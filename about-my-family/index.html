@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<title>About My Family — 用英文介紹我的家人</title>
+<style>
+  /* 源石黑體（粗圓） — 林長揚原則 #7：字體選黑體粗體 */
+  @font-face { font-family:'GenSeki TW'; src:url('assets/fonts/GenSekiGothic2TW-M.otf') format('opentype'); font-weight:500; font-display:block; }
+  @font-face { font-family:'GenSeki TW'; src:url('assets/fonts/GenSekiGothic2TW-B.otf') format('opentype'); font-weight:700; font-display:block; }
+  @font-face { font-family:'GenSeki TW'; src:url('assets/fonts/GenSekiGothic2TW-H.otf') format('opentype'); font-weight:900; font-display:block; }
+
+  :root {
+    --paper:#FAF7EE; --paper-2:#F2EDDC; --ink:#1A1A1A; --ink-soft:#555;
+    --teal:#0E7C7B; --teal-soft:#4DA5A3; --coral:#E36414; --gold:#C8941F;
+    --line:#D9D2BF; --black:#0A0A0A;
+    --fs-title:132px; --fs-sub:96px; --fs-body:56px; --fs-note:28px;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html,body { width:100%; height:100%; background:var(--black); overflow:hidden;
+    font-family:'GenSeki TW',sans-serif; color:var(--ink); font-weight:500; }
+  .stage { position:fixed; inset:0; background:var(--paper); }
+  .slide { position:absolute; inset:0; padding:56px 80px 120px; opacity:0; pointer-events:none;
+    transition:opacity .6s ease; display:flex; flex-direction:column; }
+  .slide.active { opacity:1; pointer-events:auto; }
+
+  /* 通用揭示動畫 */
+  .rv { opacity:0; transform:translateY(22px); transition:opacity .6s ease,transform .6s ease; }
+  .rv.show { opacity:1; transform:translateY(0); }
+  .pop { opacity:0; transform:scale(.4); transition:opacity .5s ease,transform .5s cubic-bezier(.34,1.56,.64,1); }
+  .pop.show { opacity:1; transform:scale(1); }
+
+  .chapter { position:absolute; top:28px; left:48px; font-weight:700; font-size:22px;
+    letter-spacing:.18em; color:var(--ink-soft); }
+  .chapter .num { color:var(--paper); background:var(--teal); padding:4px 12px; border-radius:4px; font-weight:900; margin-right:8px; }
+  h1.title { font-weight:900; font-size:var(--fs-title); letter-spacing:.06em; line-height:1.1; }
+  h2.sub { font-weight:900; font-size:80px; color:var(--teal); letter-spacing:.04em; line-height:1.15; margin-bottom:36px; text-align:center; }
+  .zh { font-weight:700; font-size:40px; color:var(--ink-soft); }
+
+  /* 人物剪影（圓頭＋圓身） */
+  .who { display:block; }
+  .who .head { fill:currentColor; }
+  .who .body { fill:currentColor; }
+
+  /* 旁白字幕 */
+  .subtitle { position:absolute; left:50%; bottom:30px; transform:translateX(-50%); max-width:88%;
+    padding:16px 36px; border-radius:10px; background:rgba(26,26,26,.92); color:#fff;
+    font-weight:700; font-size:34px; line-height:1.4; text-align:center; opacity:0; transition:opacity .4s ease; }
+  .subtitle.show { opacity:1; }
+
+  /* 開場 */
+  .start-screen { position:fixed; inset:0; background:var(--black); color:var(--paper);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; cursor:pointer; gap:40px; }
+  .start-screen .t { font-weight:900; font-size:140px; letter-spacing:.1em; line-height:1.1; text-align:center; }
+  .start-screen .t em { color:var(--gold); font-style:normal; }
+  .start-screen .s { font-size:30px; color:rgba(250,247,238,.7); font-weight:500; }
+  .start-screen .play { width:88px; height:88px; border:2px solid var(--gold); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; color:var(--gold); transition:all .3s; }
+  .start-screen:hover .play { background:var(--gold); color:var(--ink); }
+  .start-screen.hidden { display:none; }
+
+  .progress { position:absolute; left:0; bottom:0; height:5px; background:var(--teal); width:0%; transition:width .2s linear; }
+
+  /* ===== Slide 1 封面 ===== */
+  .slide-1 { background:var(--black); align-items:center; justify-content:center; text-align:center; }
+  .floaties { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+  .floaties span { position:absolute; color:rgba(232,177,74,.28); animation:floatUp 9s linear infinite; }
+  @keyframes floatUp { 0%{ transform:translateY(110vh) rotate(0deg); opacity:0; } 10%{opacity:1;} 90%{opacity:1;} 100%{ transform:translateY(-10vh) rotate(360deg); opacity:0; } }
+  .slide-1 .cover-en { font-size:44px; color:var(--gold); letter-spacing:.4em; font-weight:900; }
+  .slide-1 h1 { color:var(--paper); font-size:200px; margin-top:20px; letter-spacing:.08em; }
+  .slide-1 .cover-zh { font-size:64px; color:rgba(250,247,238,.85); margin-top:36px; font-weight:700; }
+  .slide-1 .cover-tag { margin-top:60px; font-size:28px; letter-spacing:.4em; color:rgba(250,247,238,.5); font-weight:700; }
+  .slide-1 .fa { position:relative; z-index:1; }
+
+  /* ===== Slide 2 家人單字 ===== */
+  .slide-2 { justify-content:flex-start; align-items:center; padding-top:100px; }
+  .vocab-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:34px; width:100%; max-width:1680px; }
+  .vcard { background:var(--paper-2); border:6px solid var(--line); border-radius:24px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:28px 12px; }
+  .vcard .en { font-weight:900; font-size:68px; letter-spacing:.02em; }
+  .vcard .zh { font-size:34px; }
+  .vcard.teal { border-color:var(--teal); } .vcard.teal .en { color:var(--teal); }
+  .vcard.coral { border-color:var(--coral); } .vcard.coral .en { color:var(--coral); }
+
+  /* ===== Slide 3 職業單字 ===== */
+  .slide-3 { justify-content:flex-start; align-items:center; padding-top:100px; }
+  .job-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:34px; width:100%; max-width:1680px; }
+  .jcard { background:var(--paper-2); border:6px solid var(--line); border-radius:24px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:26px 12px; }
+  .jcard .en { font-weight:900; font-size:66px; letter-spacing:.02em; }
+  .jcard .zh { font-size:34px; }
+  .jcard svg { width:86px; height:86px; }
+  .jcard.teal { border-color:var(--teal); } .jcard.teal .en { color:var(--teal); }
+  .jcard.coral { border-color:var(--coral); } .jcard.coral .en { color:var(--coral); }
+
+  /* ===== Slide 4 Who's he? ===== */
+  .slide-4 { justify-content:center; align-items:center; gap:60px; }
+  .qa { display:flex; flex-direction:column; gap:16px; width:100%; max-width:1500px; }
+  .qarow { display:flex; align-items:center; gap:40px; justify-content:center; }
+  .bubble { border-radius:26px; padding:22px 44px; font-weight:900; position:relative; }
+  .bubble.q { background:var(--paper-2); border:6px solid var(--line); font-size:66px; }
+  .bubble.a { color:#fff; font-size:66px; }
+  .bubble.a.teal { background:var(--teal); } .bubble.a.coral { background:var(--coral); }
+  .bubble .zh { font-size:34px; color:rgba(255,255,255,.85); font-weight:700; }
+  .slide-4 .arrow { font-size:64px; color:var(--gold); font-weight:900; }
+
+  /* ===== Slide 5 Is he a doctor? ===== */
+  .slide-5 { justify-content:center; align-items:center; text-align:center; gap:50px; }
+  .slide-5 .big-q { font-size:96px; font-weight:900; }
+  .slide-5 .big-q b { color:var(--teal); }
+  .slide-5 .yn { display:flex; gap:80px; justify-content:center; margin-top:20px; }
+  .ynch { min-width:300px; border-radius:24px; padding:26px 40px; font-weight:900; font-size:60px; color:#fff; }
+  .ynch.yes { background:var(--teal); } .ynch.no { background:var(--coral); }
+  .ynch .zh { font-size:34px; color:rgba(255,255,255,.9); }
+
+  /* ===== Slide 6 he/she ===== */
+  .slide-6 { justify-content:center; align-items:center; gap:60px; }
+  .hs-row { display:flex; gap:120px; }
+  .hs-box { width:420px; height:520px; border-radius:32px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; color:#fff; }
+  .hs-box.he { background:var(--teal); } .hs-box.she { background:var(--coral); }
+  .hs-box .big { font-size:170px; font-weight:900; line-height:1; }
+  .hs-box .lab { font-size:52px; font-weight:900; }
+  .hs-box .zh { font-size:40px; }
+  .slide-6 .contract { font-size:76px; font-weight:900; color:var(--ink); margin-top:10px; }
+  .slide-6 .contract b { color:var(--gold); }
+
+  /* ===== Slide 7 寫作框架 ===== */
+  .slide-7 { justify-content:flex-start; align-items:center; padding-top:100px; }
+  .frame-lines { display:flex; flex-direction:column; gap:26px; width:100%; max-width:1580px; }
+  .fline { font-weight:900; font-size:64px; color:var(--ink); background:var(--paper-2);
+    border-left:12px solid var(--teal); border-radius:8px; padding:18px 40px; letter-spacing:.03em; }
+  .fline .slot { color:var(--coral); }
+  .wordbank { display:flex; flex-wrap:wrap; gap:18px; justify-content:center; margin-top:36px; max-width:1600px; }
+  .chip { background:#fff; border:4px solid var(--teal); color:var(--teal); border-radius:40px;
+    padding:10px 26px; font-weight:900; font-size:34px; }
+
+  /* ===== Slide 8 範例 ===== */
+  .slide-8 { justify-content:center; align-items:center; gap:40px; }
+  .example-card { background:var(--paper-2); border:6px solid var(--gold); border-radius:32px;
+    padding:48px 72px; display:flex; flex-direction:column; gap:24px; max-width:1500px; }
+  .exline { font-weight:900; font-size:64px; color:var(--ink); min-height:1.4em; }
+  .exline::after { content:''; display:inline-block; width:3px; height:.9em; background:var(--gold);
+    vertical-align:-.12em; margin-left:6px; }
+  .exline.done::after { display:none; }
+
+  /* ===== Slide 9 / 10 練習 ===== */
+  .slide-9, .slide-10 { justify-content:center; align-items:center; gap:46px; }
+  .qline { display:flex; align-items:center; justify-content:center; gap:36px; width:100%; max-width:1580px; }
+  .qline .bubble.q { font-size:64px; }
+  .qline .bubble.a { font-size:64px; }
+  .qline .arrow { font-size:60px; color:var(--gold); font-weight:900; }
+  .note { font-size:40px; color:var(--ink-soft); font-weight:700; text-align:center; }
+
+  /* ===== Slide 11 總結 ===== */
+  .slide-11 { background:var(--black); align-items:center; justify-content:center; text-align:center; gap:40px; }
+  .slide-11 .golden { color:var(--gold); font-weight:900; font-size:190px; letter-spacing:.06em; line-height:1.15; }
+  .slide-11 .recap { display:flex; gap:36px; justify-content:center; }
+  .rechip { border:4px solid rgba(250,247,238,.5); color:var(--paper); border-radius:40px;
+    padding:18px 40px; font-weight:900; font-size:40px; }
+
+  /* ===== Slide 12 回家任務 ===== */
+  .slide-12 { background:var(--black); align-items:center; justify-content:center; text-align:center; gap:30px; }
+  .slide-12 .task { font-weight:900; font-size:96px; color:var(--paper); line-height:1.4; }
+  .slide-12 .task em { color:var(--coral); font-style:normal; }
+  .slide-12 .end-sig { font-size:28px; letter-spacing:.5em; color:rgba(250,247,238,.5); font-weight:700; }
+
+  .slide-11 .subtitle, .slide-12 .subtitle { background:rgba(250,247,238,.95); color:var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="start-screen" id="startScreen">
+  <div class="t">About <em>My</em> Family</div>
+  <div class="play"><svg width="24" height="28" viewBox="0 0 24 28"><path d="M2 2 L22 14 L2 26 Z" fill="currentColor"/></svg></div>
+  <div class="s">國小英語 · 用英文介紹我的家人 · 約 4 分鐘</div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- ===== Slide 1 封面 ===== -->
+  <div class="slide slide-1">
+    <div class="floaties" id="floaties"></div>
+    <div class="fa" style="position:relative;z-index:1;">
+      <div class="cover-en rv" data-step="0">ABOUT MY FAMILY</div>
+      <h1 class="rv" data-step="1">About My Family</h1>
+      <div class="cover-zh rv" data-step="2">用英文介紹我的家人</div>
+      <div class="cover-tag rv" data-step="3">國小英語 · 4 MINUTES</div>
+    </div>
+  </div>
+
+  <!-- ===== Slide 2 家人單字 ===== -->
+  <div class="slide slide-2">
+    <div class="chapter"><span class="num">01</span> / 12 — Family Words</div>
+    <h2 class="sub rv" data-step="0">家人單字</h2>
+    <div class="vocab-grid">
+      <div class="vcard teal pop" data-step="1">
+        <svg class="who" width="70" height="80" viewBox="0 0 80 90" style="color:var(--teal)"><circle class="head" cx="40" cy="26" r="18"/><path class="body" d="M12 88 Q12 58 40 58 Q68 58 68 88 Z"/></svg>
+        <div class="en">father</div><div class="zh">爸爸</div>
+      </div>
+      <div class="vcard coral pop" data-step="2">
+        <svg class="who" width="70" height="80" viewBox="0 0 80 90" style="color:var(--coral)"><circle class="head" cx="40" cy="26" r="18"/><path class="body" d="M12 88 Q12 58 40 58 Q68 58 68 88 Z"/></svg>
+        <div class="en">mother</div><div class="zh">媽媽</div>
+      </div>
+      <div class="vcard teal pop" data-step="3">
+        <svg class="who" width="70" height="80" viewBox="0 0 80 90" style="color:var(--teal)"><circle class="head" cx="40" cy="26" r="18"/><path class="body" d="M12 88 Q12 58 40 58 Q68 58 68 88 Z"/></svg>
+        <div class="en">brother</div><div class="zh">兄弟</div>
+      </div>
+      <div class="vcard coral pop" data-step="4">
+        <svg class="who" width="70" height="80" viewBox="0 0 80 90" style="color:var(--coral)"><circle class="head" cx="40" cy="26" r="18"/><path class="body" d="M12 88 Q12 58 40 58 Q68 58 68 88 Z"/></svg>
+        <div class="en">sister</div><div class="zh">姊妹</div>
+      </div>
+      <div class="vcard teal pop" data-step="5">
+        <svg class="who" width="70" height="80" viewBox="0 0 80 90" style="color:var(--teal)"><circle class="head" cx="40" cy="26" r="18"/><path class="body" d="M12 88 Q12 58 40 58 Q68 58 68 88 Z"/></svg>
+        <div class="en">grandpa</div><div class="zh">爺爺</div>
+      </div>
+      <div class="vcard coral pop" data-step="6">
+        <svg class="who" width="70" height="80" viewBox="0 0 80 90" style="color:var(--coral)"><circle class="head" cx="40" cy="26" r="18"/><path class="body" d="M12 88 Q12 58 40 58 Q68 58 68 88 Z"/></svg>
+        <div class="en">grandma</div><div class="zh">奶奶</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Slide 3 職業單字 ===== -->
+  <div class="slide slide-3">
+    <div class="chapter"><span class="num">02</span> / 12 — Jobs</div>
+    <h2 class="sub rv" data-step="0">職業單字</h2>
+    <div class="job-grid">
+      <div class="jcard teal pop" data-step="1">
+        <svg viewBox="0 0 80 80"><path d="M40 18 L74 6 V54 L40 66 Z" fill="#0E7C7B"/><path d="M40 18 L6 6 V54 L40 66 Z" fill="#4DA5A3"/><line x1="40" y1="18" x2="40" y2="66" stroke="#1A1A1A" stroke-width="3"/></svg>
+        <div class="en">teacher</div><div class="zh">老師</div>
+      </div>
+      <div class="jcard coral pop" data-step="2">
+        <svg viewBox="0 0 80 80"><polygon points="40,10 74,28 40,46 6,28" fill="#E36414"/><rect x="30" y="42" width="20" height="24" fill="#0E7C7B"/><rect x="24" y="46" width="32" height="6" fill="#1A1A1A"/></svg>
+        <div class="en">student</div><div class="zh">學生</div>
+      </div>
+      <div class="jcard teal pop" data-step="3">
+        <svg viewBox="0 0 80 80"><rect x="24" y="10" width="32" height="60" rx="10" fill="#0E7C7B"/><rect x="10" y="24" width="60" height="32" rx="10" fill="#0E7C7B"/></svg>
+        <div class="en">doctor</div><div class="zh">醫生</div>
+      </div>
+      <div class="jcard coral pop" data-step="4">
+        <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="30" fill="none" stroke="#E36414" stroke-width="7"/><rect x="36" y="26" width="8" height="28" rx="3" fill="#E36414"/><rect x="26" y="36" width="28" height="8" rx="3" fill="#E36414"/></svg>
+        <div class="en">nurse</div><div class="zh">護士</div>
+      </div>
+      <div class="jcard teal pop" data-step="5">
+        <svg viewBox="0 0 80 80"><path d="M20 66 Q18 40 34 26 Q52 12 66 14 Q64 30 50 44 Q36 56 20 66 Z" fill="#0E7C7B"/><line x1="36" y1="28" x2="48" y2="50" stroke="#1A1A1A" stroke-width="3"/></svg>
+        <div class="en">farmer</div><div class="zh">農夫</div>
+      </div>
+      <div class="jcard coral pop" data-step="6">
+        <svg viewBox="0 0 80 80"><path d="M24 54 V34 a16 16 0 0 1 32 0 V54 Z" fill="#FAF7EE" stroke="#1A1A1A" stroke-width="4"/><rect x="18" y="54" width="44" height="14" rx="5" fill="#E36414"/></svg>
+        <div class="en">cook</div><div class="zh">廚師</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Slide 4 Who's he? ===== -->
+  <div class="slide slide-4">
+    <div class="chapter"><span class="num">03</span> / 12 — 句型</div>
+    <div class="qa">
+      <div class="qarow rv" data-step="0">
+        <svg class="who" width="70" height="80" viewBox="0 0 80 90" style="color:var(--teal)"><circle class="head" cx="40" cy="26" r="18"/><path class="body" d="M12 88 Q12 58 40 58 Q68 58 68 88 Z"/></svg>
+        <div class="bubble q">Who's he?</div>
+        <div class="arrow">→</div>
+        <div class="bubble a teal">He's my dad.<div class="zh">他是我爸爸</div></div>
+      </div>
+      <div class="qarow rv" data-step="1">
+        <svg class="who" width="70" height="80" viewBox="0 0 80 90" style="color:var(--coral)"><circle class="head" cx="40" cy="26" r="18"/><path class="body" d="M12 88 Q12 58 40 58 Q68 58 68 88 Z"/></svg>
+        <div class="bubble q">Who's she?</div>
+        <div class="arrow">→</div>
+        <div class="bubble a coral">She's my mother.<div class="zh">她是我媽媽</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Slide 5 Is he a doctor? ===== -->
+  <div class="slide slide-5">
+    <div class="chapter"><span class="num">04</span> / 12 — 句型</div>
+    <div class="big-q rv" data-step="0">Is he a <b>doctor</b>? <span class="zh">他是醫生嗎？</span></div>
+    <div class="yn">
+      <div class="ynch yes pop" data-step="1">Yes, he is.<div class="zh">是，他是</div></div>
+      <div class="ynch no pop" data-step="2">No, he isn't.<div class="zh">不，他不是</div></div>
+    </div>
+    <div class="note rv" data-step="3">He's a nurse. 他是護士</div>
+  </div>
+
+  <!-- ===== Slide 6 he / she ===== -->
+  <div class="slide slide-6">
+    <div class="chapter"><span class="num">05</span> / 12 — 文法</div>
+    <div class="hs-row">
+      <div class="hs-box he pop" data-step="0">
+        <div class="big">he</div>
+        <div class="lab">男生</div>
+        <svg class="who" width="90" height="100" viewBox="0 0 80 90"><circle class="head" cx="40" cy="26" r="18"/><path class="body" d="M12 88 Q12 58 40 58 Q68 58 68 88 Z"/></svg>
+      </div>
+      <div class="hs-box she pop" data-step="1">
+        <div class="big">she</div>
+        <div class="lab">女生</div>
+        <svg class="who" width="90" height="100" viewBox="0 0 80 90"><circle class="head" cx="40" cy="26" r="18"/><path class="body" d="M12 88 Q12 58 40 58 Q68 58 68 88 Z"/></svg>
+      </div>
+    </div>
+    <div class="contract rv" data-step="2"><b>he's</b> = he is <span class="zh">縮寫</span></div>
+  </div>
+
+  <!-- ===== Slide 7 寫作框架 ===== -->
+  <div class="slide slide-7">
+    <div class="chapter"><span class="num">06</span> / 12 — 寫作</div>
+    <h2 class="sub rv" data-step="0">About My Family 寫作框架</h2>
+    <div class="frame-lines">
+      <div class="fline rv" data-step="1">This is my <span class="slot">______</span>. <span class="zh">這是我的…</span></div>
+      <div class="fline rv" data-step="2">He's / She's <span class="slot">______</span>. <span class="zh">他的職業</span></div>
+      <div class="fline rv" data-step="3">He / She likes <span class="slot">______</span>. <span class="zh">他喜歡…</span></div>
+      <div class="fline rv" data-step="4">I like <span class="slot">______</span>. <span class="zh">我喜歡…</span></div>
+    </div>
+    <div class="wordbank rv" data-step="5">
+      <span class="chip">father</span><span class="chip">mother</span><span class="chip">brother</span>
+      <span class="chip">sister</span><span class="chip">teacher</span><span class="chip">doctor</span>
+      <span class="chip">nurse</span><span class="chip">farmer</span><span class="chip">cook</span>
+      <span class="chip">blue</span><span class="chip">red</span><span class="chip">yellow</span>
+    </div>
+  </div>
+
+  <!-- ===== Slide 8 範例 ===== -->
+  <div class="slide slide-8">
+    <div class="chapter"><span class="num">07</span> / 12 — 範例</div>
+    <h2 class="sub rv" data-step="0">範例 Example</h2>
+    <div class="example-card" id="exampleCard">
+      <div class="exline" data-txt="My name is Kim."></div>
+      <div class="exline" data-txt="This is my brother."></div>
+      <div class="exline" data-txt="He's a student."></div>
+      <div class="exline" data-txt="He likes blue, but I like yellow."></div>
+    </div>
+    <svg class="who rv" data-step="1" width="90" height="100" viewBox="0 0 80 90" style="color:var(--teal)"><circle class="head" cx="40" cy="26" r="18"/><path class="body" d="M12 88 Q12 58 40 58 Q68 58 68 88 Z"/></svg>
+  </div>
+
+  <!-- ===== Slide 9 練習 1 ===== -->
+  <div class="slide slide-9">
+    <div class="chapter"><span class="num">08</span> / 12 — 練習</div>
+    <h2 class="sub rv" data-step="0">練習 Practice</h2>
+    <div class="qline rv" data-step="1">
+      <div class="bubble q">Who's he?</div>
+      <div class="arrow">→</div>
+      <div class="bubble a teal">He's my father.<div class="zh">他是我爸爸</div></div>
+    </div>
+    <div class="qline rv" data-step="2">
+      <div class="bubble q">Is he a farmer?</div>
+      <div class="arrow">→</div>
+      <div class="bubble a coral">No, he isn't.<div class="zh">不，他不是</div></div>
+    </div>
+    <div class="note rv" data-step="3">He's a teacher. 他是老師</div>
+  </div>
+
+  <!-- ===== Slide 10 練習 2 ===== -->
+  <div class="slide slide-10">
+    <div class="chapter"><span class="num">09</span> / 12 — 練習</div>
+    <h2 class="sub rv" data-step="0">練習 Practice</h2>
+    <div class="qline rv" data-step="1">
+      <div class="bubble q">Is she a nurse?</div>
+      <div class="arrow">→</div>
+      <div class="bubble a coral">Yes, she is.<div class="zh">是，她是</div></div>
+    </div>
+    <div class="note rv" data-step="2">她是我媽媽，也是一位老師。</div>
+  </div>
+
+  <!-- ===== Slide 11 總結 ===== -->
+  <div class="slide slide-11">
+    <div class="golden pop" data-step="0">This is my family!</div>
+    <div class="recap">
+      <div class="rechip rv" data-step="1">家人單字</div>
+      <div class="rechip rv" data-step="2">職業單字</div>
+      <div class="rechip rv" data-step="3">Who's he? / Who's she?</div>
+    </div>
+  </div>
+
+  <!-- ===== Slide 12 回家任務 ===== -->
+  <div class="slide slide-12">
+    <div class="task rv" data-step="0">回家任務<br>用英文，跟爸爸媽媽<em>介紹你的家人</em>！</div>
+    <div class="end-sig rv" data-step="1">GOOD LUCK · ABOUT MY FAMILY</div>
+  </div>
+
+  <div class="subtitle" id="subtitle"></div>
+</div>
+
+<div class="progress" id="progress"></div>
+<audio id="audio" preload="auto"></audio>
+
+<script>
+// ===== 旁白文字 + 時長（時長為底線，實際以音檔長度為準） =====
+const PAGES = [
+  { i:1,  dur:18, sub:"用英文介紹我的家人" },
+  { i:2,  dur:28, sub:"Family Words 家人單字" },
+  { i:3,  dur:26, sub:"Jobs 職業單字" },
+  { i:4,  dur:22, sub:"Who's he? / Who's she?" },
+  { i:5,  dur:26, sub:"Is he a doctor? Yes, he is." },
+  { i:6,  dur:20, sub:"he 男生 · she 女生" },
+  { i:7,  dur:32, sub:"This is my ______." },
+  { i:8,  dur:30, sub:"My name is Kim." },
+  { i:9,  dur:26, sub:"Who's he? → He's my father." },
+  { i:10, dur:22, sub:"Is she a nurse? Yes, she is." },
+  { i:11, dur:18, sub:"This is my family!" },
+  { i:12, dur:16, sub:"回家任務：用英文介紹你的家人" },
+];
+
+const slides = document.querySelectorAll('.slide');
+const audio = document.getElementById('audio');
+const sub = document.getElementById('subtitle');
+const startScreen = document.getElementById('startScreen');
+const progress = document.getElementById('progress');
+
+// 封面漂浮人物
+const floaties = document.getElementById('floaties');
+for (let i=0;i<14;i++) {
+  const s = document.createElement('span');
+  const teal = (i % 2 === 0);
+  s.innerHTML = `<svg class="who" width="${28+Math.random()*22}" viewBox="0 0 80 90"><circle class="head" cx="40" cy="26" r="18"/><path class="body" d="M12 88 Q12 58 40 58 Q68 58 68 88 Z"/></svg>`;
+  s.style.color = teal ? '#0E7C7B' : '#E36414';
+  s.style.left = Math.random()*100 + '%';
+  s.style.animationDuration = (6 + Math.random()*6) + 's';
+  s.style.animationDelay = (Math.random()*6) + 's';
+  floaties.appendChild(s);
+}
+
+// 逐步揭示
+function revealSteps(scopeSel, maxStep, gapMs) {
+  const scope = document.querySelector(scopeSel);
+  if (!scope) return;
+  scope.querySelectorAll('[data-step]').forEach(el => el.classList.remove('show'));
+  for (let s=0;s<=maxStep;s++) {
+    setTimeout(() => {
+      scope.querySelectorAll(`[data-step="${s}"]`).forEach(el => el.classList.add('show'));
+    }, 300 + s*gapMs);
+  }
+}
+
+// Slide 8 打字機
+let typing = false;
+async function typeSlide8() {
+  typing = true;
+  const lines = document.querySelectorAll('.slide-8 .exline');
+  lines.forEach(el => { el.textContent = ''; el.classList.remove('done'); });
+  for (const el of lines) {
+    const txt = el.dataset.txt;
+    for (let i=0;i<txt.length;i++) {
+      el.textContent += txt[i];
+      await new Promise(r => setTimeout(r, 48));
+    }
+    el.classList.add('done');
+    await new Promise(r => setTimeout(r, 300));
+  }
+  typing = false;
+}
+
+// ===== 主播放控制器 =====
+let currentSlide = 0;
+let totalElapsed = 0;
+let slideStartTime = 0;
+let rafId = null;
+let durNow = 10;
+
+audio.addEventListener('loadedmetadata', () => {
+  if (isFinite(audio.duration) && audio.duration > 0.5) durNow = audio.duration + 2.5;
+});
+
+function showSlide(i) {
+  slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+  const p = PAGES[i];
+  sub.textContent = p.sub;
+  sub.classList.add('show');
+
+  durNow = p.dur;
+  audio.src = `assets/narration/page-${String(p.i).padStart(2,'0')}.mp3`;
+  audio.play().catch(()=>{});
+
+  // 頁面動畫
+  switch (p.i) {
+    case 1: revealSteps('.slide-1', 3, 900); break;
+    case 2: revealSteps('.slide-2', 6, 500); break;
+    case 3: revealSteps('.slide-3', 6, 500); break;
+    case 4: revealSteps('.slide-4', 1, 2500); break;
+    case 5: revealSteps('.slide-5', 3, 1400); break;
+    case 6: revealSteps('.slide-6', 2, 1200); break;
+    case 7: revealSteps('.slide-7', 5, 1000); break;
+    case 8: revealSteps('.slide-8', 1, 800); typeSlide8(); break;
+    case 9: revealSteps('.slide-9', 3, 1400); break;
+    case 10: revealSteps('.slide-10', 2, 1500); break;
+    case 11: revealSteps('.slide-11', 3, 900); break;
+    case 12: revealSteps('.slide-12', 1, 1200); break;
+  }
+  slideStartTime = performance.now();
+}
+
+function tick() {
+  const now = performance.now();
+  const elapsed = (now - slideStartTime) / 1000;
+  const prog = (currentSlide + Math.min(elapsed, durNow) / durNow) / PAGES.length;
+  progress.style.width = (Math.min(prog, 1) * 100) + '%';
+
+  if (elapsed >= durNow) {
+    totalElapsed += durNow;
+    currentSlide++;
+    if (currentSlide >= PAGES.length) {
+      cancelAnimationFrame(rafId);
+      sub.classList.remove('show');
+      return;
+    }
+    showSlide(currentSlide);
+  }
+  rafId = requestAnimationFrame(tick);
+}
+
+function startVideo() {
+  startScreen.classList.add('hidden');
+  setTimeout(() => { showSlide(0); rafId = requestAnimationFrame(tick); }, 300);
+}
+
+// GOTCHAS D-3：render=true 時隱藏遮罩、自動播放（錄影用）
+if (new URLSearchParams(location.search).has('render')) {
+  startScreen.classList.add('hidden');
+  setTimeout(() => { showSlide(0); rafId = requestAnimationFrame(tick); }, 500);
+} else {
+  startScreen.addEventListener('click', startVideo);
+}
+</script>
+</body>
+</html>

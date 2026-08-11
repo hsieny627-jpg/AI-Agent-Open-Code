@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Super Fun 3 英語冒險王</title>
+<style>
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:"PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#7ec8ff 0%,#b7e4ff 45%,#8ee37d 46%,#6ec95e 100%);
+    overflow:hidden; user-select:none; -webkit-user-select:none; touch-action:manipulation;
+  }
+  .screen{display:none; position:fixed; inset:0; flex-direction:column; align-items:center; overflow-y:auto;}
+  .screen.active{display:flex;}
+
+  /* ============ 共用按鈕 ============ */
+  .btn{
+    border:none; border-radius:999px; font-size:1.25rem; font-weight:bold; color:#fff;
+    padding:14px 34px; cursor:pointer; box-shadow:0 6px 0 rgba(0,0,0,.25);
+    transition:transform .1s;
+  }
+  .btn:active{transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,.25);}
+  .btn-green{background:linear-gradient(180deg,#7ee33e,#4cb320);}
+  .btn-red{background:linear-gradient(180deg,#ff7a5c,#e0452f);}
+  .btn-gold{background:linear-gradient(180deg,#ffd257,#f59d0f);}
+  .btn-blue{background:linear-gradient(180deg,#5ab2ff,#2f7fe0);}
+  .btn-gray{background:linear-gradient(180deg,#b8c0cc,#8b95a5);}
+  .btn[disabled]{filter:grayscale(.7); opacity:.6;}
+
+  /* ============ 登入頁 ============ */
+  #scr-login{justify-content:center; padding:20px;}
+  .login-card{
+    background:#fff; border-radius:28px; padding:30px 24px; width:min(92%,420px);
+    box-shadow:0 12px 30px rgba(0,0,0,.2); text-align:center;
+  }
+  .mascot-big{font-size:5rem; animation:bounce 1.6s infinite;}
+  @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+  .login-title{font-size:1.9rem; color:#e0452f; margin:6px 0 4px; font-weight:900; text-shadow:2px 2px 0 #ffe08a;}
+  .login-sub{color:#666; margin-bottom:18px; font-size:1.05rem;}
+  .login-input{
+    width:100%; font-size:2rem; text-align:center; letter-spacing:.4rem;
+    border:4px solid #f59d0f; border-radius:18px; padding:14px; color:#333;
+    outline:none; -webkit-appearance:none;
+  }
+  .login-hint{font-size:.9rem; color:#888; margin-top:8px;}
+  .login-err{color:#e0452f; font-weight:bold; min-height:1.4em; margin-top:6px; font-size:.95rem;}
+  .login-btns{margin-top:16px; display:flex; flex-direction:column; gap:12px; align-items:center;}
+
+  /* ============ 玩法說明 ============ */
+  #scr-howto{justify-content:center; padding:20px;}
+  .howto-card{background:#fff; border-radius:28px; padding:26px 22px; width:min(94%,520px); box-shadow:0 12px 30px rgba(0,0,0,.2); text-align:center;}
+  .howto-card h2{color:#e0452f; font-size:1.6rem; margin-bottom:12px;}
+  .howto-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:14px 0;}
+  .howto-item{background:#f3f9ff; border:3px solid #b7e4ff; border-radius:18px; padding:12px 6px;}
+  .howto-item .ic{font-size:2.6rem;}
+  .howto-item .lb{font-size:.9rem; font-weight:bold; color:#2f7fe0; margin-top:4px;}
+  .howto-rule{background:#fff8e1; border:3px dashed #f59d0f; border-radius:16px; padding:10px; font-size:1rem; color:#8a6100; margin:10px 0 16px;}
+  .howto-rule b{color:#e0452f;}
+
+  /* ============ 遊戲畫面 ============ */
+  #scr-game{padding:0; justify-content:flex-start; overflow:hidden;}
+
+  /* 世界地圖 */
+  #world{position:relative; width:100%; height:150px; overflow:hidden; flex-shrink:0; background:linear-gradient(180deg,#7ec8ff 0%,#cdeaff 60%,#79c95f 60%,#5faf4a 100%);}
+  .cloud{position:absolute; font-size:2rem; opacity:.85; animation:drift 26s linear infinite;}
+  @keyframes drift{from{left:-10%;}to{left:110%;}}
+  .hill{position:absolute; bottom:30%; width:70px; height:30px; background:#79c95f; border-radius:50%;}
+  #track{position:absolute; left:5%; right:5%; top:70%; height:6px; background:#a4702d; border-radius:3px;}
+  .node{position:absolute; top:-16px; transform:translateX(-50%); font-size:1.6rem; transition:opacity .3s;}
+  .node.done{opacity:.4;}
+  #player{position:absolute; top:44%; font-size:2.6rem; transform:translate(-50%,-50%); z-index:5; transition:left .9s cubic-bezier(.5,.05,.5,1.35);}
+  #player.jump{animation:jumpAnim .7s ease;}
+  @keyframes jumpAnim{0%{transform:translate(-50%,-50%) scale(1);}30%{transform:translate(-50%,-130%) scale(1.15);}60%{transform:translate(-50%,-50%) scale(1);}80%{transform:translate(-50%,-60%) scale(1.05);}100%{transform:translate(-50%,-50%) scale(1);}}
+  #player.super{font-size:3.2rem; filter:drop-shadow(0 0 12px gold);}
+  #world-label{position:absolute; top:6px; left:10px; background:rgba(255,255,255,.8); padding:3px 10px; border-radius:12px; font-weight:bold; color:#2f7fe0; font-size:.85rem; z-index:6;}
+  .coin-burst{position:absolute; font-size:1.4rem; pointer-events:none; animation:coinFly 1s ease-out forwards; z-index:7;}
+  @keyframes coinFly{0%{transform:translateY(0) scale(1); opacity:1;}100%{transform:translateY(-110px) scale(1.5); opacity:0;}}
+
+  /* HUD */
+  #hud{width:100%; display:flex; justify-content:space-between; align-items:center; padding:8px 14px; background:rgba(0,0,0,.25); color:#fff; flex-shrink:0;}
+  .hud-item{font-weight:bold; font-size:1rem;}
+  #streak-badge{background:#ff6a3d; border-radius:12px; padding:3px 10px;}
+  #streak-badge.super{background:linear-gradient(90deg,#f59d0f,#ff2d9a);}
+
+  /* 題目區 */
+  #q-area{flex:1; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 14px 18px; overflow-y:auto;}
+  #q-type{background:#fff; color:#e0452f; font-weight:bold; border-radius:12px; padding:4px 14px; font-size:.9rem; margin-bottom:6px;}
+  #q-prompt{width:100%; text-align:center; margin-bottom:4px;}
+  .big-img{font-size:5.5rem; display:block; line-height:1.2; filter:drop-shadow(0 6px 8px rgba(0,0,0,.25));}
+  .big-word{font-size:2.6rem; font-weight:900; color:#1d3d9e; text-shadow:2px 2px 0 #fff; letter-spacing:.05em;}
+  .q-label{font-size:1.05rem; color:#555; font-weight:bold; margin-top:2px;}
+  .btn-sound{background:#fff; border:3px solid #2f7fe0; color:#2f7fe0; font-weight:bold; font-size:1rem; border-radius:999px; padding:8px 18px; margin-top:8px; cursor:pointer;}
+  #q-phon{display:none; width:100%; margin:8px 0; text-align:center;}
+  .phon-row{display:flex; justify-content:center; gap:3px; flex-wrap:wrap;}
+  .phon-cell{border:2px solid #f59d0f; background:#fff8e1; border-radius:10px; padding:2px 7px;}
+  .phon-cell .sym{font-size:1.2rem; font-weight:bold; color:#8a6100;}
+  .note{font-size:.82rem; color:#666; margin-top:5px;}
+
+  /* 選項 */
+  #q-options{width:100%; display:grid; grid-template-columns:repeat(2,1fr); gap:12px; max-width:520px;}
+  .opt-btn{
+    border:4px solid #fff; border-radius:20px; background:linear-gradient(180deg,#fff,#f1f6ff);
+    padding:12px 6px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px;
+    box-shadow:0 5px 0 rgba(0,0,0,.18); transition:transform .1s;
+  }
+  .opt-btn:active{transform:scale(.96);}
+  .opt-emoji{font-size:3rem; line-height:1.15;}
+  .opt-word{font-size:1.15rem; font-weight:bold; color:#1d3d9e;}
+  .opt-btn.correct{background:linear-gradient(180deg,#7ee33e,#4cb320); border-color:#fff; animation:pop .4s;}
+  .opt-btn.wrong{background:linear-gradient(180deg,#ff8a75,#e0452f); animation:shake .4s;}
+  .opt-btn.dim{opacity:.5;}
+  @keyframes pop{0%{transform:scale(1);}50%{transform:scale(1.12);}100%{transform:scale(1);}}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+  .flash-msg{font-size:1.5rem; font-weight:900; margin:6px 0; animation:pop .4s;}
+  .flash-msg.good{color:#4cb320; text-shadow:1px 1px 0 #fff;}
+  .flash-msg.bad{color:#e0452f; text-shadow:1px 1px 0 #fff; font-size:1.1rem;}
+
+  /* ============ 結果頁 ============ */
+  #scr-result{justify-content:center; padding:20px;}
+  .result-card{background:#fff; border-radius:28px; padding:28px 24px; width:min(92%,430px); text-align:center; box-shadow:0 12px 30px rgba(0,0,0,.2);}
+  #res-mascot{font-size:5rem; animation:bounce 1.4s infinite;}
+  #res-title{font-size:1.9rem; font-weight:900; color:#e0452f; margin:6px 0;}
+  #res-score{font-size:3rem; font-weight:900; color:#f59d0f; text-shadow:2px 2px 0 #fff;}
+  .res-line{font-size:1.1rem; color:#555; margin:6px 0;}
+  #res-name{background:#eef6ff; border-radius:12px; padding:8px; font-weight:bold; color:#2f7fe0; margin:10px 0;}
+  .res-btns{display:flex; flex-direction:column; gap:12px; align-items:center; margin-top:14px;}
+
+  /* ============ 排行榜 ============ */
+  #scr-leader{justify-content:flex-start; padding:20px;}
+  .lb-card{background:#fff; border-radius:28px; padding:24px 18px; width:min(94%,520px); box-shadow:0 12px 30px rgba(0,0,0,.2);}
+  .lb-card h2{text-align:center; color:#e0452f; margin-bottom:12px;}
+  .lb-inputs{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:10px;}
+  .lb-inputs input{border:3px solid #2f7fe0; border-radius:12px; padding:10px; font-size:1rem; width:100%; outline:none;}
+  #lb-table{width:100%; border-collapse:collapse; margin-top:10px;}
+  #lb-table th{background:#f59d0f; color:#fff; padding:8px; font-size:.95rem;}
+  #lb-table td{padding:8px; text-align:center; border-bottom:1px solid #eee; font-weight:bold;}
+  #lb-table tr.rank-1 td{background:#fff8e1; color:#e0452f; font-size:1.05rem;}
+  #lb-table tr.rank-2 td{background:#f3f3f3;}
+  #lb-table tr.rank-3 td{background:#f9efe2;}
+</style>
+</head>
+<body>
+
+<!-- ================= 登入頁 ================= -->
+<div class="screen active" id="scr-login">
+  <div class="login-card">
+    <div class="mascot-big">🦊</div>
+    <div class="login-title">英語冒險王</div>
+    <div class="login-sub">Super Fun 3 · 第 1、2 課</div>
+    <input id="in-num" class="login-input" type="number" inputmode="numeric" maxlength="5" placeholder="30909" oninput="chkLogin()">
+    <div class="login-hint">輸入 5 位數字：班級 ＋ 座號</div>
+    <div class="login-err" id="err-num"></div>
+    <div class="login-btns">
+      <button class="btn btn-green" id="btn-login" disabled>🚀 出發冒險</button>
+      <button class="btn btn-gray" id="btn-teacher">🏆 老師排行榜</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 玩法說明 ================= -->
+<div class="screen" id="scr-howto">
+  <div class="howto-card">
+    <h2>玩法說明</h2>
+    <div class="howto-grid">
+      <div class="howto-item"><div class="ic">📸</div><div class="lb">看圖片<br>選英文</div></div>
+      <div class="howto-item"><div class="ic">👀</div><div class="lb">看英文<br>選圖片</div></div>
+      <div class="howto-item"><div class="ic">👂</div><div class="lb">聽聲音<br>選圖片</div></div>
+    </div>
+    <div class="howto-rule">答對，🦊 狐狸往前跳、<b>噴金幣</b>！<br>連續答對 3 題，進入 <b>✨超級星星狀態✨</b>！</div>
+    <button class="btn btn-green" id="btn-start">🎮 開始冒險</button>
+  </div>
+</div>
+
+<!-- ================= 遊戲畫面 ================= -->
+<div class="screen" id="scr-game">
+  <div id="world">
+    <div id="world-label">🗺️ 冒險地圖</div>
+    <div class="cloud" style="top:8%; font-size:1.8rem;">☁️</div>
+    <div class="cloud" style="top:24%; font-size:1.4rem; animation-delay:-10s;">☁️</div>
+    <div class="cloud" style="top:14%; font-size:1.2rem; animation-delay:-20s;">☁️</div>
+    <div id="track"></div>
+    <div id="player">🦊</div>
+  </div>
+  <div id="hud">
+    <div class="hud-item">📚 第 <span id="q-no">1</span>/<span id="q-total">10</span> 關</div>
+    <div class="hud-item">💎 <span id="score">0</span></div>
+    <div class="hud-item" id="streak-badge">🔥 <span id="streak">0</span></div>
+  </div>
+  <div id="q-area">
+    <div id="q-type">單字快閃</div>
+    <div id="q-prompt"></div>
+    <div id="q-phon"></div>
+    <div id="q-options"></div>
+  </div>
+</div>
+
+<!-- ================= 結果頁 ================= -->
+<div class="screen" id="scr-result">
+  <div class="result-card">
+    <div id="res-mascot">🏆</div>
+    <div id="res-title">你好棒！</div>
+    <div id="res-score">💎 0</div>
+    <div class="res-line" id="res-detail">答對 0/10 題</div>
+    <div id="res-name"></div>
+    <div class="res-btns">
+      <button class="btn btn-gold" id="btn-again">🔄 再玩一次</button>
+      <button class="btn btn-blue" id="btn-home">🏠 回首頁</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 老師排行榜 ================= -->
+<div class="screen" id="scr-leader">
+  <div class="lb-card">
+    <h2>🏆 全班真實排行榜</h2>
+    <div class="lb-inputs">
+      <input id="lb-num" placeholder="30909" inputmode="numeric" maxlength="5">
+      <input id="lb-name" placeholder="姓名">
+      <input id="lb-score" placeholder="分數" inputmode="numeric" maxlength="4">
+    </div>
+    <button class="btn btn-blue" id="btn-lb-add" style="width:100%;">➕ 登錄成績</button>
+    <table id="lb-table"><thead><tr><th>名次</th><th>班級座號</th><th>姓名</th><th>分數</th></tr></thead><tbody></tbody></table>
+    <br>
+    <button class="btn btn-gray" id="btn-lb-back" style="width:100%;">➜ 回登入頁</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   Super Fun 3 英語冒險王  （單一檔案，離線可玩）
+   ============================================================ */
+
+/* ---------- 課本單字（L1 家人、L2 職業）＋ emoji 大圖 ---------- */
+var VOCAB = [
+  {en:"father",    zh:"爸爸",   img:"👨",     unit:"L1"},
+  {en:"mother",    zh:"媽媽",   img:"👩",     unit:"L1"},
+  {en:"brother",   zh:"兄弟",   img:"👦",     unit:"L1"},
+  {en:"sister",    zh:"姊妹",   img:"👧",     unit:"L1"},
+  {en:"grandfather",zh:"爺爺",  img:"👴",     unit:"L1"},
+  {en:"grandmother",zh:"奶奶",  img:"👵",     unit:"L1"},
+  {en:"family",    zh:"家人",   img:"👨‍👩‍👧‍👦", unit:"L1"},
+  {en:"teacher",   zh:"老師",   img:"🧑‍🏫",   unit:"L2"},
+  {en:"student",   zh:"學生",   img:"🧑‍🎓",   unit:"L2"},
+  {en:"cook",      zh:"廚師",   img:"👨‍🍳",   unit:"L2"},
+  {en:"doctor",    zh:"醫生",   img:"🧑‍⚕️",   unit:"L2"},
+  {en:"nurse",     zh:"護士",   img:"👩‍⚕️",   unit:"L2"},
+  {en:"farmer",    zh:"農夫",   img:"👨‍🌾",   unit:"L2"}
+];
+
+/* ---------- 句型題 ---------- */
+var SENTENCE = [
+  {q:"Who's he?", a:"He's my father.", zh:"他是誰？他是我的爸爸。", distract:["He's my sister.","She's my mother."]},
+  {q:"Who's she?", a:"She's my mother.", zh:"她是誰？她是我的媽媽。", distract:["He's my brother.","She's my cook."]},
+  {q:"Who's he?", a:"He's my brother.", zh:"他是誰？他是我的兄弟。", distract:["He's my father.","She's my nurse."]},
+  {q:"Is she a teacher?", a:"Yes, she is.", zh:"她是老師嗎？是的。", distract:["No, she isn't.","Yes, he is."]},
+  {q:"Is he a doctor?", a:"No, he isn't.", zh:"他是醫生嗎？不是。", distract:["Yes, he is.","No, she isn't."]},
+  {q:"Is he a cook?", a:"Yes, he is.", zh:"他是廚師嗎？是的。", distract:["No, he isn't.","Yes, she is."]},
+  {q:"Is she a nurse?", a:"No, she isn't. She's a teacher.", zh:"她是護士嗎？不是，她是老師。", distract:["Yes, she is.","No, he isn't."]},
+  {q:"Is he a farmer?", a:"Yes, he is.", zh:"他是農夫嗎？是的。", distract:["No, he isn't.","Yes, she is."]},
+  {q:"Who's she?", a:"She's my sister.", zh:"她是誰？她是我的姊妹。", distract:["He's my brother.","She's my grandmother."]},
+  {q:"Is she your grandmother?", a:"Yes, she is.", zh:"她是你的奶奶嗎？是的。", distract:["No, she isn't.","Yes, he is."]}
+];
+
+/* ============================================================
+   遊戲引擎
+   ============================================================ */
+var TOTAL_Q = 10;
+var student = null;
+var qNo=0, score=0, streak=0, maxStreak=0, correct=0, pos=0, difficulty=0;
+var timerId=null, timeLeft=0, answered=false;
+var leader = JSON.parse(localStorage.getItem("sf3_leader") || "[]");
+
+function $(id){ return document.getElementById(id); }
+function show(id){
+  document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("active");});
+  $(id).classList.add("active");
+}
+function shuffle(a){
+  var arr=a.slice();
+  for(var i=arr.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=arr[i];arr[i]=arr[j];arr[j]=t; }
+  return arr;
+}
+
+/* ---------- 音效（WebAudio 小樂曲） ---------- */
+var actx=null;
+function ac(){
+  if(!actx){ actx=new (window.AudioContext||window.webkitAudioContext)(); }
+  if(actx.state==="suspended"){ actx.resume(); }
+  return actx;
+}
+function tone(freq,start,dur,type,vol){
+  var c=ac(), o=c.createOscillator(), g=c.createGain();
+  o.type=type||"square"; o.frequency.value=freq;
+  g.gain.setValueAtTime(vol||.12,c.currentTime+start);
+  g.gain.exponentialRampToValueAtTime(.001,c.currentTime+start+dur);
+  o.connect(g); g.connect(c.destination); o.start(c.currentTime+start); o.stop(c.currentTime+start+dur);
+}
+function sfx(kind){
+  try{
+    if(kind==="good"){ tone(523,0,.12,"triangle"); tone(659,.09,.12,"triangle"); tone(784,.18,.22,"triangle"); }
+    else if(kind==="super"){ tone(523,0,.1,"square"); tone(659,.08,.1,"square"); tone(784,.16,.1,"square"); tone(1047,.24,.3,"square"); }
+    else if(kind==="bad"){ tone(330,0,.14,"sawtooth"); tone(262,.12,.2,"sawtooth"); }
+    else if(kind==="done"){ tone(523,0,.15,"triangle"); tone(659,.12,.15,"triangle"); tone(784,.24,.15,"triangle"); tone(1047,.36,.4,"triangle"); }
+    else if(kind==="click"){ tone(880,0,.06,"square",.06); }
+  }catch(e){}
+}
+function speak(text){
+  if(!("speechSynthesis" in window)) return;
+  try{
+    speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(text); u.lang="en-US"; u.rate=.85;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function speakZh(text){
+  if(!("speechSynthesis" in window)) return;
+  try{
+    speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(text); u.lang="zh-TW"; u.rate=.9;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ---------- 世界地圖 ---------- */
+function buildWorld(){
+  var t=$("track"); t.innerHTML="";
+  for(var i=1;i<=TOTAL_Q;i++){
+    var n=document.createElement("div");
+    n.className="node"; n.style.left=(4+i*(92/TOTAL_Q))+"%"; n.textContent="🚩";
+    n.setAttribute("data-i",i); t.appendChild(n);
+  }
+  movePlayer(true);
+}
+function movePlayer(instant){
+  var p=$("player");
+  p.style.left=(4+(pos)*(92/TOTAL_Q))+"%";
+  if(instant){ p.style.transition="none"; }
+  var raf = window.requestAnimationFrame || function(f){ return setTimeout(f,16); };
+  raf(function(){ raf(function(){ p.style.transition="left .9s cubic-bezier(.5,.05,.5,1.35)"; }); });
+  document.querySelectorAll("#track .node").forEach(function(n){
+    if(parseInt(n.getAttribute("data-i"),10)<=pos){ n.classList.add("done"); }
+  });
+}
+function jumpAnim(){ $("player").classList.remove("jump"); void $("player").offsetWidth; $("player").classList.add("jump"); }
+function superMode(on){
+  var p=$("player"), b=$("streak-badge");
+  p.classList.toggle("super",on);
+  b.classList.toggle("super",on);
+}
+function coins(){
+  var p=$("player");
+  for(var i=0;i<8;i++){
+    var c=document.createElement("div");
+    c.className="coin-burst"; c.textContent=(i%2===0)?"🪙":"✨";
+    c.style.left=(Math.random()*40-20+50)+"%";
+    c.style.top=(30+Math.random()*25)+"%";
+    c.style.animationDelay=(Math.random()*.25)+"s";
+    c.style.fontSize=(1.2+Math.random()*1)+"rem";
+    $("world").appendChild(c);
+    setTimeout(function(el){ el.remove(); },1300,c);
+  }
+}
+
+/* ---------- 登入 ---------- */
+function chkLogin(){
+  var n=$("in-num").value.trim();
+  var ok=/^\d{5}$/.test(n);
+  $("btn-login").disabled=!ok;
+  $("err-num").textContent = (n!=="" && !ok) ? "⚠️ 一定要 5 個數字喔！" : "";
+}
+$("btn-login").addEventListener("click",function(){
+  student={num:$("in-num").value.trim()};
+  sfx("click"); show("scr-howto");
+});
+$("btn-teacher").addEventListener("click",function(){ sfx("click"); show("scr-leader"); renderLeader(); });
+$("btn-lb-back").addEventListener("click",function(){ sfx("click"); show("scr-login"); });
+$("btn-start").addEventListener("click",function(){
+  sfx("click");
+  qNo=0; score=0; streak=0; maxStreak=0; correct=0; pos=0; difficulty=0;
+  show("scr-game"); buildWorld(); nextQuestion();
+});
+$("btn-again").addEventListener("click",function(){ sfx("click"); show("scr-howto"); });
+$("btn-home").addEventListener("click",function(){ sfx("click"); show("scr-login"); });
+
+/* ---------- 出題 ---------- */
+function pickOthers(w,diff){
+  var n = diff===0 ? 1 : (diff===1 ? 2 : 3);
+  return shuffle(VOCAB.filter(function(v){ return v.en!==w.en; })).slice(0,n);
+}
+function makeVocabQuestion(diff){
+  var w=VOCAB[Math.floor(Math.random()*VOCAB.length)];
+  var type=Math.floor(Math.random()*3);
+  var choices=shuffle([w].concat(pickOthers(w,diff)));
+  var promptHTML, label, audio=w.en;
+  if(type===0){ // 看圖片，選英文
+    promptHTML="<span class='big-img'>"+w.img+"</span><div class='q-label'>看圖片，選英文單字</div>";
+    audio=w.en;
+  } else if(type===1){ // 看英文，選圖片
+    promptHTML="<span class='big-word'>"+w.en+"</span><div class='q-label'>看英文，選圖片</div>";
+  } else { // 聽聲音，選圖片
+    promptHTML="<span class='big-img'>🎧</span><div class='q-label'>聽聲音，選圖片</div>";
+  }
+  return {
+    choices:choices, correct:w, promptHTML:promptHTML,
+    optText:function(o){ return "<span class='opt-emoji'>"+o.img+"</span><span class='opt-word'>"+o.en+"</span>"; },
+    word:w, audio:audio, type:type
+  };
+}
+function makeSentenceQuestion(){
+  var s=SENTENCE[Math.floor(Math.random()*SENTENCE.length)];
+  var opts=shuffle([s.a].concat(s.distract.slice(0, difficulty+1)));
+  return {
+    choices:opts, correct:s.a,
+    promptHTML:"<span class='big-word'>"+s.q+"</span><div class='q-label'>"+s.zh+"</div>",
+    optText:function(o){ return "<span class='opt-word'>"+o+"</span>"; },
+    word:null, audio:s.q, type:3
+  };
+}
+function nextQuestion(){
+  answered=false;
+  qNo++;
+  if(qNo>TOTAL_Q){ finishGame(); return; }
+  $("q-no").textContent=qNo; $("q-total").textContent=TOTAL_Q;
+  $("score").textContent=score; $("streak").textContent=streak;
+  superMode(streak>=3);
+
+  var Q=(Math.random()<0.35)?makeSentenceQuestion():makeVocabQuestion(difficulty);
+  var typeName = Q.type===3?"句型挑戰":(Q.type===0?"看圖選字":(Q.type===1?"看字選圖":"聽力達人"));
+  $("q-type").textContent=typeName;
+
+  // 題目
+  var prompt=$("q-prompt");
+  prompt.innerHTML=Q.promptHTML+"<br><button class='btn-sound' id='btn-sound'>🔊 再聽一次</button>";
+  $("btn-sound").onclick=function(){ speak(Q.audio); };
+
+  // 字母音素：每個字母一格
+  if(Q.word){
+    var cells=Q.word.en.split("").map(function(ch){
+      return "<div class='phon-cell'><span class='sym'>"+ch+"</span></div>";
+    }).join("");
+    $("q-phon").innerHTML="<div class='phon-row'>"+cells+"</div><p class='note'>每個字母都有對應的聲音，跟著唸唸看！</p>";
+    $("q-phon").style.display="block";
+  } else {
+    $("q-phon").style.display="none";
+  }
+
+  // 選項
+  var opt=$("q-options"); opt.innerHTML="";
+  Q.choices.forEach(function(ch){
+    var b=document.createElement("button");
+    b.className="opt-btn"; b.innerHTML=Q.optText(ch);
+    b._data=ch;
+    b.addEventListener("click",function(){ pick(b,ch,Q); });
+    opt.appendChild(b);
+  });
+
+  // 計時
+  var limit=difficulty===0?20:(difficulty===1?15:10);
+  timeLeft=limit;
+  clearInterval(timerId);
+  timerId=setInterval(function(){
+    timeLeft--;
+    if(timeLeft<=0 && !answered){ pick(null,null,Q); }
+  },1000);
+
+  // 讀題
+  if(Q.type===1||Q.type===0||Q.type===2){ setTimeout(function(){ speak(Q.audio); },350); }
+}
+
+/* ---------- 作答判定 ---------- */
+function pick(btn,ch,Q){
+  if(answered) return;
+  answered=true; clearInterval(timerId);
+  var isGood = (ch === Q.correct);          // 單字題比物件、句型題比字串
+  var p=$("q-prompt");
+  if(isGood){
+    correct++; streak++; if(streak>maxStreak) maxStreak=streak;
+    pos=Math.min(TOTAL_Q,pos+1);
+    var pts=10+(difficulty*5)+(streak>=3?5:0)+(timeLeft>=8?3:0);
+    score+=pts;
+    if(streak>=3 && streak%3===0){ sfx("super"); superMode(true); }
+    else { sfx("good"); }
+    jumpAnim(); coins();
+    p.innerHTML="<div class='flash-msg good'>🎉 答對！+ "+pts+" 💎</div>";
+    if(streak>=3){ p.innerHTML+="<div class='flash-msg good' style='font-size:1rem;'>✨ 連勝 "+streak+"，進入超級星星狀態！</div>"; }
+    difficulty=Math.min(2,difficulty+(streak>=2?1:0));
+  } else {
+    streak=0; superMode(false);
+    sfx("bad");
+    var ansText = Q.word ? Q.optText(Q.correct) : Q.correct;
+    p.innerHTML="<div class='flash-msg bad'>💪 沒關係！答案是 "+ansText+"</div>";
+    difficulty=Math.max(0,difficulty-1);
+  }
+  if(btn){ btn.classList.add(isGood?"correct":"wrong"); }
+  // 標出正確答案
+  var opts=$("q-options").children;
+  for(var i=0;i<opts.length;i++){
+    if(opts[i]._data===Q.correct){ opts[i].classList.add("correct"); }
+    else if(!isGood){ opts[i].classList.add("dim"); }
+  }
+  $("q-phon").style.display="none";
+  $("score").textContent=score; $("streak").textContent=streak;
+  movePlayer();
+  setTimeout(nextQuestion,1800);
+}
+
+/* ---------- 結束 ---------- */
+function finishGame(){
+  clearInterval(timerId);
+  sfx("done");
+  var okr=correct/TOTAL_Q;
+  var mascot = score>=90?"🏆":(score>=60?"🌟":"💪");
+  var title  = score>=90?"太神了！":(score>=60?"你好棒！":"再試一次！");
+  $("res-mascot").textContent=mascot;
+  $("res-title").textContent=title;
+  $("res-score").textContent="💎 "+score;
+  $("res-detail").textContent="答對 "+correct+"/"+TOTAL_Q+" 題 · 最高連勝 "+maxStreak+" 🔥";
+  $("res-name").textContent="班級座號 "+student.num;
+  show("scr-result");
+}
+
+/* ---------- 老師排行榜 ---------- */
+$("btn-lb-add").addEventListener("click",function(){
+  var n=$("lb-num").value.trim(), nm=$("lb-name").value.trim(), s=parseInt($("lb-score").value,10);
+  if(!/^\d{5}$/.test(n) || nm==="" || isNaN(s)){ alert("請填寫：5位數字班級座號、姓名、真實分數"); return; }
+  leader.push({num:n,name:nm,score:s,t:Date.now()});
+  localStorage.setItem("sf3_leader",JSON.stringify(leader));
+  $("lb-num").value=""; $("lb-name").value=""; $("lb-score").value="";
+  renderLeader();
+});
+function renderLeader(){
+  leader.sort(function(a,b){ return b.score-a.score; });
+  var tb=$("lb-table").querySelector("tbody"); tb.innerHTML="";
+  leader.forEach(function(r,i){
+    var tr=document.createElement("tr");
+    if(i===0)tr.className="rank-1"; else if(i===1)tr.className="rank-2"; else if(i===2)tr.className="rank-3";
+    var rank = i===0?"🥇":(i===1?"🥈":(i===2?"🥉":(i+1)));
+    tr.innerHTML="<td>"+rank+"</td><td>"+r.num+"</td><td>"+r.name+"</td><td>"+r.score+"</td>";
+    tb.appendChild(tr);
+  });
+  if(leader.length===0){ tb.innerHTML="<tr><td colspan='4' style='color:#999;'>還沒有成績，先登錄第一筆吧！</td></tr>"; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+.venv/
+wordwall-cli/
+__pycache__/
+*.pyc
+*.exe
+*.lnk
+.DS_Store
+Thumbs.db
