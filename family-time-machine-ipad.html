@@ -114,9 +114,7 @@ footer{color:#6E6C66;font-size:12px;text-align:center;margin:40px 0 0}
 <hr class="line">
 <div class="today"><h3>今天怎麼說</h3><div class="en" id="en"></div><div class="tw" id="tw"></div></div>
 <hr class="line">
-<div><h3>以前長什麼樣</h3><div id="oldroad"></div><div class="oldnote" id="oldnote"></div></div>
-<hr class="line">
-<div><h3>一句記住</h3><div class="hookline" id="hook"></div></div>
+<div><h3>時光小故事</h3><div class="hookline" id="story"></div></div>
 <div class="qa" id="qa"><button class="q" id="showAns"><span class="t">考考你</span><span id="q"></span></button><div class="a" id="ans"></div></div>
 <button class="primary" id="next">下一站 →</button>
 <div class="subrow"><button id="prev">‹ 上一站</button><button id="gotBtn">記住了</button><button id="codeBtn">回報碼</button></div>
@@ -150,21 +148,21 @@ footer{color:#6E6C66;font-size:12px;text-align:center;margin:40px 0 0}
 </div>
 <script>
 var D=[
-{hero:"👨‍👩‍👧‍👦",word:"family",zh:"家庭；家人",en:"This is my family.",tw:"這是我的家人。",old:["familia"],note:"羅馬的大‐家庭，爸媽小孩都在同一家。",hook:"大人小孩都是一家人。FAMILY 口訣只是遊戲，不是誰發明的。",q:"FAMILY 是 Father And Mother, I Love You 發明的嗎？",a:"不是。那只是口訣。真的老家是 familia。"},
-{hero:"👨👩",word:"parent / parents",zh:"家長；父母",en:"My dad is a parent.",tw:"我的爸爸是一位家長。",old:["parens"],note:"拉丁語：爸爸或媽媽。",hook:"一位叫 a parent，很多人叫 parents，不一定是兩個人。",q:"學校來了十位家長，能用 parents 嗎？",a:"可以。parents 就是很多位家長。"},
-{hero:"❤️",word:"mother / mom",zh:"母親／媽媽",en:"Hi, Mom!",tw:"嗨，媽媽！",old:["mōdor"],note:"很久以前寫成 mōdor，後來變成 mother。",hook:"美國說 mom，英國說 mum。mom 是從 momma 變短的。",q:"mom 是把 mother 剪一半嗎？",a:"不是。字典說 mom 是 momma 的縮短形。"},
-{hero:"🧔",word:"father / dad",zh:"父親／爸爸",en:"Hi, Dad!",tw:"嗨，爸爸！",old:["fæder"],note:"很久以前寫成 fæder，後來變成 father。",hook:"dad 是寶寶先叫出來的，不是剪短版。",q:"把 p 改一改就從 pater 變成 father 嗎？",a:"不是。它們是親戚，有共同的祖先。"},
-{hero:"🧒👦",word:"brother",zh:"哥哥；弟弟",en:"This is my brother.",tw:"這是我的哥哥／弟弟。",old:["brōþor"],note:"þ 是以前的字母，念 th。",hook:"哥哥弟弟都叫 brother，加 older / younger 才分大小。",q:"一個哥哥加一個弟弟，能說 two brothers 嗎？",a:"可以。brother 不分哥哥弟弟。"},
-{hero:"👧👩",word:"sister",zh:"姊姊；妹妹",en:"This is my sister.",tw:"這是我的姊姊／妹妹。",old:["sweostor","systir"],note:"兩地的人住在一起，說法混成 sister。",hook:"比一比：systir 最像 sister。",q:"sister 只能叫姊姊嗎？",a:"不對。妹妹也是 sister。"},
-{hero:"☀️👦",word:"son",zh:"兒子",en:"He is my son.",tw:"他是我的兒子。",old:["sunu","sone","son"],note:"樣子慢慢改變：sunu → sone → son。",hook:"son 和太陽 sun 同音，但它們是不同的字。",q:"爸爸四十歲了，還是爺爺的 son 嗎？",a:"是。son 看關係，不看年齡。"},
-{hero:"👧🤫",word:"daughter",zh:"女兒",en:"She is my daughter.",tw:"她是我的女兒。",old:["dohtor","doughter","daughter"],note:"樣子慢慢改變，今天 gh 不發音。",hook:"看到 gh 就不用念。拼法有歷史，不能亂拆故事。",q:"女兒等於擠奶女孩，可以相信嗎？",a:"不可以。那個說法沒有證據。"},
-{hero:"👴",word:"grandfather",zh:"爺爺；外公",en:"This is my grandfather.",tw:"這是我的爺爺／外公。",old:["grand-","father"],note:"grand- 從法文來，加上 father。",hook:"爸爸的爸爸、媽媽的爸爸，都是 grandfather，也叫 grandpa。",q:"媽媽的爸爸能叫 grandfather 嗎？",a:"可以。爺爺外公都叫 grandfather。"},
-{hero:"👵",word:"grandmother",zh:"奶奶；外婆",en:"Hi, Grandma!",tw:"嗨，奶奶／外婆！",old:["grand-","mother"],note:"和爺爺一樣：法文 grand- 加上 mother。",hook:"爸爸的媽媽、媽媽的媽媽，都是 grandmother，也叫 grandma。",q:"奶奶外婆要用不同的英文嗎？",a:"不用。兩位都叫 grandmother。"},
-{hero:"🧓",word:"uncle",zh:"叔叔／舅舅等",en:"This is my uncle.",tw:"這是我的叔叔／舅舅。",old:["avunculus","oncle","uncle"],note:"拉丁語到法文再到英文，意思變廣了。",hook:"老字有小祖父的線索，今天看親戚關係叫 uncle。",q:"uncle 一定是年紀小的爺爺嗎？",a:"不是。叔伯舅姨丈都叫 uncle。"},
-{hero:"👩‍🦰",word:"aunt / auntie",zh:"姑姑／阿姨等",en:"This is my aunt.",tw:"這是我的姑姑／阿姨。",old:["amita","ante","aunt"],note:"拉丁語到法文再到英文。",hook:"兩種念法都對。auntie 是可愛的叫法。",q:"姑姑阿姨都叫 aunt 嗎？",a:"可以。英文不用分爸爸邊媽媽邊。"},
-{hero:"🧑‍🤝‍🧑",word:"cousin",zh:"堂／表兄弟姊妹",en:"This is my cousin, Ben.",tw:"這是我的堂／表親 Ben。",old:["consobrinus","cosin","cousin"],note:"以前指媽媽姊妹的小孩，今天變廣了。",hook:"叔伯姑舅姨的小孩，都是 cousin。",q:"親哥哥也是 cousin 嗎？",a:"不是。哥哥是 brother。"},
-{hero:"👦",word:"nephew",zh:"姪子；外甥",en:"He is my nephew.",tw:"他是我的姪子／外甥。",old:["nepos","neveu","nephew"],note:"以前意思較廣，今天記兄弟姊妹的兒子。",hook:"戴上阿姨牌再指：姊姊的兒子就是 nephew。",q:"我是阿姨，姊姊的兒子是 son 嗎？",a:"是 nephew。對他爸媽來說才是 son。"},
-{hero:"👧",word:"niece",zh:"姪女；外甥女",en:"She is my niece.",tw:"她是我的姪女／外甥女。",old:["neptia","nece","niece"],note:"以前和孫女的意思相連，今天記兄弟姊妹的女兒。",hook:"nephew 和 niece 成對學，長大了還是 niece。",q:"哥哥的女兒是 daughter 嗎？",a:"是 niece，不是 daughter。"}
+{story:"🏛️ 羅馬人說 familia，一大群人住在一起的大家庭。",hero:"👨‍👩‍👧‍👦",word:"family",zh:"家庭；家人",en:"This is my family.",tw:"這是我的家人。",q:"family 是什麼意思？",a:"家庭；家人。This is my family 就是這是我的家人。"},
+{story:"📜 拉丁語 parens，就是爸爸或媽媽。",hero:"👨👩",word:"parent / parents",zh:"家長；父母",en:"My dad is a parent.",tw:"我的爸爸是一位家長。",q:"學校來了十位家長，能用 parents 嗎？",a:"可以。parents 就是很多位家長。"},
+{story:"📜 很久以前寫 mōdor，慢慢變成 mother。",hero:"❤️",word:"mother / mom",zh:"母親／媽媽",en:"Hi, Mom!",tw:"嗨，媽媽！",q:"mom 是把 mother 剪一半嗎？",a:"不是。字典說 mom 是 momma 的縮短形。"},
+{story:"📜 很久以前寫 fæder，慢慢變成 father。",hero:"🧔",word:"father / dad",zh:"父親／爸爸",en:"Hi, Dad!",tw:"嗨，爸爸！",q:"dad 是 father 的縮寫嗎？",a:"不是。dad 是寶寶先叫出來的。"},
+{story:"🚩 以前的字母 þ 像小旗子，brōþor 就是兄弟。",hero:"🧒👦",word:"brother",zh:"哥哥；弟弟",en:"This is my brother.",tw:"這是我的哥哥／弟弟。",q:"一個哥哥加一個弟弟，能說 two brothers 嗎？",a:"可以。brother 不分哥哥弟弟。"},
+{story:"🤝 兩邊的人住在一起，拼法混成 sister。",hero:"👧👩",word:"sister",zh:"姊姊；妹妹",en:"This is my sister.",tw:"這是我的姊姊／妹妹。",q:"sister 只能叫姊姊嗎？",a:"不對。妹妹也是 sister。"},
+{story:"🌱 sunu 長大變 sone，最後變成 son。",hero:"☀️👦",word:"son",zh:"兒子",en:"He is my son.",tw:"他是我的兒子。",q:"爸爸四十歲了，還是爺爺的 son 嗎？",a:"是。son 看關係，不看年齡。"},
+{story:"🤫 以前寫 dohtor，gh 留下來但不用念。",hero:"👧🤫",word:"daughter",zh:"女兒",en:"She is my daughter.",tw:"她是我的女兒。",q:"daughter 裡面的 gh 要念嗎？",a:"不用念。看到 gh 就跳過。"},
+{story:"🧬 法文 grand- 加上 father，混血成一字。",hero:"👴",word:"grandfather",zh:"爺爺；外公",en:"This is my grandfather.",tw:"這是我的爺爺／外公。",q:"媽媽的爸爸能叫 grandfather 嗎？",a:"可以。爺爺外公都叫 grandfather。"},
+{story:"🧬 法文 grand- 加上 mother，混血成一字。",hero:"👵",word:"grandmother",zh:"奶奶；外婆",en:"Hi, Grandma!",tw:"嗨，奶奶／外婆！",q:"奶奶外婆要用不同的英文嗎？",a:"不用。兩位都叫 grandmother。"},
+{story:"🗺️ 拉丁語出發，經過法文 oncle，來到英文。",hero:"🧓",word:"uncle",zh:"叔叔／舅舅等",en:"This is my uncle.",tw:"這是我的叔叔／舅舅。",q:"uncle 一定是年紀小的爺爺嗎？",a:"不是。叔伯舅姨丈都叫 uncle。"},
+{story:"🗺️ 拉丁語 amita 出發，經過法文 ante，來到英文。",hero:"👩‍🦰",word:"aunt / auntie",zh:"姑姑／阿姨等",en:"This is my aunt.",tw:"這是我的姑姑／阿姨。",q:"姑姑阿姨都叫 aunt 嗎？",a:"可以。英文不用分爸爸邊媽媽邊。"},
+{story:"🗺️ 拉丁語出發，經過法文 cosin，來到英文。",hero:"🧑‍🤝‍🧑",word:"cousin",zh:"堂／表兄弟姊妹",en:"This is my cousin, Ben.",tw:"這是我的堂／表親 Ben。",q:"親哥哥也是 cousin 嗎？",a:"不是。哥哥是 brother。"},
+{story:"🗺️ 拉丁語 nepos 出發，經過法文 neveu，來到英文。",hero:"👦",word:"nephew",zh:"姪子；外甥",en:"He is my nephew.",tw:"他是我的姪子／外甥。",q:"我是阿姨，姊姊的兒子是 son 嗎？",a:"是 nephew。對他爸媽來說才是 son。"},
+{story:"🗺️ 拉丁語 neptia 出發，經過法文 nece，來到英文。",hero:"👧",word:"niece",zh:"姪女；外甥女",en:"She is my niece.",tw:"她是我的姪女／外甥女。",q:"哥哥的女兒是 daughter 嗎？",a:"是 niece，不是 daughter。"}
 ];
 var G={family:"羅馬組",parent:"羅馬組",mother:"古英文組",father:"古英文組",brother:"古英文組",sister:"古英文組",son:"古英文組",daughter:"古英文組",grandfather:"混血組",grandmother:"混血組",uncle:"羅馬組",aunt:"羅馬組",cousin:"羅馬組",nephew:"羅馬組",niece:"羅馬組"};
 var i=0,got={};
@@ -190,10 +188,7 @@ document.getElementById("word").textContent=d.word;
 document.getElementById("zh").textContent=d.zh;
 document.getElementById("en").textContent=d.en;
 document.getElementById("tw").textContent=d.tw;
-var h="";for(var j=0;j<d.old.length;j++){h+="<span class='chip'>"+d.old[j]+"</span>";if(j<d.old.length-1)h+="<span class='arr'>→</span>"}h+="<span class='arr'>→</span><span class='chip new'>"+shortWord(d.word)+"</span>";
-document.getElementById("oldroad").innerHTML=h;
-document.getElementById("oldnote").textContent=d.note;
-document.getElementById("hook").textContent=d.hook;
+document.getElementById("story").textContent=d.story;
 document.getElementById("q").textContent=d.q;
 var qa=document.getElementById("qa");qa.classList.remove("open");document.getElementById("ans").textContent=d.a;
 document.getElementById("next").textContent=i===14?"完成 ✓":"下一站 →";
