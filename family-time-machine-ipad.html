@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>家人單字時光機・旗艦遊戲版・iPad專用</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;background:#FFF7E8;color:#333;line-height:1.55;touch-action:pan-y}
+header{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#FF8A3D,#FF5E62);color:#fff;padding:14px 16px 12px}
+header h1{margin:0;font-size:22px}
+header p{margin:4px 0 0;font-size:14px;opacity:.96}
+#starsTop{float:right;background:rgba(255,255,255,.25);border-radius:999px;padding:4px 14px;font-size:16px;font-weight:800}
+/* tabs */
+#tabs{display:flex;gap:8px;padding:10px 12px;background:#fff;border-bottom:2px solid #FFE0B8;position:sticky;top:0;z-index:19}
+#tabs button{flex:1;border:3px solid #eee;background:#FFF7E8;border-radius:16px;min-height:58px;font-size:18px;font-weight:900}
+#tabs button.on{background:#FF8A3D;color:#fff;border-color:#FF8A3D}
+.rule{display:flex;gap:8px;padding:10px 12px;font-size:13px;background:#fff;border-bottom:2px solid #FFE0B8}
+.rule div{flex:1;background:#F7F7F7;border-radius:12px;padding:8px;text-align:center}
+.bar{height:8px;background:#FFE0B8}
+.bar i{display:block;height:100%;background:#2EBD6B;transform-origin:left center;transform:scaleX(0)}
+#wrap{max-width:740px;margin:0 auto;padding:12px 12px 160px}
+#captain{display:flex;gap:10px;align-items:center;background:#fff;border-radius:18px;padding:10px 12px;box-shadow:0 2px 8px rgba(0,0,0,.07);border:2px solid #FFD9AE}
+#captain .face{font-size:48px;animation:wave 2.4s infinite}
+@keyframes wave{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}}
+#say{font-size:16px;font-weight:700}
+#map{margin-top:10px;background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+#map h2{margin:0 0 8px;font-size:16px}
+#grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+#grid button{border-radius:14px;border:3px solid #eee;background:#FFF7E8;min-height:66px;font-size:13px;font-weight:700;padding:6px 2px}
+#grid button .e{font-size:25px;display:block}
+#grid button.on{border-color:#FF8A3D;transform:scale(1.06)}
+#grid button.got{border-color:#2EBD6B;background:#EAFBEF}
+#tunnel{text-align:center;margin:12px 0 0;font-size:15px;color:#B26A00;font-weight:800}
+#train{font-size:34px;will-change:transform;transform:translateX(-12%);white-space:nowrap}
+#train.go{animation:drive .8s ease-out}
+@keyframes drive{0%{transform:translateX(-15%)}100%{transform:translateX(108%)}}
+#card{margin-top:6px;background:#fff;border-radius:24px;padding:20px 16px;box-shadow:0 3px 14px rgba(0,0,0,.1);border-top:10px solid #4D96FF;will-change:transform,opacity}
+#card.swap{animation:pop .32s ease-out}
+@keyframes pop{0%{transform:translateX(60px);opacity:0}100%{transform:translateX(0);opacity:1}}
+#badge{display:inline-block;color:#fff;border-radius:999px;padding:4px 14px;font-size:14px;font-weight:800}
+#st{font-size:14px;color:#999;font-weight:700;margin-top:6px}
+#hero{font-size:88px;line-height:1.1;text-align:center;margin:4px 0;animation:bounce 2s infinite;cursor:pointer}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+#word{text-align:center;font-size:37px;font-weight:900;margin:0}
+#zh{text-align:center;font-size:19px;margin:2px 0 8px;color:#555}
+.box{border-radius:16px;padding:14px;margin:10px 0;font-size:17px}
+.today{background:#EAF7FF;border:2px solid #BDE3FF}
+.old{background:#EAFBEF;border:2px solid #B9EAC6}
+.hook{background:#FFF3D6;border:2px dashed #E8B400}
+.quiz{background:#F1ECFF;border:2px solid #CFC2FF}
+.pill{display:inline-block;background:#333;color:#fff;border-radius:999px;padding:6px 14px;font-size:16px;margin:3px;font-weight:700}
+.pill.new{background:#2EBD6B;animation:glow 1.2s infinite}
+@keyframes glow{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}
+.arrow{font-size:22px}
+.en{font-size:21px;font-weight:800;margin:6px 0 2px}
+.bigbtn{border:0;border-radius:999px;padding:12px 20px;font-size:18px;font-weight:800;min-height:56px}
+#speak{background:#2EBD6B;color:#fff}
+#tapWord{background:#4D96FF;color:#fff;margin-left:8px}
+#showAns{background:#6C5CE7;color:#fff}
+#gotBtn{background:#FFB800;color:#fff;width:100%;margin-top:6px}
+#gotBtn.done{background:#2EBD6B}
+.ans{display:none;margin-top:10px;background:#fff;border-radius:12px;padding:10px;font-size:17px}
+.ans.show{display:block;animation:pop .3s ease-out}
+#win{display:none;background:linear-gradient(135deg,#FFE29F,#FFA99F);border-radius:18px;padding:16px;text-align:center;font-size:18px;font-weight:800;margin-top:10px}
+#win.show{display:block;animation:pop .4s ease-out}
+/* quiz + match */
+.panel{background:#fff;border-radius:20px;padding:18px 14px;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-top:10px}
+.panel h2{margin:0 0 6px;font-size:20px}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;font-size:19px;font-weight:800;border:3px solid #eee;background:#FFF7E8;border-radius:16px;padding:14px;min-height:62px}
+.opt.ok{background:#D8F5E0;border-color:#2EBD6B}
+.opt.no{background:#FFD9D9;border-color:#FF5E62}
+#mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.mcard{border:0;border-radius:16px;min-height:96px;font-size:17px;font-weight:800;background:#4D96FF;color:#fff;padding:8px;will-change:transform}
+.mcard.open{background:#fff;color:#333;border:3px solid #4D96FF;transform:scale(1.03)}
+.mcard.done{background:#D8F5E0;color:#333;border:3px solid #2EBD6B;opacity:.9}
+#burst{position:fixed;left:0;right:0;top:32%;text-align:center;font-size:80px;pointer-events:none;opacity:0;z-index:60}
+#burst.show{animation:burst 1.1s ease-out}
+@keyframes burst{0%{opacity:0;transform:scale(.3)}30%{opacity:1;transform:scale(1.25)}100%{opacity:0;transform:scale(1)}}
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.98);border-top:2px solid #FFE0B8;padding:10px calc(10px + env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) calc(10px + env(safe-area-inset-left));display:flex;gap:10px;align-items:center;z-index:30}
+nav button{flex:1;font-size:22px;font-weight:900;border:0;border-radius:18px;min-height:66px;background:#FF8A3D;color:#fff}
+nav button:disabled{opacity:.3}
+#count{flex:.5;text-align:center;font-size:18px;font-weight:900}
+.tip{font-size:13px;color:#888;text-align:center;margin-top:10px}
+footer{font-size:12px;color:#999;margin-top:12px;text-align:center}
+#intro{position:fixed;inset:0;z-index:100;background:linear-gradient(160deg,#FFB75D,#FF5E62);color:#fff;display:flex;align-items:center;justify-content:center;padding:24px}
+#intro.hide{display:none}
+#introCard{background:rgba(255,255,255,.15);border:3px solid rgba(255,255,255,.6);border-radius:24px;padding:26px 20px;max-width:520px;text-align:center}
+#introCard .big{font-size:76px}
+#introCard h2{margin:8px 0;font-size:28px}
+#introCard p{font-size:17px}
+#startBtn{font-size:24px;font-weight:900;border:0;border-radius:999px;padding:16px 40px;min-height:68px;background:#fff;color:#FF5E62;margin-top:10px}
+/* 老師後台 */
+.trow{background:#F7F7F7;border-radius:14px;padding:10px;margin:8px 0}
+.trow .tname{font-size:18px;font-weight:900}
+.tbar{height:10px;background:#E5E5E5;border-radius:999px;margin:6px 0;overflow:hidden}
+.tbar i{display:block;height:100%;background:#2EBD6B;transform-origin:left center}
+.tstars{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px}
+.tstars button{border-radius:10px;border:2px solid #ddd;background:#fff;min-height:44px;font-size:13px;font-weight:800}
+.tstars button.on{background:#2EBD6B;color:#fff;border-color:#2EBD6B}
+.tdel{border:0;background:none;font-size:18px;min-height:44px;min-width:44px}
+@media print{header,#tabs,.rule,.bar,nav,#intro,#burst,.tip,footer,#secLearn,#secQuiz,#secMatch{display:none!important}body{background:#fff}#wrap{padding:0;max-width:none}#secTeach{display:block!important}.tstars button{min-height:28px}}
+@media (prefers-reduced-motion:reduce){#hero,#train.go,#card.swap,.pill.new,#captain .face{animation:none}}
+</style>
+</head>
+<body>
+<div id="intro"><div id="introCard">
+<div class="big">🕰️🚂🌟</div>
+<h2>家人單字時光機</h2>
+<p>旗艦遊戲版：📖學習 → 🎯挑戰 → 🃏配對，外加 📊老師後台<br>集滿 <b>15 顆星星</b> 成為時光小博士！<br><br>👆 點大圖會動・點🔊會念英文</p>
+<button id="startBtn">🚀 出發！</button>
+</div></div>
+<header>
+<div id="starsTop">⭐ <span id="starCount">0</span>/15</div>
+<h1>🕰️ 家人單字時光機・旗艦版</h1>
+<p>一次一站・字少圖多・學習＋遊戲＋老師後台</p>
+</header>
+<div id="tabs"><button id="tabLearn" class="on">📖 學習</button><button id="tabQuiz">🎯 挑戰</button><button id="tabMatch">🃏 配對</button><button id="tabTeach">📊 老師</button></div>
+<div class="rule">
+<div>✅ 綠色＝真的老家<br>字典有寫</div>
+<div>💡 黃色＝記憶遊戲<br>好記，不是字源</div>
+<div>🔊 點我會念<br>👈👉 滑動換站</div>
+</div>
+<div class="bar"><i id="progress"></i></div>
+<div id="wrap">
+<!-- 學習 -->
+<div id="secLearn">
+<div id="captain"><div class="face">🧑‍✈️</div><div id="say">船長說：上車！我們去羅馬大房子！</div></div>
+<div id="map"><h2>🗺️ 時光地圖：點一下就跳站（變綠＝已記住）</h2><div id="grid"></div></div>
+<div id="tunnel">── 🕰️ 時光隧道 ──</div>
+<div id="train">🚂💨 ─── ▶ ▶ ▶</div>
+<div id="card">
+<div><span id="badge">古英文組</span></div>
+<div id="st">第 1 站 / 15</div>
+<div id="hero">👨‍👩‍👧‍👦</div>
+<p id="word">family</p>
+<p id="zh">家庭；家人</p>
+<div class="box today">📣 <b>今天怎麼說</b><div class="en" id="en"></div><div id="tw"></div><div style="margin-top:8px"><button class="bigbtn" id="speak">🔊 聽英文</button><button class="bigbtn" id="tapWord">🗣️ 念單字</button></div></div>
+<div class="box old">✅ <b>回到以前：老字長這樣</b><div id="oldroad" style="margin-top:8px"></div><div id="oldnote" style="margin-top:8px"></div></div>
+<div class="box hook">💡 <b>秒懂小鉤（一句就記住）</b><div id="hook" style="margin-top:4px"></div></div>
+<div class="box quiz">🎯 <b>小挑戰（先猜再看答案）</b><div id="q" style="margin:6px 0"></div><button class="bigbtn" id="showAns">點我看答案</button><div class="ans" id="ans"></div></div>
+<button class="bigbtn" id="gotBtn">⭐ 我記住了！點我收集星星</button>
+<div style="margin-top:8px;background:#F7F7F7;border-radius:12px;padding:10px">
+<div style="font-weight:800">📋 給老師看的回報碼</div>
+<div style="display:flex;gap:8px;margin-top:6px">
+<input id="myName" placeholder="輸入名字，如王小明" style="flex:1;font-size:17px;border-radius:12px;border:2px solid #ddd;padding:10px;min-height:52px">
+<button class="bigbtn" id="myCodeBtn" style="background:#00B894;color:#fff">產生</button>
+</div>
+<div id="codeBox" style="display:none;margin-top:8px;font-size:18px;font-weight:800;background:#fff;border-radius:10px;padding:10px;word-break:break-all"></div>
+</div>
+<div id="win">🎉 太厲害了！15 顆星星集滿了！你是真正的 ⭐ 時光小博士 ⭐</div>
+</div>
+</div>
+<!-- 挑戰 -->
+<div id="secQuiz" style="display:none">
+<div class="panel"><h2>🎯 時光大挑戰（10題）</h2><div id="qbest" style="color:#888">還沒挑戰過，快來拿第一分！</div>
+<div id="qbody"><p>看圖選英文，答對有音效＋星星雨。三年級一定會！</p><button class="bigbtn" id="qstart" style="background:#6C5CE7;color:#fff;width:100%">🚀 開始挑戰</button></div>
+</div>
+</div>
+<!-- 配對 -->
+<div id="secMatch" style="display:none">
+<div class="panel"><h2>🃏 翻牌配對（6組）</h2><div id="mstat" style="color:#888">英文配中文，考考你的記憶力！</div>
+<button class="bigbtn" id="mstart" style="background:#4D96FF;color:#fff;width:100%">🃏 開始配對</button>
+<div id="mgrid"></div>
+</div>
+</div>
+<!-- 老師後台 -->
+<div id="secTeach" style="display:none">
+<div class="panel"><h2>📊 老師後台・全班星星一覽</h2>
+<div style="font-size:14px;color:#888">名單存在這台 iPad 裡，沒網路也能用。學生在📖學習頁按「產生回報碼」，老師在這裡匯入即可。</div>
+<div id="tsum" style="font-weight:800;margin:8px 0"></div>
+<div style="display:flex;gap:8px;margin:8px 0">
+<input id="newName" placeholder="新增學生名字" style="flex:1;font-size:17px;border-radius:12px;border:2px solid #ddd;padding:10px;min-height:52px">
+<button class="bigbtn" id="addBtn" style="background:#2EBD6B;color:#fff">＋加入</button>
+</div>
+<div style="display:flex;gap:8px;margin:8px 0">
+<input id="impCode" placeholder="貼上回報碼，如：王小明|11100…" style="flex:1;font-size:15px;border-radius:12px;border:2px solid #ddd;padding:10px;min-height:52px">
+<button class="bigbtn" id="impBtn" style="background:#6C5CE7;color:#fff">匯入</button>
+</div>
+<div id="tmsg" style="font-weight:700;color:#B26A00"></div>
+<div id="tlist"></div>
+<div style="display:flex;gap:8px;margin-top:10px">
+<button class="bigbtn" id="csvBtn" style="background:#4D96FF;color:#fff;flex:1">📥 匯出CSV</button>
+<button class="bigbtn" id="printBtn" style="background:#888;color:#fff;flex:1">🖨️ 列印</button>
+</div>
+</div>
+</div>
+<p class="tip">👈 👉 學習模式可左右滑換站・沒網路也能用・可加到 iPad 主畫面</p>
+<footer>只寫 Merriam-Webster / Oxford 字典確定的大站。船長的話和遊戲是幫助記憶，不是字源。</footer>
+</div>
+<div id="burst">🌟🌟🌟</div>
+<nav><button id="prev">◀ 上一站</button><div id="count">1 / 15</div><button id="next">下一站 ▶</button></nav>
+<script>
+var D=[
+{say:"船長說：上車！我們去羅馬大房子！",g:"羅馬組",c:"#FF6B6B",hero:"👨‍👩‍👧‍👦",word:"family",zh:"家庭；家人",en:"This is my family.",tw:"這是我的家人。",old:["familia"],note:"羅馬的大‐家庭：爸媽小孩都在同一家。",hook:"🏠 大人小孩都是一家人！FAMILY口訣只是遊戲，不是誰發明的。",q:"FAMILY是 Father And Mother, I Love You 發明的嗎？",a:"不是！那只是口訣。真的老家是 familia。"},
+{say:"有1位家長，還是10位家長？數數看！",g:"羅馬組",c:"#FF6B6B",hero:"👨👩",word:"parent / parents",zh:"家長；父母",en:"My dad is a parent.",tw:"我的爸爸是一位家長。",old:["parens"],note:"拉丁語：爸爸或媽媽。",hook:"1位叫a parent，很多人叫parents。不一定是2個人。",q:"學校來了10位家長，能用 parents 嗎？",a:"可以！parents就是很多位家長。"},
+{say:"媽媽抱抱！跟我大聲念 Mom！",g:"古英文組",c:"#4D96FF",hero:"❤️",word:"mother / mom",zh:"母親／媽媽",en:"Hi, Mom!",tw:"嗨，媽媽！",old:["mōdor"],note:"很久以前寫成 mōdor，後來變成 mother。",hook:"美國說 mom，英國說 mum。mom是從 momma 變短的。",q:"mom是把 mother 剪一半嗎？",a:"不是喔。字典說 mom 是 momma 的縮短形。"},
+{say:"爸爸舉高高！跟我大聲念 Dad！",g:"古英文組",c:"#4D96FF",hero:"🧔",word:"father / dad",zh:"父親／爸爸",en:"Hi, Dad!",tw:"嗨，爸爸！",old:["fæder"],note:"很久以前寫成 fæder，後來變成 father。",hook:"dad是寶寶先叫出來的，不是剪短版。",q:"把 p 改一改就變 father 嗎？",a:"不是！它們是親戚，有共同的祖先。"},
+{say:"哥哥弟弟都是好兄弟，擊掌！",g:"古英文組",c:"#4D96FF",hero:"🧒👦",word:"brother",zh:"哥哥；弟弟",en:"This is my brother.",tw:"這是我的哥哥／弟弟。",old:["brōþor"],note:"þ是以前的字母，念 th。樣子變，意思沒變。",hook:"哥哥弟弟都叫brother，加 older / younger 才分大小。",q:"一個哥哥＋一個弟弟，能說 two brothers 嗎？",a:"可以！brother不分哥哥弟弟。"},
+{say:"姊姊妹妹手牽手，一起念！",g:"古英文組",c:"#4D96FF",hero:"👧👩",word:"sister",zh:"姊姊；妹妹",en:"This is my sister.",tw:"這是我的姊姊／妹妹。",old:["sweostor","systir"],note:"兩地的人住在一起，說法混成 sister。",hook:"比一比：systir 最像 sister！你找到了嗎？",q:"sister只能叫姊姊嗎？",a:"不對！妹妹也是sister。"},
+{say:"太陽下踢球的兒子跑過來了！",g:"古英文組",c:"#4D96FF",hero:"☀️👦",word:"son",zh:"兒子",en:"He is my son.",tw:"他是我的兒子。",old:["sunu","sone","son"],note:"樣子慢慢變：sunu → sone → son。",hook:"son和太陽sun同音！用太陽記聲音，但它們是不同字。",q:"爸爸40歲了，還是爺爺的 son 嗎？",a:"是！son看關係，不看年齡。"},
+{say:"噓——gh 不用念喔！跟我比🤫",g:"古英文組",c:"#4D96FF",hero:"👧🤫",word:"daughter",zh:"女兒",en:"She is my daughter.",tw:"她是我的女兒。",old:["dohtor","doughter","daughter"],note:"樣子慢慢變，今天 gh 不發音。",hook:"看到 gh 就比🤫！拼法有歷史，不能亂拆故事。",q:"女兒＝擠奶女孩，可以相信嗎？",a:"不可以！那說法沒證據，不能當真的。"},
+{say:"爺爺說故事時間！大家坐好！",g:"混血組",c:"#22A06B",hero:"👴",word:"grandfather",zh:"爺爺；外公",en:"This is my grandfather.",tw:"這是我的爺爺／外公。",old:["grand-","father"],note:"grand-從法文來＋father，混血一字！",hook:"爸爸的爸爸、媽媽的爸爸，都是grandfather。也叫grandpa。",q:"媽媽的爸爸能叫 grandfather 嗎？",a:"可以！爺爺外公都叫grandfather。"},
+{say:"奶奶的愛心餅乾出爐了！",g:"混血組",c:"#22A06B",hero:"👵",word:"grandmother",zh:"奶奶；外婆",en:"Hi, Grandma!",tw:"嗨，奶奶／外婆！",old:["grand-","mother"],note:"和爺爺一樣：法文 grand- ＋ mother。",hook:"爸爸的媽媽、媽媽的媽媽，都是grandmother。也叫grandma。",q:"奶奶外婆要分兩個字嗎？",a:"不用！都叫grandmother。"},
+{say:"猜猜我是哪一邊的叔叔？",g:"羅馬組",c:"#FF6B6B",hero:"🧓",word:"uncle",zh:"叔叔／舅舅等",en:"This is my uncle.",tw:"這是我的叔叔／舅舅。",old:["avunculus","oncle","uncle"],note:"拉丁語 → 法文 → 英文，意思變廣了。",hook:"老字有小祖父的線索，今天就是看親戚叫uncle。",q:"uncle一定是小爺爺嗎？",a:"不是！叔伯舅姨丈都叫uncle。"},
+{say:"漂亮阿姨抱一個！",g:"羅馬組",c:"#FF6B6B",hero:"👩‍🦰",word:"aunt / auntie",zh:"姑姑／阿姨等",en:"This is my aunt.",tw:"這是我的姑姑／阿姨。",old:["amita","ante","aunt"],note:"拉丁語 → 法文 → 英文，旅行到各國。",hook:"兩種念法都對！auntie是可愛叫法。",q:"姑姑阿姨都叫 aunt 嗎？",a:"可以！英文不用分爸爸邊媽媽邊。"},
+{say:"表哥表弟一起玩，誰是cousin？",g:"羅馬組",c:"#FF6B6B",hero:"🧑‍🤝‍🧑",word:"cousin",zh:"堂／表兄弟姊妹",en:"This is my cousin, Ben.",tw:"這是我的堂／表親 Ben。",old:["consobrinus","cosin","cousin"],note:"以前指媽媽姊妹的小孩，今天變廣了。",hook:"叔伯姑舅姨的小孩都是cousin！",q:"親哥哥也是 cousin 嗎？",a:"不是！哥哥是brother。"},
+{say:"小姪子跑過來了！快接住！",g:"羅馬組",c:"#FF6B6B",hero:"👦💙",word:"nephew",zh:"姪子；外甥",en:"He is my nephew.",tw:"他是我的姪子／外甥。",old:["nepos","neveu","nephew"],note:"以前意思較廣，今天記兄弟姊妹的兒子。",hook:"戴上阿姨牌再指：姊姊的兒子就是nephew！",q:"我是阿姨，姊姊的兒子是 son 嗎？",a:"是 nephew（外甥）。對他爸媽才是son。"},
+{say:"小姪女轉圈圈，裙子飛起來了！",g:"羅馬組",c:"#FF6B6B",hero:"👧💜",word:"niece",zh:"姪女；外甥女",en:"She is my niece.",tw:"她是我的姪女／外甥女。",old:["neptia","nece","niece"],note:"以前和孫女意思相連，今天記兄弟姊妹的女兒。",hook:"nephew和niece成對學！長大還是niece。",q:"哥哥的女兒是 daughter 嗎？",a:"是 niece（姪女），不是daughter。"}
+];
+var i=0,got={},mode="learn";
+try{got=JSON.parse(localStorage.getItem("familyStarsV2")||"{}")}catch(e){got={}}
+var card=document.getElementById("card"),train=document.getElementById("train"),burst=document.getElementById("burst"),grid=document.getElementById("grid");
+var AC=null;
+function ac(){try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();return AC}catch(e){return null}}
+function tone(f,d,when){try{var c=ac();if(!c)return;var o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=f;var t=c.currentTime+(when||0);g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(.25,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.05)}catch(e){}}
+function sOK(){tone(660,.12,0);tone(880,.18,.1)}
+function sNO(){tone(180,.25,0)}
+function sStar(){tone(900,.1,0);tone(1200,.16,.09)}
+function speak(t,r){try{var u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=r||.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+function save(){try{localStorage.setItem("familyStarsV2",JSON.stringify(got))}catch(e){}}
+function countStars(){var n=0;for(var k in got)if(got[k])n++;return n}
+function celebrate(e){burst.textContent=e||"🌟🌟🌟";burst.classList.remove("show");void burst.offsetWidth;burst.classList.add("show");try{if(navigator.vibrate)navigator.vibrate(15)}catch(err){}}
+function shuffle(a){for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var t=a[k];a[k]=a[j];a[j]=t}return a}
+function shortWord(w){return w.split(" ")[0]}
+/* tabs */
+function setMode(m){mode=m;["Learn","Quiz","Match","Teach"].forEach(function(x){document.getElementById("tab"+x).classList.toggle("on",x.toLowerCase()===m)});document.getElementById("secLearn").style.display=(m==="learn"?"block":"none");document.getElementById("secQuiz").style.display=(m==="quiz"?"block":"none");document.getElementById("secMatch").style.display=(m==="match"?"block":"none");document.getElementById("secTeach").style.display=(m==="teach"?"block":"none");document.querySelector("nav").style.display=(m==="learn"?"flex":"none");if(m==="teach")renderRoster()}
+document.getElementById("tabLearn").addEventListener("click",function(){ac();setMode("learn")});
+document.getElementById("tabQuiz").addEventListener("click",function(){ac();setMode("quiz")});
+document.getElementById("tabMatch").addEventListener("click",function(){ac();setMode("match")});
+document.getElementById("tabTeach").addEventListener("click",function(){ac();setMode("teach")});
+/* learn */
+function buildGrid(){grid.innerHTML="";for(var k=0;k<D.length;k++)(function(k){var b=document.createElement("button");b.id="g"+k;b.innerHTML="<span class='e'>"+D[k].hero+"</span>"+(k+1)+"."+shortWord(D[k].word);b.addEventListener("click",function(){go(k)});grid.appendChild(b)})(k)}
+function go(n){i=Math.max(0,Math.min(D.length-1,n));var d=D[i];
+var badge=document.getElementById("badge");badge.textContent=(d.g==="羅馬組"?"🏛️ ":d.g==="古英文組"?"🏰 ":"🧬 ")+d.g;badge.style.background=d.c;card.style.borderTopColor=d.c;
+document.getElementById("say").textContent=d.say;
+document.getElementById("st").textContent="第 "+(i+1)+" 站 / 15";
+document.getElementById("hero").textContent=d.hero;
+document.getElementById("word").textContent=d.word;
+document.getElementById("zh").textContent=d.zh;
+document.getElementById("en").textContent=d.en;
+document.getElementById("tw").textContent=d.tw;
+var h="";for(var j=0;j<d.old.length;j++){h+="<span class='pill'>"+d.old[j]+"</span>";if(j<d.old.length-1)h+="<span class='arrow'>➡️</span>"}h+="<span class='arrow'>➡️</span><span class='pill new'>"+shortWord(d.word)+"</span>";
+document.getElementById("oldroad").innerHTML=h;
+document.getElementById("oldnote").textContent=d.note;
+document.getElementById("hook").textContent=d.hook;
+document.getElementById("q").textContent="❓ "+d.q;
+var ans=document.getElementById("ans");ans.classList.remove("show");ans.textContent="💚 "+d.a;
+document.getElementById("count").textContent=(i+1)+" / 15";
+document.getElementById("progress").style.transform="scaleX("+((i+1)/15)+")";
+document.getElementById("prev").disabled=(i===0);document.getElementById("next").disabled=(i===D.length-1);
+var gb=document.getElementById("gotBtn");
+if(got[i]){gb.textContent="🌟 已記住！再點一下取消";gb.classList.add("done")}else{gb.textContent="⭐ 我記住了！點我收集星星";gb.classList.remove("done")}
+for(var k=0;k<D.length;k++){var g=document.getElementById("g"+k);if(g)g.className=(k===i?"on ":"")+(got[k]?"got":"")}
+var n2=countStars();document.getElementById("starCount").textContent=n2;
+document.getElementById("win").classList.toggle("show",n2>=15);
+card.classList.remove("swap");train.classList.remove("go");void card.offsetWidth;void train.offsetWidth;card.classList.add("swap");train.classList.add("go");
+}
+document.getElementById("startBtn").addEventListener("click",function(){ac();document.getElementById("intro").classList.add("hide");speak("Let's go!",1);celebrate("🚂🌟")});
+document.getElementById("prev").addEventListener("click",function(){go(i-1)});
+document.getElementById("next").addEventListener("click",function(){go(i+1)});
+document.getElementById("showAns").addEventListener("click",function(){document.getElementById("ans").classList.toggle("show")});
+document.getElementById("speak").addEventListener("click",function(){speak(D[i].en,.85)});
+document.getElementById("tapWord").addEventListener("click",function(){speak(D[i].word,.75)});
+document.getElementById("hero").addEventListener("click",function(){speak(D[i].word,.75);celebrate("✨")});
+document.getElementById("gotBtn").addEventListener("click",function(){if(got[i]){delete got[i]}else{got[i]=1;sStar();celebrate()}save();go(i)});
+/* quiz */
+var QQ=[],qi=0,qscore=0;
+function best(){try{return parseInt(localStorage.getItem("familyBest")||"0")}catch(e){return 0}}
+function setBest(v){try{localStorage.setItem("familyBest",String(v))}catch(e){}}
+function refreshBest(){var b=best();document.getElementById("qbest").textContent=b>0?("🏅 最厲害紀錄："+b+" / 10"):"還沒挑戰過，快來拿第一分！"}
+function startQuiz(){var idx=shuffle(D.map(function(_,k){return k})).slice(0,10);QQ=idx.map(function(k){var others=shuffle(D.map(function(_,j){return j}).filter(function(j){return j!==k})).slice(0,2);var opts=shuffle([k].concat(others));var type=Math.random()<.5?"ez":"ze";return {k:k,opts:opts,type:type}});qi=0;qscore=0;showQ()}
+function showQ(){var qb=document.getElementById("qbody");if(qi>=QQ.length){var b=best();if(qscore>b)setBest(qscore);refreshBest();var msg=qscore===10?"🎉 滿分！時光小博士就是你！":qscore>=7?"🌟 好厲害！再一次就滿分了！":"💪 很棒！回學習區再看一次會更強！";qb.innerHTML="<p style='font-size:22px;font-weight:900'>成績："+qscore+" / 10</p><p>"+msg+"</p><button class='bigbtn' id='qagain' style='background:#6C5CE7;color:#fff;width:100%'>🔁 再玩一次</button><button class='bigbtn' id='qback' style='background:#eee;width:100%;margin-top:8px'>📖 回學習區複習</button>";document.getElementById("qagain").addEventListener("click",startQuiz);document.getElementById("qback").addEventListener("click",function(){setMode("learn")});if(qscore>=7){celebrate("🎉");sStar()}return}
+var cur=QQ[qi],d=D[cur.k];var title=cur.type==="ez"?("第 "+(qi+1)+" / 10："+d.hero+" 中文是「"+d.zh+"」，英文是哪一個？"):("第 "+(qi+1)+" / 10：英文「"+shortWord(d.word)+"」"+d.hero+"，中文是什麼意思？");
+var h="<p style='font-weight:800'>"+title+"</p>";if(cur.type==="ez"){speak(shortWord(d.word),.8)}
+cur.opts.forEach(function(oi){var label=cur.type==="ez"?shortWord(D[oi].word):D[oi].hero+" "+D[oi].zh;h+="<button class='opt' data-j='"+oi+"'>"+label+"</button>"});
+h+="<div id='qfb' style='font-weight:800;margin-top:6px'></div><button class='bigbtn' id='qnext' style='display:none;background:#FF8A3D;color:#fff;width:100%;margin-top:8px'>下一題 ▶</button>";
+qb.innerHTML=h;
+var btns=qb.querySelectorAll(".opt");
+btns.forEach(function(btn){btn.addEventListener("click",function(){var pick=parseInt(btn.getAttribute("data-j"));var good=pick===cur.k;btns.forEach(function(b2){var jj=parseInt(b2.getAttribute("data-j"));if(jj===cur.k)b2.classList.add("ok");});if(good){qscore++;sOK();celebrate("⭐");document.getElementById("qfb").textContent="✅ 答對了！好厲害！"}else{btn.classList.add("no");sNO();document.getElementById("qfb").textContent="❌ 答案是「"+(cur.type==="ez"?shortWord(d.word):d.zh)+"」，沒關係，再接再厲！"}btns.forEach(function(b2){b2.disabled=true});document.getElementById("qnext").style.display="block"})});
+document.getElementById("qnext").addEventListener("click",function(){qi++;showQ()})}
+document.getElementById("qstart").addEventListener("click",function(){ac();startQuiz()});
+/* match */
+var MC=[],mFirst=-1,mLock=false,mMoves=0,mFound=0;
+function startMatch(){var picks=shuffle(D.map(function(_,k){return k})).slice(0,6);MC=[];picks.forEach(function(k){MC.push({k:k,t:"e"});MC.push({k:k,t:"c"})});MC=shuffle(MC);mFirst=-1;mLock=false;mMoves=0;mFound=0;renderMatch("找找看：點兩張配成一對！")}
+function renderMatch(msg){var g=document.getElementById("mgrid");g.innerHTML="";MC.forEach(function(c,idx){var b=document.createElement("button");b.className="mcard"+(c.open?" open":"")+(c.done?" done":"");b.id="m"+idx;if(c.done){b.textContent=c.t==="e"?shortWord(D[c.k].word):D[c.k].hero+" "+D[c.k].zh}else if(c.open){b.textContent=c.t==="e"?shortWord(D[c.k].word):D[c.k].hero+" "+D[c.k].zh}else{b.textContent="❓"}b.addEventListener("click",function(){flip(idx)});g.appendChild(b)});document.getElementById("mstat").textContent=msg+"（已找到 "+mFound+" / 6，走 "+mMoves+" 步）"}
+function flip(idx){if(mLock||MC[idx].open||MC[idx].done)return;ac();MC[idx].open=true;if(mFirst<0){mFirst=idx;renderMatch("再點一張配配看！");return}
+mMoves++;var a=MC[mFirst],b=MC[idx];if(a.k===b.k){a.done=true;b.done=true;mFound++;sOK();renderMatch(mFound>=6?"🎉 全部找到了！你記憶力超強！":"配對成功！繼續！");if(mFound>=6){celebrate("🎉");sStar()}}else{mLock=true;renderMatch("再想想看…");sNO();setTimeout(function(){MC[mFirst].open=false;MC[idx].open=false;mFirst=-1;mLock=false;renderMatch("再試一次，一定可以！")},650);return}
+mFirst=-1;renderMatch(mFound>=6?"🎉 全部找到了！按開始可再玩一次！":"配對成功！繼續！")}
+document.getElementById("mstart").addEventListener("click",function(){ac();startMatch();sStar()});
+document.getElementById("myCodeBtn").addEventListener("click",function(){var nm=document.getElementById("myName").value.replace(/[|\s]/g,"").slice(0,12);if(!nm){document.getElementById("codeBox").style.display="block";document.getElementById("codeBox").textContent="⚠️ 請先輸入名字！";return}var bits="";for(var k=0;k<15;k++)bits+=got[k]?"1":"0";var box=document.getElementById("codeBox");box.style.display="block";box.textContent="📋 "+nm+"|"+bits+"（"+countStars()+"/15）拿給老師匯入";try{if(navigator.clipboard)navigator.clipboard.writeText(nm+"|"+bits)}catch(e){}sStar()});
+/* teacher */
+var R={students:[]};
+try{R=JSON.parse(localStorage.getItem("familyRosterV1")||'{"students":[]}');if(!R||!R.students)R={students:[]}}catch(e){R={students:[]}}
+function saveR(){try{localStorage.setItem("familyRosterV1",JSON.stringify(R))}catch(e){}}
+function countOf(st){var n=0;for(var k=0;k<15;k++)if(st[k])n++;return n}
+function missingOf(st){var m=[];for(var k=0;k<15;k++)if(!st[k])m.push(k+1);return m.length?("缺第"+m.join("、")+"站"):"全部記住🎉"}
+function findStu(nm){for(var k=0;k<R.students.length;k++)if(R.students[k].name===nm)return R.students[k];return null}
+function renderRoster(){var list=document.getElementById("tlist");list.innerHTML="";var n=R.students.length,tot=0,fin=0;R.students.forEach(function(s){tot+=countOf(s.stars);if(countOf(s.stars)>=15)fin++});var avg=n?(tot/n).toFixed(1):"0";document.getElementById("tsum").textContent=n?("全班 "+n+" 人・平均 "+avg+" 顆星・"+fin+" 人集滿 🎉"):"還沒有學生，快加入第一位！";R.students.forEach(function(s,si){var row=document.createElement("div");row.className="trow";var c=countOf(s.stars);var h="<div><span class='tname'>"+s.name+" ⭐"+c+"/15</span> <button class='tdel' data-del='"+si+"'>🗑️</button><div style='font-size:13px;color:#888'>"+missingOf(s.stars)+"</div></div><div class='tbar'><i style='transform:scaleX("+(c/15)+")'></i></div><div class='tstars'>";for(var k=0;k<15;k++){h+="<button data-si='"+si+"' data-k='"+k+"' class='"+(s.stars[k]?"on":"")+"'>"+(k+1)+"."+shortWord(D[k].word)+"</button>"}h+="</div>";row.innerHTML=h;list.appendChild(row)});
+list.querySelectorAll("[data-del]").forEach(function(b){b.addEventListener("click",function(){R.students.splice(parseInt(b.getAttribute("data-del")),1);saveR();renderRoster()})});
+list.querySelectorAll(".tstars button").forEach(function(b){b.addEventListener("click",function(){var s=R.students[parseInt(b.getAttribute("data-si"))];var k=parseInt(b.getAttribute("data-k"));if(s.stars[k])delete s.stars[k];else s.stars[k]=1;saveR();renderRoster()})})}
+document.getElementById("addBtn").addEventListener("click",function(){var nm=document.getElementById("newName").value.replace(/[|\s]/g,"").slice(0,12);var msg=document.getElementById("tmsg");if(!nm){msg.textContent="⚠️ 請輸入名字！";return}if(findStu(nm)){msg.textContent="⚠️ "+nm+" 已經在名單裡了！";return}R.students.push({name:nm,stars:{}});document.getElementById("newName").value="";msg.textContent="✅ 已加入 "+nm+"！";saveR();renderRoster();sStar()});
+document.getElementById("impBtn").addEventListener("click",function(){var raw=document.getElementById("impCode").value.trim();var msg=document.getElementById("tmsg");var m=raw.match(/^([^|]{1,12})\|([01]{15})$/);if(!m){msg.textContent="⚠️ 格式不對！要像：王小明|111001100000000";return}var s=findStu(m[1]);if(!s){s={name:m[1],stars:{}};R.students.push(s)}for(var k=0;k<15;k++)if(m[2][k]==="1")s.stars[k]=1;document.getElementById("impCode").value="";msg.textContent="✅ 已匯入 "+s.name+"（⭐"+countOf(s.stars)+"/15）！";saveR();renderRoster();sStar();celebrate("⭐")});
+document.getElementById("csvBtn").addEventListener("click",function(){if(!R.students.length){document.getElementById("tmsg").textContent="⚠️ 名單是空的，先加入學生！";return}var csv="﻿姓名,星星數,缺的站\n";R.students.forEach(function(s){csv+=s.name+","+countOf(s.stars)+","+missingOf(s.stars)+"\n"});try{var b=new Blob([csv],{type:"text/csv"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="全班星星一覽.csv";a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},2000)}catch(e){document.getElementById("tmsg").textContent="⚠️ 這台裝置不支援下載，請用列印！"}});
+document.getElementById("printBtn").addEventListener("click",function(){window.print()});
+/* swipe only in learn */
+var sx=0;document.addEventListener("touchstart",function(e){sx=e.touches[0].clientX},{passive:true});
+document.addEventListener("touchend",function(e){try{if(mode!=="learn"||!document.getElementById("intro").classList.contains("hide"))return;var dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60){if(dx<0)go(i+1);else go(i-1)}}catch(e){}},{passive:true});
+document.addEventListener("keydown",function(e){if(mode!=="learn")return;if(e.key==="ArrowRight")go(i+1);if(e.key==="ArrowLeft")go(i-1)});
+buildGrid();go(0);refreshBest();setMode("learn");
+</script>
+</body>
+</html>
