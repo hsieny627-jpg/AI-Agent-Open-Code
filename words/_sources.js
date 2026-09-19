@@ -32,10 +32,20 @@ father:[
  '<b>Roman Jakobson (1960)《Why “Mama” and “Papa”?》</b>：da／pa 同樣是嬰兒最早發得出來的音。'],
 brother:[
  '<b>OED</b>「brother, n.」：古英文 <b>brōþor</b>。',
+  '<b>Cambridge Dictionary</b>「brother」「sister」：定義本身<b>不含年齡</b>——英文這兩個字不分長幼。',
+  '<b>Oxford Learner’s Dictionaries</b>「brother」「sister」例句作 <b>my older brother</b>／<b>my younger sister</b>：要分長幼就加 <b>older</b>／<b>younger</b>。',
+  '<b>Merriam-Webster</b>「big brother」＝ an older brother；「little brother」＝ a younger brother；「big sister」「little sister」同理。<b>口語常用，完全正確</b>。',
+  '<b>Cambridge Dictionary</b> 文法頁「elder or older?」：<b>elder</b> 只能放在名詞前面（elder brother），<b>不可以</b>寫 He is <s>elder</s> than me——要用 <b>older than</b>。elder 偏英式、偏正式。',
+  '⚠️ <b>誠實註記</b>：「最常用」指的是<b>辭典與英語教材一致採用</b>的說法（older／younger 用於書面與教學，big／little 用於口語）。要做精確的<b>使用次數排名</b>需要查 COCA／BNC 語料庫，本次製作環境連不上那些網站，<b>沒有做過次數統計</b>，所以教材上沒有寫「第幾名」這種話。',
  '<b>Wikipedia「Thorn (letter)」</b>／<b>Unicode U+00FE</b>：<b>þ</b>（thorn，荊棘）是古英文與古北歐文的字母，相當於今天的 <b>th</b>。',
  '<b>Cambridge Dictionary</b>「older brother／younger brother」：英文不用不同的字分長幼，靠 older／younger。'],
 sister:[
  '<b>OED</b>「sister, n.」：古英文本來是 <b>sweostor</b>；今天的 <b>sister</b> 帶有<b>古北歐文 systir</b> 的影響。',
+  '<b>Cambridge Dictionary</b>「brother」「sister」：定義本身<b>不含年齡</b>——英文這兩個字不分長幼。',
+  '<b>Oxford Learner’s Dictionaries</b>「brother」「sister」例句作 <b>my older brother</b>／<b>my younger sister</b>：要分長幼就加 <b>older</b>／<b>younger</b>。',
+  '<b>Merriam-Webster</b>「big brother」＝ an older brother；「little brother」＝ a younger brother；「big sister」「little sister」同理。<b>口語常用，完全正確</b>。',
+  '<b>Cambridge Dictionary</b> 文法頁「elder or older?」：<b>elder</b> 只能放在名詞前面（elder brother），<b>不可以</b>寫 He is <s>elder</s> than me——要用 <b>older than</b>。elder 偏英式、偏正式。',
+  '⚠️ <b>誠實註記</b>：「最常用」指的是<b>辭典與英語教材一致採用</b>的說法（older／younger 用於書面與教學，big／little 用於口語）。要做精確的<b>使用次數排名</b>需要查 COCA／BNC 語料庫，本次製作環境連不上那些網站，<b>沒有做過次數統計</b>，所以教材上沒有寫「第幾名」這種話。',
  '<b>Wikipedia「Old Norse influence on English」</b>／<b>Danelaw（丹麥區）</b>：九至十一世紀北歐人（維京人）在英格蘭東北部定居，兩群人長期混居，英語吸收了大量北歐詞形。'],
 son:[
  '<b>OED</b>「son, n.」：古英文 <b>sunu</b>。',
@@ -91,6 +101,12 @@ const P = {
   '<b>OED</b>「sandwich, n.」：得名自<b>第四代 Sandwich 伯爵 John Montagu（1718–1792）</b>。',
   '<b>OED</b>「breakfast, n.」：<b>break</b>（打破）＋ <b>fast</b>（禁食）。',
   '<b>OED</b>「goodbye, int.」：是 <b>God be with ye</b> 的縮合。'],
+ 'older-younger': [
+  '<b>Cambridge Dictionary</b>「brother」「sister」：定義本身<b>不含年齡</b>——英文這兩個字不分長幼。',
+  '<b>Oxford Learner’s Dictionaries</b>「brother」「sister」例句作 <b>my older brother</b>／<b>my younger sister</b>：要分長幼就加 <b>older</b>／<b>younger</b>。',
+  '<b>Merriam-Webster</b>「big brother」＝ an older brother；「little brother」＝ a younger brother；「big sister」「little sister」同理。<b>口語常用，完全正確</b>。',
+  '<b>Cambridge Dictionary</b> 文法頁「elder or older?」：<b>elder</b> 只能放在名詞前面（elder brother），<b>不可以</b>寫 He is <s>elder</s> than me——要用 <b>older than</b>。elder 偏英式、偏正式。',
+  '⚠️ <b>誠實註記</b>：「最常用」指的是<b>辭典與英語教材一致採用</b>的說法（older／younger 用於書面與教學，big／little 用於口語）。要做精確的<b>使用次數排名</b>需要查 COCA／BNC 語料庫，本次製作環境連不上那些網站，<b>沒有做過次數統計</b>，所以教材上沒有寫「第幾名」這種話。'],
  'parts': [
   '<b>grand</b>：<b>OED</b>「grand, adj.」原義是「<b>大的</b>」；親屬稱謂的 <b>grand-</b> 來自<b>法語 grand</b>（grand-père、grand-mère），法語 grand 源自拉丁文 <b>grandis</b>「大的」。課堂旁證：<b>Grand Canyon</b>（大峽谷）、<b>grand piano</b>（大鋼琴）。',
   '<b>hus</b>：<b>OED</b>「husband, n.」古英文 hūsbonda，借自古北歐文 <b>húsbóndi</b> ＝ <b>hús</b>（house 房子）＋ <b>bóndi</b>（住在裡面、管這個家的人）。',

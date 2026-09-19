@@ -126,6 +126,49 @@ const PAGES=[
 {file:'why.html',title:'家人單字的故事 ①',src:'why',S:FAM.slice(0,10)},
 {file:'why-2.html',title:'家人單字的故事 ②',src:'why',S:[OPEN2].concat(FAM.slice(10,18),[FAM[18]])},
 
+/* 哥哥／姊姊／弟弟／妹妹的說法（使用者 2026-09-19 指定要務必補充）。
+   最重要的一句在第 1 幕：平常就說 my brother，**不用講大小**。
+   older／younger 是辭典與教材採用的說法，big／little 是口語說法，兩個都對。
+   「最常用」沒有做過語料庫次數統計（環境連不上 COCA／BNC），所以畫面上不寫排名。 */
+{file:'older-younger.html',title:'哥哥還是弟弟',src:'older-younger',
+ back:{href:'brother.html',label:'← 回 單字卡'},
+ S:[
+ {emoji:'🧒👦',mid:'哥哥？弟弟？',
+  lines:['英文<b>都是 brother</b>']},
+
+ {tag:'最常說的',emoji:'🗣️',say:'my brother',
+  h:'<div class="en in d1" style="font-size:clamp(26px,4.8vh,48px)">my brother　my sister</div>',
+  lines:['平常就說 <b>my brother</b>、<b>my sister</b>',
+         '<b>不用講大小</b> —— 英文人最常這樣說']},
+
+ {tag:'要分大小',emoji:'🧒👦',say:'older brother',
+  h:'<div class="en in d1" style="font-size:clamp(22px,4vh,38px);line-height:1.6">'+
+    '<span class="fromL"><span class="hi">older</span> brother</span><br>'+
+    '<span class="fromR"><span class="hi">younger</span> brother</span></div>',
+  lines:['哥哥 ＝ <b>older brother</b>','弟弟 ＝ <b>younger brother</b>']},
+
+ {tag:'姊姊妹妹一樣',emoji:'👧👩',say:'older sister',
+  h:'<div class="en in d1" style="font-size:clamp(22px,4vh,38px);line-height:1.6">'+
+    '<span class="fromL"><span class="hi">older</span> sister</span><br>'+
+    '<span class="fromR"><span class="hi">younger</span> sister</span></div>',
+  lines:['姊姊 ＝ <b>older sister</b>','妹妹 ＝ <b>younger sister</b>']},
+
+ {tag:'聊天的時候',emoji:'💬',say:'big brother',
+  h:'<div class="en in d1" style="font-size:clamp(20px,3.6vh,34px);line-height:1.6">'+
+    '<span class="hi">big</span> brother　<span class="hi">little</span> brother<br>'+
+    '<span class="hi">big</span> sister　<span class="hi">little</span> sister</div>',
+  lines:['聊天的時候也很常這樣說','<b>big</b> ＝ 大的，<b>little</b> ＝ 小的，一樣對']},
+
+ {tag:'課本上看到的話',emoji:'📖',
+  h:'<div class="en in d1" style="font-size:clamp(24px,4.4vh,42px)"><span class="hi">elder</span> brother</div>',
+  lines:['<b>elder</b> 是<b>英國</b>的說法，意思一樣',
+         '但<b>只能放在名詞前面</b>：He is <b>older</b> than me ✅']},
+
+ {tag:'記住這個',emoji:'🧒👦👧👩',mid:'四個中文字，兩個英文字',
+  lines:['哥哥、弟弟 → <b>brother</b>；姊姊、妹妹 → <b>sister</b>',
+         '要分大小，前面加 <b>older</b> 或 <b>younger</b>']}
+]},
+
 /* 單字結構頁（使用者 2026-09-19 指定）：grand 是什麼意思？mo／fa／bro／sis／-ther 呢？
    只放**查得到一手證據**的結構。查不到的（mo、bro、sis 單獨的意思）就誠實說沒有，
    不編一個出來——編出來學生會記錯，而且違反 CLAUDE.md「事實要正確」。
@@ -207,7 +250,7 @@ const PAGES=[
    使用者 2026-09-19 指定要做成秒懂動畫，並附 100% 可查證的出處。
    不放進 daughter.html（三幕結構不動），獨立成一頁，由 daughter 頁的「✨ 補充」進來。 */
 {file:'daughter-gh.html',title:'daughter 的 gh 去哪了',src:'daughter-gh',
- back:{href:'daughter.html',label:'← 回 daughter'},
+ back:{href:'daughter.html',label:'← 回 單字卡'},
  S:[
  {tag:'重要補充',emoji:'👧',mid:'daughter 的 gh，以前唸得出來',
   lines:['怎麼知道？<b>去聽德文就知道了</b>']},
@@ -419,7 +462,8 @@ document.addEventListener("keydown",function(e){
 var jump=0;
 try{var hh=parseInt((location.hash||"").slice(1),10);if(!isNaN(hh))jump=hh}catch(e){}
 show(jump);
-${P.back?`document.getElementById("back").addEventListener("click",function(){location.href=${JSON.stringify(P.back.href)}});`:''}
+${P.back?`document.getElementById("back").addEventListener("click",function(){
+ if(history.length>1){history.back()}else{location.href=${JSON.stringify(P.back.href)}}});`:''}
 ${SRC.JS}
 </script>
 </body>

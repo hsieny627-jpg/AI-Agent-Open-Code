@@ -89,8 +89,8 @@ body{margin:0;background:#000;color:#F2F2F2;
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"><div id="card"></div></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
-<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button><button id="parts">🧩 結構</button><button id="srcb">📖 出處</button></div>
-<footer id="src"><h4>出處</h4><p><b>OED</b>「brother, n.」：古英文 <b>brōþor</b>。</p><p><b>Wikipedia「Thorn (letter)」</b>／<b>Unicode U+00FE</b>：<b>þ</b>（thorn，荊棘）是古英文與古北歐文的字母，相當於今天的 <b>th</b>。</p><p><b>Cambridge Dictionary</b>「older brother／younger brother」：英文不用不同的字分長幼，靠 older／younger。</p><button id="srcx">關閉</button></footer>
+<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button><button id="more">🧒 哥哥弟弟</button><button id="parts">🧩 結構</button><button id="srcb">📖 出處</button></div>
+<footer id="src"><h4>出處</h4><p><b>OED</b>「brother, n.」：古英文 <b>brōþor</b>。</p><p><b>Cambridge Dictionary</b>「brother」「sister」：定義本身<b>不含年齡</b>——英文這兩個字不分長幼。</p><p><b>Oxford Learner’s Dictionaries</b>「brother」「sister」例句作 <b>my older brother</b>／<b>my younger sister</b>：要分長幼就加 <b>older</b>／<b>younger</b>。</p><p><b>Merriam-Webster</b>「big brother」＝ an older brother；「little brother」＝ a younger brother；「big sister」「little sister」同理。<b>口語常用，完全正確</b>。</p><p><b>Cambridge Dictionary</b> 文法頁「elder or older?」：<b>elder</b> 只能放在名詞前面（elder brother），<b>不可以</b>寫 He is <s>elder</s> than me——要用 <b>older than</b>。elder 偏英式、偏正式。</p><p>⚠️ <b>誠實註記</b>：「最常用」指的是<b>辭典與英語教材一致採用</b>的說法（older／younger 用於書面與教學，big／little 用於口語）。要做精確的<b>使用次數排名</b>需要查 COCA／BNC 語料庫，本次製作環境連不上那些網站，<b>沒有做過次數統計</b>，所以教材上沒有寫「第幾名」這種話。</p><p><b>Wikipedia「Thorn (letter)」</b>／<b>Unicode U+00FE</b>：<b>þ</b>（thorn，荊棘）是古英文與古北歐文的字母，相當於今天的 <b>th</b>。</p><p><b>Cambridge Dictionary</b>「older brother／younger brother」：英文不用不同的字分長幼，靠 older／younger。</p><button id="srcx">關閉</button></footer>
 
 <script>
 var W={zh:"哥哥、弟弟",sub:"不分大小",icon:"🧒👦",old:"brōþor",now:"brother",
@@ -147,7 +147,7 @@ document.addEventListener("keydown",function(e){
 });
 
 show(0);
-
+document.getElementById("more").addEventListener("click",function(){location.href="older-younger.html"});
 document.getElementById("parts").addEventListener("click",function(){location.href="parts.html#4"});
 
 (function(){var s=document.getElementById("src");

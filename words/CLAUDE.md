@@ -20,6 +20,7 @@
 | `why-more.html` | 附加補充（產物）：六個日常單字（tea／ketchup／hamburger／sandwich／breakfast／goodbye） |
 | `brother-why.html` | 四幕實驗檔，等課堂實測結果再決定去留。手工維護 |
 | `parts.html` | **單字結構頁**（產物，由 `_build_story.js` 產生）：grand ＝ 大、hus ＝ house、-ther／-ter 的家人字尾，10 幕。字卡的「🧩 結構」按鈕用 `parts.html#幕號` 直接跳進去 |
+| `older-younger.html` | **哥哥／姊姊／弟弟／妹妹的說法**（產物，由 `_build_story.js` 產生），7 幕。由 `brother.html`／`sister.html` 的補充按鈕進去 |
 | `daughter-gh.html` | **daughter 的重要補充頁**（產物，由 `_build_story.js` 產生）：德文 Tochter／荷蘭文 dochter 的 ch 還在發音，五幕 |
 | `_sources.js` | **所有出處來源的唯一真相來源**，三個產生器共用。改出處只改這一個檔 |
 | `_quiz_data.js` | **20 題暖身題的唯一真相來源**（題目／選項／正解／挑戰題／秒懂說明）。網頁版與 Kahoot 都從這裡拿 |
@@ -124,6 +125,26 @@ s 和 r 中間後來插進去的音，來源和另外四個不一樣（出處卡
 
 字卡上的「🧩 結構」按鈕只給上表那 9 個字，連到 `parts.html#幕號`。
 **改 `parts.html` 的幕順序，一定要同步改 `_build.js` 裡 `parts.href` 的幕號。**
+
+## 哥哥／姊姊／弟弟／妹妹（2026-09-19 使用者指定務必補充）
+
+`older-younger.html`（7 幕）。**第 1 幕就是最重要的一句**：
+
+> 平常就說 **my brother**、**my sister**，**不用講大小**。
+
+要分長幼才加形容詞，兩套講法**都是對的**：
+
+| 場合 | 哥哥 | 弟弟 | 出處 |
+|---|---|---|---|
+| 書面、課本、教學 | **older brother** | **younger brother** | Oxford Learner’s／Cambridge |
+| 聊天、口語 | **big brother** | **little brother** | Merriam-Webster |
+| 英式、偏正式 | elder brother | — | Cambridge「elder or older?」 |
+
+sister 完全比照。**`elder` 只能放名詞前面**，不可以寫 He is elder than me，
+要寫 **older than**——這一點做成第 6 幕，因為學生會在課本上看到 elder。
+
+**誠實界線**：教材沒有寫「第幾常用」。要做使用次數排名得查 COCA／BNC 語料庫，
+製作環境連不上，**沒有做過次數統計**。出處卡裡有這條註記，被問到就翻出來。
 
 ## 字卡換頁（2026-09-19 使用者指定）
 
@@ -270,32 +291,53 @@ node words/_build_kahoot.js # 根目錄的 kahoot xlsx ＋ 說明文件
 - **每個決定都寫回這份規格**，下次不必重講，也不會被改回去。
 - 開新對話時這份規格會自動載入，第一句講「照 words/CLAUDE.md」就夠了。
 
-## 現況（2026-09-19，第二輪修訂後）
+## 現況（2026-09-19 收工時）
 
-- 17 個單字頁全部完成，全部由 `_build.js` 產生：
-  `family` `parent` `mother` `father` `brother` `sister` `son` `daughter`
-  `grandfather` `grandmother` `uncle` `aunt` `cousin` `nephew` `niece`
-  `husband` `wife`
-- `why.html` ＋ `why-2.html`（17 個家人單字的故事，各 10 幕）、
-  `why-more.html`（附加補充，八幕）、`brother-why.html`（四幕實驗檔）已完成。
-- 21 頁全部通過 `_verify.js` 量測（兩種尺寸）。
-- 已查證：`daughter` 的 `gh` 以前確實有聲音（中古英語的 [x]，約 1600 年後才不發音）。
-  可查證：OED 的 Early modern English 說明頁、Wikipedia「Gh (digraph)」「Yogh」；
-  最好懂的旁證是德文 `Tochter`、荷蘭文 `dochter` 的 ch 到今天還在發音。
-- 已查證：`family` 的來源是拉丁文 `familia`；
-  「Father And Mother, I Love You」是事後倒推的 backronym，**查無一手出處**，
-  只出現在縮寫收集網站。教材裡只寫「它不是 family 的來源」，不要寫是誰發明的。
-- 2026-09-19 第二輪修訂（使用者逐條指出的看不懂之處）：
-  - 故事頁結尾的「**叫**著叫著就慢慢變了」→ 改成「**發音**慢慢變，字就跟著變」。
-    使用者說「叫」太粗魯且詞不達意。
-  - `sister` 那一幕整個重寫。原本的「兩個村子，同一個人叫法不一樣」使用者看不懂
-    （同一個人是誰？叫法是什麼？為什麼是村子？村子跟 sister 有什麼關係？）。
-    改成看得見的兩群人：**🏴 英國人唸 sweostor ／ ⛵ 維京人唸 systir**，
-    「同一個姊姊」「住在一起久了，唸成今天的 sister」。
-    **不要再改回抽象的「村子」「叫法」。**
-  - `wife` ／ `nephew` ／ `niece` 的「都能**叫**」→ 「都可以**用這個字**」；
-    標籤「以前能叫的更多」→「以前用的人更多」。
-- 新增：`daughter-gh.html`（5 幕）、`quiz.html`（20 題）、`quiz-demo.html`（1 題）。
-- 新增：`_sources.js`、`_quiz_data.js`、`_build_quiz.js`、`_build_kahoot.js`。
-- 待辦：`brother-why.html` 的課堂實測結果 → 決定推廣或刪除。
-- 待辦：**Kahoot 要老師本人登入上傳並試玩**（AI 沒有帳號，做不到這一步）。
+### 產物一覽（26 頁，全部通過 `_verify.js`）
+
+| 類 | 檔案 |
+|---|---|
+| 字卡 × 17 | `family` `parent` `mother` `father` `brother` `sister` `son` `daughter` `grandfather` `grandmother` `uncle` `aunt` `cousin` `nephew` `niece` `husband` `wife` |
+| 暖身題 | `quiz.html`（20 題）、`quiz-demo.html`（1 題試玩） |
+| 故事 | `why.html`、`why-2.html`、`why-more.html` |
+| 補充 | `parts.html`（單字結構）、`daughter-gh.html`（gh 的聲音）、`older-younger.html`（哥哥弟弟） |
+| 實驗 | `brother-why.html`（四幕，等課堂實測） |
+
+### 四個產生器（改東西只改這四個，不要碰 .html）
+
+```bash
+node words/_build.js        # 17 張字卡
+node words/_build_story.js  # why / why-2 / why-more / parts / daughter-gh / older-younger
+node words/_build_quiz.js   # quiz / quiz-demo
+node words/_build_kahoot.js # 根目錄 kahoot xlsx ＋ 說明文件
+node words/_verify.js       # 量測（改完一定要跑）
+```
+
+資料檔：`_sources.js`（出處）、`_quiz_data.js`（題庫）。
+
+### 已查證並定案的事實（不要再重查、也不要改掉）
+
+- `daughter` 的 `gh` 以前有聲音（中古英語 /x/，約 1500–1700 年消失）。
+  旁證：德文 `Tochter`、荷蘭文 `dochter` 的 ch 至今仍發音。
+- `family` ＜ 拉丁文 `familia`（含僕役）。
+  「Father And Mother, I Love You」是後人倒推的 backronym，**查無一手出處**。
+- `grand` ＝「大」（OED），旁證 Grand Canyon。`hus` ＝ house。
+- `-ther`／`-ter` 是家人字的尾巴；**但 `sister` 的 -t- 來源不同**，
+  所以教材只寫「尾巴長得一樣」這個看得到的事實。
+- `mo`／`fa` 來自寶寶的 ma／pa；**`bro`／`sis` 單獨沒有意思**，不要編。
+
+### 待辦（下一個對話可以直接接手）
+
+1. **把整套課程串成一個總入口**（使用者 2026-09-19 提出）。
+   現況是各頁各自獨立，老師要記很多網址。建議做**專案根目錄 `index.html`**，
+   照上課順序排：
+   `🎯 暖身 20 題` → `📖🎮 家人單字時光機`（根目錄 `family-time-machine-ipad.html`，
+   原本就有學習＋遊戲兩種模式）→ `🃏 17 張字卡` → `🧩 單字結構` →
+   `📜 單字故事` → `🎬 about-my-family 影片`。
+   一個 QR code 就夠（根目錄已有 `qr-family-time-machine.png`，要重做）。
+   **只做一頁純連結頁，不要去改 `family-time-machine-ipad.html` 的內容**——
+   那支檔 84KB、是單檔 app，動它風險高、花的額度也最多。
+2. `brother-why.html` 的課堂實測結果 → 決定推廣或刪除。
+3. **Kahoot 要老師本人登入上傳並試玩**（AI 沒有帳號，做不到這一步）。
+4. 出處目前是**列條目名稱**供老師查，製作環境連不上 etymonline／Wikipedia／
+   COCA，**沒有逐條開網頁核對過**。老師第一次上課前建議抽查兩三條。
