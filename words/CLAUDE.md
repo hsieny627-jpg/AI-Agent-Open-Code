@@ -15,7 +15,7 @@
 | `<單字>.html` × 17 | **產物，不要手改**，改了會被下一次 build 蓋掉 |
 | `_verify.js` | 量測腳本。`node words/_verify.js` 量全部；`node words/_verify.js son.html` 只量一頁 |
 | `_build_story.js` | **故事頁的產生器**，`node words/_build_story.js` 重建 why 兩頁 |
-| `why.html` | **主故事頁**（產物）：六個**家人單字**自己的故事，八幕。上完家人單元後用 |
+| `why.html` | **主故事頁**（產物）：**17 個家人單字全部**各有一幕演變故事＋動畫，共 19 幕 |
 | `why-more.html` | 附加補充（產物）：六個日常單字（tea／ketchup／hamburger／sandwich／breakfast／goodbye） |
 | `brother-why.html` | 四幕實驗檔，等課堂實測結果再決定去留。手工維護 |
 | `fonts/` | Andika 400 / 700，離線必須 |
@@ -49,10 +49,12 @@
 - **17 個單字頁維持三幕，不加演變幕。** 一幕只講一件事，演變幕會排擠學生明天就
   用得到的東西（older/younger、gh 不出聲、parents 的 s）。
 - **「字為什麼會變」獨立成故事頁**，不放進單字頁，所以不排擠任何東西。
-  使用者 2026-09-19 指定：**主角必須是家人單字**（學生正在學的字），
-  `why.html` 用 family／brother／daughter／husband／sister／grandfather 六個家人單字，
-  每個字配一個動畫（僕人淡出、þ 像旗子揮、gh 變暗、hus 亮起來、兩個舊說法靠攏、零件接上）。
-  日常單字（tea 等六個）是**附加補充**，移到 `why-more.html`，想延伸再放。
+  使用者 2026-09-19 指定：**主角必須是家人單字，而且 17 個字全部都要有**。
+  `why.html` 一個字一幕，每幕配一個秒懂動畫，依 `D` 陣列的教學順序排列。
+  幕上的 `tag` 就是那個字的演變機制：意思變窄／意思變寬／失落的字母／聲音不見了／
+  兩群人混合／借來的零件／寶寶先叫出來的。
+  日常單字（tea 等六個）是**附加補充**，放在 `why-more.html`，想延伸再放。
+  **動畫只能動人、時間、聲音、零件，不可以動整個單字的拼法。**
 - **`brother-why.html` 是四幕實驗檔**，等使用者課堂實測。記得住就推廣，記不住就
   刪掉這一個檔——**不要先去動其他 17 頁**。
 - **字母逐格變形永遠禁止。** 動畫可以動人、動時間，不要動字母。
@@ -118,7 +120,10 @@ Andika 有載到（`measureText` 與 sans-serif 不同）、每幕進度點對�
   `family` `parent` `mother` `father` `brother` `sister` `son` `daughter`
   `grandfather` `grandmother` `uncle` `aunt` `cousin` `nephew` `niece`
   `husband` `wife`
-- `why.html`（家人單字故事頁，八幕）、`why-more.html`（附加補充，八幕）、
+- `why.html`（17 個家人單字的故事，19 幕）、`why-more.html`（附加補充，八幕）、
   `brother-why.html`（四幕實驗檔）已完成。
 - 20 頁全部通過 `_verify.js` 量測（兩種尺寸）。
+- 已查證：`family` 的來源是拉丁文 `familia`；
+  「Father And Mother, I Love You」是事後倒推的 backronym，**查無一手出處**，
+  只出現在縮寫收集網站。教材裡只寫「它不是 family 的來源」，不要寫是誰發明的。
 - 待辦：`brother-why.html` 的課堂實測結果 → 決定推廣或刪除。
