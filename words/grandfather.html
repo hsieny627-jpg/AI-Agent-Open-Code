@@ -51,7 +51,8 @@ body{margin:0;background:#000;color:#F2F2F2;
 .sub{font-size:clamp(17px,2.4vh,23px);color:#D8D3C5;line-height:1.5}
 .sub b{color:#F2F2F2;font-weight:700}
 
-#bar{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));display:flex;gap:12px}
+#bar{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));display:flex;gap:10px;
+ flex-wrap:wrap;justify-content:center;padding:0 10px}
 #bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
  font-size:16px;padding:11px 20px;min-height:48px;font-family:inherit;cursor:pointer}
 #bar button:active{background:#2A2A2A}
@@ -88,7 +89,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"><div id="card"></div></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
-<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button><button id="srcb">📖 出處</button></div>
+<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button><button id="parts">🧩 結構</button><button id="srcb">📖 出處</button></div>
 <footer id="src"><h4>出處</h4><p><b>OED</b>「grand-, comb. form」：親屬稱謂的 <b>grand-</b> 來自<b>法語（Anglo-French）grand</b>，比照 grandpère 的構詞造出 grandfather。</p><p><b>OED</b>「grandpa, n.」：口語簡稱。</p><button id="srcx">關閉</button></footer>
 
 <script>
@@ -149,6 +150,7 @@ document.addEventListener("keydown",function(e){
 
 show(0);
 
+document.getElementById("parts").addEventListener("click",function(){location.href="parts.html#2"});
 
 (function(){var s=document.getElementById("src");
  function t(v){s.classList.toggle("on",v)}

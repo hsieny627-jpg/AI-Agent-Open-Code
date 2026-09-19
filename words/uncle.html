@@ -51,7 +51,8 @@ body{margin:0;background:#000;color:#F2F2F2;
 .sub{font-size:clamp(17px,2.4vh,23px);color:#D8D3C5;line-height:1.5}
 .sub b{color:#F2F2F2;font-weight:700}
 
-#bar{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));display:flex;gap:12px}
+#bar{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));display:flex;gap:10px;
+ flex-wrap:wrap;justify-content:center;padding:0 10px}
 #bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
  font-size:16px;padding:11px 20px;min-height:48px;font-family:inherit;cursor:pointer}
 #bar button:active{background:#2A2A2A}
@@ -146,6 +147,7 @@ document.addEventListener("keydown",function(e){
 });
 
 show(0);
+
 
 
 (function(){var s=document.getElementById("src");

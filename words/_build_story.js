@@ -126,6 +126,83 @@ const PAGES=[
 {file:'why.html',title:'家人單字的故事 ①',src:'why',S:FAM.slice(0,10)},
 {file:'why-2.html',title:'家人單字的故事 ②',src:'why',S:[OPEN2].concat(FAM.slice(10,18),[FAM[18]])},
 
+/* 單字結構頁（使用者 2026-09-19 指定）：grand 是什麼意思？mo／fa／bro／sis／-ther 呢？
+   只放**查得到一手證據**的結構。查不到的（mo、bro、sis 單獨的意思）就誠實說沒有，
+   不編一個出來——編出來學生會記錯，而且違反 CLAUDE.md「事實要正確」。
+   幕號就是 daughter.html 等字卡「🧩 結構」按鈕的錨點，改順序要一起改 _build.js 的 parts.href。 */
+{file:'parts.html',title:'單字拆開來看',src:'parts',
+ S:[
+ {emoji:'🧩',mid:'家人單字，拆得開嗎？',
+  lines:['有的拆得開，有的<b>拆不開</b>']},
+
+ /* #1 grand ＝ 大 */
+ {tag:'grand 是什麼意思',emoji:'🏜️',say:'grand',
+  h:'<div class="en in d1"><span class="hi">grand</span> <span class="ar">＝</span> 大</div>',
+  lines:['<b>grand</b> 的意思就是「<b>大</b>」',
+         '美國的 <b>Grand Canyon</b>，就是「<b>大</b>峽谷」']},
+
+ /* #2 grand ＋ father（grandfather／grandmother 的錨點） */
+ {tag:'裝上去',emoji:'👴',say:'grandfather',
+  h:'<div class="en in d1" style="font-size:clamp(24px,4.4vh,44px)">'+
+    '<span class="fromL hi">grand</span> <span class="ar">＋</span> <span class="fromR">father</span></div>'+
+    '<div class="en pop" style="animation-delay:1.2s;font-size:clamp(24px,4.4vh,44px)">grandfather</div>',
+  lines:['「<b>大</b>」的 father ＝ <b>爸爸的爸爸</b>',
+         'grand ＋ mother，就是<b>媽媽的媽媽</b>']},
+
+ /* #3 hus ＝ house（husband 的錨點） */
+ {tag:'藏在字裡的房子',emoji:'🏠',say:'husband',
+  h:'<div class="en in d1"><span class="hi">hus</span>band</div>'+
+    '<div class="en pop" style="animation-delay:1.1s;font-size:clamp(26px,4.6vh,46px)">'+
+    '<span class="hi">hus</span> ＝ <span class="hi">house</span></div>',
+  lines:['<b>hus</b> 就是 <b>house</b>（房子）',
+         'husband ＝ <b>管這間房子的人</b>']},
+
+ /* #4 -ther／-ter 的尾巴（mother/father/brother/sister/daughter 的錨點） */
+ {tag:'一樣的尾巴',
+  h:'<div class="en in d1" style="font-size:clamp(17px,3vh,30px);line-height:1.75">'+
+    'mo<span class="hi">ther</span><br>fa<span class="hi">ther</span><br>bro<span class="hi">ther</span><br>'+
+    'daugh<span class="hi">ter</span><br>sis<span class="hi">ter</span></div>',
+  lines:['五個家人字，<b>尾巴長得一模一樣</b>',
+         '看到 <b>-ther</b>、<b>-ter</b>，很可能就是<b>家人</b>']},
+
+ /* #5 德文旁證 */
+ {tag:'德文也一樣',emoji:'🇩🇪',
+  h:'<div class="en in d1" style="font-size:clamp(16px,2.8vh,28px);line-height:1.75">'+
+    'Mut<span class="hi">ter</span><br>Va<span class="hi">ter</span><br>Bru<span class="hi">der</span><br>'+
+    'Toch<span class="hi">ter</span><br>Schwes<span class="hi">ter</span></div>',
+  lines:['德文的媽媽、爸爸、哥哥、女兒、姊姊',
+         '<b>尾巴也都一樣</b> —— 這不是巧合']},
+
+ /* #6 前面那一半：mo、fa */
+ {tag:'前面那一半',emoji:'👶',
+  h:'<div class="en in d1" style="font-size:clamp(26px,4.6vh,46px)">'+
+    '<span class="bub b1">ma</span> <span class="ar">→</span> <span class="bub b2">mo</span>ther　'+
+    '<span class="bub b3">pa</span> <span class="ar">→</span> <span class="bub b3">fa</span>ther</div>',
+  lines:['<b>mo</b> 來自 <b>ma</b>，<b>fa</b> 來自 <b>pa</b>',
+         '都是<b>寶寶最早發得出來的音</b>']},
+
+ /* #7 誠實幕：bro、sis 沒有意思 */
+ {tag:'拆到這裡就好',emoji:'✋',
+  h:'<div class="en in d1" style="font-size:clamp(24px,4.4vh,42px)">'+
+    '<span class="mute">bro</span>　<span class="mute">sis</span></div>',
+  lines:['<b>bro</b>、<b>sis</b> 單獨拿出來，<b>沒有意思</b>',
+         '今天的 bro、sis 是<b>後來剪短的</b>，不是原本的零件']},
+
+ /* #8 parent ＋ s（parent 的錨點） */
+ {tag:'這個不是字源，是文法',emoji:'👨‍👩',say:'parents',
+  h:'<div class="en in d1" style="font-size:clamp(26px,4.8vh,48px)">parent <span class="hi">＋ s</span></div>',
+  lines:['一位是 <b>a parent</b>','兩位以上<b>加 s</b>：<b>parents</b>']},
+
+ /* #9 收尾 */
+ {tag:'記住這件事',emoji:'🧩',
+  h:'<div class="en in d1" style="font-size:clamp(17px,3vh,30px);line-height:1.7">'+
+    '<span class="hi">拆得開</span>　grandfather　grandmother　husband<br>'+
+    '<span class="mute">拆不開</span>　family　son　uncle　aunt<br>'+
+    '<span class="mute">拆不開</span>　cousin　nephew　niece　wife</div>',
+  lines:['<b>拆不開的字，就整個背起來</b>',
+         '硬拆只會背錯']}
+]},
+
 /* daughter 的重要補充：英文丟掉的聲音，德文／荷蘭文還留著。
    使用者 2026-09-19 指定要做成秒懂動畫，並附 100% 可查證的出處。
    不放進 daughter.html（三幕結構不動），獨立成一頁，由 daughter 頁的「✨ 補充」進來。 */
@@ -339,7 +416,9 @@ document.addEventListener("keydown",function(e){
  if(e.key==="ArrowLeft")show(i-1);
 });
 
-show(0);
+var jump=0;
+try{var hh=parseInt((location.hash||"").slice(1),10);if(!isNaN(hh))jump=hh}catch(e){}
+show(jump);
 ${P.back?`document.getElementById("back").addEventListener("click",function(){location.href=${JSON.stringify(P.back.href)}});`:''}
 ${SRC.JS}
 </script>

@@ -91,6 +91,15 @@ const P = {
   '<b>OED</b>「sandwich, n.」：得名自<b>第四代 Sandwich 伯爵 John Montagu（1718–1792）</b>。',
   '<b>OED</b>「breakfast, n.」：<b>break</b>（打破）＋ <b>fast</b>（禁食）。',
   '<b>OED</b>「goodbye, int.」：是 <b>God be with ye</b> 的縮合。'],
+ 'parts': [
+  '<b>grand</b>：<b>OED</b>「grand, adj.」原義是「<b>大的</b>」；親屬稱謂的 <b>grand-</b> 來自<b>法語 grand</b>（grand-père、grand-mère），法語 grand 源自拉丁文 <b>grandis</b>「大的」。課堂旁證：<b>Grand Canyon</b>（大峽谷）、<b>grand piano</b>（大鋼琴）。',
+  '<b>hus</b>：<b>OED</b>「husband, n.」古英文 hūsbonda，借自古北歐文 <b>húsbóndi</b> ＝ <b>hús</b>（house 房子）＋ <b>bóndi</b>（住在裡面、管這個家的人）。',
+  '<b>-ther／-ter 的家人字尾</b>：<b>OED</b>「mother, n.1」「father, n.」「brother, n.」「daughter, n.」各詞條所列的日耳曼語與印歐語同源詞；<b>Calvert Watkins《The American Heritage Dictionary of Indo-European Roots》</b>詞根 *māter-、*pəter-、*bhrāter-、*dhugəter-：這四個字的 <b>-ter</b> 來自<b>同一個古老的家人字尾</b>。',
+  '⚠️ <b>誠實註記（給老師，不必跟學生講）</b>：<b>sister</b> 的 -t- 來源不一樣，是 s 和 r 中間<b>後來插進去的音</b>（Watkins 詞根 *swesor-），只是結果看起來跟其他四個一樣。所以教材上寫的是「<b>五個字尾巴長得一樣</b>」這個<b>看得到的事實</b>，沒有說它們來源全部相同。',
+  '<b>德文旁證</b>：<b>Duden</b>「Mutter」「Vater」「Bruder」「Tochter」「Schwester」—— 尾巴同樣都是 <b>-ter</b>。',
+  '<b>mo-／fa-</b>：<b>Roman Jakobson (1960)《Why “Mama” and “Papa”?》</b>：<b>ma</b>、<b>pa</b> 是嬰兒最早發得出來的音，全世界的「媽媽」「爸爸」多半由這兩個音來。',
+  '<b>bro-／sis- 沒有獨立意思</b>：<b>OED</b> 沒有為 bro-、sis- 列出任何獨立詞義；brother、sister 在英文裡是<b>不可再分的整個字</b>。今天口語的 <b>bro</b>、<b>sis</b> 是<b>後來從整個字剪下來的簡稱</b>（OED「bro, n.」「sis, n.」），<b>不是原本的零件</b>。',
+  '<b>parent ＋ s</b>：這是<b>文法</b>（複數加 s），不是字源。<b>Cambridge Dictionary</b>「parent」。'],
  'quiz': [
   '本卷 20 題全部出自 17 張家人單字卡與故事頁的內容，出處與各字卡相同。',
   '<b>OED</b>（牛津英語詞典）各詞條為主要依據；拉丁文詞義另據 <b>Lewis &amp; Short《A Latin Dictionary》</b>。',

@@ -258,7 +258,9 @@ document.addEventListener("keydown",function(e){
  if(e.key==="ArrowLeft")show(i-1);
 });
 
-show(0);
+var jump=0;
+try{var hh=parseInt((location.hash||"").slice(1),10);if(!isNaN(hh))jump=hh}catch(e){}
+show(jump);
 
 
 (function(){var s=document.getElementById("src");

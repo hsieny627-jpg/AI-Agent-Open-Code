@@ -51,7 +51,8 @@ body{margin:0;background:#000;color:#F2F2F2;
 .sub{font-size:clamp(17px,2.4vh,23px);color:#D8D3C5;line-height:1.5}
 .sub b{color:#F2F2F2;font-weight:700}
 
-#bar{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));display:flex;gap:12px}
+#bar{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));display:flex;gap:10px;
+ flex-wrap:wrap;justify-content:center;padding:0 10px}
 #bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
  font-size:16px;padding:11px 20px;min-height:48px;font-family:inherit;cursor:pointer}
 #bar button:active{background:#2A2A2A}
@@ -92,7 +93,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 <footer id="src"><h4>出處</h4><p><b>OED</b>「wife, n.」：古英文 <b>wīf</b>，<b>原義就是「女人」</b>，不限已婚。</p><p>旁證：<b>midwife</b>（助產士，字面「與女人同在」）、<b>old wives’ tale</b>（老婦人的說法）、<b>fishwife</b>（賣魚婦）都留著「女人」的舊意思。</p><button id="srcx">關閉</button></footer>
 
 <script>
-var W={zh:"妻子",sub:undefined,icon:"👰",old:"wīf",now:"wife",
+var W={zh:"妻子",sub:"",icon:"👰",old:"wīf",now:"wife",
  e1:"👰 <b>my wife</b> 是「我的妻子」",e2:"不可以隨便這樣叫別人"};
 
 var SCENES=[
@@ -146,6 +147,7 @@ document.addEventListener("keydown",function(e){
 });
 
 show(0);
+
 
 
 (function(){var s=document.getElementById("src");

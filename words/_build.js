@@ -17,25 +17,25 @@ const SRC=require('./_sources');
 const WORDS=[
 {f:'family',zh:'家庭',icon:'👨‍👩‍👧‍👦',old:'familia',now:'family',
  e1:'👪 爸爸、媽媽、小孩，<b>全部都是 family</b>'},
-{f:'parent',zh:'家長',sub:'爸爸或媽媽',icon:'👨‍👩',old:'parens',now:'parent',
+{f:'parent',parts:{href:'parts.html#8'},zh:'家長',sub:'爸爸或媽媽',icon:'👨‍👩',old:'parens',now:'parent',
  e1:'👤 一位家長是 <b>a parent</b>',e2:'很多位就加 s：<b>parents</b>'},
-{f:'mother',zh:'母親',icon:'❤️',old:'mōdor',now:'mother',
+{f:'mother',parts:{href:'parts.html#4'},zh:'母親',icon:'❤️',old:'mōdor',now:'mother',
  e1:'👶 也可以叫 <b>mom</b>',e2:'美國常說 mom，英國常說 <b>mum</b>'},
-{f:'father',zh:'父親',icon:'🧔',old:'fæder',now:'father',
+{f:'father',parts:{href:'parts.html#4'},zh:'父親',icon:'🧔',old:'fæder',now:'father',
  e1:'👶 也可以叫 <b>dad</b>',e2:'dad 是寶寶先叫的，<b>不是 father 剪短的</b>'},
-{f:'brother',zh:'哥哥、弟弟',sub:'不分大小',icon:'🧒👦',old:'brōþor',now:'brother',
+{f:'brother',parts:{href:'parts.html#4'},zh:'哥哥、弟弟',sub:'不分大小',icon:'🧒👦',old:'brōþor',now:'brother',
  e1:'👦 哥哥、弟弟，<b>都叫 brother</b>',e2:'要分大小就加 <b>older</b> 或 <b>younger</b>'},
-{f:'sister',zh:'姊姊、妹妹',sub:'不分大小',icon:'👧👩',old:'sweostor',now:'sister',
+{f:'sister',parts:{href:'parts.html#4'},zh:'姊姊、妹妹',sub:'不分大小',icon:'👧👩',old:'sweostor',now:'sister',
  e1:'👧 姊姊、妹妹，<b>都叫 sister</b>',e2:'要分大小就加 <b>older</b> 或 <b>younger</b>'},
 {f:'son',zh:'兒子',icon:'👦',old:'sunu',now:'son',
  e1:'☀️ 和太陽 <b>sun</b> 同音',e2:'一樣的音，<b>不一樣的字</b>'},
 {f:'daughter',zh:'女兒',icon:'👧',old:'dohtor',now:'daughter',
  e1:'🤫 中間的 <b>gh</b> 不出聲',
- more:{href:'daughter-gh.html',label:'✨ 補充'}},
-{f:'grandfather',zh:'爺爺',sub:'外公也是',icon:'👴',old:'grand-',now:'grandfather',
+ more:{href:'daughter-gh.html',label:'✨ 補充'},parts:{href:'parts.html#4'}},
+{f:'grandfather',parts:{href:'parts.html#2'},zh:'爺爺',sub:'外公也是',icon:'👴',old:'grand-',now:'grandfather',
  build:{a:'grand',b:'father',note:'<b>grand</b> 加在家人前面 ＝ 長一輩'},
  e1:'👴 也可以叫 <b>grandpa</b>',e2:'爺爺、外公，<b>都叫 grandfather</b>'},
-{f:'grandmother',zh:'奶奶',sub:'外婆也是',icon:'👵',old:'grand-',now:'grandmother',
+{f:'grandmother',parts:{href:'parts.html#2'},zh:'奶奶',sub:'外婆也是',icon:'👵',old:'grand-',now:'grandmother',
  build:{a:'grand',b:'mother',note:'<b>grand</b> 加在家人前面 ＝ 長一輩'},
  e1:'👵 也可以叫 <b>grandma</b>',e2:'奶奶、外婆，<b>都叫 grandmother</b>'},
 {f:'uncle',zh:'叔叔',sub:'伯伯、舅舅也是',icon:'🧓',old:'avunculus',now:'uncle',
@@ -48,7 +48,7 @@ const WORDS=[
  e1:'👦 哥哥姊姊的兒子，<b>就是 nephew</b>',e2:'姪子、外甥，<b>都叫 nephew</b>'},
 {f:'niece',zh:'姪女',sub:'外甥女也是',icon:'👧💜',old:'neptia',now:'niece',
  e1:'👧 哥哥姊姊的女兒，<b>就是 niece</b>',e2:'姪女、外甥女，<b>都叫 niece</b>'},
-{f:'husband',zh:'丈夫',icon:'🤵',old:'húsbóndi',now:'husband',
+{f:'husband',parts:{href:'parts.html#3'},zh:'丈夫',icon:'🤵',old:'húsbóndi',now:'husband',
  e1:'🤵 介紹另一半就說 <b>my husband</b>'},
 {f:'wife',zh:'妻子',icon:'👰',old:'wīf',now:'wife',
  e1:'👰 <b>my wife</b> 是「我的妻子」',e2:'不可以隨便這樣叫別人'}
@@ -107,7 +107,8 @@ body{margin:0;background:#000;color:#F2F2F2;
 .sub{font-size:clamp(17px,2.4vh,23px);color:#D8D3C5;line-height:1.5}
 .sub b{color:#F2F2F2;font-weight:700}
 
-#bar{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));display:flex;gap:12px}
+#bar{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));display:flex;gap:10px;
+ flex-wrap:wrap;justify-content:center;padding:0 10px}
 #bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
  font-size:16px;padding:11px 20px;min-height:48px;font-family:inherit;cursor:pointer}
 #bar button:active{background:#2A2A2A}
@@ -134,11 +135,11 @@ ${SRC.CSS}
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"><div id="card"></div></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
-<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button>${W.more?`<button id="more">${W.more.label}</button>`:''}${SRC.btn}</div>
+<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button>${W.more?`<button id="more">${W.more.label}</button>`:''}${W.parts?`<button id="parts">🧩 結構</button>`:''}${SRC.btn}</div>
 ${SRC.html(SRC.W[W.f])}
 
 <script>
-var W={zh:${JSON.stringify(W.zh)},sub:${JSON.stringify(W.sub)},icon:${JSON.stringify(W.icon)},old:${JSON.stringify(W.old)},now:${JSON.stringify(W.now)},
+var W={zh:${JSON.stringify(W.zh)},sub:${JSON.stringify(W.sub||'')},icon:${JSON.stringify(W.icon)},old:${JSON.stringify(W.old)},now:${JSON.stringify(W.now)},
  e1:${JSON.stringify(W.e1||'')},e2:${JSON.stringify(W.e2||'')}${W.build?',\n build:'+JSON.stringify(W.build):''}};
 
 var SCENES=[
@@ -199,6 +200,7 @@ document.addEventListener("keydown",function(e){
 
 show(0);
 ${W.more?`document.getElementById("more").addEventListener("click",function(){location.href=${JSON.stringify(W.more.href)}});`:''}
+${W.parts?`document.getElementById("parts").addEventListener("click",function(){location.href=${JSON.stringify(W.parts.href)}});`:''}
 ${SRC.JS}
 </script>
 </body>
