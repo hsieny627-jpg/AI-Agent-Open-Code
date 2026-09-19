@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>家人單字｜課堂總入口</title>
+<!-- 本檔由 words/_build_hub.js 產生，不要手改。 -->
+<style>
+@font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
+ src:url(words/fonts/andika-400.woff2) format("woff2")}
+@font-face{font-family:Andika;font-style:normal;font-weight:700;font-display:swap;
+ src:url(words/fonts/andika-700.woff2) format("woff2")}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{margin:0;background:#000;color:#F2F2F2;
+ font-family:Andika,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ padding:clamp(14px,3vh,28px) clamp(14px,3vw,30px);overflow-x:hidden}
+
+header{text-align:center;margin-bottom:clamp(10px,2vh,20px)}
+h1{margin:0;font-size:clamp(26px,4.4vh,42px);font-weight:700;letter-spacing:.04em}
+.sub{margin-top:6px;font-size:clamp(13px,1.9vh,17px);color:#9FB4C8;letter-spacing:.16em}
+
+#hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,268px),1fr));
+ gap:clamp(9px,1.5vh,15px);width:100%;max-width:1000px}
+
+.card{position:relative;display:flex;flex-direction:column;align-items:flex-start;
+ gap:clamp(3px,.6vh,7px);text-align:left;text-decoration:none;cursor:pointer;
+ background:linear-gradient(180deg,#0E0E0E 0%,#050505 100%);
+ border:1px solid #2A2A2A;border-radius:18px;color:#F2F2F2;font-family:inherit;
+ padding:clamp(12px,2.1vh,20px) clamp(13px,1.8vw,20px);
+ min-height:clamp(112px,17vh,150px);transition:border-color .2s,transform .12s}
+.card:hover{border-color:#9FB4C8}
+.card:active{transform:scale(.985)}
+.n{position:absolute;top:clamp(9px,1.5vh,15px);right:clamp(12px,1.6vw,18px);
+ font-size:clamp(20px,3.2vh,30px);font-weight:700;color:#242424;line-height:1}
+.ic{font-size:clamp(28px,4.4vh,40px);line-height:1.1}
+.t{font-size:clamp(18px,2.8vh,25px);font-weight:700;letter-spacing:.02em}
+.d{font-size:clamp(12.5px,1.85vh,16px);color:#9E9E9E;line-height:1.45}
+.caret{color:#9FB4C8;font-size:.8em}
+#cardsBtn[aria-expanded="true"] .caret{color:#F2F2F2}
+
+#cards{display:none;grid-template-columns:repeat(auto-fit,minmax(min(100%,132px),1fr));
+ gap:clamp(6px,1vh,10px);width:100%;max-width:1000px;margin-top:clamp(9px,1.5vh,15px)}
+#cards.on{display:grid}
+#cards a{display:flex;align-items:center;gap:8px;text-decoration:none;color:#F2F2F2;
+ background:#101010;border:1px solid #2A2A2A;border-radius:13px;
+ padding:clamp(8px,1.3vh,13px) clamp(9px,1.2vw,14px);min-height:52px}
+#cards a:hover{border-color:#9FB4C8}
+#cards .w{font-size:clamp(14px,2vh,18px);font-weight:700}
+#cards .z{font-size:clamp(11px,1.5vh,13px);color:#8E8E8E;margin-left:auto}
+
+footer{width:100%;max-width:1000px;margin-top:clamp(12px,2.2vh,22px);
+ display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;align-items:center}
+footer a{color:#7E7E7E;text-decoration:none;font-size:clamp(12px,1.7vh,14.5px);
+ border-bottom:1px solid #242424;padding-bottom:1px}
+footer a:hover{color:#9FB4C8;border-bottom-color:#9FB4C8}
+footer .sep{color:#2A2A2A;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+ <h1>家人單字　課堂總入口</h1>
+ <div class="sub">照順序上，從 1 到 6</div>
+</header>
+
+<main id="hub">
+<a class="card" href="words/quiz.html">
+   <span class="n">1</span><span class="ic">🎯</span>
+   <span class="t">暖身 20 題</span><span class="d">四選一，倒數 50 秒，小組討論後作答。6 題挑戰題 分數 ✕ 2</span></a>
+<a class="card" href="family-time-machine-ipad.html">
+   <span class="n">2</span><span class="ic">📖</span>
+   <span class="t">家人單字時光機</span><span class="d">主課程：17 站「學習」＋「遊戲」兩種模式</span></a>
+<button class="card" id="cardsBtn" aria-expanded="false" aria-controls="cards">
+   <span class="n">3</span><span class="ic">🃏</span>
+   <span class="t">17 張單字卡 <span class="caret">▾</span></span><span class="d">一個單字一張卡，翻卡換頁。點這裡展開</span></button>
+<a class="card" href="words/parts.html">
+   <span class="n">4</span><span class="ic">🧩</span>
+   <span class="t">單字結構</span><span class="d">grand ＝ 大、hus ＝ house、-ther 是家人字的尾巴</span></a>
+<a class="card" href="words/why.html">
+   <span class="n">5</span><span class="ic">📜</span>
+   <span class="t">單字故事</span><span class="d">家人單字為什麼長這樣，一個字一幕</span></a>
+<a class="card" href="about-my-family/index.html">
+   <span class="n">6</span><span class="ic">🎬</span>
+   <span class="t">About My Family</span><span class="d">用英文介紹我的家人（影片）</span></a>
+</main>
+
+<section id="cards">
+<a href="words/family.html"><span class="w">family</span><span class="z">家庭</span></a>
+<a href="words/parent.html"><span class="w">parent</span><span class="z">家長</span></a>
+<a href="words/mother.html"><span class="w">mother</span><span class="z">母親</span></a>
+<a href="words/father.html"><span class="w">father</span><span class="z">父親</span></a>
+<a href="words/brother.html"><span class="w">brother</span><span class="z">哥哥、弟弟</span></a>
+<a href="words/sister.html"><span class="w">sister</span><span class="z">姊姊、妹妹</span></a>
+<a href="words/son.html"><span class="w">son</span><span class="z">兒子</span></a>
+<a href="words/daughter.html"><span class="w">daughter</span><span class="z">女兒</span></a>
+<a href="words/grandfather.html"><span class="w">grandfather</span><span class="z">爺爺</span></a>
+<a href="words/grandmother.html"><span class="w">grandmother</span><span class="z">奶奶</span></a>
+<a href="words/uncle.html"><span class="w">uncle</span><span class="z">叔叔</span></a>
+<a href="words/aunt.html"><span class="w">aunt</span><span class="z">阿姨</span></a>
+<a href="words/cousin.html"><span class="w">cousin</span><span class="z">堂表兄弟姊妹</span></a>
+<a href="words/nephew.html"><span class="w">nephew</span><span class="z">姪子</span></a>
+<a href="words/niece.html"><span class="w">niece</span><span class="z">姪女</span></a>
+<a href="words/husband.html"><span class="w">husband</span><span class="z">丈夫</span></a>
+<a href="words/wife.html"><span class="w">wife</span><span class="z">妻子</span></a>
+</section>
+
+<footer>
+<a href="words/why-2.html">單字故事 ②</a><span class="sep">·</span>
+<a href="words/why-more.html">更多字的故事</a><span class="sep">·</span>
+<a href="words/daughter-gh.html">daughter 的 gh</a><span class="sep">·</span>
+<a href="words/older-younger.html">哥哥還是弟弟</a>
+<span class="sep">|</span>
+<a href="https://github.com/hsieny627-jpg/AI-Agent-Open-Code/blob/main/kahoot_20_%E9%A1%8C%E7%9B%AE%E8%88%87%E4%B8%8A%E6%9E%B6%E8%AA%AA%E6%98%8E.md">📋 Kahoot 20 題與上架說明</a><span class="sep">·</span>
+<a href="words/quiz-demo.html">🎮 暖身題試玩一題</a>
+</footer>
+
+<script>
+(function(){
+ var b=document.getElementById("cardsBtn"),g=document.getElementById("cards");
+ b.addEventListener("click",function(){
+  var on=g.classList.toggle("on");
+  b.setAttribute("aria-expanded",on?"true":"false");
+  if(on)g.scrollIntoView({block:"nearest",behavior:"smooth"});
+ });
+})();
+</script>
+</body>
+</html>

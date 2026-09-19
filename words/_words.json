@@ -1,0 +1,87 @@
+[
+ {
+  "f": "family",
+  "zh": "家庭",
+  "icon": "👨‍👩‍👧‍👦"
+ },
+ {
+  "f": "parent",
+  "zh": "家長",
+  "icon": "👨‍👩"
+ },
+ {
+  "f": "mother",
+  "zh": "母親",
+  "icon": "❤️"
+ },
+ {
+  "f": "father",
+  "zh": "父親",
+  "icon": "🧔"
+ },
+ {
+  "f": "brother",
+  "zh": "哥哥、弟弟",
+  "icon": "🧒👦"
+ },
+ {
+  "f": "sister",
+  "zh": "姊姊、妹妹",
+  "icon": "👧👩"
+ },
+ {
+  "f": "son",
+  "zh": "兒子",
+  "icon": "👦"
+ },
+ {
+  "f": "daughter",
+  "zh": "女兒",
+  "icon": "👧"
+ },
+ {
+  "f": "grandfather",
+  "zh": "爺爺",
+  "icon": "👴"
+ },
+ {
+  "f": "grandmother",
+  "zh": "奶奶",
+  "icon": "👵"
+ },
+ {
+  "f": "uncle",
+  "zh": "叔叔",
+  "icon": "🧓"
+ },
+ {
+  "f": "aunt",
+  "zh": "阿姨",
+  "icon": "👩‍🦰"
+ },
+ {
+  "f": "cousin",
+  "zh": "堂表兄弟姊妹",
+  "icon": "🧑‍🤝‍🧑"
+ },
+ {
+  "f": "nephew",
+  "zh": "姪子",
+  "icon": "👦💙"
+ },
+ {
+  "f": "niece",
+  "zh": "姪女",
+  "icon": "👧💜"
+ },
+ {
+  "f": "husband",
+  "zh": "丈夫",
+  "icon": "🤵"
+ },
+ {
+  "f": "wife",
+  "zh": "妻子",
+  "icon": "👰"
+ }
+]

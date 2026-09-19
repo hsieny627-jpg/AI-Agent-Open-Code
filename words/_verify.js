@@ -12,6 +12,12 @@
  *   - 首幕 ← 停用、末幕 → 停用
  *   - 停 6 秒不可自動換頁
  *
+ * C. 課堂總入口（有 #hub）＝ 專案根目錄的 index.html（用 ../index.html 指定）
+ *   - Andika 有載到
+ *   - **每一個站內連結都要真的存在**（連壞了老師上課才發現最慘）
+ *   - 關著的時候（投影出來的樣子）不可以有捲軸；按開 17 張卡之後可以往下捲
+ *   - 按「17 張單字卡」要真的展開，而且剛好 17 個連結
+ *
  * B. 暖身題頁（沒有 #dots，有 #go）＝ quiz.html / quiz-demo.html
  *   - Andika 有載到
  *   - 閘門畫面 → 出題 → 解鎖 → 作答 → 回饋，四個狀態都不可溢出
@@ -27,7 +33,8 @@ const fs=require('fs'),DIR=__dirname+'/';
 const args=process.argv.slice(2);
 const showText=args.includes('--text');
 const files=args.filter(a=>a!=='--text');
-const FILES=files.length?files:fs.readdirSync(DIR).filter(f=>f.endsWith('.html')).sort();
+const FILES=files.length?files:
+ fs.readdirSync(DIR).filter(f=>f.endsWith('.html')).sort().concat(['../index.html']);
 const VPS=[{n:'1024x768',width:1024,height:768},{n:'820x1180',width:820,height:1180}];
 
 /* 共用：量溢出與「被箭頭壓到」 */
@@ -45,6 +52,39 @@ const fontOk=p=>p.evaluate(async()=>{await document.fonts.ready;
  c.font='700 48px Andika';const a=c.measureText('brother daughter').width;
  c.font='700 48px sans-serif';const s=c.measureText('brother daughter').width;
  return{ok:document.fonts.check('700 48px Andika')&&document.fonts.check('400 48px Andika'),d:Math.abs(a-s)}});
+
+/* ---------- C. 課堂總入口 ---------- */
+async function hubPage(p,f,vp,e){
+ const snap=()=>p.evaluate(()=>{
+  const de=document.documentElement;
+  return{ox:de.scrollWidth-de.clientWidth,oy:de.scrollHeight-de.clientHeight,
+   open:document.getElementById('cards').classList.contains('on'),
+   nCard:document.querySelectorAll('#cards a').length,
+   links:[...document.querySelectorAll('a[href]')].map(a=>a.getAttribute('href'))}});
+ let acts=0;
+ let s=await snap();acts++;
+ if(s.ox>0)e.push('關著時橫向溢出'+s.ox);
+ if(s.oy>0)e.push('關著時有捲軸（投影會被切掉）'+s.oy);
+ if(s.open)e.push('17 張卡一開始就是展開的');
+
+ /* 每一個站內連結都要真的存在 */
+ const root=require('path').resolve(DIR,'..');
+ const miss=[];
+ for(const h of s.links){
+  if(!h||/^(https?:|mailto:|#)/.test(h))continue;
+  const fp=require('path').resolve(root,h.split('#')[0].split('?')[0]);
+  if(!fs.existsSync(fp))miss.push(h);
+ }
+ acts++;
+ if(miss.length)e.push('連結指到不存在的檔案：'+miss.join('、'));
+
+ await p.click('#cardsBtn');await p.waitForTimeout(350);
+ s=await snap();acts++;
+ if(!s.open)e.push('按了「17 張單字卡」沒有展開');
+ if(s.nCard!==17)e.push('展開後不是 17 張（'+s.nCard+'）');
+ if(s.ox>0)e.push('展開後橫向溢出'+s.ox);
+ return acts;
+}
 
 /* ---------- A. 幕頁 ---------- */
 async function scenePage(p,f,vp,e){
@@ -148,9 +188,9 @@ for(const vp of VPS){
   const font=await fontOk(p);
   if(!font.ok||font.d<0.5)e.push('Andika 未生效');
   const kind=await p.evaluate(()=>document.getElementById('dots')?'scene':
-   (document.getElementById('go')?'quiz':'unknown'));
-  if(kind==='unknown')e.push('頁型不明（沒有 #dots 也沒有 #go）');
-  else acts+=await (kind==='scene'?scenePage:quizPage)(p,f,vp,e);
+   (document.getElementById('go')?'quiz':(document.getElementById('hub')?'hub':'unknown')));
+  if(kind==='unknown')e.push('頁型不明（沒有 #dots／#go／#hub）');
+  else acts+=await ({scene:scenePage,quiz:quizPage,hub:hubPage}[kind])(p,f,vp,e);
   if(e.length)bad.push(f+' @'+vp.n+'：'+e.join('；'));
   await p.close();
  }

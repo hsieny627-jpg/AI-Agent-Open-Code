@@ -208,4 +208,7 @@ ${SRC.JS}
 `;
 
 WORDS.forEach(w=>fs.writeFileSync(path.join(DIR,w.f+'.html'),tpl(w),'utf8'));
+/* 給總入口（_build_hub.js）用的單字清單。由本檔產出，所以永遠不會跟字卡走鐘。 */
+fs.writeFileSync(path.join(DIR,'_words.json'),
+ JSON.stringify(WORDS.map(w=>({f:w.f,zh:w.zh,icon:w.icon})),null,1),'utf8');
 console.log('已產生 '+WORDS.length+' 頁：'+WORDS.map(w=>w.f).join(' '));

@@ -28,6 +28,8 @@
 | `quiz.html` | 暖身 20 題（產物）：老師按鈕決定要不要先做 |
 | `quiz-demo.html` | 只有一題的試玩版（產物），給測網址用，引擎完全相同 |
 | `_build_kahoot.js` | Kahoot 匯入檔的產生器，`node words/_build_kahoot.js` 重建根目錄的 `kahoot_family_20.xlsx` ＋ `kahoot_20_題目與上架說明.md` |
+| `_build_hub.js` | **課堂總入口的產生器**，`node words/_build_hub.js` 重建<b>專案根目錄</b>的 `index.html` |
+| `_words.json` | 17 個單字的清單（由 `_build.js` 產出），總入口讀它，所以不會跟字卡走鐘 |
 | `fonts/` | Andika 400 / 700，離線必須 |
 
 **改版面或互動 → 改 `_build.js` 的 `tpl()`，跑一次，17 頁同步。**
@@ -272,13 +274,19 @@ node words/_verify.js --text why.html    # 順便印出每一幕的文字
   **倒數秒數要真的在減少**、作答後選項全鎖、要出現「下一題」與秒懂說明、
   作答後停 6 秒不自動跳題。
 
+- **課堂總入口**（有 `#hub`：專案根目錄 `index.html`，用 `../index.html` 指定）——
+  **每一個站內連結都要真的存在**（這條最重要，連結壞掉老師上課才發現最慘）、
+  關著的時候不可以有捲軸（投影會被切掉）、按「17 張單字卡」要真的展開且剛好 17 個。
+
 **只印失敗項**——把全部量測資料印出來很貴。
+`node words/_verify.js` 不加參數會連 `../index.html` 一起量，不必另外下指令。
 
 ```bash
 node words/_build.js        # 17 張單字卡
 node words/_build_story.js  # why / why-2 / daughter-gh / why-more
 node words/_build_quiz.js   # quiz / quiz-demo
 node words/_build_kahoot.js # 根目錄的 kahoot xlsx ＋ 說明文件
+node words/_build_hub.js    # 根目錄的 index.html（課堂總入口）
 ```
 
 ## 省額度的做法
@@ -326,17 +334,30 @@ node words/_verify.js       # 量測（改完一定要跑）
   所以教材只寫「尾巴長得一樣」這個看得到的事實。
 - `mo`／`fa` 來自寶寶的 ma／pa；**`bro`／`sis` 單獨沒有意思**，不要編。
 
+### 課堂總入口（2026-09-19 完成，原待辦第 1 項）
+
+專案根目錄 `index.html`，由 `words/_build_hub.js` 產生。老師只要記**一個網址**：
+https://hsieny627-jpg.github.io/AI-Agent-Open-Code/
+（QR code：根目錄 `qr-課堂總入口.png`，指向同一個網址）
+
+照上課順序排 6 步：
+`1 🎯 暖身 20 題` → `2 📖 家人單字時光機`（學習＋遊戲）→ `3 🃏 17 張單字卡`（點開才展開）
+→ `4 🧩 單字結構` → `5 📜 單字故事` → `6 🎬 About My Family 影片`。
+最下面一排小字是延伸頁與老師專用（Kahoot 說明）。
+
+**界線，不要跨過去：**
+
+- **這是一頁純連結頁**，只放連結與一句說明，**不放任何教學內容**。
+- **絕對不要去改 `family-time-machine-ipad.html`**。那支 84KB 單檔 app 本來就能跑，
+  動它風險最高、花的額度也最多。總入口只是連過去。
+- 17 張卡的清單讀 `words/_words.json`（`_build.js` 產出）。
+  **增刪單字 → 跑 `_build.js` 再跑 `_build_hub.js`**，兩邊自動同步。
+- **關著的時候不可以有捲軸**（那是老師投影出來的樣子），展開後才可以往下捲。
+
 ### 待辦（下一個對話可以直接接手）
 
-1. **把整套課程串成一個總入口**（使用者 2026-09-19 提出）。
-   現況是各頁各自獨立，老師要記很多網址。建議做**專案根目錄 `index.html`**，
-   照上課順序排：
-   `🎯 暖身 20 題` → `📖🎮 家人單字時光機`（根目錄 `family-time-machine-ipad.html`，
-   原本就有學習＋遊戲兩種模式）→ `🃏 17 張字卡` → `🧩 單字結構` →
-   `📜 單字故事` → `🎬 about-my-family 影片`。
-   一個 QR code 就夠（根目錄已有 `qr-family-time-machine.png`，要重做）。
-   **只做一頁純連結頁，不要去改 `family-time-machine-ipad.html` 的內容**——
-   那支檔 84KB、是單檔 app，動它風險高、花的額度也最多。
+1. 總入口做好了，但**還沒有人實際在教室投影過**。
+   第一次上課前，老師用教室那台電腦開一次，確認投影出來字夠大、連結都點得到。
 2. `brother-why.html` 的課堂實測結果 → 決定推廣或刪除。
 3. **Kahoot 要老師本人登入上傳並試玩**（AI 沒有帳號，做不到這一步）。
 4. 出處目前是**列條目名稱**供老師查，製作環境連不上 etymonline／Wikipedia／
