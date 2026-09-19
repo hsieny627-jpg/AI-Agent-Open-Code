@@ -31,9 +31,16 @@ body{margin:0;background:#000;color:#F2F2F2;
 .nav:active:not(:disabled){background:rgba(255,255,255,.05)}
 #prev{left:0}#next{right:0}
 
-#stage{width:100%;max-width:760px;padding:0 clamp(76px,11vw,130px);text-align:center;
- min-height:clamp(320px,62vh,560px);display:flex;flex-direction:column;align-items:center;justify-content:center;
- gap:clamp(8px,1.6vh,18px)}
+/* 字卡：一張卡就是一幕，翻頁＝翻卡（使用者 2026-09-19 指定） */
+#stage{width:100%;max-width:760px;padding:0 clamp(76px,11vw,130px);
+ display:flex;align-items:center;justify-content:center;perspective:1500px}
+#card{width:100%;text-align:center;min-height:clamp(300px,57vh,520px);
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:clamp(8px,1.6vh,18px);
+ border:1px solid #242424;border-radius:clamp(18px,3vh,30px);
+ background:linear-gradient(180deg,#0B0B0B 0%,#040404 100%);
+ box-shadow:0 18px 50px rgba(0,0,0,.65);
+ padding:clamp(10px,2.4vh,24px) clamp(8px,2vw,18px)}
 .tag{font-size:clamp(13px,1.6vh,16px);color:#9FB4C8;letter-spacing:.4em;font-weight:700;padding-left:.4em}
 .emoji{font-size:clamp(84px,17vh,150px);line-height:1.05}
 .zh{font-size:clamp(46px,8.4vh,78px);font-weight:700;letter-spacing:.06em}
@@ -55,15 +62,34 @@ body{margin:0;background:#000;color:#F2F2F2;
 @keyframes rise{0%{opacity:0;transform:translateY(20px) scale(.92)}100%{opacity:1;transform:none}}
 .pop{animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
 @keyframes pop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+/* 翻卡：往後翻從右邊翻進來，往回翻從左邊翻進來（420ms，翻完才是穩定畫面） */
+.turnR{animation:turnR .42s cubic-bezier(.25,.85,.3,1) both}
+.turnL{animation:turnL .42s cubic-bezier(.25,.85,.3,1) both}
+@keyframes turnR{0%{opacity:.2;transform:rotateY(54deg) translateX(24px) scale(.94)}
+ 100%{opacity:1;transform:none}}
+@keyframes turnL{0%{opacity:.2;transform:rotateY(-54deg) translateX(-24px) scale(.94)}
+ 100%{opacity:1;transform:none}}
 .reduce *{animation:none!important;transition:none!important}
+
+#src{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.95);
+ display:none;flex-direction:column;align-items:center;justify-content:center;
+ padding:clamp(16px,4vh,40px);overflow:auto;text-align:left}
+#src.on{display:flex}
+#src h4{margin:0 0 12px;color:#9FB4C8;font-size:clamp(13px,1.8vh,16px);letter-spacing:.24em;font-weight:700}
+#src p{margin:0 0 8px;max-width:640px;color:#8E8E8E;line-height:1.65;
+ font-size:clamp(11px,1.55vh,13px)}
+#src p b{color:#D8D3C5;font-weight:700}
+#src button{margin-top:16px;background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;
+ border-radius:99px;font-size:15px;padding:10px 22px;min-height:44px;font-family:inherit;cursor:pointer}
 </style>
 </head>
 <body>
 <div id="dots"></div>
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
-<div id="stage"></div>
+<div id="stage"><div id="card"></div></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
-<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button></div>
+<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button><button id="srcb">📖 出處</button></div>
+<footer id="src"><h4>出處</h4><p><b>OED</b>「grand-, comb. form」：親屬稱謂的 <b>grand-</b> 來自<b>法語（Anglo-French）grand</b>，比照 grandpère 的構詞造出 grandfather。</p><p><b>OED</b>「grandpa, n.」：口語簡稱。</p><button id="srcx">關閉</button></footer>
 
 <script>
 var W={zh:"爺爺",sub:"外公也是",icon:"👴",old:"grand-",now:"grandfather",
@@ -98,9 +124,13 @@ for(var k=0;k<SCENES.length;k++)dots.appendChild(document.createElement("i"));
 function say(){try{var u=new SpeechSynthesisUtterance(W.now);u.lang="en-US";u.rate=.8;
  speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 
+var card=document.getElementById("card");
 function show(n){
+ var back=(n<i);
  i=Math.max(0,Math.min(SCENES.length-1,n));
- document.getElementById("stage").innerHTML=SCENES[i]();
+ card.innerHTML=SCENES[i]();
+ if(!reduce){card.classList.remove("turnR","turnL");void card.offsetWidth;
+  card.classList.add(back?"turnL":"turnR")}
  var d=dots.children;
  for(var k=0;k<d.length;k++)d[k].className=(k===i?"on":"");
  document.getElementById("prev").disabled=(i===0);
@@ -118,6 +148,13 @@ document.addEventListener("keydown",function(e){
 });
 
 show(0);
+
+
+(function(){var s=document.getElementById("src");
+ function t(v){s.classList.toggle("on",v)}
+ document.getElementById("srcb").addEventListener("click",function(){t(!s.classList.contains("on"))});
+ document.getElementById("srcx").addEventListener("click",function(){t(false)});
+ document.addEventListener("keydown",function(e){if(e.key==="Escape")t(false)});})();
 </script>
 </body>
 </html>

@@ -13,6 +13,7 @@
  * 字母逐格變形永遠禁止——動畫動的是人、時間、聲音、零件，不是整個單字的拼法。
  */
 const fs=require('fs'),path=require('path'),DIR=__dirname;
+const SRC=require('./_sources');
 
 /* FAM[0]=開場、FAM[1..17]=17 個家人單字、FAM[18]=結尾 */
 const FAM=[
@@ -46,12 +47,13 @@ const FAM=[
   lines:['以前英文有一個字母 <b>þ</b>，像一面小旗子',
          'brother 以前寫成 <b>brōþor</b>']},
 
- {tag:'兩個村子，兩種叫法',emoji:'🏘️👧🏘️',say:'sister',
-  h:'<div class="en in d1" style="font-size:clamp(22px,4vh,38px)">'+
-    '<span class="fromL">🏘️ sweostor</span> <span class="ar">＋</span> <span class="fromR">systir 🏘️</span></div>'+
-    '<div class="en pop" style="animation-delay:1.2s">sister</div>',
-  lines:['以前<b>兩個村子</b>，同一個人<b>叫法不一樣</b>',
-         '住在一起久了，兩種叫法<b>合成一個字</b>']},
+ {tag:'兩邊人唸得不一樣',emoji:'👧',say:'sister',
+  h:'<div class="en in d1" style="font-size:clamp(17px,3vh,28px);line-height:1.6">'+
+    '<span class="fromL">🏴 英國人唸 sweostor</span><br>'+
+    '<span class="fromR">⛵ 維京人唸 systir</span></div>'+
+    '<div class="en pop" style="animation-delay:1.3s">sister</div>',
+  lines:['<b>同一個姊姊</b>，英國人唸 <b>sweostor</b>，坐船來的維京人唸 <b>systir</b>',
+         '住在一起久了，<b>唸成今天的 sister</b>']},
 
  {tag:'唸起來一樣',emoji:'☀️👦',say:'son',
   h:'<div class="en in d1" style="font-size:clamp(26px,4.8vh,46px)">'+
@@ -91,14 +93,14 @@ const FAM=[
   lines:['cousin 以前只有一種：<b>阿姨的小孩</b>',
          '現在堂哥、表姊、堂弟、表妹，<b>全都是 cousin</b>']},
 
- {tag:'以前能叫的更多',emoji:'👦<span class="extra">👴👶🧒</span>',say:'nephew',
+ {tag:'以前用的人更多',emoji:'👦<span class="extra">👴👶🧒</span>',say:'nephew',
   h:'<div class="en in d1">nephew</div>',
-  lines:['<b>nepos</b> 以前很好用，孫子、姪子、外甥都能叫',
+  lines:['<b>nepos</b> 以前很好用，孫子、姪子、外甥<b>都可以用這個字</b>',
          '現在只剩一種：<b>兄弟姊妹的兒子</b>']},
 
  {tag:'和 nephew 一樣',emoji:'👧<span class="extra">👵👶👩</span>',say:'niece',
   h:'<div class="en in d1">niece</div>',
-  lines:['<b>neptia</b> 以前也一樣，一大群人都能叫',
+  lines:['<b>neptia</b> 以前也一樣，<b>一大群人都可以用這個字</b>',
          '現在只剩一種：<b>兄弟姊妹的女兒</b>']},
 
  {tag:'藏在字裡的房子',emoji:'🏠',say:'husband',
@@ -106,13 +108,13 @@ const FAM=[
   lines:['<b>hus</b> 就是 <b>house</b>（房子）',
          'husband 以前的意思是「<b>管這個家的人</b>」']},
 
- {tag:'以前能叫的更多',emoji:'👰<span class="extra">👩👩‍🦰👵</span>',say:'wife',
+ {tag:'以前用的人更多',emoji:'👰<span class="extra">👩👩‍🦰👵</span>',say:'wife',
   h:'<div class="en in d1">wife</div>',
-  lines:['以前的 <b>wīf</b>，<b>每個女生都能這樣叫</b>',
+  lines:['以前的 <b>wīf</b>，<b>每個女生都可以用這個字</b>',
          '現在只剩一種：<b>太太</b>']},
 
  {tag:'所以',emoji:'🗣️⏳',mid:'字會變，就像綽號',
-  lines:['<b>沒有人規定</b>，是大家一直叫','叫著叫著，<b>就慢慢變了</b>']}
+  lines:['<b>沒有人規定</b>，是大家一直這樣<b>發音</b>','<b>發音慢慢變，字就跟著變</b>']}
 ];
 
 /* 第二頁的開場 */
@@ -121,10 +123,37 @@ const OPEN2={emoji:'👨‍👩‍👧‍👦',mid:'還有八個家人單字',
 
 const PAGES=[
 /* 19 幕一次放太長，拆成兩頁：前 9 個字／後 8 個字，各 10 幕 */
-{file:'why.html',title:'家人單字的故事 ①',S:FAM.slice(0,10)},
-{file:'why-2.html',title:'家人單字的故事 ②',S:[OPEN2].concat(FAM.slice(10,18),[FAM[18]])},
+{file:'why.html',title:'家人單字的故事 ①',src:'why',S:FAM.slice(0,10)},
+{file:'why-2.html',title:'家人單字的故事 ②',src:'why',S:[OPEN2].concat(FAM.slice(10,18),[FAM[18]])},
 
-{file:'why-more.html',title:'更多字的故事',
+/* daughter 的重要補充：英文丟掉的聲音，德文／荷蘭文還留著。
+   使用者 2026-09-19 指定要做成秒懂動畫，並附 100% 可查證的出處。
+   不放進 daughter.html（三幕結構不動），獨立成一頁，由 daughter 頁的「✨ 補充」進來。 */
+{file:'daughter-gh.html',title:'daughter 的 gh 去哪了',src:'daughter-gh',
+ back:{href:'daughter.html',label:'← 回 daughter'},
+ S:[
+ {tag:'重要補充',emoji:'👧',mid:'daughter 的 gh，以前唸得出來',
+  lines:['怎麼知道？<b>去聽德文就知道了</b>']},
+
+ {tag:'德文',emoji:'🇩🇪',say:'Tochter',sayLang:'de-DE',
+  h:'<div class="en in d1">To<span class="keep">ch</span>ter</div>',
+  lines:['德文的「女兒」寫成 <b>Tochter</b>','中間的 <b>ch</b> 到今天<b>還在發音</b>（喉嚨後面的摩擦音）']},
+
+ {tag:'荷蘭文',emoji:'🇳🇱',say:'dochter',sayLang:'nl-NL',
+  h:'<div class="en in d1">do<span class="keep">ch</span>ter</div>',
+  lines:['荷蘭文的「女兒」寫成 <b>dochter</b>','<b>ch</b> 也<b>還在發音</b>']},
+
+ {tag:'英文',emoji:'👧',say:'daughter',
+  h:'<div class="en in d1">dau<span class="mute">gh</span>ter</div>',
+  lines:['英文 daughter 和它們是<b>同一個字的不同分支</b>',
+         '<b>聲音只有英文丟掉了，字母還留著</b>']},
+
+ {tag:'自己聽聽看',emoji:'🔊',mid:'用 Google 翻譯放一次 Tochter',
+  lines:['<b>蘇格蘭腔</b>的 <b>dochter</b>、<b>nicht</b>（night）也還留著這個音',
+         '（出處按右下角「📖 出處」）']}
+]},
+
+{file:'why-more.html',title:'更多字的故事',src:'why-more',
  S:[
  {emoji:'🌍',mid:'不只家人單字',lines:['很多你認識的字，也有故事']},
 
@@ -241,7 +270,19 @@ body{margin:0;background:#000;color:#F2F2F2;
 .fromR{display:inline-block;animation:fromR .9s cubic-bezier(.2,.9,.3,1) both}
 @keyframes fromL{0%{opacity:0;transform:translateX(-58px)}100%{opacity:1;transform:none}}
 @keyframes fromR{0%{opacity:0;transform:translateX(58px)}100%{opacity:1;transform:none}}
+/* 還在發音的 ch：聲音一直在震（德文／荷蘭文） */
+.keep{display:inline-block;color:#9FB4C8;animation:throat 1.5s ease-in-out infinite}
+@keyframes throat{0%,100%{transform:scale(1);text-shadow:0 0 0 rgba(159,180,200,0)}
+ 50%{transform:scale(1.13);text-shadow:0 0 26px rgba(159,180,200,.6)}}
+/* 翻卡換頁 */
+.turnR{animation:turnR .42s cubic-bezier(.25,.85,.3,1) both}
+.turnL{animation:turnL .42s cubic-bezier(.25,.85,.3,1) both}
+@keyframes turnR{0%{opacity:.2;transform:perspective(1500px) rotateY(50deg) translateX(22px) scale(.95)}
+ 100%{opacity:1;transform:none}}
+@keyframes turnL{0%{opacity:.2;transform:perspective(1500px) rotateY(-50deg) translateX(-22px) scale(.95)}
+ 100%{opacity:1;transform:none}}
 .reduce *{animation:none!important;transition:none!important}
+${SRC.CSS}
 </style>
 </head>
 <body>
@@ -249,7 +290,8 @@ body{margin:0;background:#000;color:#F2F2F2;
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
-<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button></div>
+<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button>${P.back?`<button id="back">${P.back.label}</button>`:''}${SRC.btn}</div>
+${SRC.html(SRC.P[P.src||'why'])}
 
 <script>
 var S=${JSON.stringify(P.S,null,1)};
@@ -272,12 +314,16 @@ var dots=document.getElementById("dots");
 for(var k=0;k<S.length;k++)dots.appendChild(document.createElement("i"));
 
 function say(){try{var w=S[i].say;if(!w)return;
- var u=new SpeechSynthesisUtterance(w);u.lang="en-US";u.rate=.8;
+ var u=new SpeechSynthesisUtterance(w);u.lang=S[i].sayLang||"en-US";u.rate=.8;
  speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 
+var stage=document.getElementById("stage");
 function show(n){
+ var back=(n<i);
  i=Math.max(0,Math.min(S.length-1,n));
- document.getElementById("stage").innerHTML=draw(S[i]);
+ stage.innerHTML=draw(S[i]);
+ if(!reduce){stage.classList.remove("turnR","turnL");void stage.offsetWidth;
+  stage.classList.add(back?"turnL":"turnR")}
  var d=dots.children;
  for(var k=0;k<d.length;k++)d[k].className=(k===i?"on":"");
  document.getElementById("prev").disabled=(i===0);
@@ -294,6 +340,8 @@ document.addEventListener("keydown",function(e){
 });
 
 show(0);
+${P.back?`document.getElementById("back").addEventListener("click",function(){location.href=${JSON.stringify(P.back.href)}});`:''}
+${SRC.JS}
 </script>
 </body>
 </html>

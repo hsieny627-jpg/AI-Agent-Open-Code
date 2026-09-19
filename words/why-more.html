@@ -82,7 +82,29 @@ body{margin:0;background:#000;color:#F2F2F2;
 .fromR{display:inline-block;animation:fromR .9s cubic-bezier(.2,.9,.3,1) both}
 @keyframes fromL{0%{opacity:0;transform:translateX(-58px)}100%{opacity:1;transform:none}}
 @keyframes fromR{0%{opacity:0;transform:translateX(58px)}100%{opacity:1;transform:none}}
+/* 還在發音的 ch：聲音一直在震（德文／荷蘭文） */
+.keep{display:inline-block;color:#9FB4C8;animation:throat 1.5s ease-in-out infinite}
+@keyframes throat{0%,100%{transform:scale(1);text-shadow:0 0 0 rgba(159,180,200,0)}
+ 50%{transform:scale(1.13);text-shadow:0 0 26px rgba(159,180,200,.6)}}
+/* 翻卡換頁 */
+.turnR{animation:turnR .42s cubic-bezier(.25,.85,.3,1) both}
+.turnL{animation:turnL .42s cubic-bezier(.25,.85,.3,1) both}
+@keyframes turnR{0%{opacity:.2;transform:perspective(1500px) rotateY(50deg) translateX(22px) scale(.95)}
+ 100%{opacity:1;transform:none}}
+@keyframes turnL{0%{opacity:.2;transform:perspective(1500px) rotateY(-50deg) translateX(-22px) scale(.95)}
+ 100%{opacity:1;transform:none}}
 .reduce *{animation:none!important;transition:none!important}
+
+#src{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.95);
+ display:none;flex-direction:column;align-items:center;justify-content:center;
+ padding:clamp(16px,4vh,40px);overflow:auto;text-align:left}
+#src.on{display:flex}
+#src h4{margin:0 0 12px;color:#9FB4C8;font-size:clamp(13px,1.8vh,16px);letter-spacing:.24em;font-weight:700}
+#src p{margin:0 0 8px;max-width:640px;color:#8E8E8E;line-height:1.65;
+ font-size:clamp(11px,1.55vh,13px)}
+#src p b{color:#D8D3C5;font-weight:700}
+#src button{margin-top:16px;background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;
+ border-radius:99px;font-size:15px;padding:10px 22px;min-height:44px;font-family:inherit;cursor:pointer}
 </style>
 </head>
 <body>
@@ -90,7 +112,8 @@ body{margin:0;background:#000;color:#F2F2F2;
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
-<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button></div>
+<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button><button id="srcb">📖 出處</button></div>
+<footer id="src"><h4>出處</h4><p><b>OED</b>「tea, n.」：經荷蘭文 thee，源自<b>閩南語（廈門話）的 tê</b>。</p><p><b>OED</b>「ketchup, n.」：源自<b>閩南語 kê-tsiap（鮭汁）</b>，原是魚醬。</p><p><b>OED</b>「hamburger, n.」：源自<b>德國漢堡市（Hamburg）</b>，與 ham（火腿）無關；後被誤切為 ham＋burger，才生出 cheeseburger。</p><p><b>OED</b>「sandwich, n.」：得名自<b>第四代 Sandwich 伯爵 John Montagu（1718–1792）</b>。</p><p><b>OED</b>「breakfast, n.」：<b>break</b>（打破）＋ <b>fast</b>（禁食）。</p><p><b>OED</b>「goodbye, int.」：是 <b>God be with ye</b> 的縮合。</p><button id="srcx">關閉</button></footer>
 
 <script>
 var S=[
@@ -190,12 +213,16 @@ var dots=document.getElementById("dots");
 for(var k=0;k<S.length;k++)dots.appendChild(document.createElement("i"));
 
 function say(){try{var w=S[i].say;if(!w)return;
- var u=new SpeechSynthesisUtterance(w);u.lang="en-US";u.rate=.8;
+ var u=new SpeechSynthesisUtterance(w);u.lang=S[i].sayLang||"en-US";u.rate=.8;
  speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 
+var stage=document.getElementById("stage");
 function show(n){
+ var back=(n<i);
  i=Math.max(0,Math.min(S.length-1,n));
- document.getElementById("stage").innerHTML=draw(S[i]);
+ stage.innerHTML=draw(S[i]);
+ if(!reduce){stage.classList.remove("turnR","turnL");void stage.offsetWidth;
+  stage.classList.add(back?"turnL":"turnR")}
  var d=dots.children;
  for(var k=0;k<d.length;k++)d[k].className=(k===i?"on":"");
  document.getElementById("prev").disabled=(i===0);
@@ -212,6 +239,13 @@ document.addEventListener("keydown",function(e){
 });
 
 show(0);
+
+
+(function(){var s=document.getElementById("src");
+ function t(v){s.classList.toggle("on",v)}
+ document.getElementById("srcb").addEventListener("click",function(){t(!s.classList.contains("on"))});
+ document.getElementById("srcx").addEventListener("click",function(){t(false)});
+ document.addEventListener("keydown",function(e){if(e.key==="Escape")t(false)});})();
 </script>
 </body>
 </html>

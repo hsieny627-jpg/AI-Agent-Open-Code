@@ -82,7 +82,29 @@ body{margin:0;background:#000;color:#F2F2F2;
 .fromR{display:inline-block;animation:fromR .9s cubic-bezier(.2,.9,.3,1) both}
 @keyframes fromL{0%{opacity:0;transform:translateX(-58px)}100%{opacity:1;transform:none}}
 @keyframes fromR{0%{opacity:0;transform:translateX(58px)}100%{opacity:1;transform:none}}
+/* 還在發音的 ch：聲音一直在震（德文／荷蘭文） */
+.keep{display:inline-block;color:#9FB4C8;animation:throat 1.5s ease-in-out infinite}
+@keyframes throat{0%,100%{transform:scale(1);text-shadow:0 0 0 rgba(159,180,200,0)}
+ 50%{transform:scale(1.13);text-shadow:0 0 26px rgba(159,180,200,.6)}}
+/* 翻卡換頁 */
+.turnR{animation:turnR .42s cubic-bezier(.25,.85,.3,1) both}
+.turnL{animation:turnL .42s cubic-bezier(.25,.85,.3,1) both}
+@keyframes turnR{0%{opacity:.2;transform:perspective(1500px) rotateY(50deg) translateX(22px) scale(.95)}
+ 100%{opacity:1;transform:none}}
+@keyframes turnL{0%{opacity:.2;transform:perspective(1500px) rotateY(-50deg) translateX(-22px) scale(.95)}
+ 100%{opacity:1;transform:none}}
 .reduce *{animation:none!important;transition:none!important}
+
+#src{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.95);
+ display:none;flex-direction:column;align-items:center;justify-content:center;
+ padding:clamp(16px,4vh,40px);overflow:auto;text-align:left}
+#src.on{display:flex}
+#src h4{margin:0 0 12px;color:#9FB4C8;font-size:clamp(13px,1.8vh,16px);letter-spacing:.24em;font-weight:700}
+#src p{margin:0 0 8px;max-width:640px;color:#8E8E8E;line-height:1.65;
+ font-size:clamp(11px,1.55vh,13px)}
+#src p b{color:#D8D3C5;font-weight:700}
+#src button{margin-top:16px;background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;
+ border-radius:99px;font-size:15px;padding:10px 22px;min-height:44px;font-family:inherit;cursor:pointer}
 </style>
 </head>
 <body>
@@ -90,7 +112,8 @@ body{margin:0;background:#000;color:#F2F2F2;
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
-<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button></div>
+<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button><button id="srcb">📖 出處</button></div>
+<footer id="src"><h4>出處</h4><p>本頁每一幕的出處，與該單字字卡頁的出處相同（見各字卡的「📖 出處」）。</p><p><b>OED</b>（牛津英語詞典）為主要依據；拉丁文詞義另據 <b>Lewis &amp; Short《A Latin Dictionary》</b>。</p><p><b>Wikipedia「Thorn (letter)」「Gh (digraph)」「Old Norse influence on English」</b>可作為課堂上最快查到的旁證。</p><p><b>Roman Jakobson (1960)《Why “Mama” and “Papa”?》</b>：ma／da 是嬰兒最早發得出來的音。</p><p>「Father And Mother, I Love You」<b>查無一手出處</b>，教材只說「它不是 family 的來源」。</p><button id="srcx">關閉</button></footer>
 
 <script>
 var S=[
@@ -142,12 +165,12 @@ var S=[
   ]
  },
  {
-  "tag": "以前能叫的更多",
+  "tag": "以前用的人更多",
   "emoji": "👦<span class=\"extra\">👴👶🧒</span>",
   "say": "nephew",
   "h": "<div class=\"en in d1\">nephew</div>",
   "lines": [
-   "<b>nepos</b> 以前很好用，孫子、姪子、外甥都能叫",
+   "<b>nepos</b> 以前很好用，孫子、姪子、外甥<b>都可以用這個字</b>",
    "現在只剩一種：<b>兄弟姊妹的兒子</b>"
   ]
  },
@@ -157,7 +180,7 @@ var S=[
   "say": "niece",
   "h": "<div class=\"en in d1\">niece</div>",
   "lines": [
-   "<b>neptia</b> 以前也一樣，一大群人都能叫",
+   "<b>neptia</b> 以前也一樣，<b>一大群人都可以用這個字</b>",
    "現在只剩一種：<b>兄弟姊妹的女兒</b>"
   ]
  },
@@ -172,12 +195,12 @@ var S=[
   ]
  },
  {
-  "tag": "以前能叫的更多",
+  "tag": "以前用的人更多",
   "emoji": "👰<span class=\"extra\">👩👩‍🦰👵</span>",
   "say": "wife",
   "h": "<div class=\"en in d1\">wife</div>",
   "lines": [
-   "以前的 <b>wīf</b>，<b>每個女生都能這樣叫</b>",
+   "以前的 <b>wīf</b>，<b>每個女生都可以用這個字</b>",
    "現在只剩一種：<b>太太</b>"
   ]
  },
@@ -186,8 +209,8 @@ var S=[
   "emoji": "🗣️⏳",
   "mid": "字會變，就像綽號",
   "lines": [
-   "<b>沒有人規定</b>，是大家一直叫",
-   "叫著叫著，<b>就慢慢變了</b>"
+   "<b>沒有人規定</b>，是大家一直這樣<b>發音</b>",
+   "<b>發音慢慢變，字就跟著變</b>"
   ]
  }
 ];
@@ -210,12 +233,16 @@ var dots=document.getElementById("dots");
 for(var k=0;k<S.length;k++)dots.appendChild(document.createElement("i"));
 
 function say(){try{var w=S[i].say;if(!w)return;
- var u=new SpeechSynthesisUtterance(w);u.lang="en-US";u.rate=.8;
+ var u=new SpeechSynthesisUtterance(w);u.lang=S[i].sayLang||"en-US";u.rate=.8;
  speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 
+var stage=document.getElementById("stage");
 function show(n){
+ var back=(n<i);
  i=Math.max(0,Math.min(S.length-1,n));
- document.getElementById("stage").innerHTML=draw(S[i]);
+ stage.innerHTML=draw(S[i]);
+ if(!reduce){stage.classList.remove("turnR","turnL");void stage.offsetWidth;
+  stage.classList.add(back?"turnL":"turnR")}
  var d=dots.children;
  for(var k=0;k<d.length;k++)d[k].className=(k===i?"on":"");
  document.getElementById("prev").disabled=(i===0);
@@ -232,6 +259,13 @@ document.addEventListener("keydown",function(e){
 });
 
 show(0);
+
+
+(function(){var s=document.getElementById("src");
+ function t(v){s.classList.toggle("on",v)}
+ document.getElementById("srcb").addEventListener("click",function(){t(!s.classList.contains("on"))});
+ document.getElementById("srcx").addEventListener("click",function(){t(false)});
+ document.addEventListener("keydown",function(e){if(e.key==="Escape")t(false)});})();
 </script>
 </body>
 </html>

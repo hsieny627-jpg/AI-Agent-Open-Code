@@ -10,6 +10,7 @@
  * 每頁只能從該單字自己的 story / hook / q / a 濃縮。
  */
 const fs=require('fs'),path=require('path'),DIR=__dirname;
+const SRC=require('./_sources');
 
 // e1 / e2 = 幕③的秒懂收尾（e2 留空就只顯示一行）
 // build   = 只給 grandfather / grandmother：把幕②從「以前」換成「怎麼組的」
@@ -29,7 +30,8 @@ const WORDS=[
 {f:'son',zh:'兒子',sub:'爸爸媽媽的男孩',icon:'👦',old:'sunu',now:'son',
  e1:'☀️ 和太陽 <b>sun</b> 同音',e2:'一樣的音，<b>不一樣的字</b>'},
 {f:'daughter',zh:'女兒',sub:'爸爸媽媽的女孩',icon:'👧',old:'dohtor',now:'daughter',
- e1:'🤫 中間的 <b>gh</b> 不出聲',e2:'念的時候直接跳過它'},
+ e1:'🤫 中間的 <b>gh</b> 不出聲',e2:'念的時候直接跳過它',
+ more:{href:'daughter-gh.html',label:'✨ 補充'}},
 {f:'grandfather',zh:'爺爺',sub:'外公也是',icon:'👴',old:'grand-',now:'grandfather',
  build:{a:'grand',b:'father',note:'<b>grand</b> 加在家人前面 ＝ 長一輩'},
  e1:'👴 也可以叫 <b>grandpa</b>',e2:'爺爺、外公，<b>都叫 grandfather</b>'},
@@ -85,9 +87,16 @@ body{margin:0;background:#000;color:#F2F2F2;
 .nav:active:not(:disabled){background:rgba(255,255,255,.05)}
 #prev{left:0}#next{right:0}
 
-#stage{width:100%;max-width:760px;padding:0 clamp(76px,11vw,130px);text-align:center;
- min-height:clamp(320px,62vh,560px);display:flex;flex-direction:column;align-items:center;justify-content:center;
- gap:clamp(8px,1.6vh,18px)}
+/* 字卡：一張卡就是一幕，翻頁＝翻卡（使用者 2026-09-19 指定） */
+#stage{width:100%;max-width:760px;padding:0 clamp(76px,11vw,130px);
+ display:flex;align-items:center;justify-content:center;perspective:1500px}
+#card{width:100%;text-align:center;min-height:clamp(300px,57vh,520px);
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:clamp(8px,1.6vh,18px);
+ border:1px solid #242424;border-radius:clamp(18px,3vh,30px);
+ background:linear-gradient(180deg,#0B0B0B 0%,#040404 100%);
+ box-shadow:0 18px 50px rgba(0,0,0,.65);
+ padding:clamp(10px,2.4vh,24px) clamp(8px,2vw,18px)}
 .tag{font-size:clamp(13px,1.6vh,16px);color:#9FB4C8;letter-spacing:.4em;font-weight:700;padding-left:.4em}
 .emoji{font-size:clamp(84px,17vh,150px);line-height:1.05}
 .zh{font-size:clamp(46px,8.4vh,78px);font-weight:700;letter-spacing:.06em}
@@ -109,15 +118,24 @@ body{margin:0;background:#000;color:#F2F2F2;
 @keyframes rise{0%{opacity:0;transform:translateY(20px) scale(.92)}100%{opacity:1;transform:none}}
 .pop{animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
 @keyframes pop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+/* 翻卡：往後翻從右邊翻進來，往回翻從左邊翻進來（420ms，翻完才是穩定畫面） */
+.turnR{animation:turnR .42s cubic-bezier(.25,.85,.3,1) both}
+.turnL{animation:turnL .42s cubic-bezier(.25,.85,.3,1) both}
+@keyframes turnR{0%{opacity:.2;transform:rotateY(54deg) translateX(24px) scale(.94)}
+ 100%{opacity:1;transform:none}}
+@keyframes turnL{0%{opacity:.2;transform:rotateY(-54deg) translateX(-24px) scale(.94)}
+ 100%{opacity:1;transform:none}}
 .reduce *{animation:none!important;transition:none!important}
+${SRC.CSS}
 </style>
 </head>
 <body>
 <div id="dots"></div>
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
-<div id="stage"></div>
+<div id="stage"><div id="card"></div></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
-<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button></div>
+<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button>${W.more?`<button id="more">${W.more.label}</button>`:''}${SRC.btn}</div>
+${SRC.html(SRC.W[W.f])}
 
 <script>
 var W={zh:${JSON.stringify(W.zh)},sub:${JSON.stringify(W.sub)},icon:${JSON.stringify(W.icon)},old:${JSON.stringify(W.old)},now:${JSON.stringify(W.now)},
@@ -156,9 +174,13 @@ for(var k=0;k<SCENES.length;k++)dots.appendChild(document.createElement("i"));
 function say(){try{var u=new SpeechSynthesisUtterance(W.now);u.lang="en-US";u.rate=.8;
  speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 
+var card=document.getElementById("card");
 function show(n){
+ var back=(n<i);
  i=Math.max(0,Math.min(SCENES.length-1,n));
- document.getElementById("stage").innerHTML=SCENES[i]();
+ card.innerHTML=SCENES[i]();
+ if(!reduce){card.classList.remove("turnR","turnL");void card.offsetWidth;
+  card.classList.add(back?"turnL":"turnR")}
  var d=dots.children;
  for(var k=0;k<d.length;k++)d[k].className=(k===i?"on":"");
  document.getElementById("prev").disabled=(i===0);
@@ -176,6 +198,8 @@ document.addEventListener("keydown",function(e){
 });
 
 show(0);
+${W.more?`document.getElementById("more").addEventListener("click",function(){location.href=${JSON.stringify(W.more.href)}});`:''}
+${SRC.JS}
 </script>
 </body>
 </html>
