@@ -1,9 +1,12 @@
-/* words/_build_story.js — 故事頁的產生器（why.html 與 why-more.html）
+/* words/_build_story.js — 故事頁的產生器（why.html / why-2.html / why-more.html）
  *
  * 用法： node words/_build_story.js
  *
- * why.html      = 主頁：六個家人單字自己的故事（上完家人單元後用）
+ * why.html      = 家人單字的故事①：開場 ＋ 前 9 個字（family…grandfather）
+ * why-2.html    = 家人單字的故事②：開場 ＋ 後 8 個字（grandmother…wife）＋ 結尾
  * why-more.html = 附加補充：六個學生認識的日常單字
+ *
+ * 17 個單字的場景都在 FAM 陣列裡，兩頁用 slice 切開——改文案只改 FAM 一個地方。
  *
  * 這兩頁是「通則頁」，不是單字頁：可以講字的來源，但事實必須正確。
  * 17 個單字頁仍然維持三幕、不加演變幕（見 CLAUDE.md）。
@@ -11,9 +14,8 @@
  */
 const fs=require('fs'),path=require('path'),DIR=__dirname;
 
-const PAGES=[
-{file:'why.html',title:'家人單字的故事',
- S:[
+/* FAM[0]=開場、FAM[1..17]=17 個家人單字、FAM[18]=結尾 */
+const FAM=[
  {emoji:'👨‍👩‍👧‍👦',mid:'每一個家人單字，都有自己的故事',
   lines:['為什麼長這樣？往前看一眼就知道']},
 
@@ -107,7 +109,16 @@ const PAGES=[
 
  {tag:'所以',emoji:'🗣️⏳',mid:'字會變，是因為有人一直在用它',
   lines:['不是有人規定它要變']}
-]},
+];
+
+/* 第二頁的開場 */
+const OPEN2={emoji:'👨‍👩‍👧‍👦',mid:'還有八個家人單字',
+ lines:['故事也都不一樣']};
+
+const PAGES=[
+/* 19 幕一次放太長，拆成兩頁：前 9 個字／後 8 個字，各 10 幕 */
+{file:'why.html',title:'家人單字的故事 ①',S:FAM.slice(0,10)},
+{file:'why-2.html',title:'家人單字的故事 ②',S:[OPEN2].concat(FAM.slice(10,18),[FAM[18]])},
 
 {file:'why-more.html',title:'更多字的故事',
  S:[
