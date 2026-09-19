@@ -46,11 +46,12 @@ const FAM=[
   lines:['以前英文有一個字母 <b>þ</b>，像一面小旗子',
          'brother 以前寫成 <b>brōþor</b>']},
 
- {tag:'兩群人，兩種說法',emoji:'👧👩',say:'sister',
-  h:'<div class="en in d1" style="font-size:clamp(26px,4.6vh,44px)">'+
-    '<span class="fromL">sweostor</span> <span class="ar">＋</span> <span class="fromR">systir</span></div>'+
+ {tag:'兩個村子，兩種叫法',emoji:'🏘️👧🏘️',say:'sister',
+  h:'<div class="en in d1" style="font-size:clamp(22px,4vh,38px)">'+
+    '<span class="fromL">🏘️ sweostor</span> <span class="ar">＋</span> <span class="fromR">systir 🏘️</span></div>'+
     '<div class="en pop" style="animation-delay:1.2s">sister</div>',
-  lines:['以前有兩群人住在一起，說法不一樣','住久了，<b>混成一個字</b>']},
+  lines:['以前<b>兩個村子</b>，同一個人<b>叫法不一樣</b>',
+         '住在一起久了，兩種叫法<b>合成一個字</b>']},
 
  {tag:'撞出一樣的聲音',emoji:'☀️👦',say:'son',
   h:'<div class="en in d1" style="font-size:clamp(26px,4.8vh,46px)">'+
@@ -107,8 +108,8 @@ const FAM=[
   h:'<div class="en in d1">wife</div>',
   lines:['古英語的 <b>wīf</b>，可以指<b>任何女人</b>','今天只剩「<b>妻子</b>」']},
 
- {tag:'所以',emoji:'🗣️⏳',mid:'字會變，是因為有人一直在用它',
-  lines:['不是有人規定它要變']}
+ {tag:'所以',emoji:'🗣️⏳',mid:'字會變，就像綽號',
+  lines:['<b>沒有人規定</b>，是大家一直叫','叫著叫著，<b>就慢慢變了</b>']}
 ];
 
 /* 第二頁的開場 */
@@ -148,8 +149,8 @@ const PAGES=[
   h:'<div class="en squeeze">goodbye</div>',
   lines:['本來是一整句 <b>God be with ye</b>','（願神與你同在）說久了，縮成一個字']},
 
- {tag:'看出來了嗎',emoji:'🗣️⏳',mid:'字，是被人用出來的',
-  lines:['從別的地方借來、黏起來、縮起來']}
+ {tag:'看出來了嗎',emoji:'🗣️⏳',mid:'每個字，都是這樣來的',
+  lines:['從外國借來、兩個字黏起來、一句話縮起來']}
 ]}
 ];
 
