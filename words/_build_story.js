@@ -1,10 +1,97 @@
-<!DOCTYPE html>
+/* words/_build_story.js — 故事頁的產生器（why.html 與 why-more.html）
+ *
+ * 用法： node words/_build_story.js
+ *
+ * why.html      = 主頁：六個家人單字自己的故事（上完家人單元後用）
+ * why-more.html = 附加補充：六個學生認識的日常單字
+ *
+ * 這兩頁是「通則頁」，不是單字頁：可以講字的來源，但事實必須正確。
+ * 17 個單字頁仍然維持三幕、不加演變幕（見 CLAUDE.md）。
+ * 字母逐格變形永遠禁止——動畫動的是人、時間、聲音、零件，不是整個單字的拼法。
+ */
+const fs=require('fs'),path=require('path'),DIR=__dirname;
+
+const PAGES=[
+{file:'why.html',title:'家人單字的故事',
+ S:[
+ {emoji:'👨‍👩‍👧‍👦',mid:'這些家人單字，為什麼長這樣？',
+  lines:['每一個，都有自己的故事']},
+
+ {tag:'以前的一家人',emoji:'👨‍👩‍👧‍👦<span class="extra">👴🧑‍🌾🧹</span>',say:'family',
+  h:'<div class="en in d1">family</div>',
+  lines:['古羅馬的 family，<b>連住在一起的僕人都算</b>',
+         '（它不是 Father And Mother I Love You 拼出來的）']},
+
+ {tag:'失落的字母',emoji:'🧒👦',say:'brother',
+  h:'<div class="en in d1"><span class="flag">þ</span> <span class="ar">就是</span> th</div>',
+  lines:['以前英文有一個字母 <b>þ</b>，像一面小旗子',
+         'brother 以前寫成 <b>brōþor</b>']},
+
+ {tag:'聲音不見了',emoji:'👧',say:'daughter',
+  h:'<div class="en in d1">dau<span class="mute">gh</span>ter</div>',
+  lines:['以前 <b>gh</b> 是有聲音的','後來聲音不見了，<b>字母留下來</b>']},
+
+ {tag:'藏在字裡的房子',emoji:'🏠',say:'husband',
+  h:'<div class="en in d1"><span class="hi">hus</span>band</div>',
+  lines:['<b>hus</b> 就是 <b>house</b>（房子）',
+         '以前指的是<b>家裡管事的那個人</b>']},
+
+ {tag:'兩群人，兩種說法',emoji:'👧👩',say:'sister',
+  h:'<div class="en in d1" style="font-size:clamp(26px,4.6vh,44px)">'+
+    '<span class="fromL">sweostor</span> <span class="ar">＋</span> <span class="fromR">systir</span></div>'+
+    '<div class="en pop" style="animation-delay:1.1s">sister</div>',
+  lines:['以前有兩群人住在一起，說法不一樣','住久了，<b>混成一個字</b>']},
+
+ {tag:'借來的零件',emoji:'👴',say:'grandfather',
+  h:'<div class="en in d1" style="font-size:clamp(28px,5vh,50px)">'+
+    '<span class="fromL hi">grand</span> <span class="ar">＋</span> <span class="fromR">father</span></div>'+
+    '<div class="en pop" style="animation-delay:1.1s;font-size:clamp(28px,5vh,50px)">grandfather</div>',
+  lines:['<b>grand</b> 是從法國借來的零件','接在家人前面，就變成<b>長一輩</b>']},
+
+ {tag:'所以',emoji:'🗣️⏳',mid:'字會變，是因為有人一直在用它',
+  lines:['不是有人規定它要變']}
+]},
+
+{file:'why-more.html',title:'更多字的故事',
+ S:[
+ {emoji:'🌍',mid:'不只家人單字',lines:['很多你認識的字，也有故事']},
+
+ {tag:'從台灣出海',emoji:'🍵🚢',emojiCls:'fly',say:'tea',
+  h:'<div class="en in d1">tea</div>',
+  lines:['台灣話的「茶」唸 <b>tê</b>','坐船到外國，就變成 <b>tea</b>']},
+
+ {tag:'也是台灣話',emoji:'🍅',say:'ketchup',
+  h:'<div class="en in d1">ketchup</div>',
+  lines:['台灣話的 <b>kê-tsiap</b>（鮭汁）是魚做的醬','英文借去用，今天變成番茄醬']},
+
+ {tag:'城市的名字',emoji:'🍔',say:'hamburger',
+  h:'<div class="en in d1">hamburger</div>',
+  lines:['來自德國的<b>漢堡市</b>，不是火腿','後來被切成 ham＋burger，才有 cheeseburger']},
+
+ {tag:'人的名字',emoji:'🥪',say:'sandwich',
+  h:'<div class="en in d1">sandwich</div>',
+  lines:['這是一位<b>伯爵的名字</b>','他請人把肉夾在麵包中間，不用停下手邊的事']},
+
+ {tag:'兩個字黏起來',emoji:'🍳',say:'breakfast',
+  h:'<div class="en"><span class="fromL">break</span> ＋ <span class="fromR">fast</span></div>',
+  lines:['合起來就是 <b>breakfast</b>（早餐）','睡了一整晚沒吃，早上<b>打破</b>它']},
+
+ {tag:'一句話縮起來',emoji:'👋',say:'goodbye',
+  h:'<div class="en squeeze">goodbye</div>',
+  lines:['本來是一整句 <b>God be with ye</b>','（願神與你同在）說久了，縮成一個字']},
+
+ {tag:'看出來了嗎',emoji:'🗣️⏳',mid:'字，是被人用出來的',
+  lines:['從別的地方借來、黏起來、縮起來']}
+]}
+];
+
+const tpl=(P)=>`<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>家人單字的故事｜單字小故事</title>
+<title>${P.title}｜單字小故事</title>
 <!-- 本檔由 words/_build_story.js 產生，不要手改。 -->
 <style>
 @font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
@@ -83,83 +170,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 <div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button></div>
 
 <script>
-var S=[
- {
-  "emoji": "👨‍👩‍👧‍👦",
-  "mid": "這些家人單字，為什麼長這樣？",
-  "lines": [
-   "每一個，都有自己的故事"
-  ]
- },
- {
-  "tag": "以前的一家人",
-  "emoji": "👨‍👩‍👧‍👦<span class=\"extra\">👴🧑‍🌾🧹</span>",
-  "say": "family",
-  "h": "<div class=\"en in d1\">family</div>",
-  "lines": [
-   "古羅馬的 family，<b>連住在一起的僕人都算</b>",
-   "（它不是 Father And Mother I Love You 拼出來的）"
-  ]
- },
- {
-  "tag": "失落的字母",
-  "emoji": "🧒👦",
-  "say": "brother",
-  "h": "<div class=\"en in d1\"><span class=\"flag\">þ</span> <span class=\"ar\">就是</span> th</div>",
-  "lines": [
-   "以前英文有一個字母 <b>þ</b>，像一面小旗子",
-   "brother 以前寫成 <b>brōþor</b>"
-  ]
- },
- {
-  "tag": "聲音不見了",
-  "emoji": "👧",
-  "say": "daughter",
-  "h": "<div class=\"en in d1\">dau<span class=\"mute\">gh</span>ter</div>",
-  "lines": [
-   "以前 <b>gh</b> 是有聲音的",
-   "後來聲音不見了，<b>字母留下來</b>"
-  ]
- },
- {
-  "tag": "藏在字裡的房子",
-  "emoji": "🏠",
-  "say": "husband",
-  "h": "<div class=\"en in d1\"><span class=\"hi\">hus</span>band</div>",
-  "lines": [
-   "<b>hus</b> 就是 <b>house</b>（房子）",
-   "以前指的是<b>家裡管事的那個人</b>"
-  ]
- },
- {
-  "tag": "兩群人，兩種說法",
-  "emoji": "👧👩",
-  "say": "sister",
-  "h": "<div class=\"en in d1\" style=\"font-size:clamp(26px,4.6vh,44px)\"><span class=\"fromL\">sweostor</span> <span class=\"ar\">＋</span> <span class=\"fromR\">systir</span></div><div class=\"en pop\" style=\"animation-delay:1.1s\">sister</div>",
-  "lines": [
-   "以前有兩群人住在一起，說法不一樣",
-   "住久了，<b>混成一個字</b>"
-  ]
- },
- {
-  "tag": "借來的零件",
-  "emoji": "👴",
-  "say": "grandfather",
-  "h": "<div class=\"en in d1\" style=\"font-size:clamp(28px,5vh,50px)\"><span class=\"fromL hi\">grand</span> <span class=\"ar\">＋</span> <span class=\"fromR\">father</span></div><div class=\"en pop\" style=\"animation-delay:1.1s;font-size:clamp(28px,5vh,50px)\">grandfather</div>",
-  "lines": [
-   "<b>grand</b> 是從法國借來的零件",
-   "接在家人前面，就變成<b>長一輩</b>"
-  ]
- },
- {
-  "tag": "所以",
-  "emoji": "🗣️⏳",
-  "mid": "字會變，是因為有人一直在用它",
-  "lines": [
-   "不是有人規定它要變"
-  ]
- }
-];
+var S=${JSON.stringify(P.S,null,1)};
 
 function draw(s){
  var h="";
@@ -204,3 +215,7 @@ show(0);
 </script>
 </body>
 </html>
+`;
+
+PAGES.forEach(p=>fs.writeFileSync(path.join(DIR,p.file),tpl(p),'utf8'));
+console.log('已產生：'+PAGES.map(p=>p.file).join('  '));

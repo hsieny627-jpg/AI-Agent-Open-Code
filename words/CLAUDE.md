@@ -14,7 +14,9 @@
 | `_build.js` | **17 個單字頁的唯一產生器。** 樣板和文案都在裡面，`node words/_build.js` 重建全部 17 頁 |
 | `<單字>.html` × 17 | **產物，不要手改**，改了會被下一次 build 蓋掉 |
 | `_verify.js` | 量測腳本。`node words/_verify.js` 量全部；`node words/_verify.js son.html` 只量一頁 |
-| `why.html` | 通則頁「字，怎麼來的？」八幕，六個有趣的字。手工維護 |
+| `_build_story.js` | **故事頁的產生器**，`node words/_build_story.js` 重建 why 兩頁 |
+| `why.html` | **主故事頁**（產物）：六個**家人單字**自己的故事，八幕。上完家人單元後用 |
+| `why-more.html` | 附加補充（產物）：六個日常單字（tea／ketchup／hamburger／sandwich／breakfast／goodbye） |
 | `brother-why.html` | 四幕實驗檔，等課堂實測結果再決定去留。手工維護 |
 | `fonts/` | Andika 400 / 700，離線必須 |
 
@@ -46,8 +48,11 @@
 
 - **17 個單字頁維持三幕，不加演變幕。** 一幕只講一件事，演變幕會排擠學生明天就
   用得到的東西（older/younger、gh 不出聲、parents 的 s）。
-- **「字為什麼會變」獨立成 `why.html`**，用六個有趣的字（tea／ketchup／hamburger／
-  sandwich／breakfast／goodbye）講一次通則。它不負責幫學生記住某個字，所以不排擠任何東西。
+- **「字為什麼會變」獨立成故事頁**，不放進單字頁，所以不排擠任何東西。
+  使用者 2026-09-19 指定：**主角必須是家人單字**（學生正在學的字），
+  `why.html` 用 family／brother／daughter／husband／sister／grandfather 六個家人單字，
+  每個字配一個動畫（僕人淡出、þ 像旗子揮、gh 變暗、hus 亮起來、兩個舊說法靠攏、零件接上）。
+  日常單字（tea 等六個）是**附加補充**，移到 `why-more.html`，想延伸再放。
 - **`brother-why.html` 是四幕實驗檔**，等使用者課堂實測。記得住就推廣，記不住就
   刪掉這一個檔——**不要先去動其他 17 頁**。
 - **字母逐格變形永遠禁止。** 動畫可以動人、動時間，不要動字母。
@@ -113,6 +118,7 @@ Andika 有載到（`measureText` 與 sans-serif 不同）、每幕進度點對�
   `family` `parent` `mother` `father` `brother` `sister` `son` `daughter`
   `grandfather` `grandmother` `uncle` `aunt` `cousin` `nephew` `niece`
   `husband` `wife`
-- `why.html`（通則頁，八幕）與 `brother-why.html`（四幕實驗檔）已完成。
-- 19 頁全部通過 `_verify.js` 量測（兩種尺寸）。
+- `why.html`（家人單字故事頁，八幕）、`why-more.html`（附加補充，八幕）、
+  `brother-why.html`（四幕實驗檔）已完成。
+- 20 頁全部通過 `_verify.js` 量測（兩種尺寸）。
 - 待辦：`brother-why.html` 的課堂實測結果 → 決定推廣或刪除。
