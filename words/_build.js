@@ -15,22 +15,22 @@ const SRC=require('./_sources');
 // e1 / e2 = 幕③的秒懂收尾（e2 留空就只顯示一行）
 // build   = 只給 grandfather / grandmother：把幕②從「以前」換成「怎麼組的」
 const WORDS=[
-{f:'family',zh:'家庭',sub:'一家人',icon:'👨‍👩‍👧‍👦',old:'familia',now:'family',
+{f:'family',zh:'家庭',icon:'👨‍👩‍👧‍👦',old:'familia',now:'family',
  e1:'👪 爸爸、媽媽、小孩，<b>全部都是 family</b>'},
 {f:'parent',zh:'家長',sub:'爸爸或媽媽',icon:'👨‍👩',old:'parens',now:'parent',
  e1:'👤 一位家長是 <b>a parent</b>',e2:'很多位就加 s：<b>parents</b>'},
-{f:'mother',zh:'母親',sub:'媽媽',icon:'❤️',old:'mōdor',now:'mother',
+{f:'mother',zh:'母親',icon:'❤️',old:'mōdor',now:'mother',
  e1:'👶 也可以叫 <b>mom</b>',e2:'美國常說 mom，英國常說 <b>mum</b>'},
-{f:'father',zh:'父親',sub:'爸爸',icon:'🧔',old:'fæder',now:'father',
+{f:'father',zh:'父親',icon:'🧔',old:'fæder',now:'father',
  e1:'👶 也可以叫 <b>dad</b>',e2:'dad 是寶寶先叫的，<b>不是 father 剪短的</b>'},
 {f:'brother',zh:'哥哥、弟弟',sub:'不分大小',icon:'🧒👦',old:'brōþor',now:'brother',
  e1:'👦 哥哥、弟弟，<b>都叫 brother</b>',e2:'要分大小就加 <b>older</b> 或 <b>younger</b>'},
 {f:'sister',zh:'姊姊、妹妹',sub:'不分大小',icon:'👧👩',old:'sweostor',now:'sister',
  e1:'👧 姊姊、妹妹，<b>都叫 sister</b>',e2:'要分大小就加 <b>older</b> 或 <b>younger</b>'},
-{f:'son',zh:'兒子',sub:'爸爸媽媽的男孩',icon:'👦',old:'sunu',now:'son',
+{f:'son',zh:'兒子',icon:'👦',old:'sunu',now:'son',
  e1:'☀️ 和太陽 <b>sun</b> 同音',e2:'一樣的音，<b>不一樣的字</b>'},
-{f:'daughter',zh:'女兒',sub:'爸爸媽媽的女孩',icon:'👧',old:'dohtor',now:'daughter',
- e1:'🤫 中間的 <b>gh</b> 不出聲',e2:'念的時候直接跳過它',
+{f:'daughter',zh:'女兒',icon:'👧',old:'dohtor',now:'daughter',
+ e1:'🤫 中間的 <b>gh</b> 不出聲',
  more:{href:'daughter-gh.html',label:'✨ 補充'}},
 {f:'grandfather',zh:'爺爺',sub:'外公也是',icon:'👴',old:'grand-',now:'grandfather',
  build:{a:'grand',b:'father',note:'<b>grand</b> 加在家人前面 ＝ 長一輩'},
@@ -48,9 +48,9 @@ const WORDS=[
  e1:'👦 哥哥姊姊的兒子，<b>就是 nephew</b>',e2:'姪子、外甥，<b>都叫 nephew</b>'},
 {f:'niece',zh:'姪女',sub:'外甥女也是',icon:'👧💜',old:'neptia',now:'niece',
  e1:'👧 哥哥姊姊的女兒，<b>就是 niece</b>',e2:'姪女、外甥女，<b>都叫 niece</b>'},
-{f:'husband',zh:'丈夫',sub:'先生',icon:'🤵',old:'húsbóndi',now:'husband',
+{f:'husband',zh:'丈夫',icon:'🤵',old:'húsbóndi',now:'husband',
  e1:'🤵 介紹另一半就說 <b>my husband</b>'},
-{f:'wife',zh:'妻子',sub:'太太',icon:'👰',old:'wīf',now:'wife',
+{f:'wife',zh:'妻子',icon:'👰',old:'wīf',now:'wife',
  e1:'👰 <b>my wife</b> 是「我的妻子」',e2:'不可以隨便這樣叫別人'}
 ];
 
@@ -145,7 +145,7 @@ var SCENES=[
  // ① 中文意思
  function(){return '<div class="emoji pop">'+W.icon+'</div>'+
    '<div class="zh in d1">'+W.zh+'</div>'+
-   '<div class="sub in d2">'+W.sub+'</div>'},
+   (W.sub?'<div class="sub in d2">'+W.sub+'</div>':'')},
  // ② 以前的樣貌（圖示就是意思，不再加說明）；grandfather / grandmother 改成「怎麼組的」
  ${W.build?
  `function(){return '<div class="tag in">怎麼組的</div>'+

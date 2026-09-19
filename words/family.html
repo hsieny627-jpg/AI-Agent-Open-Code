@@ -92,14 +92,14 @@ body{margin:0;background:#000;color:#F2F2F2;
 <footer id="src"><h4>出處</h4><p><b>OED</b>（牛津英語詞典）「family, n.」：源自拉丁文 <b>familia</b>，原指整個家戶，<b>包含家中僕役與幫傭</b>，不只血親。</p><p><b>Lewis &amp; Short《A Latin Dictionary》</b>「familia」：第一義即「一家的僕役總稱」。</p><p>「Father And Mother, I Love You」<b>查無任何一手出處</b>，只出現在縮寫收集網站，是後人倒推的順口溜（backronym），<b>不是 family 的來源</b>。</p><button id="srcx">關閉</button></footer>
 
 <script>
-var W={zh:"家庭",sub:"一家人",icon:"👨‍👩‍👧‍👦",old:"familia",now:"family",
+var W={zh:"家庭",sub:undefined,icon:"👨‍👩‍👧‍👦",old:"familia",now:"family",
  e1:"👪 爸爸、媽媽、小孩，<b>全部都是 family</b>",e2:""};
 
 var SCENES=[
  // ① 中文意思
  function(){return '<div class="emoji pop">'+W.icon+'</div>'+
    '<div class="zh in d1">'+W.zh+'</div>'+
-   '<div class="sub in d2">'+W.sub+'</div>'},
+   (W.sub?'<div class="sub in d2">'+W.sub+'</div>':'')},
  // ② 以前的樣貌（圖示就是意思，不再加說明）；grandfather / grandmother 改成「怎麼組的」
  function(){return '<div class="tag in">以前</div>'+
    '<div class="word past in d1">'+W.old+'</div>'+

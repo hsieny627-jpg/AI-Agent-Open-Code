@@ -92,14 +92,14 @@ body{margin:0;background:#000;color:#F2F2F2;
 <footer id="src"><h4>出處</h4><p><b>OED</b>「husband, n.」：古英文 <b>hūsbonda</b>，借自古北歐文 <b>húsbóndi</b> ＝ <b>hús</b>（house，房子）＋ <b>bóndi</b>（住在裡面、管這個家的人）。</p><p><b>OED</b>「husbandry, n.」：同一個字根留下的詞，意思是「經營、管理（田產）」。</p><button id="srcx">關閉</button></footer>
 
 <script>
-var W={zh:"丈夫",sub:"先生",icon:"🤵",old:"húsbóndi",now:"husband",
+var W={zh:"丈夫",sub:undefined,icon:"🤵",old:"húsbóndi",now:"husband",
  e1:"🤵 介紹另一半就說 <b>my husband</b>",e2:""};
 
 var SCENES=[
  // ① 中文意思
  function(){return '<div class="emoji pop">'+W.icon+'</div>'+
    '<div class="zh in d1">'+W.zh+'</div>'+
-   '<div class="sub in d2">'+W.sub+'</div>'},
+   (W.sub?'<div class="sub in d2">'+W.sub+'</div>':'')},
  // ② 以前的樣貌（圖示就是意思，不再加說明）；grandfather / grandmother 改成「怎麼組的」
  function(){return '<div class="tag in">以前</div>'+
    '<div class="word past in d1">'+W.old+'</div>'+

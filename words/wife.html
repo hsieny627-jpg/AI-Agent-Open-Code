@@ -92,14 +92,14 @@ body{margin:0;background:#000;color:#F2F2F2;
 <footer id="src"><h4>出處</h4><p><b>OED</b>「wife, n.」：古英文 <b>wīf</b>，<b>原義就是「女人」</b>，不限已婚。</p><p>旁證：<b>midwife</b>（助產士，字面「與女人同在」）、<b>old wives’ tale</b>（老婦人的說法）、<b>fishwife</b>（賣魚婦）都留著「女人」的舊意思。</p><button id="srcx">關閉</button></footer>
 
 <script>
-var W={zh:"妻子",sub:"太太",icon:"👰",old:"wīf",now:"wife",
+var W={zh:"妻子",sub:undefined,icon:"👰",old:"wīf",now:"wife",
  e1:"👰 <b>my wife</b> 是「我的妻子」",e2:"不可以隨便這樣叫別人"};
 
 var SCENES=[
  // ① 中文意思
  function(){return '<div class="emoji pop">'+W.icon+'</div>'+
    '<div class="zh in d1">'+W.zh+'</div>'+
-   '<div class="sub in d2">'+W.sub+'</div>'},
+   (W.sub?'<div class="sub in d2">'+W.sub+'</div>':'')},
  // ② 以前的樣貌（圖示就是意思，不再加說明）；grandfather / grandmother 改成「怎麼組的」
  function(){return '<div class="tag in">以前</div>'+
    '<div class="word past in d1">'+W.old+'</div>'+

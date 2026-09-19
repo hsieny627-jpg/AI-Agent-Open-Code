@@ -92,14 +92,14 @@ body{margin:0;background:#000;color:#F2F2F2;
 <footer id="src"><h4>出處</h4><p><b>OED</b>「father, n.」：古英文 <b>fæder</b>。</p><p><b>OED</b>「dad, n.1」：約 1500 年就有紀錄，屬於 <b>nursery word（育兒語）</b>，<b>不是 father 的縮寫</b>。</p><p><b>Roman Jakobson (1960)《Why “Mama” and “Papa”?》</b>：da／pa 同樣是嬰兒最早發得出來的音。</p><button id="srcx">關閉</button></footer>
 
 <script>
-var W={zh:"父親",sub:"爸爸",icon:"🧔",old:"fæder",now:"father",
+var W={zh:"父親",sub:undefined,icon:"🧔",old:"fæder",now:"father",
  e1:"👶 也可以叫 <b>dad</b>",e2:"dad 是寶寶先叫的，<b>不是 father 剪短的</b>"};
 
 var SCENES=[
  // ① 中文意思
  function(){return '<div class="emoji pop">'+W.icon+'</div>'+
    '<div class="zh in d1">'+W.zh+'</div>'+
-   '<div class="sub in d2">'+W.sub+'</div>'},
+   (W.sub?'<div class="sub in d2">'+W.sub+'</div>':'')},
  // ② 以前的樣貌（圖示就是意思，不再加說明）；grandfather / grandmother 改成「怎麼組的」
  function(){return '<div class="tag in">以前</div>'+
    '<div class="word past in d1">'+W.old+'</div>'+

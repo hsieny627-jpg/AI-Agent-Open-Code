@@ -92,14 +92,14 @@ body{margin:0;background:#000;color:#F2F2F2;
 <footer id="src"><h4>出處</h4><p><b>OED</b>「mother, n.1」：古英文 <b>mōdor</b>。</p><p><b>Roman Jakobson (1960)《Why “Mama” and “Papa”?》</b>：全世界語言的「媽媽」多半用 <b>m</b> 起頭的唇音，因為那是嬰兒最早發得出來的音。</p><p><b>OED</b>「mum, n.4」「mom, n.」：mum 通行於英國，mom 通行於美國。</p><button id="srcx">關閉</button></footer>
 
 <script>
-var W={zh:"母親",sub:"媽媽",icon:"❤️",old:"mōdor",now:"mother",
+var W={zh:"母親",sub:undefined,icon:"❤️",old:"mōdor",now:"mother",
  e1:"👶 也可以叫 <b>mom</b>",e2:"美國常說 mom，英國常說 <b>mum</b>"};
 
 var SCENES=[
  // ① 中文意思
  function(){return '<div class="emoji pop">'+W.icon+'</div>'+
    '<div class="zh in d1">'+W.zh+'</div>'+
-   '<div class="sub in d2">'+W.sub+'</div>'},
+   (W.sub?'<div class="sub in d2">'+W.sub+'</div>':'')},
  // ② 以前的樣貌（圖示就是意思，不再加說明）；grandfather / grandmother 改成「怎麼組的」
  function(){return '<div class="tag in">以前</div>'+
    '<div class="word past in d1">'+W.old+'</div>'+

@@ -86,6 +86,8 @@ async function quizPage(p,f,vp,e){
    talk:(document.getElementById('talk')||{}).innerText||'',
    nextHidden:document.getElementById('next').classList.contains('hide'),
    unlockHidden:document.getElementById('unlock').classList.contains('hide'),
+   pauseHidden:document.getElementById('pause').classList.contains('hide'),
+   pauseLabel:document.getElementById('pause').textContent,
    text:document.getElementById('stage').innerText.replace(/\n+/g,' | ')}},BOX.toString());
  const chk=(s,tag)=>{
   if(s.ox>0)e.push(tag+'橫向溢出'+s.ox);
@@ -108,6 +110,17 @@ async function quizPage(p,f,vp,e){
  s=await snap();acts++;
  if(!(s.secs<s0))e.push('倒數沒有在減少（'+s0+'→'+s.secs+'）');
 
+ /* 老師按「暫停」→ 秒數必須停住；再按一次 → 必須繼續走 */
+ if(s.pauseHidden)e.push('出題：沒有「暫停」按鈕');
+ await p.click('#pause');await p.waitForTimeout(150);
+ const held0=(await snap()).secs;await p.waitForTimeout(2200);
+ s=await snap();acts++;
+ if(s.secs!==held0)e.push('按了暫停，倒數還在跑（'+held0+'→'+s.secs+'）');
+ if(!/繼續/.test(s.pauseLabel))e.push('暫停後按鈕沒有變成「繼續」');
+ await p.click('#pause');await p.waitForTimeout(1600);
+ s=await snap();acts++;
+ if(!(s.secs<held0))e.push('按了繼續，倒數沒有恢復（'+held0+'→'+s.secs+'）');
+
  await p.click('#unlock');await p.waitForTimeout(250);
  s=await snap();acts++;chk(s,'解鎖：');
  if(s.lockedAll)e.push('解鎖：按了「提前作答」選項還是鎖著');
@@ -115,6 +128,7 @@ async function quizPage(p,f,vp,e){
  await p.click('.opt');await p.waitForTimeout(600);
  s=await snap();acts++;chk(s,'作答：');
  if(!s.lockedAll)e.push('作答：作答後選項沒有全部鎖住');
+ if(!s.pauseHidden)e.push('作答：作答後「暫停」沒有收起來');
  if(s.nextHidden)e.push('作答：沒有出現「下一題」');
  if(!/答對|答錯|時間到/.test(s.talk))e.push('作答：沒有顯示對錯與秒懂說明');
 

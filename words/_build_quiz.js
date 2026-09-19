@@ -62,25 +62,26 @@ body{margin:0;background:#000;color:#F2F2F2;
 #clock.warn #arc{stroke:#E0B15C}#clock.warn #secs{color:#E0B15C}
 #clock.hot #arc{stroke:#E07A6B}#clock.hot #secs{color:#E07A6B}
 #clock.hot{animation:tick 1s ease-in-out infinite}
+#clock.held #arc{stroke:#5A5A5A}#clock.held #secs{color:#5A5A5A}
 @keyframes tick{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}
 
-#stage{width:100%;max-width:880px;padding:clamp(92px,14vh,124px) clamp(16px,4vw,40px) clamp(78px,11vh,96px);
+#stage{width:100%;max-width:940px;padding:clamp(88px,13vh,116px) clamp(14px,3vw,32px) clamp(74px,10vh,92px);
  text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;
  gap:clamp(8px,1.8vh,20px)}
 
 .kicker{font-size:clamp(12px,1.6vh,15px);color:#9FB4C8;letter-spacing:.34em;font-weight:700;padding-left:.34em}
 .big{font-size:clamp(28px,5vh,46px);font-weight:700;line-height:1.35}
-.qtext{font-size:clamp(19px,3.2vh,30px);font-weight:700;line-height:1.45;max-width:760px}
-.note{font-size:clamp(14px,2vh,19px);color:#D8D3C5;line-height:1.6;max-width:680px}
+.qtext{font-size:clamp(23px,4vh,38px);font-weight:700;line-height:1.35;max-width:820px}
+.note{font-size:clamp(16px,2.4vh,23px);color:#D8D3C5;line-height:1.5;max-width:760px}
 .note b{color:#F2F2F2;font-weight:700}
 
-#opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(8px,1.4vh,14px);
- width:100%;max-width:760px;margin-top:clamp(2px,.8vh,8px)}
+#opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(7px,1.2vh,13px);
+ width:100%;max-width:860px;margin-top:clamp(2px,.7vh,8px)}
 .opt{display:flex;align-items:center;gap:10px;text-align:left;
- min-height:clamp(56px,9.4vh,82px);padding:clamp(8px,1.4vh,14px) clamp(10px,1.6vw,18px);
+ min-height:clamp(54px,8.8vh,78px);padding:clamp(7px,1.2vh,13px) clamp(9px,1.4vw,16px);
  background:#121212;border:1px solid #3A3A3A;border-radius:16px;color:#F2F2F2;
- font-family:inherit;font-size:clamp(15px,2.2vh,21px);font-weight:700;line-height:1.35;cursor:pointer}
-.opt .s{font-size:clamp(16px,2.4vh,22px);flex:none;width:1.4em;text-align:center}
+ font-family:inherit;font-size:clamp(18px,2.8vh,27px);font-weight:700;line-height:1.3;cursor:pointer}
+.opt .s{font-size:clamp(19px,2.9vh,27px);flex:none;width:1.3em;text-align:center}
 .opt:nth-child(1) .s{color:#E07A6B}.opt:nth-child(2) .s{color:#7FA7D4}
 .opt:nth-child(3) .s{color:#E0B15C}.opt:nth-child(4) .s{color:#8FBE92}
 .opt:active:not(:disabled){background:#1E1E1E}
@@ -91,10 +92,10 @@ body{margin:0;background:#000;color:#F2F2F2;
 .opt.dim{opacity:.3}
 
 .badge{display:inline-block;background:#2A2214;border:1px solid #E0B15C;color:#E0B15C;
- border-radius:99px;padding:4px 14px;font-size:clamp(12px,1.7vh,15px);font-weight:700;letter-spacing:.1em}
+ border-radius:99px;padding:5px 16px;font-size:clamp(14px,2vh,19px);font-weight:700;letter-spacing:.08em}
 .verdict{font-size:clamp(24px,4.2vh,38px);font-weight:700}
 .verdict.ok{color:#8FBE92}.verdict.no{color:#E07A6B}
-.gain{font-size:clamp(17px,2.6vh,23px);color:#E0B15C;font-weight:700}
+.gain{font-size:clamp(19px,3vh,28px);color:#E0B15C;font-weight:700}
 
 #bar{position:fixed;bottom:max(16px,env(safe-area-inset-bottom));display:flex;gap:10px;flex-wrap:wrap;
  justify-content:center;padding:0 10px;z-index:6}
@@ -133,6 +134,7 @@ ${SRC.CSS}
 <div id="bar">
  <button id="go" class="go">▶ 開始暖身題</button>
  <button id="skip">⏭ 先不做，直接上單字</button>
+ <button id="pause" class="hide">⏸ 暫停</button>
  <button id="unlock" class="hide">✋ 提前作答</button>
  <button id="next" class="hide">下一題 →</button>
  <button id="toword" class="hide">📖 開始上單字 →</button>
@@ -154,6 +156,7 @@ if(reduce)document.body.classList.add("reduce");
 
 var stage=document.getElementById("stage"),hud=document.getElementById("hud"),
     bar={go:document.getElementById("go"),skip:document.getElementById("skip"),
+         pause:document.getElementById("pause"),
          unlock:document.getElementById("unlock"),next:document.getElementById("next"),
          toword:document.getElementById("toword"),sound:document.getElementById("sound")},
     elSecs=document.getElementById("secs"),elArc=document.getElementById("arc"),
@@ -163,7 +166,7 @@ var stage=document.getElementById("stage"),hud=document.getElementById("hud"),
 var C=2*Math.PI*44;
 elArc.style.strokeDasharray=C;elArc.style.strokeDashoffset=0;
 
-var i=0,score=0,streak=0,best=0,right=0,left=SEC,timer=null,answered=false,locked=true,sound=true;
+var i=0,score=0,streak=0,best=0,right=0,left=SEC,timer=null,answered=false,locked=true,sound=true,held=false;
 
 /* --- 音效：離線也能用，不靠任何檔案 --- */
 var ac=null;
@@ -193,7 +196,7 @@ function gate(){
   '<div class="emoji pop" style="font-size:clamp(56px,11vh,96px);line-height:1.05">🎯</div>'+
   '<div class="big in d1">家人單字 暖身 '+N+' 題</div>'+
   '<div class="note in d2">四選一　每題倒數 <b>50 秒</b>　<b>先小組討論，再作答</b><br>'+
-  '其中 <b>6 題挑戰題</b> 答對得 <b>雙倍分數</b></div>'+
+  '其中 <b>6 題挑戰題</b>，答對 <b>分數 ✕ 2</b></div>'+
   '<div class="note in d3" style="color:#8A8A8A">老師按「開始」才會出題；也可以先不做，直接上單字。</div>');
 }
 function skipped(){
@@ -211,11 +214,12 @@ function stop(){if(timer){clearInterval(timer);timer=null}}
 function paint(){
  elSecs.textContent=left;
  elArc.style.strokeDashoffset=C*(1-left/SEC);
- elClock.className=left<=10?"hot":(left<=20?"warn":"");
+ elClock.className=held?"held":(left<=10?"hot":(left<=20?"warn":""));
 }
 function run(){
  left=SEC;paint();stop();
  timer=setInterval(function(){
+  if(held)return;
   left--;if(left<0)left=0;paint();
   if(left<=5&&left>0)sTick();
   if(left===SEC-TALK&&locked)open_();
@@ -236,8 +240,9 @@ function ask(){
  var q=Q[i];answered=false;locked=true;
  hud.classList.add("on");elQn.textContent=(i+1);
  btn(bar.go,false);btn(bar.skip,false);btn(bar.next,false);btn(bar.unlock,true);btn(bar.toword,false);
+ held=false;bar.pause.textContent="⏸ 暫停";btn(bar.pause,true);
  var h='';
- if(q.x2)h+='<div class="badge pop">⭐ 挑戰題　答對雙倍分</div>';
+ if(q.x2)h+='<div class="badge pop">⭐ 挑戰題　答對 分數 ✕ 2</div>';
  h+='<div class="qtext in d1">'+q.q+'</div>';
  h+='<div id="talk" class="note in d2" style="color:#9FB4C8">👥 <b>小組討論中</b>　先討論，'+TALK+' 秒後開放作答</div>';
  h+='<div id="opts" class="lock in d3">'+q.o.map(function(t,k){
@@ -265,11 +270,11 @@ function pick(k){
  var t=document.getElementById("talk");
  if(t){
   t.innerHTML = ok
-   ? '<span class="verdict ok">✅ 答對了！</span>　<span class="gain">+'+gain+(q.x2?'　⭐雙倍':'')+'</span>'+(streak>1?'　🔥 連對 '+streak+' 題':'')
+   ? '<span class="verdict ok">✅ 答對了！</span>　<span class="gain">'+(q.x2?'100 <b>✕ 2</b> ＝ +200':'+100')+'</span>'+(streak>1?'　🔥 連對 '+streak+' 題':'')
    : '<span class="verdict no">'+(k<0?'⏰ 時間到':'❌ 答錯了')+'</span><br><span class="note" style="display:inline-block;margin-top:6px">'+q.why+'</span>';
   if(ok&&q.why)t.innerHTML+='<br><span class="note" style="display:inline-block;margin-top:6px;color:#8A8A8A">'+q.why+'</span>';
  }
- btn(bar.unlock,false);btn(bar.next,true);
+ btn(bar.unlock,false);btn(bar.pause,false);held=false;btn(bar.next,true);
  bar.next.textContent=(i>=N-1)?'看成績 →':'下一題 →';
  setTimeout(function(){stage.classList.remove("shake")},520);
 }
@@ -290,6 +295,8 @@ function end(){
 bar.go.addEventListener("click",function(){i=0;score=0;streak=0;best=0;right=0;elScore.textContent=0;ask()});
 bar.skip.addEventListener("click",skipped);
 bar.unlock.addEventListener("click",open_);
+bar.pause.addEventListener("click",function(){
+ held=!held;bar.pause.textContent=held?"▶ 繼續":"⏸ 暫停";paint()});
 bar.next.addEventListener("click",function(){if(i>=N-1){end()}else{i++;ask()}});
 bar.toword.addEventListener("click",function(){location.href="family.html"});
 bar.sound.addEventListener("click",function(){sound=!sound;bar.sound.textContent=sound?"🔊 音效":"🔇 靜音"});

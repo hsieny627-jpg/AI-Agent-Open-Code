@@ -39,7 +39,7 @@ const HEAD = [
  [2, 'A', 'Quiz template'],
  [3, 'A', '家人單字 暖身 20 題（由 words/_build_kahoot.js 產生，勿手改）'],
  [4, 'A', '題目上限 95 字、選項上限 60 字。時間只能是 5/10/20/30/60/90/120 秒。'],
- [5, 'A', '匯入後，請到編輯器把第 2、5、6、9、12、18 題的 Points 改成 Double points（雙倍分數）。'],
+ [5, 'A', '匯入後，請到編輯器把第 2、5、6、9、12、18 題的 Points 改成 Double points（分數 ✕ 2）。'],
  [6, 'A', '若不是用 Excel 編輯，上傳前要先另存成 .xlsx。']
 ];
 
@@ -131,12 +131,12 @@ fs.writeFileSync(OUT, zip([
 
 const x2 = ALL.map((q, n) => q.x2 ? n + 1 : 0).filter(Boolean);
 console.log('已產生 kahoot_family_20.xlsx：' + ALL.length + ' 題，每題 ' + TIME + ' 秒（Kahoot 沒有 50 秒）');
-console.log('要手動設「雙倍分數」的挑戰題：第 ' + x2.join('、') + ' 題');
+console.log('要手動設「分數 ✕ 2」的挑戰題：第 ' + x2.join('、') + ' 題');
 
 /* ---------- 順便產生說明文件（跟題庫同一份資料，不會走鐘） ---------- */
 const DOC = path.join(__dirname, '..', 'kahoot_20_題目與上架說明.md');
 const list = ALL.map((q, n) => {
- const head = '### ' + (n + 1) + '. ' + (q.x2 ? '⭐雙倍　' : '') + q.q;
+ const head = '### ' + (n + 1) + '. ' + (q.x2 ? '⭐ 分數✕2　' : '') + q.q;
  const opts = q.o.map((o, k) => (k === q.a ? '- ✅ ' : '- ') + o).join('\n');
  return head + '\n' + opts + '\n\n> 秒懂說明：' + q.why.replace(/<\/?b>/g, '**');
 }).join('\n\n');
@@ -150,7 +150,7 @@ fs.writeFileSync(DOC, `# 家人單字 — Kahoot 暖身 20 題
 |---|---|
 | 對象 | 國小中年級（四年級） |
 | 題數 | 20 題，四選一 |
-| 挑戰題 | **第 ${x2.join('、')} 題**，共 ${x2.length} 題，答對**雙倍分數** |
+| 挑戰題 | **第 ${x2.join('、')} 題**，共 ${x2.length} 題，答對 **分數 ✕ 2** |
 | 匯入檔 | \`kahoot_family_20.xlsx\`（專案根目錄） |
 | 每題秒數 | **${TIME} 秒**（見下方「兩個 Kahoot 限制」） |
 | 課堂網頁版 | \`words/quiz.html\`（50 秒、含小組討論鎖、答錯秒懂說明） |
@@ -162,7 +162,7 @@ fs.writeFileSync(DOC, `# 家人單字 — Kahoot 暖身 20 題
 1. **Kahoot 沒有 50 秒這個選項。**
    它只能選 5／10／20／30／60／90／120 秒。匯入檔用**最接近的 60 秒**。
    要剛好 50 秒，就用課堂網頁版 \`words/quiz.html\`。
-2. **匯入試算表帶不進「雙倍分數」。**
+2. **匯入試算表帶不進「分數 ✕ 2」。**
    ${x2.length} 題挑戰題要在 Kahoot 編輯器裡**手動設定**，做法見第三節。
 
 ---
@@ -183,7 +183,7 @@ ${list}
 6. **Select file** → 選 \`kahoot_family_20.xlsx\` → **Upload**。
 7. 左邊列表跑出 **20 題**就成功了。
 
-### 把 ${x2.length} 題挑戰題設成雙倍分數
+### 把 ${x2.length} 題挑戰題設成「分數 ✕ 2」
 
 1. 點開**第 ${x2[0]} 題**。
 2. 右邊 **Points** 下拉選單 → 選 **Double points**。
@@ -199,7 +199,7 @@ ${list}
 - [ ] 第 ${x2.join('、')} 題的 Points 顯示 **Double points**。
 - [ ] 每題時間顯示 **${TIME} 秒**。
 - [ ] 按右上角 **Preview**（或 Play → Teach）**實際玩過一輪**：
-      題目讀得到、選項按得到、答對會加分、挑戰題加的是雙倍。
+      題目讀得到、選項按得到、答對會加分、挑戰題加的是兩倍。
 - [ ] 中文沒有變成亂碼（若亂碼，用 Excel 另存一次 .xlsx 再上傳）。
 
 > ⚠️ 這一節必須由**老師本人在自己的 Kahoot 帳號上操作並確認**。
