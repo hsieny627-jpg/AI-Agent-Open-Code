@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>father｜單字小故事</title>
+<!-- 本檔由 words/_build.js 產生，不要手改。改樣板請改 _build.js 再重跑。 -->
 <style>
 /* Andika 隨檔案放在 fonts/，離線也一定是 Andika（不靠網路） */
 @font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
@@ -38,6 +39,8 @@ body{margin:0;background:#000;color:#F2F2F2;
 .zh{font-size:clamp(46px,8.4vh,78px);font-weight:700;letter-spacing:.06em}
 .word{font-size:clamp(50px,9vh,88px);font-weight:700;letter-spacing:.01em}
 .word.past{color:#D8D3C5}
+.parts{font-size:clamp(34px,6vh,58px);font-weight:700;color:#D8D3C5;letter-spacing:.01em}
+.parts b{color:#9FB4C8;font-weight:700}
 .sub{font-size:clamp(17px,2.4vh,23px);color:#D8D3C5;line-height:1.5}
 .sub b{color:#F2F2F2;font-weight:700}
 
@@ -63,23 +66,24 @@ body{margin:0;background:#000;color:#F2F2F2;
 <div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button></div>
 
 <script>
-var W={zh:"父親",sub:"爸爸",icon:"🧔",old:"fæder",now:"father",alt:"dad"};
+var W={zh:"父親",sub:"爸爸",icon:"🧔",old:"fæder",now:"father",
+ e1:"👶 也可以叫 <b>dad</b>",e2:"dad 是寶寶先叫的，<b>不是 father 剪短的</b>"};
 
 var SCENES=[
  // ① 中文意思
  function(){return '<div class="emoji pop">'+W.icon+'</div>'+
    '<div class="zh in d1">'+W.zh+'</div>'+
    '<div class="sub in d2">'+W.sub+'</div>'},
- // ② 以前的樣貌（圖示就是意思，不再加說明）
+ // ② 以前的樣貌（圖示就是意思，不再加說明）；grandfather / grandmother 改成「怎麼組的」
  function(){return '<div class="tag in">以前</div>'+
    '<div class="word past in d1">'+W.old+'</div>'+
    '<div class="emoji pop d2" style="font-size:clamp(66px,12vh,104px)">'+W.icon+'</div>'},
  // ③ 現在的單字＋秒懂收尾
- function(){return '<div class="tag in">\u73FE\u5728</div>'+
+ function(){return '<div class="tag in">現在</div>'+
    '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
    '<div class="word in d1">'+W.now+'</div>'+
-   '<div class="sub in d2" style="margin-top:2px">\uD83D\uDC76 \u4E5F\u53EF\u4EE5\u53EB <b>'+W.alt+'</b></div>'+
-   '<div class="sub in d3">'+W.alt+' \u662F\u5BF6\u5BF6\u5148\u53EB\u7684\uFF0C<b>\u4E0D\u662F '+W.now+' \u526A\u77ED\u7684</b></div>'}
+   '<div class="sub in d2" style="margin-top:2px">'+W.e1+'</div>'+
+   (W.e2?'<div class="sub in d3">'+W.e2+'</div>':'')}
 ];
 
 var i=0,reduce=false;
