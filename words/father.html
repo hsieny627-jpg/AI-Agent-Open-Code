@@ -41,14 +41,6 @@ body{margin:0;background:#000;color:#F2F2F2;
 .sub{font-size:clamp(17px,2.4vh,23px);color:#D8D3C5;line-height:1.5}
 .sub b{color:#F2F2F2;font-weight:700}
 
-/* 幕3：單字搬家 */
-.move{position:relative;width:min(100%,470px);height:clamp(74px,11.4vh,108px)}
-.move span{position:absolute;line-height:1}
-.move .hs{top:0;font-size:clamp(48px,7.8vh,72px)}
-.move .l{left:0}.move .r{right:0}
-.move .trav{top:14%;font-size:clamp(34px,5.6vh,50px);animation:trip 1.7s cubic-bezier(.4,0,.2,1) .4s both}
-@keyframes trip{0%{left:19%;opacity:0}12%{opacity:1}100%{left:48%;opacity:1}}
-
 #bar{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));display:flex;gap:12px}
 #bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
  font-size:16px;padding:11px 20px;min-height:48px;font-family:inherit;cursor:pointer}
@@ -82,15 +74,7 @@ var SCENES=[
  function(){return '<div class="tag in">以前</div>'+
    '<div class="word past in d1">'+W.old+'</div>'+
    '<div class="emoji pop d2" style="font-size:clamp(66px,12vh,104px)">'+W.icon+'</div>'},
- // ③ 為什麼會變：單字搬家了
- function(){return '<div class="tag in">\u70BA\u4EC0\u9EBC</div>'+
-   '<div class="move">'+
-     '<span class="hs l pop">\uD83C\uDFE0</span>'+
-     '<span class="trav">\uD83D\uDEB6\uD83D\uDCAC</span>'+
-     '<span class="hs r pop d2">\uD83C\uDFE1</span>'+
-   '</div>'+
-   '<div class="sub in d3"><b>\u55AE\u5B57\u642C\u5BB6\uFF0C\u767C\u97F3\u4E0D\u540C</b></div>'},
- // ④ 現在的單字＋秒懂收尾
+ // ③ 現在的單字＋秒懂收尾
  function(){return '<div class="tag in">\u73FE\u5728</div>'+
    '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
    '<div class="word in d1">'+W.now+'</div>'+
