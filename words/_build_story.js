@@ -16,32 +16,32 @@ const fs=require('fs'),path=require('path'),DIR=__dirname;
 
 /* FAM[0]=開場、FAM[1..17]=17 個家人單字、FAM[18]=結尾 */
 const FAM=[
- {emoji:'👨‍👩‍👧‍👦',mid:'每一個家人單字，都有自己的故事',
-  lines:['為什麼長這樣？往前看一眼就知道']},
+ {emoji:'👨‍👩‍👧‍👦',mid:'這些家人單字，為什麼長這樣？',
+  lines:['每一個字，都有自己的故事']},
 
- {tag:'意思變窄了',emoji:'👨‍👩‍👧‍👦<span class="extra">👴🧑‍🌾🧹</span>',say:'family',
+ {tag:'以前算的人更多',emoji:'👨‍👩‍👧‍👦<span class="extra">👴🧑‍🌾🧹</span>',say:'family',
   h:'<div class="en in d1">family</div>',
-  lines:['古羅馬的 <b>familia</b>，連住在一起的<b>僕人</b>都算',
+  lines:['很久以前的 family，<b>連家裡幫忙做事的人都算</b>',
          '（它不是 Father And Mother I Love You 拼出來的）']},
 
- {tag:'意思的根',emoji:'👨‍👩',say:'parent',
+ {tag:'最早的意思',emoji:'👨‍👩',say:'parent',
   h:'<div class="en in d1">parent</div>'+
     '<div class="emoji emerge" style="font-size:clamp(40px,7.4vh,66px)">👶</div>',
-  lines:['老祖宗 <b>parens</b> 的意思是「<b>把孩子生下來的人</b>」',
-         '一位是 a parent，很多位是 parents']},
+  lines:['最早寫成 <b>parens</b>，意思是「<b>把孩子生下來的人</b>」',
+         '一位是 a parent，兩位以上是 parents']},
 
- {tag:'寶寶先叫出來的',emoji:'👶',say:'mother',
+ {tag:'寶寶最先會的音',emoji:'👶',say:'mother',
   h:'<div class="en"><span class="bub b1">ma</span><span class="bub b2">ma</span><span class="bub b3">ma</span></div>'+
     '<div class="en pop" style="animation-delay:1.3s">mom</div>',
-  lines:['全世界的寶寶，都先發得出 <b>ma</b> 這個音',
-         '<b>mother</b> 的暱稱 <b>mom</b>，是從 momma 縮短來的']},
+  lines:['全世界的寶寶，最先發得出來的音就是 <b>ma</b>',
+         '媽媽的英文 <b>mother</b>、<b>mom</b>，都從 <b>m</b> 開頭']},
 
- {tag:'不是剪短來的',emoji:'👶',say:'father',
+ {tag:'不是剪短的',emoji:'👶',say:'father',
   h:'<div class="en"><span class="bub b1">da</span><span class="bub b2">da</span><span class="bub b3">da</span></div>'+
     '<div class="en pop" style="animation-delay:1.3s">dad</div>',
   lines:['<b>dad</b> 是寶寶自己先叫出來的','<b>不是</b>把 father 剪短的']},
 
- {tag:'失落的字母',emoji:'🧒👦',say:'brother',
+ {tag:'不見了的字母',emoji:'🧒👦',say:'brother',
   h:'<div class="en in d1"><span class="flag">þ</span> <span class="ar">就是</span> th</div>',
   lines:['以前英文有一個字母 <b>þ</b>，像一面小旗子',
          'brother 以前寫成 <b>brōþor</b>']},
@@ -53,60 +53,63 @@ const FAM=[
   lines:['以前<b>兩個村子</b>，同一個人<b>叫法不一樣</b>',
          '住在一起久了，兩種叫法<b>合成一個字</b>']},
 
- {tag:'撞出一樣的聲音',emoji:'☀️👦',say:'son',
+ {tag:'唸起來一樣',emoji:'☀️👦',say:'son',
   h:'<div class="en in d1" style="font-size:clamp(26px,4.8vh,46px)">'+
     '<span class="fromL">sun ☀️</span> <span class="ar">🔊</span> <span class="fromR">👦 son</span></div>',
-  lines:['兩個字走的是<b>不同的路</b>','卻撞出<b>一樣的聲音</b>']},
+  lines:['<b>sun</b>（太陽）和 <b>son</b>（兒子），<b>唸起來一模一樣</b>',
+         '可是<b>拼法不一樣，意思也不一樣</b>']},
 
- {tag:'聲音不見了',emoji:'👧',say:'daughter',
+ {tag:'後來不唸了',emoji:'👧',say:'daughter',
   h:'<div class="en in d1">dau<span class="mute">gh</span>ter</div>',
-  lines:['以前 <b>gh</b> 是有聲音的','後來聲音不見了，<b>字母留下來</b>']},
+  lines:['以前的人，<b>gh</b> 會唸出來','後來<b>不唸了，字母還是留著</b>']},
 
- {tag:'借來的零件',emoji:'👴',say:'grandfather',
+ {tag:'借來的 grand',emoji:'👴',say:'grandfather',
   h:'<div class="en in d1" style="font-size:clamp(26px,4.8vh,48px)">'+
     '<span class="fromL hi">grand</span> <span class="ar">＋</span> <span class="fromR">father</span></div>'+
     '<div class="en pop" style="animation-delay:1.2s;font-size:clamp(26px,4.8vh,48px)">grandfather</div>',
-  lines:['<b>grand</b> 是從法國借來的零件','接在家人前面，就變成<b>長一輩</b>']},
+  lines:['<b>grand</b> 是從法國借來的','裝在 father 前面，就變成<b>爸爸的爸爸</b>']},
 
- {tag:'同一個零件，一直接',emoji:'👵',say:'grandmother',
+ {tag:'同一個 grand',emoji:'👵',say:'grandmother',
   h:'<div class="en in d1" style="font-size:clamp(24px,4.4vh,42px)">'+
     '<span class="hi">grand</span> ＋ mother</div>'+
     '<div class="en pop" style="animation-delay:1.2s;font-size:clamp(24px,4.4vh,42px)">'+
     '<span class="hi">grand</span> ＋ ma</div>',
-  lines:['同一個零件，<b>可以一直接下去</b>','接上誰，誰就長一輩']},
+  lines:['同一個 <b>grand</b>，可以一直裝','裝在 mother 前面，就是<b>媽媽的媽媽</b>']},
 
- {tag:'老祖宗的意思',emoji:'👴',emojiCls:'shrinkTo',say:'uncle',
+ {tag:'以前只有一種',emoji:'🧓<span class="plus">👨👴</span>',say:'uncle',
   h:'<div class="en in d1">uncle</div>',
-  lines:['老祖宗的意思和「<b>小爺爺</b>」有關','今天是叔叔、伯伯、舅舅']},
+  lines:['uncle 最早只有一個意思：<b>媽媽的兄弟</b>（舅舅）',
+         '現在叔叔、伯伯、姑丈、姨丈，<b>全都是 uncle</b>']},
 
- {tag:'意思變寬了',emoji:'👩‍🦰<span class="plus">👩👵</span>',say:'aunt',
+ {tag:'以前只有一種',emoji:'👩‍🦰<span class="plus">👩👵</span>',say:'aunt',
   h:'<div class="en in d1">aunt</div>',
-  lines:['拉丁文的 <b>amita</b>，只有「<b>爸爸的姊妹</b>」',
-         '現在姑姑、阿姨、舅媽<b>都算</b>']},
+  lines:['aunt 最早也只有一個意思：<b>爸爸的姊妹</b>（姑姑）',
+         '現在阿姨、伯母、舅媽，<b>全都是 aunt</b>']},
 
- {tag:'意思變寬了',emoji:'🧑<span class="plus">🧒👧👦</span>',say:'cousin',
+ {tag:'以前只有一種',emoji:'🧑<span class="plus">🧒👧👦</span>',say:'cousin',
   h:'<div class="en in d1">cousin</div>',
-  lines:['以前只有「<b>媽媽的姊妹的小孩</b>」',
-         '現在堂哥、表姊…<b>全部都是 cousin</b>']},
+  lines:['cousin 以前只有一種：<b>阿姨的小孩</b>',
+         '現在堂哥、表姊、堂弟、表妹，<b>全都是 cousin</b>']},
 
- {tag:'意思變窄了',emoji:'👦<span class="extra">👴👶🧒</span>',say:'nephew',
+ {tag:'以前能叫的更多',emoji:'👦<span class="extra">👴👶🧒</span>',say:'nephew',
   h:'<div class="en in d1">nephew</div>',
-  lines:['老祖宗 <b>nepos</b>，孫子、姪子、外甥都能指',
-         '今天只剩「<b>兄弟姊妹的兒子</b>」']},
+  lines:['<b>nepos</b> 以前很好用，孫子、姪子、外甥都能叫',
+         '現在只剩一種：<b>兄弟姊妹的兒子</b>']},
 
- {tag:'和 nephew 一對',emoji:'👧<span class="extra">👵👶👩</span>',say:'niece',
+ {tag:'和 nephew 一樣',emoji:'👧<span class="extra">👵👶👩</span>',say:'niece',
   h:'<div class="en in d1">niece</div>',
-  lines:['<b>neptia</b> 以前也是一大群人都能指',
-         '今天只剩「<b>兄弟姊妹的女兒</b>」']},
+  lines:['<b>neptia</b> 以前也一樣，一大群人都能叫',
+         '現在只剩一種：<b>兄弟姊妹的女兒</b>']},
 
  {tag:'藏在字裡的房子',emoji:'🏠',say:'husband',
   h:'<div class="en in d1"><span class="hi">hus</span>band</div>',
   lines:['<b>hus</b> 就是 <b>house</b>（房子）',
-         '以前指的是<b>家裡管事的那個人</b>']},
+         'husband 以前的意思是「<b>管這個家的人</b>」']},
 
- {tag:'意思變窄了',emoji:'👰<span class="extra">👩👩‍🦰👵</span>',say:'wife',
+ {tag:'以前能叫的更多',emoji:'👰<span class="extra">👩👩‍🦰👵</span>',say:'wife',
   h:'<div class="en in d1">wife</div>',
-  lines:['古英語的 <b>wīf</b>，可以指<b>任何女人</b>','今天只剩「<b>妻子</b>」']},
+  lines:['以前的 <b>wīf</b>，<b>每個女生都能這樣叫</b>',
+         '現在只剩一種：<b>太太</b>']},
 
  {tag:'所以',emoji:'🗣️⏳',mid:'字會變，就像綽號',
   lines:['<b>沒有人規定</b>，是大家一直叫','叫著叫著，<b>就慢慢變了</b>']}
@@ -220,9 +223,6 @@ body{margin:0;background:#000;color:#F2F2F2;
 /* 多出來的人跑進來（意思變寬） */
 .plus{display:inline-block;animation:plusin .8s cubic-bezier(.2,1.5,.4,1) both;animation-delay:1.1s}
 @keyframes plusin{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:none}}
-/* 爺爺縮小成「小爺爺」 */
-.shrinkTo{animation:shrinkTo 2.4s ease-in-out both}
-@keyframes shrinkTo{0%{opacity:0;transform:scale(1.3)}35%{opacity:1;transform:scale(1.3)}100%{opacity:1;transform:scale(.78)}}
 /* 寶寶的 ma-ma / da-da */
 .bub{display:inline-block;color:#9FB4C8;margin:0 .12em;
  animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}

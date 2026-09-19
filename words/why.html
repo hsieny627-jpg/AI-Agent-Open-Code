@@ -64,9 +64,6 @@ body{margin:0;background:#000;color:#F2F2F2;
 /* 多出來的人跑進來（意思變寬） */
 .plus{display:inline-block;animation:plusin .8s cubic-bezier(.2,1.5,.4,1) both;animation-delay:1.1s}
 @keyframes plusin{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:none}}
-/* 爺爺縮小成「小爺爺」 */
-.shrinkTo{animation:shrinkTo 2.4s ease-in-out both}
-@keyframes shrinkTo{0%{opacity:0;transform:scale(1.3)}35%{opacity:1;transform:scale(1.3)}100%{opacity:1;transform:scale(.78)}}
 /* 寶寶的 ma-ma / da-da */
 .bub{display:inline-block;color:#9FB4C8;margin:0 .12em;
  animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
@@ -99,43 +96,43 @@ body{margin:0;background:#000;color:#F2F2F2;
 var S=[
  {
   "emoji": "👨‍👩‍👧‍👦",
-  "mid": "每一個家人單字，都有自己的故事",
+  "mid": "這些家人單字，為什麼長這樣？",
   "lines": [
-   "為什麼長這樣？往前看一眼就知道"
+   "每一個字，都有自己的故事"
   ]
  },
  {
-  "tag": "意思變窄了",
+  "tag": "以前算的人更多",
   "emoji": "👨‍👩‍👧‍👦<span class=\"extra\">👴🧑‍🌾🧹</span>",
   "say": "family",
   "h": "<div class=\"en in d1\">family</div>",
   "lines": [
-   "古羅馬的 <b>familia</b>，連住在一起的<b>僕人</b>都算",
+   "很久以前的 family，<b>連家裡幫忙做事的人都算</b>",
    "（它不是 Father And Mother I Love You 拼出來的）"
   ]
  },
  {
-  "tag": "意思的根",
+  "tag": "最早的意思",
   "emoji": "👨‍👩",
   "say": "parent",
   "h": "<div class=\"en in d1\">parent</div><div class=\"emoji emerge\" style=\"font-size:clamp(40px,7.4vh,66px)\">👶</div>",
   "lines": [
-   "老祖宗 <b>parens</b> 的意思是「<b>把孩子生下來的人</b>」",
-   "一位是 a parent，很多位是 parents"
+   "最早寫成 <b>parens</b>，意思是「<b>把孩子生下來的人</b>」",
+   "一位是 a parent，兩位以上是 parents"
   ]
  },
  {
-  "tag": "寶寶先叫出來的",
+  "tag": "寶寶最先會的音",
   "emoji": "👶",
   "say": "mother",
   "h": "<div class=\"en\"><span class=\"bub b1\">ma</span><span class=\"bub b2\">ma</span><span class=\"bub b3\">ma</span></div><div class=\"en pop\" style=\"animation-delay:1.3s\">mom</div>",
   "lines": [
-   "全世界的寶寶，都先發得出 <b>ma</b> 這個音",
-   "<b>mother</b> 的暱稱 <b>mom</b>，是從 momma 縮短來的"
+   "全世界的寶寶，最先發得出來的音就是 <b>ma</b>",
+   "媽媽的英文 <b>mother</b>、<b>mom</b>，都從 <b>m</b> 開頭"
   ]
  },
  {
-  "tag": "不是剪短來的",
+  "tag": "不是剪短的",
   "emoji": "👶",
   "say": "father",
   "h": "<div class=\"en\"><span class=\"bub b1\">da</span><span class=\"bub b2\">da</span><span class=\"bub b3\">da</span></div><div class=\"en pop\" style=\"animation-delay:1.3s\">dad</div>",
@@ -145,7 +142,7 @@ var S=[
   ]
  },
  {
-  "tag": "失落的字母",
+  "tag": "不見了的字母",
   "emoji": "🧒👦",
   "say": "brother",
   "h": "<div class=\"en in d1\"><span class=\"flag\">þ</span> <span class=\"ar\">就是</span> th</div>",
@@ -165,33 +162,33 @@ var S=[
   ]
  },
  {
-  "tag": "撞出一樣的聲音",
+  "tag": "唸起來一樣",
   "emoji": "☀️👦",
   "say": "son",
   "h": "<div class=\"en in d1\" style=\"font-size:clamp(26px,4.8vh,46px)\"><span class=\"fromL\">sun ☀️</span> <span class=\"ar\">🔊</span> <span class=\"fromR\">👦 son</span></div>",
   "lines": [
-   "兩個字走的是<b>不同的路</b>",
-   "卻撞出<b>一樣的聲音</b>"
+   "<b>sun</b>（太陽）和 <b>son</b>（兒子），<b>唸起來一模一樣</b>",
+   "可是<b>拼法不一樣，意思也不一樣</b>"
   ]
  },
  {
-  "tag": "聲音不見了",
+  "tag": "後來不唸了",
   "emoji": "👧",
   "say": "daughter",
   "h": "<div class=\"en in d1\">dau<span class=\"mute\">gh</span>ter</div>",
   "lines": [
-   "以前 <b>gh</b> 是有聲音的",
-   "後來聲音不見了，<b>字母留下來</b>"
+   "以前的人，<b>gh</b> 會唸出來",
+   "後來<b>不唸了，字母還是留著</b>"
   ]
  },
  {
-  "tag": "借來的零件",
+  "tag": "借來的 grand",
   "emoji": "👴",
   "say": "grandfather",
   "h": "<div class=\"en in d1\" style=\"font-size:clamp(26px,4.8vh,48px)\"><span class=\"fromL hi\">grand</span> <span class=\"ar\">＋</span> <span class=\"fromR\">father</span></div><div class=\"en pop\" style=\"animation-delay:1.2s;font-size:clamp(26px,4.8vh,48px)\">grandfather</div>",
   "lines": [
-   "<b>grand</b> 是從法國借來的零件",
-   "接在家人前面，就變成<b>長一輩</b>"
+   "<b>grand</b> 是從法國借來的",
+   "裝在 father 前面，就變成<b>爸爸的爸爸</b>"
   ]
  }
 ];
