@@ -73,5 +73,12 @@ perl -0777 -ne 'if(/<script>(.*?)<\/script>/s){print $1}' words/<單字>.html > 
 
 ## 現況
 
-- `father.html` 已完成，為樣板（三幕）。
-- 其餘 16 個單字尚未製作。
+- 17 個單字全部完成（三幕、同一份樣板）：
+  `family` `parent` `mother` `father` `brother` `sister` `son` `daughter`
+  `grandfather` `grandmother` `uncle` `aunt` `cousin` `nephew` `niece`
+  `husband` `wife`
+- `father.html` 仍是樣板。改版面／互動請先改它，再重新套到其餘 16 頁。
+- 各頁差異只有 `<script>` 最上面那個 `W` 物件（`zh` `sub` `icon` `old` `now` `e1` `e2`）
+  和 `<title>`，CSS 與 JS 完全一樣。`e2` 留空字串就只顯示一行收尾。
+- 已量測通過：1024×768 與 820×1180 兩種尺寸、離線 Andika 生效、
+  三幕內容、首尾箭頭停用、無溢出、停 6 秒不自動換頁。

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>father｜單字小故事</title>
+<title>son｜單字小故事</title>
 <style>
 /* Andika 隨檔案放在 fonts/，離線也一定是 Andika（不靠網路） */
 @font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
@@ -63,7 +63,8 @@ body{margin:0;background:#000;color:#F2F2F2;
 <div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button></div>
 
 <script>
-var W={zh:"父親",sub:"爸爸",icon:"🧔",old:"fæder",now:"father",alt:"dad"};
+var W={zh:"兒子",sub:"爸爸媽媽的男孩",icon:"👦",old:"sunu",now:"son",
+ e1:"👦 不管幾歲，<b>都是爸媽的 son</b>",e2:""};
 
 var SCENES=[
  // ① 中文意思
@@ -75,11 +76,11 @@ var SCENES=[
    '<div class="word past in d1">'+W.old+'</div>'+
    '<div class="emoji pop d2" style="font-size:clamp(66px,12vh,104px)">'+W.icon+'</div>'},
  // ③ 現在的單字＋秒懂收尾
- function(){return '<div class="tag in">\u73FE\u5728</div>'+
+ function(){return '<div class="tag in">現在</div>'+
    '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
    '<div class="word in d1">'+W.now+'</div>'+
-   '<div class="sub in d2" style="margin-top:2px">\uD83D\uDC76 \u4E5F\u53EF\u4EE5\u53EB <b>'+W.alt+'</b></div>'+
-   '<div class="sub in d3">'+W.alt+' \u662F\u5BF6\u5BF6\u5148\u53EB\u7684\uFF0C<b>\u4E0D\u662F '+W.now+' \u526A\u77ED\u7684</b></div>'}
+   '<div class="sub in d2" style="margin-top:2px">'+W.e1+'</div>'+
+   (W.e2?'<div class="sub in d3">'+W.e2+'</div>':'')}
 ];
 
 var i=0,reduce=false;
