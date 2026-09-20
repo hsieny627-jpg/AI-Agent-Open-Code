@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#000000">
+<title>英文句型　秒懂教室</title>
+<!-- 本檔由 sentences/_build.js 產生，不要手改。改內容請改 sentences/_data.js ／ _quiz_data.js ／ _game_data.js -->
+<style>
+@font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
+ src:url(../words/fonts/andika-400.woff2) format("woff2")}
+@font-face{font-family:Andika;font-style:normal;font-weight:700;font-display:swap;
+ src:url(../words/fonts/andika-700.woff2) format("woff2")}
+
+:root{
+ --bg:#000; --fg:#F2F2F2; --body:#D8D3C5; --dim:#9E9E9E; --acc:#9FB4C8;
+ --btn:#1E1E1E; --line:#4A4A4A;
+ --he:#2563EB; --she:#E8467C; --be:#F5B301; --ap:#FF4A4A;
+ --ok:#39D98A; --no:#FF5E5E; --gold:#FFD24A;
+ --safeT:env(safe-area-inset-top,0px); --safeB:env(safe-area-inset-bottom,0px);
+ --safeL:env(safe-area-inset-left,0px); --safeR:env(safe-area-inset-right,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overscroll-behavior:none}
+body{background:var(--bg);color:var(--fg);
+ font-family:Andika,-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+ font-weight:400;overflow:hidden;user-select:none;-webkit-user-select:none;
+ touch-action:manipulation;-webkit-text-size-adjust:100%}
+button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
+ cursor:pointer;touch-action:manipulation}
+
+/* 底部按鈕列：每一頁都一樣 */
+#bar{position:fixed;left:0;right:0;bottom:0;z-index:40;
+ display:flex;flex-wrap:wrap;gap:clamp(5px,.9vh,9px);justify-content:center;align-items:center;
+ padding:clamp(6px,1vh,10px) calc(var(--safeR) + 10px) calc(clamp(6px,1vh,10px) + var(--safeB)) calc(var(--safeL) + 10px);
+ background:linear-gradient(180deg,rgba(0,0,0,0) 0%,#000 46%)}
+#bar button,#bar a{display:inline-flex;align-items:center;gap:5px;
+ background:var(--btn);border:1px solid #333;border-radius:999px;color:var(--body);
+ text-decoration:none;font-size:clamp(12.5px,1.85vh,16px);line-height:1;
+ padding:clamp(7px,1.15vh,11px) clamp(10px,1.5vw,16px);white-space:nowrap;
+ transition:border-color .15s,color .15s,background .15s}
+#bar button.on{background:#2C3A48;border-color:var(--acc);color:#fff}
+#bar button:active,#bar a:active{transform:scale(.96)}
+#bar .grp{display:inline-flex;gap:3px;background:#101010;border:1px solid #2A2A2A;
+ border-radius:999px;padding:3px}
+#bar .grp button{border:0;background:none;padding:clamp(6px,1vh,9px) clamp(8px,1.2vw,13px);
+ font-size:clamp(12px,1.75vh,15px)}
+#bar .grp button.on{background:var(--acc);color:#000;font-weight:700}
+
+/* 左右翻頁：整條邊都可以按，最小 68px（使用者指定） */
+.nav{position:fixed;top:0;bottom:0;width:clamp(68px,9vw,104px);z-index:30;
+ display:flex;align-items:center;justify-content:center;
+ font-size:clamp(30px,5vh,46px);color:#3A3A3A;background:transparent;
+ transition:color .15s,background .15s}
+.nav.l{left:0;padding-left:var(--safeL)}
+.nav.r{right:0;padding-right:var(--safeR)}
+.nav:active{color:var(--acc);background:rgba(159,180,200,.08)}
+.nav[disabled]{color:#1A1A1A;background:none}
+.nav b{display:block;font-size:clamp(9.5px,1.35vh,12px);font-weight:400;
+ letter-spacing:.1em;color:inherit;margin-top:4px;opacity:.75}
+.nav i{font-style:normal;display:block;line-height:1}
+
+/* 進度點 */
+#dots{position:fixed;left:50%;transform:translateX(-50%);z-index:35;
+ top:calc(var(--safeT) + clamp(8px,1.4vh,14px));
+ display:flex;gap:clamp(4px,.7vw,8px);max-width:78vw;flex-wrap:wrap;justify-content:center}
+#dots i{width:clamp(6px,.9vh,9px);height:clamp(6px,.9vh,9px);border-radius:50%;
+ background:#2C2C2C;display:block}
+#dots i.on{background:var(--acc);transform:scale(1.35)}
+
+.ap{color:var(--ap);font-weight:700}
+.reduce *{animation:none!important;transition:none!important}
+
+#stage{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ padding:calc(var(--safeT) + clamp(16px,3vh,32px)) clamp(14px,3.4vw,40px)
+         calc(clamp(50px,7.6vh,70px) + var(--safeB)) clamp(14px,3.4vw,40px)}
+header{text-align:center;margin-bottom:clamp(10px,2vh,22px)}
+h1{margin:0;font-size:clamp(25px,4.8vh,46px);font-weight:700;letter-spacing:.03em}
+.sub{margin-top:6px;font-size:clamp(12.5px,1.95vh,17px);color:var(--acc);letter-spacing:.16em}
+.url{margin-top:5px;font-size:clamp(11px,1.55vh,13.5px);color:#5F5F5F}
+.url b{color:#8E8E8E;font-weight:400}
+
+#menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,268px),1fr));
+ gap:clamp(9px,1.5vh,15px);width:100%;max-width:1060px}
+.card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:clamp(3px,.6vh,7px);
+ text-align:left;text-decoration:none;background:linear-gradient(180deg,#0E0E0E,#050505);
+ border:1px solid #2A2A2A;border-radius:18px;color:var(--fg);
+ padding:clamp(12px,2.1vh,20px) clamp(13px,1.8vw,20px);min-height:clamp(112px,16.5vh,150px)}
+.card:active{transform:scale(.985);border-color:var(--acc)}
+.card .n{position:absolute;top:clamp(9px,1.5vh,15px);right:clamp(12px,1.6vw,18px);
+ font-size:clamp(20px,3.2vh,30px);font-weight:700;color:#232323;line-height:1}
+.card .ic{font-size:clamp(27px,4.3vh,39px);line-height:1.1}
+.card .t{font-size:clamp(17.5px,2.75vh,25px);font-weight:700;letter-spacing:.02em}
+.card .d{font-size:clamp(12.5px,1.85vh,16px);color:var(--dim);line-height:1.45}
+.card .f{margin-top:auto;font-size:clamp(11px,1.6vh,14px);color:#5C5C5C;letter-spacing:.06em}
+.card.go{border-color:#2E4636}
+
+#order{margin-top:clamp(10px,1.8vh,18px);width:100%;max-width:1060px;
+ display:flex;flex-wrap:wrap;gap:clamp(5px,.9vw,10px);justify-content:center;align-items:center;
+ font-size:clamp(11.5px,1.75vh,15px);color:#6A6A6A}
+#order b{color:var(--acc);font-weight:400}
+#order .ar{color:#333}
+
+</style>
+</head>
+<body>
+<main id="stage">
+<header>
+ <h1>英文句型　秒懂教室</h1>
+ <div class="sub">三年級　Unit 1 ・ Unit 2</div>
+ <div class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code/sentences/</b></div>
+</header>
+
+<nav id="menu">
+ <a class="card" href="warmup.html">
+  <span class="n">1</span><span class="ic">🎯</span>
+  <span class="t">暖身題</span>
+  <span class="d">四選一，倒數 50 秒，小組討論 20 秒後才能作答。答錯的題目最後再考一次。</span>
+  <span class="f">22 題　其中 6 題 分數 ✕ 2</span></a>
+
+ <a class="card" href="unit1.html">
+  <span class="n">2</span><span class="ic">👨‍👩‍👧</span>
+  <span class="t">Unit 1 句型</span>
+  <span class="d">Who’s he? He’s my father.　Who’s she? She’s my mother.　逐字動畫、中英語序、家人替換字。</span>
+  <span class="f">13 張字卡</span></a>
+
+ <a class="card" href="unit2.html">
+  <span class="n">3</span><span class="ic">👨‍⚕️</span>
+  <span class="t">Unit 2 句型</span>
+  <span class="d">He is a doctor. ⇄ Is he a doctor?　主詞藍色、be 動詞黃色，看顏色就知道位置怎麼換。</span>
+  <span class="f">15 張字卡</span></a>
+
+ <a class="card go" href="games.html">
+  <span class="n">4</span><span class="ic">🎮</span>
+  <span class="t">複習遊戲</span>
+  <span class="d">10 種玩法，每一場倒數 2 分鐘。每次重玩都重新洗牌，隨機跳出雙倍時刻與神秘寶箱。</span>
+  <span class="f">10 種　共 216 題</span></a>
+</nav>
+
+<div id="order">
+ 上課順序：<b>暖身題</b><span class="ar">➜</span><b>Unit 1</b><span class="ar">➜</span>
+ <b>Unit 2</b><span class="ar">➜</span><b>遊戲</b>
+ <span class="ar">｜</span>暖身題老師可以跳過，直接上句型
+</div>
+</main>
+
+<nav id="bar">
+ <a href="../index.html">🏠 回家人單字首頁</a>
+</nav>
+
+<script>
+
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return [].slice.call((r||document).querySelectorAll(s))}
+function el(tag,cls,html){var d=document.createElement(tag);if(cls)d.className=cls;
+ if(html!=null)d.innerHTML=html;return d}
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));
+ var t=a[i];a[i]=a[j];a[j]=t}return a}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+/* ' 一律上紅色（使用者指定） */
+function ap(s){return String(s).replace(/['\u2019]/g,'<b class="ap">\u2019</b>')}
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem('sent_'+k)||'null');
+ localStorage.setItem('sent_'+k,JSON.stringify(v))}catch(e){return null}}
+if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+ document.body.classList.add('reduce');
+/* iPad：轉向或鍵盤收起後把版面高度重算，不會留白 */
+function fixVH(){document.documentElement.style.setProperty('--vh',window.innerHeight*0.01+'px')}
+fixVH();window.addEventListener('resize',fixVH);window.addEventListener('orientationchange',fixVH);
+
+
+var SLOW=false,VOX=null,VOXZH=null;
+function pickVoice(){try{var v=speechSynthesis.getVoices();if(!v||!v.length)return;
+ var en=v.filter(function(x){return /^en[-_]US/i.test(x.lang)});
+ if(!en.length)en=v.filter(function(x){return /^en/i.test(x.lang)});
+ var pref=['Samantha','Ava','Allison','Alex','Google US English','Microsoft Zira','Microsoft Aria'];
+ for(var i=0;i<pref.length;i++){for(var j=0;j<en.length;j++)if(en[j].name.indexOf(pref[i])>=0){VOX=en[j];break}if(VOX)break}
+ if(!VOX&&en.length)VOX=en[0];
+ var zh=v.filter(function(x){return /^zh[-_](TW|HK|CN)/i.test(x.lang)});
+ if(zh.length)VOXZH=zh[0];}catch(e){}}
+pickVoice();
+try{speechSynthesis.onvoiceschanged=pickVoice}catch(e){}
+function say(txt,lang){try{if(!txt)return;
+ var u=new SpeechSynthesisUtterance(String(txt).replace(/[\u2019]/g,"'"));
+ if(lang==='zh'){u.lang='zh-TW';if(VOXZH)u.voice=VOXZH;u.rate=SLOW?.55:.92}
+ else{u.lang='en-US';if(VOX)u.voice=VOX;u.rate=SLOW?.45:.88}
+ u.pitch=1;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+function sayZh(t){say(t,'zh')}
+/* iOS 要先由一次點擊喚醒語音引擎 */
+var TTSWOKE=false;
+function wakeTTS(){if(TTSWOKE)return;TTSWOKE=true;
+ try{var u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u);pickVoice()}catch(e){}}
+document.addEventListener('touchstart',wakeTTS,{once:true,passive:true});
+document.addEventListener('mousedown',wakeTTS,{once:true});
+
+</script>
+</body>
+</html>
