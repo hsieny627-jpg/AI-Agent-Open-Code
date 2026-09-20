@@ -129,20 +129,34 @@ const P = {
 
 /* display:none ＝ 完全不佔版面，_verify.js 量到的溢出不受影響 */
 const CSS = `
+/* 放大字級之後條目會超過一個螢幕，所以**不可以再用 flex 置中**——
+   flex 置中一旦內容超出高度，上面那幾條會被切掉而且捲不回去。
+   改成 display:block ＋ overflow:auto，從最上面開始，捲得到每一條。 */
 #src{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.95);
- display:none;flex-direction:column;align-items:center;justify-content:center;
- padding:clamp(16px,4vh,40px);overflow:auto;text-align:left}
-#src.on{display:flex}
-#src h4{margin:0 0 12px;color:#9FB4C8;font-size:clamp(13px,1.8vh,16px);letter-spacing:.24em;font-weight:700}
-#src p{margin:0 0 8px;max-width:640px;color:#8E8E8E;line-height:1.65;
- font-size:clamp(11px,1.55vh,13px)}
-#src p b{color:#D8D3C5;font-weight:700}
-#src button{margin-top:16px;background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;
- border-radius:99px;font-size:15px;padding:10px 22px;min-height:44px;font-family:inherit;cursor:pointer}`;
+ display:none;padding:clamp(16px,4vh,40px);overflow:auto;text-align:left}
+#src.on{display:block}
+#src h4{max-width:900px;margin:0 auto 16px;color:#9FB4C8;font-size:clamp(19px,2.6vh,26px);letter-spacing:.24em;font-weight:700}
+/* 字級：使用者 2026-09-20 指定放大到「最後一排學生看得清楚」。#src 平常 display:none，
+   完全不佔版面，所以放大不會影響任何一頁的溢出量測。 */
+#src p{margin:0 auto 13px;max-width:900px;color:#C2C2C2;line-height:1.7;
+ font-size:clamp(17px,2.35vh,23px)}
+#src p b{color:#F2F2F2;font-weight:700}
+#src button{display:block;margin:22px auto 0;background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;
+ border-radius:99px;font-size:19px;padding:13px 28px;min-height:52px;font-family:inherit;cursor:pointer}`;
+
+/* 音標、音節、發音是每一頁都會用到的，所以獨立成一份，自動附在每一頁的出處最後面。
+   （使用者 2026-09-20 指定加上音標與發音功能，出處同樣要 100% 查得到。） */
+const COMMON = [
+ '<b>音標（美式）</b>：<b>Cambridge Dictionary</b> 各詞條的 <b>US</b> 發音、<b>Oxford Learner’s Dictionaries</b> 的 <b>NAmE</b> 發音。',
+ '<b>KK 音標</b>：<b>Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</b> —— 台灣中小學課本採用的標法。同一個音兩套寫法不同（例：bed 的 e ＝ IPA <b>/e/</b>、KK <b>/ɛ/</b>；boat 的 o ＝ IPA <b>/oʊ/</b>、KK <b>/o/</b>）。',
+ '<b>音節切分</b>：<b>Merriam-Webster</b> 各詞條的分音節（fam·i·ly、daugh·ter、un·cle、lit·tle）。',
+ '<b>「一個母音 ＝ 一個音節」</b>：<b>Louisa Moats《Speech to Print》</b>、<b>National Reading Panel (2000)</b> 的音節教學原則。⚠️ <b>誠實註記</b>：數的是<b>還在出聲的母音</b>——畫面上<b>淺灰色的字母不出聲，不算</b>（niece 的 e、wife 的 e、daughter 的 gh、little 的第二個 t），au／ou／ie／ew 兩個字母一起發一個音，畫面上本來就是一格。照畫面數，這條規則對這些單字<b>全部成立</b>。',
+ '<b>唸出來的聲音</b>：瀏覽器內建的語音合成（<b>Web Speech API</b>），語系設 <b>en-US</b>。實際嗓音由老師那台電腦或平板決定，不需要連網也不需要帳號。'
+];
 
 const html = (lines) =>
  '<footer id="src"><h4>出處</h4>' +
- lines.map(t => '<p>' + t + '</p>').join('') +
+ lines.concat(COMMON).map(t => '<p>' + t + '</p>').join('') +
  '<button id="srcx">關閉</button></footer>';
 
 const btn = '<button id="srcb">📖 出處</button>';
@@ -154,4 +168,4 @@ const JS = `
  document.getElementById("srcx").addEventListener("click",function(){t(false)});
  document.addEventListener("keydown",function(e){if(e.key==="Escape")t(false)});})();`;
 
-module.exports = { W, P, CSS, html, btn, JS };
+module.exports = { W, P, COMMON, CSS, html, btn, JS };

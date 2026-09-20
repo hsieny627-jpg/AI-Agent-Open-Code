@@ -1,10 +1,14 @@
-/* words/_build_hub.js — 課堂總入口的產生器（產出專案根目錄的 index.html）
+/* words/_build_hub.js — 首頁的產生器（產出專案根目錄的 index.html）
+ *
+ * 使用者 2026-09-20 指定：這一頁一律叫「首頁」，不再叫「課堂總入口」。
  *
  * 用法： node words/_build_hub.js
  *
  * 為什麼要這一頁（使用者 2026-09-19 指定，CLAUDE.md 待辦第 1 項）：
  * 各頁原本各自獨立，老師上課要記一堆網址。這一頁把整套課程照**上課順序**排好，
- * 老師只要記一個網址、一個 QR code。
+ * 老師只要記一個網址、一個 QR code：
+ *   https://hsieny627-jpg.github.io/AI-Agent-Open-Code/
+ * 其他每一頁右下角都有一顆「🏠 首頁」連回這裡（使用者 2026-09-20 指定）。
  *
  * 界線（不要跨過去）：
  *  - **這是一頁純連結頁**，只放連結與一句說明，不放任何教學內容。
@@ -63,7 +67,7 @@ const HTML = `<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>家人單字｜課堂總入口</title>
+<title>家人單字｜首頁</title>
 <!-- 本檔由 words/_build_hub.js 產生，不要手改。 -->
 <style>
 @font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
@@ -81,6 +85,9 @@ body{margin:0;background:#000;color:#F2F2F2;
 header{text-align:center;margin-bottom:clamp(10px,2vh,20px)}
 h1{margin:0;font-size:clamp(26px,4.4vh,42px);font-weight:700;letter-spacing:.04em}
 .sub{margin-top:6px;font-size:clamp(13px,1.9vh,17px);color:#9FB4C8;letter-spacing:.16em}
+/* 首頁網址：老師只要記這一個（使用者 2026-09-20 指定寫在畫面上） */
+.url{margin-top:5px;font-size:clamp(11.5px,1.6vh,14px);color:#6F6F6F;letter-spacing:.02em}
+.url b{color:#9E9E9E;font-weight:400}
 
 #hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,268px),1fr));
  gap:clamp(9px,1.5vh,15px);width:100%;max-width:1000px}
@@ -121,8 +128,9 @@ footer .sep{color:#2A2A2A;font-size:12px}
 </head>
 <body>
 <header>
- <h1>家人單字　課堂總入口</h1>
+ <h1>家人單字　首頁</h1>
  <div class="sub">照順序上，從 1 到 6</div>
+ <div class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></div>
 </header>
 
 <main id="hub">
@@ -154,5 +162,5 @@ ${TEACHER.map(x => `<a href="${x.href}">${x.t}</a>`).join('<span class="sep">·<
 `;
 
 fs.writeFileSync(path.join(ROOT, 'index.html'), HTML, 'utf8');
-console.log('已產生 index.html（課堂總入口）：' + STEPS.length + ' 個步驟 ＋ ' +
+console.log('已產生 index.html（首頁）：' + STEPS.length + ' 個步驟 ＋ ' +
  WORDS.length + ' 張單字卡 ＋ ' + (EXTRA.length + TEACHER.length) + ' 個延伸連結');

@@ -18,6 +18,7 @@
  */
 const fs = require('fs'), path = require('path'), DIR = __dirname;
 const SRC = require('./_sources');
+const PH = require('./_phonics');
 const { Q, shuffle } = require('./_quiz_data');
 
 const SHAPE = ['▲', '◆', '●', '■'];
@@ -65,7 +66,8 @@ body{margin:0;background:#000;color:#F2F2F2;
 #clock.held #arc{stroke:#5A5A5A}#clock.held #secs{color:#5A5A5A}
 @keyframes tick{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}
 
-#stage{width:100%;max-width:940px;padding:clamp(88px,13vh,116px) clamp(14px,3vw,32px) clamp(74px,10vh,92px);
+/* 下方留白要放得下 #bar 換到第二排的高度（2026-09-20 加了「🐢 放慢」「🏠 首頁」） */
+#stage{width:100%;max-width:940px;padding:clamp(88px,13vh,116px) clamp(14px,3vw,32px) clamp(118px,15vh,138px);
  text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;
  gap:clamp(8px,1.8vh,20px)}
 
@@ -118,6 +120,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 @keyframes shake{0%,100%{transform:none}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}
  60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
 .reduce *{animation:none!important;transition:none!important}
+${PH.CSS}
 ${SRC.CSS}
 </style>
 </head>
@@ -139,11 +142,15 @@ ${SRC.CSS}
  <button id="next" class="hide">下一題 →</button>
  <button id="toword" class="hide">📖 開始上單字 →</button>
  <button id="sound">🔊 音效</button>
+ ${PH.btnSlow}
+ <button id="home">🏠 首頁</button>
  ${SRC.btn}
 </div>
 ${SRC.html(SRC.P.quiz)}
 
 <script>
+${PH.JS}
+
 var Q=${JSON.stringify(P.Q)};
 var SHAPE=${JSON.stringify(SHAPE)};
 var SEC=50;        // 每題倒數 50 秒
@@ -183,6 +190,8 @@ function sTick(){beep(1250,.05,"triangle")}
 
 function show(html,cls){
  stage.innerHTML=html;
+ /* 題目與秒懂說明裡的英文字詞都可以點來聽（選項是按鈕，不動它，免得誤觸作答） */
+ PH.autoSay(stage);
  if(!reduce){stage.classList.remove("turn");void stage.offsetWidth;stage.classList.add("turn")}
 }
 function btn(b,on){b.classList.toggle("hide",!on)}
@@ -273,6 +282,7 @@ function pick(k){
    ? '<span class="verdict ok">✅ 答對了！</span>　<span class="gain">'+(q.x2?'100 <b>✕ 2</b> ＝ +200':'+100')+'</span>'+(streak>1?'　🔥 連對 '+streak+' 題':'')
    : '<span class="verdict no">'+(k<0?'⏰ 時間到':'❌ 答錯了')+'</span><br><span class="note" style="display:inline-block;margin-top:6px">'+q.why+'</span>';
   if(ok&&q.why)t.innerHTML+='<br><span class="note" style="display:inline-block;margin-top:6px;color:#8A8A8A">'+q.why+'</span>';
+  PH.autoSay(t);
  }
  btn(bar.unlock,false);btn(bar.pause,false);held=false;btn(bar.next,true);
  bar.next.textContent=(i>=N-1)?'看成績 →':'下一題 →';
@@ -306,6 +316,7 @@ document.addEventListener("keydown",function(e){
 });
 
 gate();
+document.getElementById("home").addEventListener("click",function(){location.href="../index.html"});
 ${SRC.JS}
 </script>
 </body>

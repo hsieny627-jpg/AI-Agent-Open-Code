@@ -11,6 +11,7 @@
  */
 const fs=require('fs'),path=require('path'),DIR=__dirname;
 const SRC=require('./_sources');
+const PH=require('./_phonics');
 
 // e1 / e2 = 幕③的秒懂收尾（e2 留空就只顯示一行）
 // build   = 只給 grandfather / grandmother：把幕②從「以前」換成「怎麼組的」
@@ -22,7 +23,7 @@ const WORDS=[
 {f:'mother',parts:{href:'parts.html#4'},zh:'母親',icon:'❤️',old:'mōdor',now:'mother',
  e1:'👶 也可以叫 <b>mom</b>',e2:'美國常說 mom，英國常說 <b>mum</b>'},
 {f:'father',parts:{href:'parts.html#4'},zh:'父親',icon:'🧔',old:'fæder',now:'father',
- e1:'👶 也可以叫 <b>dad</b>',e2:'dad 是寶寶先叫的，<b>不是 father 剪短的</b>'},
+ e1:'👶 也可以叫 <b>dad</b>',e2:'小寶寶還不會說 father，<b>先叫出 dad</b>'},
 {f:'brother',more:{href:'older-younger.html',label:'🧒 哥哥弟弟'},parts:{href:'parts.html#4'},zh:'哥哥、弟弟',sub:'不分大小',icon:'🧒👦',old:'brōþor',now:'brother',
  e1:'👦 哥哥、弟弟，<b>都叫 brother</b>',e2:'要分大小就加 <b>older</b> 或 <b>younger</b>'},
 {f:'sister',more:{href:'older-younger.html',label:'👧 姊姊妹妹'},parts:{href:'parts.html#4'},zh:'姊姊、妹妹',sub:'不分大小',icon:'👧👩',old:'sweostor',now:'sister',
@@ -33,10 +34,10 @@ const WORDS=[
  e1:'🤫 中間的 <b>gh</b> 不出聲',
  more:{href:'daughter-gh.html',label:'✨ 補充'},parts:{href:'parts.html#4'}},
 {f:'grandfather',parts:{href:'parts.html#2'},zh:'爺爺',sub:'外公也是',icon:'👴',old:'grand-',now:'grandfather',
- build:{a:'grand',b:'father',note:'<b>grand</b> 加在家人前面 ＝ 長一輩'},
+ build:{a:'grand',b:'father',note:'<b>grand</b> ＝ <b>大</b>　大的 father ＝ <b>爸爸的爸爸</b>'},
  e1:'👴 也可以叫 <b>grandpa</b>',e2:'爺爺、外公，<b>都叫 grandfather</b>'},
 {f:'grandmother',parts:{href:'parts.html#2'},zh:'奶奶',sub:'外婆也是',icon:'👵',old:'grand-',now:'grandmother',
- build:{a:'grand',b:'mother',note:'<b>grand</b> 加在家人前面 ＝ 長一輩'},
+ build:{a:'grand',b:'mother',note:'<b>grand</b> ＝ <b>大</b>　大的 mother ＝ <b>媽媽的媽媽</b>'},
  e1:'👵 也可以叫 <b>grandma</b>',e2:'奶奶、外婆，<b>都叫 grandmother</b>'},
 {f:'uncle',zh:'叔叔',sub:'伯伯、舅舅也是',icon:'🧓',old:'avunculus',now:'uncle',
  e1:'🧓 叔叔、伯伯、舅舅，<b>都叫 uncle</b>',e2:'中文分很多種，英文<b>一個字就夠</b>'},
@@ -127,6 +128,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 @keyframes turnL{0%{opacity:.2;transform:rotateY(-54deg) translateX(-24px) scale(.94)}
  100%{opacity:1;transform:none}}
 .reduce *{animation:none!important;transition:none!important}
+${PH.CSS}
 ${SRC.CSS}
 </style>
 </head>
@@ -135,10 +137,12 @@ ${SRC.CSS}
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"><div id="card"></div></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
-<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button>${W.more?`<button id="more">${W.more.label}</button>`:''}${W.parts?`<button id="parts">🧩 結構</button>`:''}${SRC.btn}</div>
+<div id="bar"><button id="say">🔊 念一次</button>${PH.btnSlow}<button id="again">▶ 從頭看</button>${W.more?`<button id="more">${W.more.label}</button>`:''}${W.parts?`<button id="parts">🧩 結構</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>
 ${SRC.html(SRC.W[W.f])}
 
 <script>
+${PH.JS}
+
 var W={zh:${JSON.stringify(W.zh)},sub:${JSON.stringify(W.sub||'')},icon:${JSON.stringify(W.icon)},old:${JSON.stringify(W.old)},now:${JSON.stringify(W.now)},
  e1:${JSON.stringify(W.e1||'')},e2:${JSON.stringify(W.e2||'')}${W.build?',\n build:'+JSON.stringify(W.build):''}};
 
@@ -160,7 +164,7 @@ var SCENES=[
  // ③ 現在的單字＋秒懂收尾
  function(){return '<div class="tag in">現在</div>'+
    '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
-   '<div class="word in d1">'+W.now+'</div>'+
+   '<div class="word in d1">'+PH.box(W.now,LEGEND)+'</div>'+
    '<div class="sub in d2" style="margin-top:2px">'+W.e1+'</div>'+
    (W.e2?'<div class="sub in d3">'+W.e2+'</div>':'')}
 ];
@@ -172,14 +176,19 @@ if(reduce)document.body.classList.add("reduce");
 var dots=document.getElementById("dots");
 for(var k=0;k<SCENES.length;k++)dots.appendChild(document.createElement("i"));
 
-function say(){try{var u=new SpeechSynthesisUtterance(W.now);u.lang="en-US";u.rate=.8;
- speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+/* 色卡說明：紅色 ＝ 母音字母，淺灰 ＝ 不出聲的字母。按 ✂️ 音節才會換成數數的結果。 */
+var LEGEND='<span class="rv">●</span> 紅色 ＝ 母音　<span style="color:#9A9A9A">灰色 ＝ 不出聲</span>';
+
+/* 念一次：整個單字唸出來，同時一格一格亮過去（字母 ↔ 聲音） */
+function say(){var el=document.querySelector(".phw");
+ if(el){PH.sayWord(el)}else{PH.say(W.now)}}
 
 var card=document.getElementById("card");
 function show(n){
  var back=(n<i);
  i=Math.max(0,Math.min(SCENES.length-1,n));
  card.innerHTML=SCENES[i]();
+ PH.autoSay(card);       // 補充單字、字詞、用法都可以點來聽
  if(!reduce){card.classList.remove("turnR","turnL");void card.offsetWidth;
   card.classList.add(back?"turnL":"turnR")}
  var d=dots.children;
@@ -201,6 +210,7 @@ document.addEventListener("keydown",function(e){
 show(0);
 ${W.more?`document.getElementById("more").addEventListener("click",function(){location.href=${JSON.stringify(W.more.href)}});`:''}
 ${W.parts?`document.getElementById("parts").addEventListener("click",function(){location.href=${JSON.stringify(W.parts.href)}});`:''}
+document.getElementById("home").addEventListener("click",function(){location.href="../index.html"});
 ${SRC.JS}
 </script>
 </body>

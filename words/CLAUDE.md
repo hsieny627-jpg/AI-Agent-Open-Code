@@ -22,13 +22,14 @@
 | `parts.html` | **單字結構頁**（產物，由 `_build_story.js` 產生）：grand ＝ 大、hus ＝ house、-ther／-ter 的家人字尾，10 幕。字卡的「🧩 結構」按鈕用 `parts.html#幕號` 直接跳進去 |
 | `older-younger.html` | **哥哥／姊姊／弟弟／妹妹的說法**（產物，由 `_build_story.js` 產生），7 幕。由 `brother.html`／`sister.html` 的補充按鈕進去 |
 | `daughter-gh.html` | **daughter 的重要補充頁**（產物，由 `_build_story.js` 產生）：德文 Tochter／荷蘭文 dochter 的 ch 還在發音，五幕 |
-| `_sources.js` | **所有出處來源的唯一真相來源**，三個產生器共用。改出處只改這一個檔 |
+| `_sources.js` | **所有出處來源的唯一真相來源**，四個產生器共用。改出處只改這一個檔 |
+| `_phonics.js` | **發音／音標／音節的唯一真相來源**（2026-09-20 新增）。母音紅色、不發音淺灰、IPA／KK 音標、音節切分、點字唸美式發音、放慢語速——全部在這一個檔。四個產生器共用 |
 | `_quiz_data.js` | **20 題暖身題的唯一真相來源**（題目／選項／正解／挑戰題／秒懂說明）。網頁版與 Kahoot 都從這裡拿 |
 | `_build_quiz.js` | 暖身題的產生器，`node words/_build_quiz.js` 重建 `quiz.html` ＋ `quiz-demo.html` |
 | `quiz.html` | 暖身 20 題（產物）：老師按鈕決定要不要先做 |
 | `quiz-demo.html` | 只有一題的試玩版（產物），給測網址用，引擎完全相同 |
 | `_build_kahoot.js` | Kahoot 匯入檔的產生器，`node words/_build_kahoot.js` 重建根目錄的 `kahoot_family_20.xlsx` ＋ `kahoot_20_題目與上架說明.md` |
-| `_build_hub.js` | **課堂總入口的產生器**，`node words/_build_hub.js` 重建<b>專案根目錄</b>的 `index.html` |
+| `_build_hub.js` | **首頁的產生器**，`node words/_build_hub.js` 重建<b>專案根目錄</b>的 `index.html` |
 | `_words.json` | 17 個單字的清單（由 `_build.js` 產出），總入口讀它，所以不會跟字卡走鐘 |
 | `fonts/` | Andika 400 / 700，離線必須 |
 
@@ -44,7 +45,9 @@
 | ③ 現在 | 今天的單字 ＋ 一句秒懂收尾 |
 
 **例外：`grandfather` / `grandmother` 的幕② 是「怎麼組的」**（`grand ＋ father`／
-`grand ＋ mother`，配一句「grand 加在家人前面 ＝ 長一輩」）。
+`grand ＋ mother`，配一句「**grand ＝ 大　大的 father ＝ 爸爸的爸爸**」）。
+（2026-09-20 使用者問「grand 是什麼意思」，原本寫的「長一輩」本來就違反第 5.2 條
+的抽象詞禁令，已改成看得見的畫面。）
 這兩個字的 `old` 欄位本來就沒有真正的舊拼法，原本的「以前 grand-」是假的快照；
 換成構詞規則，學生今天就用得到。使用者 2026-09-19 同意。其餘 15 頁維持「以前」。
 
@@ -96,6 +99,15 @@
 
 **加新字卡時先問這一句：這一行刪掉，學生會少學到什麼？答不出來就刪掉。**
 
+### 2026-09-20 使用者又抓到兩句「學生看不懂」（判準一樣，記下來不要改回去）
+
+| 原本 | 問題 | 改成 |
+|---|---|---|
+| `father` 幕③「dad 是寶寶先叫的，**不是 father 剪短的**」；`why.html` 同一句 | 「剪短」是**大人的講法**，三年級看不懂；而且整句在講「不是什麼」，學生更難抓 | 字卡：「小寶寶還不會說 father，**先叫出 dad**」；故事頁：「小寶寶還不會說 **father**」＋「先叫出 **da-da**，就變成 **dad**」（**只講看得到的畫面，不講「不是什麼」**） |
+| `why.html` sister「**住在一起久了**，唸成今天的 sister」 | **沒有主詞**——使用者直接問「誰住在一起久了？」 | 「**英國人和維京人住進同一個村子**，後來大家都唸 **sister**」 |
+
+**判準再加一條：每一句都要有看得見的主詞。** 主詞說不出是誰，就重寫。
+
 ## 單字結構（2026-09-19 使用者指定，**這一節最容易寫出假知識，先讀完**）
 
 使用者問：grand 是什麼意思？mo／fa／bro／ther、sis／ter 分別是什麼意思？
@@ -145,8 +157,81 @@ s 和 r 中間後來插進去的音，來源和另外四個不一樣（出處卡
 sister 完全比照。**`elder` 只能放名詞前面**，不可以寫 He is elder than me，
 要寫 **older than**——這一點做成第 6 幕，因為學生會在課本上看到 elder。
 
+**2026-09-20 使用者指定改寫**：原本「文字說明太複雜囉嗦」。改寫規則
+（下次改這一頁照著用）：
+
+- **一幕最多兩行、一行最多一件事**，看動畫就懂，文字只是補一句。
+- 「哥哥 ＝ older brother」改成「哥哥加 **older**」——少掉一個重複的 brother。
+- 「elder 只能放在名詞前面」→「**elder 只能放在 brother 前面**」（名詞是抽象詞，
+  違反第 5.2 條）。
+- 動畫扛主要說明：`.grow`（older 長大）／`.shrink`（younger 縮小）／
+  `.drop`（「大的？小的？」自己掉下去不見了，所以平常不用講）／
+  `.stamp`（✅ elder brother、❌ He is elder than me 蓋章）。
+- 每一個英文字都寫成 `{{單字}}`：母音紅色、不發音淺灰、點下去唸美式發音、可切音標。
+
 **誠實界線**：教材沒有寫「第幾常用」。要做使用次數排名得查 COCA／BNC 語料庫，
 製作環境連不上，**沒有做過次數統計**。出處卡裡有這條註記，被問到就翻出來。
+
+## 發音、音標、音節（2026-09-20 使用者指定，**這一節是最大一筆，先讀完**）
+
+全部寫在 `_phonics.js` 一個檔，四個產生器 require 它。**改音標只改 `RAW`。**
+
+| 使用者要的 | 做法 |
+|---|---|
+| 母音字母標**紅色** | `#FF5A5A`，每一個母音字母都上色 |
+| 不發音的字母標**淺灰色** | `#9A9A9A`（niece 的 e、wife 的 e、daughter 的 gh、little 的第二個 t） |
+| **音節怎麼切**的秒懂動畫 | 字卡上「✂️ 音節」：先一顆一顆數紅色母音，再把音節拉開，最後寫「N 個母音 ＝ N 個音節」 |
+| 幫助記憶與正確發音的動畫 | 按「🔊 念一次」時**一格一格亮過去**，學生看得到哪個字母正在發哪個音 |
+| 點任何英文字都能聽 | `PH.autoSay()` 自動把說明文字裡的英文包成可點的 `.sp`；單字本身點 `.phw` |
+| **放慢語速** | `#bar` 的「🐢 放慢」，**管全頁所有發音**（rate 0.85 → 0.45） |
+| 兩種音標可選 | 每張字卡下面三顆 chips：**無音標／IPA／KK**；故事頁與暖身題頁用 `#bar` 的「🔤 音標」循環切換 |
+| **一開始沒有音標** | `mode` 預設 0（無），免得干擾學習。老師按了才出現，選擇記在 `localStorage`，換頁不會跑掉 |
+| **每個字母正下方對齊它的音標** | 每一個字母群是一個 `.u`（flex column：字母在上、音標在下），所以一定對齊 |
+
+### RAW 的寫法
+
+```
+單字: '字母|IPA|KK 字母|IPA|KK / 下一個音節…'    不發音寫成  字母|-|-
+daughter: 'd|d|d au|ɔː|ɔ gh|-|- / t|t|t er|ɚ|ɚ'
+```
+
+產生時**自動檢查兩件事，寫錯直接讓 build 失敗**（不要拿掉這兩個檢查）：
+
+1. 所有字母群接回去要等於這個單字的拼法。
+2. **每一個音節剛好一個母音的聲音**——這就是要教給學生的規則。
+
+### 誠實界線（會被學生抓到的地方）
+
+- 課堂上講「一個母音 ＝ 一個音節」，**數的是「畫面上還是紅色、還在出聲」的母音**。
+  淺灰色的不出聲、不算；`au`／`ou`／`ie`／`ew` 兩個字母發一個音，畫面上本來就是一格。
+  照畫面數，這 32 個字**全部數得對**，所以這條規則對學生是真的，不是近似。
+- 音標是**美式**：IPA 用 Cambridge／Oxford 的美式標法，KK 用台灣課本的標法。
+  同一個音兩套寫法會不一樣（bed 的 e ＝ IPA `/e/`、KK `/ɛ/`；boat 的 o ＝ IPA `/oʊ/`、KK `/o/`）。
+- 聲音是**瀏覽器內建的語音合成**（Web Speech API，`en-US`），不需要連網、不需要帳號，
+  但**實際嗓音由老師那台電腦決定**。出處卡裡寫清楚了。
+- **舊拼法不要用美式語音唸**（`sweostor`、`brōþor`、`parens`、`nepos`、`wīf`、`tê`…）：
+  那些字在 `_build_story.js` 裡包了 `class="nosay"`，`autoSay()` 會跳過。
+
+### 兩個不要踩的地雷
+
+- `PH.autoSay()` **只掃說明文字的容器**（`.sub .mid .note .qtext .big .parts .zh`）。
+  `.en` 那種手工排版（`dau<span>gh</span>ter`、`<span>hus</span>band`）拆開來會壞掉，
+  那種地方要用 `{{單字}}` 標記，由 `PH.word()` 直接畫（`_build_story.js` 的 `ph()` 負責展開）。
+- 暖身題的**選項是按鈕，故意不做成可點發音**，否則學生想聽發音會變成誤觸作答。
+- 暖身題頁**沒有放「🔤 音標」**：那一頁不畫 `.phw` 單字元件，按了不會有反應，
+  還會把 `#bar` 擠到第三排。那一頁只放「🐢 放慢」與「🏠 首頁」。
+- `#bar` 加按鈕**一定要同步加大 `#stage` 的下方留白**（暖身題頁已改成
+  `clamp(118px,15vh,138px)`，放得下換到第二排的按鈕），否則按鈕會蓋住選項。
+
+## 首頁與「回首頁」按鈕（2026-09-20 使用者指定）
+
+- 專案根目錄的 `index.html` 一律叫「**首頁**」，**不要再叫「課堂總入口」**。
+  網址：https://hsieny627-jpg.github.io/AI-Agent-Open-Code/
+  （寫在首頁畫面上；QR code 是根目錄 `qr-首頁.png`）
+- **每一頁都要有一顆「🏠 首頁」**：字卡 17 頁、故事頁 6 頁、暖身題 2 頁
+  （都在 `#bar`，走 `../index.html`）、`brother-why.html`（手工加的）、
+  `about-my-family/index.html`（右上角 `#homeBtn`，不擋投影畫面）。
+  **新增任何一頁，記得一起加。**
 
 ## 字卡換頁（2026-09-19 使用者指定）
 
@@ -173,6 +258,11 @@ sister 完全比照。**`elder` 只能放名詞前面**，不可以寫 He is eld
 - 引用原則：只列**查得到的工具書與條目名稱**（OED、Cambridge、Duden、Van Dale、
   Dictionaries of the Scots Language、Wikipedia 條目、Jakobson 1960），
   不寫「我查過了」這種空話。老師照著條目名稱就查得到。
+- **字級（2026-09-20 使用者指定放大）**：條目 `clamp(17px,2.35vh,23px)`、
+  標題 `clamp(19px,2.6vh,26px)`，**要讓最後一排學生看得清楚**。
+  `#src` 平常 `display:none`，放大**不會影響任何一頁的溢出量測**，所以放心改。
+- `_sources.js` 的 `COMMON` 是**音標／音節／發音的共同出處**，
+  由 `html()` 自動附在每一頁出處的最後面，不必每個單字重寫一次。
 
 ## daughter 的補充頁（2026-09-19 使用者指定）
 
@@ -274,7 +364,7 @@ node words/_verify.js --text why.html    # 順便印出每一幕的文字
   **倒數秒數要真的在減少**、作答後選項全鎖、要出現「下一題」與秒懂說明、
   作答後停 6 秒不自動跳題。
 
-- **課堂總入口**（有 `#hub`：專案根目錄 `index.html`，用 `../index.html` 指定）——
+- **首頁**（有 `#hub`：專案根目錄 `index.html`，用 `../index.html` 指定）——
   **每一個站內連結都要真的存在**（這條最重要，連結壞掉老師上課才發現最慘）、
   關著的時候不可以有捲軸（投影會被切掉）、按「17 張單字卡」要真的展開且剛好 17 個。
 
@@ -286,7 +376,7 @@ node words/_build.js        # 17 張單字卡
 node words/_build_story.js  # why / why-2 / daughter-gh / why-more
 node words/_build_quiz.js   # quiz / quiz-demo
 node words/_build_kahoot.js # 根目錄的 kahoot xlsx ＋ 說明文件
-node words/_build_hub.js    # 根目錄的 index.html（課堂總入口）
+node words/_build_hub.js    # 根目錄的 index.html（首頁）
 ```
 
 ## 省額度的做法
@@ -299,7 +389,7 @@ node words/_build_hub.js    # 根目錄的 index.html（課堂總入口）
 - **每個決定都寫回這份規格**，下次不必重講，也不會被改回去。
 - 開新對話時這份規格會自動載入，第一句講「照 words/CLAUDE.md」就夠了。
 
-## 現況（2026-09-19 收工時）
+## 現況（2026-09-20 收工時）
 
 ### 產物一覽（26 頁，全部通過 `_verify.js`）
 
@@ -310,18 +400,22 @@ node words/_build_hub.js    # 根目錄的 index.html（課堂總入口）
 | 故事 | `why.html`、`why-2.html`、`why-more.html` |
 | 補充 | `parts.html`（單字結構）、`daughter-gh.html`（gh 的聲音）、`older-younger.html`（哥哥弟弟） |
 | 實驗 | `brother-why.html`（四幕，等課堂實測） |
+| 首頁 | 專案根目錄 `index.html`（由 `_build_hub.js` 產生） |
 
-### 四個產生器（改東西只改這四個，不要碰 .html）
+### 五個產生器（改東西只改這五個，不要碰 .html）
 
 ```bash
 node words/_build.js        # 17 張字卡
 node words/_build_story.js  # why / why-2 / why-more / parts / daughter-gh / older-younger
 node words/_build_quiz.js   # quiz / quiz-demo
+node words/_build_hub.js    # 根目錄 index.html（首頁）
 node words/_build_kahoot.js # 根目錄 kahoot xlsx ＋ 說明文件
 node words/_verify.js       # 量測（改完一定要跑）
 ```
 
-資料檔：`_sources.js`（出處）、`_quiz_data.js`（題庫）。
+資料檔：`_sources.js`（出處）、`_phonics.js`（發音／音標／音節）、`_quiz_data.js`（題庫）。
+
+**改了 `_phonics.js` 要重跑前三個 build**（三個產生器都把它內嵌進頁面裡）。
 
 ### 已查證並定案的事實（不要再重查、也不要改掉）
 
@@ -334,11 +428,12 @@ node words/_verify.js       # 量測（改完一定要跑）
   所以教材只寫「尾巴長得一樣」這個看得到的事實。
 - `mo`／`fa` 來自寶寶的 ma／pa；**`bro`／`sis` 單獨沒有意思**，不要編。
 
-### 課堂總入口（2026-09-19 完成，原待辦第 1 項）
+### 首頁（2026-09-19 完成，2026-09-20 改名並加上回首頁按鈕）
 
 專案根目錄 `index.html`，由 `words/_build_hub.js` 產生。老師只要記**一個網址**：
 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/
-（QR code：根目錄 `qr-課堂總入口.png`，指向同一個網址）
+（網址寫在首頁畫面上；QR code：根目錄 `qr-首頁.png`，指向同一個網址）
+**其他每一頁都有一顆「🏠 首頁」連回這裡。**
 
 照上課順序排 6 步：
 `1 🎯 暖身 20 題` → `2 📖 家人單字時光機`（學習＋遊戲）→ `3 🃏 17 張單字卡`（點開才展開）
@@ -356,8 +451,10 @@ https://hsieny627-jpg.github.io/AI-Agent-Open-Code/
 
 ### 待辦（下一個對話可以直接接手）
 
-1. 總入口做好了，但**還沒有人實際在教室投影過**。
-   第一次上課前，老師用教室那台電腦開一次，確認投影出來字夠大、連結都點得到。
+1. 首頁做好了，但**還沒有人實際在教室投影過**。
+   第一次上課前，老師用教室那台電腦開一次，確認投影出來字夠大、連結都點得到，
+   並且**實際點一個單字聽聽看發音**——語音合成的嗓音由那台電腦決定，
+   有些電腦第一次要先去系統設定裡裝英文語音。
 2. `brother-why.html` 的課堂實測結果 → 決定推廣或刪除。
 3. **Kahoot 要老師本人登入上傳並試玩**（AI 沒有帳號，做不到這一步）。
 4. 出處目前是**列條目名稱**供老師查，製作環境連不上 etymonline／Wikipedia／

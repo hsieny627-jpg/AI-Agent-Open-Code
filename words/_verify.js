@@ -12,7 +12,7 @@
  *   - 首幕 ← 停用、末幕 → 停用
  *   - 停 6 秒不可自動換頁
  *
- * C. 課堂總入口（有 #hub）＝ 專案根目錄的 index.html（用 ../index.html 指定）
+ * C. 首頁（有 #hub）＝ 專案根目錄的 index.html（用 ../index.html 指定）
  *   - Andika 有載到
  *   - **每一個站內連結都要真的存在**（連壞了老師上課才發現最慘）
  *   - 關著的時候（投影出來的樣子）不可以有捲軸；按開 17 張卡之後可以往下捲
@@ -53,7 +53,7 @@ const fontOk=p=>p.evaluate(async()=>{await document.fonts.ready;
  c.font='700 48px sans-serif';const s=c.measureText('brother daughter').width;
  return{ok:document.fonts.check('700 48px Andika')&&document.fonts.check('400 48px Andika'),d:Math.abs(a-s)}});
 
-/* ---------- C. 課堂總入口 ---------- */
+/* ---------- C. 首頁 ---------- */
 async function hubPage(p,f,vp,e){
  const snap=()=>p.evaluate(()=>{
   const de=document.documentElement;

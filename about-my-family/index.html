@@ -19,6 +19,12 @@
   html,body { width:100%; height:100%; background:var(--black); overflow:hidden;
     font-family:'GenSeki TW',sans-serif; color:var(--ink); font-weight:500; }
   .stage { position:fixed; inset:0; background:var(--paper); }
+  /* 回首頁：固定在右上角，不蓋到投影畫面正中間 */
+  #homeBtn { position:fixed; top:14px; right:14px; z-index:999; text-decoration:none;
+    background:rgba(0,0,0,.62); border:1px solid rgba(255,255,255,.34); color:#fff;
+    border-radius:99px; font-size:15px; line-height:1; padding:11px 17px;
+    font-family:inherit; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px) }
+  #homeBtn:hover { background:rgba(0,0,0,.85) }
   .slide { position:absolute; inset:0; padding:56px 80px 120px; opacity:0; pointer-events:none;
     transition:opacity .6s ease; display:flex; flex-direction:column; }
   .slide.active { opacity:1; pointer-events:auto; }
@@ -167,6 +173,9 @@
 </style>
 </head>
 <body>
+
+<!-- 回首頁（使用者 2026-09-20 指定：從任何一個地方都要能回首頁） -->
+<a id="homeBtn" href="../index.html" title="回首頁">🏠 首頁</a>
 
 <div class="start-screen" id="startScreen">
   <div class="t">About <em>My</em> Family</div>
