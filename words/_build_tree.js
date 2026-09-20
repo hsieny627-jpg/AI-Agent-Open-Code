@@ -15,6 +15,24 @@
  *  4. 六種顯示切換：
  *       A 只圖示 ／ B 只中文 ／ C 只英文 ／ D 英文＋圖示 ／ E 英文＋中文 ／ F 全部
  *     老師選的那一種記在 localStorage，翻頁與換頁都不會跑掉。
+ *  5. **進階版要畫出 nephew／niece 的關係線**（2026-09-20 使用者指定）：
+ *     nephew／niece 是**哥哥的小孩，也是姊姊的小孩**，所以線從 brother 和 sister
+ *     兩個人一起下來。畫法是家譜的標準畫法——**兩條短豎線 ＋ 一條橫桿 ＋ 兩條短豎線**：
+ *
+ *         👦brother      🙋me      👧sister
+ *           │                        │
+ *           └───────────┬────────────┘     ← 橫桿
+ *                 ┌─────┴─────┐
+ *              nephew       niece
+ *
+ *     **不要改回「一人拉一條斜線過去」**：四條斜線會交叉成一團，
+ *     在 1024×768 的高度只剩幾十像素，斜線幾乎是平的，投影出來像亂畫的。
+ *     橫桿從 me 的下面經過，但 **me 沒有往下接的豎線**，所以不會被讀成「me 的小孩」。
+ *     平常整組線都是暗的；**現在這一個小孩**的那條豎線、橫桿、兩條爸媽豎線才會亮
+ *     ——一次還是只給一個學習重點。
+ *     線畫在一張 position:absolute 的 <svg> 上（不佔版面、不影響 _verify.js 的溢出量測），
+ *     座標用 offsetLeft／offsetTop 量（**不要用 getBoundingClientRect**：
+ *     亮起來的那個人有 scale(1.16) 與 hop 動畫，量出來的位置會跟著動）。
  *
  * 版面規則同其他頁：1024×768 與 820×1180 都不可溢出，由 _verify.js 量。
  * 這一頁有 #dots，所以 _verify.js 會當成「幕頁」來量。
@@ -52,9 +70,17 @@ const TREE2 = [
  ['nephew', 'niece']
 ];
 
+/* 關係線：[上面那個人, 下面那個人]。
+   姪子是哥哥的兒子、外甥是姊姊的兒子，英文都叫 nephew——所以 brother 和 sister
+   各拉一條線到 nephew；niece 一樣。四條線就是「英文一個字就夠」那一句的畫面。 */
+const KIDS = [
+ ['brother', 'nephew'], ['sister', 'nephew'],
+ ['brother', 'niece'],  ['sister', 'niece']
+];
+
 const PAGES = [
 { file: 'family-tree.html', title: 'family tree 基礎版', src: 'family-tree',
-  tree: TREE1,
+  tree: TREE1, links: [],
   back: { href: '../index.html', label: '← 回 首頁' },
   S: [
    { open: true, mid: 'family tree', zh: '家庭樹',
@@ -69,7 +95,7 @@ const PAGES = [
   ] },
 
 { file: 'family-tree-2.html', title: 'family tree 進階版', src: 'family-tree',
-  tree: TREE2,
+  tree: TREE2, links: KIDS,
   back: { href: 'family-tree.html', label: '← 回 基礎版' },
   S: [
    { open: true, mid: 'family tree', zh: '再加上親戚',
@@ -124,10 +150,20 @@ body{margin:0;background:#000;color:#F2F2F2;
  gap:clamp(6px,1.3vh,14px)}
 
 /* ── 樹 ── */
-#tree{display:flex;flex-direction:column;align-items:center;gap:0}
+/* position:relative 是給 #lines 當定位基準用的，同時也讓 .tn 的 offsetLeft／offsetTop
+   直接就是「相對於整棵樹」的座標，畫斜線不必再減父層位置。 */
+#tree{display:flex;flex-direction:column;align-items:center;gap:0;position:relative}
 .trow{display:flex;align-items:flex-start;justify-content:center;
  gap:clamp(12px,3vw,42px)}
 .link{width:2px;background:#3A3A3A;height:clamp(13px,2.1vh,24px)}
+/* 要畫關係線的那一層，短直線換成這個留白（橫桿要有高度才擺得下）。
+   **這裡夾的是 vw 不是 vh**：直式 820×1180 的高度很多、寬度卻更窄，
+   用 vh 會在那個尺寸把留白撐到 52px，縱向就溢出 1～2px（_verify.js 會抓到）。 */
+.gap{height:clamp(24px,3.6vw,40px)}
+/* 關係線：絕對定位，**不佔版面**，所以 _verify.js 量的溢出完全不受影響 */
+#lines{position:absolute;left:0;top:0;pointer-events:none}
+#lines line{stroke:#2E2E2E;stroke-width:2;stroke-linecap:round;transition:stroke .35s}
+#lines line.on{stroke:#9FB4C8;stroke-width:3}
 .tn{display:flex;flex-direction:column;align-items:center;gap:2px;
  opacity:.34;transition:opacity .35s,transform .35s;cursor:pointer;min-width:clamp(40px,6vw,62px)}
 .tn .ti{font-size:clamp(28px,4.7vh,48px);line-height:1.15}
@@ -201,6 +237,7 @@ ${PH.JS}
 var N=${JSON.stringify(N)};
 var TREE=${JSON.stringify(P.tree)};
 var S=${JSON.stringify(P.S)};
+var LINK=${JSON.stringify(P.links || [])};
 
 /* 顯示模式：A 只圖示／B 只中文／C 只英文／D 英＋圖／E 英＋中／F 全部 */
 var MODE="F";
@@ -213,11 +250,18 @@ if(reduce)document.body.classList.add("reduce");
 var dots=document.getElementById("dots");
 for(var k=0;k<S.length;k++)dots.appendChild(document.createElement("i"));
 
+/* 這一列有沒有人是靠斜線接上來的（有的話就不畫中間那條短直線，
+   否則會變成「從我這裡生出來的」——那是錯的） */
+function slant(row){
+ for(var k=0;k<LINK.length;k++)if(row.indexOf(LINK[k][1])>=0)return true;
+ return false;
+}
+
 /* 樹：其他人只留圖示而且變暗，只有「現在這一個」亮起來 */
 function tree(hi){
  var h='<div id="tree">',r,c;
  for(r=0;r<TREE.length;r++){
-  if(r)h+='<div class="link"></div>';
+  if(r)h+=slant(TREE[r])?'<div class="gap"></div>':'<div class="link"></div>';
   h+='<div class="trow">';
   for(c=0;c<TREE[r].length;c++){
    var key=TREE[r][c],n=N[key],on=(key===hi);
@@ -226,7 +270,52 @@ function tree(hi){
   }
   h+='</div>';
  }
+ if(LINK.length)h+='<svg id="lines"></svg>';
  return h+'</div>';
+}
+
+/* 關係線：畫完版面才量得到位置，所以在 render() 之後呼叫。
+   座標一律用 offsetLeft／offsetTop（版面座標），**不要用 getBoundingClientRect**——
+   亮起來的那個人有 scale(1.16) 與 hop 動畫，量 rect 會量到動畫中間的位置，線會飄。 */
+var NS="http://www.w3.org/2000/svg";
+function uniq(a){var o=[],k;for(k=0;k<a.length;k++)if(o.indexOf(a[k])<0)o.push(a[k]);return o}
+function seg(sv,x1,y1,x2,y2,on){
+ var ln=document.createElementNS(NS,"line");
+ ln.setAttribute("x1",x1);ln.setAttribute("y1",y1);
+ ln.setAttribute("x2",x2);ln.setAttribute("y2",y2);
+ if(on)ln.setAttribute("class","on");
+ sv.appendChild(ln);
+}
+function lines(hi){
+ var tr=document.getElementById("tree"),sv=document.getElementById("lines");
+ if(!tr||!sv||!LINK.length)return;
+ sv.setAttribute("width",tr.offsetWidth);
+ sv.setAttribute("height",tr.offsetHeight);
+ while(sv.firstChild)sv.removeChild(sv.firstChild);
+
+ var up=uniq(LINK.map(function(p){return p[0]})),   /* 上面那一排：brother／sister */
+     dn=uniq(LINK.map(function(p){return p[1]})),   /* 下面那一排：nephew／niece */
+     el=function(k){return tr.querySelector('.tn[data-k="'+k+'"]')},
+     cx=function(n){return n.offsetLeft+n.offsetWidth/2};
+ var U=[],D=[],k,n;
+ for(k=0;k<up.length;k++){n=el(up[k]);if(n)U.push(n)}
+ for(k=0;k<dn.length;k++){n=el(dn[k]);if(n)D.push({k:dn[k],n:n})}
+ if(!U.length||!D.length)return;
+
+ /* 橫桿的高度：擺在「上面那排的底」與「下面那排的頂」正中間 */
+ var top=0,bot=1e9,xs=[];
+ for(k=0;k<U.length;k++)top=Math.max(top,U[k].offsetTop+U[k].offsetHeight);
+ for(k=0;k<D.length;k++)bot=Math.min(bot,D[k].n.offsetTop);
+ var barY=Math.round((top+bot)/2);
+
+ /* 現在亮的是不是下面那排的其中一個？是的話，爸媽的豎線與橫桿一起亮 */
+ var lit=false;
+ for(k=0;k<D.length;k++)if(D[k].k===hi)lit=true;
+
+ for(k=0;k<U.length;k++){xs.push(cx(U[k]));seg(sv,cx(U[k]),top,cx(U[k]),barY,lit)}
+ for(k=0;k<D.length;k++){xs.push(cx(D[k].n));
+  seg(sv,cx(D[k].n),barY,cx(D[k].n),D[k].n.offsetTop,D[k].k===hi)}
+ seg(sv,Math.min.apply(null,xs),barY,Math.max.apply(null,xs),barY,lit);
 }
 
 /* 下方的學習焦點：模式決定看得到什麼 */
@@ -262,7 +351,12 @@ var stage=document.getElementById("stage");
 function render(){
  stage.innerHTML=draw(S[i]);
  PH.autoSay(stage);
+ lines(S[i].k||null);
 }
+/* 換尺寸（轉螢幕、投影機接上去）與字體載進來之後，線要重畫 */
+window.addEventListener("resize",function(){lines(S[i].k||null)});
+try{if(document.fonts&&document.fonts.ready)
+ document.fonts.ready.then(function(){lines(S[i].k||null)})}catch(e){}
 function show(n){
  var back=(n<i);
  i=Math.max(0,Math.min(S.length-1,n));

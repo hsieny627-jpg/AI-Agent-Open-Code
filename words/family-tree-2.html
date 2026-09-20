@@ -38,10 +38,20 @@ body{margin:0;background:#000;color:#F2F2F2;
  gap:clamp(6px,1.3vh,14px)}
 
 /* ── 樹 ── */
-#tree{display:flex;flex-direction:column;align-items:center;gap:0}
+/* position:relative 是給 #lines 當定位基準用的，同時也讓 .tn 的 offsetLeft／offsetTop
+   直接就是「相對於整棵樹」的座標，畫斜線不必再減父層位置。 */
+#tree{display:flex;flex-direction:column;align-items:center;gap:0;position:relative}
 .trow{display:flex;align-items:flex-start;justify-content:center;
  gap:clamp(12px,3vw,42px)}
 .link{width:2px;background:#3A3A3A;height:clamp(13px,2.1vh,24px)}
+/* 要畫關係線的那一層，短直線換成這個留白（橫桿要有高度才擺得下）。
+   **這裡夾的是 vw 不是 vh**：直式 820×1180 的高度很多、寬度卻更窄，
+   用 vh 會在那個尺寸把留白撐到 52px，縱向就溢出 1～2px（_verify.js 會抓到）。 */
+.gap{height:clamp(24px,3.6vw,40px)}
+/* 關係線：絕對定位，**不佔版面**，所以 _verify.js 量的溢出完全不受影響 */
+#lines{position:absolute;left:0;top:0;pointer-events:none}
+#lines line{stroke:#2E2E2E;stroke-width:2;stroke-linecap:round;transition:stroke .35s}
+#lines line.on{stroke:#9FB4C8;stroke-width:3}
 .tn{display:flex;flex-direction:column;align-items:center;gap:2px;
  opacity:.34;transition:opacity .35s,transform .35s;cursor:pointer;min-width:clamp(40px,6vw,62px)}
 .tn .ti{font-size:clamp(28px,4.7vh,48px);line-height:1.15}
@@ -365,6 +375,7 @@ var PH=(function(){
 var N={"me":{"zh":"我","ic":"🙋"},"father":{"zh":"爸爸","ic":"🧔","also":"dad"},"mother":{"zh":"媽媽","ic":"👩","also":"mom"},"brother":{"zh":"哥哥、弟弟","ic":"👦"},"sister":{"zh":"姊姊、妹妹","ic":"👧"},"grandfather":{"zh":"爺爺、外公","ic":"👴","also":"grandpa"},"grandmother":{"zh":"奶奶、外婆","ic":"👵","also":"grandma"},"uncle":{"zh":"叔叔、舅舅","ic":"🧓"},"aunt":{"zh":"阿姨、姑姑","ic":"👩‍🦰"},"cousin":{"zh":"堂表兄弟姊妹","ic":"🧑"},"nephew":{"zh":"姪子、外甥","ic":"👦💙"},"niece":{"zh":"姪女、外甥女","ic":"👧💜"}};
 var TREE=[["grandfather","grandmother"],["uncle","father","mother","aunt"],["cousin","brother","me","sister"],["nephew","niece"]];
 var S=[{"open":true,"mid":"family tree","zh":"再加上親戚","lines":["樹長大了 —— <b>親戚也上樹</b>"]},{"k":"uncle","line":"叔叔、伯伯、舅舅，<b>都叫 uncle</b>"},{"k":"aunt","line":"阿姨、姑姑、舅媽，<b>都叫 aunt</b>"},{"k":"cousin","line":"叔叔阿姨的小孩，<b>都叫 cousin</b>"},{"k":"nephew","line":"哥哥姊姊的<b>兒子</b>"},{"k":"niece","line":"哥哥姊姊的<b>女兒</b>"},{"end":true,"mid":"整棵樹，十二個人","zh":"","lines":["中文分好多種，<b>英文一個字就夠</b>"]}];
+var LINK=[["brother","nephew"],["sister","nephew"],["brother","niece"],["sister","niece"]];
 
 /* 顯示模式：A 只圖示／B 只中文／C 只英文／D 英＋圖／E 英＋中／F 全部 */
 var MODE="F";
@@ -377,11 +388,18 @@ if(reduce)document.body.classList.add("reduce");
 var dots=document.getElementById("dots");
 for(var k=0;k<S.length;k++)dots.appendChild(document.createElement("i"));
 
+/* 這一列有沒有人是靠斜線接上來的（有的話就不畫中間那條短直線，
+   否則會變成「從我這裡生出來的」——那是錯的） */
+function slant(row){
+ for(var k=0;k<LINK.length;k++)if(row.indexOf(LINK[k][1])>=0)return true;
+ return false;
+}
+
 /* 樹：其他人只留圖示而且變暗，只有「現在這一個」亮起來 */
 function tree(hi){
  var h='<div id="tree">',r,c;
  for(r=0;r<TREE.length;r++){
-  if(r)h+='<div class="link"></div>';
+  if(r)h+=slant(TREE[r])?'<div class="gap"></div>':'<div class="link"></div>';
   h+='<div class="trow">';
   for(c=0;c<TREE[r].length;c++){
    var key=TREE[r][c],n=N[key],on=(key===hi);
@@ -390,7 +408,52 @@ function tree(hi){
   }
   h+='</div>';
  }
+ if(LINK.length)h+='<svg id="lines"></svg>';
  return h+'</div>';
+}
+
+/* 關係線：畫完版面才量得到位置，所以在 render() 之後呼叫。
+   座標一律用 offsetLeft／offsetTop（版面座標），**不要用 getBoundingClientRect**——
+   亮起來的那個人有 scale(1.16) 與 hop 動畫，量 rect 會量到動畫中間的位置，線會飄。 */
+var NS="http://www.w3.org/2000/svg";
+function uniq(a){var o=[],k;for(k=0;k<a.length;k++)if(o.indexOf(a[k])<0)o.push(a[k]);return o}
+function seg(sv,x1,y1,x2,y2,on){
+ var ln=document.createElementNS(NS,"line");
+ ln.setAttribute("x1",x1);ln.setAttribute("y1",y1);
+ ln.setAttribute("x2",x2);ln.setAttribute("y2",y2);
+ if(on)ln.setAttribute("class","on");
+ sv.appendChild(ln);
+}
+function lines(hi){
+ var tr=document.getElementById("tree"),sv=document.getElementById("lines");
+ if(!tr||!sv||!LINK.length)return;
+ sv.setAttribute("width",tr.offsetWidth);
+ sv.setAttribute("height",tr.offsetHeight);
+ while(sv.firstChild)sv.removeChild(sv.firstChild);
+
+ var up=uniq(LINK.map(function(p){return p[0]})),   /* 上面那一排：brother／sister */
+     dn=uniq(LINK.map(function(p){return p[1]})),   /* 下面那一排：nephew／niece */
+     el=function(k){return tr.querySelector('.tn[data-k="'+k+'"]')},
+     cx=function(n){return n.offsetLeft+n.offsetWidth/2};
+ var U=[],D=[],k,n;
+ for(k=0;k<up.length;k++){n=el(up[k]);if(n)U.push(n)}
+ for(k=0;k<dn.length;k++){n=el(dn[k]);if(n)D.push({k:dn[k],n:n})}
+ if(!U.length||!D.length)return;
+
+ /* 橫桿的高度：擺在「上面那排的底」與「下面那排的頂」正中間 */
+ var top=0,bot=1e9,xs=[];
+ for(k=0;k<U.length;k++)top=Math.max(top,U[k].offsetTop+U[k].offsetHeight);
+ for(k=0;k<D.length;k++)bot=Math.min(bot,D[k].n.offsetTop);
+ var barY=Math.round((top+bot)/2);
+
+ /* 現在亮的是不是下面那排的其中一個？是的話，爸媽的豎線與橫桿一起亮 */
+ var lit=false;
+ for(k=0;k<D.length;k++)if(D[k].k===hi)lit=true;
+
+ for(k=0;k<U.length;k++){xs.push(cx(U[k]));seg(sv,cx(U[k]),top,cx(U[k]),barY,lit)}
+ for(k=0;k<D.length;k++){xs.push(cx(D[k].n));
+  seg(sv,cx(D[k].n),barY,cx(D[k].n),D[k].n.offsetTop,D[k].k===hi)}
+ seg(sv,Math.min.apply(null,xs),barY,Math.max.apply(null,xs),barY,lit);
 }
 
 /* 下方的學習焦點：模式決定看得到什麼 */
@@ -426,7 +489,12 @@ var stage=document.getElementById("stage");
 function render(){
  stage.innerHTML=draw(S[i]);
  PH.autoSay(stage);
+ lines(S[i].k||null);
 }
+/* 換尺寸（轉螢幕、投影機接上去）與字體載進來之後，線要重畫 */
+window.addEventListener("resize",function(){lines(S[i].k||null)});
+try{if(document.fonts&&document.fonts.ready)
+ document.fonts.ready.then(function(){lines(S[i].k||null)})}catch(e){}
 function show(n){
  var back=(n<i);
  i=Math.max(0,Math.min(S.length-1,n));
