@@ -22,7 +22,8 @@
  *
  * ── 誠實界線 ────────────────────────────────────────────────
  *   課堂上講「一個母音 ＝ 一個音節」時，**數的是「還在出聲的母音」**：
- *   不發音的字母是淺灰色（niece 的 e、wife 的 e、daughter 的 gh、little 的第二個 t），
+ *   不發音的字母是淺灰色（niece 的 i 與 e、wife 的 e、daughter 的 gh、cousin 的 o、
+ *   uncle／little 的 e、little 的第二個 t），
  *   au／ou／ie／ew 這種兩個字母一起發一個音的，畫面上本來就是一格。
  *   照畫面數，17 個字全部數得對——所以這條規則對學生是**真的**，不是近似。
  *   音標採**美式**：IPA 用 Cambridge／Oxford 美式標法，KK 用台灣課本的標法
@@ -46,11 +47,15 @@ const RAW = {
  daughter:    'd|d|d au|ɔː|ɔ gh|-|- / t|t|t er|ɚ|ɚ',
  grandfather: 'g|ɡ|ɡ r|r|r a|æ|æ n|n|n d|d|d / f|f|f a|ɑː|ɑ / th|ð|ð er|ɚ|ɚ',
  grandmother: 'g|ɡ|ɡ r|r|r a|æ|æ n|n|n d|d|d / m|m|m o|ʌ|ʌ / th|ð|ð er|ɚ|ɚ',
- uncle:       'u|ʌ|ʌ n|ŋ|ŋ / c|k|k le|əl|əl',
+ /* e 不出聲（使用者 2026-09-20 指定）：-cle 的聲音是 /kəl/，母音的聲音落在 l 身上，
+    所以 l 自己就是這個音節的核心（letters() 會把它標紅，學生數紅色才數得對）。 */
+ uncle:       'u|ʌ|ʌ n|ŋ|ŋ / c|k|k l|əl|əl e|-|-',
  aunt:        'au|æ|æ n|n|n t|t|t',
- cousin:      'c|k|k ou|ʌ|ʌ s|z|z / i|ə|ə n|n|n',
+ /* o 不出聲（使用者 2026-09-20 指定）：ou 拆成 o 淺灰 ＋ u 發 /ʌ/ */
+ cousin:      'c|k|k o|-|- u|ʌ|ʌ s|z|z / i|ə|ə n|n|n',
  nephew:      'n|n|n e|e|ɛ ph|f|f / ew|juː|ju',
- niece:       'n|n|n ie|iː|i c|s|s e|-|-',
+ /* i 不出聲（使用者 2026-09-20 指定）：ie 的 /iː/ 由 e 出聲，i 淺灰 */
+ niece:       'n|n|n i|-|- e|iː|i c|s|s e|-|-',
  husband:     'h|h|h u|ʌ|ʌ s|z|z / b|b|b a|ə|ə n|n|n d|d|d',
  wife:        'w|w|w i|aɪ|aɪ f|f|f e|-|-',
 
@@ -58,7 +63,8 @@ const RAW = {
  older:       'o|oʊ|o l|l|l / d|d|d er|ɚ|ɚ',
  younger:     'y|j|j ou|ʌ|ʌ n|ŋ|ŋ / g|ɡ|ɡ er|ɚ|ɚ',
  big:         'b|b|b i|ɪ|ɪ g|ɡ|ɡ',
- little:      'l|l|l i|ɪ|ɪ t|t|t / t|-|- le|əl|əl',
+ /* 跟 uncle 同一個 -le：e 不出聲，母音的聲音在 l 身上（兩頁要一致，學生才不會亂） */
+ little:      'l|l|l i|ɪ|ɪ t|t|t / t|-|- l|əl|əl e|-|-',
  elder:       'e|e|ɛ l|l|l / d|d|d er|ɚ|ɚ',
 
 /* ── 常一起出現的補充字 ── */
@@ -169,9 +175,13 @@ var PH=(function(){
  try{var m=localStorage.getItem("phMode");if(m!==null)mode=+m||0}catch(e){}
  function V(ch){return "aeiou".indexOf(ch.toLowerCase())>=0}
  function isNuc(u){return u.n===1}
- function letters(u){var h="",L=u.L,k;
+ /* 這一格是音節的核心，但字母裡一個 a/e/i/o/u 都沒有（uncle／little 的 l 自己就發 əl）
+    → 整格標紅。不這樣做，學生「數紅色 ＝ 數音節」就會少數一個，規則當場破功。 */
+ function noVowelNucleus(u){var k;if(!isNuc(u))return false;
+  for(k=0;k<u.L.length;k++)if(V(u.L[k]))return false;return true}
+ function letters(u){var h="",L=u.L,k,nv=noVowelNucleus(u);
   for(k=0;k<L.length;k++){
-   var red=(!u.s)&&(V(L[k])||(L[k].toLowerCase()==="y"&&isNuc(u)));
+   var red=(!u.s)&&(nv||V(L[k])||(L[k].toLowerCase()==="y"&&isNuc(u)));
    h+='<i class="'+(red?"v":"")+'">'+L[k]+'</i>'}
   return h}
  /* 一個單字的完整元件：字母（母音紅／不發音灰）＋ 正下方對齊的音標 ＋ 音節切分點 */
@@ -183,7 +193,10 @@ var PH=(function(){
   for(k=0;k<w.length;k++)h+='<i class="'+(V(w[k])?"v":"")+'">'+w[k]+'</i>';
   return h+'</span></span></span></span>'}
  function word(w,lang){
-  if(/\s/.test(w))return w.split(/\s+/).map(function(x){return word(x,lang)}).join(" ");
+  /* **這兩個 \\s 一定要寫兩條斜線**：這整段是 JS 模板字串，寫一條會被吃掉，
+     變成 /s/ 與 /s+/ ——凡是拼法裡有 s 的字（sister／son／cousin／husband…）
+     都會被當成「多個字」從 s 那裡切開，s 不見、發音也唸錯。2026-09-20 訂正。 */
+  if(/\\s/.test(w))return w.split(/\\s+/).map(function(x){return word(x,lang)}).join(" ");
   var key=w.toLowerCase(),d=D[key];
   if(!d)return plain(w,lang);
   var h='<span class="phw '+MODES[mode]+'" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+

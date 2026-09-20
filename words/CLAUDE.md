@@ -267,6 +267,36 @@ daughter: 'd|d|d au|ɔː|ɔ gh|-|- / t|t|t er|ɚ|ɚ'
 - **舊拼法不要用美式語音唸**（`sweostor`、`brōþor`、`parens`、`nepos`、`wīf`、`tê`…）：
   那些字在 `_build_story.js` 裡包了 `class="nosay"`，`autoSay()` 會跳過。
 
+### 2026-09-20 訂正三件事（都在 `_phonics.js`，不要改回去）
+
+**1.（最重要）模板字串裡的 `\s` 一定要寫成 `\\s`。**
+`PH.JS` 是一整段 JS **模板字串**，裡面寫 `/\s/` 會被吃掉一條斜線，變成 `/s/`。
+於是 `word()` 把「**拼法裡有 s 的字**」當成多個字，從 s 那裡切開：
+`sister` → `"" / i / ter`（兩個 s 不見、點下去唸 "ter"）、`son` → `on`、
+`husband` → `hu band`、`cousin` → `cou in`。受影響的有 10 個字
+（sister son cousin husband parents sun sis house sandwich breakfast fast）。
+使用者在 family tree 上抓到 sister 與 cousin，**全站其實都壞了，已一併修好**。
+`autoSay()` 裡的 `\\u2019` 本來就是雙斜線——**新增任何正規表示式都要記得雙斜線**。
+
+**2. 使用者指定的三個不發音字母。**
+
+| 字 | 改成 | 畫面 |
+|---|---|---|
+| `cousin` | `c\|k\|k o\|-\|- u\|ʌ\|ʌ s\|z\|z / i\|ə\|ə n\|n\|n` | **o 淺灰**，u 紅、i 紅 |
+| `uncle` | `u\|ʌ\|ʌ n\|ŋ\|ŋ / c\|k\|k l\|əl\|əl e\|-\|-` | **e 淺灰**，u 紅、**l 紅** |
+| `niece` | `n\|n\|n i\|-\|- e\|iː\|i c\|s\|s e\|-\|-` | **i 淺灰**、字尾 e 淺灰，中間 e 紅 |
+
+**3. 音節核心沒有 a/e/i/o/u 的那一格，整格標紅（`noVowelNucleus()`）。**
+`uncle` 的 e 一變灰，第二個音節就沒有紅色字母了，
+「**數紅色母音 ＝ 數音節**」當場破功（會數成 1 個紅色、2 個音節）。
+`-cle` 的聲音是 `/kəl/`，**母音的聲音本來就落在 l 身上**，所以整格標紅——
+規則對學生仍然是真的。`little` 是同一個 `-le`，**一起改成一樣**
+（`l\|l\|l i\|ɪ\|ɪ t\|t\|t / t\|-\|- l\|əl\|əl e\|-\|-`），
+兩頁不一致學生會亂。**只有這兩個字會走到這條規則**，其他字不受影響。
+
+> 想改回「`ie` 當成一整格紅色」「`ou` 當成一整格紅色」「`le` 當成一整格、e 紅色」，
+> 就是把上面三行 RAW 改回去，一行一個字，不會動到別的地方。
+
 ### 兩個不要踩的地雷
 
 - `PH.autoSay()` **只掃說明文字的容器**（`.sub .mid .note .qtext .big .parts .zh`）。
@@ -317,12 +347,15 @@ daughter: 'd|d|d au|ɔː|ɔ gh|-|- / t|t|t er|ɚ|ɚ'
 現在那一層改成**家譜的標準畫法：大人各一條短豎線 ＋ 一條橫桿 ＋ 小孩各一條短豎線**。
 
 ```
-基礎版 KIDS1                       進階版 KIDS2
- 🧔father     👩mother              👦brother    🙋me    👧sister
-    │            │                     │                    │
-    └──────┬─────┘                     └─────────┬──────────┘   ← 橫桿
-  ┌────────┼────────┐                        ┌───┴───┐
-brother    me     sister                  nephew   niece
+基礎版 family-tree.html                進階版 family-tree-2.html
+                                    🧓uncle 👩‍🦰aunt  🧔father 👩mother
+ 🧔father     👩mother                 └───┬───┘        │        │
+    │            │                         │            └────┬───┘  ← 橫桿（寬的在下）
+    └──────┬─────┘                    ↑ 橫桿（窄的在上）     │
+  ┌────────┼────────┐                 🧑cousin   👦brother 🙋me 👧sister
+brother    me     sister                             └──────┬──────┘
+                                                        ┌───┴───┐
+                                                     nephew   niece
 ```
 
 - **為什麼是橫桿，不是一人拉一條斜線過去**：姪子是哥哥的兒子、外甥是姊姊的兒子，
@@ -341,18 +374,68 @@ brother    me     sister                  nephew   niece
   所以 `_verify.js` 量到的溢出完全不受影響。
 - **座標一律用 `offsetLeft`／`offsetTop`，不要用 `getBoundingClientRect`**：
   亮起來的那個人有 `scale(1.16)` 與 `hop` 動畫，量 rect 會量到動畫中間的位置，線會飄。
-- 資料寫在 `_build_tree.js`：`pair(大人們, 小孩們)` 自動配對，
-  基礎版 `KIDS1 = pair(['father','mother'], ['brother','me','sister'])`、
-  進階版 `KIDS2 = pair(['brother','sister'], ['nephew','niece'])`。
+- 資料寫在 `_build_tree.js`：**一組 ＝ 一條橫桿 ＝ `fam(大人們, 小孩們)`**，
+  `links` 是一個**組的陣列**：
+  ```js
+  KIDS1 = [fam(['father','mother'], ['brother','me','sister'])];
+  KIDS2 = [fam(['uncle','aunt'],     ['cousin']),
+           fam(['father','mother'],  ['brother','me','sister']),
+           fam(['brother','sister'], ['nephew','niece'])];
+  ```
   **哪一列要畫，由 `slant()` 自動判斷**（那一列的短直線換成 `.gap` 留白）。
-- **一個 `.gap` 只畫得出一組橫桿**（`lines()` 的 `up`／`dn` 各一組）。
-  **進階版中間那一層（father／mother／uncle／aunt → cousin／brother／me／sister）
-  沒有畫**，因為 cousin 的爸媽是 uncle／aunt，那一層要**兩組**橫桿才畫得對。
-  要補得先改 `lines()` 支援多組——**老師說要再做**。
-- **`.gap` 的高度夾的是 `vw` 不是 `vh`**（`clamp(24px,3.6vw,40px)`）：
+- **同一層可以有好幾組橫桿**（2026-09-20 使用者指定補上，原本一個 `.gap` 只畫得出一組）。
+  進階版中間那一層現在有**兩組**：`father／mother → brother／me／sister`、
+  `uncle／aunt → cousin`（cousin 的爸媽是 uncle／aunt，不是同一對）。
+  `lines()` 把「上下兩排相同」的組收成同一層，橫桿高度平均分在兩排中間，
+  **窄的擺上面、寬的擺下面**。
+- **所以 TREE2 第二列改成 `uncle／aunt／father／mother`**（兩對夫妻各自靠在一起）。
+  舊排法 `uncle／father／mother／aunt` 把夫妻拆到兩端，uncle→aunt 的橫桿會橫跨整列，
+  father／mother 的豎線就會穿過它，交纏成一團。
+  **硬條件：同一組人要排在一起，兩組的左右範圍不可以交錯。改排序前先想清楚。**
+- 進階版的 `brother／me／sister` 那一組在這一頁**永遠是暗的**（那三個人在進階版沒有幕），
+  它只負責把「這三個是 father／mother 的小孩」畫出來，是結構資訊，不是學習重點。
+- **`.gap` 的高度夾的是 `vw` 不是 `vh`**（`clamp(26px,4vw,44px)`，
+  2026-09-20 從 `3.6vw` 加高，同一層要擺得下兩條橫桿；量到的兩條橫桿相距
+  1024×768 是 13px、820×1180 是 11px）：
   直式 820×1180 高度很多、寬度更窄，夾 vh 會把留白撐到 52px，
   **縱向就溢出 1～2px**（`_verify.js` 抓得到，已經踩過一次）。
 - 六種顯示模式都會重畫線（切模式會呼叫 `render()`）；換視窗大小與字體載進來之後也會重畫。
+
+### 字級（2026-09-20 使用者指定放大，坐最後一排要看得清楚）
+
+| 元素 | 現在 |
+|---|---|
+| 焦點英文單字 `.fen` | `clamp(38px,min(7.6vh,9.2vw),86px)` |
+| 焦點圖示 `.fic` | `clamp(42px,7vh,74px)` |
+| 焦點中文 `.fzh` | `clamp(26px,4.5vh,44px)` |
+| 「只中文」那個模式 | `clamp(40px,7vh,70px)`（行內覆蓋 `.fzh`） |
+| 樹上的圖示 `.tn .ti` | `clamp(31px,5.2vh,54px)` |
+| 說明 `.sub` | `clamp(18px,2.7vh,26px)` |
+
+**英文單字一定是全頁最大的**——那是這一頁最重要的學習重點，圖示與中文都要小一階。
+**一定要同時夾 `vh` 和 `vw`**，只夾 vh 的話直式 820×1180 會把 grandmother 折成兩行。
+
+放大時踩過的兩個坑，**不要改回去**：
+
+1. **`.fen` 與 `.fzh` 一定要自己寫 `line-height`**（`1.04`／`1.2`）。
+   不寫就吃 body 的 `normal`：`.phw` 是 `inline-flex`，照基線排，
+   行框硬是比單字高 30 幾 px。進階版四排樹就是被這幾十 px 擠爆的。
+   寫死的是「最小」行高，切到 IPA／KK 時 `.phw` 變高，行框一樣會跟著長。
+2. **`#stage` 的 `min-height` 加到 `clamp(340px,72vh,700px)`**。
+   沒有餘裕的話，光是「內容高度算出來是小數」就會讓 `scrollHeight` 比
+   `clientHeight` 大 1～2px，`_verify.js` 直接判定溢出。
+   **72vh 不會把文字推去撞下方按鈕列**——內容在 `#stage` 裡是置中的，
+   文字底邊 ＝ 視窗高 ÷ 2 ＋ 內容高 ÷ 2，跟 `min-height` 無關。
+   量到最緊的是進階版第 1 幕、1024×768、**切到 IPA**：離按鈕列還有 11px。
+
+**`_verify.js` 只量預設的「無音標」狀態。放大字級之後一定要自己多量一次 IPA／KK**
+（按一下 `#phmode`），每個字母底下多一行音標會再長 30px——這次就是這樣抓到的。
+
+### 兩頁互相切換（2026-09-20 使用者指定）
+
+基礎版 `#bar` 最下方那一顆改成「**🌳 進階版 →**」（原本是「← 回 首頁」，
+跟旁邊的「🏠 首頁」完全重複）；進階版維持「← 回 基礎版」。
+**按鈕數維持 7 顆、仍然只有一排**——`#bar` 一換行就會往上吃掉樹的空間。
 
 ## 首頁與「回首頁」按鈕（2026-09-20 使用者指定）
 
@@ -544,7 +627,7 @@ node words/_build_hub.js    # 根目錄的 index.html（首頁）
 | 暖身題 | `quiz.html`（20 題）、`quiz-demo.html`（1 題試玩） |
 | 故事 | `why.html`、`why-2.html`、`why-more.html` |
 | 補充 | `parts.html`（單字結構）、`daughter-gh.html`（gh 的聲音）、`older-younger.html`（哥哥弟弟） |
-| 家庭樹 | `family-tree.html`（基礎版 8 幕）、`family-tree-2.html`（進階版 7 幕）。**兩頁都有「誰是誰的小孩」的關係線** |
+| 家庭樹 | `family-tree.html`（基礎版 8 幕）、`family-tree-2.html`（進階版 7 幕）。**兩頁都有「誰是誰的小孩」的關係線**，進階版中間那一層是**兩組橫桿**；基礎版最下方有「🌳 進階版 →」 |
 | 實驗 | `brother-why.html`（四幕，等課堂實測） |
 | 首頁 | 專案根目錄 `index.html`（由 `_build_hub.js` 產生） |
 
@@ -584,6 +667,21 @@ node words/_verify.js       # 量測（改完一定要跑）
   3. 地名就是證據：**-by** ＝ 古北歐文的「村子」——Grimsby、Whitby、Derby、
      Scunthorpe（-thorpe）（OED／Cambridge「-by, suffix」）。
   **不要再把「某一個村子」寫回去。**
+
+### 2026-09-20 這一輪做了什麼（接手的人看這裡就夠）
+
+1. **`_phonics.js` 的 `\s` 訂正**——全站 10 個含 s 的字（sister／son／cousin／husband／
+   parents／sun／sis／house／sandwich／breakfast／fast）本來都被從 s 切開，
+   字母不見、點下去唸錯。**這是這一輪影響最大的一筆**，細節見上面發音那一節。
+2. **不發音字母**：cousin 的 o、uncle 的 e、niece 的 i 改成淺灰；
+   `little` 跟著 uncle 一起改（同一個 `-le`，兩頁不一致學生會亂）。
+3. **family tree 進階版中間那一層補上兩組橫桿**，TREE2 第二列改成
+   `uncle／aunt／father／mother`。
+4. **family tree 兩頁的圖示／英文／中文放大**，英文最大。
+5. **基礎版最下方多一顆「🌳 進階版 →」**（換掉重複的「← 回 首頁」）。
+
+全部跑過 `node words/_verify.js`（29 頁 × 2 尺寸）全過，
+家庭樹兩頁另外手動量過 IPA 模式。
 
 ### 首頁（2026-09-19 完成，2026-09-20 改名並加上回首頁按鈕）
 
@@ -629,10 +727,9 @@ https://hsieny627-jpg.github.io/AI-Agent-Open-Code/
 
 **AI 可以做，但要老師先說要不要的**
 
-5. ~~family tree 的關係線~~ → **2026-09-20 已完成**（使用者指定要補，兩頁都補了）。
-   做法與「不要改回斜線」的理由寫在上面的〈關係線：誰是誰的小孩〉那一節。
-   **還沒做的只剩一層**：進階版中間那一層要兩組橫桿（cousin 的爸媽是 uncle／aunt），
-   `lines()` 目前一個 `.gap` 只畫得出一組。**要不要補，先問老師。**
+5. ~~family tree 的關係線~~ → **2026-09-20 全部完成**（含進階版中間那一層的兩組橫桿）。
+   做法與「不要改回斜線」「不要把 uncle／aunt 拆到兩端」的理由都寫在
+   上面的〈關係線：誰是誰的小孩〉那一節。
 6. **音標資料（`_phonics.js` 的 42 個字）沒有逐條對過辭典**，是照 Cambridge／
    Oxford 美式標法與 KK 慣例寫的。要逐條核對得連網，**目前做不到**。
 7. 17 張字卡的三幕結構、暖身題 20 題**都沒有再動**——使用者沒說要改就不要動。
