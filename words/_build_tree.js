@@ -15,24 +15,27 @@
  *  4. 六種顯示切換：
  *       A 只圖示 ／ B 只中文 ／ C 只英文 ／ D 英文＋圖示 ／ E 英文＋中文 ／ F 全部
  *     老師選的那一種記在 localStorage，翻頁與換頁都不會跑掉。
- *  5. **進階版要畫出 nephew／niece 的關係線**（2026-09-20 使用者指定）：
- *     nephew／niece 是**哥哥的小孩，也是姊姊的小孩**，所以線從 brother 和 sister
- *     兩個人一起下來。畫法是家譜的標準畫法——**兩條短豎線 ＋ 一條橫桿 ＋ 兩條短豎線**：
+ *  5. **兩頁都要畫出「誰是誰的小孩」那一層關係線**（2026-09-20 使用者指定）。
+ *     畫法是家譜的標準畫法——**大人各一條短豎線 ＋ 一條橫桿 ＋ 小孩各一條短豎線**：
  *
- *         👦brother      🙋me      👧sister
- *           │                        │
- *           └───────────┬────────────┘     ← 橫桿
- *                 ┌─────┴─────┐
- *              nephew       niece
+ *       基礎版（KIDS1）                 進階版（KIDS2）
+ *        father     mother              brother    me    sister
+ *           |          |                   |              |
+ *           +----+-----+                   +------+-------+      <- 橫桿
+ *        +-----+-+----+                       +---+---+
+ *     brother  me   sister                 nephew   niece
  *
- *     **不要改回「一人拉一條斜線過去」**：四條斜線會交叉成一團，
- *     在 1024×768 的高度只剩幾十像素，斜線幾乎是平的，投影出來像亂畫的。
- *     橫桿從 me 的下面經過，但 **me 沒有往下接的豎線**，所以不會被讀成「me 的小孩」。
- *     平常整組線都是暗的；**現在這一個小孩**的那條豎線、橫桿、兩條爸媽豎線才會亮
+ *     **不要改回「一人拉一條斜線過去」**：斜線會交叉成一團，
+ *     在 1024x768 的高度只剩幾十像素，斜線幾乎是平的，投影出來像亂畫的。
+ *     進階版的橫桿從 me 的下面經過，但 me 沒有往下接的豎線，
+ *     所以不會被讀成「me 的小孩」；基礎版的 me 本來就是爸媽的小孩，所以有豎線。
+ *     平常整組線都是暗的；**現在這一個小孩**的那條豎線、橫桿、大人那幾條豎線才會亮
  *     ——一次還是只給一個學習重點。
  *     線畫在一張 position:absolute 的 <svg> 上（不佔版面、不影響 _verify.js 的溢出量測），
  *     座標用 offsetLeft／offsetTop 量（**不要用 getBoundingClientRect**：
  *     亮起來的那個人有 scale(1.16) 與 hop 動畫，量出來的位置會跟著動）。
+ *     **一個 gap 只畫得出一組橫桿**（lines() 的 up／dn 各一組）。進階版中間那一層
+ *     沒有畫，就是因為 cousin 的爸媽是 uncle／aunt，那一層要兩組橫桿才畫得對。
  *
  * 版面規則同其他頁：1024×768 與 820×1180 都不可溢出，由 _verify.js 量。
  * 這一頁有 #dots，所以 _verify.js 會當成「幕頁」來量。
@@ -71,16 +74,21 @@ const TREE2 = [
 ];
 
 /* 關係線：[上面那個人, 下面那個人]。
-   姪子是哥哥的兒子、外甥是姊姊的兒子，英文都叫 nephew——所以 brother 和 sister
-   各拉一條線到 nephew；niece 一樣。四條線就是「英文一個字就夠」那一句的畫面。 */
-const KIDS = [
- ['brother', 'nephew'], ['sister', 'nephew'],
- ['brother', 'niece'],  ['sister', 'niece']
-];
+   pair() 把「上面這幾個大人」對「下面這幾個小孩」全部配起來——畫出來是一條橫桿，
+   本來就是「這幾個大人 → 這幾個小孩」一整組，不是一對一。 */
+const pair = (up, dn) => { const o = []; up.forEach(u => dn.forEach(d => o.push([u, d]))); return o; };
+
+/* 基礎版：brother／me／sister 是 father 和 mother 的小孩。
+   （2026-09-20 使用者指定補上；原本這一層只有一條置中的短直線，看不出誰接誰。） */
+const KIDS1 = pair(['father', 'mother'], ['brother', 'me', 'sister']);
+
+/* 進階版：姪子是哥哥的兒子、外甥是姊姊的兒子，英文都叫 nephew——
+   所以線從 brother 和 sister 兩個人一起下來。niece 一樣。 */
+const KIDS2 = pair(['brother', 'sister'], ['nephew', 'niece']);
 
 const PAGES = [
 { file: 'family-tree.html', title: 'family tree 基礎版', src: 'family-tree',
-  tree: TREE1, links: [],
+  tree: TREE1, links: KIDS1,
   back: { href: '../index.html', label: '← 回 首頁' },
   S: [
    { open: true, mid: 'family tree', zh: '家庭樹',
@@ -95,7 +103,7 @@ const PAGES = [
   ] },
 
 { file: 'family-tree-2.html', title: 'family tree 進階版', src: 'family-tree',
-  tree: TREE2, links: KIDS,
+  tree: TREE2, links: KIDS2,
   back: { href: 'family-tree.html', label: '← 回 基礎版' },
   S: [
    { open: true, mid: 'family tree', zh: '再加上親戚',

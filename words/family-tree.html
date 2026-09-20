@@ -375,7 +375,7 @@ var PH=(function(){
 var N={"me":{"zh":"我","ic":"🙋"},"father":{"zh":"爸爸","ic":"🧔","also":"dad"},"mother":{"zh":"媽媽","ic":"👩","also":"mom"},"brother":{"zh":"哥哥、弟弟","ic":"👦"},"sister":{"zh":"姊姊、妹妹","ic":"👧"},"grandfather":{"zh":"爺爺、外公","ic":"👴","also":"grandpa"},"grandmother":{"zh":"奶奶、外婆","ic":"👵","also":"grandma"},"uncle":{"zh":"叔叔、舅舅","ic":"🧓"},"aunt":{"zh":"阿姨、姑姑","ic":"👩‍🦰"},"cousin":{"zh":"堂表兄弟姊妹","ic":"🧑"},"nephew":{"zh":"姪子、外甥","ic":"👦💙"},"niece":{"zh":"姪女、外甥女","ic":"👧💜"}};
 var TREE=[["grandfather","grandmother"],["father","mother"],["brother","me","sister"]];
 var S=[{"open":true,"mid":"family tree","zh":"家庭樹","lines":["<b>點任何一個人</b>，聽聽看怎麼唸"]},{"k":"me","line":"先從<b>自己</b>開始"},{"k":"father","line":"爸爸也可以叫 {{dad}}"},{"k":"mother","line":"媽媽也可以叫 {{mom}}"},{"k":"brother","line":"哥哥、弟弟<b>都叫 brother</b>"},{"k":"sister","line":"姊姊、妹妹<b>都叫 sister</b>"},{"k":"grandfather","line":"爸爸的爸爸，也可以叫 {{grandpa}}"},{"k":"grandmother","line":"媽媽的媽媽，也可以叫 {{grandma}}"}];
-var LINK=[];
+var LINK=[["father","brother"],["father","me"],["father","sister"],["mother","brother"],["mother","me"],["mother","sister"]];
 
 /* 顯示模式：A 只圖示／B 只中文／C 只英文／D 英＋圖／E 英＋中／F 全部 */
 var MODE="F";
