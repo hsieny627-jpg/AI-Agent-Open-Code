@@ -139,6 +139,19 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
  font-size:clamp(11.5px,1.7vh,15px);color:#4D4D4D;letter-spacing:.08em}
 #tapHint.off{display:none}
 
+/* ── 真實情境（老師按「🎞 情境」才出現）── */
+.scene{display:none;flex-direction:column;align-items:center;gap:clamp(3px,.7vh,8px);
+ width:100%;max-width:840px;margin-bottom:clamp(8px,1.6vh,18px);
+ background:#080B0E;border:1px solid #1E2831;border-radius:16px;
+ padding:clamp(8px,1.5vh,16px) clamp(10px,1.6vw,22px)}
+#card.sc .scene{display:flex}
+.scene .sat{font-size:clamp(11.5px,1.75vh,16px);color:#6F8496;letter-spacing:.1em}
+.scene .spic{font-size:clamp(19px,3.4vh,36px);line-height:1.25;text-align:center;
+ word-break:break-word}
+.scene .suse{font-size:clamp(12.5px,2vh,19px);color:var(--body);line-height:1.5;
+ text-align:center;max-width:40ch}
+#card.m-ic .scene .suse,#card.m-ic .scene .sat{display:none}
+
 /* ── 替換字 ── */
 .subs{margin-top:clamp(10px,2vh,20px);width:100%;display:flex;flex-direction:column;
  gap:clamp(4px,.8vh,8px);align-items:center}
@@ -228,14 +241,16 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
   <button data-m="full">整句中文</button>
   <button data-m="ic">只圖示</button>
  </span>
- <button id="icBtn" class="on">🖼 圖示 開</button>
+ <button id="icBtn" class="on">🖼 圖示</button>
+ <button id="scBtn">🎞 情境</button>
  <span class="grp" id="revGrp">
   <button data-r="word" class="on">🎬 逐字</button>
   <button data-r="whole">📄 整句</button>
  </span>
  <button id="play">▶ 自動播</button>
  <button id="sayBtn">🔊 念一次</button>
- <button id="slowBtn">🐢 放慢 關</button>
+ <button id="zhBtn">🔤 點中文唸 中文</button>
+ <button id="slowBtn">🐢 放慢</button>
  <a href="unit1.html">⬅ Unit 1</a>
  <a href="index.html">🏠 首頁</a>
 </nav>
@@ -301,8 +316,9 @@ function sPop(){beep(988,.07,'triangle',.1)}
 function sWow(){[523,659,784,1047,1319].forEach(function(f,i){setTimeout(function(){beep(f,.16,'triangle',.11)},i*70)})}
 
 
-var CARDS=[{"type":"sent","zh":"他是一位醫生。","say":"He is a doctor.","slot":"job","tk":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"is","zh":"是","ic":"🟰","hl":"y"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"doctor","zh":"醫生","ic":"👨‍⚕️","slot":"job"},{"en":".","zh":"。","ic":"⏹","tight":1}]},{"type":"eq","zh":"兩句一模一樣。","a":[{"en":"He","zh":"他","ic":"👦"},{"en":"is","zh":"是","ic":"🟰"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"doctor","zh":"醫生","ic":"👨‍⚕️"}],"b":[{"en":"He","zh":"他","ic":"👦"},{"en":"'s","zh":"是","ic":"🟰","tight":1},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"doctor","zh":"醫生","ic":"👨‍⚕️"}],"note":"He is ＝ He’s。"},{"type":"swap","subj":"he","slot":"job","st":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"is","zh":"是","ic":"🟰","hl":"y"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"doctor","zh":"醫生","ic":"👨‍⚕️","slot":"job"},{"en":".","zh":"。","ic":"⏹","tight":1}],"qu":[{"en":"Is","zh":"是","ic":"🟰","hl":"y"},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"doctor","zh":"醫生","ic":"👨‍⚕️","slot":"job"},{"en":"?","zh":"？","ic":"❓","tight":1}],"stzh":"他是一位醫生。","quzh":"他是一位醫生嗎？","note":"藍色的 he 和黃色的 is 換位置，句號換成問號。"},{"type":"sent","zh":"他是一位醫生嗎？","say":"Is he a doctor?","slot":"job","tk":[{"en":"Is","zh":"是","ic":"🟰","hl":"y"},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"doctor","zh":"醫生","ic":"👨‍⚕️","slot":"job"},{"en":"?","zh":"？","ic":"❓","tight":1}]},{"type":"sent","zh":"是的，他是。","say":"Yes, he is.","tk":[{"en":"Yes","zh":"是的","ic":"✅"},{"en":",","zh":"，","ic":"","tight":1},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"is","zh":"是","ic":"🟰","hl":"y"},{"en":".","zh":"。","ic":"⏹","tight":1}]},{"type":"sent","zh":"不，他不是。","say":"No, he isn't.","tk":[{"en":"No","zh":"不","ic":"❌"},{"en":",","zh":"，","ic":"","tight":1},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"isn't","zh":"不是","ic":"🚫","hl":"y"},{"en":".","zh":"。","ic":"⏹","tight":1}]},{"type":"sent","zh":"她是一位老師。","say":"She is a teacher.","slot":"job","tk":[{"en":"She","zh":"她","ic":"👧","hl":"p"},{"en":"is","zh":"是","ic":"🟰","hl":"y"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"teacher","zh":"老師","ic":"👩‍🏫","slot":"job"},{"en":".","zh":"。","ic":"⏹","tight":1}]},{"type":"eq","zh":"兩句一模一樣。","a":[{"en":"She","zh":"她","ic":"👧"},{"en":"is","zh":"是","ic":"🟰"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"teacher","zh":"老師","ic":"👩‍🏫"}],"b":[{"en":"She","zh":"她","ic":"👧"},{"en":"'s","zh":"是","ic":"🟰","tight":1},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"teacher","zh":"老師","ic":"👩‍🏫"}],"note":"She is ＝ She’s。"},{"type":"swap","subj":"she","slot":"job","st":[{"en":"She","zh":"她","ic":"👧","hl":"p"},{"en":"is","zh":"是","ic":"🟰","hl":"y"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"teacher","zh":"老師","ic":"👩‍🏫","slot":"job"},{"en":".","zh":"。","ic":"⏹","tight":1}],"qu":[{"en":"Is","zh":"是","ic":"🟰","hl":"y"},{"en":"she","zh":"她","ic":"👧","hl":"p"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"teacher","zh":"老師","ic":"👩‍🏫","slot":"job"},{"en":"?","zh":"？","ic":"❓","tight":1}],"stzh":"她是一位老師。","quzh":"她是一位老師嗎？","note":"粉色的 she 和黃色的 is 換位置，句號換成問號。"},{"type":"sent","zh":"她是一位老師嗎？","say":"Is she a teacher?","slot":"job","tk":[{"en":"Is","zh":"是","ic":"🟰","hl":"y"},{"en":"she","zh":"她","ic":"👧","hl":"p"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"teacher","zh":"老師","ic":"👩‍🏫","slot":"job"},{"en":"?","zh":"？","ic":"❓","tight":1}]},{"type":"sent","zh":"是的，她是。","say":"Yes, she is.","tk":[{"en":"Yes","zh":"是的","ic":"✅"},{"en":",","zh":"，","ic":"","tight":1},{"en":"she","zh":"她","ic":"👧","hl":"p"},{"en":"is","zh":"是","ic":"🟰","hl":"y"},{"en":".","zh":"。","ic":"⏹","tight":1}]},{"type":"sent","zh":"不，她不是。","say":"No, she isn't.","tk":[{"en":"No","zh":"不","ic":"❌"},{"en":",","zh":"，","ic":"","tight":1},{"en":"she","zh":"她","ic":"👧","hl":"p"},{"en":"isn't","zh":"不是","ic":"🚫","hl":"y"},{"en":".","zh":"。","ic":"⏹","tight":1}]},{"type":"focus","title":"交換位置就變問句","rows":[["He is a doctor.","他是一位醫生。","👦","藍 → 黃"],["Is he a doctor?","他是一位醫生嗎？","🟰","黃 → 藍"],["短答不可以縮寫","Yes, he is. ✅　Yes, he’s. ❌","✅","句尾的 is 不縮"]],"note":"只有前面兩個字換位置，後面完全不動。"},{"type":"pair","q":"Is he a doctor?","qzh":"他是一位醫生嗎？","a":"Yes, he is.","azh":"是的，他是。","qic":"👨‍⚕️","aic":"✅"},{"type":"pair","q":"Is she a nurse?","qzh":"她是一位護理師嗎？","a":"No, she isn't.","azh":"不，她不是。","qic":"👩‍⚕️","aic":"❌"}], UNIT=2, SUB={"he":{"basic":[["brother","哥哥","🧒"],["grandfather","爺爺","👴"],["dad","爸比","👨"],["grandpa","阿公","👴"]],"adv":[["uncle","叔叔","🧔"],["nephew","姪子","👦"],["cousin","表哥","🧑‍🤝‍🧑"]]},"she":{"basic":[["sister","姊姊","👧"],["grandmother","奶奶","👵"],["grandma","阿嬤","👵"],["mom","媽咪","👩"]],"adv":[["aunt","阿姨","👩‍🦱"],["cousin","表姊","🧑‍🤝‍🧑"],["niece","姪女","👧"]]},"job":{"basic":[["student","學生","🧑‍🎓"],["cook","廚師","👨‍🍳"],["farmer","農夫","👨‍🌾"],["teacher","老師","👩‍🏫"],["nurse","護理師","👩‍⚕️"],["doctor","醫生","👨‍⚕️"]],"adv":[]}};
+var CARDS=[{"type":"sent","zh":"他是一位醫生。","say":"He is a doctor.","slot":"job","tk":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"is","zh":"是","ic":"🟰","hl":"y"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"doctor","zh":"醫生","ic":"👨‍⚕️","slot":"job"},{"en":".","zh":"。","ic":"⏹","tight":1}],"scene":{"at":"🏥 醫院・帶弟弟看病","pic":"👦💬 ➜ 👉 ➜ 👨‍⚕️","use":"介紹一個人做什麼工作，就說 He is a ＋ 工作。"}},{"type":"eq","zh":"兩句一模一樣。","a":[{"en":"He","zh":"他","ic":"👦"},{"en":"is","zh":"是","ic":"🟰"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"doctor","zh":"醫生","ic":"👨‍⚕️"}],"b":[{"en":"He","zh":"他","ic":"👦"},{"en":"'s","zh":"是","ic":"🟰","tight":1},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"doctor","zh":"醫生","ic":"👨‍⚕️"}],"note":"He is ＝ He’s。","scene":{"at":"✏️ 寫作業　vs　🗣️ 開口講","pic":"📝 He is ➜ 🗣️ He’s","use":"寫下來常常寫 He is，開口講幾乎都說 He’s。"}},{"type":"swap","subj":"he","slot":"job","st":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"is","zh":"是","ic":"🟰","hl":"y"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"doctor","zh":"醫生","ic":"👨‍⚕️","slot":"job"},{"en":".","zh":"。","ic":"⏹","tight":1}],"qu":[{"en":"Is","zh":"是","ic":"🟰","hl":"y"},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"doctor","zh":"醫生","ic":"👨‍⚕️","slot":"job"},{"en":"?","zh":"？","ic":"❓","tight":1}],"stzh":"他是一位醫生。","quzh":"他是一位醫生嗎？","note":"藍色的 he 和黃色的 is 換位置，句號換成問號。","scene":{"at":"🍳 餐廳・看到戴高帽子的人","pic":"👦 He is a cook. ➜ 🔄 ➜ 👦 Is he a cook?","use":"你確定就用講的，不確定就把前面兩個字換位置，變成問句去問。"}},{"type":"sent","zh":"他是一位醫生嗎？","say":"Is he a doctor?","slot":"job","tk":[{"en":"Is","zh":"是","ic":"🟰","hl":"y"},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"doctor","zh":"醫生","ic":"👨‍⚕️","slot":"job"},{"en":"?","zh":"？","ic":"❓","tight":1}],"scene":{"at":"🏥 醫院・看到穿白袍的人","pic":"👦❓ ➜ 👀 ➜ 👨‍⚕️","use":"你猜那個人是醫生，但不確定，就這樣問。"}},{"type":"sent","zh":"是的，他是。","say":"Yes, he is.","tk":[{"en":"Yes","zh":"是的","ic":"✅"},{"en":",","zh":"，","ic":"","tight":1},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"is","zh":"是","ic":"🟰","hl":"y"},{"en":".","zh":"。","ic":"⏹","tight":1}],"scene":{"at":"✅ 猜對了","pic":"👧 ➜ 👍 ➜ 👨‍⚕️","use":"你猜對了，對方就這樣回答你。"}},{"type":"sent","zh":"不，他不是。","say":"No, he isn't.","tk":[{"en":"No","zh":"不","ic":"❌"},{"en":",","zh":"，","ic":"","tight":1},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"isn't","zh":"不是","ic":"🚫","hl":"y"},{"en":".","zh":"。","ic":"⏹","tight":1}],"scene":{"at":"❌ 猜錯了","pic":"👧 ➜ 🙅 ➜ 🧑‍🎓","use":"你猜錯了，對方先說 No, he isn’t.，再補一句真正的身分：He’s a student."}},{"type":"sent","zh":"她是一位老師。","say":"She is a teacher.","slot":"job","tk":[{"en":"She","zh":"她","ic":"👧","hl":"p"},{"en":"is","zh":"是","ic":"🟰","hl":"y"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"teacher","zh":"老師","ic":"👩‍🏫","slot":"job"},{"en":".","zh":"。","ic":"⏹","tight":1}],"scene":{"at":"🏫 學校・介紹班導師","pic":"👧💬 ➜ 👉 ➜ 👩‍🏫","use":"介紹一個女生做什麼工作，就說 She is a ＋ 工作。"}},{"type":"eq","zh":"兩句一模一樣。","a":[{"en":"She","zh":"她","ic":"👧"},{"en":"is","zh":"是","ic":"🟰"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"teacher","zh":"老師","ic":"👩‍🏫"}],"b":[{"en":"She","zh":"她","ic":"👧"},{"en":"'s","zh":"是","ic":"🟰","tight":1},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"teacher","zh":"老師","ic":"👩‍🏫"}],"note":"She is ＝ She’s。","scene":{"at":"✏️ 寫作業　vs　🗣️ 開口講","pic":"📝 She is ➜ 🗣️ She’s","use":"寫下來常常寫 She is，開口講幾乎都說 She’s。"}},{"type":"swap","subj":"she","slot":"job","st":[{"en":"She","zh":"她","ic":"👧","hl":"p"},{"en":"is","zh":"是","ic":"🟰","hl":"y"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"teacher","zh":"老師","ic":"👩‍🏫","slot":"job"},{"en":".","zh":"。","ic":"⏹","tight":1}],"qu":[{"en":"Is","zh":"是","ic":"🟰","hl":"y"},{"en":"she","zh":"她","ic":"👧","hl":"p"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"teacher","zh":"老師","ic":"👩‍🏫","slot":"job"},{"en":"?","zh":"？","ic":"❓","tight":1}],"stzh":"她是一位老師。","quzh":"她是一位老師嗎？","note":"粉色的 she 和黃色的 is 換位置，句號換成問號。","scene":{"at":"🏫 走廊・看到拿課本的人","pic":"👧 She is a teacher. ➜ 🔄 ➜ 👧 Is she a teacher?","use":"你確定就用講的，不確定就把前面兩個字換位置，變成問句去問。"}},{"type":"sent","zh":"她是一位老師嗎？","say":"Is she a teacher?","slot":"job","tk":[{"en":"Is","zh":"是","ic":"🟰","hl":"y"},{"en":"she","zh":"她","ic":"👧","hl":"p"},{"en":"a","zh":"一位","ic":"1️⃣"},{"en":"teacher","zh":"老師","ic":"👩‍🏫","slot":"job"},{"en":"?","zh":"？","ic":"❓","tight":1}],"scene":{"at":"🏫 走廊・看到拿課本的人","pic":"👧❓ ➜ 👀 ➜ 👩‍🏫","use":"你猜那個人是老師，但不確定，就這樣問。"}},{"type":"sent","zh":"是的，她是。","say":"Yes, she is.","tk":[{"en":"Yes","zh":"是的","ic":"✅"},{"en":",","zh":"，","ic":"","tight":1},{"en":"she","zh":"她","ic":"👧","hl":"p"},{"en":"is","zh":"是","ic":"🟰","hl":"y"},{"en":".","zh":"。","ic":"⏹","tight":1}],"scene":{"at":"✅ 猜對了","pic":"👦 ➜ 👍 ➜ 👩‍🏫","use":"你猜對了，對方就這樣回答你。"}},{"type":"sent","zh":"不，她不是。","say":"No, she isn't.","tk":[{"en":"No","zh":"不","ic":"❌"},{"en":",","zh":"，","ic":"","tight":1},{"en":"she","zh":"她","ic":"👧","hl":"p"},{"en":"isn't","zh":"不是","ic":"🚫","hl":"y"},{"en":".","zh":"。","ic":"⏹","tight":1}],"scene":{"at":"❌ 猜錯了","pic":"👦 ➜ 🙅 ➜ 👩‍⚕️","use":"你猜錯了，對方先說 No, she isn’t.，再補一句真正的身分：She’s a nurse."}},{"type":"focus","title":"交換位置就變問句","rows":[["He is a doctor.","他是一位醫生。","👦","藍 → 黃"],["Is he a doctor?","他是一位醫生嗎？","🟰","黃 → 藍"],["短答不可以縮寫","Yes, he is. ✅　Yes, he’s. ❌","✅","句尾的 is 不縮"]],"note":"只有前面兩個字換位置，後面完全不動。","scene":{"at":"🎨 用顏色記位置","pic":"🔵 he 🟡 is ➜ 🔄 ➜ 🟡 Is 🔵 he","use":"藍色和黃色換位置，句子就從「在講」變成「在問」。"}},{"type":"pair","q":"Is he a doctor?","qzh":"他是一位醫生嗎？","a":"Yes, he is.","azh":"是的，他是。","qic":"👨‍⚕️","aic":"✅","scene":{"at":"🏥 醫院・問路人","pic":"👦❓👨‍⚕️ ➜ 👍 ➜ ✅","use":"問完就等一個答案：猜對了對方說 Yes, he is."}},{"type":"pair","q":"Is she a nurse?","qzh":"她是一位護理師嗎？","a":"No, she isn't.","azh":"不，她不是。","qic":"👩‍⚕️","aic":"❌","scene":{"at":"🏥 醫院・問路人","pic":"👧❓👩‍⚕️ ➜ 🙅 ➜ ❌","use":"猜錯了對方說 No, she isn’t.，再告訴你她真正的身分：She’s a doctor."}}], UNIT=2, SUB={"he":{"basic":[["brother","哥哥","🧒"],["grandfather","爺爺","👴"],["dad","爸比","👨"],["grandpa","阿公","👴"]],"adv":[["uncle","叔叔","🧔"],["nephew","姪子","👦"],["cousin","表哥","🧑‍🤝‍🧑"]]},"she":{"basic":[["sister","姊姊","👧"],["grandmother","奶奶","👵"],["grandma","阿嬤","👵"],["mom","媽咪","👩"]],"adv":[["aunt","阿姨","👩‍🦱"],["cousin","表姊","🧑‍🤝‍🧑"],["niece","姪女","👧"]]},"job":{"basic":[["student","學生","🧑‍🎓"],["cook","廚師","👨‍🍳"],["farmer","農夫","👨‍🌾"],["teacher","老師","👩‍🏫"],["nurse","護理師","👩‍⚕️"],["doctor","醫生","👨‍⚕️"]],"adv":[]}};
 var i=0, mode='all', icons=true, reveal='word', step=0, playing=null;
+var scenes=false, zhSay='zh';   /* zhSay：點中文要唸中文還是唸對應的英文 */
 
 var card=$('#card'), dots=$('#dots');
 dots.innerHTML=CARDS.map(function(){return '<i></i>'}).join('');
@@ -321,6 +337,12 @@ function plain(tk){return tk.map(function(t){return t.tight?t.en:' '+t.en}).join
 function lineHTML(tk){
   return '<div class="wrap"><div class="line">'+tk.map(tkHTML).join('')+'</div></div>';
 }
+function sceneHTML(c){
+  if(!c.scene)return '';
+  return '<div class="scene"><div class="sat">'+c.scene.at+'</div>'+
+   '<div class="spic">'+ap(c.scene.pic)+'</div>'+
+   '<div class="suse">💡 '+ap(c.scene.use)+'</div></div>';
+}
 function subsHTML(kind){
   var s=SUB[kind];if(!s)return '';
   var row=function(list,lbl,cls){
@@ -338,27 +360,29 @@ function draw(dir){
   step=0;
   if(c.type==='sent'){
     kind='句型';
-    h=lineHTML(c.tk)+'<div class="full" data-zh="'+esc(c.zh)+'">'+c.zh+'</div>'+
+    h=lineHTML(c.tk)+'<div class="full" data-zh="'+esc(c.zh)+'" data-en="'+esc(c.say||plain(c.tk))+'">'+c.zh+'</div>'+
       (c.slot?subsHTML(c.slot):'');
   } else if(c.type==='eq'){
     kind='縮寫';
     h='<div class="eq">'+lineHTML(c.a)+'<div class="eqmark">＝</div>'+lineHTML(c.b)+'</div>'+
-      '<div class="full" data-zh="'+esc(c.zh)+'">'+c.zh+'</div>'+
+      '<div class="full" data-zh="'+esc(c.zh)+'" data-en="'+esc(plain(c.b))+'">'+c.zh+'</div>'+
       (c.note?'<div class="note">'+ap(c.note)+'</div>':'');
   } else if(c.type==='order'){
     kind='中英語序';
-    var chip=function(x,n){return '<button class="chip '+x[2]+'" data-n="'+n+'" data-say="'+esc(x[0])+'">'+
+    var mate=function(col){for(var k=0;k<c.enRow.length;k++)if(c.enRow[k][2]===col)return c.enRow[k][0];return ''};
+    var chip=function(x,n,zh){return '<button class="chip '+x[2]+'" data-n="'+n+'" data-say="'+esc(x[0])+'"'+
+      (zh?' data-zh="'+esc(x[0])+'" data-en="'+esc(mate(x[2]))+'"':'')+'>'+
       x[0]+'<span class="ci">'+x[1]+'</span></button>'};
     h='<div class="ord">'+
       '<div class="ordrow"><span class="cap">英文</span>'+c.enRow.map(function(x,n){return chip(x,n)}).join('')+'</div>'+
-      '<div class="ordrow"><span class="cap">中文</span>'+c.zhRow.map(function(x,n){return chip(x,n)}).join('')+'</div>'+
+      '<div class="ordrow"><span class="cap">中文</span>'+c.zhRow.map(function(x,n){return chip(x,n,1)}).join('')+'</div>'+
       '</div><div class="note">'+ap(c.note)+'</div>';
   } else if(c.type==='focus'){
     kind='秒懂重點';
     h='<div class="focus"><h2>'+ap(c.title)+'</h2>'+c.rows.map(function(r){
       return '<div class="frow"><span class="fi">'+r[2]+'</span>'+
         '<span class="fa" data-say="'+esc(r[0])+'">'+ap(r[0])+'</span>'+
-        '<span class="fb">'+ap(r[1])+'</span>'+
+        '<span class="fb" data-zh="'+esc(r[1])+'" data-en="'+esc(r[0])+'">'+ap(r[1])+'</span>'+
         '<span class="fc">'+ap(r[3]||'')+'</span></div>'}).join('')+
       '</div><div class="note">'+ap(c.note)+'</div>';
   } else if(c.type==='pair'){
@@ -366,23 +390,23 @@ function draw(dir){
     h='<div class="pair">'+
       '<div class="bub q"><span class="bi">'+c.qic+'</span><span class="bt">'+
         '<span class="be" data-say="'+esc(c.q)+'">'+ap(c.q)+'</span>'+
-        '<span class="bz" data-zh="'+esc(c.qzh)+'">'+c.qzh+'</span></span></div>'+
+        '<span class="bz" data-zh="'+esc(c.qzh)+'" data-en="'+esc(c.q)+'">'+c.qzh+'</span></span></div>'+
       '<div class="bub a"><span class="bi">'+c.aic+'</span><span class="bt">'+
         '<span class="be" data-say="'+esc(c.a)+'">'+ap(c.a)+'</span>'+
-        '<span class="bz" data-zh="'+esc(c.azh)+'">'+c.azh+'</span></span></div>'+
+        '<span class="bz" data-zh="'+esc(c.azh)+'" data-en="'+esc(c.a)+'">'+c.azh+'</span></span></div>'+
       '</div>';
   } else if(c.type==='swap'){
     kind='變身術';
     c._cur=c._cur||'st';
     h='<div class="swapbox">'+lineHTML(c[c._cur])+
-      '<div class="full" data-zh="'+esc(c._cur==='st'?c.stzh:c.quzh)+'">'+
+      '<div class="full" data-zh="'+esc(c._cur==='st'?c.stzh:c.quzh)+'" data-en="'+esc(plain(c[c._cur]))+'">'+
         (c._cur==='st'?c.stzh:c.quzh)+'</div>'+
       '<button class="swapbtn" id="swapGo">🔄 '+(c._cur==='st'?'變成問句':'變回直述句')+'</button>'+
       '<div class="swaphint">'+ap(c.note)+'</div>'+
       (c.slot?subsHTML(c.slot):'')+'</div>';
   }
   card.className='';
-  card.innerHTML='<span class="kind">'+kind+'</span><div id="cardIn">'+h+
+  card.innerHTML='<span class="kind">'+kind+'</span><div id="cardIn">'+sceneHTML(c)+h+
     '<div id="tapHint" class="off">點卡片：一次出現一個字</div></div>';
   applyMode();
   fit();
@@ -411,13 +435,22 @@ function fit(){
   var availH=card.clientHeight-2*parseFloat(getComputedStyle(card).paddingTop||0);
   var needH=inn.scrollHeight, availW=card.clientWidth, needW=inn.scrollWidth;
   var k=Math.min(availH>0&&needH>availH?availH/needH:1, availW>0&&needW>availW?availW/needW:1);
-  if(k<1)inn.style.transform='scale('+Math.max(.3,k-0.01)+')';
+  var kk=k<1?Math.max(.3,k-0.01):1;
+  if(k<1)inn.style.transform='scale('+kk+')';
+  card.setAttribute('data-k',kk.toFixed(3));
 }
 
 function applyMode(){
-  card.classList.remove('m-all','m-en','m-zh','m-full','m-ic','noic');
+  card.classList.remove('m-all','m-en','m-zh','m-full','m-ic','noic','sc');
   card.classList.add('m-'+mode);
   if(!icons)card.classList.add('noic');
+  if(scenes)card.classList.add('sc');
+}
+/* 點中文：依開關唸中文，或唸那一句對應的英文 */
+function sayPair(el){
+  var en=el.getAttribute('data-en');
+  if(zhSay==='en'&&en){say(en);return}
+  sayZh(el.getAttribute('data-zh'));
 }
 
 /* ---------- 逐字動畫：一次只呈現一個重點 ---------- */
@@ -574,15 +607,19 @@ card.addEventListener('click',function(e){
     revealNext(false);return}
   var chip=t.closest?t.closest('.chip'):null;
   if(chip){var w=chip.getAttribute('data-say');
-    if(/[A-Za-z]/.test(w))say(w);else sayZh(w);
+    if(/[A-Za-z]/.test(w))say(w);
+    else if(chip.getAttribute('data-en'))sayPair(chip);
+    else sayZh(w);
     chip.style.setProperty('--dx','-40px');chip.classList.add('fly');
     setTimeout(function(){chip.classList.remove('fly')},960);return}
   var zh=t.closest?t.closest('[data-zh]'):null;
-  if(zh){sayZh(zh.getAttribute('data-zh'));return}
+  if(zh){sayPair(zh);return}
   var tk=t.closest?t.closest('.tk'):null;
   if(tk&&!tk.classList.contains('hide')){
     var w2=tk.getAttribute('data-say');
-    if(mode==='zh'||mode==='ic'){sayZh($('.zh',tk)?$('.zh',tk).textContent:w2)}
+    if(mode==='zh'||mode==='ic'){
+      if(zhSay==='en'&&/[A-Za-z]/.test(w2))say(w2);
+      else sayZh($('.zh',tk)?$('.zh',tk).textContent:w2)}
     else if(/[A-Za-z]/.test(w2))say(w2);
     return}
   var sy=t.closest?t.closest('[data-say]'):null;
@@ -600,7 +637,7 @@ $$('#modeGrp button').forEach(function(b){
 });
 $('#icBtn').addEventListener('click',function(){
   icons=!icons;$('#icBtn').classList.toggle('on',icons);
-  $('#icBtn').innerHTML=icons?'🖼 圖示 開':'🖼 圖示 關';
+  $('#icBtn').innerHTML='🖼 圖示';
   applyMode();fit();
 });
 $$('#revGrp button').forEach(function(b){
@@ -611,11 +648,19 @@ $$('#revGrp button').forEach(function(b){
     draw(0);
   });
 });
+$('#scBtn').addEventListener('click',function(){
+  scenes=!scenes;$('#scBtn').classList.toggle('on',scenes);
+  applyMode();fit();
+});
+$('#zhBtn').addEventListener('click',function(){
+  zhSay=zhSay==='zh'?'en':'zh';
+  $('#zhBtn').classList.toggle('on',zhSay==='en');
+  $('#zhBtn').innerHTML=zhSay==='en'?'🔤 點中文唸 英文':'🔤 點中文唸 中文';
+});
 $('#play').addEventListener('click',autoPlay);
 $('#sayBtn').addEventListener('click',function(){var s=sentOf();say(s|| '')});
 $('#slowBtn').addEventListener('click',function(){
   SLOW=!SLOW;$('#slowBtn').classList.toggle('on',SLOW);
-  $('#slowBtn').innerHTML=SLOW?'🐢 放慢 開':'🐢 放慢 關';
 });
 window.addEventListener('resize',function(){fit()});
 draw(0);

@@ -72,6 +72,16 @@ async function cardsPage(p, f, vp, e) {
       red: !!document.querySelector('#cardIn .ap'),
       swap: !!document.getElementById('swapGo'),
       sub: document.querySelectorAll('#cardIn .sub').length,
+      scene: (function () {
+        const sc = document.querySelector('#cardIn .scene');
+        if (!sc) return 0;
+        return (sc.offsetParent !== null || sc.getClientRects().length) ? 2 : 1;
+      })(),
+      k: parseFloat(card.getAttribute('data-k') || '1'),
+      en: document.querySelectorAll('#cardIn [data-en]').length,
+      zhLbl: (document.getElementById('zhBtn') || {}).textContent || '',
+      zhOn: !!(document.getElementById('zhBtn') || {}).classList &&
+            document.getElementById('zhBtn').classList.contains('on'),
       txt: (document.getElementById('cardIn') || {}).innerText || ''
     };
   }, OV.toString());
@@ -90,8 +100,54 @@ async function cardsPage(p, f, vp, e) {
     if (i === N - 1 && (!s.nd || s.pd)) e.push('最後一張箭頭狀態錯');
     if (s.red) anyRed = true;
     if (s.txt.indexOf('\u2019') >= 0 && !s.red) e.push('第' + (i + 1) + '張的撇號 ’ 沒有上紅色');
+    if (s.scene === 0) e.push('第' + (i + 1) + '張沒有情境');
+    if (s.scene === 2) e.push('第' + (i + 1) + '張情境沒關起來就跑出來了');
   }
   if (!anyRed) e.push('整本找不到紅色的撇號 ’');
+  /* 🎞 情境：打開以後每一張都要看得見、不溢出、而且不可以縮到最後一排看不清楚 */
+  await rewind(p, N);
+  await p.click('#scBtn'); await p.waitForTimeout(320);
+  for (let i = 0; i < N; i++) {
+    if (i && !await fwd(p)) break;
+    const s = await snap(); acts++;
+    if (s.scene !== 2) e.push('情境開著，第' + (i + 1) + '張沒有出現情境');
+    if (s.ox > 0) e.push('情境開著，第' + (i + 1) + '張橫向溢出 ' + s.ox);
+    if (s.oy > 0) e.push('情境開著，第' + (i + 1) + '張縱向溢出 ' + s.oy);
+    if (s.spill > 2) e.push('情境開著，第' + (i + 1) + '張內容超出卡片 ' + s.spill + 'px');
+    if (s.hit) e.push('情境開著，第' + (i + 1) + '張 ' + s.hit);
+    if (s.k < 0.62) e.push('情境開著，第' + (i + 1) + '張被縮到 ' + s.k + '（最後一排會看不清楚）');
+  }
+  await p.click('#scBtn'); await p.waitForTimeout(320);
+  if ((await snap()).scene === 2) e.push('情境按第二次沒有關掉'); acts++;
+  await rewind(p, N);
+
+  /* 🔤 點中文唸：中文 ↔ 英文 */
+  {
+    const a = await snap();
+    if (a.zhOn) e.push('「點中文唸」一開始就不是中文');
+    await p.click('#zhBtn'); await p.waitForTimeout(220);
+    const b = await snap(); acts++;
+    if (!b.zhOn || b.zhLbl.indexOf('英文') < 0) e.push('按了「點中文唸」沒有切到英文（' + b.zhLbl + '）');
+    await p.click('#zhBtn'); await p.waitForTimeout(220);
+    const c2 = await snap(); acts++;
+    if (c2.zhOn || c2.zhLbl.indexOf('中文') < 0) e.push('「點中文唸」切不回中文（' + c2.zhLbl + '）');
+  }
+
+  /* 中文那一行要真的帶著對應的英文，不然切到「唸英文」會沒聲音 */
+  {
+    let noEn = [];
+    await rewind(p, N);
+    for (let i = 0; i < N; i++) {
+      if (i && !await fwd(p)) break;
+      const s = await snap();
+      const hasZh = await p.$$eval('#cardIn [data-zh]', a => a.length);
+      if (hasZh > 0 && s.en === 0) noEn.push(i + 1);
+    }
+    acts++;
+    if (noEn.length) e.push('第 ' + noEn.join('、') + ' 張的中文沒有帶對應的英文');
+    await rewind(p, N);
+  }
+
   /* 停 6 秒不可自動換頁 */
   const b4 = (await snap()).on; await p.waitForTimeout(6000);
   if ((await snap()).on !== b4) e.push('停 6 秒自動換頁'); acts++;

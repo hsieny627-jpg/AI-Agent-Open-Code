@@ -73,6 +73,19 @@ const CSS = `
  font-size:clamp(11.5px,1.7vh,15px);color:#4D4D4D;letter-spacing:.08em}
 #tapHint.off{display:none}
 
+/* ── 真實情境（老師按「🎞 情境」才出現）── */
+.scene{display:none;flex-direction:column;align-items:center;gap:clamp(3px,.7vh,8px);
+ width:100%;max-width:840px;margin-bottom:clamp(8px,1.6vh,18px);
+ background:#080B0E;border:1px solid #1E2831;border-radius:16px;
+ padding:clamp(8px,1.5vh,16px) clamp(10px,1.6vw,22px)}
+#card.sc .scene{display:flex}
+.scene .sat{font-size:clamp(11.5px,1.75vh,16px);color:#6F8496;letter-spacing:.1em}
+.scene .spic{font-size:clamp(19px,3.4vh,36px);line-height:1.25;text-align:center;
+ word-break:break-word}
+.scene .suse{font-size:clamp(12.5px,2vh,19px);color:var(--body);line-height:1.5;
+ text-align:center;max-width:40ch}
+#card.m-ic .scene .suse,#card.m-ic .scene .sat{display:none}
+
 /* ── 替換字 ── */
 .subs{margin-top:clamp(10px,2vh,20px);width:100%;display:flex;flex-direction:column;
  gap:clamp(4px,.8vh,8px);align-items:center}
@@ -150,6 +163,7 @@ const CSS = `
 const JS = `
 var CARDS=__CARDS__, UNIT=__UNIT__, SUB=__SUB__;
 var i=0, mode='all', icons=true, reveal='word', step=0, playing=null;
+var scenes=false, zhSay='zh';   /* zhSay：點中文要唸中文還是唸對應的英文 */
 
 var card=$('#card'), dots=$('#dots');
 dots.innerHTML=CARDS.map(function(){return '<i></i>'}).join('');
@@ -168,6 +182,12 @@ function plain(tk){return tk.map(function(t){return t.tight?t.en:' '+t.en}).join
 function lineHTML(tk){
   return '<div class="wrap"><div class="line">'+tk.map(tkHTML).join('')+'</div></div>';
 }
+function sceneHTML(c){
+  if(!c.scene)return '';
+  return '<div class="scene"><div class="sat">'+c.scene.at+'</div>'+
+   '<div class="spic">'+ap(c.scene.pic)+'</div>'+
+   '<div class="suse">💡 '+ap(c.scene.use)+'</div></div>';
+}
 function subsHTML(kind){
   var s=SUB[kind];if(!s)return '';
   var row=function(list,lbl,cls){
@@ -185,27 +205,29 @@ function draw(dir){
   step=0;
   if(c.type==='sent'){
     kind='句型';
-    h=lineHTML(c.tk)+'<div class="full" data-zh="'+esc(c.zh)+'">'+c.zh+'</div>'+
+    h=lineHTML(c.tk)+'<div class="full" data-zh="'+esc(c.zh)+'" data-en="'+esc(c.say||plain(c.tk))+'">'+c.zh+'</div>'+
       (c.slot?subsHTML(c.slot):'');
   } else if(c.type==='eq'){
     kind='縮寫';
     h='<div class="eq">'+lineHTML(c.a)+'<div class="eqmark">＝</div>'+lineHTML(c.b)+'</div>'+
-      '<div class="full" data-zh="'+esc(c.zh)+'">'+c.zh+'</div>'+
+      '<div class="full" data-zh="'+esc(c.zh)+'" data-en="'+esc(plain(c.b))+'">'+c.zh+'</div>'+
       (c.note?'<div class="note">'+ap(c.note)+'</div>':'');
   } else if(c.type==='order'){
     kind='中英語序';
-    var chip=function(x,n){return '<button class="chip '+x[2]+'" data-n="'+n+'" data-say="'+esc(x[0])+'">'+
+    var mate=function(col){for(var k=0;k<c.enRow.length;k++)if(c.enRow[k][2]===col)return c.enRow[k][0];return ''};
+    var chip=function(x,n,zh){return '<button class="chip '+x[2]+'" data-n="'+n+'" data-say="'+esc(x[0])+'"'+
+      (zh?' data-zh="'+esc(x[0])+'" data-en="'+esc(mate(x[2]))+'"':'')+'>'+
       x[0]+'<span class="ci">'+x[1]+'</span></button>'};
     h='<div class="ord">'+
       '<div class="ordrow"><span class="cap">英文</span>'+c.enRow.map(function(x,n){return chip(x,n)}).join('')+'</div>'+
-      '<div class="ordrow"><span class="cap">中文</span>'+c.zhRow.map(function(x,n){return chip(x,n)}).join('')+'</div>'+
+      '<div class="ordrow"><span class="cap">中文</span>'+c.zhRow.map(function(x,n){return chip(x,n,1)}).join('')+'</div>'+
       '</div><div class="note">'+ap(c.note)+'</div>';
   } else if(c.type==='focus'){
     kind='秒懂重點';
     h='<div class="focus"><h2>'+ap(c.title)+'</h2>'+c.rows.map(function(r){
       return '<div class="frow"><span class="fi">'+r[2]+'</span>'+
         '<span class="fa" data-say="'+esc(r[0])+'">'+ap(r[0])+'</span>'+
-        '<span class="fb">'+ap(r[1])+'</span>'+
+        '<span class="fb" data-zh="'+esc(r[1])+'" data-en="'+esc(r[0])+'">'+ap(r[1])+'</span>'+
         '<span class="fc">'+ap(r[3]||'')+'</span></div>'}).join('')+
       '</div><div class="note">'+ap(c.note)+'</div>';
   } else if(c.type==='pair'){
@@ -213,23 +235,23 @@ function draw(dir){
     h='<div class="pair">'+
       '<div class="bub q"><span class="bi">'+c.qic+'</span><span class="bt">'+
         '<span class="be" data-say="'+esc(c.q)+'">'+ap(c.q)+'</span>'+
-        '<span class="bz" data-zh="'+esc(c.qzh)+'">'+c.qzh+'</span></span></div>'+
+        '<span class="bz" data-zh="'+esc(c.qzh)+'" data-en="'+esc(c.q)+'">'+c.qzh+'</span></span></div>'+
       '<div class="bub a"><span class="bi">'+c.aic+'</span><span class="bt">'+
         '<span class="be" data-say="'+esc(c.a)+'">'+ap(c.a)+'</span>'+
-        '<span class="bz" data-zh="'+esc(c.azh)+'">'+c.azh+'</span></span></div>'+
+        '<span class="bz" data-zh="'+esc(c.azh)+'" data-en="'+esc(c.a)+'">'+c.azh+'</span></span></div>'+
       '</div>';
   } else if(c.type==='swap'){
     kind='變身術';
     c._cur=c._cur||'st';
     h='<div class="swapbox">'+lineHTML(c[c._cur])+
-      '<div class="full" data-zh="'+esc(c._cur==='st'?c.stzh:c.quzh)+'">'+
+      '<div class="full" data-zh="'+esc(c._cur==='st'?c.stzh:c.quzh)+'" data-en="'+esc(plain(c[c._cur]))+'">'+
         (c._cur==='st'?c.stzh:c.quzh)+'</div>'+
       '<button class="swapbtn" id="swapGo">🔄 '+(c._cur==='st'?'變成問句':'變回直述句')+'</button>'+
       '<div class="swaphint">'+ap(c.note)+'</div>'+
       (c.slot?subsHTML(c.slot):'')+'</div>';
   }
   card.className='';
-  card.innerHTML='<span class="kind">'+kind+'</span><div id="cardIn">'+h+
+  card.innerHTML='<span class="kind">'+kind+'</span><div id="cardIn">'+sceneHTML(c)+h+
     '<div id="tapHint" class="off">點卡片：一次出現一個字</div></div>';
   applyMode();
   fit();
@@ -258,13 +280,22 @@ function fit(){
   var availH=card.clientHeight-2*parseFloat(getComputedStyle(card).paddingTop||0);
   var needH=inn.scrollHeight, availW=card.clientWidth, needW=inn.scrollWidth;
   var k=Math.min(availH>0&&needH>availH?availH/needH:1, availW>0&&needW>availW?availW/needW:1);
-  if(k<1)inn.style.transform='scale('+Math.max(.3,k-0.01)+')';
+  var kk=k<1?Math.max(.3,k-0.01):1;
+  if(k<1)inn.style.transform='scale('+kk+')';
+  card.setAttribute('data-k',kk.toFixed(3));
 }
 
 function applyMode(){
-  card.classList.remove('m-all','m-en','m-zh','m-full','m-ic','noic');
+  card.classList.remove('m-all','m-en','m-zh','m-full','m-ic','noic','sc');
   card.classList.add('m-'+mode);
   if(!icons)card.classList.add('noic');
+  if(scenes)card.classList.add('sc');
+}
+/* 點中文：依開關唸中文，或唸那一句對應的英文 */
+function sayPair(el){
+  var en=el.getAttribute('data-en');
+  if(zhSay==='en'&&en){say(en);return}
+  sayZh(el.getAttribute('data-zh'));
 }
 
 /* ---------- 逐字動畫：一次只呈現一個重點 ---------- */
@@ -421,15 +452,19 @@ card.addEventListener('click',function(e){
     revealNext(false);return}
   var chip=t.closest?t.closest('.chip'):null;
   if(chip){var w=chip.getAttribute('data-say');
-    if(/[A-Za-z]/.test(w))say(w);else sayZh(w);
+    if(/[A-Za-z]/.test(w))say(w);
+    else if(chip.getAttribute('data-en'))sayPair(chip);
+    else sayZh(w);
     chip.style.setProperty('--dx','-40px');chip.classList.add('fly');
     setTimeout(function(){chip.classList.remove('fly')},960);return}
   var zh=t.closest?t.closest('[data-zh]'):null;
-  if(zh){sayZh(zh.getAttribute('data-zh'));return}
+  if(zh){sayPair(zh);return}
   var tk=t.closest?t.closest('.tk'):null;
   if(tk&&!tk.classList.contains('hide')){
     var w2=tk.getAttribute('data-say');
-    if(mode==='zh'||mode==='ic'){sayZh($('.zh',tk)?$('.zh',tk).textContent:w2)}
+    if(mode==='zh'||mode==='ic'){
+      if(zhSay==='en'&&/[A-Za-z]/.test(w2))say(w2);
+      else sayZh($('.zh',tk)?$('.zh',tk).textContent:w2)}
     else if(/[A-Za-z]/.test(w2))say(w2);
     return}
   var sy=t.closest?t.closest('[data-say]'):null;
@@ -447,7 +482,7 @@ $$('#modeGrp button').forEach(function(b){
 });
 $('#icBtn').addEventListener('click',function(){
   icons=!icons;$('#icBtn').classList.toggle('on',icons);
-  $('#icBtn').innerHTML=icons?'🖼 圖示 開':'🖼 圖示 關';
+  $('#icBtn').innerHTML='🖼 圖示';
   applyMode();fit();
 });
 $$('#revGrp button').forEach(function(b){
@@ -458,11 +493,19 @@ $$('#revGrp button').forEach(function(b){
     draw(0);
   });
 });
+$('#scBtn').addEventListener('click',function(){
+  scenes=!scenes;$('#scBtn').classList.toggle('on',scenes);
+  applyMode();fit();
+});
+$('#zhBtn').addEventListener('click',function(){
+  zhSay=zhSay==='zh'?'en':'zh';
+  $('#zhBtn').classList.toggle('on',zhSay==='en');
+  $('#zhBtn').innerHTML=zhSay==='en'?'🔤 點中文唸 英文':'🔤 點中文唸 中文';
+});
 $('#play').addEventListener('click',autoPlay);
 $('#sayBtn').addEventListener('click',function(){var s=sentOf();say(s|| '')});
 $('#slowBtn').addEventListener('click',function(){
   SLOW=!SLOW;$('#slowBtn').classList.toggle('on',SLOW);
-  $('#slowBtn').innerHTML=SLOW?'🐢 放慢 開':'🐢 放慢 關';
 });
 window.addEventListener('resize',function(){fit()});
 draw(0);
@@ -483,14 +526,16 @@ function page(unit, cards, title, other, otherName) {
   <button data-m="full">整句中文</button>
   <button data-m="ic">只圖示</button>
  </span>
- <button id="icBtn" class="on">🖼 圖示 開</button>
+ <button id="icBtn" class="on">🖼 圖示</button>
+ <button id="scBtn">🎞 情境</button>
  <span class="grp" id="revGrp">
   <button data-r="word" class="on">🎬 逐字</button>
   <button data-r="whole">📄 整句</button>
  </span>
  <button id="play">▶ 自動播</button>
  <button id="sayBtn">🔊 念一次</button>
- <button id="slowBtn">🐢 放慢 關</button>
+ <button id="zhBtn">🔤 點中文唸 中文</button>
+ <button id="slowBtn">🐢 放慢</button>
  <a href="${other}">${otherName}</a>
  <a href="index.html">🏠 首頁</a>
 </nav>
