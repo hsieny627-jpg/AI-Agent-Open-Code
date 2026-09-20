@@ -547,7 +547,7 @@ $('#quit').addEventListener('click',function(){
 $('#slowBtn').addEventListener('click',function(){
   SLOW=!SLOW;this.classList.toggle('on',SLOW);this.innerHTML=SLOW?'🐢 放慢 開':'🐢 放慢 關'});
 $('#muteBtn').addEventListener('click',function(){
-  MUTE=!MUTE;this.classList.toggle('on',MUTE);this.innerHTML=MUTE?'🔇 靜音 開':'🔔 音效 開'});
+  MUTE=!MUTE;this.classList.toggle('on',!MUTE);this.innerHTML=MUTE?'🔇 音效 N':'🔊 音效 Y'});
 hub();
 `;
 
@@ -588,7 +588,7 @@ const body = `
 <nav id="bar">
  <button id="quit">⬅ 回遊戲大廳</button>
  <button id="slowBtn">🐢 放慢 關</button>
- <button id="muteBtn">🔔 音效 開</button>
+ <button id="muteBtn" class="on">🔊 音效 Y</button>
  <a href="index.html">🏠 首頁</a>
 </nav>
 

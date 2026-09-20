@@ -262,7 +262,7 @@ $('#go').addEventListener('click',start);
 $('#slowBtn').addEventListener('click',function(){
   SLOW=!SLOW;this.classList.toggle('on',SLOW);this.innerHTML=SLOW?'🐢 放慢 開':'🐢 放慢 關'});
 $('#muteBtn').addEventListener('click',function(){
-  MUTE=!MUTE;this.classList.toggle('on',MUTE);this.innerHTML=MUTE?'🔇 靜音 開':'🔔 音效 開'});
+  MUTE=!MUTE;this.classList.toggle('on',!MUTE);this.innerHTML=MUTE?'🔇 音效 N':'🔊 音效 Y'});
 `;
 
 const body = `
@@ -314,7 +314,7 @@ const body = `
  <button id="pause">⏸ 暫停</button>
  <button id="early">✋ 提前作答</button>
  <button id="slowBtn">🐢 放慢 關</button>
- <button id="muteBtn">🔔 音效 開</button>
+ <button id="muteBtn" class="on">🔊 音效 Y</button>
  <a href="index.html">🏠 首頁</a>
 </nav>
 

@@ -71,7 +71,16 @@ async function cardsPage(p, f, vp, e) {
       hidden: document.querySelectorAll('#cardIn .tk.hide').length,
       red: !!document.querySelector('#cardIn .ap'),
       swap: !!document.getElementById('swapGo'),
-      sub: document.querySelectorAll('#cardIn .sub').length,
+      sub: document.querySelectorAll('#card .sub').length,
+      subTop: (function(){var b=document.querySelector('#card .subs');
+        return b?Math.round(b.getBoundingClientRect().top):0})(),
+      lineBot: (function(){var l=document.querySelector('#cardIn .line');
+        return l?Math.round(l.getBoundingClientRect().bottom):0})(),
+      fullEn: (function(){var f=document.querySelector('#cardIn .full');
+        return f?(f.getAttribute('data-en')||''):''})(),
+      apos: (function(){var a=[].slice.call(document.querySelectorAll('#cardIn .tk'))
+        .filter(function(t){var e=t.querySelector('.en');return e&&/^[\u2019']s$/.test(e.textContent)});
+        return a.map(function(t){return t.getAttribute('data-say')}).join('|')})(),
       scene: (function () {
         const sc = document.querySelector('#cardIn .scene');
         if (!sc) return 0;
@@ -120,6 +129,25 @@ async function cardsPage(p, f, vp, e) {
   await p.click('#scBtn'); await p.waitForTimeout(320);
   if ((await snap()).scene === 2) e.push('情境按第二次沒有關掉'); acts++;
   await rewind(p, N);
+
+  /* 秒懂動畫：跳出來的東西一定要「跳完」，不可以卡在半透明或整個沒出現 */
+  {
+    const faded = () => p.evaluate(() => {
+      const sel = '#cardIn .frow,#cardIn .bub,#cardIn .spic .sg,#cardIn .spic .sar,#cardIn .ordrow.en .chip';
+      return [].slice.call(document.querySelectorAll(sel))
+        .filter(x => parseFloat(getComputedStyle(x).opacity) < 0.9)
+        .map(x => (x.className || x.tagName) + '@' + getComputedStyle(x).opacity);
+    });
+    await p.click('#scBtn'); await p.waitForTimeout(320);   /* 情境打開，連情境畫面一起量 */
+    for (let i = 0; i < N; i++) {
+      if (i && !await fwd(p)) break;
+      await p.waitForTimeout(1500);                          /* 等動畫跑完 */
+      const bad = await faded(); acts++;
+      if (bad.length) e.push('第' + (i + 1) + '張的動畫沒有跑完，東西還是看不見：' + bad.join('、'));
+    }
+    await p.click('#scBtn'); await p.waitForTimeout(260);
+    await rewind(p, N);
+  }
 
   /* 🔤 點中文唸：中文 ↔ 英文 */
   {
@@ -170,39 +198,79 @@ async function cardsPage(p, f, vp, e) {
   const s3 = await snap(); acts++;
   if (s3.hidden > 0) e.push('整句模式還有字是藏起來的');
 
-  /* 四種切換按鈕真的有效 */
+  /* 四個 Y/N 開關：英文／中文／圖示／整句中文 各自獨立，按下去真的有效 */
   const vis = () => p.evaluate(() => {
     const on = sel => [].slice.call(document.querySelectorAll('#cardIn ' + sel))
       .some(x => x.offsetParent !== null || x.getClientRects().length);
     return { en: on('.tk .en'), zh: on('.tk .zh'), ic: on('.tk .ic'), full: on('.full') };
   });
-  const want = { all: [1, 1, 1, 1], en: [1, 0, 0, 0], zh: [0, 1, 0, 0], full: [0, 0, 0, 1], ic: [0, 0, 1, 0] };
-  for (const m of ['all', 'en', 'zh', 'full', 'ic']) {
-    await p.click('#modeGrp button[data-m="' + m + '"]'); await p.waitForTimeout(260);
-    const v = await vis(); acts++;
-    const got = [v.en ? 1 : 0, v.zh ? 1 : 0, v.ic ? 1 : 0, v.full ? 1 : 0];
-    if (got.join() !== want[m].join()) e.push('「' + m + '」模式顯示錯：英' + got[0] + ' 中' + got[1] + ' 圖' + got[2] + ' 整句' + got[3]);
-    const o = await snap();
-    if (o.ox > 0 || o.oy > 0 || o.spill > 2) e.push('「' + m + '」模式溢出 ' + o.ox + '/' + o.oy + '/' + o.spill);
+  const YN = [['#bEn', 'en', '英文'], ['#bZh', 'zh', '中文'], ['#bIc', 'ic', '圖示'], ['#bFull', 'full', '整句中文']];
+  {
+    const v0 = await vis(); acts++;
+    for (const [id, k, name] of YN) {
+      const lbl0 = await p.$eval(id, b => b.textContent.trim());
+      if (!/Y$/.test(lbl0)) e.push(name + ' 一開始不是 Y（' + lbl0 + '）');
+      await p.click(id); await p.waitForTimeout(280);
+      const v1 = await vis(); acts++;
+      const lbl1 = await p.$eval(id, b => b.textContent.trim());
+      if (!/N$/.test(lbl1)) e.push('按了' + name + '沒有變成 N（' + lbl1 + '）');
+      if (v0[k] && v1[k]) e.push(name + ' 按成 N 以後還看得見');
+      for (const [, k2, n2] of YN) if (k2 !== k && v0[k2] && !v1[k2])
+        e.push('關掉' + name + '，' + n2 + '也跟著不見了（四個開關要各自獨立）');
+      const o = await snap();
+      if (o.ox > 0 || o.oy > 0 || o.spill > 2) e.push(name + ' 關掉以後溢出 ' + o.ox + '/' + o.oy + '/' + o.spill);
+      await p.click(id); await p.waitForTimeout(280);
+      const v2 = await vis(); acts++;
+      if (v0[k] && !v2[k]) e.push(name + ' 切回 Y 以後沒有回來');
+    }
   }
-  await p.click('#modeGrp button[data-m="all"]'); await p.waitForTimeout(220);
 
-  /* 圖示開關 */
-  await p.click('#icBtn'); await p.waitForTimeout(240);
-  if ((await vis()).ic) e.push('關掉圖示以後圖示還在'); acts++;
-  await p.click('#icBtn'); await p.waitForTimeout(240);
-  if (!(await vis()).ic) e.push('打開圖示以後圖示沒回來'); acts++;
+  /* 🔊 音效 Y/N（使用者指定：太吵要關得掉） */
+  {
+    const l0 = await p.$eval('#muteBtn', b => b.textContent.trim());
+    await p.click('#muteBtn'); await p.waitForTimeout(200);
+    const l1 = await p.$eval('#muteBtn', b => b.textContent.trim()); acts++;
+    const m = await p.evaluate(() => MUTE);
+    if (!m) e.push('按了音效按鈕沒有靜音');
+    if (!/N$/.test(l1)) e.push('音效按鈕沒有變成 N（' + l1 + '）');
+    await p.click('#muteBtn'); await p.waitForTimeout(200);
+    if (await p.evaluate(() => MUTE)) e.push('音效按鈕關不回來'); acts++;
+    if ((await p.$eval('#muteBtn', b => b.textContent.trim())) !== l0) e.push('音效按鈕標示回不去');
+  }
 
-  /* 替換字：點下去要真的換掉句子裡的字 */
+  /* 's 的發音要是 /z/：data-say 必須是「前一個字＋'s」，不是單獨一個 's */
+  {
+    await rewind(p, N);
+    let bad = [];
+    for (let i = 0; i < N; i++) {
+      if (i && !await fwd(p)) break;
+      const s0 = await snap();
+      if (!s0.apos) continue;
+      for (const w of s0.apos.split('|'))
+        if (!/[A-Za-z]{2,}['\u2019]s$/.test(w)) bad.push((i + 1) + ':' + w);
+    }
+    acts++;
+    if (bad.length) e.push('這幾張的 ’s 發音不是 /z/（' + bad.join('、') + '）');
+    await rewind(p, N);
+  }
+
+  /* 替換字：點下去要真的換掉句子、發音也要跟著換，而且要待在句子的下方 */
   let g2 = 0;
   while ((await snap()).sub === 0 && g2++ < N) { if (!await fwd(p)) break; }
   if ((await snap()).sub > 0) {
-    const before = (await snap()).txt;
-    const w = await p.$eval('#cardIn .sub:not(.on)', b => b.getAttribute('data-w'));
-    await p.click('#cardIn .sub:not(.on)'); await p.waitForTimeout(600);
+    const b0 = await snap();
+    const w = await p.$eval('#card .sub:not(.on)', b => b.getAttribute('data-w'));
+    if (b0.subTop && b0.lineBot && b0.subTop < b0.lineBot)
+      e.push('替換字跑到英文句子上面去了（' + b0.subTop + ' < ' + b0.lineBot + '）');
+    await p.click('#card .sub:not(.on)'); await p.waitForTimeout(600);
     const after = await snap(); acts++;
-    if (after.txt === before) e.push('點替換字沒有換掉句子');
+    if (after.txt === b0.txt) e.push('點替換字沒有換掉句子');
     if (after.txt.indexOf(w) < 0) e.push('替換字 ' + w + ' 沒有進到句子裡');
+    if (after.fullEn.indexOf(w) < 0)
+      e.push('換了 ' + w + '，整句的發音沒有跟著換（還是「' + after.fullEn + '」）');
+    const spoken = await p.evaluate(() => sentOf());
+    if (spoken.indexOf(w) < 0)
+      e.push('換了 ' + w + '，點卡片唸出來的還是舊句子（' + spoken + '）');
     if (after.spill > 2 || after.ox > 0) e.push('換了替換字以後溢出');
   } else e.push('整本找不到替換字');
 
