@@ -207,3 +207,74 @@ https://hsieny627-jpg.github.io/AI-Agent-Open-Code/sentences/
 
 根目錄首頁第 8 張卡「💬 英文句型　秒懂教室」連過去。
 **製作環境連不到 github.io**（上層網路政策擋掉），所以線上結果由老師自己開一次確認。
+
+## 開新對話怎麼開始最省（照這個做）
+
+**第一句就這樣講：**
+
+> 照 sentences/CLAUDE.md。這次要改的地方：
+> 1. …
+> 2. …
+> （一次把所有修改點列完）
+
+這份規格會自動載入，**不必重述背景、不必叫 AI 先讀檔案、不必再解釋這個網站是什麼**。
+
+### 省額度的五件事（照重要性排）
+
+1. **一次把所有修改點列完**，不要一條一條丟。
+   對話愈長，之後每一次回應都要把前面全部重讀一遍——這是最貴的一筆。
+2. **指名要改哪一個東西**。講「Unit 2 第 3 張」「暖身題第 5 題」「記憶配對」
+   「情境」「替換字」，模型直接改那一個地方；講得模糊它會去翻一堆檔案。
+3. **改完只量改到的那幾頁**：`node sentences/_verify.js unit1.html`。
+   全量五頁 ✕ 兩尺寸要跑 ~8 分鐘。**只有改到 `_shared.js` 才需要全量**（它影響全部五頁）。
+4. **不要在量測跑的時候切分支**（`git checkout` 會把檔案抽走，量測當場白跑）。
+   順序永遠是：改完 → build → 量測拿到結果 → 才 commit／merge。
+5. **做完一個主題就開新對話。**
+
+### 四個入口，不要碰 `.html`
+
+```bash
+node sentences/_build.js         # 一次重建五頁（改 _shared.js 用這個）
+node sentences/_build_cards.js   # 只重建 unit1 / unit2
+node sentences/_build_quiz.js    # 只重建 warmup
+node sentences/_build_games.js   # 只重建 games
+node sentences/_build_home.js    # 只重建 sentences/index.html
+node sentences/_build_kahoot.js  # 根目錄 kahoot xlsx ＋ 上架說明
+```
+
+### 改哪一種東西 → 動哪一個檔（查這張表就好）
+
+| 想改的東西 | 改這個檔 | 然後跑 |
+|---|---|---|
+| 句子、逐字中文、圖示、底色、替換字 | `_data.js` 的 `U1`／`U2`／`SUB` | `_build_cards.js` |
+| **情境**（場景／畫面／什麼時候用） | `_data.js` 最下面的 `SC1`／`SC2` | `_build_cards.js` |
+| 暖身題的題目、選項、秒懂說明、挑戰題 | `_quiz_data.js` | `_build_quiz.js` ＋ `_build_kahoot.js` |
+| 遊戲題庫、玩法名稱與規則說明 | `_game_data.js` | `_build_games.js` |
+| 顏色、字體、按鈕列、發音、音效 | `_shared.js` | `_build.js`（五頁全部） |
+| 字卡的版面與互動（模式、逐字、變身、情境） | `_build_cards.js` | 它自己 |
+| 遊戲的玩法邏輯、驚喜事件 | `_build_games.js` | 它自己 |
+
+## 待辦（下一個對話可以直接接手）
+
+**只有老師做得到的（AI 做不到，不要假裝做完了）**
+
+1. **在真的 iPad Safari 上點一遍**。製作環境只能在電腦上模擬 iPad 的兩種尺寸，
+   **沒有真 iPad**。要看的是：發音清不清楚、`🐢 放慢` 有沒有用、
+   `🎞 情境` 和 `🔤 點中文唸` 按起來順不順、左右兩條邊翻頁順不順。
+2. **開一次線上網址確認**：`https://hsieny627-jpg.github.io/AI-Agent-Open-Code/sentences/`
+   製作環境**連不到 github.io**（上層網路政策擋掉），線上結果 AI 驗證不了。
+3. **Kahoot 上架**。要登入個人帳號，AI 上不去。
+   匯入檔 `kahoot_sentences_22.xlsx`，步驟與檢驗清單在
+   `kahoot_sentences_22_題目與上架說明.md`。
+
+**課堂實測後才知道要不要改的（先不要動，等老師回報）**
+
+4. 情境的文字會不會太長／三年級看不看得懂。
+5. 遊戲難度：2 分鐘會不會太短、驚喜事件跳太頻繁還是太少。
+6. 暖身題 22 題一節課做不做得完（每題 50 秒 ＋ 討論，滿場約 20 分鐘）。
+
+**已知沒做、而且是刻意不做的（不要當成漏掉去補）**
+
+7. 情境用 emoji 不是照片——離線要能上課，而且沒有版權問題。使用者 2026-09-20 同意。
+8. 遊戲成績只存在這台 iPad 的 `localStorage`，**沒有排行榜、沒有上傳**。
+9. 發音走瀏覽器內建語音，**沒有預錄音檔**。
