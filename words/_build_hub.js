@@ -32,11 +32,13 @@ const STEPS = [
    d: '主課程：17 站「學習」＋「遊戲」兩種模式' },
  { n: '3', ic: '🃏', t: '17 張單字卡', href: '#cards',
    d: '一個單字一張卡，翻卡換頁。點這裡展開' },
- { n: '4', ic: '🧩', t: '單字結構', href: 'words/parts.html',
+ { n: '4', ic: '🌳', t: 'family tree 家庭樹', href: 'words/family-tree.html',
+   d: '一次只亮一個家人。六種顯示切換：圖示／中文／英文／英＋圖／英＋中／全部' },
+ { n: '5', ic: '🧩', t: '單字結構', href: 'words/parts.html',
    d: 'grand ＝ 大、hus ＝ house、-ther 是家人字的尾巴' },
- { n: '5', ic: '📜', t: '單字故事', href: 'words/why.html',
+ { n: '6', ic: '📜', t: '單字故事', href: 'words/why.html',
    d: '家人單字為什麼長這樣，一個字一幕' },
- { n: '6', ic: '🎬', t: 'About My Family', href: 'about-my-family/index.html',
+ { n: '7', ic: '🎬', t: 'About My Family', href: 'about-my-family/index.html',
    d: '用英文介紹我的家人（影片）' }
 ];
 
@@ -45,7 +47,8 @@ const EXTRA = [
  { t: '單字故事 ②', href: 'words/why-2.html' },
  { t: '更多字的故事', href: 'words/why-more.html' },
  { t: 'daughter 的 gh', href: 'words/daughter-gh.html' },
- { t: '哥哥還是弟弟', href: 'words/older-younger.html' }
+ { t: '哥哥還是弟弟', href: 'words/older-younger.html' },
+ { t: '家庭樹 進階版（親戚）', href: 'words/family-tree-2.html' }
 ];
 const TEACHER = [
  { t: '📋 Kahoot 20 題與上架說明',
@@ -129,7 +132,7 @@ footer .sep{color:#2A2A2A;font-size:12px}
 <body>
 <header>
  <h1>家人單字　首頁</h1>
- <div class="sub">照順序上，從 1 到 6</div>
+ <div class="sub">照順序上，從 1 到 7</div>
  <div class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></div>
 </header>
 

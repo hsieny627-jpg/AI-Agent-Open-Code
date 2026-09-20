@@ -34,7 +34,9 @@ const VS = 'aæɑʌəɚɜɝeɛɪioɔʊuɒ';
 
 const RAW = {
 /* ── 17 張單字卡 ── */
- family:      'f|f|f a|æ|æ m|m|m / i|ə|ə / l|l|l y|i|ɪ',
+ /* 使用者 2026-09-20 指定切成 fa．mi．ly（開音節切法，母音後面切）。
+    辭典的連字號斷法是 fam·i·ly（那是排版斷行用的），出處卡裡兩種都寫清楚。 */
+ family:      'f|f|f a|æ|æ / m|m|m i|ə|ə / l|l|l y|i|ɪ',
  parent:      'p|p|p a|e|ɛ r|r|r / e|ə|ə n|n|n t|t|t',
  mother:      'm|m|m o|ʌ|ʌ / th|ð|ð er|ɚ|ɚ',
  father:      'f|f|f a|ɑː|ɑ / th|ð|ð er|ɚ|ɚ',
@@ -68,8 +70,23 @@ const RAW = {
  grandpa:     'g|ɡ|ɡ r|r|r a|æ|æ n|n|n d|d|d / p|p|p a|ɑː|ɑ',
  grandma:     'g|ɡ|ɡ r|r|r a|æ|æ n|n|n d|d|d / m|m|m a|ɑː|ɑ',
  auntie:      'au|æ|æ n|n|n / t|t|t ie|i|ɪ',
+ sis:         's|s|s i|ɪ|ɪ s|s|s',
+ bro:         'b|b|b r|r|r o|oʊ|o',
+ me:          'm|m|m e|iː|i',
+ tree:        't|t|t r|r|r ee|iː|i',
+ son:         's|s|s o|ʌ|ʌ n|n|n',
  grand:       'g|ɡ|ɡ r|r|r a|æ|æ n|n|n d|d|d',
- house:       'h|h|h ou|aʊ|aʊ s|s|s e|-|-'
+ house:       'h|h|h ou|aʊ|aʊ s|s|s e|-|-',
+
+/* ── 更多字的故事那一頁 ── */
+ tea:         't|t|t ea|iː|i',
+ ketchup:     'k|k|k e|e|ɛ tch|tʃ|tʃ / u|ə|ə p|p|p',
+ hamburger:   'h|h|h a|æ|æ m|m|m / b|b|b ur|ɜːr|ɝ / g|ɡ|ɡ er|ɚ|ɚ',
+ sandwich:    's|s|s a|æ|æ n|n|n d|d|d / w|w|w i|ɪ|ɪ ch|tʃ|tʃ',
+ breakfast:   'b|b|b r|r|r ea|e|ɛ k|k|k / f|f|f a|ə|ə s|s|s t|t|t',
+ goodbye:     'g|ɡ|ɡ oo|ʊ|ʊ d|d|d / b|b|b y|aɪ|aɪ e|-|-',
+ break:       'b|b|b r|r|r ea|eɪ|e k|k|k',
+ fast:        'f|f|f a|æ|æ s|s|s t|t|t'
 };
 
 /* 把一行 RAW 解析成 [[單元,…]（音節）,…]，順便把兩件事檢查掉 */
@@ -115,7 +132,7 @@ const CSS = `
 .phw .u.lit .g i.v{color:#FF9090}
 .phw .u.lit .p{color:#F2F2F2}
 /* 音節之間的切分點，一直都在（學生看得到「這裡可以切」） */
-.phw .cut{display:inline-flex;flex-direction:column;align-items:center;color:#3C4A55;
+.phw .cut{display:inline-flex;flex-direction:column;align-items:center;color:#2B343B;
  padding:0 .07em;transition:color .3s,padding .34s cubic-bezier(.2,1.4,.35,1)}
 .phw.split .cut{color:#9FB4C8;padding:0 .26em}
 .phw .syl.beat .g{animation:phbeat .52s ease-in-out both}
@@ -158,10 +175,19 @@ var PH=(function(){
    h+='<i class="'+(red?"v":"")+'">'+L[k]+'</i>'}
   return h}
  /* 一個單字的完整元件：字母（母音紅／不發音灰）＋ 正下方對齊的音標 ＋ 音節切分點 */
- function word(w,opt){
-  opt=opt||{};var key=w.toLowerCase(),d=D[key];
-  if(!d)return '<span class="phw" data-say="'+w+'"><span class="syl"><span class="u"><span class="g">'+w+'</span></span></span></span>';
-  var h='<span class="phw '+MODES[mode]+'" data-say="'+w+'" data-n="'+d.length+'">',si,ui;
+ /* 查不到音標的字（外語家人單字等）：**不硬掰音標、不硬切音節**，
+    只把母音字母標紅，一樣點得下去唸。這是誠實界線，不要拿掉。 */
+ function plain(w,lang){
+  var h='<span class="phw phplain" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
+        '><span class="syl"><span class="u"><span class="g">',k;
+  for(k=0;k<w.length;k++)h+='<i class="'+(V(w[k])?"v":"")+'">'+w[k]+'</i>';
+  return h+'</span></span></span></span>'}
+ function word(w,lang){
+  if(/\s/.test(w))return w.split(/\s+/).map(function(x){return word(x,lang)}).join(" ");
+  var key=w.toLowerCase(),d=D[key];
+  if(!d)return plain(w,lang);
+  var h='<span class="phw '+MODES[mode]+'" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
+        ' data-n="'+d.length+'">',si,ui;
   for(si=0;si<d.length;si++){
    if(si)h+='<span class="cut"><span class="g">·</span><span class="p">&nbsp;</span></span>';
    h+='<span class="syl">';
@@ -178,9 +204,14 @@ var PH=(function(){
    '<button data-m="1"'+(mode===1?' class="on"':'')+'>IPA</button>'+
    '<button data-m="2"'+(mode===2?' class="on"':'')+'>KK</button>'+
    '<button data-syl="1">✂️ 音節</button></div>'}
- function box(w,note){
-  return '<div class="phbox">'+word(w)+chips(w)+
-   '<div class="phnote">'+(note||"")+'</div></div>'}
+ /* 字卡上**只放單字本身**——切換鈕與說明文字都移到下方 #bar，
+    讓學生一眼只看到要學的那個英文單字（使用者 2026-09-20 指定）。 */
+ function box(w){return word(w)}
+ /* {{單字}} → 畫成單字元件；{{de-DE:Mutter}} → 指定語言（外語家人單字） */
+ function expand(h){
+  return String(h)
+   .replace(/\{\{([a-zA-Z]{2}-[A-Z]{2}):([^{}]+)\}\}/g,function(m,lang,w){return word(w.trim(),lang)})
+   .replace(/\{\{([^{}:]+)\}\}/g,function(m,w){return word(w.trim())})}
  function clear(){while(timers.length)clearTimeout(timers.pop())}
  function at(ms,fn){timers.push(setTimeout(fn,ms))}
  function reduced(){return document.body.classList.contains("reduce")}
@@ -264,8 +295,14 @@ var PH=(function(){
   else{say(t.getAttribute("data-say"),t.getAttribute("data-lang"));
    t.classList.add("ping");setTimeout(function(){t.classList.remove("ping")},260)}
  });
+ /* 畫面上的主角單字：#card／#stage 裡字最大的那一個 .phw */
+ function main(){
+  var all=document.querySelectorAll("#card .phw,#stage .phw"),best=null,bs=0,k;
+  for(k=0;k<all.length;k++){var f=parseFloat(getComputedStyle(all[k]).fontSize)||0;
+   if(f>bs){bs=f;best=all[k]}}
+  return best}
  function setMode(m){mode=((+m||0)%3+3)%3;try{localStorage.setItem("phMode",mode)}catch(e){}apply();return mode}
- return{word:word,box:box,chips:chips,say:say,sayWord:sayWord,syl:syl,autoSay:autoSay,apply:apply,setMode:setMode,
+ return{word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,syl:syl,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
   has:function(w){return !!D[(w||"").toLowerCase()]},
   slow:function(v){slow=(v===undefined)?!slow:!!v;return slow},
   isSlow:function(){return slow},
@@ -281,9 +318,20 @@ var PH=(function(){
 (function(){var b=document.getElementById("phmode");if(!b)return;
  var N=["無","IPA","KK"];
  function lab(){b.textContent="🔤 音標："+N[PH.mode()]}
- lab();b.addEventListener("click",function(){PH.setMode(PH.mode()+1);lab()});})();`;
+ lab();b.addEventListener("click",function(){PH.setMode(PH.mode()+1);lab()});})();
+/* #bar 的「✂️ 音節」：動畫跑在單字上，數出來的結果寫回按鈕，字卡保持乾淨 */
+(function(){var b=document.getElementById("phsyl");if(!b)return;
+ b.addEventListener("click",function(){
+  var el=PH.main();if(!el)return;
+  var n=+el.getAttribute("data-n")||0;
+  if(!n){b.textContent="✂️ 音節";return}
+  PH.syl(el,null);
+  b.textContent="✂️ 音節";
+  setTimeout(function(){b.textContent="✂️ "+n+" 個音節"},220+n*430+120+n*360);});})();`;
 
-/* 故事頁／暖身題頁 #bar 上的音標切換鈕 */
+/* #bar 上的音標切換鈕（每一頁都放；字卡上不再放 chips，版面要聚焦） */
 const btnMode = '<button id="phmode">🔤 音標：無</button>';
+/* #bar 上的音節動畫鈕。結果直接寫在按鈕上，不佔字卡版面。 */
+const btnSyl  = '<button id="phsyl">✂️ 音節</button>';
 
-module.exports = { DATA, RAW, CSS, JS, btnSlow, btnMode };
+module.exports = { DATA, RAW, CSS, JS, btnSlow, btnMode, btnSyl };

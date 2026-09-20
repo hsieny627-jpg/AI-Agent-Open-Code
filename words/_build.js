@@ -19,30 +19,30 @@ const WORDS=[
 {f:'family',zh:'家庭',icon:'👨‍👩‍👧‍👦',old:'familia',now:'family',
  e1:'👪 爸爸、媽媽、小孩，<b>全部都是 family</b>'},
 {f:'parent',parts:{href:'parts.html#8'},zh:'家長',sub:'爸爸或媽媽',icon:'👨‍👩',old:'parens',now:'parent',
- e1:'👤 一位家長是 <b>a parent</b>',e2:'很多位就加 s：<b>parents</b>'},
+ e1:'👤 一位家長是 <b>a parent</b>',e2:'很多位就加 s：{{parents}}'},
 {f:'mother',parts:{href:'parts.html#4'},zh:'母親',icon:'❤️',old:'mōdor',now:'mother',
- e1:'👶 也可以叫 <b>mom</b>',e2:'美國常說 mom，英國常說 <b>mum</b>'},
+ e1:'👶 <b>mother</b> ＝ {{mom}}',e2:'美國說 {{mom}}，英國說 {{mum}}'},
 {f:'father',parts:{href:'parts.html#4'},zh:'父親',icon:'🧔',old:'fæder',now:'father',
- e1:'👶 也可以叫 <b>dad</b>',e2:'小寶寶還不會說 father，<b>先叫出 dad</b>'},
+ e1:'👶 <b>father</b> ＝ {{dad}}',e2:'小寶寶還不會說 father，<b>先叫出 dad</b>'},
 {f:'brother',more:{href:'older-younger.html',label:'🧒 哥哥弟弟'},parts:{href:'parts.html#4'},zh:'哥哥、弟弟',sub:'不分大小',icon:'🧒👦',old:'brōþor',now:'brother',
- e1:'👦 哥哥、弟弟，<b>都叫 brother</b>',e2:'要分大小就加 <b>older</b> 或 <b>younger</b>'},
+ e1:'👦 哥哥、弟弟，<b>都叫 brother</b>',e2:'要分大小就加 {{older}} 或 {{younger}}'},
 {f:'sister',more:{href:'older-younger.html',label:'👧 姊姊妹妹'},parts:{href:'parts.html#4'},zh:'姊姊、妹妹',sub:'不分大小',icon:'👧👩',old:'sweostor',now:'sister',
- e1:'👧 姊姊、妹妹，<b>都叫 sister</b>',e2:'要分大小就加 <b>older</b> 或 <b>younger</b>'},
+ e1:'👧 姊姊、妹妹，<b>都叫 sister</b>',e2:'要分大小就加 {{older}} 或 {{younger}}'},
 {f:'son',zh:'兒子',icon:'👦',old:'sunu',now:'son',
- e1:'☀️ 和太陽 <b>sun</b> 同音',e2:'一樣的音，<b>不一樣的字</b>'},
+ e1:'☀️ 和太陽 {{sun}} 同音',e2:'一樣的音，<b>不一樣的字</b>'},
 {f:'daughter',zh:'女兒',icon:'👧',old:'dohtor',now:'daughter',
  e1:'🤫 中間的 <b>gh</b> 不出聲',
  more:{href:'daughter-gh.html',label:'✨ 補充'},parts:{href:'parts.html#4'}},
 {f:'grandfather',parts:{href:'parts.html#2'},zh:'爺爺',sub:'外公也是',icon:'👴',old:'grand-',now:'grandfather',
  build:{a:'grand',b:'father',note:'<b>grand</b> ＝ <b>大</b>　大的 father ＝ <b>爸爸的爸爸</b>'},
- e1:'👴 也可以叫 <b>grandpa</b>',e2:'爺爺、外公，<b>都叫 grandfather</b>'},
+ e1:'👴 <b>grandfather</b> ＝ {{grandpa}}',e2:'爺爺、外公，<b>都叫 grandfather</b>'},
 {f:'grandmother',parts:{href:'parts.html#2'},zh:'奶奶',sub:'外婆也是',icon:'👵',old:'grand-',now:'grandmother',
  build:{a:'grand',b:'mother',note:'<b>grand</b> ＝ <b>大</b>　大的 mother ＝ <b>媽媽的媽媽</b>'},
- e1:'👵 也可以叫 <b>grandma</b>',e2:'奶奶、外婆，<b>都叫 grandmother</b>'},
+ e1:'👵 <b>grandmother</b> ＝ {{grandma}}',e2:'奶奶、外婆，<b>都叫 grandmother</b>'},
 {f:'uncle',zh:'叔叔',sub:'伯伯、舅舅也是',icon:'🧓',old:'avunculus',now:'uncle',
  e1:'🧓 叔叔、伯伯、舅舅，<b>都叫 uncle</b>',e2:'中文分很多種，英文<b>一個字就夠</b>'},
 {f:'aunt',zh:'阿姨',sub:'姑姑、舅媽也是',icon:'👩‍🦰',old:'amita',now:'aunt',
- e1:'👩 姑姑、阿姨、舅媽，<b>都叫 aunt</b>',e2:'親一點可以叫 <b>auntie</b>'},
+ e1:'👩 姑姑、阿姨、舅媽，<b>都叫 aunt</b>',e2:'親一點可以叫 {{auntie}}'},
 {f:'cousin',zh:'堂表兄弟姊妹',sub:'叔叔阿姨的小孩',icon:'🧑‍🤝‍🧑',old:'consobrinus',now:'cousin',
  e1:'🧑‍🤝‍🧑 叔叔阿姨的小孩，<b>就是 cousin</b>',e2:'堂哥、表姊，<b>都叫 cousin</b>'},
 {f:'nephew',zh:'姪子',sub:'外甥也是',icon:'👦💙',old:'nepos',now:'nephew',
@@ -100,18 +100,31 @@ body{margin:0;background:#000;color:#F2F2F2;
  padding:clamp(10px,2.4vh,24px) clamp(8px,2vw,18px)}
 .tag{font-size:clamp(13px,1.6vh,16px);color:#9FB4C8;letter-spacing:.4em;font-weight:700;padding-left:.4em}
 .emoji{font-size:clamp(84px,17vh,150px);line-height:1.05}
-.zh{font-size:clamp(46px,8.4vh,78px);font-weight:700;letter-spacing:.06em}
-.word{font-size:clamp(50px,9vh,88px);font-weight:700;letter-spacing:.01em}
+.zh{font-size:clamp(50px,9vh,84px);font-weight:700;letter-spacing:.06em}
+/* 中央的學習焦點單字：使用者 2026-09-20 指定再放大，最後一排要看得清楚 */
+/* 高度與寬度都要夾住，否則直式（820 寬）會折行 */
+.word{font-size:clamp(50px,min(10.6vh,11.5vw),104px);font-weight:700;letter-spacing:.01em}
 .word.past{color:#D8D3C5}
-.parts{font-size:clamp(34px,6vh,58px);font-weight:700;color:#D8D3C5;letter-spacing:.01em}
+.parts{font-size:clamp(36px,6.4vh,62px);font-weight:700;color:#D8D3C5;letter-spacing:.01em}
 .parts b{color:#9FB4C8;font-weight:700}
-.sub{font-size:clamp(17px,2.4vh,23px);color:#D8D3C5;line-height:1.5}
+.sub{font-size:clamp(19px,2.7vh,26px);color:#D8D3C5;line-height:1.5}
 .sub b{color:#F2F2F2;font-weight:700}
 
-#bar{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));display:flex;gap:10px;
- flex-wrap:wrap;justify-content:center;padding:0 10px}
+/* 底部固定兩排：上排「上一個／下一個單字」，下排工具鈕。
+   使用者 2026-09-20 指定：**字卡本身不放任何按鈕與說明文字**，讓單字聚焦。 */
+#bottom{position:fixed;left:0;right:0;bottom:max(16px,env(safe-area-inset-bottom));
+ display:flex;flex-direction:column;align-items:center;gap:9px;padding:0 10px}
+#wnav{display:flex;align-items:center;justify-content:center;gap:clamp(10px,2.4vw,26px);
+ width:100%;max-width:640px}
+#wnav a{display:flex;align-items:center;gap:7px;text-decoration:none;color:#D8D3C5;
+ background:#141414;border:1px solid #333;border-radius:99px;font-family:inherit;
+ font-size:clamp(14px,2vh,17px);padding:9px 17px;min-height:44px;white-space:nowrap}
+#wnav a:hover{border-color:#9FB4C8;color:#F2F2F2}
+#wnav a .w{font-weight:700}
+#wnav .pos{font-size:clamp(12px,1.7vh,14px);color:#5E5E5E;letter-spacing:.1em;white-space:nowrap}
+#bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 #bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
- font-size:16px;padding:11px 20px;min-height:48px;font-family:inherit;cursor:pointer}
+ font-size:15px;padding:10px 17px;min-height:46px;font-family:inherit;cursor:pointer}
 #bar button:active{background:#2A2A2A}
 
 .in{animation:rise .5s cubic-bezier(.2,.9,.3,1) both}
@@ -137,7 +150,14 @@ ${SRC.CSS}
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"><div id="card"></div></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
-<div id="bar"><button id="say">🔊 念一次</button>${PH.btnSlow}<button id="again">▶ 從頭看</button>${W.more?`<button id="more">${W.more.label}</button>`:''}${W.parts?`<button id="parts">🧩 結構</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>
+<div id="bottom">
+<nav id="wnav">
+ <a href="${W.prev}.html" title="上一個單字">◀ <span class="w">${W.prev}</span></a>
+ <span class="pos">${W.idx} / ${W.total}</span>
+ <a href="${W.next}.html" title="下一個單字"><span class="w">${W.next}</span> ▶</a>
+</nav>
+<div id="bar"><button id="say">🔊 念一次</button>${PH.btnSlow}${PH.btnMode}${PH.btnSyl}${W.more?`<button id="more">${W.more.label}</button>`:''}${W.parts?`<button id="parts">🧩 結構</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>
+</div>
 ${SRC.html(SRC.W[W.f])}
 
 <script>
@@ -164,7 +184,8 @@ var SCENES=[
  // ③ 現在的單字＋秒懂收尾
  function(){return '<div class="tag in">現在</div>'+
    '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
-   '<div class="word in d1">'+PH.box(W.now,LEGEND)+'</div>'+
+   '<div class="word in d1"'+(W.now.length>=11?' style="font-size:clamp(38px,min(7.5vh,8.2vw),74px)"':'')+'>'+
+   PH.box(W.now)+'</div>'+
    '<div class="sub in d2" style="margin-top:2px">'+W.e1+'</div>'+
    (W.e2?'<div class="sub in d3">'+W.e2+'</div>':'')}
 ];
@@ -176,18 +197,15 @@ if(reduce)document.body.classList.add("reduce");
 var dots=document.getElementById("dots");
 for(var k=0;k<SCENES.length;k++)dots.appendChild(document.createElement("i"));
 
-/* 色卡說明：紅色 ＝ 母音字母，淺灰 ＝ 不出聲的字母。按 ✂️ 音節才會換成數數的結果。 */
-var LEGEND='<span class="rv">●</span> 紅色 ＝ 母音　<span style="color:#9A9A9A">灰色 ＝ 不出聲</span>';
-
 /* 念一次：整個單字唸出來，同時一格一格亮過去（字母 ↔ 聲音） */
-function say(){var el=document.querySelector(".phw");
+function say(){spoke=true;var el=PH.main();
  if(el){PH.sayWord(el)}else{PH.say(W.now)}}
 
 var card=document.getElementById("card");
 function show(n){
  var back=(n<i);
  i=Math.max(0,Math.min(SCENES.length-1,n));
- card.innerHTML=SCENES[i]();
+ card.innerHTML=PH.expand(SCENES[i]());
  PH.autoSay(card);       // 補充單字、字詞、用法都可以點來聽
  if(!reduce){card.classList.remove("turnR","turnL");void card.offsetWidth;
   card.classList.add(back?"turnL":"turnR")}
@@ -195,12 +213,19 @@ function show(n){
  for(var k=0;k<d.length;k++)d[k].className=(k===i?"on":"");
  document.getElementById("prev").disabled=(i===0);
  document.getElementById("next").disabled=(i===SCENES.length-1);
- if(i===SCENES.length-1)say();
+ /* 使用者 2026-09-20 指定：一翻到中文意思那一幕，就自動唸一次英文單字。
+    （有些瀏覽器規定要先碰過畫面才准發聲，所以下面補一個「第一次碰到就補唸」。） */
+ if(i===0||i===SCENES.length-1)say();
+}
+var spoke=false;
+function armFirstTouch(){
+ function go(){if(!spoke&&i===0)say();
+  document.removeEventListener("pointerdown",go);document.removeEventListener("keydown",go)}
+ document.addEventListener("pointerdown",go);document.addEventListener("keydown",go);
 }
 
 document.getElementById("prev").addEventListener("click",function(){show(i-1)});
 document.getElementById("next").addEventListener("click",function(){show(i+1)});
-document.getElementById("again").addEventListener("click",function(){show(0)});
 document.getElementById("say").addEventListener("click",say);
 document.addEventListener("keydown",function(e){
  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();show(i+1)}
@@ -208,6 +233,7 @@ document.addEventListener("keydown",function(e){
 });
 
 show(0);
+armFirstTouch();
 ${W.more?`document.getElementById("more").addEventListener("click",function(){location.href=${JSON.stringify(W.more.href)}});`:''}
 ${W.parts?`document.getElementById("parts").addEventListener("click",function(){location.href=${JSON.stringify(W.parts.href)}});`:''}
 document.getElementById("home").addEventListener("click",function(){location.href="../index.html"});
@@ -217,6 +243,12 @@ ${SRC.JS}
 </html>
 `;
 
+/* 上一個／下一個單字（頭尾相接），使用者 2026-09-20 指定加在每張字卡下方 */
+WORDS.forEach((w,k)=>{
+ w.prev=WORDS[(k-1+WORDS.length)%WORDS.length].f;
+ w.next=WORDS[(k+1)%WORDS.length].f;
+ w.idx=k+1; w.total=WORDS.length;
+});
 WORDS.forEach(w=>fs.writeFileSync(path.join(DIR,w.f+'.html'),tpl(w),'utf8'));
 /* 給總入口（_build_hub.js）用的單字清單。由本檔產出，所以永遠不會跟字卡走鐘。 */
 fs.writeFileSync(path.join(DIR,'_words.json'),

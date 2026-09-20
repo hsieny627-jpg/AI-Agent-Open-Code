@@ -4,10 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>grandmother｜單字小故事</title>
-<!-- 本檔由 words/_build.js 產生，不要手改。改樣板請改 _build.js 再重跑。 -->
+<title>family tree 進階版｜家人單字</title>
+<!-- 本檔由 words/_build_tree.js 產生，不要手改。 -->
 <style>
-/* Andika 隨檔案放在 fonts/，離線也一定是 Andika（不靠網路） */
 @font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
  src:url(fonts/andika-400.woff2) format("woff2")}
 @font-face{font-family:Andika;font-style:normal;font-weight:700;font-display:swap;
@@ -19,11 +18,10 @@ body{margin:0;background:#000;color:#F2F2F2;
  font-family:Andika,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;
  display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;user-select:none}
 
-#dots{display:flex;gap:10px;position:fixed;top:max(18px,env(safe-area-inset-top))}
-#dots i{width:26px;height:4px;border-radius:99px;background:#2A2A2A;transition:background .3s}
+#dots{display:flex;gap:9px;position:fixed;top:max(16px,env(safe-area-inset-top))}
+#dots i{width:22px;height:4px;border-radius:99px;background:#2A2A2A;transition:background .3s}
 #dots i.on{background:#9FB4C8}
 
-/* 左右翻頁箭頭：整條邊都可以按，投影或小朋友上台都點得到 */
 .nav{position:fixed;top:0;bottom:0;width:clamp(68px,10vw,120px);border:0;background:none;
  color:#9FB4C8;font-size:clamp(38px,5.4vw,58px);font-family:inherit;line-height:1;
  display:flex;align-items:center;justify-content:center;cursor:pointer}
@@ -31,57 +29,66 @@ body{margin:0;background:#000;color:#F2F2F2;
 .nav:active:not(:disabled){background:rgba(255,255,255,.05)}
 #prev{left:0}#next{right:0}
 
-/* 字卡：一張卡就是一幕，翻頁＝翻卡（使用者 2026-09-19 指定） */
-#stage{width:100%;max-width:760px;padding:0 clamp(76px,11vw,130px);
- display:flex;align-items:center;justify-content:center;perspective:1500px}
-#card{width:100%;text-align:center;min-height:clamp(300px,57vh,520px);
+/* min-height 要比內容高一點：進場動畫（.in 會先往下 20px）跑到一半時，
+   沒有這點餘裕 #stage 的 scrollHeight 就會比 clientHeight 大，_verify.js 會判定溢出。
+   其他幕頁也是靠同一個 min-height 才量得過。 */
+#stage{width:100%;max-width:840px;padding:0 clamp(76px,11vw,130px);text-align:center;
+ min-height:clamp(340px,64vh,620px);
  display:flex;flex-direction:column;align-items:center;justify-content:center;
- gap:clamp(8px,1.6vh,18px);
- border:1px solid #242424;border-radius:clamp(18px,3vh,30px);
- background:linear-gradient(180deg,#0B0B0B 0%,#040404 100%);
- box-shadow:0 18px 50px rgba(0,0,0,.65);
- padding:clamp(10px,2.4vh,24px) clamp(8px,2vw,18px)}
-.tag{font-size:clamp(13px,1.6vh,16px);color:#9FB4C8;letter-spacing:.4em;font-weight:700;padding-left:.4em}
-.emoji{font-size:clamp(84px,17vh,150px);line-height:1.05}
-.zh{font-size:clamp(50px,9vh,84px);font-weight:700;letter-spacing:.06em}
-/* 中央的學習焦點單字：使用者 2026-09-20 指定再放大，最後一排要看得清楚 */
-/* 高度與寬度都要夾住，否則直式（820 寬）會折行 */
-.word{font-size:clamp(50px,min(10.6vh,11.5vw),104px);font-weight:700;letter-spacing:.01em}
-.word.past{color:#D8D3C5}
-.parts{font-size:clamp(36px,6.4vh,62px);font-weight:700;color:#D8D3C5;letter-spacing:.01em}
-.parts b{color:#9FB4C8;font-weight:700}
-.sub{font-size:clamp(19px,2.7vh,26px);color:#D8D3C5;line-height:1.5}
-.sub b{color:#F2F2F2;font-weight:700}
+ gap:clamp(6px,1.3vh,14px)}
 
-/* 底部固定兩排：上排「上一個／下一個單字」，下排工具鈕。
-   使用者 2026-09-20 指定：**字卡本身不放任何按鈕與說明文字**，讓單字聚焦。 */
-#bottom{position:fixed;left:0;right:0;bottom:max(16px,env(safe-area-inset-bottom));
- display:flex;flex-direction:column;align-items:center;gap:9px;padding:0 10px}
-#wnav{display:flex;align-items:center;justify-content:center;gap:clamp(10px,2.4vw,26px);
- width:100%;max-width:640px}
-#wnav a{display:flex;align-items:center;gap:7px;text-decoration:none;color:#D8D3C5;
- background:#141414;border:1px solid #333;border-radius:99px;font-family:inherit;
- font-size:clamp(14px,2vh,17px);padding:9px 17px;min-height:44px;white-space:nowrap}
-#wnav a:hover{border-color:#9FB4C8;color:#F2F2F2}
-#wnav a .w{font-weight:700}
-#wnav .pos{font-size:clamp(12px,1.7vh,14px);color:#5E5E5E;letter-spacing:.1em;white-space:nowrap}
+/* ── 樹 ── */
+#tree{display:flex;flex-direction:column;align-items:center;gap:0}
+.trow{display:flex;align-items:flex-start;justify-content:center;
+ gap:clamp(12px,3vw,42px)}
+.link{width:2px;background:#3A3A3A;height:clamp(13px,2.1vh,24px)}
+.tn{display:flex;flex-direction:column;align-items:center;gap:2px;
+ opacity:.34;transition:opacity .35s,transform .35s;cursor:pointer;min-width:clamp(40px,6vw,62px)}
+.tn .ti{font-size:clamp(28px,4.7vh,48px);line-height:1.15}
+.tn .tz{font-size:clamp(10px,1.4vh,13px);color:#7E7E7E;white-space:nowrap}
+.tn.on{opacity:1;transform:scale(1.16)}
+.tn.on .ti{filter:drop-shadow(0 0 16px rgba(159,180,200,.85))}
+.tn.on .tz{color:#9FB4C8;font-weight:700}
+
+/* ── 下方的學習焦點（一次只有一個） ── */
+.focus{display:flex;flex-direction:column;align-items:center;gap:clamp(3px,.8vh,9px);
+ min-height:clamp(78px,13.5vh,136px);justify-content:center}
+.fic{font-size:clamp(38px,6.8vh,70px);line-height:1.05}
+.fen{font-size:clamp(30px,min(5.8vh,7vw),66px);font-weight:700;letter-spacing:.01em}
+.fzh{font-size:clamp(22px,3.8vh,36px);font-weight:700;color:#F2F2F2;letter-spacing:.06em}
+.fq{font-size:clamp(40px,7vh,74px);color:#3A3A3A;font-weight:700}
+.mid{font-size:clamp(26px,4.4vh,42px);font-weight:700;line-height:1.4;letter-spacing:.03em}
+.sub{font-size:clamp(17px,2.5vh,24px);color:#D8D3C5;line-height:1.5}
+.sub b{color:#F2F2F2;font-weight:700}
+.tag{font-size:clamp(13px,1.7vh,16px);color:#9FB4C8;letter-spacing:.34em;font-weight:700;padding-left:.34em}
+
+/* ── 下方按鈕 ── */
+#bottom{position:fixed;left:0;right:0;bottom:max(14px,env(safe-area-inset-bottom));
+ display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 10px}
+#modes{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+#modes button{background:#131313;border:1px solid #333;color:#8E8E8E;border-radius:99px;
+ font-family:inherit;font-size:clamp(12px,1.7vh,15px);padding:6px 13px;min-height:34px;cursor:pointer}
+#modes button.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A;font-weight:700}
 #bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 #bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
  font-size:15px;padding:10px 17px;min-height:46px;font-family:inherit;cursor:pointer}
 #bar button:active{background:#2A2A2A}
 
 .in{animation:rise .5s cubic-bezier(.2,.9,.3,1) both}
-.d1{animation-delay:.10s}.d2{animation-delay:.24s}.d3{animation-delay:.40s}
-.d4{animation-delay:1.55s}.d5{animation-delay:1.75s}
-@keyframes rise{0%{opacity:0;transform:translateY(20px) scale(.92)}100%{opacity:1;transform:none}}
+.d1{animation-delay:.10s}.d2{animation-delay:.28s}.d3{animation-delay:.46s}
+/* 這一頁的進場**只淡入、不位移**：位移到一半時 #stage 的 scrollHeight 會暫時大於
+   clientHeight，_verify.js 就會判定溢出。動感交給 .pop（只縮放不位移）與樹上跳一下。 */
+@keyframes rise{0%{opacity:0}100%{opacity:1}}
 .pop{animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
 @keyframes pop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
-/* 翻卡：往後翻從右邊翻進來，往回翻從左邊翻進來（420ms，翻完才是穩定畫面） */
+/* 樹上的人被點名：跳一下 */
+.tn.on{animation:hop .6s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes hop{0%{transform:scale(.8)}60%{transform:scale(1.3)}100%{transform:scale(1.16)}}
 .turnR{animation:turnR .42s cubic-bezier(.25,.85,.3,1) both}
 .turnL{animation:turnL .42s cubic-bezier(.25,.85,.3,1) both}
-@keyframes turnR{0%{opacity:.2;transform:rotateY(54deg) translateX(24px) scale(.94)}
+@keyframes turnR{0%{opacity:.2;transform:perspective(1500px) rotateY(48deg) translateX(20px) scale(.95)}
  100%{opacity:1;transform:none}}
-@keyframes turnL{0%{opacity:.2;transform:rotateY(-54deg) translateX(-24px) scale(.94)}
+@keyframes turnL{0%{opacity:.2;transform:perspective(1500px) rotateY(-48deg) translateX(-20px) scale(.95)}
  100%{opacity:1;transform:none}}
 .reduce *{animation:none!important;transition:none!important}
 
@@ -176,17 +183,16 @@ body{margin:0;background:#000;color:#F2F2F2;
 <body>
 <div id="dots"></div>
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
-<div id="stage"><div id="card"></div></div>
+<div id="stage"></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
 <div id="bottom">
-<nav id="wnav">
- <a href="grandfather.html" title="上一個單字">◀ <span class="w">grandfather</span></a>
- <span class="pos">10 / 17</span>
- <a href="uncle.html" title="下一個單字"><span class="w">uncle</span> ▶</a>
-</nav>
-<div id="bar"><button id="say">🔊 念一次</button><button id="slow">🐢 放慢</button><button id="phmode">🔤 音標：無</button><button id="phsyl">✂️ 音節</button><button id="parts">🧩 結構</button><button id="home">🏠 首頁</button><button id="srcb">📖 出處</button></div>
+ <div id="modes">
+  <button data-m="A">圖示</button><button data-m="B">中文</button><button data-m="C">英文</button>
+  <button data-m="D">英＋圖</button><button data-m="E">英＋中</button><button data-m="F">全部</button>
+ </div>
+ <div id="bar"><button id="say">🔊 念一次</button><button id="slow">🐢 放慢</button><button id="phmode">🔤 音標：無</button><button id="phsyl">✂️ 音節</button><button id="back">← 回 基礎版</button><button id="home">🏠 首頁</button><button id="srcb">📖 出處</button></div>
 </div>
-<footer id="src"><div class="wrap"><h4>出處</h4><div class="flow"><span class="f1">📺 課堂上教的</span><span class="fa">➜</span><span class="f2">📖 出自這一本</span><span class="fa">➜</span><span class="f3">✅ 你也查得到</span></div><table><thead><tr><th>這一條在講什麼</th><th>證據出處（照這個就查得到）</th><th>查到會看到什麼</th></tr></thead><tbody><tr><td class="t">grand 是什麼意思</td><td class="s">OED「grand, adj.」</td><td class="d">原義就是「<b>大的</b>」。課堂旁證：<b>Grand Canyon</b>（大峽谷）。</td></tr><tr><td class="t">grand- 從哪裡來</td><td class="s">OED「grand-, comb. form」</td><td class="d">同一個從<b>法語</b>借來的 <b>grand-</b>，裝在 mother 前面。</td></tr><tr><td class="t">grandmother ＝ grandma</td><td class="s">OED「grandma, n.」</td><td class="d">口語簡稱，意思完全一樣。</td></tr><tr><td class="t">音標（美式）</td><td class="s">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries 的 NAmE 發音</td><td class="d">本教材的 IPA 一律採<b>美式</b>標法。</td></tr><tr><td class="t">KK 音標</td><td class="s">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</td><td class="d">台灣中小學課本採用的標法。同一個音兩套寫法不同：bed 的 e ＝ IPA <b>/e/</b>、KK <b>/ɛ/</b>；boat 的 o ＝ IPA <b>/oʊ/</b>、KK <b>/o/</b>。</td></tr><tr><td class="t">音節怎麼切</td><td class="s">Louisa Moats《Speech to Print》；National Reading Panel (2000)</td><td class="d">本教材用<b>開音節切法</b>（母音後面切）：<b>fa．mi．ly</b>、mo．ther、fa．ther、bro．ther、daugh．ter、un．cle。<b>一個出聲的母音 ＝ 一個音節</b>。</td></tr><tr class="w"><td class="t">和辭典的連字號不一樣，兩種都對</td><td class="s">—</td><td class="d">辭典（如 <b>Merriam-Webster</b>）印的是<b>排版斷行用</b>的連字號，family 寫成 <b>fam·i·ly</b>；本教材教的是<b>唸的時候怎麼切</b>，所以是 <b>fa．mi．ly</b>。<b>兩種都對，用途不同</b>——一個是給排版看的，一個是給嘴巴唸的。</td></tr><tr class="w"><td class="t">數音節數的是「還在出聲的母音」</td><td class="s">—</td><td class="d">畫面上<b>淺灰色的字母不出聲，不算</b>（niece 的 e、wife 的 e、daughter 的 gh、little 的第二個 t）；<b>au／ou／ie／ew</b> 兩個字母一起發一個音，畫面上本來就是一格。照畫面數，這條規則<b>全部成立</b>。</td></tr><tr><td class="t">唸出來的聲音</td><td class="s">Web Speech API（瀏覽器內建語音合成），語系 en-US</td><td class="d">不需要連網也不需要帳號。<b>實際嗓音由老師那台電腦或平板決定</b>。外語單字另外指定語系：德 de-DE、荷 nl-NL、西 es-ES、法 fr-FR。</td></tr></tbody></table><p class="foot">⚠️ 這些條目名稱都是<b>標準工具書</b>的正式條目，老師和學生照著查一定找得到。製作環境連不上網，<b>沒有逐條開網頁核對過</b>——第一次上課前建議抽查兩三條。</p><button id="srcx">關閉</button></div></footer>
+<footer id="src"><div class="wrap"><h4>出處</h4><div class="flow"><span class="f1">📺 課堂上教的</span><span class="fa">➜</span><span class="f2">📖 出自這一本</span><span class="fa">➜</span><span class="f3">✅ 你也查得到</span></div><table><thead><tr><th>這一條在講什麼</th><th>證據出處（照這個就查得到）</th><th>查到會看到什麼</th></tr></thead><tbody><tr><td class="t">family tree 是正式說法</td><td class="s">Cambridge Dictionary「family tree」；Merriam-Webster「family tree」</td><td class="d">英文辭典收錄的固定說法，指「畫出來的家族關係圖」。</td></tr><tr><td class="t">樹上十二個人的定義</td><td class="s">Cambridge Dictionary 各詞條</td><td class="d">me／father／mother／brother／sister／grandfather／grandmother／uncle／aunt／cousin／nephew／niece，每一個都查得到。</td></tr><tr><td class="t">英文一個字管中文好幾個</td><td class="s">Cambridge Dictionary「uncle」「aunt」「cousin」</td><td class="d">叔伯舅姑丈姨丈<b>都是 uncle</b>；阿姨姑姑舅媽<b>都是 aunt</b>；堂表男女<b>都是 cousin</b>。</td></tr><tr><td class="t">grandfather ＝ grandpa、grandmother ＝ grandma</td><td class="s">OED「grandpa, n.」「grandma, n.」</td><td class="d">口語簡稱，意思完全一樣。</td></tr><tr><td class="t">音標（美式）</td><td class="s">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries 的 NAmE 發音</td><td class="d">本教材的 IPA 一律採<b>美式</b>標法。</td></tr><tr><td class="t">KK 音標</td><td class="s">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</td><td class="d">台灣中小學課本採用的標法。同一個音兩套寫法不同：bed 的 e ＝ IPA <b>/e/</b>、KK <b>/ɛ/</b>；boat 的 o ＝ IPA <b>/oʊ/</b>、KK <b>/o/</b>。</td></tr><tr><td class="t">音節怎麼切</td><td class="s">Louisa Moats《Speech to Print》；National Reading Panel (2000)</td><td class="d">本教材用<b>開音節切法</b>（母音後面切）：<b>fa．mi．ly</b>、mo．ther、fa．ther、bro．ther、daugh．ter、un．cle。<b>一個出聲的母音 ＝ 一個音節</b>。</td></tr><tr class="w"><td class="t">和辭典的連字號不一樣，兩種都對</td><td class="s">—</td><td class="d">辭典（如 <b>Merriam-Webster</b>）印的是<b>排版斷行用</b>的連字號，family 寫成 <b>fam·i·ly</b>；本教材教的是<b>唸的時候怎麼切</b>，所以是 <b>fa．mi．ly</b>。<b>兩種都對，用途不同</b>——一個是給排版看的，一個是給嘴巴唸的。</td></tr><tr class="w"><td class="t">數音節數的是「還在出聲的母音」</td><td class="s">—</td><td class="d">畫面上<b>淺灰色的字母不出聲，不算</b>（niece 的 e、wife 的 e、daughter 的 gh、little 的第二個 t）；<b>au／ou／ie／ew</b> 兩個字母一起發一個音，畫面上本來就是一格。照畫面數，這條規則<b>全部成立</b>。</td></tr><tr><td class="t">唸出來的聲音</td><td class="s">Web Speech API（瀏覽器內建語音合成），語系 en-US</td><td class="d">不需要連網也不需要帳號。<b>實際嗓音由老師那台電腦或平板決定</b>。外語單字另外指定語系：德 de-DE、荷 nl-NL、西 es-ES、法 fr-FR。</td></tr></tbody></table><p class="foot">⚠️ 這些條目名稱都是<b>標準工具書</b>的正式條目，老師和學生照著查一定找得到。製作環境連不上網，<b>沒有逐條開網頁核對過</b>——第一次上課前建議抽查兩三條。</p><button id="srcx">關閉</button></div></footer>
 
 <script>
 
@@ -356,62 +362,101 @@ var PH=(function(){
   b.textContent="✂️ 音節";
   setTimeout(function(){b.textContent="✂️ "+n+" 個音節"},220+n*430+120+n*360);});})();
 
-var W={zh:"奶奶",sub:"外婆也是",icon:"👵",old:"grand-",now:"grandmother",
- e1:"👵 <b>grandmother</b> ＝ {{grandma}}",e2:"奶奶、外婆，<b>都叫 grandmother</b>",
- build:{"a":"grand","b":"mother","note":"<b>grand</b> ＝ <b>大</b>　大的 mother ＝ <b>媽媽的媽媽</b>"}};
+var N={"me":{"zh":"我","ic":"🙋"},"father":{"zh":"爸爸","ic":"🧔","also":"dad"},"mother":{"zh":"媽媽","ic":"👩","also":"mom"},"brother":{"zh":"哥哥、弟弟","ic":"👦"},"sister":{"zh":"姊姊、妹妹","ic":"👧"},"grandfather":{"zh":"爺爺、外公","ic":"👴","also":"grandpa"},"grandmother":{"zh":"奶奶、外婆","ic":"👵","also":"grandma"},"uncle":{"zh":"叔叔、舅舅","ic":"🧓"},"aunt":{"zh":"阿姨、姑姑","ic":"👩‍🦰"},"cousin":{"zh":"堂表兄弟姊妹","ic":"🧑"},"nephew":{"zh":"姪子、外甥","ic":"👦💙"},"niece":{"zh":"姪女、外甥女","ic":"👧💜"}};
+var TREE=[["grandfather","grandmother"],["uncle","father","mother","aunt"],["cousin","brother","me","sister"],["nephew","niece"]];
+var S=[{"open":true,"mid":"family tree","zh":"再加上親戚","lines":["樹長大了 —— <b>親戚也上樹</b>"]},{"k":"uncle","line":"叔叔、伯伯、舅舅，<b>都叫 uncle</b>"},{"k":"aunt","line":"阿姨、姑姑、舅媽，<b>都叫 aunt</b>"},{"k":"cousin","line":"叔叔阿姨的小孩，<b>都叫 cousin</b>"},{"k":"nephew","line":"哥哥姊姊的<b>兒子</b>"},{"k":"niece","line":"哥哥姊姊的<b>女兒</b>"},{"end":true,"mid":"整棵樹，十二個人","zh":"","lines":["中文分好多種，<b>英文一個字就夠</b>"]}];
 
-var SCENES=[
- // ① 中文意思
- function(){return '<div class="emoji pop">'+W.icon+'</div>'+
-   '<div class="zh in d1">'+W.zh+'</div>'+
-   (W.sub?'<div class="sub in d2">'+W.sub+'</div>':'')},
- // ② 以前的樣貌（圖示就是意思，不再加說明）；grandfather / grandmother 改成「怎麼組的」
- function(){return '<div class="tag in">怎麼組的</div>'+
-   '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
-   '<div class="parts in d1"><b>'+W.build.a+'</b> ＋ '+W.build.b+'</div>'+
-   '<div class="sub in d2" style="margin-top:2px">'+W.build.note+'</div>'},
- // ③ 現在的單字＋秒懂收尾
- function(){return '<div class="tag in">現在</div>'+
-   '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
-   '<div class="word in d1"'+(W.now.length>=11?' style="font-size:clamp(38px,min(7.5vh,8.2vw),74px)"':'')+'>'+
-   PH.box(W.now)+'</div>'+
-   '<div class="sub in d2" style="margin-top:2px">'+W.e1+'</div>'+
-   (W.e2?'<div class="sub in d3">'+W.e2+'</div>':'')}
-];
+/* 顯示模式：A 只圖示／B 只中文／C 只英文／D 英＋圖／E 英＋中／F 全部 */
+var MODE="F";
+try{var m=localStorage.getItem("treeMode");if(m&&"ABCDEF".indexOf(m)>=0)MODE=m}catch(e){}
 
 var i=0,reduce=false;
 try{reduce=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)}catch(e){}
 if(reduce)document.body.classList.add("reduce");
 
 var dots=document.getElementById("dots");
-for(var k=0;k<SCENES.length;k++)dots.appendChild(document.createElement("i"));
+for(var k=0;k<S.length;k++)dots.appendChild(document.createElement("i"));
 
-/* 念一次：整個單字唸出來，同時一格一格亮過去（字母 ↔ 聲音） */
-function say(){spoke=true;var el=PH.main();
- if(el){PH.sayWord(el)}else{PH.say(W.now)}}
+/* 樹：其他人只留圖示而且變暗，只有「現在這一個」亮起來 */
+function tree(hi){
+ var h='<div id="tree">',r,c;
+ for(r=0;r<TREE.length;r++){
+  if(r)h+='<div class="link"></div>';
+  h+='<div class="trow">';
+  for(c=0;c<TREE[r].length;c++){
+   var key=TREE[r][c],n=N[key],on=(key===hi);
+   h+='<div class="tn'+(on?" on":"")+'" data-k="'+key+'" data-say="'+key+'">'+
+      '<div class="ti">'+n.ic+'</div></div>';
+  }
+  h+='</div>';
+ }
+ return h+'</div>';
+}
 
-var card=document.getElementById("card");
+/* 下方的學習焦點：模式決定看得到什麼 */
+function focus(key){
+ var n=N[key],h='<div class="focus">';
+ if(MODE==="A")      h+='<div class="fic pop">'+n.ic+'</div><div class="fq in d1">？</div>';
+ else if(MODE==="B") h+='<div class="fzh in d1" style="font-size:clamp(34px,6vh,60px)">'+n.zh+'</div>';
+ else if(MODE==="C") h+='<div class="fen in d1">{{'+key+'}}</div>';
+ else if(MODE==="D") h+='<div class="fic pop">'+n.ic+'</div><div class="fen in d1">{{'+key+'}}</div>';
+ else if(MODE==="E") h+='<div class="fen in d1">{{'+key+'}}</div><div class="fzh in d2">'+n.zh+'</div>';
+ else                h+='<div class="fic pop">'+n.ic+'</div><div class="fen in d1">{{'+key+'}}</div>'+
+                        '<div class="fzh in d2">'+n.zh+'</div>';
+ return h+'</div>';
+}
+
+function draw(s){
+ var h="";
+ if(s.open||s.end){
+  h+='<div class="fic pop">🌳</div>';
+  h+='<div class="fen in d1">{{family tree}}</div>';
+  if(s.zh)h+='<div class="fzh in d2">'+s.zh+'</div>';
+  h+=tree(null);
+ }else{
+  h+=tree(s.k);
+  h+=focus(s.k);
+ }
+ (s.lines||(s.line?[s.line]:[])).forEach(function(t,k){
+  h+='<div class="sub in d'+(k+2)+'">'+t+'</div>'});
+ return PH.expand(h);
+}
+
+var stage=document.getElementById("stage");
+function render(){
+ stage.innerHTML=draw(S[i]);
+ PH.autoSay(stage);
+}
 function show(n){
  var back=(n<i);
- i=Math.max(0,Math.min(SCENES.length-1,n));
- card.innerHTML=PH.expand(SCENES[i]());
- PH.autoSay(card);       // 補充單字、字詞、用法都可以點來聽
- if(!reduce){card.classList.remove("turnR","turnL");void card.offsetWidth;
-  card.classList.add(back?"turnL":"turnR")}
+ i=Math.max(0,Math.min(S.length-1,n));
+ render();
+ if(!reduce){stage.classList.remove("turnR","turnL");void stage.offsetWidth;
+  stage.classList.add(back?"turnL":"turnR")}
  var d=dots.children;
  for(var k=0;k<d.length;k++)d[k].className=(k===i?"on":"");
  document.getElementById("prev").disabled=(i===0);
- document.getElementById("next").disabled=(i===SCENES.length-1);
- /* 使用者 2026-09-20 指定：一翻到中文意思那一幕，就自動唸一次英文單字。
-    （有些瀏覽器規定要先碰過畫面才准發聲，所以下面補一個「第一次碰到就補唸」。） */
- if(i===0||i===SCENES.length-1)say();
+ document.getElementById("next").disabled=(i===S.length-1);
+ say();
 }
-var spoke=false;
-function armFirstTouch(){
- function go(){if(!spoke&&i===0)say();
-  document.removeEventListener("pointerdown",go);document.removeEventListener("keydown",go)}
- document.addEventListener("pointerdown",go);document.addEventListener("keydown",go);
+/* 念一次：這一幕的主角。開場／結尾唸 family tree。 */
+function say(){
+ var w=S[i].k||"family tree";
+ var el=stage.querySelector('.phw[data-say="'+w+'"]');
+ if(el){PH.sayWord(el)}else{PH.say(w)}
 }
+
+function paintModes(){
+ [].forEach.call(document.querySelectorAll("#modes button"),function(b){
+  b.classList.toggle("on",b.getAttribute("data-m")===MODE)});
+}
+document.getElementById("modes").addEventListener("click",function(e){
+ var b=e.target.closest("button[data-m]");if(!b)return;
+ MODE=b.getAttribute("data-m");
+ try{localStorage.setItem("treeMode",MODE)}catch(x){}
+ paintModes();render();
+});
+paintModes();
 
 document.getElementById("prev").addEventListener("click",function(){show(i-1)});
 document.getElementById("next").addEventListener("click",function(){show(i+1)});
@@ -420,12 +465,16 @@ document.addEventListener("keydown",function(e){
  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();show(i+1)}
  if(e.key==="ArrowLeft")show(i-1);
 });
-
-show(0);
-armFirstTouch();
-
-document.getElementById("parts").addEventListener("click",function(){location.href="parts.html#2"});
+/* 點樹上的人 → 跳到那一幕（順便唸出來） */
+stage.addEventListener("click",function(e){
+ var t=e.target.closest(".tn");if(!t)return;
+ var key=t.getAttribute("data-k"),k;
+ for(k=0;k<S.length;k++)if(S[k].k===key){show(k);return}
+});
+document.getElementById("back").addEventListener("click",function(){
+ location.href="family-tree.html"});
 document.getElementById("home").addEventListener("click",function(){location.href="../index.html"});
+show(0);
 
 (function(){var s=document.getElementById("src");
  function t(v){s.classList.toggle("on",v);if(v)s.scrollTop=0}

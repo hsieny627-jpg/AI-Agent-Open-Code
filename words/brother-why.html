@@ -57,6 +57,51 @@ body{margin:0;background:#000;color:#F2F2F2;
 .pop{animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
 @keyframes pop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
 .reduce *{animation:none!important;transition:none!important}
+/* 2026-09-20 接上 _phonics.js：點單字可以聽美式發音、可放慢語速 */
+
+/* 單字的音標／音節元件。字級跟著外層 font-size 走，所以字卡與故事頁共用一份。 */
+.phw{display:inline-flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;margin:0 .17em;
+ line-height:1.04;cursor:pointer;position:relative}
+.phw .syl{display:inline-flex;align-items:flex-end}
+.phw .u{display:inline-flex;flex-direction:column;align-items:center;transition:color .2s}
+.phw .g{display:block;white-space:nowrap}
+.phw .g i{font-style:normal}
+.phw .g i.v{color:#FF5A5A}            /* 母音字母 ＝ 紅色 */
+.phw .u.mute .g i,.phw .u.mute .g i.v{color:#9A9A9A}  /* 不發音 ＝ 淺灰色 */
+.phw .p{display:none;font-size:max(.34em,13px);font-weight:400;letter-spacing:0;white-space:nowrap;
+ color:#9FB4C8;margin-top:.30em;min-height:1.1em}
+.phw.ipa .p,.phw.kk .p{display:block}
+.phw .u.mute .p{color:#6A6A6A}
+/* 唸到哪一格，哪一格就亮起來（字母 ↔ 聲音） */
+.phw .u.lit .g i{color:#FFFFFF;text-shadow:0 0 20px rgba(159,180,200,.95)}
+.phw .u.lit .g i.v{color:#FF9090}
+.phw .u.lit .p{color:#F2F2F2}
+/* 音節之間的切分點，一直都在（學生看得到「這裡可以切」） */
+.phw .cut{display:inline-flex;flex-direction:column;align-items:center;color:#2B343B;
+ padding:0 .07em;transition:color .3s,padding .34s cubic-bezier(.2,1.4,.35,1)}
+.phw.split .cut{color:#9FB4C8;padding:0 .26em}
+.phw .syl.beat .g{animation:phbeat .52s ease-in-out both}
+@keyframes phbeat{0%{color:inherit}38%{color:#FFFFFF;text-shadow:0 0 24px rgba(159,180,200,.95)}
+ 100%{color:inherit;text-shadow:none}}
+/* 母音一顆一顆數 */
+.phw .u.count .g i.v{animation:phcount .5s ease-in-out both}
+@keyframes phcount{0%{text-shadow:none}40%{text-shadow:0 0 26px rgba(255,90,90,.95)}100%{text-shadow:none}}
+
+.phbox{display:flex;flex-direction:column;align-items:center;gap:clamp(4px,.8vh,9px)}
+.phnote{font-size:clamp(13px,1.85vh,17px);color:#8E8E8E;letter-spacing:.02em;min-height:1.35em}
+.phnote b{color:#F2F2F2;font-weight:700}
+.phnote .rv{color:#FF5A5A;font-weight:700}
+.phchips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.phchips button{background:#131313;border:1px solid #333;color:#8E8E8E;border-radius:99px;
+ font-family:inherit;font-size:clamp(12px,1.7vh,15px);padding:5px 12px;min-height:32px;cursor:pointer}
+.phchips button.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A;font-weight:700}
+.phchips button:active{background:#2A2A2A}
+.phchips button.on:active{background:#B4C6D6}
+
+/* 任何一段英文都可以點來聽（補充單字、字詞、用法） */
+.sp{cursor:pointer;border-bottom:1px dotted #4F6472}
+.sp:active,.sp.ping{color:#9FB4C8;border-bottom-color:#9FB4C8}
+.reduce .phw .syl.beat .g,.reduce .phw .u.count .g i.v{animation:none!important}
 </style>
 </head>
 <body>
@@ -64,9 +109,176 @@ body{margin:0;background:#000;color:#F2F2F2;
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
-<div id="bar"><button id="say">🔊 念一次</button><button id="again">▶ 從頭看</button><button id="home">🏠 首頁</button></div>
+<div id="bar"><button id="say">🔊 念一次</button><button id="slow">🐢 放慢</button><button id="again">▶ 從頭看</button><button id="home">🏠 首頁</button></div>
 
 <script>
+
+var PH=(function(){
+ var D={"family":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"i","i":"ə","k":"ə","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]],"parent":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"e","k":"ɛ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}],[{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"mother":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"father":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"brother":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"sister":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"son":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"daughter":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"au","i":"ɔː","k":"ɔ","s":0,"n":1},{"L":"gh","i":"","k":"","s":1,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"grandfather":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"grandmother":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"uncle":[[{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"ŋ","k":"ŋ","s":0,"n":0}],[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"le","i":"əl","k":"əl","s":0,"n":1}]],"aunt":[[{"L":"au","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"cousin":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"ou","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}],[{"L":"i","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"nephew":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"ph","i":"f","k":"f","s":0,"n":0}],[{"L":"ew","i":"juː","k":"ju","s":0,"n":1}]],"niece":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"ie","i":"iː","k":"i","s":0,"n":1},{"L":"c","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"husband":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"wife":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"older":[[{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"younger":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"ou","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"ŋ","k":"ŋ","s":0,"n":0}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"big":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0}]],"little":[[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}],[{"L":"t","i":"","k":"","s":1,"n":0},{"L":"le","i":"əl","k":"əl","s":0,"n":1}]],"elder":[[{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"parents":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"e","k":"ɛ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}],[{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"mom":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ɑ","k":"ɑ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"mum":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"dad":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"sun":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"grandpa":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}]],"grandma":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}]],"auntie":[[{"L":"au","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ie","i":"i","k":"ɪ","s":0,"n":1}]],"sis":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"bro":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"me":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1}]],"tree":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ee","i":"iː","k":"i","s":0,"n":1}]],"grand":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"house":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"ou","i":"aʊ","k":"aʊ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"tea":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1}]],"ketchup":[[{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"tch","i":"tʃ","k":"tʃ","s":0,"n":0}],[{"L":"u","i":"ə","k":"ə","s":0,"n":1},{"L":"p","i":"p","k":"p","s":0,"n":0}]],"hamburger":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"ur","i":"ɜːr","k":"ɝ","s":0,"n":1}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"sandwich":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"breakfast":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"e","k":"ɛ","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}],[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"goodbye":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"oo","i":"ʊ","k":"ʊ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"break":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"eɪ","k":"e","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}]],"fast":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]]};
+ var MODES=["","ipa","kk"],mode=0,slow=false,timers=[];
+ try{var m=localStorage.getItem("phMode");if(m!==null)mode=+m||0}catch(e){}
+ function V(ch){return "aeiou".indexOf(ch.toLowerCase())>=0}
+ function isNuc(u){return u.n===1}
+ function letters(u){var h="",L=u.L,k;
+  for(k=0;k<L.length;k++){
+   var red=(!u.s)&&(V(L[k])||(L[k].toLowerCase()==="y"&&isNuc(u)));
+   h+='<i class="'+(red?"v":"")+'">'+L[k]+'</i>'}
+  return h}
+ /* 一個單字的完整元件：字母（母音紅／不發音灰）＋ 正下方對齊的音標 ＋ 音節切分點 */
+ /* 查不到音標的字（外語家人單字等）：**不硬掰音標、不硬切音節**，
+    只把母音字母標紅，一樣點得下去唸。這是誠實界線，不要拿掉。 */
+ function plain(w,lang){
+  var h='<span class="phw phplain" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
+        '><span class="syl"><span class="u"><span class="g">',k;
+  for(k=0;k<w.length;k++)h+='<i class="'+(V(w[k])?"v":"")+'">'+w[k]+'</i>';
+  return h+'</span></span></span></span>'}
+ function word(w,lang){
+  if(/s/.test(w))return w.split(/s+/).map(function(x){return word(x,lang)}).join(" ");
+  var key=w.toLowerCase(),d=D[key];
+  if(!d)return plain(w,lang);
+  var h='<span class="phw '+MODES[mode]+'" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
+        ' data-n="'+d.length+'">',si,ui;
+  for(si=0;si<d.length;si++){
+   if(si)h+='<span class="cut"><span class="g">·</span><span class="p">&nbsp;</span></span>';
+   h+='<span class="syl">';
+   for(ui=0;ui<d[si].length;ui++){var u=d[si][ui];
+    h+='<span class="u'+(u.s?" mute":"")+'"><span class="g">'+letters(u)+'</span>'+
+       '<span class="p" data-i="'+(u.s?"–":u.i)+'" data-k="'+(u.s?"–":u.k)+'">'+
+       (u.s?"–":(mode===2?u.k:u.i))+'</span></span>'}
+   h+='</span>'}
+  return h+'</span>'}
+ /* 字卡上的三段切換（無／IPA／KK）＋ 音節按鈕 */
+ function chips(w){
+  return '<div class="phchips" data-for="'+w+'">'+
+   '<button data-m="0"'+(mode===0?' class="on"':'')+'>無音標</button>'+
+   '<button data-m="1"'+(mode===1?' class="on"':'')+'>IPA</button>'+
+   '<button data-m="2"'+(mode===2?' class="on"':'')+'>KK</button>'+
+   '<button data-syl="1">✂️ 音節</button></div>'}
+ /* 字卡上**只放單字本身**——切換鈕與說明文字都移到下方 #bar，
+    讓學生一眼只看到要學的那個英文單字（使用者 2026-09-20 指定）。 */
+ function box(w){return word(w)}
+ /* {{單字}} → 畫成單字元件；{{de-DE:Mutter}} → 指定語言（外語家人單字） */
+ function expand(h){
+  return String(h)
+   .replace(/{{([a-zA-Z]{2}-[A-Z]{2}):([^{}]+)}}/g,function(m,lang,w){return word(w.trim(),lang)})
+   .replace(/{{([^{}:]+)}}/g,function(m,w){return word(w.trim())})}
+ function clear(){while(timers.length)clearTimeout(timers.pop())}
+ function at(ms,fn){timers.push(setTimeout(fn,ms))}
+ function reduced(){return document.body.classList.contains("reduce")}
+ /* 說話：全頁共用一個放慢開關 */
+ function say(t,lang){try{if(!t)return;var u=new SpeechSynthesisUtterance(t);
+  u.lang=lang||"en-US";u.rate=slow?.45:.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+ /* 唸單字：一格一格亮過去，字母和聲音對起來 */
+ function sayWord(el,lang){
+  var w=el.getAttribute("data-say");say(w,lang);
+  if(reduced())return;
+  var us=el.querySelectorAll(".u"),k,step=(slow?300:170);
+  clear();
+  for(k=0;k<us.length;k++)(function(u,k){
+   at(160+k*step,function(){u.classList.add("lit")});
+   at(160+k*step+step*1.25,function(){u.classList.remove("lit")})})(us[k],k)}
+ /* 音節動畫：先一顆一顆數紅色母音，再把音節拉開 */
+ function syl(el,note){
+  var n=+el.getAttribute("data-n")||1,vs=el.querySelectorAll(".u"),sy=el.querySelectorAll(".syl"),k,c=0;
+  clear();el.classList.remove("split");
+  if(note)note.innerHTML="";
+  var reds=[];for(k=0;k<vs.length;k++)if(vs[k].querySelector("i.v")&&!/mute/.test(vs[k].className))reds.push(vs[k]);
+  reds.forEach(function(u,k){at(120+k*430,function(){
+   u.classList.add("count");c=k+1;
+   if(note)note.innerHTML='<span class="rv">●</span> 紅色母音 <b>'+c+'</b> 個';
+   at(520,function(){u.classList.remove("count")})})});
+  var t0=120+reds.length*430+180;
+  at(t0,function(){el.classList.add("split")});
+  for(k=0;k<sy.length;k++)(function(s,k){at(t0+120+k*360,function(){
+   s.classList.remove("beat");void s.offsetWidth;s.classList.add("beat");
+   if(note)note.innerHTML='✂️ 切成 <b>'+(k+1)+'</b> 段'})})(sy[k],k);
+  at(t0+120+sy.length*360+240,function(){
+   if(note)note.innerHTML='<span class="rv">'+n+'</span> 個母音 ＝ <b>'+n+' 個音節</b>'})}
+ /* 把說明文字裡的英文字詞變成可以點來聽（補充單字、字詞、用法都算）。
+   **只掃說明文字的容器**：.en 這種手工排版（dau<span>gh</span>ter）拆開來會壞掉，
+   那種地方改用 {{單字}} 標記，由 PH.word() 直接畫。 */
+ var HOSTS=".sub,.mid,.note,.qtext,.big,.parts,.zh";
+ function autoSay(root){
+  if(!root)return;
+  var list=[];
+  [].forEach.call(root.querySelectorAll(HOSTS),function(host){
+   if(host.closest(".nosay"))return;
+   var walk=document.createTreeWalker(host,NodeFilter.SHOW_TEXT,null,false),n;
+   while((n=walk.nextNode())){
+    var pe=n.parentNode;
+    if(!pe||pe.nodeType!==1)continue;
+    if(pe.closest(".sp,.phw,.phchips,.nosay,button,a,#src"))continue;
+    if(/[A-Za-z]{2}/.test(n.nodeValue))list.push(n)}});
+  list.forEach(function(t){
+   var s=t.nodeValue,re=/[A-Za-z][A-Za-z'\u2019-]*(?:[ ][A-Za-z][A-Za-z'\u2019-]*)*/g,
+       frag=document.createDocumentFragment(),last=0,m,any=false;
+   while((m=re.exec(s))){
+    if(m[0].length<2)continue;
+    if(m.index>last)frag.appendChild(document.createTextNode(s.slice(last,m.index)));
+    var sp=document.createElement("span");
+    sp.className="sp";sp.setAttribute("data-say",m[0]);sp.textContent=m[0];
+    frag.appendChild(sp);last=m.index+m[0].length;any=true}
+   if(!any)return;
+   if(last<s.length)frag.appendChild(document.createTextNode(s.slice(last)));
+   t.parentNode.replaceChild(frag,t)})}
+ /* 切換音標：直接換掉每個字母下面那一行，不用重畫整幕 */
+ function apply(){
+  [].forEach.call(document.querySelectorAll(".phw"),function(p){
+   p.className="phw "+MODES[mode];
+   [].forEach.call(p.querySelectorAll(".u .p"),function(g){
+    g.textContent=(mode===2?g.getAttribute("data-k"):g.getAttribute("data-i"))||""})});
+  [].forEach.call(document.querySelectorAll(".phchips button[data-m]"),function(b){
+   b.classList.toggle("on",(+b.getAttribute("data-m")||0)===mode)})}
+ /* 全頁共用：點任何一個英文字詞就唸、切換音標、播音節動畫 */
+ document.addEventListener("click",function(e){
+  var c=e.target.closest?e.target.closest(".phchips button"):null;
+  if(c){
+   var box=c.closest(".phbox"),w=box?box.querySelector(".phw"):null;
+   if(c.hasAttribute("data-syl")){if(w)syl(w,box.querySelector(".phnote"));return}
+   mode=+c.getAttribute("data-m")||0;
+   try{localStorage.setItem("phMode",mode)}catch(x){}
+   apply();
+   return}
+  var t=e.target.closest?e.target.closest(".phw,[data-say]"):null;
+  if(!t)return;
+  if(t.classList.contains("phw"))sayWord(t,t.getAttribute("data-lang"));
+  else{say(t.getAttribute("data-say"),t.getAttribute("data-lang"));
+   t.classList.add("ping");setTimeout(function(){t.classList.remove("ping")},260)}
+ });
+ /* 畫面上的主角單字：#card／#stage 裡字最大的那一個 .phw */
+ function main(){
+  var all=document.querySelectorAll("#card .phw,#stage .phw"),best=null,bs=0,k;
+  for(k=0;k<all.length;k++){var f=parseFloat(getComputedStyle(all[k]).fontSize)||0;
+   if(f>bs){bs=f;best=all[k]}}
+  return best}
+ function setMode(m){mode=((+m||0)%3+3)%3;try{localStorage.setItem("phMode",mode)}catch(e){}apply();return mode}
+ return{word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,syl:syl,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
+  has:function(w){return !!D[(w||"").toLowerCase()]},
+  slow:function(v){slow=(v===undefined)?!slow:!!v;return slow},
+  isSlow:function(){return slow},
+  mode:function(){return mode}};
+})();
+/* #bar 的「🐢 放慢」：管全頁所有發音（單字、補充字詞、用法） */
+(function(){var b=document.getElementById("slow");if(!b)return;
+ b.addEventListener("click",function(){
+  var on=PH.slow();b.textContent=on?"🐢 放慢：開":"🐢 放慢";
+  b.style.background=on?"#9FB4C8":"";b.style.color=on?"#0A0A0A":"";
+  b.style.borderColor=on?"#9FB4C8":""});})();
+/* #bar 的「🔤 音標」：無 → IPA → KK →（回到）無。字卡是用卡片上的三顆 chips。 */
+(function(){var b=document.getElementById("phmode");if(!b)return;
+ var N=["無","IPA","KK"];
+ function lab(){b.textContent="🔤 音標："+N[PH.mode()]}
+ lab();b.addEventListener("click",function(){PH.setMode(PH.mode()+1);lab()});})();
+/* #bar 的「✂️ 音節」：動畫跑在單字上，數出來的結果寫回按鈕，字卡保持乾淨 */
+(function(){var b=document.getElementById("phsyl");if(!b)return;
+ b.addEventListener("click",function(){
+  var el=PH.main();if(!el)return;
+  var n=+el.getAttribute("data-n")||0;
+  if(!n){b.textContent="✂️ 音節";return}
+  PH.syl(el,null);
+  b.textContent="✂️ 音節";
+  setTimeout(function(){b.textContent="✂️ "+n+" 個音節"},220+n*430+120+n*360);});})();
+
 var W={zh:"哥哥、弟弟",sub:"不分大小",icon:"🧒👦",old:"brōþor",now:"brother",
  e1:"👦 哥哥、弟弟，<b>都叫 brother</b>",e2:"要分大小就加 <b>older</b> 或 <b>younger</b>"};
 
@@ -110,7 +322,9 @@ function say(){try{var u=new SpeechSynthesisUtterance(W.now);u.lang="en-US";u.ra
 
 function show(n){
  i=Math.max(0,Math.min(SCENES.length-1,n));
- document.getElementById("stage").innerHTML=SCENES[i]();
+ var st=document.getElementById("stage");
+ st.innerHTML=PH.expand(SCENES[i]());
+ PH.autoSay(st);
  var d=dots.children;
  for(var k=0;k<d.length;k++)d[k].className=(k===i?"on":"");
  document.getElementById("prev").disabled=(i===0);

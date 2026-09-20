@@ -22,19 +22,19 @@ const FAM=[
   lines:['每一個字，都有自己的故事']},
 
  {tag:'以前算的人更多',emoji:'👨‍👩‍👧‍👦<span class="extra">👴🧑‍🌾🧹</span>',say:'family',
-  h:'<div class="en in d1">family</div>',
+  h:'<div class="en in d1">{{family}}</div>',
   lines:['很久以前的 <b>family</b>，<b>連家裡幫忙做事的人都算</b>',
          '（它不是 Father And Mother I Love You 拼出來的）']},
 
  {tag:'最早的意思',emoji:'👨‍👩',say:'parent',
-  h:'<div class="en in d1">parent</div>'+
+  h:'<div class="en in d1">{{parent}}</div>'+
     '<div class="emoji emerge" style="font-size:clamp(40px,7.4vh,66px)">👶</div>',
   lines:['最早寫成 <b class="nosay">parens</b>，意思是「<b>把孩子生下來的人</b>」',
          '一位是 a parent，兩位以上是 parents']},
 
  {tag:'寶寶最先會的音',emoji:'👶',say:'mother',
   h:'<div class="en"><span class="bub b1">ma</span><span class="bub b2">ma</span><span class="bub b3">ma</span></div>'+
-    '<div class="en pop" style="animation-delay:1.3s">mom</div>',
+    '<div class="en pop" style="animation-delay:1.3s">{{mom}}</div>',
   lines:['全世界的寶寶，最先發得出來的音就是 <b>ma</b>',
          '媽媽的英文 <b>mother</b>、<b>mom</b>，都從 <b>m</b> 開頭']},
 
@@ -48,69 +48,72 @@ const FAM=[
   lines:['以前英文有一個字母 <b class="nosay">þ</b>，像一面小旗子',
          '<b>brother</b> 以前寫成 <b class="nosay">brōþor</b>']},
 
+ /* 2026-09-20 訂正：原本寫「住進同一個村子」——**查不到任何一個村子的紀錄**，
+    史料講的是一整片地區（丹麥區 Danelaw），不是單一村子，那句是編的，已刪。
+    留下來的都是查得到的：維京人住在英格蘭東北邊，地名到今天還是維京話（-by ＝ 村子）。 */
  {tag:'兩邊人唸得不一樣',emoji:'👧',say:'sister',
   h:'<div class="en in d1" style="font-size:clamp(17px,3vh,28px);line-height:1.6">'+
     '<span class="fromL">🏴 英國人唸 sweostor</span><br>'+
     '<span class="fromR">⛵ 維京人唸 systir</span></div>'+
-    '<div class="en pop" style="animation-delay:1.3s">sister</div>',
+    '<div class="en pop" style="animation-delay:1.3s">{{sister}}</div>',
   lines:['<b>同一個姊姊</b>，英國人唸 <b class="nosay">sweostor</b>，坐船來的維京人唸 <b class="nosay">systir</b>',
-         '<b>英國人和維京人住進同一個村子</b>，後來大家都唸 <b>sister</b>']},
+         '維京人<b>住在英格蘭東北邊</b>，後來大家都唸 <b>sister</b>']},
 
  {tag:'唸起來一樣',emoji:'☀️👦',say:'son',
   h:'<div class="en in d1" style="font-size:clamp(26px,4.8vh,46px)">'+
-    '<span class="fromL">sun ☀️</span> <span class="ar">🔊</span> <span class="fromR">👦 son</span></div>',
+    '<span class="fromL">{{sun}} ☀️</span> <span class="ar">🔊</span> <span class="fromR">👦 {{son}}</span></div>',
   lines:['<b>sun</b>（太陽）和 <b>son</b>（兒子），<b>唸起來一模一樣</b>',
          '可是<b>拼法不一樣，意思也不一樣</b>']},
 
  {tag:'後來不唸了',emoji:'👧',say:'daughter',
-  h:'<div class="en in d1">dau<span class="mute">gh</span>ter</div>',
+  h:'<div class="en in d1"><span class="sp" data-say="daughter">dau<span class="mute">gh</span>ter</span></div>',
   lines:['以前的人，<b>gh</b> 會唸出來','後來<b>不唸了，字母還是留著</b>']},
 
  {tag:'借來的 grand',emoji:'👴',say:'grandfather',
   h:'<div class="en in d1" style="font-size:clamp(26px,4.8vh,48px)">'+
     '<span class="fromL hi">grand</span> <span class="ar">＋</span> <span class="fromR">father</span></div>'+
-    '<div class="en pop" style="animation-delay:1.2s;font-size:clamp(26px,4.8vh,48px)">grandfather</div>',
+    '<div class="en pop" style="animation-delay:1.2s;font-size:clamp(26px,4.8vh,48px)">{{grandfather}}</div>',
   lines:['<b>grand</b> ＝ <b>大</b>（從法國借來的）','裝在 father 前面 ＝ <b>爸爸的爸爸</b>']},
 
  {tag:'同一個 grand',emoji:'👵',say:'grandmother',
   h:'<div class="en in d1" style="font-size:clamp(24px,4.4vh,42px)">'+
     '<span class="hi">grand</span> ＋ mother</div>'+
     '<div class="en pop" style="animation-delay:1.2s;font-size:clamp(24px,4.4vh,42px)">'+
-    '<span class="hi">grand</span> ＋ ma</div>',
+    '{{grandmother}}　{{grandma}}</div>',
   lines:['同一個 <b>grand</b>（<b>大</b>），可以一直裝','裝在 mother 前面 ＝ <b>媽媽的媽媽</b>']},
 
  {tag:'以前只有一種',emoji:'🧓<span class="plus">👨👴</span>',say:'uncle',
-  h:'<div class="en in d1">uncle</div>',
+  h:'<div class="en in d1">{{uncle}}</div>',
   lines:['uncle 最早只有一個意思：<b>媽媽的兄弟</b>（舅舅）',
          '現在叔叔、伯伯、姑丈、姨丈，<b>全都是 uncle</b>']},
 
  {tag:'以前只有一種',emoji:'👩‍🦰<span class="plus">👩👵</span>',say:'aunt',
-  h:'<div class="en in d1">aunt</div>',
+  h:'<div class="en in d1">{{aunt}}</div>',
   lines:['aunt 最早也只有一個意思：<b>爸爸的姊妹</b>（姑姑）',
          '現在阿姨、伯母、舅媽，<b>全都是 aunt</b>']},
 
  {tag:'以前只有一種',emoji:'🧑<span class="plus">🧒👧👦</span>',say:'cousin',
-  h:'<div class="en in d1">cousin</div>',
+  h:'<div class="en in d1">{{cousin}}</div>',
   lines:['cousin 以前只有一種：<b>阿姨的小孩</b>',
          '現在堂哥、表姊、堂弟、表妹，<b>全都是 cousin</b>']},
 
  {tag:'以前用的人更多',emoji:'👦<span class="extra">👴👶🧒</span>',say:'nephew',
-  h:'<div class="en in d1">nephew</div>',
+  h:'<div class="en in d1">{{nephew}}</div>',
   lines:['<b class="nosay">nepos</b> 以前很好用，孫子、姪子、外甥<b>都可以用這個字</b>',
          '現在只剩一種：<b>兄弟姊妹的兒子</b>']},
 
  {tag:'和 nephew 一樣',emoji:'👧<span class="extra">👵👶👩</span>',say:'niece',
-  h:'<div class="en in d1">niece</div>',
+  h:'<div class="en in d1">{{niece}}</div>',
   lines:['<b class="nosay">neptia</b> 以前也一樣，<b>一大群人都可以用這個字</b>',
          '現在只剩一種：<b>兄弟姊妹的女兒</b>']},
 
  {tag:'藏在字裡的房子',emoji:'🏠',say:'husband',
-  h:'<div class="en in d1"><span class="hi">hus</span>band</div>',
+  h:'<div class="en in d1"><span class="sp" data-say="husband"><span class="hi">hus</span>band</span></div>',
   lines:['<b>hus</b> 就是 <b>house</b>（房子）',
          'husband 以前的意思是「<b>管這個家的人</b>」']},
 
  {tag:'以前用的人更多',emoji:'👰<span class="extra">👩👩‍🦰👵</span>',say:'wife',
-  h:'<div class="en in d1">wife</div>',
+  h:'<div class="en in d1">{{wife}}</div>',
   lines:['以前的 <b class="nosay">wīf</b>，<b>每個女生都可以用這個字</b>',
          '現在只剩一種：<b>太太</b>']},
 
@@ -142,36 +145,49 @@ const PAGES=[
 
  /* 動畫：「大的？小的？」自己掉下去不見了 → 平常根本不用講 */
  {tag:'平常這樣說',emoji:'🗣️',say:'my brother',
-  h:'<div class="en in d1" style="font-size:clamp(24px,4.4vh,44px)">my {{brother}}</div>'+
-    '<div class="drop" style="font-size:clamp(19px,3.2vh,30px);color:#8A8A8A;margin-top:.2em">大的？小的？</div>',
+  h:'<div class="en big1 in d1">my {{brother}}</div>'+
+    '<div class="drop" style="font-size:clamp(20px,3.4vh,32px);color:#8A8A8A;margin-top:.25em">大的？小的？</div>',
   lines:['<b>不用講大小</b>']},
 
- /* 動畫：older 長大、younger 縮小 */
- {tag:'要分大小',say:'older brother',
-  h:'<div class="en in d1" style="font-size:clamp(21px,3.9vh,38px);line-height:2.05">'+
-    '<span class="fromL">🧒 <span class="grow">{{older}}</span> {{brother}}</span><br>'+
-    '<span class="fromR">👶 <span class="shrink">{{younger}}</span> {{brother}}</span></div>',
-  lines:['哥哥加 <b>older</b>','弟弟加 <b>younger</b>']},
+ /* 一幕只講一個講法，字才放得大（使用者 2026-09-20 指定：最後一排要看得清楚） */
+ {tag:'哥哥',emoji:'<span class="eBig">👦</span>',say:'older brother',
+  h:'<div class="en big1 in d1">{{older}} {{brother}}</div>'+
+    '<div class="mean pop">＝ 哥哥</div>',
+  lines:['<b>older</b> ＝ 年紀比較大']},
 
- {tag:'姊姊妹妹一樣',say:'older sister',
-  h:'<div class="en in d1" style="font-size:clamp(21px,3.9vh,38px);line-height:2.05">'+
-    '<span class="fromL">👩 <span class="grow">{{older}}</span> {{sister}}</span><br>'+
-    '<span class="fromR">👧 <span class="shrink">{{younger}}</span> {{sister}}</span></div>',
-  lines:['姊姊加 <b>older</b>','妹妹加 <b>younger</b>']},
+ {tag:'弟弟',emoji:'<span class="eSml">👦</span>',say:'younger brother',
+  h:'<div class="en big1 in d1">{{younger}} {{brother}}</div>'+
+    '<div class="mean pop">＝ 弟弟</div>',
+  lines:['<b>younger</b> ＝ 年紀比較小']},
 
- /* 動畫：聊天的時候，big 長大、little 縮小 */
- {tag:'聊天的時候',say:'big brother',
-  h:'<div class="en in d1" style="font-size:clamp(21px,3.9vh,38px);line-height:2.05">'+
-    '💬 <span class="grow">{{big}}</span> {{brother}}<br>'+
-    '💬 <span class="shrink">{{little}}</span> {{brother}}</div>',
-  lines:['<b>big</b> ＝ 大　<b>little</b> ＝ 小','兩個都對']},
+ {tag:'姊姊',emoji:'<span class="eBig">👧</span>',say:'older sister',
+  h:'<div class="en big1 in d1">{{older}} {{sister}}</div>'+
+    '<div class="mean pop">＝ 姊姊</div>',
+  lines:['姊姊妹妹<b>完全一樣</b>，前面加 older']},
 
- /* 動畫：✅ ❌ 兩個章蓋下去 */
- {tag:'課本上會看到',say:'elder brother',
-  h:'<div class="en in d1" style="font-size:clamp(19px,3.4vh,33px);line-height:2.05">'+
-    '<span class="stamp">✅</span> {{elder}} {{brother}}<br>'+
-    '<span class="stamp">❌</span> He is {{elder}} than me</div>',
-  lines:['<b>elder</b> 只能放在 <b>brother</b> 前面','要比大小，說 <b>older than</b>']},
+ {tag:'妹妹',emoji:'<span class="eSml">👧</span>',say:'younger sister',
+  h:'<div class="en big1 in d1">{{younger}} {{sister}}</div>'+
+    '<div class="mean pop">＝ 妹妹</div>',
+  lines:['前面加 <b>younger</b> 就是妹妹']},
+
+ {tag:'聊天的時候',emoji:'💬',say:'big brother',
+  h:'<div class="en big2 in d1"><span class="grow">{{big}}</span> {{brother}} <span class="ar">＝</span> 哥哥</div>'+
+    '<div class="en big2 in d2"><span class="shrink">{{little}}</span> {{brother}} <span class="ar">＝</span> 弟弟</div>',
+  lines:['聊天這樣說<b>也對</b>','<b>big</b> ＝ 大　<b>little</b> ＝ 小']},
+
+ /* 11：elder 要註明哪個國家的用法 */
+ {tag:'課本上會看到',emoji:'🇬🇧',say:'elder brother',
+  h:'<div class="en big2 in d1"><span class="stamp">✅</span> {{elder}} {{brother}} <span class="ar">＝</span> 哥哥</div>',
+  lines:['<b>elder</b> 是<b>英國</b>的寫法，意思一樣',
+         '（證據在右下角 <b>📖 出處</b>：Cambridge「elder or older?」）']},
+
+ /* 11：錯的句子要標清楚錯在哪，並給出正確句 ＋ 中文意思 */
+ {tag:'這樣寫是錯的',emoji:'⚠️',say:'He is older than me.',
+  h:'<div class="en big3 in d1 wrong"><span class="stamp">❌</span> He is <span class="bad">elder</span> than me.</div>'+
+    '<div class="en big3 in d2"><span class="stamp">✅</span> He is <span class="hi">older</span> than me.</div>'+
+    '<div class="mean pop">他年紀比我大</div>',
+  lines:['<b>elder</b> 只能放在 <b>brother</b>、<b>sister</b> 前面',
+         '<b>than</b> 前面一定要用 <b>older</b>']},
 
  {tag:'記住這個',emoji:'🧒👦👧👩',mid:'四個中文字，兩個英文字',
   lines:['哥哥、弟弟 → <b>brother</b>','姊姊、妹妹 → <b>sister</b>']}
@@ -202,9 +218,9 @@ const PAGES=[
 
  /* #3 hus ＝ house（husband 的錨點） */
  {tag:'藏在字裡的房子',emoji:'🏠',say:'husband',
-  h:'<div class="en in d1"><span class="hi">hus</span>band</div>'+
+  h:'<div class="en in d1"><span class="sp" data-say="husband"><span class="hi">hus</span>band</span></div>'+
     '<div class="en pop" style="animation-delay:1.1s;font-size:clamp(26px,4.6vh,46px)">'+
-    '<span class="hi">hus</span> ＝ <span class="hi">house</span></div>',
+    '<span class="hi">hus</span> ＝ {{house}}</div>',
   lines:['<b>hus</b> 就是 <b>house</b>（房子）',
          'husband ＝ <b>管這間房子的人</b>']},
 
@@ -217,10 +233,15 @@ const PAGES=[
          '看到 <b>-ther</b>、<b>-ter</b>，很可能就是<b>家人</b>']},
 
  /* #5 德文旁證 */
- {tag:'德文也一樣',emoji:'🇩🇪',
-  h:'<div class="en in d1" style="font-size:clamp(16px,2.8vh,28px);line-height:1.75">'+
-    'Mut<span class="hi">ter</span><br>Va<span class="hi">ter</span><br>Bru<span class="hi">der</span><br>'+
-    'Toch<span class="hi">ter</span><br>Schwes<span class="hi">ter</span></div>',
+ /* 每一個德文字都可以點，用**德語**發音（使用者 2026-09-20 指定）。
+    .sp 帶 data-lang，全頁共用的點擊處理器會照著唸。 */
+ {tag:'德文也一樣',emoji:'🇩🇪',say:'Mutter',sayLang:'de-DE',
+  h:'<div class="en in d1" style="font-size:clamp(16px,2.8vh,28px);line-height:1.9">'+
+    '<span class="sp" data-say="Mutter" data-lang="de-DE">Mut<span class="hi">ter</span></span><br>'+
+    '<span class="sp" data-say="Vater" data-lang="de-DE">Va<span class="hi">ter</span></span><br>'+
+    '<span class="sp" data-say="Bruder" data-lang="de-DE">Bru<span class="hi">der</span></span><br>'+
+    '<span class="sp" data-say="Tochter" data-lang="de-DE">Toch<span class="hi">ter</span></span><br>'+
+    '<span class="sp" data-say="Schwester" data-lang="de-DE">Schwes<span class="hi">ter</span></span></div>',
   lines:['德文的媽媽、爸爸、哥哥、女兒、姊姊',
          '<b>尾巴也都一樣</b> —— 這不是巧合']},
 
@@ -235,7 +256,7 @@ const PAGES=[
  /* #7 誠實幕：bro、sis 沒有意思 */
  {tag:'拆到這裡就好',emoji:'✋',
   h:'<div class="en in d1" style="font-size:clamp(24px,4.4vh,42px)">'+
-    '<span class="mute">bro</span>　<span class="mute">sis</span></div>',
+    '{{bro}}　{{sis}}</div>',
   lines:['<b>bro</b>、<b>sis</b> 單獨拿出來，<b>沒有意思</b>',
          '今天的 bro、sis 是<b>後來剪短的</b>，不是原本的零件']},
 
@@ -244,7 +265,30 @@ const PAGES=[
   h:'<div class="en in d1" style="font-size:clamp(26px,4.8vh,48px)">parent <span class="hi">＋ s</span></div>',
   lines:['一位是 <b>a parent</b>','兩位以上<b>加 s</b>：<b>parents</b>']},
 
- /* #9 收尾 */
+ /* #9、#10 別的國家的家人單字：一次只講一個家人（使用者 2026-09-20 指定）。
+    只列**權威辭典查得到**的拼法，並用該國語言發音。放在最後面，
+    所以不會動到前面幕號（_build.js 的 parts.href 靠幕號跳）。 */
+ {tag:'別的國家怎麼叫媽媽',emoji:'🌍',say:'Mutter',sayLang:'de-DE',
+  h:'<div class="en in d1" style="font-size:clamp(17px,3vh,30px);line-height:1.95">'+
+    '🇩🇪 <span class="sp" data-say="Mutter" data-lang="de-DE">Mutter</span>　'+
+    '🇳🇱 <span class="sp" data-say="moeder" data-lang="nl-NL">moeder</span><br>'+
+    '🇪🇸 <span class="sp" data-say="madre" data-lang="es-ES">madre</span>　'+
+    '🇫🇷 <span class="sp" data-say="mère" data-lang="fr-FR">mère</span></div>'+
+    '<div class="en pop" style="animation-delay:1.1s;font-size:clamp(20px,3.6vh,36px)">'+
+    '🇺🇸 {{mother}}</div>',
+  lines:['<b>點一下每一個字，聽聽看</b>','都從 <b>m</b> 開頭 —— 和寶寶的 <b>ma</b> 一樣']},
+
+ {tag:'別的國家怎麼叫爸爸',emoji:'🌍',say:'Vater',sayLang:'de-DE',
+  h:'<div class="en in d1" style="font-size:clamp(17px,3vh,30px);line-height:1.95">'+
+    '🇩🇪 <span class="sp" data-say="Vater" data-lang="de-DE">Vater</span>　'+
+    '🇳🇱 <span class="sp" data-say="vader" data-lang="nl-NL">vader</span><br>'+
+    '🇪🇸 <span class="sp" data-say="padre" data-lang="es-ES">padre</span>　'+
+    '🇫🇷 <span class="sp" data-say="père" data-lang="fr-FR">père</span></div>'+
+    '<div class="en pop" style="animation-delay:1.1s;font-size:clamp(20px,3.6vh,36px)">'+
+    '🇺🇸 {{father}}</div>',
+  lines:['<b>點一下每一個字，聽聽看</b>','都從 <b>f</b>、<b>v</b>、<b>p</b> 開頭 —— 和寶寶的 <b>pa</b> 一樣']},
+
+ /* #11 收尾 */
  {tag:'記住這件事',emoji:'🧩',
   h:'<div class="en in d1" style="font-size:clamp(17px,3vh,30px);line-height:1.7">'+
     '<span class="hi">拆得開</span>　grandfather　grandmother　husband<br>'+
@@ -286,27 +330,28 @@ const PAGES=[
  {emoji:'🌍',mid:'不只家人單字',lines:['很多你認識的字，也有故事']},
 
  {tag:'從台灣出海',emoji:'🍵🚢',emojiCls:'fly',say:'tea',
-  h:'<div class="en in d1">tea</div>',
+  h:'<div class="en in d1">{{tea}}</div>',
   lines:['台灣話的「茶」唸 <b class="nosay">tê</b>','坐船到外國，就變成 <b>tea</b>']},
 
  {tag:'也是台灣話',emoji:'🍅',say:'ketchup',
-  h:'<div class="en in d1">ketchup</div>',
+  h:'<div class="en in d1">{{ketchup}}</div>',
   lines:['台灣話的 <b class="nosay">kê-tsiap</b>（鮭汁）是魚做的醬','英文借去用，今天變成番茄醬']},
 
  {tag:'城市的名字',emoji:'🍔',say:'hamburger',
-  h:'<div class="en in d1">hamburger</div>',
+  h:'<div class="en in d1">{{hamburger}}</div>',
   lines:['來自德國的<b>漢堡市</b>，不是火腿','後來被切成 ham＋burger，才有 cheeseburger']},
 
  {tag:'人的名字',emoji:'🥪',say:'sandwich',
-  h:'<div class="en in d1">sandwich</div>',
+  h:'<div class="en in d1">{{sandwich}}</div>',
   lines:['這是一位<b>伯爵的名字</b>','他請人把肉夾在麵包中間，不用停下手邊的事']},
 
  {tag:'兩個字黏起來',emoji:'🍳',say:'breakfast',
-  h:'<div class="en"><span class="fromL">break</span> ＋ <span class="fromR">fast</span></div>',
+  h:'<div class="en"><span class="fromL">{{break}}</span> ＋ <span class="fromR">{{fast}}</span></div>'+
+    '<div class="en pop" style="animation-delay:1.2s;font-size:clamp(28px,5vh,52px)">{{breakfast}}</div>',
   lines:['合起來就是 <b>breakfast</b>（早餐）','睡了一整晚沒吃，早上<b>打破</b>它']},
 
  {tag:'一句話縮起來',emoji:'👋',say:'goodbye',
-  h:'<div class="en squeeze">goodbye</div>',
+  h:'<div class="en squeeze">{{goodbye}}</div>',
   lines:['本來是一整句 <b>God be with ye</b>','（願神與你同在）說久了，縮成一個字']},
 
  {tag:'看出來了嗎',emoji:'🗣️⏳',mid:'每個字，都是這樣來的',
@@ -419,6 +464,16 @@ body{margin:0;background:#000;color:#F2F2F2;
 /* 用不到的東西自己掉下去（平常不用講大小） */
 .drop{animation:drop 2.4s cubic-bezier(.4,.1,.7,1) both}
 @keyframes drop{0%,38%{opacity:1;transform:none}100%{opacity:0;transform:translateY(46px) rotate(-13deg)}}
+/* 哥哥弟弟那一頁：一幕一個重點，字要大到最後一排看得清楚（使用者 2026-09-20） */
+.en.big1{font-size:clamp(30px,min(5.6vh,7vw),62px);line-height:1.25}
+.en.big2{font-size:clamp(20px,min(3.6vh,4.4vw),38px);line-height:1.9}
+.en.big3{font-size:clamp(19px,min(3.4vh,4.2vw),36px);line-height:1.8}
+.mean{font-size:clamp(26px,min(4.6vh,5.6vw),50px);font-weight:700;color:#F2F2F2;
+ letter-spacing:.06em;animation-delay:.9s}
+.eBig{font-size:1.28em;display:inline-block}
+.eSml{font-size:.62em;display:inline-block;vertical-align:middle}
+.bad{color:#E07A6B;text-decoration:line-through;text-decoration-thickness:.09em}
+.en.wrong{color:#9A8A86}
 /* ✅ ❌ 蓋章 */
 .stamp{display:inline-block;animation:stamp .6s cubic-bezier(.2,1.8,.4,1) both;animation-delay:.3s}
 @keyframes stamp{0%{opacity:0;transform:scale(2.4) rotate(-18deg)}100%{opacity:1;transform:none}}
@@ -440,8 +495,6 @@ ${PH.JS}
 
 var S=${JSON.stringify(P.S,null,1)};
 
-/* {{單字}} → 母音紅色／不發音淺灰／可點來聽／可切 IPA・KK 的單字元件 */
-function ph(t){return t.replace(/\{\{([A-Za-z]+)\}\}/g,function(m,w){return PH.word(w)})}
 
 function draw(s){
  var h="";
@@ -450,7 +503,7 @@ function draw(s){
  if(s.mid)h+='<div class="mid in d1">'+s.mid+'</div>';
  if(s.h)h+=s.h;
  (s.lines||[]).forEach(function(t,k){h+='<div class="sub in d'+(k+2)+'">'+t+'</div>'});
- return ph(h);
+ return PH.expand(h);
 }
 
 var i=0,reduce=false;
