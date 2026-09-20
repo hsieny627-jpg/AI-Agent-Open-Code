@@ -40,8 +40,13 @@ const VPS=[{n:'1024x768',width:1024,height:768},{n:'820x1180',width:820,height:1
 /* 共用：量溢出與「被箭頭壓到」 */
 const BOX=()=>{
  const de=document.documentElement,st=document.getElementById('stage');
- const navs=[...document.querySelectorAll('.nav')].map(n=>n.getBoundingClientRect());let hit=null;
+ /* 2026-09-20 起，字卡的箭頭改成貼在卡片自己的左右邊、住在 #stage 裡面。
+    所以要跳過箭頭本身、以及「包著箭頭的容器」（#stage、#card）——
+    它們本來就蓋住箭頭，不是壓到。真正要抓的是卡片裡的文字滑到箭頭底下。 */
+ const navEls=[...document.querySelectorAll('.nav')];
+ const navs=navEls.map(n=>n.getBoundingClientRect());let hit=null;
  for(const el of st.querySelectorAll('*')){const r=el.getBoundingClientRect();if(!r.width)continue;
+  if(navEls.some(n=>n===el||el.contains(n)))continue;
   for(const n of navs)if(r.left<n.right&&r.right>n.left&&r.top<n.bottom&&r.bottom>n.top)hit=(el.className||el.tagName)+' 壓到箭頭'}
  return{ox:(de.scrollWidth-de.clientWidth)+(st.scrollWidth-st.clientWidth),
         oy:(de.scrollHeight-de.clientHeight)+(st.scrollHeight-st.clientHeight),h:hit};

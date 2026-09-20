@@ -23,16 +23,21 @@ body{margin:0;background:#000;color:#F2F2F2;
 #dots i{width:26px;height:4px;border-radius:99px;background:#2A2A2A;transition:background .3s}
 #dots i.on{background:#9FB4C8}
 
-/* 左右翻頁箭頭：整條邊都可以按，投影或小朋友上台都點得到 */
-.nav{position:fixed;top:0;bottom:0;width:clamp(68px,10vw,120px);border:0;background:none;
- color:#9FB4C8;font-size:clamp(38px,5.4vw,58px);font-family:inherit;line-height:1;
+/* 左右翻頁箭頭：**貼在字卡自己的左右邊**（使用者 2026-09-20 指定，老師點起來比較順手）。
+   放在 #stage 裡、不放在 #card 裡——#card 每翻一幕都整個 innerHTML 重寫，
+   而且翻卡時會做 3D 旋轉，箭頭當它的子元素會被洗掉、也會跟著歪。
+   絕對定位的基準是 #stage 的 padding 邊，所以左右偏移用同一個 --pad 對齊卡片邊緣。 */
+.nav{position:absolute;top:0;bottom:0;width:var(--navw);border:0;background:none;
+ color:#9FB4C8;font-size:clamp(38px,5.4vw,58px);font-family:inherit;line-height:1;z-index:2;
  display:flex;align-items:center;justify-content:center;cursor:pointer}
 .nav:disabled{color:#202020;cursor:default}
-.nav:active:not(:disabled){background:rgba(255,255,255,.05)}
-#prev{left:0}#next{right:0}
+.nav:active:not(:disabled){background:rgba(255,255,255,.06)}
+#prev{left:var(--pad);border-radius:clamp(18px,3vh,30px) 0 0 clamp(18px,3vh,30px)}
+#next{right:var(--pad);border-radius:0 clamp(18px,3vh,30px) clamp(18px,3vh,30px) 0}
 
 /* 字卡：一張卡就是一幕，翻頁＝翻卡（使用者 2026-09-19 指定） */
-#stage{width:100%;max-width:760px;padding:0 clamp(76px,11vw,130px);
+#stage{--pad:clamp(10px,2.5vw,28px);--navw:clamp(56px,7.5vw,86px);
+ position:relative;width:100%;max-width:760px;padding:0 var(--pad);
  display:flex;align-items:center;justify-content:center;perspective:1500px}
 #card{width:100%;text-align:center;min-height:clamp(300px,57vh,520px);
  display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -40,7 +45,7 @@ body{margin:0;background:#000;color:#F2F2F2;
  border:1px solid #242424;border-radius:clamp(18px,3vh,30px);
  background:linear-gradient(180deg,#0B0B0B 0%,#040404 100%);
  box-shadow:0 18px 50px rgba(0,0,0,.65);
- padding:clamp(10px,2.4vh,24px) clamp(8px,2vw,18px)}
+ padding:clamp(10px,2.4vh,24px) calc(var(--navw) + clamp(6px,1.2vw,12px))}
 .tag{font-size:clamp(13px,1.6vh,16px);color:#9FB4C8;letter-spacing:.4em;font-weight:700;padding-left:.4em}
 .emoji{font-size:clamp(84px,17vh,150px);line-height:1.05}
 .zh{font-size:clamp(50px,9vh,84px);font-weight:700;letter-spacing:.06em}
@@ -175,9 +180,9 @@ body{margin:0;background:#000;color:#F2F2F2;
 </head>
 <body>
 <div id="dots"></div>
+<div id="stage"><div id="card"></div>
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
-<div id="stage"><div id="card"></div></div>
-<button class="nav" id="next" aria-label="下一頁">&#8594;</button>
+<button class="nav" id="next" aria-label="下一頁">&#8594;</button></div>
 <div id="bottom">
 <nav id="wnav">
  <a href="cousin.html" title="上一個單字">◀ <span class="w">cousin</span></a>
