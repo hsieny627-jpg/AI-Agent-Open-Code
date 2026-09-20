@@ -47,6 +47,13 @@
    - 📋 萃取清單：`C:\Users\ＪＤ\AppData\Local\Temp\opencode\relevant_113.txt`（107 篇 slug/標題/日期/分類）。
    - ➡️ 下一步：重跑 3 個失敗批次 → 合併全部重點 → 撰寫完整知識庫報告 → 交叉驗證 107 篇無遺漏。
 
+10. ✅ 已完成（2026-09-20）：新增**英文句型網站** `sentences/`（三年級 Unit 1／Unit 2）。
+   四個部分：首頁／暖身 22 題／Unit 1 ＋ Unit 2 句型卡／10 種複習遊戲（每種 ≧ 20 題、每場 2 分鐘）。
+   規格寫在 `sentences/CLAUDE.md`，**接手前先讀那一份**。
+   改內容只改 `_data.js`／`_quiz_data.js`／`_game_data.js`，然後 `node sentences/_build.js`，
+   再跑 `node sentences/_verify.js` 量測（五頁 ✕ 兩尺寸，只印失敗項）。
+   根目錄首頁第 8 張卡連過去；Kahoot 匯入檔是 `kahoot_sentences_22.xlsx`。
+
 ---
 
 ## 三、提示機制（重要）

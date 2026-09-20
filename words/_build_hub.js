@@ -40,6 +40,9 @@ const STEPS = [
    d: '家人單字為什麼長這樣，一個字一幕' },
  { n: '7', ic: '🎬', t: 'About My Family', href: 'about-my-family/index.html',
    d: '用英文介紹我的家人（影片）' }
+,
+ { n: '8', ic: '💬', t: '英文句型　秒懂教室', href: 'sentences/index.html',
+   d: 'Unit 1 Who’s he? ／ Unit 2 Is he a doctor?　暖身題 ＋ 句型卡 ＋ 10 種複習遊戲' }
 ];
 
 /* 延伸與老師專用，放最下面一排小字，不搶版面 */
