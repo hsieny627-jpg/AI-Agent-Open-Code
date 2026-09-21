@@ -48,6 +48,8 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 #bar .grp button{border:0;background:none;padding:clamp(6px,1vh,9px) clamp(8px,1.2vw,13px);
  font-size:clamp(12px,1.75vh,15px)}
 #bar .grp button.on{background:var(--acc);color:#000;font-weight:700}
+#bar .grp .glbl{display:inline-flex;align-items:center;padding:0 4px 0 9px;
+ font-size:clamp(11px,1.6vh,14px);color:#6E6E6E;letter-spacing:.06em;white-space:nowrap}
 
 /* 左右翻頁：整條邊都可以按，最小 68px（使用者指定） */
 .nav{position:fixed;top:0;bottom:0;width:clamp(68px,9vw,104px);z-index:30;
@@ -75,7 +77,7 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 
 #stage{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
  padding:calc(var(--safeT) + clamp(14px,2.6vh,26px)) clamp(14px,3vw,36px)
-         calc(clamp(52px,8vh,74px) + var(--safeB)) clamp(14px,3vw,36px)}
+         calc(var(--barH,60px) + var(--safeB) + clamp(6px,1vh,12px)) clamp(14px,3vw,36px)}
 #stage.lock{overflow:hidden}
 
 /* ── 遊戲大廳 ── */
@@ -98,8 +100,8 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .gcard .gb b{color:var(--gold);font-weight:700}
 
 /* ── 遊戲 HUD ── */
-#ghud{display:none;align-items:center;justify-content:space-between;gap:clamp(8px,1.6vw,20px);
- width:100%;max-width:1120px;margin:0 auto clamp(8px,1.5vh,16px)}
+#ghud{display:none;position:relative;align-items:center;justify-content:space-between;
+ gap:clamp(8px,1.6vw,20px);width:100%;max-width:1120px;margin:0 auto clamp(8px,1.5vh,16px)}
 #ghud.on{display:flex}
 #gring{position:relative;width:clamp(58px,9vh,88px);height:clamp(58px,9vh,88px);flex:0 0 auto}
 #gring svg{width:100%;height:100%;transform:rotate(-90deg)}
@@ -117,19 +119,85 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 #gstreak{color:var(--gold)}
 #gname{font-size:clamp(13px,2.1vh,19px);font-weight:700;color:var(--acc)}
 
-/* 驚喜事件橫幅 */
-#evt{position:fixed;left:50%;top:22%;transform:translate(-50%,-50%) scale(.7);z-index:60;
+/* ── 驚喜卡（使用者 2026-09-21 指定改版）────────────────────────────
+   舊版直接跳一行字，學生「看不懂驚喜是什麼、也沒有期待感」。
+   新版是一張真的卡：先看到卡背在抖（等一下會翻開 ＝ 期待），
+   翻開以後最大的那一行就是「你拿到什麼」（分數 ✕ 2、＋500 分…），
+   下面一行用白話講「現在會發生什麼事」，最後才是卡片的名字。 */
+#evt{position:fixed;left:50%;top:34%;transform:translate(-50%,-50%);z-index:60;
+ opacity:0;pointer-events:none;perspective:1200px}
+#evt.on{animation:evtIn 2.4s ease}
+#evt .c3{position:relative;width:clamp(226px,42vw,356px);height:clamp(148px,26vh,226px);
+ transform-style:preserve-3d}
+#evt.on .c3{animation:evtFlip 2.4s cubic-bezier(.3,.8,.3,1)}
+#evt .fc{position:absolute;left:0;top:0;right:0;bottom:0;border-radius:22px;
+ backface-visibility:hidden;-webkit-backface-visibility:hidden;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:4px;padding:clamp(9px,1.8vh,18px);text-align:center}
+#evt .fc.bk{background:linear-gradient(145deg,#1D1606,#090909);border:2px solid #6B5714}
+#evt .fc.bk .bi{font-size:clamp(44px,7.6vh,78px);line-height:1}
+#evt .fc.bk .bl{font-size:clamp(13px,2.1vh,19px);color:var(--gold);letter-spacing:.16em}
+#evt .fc.ft{transform:rotateY(180deg);background:#160F00;border:2px solid var(--gold);
+ box-shadow:0 0 60px rgba(255,210,74,.3)}
+#evt .ebig{font-size:clamp(25px,4.4vh,44px);font-weight:700;color:var(--gold);line-height:1.12}
+#evt .ewhy{font-size:clamp(13px,2.1vh,19px);color:var(--body);line-height:1.45;max-width:22ch}
+#evt .ename{font-size:clamp(11.5px,1.8vh,15px);color:#8A7A45;letter-spacing:.08em}
+@keyframes evtIn{0%{opacity:0}5%{opacity:1}90%{opacity:1}100%{opacity:0}}
+@keyframes evtFlip{0%{transform:rotateY(0) scale(.6)}
+ 8%{transform:rotateY(0) scale(1)}
+ 13%{transform:rotateY(0) scale(1.02) rotate(-5deg)}
+ 18%{transform:rotateY(0) scale(1.02) rotate(5deg)}
+ 23%{transform:rotateY(0) scale(1.02) rotate(-4deg)}
+ 28%{transform:rotateY(0) scale(1) rotate(0deg)}
+ 44%{transform:rotateY(180deg) scale(1.07)}
+ 52%{transform:rotateY(180deg) scale(1)}
+ 93%{transform:rotateY(180deg) scale(1)}
+ 100%{transform:rotateY(180deg) scale(.93) translateY(-34px)}}
+
+/* 魔王技能：壞事用紅色橫幅，不要跟金色的驚喜卡混在一起
+   （驚喜卡只給好事，學生才分得出來哪一個是獎勵）*/
+#bad{position:fixed;left:50%;top:26%;transform:translate(-50%,-50%) scale(.7);z-index:59;
  opacity:0;pointer-events:none;text-align:center;
- background:#160F00;border:2px solid var(--gold);border-radius:20px;
- padding:clamp(11px,2vh,22px) clamp(18px,3vw,40px);box-shadow:0 0 60px rgba(255,210,74,.28)}
-#evt.on{animation:evt 1.9s cubic-bezier(.2,.9,.3,1.2)}
-#evt .et{font-size:clamp(20px,3.6vh,36px);font-weight:700;color:var(--gold)}
-#evt .ed{font-size:clamp(12.5px,2vh,18px);color:var(--body);margin-top:4px}
-@keyframes evt{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}
+ background:#1A0A0A;border:2px solid var(--no);border-radius:20px;
+ padding:clamp(10px,1.9vh,20px) clamp(16px,2.8vw,36px);box-shadow:0 0 50px rgba(255,94,94,.25)}
+#bad.on{animation:badIn 1.9s cubic-bezier(.2,.9,.3,1.2)}
+#bad .bt{font-size:clamp(18px,3.2vh,32px);font-weight:700;color:var(--no)}
+#bad .bd{font-size:clamp(12.5px,2vh,18px);color:var(--body);margin-top:4px}
+@keyframes badIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}
  14%{opacity:1;transform:translate(-50%,-50%) scale(1.07)}
  22%{transform:translate(-50%,-50%) scale(1)}
  78%{opacity:1;transform:translate(-50%,-50%) scale(1)}
  100%{opacity:0;transform:translate(-50%,-80%) scale(.92)}}
+
+/* 分數跳動 ＋ 飄上去的「＋850」：學生看得到分數是「現在」加上去的 */
+#gsc.bump{animation:bump .5s cubic-bezier(.2,.9,.3,1.4)}
+@keyframes bump{0%{transform:scale(1)}45%{transform:scale(1.45);color:var(--gold)}
+ 100%{transform:scale(1)}}
+#gpop{position:absolute;right:0;top:-2px;font-size:clamp(15px,2.5vh,24px);font-weight:700;
+ color:var(--gold);opacity:0;pointer-events:none}
+#gpop.on{animation:gpop 1.15s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes gpop{0%{opacity:0;transform:translateY(6px) scale(.8)}
+ 25%{opacity:1;transform:translateY(-10px) scale(1.15)}
+ 70%{opacity:1;transform:translateY(-22px) scale(1)}
+ 100%{opacity:0;transform:translateY(-38px) scale(1)}}
+
+/* 得分算式：為什麼是這個分數，一眼看完（使用者 2026-09-21 指定） */
+.calc{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+ gap:clamp(4px,.8vw,9px);margin-top:3px}
+.calc .ci{display:flex;flex-direction:column;align-items:center;line-height:1.15;
+ background:#0C0C0C;border:1px solid #242424;border-radius:12px;
+ padding:clamp(3px,.6vh,7px) clamp(7px,1vw,13px)}
+.calc .ci em{font-style:normal;font-size:clamp(10px,1.5vh,13px);color:#7E8A94;letter-spacing:.04em}
+.calc .ci b{font-size:clamp(15px,2.5vh,24px);color:var(--fg)}
+.calc .ci.sp b{color:var(--be)}
+.calc .ci.tot{background:#0F3323;border-color:var(--ok)}
+.calc .ci.tot b{color:var(--ok);font-size:clamp(19px,3.2vh,32px)}
+.calc .cp{font-size:clamp(14px,2.2vh,21px);color:#6E6E6E;font-weight:700}
+.spbar{width:min(100%,420px);height:clamp(9px,1.5vh,14px);background:#141414;
+ border:1px solid #262626;border-radius:999px;overflow:hidden;margin-top:5px}
+.spbar i{display:block;height:100%;background:linear-gradient(90deg,#F5B301,#39D98A);
+ border-radius:999px}
+.sphint{font-size:clamp(10.5px,1.6vh,14px);color:#7E8A94;letter-spacing:.04em;margin-top:2px}
 
 /* ── 遊戲場 ── */
 #arena{display:none;flex-direction:column;align-items:center;gap:clamp(8px,1.5vh,16px);
@@ -143,6 +211,11 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .tg{font-size:clamp(11px,1.65vh,14px);letter-spacing:.08em;color:var(--acc);
  border:1px solid #2C3A48;border-radius:999px;padding:3px 11px}
 .tg.hot{color:var(--gold);border-color:#5A4A18;background:#1A1508;font-weight:700}
+/* 「再答對 N 題就開驚喜卡」：學生一直看得到下一張卡離自己多遠 ＝ 期待感 */
+.tg.go{color:#FFE9A8;border-color:#6B5714;background:#14100A;font-weight:700}
+.tg.go.near{animation:tgn 1.1s infinite}
+@keyframes tgn{0%,100%{box-shadow:0 0 0 0 rgba(255,210,74,0)}
+ 50%{box-shadow:0 0 0 4px rgba(255,210,74,.22)}}
 
 .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(7px,1.2vh,13px);width:100%}
 .opts.one{grid-template-columns:1fr}
@@ -238,15 +311,21 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 </style>
 </head>
 <body>
-<div id="evt"><div class="et"></div><div class="ed"></div></div>
+<div id="bad"><div class="bt"></div><div class="bd"></div></div>
+<div id="evt"><div class="c3">
+ <div class="fc bk"><span class="bi">🎁</span><span class="bl">驚喜卡</span></div>
+ <div class="fc ft"><div class="ebig"></div><div class="ewhy"></div><div class="ename"></div></div>
+</div></div>
 
 <main id="stage">
  <section id="hub">
   <h1>🎮 複習遊戲　10 種玩法</h1>
-  <p class="lead">每一題<b>限時 15 秒</b>，一場 12 題。<b>愈快答對，分數愈高</b>——
-     答完馬上看到速度分。<br>
-     每一個遊戲都有<b>自己的 20 種驚喜回饋</b>，十個遊戲完全不一樣，
-     抽到什麼<b>猜不著</b>；題序和選項每一次都重新洗牌。<br>
+  <p class="lead">每一題<b>限時 15 秒</b>，一場 12 題。<br>
+     <b>分數怎麼來：答對 100 ＋ 快 最多 900 ＋ 連對 ✕ 20</b>——
+     答完馬上看到這個算式，剩愈多秒，中間那一條就愈長。<br>
+     每答對幾題就<b>翻一張驚喜卡</b>🎁：可能直接加分、分數 ✕ 2、多給秒數、
+     或是一面護盾。<b>每一個遊戲有自己的 20 張，翻過的不會再翻到</b>——
+     畫面上隨時看得到「再答對幾題就翻牌」。<br>
      答錯會給你提示，那一題等一下還會再出現，<b>練到會為止</b>。</p>
   <div id="grid"></div>
  </section>
@@ -255,8 +334,9 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
   <span class="gcell"><span class="k">遊戲</span><span class="v" id="gname"></span></span>
   <span id="gring"><svg viewBox="0 0 100 100"><circle id="gbg" cx="50" cy="50" r="46"></circle>
    <circle id="gfg" cx="50" cy="50" r="46"></circle></svg><span id="gnum">15</span></span>
-  <span class="gcell r"><span class="k">分數 ／ 連對 ／ 進度</span>
-   <span class="v"><span id="gsc">0</span>　<span id="gstreak">—</span>　<span id="gprog">0 題</span></span></span>
+  <span class="gcell r"><span class="k">分數 ／ 連對 ／ 驚喜卡 ／ 進度</span>
+   <span class="v"><span id="gsc">0</span>　<span id="gstreak">—</span>　<span id="gsurp">🎁 0</span>　<span id="gprog">0 題</span></span></span>
+  <span id="gpop"></span>
  </div>
 
  <section id="arena"></section>
@@ -275,8 +355,12 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 
 <nav id="bar">
  <button id="quit">⬅ 回遊戲大廳</button>
- <button id="slowBtn">🐢 放慢 關</button>
- <button id="muteBtn" class="on">🔊 音效 Y</button>
+ <span class="grp" id="rateGrp">
+  <span class="glbl">🗣 語速</span>
+  <button data-r="0.5">0.5</button><button data-r="0.6">0.6</button>
+  <button data-r="0.7">0.7</button><button data-r="0.8">0.8</button>
+  <button data-r="0.9">0.9</button><button data-r="1">1.0</button>
+ </span>
  <a href="index.html">🏠 首頁</a>
 </nav>
 
@@ -298,9 +382,20 @@ if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matc
 /* iPad：轉向或鍵盤收起後把版面高度重算，不會留白 */
 function fixVH(){document.documentElement.style.setProperty('--vh',window.innerHeight*0.01+'px')}
 fixVH();window.addEventListener('resize',fixVH);window.addEventListener('orientationchange',fixVH);
+/* 底部按鈕列有幾排，就讓出幾排的高度（--barH）。
+   按鈕多了會自動換行，寫死一個數字一定會蓋到內容（語速六段就是這樣蓋到替換字的）。 */
+function fixBar(){try{var b=document.getElementById('bar');
+ if(b)document.documentElement.style.setProperty('--barH',b.offsetHeight+'px')}catch(e){}}
+fixBar();window.addEventListener('resize',fixBar);window.addEventListener('orientationchange',fixBar);
+try{document.fonts.ready.then(fixBar)}catch(e){}
+setTimeout(fixBar,400);
 
 
-var SLOW=false,VOX=null,VOXZH=null;
+var RATE=0.9, SLOW=true, VOX=null, VOXZH=null;
+/* 語速可調整（使用者 2026-09-21 指定）：0.5 0.6 0.7 0.8 0.9 1.0，1.0 ＝ 正常語速。
+   SLOW 只用來決定動畫要不要等久一點（0.8 以下算慢）。 */
+function setRate(r){r=parseFloat(r);if(!(r>0))r=0.9;
+ RATE=Math.max(0.5,Math.min(1,r));SLOW=RATE<=0.8;return RATE}
 var SQ=[],SBUSY=false,SID=0,SLAST=0;
 function pickVoice(){try{var v=speechSynthesis.getVoices();if(!v||!v.length)return;
  var en=v.filter(function(x){return /^en[-_]US/i.test(x.lang)});
@@ -326,8 +421,8 @@ function pump(){
  var t=sayText(it.t);
  if(!t){if(it.done)try{it.done()}catch(e){};setTimeout(pump,0);return}
  var u;try{u=new SpeechSynthesisUtterance(t)}catch(e){if(it.done)try{it.done()}catch(e2){};return}
- if(it.l==='zh'){u.lang='zh-TW';if(VOXZH)u.voice=VOXZH;u.rate=SLOW?.55:.92}
- else{u.lang='en-US';if(VOX)u.voice=VOX;u.rate=SLOW?.45:.88}
+ if(it.l==='zh'){u.lang='zh-TW';if(VOXZH)u.voice=VOXZH;u.rate=RATE}
+ else{u.lang='en-US';if(VOX)u.voice=VOX;u.rate=RATE}
  u.pitch=1;
  var mine=++SID;SBUSY=true;SLAST=Date.now();
  var fin=function(){if(mine!==SID)return;SID++;SBUSY=false;SLAST=Date.now();
@@ -369,40 +464,53 @@ document.addEventListener('touchstart',wakeTTS,{once:true,passive:true});
 document.addEventListener('mousedown',wakeTTS,{once:true});
 
 
-var MUTE=false,AC=null;
-function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}
- if(AC&&AC.state==='suspended'){try{AC.resume()}catch(e){}}return AC}
-function beep(f,d,type,vol){if(MUTE)return;var c=ac();if(!c)return;
- try{var o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.value=f;
- g.gain.setValueAtTime(0,c.currentTime);
- g.gain.linearRampToValueAtTime(vol||.13,c.currentTime+.012);
- g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);
- o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+d+.02)}catch(e){}}
-function sOk(){beep(784,.11);setTimeout(function(){beep(1175,.17)},95)}
-function sNo(){beep(196,.2,'square',.1);setTimeout(function(){beep(146,.26,'square',.09)},110)}
-function sTick(){beep(1320,.045,'sine',.07)}
-function sPop(){beep(988,.07,'triangle',.1)}
-function sWow(){[523,659,784,1047,1319].forEach(function(f,i){setTimeout(function(){beep(f,.16,'triangle',.11)},i*70)})}
+var MUTE=true;
+function beep(){}
+function sOk(){}function sNo(){}function sTick(){}function sPop(){}function sWow(){}
 
 
-var BANK={"g1":[{"q":"Who’s ＝ ?","o":["Who is","Who are","Whose","Who was"],"h":"’ 就是把 is 的 i 藏起來。"},{"q":"He’s ＝ ?","o":["He is","His","He has","He was"],"h":"He’s ＝ He is。His 是「他的」。"},{"q":"She’s ＝ ?","o":["She is","Her","She has","Hers"],"h":"She’s ＝ She is。"},{"q":"isn’t ＝ ?","o":["is not","is now","it not","in not"],"h":"’ 藏起來的是 not 的 o。"},{"q":"問「人」要用哪一個字？","o":["Who","What","How","Where"],"h":"Who 問人，答案一定是一個人。"},{"q":"問「東西」要用哪一個字？","o":["What","Who","How","When"],"h":"What 問東西，Who 問人。"},{"q":"\"Who’s he?\" 答句第一個字是？","o":["He","She","Him","Who"],"h":"問 he 就答 He。"},{"q":"\"Who’s she?\" 答句第一個字是？","o":["She","He","Her","Who"],"h":"問 she 就答 She。"},{"q":"「他是誰？」英文第一個字是？","o":["Who","He","Is","My"],"h":"中文最後問「誰」，英文最前面就是 Who。"},{"q":"\"He’s my father.\" 是什麼意思？","o":["他是我的爸爸。","她是我的爸爸。","他是我的媽媽。","他有爸爸。"],"h":"He 他、’s 是、my 我的、father 爸爸。"},{"q":"\"She’s my grandmother.\" 是什麼意思？","o":["她是我的奶奶。","她是我的爺爺。","他是我的奶奶。","她是我的媽媽。"],"h":"grandmother 是奶奶，也可以是外婆。"},{"q":"「爺爺」的英文是？","o":["grandfather","grandmother","father","uncle"],"h":"grand ＝ 大，grandfather ＝ 爸爸的爸爸。"},{"q":"「阿姨、姑姑、舅媽」的英文都是？","o":["aunt","uncle","niece","sister"],"h":"英文一個 aunt，管中文好幾個稱呼。"},{"q":"「叔叔、伯伯、舅舅」的英文都是？","o":["uncle","aunt","nephew","cousin"],"h":"英文一個 uncle，管中文好幾個稱呼。"},{"q":"\"He is a doctor.\" 改成問句是？","o":["Is he a doctor?","He is a doctor?","Does he a doctor?","Is a doctor he?"],"h":"he 和 is 換位置，句號換問號。"},{"q":"\"Is she a teacher?\" 改成直述句是？","o":["She is a teacher.","Is she a teacher.","Her is a teacher.","She a teacher is."],"h":"Is 和 she 換回來就變直述句。"},{"q":"直述句變問句，動的是哪兩個字？","o":["主詞和 is","is 和 a","a 和職業","完全不用動"],"h":"只動最前面兩個字，後面一個都不動。"},{"q":"\"Is he a cook?\" 回答「是的」要說？","o":["Yes, he is.","Yes, he’s.","Yes, she is.","Yes, he isn’t."],"h":"句尾的 is 不可以縮寫。"},{"q":"\"Is she a nurse?\" 回答「不是」要說？","o":["No, she isn’t.","No, she is.","No, he isn’t.","No, she not."],"h":"問 she 就答 she；不是用 isn’t。"},{"q":"「他是一位農夫。」英文是？","o":["He’s a farmer.","He’s farmer.","He a farmer.","Is he a farmer?"],"h":"職業前面一定要有 a。"},{"q":"\"a nurse\" 是什麼意思？","o":["一位護理師","一位醫生","一位廚師","一位老師"],"h":"nurse 護理師，doctor 醫生。"},{"q":"\"a cook\" 是什麼意思？","o":["一位廚師","一位農夫","一位學生","一位老師"],"h":"cook 廚師，farmer 農夫。"},{"q":"哪一句完全正確？","o":["He’s my dad.","His my dad.","He my dad.","He is my dad?"],"h":"He’s ＝ He is；His 是「他的」。"},{"q":"哪一句完全正確？","o":["She’s my aunt.","She my aunt.","Her’s my aunt.","She is my aunt?"],"h":"She’s ＝ She is。"}],"g2":[{"txt":"my father","zh":"我的爸爸","a":"he","h":"爸爸是男生 → He"},{"txt":"my mother","zh":"我的媽媽","a":"she","h":"媽媽是女生 → She"},{"txt":"my brother","zh":"我的哥哥","a":"he","h":"哥哥是男生 → He"},{"txt":"my sister","zh":"我的姊姊","a":"she","h":"姊姊是女生 → She"},{"txt":"my grandfather","zh":"我的爺爺","a":"he","h":"爺爺是男生 → He"},{"txt":"my grandmother","zh":"我的奶奶","a":"she","h":"奶奶是女生 → She"},{"txt":"my dad","zh":"我的爸比","a":"he","h":"爸比是男生 → He"},{"txt":"my mom","zh":"我的媽咪","a":"she","h":"媽咪是女生 → She"},{"txt":"my grandpa","zh":"我的阿公","a":"he","h":"阿公是男生 → He"},{"txt":"my grandma","zh":"我的阿嬤","a":"she","h":"阿嬤是女生 → She"},{"txt":"my uncle","zh":"我的叔叔","a":"he","h":"叔叔是男生 → He"},{"txt":"my aunt","zh":"我的阿姨","a":"she","h":"阿姨是女生 → She"},{"txt":"my nephew","zh":"我的姪子","a":"he","h":"姪子是男生 → He"},{"txt":"my niece","zh":"我的姪女","a":"she","h":"姪女是女生 → She"},{"txt":"Who’s ___? ___’s my father.","zh":"他是我的爸爸。","a":"he","h":"father 是男生 → He。"},{"txt":"Who’s ___? ___’s my mother.","zh":"她是我的媽媽。","a":"she","h":"mother 是女生 → She。"},{"txt":"Who’s ___? ___’s my grandma.","zh":"她是我的阿嬤。","a":"she","h":"grandma 是女生 → She。"},{"txt":"Who’s ___? ___’s my grandpa.","zh":"他是我的阿公。","a":"he","h":"grandpa 是男生 → He。"},{"txt":"___ is a doctor. (爸爸)","zh":"爸爸是一位醫生。","a":"he","h":"爸爸是男生 → He is a doctor."},{"txt":"___ is a nurse. (媽媽)","zh":"媽媽是一位護理師。","a":"she","h":"媽媽是女生 → She is a nurse."},{"txt":"Is ___ a teacher? (姊姊)","zh":"姊姊是一位老師嗎？","a":"she","h":"姊姊是女生 → Is she a teacher?"},{"txt":"Is ___ a farmer? (叔叔)","zh":"叔叔是一位農夫嗎？","a":"he","h":"叔叔是男生 → Is he a farmer?"},{"txt":"Yes, ___ is. (問 my uncle)","zh":"是的，他是。","a":"he","h":"uncle 是男生 → Yes, he is."},{"txt":"No, ___ isn’t. (問 my niece)","zh":"不，她不是。","a":"she","h":"niece 是女生 → No, she isn’t."}],"g3":[{"s":["Who","'s","he","?"],"zh":"他是誰？","h":"中文最後問「誰」，英文最前面放 Who。"},{"s":["Who","'s","she","?"],"zh":"她是誰？","h":"Who 一定放第一個。"},{"s":["He","'s","my","father","."],"zh":"他是我的爸爸。","h":"他 → 是 → 我的 → 爸爸，順序跟中文一樣。"},{"s":["She","'s","my","mother","."],"zh":"她是我的媽媽。","h":"She ’s my mother."},{"s":["He","'s","my","grandfather","."],"zh":"他是我的爺爺。","h":"my 放在人的前面。"},{"s":["She","'s","my","grandmother","."],"zh":"她是我的奶奶。","h":"my 放在人的前面。"},{"s":["He","'s","my","uncle","."],"zh":"他是我的叔叔。","h":"uncle 是叔叔、伯伯、舅舅。"},{"s":["She","'s","my","aunt","."],"zh":"她是我的阿姨。","h":"aunt 是阿姨、姑姑、舅媽。"},{"s":["He","is","a","doctor","."],"zh":"他是一位醫生。","h":"職業前面要有 a。"},{"s":["She","is","a","teacher","."],"zh":"她是一位老師。","h":"職業前面要有 a。"},{"s":["Is","he","a","doctor","?"],"zh":"他是一位醫生嗎？","h":"問句把 Is 放最前面。"},{"s":["Is","she","a","teacher","?"],"zh":"她是一位老師嗎？","h":"問句把 Is 放最前面。"},{"s":["Is","he","a","farmer","?"],"zh":"他是一位農夫嗎？","h":"Is → he → a → farmer。"},{"s":["Is","she","a","nurse","?"],"zh":"她是一位護理師嗎？","h":"Is → she → a → nurse。"},{"s":["Yes",",","he","is","."],"zh":"是的，他是。","h":"句尾的 is 不縮寫。"},{"s":["Yes",",","she","is","."],"zh":"是的，她是。","h":"句尾的 is 不縮寫。"},{"s":["No",",","he","isn't","."],"zh":"不，他不是。","h":"isn’t ＝ is not。"},{"s":["No",",","she","isn't","."],"zh":"不，她不是。","h":"isn’t ＝ is not。"},{"s":["He","'s","my","cousin","."],"zh":"他是我的表哥。","h":"cousin 是叔叔阿姨的小孩。"},{"s":["She","is","a","student","."],"zh":"她是一位學生。","h":"a student 一位學生。"}],"g4":[{"f":"He is a doctor.","d":"→ 問句","o":["Is he a doctor?","He is a doctor?","Is a doctor he?","Does he a doctor?"],"h":"he 和 is 換位置。"},{"f":"She is a teacher.","d":"→ 問句","o":["Is she a teacher?","She is a teacher?","Is a teacher she?","Do she a teacher?"],"h":"she 和 is 換位置。"},{"f":"He is a student.","d":"→ 問句","o":["Is he a student?","He is student?","Is he student?","He a student is?"],"h":"只換前兩個字，a 不能掉。"},{"f":"She is a nurse.","d":"→ 問句","o":["Is she a nurse?","She is nurse?","Is a she nurse?","She nurse is?"],"h":"Is 放最前面。"},{"f":"He is a cook.","d":"→ 問句","o":["Is he a cook?","He is a cook!","Is cook he?","He is cook?"],"h":"Is he a cook?"},{"f":"She is a farmer.","d":"→ 問句","o":["Is she a farmer?","She is farmer?","Is farmer she?","She a farmer?"],"h":"Is she a farmer?"},{"f":"He is my father.","d":"→ 問句","o":["Is he my father?","He is my father?","Is my father he?","Does he my father?"],"h":"一樣只換前兩個字。"},{"f":"She is my mother.","d":"→ 問句","o":["Is she my mother?","She is my mother?","Is my mother she?","Do she my mother?"],"h":"一樣只換前兩個字。"},{"f":"Is he a doctor?","d":"→ 直述句","o":["He is a doctor.","Is he a doctor.","He a doctor is.","Him is a doctor."],"h":"Is 和 he 換回來。"},{"f":"Is she a teacher?","d":"→ 直述句","o":["She is a teacher.","Is she a teacher.","Her is a teacher.","She a teacher is."],"h":"Is 和 she 換回來。"},{"f":"Is he a farmer?","d":"→ 直述句","o":["He is a farmer.","He a farmer.","Is he a farmer.","He is farmer."],"h":"問號換句號。"},{"f":"Is she a nurse?","d":"→ 直述句","o":["She is a nurse.","She a nurse.","Is she a nurse.","She is nurse."],"h":"問號換句號。"},{"f":"Is he a student?","d":"→ 直述句","o":["He is a student.","He is student.","Is he student.","He student is."],"h":"a 不能掉。"},{"f":"Is she a cook?","d":"→ 直述句","o":["She is a cook.","She is cook.","Is she cook.","She a cook is."],"h":"a 不能掉。"},{"f":"Is he my uncle?","d":"→ 直述句","o":["He is my uncle.","Is he my uncle.","Him is my uncle.","He my uncle is."],"h":"Is 和 he 換回來。"},{"f":"Is she my aunt?","d":"→ 直述句","o":["She is my aunt.","Is she my aunt.","Her is my aunt.","She my aunt is."],"h":"Is 和 she 換回來。"},{"f":"He’s a doctor.","d":"→ 問句","o":["Is he a doctor?","Is he’s a doctor?","He’s a doctor?","Is a doctor he?"],"h":"先把 He’s 拆回 He is，再換位置。"},{"f":"She’s a teacher.","d":"→ 問句","o":["Is she a teacher?","Is she’s a teacher?","She’s a teacher?","Is a teacher she?"],"h":"先把 She’s 拆回 She is。"},{"f":"Is he a doctor?","d":"→ 回答「是的」","o":["Yes, he is.","Yes, he’s.","Yes, she is.","Yes, he isn’t."],"h":"句尾的 is 不縮寫。"},{"f":"Is she a doctor?","d":"→ 回答「不是」","o":["No, she isn’t.","No, she is.","No, he isn’t.","No, she not."],"h":"isn’t ＝ is not。"}],"g5":[{"s":"Who's he?","o":["Who's he?","Who's she?","He's here.","Whose hat?"],"h":"最後一個字是 he 還是 she。"},{"s":"Who's she?","o":["Who's she?","Who's he?","She's here.","Whose shoe?"],"h":"she 前面多一個「ㄕ」的氣音。"},{"s":"He's my father.","o":["He's my father.","She's my father.","He's my brother.","He's my grandfather."],"h":"開頭 He，結尾 father。"},{"s":"She's my mother.","o":["She's my mother.","He's my mother.","She's my grandmother.","She's my sister."],"h":"開頭 She，結尾 mother。"},{"s":"He's my brother.","o":["He's my brother.","He's my father.","She's my sister.","He's my grandfather."],"h":"brother 哥哥、弟弟都用這個字。"},{"s":"She's my sister.","o":["She's my sister.","She's my mother.","He's my brother.","She's my grandma."],"h":"sister 姊姊、妹妹都用這個字。"},{"s":"He's my grandfather.","o":["He's my grandfather.","He's my father.","She's my grandmother.","He's my grandpa."],"h":"grand ＝ 大，爸爸的爸爸。"},{"s":"She's my grandmother.","o":["She's my grandmother.","She's my mother.","He's my grandfather.","She's my grandma."],"h":"grandmother 奶奶，也可以是外婆。"},{"s":"He's my uncle.","o":["He's my uncle.","She's my aunt.","He's my nephew.","He's my cousin."],"h":"uncle 叔叔、伯伯、舅舅。"},{"s":"She's my aunt.","o":["She's my aunt.","He's my uncle.","She's my niece.","She's my cousin."],"h":"aunt 阿姨、姑姑、舅媽。"},{"s":"He is a doctor.","o":["He is a doctor.","Is he a doctor?","She is a doctor.","He is a teacher."],"h":"第一個字是 He → 直述句。"},{"s":"Is he a doctor?","o":["Is he a doctor?","He is a doctor.","Is she a doctor?","Is he a teacher?"],"h":"第一個字是 Is → 問句。"},{"s":"She is a teacher.","o":["She is a teacher.","Is she a teacher?","He is a teacher.","She is a student."],"h":"第一個字是 She → 直述句。"},{"s":"Is she a teacher?","o":["Is she a teacher?","She is a teacher.","Is he a teacher?","Is she a student?"],"h":"第一個字是 Is → 問句。"},{"s":"Is he a farmer?","o":["Is he a farmer?","He is a farmer.","Is she a farmer?","Is he a father?"],"h":"farmer 農夫，father 爸爸，尾巴不一樣。"},{"s":"Is she a nurse?","o":["Is she a nurse?","She is a nurse.","Is he a nurse?","Is she a doctor?"],"h":"nurse 護理師。"},{"s":"Yes, he is.","o":["Yes, he is.","Yes, she is.","No, he isn’t.","Yes, he isn’t."],"h":"Yes 後面接 he is。"},{"s":"No, she isn't.","o":["No, she isn’t.","No, he isn’t.","Yes, she is.","No, she is."],"h":"isn’t 的 n’t 很短，要聽尾巴。"},{"s":"He's a student.","o":["He's a student.","He's a teacher.","She's a student.","Is he a student?"],"h":"student 學生。"},{"s":"She's a cook.","o":["She's a cook.","He's a cook.","She's a doctor.","Is she a cook?"],"h":"cook 廚師。"}],"g6":[["Who's he?","他是誰？"],["Who's she?","她是誰？"],["He's my father.","他是我的爸爸。"],["She's my mother.","她是我的媽媽。"],["grandfather","爺爺"],["grandmother","奶奶"],["brother","哥哥"],["sister","姊姊"],["uncle","叔叔"],["aunt","阿姨"],["nephew","姪子"],["niece","姪女"],["doctor","醫生"],["teacher","老師"],["nurse","護理師"],["cook","廚師"],["farmer","農夫"],["student","學生"],["Is he a doctor?","他是一位醫生嗎？"],["No, she isn't.","不，她不是。"]],"g7":[{"w":["Who","'s","he","?"],"b":-1,"zh":"他是誰？","h":"這一句完全正確，別被騙了。"},{"w":["Who","'s","him","?"],"b":2,"fix":"he","zh":"他是誰？","h":"句子裡當主詞要用 he，不是 him。"},{"w":["His","my","father","."],"b":0,"fix":"He's","zh":"他是我的爸爸。","h":"His 是「他的」，He’s 才是「他是」。"},{"w":["He","'s","my","mother","."],"b":3,"fix":"father","zh":"他是我的爸爸。","h":"He 是男生，後面不會接 mother。"},{"w":["She","'s","my","grandfather","."],"b":3,"fix":"grandmother","zh":"她是我的奶奶。","h":"She 是女生，要配 grandmother。"},{"w":["Her","'s","my","aunt","."],"b":0,"fix":"She's","zh":"她是我的阿姨。","h":"Her 不能放句子開頭當主詞。"},{"w":["He","is","doctor","."],"b":2,"fix":"a doctor","zh":"他是一位醫生。","h":"職業前面一定要有 a。"},{"w":["She","is","a","teacher","."],"b":-1,"zh":"她是一位老師。","h":"這一句完全正確。"},{"w":["Is","he","doctor","?"],"b":2,"fix":"a doctor","zh":"他是一位醫生嗎？","h":"問句裡的 a 也不能掉。"},{"w":["He","is","a","doctor","?"],"b":4,"fix":"改成 Is he a doctor?","zh":"他是一位醫生嗎？","h":"只加問號不算問句，要把 he 和 is 換位置。"},{"w":["Is","him","a","farmer","?"],"b":1,"fix":"he","zh":"他是一位農夫嗎？","h":"Is 後面接 he。"},{"w":["Is","her","a","nurse","?"],"b":1,"fix":"she","zh":"她是一位護理師嗎？","h":"Is 後面接 she。"},{"w":["Yes",",","he","'s","."],"b":3,"fix":"is","zh":"是的，他是。","h":"句尾的 is 不可以縮寫。"},{"w":["Yes",",","she","is","."],"b":-1,"zh":"是的，她是。","h":"這一句完全正確。"},{"w":["No",",","he","not","."],"b":3,"fix":"isn't","zh":"不，他不是。","h":"不是要用 isn’t ＝ is not。"},{"w":["No",",","she","isn't","."],"b":-1,"zh":"不，她不是。","h":"這一句完全正確。"},{"w":["What","'s","he","?"],"b":0,"fix":"Who","zh":"他是誰？","h":"問「人」要用 Who，不是 What。"},{"w":["Who","is","he","?"],"b":-1,"zh":"他是誰？","h":"Who is ＝ Who’s，兩種寫法都對。"},{"w":["She","is","a","doctors","."],"b":3,"fix":"doctor","zh":"她是一位醫生。","h":"a 後面只能接一個人，不加 s。"},{"w":["He","are","a","cook","."],"b":1,"fix":"is","zh":"他是一位廚師。","h":"He 後面用 is，不用 are。"}],"g8":[{"b":"___","a":"'s he?","zh":"他是誰？","o":["Who","What","How","Where"],"h":"問人用 Who。"},{"b":"Who","a":"he?","zh":"他是誰？","o":["'s","are","am","do"],"h":"Who’s ＝ Who is。"},{"b":"He","a":"my father.","zh":"他是我的爸爸。","o":["'s","are","am","have"],"h":"He’s ＝ He is。"},{"b":"She","a":"my mother.","zh":"她是我的媽媽。","o":["'s","are","am","have"],"h":"She’s ＝ She is。"},{"b":"He's my","a":".","zh":"他是我的爺爺。","o":["grandfather","grandmother","aunt","niece"],"h":"He 是男生 → grandfather。"},{"b":"She's my","a":".","zh":"她是我的奶奶。","o":["grandmother","grandfather","uncle","nephew"],"h":"She 是女生 → grandmother。"},{"b":"He is","a":"doctor.","zh":"他是一位醫生。","o":["a","the","an","is"],"h":"職業前面用 a。"},{"b":"She is a","a":".","zh":"她是一位護理師。","o":["nurse","doctor","cook","farmer"],"h":"nurse 護理師。"},{"b":"___","a":"he a doctor?","zh":"他是一位醫生嗎？","o":["Is","He","Are","Does"],"h":"問句把 Is 放最前面。"},{"b":"Is","a":"a teacher?","zh":"她是一位老師嗎？","o":["she","her","he","hers"],"h":"Is 後面接 she。"},{"b":"Is he a","a":"?","zh":"他是一位農夫嗎？","o":["farmer","father","nurse","teacher"],"h":"farmer 農夫。"},{"b":"Yes, he","a":".","zh":"是的，他是。","o":["is","'s","are","be"],"h":"句尾的 is 不縮寫。"},{"b":"No, she","a":".","zh":"不，她不是。","o":["isn't","is","not","aren’t"],"h":"isn’t ＝ is not。"},{"b":"Yes,","a":"is.","zh":"是的，她是。","o":["she","her","he","hers"],"h":"問 she 就答 she。"},{"b":"No,","a":"isn't.","zh":"不，他不是。","o":["he","him","she","his"],"h":"問 he 就答 he。"},{"b":"He is a","a":".","zh":"他是一位學生。","o":["student","teacher","doctor","cook"],"h":"student 學生。"},{"b":"She","a":"a cook.","zh":"她是一位廚師。","o":["is","are","am","be"],"h":"She 後面用 is。"},{"b":"___","a":"'s she?","zh":"她是誰？","o":["Who","What","How","When"],"h":"問人用 Who。"},{"b":"She's my","a":".","zh":"她是我的阿姨。","o":["aunt","uncle","nephew","grandpa"],"h":"aunt 阿姨、姑姑、舅媽。"},{"b":"He's my","a":".","zh":"他是我的叔叔。","o":["uncle","aunt","niece","grandma"],"h":"uncle 叔叔、伯伯、舅舅。"}],"g9":[["Who's he?","q"],["Who's she?","q"],["He's my father.","s"],["She's my mother.","s"],["Is he a doctor?","q"],["He is a doctor.","s"],["Is she a teacher?","q"],["She is a teacher.","s"],["Yes, he is.","s"],["No, she isn’t.","s"],["Is he your uncle?","q"],["He is my uncle.","s"],["Who is she?","q"],["She is my aunt.","s"],["Is she a nurse?","q"],["She’s a nurse.","s"],["Is he a farmer?","q"],["He’s a farmer.","s"],["Who’s your father?","q"],["My father is a cook.","s"],["Is she a student?","q"],["She’s a student.","s"],["Is he my brother?","q"],["He’s my brother.","s"]],"g10":[{"q":"魔王問：Who’s ＝ ?","o":["Who is","Whose","Who are","Who has"],"h":"’ 藏起來的是 is 的 i。"},{"q":"魔王問：「他是誰？」英文第一個字？","o":["Who","He","Is","My"],"h":"中文最後問誰，英文最前面 Who。"},{"q":"魔王問：\"Who’s she?\" 答句開頭？","o":["She","He","Her","Who"],"h":"問 she 就答 She。"},{"q":"魔王問：He’s ＝ ?","o":["He is","His","He has","Him is"],"h":"He’s ＝ He is。"},{"q":"魔王問：\"He is a cook.\" 的問句？","o":["Is he a cook?","He is a cook?","Is a cook he?","Do he a cook?"],"h":"he 和 is 換位置。"},{"q":"魔王問：\"Is she a nurse?\" 的直述句？","o":["She is a nurse.","Is she a nurse.","Her is a nurse.","She a nurse is."],"h":"Is 和 she 換回來。"},{"q":"魔王問：\"Is he a teacher?\" 答「是的」？","o":["Yes, he is.","Yes, he’s.","Yes, she is.","Yes, he isn’t."],"h":"句尾的 is 不縮寫。"},{"q":"魔王問：\"Is she a doctor?\" 答「不是」？","o":["No, she isn’t.","No, she is.","No, he isn’t.","No, she not."],"h":"isn’t ＝ is not。"},{"q":"魔王問：「奶奶」的英文？","o":["grandmother","grandfather","aunt","mother"],"h":"grandmother 奶奶，也可以是外婆。"},{"q":"魔王問：「姪女」的英文？","o":["niece","nephew","aunt","cousin"],"h":"niece 姪女，外甥女也是。"},{"q":"魔王問：「姪子」的英文？","o":["nephew","niece","uncle","cousin"],"h":"nephew 姪子，外甥也是。"},{"q":"魔王問：aunt 是誰？","o":["阿姨、姑姑、舅媽","奶奶","姊姊","姪女"],"h":"英文一個字管中文好幾個稱呼。"},{"q":"魔王問：哪一句是對的？","o":["He’s my dad.","His my dad.","He my dad.","Him is my dad."],"h":"He’s ＝ He is。"},{"q":"魔王問：哪一句是對的？","o":["She is a doctor.","She is doctor.","She are a doctor.","She a doctor."],"h":"is ＋ a 兩個都不能少。"},{"q":"魔王問：問「東西」用哪個字？","o":["What","Who","How","Where"],"h":"What 問東西，Who 問人。"},{"q":"魔王問：isn’t ＝ ?","o":["is not","it not","in not","is now"],"h":"’ 藏起來的是 not 的 o。"},{"q":"魔王問：直述句變問句要動幾個字？","o":["兩個（主詞和 is）","一個","三個","全部"],"h":"只動最前面兩個字。"},{"q":"魔王問：\"She’s a farmer.\" 的問句？","o":["Is she a farmer?","She’s a farmer?","Is she’s a farmer?","Is a farmer she?"],"h":"先把 She’s 拆回 She is。"},{"q":"魔王問：a student 是什麼？","o":["一位學生","一位老師","一位醫生","一位廚師"],"h":"student 學生。"},{"q":"魔王問：「他是一位農夫。」","o":["He’s a farmer.","He’s farmer.","He a farmer.","Is he a farmer?"],"h":"職業前面要有 a。"},{"q":"魔王問：\"Who’s he?\" 不可以怎麼回答？","o":["It’s a book.","He’s my dad.","He’s my uncle.","He’s my brother."],"h":"Who 問人，答案一定是一個人。"},{"q":"魔王問：Who’s 和 Whose 唸起來？","o":["一模一樣，但意思不同","完全不同","Whose 不存在","兩個都是「誰是」"],"h":"聽起來一樣，Who’s ＝ Who is，Whose ＝ 誰的。"},{"q":"魔王問：\"He is my grandfather.\" 的問句？","o":["Is he my grandfather?","He is my grandfather?","Is my grandfather he?","Does he my grandfather?"],"h":"一樣只換前兩個字。"},{"q":"魔王問：cook 是什麼？","o":["廚師","農夫","護理師","學生"],"h":"cook 廚師，farmer 農夫。"}]}, META=[{"id":"g1","ic":"⚡","name":"閃電四選一","rule":"看題目選答案，答得快分數高。隨機出現「雙倍時刻」。","n":24},{"id":"g2","ic":"🔵","name":"他還是她","rule":"看到就按：左邊 He（藍）、右邊 She（粉）。","n":24},{"id":"g3","ic":"🧩","name":"語序大挑戰","rule":"照順序點英文字，把整句排出來。","n":20},{"id":"g4","ic":"🔄","name":"變身術","rule":"直述句 ⇄ 問句，選出變身後正確的句子。","n":20},{"id":"g5","ic":"🎧","name":"聽力狙擊","rule":"聽一句英文，射下正確的那一張卡。","n":20},{"id":"g6","ic":"🃏","name":"記憶配對","rule":"翻開兩張，英文配中文，配對成功就消失。","n":20},{"id":"g7","ic":"🔍","name":"火眼金睛","rule":"句子裡有一個字是錯的，點出來。全對的句子按「✅ 這句沒錯」。","n":20},{"id":"g8","ic":"✏️","name":"填空高手","rule":"句子少了一個字，選出正確的那一個。","n":20},{"id":"g9","ic":"🗂","name":"分類大師","rule":"問句丟右邊 ❓，直述句丟左邊 🙋。","n":24},{"id":"g10","ic":"👑","name":"魔王挑戰","rule":"打倒魔王！答對扣血，答錯魔王放技能。","n":24}], SURP={"g1":[{"t":"⚡ 電力全開","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🔋 充飽電","d":"直接加 300 分","k":"pts","v":300},{"t":"🌩 雷擊暴衝","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"💡 燈泡亮了","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"🏎 加速引擎","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🛡 絕緣護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🔥 連擊火焰","d":"連對直接 ＋3","k":"streak","v":3},{"t":"🎆 煙火綻放","d":"直接加 500 分","k":"pts","v":500},{"t":"🚀 火箭點火","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"🌟 超新星","d":"直接加 800 分","k":"pts","v":800},{"t":"🧲 磁力吸分","d":"直接加 250 分","k":"pts","v":250},{"t":"⏰ 時間回流","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"💎 鑽石電池","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🎯 精準射擊","d":"5 秒內答對，再加 300 分","k":"fast","v":300},{"t":"🌈 彩虹電流","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🦾 鋼鐵手速","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🍀 幸運電波","d":"直接加 400 分","k":"pts","v":400},{"t":"🛰 衛星連線","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"👑 電力之王","d":"直接加 1000 分","k":"pts","v":1000},{"t":"🎁 神秘電箱","d":"直接加 150 分","k":"pts","v":150}],"g2":[{"t":"👦 男生應援團","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"👧 女生應援團","d":"直接加 300 分","k":"pts","v":300},{"t":"👬 雙胞胎出現","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🎀 粉紅風暴","d":"直接加 450 分","k":"pts","v":450},{"t":"💙 藍色風暴","d":"直接加 450 分","k":"pts","v":450},{"t":"🤝 好朋友加持","d":"連對直接 ＋3","k":"streak","v":3},{"t":"🧢 男生帽子","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"👒 女生帽子","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"🛡 友情護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🎈 慶生氣球","d":"直接加 200 分","k":"pts","v":200},{"t":"🏃 賽跑第一","d":"5 秒內答對，再加 350 分","k":"fast","v":350},{"t":"🎪 大遊行","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🍭 棒棒糖","d":"直接加 150 分","k":"pts","v":150},{"t":"🎂 生日蛋糕","d":"直接加 600 分","k":"pts","v":600},{"t":"📸 全班合照","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🌼 花圈加冕","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🎵 班歌響起","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"🏅 模範生","d":"直接加 700 分","k":"pts","v":700},{"t":"🐣 小雞跟屁蟲","d":"5 秒內答對，再加 250 分","k":"fast","v":250},{"t":"👑 班長加冕","d":"直接加 900 分","k":"pts","v":900}],"g3":[{"t":"🧩 拼圖合體","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🪄 一秒拼好","d":"直接加 350 分","k":"pts","v":350},{"t":"🏗 積木高塔","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🔧 萬能工具","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"📐 完美對齊","d":"5 秒內答對，再加 300 分","k":"fast","v":300},{"t":"🛡 拼圖護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🧱 蓋好城牆","d":"連對直接 ＋3","k":"streak","v":3},{"t":"🎨 上色完成","d":"直接加 400 分","k":"pts","v":400},{"t":"🚧 工程加速","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"🏰 蓋出城堡","d":"直接加 800 分","k":"pts","v":800},{"t":"🔩 螺絲鎖緊","d":"直接加 200 分","k":"pts","v":200},{"t":"⌛ 沙漏翻面","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"💠 稀有拼片","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🖇 完美接合","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🌉 蓋好大橋","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🦺 工頭表揚","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🎁 工具寶箱","d":"直接加 250 分","k":"pts","v":250},{"t":"🪜 再上一層","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"👑 總工程師","d":"直接加 1000 分","k":"pts","v":1000},{"t":"📦 補給到貨","d":"直接加 150 分","k":"pts","v":150}],"g4":[{"t":"🪄 魔法加倍","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🔮 水晶球","d":"直接加 350 分","k":"pts","v":350},{"t":"🐉 召喚巨龍","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧪 時間藥水","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"✨ 瞬間移動","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🛡 魔法護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🔥 火焰咒語","d":"連對直接 ＋3","k":"streak","v":3},{"t":"🌙 月光祝福","d":"直接加 500 分","k":"pts","v":500},{"t":"🧙 大法師加持","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"💫 流星許願","d":"直接加 900 分","k":"pts","v":900},{"t":"🍄 魔法蘑菇","d":"直接加 200 分","k":"pts","v":200},{"t":"⏳ 時光倒流","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"👻 隱形斗篷","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🦄 獨角獸現身","d":"5 秒內答對，再加 350 分","k":"fast","v":350},{"t":"🌀 傳送門","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🐸 變身青蛙","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🎩 帽子變兔子","d":"直接加 300 分","k":"pts","v":300},{"t":"🕯 蠟燭祈福","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"👑 魔法之王","d":"直接加 1000 分","k":"pts","v":1000},{"t":"🎁 魔法禮盒","d":"直接加 150 分","k":"pts","v":150}],"g5":[{"t":"🎯 連續命中","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🔭 鷹眼瞄準","d":"直接加 350 分","k":"pts","v":350},{"t":"💥 一槍雙殺","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🎧 超級耳機","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"🏹 神射手","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🛡 防彈護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🔊 擴音器","d":"連對直接 ＋3","k":"streak","v":3},{"t":"🥇 狙擊冠軍","d":"直接加 600 分","k":"pts","v":600},{"t":"🚁 空中支援","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"🌟 傳說神槍","d":"直接加 900 分","k":"pts","v":900},{"t":"🔋 備用彈匣","d":"直接加 200 分","k":"pts","v":200},{"t":"⌚ 子彈時間","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"🎆 爆頭特效","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"👂 順風耳","d":"5 秒內答對，再加 300 分","k":"fast","v":300},{"t":"🛸 高科技裝備","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🐺 狼耳朵","d":"連對直接 ＋2","k":"streak","v":2},{"t":"📡 雷達鎖定","d":"直接加 400 分","k":"pts","v":400},{"t":"🧊 冷靜下來","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"👑 狙擊之王","d":"直接加 1000 分","k":"pts","v":1000},{"t":"🎁 補給空投","d":"直接加 150 分","k":"pts","v":150}],"g6":[{"t":"🃏 鬼牌出現","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"♠ 黑桃 A","d":"直接加 350 分","k":"pts","v":350},{"t":"♥ 紅心同花","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧠 過目不忘","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"⚡ 閃電記憶","d":"5 秒內配對成功，再加 400 分","k":"fast","v":400},{"t":"🛡 記憶護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🔥 手氣正旺","d":"連對直接 ＋3","k":"streak","v":3},{"t":"💰 通殺全場","d":"直接加 600 分","k":"pts","v":600},{"t":"🎩 魔術師手法","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"👑 同花大順","d":"直接加 1000 分","k":"pts","v":1000},{"t":"♣ 梅花小禮","d":"直接加 200 分","k":"pts","v":200},{"t":"⏳ 多看一眼","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"♦ 方塊閃光","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🎲 骰到六點","d":"5 秒內配對成功，再加 300 分","k":"fast","v":300},{"t":"🎰 拉霸中獎","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🐘 大象記憶","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🍀 幸運四葉草","d":"直接加 400 分","k":"pts","v":400},{"t":"🔍 偷看一秒","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"💎 鑽石王牌","d":"直接加 800 分","k":"pts","v":800},{"t":"🎁 神秘牌堆","d":"直接加 150 分","k":"pts","v":150}],"g7":[{"t":"🔍 名偵探出動","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🕵 找到線索","d":"直接加 350 分","k":"pts","v":350},{"t":"🚨 破案警報","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🔦 手電筒","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"👁 鷹眼掃描","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🛡 真相護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🧩 拼出真相","d":"連對直接 ＋3","k":"streak","v":3},{"t":"🏆 破案獎金","d":"直接加 600 分","k":"pts","v":600},{"t":"🐕 警犬幫忙","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"👑 神探之王","d":"直接加 1000 分","k":"pts","v":1000},{"t":"📎 小小證物","d":"直接加 200 分","k":"pts","v":200},{"t":"⌛ 現場保留","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"💡 靈光一閃","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧤 指紋鑑定","d":"5 秒內答對，再加 300 分","k":"fast","v":300},{"t":"📰 頭條新聞","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🦉 貓頭鷹視力","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🗝 找到鑰匙","d":"直接加 400 分","k":"pts","v":400},{"t":"☕ 喝杯咖啡","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"🎖 警長表揚","d":"直接加 800 分","k":"pts","v":800},{"t":"🎁 證物箱","d":"直接加 150 分","k":"pts","v":150}],"g8":[{"t":"✏️ 鉛筆全開","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🖍 彩色筆","d":"直接加 350 分","k":"pts","v":350},{"t":"🖊 鋼筆簽名","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧽 橡皮擦救援","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"📏 一尺量準","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🛡 筆袋護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"📚 課本加持","d":"連對直接 ＋3","k":"streak","v":3},{"t":"💯 滿分貼紙","d":"直接加 600 分","k":"pts","v":600},{"t":"🎒 書包補給","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"👑 作業之王","d":"直接加 1000 分","k":"pts","v":1000},{"t":"📎 迴紋針","d":"直接加 200 分","k":"pts","v":200},{"t":"⏳ 多想一下","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"🌟 老師蓋章","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🖌 一筆畫完","d":"5 秒內答對，再加 300 分","k":"fast","v":300},{"t":"🗒 筆記整齊","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"✒️ 字跡工整","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🎨 得獎作品","d":"直接加 400 分","k":"pts","v":400},{"t":"🧃 喝口果汁","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"🏅 模範作業","d":"直接加 800 分","k":"pts","v":800},{"t":"🎁 文具福袋","d":"直接加 150 分","k":"pts","v":150}],"g9":[{"t":"🗂 分類神手","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"📁 資料夾滿了","d":"直接加 350 分","k":"pts","v":350},{"t":"🏷 貼上標籤","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧹 大掃除","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"⚡ 秒速整理","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🛡 收納護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"📦 全部歸位","d":"連對直接 ＋3","k":"streak","v":3},{"t":"✨ 房間變乾淨","d":"直接加 600 分","k":"pts","v":600},{"t":"🧺 洗衣籃清空","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"👑 收納之王","d":"直接加 1000 分","k":"pts","v":1000},{"t":"📌 圖釘固定","d":"直接加 200 分","k":"pts","v":200},{"t":"⌛ 慢慢整理","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"🗄 抽屜整齊","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧯 火速處理","d":"5 秒內答對，再加 300 分","k":"fast","v":300},{"t":"🏠 全家誇獎","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🐈 貓咪來幫忙","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🧼 擦得發亮","d":"直接加 400 分","k":"pts","v":400},{"t":"🍪 點心時間","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"🏆 整潔比賽第一","d":"直接加 800 分","k":"pts","v":800},{"t":"🎁 收納箱","d":"直接加 150 分","k":"pts","v":150}],"g10":[{"t":"⚔️ 勇者之劍","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🛡 傳說盾牌","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🐲 召喚神龍","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧪 紅藥水","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"💨 迅捷之靴","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🔥 必殺技","d":"連對直接 ＋3","k":"streak","v":3},{"t":"💰 魔王掉寶","d":"直接加 600 分","k":"pts","v":600},{"t":"🏹 精靈弓箭手","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"👑 王者降臨","d":"直接加 1000 分","k":"pts","v":1000},{"t":"🪙 金幣一袋","d":"直接加 200 分","k":"pts","v":200},{"t":"⏳ 時之沙漏","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"🌟 覺醒時刻","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🗡 暴擊一擊","d":"5 秒內答對，再加 350 分","k":"fast","v":350},{"t":"🦁 獅心勇氣","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🧝 精靈祝福","d":"連對直接 ＋2","k":"streak","v":2},{"t":"💎 傳說寶石","d":"直接加 500 分","k":"pts","v":500},{"t":"🍖 補血烤肉","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"🏰 攻下城堡","d":"直接加 800 分","k":"pts","v":800},{"t":"🎁 魔王寶箱","d":"直接加 300 分","k":"pts","v":300},{"t":"🧿 破魔護符","d":"下一題答錯，連對不歸零","k":"shield","v":1}]};
+var BANK={"g1":[{"q":"Who’s ＝ ?","o":["Who is","Who are","Whose","Who was"],"h":"’ 就是把 is 的 i 藏起來。"},{"q":"He’s ＝ ?","o":["He is","His","He has","He was"],"h":"He’s ＝ He is。His 是「他的」。"},{"q":"She’s ＝ ?","o":["She is","Her","She has","Hers"],"h":"She’s ＝ She is。"},{"q":"isn’t ＝ ?","o":["is not","is now","it not","in not"],"h":"’ 藏起來的是 not 的 o。"},{"q":"問「人」要用哪一個字？","o":["Who","What","How","Where"],"h":"Who 問人，答案一定是一個人。"},{"q":"問「東西」要用哪一個字？","o":["What","Who","How","When"],"h":"What 問東西，Who 問人。"},{"q":"\"Who’s he?\" 答句第一個字是？","o":["He","She","Him","Who"],"h":"問 he 就答 He。"},{"q":"\"Who’s she?\" 答句第一個字是？","o":["She","He","Her","Who"],"h":"問 she 就答 She。"},{"q":"「他是誰？」英文第一個字是？","o":["Who","He","Is","My"],"h":"中文最後問「誰」，英文最前面就是 Who。"},{"q":"\"He’s my father.\" 是什麼意思？","o":["他是我的爸爸。","她是我的爸爸。","他是我的媽媽。","他有爸爸。"],"h":"He 他、’s 是、my 我的、father 爸爸。"},{"q":"\"She’s my grandmother.\" 是什麼意思？","o":["她是我的奶奶。","她是我的爺爺。","他是我的奶奶。","她是我的媽媽。"],"h":"grandmother 是奶奶，也可以是外婆。"},{"q":"「爺爺」的英文是？","o":["grandfather","grandmother","father","uncle"],"h":"grand ＝ 大，grandfather ＝ 爸爸的爸爸。"},{"q":"「阿姨、姑姑、舅媽」的英文都是？","o":["aunt","uncle","niece","sister"],"h":"英文一個 aunt，管中文好幾個稱呼。"},{"q":"「叔叔、伯伯、舅舅」的英文都是？","o":["uncle","aunt","nephew","cousin"],"h":"英文一個 uncle，管中文好幾個稱呼。"},{"q":"\"He is a doctor.\" 改成問句是？","o":["Is he a doctor?","He is a doctor?","Does he a doctor?","Is a doctor he?"],"h":"he 和 is 換位置，句號換問號。"},{"q":"\"Is she a teacher?\" 改成直述句是？","o":["She is a teacher.","Is she a teacher.","Her is a teacher.","She a teacher is."],"h":"Is 和 she 換回來就變直述句。"},{"q":"直述句變問句，動的是哪兩個字？","o":["主詞和 is","is 和 a","a 和職業","完全不用動"],"h":"只動最前面兩個字，後面一個都不動。"},{"q":"\"Is he a cook?\" 回答「是的」要說？","o":["Yes, he is.","Yes, he’s.","Yes, she is.","Yes, he isn’t."],"h":"句尾的 is 不可以縮寫。"},{"q":"\"Is she a nurse?\" 回答「不是」要說？","o":["No, she isn’t.","No, she is.","No, he isn’t.","No, she not."],"h":"問 she 就答 she；不是用 isn’t。"},{"q":"「他是一位農夫。」英文是？","o":["He’s a farmer.","He’s farmer.","He a farmer.","Is he a farmer?"],"h":"職業前面一定要有 a。"},{"q":"\"a nurse\" 是什麼意思？","o":["一位護理師","一位醫生","一位廚師","一位老師"],"h":"nurse 護理師，doctor 醫生。"},{"q":"\"a cook\" 是什麼意思？","o":["一位廚師","一位農夫","一位學生","一位老師"],"h":"cook 廚師，farmer 農夫。"},{"q":"哪一句完全正確？","o":["He’s my dad.","His my dad.","He my dad.","He is my dad?"],"h":"He’s ＝ He is；His 是「他的」。"},{"q":"哪一句完全正確？","o":["She’s my aunt.","She my aunt.","Her’s my aunt.","She is my aunt?"],"h":"She’s ＝ She is。"}],"g2":[{"txt":"my father","zh":"我的爸爸","a":"he","h":"爸爸是男生 → He"},{"txt":"my mother","zh":"我的媽媽","a":"she","h":"媽媽是女生 → She"},{"txt":"my brother","zh":"我的哥哥","a":"he","h":"哥哥是男生 → He"},{"txt":"my sister","zh":"我的姊姊","a":"she","h":"姊姊是女生 → She"},{"txt":"my grandfather","zh":"我的爺爺","a":"he","h":"爺爺是男生 → He"},{"txt":"my grandmother","zh":"我的奶奶","a":"she","h":"奶奶是女生 → She"},{"txt":"my dad","zh":"我的爸爸","a":"he","h":"爸爸是男生 → He"},{"txt":"my mom","zh":"我的媽媽","a":"she","h":"媽媽是女生 → She"},{"txt":"my grandpa","zh":"我的阿公","a":"he","h":"阿公是男生 → He"},{"txt":"my grandma","zh":"我的阿嬤","a":"she","h":"阿嬤是女生 → She"},{"txt":"my uncle","zh":"我的叔叔","a":"he","h":"叔叔是男生 → He"},{"txt":"my aunt","zh":"我的阿姨","a":"she","h":"阿姨是女生 → She"},{"txt":"my nephew","zh":"我的姪子","a":"he","h":"姪子是男生 → He"},{"txt":"my niece","zh":"我的姪女","a":"she","h":"姪女是女生 → She"},{"txt":"Who’s ___? ___’s my father.","zh":"他是我的爸爸。","a":"he","h":"father 是男生 → He。"},{"txt":"Who’s ___? ___’s my mother.","zh":"她是我的媽媽。","a":"she","h":"mother 是女生 → She。"},{"txt":"Who’s ___? ___’s my grandma.","zh":"她是我的阿嬤。","a":"she","h":"grandma 是女生 → She。"},{"txt":"Who’s ___? ___’s my grandpa.","zh":"他是我的阿公。","a":"he","h":"grandpa 是男生 → He。"},{"txt":"___ is a doctor. (爸爸)","zh":"爸爸是一位醫生。","a":"he","h":"爸爸是男生 → He is a doctor."},{"txt":"___ is a nurse. (媽媽)","zh":"媽媽是一位護理師。","a":"she","h":"媽媽是女生 → She is a nurse."},{"txt":"Is ___ a teacher? (姊姊)","zh":"姊姊是一位老師嗎？","a":"she","h":"姊姊是女生 → Is she a teacher?"},{"txt":"Is ___ a farmer? (叔叔)","zh":"叔叔是一位農夫嗎？","a":"he","h":"叔叔是男生 → Is he a farmer?"},{"txt":"Yes, ___ is. (問 my uncle)","zh":"是的，他是。","a":"he","h":"uncle 是男生 → Yes, he is."},{"txt":"No, ___ isn’t. (問 my niece)","zh":"不，她不是。","a":"she","h":"niece 是女生 → No, she isn’t."}],"g3":[{"s":["Who","'s","he","?"],"zh":"他是誰？","h":"中文最後問「誰」，英文最前面放 Who。"},{"s":["Who","'s","she","?"],"zh":"她是誰？","h":"Who 一定放第一個。"},{"s":["He","'s","my","father","."],"zh":"他是我的爸爸。","h":"他 → 是 → 我的 → 爸爸，順序跟中文一樣。"},{"s":["She","'s","my","mother","."],"zh":"她是我的媽媽。","h":"She ’s my mother."},{"s":["He","'s","my","grandfather","."],"zh":"他是我的爺爺。","h":"my 放在人的前面。"},{"s":["She","'s","my","grandmother","."],"zh":"她是我的奶奶。","h":"my 放在人的前面。"},{"s":["He","'s","my","uncle","."],"zh":"他是我的叔叔。","h":"uncle 是叔叔、伯伯、舅舅。"},{"s":["She","'s","my","aunt","."],"zh":"她是我的阿姨。","h":"aunt 是阿姨、姑姑、舅媽。"},{"s":["He","is","a","doctor","."],"zh":"他是一位醫生。","h":"職業前面要有 a。"},{"s":["She","is","a","teacher","."],"zh":"她是一位老師。","h":"職業前面要有 a。"},{"s":["Is","he","a","doctor","?"],"zh":"他是一位醫生嗎？","h":"問句把 Is 放最前面。"},{"s":["Is","she","a","teacher","?"],"zh":"她是一位老師嗎？","h":"問句把 Is 放最前面。"},{"s":["Is","he","a","farmer","?"],"zh":"他是一位農夫嗎？","h":"Is → he → a → farmer。"},{"s":["Is","she","a","nurse","?"],"zh":"她是一位護理師嗎？","h":"Is → she → a → nurse。"},{"s":["Yes",",","he","is","."],"zh":"是的，他是。","h":"句尾的 is 不縮寫。"},{"s":["Yes",",","she","is","."],"zh":"是的，她是。","h":"句尾的 is 不縮寫。"},{"s":["No",",","he","isn't","."],"zh":"不，他不是。","h":"isn’t ＝ is not。"},{"s":["No",",","she","isn't","."],"zh":"不，她不是。","h":"isn’t ＝ is not。"},{"s":["He","'s","my","cousin","."],"zh":"他是我的表哥。","h":"cousin 是叔叔阿姨的小孩。"},{"s":["She","is","a","student","."],"zh":"她是一位學生。","h":"a student 一位學生。"}],"g4":[{"f":"He is a doctor.","d":"→ 問句","o":["Is he a doctor?","He is a doctor?","Is a doctor he?","Does he a doctor?"],"h":"he 和 is 換位置。"},{"f":"She is a teacher.","d":"→ 問句","o":["Is she a teacher?","She is a teacher?","Is a teacher she?","Do she a teacher?"],"h":"she 和 is 換位置。"},{"f":"He is a student.","d":"→ 問句","o":["Is he a student?","He is student?","Is he student?","He a student is?"],"h":"只換前兩個字，a 不能掉。"},{"f":"She is a nurse.","d":"→ 問句","o":["Is she a nurse?","She is nurse?","Is a she nurse?","She nurse is?"],"h":"Is 放最前面。"},{"f":"He is a cook.","d":"→ 問句","o":["Is he a cook?","He is a cook!","Is cook he?","He is cook?"],"h":"Is he a cook?"},{"f":"She is a farmer.","d":"→ 問句","o":["Is she a farmer?","She is farmer?","Is farmer she?","She a farmer?"],"h":"Is she a farmer?"},{"f":"He is my father.","d":"→ 問句","o":["Is he my father?","He is my father?","Is my father he?","Does he my father?"],"h":"一樣只換前兩個字。"},{"f":"She is my mother.","d":"→ 問句","o":["Is she my mother?","She is my mother?","Is my mother she?","Do she my mother?"],"h":"一樣只換前兩個字。"},{"f":"Is he a doctor?","d":"→ 直述句","o":["He is a doctor.","Is he a doctor.","He a doctor is.","Him is a doctor."],"h":"Is 和 he 換回來。"},{"f":"Is she a teacher?","d":"→ 直述句","o":["She is a teacher.","Is she a teacher.","Her is a teacher.","She a teacher is."],"h":"Is 和 she 換回來。"},{"f":"Is he a farmer?","d":"→ 直述句","o":["He is a farmer.","He a farmer.","Is he a farmer.","He is farmer."],"h":"問號換句號。"},{"f":"Is she a nurse?","d":"→ 直述句","o":["She is a nurse.","She a nurse.","Is she a nurse.","She is nurse."],"h":"問號換句號。"},{"f":"Is he a student?","d":"→ 直述句","o":["He is a student.","He is student.","Is he student.","He student is."],"h":"a 不能掉。"},{"f":"Is she a cook?","d":"→ 直述句","o":["She is a cook.","She is cook.","Is she cook.","She a cook is."],"h":"a 不能掉。"},{"f":"Is he my uncle?","d":"→ 直述句","o":["He is my uncle.","Is he my uncle.","Him is my uncle.","He my uncle is."],"h":"Is 和 he 換回來。"},{"f":"Is she my aunt?","d":"→ 直述句","o":["She is my aunt.","Is she my aunt.","Her is my aunt.","She my aunt is."],"h":"Is 和 she 換回來。"},{"f":"He’s a doctor.","d":"→ 問句","o":["Is he a doctor?","Is he’s a doctor?","He’s a doctor?","Is a doctor he?"],"h":"先把 He’s 拆回 He is，再換位置。"},{"f":"She’s a teacher.","d":"→ 問句","o":["Is she a teacher?","Is she’s a teacher?","She’s a teacher?","Is a teacher she?"],"h":"先把 She’s 拆回 She is。"},{"f":"Is he a doctor?","d":"→ 回答「是的」","o":["Yes, he is.","Yes, he’s.","Yes, she is.","Yes, he isn’t."],"h":"句尾的 is 不縮寫。"},{"f":"Is she a doctor?","d":"→ 回答「不是」","o":["No, she isn’t.","No, she is.","No, he isn’t.","No, she not."],"h":"isn’t ＝ is not。"}],"g5":[{"s":"Who's he?","o":["Who's he?","Who's she?","He's here.","Whose hat?"],"h":"最後一個字是 he 還是 she。"},{"s":"Who's she?","o":["Who's she?","Who's he?","She's here.","Whose shoe?"],"h":"she 前面多一個「ㄕ」的氣音。"},{"s":"He's my father.","o":["He's my father.","She's my father.","He's my brother.","He's my grandfather."],"h":"開頭 He，結尾 father。"},{"s":"She's my mother.","o":["She's my mother.","He's my mother.","She's my grandmother.","She's my sister."],"h":"開頭 She，結尾 mother。"},{"s":"He's my brother.","o":["He's my brother.","He's my father.","She's my sister.","He's my grandfather."],"h":"brother 哥哥、弟弟都用這個字。"},{"s":"She's my sister.","o":["She's my sister.","She's my mother.","He's my brother.","She's my grandma."],"h":"sister 姊姊、妹妹都用這個字。"},{"s":"He's my grandfather.","o":["He's my grandfather.","He's my father.","She's my grandmother.","He's my grandpa."],"h":"grand ＝ 大，爸爸的爸爸。"},{"s":"She's my grandmother.","o":["She's my grandmother.","She's my mother.","He's my grandfather.","She's my grandma."],"h":"grandmother 奶奶，也可以是外婆。"},{"s":"He's my uncle.","o":["He's my uncle.","She's my aunt.","He's my nephew.","He's my cousin."],"h":"uncle 叔叔、伯伯、舅舅。"},{"s":"She's my aunt.","o":["She's my aunt.","He's my uncle.","She's my niece.","She's my cousin."],"h":"aunt 阿姨、姑姑、舅媽。"},{"s":"He is a doctor.","o":["He is a doctor.","Is he a doctor?","She is a doctor.","He is a teacher."],"h":"第一個字是 He → 直述句。"},{"s":"Is he a doctor?","o":["Is he a doctor?","He is a doctor.","Is she a doctor?","Is he a teacher?"],"h":"第一個字是 Is → 問句。"},{"s":"She is a teacher.","o":["She is a teacher.","Is she a teacher?","He is a teacher.","She is a student."],"h":"第一個字是 She → 直述句。"},{"s":"Is she a teacher?","o":["Is she a teacher?","She is a teacher.","Is he a teacher?","Is she a student?"],"h":"第一個字是 Is → 問句。"},{"s":"Is he a farmer?","o":["Is he a farmer?","He is a farmer.","Is she a farmer?","Is he a father?"],"h":"farmer 農夫，father 爸爸，尾巴不一樣。"},{"s":"Is she a nurse?","o":["Is she a nurse?","She is a nurse.","Is he a nurse?","Is she a doctor?"],"h":"nurse 護理師。"},{"s":"Yes, he is.","o":["Yes, he is.","Yes, she is.","No, he isn’t.","Yes, he isn’t."],"h":"Yes 後面接 he is。"},{"s":"No, she isn't.","o":["No, she isn’t.","No, he isn’t.","Yes, she is.","No, she is."],"h":"isn’t 的 n’t 很短，要聽尾巴。"},{"s":"He's a student.","o":["He's a student.","He's a teacher.","She's a student.","Is he a student?"],"h":"student 學生。"},{"s":"She's a cook.","o":["She's a cook.","He's a cook.","She's a doctor.","Is she a cook?"],"h":"cook 廚師。"}],"g6":[["Who's he?","他是誰？"],["Who's she?","她是誰？"],["He's my father.","他是我的爸爸。"],["She's my mother.","她是我的媽媽。"],["grandfather","爺爺"],["grandmother","奶奶"],["brother","哥哥"],["sister","姊姊"],["uncle","叔叔"],["aunt","阿姨"],["nephew","姪子"],["niece","姪女"],["doctor","醫生"],["teacher","老師"],["nurse","護理師"],["cook","廚師"],["farmer","農夫"],["student","學生"],["Is he a doctor?","他是一位醫生嗎？"],["No, she isn't.","不，她不是。"]],"g7":[{"w":["Who","'s","he","?"],"b":-1,"zh":"他是誰？","h":"這一句完全正確，別被騙了。"},{"w":["Who","'s","him","?"],"b":2,"fix":"he","zh":"他是誰？","h":"句子裡當主詞要用 he，不是 him。"},{"w":["His","my","father","."],"b":0,"fix":"He's","zh":"他是我的爸爸。","h":"His 是「他的」，He’s 才是「他是」。"},{"w":["He","'s","my","mother","."],"b":3,"fix":"father","zh":"他是我的爸爸。","h":"He 是男生，後面不會接 mother。"},{"w":["She","'s","my","grandfather","."],"b":3,"fix":"grandmother","zh":"她是我的奶奶。","h":"She 是女生，要配 grandmother。"},{"w":["Her","'s","my","aunt","."],"b":0,"fix":"She's","zh":"她是我的阿姨。","h":"Her 不能放句子開頭當主詞。"},{"w":["He","is","doctor","."],"b":2,"fix":"a doctor","zh":"他是一位醫生。","h":"職業前面一定要有 a。"},{"w":["She","is","a","teacher","."],"b":-1,"zh":"她是一位老師。","h":"這一句完全正確。"},{"w":["Is","he","doctor","?"],"b":2,"fix":"a doctor","zh":"他是一位醫生嗎？","h":"問句裡的 a 也不能掉。"},{"w":["He","is","a","doctor","?"],"b":4,"fix":"改成 Is he a doctor?","zh":"他是一位醫生嗎？","h":"只加問號不算問句，要把 he 和 is 換位置。"},{"w":["Is","him","a","farmer","?"],"b":1,"fix":"he","zh":"他是一位農夫嗎？","h":"Is 後面接 he。"},{"w":["Is","her","a","nurse","?"],"b":1,"fix":"she","zh":"她是一位護理師嗎？","h":"Is 後面接 she。"},{"w":["Yes",",","he","'s","."],"b":3,"fix":"is","zh":"是的，他是。","h":"句尾的 is 不可以縮寫。"},{"w":["Yes",",","she","is","."],"b":-1,"zh":"是的，她是。","h":"這一句完全正確。"},{"w":["No",",","he","not","."],"b":3,"fix":"isn't","zh":"不，他不是。","h":"不是要用 isn’t ＝ is not。"},{"w":["No",",","she","isn't","."],"b":-1,"zh":"不，她不是。","h":"這一句完全正確。"},{"w":["What","'s","he","?"],"b":0,"fix":"Who","zh":"他是誰？","h":"問「人」要用 Who，不是 What。"},{"w":["Who","is","he","?"],"b":-1,"zh":"他是誰？","h":"Who is ＝ Who’s，兩種寫法都對。"},{"w":["She","is","a","doctors","."],"b":3,"fix":"doctor","zh":"她是一位醫生。","h":"a 後面只能接一個人，不加 s。"},{"w":["He","are","a","cook","."],"b":1,"fix":"is","zh":"他是一位廚師。","h":"He 後面用 is，不用 are。"}],"g8":[{"b":"___","a":"'s he?","zh":"他是誰？","o":["Who","What","How","Where"],"h":"問人用 Who。"},{"b":"Who","a":"he?","zh":"他是誰？","o":["'s","are","am","do"],"h":"Who’s ＝ Who is。"},{"b":"He","a":"my father.","zh":"他是我的爸爸。","o":["'s","are","am","have"],"h":"He’s ＝ He is。"},{"b":"She","a":"my mother.","zh":"她是我的媽媽。","o":["'s","are","am","have"],"h":"She’s ＝ She is。"},{"b":"He's my","a":".","zh":"他是我的爺爺。","o":["grandfather","grandmother","aunt","niece"],"h":"He 是男生 → grandfather。"},{"b":"She's my","a":".","zh":"她是我的奶奶。","o":["grandmother","grandfather","uncle","nephew"],"h":"She 是女生 → grandmother。"},{"b":"He is","a":"doctor.","zh":"他是一位醫生。","o":["a","the","an","is"],"h":"職業前面用 a。"},{"b":"She is a","a":".","zh":"她是一位護理師。","o":["nurse","doctor","cook","farmer"],"h":"nurse 護理師。"},{"b":"___","a":"he a doctor?","zh":"他是一位醫生嗎？","o":["Is","He","Are","Does"],"h":"問句把 Is 放最前面。"},{"b":"Is","a":"a teacher?","zh":"她是一位老師嗎？","o":["she","her","he","hers"],"h":"Is 後面接 she。"},{"b":"Is he a","a":"?","zh":"他是一位農夫嗎？","o":["farmer","father","nurse","teacher"],"h":"farmer 農夫。"},{"b":"Yes, he","a":".","zh":"是的，他是。","o":["is","'s","are","be"],"h":"句尾的 is 不縮寫。"},{"b":"No, she","a":".","zh":"不，她不是。","o":["isn't","is","not","aren’t"],"h":"isn’t ＝ is not。"},{"b":"Yes,","a":"is.","zh":"是的，她是。","o":["she","her","he","hers"],"h":"問 she 就答 she。"},{"b":"No,","a":"isn't.","zh":"不，他不是。","o":["he","him","she","his"],"h":"問 he 就答 he。"},{"b":"He is a","a":".","zh":"他是一位學生。","o":["student","teacher","doctor","cook"],"h":"student 學生。"},{"b":"She","a":"a cook.","zh":"她是一位廚師。","o":["is","are","am","be"],"h":"She 後面用 is。"},{"b":"___","a":"'s she?","zh":"她是誰？","o":["Who","What","How","When"],"h":"問人用 Who。"},{"b":"She's my","a":".","zh":"她是我的阿姨。","o":["aunt","uncle","nephew","grandpa"],"h":"aunt 阿姨、姑姑、舅媽。"},{"b":"He's my","a":".","zh":"他是我的叔叔。","o":["uncle","aunt","niece","grandma"],"h":"uncle 叔叔、伯伯、舅舅。"}],"g9":[["Who's he?","q"],["Who's she?","q"],["He's my father.","s"],["She's my mother.","s"],["Is he a doctor?","q"],["He is a doctor.","s"],["Is she a teacher?","q"],["She is a teacher.","s"],["Yes, he is.","s"],["No, she isn’t.","s"],["Is he your uncle?","q"],["He is my uncle.","s"],["Who is she?","q"],["She is my aunt.","s"],["Is she a nurse?","q"],["She’s a nurse.","s"],["Is he a farmer?","q"],["He’s a farmer.","s"],["Who’s your father?","q"],["My father is a cook.","s"],["Is she a student?","q"],["She’s a student.","s"],["Is he my brother?","q"],["He’s my brother.","s"]],"g10":[{"q":"魔王問：Who’s ＝ ?","o":["Who is","Whose","Who are","Who has"],"h":"’ 藏起來的是 is 的 i。"},{"q":"魔王問：「他是誰？」英文第一個字？","o":["Who","He","Is","My"],"h":"中文最後問誰，英文最前面 Who。"},{"q":"魔王問：\"Who’s she?\" 答句開頭？","o":["She","He","Her","Who"],"h":"問 she 就答 She。"},{"q":"魔王問：He’s ＝ ?","o":["He is","His","He has","Him is"],"h":"He’s ＝ He is。"},{"q":"魔王問：\"He is a cook.\" 的問句？","o":["Is he a cook?","He is a cook?","Is a cook he?","Do he a cook?"],"h":"he 和 is 換位置。"},{"q":"魔王問：\"Is she a nurse?\" 的直述句？","o":["She is a nurse.","Is she a nurse.","Her is a nurse.","She a nurse is."],"h":"Is 和 she 換回來。"},{"q":"魔王問：\"Is he a teacher?\" 答「是的」？","o":["Yes, he is.","Yes, he’s.","Yes, she is.","Yes, he isn’t."],"h":"句尾的 is 不縮寫。"},{"q":"魔王問：\"Is she a doctor?\" 答「不是」？","o":["No, she isn’t.","No, she is.","No, he isn’t.","No, she not."],"h":"isn’t ＝ is not。"},{"q":"魔王問：「奶奶」的英文？","o":["grandmother","grandfather","aunt","mother"],"h":"grandmother 奶奶，也可以是外婆。"},{"q":"魔王問：「姪女」的英文？","o":["niece","nephew","aunt","cousin"],"h":"niece 姪女，外甥女也是。"},{"q":"魔王問：「姪子」的英文？","o":["nephew","niece","uncle","cousin"],"h":"nephew 姪子，外甥也是。"},{"q":"魔王問：aunt 是誰？","o":["阿姨、姑姑、舅媽","奶奶","姊姊","姪女"],"h":"英文一個字管中文好幾個稱呼。"},{"q":"魔王問：哪一句是對的？","o":["He’s my dad.","His my dad.","He my dad.","Him is my dad."],"h":"He’s ＝ He is。"},{"q":"魔王問：哪一句是對的？","o":["She is a doctor.","She is doctor.","She are a doctor.","She a doctor."],"h":"is ＋ a 兩個都不能少。"},{"q":"魔王問：問「東西」用哪個字？","o":["What","Who","How","Where"],"h":"What 問東西，Who 問人。"},{"q":"魔王問：isn’t ＝ ?","o":["is not","it not","in not","is now"],"h":"’ 藏起來的是 not 的 o。"},{"q":"魔王問：直述句變問句要動幾個字？","o":["兩個（主詞和 is）","一個","三個","全部"],"h":"只動最前面兩個字。"},{"q":"魔王問：\"She’s a farmer.\" 的問句？","o":["Is she a farmer?","She’s a farmer?","Is she’s a farmer?","Is a farmer she?"],"h":"先把 She’s 拆回 She is。"},{"q":"魔王問：a student 是什麼？","o":["一位學生","一位老師","一位醫生","一位廚師"],"h":"student 學生。"},{"q":"魔王問：「他是一位農夫。」","o":["He’s a farmer.","He’s farmer.","He a farmer.","Is he a farmer?"],"h":"職業前面要有 a。"},{"q":"魔王問：\"Who’s he?\" 不可以怎麼回答？","o":["It’s a book.","He’s my dad.","He’s my uncle.","He’s my brother."],"h":"Who 問人，答案一定是一個人。"},{"q":"魔王問：Who’s 和 Whose 唸起來？","o":["一模一樣，但意思不同","完全不同","Whose 不存在","兩個都是「誰是」"],"h":"聽起來一樣，Who’s ＝ Who is，Whose ＝ 誰的。"},{"q":"魔王問：\"He is my grandfather.\" 的問句？","o":["Is he my grandfather?","He is my grandfather?","Is my grandfather he?","Does he my grandfather?"],"h":"一樣只換前兩個字。"},{"q":"魔王問：cook 是什麼？","o":["廚師","農夫","護理師","學生"],"h":"cook 廚師，farmer 農夫。"}]}, META=[{"id":"g1","ic":"⚡","name":"閃電四選一","rule":"看題目選答案，答得快分數高。","st":"⚡ 電力","n":24},{"id":"g2","ic":"🔵","name":"他還是她","rule":"看到就按：左邊 He（藍）、右邊 She（粉）。","st":"👬 雙胞胎","n":24},{"id":"g3","ic":"🧩","name":"語序大挑戰","rule":"照順序點英文字，把整句排出來。","st":"🧩 拼圖","n":20},{"id":"g4","ic":"🔄","name":"變身術","rule":"直述句 ⇄ 問句，選出變身後正確的句子。","st":"🪄 魔法","n":20},{"id":"g5","ic":"🎧","name":"聽力狙擊","rule":"聽一句英文，射下正確的那一張卡。","st":"🎯 狙擊","n":20},{"id":"g6","ic":"🃏","name":"記憶配對","rule":"翻開兩張，英文配中文，配對成功就消失。","st":"🃏 撲克牌","n":20},{"id":"g7","ic":"🔍","name":"火眼金睛","rule":"句子裡有一個字是錯的，點出來。全對的句子按「✅ 這句沒錯」。","st":"🕵 偵探","n":20},{"id":"g8","ic":"✏️","name":"填空高手","rule":"句子少了一個字，選出正確的那一個。","st":"✏️ 文具","n":20},{"id":"g9","ic":"🗂","name":"分類大師","rule":"問句丟右邊 ❓，直述句丟左邊 🙋。","st":"🗂 整理","n":24},{"id":"g10","ic":"👑","name":"魔王挑戰","rule":"打倒魔王！答對扣血，答錯魔王放技能。","st":"🗡 勇者","n":24}], SURP={"g1":[{"t":"⚡ 電力全開","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🔋 充飽電","d":"直接加 300 分","k":"pts","v":300},{"t":"🌩 雷擊暴衝","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"💡 燈泡亮了","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"🏎 加速引擎","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🛡 絕緣護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🔥 連擊火焰","d":"連對直接 ＋3","k":"streak","v":3},{"t":"🎆 煙火綻放","d":"直接加 500 分","k":"pts","v":500},{"t":"🚀 火箭點火","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"🌟 超新星","d":"直接加 800 分","k":"pts","v":800},{"t":"🧲 磁力吸分","d":"直接加 250 分","k":"pts","v":250},{"t":"⏰ 時間回流","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"💎 鑽石電池","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🎯 精準射擊","d":"5 秒內答對，再加 300 分","k":"fast","v":300},{"t":"🌈 彩虹電流","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🦾 鋼鐵手速","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🍀 幸運電波","d":"直接加 400 分","k":"pts","v":400},{"t":"🛰 衛星連線","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"👑 電力之王","d":"直接加 1000 分","k":"pts","v":1000},{"t":"🎁 神秘電箱","d":"直接加 150 分","k":"pts","v":150}],"g2":[{"t":"👦 男生應援團","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"👧 女生應援團","d":"直接加 300 分","k":"pts","v":300},{"t":"👬 雙胞胎出現","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🎀 粉紅風暴","d":"直接加 450 分","k":"pts","v":450},{"t":"💙 藍色風暴","d":"直接加 450 分","k":"pts","v":450},{"t":"🤝 好朋友加持","d":"連對直接 ＋3","k":"streak","v":3},{"t":"🧢 男生帽子","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"👒 女生帽子","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"🛡 友情護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🎈 慶生氣球","d":"直接加 200 分","k":"pts","v":200},{"t":"🏃 賽跑第一","d":"5 秒內答對，再加 350 分","k":"fast","v":350},{"t":"🎪 大遊行","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🍭 棒棒糖","d":"直接加 150 分","k":"pts","v":150},{"t":"🎂 生日蛋糕","d":"直接加 600 分","k":"pts","v":600},{"t":"📸 全班合照","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🌼 花圈加冕","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🎵 班歌響起","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"🏅 模範生","d":"直接加 700 分","k":"pts","v":700},{"t":"🐣 小雞跟屁蟲","d":"5 秒內答對，再加 250 分","k":"fast","v":250},{"t":"👑 班長加冕","d":"直接加 900 分","k":"pts","v":900}],"g3":[{"t":"🧩 拼圖合體","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🪄 一秒拼好","d":"直接加 350 分","k":"pts","v":350},{"t":"🏗 積木高塔","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🔧 萬能工具","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"📐 完美對齊","d":"5 秒內答對，再加 300 分","k":"fast","v":300},{"t":"🛡 拼圖護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🧱 蓋好城牆","d":"連對直接 ＋3","k":"streak","v":3},{"t":"🎨 上色完成","d":"直接加 400 分","k":"pts","v":400},{"t":"🚧 工程加速","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"🏰 蓋出城堡","d":"直接加 800 分","k":"pts","v":800},{"t":"🔩 螺絲鎖緊","d":"直接加 200 分","k":"pts","v":200},{"t":"⌛ 沙漏翻面","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"💠 稀有拼片","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🖇 完美接合","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🌉 蓋好大橋","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🦺 工頭表揚","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🎁 工具寶箱","d":"直接加 250 分","k":"pts","v":250},{"t":"🪜 再上一層","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"👑 總工程師","d":"直接加 1000 分","k":"pts","v":1000},{"t":"📦 補給到貨","d":"直接加 150 分","k":"pts","v":150}],"g4":[{"t":"🪄 魔法加倍","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🔮 水晶球","d":"直接加 350 分","k":"pts","v":350},{"t":"🐉 召喚巨龍","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧪 時間藥水","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"✨ 瞬間移動","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🛡 魔法護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🔥 火焰咒語","d":"連對直接 ＋3","k":"streak","v":3},{"t":"🌙 月光祝福","d":"直接加 500 分","k":"pts","v":500},{"t":"🧙 大法師加持","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"💫 流星許願","d":"直接加 900 分","k":"pts","v":900},{"t":"🍄 魔法蘑菇","d":"直接加 200 分","k":"pts","v":200},{"t":"⏳ 時光倒流","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"👻 隱形斗篷","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🦄 獨角獸現身","d":"5 秒內答對，再加 350 分","k":"fast","v":350},{"t":"🌀 傳送門","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🐸 變身青蛙","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🎩 帽子變兔子","d":"直接加 300 分","k":"pts","v":300},{"t":"🕯 蠟燭祈福","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"👑 魔法之王","d":"直接加 1000 分","k":"pts","v":1000},{"t":"🎁 魔法禮盒","d":"直接加 150 分","k":"pts","v":150}],"g5":[{"t":"🎯 連續命中","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🔭 鷹眼瞄準","d":"直接加 350 分","k":"pts","v":350},{"t":"💥 一槍雙殺","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🎧 超級耳機","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"🏹 神射手","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🛡 防彈護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🔊 擴音器","d":"連對直接 ＋3","k":"streak","v":3},{"t":"🥇 狙擊冠軍","d":"直接加 600 分","k":"pts","v":600},{"t":"🚁 空中支援","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"🌟 傳說神槍","d":"直接加 900 分","k":"pts","v":900},{"t":"🔋 備用彈匣","d":"直接加 200 分","k":"pts","v":200},{"t":"⌚ 子彈時間","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"🎆 爆頭特效","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"👂 順風耳","d":"5 秒內答對，再加 300 分","k":"fast","v":300},{"t":"🛸 高科技裝備","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🐺 狼耳朵","d":"連對直接 ＋2","k":"streak","v":2},{"t":"📡 雷達鎖定","d":"直接加 400 分","k":"pts","v":400},{"t":"🧊 冷靜下來","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"👑 狙擊之王","d":"直接加 1000 分","k":"pts","v":1000},{"t":"🎁 補給空投","d":"直接加 150 分","k":"pts","v":150}],"g6":[{"t":"🃏 鬼牌出現","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"♠ 黑桃 A","d":"直接加 350 分","k":"pts","v":350},{"t":"♥ 紅心同花","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧠 過目不忘","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"⚡ 閃電記憶","d":"5 秒內配對成功，再加 400 分","k":"fast","v":400},{"t":"🛡 記憶護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🔥 手氣正旺","d":"連對直接 ＋3","k":"streak","v":3},{"t":"💰 通殺全場","d":"直接加 600 分","k":"pts","v":600},{"t":"🎩 魔術師手法","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"👑 同花大順","d":"直接加 1000 分","k":"pts","v":1000},{"t":"♣ 梅花小禮","d":"直接加 200 分","k":"pts","v":200},{"t":"⏳ 多看一眼","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"♦ 方塊閃光","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🎲 骰到六點","d":"5 秒內配對成功，再加 300 分","k":"fast","v":300},{"t":"🎰 拉霸中獎","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🐘 大象記憶","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🍀 幸運四葉草","d":"直接加 400 分","k":"pts","v":400},{"t":"🔍 偷看一秒","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"💎 鑽石王牌","d":"直接加 800 分","k":"pts","v":800},{"t":"🎁 神秘牌堆","d":"直接加 150 分","k":"pts","v":150}],"g7":[{"t":"🔍 名偵探出動","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🕵 找到線索","d":"直接加 350 分","k":"pts","v":350},{"t":"🚨 破案警報","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🔦 手電筒","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"👁 鷹眼掃描","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🛡 真相護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🧩 拼出真相","d":"連對直接 ＋3","k":"streak","v":3},{"t":"🏆 破案獎金","d":"直接加 600 分","k":"pts","v":600},{"t":"🐕 警犬幫忙","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"👑 神探之王","d":"直接加 1000 分","k":"pts","v":1000},{"t":"📎 小小證物","d":"直接加 200 分","k":"pts","v":200},{"t":"⌛ 現場保留","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"💡 靈光一閃","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧤 指紋鑑定","d":"5 秒內答對，再加 300 分","k":"fast","v":300},{"t":"📰 頭條新聞","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🦉 貓頭鷹視力","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🗝 找到鑰匙","d":"直接加 400 分","k":"pts","v":400},{"t":"☕ 喝杯咖啡","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"🎖 警長表揚","d":"直接加 800 分","k":"pts","v":800},{"t":"🎁 證物箱","d":"直接加 150 分","k":"pts","v":150}],"g8":[{"t":"✏️ 鉛筆全開","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🖍 彩色筆","d":"直接加 350 分","k":"pts","v":350},{"t":"🖊 鋼筆簽名","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧽 橡皮擦救援","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"📏 一尺量準","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🛡 筆袋護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"📚 課本加持","d":"連對直接 ＋3","k":"streak","v":3},{"t":"💯 滿分貼紙","d":"直接加 600 分","k":"pts","v":600},{"t":"🎒 書包補給","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"👑 作業之王","d":"直接加 1000 分","k":"pts","v":1000},{"t":"📎 迴紋針","d":"直接加 200 分","k":"pts","v":200},{"t":"⏳ 多想一下","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"🌟 老師蓋章","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🖌 一筆畫完","d":"5 秒內答對，再加 300 分","k":"fast","v":300},{"t":"🗒 筆記整齊","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"✒️ 字跡工整","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🎨 得獎作品","d":"直接加 400 分","k":"pts","v":400},{"t":"🧃 喝口果汁","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"🏅 模範作業","d":"直接加 800 分","k":"pts","v":800},{"t":"🎁 文具福袋","d":"直接加 150 分","k":"pts","v":150}],"g9":[{"t":"🗂 分類神手","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"📁 資料夾滿了","d":"直接加 350 分","k":"pts","v":350},{"t":"🏷 貼上標籤","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧹 大掃除","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"⚡ 秒速整理","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🛡 收納護盾","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"📦 全部歸位","d":"連對直接 ＋3","k":"streak","v":3},{"t":"✨ 房間變乾淨","d":"直接加 600 分","k":"pts","v":600},{"t":"🧺 洗衣籃清空","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"👑 收納之王","d":"直接加 1000 分","k":"pts","v":1000},{"t":"📌 圖釘固定","d":"直接加 200 分","k":"pts","v":200},{"t":"⌛ 慢慢整理","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"🗄 抽屜整齊","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧯 火速處理","d":"5 秒內答對，再加 300 分","k":"fast","v":300},{"t":"🏠 全家誇獎","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🐈 貓咪來幫忙","d":"連對直接 ＋2","k":"streak","v":2},{"t":"🧼 擦得發亮","d":"直接加 400 分","k":"pts","v":400},{"t":"🍪 點心時間","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"🏆 整潔比賽第一","d":"直接加 800 分","k":"pts","v":800},{"t":"🎁 收納箱","d":"直接加 150 分","k":"pts","v":150}],"g10":[{"t":"⚔️ 勇者之劍","d":"接下來 3 題，分數 ✕ 2","k":"x2","v":3},{"t":"🛡 傳說盾牌","d":"下一題答錯，連對不歸零","k":"shield","v":1},{"t":"🐲 召喚神龍","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🧪 紅藥水","d":"這一題 ＋8 秒","k":"time","v":8},{"t":"💨 迅捷之靴","d":"5 秒內答對，再加 400 分","k":"fast","v":400},{"t":"🔥 必殺技","d":"連對直接 ＋3","k":"streak","v":3},{"t":"💰 魔王掉寶","d":"直接加 600 分","k":"pts","v":600},{"t":"🏹 精靈弓箭手","d":"接下來 2 題，分數 ✕ 2","k":"x2","v":2},{"t":"👑 王者降臨","d":"直接加 1000 分","k":"pts","v":1000},{"t":"🪙 金幣一袋","d":"直接加 200 分","k":"pts","v":200},{"t":"⏳ 時之沙漏","d":"這一題 ＋10 秒","k":"time","v":10},{"t":"🌟 覺醒時刻","d":"下一題分數 ✕ 3","k":"x3","v":1},{"t":"🗡 暴擊一擊","d":"5 秒內答對，再加 350 分","k":"fast","v":350},{"t":"🦁 獅心勇氣","d":"接下來 4 題，分數 ✕ 2","k":"x2","v":4},{"t":"🧝 精靈祝福","d":"連對直接 ＋2","k":"streak","v":2},{"t":"💎 傳說寶石","d":"直接加 500 分","k":"pts","v":500},{"t":"🍖 補血烤肉","d":"這一題 ＋6 秒","k":"time","v":6},{"t":"🏰 攻下城堡","d":"直接加 800 分","k":"pts","v":800},{"t":"🎁 魔王寶箱","d":"直接加 300 分","k":"pts","v":300},{"t":"🧿 破魔護符","d":"下一題答錯，連對不歸零","k":"shield","v":1}]};
 var SHAPE=['▲','◆','●','■'];
 var QT=15, ROUNDQ=12;                 /* 每一題 15 秒，一場 12 題（使用者 2026-09-21 指定） */
 var g=null,queue=[],cur=null,left=QT,qt=QT,tick=null,score=0,streak=0,best=0,right=0,wrong=0;
-var asked=0,speedSum=0,shield=0;
+var asked=0,speedSum=0,shield=0,timeAdd=0,opened=[],lastGain=0;
 var mult=1,multLeft=0,fast=0,wrongList=[],busy=false,memPairs=[],memOpen=[],memLeft=0;
-var bossHP=100,bossMax=100;
+var bossHP=100,bossMax=100,bossShield=0;
 var pool=[];
 
 var R=2*Math.PI*46;$('#gfg').setAttribute('stroke-dasharray',R);
 
-/* ── 驚喜回饋：每一個遊戲 20 種，抽過不重複，十個遊戲都不一樣 ── */
+/* ── 驚喜卡：每一個遊戲 20 種，抽過不重複，十個遊戲都不一樣 ──
+   使用者 2026-09-21 回報「看不懂驚喜的意義、看不懂文字和圖示」。
+   所以卡片上最大的那一行 ＝ 你拿到什麼（eBig），
+   下面一行 ＝ 現在會發生什麼事（eWhy），兩行都是從效果直接算出來的，
+   不會跟實際發生的事不一樣。 */
 var nextEvt=2+Math.floor(Math.random()*3);
+function eBig(e){
+  if(e.k==='pts')return '＋'+e.v+' 分';
+  if(e.k==='x2')return '分數 ✕ 2';
+  if(e.k==='x3')return '分數 ✕ 3';
+  if(e.k==='time')return '下一題 ＋'+e.v+' 秒';
+  if(e.k==='fast')return '快答 ＋'+e.v+' 分';
+  if(e.k==='streak')return '🔥 連對 ＋'+e.v;
+  if(e.k==='shield')return '🛡 護盾';
+  return '';
+}
+function eWhy(e){
+  if(e.k==='pts')return '這 '+e.v+' 分現在就加進你的分數';
+  if(e.k==='x2')return '接下來 '+e.v+' 題，答對的分數都變兩倍';
+  if(e.k==='x3')return '接下來 '+e.v+' 題，答對的分數都變三倍';
+  if(e.k==='time')return '下一題多給你 '+e.v+' 秒，想清楚再按';
+  if(e.k==='fast')return '下一題 5 秒內答對，再多拿 '+e.v+' 分';
+  if(e.k==='streak')return '連對直接加 '+e.v+'，分數跟著跳上去';
+  if(e.k==='shield')return '下一題就算答錯，連對也不會歸零';
+  return '';
+}
 function doEvt(e){
-  if(e.k==='pts')score+=e.v;
+  if(e.k==='pts'){score+=e.v;popScore(e.v)}
   else if(e.k==='x2'){mult=2;multLeft=e.v}
   else if(e.k==='x3'){mult=3;multLeft=e.v}
-  else if(e.k==='time'){left=left+e.v;qt=Math.max(qt,left)}
+  else if(e.k==='time')timeAdd=e.v;        /* 下一題開始時才加得到（不然答完就被重設掉） */
   else if(e.k==='fast')fast=Date.now();
   else if(e.k==='streak'){streak+=e.v;if(streak>best)best=streak}
   else if(e.k==='shield')shield=1;
@@ -410,11 +518,21 @@ function doEvt(e){
 function fire(){
   if(!pool.length)pool=shuf((SURP[g]||[]).slice());
   var e=pool.shift();if(!e)return;
-  $('#evt .et').textContent=e.t;$('#evt .ed').textContent=e.d;
-  doEvt(e);
+  $('#evt .ebig').textContent=eBig(e);
+  $('#evt .ewhy').textContent=eWhy(e);
+  $('#evt .ename').textContent=e.t;
   var box=$('#evt');box.classList.remove('on');void box.offsetWidth;box.classList.add('on');
-  sWow();paint();
+  sWow();
+  /* 卡片翻過來的那一刻，效果才真的發生（分數也才跳上去）——
+     學生看得到「是這張卡給我的」，不會莫名其妙多了幾分（使用者 2026-09-21 指定） */
+  setTimeout(function(){opened.push(e.t);doEvt(e);paint()},1000);
   nextEvt=2+Math.floor(Math.random()*3);
+}
+/* 分數是「現在」加上去的：數字跳一下，旁邊飄一個 ＋850 上去 */
+function popScore(v){
+  var el=$('#gpop');if(el){el.textContent='＋'+v;
+    el.classList.remove('on');void el.offsetWidth;el.classList.add('on')}
+  var sc=$('#gsc');if(sc){sc.classList.remove('bump');void sc.offsetWidth;sc.classList.add('bump')}
 }
 
 /* ── 大廳 ── */
@@ -428,7 +546,8 @@ function hub(){
     return '<button class="gcard" data-g="'+m.id+'"><span class="gn">'+(n+1)+'</span>'+
       '<span class="gi">'+m.ic+'</span><span class="gt">'+m.name+'</span>'+
       '<span class="gr">'+m.rule+'</span>'+
-      '<span class="gb">'+m.n+' 題庫　一場 '+ROUNDQ+' 題　每題 '+QT+' 秒'+(b?'　最佳 <b>'+b+'</b>':'')+'</span></button>';
+      '<span class="gb">'+m.n+' 題庫　一場 '+ROUNDQ+' 題　每題 '+QT+' 秒　🎁 '+m.st+'驚喜卡 20 張'+
+      (b?'　最佳 <b>'+b+'</b>':'')+'</span></button>';
   }).join('');
 }
 $('#grid').addEventListener('click',function(e){
@@ -440,9 +559,9 @@ $('#grid').addEventListener('click',function(e){
 function begin(id){
   g=id;
   score=0;streak=0;best=0;right=0;wrong=0;mult=1;multLeft=0;fast=0;wrongList=[];busy=false;
-  asked=0;speedSum=0;shield=0;pool=shuf((SURP[id]||[]).slice());
+  asked=0;speedSum=0;shield=0;timeAdd=0;opened=[];lastGain=0;pool=shuf((SURP[id]||[]).slice());
   left=QT;qt=QT;nextEvt=2+Math.floor(Math.random()*3);
-  bossHP=bossMax=100;
+  bossHP=bossMax=100;bossShield=0;
   memLeft=0;memOpen=[];memPairs=[];
   queue=shuf(BANK[id].slice());
   $('#hub').style.display='none';$('#ghud').classList.add('on');
@@ -454,7 +573,8 @@ function begin(id){
 /* 每一題自己的倒數：時間到就算答錯，給提示再出下一題 */
 function run(sec){
   if(tick)clearInterval(tick);
-  qt=sec||QT;left=qt;paint();
+  qt=Math.max(5,(sec||QT)+timeAdd);timeAdd=0;  /* 驚喜卡（或魔王技能）給的秒數在這一題才生效 */
+  left=qt;paint();
   tick=setInterval(function(){
     left-=0.1;
     if(left<=0){left=0;paint();tstop();timeUp();return}
@@ -478,6 +598,7 @@ function paint(){
   $('#gring').className=left<=5?'dang':(left<=8?'warn':'');
   $('#gsc').textContent=score;
   $('#gstreak').textContent=(shield?'🛡 ':'')+(streak?'🔥 '+streak:'—');
+  $('#gsurp').textContent='🎁 '+opened.length;
   $('#gprog').textContent=asked+' ／ '+ROUNDQ+' 題';
 }
 
@@ -493,41 +614,63 @@ function next(){
 }
 function tags(extra){
   var h='';
-  if(multLeft>0)h+='<span class="tg hot">分數 ✕ '+mult+'（剩 '+multLeft+' 題）</span>';
-  if(fast)h+='<span class="tg hot">🎯 急速題</span>';
+  if(multLeft>0)h+='<span class="tg hot">🎁 分數 ✕ '+mult+'　還剩 '+multLeft+' 題</span>';
+  if(fast)h+='<span class="tg hot">🎯 5 秒內答對再加 分</span>';
+  if(shield)h+='<span class="tg hot">🛡 答錯連對也不歸零</span>';
+  /* 期待感：下一張驚喜卡離我還有幾題，隨時看得到（使用者 2026-09-21 指定） */
+  h+='<span class="tg go'+(nextEvt<=1?' near':'')+'">'+
+     (nextEvt<=1?'🎁 這一題答對就翻驚喜卡！':'🎁 再答對 '+nextEvt+' 題翻驚喜卡')+'</span>';
   if(extra)h+='<span class="tg">'+extra+'</span>';
-  return h?'<div class="tagline">'+h+'</div>':'';
+  return '<div class="tagline">'+h+'</div>';
 }
 
 /* ── 判定 ── */
 /* 愈快答對，分數愈高（使用者 2026-09-21 指定）：
    基本 100 分 ＋ 速度分（剩下的秒數 ／ 總秒數 ✕ 900）＋ 連對加成，最後再乘上倍率 */
+/* 分數是怎麼算出來的，一格一格排給學生看（使用者 2026-09-21 指定：
+   「看不懂為何得分」＝ 只給一個總分沒有用，要看得到 100 ＋ 速度分 ＋ 連對） */
+function ci(lbl,val,cls){
+  return '<span class="ci '+(cls||'')+'"><em>'+lbl+'</em><b>'+val+'</b></span>'}
+function cp(sym){return '<span class="cp">'+sym+'</span>'}
 function judge(ok,hint,after,timeout){
   if(busy)return;busy=true;
   tstop();
-  var bonus=0;
+  var bonus=0, evtNow=false;
   asked++;
   if(ok){
     right++;streak++;if(streak>best)best=streak;
     var sp=Math.round(900*(left/qt));speedSum+=sp;
-    var p=100+sp+streak*20;
+    var base=100+sp+streak*20;
     if(fast&&Date.now()-fast<5000){bonus=200;fast=0}
     else if(fast&&Date.now()-fast>=5000){fast=0}
-    p=p*mult+bonus;
+    var p=base*mult+bonus;
     score+=p;sOk();
+    lastGain=p;
     if(multLeft>0){multLeft--;if(multLeft===0)mult=1}
-    $('#gfb').innerHTML='<div class="fh ok">✅ ＋'+p+'</div>'+
-      '<div class="fw">⚡ 速度分 ＋'+sp+'（剩 '+left.toFixed(1)+' 秒）'+
-      (streak>1?'　🔥 連對 ＋'+(streak*20):'')+(mult>1?'　✕ '+mult:'')+
-      (bonus?'　🎯 急速 ＋200':'')+'</div>';
+    var row1='<div class="calc">'+ci('答對','100')+cp('＋')+
+      ci('⚡ 快　剩 '+left.toFixed(1)+' 秒',''+sp,'sp')+
+      (streak>1?cp('＋')+ci('🔥 連對 '+streak,''+(streak*20)):'')+
+      cp('＝')+ci(mult>1||bonus?'小計':'這一題拿到',''+base,mult>1||bonus?'':'tot')+'</div>';
+    var row2='';
+    if(mult>1||bonus){
+      row2='<div class="calc">'+ci('小計',''+base)+
+        (mult>1?cp('✕ '+mult+'（🎁 驚喜卡）'):'')+
+        (bonus?cp('＋')+ci('🎯 快答',''+bonus):'')+
+        cp('＝')+ci('這一題拿到',''+p,'tot')+'</div>';
+    }
+    $('#gfb').innerHTML='<div class="fh ok">✅ 答對！分數 ＋'+p+'</div>'+row1+row2+
+      '<div class="spbar"><i style="width:'+Math.max(3,Math.round(100*left/qt))+'%"></i></div>'+
+      '<div class="sphint">⚡ 答得愈快，這一條愈長，速度分就愈高</div>';
+    popScore(p);
     nextEvt--;
-    if(nextEvt<=0)setTimeout(fire,320);
+    if(nextEvt<=0){evtNow=true;setTimeout(fire,900)}   /* 先讓學生看完算式，再翻驚喜卡 */
   }else{
     wrong++;
     if(shield){shield=0;$('#gstreak').textContent='🔥 '+streak}else streak=0;
     sNo();
-    $('#gfb').innerHTML='<div class="fh no">'+(timeout?'⏰ 時間到！':'❌ 再想一下')+'</div>'+
-      '<div class="fw">'+ap(hint||'')+'</div>';
+    $('#gfb').innerHTML='<div class="fh no">'+(timeout?'⏰ 時間到！這一題 0 分':'❌ 再想一下，這一題 0 分')+'</div>'+
+      '<div class="fw">'+ap(hint||'')+'</div>'+
+      '<div class="sphint">這一題等一下會再出現一次，答對就拿得到分數</div>';
     queue.splice(Math.min(queue.length,2+Math.floor(Math.random()*3)),0,cur); /* 練到會為止 */
     if(hint&&wrongList.indexOf(hint)<0)wrongList.push(hint);
   }
@@ -536,7 +679,7 @@ function judge(ok,hint,after,timeout){
     if(!$('#arena').classList.contains('on'))return;
     if(asked>=ROUNDQ){over();return}
     (after||next)();
-  },ok?1000:2000);
+  },evtNow?3500:(ok?1200:2200));
 }
 
 /* ── 1 ⚡ 閃電四選一 ── */
@@ -721,20 +864,24 @@ function bossTap(e){
   var ok=b.getAttribute('data-ok')==='true';
   markO(b,ok);
   if(ok){
-    bossHP=Math.max(0,bossHP-10);   /* 打十下倒，一場 12 題打得完 */
+    var dmg=bossShield?5:10;bossShield=0;   /* 打十下倒，一場 12 題打得完 */
+    bossHP=Math.max(0,bossHP-dmg);
     $('#hp').style.width=bossHP+'%';
     $('#bossface').classList.add('hit');
     if(bossHP<=0){sWow();stop();setTimeout(win,700);return}
     judge(true,'');
   }else{
+    /* 三個技能都是「真的會發生的事」，而且都寫明下一題會怎樣——
+       學生看得懂才有壓力，看不懂就只是莫名其妙（使用者 2026-09-21 指定） */
     var sk=pick([
-      {t:'🌀 魔王技能：偷走 10 秒',f:function(){left=Math.max(5,left-10)}},
-      {t:'🎲 魔王技能：選項洗牌',f:function(){}},
-      {t:'💢 魔王回血 5%',f:function(){bossHP=Math.min(100,bossHP+5);$('#hp').style.width=bossHP+'%'}}
+      {t:'🌀 魔王偷時間',d:'下一題只剩 5 秒！',f:function(){timeAdd=-10}},
+      {t:'💢 魔王回血 5%',d:'血條又長回去一點了',
+       f:function(){bossHP=Math.min(100,bossHP+5);$('#hp').style.width=bossHP+'%'}},
+      {t:'🛡 魔王開護盾',d:'下一題答對只扣一半的血',f:function(){bossShield=1}}
     ]);
     sk.f();
-    $('#evt .et').textContent=sk.t;$('#evt .ed').textContent='答對就能扳回來！';
-    var bx=$('#evt');bx.classList.remove('on');void bx.offsetWidth;bx.classList.add('on');
+    $('#bad .bt').textContent=sk.t;$('#bad .bd').textContent=sk.d+'　答對就能扳回來！';
+    var bx=$('#bad');bx.classList.remove('on');void bx.offsetWidth;bx.classList.add('on');
     judge(false,cur.h);
   }
 }
@@ -776,10 +923,14 @@ function endBody(){
   $('#gendsc').textContent=score;
   $('#gendln').innerHTML='答對 <b>'+right+'</b> 題　答錯 <b>'+wrong+'</b> 題　最長連對 <b>'+best+
     '</b>　速度分共 <b>'+speedSum+'</b>　最佳紀錄 <b>'+b+'</b>';
-  $('#gendrev').innerHTML=wrongList.length?
-    ('<div style="color:#5C5C5C;letter-spacing:.1em">📌 這一場要記住的：</div>'+
-     wrongList.map(function(h){return '<div>・'+ap(h)+'</div>'}).join('')):
-    '<div>全對！一題都沒錯 🎉</div>';
+  $('#gendrev').innerHTML=
+    '<div>🎁 這一場翻到 <b>'+opened.length+'</b> 張驚喜卡'+
+      (opened.length?'：'+opened.join('、'):'')+
+      '　（這個遊戲一共有 <b>20</b> 張，每一張都不一樣）</div>'+
+    (wrongList.length?
+     ('<div style="color:#5C5C5C;letter-spacing:.1em">📌 這一場要記住的：</div>'+
+      wrongList.map(function(h){return '<div>・'+ap(h)+'</div>'}).join('')):
+     '<div>全對！一題都沒錯 🎉</div>');
   sWow();
 }
 $('#retry').addEventListener('click',function(){begin(g)});
@@ -787,11 +938,20 @@ $('#backhub').addEventListener('click',hub);
 $('#quit').addEventListener('click',function(){
   if($('#arena').classList.contains('on')||$('#gend').classList.contains('on'))hub();
 });
-$('#slowBtn').addEventListener('click',function(){
-  SLOW=!SLOW;this.classList.toggle('on',SLOW);this.innerHTML=SLOW?'🐢 放慢 開':'🐢 放慢 關'});
-$('#muteBtn').addEventListener('click',function(){
-  MUTE=!MUTE;this.classList.toggle('on',!MUTE);this.innerHTML=MUTE?'🔇 音效 N':'🔊 音效 Y'});
 hub();
+
+
+(function(){
+  var g=$('#rateGrp');if(!g)return;
+  var saved=store('rate');if(saved)setRate(saved);
+  function mark(){$$('#rateGrp button').forEach(function(b){
+    b.classList.toggle('on',Math.abs(parseFloat(b.getAttribute('data-r'))-RATE)<0.001)})}
+  mark();
+  g.addEventListener('click',function(e){
+    var b=e.target&&e.target.closest?e.target.closest('button'):null;if(!b)return;
+    setRate(parseFloat(b.getAttribute('data-r')));store('rate',RATE);mark();sayStop();
+  });
+})();
 
 </script>
 </body>

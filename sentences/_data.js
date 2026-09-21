@@ -42,13 +42,13 @@ var ICON = {
 var SUB = {
   he: {
     basic:[['brother','哥哥',ICON.brother],['grandfather','爺爺',ICON.grandfather],
-           ['dad','爸比',ICON.dad],['grandpa','阿公',ICON.grandpa]],
+           ['dad','爸爸',ICON.dad],['grandpa','阿公',ICON.grandpa]],
     adv:  [['uncle','叔叔',ICON.uncle],['nephew','姪子',ICON.nephew],
            ['cousin','表哥',ICON.cousin]]
   },
   she: {
     basic:[['sister','姊姊',ICON.sister],['grandmother','奶奶',ICON.grandmother],
-           ['grandma','阿嬤',ICON.grandma],['mom','媽咪',ICON.mom]],
+           ['grandma','阿嬤',ICON.grandma],['mom','媽媽',ICON.mom]],
     adv:  [['aunt','阿姨',ICON.aunt],['cousin','表姊',ICON.cousin],
            ['niece','姪女',ICON.niece]]
   },
@@ -143,15 +143,23 @@ var U1 = [
   rows:[{q:'Who’s he?', qk:'he', qzh:'他 是 誰？', a:'He’s ______.', ak:'He', azh:'他 是 ______。', cls:'b'},
         {q:'Who’s she?', qk:'she', qzh:'她 是 誰？', a:'She’s ______.', ak:'She', azh:'她 是 ______。', cls:'lp'}]},
 
- /* 15 */
- {type:'pair', q:'Who’s he?', qk:'he', qzh:'他 是 誰？',
-  a:'He’s my {w}.', ak:'He', azh:'他 是 我的 {z}。', cls:'b',
-  slot:'he', w:'father', z:'爸爸', qic:ICON.who, aic:ICON.father},
+ /* 15 一問一答：每一個英文字的正下方就是那個字的中文（使用者 2026-09-21 指定） */
+ {type:'pair', cls:'b', slot:'he', qic:ICON.who, aic:ICON.father,
+  qtk:[t('Who','誰',ICON.who),t("'s",'是',ICON.is,{tight:1}),
+       t('he','他',ICON.he,{hl:'b'}),t('?','？',ICON.q,{tight:1})],
+  atk:[t('He','他',ICON.he,{hl:'b'}),t("'s",'是',ICON.is,{tight:1}),
+       t('my','我的',ICON.my),t('father','爸爸',ICON.father,{slot:'he'}),
+       t('.','。',ICON.dot,{tight:1})],
+  qzh:'他 是 誰？', azh:'他 是 我的 爸爸。'},
 
  /* 16 */
- {type:'pair', q:'Who’s she?', qk:'she', qzh:'她 是 誰？',
-  a:'She’s my {w}.', ak:'She', azh:'她 是 我的 {z}。', cls:'lp',
-  slot:'she', w:'mother', z:'媽媽', qic:ICON.who, aic:ICON.mother}
+ {type:'pair', cls:'lp', slot:'she', qic:ICON.who, aic:ICON.mother,
+  qtk:[t('Who','誰',ICON.who),t("'s",'是',ICON.is,{tight:1}),
+       t('she','她',ICON.she,{hl:'lp'}),t('?','？',ICON.q,{tight:1})],
+  atk:[t('She','她',ICON.she,{hl:'lp'}),t("'s",'是',ICON.is,{tight:1}),
+       t('my','我的',ICON.my),t('mother','媽媽',ICON.mother,{slot:'she'}),
+       t('.','。',ICON.dot,{tight:1})],
+  qzh:'她 是 誰？', azh:'她 是 我的 媽媽。'}
 ];
 
 /* ---------------- Unit 2 ---------------- */
@@ -287,15 +295,25 @@ var U2 = [
   stzh:'他 是 一位 醫生。', quzh:'他 是 一位 醫生 嗎？',
   note:'短答不縮寫：Yes, he is. ✅　Yes, he’s. ❌'},
 
- /* 20 */
- {type:'pair', q:'Is he a {w}?', qk:'he', qzh:'他 是 一位 {z} 嗎？',
-  a:'Yes, he is.', ak:'he', azh:'是的，他 是。', cls:'b',
-  slot:'job', w:'doctor', z:'醫生', qic:ICON.doctor, aic:ICON.yes},
+ /* 20 一問一答：每一個英文字的正下方就是那個字的中文（使用者 2026-09-21 指定） */
+ {type:'pair', cls:'b', slot:'job', qic:ICON.doctor, aic:ICON.yes,
+  qtk:[t('Is','是',ICON.is,{hl:'y'}),t('he','他',ICON.he,{hl:'b'}),
+       t('a','一位',ICON.a),t('doctor','醫生',ICON.doctor,{slot:'job'}),
+       t('?','嗎？',ICON.q,{tight:1})],
+  atk:[t('Yes','是的',ICON.yes),t(',','，',ICON.comma,{tight:1}),
+       t('he','他',ICON.he,{hl:'b'}),t('is','是',ICON.is,{hl:'y'}),
+       t('.','。',ICON.dot,{tight:1})],
+  qzh:'他 是 一位 醫生 嗎？', azh:'是的，他 是。'},
 
  /* 21 */
- {type:'pair', q:'Is she a {w}?', qk:'she', qzh:'她 是 一位 {z} 嗎？',
-  a:'No, she isn’t.', ak:'she', azh:'不，她 不是。', cls:'p',
-  slot:'job', w:'nurse', z:'護理師', qic:ICON.nurse, aic:ICON.no}
+ {type:'pair', cls:'p', slot:'job', qic:ICON.nurse, aic:ICON.no,
+  qtk:[t('Is','是',ICON.is,{hl:'y'}),t('she','她',ICON.she,{hl:'p'}),
+       t('a','一位',ICON.a),t('nurse','護理師',ICON.nurse,{slot:'job'}),
+       t('?','嗎？',ICON.q,{tight:1})],
+  atk:[t('No','不',ICON.no),t(',','，',ICON.comma,{tight:1}),
+       t('she','她',ICON.she,{hl:'p'}),t("isn't",'不是',ICON.not,{hl:'y'}),
+       t('.','。',ICON.dot,{tight:1})],
+  qzh:'她 是 一位 護理師 嗎？', azh:'不，她 不是。'}
 ];
 
 /* ---------------- 複習題（使用者 2026-09-21 指定新增）----------------

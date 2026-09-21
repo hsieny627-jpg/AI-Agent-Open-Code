@@ -8,7 +8,7 @@
 /* ── 共用材料 ───────────────────────────────────────────── */
 const FAM = [
  ['father','爸爸','he'],['mother','媽媽','she'],['brother','哥哥','he'],['sister','姊姊','she'],
- ['grandfather','爺爺','he'],['grandmother','奶奶','she'],['dad','爸比','he'],['mom','媽咪','she'],
+ ['grandfather','爺爺','he'],['grandmother','奶奶','she'],['dad','爸爸','he'],['mom','媽媽','she'],
  ['grandpa','阿公','he'],['grandma','阿嬤','she'],['uncle','叔叔','he'],['aunt','阿姨','she'],
  ['nephew','姪子','he'],['niece','姪女','she']
 ];
@@ -482,17 +482,19 @@ const SURP = {
  ]
 };
 
+/* st ＝ 這一個遊戲的驚喜卡主題（使用者 2026-09-21 指定：學生要看得懂驚喜是什麼、
+   而且要有「下一張會抽到什麼」的期待感，所以大廳就先把主題講出來） */
 const GAMES = [
- {id:'g1',  ic:'⚡', name:'閃電四選一', rule:'看題目選答案，答得快分數高。隨機出現「雙倍時刻」。', n:G1.length},
- {id:'g2',  ic:'🔵', name:'他還是她',   rule:'看到就按：左邊 He（藍）、右邊 She（粉）。', n:G2.length},
- {id:'g3',  ic:'🧩', name:'語序大挑戰', rule:'照順序點英文字，把整句排出來。', n:G3.length},
- {id:'g4',  ic:'🔄', name:'變身術',     rule:'直述句 ⇄ 問句，選出變身後正確的句子。', n:G4.length},
- {id:'g5',  ic:'🎧', name:'聽力狙擊',   rule:'聽一句英文，射下正確的那一張卡。', n:G5.length},
- {id:'g6',  ic:'🃏', name:'記憶配對',   rule:'翻開兩張，英文配中文，配對成功就消失。', n:G6.length},
- {id:'g7',  ic:'🔍', name:'火眼金睛',   rule:'句子裡有一個字是錯的，點出來。全對的句子按「✅ 這句沒錯」。', n:G7.length},
- {id:'g8',  ic:'✏️', name:'填空高手',   rule:'句子少了一個字，選出正確的那一個。', n:G8.length},
- {id:'g9',  ic:'🗂', name:'分類大師',   rule:'問句丟右邊 ❓，直述句丟左邊 🙋。', n:G9.length},
- {id:'g10', ic:'👑', name:'魔王挑戰',   rule:'打倒魔王！答對扣血，答錯魔王放技能。', n:G10.length}
+ {id:'g1',  ic:'⚡', name:'閃電四選一', rule:'看題目選答案，答得快分數高。', st:'⚡ 電力', n:G1.length},
+ {id:'g2',  ic:'🔵', name:'他還是她',   rule:'看到就按：左邊 He（藍）、右邊 She（粉）。', st:'👬 雙胞胎', n:G2.length},
+ {id:'g3',  ic:'🧩', name:'語序大挑戰', rule:'照順序點英文字，把整句排出來。', st:'🧩 拼圖', n:G3.length},
+ {id:'g4',  ic:'🔄', name:'變身術',     rule:'直述句 ⇄ 問句，選出變身後正確的句子。', st:'🪄 魔法', n:G4.length},
+ {id:'g5',  ic:'🎧', name:'聽力狙擊',   rule:'聽一句英文，射下正確的那一張卡。', st:'🎯 狙擊', n:G5.length},
+ {id:'g6',  ic:'🃏', name:'記憶配對',   rule:'翻開兩張，英文配中文，配對成功就消失。', st:'🃏 撲克牌', n:G6.length},
+ {id:'g7',  ic:'🔍', name:'火眼金睛',   rule:'句子裡有一個字是錯的，點出來。全對的句子按「✅ 這句沒錯」。', st:'🕵 偵探', n:G7.length},
+ {id:'g8',  ic:'✏️', name:'填空高手',   rule:'句子少了一個字，選出正確的那一個。', st:'✏️ 文具', n:G8.length},
+ {id:'g9',  ic:'🗂', name:'分類大師',   rule:'問句丟右邊 ❓，直述句丟左邊 🙋。', st:'🗂 整理', n:G9.length},
+ {id:'g10', ic:'👑', name:'魔王挑戰',   rule:'打倒魔王！答對扣血，答錯魔王放技能。', st:'🗡 勇者', n:G10.length}
 ];
 
 module.exports = { FAM, JOB, G1, G2, G3, G4, G5, G6, G7, G8, G9, G10, GAMES, SURP };

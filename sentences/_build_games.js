@@ -19,7 +19,7 @@ const B = require('./_game_data');
 const CSS = `
 #stage{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
  padding:calc(var(--safeT) + clamp(14px,2.6vh,26px)) clamp(14px,3vw,36px)
-         calc(clamp(52px,8vh,74px) + var(--safeB)) clamp(14px,3vw,36px)}
+         calc(var(--barH,60px) + var(--safeB) + clamp(6px,1vh,12px)) clamp(14px,3vw,36px)}
 #stage.lock{overflow:hidden}
 
 /* ── 遊戲大廳 ── */
@@ -42,8 +42,8 @@ const CSS = `
 .gcard .gb b{color:var(--gold);font-weight:700}
 
 /* ── 遊戲 HUD ── */
-#ghud{display:none;align-items:center;justify-content:space-between;gap:clamp(8px,1.6vw,20px);
- width:100%;max-width:1120px;margin:0 auto clamp(8px,1.5vh,16px)}
+#ghud{display:none;position:relative;align-items:center;justify-content:space-between;
+ gap:clamp(8px,1.6vw,20px);width:100%;max-width:1120px;margin:0 auto clamp(8px,1.5vh,16px)}
 #ghud.on{display:flex}
 #gring{position:relative;width:clamp(58px,9vh,88px);height:clamp(58px,9vh,88px);flex:0 0 auto}
 #gring svg{width:100%;height:100%;transform:rotate(-90deg)}
@@ -61,19 +61,85 @@ const CSS = `
 #gstreak{color:var(--gold)}
 #gname{font-size:clamp(13px,2.1vh,19px);font-weight:700;color:var(--acc)}
 
-/* 驚喜事件橫幅 */
-#evt{position:fixed;left:50%;top:22%;transform:translate(-50%,-50%) scale(.7);z-index:60;
+/* ── 驚喜卡（使用者 2026-09-21 指定改版）────────────────────────────
+   舊版直接跳一行字，學生「看不懂驚喜是什麼、也沒有期待感」。
+   新版是一張真的卡：先看到卡背在抖（等一下會翻開 ＝ 期待），
+   翻開以後最大的那一行就是「你拿到什麼」（分數 ✕ 2、＋500 分…），
+   下面一行用白話講「現在會發生什麼事」，最後才是卡片的名字。 */
+#evt{position:fixed;left:50%;top:34%;transform:translate(-50%,-50%);z-index:60;
+ opacity:0;pointer-events:none;perspective:1200px}
+#evt.on{animation:evtIn 2.4s ease}
+#evt .c3{position:relative;width:clamp(226px,42vw,356px);height:clamp(148px,26vh,226px);
+ transform-style:preserve-3d}
+#evt.on .c3{animation:evtFlip 2.4s cubic-bezier(.3,.8,.3,1)}
+#evt .fc{position:absolute;left:0;top:0;right:0;bottom:0;border-radius:22px;
+ backface-visibility:hidden;-webkit-backface-visibility:hidden;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:4px;padding:clamp(9px,1.8vh,18px);text-align:center}
+#evt .fc.bk{background:linear-gradient(145deg,#1D1606,#090909);border:2px solid #6B5714}
+#evt .fc.bk .bi{font-size:clamp(44px,7.6vh,78px);line-height:1}
+#evt .fc.bk .bl{font-size:clamp(13px,2.1vh,19px);color:var(--gold);letter-spacing:.16em}
+#evt .fc.ft{transform:rotateY(180deg);background:#160F00;border:2px solid var(--gold);
+ box-shadow:0 0 60px rgba(255,210,74,.3)}
+#evt .ebig{font-size:clamp(25px,4.4vh,44px);font-weight:700;color:var(--gold);line-height:1.12}
+#evt .ewhy{font-size:clamp(13px,2.1vh,19px);color:var(--body);line-height:1.45;max-width:22ch}
+#evt .ename{font-size:clamp(11.5px,1.8vh,15px);color:#8A7A45;letter-spacing:.08em}
+@keyframes evtIn{0%{opacity:0}5%{opacity:1}90%{opacity:1}100%{opacity:0}}
+@keyframes evtFlip{0%{transform:rotateY(0) scale(.6)}
+ 8%{transform:rotateY(0) scale(1)}
+ 13%{transform:rotateY(0) scale(1.02) rotate(-5deg)}
+ 18%{transform:rotateY(0) scale(1.02) rotate(5deg)}
+ 23%{transform:rotateY(0) scale(1.02) rotate(-4deg)}
+ 28%{transform:rotateY(0) scale(1) rotate(0deg)}
+ 44%{transform:rotateY(180deg) scale(1.07)}
+ 52%{transform:rotateY(180deg) scale(1)}
+ 93%{transform:rotateY(180deg) scale(1)}
+ 100%{transform:rotateY(180deg) scale(.93) translateY(-34px)}}
+
+/* 魔王技能：壞事用紅色橫幅，不要跟金色的驚喜卡混在一起
+   （驚喜卡只給好事，學生才分得出來哪一個是獎勵）*/
+#bad{position:fixed;left:50%;top:26%;transform:translate(-50%,-50%) scale(.7);z-index:59;
  opacity:0;pointer-events:none;text-align:center;
- background:#160F00;border:2px solid var(--gold);border-radius:20px;
- padding:clamp(11px,2vh,22px) clamp(18px,3vw,40px);box-shadow:0 0 60px rgba(255,210,74,.28)}
-#evt.on{animation:evt 1.9s cubic-bezier(.2,.9,.3,1.2)}
-#evt .et{font-size:clamp(20px,3.6vh,36px);font-weight:700;color:var(--gold)}
-#evt .ed{font-size:clamp(12.5px,2vh,18px);color:var(--body);margin-top:4px}
-@keyframes evt{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}
+ background:#1A0A0A;border:2px solid var(--no);border-radius:20px;
+ padding:clamp(10px,1.9vh,20px) clamp(16px,2.8vw,36px);box-shadow:0 0 50px rgba(255,94,94,.25)}
+#bad.on{animation:badIn 1.9s cubic-bezier(.2,.9,.3,1.2)}
+#bad .bt{font-size:clamp(18px,3.2vh,32px);font-weight:700;color:var(--no)}
+#bad .bd{font-size:clamp(12.5px,2vh,18px);color:var(--body);margin-top:4px}
+@keyframes badIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}
  14%{opacity:1;transform:translate(-50%,-50%) scale(1.07)}
  22%{transform:translate(-50%,-50%) scale(1)}
  78%{opacity:1;transform:translate(-50%,-50%) scale(1)}
  100%{opacity:0;transform:translate(-50%,-80%) scale(.92)}}
+
+/* 分數跳動 ＋ 飄上去的「＋850」：學生看得到分數是「現在」加上去的 */
+#gsc.bump{animation:bump .5s cubic-bezier(.2,.9,.3,1.4)}
+@keyframes bump{0%{transform:scale(1)}45%{transform:scale(1.45);color:var(--gold)}
+ 100%{transform:scale(1)}}
+#gpop{position:absolute;right:0;top:-2px;font-size:clamp(15px,2.5vh,24px);font-weight:700;
+ color:var(--gold);opacity:0;pointer-events:none}
+#gpop.on{animation:gpop 1.15s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes gpop{0%{opacity:0;transform:translateY(6px) scale(.8)}
+ 25%{opacity:1;transform:translateY(-10px) scale(1.15)}
+ 70%{opacity:1;transform:translateY(-22px) scale(1)}
+ 100%{opacity:0;transform:translateY(-38px) scale(1)}}
+
+/* 得分算式：為什麼是這個分數，一眼看完（使用者 2026-09-21 指定） */
+.calc{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+ gap:clamp(4px,.8vw,9px);margin-top:3px}
+.calc .ci{display:flex;flex-direction:column;align-items:center;line-height:1.15;
+ background:#0C0C0C;border:1px solid #242424;border-radius:12px;
+ padding:clamp(3px,.6vh,7px) clamp(7px,1vw,13px)}
+.calc .ci em{font-style:normal;font-size:clamp(10px,1.5vh,13px);color:#7E8A94;letter-spacing:.04em}
+.calc .ci b{font-size:clamp(15px,2.5vh,24px);color:var(--fg)}
+.calc .ci.sp b{color:var(--be)}
+.calc .ci.tot{background:#0F3323;border-color:var(--ok)}
+.calc .ci.tot b{color:var(--ok);font-size:clamp(19px,3.2vh,32px)}
+.calc .cp{font-size:clamp(14px,2.2vh,21px);color:#6E6E6E;font-weight:700}
+.spbar{width:min(100%,420px);height:clamp(9px,1.5vh,14px);background:#141414;
+ border:1px solid #262626;border-radius:999px;overflow:hidden;margin-top:5px}
+.spbar i{display:block;height:100%;background:linear-gradient(90deg,#F5B301,#39D98A);
+ border-radius:999px}
+.sphint{font-size:clamp(10.5px,1.6vh,14px);color:#7E8A94;letter-spacing:.04em;margin-top:2px}
 
 /* ── 遊戲場 ── */
 #arena{display:none;flex-direction:column;align-items:center;gap:clamp(8px,1.5vh,16px);
@@ -87,6 +153,11 @@ const CSS = `
 .tg{font-size:clamp(11px,1.65vh,14px);letter-spacing:.08em;color:var(--acc);
  border:1px solid #2C3A48;border-radius:999px;padding:3px 11px}
 .tg.hot{color:var(--gold);border-color:#5A4A18;background:#1A1508;font-weight:700}
+/* 「再答對 N 題就開驚喜卡」：學生一直看得到下一張卡離自己多遠 ＝ 期待感 */
+.tg.go{color:#FFE9A8;border-color:#6B5714;background:#14100A;font-weight:700}
+.tg.go.near{animation:tgn 1.1s infinite}
+@keyframes tgn{0%,100%{box-shadow:0 0 0 0 rgba(255,210,74,0)}
+ 50%{box-shadow:0 0 0 4px rgba(255,210,74,.22)}}
 
 .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(7px,1.2vh,13px);width:100%}
 .opts.one{grid-template-columns:1fr}
@@ -185,20 +256,44 @@ var BANK=__BANK__, META=__META__, SURP=__SURP__;
 var SHAPE=['▲','◆','●','■'];
 var QT=15, ROUNDQ=12;                 /* 每一題 15 秒，一場 12 題（使用者 2026-09-21 指定） */
 var g=null,queue=[],cur=null,left=QT,qt=QT,tick=null,score=0,streak=0,best=0,right=0,wrong=0;
-var asked=0,speedSum=0,shield=0;
+var asked=0,speedSum=0,shield=0,timeAdd=0,opened=[],lastGain=0;
 var mult=1,multLeft=0,fast=0,wrongList=[],busy=false,memPairs=[],memOpen=[],memLeft=0;
-var bossHP=100,bossMax=100;
+var bossHP=100,bossMax=100,bossShield=0;
 var pool=[];
 
 var R=2*Math.PI*46;$('#gfg').setAttribute('stroke-dasharray',R);
 
-/* ── 驚喜回饋：每一個遊戲 20 種，抽過不重複，十個遊戲都不一樣 ── */
+/* ── 驚喜卡：每一個遊戲 20 種，抽過不重複，十個遊戲都不一樣 ──
+   使用者 2026-09-21 回報「看不懂驚喜的意義、看不懂文字和圖示」。
+   所以卡片上最大的那一行 ＝ 你拿到什麼（eBig），
+   下面一行 ＝ 現在會發生什麼事（eWhy），兩行都是從效果直接算出來的，
+   不會跟實際發生的事不一樣。 */
 var nextEvt=2+Math.floor(Math.random()*3);
+function eBig(e){
+  if(e.k==='pts')return '＋'+e.v+' 分';
+  if(e.k==='x2')return '分數 ✕ 2';
+  if(e.k==='x3')return '分數 ✕ 3';
+  if(e.k==='time')return '下一題 ＋'+e.v+' 秒';
+  if(e.k==='fast')return '快答 ＋'+e.v+' 分';
+  if(e.k==='streak')return '🔥 連對 ＋'+e.v;
+  if(e.k==='shield')return '🛡 護盾';
+  return '';
+}
+function eWhy(e){
+  if(e.k==='pts')return '這 '+e.v+' 分現在就加進你的分數';
+  if(e.k==='x2')return '接下來 '+e.v+' 題，答對的分數都變兩倍';
+  if(e.k==='x3')return '接下來 '+e.v+' 題，答對的分數都變三倍';
+  if(e.k==='time')return '下一題多給你 '+e.v+' 秒，想清楚再按';
+  if(e.k==='fast')return '下一題 5 秒內答對，再多拿 '+e.v+' 分';
+  if(e.k==='streak')return '連對直接加 '+e.v+'，分數跟著跳上去';
+  if(e.k==='shield')return '下一題就算答錯，連對也不會歸零';
+  return '';
+}
 function doEvt(e){
-  if(e.k==='pts')score+=e.v;
+  if(e.k==='pts'){score+=e.v;popScore(e.v)}
   else if(e.k==='x2'){mult=2;multLeft=e.v}
   else if(e.k==='x3'){mult=3;multLeft=e.v}
-  else if(e.k==='time'){left=left+e.v;qt=Math.max(qt,left)}
+  else if(e.k==='time')timeAdd=e.v;        /* 下一題開始時才加得到（不然答完就被重設掉） */
   else if(e.k==='fast')fast=Date.now();
   else if(e.k==='streak'){streak+=e.v;if(streak>best)best=streak}
   else if(e.k==='shield')shield=1;
@@ -206,11 +301,21 @@ function doEvt(e){
 function fire(){
   if(!pool.length)pool=shuf((SURP[g]||[]).slice());
   var e=pool.shift();if(!e)return;
-  $('#evt .et').textContent=e.t;$('#evt .ed').textContent=e.d;
-  doEvt(e);
+  $('#evt .ebig').textContent=eBig(e);
+  $('#evt .ewhy').textContent=eWhy(e);
+  $('#evt .ename').textContent=e.t;
   var box=$('#evt');box.classList.remove('on');void box.offsetWidth;box.classList.add('on');
-  sWow();paint();
+  sWow();
+  /* 卡片翻過來的那一刻，效果才真的發生（分數也才跳上去）——
+     學生看得到「是這張卡給我的」，不會莫名其妙多了幾分（使用者 2026-09-21 指定） */
+  setTimeout(function(){opened.push(e.t);doEvt(e);paint()},1000);
   nextEvt=2+Math.floor(Math.random()*3);
+}
+/* 分數是「現在」加上去的：數字跳一下，旁邊飄一個 ＋850 上去 */
+function popScore(v){
+  var el=$('#gpop');if(el){el.textContent='＋'+v;
+    el.classList.remove('on');void el.offsetWidth;el.classList.add('on')}
+  var sc=$('#gsc');if(sc){sc.classList.remove('bump');void sc.offsetWidth;sc.classList.add('bump')}
 }
 
 /* ── 大廳 ── */
@@ -224,7 +329,8 @@ function hub(){
     return '<button class="gcard" data-g="'+m.id+'"><span class="gn">'+(n+1)+'</span>'+
       '<span class="gi">'+m.ic+'</span><span class="gt">'+m.name+'</span>'+
       '<span class="gr">'+m.rule+'</span>'+
-      '<span class="gb">'+m.n+' 題庫　一場 '+ROUNDQ+' 題　每題 '+QT+' 秒'+(b?'　最佳 <b>'+b+'</b>':'')+'</span></button>';
+      '<span class="gb">'+m.n+' 題庫　一場 '+ROUNDQ+' 題　每題 '+QT+' 秒　🎁 '+m.st+'驚喜卡 20 張'+
+      (b?'　最佳 <b>'+b+'</b>':'')+'</span></button>';
   }).join('');
 }
 $('#grid').addEventListener('click',function(e){
@@ -236,9 +342,9 @@ $('#grid').addEventListener('click',function(e){
 function begin(id){
   g=id;
   score=0;streak=0;best=0;right=0;wrong=0;mult=1;multLeft=0;fast=0;wrongList=[];busy=false;
-  asked=0;speedSum=0;shield=0;pool=shuf((SURP[id]||[]).slice());
+  asked=0;speedSum=0;shield=0;timeAdd=0;opened=[];lastGain=0;pool=shuf((SURP[id]||[]).slice());
   left=QT;qt=QT;nextEvt=2+Math.floor(Math.random()*3);
-  bossHP=bossMax=100;
+  bossHP=bossMax=100;bossShield=0;
   memLeft=0;memOpen=[];memPairs=[];
   queue=shuf(BANK[id].slice());
   $('#hub').style.display='none';$('#ghud').classList.add('on');
@@ -250,7 +356,8 @@ function begin(id){
 /* 每一題自己的倒數：時間到就算答錯，給提示再出下一題 */
 function run(sec){
   if(tick)clearInterval(tick);
-  qt=sec||QT;left=qt;paint();
+  qt=Math.max(5,(sec||QT)+timeAdd);timeAdd=0;  /* 驚喜卡（或魔王技能）給的秒數在這一題才生效 */
+  left=qt;paint();
   tick=setInterval(function(){
     left-=0.1;
     if(left<=0){left=0;paint();tstop();timeUp();return}
@@ -274,6 +381,7 @@ function paint(){
   $('#gring').className=left<=5?'dang':(left<=8?'warn':'');
   $('#gsc').textContent=score;
   $('#gstreak').textContent=(shield?'🛡 ':'')+(streak?'🔥 '+streak:'—');
+  $('#gsurp').textContent='🎁 '+opened.length;
   $('#gprog').textContent=asked+' ／ '+ROUNDQ+' 題';
 }
 
@@ -289,41 +397,63 @@ function next(){
 }
 function tags(extra){
   var h='';
-  if(multLeft>0)h+='<span class="tg hot">分數 ✕ '+mult+'（剩 '+multLeft+' 題）</span>';
-  if(fast)h+='<span class="tg hot">🎯 急速題</span>';
+  if(multLeft>0)h+='<span class="tg hot">🎁 分數 ✕ '+mult+'　還剩 '+multLeft+' 題</span>';
+  if(fast)h+='<span class="tg hot">🎯 5 秒內答對再加 分</span>';
+  if(shield)h+='<span class="tg hot">🛡 答錯連對也不歸零</span>';
+  /* 期待感：下一張驚喜卡離我還有幾題，隨時看得到（使用者 2026-09-21 指定） */
+  h+='<span class="tg go'+(nextEvt<=1?' near':'')+'">'+
+     (nextEvt<=1?'🎁 這一題答對就翻驚喜卡！':'🎁 再答對 '+nextEvt+' 題翻驚喜卡')+'</span>';
   if(extra)h+='<span class="tg">'+extra+'</span>';
-  return h?'<div class="tagline">'+h+'</div>':'';
+  return '<div class="tagline">'+h+'</div>';
 }
 
 /* ── 判定 ── */
 /* 愈快答對，分數愈高（使用者 2026-09-21 指定）：
    基本 100 分 ＋ 速度分（剩下的秒數 ／ 總秒數 ✕ 900）＋ 連對加成，最後再乘上倍率 */
+/* 分數是怎麼算出來的，一格一格排給學生看（使用者 2026-09-21 指定：
+   「看不懂為何得分」＝ 只給一個總分沒有用，要看得到 100 ＋ 速度分 ＋ 連對） */
+function ci(lbl,val,cls){
+  return '<span class="ci '+(cls||'')+'"><em>'+lbl+'</em><b>'+val+'</b></span>'}
+function cp(sym){return '<span class="cp">'+sym+'</span>'}
 function judge(ok,hint,after,timeout){
   if(busy)return;busy=true;
   tstop();
-  var bonus=0;
+  var bonus=0, evtNow=false;
   asked++;
   if(ok){
     right++;streak++;if(streak>best)best=streak;
     var sp=Math.round(900*(left/qt));speedSum+=sp;
-    var p=100+sp+streak*20;
+    var base=100+sp+streak*20;
     if(fast&&Date.now()-fast<5000){bonus=200;fast=0}
     else if(fast&&Date.now()-fast>=5000){fast=0}
-    p=p*mult+bonus;
+    var p=base*mult+bonus;
     score+=p;sOk();
+    lastGain=p;
     if(multLeft>0){multLeft--;if(multLeft===0)mult=1}
-    $('#gfb').innerHTML='<div class="fh ok">✅ ＋'+p+'</div>'+
-      '<div class="fw">⚡ 速度分 ＋'+sp+'（剩 '+left.toFixed(1)+' 秒）'+
-      (streak>1?'　🔥 連對 ＋'+(streak*20):'')+(mult>1?'　✕ '+mult:'')+
-      (bonus?'　🎯 急速 ＋200':'')+'</div>';
+    var row1='<div class="calc">'+ci('答對','100')+cp('＋')+
+      ci('⚡ 快　剩 '+left.toFixed(1)+' 秒',''+sp,'sp')+
+      (streak>1?cp('＋')+ci('🔥 連對 '+streak,''+(streak*20)):'')+
+      cp('＝')+ci(mult>1||bonus?'小計':'這一題拿到',''+base,mult>1||bonus?'':'tot')+'</div>';
+    var row2='';
+    if(mult>1||bonus){
+      row2='<div class="calc">'+ci('小計',''+base)+
+        (mult>1?cp('✕ '+mult+'（🎁 驚喜卡）'):'')+
+        (bonus?cp('＋')+ci('🎯 快答',''+bonus):'')+
+        cp('＝')+ci('這一題拿到',''+p,'tot')+'</div>';
+    }
+    $('#gfb').innerHTML='<div class="fh ok">✅ 答對！分數 ＋'+p+'</div>'+row1+row2+
+      '<div class="spbar"><i style="width:'+Math.max(3,Math.round(100*left/qt))+'%"></i></div>'+
+      '<div class="sphint">⚡ 答得愈快，這一條愈長，速度分就愈高</div>';
+    popScore(p);
     nextEvt--;
-    if(nextEvt<=0)setTimeout(fire,320);
+    if(nextEvt<=0){evtNow=true;setTimeout(fire,900)}   /* 先讓學生看完算式，再翻驚喜卡 */
   }else{
     wrong++;
     if(shield){shield=0;$('#gstreak').textContent='🔥 '+streak}else streak=0;
     sNo();
-    $('#gfb').innerHTML='<div class="fh no">'+(timeout?'⏰ 時間到！':'❌ 再想一下')+'</div>'+
-      '<div class="fw">'+ap(hint||'')+'</div>';
+    $('#gfb').innerHTML='<div class="fh no">'+(timeout?'⏰ 時間到！這一題 0 分':'❌ 再想一下，這一題 0 分')+'</div>'+
+      '<div class="fw">'+ap(hint||'')+'</div>'+
+      '<div class="sphint">這一題等一下會再出現一次，答對就拿得到分數</div>';
     queue.splice(Math.min(queue.length,2+Math.floor(Math.random()*3)),0,cur); /* 練到會為止 */
     if(hint&&wrongList.indexOf(hint)<0)wrongList.push(hint);
   }
@@ -332,7 +462,7 @@ function judge(ok,hint,after,timeout){
     if(!$('#arena').classList.contains('on'))return;
     if(asked>=ROUNDQ){over();return}
     (after||next)();
-  },ok?1000:2000);
+  },evtNow?3500:(ok?1200:2200));
 }
 
 /* ── 1 ⚡ 閃電四選一 ── */
@@ -517,20 +647,24 @@ function bossTap(e){
   var ok=b.getAttribute('data-ok')==='true';
   markO(b,ok);
   if(ok){
-    bossHP=Math.max(0,bossHP-10);   /* 打十下倒，一場 12 題打得完 */
+    var dmg=bossShield?5:10;bossShield=0;   /* 打十下倒，一場 12 題打得完 */
+    bossHP=Math.max(0,bossHP-dmg);
     $('#hp').style.width=bossHP+'%';
     $('#bossface').classList.add('hit');
     if(bossHP<=0){sWow();stop();setTimeout(win,700);return}
     judge(true,'');
   }else{
+    /* 三個技能都是「真的會發生的事」，而且都寫明下一題會怎樣——
+       學生看得懂才有壓力，看不懂就只是莫名其妙（使用者 2026-09-21 指定） */
     var sk=pick([
-      {t:'🌀 魔王技能：偷走 10 秒',f:function(){left=Math.max(5,left-10)}},
-      {t:'🎲 魔王技能：選項洗牌',f:function(){}},
-      {t:'💢 魔王回血 5%',f:function(){bossHP=Math.min(100,bossHP+5);$('#hp').style.width=bossHP+'%'}}
+      {t:'🌀 魔王偷時間',d:'下一題只剩 5 秒！',f:function(){timeAdd=-10}},
+      {t:'💢 魔王回血 5%',d:'血條又長回去一點了',
+       f:function(){bossHP=Math.min(100,bossHP+5);$('#hp').style.width=bossHP+'%'}},
+      {t:'🛡 魔王開護盾',d:'下一題答對只扣一半的血',f:function(){bossShield=1}}
     ]);
     sk.f();
-    $('#evt .et').textContent=sk.t;$('#evt .ed').textContent='答對就能扳回來！';
-    var bx=$('#evt');bx.classList.remove('on');void bx.offsetWidth;bx.classList.add('on');
+    $('#bad .bt').textContent=sk.t;$('#bad .bd').textContent=sk.d+'　答對就能扳回來！';
+    var bx=$('#bad');bx.classList.remove('on');void bx.offsetWidth;bx.classList.add('on');
     judge(false,cur.h);
   }
 }
@@ -572,10 +706,14 @@ function endBody(){
   $('#gendsc').textContent=score;
   $('#gendln').innerHTML='答對 <b>'+right+'</b> 題　答錯 <b>'+wrong+'</b> 題　最長連對 <b>'+best+
     '</b>　速度分共 <b>'+speedSum+'</b>　最佳紀錄 <b>'+b+'</b>';
-  $('#gendrev').innerHTML=wrongList.length?
-    ('<div style="color:#5C5C5C;letter-spacing:.1em">📌 這一場要記住的：</div>'+
-     wrongList.map(function(h){return '<div>・'+ap(h)+'</div>'}).join('')):
-    '<div>全對！一題都沒錯 🎉</div>';
+  $('#gendrev').innerHTML=
+    '<div>🎁 這一場翻到 <b>'+opened.length+'</b> 張驚喜卡'+
+      (opened.length?'：'+opened.join('、'):'')+
+      '　（這個遊戲一共有 <b>20</b> 張，每一張都不一樣）</div>'+
+    (wrongList.length?
+     ('<div style="color:#5C5C5C;letter-spacing:.1em">📌 這一場要記住的：</div>'+
+      wrongList.map(function(h){return '<div>・'+ap(h)+'</div>'}).join('')):
+     '<div>全對！一題都沒錯 🎉</div>');
   sWow();
 }
 $('#retry').addEventListener('click',function(){begin(g)});
@@ -583,23 +721,25 @@ $('#backhub').addEventListener('click',hub);
 $('#quit').addEventListener('click',function(){
   if($('#arena').classList.contains('on')||$('#gend').classList.contains('on'))hub();
 });
-$('#slowBtn').addEventListener('click',function(){
-  SLOW=!SLOW;this.classList.toggle('on',SLOW);this.innerHTML=SLOW?'🐢 放慢 開':'🐢 放慢 關'});
-$('#muteBtn').addEventListener('click',function(){
-  MUTE=!MUTE;this.classList.toggle('on',!MUTE);this.innerHTML=MUTE?'🔇 音效 N':'🔊 音效 Y'});
 hub();
 `;
 
 const body = `
-<div id="evt"><div class="et"></div><div class="ed"></div></div>
+<div id="bad"><div class="bt"></div><div class="bd"></div></div>
+<div id="evt"><div class="c3">
+ <div class="fc bk"><span class="bi">🎁</span><span class="bl">驚喜卡</span></div>
+ <div class="fc ft"><div class="ebig"></div><div class="ewhy"></div><div class="ename"></div></div>
+</div></div>
 
 <main id="stage">
  <section id="hub">
   <h1>🎮 複習遊戲　10 種玩法</h1>
-  <p class="lead">每一題<b>限時 15 秒</b>，一場 12 題。<b>愈快答對，分數愈高</b>——
-     答完馬上看到速度分。<br>
-     每一個遊戲都有<b>自己的 20 種驚喜回饋</b>，十個遊戲完全不一樣，
-     抽到什麼<b>猜不著</b>；題序和選項每一次都重新洗牌。<br>
+  <p class="lead">每一題<b>限時 15 秒</b>，一場 12 題。<br>
+     <b>分數怎麼來：答對 100 ＋ 快 最多 900 ＋ 連對 ✕ 20</b>——
+     答完馬上看到這個算式，剩愈多秒，中間那一條就愈長。<br>
+     每答對幾題就<b>翻一張驚喜卡</b>🎁：可能直接加分、分數 ✕ 2、多給秒數、
+     或是一面護盾。<b>每一個遊戲有自己的 20 張，翻過的不會再翻到</b>——
+     畫面上隨時看得到「再答對幾題就翻牌」。<br>
      答錯會給你提示，那一題等一下還會再出現，<b>練到會為止</b>。</p>
   <div id="grid"></div>
  </section>
@@ -608,8 +748,9 @@ const body = `
   <span class="gcell"><span class="k">遊戲</span><span class="v" id="gname"></span></span>
   <span id="gring"><svg viewBox="0 0 100 100"><circle id="gbg" cx="50" cy="50" r="46"></circle>
    <circle id="gfg" cx="50" cy="50" r="46"></circle></svg><span id="gnum">15</span></span>
-  <span class="gcell r"><span class="k">分數 ／ 連對 ／ 進度</span>
-   <span class="v"><span id="gsc">0</span>　<span id="gstreak">—</span>　<span id="gprog">0 題</span></span></span>
+  <span class="gcell r"><span class="k">分數 ／ 連對 ／ 驚喜卡 ／ 進度</span>
+   <span class="v"><span id="gsc">0</span>　<span id="gstreak">—</span>　<span id="gsurp">🎁 0</span>　<span id="gprog">0 題</span></span></span>
+  <span id="gpop"></span>
  </div>
 
  <section id="arena"></section>
@@ -628,8 +769,7 @@ const body = `
 
 <nav id="bar">
  <button id="quit">⬅ 回遊戲大廳</button>
- <button id="slowBtn">🐢 放慢 關</button>
- <button id="muteBtn" class="on">🔊 音效 Y</button>
+ ${S.RATEBAR}
  <a href="index.html">🏠 首頁</a>
 </nav>
 
@@ -642,6 +782,7 @@ ${JS.replace('__BANK__', () => JSON.stringify({
     g6: B.G6, g7: B.G7, g8: B.G8, g9: B.G9, g10: B.G10
   })).replace('__META__', () => JSON.stringify(B.GAMES))
      .replace('__SURP__', () => JSON.stringify(B.SURP))}
+${S.RATEJS}
 </script>
 </body>
 </html>`;

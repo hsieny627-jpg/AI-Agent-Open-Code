@@ -29,7 +29,7 @@ const CSS = `
 #stage{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;
  justify-content:center;
  padding:calc(var(--safeT) + clamp(84px,13.5vh,124px)) clamp(14px,3vw,40px)
-         calc(clamp(52px,8vh,74px) + var(--safeB)) clamp(14px,3vw,40px)}
+         calc(var(--barH,60px) + var(--safeB) + clamp(6px,1vh,12px)) clamp(14px,3vw,40px)}
 
 /* 閘門 */
 #gate{display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vh,20px);text-align:center}
@@ -259,10 +259,6 @@ function finish(){
 }
 $('#again').addEventListener('click',function(){$('#end').classList.remove('on');start()});
 $('#go').addEventListener('click',start);
-$('#slowBtn').addEventListener('click',function(){
-  SLOW=!SLOW;this.classList.toggle('on',SLOW);this.innerHTML=SLOW?'🐢 放慢 開':'🐢 放慢 關'});
-$('#muteBtn').addEventListener('click',function(){
-  MUTE=!MUTE;this.classList.toggle('on',!MUTE);this.innerHTML=MUTE?'🔇 音效 N':'🔊 音效 Y'});
 `;
 
 const body = `
@@ -313,8 +309,7 @@ const body = `
 <nav id="bar">
  <button id="pause">⏸ 暫停</button>
  <button id="early">✋ 提前作答</button>
- <button id="slowBtn">🐢 放慢 關</button>
- <button id="muteBtn" class="on">🔊 音效 Y</button>
+ ${S.RATEBAR}
  <a href="index.html">🏠 首頁</a>
 </nav>
 
@@ -323,6 +318,7 @@ ${S.UTIL}
 ${S.TTS}
 ${S.SFX}
 ${JS.replace('__Q__', () => JSON.stringify(BUILT))}
+${S.RATEJS}
 </script>
 </body>
 </html>`;

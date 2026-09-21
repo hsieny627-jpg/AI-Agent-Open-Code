@@ -32,6 +32,22 @@ async function links(p, e) {
   }
 }
 
+/* 🗣 語速六段：0.5 0.6 0.7 0.8 0.9 1.0，按下去 RATE 真的跟著變（使用者 2026-09-21 指定）
+   音效和音效按鈕已依使用者指定暫時刪除，所以這裡不再量 MUTE。 */
+async function rateBar(p, e) {
+  const n = await p.$$eval('#rateGrp button', a => a.map(b => b.textContent.trim()));
+  if (n.join(',') !== '0.5,0.6,0.7,0.8,0.9,1.0') e.push('語速不是六段（' + n.join(',') + '）');
+  if (await p.$('#muteBtn')) e.push('音效按鈕還在（使用者指定暫時刪除）');
+  if (await p.$('#slowBtn')) e.push('🐢 放慢按鈕還在（已改成語速六段）');
+  await p.click('#rateGrp button[data-r="0.5"]'); await p.waitForTimeout(220);
+  if (Math.abs((await p.evaluate(() => RATE)) - 0.5) > 0.001) e.push('按了語速 0.5，RATE 沒有跟著變');
+  const on = await p.$$eval('#rateGrp button.on', a => a.map(b => b.textContent.trim()));
+  if (on.join(',') !== '0.5') e.push('語速 0.5 沒有亮起來（' + on.join(',') + '）');
+  await p.click('#rateGrp button[data-r="1"]'); await p.waitForTimeout(220);
+  if ((await p.evaluate(() => RATE)) !== 1) e.push('語速切不回 1.0');
+  return 3;
+}
+
 /* 往後翻一張；已經是最後一張就回報 false（停用的按鈕點下去 Playwright 會卡 30 秒） */
 async function fwd(p) {
   if (await p.$eval('#next', b => b.disabled)) return false;
@@ -133,7 +149,7 @@ async function cardsPage(p, f, vp, e) {
   /* 秒懂動畫：跳出來的東西一定要「跳完」，不可以卡在半透明或整個沒出現 */
   {
     const faded = () => p.evaluate(() => {
-      const sel = '#cardIn .frow,#cardIn .bub,#cardIn .spic .sg,#cardIn .spic .sar,#cardIn .ordrow.en .chip';
+      const sel = '#cardIn .frow,#cardIn .bub,#cardIn .spic .sg,#cardIn .spic .sar,#cardIn .chip.ce';
       return [].slice.call(document.querySelectorAll(sel))
         .filter(x => parseFloat(getComputedStyle(x).opacity) < 0.9)
         .map(x => (x.className || x.tagName) + '@' + getComputedStyle(x).opacity);
@@ -257,18 +273,6 @@ async function cardsPage(p, f, vp, e) {
     await p.waitForTimeout(250);
   }
 
-  /* 🔊 音效 Y/N（使用者指定：太吵要關得掉） */
-  {
-    const l0 = await p.$eval('#muteBtn', b => b.textContent.trim());
-    await p.click('#muteBtn'); await p.waitForTimeout(200);
-    const l1 = await p.$eval('#muteBtn', b => b.textContent.trim()); acts++;
-    const m = await p.evaluate(() => MUTE);
-    if (!m) e.push('按了音效按鈕沒有靜音');
-    if (!/N$/.test(l1)) e.push('音效按鈕沒有變成 N（' + l1 + '）');
-    await p.click('#muteBtn'); await p.waitForTimeout(200);
-    if (await p.evaluate(() => MUTE)) e.push('音效按鈕關不回來'); acts++;
-    if ((await p.$eval('#muteBtn', b => b.textContent.trim())) !== l0) e.push('音效按鈕標示回不去');
-  }
 
   /* 's 的發音要是 /z/：data-say 必須是「前一個字＋'s」，不是單獨一個 's */
   {
@@ -306,6 +310,36 @@ async function cardsPage(p, f, vp, e) {
     if (after.spill > 2 || after.ox > 0) e.push('換了替換字以後溢出');
   } else e.push('整本找不到替換字');
 
+  /* 一問一答：問句和答句都要逐字對齊（每一個英文字的正下方就是它的中文） */
+  {
+    await rewind(p, N);
+    let g4 = 0, ok = false;
+    while (g4++ < N) {
+      const pr = await p.evaluate(() => {
+        const b = document.querySelectorAll('#cardIn .pair .bub');
+        if (b.length !== 2) return null;
+        return [].slice.call(b).map(x => ({
+          tk: x.querySelectorAll('.tk').length,
+          zh: [].slice.call(x.querySelectorAll('.tk')).filter(t => {
+            const z = t.querySelector('.zh'); return z && z.textContent.trim();
+          }).length
+        }));
+      });
+      if (pr) {
+        ok = true; acts++;
+        pr.forEach((x, n) => {
+          const who = n ? '答句' : '問句';
+          if (x.tk < 2) e.push('一問一答的' + who + '沒有逐字（' + x.tk + ' 個字）');
+          if (x.zh !== x.tk) e.push('一問一答的' + who + '有 ' + (x.tk - x.zh) + ' 個英文字下面沒有中文');
+        });
+        break;
+      }
+      if (!await fwd(p)) break;
+    }
+    if (!ok) e.push('找不到一問一答卡');
+    await rewind(p, N);
+  }
+
   /* 變身術（Unit 2）：主詞和 be 動詞要真的交換 */
   await rewind(p, N);
   let g3 = 0, found = false;
@@ -320,6 +354,7 @@ async function cardsPage(p, f, vp, e) {
     const o = await snap();
     if (o.spill > 2 || o.ox > 0) e.push('變身以後溢出');
   } else if (f === 'unit2.html') e.push('Unit 2 找不到變身卡');
+  acts += await rateBar(p, e);
   return acts;
 }
 
@@ -378,6 +413,7 @@ async function quizPage(p, f, vp, e) {
   /* 停 6 秒不可自動跳題 */
   const q1 = (await snap()).qn; await p.waitForTimeout(6000);
   if ((await snap()).qn !== q1) e.push('停 6 秒自動跳題'); acts++;
+  acts += await rateBar(p, e);
   return acts;
 }
 
@@ -429,6 +465,7 @@ async function gamesPage(p, f, vp, e) {
     await p.click('#quit'); await p.waitForTimeout(500);
     if ((await snap()).cards !== 10) e.push('遊戲 ' + i + ' 回不了大廳');
   }
+  acts += await rateBar(p, e);
   return acts;
 }
 

@@ -1,4 +1,4 @@
-/* sentences/_shared.js — 五頁共用的樣板、配色、發音、音效
+/* sentences/_shared.js — 五頁共用的樣板、配色、發音、語速
  * 改版面只改這一個檔，跑 node sentences/_build.js 全部重出。
  *
  * iPad ／ 任何瀏覽器 100% 流暢的六條做法（不要拿掉）：
@@ -60,6 +60,8 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 #bar .grp button{border:0;background:none;padding:clamp(6px,1vh,9px) clamp(8px,1.2vw,13px);
  font-size:clamp(12px,1.75vh,15px)}
 #bar .grp button.on{background:var(--acc);color:#000;font-weight:700}
+#bar .grp .glbl{display:inline-flex;align-items:center;padding:0 4px 0 9px;
+ font-size:clamp(11px,1.6vh,14px);color:#6E6E6E;letter-spacing:.06em;white-space:nowrap}
 
 /* 左右翻頁：整條邊都可以按，最小 68px（使用者指定） */
 .nav{position:fixed;top:0;bottom:0;width:clamp(68px,9vw,104px);z-index:30;
@@ -102,7 +104,11 @@ ${extraCss || ''}
  *     → sayText() 把 ＝ = ➜ … ＿ _ 這些符號一律拿掉，唸不出來就不唸。
  */
 const TTS = `
-var SLOW=false,VOX=null,VOXZH=null;
+var RATE=0.9, SLOW=true, VOX=null, VOXZH=null;
+/* 語速可調整（使用者 2026-09-21 指定）：0.5 0.6 0.7 0.8 0.9 1.0，1.0 ＝ 正常語速。
+   SLOW 只用來決定動畫要不要等久一點（0.8 以下算慢）。 */
+function setRate(r){r=parseFloat(r);if(!(r>0))r=0.9;
+ RATE=Math.max(0.5,Math.min(1,r));SLOW=RATE<=0.8;return RATE}
 var SQ=[],SBUSY=false,SID=0,SLAST=0;
 function pickVoice(){try{var v=speechSynthesis.getVoices();if(!v||!v.length)return;
  var en=v.filter(function(x){return /^en[-_]US/i.test(x.lang)});
@@ -128,8 +134,8 @@ function pump(){
  var t=sayText(it.t);
  if(!t){if(it.done)try{it.done()}catch(e){};setTimeout(pump,0);return}
  var u;try{u=new SpeechSynthesisUtterance(t)}catch(e){if(it.done)try{it.done()}catch(e2){};return}
- if(it.l==='zh'){u.lang='zh-TW';if(VOXZH)u.voice=VOXZH;u.rate=SLOW?.55:.92}
- else{u.lang='en-US';if(VOX)u.voice=VOX;u.rate=SLOW?.45:.88}
+ if(it.l==='zh'){u.lang='zh-TW';if(VOXZH)u.voice=VOXZH;u.rate=RATE}
+ else{u.lang='en-US';if(VOX)u.voice=VOX;u.rate=RATE}
  u.pitch=1;
  var mine=++SID;SBUSY=true;SLAST=Date.now();
  var fin=function(){if(mine!==SID)return;SID++;SBUSY=false;SLAST=Date.now();
@@ -171,22 +177,14 @@ document.addEventListener('touchstart',wakeTTS,{once:true,passive:true});
 document.addEventListener('mousedown',wakeTTS,{once:true});
 `;
 
-/* 音效：WebAudio，離線可用，可靜音 */
+/* 音效：使用者 2026-09-21 指定「暫時刪除音效和音效按鈕」。
+ * 這裡把六個發聲函式留成空殼（名字還在，什麼都不做），
+ * 五頁的呼叫點就不用一個一個拆掉，之後要加回來只改這一段。
+ */
 const SFX = `
-var MUTE=false,AC=null;
-function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}
- if(AC&&AC.state==='suspended'){try{AC.resume()}catch(e){}}return AC}
-function beep(f,d,type,vol){if(MUTE)return;var c=ac();if(!c)return;
- try{var o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.value=f;
- g.gain.setValueAtTime(0,c.currentTime);
- g.gain.linearRampToValueAtTime(vol||.13,c.currentTime+.012);
- g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);
- o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+d+.02)}catch(e){}}
-function sOk(){beep(784,.11);setTimeout(function(){beep(1175,.17)},95)}
-function sNo(){beep(196,.2,'square',.1);setTimeout(function(){beep(146,.26,'square',.09)},110)}
-function sTick(){beep(1320,.045,'sine',.07)}
-function sPop(){beep(988,.07,'triangle',.1)}
-function sWow(){[523,659,784,1047,1319].forEach(function(f,i){setTimeout(function(){beep(f,.16,'triangle',.11)},i*70)})}
+var MUTE=true;
+function beep(){}
+function sOk(){}function sNo(){}function sTick(){}function sPop(){}function sWow(){}
 `;
 
 /* 小工具 */
@@ -207,8 +205,37 @@ if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matc
 /* iPad：轉向或鍵盤收起後把版面高度重算，不會留白 */
 function fixVH(){document.documentElement.style.setProperty('--vh',window.innerHeight*0.01+'px')}
 fixVH();window.addEventListener('resize',fixVH);window.addEventListener('orientationchange',fixVH);
+/* 底部按鈕列有幾排，就讓出幾排的高度（--barH）。
+   按鈕多了會自動換行，寫死一個數字一定會蓋到內容（語速六段就是這樣蓋到替換字的）。 */
+function fixBar(){try{var b=document.getElementById('bar');
+ if(b)document.documentElement.style.setProperty('--barH',b.offsetHeight+'px')}catch(e){}}
+fixBar();window.addEventListener('resize',fixBar);window.addEventListener('orientationchange',fixBar);
+try{document.fonts.ready.then(fixBar)}catch(e){}
+setTimeout(fixBar,400);
+`;
+
+/* 語速按鈕列（五頁共用；1.0 ＝ 正常語速） */
+const RATEBAR = `<span class="grp" id="rateGrp">
+  <span class="glbl">\u{1F5E3} 語速</span>
+  <button data-r="0.5">0.5</button><button data-r="0.6">0.6</button>
+  <button data-r="0.7">0.7</button><button data-r="0.8">0.8</button>
+  <button data-r="0.9">0.9</button><button data-r="1">1.0</button>
+ </span>`;
+
+const RATEJS = `
+(function(){
+  var g=$('#rateGrp');if(!g)return;
+  var saved=store('rate');if(saved)setRate(saved);
+  function mark(){$$('#rateGrp button').forEach(function(b){
+    b.classList.toggle('on',Math.abs(parseFloat(b.getAttribute('data-r'))-RATE)<0.001)})}
+  mark();
+  g.addEventListener('click',function(e){
+    var b=e.target&&e.target.closest?e.target.closest('button'):null;if(!b)return;
+    setRate(parseFloat(b.getAttribute('data-r')));store('rate',RATE);mark();sayStop();
+  });
+})();
 `;
 
 const HOME = (href) => `<a href="${href}">🏠 首頁</a>`;
 
-module.exports = { HEAD, TTS, SFX, UTIL, HOME };
+module.exports = { HEAD, TTS, SFX, UTIL, HOME, RATEBAR, RATEJS };
