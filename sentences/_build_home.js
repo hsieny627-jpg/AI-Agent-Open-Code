@@ -58,19 +58,19 @@ const body = `
  <a class="card" href="unit1.html">
   <span class="n">2</span><span class="ic">👨‍👩‍👧</span>
   <span class="t">Unit 1 句型</span>
-  <span class="d">Who’s he? He’s my father.　Who’s she? She’s my mother.　逐字動畫、中英語序、家人替換字。</span>
+  <span class="d">Who’s he? He’s my father.　Who’s she? She’s my mother.　逐字動畫、縮寫變身、中英語序、家人替換字，下面還有「📝 複習」。</span>
   <span class="f">${D.U1.length} 張字卡</span></a>
 
  <a class="card" href="unit2.html">
   <span class="n">3</span><span class="ic">👨‍⚕️</span>
   <span class="t">Unit 2 句型</span>
-  <span class="d">He is a doctor. ⇄ Is he a doctor?　主詞藍色、be 動詞黃色，看顏色就知道位置怎麼換。</span>
+  <span class="d">He is a doctor. ⇄ Is he a doctor?　主詞藍色、be 動詞黃色，看顏色就知道位置怎麼換，下面還有「📝 複習」。</span>
   <span class="f">${D.U2.length} 張字卡</span></a>
 
  <a class="card go" href="games.html">
   <span class="n">4</span><span class="ic">🎮</span>
   <span class="t">複習遊戲</span>
-  <span class="d">10 種玩法，每一場倒數 2 分鐘。每次重玩都重新洗牌，隨機跳出雙倍時刻與神秘寶箱。</span>
+  <span class="d">10 種玩法，<b>每一題 15 秒、愈快答對分數愈高</b>。每一個遊戲都有自己的 20 種驚喜回饋，每次重玩都不一樣。</span>
   <span class="f">${B.GAMES.length} 種　共 ${B.GAMES.reduce((a, g) => a + g.n, 0)} 題</span></a>
 </nav>
 

@@ -225,6 +225,38 @@ async function cardsPage(p, f, vp, e) {
     }
   }
 
+  /* 📝 複習：每 4 張一組，20 秒限時，愈快答對分數愈高（使用者 2026-09-21 指定） */
+  {
+    await p.click('#rvBtn'); await p.waitForTimeout(420); acts++;
+    const gs = await p.$$eval('#rv .rvg', a => a.map(x => x.textContent));
+    const gn = gs.length;
+    if (gn < 3) e.push('複習只有 ' + gn + ' 組（要每 4 張一組）');
+    if (gn * 5 < N) e.push('複習沒有蓋到全部 ' + N + ' 張（只有 ' + gn + ' 組）');
+    for (const g of gs) {
+      const m = /(\d+)\s*題/.exec(g);
+      if (!m || parseInt(m[1], 10) < 3) e.push('複習「' + g.trim() + '」不到 3 題');
+    }
+    await p.click('#rv .rvg'); await p.waitForTimeout(650); acts++;
+    const q = await p.evaluate(() => ({
+      q: (document.querySelector('.rvq') || {}).textContent || '',
+      o: document.querySelectorAll('.rvo button').length,
+      sec: parseInt((document.getElementById('rvnum') || {}).textContent || '0', 10),
+      ox: document.documentElement.scrollWidth - document.documentElement.clientWidth
+    }));
+    if (!q.q) e.push('複習題出不來');
+    if (q.o !== 4) e.push('複習題不是四選一（' + q.o + '）');
+    if (q.sec !== 20) e.push('複習題不是 20 秒（' + q.sec + '）');
+    if (q.ox > 0) e.push('複習題橫向溢出 ' + q.ox);
+    await p.waitForTimeout(1200);
+    const s2 = await p.evaluate(() => parseInt(document.getElementById('rvnum').textContent, 10));
+    if (!(s2 < q.sec)) e.push('複習題的倒數沒有在減少（' + q.sec + '→' + s2 + '）');
+    await p.click('.rvo button'); await p.waitForTimeout(700); acts++;
+    const fb = await p.$eval('#rvfb', x => x.textContent.trim());
+    if (!fb) e.push('複習題答完沒有回饋');
+    await p.evaluate(() => { rvStop(); document.getElementById('rv').classList.remove('on'); });
+    await p.waitForTimeout(250);
+  }
+
   /* 🔊 音效 Y/N（使用者指定：太吵要關得掉） */
   {
     const l0 = await p.$eval('#muteBtn', b => b.textContent.trim());
@@ -376,7 +408,7 @@ async function gamesPage(p, f, vp, e) {
     if (!g.arena) { e.push('遊戲 ' + i + ' 沒有進到遊戲場'); await p.click('#quit'); continue }
     if (g.inner < 3) e.push('遊戲 ' + i + '（' + id + '）畫面是空的');
     if (!g.clickable) e.push('遊戲 ' + i + '（' + id + '）沒有可以點的東西');
-    if (g.sec !== 120 && g.sec > 120) e.push('遊戲 ' + i + ' 倒數不是 2 分鐘（' + g.sec + '）');
+    if (g.sec > 60) e.push('遊戲 ' + i + ' 一題的倒數不是 15 秒（' + g.sec + '）');
     if (g.ox > 0) e.push('遊戲 ' + i + ' 橫向溢出 ' + g.ox);
     /* 倒數要真的在跑 */
     const a1 = g.sec; await p.waitForTimeout(2400);

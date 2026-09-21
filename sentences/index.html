@@ -124,19 +124,19 @@ h1{margin:0;font-size:clamp(25px,4.8vh,46px);font-weight:700;letter-spacing:.03e
  <a class="card" href="unit1.html">
   <span class="n">2</span><span class="ic">👨‍👩‍👧</span>
   <span class="t">Unit 1 句型</span>
-  <span class="d">Who’s he? He’s my father.　Who’s she? She’s my mother.　逐字動畫、中英語序、家人替換字。</span>
-  <span class="f">13 張字卡</span></a>
+  <span class="d">Who’s he? He’s my father.　Who’s she? She’s my mother.　逐字動畫、縮寫變身、中英語序、家人替換字，下面還有「📝 複習」。</span>
+  <span class="f">16 張字卡</span></a>
 
  <a class="card" href="unit2.html">
   <span class="n">3</span><span class="ic">👨‍⚕️</span>
   <span class="t">Unit 2 句型</span>
-  <span class="d">He is a doctor. ⇄ Is he a doctor?　主詞藍色、be 動詞黃色，看顏色就知道位置怎麼換。</span>
-  <span class="f">15 張字卡</span></a>
+  <span class="d">He is a doctor. ⇄ Is he a doctor?　主詞藍色、be 動詞黃色，看顏色就知道位置怎麼換，下面還有「📝 複習」。</span>
+  <span class="f">21 張字卡</span></a>
 
  <a class="card go" href="games.html">
   <span class="n">4</span><span class="ic">🎮</span>
   <span class="t">複習遊戲</span>
-  <span class="d">10 種玩法，每一場倒數 2 分鐘。每次重玩都重新洗牌，隨機跳出雙倍時刻與神秘寶箱。</span>
+  <span class="d">10 種玩法，<b>每一題 15 秒、愈快答對分數愈高</b>。每一個遊戲都有自己的 20 種驚喜回饋，每次重玩都不一樣。</span>
   <span class="f">10 種　共 216 題</span></a>
 </nav>
 
@@ -172,6 +172,7 @@ fixVH();window.addEventListener('resize',fixVH);window.addEventListener('orienta
 
 
 var SLOW=false,VOX=null,VOXZH=null;
+var SQ=[],SBUSY=false,SID=0,SLAST=0;
 function pickVoice(){try{var v=speechSynthesis.getVoices();if(!v||!v.length)return;
  var en=v.filter(function(x){return /^en[-_]US/i.test(x.lang)});
  if(!en.length)en=v.filter(function(x){return /^en/i.test(x.lang)});
@@ -182,12 +183,55 @@ function pickVoice(){try{var v=speechSynthesis.getVoices();if(!v||!v.length)retu
  if(zh.length)VOXZH=zh[0];}catch(e){}}
 pickVoice();
 try{speechSynthesis.onvoiceschanged=pickVoice}catch(e){}
-function say(txt,lang){try{if(!txt)return;
- var u=new SpeechSynthesisUtterance(String(txt).replace(/[\u2019]/g,"'"));
- if(lang==='zh'){u.lang='zh-TW';if(VOXZH)u.voice=VOXZH;u.rate=SLOW?.55:.92}
+
+/* 唸出來以前先洗一次：＝ ➜ ＿ 這些符號不發音（使用者指定） */
+function sayText(s){
+ return String(s).replace(/[\u2019]/g,"'")
+  .replace(/[=\uFF1D\u2260\u279C\u2192\u21D2\u2026\uFF3F_\u3000]+/g,' ')
+  .replace(/\s+/g,' ').trim();
+}
+/* 真正送出一句 */
+function pump(){
+ if(SBUSY)return;
+ var it=SQ.shift();if(!it)return;
+ var t=sayText(it.t);
+ if(!t){if(it.done)try{it.done()}catch(e){};setTimeout(pump,0);return}
+ var u;try{u=new SpeechSynthesisUtterance(t)}catch(e){if(it.done)try{it.done()}catch(e2){};return}
+ if(it.l==='zh'){u.lang='zh-TW';if(VOXZH)u.voice=VOXZH;u.rate=SLOW?.55:.92}
  else{u.lang='en-US';if(VOX)u.voice=VOX;u.rate=SLOW?.45:.88}
- u.pitch=1;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
-function sayZh(t){say(t,'zh')}
+ u.pitch=1;
+ var mine=++SID;SBUSY=true;SLAST=Date.now();
+ var fin=function(){if(mine!==SID)return;SID++;SBUSY=false;SLAST=Date.now();
+  if(it.done)try{it.done()}catch(e){}
+  setTimeout(pump,60)};
+ u.onend=fin;u.onerror=fin;
+ try{speechSynthesis.speak(u)}catch(e){fin()}
+}
+/* say(句子)            ＝ 馬上講，砍掉還沒講完的
+   say(字,null,{keep:1}) ＝ 排隊，前一個講完才講（自動播、逐字用這個）
+   say(句子,null,{done:fn}) ＝ 講完再做一件事 */
+function say(txt,lang,opt){
+ opt=opt||{};
+ if(!txt||!sayText(txt)){if(opt.done)opt.done();return}
+ if(opt.keep){if(SQ.length>4)SQ.length=4;SQ.push({t:txt,l:lang,done:opt.done});pump();return}
+ SQ.length=0;SID++;SBUSY=false;
+ try{speechSynthesis.cancel()}catch(e){}
+ SQ.push({t:txt,l:lang,done:opt.done});
+ /* Chrome／Edge：cancel() 之後馬上 speak() 會被吃掉，等 90ms 再講 */
+ setTimeout(pump,90);
+}
+function sayZh(t,opt){say(t,'zh',opt)}
+function sayStop(){SQ.length=0;SID++;SBUSY=false;try{speechSynthesis.cancel()}catch(e){}}
+/* 看門狗：瀏覽器有時候不發 onend（或講到一半自己停住），卡住就救回來 */
+setInterval(function(){
+ try{
+  if(speechSynthesis.speaking&&!speechSynthesis.paused)speechSynthesis.resume();
+  if(!SBUSY){if(SQ.length)pump();return}
+  var idle=Date.now()-SLAST;
+  if(!speechSynthesis.speaking&&!speechSynthesis.pending&&idle>900){SID++;SBUSY=false;pump()}
+  else if(idle>15000){SID++;SBUSY=false;try{speechSynthesis.cancel()}catch(e){}pump()}
+ }catch(e){}
+},400);
 /* iOS 要先由一次點擊喚醒語音引擎 */
 var TTSWOKE=false;
 function wakeTTS(){if(TTSWOKE)return;TTSWOKE=true;

@@ -1,12 +1,15 @@
 /* sentences/_build_games.js — 10 種複習遊戲（games.html）
  * node sentences/_build_games.js
- * 題庫改 _game_data.js，玩法與版面改這裡。
+ * 題庫與驚喜回饋改 _game_data.js，玩法與版面改這裡。
  *
- * 十個遊戲共用一顆引擎：
- *  - 每一場倒數 2 分鐘（120 秒），圓環 ＋ 大數字
- *  - 題序、選項每一次都重新打散 → 同一個遊戲每次重玩都不一樣
- *  - 隨機驚喜事件（雙倍時刻、神秘題 ✕3、時間 ＋10 秒、急速題、寶箱）
- *  - 答錯 → 給鷹架提示，而且那一題會再回到題庫，練到會為止
+ * 十個遊戲共用一顆引擎（2026-09-21 使用者指定改版）：
+ *  - **每一題限時 15 秒**（不是一整場 2 分鐘），圓環 ＋ 大數字
+ *  - **愈快答對分數愈高**：基本 100 分 ＋ 速度分（最多 900）＋ 連對加成
+ *    答完馬上看到「＋850（速度分 ＋720）」，學生秒懂「快 ＝ 高分」
+ *  - 一場 12 題；題序、選項每一次都重新打散 → 每次重玩都不一樣
+ *  - **每一個遊戲有自己的 20 種正向驚喜回饋**（_game_data.js 的 SURP），
+ *    十個遊戲完全不重複，抽過不再抽 → 學生摸不透、猜不著
+ *  - 答錯（或時間到）→ 給鷹架提示，那一題會再回到題庫，練到會為止
  *  - 最佳紀錄存在這台 iPad 上
  */
 const fs = require('fs'), DIR = __dirname;
@@ -178,33 +181,36 @@ const CSS = `
 `;
 
 const JS = `
-var BANK=__BANK__, META=__META__;
-var SHAPE=['▲','◆','●','■'], TIME=120;
-var g=null,queue=[],cur=null,left=TIME,tick=null,score=0,streak=0,best=0,right=0,wrong=0;
+var BANK=__BANK__, META=__META__, SURP=__SURP__;
+var SHAPE=['▲','◆','●','■'];
+var QT=15, ROUNDQ=12;                 /* 每一題 15 秒，一場 12 題（使用者 2026-09-21 指定） */
+var g=null,queue=[],cur=null,left=QT,qt=QT,tick=null,score=0,streak=0,best=0,right=0,wrong=0;
+var asked=0,speedSum=0,shield=0;
 var mult=1,multLeft=0,fast=0,wrongList=[],busy=false,memPairs=[],memOpen=[],memLeft=0;
 var bossHP=100,bossMax=100;
+var pool=[];
 
 var R=2*Math.PI*46;$('#gfg').setAttribute('stroke-dasharray',R);
 
-/* ── 驚喜事件：同一個遊戲每次重玩都不一樣 ── */
-var EVENTS=[
- {t:'⚡ 雙倍時刻！',d:'接下來 3 題，分數 ✕ 2',f:function(){mult=2;multLeft=3}},
- {t:'🎁 神秘寶箱',d:'直接拿 '+0+' 分',f:function(){var p=100+Math.floor(Math.random()*400);score+=p;
-   $('#evt .ed').textContent='直接拿 '+p+' 分'}},
- {t:'⏱ 時間 ＋10 秒',d:'倒數加回來了',f:function(){left=Math.min(TIME,left+10)}},
- {t:'🔮 神秘題 ✕3',d:'下一題答對，分數 ✕ 3',f:function(){mult=3;multLeft=1}},
- {t:'🔥 連擊火焰',d:'連對加成翻倍',f:function(){mult=2;multLeft=5}},
- {t:'🎯 急速題',d:'5 秒內答對，額外 ＋200',f:function(){fast=Date.now()}}
-];
-var nextEvt=3+Math.floor(Math.random()*3);
-
+/* ── 驚喜回饋：每一個遊戲 20 種，抽過不重複，十個遊戲都不一樣 ── */
+var nextEvt=2+Math.floor(Math.random()*3);
+function doEvt(e){
+  if(e.k==='pts')score+=e.v;
+  else if(e.k==='x2'){mult=2;multLeft=e.v}
+  else if(e.k==='x3'){mult=3;multLeft=e.v}
+  else if(e.k==='time'){left=left+e.v;qt=Math.max(qt,left)}
+  else if(e.k==='fast')fast=Date.now();
+  else if(e.k==='streak'){streak+=e.v;if(streak>best)best=streak}
+  else if(e.k==='shield')shield=1;
+}
 function fire(){
-  var e=pick(EVENTS);
+  if(!pool.length)pool=shuf((SURP[g]||[]).slice());
+  var e=pool.shift();if(!e)return;
   $('#evt .et').textContent=e.t;$('#evt .ed').textContent=e.d;
-  e.f();
+  doEvt(e);
   var box=$('#evt');box.classList.remove('on');void box.offsetWidth;box.classList.add('on');
-  sWow();
-  nextEvt=3+Math.floor(Math.random()*4);
+  sWow();paint();
+  nextEvt=2+Math.floor(Math.random()*3);
 }
 
 /* ── 大廳 ── */
@@ -218,7 +224,7 @@ function hub(){
     return '<button class="gcard" data-g="'+m.id+'"><span class="gn">'+(n+1)+'</span>'+
       '<span class="gi">'+m.ic+'</span><span class="gt">'+m.name+'</span>'+
       '<span class="gr">'+m.rule+'</span>'+
-      '<span class="gb">'+m.n+' 題　倒數 2 分鐘'+(b?'　最佳 <b>'+b+'</b>':'')+'</span></button>';
+      '<span class="gb">'+m.n+' 題庫　一場 '+ROUNDQ+' 題　每題 '+QT+' 秒'+(b?'　最佳 <b>'+b+'</b>':'')+'</span></button>';
   }).join('');
 }
 $('#grid').addEventListener('click',function(e){
@@ -230,7 +236,8 @@ $('#grid').addEventListener('click',function(e){
 function begin(id){
   g=id;
   score=0;streak=0;best=0;right=0;wrong=0;mult=1;multLeft=0;fast=0;wrongList=[];busy=false;
-  left=TIME;nextEvt=3+Math.floor(Math.random()*3);
+  asked=0;speedSum=0;shield=0;pool=shuf((SURP[id]||[]).slice());
+  left=QT;qt=QT;nextEvt=2+Math.floor(Math.random()*3);
   bossHP=bossMax=100;
   memLeft=0;memOpen=[];memPairs=[];
   queue=shuf(BANK[id].slice());
@@ -238,35 +245,47 @@ function begin(id){
   $('#arena').classList.add('on');$('#gend').classList.remove('on');
   var m=META.filter(function(x){return x.id===id})[0];
   $('#gname').textContent=m.ic+' '+m.name;
-  run();next();
+  next();
 }
-function run(){
+/* 每一題自己的倒數：時間到就算答錯，給提示再出下一題 */
+function run(sec){
   if(tick)clearInterval(tick);
-  paint();
+  qt=sec||QT;left=qt;paint();
   tick=setInterval(function(){
-    left--;
-    if(left<=0){left=0;paint();stop();over();return}
-    if(left<=15)sTick();
+    left-=0.1;
+    if(left<=0){left=0;paint();tstop();timeUp();return}
+    if(left<=5&&Math.abs(left-Math.round(left))<0.05)sTick();
     paint();
-  },1000);
+  },100);
 }
-function stop(){if(tick){clearInterval(tick);tick=null}try{speechSynthesis.cancel()}catch(e){}}
+function timeUp(){
+  if(busy)return;
+  if(g==='g6'){busy=true;sNo();streak=0;paint();
+    $('#gfb').innerHTML='<div class="fh no">⏰ 時間到！</div><div class="fw">記住位置，下一局會更快。</div>';
+    asked++;memLeft=0;
+    setTimeout(function(){if(asked>=ROUNDQ)over();else{busy=false;next()}},1600);return}
+  judge(false,cur?cur.h:'',null,true);
+}
+function tstop(){if(tick){clearInterval(tick);tick=null}}   /* 只停這一題的倒數 */
+function stop(){tstop();sayStop()}                          /* 離開遊戲才連發音一起停 */
 function paint(){
-  $('#gnum').textContent=left;
-  $('#gfg').setAttribute('stroke-dashoffset',R*(1-left/TIME));
-  $('#gring').className=left<=15?'dang':(left<=30?'warn':'');
+  $('#gnum').textContent=Math.ceil(left);
+  $('#gfg').setAttribute('stroke-dashoffset',R*(1-left/qt));
+  $('#gring').className=left<=5?'dang':(left<=8?'warn':'');
   $('#gsc').textContent=score;
-  $('#gstreak').textContent=streak?'🔥 '+streak:'—';
-  $('#gprog').textContent=right+' 題';
+  $('#gstreak').textContent=(shield?'🛡 ':'')+(streak?'🔥 '+streak:'—');
+  $('#gprog').textContent=asked+' ／ '+ROUNDQ+' 題';
 }
 
 /* ── 出下一題 ── */
 function next(){
   busy=false;
   var fb=$('#gfb');if(fb)fb.innerHTML='';   /* 第一題時 #gfb 還沒被畫出來 */
+  if(asked>=ROUNDQ){over();return}
   if(!queue.length)queue=shuf(BANK[g].slice());
   cur=queue.shift();
   ({g1:rMcq,g2:rTwo,g3:rOrder,g4:rTrans,g5:rHear,g6:rMem,g7:rSpot,g8:rFill,g9:rSort,g10:rBoss}[g])();
+  run(g==='g6'?QT*4:QT);     /* 記憶配對一局四對，時間比照四題 */
 }
 function tags(extra){
   var h='';
@@ -277,28 +296,43 @@ function tags(extra){
 }
 
 /* ── 判定 ── */
-function judge(ok,hint,after){
+/* 愈快答對，分數愈高（使用者 2026-09-21 指定）：
+   基本 100 分 ＋ 速度分（剩下的秒數 ／ 總秒數 ✕ 900）＋ 連對加成，最後再乘上倍率 */
+function judge(ok,hint,after,timeout){
   if(busy)return;busy=true;
+  tstop();
   var bonus=0;
+  asked++;
   if(ok){
     right++;streak++;if(streak>best)best=streak;
-    var p=100+streak*20;
+    var sp=Math.round(900*(left/qt));speedSum+=sp;
+    var p=100+sp+streak*20;
     if(fast&&Date.now()-fast<5000){bonus=200;fast=0}
     else if(fast&&Date.now()-fast>=5000){fast=0}
     p=p*mult+bonus;
     score+=p;sOk();
     if(multLeft>0){multLeft--;if(multLeft===0)mult=1}
-    $('#gfb').innerHTML='<div class="fh ok">✅ ＋'+p+(bonus?'（急速 ＋200）':'')+'</div>';
+    $('#gfb').innerHTML='<div class="fh ok">✅ ＋'+p+'</div>'+
+      '<div class="fw">⚡ 速度分 ＋'+sp+'（剩 '+left.toFixed(1)+' 秒）'+
+      (streak>1?'　🔥 連對 ＋'+(streak*20):'')+(mult>1?'　✕ '+mult:'')+
+      (bonus?'　🎯 急速 ＋200':'')+'</div>';
     nextEvt--;
     if(nextEvt<=0)setTimeout(fire,320);
   }else{
-    wrong++;streak=0;sNo();
-    $('#gfb').innerHTML='<div class="fh no">❌ 再想一下</div><div class="fw">'+ap(hint||'')+'</div>';
+    wrong++;
+    if(shield){shield=0;$('#gstreak').textContent='🔥 '+streak}else streak=0;
+    sNo();
+    $('#gfb').innerHTML='<div class="fh no">'+(timeout?'⏰ 時間到！':'❌ 再想一下')+'</div>'+
+      '<div class="fw">'+ap(hint||'')+'</div>';
     queue.splice(Math.min(queue.length,2+Math.floor(Math.random()*3)),0,cur); /* 練到會為止 */
     if(hint&&wrongList.indexOf(hint)<0)wrongList.push(hint);
   }
   paint();
-  setTimeout(function(){if(left>0&&$('#arena').classList.contains('on'))(after||next)()},ok?720:1750);
+  setTimeout(function(){
+    if(!$('#arena').classList.contains('on'))return;
+    if(asked>=ROUNDQ){over();return}
+    (after||next)();
+  },ok?1000:2000);
 }
 
 /* ── 1 ⚡ 閃電四選一 ── */
@@ -398,12 +432,16 @@ function memTap(e){
     if(a.getAttribute('data-k')===c.getAttribute('data-k')&&a!==c){
       a.classList.add('ok');c.classList.add('ok');memOpen=[];memLeft--;
       right++;streak++;if(streak>best)best=streak;
-      var p=(150+streak*20)*mult;score+=p;sOk();
+      var sp=Math.round(900*(left/qt)/4);speedSum+=sp;
+      var p=(150+sp+streak*20)*mult;score+=p;sOk();
       if(multLeft>0){multLeft--;if(multLeft===0)mult=1}
       nextEvt--;if(nextEvt<=0)setTimeout(fire,300);
+      $('#gfb').innerHTML='<div class="fh ok">✅ ＋'+p+'</div><div class="fw">⚡ 速度分 ＋'+sp+'</div>';
       paint();
       setTimeout(function(){a.classList.add('gone');c.classList.add('gone');
-        if(!memLeft&&left>0){setTimeout(function(){rMem()},380)}},420);
+        if(!memLeft){asked++;paint();
+          if(asked>=ROUNDQ)over();
+          else setTimeout(function(){rMem();run(QT*4)},380)}},420);
     }else{
       busy=true;a.classList.add('bad');c.classList.add('bad');sNo();streak=0;wrong++;paint();
       setTimeout(function(){[a,c].forEach(function(x){
@@ -479,7 +517,7 @@ function bossTap(e){
   var ok=b.getAttribute('data-ok')==='true';
   markO(b,ok);
   if(ok){
-    bossHP=Math.max(0,bossHP-Math.ceil(100/BANK.g10.length*1.6));
+    bossHP=Math.max(0,bossHP-10);   /* 打十下倒，一場 12 題打得完 */
     $('#hp').style.width=bossHP+'%';
     $('#bossface').classList.add('hit');
     if(bossHP<=0){sWow();stop();setTimeout(win,700);return}
@@ -522,8 +560,9 @@ function markO(b,ok){
 
 /* ── 結算 ── */
 function over(){
+  stop();
   $('#arena').classList.remove('on');$('#gend').classList.add('on');
-  $('#gendh').textContent='⏰ 時間到！';
+  $('#gendh').textContent='🏁 這一場結束！';
   endBody();
 }
 function endBody(){
@@ -532,7 +571,7 @@ function endBody(){
   if(score>b){store('best_'+g,score);b=score;$('#gendh').textContent+='　🎉 破紀錄！'}
   $('#gendsc').textContent=score;
   $('#gendln').innerHTML='答對 <b>'+right+'</b> 題　答錯 <b>'+wrong+'</b> 題　最長連對 <b>'+best+
-    '</b>　最佳紀錄 <b>'+b+'</b>';
+    '</b>　速度分共 <b>'+speedSum+'</b>　最佳紀錄 <b>'+b+'</b>';
   $('#gendrev').innerHTML=wrongList.length?
     ('<div style="color:#5C5C5C;letter-spacing:.1em">📌 這一場要記住的：</div>'+
      wrongList.map(function(h){return '<div>・'+ap(h)+'</div>'}).join('')):
@@ -557,8 +596,10 @@ const body = `
 <main id="stage">
  <section id="hub">
   <h1>🎮 複習遊戲　10 種玩法</h1>
-  <p class="lead">每一場<b>倒數 2 分鐘</b>。題序和選項<b>每次都重新洗牌</b>，
-     途中會<b>隨機</b>跳出雙倍時刻、神秘寶箱、急速題——每一次玩都不一樣。<br>
+  <p class="lead">每一題<b>限時 15 秒</b>，一場 12 題。<b>愈快答對，分數愈高</b>——
+     答完馬上看到速度分。<br>
+     每一個遊戲都有<b>自己的 20 種驚喜回饋</b>，十個遊戲完全不一樣，
+     抽到什麼<b>猜不著</b>；題序和選項每一次都重新洗牌。<br>
      答錯會給你提示，那一題等一下還會再出現，<b>練到會為止</b>。</p>
   <div id="grid"></div>
  </section>
@@ -566,15 +607,15 @@ const body = `
  <div id="ghud">
   <span class="gcell"><span class="k">遊戲</span><span class="v" id="gname"></span></span>
   <span id="gring"><svg viewBox="0 0 100 100"><circle id="gbg" cx="50" cy="50" r="46"></circle>
-   <circle id="gfg" cx="50" cy="50" r="46"></circle></svg><span id="gnum">120</span></span>
-  <span class="gcell r"><span class="k">分數 ／ 連對 ／ 答對</span>
+   <circle id="gfg" cx="50" cy="50" r="46"></circle></svg><span id="gnum">15</span></span>
+  <span class="gcell r"><span class="k">分數 ／ 連對 ／ 進度</span>
    <span class="v"><span id="gsc">0</span>　<span id="gstreak">—</span>　<span id="gprog">0 題</span></span></span>
  </div>
 
  <section id="arena"></section>
 
  <section id="gend">
-  <h2 id="gendh">⏰ 時間到！</h2>
+  <h2 id="gendh">🏁 這一場結束！</h2>
   <div class="sc" id="gendsc">0</div>
   <div class="ln" id="gendln"></div>
   <div class="rev" id="gendrev"></div>
@@ -599,7 +640,8 @@ ${S.SFX}
 ${JS.replace('__BANK__', () => JSON.stringify({
     g1: B.G1, g2: B.G2, g3: B.G3, g4: B.G4, g5: B.G5,
     g6: B.G6, g7: B.G7, g8: B.G8, g9: B.G9, g10: B.G10
-  })).replace('__META__', () => JSON.stringify(B.GAMES))}
+  })).replace('__META__', () => JSON.stringify(B.GAMES))
+     .replace('__SURP__', () => JSON.stringify(B.SURP))}
 </script>
 </body>
 </html>`;
