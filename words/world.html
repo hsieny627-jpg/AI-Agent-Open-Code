@@ -173,6 +173,9 @@ body{margin:0;background:#000;color:#F2F2F2;
 /* 新增的幕一律「只淡入、不位移」：位移到一半 #stage 會暫時變高，_verify.js 會判定溢出（家庭樹踩過同一個坑） */
 @keyframes fadeOnly{from{opacity:0}to{opacity:1}}
 .fo{animation:fadeOnly .5s ease .1s both}
+/* 內容很滿的兩頁（parts／world）：最下面那行字是從下面滑上來的，滑到一半會多 20px，先讓出來 */
+.sa #stage{padding-bottom:24px}
+.sa #stage .in{animation-name:fadeOnly}
 /* 地圖 */
 .mapbox{width:min(92vw,500px,calc(40vh * 1.08))}
 .map{display:block;width:100%;height:auto}
@@ -322,7 +325,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 .reduce #src *{animation:none!important;opacity:1!important}
 </style>
 </head>
-<body>
+<body class="sa">
 <div id="dots"></div>
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"></div>
