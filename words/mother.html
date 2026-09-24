@@ -134,48 +134,57 @@ body{margin:0;background:#000;color:#F2F2F2;
 .sp:active,.sp.ping{color:#9FB4C8;border-bottom-color:#9FB4C8}
 .reduce .phw .syl.beat .g,.reduce .phw .u.count .g i.v{animation:none!important}
 
-/* 出處覆蓋卡：使用者 2026-09-20 指定改成「秒懂圖表」。
-   **不可以用 flex 置中**——內容一超過一個螢幕，上面幾列會被切掉而且捲不回去。
-   display:block ＋ overflow:auto，從最上面開始，每一列都捲得到。 */
-#src{position:fixed;inset:0;z-index:20;background:#000;
- display:none;padding:clamp(14px,3.4vh,34px) clamp(12px,3vw,30px);overflow:auto;text-align:left}
-#src.on{display:block}
-#src .wrap{max-width:1000px;margin:0 auto}
-#src h4{margin:0 0 10px;color:#9FB4C8;font-size:clamp(19px,2.6vh,26px);
- letter-spacing:.24em;font-weight:700}
-/* 秒懂動畫：課堂上教的 ➜ 出自這一本 ➜ 你也查得到 */
-#src .flow{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;
- gap:8px;margin:0 0 16px}
-#src .flow span{font-size:clamp(13px,1.9vh,17px);border-radius:99px;padding:7px 14px;
- white-space:nowrap}
-#src .f1{background:#16202A;color:#9FB4C8;border:1px solid #24323E}
-#src .f2{background:#1E1A12;color:#D8C08A;border:1px solid #332C1C}
-#src .f3{background:#13201A;color:#8FBE92;border:1px solid #1F3329}
-#src .fa{color:#4A4A4A;font-size:clamp(14px,2vh,18px)}
-#src.on .flow span,#src.on .flow .fa{animation:srcflow .5s cubic-bezier(.2,1.4,.4,1) both}
-#src.on .flow > *:nth-child(1){animation-delay:.05s}
-#src.on .flow > *:nth-child(2){animation-delay:.20s}
-#src.on .flow > *:nth-child(3){animation-delay:.33s}
-#src.on .flow > *:nth-child(4){animation-delay:.46s}
-#src.on .flow > *:nth-child(5){animation-delay:.59s}
-@keyframes srcflow{0%{opacity:0;transform:translateX(-14px) scale(.9)}100%{opacity:1;transform:none}}
-/* 秒懂圖表：三欄——講什麼／證據出處／查到會看到什麼 */
-#src table{width:100%;border-collapse:collapse}
-#src th{text-align:left;color:#7E8B96;font-weight:700;letter-spacing:.06em;
- font-size:clamp(13px,1.8vh,16px);padding:0 10px 8px;border-bottom:1px solid #262626;white-space:nowrap}
-#src td{vertical-align:top;padding:11px 10px;border-bottom:1px solid #1A1A1A;
- font-size:clamp(15px,2.05vh,20px);line-height:1.6}
-#src td.t{color:#F2F2F2;font-weight:700;width:22%}
-#src td.s{color:#D8C08A;width:36%}
-#src td.d{color:#C2C2C2}
-#src td b{color:#F2F2F2;font-weight:700}
-#src td.s b{color:#EBD9A8}
-#src tr.w td{background:#141008}
-#src tr.w td.t{color:#E0B15C}
-#src .foot{margin:14px 0 0;color:#6E6E6E;font-size:clamp(12px,1.7vh,15px);line-height:1.6}
-#src button{display:block;margin:20px auto 0;background:#1E1E1E;border:1px solid #4A4A4A;
- color:#F2F2F2;border-radius:99px;font-size:18px;padding:12px 28px;min-height:52px;
- font-family:inherit;cursor:pointer}
+#src{position:fixed;inset:0;z-index:40;background:#000;display:none;flex-direction:column;
+ padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) max(10px,env(safe-area-inset-bottom));text-align:left}
+#src.on{display:flex}
+#src .shd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto}
+#src .sttl{color:#9FB4C8;font-size:clamp(17px,2.6vh,24px);font-weight:700;letter-spacing:.2em}
+#src .scnt{color:#D8D3C5;font-size:clamp(16px,2.4vh,22px);font-weight:700}
+#src .sbody{flex:1 1 auto;min-height:0;overflow:auto;display:flex}
+#src .sl{display:none;flex-direction:column;justify-content:center;gap:clamp(10px,2vh,22px);
+ width:100%;max-width:980px;margin:auto}
+#src .sl.on{display:flex}
+#src .lt{font-size:clamp(28px,5.6vh,54px);font-weight:700;color:#F2F2F2;line-height:1.3;text-align:center;
+ animation:srcIn .45s cubic-bezier(.2,1.3,.4,1) both}
+#src .sl.w .lt{color:#F0B45C}
+#src .lt .wtag{display:inline-block;font-size:.5em;vertical-align:middle;background:#3A2A0C;color:#F0B45C;
+ border:1px solid #6B4E1A;border-radius:99px;padding:4px 12px;margin-right:10px;letter-spacing:.1em}
+#src .vis{display:flex;justify-content:center;animation:srcIn .45s cubic-bezier(.2,1.3,.4,1) .15s both}
+#src .ck{display:flex;align-items:center;gap:clamp(10px,1.6vw,20px);border-radius:18px;
+ padding:clamp(10px,1.8vh,18px) clamp(14px,2vw,24px);animation:srcIn .5s cubic-bezier(.2,1.3,.4,1) both}
+#src .ck .ci{font-size:clamp(30px,5.4vh,52px);flex:0 0 auto}
+#src .ck .cl{display:block;font-size:clamp(13px,1.9vh,17px);letter-spacing:.14em;margin-bottom:4px;font-weight:700}
+#src .ck .cv{display:block;line-height:1.5}
+#src .ck.s{background:#17140C;border:1px solid #3A3018;animation-delay:.35s}
+#src .ck.s .cl{color:#B79A5C}
+#src .ck.s .cv{color:#EBD9A8;font-size:clamp(18px,3vh,30px);font-weight:700}
+#src .ck.d{background:#0E1A12;border:1px solid #21402B;animation-delay:.75s}
+#src .ck.d .cl{color:#6FAE7C}
+#src .ck.d .cv{color:#E6E6E6;font-size:clamp(20px,3.4vh,34px)}
+#src .ck.d .cv b{color:#FFD24A}
+#src .sl.w .ck.d{background:#1A1206;border-color:#4A3510}
+#src .car{text-align:center;color:#5A5A5A;font-size:clamp(20px,3vh,30px);line-height:1;
+ animation:srcIn .4s ease .6s both}
+@keyframes srcIn{0%{opacity:0;transform:translateY(16px) scale(.94)}100%{opacity:1;transform:none}}
+#src .snav{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,18px);flex:0 0 auto;
+ padding-top:8px}
+#src .snav button,#src .shd button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
+ font-size:clamp(16px,2.4vh,22px);padding:10px 22px;min-height:50px;font-family:inherit;cursor:pointer}
+#src .snav button:disabled{opacity:.3}
+#src .sdots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:46vw}
+#src .sdots i{width:10px;height:10px;border-radius:50%;background:#2A2A2A}
+#src .sdots i.on{background:#FFD24A}
+/* 出處裡的秒懂動畫（字母一格一格跳出來、插進來的字母會發光） */
+#src .ev{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:clamp(8px,1.4vw,18px)}
+#src .ev .st{display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0;
+ animation:srcIn .5s cubic-bezier(.2,1.3,.4,1) both}
+#src .ev .st b{font-size:clamp(24px,4.6vh,46px);color:#F2F2F2;letter-spacing:.02em}
+#src .ev .st em{font-style:normal;font-size:clamp(12px,1.8vh,16px);color:#8E8E8E;white-space:nowrap}
+#src .ev .ar{color:#5A5A5A;font-size:clamp(20px,3vh,30px);padding-bottom:1.1em;opacity:0;animation:srcIn .4s ease both}
+#src .ev .new{color:#FFD24A;display:inline-block;animation:newT 1.2s ease-in-out 1.6s 3}
+#src .ev .no{color:#FF6B6B}
+@keyframes newT{0%,100%{transform:none;text-shadow:none}50%{transform:translateY(-.25em) scale(1.5);text-shadow:0 0 18px rgba(255,210,74,.9)}}
+.reduce #src *{animation:none!important;opacity:1!important}
 </style>
 </head>
 <body>
@@ -191,7 +200,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 </nav>
 <div id="bar"><button id="say">🔊 念一次</button><button id="slow">🐢 放慢</button><button id="phmode">🔤 音標：無</button><button id="phsyl">✂️ 音節</button><button id="parts">🧩 結構</button><button id="home">🏠 首頁</button><button id="srcb">📖 出處</button></div>
 </div>
-<footer id="src"><div class="wrap"><h4>出處</h4><div class="flow"><span class="f1">📺 課堂上教的</span><span class="fa">➜</span><span class="f2">📖 出自這一本</span><span class="fa">➜</span><span class="f3">✅ 你也查得到</span></div><table><thead><tr><th>這一條在講什麼</th><th>證據出處（照這個就查得到）</th><th>查到會看到什麼</th></tr></thead><tbody><tr><td class="t">mother 的來源</td><td class="s">OED「mother, n.1」</td><td class="d">古英文寫成 <b>mōdor</b>。</td></tr><tr><td class="t">為什麼從 m 開頭</td><td class="s">Roman Jakobson (1960)《Why “Mama” and “Papa”?》</td><td class="d">全世界語言的「媽媽」多半用 <b>m</b> 起頭的唇音——那是<b>嬰兒最早發得出來的音</b>。</td></tr><tr><td class="t">mom 還是 mum</td><td class="s">OED「mom, n.」「mum, n.4」</td><td class="d"><b>mom</b> 通行於美國，<b>mum</b> 通行於英國。</td></tr><tr><td class="t">音標（美式）</td><td class="s">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries 的 NAmE 發音</td><td class="d">本教材的 IPA 一律採<b>美式</b>標法。</td></tr><tr><td class="t">KK 音標</td><td class="s">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</td><td class="d">台灣中小學課本採用的標法。同一個音兩套寫法不同：bed 的 e ＝ IPA <b>/e/</b>、KK <b>/ɛ/</b>；boat 的 o ＝ IPA <b>/oʊ/</b>、KK <b>/o/</b>。</td></tr><tr><td class="t">音節怎麼切</td><td class="s">Louisa Moats《Speech to Print》；National Reading Panel (2000)</td><td class="d">本教材用<b>開音節切法</b>（母音後面切）：<b>fa．mi．ly</b>、mo．ther、fa．ther、bro．ther、daugh．ter、un．cle。<b>一個出聲的母音 ＝ 一個音節</b>。</td></tr><tr class="w"><td class="t">和辭典的連字號不一樣，兩種都對</td><td class="s">—</td><td class="d">辭典（如 <b>Merriam-Webster</b>）印的是<b>排版斷行用</b>的連字號，family 寫成 <b>fam·i·ly</b>；本教材教的是<b>唸的時候怎麼切</b>，所以是 <b>fa．mi．ly</b>。<b>兩種都對，用途不同</b>——一個是給排版看的，一個是給嘴巴唸的。</td></tr><tr class="w"><td class="t">數音節數的是「還在出聲的母音」</td><td class="s">—</td><td class="d">畫面上<b>淺灰色的字母不出聲，不算</b>（niece 的 e、wife 的 e、daughter 的 gh、little 的第二個 t）；<b>au／ou／ie／ew</b> 兩個字母一起發一個音，畫面上本來就是一格。照畫面數，這條規則<b>全部成立</b>。</td></tr><tr><td class="t">唸出來的聲音</td><td class="s">Web Speech API（瀏覽器內建語音合成），語系 en-US</td><td class="d">不需要連網也不需要帳號。<b>實際嗓音由老師那台電腦或平板決定</b>。外語單字另外指定語系：德 de-DE、荷 nl-NL、西 es-ES、法 fr-FR。</td></tr></tbody></table><p class="foot">⚠️ 這些條目名稱都是<b>標準工具書</b>的正式條目，老師和學生照著查一定找得到。製作環境連不上網，<b>沒有逐條開網頁核對過</b>——第一次上課前建議抽查兩三條。</p><button id="srcx">關閉</button></div></footer>
+<footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span><span class="scnt"><span id="srcn">1</span> ／ 9</span><button id="srcx">✕ 關閉</button></div><div class="sbody"><section class="sl on" data-k="0"><div class="lt">mother 的來源</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「mother, n.1」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">古英文寫成 <b>mōdor</b>。</span></span></div></section><section class="sl" data-k="1"><div class="lt">為什麼從 m 開頭</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Roman Jakobson (1960)《Why “Mama” and “Papa”?》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">全世界語言的「媽媽」多半用 <b>m</b> 起頭的唇音——那是<b>嬰兒最早發得出來的音</b>。</span></span></div></section><section class="sl" data-k="2"><div class="lt">mom 還是 mum</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「mom, n.」「mum, n.4」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv"><b>mom</b> 通行於美國，<b>mum</b> 通行於英國。</span></span></div></section><section class="sl" data-k="3"><div class="lt">音標（美式）</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries（NAmE）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">本教材的 IPA 一律用<b>美式</b>。</span></span></div></section><section class="sl" data-k="4"><div class="lt">KK 音標</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">台灣課本用的標法。例：bed 的 e ＝ IPA <b>/e/</b> ＝ KK <b>/ɛ/</b>。</span></span></div></section><section class="sl" data-k="5"><div class="lt">音節怎麼切</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Louisa Moats《Speech to Print》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">母音後面切：<b>fa．mi．ly</b>。<b>一個出聲的母音 ＝ 一個音節</b>。</span></span></div></section><section class="sl w" data-k="6"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>辭典的 fam·i·ly 也對</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">那是<b>排版斷行</b>用的；本教材教的是<b>唸的時候</b>怎麼切。兩種都對。</span></span></div></section><section class="sl w" data-k="7"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>淺灰色的字母不算</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">不出聲的字母（淺灰色）<b>不算母音</b>，數紅色的就對了。</span></span></div></section><section class="sl" data-k="8"><div class="lt">唸出來的聲音</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Web Speech API（瀏覽器內建語音，en-US）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">不用連網。<b>嗓音由這台電腦決定</b>。外語另外指定：德 de-DE、荷 nl-NL、瑞典 sv-SE、法 fr-FR、西 es-ES。</span></span></div></section></div><div class="snav"><button id="srcp">◀ 上一條</button><span class="sdots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><button id="srcf">下一條 ▶</button></div></footer>
 
 <script>
 
@@ -437,11 +446,29 @@ armFirstTouch();
 document.getElementById("parts").addEventListener("click",function(){location.href="parts.html#4"});
 document.getElementById("home").addEventListener("click",function(){location.href="../index.html"});
 
-(function(){var s=document.getElementById("src");
- function t(v){s.classList.toggle("on",v);if(v)s.scrollTop=0}
+(function(){var s=document.getElementById("src");if(!s)return;
+ var L=s.querySelectorAll(".sl"),D=s.querySelectorAll(".sdots i"),k=0;
+ function go(n){k=Math.max(0,Math.min(L.length-1,n));
+  for(var j=0;j<L.length;j++){L[j].classList.toggle("on",j===k);D[j].classList.toggle("on",j===k)}
+  /* 換頁時動畫重播一次 */
+  var c=L[k];c.style.display="none";void c.offsetWidth;c.style.display="";
+  document.getElementById("srcn").textContent=k+1;
+  document.getElementById("srcp").disabled=(k===0);
+  document.getElementById("srcf").disabled=(k===L.length-1)}
+ function t(v){s.classList.toggle("on",v);if(v)go(0)}
  document.getElementById("srcb").addEventListener("click",function(){t(!s.classList.contains("on"))});
  document.getElementById("srcx").addEventListener("click",function(){t(false)});
- document.addEventListener("keydown",function(e){if(e.key==="Escape")t(false)});})();
+ document.getElementById("srcp").addEventListener("click",function(){go(k-1)});
+ document.getElementById("srcf").addEventListener("click",function(){go(k+1)});
+ /* 出處開著的時候，← → 翻的是出處，不是後面那一頁（先攔下來） */
+ document.addEventListener("keydown",function(e){
+  if(!s.classList.contains("on"))return;
+  if(e.key==="Escape"){t(false)}
+  else if(e.key==="ArrowRight"||e.key===" "){go(k+1)}
+  else if(e.key==="ArrowLeft"){go(k-1)}
+  else return;
+  e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();
+ },true);})();
 </script>
 </body>
 </html>

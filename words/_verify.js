@@ -118,6 +118,73 @@ async function scenePage(p,f,vp,e){
  }
  const b4=(await snap()).on;await p.waitForTimeout(6000);
  if((await snap()).on!==b4)e.push('停 6 秒自動換頁');
+
+ /* 2026-09-24 新增的四項（使用者指定）───────────────────────────── */
+ const NEW=/^(parts|world)\.html$/.test(f);
+ const back=async()=>{await p.evaluate(()=>show(0));await p.waitForTimeout(600)};
+ if(NEW){
+  /* ① 字不可以壓到下面的按鈕列（動畫跑完才量） */
+  await back();
+  for(let i=0;i<N;i++){
+   if(i){await p.click('#next')}
+   await p.waitForTimeout(3600);
+   const hit=await p.evaluate(()=>{
+    const bs=[...document.querySelectorAll('#bar button')].map(b=>b.getBoundingClientRect());
+    for(const el of document.getElementById('stage').querySelectorAll('*')){
+     if(el.children.length||!el.textContent.trim())continue;
+     const r=el.getBoundingClientRect();if(!r.width)continue;
+     for(const b of bs)if(r.left<b.right&&r.right>b.left&&r.top<b.bottom&&r.bottom>b.top)
+      return (el.className||el.tagName)+'「'+el.textContent.trim().slice(0,12)+'」';
+    }return null});
+   acts++;
+   if(hit)e.push('幕'+(i+1)+' '+hit+' 壓到下面的按鈕');
+  }
+  /* ② 「🔊 唸一次」在正下方的中央 */
+  const c=await p.evaluate(()=>{const r=document.getElementById('say').getBoundingClientRect();
+   return Math.round(r.left+r.width/2-innerWidth/2)});acts++;
+  if(Math.abs(c)>3)e.push('「唸一次」沒有在正中央（偏 '+c+'px）');
+  /* ③ 猜猜看：一開始看不到國名，按「公布答案」才出現 */
+  await back();
+  let seen=0;
+  for(let i=0;i<N;i++){
+   if(i){await p.click('#next');await p.waitForTimeout(500)}
+   if(!await p.$('#stage .guess'))continue;
+   seen++;
+   const v0=await p.evaluate(()=>[...document.querySelectorAll('#stage .gans')].some(x=>x.getClientRects().length>0));
+   if(v0)e.push('幕'+(i+1)+' 還沒公布就看得到國名');
+   await p.click('#stage .grev');await p.waitForTimeout(400);
+   const v1=await p.evaluate(()=>[...document.querySelectorAll('#stage .gans')].every(x=>x.getClientRects().length>0));
+   if(!v1)e.push('幕'+(i+1)+' 按了公布答案，國名沒有出來');
+   if(await p.$('#stage .gmode')){
+    await p.click('#stage .gmode button[data-m="zh"]');await p.waitForTimeout(300);
+    const z=await p.evaluate(()=>[...document.querySelectorAll('#stage .gm .mzh')].every(x=>x.getClientRects().length>0));
+    if(!z)e.push('幕'+(i+1)+' 右邊切到中文沒有出來');
+   }
+   acts++;
+  }
+  if(!seen)e.push('找不到「這是哪一國的話？」猜猜看');
+ }
+ /* ④ 出處：一條一頁、字要大、翻得動、關得掉（每一頁都量） */
+ if(await p.$('#srcb')){
+  await p.click('#srcb');await p.waitForTimeout(500);
+  const s0=await p.evaluate(()=>{const on=document.querySelector('#src .sl.on');
+   return{n:document.querySelectorAll('#src .sl').length,on:document.querySelectorAll('#src .sl.on').length,
+    fs:on?parseFloat(getComputedStyle(on.querySelector('.lt')).fontSize):0,
+    cnt:(document.getElementById('srcn')||{}).textContent,
+    ox:document.documentElement.scrollWidth-document.documentElement.clientWidth}});
+  acts++;
+  if(s0.n<2)e.push('出處只有 '+s0.n+' 頁');
+  if(s0.on!==1)e.push('出處一次不是只顯示一條（'+s0.on+'）');
+  if(s0.fs<24)e.push('出處的字太小（'+s0.fs+'px）');
+  if(s0.ox>0)e.push('出處橫向溢出'+s0.ox);
+  const d0=(await snap()).on;
+  await p.keyboard.press('ArrowRight');await p.waitForTimeout(300);
+  const c1=await p.$eval('#srcn',x=>x.textContent);
+  if(c1!=='2')e.push('出處按 → 沒有翻到第 2 條（'+c1+'）');
+  if((await snap()).on!==d0)e.push('出處開著的時候按 →，後面那一頁也跟著翻了');
+  await p.click('#srcx');await p.waitForTimeout(300);
+  if(await p.$eval('#src',x=>getComputedStyle(x).display!=='none'))e.push('出處關不掉');
+ }
  return acts;
 }
 

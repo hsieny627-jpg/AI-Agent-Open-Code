@@ -18,7 +18,7 @@ const PH=require('./_phonics');
 const WORDS=[
 {f:'family',zh:'家庭',icon:'👨‍👩‍👧‍👦',old:'familia',now:'family',
  e1:'👪 爸爸、媽媽、小孩，<b>全部都是 family</b>'},
-{f:'parent',parts:{href:'parts.html#8'},zh:'家長',sub:'爸爸或媽媽',icon:'👨‍👩',old:'parens',now:'parent',
+{f:'parent',parts:{href:'parts.html#10'},zh:'家長',sub:'爸爸或媽媽',icon:'👨‍👩',old:'parens',now:'parent',
  e1:'👤 一位家長是 <b>a parent</b>',e2:'很多位就加 s：{{parents}}'},
 {f:'mother',parts:{href:'parts.html#4'},zh:'母親',icon:'❤️',old:'mōdor',now:'mother',
  e1:'👶 <b>mother</b> ＝ {{mom}}',e2:'美國說 {{mom}}，英國說 {{mum}}'},

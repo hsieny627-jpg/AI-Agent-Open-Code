@@ -134,7 +134,7 @@ $('#rfg').setAttribute('stroke-dasharray',R);
 
 function start(){
   order=QS.map(function(_,n){return n});
-  qi=0;score=0;streak=0;best=0;right=0;wrongBank=[];revRound=false;
+  qi=0;score=0;streak=0;best=0;right=0;wrongBank=[];revRound=false;MISSLOG=[];
   $('#gate').style.display='none';$('#hud').classList.add('on');$('#quiz').classList.add('on');
   ask();
 }
@@ -223,6 +223,8 @@ function choose(n){
     $('#stage').classList.add('shake');
     setTimeout(function(){$('#stage').classList.remove('shake')},440);
     if(!revRound)wrongBank.push(reshuffle(q));
+    /* 答錯：蓋一整頁，倒數 3 秒（使用者 2026-09-24 指定） */
+    missShow({q:q.q+(q.say?'　🔊 <b>'+q.say+'</b>':''),pick:n<0?null:q.o[n],ans:q.o[q.a],why:q.why});
   }
   $('#why').innerHTML=ap(q.why);
   $('#sc').textContent=score;
@@ -255,9 +257,13 @@ function finish(){
   $('#end').classList.add('on');
   $('#endsc').textContent=score;
   $('#endln').innerHTML='答對 <b>'+right+'</b> 題　最長連對 <b>'+best+'</b> 題';
+  $('#missBtn').style.display=MISSLOG.length?'':'none';
   sWow();
+  /* 結束的時候：答錯整理用獨立的一整頁，先看這個（使用者 2026-09-24 指定） */
+  missAll('暖身題　答錯整理');
 }
 $('#again').addEventListener('click',function(){$('#end').classList.remove('on');start()});
+$('#missBtn').addEventListener('click',function(){missAll('暖身題　答錯整理')});
 $('#go').addEventListener('click',start);
 `;
 
@@ -300,6 +306,7 @@ const body = `
   <div class="sc" id="endsc">0</div>
   <div class="ln" id="endln"></div>
   <div class="btns" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+   <button class="big" id="missBtn">📌 答錯整理</button>
    <button class="big" id="again">🔁 再玩一次</button>
    <a class="big go" href="unit1.html" style="text-decoration:none;display:inline-block">➡ 開始上 Unit 1</a>
   </div>
@@ -317,6 +324,7 @@ const body = `
 ${S.UTIL}
 ${S.TTS}
 ${S.SFX}
+${S.MISS}
 ${JS.replace('__Q__', () => JSON.stringify(BUILT))}
 ${S.RATEJS}
 </script>

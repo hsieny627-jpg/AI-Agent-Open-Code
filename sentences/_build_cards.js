@@ -82,23 +82,58 @@ const CSS = `
  font-size:clamp(11.5px,1.7vh,15px);color:#4D4D4D;letter-spacing:.08em}
 #tapHint.off{display:none}
 
-/* ── 真實情境（老師按「🎞 情境」才出現）：畫面一段一段跳出來 ── */
-.scene{display:none;flex-direction:column;align-items:center;gap:clamp(3px,.7vh,8px);
- width:100%;max-width:840px;margin-bottom:clamp(8px,1.6vh,18px);
- background:#080B0E;border:1px solid #1E2831;border-radius:16px;
- padding:clamp(8px,1.5vh,16px) clamp(10px,1.6vw,22px)}
+/* ── 真實情境：會動的小劇場（老師按「🎞 情境」才出現；使用者 2026-09-24 指定改版）──
+   背景亮 ➜ 兩個人走進來 ➜ 左邊的人說話 ➜ 右邊的人回答 ➜ 💡 什麼時候這樣說。
+   全部只動 transform／opacity，2.8 秒演完。 */
+.scene{display:none;flex-direction:column;align-items:stretch;gap:clamp(3px,.6vh,7px);
+ width:100%;max-width:960px;margin-bottom:clamp(8px,1.5vh,16px);
+ background:linear-gradient(180deg,#0B121A,#05080B);border:1px solid #1E2831;border-radius:16px;
+ padding:clamp(6px,1.1vh,12px) clamp(10px,1.6vw,20px);overflow:hidden}
 #card.sc .scene{display:flex}
-.scene .sat{font-size:clamp(13px,2vh,19px);color:#7E93A5;letter-spacing:.08em}
-.scene .spic{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
- gap:clamp(5px,.9vw,12px);line-height:1.2;text-align:center}
-.spic .sg{font-size:clamp(22px,4vh,42px);opacity:0;
- animation:sgIn .44s cubic-bezier(.2,.9,.3,1.3) forwards}
-.spic .sar{font-size:clamp(15px,2.4vh,25px);color:#44586A;opacity:0;
- animation:sgIn .44s cubic-bezier(.2,.9,.3,1.3) forwards}
-@keyframes sgIn{from{opacity:0;transform:translateX(-16px) scale(.72)}to{opacity:1;transform:none}}
-.scene .suse{font-size:clamp(14px,2.3vh,22px);color:var(--body);line-height:1.45;
- text-align:center;max-width:34ch}
-.reduce .spic .sg,.reduce .spic .sar{opacity:1;animation:none}
+.sth{position:relative;display:flex;align-items:center;gap:clamp(6px,1vw,12px);
+ min-height:clamp(70px,11.5vh,118px);padding:clamp(14px,2.2vh,22px) clamp(30px,3.6vw,44px) 0}
+.sbg{position:absolute;left:50%;top:55%;font-size:clamp(66px,12vh,124px);line-height:1;
+ opacity:.14;pointer-events:none;transform:translate(-50%,-50%);animation:sbgIn .7s ease both}
+@keyframes sbgIn{from{opacity:0;transform:translate(-50%,-50%) scale(.6)}to{opacity:.14;transform:translate(-50%,-50%)}}
+.sat{position:absolute;left:0;top:0;font-size:clamp(11px,1.7vh,16px);color:#7E93A5;letter-spacing:.08em;
+ white-space:nowrap}
+.sact{position:relative;display:flex;flex-direction:column;align-items:center;flex:0 0 auto;z-index:1}
+.sfig{font-size:clamp(36px,6.6vh,66px);line-height:1;display:inline-block}
+.snm{font-size:clamp(10px,1.5vh,14px);color:var(--dim);margin-top:2px;white-space:nowrap}
+.stag{position:absolute;top:-.3em;right:-.35em;font-size:clamp(18px,3.2vh,32px);
+ animation:tagIn .5s cubic-bezier(.2,1.5,.4,1) 1.3s both,bob 1.3s ease-in-out 1.8s infinite}
+@keyframes tagIn{from{opacity:0;transform:scale(.2) translateY(10px)}to{opacity:1;transform:none}}
+@keyframes bob{0%,100%{transform:none}50%{transform:translateY(-6px)}}
+/* 走進來：一跳一跳的 */
+.sact.L{animation:walkL .9s linear .15s both}
+.sact.R{animation:walkR .9s linear .5s both}
+@keyframes walkL{0%{opacity:0;transform:translateX(-26px)}15%{opacity:1}
+ 25%{transform:translateX(-19px) translateY(-9px)}50%{transform:translateX(-12px)}
+ 75%{transform:translateX(-5px) translateY(-9px)}100%{opacity:1;transform:none}}
+@keyframes walkR{0%{opacity:0;transform:translateX(26px)}15%{opacity:1}
+ 25%{transform:translateX(19px) translateY(-9px)}50%{transform:translateX(12px)}
+ 75%{transform:translateX(5px) translateY(-9px)}100%{opacity:1;transform:none}}
+/* 說話的那一個會點頭 */
+.sact.L .sfig{animation:talk .3s ease-in-out 1.15s 4 alternate}
+.sact.R.ans .sfig{animation:talk .3s ease-in-out 2.25s 4 alternate}
+@keyframes talk{from{transform:none}to{transform:translateY(-5px) rotate(-6deg)}}
+/* 對話框 */
+.sbub{position:relative;z-index:1;background:#F2F2F2;color:#111;font-weight:700;border-radius:16px;
+ padding:clamp(5px,1vh,10px) clamp(9px,1.3vw,16px);font-size:clamp(16px,2.8vh,28px);line-height:1.25;
+ max-width:42%;min-width:0;text-align:center;
+ animation:bubIn .5s cubic-bezier(.2,1.5,.4,1) 1.05s both;transition:transform .16s,box-shadow .16s}
+.sbub.R{background:#FFE7A0;animation-delay:2.15s}
+.sbub.L::before,.sbub.R::after{content:'';position:absolute;top:50%;margin-top:-8px;
+ border:8px solid transparent}
+.sbub.L::before{left:-14px;border-right:8px solid #F2F2F2}
+.sbub.R::after{right:-14px;border-left:8px solid #FFE7A0}
+@keyframes bubIn{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+.ssp{flex:1 1 auto}
+.scene .suse{font-size:clamp(15px,2.5vh,24px);color:var(--fg);line-height:1.4;text-align:center;
+ animation:suseIn .5s ease 2.55s both}
+@keyframes suseIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.reduce .sact,.reduce .sbub,.reduce .suse,.reduce .stag{opacity:1;animation:none}
+.reduce .sbg{opacity:.14;animation:none}
 
 /* ── 替換字：放在卡片最下面，不跟中間的英文句子搶位置（使用者指定）── */
 .subs{position:absolute;left:clamp(8px,1.6vw,20px);right:clamp(8px,1.6vw,20px);
@@ -173,7 +208,7 @@ const CSS = `
 
 /* ── 對話卡：中文放大、照英文的意思斷字（使用者指定）── */
 .pair{width:100%;display:flex;flex-direction:column;gap:clamp(8px,1.8vh,20px);
- align-items:stretch;max-width:840px}
+ align-items:stretch;max-width:1040px}
 .bub{display:flex;align-items:center;gap:clamp(9px,1.5vw,18px);border-radius:18px;
  padding:clamp(10px,1.9vh,20px) clamp(12px,1.8vw,24px);border:1px solid #242424;background:#0B0B0B;
  opacity:0;animation:rowIn .48s cubic-bezier(.2,.9,.3,1.25) forwards}
@@ -182,11 +217,12 @@ const CSS = `
 .bub.a{border-color:#2E4636;margin-left:clamp(14px,4vw,64px)}
 .bub .bi{font-size:clamp(28px,4.8vh,50px);flex:0 0 auto}
 .bub .bt{flex:1 1 auto;min-width:0}
-/* 每一個英文字的正下方，就是那一個字的中文（使用者 2026-09-21 指定） */
-.pair .tk .en{font-size:clamp(22px,4.8vh,46px)}
-.pair .tk .zh{font-size:clamp(15px,2.9vh,28px)}
-.pair .tk .ic{font-size:clamp(17px,3.2vh,32px)}
-.pair .full{margin-top:clamp(4px,.9vh,10px);font-size:clamp(17px,3vh,30px);
+/* 每一個英文字的正下方，就是那一個字的中文（使用者 2026-09-21 指定）
+   2026-09-24 使用者指定：一問一答的英文和中文都太小 ➜ 英文 46 → 70、中文 28 → 40、整句中文 30 → 40 */
+.pair .tk .en{font-size:clamp(30px,7.2vh,70px)}
+.pair .tk .zh{font-size:clamp(20px,4vh,40px)}
+.pair .tk .ic{font-size:clamp(18px,3.2vh,32px)}
+.pair .full{margin-top:clamp(4px,.9vh,10px);font-size:clamp(21px,4vh,40px);
  letter-spacing:.04em;text-align:center}
 
 /* ── 變身卡（Unit 2 的核心秒懂動畫）── */
@@ -254,10 +290,20 @@ const CSS = `
 .key.fly{position:fixed;z-index:60;pointer-events:none;font-weight:700;
  font-size:clamp(20px,4vh,40px);line-height:1.2}
 
-/* ── 變身卡：。變成 ？ 要看得見（使用者 2026-09-21 指定）── */
-.tk.d2q .en{display:inline-block;animation:d2q .8s cubic-bezier(.2,.9,.3,1.3)}
-@keyframes d2q{0%{transform:scale(.4) rotate(-25deg);color:var(--be)}
- 55%{transform:scale(1.7);color:var(--be)}100%{transform:none}}
+/* ── 變身卡：。變成 ？ 要看得見（使用者 2026-09-21 指定）──
+   2026-09-24 使用者指定：問號要更大、放大的時間更長，讓學生永遠記住「問句最後要加問號」
+   ➜ 往上飄 ＋ 放大 4.6 倍 ＋ 金色發光 ＋ 左右搖一搖，停在最大 1.8 秒，整段 2.8 秒 */
+.tk.d2q{position:relative;z-index:6}
+.tk.d2q .en{display:inline-block;color:var(--gold);
+ text-shadow:0 0 18px rgba(255,210,74,.95),0 0 44px rgba(255,210,74,.6);
+ animation:d2q 2.8s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes d2q{0%{transform:scale(.4) rotate(-25deg)}
+ 14%{transform:translateY(-1.1em) scale(4.6) rotate(10deg)}
+ 22%{transform:translateY(-1.1em) scale(4.6) rotate(-8deg)}
+ 30%{transform:translateY(-1.1em) scale(4.6) rotate(5deg)}
+ 38%{transform:translateY(-1.1em) scale(4.6) rotate(0)}
+ 78%{transform:translateY(-1.1em) scale(4.6)}
+ 100%{transform:none}}
 /* 句點往上飄、放大——「一定要加上句點」（使用者 2026-09-21 指定） */
 .tk.dotup .en{display:inline-block;color:var(--gold);
  text-shadow:0 0 22px rgba(255,210,74,.75);animation:dotup 1.5s cubic-bezier(.2,.9,.3,1.25)}
@@ -265,6 +311,42 @@ const CSS = `
  20%{transform:translateY(-1.25em) scale(3.4)}
  62%{transform:translateY(-1.25em) scale(3.4)}
  100%{transform:none}}
+
+/* ── 念到哪亮到哪（使用者 2026-09-24 指定）：正在唸的字稍微放大、稍微變亮 ── */
+.tk .en,.chip .cen,.frow .fa,.ms,.w{transition:transform .16s ease,filter .16s ease,text-shadow .16s ease}
+.w{display:inline-block}
+.tk.spk .en,.chip.spk .cen,.fa.spk,.w.spk,.ms.spk{transform:scale(1.14);filter:brightness(1.35);
+ text-shadow:0 0 14px rgba(255,255,255,.75),0 0 30px rgba(159,180,200,.55)}
+.ms.spk{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,210,74,.55),0 0 26px rgba(255,210,74,.35)}
+.tk.spk .zh{color:#DCEAF7}
+.sbub.spk{transform:scale(1.08);box-shadow:0 0 0 2px var(--gold),0 0 22px rgba(255,210,74,.4)}
+
+/* ── 📑 目次（使用者 2026-09-24 指定）：按了才蓋上來，平常完全不佔版面、不擋句子 ── */
+#toc{position:fixed;inset:0;z-index:65;background:rgba(0,0,0,.94);display:none;
+ flex-direction:column;align-items:center;
+ padding:calc(var(--safeT) + clamp(10px,2vh,20px)) clamp(12px,2.4vw,30px)
+         calc(var(--safeB) + clamp(10px,2vh,20px));overflow-y:auto}
+#toc.on{display:flex}
+#toc .th{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1100px;
+ margin-bottom:clamp(8px,1.6vh,16px)}
+#toc h2{margin:0;font-size:clamp(20px,3.6vh,34px)}
+#toc .tx{background:var(--btn);border:1px solid var(--line);border-radius:999px;
+ font-size:clamp(15px,2.4vh,22px);font-weight:700;padding:clamp(7px,1.2vh,12px) clamp(14px,2vw,24px)}
+#toc .tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(220px,28vw,300px),1fr));
+ gap:clamp(6px,1.1vh,12px);width:100%;max-width:1100px}
+#toc .ti{display:flex;align-items:center;gap:clamp(8px,1.2vw,14px);text-align:left;
+ background:#0C0C0C;border:1px solid #262626;border-radius:14px;
+ padding:clamp(8px,1.4vh,14px) clamp(10px,1.4vw,16px);min-height:clamp(52px,8vh,78px)}
+#toc .ti:active{transform:scale(.97)}
+#toc .ti.cur{border-color:var(--gold);background:#1D1908;box-shadow:0 0 0 2px rgba(255,210,74,.35)}
+#toc .tn{flex:0 0 auto;width:clamp(30px,4.6vh,44px);height:clamp(30px,4.6vh,44px);border-radius:50%;
+ background:#1E2A36;color:#fff;font-weight:700;font-size:clamp(14px,2.3vh,21px);
+ display:flex;align-items:center;justify-content:center}
+#toc .ti.cur .tn{background:var(--gold);color:#000}
+#toc .tb{display:flex;flex-direction:column;gap:3px;min-width:0}
+#toc .tk2{font-size:clamp(11px,1.6vh,14px);color:var(--acc);letter-spacing:.08em}
+#toc .tt{font-size:clamp(15px,2.5vh,23px);font-weight:700;color:var(--fg);line-height:1.25;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ── 複習題（使用者 2026-09-21 指定新增）：20 秒限時，愈快答對分數愈高 ── */
 #rv{position:fixed;inset:0;z-index:70;background:#000;display:none;
@@ -360,12 +442,46 @@ function tkHTML(t,idx,arr){
   var sy=t.say||t.en;
   if(/^[\\u2019']s$/.test(t.en)&&arr&&idx>0&&arr[idx-1])sy=arr[idx-1].en+"'s";
   var enh=(MOR&&t.ri)?morphEn(t.en,t.ri):enHTML(t.en,t.ri);
-  return '<span class="'+cls+'" data-i="'+idx+'" data-k="'+(t.k||'')+'" data-say="'+esc(sy)+'">'+
+  return '<span class="'+cls+'" data-i="'+idx+'" data-k="'+(t.k||'')+'" data-w="'+esc(t.en)+'" data-say="'+esc(sy)+'">'+
     '<span class="en">'+enh+'</span>'+
     '<span class="zh">'+(t.zh||'')+'</span>'+
     '<span class="ic">'+(t.ic||'')+'</span></span>';
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+/* ══ 念到哪亮到哪（使用者 2026-09-24 指定）══════════════════════════
+   唸整句的時候，正在唸的那一個字「稍微放大、稍微變亮」（.spk）。
+   's、?、. 這種 tight 的 token 跟前一個字算同一個字（Who’s 一起亮）。 */
+function hlOff(){$$('.spk').forEach(function(x){x.classList.remove('spk')})}
+window.HLCLR=hlOff;
+function spGroups(els){
+  var g=[];
+  els.forEach(function(t){
+    var w=t.getAttribute('data-w')||t.textContent||'';
+    var tight=t.classList.contains('tight')||/^([\u2019']s|[?.,!])$/.test(w);
+    if(tight&&g.length){var L=g[g.length-1];L.t+=w;L.els.push(t)}
+    else g.push({t:w,els:[t]});
+  });
+  return g.filter(function(x){return /[A-Za-z]/.test(x.t)});
+}
+/* 唸一串字（元素陣列），念到哪一個就亮哪一個 */
+function sayEls(els,opt){
+  opt=opt||{};var g=spGroups(els);
+  if(!g.length){if(opt.done)opt.done();return}
+  var txt=g.map(function(x){return x.t}).join(' ');
+  say(txt,null,{keep:opt.keep,done:opt.done,start:opt.start,hl:function(k){
+    g.forEach(function(x){x.els.forEach(function(e){e.classList.remove('spk')})});
+    if(k>=0&&g[k])g[k].els.forEach(function(e){e.classList.add('spk')});
+  }});
+}
+/* 唸一個東西（一個字、一個按鈕），唸的時候它整個亮 */
+function sayOne(el,txt,opt){
+  opt=opt||{};
+  say(txt,null,{keep:opt.keep,done:opt.done,hl:function(k){
+    if(k>=0){el.classList.add('spk');
+      if(el.classList.contains('tight')&&el.previousElementSibling)el.previousElementSibling.classList.add('spk')}
+    else{el.classList.remove('spk');if(el.previousElementSibling)el.previousElementSibling.classList.remove('spk')}
+  }});
+}
 function plain(tk){return tk.map(function(t){return t.tight?t.en:' '+t.en}).join('').trim()}
 function spk(s){return String(s).replace(/[\\u279C\\u2026]/g,' ')}
 /* 替換字用的 {w}（英文）／{z}（中文） */
@@ -381,22 +497,33 @@ function keyed(txt,k,cls){
   return enHTML(txt.slice(0,st))+'<span class="key '+(cls||'')+'">'+enHTML(k)+'</span>'+
     enHTML(txt.slice(ed));
 }
+/* 一個字一個 .w：念到哪一個字，那一個字就亮（使用者 2026-09-24 指定） */
+function wordsHTML(txt,k,cls){
+  return String(txt).split(' ').map(function(w){
+    return '<span class="w" data-w="'+esc(w)+'">'+keyed(w,k,cls)+'</span>'}).join(' ');
+}
 
 function lineHTML(tk,id){
   return '<div class="wrap"><div class="line"'+(id?' id="'+id+'"':'')+'>'+
     tk.map(tkHTML).join('')+'</div></div>';
 }
-/* 情境畫面用 ➜ 切段，一段一段跳出來 */
+/* 情境：兩個人演一次（使用者 2026-09-24 指定改版）。對話框點了就唸 */
 function sceneHTML(c){
-  if(!c.scene)return '';
-  var segs=String(c.scene.pic).split('\\u279C'), h='', d=0;
-  segs.forEach(function(s,n){
-    if(n){h+='<span class="sar" style="animation-delay:'+d.toFixed(2)+'s">\\u279C</span>';d+=0.14}
-    h+='<span class="sg" style="animation-delay:'+d.toFixed(2)+'s">'+ap(s.trim())+'</span>';d+=0.28;
-  });
-  return '<div class="scene"><div class="sat">'+c.scene.at+'</div>'+
-   '<div class="spic">'+h+'</div>'+
-   '<div class="suse">\\uD83D\\uDCA1 '+ap(c.scene.use)+'</div></div>';
+  var s=c.scene;if(!s)return '';
+  var bub=function(txt,side,zh,mate){
+    if(!txt)return '';
+    var at=zh?' data-zh="'+esc(txt)+'" data-en="'+esc(mate||'')+'"':' data-say="'+esc(txt)+'"';
+    return '<div class="sbub '+side+'"'+at+'>'+ap(txt)+'</div>';
+  };
+  var act=function(f,nm,tag,side){
+    return '<div class="sact '+side+'"><span class="sfig">'+f+'</span>'+
+      (tag?'<span class="stag">'+tag+'</span>':'')+(nm?'<span class="snm">'+nm+'</span>':'')+'</div>';
+  };
+  return '<div class="scene"><div class="sth">'+
+    '<span class="sbg">'+(s.bg||'')+'</span><span class="sat">'+s.at+'</span>'+
+    act(s.l,s.ln,'','L')+bub(s.b,'L',s.bzh,s.b2)+'<span class="ssp"></span>'+
+    bub(s.b2,'R')+act(s.r,s.rn,s.rt,'R'+(s.b2?' ans':''))+
+    '</div><div class="suse">\\uD83D\\uDCA1 '+ap(s.use)+'</div></div>';
 }
 function subsHTML(kind){
   var s=SUB[kind];if(!s)return '';
@@ -421,7 +548,9 @@ function draw(dir){
   step=0;clearAnim();
   if(c.type==='sent'){
     kind='句型';
-    h=lineHTML(c.tk)+fullHTML(c.zh,c.say||plain(c.tk));
+    /* 整句發音一律照畫面上的字：畫面是 Who’s he? 就唸 Who’s he?，不可以唸成 Who is he?
+       （使用者 2026-09-24 指定） */
+    h=lineHTML(c.tk)+fullHTML(c.zh,plain(c.tk));
     subs=c.slot?subsHTML(c.slot):'';
   } else if(c.type==='eq'){
     kind='縮寫';
@@ -457,7 +586,7 @@ function draw(dir){
     };
     var mate=function(col){for(var k=0;k<c.enRow.length;k++)if(c.enRow[k][2]===col)return sayOf(c.enRow,k);return ''};
     var chip=function(x,n,row,zh,rc){
-      return '<button class="chip '+x[2]+' '+rc+'" data-c="'+x[2]+'" data-n="'+n+'" data-say="'+esc(sayOf(row,n))+'"'+
+      return '<button class="chip '+x[2]+' '+rc+'" data-c="'+x[2]+'" data-n="'+n+'" data-w="'+esc(x[0])+'" data-say="'+esc(sayOf(row,n))+'"'+
       (zh?' data-zh="'+esc(x[0])+'" data-en="'+esc(mate(x[2]))+'"':'')+'>'+
       /* 英文一定要包在自己的一個 <span> 裡：.chip 是直向 flex，
          淺灰的 <b>W</b> 如果直接當 flex item，Who 的 ho 就會被推到下一行
@@ -477,7 +606,7 @@ function draw(dir){
     h='<div class="focus"><h2>'+ap(c.title)+'</h2>'+c.rows.map(function(r,n){
       return '<div class="frow'+(c.eqRow?' eqr':'')+'" style="animation-delay:'+(0.12+n*0.22).toFixed(2)+'s">'+
         '<span class="fi ic">'+r[2]+'</span>'+
-        '<span class="fa en" data-say="'+esc(spk(r[0]))+'">'+enHTML(r[0])+'</span>'+
+        '<span class="fa en" data-w="'+esc(spk(r[0]))+'" data-say="'+esc(spk(r[0]))+'">'+enHTML(r[0])+'</span>'+
         (c.eqRow?'<span class="fe">＝</span>':'')+
         '<span class="fb zh" data-zh="'+esc(r[1])+'" data-en="'+esc(spk(r[0]))+'">'+ap(r[1])+'</span>'+
         '</div>'}).join('')+'</div>'+noteHTML(c.note);
@@ -485,10 +614,10 @@ function draw(dir){
     kind='秒懂重點';
     h='<div class="echo">'+c.rows.map(function(r,n){
       return '<div class="erow" style="animation-delay:'+(0.12+n*0.24).toFixed(2)+'s">'+
-       '<span class="ebub q"><span class="et en" data-say="'+esc(r.q)+'">'+keyed(r.q,r.qk,r.cls)+'</span>'+
+       '<span class="ebub q"><span class="et en" data-say="'+esc(r.q)+'">'+wordsHTML(r.q,r.qk,r.cls)+'</span>'+
          '<span class="ez zh" data-zh="'+esc(r.qzh)+'" data-en="'+esc(r.q)+'">'+r.qzh+'</span></span>'+
        '<span class="earr">\\u279C</span>'+
-       '<span class="ebub a"><span class="et en" data-say="'+esc(r.a)+'">'+keyed(r.a,r.ak,r.cls)+'</span>'+
+       '<span class="ebub a"><span class="et en" data-say="'+esc(r.a)+'">'+wordsHTML(r.a,r.ak,r.cls)+'</span>'+
          '<span class="ez zh" data-zh="'+esc(r.azh)+'" data-en="'+esc(r.a)+'">'+r.azh+'</span></span>'+
        '</div>'}).join('')+'</div>';
   } else if(c.type==='pair'){
@@ -625,7 +754,7 @@ function playMorph(){
     if(eq)eq.classList.add('on');return;
   }
   var tks=$$('.tk',line);
-  say(two);                                             /* ① */
+  sayEls(tks);                                          /* ① Who is：念到哪個字，那個字就放大變亮 */
   morT.push(setTimeout(function(){                      /* ② */
     if(i!==myI)return;
     var lt=$('.lt',line);if(lt)lt.classList.add('go');
@@ -640,13 +769,15 @@ function playMorph(){
     line.innerHTML=c.b.map(tkHTML).join('');
     $$('.tk',line).forEach(function(t){t.classList.add('pop')});
     applyMode();fit();
-    say(one);
+    sayEls($$('.tk',line));                             /* Who’s 一起放大變亮 */
   },2900));
   morT.push(setTimeout(function(){                      /* ⑤ */
     if(i!==myI)return;
     if(eq)eq.classList.add('on');
     fit();
-    say(two,null,{keep:1});say(one,null,{keep:1});
+    var ms=$$('.ms',eq||card);
+    if(ms.length===2){sayOne(ms[0],two,{keep:1});sayOne(ms[1],one,{keep:1})}
+    else{say(two,null,{keep:1});say(one,null,{keep:1})}
   },4200));
 }
 
@@ -654,10 +785,10 @@ function playMorph(){
    使用者 2026-09-21 指定：Who is he? 和 Who’s he? 兩句都要完整聽到，
    而且要用會動的方式讓學生秒懂「這兩句是同一句」。 */
 /* 一句唸完（或最多等 max 毫秒，語速調到 0.5 也不會脫節）再做下一件事 */
-function after(txt,max,fn){
+function after(els,max,fn){
   var myI=i, done=0;
   var run=function(){if(done)return;done=1;if(i!==myI)return;fn()};
-  say(txt,null,{keep:1,done:run});
+  sayEls(els,{keep:1,done:run});
   morT.push(setTimeout(run,max));
 }
 function playEq(){
@@ -666,9 +797,9 @@ function playEq(){
   if(!ra||!rb)return;
   sayStop();
   ra.classList.add('lit');rb.classList.remove('lit');
-  after(plain(c.a),6500,function(){
+  after($$('.tk',ra),6500,function(){
     ra.classList.remove('lit');rb.classList.add('lit');
-    after(plain(c.b),6500,function(){
+    after($$('.tk',rb),6500,function(){
       ra.classList.add('lit');
       if(mk){mk.classList.remove('pulse');void mk.offsetWidth;mk.classList.add('pulse')}
       morT.push(setTimeout(function(){
@@ -732,12 +863,12 @@ function revealNext(auto){
     sPop();
     var w=t.getAttribute('data-say');
     /* 排隊唸，不砍掉前一個字——這樣就不會「某些字發音不見」（使用者 2026-09-21 回報） */
-    if(w&&/[A-Za-z]/.test(w))say(w,null,{keep:1});
+    if(w&&/[A-Za-z]/.test(w))sayOne(t,w,{keep:1});
     step++;
     if(step===tks.length){
       var f=$('.full',card);if(f)setTimeout(function(){f.classList.remove('hide')},260);
       var hint=$('#tapHint');if(hint)hint.classList.add('off');
-      if(!auto)say(sentOf(),null,{keep:1});
+      if(!auto)sayCard({keep:1});
     }
     fit();
     return true;
@@ -747,7 +878,7 @@ function revealNext(auto){
 /* 點什麼唸什麼：每一種卡片都要唸得出一句話（使用者 2026-09-21 回報「念一次沒聲音」） */
 function sentOf(){
   var c=CARDS[i];
-  if(c.type==='sent')return c.say||plain(c.tk);
+  if(c.type==='sent')return plain(c.tk);
   if(c.type==='swap'||c.type==='swapdemo')return plain(c[c._cur||'st']);
   if(c.type==='eq')return plain(c.b);
   if(c.type==='morph')return c.say||plain(c.b);
@@ -756,6 +887,19 @@ function sentOf(){
   if(c.type==='echo')return c.rows.map(function(r){return r.q+' '+r.a}).join(' ');
   if(c.type==='pair')return plain(c.qtk)+' '+plain(c.atk);
   return '';
+}
+/* 唸整張卡，念到哪個字那個字就亮（使用者 2026-09-24 指定） */
+function sayCard(opt){
+  opt=opt||{};
+  var c=CARDS[i], A=function(sel){return $$(sel,card)};
+  if(c.type==='sent'||c.type==='swap'||c.type==='swapdemo'){sayEls(A('#cardIn .line .tk'),opt);return}
+  if(c.type==='eq'){sayEls(A('.eqrow.b .tk'),opt);return}
+  if(c.type==='morph'){sayEls(A('#morLine .tk'),opt);return}
+  if(c.type==='order'){sayEls(A('.chip.ce'),opt);return}
+  if(c.type==='focus'){sayEls(A('.frow .fa'),opt);return}
+  if(c.type==='echo'){sayEls(A('.erow .w'),opt);return}
+  if(c.type==='pair'){sayEls(A('.bub.q .tk'),opt);sayEls(A('.bub.a .tk'),{keep:1});return}
+  var s=sentOf();if(s)say(s,null,opt);
 }
 /* 自動播：一個字唸完才出下一個字（不再用固定秒數硬推，整句也不會延遲） */
 function stopPlay(){
@@ -767,7 +911,7 @@ function autoStep(){
   var tks=$$('.tk',card);
   if(step>=tks.length){
     stopPlay();
-    say(sentOf());
+    sayCard();
     return;
   }
   var t=tks[step];t.classList.remove('hide');t.classList.add('pop');sPop();
@@ -780,13 +924,13 @@ function autoStep(){
   fit();
   var gap=SLOW?820:460;
   var go=function(){if(playing)playing=setTimeout(autoStep,gap)};
-  if(w&&/[A-Za-z]/.test(w))say(w,null,{keep:1,done:go});
+  if(w&&/[A-Za-z]/.test(w))sayOne(t,w,{keep:1,done:go});
   else setTimeout(go,SLOW?700:380);
 }
 function autoPlay(){
   if(playing){stopPlay();sayStop();return}
   var c=CARDS[i];
-  if(c.type!=='sent'&&c.type!=='swap'){say(sentOf());return}
+  if(c.type!=='sent'&&c.type!=='swap'){sayCard();return}
   startWord();
   playing=1;$('#play').classList.add('on');
   autoStep();
@@ -834,7 +978,7 @@ function setSlot(w,z,ic){
       var hint=$('#tapHint');if(hint)hint.classList.add('off');
     }
   }
-  say(sentOf());
+  sayCard();
 }
 
 /* ---------- 變身術：FLIP 動畫，主詞和 be 動詞真的滑過去，句號變問號 ---------- */
@@ -881,7 +1025,7 @@ function doSwap(auto){
           var le=$('.en',last), lc=(le?le.textContent:'').trim();
           var anim=(lc==='.')?'dotup':'d2q';
           last.classList.add(anim);
-          setTimeout(function(){last.classList.remove(anim)},anim==='dotup'?1520:820);
+          setTimeout(function(){last.classList.remove(anim)},anim==='dotup'?1520:2820);
         }
         setTimeout(function(){now.forEach(function(t){t.classList.remove('flash')})},520);
       },640);
@@ -889,14 +1033,47 @@ function doSwap(auto){
   }
   sPop();
   step=now.length;
-  setTimeout(function(){say(plain(c[to]))},document.body.classList.contains('reduce')?60:700);
+  setTimeout(function(){if(CARDS[i]===c)sayEls($$('#cardIn .line .tk'))},document.body.classList.contains('reduce')?60:700);
   markSubs();
   /* 秒懂重點卡：自己演三次，演完留著按鈕給老師重播 */
   if(auto&&c.type==='swapdemo'){
     demoN++;
-    if(demoN<3)demoT=setTimeout(function(){doSwap(1)},3400);
+    if(demoN<3)demoT=setTimeout(function(){doSwap(1)},4200);
   }
 }
+
+/* ---------- 📑 目次：一張卡一格，點了直接跳過去（使用者 2026-09-24 指定）---------- */
+var KIND={sent:'💬 句型',eq:'＝ 縮寫',morph:'⚡ 縮寫變身',order:'🔁 中英語序',focus:'💡 秒懂重點',
+ echo:'💡 秒懂重點',pair:'🗣 一問一答',swap:'🔄 變身術',swapdemo:'🔄 秒懂重點'};
+function tocLabel(c){
+  if(c.type==='sent')return plain(c.tk);
+  if(c.type==='eq')return plain(c.a)+' ＝ '+plain(c.b);
+  if(c.type==='morph')return plain(c.a)+' ➜ '+plain(c.b);
+  if(c.type==='order')return c.zhRow.map(function(x){return x[0]}).join('')+' ➜ '+(c.say||'');
+  if(c.type==='focus')return c.title;
+  if(c.type==='echo')return c.rows.map(function(r){return r.q}).join('　');
+  if(c.type==='pair')return plain(c.qtk)+'　'+plain(c.atk);
+  if(c.type==='swap')return plain(c.st)+' ➜ '+plain(c.qu);
+  if(c.type==='swapdemo')return plain(c.st)+' ⇄ '+plain(c.qu);
+  return '';
+}
+function tocOpen(){
+  stopPlay();sayStop();
+  $('#tocG').innerHTML=CARDS.map(function(c,n){
+    return '<button class="ti'+(n===i?' cur':'')+'" data-n="'+n+'"><span class="tn">'+(n+1)+'</span>'+
+      '<span class="tb"><span class="tk2">'+(KIND[c.type]||'')+'</span>'+
+      '<span class="tt">'+ap(tocLabel(c))+'</span></span></button>'}).join('');
+  $('#toc').classList.add('on');
+  var cur=$('#toc .ti.cur');if(cur&&cur.scrollIntoView)try{cur.scrollIntoView({block:'center'})}catch(e){}
+}
+function tocClose(){$('#toc').classList.remove('on')}
+$('#tocBtn').addEventListener('click',tocOpen);
+$('#toc').addEventListener('click',function(e){
+  var t=e.target, b=t.closest?t.closest('.ti'):null;
+  if(b){var n=parseInt(b.getAttribute('data-n'),10);tocClose();
+    if(n!==i){var d=n>i?1:-1;stopPlay();sayStop();i=n;draw(d)}return}
+  if((t.closest&&t.closest('.tx'))||t===$('#toc'))tocClose();
+});
 
 /* ---------- 換卡 ---------- */
 function go(d){
@@ -908,6 +1085,7 @@ function go(d){
 $('#prev').addEventListener('click',function(){go(-1)});
 $('#next').addEventListener('click',function(){go(1)});
 document.addEventListener('keydown',function(e){
+  if($('#toc').classList.contains('on')){if(e.key==='Escape')tocClose();return}
   if($('#rv').classList.contains('on'))return;
   if(e.key==='ArrowLeft')go(-1);
   else if(e.key==='ArrowRight')go(1);
@@ -920,7 +1098,7 @@ function cardTap(){
   if(reveal==='word'&&(c.type==='sent'||c.type==='swap')&&step<$$('.tk',card).length){
     revealNext(false);return;
   }
-  var s=sentOf();if(s)say(s);
+  sayCard();
 }
 card.addEventListener('click',function(e){
   var t=e.target;
@@ -936,7 +1114,7 @@ card.addEventListener('click',function(e){
     revealNext(false);return}
   var chip=t.closest?t.closest('.chip'):null;
   if(chip){var w=chip.getAttribute('data-say');
-    if(/[A-Za-z]/.test(w))say(w);
+    if(/[A-Za-z]/.test(w))sayOne(chip,w);
     else if(chip.getAttribute('data-en'))sayPair(chip);
     else sayZh(w);
     chip.style.setProperty('--dx','-40px');chip.classList.add('fly');
@@ -947,12 +1125,12 @@ card.addEventListener('click',function(e){
   if(tk&&!tk.classList.contains('hide')){
     var w2=tk.getAttribute('data-say');
     if(!show.en){
-      if(zhSay==='en'&&/[A-Za-z]/.test(w2))say(w2);
+      if(zhSay==='en'&&/[A-Za-z]/.test(w2))sayOne(tk,w2);
       else sayZh($('.zh',tk)?$('.zh',tk).textContent:w2)}
-    else if(/[A-Za-z]/.test(w2))say(w2);
+    else if(/[A-Za-z]/.test(w2))sayOne(tk,w2);
     return}
   var sy=t.closest?t.closest('[data-say]'):null;
-  if(sy){say(sy.getAttribute('data-say'));return}
+  if(sy){sayOne(sy,sy.getAttribute('data-say'));return}
   cardTap();
 });
 
@@ -982,8 +1160,8 @@ $$('#revGrp button').forEach(function(b){
 $('#scBtn').addEventListener('click',function(){
   scenes=!scenes;$('#scBtn').classList.toggle('on',scenes);
   applyMode();fit();
-  if(scenes){ /* 打開情境：畫面重播一次 */
-    var p=$('.spic',card);
+  if(scenes){ /* 打開情境：小劇場重演一次 */
+    var p=$('.scene',card);
     if(p){var h=p.innerHTML;p.innerHTML='';void p.offsetWidth;p.innerHTML=h}
   }
 });
@@ -993,7 +1171,7 @@ $('#zhBtn').addEventListener('click',function(){
   $('#zhBtn').innerHTML=zhSay==='en'?'🔤 點中文唸 英文':'🔤 點中文唸 中文';
 });
 $('#play').addEventListener('click',autoPlay);
-$('#sayBtn').addEventListener('click',function(){say(sentOf())});
+$('#sayBtn').addEventListener('click',function(){sayCard()});
 window.addEventListener('resize',function(){fixBar();padBottom();fit()});
 /* 字體載到、按鈕列換行以後，版面要重新量一次（不然替換字會被按鈕列蓋住） */
 try{document.fonts.ready.then(function(){fixBar();padBottom();fit()})}catch(e){}
@@ -1021,7 +1199,7 @@ function rvHome(){
 }
 function rvStop(){if(rvTick){clearInterval(rvTick);rvTick=null}}
 function rvStart(gi){
-  rvGi=gi;rvScore=0;rvOK=0;rvN=0;rvMiss=[];
+  rvGi=gi;rvScore=0;rvOK=0;rvN=0;rvMiss=[];MISSLOG=[];
   rvQ=shuf(RVG[gi].q.slice());
   rvAsk();
 }
@@ -1038,7 +1216,7 @@ function rvAsk(){
     '<span style="text-align:right"><span class="k">分數</span><br><span class="v" id="rvsc">'+rvScore+'</span></span></div>'+
    '<div class="rvq">'+ap(q.q)+'</div>'+
    '<div class="rvo">'+o.map(function(t,n){
-     return '<button data-ok="'+(t.n===0)+'"><span class="sh">'+SHP[n]+'</span><span>'+ap(t.x)+'</span></button>'
+     return '<button data-ok="'+(t.n===0)+'" data-t="'+esc(t.x)+'"><span class="sh">'+SHP[n]+'</span><span>'+ap(t.x)+'</span></button>'
    }).join('')+'</div>'+
    '<div class="rvfb" id="rvfb"></div>';
   $('#rvfg').setAttribute('stroke-dasharray',RVR);
@@ -1079,8 +1257,13 @@ function rvDone(btn,ok,timeout){
     sNo();
     if(rvMiss.indexOf(q.h)<0)rvMiss.push(q.h);
     $('#rvfb').innerHTML='<div>'+(timeout?'⏰ 時間到！':'❌ 再想一下')+'</div><div>'+ap(q.h)+'</div>';
+    /* 答錯：蓋一整頁，倒數 3 秒才消失，消失以後才出下一題（使用者 2026-09-24 指定） */
+    var myG=rvGi;
+    missShow({q:q.q,pick:btn?btn.getAttribute('data-t'):null,ans:q.o[0],why:q.h},
+      function(){if(rvGi===myG&&$('#rv').classList.contains('on')){rvN++;rvAsk()}});
+    return;
   }
-  setTimeout(function(){rvN++;rvAsk()},ok?1100:2200);
+  setTimeout(function(){rvN++;rvAsk()},1100);
 }
 function rvEnd(){
   rvStop();
@@ -1090,18 +1273,21 @@ function rvEnd(){
   $('#rvbox').innerHTML='<h2>'+RVG[rvGi].t+' 完成！'+rec+'</h2>'+
    '<div class="rvsc">'+rvScore+'</div>'+
    '<p class="lead">答對 '+rvOK+' ／ '+rvQ.length+' 題　最佳紀錄 '+b+'</p>'+
-   (rvMiss.length?'<div class="rvfb">📌 要記住的：<br>'+rvMiss.map(function(h){return '・'+ap(h)}).join('<br>')+'</div>'
-                 :'<div class="rvfb">全對！一題都沒錯 🎉</div>')+
-   '<div class="rvbtns"><button class="go" id="rvAgain">🔁 再玩一次</button>'+
+   (MISSLOG.length?'':'<div class="rvfb">全對！一題都沒錯 🎉</div>')+
+   '<div class="rvbtns">'+(MISSLOG.length?'<button id="rvMissBtn">📌 答錯整理</button>':'')+
+   '<button class="go" id="rvAgain">🔁 再玩一次</button>'+
    '<button id="rvBack">📚 換一組</button><button id="rvClose">⬅ 回卡片</button></div>';
+  /* 結束：答錯整理用獨立的一整頁先蓋上來（使用者 2026-09-24 指定） */
+  missAll(RVG[rvGi].t+'　答錯整理');
 }
 $('#rv').addEventListener('click',function(e){
   var t=e.target;
   var g=t.closest?t.closest('.rvg'):null;
   if(g){rvStart(parseInt(g.getAttribute('data-g'),10));return}
   if(t.closest&&t.closest('#rvAgain')){rvStart(rvGi);return}
-  if(t.closest&&t.closest('#rvBack')){rvHome();return}
-  if(t.closest&&t.closest('#rvClose')){rvStop();sayStop();$('#rv').classList.remove('on');return}
+  if(t.closest&&t.closest('#rvMissBtn')){missAll(RVG[rvGi].t+'　答錯整理');return}
+  if(t.closest&&t.closest('#rvBack')){missHide(false);rvHome();return}
+  if(t.closest&&t.closest('#rvClose')){rvStop();sayStop();missHide(false);$('#rv').classList.remove('on');return}
 });
 $('#rvBtn').addEventListener('click',function(){
   stopPlay();sayStop();rvHome();
@@ -1118,8 +1304,11 @@ function page(unit, cards, title, other, otherName) {
 <main id="stage"><section id="card"></section></main>
 
 <div id="rv"><div class="rvbox" id="rvbox"></div></div>
+<div id="toc" aria-label="目次"><div class="th"><h2>📑 目次　點一張，直接跳過去</h2>
+ <button class="tx">✕ 關閉</button></div><div class="tg" id="tocG"></div></div>
 
 <nav id="bar">
+ <button id="tocBtn">📑 目次</button>
  <span class="grp" id="ynGrp">
   <button id="bEn" class="on">英文 Y</button>
   <button id="bZh" class="on">中文 Y</button>
@@ -1144,6 +1333,7 @@ function page(unit, cards, title, other, otherName) {
 ${S.UTIL}
 ${S.TTS}
 ${S.SFX}
+${S.MISS}
 ${JS.replace('__CARDS__', () => JSON.stringify(cards))
     .replace('__UNIT__', () => JSON.stringify(unit))
     .replace('__SUB__', () => JSON.stringify(D.SUB))

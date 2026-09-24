@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>離線版｜沒有網路也能上課</title>
+<!-- 使用者 2026-09-24 指定：離線、沒有網路也能在老師的電腦流暢操作，用投影上課。
+     整個網站本來就不吃任何外部檔案（字體在 words/fonts/），所以「下載一次 ZIP、解壓縮、雙擊 index.html」就能離線用。 -->
+<style>
+@font-face{font-family:Andika;font-weight:400;src:url(words/fonts/andika-400.woff2) format("woff2")}
+@font-face{font-family:Andika;font-weight:700;src:url(words/fonts/andika-700.woff2) format("woff2")}
+*{box-sizing:border-box}
+html,body{margin:0;background:#000;color:#F2F2F2;font-family:Andika,-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif}
+main{max-width:1000px;margin:0 auto;padding:clamp(16px,3vh,36px) 16px 40px}
+h1{margin:0 0 6px;font-size:clamp(28px,5vh,46px);text-align:center}
+.lead{margin:0 0 clamp(14px,3vh,28px);text-align:center;color:#9FB4C8;font-size:clamp(17px,2.6vh,24px)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:760px){.steps{grid-template-columns:1fr 1fr}}
+.st{background:#0C0C0C;border:1px solid #262626;border-radius:18px;padding:16px 14px;text-align:center;
+ display:flex;flex-direction:column;gap:8px;align-items:center;animation:up .5s ease both}
+.st:nth-child(2){animation-delay:.2s}.st:nth-child(3){animation-delay:.4s}.st:nth-child(4){animation-delay:.6s}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.st .n{width:44px;height:44px;border-radius:50%;background:#FFD24A;color:#000;font-weight:700;font-size:24px;
+ display:flex;align-items:center;justify-content:center}
+.st .i{font-size:44px;line-height:1}
+.st b{font-size:clamp(19px,2.8vh,24px)}
+.st span{color:#D8D3C5;font-size:clamp(15px,2.1vh,18px);line-height:1.5}
+.dl{display:block;margin:clamp(16px,3vh,28px) auto;max-width:560px;text-align:center;background:#10301F;
+ border:2px solid #39D98A;border-radius:999px;color:#fff;text-decoration:none;font-weight:700;
+ font-size:clamp(20px,3vh,28px);padding:16px 24px}
+.box{background:#0B0B0B;border:1px solid #232323;border-left:8px solid #9FB4C8;border-radius:14px;
+ padding:14px 18px;margin:12px 0;font-size:clamp(16px,2.2vh,20px);line-height:1.6}
+.box.w{border-left-color:#F0B45C}
+.box b{color:#FFD24A}
+.home{display:inline-block;margin-top:14px;color:#9FB4C8;font-size:18px}
+</style>
+</head>
+<body>
+<main>
+<h1>💾 離線版：沒有網路也能上課</h1>
+<p class="lead">有網路的時候下載一次，之後教室沒有網路也能投影上課</p>
+
+<div class="steps">
+ <div class="st"><span class="n">1</span><span class="i">⬇️</span><b>下載 ZIP</b><span>有網路的時候，按下面綠色按鈕</span></div>
+ <div class="st"><span class="n">2</span><span class="i">📂</span><b>解壓縮</b><span>ZIP 按右鍵 ➜「全部解壓縮」到桌面</span></div>
+ <div class="st"><span class="n">3</span><span class="i">🖱️</span><b>雙擊 index.html</b><span>用 Chrome 或 Edge 打開，就是首頁</span></div>
+ <div class="st"><span class="n">4</span><span class="i">📽️</span><b>按 F11</b><span>全螢幕投影；再按一次 F11 離開</span></div>
+</div>
+
+<a class="dl" href="https://github.com/hsieny627-jpg/AI-Agent-Open-Code/archive/refs/heads/main.zip">⬇️ 下載整個網站（ZIP，約 80 MB）</a>
+
+<div class="box">🔊 <b>發音用電腦內建的英文語音</b>，不用網路。沒有聲音的話：Windows「設定 ➜ 時間與語言 ➜ 語音」加一個<b>英文（美國）</b>語音。</div>
+<div class="box">🌍 德文、荷蘭文、瑞典文、法文、西班牙文要唸得標準，電腦也要有那一國的語音；沒有的話會用英文語音唸。</div>
+<div class="box w">🔁 網站<b>改版以後要重新下載一次</b>，舊的資料夾直接刪掉換新的。</div>
+<div class="box w">📌 分數、最佳紀錄存在<b>這台電腦的瀏覽器</b>裡，換電腦不會跟著走。</div>
+
+<a class="home" href="index.html">🏠 回到首頁</a>
+</main>
+</body>
+</html>

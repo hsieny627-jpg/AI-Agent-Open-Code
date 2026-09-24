@@ -260,6 +260,7 @@ var asked=0,speedSum=0,shield=0,timeAdd=0,opened=[],lastGain=0;
 var mult=1,multLeft=0,fast=0,wrongList=[],busy=false,memPairs=[],memOpen=[],memLeft=0;
 var bossHP=100,bossMax=100,bossShield=0;
 var pool=[];
+var PICK=null;   /* 學生按了什麼（答錯的獨立頁要用） */
 
 var R=2*Math.PI*46;$('#gfg').setAttribute('stroke-dasharray',R);
 
@@ -320,7 +321,8 @@ function popScore(v){
 
 /* ── 大廳 ── */
 function hub(){
-  stop();
+  stop();missHide(false);
+  var ma=document.getElementById('missAll');if(ma)ma.classList.remove('on');
   $('#hub').style.display='';$('#ghud').classList.remove('on');
   $('#arena').classList.remove('on');$('#gend').classList.remove('on');
   $('#stage').classList.remove('lock');
@@ -345,7 +347,7 @@ function begin(id){
   asked=0;speedSum=0;shield=0;timeAdd=0;opened=[];lastGain=0;pool=shuf((SURP[id]||[]).slice());
   left=QT;qt=QT;nextEvt=2+Math.floor(Math.random()*3);
   bossHP=bossMax=100;bossShield=0;
-  memLeft=0;memOpen=[];memPairs=[];
+  memLeft=0;memOpen=[];memPairs=[];MISSLOG=[];missHide(false);
   queue=shuf(BANK[id].slice());
   $('#hub').style.display='none';$('#ghud').classList.add('on');
   $('#arena').classList.add('on');$('#gend').classList.remove('on');
@@ -387,7 +389,7 @@ function paint(){
 
 /* ── 出下一題 ── */
 function next(){
-  busy=false;
+  busy=false;PICK=null;
   var fb=$('#gfb');if(fb)fb.innerHTML='';   /* 第一題時 #gfb 還沒被畫出來 */
   if(asked>=ROUNDQ){over();return}
   if(!queue.length)queue=shuf(BANK[g].slice());
@@ -405,6 +407,30 @@ function tags(extra){
      (nextEvt<=1?'🎁 這一題答對就翻驚喜卡！':'🎁 再答對 '+nextEvt+' 題翻驚喜卡')+'</span>';
   if(extra)h+='<span class="tg">'+extra+'</span>';
   return '<div class="tagline">'+h+'</div>';
+}
+
+/* ── 答錯的獨立頁要的三樣東西：題目、你選的、正確答案（每一種遊戲長得不一樣）── */
+function cap1(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+function fillBl(txt,w){ /* 把 ___ 填進去；句子開頭的要大寫 */
+  return String(txt).replace(/___/g,function(m,off,all){
+    var pre=all.slice(0,off);return (/^\s*$/.test(pre)||/[.?!]\s*$/.test(pre))?cap1(w):w})}
+function mInfo(){
+  var c=cur||{};
+  if(g==='g1'||g==='g10')return {q:c.q,pick:PICK,ans:c.o[0]};
+  if(g==='g2')return {q:c.txt+'　'+c.zh,pick:PICK==null?null:fillBl(c.txt,PICK),ans:fillBl(c.txt,c.a)};
+  if(g==='g3'){var full=c.s.join(' ').replace(/ ([?.,])/g,'$1').replace(/ ([\u2019']s)/g,'$1');
+    return {q:c.zh,pick:PICK,ans:full}}
+  if(g==='g4')return {q:c.f+'　'+c.d,pick:PICK,ans:c.o[0]};
+  if(g==='g5')return {q:'🔊 聽到的句子是？',pick:PICK,ans:c.o[0]};
+  if(g==='g7'){var bad=c.w.join(' ').replace(/ ([?.,])/g,'$1').replace(/ ([\u2019']s)/g,'$1');
+    if(c.b<0)return {q:c.zh+'　'+bad,pick:PICK==null?null:('「'+PICK+'」是錯的'),ans:'這一句完全正確 ✅'};
+    var ok=c.w.slice();ok[c.b]=c.fix;
+    return {q:c.zh+'　'+bad,pick:PICK==null?null:bad,
+      ans:ok.join(' ').replace(/ ([?.,])/g,'$1').replace(/ ([\u2019']s)/g,'$1')}}
+  if(g==='g8')return {q:c.zh,pick:PICK==null?null:(c.b+' '+PICK+' '+c.a).replace(/ ([?.,])/g,'$1'),
+    ans:(c.b+' '+c.o[0]+' '+c.a).replace(/ ([?.,])/g,'$1')};
+  if(g==='g9')return {q:c[0],pick:PICK,ans:c[1]==='q'?'❓ 問句':'🙋 直述句'};
+  return {q:'',pick:PICK,ans:''};
 }
 
 /* ── 判定 ── */
@@ -456,13 +482,27 @@ function judge(ok,hint,after,timeout){
       '<div class="sphint">這一題等一下會再出現一次，答對就拿得到分數</div>';
     queue.splice(Math.min(queue.length,2+Math.floor(Math.random()*3)),0,cur); /* 練到會為止 */
     if(hint&&wrongList.indexOf(hint)<0)wrongList.push(hint);
+    /* 答錯：先讓學生看一眼紅綠（0.5 秒），再蓋一整頁、倒數 3 秒，
+       關掉以後才出下一題（使用者 2026-09-24 指定） */
+    paint();
+    var mi=mInfo();mi.why=hint||'';
+    if(timeout)mi.pick=null;
+    setTimeout(function(){
+      if(!$('#arena').classList.contains('on'))return;
+      missShow(mi,function(){
+        if(!$('#arena').classList.contains('on'))return;
+        if(asked>=ROUNDQ){over();return}
+        (after||next)();
+      });
+    },500);
+    return;
   }
   paint();
   setTimeout(function(){
     if(!$('#arena').classList.contains('on'))return;
     if(asked>=ROUNDQ){over();return}
     (after||next)();
-  },evtNow?3500:(ok?1200:2200));
+  },evtNow?3500:1200);
 }
 
 /* ── 1 ⚡ 閃電四選一 ── */
@@ -470,7 +510,7 @@ function rMcq(){
   var o=shuf(cur.o.map(function(x,n){return{x:x,n:n}}));
   $('#arena').innerHTML=tags('⚡ 閃電')+'<h2 class="qh">'+ap(cur.q)+'</h2>'+
     '<div class="opts">'+o.map(function(t,n){
-      return '<button class="o s'+n+'" data-ok="'+(t.n===0)+'"><span class="sh">'+SHAPE[n]+
+      return '<button class="o s'+n+'" data-ok="'+(t.n===0)+'" data-t="'+String(t.x).replace(/"/g,'&quot;')+'"><span class="sh">'+SHAPE[n]+
         '</span><span>'+ap(t.x)+'</span></button>'}).join('')+'</div>'+fbBox();
   bindO();
 }
@@ -486,6 +526,7 @@ function rTwo(){
     if(busy)return;var ok=b.getAttribute('data-v')===cur.a;
     b.classList.add(ok?'ok':'bad');
     if(!ok)$$('.dbtn').forEach(function(x){if(x.getAttribute('data-v')===cur.a)x.classList.add('ok')});
+    PICK=b.getAttribute('data-v');
     say(cur.a==='he'?'He':'She');judge(ok,cur.h);
   })});
 }
@@ -509,6 +550,9 @@ function rOrder(){
         judge(true,'');
       }
     }else{b.classList.add('bad');setTimeout(function(){b.classList.remove('bad')},420);
+      /* 你排出來的：前面排對的字 ＋ 你按錯的那一個 */
+      PICK=got.map(function(k){return need[k]}).concat([need[n]]).join(' ')
+        .replace(/ ([?.,])/g,'$1').replace(/ ([\u2019']s)/g,'$1');
       judge(false,cur.h);}
   });
 }
@@ -519,7 +563,7 @@ function rTrans(){
     '<div class="qbig" data-say="'+cur.f.replace(/"/g,'&quot;')+'">'+ap(cur.f)+'</div>'+
     '<div class="qs">'+cur.d+'</div>'+
     '<div class="opts">'+o.map(function(t,n){
-      return '<button class="o s'+n+'" data-ok="'+(t.n===0)+'"><span class="sh">'+SHAPE[n]+
+      return '<button class="o s'+n+'" data-ok="'+(t.n===0)+'" data-t="'+String(t.x).replace(/"/g,'&quot;')+'"><span class="sh">'+SHAPE[n]+
         '</span><span>'+ap(t.x)+'</span></button>'}).join('')+'</div>'+fbBox();
   say(cur.f);bindO();
 }
@@ -530,7 +574,7 @@ function rHear(){
     '<h2 class="qh">聽一聽，射下正確的那一張</h2>'+
     '<button class="big" id="rep">🔊 再聽一次</button>'+
     '<div class="opts">'+o.map(function(t,n){
-      return '<button class="o s'+n+'" data-ok="'+(t.n===0)+'"><span class="sh">'+SHAPE[n]+
+      return '<button class="o s'+n+'" data-ok="'+(t.n===0)+'" data-t="'+String(t.x).replace(/"/g,'&quot;')+'"><span class="sh">'+SHAPE[n]+
         '</span><span>'+ap(t.x)+'</span></button>'}).join('')+'</div>'+fbBox();
   $('#rep').addEventListener('click',function(){say(cur.s)});
   setTimeout(function(){say(cur.s)},260);
@@ -591,6 +635,7 @@ function rSpot(){
     var n=parseInt(b.getAttribute('data-n'),10);
     var ok=(n===cur.b);
     b.classList.add(ok?'ok':'bad');
+    PICK=cur.w[n];
     judge(ok,cur.b<0?'這一句<b>完全正確</b>，要按「✅ 這句沒錯」。':
       ('錯的是 <b>'+cur.w[cur.b]+'</b> → 要改成 <b>'+cur.fix+'</b>。'+cur.h));
   });
@@ -598,6 +643,7 @@ function rSpot(){
     if(busy)return;
     var ok=(cur.b<0);
     this.classList.add(ok?'ok':'bad');
+    PICK='';
     judge(ok,ok?'':('這一句有錯：<b>'+cur.w[cur.b]+'</b> 要改成 <b>'+cur.fix+'</b>。'+cur.h));
   });
 }
@@ -608,7 +654,7 @@ function rFill(){
     '<div class="qbig">'+ap(cur.b)+' <span style="color:var(--be)">＿＿</span> '+ap(cur.a)+'</div>'+
     '<div class="qzh">'+cur.zh+'</div>'+
     '<div class="opts">'+o.map(function(t,n){
-      return '<button class="o s'+n+'" data-ok="'+(t.n===0)+'"><span class="sh">'+SHAPE[n]+
+      return '<button class="o s'+n+'" data-ok="'+(t.n===0)+'" data-t="'+String(t.x).replace(/"/g,'&quot;')+'"><span class="sh">'+SHAPE[n]+
         '</span><span>'+ap(t.x)+'</span></button>'}).join('')+'</div>'+fbBox();
   bindO();
 }
@@ -624,6 +670,7 @@ function rSort(){
   $$('.dbtn').forEach(function(b){b.addEventListener('click',function(){
     if(busy)return;var ok=b.getAttribute('data-v')===cur[1];
     b.classList.add(ok?'ok':'bad');
+    PICK=b.getAttribute('data-v')==='q'?'❓ 問句':'🙋 直述句';
     judge(ok,cur[1]==='q'?'句尾是 <b>?</b>，而且 <b>Is／Who</b> 放在最前面 → <b>問句</b>。':
       '句尾是 <b>.</b>，主詞放最前面 → <b>直述句</b>。');
   })});
@@ -638,14 +685,14 @@ function rBoss(){
     '<div class="qs">魔王血量 '+bossHP+'%</div></div>'+
     '<h2 class="qh">'+ap(cur.q)+'</h2>'+
     '<div class="opts">'+o.map(function(t,n){
-      return '<button class="o s'+n+'" data-ok="'+(t.n===0)+'"><span class="sh">'+SHAPE[n]+
+      return '<button class="o s'+n+'" data-ok="'+(t.n===0)+'" data-t="'+String(t.x).replace(/"/g,'&quot;')+'"><span class="sh">'+SHAPE[n]+
         '</span><span>'+ap(t.x)+'</span></button>'}).join('')+'</div>'+fbBox();
   $('.opts').addEventListener('click',bossTap);
 }
 function bossTap(e){
   var b=e.target.closest?e.target.closest('.o'):null;if(!b||busy)return;
   var ok=b.getAttribute('data-ok')==='true';
-  markO(b,ok);
+  markO(b,ok);PICK=b.getAttribute('data-t');
   if(ok){
     var dmg=bossShield?5:10;bossShield=0;   /* 打十下倒，一場 12 題打得完 */
     bossHP=Math.max(0,bossHP-dmg);
@@ -682,7 +729,7 @@ function bindO(){
   $$('.o').forEach(function(b){b.addEventListener('click',function(){
     if(busy)return;
     var ok=b.getAttribute('data-ok')==='true';
-    markO(b,ok);
+    markO(b,ok);PICK=b.getAttribute('data-t');
     judge(ok,cur.h);
   })});
 }
@@ -714,9 +761,13 @@ function endBody(){
      ('<div style="color:#5C5C5C;letter-spacing:.1em">📌 這一場要記住的：</div>'+
       wrongList.map(function(h){return '<div>・'+ap(h)+'</div>'}).join('')):
      '<div>全對！一題都沒錯 🎉</div>');
+  var mb=$('#missBtn');if(mb)mb.style.display=MISSLOG.length?'':'none';
   sWow();
+  /* 遊戲結束：答錯整理用獨立的一整頁先蓋上來——這是對學生最有幫助的部分（使用者 2026-09-24 指定） */
+  missAll('這一場　答錯整理');
 }
 $('#retry').addEventListener('click',function(){begin(g)});
+$('#missBtn').addEventListener('click',function(){missAll('這一場　答錯整理')});
 $('#backhub').addEventListener('click',hub);
 $('#quit').addEventListener('click',function(){
   if($('#arena').classList.contains('on')||$('#gend').classList.contains('on'))hub();
@@ -761,6 +812,7 @@ const body = `
   <div class="ln" id="gendln"></div>
   <div class="rev" id="gendrev"></div>
   <div class="rowbtn">
+   <button class="big" id="missBtn">📌 答錯整理</button>
    <button class="big go" id="retry">🔁 再玩一次</button>
    <button class="big" id="backhub">🎮 換一個遊戲</button>
   </div>
@@ -777,6 +829,7 @@ const body = `
 ${S.UTIL}
 ${S.TTS}
 ${S.SFX}
+${S.MISS}
 ${JS.replace('__BANK__', () => JSON.stringify({
     g1: B.G1, g2: B.G2, g3: B.G3, g4: B.G4, g5: B.G5,
     g6: B.G6, g7: B.G7, g8: B.G8, g9: B.G9, g10: B.G10

@@ -15,6 +15,7 @@
 const fs=require('fs'),path=require('path'),DIR=__dirname;
 const SRC=require('./_sources');
 const PH=require('./_phonics');
+const WD=require('./_world');
 
 /* FAM[0]=開場、FAM[1..17]=17 個家人單字、FAM[18]=結尾 */
 const FAM=[
@@ -197,7 +198,8 @@ const PAGES=[
    只放**查得到一手證據**的結構。查不到的（mo、bro、sis 單獨的意思）就誠實說沒有，
    不編一個出來——編出來學生會記錯，而且違反 CLAUDE.md「事實要正確」。
    幕號就是 daughter.html 等字卡「🧩 結構」按鈕的錨點，改順序要一起改 _build.js 的 parts.href。 */
-{file:'parts.html',title:'單字拆開來看',src:'parts',
+{file:'parts.html',title:'單字拆開來看',src:'parts',sayAll:1,
+ back:{href:'world.html',label:'🌍 環遊世界 →'},
  S:[
  {emoji:'🧩',mid:'家人單字，拆得開嗎？',
   lines:['有的拆得開，有的<b>拆不開</b>']},
@@ -225,25 +227,50 @@ const PAGES=[
          'husband ＝ <b>管這間房子的人</b>']},
 
  /* #4 -ther／-ter 的尾巴（mother/father/brother/sister/daughter 的錨點） */
+ /* 使用者 2026-09-24 指定：sister 的 ter 照字源不能跟另外四個放同一類 ——
+    分開擺，證據（t 是後來擠進來的）放在 📖 出處，有獨立的一頁＋動畫。 */
  {tag:'一樣的尾巴',
   h:'<div class="en in d1" style="font-size:clamp(17px,3vh,30px);line-height:1.75">'+
-    'mo<span class="hi">ther</span><br>fa<span class="hi">ther</span><br>bro<span class="hi">ther</span><br>'+
-    'daugh<span class="hi">ter</span><br>sis<span class="hi">ter</span></div>',
-  lines:['五個家人字，<b>尾巴長得一模一樣</b>',
-         '看到 <b>-ther</b>、<b>-ter</b>，很可能就是<b>家人</b>']},
+    'mo<span class="hi">ther</span>　fa<span class="hi">ther</span><br>bro<span class="hi">ther</span>　'+
+    'daugh<span class="hi">ter</span></div>'+
+    '<div class="en pop odd" style="animation-delay:1s;font-size:clamp(17px,3vh,30px)"><span>sis<span class="hi2">ter</span></span>'+
+    '<span class="oddtag">⚠️ 長得像，來源不一樣</span></div>',
+  lines:['這四個家人字，<b>尾巴是同一條</b>',
+         'sister 的 t 是<b>後來才擠進去的</b>（證據在 📖 出處）']},
 
- /* #5 德文旁證 */
- /* 每一個德文字都可以點，用**德語**發音（使用者 2026-09-20 指定）。
-    .sp 帶 data-lang，全頁共用的點擊處理器會照著唸。 */
- {tag:'德文也一樣',emoji:'🇩🇪',say:'Mutter',sayLang:'de-DE',
-  h:'<div class="en in d1" style="font-size:clamp(16px,2.8vh,28px);line-height:1.9">'+
-    '<span class="sp" data-say="Mutter" data-lang="de-DE">Mut<span class="hi">ter</span></span><br>'+
-    '<span class="sp" data-say="Vater" data-lang="de-DE">Va<span class="hi">ter</span></span><br>'+
-    '<span class="sp" data-say="Bruder" data-lang="de-DE">Bru<span class="hi">der</span></span><br>'+
-    '<span class="sp" data-say="Tochter" data-lang="de-DE">Toch<span class="hi">ter</span></span><br>'+
-    '<span class="sp" data-say="Schwester" data-lang="de-DE">Schwes<span class="hi">ter</span></span></div>',
-  lines:['德文的媽媽、爸爸、哥哥、女兒、姊姊',
-         '<b>尾巴也都一樣</b> —— 這不是巧合']},
+ /* #5 德文：先猜是哪一國（使用者 2026-09-24 指定：一開始不可以出現「德文」兩個字） */
+ WD.guessOne({c:'de',w:[
+   ['Mut<span class="hi">ter</span>','Mutter','媽媽','mother'],
+   ['Va<span class="hi">ter</span>','Vater','爸爸','father'],
+   ['Bru<span class="hi">der</span>','Bruder','兄弟','brother'],
+   ['Toch<span class="hi">ter</span>','Tochter','女兒','daughter'],
+   ['Schwes<span class="hi2">ter</span>','Schwester','姊妹','sister']],
+   lines:['<b>先聽、先猜</b>：這是哪一國的話？']}),
+
+ /* #6 荷蘭文：一樣先猜，右邊多一個「德文」可以對照 */
+ WD.guessOne({c:'nl',de:1,w:[
+   ['moe<span class="hi">der</span>','moeder','媽媽','mother','Mutter'],
+   ['va<span class="hi">der</span>','vader','爸爸','father','Vater'],
+   ['broer','broer','兄弟','brother','Bruder'],
+   ['doch<span class="hi">ter</span>','dochter','女兒','daughter','Tochter'],
+   ['zus','zus','姊妹','sister','Schwester']],
+   lines:['再猜一次：<b>這又是哪一國？</b>']}),
+
+ /* #7 為什麼尾巴都一樣？（使用者 2026-09-24 指定的動畫頁） */
+ {tag:'為什麼尾巴都一樣',sayAll:1,
+  h:'<div class="tails in d1">'+
+    '<em class="tcap">很久很久以前</em>'+
+    '<span class="old">mā<i>ter</i></span><span class="old">pə<i>ter</i></span><span class="old">bhrā<i>ter</i></span><span class="old">dhughə<i>ter</i></span>'+
+    '<span class="tarr">⬇</span><span class="tarr">⬇</span><span class="tarr">⬇</span><span class="tarr">⬇</span>'+
+    '<em class="tcap en2">今天的英文</em>'+
+    '<span class="sp en2" data-say="mother">mo<i>ther</i></span><span class="sp en2" data-say="father">fa<i>ther</i></span>'+
+    '<span class="sp en2" data-say="brother">bro<i>ther</i></span><span class="sp en2" data-say="daughter">daugh<i>ter</i></span>'+
+    '<em class="tcap de2">今天的德文</em>'+
+    '<span class="sp de2" data-say="Mutter" data-lang="de-DE">Mut<i>ter</i></span><span class="sp de2" data-say="Vater" data-lang="de-DE">Va<i>ter</i></span>'+
+    '<span class="sp de2" data-say="Bruder" data-lang="de-DE">Bru<i>der</i></span><span class="sp de2" data-say="Tochter" data-lang="de-DE">Toch<i>ter</i></span>'+
+  '</div>',
+  lines:['<b>-ter</b> ＝ 很久以前<b>家人稱呼共用的尾巴</b>，後來才唸成 ther',
+         '它最早還有沒有別的意思？<b>學者到今天還沒有定論</b>']},
 
  /* #6 前面那一半：mo、fa */
  {tag:'前面那一半',emoji:'👶',
@@ -265,38 +292,52 @@ const PAGES=[
   h:'<div class="en in d1" style="font-size:clamp(26px,4.8vh,48px)">parent <span class="hi">＋ s</span></div>',
   lines:['一位是 <b>a parent</b>','兩位以上<b>加 s</b>：<b>parents</b>']},
 
- /* #9、#10 別的國家的家人單字：一次只講一個家人（使用者 2026-09-20 指定）。
-    只列**權威辭典查得到**的拼法，並用該國語言發音。放在最後面，
-    所以不會動到前面幕號（_build.js 的 parts.href 靠幕號跳）。 */
- {tag:'別的國家怎麼叫媽媽',emoji:'🌍',say:'Mutter',sayLang:'de-DE',
-  h:'<div class="en in d1" style="font-size:clamp(17px,3vh,30px);line-height:1.95">'+
-    '🇩🇪 <span class="sp" data-say="Mutter" data-lang="de-DE">Mutter</span>　'+
-    '🇳🇱 <span class="sp" data-say="moeder" data-lang="nl-NL">moeder</span><br>'+
-    '🇪🇸 <span class="sp" data-say="madre" data-lang="es-ES">madre</span>　'+
-    '🇫🇷 <span class="sp" data-say="mère" data-lang="fr-FR">mère</span></div>'+
-    '<div class="en pop" style="animation-delay:1.1s;font-size:clamp(20px,3.6vh,36px)">'+
-    '🇺🇸 {{mother}}</div>',
-  lines:['<b>點一下每一個字，聽聽看</b>','都從 <b>m</b> 開頭 —— 和寶寶的 <b>ma</b> 一樣']},
-
- {tag:'別的國家怎麼叫爸爸',emoji:'🌍',say:'Vater',sayLang:'de-DE',
-  h:'<div class="en in d1" style="font-size:clamp(17px,3vh,30px);line-height:1.95">'+
-    '🇩🇪 <span class="sp" data-say="Vater" data-lang="de-DE">Vater</span>　'+
-    '🇳🇱 <span class="sp" data-say="vader" data-lang="nl-NL">vader</span><br>'+
-    '🇪🇸 <span class="sp" data-say="padre" data-lang="es-ES">padre</span>　'+
-    '🇫🇷 <span class="sp" data-say="père" data-lang="fr-FR">père</span></div>'+
-    '<div class="en pop" style="animation-delay:1.1s;font-size:clamp(20px,3.6vh,36px)">'+
-    '🇺🇸 {{father}}</div>',
-  lines:['<b>點一下每一個字，聽聽看</b>','都從 <b>f</b>、<b>v</b>、<b>p</b> 開頭 —— 和寶寶的 <b>pa</b> 一樣']},
-
- /* #11 收尾 */
+ /* 收尾 */
  {tag:'記住這件事',emoji:'🧩',
   h:'<div class="en in d1" style="font-size:clamp(17px,3vh,30px);line-height:1.7">'+
     '<span class="hi">拆得開</span>　grandfather　grandmother　husband<br>'+
     '<span class="mute">拆不開</span>　family　son　uncle　aunt<br>'+
     '<span class="mute">拆不開</span>　cousin　nephew　niece　wife</div>',
   lines:['<b>拆不開的字，就整個背起來</b>',
-         '硬拆只會背錯']}
+         '硬拆只會背錯　　➡ 下一頁：<b>🌍 家人單字環遊世界</b>']}
 ]},
+
+/* 家人單字環遊世界（使用者 2026-09-24 指定新增）：
+   語言也有家人 ➜ 地圖演語言怎麼搬家 ➜ 別的國家怎麼叫每一個家人 ➜ 為什麼這麼像。
+   原本在 parts.html 最後的「別的國家怎麼叫媽媽／爸爸」搬來這裡，改成先猜再公布。
+   一頁一個主題：parts.html 講「字怎麼拆」，這一頁講「字從哪裡來」。 */
+{file:'world.html',title:'家人單字環遊世界',src:'world',sayAll:1,
+ back:{href:'parts.html',label:'← 字的結構'},
+ S:[
+ {emoji:'🌍',mid:'家人單字，環遊世界',lines:['為什麼<b>別的國家</b>的家人單字，<b>跟英文這麼像</b>？']},
+ WD.TREE
+].concat(WD.MAPS,[
+ WD.guessMany({en:'mother',zh:'媽媽',r:[['de','Mutter'],['nl','moeder'],['sv','mor'],['fr','mère'],['es','madre']],
+   near:['de','nl','sv'],why:'德、荷、瑞典最像 ＝ <b>同一個日耳曼家族</b>'}),
+ WD.guessMany({en:'father',zh:'爸爸',r:[['de','Vater'],['nl','vader'],['sv','far'],['fr','père'],['es','padre']],
+   near:['de','nl','sv'],why:'德、荷、瑞典最像 ＝ <b>同一個日耳曼家族</b>'}),
+ WD.guessMany({en:'family',zh:'家人',r:[['de','Familie'],['nl','familie'],['sv','familj'],['fr','famille'],['es','familia']],
+   near:['fr','es'],why:'family 來自<b>拉丁文 familia</b>，所以法文、西班牙文最像'}),
+ WD.guessMany({en:'brother',zh:'兄弟',r:[['de','Bruder'],['nl','broer'],['sv','bror'],['fr','frère'],['es','hermano']],
+   near:['de','nl','sv'],why:'日耳曼家族最像；西班牙文 <b>hermano</b> 是另一個字'}),
+ WD.guessMany({en:'sister',zh:'姊妹',r:[['de','Schwester'],['nl','zus'],['sv','syster'],['fr','sœur'],['es','hermana']],
+   near:['de','sv'],why:'德文 Schwester、瑞典文 syster 最像 ＝ <b>日耳曼家族</b>'}),
+ WD.guessMany({en:'grandfather',zh:'爺爺、外公',r:[['de','Großvater'],['nl','grootvader'],['sv','farfar／morfar'],['fr','grand-père'],['es','abuelo']],
+   near:['fr','de'],why:'<b>grand</b> 來自法文，<b>father</b> 來自日耳曼家族'}),
+ WD.guessMany({en:'grandmother',zh:'奶奶、外婆',r:[['de','Großmutter'],['nl','grootmoeder'],['sv','farmor／mormor'],['fr','grand-mère'],['es','abuela']],
+   near:['fr','de','sv'],why:'瑞典文分兩邊：<b>farmor</b> 爸爸的媽媽、<b>mormor</b> 媽媽的媽媽'}),
+ WD.guessMany({en:'uncle',zh:'叔叔、舅舅',r:[['de','Onkel'],['nl','oom'],['sv','farbror／morbror'],['fr','oncle'],['es','tío']],
+   near:['fr'],why:'uncle 是 <b>1066 年從法文 oncle</b> 借來的'}),
+ WD.guessMany({en:'aunt',zh:'阿姨、姑姑',r:[['de','Tante'],['nl','tante'],['sv','faster／moster'],['fr','tante'],['es','tía']],
+   near:['fr'],why:'aunt 也是 <b>1066 年以後從法文</b>借來的'}),
+ WD.guessMany({en:'cousin',zh:'堂表兄弟姊妹',r:[['de','Cousin／Cousine'],['nl','neef／nicht'],['sv','kusin'],['fr','cousin／cousine'],['es','primo／prima']],
+   near:['fr'],why:'cousin 跟法文<b>一模一樣</b>——從法文借來的'}),
+ {tag:'記住這件事',emoji:'🧠',sayAll:1,
+  h:'<div class="sumg in d1">'+
+    '<div class="sg g"><b>🌲 日耳曼家族的字</b><span>{{mother}} {{father}} {{brother}} {{sister}} {{daughter}} {{son}}</span><em>跟德文、荷蘭文像</em></div>'+
+    '<div class="sg l"><b>🏛 從法文借來的字</b><span>{{uncle}} {{aunt}} {{cousin}} {{nephew}} {{niece}}</span><em>跟法文像</em></div></div>',
+  lines:['<b>看一個字像誰</b>，就知道它從哪裡來']}
+])},
 
 /* daughter 的重要補充：英文丟掉的聲音，德文／荷蘭文還留著。
    使用者 2026-09-19 指定要做成秒懂動畫，並附 100% 可查證的出處。
@@ -477,6 +518,110 @@ body{margin:0;background:#000;color:#F2F2F2;
 /* ✅ ❌ 蓋章 */
 .stamp{display:inline-block;animation:stamp .6s cubic-bezier(.2,1.8,.4,1) both;animation-delay:.3s}
 @keyframes stamp{0%{opacity:0;transform:scale(2.4) rotate(-18deg)}100%{opacity:1;transform:none}}
+/* ── 2026-09-24 使用者指定：猜猜看／地圖／語言家族 ─────────────────── */
+.hi2{color:#F0B45C}
+.odd{display:flex;align-items:center;gap:.6em;justify-content:center;opacity:.95}
+.oddtag{font-size:.5em;color:#F0B45C;border:1px dashed #6B4E1A;border-radius:99px;padding:3px 10px;font-weight:700}
+.flag{width:1.5em;height:1em;vertical-align:-.12em;border-radius:2px;flex:0 0 auto}
+.guess{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.2vh,12px);width:100%}
+.gtop{min-height:1.6em;font-size:clamp(22px,3.8vh,36px);font-weight:700}
+.gunk{color:#8E8E8E;font-weight:700}
+.gans{display:none;align-items:center;gap:.35em;font-weight:700;color:#FFD24A;white-space:nowrap}
+.gans em{font-style:normal;font-size:.72em;color:#D8D3C5;font-weight:400}
+.guess.rev .gans{display:inline-flex;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.guess.rev .gunk{display:none}
+.gmode{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center;
+ font-size:clamp(13px,1.9vh,17px);color:#8E8E8E}
+.gmode button{background:#141414;border:1px solid #333;color:#D8D3C5;border-radius:99px;font-family:inherit;
+ font-size:clamp(14px,2vh,18px);padding:6px 14px;min-height:40px;cursor:pointer}
+.gmode button.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A;font-weight:700}
+.glist{display:flex;flex-direction:column;gap:clamp(4px,.9vh,9px);width:100%;max-width:640px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#0C0C0C;
+ border:1px solid #232323;border-radius:14px;padding:clamp(4px,.9vh,9px) clamp(12px,1.8vw,20px);
+ animation:rise .45s cubic-bezier(.2,.9,.3,1) both}
+.grow .gw{font-size:clamp(24px,4.3vh,42px);font-weight:700;color:#F2F2F2;border-bottom:0}
+.gm{font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#9FB4C8;white-space:nowrap}
+.gm>span{display:none;border-bottom:0}
+.guess[data-m="0"] .gm .m0,.guess[data-m="zh"] .gm .mzh,.guess[data-m="en"] .gm .men,.guess[data-m="de"] .gm .mde{display:inline;
+ animation:pop .45s cubic-bezier(.2,1.5,.4,1) both}
+.gm .m0{color:#4A4A4A}
+.grev{background:#2A2208;border:1px solid #FFD24A;color:#FFD24A;border-radius:99px;font-family:inherit;
+ font-weight:700;font-size:clamp(16px,2.4vh,22px);padding:9px 22px;min-height:48px;cursor:pointer}
+.guess.rev .grev{background:#141414;border-color:#444;color:#8E8E8E}
+.gen{font-size:clamp(20px,3.2vh,30px);color:#D8D3C5;display:flex;align-items:baseline;gap:.4em}
+.gen .gbig{font-size:1.7em;font-weight:700;color:#F2F2F2;border-bottom:0}
+.gen em{font-style:normal;color:#9FB4C8;font-weight:700}
+.guess.many .grow .gw{font-size:clamp(21px,3.7vh,36px)}
+.guess.many .gunk,.guess.many .gans{font-size:clamp(17px,2.8vh,26px)}
+.guess.many.rev .grow.near{border-color:#FFD24A;background:#1D1908;animation:nearGlow 1.2s ease-in-out .5s 2}
+@keyframes nearGlow{0%,100%{transform:none}50%{transform:scale(1.04);box-shadow:0 0 22px rgba(255,210,74,.45)}}
+.gwhy{display:none;font-size:clamp(16px,2.6vh,24px);color:#F2F2F2;text-align:center}
+.mbelow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+.mbelow span{background:#1A1208;border:1px solid #5A3E1C;color:#F3B06B;border-radius:99px;font-weight:700;
+ font-size:clamp(14px,2.2vh,20px);padding:3px 10px;white-space:nowrap;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.gwhy b{color:#FFD24A}
+.guess.rev .gwhy{display:block;animation:rise .5s cubic-bezier(.2,.9,.3,1) .4s both}
+/* 為什麼尾巴都一樣：四欄對齊，一欄 ＝ 一個家人（以前 ➜ 英文 ➜ 德文） */
+.tails{display:grid;grid-template-columns:repeat(4,auto);justify-content:center;align-items:baseline;
+ column-gap:clamp(12px,2vw,24px);row-gap:clamp(2px,.6vh,6px);font-size:clamp(20px,3.6vh,32px);font-weight:700}
+.tails .tcap{grid-column:1/-1;font-style:normal;font-size:clamp(13px,1.9vh,17px);color:#8E8E8E;font-weight:400;
+ text-align:center;margin-top:clamp(2px,.8vh,8px)}
+.tails i{font-style:normal;color:#FFD24A;display:inline-block;animation:tglow 1.4s ease-in-out 1.2s 2}
+.tails .old{color:#8E8E8E}
+.tails .en2{animation:rise .5s ease .7s both}.tails .de2{animation:rise .5s ease 1.1s both}
+.tails .sp{border-bottom:0;text-align:center}.tails .old{text-align:center}
+.tarr{color:#4A4A4A;font-size:.7em;text-align:center;animation:rise .4s ease .4s both}
+@keyframes tglow{0%,100%{transform:none;text-shadow:none}50%{transform:translateY(-.15em) scale(1.25);text-shadow:0 0 16px rgba(255,210,74,.9)}}
+/* 地圖 */
+.mapbox{width:min(92vw,600px,calc(44vh * 1.08))}
+.map{display:block;width:100%;height:auto}
+.map .mt{font-size:13px;font-weight:700;fill:#F2F2F2;opacity:0;animation:mtIn .5s ease both}
+.map .mt.big{font-size:16px}.map .mt.small{font-size:9px}
+.map .mt.g{fill:#8FD19E}.map .mt.l{fill:#F3B06B}.map .mt.e{fill:#FFD24A}.map .mt.say{fill:#FFD24A;font-size:12px}
+.map .mt.chip{fill:#F3B06B;font-size:12px}
+@keyframes mtIn{from{opacity:0}to{opacity:1}}
+.map .md{fill:#FFD24A;opacity:0;animation:mtIn .4s ease both}
+.map .md.pulse{animation:mtIn .4s ease both,mdP 1.4s ease-in-out infinite}
+.map .md.l{fill:#F3B06B}
+@keyframes mdP{0%,100%{r:6}50%{r:11}}
+.map .ma{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;
+ animation:maDraw 1.2s ease forwards}
+.map .ma.g{stroke:#8FD19E}.map .ma.l{stroke:#F3B06B}
+@keyframes maDraw{to{stroke-dashoffset:0}}
+.map .mboat{font-size:18px}
+.map .mb{opacity:0;animation:mbGo 2s ease-in-out both}
+@keyframes mbGo{0%{opacity:0;transform:none}10%{opacity:1}90%{opacity:1;transform:translate(var(--dx),var(--dy))}
+ 100%{opacity:1;transform:translate(var(--dx),var(--dy))}}
+/* 語言也有家人 */
+.ltree{display:flex;flex-direction:column;align-items:center;width:100%;max-width:660px}
+.lroot{font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#FFD24A;display:flex;flex-direction:column;align-items:center}
+.lroot em{font-style:normal;font-size:.55em;color:#8E8E8E;font-weight:400}
+.llines{width:100%;height:clamp(26px,4.5vh,44px)}
+.llines path{fill:none;stroke:#5A6E7E;stroke-width:3;stroke-dasharray:100;stroke-dashoffset:100;
+ animation:maDraw .7s ease forwards;vector-effect:non-scaling-stroke}
+.lkids{display:grid;grid-template-columns:repeat(4,1fr);width:100%;gap:8px}
+.lkid{display:flex;flex-direction:column;align-items:center;gap:4px;background:#0C0C0C;border:1px solid #232323;
+ border-radius:14px;padding:8px 4px;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.lkid b{font-size:clamp(14px,2.2vh,20px);color:#D8D3C5}
+.lkid .sp{font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#F2F2F2;border-bottom:0}
+.lkid .flag{width:2.4em;height:1.6em}
+/* 記住這件事：兩個家族 */
+.sumg{display:flex;flex-direction:column;gap:clamp(8px,1.6vh,16px);width:100%;max-width:700px}
+.sg{display:flex;flex-direction:column;gap:4px;border-radius:16px;padding:clamp(8px,1.4vh,14px) 18px;text-align:center}
+.sg b{font-size:clamp(18px,2.8vh,26px)}.sg em{font-style:normal;color:#8E8E8E;font-size:clamp(14px,2vh,18px)}
+.sg span{font-size:clamp(22px,3.8vh,36px);font-weight:700;display:flex;gap:.5em;flex-wrap:wrap;justify-content:center}
+.sg.g{background:#0C1A10;border:1px solid #2B5236}.sg.g b{color:#8FD19E}
+.sg.l{background:#1A1208;border:1px solid #5A3E1C}.sg.l b{color:#F3B06B}
+/* 念到哪一個字，那一個字就亮 */
+.speak{color:#FFD24A!important;text-shadow:0 0 16px rgba(255,210,74,.8);transform:scale(1.12);display:inline-block;transition:transform .15s}
+/* 底部按鈕列：「🔊 唸一次」放在正中央（使用者 2026-09-24 指定） */
+#bar.c3{left:0;right:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+ gap:clamp(6px,1vw,12px);padding:0 clamp(8px,1.5vw,16px)}
+#bar.c3 .bl,#bar.c3 .br{display:flex;gap:clamp(5px,.8vw,10px);align-items:center}
+#bar.c3 .bl{justify-content:flex-end}#bar.c3 .br{justify-content:flex-start}
+#bar.c3 .bl button,#bar.c3 .br button{font-size:clamp(12.5px,1.65vw,16px);padding:10px clamp(9px,1.3vw,18px);white-space:nowrap}
+#bar.c3 #say{font-size:clamp(17px,2.2vw,21px);font-weight:700;padding:12px clamp(18px,2.6vw,30px);
+ background:#10301F;border-color:#39D98A;min-height:54px;white-space:nowrap}
 .reduce *{animation:none!important;transition:none!important}
 ${PH.CSS}
 ${SRC.CSS}
@@ -487,7 +632,8 @@ ${SRC.CSS}
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
-<div id="bar"><button id="say">🔊 念一次</button>${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button>${P.back?`<button id="back">${P.back.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>
+${P.sayAll?`<div id="bar" class="c3"><span class="bl">${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button></span><button id="say">🔊 唸一次</button><span class="br">${P.back?`<button id="back">${P.back.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</span></div>`:
+`<div id="bar"><button id="say">🔊 念一次</button>${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button>${P.back?`<button id="back">${P.back.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>`}
 ${SRC.html(SRC.P[P.src||'why'])}
 
 <script>
@@ -513,13 +659,38 @@ if(reduce)document.body.classList.add("reduce");
 var dots=document.getElementById("dots");
 for(var k=0;k<S.length;k++)dots.appendChild(document.createElement("i"));
 
-/* 念一次：整幕的主角字。畫面上還有 {{單字}} 的話，順便一格一格亮過去。 */
-function say(){var w=S[i].say;if(!w)return;
+/* 唸一次：這一幕看得到的每一個字，一個一個唸完，念到哪個字那個字就亮
+   （使用者 2026-09-24 指定，parts.html／world.html）。外語照各自的語言唸。 */
+var SAYALL=${P.sayAll?1:0},chainId=0;
+function visible(el){if(!el.getClientRects().length)return false;
+ for(var p=el;p&&p!==document.body;p=p.parentElement){var cs=getComputedStyle(p);
+  if(cs.display==="none"||cs.visibility==="hidden")return false}return true}
+function sayAll(){
+ var my=++chainId;try{speechSynthesis.cancel()}catch(e){}
+ var els=[].filter.call(stage.querySelectorAll(".phw,.sp"),function(el){
+  return visible(el)&&!(el.parentElement&&el.parentElement.closest(".phw,.sp"))});
+ var k=0;
+ function next(){
+  [].forEach.call(stage.querySelectorAll(".speak"),function(x){x.classList.remove("speak")});
+  if(my!==chainId||k>=els.length)return;
+  var el=els[k++],t=el.getAttribute("data-say"),lang=el.getAttribute("data-lang")||"en-US",done=0;
+  if(!t){next();return}
+  el.classList.add("speak");
+  var fin=function(){if(done)return;done=1;setTimeout(next,160)};
+  try{var u=new SpeechSynthesisUtterance(t);u.lang=lang;u.rate=PH.isSlow()?.45:.85;
+   u.onend=fin;u.onerror=fin;speechSynthesis.speak(u)}catch(e){fin()}
+  setTimeout(fin,1400+t.length*(PH.isSlow()?260:140));   /* 瀏覽器不發 onend 也不會卡住 */
+ }
+ setTimeout(next,90);
+}
+function say(){if(SAYALL){sayAll();return}
+ var w=S[i].say;if(!w)return;
  var el=stage.querySelector('.phw[data-say="'+w+'"]');
  if(el){PH.sayWord(el,S[i].sayLang)}else{PH.say(w,S[i].sayLang)}}
 
 var stage=document.getElementById("stage");
 function show(n){
+ chainId++;
  var back=(n<i);
  i=Math.max(0,Math.min(S.length-1,n));
  stage.innerHTML=draw(S[i]);
@@ -536,6 +707,16 @@ document.getElementById("prev").addEventListener("click",function(){show(i-1)});
 document.getElementById("next").addEventListener("click",function(){show(i+1)});
 document.getElementById("again").addEventListener("click",function(){show(0)});
 document.getElementById("say").addEventListener("click",say);
+/* 猜猜看：公布答案／藏起來、右邊看中文／英文／德文 */
+stage.addEventListener("click",function(e){
+ var t=e.target;
+ var r=t.closest?t.closest(".grev"):null;
+ if(r){var g=r.closest(".guess");var on=!g.classList.contains("rev");g.classList.toggle("rev",on);
+  r.textContent=on?"🙈 藏起來再猜一次":"🔍 公布答案";return}
+ var m=t.closest?t.closest(".gmode button"):null;
+ if(m){var g2=m.closest(".guess");g2.setAttribute("data-m",m.getAttribute("data-m"));
+  [].forEach.call(g2.querySelectorAll(".gmode button"),function(b){b.classList.toggle("on",b===m)});}
+});
 document.addEventListener("keydown",function(e){
  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();show(i+1)}
  if(e.key==="ArrowLeft")show(i-1);

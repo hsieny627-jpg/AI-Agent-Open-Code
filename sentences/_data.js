@@ -69,7 +69,7 @@ var U1 = [
   rows:[['Who','誰',ICON.who],['What','什麼',ICON.what],['How','怎麼樣',ICON.how]]},
 
  /* 2 */
- {type:'sent', zh:'他是誰？', say:'Who is he?',
+ {type:'sent', zh:'他是誰？', say:"Who's he?",
   tk:[t('Who','誰',ICON.who),t("'s",'是',ICON.is,{tight:1}),
       t('he','他',ICON.he,{hl:'b'}),t('?','？',ICON.q,{tight:1})]},
 
@@ -86,7 +86,7 @@ var U1 = [
   note:'紅色的 ’ ＝ 被藏起來的 [i]。'},
 
  /* 5 */
- {type:'sent', zh:'他是我的爸爸。', say:'He is my father.', slot:'he',
+ {type:'sent', zh:'他是我的爸爸。', say:"He's my father.", slot:'he',
   tk:[t('He','他',ICON.he,{hl:'b'}),t("'s",'是',ICON.is,{tight:1}),
       t('my','我的',ICON.my),t('father','爸爸',ICON.father,{slot:'he'}),
       t('.','。',ICON.dot,{tight:1})]},
@@ -107,15 +107,15 @@ var U1 = [
  /* 8 */
  {type:'order', zhRow:[['他',ICON.he,'b'],['是',ICON.is,'y'],['誰',ICON.who,'r'],['？',ICON.q,'g']],
   enRow:[['Who',ICON.who,'r'],["'s",ICON.is,'y'],['he',ICON.he,'b'],['?',ICON.q,'g']],
-  say:'Who is he?'},
+  say:"Who's he?"},
 
  /* 9 */
- {type:'sent', zh:'她是誰？', say:'Who is she?',
+ {type:'sent', zh:'她是誰？', say:"Who's she?",
   tk:[t('Who','誰',ICON.who),t("'s",'是',ICON.is,{tight:1}),
       t('she','她',ICON.she,{hl:'lp'}),t('?','？',ICON.q,{tight:1})]},
 
  /* 10 */
- {type:'sent', zh:'她是我的媽媽。', say:'She is my mother.', slot:'she',
+ {type:'sent', zh:'她是我的媽媽。', say:"She's my mother.", slot:'she',
   tk:[t('She','她',ICON.she,{hl:'lp'}),t("'s",'是',ICON.is,{tight:1}),
       t('my','我的',ICON.my),t('mother','媽媽',ICON.mother,{slot:'she'}),
       t('.','。',ICON.dot,{tight:1})]},
@@ -136,7 +136,7 @@ var U1 = [
  /* 13 she 改成淺粉底：原本 she 的桃紅跟 Who 的紅太接近，學生分不出來（使用者 2026-09-21） */
  {type:'order', zhRow:[['她',ICON.she,'lp'],['是',ICON.is,'y'],['誰',ICON.who,'r'],['？',ICON.q,'g']],
   enRow:[['Who',ICON.who,'r'],["'s",ICON.is,'y'],['she',ICON.she,'lp'],['?',ICON.q,'g']],
-  say:'Who is she?'},
+  say:"Who's she?"},
 
  /* 14 秒懂重點改成會動的：he 問 ➜ He 答，兩個都是藍底（使用者 2026-09-21 指定） */
  {type:'echo',
@@ -385,57 +385,69 @@ var RV2 = [
 
 module.exports = { ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2 };
 
-/* ── 真實情境（使用者 2026-09-20 指定，2026-09-21 補上新卡片）──────────────
- * 老師按「🎞 情境」才出現，平常不佔版面。
- * 一張卡一個情境，三行講完，而且每一行都要短：
- *   at  場景（在哪裡）——最多 8 個字
- *   pic 秒懂畫面：用 ➜ 分段，產生器會一段一段跳出來（秒懂動畫）。最多三段
- *   use 什麼時候會這樣說——一句話，最多 12 個字
- * 做法是 emoji 情境畫面，不是照片（離線也要能上課，教室網路常斷）。
+/* ── 真實情境：會動的小劇場（使用者 2026-09-24 指定改版）──────────────
+ * 原本「地點＋三段 emoji＋一句話」學生完全看不懂，改成**兩個人演一次**：
+ *   ① 背景（大大的、淡淡的）亮出來 ➜ ② 左邊的人走進來、右邊的人走進來
+ *   ➜ ③ 左邊的人說話（對話框跳出來）➜ ④ 右邊的人回答（或頭上冒出 ❓ 👋）
+ *   ➜ ⑤ 最下面一行 💡 告訴學生「什麼時候這樣說」。
+ * 對話框可以點，點了就唸（念到哪亮到哪）。
+ *
+ *   at  左上角的小地點（emoji ＋ 最多 6 個字）
+ *   bg  背景 emoji（會放很大、很淡）
+ *   l／r   左邊／右邊的人（emoji）      ln／rn 人下面的小名牌（選填）
+ *   rt  右邊那個人頭上冒出來的東西（選填，例如 ❓ 👋）
+ *   b   左邊的人說的話（英文）；bzh:1 表示這一句是中文
+ *   b2  右邊的人說的話（選填）
+ *   use 什麼時候這樣說——一句話，最多 16 個字
+ *
+ * 🐢／🐇 ＝「慢慢說／說快一點」：縮寫卡用這一組，學生一看就懂「一樣的話，說得比較快」。
  * 英文一律正確：sister 是女生，主詞只能用 She。
  */
+function sc(o){return o}
+var SLOW1 = function(a,b,use){return sc({at:'⚡ 說快一點',bg:'💨',l:'🐢',ln:'慢慢說',b:a,r:'🐇',rn:'說快一點',b2:b,use:use})};
 var SC1 = [
- {at:'🎒 教室', pic:'❓ ➜ 👦 👧', use:'問「人」就用 Who。'},
- {at:'🏫 校門口', pic:'👦 ➜ ❓ ➜ 👨', use:'不認識的男生，問他是誰。'},
- {at:'⚡ 講快一點', pic:'Who is ➜ ⚡ ➜ Who’s', use:'兩個字黏成一個字。'},
- {at:'📺 聽外國人講話', pic:'📝 Who is ➜ 🗣️ Who’s', use:'寫兩個字，講一個字。'},
- {at:'🏫 校門口', pic:'👦 ➜ 🤝 ➜ 👨', use:'介紹他是我爸爸。'},
- {at:'⚡ 講快一點', pic:'He is ➜ ⚡ ➜ He’s', use:'i 躲起來，’ 站上去。'},
- {at:'✏️ 寫　vs　🗣️ 說', pic:'📝 He is ➜ 🗣️ He’s', use:'寫 He is，講 He’s。'},
- {at:'🔁 中文 vs 英文', pic:'🇹🇼 他是誰？ ➜ 🇺🇸 Who’s he?', use:'「誰」跑到最前面。'},
- {at:'🛒 超市', pic:'👦 ➜ ❓ ➜ 👧', use:'不認識的女生，問她是誰。'},
- {at:'🛒 超市', pic:'👧 ➜ 🤝 ➜ 👩', use:'介紹她是我媽媽。'},
- {at:'⚡ 講快一點', pic:'She is ➜ ⚡ ➜ She’s', use:'i 躲起來，’ 站上去。'},
- {at:'✏️ 寫　vs　🗣️ 說', pic:'📝 She is ➜ 🗣️ She’s', use:'寫 She is，講 She’s。'},
- {at:'🔁 中文 vs 英文', pic:'🇹🇼 她是誰？ ➜ 🇺🇸 Who’s she?', use:'「誰」跑到最前面。'},
- {at:'🎤 兩個人對話', pic:'❓ he ➜ ✅ He', use:'問誰就答誰。'},
- {at:'🏫 爸爸來接你', pic:'👦 ➜ ❓ ➜ 👨', use:'問一句，答一句。'},
- {at:'🛒 媽媽在旁邊', pic:'👧 ➜ ❓ ➜ 👩', use:'問一句，答一句。'}
+ sc({at:'🎒 教室',bg:'🏫',l:'👧',b:'Who’s he?',r:'🧑',rt:'❓',use:'想知道「是哪一個人」，就用 Who。'}),
+ sc({at:'🏫 校門口',bg:'🏫',l:'👦',b:'Who’s he?',r:'👨',rt:'❓',use:'看到不認識的男生，問「他是誰？」'}),
+ SLOW1('Who is','Who’s','說快一點，兩個字黏成一個字。'),
+ SLOW1('Who is he?','Who’s he?','意思一模一樣，只是說得比較快。'),
+ sc({at:'🏫 校門口',bg:'🏫',l:'👦',b:'He’s my father.',r:'👨',rt:'👋',use:'介紹身邊的男生：他是我爸爸。'}),
+ SLOW1('He is','He’s','說快一點，兩個字黏成一個字。'),
+ SLOW1('He is my father.','He’s my father.','意思一模一樣，只是說得比較快。'),
+ sc({at:'🔁 中文 ➜ 英文',bg:'🔁',l:'🧒',ln:'中文',b:'他是誰？',bzh:1,r:'🧒',rn:'英文',b2:'Who’s he?',use:'中文「誰」在最後，英文 Who 在最前面。'}),
+ sc({at:'🛒 超市',bg:'🛒',l:'👦',b:'Who’s she?',r:'👩',rt:'❓',use:'看到不認識的女生，問「她是誰？」'}),
+ sc({at:'🛒 超市',bg:'🛒',l:'👧',b:'She’s my mother.',r:'👩',rt:'👋',use:'介紹身邊的女生：她是我媽媽。'}),
+ SLOW1('She is','She’s','說快一點，兩個字黏成一個字。'),
+ SLOW1('She is my mother.','She’s my mother.','意思一模一樣，只是說得比較快。'),
+ sc({at:'🔁 中文 ➜ 英文',bg:'🔁',l:'🧒',ln:'中文',b:'她是誰？',bzh:1,r:'🧒',rn:'英文',b2:'Who’s she?',use:'中文「誰」在最後，英文 Who 在最前面。'}),
+ sc({at:'🎤 一問一答',bg:'💬',l:'👧',b:'Who’s he?',r:'👦',b2:'He’s my brother.',use:'問 he，就用 He 回答。'}),
+ sc({at:'🏫 爸爸來接你',bg:'🏫',l:'👧',b:'Who’s he?',r:'👦',b2:'He’s my father.',use:'同學問，你回答。'}),
+ sc({at:'🛒 媽媽在旁邊',bg:'🛒',l:'👦',b:'Who’s she?',r:'👧',b2:'She’s my mother.',use:'同學問，你回答。'})
 ];
 
 var SC2 = [
- {at:'🏥 醫院', pic:'👦 ➜ 👉 ➜ 👨‍⚕️', use:'介紹他的工作。'},
- {at:'⚡ 講快一點', pic:'He is ➜ ⚡ ➜ He’s', use:'i 躲起來，’ 站上去。'},
- {at:'✏️ 寫　vs　🗣️ 說', pic:'📝 He is ➜ 🗣️ He’s', use:'寫 He is，講 He’s。'},
- {at:'🍳 餐廳', pic:'🔵 he 🟡 is ➜ 🔄 ➜ 🟡 Is 🔵 he', use:'換位置就變問句。'},
- {at:'🏥 醫院', pic:'👦 ➜ ❓ ➜ 👨‍⚕️', use:'不確定就用問的。'},
- {at:'✅ 猜對了', pic:'👧 ➜ 👍 ➜ 👨‍⚕️', use:'猜對就說 Yes。'},
- {at:'❌ 猜錯了', pic:'👧 ➜ 🙅 ➜ 🧑‍🎓', use:'猜錯就說 No。'},
- {at:'🚫 兩個字變一個', pic:'is not ➜ ⚡ ➜ isn’t', use:'o 躲起來，’ 站上去。'},
- {at:'🏥 猜錯以後', pic:'🙅 ➜ 👉 ➜ 🧑‍🎓', use:'不是醫生，那是什麼？'},
- {at:'🏫 學校', pic:'👧 ➜ 👉 ➜ 👩‍🏫', use:'介紹她的工作。'},
- {at:'⚡ 講快一點', pic:'She is ➜ ⚡ ➜ She’s', use:'i 躲起來，’ 站上去。'},
- {at:'✏️ 寫　vs　🗣️ 說', pic:'📝 She is ➜ 🗣️ She’s', use:'寫 She is，講 She’s。'},
- {at:'🏫 走廊', pic:'💗 she 🟡 is ➜ 🔄 ➜ 🟡 Is 💗 she', use:'換位置就變問句。'},
- {at:'🏫 走廊', pic:'👦 ➜ ❓ ➜ 👩‍🏫', use:'不確定就用問的。'},
- {at:'✅ 猜對了', pic:'👦 ➜ 👍 ➜ 👩‍🏫', use:'猜對就說 Yes。'},
- {at:'❌ 猜錯了', pic:'👦 ➜ 🙅 ➜ 👩‍⚕️', use:'猜錯就說 No。'},
- {at:'🚫 兩個字變一個', pic:'is not ➜ ⚡ ➜ isn’t', use:'o 躲起來，’ 站上去。'},
- {at:'🏫 猜錯以後', pic:'🙅 ➜ 👉 ➜ 👩‍⚕️', use:'不是老師，那是什麼？'},
- {at:'🎨 用顏色記', pic:'🔵🟡 。 ➜ 🔄 ➜ 🟡🔵 ？', use:'換位置，句號變問號。'},
- {at:'🏥 醫院', pic:'👦 ➜ ❓ ➜ 👍', use:'問一句，答一句。'},
- {at:'🏥 醫院', pic:'👧 ➜ ❓ ➜ 🙅', use:'問一句，答一句。'}
+ sc({at:'🏥 醫院',bg:'🏥',l:'👧',b:'He is a doctor.',r:'👨‍⚕️',rt:'🩺',use:'介紹他的工作。'}),
+ SLOW1('He is','He’s','說快一點，兩個字黏成一個字。'),
+ SLOW1('He is a doctor.','He’s a doctor.','意思一模一樣，只是說得比較快。'),
+ sc({at:'🏥 醫院',bg:'🏥',l:'🙋',ln:'我知道',b:'He is a doctor.',r:'🤔',rn:'不確定',b2:'Is he a doctor?',use:'不確定，就把 Is 搬到最前面來問。'}),
+ sc({at:'🏥 醫院',bg:'🏥',l:'👦',b:'Is he a doctor?',r:'👨‍⚕️',rt:'❓',use:'不確定他的工作，就問一問。'}),
+ sc({at:'✅ 猜對了',bg:'🏥',l:'👦',b:'Is he a doctor?',r:'👧',b2:'Yes, he is.',use:'猜對了，就說 Yes。'}),
+ sc({at:'❌ 猜錯了',bg:'🏫',l:'👦',b:'Is he a doctor?',r:'👧',b2:'No, he isn’t.',use:'猜錯了，就說 No。'}),
+ SLOW1('is not','isn’t','說快一點，兩個字黏成一個字。'),
+ sc({at:'🏫 猜錯以後',bg:'🏫',l:'👦',b:'Is he a doctor?',r:'👧',b2:'No, he isn’t. He’s a student.',use:'先說「不是」，再說他真正的工作。'}),
+ sc({at:'🏫 學校',bg:'🏫',l:'👦',b:'She is a teacher.',r:'👩‍🏫',rt:'📚',use:'介紹她的工作。'}),
+ SLOW1('She is','She’s','說快一點，兩個字黏成一個字。'),
+ SLOW1('She is a teacher.','She’s a teacher.','意思一模一樣，只是說得比較快。'),
+ sc({at:'🏫 走廊',bg:'🏫',l:'🙋',ln:'我知道',b:'She is a teacher.',r:'🤔',rn:'不確定',b2:'Is she a teacher?',use:'不確定，就把 Is 搬到最前面來問。'}),
+ sc({at:'🏫 走廊',bg:'🏫',l:'👧',b:'Is she a teacher?',r:'👩‍🏫',rt:'❓',use:'不確定她的工作，就問一問。'}),
+ sc({at:'✅ 猜對了',bg:'🏫',l:'👧',b:'Is she a teacher?',r:'👦',b2:'Yes, she is.',use:'猜對了，就說 Yes。'}),
+ sc({at:'❌ 猜錯了',bg:'🏥',l:'👧',b:'Is she a teacher?',r:'👦',b2:'No, she isn’t.',use:'猜錯了，就說 No。'}),
+ SLOW1('is not','isn’t','說快一點，兩個字黏成一個字。'),
+ sc({at:'🏥 猜錯以後',bg:'🏥',l:'👧',b:'Is she a teacher?',r:'👦',b2:'No, she isn’t. She’s a nurse.',use:'先說「不是」，再說她真正的工作。'}),
+ sc({at:'🎨 用顏色記',bg:'🔄',l:'🙋',ln:'直述句',b:'He is a doctor.',r:'🤔',rn:'問句',b2:'Is he a doctor?',use:'換位置，句號變問號。'}),
+ sc({at:'🏥 醫院',bg:'🏥',l:'👧',b:'Is he a doctor?',r:'👦',b2:'Yes, he is.',use:'問一句，答一句。'}),
+ sc({at:'🏥 醫院',bg:'🏥',l:'👦',b:'Is she a nurse?',r:'👧',b2:'No, she isn’t.',use:'問一句，答一句。'})
 ];
 
+if (SC1.length !== 16 || SC2.length !== 21) throw new Error('情境數量跟卡片數量對不起來');
 U1.forEach(function (c, i) { c.scene = SC1[i]; });
 U2.forEach(function (c, i) { c.scene = SC2[i]; });

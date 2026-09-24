@@ -116,6 +116,110 @@ body{margin:0;background:#000;color:#F2F2F2;
 /* ✅ ❌ 蓋章 */
 .stamp{display:inline-block;animation:stamp .6s cubic-bezier(.2,1.8,.4,1) both;animation-delay:.3s}
 @keyframes stamp{0%{opacity:0;transform:scale(2.4) rotate(-18deg)}100%{opacity:1;transform:none}}
+/* ── 2026-09-24 使用者指定：猜猜看／地圖／語言家族 ─────────────────── */
+.hi2{color:#F0B45C}
+.odd{display:flex;align-items:center;gap:.6em;justify-content:center;opacity:.95}
+.oddtag{font-size:.5em;color:#F0B45C;border:1px dashed #6B4E1A;border-radius:99px;padding:3px 10px;font-weight:700}
+.flag{width:1.5em;height:1em;vertical-align:-.12em;border-radius:2px;flex:0 0 auto}
+.guess{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.2vh,12px);width:100%}
+.gtop{min-height:1.6em;font-size:clamp(22px,3.8vh,36px);font-weight:700}
+.gunk{color:#8E8E8E;font-weight:700}
+.gans{display:none;align-items:center;gap:.35em;font-weight:700;color:#FFD24A;white-space:nowrap}
+.gans em{font-style:normal;font-size:.72em;color:#D8D3C5;font-weight:400}
+.guess.rev .gans{display:inline-flex;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.guess.rev .gunk{display:none}
+.gmode{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center;
+ font-size:clamp(13px,1.9vh,17px);color:#8E8E8E}
+.gmode button{background:#141414;border:1px solid #333;color:#D8D3C5;border-radius:99px;font-family:inherit;
+ font-size:clamp(14px,2vh,18px);padding:6px 14px;min-height:40px;cursor:pointer}
+.gmode button.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A;font-weight:700}
+.glist{display:flex;flex-direction:column;gap:clamp(4px,.9vh,9px);width:100%;max-width:640px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#0C0C0C;
+ border:1px solid #232323;border-radius:14px;padding:clamp(4px,.9vh,9px) clamp(12px,1.8vw,20px);
+ animation:rise .45s cubic-bezier(.2,.9,.3,1) both}
+.grow .gw{font-size:clamp(24px,4.3vh,42px);font-weight:700;color:#F2F2F2;border-bottom:0}
+.gm{font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#9FB4C8;white-space:nowrap}
+.gm>span{display:none;border-bottom:0}
+.guess[data-m="0"] .gm .m0,.guess[data-m="zh"] .gm .mzh,.guess[data-m="en"] .gm .men,.guess[data-m="de"] .gm .mde{display:inline;
+ animation:pop .45s cubic-bezier(.2,1.5,.4,1) both}
+.gm .m0{color:#4A4A4A}
+.grev{background:#2A2208;border:1px solid #FFD24A;color:#FFD24A;border-radius:99px;font-family:inherit;
+ font-weight:700;font-size:clamp(16px,2.4vh,22px);padding:9px 22px;min-height:48px;cursor:pointer}
+.guess.rev .grev{background:#141414;border-color:#444;color:#8E8E8E}
+.gen{font-size:clamp(20px,3.2vh,30px);color:#D8D3C5;display:flex;align-items:baseline;gap:.4em}
+.gen .gbig{font-size:1.7em;font-weight:700;color:#F2F2F2;border-bottom:0}
+.gen em{font-style:normal;color:#9FB4C8;font-weight:700}
+.guess.many .grow .gw{font-size:clamp(21px,3.7vh,36px)}
+.guess.many .gunk,.guess.many .gans{font-size:clamp(17px,2.8vh,26px)}
+.guess.many.rev .grow.near{border-color:#FFD24A;background:#1D1908;animation:nearGlow 1.2s ease-in-out .5s 2}
+@keyframes nearGlow{0%,100%{transform:none}50%{transform:scale(1.04);box-shadow:0 0 22px rgba(255,210,74,.45)}}
+.gwhy{display:none;font-size:clamp(16px,2.6vh,24px);color:#F2F2F2;text-align:center}
+.mbelow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+.mbelow span{background:#1A1208;border:1px solid #5A3E1C;color:#F3B06B;border-radius:99px;font-weight:700;
+ font-size:clamp(14px,2.2vh,20px);padding:3px 10px;white-space:nowrap;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.gwhy b{color:#FFD24A}
+.guess.rev .gwhy{display:block;animation:rise .5s cubic-bezier(.2,.9,.3,1) .4s both}
+/* 為什麼尾巴都一樣：四欄對齊，一欄 ＝ 一個家人（以前 ➜ 英文 ➜ 德文） */
+.tails{display:grid;grid-template-columns:repeat(4,auto);justify-content:center;align-items:baseline;
+ column-gap:clamp(12px,2vw,24px);row-gap:clamp(2px,.6vh,6px);font-size:clamp(20px,3.6vh,32px);font-weight:700}
+.tails .tcap{grid-column:1/-1;font-style:normal;font-size:clamp(13px,1.9vh,17px);color:#8E8E8E;font-weight:400;
+ text-align:center;margin-top:clamp(2px,.8vh,8px)}
+.tails i{font-style:normal;color:#FFD24A;display:inline-block;animation:tglow 1.4s ease-in-out 1.2s 2}
+.tails .old{color:#8E8E8E}
+.tails .en2{animation:rise .5s ease .7s both}.tails .de2{animation:rise .5s ease 1.1s both}
+.tails .sp{border-bottom:0;text-align:center}.tails .old{text-align:center}
+.tarr{color:#4A4A4A;font-size:.7em;text-align:center;animation:rise .4s ease .4s both}
+@keyframes tglow{0%,100%{transform:none;text-shadow:none}50%{transform:translateY(-.15em) scale(1.25);text-shadow:0 0 16px rgba(255,210,74,.9)}}
+/* 地圖 */
+.mapbox{width:min(92vw,600px,calc(44vh * 1.08))}
+.map{display:block;width:100%;height:auto}
+.map .mt{font-size:13px;font-weight:700;fill:#F2F2F2;opacity:0;animation:mtIn .5s ease both}
+.map .mt.big{font-size:16px}.map .mt.small{font-size:9px}
+.map .mt.g{fill:#8FD19E}.map .mt.l{fill:#F3B06B}.map .mt.e{fill:#FFD24A}.map .mt.say{fill:#FFD24A;font-size:12px}
+.map .mt.chip{fill:#F3B06B;font-size:12px}
+@keyframes mtIn{from{opacity:0}to{opacity:1}}
+.map .md{fill:#FFD24A;opacity:0;animation:mtIn .4s ease both}
+.map .md.pulse{animation:mtIn .4s ease both,mdP 1.4s ease-in-out infinite}
+.map .md.l{fill:#F3B06B}
+@keyframes mdP{0%,100%{r:6}50%{r:11}}
+.map .ma{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;
+ animation:maDraw 1.2s ease forwards}
+.map .ma.g{stroke:#8FD19E}.map .ma.l{stroke:#F3B06B}
+@keyframes maDraw{to{stroke-dashoffset:0}}
+.map .mboat{font-size:18px}
+.map .mb{opacity:0;animation:mbGo 2s ease-in-out both}
+@keyframes mbGo{0%{opacity:0;transform:none}10%{opacity:1}90%{opacity:1;transform:translate(var(--dx),var(--dy))}
+ 100%{opacity:1;transform:translate(var(--dx),var(--dy))}}
+/* 語言也有家人 */
+.ltree{display:flex;flex-direction:column;align-items:center;width:100%;max-width:660px}
+.lroot{font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#FFD24A;display:flex;flex-direction:column;align-items:center}
+.lroot em{font-style:normal;font-size:.55em;color:#8E8E8E;font-weight:400}
+.llines{width:100%;height:clamp(26px,4.5vh,44px)}
+.llines path{fill:none;stroke:#5A6E7E;stroke-width:3;stroke-dasharray:100;stroke-dashoffset:100;
+ animation:maDraw .7s ease forwards;vector-effect:non-scaling-stroke}
+.lkids{display:grid;grid-template-columns:repeat(4,1fr);width:100%;gap:8px}
+.lkid{display:flex;flex-direction:column;align-items:center;gap:4px;background:#0C0C0C;border:1px solid #232323;
+ border-radius:14px;padding:8px 4px;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.lkid b{font-size:clamp(14px,2.2vh,20px);color:#D8D3C5}
+.lkid .sp{font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#F2F2F2;border-bottom:0}
+.lkid .flag{width:2.4em;height:1.6em}
+/* 記住這件事：兩個家族 */
+.sumg{display:flex;flex-direction:column;gap:clamp(8px,1.6vh,16px);width:100%;max-width:700px}
+.sg{display:flex;flex-direction:column;gap:4px;border-radius:16px;padding:clamp(8px,1.4vh,14px) 18px;text-align:center}
+.sg b{font-size:clamp(18px,2.8vh,26px)}.sg em{font-style:normal;color:#8E8E8E;font-size:clamp(14px,2vh,18px)}
+.sg span{font-size:clamp(22px,3.8vh,36px);font-weight:700;display:flex;gap:.5em;flex-wrap:wrap;justify-content:center}
+.sg.g{background:#0C1A10;border:1px solid #2B5236}.sg.g b{color:#8FD19E}
+.sg.l{background:#1A1208;border:1px solid #5A3E1C}.sg.l b{color:#F3B06B}
+/* 念到哪一個字，那一個字就亮 */
+.speak{color:#FFD24A!important;text-shadow:0 0 16px rgba(255,210,74,.8);transform:scale(1.12);display:inline-block;transition:transform .15s}
+/* 底部按鈕列：「🔊 唸一次」放在正中央（使用者 2026-09-24 指定） */
+#bar.c3{left:0;right:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+ gap:clamp(6px,1vw,12px);padding:0 clamp(8px,1.5vw,16px)}
+#bar.c3 .bl,#bar.c3 .br{display:flex;gap:clamp(5px,.8vw,10px);align-items:center}
+#bar.c3 .bl{justify-content:flex-end}#bar.c3 .br{justify-content:flex-start}
+#bar.c3 .bl button,#bar.c3 .br button{font-size:clamp(12.5px,1.65vw,16px);padding:10px clamp(9px,1.3vw,18px);white-space:nowrap}
+#bar.c3 #say{font-size:clamp(17px,2.2vw,21px);font-weight:700;padding:12px clamp(18px,2.6vw,30px);
+ background:#10301F;border-color:#39D98A;min-height:54px;white-space:nowrap}
 .reduce *{animation:none!important;transition:none!important}
 
 /* 單字的音標／音節元件。字級跟著外層 font-size 走，所以字卡與故事頁共用一份。 */
@@ -162,48 +266,57 @@ body{margin:0;background:#000;color:#F2F2F2;
 .sp:active,.sp.ping{color:#9FB4C8;border-bottom-color:#9FB4C8}
 .reduce .phw .syl.beat .g,.reduce .phw .u.count .g i.v{animation:none!important}
 
-/* 出處覆蓋卡：使用者 2026-09-20 指定改成「秒懂圖表」。
-   **不可以用 flex 置中**——內容一超過一個螢幕，上面幾列會被切掉而且捲不回去。
-   display:block ＋ overflow:auto，從最上面開始，每一列都捲得到。 */
-#src{position:fixed;inset:0;z-index:20;background:#000;
- display:none;padding:clamp(14px,3.4vh,34px) clamp(12px,3vw,30px);overflow:auto;text-align:left}
-#src.on{display:block}
-#src .wrap{max-width:1000px;margin:0 auto}
-#src h4{margin:0 0 10px;color:#9FB4C8;font-size:clamp(19px,2.6vh,26px);
- letter-spacing:.24em;font-weight:700}
-/* 秒懂動畫：課堂上教的 ➜ 出自這一本 ➜ 你也查得到 */
-#src .flow{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;
- gap:8px;margin:0 0 16px}
-#src .flow span{font-size:clamp(13px,1.9vh,17px);border-radius:99px;padding:7px 14px;
- white-space:nowrap}
-#src .f1{background:#16202A;color:#9FB4C8;border:1px solid #24323E}
-#src .f2{background:#1E1A12;color:#D8C08A;border:1px solid #332C1C}
-#src .f3{background:#13201A;color:#8FBE92;border:1px solid #1F3329}
-#src .fa{color:#4A4A4A;font-size:clamp(14px,2vh,18px)}
-#src.on .flow span,#src.on .flow .fa{animation:srcflow .5s cubic-bezier(.2,1.4,.4,1) both}
-#src.on .flow > *:nth-child(1){animation-delay:.05s}
-#src.on .flow > *:nth-child(2){animation-delay:.20s}
-#src.on .flow > *:nth-child(3){animation-delay:.33s}
-#src.on .flow > *:nth-child(4){animation-delay:.46s}
-#src.on .flow > *:nth-child(5){animation-delay:.59s}
-@keyframes srcflow{0%{opacity:0;transform:translateX(-14px) scale(.9)}100%{opacity:1;transform:none}}
-/* 秒懂圖表：三欄——講什麼／證據出處／查到會看到什麼 */
-#src table{width:100%;border-collapse:collapse}
-#src th{text-align:left;color:#7E8B96;font-weight:700;letter-spacing:.06em;
- font-size:clamp(13px,1.8vh,16px);padding:0 10px 8px;border-bottom:1px solid #262626;white-space:nowrap}
-#src td{vertical-align:top;padding:11px 10px;border-bottom:1px solid #1A1A1A;
- font-size:clamp(15px,2.05vh,20px);line-height:1.6}
-#src td.t{color:#F2F2F2;font-weight:700;width:22%}
-#src td.s{color:#D8C08A;width:36%}
-#src td.d{color:#C2C2C2}
-#src td b{color:#F2F2F2;font-weight:700}
-#src td.s b{color:#EBD9A8}
-#src tr.w td{background:#141008}
-#src tr.w td.t{color:#E0B15C}
-#src .foot{margin:14px 0 0;color:#6E6E6E;font-size:clamp(12px,1.7vh,15px);line-height:1.6}
-#src button{display:block;margin:20px auto 0;background:#1E1E1E;border:1px solid #4A4A4A;
- color:#F2F2F2;border-radius:99px;font-size:18px;padding:12px 28px;min-height:52px;
- font-family:inherit;cursor:pointer}
+#src{position:fixed;inset:0;z-index:40;background:#000;display:none;flex-direction:column;
+ padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) max(10px,env(safe-area-inset-bottom));text-align:left}
+#src.on{display:flex}
+#src .shd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto}
+#src .sttl{color:#9FB4C8;font-size:clamp(17px,2.6vh,24px);font-weight:700;letter-spacing:.2em}
+#src .scnt{color:#D8D3C5;font-size:clamp(16px,2.4vh,22px);font-weight:700}
+#src .sbody{flex:1 1 auto;min-height:0;overflow:auto;display:flex}
+#src .sl{display:none;flex-direction:column;justify-content:center;gap:clamp(10px,2vh,22px);
+ width:100%;max-width:980px;margin:auto}
+#src .sl.on{display:flex}
+#src .lt{font-size:clamp(28px,5.6vh,54px);font-weight:700;color:#F2F2F2;line-height:1.3;text-align:center;
+ animation:srcIn .45s cubic-bezier(.2,1.3,.4,1) both}
+#src .sl.w .lt{color:#F0B45C}
+#src .lt .wtag{display:inline-block;font-size:.5em;vertical-align:middle;background:#3A2A0C;color:#F0B45C;
+ border:1px solid #6B4E1A;border-radius:99px;padding:4px 12px;margin-right:10px;letter-spacing:.1em}
+#src .vis{display:flex;justify-content:center;animation:srcIn .45s cubic-bezier(.2,1.3,.4,1) .15s both}
+#src .ck{display:flex;align-items:center;gap:clamp(10px,1.6vw,20px);border-radius:18px;
+ padding:clamp(10px,1.8vh,18px) clamp(14px,2vw,24px);animation:srcIn .5s cubic-bezier(.2,1.3,.4,1) both}
+#src .ck .ci{font-size:clamp(30px,5.4vh,52px);flex:0 0 auto}
+#src .ck .cl{display:block;font-size:clamp(13px,1.9vh,17px);letter-spacing:.14em;margin-bottom:4px;font-weight:700}
+#src .ck .cv{display:block;line-height:1.5}
+#src .ck.s{background:#17140C;border:1px solid #3A3018;animation-delay:.35s}
+#src .ck.s .cl{color:#B79A5C}
+#src .ck.s .cv{color:#EBD9A8;font-size:clamp(18px,3vh,30px);font-weight:700}
+#src .ck.d{background:#0E1A12;border:1px solid #21402B;animation-delay:.75s}
+#src .ck.d .cl{color:#6FAE7C}
+#src .ck.d .cv{color:#E6E6E6;font-size:clamp(20px,3.4vh,34px)}
+#src .ck.d .cv b{color:#FFD24A}
+#src .sl.w .ck.d{background:#1A1206;border-color:#4A3510}
+#src .car{text-align:center;color:#5A5A5A;font-size:clamp(20px,3vh,30px);line-height:1;
+ animation:srcIn .4s ease .6s both}
+@keyframes srcIn{0%{opacity:0;transform:translateY(16px) scale(.94)}100%{opacity:1;transform:none}}
+#src .snav{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,18px);flex:0 0 auto;
+ padding-top:8px}
+#src .snav button,#src .shd button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
+ font-size:clamp(16px,2.4vh,22px);padding:10px 22px;min-height:50px;font-family:inherit;cursor:pointer}
+#src .snav button:disabled{opacity:.3}
+#src .sdots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:46vw}
+#src .sdots i{width:10px;height:10px;border-radius:50%;background:#2A2A2A}
+#src .sdots i.on{background:#FFD24A}
+/* 出處裡的秒懂動畫（字母一格一格跳出來、插進來的字母會發光） */
+#src .ev{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:clamp(8px,1.4vw,18px)}
+#src .ev .st{display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0;
+ animation:srcIn .5s cubic-bezier(.2,1.3,.4,1) both}
+#src .ev .st b{font-size:clamp(24px,4.6vh,46px);color:#F2F2F2;letter-spacing:.02em}
+#src .ev .st em{font-style:normal;font-size:clamp(12px,1.8vh,16px);color:#8E8E8E;white-space:nowrap}
+#src .ev .ar{color:#5A5A5A;font-size:clamp(20px,3vh,30px);padding-bottom:1.1em;opacity:0;animation:srcIn .4s ease both}
+#src .ev .new{color:#FFD24A;display:inline-block;animation:newT 1.2s ease-in-out 1.6s 3}
+#src .ev .no{color:#FF6B6B}
+@keyframes newT{0%,100%{transform:none;text-shadow:none}50%{transform:translateY(-.25em) scale(1.5);text-shadow:0 0 18px rgba(255,210,74,.9)}}
+.reduce #src *{animation:none!important;opacity:1!important}
 </style>
 </head>
 <body>
@@ -212,7 +325,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 <div id="stage"></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
 <div id="bar"><button id="say">🔊 念一次</button><button id="slow">🐢 放慢</button><button id="phmode">🔤 音標：無</button><button id="again">▶ 從頭看</button><button id="home">🏠 首頁</button><button id="srcb">📖 出處</button></div>
-<footer id="src"><div class="wrap"><h4>出處</h4><div class="flow"><span class="f1">📺 課堂上教的</span><span class="fa">➜</span><span class="f2">📖 出自這一本</span><span class="fa">➜</span><span class="f3">✅ 你也查得到</span></div><table><thead><tr><th>這一條在講什麼</th><th>證據出處（照這個就查得到）</th><th>查到會看到什麼</th></tr></thead><tbody><tr><td class="t">本頁各幕的出處</td><td class="s">見各單字卡的「📖 出處」</td><td class="d">每一幕的依據與該單字字卡頁完全相同，這裡只列共通的幾本。</td></tr><tr><td class="t">主要依據</td><td class="s">OED（牛津英語詞典）；Lewis &amp; Short《A Latin Dictionary》</td><td class="d">字源以 OED 為準，拉丁文詞義另據 Lewis &amp; Short。</td></tr><tr><td class="t">課堂上最快查到的旁證</td><td class="s">Wikipedia「Thorn (letter)」「Gh (digraph)」「Danelaw」</td><td class="d">學生當場質疑時，這三個條目手機就查得到。</td></tr><tr><td class="t">寶寶的 ma／da</td><td class="s">Roman Jakobson (1960)《Why “Mama” and “Papa”?》</td><td class="d">ma／da 是嬰兒最早發得出來的音。</td></tr><tr><td class="t">維京人住在哪裡</td><td class="s">Anglo-Saxon Chronicle 876–877 年條；「Danelaw（丹麥區）」；OED「-by, suffix」</td><td class="d">住的是<b>英格蘭東北部一整片地區</b>，不是某一個村子。證據是地名：<b>-by</b>（古北歐文的村子）Grimsby、Whitby、Derby。</td></tr><tr class="w"><td class="t">這個說法是假的</td><td class="s">—</td><td class="d">「Father And Mother, I Love You」<b>查無一手出處</b>，教材只說「它不是 family 的來源」。</td></tr><tr><td class="t">音標（美式）</td><td class="s">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries 的 NAmE 發音</td><td class="d">本教材的 IPA 一律採<b>美式</b>標法。</td></tr><tr><td class="t">KK 音標</td><td class="s">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</td><td class="d">台灣中小學課本採用的標法。同一個音兩套寫法不同：bed 的 e ＝ IPA <b>/e/</b>、KK <b>/ɛ/</b>；boat 的 o ＝ IPA <b>/oʊ/</b>、KK <b>/o/</b>。</td></tr><tr><td class="t">音節怎麼切</td><td class="s">Louisa Moats《Speech to Print》；National Reading Panel (2000)</td><td class="d">本教材用<b>開音節切法</b>（母音後面切）：<b>fa．mi．ly</b>、mo．ther、fa．ther、bro．ther、daugh．ter、un．cle。<b>一個出聲的母音 ＝ 一個音節</b>。</td></tr><tr class="w"><td class="t">和辭典的連字號不一樣，兩種都對</td><td class="s">—</td><td class="d">辭典（如 <b>Merriam-Webster</b>）印的是<b>排版斷行用</b>的連字號，family 寫成 <b>fam·i·ly</b>；本教材教的是<b>唸的時候怎麼切</b>，所以是 <b>fa．mi．ly</b>。<b>兩種都對，用途不同</b>——一個是給排版看的，一個是給嘴巴唸的。</td></tr><tr class="w"><td class="t">數音節數的是「還在出聲的母音」</td><td class="s">—</td><td class="d">畫面上<b>淺灰色的字母不出聲，不算</b>（niece 的 e、wife 的 e、daughter 的 gh、little 的第二個 t）；<b>au／ou／ie／ew</b> 兩個字母一起發一個音，畫面上本來就是一格。照畫面數，這條規則<b>全部成立</b>。</td></tr><tr><td class="t">唸出來的聲音</td><td class="s">Web Speech API（瀏覽器內建語音合成），語系 en-US</td><td class="d">不需要連網也不需要帳號。<b>實際嗓音由老師那台電腦或平板決定</b>。外語單字另外指定語系：德 de-DE、荷 nl-NL、西 es-ES、法 fr-FR。</td></tr></tbody></table><p class="foot">⚠️ 這些條目名稱都是<b>標準工具書</b>的正式條目，老師和學生照著查一定找得到。製作環境連不上網，<b>沒有逐條開網頁核對過</b>——第一次上課前建議抽查兩三條。</p><button id="srcx">關閉</button></div></footer>
+<footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span><span class="scnt"><span id="srcn">1</span> ／ 12</span><button id="srcx">✕ 關閉</button></div><div class="sbody"><section class="sl on" data-k="0"><div class="lt">本頁各幕的出處</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">見各單字卡的「📖 出處」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">每一幕的依據與該單字字卡頁完全相同，這裡只列共通的幾本。</span></span></div></section><section class="sl" data-k="1"><div class="lt">主要依據</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED（牛津英語詞典）；Lewis &amp; Short《A Latin Dictionary》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">字源以 OED 為準，拉丁文詞義另據 Lewis &amp; Short。</span></span></div></section><section class="sl" data-k="2"><div class="lt">課堂上最快查到的旁證</div><div class="ck s"><span class="ci">🌐</span><span><span class="cl">證據在這本書</span><span class="cv">Wikipedia「Thorn (letter)」「Gh (digraph)」「Danelaw」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">學生當場質疑時，這三個條目手機就查得到。</span></span></div></section><section class="sl" data-k="3"><div class="lt">寶寶的 ma／da</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Roman Jakobson (1960)《Why “Mama” and “Papa”?》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">ma／da 是嬰兒最早發得出來的音。</span></span></div></section><section class="sl" data-k="4"><div class="lt">維京人住在哪裡</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">Anglo-Saxon Chronicle 876–877 年條；「Danelaw（丹麥區）」；OED「-by, suffix」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">住的是<b>英格蘭東北部一整片地區</b>，不是某一個村子。證據是地名：<b>-by</b>（古北歐文的村子）Grimsby、Whitby、Derby。</span></span></div></section><section class="sl w" data-k="5"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>這個說法是假的</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">「Father And Mother, I Love You」<b>查無一手出處</b>，教材只說「它不是 family 的來源」。</span></span></div></section><section class="sl" data-k="6"><div class="lt">音標（美式）</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries（NAmE）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">本教材的 IPA 一律用<b>美式</b>。</span></span></div></section><section class="sl" data-k="7"><div class="lt">KK 音標</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">台灣課本用的標法。例：bed 的 e ＝ IPA <b>/e/</b> ＝ KK <b>/ɛ/</b>。</span></span></div></section><section class="sl" data-k="8"><div class="lt">音節怎麼切</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Louisa Moats《Speech to Print》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">母音後面切：<b>fa．mi．ly</b>。<b>一個出聲的母音 ＝ 一個音節</b>。</span></span></div></section><section class="sl w" data-k="9"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>辭典的 fam·i·ly 也對</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">那是<b>排版斷行</b>用的；本教材教的是<b>唸的時候</b>怎麼切。兩種都對。</span></span></div></section><section class="sl w" data-k="10"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>淺灰色的字母不算</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">不出聲的字母（淺灰色）<b>不算母音</b>，數紅色的就對了。</span></span></div></section><section class="sl" data-k="11"><div class="lt">唸出來的聲音</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Web Speech API（瀏覽器內建語音，en-US）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">不用連網。<b>嗓音由這台電腦決定</b>。外語另外指定：德 de-DE、荷 nl-NL、瑞典 sv-SE、法 fr-FR、西 es-ES。</span></span></div></section></div><div class="snav"><button id="srcp">◀ 上一條</button><span class="sdots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><button id="srcf">下一條 ▶</button></div></footer>
 
 <script>
 
@@ -506,13 +619,38 @@ if(reduce)document.body.classList.add("reduce");
 var dots=document.getElementById("dots");
 for(var k=0;k<S.length;k++)dots.appendChild(document.createElement("i"));
 
-/* 念一次：整幕的主角字。畫面上還有 {{單字}} 的話，順便一格一格亮過去。 */
-function say(){var w=S[i].say;if(!w)return;
+/* 唸一次：這一幕看得到的每一個字，一個一個唸完，念到哪個字那個字就亮
+   （使用者 2026-09-24 指定，parts.html／world.html）。外語照各自的語言唸。 */
+var SAYALL=0,chainId=0;
+function visible(el){if(!el.getClientRects().length)return false;
+ for(var p=el;p&&p!==document.body;p=p.parentElement){var cs=getComputedStyle(p);
+  if(cs.display==="none"||cs.visibility==="hidden")return false}return true}
+function sayAll(){
+ var my=++chainId;try{speechSynthesis.cancel()}catch(e){}
+ var els=[].filter.call(stage.querySelectorAll(".phw,.sp"),function(el){
+  return visible(el)&&!(el.parentElement&&el.parentElement.closest(".phw,.sp"))});
+ var k=0;
+ function next(){
+  [].forEach.call(stage.querySelectorAll(".speak"),function(x){x.classList.remove("speak")});
+  if(my!==chainId||k>=els.length)return;
+  var el=els[k++],t=el.getAttribute("data-say"),lang=el.getAttribute("data-lang")||"en-US",done=0;
+  if(!t){next();return}
+  el.classList.add("speak");
+  var fin=function(){if(done)return;done=1;setTimeout(next,160)};
+  try{var u=new SpeechSynthesisUtterance(t);u.lang=lang;u.rate=PH.isSlow()?.45:.85;
+   u.onend=fin;u.onerror=fin;speechSynthesis.speak(u)}catch(e){fin()}
+  setTimeout(fin,1400+t.length*(PH.isSlow()?260:140));   /* 瀏覽器不發 onend 也不會卡住 */
+ }
+ setTimeout(next,90);
+}
+function say(){if(SAYALL){sayAll();return}
+ var w=S[i].say;if(!w)return;
  var el=stage.querySelector('.phw[data-say="'+w+'"]');
  if(el){PH.sayWord(el,S[i].sayLang)}else{PH.say(w,S[i].sayLang)}}
 
 var stage=document.getElementById("stage");
 function show(n){
+ chainId++;
  var back=(n<i);
  i=Math.max(0,Math.min(S.length-1,n));
  stage.innerHTML=draw(S[i]);
@@ -529,6 +667,16 @@ document.getElementById("prev").addEventListener("click",function(){show(i-1)});
 document.getElementById("next").addEventListener("click",function(){show(i+1)});
 document.getElementById("again").addEventListener("click",function(){show(0)});
 document.getElementById("say").addEventListener("click",say);
+/* 猜猜看：公布答案／藏起來、右邊看中文／英文／德文 */
+stage.addEventListener("click",function(e){
+ var t=e.target;
+ var r=t.closest?t.closest(".grev"):null;
+ if(r){var g=r.closest(".guess");var on=!g.classList.contains("rev");g.classList.toggle("rev",on);
+  r.textContent=on?"🙈 藏起來再猜一次":"🔍 公布答案";return}
+ var m=t.closest?t.closest(".gmode button"):null;
+ if(m){var g2=m.closest(".guess");g2.setAttribute("data-m",m.getAttribute("data-m"));
+  [].forEach.call(g2.querySelectorAll(".gmode button"),function(b){b.classList.toggle("on",b===m)});}
+});
 document.addEventListener("keydown",function(e){
  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();show(i+1)}
  if(e.key==="ArrowLeft")show(i-1);
@@ -540,11 +688,29 @@ show(jump);
 
 document.getElementById("home").addEventListener("click",function(){location.href="../index.html"});
 
-(function(){var s=document.getElementById("src");
- function t(v){s.classList.toggle("on",v);if(v)s.scrollTop=0}
+(function(){var s=document.getElementById("src");if(!s)return;
+ var L=s.querySelectorAll(".sl"),D=s.querySelectorAll(".sdots i"),k=0;
+ function go(n){k=Math.max(0,Math.min(L.length-1,n));
+  for(var j=0;j<L.length;j++){L[j].classList.toggle("on",j===k);D[j].classList.toggle("on",j===k)}
+  /* 換頁時動畫重播一次 */
+  var c=L[k];c.style.display="none";void c.offsetWidth;c.style.display="";
+  document.getElementById("srcn").textContent=k+1;
+  document.getElementById("srcp").disabled=(k===0);
+  document.getElementById("srcf").disabled=(k===L.length-1)}
+ function t(v){s.classList.toggle("on",v);if(v)go(0)}
  document.getElementById("srcb").addEventListener("click",function(){t(!s.classList.contains("on"))});
  document.getElementById("srcx").addEventListener("click",function(){t(false)});
- document.addEventListener("keydown",function(e){if(e.key==="Escape")t(false)});})();
+ document.getElementById("srcp").addEventListener("click",function(){go(k-1)});
+ document.getElementById("srcf").addEventListener("click",function(){go(k+1)});
+ /* 出處開著的時候，← → 翻的是出處，不是後面那一頁（先攔下來） */
+ document.addEventListener("keydown",function(e){
+  if(!s.classList.contains("on"))return;
+  if(e.key==="Escape"){t(false)}
+  else if(e.key==="ArrowRight"||e.key===" "){go(k+1)}
+  else if(e.key==="ArrowLeft"){go(k-1)}
+  else return;
+  e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();
+ },true);})();
 </script>
 </body>
 </html>

@@ -51,12 +51,14 @@ const EXTRA = [
  { t: '更多字的故事', href: 'words/why-more.html' },
  { t: 'daughter 的 gh', href: 'words/daughter-gh.html' },
  { t: '哥哥還是弟弟', href: 'words/older-younger.html' },
- { t: '家庭樹 進階版（親戚）', href: 'words/family-tree-2.html' }
+ { t: '家庭樹 進階版（親戚）', href: 'words/family-tree-2.html' },
+ { t: '🌍 家人單字環遊世界', href: 'words/world.html' }
 ];
 const TEACHER = [
  { t: '📋 Kahoot 20 題與上架說明',
    href: 'https://github.com/hsieny627-jpg/AI-Agent-Open-Code/blob/main/kahoot_20_%E9%A1%8C%E7%9B%AE%E8%88%87%E4%B8%8A%E6%9E%B6%E8%AA%AA%E6%98%8E.md' },
- { t: '🎮 暖身題試玩一題', href: 'words/quiz-demo.html' }
+ { t: '🎮 暖身題試玩一題', href: 'words/quiz-demo.html' },
+ { t: '💾 離線版：沒有網路也能上課', href: 'offline.html' }
 ];
 
 const card = (s) => s.href === '#cards'

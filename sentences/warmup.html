@@ -73,6 +73,57 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 #dots i.on{background:var(--acc);transform:scale(1.35)}
 
 .ap{color:var(--ap);font-weight:700}
+
+#miss,#missAll{position:fixed;inset:0;z-index:95;background:#000;display:none;flex-direction:column;
+ align-items:center;padding:calc(var(--safeT) + clamp(10px,2vh,24px)) clamp(14px,3vw,40px)
+ calc(var(--safeB) + clamp(10px,2vh,24px));overflow-y:auto}
+#miss.on,#missAll.on{display:flex}
+#miss .mbox,#missAll .mbox{width:100%;max-width:1060px;margin:auto 0;display:flex;flex-direction:column;
+ gap:clamp(8px,1.6vh,18px)}
+.mhd{display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,26px)}
+.mhd .mt{font-size:clamp(30px,6.4vh,62px);font-weight:700;color:var(--no);
+ animation:mShake .5s cubic-bezier(.3,.8,.3,1)}
+@keyframes mShake{0%,100%{transform:none}20%{transform:translateX(-14px)}40%{transform:translateX(12px)}
+ 60%{transform:translateX(-8px)}80%{transform:translateX(5px)}}
+.mrow{display:flex;align-items:center;gap:clamp(10px,1.8vw,22px);background:#0B0B0B;border:1px solid #222;
+ border-left-width:10px;border-radius:16px;padding:clamp(8px,1.5vh,16px) clamp(12px,1.8vw,24px);
+ opacity:0;animation:mIn .45s cubic-bezier(.2,.9,.3,1.2) forwards}
+@keyframes mIn{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+.mrow .ml{flex:0 0 auto;width:clamp(86px,12vw,150px);font-size:clamp(15px,2.5vh,24px);font-weight:700;
+ color:var(--dim);line-height:1.25}
+.mrow .mv{flex:1 1 auto;min-width:0;line-height:1.3;overflow-wrap:anywhere}
+.mrow.q{border-left-color:#44586A}.mrow.q .mv{font-size:clamp(19px,3.4vh,34px);color:var(--body)}
+.mrow.p{border-left-color:var(--no);animation-delay:.25s}
+.mrow.p .mv{font-size:clamp(23px,4.6vh,46px);color:#FF9C9C}
+.mrow.a{border-left-color:var(--ok);background:#07190F;animation-delay:.6s}
+.mrow.a .mv{font-size:clamp(30px,7vh,70px);font-weight:700;color:var(--ok)}
+.mrow.w{border-left-color:var(--gold);animation-delay:1s}
+.mrow.w .mv{font-size:clamp(19px,3.5vh,34px);color:var(--fg)}
+.mrow.w .mv b{color:var(--gold)}
+.mrow .x{border-radius:8px;padding:0 .12em;background:rgba(255,94,94,.28);color:#fff;
+ text-decoration:line-through;text-decoration-color:var(--no);text-decoration-thickness:.1em}
+.mrow .f{border-radius:8px;padding:0 .12em;background:var(--gold);color:#000;
+ display:inline-block;animation:mFix 1.1s ease-in-out .9s 2}
+@keyframes mFix{0%,100%{transform:none}50%{transform:scale(1.18)}}
+.mrow .say{flex:0 0 auto;background:#10301F;border:1px solid var(--ok);border-radius:999px;
+ font-size:clamp(14px,2.2vh,20px);padding:clamp(6px,1vh,10px) clamp(10px,1.4vw,16px);color:#fff}
+.mcd{display:flex;align-items:center;justify-content:center;gap:12px;
+ font-size:clamp(15px,2.4vh,22px);color:var(--dim)}
+.mcd b{display:inline-flex;align-items:center;justify-content:center;width:clamp(46px,7vh,70px);
+ height:clamp(46px,7vh,70px);border-radius:50%;border:4px solid var(--gold);color:var(--gold);
+ font-size:clamp(24px,4.4vh,42px)}
+.mcd b.tick{animation:mTick .9s ease}
+@keyframes mTick{0%{transform:scale(1.35)}100%{transform:none}}
+#missAll h2{margin:0;text-align:center;font-size:clamp(26px,5vh,48px)}
+#missAll .lead{margin:0;text-align:center;font-size:clamp(15px,2.4vh,22px);color:var(--dim)}
+.mcard{display:flex;flex-direction:column;gap:clamp(6px,1.1vh,12px);border:1px solid #262626;border-radius:20px;
+ padding:clamp(10px,1.8vh,18px);background:#050505;opacity:0;animation:mIn .45s cubic-bezier(.2,.9,.3,1.2) forwards}
+.mcard .mn{font-size:clamp(14px,2.2vh,20px);color:var(--acc);font-weight:700;letter-spacing:.1em}
+.mcard .mrow{opacity:1;animation:none}
+.mbtns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:clamp(4px,1vh,10px)}
+.mbtns button{background:#0F3323;border:1px solid var(--ok);border-radius:999px;color:#fff;font-weight:700;
+ font-size:clamp(17px,2.8vh,26px);padding:clamp(10px,1.6vh,16px) clamp(20px,3vw,36px)}
+
 .reduce *{animation:none!important;transition:none!important}
 
 #stage{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;
@@ -213,6 +264,7 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
   <div class="sc" id="endsc">0</div>
   <div class="ln" id="endln"></div>
   <div class="btns" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+   <button class="big" id="missBtn">📌 答錯整理</button>
    <button class="big" id="again">🔁 再玩一次</button>
    <a class="big go" href="unit1.html" style="text-decoration:none;display:inline-block">➡ 開始上 Unit 1</a>
   </div>
@@ -265,6 +317,11 @@ function setRate(r){r=parseFloat(r);if(!(r>0))r=0.9;
  RATE=Math.max(0.5,Math.min(1,r));SLOW=RATE<=0.8;return RATE}
 var SQ=[],SBUSY=false,SID=0,SLAST=0;
 function pickVoice(){try{var v=speechSynthesis.getVoices();if(!v||!v.length)return;
+ /* 離線上課（使用者 2026-09-24 指定）：沒有網路的時候，只能用「電腦內建」的語音——
+    Google／Edge 的線上語音離線會沒聲音。所以離線時先把線上語音拿掉。 */
+ var off=false;try{off=(navigator.onLine===false)}catch(e){}
+ if(off){var loc=v.filter(function(x){return x.localService!==false});if(loc.length)v=loc}
+ VOX=null;VOXZH=null;
  var en=v.filter(function(x){return /^en[-_]US/i.test(x.lang)});
  if(!en.length)en=v.filter(function(x){return /^en/i.test(x.lang)});
  var pref=['Samantha','Ava','Allison','Alex','Google US English','Microsoft Zira','Microsoft Aria'];
@@ -274,6 +331,7 @@ function pickVoice(){try{var v=speechSynthesis.getVoices();if(!v||!v.length)retu
  if(zh.length)VOXZH=zh[0];}catch(e){}}
 pickVoice();
 try{speechSynthesis.onvoiceschanged=pickVoice}catch(e){}
+try{window.addEventListener('online',pickVoice);window.addEventListener('offline',pickVoice)}catch(e){}
 
 /* 唸出來以前先洗一次：＝ ➜ ＿ 這些符號不發音（使用者指定） */
 function sayText(s){
@@ -292,27 +350,55 @@ function pump(){
  else{u.lang='en-US';if(VOX)u.voice=VOX;u.rate=RATE}
  u.pitch=1;
  var mine=++SID;SBUSY=true;SLAST=Date.now();
- var fin=function(){if(mine!==SID)return;SID++;SBUSY=false;SLAST=Date.now();
+ /* 念到哪個字，那個字就亮（使用者 2026-09-24 指定）：
+    有 onboundary 的瀏覽器照真正的時間亮；沒有的（部分 Chrome 線上語音、iPad 舊版）
+    就照字母數估時間一個一個亮過去。第一個真的 boundary 一來，估算就停掉。 */
+ var ws=[],wm,wre=/\S+/g;while((wm=wre.exec(t)))ws.push({s:wm.index,n:wm[0].replace(/[^A-Za-z]/g,'').length});
+ var hk=-2,gotB=false,ft=null,began=false;
+ var mark=function(k){if(!it.hl||k===hk)return;hk=k;try{it.hl(k)}catch(e){}};
+ var est=function(k){var n=ws[k]?ws[k].n:3;return (140+62*Math.max(1,n))/RATE};
+ var step=function(){if(gotB||mine!==SID)return;var k=hk+1;
+  if(k<ws.length){mark(k);ft=setTimeout(step,est(k))}};
+ var begin=function(){if(began)return;began=true;
+  if(it.start)try{it.start()}catch(e){}
+  if(it.hl){mark(0);ft=setTimeout(step,est(0))}};
+ u.onstart=begin;
+ u.onboundary=function(e){if(!it.hl||mine!==SID)return;
+  if(e&&e.name&&e.name!=='word')return;
+  gotB=true;if(ft){clearTimeout(ft);ft=null}begin();
+  var c=e&&typeof e.charIndex==='number'?e.charIndex:0,k=0;
+  for(var q=0;q<ws.length;q++)if(ws[q].s<=c)k=q;
+  mark(k)};
+ var fin=function(){if(ft){clearTimeout(ft);ft=null}
+  if(it.hl&&hk!==-1){hk=-1;try{it.hl(-1)}catch(e){}}
+  if(mine!==SID)return;SID++;SBUSY=false;SLAST=Date.now();
   if(it.done)try{it.done()}catch(e){}
   setTimeout(pump,60)};
  u.onend=fin;u.onerror=fin;
  try{speechSynthesis.speak(u)}catch(e){fin()}
+ /* 有些瀏覽器不發 onstart：0.35 秒還沒開始就自己開始亮 */
+ setTimeout(function(){if(mine===SID&&SBUSY)begin()},350);
 }
 /* say(句子)            ＝ 馬上講，砍掉還沒講完的
    say(字,null,{keep:1}) ＝ 排隊，前一個講完才講（自動播、逐字用這個）
-   say(句子,null,{done:fn}) ＝ 講完再做一件事 */
+   say(句子,null,{done:fn}) ＝ 講完再做一件事
+   say(句子,null,{hl:fn})   ＝ 念到第 k 個字就呼叫 fn(k)，念完呼叫 fn(-1)（念到哪亮到哪）
+   say(句子,null,{start:fn})＝ 真的開始出聲的那一刻呼叫 fn */
 function say(txt,lang,opt){
  opt=opt||{};
  if(!txt||!sayText(txt)){if(opt.done)opt.done();return}
- if(opt.keep){if(SQ.length>4)SQ.length=4;SQ.push({t:txt,l:lang,done:opt.done});pump();return}
+ var item={t:txt,l:lang,done:opt.done,hl:opt.hl,start:opt.start};
+ if(opt.keep){if(SQ.length>4)SQ.length=4;SQ.push(item);pump();return}
  SQ.length=0;SID++;SBUSY=false;
+ if(window.HLCLR)try{HLCLR()}catch(e){}
  try{speechSynthesis.cancel()}catch(e){}
- SQ.push({t:txt,l:lang,done:opt.done});
+ SQ.push(item);
  /* Chrome／Edge：cancel() 之後馬上 speak() 會被吃掉，等 90ms 再講 */
  setTimeout(pump,90);
 }
 function sayZh(t,opt){say(t,'zh',opt)}
-function sayStop(){SQ.length=0;SID++;SBUSY=false;try{speechSynthesis.cancel()}catch(e){}}
+function sayStop(){SQ.length=0;SID++;SBUSY=false;if(window.HLCLR)try{HLCLR()}catch(e){}
+ try{speechSynthesis.cancel()}catch(e){}}
 /* 看門狗：瀏覽器有時候不發 onend（或講到一半自己停住），卡住就救回來 */
 setInterval(function(){
  try{
@@ -336,6 +422,88 @@ function beep(){}
 function sOk(){}function sNo(){}function sTick(){}function sPop(){}function sWow(){}
 
 
+/* 找出「哪裡錯」：兩句逐字比對，錯的字框紅色、改對的字框金色 */
+function mTok(s){var r=[],re=/[A-Za-z’']+|[^sA-Za-z’']/g,m;s=String(s);
+ while((m=re.exec(s)))r.push({t:m[0],s:m.index,e:m.index+m[0].length});return r}
+function mKey(t){return t.replace(/’/g,"'").toLowerCase()}
+function mDiff(a,b){ /* 回傳：a 裡面哪些字不在共同的部分、b 裡面哪些字不在共同的部分 */
+ var A=mTok(a),B=mTok(b),n=A.length,m=B.length,L=[],i,j;
+ for(i=0;i<=n;i++){L.push([]);for(j=0;j<=m;j++)L[i].push(0)}
+ for(i=n-1;i>=0;i--)for(j=m-1;j>=0;j--)
+  L[i][j]=mKey(A[i].t)===mKey(B[j].t)?L[i+1][j+1]+1:Math.max(L[i+1][j],L[i][j+1]);
+ var ia={},ib={};i=0;j=0;
+ while(i<n&&j<m){if(mKey(A[i].t)===mKey(B[j].t)){ia[i]=1;ib[j]=1;i++;j++}
+  else if(L[i+1][j]>=L[i][j+1])i++;else j++}
+ return {A:A,B:B,ia:ia,ib:ib};
+}
+function mPaint(s,T,keep,cls){ /* 把沒對上的字包起來，其他字照原樣 */
+ s=String(s);var out='',p=0;
+ T.forEach(function(t,k){out+=mEsc(s.slice(p,t.s));
+  out+=keep[k]?mEsc(t.t):'<span class="'+cls+'">'+mEsc(t.t)+'</span>';p=t.e});
+ return ap(out+mEsc(s.slice(p)));
+}
+function mEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function mStrip(h){var d=document.createElement('div');d.innerHTML=String(h||'');return d.textContent||''}
+function mRows(o){
+ var pick=o.pick==null?null:mStrip(o.pick), ans=mStrip(o.ans), dp='', da='';
+ if(pick!=null){var d=mDiff(pick,ans);dp=mPaint(pick,d.A,d.ia,'x');da=mPaint(ans,d.B,d.ib,'f')}
+ else da=ap(mEsc(ans));
+ var en=/[A-Za-z]/.test(ans);
+ return (o.q?'<div class="mrow q"><span class="ml">📝 題目</span><span class="mv">'+ap(o.q)+'</span></div>':'')+
+  '<div class="mrow p"><span class="ml">❌ 你選的</span><span class="mv">'+
+    (pick==null?'⏰ 時間到，沒有作答':dp)+'</span></div>'+
+  '<div class="mrow a"><span class="ml">✅ 正確答案</span><span class="mv">'+da+'</span>'+
+    (en?'<button class="say" data-say="'+mEsc(ans).replace(/"/g,'&quot;')+'">🔊 聽</button>':'')+'</div>'+
+  (o.why?'<div class="mrow w"><span class="ml">💡 為什麼</span><span class="mv">'+ap(o.why)+'</span></div>':'');
+}
+var MISSLOG=[], missT=null, missCB=null;
+/* 答錯：蓋一整頁，倒數 3 秒才消失，消失以後才呼叫 cb */
+function missShow(o,cb){
+ var m=document.getElementById('miss');
+ if(!m){m=document.createElement('div');m.id='miss';document.body.appendChild(m);
+  m.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('.say'):null;
+   if(b)say(b.getAttribute('data-say'))})}
+ var key=mStrip(o.q)+'|'+mStrip(o.ans);
+ MISSLOG=MISSLOG.filter(function(x){return x.key!==key});
+ MISSLOG.push({key:key,q:o.q,pick:o.pick,ans:o.ans,why:o.why});
+ if(missT){clearInterval(missT);missT=null}
+ missCB=cb||null;
+ var n=3;
+ m.innerHTML='<div class="mbox"><div class="mhd"><span class="mt">'+(o.pick==null?'⏰ 時間到':'❌ 答錯了')+'</span></div>'+
+  mRows(o)+'<div class="mcd">看清楚：錯在哪裡、正確答案是什麼 <b id="mcdn">3</b></div></div>';
+ m.classList.add('on');
+ var ans=mStrip(o.ans);if(/[A-Za-z]/.test(ans))setTimeout(function(){say(ans)},700);
+ missT=setInterval(function(){
+  n--;var b=document.getElementById('mcdn');
+  if(n>0&&b){b.textContent=n;b.classList.remove('tick');void b.offsetWidth;b.classList.add('tick');return}
+  missHide(true);
+ },1000);
+}
+function missHide(run){
+ if(missT){clearInterval(missT);missT=null}
+ var m=document.getElementById('miss');if(m)m.classList.remove('on');
+ var cb=missCB;missCB=null;if(run&&cb)cb();
+}
+function missOn(){var m=document.getElementById('miss');return !!(m&&m.classList.contains('on'))}
+/* 結束時的「答錯整理」：一題一張卡，全部再看一次 */
+function missAll(title,done){
+ var m=document.getElementById('missAll');
+ if(!m){m=document.createElement('div');m.id='missAll';document.body.appendChild(m);
+  m.addEventListener('click',function(e){
+   var b=e.target.closest?e.target.closest('.say'):null;if(b){say(b.getAttribute('data-say'));return}
+   if(e.target.closest&&e.target.closest('#mAllOk')){m.classList.remove('on');var f=m._done;m._done=null;if(f)f()}})}
+ if(!MISSLOG.length){if(done)done();return false}
+ m._done=done||null;
+ m.innerHTML='<div class="mbox"><h2>📌 '+(title||'答錯整理')+'</h2>'+
+  '<p class="lead">一共 <b style="color:var(--gold)">'+MISSLOG.length+'</b> 題。看紅框（錯在哪裡）和金框（改成什麼）。</p>'+
+  MISSLOG.map(function(x,k){return '<div class="mcard" style="animation-delay:'+(0.12+k*0.18).toFixed(2)+'s">'+
+   '<span class="mn">第 '+(k+1)+' 題</span>'+mRows(x)+'</div>'}).join('')+
+  '<div class="mbtns"><button id="mAllOk">✅ 我都弄懂了</button></div></div>';
+ m.scrollTop=0;m.classList.add('on');
+ return true;
+}
+
+
 var QS=[{"t":"see-zh","q":"「他是一位醫生。」英文怎麼說？","say":"","why":"職業前面<b>一定要有 a</b>。少了 a 就不是完整的句子。","x2":false,"o":["Is he a doctor?","He a doctor.","He's a doctor.","He's doctor."],"a":2},{"t":"think","q":"\"Who’s she?\" 的回答，第一個字要用哪一個？","say":"","why":"問 <b>she</b> 就答 <b>She</b>。Her 不能放句子開頭當主詞。","x2":false,"o":["Who","He","Her","She"],"a":3},{"t":"see-en","q":"\"Who's she?\" 的中文意思是？","say":"","why":"英文 Who 在前面，翻成中文要搬到<b>最後面</b>：<b>她是誰？</b>","x2":false,"o":["她是我的。","她是誰？","誰是她？","她好嗎？"],"a":1},{"t":"think","q":"\"Is she a nurse?\" 改成直述句，要怎麼寫？","say":"","why":"把 <b>Is</b> 和 <b>she</b> 換回來：<b>She is</b> a nurse. 問號換句號。","x2":true,"o":["Her is a nurse.","Is she a nurse.","She is a nurse.","She a nurse is."],"a":2},{"t":"hear-zh","q":"聽一聽，這句話的中文意思是？","say":"Is she a teacher?","why":"第一個字聽到 <b>Is</b> 就是<b>在問問題</b>，中文要加「<b>嗎</b>」。","x2":false,"o":["他是老師嗎？","她是老師。","她不是老師。","她是老師嗎？"],"a":3},{"t":"think","q":"直述句變問句，是哪兩個字交換位置？","say":"","why":"只動<b>最前面兩個字</b>：藍色的 <b>he</b> 和黃色的 <b>is</b>。其他字一個都不動。","x2":false,"o":["he 和 a","he 和 is","is 和 a","a 和 doctor"],"a":1},{"t":"think","q":"下面哪一個字是用來問「人」的？","say":"","why":"<b>Who 問人</b>、What 問東西、How 問好不好、Where 問地方。看到 Who，答案一定是一個人。","x2":false,"o":["Where","Who","What","How"],"a":1},{"t":"see-en","q":"\"He's my father.\" 的中文意思是？","say":"","why":"<b>He ＝ 他</b>、<b>’s ＝ is ＝ 是</b>、<b>my ＝ 我的</b>。一個字一個字對下來就不會錯。","x2":false,"o":["他是我的媽媽。","他是我的爸爸。","他有一個爸爸。","她是我的爸爸。"],"a":1},{"t":"hear-zh","q":"聽一聽，這句話的中文意思是？","say":"She's my mother.","why":"開頭聽到 <b>She</b> 就是「她」，最後聽到 <b>mother</b> 就是「媽媽」。","x2":false,"o":["她是我的姊姊。","他是我的媽媽。","她是我的媽媽。","她是我的奶奶。"],"a":2},{"t":"hear-en","q":"聽一聽，你聽到的是哪一句？","say":"Is he a farmer?","why":"問句的第一個字是 <b>Is</b>，直述句的第一個字是 <b>He</b>。<b>聽第一個字就分得出來</b>。","x2":false,"o":["He is a farmer.","Is he a farmer?","He is a father.","Is she a farmer?"],"a":1},{"t":"see-zh","q":"「她是我的奶奶。」英文怎麼說？","say":"","why":"奶奶是女生 → 用 <b>She</b>；<b>grandmother</b> 才是奶奶，grandfather 是爺爺。","x2":false,"o":["She's my grandmother.","She's my mother.","She's my grandfather.","He's my grandmother."],"a":0},{"t":"hear-en","q":"聽一聽，你聽到的是哪一句？","say":"He's my brother.","why":"開頭是 <b>He</b>，最後是 <b>brother</b>（哥哥、弟弟都是這個字）。","x2":false,"o":["He's my father.","He's my brother.","She's my brother.","He's my grandfather."],"a":1},{"t":"think","q":"\"Is he a teacher?\" 要回答「是的」，哪一句才對？","say":"","why":"句子<b>結尾的 is 不可以縮寫</b>。Yes, he’s. 是錯的，一定要說 <b>Yes, he is.</b>","x2":true,"o":["Yes, she is.","Yes, he's.","Yes, he is.","Yes, he isn't."],"a":2},{"t":"think","q":"下面哪一句是完全正確的？","say":"","why":"<b>He’s ＝ He is</b>；<b>His</b> 是「他的」，不能當「他是」。兩個唸起來很像，寫出來差很多。","x2":true,"o":["He my dad.","He's my dad?","He's my dad.","His my dad."],"a":2},{"t":"hear-en","q":"聽一聽，你聽到的是哪一句？","say":"Who's he?","why":"聽最後一個字：<b>he</b>（他）還是 <b>she</b>（她）。she 前面多一個「ㄕ」的氣音。","x2":false,"o":["Who's she?","Whose he?","He's here.","Who's he?"],"a":3},{"t":"think","q":"\"He is a student.\" 改成問句，要怎麼寫？","say":"","why":"把 <b>he</b> 和 <b>is</b> <b>換位置</b>，句號換問號。後面 a student 完全不動。","x2":true,"o":["Does he a student?","Is he a student?","He is a student?","Is a student he?"],"a":1},{"t":"see-en","q":"\"She's my aunt.\" 的 aunt 是誰？","say":"","why":"英文的 <b>aunt</b> 一個字，管中文的<b>阿姨、姑姑、舅媽</b>好幾個稱呼。","x2":false,"o":["姪女","姊姊","阿姨（姑姑、舅媽也是）","奶奶"],"a":2},{"t":"see-zh","q":"「他是誰？」英文怎麼說？","say":"","why":"中文的「<b>誰</b>」在最後一個字，英文的 <b>Who</b> 要放<b>第一個</b>。順序剛好相反。","x2":true,"o":["Who he is?","He's who?","What's he?","Who's he?"],"a":3},{"t":"see-en","q":"\"grandfather\" 是誰？","say":"","why":"英文<b>一個字管中文兩個稱呼</b>：爺爺和外公都叫 grandfather。","x2":false,"o":["奶奶","爺爺（外公也是）","哥哥","叔叔"],"a":1},{"t":"think","q":"\"Who’s he?\" 的回答，第一個字要用哪一個？","say":"","why":"問句最後問 <b>he</b>，答句第一個字就用 <b>He</b>：He’s my father.","x2":false,"o":["He","It","Who","She"],"a":0},{"t":"think","q":"\"Is she a doctor?\" 要回答「不是」，哪一句才對？","say":"","why":"問 <b>she</b> 就答 <b>she</b>；「不是」用 <b>isn’t</b>（＝ is not）。","x2":false,"o":["No, she not.","No, he isn't.","No, she is.","No, she isn't."],"a":3},{"t":"think","q":"Who’s 是哪兩個字合起來的？","say":"","why":"<b>Who’s ＝ Who is</b>。紅色那一撇 ’ 就是把 <b>i</b> 藏起來的地方。","x2":true,"o":["Whose","Who are","Who is","Who was"],"a":2}], SHAPE=['▲','◆','●','■'];
 var order=[],qi=0,score=0,streak=0,best=0,right=0,wrongBank=[],revRound=false,answered=false;
 var T=50,LOCK=20,left=T,locked=true,paused=false,tick=null;
@@ -345,7 +513,7 @@ $('#rfg').setAttribute('stroke-dasharray',R);
 
 function start(){
   order=QS.map(function(_,n){return n});
-  qi=0;score=0;streak=0;best=0;right=0;wrongBank=[];revRound=false;
+  qi=0;score=0;streak=0;best=0;right=0;wrongBank=[];revRound=false;MISSLOG=[];
   $('#gate').style.display='none';$('#hud').classList.add('on');$('#quiz').classList.add('on');
   ask();
 }
@@ -434,6 +602,8 @@ function choose(n){
     $('#stage').classList.add('shake');
     setTimeout(function(){$('#stage').classList.remove('shake')},440);
     if(!revRound)wrongBank.push(reshuffle(q));
+    /* 答錯：蓋一整頁，倒數 3 秒（使用者 2026-09-24 指定） */
+    missShow({q:q.q+(q.say?'　🔊 <b>'+q.say+'</b>':''),pick:n<0?null:q.o[n],ans:q.o[q.a],why:q.why});
   }
   $('#why').innerHTML=ap(q.why);
   $('#sc').textContent=score;
@@ -466,9 +636,13 @@ function finish(){
   $('#end').classList.add('on');
   $('#endsc').textContent=score;
   $('#endln').innerHTML='答對 <b>'+right+'</b> 題　最長連對 <b>'+best+'</b> 題';
+  $('#missBtn').style.display=MISSLOG.length?'':'none';
   sWow();
+  /* 結束的時候：答錯整理用獨立的一整頁，先看這個（使用者 2026-09-24 指定） */
+  missAll('暖身題　答錯整理');
 }
 $('#again').addEventListener('click',function(){$('#end').classList.remove('on');start()});
+$('#missBtn').addEventListener('click',function(){missAll('暖身題　答錯整理')});
 $('#go').addEventListener('click',start);
 
 

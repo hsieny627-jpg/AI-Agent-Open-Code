@@ -14,6 +14,11 @@ body{font-family:Andika,-apple-system,"PingFang TC","Noto Sans TC","Microsoft Jh
 #wrap{max-width:640px;margin:0 auto;padding:0 20px calc(30px + env(safe-area-inset-bottom))}
 header{position:sticky;top:0;z-index:20;background:#000;border-bottom:1px solid #262626;padding:12px 16px}
 header h1{margin:0;font-size:19px;font-weight:700;letter-spacing:.05em}
+/* 回到首頁（使用者 2026-09-24 指定）：放在標題右邊，不擋學習內容 */
+header .hrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#homeBtn{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;background:#1E1E1E;border:1px solid #4A4A4A;
+ border-radius:999px;color:#F2F2F2;text-decoration:none;font-size:16px;padding:9px 16px;min-height:44px;white-space:nowrap}
+#homeBtn:active{background:#2A2A2A}
 #bar{height:3px;background:#262626;margin-top:10px}
 #bar i{display:block;height:100%;background:#9FB4C8;transform-origin:left center;transform:scaleX(0)}
 #dots{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 4px}
@@ -97,7 +102,7 @@ nav button:disabled{opacity:.25}
 </style>
 </head>
 <body>
-<header><h1>🕰️ 家人單字時光機</h1><div id="bar"><i id="progress"></i></div></header>
+<header><div class="hrow"><h1>🕰️ 家人單字時光機</h1><a id="homeBtn" href="index.html">🏠 回到首頁</a></div><div id="bar"><i id="progress"></i></div></header>
 <div id="tabs"><button id="tabLearn" class="on">📖 學習</button><button id="tabGames">🎮 遊戲</button></div>
 <div id="wrap">
 <div id="secLearn">

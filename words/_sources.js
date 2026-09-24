@@ -21,6 +21,8 @@
 
 const e    = (t, s, d) => ({ t, s, d });
 const warn = (t, d)    => ({ t, s: '', d, w: 1 });
+/* 有秒懂動畫的出處（v ＝ 放在中間的動畫 HTML，使用者 2026-09-24 指定） */
+const ev   = (t, s, d, v) => ({ t, s, d, v });
 
 /* ── 好幾個字共用的區塊 ── */
 const BROSIS = [
@@ -190,34 +192,69 @@ const P = {
 'older-younger': BROSIS.slice(),
 
 'parts': [
- e('grand ＝ 大', 'OED「grand, adj.」；OED「grand-, comb. form」',
-   '原義是「<b>大的</b>」；親屬稱謂的 grand- 來自<b>法語 grand</b>（grand-père、grand-mère），'+
-   '法語 grand 源自拉丁文 <b>grandis</b>「大的」。旁證：<b>Grand Canyon</b>、<b>grand piano</b>。'),
+ e('grand ＝ 大', 'OED「grand, adj.」「grand-, comb. form」',
+   'grand 原本就是「<b>大的</b>」，從<b>法文</b>借來（grand-père）。旁證：<b>Grand Canyon</b> 大峽谷。'),
  e('hus ＝ house', 'OED「husband, n.」',
-   '古英文 hūsbonda，借自古北歐文 <b>húsbóndi</b> ＝ <b>hús</b>（house 房子）＋ <b>bóndi</b>（管這個家的人）。'),
- e('-ther／-ter 是家人字的尾巴',
-   'OED「mother, n.1」「father, n.」「brother, n.」「daughter, n.」；'+
-   'Calvert Watkins《The American Heritage Dictionary of Indo-European Roots》',
-   '詞根 *māter-、*pəter-、*bhrāter-、*dhugəter-：這四個字的 <b>-ter</b> 來自<b>同一個古老的家人字尾</b>。'),
- warn('誠實界線（給老師，不必跟學生講）',
-   '<b>sister</b> 的 -t- 來源不一樣，是 s 和 r 中間<b>後來插進去的音</b>（Watkins 詞根 *swesor-），'+
-   '只是結果看起來跟其他四個一樣。所以教材上寫的是「<b>五個字尾巴長得一樣</b>」這個'+
-   '<b>看得到的事實</b>，沒有說它們來源全部相同。'),
- e('德文旁證', 'Duden「Mutter」「Vater」「Bruder」「Tochter」「Schwester」',
-   '尾巴同樣都是 <b>-ter</b>／<b>-der</b>。'),
- e('別的國家怎麼叫媽媽',
-   'Duden「Mutter」；Van Dale「moeder」；Real Academia Española《DLE》「madre」；Larousse「mère」',
-   '德 <b>Mutter</b>／荷 <b>moeder</b>／西 <b>madre</b>／法 <b>mère</b>——<b>都從 m 開頭</b>。'),
- e('別的國家怎麼叫爸爸',
-   'Duden「Vater」；Van Dale「vader」；Real Academia Española《DLE》「padre」；Larousse「père」',
-   '德 <b>Vater</b>／荷 <b>vader</b>／西 <b>padre</b>／法 <b>père</b>——都從 <b>f／v／p</b> 開頭。'),
+   '古北歐文 <b>hús</b>（房子）＋ <b>bóndi</b>（管家的人）。'),
+ ev('這四個字，尾巴是同一條',
+   'Watkins《American Heritage Dictionary of Indo-European Roots》詞根 māter-、pəter-、bhrāter-、dhughəter-',
+   '四個字最早的樣子都帶著 <b>-ter</b>。今天唸成 ther／ter，是<b>聲音後來變了</b>。',
+   '<div class="ev">'+
+   '<span class="st" style="animation-delay:.2s"><b>*mā<span class="new">ter</span></b><em>媽媽</em></span>'+
+   '<span class="st" style="animation-delay:.45s"><b>*pə<span class="new">ter</span></b><em>爸爸</em></span>'+
+   '<span class="st" style="animation-delay:.7s"><b>*bhrā<span class="new">ter</span></b><em>兄弟</em></span>'+
+   '<span class="st" style="animation-delay:.95s"><b>*dhughə<span class="new">ter</span></b><em>女兒</em></span></div>'),
+ ev('sister 的 ter，來源不一樣',
+   'Watkins 詞根 <b>swesor-</b>；Kroonen《Etymological Dictionary of Proto-Germanic》(2013)「*swester-」；OED「sister, n.」',
+   '最早是 <b>swesor</b>，<b>沒有 t</b>。s 和 r 中間<b>後來才擠進一個 t</b>，所以只是<b>長得像</b>。',
+   '<div class="ev">'+
+   '<span class="st" style="animation-delay:.2s"><b>*swe<span class="no">s</span>or</b><em>最早：沒有 t</em></span>'+
+   '<span class="ar" style="animation-delay:.6s">➜</span>'+
+   '<span class="st" style="animation-delay:.9s"><b>*swes<span class="new">t</span>er</b><em>t 擠進來</em></span>'+
+   '<span class="ar" style="animation-delay:1.2s">➜</span>'+
+   '<span class="st" style="animation-delay:1.5s"><b>sis<span class="new">t</span>er</b><em>今天</em></span></div>'),
+ ev('證據：別的語言裡，姊妹沒有 t',
+   'Lewis &amp; Short《A Latin Dictionary》「soror」；Watkins 詞根 swesor-',
+   '拉丁文 <b>soror</b>、梵文 <b>svasar</b>：同一個祖先，<b>都沒有 t</b>。',
+   '<div class="ev">'+
+   '<span class="st" style="animation-delay:.2s"><b>soror</b><em>拉丁文</em></span>'+
+   '<span class="st" style="animation-delay:.5s"><b>svasar</b><em>梵文</em></span>'+
+   '<span class="st" style="animation-delay:.8s"><b>sis<span class="new">t</span>er</b><em>英文</em></span></div>'),
+ e('-ter 最早是什麼意思？', 'Mallory &amp; Adams《The Oxford Introduction to Proto-Indo-European》(2006) 第 12 章「Kinship」',
+   '它是很久以前<b>家人稱呼共用的尾巴</b>；最早還有沒有別的意思，<b>學者到今天還沒有定論</b>。'),
+ e('德文', 'Duden「Mutter」「Vater」「Bruder」「Tochter」「Schwester」', '尾巴一樣是 <b>-ter／-der</b>。'),
+ e('荷蘭文', 'Van Dale「moeder」「vader」「broer」「dochter」「zus」',
+   '<b>broer</b> 以前是 broeder，<b>zus</b> 是 zuster 的簡短說法。'),
  e('mo-／fa- 從哪裡來', 'Roman Jakobson (1960)《Why “Mama” and “Papa”?》',
-   '<b>ma</b>、<b>pa</b> 是嬰兒最早發得出來的音，全世界的「媽媽」「爸爸」多半由這兩個音來。'),
- e('bro-／sis- 沒有獨立意思', 'OED（查無 bro-／sis- 詞義）；OED「bro, n.」「sis, n.」',
-   'OED <b>沒有</b>為 bro-、sis- 列出任何獨立詞義；brother、sister 在英文裡是<b>不可再分的整個字</b>。'+
-   '今天口語的 <b>bro</b>、<b>sis</b> 是<b>後來從整個字剪下來的簡稱</b>，不是原本的零件。'),
- e('parent ＋ s', 'Cambridge Dictionary「parent」',
-   '這是<b>文法</b>（複數加 s），<b>不是字源</b>。')],
+   '<b>ma</b>、<b>pa</b> 是寶寶最早發得出來的音。'),
+ e('bro-／sis- 沒有意思', 'OED「brother, n.」「sister, n.」「bro, n.」「sis, n.」',
+   'OED 沒有替 bro-、sis- 列任何意思。口語的 bro、sis 是<b>後來剪短的</b>。'),
+ e('parent ＋ s', 'Cambridge Dictionary「parent」', '這是<b>文法</b>（複數加 s），不是字源。')],
+
+'world': [
+ e('語言也有家人', 'Wikipedia「Germanic languages」「Indo-European languages」',
+   '英文、德文、荷蘭文、瑞典文都是<b>日耳曼語族</b>——像兄弟姊妹。'),
+ e('大約 6000 年前', 'Mallory &amp; Adams (2006)；Wikipedia「Kurgan hypothesis」',
+   '很多學者認為：這一大家族最早在<b>黑海北邊的草原</b>。這是<b>目前最多人支持的說法</b>，不是百分之百確定。'),
+ e('大約 1500 年前，坐船到英國', 'Bede《英吉利教會史》(731)；Wikipedia「Anglo-Saxon settlement of Britain」',
+   '<b>盎格魯人、撒克遜人</b>從今天的<b>德國北部、丹麥</b>坐船到英國，帶去的話就是英文的老祖先。'),
+ e('1066 年，法文進來了', 'Wikipedia「Norman Conquest」；OED「uncle」「aunt」「cousin」「nephew」「niece」',
+   '<b>講法文的諾曼人</b>打贏英國。<b>uncle、aunt、cousin、nephew、niece</b> 都是那之後從法文借來的。'),
+ e('mother 家族', 'Duden「Mutter」；Van Dale「moeder」；SAOL「mor」；Larousse「mère」；RAE《DLE》「madre」',
+   '德 <b>Mutter</b>、荷 <b>moeder</b>、瑞典 <b>mor</b>、法 <b>mère</b>、西 <b>madre</b>。'),
+ e('father 家族', 'Duden「Vater」；Van Dale「vader」；SAOL「far」；Larousse「père」；RAE《DLE》「padre」',
+   '德 <b>Vater</b>、荷 <b>vader</b>、瑞典 <b>far</b>、法 <b>père</b>、西 <b>padre</b>。'),
+ e('family', 'OED「family, n.」；Larousse「famille」；RAE「familia」',
+   '英文 family 來自<b>拉丁文 familia</b>，所以跟法文、西班牙文最像。'),
+ e('brother／sister', 'Duden／Van Dale／SAOL 各詞條；RAE「hermano」',
+   '德荷瑞都像英文。西班牙文 <b>hermano</b> 不像，因為它來自另一個拉丁字 germanus。'),
+ e('瑞典文分爸爸那邊、媽媽那邊', 'SAOL（瑞典學院詞表）「farfar」「morfar」「farbror」「morbror」「faster」「moster」',
+   '<b>farfar</b> ＝ 爸爸的爸爸，<b>morfar</b> ＝ 媽媽的爸爸——<b>跟中文一樣分兩邊</b>。'),
+ e('grandfather 一半一半', 'OED「grand-, comb. form」；Larousse「grand-père」',
+   '<b>grand</b> 從法文 grand-père 借來，<b>father</b> 是日耳曼家族的字。'),
+ e('uncle／aunt／cousin', 'OED「uncle」「aunt」「cousin」；Larousse「oncle」「tante」「cousin」',
+   '三個都是 1066 年以後<b>從法文借來的</b>，所以跟法文最像。'),
+ warn('地圖是示意圖', '地圖上的路線與年代是<b>簡化過的示意</b>，實際是好幾百年、很多批人慢慢搬的。')],
 
 'family-tree': [
  e('family tree 是正式說法', 'Cambridge Dictionary「family tree」；Merriam-Webster「family tree」',
@@ -243,99 +280,130 @@ const P = {
 
 /* 音標、音節、發音是每一頁都會用到的，自動附在每一頁出處的最後面。 */
 const COMMON = [
- e('音標（美式）', 'Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries 的 NAmE 發音',
-   '本教材的 IPA 一律採<b>美式</b>標法。'),
+ e('音標（美式）', 'Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries（NAmE）',
+   '本教材的 IPA 一律用<b>美式</b>。'),
  e('KK 音標', 'Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)',
-   '台灣中小學課本採用的標法。同一個音兩套寫法不同：'+
-   'bed 的 e ＝ IPA <b>/e/</b>、KK <b>/ɛ/</b>；boat 的 o ＝ IPA <b>/oʊ/</b>、KK <b>/o/</b>。'),
- e('音節怎麼切', 'Louisa Moats《Speech to Print》；National Reading Panel (2000)',
-   '本教材用<b>開音節切法</b>（母音後面切）：<b>fa．mi．ly</b>、mo．ther、fa．ther、'+
-   'bro．ther、daugh．ter、un．cle。<b>一個出聲的母音 ＝ 一個音節</b>。'),
- warn('和辭典的連字號不一樣，兩種都對',
-   '辭典（如 <b>Merriam-Webster</b>）印的是<b>排版斷行用</b>的連字號，family 寫成 <b>fam·i·ly</b>；'+
-   '本教材教的是<b>唸的時候怎麼切</b>，所以是 <b>fa．mi．ly</b>。'+
-   '<b>兩種都對，用途不同</b>——一個是給排版看的，一個是給嘴巴唸的。'),
- warn('數音節數的是「還在出聲的母音」',
-   '畫面上<b>淺灰色的字母不出聲，不算</b>（niece 的 e、wife 的 e、daughter 的 gh、little 的第二個 t）；'+
-   '<b>au／ou／ie／ew</b> 兩個字母一起發一個音，畫面上本來就是一格。照畫面數，這條規則<b>全部成立</b>。'),
- e('唸出來的聲音', 'Web Speech API（瀏覽器內建語音合成），語系 en-US',
-   '不需要連網也不需要帳號。<b>實際嗓音由老師那台電腦或平板決定</b>。'+
-   '外語單字另外指定語系：德 de-DE、荷 nl-NL、西 es-ES、法 fr-FR。')
+   '台灣課本用的標法。例：bed 的 e ＝ IPA <b>/e/</b> ＝ KK <b>/ɛ/</b>。'),
+ e('音節怎麼切', 'Louisa Moats《Speech to Print》',
+   '母音後面切：<b>fa．mi．ly</b>。<b>一個出聲的母音 ＝ 一個音節</b>。'),
+ warn('辭典的 fam·i·ly 也對', '那是<b>排版斷行</b>用的；本教材教的是<b>唸的時候</b>怎麼切。兩種都對。'),
+ warn('淺灰色的字母不算', '不出聲的字母（淺灰色）<b>不算母音</b>，數紅色的就對了。'),
+ e('唸出來的聲音', 'Web Speech API（瀏覽器內建語音，en-US）',
+   '不用連網。<b>嗓音由這台電腦決定</b>。外語另外指定：德 de-DE、荷 nl-NL、瑞典 sv-SE、法 fr-FR、西 es-ES。')
 ];
 
-/* ---- 給樣板用的三段（CSS／HTML／JS），四個產生器共用 ---- */
+/* ---- 給樣板用的三段（CSS／HTML／JS），五個產生器共用 ---- */
 
-/* display:none ＝ 完全不佔版面，_verify.js 量到的溢出不受影響 */
+/* 出處：**一條一頁**（使用者 2026-09-24 指定改版）。
+ * 原本是一整張三欄表格，字小、一次塞十幾列，學生不想看也看不懂。
+ * 現在一條出處就是一整頁：
+ *   ① 最上面一行大字：這一條在講什麼（t）
+ *   ② 有秒懂動畫的條目，動畫放在中間（v）
+ *   ③ 📖 證據在這本書（s）⬇ ✅ 翻開會看到（d）—— 一步一步跳出來
+ * 左右翻頁（◀ ▶、鍵盤 ← →），Esc 或 ✕ 關閉。
+ * 平常 display:none，完全不佔版面，所以 _verify.js 量到的溢出不受影響。 */
 const CSS = `
-/* 出處覆蓋卡：使用者 2026-09-20 指定改成「秒懂圖表」。
-   **不可以用 flex 置中**——內容一超過一個螢幕，上面幾列會被切掉而且捲不回去。
-   display:block ＋ overflow:auto，從最上面開始，每一列都捲得到。 */
-#src{position:fixed;inset:0;z-index:20;background:#000;
- display:none;padding:clamp(14px,3.4vh,34px) clamp(12px,3vw,30px);overflow:auto;text-align:left}
-#src.on{display:block}
-#src .wrap{max-width:1000px;margin:0 auto}
-#src h4{margin:0 0 10px;color:#9FB4C8;font-size:clamp(19px,2.6vh,26px);
- letter-spacing:.24em;font-weight:700}
-/* 秒懂動畫：課堂上教的 ➜ 出自這一本 ➜ 你也查得到 */
-#src .flow{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;
- gap:8px;margin:0 0 16px}
-#src .flow span{font-size:clamp(13px,1.9vh,17px);border-radius:99px;padding:7px 14px;
- white-space:nowrap}
-#src .f1{background:#16202A;color:#9FB4C8;border:1px solid #24323E}
-#src .f2{background:#1E1A12;color:#D8C08A;border:1px solid #332C1C}
-#src .f3{background:#13201A;color:#8FBE92;border:1px solid #1F3329}
-#src .fa{color:#4A4A4A;font-size:clamp(14px,2vh,18px)}
-#src.on .flow span,#src.on .flow .fa{animation:srcflow .5s cubic-bezier(.2,1.4,.4,1) both}
-#src.on .flow > *:nth-child(1){animation-delay:.05s}
-#src.on .flow > *:nth-child(2){animation-delay:.20s}
-#src.on .flow > *:nth-child(3){animation-delay:.33s}
-#src.on .flow > *:nth-child(4){animation-delay:.46s}
-#src.on .flow > *:nth-child(5){animation-delay:.59s}
-@keyframes srcflow{0%{opacity:0;transform:translateX(-14px) scale(.9)}100%{opacity:1;transform:none}}
-/* 秒懂圖表：三欄——講什麼／證據出處／查到會看到什麼 */
-#src table{width:100%;border-collapse:collapse}
-#src th{text-align:left;color:#7E8B96;font-weight:700;letter-spacing:.06em;
- font-size:clamp(13px,1.8vh,16px);padding:0 10px 8px;border-bottom:1px solid #262626;white-space:nowrap}
-#src td{vertical-align:top;padding:11px 10px;border-bottom:1px solid #1A1A1A;
- font-size:clamp(15px,2.05vh,20px);line-height:1.6}
-#src td.t{color:#F2F2F2;font-weight:700;width:22%}
-#src td.s{color:#D8C08A;width:36%}
-#src td.d{color:#C2C2C2}
-#src td b{color:#F2F2F2;font-weight:700}
-#src td.s b{color:#EBD9A8}
-#src tr.w td{background:#141008}
-#src tr.w td.t{color:#E0B15C}
-#src .foot{margin:14px 0 0;color:#6E6E6E;font-size:clamp(12px,1.7vh,15px);line-height:1.6}
-#src button{display:block;margin:20px auto 0;background:#1E1E1E;border:1px solid #4A4A4A;
- color:#F2F2F2;border-radius:99px;font-size:18px;padding:12px 28px;min-height:52px;
- font-family:inherit;cursor:pointer}`;
+#src{position:fixed;inset:0;z-index:40;background:#000;display:none;flex-direction:column;
+ padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) max(10px,env(safe-area-inset-bottom));text-align:left}
+#src.on{display:flex}
+#src .shd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto}
+#src .sttl{color:#9FB4C8;font-size:clamp(17px,2.6vh,24px);font-weight:700;letter-spacing:.2em}
+#src .scnt{color:#D8D3C5;font-size:clamp(16px,2.4vh,22px);font-weight:700}
+#src .sbody{flex:1 1 auto;min-height:0;overflow:auto;display:flex}
+#src .sl{display:none;flex-direction:column;justify-content:center;gap:clamp(10px,2vh,22px);
+ width:100%;max-width:980px;margin:auto}
+#src .sl.on{display:flex}
+#src .lt{font-size:clamp(28px,5.6vh,54px);font-weight:700;color:#F2F2F2;line-height:1.3;text-align:center;
+ animation:srcIn .45s cubic-bezier(.2,1.3,.4,1) both}
+#src .sl.w .lt{color:#F0B45C}
+#src .lt .wtag{display:inline-block;font-size:.5em;vertical-align:middle;background:#3A2A0C;color:#F0B45C;
+ border:1px solid #6B4E1A;border-radius:99px;padding:4px 12px;margin-right:10px;letter-spacing:.1em}
+#src .vis{display:flex;justify-content:center;animation:srcIn .45s cubic-bezier(.2,1.3,.4,1) .15s both}
+#src .ck{display:flex;align-items:center;gap:clamp(10px,1.6vw,20px);border-radius:18px;
+ padding:clamp(10px,1.8vh,18px) clamp(14px,2vw,24px);animation:srcIn .5s cubic-bezier(.2,1.3,.4,1) both}
+#src .ck .ci{font-size:clamp(30px,5.4vh,52px);flex:0 0 auto}
+#src .ck .cl{display:block;font-size:clamp(13px,1.9vh,17px);letter-spacing:.14em;margin-bottom:4px;font-weight:700}
+#src .ck .cv{display:block;line-height:1.5}
+#src .ck.s{background:#17140C;border:1px solid #3A3018;animation-delay:.35s}
+#src .ck.s .cl{color:#B79A5C}
+#src .ck.s .cv{color:#EBD9A8;font-size:clamp(18px,3vh,30px);font-weight:700}
+#src .ck.d{background:#0E1A12;border:1px solid #21402B;animation-delay:.75s}
+#src .ck.d .cl{color:#6FAE7C}
+#src .ck.d .cv{color:#E6E6E6;font-size:clamp(20px,3.4vh,34px)}
+#src .ck.d .cv b{color:#FFD24A}
+#src .sl.w .ck.d{background:#1A1206;border-color:#4A3510}
+#src .car{text-align:center;color:#5A5A5A;font-size:clamp(20px,3vh,30px);line-height:1;
+ animation:srcIn .4s ease .6s both}
+@keyframes srcIn{0%{opacity:0;transform:translateY(16px) scale(.94)}100%{opacity:1;transform:none}}
+#src .snav{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,18px);flex:0 0 auto;
+ padding-top:8px}
+#src .snav button,#src .shd button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
+ font-size:clamp(16px,2.4vh,22px);padding:10px 22px;min-height:50px;font-family:inherit;cursor:pointer}
+#src .snav button:disabled{opacity:.3}
+#src .sdots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:46vw}
+#src .sdots i{width:10px;height:10px;border-radius:50%;background:#2A2A2A}
+#src .sdots i.on{background:#FFD24A}
+/* 出處裡的秒懂動畫（字母一格一格跳出來、插進來的字母會發光） */
+#src .ev{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:clamp(8px,1.4vw,18px)}
+#src .ev .st{display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0;
+ animation:srcIn .5s cubic-bezier(.2,1.3,.4,1) both}
+#src .ev .st b{font-size:clamp(24px,4.6vh,46px);color:#F2F2F2;letter-spacing:.02em}
+#src .ev .st em{font-style:normal;font-size:clamp(12px,1.8vh,16px);color:#8E8E8E;white-space:nowrap}
+#src .ev .ar{color:#5A5A5A;font-size:clamp(20px,3vh,30px);padding-bottom:1.1em;opacity:0;animation:srcIn .4s ease both}
+#src .ev .new{color:#FFD24A;display:inline-block;animation:newT 1.2s ease-in-out 1.6s 3}
+#src .ev .no{color:#FF6B6B}
+@keyframes newT{0%,100%{transform:none;text-shadow:none}50%{transform:translateY(-.25em) scale(1.5);text-shadow:0 0 18px rgba(255,210,74,.9)}}
+.reduce #src *{animation:none!important;opacity:1!important}`;
 
-const row = (r) =>
- '<tr' + (r.w ? ' class="w"' : '') + '>' +
- '<td class="t">' + r.t + '</td>' +
- '<td class="s">' + (r.s || '—') + '</td>' +
- '<td class="d">' + r.d + '</td></tr>';
+const icoOf = (s) => /OED|牛津/.test(s) ? '📕' : /Cambridge|Oxford Learner/.test(s) ? '📘' :
+  /Duden/.test(s) ? '📗' : /Van Dale/.test(s) ? '📙' : /Wikipedia/.test(s) ? '🌐' : '📖';
 
-const html = (rows) =>
- '<footer id="src"><div class="wrap"><h4>出處</h4>' +
- '<div class="flow">' +
-   '<span class="f1">📺 課堂上教的</span><span class="fa">➜</span>' +
-   '<span class="f2">📖 出自這一本</span><span class="fa">➜</span>' +
-   '<span class="f3">✅ 你也查得到</span>' +
- '</div>' +
- '<table><thead><tr><th>這一條在講什麼</th><th>證據出處（照這個就查得到）</th><th>查到會看到什麼</th></tr></thead>' +
- '<tbody>' + rows.concat(COMMON).map(row).join('') + '</tbody></table>' +
- '<p class="foot">⚠️ 這些條目名稱都是<b>標準工具書</b>的正式條目，老師和學生照著查一定找得到。' +
- '製作環境連不上網，<b>沒有逐條開網頁核對過</b>——第一次上課前建議抽查兩三條。</p>' +
- '<button id="srcx">關閉</button></div></footer>';
+const slide = (r, k, n) =>
+ '<section class="sl' + (r.w ? ' w' : '') + (k === 0 ? ' on' : '') + '" data-k="' + k + '">' +
+ '<div class="lt">' + (r.w ? '<span class="wtag">⚠️ 誠實註記</span>' : '') + r.t + '</div>' +
+ (r.v ? '<div class="vis">' + r.v + '</div>' : '') +
+ (r.s ? '<div class="ck s"><span class="ci">' + icoOf(r.s) + '</span><span><span class="cl">證據在這本書</span>' +
+   '<span class="cv">' + r.s + '</span></span></div><div class="car">⬇</div>' : '') +
+ '<div class="ck d"><span class="ci">' + (r.w ? '⚠️' : '✅') + '</span><span><span class="cl">' +
+   (r.s ? '翻開會看到' : '要知道的事') + '</span><span class="cv">' + r.d + '</span></span></div>' +
+ '</section>';
+
+const html = (rows) => {
+ const all = rows.concat(COMMON);
+ return '<footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span>' +
+  '<span class="scnt"><span id="srcn">1</span> ／ ' + all.length + '</span>' +
+  '<button id="srcx">✕ 關閉</button></div>' +
+  '<div class="sbody">' + all.map((r, k) => slide(r, k, all.length)).join('') + '</div>' +
+  '<div class="snav"><button id="srcp">◀ 上一條</button><span class="sdots">' +
+  all.map((r, k) => '<i' + (k === 0 ? ' class="on"' : '') + '></i>').join('') + '</span>' +
+  '<button id="srcf">下一條 ▶</button></div></footer>';
+};
 
 const btn = '<button id="srcb">📖 出處</button>';
 
 const JS = `
-(function(){var s=document.getElementById("src");
- function t(v){s.classList.toggle("on",v);if(v)s.scrollTop=0}
+(function(){var s=document.getElementById("src");if(!s)return;
+ var L=s.querySelectorAll(".sl"),D=s.querySelectorAll(".sdots i"),k=0;
+ function go(n){k=Math.max(0,Math.min(L.length-1,n));
+  for(var j=0;j<L.length;j++){L[j].classList.toggle("on",j===k);D[j].classList.toggle("on",j===k)}
+  /* 換頁時動畫重播一次 */
+  var c=L[k];c.style.display="none";void c.offsetWidth;c.style.display="";
+  document.getElementById("srcn").textContent=k+1;
+  document.getElementById("srcp").disabled=(k===0);
+  document.getElementById("srcf").disabled=(k===L.length-1)}
+ function t(v){s.classList.toggle("on",v);if(v)go(0)}
  document.getElementById("srcb").addEventListener("click",function(){t(!s.classList.contains("on"))});
  document.getElementById("srcx").addEventListener("click",function(){t(false)});
- document.addEventListener("keydown",function(e){if(e.key==="Escape")t(false)});})();`;
+ document.getElementById("srcp").addEventListener("click",function(){go(k-1)});
+ document.getElementById("srcf").addEventListener("click",function(){go(k+1)});
+ /* 出處開著的時候，← → 翻的是出處，不是後面那一頁（先攔下來） */
+ document.addEventListener("keydown",function(e){
+  if(!s.classList.contains("on"))return;
+  if(e.key==="Escape"){t(false)}
+  else if(e.key==="ArrowRight"||e.key===" "){go(k+1)}
+  else if(e.key==="ArrowLeft"){go(k-1)}
+  else return;
+  e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();
+ },true);})();`;
 
-module.exports = { W, P, COMMON, CSS, html, btn, JS, e, warn };
+module.exports = { W, P, COMMON, CSS, html, btn, JS, e, warn, ev };
