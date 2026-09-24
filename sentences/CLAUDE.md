@@ -312,6 +312,22 @@
 4. **Kahoot 要登入個人帳號，AI 無法代為上傳與試玩。**
    `kahoot_sentences_22_題目與上架說明.md` 最後一節是給老師自己打勾的檢驗清單。
 
+## 每一次改完就存進 GitHub（使用者 2026-09-24 指定，不必再問）
+
+**順序固定，不可以跳**：改資料或產生器 → build → 量測 → **0 失敗才 commit** → **push 到 `main`**。
+
+```bash
+node sentences/_build.js                 # 或只跑改到的那一個產生器
+node sentences/_verify.js unit1.html     # 只量改到的那一頁（省額度）
+git add -A && git commit -m "…"          # 量測 0 失敗才做這一步
+git push origin main                     # 網站在 main 上，推了 GitHub Pages 才會更新
+```
+
+- **量測沒過就不要 commit**，先修好。使用者要的是「能用的網站」，不是「有推上去的檔案」。
+- commit 訊息用中文，一條修改一行，寫「改了什麼、為什麼」。
+- 推完回報一句：改了哪幾點、量測幾項 0 失敗、線上網址。
+- 網站是從 **`main`** 發布的（GitHub Pages）。**推到別的分支網站不會更新。**
+
 ## 驗證（改完一定要做，不可只寫完就回報）
 
 ```bash
