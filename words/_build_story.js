@@ -524,7 +524,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 .oddtag{font-size:.5em;color:#F0B45C;border:1px dashed #6B4E1A;border-radius:99px;padding:3px 10px;font-weight:700}
 .flag{width:1.5em;height:1em;vertical-align:-.12em;border-radius:2px;flex:0 0 auto}
 .guess{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.2vh,12px);width:100%}
-.gtop{min-height:1.6em;font-size:clamp(22px,3.8vh,36px);font-weight:700}
+.gtop{min-height:1.4em;font-size:clamp(20px,3.3vh,32px);font-weight:700}
 .gunk{color:#8E8E8E;font-weight:700}
 .gans{display:none;align-items:center;gap:.35em;font-weight:700;color:#FFD24A;white-space:nowrap}
 .gans em{font-style:normal;font-size:.72em;color:#D8D3C5;font-weight:400}
@@ -533,20 +533,20 @@ body{margin:0;background:#000;color:#F2F2F2;
 .gmode{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center;
  font-size:clamp(13px,1.9vh,17px);color:#8E8E8E}
 .gmode button{background:#141414;border:1px solid #333;color:#D8D3C5;border-radius:99px;font-family:inherit;
- font-size:clamp(14px,2vh,18px);padding:6px 14px;min-height:40px;cursor:pointer}
+ font-size:clamp(14px,2vh,18px);padding:4px 14px;min-height:36px;cursor:pointer}
 .gmode button.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A;font-weight:700}
-.glist{display:flex;flex-direction:column;gap:clamp(4px,.9vh,9px);width:100%;max-width:640px}
+.glist{display:flex;flex-direction:column;gap:clamp(3px,.6vh,7px);width:100%;max-width:640px}
 .grow{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#0C0C0C;
- border:1px solid #232323;border-radius:14px;padding:clamp(4px,.9vh,9px) clamp(12px,1.8vw,20px);
+ border:1px solid #232323;border-radius:14px;padding:clamp(2px,.5vh,6px) clamp(12px,1.8vw,20px);
  animation:rise .45s cubic-bezier(.2,.9,.3,1) both}
-.grow .gw{font-size:clamp(24px,4.3vh,42px);font-weight:700;color:#F2F2F2;border-bottom:0}
-.gm{font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#9FB4C8;white-space:nowrap}
+.grow .gw{font-size:clamp(22px,3.7vh,38px);font-weight:700;color:#F2F2F2;border-bottom:0}
+.gm{font-size:clamp(18px,3vh,30px);font-weight:700;color:#9FB4C8;white-space:nowrap}
 .gm>span{display:none;border-bottom:0}
 .guess[data-m="0"] .gm .m0,.guess[data-m="zh"] .gm .mzh,.guess[data-m="en"] .gm .men,.guess[data-m="de"] .gm .mde{display:inline;
  animation:pop .45s cubic-bezier(.2,1.5,.4,1) both}
 .gm .m0{color:#4A4A4A}
 .grev{background:#2A2208;border:1px solid #FFD24A;color:#FFD24A;border-radius:99px;font-family:inherit;
- font-weight:700;font-size:clamp(16px,2.4vh,22px);padding:9px 22px;min-height:48px;cursor:pointer}
+ font-weight:700;font-size:clamp(16px,2.3vh,21px);padding:6px 20px;min-height:42px;cursor:pointer}
 .guess.rev .grev{background:#141414;border-color:#444;color:#8E8E8E}
 .gen{font-size:clamp(20px,3.2vh,30px);color:#D8D3C5;display:flex;align-items:baseline;gap:.4em}
 .gen .gbig{font-size:1.7em;font-weight:700;color:#F2F2F2;border-bottom:0}
@@ -573,7 +573,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 .tarr{color:#4A4A4A;font-size:.7em;text-align:center;animation:rise .4s ease .4s both}
 @keyframes tglow{0%,100%{transform:none;text-shadow:none}50%{transform:translateY(-.15em) scale(1.25);text-shadow:0 0 16px rgba(255,210,74,.9)}}
 /* 地圖 */
-.mapbox{width:min(92vw,600px,calc(44vh * 1.08))}
+.mapbox{width:min(92vw,500px,calc(40vh * 1.08))}
 .map{display:block;width:100%;height:auto}
 .map .mt{font-size:13px;font-weight:700;fill:#F2F2F2;opacity:0;animation:mtIn .5s ease both}
 .map .mt.big{font-size:16px}.map .mt.small{font-size:9px}
@@ -609,7 +609,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 .sumg{display:flex;flex-direction:column;gap:clamp(8px,1.6vh,16px);width:100%;max-width:700px}
 .sg{display:flex;flex-direction:column;gap:4px;border-radius:16px;padding:clamp(8px,1.4vh,14px) 18px;text-align:center}
 .sg b{font-size:clamp(18px,2.8vh,26px)}.sg em{font-style:normal;color:#8E8E8E;font-size:clamp(14px,2vh,18px)}
-.sg span{font-size:clamp(22px,3.8vh,36px);font-weight:700;display:flex;gap:.5em;flex-wrap:wrap;justify-content:center}
+.sg span{font-size:clamp(20px,3.2vh,32px);font-weight:700;display:flex;gap:.5em;flex-wrap:wrap;justify-content:center}
 .sg.g{background:#0C1A10;border:1px solid #2B5236}.sg.g b{color:#8FD19E}
 .sg.l{background:#1A1208;border:1px solid #5A3E1C}.sg.l b{color:#F3B06B}
 /* 念到哪一個字，那一個字就亮 */
