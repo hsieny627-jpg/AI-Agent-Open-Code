@@ -258,7 +258,7 @@ const PAGES=[
 
  /* #7 為什麼尾巴都一樣？（使用者 2026-09-24 指定的動畫頁） */
  {tag:'為什麼尾巴都一樣',sayAll:1,
-  h:'<div class="tails in d1">'+
+  h:'<div class="tails fo">'+
     '<em class="tcap">很久很久以前</em>'+
     '<span class="old">mā<i>ter</i></span><span class="old">pə<i>ter</i></span><span class="old">bhrā<i>ter</i></span><span class="old">dhughə<i>ter</i></span>'+
     '<span class="tarr">⬇</span><span class="tarr">⬇</span><span class="tarr">⬇</span><span class="tarr">⬇</span>'+
@@ -333,7 +333,7 @@ const PAGES=[
  WD.guessMany({en:'cousin',zh:'堂表兄弟姊妹',r:[['de','Cousin／Cousine'],['nl','neef／nicht'],['sv','kusin'],['fr','cousin／cousine'],['es','primo／prima']],
    near:['fr'],why:'cousin 跟法文<b>一模一樣</b>——從法文借來的'}),
  {tag:'記住這件事',emoji:'🧠',sayAll:1,
-  h:'<div class="sumg in d1">'+
+  h:'<div class="sumg fo">'+
     '<div class="sg g"><b>🌲 日耳曼家族的字</b><span>{{mother}} {{father}} {{brother}} {{sister}} {{daughter}} {{son}}</span><em>跟德文、荷蘭文像</em></div>'+
     '<div class="sg l"><b>🏛 從法文借來的字</b><span>{{uncle}} {{aunt}} {{cousin}} {{nephew}} {{niece}}</span><em>跟法文像</em></div></div>',
   lines:['<b>看一個字像誰</b>，就知道它從哪裡來']}
@@ -538,7 +538,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 .glist{display:flex;flex-direction:column;gap:clamp(3px,.6vh,7px);width:100%;max-width:640px}
 .grow{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#0C0C0C;
  border:1px solid #232323;border-radius:14px;padding:clamp(2px,.5vh,6px) clamp(12px,1.8vw,20px);
- animation:rise .45s cubic-bezier(.2,.9,.3,1) both}
+ animation:fadeOnly .45s ease both}
 .grow .gw{font-size:clamp(22px,3.7vh,38px);font-weight:700;color:#F2F2F2;border-bottom:0}
 .gm{font-size:clamp(18px,3vh,30px);font-weight:700;color:#9FB4C8;white-space:nowrap}
 .gm>span{display:none;border-bottom:0}
@@ -560,7 +560,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 .mbelow span{background:#1A1208;border:1px solid #5A3E1C;color:#F3B06B;border-radius:99px;font-weight:700;
  font-size:clamp(14px,2.2vh,20px);padding:3px 10px;white-space:nowrap;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
 .gwhy b{color:#FFD24A}
-.guess.rev .gwhy{display:block;animation:rise .5s cubic-bezier(.2,.9,.3,1) .4s both}
+.guess.rev .gwhy{display:block;animation:fadeOnly .5s ease .4s both}
 /* 為什麼尾巴都一樣：四欄對齊，一欄 ＝ 一個家人（以前 ➜ 英文 ➜ 德文） */
 .tails{display:grid;grid-template-columns:repeat(4,auto);justify-content:center;align-items:baseline;
  column-gap:clamp(12px,2vw,24px);row-gap:clamp(2px,.6vh,6px);font-size:clamp(20px,3.6vh,32px);font-weight:700}
@@ -568,10 +568,13 @@ body{margin:0;background:#000;color:#F2F2F2;
  text-align:center;margin-top:clamp(2px,.8vh,8px)}
 .tails i{font-style:normal;color:#FFD24A;display:inline-block;animation:tglow 1.4s ease-in-out 1.2s 2}
 .tails .old{color:#8E8E8E}
-.tails .en2{animation:rise .5s ease .7s both}.tails .de2{animation:rise .5s ease 1.1s both}
+.tails .en2{animation:fadeOnly .5s ease .7s both}.tails .de2{animation:fadeOnly .5s ease 1.1s both}
 .tails .sp{border-bottom:0;text-align:center}.tails .old{text-align:center}
-.tarr{color:#4A4A4A;font-size:.7em;text-align:center;animation:rise .4s ease .4s both}
+.tarr{color:#4A4A4A;font-size:.7em;text-align:center;animation:fadeOnly .4s ease .4s both}
 @keyframes tglow{0%,100%{transform:none;text-shadow:none}50%{transform:translateY(-.15em) scale(1.25);text-shadow:0 0 16px rgba(255,210,74,.9)}}
+/* 新增的幕一律「只淡入、不位移」：位移到一半 #stage 會暫時變高，_verify.js 會判定溢出（家庭樹踩過同一個坑） */
+@keyframes fadeOnly{from{opacity:0}to{opacity:1}}
+.fo{animation:fadeOnly .5s ease .1s both}
 /* 地圖 */
 .mapbox{width:min(92vw,500px,calc(40vh * 1.08))}
 .map{display:block;width:100%;height:auto}

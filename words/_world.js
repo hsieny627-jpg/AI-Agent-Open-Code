@@ -53,7 +53,7 @@ function guessOne(o) {
   const modes = [['0', '🙈 藏'], ['zh', '中文'], ['en', '英文']].concat(o.de ? [['de', '德文']] : []);
   return {
     tag: '🕵️ 這是哪一國的話？', say: '', sayAll: 1,
-    h: '<div class="guess one in d1" data-m="0">' +
+    h: '<div class="guess one fo" data-m="0">' +
       '<div class="gtop">' + q + ans(o.c) + '</div>' +
       '<div class="gmode">右邊看：' + modes.map(m => '<button data-m="' + m[0] + '"' + (m[0] === '0' ? ' class="on"' : '') + '>' + m[1] + '</button>').join('') + '</div>' +
       '<div class="glist">' + o.w.map((x, k) =>
@@ -73,7 +73,7 @@ function guessOne(o) {
 function guessMany(o) {
   return {
     tag: '🌍 別的國家怎麼叫' + o.zh, sayAll: 1,
-    h: '<div class="guess many in d1">' +
+    h: '<div class="guess many fo">' +
       '<div class="gen">英文 <span class="sp gbig" data-say="' + o.en + '">' + o.en + '</span><em>' + o.zh + '</em></div>' +
       '<div class="glist">' + o.r.map((x, k) =>
         '<div class="grow' + (o.near.indexOf(x[0]) >= 0 ? ' near' : '') + '" style="animation-delay:' + (0.2 + k * 0.12).toFixed(2) + 's">' +
@@ -104,7 +104,7 @@ const STEPPE = [40, 48.5], NORTH = [10, 55], ROME = [12.5, 42], ENG = [-1.2, 52.
   DE = [10.5, 51], NL = [5.6, 52.3], SE = [15.5, 60.5], FR = [2.4, 46.8], ES = [-3.7, 40.3];
 
 const mapScene = (tag, inner, lines, below) => ({ tag, map: 1,
-  h: '<div class="mapbox in d1">' + M.svg(inner) + '</div>' + (below ? '<div class="mbelow">' + below + '</div>' : ''), lines });
+  h: '<div class="mapbox fo">' + M.svg(inner) + '</div>' + (below ? '<div class="mbelow">' + below + '</div>' : ''), lines });
 
 const MAPS = [
   mapScene('🗺 大約 6000 年前',
@@ -139,7 +139,7 @@ const MAPS = [
 /* ── ④ 語言也有家人：一個祖先，四個兄弟姊妹 ── */
 const TREE = {
   tag: '🌳 語言也有家人',
-  h: '<div class="ltree in d1">' +
+  h: '<div class="ltree fo">' +
     '<div class="lroot">👵 古日耳曼語<em>很久以前的一種話</em></div>' +
     '<svg class="llines" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true">' +
     [50, 150, 250, 350].map((x, k) => '<path d="M200,0 L' + x + ',40" pathLength="100" style="animation-delay:' + (0.4 + k * 0.2) + 's"/>').join('') +
