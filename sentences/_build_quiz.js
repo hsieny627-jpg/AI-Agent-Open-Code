@@ -11,9 +11,12 @@
  *  - 6 題挑戰題答對 分數 ✕ 2
  *  - 聽力題有 🔊 再聽一次
  */
-const fs = require('fs'), DIR = __dirname;
+const fs = require('fs'), SITE = require('./_site'), DIR = SITE.DIR;
 const S = require('./_shared');
-const { Q, shuffle } = require('./_quiz_data');
+const QD = SITE.load('_quiz_data'), { Q, shuffle } = QD;
+/* 別的課次才會寫的設定（sentences 沒寫 ➜ 跟原本一模一樣）：
+   random 每一次開始都重洗題序和選項 ｜ speed 分數 ＝ 100 ＋ 剩下秒數 ÷ 50 ✕ 900（愈快愈高） */
+const QC = QD.CFG || {};
 
 /* 固定種子打散題序與選項，每次 build 出來一樣，老師對答案不會亂 */
 const BUILT = shuffle(Q, 20260920).map((q, n) => {
@@ -134,7 +137,7 @@ $('#rfg').setAttribute('stroke-dasharray',R);
 
 function start(){
   order=QS.map(function(_,n){return n});
-  qi=0;score=0;streak=0;best=0;right=0;wrongBank=[];revRound=false;MISSLOG=[];
+${QC.random ? '  /* 題目和選項每一次都重洗：學生不能用位置或順序背答案 */\n  order=shuf(order);QS=QS.map(reshuffle);\n' : ''}  qi=0;score=0;streak=0;best=0;right=0;wrongBank=[];revRound=false;MISSLOG=[];
   $('#gate').style.display='none';$('#hud').classList.add('on');$('#quiz').classList.add('on');
   ask();
 }
@@ -210,7 +213,7 @@ function choose(n){
   $('#opts').className='lock';
   if(ok){
     right++;streak++;if(streak>best)best=streak;
-    var base=100+Math.max(0,left)*2;
+    var base=${QC.speed ? '100+Math.round(900*Math.max(0,left)/T)' : '100+Math.max(0,left)*2'};
     var pts=q.x2?base*2:base;
     score+=pts;sOk();
     $('#fbh').className='ok';
@@ -280,7 +283,7 @@ const body = `
  <section id="gate">
   <h1>🎯 暖身 ${BUILT.length} 題</h1>
   <p>四選一。每題倒數 <b>50 秒</b>，前 <b>20 秒</b>小組討論，時間到才可以按答案。<br>
-     其中 <b>6 題挑戰題</b>答對 <b>分數 ✕ 2</b>。答錯的題目最後會再考一次。</p>
+     其中 <b>${BUILT.filter(q => q.x2).length} 題挑戰題</b>答對 <b>分數 ✕ 2</b>。答錯的題目最後會再考一次。${QC.gate || ''}</p>
   <div class="btns">
    <button class="big go" id="go">▶ 開始暖身題</button>
    <a class="big" href="unit1.html" style="text-decoration:none;display:inline-block">⏭ 先不做，直接上句型</a>

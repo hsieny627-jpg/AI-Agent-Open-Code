@@ -70,6 +70,7 @@ const MISSCSS = `
  font-size:clamp(17px,2.8vh,26px);padding:clamp(10px,1.6vh,16px) clamp(20px,3vw,36px)}
 `;
 
+const SRC = require('./_site').NAME;
 const HEAD = (title, extraCss) => `<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -79,7 +80,7 @@ const HEAD = (title, extraCss) => `<!DOCTYPE html>
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="theme-color" content="#000000">
 <title>${title}</title>
-<!-- 本檔由 sentences/_build.js 產生，不要手改。改內容請改 sentences/_data.js ／ _quiz_data.js ／ _game_data.js -->
+<!-- 本檔由 ${SRC}/_build.js 產生，不要手改。改內容請改 ${SRC}/_data.js ／ _quiz_data.js ／ _game_data.js -->
 <style>
 @font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
  src:url(../words/fonts/andika-400.woff2) format("woff2")}

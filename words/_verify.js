@@ -79,7 +79,7 @@ async function hubPage(p,f,vp,e){
  const miss=[];
  for(const h of s.links){
   if(!h||/^(https?:|mailto:|#)/.test(h))continue;
-  const fp=require('path').resolve(root,h.split('#')[0].split('?')[0]);
+  const fp=require('path').resolve(root,decodeURIComponent(h.split('#')[0].split('?')[0]));  /* %20 ＝ 空白（G3 - L1 + L2） */
   if(!fs.existsSync(fp))miss.push(h);
  }
  acts++;

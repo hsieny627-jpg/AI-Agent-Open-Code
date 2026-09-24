@@ -13,10 +13,14 @@
  *     老師要念的句子印在說明文件第二節（學生看不到）
  */
 const fs = require('fs'), path = require('path');
-const { Q, shuffle } = require('./_quiz_data');
+const SITE = require('./_site');
+const QD = SITE.load('_quiz_data'), { Q, shuffle } = QD;
+/* 別的課次在 _quiz_data.js 寫 KAHOOT（檔名、放哪裡、範圍）；沒寫就是 sentences 原本的 */
+const K = QD.KAHOOT || { name: 'kahoot_sentences_22', dir: path.join(__dirname, '..'), where: '專案根目錄',
+  src: 'sentences', title: '英文句型', range: "Unit 1 Who's he? / Who's she?　Unit 2 Is he a doctor?" };
 
-const OUT = path.join(__dirname, '..', 'kahoot_sentences_22.xlsx');
-const DOC = path.join(__dirname, '..', 'kahoot_sentences_22_題目與上架說明.md');
+const OUT = path.join(K.dir, K.name + '.xlsx');
+const DOC = path.join(K.dir, K.name + '_題目與上架說明.md');
 const TIME = 60;
 
 /* 和網頁版同一個種子，順序一致，老師對答案不會亂 */
@@ -54,7 +58,7 @@ const num = (ref, v) => `<c r="${ref}"><v>${v}</v></c>`;
 
 const HEAD = [
   [2, 'A', 'Quiz template'],
-  [3, 'A', '英文句型 暖身 ' + ALL.length + ' 題（由 sentences/_build_kahoot.js 產生，勿手改）'],
+  [3, 'A', K.title + ' 暖身 ' + ALL.length + ' 題（由 ' + K.src + '/_build_kahoot.js 產生，勿手改）'],
   [4, 'A', '題目上限 95 字、選項上限 60 字。時間只能是 5/10/20/30/60/90/120 秒。'],
   [5, 'A', '匯入後，請到編輯器把第 ' + x2.join('、') + ' 題的 Points 改成 Double points（分數 ✕ 2）。'],
   [6, 'A', '🎧 聽力題（第 ' + ALL.map((q, n) => q.read ? n + 1 : 0).filter(Boolean).join('、') + ' 題）老師要念的句子見說明文件第二節。'],
@@ -148,21 +152,21 @@ const list = ALL.map((q, n) => {
   return head + read + '\n\n' + opts + '\n\n> 秒懂說明：' + q.why.replace(/<\/?b>/g, '**');
 }).join('\n\n');
 
-fs.writeFileSync(DOC, `# 英文句型 — Kahoot 暖身 ${ALL.length} 題
+fs.writeFileSync(DOC, `# ${K.title} — Kahoot 暖身 ${ALL.length} 題
 
-> 本檔由 \`node sentences/_build_kahoot.js\` 產生，**不要手改**（改題目請改 \`sentences/_quiz_data.js\`）。
-> 題目與網頁版 \`sentences/warmup.html\` 完全相同，同一份資料產出，不會走鐘。
+> 本檔由 \`${K.cmd || 'node ' + K.src + '/_build_kahoot.js'}\` 產生，**不要手改**（改題目請改 \`${K.src}/_quiz_data.js\`）。
+> 題目與網頁版 \`${K.src}/warmup.html\` 完全相同，同一份資料產出，不會走鐘。
 
 | 項目 | 內容 |
 |---|---|
 | 對象 | 國小三年級 |
-| 範圍 | Unit 1 Who's he? / Who's she?　Unit 2 Is he a doctor? |
+| 範圍 | ${K.range} |
 | 題數 | ${ALL.length} 題，四選一 |
 | 挑戰題 | **第 ${x2.join('、')} 題**，共 ${x2.length} 題，答對 **分數 ✕ 2** |
 | 聽力題 | **第 ${hear.map(h => h.n).join('、')} 題**，共 ${hear.length} 題，由老師念（見第二節） |
-| 匯入檔 | \`kahoot_sentences_22.xlsx\`（專案根目錄） |
+| 匯入檔 | \`${K.name}.xlsx\`（${K.where}） |
 | 每題秒數 | **${TIME} 秒**（Kahoot 沒有 50 秒） |
-| 課堂網頁版 | \`sentences/warmup.html\`（50 秒、小組討論鎖 20 秒、可暫停、答錯秒懂說明、錯題再戰） |
+| 課堂網頁版 | \`${K.src}/warmup.html\`（50 秒、小組討論鎖 20 秒、可暫停、答錯秒懂說明、錯題再戰） |
 
 ---
 
@@ -170,7 +174,7 @@ fs.writeFileSync(DOC, `# 英文句型 — Kahoot 暖身 ${ALL.length} 題
 
 1. **Kahoot 沒有 50 秒這個選項。** 只能選 5／10／20／30／60／90／120 秒，
    匯入檔用最接近的 **60 秒**。要剛好 50 秒、還要「前 20 秒小組討論不能按」，
-   就用課堂網頁版 \`sentences/warmup.html\`。
+   就用課堂網頁版 \`${K.src}/warmup.html\`。
 2. **匯入試算表帶不進「分數 ✕ 2」。** ${x2.length} 題挑戰題要在編輯器手動設，做法見第三節。
 3. **匯入試算表不能帶音檔。** 所以 ${hear.length} 題聽力題改成「**老師念，學生選**」，
    要念的句子印在第二節，投影出去的題目上看不到。
@@ -190,9 +194,9 @@ ${list}
 1. 開 **kahoot.com**，登入帳號。
 2. 右上角 **Create** → 選 **Quiz**。
 3. 選 **Blank canvas**（空白），不要套版。
-4. 打標題：**英文句型 暖身 ${ALL.length} 題**。
+4. 打標題：**${K.title} 暖身 ${ALL.length} 題**。
 5. 左邊 **Add question** → **Import spreadsheet**。
-6. **Select file** → 選 \`kahoot_sentences_22.xlsx\` → **Upload**。
+6. **Select file** → 選 \`${K.name}.xlsx\` → **Upload**。
 7. 左邊列表跑出 **${ALL.length} 題**就成功了。
 
 ### 把 ${x2.length} 題挑戰題設成「分數 ✕ 2」
@@ -214,6 +218,6 @@ ${list}
 - [ ] 按 **Preview**（或用第二支手機加入）實際玩過一輪，確認題目和答案都對得上。
 `);
 
-console.log('已產生 kahoot_sentences_22.xlsx：' + ALL.length + ' 題，每題 ' + TIME + ' 秒');
+console.log('已產生 ' + K.name + '.xlsx：' + ALL.length + ' 題，每題 ' + TIME + ' 秒');
 console.log('挑戰題（要手動設 分數 ✕ 2）：第 ' + x2.join('、') + ' 題');
 console.log('聽力題（老師念）：第 ' + hear.map(h => h.n).join('、') + ' 題');

@@ -42,7 +42,10 @@ const STEPS = [
    d: '用英文介紹我的家人（影片）' }
 ,
  { n: '8', ic: '💬', t: '英文句型　秒懂教室', href: 'sentences/index.html',
-   d: 'Unit 1 Who’s he? ／ Unit 2 Is he a doctor?　暖身題 ＋ 句型卡 ＋ 10 種複習遊戲' }
+   d: 'Unit 1 Who’s he? ／ Unit 2 Is he a doctor?　暖身題 ＋ 句型卡 ＋ 10 種複習遊戲' },
+ /* 2026-09-24 新增：三年級第一冊 L1＋L2（引擎跟 sentences 共用，規格在 G3 - L1 + L2/CLAUDE.md） */
+ { n: '9', ic: '📛', t: '三年級 L1 ＋ L2 句型', href: 'G3%20-%20L1%20+%20L2/index.html',
+   d: 'Unit 1 What’s your name? ／ Unit 2 How old are you?　暖身題 ＋ 句型卡 ＋ 10 種複習遊戲' }
 ];
 
 /* 延伸與老師專用，放最下面一排小字，不搶版面 */
@@ -97,7 +100,8 @@ h1{margin:0;font-size:clamp(26px,4.4vh,42px);font-weight:700;letter-spacing:.04e
 .url{margin-top:5px;font-size:clamp(11.5px,1.6vh,14px);color:#6F6F6F;letter-spacing:.02em}
 .url b{color:#9E9E9E;font-weight:400}
 
-#hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,268px),1fr));
+/* 236px（原本 268）：第 9 張卡加進來以後，直式 iPad 排成三欄才不會有捲軸（2026-09-24 量測） */
+#hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,236px),1fr));
  gap:clamp(9px,1.5vh,15px);width:100%;max-width:1000px}
 
 .card{position:relative;display:flex;flex-direction:column;align-items:flex-start;

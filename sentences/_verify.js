@@ -7,7 +7,14 @@
  * 只印失敗項與一行總結。
  */
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
-const fs = require('fs'), path = require('path'), DIR = __dirname + '/';
+const fs = require('fs'), path = require('path'), { pathToFileURL } = require('url');
+/* 別的課次（例：「G3 - L1 + L2」）共用這一支：SITE_DIR ＝ 那個資料夾，它自己的 _verify.js 會設好 */
+const SITE_DIR = process.env.SITE_DIR ? path.resolve(process.env.SITE_DIR) : '';
+const DIR = (SITE_DIR || __dirname) + '/';
+/* 這個課次自己的資料：不發音字母（SIL）、驚喜卡（SURP）、題目要不要每次重洗（CFG.random） */
+const SD = SITE_DIR ? require(DIR + '_data.js') : {};
+const SG = SITE_DIR ? require(DIR + '_game_data.js') : {};
+const SQ = SITE_DIR ? require(DIR + '_quiz_data.js') : {};
 const args = process.argv.slice(2);
 const ALL = ['index.html', 'warmup.html', 'unit1.html', 'unit2.html', 'games.html'];
 const FILES = args.length ? args : ALL;
@@ -117,7 +124,7 @@ async function cardsPage(p, f, vp, e) {
       fullEn: (function(){var f=document.querySelector('#cardIn .full');
         return f?(f.getAttribute('data-en')||''):''})(),
       apos: (function(){var a=[].slice.call(document.querySelectorAll('#cardIn .tk'))
-        .filter(function(t){var e=t.querySelector('.en');return e&&/^[\u2019']s$/.test(e.textContent)});
+        .filter(function(t){var e=t.querySelector('.en');return e&&/^[\u2019'](s|m|re)$/.test(e.textContent)});
         return a.map(function(t){return t.getAttribute('data-say')}).join('|')})(),
       scene: (function () {
         const sc = document.querySelector('#cardIn .scene');
@@ -325,12 +332,12 @@ async function cardsPage(p, f, vp, e) {
       if (i && !await fwd(p)) break;
       const r = await p.evaluate(() => {
         const has = [].slice.call(document.querySelectorAll('#cardIn .line .tk'))
-          .some(t => /^['\u2019]s$/.test(t.getAttribute('data-w') || ''));
+          .some(t => /^['\u2019](s|m|re)$/.test(t.getAttribute('data-w') || ''));
         const f = document.querySelector('#cardIn .full');
         return { has, en: f ? (f.getAttribute('data-en') || '') : '', grp: typeof sayEls === 'function' };
       });
       if (!r.grp) { bad.push('沒有 sayEls'); break; }
-      if (r.has && /\b(Who|He|She) is\b/.test(r.en)) bad.push((i + 1) + ':' + r.en);
+      if (r.has && /\b(Who|He|She|What) is\b|\bI am\b|\bYou are\b/.test(r.en)) bad.push((i + 1) + ':' + r.en);
     }
     acts++;
     if (bad.length) e.push('畫面是 ’s，唸出來卻是 is（' + bad.join('、') + '）');
@@ -346,7 +353,7 @@ async function cardsPage(p, f, vp, e) {
       const s0 = await snap();
       if (!s0.apos) continue;
       for (const w of s0.apos.split('|'))
-        if (!/[A-Za-z]{2,}['\u2019]s$/.test(w)) bad.push((i + 1) + ':' + w);
+        if (!/[A-Za-z]{2,}['\u2019]s$|^[A-Za-z]+['\u2019](m|re)$/.test(w)) bad.push((i + 1) + ':' + w);
     }
     acts++;
     if (bad.length) e.push('這幾張的 ’s 發音不是 /z/（' + bad.join('、') + '）');
@@ -416,7 +423,26 @@ async function cardsPage(p, f, vp, e) {
       e.push('按了變身，前兩個字沒有交換（' + b.slice(0, 2).join(' ') + ' → ' + a2.slice(0, 2).join(' ') + '）');
     const o = await snap();
     if (o.spill > 2 || o.ox > 0) e.push('變身以後溢出');
-  } else if (f === 'unit2.html') e.push('Unit 2 找不到變身卡');
+  } else if (f === 'unit2.html' && !SITE_DIR) e.push('Unit 2 找不到變身卡');
+
+  /* 不發音的字母一律淺灰色（SIL 寫幾個字，就量幾個字：灰的剛好是那幾個字母，不多不少） */
+  if (SD.SIL) {
+    const bad = await p.evaluate(SIL => {
+      const out = [];
+      for (const w in SIL) {
+        const d = document.createElement('div'); d.innerHTML = enHTML(w);
+        const got = [].slice.call(d.childNodes).reduce((a, n) => {
+          const t = n.textContent; if (n.className === 'sil') for (let k = 0; k < t.length; k++) a.push(a.len + k);
+          a.len += t.length; return a;
+        }, Object.assign([], { len: 0 })).join(',');
+        if (got !== SIL[w].join(',')) out.push(w + '（應該灰 ' + SIL[w].join(',') + '，實際 ' + (got || '沒有') + '）');
+      }
+      if (!document.querySelector('#cardIn .sil, .sil')) out.push('整頁看不到任何淺灰色的字母');
+      return out;
+    }, SD.SIL);
+    acts++;
+    if (bad.length) e.push('不發音字母不對：' + bad.join('、'));
+  }
   acts += await rateBar(p, e);
   return acts;
 }
@@ -444,6 +470,18 @@ async function quizPage(p, f, vp, e) {
 
   await p.click('#go'); await p.waitForTimeout(600);
   s = await snap(); acts++;
+  /* 題目和選項每一次都重洗（CFG.random）：連開三次，題序和第一題的選項不可以都一樣 */
+  if (SQ.CFG && SQ.CFG.random) {
+    const sig = await p.evaluate(() => {
+      const r = []; for (let k = 0; k < 3; k++) { start(); r.push(order.join(',') + '|' + cur().o.join('/')) }
+      return r;
+    });
+    acts++;
+    if (sig[0] === sig[1] && sig[1] === sig[2]) e.push('暖身題連開三次，題序和選項都一樣（沒有隨機）');
+    const ok = await p.evaluate(() => QS.every(q => q.o[q.a] !== undefined && q.o.length === 4));
+    if (!ok) e.push('重洗以後正確答案對不上');
+    s = await snap();
+  }
   if (s.n !== 4) e.push('選項不是 4 個（' + s.n + '）');
   if (!s.lock) e.push('一開始選項沒有鎖住（小組討論 20 秒）');
   if (s.ox > 0 || s.oy > 0) e.push('出題畫面溢出 ' + s.ox + '/' + s.oy);
@@ -500,6 +538,34 @@ async function gamesPage(p, f, vp, e) {
 
   let acts = 0, s = await snap(); acts++;
   if (s.cards !== 10) e.push('遊戲大廳不是 10 種（' + s.cards + '）');
+
+  /* 驚喜卡：每一個遊戲張數一樣、十個遊戲的名字全部不重複；翻開一張要真的出現、炸得出來、不溢出 */
+  if (SG.SURP) {
+    const all = [], need = SG.SURP.g1.length;
+    for (const k in SG.SURP) {
+      if (SG.SURP[k].length !== need) e.push(k + ' 的驚喜卡是 ' + SG.SURP[k].length + ' 張（其他是 ' + need + ' 張）');
+      SG.SURP[k].forEach(x => all.push(x.t));
+    }
+    const dup = all.filter((t, n) => all.indexOf(t) !== n);
+    if (dup.length) e.push('驚喜卡名字重複：' + dup.join('、'));
+    if (SG.CFG && SG.CFG.minSurp && need < SG.CFG.minSurp) e.push('每個遊戲只有 ' + need + ' 張驚喜卡（要 ' + SG.CFG.minSurp + ' 張）');
+    await p.click('.gcard:nth-of-type(1)'); await p.waitForTimeout(700);
+    const sc0 = await p.evaluate(() => score);
+    for (let k = 0; k < 3; k++) { await p.evaluate(() => fire()); await p.waitForTimeout(1250); }
+    const ev = await p.evaluate(() => ({
+      on: document.getElementById('evt').classList.contains('on'),
+      big: (document.querySelector('#evt .ebig') || {}).textContent || '',
+      burst: document.querySelectorAll('#burst i').length, hasBurst: !!document.getElementById('burst'),
+      opened: opened.length, ox: document.documentElement.scrollWidth - document.documentElement.clientWidth
+    }));
+    acts++;
+    if (!ev.on || !ev.big) e.push('翻驚喜卡沒有出現／卡片上沒有寫拿到什麼');
+    if (ev.opened !== 3) e.push('翻了 3 張驚喜卡，記到 ' + ev.opened + ' 張');
+    if (ev.hasBurst && ev.burst < 10) e.push('驚喜卡翻開沒有炸滿畫面（' + ev.burst + ' 個）');
+    if (ev.ox > 0) e.push('驚喜卡翻開以後橫向溢出 ' + ev.ox);
+    await p.waitForTimeout(1600);
+    await p.click('#quit'); await p.waitForTimeout(500);
+  }
   if (s.ox > 0) e.push('大廳橫向溢出 ' + s.ox);
 
   for (let i = 1; i <= 10; i++) {
@@ -560,7 +626,7 @@ async function homePage(p, f, vp, e) {
       const e = [];
       p.on('pageerror', err => e.push('JS 例外：' + err.message));
       p.on('console', m => { if (m.type() === 'error') e.push('console error：' + m.text().slice(0, 120)) });
-      await p.goto('file://' + DIR + f);
+      await p.goto(pathToFileURL(DIR + f).href);
       await p.waitForTimeout(500);
       if (!await fontOk(p)) e.push('Andika 沒有載到');
       await links(p, e);

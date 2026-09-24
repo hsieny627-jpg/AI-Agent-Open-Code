@@ -24,6 +24,16 @@
 | `_verify.js` | 量測腳本。`node sentences/_verify.js` 量全部；`node sentences/_verify.js unit1.html` 只量一頁 |
 | `index.html` `warmup.html` `unit1.html` `unit2.html` `games.html` | **產物，不要手改**，會被下一次 build 蓋掉 |
 
+## 引擎共用給別的課次（2026-09-24 新增，先看這裡）
+
+`sentences/` 的產生器現在也替別的課次產生網站（第一個是 `G3 - L1 + L2/`，規格在那個資料夾的 `CLAUDE.md`）。
+做法：`_site.js` 決定「資料在哪個資料夾、產物寫到哪個資料夾」（環境變數 `SITE_DIR`，沒設就是 sentences 自己）。
+別的課次只放自己的 `_data.js`／`_quiz_data.js`／`_game_data.js`，它的 `_build.js`／`_verify.js` 設好 `SITE_DIR` 再 require 這裡的產生器。
+
+**鐵律：新功能一律寫成「資料裡有寫才開」**（`SIL`、`CONTR`、`PAGES`、`CFG`、`KAHOOT`、`duo`…），
+sentences 的資料沒寫，產物就要跟原本**逐位元組相同**。改完引擎先跑 `node sentences/_build.js`，
+`git status` 看得到 `sentences/*.html` 被改 ＝ 動到 sentences 了，要修掉。
+
 ## 2026-09-24 第五次改版（使用者 11 點，句型網站部分）——先讀這一節
 
 | # | 使用者要的 | 做法（在哪裡） |

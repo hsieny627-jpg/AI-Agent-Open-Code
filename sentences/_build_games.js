@@ -12,9 +12,20 @@
  *  - 答錯（或時間到）→ 給鷹架提示，那一題會再回到題庫，練到會為止
  *  - 最佳紀錄存在這台 iPad 上
  */
-const fs = require('fs'), DIR = __dirname;
+const fs = require('fs'), SITE = require('./_site'), DIR = SITE.DIR;
 const S = require('./_shared');
-const B = require('./_game_data');
+const B = SITE.load('_game_data');
+
+/* ── 別的課次共用這一套遊戲引擎時才會用到的設定（sentences 沒寫 ➜ 跟原本一模一樣）──
+   B.CFG.burst  驚喜卡翻開的那一刻，卡片上的圖示炸滿整個畫面（四種炸法隨機：雨、爆、飄、轉）
+   B.CFG.lucky  k:'lucky' 的神秘紅包：翻開才知道是 v[0]～v[1] 之間的幾分
+   META g2／g9 的 duo：兩顆大按鈕各是什麼（[{v,t,d,c}]），g9 題目的第 3 格是答錯的提示 */
+const GC = B.CFG || {};
+const NS = B.SURP.g1.length;                          /* 每一個遊戲幾張驚喜卡 */
+const metaOf = id => B.GAMES.filter(m => m.id === id)[0] || {};
+const duoBtns = d => d.map(x => `     '<button class="dbtn ${x.c}" data-v="${x.v}">${x.t}<span class="ds">${x.d}</span></button>'+`).join('\n');
+const DUO2 = metaOf('g2').duo, DUO9 = metaOf('g9').duo;
+const LAB9 = DUO9 ? JSON.stringify(DUO9.reduce((o, x) => { o[x.v] = x.t + ' ' + x.d.split('　')[0]; return o }, {})) : '';
 
 const CSS = `
 #stage{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
@@ -172,7 +183,26 @@ const CSS = `
 .o.bad{background:#3A1111;border-color:var(--no)}
 .o.dim{opacity:.3}
 
-/* 兩顆大按鈕（他／她、問句／直述句） */
+${GC.burst ? `/* 驚喜卡翻開：卡片上的圖示炸滿整個畫面（只動 transform／opacity）*/
+#burst{position:fixed;inset:0;z-index:58;pointer-events:none;overflow:hidden}
+#burst i{position:absolute;left:50%;top:40%;font-style:normal;line-height:1;will-change:transform,opacity;
+ font-size:var(--z,44px);animation:var(--a) var(--d,1.9s) cubic-bezier(.2,.8,.3,1) var(--w,0s) both}
+#burst b{position:absolute;left:50%;top:40%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;
+ border:6px solid var(--gold);animation:bRing 1s ease-out both}
+@keyframes bRing{from{transform:scale(.2);opacity:1}to{transform:scale(22);opacity:0}}
+@keyframes bBoom{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}12%{opacity:1}
+ 100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.2) rotate(var(--r));opacity:0}}
+@keyframes bRain{0%{transform:translate(calc(-50% + var(--x)),-60vh) rotate(0);opacity:0}10%{opacity:1}
+ 100%{transform:translate(calc(-50% + var(--x)),75vh) rotate(var(--r));opacity:.2}}
+@keyframes bRise{0%{transform:translate(calc(-50% + var(--x)),70vh) scale(.6);opacity:0}15%{opacity:1}
+ 100%{transform:translate(calc(-50% + var(--x)),-55vh) scale(1.3);opacity:0}}
+@keyframes bSpin{0%{transform:translate(-50%,-50%) rotate(0) translateX(0) scale(.3);opacity:0}15%{opacity:1}
+ 100%{transform:translate(-50%,-50%) rotate(var(--r)) translateX(var(--x)) scale(1.1);opacity:0}}
+#stage.quake{animation:quake .5s}
+@keyframes quake{0%,100%{transform:none}20%{transform:translate(-7px,3px)}40%{transform:translate(6px,-4px)}
+ 60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-1px)}}
+
+` : ''}/* 兩顆大按鈕（他／她、問句／直述句） */
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,1.5vw,18px);width:100%}
 .dbtn{border-radius:20px;border:2px solid #2A2A2A;background:#0A0A0A;color:var(--fg);
  min-height:clamp(84px,15vh,150px);display:flex;flex-direction:column;align-items:center;
@@ -252,7 +282,7 @@ const CSS = `
 `;
 
 const JS = `
-var BANK=__BANK__, META=__META__, SURP=__SURP__;
+var BANK=__BANK__, META=__META__, SURP=__SURP__;${DUO9 ? '\nvar LAB9=' + LAB9 + ';' : ''}
 var SHAPE=['▲','◆','●','■'];
 var QT=15, ROUNDQ=12;                 /* 每一題 15 秒，一場 12 題（使用者 2026-09-21 指定） */
 var g=null,queue=[],cur=null,left=QT,qt=QT,tick=null,score=0,streak=0,best=0,right=0,wrong=0;
@@ -302,17 +332,34 @@ function doEvt(e){
 function fire(){
   if(!pool.length)pool=shuf((SURP[g]||[]).slice());
   var e=pool.shift();if(!e)return;
-  $('#evt .ebig').textContent=eBig(e);
+${GC.lucky ? "  /* 神秘紅包：翻開才決定是幾分（10 分一跳），學生猜不到 */\n  if(e.k==='lucky')e={t:e.t,k:'pts',v:e.v[0]+Math.round(Math.random()*(e.v[1]-e.v[0])/10)*10};\n" : ''}  $('#evt .ebig').textContent=eBig(e);
   $('#evt .ewhy').textContent=eWhy(e);
   $('#evt .ename').textContent=e.t;
   var box=$('#evt');box.classList.remove('on');void box.offsetWidth;box.classList.add('on');
   sWow();
   /* 卡片翻過來的那一刻，效果才真的發生（分數也才跳上去）——
      學生看得到「是這張卡給我的」，不會莫名其妙多了幾分（使用者 2026-09-21 指定） */
-  setTimeout(function(){opened.push(e.t);doEvt(e);paint()},1000);
+  setTimeout(function(){opened.push(e.t);doEvt(e);paint()${GC.burst ? ';burst(e)' : ''}},1000);
   nextEvt=2+Math.floor(Math.random()*3);
 }
-/* 分數是「現在」加上去的：數字跳一下，旁邊飄一個 ＋850 上去 */
+${GC.burst ? `/* 翻開的那一刻：卡片上的圖示炸滿整個畫面，四種炸法隨機，學生猜不到下一次是哪一種 */
+function burst(e){
+  if(document.body.classList.contains('reduce'))return;
+  var bx=document.getElementById('burst');if(!bx)return;
+  var em=String(e.t).split(' ')[0], kind=pick(['bBoom','bRain','bRise','bSpin']), h='<b></b>';
+  for(var n=0;n<22;n++){
+    var x,y=0,r=(Math.random()*720-360)+'deg',w=(Math.random()*.35).toFixed(2)+'s';
+    if(kind==='bBoom'){var a=Math.random()*6.283,d=18+Math.random()*34;x=Math.cos(a)*d+'vw';y=Math.sin(a)*d+'vh'}
+    else if(kind==='bSpin'){x=(12+Math.random()*30)+'vw';r=(n*33+180)+'deg'}
+    else x=(Math.random()*96-48)+'vw';
+    h+='<i style="--a:'+kind+';--x:'+x+';--y:'+y+';--r:'+r+';--w:'+w+';--z:'+(30+Math.round(Math.random()*44))+'px">'+em+'</i>';
+  }
+  bx.innerHTML=h;
+  var st=document.getElementById('stage');st.classList.remove('quake');void st.offsetWidth;st.classList.add('quake');
+  clearTimeout(burst.t);   /* 連翻兩張：前一張的清除不可以把這一張炸掉 */
+  burst.t=setTimeout(function(){bx.innerHTML='';st.classList.remove('quake')},2500);
+}
+` : ''}/* 分數是「現在」加上去的：數字跳一下，旁邊飄一個 ＋850 上去 */
 function popScore(v){
   var el=$('#gpop');if(el){el.textContent='＋'+v;
     el.classList.remove('on');void el.offsetWidth;el.classList.add('on')}
@@ -331,7 +378,7 @@ function hub(){
     return '<button class="gcard" data-g="'+m.id+'"><span class="gn">'+(n+1)+'</span>'+
       '<span class="gi">'+m.ic+'</span><span class="gt">'+m.name+'</span>'+
       '<span class="gr">'+m.rule+'</span>'+
-      '<span class="gb">'+m.n+' 題庫　一場 '+ROUNDQ+' 題　每題 '+QT+' 秒　🎁 '+m.st+'驚喜卡 20 張'+
+      '<span class="gb">'+m.n+' 題庫　一場 '+ROUNDQ+' 題　每題 '+QT+' 秒　🎁 '+m.st+'驚喜卡 ${NS} 張'+
       (b?'　最佳 <b>'+b+'</b>':'')+'</span></button>';
   }).join('');
 }
@@ -429,7 +476,7 @@ function mInfo(){
       ans:ok.join(' ').replace(/ ([?.,])/g,'$1').replace(/ ([\u2019']s)/g,'$1')}}
   if(g==='g8')return {q:c.zh,pick:PICK==null?null:(c.b+' '+PICK+' '+c.a).replace(/ ([?.,])/g,'$1'),
     ans:(c.b+' '+c.o[0]+' '+c.a).replace(/ ([?.,])/g,'$1')};
-  if(g==='g9')return {q:c[0],pick:PICK,ans:c[1]==='q'?'❓ 問句':'🙋 直述句'};
+  if(g==='g9')return {q:c[0],pick:PICK,ans:${DUO9 ? 'LAB9[c[1]]' : "c[1]==='q'?'❓ 問句':'🙋 直述句'"}};
   return {q:'',pick:PICK,ans:''};
 }
 
@@ -516,18 +563,18 @@ function rMcq(){
 }
 /* ── 2 🔵 他還是她 ── */
 function rTwo(){
-  $('#arena').innerHTML=tags('🔵🩷 他還是她')+
+  $('#arena').innerHTML=tags('${DUO2 ? metaOf('g2').ic + ' ' + metaOf('g2').name : '🔵🩷 他還是她'}')+
     '<div class="qbig">'+ap(cur.txt)+'</div><div class="qzh">'+cur.zh+'</div>'+
     '<div class="duo">'+
-     '<button class="dbtn he" data-v="he">He<span class="ds">他　男生</span></button>'+
-     '<button class="dbtn she" data-v="she">She<span class="ds">她　女生</span></button>'+
+${DUO2 ? duoBtns(DUO2) : `     '<button class="dbtn he" data-v="he">He<span class="ds">他　男生</span></button>'+
+     '<button class="dbtn she" data-v="she">She<span class="ds">她　女生</span></button>'+`}
     '</div>'+fbBox();
   $$('.dbtn').forEach(function(b){b.addEventListener('click',function(){
     if(busy)return;var ok=b.getAttribute('data-v')===cur.a;
     b.classList.add(ok?'ok':'bad');
     if(!ok)$$('.dbtn').forEach(function(x){if(x.getAttribute('data-v')===cur.a)x.classList.add('ok')});
     PICK=b.getAttribute('data-v');
-    say(cur.a==='he'?'He':'She');judge(ok,cur.h);
+    ${DUO2 ? 'say(fillBl(cur.txt,cur.a));' : "say(cur.a==='he'?'He':'She');"}judge(ok,cur.h);
   })});
 }
 /* ── 3 🧩 語序大挑戰 ── */
@@ -663,16 +710,17 @@ function rSort(){
   $('#arena').innerHTML=tags('🗂 分類')+
     '<div class="qbig" data-say="'+cur[0].replace(/"/g,'&quot;')+'">'+ap(cur[0])+'</div>'+
     '<div class="duo">'+
-     '<button class="dbtn st" data-v="s">🙋<span class="ds">直述句　在講一件事</span></button>'+
-     '<button class="dbtn qu" data-v="q">❓<span class="ds">問句　在問問題</span></button>'+
+${DUO9 ? duoBtns(DUO9) : `     '<button class="dbtn st" data-v="s">🙋<span class="ds">直述句　在講一件事</span></button>'+
+     '<button class="dbtn qu" data-v="q">❓<span class="ds">問句　在問問題</span></button>'+`}
     '</div>'+fbBox();
   say(cur[0]);
   $$('.dbtn').forEach(function(b){b.addEventListener('click',function(){
     if(busy)return;var ok=b.getAttribute('data-v')===cur[1];
     b.classList.add(ok?'ok':'bad');
-    PICK=b.getAttribute('data-v')==='q'?'❓ 問句':'🙋 直述句';
+${DUO9 ? `    PICK=LAB9[b.getAttribute('data-v')];
+    judge(ok,cur[2]||'');` : `    PICK=b.getAttribute('data-v')==='q'?'❓ 問句':'🙋 直述句';
     judge(ok,cur[1]==='q'?'句尾是 <b>?</b>，而且 <b>Is／Who</b> 放在最前面 → <b>問句</b>。':
-      '句尾是 <b>.</b>，主詞放最前面 → <b>直述句</b>。');
+      '句尾是 <b>.</b>，主詞放最前面 → <b>直述句</b>。');`}
   })});
 }
 /* ── 10 👑 魔王挑戰 ── */
@@ -756,7 +804,7 @@ function endBody(){
   $('#gendrev').innerHTML=
     '<div>🎁 這一場翻到 <b>'+opened.length+'</b> 張驚喜卡'+
       (opened.length?'：'+opened.join('、'):'')+
-      '　（這個遊戲一共有 <b>20</b> 張，每一張都不一樣）</div>'+
+      '　（這個遊戲一共有 <b>${NS}</b> 張，每一張都不一樣）</div>'+
     (wrongList.length?
      ('<div style="color:#5C5C5C;letter-spacing:.1em">📌 這一場要記住的：</div>'+
       wrongList.map(function(h){return '<div>・'+ap(h)+'</div>'}).join('')):
@@ -776,7 +824,7 @@ hub();
 `;
 
 const body = `
-<div id="bad"><div class="bt"></div><div class="bd"></div></div>
+<div id="bad"><div class="bt"></div><div class="bd"></div></div>${GC.burst ? '\n<div id="burst"></div>' : ''}
 <div id="evt"><div class="c3">
  <div class="fc bk"><span class="bi">🎁</span><span class="bl">驚喜卡</span></div>
  <div class="fc ft"><div class="ebig"></div><div class="ewhy"></div><div class="ename"></div></div>
@@ -789,7 +837,7 @@ const body = `
      <b>分數怎麼來：答對 100 ＋ 快 最多 900 ＋ 連對 ✕ 20</b>——
      答完馬上看到這個算式，剩愈多秒，中間那一條就愈長。<br>
      每答對幾題就<b>翻一張驚喜卡</b>🎁：可能直接加分、分數 ✕ 2、多給秒數、
-     或是一面護盾。<b>每一個遊戲有自己的 20 張，翻過的不會再翻到</b>——
+     或是一面護盾。<b>每一個遊戲有自己的 ${NS} 張，翻過的不會再翻到</b>——
      畫面上隨時看得到「再答對幾題就翻牌」。<br>
      答錯會給你提示，那一題等一下還會再出現，<b>練到會為止</b>。</p>
   <div id="grid"></div>
