@@ -33,7 +33,7 @@ const STEPS = [
  { n: '3', ic: '🃏', t: '17 張單字卡', href: '#cards',
    d: '一個單字一張卡，翻卡換頁。點這裡展開' },
  { n: '4', ic: '🌳', t: 'family tree 家庭樹', href: 'words/family-tree.html',
-   d: '一次只亮一個家人。六種顯示切換：圖示／中文／英文／英＋圖／英＋中／全部' },
+   d: '一次只亮一個家人，六種顯示切換' },
  { n: '5', ic: '🧩', t: '單字結構', href: 'words/parts.html',
    d: 'grand ＝ 大、hus ＝ house、-ther 是家人字的尾巴' },
  { n: '6', ic: '📜', t: '單字故事', href: 'words/why.html',
@@ -42,14 +42,14 @@ const STEPS = [
    d: '用英文介紹我的家人（影片）' }
 ,
  /* 2026-09-25 使用者指定：次標題改成「四年級 Unit 1, Unit 2」 */
- { n: '8', ic: '💬', t: '英文句型　秒懂教室　四年級', href: 'sentences/index.html',
-   d: 'Unit 1 Who’s he? ／ Unit 2 Is he a doctor?　暖身題 ＋ 句型卡 ＋ 10 種複習遊戲' },
+ { n: '8', ic: '💬', t: '四年級 句型', href: 'sentences/index.html',
+   d: '英文句型 秒懂教室：Who’s he?／Is he a doctor?' },
  /* 2026-09-24 新增：三年級第一冊 L1＋L2（引擎跟 sentences 共用，規格在 G3 - L1 + L2/CLAUDE.md） */
- { n: '9', ic: '📛', t: '三年級 L1 ＋ L2 句型', href: 'G3%20-%20L1%20+%20L2/index.html',
-   d: 'Unit 1 What’s your name? ／ Unit 2 How old are you?　句型卡 ＋ 遊戲 ＋ 🔢 數字單字 ＋ 👀 Sight Words' },
+ { n: '9', ic: '📛', t: '三年級 句型', href: 'G3%20-%20L1%20+%20L2/index.html',
+   d: 'What’s your name?／How old are you?　＋ 🔢 數字、👀 Sight Words' },
  /* 2026-09-25 使用者指定新增：職業單字（照家人單字的架構：字卡、結構、故事、環遊世界、出處） */
  { n: '10', ic: '💼', t: '職業單字', href: 'words/jobs.html',
-   d: 'student teacher doctor farmer nurse　字卡 ＋ 結構 ＋ 故事 ＋ 環遊世界' }
+   d: 'student、teacher、doctor、farmer、nurse' }
 ];
 
 /* 延伸與老師專用，放最下面一排小字，不搶版面 */
