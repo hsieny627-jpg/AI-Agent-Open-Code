@@ -89,6 +89,7 @@ const WHY = [
    '英文 <b>neighbor</b>（鄰居）＝ <b>near</b>（近）＋ <b>bour</b>（住在那裡的人），bour 跟德文 <b>Bauer</b>（農夫）是同一個字。'))
 ];
 const WORLD = [
+ ...require('./_sources').P.world.filter(r => r.id === 'map' || r.id === 'why5'),
  I('w-student', e('student 家族', 'Duden「Student」；Van Dale「student」；SAOL「student」；Larousse「étudiant」；RAE「estudiante」',
    '五國都從<b>拉丁文 studēns</b> 來，所以都很像。')),
  warn('小提醒：德、荷、瑞典、法的 student 多半是大學生', '國小、國中的學生，德文說 <b>Schüler</b>、荷蘭文 <b>leerling</b>、瑞典文 <b>elev</b>、法文 <b>élève</b>（Duden、Van Dale、SAOL、Larousse 各詞條）。英文的 student 兩種都可以。'),

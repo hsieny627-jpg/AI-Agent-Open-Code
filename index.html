@@ -26,16 +26,17 @@ h1{margin:0;font-size:clamp(26px,4.4vh,42px);font-weight:700;letter-spacing:.04e
 .url{margin-top:5px;font-size:clamp(11.5px,1.6vh,14px);color:#6F6F6F;letter-spacing:.02em}
 .url b{color:#9E9E9E;font-weight:400}
 
-/* 236px（原本 268）：第 9 張卡加進來以後，直式 iPad 排成三欄才不會有捲軸（2026-09-24 量測） */
-#hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,236px),1fr));
+/* 236px（原本 268）：第 9 張卡加進來以後，直式 iPad 排成三欄才不會有捲軸（2026-09-24 量測）
+   2026-09-25 第 10 張卡（職業單字）加進來 ➜ 180px：橫的排五欄、直的排四欄，還是不會有捲軸 */
+#hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));
  gap:clamp(9px,1.5vh,15px);width:100%;max-width:1000px}
 
 .card{position:relative;display:flex;flex-direction:column;align-items:flex-start;
  gap:clamp(3px,.6vh,7px);text-align:left;text-decoration:none;cursor:pointer;
  background:linear-gradient(180deg,#0E0E0E 0%,#050505 100%);
  border:1px solid #2A2A2A;border-radius:18px;color:#F2F2F2;font-family:inherit;
- padding:clamp(12px,2.1vh,20px) clamp(13px,1.8vw,20px);
- min-height:clamp(112px,17vh,150px);transition:border-color .2s,transform .12s}
+ padding:clamp(10px,1.7vh,18px) clamp(11px,1.5vw,18px);
+ min-height:clamp(100px,14vh,140px);transition:border-color .2s,transform .12s}
 .card:hover{border-color:#9FB4C8}
 .card:active{transform:scale(.985)}
 .n{position:absolute;top:clamp(9px,1.5vh,15px);right:clamp(12px,1.6vw,18px);

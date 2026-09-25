@@ -106,6 +106,7 @@ const NUMWHY = [
  I('zero', NUMW.zero[0]), I('months', NUMW.seven[1]), I('eight', NUMW.eight[0]), I('two', NUMW.two[0]), I('lif', NUMW.eleven[0])
 ];
 const NUMWORLD = [
+ ...require('../words/_sources').P.world.filter(r => r.id === 'map' || r.id === 'why5'),
  I('w-one', e('one 家族', 'Duden「eins」；Van Dale「een」；SAOL「en」；Larousse「un」；RAE「uno」', '德 eins、荷 een、瑞典 en、法 un、西 uno。')),
  I('w-two', e('two 家族', 'Duden「zwei」；Van Dale「twee」；SAOL「två」；Larousse「deux」；RAE「dos」', '荷蘭文 <b>twee</b> 跟 two 最像，還留著 w。')),
  I('w-three', e('three 家族', 'Duden「drei」；Van Dale「drie」；SAOL「tre」；Larousse「trois」；RAE「tres」', '五國都長得很像。')),
@@ -272,6 +273,7 @@ const SIGHTPARTS = [
 ];
 const SIGHTWHY = [ I('i', SIGHTW.i[0]), I('you', SIGHTW.you[0]), I('name', SIGHTW.name[1]), I('what', SIGHTW.what[1]), I('year', SIGHTW.year[0]) ];
 const SIGHTWORLD = [
+ ...require('../words/_sources').P.world.filter(r => r.id === 'map' || r.id === 'why5'),
  I('w-i', e('I 家族', 'Duden「ich」；Van Dale「ik」；SAOL「jag」；Larousse「je」；RAE「yo」', '德 ich、荷 ik、瑞典 jag、法 je、西 yo。')),
  I('w-my', e('my 家族', 'Duden「mein」；Van Dale「mijn」；SAOL「min」；Larousse「mon」；RAE「mi」', '五國都用 <b>m</b> 開頭。')),
  I('w-name', e('name 家族', 'Duden「Name」；Van Dale「naam」；SAOL「namn」；Larousse「nom」；RAE「nombre」', '五國都像：<b>n ＋ m</b>。')),

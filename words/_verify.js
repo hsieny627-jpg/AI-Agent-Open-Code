@@ -233,9 +233,11 @@ async function scenePage(p,f,vp,e){
   if(s0.fs<24)e.push('出處的字太小（'+s0.fs+'px）');
   if(s0.ox>0)e.push('出處橫向溢出'+s0.ox);
   const d0=(await snap()).on;
+  /* 出處會從「這一幕的證據」開始（2026-09-25），所以量「按 → 有沒有往後翻一條」 */
+  const c0=+(await p.$eval('#srcn',x=>x.textContent));
   await p.keyboard.press('ArrowRight');await p.waitForTimeout(300);
-  const c1=await p.$eval('#srcn',x=>x.textContent);
-  if(c1!=='2')e.push('出處按 → 沒有翻到第 2 條（'+c1+'）');
+  const c1=+(await p.$eval('#srcn',x=>x.textContent));
+  if(c1!==Math.min(c0+1,s0.n))e.push('出處按 → 沒有往後翻一條（'+c0+'→'+c1+'）');
   if((await snap()).on!==d0)e.push('出處開著的時候按 →，後面那一頁也跟著翻了');
   await p.click('#srcx');await p.waitForTimeout(300);
   if(await p.$eval('#src',x=>getComputedStyle(x).display!=='none'))e.push('出處關不掉');
