@@ -519,7 +519,7 @@ async function cardsPage(p, f, vp, e) {
       }
       if (k.eq3 === 3) sawEq3 = true;
     }
-    if (!sawOrd) e.push('找不到中英語序卡');
+    if (!sawOrd && (SITE_DIR || f === 'unit1.html')) e.push('找不到中英語序卡');
     if (SITE_DIR && !sawEq3) e.push('找不到三句一樣的等式卡');
     if (SITE_DIR && f === 'unit1.html' && !sawUse) e.push('Unit 1 第一張找不到「💡 問什麼？」');
     if (!SITE_DIR && f === 'unit1.html' && !sawUse) e.push('Unit 1 第一張找不到「💡 問什麼？」');
@@ -713,8 +713,10 @@ async function gamesPage(p, f, vp, e) {
       await p.click('#quit'); await p.waitForTimeout(400); continue;
     }
     await p.waitForTimeout(250);
+    /* 答錯頁在紅綠亮 0.5 秒以後才蓋上來；他還是她、語序、火眼金睛、分類的「錯」不是 .o，所以用 PICK 判斷有沒有答錯 */
     if (await p.evaluate(() => { const m = document.getElementById('miss'); return !!(m && m.classList.contains('on')) })
-        || await p.$('#arena .o[data-ok="false"].bad'))
+        || await p.$('#arena .o[data-ok="false"].bad')
+        || await p.evaluate(() => busy && !document.getElementById('gain').classList.contains('on') && g !== 'g6'))
       acts += await missCheck(p, e, '遊戲 ' + i + ' ', i === 1, () => score);
     await p.waitForTimeout(700);
     g = await snap(); acts++;
