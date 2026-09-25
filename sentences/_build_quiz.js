@@ -77,8 +77,8 @@ const CSS = `
  border:1px solid #2C3A48;border-radius:999px;padding:4px 12px}
 .tag.x2{color:var(--gold);border-color:#5A4A18;background:#1A1508;font-weight:700}
 .tag.rev{color:var(--no);border-color:#4A1F1F;background:#1A0A0A}
-#qt{font-size:clamp(21px,4vh,38px);font-weight:700;text-align:center;line-height:1.4;
- max-width:30ch}
+#qt{font-size:clamp(25px,5vh,50px);font-weight:700;text-align:center;line-height:1.3;
+ max-width:28ch}
 #qt .ap{color:var(--ap)}
 #playQ{background:var(--btn);border:1px solid var(--line);border-radius:999px;color:var(--fg);
  font-size:clamp(15px,2.5vh,24px);font-weight:700;padding:clamp(9px,1.6vh,16px) clamp(16px,2.6vw,32px)}
@@ -90,8 +90,8 @@ const CSS = `
  width:100%;margin-top:clamp(2px,.8vh,8px)}
 .opt{display:flex;align-items:center;gap:clamp(8px,1.4vw,16px);text-align:left;
  background:#0C0C0C;border:1px solid #262626;border-radius:16px;color:var(--fg);
- font-size:clamp(16px,2.65vh,27px);line-height:1.3;
- padding:clamp(10px,1.85vh,20px) clamp(12px,1.8vw,24px);min-height:clamp(54px,8.4vh,88px);
+ font-size:clamp(21px,3.9vh,39px);font-weight:700;line-height:1.25;
+ padding:clamp(9px,1.6vh,18px) clamp(12px,1.8vw,24px);min-height:clamp(58px,9.4vh,98px);
  transition:background .15s,border-color .15s,opacity .2s}
 .opt .sh{font-size:.82em;flex:0 0 auto;width:1.3em;text-align:center}
 .opt.s0 .sh{color:#FF5E5E}.opt.s1 .sh{color:#F5B301}.opt.s2 .sh{color:#39D98A}.opt.s3 .sh{color:#5AA9FF}
@@ -137,12 +137,12 @@ $('#rfg').setAttribute('stroke-dasharray',R);
 
 function start(){
   order=QS.map(function(_,n){return n});
-${QC.random ? '  /* 題目和選項每一次都重洗：學生不能用位置或順序背答案 */\n  order=shuf(order);QS=QS.map(reshuffle);\n' : ''}  qi=0;score=0;streak=0;best=0;right=0;wrongBank=[];revRound=false;MISSLOG=[];
+${QC.random ? '  /* 題目和選項每一次都重洗：學生不能用位置或順序背答案 */\n  order=shuf(order);QS=QS.map(reshuffle);\n' : ''}  qi=0;score=0;streak=0;best=0;right=0;wrongBank=[];revRound=false;MISSLOG=[];SIMS={};
   $('#gate').style.display='none';$('#hud').classList.add('on');$('#quiz').classList.add('on');
   ask();
 }
 function cur(){return revRound?wrongBank[qi]:QS[order[qi]]}
-function total(){return revRound?wrongBank.length:QS.length}
+function total(){return revRound?wrongBank.length:order.length}
 
 function ask(){
   answered=false;locked=true;paused=false;left=T;
@@ -153,6 +153,7 @@ function ask(){
   $('#streak').textContent=streak?'🔥 '+streak:'—';
   var tags='';
   if(revRound)tags+='<span class="tag rev">🔁 錯題再戰</span>';
+  else if(SIMS[order[qi]])tags+='<span class="tag x2">🔁 類似題　剛剛錯的，再練一次</span>';
   if(q.x2)tags+='<span class="tag x2">⭐ 挑戰題　答對 分數 ✕ 2</span>';
   tags+='<span class="tag">'+kindName(q.t)+'</span>';
   $('#badge').innerHTML=tags;
@@ -226,8 +227,15 @@ function choose(n){
     $('#stage').classList.add('shake');
     setTimeout(function(){$('#stage').classList.remove('shake')},440);
     if(!revRound)wrongBank.push(reshuffle(q));
-    /* 答錯：蓋一整頁，倒數 3 秒（使用者 2026-09-24 指定） */
-    missShow({q:q.q+(q.say?'　🔊 <b>'+q.say+'</b>':''),pick:n<0?null:q.o[n],ans:q.o[q.a],why:q.why});
+    /* 答錯：蓋一整頁錯題分析（倒數 8 秒、正確答案自動唸 3 次、⭐ 加分 ➜ 類似題 ✕2）
+       （使用者 2026-09-24 指定、2026-09-25 改版）；過兩三題再出一題「類似題」，選項重洗 */
+    var sims=qSims(q);
+    if(!revRound&&sims[1]){var si=QS.indexOf(sims[1]);
+      if(si>=0&&order.slice(qi+1).indexOf(si)<0)order.splice(Math.min(order.length,qi+3+Math.floor(Math.random()*2)),0,si);
+      SIMS[si]=1}
+    missShow({q:q.q+(q.say?'　🔊 <b>'+q.say+'</b>':''),pick:n<0?null:q.o[n],ans:q.o[q.a],why:q.why,
+      sims:sims.slice(0,3).map(toMcq),pts:${QC.speed ? '(q.x2?1000:500)' : '(q.x2?200:100)'},
+      gain:function(g){score+=g;$('#sc').textContent=score}});
   }
   $('#why').innerHTML=ap(q.why);
   $('#sc').textContent=score;
@@ -236,6 +244,16 @@ function choose(n){
   $('#nextQ').textContent=(qi+1<total())?'下一題 ▶':(revRound?'看結果 ▶':(wrongBank.length?'🔁 錯題再戰（'+wrongBank.length+' 題）▶':'看結果 ▶'));
   $('#pause').textContent='⏸ 暫停';
 }
+/* 類似題：同一種題型、英文字重疊最多的（不含自己） */
+var SIMS={};
+function qSims(q){
+  var same=QS.filter(function(x){return x.t===q.t});
+  var rest=QS.filter(function(x){return x.t!==q.t});
+  var tx=function(x){return x.q+' '+(x.say||'')+' '+x.o[x.a]};
+  return simRank(q,same,tx,null).concat(simRank(q,rest,tx,null));
+}
+function toMcq(x){var o=[x.o[x.a]].concat(x.o.filter(function(_,k){return k!==x.a}));
+  return {q:x.q,o:o,h:x.why,say:x.t.indexOf('hear')===0?x.say:''}}
 /* 錯題再考一次：選項順序換掉，不能用位置背答案 */
 function reshuffle(q){
   var idx=shuf([0,1,2,3]);

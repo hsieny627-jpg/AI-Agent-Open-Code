@@ -41,11 +41,15 @@ const STEPS = [
  { n: '7', ic: '🎬', t: 'About My Family', href: 'about-my-family/index.html',
    d: '用英文介紹我的家人（影片）' }
 ,
- { n: '8', ic: '💬', t: '英文句型　秒懂教室', href: 'sentences/index.html',
+ /* 2026-09-25 使用者指定：次標題改成「四年級 Unit 1, Unit 2」 */
+ { n: '8', ic: '💬', t: '英文句型　秒懂教室　四年級', href: 'sentences/index.html',
    d: 'Unit 1 Who’s he? ／ Unit 2 Is he a doctor?　暖身題 ＋ 句型卡 ＋ 10 種複習遊戲' },
  /* 2026-09-24 新增：三年級第一冊 L1＋L2（引擎跟 sentences 共用，規格在 G3 - L1 + L2/CLAUDE.md） */
  { n: '9', ic: '📛', t: '三年級 L1 ＋ L2 句型', href: 'G3%20-%20L1%20+%20L2/index.html',
-   d: 'Unit 1 What’s your name? ／ Unit 2 How old are you?　暖身題 ＋ 句型卡 ＋ 10 種複習遊戲' }
+   d: 'Unit 1 What’s your name? ／ Unit 2 How old are you?　句型卡 ＋ 遊戲 ＋ 🔢 數字單字 ＋ 👀 Sight Words' },
+ /* 2026-09-25 使用者指定新增：職業單字（照家人單字的架構：字卡、結構、故事、環遊世界、出處） */
+ { n: '10', ic: '💼', t: '職業單字', href: 'words/jobs.html',
+   d: 'student teacher doctor farmer nurse　字卡 ＋ 結構 ＋ 故事 ＋ 環遊世界' }
 ];
 
 /* 延伸與老師專用，放最下面一排小字，不搶版面 */

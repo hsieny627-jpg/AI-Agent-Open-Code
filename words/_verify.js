@@ -33,8 +33,11 @@ const fs=require('fs'),DIR=__dirname+'/';
 const args=process.argv.slice(2);
 const showText=args.includes('--text');
 const files=args.filter(a=>a!=='--text');
+/* 2026-09-25：G3 的數字單字、Sight Words 也是這一套樣板產生的，一起量 */
+const G3W=['numbers','sight'].map(d=>'../G3 - L1 + L2/'+d+'/').filter(d=>fs.existsSync(DIR+d))
+ .map(d=>fs.readdirSync(DIR+d).filter(f=>f.endsWith('.html')).sort().map(f=>d+f)).reduce((a,b)=>a.concat(b),[]);
 const FILES=files.length?files:
- fs.readdirSync(DIR).filter(f=>f.endsWith('.html')).sort().concat(['../index.html']);
+ fs.readdirSync(DIR).filter(f=>f.endsWith('.html')).sort().concat(['../index.html']).concat(G3W);
 const VPS=[{n:'1024x768',width:1024,height:768},{n:'820x1180',width:820,height:1180}];
 
 /* 共用：量溢出與「被箭頭壓到」 */
@@ -93,6 +96,20 @@ async function hubPage(p,f,vp,e){
  return acts;
 }
 
+/* ---------- D. 一組單字的首頁（jobs.html、numbers/index.html、sight/index.html）---------- */
+async function secPage(p,f,vp,e){
+ const s=await p.evaluate(()=>{const de=document.documentElement;
+  return{ox:de.scrollWidth-de.clientWidth,links:[...document.querySelectorAll('a[href]')].map(a=>a.getAttribute('href'))}});
+ if(s.ox>0)e.push('橫向溢出'+s.ox);
+ const base=require('path').dirname(require('path').resolve(DIR,f));
+ const miss=s.links.filter(h=>h&&!/^(https?:|mailto:|#)/.test(h)&&!fs.existsSync(require('path').resolve(base,decodeURIComponent(h.split('#')[0]))));
+ if(miss.length)e.push('連結指到不存在的檔案：'+miss.join('、'));
+ await p.click('#cardsBtn');await p.waitForTimeout(300);
+ const n=await p.$$eval('#cards a',a=>a.filter(x=>x.getClientRects().length).length);
+ if(n<3)e.push('按了單字卡沒有展開（'+n+'）');
+ return 3;
+}
+
 /* ---------- A. 幕頁 ---------- */
 async function scenePage(p,f,vp,e){
  const snap=()=>p.evaluate(BOXSRC=>{
@@ -120,7 +137,7 @@ async function scenePage(p,f,vp,e){
  if((await snap()).on!==b4)e.push('停 6 秒自動換頁');
 
  /* 2026-09-24 新增的四項（使用者指定）───────────────────────────── */
- const NEW=/^(parts|world)\.html$/.test(f);
+ const NEW=/(^|[\/-])(parts|world)\.html$/.test(f);
  const back=async()=>{await p.evaluate(()=>show(0));await p.waitForTimeout(600)};
  if(NEW){
   /* ① 字不可以壓到下面的按鈕列（動畫跑完才量） */
@@ -163,6 +180,44 @@ async function scenePage(p,f,vp,e){
    acts++;
   }
   if(!seen)e.push('找不到「這是哪一國的話？」猜猜看');
+ }
+ /* ⑤ 📑 目次（使用者 2026-09-25 指定）：按了才出來、一格一格、點了跳得過去（字卡是連到別張） */
+ if(await p.$('#tocb')){
+  await p.click('#tocb');await p.waitForTimeout(300);
+  const t=await p.evaluate(()=>({on:document.getElementById('toc').classList.contains('on'),
+   n:document.querySelectorAll('#toc .tgd button,#toc .tgd a').length}));acts++;
+  if(!t.on)e.push('按了目次沒有打開');
+  if(t.n<2)e.push('目次只有 '+t.n+' 格');
+  const btn=await p.$('#toc .tgd button[data-k="1"]');
+  if(btn){await btn.click();await p.waitForTimeout(700);
+   if((await snap()).on!==1)e.push('目次點第 2 幕沒有跳過去');
+   await p.evaluate(()=>show(0));await p.waitForTimeout(500);}
+  else{await p.click('#tocx');await p.waitForTimeout(200)}
+  if(await p.evaluate(()=>document.getElementById('toc').classList.contains('on')))e.push('目次關不掉');
+ }else if(!/family-tree|brother-why|quiz/.test(f))e.push('沒有 📑 目次按鈕');
+ /* ⑥ 出處直接跳到這一幕的證據（使用者 2026-09-25 指定）：SRCAT 指到的那一條 */
+ if(await p.$('#srcb')){
+  let bad=[];
+  for(let i=0;i<N;i++){
+   await p.evaluate(k=>show(k),i);await p.waitForTimeout(250);
+   const r=await p.evaluate(()=>{var v=window.SRCAT;if(v==null||v==='')return null;
+    var L=[].slice.call(document.querySelectorAll('#src .sl')),want=typeof v==='number'?v:L.findIndex(x=>x.getAttribute('data-id')===v);
+    document.getElementById('srcb').click();
+    var got=+(document.getElementById('srcn').textContent)-1;document.getElementById('srcx').click();
+    return{want,got,v}});
+   if(r&&(r.want<0||r.want!==r.got))bad.push((i+1)+':'+r.v);
+  }
+  acts++;
+  if(bad.length)e.push('出處沒有跳到這一幕的證據（'+bad.join('、')+'）');
+  await p.evaluate(()=>show(0));await p.waitForTimeout(300);
+ }
+ /* ⑦ 「🌍 環遊世界 →」要真的連到環遊世界那一頁（使用者 2026-09-25 抓到按了到不了） */
+ if(await p.$('#fwd')){
+  const want=await p.evaluate(()=>document.getElementById('fwd').textContent);
+  await Promise.all([p.waitForNavigation({timeout:5000}).catch(()=>null),p.click('#fwd')]);
+  acts++;
+  if(!/world\.html$/.test(p.url()))e.push('按「'+want+'」沒有到環遊世界（'+p.url().split('/').pop()+'）');
+  await p.goBack().catch(()=>null);await p.waitForTimeout(500);
  }
  /* ④ 出處：一條一頁、字要大、翻得動、關得掉（每一頁都量） */
  if(await p.$('#srcb')){
@@ -257,14 +312,16 @@ const b=await chromium.launch();const bad=[];let acts=0;
 for(const vp of VPS){
  const ctx=await b.newContext({viewport:{width:vp.width,height:vp.height},offline:true});
  for(const f of FILES){
-  const p=await ctx.newPage();await p.goto('file://'+DIR+f);await p.waitForTimeout(400);
-  const e=[];
+  const p=await ctx.newPage();const e=[];
+  p.on('pageerror',err=>e.push('JS 例外：'+err.message));
+  p.on('console',m=>{if(m.type()==='error')e.push('console error：'+m.text().slice(0,120))});
+  await p.goto(require('url').pathToFileURL(DIR+f).href);await p.waitForTimeout(400);
   const font=await fontOk(p);
   if(!font.ok||font.d<0.5)e.push('Andika 未生效');
   const kind=await p.evaluate(()=>document.getElementById('dots')?'scene':
-   (document.getElementById('go')?'quiz':(document.getElementById('hub')?'hub':'unknown')));
+   (document.getElementById('go')?'quiz':(document.getElementById('hub')?'hub':(document.getElementById('cardsBtn')?'sec':'unknown'))));
   if(kind==='unknown')e.push('頁型不明（沒有 #dots／#go／#hub）');
-  else acts+=await ({scene:scenePage,quiz:quizPage,hub:hubPage}[kind])(p,f,vp,e);
+  else acts+=await ({scene:scenePage,quiz:quizPage,hub:hubPage,sec:secPage}[kind])(p,f,vp,e);
   if(e.length)bad.push(f+' @'+vp.n+'：'+e.join('；'));
   await p.close();
  }

@@ -72,7 +72,7 @@ function guessOne(o) {
    r：[國家代碼, 那一國的字（可以有兩個，用／隔開）] */
 function guessMany(o) {
   return {
-    tag: '🌍 別的國家怎麼叫' + o.zh, sayAll: 1,
+    tag: '🌍 別的國家怎麼叫' + o.zh, sayAll: 1, src: o.src || 'w-' + o.en,
     h: '<div class="guess many fo">' +
       '<div class="gen">英文 <span class="sp gbig" data-say="' + o.en + '">' + o.en + '</span><em>' + o.zh + '</em></div>' +
       '<div class="glist">' + o.r.map((x, k) =>
@@ -103,44 +103,83 @@ const boat = (a, b, d, lbl) => { const [x1, y1] = pt(a[0], a[1]), [x2, y2] = pt(
 const STEPPE = [40, 48.5], NORTH = [10, 55], ROME = [12.5, 42], ENG = [-1.2, 52.4], NORM = [0.2, 49.2],
   DE = [10.5, 51], NL = [5.6, 52.3], SE = [15.5, 60.5], FR = [2.4, 46.8], ES = [-3.7, 40.3];
 
-const mapScene = (tag, inner, lines, below) => ({ tag, map: 1,
-  h: '<div class="mapbox fo">' + M.svg(inner) + '</div>' + (below ? '<div class="mbelow">' + below + '</div>' : ''), lines });
+/* 今天的國家名字：每一張地圖都標出來（使用者 2026-09-25 指定：學生不知道地圖上的地方是哪一國） */
+const CTRY = [['gb', -2.2, 53.2, '英國'], ['de', 10.2, 51.2, '德國'], ['nl', 5.4, 52.4, '荷蘭'], ['sv', 15.2, 62.2, '瑞典'],
+  ['fr', 2.3, 46.6, '法國'], ['es', -3.8, 40.0, '西班牙'], ['it', 12.8, 43.2, '義大利']];
+const names = () => CTRY.map(c => { const [x, y] = pt(c[1], c[2]); return '<text class="mc" x="' + x + '" y="' + y + '">' + c[3] + '</text>'; }).join('');
+/* 時間軸：現在演到哪一段（使用者 2026-09-25 指定：學生搞不清楚歷史，用一條看得到的時間線帶著走） */
+const TL = ['6000 年前', '分成兩家', '1500 年前', '拉丁家族', '1066 年', '今天'];
+const tline = k => '<div class="tline">' + TL.map((t, j) => '<span class="' + (j < k ? 'past' : j === k ? 'now' : '') + '">' + t + '</span>').join('<i>➜</i>') + '</div>';
+const mapScene = (tag, inner, lines, below, k, src) => ({ tag, map: 1, src: src || 'map',
+  h: tline(k) + '<div class="mapbox fo">' + M.svg(names() + inner) + '</div>' + (below ? '<div class="mbelow">' + below + '</div>' : ''), lines });
 
 const MAPS = [
-  mapScene('🗺 大約 6000 年前',
+  mapScene('🗺 很久很久以前（6000 年前）',
     dot(STEPPE[0], STEPPE[1], 'pulse', .3) + txt(STEPPE[0] - 5, STEPPE[1] + 3.2, '👨‍👩‍👧 草原', 'big', .5) +
     txt(STEPPE[0] - 7, STEPPE[1] - 3.2, '「mā-ter！」', 'say', 1.1),
-    ['大約 <b>6000 年前</b>，有一群人住在<b>黑海北邊的草原</b>',
-     '很多家人字，<b>最早從這裡出發</b>']),
+    ['有一群人住在<b>黑海北邊的草原</b>', '很多家人字，<b>從這裡出發</b>'], '', 0, 'steppe'),
   mapScene('🗺 搬家，分成兩大家族',
     dot(STEPPE[0], STEPPE[1], '', 0) + arrow(STEPPE, NORTH, 'g', .3) + arrow(STEPPE, ROME, 'l', 1.1) +
     txt(NORTH[0] - 8, NORTH[1] + 2.4, '🌲 日耳曼家族', 'big g', 1.2) + txt(ROME[0] - 7, ROME[1] - 2.2, '🏛 拉丁家族', 'big l', 2),
-    ['他們慢慢<b>搬家</b>，分成好幾個家族', '往北：<b>日耳曼家族</b>　往南：<b>拉丁家族</b>']),
-  mapScene('🗺 日耳曼家族：坐船到英國',
+    ['往北：<b>🌲 日耳曼家族</b>', '往南：<b>🏛 拉丁家族</b>'], '', 1, 'steppe'),
+  mapScene('🗺 坐船到英國（1500 年前）',
     txt(DE[0] - 1, DE[1] - 1.2, 'Mutter', 'g', .2) + txt(1.5, 54.6, 'moeder', 'g', .5) +
-    txt(SE[0] - 3, SE[1], 'mor', 'g', .8) +
-    boat([7.5, 55.5], [-0.5, 53.6], 1.2, '') + txt(-3.6, 51.6, 'mother', 'big e', 2.6),
-    ['大約 <b>1500 年前</b>，有人從<b>德國北部、丹麥</b>坐船到英國',
-     '所以 mother、Mutter、moeder <b>像兄弟姊妹</b>']),
+    txt(SE[0] - 3, SE[1] - 1.4, 'mor', 'g', .8) +
+    boat([7.5, 55.5], [-0.5, 53.6], 1.2, '') + txt(-3.6, 51.2, 'mother', 'big e', 2.6),
+    ['德國北部、丹麥的人<b>坐船到英國</b>', 'mother、Mutter、moeder <b>是兄弟姊妹</b>'], '', 2, 'boat'),
   mapScene('🗺 拉丁家族',
     dot(ROME[0], ROME[1], 'pulse l', .2) + txt(ROME[0] + .8, ROME[1] + .6, 'māter', 'l', .4) +
     arrow(ROME, FR, 'l', .8) + arrow(ROME, ES, 'l', 1.2) +
-    txt(FR[0] - 2, FR[1], 'mère', 'big l', 1.6) + txt(ES[0] - 1.5, ES[1], 'madre', 'big l', 2),
-    ['拉丁家族：法文 <b>mère</b>、西班牙文 <b>madre</b>', '一樣是 <b>m</b> 開頭，但<b>跟英文比較不像</b>']),
+    txt(FR[0] - 2, FR[1] - 1.4, 'mère', 'big l', 1.6) + txt(ES[0] - 1.5, ES[1] - 1.4, 'madre', 'big l', 2),
+    ['法國 <b>mère</b>、西班牙 <b>madre</b>', '一樣 <b>m</b> 開頭，<b>跟英文比較不像</b>'], '', 3, 'latin'),
   mapScene('🗺 1066 年：法文坐船進英國',
     txt(1.2, 47.9, '🏰 諾曼第', 'l', .2) + dot(NORM[0], NORM[1], 'pulse l', .2) +
     boat([NORM[0] - .5, NORM[1] + .6], [-1.8, 51.2], .6, ''),
-    ['<b>1066 年</b>，講法文的<b>諾曼人</b>打贏英國',
-     '<b>uncle、aunt、cousin</b> 就是那時候從法文來的'],
+    ['講法文的<b>諾曼人</b>打贏英國', '<b>uncle、aunt、cousin</b> 從法文來'],
     '<span style="animation-delay:2.2s">oncle ➜ uncle</span><span style="animation-delay:2.6s">ante ➜ aunt</span>' +
-    '<span style="animation-delay:3s">cosin ➜ cousin</span>')
+    '<span style="animation-delay:3s">cosin ➜ cousin</span>', 4, '1066')
 ];
 
-/* ── ④ 語言也有家人：一個祖先，四個兄弟姊妹 ── */
+/* ── 歐洲在哪裡：從台灣飛過去（使用者 2026-09-25 指定：四年級看得懂的地理）── */
+const WHERE = {
+  tag: '🌏 這些國家在哪裡？', src: 'where',
+  h: '<div class="where fo"><div class="wtw"><span class="wic">🏝️</span><b>台灣</b><em>我們在這裡</em></div>' +
+    '<div class="wfly"><span class="plane">✈️</span><i></i></div>' +
+    '<div class="weu"><span class="wic">🏰</span><b>歐洲</b><em>很遠的西邊</em></div></div>',
+  lines: ['從台灣坐飛機，要飛<b>十幾個小時</b>', '歐洲有很多國家，<b>每一國說的話都不一樣</b>']
+};
+/* ── 今天的六個國家：一國一國跳出來 ── */
+const SIX = {
+  tag: '🗺 今天的六個國家', map: 1, src: 'map',
+  h: '<div class="mapbox fo">' + M.svg(CTRY.filter(c => c[0] !== 'it').map((c, k) => {
+      const [x, y] = pt(c[1], c[2]);
+      return '<g class="cpop" style="animation-delay:' + (0.3 + k * 0.45).toFixed(2) + 's">' +
+        '<circle cx="' + x + '" cy="' + (y - 4) + '" r="5" class="md" style="opacity:1"/>' +
+        '<text class="mt big" x="' + (x + 8) + '" y="' + y + '" style="opacity:1">' + c[3] + '</text></g>';
+    }).join('')) + '</div>' +
+    '<div class="flags6">' + ['gb', 'de', 'nl', 'sv', 'fr', 'es'].map((c, k) =>
+      '<span style="animation-delay:' + (0.3 + k * 0.45).toFixed(2) + 's">' + flag(c) + '<b>' + NAME[c][1] + '</b></span>').join('') + '</div>',
+  lines: ['英國在最左邊的<b>小島</b>上']
+};
+/* ── 為什麼挑這 5 個國家（使用者 2026-09-25 指定）── */
+const WHY5 = {
+  tag: '🤔 為什麼挑這 5 國？', src: 'why5',
+  h: '<div class="why5 fo">' +
+    '<div class="w5 g" style="animation-delay:.2s"><span class="w5f">' + flag('de') + flag('nl') + flag('sv') + '</span>' +
+      '<b>德國・荷蘭・瑞典</b><em>🌲 英文的兄弟姊妹 ➜ 字最像</em></div>' +
+    '<div class="w5 l" style="animation-delay:1s"><span class="w5f">' + flag('fr') + '</span>' +
+      '<b>法國</b><em>🏰 1066 年送很多字給英文</em></div>' +
+    '<div class="w5 l2" style="animation-delay:1.8s"><span class="w5f">' + flag('es') + '</span>' +
+      '<b>西班牙</b><em>🏛 法文的兄弟 ➜ 比比看哪裡不一樣</em></div></div>',
+  lines: ['<b>瑞典文</b>還跟中文一樣：<b>分爸爸那邊、媽媽那邊</b>']
+};
+
+/* ── ④ 語言也有家人：一個祖先，四個兄弟姊妹 ──
+   2026-09-25 使用者指定：學生不懂「古日耳曼語」是什麼 ➜ 畫面上用一句話講，詳細的秒懂動畫放在 📖 出處 */
 const TREE = {
-  tag: '🌳 語言也有家人',
+  tag: '🌳 語言也有家人', src: 'gmc',
   h: '<div class="ltree fo">' +
-    '<div class="lroot">👵 古日耳曼語<em>很久以前的一種話</em></div>' +
+    '<div class="lroot">👵 古日耳曼語<em>2000 多年前，北歐和德國北部的人說的話</em></div>' +
     '<svg class="llines" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true">' +
     [50, 150, 250, 350].map((x, k) => '<path d="M200,0 L' + x + ',40" pathLength="100" style="animation-delay:' + (0.4 + k * 0.2) + 's"/>').join('') +
     '</svg><div class="lkids">' +
@@ -148,7 +187,7 @@ const TREE = {
       '<div class="lkid" style="animation-delay:' + (0.9 + k * 0.25).toFixed(2) + 's">' + flag(x[0]) + '<b>' + NAME[x[0]][0] + '</b>' +
       '<span class="sp" data-say="' + x[1] + '" data-lang="' + LANG[x[0]] + '">' + x[1] + '</span></div>').join('') +
     '</div></div>',
-  lines: ['英文、德文、荷蘭文、瑞典文 ＝ <b>同一個家族的兄弟姊妹</b>', '所以家人單字<b>長得很像</b>']
+  lines: ['英文、德文、荷蘭文、瑞典文 ＝ <b>同一個媽媽生的兄弟姊妹</b>']
 };
 
-module.exports = { flag, guessOne, guessMany, MAPS, TREE, NAME };
+module.exports = { flag, guessOne, guessMany, MAPS, TREE, NAME, LANG, WHERE, SIX, WHY5 };

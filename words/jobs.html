@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>💼 職業單字</title>
+<!-- 本檔由 words/_section.js 產生，不要手改。 -->
+<style>
+@font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;src:url(fonts/andika-400.woff2) format("woff2")}
+@font-face{font-family:Andika;font-style:normal;font-weight:700;font-display:swap;src:url(fonts/andika-700.woff2) format("woff2")}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#000;color:#F2F2F2;font-family:Andika,-apple-system,"PingFang TC","Noto Sans TC",sans-serif}
+body{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:clamp(14px,3vh,34px) clamp(12px,3vw,34px) 90px}
+h1{margin:0;font-size:clamp(28px,5.4vh,52px);text-align:center}
+.sub{margin:6px 0 clamp(12px,2.4vh,26px);color:#9FB4C8;font-size:clamp(15px,2.3vh,21px);letter-spacing:.12em;text-align:center}
+#grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(8px,1.6vh,16px);width:100%;max-width:1060px}
+.card{position:relative;display:flex;flex-direction:column;gap:4px;text-align:left;background:linear-gradient(180deg,#0E0E0E,#050505);
+ border:1px solid #272727;border-radius:20px;color:#F2F2F2;text-decoration:none;font-family:inherit;cursor:pointer;
+ padding:clamp(12px,2vh,20px) clamp(14px,1.8vw,22px);min-height:clamp(110px,16vh,150px)}
+.card:active{transform:scale(.985)}
+.card .n{position:absolute;top:10px;right:16px;font-size:clamp(20px,3.2vh,30px);font-weight:700;color:#262626}
+.card .ic{font-size:clamp(30px,5vh,46px);line-height:1.1}
+.card .t{font-size:clamp(20px,3.2vh,28px);font-weight:700}
+.card .d{font-size:clamp(14px,2vh,18px);color:#9E9E9E;line-height:1.45}
+#cards{display:none;grid-column:1/-1;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+#cards.on{display:grid}
+#cards a{display:flex;flex-direction:column;align-items:center;gap:2px;background:#0C0C0C;border:1px solid #2A2A2A;border-radius:14px;
+ color:#F2F2F2;text-decoration:none;padding:10px 6px}
+#cards a span{font-size:30px}#cards a b{font-size:clamp(18px,2.6vh,24px)}#cards a em{font-style:normal;color:#9FB4C8;font-size:15px}
+#bar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:10px;padding:12px;background:linear-gradient(180deg,transparent,#000 40%)}
+#bar a{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;text-decoration:none;font-size:16px;padding:11px 20px}
+</style>
+</head>
+<body>
+<h1>💼 職業單字</h1>
+<div class="sub">student　teacher　doctor　farmer　nurse</div>
+<div id="grid"><button class="card" id="cardsBtn"><span class="n">1</span><span class="ic">🃏</span><span class="t">5 張單字卡 ▾</span><span class="d">中文 ➜ 以前 ➜ 現在，一個字一張卡</span></button><div id="cards"><a href="student.html"><span>🧑‍🎓</span><b>student</b><em>學生</em></a><a href="teacher.html"><span>👩‍🏫</span><b>teacher</b><em>老師</em></a><a href="doctor.html"><span>👨‍⚕️</span><b>doctor</b><em>醫生</em></a><a href="farmer.html"><span>👨‍🌾</span><b>farmer</b><em>農夫</em></a><a href="nurse.html"><span>👩‍⚕️</span><b>nurse</b><em>護理師</em></a></div><a class="card" href="jobs-parts.html"><span class="n">2</span><span class="ic">🧩</span><span class="t">單字結構</span><span class="d">-er、-or、-ent ＝ 做這件事的人</span></a><a class="card" href="jobs-why.html"><span class="n">3</span><span class="ic">📜</span><span class="t">職業故事</span><span class="d">doctor 以前是老師？nurse 以前是餵奶的人？</span></a><a class="card" href="jobs-world.html"><span class="n">4</span><span class="ic">🌍</span><span class="t">職業單字環遊世界</span><span class="d">猜猜看是哪一國；五國比一比</span></a></div>
+<nav id="bar"><a href="../index.html">🏠 首頁</a></nav>
+<script>
+(function(){var b=document.getElementById("cardsBtn"),c=document.getElementById("cards");if(!b||!c)return;
+ b.addEventListener("click",function(){c.classList.toggle("on")});})();
+</script>
+</body>
+</html>

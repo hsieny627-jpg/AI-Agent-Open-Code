@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>old｜Sight Words</title>
+<!-- 本檔由 words/_build.js 產生，不要手改。改樣板請改 _build.js 再重跑。 -->
+<style>
+/* Andika 隨檔案放在 fonts/，離線也一定是 Andika（不靠網路） */
+@font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
+ src:url(../../words/fonts/andika-400.woff2) format("woff2")}
+@font-face{font-family:Andika;font-style:normal;font-weight:700;font-display:swap;
+ src:url(../../words/fonts/andika-700.woff2) format("woff2")}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:#000;color:#F2F2F2;
+ font-family:Andika,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;user-select:none}
+
+#dots{display:flex;gap:10px;position:fixed;top:max(18px,env(safe-area-inset-top))}
+#dots i{width:26px;height:4px;border-radius:99px;background:#2A2A2A;transition:background .3s}
+#dots i.on{background:#9FB4C8}
+
+/* 左右翻頁箭頭：**貼在字卡自己的左右邊**（使用者 2026-09-20 指定，老師點起來比較順手）。
+   放在 #stage 裡、不放在 #card 裡——#card 每翻一幕都整個 innerHTML 重寫，
+   而且翻卡時會做 3D 旋轉，箭頭當它的子元素會被洗掉、也會跟著歪。
+   絕對定位的基準是 #stage 的 padding 邊，所以左右偏移用同一個 --pad 對齊卡片邊緣。 */
+.nav{position:absolute;top:0;bottom:0;width:var(--navw);border:0;background:none;
+ color:#9FB4C8;font-size:clamp(38px,5.4vw,58px);font-family:inherit;line-height:1;z-index:2;
+ display:flex;align-items:center;justify-content:center;cursor:pointer}
+.nav:disabled{color:#202020;cursor:default}
+.nav:active:not(:disabled){background:rgba(255,255,255,.06)}
+#prev{left:var(--pad);border-radius:clamp(18px,3vh,30px) 0 0 clamp(18px,3vh,30px)}
+#next{right:var(--pad);border-radius:0 clamp(18px,3vh,30px) clamp(18px,3vh,30px) 0}
+
+/* 字卡：一張卡就是一幕，翻頁＝翻卡（使用者 2026-09-19 指定） */
+#stage{--pad:clamp(10px,2.5vw,28px);--navw:clamp(56px,7.5vw,86px);
+ position:relative;width:100%;max-width:760px;padding:0 var(--pad);
+ display:flex;align-items:center;justify-content:center;perspective:1500px}
+#card{width:100%;text-align:center;min-height:clamp(300px,57vh,520px);
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:clamp(8px,1.6vh,18px);
+ border:1px solid #242424;border-radius:clamp(18px,3vh,30px);
+ background:linear-gradient(180deg,#0B0B0B 0%,#040404 100%);
+ box-shadow:0 18px 50px rgba(0,0,0,.65);
+ padding:clamp(10px,2.4vh,24px) calc(var(--navw) + clamp(6px,1.2vw,12px))}
+.tag{font-size:clamp(13px,1.6vh,16px);color:#9FB4C8;letter-spacing:.4em;font-weight:700;padding-left:.4em}
+.emoji{font-size:clamp(84px,17vh,150px);line-height:1.05}
+.zh{font-size:clamp(50px,9vh,84px);font-weight:700;letter-spacing:.06em}
+/* 中央的學習焦點單字：使用者 2026-09-20 指定再放大，最後一排要看得清楚 */
+/* 高度與寬度都要夾住，否則直式（820 寬）會折行 */
+.word{font-size:clamp(50px,min(10.6vh,11.5vw),104px);font-weight:700;letter-spacing:.01em}
+.word.past{color:#D8D3C5}
+.parts{font-size:clamp(36px,6.4vh,62px);font-weight:700;color:#D8D3C5;letter-spacing:.01em}
+.parts b{color:#9FB4C8;font-weight:700}
+.sub{font-size:clamp(19px,2.7vh,26px);color:#D8D3C5;line-height:1.5}
+.sub b{color:#F2F2F2;font-weight:700}
+
+/* 底部固定兩排：上排「上一個／下一個單字」，下排工具鈕。
+   使用者 2026-09-20 指定：**字卡本身不放任何按鈕與說明文字**，讓單字聚焦。 */
+#bottom{position:fixed;left:0;right:0;bottom:max(16px,env(safe-area-inset-bottom));
+ display:flex;flex-direction:column;align-items:center;gap:9px;padding:0 10px}
+#wnav{display:flex;align-items:center;justify-content:center;gap:clamp(10px,2.4vw,26px);
+ width:100%;max-width:640px}
+#wnav a{display:flex;align-items:center;gap:7px;text-decoration:none;color:#D8D3C5;
+ background:#141414;border:1px solid #333;border-radius:99px;font-family:inherit;
+ font-size:clamp(14px,2vh,17px);padding:9px 17px;min-height:44px;white-space:nowrap}
+#wnav a:hover{border-color:#9FB4C8;color:#F2F2F2}
+#wnav a .w{font-weight:700}
+#wnav .pos{font-size:clamp(12px,1.7vh,14px);color:#5E5E5E;letter-spacing:.1em;white-space:nowrap}
+#bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+#bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
+ font-size:15px;padding:10px 17px;min-height:46px;font-family:inherit;cursor:pointer}
+#bar button:active{background:#2A2A2A}
+
+.in{animation:rise .5s cubic-bezier(.2,.9,.3,1) both}
+.d1{animation-delay:.10s}.d2{animation-delay:.24s}.d3{animation-delay:.40s}
+.d4{animation-delay:1.55s}.d5{animation-delay:1.75s}
+@keyframes rise{0%{opacity:0;transform:translateY(20px) scale(.92)}100%{opacity:1;transform:none}}
+.pop{animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes pop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+/* 翻卡：往後翻從右邊翻進來，往回翻從左邊翻進來（420ms，翻完才是穩定畫面） */
+.turnR{animation:turnR .42s cubic-bezier(.25,.85,.3,1) both}
+.turnL{animation:turnL .42s cubic-bezier(.25,.85,.3,1) both}
+@keyframes turnR{0%{opacity:.2;transform:rotateY(54deg) translateX(24px) scale(.94)}
+ 100%{opacity:1;transform:none}}
+@keyframes turnL{0%{opacity:.2;transform:rotateY(-54deg) translateX(-24px) scale(.94)}
+ 100%{opacity:1;transform:none}}
+.reduce *{animation:none!important;transition:none!important}
+#toc{position:fixed;inset:0;z-index:45;background:#000;display:none;flex-direction:column;
+ padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) max(10px,env(safe-area-inset-bottom));overflow:auto}
+#toc.on{display:flex}
+#toc .thd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#toc .thd b{font-size:clamp(20px,3.4vh,30px);color:#9FB4C8}
+#toc .thd button,#toc .tgd button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;font-family:inherit;
+ font-size:clamp(15px,2.3vh,21px);padding:8px 18px;min-height:46px;cursor:pointer}
+#toc .tgd{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(200px,26vw,300px),1fr));gap:8px}
+#toc .tgd button{display:flex;align-items:center;gap:10px;text-align:left;border-radius:14px;background:#0C0C0C;border-color:#2A2A2A}
+#toc .tgd button b{flex:0 0 auto;width:2em;height:2em;border-radius:50%;background:#1E2A36;display:flex;align-items:center;justify-content:center}
+#toc .tgd button.cur{border-color:#FFD24A;background:#1D1908}
+#toc .tgd a{display:flex;align-items:center;gap:10px;text-align:left;border-radius:14px;background:#0C0C0C;border:1px solid #2A2A2A;
+ color:#F2F2F2;text-decoration:none;font-size:clamp(15px,2.3vh,21px);padding:8px 14px;min-height:50px}
+#toc .tgd a b{flex:0 0 auto;width:2em;height:2em;border-radius:50%;background:#1E2A36;display:flex;align-items:center;justify-content:center}
+#toc .tgd a.cur{border-color:#FFD24A;background:#1D1908}
+.rs{color:#FF5A5A!important}
+
+/* 單字的音標／音節元件。字級跟著外層 font-size 走，所以字卡與故事頁共用一份。 */
+.phw{display:inline-flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;margin:0 .17em;
+ line-height:1.04;cursor:pointer;position:relative}
+.phw .syl{display:inline-flex;align-items:flex-end}
+.phw .u{display:inline-flex;flex-direction:column;align-items:center;transition:color .2s}
+.phw .g{display:block;white-space:nowrap}
+.phw .g i{font-style:normal}
+.phw .g i.v{color:#FF5A5A}            /* 母音字母 ＝ 紅色 */
+.phw .u.mute .g i,.phw .u.mute .g i.v{color:#9A9A9A}  /* 不發音 ＝ 淺灰色 */
+.phw .p{display:none;font-size:max(.34em,13px);font-weight:400;letter-spacing:0;white-space:nowrap;
+ color:#9FB4C8;margin-top:.30em;min-height:1.1em}
+.phw.ipa .p,.phw.kk .p{display:block}
+.phw .u.mute .p{color:#6A6A6A}
+/* 唸到哪一格，哪一格就亮起來（字母 ↔ 聲音） */
+.phw .u.lit .g i{color:#FFFFFF;text-shadow:0 0 20px rgba(159,180,200,.95)}
+.phw .u.lit .g i.v{color:#FF9090}
+.phw .u.lit .p{color:#F2F2F2}
+/* 音節之間的切分點，一直都在（學生看得到「這裡可以切」） */
+.phw .cut{display:inline-flex;flex-direction:column;align-items:center;color:#2B343B;
+ padding:0 .07em;transition:color .3s,padding .34s cubic-bezier(.2,1.4,.35,1)}
+.phw.split .cut{color:#9FB4C8;padding:0 .26em}
+.phw .syl.beat .g{animation:phbeat .52s ease-in-out both}
+@keyframes phbeat{0%{color:inherit}38%{color:#FFFFFF;text-shadow:0 0 24px rgba(159,180,200,.95)}
+ 100%{color:inherit;text-shadow:none}}
+/* 母音一顆一顆數 */
+.phw .u.count .g i.v{animation:phcount .5s ease-in-out both}
+@keyframes phcount{0%{text-shadow:none}40%{text-shadow:0 0 26px rgba(255,90,90,.95)}100%{text-shadow:none}}
+
+.phbox{display:flex;flex-direction:column;align-items:center;gap:clamp(4px,.8vh,9px)}
+.phnote{font-size:clamp(13px,1.85vh,17px);color:#8E8E8E;letter-spacing:.02em;min-height:1.35em}
+.phnote b{color:#F2F2F2;font-weight:700}
+.phnote .rv{color:#FF5A5A;font-weight:700}
+.phchips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.phchips button{background:#131313;border:1px solid #333;color:#8E8E8E;border-radius:99px;
+ font-family:inherit;font-size:clamp(12px,1.7vh,15px);padding:5px 12px;min-height:32px;cursor:pointer}
+.phchips button.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A;font-weight:700}
+.phchips button:active{background:#2A2A2A}
+.phchips button.on:active{background:#B4C6D6}
+
+/* 念到哪一個字，那一個字就放大、變亮（使用者 2026-09-25 指定，每一頁都一樣） */
+.speak{color:#FFD24A!important;text-shadow:0 0 16px rgba(255,210,74,.8);transform:scale(1.14);display:inline-block;
+ transition:transform .15s}
+.phw.speak .g i,.phw.speak .g i.v{color:#FFD24A!important}
+/* 任何一段英文都可以點來聽（補充單字、字詞、用法） */
+.sp{cursor:pointer;border-bottom:1px dotted #4F6472}
+.sp:active,.sp.ping{color:#9FB4C8;border-bottom-color:#9FB4C8}
+.reduce .phw .syl.beat .g,.reduce .phw .u.count .g i.v{animation:none!important}
+
+#src{position:fixed;inset:0;z-index:40;background:#000;display:none;flex-direction:column;
+ padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) max(10px,env(safe-area-inset-bottom));text-align:left}
+#src.on{display:flex}
+#src .shd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto}
+#src .sttl{color:#9FB4C8;font-size:clamp(17px,2.6vh,24px);font-weight:700;letter-spacing:.2em}
+#src .scnt{color:#D8D3C5;font-size:clamp(16px,2.4vh,22px);font-weight:700}
+#src .sbody{flex:1 1 auto;min-height:0;overflow:auto;display:flex}
+#src .sl{display:none;flex-direction:column;justify-content:center;gap:clamp(10px,2vh,22px);
+ width:100%;max-width:980px;margin:auto}
+#src .sl.on{display:flex}
+#src .lt{font-size:clamp(28px,5.6vh,54px);font-weight:700;color:#F2F2F2;line-height:1.3;text-align:center;
+ animation:srcIn .45s cubic-bezier(.2,1.3,.4,1) both}
+#src .sl.w .lt{color:#F0B45C}
+#src .lt .wtag{display:inline-block;font-size:.5em;vertical-align:middle;background:#3A2A0C;color:#F0B45C;
+ border:1px solid #6B4E1A;border-radius:99px;padding:4px 12px;margin-right:10px;letter-spacing:.1em}
+#src .vis{display:flex;justify-content:center;animation:srcIn .45s cubic-bezier(.2,1.3,.4,1) .15s both}
+#src .ck{display:flex;align-items:center;gap:clamp(10px,1.6vw,20px);border-radius:18px;
+ padding:clamp(10px,1.8vh,18px) clamp(14px,2vw,24px);animation:srcIn .5s cubic-bezier(.2,1.3,.4,1) both}
+#src .ck .ci{font-size:clamp(30px,5.4vh,52px);flex:0 0 auto}
+#src .ck .cl{display:block;font-size:clamp(13px,1.9vh,17px);letter-spacing:.14em;margin-bottom:4px;font-weight:700}
+#src .ck .cv{display:block;line-height:1.5}
+#src .ck.s{background:#17140C;border:1px solid #3A3018;animation-delay:.35s}
+#src .ck.s .cl{color:#B79A5C}
+#src .ck.s .cv{color:#EBD9A8;font-size:clamp(18px,3vh,30px);font-weight:700}
+#src .ck.d{background:#0E1A12;border:1px solid #21402B;animation-delay:.75s}
+#src .ck.d .cl{color:#6FAE7C}
+#src .ck.d .cv{color:#E6E6E6;font-size:clamp(20px,3.4vh,34px)}
+#src .ck.d .cv b{color:#FFD24A}
+#src .sl.w .ck.d{background:#1A1206;border-color:#4A3510}
+#src .car{text-align:center;color:#5A5A5A;font-size:clamp(20px,3vh,30px);line-height:1;
+ animation:srcIn .4s ease .6s both}
+@keyframes srcIn{0%{opacity:0;transform:translateY(16px) scale(.94)}100%{opacity:1;transform:none}}
+#src .snav{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,18px);flex:0 0 auto;
+ padding-top:8px}
+#src .snav button,#src .shd button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
+ font-size:clamp(16px,2.4vh,22px);padding:10px 22px;min-height:50px;font-family:inherit;cursor:pointer}
+#src .snav button:disabled{opacity:.3}
+#src .sdots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:46vw}
+#src .sdots i{width:10px;height:10px;border-radius:50%;background:#2A2A2A}
+#src .sdots i.on{background:#FFD24A}
+/* 出處裡的秒懂動畫（字母一格一格跳出來、插進來的字母會發光） */
+#src .ev{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:clamp(8px,1.4vw,18px)}
+#src .ev .st{display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0;
+ animation:srcIn .5s cubic-bezier(.2,1.3,.4,1) both}
+#src .ev .st b{font-size:clamp(24px,4.6vh,46px);color:#F2F2F2;letter-spacing:.02em}
+#src .ev .st em{font-style:normal;font-size:clamp(12px,1.8vh,16px);color:#8E8E8E;white-space:nowrap}
+#src .ev .ar{color:#5A5A5A;font-size:clamp(20px,3vh,30px);padding-bottom:1.1em;opacity:0;animation:srcIn .4s ease both}
+#src .ev .new{color:#FFD24A;display:inline-block;animation:newT 1.2s ease-in-out 1.6s 3}
+#src .ev .no{color:#FF6B6B}
+@keyframes newT{0%,100%{transform:none;text-shadow:none}50%{transform:translateY(-.25em) scale(1.5);text-shadow:0 0 18px rgba(255,210,74,.9)}}
+#src .stoc{display:none;position:absolute;left:0;right:0;top:calc(max(10px,env(safe-area-inset-top)) + 64px);bottom:0;
+ background:#000;z-index:2;overflow:auto;padding:10px clamp(12px,3vw,34px) 20px;
+ grid-template-columns:repeat(auto-fill,minmax(clamp(220px,28vw,320px),1fr));gap:8px;align-content:start}
+#src .stoc.on{display:grid}
+#src .stoc button{display:flex;align-items:center;gap:10px;text-align:left;background:#0C0C0C;border:1px solid #2A2A2A;
+ border-radius:14px;color:#F2F2F2;font-family:inherit;font-size:clamp(15px,2.3vh,21px);padding:10px 14px;min-height:54px;cursor:pointer}
+#src .stoc button b{flex:0 0 auto;width:2em;height:2em;border-radius:50%;background:#1E2A36;display:flex;align-items:center;justify-content:center}
+#src .stoc button.w b{background:#3A2A0C;color:#F0B45C}
+#src .stoc button.cur{border-color:#FFD24A;background:#1D1908}
+#src .shd button#srct{margin-left:auto}
+.reduce #src *{animation:none!important;opacity:1!important}
+</style>
+<script src="../../words/audio/sv/aud.js"></script><script>window.SVDIR="../../words/audio/sv/"</script>
+</head>
+<body>
+<div id="dots"></div>
+<div id="stage"><div id="card"></div>
+<button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
+<button class="nav" id="next" aria-label="下一頁">&#8594;</button></div>
+<div id="bottom">
+<nav id="wnav">
+ <a href="how.html" title="上一個單字">◀ <span class="w">How</span></a>
+ <span class="pos">12 / 15</span>
+ <a href="how-old.html" title="下一個單字"><span class="w">How old</span> ▶</a>
+</nav>
+<div id="bar"><button id="say">🔊 念一次</button><button id="tocb">📑 目次</button><button id="slow">🐢 放慢</button><button id="phmode">🔤 音標：無</button><button id="phsyl">✂️ 音節</button><button id="home">🏠 首頁</button><button id="srcb">📖 出處</button></div>
+</div>
+<div id="toc"><div class="thd"><b>📑 目次</b><button id="tocx">✕ 關閉</button></div><div class="tgd"><a href="i.html"><b>1</b><span>🙋 I　我</span></a><a href="my.html"><b>2</b><span>🙋🎒 My　我的</span></a><a href="you.html"><b>3</b><span>👉 You　你</span></a><a href="your.html"><b>4</b><span>👉🎒 Your　你的</span></a><a href="i-am.html"><b>5</b><span>🙋＝ I am　我是</span></a><a href="you-are.html"><b>6</b><span>👉＝ You are　你是</span></a><a href="name.html"><b>7</b><span>📛 name　名字</span></a><a href="is.html"><b>8</b><span>＝ is　是</span></a><a href="what.html"><b>9</b><span>❓ What　什麼</span></a><a href="whats.html"><b>10</b><span>❓＝ What’s　什麼是</span></a><a href="how.html"><b>11</b><span>🤔 How　怎麼樣</span></a><a href="old.html" class="cur"><b>12</b><span>👴 old　老的；…歲</span></a><a href="how-old.html"><b>13</b><span>🎂 How old　幾歲</span></a><a href="year.html"><b>14</b><span>📅 year　年</span></a><a href="years-old.html"><b>15</b><span>🎂 years old　…歲</span></a></div></div>
+<footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span><span class="scnt"><span id="srcn">1</span> ／ 7</span><button id="srct">📑 目次</button><button id="srcx">✕ 關閉</button></div><div class="stoc" id="stoc"><button data-k="0"><b>1</b><span>old 的來源</span></button><button data-k="1"><b>2</b><span>音標（美式）</span></button><button data-k="2"><b>3</b><span>KK 音標</span></button><button data-k="3"><b>4</b><span>音節怎麼切</span></button><button data-k="4" class="w"><b>5</b><span>辭典的 fam·i·ly 也對</span></button><button data-k="5" class="w"><b>6</b><span>淺灰色的字母不算</span></button><button data-k="6"><b>7</b><span>唸出來的聲音</span></button></div><div class="sbody"><section class="sl on" data-k="0"><div class="lt">old 的來源</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「old, adj.」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">古英文 <b>ald／eald</b>；older、elder 都是它的家人。</span></span></div></section><section class="sl" data-k="1"><div class="lt">音標（美式）</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries（NAmE）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">本教材的 IPA 一律用<b>美式</b>。</span></span></div></section><section class="sl" data-k="2"><div class="lt">KK 音標</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">台灣課本用的標法。例：bed 的 e ＝ IPA <b>/e/</b> ＝ KK <b>/ɛ/</b>。</span></span></div></section><section class="sl" data-k="3"><div class="lt">音節怎麼切</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Louisa Moats《Speech to Print》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">母音後面切：<b>fa．mi．ly</b>。<b>一個出聲的母音 ＝ 一個音節</b>。</span></span></div></section><section class="sl w" data-k="4"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>辭典的 fam·i·ly 也對</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">那是<b>排版斷行</b>用的；本教材教的是<b>唸的時候</b>怎麼切。兩種都對。</span></span></div></section><section class="sl w" data-k="5"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>淺灰色的字母不算</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">不出聲的字母（淺灰色）<b>不算母音</b>，數紅色的就對了。</span></span></div></section><section class="sl" data-k="6"><div class="lt">唸出來的聲音</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Web Speech API（瀏覽器內建語音，en-US）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">不用連網。<b>嗓音由這台電腦決定</b>。外語另外指定：德 de-DE、荷 nl-NL、瑞典 sv-SE、法 fr-FR、西 es-ES。</span></span></div></section></div><div class="snav"><button id="srcp">◀ 上一條</button><span class="sdots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i></span><button id="srcf">下一條 ▶</button></div></footer>
+
+<script>
+
+var PH=(function(){
+ var D={"family":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"i","i":"ə","k":"ə","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]],"parent":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"e","k":"ɛ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}],[{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"mother":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"father":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"brother":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"sister":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"son":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"daughter":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"au","i":"ɔː","k":"ɔ","s":0,"n":1},{"L":"gh","i":"","k":"","s":1,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"grandfather":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"grandmother":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"uncle":[[{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"ŋ","k":"ŋ","s":0,"n":0}],[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"l","i":"əl","k":"əl","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"aunt":[[{"L":"au","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"cousin":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}],[{"L":"i","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"nephew":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"ph","i":"f","k":"f","s":0,"n":0}],[{"L":"ew","i":"juː","k":"ju","s":0,"n":1}]],"niece":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"i","i":"","k":"","s":1,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1},{"L":"c","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"husband":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"wife":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"older":[[{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"younger":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"ou","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"ŋ","k":"ŋ","s":0,"n":0}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"big":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0}]],"little":[[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}],[{"L":"t","i":"","k":"","s":1,"n":0},{"L":"l","i":"əl","k":"əl","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"elder":[[{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"parents":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"e","k":"ɛ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}],[{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"mom":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ɑ","k":"ɑ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"mum":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"dad":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"sun":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"grandpa":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}]],"grandma":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}]],"auntie":[[{"L":"au","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ie","i":"i","k":"ɪ","s":0,"n":1}]],"sis":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"bro":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"me":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1}]],"tree":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ee","i":"iː","k":"i","s":0,"n":1}]],"grand":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"house":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"ou","i":"aʊ","k":"aʊ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"student":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"u","i":"uː","k":"u","s":0,"n":1}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"teacher":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1}],[{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"doctor":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"c","i":"k","k":"k","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"or","i":"ɚ","k":"ɚ","s":0,"n":1}]],"farmer":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"nurse":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"ur","i":"ɝː","k":"ɝ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"teach":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1},{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"farm":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"study":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]],"zero":[[{"L":"z","i":"z","k":"z","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"one":[[{"L":"o","i":"wʌ","k":"wʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"two":[[{"L":"tw","i":"t","k":"t","s":0,"n":0},{"L":"o","i":"uː","k":"u","s":0,"n":1}]],"three":[[{"L":"th","i":"θ","k":"θ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"four":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"o","i":"ɔː","k":"ɔ","s":0,"n":1},{"L":"u","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"five":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"six":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"x","i":"ks","k":"ks","s":0,"n":0}]],"seven":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"eight":[[{"L":"ei","i":"eɪ","k":"e","s":0,"n":1},{"L":"gh","i":"","k":"","s":1,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"nine":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"ten":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"eleven":[[{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"twelve":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"i":[[{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1}]],"my":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1}]],"you":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"uː","k":"u","s":0,"n":1}]],"your":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"ʊ","k":"ʊ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"am":[[{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"are":[[{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"name":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"is":[[{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"what":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"what's":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"'s","i":"s","k":"s","s":0,"n":0}]],"how":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"ow","i":"aʊ","k":"aʊ","s":0,"n":1}]],"old":[[{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"year":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"a","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"years":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"a","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"tea":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1}]],"ketchup":[[{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"tch","i":"tʃ","k":"tʃ","s":0,"n":0}],[{"L":"u","i":"ə","k":"ə","s":0,"n":1},{"L":"p","i":"p","k":"p","s":0,"n":0}]],"hamburger":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"ur","i":"ɜːr","k":"ɝ","s":0,"n":1}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"sandwich":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"breakfast":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"e","k":"ɛ","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}],[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"goodbye":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"oo","i":"ʊ","k":"ʊ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"break":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"eɪ","k":"e","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}]],"fast":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]]};
+ var MODES=["","ipa","kk"],mode=0,slow=false,timers=[];
+ try{var m=localStorage.getItem("phMode");if(m!==null)mode=+m||0}catch(e){}
+ function V(ch){return "aeiou".indexOf(ch.toLowerCase())>=0}
+ function isNuc(u){return u.n===1}
+ /* 這一格是音節的核心，但字母裡一個 a/e/i/o/u 都沒有（uncle／little 的 l 自己就發 əl）
+    → 整格標紅。不這樣做，學生「數紅色 ＝ 數音節」就會少數一個，規則當場破功。 */
+ function noVowelNucleus(u){var k;if(!isNuc(u))return false;
+  for(k=0;k<u.L.length;k++)if(V(u.L[k]))return false;return true}
+ function letters(u){var h="",L=u.L,k,nv=noVowelNucleus(u);
+  for(k=0;k<L.length;k++){
+   var red=(!u.s)&&(nv||V(L[k])||(L[k].toLowerCase()==="y"&&isNuc(u)));
+   h+='<i class="'+(red?"v":"")+'">'+L[k]+'</i>'}
+  return h}
+ /* 一個單字的完整元件：字母（母音紅／不發音灰）＋ 正下方對齊的音標 ＋ 音節切分點 */
+ /* 查不到音標的字（外語家人單字等）：**不硬掰音標、不硬切音節**，
+    只把母音字母標紅，一樣點得下去唸。這是誠實界線，不要拿掉。 */
+ function plain(w,lang){
+  var h='<span class="phw phplain" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
+        '><span class="syl"><span class="u"><span class="g">',k;
+  for(k=0;k<w.length;k++)h+='<i class="'+(V(w[k])?"v":"")+'">'+w[k]+'</i>';
+  return h+'</span></span></span></span>'}
+ function word(w,lang){
+  /* **這兩個 \s 一定要寫兩條斜線**：這整段是 JS 模板字串，寫一條會被吃掉，
+     變成 /s/ 與 /s+/ ——凡是拼法裡有 s 的字（sister／son／cousin／husband…）
+     都會被當成「多個字」從 s 那裡切開，s 不見、發音也唸錯。2026-09-20 訂正。 */
+  if(/\s/.test(w))return w.split(/\s+/).map(function(x){return word(x,lang)}).join(" ");
+  var key=w.toLowerCase().replace(/[’]/g,"'"),d=D[key];
+  if(!d)return plain(w,lang);
+  /* 字母照原本的大小寫畫（I、My、What 開頭要大寫；資料裡一律小寫） */
+  var CS=w.replace(/[’]/g,"’"),cp=0;
+  var h='<span class="phw '+MODES[mode]+'" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
+        ' data-n="'+d.length+'">',si,ui;
+  for(si=0;si<d.length;si++){
+   if(si)h+='<span class="cut"><span class="g">·</span><span class="p">&nbsp;</span></span>';
+   h+='<span class="syl">';
+   for(ui=0;ui<d[si].length;ui++){var u=d[si][ui];
+    var lu=letters(u).replace(/>([^<])</g,function(m,c){var o=CS.charAt(cp++);return '>'+(o&&o.toLowerCase()===c.toLowerCase()?o:(c==="'"&&o==="’"?o:c))+'<'});
+    h+='<span class="u'+(u.s?" mute":"")+'"><span class="g">'+lu+'</span>'+
+       '<span class="p" data-i="'+(u.s?"–":u.i)+'" data-k="'+(u.s?"–":u.k)+'">'+
+       (u.s?"–":(mode===2?u.k:u.i))+'</span></span>'}
+   h+='</span>'}
+  return h+'</span>'}
+ /* 字卡上的三段切換（無／IPA／KK）＋ 音節按鈕 */
+ function chips(w){
+  return '<div class="phchips" data-for="'+w+'">'+
+   '<button data-m="0"'+(mode===0?' class="on"':'')+'>無音標</button>'+
+   '<button data-m="1"'+(mode===1?' class="on"':'')+'>IPA</button>'+
+   '<button data-m="2"'+(mode===2?' class="on"':'')+'>KK</button>'+
+   '<button data-syl="1">✂️ 音節</button></div>'}
+ /* 字卡上**只放單字本身**——切換鈕與說明文字都移到下方 #bar，
+    讓學生一眼只看到要學的那個英文單字（使用者 2026-09-20 指定）。 */
+ function box(w){return word(w)}
+ /* {{單字}} → 畫成單字元件；{{de-DE:Mutter}} → 指定語言（外語家人單字） */
+ function expand(h){
+  return String(h)
+   .replace(/{{([a-zA-Z]{2}-[A-Z]{2}):([^{}]+)}}/g,function(m,lang,w){return word(w.trim(),lang)})
+   .replace(/{{([^{}:]+)}}/g,function(m,w){return word(w.trim())})}
+ function clear(){while(timers.length)clearTimeout(timers.pop())}
+ function at(ms,fn){timers.push(setTimeout(fn,ms))}
+ function reduced(){return document.body.classList.contains("reduce")}
+ /* 說話：全頁共用一個放慢開關。
+    瑞典文先查預先做好的語音檔（window.SVAUD，使用者 2026-09-25 指定：要真實正確的瑞典語發音），
+    很多電腦沒有瑞典文語音，瀏覽器會用英文腔亂唸。查不到才用瀏覽器語音。
+    fin：唸完（或出錯）要做的事；一定會被呼叫，而且只呼叫一次。 */
+ var AU=null;
+ function akey(t){return String(t).replace(/[’]/g,"'").replace(/s+/g," ").trim().toLowerCase()}
+ function stopAll(){try{speechSynthesis.cancel()}catch(e){}try{if(AU)AU.pause()}catch(e){}}
+ function say(t,lang,fin){
+  var done=false,end=function(){if(done)return;done=true;if(fin)try{fin()}catch(e){}};
+  if(!t){end();return}
+  stopAll();
+  var A=(lang&&/^sv/i.test(lang)&&window.SVAUD)?SVAUD[akey(t)]:null;
+  if(A){try{if(!AU)AU=new Audio();AU.onended=end;AU.onerror=end;
+    AU.src=(window.SVDIR||"audio/sv/")+A[0];AU.playbackRate=slow?.7:1;
+    var pr=AU.play();if(pr&&pr.catch)pr.catch(end);setTimeout(end,A[1]*1000/(slow?.7:1)+1500);return}catch(e){}}
+  try{var u=new SpeechSynthesisUtterance(t);
+   u.lang=lang||"en-US";u.rate=slow?.45:.85;u.onend=end;u.onerror=end;speechSynthesis.speak(u)}catch(e){end();return}
+  setTimeout(end,1400+String(t).length*(slow?260:140));   /* 瀏覽器不發 onend 也不會卡住 */
+ }
+ /* 一個字一個字唸：唸到哪一個字，那一個字就放大、變亮（使用者 2026-09-25 指定：每一個單字都要有發音） */
+ var chainId=0;
+ function sayChain(els,fin){
+  var my=++chainId,k=0;stopAll();
+  function next(){
+   [].forEach.call(document.querySelectorAll(".speak"),function(x){x.classList.remove("speak")});
+   if(my!==chainId)return;
+   if(k>=els.length){if(fin)fin();return}
+   var el=els[k++],t=el.getAttribute("data-say");
+   if(!t){next();return}
+   el.classList.add("speak");
+   say(t,el.getAttribute("data-lang")||"en-US",function(){if(my===chainId)setTimeout(next,160)});
+  }
+  setTimeout(next,90);
+ }
+ function chainStop(){chainId++;stopAll();
+  [].forEach.call(document.querySelectorAll(".speak"),function(x){x.classList.remove("speak")})}
+ /* 唸單字：一格一格亮過去，字母和聲音對起來 */
+ function sayWord(el,lang){
+  var w=el.getAttribute("data-say");say(w,lang);
+  if(reduced())return;
+  var us=el.querySelectorAll(".u"),k,step=(slow?300:170);
+  clear();
+  for(k=0;k<us.length;k++)(function(u,k){
+   at(160+k*step,function(){u.classList.add("lit")});
+   at(160+k*step+step*1.25,function(){u.classList.remove("lit")})})(us[k],k)}
+ /* 音節動畫：先一顆一顆數紅色母音，再把音節拉開 */
+ function syl(el,note){
+  var n=+el.getAttribute("data-n")||1,vs=el.querySelectorAll(".u"),sy=el.querySelectorAll(".syl"),k,c=0;
+  clear();el.classList.remove("split");
+  if(note)note.innerHTML="";
+  var reds=[];for(k=0;k<vs.length;k++)if(vs[k].querySelector("i.v")&&!/mute/.test(vs[k].className))reds.push(vs[k]);
+  reds.forEach(function(u,k){at(120+k*430,function(){
+   u.classList.add("count");c=k+1;
+   if(note)note.innerHTML='<span class="rv">●</span> 紅色母音 <b>'+c+'</b> 個';
+   at(520,function(){u.classList.remove("count")})})});
+  var t0=120+reds.length*430+180;
+  at(t0,function(){el.classList.add("split")});
+  for(k=0;k<sy.length;k++)(function(s,k){at(t0+120+k*360,function(){
+   s.classList.remove("beat");void s.offsetWidth;s.classList.add("beat");
+   if(note)note.innerHTML='✂️ 切成 <b>'+(k+1)+'</b> 段'})})(sy[k],k);
+  at(t0+120+sy.length*360+240,function(){
+   if(note)note.innerHTML='<span class="rv">'+n+'</span> 個母音 ＝ <b>'+n+' 個音節</b>'})}
+ /* 把說明文字裡的英文字詞變成可以點來聽（補充單字、字詞、用法都算）。
+   **只掃說明文字的容器**：.en 這種手工排版（dau<span>gh</span>ter）拆開來會壞掉，
+   那種地方改用 {{單字}} 標記，由 PH.word() 直接畫。 */
+ var HOSTS=".sub,.mid,.note,.qtext,.big,.parts,.zh";
+ function autoSay(root){
+  if(!root)return;
+  var list=[];
+  [].forEach.call(root.querySelectorAll(HOSTS),function(host){
+   if(host.closest(".nosay"))return;
+   var walk=document.createTreeWalker(host,NodeFilter.SHOW_TEXT,null,false),n;
+   while((n=walk.nextNode())){
+    var pe=n.parentNode;
+    if(!pe||pe.nodeType!==1)continue;
+    if(pe.closest(".sp,.phw,.phchips,.nosay,button,a,#src"))continue;
+    if(/[A-Za-z]{2}/.test(n.nodeValue))list.push(n)}});
+  list.forEach(function(t){
+   var s=t.nodeValue,re=/[A-Za-z][A-Za-z'\u2019-]*(?:[ ][A-Za-z][A-Za-z'\u2019-]*)*/g,
+       frag=document.createDocumentFragment(),last=0,m,any=false;
+   while((m=re.exec(s))){
+    if(m[0].length<2)continue;
+    if(m.index>last)frag.appendChild(document.createTextNode(s.slice(last,m.index)));
+    var sp=document.createElement("span");
+    sp.className="sp";sp.setAttribute("data-say",m[0]);sp.textContent=m[0];
+    frag.appendChild(sp);last=m.index+m[0].length;any=true}
+   if(!any)return;
+   if(last<s.length)frag.appendChild(document.createTextNode(s.slice(last)));
+   t.parentNode.replaceChild(frag,t)})}
+ /* 切換音標：直接換掉每個字母下面那一行，不用重畫整幕 */
+ function apply(){
+  [].forEach.call(document.querySelectorAll(".phw"),function(p){
+   p.className="phw "+MODES[mode];
+   [].forEach.call(p.querySelectorAll(".u .p"),function(g){
+    g.textContent=(mode===2?g.getAttribute("data-k"):g.getAttribute("data-i"))||""})});
+  [].forEach.call(document.querySelectorAll(".phchips button[data-m]"),function(b){
+   b.classList.toggle("on",(+b.getAttribute("data-m")||0)===mode)})}
+ /* 全頁共用：點任何一個英文字詞就唸、切換音標、播音節動畫 */
+ document.addEventListener("click",function(e){
+  var c=e.target.closest?e.target.closest(".phchips button"):null;
+  if(c){
+   var box=c.closest(".phbox"),w=box?box.querySelector(".phw"):null;
+   if(c.hasAttribute("data-syl")){if(w)syl(w,box.querySelector(".phnote"));return}
+   mode=+c.getAttribute("data-m")||0;
+   try{localStorage.setItem("phMode",mode)}catch(x){}
+   apply();
+   return}
+  var t=e.target.closest?e.target.closest(".phw,[data-say]"):null;
+  if(!t)return;
+  if(t.classList.contains("phw"))sayWord(t,t.getAttribute("data-lang"));
+  else{say(t.getAttribute("data-say"),t.getAttribute("data-lang"));
+   t.classList.add("ping");setTimeout(function(){t.classList.remove("ping")},260)}
+ });
+ /* 畫面上的主角單字：#card／#stage 裡字最大的那一個 .phw */
+ function main(){
+  var all=document.querySelectorAll("#card .phw,#stage .phw"),best=null,bs=0,k;
+  for(k=0;k<all.length;k++){var f=parseFloat(getComputedStyle(all[k]).fontSize)||0;
+   if(f>bs){bs=f;best=all[k]}}
+  return best}
+ function setMode(m){mode=((+m||0)%3+3)%3;try{localStorage.setItem("phMode",mode)}catch(e){}apply();return mode}
+ return{word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
+  has:function(w){return !!D[(w||"").toLowerCase()]},
+  slow:function(v){slow=(v===undefined)?!slow:!!v;return slow},
+  isSlow:function(){return slow},
+  mode:function(){return mode}};
+})();
+/* #bar 的「🐢 放慢」：管全頁所有發音（單字、補充字詞、用法） */
+(function(){var b=document.getElementById("slow");if(!b)return;
+ b.addEventListener("click",function(){
+  var on=PH.slow();b.textContent=on?"🐢 放慢：開":"🐢 放慢";
+  b.style.background=on?"#9FB4C8":"";b.style.color=on?"#0A0A0A":"";
+  b.style.borderColor=on?"#9FB4C8":""});})();
+/* #bar 的「🔤 音標」：無 → IPA → KK →（回到）無。字卡是用卡片上的三顆 chips。 */
+(function(){var b=document.getElementById("phmode");if(!b)return;
+ var N=["無","IPA","KK"];
+ function lab(){b.textContent="🔤 音標："+N[PH.mode()]}
+ lab();b.addEventListener("click",function(){PH.setMode(PH.mode()+1);lab()});})();
+/* #bar 的「✂️ 音節」：動畫跑在單字上，數出來的結果寫回按鈕，字卡保持乾淨 */
+(function(){var b=document.getElementById("phsyl");if(!b)return;
+ b.addEventListener("click",function(){
+  var el=PH.main();if(!el)return;
+  var n=+el.getAttribute("data-n")||0;
+  if(!n){b.textContent="✂️ 音節";return}
+  PH.syl(el,null);
+  b.textContent="✂️ 音節";
+  setTimeout(function(){b.textContent="✂️ "+n+" 個音節"},220+n*430+120+n*360);});})();
+
+var W={zh:"老的；…歲",sub:"",icon:"👴",old:"ald",now:"old",
+ e1:"ten years <b>old</b> ＝ 十歲",e2:"{{older}} 年紀比較大"};
+
+var SCENES=[
+ // ① 中文意思
+ function(){return '<div class="emoji pop">'+W.icon+'</div>'+
+   '<div class="zh in d1">'+W.zh+'</div>'+
+   (W.sub?'<div class="sub in d2">'+W.sub+'</div>':'')},
+ // ② 以前的樣貌（圖示就是意思，不再加說明）；grandfather / grandmother 改成「怎麼組的」
+ function(){return '<div class="tag in">以前</div>'+
+   '<div class="word past in d1">'+W.old+'</div>'+
+   '<div class="emoji pop d2" style="font-size:clamp(66px,12vh,104px)">'+W.icon+'</div>'},
+ // ③ 現在的單字＋秒懂收尾
+ function(){return '<div class="tag in">現在</div>'+
+   '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
+   '<div class="word in d1"'+(W.now.length>=11?' style="font-size:clamp(38px,min(7.5vh,8.2vw),74px)"':'')+'>'+
+   PH.box(W.now)+'</div>'+
+   '<div class="sub in d2" style="margin-top:2px">'+W.e1+'</div>'+
+   (W.e2?'<div class="sub in d3">'+W.e2+'</div>':'')}
+];
+
+var i=0,reduce=false;
+try{reduce=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)}catch(e){}
+if(reduce)document.body.classList.add("reduce");
+
+var dots=document.getElementById("dots");
+for(var k=0;k<SCENES.length;k++)dots.appendChild(document.createElement("i"));
+
+/* 念一次：整個單字唸出來，同時一格一格亮過去（字母 ↔ 聲音） */
+function say(){spoke=true;var el=PH.main();
+ if(el){PH.sayWord(el)}else{PH.say(W.now)}}
+
+var card=document.getElementById("card");
+function show(n){
+ var back=(n<i);
+ i=Math.max(0,Math.min(SCENES.length-1,n));
+ window.SRCAT=[0,0,0][i];   /* 按「📖 出處」直接跳到這一張字卡的證據（使用者 2026-09-25 指定） */
+ card.innerHTML=PH.expand(SCENES[i]());
+ PH.autoSay(card);       // 補充單字、字詞、用法都可以點來聽
+ if(!reduce){card.classList.remove("turnR","turnL");void card.offsetWidth;
+  card.classList.add(back?"turnL":"turnR")}
+ var d=dots.children;
+ for(var k=0;k<d.length;k++)d[k].className=(k===i?"on":"");
+ document.getElementById("prev").disabled=(i===0);
+ document.getElementById("next").disabled=(i===SCENES.length-1);
+ /* 使用者 2026-09-20 指定：一翻到中文意思那一幕，就自動唸一次英文單字。
+    （有些瀏覽器規定要先碰過畫面才准發聲，所以下面補一個「第一次碰到就補唸」。） */
+ if(i===0||i===SCENES.length-1)say();
+}
+var spoke=false;
+function armFirstTouch(){
+ function go(){if(!spoke&&i===0)say();
+  document.removeEventListener("pointerdown",go);document.removeEventListener("keydown",go)}
+ document.addEventListener("pointerdown",go);document.addEventListener("keydown",go);
+}
+
+document.getElementById("prev").addEventListener("click",function(){show(i-1)});
+document.getElementById("next").addEventListener("click",function(){show(i+1)});
+document.getElementById("say").addEventListener("click",say);
+document.addEventListener("keydown",function(e){
+ if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();show(i+1)}
+ if(e.key==="ArrowLeft")show(i-1);
+});
+
+show(0);
+armFirstTouch();
+
+
+document.getElementById("home").addEventListener("click",function(){location.href="../index.html"});
+(function(){var T=document.getElementById("toc");
+ document.getElementById("tocb").addEventListener("click",function(){T.classList.add("on")});
+ document.getElementById("tocx").addEventListener("click",function(){T.classList.remove("on")});
+ document.addEventListener("keydown",function(e){if(T.classList.contains("on")){if(e.key==="Escape")T.classList.remove("on");
+  e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation()}},true);
+})();
+
+(function(){var s=document.getElementById("src");if(!s)return;
+ var L=s.querySelectorAll(".sl"),D=s.querySelectorAll(".sdots i"),k=0;
+ function go(n){k=Math.max(0,Math.min(L.length-1,n));
+  for(var j=0;j<L.length;j++){L[j].classList.toggle("on",j===k);D[j].classList.toggle("on",j===k)}
+  /* 換頁時動畫重播一次 */
+  var c=L[k];c.style.display="none";void c.offsetWidth;c.style.display="";
+  document.getElementById("srcn").textContent=k+1;
+  document.getElementById("srcp").disabled=(k===0);
+  document.getElementById("srcf").disabled=(k===L.length-1)}
+ /* 從哪一條開始：這一幕／這一張字卡對應的那一條（window.SRCAT：出處的 id 或第幾條），
+    沒有對應就從第一條開始（使用者 2026-09-25 指定：按「出處」直接跳到這一張的證據） */
+ function at(v){if(v==null||v==="")return 0;if(typeof v==="number")return v;
+  for(var j=0;j<L.length;j++)if(L[j].getAttribute("data-id")===v)return j;return 0}
+ var T=document.getElementById("stoc");
+ function toc(v){T.classList.toggle("on",v);if(v){[].forEach.call(T.querySelectorAll("button"),function(b,j){b.classList.toggle("cur",j===k)})}}
+ function t(v,from){s.classList.toggle("on",v);toc(false);if(v)go(at(from))}
+ window.SRCOPEN=function(id){t(true,id)};
+ document.getElementById("srcb").addEventListener("click",function(){
+  if(s.classList.contains("on"))t(false);else t(true,window.SRCAT)});
+ document.getElementById("srcx").addEventListener("click",function(){t(false)});
+ document.getElementById("srct").addEventListener("click",function(){toc(!T.classList.contains("on"))});
+ T.addEventListener("click",function(e){var b=e.target.closest?e.target.closest("button"):null;if(!b)return;
+  toc(false);go(+b.getAttribute("data-k")||0)});
+ document.getElementById("srcp").addEventListener("click",function(){go(k-1)});
+ document.getElementById("srcf").addEventListener("click",function(){go(k+1)});
+ /* 出處開著的時候，← → 翻的是出處，不是後面那一頁（先攔下來） */
+ document.addEventListener("keydown",function(e){
+  if(!s.classList.contains("on"))return;
+  if(e.key==="Escape"){if(T.classList.contains("on"))toc(false);else t(false)}
+  else if(e.key==="ArrowRight"||e.key===" "){go(k+1)}
+  else if(e.key==="ArrowLeft"){go(k-1)}
+  else return;
+  e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();
+ },true);})();
+</script>
+</body>
+</html>

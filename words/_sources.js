@@ -23,6 +23,8 @@ const e    = (t, s, d) => ({ t, s, d });
 const warn = (t, d)    => ({ t, s: '', d, w: 1 });
 /* 有秒懂動畫的出處（v ＝ 放在中間的動畫 HTML，使用者 2026-09-24 指定） */
 const ev   = (t, s, d, v) => ({ t, s, d, v });
+/* 給這一條一個 id：頁面上的「📖 出處」按鈕直接跳到這一條（使用者 2026-09-25 指定） */
+const I    = (id, r) => Object.assign(r, { id });
 
 /* ── 好幾個字共用的區塊 ── */
 const BROSIS = [
@@ -192,18 +194,18 @@ const P = {
 'older-younger': BROSIS.slice(),
 
 'parts': [
- e('grand ＝ 大', 'OED「grand, adj.」「grand-, comb. form」',
-   'grand 原本就是「<b>大的</b>」，從<b>法文</b>借來（grand-père）。旁證：<b>Grand Canyon</b> 大峽谷。'),
- e('hus ＝ house', 'OED「husband, n.」',
-   '古北歐文 <b>hús</b>（房子）＋ <b>bóndi</b>（管家的人）。'),
- ev('這四個字，尾巴是同一條',
+ I('grand', e('grand ＝ 大', 'OED「grand, adj.」「grand-, comb. form」',
+   'grand 原本就是「<b>大的</b>」，從<b>法文</b>借來（grand-père）。旁證：<b>Grand Canyon</b> 大峽谷。')),
+ I('hus', e('hus ＝ house', 'OED「husband, n.」',
+   '古北歐文 <b>hús</b>（房子）＋ <b>bóndi</b>（管家的人）。')),
+ I('tails', ev('這四個字，尾巴是同一條',
    'Watkins《American Heritage Dictionary of Indo-European Roots》詞根 māter-、pəter-、bhrāter-、dhughəter-',
    '四個字最早的樣子都帶著 <b>-ter</b>。今天唸成 ther／ter，是<b>聲音後來變了</b>。',
    '<div class="ev">'+
    '<span class="st" style="animation-delay:.2s"><b>*mā<span class="new">ter</span></b><em>媽媽</em></span>'+
    '<span class="st" style="animation-delay:.45s"><b>*pə<span class="new">ter</span></b><em>爸爸</em></span>'+
    '<span class="st" style="animation-delay:.7s"><b>*bhrā<span class="new">ter</span></b><em>兄弟</em></span>'+
-   '<span class="st" style="animation-delay:.95s"><b>*dhughə<span class="new">ter</span></b><em>女兒</em></span></div>'),
+   '<span class="st" style="animation-delay:.95s"><b>*dhughə<span class="new">ter</span></b><em>女兒</em></span></div>')),
  ev('sister 的 ter，來源不一樣',
    'Watkins 詞根 <b>swesor-</b>；Kroonen《Etymological Dictionary of Proto-Germanic》(2013)「*swester-」；OED「sister, n.」',
    '最早是 <b>swesor</b>，<b>沒有 t</b>。s 和 r 中間<b>後來才擠進一個 t</b>，所以只是<b>長得像</b>。',
@@ -220,41 +222,67 @@ const P = {
    '<span class="st" style="animation-delay:.2s"><b>soror</b><em>拉丁文</em></span>'+
    '<span class="st" style="animation-delay:.5s"><b>svasar</b><em>梵文</em></span>'+
    '<span class="st" style="animation-delay:.8s"><b>sis<span class="new">t</span>er</b><em>英文</em></span></div>'),
- e('-ter 最早是什麼意思？', 'Mallory &amp; Adams《The Oxford Introduction to Proto-Indo-European》(2006) 第 12 章「Kinship」',
-   '它是很久以前<b>家人稱呼共用的尾巴</b>；最早還有沒有別的意思，<b>學者到今天還沒有定論</b>。'),
- e('德文', 'Duden「Mutter」「Vater」「Bruder」「Tochter」「Schwester」', '尾巴一樣是 <b>-ter／-der</b>。'),
- e('荷蘭文', 'Van Dale「moeder」「vader」「broer」「dochter」「zus」',
-   '<b>broer</b> 以前是 broeder，<b>zus</b> 是 zuster 的簡短說法。'),
- e('mo-／fa- 從哪裡來', 'Roman Jakobson (1960)《Why “Mama” and “Papa”?》',
-   '<b>ma</b>、<b>pa</b> 是寶寶最早發得出來的音。'),
- e('bro-／sis- 沒有意思', 'OED「brother, n.」「sister, n.」「bro, n.」「sis, n.」',
-   'OED 沒有替 bro-、sis- 列任何意思。口語的 bro、sis 是<b>後來剪短的</b>。'),
- e('parent ＋ s', 'Cambridge Dictionary「parent」', '這是<b>文法</b>（複數加 s），不是字源。')],
+ I('terwhy', e('-ter 最早是什麼意思？', 'Mallory &amp; Adams《The Oxford Introduction to Proto-Indo-European》(2006) 第 12 章「Kinship」',
+   '它是很久以前<b>家人稱呼共用的尾巴</b>；最早還有沒有別的意思，<b>學者到今天還沒有定論</b>。')),
+ I('de', e('德文', 'Duden「Mutter」「Vater」「Bruder」「Tochter」「Schwester」', '尾巴一樣是 <b>-ter／-der</b>。')),
+ I('nl', e('荷蘭文', 'Van Dale「moeder」「vader」「broer」「dochter」「zus」',
+   '<b>broer</b> 以前是 broeder，<b>zus</b> 是 zuster 的簡短說法。')),
+ /* 前面那一半：證據要讓學生信服（使用者 2026-09-25 指定）——全世界的寶寶都先叫 ma、pa */
+ I('mofa', ev('mo、fa 從哪裡來？寶寶最早的音',
+   'Roman Jakobson (1960)《Why “Mama” and “Papa”?》；各語言辭典「媽媽／爸爸」',
+   '<b>m</b>、<b>p</b>、<b>b</b> 只要嘴唇一合一開就發得出來，<b>寶寶最早會的就是它們</b>。所以很多語言的媽媽、爸爸都長這樣。',
+   '<div class="ev">'+
+   '<span class="st" style="animation-delay:.2s"><b><span class="new">m</span>ama <span class="new">p</span>apa</b><em>英文（小孩說）</em></span>'+
+   '<span class="st" style="animation-delay:.5s"><b><span class="new">M</span>ama <span class="new">P</span>apa</b><em>德文</em></span>'+
+   '<span class="st" style="animation-delay:.8s"><b><span class="new">m</span>amá <span class="new">p</span>apá</b><em>西班牙文</em></span>'+
+   '<span class="st" style="animation-delay:1.1s"><b><span class="new">m</span>aman <span class="new">p</span>apa</b><em>法文</em></span>'+
+   '<span class="st" style="animation-delay:1.4s"><b>媽媽 爸爸</b><em>中文 māma bàba</em></span></div>')),
+ I('brosis', e('bro-／sis- 沒有意思', 'OED「brother, n.」「sister, n.」「bro, n.」「sis, n.」',
+   'OED 沒有替 bro-、sis- 列任何意思。口語的 bro、sis 是<b>後來剪短的</b>。')),
+ I('parent', e('parent ＋ s', 'Cambridge Dictionary「parent」', '這是<b>文法</b>（複數加 s），不是字源。'))],
 
 'world': [
- e('語言也有家人', 'Wikipedia「Germanic languages」「Indo-European languages」',
-   '英文、德文、荷蘭文、瑞典文都是<b>日耳曼語族</b>——像兄弟姊妹。'),
- e('大約 6000 年前', 'Mallory &amp; Adams (2006)；Wikipedia「Kurgan hypothesis」',
-   '很多學者認為：這一大家族最早在<b>黑海北邊的草原</b>。這是<b>目前最多人支持的說法</b>，不是百分之百確定。'),
- e('大約 1500 年前，坐船到英國', 'Bede《英吉利教會史》(731)；Wikipedia「Anglo-Saxon settlement of Britain」',
-   '<b>盎格魯人、撒克遜人</b>從今天的<b>德國北部、丹麥</b>坐船到英國，帶去的話就是英文的老祖先。'),
- e('1066 年，法文進來了', 'Wikipedia「Norman Conquest」；OED「uncle」「aunt」「cousin」「nephew」「niece」',
-   '<b>講法文的諾曼人</b>打贏英國。<b>uncle、aunt、cousin、nephew、niece</b> 都是那之後從法文借來的。'),
- e('mother 家族', 'Duden「Mutter」；Van Dale「moeder」；SAOL「mor」；Larousse「mère」；RAE《DLE》「madre」',
-   '德 <b>Mutter</b>、荷 <b>moeder</b>、瑞典 <b>mor</b>、法 <b>mère</b>、西 <b>madre</b>。'),
- e('father 家族', 'Duden「Vater」；Van Dale「vader」；SAOL「far」；Larousse「père」；RAE《DLE》「padre」',
-   '德 <b>Vater</b>、荷 <b>vader</b>、瑞典 <b>far</b>、法 <b>père</b>、西 <b>padre</b>。'),
- e('family', 'OED「family, n.」；Larousse「famille」；RAE「familia」',
-   '英文 family 來自<b>拉丁文 familia</b>，所以跟法文、西班牙文最像。'),
- e('brother／sister', 'Duden／Van Dale／SAOL 各詞條；RAE「hermano」',
-   '德荷瑞都像英文。西班牙文 <b>hermano</b> 不像，因為它來自另一個拉丁字 germanus。'),
- e('瑞典文分爸爸那邊、媽媽那邊', 'SAOL（瑞典學院詞表）「farfar」「morfar」「farbror」「morbror」「faster」「moster」',
-   '<b>farfar</b> ＝ 爸爸的爸爸，<b>morfar</b> ＝ 媽媽的爸爸——<b>跟中文一樣分兩邊</b>。'),
- e('grandfather 一半一半', 'OED「grand-, comb. form」；Larousse「grand-père」',
-   '<b>grand</b> 從法文 grand-père 借來，<b>father</b> 是日耳曼家族的字。'),
- e('uncle／aunt／cousin', 'OED「uncle」「aunt」「cousin」；Larousse「oncle」「tante」「cousin」',
-   '三個都是 1066 年以後<b>從法文借來的</b>，所以跟法文最像。'),
- warn('地圖是示意圖', '地圖上的路線與年代是<b>簡化過的示意</b>，實際是好幾百年、很多批人慢慢搬的。')],
+ /* 古日耳曼語是什麼（使用者 2026-09-25 指定：學生不懂，秒懂動畫放在出處） */
+ I('gmc', ev('古日耳曼語是什麼？',
+   'Wikipedia「Proto-Germanic language」；Ringe《From Proto-Indo-European to Proto-Germanic》(2006)',
+   '大約 <b>2000 多年前</b>，住在<b>北歐和德國北部</b>的人說的話。<b>沒有留下書</b>，是學者把英文、德文、荷蘭文、瑞典文<b>拿來比對</b>，推回去的。',
+   '<div class="ev">'+
+   '<span class="st" style="animation-delay:.2s"><b>👵 古日耳曼語</b><em>2000 多年前，沒有留下書</em></span>'+
+   '<span class="ar" style="animation-delay:.6s">➜</span>'+
+   '<span class="st" style="animation-delay:.9s"><b>mother</b><em>英文</em></span>'+
+   '<span class="st" style="animation-delay:1.1s"><b>Mutter</b><em>德文</em></span>'+
+   '<span class="st" style="animation-delay:1.3s"><b>moeder</b><em>荷蘭文</em></span>'+
+   '<span class="st" style="animation-delay:1.5s"><b>mor</b><em>瑞典文</em></span></div>')),
+ I('where', e('歐洲在台灣的哪裡', '任何一本世界地圖／Google 地圖',
+   '歐洲在台灣的<b>西北邊</b>；台北飛倫敦、法蘭克福的直飛班機，大約要飛<b>十幾個小時</b>。')),
+ I('map', e('語言也有家人', 'Wikipedia「Germanic languages」「Indo-European languages」',
+   '英文、德文、荷蘭文、瑞典文都是<b>日耳曼語族</b>——像兄弟姊妹。')),
+ I('why5', e('為什麼挑這五國', 'Wikipedia「Germanic languages」「Norman Conquest」「Romance languages」',
+   '德、荷、瑞典：<b>日耳曼家族</b>，跟英文最像；法文：<b>1066 年</b>以後借給英文很多字；西班牙文：跟法文同一個<b>拉丁家族</b>，拿來比較。')),
+ I('steppe', e('大約 6000 年前', 'Mallory &amp; Adams (2006)；Wikipedia「Kurgan hypothesis」',
+   '很多學者認為：這一大家族最早在<b>黑海北邊的草原</b>。這是<b>目前最多人支持的說法</b>，不是百分之百確定。')),
+ I('boat', e('大約 1500 年前，坐船到英國', 'Bede《英吉利教會史》(731)；Wikipedia「Anglo-Saxon settlement of Britain」',
+   '<b>盎格魯人、撒克遜人</b>從今天的<b>德國北部、丹麥</b>坐船到英國，帶去的話就是英文的老祖先。')),
+ I('latin', e('拉丁家族', 'Wikipedia「Romance languages」；Larousse「mère」；RAE「madre」',
+   '法文、西班牙文、義大利文都從<b>拉丁文</b>來：拉丁文 <b>māter</b> ➜ 法文 <b>mère</b>、西班牙文 <b>madre</b>。')),
+ I('1066', e('1066 年，法文進來了', 'Wikipedia「Norman Conquest」；OED「uncle」「aunt」「cousin」「nephew」「niece」',
+   '<b>講法文的諾曼人</b>打贏英國。<b>uncle、aunt、cousin、nephew、niece</b> 都是那之後從法文借來的。')),
+ I('w-mother', e('mother 家族', 'Duden「Mutter」；Van Dale「moeder」；SAOL「mor」；Larousse「mère」；RAE《DLE》「madre」',
+   '德 <b>Mutter</b>、荷 <b>moeder</b>、瑞典 <b>mor</b>、法 <b>mère</b>、西 <b>madre</b>。')),
+ I('w-father', e('father 家族', 'Duden「Vater」；Van Dale「vader」；SAOL「far」；Larousse「père」；RAE《DLE》「padre」',
+   '德 <b>Vater</b>、荷 <b>vader</b>、瑞典 <b>far</b>、法 <b>père</b>、西 <b>padre</b>。')),
+ I('w-family', e('family', 'OED「family, n.」；Larousse「famille」；RAE「familia」',
+   '英文 family 來自<b>拉丁文 familia</b>，所以跟法文、西班牙文最像。')),
+ I('w-brother', e('brother／sister', 'Duden／Van Dale／SAOL 各詞條；RAE「hermano」',
+   '德荷瑞都像英文。西班牙文 <b>hermano</b> 不像，因為它來自另一個拉丁字 germanus。')),
+ I('w-grandfather', e('瑞典文分爸爸那邊、媽媽那邊', 'SAOL（瑞典學院詞表）「farfar」「morfar」「farbror」「morbror」「faster」「moster」',
+   '<b>farfar</b> ＝ 爸爸的爸爸，<b>morfar</b> ＝ 媽媽的爸爸——<b>跟中文一樣分兩邊</b>。')),
+ I('w-grand', e('grandfather 一半一半', 'OED「grand-, comb. form」；Larousse「grand-père」',
+   '<b>grand</b> 從法文 grand-père 借來，<b>father</b> 是日耳曼家族的字。')),
+ I('w-uncle', e('uncle／aunt／cousin', 'OED「uncle」「aunt」「cousin」；Larousse「oncle」「tante」「cousin」',
+   '三個都是 1066 年以後<b>從法文借來的</b>，所以跟法文最像。')),
+ I('sum', warn('地圖是示意圖', '地圖上的路線與年代是<b>簡化過的示意</b>，實際是好幾百年、很多批人慢慢搬的。')),
+ warn('瑞典文的聲音', '瑞典文用的是<b>預先做好的語音檔</b>：瑞典國家圖書館（KBLab）用<b>瑞典母語者的錄音</b>（NST 語料，CC0）訓練的神經語音 Piper sv_SE-nst。很多電腦沒有瑞典文語音，瀏覽器會用英文腔亂唸，所以改用音檔。')],
 
 'family-tree': [
  e('family tree 是正式說法', 'Cambridge Dictionary「family tree」；Merriam-Webster「family tree」',
@@ -353,13 +381,23 @@ const CSS = `
 #src .ev .new{color:#FFD24A;display:inline-block;animation:newT 1.2s ease-in-out 1.6s 3}
 #src .ev .no{color:#FF6B6B}
 @keyframes newT{0%,100%{transform:none;text-shadow:none}50%{transform:translateY(-.25em) scale(1.5);text-shadow:0 0 18px rgba(255,210,74,.9)}}
+#src .stoc{display:none;position:absolute;left:0;right:0;top:calc(max(10px,env(safe-area-inset-top)) + 64px);bottom:0;
+ background:#000;z-index:2;overflow:auto;padding:10px clamp(12px,3vw,34px) 20px;
+ grid-template-columns:repeat(auto-fill,minmax(clamp(220px,28vw,320px),1fr));gap:8px;align-content:start}
+#src .stoc.on{display:grid}
+#src .stoc button{display:flex;align-items:center;gap:10px;text-align:left;background:#0C0C0C;border:1px solid #2A2A2A;
+ border-radius:14px;color:#F2F2F2;font-family:inherit;font-size:clamp(15px,2.3vh,21px);padding:10px 14px;min-height:54px;cursor:pointer}
+#src .stoc button b{flex:0 0 auto;width:2em;height:2em;border-radius:50%;background:#1E2A36;display:flex;align-items:center;justify-content:center}
+#src .stoc button.w b{background:#3A2A0C;color:#F0B45C}
+#src .stoc button.cur{border-color:#FFD24A;background:#1D1908}
+#src .shd button#srct{margin-left:auto}
 .reduce #src *{animation:none!important;opacity:1!important}`;
 
 const icoOf = (s) => /OED|牛津/.test(s) ? '📕' : /Cambridge|Oxford Learner/.test(s) ? '📘' :
   /Duden/.test(s) ? '📗' : /Van Dale/.test(s) ? '📙' : /Wikipedia/.test(s) ? '🌐' : '📖';
 
 const slide = (r, k, n) =>
- '<section class="sl' + (r.w ? ' w' : '') + (k === 0 ? ' on' : '') + '" data-k="' + k + '">' +
+ '<section class="sl' + (r.w ? ' w' : '') + (k === 0 ? ' on' : '') + '" data-k="' + k + '"' + (r.id ? ' data-id="' + r.id + '"' : '') + '>' +
  '<div class="lt">' + (r.w ? '<span class="wtag">⚠️ 誠實註記</span>' : '') + r.t + '</div>' +
  (r.v ? '<div class="vis">' + r.v + '</div>' : '') +
  (r.s ? '<div class="ck s"><span class="ci">' + icoOf(r.s) + '</span><span><span class="cl">證據在這本書</span>' +
@@ -368,11 +406,15 @@ const slide = (r, k, n) =>
    (r.s ? '翻開會看到' : '要知道的事') + '</span><span class="cv">' + r.d + '</span></span></div>' +
  '</section>';
 
+/* 出處的 📑 目次（使用者 2026-09-25 指定）：一條一格，點了直接跳過去 */
+const strip = h => String(h).replace(/<[^>]+>/g, '').replace(/&amp;/g, '&');
 const html = (rows) => {
  const all = rows.concat(COMMON);
  return '<footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span>' +
   '<span class="scnt"><span id="srcn">1</span> ／ ' + all.length + '</span>' +
-  '<button id="srcx">✕ 關閉</button></div>' +
+  '<button id="srct">📑 目次</button><button id="srcx">✕ 關閉</button></div>' +
+  '<div class="stoc" id="stoc">' + all.map((r, k) => '<button data-k="' + k + '"' + (r.w ? ' class="w"' : '') + '><b>' + (k + 1) +
+    '</b><span>' + strip(r.t) + '</span></button>').join('') + '</div>' +
   '<div class="sbody">' + all.map((r, k) => slide(r, k, all.length)).join('') + '</div>' +
   '<div class="snav"><button id="srcp">◀ 上一條</button><span class="sdots">' +
   all.map((r, k) => '<i' + (k === 0 ? ' class="on"' : '') + '></i>').join('') + '</span>' +
@@ -391,19 +433,30 @@ const JS = `
   document.getElementById("srcn").textContent=k+1;
   document.getElementById("srcp").disabled=(k===0);
   document.getElementById("srcf").disabled=(k===L.length-1)}
- function t(v){s.classList.toggle("on",v);if(v)go(0)}
- document.getElementById("srcb").addEventListener("click",function(){t(!s.classList.contains("on"))});
+ /* 從哪一條開始：這一幕／這一張字卡對應的那一條（window.SRCAT：出處的 id 或第幾條），
+    沒有對應就從第一條開始（使用者 2026-09-25 指定：按「出處」直接跳到這一張的證據） */
+ function at(v){if(v==null||v==="")return 0;if(typeof v==="number")return v;
+  for(var j=0;j<L.length;j++)if(L[j].getAttribute("data-id")===v)return j;return 0}
+ var T=document.getElementById("stoc");
+ function toc(v){T.classList.toggle("on",v);if(v){[].forEach.call(T.querySelectorAll("button"),function(b,j){b.classList.toggle("cur",j===k)})}}
+ function t(v,from){s.classList.toggle("on",v);toc(false);if(v)go(at(from))}
+ window.SRCOPEN=function(id){t(true,id)};
+ document.getElementById("srcb").addEventListener("click",function(){
+  if(s.classList.contains("on"))t(false);else t(true,window.SRCAT)});
  document.getElementById("srcx").addEventListener("click",function(){t(false)});
+ document.getElementById("srct").addEventListener("click",function(){toc(!T.classList.contains("on"))});
+ T.addEventListener("click",function(e){var b=e.target.closest?e.target.closest("button"):null;if(!b)return;
+  toc(false);go(+b.getAttribute("data-k")||0)});
  document.getElementById("srcp").addEventListener("click",function(){go(k-1)});
  document.getElementById("srcf").addEventListener("click",function(){go(k+1)});
  /* 出處開著的時候，← → 翻的是出處，不是後面那一頁（先攔下來） */
  document.addEventListener("keydown",function(e){
   if(!s.classList.contains("on"))return;
-  if(e.key==="Escape"){t(false)}
+  if(e.key==="Escape"){if(T.classList.contains("on"))toc(false);else t(false)}
   else if(e.key==="ArrowRight"||e.key===" "){go(k+1)}
   else if(e.key==="ArrowLeft"){go(k-1)}
   else return;
   e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();
  },true);})();`;
 
-module.exports = { W, P, COMMON, CSS, html, btn, JS, e, warn, ev };
+module.exports = { W, P, COMMON, CSS, html, btn, JS, e, warn, ev, I };

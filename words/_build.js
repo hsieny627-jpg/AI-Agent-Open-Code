@@ -12,63 +12,64 @@
 const fs=require('fs'),path=require('path'),DIR=__dirname;
 const SRC=require('./_sources');
 const PH=require('./_phonics');
+const TOC=require('./_toc');
 
 // e1 / e2 = 幕③的秒懂收尾（e2 留空就只顯示一行）
 // build   = 只給 grandfather / grandmother：把幕②從「以前」換成「怎麼組的」
 const WORDS=[
-{f:'family',zh:'家庭',icon:'👨‍👩‍👧‍👦',old:'familia',now:'family',
+{f:'family',src:[0, 0, 0],zh:'家庭',icon:'👨‍👩‍👧‍👦',old:'familia',now:'family',
  e1:'👪 爸爸、媽媽、小孩，<b>全部都是 family</b>'},
-{f:'parent',parts:{href:'parts.html#10'},zh:'家長',sub:'爸爸或媽媽',icon:'👨‍👩',old:'parens',now:'parent',
- e1:'👤 一位家長是 <b>a parent</b>',e2:'很多位就加 s：{{parents}}'},
-{f:'mother',parts:{href:'parts.html#4'},zh:'母親',icon:'❤️',old:'mōdor',now:'mother',
+{f:'parent',src:[0, 0, 1],parts:{href:'parts.html#10'},zh:'家長',sub:'爸爸或媽媽',icon:'👨‍👩',old:'parens',now:'parent',
+ e1:'👤 一位家長是 <b>a parent</b>',e2:'很多位就加 <b class="rs">s</b>：<span class="sp" data-say="parents">parent<b class="rs">s</b></span>'},
+{f:'mother',src:[1, 0, 2],parts:{href:'parts.html#4'},zh:'母親',icon:'❤️',old:'mōdor',now:'mother',
  e1:'👶 <b>mother</b> ＝ {{mom}}',e2:'美國說 {{mom}}，英國說 {{mum}}'},
-{f:'father',parts:{href:'parts.html#4'},zh:'父親',icon:'🧔',old:'fæder',now:'father',
+{f:'father',src:[2, 0, 1],parts:{href:'parts.html#4'},zh:'父親',icon:'🧔',old:'fæder',now:'father',
  e1:'👶 <b>father</b> ＝ {{dad}}',e2:'小寶寶還不會說 father，<b>先叫出 dad</b>'},
-{f:'brother',more:{href:'older-younger.html',label:'🧒 哥哥弟弟'},parts:{href:'parts.html#4'},zh:'哥哥、弟弟',sub:'不分大小',icon:'🧒👦',old:'brōþor',now:'brother',
+{f:'brother',src:[2, 1, 3],more:{href:'older-younger.html',label:'🧒 哥哥弟弟'},parts:{href:'parts.html#4'},zh:'哥哥、弟弟',sub:'不分大小',icon:'🧒👦',old:'brōþor',now:'brother',
  e1:'👦 哥哥、弟弟，<b>都叫 brother</b>',e2:'要分大小就加 {{older}} 或 {{younger}}'},
-{f:'sister',more:{href:'older-younger.html',label:'👧 姊姊妹妹'},parts:{href:'parts.html#4'},zh:'姊姊、妹妹',sub:'不分大小',icon:'👧👩',old:'sweostor',now:'sister',
+{f:'sister',src:[4, 0, 5],more:{href:'older-younger.html',label:'👧 姊姊妹妹'},parts:{href:'parts.html#4'},zh:'姊姊、妹妹',sub:'不分大小',icon:'👧👩',old:'sweostor',now:'sister',
  e1:'👧 姊姊、妹妹，<b>都叫 sister</b>',e2:'要分大小就加 {{older}} 或 {{younger}}'},
-{f:'son',zh:'兒子',icon:'👦',old:'sunu',now:'son',
+{f:'son',src:[0, 0, 1],zh:'兒子',icon:'👦',old:'sunu',now:'son',
  e1:'☀️ 和太陽 {{sun}} 同音',e2:'一樣的音，<b>不一樣的字</b>'},
-{f:'daughter',zh:'女兒',icon:'👧',old:'dohtor',now:'daughter',
+{f:'daughter',src:[0, 0, 1],zh:'女兒',icon:'👧',old:'dohtor',now:'daughter',
  e1:'🤫 中間的 <b>gh</b> 不出聲',
  more:{href:'daughter-gh.html',label:'✨ 補充'},parts:{href:'parts.html#4'}},
-{f:'grandfather',parts:{href:'parts.html#2'},zh:'爺爺',sub:'外公也是',icon:'👴',old:'grand-',now:'grandfather',
+{f:'grandfather',src:[0, 0, 2],parts:{href:'parts.html#2'},zh:'爺爺',sub:'外公也是',icon:'👴',old:'grand-',now:'grandfather',
  build:{a:'grand',b:'father',note:'<b>grand</b> ＝ <b>大</b>　大的 father ＝ <b>爸爸的爸爸</b>'},
  e1:'👴 <b>grandfather</b> ＝ {{grandpa}}',e2:'爺爺、外公，<b>都叫 grandfather</b>'},
-{f:'grandmother',parts:{href:'parts.html#2'},zh:'奶奶',sub:'外婆也是',icon:'👵',old:'grand-',now:'grandmother',
+{f:'grandmother',src:[0, 0, 2],parts:{href:'parts.html#2'},zh:'奶奶',sub:'外婆也是',icon:'👵',old:'grand-',now:'grandmother',
  build:{a:'grand',b:'mother',note:'<b>grand</b> ＝ <b>大</b>　大的 mother ＝ <b>媽媽的媽媽</b>'},
  e1:'👵 <b>grandmother</b> ＝ {{grandma}}',e2:'奶奶、外婆，<b>都叫 grandmother</b>'},
-{f:'uncle',zh:'叔叔',sub:'伯伯、舅舅也是',icon:'🧓',old:'avunculus',now:'uncle',
+{f:'uncle',src:[1, 0, 1],zh:'叔叔',sub:'伯伯、舅舅也是',icon:'🧓',old:'avunculus',now:'uncle',
  e1:'🧓 叔叔、伯伯、舅舅，<b>都叫 uncle</b>',e2:'中文分很多種，英文<b>一個字就夠</b>'},
-{f:'aunt',zh:'阿姨',sub:'姑姑、舅媽也是',icon:'👩‍🦰',old:'amita',now:'aunt',
+{f:'aunt',src:[0, 0, 1],zh:'阿姨',sub:'姑姑、舅媽也是',icon:'👩‍🦰',old:'amita',now:'aunt',
  e1:'👩 姑姑、阿姨、舅媽，<b>都叫 aunt</b>',e2:'親一點可以叫 {{auntie}}'},
-{f:'cousin',zh:'堂表兄弟姊妹',sub:'叔叔阿姨的小孩',icon:'🧑‍🤝‍🧑',old:'consobrinus',now:'cousin',
+{f:'cousin',src:[1, 0, 1],zh:'堂表兄弟姊妹',sub:'叔叔阿姨的小孩',icon:'🧑‍🤝‍🧑',old:'consobrinus',now:'cousin',
  e1:'🧑‍🤝‍🧑 叔叔阿姨的小孩，<b>就是 cousin</b>',e2:'堂哥、表姊，<b>都叫 cousin</b>'},
-{f:'nephew',zh:'姪子',sub:'外甥也是',icon:'👦💙',old:'nepos',now:'nephew',
+{f:'nephew',src:[1, 0, 1],zh:'姪子',sub:'外甥也是',icon:'👦💙',old:'nepos',now:'nephew',
  e1:'👦 哥哥姊姊的兒子，<b>就是 nephew</b>',e2:'姪子、外甥，<b>都叫 nephew</b>'},
-{f:'niece',zh:'姪女',sub:'外甥女也是',icon:'👧💜',old:'neptia',now:'niece',
+{f:'niece',src:[1, 0, 1],zh:'姪女',sub:'外甥女也是',icon:'👧💜',old:'neptia',now:'niece',
  e1:'👧 哥哥姊姊的女兒，<b>就是 niece</b>',e2:'姪女、外甥女，<b>都叫 niece</b>'},
-{f:'husband',parts:{href:'parts.html#3'},zh:'丈夫',icon:'🤵',old:'húsbóndi',now:'husband',
+{f:'husband',src:[0, 0, 0],parts:{href:'parts.html#3'},zh:'丈夫',icon:'🤵',old:'húsbóndi',now:'husband',
  e1:'🤵 介紹另一半就說 <b>my husband</b>'},
-{f:'wife',zh:'妻子',icon:'👰',old:'wīf',now:'wife',
+{f:'wife',src:[0, 0, 1],zh:'妻子',icon:'👰',old:'wīf',now:'wife',
  e1:'👰 <b>my wife</b> 是「我的妻子」',e2:'不可以隨便這樣叫別人'}
 ];
 
-const tpl=(W)=>`<!DOCTYPE html>
+const tpl=(W,SET)=>`<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>${W.now}｜單字小故事</title>
+<title>${W.now}｜${SET.title||'單字小故事'}</title>
 <!-- 本檔由 words/_build.js 產生，不要手改。改樣板請改 _build.js 再重跑。 -->
 <style>
 /* Andika 隨檔案放在 fonts/，離線也一定是 Andika（不靠網路） */
 @font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
- src:url(fonts/andika-400.woff2) format("woff2")}
+ src:url(${SET.font||'fonts/'}andika-400.woff2) format("woff2")}
 @font-face{font-family:Andika;font-style:normal;font-weight:700;font-display:swap;
- src:url(fonts/andika-700.woff2) format("woff2")}
+ src:url(${SET.font||'fonts/'}andika-700.woff2) format("woff2")}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
@@ -146,9 +147,12 @@ body{margin:0;background:#000;color:#F2F2F2;
 @keyframes turnL{0%{opacity:.2;transform:rotateY(-54deg) translateX(-24px) scale(.94)}
  100%{opacity:1;transform:none}}
 .reduce *{animation:none!important;transition:none!important}
+${TOC.TOCCSS}
+.rs{color:#FF5A5A!important}
 ${PH.CSS}
 ${SRC.CSS}
 </style>
+${SET.head||''}
 </head>
 <body>
 <div id="dots"></div>
@@ -157,13 +161,14 @@ ${SRC.CSS}
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button></div>
 <div id="bottom">
 <nav id="wnav">
- <a href="${W.prev}.html" title="上一個單字">◀ <span class="w">${W.prev}</span></a>
+ <a href="${W.prev}.html" title="上一個單字">◀ <span class="w">${W.prevL||W.prev}</span></a>
  <span class="pos">${W.idx} / ${W.total}</span>
- <a href="${W.next}.html" title="下一個單字"><span class="w">${W.next}</span> ▶</a>
+ <a href="${W.next}.html" title="下一個單字"><span class="w">${W.nextL||W.next}</span> ▶</a>
 </nav>
-<div id="bar"><button id="say">🔊 念一次</button>${PH.btnSlow}${PH.btnMode}${PH.btnSyl}${W.more?`<button id="more">${W.more.label}</button>`:''}${W.parts?`<button id="parts">🧩 結構</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>
+<div id="bar"><button id="say">🔊 念一次</button>${TOC.TOCB}${PH.btnSlow}${PH.btnMode}${PH.btnSyl}${W.more?`<button id="more">${W.more.label}</button>`:''}${W.parts?`<button id="parts">🧩 結構</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>
 </div>
-${SRC.html(SRC.W[W.f])}
+${TOC.linksHTML(SET.list,W.f)}
+${SRC.html((SET.srcW||SRC.W)[W.f])}
 
 <script>
 ${PH.JS}
@@ -180,7 +185,7 @@ var SCENES=[
  ${W.build?
  `function(){return '<div class="tag in">怎麼組的</div>'+
    '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
-   '<div class="parts in d1"><b>'+W.build.a+'</b> ＋ '+W.build.b+'</div>'+
+   '<div class="parts in d1">{{'+W.build.a+'}} ＋ {{'+W.build.b+'}}</div>'+
    '<div class="sub in d2" style="margin-top:2px">'+W.build.note+'</div>'}`
  :
  `function(){return '<div class="tag in">以前</div>'+
@@ -210,6 +215,7 @@ var card=document.getElementById("card");
 function show(n){
  var back=(n<i);
  i=Math.max(0,Math.min(SCENES.length-1,n));
+ window.SRCAT=${JSON.stringify(W.src||[0,0,0])}[i];   /* 按「📖 出處」直接跳到這一張字卡的證據（使用者 2026-09-25 指定） */
  card.innerHTML=PH.expand(SCENES[i]());
  PH.autoSay(card);       // 補充單字、字詞、用法都可以點來聽
  if(!reduce){card.classList.remove("turnR","turnL");void card.offsetWidth;
@@ -241,21 +247,34 @@ show(0);
 armFirstTouch();
 ${W.more?`document.getElementById("more").addEventListener("click",function(){location.href=${JSON.stringify(W.more.href)}});`:''}
 ${W.parts?`document.getElementById("parts").addEventListener("click",function(){location.href=${JSON.stringify(W.parts.href)}});`:''}
-document.getElementById("home").addEventListener("click",function(){location.href="../index.html"});
+document.getElementById("home").addEventListener("click",function(){location.href=${JSON.stringify(SET.home||'../index.html')}});
+${TOC.LINKJS}
 ${SRC.JS}
 </script>
 </body>
 </html>
 `;
 
-/* 上一個／下一個單字（頭尾相接），使用者 2026-09-20 指定加在每張字卡下方 */
-WORDS.forEach((w,k)=>{
- w.prev=WORDS[(k-1+WORDS.length)%WORDS.length].f;
- w.next=WORDS[(k+1)%WORDS.length].f;
- w.idx=k+1; w.total=WORDS.length;
-});
-WORDS.forEach(w=>fs.writeFileSync(path.join(DIR,w.f+'.html'),tpl(w),'utf8'));
-/* 給總入口（_build_hub.js）用的單字清單。由本檔產出，所以永遠不會跟字卡走鐘。 */
-fs.writeFileSync(path.join(DIR,'_words.json'),
- JSON.stringify(WORDS.map(w=>({f:w.f,zh:w.zh,icon:w.icon})),null,1),'utf8');
-console.log('已產生 '+WORDS.length+' 頁：'+WORDS.map(w=>w.f).join(' '));
+/* 一組單字卡（家人、職業，或 G3 的數字、常見字）：同一個樣板，一組一組產出。
+   SET：dir 輸出資料夾、font 字體路徑、home 首頁、srcW 出處（單字 ➜ 出處）、title 網頁標題後綴、head 額外放進 <head> 的東西 */
+function buildSet(WL,SET){
+ /* 上一個／下一個單字（頭尾相接），使用者 2026-09-20 指定加在每張字卡下方 */
+ WL.forEach((w,k)=>{
+  w.prev=WL[(k-1+WL.length)%WL.length].f;
+  w.next=WL[(k+1)%WL.length].f;
+  w.prevL=WL[(k-1+WL.length)%WL.length].now;
+  w.nextL=WL[(k+1)%WL.length].now;
+  w.idx=k+1; w.total=WL.length;
+ });
+ SET.list=WL.map(w=>({f:w.now||w.f,zh:w.zh,icon:w.icon,href:w.f+'.html',k:w.f}));
+ WL.forEach(w=>fs.writeFileSync(path.join(SET.dir||DIR,w.f+'.html'),tpl(w,SET),'utf8'));
+ return WL;
+}
+module.exports={buildSet,tpl};
+if(require.main===module){
+ buildSet(WORDS,{dir:DIR});
+ /* 給總入口（_build_hub.js）用的單字清單。由本檔產出，所以永遠不會跟字卡走鐘。 */
+ fs.writeFileSync(path.join(DIR,'_words.json'),
+  JSON.stringify(WORDS.map(w=>({f:w.f,zh:w.zh,icon:w.icon})),null,1),'utf8');
+ console.log('已產生 '+WORDS.length+' 頁：'+WORDS.map(w=>w.f).join(' '));
+}

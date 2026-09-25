@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="theme-color" content="#000000">
 <title>Unit 1 句型｜Who’s he? Who’s she?</title>
+
 <!-- 本檔由 sentences/_build.js 產生，不要手改。改內容請改 sentences/_data.js ／ _quiz_data.js ／ _game_data.js -->
 <style>
 @font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
@@ -75,54 +76,96 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .ap{color:var(--ap);font-weight:700}
 
 #miss,#missAll{position:fixed;inset:0;z-index:95;background:#000;display:none;flex-direction:column;
- align-items:center;padding:calc(var(--safeT) + clamp(10px,2vh,24px)) clamp(14px,3vw,40px)
- calc(var(--safeB) + clamp(10px,2vh,24px));overflow-y:auto}
+ align-items:center;padding:calc(var(--safeT) + clamp(8px,1.6vh,20px)) clamp(14px,3vw,40px)
+ calc(var(--safeB) + clamp(8px,1.6vh,20px));overflow-y:auto}
 #miss.on,#missAll.on{display:flex}
 #miss .mbox,#missAll .mbox{width:100%;max-width:1060px;margin:auto 0;display:flex;flex-direction:column;
- gap:clamp(8px,1.6vh,18px)}
-.mhd{display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,26px)}
-.mhd .mt{font-size:clamp(30px,6.4vh,62px);font-weight:700;color:var(--no);
+ align-items:center;gap:clamp(6px,1.4vh,16px)}
+.mhd{font-size:clamp(30px,6vh,60px);font-weight:700;color:var(--no);text-align:center;line-height:1.1;
  animation:mShake .5s cubic-bezier(.3,.8,.3,1)}
+.mhd.ok{color:var(--ok);animation:mPop .6s cubic-bezier(.2,1.5,.4,1)}
+.mhd.bn{color:var(--gold);animation:mPop .6s cubic-bezier(.2,1.5,.4,1)}
 @keyframes mShake{0%,100%{transform:none}20%{transform:translateX(-14px)}40%{transform:translateX(12px)}
  60%{transform:translateX(-8px)}80%{transform:translateX(5px)}}
-.mrow{display:flex;align-items:center;gap:clamp(10px,1.8vw,22px);background:#0B0B0B;border:1px solid #222;
- border-left-width:10px;border-radius:16px;padding:clamp(8px,1.5vh,16px) clamp(12px,1.8vw,24px);
- opacity:0;animation:mIn .45s cubic-bezier(.2,.9,.3,1.2) forwards}
-@keyframes mIn{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
-.mrow .ml{flex:0 0 auto;width:clamp(86px,12vw,150px);font-size:clamp(15px,2.5vh,24px);font-weight:700;
- color:var(--dim);line-height:1.25}
-.mrow .mv{flex:1 1 auto;min-width:0;line-height:1.3;overflow-wrap:anywhere}
-.mrow.q{border-left-color:#44586A}.mrow.q .mv{font-size:clamp(19px,3.4vh,34px);color:var(--body)}
-.mrow.p{border-left-color:var(--no);animation-delay:.25s}
-.mrow.p .mv{font-size:clamp(23px,4.6vh,46px);color:#FF9C9C}
-.mrow.a{border-left-color:var(--ok);background:#07190F;animation-delay:.6s}
-.mrow.a .mv{font-size:clamp(30px,7vh,70px);font-weight:700;color:var(--ok)}
-.mrow.w{border-left-color:var(--gold);animation-delay:1s}
-.mrow.w .mv{font-size:clamp(19px,3.5vh,34px);color:var(--fg)}
-.mrow.w .mv b{color:var(--gold)}
-.mrow .x{border-radius:8px;padding:0 .12em;background:rgba(255,94,94,.28);color:#fff;
+@keyframes mPop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+@keyframes mIn{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+.mq{font-size:clamp(17px,3vh,30px);color:var(--dim);text-align:center;line-height:1.35;max-width:36ch}
+.mq b{color:var(--fg)}
+.mcmp{display:flex;flex-direction:column;align-items:center;gap:clamp(2px,.6vh,8px);width:100%}
+.mcmp .mp,.mcmp .ma{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.4vw,18px);
+ border-radius:20px;padding:clamp(6px,1.2vh,14px) clamp(14px,2.2vw,30px);max-width:100%;
+ opacity:0;animation:mIn .45s cubic-bezier(.2,.9,.3,1.2) forwards;overflow-wrap:anywhere;text-align:center}
+.mcmp .mp{background:#1A0808;border:2px solid #5A1F1F;font-size:clamp(22px,4.4vh,44px);color:#FF9C9C;animation-delay:.15s}
+.mcmp .ma{background:#06190E;border:3px solid var(--ok);font-size:clamp(32px,7.6vh,76px);font-weight:700;
+ color:var(--ok);animation-delay:.55s;box-shadow:0 0 40px rgba(57,217,138,.22)}
+.mcmp .mi{flex:0 0 auto;font-size:.8em}
+.mcmp .mar{font-size:clamp(20px,3.4vh,34px);color:#4A4A4A;line-height:1;opacity:0;animation:mIn .4s ease .4s forwards}
+.mcmp .x{border-radius:8px;padding:0 .12em;background:rgba(255,94,94,.28);color:#fff;
  text-decoration:line-through;text-decoration-color:var(--no);text-decoration-thickness:.1em}
-.mrow .f{border-radius:8px;padding:0 .12em;background:var(--gold);color:#000;
- display:inline-block;animation:mFix 1.1s ease-in-out .9s 2}
+.mcmp .f{border-radius:8px;padding:0 .12em;background:var(--gold);color:#000;
+ display:inline-block;animation:mFix 1.1s ease-in-out 1s 2}
 @keyframes mFix{0%,100%{transform:none}50%{transform:scale(1.18)}}
-.mrow .say{flex:0 0 auto;background:#10301F;border:1px solid var(--ok);border-radius:999px;
- font-size:clamp(14px,2.2vh,20px);padding:clamp(6px,1vh,10px) clamp(10px,1.4vw,16px);color:#fff}
-.mcd{display:flex;align-items:center;justify-content:center;gap:12px;
- font-size:clamp(15px,2.4vh,22px);color:var(--dim)}
-.mcd b{display:inline-flex;align-items:center;justify-content:center;width:clamp(46px,7vh,70px);
- height:clamp(46px,7vh,70px);border-radius:50%;border:4px solid var(--gold);color:var(--gold);
- font-size:clamp(24px,4.4vh,42px)}
-.mcd b.tick{animation:mTick .9s ease}
+.mw{font-size:clamp(19px,3.4vh,34px);color:var(--fg);text-align:center;line-height:1.4;max-width:32ch;
+ opacity:0;animation:mIn .45s ease 1s forwards}
+.mw b{color:var(--gold)}
+/* 加分的秒懂說明：一格一格亮起來 */
+.mbn{display:flex;align-items:center;justify-content:center;gap:clamp(4px,.9vw,12px);flex-wrap:wrap;
+ background:#141005;border:1px dashed #6B5714;border-radius:999px;padding:clamp(4px,.8vh,9px) clamp(10px,1.6vw,20px);
+ opacity:0;animation:mIn .45s ease 1.4s forwards}
+.mbn span{font-size:clamp(15px,2.6vh,26px);font-weight:700;color:#BFA75A;white-space:nowrap;
+ animation:mStep 4s ease-in-out infinite}
+.mbn span:nth-of-type(2){animation-delay:1s}.mbn span:nth-of-type(3){animation-delay:2s}.mbn span:nth-of-type(4){animation-delay:3s}
+.mbn i{font-style:normal;color:#5E5230;font-size:clamp(13px,2vh,20px)}
+.mbn.cur span{animation:none}
+.mbn span.now{color:var(--gold);text-shadow:0 0 14px rgba(255,210,74,.8)}
+@keyframes mStep{0%,20%{color:var(--gold);text-shadow:0 0 14px rgba(255,210,74,.8);transform:scale(1.12)}30%,100%{color:#BFA75A;text-shadow:none;transform:none}}
+/* 最下面一排：倒數 ➜ 倒數完才出現「⭐ 加分」「▶ 繼續」 */
+.mft{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,18px);flex-wrap:wrap;
+ min-height:clamp(60px,9vh,86px)}
+.mcd{display:inline-flex;align-items:center;justify-content:center;width:clamp(52px,8.4vh,84px);
+ height:clamp(52px,8.4vh,84px);border-radius:50%;border:5px solid var(--gold);color:var(--gold);
+ font-size:clamp(26px,4.8vh,46px);font-weight:700}
+.mcd.tick{animation:mTick .9s ease}
 @keyframes mTick{0%{transform:scale(1.35)}100%{transform:none}}
-#missAll h2{margin:0;text-align:center;font-size:clamp(26px,5vh,48px)}
-#missAll .lead{margin:0;text-align:center;font-size:clamp(15px,2.4vh,22px);color:var(--dim)}
-.mcard{display:flex;flex-direction:column;gap:clamp(6px,1.1vh,12px);border:1px solid #262626;border-radius:20px;
- padding:clamp(10px,1.8vh,18px);background:#050505;opacity:0;animation:mIn .45s cubic-bezier(.2,.9,.3,1.2) forwards}
-.mcard .mn{font-size:clamp(14px,2.2vh,20px);color:var(--acc);font-weight:700;letter-spacing:.1em}
-.mcard .mrow{opacity:1;animation:none}
+.mft button,.mbtns button{border-radius:999px;color:#fff;font-weight:700;border:2px solid var(--line);background:var(--btn);
+ font-size:clamp(18px,3.2vh,30px);padding:clamp(9px,1.6vh,16px) clamp(18px,2.8vw,34px)}
+.mft .say{background:#10301F;border-color:var(--ok)}
+.mft .bon{background:#2A2208;border-color:var(--gold);color:var(--gold);animation:mGlow 1.3s ease-in-out infinite}
+@keyframes mGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,210,74,0)}50%{box-shadow:0 0 0 7px rgba(255,210,74,.25)}}
+.mft .nxt{background:#0F3323;border-color:var(--ok)}
+.mft button:active,.mbtns button:active{transform:scale(.96)}
+/* 加分題：字放大 */
+.mbq{font-size:clamp(26px,5.6vh,56px);font-weight:700;text-align:center;line-height:1.3;max-width:26ch;
+ animation:mPop .5s cubic-bezier(.2,1.5,.4,1)}
+.mbo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(8px,1.4vh,16px);width:100%}
+.mbo.one{grid-template-columns:1fr}
+.mbo button{background:#0C0C0C;border:2px solid #2E2E2E;border-radius:18px;color:var(--fg);
+ font-size:clamp(22px,4.4vh,44px);font-weight:700;line-height:1.25;min-height:clamp(64px,11vh,110px);
+ padding:clamp(8px,1.4vh,16px) clamp(10px,1.6vw,20px);opacity:0;animation:mIn .4s ease forwards}
+.mbo button:active{transform:scale(.97)}
+.mbo button.ok{background:#0F3323;border-color:var(--ok)}
+.mbo button.bad{background:#3A1111;border-color:var(--no)}
+.mgain{font-size:clamp(60px,15vh,150px);font-weight:700;color:var(--gold);line-height:1;
+ text-shadow:0 0 40px rgba(255,210,74,.6);animation:mPop .7s cubic-bezier(.2,1.6,.4,1)}
+.mx2{display:flex;align-items:center;gap:.4em;font-size:clamp(24px,4.6vh,46px);font-weight:700;color:var(--fg)}
+.mx2 b{color:var(--gold)}
+#missAll h2{margin:0;text-align:center;font-size:clamp(28px,5.4vh,52px)}
+#missAll .lead{margin:0;text-align:center;font-size:clamp(17px,2.8vh,26px);color:var(--dim)}
+.mcard{display:flex;flex-direction:column;gap:clamp(4px,.8vh,10px);border:1px solid #262626;border-radius:20px;width:100%;
+ padding:clamp(10px,1.8vh,18px) clamp(12px,2vw,24px);background:#050505;opacity:0;animation:mIn .45s cubic-bezier(.2,.9,.3,1.2) forwards}
+.mcard .mn{font-size:clamp(15px,2.3vh,21px);color:var(--acc);font-weight:700;letter-spacing:.1em}
+.mcard .cq{font-size:clamp(18px,3vh,30px);color:var(--body);line-height:1.35}
+.mcard .cp{font-size:clamp(18px,3vh,30px);color:#FF9C9C;line-height:1.35}
+.mcard .ca{font-size:clamp(26px,5vh,50px);font-weight:700;color:var(--ok);line-height:1.25}
+.mcard .ca b{color:var(--ok)}
+.mcard .cw{font-size:clamp(17px,2.8vh,28px);color:var(--fg);line-height:1.4}
+.mcard .cw b{color:var(--gold)}
+.mcard .x{border-radius:8px;padding:0 .12em;background:rgba(255,94,94,.28);color:#fff;text-decoration:line-through}
+.mcard .f{border-radius:8px;padding:0 .12em;background:var(--gold);color:#000}
+.mcard .say{align-self:flex-start;background:#10301F;border:1px solid var(--ok);border-radius:999px;color:#fff;
+ font-size:clamp(15px,2.4vh,22px);padding:6px 16px}
 .mbtns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:clamp(4px,1vh,10px)}
-.mbtns button{background:#0F3323;border:1px solid var(--ok);border-radius:999px;color:#fff;font-weight:700;
- font-size:clamp(17px,2.8vh,26px);padding:clamp(10px,1.6vh,16px) clamp(20px,3vw,36px)}
+.mbtns button{background:#0F3323;border-color:var(--ok)}
 
 .reduce *{animation:none!important;transition:none!important}
 
@@ -160,6 +203,10 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .tk{display:flex;flex-direction:column;align-items:center;gap:clamp(2px,.5vh,7px);
  padding:2px 2px 4px;border-radius:12px;transition:background .18s}
 .tk.tight{margin-left:calc(-1 * clamp(6px,1.1vw,18px))}
+/* ’s／’m／’re 底下的「是」要在 s 的正下方（使用者 2026-09-25 指定）：
+   ’ 在左邊佔了一點寬度，整格置中會讓「是」看起來偏到 ’ 下面，往右推回 s 的正下方 */
+.tk.ctr .zh,.tk.ctr .ic{position:relative;left:.16em}
+.tk.ctr .zh{left:.3em}
 .tk:active{background:#161616}
 /* 字體放大（使用者指定） */
 .tk .en{font-size:clamp(30px,8.6vh,82px);font-weight:700;line-height:1.08;
@@ -272,6 +319,9 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .eqrow{width:100%;border-radius:16px;transition:background .35s,box-shadow .35s;
  padding:clamp(3px,.7vh,8px) clamp(4px,.8vw,10px)}
 .eqrow.lit{background:#0F1720;box-shadow:0 0 0 2px rgba(159,180,200,.5)}
+.eq.left{width:auto;align-items:stretch}
+.eq.left .eqrow .wrap{justify-content:flex-start}
+.eq.left .eqmark,.eq.left .swapbtn{align-self:center}
 .eqmark{font-size:clamp(28px,5.4vh,54px);color:var(--be);font-weight:700;line-height:1;
  display:inline-block}
 .eqmark.pulse{animation:eqp 1s cubic-bezier(.2,.9,.3,1.4)}
@@ -289,11 +339,16 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
  column-gap:clamp(5px,.9vw,12px);row-gap:clamp(8px,1.6vh,18px);max-width:100%}
 .ordgrid .cap{font-size:clamp(12px,1.8vh,16px);color:#5C5C5C;letter-spacing:.12em;
  justify-self:end;text-align:right;padding-right:clamp(2px,.5vw,6px)}
-.chip{display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:12px;
- padding:clamp(5px,1vh,11px) clamp(8px,1.2vw,16px);font-weight:700;white-space:nowrap;
- font-size:clamp(22px,4.2vh,44px);line-height:1.1;background:#141414;color:var(--fg)}
+.chip{display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:14px;
+ padding:clamp(6px,1.2vh,13px) clamp(10px,1.4vw,18px);font-weight:700;white-space:nowrap;
+ font-size:clamp(28px,6.4vh,64px);line-height:1.1;background:#141414;color:var(--fg);
+ transition:transform .22s cubic-bezier(.2,.9,.3,1.4),filter .22s,box-shadow .22s}
 .chip .cen{display:block;white-space:nowrap}
-.chip .ci{font-size:clamp(16px,2.6vh,27px);font-weight:400}
+.chip .ci{font-size:clamp(18px,3.4vh,34px);font-weight:400}
+/* 中英連動（使用者 2026-09-25 指定）：點中文或英文，上下兩個同色的字一起放大變亮 */
+.chip.lnk{transform:scale(1.2);filter:brightness(1.3);position:relative;z-index:3;
+ box-shadow:0 0 0 4px rgba(255,255,255,.85),0 0 34px rgba(255,255,255,.55)}
+.chip.zin{opacity:0;transform:translateY(22px) scale(.6)}
 .chip .ci:empty{display:none}
 .chip.r{background:var(--ap);color:#fff}
 .chip.y{background:var(--be);color:#000}
@@ -322,6 +377,50 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .frow.eqr .fi{width:auto}
 .frow.eqr .fa,.frow.eqr .fb{flex:0 0 auto;text-align:left}
 .frow.eqr .fe{font-size:clamp(20px,3.6vh,36px);color:var(--be);font-weight:700;flex:0 0 auto}
+/* ── 秒懂重點（Who／What／How）：三欄上下對齊、一次出現一個字（使用者 2026-09-25 指定）──
+   英文、＝、中文放在同一個 grid，欄寬由每一列一起決定，所以永遠上下對齊。
+   一列一列演：先跳出英文（同時唸出來），英文出來以後才跳出 ＝ 和中文。 */
+.fq{gap:clamp(8px,1.6vh,18px)}
+.fq h2{font-size:clamp(28px,5.2vh,54px);margin:0}
+.fgrid{display:grid;grid-template-columns:repeat(4,auto);justify-content:center;align-items:center;
+ column-gap:clamp(12px,2.2vw,30px);row-gap:clamp(8px,1.9vh,22px);background:#080808;border:1px solid #1E1E1E;
+ border-radius:22px;padding:clamp(10px,2.2vh,24px) clamp(16px,2.8vw,40px);max-width:100%}
+.fgrid>span{transition:opacity .35s ease,transform .5s cubic-bezier(.2,.9,.3,1.35)}
+.fgrid .gi{font-size:clamp(32px,6vh,60px);text-align:center;line-height:1}
+.fgrid .fa{font-size:clamp(40px,9.4vh,96px);font-weight:700;text-align:center;line-height:1.04;white-space:nowrap}
+.fgrid .fe{font-size:clamp(30px,6.2vh,62px);color:var(--be);font-weight:700;text-align:center;line-height:1}
+.fgrid .fb{font-size:clamp(32px,6.8vh,68px);color:var(--acc);font-weight:700;text-align:left;white-space:nowrap;line-height:1.1}
+.fgrid .fh{opacity:0;transform:translateY(18px) scale(.7)}
+.fgrid.uses{row-gap:clamp(4px,.9vh,10px)}
+.fgrid.uses .fa{font-size:clamp(32px,6.6vh,68px)}
+.fgrid.uses .fb{font-size:clamp(26px,5vh,50px)}
+.fgrid.uses .gi{font-size:clamp(26px,4.6vh,46px)}
+/* 用法放在那一列的正下方（跨四欄），版面不會變寬 */
+.fu{display:none;grid-column:1/-1;justify-self:center;align-items:center;gap:clamp(6px,1vw,14px);white-space:nowrap;
+ margin-bottom:clamp(4px,1vh,12px);
+ background:#161206;border:2px solid #5E4B12;border-radius:16px;padding:clamp(4px,.8vh,10px) clamp(8px,1.2vw,16px)}
+.fgrid.uses .fu{display:flex;opacity:0;animation:useIn .6s cubic-bezier(.2,1.2,.3,1.2) forwards}
+.fu b{font-size:clamp(22px,4.4vh,44px);color:var(--gold);font-weight:700}
+.fv{display:inline-flex;align-items:flex-end;gap:.1em;font-size:clamp(24px,4.8vh,48px);line-height:1}
+.fv i{font-style:normal;display:inline-block;opacity:0;animation:uPop .5s cubic-bezier(.2,1.6,.4,1) forwards,uHop 1.6s ease-in-out infinite}
+.fv i:nth-child(1){animation-delay:.35s,1s}.fv i:nth-child(2){animation-delay:.55s,1.2s}
+.fv i:nth-child(3){animation-delay:.75s,1.4s}.fv i:nth-child(4){animation-delay:.95s,1.6s}
+.fv i.spin{animation:uPop .5s cubic-bezier(.2,1.6,.4,1) forwards,uSpin 2.4s linear infinite}
+/* 程度：一格一格長高的量表 */
+.fv .bars{display:inline-flex;align-items:flex-end;gap:3px;height:1em;margin:0 .15em}
+.fv .bars u{display:block;width:.2em;background:var(--ok);border-radius:3px;transform-origin:bottom;
+ transform:scaleY(0);animation:uBar 2.2s ease-in-out infinite}
+.fv .bars u:nth-child(1){height:30%}.fv .bars u:nth-child(2){height:55%;animation-delay:.2s}
+.fv .bars u:nth-child(3){height:80%;animation-delay:.4s}.fv .bars u:nth-child(4){height:100%;animation-delay:.6s}
+@keyframes useIn{from{opacity:0;transform:translateX(-24px) scale(.8)}to{opacity:1;transform:none}}
+@keyframes uPop{from{opacity:0;transform:scale(.2) translateY(20px)}to{opacity:1;transform:none}}
+@keyframes uHop{0%,100%{transform:none}50%{transform:translateY(-.22em)}}
+@keyframes uSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes uBar{0%{transform:scaleY(0)}45%,80%{transform:scaleY(1)}100%{transform:scaleY(0)}}
+.reduce .fgrid .fh{opacity:1;transform:none}
+.reduce .fgrid.uses .fu,.reduce .fv i{opacity:1;animation:none}
+.reduce .fv .bars u{transform:none;animation:none}
+.swapbtn.on{background:#2A2208;border-color:var(--gold);color:var(--gold)}
 
 /* ── 對話卡：中文放大、照英文的意思斷字（使用者指定）── */
 .pair{width:100%;display:flex;flex-direction:column;gap:clamp(8px,1.8vh,20px);
@@ -348,6 +447,8 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
  color:var(--fg);font-size:clamp(15px,2.4vh,23px);font-weight:700;
  padding:clamp(8px,1.4vh,14px) clamp(16px,2.4vw,30px)}
 .swapbtn:active{transform:scale(.96);border-color:var(--acc)}
+.swaprow{display:flex;gap:clamp(8px,1.4vw,16px);flex-wrap:wrap;justify-content:center}
+#puncGo{font-size:clamp(13px,2vh,19px);font-weight:400;color:var(--body)}
 .swaphint{font-size:clamp(13px,2.1vh,20px);color:var(--dim);text-align:center}
 .tk.moving{z-index:3}
 .tk.flash .en{box-shadow:0 0 0 3px rgba(255,255,255,.55)}
@@ -359,7 +460,13 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .sil{color:#8C8C8C}
 .ri{color:var(--ap)}
 .tk.lp .en{background:#F7A8C4;color:#3A0A1C;border-radius:10px;padding:0 .18em}
-.chip.lp{background:#F7A8C4;color:#3A0A1C}
+/* 2026-09-25 使用者指定：「她」的底色跟「誰」太接近 ➜ 改成很淡的粉紅色 */
+.chip.lp{background:#FFDCE8;color:#4A0E26}
+.chip.gr{background:#1E9E62;color:#fff}
+.chip.v{background:#7A4DFF;color:#fff}
+/* 底色上的不發音字母：淺灰會糊掉（are 的 e 在黃底上看不清楚），改成跟底色對比夠的半透明 */
+.chip.y .sil,.chip.lp .sil,.tk.y .en .sil,.tk.lp .en .sil,.key.lp .sil{color:rgba(0,0,0,.42)}
+.chip.b .sil,.chip.p .sil,.chip.r .sil,.chip.gr .sil,.chip.v .sil,.tk.b .en .sil,.tk.p .en .sil,.key.b .sil,.key.p .sil{color:rgba(255,255,255,.55)}
 .tk.blank .en{letter-spacing:.06em;color:var(--be)}
 
 /* ── 縮寫變身卡：i 躲起來、’ 站上去、兩個字黏在一起（使用者 2026-09-21 指定）── */
@@ -386,7 +493,10 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
  padding:clamp(5px,1vh,11px) clamp(9px,1.4vw,18px);white-space:nowrap}
 .moreq .ms:active{border-color:var(--acc)}
 .moreq .mq{font-size:clamp(24px,4.6vh,46px);font-weight:700;color:var(--be)}
-.moreq.on .mq{animation:eqp 1s cubic-bezier(.2,.9,.3,1.4) .25s}
+.moreq .mq{display:inline-block}
+.moreq .mq.go{animation:eqp 1s cubic-bezier(.2,.9,.3,1.4);text-shadow:0 0 24px rgba(57,217,138,.9)}
+.moreq .ms.big.spk,.moreq .ms.big{transform:scale(1.28);filter:brightness(1.4);border-color:var(--gold);
+ box-shadow:0 0 0 3px rgba(255,210,74,.6),0 0 34px rgba(255,210,74,.45)}
 
 /* ── he 問 ➜ He 答（藍底會自己飛下去）── */
 .echo{width:100%;max-width:880px;display:flex;flex-direction:column;gap:clamp(8px,1.7vh,18px)}
@@ -397,6 +507,8 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .reduce .erow{opacity:1;animation:none}
 .erow .earr{font-size:clamp(17px,2.8vh,30px);color:#44586A;flex:0 0 auto}
 .ebub{flex:1 1 0;min-width:0;text-align:center}
+/* 答句靠左：He’s／She’s、I’m 的開頭上下對齊（使用者 2026-09-25 指定） */
+.ebub.a{text-align:left}
 .ebub .et{display:block;font-size:clamp(20px,4vh,40px);font-weight:700;line-height:1.2;white-space:nowrap}
 .ebub .ez{display:block;font-size:clamp(14px,2.4vh,24px);color:var(--acc);margin-top:4px}
 .key{display:inline-block;border-radius:9px;padding:0 .16em}
@@ -494,12 +606,14 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .rvhud{display:flex;align-items:center;justify-content:space-between;gap:clamp(8px,1.6vw,20px);width:100%}
 .rvhud .k{font-size:clamp(10.5px,1.5vh,13px);color:#5C5C5C;letter-spacing:.12em}
 .rvhud .v{font-size:clamp(16px,2.7vh,26px);font-weight:700}
-.rvq{font-size:clamp(19px,3.4vh,34px);font-weight:700;text-align:center;line-height:1.35}
+.rvq{font-size:clamp(24px,4.6vh,46px);font-weight:700;text-align:center;line-height:1.3}
+.rvsim{font-size:clamp(14px,2.2vh,20px);color:var(--gold);border:1px solid #5A4A18;background:#1A1508;
+ border-radius:999px;padding:3px 14px;font-weight:700}
 .rvo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(7px,1.2vh,13px);width:100%}
 .rvo button{display:flex;align-items:center;gap:clamp(6px,1.1vw,13px);text-align:left;
  background:#0C0C0C;border:1px solid #262626;border-radius:15px;color:var(--fg);
- font-size:clamp(15px,2.5vh,25px);line-height:1.3;
- padding:clamp(9px,1.6vh,17px) clamp(11px,1.6vw,21px);min-height:clamp(48px,7.4vh,76px)}
+ font-size:clamp(20px,3.6vh,36px);font-weight:700;line-height:1.25;
+ padding:clamp(9px,1.6vh,17px) clamp(11px,1.6vw,21px);min-height:clamp(56px,9vh,92px)}
 .rvo button .sh{flex:0 0 auto;width:1.2em;text-align:center;font-size:.82em}
 .rvo button.ok{background:#0F3323;border-color:var(--ok)}
 .rvo button.bad{background:#3A1111;border-color:var(--no)}
@@ -611,12 +725,44 @@ function sayText(s){
   .replace(/[=\uFF1D\u2260\u279C\u2192\u21D2\u2026\uFF3F_\u3000]+/g,' ')
   .replace(/\s+/g,' ').trim();
 }
+/* 預先錄好的語音檔（有 window.AUD 才用）：英文先查表，查得到就播音檔，查不到才用瀏覽器語音
+   （使用者 2026-09-25 指定：美式英語自然正確的語調）。播放速度照語速六段。 */
+var AEL=null,APLAY=false;
+function akey(t){return sayText(t).toLowerCase()}
+function aEl(){if(!AEL){try{AEL=new Audio();AEL.preload='auto'}catch(e){AEL=null}}return AEL}
+function aPlay(it,t,a){
+ var el=aEl();if(!el)return false;
+ var mine=++SID;SBUSY=true;APLAY=true;SLAST=Date.now();
+ var ws=[],wm,wre=/\S+/g;while((wm=wre.exec(t)))ws.push(Math.max(1,wm[0].replace(/[^A-Za-z]/g,'').length));
+ var tot=ws.reduce(function(x,y){return x+y},0),ft=[],done=false;
+ var hl=function(k){if(it.hl)try{it.hl(k)}catch(e){}};
+ var fin=function(){if(done)return;done=true;ft.forEach(clearTimeout);APLAY=false;
+  if(it.hl)hl(-1);
+  if(mine!==SID)return;SID++;SBUSY=false;SLAST=Date.now();
+  if(it.done)try{it.done()}catch(e){}
+  setTimeout(pump,60)};
+ var began=false;
+ var begin=function(){if(began)return;began=true;
+  if(it.start)try{it.start()}catch(e){}
+  if(it.hl){var d=a[1]*1000/RATE,acc=0;
+   ws.forEach(function(n,k){ft.push(setTimeout(function(){if(mine===SID)hl(k)},acc));acc+=d*n/tot})}};
+ el.onplaying=begin;el.onended=fin;el.onerror=fin;
+ try{el.pause()}catch(e){}
+ el.src=(window.AUDDIR||'audio/')+a[0];
+ try{el.playbackRate=RATE;el.defaultPlaybackRate=RATE;el.preservesPitch=true;el.webkitPreservesPitch=true}catch(e){}
+ var pr;try{pr=el.play()}catch(e){fin();return true}
+ if(pr&&pr.catch)pr.catch(function(){fin()});
+ /* 最多等「音檔長度 ＋ 2 秒」，播放器沒有回報也不會卡住 */
+ ft.push(setTimeout(fin,a[1]*1000/RATE+2000));
+ return true;
+}
 /* 真正送出一句 */
 function pump(){
  if(SBUSY)return;
  var it=SQ.shift();if(!it)return;
  var t=sayText(it.t);
  if(!t){if(it.done)try{it.done()}catch(e){};setTimeout(pump,0);return}
+ if(it.l!=='zh'&&window.AUD){var au=AUD[akey(t)];if(au&&aPlay(it,t,au))return}
  var u;try{u=new SpeechSynthesisUtterance(t)}catch(e){if(it.done)try{it.done()}catch(e2){};return}
  if(it.l==='zh'){u.lang='zh-TW';if(VOXZH)u.voice=VOXZH;u.rate=RATE}
  else{u.lang='en-US';if(VOX)u.voice=VOX;u.rate=RATE}
@@ -661,21 +807,24 @@ function say(txt,lang,opt){
  if(!txt||!sayText(txt)){if(opt.done)opt.done();return}
  var item={t:txt,l:lang,done:opt.done,hl:opt.hl,start:opt.start};
  if(opt.keep){if(SQ.length>4)SQ.length=4;SQ.push(item);pump();return}
- SQ.length=0;SID++;SBUSY=false;
+ SQ.length=0;SID++;SBUSY=false;APLAY=false;
  if(window.HLCLR)try{HLCLR()}catch(e){}
+ try{if(AEL)AEL.pause()}catch(e){}
  try{speechSynthesis.cancel()}catch(e){}
  SQ.push(item);
  /* Chrome／Edge：cancel() 之後馬上 speak() 會被吃掉，等 90ms 再講 */
  setTimeout(pump,90);
 }
 function sayZh(t,opt){say(t,'zh',opt)}
-function sayStop(){SQ.length=0;SID++;SBUSY=false;if(window.HLCLR)try{HLCLR()}catch(e){}
+function sayStop(){SQ.length=0;SID++;SBUSY=false;APLAY=false;if(window.HLCLR)try{HLCLR()}catch(e){}
+ try{if(AEL)AEL.pause()}catch(e){}
  try{speechSynthesis.cancel()}catch(e){}}
 /* 看門狗：瀏覽器有時候不發 onend（或講到一半自己停住），卡住就救回來 */
 setInterval(function(){
  try{
   if(speechSynthesis.speaking&&!speechSynthesis.paused)speechSynthesis.resume();
   if(!SBUSY){if(SQ.length)pump();return}
+  if(APLAY)return;                    /* 播音檔的時候不歸看門狗管（音檔自己有逾時） */
   var idle=Date.now()-SLAST;
   if(!speechSynthesis.speaking&&!speechSynthesis.pending&&idle>900){SID++;SBUSY=false;pump()}
   else if(idle>15000){SID++;SBUSY=false;try{speechSynthesis.cancel()}catch(e){}pump()}
@@ -684,7 +833,10 @@ setInterval(function(){
 /* iOS 要先由一次點擊喚醒語音引擎 */
 var TTSWOKE=false;
 function wakeTTS(){if(TTSWOKE)return;TTSWOKE=true;
- try{var u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u);pickVoice()}catch(e){}}
+ try{var u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u);pickVoice()}catch(e){}
+ /* iPad：音檔也要先由一次點擊「解鎖」，之後才可以自己播 */
+ try{if(window.AUD){var el=aEl(),k0=Object.keys(AUD)[0];if(el&&k0){el.muted=true;el.src=(window.AUDDIR||'audio/')+AUD[k0][0];
+  var pr=el.play();var un=function(){try{el.pause()}catch(e){}el.muted=false};if(pr&&pr.then)pr.then(un,un);else un()}}}catch(e){}}
 document.addEventListener('touchstart',wakeTTS,{once:true,passive:true});
 document.addEventListener('mousedown',wakeTTS,{once:true});
 
@@ -695,7 +847,7 @@ function sOk(){}function sNo(){}function sTick(){}function sPop(){}function sWow
 
 
 /* 找出「哪裡錯」：兩句逐字比對，錯的字框紅色、改對的字框金色 */
-function mTok(s){var r=[],re=/[A-Za-z’']+|[^sA-Za-z’']/g,m;s=String(s);
+function mTok(s){var r=[],re=/[A-Za-z’']+|[^\sA-Za-z’']/g,m;s=String(s);
  while((m=re.exec(s)))r.push({t:m[0],s:m.index,e:m.index+m[0].length});return r}
 function mKey(t){return t.replace(/’/g,"'").toLowerCase()}
 function mDiff(a,b){ /* 回傳：a 裡面哪些字不在共同的部分、b 裡面哪些字不在共同的部分 */
@@ -716,48 +868,134 @@ function mPaint(s,T,keep,cls){ /* 把沒對上的字包起來，其他字照原�
 }
 function mEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 function mStrip(h){var d=document.createElement('div');d.innerHTML=String(h||'');return d.textContent||''}
-function mRows(o){
+function mPair(o){ /* 你選的（紅框）／正確答案（金框） */
  var pick=o.pick==null?null:mStrip(o.pick), ans=mStrip(o.ans), dp='', da='';
- if(pick!=null){var d=mDiff(pick,ans);dp=mPaint(pick,d.A,d.ia,'x');da=mPaint(ans,d.B,d.ib,'f')}
+ if(pick!=null&&pick!==''){var d=mDiff(pick,ans);dp=mPaint(pick,d.A,d.ia,'x');da=mPaint(ans,d.B,d.ib,'f')}
  else da=ap(mEsc(ans));
- var en=/[A-Za-z]/.test(ans);
- return (o.q?'<div class="mrow q"><span class="ml">📝 題目</span><span class="mv">'+ap(o.q)+'</span></div>':'')+
-  '<div class="mrow p"><span class="ml">❌ 你選的</span><span class="mv">'+
-    (pick==null?'⏰ 時間到，沒有作答':dp)+'</span></div>'+
-  '<div class="mrow a"><span class="ml">✅ 正確答案</span><span class="mv">'+da+'</span>'+
-    (en?'<button class="say" data-say="'+mEsc(ans).replace(/"/g,'&quot;')+'">🔊 聽</button>':'')+'</div>'+
-  (o.why?'<div class="mrow w"><span class="ml">💡 為什麼</span><span class="mv">'+ap(o.why)+'</span></div>':'');
+ return {p:(pick==null?'⏰ 時間到，沒有作答':(pick===''?'（沒有選）':dp)),a:da,en:/[A-Za-z]/.test(ans),ans:ans};
 }
-var MISSLOG=[], missT=null, missCB=null;
-/* 答錯：蓋一整頁，倒數 3 秒才消失，消失以後才呼叫 cb */
-function missShow(o,cb){
+var MISSLOG=[], missT=null, missCB=null, MS=null, MISSN=8;
+function mEl(){
  var m=document.getElementById('miss');
  if(!m){m=document.createElement('div');m.id='miss';document.body.appendChild(m);
-  m.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('.say'):null;
-   if(b)say(b.getAttribute('data-say'))})}
+  m.addEventListener('click',function(e){
+   var t=e.target,b=t.closest?t.closest('button'):null;if(!b)return;
+   if(b.classList.contains('say')){say(b.getAttribute('data-say'));return}
+   if(b.classList.contains('bon')){missBonus();return}
+   if(b.classList.contains('nxt')){missHide(true);return}
+   if(b.hasAttribute('data-ok'))missPick(b);
+  })}
+ return m;
+}
+/* 正確答案的英文自動唸 3 次（使用者 2026-09-25 指定），頁面關掉就停 */
+function mSay3(t){
+ if(!/[A-Za-z]/.test(t))return;
+ var k=0,my=MS;
+ var go=function(){if(MS!==my||!missOn()||k>=3)return;k++;
+  say(t,null,{keep:k>1?1:0,done:function(){setTimeout(go,650)}})};
+ setTimeout(go,700);
+}
+function mCount(n,fn){
+ if(missT){clearInterval(missT);missT=null}
+ var b=document.getElementById('mcdn');if(b)b.textContent=n;
+ missT=setInterval(function(){
+  n--;var c=document.getElementById('mcdn');
+  if(n>0&&c){c.textContent=n;c.classList.remove('tick');void c.offsetWidth;c.classList.add('tick');return}
+  clearInterval(missT);missT=null;fn();
+ },1000);
+}
+function mStrip4(cur){ /* 加分的秒懂說明：⭐ ➜ 👀 8 秒 ➜ 📝 類似題 ➜ ✅ ✕2 */
+ var st=['⭐ 加分','👀 再看 8 秒','📝 類似題','✅ 分數 ✕ 2'];
+ return '<div class="mbn'+(cur!=null?' cur':'')+'">'+st.map(function(x,k){
+  return (k?'<i>➜</i>':'')+'<span'+(cur===k?' class="now"':'')+'>'+x+'</span>'}).join('')+'</div>';
+}
+function mCan(){return !!(MS&&MS.o&&MS.o.gain&&((MS.o.sims&&MS.o.sims.length)||MS.o.sim0))}
+/* 錯題分析頁：reread ＝ 按了加分以後的「再看 8 秒」 */
+function mRead(reread){
+ var o=MS.o, p=mPair(o), m=mEl();
+ m.innerHTML='<div class="mbox">'+
+  '<div class="mhd'+(reread?' bn':'')+'">'+(reread?'👀 再仔細看一次':(o.pick==null?'⏰ 時間到':'❌ 答錯了'))+'</div>'+
+  (o.q?'<div class="mq">'+ap(o.q)+'</div>':'')+
+  '<div class="mcmp"><div class="mp"><span class="mi">❌</span><span class="mv">'+p.p+'</span></div>'+
+  '<div class="mar">⬇</div><div class="ma"><span class="mi">✅</span><span class="mv">'+p.a+'</span></div></div>'+
+  (o.why?'<div class="mw">💡 '+ap(o.why)+'</div>':'')+
+  (mCan()?mStrip4(reread?1:null):'')+
+  '<div class="mft" id="mft">'+(p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+
+   '<span class="mcd" id="mcdn">'+MISSN+'</span></div></div>';
+ m.scrollTop=0;m.classList.add('on');
+ mSay3(p.ans);
+ mCount(MISSN,function(){
+  if(reread){mQuiz();return}
+  var f=document.getElementById('mft');if(!f)return;
+  f.innerHTML=(p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+
+   (mCan()?'<button class="bon">⭐ 加分</button>':'')+'<button class="nxt">▶ 繼續</button>';
+ });
+}
+/* 答錯：蓋一整頁，倒數 8 秒，倒數完才看得到「⭐ 加分」「▶ 繼續」；按「▶ 繼續」才呼叫 cb
+   o：q 題目、pick 你選的、ans 正確答案、why 為什麼、
+      sims 類似題 [{q,o:[正解,...],h,say}]、pts 原題分數、gain(n) 加分題答對要把 n 分加進去 */
+function missShow(o,cb){
  var key=mStrip(o.q)+'|'+mStrip(o.ans);
  MISSLOG=MISSLOG.filter(function(x){return x.key!==key});
  MISSLOG.push({key:key,q:o.q,pick:o.pick,ans:o.ans,why:o.why});
- if(missT){clearInterval(missT);missT=null}
  missCB=cb||null;
- var n=3;
- m.innerHTML='<div class="mbox"><div class="mhd"><span class="mt">'+(o.pick==null?'⏰ 時間到':'❌ 答錯了')+'</span></div>'+
-  mRows(o)+'<div class="mcd">看清楚：錯在哪裡、正確答案是什麼 <b id="mcdn">3</b></div></div>';
- m.classList.add('on');
- var ans=mStrip(o.ans);if(/[A-Za-z]/.test(ans))setTimeout(function(){say(ans)},700);
- missT=setInterval(function(){
-  n--;var b=document.getElementById('mcdn');
-  if(n>0&&b){b.textContent=n;b.classList.remove('tick');void b.offsetWidth;b.classList.add('tick');return}
-  missHide(true);
- },1000);
+ MS={o:o};
+ mRead(false);
+}
+function missBonus(){if(!mCan())return;sayStop();mRead(true)}
+/* 加分題：字放大的類似題，選項重洗 */
+function mQuiz(){
+ var o=MS.o, s=(o.sims&&o.sims.length)?o.sims.shift():o.sim0;
+ if(!s){missHide(true);return}
+ MS.s=s;
+ var opts=shuf(s.o.map(function(x,n){return{x:x,n:n}}));
+ var m=mEl();
+ m.innerHTML='<div class="mbox"><div class="mhd bn">⭐ 加分題</div>'+mStrip4(2)+
+  '<div class="mbq">'+ap(s.q)+'</div>'+
+  (s.say?'<div class="mft"><button class="say" data-say="'+mEsc(s.say).replace(/"/g,'&quot;')+'">🔊 再聽一次</button></div>':'')+
+  '<div class="mbo'+(opts.length<3?' one':'')+'">'+opts.map(function(t,k){
+   return '<button data-ok="'+(t.n===0)+'" data-t="'+mEsc(t.x).replace(/"/g,'&quot;')+'" style="animation-delay:'+(0.15+k*0.1).toFixed(2)+'s">'+ap(t.x)+'</button>'}).join('')+'</div>'+
+  '<div class="mx2">答對 ＝ <b>'+o.pts+' ✕ 2</b></div></div>';
+ m.scrollTop=0;
+ if(s.say)setTimeout(function(){say(s.say)},450);
+}
+function missPick(b){
+ if(!MS||!MS.s||MS.done)return;
+ var ok=b.getAttribute('data-ok')==='true', o=MS.o, s=MS.s;
+ [].forEach.call(document.querySelectorAll('#miss .mbo button'),function(x){
+  if(x.getAttribute('data-ok')==='true')x.classList.add('ok');else if(x===b)x.classList.add('bad')});
+ if(ok){
+  MS.done=1;var g=o.pts*2;
+  setTimeout(function(){
+   if(!missOn())return;
+   try{o.gain(g)}catch(e){}
+   var m=mEl();
+   m.innerHTML='<div class="mbox"><div class="mhd ok">🎉 答對了！</div>'+mStrip4(3)+
+    '<div class="mgain">＋'+g+'</div><div class="mx2">'+o.pts+' <b>✕ 2</b> ＝ <b>'+g+'</b></div>'+
+    '<div class="mft"><button class="nxt">▶ 繼續</button></div></div>';
+   say(s.o[0]);
+  },650);
+  return;
+ }
+ /* 加分題也答錯：再給一次錯題分析，一樣可以再按 ⭐ 加分 */
+ setTimeout(function(){
+  if(!missOn())return;
+  var no={q:s.q,pick:b.getAttribute('data-t'),ans:s.o[0],why:s.h,pts:o.pts,gain:o.gain,
+   sims:o.sims,sim0:o.sim0||s};
+  var key=mStrip(no.q)+'|'+mStrip(no.ans);
+  MISSLOG=MISSLOG.filter(function(x){return x.key!==key});
+  MISSLOG.push({key:key,q:no.q,pick:no.pick,ans:no.ans,why:no.why});
+  MS={o:no};mRead(false);
+ },700);
 }
 function missHide(run){
  if(missT){clearInterval(missT);missT=null}
  var m=document.getElementById('miss');if(m)m.classList.remove('on');
+ MS=null;sayStop();
  var cb=missCB;missCB=null;if(run&&cb)cb();
 }
 function missOn(){var m=document.getElementById('miss');return !!(m&&m.classList.contains('on'))}
-/* 結束時的「答錯整理」：一題一張卡，全部再看一次 */
+/* 結束時的「答錯整理」：一題一張卡，正確答案粗體、綠色、放大 */
 function missAll(title,done){
  var m=document.getElementById('missAll');
  if(!m){m=document.createElement('div');m.id='missAll';document.body.appendChild(m);
@@ -767,16 +1005,32 @@ function missAll(title,done){
  if(!MISSLOG.length){if(done)done();return false}
  m._done=done||null;
  m.innerHTML='<div class="mbox"><h2>📌 '+(title||'答錯整理')+'</h2>'+
-  '<p class="lead">一共 <b style="color:var(--gold)">'+MISSLOG.length+'</b> 題。看紅框（錯在哪裡）和金框（改成什麼）。</p>'+
-  MISSLOG.map(function(x,k){return '<div class="mcard" style="animation-delay:'+(0.12+k*0.18).toFixed(2)+'s">'+
-   '<span class="mn">第 '+(k+1)+' 題</span>'+mRows(x)+'</div>'}).join('')+
+  '<p class="lead">一共 <b style="color:var(--gold)">'+MISSLOG.length+'</b> 題　<b style="color:var(--ok)">綠色粗體</b> ＝ 正確答案</p>'+
+  MISSLOG.map(function(x,k){var p=mPair(x);
+   return '<div class="mcard" style="animation-delay:'+(0.1+k*0.14).toFixed(2)+'s">'+
+   '<span class="mn">第 '+(k+1)+' 題</span>'+(x.q?'<div class="cq">📝 '+ap(x.q)+'</div>':'')+
+   '<div class="cp">❌ '+p.p+'</div><div class="ca">✅ <b>'+p.a+'</b></div>'+
+   (x.why?'<div class="cw">💡 '+ap(x.why)+'</div>':'')+
+   (p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+'</div>'}).join('')+
   '<div class="mbtns"><button id="mAllOk">✅ 我都弄懂了</button></div></div>';
  m.scrollTop=0;m.classList.add('on');
  return true;
 }
+/* 找類似題：同一題庫裡，英文字重疊最多、提示一樣的題目（不含自己）；回傳由像到不像排好的 */
+function simRank(me,list,txt,hint){
+ /* 英文字 ＋ 中文兩個字一組：觀念題（大多是中文）也找得到像的 */
+ var W=function(s){var o={};s=String(s).toLowerCase().replace(/[’']/g,"'");
+  s.replace(/[a-z']+/g,function(w){o[w]=1});
+  var z=s.replace(/[^一-鿿]/g,'');for(var i=0;i+1<z.length;i++)o[z.substr(i,2)]=1;return o};
+ var a=W(txt(me)),ha=hint?hint(me):'';
+ return list.filter(function(x){return x!==me}).map(function(x){
+  var b=W(txt(x)),n=0,t=0,k;for(k in a){t++;if(b[k])n++}for(k in b)if(!a[k])t++;
+  return {x:x,s:(t?n/t:0)+(ha&&hint(x)===ha?1:0)+Math.random()*.01}}).sort(function(p,q){return q.s-p.s})
+  .map(function(p){return p.x});
+}
 
 
-var CARDS=[{"type":"focus","eqRow":1,"title":"Who ＝ 問「人」","rows":[["Who","誰","❓"],["What","什麼","📦"],["How","怎麼樣","🤔"]],"scene":{"at":"🎒 教室","bg":"🏫","l":"👧","b":"Who’s he?","r":"🧑","rt":"❓","use":"想知道「是哪一個人」，就用 Who。"}},{"type":"sent","zh":"他是誰？","say":"Who's he?","tk":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"scene":{"at":"🏫 校門口","bg":"🏫","l":"👦","b":"Who’s he?","r":"👨","rt":"❓","use":"看到不認識的男生，問「他是誰？」"}},{"type":"morph","a":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"is","zh":"是","ic":"＝","ri":"i"}],"b":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"'s","zh":"是","ic":"＝","tight":1}],"say":"Who's","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"Who is","r":"🐇","rn":"說快一點","b2":"Who’s","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","a":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"is","zh":"是","ic":"＝","ri":"i"},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"b":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"note":"紅色的 ’ ＝ 被藏起來的 [i]。","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"Who is he?","r":"🐇","rn":"說快一點","b2":"Who’s he?","use":"意思一模一樣，只是說得比較快。"}},{"type":"sent","zh":"他是我的爸爸。","say":"He's my father.","slot":"he","tk":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"my","zh":"我的","ic":"🙋"},{"en":"father","zh":"爸爸","ic":"👨","slot":"he"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🏫 校門口","bg":"🏫","l":"👦","b":"He’s my father.","r":"👨","rt":"👋","use":"介紹身邊的男生：他是我爸爸。"}},{"type":"morph","a":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"is","zh":"是","ic":"＝","ri":"i"}],"b":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"'s","zh":"是","ic":"＝","tight":1}],"say":"He's","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"He is","r":"🐇","rn":"說快一點","b2":"He’s","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","a":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"is","zh":"是","ic":"＝","ri":"i"},{"en":"my","zh":"我的","ic":"🙋"},{"en":"father","zh":"爸爸","ic":"👨"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"my","zh":"我的","ic":"🙋"},{"en":"father","zh":"爸爸","ic":"👨"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"He is my father.","r":"🐇","rn":"說快一點","b2":"He’s my father.","use":"意思一模一樣，只是說得比較快。"}},{"type":"order","zhRow":[["他","👦","b"],["是","＝","y"],["誰","❓","r"],["？","","g"]],"enRow":[["Who","❓","r"],["'s","＝","y"],["he","👦","b"],["?","","g"]],"say":"Who's he?","scene":{"at":"🔁 中文 ➜ 英文","bg":"🔁","l":"🧒","ln":"中文","b":"他是誰？","bzh":1,"r":"🧒","rn":"英文","b2":"Who’s he?","use":"中文「誰」在最後，英文 Who 在最前面。"}},{"type":"sent","zh":"她是誰？","say":"Who's she?","tk":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"she","zh":"她","ic":"👧","hl":"lp"},{"en":"?","zh":"？","ic":"","tight":1}],"scene":{"at":"🛒 超市","bg":"🛒","l":"👦","b":"Who’s she?","r":"👩","rt":"❓","use":"看到不認識的女生，問「她是誰？」"}},{"type":"sent","zh":"她是我的媽媽。","say":"She's my mother.","slot":"she","tk":[{"en":"She","zh":"她","ic":"👧","hl":"lp"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"my","zh":"我的","ic":"🙋"},{"en":"mother","zh":"媽媽","ic":"👩","slot":"she"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🛒 超市","bg":"🛒","l":"👧","b":"She’s my mother.","r":"👩","rt":"👋","use":"介紹身邊的女生：她是我媽媽。"}},{"type":"morph","a":[{"en":"She","zh":"她","ic":"👧","hl":"lp"},{"en":"is","zh":"是","ic":"＝","ri":"i"}],"b":[{"en":"She","zh":"她","ic":"👧","hl":"lp"},{"en":"'s","zh":"是","ic":"＝","tight":1}],"say":"She's","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"She is","r":"🐇","rn":"說快一點","b2":"She’s","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","a":[{"en":"She","zh":"她","ic":"👧","hl":"lp"},{"en":"is","zh":"是","ic":"＝","ri":"i"},{"en":"my","zh":"我的","ic":"🙋"},{"en":"mother","zh":"媽媽","ic":"👩"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"She","zh":"她","ic":"👧","hl":"lp"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"my","zh":"我的","ic":"🙋"},{"en":"mother","zh":"媽媽","ic":"👩"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"She is my mother.","r":"🐇","rn":"說快一點","b2":"She’s my mother.","use":"意思一模一樣，只是說得比較快。"}},{"type":"order","zhRow":[["她","👧","lp"],["是","＝","y"],["誰","❓","r"],["？","","g"]],"enRow":[["Who","❓","r"],["'s","＝","y"],["she","👧","lp"],["?","","g"]],"say":"Who's she?","scene":{"at":"🔁 中文 ➜ 英文","bg":"🔁","l":"🧒","ln":"中文","b":"她是誰？","bzh":1,"r":"🧒","rn":"英文","b2":"Who’s she?","use":"中文「誰」在最後，英文 Who 在最前面。"}},{"type":"echo","rows":[{"q":"Who’s he?","qk":"he","qzh":"他 是 誰？","a":"He’s ______.","ak":"He","azh":"他 是 ______。","cls":"b"},{"q":"Who’s she?","qk":"she","qzh":"她 是 誰？","a":"She’s ______.","ak":"She","azh":"她 是 ______。","cls":"lp"}],"scene":{"at":"🎤 一問一答","bg":"💬","l":"👧","b":"Who’s he?","r":"👦","b2":"He’s my brother.","use":"問 he，就用 He 回答。"}},{"type":"pair","cls":"b","slot":"he","qic":"❓","aic":"👨","qtk":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"my","zh":"我的","ic":"🙋"},{"en":"father","zh":"爸爸","ic":"👨","slot":"he"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"他 是 誰？","azh":"他 是 我的 爸爸。","scene":{"at":"🏫 爸爸來接你","bg":"🏫","l":"👧","b":"Who’s he?","r":"👦","b2":"He’s my father.","use":"同學問，你回答。"}},{"type":"pair","cls":"lp","slot":"she","qic":"❓","aic":"👩","qtk":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"she","zh":"她","ic":"👧","hl":"lp"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"She","zh":"她","ic":"👧","hl":"lp"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"my","zh":"我的","ic":"🙋"},{"en":"mother","zh":"媽媽","ic":"👩","slot":"she"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"她 是 誰？","azh":"她 是 我的 媽媽。","scene":{"at":"🛒 媽媽在旁邊","bg":"🛒","l":"👦","b":"Who’s she?","r":"👧","b2":"She’s my mother.","use":"同學問，你回答。"}}], UNIT=1, SUB={"he":{"basic":[["brother","哥哥","🧒"],["grandfather","爺爺","👴"],["dad","爸爸","👨"],["grandpa","阿公","👴"]],"adv":[["uncle","叔叔","🧔"],["nephew","姪子","👦"],["cousin","表哥","🧑‍🤝‍🧑"]]},"she":{"basic":[["sister","姊姊","👧"],["grandmother","奶奶","👵"],["grandma","阿嬤","👵"],["mom","媽媽","👩"]],"adv":[["aunt","阿姨","👩‍🦱"],["cousin","表姊","🧑‍🤝‍🧑"],["niece","姪女","👧"]]},"job":{"basic":[["student","學生","🧑‍🎓"],["cook","廚師","👨‍🍳"],["farmer","農夫","👨‍🌾"],["teacher","老師","👩‍🏫"],["nurse","護理師","👩‍⚕️"],["doctor","醫生","👨‍⚕️"]],"adv":[]}}, RVG=[{"t":"第 1～4 張","q":[{"q":"看到 Who，答案一定是什麼？","o":["人 👦👧","東西 📦","天氣 🌤","地方 🏫"],"h":"Who ＝ 問「人」。"},{"q":"Who’s he? 等於下面哪一句？","o":["Who is he?","Who are he?","Who he is?","Who am he?"],"h":"’ 就是被藏起來的 i：Who is ➜ Who’s。"},{"q":"Who’s he? 的中文是？","o":["他是誰？","誰是他？","他好嗎？","他在哪裡？"],"h":"中文問「他是誰？」，英文才是 Who 排最前面。"},{"q":"Who’s 的紅色 ’ 藏起來的是哪一個字母？","o":["i","o","h","e"],"h":"is 的 i 被 ’ 藏起來了。"},{"q":"Who 的 W 為什麼是淺灰色？","o":["不發音","要唸很大聲","因為是大寫","唸成 wu"],"h":"Who 的 w 不發音，整個字唸 /huː/。"}]},{"t":"第 5～8 張","q":[{"q":"He is my father. 縮寫成哪一句？","o":["He’s my father.","Hes my father.","He’is my father.","His my father."],"h":"is 的 i 換成 ’，黏在 He 後面。"},{"q":"「他是誰？」的英文，哪一個字排最前面？","o":["Who","He","is","my"],"h":"中文「誰」在最後，英文 Who 要跑到最前面。"},{"q":"Who’s he? 要怎麼回答？","o":["He’s my father.","She’s my mother.","Yes, he is.","Who is he?"],"h":"問 he 就要答 He。"},{"q":"Who’s 裡面的 s 要唸什麼音？","o":["/z/","/s/","/es/","不發音"],"h":"Who’s 唸 /huːz/，s 唸 /z/。"}]},{"t":"第 9～12 張","q":[{"q":"「她是我的媽媽。」的英文是？","o":["She’s my mother.","He’s my mother.","She’s my father.","My mother she is."],"h":"媽媽是女生，主詞用 She。"},{"q":"She is my mother. 縮寫成哪一句？","o":["She’s my mother.","Shes my mother.","She’is my mother.","She my mother."],"h":"She is ➜ She’s，i 換成 ’。"},{"q":"問女生要用哪一句？","o":["Who’s she?","Who’s he?","Who she is?","She’s who?"],"h":"she ＝ 她，問女生用 Who’s she?。"},{"q":"Who’s she? 的中文是？","o":["她是誰？","誰是她？","她是我的媽媽。","她好嗎？"],"h":"英文問句 Who 在最前面，中文「誰」在最後。"}]},{"t":"第 13～16 張","q":[{"q":"Who’s he? 的答句要用哪一個字開頭？","o":["He","She","Who","Yes"],"h":"問 he 就答 He；問 she 就答 She。"},{"q":"Who’s she? 要怎麼回答？","o":["She’s my sister.","He’s my brother.","Yes, she is.","Who is she?"],"h":"問 she 就答 She。"},{"q":"He’s my grandfather. 的中文是？","o":["他是我的爺爺。","她是我的奶奶。","他是我的哥哥。","他是我的叔叔。"],"h":"grandfather ＝ 爺爺 👴。"},{"q":"問 he 答 He，那問 she 要答什麼？","o":["She","He","It","Who"],"h":"問誰就答誰，主詞要對得起來。"}]}];
+var CARDS=[{"type":"focus","eqRow":1,"title":"Who？What？How？","rows":[["Who","誰","❓",{"u":"問「人」","v":"<i>👦</i><i>👧</i><i>👵</i>"}],["What","什麼","📦",{"u":"問「東西」、「事情」","v":"<i class=\"spin\">📦</i><i>🍎</i><i>🎉</i>"}],["How","怎麼樣","🤔",{"u":"問「程度」、「方式」","v":"<span class=\"bars\"><u></u><u></u><u></u><u></u></span><i>🚲</i><i>🚌</i>"}]],"scene":{"at":"🎒 教室","bg":"🏫","l":"👧","b":"Who’s he?","r":"🧑","rt":"❓","use":"想知道「是哪一個人」，就用 Who。"}},{"type":"sent","zh":"他是誰？","say":"Who's he?","tk":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"scene":{"at":"🏫 校門口","bg":"🏫","l":"👦","b":"Who’s he?","r":"👨","rt":"❓","use":"看到不認識的男生，問「他是誰？」"}},{"type":"morph","a":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"is","zh":"是","ic":"＝","ri":"i"}],"b":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"'s","zh":"是","ic":"＝","tight":1}],"say":"Who's","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"Who is","r":"🐇","rn":"說快一點","b2":"Who’s","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","a":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"is","zh":"是","ic":"＝","ri":"i"},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"b":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"note":"紅色的 ’ ＝ 被藏起來的 [i]。","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"Who is he?","r":"🐇","rn":"說快一點","b2":"Who’s he?","use":"意思一模一樣，只是說得比較快。"}},{"type":"sent","zh":"他是我的爸爸。","say":"He's my father.","slot":"he","tk":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"my","zh":"我的","ic":"🙋"},{"en":"father","zh":"爸爸","ic":"👨","slot":"he"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🏫 校門口","bg":"🏫","l":"👦","b":"He’s my father.","r":"👨","rt":"👋","use":"介紹身邊的男生：他是我爸爸。"}},{"type":"morph","a":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"is","zh":"是","ic":"＝","ri":"i"}],"b":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"'s","zh":"是","ic":"＝","tight":1}],"say":"He's","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"He is","r":"🐇","rn":"說快一點","b2":"He’s","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","a":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"is","zh":"是","ic":"＝","ri":"i"},{"en":"my","zh":"我的","ic":"🙋"},{"en":"father","zh":"爸爸","ic":"👨"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"my","zh":"我的","ic":"🙋"},{"en":"father","zh":"爸爸","ic":"👨"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"He is my father.","r":"🐇","rn":"說快一點","b2":"He’s my father.","use":"意思一模一樣，只是說得比較快。"}},{"type":"order","zhRow":[["他","👦","b"],["是","＝","y"],["誰","❓","r"],["？","","g"]],"enRow":[["Who","❓","r"],["'s","＝","y"],["he","👦","b"],["?","","g"]],"say":"Who's he?","scene":{"at":"🔁 中文 ➜ 英文","bg":"🔁","l":"🧒","ln":"中文","b":"他是誰？","bzh":1,"r":"🧒","rn":"英文","b2":"Who’s he?","use":"中文「誰」在最後，英文 Who 在最前面。"}},{"type":"sent","zh":"她是誰？","say":"Who's she?","tk":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"she","zh":"她","ic":"👧","hl":"lp"},{"en":"?","zh":"？","ic":"","tight":1}],"scene":{"at":"🛒 超市","bg":"🛒","l":"👦","b":"Who’s she?","r":"👩","rt":"❓","use":"看到不認識的女生，問「她是誰？」"}},{"type":"sent","zh":"她是我的媽媽。","say":"She's my mother.","slot":"she","tk":[{"en":"She","zh":"她","ic":"👧","hl":"lp"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"my","zh":"我的","ic":"🙋"},{"en":"mother","zh":"媽媽","ic":"👩","slot":"she"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🛒 超市","bg":"🛒","l":"👧","b":"She’s my mother.","r":"👩","rt":"👋","use":"介紹身邊的女生：她是我媽媽。"}},{"type":"morph","a":[{"en":"She","zh":"她","ic":"👧","hl":"lp"},{"en":"is","zh":"是","ic":"＝","ri":"i"}],"b":[{"en":"She","zh":"她","ic":"👧","hl":"lp"},{"en":"'s","zh":"是","ic":"＝","tight":1}],"say":"She's","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"She is","r":"🐇","rn":"說快一點","b2":"She’s","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","a":[{"en":"She","zh":"她","ic":"👧","hl":"lp"},{"en":"is","zh":"是","ic":"＝","ri":"i"},{"en":"my","zh":"我的","ic":"🙋"},{"en":"mother","zh":"媽媽","ic":"👩"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"She","zh":"她","ic":"👧","hl":"lp"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"my","zh":"我的","ic":"🙋"},{"en":"mother","zh":"媽媽","ic":"👩"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"She is my mother.","r":"🐇","rn":"說快一點","b2":"She’s my mother.","use":"意思一模一樣，只是說得比較快。"}},{"type":"order","zhRow":[["她","👧","lp"],["是","＝","y"],["誰","❓","r"],["？","","g"]],"enRow":[["Who","❓","r"],["'s","＝","y"],["she","👧","lp"],["?","","g"]],"say":"Who's she?","scene":{"at":"🔁 中文 ➜ 英文","bg":"🔁","l":"🧒","ln":"中文","b":"她是誰？","bzh":1,"r":"🧒","rn":"英文","b2":"Who’s she?","use":"中文「誰」在最後，英文 Who 在最前面。"}},{"type":"echo","rows":[{"q":"Who’s he?","qk":"he","qzh":"他 是 誰？","a":"He’s ______.","ak":"He","azh":"他 是 ______。","cls":"b"},{"q":"Who’s she?","qk":"she","qzh":"她 是 誰？","a":"She’s ______.","ak":"She","azh":"她 是 ______。","cls":"lp"}],"scene":{"at":"🎤 一問一答","bg":"💬","l":"👧","b":"Who’s he?","r":"👦","b2":"He’s my brother.","use":"問 he，就用 He 回答。"}},{"type":"pair","cls":"b","slot":"he","qic":"❓","aic":"👨","qtk":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"he","zh":"他","ic":"👦","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"He","zh":"他","ic":"👦","hl":"b"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"my","zh":"我的","ic":"🙋"},{"en":"father","zh":"爸爸","ic":"👨","slot":"he"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"他 是 誰？","azh":"他 是 我的 爸爸。","scene":{"at":"🏫 爸爸來接你","bg":"🏫","l":"👧","b":"Who’s he?","r":"👦","b2":"He’s my father.","use":"同學問，你回答。"}},{"type":"pair","cls":"lp","slot":"she","qic":"❓","aic":"👩","qtk":[{"en":"Who","zh":"誰","ic":"❓"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"she","zh":"她","ic":"👧","hl":"lp"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"She","zh":"她","ic":"👧","hl":"lp"},{"en":"'s","zh":"是","ic":"＝","tight":1},{"en":"my","zh":"我的","ic":"🙋"},{"en":"mother","zh":"媽媽","ic":"👩","slot":"she"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"她 是 誰？","azh":"她 是 我的 媽媽。","scene":{"at":"🛒 媽媽在旁邊","bg":"🛒","l":"👦","b":"Who’s she?","r":"👧","b2":"She’s my mother.","use":"同學問，你回答。"}}], UNIT=1, SUB={"he":{"basic":[["brother","哥哥","🧒"],["grandfather","爺爺","👴"],["dad","爸爸","👨"],["grandpa","爺爺","👴"]],"adv":[["uncle","叔叔","🧔"],["nephew","姪子","👦"],["cousin","表哥","🧑‍🤝‍🧑"]]},"she":{"basic":[["sister","姊姊","👧"],["grandmother","奶奶","👵"],["grandma","奶奶","👵"],["mom","媽媽","👩"]],"adv":[["aunt","阿姨","👩‍🦱"],["cousin","表姊","🧑‍🤝‍🧑"],["niece","姪女","👧"]]},"job":{"basic":[["student","學生","🧑‍🎓"],["cook","廚師","👨‍🍳"],["farmer","農夫","👨‍🌾"],["teacher","老師","👩‍🏫"],["nurse","護理師","👩‍⚕️"],["doctor","醫生","👨‍⚕️"]],"adv":[]}}, RVG=[{"t":"第 1～4 張","q":[{"q":"看到 Who，答案一定是什麼？","o":["人 👦👧","東西 📦","天氣 🌤","地方 🏫"],"h":"Who ＝ 問「人」。"},{"q":"Who’s he? 等於下面哪一句？","o":["Who is he?","Who are he?","Who he is?","Who am he?"],"h":"’ 就是被藏起來的 i：Who is ➜ Who’s。"},{"q":"Who’s he? 的中文是？","o":["他是誰？","誰是他？","他好嗎？","他在哪裡？"],"h":"中文問「他是誰？」，英文才是 Who 排最前面。"},{"q":"Who’s 的紅色 ’ 藏起來的是哪一個字母？","o":["i","o","h","e"],"h":"is 的 i 被 ’ 藏起來了。"},{"q":"Who 的 W 為什麼是淺灰色？","o":["不發音","要唸很大聲","因為是大寫","唸成 wu"],"h":"Who 的 w 不發音，整個字唸 /huː/。"}]},{"t":"第 5～8 張","q":[{"q":"He is my father. 縮寫成哪一句？","o":["He’s my father.","Hes my father.","He’is my father.","His my father."],"h":"is 的 i 換成 ’，黏在 He 後面。"},{"q":"「他是誰？」的英文，哪一個字排最前面？","o":["Who","He","is","my"],"h":"中文「誰」在最後，英文 Who 要跑到最前面。"},{"q":"Who’s he? 要怎麼回答？","o":["He’s my father.","She’s my mother.","Yes, he is.","Who is he?"],"h":"問 he 就要答 He。"},{"q":"Who’s 裡面的 s 要唸什麼音？","o":["/z/","/s/","/es/","不發音"],"h":"Who’s 唸 /huːz/，s 唸 /z/。"}]},{"t":"第 9～12 張","q":[{"q":"「她是我的媽媽。」的英文是？","o":["She’s my mother.","He’s my mother.","She’s my father.","My mother she is."],"h":"媽媽是女生，主詞用 She。"},{"q":"She is my mother. 縮寫成哪一句？","o":["She’s my mother.","Shes my mother.","She’is my mother.","She my mother."],"h":"She is ➜ She’s，i 換成 ’。"},{"q":"問女生要用哪一句？","o":["Who’s she?","Who’s he?","Who she is?","She’s who?"],"h":"she ＝ 她，問女生用 Who’s she?。"},{"q":"Who’s she? 的中文是？","o":["她是誰？","誰是她？","她是我的媽媽。","她好嗎？"],"h":"英文問句 Who 在最前面，中文「誰」在最後。"}]},{"t":"第 13～16 張","q":[{"q":"Who’s he? 的答句要用哪一個字開頭？","o":["He","She","Who","Yes"],"h":"問 he 就答 He；問 she 就答 She。"},{"q":"Who’s she? 要怎麼回答？","o":["She’s my sister.","He’s my brother.","Yes, she is.","Who is she?"],"h":"問 she 就答 She。"},{"q":"He’s my grandfather. 的中文是？","o":["他是我的爺爺。","她是我的奶奶。","他是我的哥哥。","他是我的叔叔。"],"h":"grandfather ＝ 爺爺 👴。"},{"q":"問 he 答 He，那問 she 要答什麼？","o":["She","He","It","Who"],"h":"問誰就答誰，主詞要對得起來。"}]}];
 var i=0, show={en:true,zh:true,ic:true,full:true}, reveal='word', step=0, playing=0;
 var scenes=false, zhSay='zh';   /* zhSay：點中文要唸中文還是唸對應的英文 */
 var MOR=0, morT=[], demoT=null, demoN=0;
@@ -813,7 +1067,8 @@ function morphEn(en,ri){
 /* ---------- 畫一個字（英文／中文／圖示三層）---------- */
 /* 's 的發音：唸「前一個字＋'s」，學生聽到的就是 /z/（Who's → /huːz/） */
 function tkHTML(t,idx,arr){
-  var cls='tk'+(t.tight?' tight':'')+(t.hl?' '+t.hl:'')+(t.blank?' blank':'');
+  var cls='tk'+(t.tight?' tight':'')+(t.hl?' '+t.hl:'')+(t.blank?' blank':'')+
+    (/^[’']s$/.test(t.en)?' ctr':'');
   var sy=t.say||t.en;
   if(/^[\u2019']s$/.test(t.en)&&arr&&idx>0&&arr[idx-1])sy=arr[idx-1].en+"'s";
   var enh=(MOR&&t.ri)?morphEn(t.en,t.ri):enHTML(t.en,t.ri);
@@ -906,7 +1161,7 @@ function subsHTML(kind){
     if(!list.length)return '';
     return '<div class="subrow"><span class="lbl">'+lbl+'</span>'+list.map(function(w){
       return '<button class="sub '+cls+'" data-w="'+w[0]+'" data-z="'+w[1]+'" data-ic="'+w[2]+'">'+
-       w[2]+' '+w[0]+' <em>'+w[1]+'</em></button>'}).join('')+'</div>';
+       w[2]+' '+w[0]+(w[1]!==w[0]?' <em>'+w[1]+'</em>':'')+'</button>'}).join('')+'</div>';
   };
   return '<div class="subs">'+row(s.basic,'基礎','')+row(s.adv,'進階','adv')+'</div>';
 }
@@ -930,10 +1185,13 @@ function draw(dir){
   } else if(c.type==='eq'){
     kind='縮寫';
     /* 兩句都要完整聽得到，而且要看得出「這兩句是同一句」（使用者 2026-09-21 指定） */
-    h='<div class="eq">'+
+    /* c.c ＝ 第三句（使用者 2026-09-25 指定：My name is Ken. ＝ I am Ken. ＝ I’m Ken.）；
+       c.left ＝ 三句靠左對齊，開頭的 I 上下對齊 */
+    h='<div class="eq'+(c.left?' left':'')+'">'+
       '<div class="eqrow a" data-say="'+esc(plain(c.a))+'">'+lineHTML(c.a)+'</div>'+
       '<div class="eqmark">＝</div>'+
       '<div class="eqrow b" data-say="'+esc(plain(c.b))+'">'+lineHTML(c.b)+'</div>'+
+      (c.c?'<div class="eqmark">＝</div><div class="eqrow c" data-say="'+esc(plain(c.c))+'">'+lineHTML(c.c)+'</div>':'')+
       '<button class="swapbtn" id="eqGo">🔁 再聽一次</button></div>'+
       fullHTML(c.zh,plain(c.b))+noteHTML(c.note);
   } else if(c.type==='morph'){
@@ -976,6 +1234,20 @@ function draw(dir){
         c.enRow.map(function(x,n){return chip(x,n,c.enRow,0,'ce')}).join('')+
       '</div><button class="swapbtn" id="ordGo">🔁 再演一次</button>'+
       '</div>'+noteHTML(c.note);
+  } else if(c.type==='focus'&&c.eqRow){
+    kind='秒懂重點';
+    /* 2026-09-25 使用者指定：①一次出現一個英文字，英文出來以後才出現它的中文
+       ② 英文、＝、中文三欄上下對齊（同一個 grid）③「💡 問什麼？」按了才用動畫演出用法 ④ 字放大 */
+    var hasU=c.rows.some(function(r){return r[3]});
+    h='<div class="focus fq"><h2>'+ap(c.title)+'</h2><div class="fgrid'+(hasU?' hasu':'')+'">'+c.rows.map(function(r,n){
+      return '<span class="gi ic fh" data-r="'+n+'" data-p="0">'+r[2]+'</span>'+
+        '<span class="fa en fh" data-r="'+n+'" data-p="0" data-w="'+esc(spk(r[0]))+'" data-say="'+esc(spk(r[0]))+'">'+enHTML(r[0])+'</span>'+
+        '<span class="fe fh" data-r="'+n+'" data-p="1">＝</span>'+
+        '<span class="fb zh fh" data-r="'+n+'" data-p="1" data-zh="'+esc(r[1])+'" data-en="'+esc(spk(r[0]))+'">'+ap(r[1])+'</span>'+
+        (hasU?'<span class="fu" data-r="'+n+'">'+(r[3]?'<b data-zh="'+esc(r[3].u.replace(/[「」]/g,''))+'" data-en="'+esc(spk(r[0]))+'">'+r[3].u+'</b><span class="fv">'+(r[3].v||'')+'</span>':'')+'</span>':'');
+    }).join('')+'</div>'+
+    (hasU?'<button class="swapbtn" id="useGo">💡 '+(c.useBtn||'問什麼？')+'</button>':'')+
+    '</div>'+noteHTML(c.note);
   } else if(c.type==='focus'){
     kind='秒懂重點';
     h='<div class="focus"><h2>'+ap(c.title)+'</h2>'+c.rows.map(function(r,n){
@@ -1011,7 +1283,8 @@ function draw(dir){
     c._cur=c._cur||'st';
     h='<div class="swapbox">'+lineHTML(c[c._cur])+
       fullHTML(c._cur==='st'?c.stzh:c.quzh,plain(c[c._cur]))+
-      '<button class="swapbtn" id="swapGo">🔄 '+(c._cur==='st'?'變成問句':'變成直述句')+'</button>'+
+      '<span class="swaprow"><button class="swapbtn" id="swapGo">🔄 '+(c._cur==='st'?'變成問句':'變成直述句')+'</button>'+
+      '<button class="swapbtn" id="puncGo">'+puncLbl()+'</button></span>'+
       (c.note?'<div class="swaphint">'+mk(c.note)+'</div>':'')+'</div>';
     subs=c.slot?subsHTML(c.slot):'';
   }
@@ -1023,6 +1296,7 @@ function draw(dir){
   fit();
   markSubs();
   if(c.type==='order')playOrder();
+  if(c.type==='focus'&&c.eqRow)playFocus();
   if(c.type==='morph')playMorph();
   if(c.type==='eq')playEq();
   if(c.type==='echo')playEcho();
@@ -1085,29 +1359,85 @@ function sayPair(el){
   sayZh(el.getAttribute('data-zh'));
 }
 
+/* ---------- 秒懂重點（三欄對齊）：一次一個英文字，英文出來、唸完，才出現 ＝ 和中文 ---------- */
+function playFocus(){
+  var myI=i, g=$('.fgrid',card);if(!g)return;
+  var cells=$$('[data-p]',g);
+  if(document.body.classList.contains('reduce')){cells.forEach(function(x){x.classList.remove('fh')});return}
+  cells.forEach(function(x){x.classList.add('fh')});
+  var N=$$('.fa',g).length, r=0;
+  var show=function(x){x.classList.remove('fh')};
+  function step(){
+    if(i!==myI||r>=N)return;
+    var p0=$$('[data-r="'+r+'"][data-p="0"]',g), p1=$$('[data-r="'+r+'"][data-p="1"]',g), en=$('.fa[data-r="'+r+'"]',g);
+    p0.forEach(show);
+    var done=0, nx=function(){if(done)return;done=1;if(i!==myI)return;
+      morT.push(setTimeout(function(){if(i!==myI)return;p1.forEach(show);r++;morT.push(setTimeout(step,850))},300))};
+    if(en)sayOne(en,en.getAttribute('data-say'),{keep:1,done:nx});
+    morT.push(setTimeout(nx,2600));
+  }
+  morT.push(setTimeout(step,420));
+}
+/* 💡 問什麼？：按了才出現用法，用法會用動畫演出來（使用者 2026-09-25 指定） */
+function useToggle(){
+  var g=$('.fgrid',card);if(!g)return;
+  var on=!g.classList.contains('uses');
+  $$('[data-p]',g).forEach(function(x){x.classList.remove('fh')});
+  g.classList.toggle('uses',on);
+  var b=$('#useGo');if(b)b.classList.toggle('on',on);
+  if(on)$$('.fu',g).forEach(function(u,n){u.style.animationDelay=(n*0.55).toFixed(2)+'s';
+    $$('.fv i',u).forEach(function(x,k){x.style.animationDelay=(n*0.55+0.35+k*0.2).toFixed(2)+'s,'+(n*0.55+1+k*0.2).toFixed(2)+'s'})});
+  fit();
+}
+
 /* ---------- 語序卡：中文的字飛到英文的位置 ---------- */
 function playOrder(){
-  if(document.body.classList.contains('reduce'))return;
   var grid=$('.ordgrid',card);
   if(!grid)return;
-  var k=parseFloat(card.getAttribute('data-k')||'1')||1;
-  var zc=$$('.chip.cz',grid), ec=$$('.chip.ce',grid), used={};
-  ec.forEach(function(c){
-    var col=c.getAttribute('data-c'), src=null;
-    for(var j=0;j<zc.length;j++){if(!used[j]&&zc[j].getAttribute('data-c')===col){src=zc[j];used[j]=1;break}}
-    if(!src)return;
-    var a=src.getBoundingClientRect(), b=c.getBoundingClientRect();
-    c.style.transition='none';
-    c.style.transform='translate('+((a.left-b.left)/k)+'px,'+((a.top-b.top)/k)+'px)';
-    c.style.opacity='.3';
-  });
-  requestAnimationFrame(function(){requestAnimationFrame(function(){
-    ec.forEach(function(c,n){
-      var d=(n*0.13).toFixed(2)+'s';
-      c.style.transition='transform .78s cubic-bezier(.3,.75,.25,1) '+d+',opacity .4s '+d;
+  var myI=i;
+  var zc=$$('.chip.cz',grid), ec=$$('.chip.ce',grid);
+  morT.forEach(function(t){clearTimeout(t)});morT=[];
+  if(document.body.classList.contains('reduce')){zc.concat(ec).forEach(function(x){x.classList.remove('zin');x.style.opacity=''});return}
+  /* 2026-09-25 使用者指定：先一個字一個字跳出中文，再一個字一個字跳出英文（英文從它的中文飛過去），
+     最後整句英文唸一次 —— 學生看得到「同一個顏色 ＝ 同一個意思」 */
+  zc.forEach(function(x){x.classList.add('zin')});
+  ec.forEach(function(x){x.style.transition='none';x.style.opacity='0';x.style.transform=''});
+  var k=0;
+  function zStep(){
+    if(i!==myI)return;
+    if(k>=zc.length){k=0;morT.push(setTimeout(eStep,500));return}
+    var z=zc[k++];z.classList.remove('zin');
+    var t=z.getAttribute('data-say')||'';
+    if(/[一-鿿]/.test(t)){var d=0,nx=function(){if(d)return;d=1;morT.push(setTimeout(zStep,180))};
+      sayZh(t,{keep:1,done:nx});morT.push(setTimeout(nx,1500))}
+    else morT.push(setTimeout(zStep,420));
+  }
+  function eStep(){
+    if(i!==myI)return;
+    if(k>=ec.length){morT.push(setTimeout(function(){if(i===myI)sayEls(ec,{keep:1})},600));return}
+    var c=ec[k++], col=c.getAttribute('data-c'), src=null, used=0;
+    for(var j=0;j<zc.length;j++)if(zc[j].getAttribute('data-c')===col){src=zc[j];break}
+    var kk=parseFloat(card.getAttribute('data-k')||'1')||1;
+    if(src){var a=src.getBoundingClientRect(), b=c.getBoundingClientRect();
+      c.style.transition='none';c.style.transform='translate('+((a.left-b.left)/kk)+'px,'+((a.top-b.top)/kk)+'px) scale(.8)';}
+    c.style.opacity='.35';
+    void c.offsetWidth;
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      c.style.transition='transform .7s cubic-bezier(.3,.75,.25,1),opacity .35s';
       c.style.transform='';c.style.opacity='';
-    });
-  })});
+    })});
+    lnk(col,900);
+    var w=c.getAttribute('data-say')||'', d=0, nx=function(){if(d)return;d=1;morT.push(setTimeout(eStep,260))};
+    if(/[A-Za-z]/.test(w)){morT.push(setTimeout(function(){if(i!==myI)return;sayOne(c,w,{keep:1,done:nx})},420));morT.push(setTimeout(nx,2400))}
+    else morT.push(setTimeout(nx,760));
+  }
+  morT.push(setTimeout(zStep,350));
+}
+/* 中英連動：同一個顏色的中文和英文，一起放大變亮 */
+function lnk(col,ms){
+  $$('.ordgrid .chip',card).forEach(function(x){x.classList.toggle('lnk',x.getAttribute('data-c')===col)});
+  if(lnk.t)clearTimeout(lnk.t);
+  lnk.t=setTimeout(function(){$$('.ordgrid .chip.lnk').forEach(function(x){x.classList.remove('lnk')})},ms||1300);
 }
 
 /* ---------- 縮寫變身卡（使用者 2026-09-21 指定的五拍）----------
@@ -1150,10 +1480,24 @@ function playMorph(){
     if(i!==myI)return;
     if(eq)eq.classList.add('on');
     fit();
-    var ms=$$('.ms',eq||card);
-    if(ms.length===2){sayOne(ms[0],two,{keep:1});sayOne(ms[1],one,{keep:1})}
+    var ms=$$('.ms',eq||card), mq=$('.mq',eq||card);
+    /* 2026-09-25 使用者指定：Who is 唸完，＝ 才放大變亮；＝ 亮完，才唸 Who’s，唸的同時 Who’s 放大變亮 */
+    if(ms.length===2){
+      sayThen(ms[0],two,4500,function(){
+        if(mq){mq.classList.remove('go');void mq.offsetWidth;mq.classList.add('go')}
+        morT.push(setTimeout(function(){if(i!==myI)return;
+          ms[1].classList.add('big');sayThen(ms[1],one,4500,function(){ms[1].classList.remove('big')})},1050));
+      });
+    }
     else{say(two,null,{keep:1});say(one,null,{keep:1})}
   },4200));
+}
+/* 唸一個東西（唸的時候它亮），唸完（或最多等 max 毫秒）才做下一件事；換卡了就不做 */
+function sayThen(el,txt,max,fn){
+  var myI=i, done=0;
+  var run=function(){if(done)return;done=1;if(i!==myI)return;fn()};
+  sayOne(el,txt,{keep:1,done:run});
+  morT.push(setTimeout(run,max));
 }
 
 /* ---------- 等式卡：一句一句亮起來、一句一句唸完，最後兩句一起亮 ＋ 等號放大 ----------
@@ -1167,20 +1511,22 @@ function after(els,max,fn){
   morT.push(setTimeout(run,max));
 }
 function playEq(){
-  var c=CARDS[i];
-  var ra=$('.eqrow.a',card), rb=$('.eqrow.b',card), mk=$('.eqmark',card);
-  if(!ra||!rb)return;
+  var rows=$$('.eqrow',card), mks=$$('.eqmark',card);
+  if(rows.length<2)return;
   sayStop();
-  ra.classList.add('lit');rb.classList.remove('lit');
-  after($$('.tk',ra),6500,function(){
-    ra.classList.remove('lit');rb.classList.add('lit');
-    after($$('.tk',rb),6500,function(){
-      ra.classList.add('lit');
-      if(mk){mk.classList.remove('pulse');void mk.offsetWidth;mk.classList.add('pulse')}
-      morT.push(setTimeout(function(){
-        ra.classList.remove('lit');rb.classList.remove('lit')},1800));
-    });
-  });
+  var n=0;
+  var lit=function(k){rows.forEach(function(r,j){r.classList.toggle('lit',j===k)})};
+  var pulse=function(m){if(m){m.classList.remove('pulse');void m.offsetWidth;m.classList.add('pulse')}};
+  function nx(){
+    if(n>=rows.length){
+      rows.forEach(function(r){r.classList.add('lit')});mks.forEach(pulse);
+      morT.push(setTimeout(function(){rows.forEach(function(r){r.classList.remove('lit')})},1800));
+      return;
+    }
+    lit(n);var r=rows[n++];
+    after($$('.tk',r),6500,nx);
+  }
+  nx();
 }
 
 /* ---------- he 問 ➜ He 答：藍色的字自己飛下去（使用者 2026-09-21 指定）---------- */
@@ -1255,7 +1601,7 @@ function sentOf(){
   var c=CARDS[i];
   if(c.type==='sent')return plain(c.tk);
   if(c.type==='swap'||c.type==='swapdemo')return plain(c[c._cur||'st']);
-  if(c.type==='eq')return plain(c.b);
+  if(c.type==='eq')return plain(c.c||c.b);
   if(c.type==='morph')return c.say||plain(c.b);
   if(c.type==='order')return c.say||'';
   if(c.type==='focus')return c.rows.map(function(r){return spk(r[0])}).join(', ');
@@ -1268,11 +1614,16 @@ function sayCard(opt){
   opt=opt||{};
   var c=CARDS[i], A=function(sel){return $$(sel,card)};
   if(c.type==='sent'||c.type==='swap'||c.type==='swapdemo'){sayEls(A('#cardIn .line .tk'),opt);return}
-  if(c.type==='eq'){sayEls(A('.eqrow.b .tk'),opt);return}
+  if(c.type==='eq'){sayEls(A(c.c?'.eqrow.c .tk':'.eqrow.b .tk'),opt);return}
   if(c.type==='morph'){sayEls(A('#morLine .tk'),opt);return}
   if(c.type==='order'){sayEls(A('.chip.ce'),opt);return}
-  if(c.type==='focus'){sayEls(A('.frow .fa'),opt);return}
-  if(c.type==='echo'){sayEls(A('.erow .w'),opt);return}
+  if(c.type==='focus'){sayEls(A(c.eqRow?'.fgrid .fa':'.frow .fa'),opt);return}
+  /* 他問他答：一列唸完，停 1 秒，才唸下一列（使用者 2026-09-25 指定：He’s ______. 唸完等一秒才唸 Who’s she?） */
+  if(c.type==='echo'){var rs=A('.erow'),k=0,myI=i;
+    var nx=function(){if(i!==myI)return;if(k>=rs.length){if(opt.done)opt.done();return}
+      var r=rs[k++];sayEls($$('.w',r),{keep:k>1?1:opt.keep,done:function(){
+        if(k<rs.length)morT.push(setTimeout(nx,1000));else nx()}})};
+    nx();return}
   if(c.type==='pair'){sayEls(A('.bub.q .tk'),opt);sayEls(A('.bub.a .tk'),{keep:1});return}
   var s=sentOf();if(s)say(s,null,opt);
 }
@@ -1393,36 +1744,48 @@ function doSwap(auto){
         now.forEach(function(t){t.classList.remove('moving');t.style.transition='';});
         if(now[0])now[0].classList.add('flash');
         if(now[1])now[1].classList.add('flash');
-        /* 。變成 ？ 要看得見；變回 。 的時候句點往上飄、放大
-           ——「一定要加上句點」要讓學生永生不忘（使用者 2026-09-21 指定） */
-        var last=now[now.length-1];
-        if(last){
-          var le=$('.en',last), lc=(le?le.textContent:'').trim();
-          var anim=(lc==='.')?'dotup':'d2q';
-          last.classList.add(anim);
-          setTimeout(function(){last.classList.remove(anim)},anim==='dotup'?1520:2820);
-        }
+        if(PUNC==='first')punc();
         setTimeout(function(){now.forEach(function(t){t.classList.remove('flash')})},520);
       },640);
     })});
   }
+  /* 。變成 ？ 要看得見；變回 。 的時候句點往上飄、放大
+     ——「一定要加上句點」要讓學生永生不忘（使用者 2026-09-21 指定）
+     2026-09-25 使用者指定：預設「整句唸完，標點才放大」；按「⏱ 標點」可以切回「標點先放大」 */
+  var pd=0;
+  function punc(){
+    if(pd||CARDS[i]!==c)return;pd=1;
+    var last=now[now.length-1];if(!last||document.body.classList.contains('reduce'))return;
+    var le=$('.en',last), lc=(le?le.textContent:'').trim();
+    var anim=(lc==='.')?'dotup':'d2q';
+    last.classList.add(anim);
+    setTimeout(function(){last.classList.remove(anim)},anim==='dotup'?1520:2820);
+  }
   sPop();
   step=now.length;
-  setTimeout(function(){if(CARDS[i]===c)sayEls($$('#cardIn .line .tk'))},document.body.classList.contains('reduce')?60:700);
+  setTimeout(function(){if(CARDS[i]!==c)return;
+    sayEls($$('#cardIn .line .tk'),{done:function(){if(PUNC!=='first')setTimeout(punc,120)}});
+    if(PUNC!=='first')morT.push(setTimeout(punc,5200));      /* 瀏覽器沒有回報唸完，最多等 5.2 秒 */
+  },document.body.classList.contains('reduce')?60:700);
   markSubs();
   /* 秒懂重點卡：自己演三次，演完留著按鈕給老師重播 */
   if(auto&&c.type==='swapdemo'){
     demoN++;
-    if(demoN<3)demoT=setTimeout(function(){doSwap(1)},4200);
+    if(demoN<3)demoT=setTimeout(function(){doSwap(1)},PUNC==='first'?4200:6200);
   }
 }
+/* ⏱ 標點什麼時候放大：after ＝ 整句唸完才放大（預設）、first ＝ 一變身就先放大 */
+var PUNC=store('punc')==='first'?'first':'after';
+function puncLbl(){return PUNC==='first'?'⏱ 標點：先放大':'⏱ 標點：唸完才放大'}
+function puncToggle(){PUNC=PUNC==='first'?'after':'first';store('punc',PUNC);
+  var b=$('#puncGo');if(b){b.textContent=puncLbl();b.classList.toggle('on',PUNC==='first')}}
 
 /* ---------- 📑 目次：一張卡一格，點了直接跳過去（使用者 2026-09-24 指定）---------- */
 var KIND={sent:'💬 句型',eq:'＝ 縮寫',morph:'⚡ 縮寫變身',order:'🔁 中英語序',focus:'💡 秒懂重點',
  echo:'💡 秒懂重點',pair:'🗣 一問一答',swap:'🔄 變身術',swapdemo:'🔄 秒懂重點'};
 function tocLabel(c){
   if(c.type==='sent')return plain(c.tk);
-  if(c.type==='eq')return plain(c.a)+' ＝ '+plain(c.b);
+  if(c.type==='eq')return plain(c.a)+' ＝ '+plain(c.b)+(c.c?' ＝ '+plain(c.c):'');
   if(c.type==='morph')return plain(c.a)+' ➜ '+plain(c.b);
   if(c.type==='order')return c.zhRow.map(function(x){return x[0]}).join('')+' ➜ '+(c.say||'');
   if(c.type==='focus')return c.title;
@@ -1480,9 +1843,11 @@ card.addEventListener('click',function(e){
   var sub=t.closest?t.closest('.sub'):null;
   if(sub){setSlot(sub.getAttribute('data-w'),sub.getAttribute('data-z'),sub.getAttribute('data-ic'));return}
   if(t.closest&&t.closest('#swapGo')){doSwap();return}
+  if(t.closest&&t.closest('#puncGo')){puncToggle();return}
   if(t.closest&&t.closest('#ordGo')){playOrder();return}
   if(t.closest&&t.closest('#morGo')){playMorph();return}
   if(t.closest&&t.closest('#eqGo')){playEq();return}
+  if(t.closest&&t.closest('#useGo')){useToggle();return}
   /* 逐字模式還沒出完：點卡片上任何地方都是「出下一個字」，不要讓學生點到空的地方沒反應 */
   var cc=CARDS[i];
   if(reveal==='word'&&(cc.type==='sent'||cc.type==='swap')&&step<$$('.tk',card).length){
@@ -1492,8 +1857,7 @@ card.addEventListener('click',function(e){
     if(/[A-Za-z]/.test(w))sayOne(chip,w);
     else if(chip.getAttribute('data-en'))sayPair(chip);
     else sayZh(w);
-    chip.style.setProperty('--dx','-40px');chip.classList.add('fly');
-    setTimeout(function(){chip.classList.remove('fly')},960);return}
+    lnk(chip.getAttribute('data-c'),1500);return}
   var zh=t.closest?t.closest('[data-zh]'):null;
   if(zh){sayPair(zh);return}
   var tk=t.closest?t.closest('.tk'):null;
@@ -1589,6 +1953,7 @@ function rvAsk(){
     '<span id="rvring"><svg viewBox="0 0 100 100"><circle id="rvbg" cx="50" cy="50" r="46"></circle>'+
      '<circle id="rvfg" cx="50" cy="50" r="46"></circle></svg><span id="rvnum">'+RVT+'</span></span>'+
     '<span style="text-align:right"><span class="k">分數</span><br><span class="v" id="rvsc">'+rvScore+'</span></span></div>'+
+   (q.sim?'<div class="rvsim">🔁 類似題　剛剛錯的，再練一次</div>':'')+
    '<div class="rvq">'+ap(q.q)+'</div>'+
    '<div class="rvo">'+o.map(function(t,n){
      return '<button data-ok="'+(t.n===0)+'" data-t="'+esc(t.x)+'"><span class="sh">'+SHP[n]+'</span><span>'+ap(t.x)+'</span></button>'
@@ -1632,13 +1997,22 @@ function rvDone(btn,ok,timeout){
     sNo();
     if(rvMiss.indexOf(q.h)<0)rvMiss.push(q.h);
     $('#rvfb').innerHTML='<div>'+(timeout?'⏰ 時間到！':'❌ 再想一下')+'</div><div>'+ap(q.h)+'</div>';
-    /* 答錯：蓋一整頁，倒數 3 秒才消失，消失以後才出下一題（使用者 2026-09-24 指定） */
-    var myG=rvGi;
-    missShow({q:q.q,pick:btn?btn.getAttribute('data-t'):null,ans:q.o[0],why:q.h},
+    /* 答錯：蓋一整頁錯題分析（倒數 8 秒、自動唸 3 次、⭐ 加分 ➜ 類似題 ✕2），按「▶ 繼續」才出下一題
+       （使用者 2026-09-24 指定、2026-09-25 改版）；過兩三題再出一題「類似題」，選項重洗 */
+    var myG=rvGi, sims=rvSims(q);
+    if(sims[1]&&!q.sim){var sq={q:sims[1].q,o:sims[1].o,h:sims[1].h,sim:1};
+      rvQ.splice(Math.min(rvQ.length,rvN+3+Math.floor(Math.random()*2)),0,sq)}
+    missShow({q:q.q,pick:btn?btn.getAttribute('data-t'):null,ans:q.o[0],why:q.h,
+      sims:sims.slice(0,3),pts:500,gain:function(n){rvScore+=n;var e=$('#rvsc');if(e)e.textContent=rvScore}},
       function(){if(rvGi===myG&&$('#rv').classList.contains('on')){rvN++;rvAsk()}});
     return;
   }
   setTimeout(function(){rvN++;rvAsk()},1100);
+}
+/* 類似題：同一個 Unit 的複習題裡，英文字重疊最多的（不含自己） */
+function rvSims(q){
+  var all=[];RVG.forEach(function(g){all=all.concat(g.q)});
+  return simRank(q,all,function(x){return x.q+' '+x.o[0]},function(x){return x.h});
 }
 function rvEnd(){
   rvStop();

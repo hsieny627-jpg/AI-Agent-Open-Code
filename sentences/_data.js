@@ -10,6 +10,8 @@
  *   ri   把這個字母上紅色：is 的 i、not 的 o ——學生一眼看到「紅色的字母等一下會被 ’ 藏起來」
  *   slot 'he' | 'she' | 'job' = 這個位置可以被下面的替換字換掉
  *   blank true = 這個位置一開始是 ______，點下面的替換字才填進去
+ *   say  點這個字（逐字動畫）時要唸的聲音；a 寫 'uh'：單獨唸 a 瀏覽器會唸成字母 /eɪ/，
+ *        使用者 2026-09-25 指定要接近注音「ㄜ」（整句唸的時候不受影響，本來就是 /ə/）
  *
  * 三個顏色規則（使用者 2026-09-21 指定，不要改回去）
  *   ① Who 的 W 淺灰色（不發音）——enHTML() 自動處理，資料裡不用寫
@@ -42,13 +44,13 @@ var ICON = {
 var SUB = {
   he: {
     basic:[['brother','哥哥',ICON.brother],['grandfather','爺爺',ICON.grandfather],
-           ['dad','爸爸',ICON.dad],['grandpa','阿公',ICON.grandpa]],
+           ['dad','爸爸',ICON.dad],['grandpa','爺爺',ICON.grandpa]],
     adv:  [['uncle','叔叔',ICON.uncle],['nephew','姪子',ICON.nephew],
            ['cousin','表哥',ICON.cousin]]
   },
   she: {
     basic:[['sister','姊姊',ICON.sister],['grandmother','奶奶',ICON.grandmother],
-           ['grandma','阿嬤',ICON.grandma],['mom','媽媽',ICON.mom]],
+           ['grandma','奶奶',ICON.grandma],['mom','媽媽',ICON.mom]],
     adv:  [['aunt','阿姨',ICON.aunt],['cousin','表姊',ICON.cousin],
            ['niece','姪女',ICON.niece]]
   },
@@ -60,13 +62,22 @@ var SUB = {
   }
 };
 
+/* 「💡 問什麼？」按下去才出現的用法（u ＝ 一句話，v ＝ 會動的秒懂圖示）——G3 也用這一組 */
+var USE = {
+  who: {u:'問「人」', v:'<i>👦</i><i>👧</i><i>👵</i>'},
+  what:{u:'問「東西」、「事情」', v:'<i class="spin">📦</i><i>🍎</i><i>🎉</i>'},
+  how: {u:'問「程度」、「方式」', v:'<span class="bars"><u></u><u></u><u></u><u></u></span><i>🚲</i><i>🚌</i>'}
+};
+
 function t(en,zh,ic,o){var x={en:en,zh:zh,ic:ic};if(o)for(var k in o)x[k]=o[k];return x;}
 
 /* ---------------- Unit 1 ---------------- */
 var U1 = [
  /* 1 */
- {type:'focus', eqRow:1, title:'Who ＝ 問「人」',
-  rows:[['Who','誰',ICON.who],['What','什麼',ICON.what],['How','怎麼樣',ICON.how]]},
+/* 2026-09-25 使用者指定：一次一個字（英文先出來，再出中文）、英文／＝／中文上下對齊、
+    「💡 問什麼？」按了才用動畫演出三個字的用法、字放大 */
+ {type:'focus', eqRow:1, title:'Who？What？How？',
+  rows:[['Who','誰',ICON.who,USE.who],['What','什麼',ICON.what,USE.what],['How','怎麼樣',ICON.how,USE.how]]},
 
  /* 2 */
  {type:'sent', zh:'他是誰？', say:"Who's he?",
@@ -167,7 +178,7 @@ var U2 = [
  /* 1 */
  {type:'sent', zh:'他是一位醫生。', say:'He is a doctor.', slot:'job',
   tk:[t('He','他',ICON.he,{hl:'b'}),t('is','是',ICON.is,{hl:'y',ri:'i'}),
-      t('a','一位',ICON.a),t('doctor','醫生',ICON.doctor,{slot:'job'}),
+      t('a','一位',ICON.a,{say:'uh'}),t('doctor','醫生',ICON.doctor,{slot:'job'}),
       t('.','。',ICON.dot,{tight:1})]},
 
  /* 2 秒懂動畫：He is ➜ He's（使用者 2026-09-21 指定新增） */
@@ -178,24 +189,24 @@ var U2 = [
 
  /* 3 */
  {type:'eq',
-  a:[t('He','他',ICON.he,{hl:'b'}),t('is','是',ICON.is,{ri:'i'}),t('a','一位',ICON.a),
+  a:[t('He','他',ICON.he,{hl:'b'}),t('is','是',ICON.is,{ri:'i'}),t('a','一位',ICON.a,{say:'uh'}),
      t('doctor','醫生',ICON.doctor),t('.','。',ICON.dot,{tight:1})],
-  b:[t('He','他',ICON.he,{hl:'b'}),t("'s",'是',ICON.is,{tight:1}),t('a','一位',ICON.a),
+  b:[t('He','他',ICON.he,{hl:'b'}),t("'s",'是',ICON.is,{tight:1}),t('a','一位',ICON.a,{say:'uh'}),
      t('doctor','醫生',ICON.doctor),t('.','。',ICON.dot,{tight:1})]},
 
  /* 4 */
  {type:'swap', subj:'he', slot:'job',
   st:[t('He','他',ICON.he,{hl:'b'}),t('is','是',ICON.is,{hl:'y'}),
-      t('a','一位',ICON.a),t('doctor','醫生',ICON.doctor,{slot:'job'}),t('.','。',ICON.dot,{tight:1})],
+      t('a','一位',ICON.a,{say:'uh'}),t('doctor','醫生',ICON.doctor,{slot:'job'}),t('.','。',ICON.dot,{tight:1})],
   qu:[t('Is','是',ICON.is,{hl:'y'}),t('he','他',ICON.he,{hl:'b'}),
-      t('a','一位',ICON.a),t('doctor','醫生',ICON.doctor,{slot:'job'}),t('?','？',ICON.q,{tight:1})],
+      t('a','一位',ICON.a,{say:'uh'}),t('doctor','醫生',ICON.doctor,{slot:'job'}),t('?','？',ICON.q,{tight:1})],
   stzh:'他是一位醫生。', quzh:'他是一位醫生嗎？',
   note:'🔵 he 和 🟡 is 換位置，。變成 ？'},
 
  /* 5 */
  {type:'sent', zh:'他是一位醫生嗎？', say:'Is he a doctor?', slot:'job',
   tk:[t('Is','是',ICON.is,{hl:'y'}),t('he','他',ICON.he,{hl:'b'}),
-      t('a','一位',ICON.a),t('doctor','醫生',ICON.doctor,{slot:'job'}),
+      t('a','一位',ICON.a,{say:'uh'}),t('doctor','醫生',ICON.doctor,{slot:'job'}),
       t('?','？',ICON.q,{tight:1})]},
 
  /* 6 */
@@ -222,13 +233,13 @@ var U2 = [
       t('he','他',ICON.he,{hl:'b'}),t("isn't",'不是',ICON.not,{hl:'y'}),
       t('.','。',ICON.dot,{tight:1}),
       t('He','他',ICON.he,{hl:'b'}),t("'s",'是',ICON.is,{tight:1}),
-      t('a','一位',ICON.a),t('______','______','',{slot:'job',blank:1}),
+      t('a','一位',ICON.a,{say:'uh'}),t('______','______','',{slot:'job',blank:1}),
       t('.','。',ICON.dot,{tight:1})]},
 
  /* 10 */
  {type:'sent', zh:'她是一位老師。', say:'She is a teacher.', slot:'job',
   tk:[t('She','她',ICON.she,{hl:'p'}),t('is','是',ICON.is,{hl:'y',ri:'i'}),
-      t('a','一位',ICON.a),t('teacher','老師',ICON.teacher,{slot:'job'}),
+      t('a','一位',ICON.a,{say:'uh'}),t('teacher','老師',ICON.teacher,{slot:'job'}),
       t('.','。',ICON.dot,{tight:1})]},
 
  /* 11 秒懂動畫：She is ➜ She's */
@@ -239,24 +250,24 @@ var U2 = [
 
  /* 12 */
  {type:'eq',
-  a:[t('She','她',ICON.she,{hl:'p'}),t('is','是',ICON.is,{ri:'i'}),t('a','一位',ICON.a),
+  a:[t('She','她',ICON.she,{hl:'p'}),t('is','是',ICON.is,{ri:'i'}),t('a','一位',ICON.a,{say:'uh'}),
      t('teacher','老師',ICON.teacher),t('.','。',ICON.dot,{tight:1})],
-  b:[t('She','她',ICON.she,{hl:'p'}),t("'s",'是',ICON.is,{tight:1}),t('a','一位',ICON.a),
+  b:[t('She','她',ICON.she,{hl:'p'}),t("'s",'是',ICON.is,{tight:1}),t('a','一位',ICON.a,{say:'uh'}),
      t('teacher','老師',ICON.teacher),t('.','。',ICON.dot,{tight:1})]},
 
  /* 13 */
  {type:'swap', subj:'she', slot:'job',
   st:[t('She','她',ICON.she,{hl:'p'}),t('is','是',ICON.is,{hl:'y'}),
-      t('a','一位',ICON.a),t('teacher','老師',ICON.teacher,{slot:'job'}),t('.','。',ICON.dot,{tight:1})],
+      t('a','一位',ICON.a,{say:'uh'}),t('teacher','老師',ICON.teacher,{slot:'job'}),t('.','。',ICON.dot,{tight:1})],
   qu:[t('Is','是',ICON.is,{hl:'y'}),t('she','她',ICON.she,{hl:'p'}),
-      t('a','一位',ICON.a),t('teacher','老師',ICON.teacher,{slot:'job'}),t('?','？',ICON.q,{tight:1})],
+      t('a','一位',ICON.a,{say:'uh'}),t('teacher','老師',ICON.teacher,{slot:'job'}),t('?','？',ICON.q,{tight:1})],
   stzh:'她是一位老師。', quzh:'她是一位老師嗎？',
   note:'💗 she 和 🟡 is 換位置，。變成 ？'},
 
  /* 14 */
  {type:'sent', zh:'她是一位老師嗎？', say:'Is she a teacher?', slot:'job',
   tk:[t('Is','是',ICON.is,{hl:'y'}),t('she','她',ICON.she,{hl:'p'}),
-      t('a','一位',ICON.a),t('teacher','老師',ICON.teacher,{slot:'job'}),
+      t('a','一位',ICON.a,{say:'uh'}),t('teacher','老師',ICON.teacher,{slot:'job'}),
       t('?','？',ICON.q,{tight:1})]},
 
  /* 15 */
@@ -283,22 +294,22 @@ var U2 = [
       t('she','她',ICON.she,{hl:'p'}),t("isn't",'不是',ICON.not,{hl:'y'}),
       t('.','。',ICON.dot,{tight:1}),
       t('She','她',ICON.she,{hl:'p'}),t("'s",'是',ICON.is,{tight:1}),
-      t('a','一位',ICON.a),t('______','______','',{slot:'job',blank:1}),
+      t('a','一位',ICON.a,{say:'uh'}),t('______','______','',{slot:'job',blank:1}),
       t('.','。',ICON.dot,{tight:1})]},
 
  /* 19 秒懂重點改成會動的：直述句 ⇄ 問句 自己演一遍（使用者 2026-09-21 指定） */
  {type:'swapdemo',
   st:[t('He','他',ICON.he,{hl:'b'}),t('is','是',ICON.is,{hl:'y'}),
-      t('a','一位',ICON.a),t('doctor','醫生',ICON.doctor),t('.','。',ICON.dot,{tight:1})],
+      t('a','一位',ICON.a,{say:'uh'}),t('doctor','醫生',ICON.doctor),t('.','。',ICON.dot,{tight:1})],
   qu:[t('Is','是',ICON.is,{hl:'y'}),t('he','他',ICON.he,{hl:'b'}),
-      t('a','一位',ICON.a),t('doctor','醫生',ICON.doctor),t('?','？',ICON.q,{tight:1})],
+      t('a','一位',ICON.a,{say:'uh'}),t('doctor','醫生',ICON.doctor),t('?','？',ICON.q,{tight:1})],
   stzh:'他 是 一位 醫生。', quzh:'他 是 一位 醫生 嗎？',
   note:'短答不縮寫：Yes, he is. ✅　Yes, he’s. ❌'},
 
  /* 20 一問一答：每一個英文字的正下方就是那個字的中文（使用者 2026-09-21 指定） */
  {type:'pair', cls:'b', slot:'job', qic:ICON.doctor, aic:ICON.yes,
   qtk:[t('Is','是',ICON.is,{hl:'y'}),t('he','他',ICON.he,{hl:'b'}),
-       t('a','一位',ICON.a),t('doctor','醫生',ICON.doctor,{slot:'job'}),
+       t('a','一位',ICON.a,{say:'uh'}),t('doctor','醫生',ICON.doctor,{slot:'job'}),
        t('?','嗎？',ICON.q,{tight:1})],
   atk:[t('Yes','是的',ICON.yes),t(',','，',ICON.comma,{tight:1}),
        t('he','他',ICON.he,{hl:'b'}),t('is','是',ICON.is,{hl:'y'}),
@@ -308,7 +319,7 @@ var U2 = [
  /* 21 */
  {type:'pair', cls:'p', slot:'job', qic:ICON.nurse, aic:ICON.no,
   qtk:[t('Is','是',ICON.is,{hl:'y'}),t('she','她',ICON.she,{hl:'p'}),
-       t('a','一位',ICON.a),t('nurse','護理師',ICON.nurse,{slot:'job'}),
+       t('a','一位',ICON.a,{say:'uh'}),t('nurse','護理師',ICON.nurse,{slot:'job'}),
        t('?','嗎？',ICON.q,{tight:1})],
   atk:[t('No','不',ICON.no),t(',','，',ICON.comma,{tight:1}),
        t('she','她',ICON.she,{hl:'p'}),t("isn't",'不是',ICON.not,{hl:'y'}),
@@ -383,7 +394,7 @@ var RV2 = [
  ]}
 ];
 
-module.exports = { ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2 };
+module.exports = { ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, USE:USE };
 
 /* ── 真實情境：會動的小劇場（使用者 2026-09-24 指定改版）──────────────
  * 原本「地點＋三段 emoji＋一句話」學生完全看不懂，改成**兩個人演一次**：

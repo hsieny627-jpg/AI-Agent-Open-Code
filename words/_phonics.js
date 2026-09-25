@@ -84,6 +84,50 @@ const RAW = {
  grand:       'g|ɡ|ɡ r|r|r a|æ|æ n|n|n d|d|d',
  house:       'h|h|h ou|aʊ|aʊ s|s|s e|-|-',
 
+/* ── 職業單字（使用者 2026-09-25 指定新增）── */
+ student:     's|s|s t|t|t u|uː|u / d|d|d e|ə|ə n|n|n t|t|t',
+ teacher:     't|t|t ea|iː|i / ch|tʃ|tʃ er|ɚ|ɚ',
+ doctor:      'd|d|d o|ɑː|ɑ c|k|k / t|t|t or|ɚ|ɚ',
+ farmer:      'f|f|f ar|ɑːr|ɑr / m|m|m er|ɚ|ɚ',
+ nurse:       'n|n|n ur|ɝː|ɝ s|s|s e|-|-',
+ teach:       't|t|t ea|iː|i ch|tʃ|tʃ',
+ farm:        'f|f|f ar|ɑːr|ɑr m|m|m',
+ study:       's|s|s t|t|t u|ʌ|ʌ / d|d|d y|i|ɪ',
+
+/* ── G3 數字單字（使用者 2026-09-25 指定；不發音的字母照使用者列的：one 的 e、three 字尾 e、
+      four 的 u、five 的 e、eight 的 gh、nine 的 e、twelve 字尾 e）──
+   two 的 w 其實也不唸（/tuː/），使用者的清單沒有列，先照清單不標灰，tw 放同一格、音標只寫 /t/ */
+ zero:        'z|z|z e|ɪ|ɪ / r|r|r o|oʊ|o',
+ one:         'o|wʌ|wʌ n|n|n e|-|-',
+ two:         'tw|t|t o|uː|u',
+ three:       'th|θ|θ r|r|r e|iː|i e|-|-',
+ four:        'f|f|f o|ɔː|ɔ u|-|- r|r|r',
+ five:        'f|f|f i|aɪ|aɪ v|v|v e|-|-',
+ six:         's|s|s i|ɪ|ɪ x|ks|ks',
+ seven:       's|s|s e|e|ɛ / v|v|v e|ə|ə n|n|n',
+ eight:       'ei|eɪ|e gh|-|- t|t|t',
+ nine:        'n|n|n i|aɪ|aɪ n|n|n e|-|-',
+ ten:         't|t|t e|e|ɛ n|n|n',
+ eleven:      'e|ɪ|ɪ / l|l|l e|e|ɛ / v|v|v e|ə|ə n|n|n',
+ twelve:      't|t|t w|w|w e|e|ɛ l|l|l v|v|v e|-|-',
+
+/* ── G3 Sight Words 常見字（使用者 2026-09-25 指定；不發音的字母照使用者列的：
+      You 的 o、Your 的 o、are 的 e、name 的 e、What 的 h、year 的 a）── */
+ i:           'i|aɪ|aɪ',
+ my:          'm|m|m y|aɪ|aɪ',
+ you:         'y|j|j o|-|- u|uː|u',
+ your:        'y|j|j o|-|- u|ʊ|ʊ r|r|r',
+ am:          'a|æ|æ m|m|m',
+ are:         'ar|ɑːr|ɑr e|-|-',
+ name:        'n|n|n a|eɪ|e m|m|m e|-|-',
+ is:          'i|ɪ|ɪ s|z|z',
+ what:        'w|w|w h|-|- a|ɑː|ɑ t|t|t',
+ "what's":    "w|w|w h|-|- a|ɑː|ɑ t|t|t 's|s|s",
+ how:         'h|h|h ow|aʊ|aʊ',
+ old:         'o|oʊ|o l|l|l d|d|d',
+ year:        'y|j|j e|ɪ|ɪ a|-|- r|r|r',
+ years:       'y|j|j e|ɪ|ɪ a|-|- r|r|r s|z|z',
+
 /* ── 更多字的故事那一頁 ── */
  tea:         't|t|t ea|iː|i',
  ketchup:     'k|k|k e|e|ɛ tch|tʃ|tʃ / u|ə|ə p|p|p',
@@ -159,6 +203,10 @@ const CSS = `
 .phchips button:active{background:#2A2A2A}
 .phchips button.on:active{background:#B4C6D6}
 
+/* 念到哪一個字，那一個字就放大、變亮（使用者 2026-09-25 指定，每一頁都一樣） */
+.speak{color:#FFD24A!important;text-shadow:0 0 16px rgba(255,210,74,.8);transform:scale(1.14);display:inline-block;
+ transition:transform .15s}
+.phw.speak .g i,.phw.speak .g i.v{color:#FFD24A!important}
 /* 任何一段英文都可以點來聽（補充單字、字詞、用法） */
 .sp{cursor:pointer;border-bottom:1px dotted #4F6472}
 .sp:active,.sp.ping{color:#9FB4C8;border-bottom-color:#9FB4C8}
@@ -197,15 +245,18 @@ var PH=(function(){
      變成 /s/ 與 /s+/ ——凡是拼法裡有 s 的字（sister／son／cousin／husband…）
      都會被當成「多個字」從 s 那裡切開，s 不見、發音也唸錯。2026-09-20 訂正。 */
   if(/\\s/.test(w))return w.split(/\\s+/).map(function(x){return word(x,lang)}).join(" ");
-  var key=w.toLowerCase(),d=D[key];
+  var key=w.toLowerCase().replace(/[\u2019]/g,"'"),d=D[key];
   if(!d)return plain(w,lang);
+  /* 字母照原本的大小寫畫（I、My、What 開頭要大寫；資料裡一律小寫） */
+  var CS=w.replace(/[\u2019]/g,"\u2019"),cp=0;
   var h='<span class="phw '+MODES[mode]+'" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
         ' data-n="'+d.length+'">',si,ui;
   for(si=0;si<d.length;si++){
    if(si)h+='<span class="cut"><span class="g">·</span><span class="p">&nbsp;</span></span>';
    h+='<span class="syl">';
    for(ui=0;ui<d[si].length;ui++){var u=d[si][ui];
-    h+='<span class="u'+(u.s?" mute":"")+'"><span class="g">'+letters(u)+'</span>'+
+    var lu=letters(u).replace(/>([^<])</g,function(m,c){var o=CS.charAt(cp++);return '>'+(o&&o.toLowerCase()===c.toLowerCase()?o:(c==="'"&&o==="\u2019"?o:c))+'<'});
+    h+='<span class="u'+(u.s?" mute":"")+'"><span class="g">'+lu+'</span>'+
        '<span class="p" data-i="'+(u.s?"–":u.i)+'" data-k="'+(u.s?"–":u.k)+'">'+
        (u.s?"–":(mode===2?u.k:u.i))+'</span></span>'}
    h+='</span>'}
@@ -228,9 +279,42 @@ var PH=(function(){
  function clear(){while(timers.length)clearTimeout(timers.pop())}
  function at(ms,fn){timers.push(setTimeout(fn,ms))}
  function reduced(){return document.body.classList.contains("reduce")}
- /* 說話：全頁共用一個放慢開關 */
- function say(t,lang){try{if(!t)return;var u=new SpeechSynthesisUtterance(t);
-  u.lang=lang||"en-US";u.rate=slow?.45:.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+ /* 說話：全頁共用一個放慢開關。
+    瑞典文先查預先做好的語音檔（window.SVAUD，使用者 2026-09-25 指定：要真實正確的瑞典語發音），
+    很多電腦沒有瑞典文語音，瀏覽器會用英文腔亂唸。查不到才用瀏覽器語音。
+    fin：唸完（或出錯）要做的事；一定會被呼叫，而且只呼叫一次。 */
+ var AU=null;
+ function akey(t){return String(t).replace(/[\u2019]/g,"'").replace(/\s+/g," ").trim().toLowerCase()}
+ function stopAll(){try{speechSynthesis.cancel()}catch(e){}try{if(AU)AU.pause()}catch(e){}}
+ function say(t,lang,fin){
+  var done=false,end=function(){if(done)return;done=true;if(fin)try{fin()}catch(e){}};
+  if(!t){end();return}
+  stopAll();
+  var A=(lang&&/^sv/i.test(lang)&&window.SVAUD)?SVAUD[akey(t)]:null;
+  if(A){try{if(!AU)AU=new Audio();AU.onended=end;AU.onerror=end;
+    AU.src=(window.SVDIR||"audio/sv/")+A[0];AU.playbackRate=slow?.7:1;
+    var pr=AU.play();if(pr&&pr.catch)pr.catch(end);setTimeout(end,A[1]*1000/(slow?.7:1)+1500);return}catch(e){}}
+  try{var u=new SpeechSynthesisUtterance(t);
+   u.lang=lang||"en-US";u.rate=slow?.45:.85;u.onend=end;u.onerror=end;speechSynthesis.speak(u)}catch(e){end();return}
+  setTimeout(end,1400+String(t).length*(slow?260:140));   /* 瀏覽器不發 onend 也不會卡住 */
+ }
+ /* 一個字一個字唸：唸到哪一個字，那一個字就放大、變亮（使用者 2026-09-25 指定：每一個單字都要有發音） */
+ var chainId=0;
+ function sayChain(els,fin){
+  var my=++chainId,k=0;stopAll();
+  function next(){
+   [].forEach.call(document.querySelectorAll(".speak"),function(x){x.classList.remove("speak")});
+   if(my!==chainId)return;
+   if(k>=els.length){if(fin)fin();return}
+   var el=els[k++],t=el.getAttribute("data-say");
+   if(!t){next();return}
+   el.classList.add("speak");
+   say(t,el.getAttribute("data-lang")||"en-US",function(){if(my===chainId)setTimeout(next,160)});
+  }
+  setTimeout(next,90);
+ }
+ function chainStop(){chainId++;stopAll();
+  [].forEach.call(document.querySelectorAll(".speak"),function(x){x.classList.remove("speak")})}
  /* 唸單字：一格一格亮過去，字母和聲音對起來 */
  function sayWord(el,lang){
   var w=el.getAttribute("data-say");say(w,lang);
@@ -315,7 +399,7 @@ var PH=(function(){
    if(f>bs){bs=f;best=all[k]}}
   return best}
  function setMode(m){mode=((+m||0)%3+3)%3;try{localStorage.setItem("phMode",mode)}catch(e){}apply();return mode}
- return{word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,syl:syl,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
+ return{word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
   has:function(w){return !!D[(w||"").toLowerCase()]},
   slow:function(v){slow=(v===undefined)?!slow:!!v;return slow},
   isSlow:function(){return slow},

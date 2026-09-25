@@ -49,12 +49,13 @@
 const fs = require('fs'), path = require('path'), DIR = __dirname;
 const SRC = require('./_sources');
 const PH  = require('./_phonics');
+const TOC = require('./_toc');
 
 /* 每一個家人：英文、中文、圖示、口語說法（有的話） */
 const N = {
  me:          { zh: '我',          ic: '🙋' },
  father:      { zh: '爸爸',        ic: '🧔',   also: 'dad' },
- mother:      { zh: '媽媽',        ic: '👩',   also: 'mom' },
+ mother:      { zh: '媽媽',        ic: '👩',   also: 'mom', uk: 'mum' },
  brother:     { zh: '哥哥、弟弟',  ic: '👦' },
  sister:      { zh: '姊姊、妹妹',  ic: '👧' },
  grandfather: { zh: '爺爺、外公',  ic: '👴',   also: 'grandpa' },
@@ -109,12 +110,14 @@ const PAGES = [
    { open: true, mid: 'family tree', zh: '家庭樹',
      lines: ['<b>點任何一個人</b>，聽聽看怎麼唸'] },
    { k: 'me',          line: '先從<b>自己</b>開始' },
-   { k: 'father',      line: '爸爸也可以叫 {{dad}}' },
-   { k: 'mother',      line: '媽媽也可以叫 {{mom}}' },
+   /* 2026-09-25 使用者指定：father／mother／grandfather／grandmother 的正下方寫「＝ 口語說法」，
+      單字下面的說明文字全部刪掉（等號本身就講完了） */
+   { k: 'father' },
+   { k: 'mother' },
    { k: 'brother',     line: '哥哥、弟弟<b>都叫 brother</b>' },
    { k: 'sister',      line: '姊姊、妹妹<b>都叫 sister</b>' },
-   { k: 'grandfather', line: '爸爸的爸爸，也可以叫 {{grandpa}}' },
-   { k: 'grandmother', line: '媽媽的媽媽，也可以叫 {{grandma}}' }
+   { k: 'grandfather' },
+   { k: 'grandmother' }
   ] },
 
 { file: 'family-tree-2.html', title: 'family tree 進階版', src: 'family-tree',
@@ -219,6 +222,11 @@ body{margin:0;background:#000;color:#F2F2F2;
 .fq{font-size:clamp(44px,7.4vh,78px);color:#3A3A3A;font-weight:700}
 .mid{font-size:clamp(26px,4.4vh,42px);font-weight:700;line-height:1.4;letter-spacing:.03em}
 .sub{font-size:clamp(18px,2.7vh,26px);color:#D8D3C5;line-height:1.5}
+/* ＝ grandpa：口語說法放在英文單字正下方（使用者 2026-09-25 指定） */
+.falso{display:flex;align-items:baseline;justify-content:center;gap:.3em;flex-wrap:wrap;
+ font-size:clamp(26px,min(4.8vh,6vw),48px);font-weight:700;line-height:1.1}
+.falso .feq{color:#FFD24A}
+.fuk{font-size:.6em;color:#9FB4C8;font-weight:400;display:inline-flex;align-items:baseline;gap:.2em}
 .sub b{color:#F2F2F2;font-weight:700}
 .tag{font-size:clamp(13px,1.7vh,16px);color:#9FB4C8;letter-spacing:.34em;font-weight:700;padding-left:.34em}
 
@@ -251,6 +259,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 @keyframes turnL{0%{opacity:.2;transform:perspective(1500px) rotateY(-48deg) translateX(-20px) scale(.95)}
  100%{opacity:1;transform:none}}
 .reduce *{animation:none!important;transition:none!important}
+${TOC.TOCCSS}
 ${PH.CSS}
 ${SRC.CSS}
 </style>
@@ -265,7 +274,8 @@ ${SRC.CSS}
   <button data-m="A">圖示</button><button data-m="B">中文</button><button data-m="C">英文</button>
   <button data-m="D">英＋圖</button><button data-m="E">英＋中</button><button data-m="F">全部</button>
  </div>
- <div id="bar"><button id="say">🔊 念一次</button>${PH.btnSlow}${PH.btnMode}${PH.btnSyl}<button id="back">${P.back.label}</button><button id="home">🏠 首頁</button>${SRC.btn}</div>
+ <div id="bar"><button id="say">🔊 念一次</button>${TOC.TOCB}${PH.btnSlow}${PH.btnMode}${PH.btnSyl}<button id="back">${P.back.label}</button><button id="home">🏠 首頁</button>${SRC.btn}</div>
+${TOC.TOCHTML}
 </div>
 ${SRC.html(SRC.P[P.src])}
 
@@ -376,15 +386,22 @@ function lines(hi){
  }
 }
 
+/* 單字正下方的「＝ 口語說法」：grandfather ＝ grandpa、mother ＝ mom［英式英語：mum］
+   （使用者 2026-09-25 指定；只在看得到英文的模式出現，不然會漏餡） */
+function alsoHTML(n){
+ if(!n.also)return '';
+ return '<div class="falso in d2"><span class="feq">＝</span>{{'+n.also+'}}'+
+  (n.uk?'<span class="fuk">［英式英語：{{'+n.uk+'}}］</span>':'')+'</div>';
+}
 /* 下方的學習焦點：模式決定看得到什麼 */
 function focus(key){
  var n=N[key],h='<div class="focus">';
  if(MODE==="A")      h+='<div class="fic pop">'+n.ic+'</div><div class="fq in d1">？</div>';
  else if(MODE==="B") h+='<div class="fzh in d1" style="font-size:clamp(40px,7vh,70px)">'+n.zh+'</div>';
- else if(MODE==="C") h+='<div class="fen in d1">{{'+key+'}}</div>';
- else if(MODE==="D") h+='<div class="fic pop">'+n.ic+'</div><div class="fen in d1">{{'+key+'}}</div>';
- else if(MODE==="E") h+='<div class="fen in d1">{{'+key+'}}</div><div class="fzh in d2">'+n.zh+'</div>';
- else                h+='<div class="fic pop">'+n.ic+'</div><div class="fen in d1">{{'+key+'}}</div>'+
+ else if(MODE==="C") h+='<div class="fen in d1">{{'+key+'}}</div>'+alsoHTML(n);
+ else if(MODE==="D") h+='<div class="fic pop">'+n.ic+'</div><div class="fen in d1">{{'+key+'}}</div>'+alsoHTML(n);
+ else if(MODE==="E") h+='<div class="fen in d1">{{'+key+'}}</div>'+alsoHTML(n)+'<div class="fzh in d2">'+n.zh+'</div>';
+ else                h+='<div class="fic pop">'+n.ic+'</div><div class="fen in d1">{{'+key+'}}</div>'+alsoHTML(n)+
                         '<div class="fzh in d2">'+n.zh+'</div>';
  return h+'</div>';
 }
@@ -429,11 +446,13 @@ function show(n){
  document.getElementById("next").disabled=(i===S.length-1);
  say();
 }
-/* 念一次：這一幕的主角。開場／結尾唸 family tree。 */
+/* 念一次：這一幕看得到的每一個英文字，一個一個唸，唸到哪個字那個字就放大變亮
+   （使用者 2026-09-25 指定：每一個單字都要有發音）。樹上的人不唸（點了才唸）。 */
 function say(){
- var w=S[i].k||"family tree";
- var el=stage.querySelector('.phw[data-say="'+w+'"]');
- if(el){PH.sayWord(el)}else{PH.say(w)}
+ var els=[].filter.call(stage.querySelectorAll(".phw,.sp"),function(el){
+  return el.getClientRects().length&&!el.closest(".tn")&&!(el.parentElement&&el.parentElement.closest(".phw,.sp"))});
+ if(!els.length){PH.say(S[i].k||"family tree");return}
+ PH.sayChain(els);
 }
 
 function paintModes(){
@@ -465,6 +484,7 @@ document.getElementById("back").addEventListener("click",function(){
  location.href=${JSON.stringify(P.back.href)}});
 document.getElementById("home").addEventListener("click",function(){location.href="../index.html"});
 show(0);
+${TOC.TOCJS}
 ${SRC.JS}
 </script>
 </body>

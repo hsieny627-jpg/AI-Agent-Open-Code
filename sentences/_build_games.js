@@ -1,32 +1,29 @@
 /* sentences/_build_games.js — 10 種複習遊戲（games.html）
  * node sentences/_build_games.js
- * 題庫與驚喜回饋改 _game_data.js，玩法與版面改這裡。
+ * 題庫與驚喜卡改 _game_data.js，玩法與版面改這裡。
  *
- * 十個遊戲共用一顆引擎（2026-09-21 使用者指定改版）：
- *  - **每一題限時 15 秒**（不是一整場 2 分鐘），圓環 ＋ 大數字
- *  - **愈快答對分數愈高**：基本 100 分 ＋ 速度分（最多 900）＋ 連對加成
- *    答完馬上看到「＋850（速度分 ＋720）」，學生秒懂「快 ＝ 高分」
- *  - 一場 12 題；題序、選項每一次都重新打散 → 每次重玩都不一樣
- *  - **每一個遊戲有自己的 20 種正向驚喜回饋**（_game_data.js 的 SURP），
- *    十個遊戲完全不重複，抽過不再抽 → 學生摸不透、猜不著
- *  - 答錯（或時間到）→ 給鷹架提示，那一題會再回到題庫，練到會為止
+ * 十個遊戲共用一顆引擎（2026-09-21 使用者指定改版；2026-09-25 再改版）：
+ *  - **每一個遊戲限時 5 分鐘**（⏳ 一直看得到），每一題限時 15 秒，愈快答對分數愈高
+ *  - **答對：加分畫面用獨立視窗**（✅ ＋880，下面一排圖示算式 ✅100 ＋ ⚡720 ＋ 🔥60），字大、字少
+ *  - **連續答對 3 題才翻驚喜卡**：70% 直接翻一張；30% 自己選（二選一 12%、三選一 9%、四選一 6%、五選一 3%）
+ *    每一個遊戲 30 張：名字、效果、翻開的特效全部不一樣，**只給好事**（_surprise.js）
+ *  - **答錯：錯題分析的獨立頁**（_shared.js 的 MISS）：倒數 8 秒、正確答案唸 3 次、🔊 發音、
+ *    ⭐ 加分 ➜ 再看 8 秒 ➜ 字放大的類似題 ➜ 答對拿 500 ✕ 2；過兩三題再出一題類似題，選項重洗
+ *  - 題序、選項每一次都重新打散 → 每次重玩都不一樣
  *  - 最佳紀錄存在這台 iPad 上
  */
 const fs = require('fs'), SITE = require('./_site'), DIR = SITE.DIR;
 const S = require('./_shared');
 const B = SITE.load('_game_data');
 
-/* ── 別的課次共用這一套遊戲引擎時才會用到的設定（sentences 沒寫 ➜ 跟原本一模一樣）──
-   B.CFG.burst  驚喜卡翻開的那一刻，卡片上的圖示炸滿整個畫面（四種炸法隨機：雨、爆、飄、轉）
-   B.CFG.lucky  k:'lucky' 的神秘紅包：翻開才知道是 v[0]～v[1] 之間的幾分
+/* ── 別的課次共用這一套遊戲引擎時才會用到的設定（sentences 沒寫 ➜ 用 sentences 自己的）──
    META g2／g9 的 duo：兩顆大按鈕各是什麼（[{v,t,d,c}]），g9 題目的第 3 格是答錯的提示 */
-const GC = B.CFG || {};
 const NS = B.SURP.g1.length;                          /* 每一個遊戲幾張驚喜卡 */
 const metaOf = id => B.GAMES.filter(m => m.id === id)[0] || {};
 const duoBtns = d => d.map(x => `     '<button class="dbtn ${x.c}" data-v="${x.v}">${x.t}<span class="ds">${x.d}</span></button>'+`).join('\n');
 const DUO2 = metaOf('g2').duo, DUO9 = metaOf('g9').duo;
 const LAB9 = DUO9 ? JSON.stringify(DUO9.reduce((o, x) => { o[x.v] = x.t + ' ' + x.d.split('　')[0]; return o }, {})) : '';
-
+const OTHER2 = DUO2 ? JSON.stringify(DUO2.map(x => x.v)) : '["he","she"]';
 const CSS = `
 #stage{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
  padding:calc(var(--safeT) + clamp(14px,2.6vh,26px)) clamp(14px,3vw,36px)
@@ -72,40 +69,107 @@ const CSS = `
 #gstreak{color:var(--gold)}
 #gname{font-size:clamp(13px,2.1vh,19px);font-weight:700;color:var(--acc)}
 
-/* ── 驚喜卡（使用者 2026-09-21 指定改版）────────────────────────────
-   舊版直接跳一行字，學生「看不懂驚喜是什麼、也沒有期待感」。
-   新版是一張真的卡：先看到卡背在抖（等一下會翻開 ＝ 期待），
-   翻開以後最大的那一行就是「你拿到什麼」（分數 ✕ 2、＋500 分…），
-   下面一行用白話講「現在會發生什麼事」，最後才是卡片的名字。 */
-#evt{position:fixed;left:50%;top:34%;transform:translate(-50%,-50%);z-index:60;
- opacity:0;pointer-events:none;perspective:1200px}
-#evt.on{animation:evtIn 2.4s ease}
-#evt .c3{position:relative;width:clamp(226px,42vw,356px);height:clamp(148px,26vh,226px);
- transform-style:preserve-3d}
-#evt.on .c3{animation:evtFlip 2.4s cubic-bezier(.3,.8,.3,1)}
-#evt .fc{position:absolute;left:0;top:0;right:0;bottom:0;border-radius:22px;
- backface-visibility:hidden;-webkit-backface-visibility:hidden;
- display:flex;flex-direction:column;align-items:center;justify-content:center;
- gap:4px;padding:clamp(9px,1.8vh,18px);text-align:center}
-#evt .fc.bk{background:linear-gradient(145deg,#1D1606,#090909);border:2px solid #6B5714}
-#evt .fc.bk .bi{font-size:clamp(44px,7.6vh,78px);line-height:1}
-#evt .fc.bk .bl{font-size:clamp(13px,2.1vh,19px);color:var(--gold);letter-spacing:.16em}
-#evt .fc.ft{transform:rotateY(180deg);background:#160F00;border:2px solid var(--gold);
- box-shadow:0 0 60px rgba(255,210,74,.3)}
-#evt .ebig{font-size:clamp(25px,4.4vh,44px);font-weight:700;color:var(--gold);line-height:1.12}
-#evt .ewhy{font-size:clamp(13px,2.1vh,19px);color:var(--body);line-height:1.45;max-width:22ch}
-#evt .ename{font-size:clamp(11.5px,1.8vh,15px);color:#8A7A45;letter-spacing:.08em}
-@keyframes evtIn{0%{opacity:0}5%{opacity:1}90%{opacity:1}100%{opacity:0}}
-@keyframes evtFlip{0%{transform:rotateY(0) scale(.6)}
- 8%{transform:rotateY(0) scale(1)}
- 13%{transform:rotateY(0) scale(1.02) rotate(-5deg)}
- 18%{transform:rotateY(0) scale(1.02) rotate(5deg)}
- 23%{transform:rotateY(0) scale(1.02) rotate(-4deg)}
- 28%{transform:rotateY(0) scale(1) rotate(0deg)}
- 44%{transform:rotateY(180deg) scale(1.07)}
- 52%{transform:rotateY(180deg) scale(1)}
- 93%{transform:rotateY(180deg) scale(1)}
- 100%{transform:rotateY(180deg) scale(.93) translateY(-34px)}}
+/* ── 驚喜卡（2026-09-21 改版；2026-09-25 使用者指定：字、圖示、動畫放大，文字簡潔，質感升級）──
+   一張真的卡：卡背先抖（等一下會翻開 ＝ 期待），翻開以後
+   大大的圖示 ➜ 最大的那一行 ＝ 你拿到什麼 ➜ 一行短短的白話 ➜ 卡片名字。
+   四種顏色（p0～p3）✕ 八種炸法 ＝ 每一張卡翻開的樣子都不一樣。 */
+#evt,#pick,#gain{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
+ background:rgba(0,0,0,.84);perspective:1400px}
+#evt.on,#pick.on,#gain.on{display:flex}
+.c3{position:relative;width:clamp(250px,40vw,420px);height:clamp(300px,52vh,460px);transform-style:preserve-3d;
+ transition:transform .75s cubic-bezier(.3,.8,.3,1.1)}
+.c3.flip{transform:rotateY(180deg)}
+#evt.on .c3.shake{animation:cShake .9s ease-in-out}
+@keyframes cShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-6deg) scale(1.04)}40%{transform:rotate(6deg) scale(1.04)}
+ 60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+.fc{position:absolute;inset:0;border-radius:28px;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(4px,1vh,12px);
+ padding:clamp(12px,2.4vh,26px);text-align:center;overflow:hidden}
+.fc.bk{background:radial-gradient(circle at 30% 20%,var(--pc2),var(--pc3) 70%);border:3px solid var(--pc);
+ box-shadow:0 0 50px var(--pcg),inset 0 0 30px rgba(255,255,255,.08)}
+.fc.bk::before{content:'';position:absolute;inset:10px;border-radius:20px;border:2px dashed rgba(255,255,255,.22)}
+.fc.bk .bi{font-size:clamp(80px,15vh,150px);line-height:1;animation:bBob 1.4s ease-in-out infinite}
+.fc.bk .bl{font-size:clamp(20px,3.4vh,32px);color:#fff;font-weight:700;letter-spacing:.2em}
+@keyframes bBob{0%,100%{transform:none}50%{transform:translateY(-10px) scale(1.06)}}
+.fc.ft{transform:rotateY(180deg);background:linear-gradient(160deg,var(--pc3),#050505 80%);border:3px solid var(--pc);
+ box-shadow:0 0 70px var(--pcg)}
+.fc.ft::after{content:'';position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent,var(--pcg),transparent 30%);
+ animation:shine 3.2s linear infinite;opacity:.55;z-index:-1}
+@keyframes shine{to{transform:rotate(360deg)}}
+.fc .eic{font-size:clamp(64px,12vh,124px);line-height:1;filter:drop-shadow(0 0 18px var(--pcg))}
+.fc .ebig{font-size:clamp(34px,6.6vh,66px);font-weight:700;color:var(--pc);line-height:1.08;text-shadow:0 0 22px var(--pcg)}
+.fc .ewhy{font-size:clamp(18px,3.1vh,30px);color:#fff;line-height:1.3;max-width:15em}
+.fc .ename{font-size:clamp(14px,2.2vh,20px);color:rgba(255,255,255,.6);letter-spacing:.08em}
+.p0{--pc:#FFD24A;--pc2:#6B5210;--pc3:#1D1606;--pcg:rgba(255,210,74,.5)}
+.p1{--pc:#5AD1FF;--pc2:#12506B;--pc3:#061621;--pcg:rgba(90,209,255,.5)}
+.p2{--pc:#FF7EB6;--pc2:#6B1640;--pc3:#1F0612;--pcg:rgba(255,126,182,.5)}
+.p3{--pc:#8CF08A;--pc2:#1F6B2A;--pc3:#07190A;--pcg:rgba(140,240,138,.5)}
+/* 自己選一張：二選一～五選一 */
+#pick .pbox{display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vh,22px);width:min(96vw,1100px)}
+#pick h2{margin:0;font-size:clamp(28px,5.4vh,54px);color:var(--gold);text-shadow:0 0 24px rgba(255,210,74,.5);
+ animation:pkT 1s ease-in-out infinite}
+@keyframes pkT{0%,100%{transform:none}50%{transform:scale(1.06)}}
+.prow{display:flex;gap:clamp(8px,1.6vw,20px);justify-content:center;flex-wrap:nowrap}
+.prow .c3{width:clamp(120px,17vw,210px);height:clamp(170px,30vh,290px);cursor:pointer;
+ animation:pkIn .5s cubic-bezier(.2,1.4,.4,1) both}
+.prow .c3:not(.flip):hover{transform:translateY(-8px)}
+.prow .fc .bi{font-size:clamp(46px,8vh,84px)}
+.prow .fc .bl{font-size:clamp(14px,2.2vh,22px)}
+.prow .fc .eic{font-size:clamp(36px,6.4vh,66px)}
+.prow .fc .ebig{font-size:clamp(18px,3.4vh,34px)}
+.prow .fc .ewhy{font-size:clamp(12px,2vh,19px)}
+.prow .fc .ename{font-size:clamp(11px,1.6vh,15px)}
+.prow .c3.dim{opacity:.4;filter:grayscale(.6)}
+.prow .c3.mine .fc.ft{box-shadow:0 0 0 5px #fff,0 0 80px var(--pcg)}
+@keyframes pkIn{from{opacity:0;transform:translateY(40px) scale(.7)}to{opacity:1;transform:none}}
+/* 答對的加分視窗：✅ ＋880 一眼看完，下面一排圖示算式 */
+#gain{background:rgba(0,0,0,.6)}
+.gbox{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.2vh,14px);
+ background:radial-gradient(circle at 50% 0%,#12361F,#040C07 75%);border:3px solid var(--ok);border-radius:30px;
+ padding:clamp(14px,2.6vh,30px) clamp(24px,4vw,56px);box-shadow:0 0 70px rgba(57,217,138,.35);
+ animation:gIn .5s cubic-bezier(.2,1.5,.4,1)}
+@keyframes gIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:none}}
+.gbox .gok{font-size:clamp(48px,9vh,90px);line-height:1}
+.gbox .gnum{font-size:clamp(64px,14vh,140px);font-weight:700;color:var(--gold);line-height:1;text-shadow:0 0 36px rgba(255,210,74,.55)}
+.geq{display:flex;align-items:center;gap:clamp(6px,1vw,14px);flex-wrap:wrap;justify-content:center}
+.geq span{display:flex;align-items:center;gap:.15em;font-size:clamp(22px,4.2vh,42px);font-weight:700;color:#fff;
+ background:#0A1A10;border:1px solid #1F4A2E;border-radius:14px;padding:.12em .4em;opacity:0;animation:gPart .4s ease forwards}
+.geq span.m{color:var(--gold);border-color:#6B5714;background:#1A1506}
+.geq i{font-style:normal;color:#5E7A68;font-size:clamp(18px,3.2vh,32px)}
+@keyframes gPart{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.gbar{width:min(70vw,440px);height:clamp(12px,2vh,20px);background:#10281A;border-radius:99px;overflow:hidden}
+.gbar i{display:block;height:100%;background:linear-gradient(90deg,#F5B301,#39D98A);border-radius:99px;
+ transform-origin:left;animation:gBar .8s ease-out both}
+@keyframes gBar{from{transform:scaleX(0)}to{transform:none}}
+/* 驚喜卡翻開：卡片上的圖示炸滿整個畫面（八種炸法 ✕ 四種顏色，只動 transform／opacity）*/
+#burst{position:fixed;inset:0;z-index:61;pointer-events:none;overflow:hidden}
+#burst i{position:absolute;left:50%;top:45%;font-style:normal;line-height:1;will-change:transform,opacity;
+ font-size:var(--z,44px);animation:var(--a) var(--d,1.9s) cubic-bezier(.2,.8,.3,1) var(--w,0s) both}
+#burst b{position:absolute;left:50%;top:45%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;
+ border:4px solid var(--pc,#FFD24A);animation:bRing 1s ease-out both}
+@keyframes bRing{from{transform:scale(.2);opacity:.9}to{transform:scale(16);opacity:0}}
+@keyframes bBoom{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}12%{opacity:1}
+ 100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.2) rotate(var(--r));opacity:0}}
+@keyframes bRain{0%{transform:translate(calc(-50% + var(--x)),-60vh) rotate(0);opacity:0}10%{opacity:1}
+ 100%{transform:translate(calc(-50% + var(--x)),75vh) rotate(var(--r));opacity:.2}}
+@keyframes bRise{0%{transform:translate(calc(-50% + var(--x)),70vh) scale(.6);opacity:0}15%{opacity:1}
+ 100%{transform:translate(calc(-50% + var(--x)),-55vh) scale(1.3);opacity:0}}
+@keyframes bSpin{0%{transform:translate(-50%,-50%) rotate(0) translateX(0) scale(.3);opacity:0}15%{opacity:1}
+ 100%{transform:translate(-50%,-50%) rotate(var(--r)) translateX(var(--x)) scale(1.1);opacity:0}}
+@keyframes bSpiral{0%{transform:translate(-50%,-50%) rotate(0) translateX(0) scale(.2);opacity:0}20%{opacity:1}
+ 100%{transform:translate(-50%,-50%) rotate(calc(var(--r) * 2)) translateX(var(--x)) scale(1.4);opacity:0}}
+@keyframes bFount{0%{transform:translate(-50%,40vh) scale(.4);opacity:0}15%{opacity:1}
+ 55%{transform:translate(calc(-50% + var(--x) * .6),calc(-30vh + var(--y) * .2)) scale(1.1)}
+ 100%{transform:translate(calc(-50% + var(--x)),50vh) rotate(var(--r));opacity:0}}
+@keyframes bZoom{0%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(0);opacity:0}
+ 40%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(2.4);opacity:1}
+ 100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(.2);opacity:0}}
+@keyframes bWave{0%{transform:translate(-60vw,calc(-50% + var(--y))) rotate(0);opacity:0}15%{opacity:1}
+ 50%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y) - 8vh)) rotate(var(--r))}
+ 100%{transform:translate(60vw,calc(-50% + var(--y))) rotate(0);opacity:0}}
+#stage.quake{animation:quake .5s}
+@keyframes quake{0%,100%{transform:none}20%{transform:translate(-7px,3px)}40%{transform:translate(6px,-4px)}
+ 60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-1px)}}
 
 /* 魔王技能：壞事用紅色橫幅，不要跟金色的驚喜卡混在一起
    （驚喜卡只給好事，學生才分得出來哪一個是獎勵）*/
@@ -156,10 +220,10 @@ const CSS = `
 #arena{display:none;flex-direction:column;align-items:center;gap:clamp(8px,1.5vh,16px);
  width:100%;max-width:1080px;margin:0 auto}
 #arena.on{display:flex}
-.qh{font-size:clamp(19px,3.6vh,34px);font-weight:700;text-align:center;line-height:1.35;max-width:28ch}
-.qs{font-size:clamp(13px,2.1vh,20px);color:var(--acc);text-align:center}
-.qbig{font-size:clamp(25px,5vh,50px);font-weight:700;text-align:center;line-height:1.2}
-.qzh{font-size:clamp(14px,2.3vh,22px);color:var(--acc);text-align:center}
+.qh{font-size:clamp(25px,5vh,50px);font-weight:700;text-align:center;line-height:1.3;max-width:26ch}
+.qs{font-size:clamp(17px,2.8vh,28px);color:var(--acc);text-align:center}
+.qbig{font-size:clamp(30px,6.6vh,66px);font-weight:700;text-align:center;line-height:1.2}
+.qzh{font-size:clamp(19px,3.2vh,32px);color:var(--acc);text-align:center}
 .tagline{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .tg{font-size:clamp(11px,1.65vh,14px);letter-spacing:.08em;color:var(--acc);
  border:1px solid #2C3A48;border-radius:999px;padding:3px 11px}
@@ -174,8 +238,8 @@ const CSS = `
 .opts.one{grid-template-columns:1fr}
 .o{display:flex;align-items:center;gap:clamp(7px,1.2vw,14px);text-align:left;
  background:#0C0C0C;border:1px solid #262626;border-radius:15px;color:var(--fg);
- font-size:clamp(15px,2.5vh,25px);line-height:1.3;
- padding:clamp(9px,1.7vh,18px) clamp(11px,1.7vw,22px);min-height:clamp(50px,7.8vh,80px)}
+ font-size:clamp(20px,3.8vh,38px);font-weight:700;line-height:1.25;
+ padding:clamp(8px,1.5vh,16px) clamp(11px,1.7vw,22px);min-height:clamp(56px,9vh,92px)}
 .o .sh{flex:0 0 auto;width:1.25em;text-align:center;font-size:.82em}
 .o.s0 .sh{color:#FF5E5E}.o.s1 .sh{color:#F5B301}.o.s2 .sh{color:#39D98A}.o.s3 .sh{color:#5AA9FF}
 .o:active{transform:scale(.985)}
@@ -183,26 +247,7 @@ const CSS = `
 .o.bad{background:#3A1111;border-color:var(--no)}
 .o.dim{opacity:.3}
 
-${GC.burst ? `/* 驚喜卡翻開：卡片上的圖示炸滿整個畫面（只動 transform／opacity）*/
-#burst{position:fixed;inset:0;z-index:58;pointer-events:none;overflow:hidden}
-#burst i{position:absolute;left:50%;top:40%;font-style:normal;line-height:1;will-change:transform,opacity;
- font-size:var(--z,44px);animation:var(--a) var(--d,1.9s) cubic-bezier(.2,.8,.3,1) var(--w,0s) both}
-#burst b{position:absolute;left:50%;top:40%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;
- border:6px solid var(--gold);animation:bRing 1s ease-out both}
-@keyframes bRing{from{transform:scale(.2);opacity:1}to{transform:scale(22);opacity:0}}
-@keyframes bBoom{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}12%{opacity:1}
- 100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.2) rotate(var(--r));opacity:0}}
-@keyframes bRain{0%{transform:translate(calc(-50% + var(--x)),-60vh) rotate(0);opacity:0}10%{opacity:1}
- 100%{transform:translate(calc(-50% + var(--x)),75vh) rotate(var(--r));opacity:.2}}
-@keyframes bRise{0%{transform:translate(calc(-50% + var(--x)),70vh) scale(.6);opacity:0}15%{opacity:1}
- 100%{transform:translate(calc(-50% + var(--x)),-55vh) scale(1.3);opacity:0}}
-@keyframes bSpin{0%{transform:translate(-50%,-50%) rotate(0) translateX(0) scale(.3);opacity:0}15%{opacity:1}
- 100%{transform:translate(-50%,-50%) rotate(var(--r)) translateX(var(--x)) scale(1.1);opacity:0}}
-#stage.quake{animation:quake .5s}
-@keyframes quake{0%,100%{transform:none}20%{transform:translate(-7px,3px)}40%{transform:translate(6px,-4px)}
- 60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-1px)}}
-
-` : ''}/* 兩顆大按鈕（他／她、問句／直述句） */
+/* 兩顆大按鈕（他／她、問句／直述句） */
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,1.5vw,18px);width:100%}
 .dbtn{border-radius:20px;border:2px solid #2A2A2A;background:#0A0A0A;color:var(--fg);
  min-height:clamp(84px,15vh,150px);display:flex;flex-direction:column;align-items:center;
@@ -218,7 +263,7 @@ ${GC.burst ? `/* 驚喜卡翻開：卡片上的圖示炸滿整個畫面（只動
 /* 語序／火眼金睛的字塊 */
 .chips{display:flex;flex-wrap:wrap;gap:clamp(6px,1vw,11px);justify-content:center;width:100%}
 .cw{background:#111;border:1px solid #2C2C2C;border-radius:13px;color:var(--fg);
- font-size:clamp(18px,3.2vh,32px);font-weight:700;
+ font-size:clamp(22px,4.2vh,42px);font-weight:700;
  padding:clamp(7px,1.3vh,14px) clamp(11px,1.6vw,22px)}
 .cw:active{transform:scale(.95)}
 .cw.used{opacity:.18;pointer-events:none}
@@ -234,7 +279,7 @@ ${GC.burst ? `/* 驚喜卡翻開：卡片上的圖示炸滿整個畫面（只動
 /* 記憶配對 */
 .board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(6px,1.1vw,12px);width:100%}
 .mc{min-height:clamp(62px,11vh,116px);border-radius:15px;border:1px solid #2A2A2A;background:#0C0C0C;
- color:var(--fg);font-size:clamp(13px,2.15vh,21px);font-weight:700;line-height:1.25;
+ color:var(--fg);font-size:clamp(16px,2.8vh,27px);font-weight:700;line-height:1.25;
  display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;
  transition:transform .22s,background .2s,opacity .3s}
 .mc.back{background:#151B22;color:#3E4C5A;font-size:clamp(20px,3.4vh,32px)}
@@ -271,7 +316,7 @@ ${GC.burst ? `/* 驚喜卡翻開：卡片上的圖示炸滿整個畫面（只動
 #gend .ln{font-size:clamp(13px,2.15vh,20px);color:var(--dim)}
 #gend .rev{width:100%;text-align:left;background:#0A0A0A;border:1px solid #232323;border-radius:14px;
  padding:clamp(9px,1.6vh,16px);max-height:34vh;overflow-y:auto}
-#gend .rev div{font-size:clamp(12.5px,2vh,18px);color:var(--body);line-height:1.55;
+#gend .rev div{font-size:clamp(16px,2.6vh,24px);color:var(--body);line-height:1.55;
  padding:4px 0;border-bottom:1px solid #161616}
 #gend .rev b{color:var(--gold)}
 .big{background:var(--btn);border:1px solid var(--line);border-radius:15px;color:var(--fg);
@@ -279,97 +324,180 @@ ${GC.burst ? `/* 驚喜卡翻開：卡片上的圖示炸滿整個畫面（只動
 .big.go{background:#123A26;border-color:var(--ok);color:#EAFFF3}
 .big:active{transform:scale(.97)}
 .rowbtn{display:flex;gap:clamp(7px,1.3vw,14px);flex-wrap:wrap;justify-content:center}
+/* ⏳ 每一個遊戲 5 分鐘（使用者 2026-09-25 指定） */
+#gclock{font-size:clamp(22px,4vh,40px);font-weight:700;color:var(--fg);font-variant-numeric:tabular-nums}
+#gclock.warn{color:var(--be)}#gclock.dang{color:var(--no);animation:thump .6s infinite}
+#gring.frz #gfg{stroke:#8FD8FF}#gring.frz #gnum{color:#8FD8FF}
+.tg{font-size:clamp(13px,2.1vh,19px)}
+.hintl{font-size:clamp(17px,2.9vh,28px);color:var(--gold);background:#1A1508;border:1px solid #5A4A18;
+ border-radius:14px;padding:4px 16px;text-align:center}
+.o.cut{visibility:hidden}
+.o.cutting{animation:cutAway .7s ease forwards}
+@keyframes cutAway{0%{opacity:1}40%{transform:rotate(-4deg) scale(1.03)}100%{opacity:0;transform:translateY(20px) scale(.8)}}
 `;
 
 const JS = `
 var BANK=__BANK__, META=__META__, SURP=__SURP__;${DUO9 ? '\nvar LAB9=' + LAB9 + ';' : ''}
+var DUOV=${OTHER2};
 var SHAPE=['▲','◆','●','■'];
-var QT=15, ROUNDQ=12;                 /* 每一題 15 秒，一場 12 題（使用者 2026-09-21 指定） */
+var QT=15, GT=300;                    /* 每一題 15 秒；每一個遊戲 5 分鐘（使用者 2026-09-25 指定） */
+var OPTG={g1:1,g4:1,g5:1,g8:1,g10:1}; /* 有四個選項的遊戲（驚喜卡「刪掉錯的選項」只給它們） */
 var g=null,queue=[],cur=null,left=QT,qt=QT,tick=null,score=0,streak=0,best=0,right=0,wrong=0;
 var asked=0,speedSum=0,shield=0,timeAdd=0,opened=[],lastGain=0;
-var mult=1,multLeft=0,fast=0,wrongList=[],busy=false,memPairs=[],memOpen=[],memLeft=0;
+var mult=1,multLeft=0,fastV=0,cutNext=0,hintNext=0,goldNext=0,freezeNext=0,frozenTo=0,combo=null;
+var wrongList=[],busy=false,memPairs=[],memOpen=[],memLeft=0;
 var bossHP=100,bossMax=100,bossShield=0;
+var gLeft=GT,gTick=null,gPause=0,ended=false;
 var pool=[];
 var PICK=null;   /* 學生按了什麼（答錯的獨立頁要用） */
 
 var R=2*Math.PI*46;$('#gfg').setAttribute('stroke-dasharray',R);
 
-/* ── 驚喜卡：每一個遊戲 20 種，抽過不重複，十個遊戲都不一樣 ──
-   使用者 2026-09-21 回報「看不懂驚喜的意義、看不懂文字和圖示」。
-   所以卡片上最大的那一行 ＝ 你拿到什麼（eBig），
-   下面一行 ＝ 現在會發生什麼事（eWhy），兩行都是從效果直接算出來的，
-   不會跟實際發生的事不一樣。 */
-var nextEvt=2+Math.floor(Math.random()*3);
+/* ══ 驚喜卡（使用者 2026-09-25 指定改版）══════════════════════════════
+   連續答對 3 題才翻一張。70% 直接翻一張；30% 自己選：二選一 12%、三選一 9%、四選一 6%、五選一 3%。
+   卡片上最大的那一行 ＝ 你拿到什麼（eBig），下面一行 ＝ 會發生什麼事（eWhy），都從效果直接算出來。
+   只給好事，沒有銘謝惠顧、沒有扣分。 */
+function vOf(e){return e.k==='lucky'?(e.got||0):e.v}
 function eBig(e){
-  if(e.k==='pts')return '＋'+e.v+' 分';
-  if(e.k==='x2')return '分數 ✕ 2';
-  if(e.k==='x3')return '分數 ✕ 3';
-  if(e.k==='time')return '下一題 ＋'+e.v+' 秒';
-  if(e.k==='fast')return '快答 ＋'+e.v+' 分';
-  if(e.k==='streak')return '🔥 連對 ＋'+e.v;
-  if(e.k==='shield')return '🛡 護盾';
+  var v=e.v;
+  if(e.k==='pts')return '＋'+v+' 分';
+  if(e.k==='lucky')return '🧧 ＋'+(e.got||0);
+  if(e.k==='now')return '這一題 ✕ '+v;
+  if(e.k==='mul')return '分數 ✕ '+v[0];
+  if(e.k==='time')return '⏰ ＋'+v+' 秒';
+  if(e.k==='cut')return '✂️ 刪 '+v+' 個';
+  if(e.k==='shield')return '🛡 免死金牌';
+  if(e.k==='combo')return '🔗 連對 '+v[0]+' ➜ ✕ '+v[1];
+  if(e.k==='hint')return '💡 送你提示';
+  if(e.k==='gold')return '🏅 黃金題';
+  if(e.k==='fast')return '🎯 快答 ＋'+v;
+  if(e.k==='streak')return '🔥 連對 ＋'+v;
+  if(e.k==='freeze')return '❄️ 凍結 '+v+' 秒';
   return '';
 }
 function eWhy(e){
-  if(e.k==='pts')return '這 '+e.v+' 分現在就加進你的分數';
-  if(e.k==='x2')return '接下來 '+e.v+' 題，答對的分數都變兩倍';
-  if(e.k==='x3')return '接下來 '+e.v+' 題，答對的分數都變三倍';
-  if(e.k==='time')return '下一題多給你 '+e.v+' 秒，想清楚再按';
-  if(e.k==='fast')return '下一題 5 秒內答對，再多拿 '+e.v+' 分';
-  if(e.k==='streak')return '連對直接加 '+e.v+'，分數跟著跳上去';
-  if(e.k==='shield')return '下一題就算答錯，連對也不會歸零';
+  var v=e.v;
+  if(e.k==='pts')return '分數直接加上去';
+  if(e.k==='lucky')return '神秘紅包打開了';
+  if(e.k==='now')return lastGain+' ✕ '+v+' ＝ '+(lastGain*v);
+  if(e.k==='mul')return '接下來 '+v[1]+' 題都 ✕ '+v[0];
+  if(e.k==='time')return '下一題多 '+v+' 秒';
+  if(e.k==='cut')return '下一題少 '+v+' 個錯的選項';
+  if(e.k==='shield')return '下一次答錯不算錯';
+  if(e.k==='combo')return '連對 '+v[0]+' 題，第 '+(v[0]+1)+' 題 ✕ '+v[1];
+  if(e.k==='hint')return '下一題先看到提示';
+  if(e.k==='gold')return '下一題答對 ＋'+v;
+  if(e.k==='fast')return '下一題 5 秒內答對';
+  if(e.k==='streak')return '連對數字直接加上去';
+  if(e.k==='freeze')return '下一題前 '+v+' 秒，時間不動';
   return '';
 }
 function doEvt(e){
-  if(e.k==='pts'){score+=e.v;popScore(e.v)}
-  else if(e.k==='x2'){mult=2;multLeft=e.v}
-  else if(e.k==='x3'){mult=3;multLeft=e.v}
-  else if(e.k==='time')timeAdd=e.v;        /* 下一題開始時才加得到（不然答完就被重設掉） */
-  else if(e.k==='fast')fast=Date.now();
-  else if(e.k==='streak'){streak+=e.v;if(streak>best)best=streak}
+  var v=e.v;
+  if(e.k==='pts'){score+=v;popScore(v)}
+  else if(e.k==='lucky'){score+=e.got;popScore(e.got)}
+  else if(e.k==='now'){var add=lastGain*(v-1);score+=add;popScore(add)}
+  else if(e.k==='mul'){mult=v[0];multLeft=v[1]}
+  else if(e.k==='time')timeAdd+=v;        /* 下一題開始時才加得到 */
+  else if(e.k==='cut')cutNext=v;
   else if(e.k==='shield')shield=1;
+  else if(e.k==='combo')combo={need:v[0],mul:v[1],n:0};
+  else if(e.k==='hint')hintNext=1;
+  else if(e.k==='gold')goldNext=v;
+  else if(e.k==='fast')fastV=v;
+  else if(e.k==='streak'){streak+=v;if(streak>best)best=streak}
+  else if(e.k==='freeze')freezeNext=v;
 }
-function fire(){
-  if(!pool.length)pool=shuf((SURP[g]||[]).slice());
-  var e=pool.shift();if(!e)return;
-${GC.lucky ? "  /* 神秘紅包：翻開才決定是幾分（10 分一跳），學生猜不到 */\n  if(e.k==='lucky')e={t:e.t,k:'pts',v:e.v[0]+Math.round(Math.random()*(e.v[1]-e.v[0])/10)*10};\n" : ''}  $('#evt .ebig').textContent=eBig(e);
-  $('#evt .ewhy').textContent=eWhy(e);
-  $('#evt .ename').textContent=e.t;
-  var box=$('#evt');box.classList.remove('on');void box.offsetWidth;box.classList.add('on');
-  sWow();
-  /* 卡片翻過來的那一刻，效果才真的發生（分數也才跳上去）——
-     學生看得到「是這張卡給我的」，不會莫名其妙多了幾分（使用者 2026-09-21 指定） */
-  setTimeout(function(){opened.push(e.t);doEvt(e);paint()${GC.burst ? ';burst(e)' : ''}},1000);
-  nextEvt=2+Math.floor(Math.random()*3);
+/* 神秘紅包：翻開那一刻才決定幾分（10 分一跳） */
+function roll(e){var c={};for(var k in e)c[k]=e[k];
+  if(c.k==='lucky')c.got=c.v[0]+Math.round(Math.random()*(c.v[1]-c.v[0])/10)*10;return c}
+function draw1(){if(!pool.length)pool=shuf((SURP[g]||[]).slice());return pool.shift()}
+function cardHTML(e,big){
+  var em=String(e.t).split(' ')[0], nm=String(e.t).split(' ').slice(1).join(' ');
+  return '<div class="c3 p'+e.fx[1]+'"><div class="fc bk"><span class="bi">🎁</span><span class="bl">驚喜卡</span></div>'+
+   '<div class="fc ft"><div class="eic">'+em+'</div><div class="ebig">'+eBig(e)+'</div>'+
+   '<div class="ewhy">'+eWhy(e)+'</div><div class="ename">'+nm+'</div></div></div>';
 }
-${GC.burst ? `/* 翻開的那一刻：卡片上的圖示炸滿整個畫面，四種炸法隨機，學生猜不到下一次是哪一種 */
+/* 翻一張：卡背抖一抖 ➜ 翻開的那一刻效果才生效、炸滿畫面 ➜ 收起來 ➜ done() */
+function fire(done){
+  var e=draw1();if(!e){if(done)done();return}
+  e=roll(e);
+  gPause++;
+  var box=$('#evt');box.innerHTML=cardHTML(e);box.classList.add('on');
+  var c=$('.c3',box);c.classList.add('shake');sWow();
+  setTimeout(function(){c.classList.remove('shake');c.classList.add('flip')},900);
+  setTimeout(function(){opened.push(e.t);doEvt(e);paint();burst(e)},1300);
+  setTimeout(function(){box.classList.remove('on');box.innerHTML='';gPause=Math.max(0,gPause-1);if(done&&!ended)done()},3900);
+}
+/* 自己選一張（二～五選一）：選到的那張翻開生效，其他張也翻開給你看（變暗），沒選到的放回牌堆 */
+function pickN(n,done){
+  var cs=[];for(var k=0;k<n;k++){var e=draw1();if(e&&cs.indexOf(e)<0)cs.push(roll(e))}
+  if(cs.length<2){if(cs[0])pool.unshift(cs[0]);fire(done);return}
+  gPause++;
+  var box=$('#pick');
+  box.innerHTML='<div class="pbox"><h2>🎁 '+cs.length+' 選 1！選一張</h2><div class="prow">'+
+    cs.map(function(e,k){return cardHTML(e).replace('class="c3','data-k="'+k+'" style="animation-delay:'+(k*0.12).toFixed(2)+'s" class="c3')}).join('')+'</div></div>';
+  box.classList.add('on');sWow();
+  var got=false;
+  $$('.prow .c3',box).forEach(function(el){el.addEventListener('click',function(){
+    if(got)return;got=true;
+    var k=parseInt(el.getAttribute('data-k'),10), e=cs[k];
+    el.classList.add('flip','mine');
+    setTimeout(function(){opened.push(e.t);doEvt(e);paint();burst(e)},450);
+    setTimeout(function(){$$('.prow .c3',box).forEach(function(x){if(x!==el){x.classList.add('flip','dim')}})},1300);
+    cs.forEach(function(x,j){if(j!==k){for(var q=0;q<(SURP[g]||[]).length;q++)if(SURP[g][q].t===x.t){pool.push(SURP[g][q]);break}}});
+    setTimeout(function(){box.classList.remove('on');box.innerHTML='';gPause=Math.max(0,gPause-1);if(done&&!ended)done()},3800);
+  })});
+}
+function surprise(done){
+  var r=Math.random(), n=r<0.70?1:(r<0.82?2:(r<0.91?3:(r<0.97?4:5)));
+  if(n===1)fire(done);else pickN(n,done);
+}
+/* 翻開的那一刻：卡片上的圖示炸滿整個畫面；八種炸法 ✕ 四種顏色，每一張卡都不一樣 */
+var BK=['bBoom','bRain','bRise','bSpin','bSpiral','bFount','bZoom','bWave'];
+var PC=['#FFD24A','#5AD1FF','#FF7EB6','#8CF08A'];
 function burst(e){
   if(document.body.classList.contains('reduce'))return;
   var bx=document.getElementById('burst');if(!bx)return;
-  var em=String(e.t).split(' ')[0], kind=pick(['bBoom','bRain','bRise','bSpin']), h='<b></b>';
-  for(var n=0;n<22;n++){
-    var x,y=0,r=(Math.random()*720-360)+'deg',w=(Math.random()*.35).toFixed(2)+'s';
-    if(kind==='bBoom'){var a=Math.random()*6.283,d=18+Math.random()*34;x=Math.cos(a)*d+'vw';y=Math.sin(a)*d+'vh'}
-    else if(kind==='bSpin'){x=(12+Math.random()*30)+'vw';r=(n*33+180)+'deg'}
+  var em=String(e.t).split(' ')[0], kind=BK[e.fx[0]], h='<b style="--pc:'+PC[e.fx[1]]+'"></b>';
+  for(var n=0;n<24;n++){
+    var x,y=(Math.random()*60-30)+'vh',r=(Math.random()*720-360)+'deg',w=(Math.random()*.35).toFixed(2)+'s';
+    if(kind==='bBoom'||kind==='bZoom'){var a=Math.random()*6.283,d=16+Math.random()*34;x=Math.cos(a)*d+'vw';y=Math.sin(a)*d+'vh'}
+    else if(kind==='bSpin'||kind==='bSpiral'){x=(12+Math.random()*30)+'vw';r=(n*33+180)+'deg'}
     else x=(Math.random()*96-48)+'vw';
-    h+='<i style="--a:'+kind+';--x:'+x+';--y:'+y+';--r:'+r+';--w:'+w+';--z:'+(30+Math.round(Math.random()*44))+'px">'+em+'</i>';
+    h+='<i style="--a:'+kind+';--x:'+x+';--y:'+y+';--r:'+r+';--w:'+w+';--z:'+(34+Math.round(Math.random()*50))+'px">'+em+'</i>';
   }
   bx.innerHTML=h;
   var st=document.getElementById('stage');st.classList.remove('quake');void st.offsetWidth;st.classList.add('quake');
-  clearTimeout(burst.t);   /* 連翻兩張：前一張的清除不可以把這一張炸掉 */
-  burst.t=setTimeout(function(){bx.innerHTML='';st.classList.remove('quake')},2500);
+  clearTimeout(burst.t);
+  burst.t=setTimeout(function(){bx.innerHTML='';st.classList.remove('quake')},2600);
 }
-` : ''}/* 分數是「現在」加上去的：數字跳一下，旁邊飄一個 ＋850 上去 */
+/* 分數是「現在」加上去的：數字跳一下，旁邊飄一個 ＋850 上去 */
 function popScore(v){
   var el=$('#gpop');if(el){el.textContent='＋'+v;
     el.classList.remove('on');void el.offsetWidth;el.classList.add('on')}
   var sc=$('#gsc');if(sc){sc.classList.remove('bump');void sc.offsetWidth;sc.classList.add('bump')}
 }
+/* 答對的加分視窗：✅ ＋880，下面一排圖示算式；字大、字少（使用者 2026-09-25 指定） */
+function showGain(d,done){
+  var box=$('#gain');
+  var parts='<span>✅ 100</span><i>＋</i><span>⚡ '+d.sp+'</span>'+(d.st?'<i>＋</i><span>🔥 '+d.st+'</span>':'')+
+    (d.mul>1?'<i>✕</i><span class="m">'+d.mul+'</span>':'')+(d.extra?'<i>＋</i><span class="m">'+d.extraIc+' '+d.extra+'</span>':'');
+  box.innerHTML='<div class="gbox"><div class="gok">✅</div><div class="gnum" id="gnumv">＋0</div>'+
+    '<div class="geq">'+parts+'</div><div class="gbar"><i style="width:'+Math.max(4,Math.round(100*d.pct))+'%"></i></div></div>';
+  $$('.geq span',box).forEach(function(x,k){x.style.animationDelay=(0.15+k*0.14).toFixed(2)+'s'});
+  box.classList.add('on');gPause++;
+  var t0=Date.now(), el=$('#gnumv');
+  var step=function(){var k=Math.min(1,(Date.now()-t0)/650);if(el)el.textContent='＋'+Math.round(d.p*k);if(k<1)requestAnimationFrame(step)};
+  requestAnimationFrame(step);
+  setTimeout(function(){box.classList.remove('on');box.innerHTML='';gPause=Math.max(0,gPause-1);if(done&&!ended)done()},d.short?1100:1700);
+}
 
 /* ── 大廳 ── */
 function hub(){
-  stop();missHide(false);
+  stop();gStop();missHide(false);ended=true;
   var ma=document.getElementById('missAll');if(ma)ma.classList.remove('on');
+  ['#evt','#pick','#gain'].forEach(function(s){var x=$(s);x.classList.remove('on');x.innerHTML=''});gPause=0;
   $('#hub').style.display='';$('#ghud').classList.remove('on');
   $('#arena').classList.remove('on');$('#gend').classList.remove('on');
   $('#stage').classList.remove('lock');
@@ -378,7 +506,7 @@ function hub(){
     return '<button class="gcard" data-g="'+m.id+'"><span class="gn">'+(n+1)+'</span>'+
       '<span class="gi">'+m.ic+'</span><span class="gt">'+m.name+'</span>'+
       '<span class="gr">'+m.rule+'</span>'+
-      '<span class="gb">'+m.n+' 題庫　一場 '+ROUNDQ+' 題　每題 '+QT+' 秒　🎁 '+m.st+'驚喜卡 ${NS} 張'+
+      '<span class="gb">⏳ 5 分鐘　🎁 '+m.st+' ${NS} 張'+
       (b?'　最佳 <b>'+b+'</b>':'')+'</span></button>';
   }).join('');
 }
@@ -389,10 +517,11 @@ $('#grid').addEventListener('click',function(e){
 
 /* ── 開一場 ── */
 function begin(id){
-  g=id;
-  score=0;streak=0;best=0;right=0;wrong=0;mult=1;multLeft=0;fast=0;wrongList=[];busy=false;
+  g=id;ended=false;
+  score=0;streak=0;best=0;right=0;wrong=0;mult=1;multLeft=0;fastV=0;wrongList=[];busy=false;
   asked=0;speedSum=0;shield=0;timeAdd=0;opened=[];lastGain=0;pool=shuf((SURP[id]||[]).slice());
-  left=QT;qt=QT;nextEvt=2+Math.floor(Math.random()*3);
+  cutNext=0;hintNext=0;goldNext=0;freezeNext=0;frozenTo=0;combo=null;
+  left=QT;qt=QT;
   bossHP=bossMax=100;bossShield=0;
   memLeft=0;memOpen=[];memPairs=[];MISSLOG=[];missHide(false);
   queue=shuf(BANK[id].slice());
@@ -400,14 +529,31 @@ function begin(id){
   $('#arena').classList.add('on');$('#gend').classList.remove('on');
   var m=META.filter(function(x){return x.id===id})[0];
   $('#gname').textContent=m.ic+' '+m.name;
+  gStart();
   next();
 }
-/* 每一題自己的倒數：時間到就算答錯，給提示再出下一題 */
+/* ⏳ 一場 5 分鐘：答錯分析頁也照算（驚喜卡、加分視窗的動畫時間不算） */
+function gStart(){gStop();gLeft=GT;gPause=0;gPaint();
+  gTick=setInterval(function(){if(ended)return;if(!gPause){gLeft-=0.1;if(gLeft<=0){gLeft=0;gPaint();timeOver();return}}gPaint()},100)}
+function gStop(){if(gTick){clearInterval(gTick);gTick=null}}
+function gPaint(){var c=$('#gclock');if(!c)return;var s=Math.ceil(gLeft);
+  c.textContent='⏳ '+Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);
+  c.className=gLeft<=30?'dang':(gLeft<=60?'warn':'')}
+function timeOver(){
+  if(ended)return;
+  stop();gStop();missHide(false);
+  ['#evt','#pick','#gain'].forEach(function(s){var x=$(s);x.classList.remove('on');x.innerHTML=''});gPause=0;
+  over('⏰ 5 分鐘到！');
+}
+/* 每一題自己的倒數：時間到就算答錯；❄️ 凍結的那幾秒不會少 */
 function run(sec){
   if(tick)clearInterval(tick);
   qt=Math.max(5,(sec||QT)+timeAdd);timeAdd=0;  /* 驚喜卡（或魔王技能）給的秒數在這一題才生效 */
+  frozenTo=freezeNext?Date.now()+freezeNext*1000:0;freezeNext=0;
   left=qt;paint();
   tick=setInterval(function(){
+    if(gPause)return;
+    if(frozenTo&&Date.now()<frozenTo){paint();return}
     left-=0.1;
     if(left<=0){left=0;paint();tstop();timeUp();return}
     if(left<=5&&Math.abs(left-Math.round(left))<0.05)sTick();
@@ -416,10 +562,10 @@ function run(sec){
 }
 function timeUp(){
   if(busy)return;
-  if(g==='g6'){busy=true;sNo();streak=0;paint();
-    $('#gfb').innerHTML='<div class="fh no">⏰ 時間到！</div><div class="fw">記住位置，下一局會更快。</div>';
+  if(g==='g6'){busy=true;sNo();streak=0;combo=null;paint();
+    $('#gfb').innerHTML='<div class="fh no">⏰ 時間到！</div>';
     asked++;memLeft=0;
-    setTimeout(function(){if(asked>=ROUNDQ)over();else{busy=false;next()}},1600);return}
+    setTimeout(function(){if(!ended){busy=false;next()}},1400);return}
   judge(false,cur?cur.h:'',null,true);
 }
 function tstop(){if(tick){clearInterval(tick);tick=null}}   /* 只停這一題的倒數 */
@@ -427,33 +573,41 @@ function stop(){tstop();sayStop()}                          /* 離開遊戲才�
 function paint(){
   $('#gnum').textContent=Math.ceil(left);
   $('#gfg').setAttribute('stroke-dashoffset',R*(1-left/qt));
-  $('#gring').className=left<=5?'dang':(left<=8?'warn':'');
+  $('#gring').className=(frozenTo&&Date.now()<frozenTo)?'frz':(left<=5?'dang':(left<=8?'warn':''));
   $('#gsc').textContent=score;
   $('#gstreak').textContent=(shield?'🛡 ':'')+(streak?'🔥 '+streak:'—');
   $('#gsurp').textContent='🎁 '+opened.length;
-  $('#gprog').textContent=asked+' ／ '+ROUNDQ+' 題';
+  var t=$('#tagsL');if(t)t.innerHTML=tagsIn();
 }
 
 /* ── 出下一題 ── */
 function next(){
+  if(ended)return;
   busy=false;PICK=null;
   var fb=$('#gfb');if(fb)fb.innerHTML='';   /* 第一題時 #gfb 還沒被畫出來 */
-  if(asked>=ROUNDQ){over();return}
   if(!queue.length)queue=shuf(BANK[g].slice());
   cur=queue.shift();
   ({g1:rMcq,g2:rTwo,g3:rOrder,g4:rTrans,g5:rHear,g6:rMem,g7:rSpot,g8:rFill,g9:rSort,g10:rBoss}[g])();
+  /* 驚喜卡的效果：💡 先看到提示、✂️ 刪掉錯的選項 */
+  if(hintNext&&cur&&cur.h&&g!=='g6'){hintNext=0;var a=$('#arena'),hl=el('div','hintl','💡 '+ap(cur.h));
+    var tl=$('.tagline',a);if(tl&&tl.nextSibling)a.insertBefore(hl,tl.nextSibling);else a.insertBefore(hl,a.firstChild)}
+  if(cutNext&&OPTG[g]){var bad=shuf($$('#arena .o[data-ok="false"]')).slice(0,cutNext);cutNext=0;
+    bad.forEach(function(b){b.classList.add('cutting');setTimeout(function(){b.classList.remove('cutting');b.classList.add('cut')},700)})}
   run(g==='g6'?QT*4:QT);     /* 記憶配對一局四對，時間比照四題 */
 }
+/* 標籤：現在身上有什麼好東西、再連對幾題翻驚喜卡（字少、看得懂） */
+function tagsIn(){
+  var h='', need=3-(streak%3);
+  if(multLeft>0)h+='<span class="tg hot">✕'+mult+'　還剩 '+multLeft+' 題</span>';
+  if(combo)h+='<span class="tg hot">🔗 '+combo.n+' ／ '+combo.need+' ➜ ✕'+combo.mul+'</span>';
+  if(goldNext)h+='<span class="tg hot">🏅 黃金題 ＋'+goldNext+'</span>';
+  if(fastV)h+='<span class="tg hot">🎯 5 秒內 ＋'+fastV+'</span>';
+  if(shield)h+='<span class="tg hot">🛡 免死金牌</span>';
+  h+='<span class="tg go'+(need<=1?' near':'')+'">'+(need<=1?'🎁 再對 1 題就翻卡！':'🎁 再連對 '+need+' 題')+'</span>';
+  return h;
+}
 function tags(extra){
-  var h='';
-  if(multLeft>0)h+='<span class="tg hot">🎁 分數 ✕ '+mult+'　還剩 '+multLeft+' 題</span>';
-  if(fast)h+='<span class="tg hot">🎯 5 秒內答對再加 分</span>';
-  if(shield)h+='<span class="tg hot">🛡 答錯連對也不歸零</span>';
-  /* 期待感：下一張驚喜卡離我還有幾題，隨時看得到（使用者 2026-09-21 指定） */
-  h+='<span class="tg go'+(nextEvt<=1?' near':'')+'">'+
-     (nextEvt<=1?'🎁 這一題答對就翻驚喜卡！':'🎁 再答對 '+nextEvt+' 題翻驚喜卡')+'</span>';
-  if(extra)h+='<span class="tg">'+extra+'</span>';
-  return '<div class="tagline">'+h+'</div>';
+  return '<div class="tagline" id="tagsL">'+tagsIn()+'</div>';
 }
 
 /* ── 答錯的獨立頁要的三樣東西：題目、你選的、正確答案（每一種遊戲長得不一樣）── */
@@ -480,76 +634,95 @@ function mInfo(){
   return {q:'',pick:PICK,ans:''};
 }
 
-/* ── 判定 ── */
-/* 愈快答對，分數愈高（使用者 2026-09-21 指定）：
-   基本 100 分 ＋ 速度分（剩下的秒數 ／ 總秒數 ✕ 900）＋ 連對加成，最後再乘上倍率 */
-/* 分數是怎麼算出來的，一格一格排給學生看（使用者 2026-09-21 指定：
-   「看不懂為何得分」＝ 只給一個總分沒有用，要看得到 100 ＋ 速度分 ＋ 連對） */
-function ci(lbl,val,cls){
-  return '<span class="ci '+(cls||'')+'"><em>'+lbl+'</em><b>'+val+'</b></span>'}
-function cp(sym){return '<span class="cp">'+sym+'</span>'}
+/* ── 類似題（使用者 2026-09-25 指定）：同一個遊戲的題庫裡，英文字重疊最多、提示一樣的（不含自己）──
+   ① 答錯頁的「⭐ 加分」用它出一題字放大的四選一；② 過兩三題再出一題，選項重洗 */
+function joinS(a){return a.join(' ').replace(/ ([?.,!])/g,'$1').replace(/ ([’']s)/g,'$1')}
+function itxt(c){
+  if(g==='g1'||g==='g10')return c.q+' '+c.o[0];
+  if(g==='g2')return c.txt+' '+c.a;
+  if(g==='g3')return c.s.join(' ');
+  if(g==='g4')return c.f+' '+c.o[0];
+  if(g==='g5')return c.s+' '+c.o[0];
+  if(g==='g7')return c.w.join(' ');
+  if(g==='g8')return c.b+' '+c.o[0]+' '+c.a;
+  if(g==='g9')return c[0];
+  return '';
+}
+function simsOf(c){return g==='g6'?[]:simRank(c,BANK[g],itxt,function(x){return x.h||x[2]||''})}
+function toMcq(c){
+  if(g==='g1'||g==='g10')return {q:c.q,o:c.o,h:c.h};
+  if(g==='g4')return {q:c.f+'<br>'+c.d,o:c.o,h:c.h};
+  if(g==='g5')return {q:'🔊 聽到的是哪一句？',say:c.s,o:c.o,h:c.h};
+  if(g==='g8')return {q:ap(c.b)+' <span style="color:var(--be)">＿＿</span> '+ap(c.a)+'<br>'+c.zh,o:c.o,h:c.h};
+  if(g==='g2'){var ot=DUOV.filter(function(v){return v!==c.a})[0];
+    return {q:c.zh+'<br>哪一句對？',o:[fillBl(c.txt,c.a),fillBl(c.txt,ot)],h:c.h}}
+  if(g==='g3'){var ok=joinS(c.s),o=[ok],t=0;
+    while(o.length<4&&t++<40){var w=c.s.slice(0,-1),p=c.s[c.s.length-1];var x=joinS(shuf(w).concat([/^[?.!]$/.test(p)?p:p]));
+      if(o.indexOf(x)<0)o.push(x)}
+    return {q:c.zh+'<br>哪一句的順序對？',o:o,h:c.h}}
+  if(g==='g7'){var bad=joinS(c.w);
+    if(c.b<0){var o7=[bad];BANK.g7.forEach(function(y){if(y!==c&&y.zh===c.zh&&y.b>=0&&o7.length<3)o7.push(joinS(y.w))});
+      if(o7.length<2){var w7=c.w.slice(0,-1);o7.push(joinS(shuf(w7).concat(c.w.slice(-1))))}
+      return {q:c.zh+'<br>哪一句完全正確？',o:o7,h:c.h}}
+    var fix=c.w.slice();fix[c.b]=c.fix;return {q:c.zh+'<br>哪一句完全正確？',o:[joinS(fix),bad],h:c.h}}
+  if(g==='g9'){var lab=${DUO9 ? 'LAB9' : "{q:'❓ 問句',s:'🙋 直述句'}"},ks=Object.keys(lab);
+    return {q:'「'+c[0]+'」<br>'+(${DUO9 ? "'在回答哪一題？'" : "'是哪一種句子？'"}),say:c[0],
+      o:[lab[c[1]]].concat(ks.filter(function(k){return k!==c[1]}).map(function(k){return lab[k]})),h:c[2]||''}}
+  return null;
+}
+
+/* ── 判定 ──
+   愈快答對，分數愈高：答對 100 ＋ 速度分（剩下的秒數 ／ 總秒數 ✕ 900）＋ 連對 ✕ 20，再乘驚喜卡的倍率。
+   答對：加分視窗（✅ ＋880 ＋ 圖示算式）➜ 連對到 3 的倍數就翻驚喜卡 ➜ 下一題。
+   答錯：錯題分析的獨立頁（倒數 8 秒、唸 3 次、⭐ 加分 ➜ 類似題 ✕2），按「▶ 繼續」才出下一題。 */
+function award(sp,short){
+  right++;streak++;if(streak>best)best=streak;
+  speedSum+=sp;
+  var st=streak*20, sub=100+sp+st, mul=1, extra=0, extraIc='';
+  if(multLeft>0){mul*=mult;multLeft--;if(!multLeft)mult=1}
+  if(combo){combo.n++;if(combo.n>combo.need){mul*=combo.mul;combo=null}}
+  if(goldNext){extra+=goldNext;extraIc='🏅';goldNext=0}
+  if(fastV){if(qt-left<=5){extra+=fastV;extraIc=extraIc||'🎯'}fastV=0}
+  var p=sub*mul+extra;
+  score+=p;lastGain=p;sOk();popScore(p);paint();
+  return {sp:sp,st:streak>1?st:0,mul:mul,extra:extra,extraIc:extraIc,p:p,pct:left/qt,short:short};
+}
 function judge(ok,hint,after,timeout){
-  if(busy)return;busy=true;
+  if(busy||ended)return;busy=true;
   tstop();
-  var bonus=0, evtNow=false;
   asked++;
   if(ok){
-    right++;streak++;if(streak>best)best=streak;
-    var sp=Math.round(900*(left/qt));speedSum+=sp;
-    var base=100+sp+streak*20;
-    if(fast&&Date.now()-fast<5000){bonus=200;fast=0}
-    else if(fast&&Date.now()-fast>=5000){fast=0}
-    var p=base*mult+bonus;
-    score+=p;sOk();
-    lastGain=p;
-    if(multLeft>0){multLeft--;if(multLeft===0)mult=1}
-    var row1='<div class="calc">'+ci('答對','100')+cp('＋')+
-      ci('⚡ 快　剩 '+left.toFixed(1)+' 秒',''+sp,'sp')+
-      (streak>1?cp('＋')+ci('🔥 連對 '+streak,''+(streak*20)):'')+
-      cp('＝')+ci(mult>1||bonus?'小計':'這一題拿到',''+base,mult>1||bonus?'':'tot')+'</div>';
-    var row2='';
-    if(mult>1||bonus){
-      row2='<div class="calc">'+ci('小計',''+base)+
-        (mult>1?cp('✕ '+mult+'（🎁 驚喜卡）'):'')+
-        (bonus?cp('＋')+ci('🎯 快答',''+bonus):'')+
-        cp('＝')+ci('這一題拿到',''+p,'tot')+'</div>';
-    }
-    $('#gfb').innerHTML='<div class="fh ok">✅ 答對！分數 ＋'+p+'</div>'+row1+row2+
-      '<div class="spbar"><i style="width:'+Math.max(3,Math.round(100*left/qt))+'%"></i></div>'+
-      '<div class="sphint">⚡ 答得愈快，這一條愈長，速度分就愈高</div>';
-    popScore(p);
-    nextEvt--;
-    if(nextEvt<=0){evtNow=true;setTimeout(fire,900)}   /* 先讓學生看完算式，再翻驚喜卡 */
-  }else{
-    wrong++;
-    if(shield){shield=0;$('#gstreak').textContent='🔥 '+streak}else streak=0;
-    sNo();
-    $('#gfb').innerHTML='<div class="fh no">'+(timeout?'⏰ 時間到！這一題 0 分':'❌ 再想一下，這一題 0 分')+'</div>'+
-      '<div class="fw">'+ap(hint||'')+'</div>'+
-      '<div class="sphint">這一題等一下會再出現一次，答對就拿得到分數</div>';
-    queue.splice(Math.min(queue.length,2+Math.floor(Math.random()*3)),0,cur); /* 練到會為止 */
-    if(hint&&wrongList.indexOf(hint)<0)wrongList.push(hint);
-    /* 答錯：先讓學生看一眼紅綠（0.5 秒），再蓋一整頁、倒數 3 秒，
-       關掉以後才出下一題（使用者 2026-09-24 指定） */
-    paint();
-    var mi=mInfo();mi.why=hint||'';
-    if(timeout)mi.pick=null;
-    setTimeout(function(){
-      if(!$('#arena').classList.contains('on'))return;
-      missShow(mi,function(){
-        if(!$('#arena').classList.contains('on'))return;
-        if(asked>=ROUNDQ){over();return}
-        (after||next)();
-      });
-    },500);
+    var d=award(Math.round(900*(left/qt)),false);
+    var go=function(){if(!ended&&$('#arena').classList.contains('on'))(after||next)()};
+    showGain(d,function(){
+      if(ended)return;
+      if(streak>0&&streak%3===0)surprise(go);else go();
+    });
     return;
   }
+  var saved=false;
+  if(shield){shield=0;saved=true}      /* 🛡 免死金牌：這一次答錯不算錯、連對不斷 */
+  else{wrong++;streak=0;combo=null}
+  sNo();
+  var sims=simsOf(cur);
+  /* 過兩三題再出一題類似題（選項每次都重洗），練到會為止 */
+  queue.splice(Math.min(queue.length,2+Math.floor(Math.random()*2)),0,sims[1]||sims[0]||cur);
+  if(hint&&wrongList.indexOf(hint)<0)wrongList.push(hint);
   paint();
+  var mi=mInfo();mi.why=(saved?'🛡 免死金牌：這一次不算錯！　':'')+(hint||'');
+  if(timeout)mi.pick=null;
+  mi.sims=sims.slice(0,3).map(toMcq).filter(function(x){return x});
+  if(!mi.sims.length&&cur)mi.sim0=toMcq(cur);
+  mi.pts=500;
+  mi.gain=function(n){score+=n;popScore(n);paint()};
+  /* 先讓學生看一眼紅綠（0.5 秒），再蓋上錯題分析頁 */
   setTimeout(function(){
-    if(!$('#arena').classList.contains('on'))return;
-    if(asked>=ROUNDQ){over();return}
-    (after||next)();
-  },evtNow?3500:1200);
+    if(ended||!$('#arena').classList.contains('on'))return;
+    missShow(mi,function(){
+      if(ended||!$('#arena').classList.contains('on'))return;
+      (after||next)();
+    });
+  },500);
 }
 
 /* ── 1 ⚡ 閃電四選一 ── */
@@ -635,7 +808,7 @@ function rMem(){
     var cards=[];
     four.forEach(function(p,n){cards.push({k:n,s:p[0],en:1});cards.push({k:n,s:p[1],en:0})});
     cards=shuf(cards);
-    $('#arena').innerHTML=tags('🃏 記憶配對')+'<div class="qs">翻開兩張，英文配中文</div>'+
+    $('#arena').innerHTML=tags()+'<div class="qs">翻開兩張，英文配中文</div>'+
       '<div class="board" id="bd">'+cards.map(function(c,n){
         return '<button class="mc back" data-k="'+c.k+'" data-n="'+n+'" data-en="'+c.en+
           '" data-s="'+String(c.s).replace(/"/g,'&quot;')+'">？</button>'}).join('')+'</div>'+fbBox();
@@ -644,7 +817,7 @@ function rMem(){
 }
 function memTap(e){
   var b=e.target.closest?e.target.closest('.mc'):null;
-  if(!b||busy||!b.classList.contains('back')||memOpen.length>=2)return;
+  if(!b||busy||ended||!b.classList.contains('back')||memOpen.length>=2)return;
   b.classList.remove('back');b.innerHTML=ap(b.getAttribute('data-s'));
   if(b.getAttribute('data-en')==='1')say(b.getAttribute('data-s'));else sayZh(b.getAttribute('data-s'));
   memOpen.push(b);sPop();
@@ -652,19 +825,23 @@ function memTap(e){
     var a=memOpen[0],c=memOpen[1];
     if(a.getAttribute('data-k')===c.getAttribute('data-k')&&a!==c){
       a.classList.add('ok');c.classList.add('ok');memOpen=[];memLeft--;
-      right++;streak++;if(streak>best)best=streak;
-      var sp=Math.round(900*(left/qt)/4);speedSum+=sp;
-      var p=(150+sp+streak*20)*mult;score+=p;sOk();
-      if(multLeft>0){multLeft--;if(multLeft===0)mult=1}
-      nextEvt--;if(nextEvt<=0)setTimeout(fire,300);
-      $('#gfb').innerHTML='<div class="fh ok">✅ ＋'+p+'</div><div class="fw">⚡ 速度分 ＋'+sp+'</div>';
-      paint();
-      setTimeout(function(){a.classList.add('gone');c.classList.add('gone');
-        if(!memLeft){asked++;paint();
-          if(asked>=ROUNDQ)over();
-          else setTimeout(function(){rMem();run(QT*4)},380)}},420);
+      busy=true;
+      var d=award(Math.round(900*(left/qt)/4),true);
+      var cont=function(){
+        busy=false;if(ended)return;
+        a.classList.add('gone');c.classList.add('gone');
+        if(!memLeft){asked++;paint();tstop();setTimeout(function(){if(!ended){rMem();run(QT*4)}},380)}
+      };
+      tstop();
+      showGain(d,function(){
+        if(ended)return;
+        var go=function(){if(ended)return;cont();if(memLeft)run(left)};
+        if(streak>0&&streak%3===0)surprise(go);else go();
+      });
     }else{
-      busy=true;a.classList.add('bad');c.classList.add('bad');sNo();streak=0;wrong++;paint();
+      busy=true;a.classList.add('bad');c.classList.add('bad');sNo();
+      if(shield)shield=0;else{streak=0;combo=null;wrong++}
+      paint();
       setTimeout(function(){[a,c].forEach(function(x){
         x.classList.remove('bad');x.classList.add('back');x.innerHTML='？'});
         memOpen=[];busy=false},780);
@@ -764,11 +941,10 @@ function bossTap(e){
   }
 }
 function win(){
-  $('#arena').classList.remove('on');
-  $('#gend').classList.add('on');
+  if(ended)return;
+  stop();gStop();missHide(false);
   score+=1000;
-  $('#gendh').textContent='🏆 魔王被打倒了！（獎勵 ＋1000）';
-  endBody();
+  over('🏆 魔王被打倒了！（獎勵 ＋1000）');
 }
 
 /* ── 共用：四選一的綁定 ── */
@@ -788,30 +964,28 @@ function markO(b,ok){
 }
 
 /* ── 結算 ── */
-function over(){
-  stop();
+function over(title){
+  if(ended&&$('#gend').classList.contains('on'))return;
+  ended=true;stop();gStop();
   $('#arena').classList.remove('on');$('#gend').classList.add('on');
-  $('#gendh').textContent='🏁 這一場結束！';
+  $('#gendh').textContent=title||'🏁 這一場結束！';
   endBody();
 }
 function endBody(){
-  stop();
   var b=store('best_'+g)||0;
   if(score>b){store('best_'+g,score);b=score;$('#gendh').textContent+='　🎉 破紀錄！'}
   $('#gendsc').textContent=score;
-  $('#gendln').innerHTML='答對 <b>'+right+'</b> 題　答錯 <b>'+wrong+'</b> 題　最長連對 <b>'+best+
-    '</b>　速度分共 <b>'+speedSum+'</b>　最佳紀錄 <b>'+b+'</b>';
+  $('#gendln').innerHTML='✅ <b>'+right+'</b>　❌ <b>'+wrong+'</b>　🔥 最長 <b>'+best+
+    '</b>　⚡ <b>'+speedSum+'</b>　🏆 最佳 <b>'+b+'</b>';
   $('#gendrev').innerHTML=
-    '<div>🎁 這一場翻到 <b>'+opened.length+'</b> 張驚喜卡'+
-      (opened.length?'：'+opened.join('、'):'')+
-      '　（這個遊戲一共有 <b>${NS}</b> 張，每一張都不一樣）</div>'+
+    '<div>🎁 翻到 <b>'+opened.length+'</b> 張'+(opened.length?'：'+opened.join('、'):'')+'</div>'+
     (wrongList.length?
-     ('<div style="color:#5C5C5C;letter-spacing:.1em">📌 這一場要記住的：</div>'+
+     ('<div style="color:#5C5C5C;letter-spacing:.1em">📌 要記住的：</div>'+
       wrongList.map(function(h){return '<div>・'+ap(h)+'</div>'}).join('')):
      '<div>全對！一題都沒錯 🎉</div>');
   var mb=$('#missBtn');if(mb)mb.style.display=MISSLOG.length?'':'none';
   sWow();
-  /* 遊戲結束：答錯整理用獨立的一整頁先蓋上來——這是對學生最有幫助的部分（使用者 2026-09-24 指定） */
+  /* 遊戲結束：答錯整理用獨立的一整頁先蓋上來（使用者 2026-09-24 指定） */
   missAll('這一場　答錯整理');
 }
 $('#retry').addEventListener('click',function(){begin(g)});
@@ -824,31 +998,28 @@ hub();
 `;
 
 const body = `
-<div id="bad"><div class="bt"></div><div class="bd"></div></div>${GC.burst ? '\n<div id="burst"></div>' : ''}
-<div id="evt"><div class="c3">
- <div class="fc bk"><span class="bi">🎁</span><span class="bl">驚喜卡</span></div>
- <div class="fc ft"><div class="ebig"></div><div class="ewhy"></div><div class="ename"></div></div>
-</div></div>
+<div id="bad"><div class="bt"></div><div class="bd"></div></div>
+<div id="burst"></div>
+<div id="evt"></div>
+<div id="pick"></div>
+<div id="gain"></div>
 
 <main id="stage">
  <section id="hub">
   <h1>🎮 複習遊戲　10 種玩法</h1>
-  <p class="lead">每一題<b>限時 15 秒</b>，一場 12 題。<br>
-     <b>分數怎麼來：答對 100 ＋ 快 最多 900 ＋ 連對 ✕ 20</b>——
-     答完馬上看到這個算式，剩愈多秒，中間那一條就愈長。<br>
-     每答對幾題就<b>翻一張驚喜卡</b>🎁：可能直接加分、分數 ✕ 2、多給秒數、
-     或是一面護盾。<b>每一個遊戲有自己的 ${NS} 張，翻過的不會再翻到</b>——
-     畫面上隨時看得到「再答對幾題就翻牌」。<br>
-     答錯會給你提示，那一題等一下還會再出現，<b>練到會為止</b>。</p>
+  <p class="lead">⏳ 每個遊戲 <b>5 分鐘</b>　⚡ 每題 15 秒，<b>愈快分數愈高</b><br>
+     🔥 <b>連對 3 題</b> ➜ 翻一張 🎁 驚喜卡（每個遊戲 ${NS} 張，張張不一樣）<br>
+     ❌ 答錯 ➜ 看清楚 ➜ ⭐ 加分題答對 <b>✕ 2</b></p>
   <div id="grid"></div>
  </section>
 
  <div id="ghud">
   <span class="gcell"><span class="k">遊戲</span><span class="v" id="gname"></span></span>
+  <span class="gcell"><span class="k">剩下</span><span class="v" id="gclock">⏳ 5:00</span></span>
   <span id="gring"><svg viewBox="0 0 100 100"><circle id="gbg" cx="50" cy="50" r="46"></circle>
    <circle id="gfg" cx="50" cy="50" r="46"></circle></svg><span id="gnum">15</span></span>
-  <span class="gcell r"><span class="k">分數 ／ 連對 ／ 驚喜卡 ／ 進度</span>
-   <span class="v"><span id="gsc">0</span>　<span id="gstreak">—</span>　<span id="gsurp">🎁 0</span>　<span id="gprog">0 題</span></span></span>
+  <span class="gcell r"><span class="k">分數 ／ 連對 ／ 驚喜卡</span>
+   <span class="v"><span id="gsc">0</span>　<span id="gstreak">—</span>　<span id="gsurp">🎁 0</span></span></span>
   <span id="gpop"></span>
  </div>
 

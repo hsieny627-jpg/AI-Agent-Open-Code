@@ -13,7 +13,7 @@ const SITE_DIR = process.env.SITE_DIR ? path.resolve(process.env.SITE_DIR) : '';
 const DIR = (SITE_DIR || __dirname) + '/';
 /* 這個課次自己的資料：不發音字母（SIL）、驚喜卡（SURP）、題目要不要每次重洗（CFG.random） */
 const SD = SITE_DIR ? require(DIR + '_data.js') : {};
-const SG = SITE_DIR ? require(DIR + '_game_data.js') : {};
+const SG = require(DIR + '_game_data.js');
 const SQ = SITE_DIR ? require(DIR + '_quiz_data.js') : {};
 const args = process.argv.slice(2);
 const ALL = ['index.html', 'warmup.html', 'unit1.html', 'unit2.html', 'games.html'];
@@ -55,25 +55,52 @@ async function rateBar(p, e) {
   return 3;
 }
 
-/* 答錯的獨立頁（使用者 2026-09-24 指定）：要出現、要有正確答案、
-   1.5 秒時還在（不可以不到 3 秒就消失）、4.5 秒內自己消失 */
-async function missCheck(p, e, who) {
+/* 答錯的獨立頁（2026-09-24 新增；2026-09-25 使用者指定改版）：
+   要出現、要有正確答案、從 8 開始倒數、1.5 秒時還在、倒數完才出現「⭐ 加分」「▶ 繼續」、按「▶ 繼續」才關掉。
+   bonus ＝ 順便走一次加分流程：⭐ 加分 ➜ 再倒數 8 秒 ➜ 字放大的類似題 ➜ 答對 ➜ 分數真的加上去 */
+async function missCheck(p, e, who, bonus, scoreExpr) {
   const on = () => p.evaluate(() => { const m = document.getElementById('miss'); return !!(m && m.classList.contains('on')) });
   let seen = false;
-  for (let k = 0; k < 12 && !seen; k++) { if (await on()) seen = true; else await p.waitForTimeout(100); }
+  for (let k = 0; k < 14 && !seen; k++) { if (await on()) seen = true; else await p.waitForTimeout(100); }
   if (!seen) { e.push(who + '答錯了，沒有出現「答錯的獨立頁」'); return 1; }
   const c = await p.evaluate(() => ({
-    ans: ((document.querySelector('#miss .mrow.a .mv') || {}).textContent || '').trim(),
+    ans: ((document.querySelector('#miss .ma .mv') || {}).textContent || '').trim(),
     cd: ((document.getElementById('mcdn') || {}).textContent || '').trim(),
+    nxt: !!document.querySelector('#miss .nxt'),
     ox: document.documentElement.scrollWidth - document.documentElement.clientWidth
   }));
   if (!c.ans) e.push(who + '答錯的獨立頁沒有正確答案');
-  if (c.cd !== '3') e.push(who + '答錯的獨立頁不是從 3 開始倒數（' + c.cd + '）');
+  if (c.cd !== '8') e.push(who + '答錯的獨立頁不是從 8 開始倒數（' + c.cd + '）');
+  if (c.nxt) e.push(who + '答錯的獨立頁一開始就可以按「繼續」（要先看 8 秒）');
   if (c.ox > 0) e.push(who + '答錯的獨立頁橫向溢出 ' + c.ox);
   await p.waitForTimeout(1500);
-  if (!await on()) e.push(who + '答錯的獨立頁不到 3 秒就消失了');
-  await p.waitForTimeout(2600);
-  if (await on()) e.push(who + '答錯的獨立頁 3 秒後沒有消失');
+  if (!await on()) e.push(who + '答錯的獨立頁不到 8 秒就消失了');
+  await p.waitForTimeout(7000);
+  const d = await p.evaluate(() => ({ nxt: !!document.querySelector('#miss .nxt'), bon: !!document.querySelector('#miss .bon'),
+    say: !!document.querySelector('#miss .say') }));
+  if (!d.nxt) e.push(who + '倒數 8 秒以後沒有「▶ 繼續」');
+  if (bonus) {
+    if (!d.bon) e.push(who + '倒數 8 秒以後沒有「⭐ 加分」');
+    else {
+      const s0 = await p.evaluate(scoreExpr);
+      await p.click('#miss .bon'); await p.waitForTimeout(400);
+      const r = await p.evaluate(() => ((document.getElementById('mcdn') || {}).textContent || '').trim());
+      if (r !== '8') e.push(who + '按了加分，沒有再倒數 8 秒（' + r + '）');
+      await p.waitForTimeout(8400);
+      const q = await p.evaluate(() => ({ q: !!document.querySelector('#miss .mbq'), n: document.querySelectorAll('#miss .mbo button').length }));
+      if (!q.q || q.n < 2) e.push(who + '加分題沒有出來（' + q.n + ' 個選項）');
+      else {
+        await p.click('#miss .mbo button[data-ok="true"]'); await p.waitForTimeout(1200);
+        const g = await p.evaluate(() => ((document.querySelector('#miss .mgain') || {}).textContent || ''));
+        const s1 = await p.evaluate(scoreExpr);
+        if (!g) e.push(who + '加分題答對，沒有出現加分畫面');
+        if (!(s1 > s0)) e.push(who + '加分題答對，分數沒有加上去（' + s0 + '→' + s1 + '）');
+      }
+    }
+  }
+  if (!d.say && /[A-Za-z]/.test(c.ans)) e.push(who + '答錯的獨立頁沒有「🔊 發音」（正確答案有英文）');
+  if (await p.$('#miss .nxt')) { await p.click('#miss .nxt'); await p.waitForTimeout(300); }
+  if (await on()) e.push(who + '按了「▶ 繼續」，答錯頁沒有關掉');
   return 1;
 }
 
@@ -178,7 +205,7 @@ async function cardsPage(p, f, vp, e) {
   /* 秒懂動畫：跳出來的東西一定要「跳完」，不可以卡在半透明或整個沒出現 */
   {
     const faded = () => p.evaluate(() => {
-      const sel = '#cardIn .frow,#cardIn .bub,#cardIn .scene .sact,#cardIn .scene .sbub,#cardIn .scene .suse,#cardIn .chip.ce';
+      const sel = '#cardIn .frow,#cardIn .bub,#cardIn .scene .sact,#cardIn .scene .sbub,#cardIn .scene .suse,#cardIn .chip.ce,#cardIn .chip.cz,#cardIn .fgrid [data-p]';
       return [].slice.call(document.querySelectorAll(sel))
         .filter(x => parseFloat(getComputedStyle(x).opacity) < 0.9)
         .map(x => (x.className || x.tagName) + '@' + getComputedStyle(x).opacity);
@@ -187,7 +214,10 @@ async function cardsPage(p, f, vp, e) {
     for (let i = 0; i < N; i++) {
       if (i && !await fwd(p)) break;
       await p.waitForTimeout(3100);                          /* 等動畫跑完（情境小劇場 2.8 秒演完） */
-      const bad = await faded(); acts++;
+      /* 秒懂重點（一次一個字）和中英語序（先逐字中文再逐字英文）要久一點，最多再等 14 秒 */
+      let bad = await faded();
+      for (let w = 0; w < 28 && bad.length; w++) { await p.waitForTimeout(500); bad = await faded(); }
+      acts++;
       if (bad.length) e.push('第' + (i + 1) + '張的動畫沒有跑完，東西還是看不見：' + bad.join('、'));
     }
     await p.click('#scBtn'); await p.waitForTimeout(260);
@@ -298,7 +328,7 @@ async function cardsPage(p, f, vp, e) {
     await p.click('.rvo button[data-ok="false"]'); await p.waitForTimeout(300); acts++;
     const fb = await p.$eval('#rvfb', x => x.textContent.trim());
     if (!fb) e.push('複習題答完沒有回饋');
-    acts += await missCheck(p, e, '複習題');
+    acts += await missCheck(p, e, '複習題', true, () => rvScore);
     await p.waitForTimeout(400);
     const q2 = await p.evaluate(() => ((document.querySelector('.rvq') || {}).textContent || ''));
     if (!q2) e.push('複習題答錯頁關掉以後，沒有出下一題');
@@ -443,6 +473,59 @@ async function cardsPage(p, f, vp, e) {
     acts++;
     if (bad.length) e.push('不發音字母不對：' + bad.join('、'));
   }
+  /* 2026-09-25 使用者指定的新東西 ─────────────────────────────── */
+  {
+    await rewind(p, N);
+    let sawUse = false, sawOrd = false, sawPunc = false, sawEq3 = false;
+    for (let i = 0; i < N; i++) {
+      if (i && !await fwd(p)) break;
+      const k = await p.evaluate(() => ({ use: !!document.getElementById('useGo'), ord: !!document.querySelector('.ordgrid'),
+        punc: !!document.getElementById('puncGo'), eq3: document.querySelectorAll('#cardIn .eqrow').length }));
+      if (k.use && !sawUse) {                    /* 💡 問什麼？按了才出現用法 */
+        sawUse = true;
+        const v0 = await p.$$eval('#cardIn .fu', a => a.filter(x => x.getClientRects().length).length);
+        await p.click('#useGo'); await p.waitForTimeout(2600);
+        const v1 = await p.evaluate(() => ({ n: [].slice.call(document.querySelectorAll('#cardIn .fu')).filter(x => x.getClientRects().length).length,
+          k: parseFloat(document.getElementById('card').getAttribute('data-k') || '1') }));
+        if (v0) e.push('第' + (i + 1) + '張的用法一開始就跑出來了（要按「💡 問什麼？」才出現）');
+        if (!v1.n) e.push('第' + (i + 1) + '張按了「💡 問什麼？」沒有出現用法');
+        const o = await snap(); if (o.ox > 0 || o.spill > 2 || o.hit) e.push('第' + (i + 1) + '張打開用法以後溢出／壓到箭頭');
+        acts++;
+        /* 英文、＝、中文三欄上下對齊 */
+        const al = await p.evaluate(() => {
+          const g = document.querySelector('#cardIn .fgrid'); if (!g) return 'no';
+          const col = sel => [].slice.call(g.querySelectorAll(sel)).map(x => { const r = x.getBoundingClientRect(); return Math.round(r.left + r.width / 2) });
+          const sp = a => Math.max.apply(null, a) - Math.min.apply(null, a);
+          return { fe: sp(col('.fe')), fa: sp(col('.fa')) };
+        });
+        if (al === 'no' || al.fe > 2 || al.fa > 2) e.push('第' + (i + 1) + '張英文／＝ 沒有上下對齊（' + JSON.stringify(al) + '）');
+      }
+      if (k.ord && !sawOrd) {                    /* 中英連動：點一個字，上下同色的一起放大變亮 */
+        sawOrd = true;
+        await p.waitForTimeout(12000);
+        await p.click('#cardIn .chip.cz'); await p.waitForTimeout(250);
+        const l = await p.evaluate(() => [].slice.call(document.querySelectorAll('#cardIn .chip.lnk')).map(x => x.className.indexOf('cz') >= 0 ? 'z' : 'e').sort().join(''));
+        if (l !== 'ez') e.push('第' + (i + 1) + '張點中文，中文和英文沒有一起放大變亮（' + l + '）');
+        acts++;
+      }
+      if (k.punc && !sawPunc) {                  /* ⏱ 標點：唸完才放大 ⇄ 先放大 */
+        sawPunc = true;
+        const a = await p.$eval('#puncGo', b => b.textContent);
+        await p.click('#puncGo'); await p.waitForTimeout(200);
+        const b2 = await p.$eval('#puncGo', b => b.textContent);
+        if (a === b2) e.push('第' + (i + 1) + '張按「⏱ 標點」沒有切換');
+        await p.click('#puncGo'); await p.waitForTimeout(200);
+        acts++;
+      }
+      if (k.eq3 === 3) sawEq3 = true;
+    }
+    if (!sawOrd) e.push('找不到中英語序卡');
+    if (SITE_DIR && !sawEq3) e.push('找不到三句一樣的等式卡');
+    if (SITE_DIR && f === 'unit1.html' && !sawUse) e.push('Unit 1 第一張找不到「💡 問什麼？」');
+    if (!SITE_DIR && f === 'unit1.html' && !sawUse) e.push('Unit 1 第一張找不到「💡 問什麼？」');
+    if (!SITE_DIR && f === 'unit2.html' && !sawPunc) e.push('Unit 2 找不到「⏱ 標點」切換');
+    await rewind(p, N);
+  }
   acts += await rateBar(p, e);
   return acts;
 }
@@ -505,7 +588,7 @@ async function quizPage(p, f, vp, e) {
   /* 作答後：要有秒懂說明與下一題，選項要全鎖 */
   const wrongN = await p.evaluate(() => (cur().a + 1) % 4);
   await p.click('.opt[data-n="' + wrongN + '"]'); await p.waitForTimeout(250);
-  acts += await missCheck(p, e, '暖身題');
+  acts += await missCheck(p, e, '暖身題', true, () => score);
   s = await snap(); acts++;
   if (!s.fb) e.push('作答後沒有出現回饋');
   if (s.why < 4) e.push('作答後沒有秒懂說明');
@@ -550,20 +633,59 @@ async function gamesPage(p, f, vp, e) {
     if (dup.length) e.push('驚喜卡名字重複：' + dup.join('、'));
     if (SG.CFG && SG.CFG.minSurp && need < SG.CFG.minSurp) e.push('每個遊戲只有 ' + need + ' 張驚喜卡（要 ' + SG.CFG.minSurp + ' 張）');
     await p.click('.gcard:nth-of-type(1)'); await p.waitForTimeout(700);
-    const sc0 = await p.evaluate(() => score);
-    for (let k = 0; k < 3; k++) { await p.evaluate(() => fire()); await p.waitForTimeout(1250); }
+    /* 驚喜卡的效果：同一個遊戲 30 張的效果、特效都不一樣，而且只給好事 */
+    const fxBad = await p.evaluate(() => {
+      const out = [];
+      for (const g in SURP) {
+        const k = SURP[g].map(x => x.k + JSON.stringify(x.v)), f = SURP[g].map(x => x.fx.join(','));
+        if (new Set(k).size !== k.length) out.push(g + ' 效果重複');
+        if (new Set(f).size !== f.length) out.push(g + ' 特效重複');
+        SURP[g].forEach(x => { if (!eBig(x)) out.push(g + ' ' + x.t + ' 不知道是什麼效果') });
+      }
+      return out;
+    });
+    acts++;
+    if (fxBad.length) e.push('驚喜卡：' + fxBad.join('、'));
+    /* 翻一張 */
+    await p.evaluate(() => { lastGain = 500; fire(function () {}) }); await p.waitForTimeout(1600);
     const ev = await p.evaluate(() => ({
       on: document.getElementById('evt').classList.contains('on'),
       big: (document.querySelector('#evt .ebig') || {}).textContent || '',
-      burst: document.querySelectorAll('#burst i').length, hasBurst: !!document.getElementById('burst'),
+      burst: document.querySelectorAll('#burst i').length,
       opened: opened.length, ox: document.documentElement.scrollWidth - document.documentElement.clientWidth
     }));
     acts++;
     if (!ev.on || !ev.big) e.push('翻驚喜卡沒有出現／卡片上沒有寫拿到什麼');
-    if (ev.opened !== 3) e.push('翻了 3 張驚喜卡，記到 ' + ev.opened + ' 張');
-    if (ev.hasBurst && ev.burst < 10) e.push('驚喜卡翻開沒有炸滿畫面（' + ev.burst + ' 個）');
+    if (ev.opened !== 1) e.push('翻了 1 張驚喜卡，記到 ' + ev.opened + ' 張');
+    if (ev.burst < 10) e.push('驚喜卡翻開沒有炸滿畫面（' + ev.burst + ' 個）');
     if (ev.ox > 0) e.push('驚喜卡翻開以後橫向溢出 ' + ev.ox);
-    await p.waitForTimeout(1600);
+    await p.waitForTimeout(2600);
+    /* 自己選一張（三選一） */
+    await p.evaluate(() => pickN(3, function () {})); await p.waitForTimeout(900);
+    const pk = await p.evaluate(() => document.querySelectorAll('#pick .prow .c3').length);
+    if (pk !== 3) e.push('三選一的驚喜卡不是 3 張（' + pk + '）');
+    else { await p.click('#pick .prow .c3'); await p.waitForTimeout(800); }
+    const op2 = await p.evaluate(() => opened.length);
+    if (op2 !== 2) e.push('三選一選了一張，沒有記到（' + op2 + '）');
+    await p.waitForTimeout(3400);
+    /* 答對：加分用獨立視窗 */
+    const okb = await p.$('#arena .o[data-ok="true"]:not(.cut)');
+    if (okb) {
+      await okb.click(); await p.waitForTimeout(450);
+      const gn = await p.evaluate(() => ({ on: document.getElementById('gain').classList.contains('on'), eq: document.querySelectorAll('#gain .geq span').length }));
+      if (!gn.on) e.push('答對以後沒有加分視窗');
+      if (gn.eq < 2) e.push('加分視窗沒有圖示算式');
+      acts++;
+      await p.waitForTimeout(6000);
+    }
+    /* ⏳ 一場 5 分鐘：時間到就結算 */
+    const c0 = await p.evaluate(() => (document.getElementById('gclock') || {}).textContent || '');
+    if (!/⏳\s*[45]:\d\d/.test(c0)) e.push('遊戲沒有 5 分鐘倒數（' + c0 + '）');
+    await p.evaluate(() => { missHide(false); gLeft = 0.3; }); await p.waitForTimeout(1500);
+    const end = await p.evaluate(() => document.getElementById('gend').classList.contains('on'));
+    acts++;
+    if (!end) e.push('5 分鐘到了沒有結算');
+    await p.evaluate(() => { const m = document.getElementById('missAll'); if (m) m.classList.remove('on') });
     await p.click('#quit'); await p.waitForTimeout(500);
   }
   if (s.ox > 0) e.push('大廳橫向溢出 ' + s.ox);
@@ -593,7 +715,7 @@ async function gamesPage(p, f, vp, e) {
     await p.waitForTimeout(250);
     if (await p.evaluate(() => { const m = document.getElementById('miss'); return !!(m && m.classList.contains('on')) })
         || await p.$('#arena .o[data-ok="false"].bad'))
-      acts += await missCheck(p, e, '遊戲 ' + i + ' ');
+      acts += await missCheck(p, e, '遊戲 ' + i + ' ', i === 1, () => score);
     await p.waitForTimeout(700);
     g = await snap(); acts++;
     if (!g.arena && !g.end) e.push('遊戲 ' + i + ' 作答後畫面不見了');
@@ -612,7 +734,7 @@ async function homePage(p, f, vp, e) {
   if (s.ox > 0) e.push('首頁橫向溢出 ' + s.ox);
   if (s.oy > 0) e.push('首頁有捲軸（投影會被切掉）' + s.oy);
   const n = await p.$$eval('#menu .card', a => a.length);
-  if (n !== 4) e.push('首頁不是四個部分（' + n + '）');
+  if (n < 4) e.push('首頁少於四個部分（' + n + '）');
   return 2;
 }
 

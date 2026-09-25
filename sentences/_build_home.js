@@ -44,7 +44,7 @@ const body = `
 <main id="stage">
 <header>
  <h1>英文句型　秒懂教室</h1>
- <div class="sub">三年級　Unit 1 ・ Unit 2</div>
+ <div class="sub">四年級　Unit 1 ・ Unit 2</div>
  <div class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code/sentences/</b></div>
 </header>
 
@@ -70,7 +70,7 @@ const body = `
  <a class="card go" href="games.html">
   <span class="n">4</span><span class="ic">🎮</span>
   <span class="t">複習遊戲</span>
-  <span class="d">10 種玩法，<b>每一題 15 秒、愈快答對分數愈高</b>。每一個遊戲都有自己的 20 種驚喜回饋，每次重玩都不一樣。</span>
+  <span class="d">10 種玩法，每個遊戲 <b>5 分鐘</b>、愈快分數愈高。<b>連對 3 題</b>翻一張驚喜卡（每個遊戲 30 張，張張不一樣）。</span>
   <span class="f">${B.GAMES.length} 種　共 ${B.GAMES.reduce((a, g) => a + g.n, 0)} 題</span></a>
 </nav>
 

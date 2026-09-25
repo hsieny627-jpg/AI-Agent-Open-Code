@@ -199,65 +199,62 @@ const PAGES=[
    不編一個出來——編出來學生會記錯，而且違反 CLAUDE.md「事實要正確」。
    幕號就是 daughter.html 等字卡「🧩 結構」按鈕的錨點，改順序要一起改 _build.js 的 parts.href。 */
 {file:'parts.html',title:'單字拆開來看',src:'parts',sayAll:1,
- back:{href:'world.html',label:'🌍 環遊世界 →'},
+ /* 2026-09-25 使用者指定：「🌍 環遊世界」要真的連到 world.html（原本按下去是「上一頁」，回不去也到不了） */
+ fwd:{href:'world.html',label:'🌍 環遊世界 →'},
  S:[
  {emoji:'🧩',mid:'家人單字，拆得開嗎？',
   lines:['有的拆得開，有的<b>拆不開</b>']},
 
  /* #1 grand ＝ 大 */
- {tag:'grand 是什麼意思',emoji:'🏜️',say:'grand',
-  h:'<div class="en in d1"><span class="hi">grand</span> <span class="ar">＝</span> 大</div>',
-  lines:['<b>grand</b> 的意思就是「<b>大</b>」',
-         '美國的 <b>Grand Canyon</b>，就是「<b>大</b>峽谷」']},
+ {tag:'grand 是什麼意思',emoji:'🏜️',src:'grand',
+  h:'<div class="en in d1">{{grand}} <span class="ar">＝</span> 大</div>',
+  lines:['<b>grand</b> ＝ <b>大</b>','<b>Grand Canyon</b> ＝ 大峽谷']},
 
  /* #2 grand ＋ father（grandfather／grandmother 的錨點） */
- {tag:'裝上去',emoji:'👴',say:'grandfather',
+ {tag:'裝上去',emoji:'👴',src:'grand',
   h:'<div class="en in d1" style="font-size:clamp(24px,4.4vh,44px)">'+
-    '<span class="fromL hi">grand</span> <span class="ar">＋</span> <span class="fromR">father</span></div>'+
-    '<div class="en pop" style="animation-delay:1.2s;font-size:clamp(24px,4.4vh,44px)">grandfather</div>',
-  lines:['「<b>大</b>」的 father ＝ <b>爸爸的爸爸</b>',
-         'grand ＋ mother，就是<b>媽媽的媽媽</b>']},
+    '<span class="fromL hi sp" data-say="grand">grand</span> <span class="ar">＋</span> <span class="fromR">{{father}}</span></div>'+
+    '<div class="en pop" style="animation-delay:1.2s;font-size:clamp(24px,4.4vh,44px)">{{grandfather}}</div>',
+  lines:['大的 father ＝ <b>爸爸的爸爸</b>']},
 
  /* #3 hus ＝ house（husband 的錨點） */
- {tag:'藏在字裡的房子',emoji:'🏠',say:'husband',
+ {tag:'藏在字裡的房子',emoji:'🏠',src:'hus',
   h:'<div class="en in d1"><span class="sp" data-say="husband"><span class="hi">hus</span>band</span></div>'+
     '<div class="en pop" style="animation-delay:1.1s;font-size:clamp(26px,4.6vh,46px)">'+
     '<span class="hi">hus</span> ＝ {{house}}</div>',
-  lines:['<b>hus</b> 就是 <b>house</b>（房子）',
-         'husband ＝ <b>管這間房子的人</b>']},
+  lines:['husband ＝ <b>管這間房子的人</b>']},
 
- /* #4 -ther／-ter 的尾巴（mother/father/brother/sister/daughter 的錨點） */
- /* 使用者 2026-09-24 指定：sister 的 ter 照字源不能跟另外四個放同一類 ——
-    分開擺，證據（t 是後來擠進來的）放在 📖 出處，有獨立的一頁＋動畫。 */
- {tag:'一樣的尾巴',
-  h:'<div class="en in d1" style="font-size:clamp(17px,3vh,30px);line-height:1.75">'+
-    'mo<span class="hi">ther</span>　fa<span class="hi">ther</span><br>bro<span class="hi">ther</span>　'+
-    'daugh<span class="hi">ter</span></div>'+
-    '<div class="en pop odd" style="animation-delay:1s;font-size:clamp(17px,3vh,30px)"><span>sis<span class="hi2">ter</span></span>'+
+ /* #4 一樣的尾巴（mother/father/brother/sister/daughter 的錨點）
+    2026-09-25 使用者指定：標題、英文、中文都放大；每一個字底下就是它的中文 */
+ {tag:'一樣的尾巴',src:'tails',
+  h:'<div class="tl4 fo">'+
+    [['mo','ther','mother','媽媽'],['fa','ther','father','爸爸'],['bro','ther','brother','兄弟'],['daugh','ter','daughter','女兒']]
+     .map(function(x){return '<span class="tw"><span class="sp" data-say="'+x[2]+'">'+x[0]+'<span class="hi">'+x[1]+'</span></span><em>'+x[3]+'</em></span>'}).join('')+
+    '</div>'+
+    '<div class="odd pop" style="animation-delay:1s"><span class="tw"><span class="sp" data-say="sister">sis<span class="hi2">ter</span></span><em>姊妹</em></span>'+
     '<span class="oddtag">⚠️ 長得像，來源不一樣</span></div>',
-  lines:['這四個家人字，<b>尾巴是同一條</b>',
-         'sister 的 t 是<b>後來才擠進去的</b>（證據在 📖 出處）']},
+  lines:['四個家人字，<b>尾巴是同一條</b>']},
 
  /* #5 德文：先猜是哪一國（使用者 2026-09-24 指定：一開始不可以出現「德文」兩個字） */
- WD.guessOne({c:'de',w:[
+ Object.assign(WD.guessOne({c:'de',w:[
    ['Mut<span class="hi">ter</span>','Mutter','媽媽','mother'],
    ['Va<span class="hi">ter</span>','Vater','爸爸','father'],
    ['Bru<span class="hi">der</span>','Bruder','兄弟','brother'],
    ['Toch<span class="hi">ter</span>','Tochter','女兒','daughter'],
    ['Schwes<span class="hi2">ter</span>','Schwester','姊妹','sister']],
-   lines:['<b>先聽、先猜</b>：這是哪一國的話？']}),
+   lines:['<b>先聽、先猜</b>：這是哪一國的話？']}),{src:'de'}),
 
  /* #6 荷蘭文：一樣先猜，右邊多一個「德文」可以對照 */
- WD.guessOne({c:'nl',de:1,w:[
+ Object.assign(WD.guessOne({c:'nl',de:1,w:[
    ['moe<span class="hi">der</span>','moeder','媽媽','mother','Mutter'],
    ['va<span class="hi">der</span>','vader','爸爸','father','Vater'],
    ['broer','broer','兄弟','brother','Bruder'],
    ['doch<span class="hi">ter</span>','dochter','女兒','daughter','Tochter'],
    ['zus','zus','姊妹','sister','Schwester']],
-   lines:['再猜一次：<b>這又是哪一國？</b>']}),
+   lines:['再猜一次：<b>這又是哪一國？</b>']}),{src:'nl'}),
 
- /* #7 為什麼尾巴都一樣？（使用者 2026-09-24 指定的動畫頁） */
- {tag:'為什麼尾巴都一樣',sayAll:1,
+ /* #7 為什麼尾巴都一樣？（使用者 2026-09-24 指定的動畫頁；2026-09-25 主標題、次標題放大） */
+ {tag:'為什麼尾巴都一樣',sayAll:1,src:'terwhy',
   h:'<div class="tails fo">'+
     '<em class="tcap">很久很久以前</em>'+
     '<span class="old">mā<i>ter</i></span><span class="old">pə<i>ter</i></span><span class="old">bhrā<i>ter</i></span><span class="old">dhughə<i>ter</i></span>'+
@@ -269,37 +266,36 @@ const PAGES=[
     '<span class="sp de2" data-say="Mutter" data-lang="de-DE">Mut<i>ter</i></span><span class="sp de2" data-say="Vater" data-lang="de-DE">Va<i>ter</i></span>'+
     '<span class="sp de2" data-say="Bruder" data-lang="de-DE">Bru<i>der</i></span><span class="sp de2" data-say="Tochter" data-lang="de-DE">Toch<i>ter</i></span>'+
   '</div>',
-  lines:['<b>-ter</b> ＝ 很久以前<b>家人稱呼共用的尾巴</b>，後來才唸成 ther',
-         '它最早還有沒有別的意思？<b>學者到今天還沒有定論</b>']},
+  lines:['<b>-ter</b> ＝ 很久以前<b>家人字共用的尾巴</b>',
+         '它最早有沒有別的意思？<b>還沒有定論</b>']},
 
- /* #6 前面那一半：mo、fa */
- {tag:'前面那一半',emoji:'👶',
+ /* #8 前面那一半：mo、fa（2026-09-25 使用者指定：出處直接跳到證據） */
+ {tag:'前面那一半',emoji:'👶',src:'mofa',
   h:'<div class="en in d1" style="font-size:clamp(26px,4.6vh,46px)">'+
-    '<span class="bub b1">ma</span> <span class="ar">→</span> <span class="bub b2">mo</span>ther　'+
-    '<span class="bub b3">pa</span> <span class="ar">→</span> <span class="bub b3">fa</span>ther</div>',
-  lines:['<b>mo</b> 來自 <b>ma</b>，<b>fa</b> 來自 <b>pa</b>',
-         '都是<b>寶寶最早發得出來的音</b>']},
+    '<span class="bub b1">ma</span> <span class="ar">→</span> <span class="sp" data-say="mother"><span class="bub b2">mo</span>ther</span>　'+
+    '<span class="bub b3">pa</span> <span class="ar">→</span> <span class="sp" data-say="father"><span class="bub b3">fa</span>ther</span></div>',
+  lines:['<b>ma</b>、<b>pa</b> ＝ <b>寶寶最早會發的音</b>']},
 
- /* #7 誠實幕：bro、sis 沒有意思 */
- {tag:'拆到這裡就好',emoji:'✋',
+ /* #9 誠實幕：bro、sis 沒有意思 */
+ {tag:'拆到這裡就好',emoji:'✋',src:'brosis',
   h:'<div class="en in d1" style="font-size:clamp(24px,4.4vh,42px)">'+
     '{{bro}}　{{sis}}</div>',
-  lines:['<b>bro</b>、<b>sis</b> 單獨拿出來，<b>沒有意思</b>',
-         '今天的 bro、sis 是<b>後來剪短的</b>，不是原本的零件']},
+  lines:['<b>bro</b>、<b>sis</b> 單獨拿出來，<b>沒有意思</b>']},
 
- /* #8 parent ＋ s（parent 的錨點） */
- {tag:'這個不是字源，是文法',emoji:'👨‍👩',say:'parents',
-  h:'<div class="en in d1" style="font-size:clamp(26px,4.8vh,48px)">parent <span class="hi">＋ s</span></div>',
-  lines:['一位是 <b>a parent</b>','兩位以上<b>加 s</b>：<b>parents</b>']},
+ /* #10 parent ＋ s（parent 的錨點）：s 紅色（使用者 2026-09-25 指定） */
+ {tag:'一位、兩位',emoji:'👨‍👩',src:'parent',
+  h:'<div class="en in d1" style="font-size:clamp(26px,4.8vh,48px)">{{parent}} <span class="ar">➜</span> '+
+    '<span class="sp" data-say="parents">parent<b class="rs">s</b></span></div>',
+  lines:['兩位以上，<b>加 <b class="rs">s</b></b>']},
 
- /* 收尾 */
+ /* 收尾：下一頁真的連得過去（使用者 2026-09-25 指定） */
  {tag:'記住這件事',emoji:'🧩',
   h:'<div class="en in d1" style="font-size:clamp(17px,3vh,30px);line-height:1.7">'+
-    '<span class="hi">拆得開</span>　grandfather　grandmother　husband<br>'+
-    '<span class="mute">拆不開</span>　family　son　uncle　aunt<br>'+
-    '<span class="mute">拆不開</span>　cousin　nephew　niece　wife</div>',
-  lines:['<b>拆不開的字，就整個背起來</b>',
-         '硬拆只會背錯　　➡ 下一頁：<b>🌍 家人單字環遊世界</b>']}
+    '<span class="hi">拆得開</span>　{{grandfather}}　{{grandmother}}　{{husband}}<br>'+
+    '<span class="mute">拆不開</span>　{{family}}　{{son}}　{{uncle}}　{{aunt}}<br>'+
+    '<span class="mute">拆不開</span>　{{cousin}}　{{nephew}}　{{niece}}　{{wife}}</div>'+
+    '<a class="golink pop" href="world.html">🌍 下一頁：家人單字環遊世界 ➜</a>',
+  lines:['<b>拆不開的字，就整個背起來</b>']}
 ]},
 
 /* 家人單字環遊世界（使用者 2026-09-24 指定新增）：
@@ -310,32 +306,42 @@ const PAGES=[
  back:{href:'parts.html',label:'← 字的結構'},
  S:[
  {emoji:'🌍',mid:'家人單字，環遊世界',lines:['為什麼<b>別的國家</b>的家人單字，<b>跟英文這麼像</b>？']},
+ /* 2026-09-25 使用者指定：四年級看不懂地圖和歷史 ➜ 先說歐洲在哪裡、今天是哪六國、為什麼挑這五國，再進地圖 */
+ WD.WHERE, WD.SIX, WD.WHY5,
  WD.TREE
 ].concat(WD.MAPS,[
- WD.guessMany({en:'mother',zh:'媽媽',r:[['de','Mutter'],['nl','moeder'],['sv','mor'],['fr','mère'],['es','madre']],
+ WD.guessMany({src:'w-mother',en:'mother',zh:'媽媽',r:[['de','Mutter'],['nl','moeder'],['sv','mor'],['fr','mère'],['es','madre']],
    near:['de','nl','sv'],why:'德、荷、瑞典最像 ＝ <b>同一個日耳曼家族</b>'}),
- WD.guessMany({en:'father',zh:'爸爸',r:[['de','Vater'],['nl','vader'],['sv','far'],['fr','père'],['es','padre']],
+ WD.guessMany({src:'w-father',en:'father',zh:'爸爸',r:[['de','Vater'],['nl','vader'],['sv','far'],['fr','père'],['es','padre']],
    near:['de','nl','sv'],why:'德、荷、瑞典最像 ＝ <b>同一個日耳曼家族</b>'}),
- WD.guessMany({en:'family',zh:'家人',r:[['de','Familie'],['nl','familie'],['sv','familj'],['fr','famille'],['es','familia']],
+ WD.guessMany({src:'w-family',en:'family',zh:'家人',r:[['de','Familie'],['nl','familie'],['sv','familj'],['fr','famille'],['es','familia']],
    near:['fr','es'],why:'family 來自<b>拉丁文 familia</b>，所以法文、西班牙文最像'}),
- WD.guessMany({en:'brother',zh:'兄弟',r:[['de','Bruder'],['nl','broer'],['sv','bror'],['fr','frère'],['es','hermano']],
+ WD.guessMany({src:'w-brother',en:'brother',zh:'兄弟',r:[['de','Bruder'],['nl','broer'],['sv','bror'],['fr','frère'],['es','hermano']],
    near:['de','nl','sv'],why:'日耳曼家族最像；西班牙文 <b>hermano</b> 是另一個字'}),
- WD.guessMany({en:'sister',zh:'姊妹',r:[['de','Schwester'],['nl','zus'],['sv','syster'],['fr','sœur'],['es','hermana']],
+ WD.guessMany({src:'w-brother',en:'sister',zh:'姊妹',r:[['de','Schwester'],['nl','zus'],['sv','syster'],['fr','sœur'],['es','hermana']],
    near:['de','sv'],why:'德文 Schwester、瑞典文 syster 最像 ＝ <b>日耳曼家族</b>'}),
- WD.guessMany({en:'grandfather',zh:'爺爺、外公',r:[['de','Großvater'],['nl','grootvader'],['sv','farfar／morfar'],['fr','grand-père'],['es','abuelo']],
+ WD.guessMany({src:'w-grand',en:'grandfather',zh:'爺爺、外公',r:[['de','Großvater'],['nl','grootvader'],['sv','farfar／morfar'],['fr','grand-père'],['es','abuelo']],
    near:['fr','de'],why:'<b>grand</b> 來自法文，<b>father</b> 來自日耳曼家族'}),
- WD.guessMany({en:'grandmother',zh:'奶奶、外婆',r:[['de','Großmutter'],['nl','grootmoeder'],['sv','farmor／mormor'],['fr','grand-mère'],['es','abuela']],
+ WD.guessMany({src:'w-grandfather',en:'grandmother',zh:'奶奶、外婆',r:[['de','Großmutter'],['nl','grootmoeder'],['sv','farmor／mormor'],['fr','grand-mère'],['es','abuela']],
    near:['fr','de','sv'],why:'瑞典文分兩邊：<b>farmor</b> 爸爸的媽媽、<b>mormor</b> 媽媽的媽媽'}),
- WD.guessMany({en:'uncle',zh:'叔叔、舅舅',r:[['de','Onkel'],['nl','oom'],['sv','farbror／morbror'],['fr','oncle'],['es','tío']],
+ WD.guessMany({src:'w-uncle',en:'uncle',zh:'叔叔、舅舅',r:[['de','Onkel'],['nl','oom'],['sv','farbror／morbror'],['fr','oncle'],['es','tío']],
    near:['fr'],why:'uncle 是 <b>1066 年從法文 oncle</b> 借來的'}),
- WD.guessMany({en:'aunt',zh:'阿姨、姑姑',r:[['de','Tante'],['nl','tante'],['sv','faster／moster'],['fr','tante'],['es','tía']],
+ WD.guessMany({src:'w-uncle',en:'aunt',zh:'阿姨、姑姑',r:[['de','Tante'],['nl','tante'],['sv','faster／moster'],['fr','tante'],['es','tía']],
    near:['fr'],why:'aunt 也是 <b>1066 年以後從法文</b>借來的'}),
- WD.guessMany({en:'cousin',zh:'堂表兄弟姊妹',r:[['de','Cousin／Cousine'],['nl','neef／nicht'],['sv','kusin'],['fr','cousin／cousine'],['es','primo／prima']],
+ WD.guessMany({src:'w-uncle',en:'cousin',zh:'堂表兄弟姊妹',r:[['de','Cousin／Cousine'],['nl','neef／nicht'],['sv','kusin'],['fr','cousin／cousine'],['es','primo／prima']],
    near:['fr'],why:'cousin 跟法文<b>一模一樣</b>——從法文借來的'}),
- {tag:'記住這件事',emoji:'🧠',sayAll:1,
-  h:'<div class="sumg fo">'+
-    '<div class="sg g"><b>🌲 日耳曼家族的字</b><span>{{mother}} {{father}} {{brother}} {{sister}} {{daughter}} {{son}}</span><em>跟德文、荷蘭文像</em></div>'+
-    '<div class="sg l"><b>🏛 從法文借來的字</b><span>{{uncle}} {{aunt}} {{cousin}} {{nephew}} {{niece}}</span><em>跟法文像</em></div></div>',
+/* 記住這件事（2026-09-25 使用者指定：原本單字擠在一起又有音標，太亂 ➜ 改成兩張簡單的表，字放大、顏色清楚） */
+ {tag:'記住這件事',sayAll:1,src:'sum',
+  h:'<div class="sumt fo">'+
+    '<table class="st g"><caption>🌲 跟德文、荷蘭文像</caption><tr><th>英文</th><th>德文</th><th>荷蘭文</th></tr>'+
+    [['mother','Mutter','moeder'],['father','Vater','vader'],['brother','Bruder','broer'],['daughter','Tochter','dochter']]
+     .map(function(r){return '<tr><td><span class="sp" data-say="'+r[0]+'">'+r[0]+'</span></td>'+
+       '<td><span class="sp" data-say="'+r[1]+'" data-lang="de-DE">'+r[1]+'</span></td>'+
+       '<td><span class="sp" data-say="'+r[2]+'" data-lang="nl-NL">'+r[2]+'</span></td></tr>'}).join('')+'</table>'+
+    '<table class="st l"><caption>🏰 跟法文像（1066 年借來）</caption><tr><th>英文</th><th>法文</th></tr>'+
+    [['uncle','oncle'],['aunt','tante'],['cousin','cousin']]
+     .map(function(r){return '<tr><td><span class="sp" data-say="'+r[0]+'">'+r[0]+'</span></td>'+
+       '<td><span class="sp" data-say="'+r[1]+'" data-lang="fr-FR">'+r[1]+'</span></td></tr>'}).join('')+'</table></div>',
   lines:['<b>看一個字像誰</b>，就知道它從哪裡來']}
 ])},
 
@@ -400,19 +406,23 @@ const PAGES=[
 ]}
 ];
 
+const {TOCB,TOCHTML,TOCJS,TOCCSS}=require('./_toc');
+/* 瑞典文語音檔（_audio_sv.js 做的）：有才載入，沒有就用瀏覽器語音 */
+const SVJS=fs.existsSync(path.join(DIR,'audio','sv','aud.js'))?'<script src="audio/sv/aud.js"></script>':'';
+
 const tpl=(P)=>`<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>${P.title}｜單字小故事</title>
+<title>${P.title}｜${P.suffix||'單字小故事'}</title>
 <!-- 本檔由 words/_build_story.js 產生，不要手改。 -->
 <style>
 @font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
- src:url(fonts/andika-400.woff2) format("woff2")}
+ src:url(${P.font||'fonts/'}andika-400.woff2) format("woff2")}
 @font-face{font-family:Andika;font-style:normal;font-weight:700;font-display:swap;
- src:url(fonts/andika-700.woff2) format("woff2")}
+ src:url(${P.font||'fonts/'}andika-700.woff2) format("woff2")}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
@@ -611,6 +621,45 @@ body{margin:0;background:#000;color:#F2F2F2;
 .lkid b{font-size:clamp(14px,2.2vh,20px);color:#D8D3C5}
 .lkid .sp{font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#F2F2F2;border-bottom:0}
 .lkid .flag{width:2.4em;height:1.6em}
+/* 2026-09-25：地圖放大、國名、時間軸、歐洲在哪裡、為什麼五國、統整表 */
+.sa .mapbox{width:min(94vw,680px,calc(50vh * 1.08))}
+.map .mc{font-size:11px;fill:#6F8797;font-weight:700;letter-spacing:.05em}
+.map .cpop{opacity:0;animation:mtIn .5s ease both}
+.tline{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:center;font-size:clamp(11px,1.7vh,15px)}
+.tline span{color:#4A4A4A;border:1px solid #2A2A2A;border-radius:99px;padding:1px 7px;white-space:nowrap}
+.tline span.past{color:#8E8E8E;border-color:#3A3A3A}
+.tline span.now{color:#000;background:#FFD24A;border-color:#FFD24A;font-weight:700;animation:pop .5s cubic-bezier(.2,1.5,.4,1) both}
+.tline i{font-style:normal;color:#3A3A3A;font-size:.8em}
+.where{display:flex;align-items:center;justify-content:center;gap:clamp(10px,2vw,26px);width:100%}
+.where>div{display:flex;flex-direction:column;align-items:center;gap:4px}
+.where .wic{font-size:clamp(56px,11vh,110px);line-height:1}
+.where b{font-size:clamp(26px,4.6vh,46px)}
+.where em{font-style:normal;color:#9FB4C8;font-size:clamp(15px,2.4vh,22px)}
+.wfly{position:relative;width:clamp(160px,34vw,380px);height:clamp(60px,10vh,100px)}
+.wfly i{position:absolute;left:0;right:0;top:50%;border-top:3px dashed #3A4E5E}
+.wfly .plane{position:absolute;right:0;top:50%;font-size:clamp(34px,6vh,58px);transform:translate(0,-50%) scaleX(-1);
+ animation:plane 2.6s ease-in-out .4s both}
+@keyframes plane{0%{right:0}100%{right:calc(100% - 1.2em)}}
+.flags6{display:flex;gap:clamp(6px,1.2vw,14px);flex-wrap:wrap;justify-content:center}
+.flags6 span{display:inline-flex;align-items:center;gap:6px;background:#0C0C0C;border:1px solid #2A2A2A;border-radius:99px;
+ padding:4px 12px;font-size:clamp(16px,2.6vh,24px);animation:pop .5s cubic-bezier(.2,1.5,.4,1) both}
+.why5{display:flex;flex-direction:column;gap:clamp(8px,1.6vh,16px);width:100%;max-width:720px}
+.w5{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:14px;align-items:center;text-align:left;
+ border-radius:16px;padding:clamp(8px,1.4vh,14px) 18px;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.w5 .w5f{grid-row:1/3;display:flex;gap:4px}.w5 .w5f .flag{width:2.2em;height:1.5em}
+.w5 b{font-size:clamp(22px,3.8vh,36px)}.w5 em{font-style:normal;font-size:clamp(17px,2.8vh,26px);color:#D8D3C5}
+.w5.g{background:#0C1A10;border:1px solid #2B5236}.w5.l{background:#1A1208;border:1px solid #5A3E1C}.w5.l2{background:#1A0E0E;border:1px solid #5A2A2A}
+.sumt{display:flex;gap:clamp(10px,2vw,24px);flex-wrap:wrap;justify-content:center;align-items:flex-start;width:100%}
+.st{border-collapse:separate;border-spacing:0;border-radius:16px;overflow:hidden;font-size:clamp(17px,3.1vh,30px);font-weight:700}
+.st caption{font-size:clamp(16px,2.5vh,24px);padding-bottom:4px;font-weight:700;white-space:nowrap}
+.st th{font-size:clamp(12px,1.8vh,16px);font-weight:400;color:#9A9A9A;padding:2px 10px}
+.st td{padding:clamp(1px,.4vh,5px) clamp(8px,1.4vw,16px);text-align:center}
+.st td .sp{border-bottom:0}
+.st.g{background:#0C1A10;border:2px solid #3E8A55}.st.g caption{color:#8FF0A8}.st.g td{color:#EFFFF3}
+.st.g td:nth-child(n+2){color:#8FF0A8}
+.st.l{background:#1A1208;border:2px solid #9A6A2A}.st.l caption{color:#FFC27A}.st.l td{color:#FFF6EA}
+.st.l td:nth-child(2){color:#FFC27A}
+.st tr:nth-child(even) td{background:rgba(255,255,255,.04)}
 /* 記住這件事：兩個家族 */
 .sumg{display:flex;flex-direction:column;gap:clamp(8px,1.6vh,16px);width:100%;max-width:700px}
 .sg{display:flex;flex-direction:column;gap:4px;border-radius:16px;padding:clamp(8px,1.4vh,14px) 18px;text-align:center}
@@ -618,6 +667,23 @@ body{margin:0;background:#000;color:#F2F2F2;
 .sg span{font-size:clamp(20px,3.2vh,32px);font-weight:700;display:flex;gap:.5em;flex-wrap:wrap;justify-content:center}
 .sg.g{background:#0C1A10;border:1px solid #2B5236}.sg.g b{color:#8FD19E}
 .sg.l{background:#1A1208;border:1px solid #5A3E1C}.sg.l b{color:#F3B06B}
+/* 📑 目次放在左上角：底部按鈕列已經滿了，再塞一顆「唸一次」就不在正中央（直式 iPad） */
+.tocfix{position:fixed;top:max(10px,env(safe-area-inset-top));left:12px;z-index:30;background:#1E1E1E;border:1px solid #4A4A4A;
+ color:#F2F2F2;border-radius:99px;font-family:inherit;font-size:15px;padding:8px 14px;cursor:pointer}
+/* 直式：一樣的尾巴排兩欄 */
+@media (max-aspect-ratio:1/1){.tl4{grid-template-columns:repeat(2,auto)!important}}
+/* 2026-09-25 使用者指定：單字結構／環遊世界的主標題、次標題放大 */
+.sa .tag{font-size:clamp(22px,3.6vh,34px);letter-spacing:.14em;color:#BFD3E6}
+.sa .sub{font-size:clamp(19px,2.8vh,27px)}
+/* 一樣的尾巴：每一個字底下就是它的中文 */
+.tl4{display:grid;grid-template-columns:repeat(4,auto);justify-content:center;column-gap:clamp(14px,2.4vw,30px);row-gap:8px}
+.tw{display:inline-flex;flex-direction:column;align-items:center;gap:2px}
+.tw .sp{font-size:clamp(28px,5.4vh,54px);font-weight:700;border-bottom:0}
+.tw em{font-style:normal;font-size:clamp(20px,3.4vh,34px);color:#D8D3C5;font-weight:700}
+.odd .tw .sp{font-size:clamp(26px,5vh,50px)}
+.rs{color:#FF5A5A!important}
+.golink{display:inline-block;margin-top:6px;background:#10301F;border:2px solid #39D98A;color:#F2F2F2;border-radius:99px;
+ text-decoration:none;font-weight:700;font-size:clamp(17px,2.6vh,24px);padding:10px 22px}
 /* 念到哪一個字，那一個字就亮 */
 .speak{color:#FFD24A!important;text-shadow:0 0 16px rgba(255,210,74,.8);transform:scale(1.12);display:inline-block;transition:transform .15s}
 /* 底部按鈕列：「🔊 唸一次」放在正中央（使用者 2026-09-24 指定） */
@@ -629,18 +695,22 @@ body{margin:0;background:#000;color:#F2F2F2;
 #bar.c3 #say{font-size:clamp(17px,2.2vw,21px);font-weight:700;padding:12px clamp(18px,2.6vw,30px);
  background:#10301F;border-color:#39D98A;min-height:54px;white-space:nowrap}
 .reduce *{animation:none!important;transition:none!important}
+${TOCCSS}
 ${PH.CSS}
 ${SRC.CSS}
 </style>
+${P.svjs!=null?P.svjs:SVJS}
 </head>
 <body${P.sayAll?' class="sa"':''}>
 <div id="dots"></div>
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
-${P.sayAll?`<div id="bar" class="c3"><span class="bl">${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button></span><button id="say">🔊 唸一次</button><span class="br">${P.back?`<button id="back">${P.back.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</span></div>`:
-`<div id="bar"><button id="say">🔊 念一次</button>${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button>${P.back?`<button id="back">${P.back.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>`}
-${SRC.html(SRC.P[P.src||'why'])}
+${P.sayAll?`<div id="bar" class="c3"><span class="bl">${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button></span><button id="say">🔊 唸一次</button><span class="br">${P.back?`<button id="back">${P.back.label}</button>`:''}${P.fwd?`<button id="fwd">${P.fwd.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</span></div>`:
+`<div id="bar"><button id="say">🔊 念一次</button>${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button>${P.back?`<button id="back">${P.back.label}</button>`:''}${P.fwd?`<button id="fwd">${P.fwd.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>`}
+<button id="tocb" class="tocfix">📑 目次</button>
+${TOCHTML}
+${SRC.html(P.srcRows||SRC.P[P.src||'why'])}
 
 <script>
 ${PH.JS}
@@ -672,22 +742,9 @@ function visible(el){if(!el.getClientRects().length)return false;
  for(var p=el;p&&p!==document.body;p=p.parentElement){var cs=getComputedStyle(p);
   if(cs.display==="none"||cs.visibility==="hidden")return false}return true}
 function sayAll(){
- var my=++chainId;try{speechSynthesis.cancel()}catch(e){}
  var els=[].filter.call(stage.querySelectorAll(".phw,.sp"),function(el){
   return visible(el)&&!(el.parentElement&&el.parentElement.closest(".phw,.sp"))});
- var k=0;
- function next(){
-  [].forEach.call(stage.querySelectorAll(".speak"),function(x){x.classList.remove("speak")});
-  if(my!==chainId||k>=els.length)return;
-  var el=els[k++],t=el.getAttribute("data-say"),lang=el.getAttribute("data-lang")||"en-US",done=0;
-  if(!t){next();return}
-  el.classList.add("speak");
-  var fin=function(){if(done)return;done=1;setTimeout(next,160)};
-  try{var u=new SpeechSynthesisUtterance(t);u.lang=lang;u.rate=PH.isSlow()?.45:.85;
-   u.onend=fin;u.onerror=fin;speechSynthesis.speak(u)}catch(e){fin()}
-  setTimeout(fin,1400+t.length*(PH.isSlow()?260:140));   /* 瀏覽器不發 onend 也不會卡住 */
- }
- setTimeout(next,90);
+ PH.sayChain(els);    /* 瑞典文會先查預先做好的語音檔（_phonics.js） */
 }
 function say(){if(SAYALL){sayAll();return}
  var w=S[i].say;if(!w)return;
@@ -696,9 +753,10 @@ function say(){if(SAYALL){sayAll();return}
 
 var stage=document.getElementById("stage");
 function show(n){
- chainId++;
+ chainId++;PH.chainStop();
  var back=(n<i);
  i=Math.max(0,Math.min(S.length-1,n));
+ window.SRCAT=S[i].src||"";   /* 按「📖 出處」直接跳到這一幕的證據（使用者 2026-09-25 指定） */
  stage.innerHTML=draw(S[i]);
  PH.autoSay(stage);      // 補充單字、字詞、用法都可以點來聽
  if(!reduce){stage.classList.remove("turnR","turnL");void stage.offsetWidth;
@@ -733,12 +791,17 @@ try{var hh=parseInt((location.hash||"").slice(1),10);if(!isNaN(hh))jump=hh}catch
 show(jump);
 ${P.back?`document.getElementById("back").addEventListener("click",function(){
  if(history.length>1){history.back()}else{location.href=${JSON.stringify(P.back.href)}}});`:''}
-document.getElementById("home").addEventListener("click",function(){location.href="../index.html"});
+${P.fwd?`document.getElementById("fwd").addEventListener("click",function(){location.href=${JSON.stringify(P.fwd.href)}});`:''}
+document.getElementById("home").addEventListener("click",function(){location.href=${JSON.stringify(P.home||'../index.html')}});
+${TOCJS}
 ${SRC.JS}
 </script>
 </body>
 </html>
 `;
 
-PAGES.forEach(p=>fs.writeFileSync(path.join(DIR,p.file),tpl(p),'utf8'));
-console.log('已產生：'+PAGES.map(p=>p.file).join('  '));
+module.exports={tpl};
+if(require.main===module){
+ PAGES.forEach(p=>fs.writeFileSync(path.join(DIR,p.file),tpl(p),'utf8'));
+ console.log('已產生：'+PAGES.map(p=>p.file).join('  '));
+}

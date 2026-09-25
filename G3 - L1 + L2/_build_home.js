@@ -65,14 +65,27 @@ const body = `
  <a class="card" href="unit2.html">
   <span class="n">3</span><span class="ic">🎂</span>
   <span class="t">Unit 2 句型</span>
-  <span class="d">How old are you?　I’m eight years old.／I’m eight.　you 問 ➜ I 答、數字 6～12 替換字，下面還有「📝 複習」。</span>
+  <span class="d">How old are you?　I’m ten years old.／I’m ten.　you 問 ➜ I 答、數字 6～12 替換字，下面還有「📝 複習」。</span>
   <span class="f">${D.U2.length} 張字卡</span></a>
 
  <a class="card go" href="games.html">
   <span class="n">4</span><span class="ic">🎮</span>
   <span class="t">複習遊戲</span>
-  <span class="d">10 種玩法，<b>每一題 15 秒、愈快答對分數愈高</b>。每一個遊戲都有自己的 ${B.SURP.g1.length} 種驚喜卡，翻開會炸滿整個畫面。</span>
+  <span class="d">10 種玩法，每個遊戲 <b>5 分鐘</b>、愈快分數愈高。<b>連對 3 題</b>翻一張驚喜卡（${B.SURP.g1.length} 張張張不一樣）。</span>
   <span class="f">${B.GAMES.length} 種　共 ${B.GAMES.reduce((a, g) => a + g.n, 0)} 題</span></a>
+
+ <!-- 2026-09-25 使用者指定新增：數字單字、Sight Words（照家人單字的架構） -->
+ <a class="card" href="numbers/index.html">
+  <span class="n">5</span><span class="ic">🔢</span>
+  <span class="t">數字單字</span>
+  <span class="d">zero～twelve 字卡、結構、故事、環遊世界。母音紅色、不發音淺灰。</span>
+  <span class="f">13 張字卡</span></a>
+
+ <a class="card" href="sight/index.html">
+  <span class="n">6</span><span class="ic">👀</span>
+  <span class="t">Sight Words 常見字</span>
+  <span class="d">I、My、You、Your、name、What、How old…… 字卡、結構、故事、環遊世界。</span>
+  <span class="f">15 張字卡</span></a>
 </nav>
 
 <div id="order">
