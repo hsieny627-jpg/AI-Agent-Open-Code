@@ -796,9 +796,23 @@ function fit(){
     if(need>avail&&avail>0){var k=Math.max(.34,avail/need-0.015);
       w.style.transform='scale('+k+')';w.style.height=(ln.offsetHeight*k)+'px'}
   });
+  /* 三句靠左的等式（I 要上下對齊）：三句用同一個縮放、從左邊縮，不然最長那一句自己縮小，I 就對不齊了 */
+  var el=$('.eq.left',inn);
+  if(el){var ws=$$('.wrap',el),km=1;
+    ws.forEach(function(w){var ln=$('.line',w);w.style.transform='';w.style.height='';
+      var a=w.clientWidth,nd=ln?ln.scrollWidth:0;if(nd>a&&a>0)km=Math.min(km,Math.max(.34,a/nd-0.015))});
+    ws.forEach(function(w){var ln=$('.line',w);w.style.transformOrigin='left center';
+      if(km<1){w.style.transform='scale('+km+')';w.style.height=(ln.offsetHeight*km)+'px'}})}
   var cs=getComputedStyle(card);
   var availH=card.clientHeight-parseFloat(cs.paddingTop||0)-parseFloat(cs.paddingBottom||0);
   var needH=inn.scrollHeight, availW=card.clientWidth, needW=inn.scrollWidth;
+  /* 置中的 grid（語序卡、秒懂重點、三句等式）太寬時是往「兩邊」溢出，scrollWidth 只算得到右邊，
+     所以直接量裡面每一個東西最左、最右的位置（2026-09-25 直式 iPad 量到壓到翻頁箭頭） */
+  var cr=card.getBoundingClientRect(), lo=cr.left+parseFloat(cs.paddingLeft||0), hi=cr.right-parseFloat(cs.paddingRight||0), mn=lo, mx=hi;
+  $$('.ordgrid>*,.fgrid>*,.eqrow .line,.eqmark',inn).forEach(function(x){var r=x.getBoundingClientRect();if(!r.width)return;
+    if(r.left<mn)mn=r.left;if(r.right>mx)mx=r.right});
+  var ext=Math.max(hi-lo,2*Math.max(hi-(lo+hi)/2,mx-(lo+hi)/2,(lo+hi)/2-mn));
+  if(ext>hi-lo+1){needW=Math.max(needW,ext);availW=hi-lo}
   var k=Math.min(availH>0&&needH>availH?availH/needH:1, availW>0&&needW>availW?availW/needW:1);
   var kk=k<1?Math.max(.3,k-0.01):1;
   if(k<1)inn.style.transform='scale('+kk+')';
