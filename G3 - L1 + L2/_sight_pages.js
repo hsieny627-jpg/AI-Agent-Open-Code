@@ -79,7 +79,7 @@ const worldS = [
     why: '法、西說「<b>我有十年</b>」！', story: cx('🇬🇧 ten ' + E('years') + ' ' + E('old'), F('de') + ' zehn ' + Dd('Jahre') + ' ' + Dd('alt'), F('nl') + ' tien ' + Dd('jaar') + ' ' + Dd('oud')) }),
   { tag: '記住這件事', sayAll: 1, src: 'boat',
     h: rem([['I', 'ich', 'ik', '我'], ['my', 'mein', 'mijn', '我的'], ['name', 'Name', 'naam', '名字'], ['is', 'ist', 'is', '是'], ['what', 'was', 'wat', '什麼'], ['How old', 'Wie alt', 'Hoe oud', '幾歲']]) + BRO3,
-    lines: REMLINE }
+    lines: [REMLINE[1]] }
 ];
 
 /* ═════════ 📜 常見字的故事（第 20、23、24 點）═════════ */

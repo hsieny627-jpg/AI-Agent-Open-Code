@@ -89,7 +89,7 @@ const WHYSEE = {
 /* ═════════ 🧩 數字的結構（第 12、13、14、16 點）═════════ */
 const PARTS = [
   I('cant', e('one～ten 拆不開', 'OED 各詞條', 'one 到 ten 在英文裡<b>拆不出零件</b>，整個背起來。')),
-  ...SRCW.filter(r => ['lif', 'teen', 'ty', 'help', 'w-num', 'boat', 'gmc', 'gh-ch'].indexOf(r.id) >= 0),
+  ...SRCW.filter(r => ['lif', 'teen', 'ty', 'help', 'w-num', 'boat', 'gmc', 'gh-ch', 'where', 'map'].indexOf(r.id) >= 0),
   I('fam', e('one、two 的家人', 'OED「once」「only」「alone」「none」「twin」「twice」「twenty」「between」；Etymonline 同名詞條',
     '<b>once</b>（古英文 ānes）、<b>only</b>（ānlic）、<b>alone</b>（all ＋ one）、<b>none</b>（ne ＋ ān 一個也沒有）都藏著 one；' +
     '<b>twin</b>、<b>twice</b>、<b>twelve</b>、<b>twenty</b>（two ＋ ten）、<b>between</b>（在兩個中間）都藏著 tw（二）。')),
@@ -331,22 +331,22 @@ const TY = { tag: '🔑 字母密碼：-ty ＝ -zig ＝ -tig ＝ 幾個十', src
       '<span class="w sp" data-say="' + r[0] + '"' + (r[3] === 'de' ? ' data-lang="de-DE"' : r[3] === 'nl' ? ' data-lang="nl-NL"' : r[3] === 'sv' ? ' data-lang="sv-SE"' : '') + ' style="animation-delay:' + (0.3 + k * 0.4) + 's">' + r[1] + '<span class="ty">' + r[2] + '</span></span>' +
       '<span class="m" style="animation-delay:' + (0.4 + k * 0.4) + 's">3 ✕ <span class="ty">10</span></span>').join('') + '</div>',
   lines: ['幾十的尾巴，<b>都是「幾個十」</b>'] };
-const REM = (rows) => ({ tag: '記住這件事', sayAll: 1, src: 'boat', h: rem(rows) + BRO3, lines: REMLINE });
+const REM = (rows, next) => ({ tag: '記住這件事', sayAll: 1, src: 'boat', h: rem(rows) + BRO3 + (next ? '<a class="golink pop" href="' + next[0] + '">' + next[1] + '</a>' : ''), lines: next ? [REMLINE[1]] : REMLINE });
 
 const worldPages = [
   { file: 'numbers-world.html', title: '數字環遊世界　基礎 0～10', sayAll: 1, big: 1, srcRows: SRCW, topic: '🌍 環遊世界　基礎',
-    back: { href: 'numbers-parts.html', label: '← 字的結構' }, fwd: { href: 'numbers-world-2.html', label: '進階 11～20 →' },
+    back: { href: 'numbers-parts.html', label: '← 字的結構' },
     S: [{ emoji: '🌍', mid: '數字，環遊世界', lines: ['<b>基礎版</b>：別的國家怎麼說 0～10？'] },
       WD.WHERE, WD.SIX, WD.WHY5, WD.TREE, Object.assign({}, WD.MAPS[2], { lines: REMLINE }), T_Z,
       ...W0,
       REM([['o' + E('n') + 'e', 'ei' + Dd('n') + 's', 'ee' + Dd('n'), '一'], [E('t') + 'wo', Dd('z') + 'wei', 't' + Dd('w') + 'ee', '二'],
-        [E('th') + 'ree', Dd('d') + 'rei', Dd('d') + 'rie', '三'], ['ei' + E('gh') + 't', 'a' + Dd('ch') + 't', 'a' + Dd('ch') + 't', '八'], [E('t') + 'en', Dd('z') + 'ehn', Dd('t') + 'ien', '十']])] },
+        [E('th') + 'ree', Dd('d') + 'rei', Dd('d') + 'rie', '三'], ['ei' + E('gh') + 't', 'a' + Dd('ch') + 't', 'a' + Dd('ch') + 't', '八'], [E('t') + 'en', Dd('z') + 'ehn', Dd('t') + 'ien', '十']], ['numbers-world-2.html', '🌍 下一頁：進階 11～20 ➜'])] },
   { file: 'numbers-world-2.html', title: '數字環遊世界　進階 11～20', sayAll: 1, big: 1, srcRows: SRCW, topic: '🌍 環遊世界　進階 1',
-    back: { href: 'numbers-world.html', label: '← 基礎 0～10' }, fwd: { href: 'numbers-world-3.html', label: '進階 30～100 →' },
+    back: { href: 'numbers-world.html', label: '← 基礎 0～10' },
     S: [{ emoji: '🌍', mid: '十幾，環遊世界', lines: ['<b>進階版 1</b>：別的國家怎麼說 11～20？'] }, TEEN,
       ...W1,
       REM([['e' + E('leven'), 'e' + Dd('lf'), 'e' + Dd('lf'), '十一'], [E('tw') + 'elve', Dd('zw') + 'ölf', Dd('tw') + 'aalf', '十二'],
-        ['thir' + E('teen'), 'drei' + Dd('zehn'), 'der' + Dd('tien'), '十三'], ['four' + E('teen'), 'vier' + Dd('zehn'), 'veer' + Dd('tien'), '十四'], [E('tw') + 'enty', Dd('zw') + 'anzig', Dd('tw') + 'intig', '二十']])] },
+        ['thir' + E('teen'), 'drei' + Dd('zehn'), 'der' + Dd('tien'), '十三'], ['four' + E('teen'), 'vier' + Dd('zehn'), 'veer' + Dd('tien'), '十四'], [E('tw') + 'enty', Dd('zw') + 'anzig', Dd('tw') + 'intig', '二十']], ['numbers-world-3.html', '🌍 下一頁：進階 30～100 ➜'])] },
   { file: 'numbers-world-3.html', title: '數字環遊世界　進階 30～100', sayAll: 1, big: 1, srcRows: SRCW, topic: '🌍 環遊世界　進階 2',
     back: { href: 'numbers-world-2.html', label: '← 進階 11～20' },
     S: [{ emoji: '🌍', mid: '幾十，環遊世界', lines: ['<b>進階版 2</b>：別的國家怎麼說 30、40……100？'] }, TY,
