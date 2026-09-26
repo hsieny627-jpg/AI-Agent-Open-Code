@@ -761,7 +761,7 @@ async function gamesPage(p, f, vp, e) {
     /* 答錯頁在紅綠亮 0.5 秒以後才蓋上來；他還是她、語序、火眼金睛、分類的「錯」不是 .o，所以用 PICK 判斷有沒有答錯 */
     if (await p.evaluate(() => { const m = document.getElementById('miss'); return !!(m && m.classList.contains('on')) })
         || await p.$('#arena .o[data-ok="false"].bad')
-        || await p.evaluate(() => busy && !document.getElementById('gain').classList.contains('on') && g !== 'g6'))
+        || await p.evaluate(() => busy && window.LASTOK === false && !document.getElementById('gain').classList.contains('on') && g !== 'g6'))
       acts += await missCheck(p, e, '遊戲 ' + i + ' ', i === 1, () => score);
     await p.waitForTimeout(700);
     g = await snap(); acts++;

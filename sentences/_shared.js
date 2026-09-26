@@ -463,7 +463,9 @@ function mPair(o){ /* 你選的（紅框）／正確答案（金框）＋ 逐字
  var src=gSrc(o),g='',tr='';
  if(src){g=src.en===ans?mGloss(ans,bad):null;tr=src.zh||'';
   if(g===null){g='';o._gq=mGloss(src.en,null)}}
- return {p:(pick==null?'⏰ 時間到，沒有作答':(pick===''?'（沒有選）':dp)),a:da,g:g,tr:tr,gq:o._gq||'',en:/[A-Za-z]/.test(ans),ans:ans};
+ /* st ＝ 🔊 發音要唸的英文：答案有英文就唸答案；答案是中文（看英文選中文）就唸題目裡的那一句英文 */
+ var st=/[A-Za-z]/.test(ans)?ans:(src&&src.en?src.en:'');
+ return {p:(pick==null?'⏰ 時間到，沒有作答':(pick===''?'（沒有選）':dp)),a:da,g:g,tr:tr,gq:o._gq||'',en:/[A-Za-z]/.test(ans),ans:ans,st:st};
 }
 var MISSLOG=[], missT=null, missCB=null, MS=null, MISSN=8;
 function mEl(){
@@ -513,14 +515,14 @@ function mRead(reread){
   (p.tr?'<div class="mtr">整句：<b>'+mEsc(p.tr)+'</b></div>':'')+
   (o.why?'<div class="mw">💡 '+ap(o.why)+'</div>':'')+
   (mCan()?mStrip4(reread?1:null):'')+
-  '<div class="mft" id="mft">'+(p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+
+  '<div class="mft" id="mft">'+(p.st?'<button class="say" data-say="'+mEsc(p.st).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+
    '<span class="mcd" id="mcdn">'+MISSN+'</span></div></div>';
  m.scrollTop=0;m.classList.add('on');
  mSay3(/[A-Za-z]{2}/.test(p.ans)?p.ans:((gSrc(o)||{}).en||''));
  mCount(MISSN,function(){
   if(reread){mQuiz();return}
   var f=document.getElementById('mft');if(!f)return;
-  f.innerHTML=(p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+
+  f.innerHTML=(p.st?'<button class="say" data-say="'+mEsc(p.st).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+
    (mCan()?'<button class="bon">⭐ 加分</button>':'')+'<button class="nxt">▶ 繼續</button>';
  });
 }

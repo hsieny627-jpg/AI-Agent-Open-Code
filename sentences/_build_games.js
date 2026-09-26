@@ -724,6 +724,7 @@ function award(sp,short){
 }
 function judge(ok,hint,after,timeout){
   if(busy||ended)return;busy=true;
+  window.LASTOK=ok;   /* 量測用：這一題是答對還是答錯（火眼金睛答對以後要先看 6 秒，busy 會一直是 true） */
   tstop();
   asked++;
   if(ok){
