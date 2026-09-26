@@ -306,7 +306,9 @@ async function cardsPage(p, f, vp, e) {
     await p.click('#rvBtn'); await p.waitForTimeout(420); acts++;
     const gs = await p.$$eval('#rv .rvg', a => a.map(x => x.textContent));
     const gn = gs.length;
-    if (gn < 3) e.push('複習只有 ' + gn + ' 組（要每 4 張一組）');
+    /* 每 4 張一組：組數至少 ＝ 卡片數 ÷ 4（無條件捨去）；Review 1 只有 6、7 張 ➜ 至少 1 組（2026-09-26） */
+    const ncard = await p.$$eval('#dots i', a => a.length);
+    if (gn < Math.max(1, Math.floor(ncard / 4))) e.push('複習只有 ' + gn + ' 組（要每 4 張一組）');
     if (gn * 5 < N) e.push('複習沒有蓋到全部 ' + N + ' 張（只有 ' + gn + ' 組）');
     for (const g of gs) {
       const m = /(\d+)\s*題/.exec(g);
