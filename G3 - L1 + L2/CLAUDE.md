@@ -17,7 +17,7 @@
 | 19(3)(4) | 全部句型的語調不自然，要美式英語自然正確的語調 | **全部預先做成語音檔**：`audio/`（Kokoro 神經語音，美式女聲 af_bella，Apache-2.0），`_audio.js` 收集這一課會唸到的每一句、每一個字、每一個答案（316 句）。網頁唸英文先查 `audio/aud.js`，查得到就播音檔，查不到才用瀏覽器語音（引擎：`_shared.js` 的 `aPlay()`，有 `audio/aud.js` 才載入，sentences 沒有）。語速六段照樣管（`playbackRate`） |
 | 19(5)(6) | I’m Mike ➜ **I’m Ken**；縮寫卡 **I am Ken. ＝ I’m Ken.** | `U1[6]`、`U1[8]` |
 | 19(7) | 名字不翻譯 | 名字的中文那一格就寫英文名字（`W.nm()`、`SUB.name`、遊戲和暖身題的中文句子也一樣） |
-| 19(8) | 名字的頭像照老師的截圖 | 圖片在老師電腦 `C:\Users\ＪＤ\Documents\Codex\2026-09-26\5-ken-ken\outputs`（雲端環境讀不到）。先用 emoji；把圖片放進 `avatars/`（`ken.png`、`mike.png`、`alan.png`、`wendy.png`、`emma.png`）重新 build 就會換成圖片（`av()`） |
+| 19(8) | 名字的頭像照老師的截圖 | ✅ 2026-09-26 老師上傳五張全身角色圖（透明底 PNG），已放進 `avatars/`：`ken.png` 格子襯衫男孩、`mike.png` 戴眼鏡男孩、`alan.png` 西裝大人、`emma.png` 黃洋裝女孩、`wendy.png` 紅吊帶褲女孩（**對應是 Claude 依性別與老師列名順序推的，錯了只要互換檔名再 build**）。`.av` 改成不裁圓形、高 1.6em、`contain`（全身圖整個人都看得到）。引擎修正：替換字按鈕的 `data-ic` 要把 `"` 轉成 `&quot;`（`sentences/_build_cards.js`），不然 `<img>` 會把屬性切斷、按鈕上多出 `">` |
 | 19(9) | 秒懂重點：英文、中文、等號上下對齊 | 引擎的 `.fgrid`（`eqRow` 的卡都是） |
 | 19(10) | 一問一答 My name is Wendy ➜ **Emma** | `U1[13]` |
 | 19(11) | 新卡：**My name is Ken. ＝ I am Ken. ＝ I’m Ken.** | `U1[9]`：`eq` 卡多一個 `c`（第三句），`left:1` 三句靠左 |

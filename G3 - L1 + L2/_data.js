@@ -384,7 +384,7 @@ var CSS = '@media (max-aspect-ratio:1/1){.erow{flex-direction:column;gap:clamp(4
   'font-size:.44em;line-height:1.1;margin:0 -.2em;border:1px solid #C9302C}' +
   '.nmtag b{background:#C9302C;color:#fff;padding:.08em .4em;letter-spacing:.08em;font-size:.72em}' +
   '.nmtag i{background:#fff;color:#111;font-style:normal;font-weight:700;padding:.1em .5em;font-size:1.05em}' +
-  '.av{width:1.3em;height:1.3em;border-radius:50%;object-fit:cover;vertical-align:middle}' +
+  '.av{width:auto;height:1.6em;object-fit:contain;vertical-align:middle}' /* 老師給的是全身角色圖（透明底）：不裁成圓形，整個人都看得到 */ +
   '.chip .ci .pi,.bub .bi .pi{margin:0}';
 
 module.exports = { ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, SIL:SIL, CONTR:CONTR, PAGES:PAGES, CSS:CSS };
