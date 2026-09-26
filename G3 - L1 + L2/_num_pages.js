@@ -135,7 +135,7 @@ const CSS = `
 .tt .teen{color:#FFD24A;font-weight:800}.tt .ty{color:#5AD1FF;font-weight:800}
 .tt .m{font-size:clamp(20px,min(5.2vh,5vw),52px);font-weight:700;opacity:0;animation:nfIn .6s ease forwards;white-space:nowrap}
 .tt .m .teen{color:#FFD24A}.tt .m .ty{color:#5AD1FF}
-.fr80{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,20px);flex-wrap:wrap;font-size:clamp(34px,7vh,70px);font-weight:700}
+.fr80{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,20px);flex-wrap:wrap;font-size:clamp(26px,min(7vh,6vw),70px);font-weight:700}
 .fr80 span{opacity:0;animation:nfIn .6s cubic-bezier(.2,1.5,.4,1) forwards}
 .fr80 .x{color:#FF9EC7}.fr80 .v{color:#5AD1FF}
 .birds{font-size:clamp(20px,3.6vh,34px);line-height:1.1;max-width:14em;text-align:center}
