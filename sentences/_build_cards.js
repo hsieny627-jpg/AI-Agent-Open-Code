@@ -52,7 +52,7 @@ const CSS = `
 
 /* 卡片類型標籤 */
 .kind{position:absolute;top:clamp(9px,1.5vh,16px);left:clamp(12px,1.8vw,22px);
- font-size:clamp(11px,1.6vh,14px);color:#3E3E3E;letter-spacing:.14em}
+ font-size:clamp(15px,2.3vh,21px);color:#FFD66B;font-weight:700;letter-spacing:.1em}  /* 2026-09-26 使用者：左上方寫這張卡的主題，要看得見 */
 
 /* ── 句子（一個字一欄：英文／中文／圖示）── */
 .wrap{width:100%;display:flex;align-items:center;justify-content:center;
@@ -171,6 +171,9 @@ const CSS = `
 .sub.on{background:#2C3A48;border-color:var(--acc);color:#fff}
 .sub:active{transform:scale(.95)}
 .sub.adv{border-style:dashed;border-color:#3A4650}
+.subs.many{gap:clamp(2px,.4vh,5px)}
+.subs.many .subrow{gap:clamp(3px,.5vw,6px)}
+.subs.many .sub{font-size:clamp(11.5px,1.65vh,15px);padding:clamp(3px,.5vh,5px) clamp(6px,.8vw,10px);gap:3px}
 
 /* ── 等式卡：兩句「一句一句亮起來、一句一句唸出來」，最後兩句一起亮＋等號放大
    （使用者 2026-09-21 指定：兩句都要完整聽到，而且要秒懂它們是同一句）── */
@@ -250,6 +253,8 @@ const CSS = `
 .fgrid .fe{font-size:clamp(30px,6.2vh,62px);color:var(--be);font-weight:700;text-align:center;line-height:1}
 .fgrid .fb{font-size:clamp(32px,6.8vh,68px);color:var(--acc);font-weight:700;text-align:left;white-space:nowrap;line-height:1.1}
 .fgrid .fh{opacity:0;transform:translateY(18px) scale(.7)}
+/* left:1 ＝ 英文靠左，每一行的第一個字母上下對齊（使用者 2026-09-26：You／Your 的 Y、What／How／How old） */
+.fgrid.left .fa{text-align:left}
 .fgrid.uses{row-gap:clamp(4px,.9vh,10px)}
 .fgrid.uses .fa{font-size:clamp(32px,6.6vh,68px)}
 .fgrid.uses .fb{font-size:clamp(26px,5vh,50px)}
@@ -465,6 +470,10 @@ const CSS = `
 .rvhud{display:flex;align-items:center;justify-content:space-between;gap:clamp(8px,1.6vw,20px);width:100%}
 .rvhud .k{font-size:clamp(10.5px,1.5vh,13px);color:#5C5C5C;letter-spacing:.12em}
 .rvhud .v{font-size:clamp(16px,2.7vh,26px);font-weight:700}
+/* 2026-09-26 使用者：右上角分數和文字放大 */
+.rvsb{display:flex;flex-direction:column;align-items:center;line-height:1.05}
+.rvsb b{font-size:clamp(34px,6.4vh,64px);font-weight:700;color:var(--gold);text-shadow:0 0 18px rgba(255,210,74,.45)}
+.rvsb em{font-style:normal;font-size:clamp(13px,2vh,19px);color:#BFA75A;font-weight:700;letter-spacing:.06em}
 .rvq{font-size:clamp(24px,4.6vh,46px);font-weight:700;text-align:center;line-height:1.3}
 .rvsim{font-size:clamp(14px,2.2vh,20px);color:var(--gold);border:1px solid #5A4A18;background:#1A1508;
  border-radius:999px;padding:3px 14px;font-weight:700}
@@ -479,7 +488,7 @@ const CSS = `
 .rvo button.dim{opacity:.32}
 .rvfb{min-height:clamp(42px,7vh,70px);text-align:center;font-size:clamp(14px,2.3vh,22px);
  color:var(--body);line-height:1.45}
-.rvfb .gain{font-size:clamp(20px,3.6vh,34px);font-weight:700;color:var(--ok)}
+.rvfb .gain{font-size:clamp(28px,5.4vh,54px);font-weight:700;color:var(--ok)}
 .rvfb .surp{color:var(--gold);font-weight:700}
 .rvbtns{display:flex;gap:clamp(7px,1.3vw,14px);flex-wrap:wrap;justify-content:center}
 .rvbtns button{background:var(--btn);border:1px solid var(--line);border-radius:999px;
@@ -559,9 +568,14 @@ function sayEls(els,opt){
   opt=opt||{};var g=spGroups(els);
   if(!g.length){if(opt.done)opt.done();return}
   var txt=g.map(function(x){return x.t}).join(' ');
+  /* 一格裡有兩個英文字（How old、years old）：第 k 個「字」要對到第幾格（2026-09-26 修：原本亮到下一格去） */
+  var map=[];g.forEach(function(x,gi){x.t.split(/\s+/).forEach(function(w){if(w)map.push(gi)})});
+  var last=-2;
   say(txt,null,{keep:opt.keep,done:opt.done,start:opt.start,hl:function(k){
+    var gi=k>=0?map[k]:-1;if(gi==null)gi=-1;
     g.forEach(function(x){x.els.forEach(function(e){e.classList.remove('spk')})});
-    if(k>=0&&g[k])g[k].els.forEach(function(e){e.classList.add('spk')});
+    if(gi>=0&&g[gi])g[gi].els.forEach(function(e){e.classList.add('spk')});
+    if(opt.onk&&gi!==last){last=gi;try{opt.onk(gi,g[gi])}catch(e){}}
   }});
 }
 /* 唸一個東西（一個字、一個按鈕），唸的時候它整個亮 */
@@ -616,15 +630,21 @@ function sceneHTML(c){
     bub(s.b2,'R')+act(s.r,s.rn,s.rt,'R'+(s.b2?' ans':''))+
     '</div><div class="suse">\\uD83D\\uDCA1 '+ap(s.use)+'</div></div>';
 }
-function subsHTML(kind){
+function subsHTML(kind,inner){
+  /* 一張卡兩排替換字（2026-09-26 Review 1：He’s／She’s ＋ 職業）：c.slots ＝ ['pr','job']；
+     替換字很多（20 個以上）就排小一點（.many），句子才有位置 */
+  var ks=Object.prototype.toString.call(kind)==='[object Array]'?kind:[kind];
+  if(!inner){var n=0;ks.forEach(function(k){var x=SUB[k];if(x)n+=x.basic.length+x.adv.length});
+    var body=ks.map(function(k){return subsHTML(k,1)}).join('');
+    return body?'<div class="subs'+(n>12?' many':'')+'">'+body+'</div>':''}
   var s=SUB[kind];if(!s)return '';
   var row=function(list,lbl,cls){
     if(!list.length)return '';
     return '<div class="subrow"><span class="lbl">'+lbl+'</span>'+list.map(function(w){
-      return '<button class="sub '+cls+'" data-w="'+w[0]+'" data-z="'+w[1]+'" data-ic="'+String(w[2]).replace(/"/g,'&quot;')+'">'+
+      return '<button class="sub '+cls+'" data-k="'+kind+'" data-w="'+w[0]+'" data-z="'+w[1]+'" data-ic="'+String(w[2]).replace(/"/g,'&quot;')+'">'+
        w[2]+' '+w[0]+(w[1]!==w[0]?' <em>'+w[1]+'</em>':'')+'</button>'}).join('')+'</div>';
   };
-  return '<div class="subs">'+row(s.basic,'基礎','')+row(s.adv,'進階','adv')+'</div>';
+  return row(s.basic,s.lb||'基礎','')+row(s.adv,s.la||'進階','adv');
 }
 function noteHTML(n){return n?'<div class="note">'+mk(n)+'</div>':''}
 /* 說明文字裡的 [i]／[o] ＝ 那個被藏起來的字母，一樣上紅色 */
@@ -642,7 +662,7 @@ function draw(dir){
     /* 整句發音一律照畫面上的字：畫面是 Who’s he? 就唸 Who’s he?，不可以唸成 Who is he?
        （使用者 2026-09-24 指定） */
     h=lineHTML(c.tk)+fullHTML(c.zh,plain(c.tk));
-    subs=c.slot?subsHTML(c.slot):'';
+    subs=c.slots?subsHTML(c.slots):(c.slot?subsHTML(c.slot):'');
   } else if(c.type==='eq'){
     kind='縮寫';
     /* 兩句都要完整聽得到，而且要看得出「這兩句是同一句」（使用者 2026-09-21 指定） */
@@ -700,7 +720,7 @@ function draw(dir){
     /* 2026-09-25 使用者指定：①一次出現一個英文字，英文出來以後才出現它的中文
        ② 英文、＝、中文三欄上下對齊（同一個 grid）③「💡 問什麼？」按了才用動畫演出用法 ④ 字放大 */
     var hasU=c.rows.some(function(r){return r[3]});
-    h='<div class="focus fq"><h2>'+ap(c.title)+'</h2><div class="fgrid'+(hasU?' hasu':'')+'">'+c.rows.map(function(r,n){
+    h='<div class="focus fq"><h2>'+ap(c.title)+'</h2><div class="fgrid'+(hasU?' hasu':'')+(c.left?' left':'')+'">'+c.rows.map(function(r,n){
       return '<span class="gi ic fh" data-r="'+n+'" data-p="0">'+r[2]+'</span>'+
         '<span class="fa en fh" data-r="'+n+'" data-p="0" data-w="'+esc(spk(r[0]))+'" data-say="'+esc(spk(r[0]))+'">'+enHTML(r[0])+'</span>'+
         '<span class="fe fh" data-r="'+n+'" data-p="1">＝</span>'+
@@ -750,6 +770,7 @@ function draw(dir){
     subs=c.slot?subsHTML(c.slot):'';
   }
   card.className='';
+  if(c.kind)kind=c.kind;
   card.innerHTML='<span class="kind">'+kind+'</span><div id="cardIn">'+sceneHTML(c)+h+
     '<div id="tapHint" class="off">點卡片：一次出現一個字</div></div>'+subs;
   applyMode();
@@ -889,7 +910,7 @@ function playOrder(){
   }
   function eStep(){
     if(i!==myI)return;
-    if(k>=ec.length){morT.push(setTimeout(function(){if(i===myI)sayEls(ec,{keep:1})},600));return}
+    if(k>=ec.length){morT.push(setTimeout(function(){if(i===myI)sayOrd(ec,{keep:1})},600));return}
     var c=ec[k++], col=c.getAttribute('data-c'), src=null, used=0;
     for(var j=0;j<zc.length;j++)if(zc[j].getAttribute('data-c')===col){src=zc[j];break}
     var kk=parseFloat(card.getAttribute('data-k')||'1')||1;
@@ -907,6 +928,19 @@ function playOrder(){
     else morT.push(setTimeout(nx,760));
   }
   morT.push(setTimeout(zStep,350));
+}
+/* 整句唸的時候，唸到哪一個英文字，它和它的中文（同一個顏色）一起放大變亮（使用者 2026-09-26 指定）
+   What’s 是一個聲音：先亮 What ＋ 什麼，再亮 ’s ＋ 是 */
+function sayOrd(ec,opt){
+  opt=opt||{};var lt=null;
+  var off=function(){if(lt){clearTimeout(lt);lt=null}$$('.ordgrid .chip.lnk',card).forEach(function(x){x.classList.remove('lnk')})};
+  sayEls(ec,{keep:opt.keep,done:function(){off();if(opt.done)opt.done()},onk:function(gi,G){
+    if(lt){clearTimeout(lt);lt=null}
+    if(!G){off();return}
+    var cols=G.els.map(function(e){return e.getAttribute('data-c')});
+    lnk(cols[0],60000);
+    if(cols[1]&&cols[1]!==cols[0])lt=setTimeout(function(){lnk(cols[1],60000)},240);
+  }});
 }
 /* 中英連動：同一個顏色的中文和英文，一起放大變亮 */
 function lnk(col,ms){
@@ -1089,9 +1123,14 @@ function sayCard(opt){
   opt=opt||{};
   var c=CARDS[i], A=function(sel){return $$(sel,card)};
   if(c.type==='sent'||c.type==='swap'||c.type==='swapdemo'){sayEls(A('#cardIn .line .tk'),opt);return}
+  /* all:1 ＝ 每一句都唸（使用者 2026-09-26 指定：I am ten years old. ＝ I’m ten years old. 兩句都要唸） */
+  if(c.type==='eq'&&c.all){var rs=A('.eqrow'),k=0,myI=i;
+    var nx=function(){if(i!==myI)return;if(k>=rs.length){if(opt.done)opt.done();return}
+      var r=rs[k++];sayEls($$('.tk',r),{keep:k>1?1:opt.keep,done:function(){if(k<rs.length)morT.push(setTimeout(nx,500));else nx()}})};
+    nx();return}
   if(c.type==='eq'){sayEls(A(c.c?'.eqrow.c .tk':'.eqrow.b .tk'),opt);return}
   if(c.type==='morph'){sayEls(A('#morLine .tk'),opt);return}
-  if(c.type==='order'){sayEls(A('.chip.ce'),opt);return}
+  if(c.type==='order'){sayOrd(A('.chip.ce'),opt);return}
   if(c.type==='focus'){sayEls(A(c.eqRow?'.fgrid .fa':'.frow .fa'),opt);return}
   /* 他問他答：一列唸完，停 1 秒，才唸下一列（使用者 2026-09-25 指定：He’s ______. 唸完等一秒才唸 Who’s she?） */
   if(c.type==='echo'){var rs=A('.erow'),k=0,myI=i;
@@ -1139,9 +1178,8 @@ function autoPlay(){
 
 /* ---------- 替換字 ---------- */
 function markSubs(){
-  var cur=curSlotWord();
   $$('.sub',card).forEach(function(b){
-    b.classList.toggle('on',b.getAttribute('data-w')===cur)});
+    b.classList.toggle('on',b.getAttribute('data-w')===curSlotWord(b.getAttribute('data-k')))});
 }
 /* 一張卡裡所有的句子（對話卡有兩句，變身卡有直述句和問句） */
 function tkLists(c){
@@ -1149,24 +1187,27 @@ function tkLists(c){
   if(c.type==='swap'||c.type==='swapdemo')return [c.st,c.qu];
   return c.tk?[c.tk]:[];
 }
-function curSlot(){
-  var L=tkLists(CARDS[i]);
-  for(var a=0;a<L.length;a++)for(var n=0;n<L[a].length;n++)if(L[a][n].slot)return L[a][n];
+function curSlot(k){
+  var L=tkLists(CARDS[i]),multi=!!CARDS[i].slots;
+  for(var a=0;a<L.length;a++)for(var n=0;n<L[a].length;n++)if(L[a][n].slot&&(!multi||!k||L[a][n].slot===k))return L[a][n];
   return null;
 }
-function curSlotWord(){var s=curSlot();return s?s.en:''}
+function curSlotWord(k){var s=curSlot(k);return s?s.en:''}
 function rep(s,a,b){return (s&&a)?String(s).split(a).join(b):s}
 /* 換了字，整句的發音和整句中文一定要跟著換（使用者 2026-09-20 指定修掉的 bug） */
-function setSlot(w,z,ic){
+function setSlot(w,z,ic,k){
   var c=CARDS[i];
-  var s0=curSlot(), oldEn=s0?s0.en:'', oldZh=s0?s0.zh:'';
+  if(!c.slots)k=null;
+  var s0=curSlot(k), oldEn=s0?s0.en:'', oldZh=s0?s0.zh:'';
   if(c.type==='pair'&&s0){       /* 換掉的字在問句還是答句，那一邊的圖示就跟著換 */
     if(c.qtk.indexOf(s0)>=0)c.qic=ic;else c.aic=ic;
   }
   tkLists(c).forEach(function(L){
-    L.forEach(function(t){if(t.slot){t.en=w;t.zh=z;t.ic=ic;t.blank=0}})});
-  ['say','zh','stzh','quzh','qzh','azh'].forEach(function(k){
-    if(c[k]){c[k]=rep(rep(c[k],oldEn,w),oldZh,z)}
+    L.forEach(function(t){if(t.slot&&(!k||t.slot===k)){t.en=w;t.zh=z;t.ic=ic;t.blank=0}})});
+  /* say 是英文、其他是中文：分開換（空格 ______ 的英文和中文一樣，一起換會把英文換進中文句子裡） */
+  if(c.say)c.say=rep(c.say,oldEn,w);
+  ['zh','stzh','quzh','qzh','azh'].forEach(function(k){
+    if(c[k]){c[k]=rep(c[k],oldZh,z)}
   });
   var keepStep=step, wasAll=(step>=$$('.tk',card).length);
   draw(0);
@@ -1316,7 +1357,7 @@ function cardTap(){
 card.addEventListener('click',function(e){
   var t=e.target;
   var sub=t.closest?t.closest('.sub'):null;
-  if(sub){setSlot(sub.getAttribute('data-w'),sub.getAttribute('data-z'),sub.getAttribute('data-ic'));return}
+  if(sub){setSlot(sub.getAttribute('data-w'),sub.getAttribute('data-z'),sub.getAttribute('data-ic'),sub.getAttribute('data-k'));return}
   if(t.closest&&t.closest('#swapGo')){doSwap();return}
   if(t.closest&&t.closest('#puncGo')){puncToggle();return}
   if(t.closest&&t.closest('#ordGo')){playOrder();return}
@@ -1404,7 +1445,7 @@ function rvHome(){
   rvStop();
   $('#rv').classList.add('on');
   var best=function(n){return store('rv_'+UNIT+'_'+n)||0};
-  $('#rvbox').innerHTML='<h2>📝 Unit '+UNIT+' 複習　挑一組開始</h2>'+
+  $('#rvbox').innerHTML='<h2>📝 '+(typeof UNIT==='number'?'Unit '+UNIT:UNIT)+' 複習　挑一組開始</h2>'+
    '<p class="lead">20 秒一題，愈快答對分數愈高。題目和選項每一次都重洗。</p>'+
    '<div class="rvpick">'+RVG.map(function(g,n){
      return '<button class="rvg" data-g="'+n+'">'+g.t+
@@ -1427,7 +1468,7 @@ function rvAsk(){
      '<span class="v">'+RVG[rvGi].t+'</span></span>'+
     '<span id="rvring"><svg viewBox="0 0 100 100"><circle id="rvbg" cx="50" cy="50" r="46"></circle>'+
      '<circle id="rvfg" cx="50" cy="50" r="46"></circle></svg><span id="rvnum">'+RVT+'</span></span>'+
-    '<span style="text-align:right"><span class="k">分數</span><br><span class="v" id="rvsc">'+rvScore+'</span></span></div>'+
+    '<span class="rvsb"><b id="rvsc">'+rvScore+'</b><em>🏆 總分</em></span></div>'+
    (q.sim?'<div class="rvsim">🔁 類似題　剛剛錯的，再練一次</div>':'')+
    '<div class="rvq">'+ap(q.q)+'</div>'+
    '<div class="rvo">'+o.map(function(t,n){
@@ -1478,7 +1519,7 @@ function rvDone(btn,ok,timeout){
     if(sims[1]&&!q.sim){var sq={q:sims[1].q,o:sims[1].o,h:sims[1].h,sim:1};
       rvQ.splice(Math.min(rvQ.length,rvN+3+Math.floor(Math.random()*2)),0,sq)}
     missShow({q:q.q,pick:btn?btn.getAttribute('data-t'):null,ans:q.o[0],why:q.h,
-      sims:sims.slice(0,3),pts:500,gain:function(n){rvScore+=n;var e=$('#rvsc');if(e)e.textContent=rvScore}},
+      sims:sims.slice(0,3),self:{q:q.q,o:q.o,h:q.h},pts:500,gain:function(n){rvScore+=n;var e=$('#rvsc');if(e)e.textContent=rvScore}},
       function(){if(rvGi===myG&&$('#rv').classList.contains('on')){rvN++;rvAsk()}});
     return;
   }
@@ -1520,7 +1561,8 @@ $('#rvBtn').addEventListener('click',function(){
 draw(0);
 `;
 
-function page(unit, cards, title, other, otherName) {
+function page(unit, cards, title, other, otherName, P) {
+  P = P || {};
   const body = `
 <div id="dots"></div>
 <button class="nav l" id="prev" aria-label="上一張"><span><i>◀</i><b>上一張</b></span></button>
@@ -1561,7 +1603,7 @@ ${S.MISS}
 ${JS.replace('__CARDS__', () => JSON.stringify(cards))
     .replace('__UNIT__', () => JSON.stringify(unit))
     .replace('__SUB__', () => JSON.stringify(D.SUB))
-    .replace('__RVG__', () => JSON.stringify(unit === 1 ? D.RV1 : D.RV2))}
+    .replace('__RVG__', () => JSON.stringify(P.rv || (unit === 1 ? D.RV1 : D.RV2)))}
 ${S.RATEJS}
 </script>
 </body>
@@ -1574,6 +1616,7 @@ const PAGES = D.PAGES || [
   { file: 'unit1.html', unit: 1, title: 'Unit 1 句型｜Who’s he? Who’s she?', other: 'unit2.html', otherName: '➡ Unit 2' },
   { file: 'unit2.html', unit: 2, title: 'Unit 2 句型｜Is he a doctor?', other: 'unit1.html', otherName: '⬅ Unit 1' }
 ];
-PAGES.forEach(P => fs.writeFileSync(DIR + '/' + P.file,
-  page(P.unit, P.unit === 1 ? D.U1 : D.U2, P.title, P.other, P.otherName)));
+/* XPAGES（2026-09-26 新增：Review 1）：自己帶卡片 cards、複習題 rv；unit 寫名字（例：'Review 1'） */
+PAGES.concat(D.XPAGES || []).forEach(P => fs.writeFileSync(DIR + '/' + P.file,
+  page(P.unit, P.cards || (P.unit === 1 ? D.U1 : D.U2), P.title, P.other, P.otherName, P)));
 console.log('cards ok  unit1=' + D.U1.length + ' 張  unit2=' + D.U2.length + ' 張');

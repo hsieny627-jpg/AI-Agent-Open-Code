@@ -10,7 +10,7 @@
 const fs = require('fs'), path = require('path');
 const { pack } = require('../tools/audio_pack');
 const ROOT = path.join(__dirname, '..');
-const dirs = [__dirname, path.join(ROOT, 'G3 - L1 + L2', 'numbers'), path.join(ROOT, 'G3 - L1 + L2', 'sight')];
+const dirs = [__dirname, path.join(ROOT, 'G3 - L1 + L2', 'numbers'), path.join(ROOT, 'G3 - L1 + L2', 'sight'), path.join(ROOT, 'sentences')];   /* sentences：2026-09-26 句型環遊世界 */
 const T = [];
 dirs.filter(d => fs.existsSync(d)).forEach(d => fs.readdirSync(d).filter(f => /\.html$/.test(f)).forEach(f => {
   const h = fs.readFileSync(path.join(d, f), 'utf8');

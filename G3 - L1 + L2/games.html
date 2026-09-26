@@ -76,11 +76,12 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 
 .ap{color:var(--ap);font-weight:700}
 
-#miss,#missAll{position:fixed;inset:0;z-index:95;background:#000;display:none;flex-direction:column;
+#miss,#missAll,#look{position:fixed;inset:0;z-index:95;background:#000;display:none;flex-direction:column;
  align-items:center;padding:calc(var(--safeT) + clamp(8px,1.6vh,20px)) clamp(14px,3vw,40px)
  calc(var(--safeB) + clamp(8px,1.6vh,20px));overflow-y:auto}
-#miss.on,#missAll.on{display:flex}
-#miss .mbox,#missAll .mbox{width:100%;max-width:1060px;margin:auto 0;display:flex;flex-direction:column;
+#miss.on,#missAll.on,#look.on{display:flex}
+#look{z-index:96}
+#miss .mbox,#missAll .mbox,#look .mbox{width:100%;max-width:1060px;margin:auto 0;display:flex;flex-direction:column;
  align-items:center;gap:clamp(6px,1.4vh,16px)}
 .mhd{font-size:clamp(30px,6vh,60px);font-weight:700;color:var(--no);text-align:center;line-height:1.1;
  animation:mShake .5s cubic-bezier(.3,.8,.3,1)}
@@ -166,6 +167,16 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .mcard .say{align-self:flex-start;background:#10301F;border:1px solid var(--ok);border-radius:999px;color:#fff;
  font-size:clamp(15px,2.4vh,22px);padding:6px 16px}
 .mbtns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:clamp(4px,1vh,10px)}
+/* 2026-09-26 使用者指定：正確答案每一個英文字正下方 ＝ 它的中文；下面一行整句翻譯 */
+.mv.glw,.ma.gl .mv{display:inline-flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:0 .32em}
+.gw{display:inline-flex;flex-direction:column;align-items:center;line-height:1.1}
+.gw b{font-weight:700}
+.gw i{font-style:normal;font-size:.46em;color:#FFE9A8;font-weight:700;margin-top:.12em;white-space:nowrap;letter-spacing:.02em}
+.gw.gc{margin-left:-.3em}.gw.gp{margin-left:-.3em}.gw.gp i{visibility:hidden}
+.mtr{font-size:clamp(22px,4.2vh,42px);color:var(--fg);text-align:center;line-height:1.3;opacity:0;animation:mIn .45s ease .8s forwards}
+.mtr b{color:#FFE9A8}
+#look .lk{font-size:clamp(15px,2.4vh,22px);color:var(--dim)}
+.mvar{font-size:clamp(15px,2.4vh,22px);color:var(--acc);letter-spacing:.06em}
 .mbtns button{background:#0F3323;border-color:var(--ok)}
 
 .reduce *{animation:none!important;transition:none!important}
@@ -212,6 +223,14 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .gcell .v{font-size:clamp(16px,2.7vh,26px);font-weight:700}
 .gcell.r{align-items:flex-end;text-align:right}
 #gstreak{color:var(--gold)}
+/* 2026-09-26 使用者：右上角分數和文字放大，一眼看懂總分和拿到的獎勵 */
+.gsb{display:flex;align-items:flex-end;gap:clamp(8px,1.4vw,18px)}
+.gsb>span{display:flex;flex-direction:column;align-items:center;line-height:1.05}
+.gsb b{font-weight:700;font-variant-numeric:tabular-nums}
+.gsb em{font-style:normal;font-size:clamp(13px,2vh,19px);color:#BFA75A;font-weight:700;letter-spacing:.06em;margin-top:2px}
+.gsb .gb1 b{font-size:clamp(34px,6.4vh,64px);color:var(--gold);text-shadow:0 0 18px rgba(255,210,74,.45)}
+.gsb .gb2 b{font-size:clamp(22px,4vh,40px)}
+#gpop{font-size:clamp(24px,4.4vh,44px)!important;top:-10px!important}
 #gname{font-size:clamp(13px,2.1vh,19px);font-weight:700;color:var(--acc)}
 
 /* ── 驚喜卡（2026-09-21 改版；2026-09-25 使用者指定：字、圖示、動畫放大，文字簡潔，質感升級）──
@@ -265,6 +284,13 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .prow .fc .ewhy{font-size:clamp(12px,2vh,19px)}
 .prow .fc .ename{font-size:clamp(11px,1.6vh,15px)}
 .prow .c3.dim{opacity:.4;filter:grayscale(.6)}
+/* 2026-09-26 使用者：選了一張卻看不到任何回饋 ➜ 原因：進場動畫 pkIn（fill both）把翻面的 rotateY 蓋掉了。
+   翻開以後把動畫拿掉，卡片才真的翻過來；另外下面再用最大的字寫「你拿到：…」 */
+.prow .c3.flip{animation:none;transform:rotateY(180deg)}
+.pres{display:flex;flex-direction:column;align-items:center;gap:4px;min-height:1em;text-align:center}
+.pres .pb{font-size:clamp(40px,8.4vh,84px);font-weight:700;color:var(--gold);line-height:1.05;
+ text-shadow:0 0 30px rgba(255,210,74,.6);animation:gIn .55s cubic-bezier(.2,1.6,.4,1)}
+.pres .pw{font-size:clamp(22px,4vh,40px);color:#fff;font-weight:700;animation:gIn .55s ease .15s both}
 .prow .c3.mine .fc.ft{box-shadow:0 0 0 5px #fff,0 0 80px var(--pcg)}
 @keyframes pkIn{from{opacity:0;transform:translateY(40px) scale(.7)}to{opacity:1;transform:none}}
 /* 答對的加分視窗：✅ ＋880 一眼看完，下面一排圖示算式 */
@@ -277,9 +303,13 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .gbox .gok{font-size:clamp(48px,9vh,90px);line-height:1}
 .gbox .gnum{font-size:clamp(64px,14vh,140px);font-weight:700;color:var(--gold);line-height:1;text-shadow:0 0 36px rgba(255,210,74,.55)}
 .geq{display:flex;align-items:center;gap:clamp(6px,1vw,14px);flex-wrap:wrap;justify-content:center}
-.geq span{display:flex;align-items:center;gap:.15em;font-size:clamp(22px,4.2vh,42px);font-weight:700;color:#fff;
+.geq span{display:flex;flex-direction:column;align-items:center;gap:0;font-size:clamp(22px,4.2vh,42px);font-weight:700;color:#fff;
  background:#0A1A10;border:1px solid #1F4A2E;border-radius:14px;padding:.12em .4em;opacity:0;animation:gPart .4s ease forwards}
 .geq span.m{color:var(--gold);border-color:#6B5714;background:#1A1506}
+.geq span b{font-weight:700;white-space:nowrap}
+.geq span em{font-style:normal;font-size:.5em;color:#BFE8CF;letter-spacing:.04em;white-space:nowrap}
+.gbox .gtot{font-size:clamp(20px,3.6vh,36px);color:#fff;font-weight:700}
+.gbox .gtot b{color:var(--gold);font-size:1.3em}
 .geq i{font-style:normal;color:#5E7A68;font-size:clamp(18px,3.2vh,32px)}
 @keyframes gPart{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .gbar{width:min(70vw,440px);height:clamp(12px,2vh,20px);background:#10281A;border-radius:99px;overflow:hidden}
@@ -503,8 +533,9 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
   <span class="gcell"><span class="k">剩下</span><span class="v" id="gclock">⏳ 5:00</span></span>
   <span id="gring"><svg viewBox="0 0 100 100"><circle id="gbg" cx="50" cy="50" r="46"></circle>
    <circle id="gfg" cx="50" cy="50" r="46"></circle></svg><span id="gnum">15</span></span>
-  <span class="gcell r"><span class="k">分數 ／ 連對 ／ 驚喜卡</span>
-   <span class="v"><span id="gsc">0</span>　<span id="gstreak">—</span>　<span id="gsurp">🎁 0</span></span></span>
+  <span class="gsb"><span class="gb1"><b id="gsc">0</b><em>🏆 總分</em></span>
+   <span class="gb2"><b id="gstreak">—</b><em>連對</em></span>
+   <span class="gb2"><b id="gsurp">🎁 0</b><em>驚喜卡</em></span></span>
   <span id="gpop"></span>
  </div>
 
@@ -733,11 +764,15 @@ function mPaint(s,T,keep,cls){ /* 把沒對上的字包起來，其他字照原�
 }
 function mEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 function mStrip(h){var d=document.createElement('div');d.innerHTML=String(h||'');return d.textContent||''}
-function mPair(o){ /* 你選的（紅框）／正確答案（金框） */
- var pick=o.pick==null?null:mStrip(o.pick), ans=mStrip(o.ans), dp='', da='';
- if(pick!=null&&pick!==''){var d=mDiff(pick,ans);dp=mPaint(pick,d.A,d.ia,'x');da=mPaint(ans,d.B,d.ib,'f')}
+function mPair(o){ /* 你選的（紅框）／正確答案（金框）＋ 逐字中文、整句翻譯（2026-09-26） */
+ var pick=o.pick==null?null:mStrip(o.pick), ans=mStrip(o.ans), dp='', da='', bad=[];
+ if(pick!=null&&pick!==''){var d=mDiff(pick,ans);dp=mPaint(pick,d.A,d.ia,'x');da=mPaint(ans,d.B,d.ib,'f');
+  d.B.forEach(function(t,k){if(!d.ib[k])bad.push(t)})}
  else da=ap(mEsc(ans));
- return {p:(pick==null?'⏰ 時間到，沒有作答':(pick===''?'（沒有選）':dp)),a:da,en:/[A-Za-z]/.test(ans),ans:ans};
+ var src=gSrc(o),g='',tr='';
+ if(src){g=src.en===ans?mGloss(ans,bad):null;tr=src.zh||'';
+  if(g===null){g='';o._gq=mGloss(src.en,null)}}
+ return {p:(pick==null?'⏰ 時間到，沒有作答':(pick===''?'（沒有選）':dp)),a:da,g:g,tr:tr,gq:o._gq||'',en:/[A-Za-z]/.test(ans),ans:ans};
 }
 var MISSLOG=[], missT=null, missCB=null, MS=null, MISSN=8;
 function mEl(){
@@ -774,21 +809,23 @@ function mStrip4(cur){ /* 加分的秒懂說明：⭐ ➜ 👀 8 秒 ➜ 📝 �
  return '<div class="mbn'+(cur!=null?' cur':'')+'">'+st.map(function(x,k){
   return (k?'<i>➜</i>':'')+'<span'+(cur===k?' class="now"':'')+'>'+x+'</span>'}).join('')+'</div>';
 }
-function mCan(){return !!(MS&&MS.o&&MS.o.gain&&((MS.o.sims&&MS.o.sims.length)||MS.o.sim0))}
+function mCan(){return !!(MS&&MS.o&&MS.o.gain&&(MS.o.self||(MS.o.sims&&MS.o.sims.length)||MS.o.sim0))}
 /* 錯題分析頁：reread ＝ 按了加分以後的「再看 8 秒」 */
 function mRead(reread){
  var o=MS.o, p=mPair(o), m=mEl();
  m.innerHTML='<div class="mbox">'+
   '<div class="mhd'+(reread?' bn':'')+'">'+(reread?'👀 再仔細看一次':(o.pick==null?'⏰ 時間到':'❌ 答錯了'))+'</div>'+
   (o.q?'<div class="mq">'+ap(o.q)+'</div>':'')+
+  (p.gq?'<div class="mcmp"><div class="ma gl" style="animation-delay:.1s;font-size:clamp(26px,5.6vh,56px)"><span class="mi">🔤</span><span class="mv">'+p.gq+'</span></div></div>':'')+
   '<div class="mcmp"><div class="mp"><span class="mi">❌</span><span class="mv">'+p.p+'</span></div>'+
-  '<div class="mar">⬇</div><div class="ma"><span class="mi">✅</span><span class="mv">'+p.a+'</span></div></div>'+
+  '<div class="mar">⬇</div><div class="ma'+(p.g?' gl':'')+'"><span class="mi">✅</span><span class="mv">'+(p.g?p.g:p.a)+'</span></div></div>'+
+  (p.tr?'<div class="mtr">整句：<b>'+mEsc(p.tr)+'</b></div>':'')+
   (o.why?'<div class="mw">💡 '+ap(o.why)+'</div>':'')+
   (mCan()?mStrip4(reread?1:null):'')+
   '<div class="mft" id="mft">'+(p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+
    '<span class="mcd" id="mcdn">'+MISSN+'</span></div></div>';
  m.scrollTop=0;m.classList.add('on');
- mSay3(p.ans);
+ mSay3(/[A-Za-z]{2}/.test(p.ans)?p.ans:((gSrc(o)||{}).en||''));
  mCount(MISSN,function(){
   if(reread){mQuiz();return}
   var f=document.getElementById('mft');if(!f)return;
@@ -804,21 +841,22 @@ function missShow(o,cb){
  MISSLOG=MISSLOG.filter(function(x){return x.key!==key});
  MISSLOG.push({key:key,q:o.q,pick:o.pick,ans:o.ans,why:o.why});
  missCB=cb||null;
- MS={o:o};
+ o.self0=o.self;MS={o:o};
  mRead(false);
 }
 function missBonus(){if(!mCan())return;sayStop();mRead(true)}
 /* 加分題：字放大的類似題，選項重洗 */
 function mQuiz(){
- var o=MS.o, s=(o.sims&&o.sims.length)?o.sims.shift():o.sim0;
+ /* 2026-09-26 使用者指定：加分題 ＝ 同一題換個樣子（mVar），一律四個選項；原題不能轉就用最像的一題 */
+ var o=MS.o, s=o.self?mVar(o.self,o.self===o.self0?o.pick:null):((o.sims&&o.sims.length)?mVar(o.sims.shift()):mVar(o.sim0));
  if(!s){missHide(true);return}
  MS.s=s;
  var opts=shuf(s.o.map(function(x,n){return{x:x,n:n}}));
  var m=mEl();
- m.innerHTML='<div class="mbox"><div class="mhd bn">⭐ 加分題</div>'+mStrip4(2)+
+ m.innerHTML='<div class="mbox"><div class="mhd bn">⭐ 加分題</div><div class="mvar">🔁 同一個重點，換個樣子再考一次</div>'+mStrip4(2)+
   '<div class="mbq">'+ap(s.q)+'</div>'+
   (s.say?'<div class="mft"><button class="say" data-say="'+mEsc(s.say).replace(/"/g,'&quot;')+'">🔊 再聽一次</button></div>':'')+
-  '<div class="mbo'+(opts.length<3?' one':'')+'">'+opts.map(function(t,k){
+  '<div class="mbo">'+opts.map(function(t,k){
    return '<button data-ok="'+(t.n===0)+'" data-t="'+mEsc(t.x).replace(/"/g,'&quot;')+'" style="animation-delay:'+(0.15+k*0.1).toFixed(2)+'s">'+ap(t.x)+'</button>'}).join('')+'</div>'+
   '<div class="mx2">答對 ＝ <b>'+o.pts+' ✕ 2</b></div></div>';
  m.scrollTop=0;
@@ -846,7 +884,7 @@ function missPick(b){
  setTimeout(function(){
   if(!missOn())return;
   var no={q:s.q,pick:b.getAttribute('data-t'),ans:s.o[0],why:s.h,pts:o.pts,gain:o.gain,
-   sims:o.sims,sim0:o.sim0||s};
+   sims:o.sims,sim0:o.sim0||s,self:o.self||s,look:o.look};
   var key=mStrip(no.q)+'|'+mStrip(no.ans);
   MISSLOG=MISSLOG.filter(function(x){return x.key!==key});
   MISSLOG.push({key:key,q:no.q,pick:no.pick,ans:no.ans,why:no.why});
@@ -874,7 +912,8 @@ function missAll(title,done){
   MISSLOG.map(function(x,k){var p=mPair(x);
    return '<div class="mcard" style="animation-delay:'+(0.1+k*0.14).toFixed(2)+'s">'+
    '<span class="mn">第 '+(k+1)+' 題</span>'+(x.q?'<div class="cq">📝 '+ap(x.q)+'</div>':'')+
-   '<div class="cp">❌ '+p.p+'</div><div class="ca">✅ <b>'+p.a+'</b></div>'+
+   '<div class="cp">❌ '+p.p+'</div><div class="ca">✅ <b>'+(p.g?'<span class="mv glw">'+p.g+'</span>':p.a)+'</b></div>'+
+   (p.tr?'<div class="cw">整句：<b>'+mEsc(p.tr)+'</b></div>':'')+
    (x.why?'<div class="cw">💡 '+ap(x.why)+'</div>':'')+
    (p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+'</div>'}).join('')+
   '<div class="mbtns"><button id="mAllOk">✅ 我都弄懂了</button></div></div>';
@@ -893,6 +932,147 @@ function simRank(me,list,txt,hint){
   return {x:x,s:(t?n/t:0)+(ha&&hint(x)===ha?1:0)+Math.random()*.01}}).sort(function(p,q){return q.s-p.s})
   .map(function(p){return p.x});
 }
+var GL={"how":"如何","how old":"幾歲","years old":"歲","year old":"歲","year":"年","years":"年","old":"老的","i":"我","my":"我的","you":"你","your":"你的","he":"他","she":"她","his":"他的","her":"她的","him":"他","is":"是","am":"是","are":"是","'s":"是","'m":"是","'re":"是","not":"不","isn't":"不是","n't":"不","what":"什麼","who":"誰","where":"哪裡","when":"什麼時候","why":"為什麼","whose":"誰的","name":"名字","a":"一位","an":"一個","yes":"是的","no":"不","and":"和","but":"但是","this":"這","my name":"我的 名字","like":"喜歡","likes":"喜歡","to":"去","can":"會","hi":"嗨","it":"它","it's":"它是","book":"書","gh":"（不發音）","many":"多少","the":"這個","one":"一","me":"我","hello":"哈囉","about":"關於","family":"家人","was":"是（過去）","has":"有","have":"有","do":"做","does":"做","ken":"Ken","emma":"Emma","ten":"十","alan":"Alan","wendy":"Wendy","mike":"Mike","six":"六","seven":"七","eight":"八","nine":"九","eleven":"十一","twelve":"十二","basketball":"籃球","dodgeball":"躲避球","pokémon cards":"寶可夢卡","switch games":"Switch 遊戲","minecraft":"當個創世神","lego":"樂高","comics":"漫畫","recess":"下課時間","pe class":"體育課","bubble tea":"珍珠奶茶","books":"書","baseball":"棒球","soccer":"足球","video games":"電玩","art class":"美勞課","music":"音樂","ice cream":"冰淇淋","fried chicken":"炸雞","dogs":"狗","cats":"貓","play basketball":"打籃球","play dodgeball":"打躲避球","play tag":"玩鬼抓人","play video games":"打電動","collect pokémon cards":"收集寶可夢卡","build lego":"組樂高","draw":"畫畫","sing":"唱歌","dance":"跳舞","read":"閱讀","swim":"游泳","cook":"做菜","play baseball":"打棒球","play badminton":"打羽毛球","play the piano":"彈鋼琴","play the guitar":"彈吉他","ride my bike":"騎我的腳踏車","skateboard":"溜滑板","jump rope":"跳繩","play with my dog":"和我的狗玩"},TR={"what's your name?":"你的名字是什麼？","my name is ken.":"我的名字是 Ken。","my name is alan.":"我的名字是 Alan。","my name is wendy.":"我的名字是 Wendy。","my name is mike.":"我的名字是 Mike。","my name is emma.":"我的名字是 Emma。","i'm ken.":"我是 Ken。","i'm alan.":"我是 Alan。","i'm wendy.":"我是 Wendy。","i'm mike.":"我是 Mike。","i'm emma.":"我是 Emma。","my name is emma. ＝ i'm emma.":"我的 名字 是 Emma。＝ 我 是 Emma。","my name is ken. ＝ i'm emma.":"我的 名字 是 Ken。＝ 我 是 Emma。","my name is alan. ＝ i'm emma.":"我的 名字 是 Alan。＝ 我 是 Emma。","my name is wendy. ＝ i'm emma.":"我的 名字 是 Wendy。＝ 我 是 Emma。","my name is mike. ＝ i'm emma.":"我的 名字 是 Mike。＝ 我 是 Emma。","my name is emma. ＝ i'm ken.":"我的 名字 是 Ken。＝ 我 是 Emma。","my name is emma. ＝ i'm alan.":"我的 名字 是 Alan。＝ 我 是 Emma。","my name is emma. ＝ i'm wendy.":"我的 名字 是 Wendy。＝ 我 是 Emma。","my name is emma. ＝ i'm mike.":"我的 名字 是 Mike。＝ 我 是 Emma。","how old are you?":"你幾歲？","i'm ten years old.":"我十歲。","i'm six years old.":"我六歲。","i'm seven years old.":"我七歲。","i'm eight years old.":"我八歲。","i'm nine years old.":"我九歲。","i'm eleven years old.":"我十一歲。","i'm twelve years old.":"我十二歲。","i'm ten.":"我十歲。","i'm six.":"我 是 六 歲。","i'm seven.":"我七歲。","i'm eight.":"我八歲。","i'm nine.":"我九歲。","i'm eleven.":"我十一歲。","i'm twelve.":"我十二歲。","i am ken.":"我是 Ken。","i am nine.":"我九歲。","hi! my name is alan.":"嗨！我的名字是 Alan。","hello! my name is wendy.":"哈囉！我的名字是 Wendy。","i am seven years old.":"我七歲。","what is your name?":"你的名字是什麼？","i am emma.":"我是 Emma。","i am six.":"我六歲。","my name":"我的名字","i'm":"我是","what":"什麼","how old":"幾歲","name":"名字","years old":"歲","i":"我","my":"我的","you":"你","your":"你的","six":"六","seven":"七","nine":"九","eleven":"十一","twelve":"十二","you're":"你是","you're six.":"你六歲。","you are seven.":"你七歲。","you're seven.":"你七歲。","i am ten.":"我十歲。","i am ten years old.":"我十歲。"};
+/* sentences/_miss_rt.js — 瀏覽器端程式（原封不動塞進網頁，跟 _shared.js 的 MISS 放在一起）
+ * 使用者 2026-09-26 指定的三件事：
+ *  ① 答錯頁：正確答案的每一個英文字正下方 ＝ 它的中文；下面再一行整句翻譯（mGloss／mTr）
+ *  ② 加分題：不是換一題「不像的題目」，而是**同一題換個樣子**（名字／職業／數字換掉、選項換位置、
+ *     選項文字稍微變一下），一律**四個選項**，錯的選項都是學生真的會寫錯的樣子（mVar）
+ *  ③ 火眼金睛：答對也要看 6 秒（正確句子＋逐字中文＋整句翻譯＋自動唸）才得分（lookShow）
+ * GL（字 ➜ 中文）、TR（句 ➜ 中文）由 _gloss.js 在 build 時從這個網站的資料自動收集。
+ */
+function gKey(s){return String(s).replace(/<[^>]+>/g,'').replace(/[’‘]/g,"'").replace(/\s+/g,' ')
+ .replace(/\s+([?.!,])/g,'$1').replace(/\s+'/g,"'").trim().toLowerCase()}
+/* 切成一個一個「字」：What's ➜ What ＋ 's（使用者的例子：'s 正下方是「是」）；How old、years old 算一個 */
+function gUnits(s){
+ s=String(s);var r=[],re=/[A-Za-z]+n[’']t\b|[A-Za-z]+|[’'][A-Za-z]+|[?.!,]/g,m;
+ while((m=re.exec(s)))r.push({t:m[0],s:m.index,e:m.index+m[0].length});
+ for(var i=0;i+1<r.length;i++){var two=gKey(r[i].t+' '+r[i+1].t);
+  if(/[a-z]/.test(r[i+1].t)&&GL[two]&&/^(how old|years old|year old)$/.test(two)){
+   r.splice(i,2,{t:s.slice(r[i].s,r[i+1].e),s:r[i].s,e:r[i+1].e})}}
+ return r;
+}
+function gZh(t){var k=gKey(t);if(GL[k]!=null)return GL[k];
+ if(/^[a-z]+n't$/.test(k)&&GL[k.replace(/n't$/,'')])return GL[k.replace(/n't$/,'')]+' 不';
+ return ''}
+/* 名字、數字、職業換掉以後的句子，也翻得出來 */
+var GSW=[['Ken','Ken'],['Alan','Alan'],['Wendy','Wendy'],['Mike','Mike'],['Emma','Emma']];
+var GSA=[['six','六'],['seven','七'],['eight','八'],['nine','九'],['ten','十'],['eleven','十一'],['twelve','十二']];
+var GSJ=[['doctor','醫生'],['teacher','老師'],['student','學生'],['farmer','農夫'],['nurse','護理師'],['cook','廚師']];
+function mTr(s){
+ var k=gKey(s);if(!k||!/[a-z]/.test(k))return '';
+ if(TR[k])return TR[k];
+ var sets=[GSW,GSA,GSJ];
+ for(var a=0;a<sets.length;a++)for(var i=0;i<sets[a].length;i++){
+  var w=sets[a][i],re=new RegExp('\\b'+w[0].toLowerCase()+'\\b');if(!re.test(k))continue;
+  for(var j=0;j<sets[a].length;j++){if(j===i)continue;var v=sets[a][j],k2=k.replace(re,v[0].toLowerCase());
+   if(TR[k2]&&TR[k2].indexOf(v[1])>=0)return TR[k2].replace(v[1],w[1])}}
+ return '';
+}
+/* 正確答案畫成「英文在上、中文在下」一欄一欄；bad ＝ 要框金色（改對的字）的字元範圍 */
+function mGloss(ans,bad){
+ var U=gUnits(ans),h='',hit=function(u){if(!bad)return false;for(var i=0;i<bad.length;i++)
+  if(u.s<bad[i].e&&u.e>bad[i].s)return true;return false};
+ U.forEach(function(u){
+  if(/^[?.!,]$/.test(u.t)){h+='<span class="gw gp"><b>'+u.t+'</b><i>&nbsp;</i></span>';return}
+  var z=gZh(u.t);
+  h+='<span class="gw'+(/^['’]/.test(u.t)?' gc':'')+'"><b'+(hit(u)?' class="f"':'')+'>'+ap(mEsc(u.t))+'</b><i>'+(z?mEsc(z):'&nbsp;')+'</i></span>'});
+ return h;
+}
+function gIsEn(s){s=mStrip(s);return /[A-Za-z]{2,}|^I\b/.test(s)&&!/[一-鿿]/.test(s)}
+/* 答案是中文（看英文選中文）：就拿題目裡引號中的英文句子來逐字對照 */
+function gSrc(o){var a=mStrip(o.ans);if(gIsEn(a))return {en:a,zh:mTr(a)};
+ var q=mStrip(o.q||''),m=q.match(/["“「]([^"”」]*[A-Za-z][^"”」]*)["”」]/);
+ if(m&&gIsEn(m[1])&&/[一-鿿]/.test(a))return {en:m[1],zh:a.replace(/^[^一-鿿]+/,'')};
+ return null}
+
+/* ── ② 加分題：同一題換個樣子，四個選項 ── */
+function gCanon(s){s=gKey(s).replace(/[?.!]$/,'');
+ return s.replace(/'s\b/g,' is').replace(/'m\b/g,' am').replace(/'re\b/g,' are').replace(/n't\b/g,' not')
+  .replace(/ years old\b/g,'').replace(/^my name is /,'i am ').replace(/\s+/g,' ').trim()}
+var MUT=[
+ [/\byour\b/,'you'],[/\byou\b/,'your'],[/\bYour\b/,'You'],[/\bYou\b(?![’'])/,'Your'],
+ [/\bMy name\b/,'I name'],[/\bI[’']m\b/,'I are'],[/\bI[’']m\b/,'Me'],[/\bYou[’']re\b/,'You is'],[/\bYou[’']re\b/,'You’s'],[/\bYou[’']re\b/,'Your are'],[/\bmy\b/,'I'],[/\bI[’']m\b/,'My'],[/\bI am\b/,'I is'],
+ [/\bis\b/,'are'],[/\bare\b/,'is'],[/\bam\b/,'is'],[/([A-Za-z])[’']s\b/,'$1'],[/([A-Za-z])[’']m\b/,'$1'],
+ [/\byears old\b/,'year old'],[/\bHow old\b/,'How'],[/\bWhat\b/,'How'],[/\bHow\b(?! old)/,'What'],
+ [/\bhe\b/,'she'],[/\bshe\b/,'he'],[/\bHe\b/,'She'],[/\bShe\b/,'He'],[/\bhe\b/,'him'],[/\bHe[’']s\b/,'His'],
+ [/\ba ([a-z]+)/,'$1'],[/\bIs (he|she)\b/,'$1 is'],[/\bWho\b/,'What'],[/\bisn[’']t\b/,'not'],[/\bWho[’']s\b/,'Whose'],
+ [/他/,'她'],[/她/,'他'],[/你的/,'我的'],[/我的/,'你的'],[/誰/,'什麼'],[/什麼/,'誰'],[/幾歲/,'好嗎'],[/名字/,'年紀']
+];
+/* 一個字的答案：同一組容易搞混的字 */
+var MSET=[['is','are','am','be','was','do'],["'s","'m","'re",'is','are'],['I','My','You','Your','Me'],['my','your','I','you','me'],
+ ['he','she','him','his','her'],['He','She','His','Her','Him'],['What','How','Who','Where','When'],['Who','Whose','What','How'],
+ ['How old','How','What','How many'],['year','years','old','years old'],['a','an','the','one']];
+function mMuts(c){var out=[];MUT.forEach(function(r){if(r[0].test(c)){var x=c.replace(r[0],r[1]);if(x!==c)out.push(x)}});
+ MSET.forEach(function(S){if(S.indexOf(c)>=0)S.forEach(function(x){if(x!==c)out.push(x)})});
+ /* 中文答案：職業、數字換一個 */
+ [GSJ,GSA].forEach(function(S){S.forEach(function(w){if(c.indexOf(w[1])>=0)S.forEach(function(v){
+  if(v!==w&&c.indexOf(v[1])<0&&!(S===GSA&&/十[一二]/.test(c)))out.push(c.replace(w[1],v[1]))})})});
+ /* 兩個字對調（語序錯），開頭大寫 */
+ var w=c.split(' ');if(w.length>=3&&/[A-Za-z]/.test(c)){for(var n=0;n<2;n++){var i=Math.floor(Math.random()*(w.length-1));
+  var v=w.slice(),t=v[i];v[i]=v[i+1];v[i+1]=t;if(/[?.!,]$/.test(w[i])||/[?.!,]$/.test(w[i+1]))continue;
+  var y=v.join(' ');y=y.charAt(0).toUpperCase()+y.slice(1);out.push(y)}}
+ /* 少一個字 */
+ if(w.length>=3&&/[A-Za-z]/.test(c)){var d=1+Math.floor(Math.random()*(w.length-2));var z=w.slice();z.splice(d,1);
+  if(!/^[?.!]$/.test(z[z.length-1]))out.push(z.join(' '))}
+ return shuf(out)}
+function gSame(a,b){return gKey(a)===gKey(b)}
+function mSwapIn(b){ /* 名字 ➜ 職業 ➜ 數字，換一組（題目、選項、提示一起換，答案還是對的） */
+ var all=[b.q].concat(b.o).concat([b.h||'',b.say||'']).join(' ');
+ var cjk=/[六七八九十]/.test(all);
+ var sets=[GSW,GSJ].concat(cjk?[]:[GSA]);
+ for(var a=0;a<sets.length;a++){
+  var S=sets[a],had=S.filter(function(w){return new RegExp('\\b'+w[0]+'\\b','i').test(all)});
+  if(!had.length)continue;
+  var from=pick(had),rest=S.filter(function(w){return !new RegExp('\\b'+w[0]+'\\b','i').test(all)});
+  if(!rest.length)continue;var to=pick(rest);
+  var rep=function(s){if(s==null)return s;s=String(s).replace(new RegExp('\\b'+from[0]+'\\b','g'),to[0])
+    .replace(new RegExp('\\b'+from[0].charAt(0).toUpperCase()+from[0].slice(1)+'\\b','g'),to[0].charAt(0).toUpperCase()+to[0].slice(1));
+   if(from[1]!==from[0]&&S!==GSA)s=s.split(from[1]).join(to[1]);return s};
+  return {q:rep(b.q),o:b.o.map(rep),h:rep(b.h),say:rep(b.say),sw:1};
+ }
+ return null;
+}
+/* base ＝ 原題（{q,o:[正解,...],h,say}）；pick ＝ 學生選錯的那一個 */
+function mVar(base,pick){
+ if(!base||!base.o||!base.o.length)return base;
+ var sw=mSwapIn(base)||{q:base.q,o:base.o.slice(),h:base.h,say:base.say};
+ var c=sw.o[0],opts=[c],cc=gCanon(c);
+ var ok=function(x){if(!x)return false;x=String(x);if(/<[^>]+>/.test(x)&&!mStrip(x))return false;
+  for(var i=0;i<opts.length;i++)if(gSame(opts[i],x))return false;
+  if(/[A-Za-z]/.test(x)&&gCanon(x)===cc)return false;return true};
+ /* 先放「學生真的會錯」的：原題的錯選項（換過名字的）、學生自己選的那一個、正解改一個地方 */
+ var cand=shuf(sw.o.slice(1));
+ if(pick&&!sw.sw)cand.unshift(pick);
+ var mm=base.nm?[]:mMuts(c);
+ /* 原題的錯選項最多留兩個，至少換一個成「正解改一個地方」：選項文字跟原題不一樣，不能背 */
+ var keep=cand.filter(ok).slice(0,2);keep.forEach(function(x){if(ok(x))opts.push(x)});
+ mm.forEach(function(x){if(opts.length<4&&ok(x))opts.push(x)});
+ cand.forEach(function(x){if(opts.length<4&&ok(x))opts.push(x)});
+ return {q:sw.q,o:opts,h:sw.h,say:sw.say,v:1};
+}
+
+/* ── ③ 火眼金睛：答對也要看 6 秒才得分 ── */
+var lookT=null;
+function lookShow(en,cb){
+ var m=document.getElementById('look');
+ if(!m){m=document.createElement('div');m.id='look';document.body.appendChild(m);
+  m.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('.say'):null;if(b)say(b.getAttribute('data-say'))})}
+ var zh=mTr(en),n=6;
+ m.innerHTML='<div class="mbox"><div class="mhd ok">🔍 看清楚，記起來</div>'+
+  '<div class="mcmp"><div class="ma gl"><span class="mi">✅</span><span class="mv">'+mGloss(en,null)+'</span></div></div>'+
+  (zh?'<div class="mtr">整句：<b>'+mEsc(zh)+'</b></div>':'')+
+  '<div class="mft"><button class="say" data-say="'+mEsc(en).replace(/"/g,'&quot;')+'">🔊 發音</button>'+
+  '<span class="mcd" id="lcdn">'+n+'</span></div>'+
+  '<div class="lk">看完 6 秒 ➜ 才拿得到分數</div></div>';
+ m.classList.add('on');
+ setTimeout(function(){if(m.classList.contains('on'))say(en)},500);
+ if(lookT)clearInterval(lookT);
+ lookT=setInterval(function(){n--;var c=document.getElementById('lcdn');
+  if(n>0){if(c){c.textContent=n;c.classList.remove('tick');void c.offsetWidth;c.classList.add('tick')}return}
+  clearInterval(lookT);lookT=null;m.classList.remove('on');sayStop();if(cb)cb()},1000);
+}
+function lookHide(){if(lookT){clearInterval(lookT);lookT=null}var m=document.getElementById('look');if(m)m.classList.remove('on')}
 
 
 var BANK={"g1":[{"q":"What’s ＝ ?","o":["What is","What are","What am","What your"],"h":"’ 藏起來的是 is 的 i。"},{"q":"I’m ＝ ?","o":["I am","I is","I are","My am"],"h":"’ 藏起來的是 am 的 a。"},{"q":"You’re ＝ ?","o":["You are","Your","You is","You am"],"h":"You’re ＝ You are；Your 是「你的」。"},{"q":"What 的中文是？","o":["什麼","幾歲","怎麼樣","誰"],"h":"What ＝ 什麼。"},{"q":"How old 在問什麼？","o":["幾歲","名字","什麼","怎麼樣"],"h":"How old ＝ 問年紀。"},{"q":"How 的中文是？","o":["怎麼樣","幾歲","什麼","名字"],"h":"How 問程度（怎麼樣）；加上 old 才是問幾歲。"},{"q":"name 的中文是？","o":["名字","年紀","數字","朋友"],"h":"name ＝ 名字。"},{"q":"My 的中文是？","o":["我的","我","你的","你"],"h":"I 我，My 我的。"},{"q":"Your 的中文是？","o":["你的","你","我的","我"],"h":"You 你，Your 你的。"},{"q":"「我」的英文是？","o":["I","My","You","Your"],"h":"I ＝ 我（永遠大寫）。"},{"q":"「你」的英文是？","o":["You","Your","I","My"],"h":"You ＝ 你。"},{"q":"\"What’s your name?\" 的回答？","o":["My name is Emma.","I’m nine.","Your name is Emma.","I’m nine years old."],"h":"問名字，答名字。"},{"q":"\"How old are you?\" 的回答？","o":["I’m ten.","I’m Ken.","My name is ten.","You’re ten."],"h":"問幾歲，答幾歲。"},{"q":"「你的名字是什麼？」","o":["What’s your name?","What’s my name?","How old are you?","What your name?"],"h":"your ＝ 你的。"},{"q":"「你幾歲？」","o":["How old are you?","How are you?","How old you are?","What’s your name?"],"h":"How old ＋ are ＋ you。"},{"q":"「我八歲。」","o":["I’m eight years old.","I’m eight year old.","My eight years old.","I eight years old."],"h":"years 有 s，I’m 不能少。"},{"q":"「我的名字是 Mike。」","o":["My name is Mike.","I name is Mike.","My name Mike.","Your name is Mike."],"h":"My name is ＋ 名字。"},{"q":"eleven 是多少？","o":["十一","七","十二","十"],"h":"eleven 11，twelve 12。"},{"q":"twelve 是多少？","o":["十二","十一","二十","十"],"h":"twelve ＝ 12。"},{"q":"seven 是多少？","o":["七","十一","六","九"],"h":"seven ＝ 7。"},{"q":"「九」的英文是？","o":["nine","night","five","ten"],"h":"nine 最後的 e 不發音。"},{"q":"「六」的英文是？","o":["six","seven","sick","ten"],"h":"six ＝ 6。"},{"q":"years old 的中文是？","o":["歲","年","老","名字"],"h":"years old ＝ 歲。"},{"q":"I’m ten. 省略了什麼？","o":["years old","name","my","are"],"h":"I’m ten years old. 的 years old 可以省略。"}],"g2":[{"txt":"___ name is Ken.","zh":"我的名字是 Ken。","a":"my","h":"後面有 name（名字）➜ 我的名字 ➜ My。"},{"txt":"___ name is Alan.","zh":"我的名字是 Alan。","a":"my","h":"後面有 name（名字）➜ 我的名字 ➜ My。"},{"txt":"___ name is Wendy.","zh":"我的名字是 Wendy。","a":"my","h":"後面有 name（名字）➜ 我的名字 ➜ My。"},{"txt":"___ name is Mike.","zh":"我的名字是 Mike。","a":"my","h":"後面有 name（名字）➜ 我的名字 ➜ My。"},{"txt":"___ name is Emma.","zh":"我的名字是 Emma。","a":"my","h":"後面有 name（名字）➜ 我的名字 ➜ My。"},{"txt":"___’m Ken.","zh":"我是 Ken。","a":"I","h":"’m ＝ am，I am ➜ I’m。"},{"txt":"___’m Alan.","zh":"我是 Alan。","a":"I","h":"’m ＝ am，I am ➜ I’m。"},{"txt":"___’m Wendy.","zh":"我是 Wendy。","a":"I","h":"’m ＝ am，I am ➜ I’m。"},{"txt":"___’m Mike.","zh":"我是 Mike。","a":"I","h":"’m ＝ am，I am ➜ I’m。"},{"txt":"___’m Emma.","zh":"我是 Emma。","a":"I","h":"’m ＝ am，I am ➜ I’m。"},{"txt":"___’m six years old.","zh":"我六歲。","a":"I","h":"我是幾歲 ➜ I’m ＋ 數字 ＋ years old。"},{"txt":"___’m seven years old.","zh":"我七歲。","a":"I","h":"我是幾歲 ➜ I’m ＋ 數字 ＋ years old。"},{"txt":"___’m eight years old.","zh":"我八歲。","a":"I","h":"我是幾歲 ➜ I’m ＋ 數字 ＋ years old。"},{"txt":"___’m nine years old.","zh":"我九歲。","a":"I","h":"我是幾歲 ➜ I’m ＋ 數字 ＋ years old。"},{"txt":"___’m ten years old.","zh":"我十歲。","a":"I","h":"我是幾歲 ➜ I’m ＋ 數字 ＋ years old。"},{"txt":"___’m eleven years old.","zh":"我十一歲。","a":"I","h":"我是幾歲 ➜ I’m ＋ 數字 ＋ years old。"},{"txt":"___’m twelve years old.","zh":"我十二歲。","a":"I","h":"我是幾歲 ➜ I’m ＋ 數字 ＋ years old。"},{"txt":"___ am Ken.","zh":"我是 Ken。","a":"I","h":"am 前面用 I：I am。"},{"txt":"___ am nine.","zh":"我九歲。","a":"I","h":"am 前面用 I：I am。"},{"txt":"Hi! ___ name is Alan.","zh":"嗨！我的名字是 Alan。","a":"my","h":"name 前面用 My（我的）。"},{"txt":"___’m twelve.","zh":"我十二歲。","a":"I","h":"I’m ＝ I am ＝ 我是。"},{"txt":"Hello! ___ name is Wendy.","zh":"哈囉！我的名字是 Wendy。","a":"my","h":"name 前面用 My（我的）。"},{"txt":"___ am seven years old.","zh":"我七歲。","a":"I","h":"am 前面用 I：I am。"},{"txt":"___ name is Emma.","zh":"我的名字是 Emma。","a":"my","h":"My name ＝ 我的名字。"}],"g3":[{"s":["What’s","your","name","?"],"zh":"你的名字是什麼？","h":"中文「什麼」在最後，英文 What 在最前面。"},{"s":["What","is","your","name","?"],"zh":"你的名字是什麼？","h":"What ➜ is ➜ your ➜ name。"},{"s":["How","old","are","you","?"],"zh":"你幾歲？","h":"How old 一起放最前面。"},{"s":["My","name","is","Ken","."],"zh":"我的名字是 Ken。","h":"My ➜ name ➜ is ➜ 名字。"},{"s":["My","name","is","Wendy","."],"zh":"我的名字是 Wendy。","h":"跟中文一樣：我的 名字 是 Wendy。"},{"s":["My","name","is","Mike","."],"zh":"我的名字是 Mike。","h":"My name is ＋ 名字。"},{"s":["I’m","Alan","."],"zh":"我是 Alan。","h":"I’m ＋ 名字。"},{"s":["I","am","Emma","."],"zh":"我是 Emma。","h":"I ➜ am ➜ 名字。"},{"s":["I’m","eight","years","old","."],"zh":"我八歲。","h":"I’m ➜ 數字 ➜ years old。"},{"s":["I’m","nine","years","old","."],"zh":"我九歲。","h":"數字放在 years old 前面。"},{"s":["I’m","ten","years","old","."],"zh":"我十歲。","h":"years 在 old 前面。"},{"s":["I","am","seven","years","old","."],"zh":"我七歲。","h":"I ➜ am ➜ 數字 ➜ years ➜ old。"},{"s":["I’m","eleven","."],"zh":"我十一歲。","h":"years old 可以省略。"},{"s":["I’m","twelve","."],"zh":"我十二歲。","h":"I’m ＋ 數字。"},{"s":["I","am","six","."],"zh":"我六歲。","h":"I am ＋ 數字。"},{"s":["My","name","is","Emma","."],"zh":"我的名字是 Emma。","h":"My name is ＋ 名字。"},{"s":["I’m","Wendy","."],"zh":"我是 Wendy。","h":"I’m ＋ 名字。"},{"s":["I","am","Ken","."],"zh":"我是 Ken。","h":"I ➜ am ➜ 名字。"},{"s":["I’m","twelve","years","old","."],"zh":"我十二歲。","h":"I’m ➜ 數字 ➜ years old。"},{"s":["What’s","your","name","?"],"zh":"你叫什麼名字？","h":"What’s 放第一個。"},{"s":["How","old","are","you","?"],"zh":"你今年幾歲？","h":"are 放在 you 前面。"},{"s":["I’m","six","years","old","."],"zh":"我六歲。","h":"數字放在 I’m 後面。"}],"g4":[{"f":"What is your name?","d":"→ 縮寫","o":["What’s your name?","Whats your name?","What’is your name?","What your name?"],"h":"is 的 i 換成 ’。"},{"f":"What’s your name?","d":"→ 拆開","o":["What is your name?","What are your name?","What am your name?","What his your name?"],"h":"What’s ＝ What is。"},{"f":"I am Ken.","d":"→ 縮寫","o":["I’m Ken.","Im Ken.","I’am Ken.","My Ken."],"h":"am 的 a 換成 ’。"},{"f":"I’m Mike.","d":"→ 拆開","o":["I am Mike.","I is Mike.","I are Mike.","My am Mike."],"h":"I’m ＝ I am。"},{"f":"I am nine years old.","d":"→ 縮寫","o":["I’m nine years old.","Im nine years old.","I’am nine years old.","I’s nine years old."],"h":"I am ➜ I’m。"},{"f":"I’m ten years old.","d":"→ 拆開","o":["I am ten years old.","I is ten years old.","I are ten years old.","My am ten years old."],"h":"I’m ＝ I am。"},{"f":"You are eight.","d":"→ 縮寫","o":["You’re eight.","Your eight.","Youre eight.","You’are eight."],"h":"are 的 a 換成 ’。Your 是「你的」。"},{"f":"You’re seven.","d":"→ 拆開","o":["You are seven.","You is seven.","Your are seven.","You am seven."],"h":"You’re ＝ You are。"},{"f":"I’m eight years old.","d":"→ 省略 years old","o":["I’m eight.","I’m eight years.","I’m eight old.","I’m years old."],"h":"years 和 old 一起省略。"},{"f":"I’m eleven years old.","d":"→ 省略 years old","o":["I’m eleven.","I’m eleven years.","I’m eleven old.","I eleven."],"h":"years old 一起拿掉。"},{"f":"I’m six.","d":"→ 說完整","o":["I’m six years old.","I’m six year old.","I’m six years.","I’m six old."],"h":"加回 years old，years 有 s。"},{"f":"I’m twelve.","d":"→ 說完整","o":["I’m twelve years old.","I’m twelve year old.","I’m twelve old.","I’m twelve years."],"h":"加回 years old。"},{"f":"What is your name?","d":"→ 回答（用 My）","o":["My name is Wendy.","Your name is Wendy.","I name is Wendy.","My name Wendy."],"h":"問 your，答 My。"},{"f":"What is your name?","d":"→ 回答（用 I’m）","o":["I’m Emma.","My Emma.","I Emma.","You’re Emma."],"h":"I’m ＋ 名字。"},{"f":"How old are you?","d":"→ 回答（用 I’m）","o":["I’m nine.","I’m Mike.","My nine.","You’re nine."],"h":"問 you，答 I。"},{"f":"My name is Ken.","d":"→ 換成 I’m","o":["I’m Ken.","I’m name is Ken.","My’m Ken.","I Ken."],"h":"My name is ___. ＝ I’m ___."},{"f":"I’m Alan.","d":"→ 換成 My name is","o":["My name is Alan.","My name Alan.","I name is Alan.","My is Alan."],"h":"I’m ___. ＝ My name is ___."},{"f":"I am seven.","d":"→ 縮寫","o":["I’m seven.","Im seven.","I’am seven.","I’s seven."],"h":"I am ➜ I’m。"},{"f":"What is your name?","d":"→ 問幾歲","o":["How old are you?","What old are you?","How old is your name?","How are you?"],"h":"問年紀用 How old。"},{"f":"How old are you?","d":"→ 問名字","o":["What’s your name?","How’s your name?","What old are you?","What’s you name?"],"h":"問名字用 What。"}],"g5":[{"s":"What's your name?","o":["What's your name?","What's my name?","What is name?","How old are you?"],"h":"聽中間：your（你的）。"},{"s":"How old are you?","o":["How old are you?","How are you?","What's your name?","How old am I?"],"h":"聽到 old ➜ 問幾歲。"},{"s":"My name is Ken.","o":["My name is Ken.","I'm ten.","My name is Alan.","I'm Ken."],"h":"Ken 的 k 像「ㄎ」，ten 的 t 像「ㄊ」。"},{"s":"I'm ten.","o":["I'm ten.","I'm Ken.","I'm seven.","I'm twelve."],"h":"ten 開頭是 t（ㄊ）。"},{"s":"I'm seven.","o":["I'm seven.","I'm eleven.","I'm six.","I'm Ken."],"h":"eleven 前面多一個「ㄧ」。"},{"s":"I'm eleven.","o":["I'm eleven.","I'm seven.","I'm twelve.","I'm Alan."],"h":"eleven 十一，e-lev-en 三拍。"},{"s":"I'm six years old.","o":["I'm six years old.","I'm seven years old.","I'm six.","I'm sixty years old."],"h":"six 只有一拍。"},{"s":"I'm nine years old.","o":["I'm nine years old.","I'm nine.","I'm eight years old.","I'm ten years old."],"h":"nine 最後的 e 不發音。"},{"s":"I'm eight.","o":["I'm eight.","I'm eight years old.","I'm nine.","I'm ten."],"h":"eight 的 gh 不發音，像 ate。"},{"s":"I'm twelve years old.","o":["I'm twelve years old.","I'm eleven years old.","I'm twelve.","I'm ten years old."],"h":"twelve 開頭 tw。"},{"s":"My name is Emma.","o":["My name is Emma.","My name is Wendy.","I'm Emma.","My name is Alan."],"h":"Emma 開頭是 E。"},{"s":"I'm Wendy.","o":["I'm Wendy.","My name is Wendy.","I'm Emma.","I'm eight."],"h":"短短的，只有 I’m ＋ 名字。"},{"s":"My name is Mike.","o":["My name is Mike.","I'm Mike.","My name is Ken.","My name is Alan."],"h":"Mike 的 e 不發音。"},{"s":"I'm Alan.","o":["I'm Alan.","I'm Emma.","My name is Alan.","I'm eleven."],"h":"Alan 開頭是 A。"},{"s":"What is your name?","o":["What is your name?","What's your name?","What is my name?","How old are you?"],"h":"這一次是 What is，沒有縮寫。"},{"s":"I am ten years old.","o":["I am ten years old.","I'm ten years old.","I am ten.","I am Ken."],"h":"這一次是 I am，沒有縮寫。"},{"s":"You're seven.","o":["You're seven.","I'm seven.","You're eleven.","Your seven."],"h":"開頭是 You’re（你是）。"},{"s":"I'm nine.","o":["I'm nine.","I'm five.","I'm Mike.","I'm nine years old."],"h":"短答，沒有 years old。"},{"s":"My name is Wendy.","o":["My name is Wendy.","Your name is Wendy.","I'm Wendy.","My name is Emma."],"h":"開頭是 My（我的）。"},{"s":"I'm six.","o":["I'm six.","I'm seven.","I'm Mike.","I'm sixty."],"h":"six 一拍，seven 兩拍。"}],"g6":[["What's your name?","你的名字是什麼？"],["How old are you?","你幾歲？"],["My name","我的名字"],["I'm","我是"],["I'm eight years old.","我八歲。"],["I'm ten.","我十歲。"],["What","什麼"],["How old","幾歲"],["name","名字"],["years old","歲"],["I","我"],["My","我的"],["You","你"],["Your","你的"],["six","六"],["seven","七"],["nine","九"],["eleven","十一"],["twelve","十二"],["You're","你是"]],"g7":[{"w":["What’s","your","name","?"],"b":-1,"zh":"你的名字是什麼？","h":"這一句完全正確，別被騙了。"},{"w":["What’s","you","name","?"],"b":1,"fix":"your","zh":"你的名字是什麼？","h":"「你的」名字要用 your。"},{"w":["What’s","my","name","?"],"b":1,"fix":"your","zh":"你的名字是什麼？","h":"問別人的名字用 your。"},{"w":["How","your","name","?"],"b":0,"fix":"What’s","zh":"你的名字是什麼？","h":"問名字用 What。"},{"w":["How","old","are","you","?"],"b":-1,"zh":"你幾歲？","h":"這一句完全正確。"},{"w":["What","old","are","you","?"],"b":0,"fix":"How","zh":"你幾歲？","h":"問幾歲是 How old，不是 What old。"},{"w":["How","old","is","you","?"],"b":2,"fix":"are","zh":"你幾歲？","h":"you 要配 are。"},{"w":["How","old","are","your","?"],"b":3,"fix":"you","zh":"你幾歲？","h":"問「你」幾歲，用 you。"},{"w":["My","name","is","Ken","."],"b":-1,"zh":"我的名字是 Ken。","h":"這一句完全正確。"},{"w":["I","name","is","Ken","."],"b":0,"fix":"My","zh":"我的名字是 Ken。","h":"「我的」名字要用 My。"},{"w":["Your","name","is","Wendy","."],"b":0,"fix":"My","zh":"我的名字是 Wendy。","h":"說自己的名字用 My。"},{"w":["My","name","Emma","."],"b":2,"fix":"is Emma","zh":"我的名字是 Emma。","h":"My name 後面要有 is。"},{"w":["I’m","Mike","."],"b":-1,"zh":"我是 Mike。","h":"這一句完全正確。"},{"w":["My","Mike","."],"b":0,"fix":"I’m","zh":"我是 Mike。","h":"「我是」要用 I’m。"},{"w":["I’m","eight","years","old","."],"b":-1,"zh":"我八歲。","h":"這一句完全正確。"},{"w":["I’m","eight","year","old","."],"b":2,"fix":"years","zh":"我八歲。","h":"years 要有 s。"},{"w":["My","nine","years","old","."],"b":0,"fix":"I’m","zh":"我九歲。","h":"說自己幾歲用 I’m。"},{"w":["I’m","ten","years","."],"b":2,"fix":"years old","zh":"我十歲。","h":"years 後面還要有 old。"},{"w":["I’m","eleven","."],"b":-1,"zh":"我十一歲。","h":"years old 可以省略，這一句正確。"},{"w":["I","twelve","years","old","."],"b":0,"fix":"I’m","zh":"我十二歲。","h":"I 後面要有 am：I’m。"},{"w":["I’m","seven","old","."],"b":2,"fix":"years old","zh":"我七歲。","h":"old 前面要有 years。"},{"w":["Your","six","."],"b":0,"fix":"You’re","zh":"你六歲。","h":"「你是」是 You’re；Your 是「你的」。"}],"g8":[{"b":"___","a":"'s your name?","zh":"你的名字是什麼？","o":["What","How","Who","My"],"h":"問名字用 What。"},{"b":"What's","a":"name?","zh":"你的名字是什麼？","o":["your","you","my","I"],"h":"你的 ＝ your。"},{"b":"What's your","a":"?","zh":"你的名字是什麼？","o":["name","old","years","nine"],"h":"名字 ＝ name。"},{"b":"How","a":"are you?","zh":"你幾歲？","o":["old","name","years","is"],"h":"How old ＝ 幾歲。"},{"b":"How old","a":"you?","zh":"你幾歲？","o":["are","is","am","do"],"h":"you 配 are。"},{"b":"How old are","a":"?","zh":"你幾歲？","o":["you","your","I","my"],"h":"你 ＝ you。"},{"b":"___","a":"name is Ken.","zh":"我的名字是 Ken。","o":["My","I","Your","Me"],"h":"我的 ＝ My。"},{"b":"My name","a":"Alan.","zh":"我的名字是 Alan。","o":["is","am","are","’m"],"h":"name 配 is。"},{"b":"My","a":"is Wendy.","zh":"我的名字是 Wendy。","o":["name","old","years","you"],"h":"名字 ＝ name。"},{"b":"___","a":"'m Mike.","zh":"我是 Mike。","o":["I","My","You","Me"],"h":"I’m ＝ I am ＝ 我是。"},{"b":"I","a":"Emma.","zh":"我是 Emma。","o":["am","is","are","my"],"h":"I 配 am。"},{"b":"I'm eight","a":"old.","zh":"我八歲。","o":["years","year","name","is"],"h":"years 要有 s。"},{"b":"I'm nine years","a":".","zh":"我九歲。","o":["old","name","nine","you"],"h":"years old ＝ 歲。"},{"b":"I'm","a":"years old.","zh":"我十歲。","o":["ten","Ken","two","tea"],"h":"十 ＝ ten。"},{"b":"I'm","a":".","zh":"我十一歲。","o":["eleven","seven","twelve","even"],"h":"十一 ＝ eleven。"},{"b":"I'm","a":"years old.","zh":"我十二歲。","o":["twelve","eleven","twenty","two"],"h":"十二 ＝ twelve。"},{"b":"I'm","a":".","zh":"我七歲。","o":["seven","six","eleven","nine"],"h":"七 ＝ seven。"},{"b":"I'm","a":"years old.","zh":"我六歲。","o":["six","sick","seven","sixty"],"h":"六 ＝ six。"},{"b":"I'm","a":".","zh":"我九歲。","o":["nine","night","five","ten"],"h":"九 ＝ nine。"},{"b":"___","a":"'re seven.","zh":"你七歲。","o":["You","Your","I","My"],"h":"You’re ＝ You are ＝ 你是。"},{"b":"___","a":"old are you?","zh":"你幾歲？","o":["How","What","Who","My"],"h":"問幾歲用 How old。"},{"b":"I'm","a":".","zh":"我八歲。","o":["eight","eat","ten","Ken"],"h":"八 ＝ eight。"}],"g9":[["My name is Ken.","n","Ken 是名字 ➜ 在回答 What’s your name?"],["My name is Alan.","n","Alan 是名字 ➜ 在回答 What’s your name?"],["My name is Wendy.","n","Wendy 是名字 ➜ 在回答 What’s your name?"],["My name is Mike.","n","Mike 是名字 ➜ 在回答 What’s your name?"],["My name is Emma.","n","Emma 是名字 ➜ 在回答 What’s your name?"],["I’m Ken.","n","Ken 是名字 ➜ 在回答 What’s your name?"],["I’m Alan.","n","Alan 是名字 ➜ 在回答 What’s your name?"],["I’m Wendy.","n","Wendy 是名字 ➜ 在回答 What’s your name?"],["I’m Mike.","n","Mike 是名字 ➜ 在回答 What’s your name?"],["I’m Emma.","n","Emma 是名字 ➜ 在回答 What’s your name?"],["I’m six.","a","six 是數字（六）➜ 在回答 How old are you?"],["I’m seven.","a","seven 是數字（七）➜ 在回答 How old are you?"],["I’m eight.","a","eight 是數字（八）➜ 在回答 How old are you?"],["I’m nine.","a","nine 是數字（九）➜ 在回答 How old are you?"],["I’m ten.","a","ten 是數字（十）➜ 在回答 How old are you?"],["I’m eleven.","a","eleven 是數字（十一）➜ 在回答 How old are you?"],["I’m twelve.","a","twelve 是數字（十二）➜ 在回答 How old are you?"],["I’m six years old.","a","years old ＝ 歲 ➜ 在回答 How old are you?"],["I’m seven years old.","a","years old ＝ 歲 ➜ 在回答 How old are you?"],["I’m eight years old.","a","years old ＝ 歲 ➜ 在回答 How old are you?"],["I’m nine years old.","a","years old ＝ 歲 ➜ 在回答 How old are you?"],["I’m ten years old.","a","years old ＝ 歲 ➜ 在回答 How old are you?"],["I’m eleven years old.","a","years old ＝ 歲 ➜ 在回答 How old are you?"],["I’m twelve years old.","a","years old ＝ 歲 ➜ 在回答 How old are you?"]],"g10":[{"q":"魔王問：What’s ＝ ?","o":["What is","What are","Whats","What am"],"h":"’ 藏起來的是 is 的 i。"},{"q":"魔王問：I’m ＝ ?","o":["I am","I is","My am","I are"],"h":"I’m ＝ I am。"},{"q":"魔王問：You’re ＝ ?","o":["You are","Your","You is","You am"],"h":"Your 是「你的」，You’re 是「你是」。"},{"q":"魔王問：「你的名字是什麼？」","o":["What’s your name?","What’s you name?","How’s your name?","What your name?"],"h":"What’s ＋ your ＋ name。"},{"q":"魔王問：「你幾歲？」","o":["How old are you?","What old are you?","How are you?","How old is you?"],"h":"How old are you?"},{"q":"魔王問：What’s your name? 的回答？","o":["I’m Wendy.","I’m ten.","Your name is Wendy.","I’m ten years old."],"h":"問名字，答名字。"},{"q":"魔王問：How old are you? 的回答？","o":["I’m eleven years old.","I’m Alan.","My name is eleven.","You’re eleven."],"h":"問幾歲，答幾歲。"},{"q":"魔王問：問 your，要答？","o":["My","Your","You","I"],"h":"your（你的）➜ My（我的）。"},{"q":"魔王問：問 you，要答？","o":["I","You","My","Your"],"h":"you（你）➜ I（我）。"},{"q":"魔王問：哪一句是對的？","o":["I’m nine years old.","I’m nine year old.","I nine years old.","My nine years old."],"h":"I’m ＋ 數字 ＋ years old。"},{"q":"魔王問：哪一句是對的？","o":["My name is Mike.","I name is Mike.","My name Mike.","Me name is Mike."],"h":"My name is ＋ 名字。"},{"q":"魔王問：I’m eight. 等於？","o":["I’m eight years old.","I’m eight year.","My name is eight.","I eat."],"h":"years old 可以省略。"},{"q":"魔王問：How old 問什麼？","o":["幾歲","名字","怎麼樣","什麼"],"h":"How old ＝ 問年紀。"},{"q":"魔王問：How 單獨是什麼？","o":["怎麼樣","幾歲","什麼","名字"],"h":"How 問程度；How old 才是問幾歲。"},{"q":"魔王問：What 的哪個字母不發音？","o":["h","W","a","t"],"h":"What 的 h 淺灰色。"},{"q":"魔王問：eight 的哪兩個字母不發音？","o":["gh","ei","ht","eg"],"h":"eight 的 gh 淺灰色。"},{"q":"魔王問：name 的哪個字母不發音？","o":["e","n","a","m"],"h":"name 的 e 淺灰色。"},{"q":"魔王問：twelve 是多少？","o":["十二","十一","二十","十"],"h":"twelve ＝ 12。"},{"q":"魔王問：eleven 是多少？","o":["十一","七","十二","十"],"h":"eleven ＝ 11。"},{"q":"魔王問：「我七歲。」","o":["I’m seven.","I’m eleven.","My seven.","You’re seven."],"h":"I’m ＋ seven。"},{"q":"魔王問：「你是七歲。」","o":["You’re seven.","Your seven.","I’m seven.","You seven."],"h":"You’re ＝ You are ＝ 你是。"},{"q":"魔王問：My 的中文？","o":["我的","我","你的","你"],"h":"I 我，My 我的。"},{"q":"魔王問：Your 的中文？","o":["你的","你","我的","我"],"h":"You 你，Your 你的。"},{"q":"魔王問：I’m Ken. 在回答哪一題？","o":["What’s your name?","How old are you?","How are you?","Who are you?"],"h":"Ken 是名字 ➜ What’s your name?"}]}, META=[{"id":"g1","ic":"⚡","name":"閃電四選一","rule":"看題目選答案，答得快分數高。","st":"🚀 太空","n":24},{"id":"g2","ic":"🙋","name":"I 還是 My","rule":"看到就按：左邊 I（我）、右邊 My（我的）。","st":"🐼 動物","n":24,"duo":[{"v":"I","t":"I","d":"我　🙋","c":"she"},{"v":"my","t":"My","d":"我的　🙋🎒","c":"he"}]},{"id":"g3","ic":"🧩","name":"語序大挑戰","rule":"照順序點英文字，把整句排出來。","st":"🍰 甜點","n":22},{"id":"g4","ic":"🪄","name":"縮寫變身術","rule":"What is ⇄ What’s、I am ⇄ I’m，選出變身後正確的句子。","st":"🔮 魔法","n":20},{"id":"g5","ic":"🎧","name":"聽力狙擊","rule":"聽一句英文，射下正確的那一張卡。","st":"🎵 音樂","n":20},{"id":"g6","ic":"🃏","name":"記憶配對","rule":"翻開兩張，英文配中文，配對成功就消失。","st":"🐬 海洋","n":20},{"id":"g7","ic":"🔍","name":"火眼金睛","rule":"句子裡有一個字是錯的，點出來。全對的句子按「✅ 這句沒錯」。","st":"💎 尋寶","n":22},{"id":"g8","ic":"✏️","name":"填空高手","rule":"句子少了一個字，選出正確的那一個。","st":"⚽ 運動","n":22},{"id":"g9","ic":"🗂","name":"問名字還是問幾歲","rule":"這一句在回答哪一題？📛 名字 ／ 🎂 幾歲。","st":"🌈 大自然","n":24,"duo":[{"v":"n","t":"📛","d":"問名字　What’s your name?","c":"he"},{"v":"a","t":"🎂","d":"問幾歲　How old are you?","c":"she"}]},{"id":"g10","ic":"👑","name":"魔王挑戰","rule":"打倒魔王！答對扣血，答錯魔王放技能。","st":"⚔️ 勇者","n":24}], SURP={"g1":[{"t":"🚀 火箭升空","k":"pts","v":300,"fx":[0,0]},{"t":"🛸 飛碟降落","k":"pts","v":400,"fx":[1,0]},{"t":"🌕 滿月能量","k":"pts","v":500,"fx":[2,0]},{"t":"🌟 超級新星","k":"pts","v":600,"fx":[3,0]},{"t":"☄️ 彗星撞地球","k":"pts","v":700,"fx":[4,0]},{"t":"🪐 土星光環","k":"pts","v":800,"fx":[5,0]},{"t":"🌌 銀河旋風","k":"pts","v":1000,"fx":[6,0]},{"t":"👽 外星朋友","k":"pts","v":1200,"fx":[7,0]},{"t":"🛰️ 衛星連線","k":"pts","v":1500,"fx":[0,1]},{"t":"🌠 流星許願","k":"lucky","v":[200,800],"fx":[1,1]},{"t":"🔭 望遠鏡發現","k":"lucky","v":[300,1200],"fx":[2,1]},{"t":"🌙 彎彎月亮","k":"lucky","v":[500,1500],"fx":[3,1]},{"t":"☀️ 太陽充電","k":"lucky","v":[100,2000],"fx":[4,1]},{"t":"🌍 繞地球一圈","k":"now","v":2,"fx":[5,1]},{"t":"👩‍🚀 太空人出任務","k":"now","v":3,"fx":[6,1]},{"t":"💫 星星轉圈圈","k":"now","v":4,"fx":[7,1]},{"t":"✨ 星塵閃閃","k":"now","v":5,"fx":[0,2]},{"t":"🌞 太陽公公","k":"mul","v":[2,2],"fx":[1,2]},{"t":"🌛 月亮小船","k":"mul","v":[2,3],"fx":[2,2]},{"t":"🪨 月球寶石","k":"mul","v":[3,2],"fx":[3,2]},{"t":"🧭 太空羅盤","k":"mul","v":[4,1],"fx":[4,2]},{"t":"📡 雷達鎖定","k":"mul","v":[5,1],"fx":[5,2]},{"t":"🌑 黑洞吸分","k":"time","v":5,"fx":[6,2]},{"t":"🎇 星空煙火","k":"time","v":8,"fx":[7,2]},{"t":"🧑‍🚀 無重力漂浮","k":"time","v":10,"fx":[0,3]},{"t":"🚀 光速引擎","k":"cut","v":1,"fx":[1,3]},{"t":"🌟 北極星指路","k":"cut","v":2,"fx":[2,3]},{"t":"🪐 木星風暴","k":"shield","v":1,"fx":[3,3]},{"t":"🌠 流星雨","k":"combo","v":[3,4],"fx":[4,3]},{"t":"🛸 外星禮物","k":"combo","v":[5,5],"fx":[5,3]}],"g2":[{"t":"🐼 熊貓抱抱","k":"pts","v":1200,"fx":[0,0]},{"t":"🦁 獅子吼","k":"pts","v":1500,"fx":[1,0]},{"t":"🐯 老虎衝刺","k":"lucky","v":[200,800],"fx":[2,0]},{"t":"🐘 大象噴水","k":"lucky","v":[300,1200],"fx":[3,0]},{"t":"🦒 長頸鹿看遠遠","k":"lucky","v":[500,1500],"fx":[4,0]},{"t":"🐬 海豚跳躍","k":"lucky","v":[100,2000],"fx":[5,0]},{"t":"🦊 狐狸妙計","k":"now","v":2,"fx":[6,0]},{"t":"🐰 兔子蹦蹦跳","k":"now","v":3,"fx":[7,0]},{"t":"🐢 烏龜穩穩走","k":"now","v":4,"fx":[0,1]},{"t":"🦉 貓頭鷹智慧","k":"now","v":5,"fx":[1,1]},{"t":"🐧 企鵝滑冰","k":"mul","v":[2,2],"fx":[2,1]},{"t":"🐨 無尾熊午睡","k":"mul","v":[2,3],"fx":[3,1]},{"t":"🦘 袋鼠跳高","k":"mul","v":[3,2],"fx":[4,1]},{"t":"🐝 蜜蜂採蜜","k":"mul","v":[4,1],"fx":[5,1]},{"t":"🦋 蝴蝶飛飛","k":"mul","v":[5,1],"fx":[6,1]},{"t":"🐿️ 松鼠藏堅果","k":"time","v":5,"fx":[7,1]},{"t":"🦄 獨角獸魔法","k":"time","v":8,"fx":[0,2]},{"t":"🐶 小狗搖尾巴","k":"time","v":10,"fx":[1,2]},{"t":"🐱 小貓伸懶腰","k":"shield","v":1,"fx":[2,2]},{"t":"🐸 青蛙呱呱","k":"combo","v":[3,4],"fx":[3,2]},{"t":"🦜 鸚鵡學說話","k":"combo","v":[5,5],"fx":[4,2]},{"t":"🐳 鯨魚噴泉","k":"hint","v":1,"fx":[5,2]},{"t":"🦔 刺蝟縮成球","k":"gold","v":1000,"fx":[6,2]},{"t":"🐹 倉鼠跑滾輪","k":"fast","v":300,"fx":[7,2]},{"t":"🐮 乳牛送牛奶","k":"fast","v":500,"fx":[0,3]},{"t":"🐔 小雞啾啾","k":"streak","v":3,"fx":[1,3]},{"t":"🦩 紅鶴單腳站","k":"streak","v":5,"fx":[2,3]},{"t":"🐒 猴子盪鞦韆","k":"freeze","v":5,"fx":[3,3]},{"t":"🐊 鱷魚大口","k":"pts","v":300,"fx":[4,3]},{"t":"🦥 樹懶慢慢來","k":"pts","v":400,"fx":[5,3]}],"g3":[{"t":"🍰 草莓蛋糕","k":"now","v":3,"fx":[0,0]},{"t":"🍩 甜甜圈","k":"now","v":4,"fx":[1,0]},{"t":"🍪 巧克力餅乾","k":"now","v":5,"fx":[2,0]},{"t":"🧁 杯子蛋糕","k":"mul","v":[2,2],"fx":[3,0]},{"t":"🍦 霜淇淋","k":"mul","v":[2,3],"fx":[4,0]},{"t":"🍭 彩虹棒棒糖","k":"mul","v":[3,2],"fx":[5,0]},{"t":"🍫 巧克力磚","k":"mul","v":[4,1],"fx":[6,0]},{"t":"🍮 布丁搖搖","k":"mul","v":[5,1],"fx":[7,0]},{"t":"🥞 鬆餅塔","k":"time","v":5,"fx":[0,1]},{"t":"🍓 草莓大豐收","k":"time","v":8,"fx":[1,1]},{"t":"🍉 西瓜切片","k":"time","v":10,"fx":[2,1]},{"t":"🍬 水果糖","k":"shield","v":1,"fx":[3,1]},{"t":"🥧 蘋果派","k":"combo","v":[3,4],"fx":[4,1]},{"t":"🍡 糰子串串","k":"combo","v":[5,5],"fx":[5,1]},{"t":"🧇 格子鬆餅","k":"hint","v":1,"fx":[6,1]},{"t":"🍯 蜂蜜罐","k":"gold","v":1000,"fx":[7,1]},{"t":"🎂 生日蛋糕","k":"fast","v":300,"fx":[0,2]},{"t":"🍿 爆米花","k":"fast","v":500,"fx":[1,2]},{"t":"🥤 珍珠奶茶","k":"streak","v":3,"fx":[2,2]},{"t":"🍧 剉冰","k":"streak","v":5,"fx":[3,2]},{"t":"🍒 櫻桃雙胞胎","k":"freeze","v":5,"fx":[4,2]},{"t":"🍌 香蕉船","k":"pts","v":300,"fx":[5,2]},{"t":"🥐 可頌麵包","k":"pts","v":400,"fx":[6,2]},{"t":"🍨 聖代","k":"pts","v":500,"fx":[7,2]},{"t":"🍎 紅蘋果","k":"pts","v":600,"fx":[0,3]},{"t":"🥭 芒果冰","k":"pts","v":700,"fx":[1,3]},{"t":"🍋 檸檬汽水","k":"pts","v":800,"fx":[2,3]},{"t":"🍇 葡萄一串","k":"pts","v":1000,"fx":[3,3]},{"t":"🥥 椰子汁","k":"pts","v":1200,"fx":[4,3]},{"t":"🍑 水蜜桃","k":"pts","v":1500,"fx":[5,3]}],"g4":[{"t":"🔮 水晶球","k":"mul","v":[5,1],"fx":[0,0]},{"t":"🪄 魔杖一揮","k":"time","v":5,"fx":[1,0]},{"t":"🎩 帽子變兔子","k":"time","v":8,"fx":[2,0]},{"t":"✨ 魔法亮粉","k":"time","v":10,"fx":[3,0]},{"t":"📜 古老咒語","k":"cut","v":1,"fx":[4,0]},{"t":"🧙 巫師祝福","k":"cut","v":2,"fx":[5,0]},{"t":"🧚 小仙子","k":"shield","v":1,"fx":[6,0]},{"t":"🌀 傳送門","k":"combo","v":[3,4],"fx":[7,0]},{"t":"🕯️ 魔法蠟燭","k":"combo","v":[5,5],"fx":[0,1]},{"t":"🗝️ 金鑰匙","k":"hint","v":1,"fx":[1,1]},{"t":"🧪 變身藥水","k":"gold","v":1000,"fx":[2,1]},{"t":"📖 魔法書","k":"fast","v":300,"fx":[3,1]},{"t":"🦉 魔法信差","k":"fast","v":500,"fx":[4,1]},{"t":"🧹 飛天掃帚","k":"streak","v":3,"fx":[5,1]},{"t":"🪞 魔鏡魔鏡","k":"streak","v":5,"fx":[6,1]},{"t":"💍 魔法戒指","k":"freeze","v":5,"fx":[7,1]},{"t":"🐉 小龍守護","k":"pts","v":300,"fx":[0,2]},{"t":"🌟 許願星","k":"pts","v":400,"fx":[1,2]},{"t":"🎴 魔法卡牌","k":"pts","v":500,"fx":[2,2]},{"t":"🧿 幸運護符","k":"pts","v":600,"fx":[3,2]},{"t":"🍄 魔法蘑菇","k":"pts","v":700,"fx":[4,2]},{"t":"🌈 彩虹橋","k":"pts","v":800,"fx":[5,2]},{"t":"🪶 鳳凰羽毛","k":"pts","v":1000,"fx":[6,2]},{"t":"🏰 魔法城堡","k":"pts","v":1200,"fx":[7,2]},{"t":"🎪 魔術秀","k":"pts","v":1500,"fx":[0,3]},{"t":"🃏 鬼牌翻轉","k":"lucky","v":[200,800],"fx":[1,3]},{"t":"🧞 神燈精靈","k":"lucky","v":[300,1200],"fx":[2,3]},{"t":"⚗️ 煉金術","k":"lucky","v":[500,1500],"fx":[3,3]},{"t":"🔔 魔法鈴鐺","k":"lucky","v":[100,2000],"fx":[4,3]},{"t":"🌙 月光魔法","k":"now","v":2,"fx":[5,3]}],"g5":[{"t":"🎵 音符跳跳","k":"combo","v":[3,4],"fx":[0,0]},{"t":"🎸 電吉他","k":"combo","v":[5,5],"fx":[1,0]},{"t":"🥁 鼓聲咚咚","k":"hint","v":1,"fx":[2,0]},{"t":"🎺 小喇叭","k":"gold","v":1000,"fx":[3,0]},{"t":"🎹 鋼琴鍵","k":"fast","v":300,"fx":[4,0]},{"t":"🎻 小提琴","k":"fast","v":500,"fx":[5,0]},{"t":"🎷 薩克斯風","k":"streak","v":3,"fx":[6,0]},{"t":"🪘 非洲鼓","k":"streak","v":5,"fx":[7,0]},{"t":"🎤 麥克風","k":"freeze","v":5,"fx":[0,1]},{"t":"🎧 耳機音樂","k":"pts","v":300,"fx":[1,1]},{"t":"📻 收音機","k":"pts","v":400,"fx":[2,1]},{"t":"🪗 手風琴","k":"pts","v":500,"fx":[3,1]},{"t":"🎶 合唱團","k":"pts","v":600,"fx":[4,1]},{"t":"🔔 叮噹鈴","k":"pts","v":700,"fx":[5,1]},{"t":"🪇 沙鈴沙沙","k":"pts","v":800,"fx":[6,1]},{"t":"🎼 五線譜","k":"pts","v":1000,"fx":[7,1]},{"t":"🪕 斑鳩琴","k":"pts","v":1200,"fx":[0,2]},{"t":"💃 跳舞時間","k":"pts","v":1500,"fx":[1,2]},{"t":"🕺 迪斯可","k":"lucky","v":[200,800],"fx":[2,2]},{"t":"🎙️ 廣播電台","k":"lucky","v":[300,1200],"fx":[3,2]},{"t":"📯 號角響起","k":"lucky","v":[500,1500],"fx":[4,2]},{"t":"🪈 直笛","k":"lucky","v":[100,2000],"fx":[5,2]},{"t":"🎚️ 音量開到最大","k":"now","v":2,"fx":[6,2]},{"t":"🔊 超大聲","k":"now","v":3,"fx":[7,2]},{"t":"🎛️ 混音大師","k":"now","v":4,"fx":[0,3]},{"t":"🎟️ 演唱會門票","k":"now","v":5,"fx":[1,3]},{"t":"🏆 金曲獎","k":"mul","v":[2,2],"fx":[2,3]},{"t":"👏 全場鼓掌","k":"mul","v":[2,3],"fx":[3,3]},{"t":"🌟 安可安可","k":"mul","v":[3,2],"fx":[4,3]},{"t":"💿 黃金唱片","k":"mul","v":[4,1],"fx":[5,3]}],"g6":[{"t":"🐬 海豚跳圈","k":"pts","v":400,"fx":[0,0]},{"t":"🐙 章魚八隻手","k":"pts","v":500,"fx":[1,0]},{"t":"🦀 螃蟹橫著走","k":"pts","v":600,"fx":[2,0]},{"t":"🐠 熱帶魚","k":"pts","v":700,"fx":[3,0]},{"t":"🦈 鯊魚衝刺","k":"pts","v":800,"fx":[4,0]},{"t":"🐚 貝殼寶藏","k":"pts","v":1000,"fx":[5,0]},{"t":"🦞 龍蝦大餐","k":"pts","v":1200,"fx":[6,0]},{"t":"🪸 珊瑚礁","k":"pts","v":1500,"fx":[7,0]},{"t":"🌊 大浪來了","k":"lucky","v":[200,800],"fx":[0,1]},{"t":"🏝️ 小島探險","k":"lucky","v":[300,1200],"fx":[1,1]},{"t":"⚓ 船錨","k":"lucky","v":[500,1500],"fx":[2,1]},{"t":"🧜 美人魚","k":"lucky","v":[100,2000],"fx":[3,1]},{"t":"🐡 河豚膨膨","k":"now","v":2,"fx":[4,1]},{"t":"🦭 海豹拍手","k":"now","v":3,"fx":[5,1]},{"t":"🐋 藍鯨","k":"now","v":4,"fx":[6,1]},{"t":"🦑 魷魚噴墨","k":"now","v":5,"fx":[7,1]},{"t":"🐟 小魚群","k":"mul","v":[2,2],"fx":[0,2]},{"t":"🪼 水母漂漂","k":"mul","v":[2,3],"fx":[1,2]},{"t":"⛵ 帆船出航","k":"mul","v":[3,2],"fx":[2,2]},{"t":"🐢 海龜回家","k":"mul","v":[4,1],"fx":[3,2]},{"t":"🏖️ 沙灘城堡","k":"mul","v":[5,1],"fx":[4,2]},{"t":"🦦 海獺手牽手","k":"time","v":5,"fx":[5,2]},{"t":"🐳 鯨魚唱歌","k":"time","v":8,"fx":[6,2]},{"t":"🌅 海上日出","k":"time","v":10,"fx":[7,2]},{"t":"🔱 海神三叉戟","k":"shield","v":1,"fx":[0,3]},{"t":"🧭 航海羅盤","k":"combo","v":[3,4],"fx":[1,3]},{"t":"🗺️ 藏寶地圖","k":"combo","v":[5,5],"fx":[2,3]},{"t":"🦐 小蝦米","k":"gold","v":1000,"fx":[3,3]},{"t":"🐧 冰上企鵝","k":"fast","v":300,"fx":[4,3]},{"t":"🫧 泡泡浴","k":"fast","v":500,"fx":[5,3]}],"g7":[{"t":"💎 閃亮鑽石","k":"pts","v":1200,"fx":[0,0]},{"t":"🔍 放大鏡","k":"pts","v":1500,"fx":[1,0]},{"t":"🕵️ 名偵探","k":"lucky","v":[200,800],"fx":[2,0]},{"t":"🧩 破案線索","k":"lucky","v":[300,1200],"fx":[3,0]},{"t":"🗝️ 密室鑰匙","k":"lucky","v":[500,1500],"fx":[4,0]},{"t":"👣 神秘腳印","k":"lucky","v":[100,2000],"fx":[5,0]},{"t":"📜 藏寶紙條","k":"now","v":2,"fx":[6,0]},{"t":"🔦 手電筒","k":"now","v":3,"fx":[7,0]},{"t":"🧤 偵探手套","k":"now","v":4,"fx":[0,1]},{"t":"🕰️ 老時鐘","k":"now","v":5,"fx":[1,1]},{"t":"🪙 金幣一枚","k":"mul","v":[2,2],"fx":[2,1]},{"t":"👑 失落王冠","k":"mul","v":[2,3],"fx":[3,1]},{"t":"🏺 古董花瓶","k":"mul","v":[3,2],"fx":[4,1]},{"t":"📦 神秘包裹","k":"mul","v":[4,1],"fx":[5,1]},{"t":"🧲 找到了","k":"mul","v":[5,1],"fx":[6,1]},{"t":"🗃️ 祕密檔案","k":"time","v":5,"fx":[7,1]},{"t":"🔐 密碼鎖","k":"time","v":8,"fx":[0,2]},{"t":"🧿 真相之眼","k":"time","v":10,"fx":[1,2]},{"t":"🐾 貓咪偵探","k":"shield","v":1,"fx":[2,2]},{"t":"🎩 福爾摩斯帽","k":"combo","v":[3,4],"fx":[3,2]},{"t":"📸 證據照片","k":"combo","v":[5,5],"fx":[4,2]},{"t":"🗺️ 尋寶路線","k":"hint","v":1,"fx":[5,2]},{"t":"💰 金幣滿袋","k":"gold","v":1000,"fx":[6,2]},{"t":"💍 寶石戒指","k":"fast","v":300,"fx":[7,2]},{"t":"🪞 照妖鏡","k":"fast","v":500,"fx":[0,3]},{"t":"🦴 恐龍化石","k":"streak","v":3,"fx":[1,3]},{"t":"🏴‍☠️ 海盜寶箱","k":"streak","v":5,"fx":[2,3]},{"t":"⛏️ 挖到寶","k":"freeze","v":5,"fx":[3,3]},{"t":"📿 珍珠項鍊","k":"pts","v":300,"fx":[4,3]},{"t":"🚪 祕密通道","k":"pts","v":400,"fx":[5,3]}],"g8":[{"t":"⚽ 射門得分","k":"lucky","v":[100,2000],"fx":[0,0]},{"t":"🏀 三分球","k":"now","v":2,"fx":[1,0]},{"t":"⚾ 全壘打","k":"now","v":3,"fx":[2,0]},{"t":"🏐 排球殺球","k":"now","v":4,"fx":[3,0]},{"t":"🎾 網球發球","k":"now","v":5,"fx":[4,0]},{"t":"🏓 桌球連發","k":"mul","v":[2,2],"fx":[5,0]},{"t":"🏸 羽球扣殺","k":"mul","v":[2,3],"fx":[6,0]},{"t":"🥅 守門成功","k":"mul","v":[3,2],"fx":[7,0]},{"t":"🏊 游泳衝刺","k":"mul","v":[4,1],"fx":[0,1]},{"t":"🚴 騎車衝線","k":"mul","v":[5,1],"fx":[1,1]},{"t":"🏃 接力棒","k":"time","v":5,"fx":[2,1]},{"t":"🤸 後空翻","k":"time","v":8,"fx":[3,1]},{"t":"🥇 金牌","k":"time","v":10,"fx":[4,1]},{"t":"🥈 銀牌","k":"cut","v":1,"fx":[5,1]},{"t":"🥉 銅牌","k":"cut","v":2,"fx":[6,1]},{"t":"🏆 冠軍獎盃","k":"shield","v":1,"fx":[7,1]},{"t":"🎯 飛鏢紅心","k":"combo","v":[3,4],"fx":[0,2]},{"t":"🛹 滑板特技","k":"combo","v":[5,5],"fx":[1,2]},{"t":"⛸️ 花式溜冰","k":"hint","v":1,"fx":[2,2]},{"t":"🏂 滑雪板","k":"gold","v":1000,"fx":[3,2]},{"t":"🥋 跆拳道","k":"fast","v":300,"fx":[4,2]},{"t":"🏹 射箭","k":"fast","v":500,"fx":[5,2]},{"t":"🧗 攀岩登頂","k":"streak","v":3,"fx":[6,2]},{"t":"🤾 手球","k":"streak","v":5,"fx":[7,2]},{"t":"🏌️ 一桿進洞","k":"freeze","v":5,"fx":[0,3]},{"t":"🛼 溜冰鞋","k":"pts","v":300,"fx":[1,3]},{"t":"🪁 放風箏","k":"pts","v":400,"fx":[2,3]},{"t":"🏅 運動會獎牌","k":"pts","v":500,"fx":[3,3]},{"t":"📣 啦啦隊加油","k":"pts","v":600,"fx":[4,3]},{"t":"🎽 運動背心","k":"pts","v":700,"fx":[5,3]}],"g9":[{"t":"🌈 雙彩虹","k":"mul","v":[5,1],"fx":[0,0]},{"t":"☀️ 大晴天","k":"time","v":5,"fx":[1,0]},{"t":"⛅ 太陽出來了","k":"time","v":8,"fx":[2,0]},{"t":"🌤️ 微風","k":"time","v":10,"fx":[3,0]},{"t":"🌸 櫻花雨","k":"shield","v":1,"fx":[4,0]},{"t":"🌻 向日葵","k":"combo","v":[3,4],"fx":[5,0]},{"t":"🍀 四葉草","k":"combo","v":[5,5],"fx":[6,0]},{"t":"🌳 大樹爺爺","k":"hint","v":1,"fx":[7,0]},{"t":"🍁 楓葉飄","k":"gold","v":1000,"fx":[0,1]},{"t":"❄️ 雪花片片","k":"fast","v":300,"fx":[1,1]},{"t":"⛄ 雪人","k":"fast","v":500,"fx":[2,1]},{"t":"🌷 鬱金香","k":"streak","v":3,"fx":[3,1]},{"t":"🌼 小雛菊","k":"streak","v":5,"fx":[4,1]},{"t":"🍃 清風","k":"freeze","v":5,"fx":[5,1]},{"t":"🌊 海風","k":"pts","v":300,"fx":[6,1]},{"t":"🌋 火山","k":"pts","v":400,"fx":[7,1]},{"t":"🏔️ 雪山","k":"pts","v":500,"fx":[0,2]},{"t":"🌾 稻田","k":"pts","v":600,"fx":[1,2]},{"t":"🌺 扶桑花","k":"pts","v":700,"fx":[2,2]},{"t":"🌵 仙人掌","k":"pts","v":800,"fx":[3,2]},{"t":"🪴 小盆栽","k":"pts","v":1000,"fx":[4,2]},{"t":"🌙 安靜夜晚","k":"pts","v":1200,"fx":[5,2]},{"t":"⭐ 滿天星","k":"pts","v":1500,"fx":[6,2]},{"t":"🌦️ 太陽雨","k":"lucky","v":[200,800],"fx":[7,2]},{"t":"⚡ 打雷閃電","k":"lucky","v":[300,1200],"fx":[0,3]},{"t":"🌪️ 龍捲風","k":"lucky","v":[500,1500],"fx":[1,3]},{"t":"🌅 日出","k":"lucky","v":[100,2000],"fx":[2,3]},{"t":"🌄 山頂日出","k":"now","v":2,"fx":[3,3]},{"t":"🍂 秋天落葉","k":"now","v":3,"fx":[4,3]},{"t":"🌱 新芽","k":"now","v":4,"fx":[5,3]}],"g10":[{"t":"⚔️ 勇者之劍","k":"cut","v":2,"fx":[0,0]},{"t":"🛡️ 聖騎士盾","k":"shield","v":1,"fx":[1,0]},{"t":"🏹 神射手","k":"combo","v":[3,4],"fx":[2,0]},{"t":"👑 國王賞賜","k":"combo","v":[5,5],"fx":[3,0]},{"t":"🐉 屠龍英雄","k":"hint","v":1,"fx":[4,0]},{"t":"🗡️ 雙刀流","k":"gold","v":1000,"fx":[5,0]},{"t":"🔥 火焰魔法","k":"fast","v":300,"fx":[6,0]},{"t":"❄️ 冰凍魔法","k":"fast","v":500,"fx":[7,0]},{"t":"⚡ 雷電魔法","k":"streak","v":3,"fx":[0,1]},{"t":"🧪 回血藥水","k":"streak","v":5,"fx":[1,1]},{"t":"💪 力量加倍","k":"freeze","v":5,"fx":[2,1]},{"t":"🦸 超級英雄","k":"pts","v":300,"fx":[3,1]},{"t":"🏰 攻進城堡","k":"pts","v":400,"fx":[4,1]},{"t":"🐴 騎士戰馬","k":"pts","v":500,"fx":[5,1]},{"t":"🎖️ 勇氣勳章","k":"pts","v":600,"fx":[6,1]},{"t":"🪖 鋼鐵頭盔","k":"pts","v":700,"fx":[7,1]},{"t":"🧙 大魔法師","k":"pts","v":800,"fx":[0,2]},{"t":"🔱 海神之力","k":"pts","v":1000,"fx":[1,2]},{"t":"🌟 勇者之星","k":"pts","v":1200,"fx":[2,2]},{"t":"🗺️ 冒險地圖","k":"pts","v":1500,"fx":[3,2]},{"t":"💥 必殺技","k":"lucky","v":[200,800],"fx":[4,2]},{"t":"🌀 旋風斬","k":"lucky","v":[300,1200],"fx":[5,2]},{"t":"🦅 老鷹偵察","k":"lucky","v":[500,1500],"fx":[6,2]},{"t":"🐺 狼群助陣","k":"lucky","v":[100,2000],"fx":[7,2]},{"t":"🧝 精靈弓箭","k":"now","v":2,"fx":[0,3]},{"t":"🤖 機器戰士","k":"now","v":3,"fx":[1,3]},{"t":"🥷 忍者閃現","k":"now","v":4,"fx":[2,3]},{"t":"🪓 戰斧","k":"now","v":5,"fx":[3,3]},{"t":"🏆 魔王獎盃","k":"mul","v":[2,2],"fx":[4,3]},{"t":"🎁 魔王寶箱","k":"mul","v":[2,3],"fx":[5,3]}]};
@@ -995,17 +1175,18 @@ function pickN(n,done){
   gPause++;
   var box=$('#pick');
   box.innerHTML='<div class="pbox"><h2>🎁 '+cs.length+' 選 1！選一張</h2><div class="prow">'+
-    cs.map(function(e,k){return cardHTML(e).replace('class="c3','data-k="'+k+'" style="animation-delay:'+(k*0.12).toFixed(2)+'s" class="c3')}).join('')+'</div></div>';
+    cs.map(function(e,k){return cardHTML(e).replace('class="c3','data-k="'+k+'" style="animation-delay:'+(k*0.12).toFixed(2)+'s" class="c3')}).join('')+'</div><div class="pres"></div></div>';
   box.classList.add('on');sWow();
   var got=false;
   $$('.prow .c3',box).forEach(function(el){el.addEventListener('click',function(){
     if(got)return;got=true;
     var k=parseInt(el.getAttribute('data-k'),10), e=cs[k];
     el.classList.add('flip','mine');
-    setTimeout(function(){opened.push(e.t);doEvt(e);paint();burst(e)},450);
+    setTimeout(function(){opened.push(e.t);doEvt(e);paint();burst(e);
+      var pr=$('.pres',box);if(pr)pr.innerHTML='<div class="pb">🎉 '+eBig(e)+'</div><div class="pw">'+eWhy(e)+'</div>'},450);
     setTimeout(function(){$$('.prow .c3',box).forEach(function(x){if(x!==el){x.classList.add('flip','dim')}})},1300);
     cs.forEach(function(x,j){if(j!==k){for(var q=0;q<(SURP[g]||[]).length;q++)if(SURP[g][q].t===x.t){pool.push(SURP[g][q]);break}}});
-    setTimeout(function(){box.classList.remove('on');box.innerHTML='';gPause=Math.max(0,gPause-1);if(done&&!ended)done()},3800);
+    setTimeout(function(){box.classList.remove('on');box.innerHTML='';gPause=Math.max(0,gPause-1);if(done&&!ended)done()},4600);
   })});
 }
 function surprise(done){
@@ -1040,21 +1221,24 @@ function popScore(v){
 /* 答對的加分視窗：✅ ＋880，下面一排圖示算式；字大、字少（使用者 2026-09-25 指定） */
 function showGain(d,done){
   var box=$('#gain');
-  var parts='<span>✅ 100</span><i>＋</i><span>⚡ '+d.sp+'</span>'+(d.st?'<i>＋</i><span>🔥 '+d.st+'</span>':'')+
-    (d.mul>1?'<i>✕</i><span class="m">'+d.mul+'</span>':'')+(d.extra?'<i>＋</i><span class="m">'+d.extraIc+' '+d.extra+'</span>':'');
+  /* 2026-09-26 使用者：看不懂圖示 ➜ 每一格下面一行短短的字 */
+  var P=function(ic,v,t,m){return '<span'+(m?' class="m"':'')+'><b>'+ic+' '+v+'</b><em>'+t+'</em></span>'};
+  var parts=P('✅',100,'答對')+'<i>＋</i>'+P('⚡',d.sp,'速度快')+(d.st?'<i>＋</i>'+P('🔥',d.st,'連對 '+streak+' 題'):'')+
+    (d.mul>1?'<i>✕</i>'+P('🎁',d.mul,'驚喜卡倍數',1):'')+(d.extra?'<i>＋</i>'+P(d.extraIc,d.extra,'驚喜卡獎勵',1):'');
   box.innerHTML='<div class="gbox"><div class="gok">✅</div><div class="gnum" id="gnumv">＋0</div>'+
-    '<div class="geq">'+parts+'</div><div class="gbar"><i style="width:'+Math.max(4,Math.round(100*d.pct))+'%"></i></div></div>';
+    '<div class="geq">'+parts+'</div><div class="gbar"><i style="width:'+Math.max(4,Math.round(100*d.pct))+'%"></i></div>'+
+    '<div class="gtot">🏆 總分 <b>'+score+'</b></div></div>';
   $$('.geq span',box).forEach(function(x,k){x.style.animationDelay=(0.15+k*0.14).toFixed(2)+'s'});
   box.classList.add('on');gPause++;
   var t0=Date.now(), el=$('#gnumv');
   var step=function(){var k=Math.min(1,(Date.now()-t0)/650);if(el)el.textContent='＋'+Math.round(d.p*k);if(k<1)requestAnimationFrame(step)};
   requestAnimationFrame(step);
-  setTimeout(function(){box.classList.remove('on');box.innerHTML='';gPause=Math.max(0,gPause-1);if(done&&!ended)done()},d.short?1100:1700);
+  setTimeout(function(){box.classList.remove('on');box.innerHTML='';gPause=Math.max(0,gPause-1);if(done&&!ended)done()},d.short?1300:2200);
 }
 
 /* ── 大廳 ── */
 function hub(){
-  stop();gStop();missHide(false);ended=true;
+  stop();gStop();missHide(false);lookHide();ended=true;
   var ma=document.getElementById('missAll');if(ma)ma.classList.remove('on');
   ['#evt','#pick','#gain'].forEach(function(s){var x=$(s);x.classList.remove('on');x.innerHTML=''});gPause=0;
   $('#hub').style.display='';$('#ghud').classList.remove('on');
@@ -1100,7 +1284,7 @@ function gPaint(){var c=$('#gclock');if(!c)return;var s=Math.ceil(gLeft);
   c.className=gLeft<=30?'dang':(gLeft<=60?'warn':'')}
 function timeOver(){
   if(ended)return;
-  stop();gStop();missHide(false);
+  stop();gStop();missHide(false);lookHide();
   ['#evt','#pick','#gain'].forEach(function(s){var x=$(s);x.classList.remove('on');x.innerHTML=''});gPause=0;
   over('⏰ 5 分鐘到！');
 }
@@ -1173,7 +1357,9 @@ function tags(extra){
 function cap1(s){return s.charAt(0).toUpperCase()+s.slice(1)}
 function fillBl(txt,w){ /* 把 ___ 填進去；句子開頭的要大寫 */
   return String(txt).replace(/___/g,function(m,off,all){
-    var pre=all.slice(0,off);return (/^s*$/.test(pre)||/[.?!]s*$/.test(pre))?cap1(w):w})}
+    var pre=all.slice(0,off);return (/^\s*$/.test(pre)||/[.?!]\s*$/.test(pre))?cap1(w):w})}
+/* 填空題：b ＝ ___ 表示空格在句子最前面（2026-09-26 修：原本答錯頁會出現「___ Who 's he?」） */
+function f8(c,w){return ((c.b==='___'?'':c.b+' ')+w+' '+c.a).replace(/ ([?.,])/g,'$1').replace(/ (['’](s|m|re)\b)/g,'$1')}
 function mInfo(){
   var c=cur||{};
   if(g==='g1'||g==='g10')return {q:c.q,pick:PICK,ans:c.o[0]};
@@ -1187,8 +1373,7 @@ function mInfo(){
     var ok=c.w.slice();ok[c.b]=c.fix;
     return {q:c.zh+'　'+bad,pick:PICK==null?null:bad,
       ans:ok.join(' ').replace(/ ([?.,])/g,'$1').replace(/ ([’']s)/g,'$1')}}
-  if(g==='g8')return {q:c.zh,pick:PICK==null?null:(c.b+' '+PICK+' '+c.a).replace(/ ([?.,])/g,'$1'),
-    ans:(c.b+' '+c.o[0]+' '+c.a).replace(/ ([?.,])/g,'$1')};
+  if(g==='g8')return {q:c.zh,pick:PICK==null?null:f8(c,PICK),ans:f8(c,c.o[0])};
   if(g==='g9')return {q:c[0],pick:PICK,ans:LAB9[c[1]]};
   return {q:'',pick:PICK,ans:''};
 }
@@ -1203,7 +1388,7 @@ function itxt(c){
   if(g==='g4')return c.f+' '+c.o[0];
   if(g==='g5')return c.s+' '+c.o[0];
   if(g==='g7')return c.w.join(' ');
-  if(g==='g8')return c.b+' '+c.o[0]+' '+c.a;
+  if(g==='g8')return f8(c,c.o[0]);
   if(g==='g9')return c[0];
   return '';
 }
@@ -1212,8 +1397,11 @@ function toMcq(c){
   if(g==='g1'||g==='g10')return {q:c.q,o:c.o,h:c.h};
   if(g==='g4')return {q:c.f+'<br>'+c.d,o:c.o,h:c.h};
   if(g==='g5')return {q:'🔊 聽到的是哪一句？',say:c.s,o:c.o,h:c.h};
-  if(g==='g8')return {q:ap(c.b)+' <span style="color:var(--be)">＿＿</span> '+ap(c.a)+'<br>'+c.zh,o:c.o,h:c.h};
+  if(g==='g8')return {q:(c.b==='___'?'':ap(c.b)+' ')+'<span style="color:var(--be)">＿＿</span> '+ap(c.a)+'<br>'+c.zh,o:c.o,h:c.h};
   if(g==='g2'){var ot=DUOV.filter(function(v){return v!==c.a})[0];
+    /* 題目沒有 ___（my father ➜ he／she）：改成整句 ___’s my father. 四選一（2026-09-26） */
+    if(!/___/.test(c.txt)){var A=cap1(c.a),O=cap1(ot);
+      return {q:c.zh+'（'+c.txt+'）<br>哪一句對？',o:[A+'’s '+c.txt+'.',O+'’s '+c.txt+'.',(c.a==='he'?'His ':'Her ')+c.txt+'.',A+' '+c.txt+'.'],h:c.h}}
     return {q:c.zh+'<br>哪一句對？',o:[fillBl(c.txt,c.a),fillBl(c.txt,ot)],h:c.h}}
   if(g==='g3'){var ok=joinS(c.s),o=[ok],t=0;
     while(o.length<4&&t++<40){var w=c.s.slice(0,-1),p=c.s[c.s.length-1];var x=joinS(shuf(w).concat([/^[?.!]$/.test(p)?p:p]));
@@ -1224,6 +1412,14 @@ function toMcq(c){
       if(o7.length<2){var w7=c.w.slice(0,-1);o7.push(joinS(shuf(w7).concat(c.w.slice(-1))))}
       return {q:c.zh+'<br>哪一句完全正確？',o:o7,h:c.h}}
     var fix=c.w.slice();fix[c.b]=c.fix;return {q:c.zh+'<br>哪一句完全正確？',o:[joinS(fix),bad],h:c.h}}
+  if(g==='g9'&&!1){ /* 問句／直述句：四句裡找一句跟它同一種（一句對、三句是另一種） */
+    var same=BANK.g9.filter(function(y){return y!==c&&y[1]===c[1]}),diff=shuf(BANK.g9.filter(function(y){return y[1]!==c[1]}));
+    if(same.length&&diff.length>=3)return {q:'「'+c[0]+'」是'+(c[1]==='q'?'❓ 問句':'🙋 直述句')+'。<br>哪一句跟它<b>同一種</b>？',
+      o:[pick(same)[0]].concat(diff.slice(0,3).map(function(y){return y[0]})),h:c[2]||'',nm:1}}
+  if(g==='g9'&&1){ /* 在回答哪一題：四個問句選一個 */
+    var qs=["What’s your name?","How old are you?"],ks9=["n","a"];
+    var qq=qs[ks9.indexOf(c[1])];
+    if(qq)return {q:'「'+c[0]+'」<br>在回答哪一題？',say:c[0],o:[qq].concat(qs.filter(function(x){return x!==qq})),h:c[2]||''}}
   if(g==='g9'){var lab=LAB9,ks=Object.keys(lab);
     return {q:'「'+c[0]+'」<br>'+('在回答哪一題？'),say:c[0],
       o:[lab[c[1]]].concat(ks.filter(function(k){return k!==c[1]}).map(function(k){return lab[k]})),h:c[2]||''}}
@@ -1251,12 +1447,20 @@ function judge(ok,hint,after,timeout){
   tstop();
   asked++;
   if(ok){
-    var d=award(Math.round(900*(left/qt)),false);
-    var go=function(){if(!ended&&$('#arena').classList.contains('on'))(after||next)()};
-    showGain(d,function(){
-      if(ended)return;
-      if(streak>0&&streak%3===0)surprise(go);else go();
-    });
+    var sp0=Math.round(900*(left/qt));
+    var fin=function(){
+      var d=award(sp0,false);
+      var go=function(){if(!ended&&$('#arena').classList.contains('on'))(after||next)()};
+      showGain(d,function(){
+        if(ended)return;
+        if(streak>0&&streak%3===0)surprise(go);else go();
+      });
+    };
+    /* 🔍 火眼金睛：答對也要看 6 秒（正確句子＋逐字中文＋整句翻譯＋自動唸）才得分（使用者 2026-09-26 指定）*/
+    if(g==='g7'&&cur){var ok7=cur.w.slice();if(cur.b>=0)ok7[cur.b]=cur.fix;gPause++;
+      setTimeout(function(){if(ended){gPause=Math.max(0,gPause-1);return}
+        lookShow(joinS(ok7),function(){gPause=Math.max(0,gPause-1);if(!ended)fin()})},450);return}
+    fin();
     return;
   }
   var saved=false;
@@ -1271,6 +1475,7 @@ function judge(ok,hint,after,timeout){
   var mi=mInfo();mi.why=(saved?'🛡 免死金牌：這一次不算錯！　':'')+(hint||'');
   if(timeout)mi.pick=null;
   mi.sims=sims.slice(0,3).map(toMcq).filter(function(x){return x});
+  mi.self=cur?toMcq(cur):null;   /* 加分題 ＝ 這一題換個樣子（_miss_rt.js 的 mVar） */
   if(!mi.sims.length&&cur)mi.sim0=toMcq(cur);
   mi.pts=500;
   mi.gain=function(n){score+=n;popScore(n);paint()};
@@ -1434,7 +1639,7 @@ function rSpot(){
 function rFill(){
   var o=shuf(cur.o.map(function(x,n){return{x:x,n:n}}));
   $('#arena').innerHTML=tags('✏️ 填空')+
-    '<div class="qbig">'+ap(cur.b)+' <span style="color:var(--be)">＿＿</span> '+ap(cur.a)+'</div>'+
+    '<div class="qbig">'+(cur.b==='___'?'':ap(cur.b)+' ')+'<span style="color:var(--be)">＿＿</span> '+ap(cur.a)+'</div>'+
     '<div class="qzh">'+cur.zh+'</div>'+
     '<div class="opts">'+o.map(function(t,n){
       return '<button class="o s'+n+'" data-ok="'+(t.n===0)+'" data-t="'+String(t.x).replace(/"/g,'&quot;')+'"><span class="sh">'+SHAPE[n]+

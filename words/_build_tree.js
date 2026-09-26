@@ -262,9 +262,12 @@ body{margin:0;background:#000;color:#F2F2F2;
 ${TOC.TOCCSS}
 ${PH.CSS}
 ${SRC.CSS}
+.topicfix{position:fixed;top:max(10px,env(safe-area-inset-top));left:14px;z-index:30;color:#FFD66B;font-weight:700;
+ font-size:clamp(16px,2.4vh,22px);letter-spacing:.08em;pointer-events:none;white-space:nowrap}
 </style>
 </head>
 <body>
+<div class="topicfix">🌳 Family tree 家庭樹</div>
 <div id="dots"></div>
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"></div>

@@ -6,7 +6,7 @@
 # 模型不放進 repo（太大）：環境變數 TTS_MODELS 指到放模型的資料夾，裡面要有
 #   kokoro-en-v0_19/  與  vits-piper-sv_SE-nst-medium/
 #   下載：https://github.com/k2-fsa/sherpa-onnx/releases/tag/tts-models
-#   需要：pip install sherpa-onnx lameenc numpy
+#   需要：pip install sherpa-onnx lameenc numpy pyworld（pyworld：句子重音，見 stress.py）
 import sys, json, sherpa_onnx, numpy as np, lameenc, os
 T=os.environ.get('TTS_MODELS') or os.path.dirname(os.path.abspath(__file__))
 def mk_ko():
@@ -33,8 +33,15 @@ if __name__=='__main__':
     kind,sid,items,outdir=sys.argv[1],int(sys.argv[2]),json.load(open(sys.argv[3])),sys.argv[4]
     tts=mk_ko() if kind=='ko' else mk_sv()
     res={}
+    sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
+    import stress
     for key,text in items:
-        au=tts.generate(text,sid=sid,speed=1.0)
-        res[key]=round(mp3(au.samples,au.sample_rate,os.path.join(outdir,key+'.mp3')),3)
+        if kind=='ko' and stress.has(text):   # 句子重音：+ten -years -old（tools/stress.py）
+            plain,_,_=stress.parse(text)
+            au=tts.generate(plain,sid=sid,speed=1.0)
+            smp=stress.apply(tts,sid,au.samples,au.sample_rate,text)
+        else:
+            au=tts.generate(text,sid=sid,speed=1.0); smp=au.samples
+        res[key]=round(mp3(smp,au.sample_rate,os.path.join(outdir,key+'.mp3')),3)
     json.dump(res,open(os.path.join(outdir,'_dur.json'),'w'))
     print('done',len(res))

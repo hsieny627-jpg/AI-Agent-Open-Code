@@ -16,7 +16,8 @@ const SD = SITE_DIR ? require(DIR + '_data.js') : {};
 const SG = require(DIR + '_game_data.js');
 const SQ = SITE_DIR ? require(DIR + '_quiz_data.js') : {};
 const args = process.argv.slice(2);
-const ALL = ['index.html', 'warmup.html', 'unit1.html', 'unit2.html', 'games.html'];
+const ALL = ['index.html', 'warmup.html', 'unit1.html', 'unit2.html', 'games.html']
+  .concat(require('fs').existsSync(DIR + 'review1.html') ? ['review1.html'] : []);   /* 2026-09-26：Review 1 */
 const FILES = args.length ? args : ALL;
 const VPS = [{ n: '1024x768', width: 1024, height: 768 }, { n: '820x1180', width: 820, height: 1180 }];
 
@@ -436,7 +437,7 @@ async function cardsPage(p, f, vp, e) {
       }
       if (!await fwd(p)) break;
     }
-    if (!ok) e.push('找不到一問一答卡');
+    if (!ok && !/review/.test(f)) e.push('找不到一問一答卡');
     await rewind(p, N);
   }
 
@@ -519,11 +520,32 @@ async function cardsPage(p, f, vp, e) {
       }
       if (k.eq3 === 3) sawEq3 = true;
     }
-    if (!sawOrd && (SITE_DIR || f === 'unit1.html')) e.push('找不到中英語序卡');
-    if (SITE_DIR && !sawEq3) e.push('找不到三句一樣的等式卡');
+    if (!sawOrd && (SITE_DIR || f === 'unit1.html') && !/review/.test(f)) e.push('找不到中英語序卡');
+    if (SITE_DIR && !sawEq3 && !/review/.test(f)) e.push('找不到三句一樣的等式卡');
     if (SITE_DIR && f === 'unit1.html' && !sawUse) e.push('Unit 1 第一張找不到「💡 問什麼？」');
     if (!SITE_DIR && f === 'unit1.html' && !sawUse) e.push('Unit 1 第一張找不到「💡 問什麼？」');
     if (!SITE_DIR && f === 'unit2.html' && !sawPunc) e.push('Unit 2 找不到「⏱ 標點」切換');
+    await rewind(p, N);
+  }
+  /* 2026-09-26 Review 1：每一張的空格都點得到替換字，點了英文句子和整句中文都要跟著換（不可以把英文換進中文） */
+  if (/review/.test(f)) {
+    await rewind(p, N);
+    for (let i = 0; i < N; i++) {
+      const subs = await p.$$('#card .sub');
+      if (subs.length) {
+        const pickB = subs[Math.min(subs.length - 1, 3)];
+        const w = await pickB.getAttribute('data-w'), z = await pickB.getAttribute('data-z'), k = await pickB.getAttribute('data-k');
+        await pickB.click(); await p.waitForTimeout(700);
+        const r = await p.evaluate(() => ({ en: [...document.querySelectorAll('#cardIn .line .tk .en')].map(x => x.textContent.trim()).join(' '),
+          zh: (document.querySelector('#cardIn .full') || {}).textContent || '' }));
+        acts++;
+        if (r.en.indexOf(w.split(' ')[0]) < 0) e.push('第' + (i + 1) + '張點了「' + w + '」英文句子沒有換');
+        if (z !== w && /[一-鿿]/.test(z) && r.zh.indexOf(z) < 0 && !/^(He|She)$/.test(w)) e.push('第' + (i + 1) + '張點了「' + w + '」整句中文沒有換成「' + z + '」');
+        if (/[A-Za-z]{3,}/.test(r.zh.replace(/Ken|Amy|Leo|Mia|Alan|Wendy|Mike|Emma|YouTuber|LEGO|Switch|Minecraft|PE|Pokémon/g, ''))) e.push('第' + (i + 1) + '張整句中文裡跑進英文：' + r.zh);
+        const o = await snap(); if (o.spill > 2 || o.ox > 0 || o.oy > 0) e.push('第' + (i + 1) + '張換字以後溢出');
+      }
+      if (!await fwd(p)) break;
+    }
     await rewind(p, N);
   }
   acts += await rateBar(p, e);
@@ -599,6 +621,27 @@ async function quizPage(p, f, vp, e) {
   /* 停 6 秒不可自動跳題 */
   const q1 = (await snap()).qn; await p.waitForTimeout(6000);
   if ((await snap()).qn !== q1) e.push('停 6 秒自動跳題'); acts++;
+  /* 2026-09-26 Review 1：每一張的空格都點得到替換字，點了英文句子和整句中文都要跟著換（不可以把英文換進中文） */
+  if (/review/.test(f)) {
+    await rewind(p, N);
+    for (let i = 0; i < N; i++) {
+      const subs = await p.$$('#card .sub');
+      if (subs.length) {
+        const pickB = subs[Math.min(subs.length - 1, 3)];
+        const w = await pickB.getAttribute('data-w'), z = await pickB.getAttribute('data-z'), k = await pickB.getAttribute('data-k');
+        await pickB.click(); await p.waitForTimeout(700);
+        const r = await p.evaluate(() => ({ en: [...document.querySelectorAll('#cardIn .line .tk .en')].map(x => x.textContent.trim()).join(' '),
+          zh: (document.querySelector('#cardIn .full') || {}).textContent || '' }));
+        acts++;
+        if (r.en.indexOf(w.split(' ')[0]) < 0) e.push('第' + (i + 1) + '張點了「' + w + '」英文句子沒有換');
+        if (z !== w && /[一-鿿]/.test(z) && r.zh.indexOf(z) < 0 && !/^(He|She)$/.test(w)) e.push('第' + (i + 1) + '張點了「' + w + '」整句中文沒有換成「' + z + '」');
+        if (/[A-Za-z]{3,}/.test(r.zh.replace(/Ken|Amy|Leo|Mia|Alan|Wendy|Mike|Emma|YouTuber|LEGO|Switch|Minecraft|PE|Pokémon/g, ''))) e.push('第' + (i + 1) + '張整句中文裡跑進英文：' + r.zh);
+        const o = await snap(); if (o.spill > 2 || o.ox > 0 || o.oy > 0) e.push('第' + (i + 1) + '張換字以後溢出');
+      }
+      if (!await fwd(p)) break;
+    }
+    await rewind(p, N);
+  }
   acts += await rateBar(p, e);
   return acts;
 }
@@ -725,6 +768,27 @@ async function gamesPage(p, f, vp, e) {
     if (g.ox > 0) e.push('遊戲 ' + i + ' 作答後橫向溢出 ' + g.ox);
     await p.click('#quit'); await p.waitForTimeout(500);
     if ((await snap()).cards !== 10) e.push('遊戲 ' + i + ' 回不了大廳');
+  }
+  /* 2026-09-26 Review 1：每一張的空格都點得到替換字，點了英文句子和整句中文都要跟著換（不可以把英文換進中文） */
+  if (/review/.test(f)) {
+    await rewind(p, N);
+    for (let i = 0; i < N; i++) {
+      const subs = await p.$$('#card .sub');
+      if (subs.length) {
+        const pickB = subs[Math.min(subs.length - 1, 3)];
+        const w = await pickB.getAttribute('data-w'), z = await pickB.getAttribute('data-z'), k = await pickB.getAttribute('data-k');
+        await pickB.click(); await p.waitForTimeout(700);
+        const r = await p.evaluate(() => ({ en: [...document.querySelectorAll('#cardIn .line .tk .en')].map(x => x.textContent.trim()).join(' '),
+          zh: (document.querySelector('#cardIn .full') || {}).textContent || '' }));
+        acts++;
+        if (r.en.indexOf(w.split(' ')[0]) < 0) e.push('第' + (i + 1) + '張點了「' + w + '」英文句子沒有換');
+        if (z !== w && /[一-鿿]/.test(z) && r.zh.indexOf(z) < 0 && !/^(He|She)$/.test(w)) e.push('第' + (i + 1) + '張點了「' + w + '」整句中文沒有換成「' + z + '」');
+        if (/[A-Za-z]{3,}/.test(r.zh.replace(/Ken|Amy|Leo|Mia|Alan|Wendy|Mike|Emma|YouTuber|LEGO|Switch|Minecraft|PE|Pokémon/g, ''))) e.push('第' + (i + 1) + '張整句中文裡跑進英文：' + r.zh);
+        const o = await snap(); if (o.spill > 2 || o.ox > 0 || o.oy > 0) e.push('第' + (i + 1) + '張換字以後溢出');
+      }
+      if (!await fwd(p)) break;
+    }
+    await rewind(p, N);
   }
   acts += await rateBar(p, e);
   return acts;

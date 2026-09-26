@@ -55,5 +55,15 @@ G.G7.forEach(c => { add(joinS(c.w)); if (c.b >= 0) { const w = c.w.slice(); w[c.
 G.G8.forEach(c => c.o.forEach(o => add((c.b + ' ' + o + ' ' + c.a).replace(/ ([?.,])/g, '$1'))));
 G.G9.forEach(c => add(c[0]));
 
+/* 句子重音（使用者 2026-09-26 指定）：數字是 content word，音高比較高（stressed）；years old 是 function words，唸得比較輕。
+   + ＝ 重音、- ＝ 輕讀，做法見 tools/stress.py */
+['six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'].forEach(n => {
+  T.push("I'm +" + n + ' -years -old.', 'I am +' + n + ' -years -old.', "I'm +" + n + '.', 'I am +' + n + '.');
+});
+/* Review 1（2026-09-26 新增）：每一句、每一個替換字換進去的句子 */
+(D.XPAGES || []).forEach(P => (P.cards || []).forEach(c => {
+  list(c.tk); const s = c.scene; if (s) { add(s.b); add(s.b2); }
+}));
+(D.XPAGES || []).forEach(P => (P.rv || []).forEach(g => g.q.forEach(q => add(q.o[0]))));
 const r = pack({ texts: T, dir: path.join(__dirname, 'audio'), lang: 'en', varName: 'AUD' });
 console.log('語音檔：' + r.total + ' 句（這次新做 ' + r.made + ' 句）');

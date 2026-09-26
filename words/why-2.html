@@ -159,6 +159,50 @@ body{margin:0;background:#000;color:#F2F2F2;
  font-size:clamp(14px,2.2vh,20px);padding:3px 10px;white-space:nowrap;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
 .gwhy b{color:#FFD24A}
 .guess.rev .gwhy{display:block;animation:fadeOnly .5s ease .4s both}
+/* 公布以後：為什麼這麼像（2026-09-26）——字母密碼 t ⇄ z、th ⇄ d、gh ⇄ ch 一格一格亮 */
+.gstory{display:none;flex-wrap:wrap;gap:clamp(4px,.8vw,10px);justify-content:center;align-items:center;margin-top:2px}
+.cx>span{display:inline-flex;align-items:baseline;gap:.2em;white-space:nowrap}
+/* 公布答案以後，清單排緊一點，字母密碼才放得下 */
+.guess.many.rev .grow{padding-top:0;padding-bottom:0}
+.guess.many.rev .gen{font-size:clamp(17px,2.6vh,26px)}
+.guess.rev .gstory{display:flex}
+.cx{display:inline-flex;align-items:center;gap:.35em;background:#0B1620;border:1px solid #29465E;border-radius:14px;
+ padding:.08em .5em;font-size:clamp(16px,2.8vh,28px);font-weight:700;color:#F2F2F2;opacity:0;animation:cxIn .6s cubic-bezier(.2,1.4,.4,1) forwards}
+.cx:nth-child(2){animation-delay:.5s}.cx:nth-child(3){animation-delay:1s}.cx:nth-child(4){animation-delay:1.5s}
+.cx .e{color:#FFD24A}.cx .d{color:#5AD1FF}.cx .n{color:#FF9EC7}.cx .x{color:#8CF08A}
+.cx i{font-style:normal;color:#5E7A8E;font-size:.8em;animation:cxAr 1.2s ease-in-out infinite}
+.cx em{font-style:normal;font-size:.62em;color:#BFD3E6;font-weight:400}
+@keyframes cxIn{from{opacity:0;transform:translateY(14px) scale(.8)}to{opacity:1;transform:none}}
+@keyframes cxAr{0%,100%{transform:none}50%{transform:translateX(4px)}}
+/* 記住這件事：字放大、每一個字底下有中文（2026-09-26） */
+.rem{border-collapse:separate;border-spacing:clamp(4px,.8vw,10px) clamp(3px,.6vh,8px);margin:0 auto}
+.rem th{font-size:clamp(16px,2.6vh,24px);color:#9FB4C8;font-weight:700;padding:0 .4em}
+.rem th .flag{width:1.4em;vertical-align:-.2em;margin-right:.2em}
+.rem td{font-size:clamp(24px,4.4vh,44px);font-weight:700;text-align:center;background:#0C0C0C;border:1px solid #232323;
+ border-radius:14px;padding:.08em .5em;line-height:1.15;opacity:0;animation:cxIn .5s ease forwards}
+.rem td em{display:block;font-style:normal;font-size:.5em;color:#D8D3C5;font-weight:700}
+.rem td.z{color:#FFE9A8;font-size:clamp(22px,4vh,40px)}
+.rem td .e{color:#FFD24A}.rem td .d{color:#5AD1FF}
+/* 三兄弟坐船：1500 年前 德國北部、荷蘭一帶的人坐船到英國 ➜ 英文、德文、荷蘭文是一家人 */
+.bro3{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,20px);font-size:clamp(17px,2.8vh,26px);
+ color:#F2F2F2;font-weight:700;flex-wrap:wrap}
+.bro3 .b3{display:inline-flex;align-items:center;gap:.3em;background:#0C1A10;border:1px solid #2B5236;border-radius:99px;
+ padding:.15em .7em;opacity:0;animation:cxIn .6s ease forwards}
+.bro3 .b3 .flag{width:1.5em}
+.bro3 .b3:nth-child(1){animation-delay:.2s}.bro3 .b3:nth-child(3){animation-delay:.8s}.bro3 .b3:nth-child(5){animation-delay:1.4s}
+.bro3 .sail{display:inline-block;animation:sail 2.4s ease-in-out infinite}
+@keyframes sail{0%,100%{transform:translateX(-6px) rotate(-4deg)}50%{transform:translateX(6px) rotate(4deg)}}
+/* 字母對照的大卡：一個字母一個字母比 */
+.lk{display:grid;grid-template-columns:auto auto auto;align-items:center;justify-content:center;column-gap:clamp(10px,2vw,26px);
+ row-gap:clamp(4px,1vh,10px)}
+.lk .w{font-size:clamp(30px,6vh,60px);font-weight:700;opacity:0;animation:cxIn .6s ease forwards;border-bottom:0}
+.lk .w .e{color:#FFD24A;display:inline-block;animation:lkGlow 1.6s ease-in-out 1.2s 2}
+.lk .w .d{color:#5AD1FF;display:inline-block;animation:lkGlow 1.6s ease-in-out 1.2s 2}
+.lk .w .n{color:#FF9EC7;display:inline-block;animation:lkGlow 1.6s ease-in-out 1.2s 2}
+.lk .fl{font-size:clamp(14px,2vh,19px);color:#9FB4C8;text-align:center;opacity:0;animation:cxIn .5s ease forwards}
+.lk .fl .flag{width:1.6em;display:block;margin:0 auto 2px}
+.lk .zz{grid-column:1/-1;text-align:center;font-size:clamp(18px,3vh,28px);color:#D8D3C5;font-weight:700;opacity:0;animation:cxIn .5s ease 1.8s forwards}
+@keyframes lkGlow{0%,100%{transform:none;text-shadow:none}50%{transform:scale(1.35) translateY(-4px);text-shadow:0 0 18px currentColor}}
 /* 為什麼尾巴都一樣：四欄對齊，一欄 ＝ 一個家人（以前 ➜ 英文 ➜ 德文） */
 .tails{display:grid;grid-template-columns:repeat(4,auto);justify-content:center;align-items:baseline;
  column-gap:clamp(12px,2vw,24px);row-gap:clamp(2px,.6vh,6px);font-size:clamp(20px,3.6vh,32px);font-weight:700}
@@ -283,6 +327,35 @@ body{margin:0;background:#000;color:#F2F2F2;
 #bar.c3 #say{font-size:clamp(17px,2.2vw,21px);font-weight:700;padding:12px clamp(18px,2.6vw,30px);
  background:#10301F;border-color:#39D98A;min-height:54px;white-space:nowrap}
 .reduce *{animation:none!important;transition:none!important}
+/* 2026-09-26 使用者指定：畫面左上方寫這一頁的主題（例：🧩 單字結構） */
+.topicfix{position:fixed;top:max(10px,env(safe-area-inset-top));left:112px;z-index:30;color:#FFD66B;font-weight:700;
+ font-size:clamp(16px,2.4vh,22px);letter-spacing:.08em;padding:8px 4px;pointer-events:none;white-space:nowrap}
+/* 每一幕先來一題「猜猜看」（使用者 2026-09-26 指定：故事融入暖身題），答了才揭曉故事 */
+.qz{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vh,16px);width:100%;max-width:980px}
+.qz .qq{font-size:clamp(24px,4.6vh,44px);font-weight:700;line-height:1.35;text-align:center;color:#FFF}
+.qz .qq b{color:#FFD24A}
+.qz .qo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(8px,1.4vh,14px);width:100%}
+.qz .qo button{background:#0C0C0C;border:2px solid #2E2E2E;border-radius:18px;color:#F2F2F2;font-family:inherit;
+ font-size:clamp(20px,3.8vh,36px);font-weight:700;line-height:1.25;padding:clamp(10px,1.8vh,18px) 14px;cursor:pointer;
+ animation:qIn .45s cubic-bezier(.2,1.3,.4,1) both}
+.qz .qo button:nth-child(2){animation-delay:.08s}.qz .qo button:nth-child(3){animation-delay:.16s}.qz .qo button:nth-child(4){animation-delay:.24s}
+@keyframes qIn{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}
+.qz .qo button.ok{background:#0F3323;border-color:#39D98A;animation:qOk .6s ease}
+.qz .qo button.bad{background:#3A1111;border-color:#FF5E5E;animation:qNo .45s}
+.qz .qo button.dim{opacity:.35}
+@keyframes qOk{50%{transform:scale(1.08)}}
+@keyframes qNo{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.qz .qskip{background:none;border:0;color:#7E8A94;font-family:inherit;font-size:clamp(14px,2vh,18px);text-decoration:underline;cursor:pointer}
+.qz .qres{font-size:clamp(26px,5vh,48px);font-weight:700;animation:qIn .5s cubic-bezier(.2,1.6,.4,1) both}
+.qz .qres.ok{color:#39D98A}.qz .qres.no{color:#FFB35A}
+.qwait .rv{display:none}
+.qdone .qz .qo,.qdone .qz .qskip{display:none}
+.qdone .qz{gap:4px}
+.qdone .qz .qq{font-size:clamp(17px,2.6vh,24px);color:#9E9E9E}
+/* 故事頁字放大（使用者 2026-09-26：標題和說明文字放大） */
+.big .tag{font-size:clamp(22px,3.6vh,34px);letter-spacing:.14em;color:#BFD3E6}
+.big .sub{font-size:clamp(21px,3.4vh,32px);line-height:1.45}
+.big .mid{font-size:clamp(34px,6.4vh,60px)}
 #toc{position:fixed;inset:0;z-index:45;background:#000;display:none;flex-direction:column;
  padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) max(10px,env(safe-area-inset-bottom));overflow:auto}
 #toc.on{display:flex}
@@ -408,23 +481,25 @@ body{margin:0;background:#000;color:#F2F2F2;
 #src .stoc button.cur{border-color:#FFD24A;background:#1D1908}
 #src .shd button#srct{margin-left:auto}
 .reduce #src *{animation:none!important;opacity:1!important}
+
 </style>
 <script src="audio/sv/aud.js"></script>
 </head>
-<body>
+<body class="big">
 <div id="dots"></div>
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
 <div id="bar"><button id="say">🔊 念一次</button><button id="slow">🐢 放慢</button><button id="phmode">🔤 音標：無</button><button id="again">▶ 從頭看</button><button id="home">🏠 首頁</button><button id="srcb">📖 出處</button></div>
 <button id="tocb" class="tocfix">📑 目次</button>
+<div class="topicfix">📜 單字故事</div>
 <div id="toc"><div class="thd"><b>📑 目次</b><button id="tocx">✕ 關閉</button></div><div class="tgd" id="tocg"></div></div>
 <footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span><span class="scnt"><span id="srcn">1</span> ／ 12</span><button id="srct">📑 目次</button><button id="srcx">✕ 關閉</button></div><div class="stoc" id="stoc"><button data-k="0"><b>1</b><span>本頁各幕的出處</span></button><button data-k="1"><b>2</b><span>主要依據</span></button><button data-k="2"><b>3</b><span>課堂上最快查到的旁證</span></button><button data-k="3"><b>4</b><span>寶寶的 ma／da</span></button><button data-k="4"><b>5</b><span>維京人住在哪裡</span></button><button data-k="5" class="w"><b>6</b><span>這個說法是假的</span></button><button data-k="6"><b>7</b><span>音標（美式）</span></button><button data-k="7"><b>8</b><span>KK 音標</span></button><button data-k="8"><b>9</b><span>音節怎麼切</span></button><button data-k="9" class="w"><b>10</b><span>辭典的 fam·i·ly 也對</span></button><button data-k="10" class="w"><b>11</b><span>淺灰色的字母不算</span></button><button data-k="11"><b>12</b><span>唸出來的聲音</span></button></div><div class="sbody"><section class="sl on" data-k="0"><div class="lt">本頁各幕的出處</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">見各單字卡的「📖 出處」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">每一幕的依據與該單字字卡頁完全相同，這裡只列共通的幾本。</span></span></div></section><section class="sl" data-k="1"><div class="lt">主要依據</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED（牛津英語詞典）；Lewis &amp; Short《A Latin Dictionary》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">字源以 OED 為準，拉丁文詞義另據 Lewis &amp; Short。</span></span></div></section><section class="sl" data-k="2"><div class="lt">課堂上最快查到的旁證</div><div class="ck s"><span class="ci">🌐</span><span><span class="cl">證據在這本書</span><span class="cv">Wikipedia「Thorn (letter)」「Gh (digraph)」「Danelaw」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">學生當場質疑時，這三個條目手機就查得到。</span></span></div></section><section class="sl" data-k="3"><div class="lt">寶寶的 ma／da</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Roman Jakobson (1960)《Why “Mama” and “Papa”?》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">ma／da 是嬰兒最早發得出來的音。</span></span></div></section><section class="sl" data-k="4"><div class="lt">維京人住在哪裡</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">Anglo-Saxon Chronicle 876–877 年條；「Danelaw（丹麥區）」；OED「-by, suffix」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">住的是<b>英格蘭東北部一整片地區</b>，不是某一個村子。證據是地名：<b>-by</b>（古北歐文的村子）Grimsby、Whitby、Derby。</span></span></div></section><section class="sl w" data-k="5"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>這個說法是假的</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">「Father And Mother, I Love You」<b>查無一手出處</b>，教材只說「它不是 family 的來源」。</span></span></div></section><section class="sl" data-k="6"><div class="lt">音標（美式）</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries（NAmE）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">本教材的 IPA 一律用<b>美式</b>。</span></span></div></section><section class="sl" data-k="7"><div class="lt">KK 音標</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">台灣課本用的標法。例：bed 的 e ＝ IPA <b>/e/</b> ＝ KK <b>/ɛ/</b>。</span></span></div></section><section class="sl" data-k="8"><div class="lt">音節怎麼切</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Louisa Moats《Speech to Print》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">母音後面切：<b>fa．mi．ly</b>。<b>一個出聲的母音 ＝ 一個音節</b>。</span></span></div></section><section class="sl w" data-k="9"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>辭典的 fam·i·ly 也對</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">那是<b>排版斷行</b>用的；本教材教的是<b>唸的時候</b>怎麼切。兩種都對。</span></span></div></section><section class="sl w" data-k="10"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>淺灰色的字母不算</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">不出聲的字母（淺灰色）<b>不算母音</b>，數紅色的就對了。</span></span></div></section><section class="sl" data-k="11"><div class="lt">唸出來的聲音</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Web Speech API（瀏覽器內建語音，en-US）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">不用連網。<b>嗓音由這台電腦決定</b>。外語另外指定：德 de-DE、荷 nl-NL、瑞典 sv-SE、法 fr-FR、西 es-ES。</span></span></div></section></div><div class="snav"><button id="srcp">◀ 上一條</button><span class="sdots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><button id="srcf">下一條 ▶</button></div></footer>
 
 <script>
 
 var PH=(function(){
- var D={"family":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"i","i":"ə","k":"ə","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]],"parent":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"e","k":"ɛ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}],[{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"mother":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"father":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"brother":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"sister":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"son":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"daughter":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"au","i":"ɔː","k":"ɔ","s":0,"n":1},{"L":"gh","i":"","k":"","s":1,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"grandfather":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"grandmother":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"uncle":[[{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"ŋ","k":"ŋ","s":0,"n":0}],[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"l","i":"əl","k":"əl","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"aunt":[[{"L":"au","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"cousin":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}],[{"L":"i","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"nephew":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"ph","i":"f","k":"f","s":0,"n":0}],[{"L":"ew","i":"juː","k":"ju","s":0,"n":1}]],"niece":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"i","i":"","k":"","s":1,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1},{"L":"c","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"husband":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"wife":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"older":[[{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"younger":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"ou","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"ŋ","k":"ŋ","s":0,"n":0}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"big":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0}]],"little":[[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}],[{"L":"t","i":"","k":"","s":1,"n":0},{"L":"l","i":"əl","k":"əl","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"elder":[[{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"parents":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"e","k":"ɛ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}],[{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"mom":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ɑ","k":"ɑ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"mum":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"dad":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"sun":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"grandpa":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}]],"grandma":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}]],"auntie":[[{"L":"au","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ie","i":"i","k":"ɪ","s":0,"n":1}]],"sis":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"bro":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"me":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1}]],"tree":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ee","i":"iː","k":"i","s":0,"n":1}]],"grand":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"house":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"ou","i":"aʊ","k":"aʊ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"student":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"u","i":"uː","k":"u","s":0,"n":1}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"teacher":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1}],[{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"doctor":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"c","i":"k","k":"k","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"or","i":"ɚ","k":"ɚ","s":0,"n":1}]],"farmer":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"nurse":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"ur","i":"ɝː","k":"ɝ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"teach":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1},{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"farm":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"study":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]],"zero":[[{"L":"z","i":"z","k":"z","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"one":[[{"L":"o","i":"wʌ","k":"wʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"two":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"w","i":"","k":"","s":1,"n":0},{"L":"o","i":"uː","k":"u","s":0,"n":1}]],"three":[[{"L":"th","i":"θ","k":"θ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"four":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"o","i":"ɔː","k":"ɔ","s":0,"n":1},{"L":"u","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"five":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"six":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"x","i":"ks","k":"ks","s":0,"n":0}]],"seven":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"eight":[[{"L":"ei","i":"eɪ","k":"e","s":0,"n":1},{"L":"gh","i":"","k":"","s":1,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"nine":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"ten":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"eleven":[[{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"twelve":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"i":[[{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1}]],"my":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1}]],"you":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"uː","k":"u","s":0,"n":1}]],"your":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"ʊ","k":"ʊ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"am":[[{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"are":[[{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"name":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"is":[[{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"what":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"what's":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"'s","i":"s","k":"s","s":0,"n":0}]],"how":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"ow","i":"aʊ","k":"aʊ","s":0,"n":1}]],"old":[[{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"year":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"a","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"years":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"a","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"tea":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1}]],"ketchup":[[{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"tch","i":"tʃ","k":"tʃ","s":0,"n":0}],[{"L":"u","i":"ə","k":"ə","s":0,"n":1},{"L":"p","i":"p","k":"p","s":0,"n":0}]],"hamburger":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"ur","i":"ɜːr","k":"ɝ","s":0,"n":1}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"sandwich":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"breakfast":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"e","k":"ɛ","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}],[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"goodbye":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"oo","i":"ʊ","k":"ʊ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"break":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"eɪ","k":"e","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}]],"fast":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]]};
+ var D={"family":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"i","i":"ə","k":"ə","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]],"parent":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"e","k":"ɛ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}],[{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"mother":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"father":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"brother":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"sister":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"son":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"daughter":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"au","i":"ɔː","k":"ɔ","s":0,"n":1},{"L":"gh","i":"","k":"","s":1,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"grandfather":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"grandmother":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"uncle":[[{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"ŋ","k":"ŋ","s":0,"n":0}],[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"l","i":"əl","k":"əl","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"aunt":[[{"L":"au","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"cousin":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}],[{"L":"i","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"nephew":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"ph","i":"f","k":"f","s":0,"n":0}],[{"L":"ew","i":"juː","k":"ju","s":0,"n":1}]],"niece":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"i","i":"","k":"","s":1,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1},{"L":"c","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"husband":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"wife":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"older":[[{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"younger":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"ou","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"ŋ","k":"ŋ","s":0,"n":0}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"big":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0}]],"little":[[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}],[{"L":"t","i":"","k":"","s":1,"n":0},{"L":"l","i":"əl","k":"əl","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"elder":[[{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"parents":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"e","k":"ɛ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}],[{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"mom":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ɑ","k":"ɑ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"mum":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"dad":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"sun":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"grandpa":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}]],"grandma":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}]],"auntie":[[{"L":"au","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ie","i":"i","k":"ɪ","s":0,"n":1}]],"sis":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"bro":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"me":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1}]],"tree":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ee","i":"iː","k":"i","s":0,"n":1}]],"grand":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"house":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"ou","i":"aʊ","k":"aʊ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"student":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"u","i":"uː","k":"u","s":0,"n":1}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"teacher":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1}],[{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"doctor":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"c","i":"k","k":"k","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"or","i":"ɚ","k":"ɚ","s":0,"n":1}]],"farmer":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"nurse":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"ur","i":"ɝː","k":"ɝ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"teach":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1},{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"farm":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"study":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]],"zero":[[{"L":"z","i":"z","k":"z","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"one":[[{"L":"o","i":"wʌ","k":"wʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"two":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"w","i":"","k":"","s":1,"n":0},{"L":"o","i":"uː","k":"u","s":0,"n":1}]],"three":[[{"L":"th","i":"θ","k":"θ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"four":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"o","i":"ɔː","k":"ɔ","s":0,"n":1},{"L":"u","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"five":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"six":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"x","i":"ks","k":"ks","s":0,"n":0}]],"seven":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"eight":[[{"L":"ei","i":"eɪ","k":"e","s":0,"n":1},{"L":"gh","i":"","k":"","s":1,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"nine":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"ten":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"eleven":[[{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"twelve":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"i":[[{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1}]],"my":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1}]],"you":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"uː","k":"u","s":0,"n":1}]],"your":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"ʊ","k":"ʊ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"am":[[{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"are":[[{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"name":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"is":[[{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"what":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"what's":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"'s","i":"s","k":"s","s":0,"n":0}]],"how":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"ow","i":"aʊ","k":"aʊ","s":0,"n":1}]],"old":[[{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"year":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"a","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"years":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"a","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"who":[[{"L":"w","i":"","k":"","s":1,"n":0},{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"o","i":"uː","k":"u","s":0,"n":1}]],"where":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"when":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"why":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1}]],"tea":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1}]],"ketchup":[[{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"tch","i":"tʃ","k":"tʃ","s":0,"n":0}],[{"L":"u","i":"ə","k":"ə","s":0,"n":1},{"L":"p","i":"p","k":"p","s":0,"n":0}]],"hamburger":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"ur","i":"ɜːr","k":"ɝ","s":0,"n":1}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"sandwich":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"breakfast":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"e","k":"ɛ","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}],[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"goodbye":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"oo","i":"ʊ","k":"ʊ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"break":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"eɪ","k":"e","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}]],"fast":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]]};
  var MODES=["","ipa","kk"],mode=0,slow=false,timers=[];
  try{var m=localStorage.getItem("phMode");if(m!==null)mode=+m||0}catch(e){}
  function V(ch){return "aeiou".indexOf(ch.toLowerCase())>=0}
@@ -648,7 +723,16 @@ var S=[
   "lines": [
    "同一個 <b>grand</b>（<b>大</b>），可以一直裝",
    "裝在 mother 前面 ＝ <b>媽媽的媽媽</b>"
-  ]
+  ],
+  "q": {
+   "q": "grandma 的 grand，跟哪一個 grand <b>意思一樣</b>？",
+   "o": [
+    "Grand Canyon 大峽谷",
+    "grab 抓",
+    "grade 年級",
+    "grass 草"
+   ]
+  }
  },
  {
   "tag": "以前只有一種",
@@ -658,7 +742,16 @@ var S=[
   "lines": [
    "uncle 最早只有一個意思：<b>媽媽的兄弟</b>（舅舅）",
    "現在叔叔、伯伯、姑丈、姨丈，<b>全都是 uncle</b>"
-  ]
+  ],
+  "q": {
+   "q": "<b>uncle</b> 最早只能叫誰？",
+   "o": [
+    "媽媽的兄弟（舅舅）",
+    "爸爸的兄弟（叔叔）",
+    "爸爸的爸爸",
+    "鄰居先生"
+   ]
+  }
  },
  {
   "tag": "以前只有一種",
@@ -668,7 +761,16 @@ var S=[
   "lines": [
    "aunt 最早也只有一個意思：<b>爸爸的姊妹</b>（姑姑）",
    "現在阿姨、伯母、舅媽，<b>全都是 aunt</b>"
-  ]
+  ],
+  "q": {
+   "q": "<b>aunt</b> 最早只能叫誰？",
+   "o": [
+    "爸爸的姊妹（姑姑）",
+    "媽媽的姊妹（阿姨）",
+    "媽媽的媽媽",
+    "女老師"
+   ]
+  }
  },
  {
   "tag": "以前只有一種",
@@ -678,7 +780,16 @@ var S=[
   "lines": [
    "cousin 以前只有一種：<b>阿姨的小孩</b>",
    "現在堂哥、表姊、堂弟、表妹，<b>全都是 cousin</b>"
-  ]
+  ],
+  "q": {
+   "q": "<b>cousin</b> 以前只能叫誰的小孩？",
+   "o": [
+    "阿姨的小孩",
+    "叔叔的小孩",
+    "哥哥的小孩",
+    "鄰居的小孩"
+   ]
+  }
  },
  {
   "tag": "以前用的人更多",
@@ -688,7 +799,16 @@ var S=[
   "lines": [
    "<b class=\"nosay\">nepos</b> 以前很好用，孫子、姪子、外甥<b>都可以用這個字</b>",
    "現在只剩一種：<b>兄弟姊妹的兒子</b>"
-  ]
+  ],
+  "q": {
+   "q": "nephew 以前的樣子 <b>nepos</b>，還可以叫誰？",
+   "o": [
+    "孫子",
+    "爺爺",
+    "爸爸",
+    "老師"
+   ]
+  }
  },
  {
   "tag": "和 nephew 一樣",
@@ -698,7 +818,16 @@ var S=[
   "lines": [
    "<b class=\"nosay\">neptia</b> 以前也一樣，<b>一大群人都可以用這個字</b>",
    "現在只剩一種：<b>兄弟姊妹的女兒</b>"
-  ]
+  ],
+  "q": {
+   "q": "<b>niece</b> 跟哪一個字是一對？",
+   "o": [
+    "nephew 姪子",
+    "nice 很好",
+    "nine 九",
+    "name 名字"
+   ]
+  }
  },
  {
   "tag": "藏在字裡的房子",
@@ -708,7 +837,16 @@ var S=[
   "lines": [
    "<b>hus</b> 就是 <b>house</b>（房子）",
    "husband 以前的意思是「<b>管這個家的人</b>」"
-  ]
+  ],
+  "q": {
+   "q": "<b>husband</b> 裡面藏著哪一個東西？",
+   "o": [
+    "house 房子",
+    "horse 馬",
+    "hat 帽子",
+    "hand 手"
+   ]
+  }
  },
  {
   "tag": "以前用的人更多",
@@ -718,7 +856,16 @@ var S=[
   "lines": [
    "以前的 <b class=\"nosay\">wīf</b>，<b>每個女生都可以用這個字</b>",
    "現在只剩一種：<b>太太</b>"
-  ]
+  ],
+  "q": {
+   "q": "以前的 <b>wīf</b>，指的是誰？",
+   "o": [
+    "每一個女生",
+    "只有媽媽",
+    "只有皇后",
+    "每一個小孩"
+   ]
+  }
  },
  {
   "tag": "所以",
@@ -734,12 +881,29 @@ var S=[
 
 function draw(s){
  var h="";
- if(s.tag)h+='<div class="tag in">'+s.tag+'</div>';
  if(s.emoji)h+='<div class="emoji '+(s.emojiCls||"pop")+'">'+s.emoji+'</div>';
  if(s.mid)h+='<div class="mid in d1">'+s.mid+'</div>';
  if(s.h)h+=s.h;
  (s.lines||[]).forEach(function(t,k){h+='<div class="sub in d'+(k+2)+'">'+t+'</div>'});
- return PH.expand(h);
+ var t=s.tag?'<div class="tag in">'+s.tag+'</div>':'';
+ /* 猜猜看：先答題，答了（或按「直接看答案」）才揭曉 */
+ if(s.q){var o=s.q.o.map(function(x,n){return{x:x,n:n}});
+  for(var a=o.length-1;a>0;a--){var b=Math.floor(Math.random()*(a+1)),c=o[a];o[a]=o[b];o[b]=c}
+  return PH.expand(t+'<div class="qz"><div class="qq">🤔 '+s.q.q+'</div><div class="qo">'+
+   o.map(function(x){return '<button data-ok="'+(x.n===0?1:0)+'">'+x.x+'</button>'}).join('')+
+   '</div><button class="qskip">👀 直接看答案</button><div class="qresw"></div></div><div class="rv">'+h+'</div>')}
+ return PH.expand(t+h);
+}
+function qAns(b){
+ if(!stage.classList.contains("qwait"))return;
+ var s=S[i];if(!s.q)return;
+ var ok=b&&b.getAttribute("data-ok")==="1";
+ [].forEach.call(stage.querySelectorAll(".qo button"),function(x){
+  x.classList.add(x.getAttribute("data-ok")==="1"?"ok":(x===b?"bad":"dim"))});
+ var r=stage.querySelector(".qresw");
+ var right=s.q.o[0].replace(/<[^>]+>/g,"");
+ if(r)r.innerHTML='<div class="qres '+(ok?'ok':'no')+'">'+(b?(ok?'🎉 答對了！':'😮 答案是：'+s.q.o[0]):'✅ 答案是：'+s.q.o[0])+'</div>';
+ setTimeout(function(){stage.classList.remove("qwait");stage.classList.add("qdone");PH.autoSay(stage)},b?900:200);
 }
 
 var i=0,reduce=false;
@@ -772,6 +936,7 @@ function show(n){
  i=Math.max(0,Math.min(S.length-1,n));
  window.SRCAT=S[i].src||"";   /* 按「📖 出處」直接跳到這一幕的證據（使用者 2026-09-25 指定） */
  stage.innerHTML=draw(S[i]);
+ stage.classList.toggle("qwait",!!S[i].q);stage.classList.remove("qdone");
  PH.autoSay(stage);      // 補充單字、字詞、用法都可以點來聽
  if(!reduce){stage.classList.remove("turnR","turnL");void stage.offsetWidth;
   stage.classList.add(back?"turnL":"turnR")}
@@ -788,6 +953,8 @@ document.getElementById("say").addEventListener("click",say);
 /* 猜猜看：公布答案／藏起來、右邊看中文／英文／德文 */
 stage.addEventListener("click",function(e){
  var t=e.target;
+ var qb=t.closest?t.closest(".qo button"):null;if(qb){qAns(qb);return}
+ if(t.closest&&t.closest(".qskip")){qAns(null);return}
  var r=t.closest?t.closest(".grev"):null;
  if(r){var g=r.closest(".guess");var on=!g.classList.contains("rev");g.classList.toggle("rev",on);
   r.textContent=on?"🙈 藏起來再猜一次":"🔍 公布答案";return}

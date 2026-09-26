@@ -23,9 +23,11 @@ function pack(o) {
   const dir = o.dir, varName = o.varName || 'AUD';
   fs.mkdirSync(dir, { recursive: true });
   const want = {};
+  /* 重音記號（2026-09-26）：字前面的 + ＝ 重音、- ＝ 輕讀（見 tools/stress.py）。鑰匙不含記號；有記號的版本優先 */
+  const MK = /(^|\s)[+-](?=[A-Za-z])/g, marked = t => /(^|\s)[+-][A-Za-z]/.test(t);
   o.texts.forEach(t => {
-    const s = sayText(t); if (!/[A-Za-zÅÄÖåäö]/.test(s)) return;
-    const k = akey(s); if (!want[k]) want[k] = s;
+    const m = marked(String(t)), s = sayText(String(t).replace(MK, '$1')); if (!/[A-Za-zÅÄÖåäö]/.test(s)) return;
+    const k = akey(s); if (!want[k] || (m && !marked(want[k]))) want[k] = m ? sayText(t) : s;
   });
   const manPath = path.join(dir, 'aud.js');
   let old = {};
@@ -33,7 +35,8 @@ function pack(o) {
     const m = /=\s*(\{[\s\S]*\});/.exec(fs.readFileSync(manPath, 'utf8'));
     if (m) old = JSON.parse(m[1]);
   }
-  const todo = Object.keys(want).filter(k => !(old[k] && fs.existsSync(path.join(dir, old[k][0]))));
+  const todo = Object.keys(want).filter(k => !(old[k] && fs.existsSync(path.join(dir, old[k][0])) &&
+    (!marked(want[k]) || old[k][2] === want[k])));
   if (todo.length) {
     const models = process.env.TTS_MODELS;
     if (!models) throw new Error('要做 ' + todo.length + ' 個新語音檔，但沒有設定 TTS_MODELS（模型資料夾），見 tools/tts_gen.py');
@@ -42,7 +45,7 @@ function pack(o) {
     cp.execFileSync('python3', [path.join(__dirname, 'tts_gen.py'), o.lang === 'sv' ? 'sv' : 'ko',
       String(o.lang === 'sv' ? 0 : 1), tmp, dir], { stdio: 'inherit', env: process.env });
     const dur = JSON.parse(fs.readFileSync(path.join(dir, '_dur.json'), 'utf8'));
-    todo.forEach(k => { old[k] = [fname(k) + '.mp3', dur[fname(k)]]; });
+    todo.forEach(k => { old[k] = [fname(k) + '.mp3', dur[fname(k)]].concat(marked(want[k]) ? [want[k]] : []); });
     fs.unlinkSync(tmp); fs.unlinkSync(path.join(dir, '_dur.json'));
   }
   const man = {};

@@ -394,7 +394,95 @@ var RV2 = [
  ]}
 ];
 
-module.exports = { ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, USE:USE };
+/* ════════ 📝 Review 1　About My Family（使用者 2026-09-26 指定新增）════════
+ * 學習目標：學以致用，真心並開心想用英文表達自我並介紹家人。一句一張卡，句子照課本截圖：
+ *   My name is ___. ／ This is my ___. ／ (He’s／She’s) a ___. ／ (He／She) likes ___, ／ (and／but) I like ___.
+ *   (He／She) can ___, ／ (and／but) I can ___.
+ * 空格：課本 Word Bank（基礎）＋ 學生天天用得到、最想說的字（進階）：家人／親戚稱謂、friend、teacher；
+ *   20 種最酷的夢想職業（全部子音開頭，a 不用變 an）；常見顏色；20 種學生真心喜歡、很酷的活動（不放幼稚的）。
+ * 一張卡兩排替換字：slots（He／She ＋ 職業、and／but ＋ 顏色……），引擎 _build_cards.js 的 subsHTML(slots)。 */
+SUB.nm4 = { basic:[['Ken','Ken','👦'],['Amy','Amy','👧'],['Leo','Leo','🧒'],['Mia','Mia','👧']], adv:[] };
+SUB.fam = { lb:'📘 課本', la:'✨ 還有',
+  basic:[['sister','姊姊',ICON.sister],['brother','哥哥',ICON.brother],['father','爸爸',ICON.father],
+         ['mother','媽媽',ICON.mother],['grandfather','爺爺',ICON.grandfather],['grandmother','奶奶',ICON.grandmother]],
+  adv:  [['dad','爸爸',ICON.dad],['mom','媽媽',ICON.mom],['grandpa','爺爺',ICON.grandpa],['grandma','奶奶',ICON.grandma],
+         ['uncle','叔叔',ICON.uncle],['aunt','阿姨',ICON.aunt],['cousin','表哥',ICON.cousin],['friend','朋友','🤝'],
+         ['best friend','最好的朋友','💛'],['teacher','老師',ICON.teacher],['classmate','同學','🧑‍🤝‍🧑']] };
+SUB.pr = { lb:'他／她', basic:[['He','他',ICON.he],['She','她',ICON.she]], adv:[] };
+SUB.job4 = { lb:'📘 課本', la:'🚀 夢想',
+  basic:[['cook','廚師',ICON.cook],['nurse','護理師',ICON.nurse],['doctor','醫生',ICON.doctor],
+         ['farmer','農夫',ICON.farmer],['teacher','老師',ICON.teacher],['student','學生',ICON.student]],
+  adv:  [['YouTuber','YouTuber','📹'],['pilot','飛行員','✈️'],['police officer','警察','👮'],['firefighter','消防員','🚒'],
+         ['scientist','科學家','🔬'],['game designer','遊戲設計師','🎮'],['programmer','程式設計師','💻'],['chef','主廚','👨‍🍳'],
+         ['baker','麵包師傅','🥐'],['singer','歌手','🎤'],['dancer','舞者','💃'],['movie star','電影明星','🎬'],
+         ['painter','畫家','🎨'],['photographer','攝影師','📷'],['basketball player','籃球員','🏀'],['baseball player','棒球員','⚾'],
+         ['soccer player','足球員','⚽'],['vet','獸醫','🐾'],['dentist','牙醫','🦷'],['magician','魔術師','🎩']] };
+SUB.color = { lb:'📘 課本', la:'🎨 還有',
+  basic:[['red','紅色','🔴'],['blue','藍色','🔵'],['green','綠色','🟢'],['yellow','黃色','🟡'],['purple','紫色','🟣'],['orange','橘色','🟠']],
+  adv:  [['pink','粉紅色','🩷'],['black','黑色','⚫'],['white','白色','⚪'],['brown','咖啡色','🟤'],['gray','灰色','🩶'],
+         ['gold','金色','🥇'],['silver','銀色','🥈']] };
+SUB.cj = { lb:'和／但', basic:[['and','而且','➕'],['but','但是','🔀']], adv:[] };
+SUB.can = { lb:'📘 課本', la:'😎 還有',
+  basic:[['sing','唱歌','🎤'],['read','閱讀','📖'],['draw','畫畫','✏️'],['write','寫字','✍️'],['dance','跳舞','💃']],
+  adv:  [['swim','游泳','🏊'],['cook','做菜','🍳'],['play basketball','打籃球','🏀'],['play baseball','打棒球','⚾'],
+         ['play dodgeball','打躲避球','🔴'],['play badminton','打羽毛球','🏸'],['play tag','玩鬼抓人','🏃'],['play the piano','彈鋼琴','🎹'],
+         ['play the guitar','彈吉他','🎸'],['play video games','打電動','🎮'],['ride a bike','騎腳踏車','🚲'],['skateboard','溜滑板','🛹'],
+         ['jump rope','跳繩','🪢'],['speak English','說英文','🗣️'],['do magic tricks','變魔術','🎩'],['make videos','拍影片','📹'],
+         ['write code','寫程式','💻'],['take photos','拍照','📷'],['bake cakes','烤蛋糕','🎂'],['fly a kite','放風箏','🪁']] };
+var R4 = '📝 Review 1';
+var BL = function(k){return t('______','______','',{slot:k,blank:1})};
+var HE = function(){return t('He','他',ICON.he,{slot:'pr'})};
+var RV4C = [
+ {type:'sent', kind:R4, zh:'我的名字是 ______。', slot:'nm4',
+  tk:[t('My','我的',ICON.my),t('name','名字','📛'),t('is','是',ICON.is),BL('nm4'),t('.','。',ICON.dot,{tight:1})]},
+ {type:'sent', kind:R4, zh:'這是我的 ______。', slot:'fam',
+  tk:[t('This','這','👇'),t('is','是',ICON.is),t('my','我的',ICON.my),BL('fam'),t('.','。',ICON.dot,{tight:1})]},
+ {type:'sent', kind:R4, zh:'他是一位 ______。', slots:['pr','job4'],
+  tk:[HE(),t("'s",'是',ICON.is,{tight:1}),t('a','一位',ICON.a,{say:'uh'}),BL('job4'),t('.','。',ICON.dot,{tight:1})]},
+ {type:'sent', kind:R4, zh:'他喜歡 ______，', slots:['pr','color'],
+  tk:[HE(),t('likes','喜歡','❤️'),BL('color'),t(',','，','',{tight:1})]},
+ {type:'sent', kind:R4, zh:'而且我喜歡 ______。', slots:['cj','color'],
+  tk:[t('and','而且','➕',{slot:'cj'}),t('I','我','🙋'),t('like','喜歡','❤️'),BL('color'),t('.','。',ICON.dot,{tight:1})]},
+ {type:'sent', kind:R4, zh:'他會 ______，', slots:['pr','can'],
+  tk:[HE(),t('can','會','💪'),BL('can'),t(',','，','',{tight:1})]},
+ {type:'sent', kind:R4, zh:'而且我會 ______。', slots:['cj','can'],
+  tk:[t('and','而且','➕',{slot:'cj'}),t('I','我','🙋'),t('can','會','💪'),BL('can'),t('.','。',ICON.dot,{tight:1})]}
+];
+var SCR4 = [
+ sc({at:'🎤 介紹我的家人',bg:'💬',l:'👦',b:'My name is Ken.',r:'👧',rt:'👂',use:'先說自己的名字。'}),
+ sc({at:'🖼 拿出全家福',bg:'🖼',l:'👦',b:'This is my father.',r:'👨',rt:'👋',use:'指著照片：這是我的……'}),
+ sc({at:'🖼 拿出全家福',bg:'🖼',l:'👦',b:'He’s a doctor.',r:'👨‍⚕️',rt:'🩺',use:'男生用 He’s，女生用 She’s。'}),
+ sc({at:'🎨 最愛的顏色',bg:'🎨',l:'👦',b:'He likes blue,',r:'👨',rt:'🔵',use:'他／她 後面的 like 要加 s：likes。'}),
+ sc({at:'🎨 最愛的顏色',bg:'🎨',l:'👦',b:'but I like red.',r:'👨',rt:'🔴',use:'一樣用 and，不一樣用 but。'}),
+ sc({at:'💪 他會什麼',bg:'💪',l:'👦',b:'He can cook,',r:'👨',rt:'🍳',use:'can ＋ 動作：會做什麼。'}),
+ sc({at:'💪 我會什麼',bg:'💪',l:'👦',b:'and I can cook, too.',r:'👨',rt:'😃',use:'一樣用 and，不一樣用 but。'})
+];
+RV4C.forEach(function (c, i) { c.scene = SCR4[i]; });
+var RVR4 = [
+ {t:'This is my ～ likes', q:[
+  {q:'This is my father. 的中文是？', o:['這是我的爸爸。','他是我的爸爸。','這是你的爸爸。','那是我的爸爸嗎？'], h:'This ＝ 這，my ＝ 我的。'},
+  {q:'「她是一位護理師。」英文是？', o:['She’s a nurse.','He’s a nurse.','She’s nurse.','She a nurse.'], h:'女生用 She’s，職業前面要有 a。'},
+  {q:'He ___ blue.（他喜歡藍色）', o:['likes','like','liking','is like'], h:'He／She 後面的 like 要加 s：likes。'},
+  {q:'He likes blue, ___ I like red.（我喜歡的不一樣）', o:['but','and','so','or'], h:'不一樣 ➜ but（但是）。'}
+ ]},
+ {t:'can ～ and／but', q:[
+  {q:'He can draw, ___ I can draw, too.（我們都會）', o:['and','but','or','so'], h:'一樣 ➜ and（而且）。'},
+  {q:'I can ___. 空格要放什麼？', o:['動作（swim）','顏色（red）','家人（mother）','職業（doctor）'], h:'can 後面接「動作」。'},
+  {q:'He’s a pilot. 的中文是？', o:['他是一位飛行員。','她是一位飛行員。','他喜歡飛機。','他會開飛機嗎？'], h:'He’s ＝ 他是，pilot ＝ 飛行員。'},
+  {q:'介紹媽媽：This is my mother. 下一句要說？', o:['She’s a teacher.','He’s a teacher.','I’m a teacher.','It’s a teacher.'], h:'媽媽是女生 ➜ She’s。'}
+ ]}
+];
+var XPAGES = [
+  { file:'review1.html', unit:'Review 1', title:'Review 1｜About My Family', other:'unit2.html', otherName:'⬅ Unit 2', cards:RV4C, rv:RVR4 }
+];
+
+/* 答錯頁「整句翻譯」：資料裡自動收集不到的幾句（使用者 2026-09-26 指定要整句中文，_gloss.js 讀這裡） */
+var TRX = {
+  "He's a farmer.":'他是一位農夫。', "He's a student.":'他是一位學生。', "She's a cook.":'她是一位廚師。',
+  'Is he my father?':'他是我的爸爸嗎？', 'Is she my mother?':'她是我的媽媽嗎？', 'Is he my grandfather?':'他是我的爺爺嗎？',
+  'He is my uncle.':'他是我的叔叔。', 'She is my aunt.':'她是我的阿姨。', "It's a book.":'它是一本書。'
+};
+module.exports = { ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, USE:USE, TRX:TRX, XPAGES:XPAGES };
 
 /* ── 真實情境：會動的小劇場（使用者 2026-09-24 指定改版）──────────────
  * 原本「地點＋三段 emoji＋一句話」學生完全看不懂，改成**兩個人演一次**：

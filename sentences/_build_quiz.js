@@ -50,6 +50,13 @@ const CSS = `
  height:calc(var(--safeT) + clamp(80px,12.5vh,116px));
  padding:var(--safeT) calc(var(--safeR) + clamp(12px,2.6vw,30px)) 0 calc(var(--safeL) + clamp(12px,2.6vw,30px))}
 #hud.on{display:flex}
+/* 2026-09-26 使用者：右上角分數和文字放大，一眼看懂總分 */
+.qsb{display:flex;align-items:flex-end;gap:clamp(10px,1.6vw,20px)}
+.qsb>span{display:flex;flex-direction:column;align-items:center;line-height:1.05}
+.qsb b{font-weight:700;font-variant-numeric:tabular-nums}
+.qsb em{font-style:normal;font-size:clamp(13px,2vh,19px);color:#BFA75A;font-weight:700;letter-spacing:.06em;margin-top:2px}
+.qsb .q1 b{font-size:clamp(34px,6.4vh,64px);color:var(--gold);text-shadow:0 0 18px rgba(255,210,74,.45)}
+.qsb .q2 b{font-size:clamp(22px,4vh,40px);color:var(--gold)}
 .hcell{display:flex;flex-direction:column;gap:2px;min-width:clamp(88px,15vw,170px)}
 .hcell .k{font-size:clamp(10.5px,1.5vh,13px);color:#5C5C5C;letter-spacing:.14em}
 .hcell .v{font-size:clamp(17px,2.9vh,28px);font-weight:700}
@@ -234,7 +241,7 @@ function choose(n){
       if(si>=0&&order.slice(qi+1).indexOf(si)<0)order.splice(Math.min(order.length,qi+3+Math.floor(Math.random()*2)),0,si);
       SIMS[si]=1}
     missShow({q:q.q+(q.say?'　🔊 <b>'+q.say+'</b>':''),pick:n<0?null:q.o[n],ans:q.o[q.a],why:q.why,
-      sims:sims.slice(0,3).map(toMcq),pts:${QC.speed ? '(q.x2?1000:500)' : '(q.x2?200:100)'},
+      sims:sims.slice(0,3).map(toMcq),self:toMcq(q),pts:${QC.speed ? '(q.x2?1000:500)' : '(q.x2?200:100)'},
       gain:function(g){score+=g;$('#sc').textContent=score}});
   }
   $('#why').innerHTML=ap(q.why);
@@ -293,8 +300,7 @@ const body = `
  <span class="hcell"><span class="k">題號</span><span class="v" id="qn">1 / ${BUILT.length}</span></span>
  <span id="ring"><svg viewBox="0 0 100 100"><circle id="rbg" cx="50" cy="50" r="46"></circle>
   <circle id="rfg" cx="50" cy="50" r="46"></circle></svg><span id="rnum">50</span></span>
- <span class="hcell r"><span class="k">分數 ／ 連對</span>
-  <span class="v"><span id="sc">0</span>　<span id="streak">—</span></span></span>
+ <span class="qsb"><span class="q1"><b id="sc">0</b><em>🏆 總分</em></span><span class="q2"><b id="streak">—</b><em>連對</em></span></span>
 </div>
 
 <main id="stage">

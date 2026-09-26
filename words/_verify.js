@@ -132,12 +132,34 @@ async function scenePage(p,f,vp,e){
   if(s.h)e.push('幕'+(i+1)+' '+s.h);
   if(i===0&&(!s.pd||s.nd))e.push('幕1箭頭狀態錯');
   if(i===N-1&&(!s.nd||s.pd))e.push('末幕箭頭狀態錯');
+  /* 2026-09-26：故事融入暖身題 ➜ 先有題目、故事藏起來；答了才揭曉，揭曉後也不可以溢出、不可以壓到按鈕 */
+  if(await p.$('#stage.qwait')){
+   const q0=await p.evaluate(()=>({n:document.querySelectorAll('#stage .qo button').length,
+    rv:[...document.querySelectorAll('#stage .rv')].some(x=>x.getClientRects().length)}));
+   if(q0.n!==4)e.push('幕'+(i+1)+' 猜猜看不是四個選項（'+q0.n+'）');
+   if(q0.rv)e.push('幕'+(i+1)+' 還沒作答就看得到故事');
+   await p.click('#stage .qo button:not([data-ok="1"])');await p.waitForTimeout(3800);
+   const q1=await p.evaluate(BOXSRC=>{const box=eval('('+BOXSRC+')')();
+    const bs=[...document.querySelectorAll('#bar button')].map(b=>b.getBoundingClientRect());let hit=null;
+    for(const el of document.getElementById('stage').querySelectorAll('*')){
+     if(el.children.length||!el.textContent.trim())continue;
+     const r=el.getBoundingClientRect();if(!r.width)continue;
+     for(const b of bs)if(r.left<b.right&&r.right>b.left&&r.top<b.bottom&&r.bottom>b.top)hit=(el.className||el.tagName)+'「'+el.textContent.trim().slice(0,12)+'」'}
+    return{done:document.getElementById('stage').classList.contains('qdone'),ok:!!document.querySelector('#stage .qo button.ok'),
+     rv:[...document.querySelectorAll('#stage .rv')].some(x=>x.getClientRects().length),ox:box.ox,oy:box.oy,hit}},BOX.toString());
+   acts++;
+   if(!q1.done||!q1.rv)e.push('幕'+(i+1)+' 答了題目，故事沒有揭曉');
+   if(!q1.ok)e.push('幕'+(i+1)+' 答錯了卻沒有標出正確答案');
+   if(q1.ox>0)e.push('幕'+(i+1)+' 揭曉後橫向溢出'+q1.ox);
+   if(q1.oy>0)e.push('幕'+(i+1)+' 揭曉後縱向溢出'+q1.oy);
+   if(q1.hit)e.push('幕'+(i+1)+' 揭曉後 '+q1.hit+' 壓到下面的按鈕');
+  }
  }
  const b4=(await snap()).on;await p.waitForTimeout(6000);
  if((await snap()).on!==b4)e.push('停 6 秒自動換頁');
 
  /* 2026-09-24 新增的四項（使用者指定）───────────────────────────── */
- const NEW=/(^|[\/-])(parts|world)\.html$/.test(f);
+ const NEW=/(^|[\/-])(parts|world)(-\d)?\.html$/.test(f);
  const back=async()=>{await p.evaluate(()=>show(0));await p.waitForTimeout(600)};
  if(NEW){
   /* ① 字不可以壓到下面的按鈕列（動畫跑完才量） */

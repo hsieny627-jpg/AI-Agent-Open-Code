@@ -52,7 +52,7 @@ const q = '<span class="gunk">❓ 哪一國？</span>';
 function guessOne(o) {
   const modes = [['0', '🙈 藏'], ['zh', '中文'], ['en', '英文']].concat(o.de ? [['de', '德文']] : []);
   return {
-    tag: '🕵️ 這是哪一國的話？', say: '', sayAll: 1,
+    tag: o.tag || '🕵️ 這是哪一國的話？', say: '', sayAll: 1,
     h: '<div class="guess one fo" data-m="0">' +
       '<div class="gtop">' + q + ans(o.c) + '</div>' +
       '<div class="gmode">右邊看：' + modes.map(m => '<button data-m="' + m[0] + '"' + (m[0] === '0' ? ' class="on"' : '') + '>' + m[1] + '</button>').join('') + '</div>' +
@@ -72,7 +72,8 @@ function guessOne(o) {
    r：[國家代碼, 那一國的字（可以有兩個，用／隔開）] */
 function guessMany(o) {
   return {
-    tag: '🌍 別的國家怎麼叫' + o.zh, sayAll: 1, src: o.src || 'w-' + o.en,
+    /* 2026-09-26 使用者指定：一律寫成「別的國家怎麼說 ＿＿」（說後面空一格） */
+    tag: '🌍 別的國家怎麼說 ' + (o.tz || o.zh), sayAll: 1, src: o.src || 'w-' + o.en, q: o.q,
     h: '<div class="guess many fo">' +
       '<div class="gen">英文 <span class="sp gbig" data-say="' + o.en + '">' + o.en + '</span><em>' + o.zh + '</em></div>' +
       '<div class="glist">' + o.r.map((x, k) =>
@@ -80,7 +81,9 @@ function guessMany(o) {
         '<span class="sp gw" data-say="' + x[1].replace(/／/g, ', ') + '" data-lang="' + LANG[x[0]] + '">' + x[1] + '</span>' +
         q + ans(x[0]) + '</div>').join('') + '</div>' +
       '<button class="grev">🔍 公布答案</button>' +
-      '<div class="gwhy">' + o.why + '</div></div>'
+      '<div class="gwhy">' + o.why + '</div>' +
+      /* 公布以後才出現的「為什麼這麼像」小動畫（使用者 2026-09-26 指定：每一張都要有語言演變的真實故事） */
+      (o.story ? '<div class="gstory">' + o.story + '</div>' : '') + '</div>'
   };
 }
 

@@ -5,6 +5,34 @@
 **引擎跟 `sentences/` 共用**，所以 `sentences/CLAUDE.md` 裡的字卡規則、發音引擎、答錯獨立頁、
 語速六段、音效暫時刪除……全部適用，這一份只寫「這一課不一樣的地方」。
 
+## 2026-09-26 改版（使用者 26 點）——先讀這一節
+
+引擎的改動（答錯頁逐字中文、加分題、火眼金睛 6 秒頁、驚喜卡、右上角分數、語序卡唸到哪亮到哪、多排替換字……）
+寫在 `sentences/CLAUDE.md` 最上面「2026-09-26」，**兩個網站共用**。單字頁（數字、Sight Words）的樣板改動寫在 `words/CLAUDE.md`。這一課自己的：
+
+| # | 使用者要的 | 做法（在哪裡） |
+|---|---|---|
+| 1・2 | 總首頁改名「首頁」，分「四年級／三年級」兩區；「三年級句型」改名「三年級」 | `words/_build_hub.js` 的 `GROUPS` |
+| 3 | Unit 1 秒懂重點：How ＝ **如何** | `U1[0]` |
+| 4 | You／Your 的 Y 上下對齊；Your 的 o 淡灰 | `U1[10]` 加 `left:1`（引擎 `.fgrid.left`）；`SIL.your=[1]` |
+| 5 | 一問一答最後一張：What’s your name? ／ My name is Emma. ＝ I’m Emma. | `U1[15]`（`atk` 中間一個 `＝` token，`eqs:1`，不發音）；情境 `SC1` 同步加一幕 |
+| 6 | Unit 2 秒懂重點 What／How／How old 第一個字對齊 | `U2[0]` 加 `left:1` |
+| 7 | Unit 2 語序：你／you 藍色；後面的卡 you 都藍色；唸到哪一個字，那個字和它的中文一起放大變亮（Unit 1 也一樣） | `W.you`／`W.You` 改 `hl:'b'`；語序卡 `'b'`；他問他答、一問一答 `cls:'b'`。引擎 `sayOrd()`：What’s 先亮 What＋什麼，再亮 ’s＋是 |
+| 8・10 | 縮寫卡「唸一次」兩句（三句）都要唸；**ten 重音、years old 輕讀** | 卡片加 `all:1`（`U2[5]`、`U2[8]`）。語調：`tools/stress.py`（WORLD 聲碼器改音高和音量：ten 音高 ✕1.25、years old ✕0.86），`_audio.js` 用 `+ten -years -old` 記號，six～twelve 四種句子都做。**量過**：ten 那一段的音高是全句最高 |
+| 9 | I’m ten years old. ＝ I’m ten. 兩句的 I 對齊 | `U2[7]` 加 `left:1` |
+| 12・16 | 數字結構看不懂 ➜ 「eleven ＝ 10 ＋ 1？」**對！**藍色 ＝ 1、2，金色粗體 ＝ 10；leven／lve ＝ 剩下（跟 leave 一家） | `_num_pages.js` 的 `numP` |
+| 13 | one、two 的家人分兩籃：藍 once only alone none eleven；橘 twin twice twelve twenty between | 同上（每一個都查 OED／Etymonline） |
+| 14 | thirteen／thirty：teen 金色、ty 藍色，粗體 | 同上 |
+| 15 | 「這是哪一國的【數字單字】？」；為什麼看這幾國、對記英文有什麼幫助 | 猜之前多四幕：在哪裡 ➜ 坐船到英國 ➜ 語言也有家人 ➜「英文不唸的字母，兄弟姊妹還在唸」（eight／acht、two／twee） |
+| 17 | 數字環遊世界：基礎 0～10（11 張）、進階 11～20（10 張）、進階 30～100（8 張） | 三頁：`numbers-world.html`／`-2`／`-3`。每一張：先猜（遊戲）➜ 公布後出現**字母密碼**動畫（英文 t ＝ 德文 z、th ＝ d、gh ＝ ch、-teen ＝ -zehn ＝ -tien、-ty ＝ -zig ＝ -tig、法文 80 ＝ 4 ✕ 20）。記住這件事：字放大、每一個字有中文、三兄弟坐船動畫 |
+| 18 | Sight Words 加【進階】Who、Where、When、Why；「我 是」中間空一格，每個字正上方是它的圖示（你 是、什麼 是 也一樣） | `SIGHT` 加四張（`adv:1`，音標在 `words/_phonics.js`）；`zhp:[['我','🙋'],['是','＝']]`（`words/_build.js` 第①幕） |
+| 19 | 常見字環遊世界加：你、你的、你的名字是什麼？、你幾歲？；別國的「我」也大寫嗎？ | `_sight_pages.js` 的 `worldS`（thou ＝ du、thine ＝ dein、hight ＝ heißen；只有英文的 I 大寫、德文反而名詞大寫） |
+| 20・21・23・24 | 故事改成先猜再揭曉、字放大；you：今天你、你們都是 you；德文 Jahr ＝ 年 | `numW`、`whyS`：每一幕 `q:{q,o}`（o[0] 正解），引擎見 `words/CLAUDE.md` |
+| 25 | **Review 1**：Hi. ／ My name is ___. ／ I’m ___ years old.（eight nine ten）／ I like ___.（20 個）／ I like to ___.（20 個）／ How about you? | `_data.js` 的 `XPAGES` ➜ `review1.html`（首頁第 4 張卡）。空格一開始是 ______，點替換字才填進去 |
+
+**語音檔怎麼重做**多一個套件：`pip install sherpa-onnx lameenc numpy pyworld`（pyworld 做重音）。
+模型：`kokoro-en-v0_19`（英文）、`vits-piper-sv_SE-nst-medium`（瑞典文），從 sherpa-onnx 的 tts-models 下載，放同一個資料夾給 `TTS_MODELS`。
+
 ## 2026-09-25 改版（使用者指定）——先讀這一節
 
 引擎的改動（答錯頁 8 秒＋加分類似題、遊戲 5 分鐘、驚喜卡、語序卡連動、秒懂重點三欄對齊……）寫在
@@ -28,7 +56,7 @@
 | 18 | **🔢 數字單字** zero～twelve：字卡（母音紅、不發音灰、音節切開）＋ 結構 ＋ 故事 ＋ 環遊世界 ＋ 出處 | `numbers/`，產生器 `_build_words.js`（樣板跟 words/ 家人單字**同一套**：`words/_section.js`） |
 | 20 | **👀 Sight Words** I, My, You, Your, I am, You are, name, is, What, What’s, How, old, How old, year, years old | `sight/`，同上 |
 
-卡片數現在是 **Unit 1 16 張、Unit 2 17 張**（複習題照每 4 張一組，最後一組 4～5 張）。
+卡片數現在是 **Unit 1 17 張、Unit 2 17 張、Review 1 6 張**（2026-09-26）；以前是 Unit 1 16 張、Unit 2 17 張（複習題照每 4 張一組，最後一組 4～5 張）。
 
 **不發音字母照使用者的清單**：one 的 e、three 字尾 e、four 的 u、five 的 e、eight 的 gh、nine 的 e、twelve 字尾 e；
 You／Your 的 o、are 的 e、name 的 e、What 的 h、year 的 a（`words/_phonics.js` 的 `RAW`）。
@@ -104,7 +132,7 @@ Unit 1 第 15 張、Unit 2 第 16 張是「淺灰色的字母 ＝ 不發音」�
 | 顏色 | 問 ➜ 答 | 在哪裡演 |
 |---|---|---|
 | 🔵 藍底 | `your` 你的 ➜ `My` 我的 | Unit 1 他問他答卡（第 11 張）、一問一答卡：藍色的 your 自己飛到 My |
-| 🩷 淺粉底 | `you` 你 ➜ `I` 我 | Unit 2 他問他答卡（第 11 張）、一問一答卡：粉色的 you 自己飛到 I |
+| 🔵 藍底（2026-09-26 改） | `you` 你 ➜ `I` 我 | Unit 2 他問他答卡（第 12 張）、一問一答卡：藍色的 you 自己飛到 I（使用者指定 you 一律藍色） |
 
 另外有：`I 我／My 我的／You 你／Your 你的` 秒懂重點卡（Unit 1 第 10 張）、
 `What ＝ 什麼／How ＝ 怎麼樣／How old ＝ 幾歲`（Unit 2 第 1 張）、

@@ -144,26 +144,26 @@ const PAGES = [
   lines:['<b>-er、-or、-ent</b> ＝ 做這件事的人']}
 ]},
 
-{file:'jobs-why.html',title:'職業單字的故事',srcRows:WHY,
+{file:'jobs-why.html',title:'職業單字的故事',srcRows:WHY,big:1,
  S:[
  {emoji:'🧑‍🎓👩‍🏫👨‍⚕️👨‍🌾👩‍⚕️',mid:'職業單字，以前是什麼意思？',lines:['每一個字，<b>意思都變過</b>']},
- {tag:'很認真的人',emoji:'📖',say:'student',src:'student',
+ {tag:'很認真的人',emoji:'📖',say:'student',src:'student',q:{q:'student 從拉丁文 <b>studēre</b> 來，它的意思是？',o:['很認真','很會考試','穿制服','住在學校']},
   h:'<div class="en in d1">{{student}}</div>',
   lines:['拉丁文 <b class="nosay">studēre</b> ＝ <b>很認真</b>','很認真學習的人 ➜ <b>student</b>']},
- {tag:'指給你看',emoji:'👉📖',say:'teacher',src:'teacher',
+ {tag:'指給你看',emoji:'👉📖',say:'teacher',src:'teacher',q:{q:'以前的 <b>teach</b>，意思是？',o:['指給你看','打分數','罵人','唱歌']},
   h:'<div class="en in d1"><span class="fromL">{{teach}}</span> <span class="ar">＋</span> <span class="fromR hi">er</span></div>' +
     '<div class="en pop" style="animation-delay:1.2s">{{teacher}}</div>',
   lines:['以前的 <b>teach</b> ＝ <b>指給你看</b>','指給你看、教你的人 ➜ <b>teacher</b>']},
- {tag:'以前是老師',emoji:'👨‍🏫<span class="plus">➜ 👨‍⚕️</span>',say:'doctor',src:'doctor',
+ {tag:'以前是老師',emoji:'👨‍🏫<span class="plus">➜ 👨‍⚕️</span>',say:'doctor',src:'doctor',q:{q:'最早的 <b>doctor</b> 是做什麼的？',o:['老師','醫生','廚師','農夫']},
   h:'<div class="en in d1">{{doctor}}</div>',
   lines:['最早的 doctor 是 <b>老師</b>','大約 <b>600 年前</b>，才用來叫<b>醫生</b>']},
- {tag:'以前是收租金的人',emoji:'💰<span class="plus">➜ 🌾</span>',say:'farmer',src:'farmer',
+ {tag:'以前是收租金的人',emoji:'💰<span class="plus">➜ 🌾</span>',say:'farmer',src:'farmer',q:{q:'最早的 <b>farmer</b> 是做什麼的？',o:['收租金的人','種田的人','養牛的人','賣菜的人']},
   h:'<div class="en in d1">{{farmer}}</div>',
   lines:['最早的 farmer ＝ <b>收租金的人</b>','後來 ＝ <b>租一塊地來種田的人</b> ➜ 農夫']},
- {tag:'以前是餵奶的人',emoji:'🍼<span class="plus">➜ 🏥</span>',say:'nurse',src:'nurse',
+ {tag:'以前是餵奶的人',emoji:'🍼<span class="plus">➜ 🏥</span>',say:'nurse',src:'nurse',q:{q:'最早的 <b>nurse</b> 是做什麼的？',o:['餵寶寶喝奶的人','打針的人','醫生的太太','送信的人']},
   h:'<div class="en in d1">{{nurse}}</div>',
   lines:['最早的 nurse ＝ <b>餵寶寶喝奶的人</b>','大約 <b>400 多年前</b> ➜ <b>照顧病人</b>的人']},
- {tag:'加碼：農夫和鄰居',emoji:'🏡',say:'neighbor',src:'bauer',
+ {tag:'加碼：農夫和鄰居',emoji:'🏡',say:'neighbor',src:'bauer',q:{q:'neighbor 的 <b>bor</b>，跟德文哪一個字是同一個字？',o:['Bauer 農夫','Bär 熊','Boot 船','Brot 麵包']},
   h:'<div class="en in d1"><span class="sp" data-say="neighbor">neigh<span class="hi">bor</span></span></div>',
   lines:['<b>neighbor</b> 鄰居 ＝ 住在<b>附近</b>的人','bor 跟德文 <b>Bauer</b>（農夫）是同一個字']},
  {tag:'所以',emoji:'🗣️⏳',mid:'字的意思，會慢慢變',lines:['老師 ➜ 醫生、收租 ➜ 種田、餵奶 ➜ 照顧病人']}

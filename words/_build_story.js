@@ -122,14 +122,38 @@ const FAM=[
   lines:['<b>沒有人規定</b>，是大家一直這樣<b>發音</b>','<b>發音慢慢變，字就跟著變</b>']}
 ];
 
+/* 每一個字的故事先來一題猜猜看（使用者 2026-09-26 指定：故事融入暖身題，要有趣、顛覆認知）
+   o[0] 一定是正確答案，畫面上會打散。答了（或按「直接看答案」）才揭曉故事動畫。 */
+const FQ={
+ family:{q:'很久以前的 <b>family</b>，連誰都算「家裡的人」？',o:['幫忙做事的僕人','隔壁鄰居','學校老師','路過的客人']},
+ parent:{q:'<b>parent</b> 最早的意思是？',o:['把孩子生下來的人','家裡最老的人','會煮飯的人','住在隔壁的人']},
+ mother:{q:'全世界的寶寶，<b>最先</b>發得出來的音是？',o:['ma','ka','sa','la']},
+ dad:{q:'寶寶還不會說 father，<b>先叫出</b>什麼？',o:['da-da','fa-fa','ka-ka','sa-sa']},
+ brother:{q:'英文以前有一個像小旗子的字母 <b>þ</b>，今天變成了？',o:['th','b','p','f']},
+ sister:{q:'<b>sister</b> 這樣唸，是誰帶來的？',o:['坐船來的維京人','法國國王','美國人','羅馬人']},
+ son:{q:'哪一個字跟 <b>son</b> 唸起來<b>一模一樣</b>？',o:['sun 太陽','sing 唱歌','soon 很快','song 歌']},
+ daughter:{q:'daughter 的 <b>gh</b>，以前的人？',o:['會唸出來','從來不唸','唸成 f','根本沒寫']},
+ grandfather:{q:'<b>grand</b> 的意思是？',o:['大','老','好','爺爺']},
+ grandmother:{q:'grandma 的 grand，跟哪一個 grand <b>意思一樣</b>？',o:['Grand Canyon 大峽谷','grab 抓','grade 年級','grass 草']},
+ uncle:{q:'<b>uncle</b> 最早只能叫誰？',o:['媽媽的兄弟（舅舅）','爸爸的兄弟（叔叔）','爸爸的爸爸','鄰居先生']},
+ aunt:{q:'<b>aunt</b> 最早只能叫誰？',o:['爸爸的姊妹（姑姑）','媽媽的姊妹（阿姨）','媽媽的媽媽','女老師']},
+ cousin:{q:'<b>cousin</b> 以前只能叫誰的小孩？',o:['阿姨的小孩','叔叔的小孩','哥哥的小孩','鄰居的小孩']},
+ nephew:{q:'nephew 以前的樣子 <b>nepos</b>，還可以叫誰？',o:['孫子','爺爺','爸爸','老師']},
+ niece:{q:'<b>niece</b> 跟哪一個字是一對？',o:['nephew 姪子','nice 很好','nine 九','name 名字']},
+ husband:{q:'<b>husband</b> 裡面藏著哪一個東西？',o:['house 房子','horse 馬','hat 帽子','hand 手']},
+ wife:{q:'以前的 <b>wīf</b>，指的是誰？',o:['每一個女生','只有媽媽','只有皇后','每一個小孩']}
+};
+FAM.forEach(s=>{if(s.say&&FQ[s.say])s.q=FQ[s.say]});
+FAM.forEach(s=>{if(s.say==='dad')s.q=FQ.dad});
+
 /* 第二頁的開場 */
 const OPEN2={emoji:'👨‍👩‍👧‍👦',mid:'還有八個家人單字',
  lines:['故事也都不一樣']};
 
 const PAGES=[
 /* 19 幕一次放太長，拆成兩頁：前 9 個字／後 8 個字，各 10 幕 */
-{file:'why.html',title:'家人單字的故事 ①',src:'why',S:FAM.slice(0,10)},
-{file:'why-2.html',title:'家人單字的故事 ②',src:'why',S:[OPEN2].concat(FAM.slice(10,18),[FAM[18]])},
+{file:'why.html',title:'家人單字的故事 ①',src:'why',big:1,S:FAM.slice(0,10)},
+{file:'why-2.html',title:'家人單字的故事 ②',src:'why',big:1,S:[OPEN2].concat(FAM.slice(10,18),[FAM[18]])},
 
 /* 哥哥／姊姊／弟弟／妹妹的說法（使用者 2026-09-19 指定要務必補充）。
    **2026-09-20 使用者指定改寫**：原本文字太囉嗦，學生看不懂。
@@ -571,6 +595,50 @@ body{margin:0;background:#000;color:#F2F2F2;
  font-size:clamp(14px,2.2vh,20px);padding:3px 10px;white-space:nowrap;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
 .gwhy b{color:#FFD24A}
 .guess.rev .gwhy{display:block;animation:fadeOnly .5s ease .4s both}
+/* 公布以後：為什麼這麼像（2026-09-26）——字母密碼 t ⇄ z、th ⇄ d、gh ⇄ ch 一格一格亮 */
+.gstory{display:none;flex-wrap:wrap;gap:clamp(4px,.8vw,10px);justify-content:center;align-items:center;margin-top:2px}
+.cx>span{display:inline-flex;align-items:baseline;gap:.2em;white-space:nowrap}
+/* 公布答案以後，清單排緊一點，字母密碼才放得下 */
+.guess.many.rev .grow{padding-top:0;padding-bottom:0}
+.guess.many.rev .gen{font-size:clamp(17px,2.6vh,26px)}
+.guess.rev .gstory{display:flex}
+.cx{display:inline-flex;align-items:center;gap:.35em;background:#0B1620;border:1px solid #29465E;border-radius:14px;
+ padding:.08em .5em;font-size:clamp(16px,2.8vh,28px);font-weight:700;color:#F2F2F2;opacity:0;animation:cxIn .6s cubic-bezier(.2,1.4,.4,1) forwards}
+.cx:nth-child(2){animation-delay:.5s}.cx:nth-child(3){animation-delay:1s}.cx:nth-child(4){animation-delay:1.5s}
+.cx .e{color:#FFD24A}.cx .d{color:#5AD1FF}.cx .n{color:#FF9EC7}.cx .x{color:#8CF08A}
+.cx i{font-style:normal;color:#5E7A8E;font-size:.8em;animation:cxAr 1.2s ease-in-out infinite}
+.cx em{font-style:normal;font-size:.62em;color:#BFD3E6;font-weight:400}
+@keyframes cxIn{from{opacity:0;transform:translateY(14px) scale(.8)}to{opacity:1;transform:none}}
+@keyframes cxAr{0%,100%{transform:none}50%{transform:translateX(4px)}}
+/* 記住這件事：字放大、每一個字底下有中文（2026-09-26） */
+.rem{border-collapse:separate;border-spacing:clamp(4px,.8vw,10px) clamp(3px,.6vh,8px);margin:0 auto}
+.rem th{font-size:clamp(16px,2.6vh,24px);color:#9FB4C8;font-weight:700;padding:0 .4em}
+.rem th .flag{width:1.4em;vertical-align:-.2em;margin-right:.2em}
+.rem td{font-size:clamp(24px,4.4vh,44px);font-weight:700;text-align:center;background:#0C0C0C;border:1px solid #232323;
+ border-radius:14px;padding:.08em .5em;line-height:1.15;opacity:0;animation:cxIn .5s ease forwards}
+.rem td em{display:block;font-style:normal;font-size:.5em;color:#D8D3C5;font-weight:700}
+.rem td.z{color:#FFE9A8;font-size:clamp(22px,4vh,40px)}
+.rem td .e{color:#FFD24A}.rem td .d{color:#5AD1FF}
+/* 三兄弟坐船：1500 年前 德國北部、荷蘭一帶的人坐船到英國 ➜ 英文、德文、荷蘭文是一家人 */
+.bro3{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,20px);font-size:clamp(17px,2.8vh,26px);
+ color:#F2F2F2;font-weight:700;flex-wrap:wrap}
+.bro3 .b3{display:inline-flex;align-items:center;gap:.3em;background:#0C1A10;border:1px solid #2B5236;border-radius:99px;
+ padding:.15em .7em;opacity:0;animation:cxIn .6s ease forwards}
+.bro3 .b3 .flag{width:1.5em}
+.bro3 .b3:nth-child(1){animation-delay:.2s}.bro3 .b3:nth-child(3){animation-delay:.8s}.bro3 .b3:nth-child(5){animation-delay:1.4s}
+.bro3 .sail{display:inline-block;animation:sail 2.4s ease-in-out infinite}
+@keyframes sail{0%,100%{transform:translateX(-6px) rotate(-4deg)}50%{transform:translateX(6px) rotate(4deg)}}
+/* 字母對照的大卡：一個字母一個字母比 */
+.lk{display:grid;grid-template-columns:auto auto auto;align-items:center;justify-content:center;column-gap:clamp(10px,2vw,26px);
+ row-gap:clamp(4px,1vh,10px)}
+.lk .w{font-size:clamp(30px,6vh,60px);font-weight:700;opacity:0;animation:cxIn .6s ease forwards;border-bottom:0}
+.lk .w .e{color:#FFD24A;display:inline-block;animation:lkGlow 1.6s ease-in-out 1.2s 2}
+.lk .w .d{color:#5AD1FF;display:inline-block;animation:lkGlow 1.6s ease-in-out 1.2s 2}
+.lk .w .n{color:#FF9EC7;display:inline-block;animation:lkGlow 1.6s ease-in-out 1.2s 2}
+.lk .fl{font-size:clamp(14px,2vh,19px);color:#9FB4C8;text-align:center;opacity:0;animation:cxIn .5s ease forwards}
+.lk .fl .flag{width:1.6em;display:block;margin:0 auto 2px}
+.lk .zz{grid-column:1/-1;text-align:center;font-size:clamp(18px,3vh,28px);color:#D8D3C5;font-weight:700;opacity:0;animation:cxIn .5s ease 1.8s forwards}
+@keyframes lkGlow{0%,100%{transform:none;text-shadow:none}50%{transform:scale(1.35) translateY(-4px);text-shadow:0 0 18px currentColor}}
 /* 為什麼尾巴都一樣：四欄對齊，一欄 ＝ 一個家人（以前 ➜ 英文 ➜ 德文） */
 .tails{display:grid;grid-template-columns:repeat(4,auto);justify-content:center;align-items:baseline;
  column-gap:clamp(12px,2vw,24px);row-gap:clamp(2px,.6vh,6px);font-size:clamp(20px,3.6vh,32px);font-weight:700}
@@ -695,13 +763,43 @@ body{margin:0;background:#000;color:#F2F2F2;
 #bar.c3 #say{font-size:clamp(17px,2.2vw,21px);font-weight:700;padding:12px clamp(18px,2.6vw,30px);
  background:#10301F;border-color:#39D98A;min-height:54px;white-space:nowrap}
 .reduce *{animation:none!important;transition:none!important}
+/* 2026-09-26 使用者指定：畫面左上方寫這一頁的主題（例：🧩 單字結構） */
+.topicfix{position:fixed;top:max(10px,env(safe-area-inset-top));left:112px;z-index:30;color:#FFD66B;font-weight:700;
+ font-size:clamp(16px,2.4vh,22px);letter-spacing:.08em;padding:8px 4px;pointer-events:none;white-space:nowrap}
+/* 每一幕先來一題「猜猜看」（使用者 2026-09-26 指定：故事融入暖身題），答了才揭曉故事 */
+.qz{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vh,16px);width:100%;max-width:980px}
+.qz .qq{font-size:clamp(24px,4.6vh,44px);font-weight:700;line-height:1.35;text-align:center;color:#FFF}
+.qz .qq b{color:#FFD24A}
+.qz .qo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(8px,1.4vh,14px);width:100%}
+.qz .qo button{background:#0C0C0C;border:2px solid #2E2E2E;border-radius:18px;color:#F2F2F2;font-family:inherit;
+ font-size:clamp(20px,3.8vh,36px);font-weight:700;line-height:1.25;padding:clamp(10px,1.8vh,18px) 14px;cursor:pointer;
+ animation:qIn .45s cubic-bezier(.2,1.3,.4,1) both}
+.qz .qo button:nth-child(2){animation-delay:.08s}.qz .qo button:nth-child(3){animation-delay:.16s}.qz .qo button:nth-child(4){animation-delay:.24s}
+@keyframes qIn{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}
+.qz .qo button.ok{background:#0F3323;border-color:#39D98A;animation:qOk .6s ease}
+.qz .qo button.bad{background:#3A1111;border-color:#FF5E5E;animation:qNo .45s}
+.qz .qo button.dim{opacity:.35}
+@keyframes qOk{50%{transform:scale(1.08)}}
+@keyframes qNo{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.qz .qskip{background:none;border:0;color:#7E8A94;font-family:inherit;font-size:clamp(14px,2vh,18px);text-decoration:underline;cursor:pointer}
+.qz .qres{font-size:clamp(26px,5vh,48px);font-weight:700;animation:qIn .5s cubic-bezier(.2,1.6,.4,1) both}
+.qz .qres.ok{color:#39D98A}.qz .qres.no{color:#FFB35A}
+.qwait .rv{display:none}
+.qdone .qz .qo,.qdone .qz .qskip{display:none}
+.qdone .qz{gap:4px}
+.qdone .qz .qq{font-size:clamp(17px,2.6vh,24px);color:#9E9E9E}
+/* 故事頁字放大（使用者 2026-09-26：標題和說明文字放大） */
+.big .tag{font-size:clamp(22px,3.6vh,34px);letter-spacing:.14em;color:#BFD3E6}
+.big .sub{font-size:clamp(21px,3.4vh,32px);line-height:1.45}
+.big .mid{font-size:clamp(34px,6.4vh,60px)}
 ${TOCCSS}
 ${PH.CSS}
 ${SRC.CSS}
+${P.css||''}
 </style>
 ${P.svjs!=null?P.svjs:SVJS}
 </head>
-<body${P.sayAll?' class="sa"':''}>
+<body class="${[P.sayAll?'sa':'',P.big?'big':''].join(' ').trim()}">
 <div id="dots"></div>
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"></div>
@@ -709,6 +807,7 @@ ${P.svjs!=null?P.svjs:SVJS}
 ${P.sayAll?`<div id="bar" class="c3"><span class="bl">${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button></span><button id="say">🔊 唸一次</button><span class="br">${P.back?`<button id="back">${P.back.label}</button>`:''}${P.fwd?`<button id="fwd">${P.fwd.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</span></div>`:
 `<div id="bar"><button id="say">🔊 念一次</button>${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button>${P.back?`<button id="back">${P.back.label}</button>`:''}${P.fwd?`<button id="fwd">${P.fwd.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>`}
 <button id="tocb" class="tocfix">📑 目次</button>
+<div class="topicfix">${P.topic||(/parts/.test(P.file)?'🧩 單字結構':/why/.test(P.file)?'📜 單字故事':/world/.test(P.file)?'🌍 環遊世界':'📖 '+P.title)}</div>
 ${TOCHTML}
 ${SRC.html(P.srcRows||SRC.P[P.src||'why'])}
 
@@ -720,12 +819,29 @@ var S=${JSON.stringify(P.S,null,1)};
 
 function draw(s){
  var h="";
- if(s.tag)h+='<div class="tag in">'+s.tag+'</div>';
  if(s.emoji)h+='<div class="emoji '+(s.emojiCls||"pop")+'">'+s.emoji+'</div>';
  if(s.mid)h+='<div class="mid in d1">'+s.mid+'</div>';
  if(s.h)h+=s.h;
  (s.lines||[]).forEach(function(t,k){h+='<div class="sub in d'+(k+2)+'">'+t+'</div>'});
- return PH.expand(h);
+ var t=s.tag?'<div class="tag in">'+s.tag+'</div>':'';
+ /* 猜猜看：先答題，答了（或按「直接看答案」）才揭曉 */
+ if(s.q){var o=s.q.o.map(function(x,n){return{x:x,n:n}});
+  for(var a=o.length-1;a>0;a--){var b=Math.floor(Math.random()*(a+1)),c=o[a];o[a]=o[b];o[b]=c}
+  return PH.expand(t+'<div class="qz"><div class="qq">🤔 '+s.q.q+'</div><div class="qo">'+
+   o.map(function(x){return '<button data-ok="'+(x.n===0?1:0)+'">'+x.x+'</button>'}).join('')+
+   '</div><button class="qskip">👀 直接看答案</button><div class="qresw"></div></div><div class="rv">'+h+'</div>')}
+ return PH.expand(t+h);
+}
+function qAns(b){
+ if(!stage.classList.contains("qwait"))return;
+ var s=S[i];if(!s.q)return;
+ var ok=b&&b.getAttribute("data-ok")==="1";
+ [].forEach.call(stage.querySelectorAll(".qo button"),function(x){
+  x.classList.add(x.getAttribute("data-ok")==="1"?"ok":(x===b?"bad":"dim"))});
+ var r=stage.querySelector(".qresw");
+ var right=s.q.o[0].replace(/<[^>]+>/g,"");
+ if(r)r.innerHTML='<div class="qres '+(ok?'ok':'no')+'">'+(b?(ok?'🎉 答對了！':'😮 答案是：'+s.q.o[0]):'✅ 答案是：'+s.q.o[0])+'</div>';
+ setTimeout(function(){stage.classList.remove("qwait");stage.classList.add("qdone");PH.autoSay(stage)},b?900:200);
 }
 
 var i=0,reduce=false;
@@ -758,6 +874,7 @@ function show(n){
  i=Math.max(0,Math.min(S.length-1,n));
  window.SRCAT=S[i].src||"";   /* 按「📖 出處」直接跳到這一幕的證據（使用者 2026-09-25 指定） */
  stage.innerHTML=draw(S[i]);
+ stage.classList.toggle("qwait",!!S[i].q);stage.classList.remove("qdone");
  PH.autoSay(stage);      // 補充單字、字詞、用法都可以點來聽
  if(!reduce){stage.classList.remove("turnR","turnL");void stage.offsetWidth;
   stage.classList.add(back?"turnL":"turnR")}
@@ -774,6 +891,8 @@ document.getElementById("say").addEventListener("click",say);
 /* 猜猜看：公布答案／藏起來、右邊看中文／英文／德文 */
 stage.addEventListener("click",function(e){
  var t=e.target;
+ var qb=t.closest?t.closest(".qo button"):null;if(qb){qAns(qb);return}
+ if(t.closest&&t.closest(".qskip")){qAns(null);return}
  var r=t.closest?t.closest(".grev"):null;
  if(r){var g=r.closest(".guess");var on=!g.classList.contains("rev");g.classList.toggle("rev",on);
   r.textContent=on?"🙈 藏起來再猜一次":"🔍 公布答案";return}

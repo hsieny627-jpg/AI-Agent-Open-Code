@@ -24,11 +24,12 @@
  * 結束的時候 missAll() 再蓋一整頁「答錯整理」：正確答案粗體、綠色、放大。
  */
 const MISSCSS = `
-#miss,#missAll{position:fixed;inset:0;z-index:95;background:#000;display:none;flex-direction:column;
+#miss,#missAll,#look{position:fixed;inset:0;z-index:95;background:#000;display:none;flex-direction:column;
  align-items:center;padding:calc(var(--safeT) + clamp(8px,1.6vh,20px)) clamp(14px,3vw,40px)
  calc(var(--safeB) + clamp(8px,1.6vh,20px));overflow-y:auto}
-#miss.on,#missAll.on{display:flex}
-#miss .mbox,#missAll .mbox{width:100%;max-width:1060px;margin:auto 0;display:flex;flex-direction:column;
+#miss.on,#missAll.on,#look.on{display:flex}
+#look{z-index:96}
+#miss .mbox,#missAll .mbox,#look .mbox{width:100%;max-width:1060px;margin:auto 0;display:flex;flex-direction:column;
  align-items:center;gap:clamp(6px,1.4vh,16px)}
 .mhd{font-size:clamp(30px,6vh,60px);font-weight:700;color:var(--no);text-align:center;line-height:1.1;
  animation:mShake .5s cubic-bezier(.3,.8,.3,1)}
@@ -114,6 +115,16 @@ const MISSCSS = `
 .mcard .say{align-self:flex-start;background:#10301F;border:1px solid var(--ok);border-radius:999px;color:#fff;
  font-size:clamp(15px,2.4vh,22px);padding:6px 16px}
 .mbtns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:clamp(4px,1vh,10px)}
+/* 2026-09-26 使用者指定：正確答案每一個英文字正下方 ＝ 它的中文；下面一行整句翻譯 */
+.mv.glw,.ma.gl .mv{display:inline-flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:0 .32em}
+.gw{display:inline-flex;flex-direction:column;align-items:center;line-height:1.1}
+.gw b{font-weight:700}
+.gw i{font-style:normal;font-size:.46em;color:#FFE9A8;font-weight:700;margin-top:.12em;white-space:nowrap;letter-spacing:.02em}
+.gw.gc{margin-left:-.3em}.gw.gp{margin-left:-.3em}.gw.gp i{visibility:hidden}
+.mtr{font-size:clamp(22px,4.2vh,42px);color:var(--fg);text-align:center;line-height:1.3;opacity:0;animation:mIn .45s ease .8s forwards}
+.mtr b{color:#FFE9A8}
+#look .lk{font-size:clamp(15px,2.4vh,22px);color:var(--dim)}
+.mvar{font-size:clamp(15px,2.4vh,22px);color:var(--acc);letter-spacing:.06em}
 .mbtns button{background:#0F3323;border-color:var(--ok)}
 `;
 
@@ -444,11 +455,15 @@ function mPaint(s,T,keep,cls){ /* 把沒對上的字包起來，其他字照原�
 }
 function mEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 function mStrip(h){var d=document.createElement('div');d.innerHTML=String(h||'');return d.textContent||''}
-function mPair(o){ /* 你選的（紅框）／正確答案（金框） */
- var pick=o.pick==null?null:mStrip(o.pick), ans=mStrip(o.ans), dp='', da='';
- if(pick!=null&&pick!==''){var d=mDiff(pick,ans);dp=mPaint(pick,d.A,d.ia,'x');da=mPaint(ans,d.B,d.ib,'f')}
+function mPair(o){ /* 你選的（紅框）／正確答案（金框）＋ 逐字中文、整句翻譯（2026-09-26） */
+ var pick=o.pick==null?null:mStrip(o.pick), ans=mStrip(o.ans), dp='', da='', bad=[];
+ if(pick!=null&&pick!==''){var d=mDiff(pick,ans);dp=mPaint(pick,d.A,d.ia,'x');da=mPaint(ans,d.B,d.ib,'f');
+  d.B.forEach(function(t,k){if(!d.ib[k])bad.push(t)})}
  else da=ap(mEsc(ans));
- return {p:(pick==null?'⏰ 時間到，沒有作答':(pick===''?'（沒有選）':dp)),a:da,en:/[A-Za-z]/.test(ans),ans:ans};
+ var src=gSrc(o),g='',tr='';
+ if(src){g=src.en===ans?mGloss(ans,bad):null;tr=src.zh||'';
+  if(g===null){g='';o._gq=mGloss(src.en,null)}}
+ return {p:(pick==null?'⏰ 時間到，沒有作答':(pick===''?'（沒有選）':dp)),a:da,g:g,tr:tr,gq:o._gq||'',en:/[A-Za-z]/.test(ans),ans:ans};
 }
 var MISSLOG=[], missT=null, missCB=null, MS=null, MISSN=8;
 function mEl(){
@@ -485,21 +500,23 @@ function mStrip4(cur){ /* 加分的秒懂說明：⭐ ➜ 👀 8 秒 ➜ 📝 �
  return '<div class="mbn'+(cur!=null?' cur':'')+'">'+st.map(function(x,k){
   return (k?'<i>➜</i>':'')+'<span'+(cur===k?' class="now"':'')+'>'+x+'</span>'}).join('')+'</div>';
 }
-function mCan(){return !!(MS&&MS.o&&MS.o.gain&&((MS.o.sims&&MS.o.sims.length)||MS.o.sim0))}
+function mCan(){return !!(MS&&MS.o&&MS.o.gain&&(MS.o.self||(MS.o.sims&&MS.o.sims.length)||MS.o.sim0))}
 /* 錯題分析頁：reread ＝ 按了加分以後的「再看 8 秒」 */
 function mRead(reread){
  var o=MS.o, p=mPair(o), m=mEl();
  m.innerHTML='<div class="mbox">'+
   '<div class="mhd'+(reread?' bn':'')+'">'+(reread?'👀 再仔細看一次':(o.pick==null?'⏰ 時間到':'❌ 答錯了'))+'</div>'+
   (o.q?'<div class="mq">'+ap(o.q)+'</div>':'')+
+  (p.gq?'<div class="mcmp"><div class="ma gl" style="animation-delay:.1s;font-size:clamp(26px,5.6vh,56px)"><span class="mi">🔤</span><span class="mv">'+p.gq+'</span></div></div>':'')+
   '<div class="mcmp"><div class="mp"><span class="mi">❌</span><span class="mv">'+p.p+'</span></div>'+
-  '<div class="mar">⬇</div><div class="ma"><span class="mi">✅</span><span class="mv">'+p.a+'</span></div></div>'+
+  '<div class="mar">⬇</div><div class="ma'+(p.g?' gl':'')+'"><span class="mi">✅</span><span class="mv">'+(p.g?p.g:p.a)+'</span></div></div>'+
+  (p.tr?'<div class="mtr">整句：<b>'+mEsc(p.tr)+'</b></div>':'')+
   (o.why?'<div class="mw">💡 '+ap(o.why)+'</div>':'')+
   (mCan()?mStrip4(reread?1:null):'')+
   '<div class="mft" id="mft">'+(p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+
    '<span class="mcd" id="mcdn">'+MISSN+'</span></div></div>';
  m.scrollTop=0;m.classList.add('on');
- mSay3(p.ans);
+ mSay3(/[A-Za-z]{2}/.test(p.ans)?p.ans:((gSrc(o)||{}).en||''));
  mCount(MISSN,function(){
   if(reread){mQuiz();return}
   var f=document.getElementById('mft');if(!f)return;
@@ -515,21 +532,22 @@ function missShow(o,cb){
  MISSLOG=MISSLOG.filter(function(x){return x.key!==key});
  MISSLOG.push({key:key,q:o.q,pick:o.pick,ans:o.ans,why:o.why});
  missCB=cb||null;
- MS={o:o};
+ o.self0=o.self;MS={o:o};
  mRead(false);
 }
 function missBonus(){if(!mCan())return;sayStop();mRead(true)}
 /* 加分題：字放大的類似題，選項重洗 */
 function mQuiz(){
- var o=MS.o, s=(o.sims&&o.sims.length)?o.sims.shift():o.sim0;
+ /* 2026-09-26 使用者指定：加分題 ＝ 同一題換個樣子（mVar），一律四個選項；原題不能轉就用最像的一題 */
+ var o=MS.o, s=o.self?mVar(o.self,o.self===o.self0?o.pick:null):((o.sims&&o.sims.length)?mVar(o.sims.shift()):mVar(o.sim0));
  if(!s){missHide(true);return}
  MS.s=s;
  var opts=shuf(s.o.map(function(x,n){return{x:x,n:n}}));
  var m=mEl();
- m.innerHTML='<div class="mbox"><div class="mhd bn">⭐ 加分題</div>'+mStrip4(2)+
+ m.innerHTML='<div class="mbox"><div class="mhd bn">⭐ 加分題</div><div class="mvar">🔁 同一個重點，換個樣子再考一次</div>'+mStrip4(2)+
   '<div class="mbq">'+ap(s.q)+'</div>'+
   (s.say?'<div class="mft"><button class="say" data-say="'+mEsc(s.say).replace(/"/g,'&quot;')+'">🔊 再聽一次</button></div>':'')+
-  '<div class="mbo'+(opts.length<3?' one':'')+'">'+opts.map(function(t,k){
+  '<div class="mbo">'+opts.map(function(t,k){
    return '<button data-ok="'+(t.n===0)+'" data-t="'+mEsc(t.x).replace(/"/g,'&quot;')+'" style="animation-delay:'+(0.15+k*0.1).toFixed(2)+'s">'+ap(t.x)+'</button>'}).join('')+'</div>'+
   '<div class="mx2">答對 ＝ <b>'+o.pts+' ✕ 2</b></div></div>';
  m.scrollTop=0;
@@ -557,7 +575,7 @@ function missPick(b){
  setTimeout(function(){
   if(!missOn())return;
   var no={q:s.q,pick:b.getAttribute('data-t'),ans:s.o[0],why:s.h,pts:o.pts,gain:o.gain,
-   sims:o.sims,sim0:o.sim0||s};
+   sims:o.sims,sim0:o.sim0||s,self:o.self||s,look:o.look};
   var key=mStrip(no.q)+'|'+mStrip(no.ans);
   MISSLOG=MISSLOG.filter(function(x){return x.key!==key});
   MISSLOG.push({key:key,q:no.q,pick:no.pick,ans:no.ans,why:no.why});
@@ -585,7 +603,8 @@ function missAll(title,done){
   MISSLOG.map(function(x,k){var p=mPair(x);
    return '<div class="mcard" style="animation-delay:'+(0.1+k*0.14).toFixed(2)+'s">'+
    '<span class="mn">第 '+(k+1)+' 題</span>'+(x.q?'<div class="cq">📝 '+ap(x.q)+'</div>':'')+
-   '<div class="cp">❌ '+p.p+'</div><div class="ca">✅ <b>'+p.a+'</b></div>'+
+   '<div class="cp">❌ '+p.p+'</div><div class="ca">✅ <b>'+(p.g?'<span class="mv glw">'+p.g+'</span>':p.a)+'</b></div>'+
+   (p.tr?'<div class="cw">整句：<b>'+mEsc(p.tr)+'</b></div>':'')+
    (x.why?'<div class="cw">💡 '+ap(x.why)+'</div>':'')+
    (p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+'</div>'}).join('')+
   '<div class="mbtns"><button id="mAllOk">✅ 我都弄懂了</button></div></div>';
@@ -606,6 +625,7 @@ function simRank(me,list,txt,hint){
 }
 `;
 
+const MISS2 = require('./_gloss').JS() + '\n' + require('fs').readFileSync(__dirname + '/_miss_rt.js', 'utf8');
 const HOME = (href) => `<a href="${href}">🏠 首頁</a>`;
 
-module.exports = { HEAD, TTS, SFX, UTIL, HOME, RATEBAR, RATEJS, MISS };
+module.exports = { HEAD, TTS, SFX, UTIL, HOME, RATEBAR, RATEJS, MISS: MISS + MISS2 };

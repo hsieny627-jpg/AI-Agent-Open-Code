@@ -127,6 +127,11 @@ const RAW = {
  old:         'o|oʊ|o l|l|l d|d|d',
  year:        'y|j|j e|ɪ|ɪ a|-|- r|r|r',
  years:       'y|j|j e|ɪ|ɪ a|-|- r|r|r s|z|z',
+ /* 2026-09-26 使用者指定：Sight Words 進階 Who, Where, When, Why（Who 的 W、其他三個的 h 不發音，淺灰） */
+ who:         'w|-|- h|h|h o|uː|u',
+ where:       'w|w|w h|-|- e|e|ɛ r|r|r e|-|-',
+ when:        'w|w|w h|-|- e|e|ɛ n|n|n',
+ why:         'w|w|w h|-|- y|aɪ|aɪ',
 
 /* ── 更多字的故事那一頁 ── */
  tea:         't|t|t ea|iː|i',

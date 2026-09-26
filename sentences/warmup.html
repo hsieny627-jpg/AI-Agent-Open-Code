@@ -75,11 +75,12 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 
 .ap{color:var(--ap);font-weight:700}
 
-#miss,#missAll{position:fixed;inset:0;z-index:95;background:#000;display:none;flex-direction:column;
+#miss,#missAll,#look{position:fixed;inset:0;z-index:95;background:#000;display:none;flex-direction:column;
  align-items:center;padding:calc(var(--safeT) + clamp(8px,1.6vh,20px)) clamp(14px,3vw,40px)
  calc(var(--safeB) + clamp(8px,1.6vh,20px));overflow-y:auto}
-#miss.on,#missAll.on{display:flex}
-#miss .mbox,#missAll .mbox{width:100%;max-width:1060px;margin:auto 0;display:flex;flex-direction:column;
+#miss.on,#missAll.on,#look.on{display:flex}
+#look{z-index:96}
+#miss .mbox,#missAll .mbox,#look .mbox{width:100%;max-width:1060px;margin:auto 0;display:flex;flex-direction:column;
  align-items:center;gap:clamp(6px,1.4vh,16px)}
 .mhd{font-size:clamp(30px,6vh,60px);font-weight:700;color:var(--no);text-align:center;line-height:1.1;
  animation:mShake .5s cubic-bezier(.3,.8,.3,1)}
@@ -165,6 +166,16 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .mcard .say{align-self:flex-start;background:#10301F;border:1px solid var(--ok);border-radius:999px;color:#fff;
  font-size:clamp(15px,2.4vh,22px);padding:6px 16px}
 .mbtns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:clamp(4px,1vh,10px)}
+/* 2026-09-26 使用者指定：正確答案每一個英文字正下方 ＝ 它的中文；下面一行整句翻譯 */
+.mv.glw,.ma.gl .mv{display:inline-flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:0 .32em}
+.gw{display:inline-flex;flex-direction:column;align-items:center;line-height:1.1}
+.gw b{font-weight:700}
+.gw i{font-style:normal;font-size:.46em;color:#FFE9A8;font-weight:700;margin-top:.12em;white-space:nowrap;letter-spacing:.02em}
+.gw.gc{margin-left:-.3em}.gw.gp{margin-left:-.3em}.gw.gp i{visibility:hidden}
+.mtr{font-size:clamp(22px,4.2vh,42px);color:var(--fg);text-align:center;line-height:1.3;opacity:0;animation:mIn .45s ease .8s forwards}
+.mtr b{color:#FFE9A8}
+#look .lk{font-size:clamp(15px,2.4vh,22px);color:var(--dim)}
+.mvar{font-size:clamp(15px,2.4vh,22px);color:var(--acc);letter-spacing:.06em}
 .mbtns button{background:#0F3323;border-color:var(--ok)}
 
 .reduce *{animation:none!important;transition:none!important}
@@ -190,6 +201,13 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
  height:calc(var(--safeT) + clamp(80px,12.5vh,116px));
  padding:var(--safeT) calc(var(--safeR) + clamp(12px,2.6vw,30px)) 0 calc(var(--safeL) + clamp(12px,2.6vw,30px))}
 #hud.on{display:flex}
+/* 2026-09-26 使用者：右上角分數和文字放大，一眼看懂總分 */
+.qsb{display:flex;align-items:flex-end;gap:clamp(10px,1.6vw,20px)}
+.qsb>span{display:flex;flex-direction:column;align-items:center;line-height:1.05}
+.qsb b{font-weight:700;font-variant-numeric:tabular-nums}
+.qsb em{font-style:normal;font-size:clamp(13px,2vh,19px);color:#BFA75A;font-weight:700;letter-spacing:.06em;margin-top:2px}
+.qsb .q1 b{font-size:clamp(34px,6.4vh,64px);color:var(--gold);text-shadow:0 0 18px rgba(255,210,74,.45)}
+.qsb .q2 b{font-size:clamp(22px,4vh,40px);color:var(--gold)}
 .hcell{display:flex;flex-direction:column;gap:2px;min-width:clamp(88px,15vw,170px)}
 .hcell .k{font-size:clamp(10.5px,1.5vh,13px);color:#5C5C5C;letter-spacing:.14em}
 .hcell .v{font-size:clamp(17px,2.9vh,28px);font-weight:700}
@@ -273,8 +291,7 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
  <span class="hcell"><span class="k">題號</span><span class="v" id="qn">1 / 22</span></span>
  <span id="ring"><svg viewBox="0 0 100 100"><circle id="rbg" cx="50" cy="50" r="46"></circle>
   <circle id="rfg" cx="50" cy="50" r="46"></circle></svg><span id="rnum">50</span></span>
- <span class="hcell r"><span class="k">分數 ／ 連對</span>
-  <span class="v"><span id="sc">0</span>　<span id="streak">—</span></span></span>
+ <span class="qsb"><span class="q1"><b id="sc">0</b><em>🏆 總分</em></span><span class="q2"><b id="streak">—</b><em>連對</em></span></span>
 </div>
 
 <main id="stage">
@@ -525,11 +542,15 @@ function mPaint(s,T,keep,cls){ /* 把沒對上的字包起來，其他字照原�
 }
 function mEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 function mStrip(h){var d=document.createElement('div');d.innerHTML=String(h||'');return d.textContent||''}
-function mPair(o){ /* 你選的（紅框）／正確答案（金框） */
- var pick=o.pick==null?null:mStrip(o.pick), ans=mStrip(o.ans), dp='', da='';
- if(pick!=null&&pick!==''){var d=mDiff(pick,ans);dp=mPaint(pick,d.A,d.ia,'x');da=mPaint(ans,d.B,d.ib,'f')}
+function mPair(o){ /* 你選的（紅框）／正確答案（金框）＋ 逐字中文、整句翻譯（2026-09-26） */
+ var pick=o.pick==null?null:mStrip(o.pick), ans=mStrip(o.ans), dp='', da='', bad=[];
+ if(pick!=null&&pick!==''){var d=mDiff(pick,ans);dp=mPaint(pick,d.A,d.ia,'x');da=mPaint(ans,d.B,d.ib,'f');
+  d.B.forEach(function(t,k){if(!d.ib[k])bad.push(t)})}
  else da=ap(mEsc(ans));
- return {p:(pick==null?'⏰ 時間到，沒有作答':(pick===''?'（沒有選）':dp)),a:da,en:/[A-Za-z]/.test(ans),ans:ans};
+ var src=gSrc(o),g='',tr='';
+ if(src){g=src.en===ans?mGloss(ans,bad):null;tr=src.zh||'';
+  if(g===null){g='';o._gq=mGloss(src.en,null)}}
+ return {p:(pick==null?'⏰ 時間到，沒有作答':(pick===''?'（沒有選）':dp)),a:da,g:g,tr:tr,gq:o._gq||'',en:/[A-Za-z]/.test(ans),ans:ans};
 }
 var MISSLOG=[], missT=null, missCB=null, MS=null, MISSN=8;
 function mEl(){
@@ -566,21 +587,23 @@ function mStrip4(cur){ /* 加分的秒懂說明：⭐ ➜ 👀 8 秒 ➜ 📝 �
  return '<div class="mbn'+(cur!=null?' cur':'')+'">'+st.map(function(x,k){
   return (k?'<i>➜</i>':'')+'<span'+(cur===k?' class="now"':'')+'>'+x+'</span>'}).join('')+'</div>';
 }
-function mCan(){return !!(MS&&MS.o&&MS.o.gain&&((MS.o.sims&&MS.o.sims.length)||MS.o.sim0))}
+function mCan(){return !!(MS&&MS.o&&MS.o.gain&&(MS.o.self||(MS.o.sims&&MS.o.sims.length)||MS.o.sim0))}
 /* 錯題分析頁：reread ＝ 按了加分以後的「再看 8 秒」 */
 function mRead(reread){
  var o=MS.o, p=mPair(o), m=mEl();
  m.innerHTML='<div class="mbox">'+
   '<div class="mhd'+(reread?' bn':'')+'">'+(reread?'👀 再仔細看一次':(o.pick==null?'⏰ 時間到':'❌ 答錯了'))+'</div>'+
   (o.q?'<div class="mq">'+ap(o.q)+'</div>':'')+
+  (p.gq?'<div class="mcmp"><div class="ma gl" style="animation-delay:.1s;font-size:clamp(26px,5.6vh,56px)"><span class="mi">🔤</span><span class="mv">'+p.gq+'</span></div></div>':'')+
   '<div class="mcmp"><div class="mp"><span class="mi">❌</span><span class="mv">'+p.p+'</span></div>'+
-  '<div class="mar">⬇</div><div class="ma"><span class="mi">✅</span><span class="mv">'+p.a+'</span></div></div>'+
+  '<div class="mar">⬇</div><div class="ma'+(p.g?' gl':'')+'"><span class="mi">✅</span><span class="mv">'+(p.g?p.g:p.a)+'</span></div></div>'+
+  (p.tr?'<div class="mtr">整句：<b>'+mEsc(p.tr)+'</b></div>':'')+
   (o.why?'<div class="mw">💡 '+ap(o.why)+'</div>':'')+
   (mCan()?mStrip4(reread?1:null):'')+
   '<div class="mft" id="mft">'+(p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+
    '<span class="mcd" id="mcdn">'+MISSN+'</span></div></div>';
  m.scrollTop=0;m.classList.add('on');
- mSay3(p.ans);
+ mSay3(/[A-Za-z]{2}/.test(p.ans)?p.ans:((gSrc(o)||{}).en||''));
  mCount(MISSN,function(){
   if(reread){mQuiz();return}
   var f=document.getElementById('mft');if(!f)return;
@@ -596,21 +619,22 @@ function missShow(o,cb){
  MISSLOG=MISSLOG.filter(function(x){return x.key!==key});
  MISSLOG.push({key:key,q:o.q,pick:o.pick,ans:o.ans,why:o.why});
  missCB=cb||null;
- MS={o:o};
+ o.self0=o.self;MS={o:o};
  mRead(false);
 }
 function missBonus(){if(!mCan())return;sayStop();mRead(true)}
 /* 加分題：字放大的類似題，選項重洗 */
 function mQuiz(){
- var o=MS.o, s=(o.sims&&o.sims.length)?o.sims.shift():o.sim0;
+ /* 2026-09-26 使用者指定：加分題 ＝ 同一題換個樣子（mVar），一律四個選項；原題不能轉就用最像的一題 */
+ var o=MS.o, s=o.self?mVar(o.self,o.self===o.self0?o.pick:null):((o.sims&&o.sims.length)?mVar(o.sims.shift()):mVar(o.sim0));
  if(!s){missHide(true);return}
  MS.s=s;
  var opts=shuf(s.o.map(function(x,n){return{x:x,n:n}}));
  var m=mEl();
- m.innerHTML='<div class="mbox"><div class="mhd bn">⭐ 加分題</div>'+mStrip4(2)+
+ m.innerHTML='<div class="mbox"><div class="mhd bn">⭐ 加分題</div><div class="mvar">🔁 同一個重點，換個樣子再考一次</div>'+mStrip4(2)+
   '<div class="mbq">'+ap(s.q)+'</div>'+
   (s.say?'<div class="mft"><button class="say" data-say="'+mEsc(s.say).replace(/"/g,'&quot;')+'">🔊 再聽一次</button></div>':'')+
-  '<div class="mbo'+(opts.length<3?' one':'')+'">'+opts.map(function(t,k){
+  '<div class="mbo">'+opts.map(function(t,k){
    return '<button data-ok="'+(t.n===0)+'" data-t="'+mEsc(t.x).replace(/"/g,'&quot;')+'" style="animation-delay:'+(0.15+k*0.1).toFixed(2)+'s">'+ap(t.x)+'</button>'}).join('')+'</div>'+
   '<div class="mx2">答對 ＝ <b>'+o.pts+' ✕ 2</b></div></div>';
  m.scrollTop=0;
@@ -638,7 +662,7 @@ function missPick(b){
  setTimeout(function(){
   if(!missOn())return;
   var no={q:s.q,pick:b.getAttribute('data-t'),ans:s.o[0],why:s.h,pts:o.pts,gain:o.gain,
-   sims:o.sims,sim0:o.sim0||s};
+   sims:o.sims,sim0:o.sim0||s,self:o.self||s,look:o.look};
   var key=mStrip(no.q)+'|'+mStrip(no.ans);
   MISSLOG=MISSLOG.filter(function(x){return x.key!==key});
   MISSLOG.push({key:key,q:no.q,pick:no.pick,ans:no.ans,why:no.why});
@@ -666,7 +690,8 @@ function missAll(title,done){
   MISSLOG.map(function(x,k){var p=mPair(x);
    return '<div class="mcard" style="animation-delay:'+(0.1+k*0.14).toFixed(2)+'s">'+
    '<span class="mn">第 '+(k+1)+' 題</span>'+(x.q?'<div class="cq">📝 '+ap(x.q)+'</div>':'')+
-   '<div class="cp">❌ '+p.p+'</div><div class="ca">✅ <b>'+p.a+'</b></div>'+
+   '<div class="cp">❌ '+p.p+'</div><div class="ca">✅ <b>'+(p.g?'<span class="mv glw">'+p.g+'</span>':p.a)+'</b></div>'+
+   (p.tr?'<div class="cw">整句：<b>'+mEsc(p.tr)+'</b></div>':'')+
    (x.why?'<div class="cw">💡 '+ap(x.why)+'</div>':'')+
    (p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+'</div>'}).join('')+
   '<div class="mbtns"><button id="mAllOk">✅ 我都弄懂了</button></div></div>';
@@ -685,6 +710,147 @@ function simRank(me,list,txt,hint){
   return {x:x,s:(t?n/t:0)+(ha&&hint(x)===ha?1:0)+Math.random()*.01}}).sort(function(p,q){return q.s-p.s})
   .map(function(p){return p.x});
 }
+var GL={"how":"如何","how old":"幾歲","years old":"歲","year old":"歲","year":"年","years":"年","old":"老的","i":"我","my":"我的","you":"你","your":"你的","he":"他","she":"她","his":"他的","her":"她的","him":"他","is":"是","am":"是","are":"是","'s":"是","'m":"是","'re":"是","not":"不","isn't":"不是","n't":"不","what":"什麼","who":"誰","where":"哪裡","when":"什麼時候","why":"為什麼","whose":"誰的","name":"名字","a":"一位","an":"一個","yes":"是的","no":"不","and":"而且","but":"但是","this":"這","my name":"我的 名字","like":"喜歡","likes":"喜歡","to":"去","can":"會","hi":"嗨","it":"它","it's":"它是","book":"書","gh":"（不發音）","many":"多少","the":"這個","one":"一","me":"我","hello":"哈囉","about":"關於","family":"家人","was":"是（過去）","has":"有","have":"有","do":"做","does":"做","father":"爸爸","mother":"媽媽","doctor":"醫生","teacher":"老師","nurse":"護理師","brother":"哥哥","grandfather":"爺爺","dad":"爸爸","grandpa":"爺爺","uncle":"叔叔","nephew":"姪子","cousin":"表哥","sister":"姊姊","grandmother":"奶奶","grandma":"奶奶","mom":"媽媽","aunt":"阿姨","niece":"姪女","student":"學生","cook":"做菜","farmer":"農夫","ken":"Ken","amy":"Amy","leo":"Leo","mia":"Mia","friend":"朋友","best friend":"最好的朋友","classmate":"同學","youtuber":"YouTuber","pilot":"飛行員","police officer":"警察","firefighter":"消防員","scientist":"科學家","game designer":"遊戲設計師","programmer":"程式設計師","chef":"主廚","baker":"麵包師傅","singer":"歌手","dancer":"舞者","movie star":"電影明星","painter":"畫家","photographer":"攝影師","basketball player":"籃球員","baseball player":"棒球員","soccer player":"足球員","vet":"獸醫","dentist":"牙醫","magician":"魔術師","red":"紅色","blue":"藍色","green":"綠色","yellow":"黃色","purple":"紫色","orange":"橘色","pink":"粉紅色","black":"黑色","white":"白色","brown":"咖啡色","gray":"灰色","gold":"金色","silver":"銀色","sing":"唱歌","read":"閱讀","draw":"畫畫","write":"寫字","dance":"跳舞","swim":"游泳","play basketball":"打籃球","play baseball":"打棒球","play dodgeball":"打躲避球","play badminton":"打羽毛球","play tag":"玩鬼抓人","play the piano":"彈鋼琴","play the guitar":"彈吉他","play video games":"打電動","ride a bike":"騎腳踏車","skateboard":"溜滑板","jump rope":"跳繩","speak english":"說英文","do magic tricks":"變魔術","make videos":"拍影片","write code":"寫程式","take photos":"拍照","bake cakes":"烤蛋糕","fly a kite":"放風箏"},TR={"who's he?":"他是誰？","he's my father.":"他是我的爸爸。","he's my brother.":"他 是 我的 哥哥。","he's my grandfather.":"他是我的爺爺。","he's my dad.":"他 是 我的 爸爸。","he's my grandpa.":"他 是 我的 爺爺。","he's my uncle.":"他是我的叔叔。","he's my nephew.":"他 是 我的 姪子。","he's my cousin.":"他是我的表哥。","who's she?":"她是誰？","she's my mother.":"她是我的媽媽。","she's my sister.":"她 是 我的 姊姊。","she's my grandmother.":"她是我的奶奶。","she's my grandma.":"她 是 我的 奶奶。","she's my mom.":"她 是 我的 媽媽。","she's my aunt.":"她是我的阿姨。","she's my cousin.":"她 是 我的 表姊。","she's my niece.":"她 是 我的 姪女。","he is a doctor.":"他是一位醫生。","he is a student.":"他是一位學生。","he is a cook.":"他是一位廚師。","he is a farmer.":"他是一位農夫。","he is a teacher.":"他是一位老師。","he is a nurse.":"他是一位護理師。","is he a doctor?":"他是一位醫生嗎？","is he a student?":"他 是 一位 學生 嗎？","is he a cook?":"他 是 一位 廚師 嗎？","is he a farmer?":"他是一位農夫嗎？","is he a teacher?":"他 是 一位 老師 嗎？","is he a nurse?":"他 是 一位 護理師 嗎？","yes, he is.":"是的，他是。","no, he isn't.":"不，他不是。","no, he isn't. he's a student.":"不，他不是。他是一位 學生。","no, he isn't. he's a cook.":"不，他不是。他是一位 廚師。","no, he isn't. he's a farmer.":"不，他不是。他是一位 農夫。","no, he isn't. he's a teacher.":"不，他不是。他是一位 老師。","no, he isn't. he's a nurse.":"不，他不是。他是一位 護理師。","no, he isn't. he's a doctor.":"不，他不是。他是一位 醫生。","she is a teacher.":"她是一位老師。","she is a student.":"她是一位學生。","she is a cook.":"她是一位廚師。","she is a farmer.":"她是一位農夫。","she is a nurse.":"她是一位護理師。","she is a doctor.":"她是一位醫生。","is she a teacher?":"她是一位老師嗎？","is she a student?":"她 是 一位 學生 嗎？","is she a cook?":"她 是 一位 廚師 嗎？","is she a farmer?":"她 是 一位 農夫 嗎？","is she a nurse?":"她是一位護理師嗎？","is she a doctor?":"她 是 一位 醫生 嗎？","yes, she is.":"是的，她是。","no, she isn't.":"不，她不是。","no, she isn't. she's a student.":"不，她不是。她是一位 學生。","no, she isn't. she's a cook.":"不，她不是。她是一位 廚師。","no, she isn't. she's a farmer.":"不，她不是。她是一位 農夫。","no, she isn't. she's a teacher.":"不，她不是。她是一位 老師。","no, she isn't. she's a nurse.":"不，她不是。她是一位 護理師。","no, she isn't. she's a doctor.":"不，她不是。她是一位 醫生。","who's he? he's my father.":"他是我的爸爸。","who's she? she's my mother.":"她是我的媽媽。","who's she? she's my grandma.":"她是我的奶奶。","who's he? he's my grandpa.":"他是我的爺爺。","he is a doctor. (爸爸)":"爸爸是一位醫生。","she is a nurse. (媽媽)":"媽媽是一位護理師。","is she a teacher? (姊姊)":"姊姊是一位老師嗎？","is he a farmer? (叔叔)":"叔叔是一位農夫嗎？","yes, he is. (問 my uncle)":"是的，他是。","no, she isn't. (問 my niece)":"不，她不是。","grandfather":"爺爺","grandmother":"奶奶","brother":"哥哥","sister":"姊姊","uncle":"叔叔","aunt":"阿姨","nephew":"姪子","niece":"姪女","doctor":"醫生","teacher":"老師","nurse":"護理師","cook":"廚師","farmer":"農夫","student":"學生","she's's my aunt.":"她是我的阿姨。","he is a doctor 改成 is he a doctor?":"他是一位醫生嗎？","who is he?":"他是誰？","he's a farmer.":"他是一位農夫。","he's a student.":"他是一位學生。","she's a cook.":"她是一位廚師。","is he my father?":"他是我的爸爸嗎？","is she my mother?":"她是我的媽媽嗎？","is he my grandfather?":"他是我的爺爺嗎？","he is my uncle.":"他是我的叔叔。","she is my aunt.":"她是我的阿姨。","it's a book.":"它是一本書。"};
+/* sentences/_miss_rt.js — 瀏覽器端程式（原封不動塞進網頁，跟 _shared.js 的 MISS 放在一起）
+ * 使用者 2026-09-26 指定的三件事：
+ *  ① 答錯頁：正確答案的每一個英文字正下方 ＝ 它的中文；下面再一行整句翻譯（mGloss／mTr）
+ *  ② 加分題：不是換一題「不像的題目」，而是**同一題換個樣子**（名字／職業／數字換掉、選項換位置、
+ *     選項文字稍微變一下），一律**四個選項**，錯的選項都是學生真的會寫錯的樣子（mVar）
+ *  ③ 火眼金睛：答對也要看 6 秒（正確句子＋逐字中文＋整句翻譯＋自動唸）才得分（lookShow）
+ * GL（字 ➜ 中文）、TR（句 ➜ 中文）由 _gloss.js 在 build 時從這個網站的資料自動收集。
+ */
+function gKey(s){return String(s).replace(/<[^>]+>/g,'').replace(/[’‘]/g,"'").replace(/\s+/g,' ')
+ .replace(/\s+([?.!,])/g,'$1').replace(/\s+'/g,"'").trim().toLowerCase()}
+/* 切成一個一個「字」：What's ➜ What ＋ 's（使用者的例子：'s 正下方是「是」）；How old、years old 算一個 */
+function gUnits(s){
+ s=String(s);var r=[],re=/[A-Za-z]+n[’']t\b|[A-Za-z]+|[’'][A-Za-z]+|[?.!,]/g,m;
+ while((m=re.exec(s)))r.push({t:m[0],s:m.index,e:m.index+m[0].length});
+ for(var i=0;i+1<r.length;i++){var two=gKey(r[i].t+' '+r[i+1].t);
+  if(/[a-z]/.test(r[i+1].t)&&GL[two]&&/^(how old|years old|year old)$/.test(two)){
+   r.splice(i,2,{t:s.slice(r[i].s,r[i+1].e),s:r[i].s,e:r[i+1].e})}}
+ return r;
+}
+function gZh(t){var k=gKey(t);if(GL[k]!=null)return GL[k];
+ if(/^[a-z]+n't$/.test(k)&&GL[k.replace(/n't$/,'')])return GL[k.replace(/n't$/,'')]+' 不';
+ return ''}
+/* 名字、數字、職業換掉以後的句子，也翻得出來 */
+var GSW=[['Ken','Ken'],['Alan','Alan'],['Wendy','Wendy'],['Mike','Mike'],['Emma','Emma']];
+var GSA=[['six','六'],['seven','七'],['eight','八'],['nine','九'],['ten','十'],['eleven','十一'],['twelve','十二']];
+var GSJ=[['doctor','醫生'],['teacher','老師'],['student','學生'],['farmer','農夫'],['nurse','護理師'],['cook','廚師']];
+function mTr(s){
+ var k=gKey(s);if(!k||!/[a-z]/.test(k))return '';
+ if(TR[k])return TR[k];
+ var sets=[GSW,GSA,GSJ];
+ for(var a=0;a<sets.length;a++)for(var i=0;i<sets[a].length;i++){
+  var w=sets[a][i],re=new RegExp('\\b'+w[0].toLowerCase()+'\\b');if(!re.test(k))continue;
+  for(var j=0;j<sets[a].length;j++){if(j===i)continue;var v=sets[a][j],k2=k.replace(re,v[0].toLowerCase());
+   if(TR[k2]&&TR[k2].indexOf(v[1])>=0)return TR[k2].replace(v[1],w[1])}}
+ return '';
+}
+/* 正確答案畫成「英文在上、中文在下」一欄一欄；bad ＝ 要框金色（改對的字）的字元範圍 */
+function mGloss(ans,bad){
+ var U=gUnits(ans),h='',hit=function(u){if(!bad)return false;for(var i=0;i<bad.length;i++)
+  if(u.s<bad[i].e&&u.e>bad[i].s)return true;return false};
+ U.forEach(function(u){
+  if(/^[?.!,]$/.test(u.t)){h+='<span class="gw gp"><b>'+u.t+'</b><i>&nbsp;</i></span>';return}
+  var z=gZh(u.t);
+  h+='<span class="gw'+(/^['’]/.test(u.t)?' gc':'')+'"><b'+(hit(u)?' class="f"':'')+'>'+ap(mEsc(u.t))+'</b><i>'+(z?mEsc(z):'&nbsp;')+'</i></span>'});
+ return h;
+}
+function gIsEn(s){s=mStrip(s);return /[A-Za-z]{2,}|^I\b/.test(s)&&!/[一-鿿]/.test(s)}
+/* 答案是中文（看英文選中文）：就拿題目裡引號中的英文句子來逐字對照 */
+function gSrc(o){var a=mStrip(o.ans);if(gIsEn(a))return {en:a,zh:mTr(a)};
+ var q=mStrip(o.q||''),m=q.match(/["“「]([^"”」]*[A-Za-z][^"”」]*)["”」]/);
+ if(m&&gIsEn(m[1])&&/[一-鿿]/.test(a))return {en:m[1],zh:a.replace(/^[^一-鿿]+/,'')};
+ return null}
+
+/* ── ② 加分題：同一題換個樣子，四個選項 ── */
+function gCanon(s){s=gKey(s).replace(/[?.!]$/,'');
+ return s.replace(/'s\b/g,' is').replace(/'m\b/g,' am').replace(/'re\b/g,' are').replace(/n't\b/g,' not')
+  .replace(/ years old\b/g,'').replace(/^my name is /,'i am ').replace(/\s+/g,' ').trim()}
+var MUT=[
+ [/\byour\b/,'you'],[/\byou\b/,'your'],[/\bYour\b/,'You'],[/\bYou\b(?![’'])/,'Your'],
+ [/\bMy name\b/,'I name'],[/\bI[’']m\b/,'I are'],[/\bI[’']m\b/,'Me'],[/\bYou[’']re\b/,'You is'],[/\bYou[’']re\b/,'You’s'],[/\bYou[’']re\b/,'Your are'],[/\bmy\b/,'I'],[/\bI[’']m\b/,'My'],[/\bI am\b/,'I is'],
+ [/\bis\b/,'are'],[/\bare\b/,'is'],[/\bam\b/,'is'],[/([A-Za-z])[’']s\b/,'$1'],[/([A-Za-z])[’']m\b/,'$1'],
+ [/\byears old\b/,'year old'],[/\bHow old\b/,'How'],[/\bWhat\b/,'How'],[/\bHow\b(?! old)/,'What'],
+ [/\bhe\b/,'she'],[/\bshe\b/,'he'],[/\bHe\b/,'She'],[/\bShe\b/,'He'],[/\bhe\b/,'him'],[/\bHe[’']s\b/,'His'],
+ [/\ba ([a-z]+)/,'$1'],[/\bIs (he|she)\b/,'$1 is'],[/\bWho\b/,'What'],[/\bisn[’']t\b/,'not'],[/\bWho[’']s\b/,'Whose'],
+ [/他/,'她'],[/她/,'他'],[/你的/,'我的'],[/我的/,'你的'],[/誰/,'什麼'],[/什麼/,'誰'],[/幾歲/,'好嗎'],[/名字/,'年紀']
+];
+/* 一個字的答案：同一組容易搞混的字 */
+var MSET=[['is','are','am','be','was','do'],["'s","'m","'re",'is','are'],['I','My','You','Your','Me'],['my','your','I','you','me'],
+ ['he','she','him','his','her'],['He','She','His','Her','Him'],['What','How','Who','Where','When'],['Who','Whose','What','How'],
+ ['How old','How','What','How many'],['year','years','old','years old'],['a','an','the','one']];
+function mMuts(c){var out=[];MUT.forEach(function(r){if(r[0].test(c)){var x=c.replace(r[0],r[1]);if(x!==c)out.push(x)}});
+ MSET.forEach(function(S){if(S.indexOf(c)>=0)S.forEach(function(x){if(x!==c)out.push(x)})});
+ /* 中文答案：職業、數字換一個 */
+ [GSJ,GSA].forEach(function(S){S.forEach(function(w){if(c.indexOf(w[1])>=0)S.forEach(function(v){
+  if(v!==w&&c.indexOf(v[1])<0&&!(S===GSA&&/十[一二]/.test(c)))out.push(c.replace(w[1],v[1]))})})});
+ /* 兩個字對調（語序錯），開頭大寫 */
+ var w=c.split(' ');if(w.length>=3&&/[A-Za-z]/.test(c)){for(var n=0;n<2;n++){var i=Math.floor(Math.random()*(w.length-1));
+  var v=w.slice(),t=v[i];v[i]=v[i+1];v[i+1]=t;if(/[?.!,]$/.test(w[i])||/[?.!,]$/.test(w[i+1]))continue;
+  var y=v.join(' ');y=y.charAt(0).toUpperCase()+y.slice(1);out.push(y)}}
+ /* 少一個字 */
+ if(w.length>=3&&/[A-Za-z]/.test(c)){var d=1+Math.floor(Math.random()*(w.length-2));var z=w.slice();z.splice(d,1);
+  if(!/^[?.!]$/.test(z[z.length-1]))out.push(z.join(' '))}
+ return shuf(out)}
+function gSame(a,b){return gKey(a)===gKey(b)}
+function mSwapIn(b){ /* 名字 ➜ 職業 ➜ 數字，換一組（題目、選項、提示一起換，答案還是對的） */
+ var all=[b.q].concat(b.o).concat([b.h||'',b.say||'']).join(' ');
+ var cjk=/[六七八九十]/.test(all);
+ var sets=[GSW,GSJ].concat(cjk?[]:[GSA]);
+ for(var a=0;a<sets.length;a++){
+  var S=sets[a],had=S.filter(function(w){return new RegExp('\\b'+w[0]+'\\b','i').test(all)});
+  if(!had.length)continue;
+  var from=pick(had),rest=S.filter(function(w){return !new RegExp('\\b'+w[0]+'\\b','i').test(all)});
+  if(!rest.length)continue;var to=pick(rest);
+  var rep=function(s){if(s==null)return s;s=String(s).replace(new RegExp('\\b'+from[0]+'\\b','g'),to[0])
+    .replace(new RegExp('\\b'+from[0].charAt(0).toUpperCase()+from[0].slice(1)+'\\b','g'),to[0].charAt(0).toUpperCase()+to[0].slice(1));
+   if(from[1]!==from[0]&&S!==GSA)s=s.split(from[1]).join(to[1]);return s};
+  return {q:rep(b.q),o:b.o.map(rep),h:rep(b.h),say:rep(b.say),sw:1};
+ }
+ return null;
+}
+/* base ＝ 原題（{q,o:[正解,...],h,say}）；pick ＝ 學生選錯的那一個 */
+function mVar(base,pick){
+ if(!base||!base.o||!base.o.length)return base;
+ var sw=mSwapIn(base)||{q:base.q,o:base.o.slice(),h:base.h,say:base.say};
+ var c=sw.o[0],opts=[c],cc=gCanon(c);
+ var ok=function(x){if(!x)return false;x=String(x);if(/<[^>]+>/.test(x)&&!mStrip(x))return false;
+  for(var i=0;i<opts.length;i++)if(gSame(opts[i],x))return false;
+  if(/[A-Za-z]/.test(x)&&gCanon(x)===cc)return false;return true};
+ /* 先放「學生真的會錯」的：原題的錯選項（換過名字的）、學生自己選的那一個、正解改一個地方 */
+ var cand=shuf(sw.o.slice(1));
+ if(pick&&!sw.sw)cand.unshift(pick);
+ var mm=base.nm?[]:mMuts(c);
+ /* 原題的錯選項最多留兩個，至少換一個成「正解改一個地方」：選項文字跟原題不一樣，不能背 */
+ var keep=cand.filter(ok).slice(0,2);keep.forEach(function(x){if(ok(x))opts.push(x)});
+ mm.forEach(function(x){if(opts.length<4&&ok(x))opts.push(x)});
+ cand.forEach(function(x){if(opts.length<4&&ok(x))opts.push(x)});
+ return {q:sw.q,o:opts,h:sw.h,say:sw.say,v:1};
+}
+
+/* ── ③ 火眼金睛：答對也要看 6 秒才得分 ── */
+var lookT=null;
+function lookShow(en,cb){
+ var m=document.getElementById('look');
+ if(!m){m=document.createElement('div');m.id='look';document.body.appendChild(m);
+  m.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('.say'):null;if(b)say(b.getAttribute('data-say'))})}
+ var zh=mTr(en),n=6;
+ m.innerHTML='<div class="mbox"><div class="mhd ok">🔍 看清楚，記起來</div>'+
+  '<div class="mcmp"><div class="ma gl"><span class="mi">✅</span><span class="mv">'+mGloss(en,null)+'</span></div></div>'+
+  (zh?'<div class="mtr">整句：<b>'+mEsc(zh)+'</b></div>':'')+
+  '<div class="mft"><button class="say" data-say="'+mEsc(en).replace(/"/g,'&quot;')+'">🔊 發音</button>'+
+  '<span class="mcd" id="lcdn">'+n+'</span></div>'+
+  '<div class="lk">看完 6 秒 ➜ 才拿得到分數</div></div>';
+ m.classList.add('on');
+ setTimeout(function(){if(m.classList.contains('on'))say(en)},500);
+ if(lookT)clearInterval(lookT);
+ lookT=setInterval(function(){n--;var c=document.getElementById('lcdn');
+  if(n>0){if(c){c.textContent=n;c.classList.remove('tick');void c.offsetWidth;c.classList.add('tick')}return}
+  clearInterval(lookT);lookT=null;m.classList.remove('on');sayStop();if(cb)cb()},1000);
+}
+function lookHide(){if(lookT){clearInterval(lookT);lookT=null}var m=document.getElementById('look');if(m)m.classList.remove('on')}
 
 
 var QS=[{"t":"see-zh","q":"「他是一位醫生。」英文怎麼說？","say":"","why":"職業前面<b>一定要有 a</b>。少了 a 就不是完整的句子。","x2":false,"o":["Is he a doctor?","He a doctor.","He's a doctor.","He's doctor."],"a":2},{"t":"think","q":"\"Who’s she?\" 的回答，第一個字要用哪一個？","say":"","why":"問 <b>she</b> 就答 <b>She</b>。Her 不能放句子開頭當主詞。","x2":false,"o":["Who","He","Her","She"],"a":3},{"t":"see-en","q":"\"Who's she?\" 的中文意思是？","say":"","why":"英文 Who 在前面，翻成中文要搬到<b>最後面</b>：<b>她是誰？</b>","x2":false,"o":["她是我的。","她是誰？","誰是她？","她好嗎？"],"a":1},{"t":"think","q":"\"Is she a nurse?\" 改成直述句，要怎麼寫？","say":"","why":"把 <b>Is</b> 和 <b>she</b> 換回來：<b>She is</b> a nurse. 問號換句號。","x2":true,"o":["Her is a nurse.","Is she a nurse.","She is a nurse.","She a nurse is."],"a":2},{"t":"hear-zh","q":"聽一聽，這句話的中文意思是？","say":"Is she a teacher?","why":"第一個字聽到 <b>Is</b> 就是<b>在問問題</b>，中文要加「<b>嗎</b>」。","x2":false,"o":["他是老師嗎？","她是老師。","她不是老師。","她是老師嗎？"],"a":3},{"t":"think","q":"直述句變問句，是哪兩個字交換位置？","say":"","why":"只動<b>最前面兩個字</b>：藍色的 <b>he</b> 和黃色的 <b>is</b>。其他字一個都不動。","x2":false,"o":["he 和 a","he 和 is","is 和 a","a 和 doctor"],"a":1},{"t":"think","q":"下面哪一個字是用來問「人」的？","say":"","why":"<b>Who 問人</b>、What 問東西、How 問好不好、Where 問地方。看到 Who，答案一定是一個人。","x2":false,"o":["Where","Who","What","How"],"a":1},{"t":"see-en","q":"\"He's my father.\" 的中文意思是？","say":"","why":"<b>He ＝ 他</b>、<b>’s ＝ is ＝ 是</b>、<b>my ＝ 我的</b>。一個字一個字對下來就不會錯。","x2":false,"o":["他是我的媽媽。","他是我的爸爸。","他有一個爸爸。","她是我的爸爸。"],"a":1},{"t":"hear-zh","q":"聽一聽，這句話的中文意思是？","say":"She's my mother.","why":"開頭聽到 <b>She</b> 就是「她」，最後聽到 <b>mother</b> 就是「媽媽」。","x2":false,"o":["她是我的姊姊。","他是我的媽媽。","她是我的媽媽。","她是我的奶奶。"],"a":2},{"t":"hear-en","q":"聽一聽，你聽到的是哪一句？","say":"Is he a farmer?","why":"問句的第一個字是 <b>Is</b>，直述句的第一個字是 <b>He</b>。<b>聽第一個字就分得出來</b>。","x2":false,"o":["He is a farmer.","Is he a farmer?","He is a father.","Is she a farmer?"],"a":1},{"t":"see-zh","q":"「她是我的奶奶。」英文怎麼說？","say":"","why":"奶奶是女生 → 用 <b>She</b>；<b>grandmother</b> 才是奶奶，grandfather 是爺爺。","x2":false,"o":["She's my grandmother.","She's my mother.","She's my grandfather.","He's my grandmother."],"a":0},{"t":"hear-en","q":"聽一聽，你聽到的是哪一句？","say":"He's my brother.","why":"開頭是 <b>He</b>，最後是 <b>brother</b>（哥哥、弟弟都是這個字）。","x2":false,"o":["He's my father.","He's my brother.","She's my brother.","He's my grandfather."],"a":1},{"t":"think","q":"\"Is he a teacher?\" 要回答「是的」，哪一句才對？","say":"","why":"句子<b>結尾的 is 不可以縮寫</b>。Yes, he’s. 是錯的，一定要說 <b>Yes, he is.</b>","x2":true,"o":["Yes, she is.","Yes, he's.","Yes, he is.","Yes, he isn't."],"a":2},{"t":"think","q":"下面哪一句是完全正確的？","say":"","why":"<b>He’s ＝ He is</b>；<b>His</b> 是「他的」，不能當「他是」。兩個唸起來很像，寫出來差很多。","x2":true,"o":["He my dad.","He's my dad?","He's my dad.","His my dad."],"a":2},{"t":"hear-en","q":"聽一聽，你聽到的是哪一句？","say":"Who's he?","why":"聽最後一個字：<b>he</b>（他）還是 <b>she</b>（她）。she 前面多一個「ㄕ」的氣音。","x2":false,"o":["Who's she?","Whose he?","He's here.","Who's he?"],"a":3},{"t":"think","q":"\"He is a student.\" 改成問句，要怎麼寫？","say":"","why":"把 <b>he</b> 和 <b>is</b> <b>換位置</b>，句號換問號。後面 a student 完全不動。","x2":true,"o":["Does he a student?","Is he a student?","He is a student?","Is a student he?"],"a":1},{"t":"see-en","q":"\"She's my aunt.\" 的 aunt 是誰？","say":"","why":"英文的 <b>aunt</b> 一個字，管中文的<b>阿姨、姑姑、舅媽</b>好幾個稱呼。","x2":false,"o":["姪女","姊姊","阿姨（姑姑、舅媽也是）","奶奶"],"a":2},{"t":"see-zh","q":"「他是誰？」英文怎麼說？","say":"","why":"中文的「<b>誰</b>」在最後一個字，英文的 <b>Who</b> 要放<b>第一個</b>。順序剛好相反。","x2":true,"o":["Who he is?","He's who?","What's he?","Who's he?"],"a":3},{"t":"see-en","q":"\"grandfather\" 是誰？","say":"","why":"英文<b>一個字管中文兩個稱呼</b>：爺爺和外公都叫 grandfather。","x2":false,"o":["奶奶","爺爺（外公也是）","哥哥","叔叔"],"a":1},{"t":"think","q":"\"Who’s he?\" 的回答，第一個字要用哪一個？","say":"","why":"問句最後問 <b>he</b>，答句第一個字就用 <b>He</b>：He’s my father.","x2":false,"o":["He","It","Who","She"],"a":0},{"t":"think","q":"\"Is she a doctor?\" 要回答「不是」，哪一句才對？","say":"","why":"問 <b>she</b> 就答 <b>she</b>；「不是」用 <b>isn’t</b>（＝ is not）。","x2":false,"o":["No, she not.","No, he isn't.","No, she is.","No, she isn't."],"a":3},{"t":"think","q":"Who’s 是哪兩個字合起來的？","say":"","why":"<b>Who’s ＝ Who is</b>。紅色那一撇 ’ 就是把 <b>i</b> 藏起來的地方。","x2":true,"o":["Whose","Who are","Who is","Who was"],"a":2}], SHAPE=['▲','◆','●','■'];
@@ -793,7 +959,7 @@ function choose(n){
       if(si>=0&&order.slice(qi+1).indexOf(si)<0)order.splice(Math.min(order.length,qi+3+Math.floor(Math.random()*2)),0,si);
       SIMS[si]=1}
     missShow({q:q.q+(q.say?'　🔊 <b>'+q.say+'</b>':''),pick:n<0?null:q.o[n],ans:q.o[q.a],why:q.why,
-      sims:sims.slice(0,3).map(toMcq),pts:(q.x2?200:100),
+      sims:sims.slice(0,3).map(toMcq),self:toMcq(q),pts:(q.x2?200:100),
       gain:function(g){score+=g;$('#sc').textContent=score}});
   }
   $('#why').innerHTML=ap(q.why);

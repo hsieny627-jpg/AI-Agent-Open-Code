@@ -98,6 +98,11 @@
    新增 💼 職業單字（words/jobs.html）、G3 🔢 數字單字（numbers/）、👀 Sight Words（sight/）。
    細節在 `sentences/CLAUDE.md`、`G3 - L1 + L2/CLAUDE.md`、`words/CLAUDE.md` 最上面「2026-09-25」那一節。
 
+13. ✅ 已完成（2026-09-26）：使用者 26 點大改版（首頁分四年級／三年級、答錯頁逐字中文＋整句翻譯、
+   加分題改成「同一題換個樣子」四選一、火眼金睛 6 秒頁、驚喜卡修好、G3 數字環遊世界 29 張（字母密碼）、
+   Sight Words 進階 Who Where When Why、四年級句型環遊世界、G3／G4 Review 1、所有故事先猜再揭曉、ten 重音語音檔）。
+   細節在 `sentences/CLAUDE.md`、`G3 - L1 + L2/CLAUDE.md`、`words/CLAUDE.md` 最上面「2026-09-26」那一節。
+
 ---
 
 ## 三、提示機制（重要）

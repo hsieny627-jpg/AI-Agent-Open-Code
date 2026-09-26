@@ -20,6 +20,7 @@ var SIL = {
   name:[3],            /* nam(e)      */
   are:[2],             /* ar(e)       */
   you:[1],             /* y(o)u       */
+  your:[1],            /* y(o)ur（使用者 2026-09-26 指定：Your 的 o 淡灰色） */
   year:[2], years:[2], /* ye(a)r(s)   */
   eight:[2,3],         /* ei(gh)t     */
   nine:[3],            /* nin(e)      */
@@ -82,8 +83,9 @@ var W = {
   your:function(){return t('your','你的',ICON.your,{hl:'b'})},
   My:function(){return t('My','我的',ICON.my,{hl:'b'})},
   I:function(){return t('I','我',ICON.i,{hl:'lp'})},
-  you:function(){return t('you','你',ICON.you,{hl:'lp'})},
-  You:function(){return t('You','你',ICON.you,{hl:'lp'})},
+  /* 使用者 2026-09-26 指定：Unit 2 的 you 底色一律改藍色 */
+  you:function(){return t('you','你',ICON.you,{hl:'b'})},
+  You:function(){return t('You','你',ICON.you,{hl:'b'})},
   name:function(){return t('name','名字',ICON.name)},
   is:function(o){return t('is','是',ICON.is,o)},
   are:function(o){return t('are','是',ICON.is,o)},
@@ -103,7 +105,7 @@ var USE = require('../sentences/_data.js').USE;
 var U1 = [
  /* 1 What／How（使用者 2026-09-25 指定：照抄四年級 Unit 1 第一張，暫時刪除 Who） */
  {type:'focus', eqRow:1, title:'What？How？',
-  rows:[['What','什麼',ICON.what,USE.what],['How','怎麼樣',ICON.how,USE.how]]},
+  rows:[['What','什麼',ICON.what,USE.what],['How','如何',ICON.how,USE.how]]},   /* 使用者 2026-09-26：How ＝ 如何 */
 
  /* 2 */
  {type:'sent', zh:'你的名字是什麼？',
@@ -145,7 +147,7 @@ var U1 = [
   c:[W.I(),W.m(),W.nm('Ken'),W.dot()]},
 
  /* 11 I／My、You／Your（使用者指定：學生最容易搞混） */
- {type:'focus', eqRow:1, title:'I 我 ／ My 我的',
+ {type:'focus', eqRow:1, left:1, title:'I 我 ／ My 我的',   /* left：You／Your 的 Y 上下對齊（2026-09-26） */
   rows:[['I','我',ICON.i],['My','我的',ICON.my],['You','你',ICON.you],['Your','你的',ICON.your]]},
 
  /* 12 your 問 ➜ My 答：藍底自己飛下去 */
@@ -169,7 +171,13 @@ var U1 = [
   atk:[W.I(),W.m(),W.nm('Emma'),W.dot()],
   qzh:'你的 名字 是 什麼？', azh:'我 是 Emma。'},
 
- /* 16 淺灰色 ＝ 不發音（使用者指定：有些字母不發音） */
+ /* 16 一問一答 (3)（使用者 2026-09-26 指定新增最後一張）：My name is Emma. ＝ I’m Emma. */
+ {type:'pair', cls:'b', slot:'name', qic:ICON.name, aic:ICON.emma,
+  qtk:[W.What(),W.s(),W.your(),W.name(),W.q()],
+  atk:[W.My(),W.name(),W.is(),W.nm('Emma'),W.dot(),t('＝','','',{eqs:1}),W.I(),W.m(),W.nm('Emma'),W.dot()],
+  qzh:'你的 名字 是 什麼？', azh:'我的 名字 是 Emma。＝ 我 是 Emma。'},
+
+ /* 17 淺灰色 ＝ 不發音（使用者指定：有些字母不發音） */
  {type:'focus', title:'淺灰色的字母 ＝ 不發音',
   rows:[['What','h 不唸','🤫'],['name','e 不唸','🤫'],['Mike','e 不唸','🤫']]}
 ];
@@ -178,7 +186,7 @@ var U1 = [
    使用者 2026-09-25 指定：所有句型裡的數字，一律預設 ten */
 var U2 = [
  /* 1 What／How／How old（使用者指定：What ＝ 什麼，How ＝ 問程度，How old ＝ 問年紀） */
- {type:'focus', eqRow:1, title:'How old ＝ 問「幾歲」',
+ {type:'focus', eqRow:1, left:1, title:'How old ＝ 問「幾歲」',   /* left：What／How／How old 第一個字對齊（2026-09-26） */
   rows:[['What','什麼',ICON.what],['How','怎麼樣',ICON.how],['How old','幾歲',ICON.howold]]},
 
  /* 2 */
@@ -186,8 +194,8 @@ var U2 = [
   tk:[W.HowOld(),W.are(),W.you(),W.q()]},
 
  /* 3 中英語序：中文「幾歲」在最後，英文 How old 在最前面 */
- {type:'order', zhRow:[['你',ICON.you,'lp'],['是',ICON.is,'y'],['幾歲',ICON.howold,'r'],['？','','g']],
-  enRow:[['How old',ICON.howold,'r'],['are',ICON.is,'y'],['you',ICON.you,'lp'],['?','','g']],
+ {type:'order', zhRow:[['你',ICON.you,'b'],['是',ICON.is,'y'],['幾歲',ICON.howold,'r'],['？','','g']],
+  enRow:[['How old',ICON.howold,'r'],['are',ICON.is,'y'],['you',ICON.you,'b'],['?','','g']],
   say:'How old are you?'},
 
  /* 4 回答 (1)：I’m ___ years old. */
@@ -197,8 +205,8 @@ var U2 = [
  /* 5 縮寫變身：I am ➜ I’m */
  {type:'morph', a:[W.I(),W.am({ri:'a'})], b:[W.I(),W.m()], say:"I'm"},
 
- /* 6 */
- {type:'eq',
+ /* 6 使用者 2026-09-26：按「唸一次」兩句都要唸（all:1） */
+ {type:'eq', all:1,
   a:[W.I(),W.am({ri:'a'}),W.ten(),W.yo(),W.dot()],
   b:[W.I(),W.m(),W.ten(),W.yo(),W.dot()]},
 
@@ -207,13 +215,13 @@ var U2 = [
   tk:[W.I(),W.m(),W.ten(),W.dot()]},
 
  /* 8 years old 可以省略：兩句意思一樣 */
- {type:'eq',
+ {type:'eq', left:1,   /* 使用者 2026-09-26：兩句的 I 上下對齊 */
   a:[W.I(),W.m(),W.ten(),W.yo(),W.dot()],
   b:[W.I(),W.m(),W.ten(),W.dot()],
   note:'years old 可以省略'},
 
  /* 9 三句一樣（使用者 2026-09-25 指定新增）：I am ten years old. ＝ I am ten. ＝ I’m ten.，三句的 I 上下對齊 */
- {type:'eq', left:1,
+ {type:'eq', left:1, all:1,   /* all：三句都唸（2026-09-26） */
   a:[W.I(),W.am({ri:'a'}),W.ten(),W.yo(),W.dot()],
   b:[W.I(),W.am({ri:'a'}),W.ten(),W.dot()],
   c:[W.I(),W.m(),W.ten(),W.dot()]},
@@ -228,8 +236,8 @@ var U2 = [
 
  /* 12 you 問 ➜ I 答：淺粉底自己飛下去 */
  {type:'echo',
-  rows:[{q:'How old are you?', qk:'you', qzh:'你 幾歲？', a:'I’m ______ years old.', ak:'I', azh:'我 是 ______ 歲。', cls:'lp'},
-        {q:'How old are you?', qk:'you', qzh:'你 幾歲？', a:'I’m ______.', ak:'I', azh:'我 是 ______ 歲。', cls:'lp'}]},
+  rows:[{q:'How old are you?', qk:'you', qzh:'你 幾歲？', a:'I’m ______ years old.', ak:'I', azh:'我 是 ______ 歲。', cls:'b'},
+        {q:'How old are you?', qk:'you', qzh:'你 幾歲？', a:'I’m ______.', ak:'I', azh:'我 是 ______ 歲。', cls:'b'}]},
 
  /* 13 問幾歲，要答幾歲（使用者指定：學生容易答錯的問答） */
  {type:'focus', title:'How old are you? 要答什麼？',
@@ -241,13 +249,13 @@ var U2 = [
   rows:[['What’s your name?','📛 答名字',ICON.name],['How old are you?','🎂 答幾歲',ICON.howold]]},
 
  /* 15 一問一答 (1) */
- {type:'pair', cls:'lp', slot:'age', qic:ICON.howold, aic:ICON.ten,
+ {type:'pair', cls:'b', slot:'age', qic:ICON.howold, aic:ICON.ten,
   qtk:[W.HowOld(),W.are(),W.you(),W.q()],
   atk:[W.I(),W.m(),W.ten(),W.yo(),W.dot()],
   qzh:'你 幾歲？', azh:'我 是 十 歲。'},
 
  /* 16 一問一答 (2) */
- {type:'pair', cls:'lp', slot:'age', qic:ICON.howold, aic:ICON.ten,
+ {type:'pair', cls:'b', slot:'age', qic:ICON.howold, aic:ICON.ten,
   qtk:[W.HowOld(),W.are(),W.you(),W.q()],
   atk:[W.I(),W.m(),W.ten(),W.dot()],
   qzh:'你 幾歲？', azh:'我 是 十 歲。'},
@@ -278,7 +286,7 @@ var RV1 = [
   {q:'問 your name（你的名字），答句開頭用哪一個？', o:['My','Your','You','Me'], h:'問「你的」，就答「我的」：your ➜ My。'},
   {q:'哪一句「不是」在回答 What’s your name?', o:['I’m eight.','I’m Ken.','My name is Ken.','My name is Emma.'], h:'I’m eight. 是在說幾歲，不是名字。'}
  ]},
- {t:'第 13～16 張', q:[
+ {t:'第 13～17 張', q:[
   {q:'「我的名字是 Emma。」英文是？', o:['My name is Emma.','I name is Emma.','My name Emma.','Your name is Emma.'], h:'My name is ___.，is 不能少。'},
   {q:'name 的哪一個字母不發音？', o:['e','n','a','m'], h:'name 的 e 淺灰色，不發音。'},
   {q:'Mike 的哪一個字母不發音？', o:['e','M','i','k'], h:'Mike 的 e 淺灰色，不發音。'},
@@ -341,6 +349,7 @@ var SC1 = [
  sc({at:'🎤 一問一答',bg:'💬',l:'👧',b:'What’s your name?',r:'👦',b2:'My name is Ken.',use:'問名字，就答名字。'}),
  sc({at:'🎂 生日派對',bg:'🎈',l:'👦',b:'What’s your name?',r:'👧',b2:'My name is Emma.',use:'第一次見面，互相問名字。'}),
  sc({at:'🎂 生日派對',bg:'🎈',l:'👦',b:'What’s your name?',r:'👧🏻',b2:'I’m Emma.',use:'也可以只說 I’m ＋ 名字。'}),
+ sc({at:'🎤 自我介紹',bg:'💬',l:'👦',b:'What’s your name?',r:'👧🏻',b2:'My name is Emma. ＝ I’m Emma.',use:'兩種回答，意思一樣。'}),
  sc({at:'🤫 小聲一點',bg:'🤫',l:'🧒',b:'What',r:'🧒',b2:'name',use:'淺灰色的字母，唸的時候不發音。'})
 ];
 var SC2 = [
@@ -387,4 +396,69 @@ var CSS = '@media (max-aspect-ratio:1/1){.erow{flex-direction:column;gap:clamp(4
   '.av{width:auto;height:1.6em;object-fit:contain;vertical-align:middle}' /* 老師給的是全身角色圖（透明底）：不裁成圓形，整個人都看得到 */ +
   '.chip .ci .pi,.bub .bi .pi{margin:0}';
 
-module.exports = { ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, SIL:SIL, CONTR:CONTR, PAGES:PAGES, CSS:CSS };
+/* ════════ 📝 Review 1（使用者 2026-09-26 指定新增）════════
+ * 學習目標：學以致用，真心、開心、迫不及待想用英文介紹自己。一句一張卡。
+ *   Hi. ／ My name is ___. ／ I’m ___ years old.（eight, nine, ten）／ I like ___.（20 個）／ I like to ___.（20 個）／ How about you?
+ * I like ___ 的空格：不可數名詞、複數名詞、專有名詞——台灣國小三年級最喜歡、最流行、最酷的東西（20 個）
+ * I like to ___ 的空格：動詞（片語）——學生真心喜歡、很酷的活動，不放幼稚的活動（20 個） */
+SUB.age3 = { basic:[['eight','八',ICON.eight],['nine','九',ICON.nine],['ten','十',ICON.ten]], adv:[] };
+SUB.like = { lb:'🔥 最愛', la:'✨ 還有',
+  basic:[['basketball','籃球','🏀'],['dodgeball','躲避球','🔴'],['Pokémon cards','寶可夢卡','🃏'],['Switch games','Switch 遊戲','🎮'],
+         ['Minecraft','當個創世神','⛏️'],['LEGO','樂高','🧱'],['comics','漫畫','📖'],['recess','下課時間','🔔'],
+         ['PE class','體育課','🤸'],['bubble tea','珍珠奶茶','🧋']],
+  adv:  [['books','書','📚'],['baseball','棒球','⚾'],['soccer','足球','⚽'],['video games','電玩','🕹️'],
+         ['art class','美勞課','🎨'],['music','音樂','🎵'],['ice cream','冰淇淋','🍦'],['fried chicken','炸雞','🍗'],
+         ['dogs','狗','🐶'],['cats','貓','🐱']] };
+SUB.liketo = { lb:'🔥 最愛', la:'✨ 還有',
+  basic:[['play basketball','打籃球','🏀'],['play dodgeball','打躲避球','🔴'],['play tag','玩鬼抓人','🏃'],['play video games','打電動','🎮'],
+         ['collect Pokémon cards','收集寶可夢卡','🃏'],['build LEGO','組樂高','🧱'],['draw','畫畫','✏️'],['sing','唱歌','🎤'],
+         ['dance','跳舞','💃'],['read','閱讀','📖']],
+  adv:  [['swim','游泳','🏊'],['cook','做菜','🍳'],['play baseball','打棒球','⚾'],['play badminton','打羽毛球','🏸'],
+         ['play the piano','彈鋼琴','🎹'],['play the guitar','彈吉他','🎸'],['ride my bike','騎我的腳踏車','🚲'],['skateboard','溜滑板','🛹'],
+         ['jump rope','跳繩','🪢'],['play with my dog','和我的狗玩','🐕']] };
+var R1K = '📝 Review 1';
+var RV1C = [
+ {type:'sent', kind:R1K, zh:'嗨。', tk:[t('Hi','嗨','👋'),W.dot()]},
+ {type:'sent', kind:R1K, zh:'我的名字是 ______。', slot:'name',
+  tk:[W.My(),W.name(),W.is(),t('______','______','',{slot:'name',blank:1}),W.dot()]},
+ {type:'sent', kind:R1K, zh:'我是 ______ 歲。', slot:'age3',
+  tk:[W.I(),W.m(),t('______','______','',{slot:'age3',blank:1}),W.yo(),W.dot()]},
+ {type:'sent', kind:R1K, zh:'我喜歡 ______。', slot:'like',
+  tk:[W.I(),t('like','喜歡','❤️'),t('______','______','',{slot:'like',blank:1}),W.dot()]},
+ {type:'sent', kind:R1K, zh:'我喜歡 ______。', slot:'liketo', note:'like to ＋ <b>動作</b>',
+  tk:[W.I(),t('like','喜歡','❤️'),t('to','（做）','➡️'),t('______','______','',{slot:'liketo',blank:1}),W.dot()]},
+ {type:'sent', kind:R1K, zh:'你呢？',
+  tk:[t('How','如何',ICON.how),t('about','關於','💭'),W.you(),W.q()]}
+];
+var SCR1 = [
+ sc({at:'🏫 開學第一天',bg:'🏫',l:'👦',b:'Hi.',r:'👧',b2:'Hi.',use:'見面先打招呼。'}),
+ sc({at:'🎤 自我介紹',bg:'💬',l:'👦',b:'My name is Ken.',r:'👧',rt:'👂',use:'說出自己的名字。'}),
+ sc({at:'🎤 自我介紹',bg:'💬',l:'👦',b:'I’m nine years old.',r:'👧',rt:'🎂',use:'說自己幾歲：eight、nine、ten。'}),
+ sc({at:'🛝 下課',bg:'🛝',l:'👦',b:'I like dodgeball.',r:'👧',b2:'Me too!',use:'I like ＋ 我最愛的東西。'}),
+ sc({at:'🛝 下課',bg:'🛝',l:'👧',b:'I like to play tag.',r:'👦',b2:'Cool!',use:'I like to ＋ 我最愛做的事。'}),
+ sc({at:'🔁 換你說',bg:'🔁',l:'👦',b:'How about you?',r:'👧',rt:'😃',use:'說完自己，問對方：你呢？'})
+];
+RV1C.forEach(function (c, i) { c.scene = SCR1[i]; });
+var RVR1 = [
+ {t:'Hi ～ years old', q:[
+  {q:'Hi. 的中文是？', o:['嗨。','再見。','謝謝。','你好嗎？'], h:'Hi ＝ 嗨，見面打招呼。'},
+  {q:'「我的名字是 Ken。」英文是？', o:['My name is Ken.','I name is Ken.','My name Ken.','Your name is Ken.'], h:'My name is ＋ 名字。'},
+  {q:'「我九歲。」英文是？', o:['I’m nine years old.','I’m nine year old.','My nine years old.','I nine years old.'], h:'I’m ＋ 數字 ＋ years old，years 要有 s。'},
+  {q:'I’m ___ years old. 我八歲要填？', o:['eight','eighteen','eighty','eighth'], h:'8 ＝ eight。eighteen 是 18。'}
+ ]},
+ {t:'I like ～ How about you?', q:[
+  {q:'「我喜歡籃球。」英文是？', o:['I like basketball.','I like to basketball.','I likes basketball.','I like play basketball.'], h:'喜歡「東西」：I like ＋ 東西。'},
+  {q:'「我喜歡唱歌。」英文是？', o:['I like to sing.','I like to singing.','I like sing.','I to like sing.'], h:'喜歡「做一件事」：I like to ＋ 動作。'},
+  {q:'How about you? 的中文是？', o:['你呢？','你好嗎？','你幾歲？','你是誰？'], h:'說完自己，問對方：你呢？'},
+  {q:'I like to ___. 空格要放什麼？', o:['動作（swim）','東西（books）','名字（Ken）','數字（ten）'], h:'like to 後面接「動作」。'}
+ ]}
+];
+var XPAGES = [
+  { file:'review1.html', unit:'Review 1', title:'Review 1｜我會介紹自己', other:'unit2.html', otherName:'⬅ Unit 2', cards:RV1C, rv:RVR1 }
+];
+
+/* 答錯頁「整句翻譯」：資料裡自動收集不到的幾句（_gloss.js 讀這裡） */
+var GLX = { 'how':'如何' };
+var TRX = { 'You are seven.':'你七歲。', "You're seven.":'你七歲。', 'I am ten.':'我十歲。', "I'm ten.":'我十歲。',
+  'I am ten years old.':'我十歲。', "I'm ten years old.":'我十歲。', 'I am Ken.':'我是 Ken。', "I'm Ken.":'我是 Ken。' };
+module.exports = { XPAGES:XPAGES, GLX:GLX, TRX:TRX, ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, SIL:SIL, CONTR:CONTR, PAGES:PAGES, CSS:CSS };

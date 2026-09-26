@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>數字環遊世界　進階 11～20｜數字單字</title>
+<!-- 本檔由 words/_build_story.js 產生，不要手改。 -->
+<style>
+@font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
+ src:url(../../words/fonts/andika-400.woff2) format("woff2")}
+@font-face{font-family:Andika;font-style:normal;font-weight:700;font-display:swap;
+ src:url(../../words/fonts/andika-700.woff2) format("woff2")}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:#000;color:#F2F2F2;
+ font-family:Andika,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;user-select:none}
+
+#dots{display:flex;gap:9px;position:fixed;top:max(18px,env(safe-area-inset-top))}
+#dots i{width:22px;height:4px;border-radius:99px;background:#2A2A2A;transition:background .3s}
+#dots i.on{background:#9FB4C8}
+
+.nav{position:fixed;top:0;bottom:0;width:clamp(68px,10vw,120px);border:0;background:none;
+ color:#9FB4C8;font-size:clamp(38px,5.4vw,58px);font-family:inherit;line-height:1;
+ display:flex;align-items:center;justify-content:center;cursor:pointer}
+.nav:disabled{color:#202020;cursor:default}
+.nav:active:not(:disabled){background:rgba(255,255,255,.05)}
+#prev{left:0}#next{right:0}
+
+#stage{width:100%;max-width:760px;padding:0 clamp(76px,11vw,130px);text-align:center;
+ min-height:clamp(320px,62vh,560px);display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:clamp(8px,1.6vh,18px)}
+.tag{font-size:clamp(13px,1.6vh,16px);color:#9FB4C8;letter-spacing:.4em;font-weight:700;padding-left:.4em}
+.emoji{font-size:clamp(62px,12.4vh,112px);line-height:1.05}
+.mid{font-size:clamp(25px,4.2vh,38px);font-weight:700;line-height:1.45;letter-spacing:.04em}
+.en{font-size:clamp(38px,7vh,68px);font-weight:700;letter-spacing:.01em}
+.sub{font-size:clamp(17px,2.4vh,23px);color:#D8D3C5;line-height:1.55}
+.sub b{color:#F2F2F2;font-weight:700}
+.hi{color:#9FB4C8}
+.ar{color:#9FB4C8;font-size:.58em;vertical-align:middle}
+
+#bar{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));display:flex;gap:12px}
+#bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
+ font-size:16px;padding:11px 20px;min-height:48px;font-family:inherit;cursor:pointer}
+#bar button:active{background:#2A2A2A}
+
+.in{animation:rise .5s cubic-bezier(.2,.9,.3,1) both}
+.d1{animation-delay:.10s}.d2{animation-delay:.28s}.d3{animation-delay:.46s}
+@keyframes rise{0%{opacity:0;transform:translateY(20px) scale(.92)}100%{opacity:1;transform:none}}
+.pop{animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes pop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+/* 多出來的人淡掉（意思變窄） */
+.extra{display:inline-block;animation:vanish 2.6s ease-in-out both}
+@keyframes vanish{0%,45%{opacity:1;transform:none}100%{opacity:.10;transform:scale(.72)}}
+/* þ 像一面小旗子 */
+.flag{display:inline-block;color:#9FB4C8;animation:flag 1.8s ease-in-out both}
+@keyframes flag{0%{opacity:0;transform:rotate(-14deg) scale(.5)}45%{opacity:1;transform:rotate(9deg) scale(1)}
+ 72%{transform:rotate(-6deg)}100%{opacity:1;transform:none}}
+/* gh 的聲音慢慢消失 */
+.mute{animation:mute 2.4s ease-in-out both}
+@keyframes mute{0%,38%{color:#9FB4C8}100%{color:#2E2E2E}}
+/* 多出來的人跑進來（意思變寬） */
+.plus{display:inline-block;animation:plusin .8s cubic-bezier(.2,1.5,.4,1) both;animation-delay:1.1s}
+@keyframes plusin{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:none}}
+/* 寶寶的 ma-ma / da-da */
+.bub{display:inline-block;color:#9FB4C8;margin:0 .12em;
+ animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.b1{animation-delay:.15s}.b2{animation-delay:.52s}.b3{animation-delay:.89s}
+/* 小孩從字裡冒出來 */
+.emerge{animation:emerge .9s cubic-bezier(.2,1.2,.3,1) both;animation-delay:.55s}
+@keyframes emerge{0%{opacity:0;transform:translateY(34px) scale(.5)}100%{opacity:1;transform:none}}
+/* 坐船飄過來 */
+.fly{animation:fly 1.2s cubic-bezier(.3,.8,.3,1) both}
+@keyframes fly{0%{opacity:0;transform:translateX(-52px)}60%{opacity:1}100%{opacity:1;transform:none}}
+/* 一整句話縮成一個字 */
+.squeeze{animation:squeeze 1.3s cubic-bezier(.3,.9,.3,1) both}
+@keyframes squeeze{0%{opacity:0;letter-spacing:.40em}100%{opacity:1;letter-spacing:.01em}}
+/* 兩邊靠攏，黏成一個字 */
+.fromL{display:inline-block;animation:fromL .9s cubic-bezier(.2,.9,.3,1) both}
+.fromR{display:inline-block;animation:fromR .9s cubic-bezier(.2,.9,.3,1) both}
+@keyframes fromL{0%{opacity:0;transform:translateX(-58px)}100%{opacity:1;transform:none}}
+@keyframes fromR{0%{opacity:0;transform:translateX(58px)}100%{opacity:1;transform:none}}
+/* 還在發音的 ch：聲音一直在震（德文／荷蘭文） */
+.keep{display:inline-block;color:#9FB4C8;animation:throat 1.5s ease-in-out infinite}
+@keyframes throat{0%,100%{transform:scale(1);text-shadow:0 0 0 rgba(159,180,200,0)}
+ 50%{transform:scale(1.13);text-shadow:0 0 26px rgba(159,180,200,.6)}}
+/* 翻卡換頁 */
+.turnR{animation:turnR .42s cubic-bezier(.25,.85,.3,1) both}
+.turnL{animation:turnL .42s cubic-bezier(.25,.85,.3,1) both}
+@keyframes turnR{0%{opacity:.2;transform:perspective(1500px) rotateY(50deg) translateX(22px) scale(.95)}
+ 100%{opacity:1;transform:none}}
+@keyframes turnL{0%{opacity:.2;transform:perspective(1500px) rotateY(-50deg) translateX(-22px) scale(.95)}
+ 100%{opacity:1;transform:none}}
+/* older 長大、younger 縮小（哥哥弟弟那一頁的主要動畫）。
+   **動 font-size 不要動 transform**：transform 放大的字會壓到隔壁那個字，
+   font-size 會讓旁邊的字跟著讓開，投影出來才不會黏在一起。 */
+.grow{display:inline-block;animation:grow 1.4s cubic-bezier(.2,1.2,.3,1) both;animation-delay:.3s}
+@keyframes grow{0%{font-size:.80em}62%{font-size:1.30em}100%{font-size:1.22em}}
+.shrink{display:inline-block;animation:shrink 1.4s cubic-bezier(.2,1.2,.3,1) both;animation-delay:.3s}
+@keyframes shrink{0%{font-size:1.24em}62%{font-size:.74em}100%{font-size:.80em}}
+/* 用不到的東西自己掉下去（平常不用講大小） */
+.drop{animation:drop 2.4s cubic-bezier(.4,.1,.7,1) both}
+@keyframes drop{0%,38%{opacity:1;transform:none}100%{opacity:0;transform:translateY(46px) rotate(-13deg)}}
+/* 哥哥弟弟那一頁：一幕一個重點，字要大到最後一排看得清楚（使用者 2026-09-20） */
+.en.big1{font-size:clamp(30px,min(5.6vh,7vw),62px);line-height:1.25}
+.en.big2{font-size:clamp(20px,min(3.6vh,4.4vw),38px);line-height:1.9}
+.en.big3{font-size:clamp(19px,min(3.4vh,4.2vw),36px);line-height:1.8}
+.mean{font-size:clamp(26px,min(4.6vh,5.6vw),50px);font-weight:700;color:#F2F2F2;
+ letter-spacing:.06em;animation-delay:.9s}
+.eBig{font-size:1.28em;display:inline-block}
+.eSml{font-size:.62em;display:inline-block;vertical-align:middle}
+.bad{color:#E07A6B;text-decoration:line-through;text-decoration-thickness:.09em}
+.en.wrong{color:#9A8A86}
+/* ✅ ❌ 蓋章 */
+.stamp{display:inline-block;animation:stamp .6s cubic-bezier(.2,1.8,.4,1) both;animation-delay:.3s}
+@keyframes stamp{0%{opacity:0;transform:scale(2.4) rotate(-18deg)}100%{opacity:1;transform:none}}
+/* ── 2026-09-24 使用者指定：猜猜看／地圖／語言家族 ─────────────────── */
+.hi2{color:#F0B45C}
+.odd{display:flex;align-items:center;gap:.6em;justify-content:center;opacity:.95}
+.oddtag{font-size:.5em;color:#F0B45C;border:1px dashed #6B4E1A;border-radius:99px;padding:3px 10px;font-weight:700}
+.flag{width:1.5em;height:1em;vertical-align:-.12em;border-radius:2px;flex:0 0 auto}
+.guess{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.2vh,12px);width:100%}
+.gtop{min-height:1.4em;font-size:clamp(20px,3.3vh,32px);font-weight:700}
+.gunk{color:#8E8E8E;font-weight:700}
+.gans{display:none;align-items:center;gap:.35em;font-weight:700;color:#FFD24A;white-space:nowrap}
+.gans em{font-style:normal;font-size:.72em;color:#D8D3C5;font-weight:400}
+.guess.rev .gans{display:inline-flex;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.guess.rev .gunk{display:none}
+.gmode{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center;
+ font-size:clamp(13px,1.9vh,17px);color:#8E8E8E}
+.gmode button{background:#141414;border:1px solid #333;color:#D8D3C5;border-radius:99px;font-family:inherit;
+ font-size:clamp(14px,2vh,18px);padding:4px 14px;min-height:36px;cursor:pointer}
+.gmode button.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A;font-weight:700}
+.glist{display:flex;flex-direction:column;gap:clamp(3px,.6vh,7px);width:100%;max-width:640px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#0C0C0C;
+ border:1px solid #232323;border-radius:14px;padding:clamp(2px,.5vh,6px) clamp(12px,1.8vw,20px);
+ animation:fadeOnly .45s ease both}
+.grow .gw{font-size:clamp(22px,3.7vh,38px);font-weight:700;color:#F2F2F2;border-bottom:0}
+.gm{font-size:clamp(18px,3vh,30px);font-weight:700;color:#9FB4C8;white-space:nowrap}
+.gm>span{display:none;border-bottom:0}
+.guess[data-m="0"] .gm .m0,.guess[data-m="zh"] .gm .mzh,.guess[data-m="en"] .gm .men,.guess[data-m="de"] .gm .mde{display:inline;
+ animation:pop .45s cubic-bezier(.2,1.5,.4,1) both}
+.gm .m0{color:#4A4A4A}
+.grev{background:#2A2208;border:1px solid #FFD24A;color:#FFD24A;border-radius:99px;font-family:inherit;
+ font-weight:700;font-size:clamp(16px,2.3vh,21px);padding:6px 20px;min-height:42px;cursor:pointer}
+.guess.rev .grev{background:#141414;border-color:#444;color:#8E8E8E}
+.gen{font-size:clamp(20px,3.2vh,30px);color:#D8D3C5;display:flex;align-items:baseline;gap:.4em}
+.gen .gbig{font-size:1.7em;font-weight:700;color:#F2F2F2;border-bottom:0}
+.gen em{font-style:normal;color:#9FB4C8;font-weight:700}
+.guess.many .grow .gw{font-size:clamp(21px,3.7vh,36px)}
+.guess.many .gunk,.guess.many .gans{font-size:clamp(17px,2.8vh,26px)}
+.guess.many.rev .grow.near{border-color:#FFD24A;background:#1D1908;animation:nearGlow 1.2s ease-in-out .5s 2}
+@keyframes nearGlow{0%,100%{transform:none}50%{transform:scale(1.04);box-shadow:0 0 22px rgba(255,210,74,.45)}}
+.gwhy{display:none;font-size:clamp(16px,2.6vh,24px);color:#F2F2F2;text-align:center}
+.mbelow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+.mbelow span{background:#1A1208;border:1px solid #5A3E1C;color:#F3B06B;border-radius:99px;font-weight:700;
+ font-size:clamp(14px,2.2vh,20px);padding:3px 10px;white-space:nowrap;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.gwhy b{color:#FFD24A}
+.guess.rev .gwhy{display:block;animation:fadeOnly .5s ease .4s both}
+/* 公布以後：為什麼這麼像（2026-09-26）——字母密碼 t ⇄ z、th ⇄ d、gh ⇄ ch 一格一格亮 */
+.gstory{display:none;flex-wrap:wrap;gap:clamp(4px,.8vw,10px);justify-content:center;align-items:center;margin-top:2px}
+.cx>span{display:inline-flex;align-items:baseline;gap:.2em;white-space:nowrap}
+/* 公布答案以後，清單排緊一點，字母密碼才放得下 */
+.guess.many.rev .grow{padding-top:0;padding-bottom:0}
+.guess.many.rev .gen{font-size:clamp(17px,2.6vh,26px)}
+.guess.rev .gstory{display:flex}
+.cx{display:inline-flex;align-items:center;gap:.35em;background:#0B1620;border:1px solid #29465E;border-radius:14px;
+ padding:.08em .5em;font-size:clamp(16px,2.8vh,28px);font-weight:700;color:#F2F2F2;opacity:0;animation:cxIn .6s cubic-bezier(.2,1.4,.4,1) forwards}
+.cx:nth-child(2){animation-delay:.5s}.cx:nth-child(3){animation-delay:1s}.cx:nth-child(4){animation-delay:1.5s}
+.cx .e{color:#FFD24A}.cx .d{color:#5AD1FF}.cx .n{color:#FF9EC7}.cx .x{color:#8CF08A}
+.cx i{font-style:normal;color:#5E7A8E;font-size:.8em;animation:cxAr 1.2s ease-in-out infinite}
+.cx em{font-style:normal;font-size:.62em;color:#BFD3E6;font-weight:400}
+@keyframes cxIn{from{opacity:0;transform:translateY(14px) scale(.8)}to{opacity:1;transform:none}}
+@keyframes cxAr{0%,100%{transform:none}50%{transform:translateX(4px)}}
+/* 記住這件事：字放大、每一個字底下有中文（2026-09-26） */
+.rem{border-collapse:separate;border-spacing:clamp(4px,.8vw,10px) clamp(3px,.6vh,8px);margin:0 auto}
+.rem th{font-size:clamp(16px,2.6vh,24px);color:#9FB4C8;font-weight:700;padding:0 .4em}
+.rem th .flag{width:1.4em;vertical-align:-.2em;margin-right:.2em}
+.rem td{font-size:clamp(24px,4.4vh,44px);font-weight:700;text-align:center;background:#0C0C0C;border:1px solid #232323;
+ border-radius:14px;padding:.08em .5em;line-height:1.15;opacity:0;animation:cxIn .5s ease forwards}
+.rem td em{display:block;font-style:normal;font-size:.5em;color:#D8D3C5;font-weight:700}
+.rem td.z{color:#FFE9A8;font-size:clamp(22px,4vh,40px)}
+.rem td .e{color:#FFD24A}.rem td .d{color:#5AD1FF}
+/* 三兄弟坐船：1500 年前 德國北部、荷蘭一帶的人坐船到英國 ➜ 英文、德文、荷蘭文是一家人 */
+.bro3{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,20px);font-size:clamp(17px,2.8vh,26px);
+ color:#F2F2F2;font-weight:700;flex-wrap:wrap}
+.bro3 .b3{display:inline-flex;align-items:center;gap:.3em;background:#0C1A10;border:1px solid #2B5236;border-radius:99px;
+ padding:.15em .7em;opacity:0;animation:cxIn .6s ease forwards}
+.bro3 .b3 .flag{width:1.5em}
+.bro3 .b3:nth-child(1){animation-delay:.2s}.bro3 .b3:nth-child(3){animation-delay:.8s}.bro3 .b3:nth-child(5){animation-delay:1.4s}
+.bro3 .sail{display:inline-block;animation:sail 2.4s ease-in-out infinite}
+@keyframes sail{0%,100%{transform:translateX(-6px) rotate(-4deg)}50%{transform:translateX(6px) rotate(4deg)}}
+/* 字母對照的大卡：一個字母一個字母比 */
+.lk{display:grid;grid-template-columns:auto auto auto;align-items:center;justify-content:center;column-gap:clamp(10px,2vw,26px);
+ row-gap:clamp(4px,1vh,10px)}
+.lk .w{font-size:clamp(30px,6vh,60px);font-weight:700;opacity:0;animation:cxIn .6s ease forwards;border-bottom:0}
+.lk .w .e{color:#FFD24A;display:inline-block;animation:lkGlow 1.6s ease-in-out 1.2s 2}
+.lk .w .d{color:#5AD1FF;display:inline-block;animation:lkGlow 1.6s ease-in-out 1.2s 2}
+.lk .w .n{color:#FF9EC7;display:inline-block;animation:lkGlow 1.6s ease-in-out 1.2s 2}
+.lk .fl{font-size:clamp(14px,2vh,19px);color:#9FB4C8;text-align:center;opacity:0;animation:cxIn .5s ease forwards}
+.lk .fl .flag{width:1.6em;display:block;margin:0 auto 2px}
+.lk .zz{grid-column:1/-1;text-align:center;font-size:clamp(18px,3vh,28px);color:#D8D3C5;font-weight:700;opacity:0;animation:cxIn .5s ease 1.8s forwards}
+@keyframes lkGlow{0%,100%{transform:none;text-shadow:none}50%{transform:scale(1.35) translateY(-4px);text-shadow:0 0 18px currentColor}}
+/* 為什麼尾巴都一樣：四欄對齊，一欄 ＝ 一個家人（以前 ➜ 英文 ➜ 德文） */
+.tails{display:grid;grid-template-columns:repeat(4,auto);justify-content:center;align-items:baseline;
+ column-gap:clamp(12px,2vw,24px);row-gap:clamp(2px,.6vh,6px);font-size:clamp(20px,3.6vh,32px);font-weight:700}
+.tails .tcap{grid-column:1/-1;font-style:normal;font-size:clamp(13px,1.9vh,17px);color:#8E8E8E;font-weight:400;
+ text-align:center;margin-top:clamp(2px,.8vh,8px)}
+.tails i{font-style:normal;color:#FFD24A;display:inline-block;animation:tglow 1.4s ease-in-out 1.2s 2}
+.tails .old{color:#8E8E8E}
+.tails .en2{animation:fadeOnly .5s ease .7s both}.tails .de2{animation:fadeOnly .5s ease 1.1s both}
+.tails .sp{border-bottom:0;text-align:center}.tails .old{text-align:center}
+.tarr{color:#4A4A4A;font-size:.7em;text-align:center;animation:fadeOnly .4s ease .4s both}
+@keyframes tglow{0%,100%{transform:none;text-shadow:none}50%{transform:translateY(-.15em) scale(1.25);text-shadow:0 0 16px rgba(255,210,74,.9)}}
+/* 新增的幕一律「只淡入、不位移」：位移到一半 #stage 會暫時變高，_verify.js 會判定溢出（家庭樹踩過同一個坑） */
+@keyframes fadeOnly{from{opacity:0}to{opacity:1}}
+.fo{animation:fadeOnly .5s ease .1s both}
+/* 內容很滿的兩頁（parts／world）：最下面那行字是從下面滑上來的，滑到一半會多 20px，先讓出來 */
+.sa #stage{padding-bottom:24px}
+.sa #stage .in{animation-name:fadeOnly}
+/* 地圖 */
+.mapbox{width:min(92vw,500px,calc(40vh * 1.08))}
+.map{display:block;width:100%;height:auto}
+.map .mt{font-size:13px;font-weight:700;fill:#F2F2F2;opacity:0;animation:mtIn .5s ease both}
+.map .mt.big{font-size:16px}.map .mt.small{font-size:9px}
+.map .mt.g{fill:#8FD19E}.map .mt.l{fill:#F3B06B}.map .mt.e{fill:#FFD24A}.map .mt.say{fill:#FFD24A;font-size:12px}
+.map .mt.chip{fill:#F3B06B;font-size:12px}
+@keyframes mtIn{from{opacity:0}to{opacity:1}}
+.map .md{fill:#FFD24A;opacity:0;animation:mtIn .4s ease both}
+.map .md.pulse{animation:mtIn .4s ease both,mdP 1.4s ease-in-out infinite}
+.map .md.l{fill:#F3B06B}
+@keyframes mdP{0%,100%{r:6}50%{r:11}}
+.map .ma{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;
+ animation:maDraw 1.2s ease forwards}
+.map .ma.g{stroke:#8FD19E}.map .ma.l{stroke:#F3B06B}
+@keyframes maDraw{to{stroke-dashoffset:0}}
+.map .mboat{font-size:18px}
+.map .mb{opacity:0;animation:mbGo 2s ease-in-out both}
+@keyframes mbGo{0%{opacity:0;transform:none}10%{opacity:1}90%{opacity:1;transform:translate(var(--dx),var(--dy))}
+ 100%{opacity:1;transform:translate(var(--dx),var(--dy))}}
+/* 語言也有家人 */
+.ltree{display:flex;flex-direction:column;align-items:center;width:100%;max-width:660px}
+.lroot{font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#FFD24A;display:flex;flex-direction:column;align-items:center}
+.lroot em{font-style:normal;font-size:.55em;color:#8E8E8E;font-weight:400}
+.llines{width:100%;height:clamp(26px,4.5vh,44px)}
+.llines path{fill:none;stroke:#5A6E7E;stroke-width:3;stroke-dasharray:100;stroke-dashoffset:100;
+ animation:maDraw .7s ease forwards;vector-effect:non-scaling-stroke}
+.lkids{display:grid;grid-template-columns:repeat(4,1fr);width:100%;gap:8px}
+.lkid{display:flex;flex-direction:column;align-items:center;gap:4px;background:#0C0C0C;border:1px solid #232323;
+ border-radius:14px;padding:8px 4px;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.lkid b{font-size:clamp(14px,2.2vh,20px);color:#D8D3C5}
+.lkid .sp{font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#F2F2F2;border-bottom:0}
+.lkid .flag{width:2.4em;height:1.6em}
+/* 2026-09-25：地圖放大、國名、時間軸、歐洲在哪裡、為什麼五國、統整表 */
+.sa .mapbox{width:min(94vw,680px,calc(50vh * 1.08))}
+.map .mc{font-size:11px;fill:#6F8797;font-weight:700;letter-spacing:.05em}
+.map .cpop{opacity:0;animation:mtIn .5s ease both}
+.tline{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:center;font-size:clamp(11px,1.7vh,15px)}
+.tline span{color:#4A4A4A;border:1px solid #2A2A2A;border-radius:99px;padding:1px 7px;white-space:nowrap}
+.tline span.past{color:#8E8E8E;border-color:#3A3A3A}
+.tline span.now{color:#000;background:#FFD24A;border-color:#FFD24A;font-weight:700;animation:pop .5s cubic-bezier(.2,1.5,.4,1) both}
+.tline i{font-style:normal;color:#3A3A3A;font-size:.8em}
+.where{display:flex;align-items:center;justify-content:center;gap:clamp(10px,2vw,26px);width:100%}
+.where>div{display:flex;flex-direction:column;align-items:center;gap:4px}
+.where .wic{font-size:clamp(56px,11vh,110px);line-height:1}
+.where b{font-size:clamp(26px,4.6vh,46px)}
+.where em{font-style:normal;color:#9FB4C8;font-size:clamp(15px,2.4vh,22px)}
+.wfly{position:relative;width:clamp(160px,34vw,380px);height:clamp(60px,10vh,100px)}
+.wfly i{position:absolute;left:0;right:0;top:50%;border-top:3px dashed #3A4E5E}
+.wfly .plane{position:absolute;right:0;top:50%;font-size:clamp(34px,6vh,58px);transform:translate(0,-50%) scaleX(-1);
+ animation:plane 2.6s ease-in-out .4s both}
+@keyframes plane{0%{right:0}100%{right:calc(100% - 1.2em)}}
+.flags6{display:flex;gap:clamp(6px,1.2vw,14px);flex-wrap:wrap;justify-content:center}
+.flags6 span{display:inline-flex;align-items:center;gap:6px;background:#0C0C0C;border:1px solid #2A2A2A;border-radius:99px;
+ padding:4px 12px;font-size:clamp(16px,2.6vh,24px);animation:pop .5s cubic-bezier(.2,1.5,.4,1) both}
+.why5{display:flex;flex-direction:column;gap:clamp(8px,1.6vh,16px);width:100%;max-width:720px}
+.w5{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:14px;align-items:center;text-align:left;
+ border-radius:16px;padding:clamp(8px,1.4vh,14px) 18px;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.w5 .w5f{grid-row:1/3;display:flex;gap:4px}.w5 .w5f .flag{width:2.2em;height:1.5em}
+.w5 b{font-size:clamp(22px,3.8vh,36px)}.w5 em{font-style:normal;font-size:clamp(17px,2.8vh,26px);color:#D8D3C5}
+.w5.g{background:#0C1A10;border:1px solid #2B5236}.w5.l{background:#1A1208;border:1px solid #5A3E1C}.w5.l2{background:#1A0E0E;border:1px solid #5A2A2A}
+.sumt{display:flex;gap:clamp(10px,2vw,24px);flex-wrap:wrap;justify-content:center;align-items:flex-start;width:100%}
+.st{border-collapse:separate;border-spacing:0;border-radius:16px;overflow:hidden;font-size:clamp(17px,3.1vh,30px);font-weight:700}
+.st caption{font-size:clamp(16px,2.5vh,24px);padding-bottom:4px;font-weight:700;white-space:nowrap}
+.st th{font-size:clamp(12px,1.8vh,16px);font-weight:400;color:#9A9A9A;padding:2px 10px}
+.st td{padding:clamp(1px,.4vh,5px) clamp(8px,1.4vw,16px);text-align:center}
+.st td .sp{border-bottom:0}
+.st.g{background:#0C1A10;border:2px solid #3E8A55}.st.g caption{color:#8FF0A8}.st.g td{color:#EFFFF3}
+.st.g td:nth-child(n+2){color:#8FF0A8}
+.st.l{background:#1A1208;border:2px solid #9A6A2A}.st.l caption{color:#FFC27A}.st.l td{color:#FFF6EA}
+.st.l td:nth-child(2){color:#FFC27A}
+.st tr:nth-child(even) td{background:rgba(255,255,255,.04)}
+/* 記住這件事：兩個家族 */
+.sumg{display:flex;flex-direction:column;gap:clamp(8px,1.6vh,16px);width:100%;max-width:700px}
+.sg{display:flex;flex-direction:column;gap:4px;border-radius:16px;padding:clamp(8px,1.4vh,14px) 18px;text-align:center}
+.sg b{font-size:clamp(18px,2.8vh,26px)}.sg em{font-style:normal;color:#8E8E8E;font-size:clamp(14px,2vh,18px)}
+.sg span{font-size:clamp(20px,3.2vh,32px);font-weight:700;display:flex;gap:.5em;flex-wrap:wrap;justify-content:center}
+.sg.g{background:#0C1A10;border:1px solid #2B5236}.sg.g b{color:#8FD19E}
+.sg.l{background:#1A1208;border:1px solid #5A3E1C}.sg.l b{color:#F3B06B}
+/* 📑 目次放在左上角：底部按鈕列已經滿了，再塞一顆「唸一次」就不在正中央（直式 iPad） */
+.tocfix{position:fixed;top:max(10px,env(safe-area-inset-top));left:12px;z-index:30;background:#1E1E1E;border:1px solid #4A4A4A;
+ color:#F2F2F2;border-radius:99px;font-family:inherit;font-size:15px;padding:8px 14px;cursor:pointer}
+/* 直式：一樣的尾巴排兩欄 */
+@media (max-aspect-ratio:1/1){.tl4{grid-template-columns:repeat(2,auto)!important}}
+/* 2026-09-25 使用者指定：單字結構／環遊世界的主標題、次標題放大 */
+.sa .tag{font-size:clamp(22px,3.6vh,34px);letter-spacing:.14em;color:#BFD3E6}
+.sa .sub{font-size:clamp(19px,2.8vh,27px)}
+/* 一樣的尾巴：每一個字底下就是它的中文 */
+.tl4{display:grid;grid-template-columns:repeat(4,auto);justify-content:center;column-gap:clamp(14px,2.4vw,30px);row-gap:8px}
+.tw{display:inline-flex;flex-direction:column;align-items:center;gap:2px}
+.tw .sp{font-size:clamp(28px,5.4vh,54px);font-weight:700;border-bottom:0}
+.tw em{font-style:normal;font-size:clamp(20px,3.4vh,34px);color:#D8D3C5;font-weight:700}
+.odd .tw .sp{font-size:clamp(26px,5vh,50px)}
+.rs{color:#FF5A5A!important}
+.golink{display:inline-block;margin-top:6px;background:#10301F;border:2px solid #39D98A;color:#F2F2F2;border-radius:99px;
+ text-decoration:none;font-weight:700;font-size:clamp(17px,2.6vh,24px);padding:10px 22px}
+/* 念到哪一個字，那一個字就亮 */
+.speak{color:#FFD24A!important;text-shadow:0 0 16px rgba(255,210,74,.8);transform:scale(1.12);display:inline-block;transition:transform .15s}
+/* 底部按鈕列：「🔊 唸一次」放在正中央（使用者 2026-09-24 指定） */
+#bar.c3{left:0;right:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+ gap:clamp(6px,1vw,12px);padding:0 clamp(8px,1.5vw,16px)}
+#bar.c3 .bl,#bar.c3 .br{display:flex;gap:clamp(5px,.8vw,10px);align-items:center}
+#bar.c3 .bl{justify-content:flex-end}#bar.c3 .br{justify-content:flex-start}
+#bar.c3 .bl button,#bar.c3 .br button{font-size:clamp(12.5px,1.65vw,16px);padding:10px clamp(9px,1.3vw,18px);white-space:nowrap}
+#bar.c3 #say{font-size:clamp(17px,2.2vw,21px);font-weight:700;padding:12px clamp(18px,2.6vw,30px);
+ background:#10301F;border-color:#39D98A;min-height:54px;white-space:nowrap}
+.reduce *{animation:none!important;transition:none!important}
+/* 2026-09-26 使用者指定：畫面左上方寫這一頁的主題（例：🧩 單字結構） */
+.topicfix{position:fixed;top:max(10px,env(safe-area-inset-top));left:112px;z-index:30;color:#FFD66B;font-weight:700;
+ font-size:clamp(16px,2.4vh,22px);letter-spacing:.08em;padding:8px 4px;pointer-events:none;white-space:nowrap}
+/* 每一幕先來一題「猜猜看」（使用者 2026-09-26 指定：故事融入暖身題），答了才揭曉故事 */
+.qz{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vh,16px);width:100%;max-width:980px}
+.qz .qq{font-size:clamp(24px,4.6vh,44px);font-weight:700;line-height:1.35;text-align:center;color:#FFF}
+.qz .qq b{color:#FFD24A}
+.qz .qo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(8px,1.4vh,14px);width:100%}
+.qz .qo button{background:#0C0C0C;border:2px solid #2E2E2E;border-radius:18px;color:#F2F2F2;font-family:inherit;
+ font-size:clamp(20px,3.8vh,36px);font-weight:700;line-height:1.25;padding:clamp(10px,1.8vh,18px) 14px;cursor:pointer;
+ animation:qIn .45s cubic-bezier(.2,1.3,.4,1) both}
+.qz .qo button:nth-child(2){animation-delay:.08s}.qz .qo button:nth-child(3){animation-delay:.16s}.qz .qo button:nth-child(4){animation-delay:.24s}
+@keyframes qIn{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}
+.qz .qo button.ok{background:#0F3323;border-color:#39D98A;animation:qOk .6s ease}
+.qz .qo button.bad{background:#3A1111;border-color:#FF5E5E;animation:qNo .45s}
+.qz .qo button.dim{opacity:.35}
+@keyframes qOk{50%{transform:scale(1.08)}}
+@keyframes qNo{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.qz .qskip{background:none;border:0;color:#7E8A94;font-family:inherit;font-size:clamp(14px,2vh,18px);text-decoration:underline;cursor:pointer}
+.qz .qres{font-size:clamp(26px,5vh,48px);font-weight:700;animation:qIn .5s cubic-bezier(.2,1.6,.4,1) both}
+.qz .qres.ok{color:#39D98A}.qz .qres.no{color:#FFB35A}
+.qwait .rv{display:none}
+.qdone .qz .qo,.qdone .qz .qskip{display:none}
+.qdone .qz{gap:4px}
+.qdone .qz .qq{font-size:clamp(17px,2.6vh,24px);color:#9E9E9E}
+/* 故事頁字放大（使用者 2026-09-26：標題和說明文字放大） */
+.big .tag{font-size:clamp(22px,3.6vh,34px);letter-spacing:.14em;color:#BFD3E6}
+.big .sub{font-size:clamp(21px,3.4vh,32px);line-height:1.45}
+.big .mid{font-size:clamp(34px,6.4vh,60px)}
+#toc{position:fixed;inset:0;z-index:45;background:#000;display:none;flex-direction:column;
+ padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) max(10px,env(safe-area-inset-bottom));overflow:auto}
+#toc.on{display:flex}
+#toc .thd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#toc .thd b{font-size:clamp(20px,3.4vh,30px);color:#9FB4C8}
+#toc .thd button,#toc .tgd button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;font-family:inherit;
+ font-size:clamp(15px,2.3vh,21px);padding:8px 18px;min-height:46px;cursor:pointer}
+#toc .tgd{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(200px,26vw,300px),1fr));gap:8px}
+#toc .tgd button{display:flex;align-items:center;gap:10px;text-align:left;border-radius:14px;background:#0C0C0C;border-color:#2A2A2A}
+#toc .tgd button b{flex:0 0 auto;width:2em;height:2em;border-radius:50%;background:#1E2A36;display:flex;align-items:center;justify-content:center}
+#toc .tgd button.cur{border-color:#FFD24A;background:#1D1908}
+#toc .tgd a{display:flex;align-items:center;gap:10px;text-align:left;border-radius:14px;background:#0C0C0C;border:1px solid #2A2A2A;
+ color:#F2F2F2;text-decoration:none;font-size:clamp(15px,2.3vh,21px);padding:8px 14px;min-height:50px}
+#toc .tgd a b{flex:0 0 auto;width:2em;height:2em;border-radius:50%;background:#1E2A36;display:flex;align-items:center;justify-content:center}
+#toc .tgd a.cur{border-color:#FFD24A;background:#1D1908}
+
+/* 單字的音標／音節元件。字級跟著外層 font-size 走，所以字卡與故事頁共用一份。 */
+.phw{display:inline-flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;margin:0 .17em;
+ line-height:1.04;cursor:pointer;position:relative}
+.phw .syl{display:inline-flex;align-items:flex-end}
+.phw .u{display:inline-flex;flex-direction:column;align-items:center;transition:color .2s}
+.phw .g{display:block;white-space:nowrap}
+.phw .g i{font-style:normal}
+.phw .g i.v{color:#FF5A5A}            /* 母音字母 ＝ 紅色 */
+.phw .u.mute .g i,.phw .u.mute .g i.v{color:#9A9A9A}  /* 不發音 ＝ 淺灰色 */
+.phw .p{display:none;font-size:max(.34em,13px);font-weight:400;letter-spacing:0;white-space:nowrap;
+ color:#9FB4C8;margin-top:.30em;min-height:1.1em}
+.phw.ipa .p,.phw.kk .p{display:block}
+.phw .u.mute .p{color:#6A6A6A}
+/* 唸到哪一格，哪一格就亮起來（字母 ↔ 聲音） */
+.phw .u.lit .g i{color:#FFFFFF;text-shadow:0 0 20px rgba(159,180,200,.95)}
+.phw .u.lit .g i.v{color:#FF9090}
+.phw .u.lit .p{color:#F2F2F2}
+/* 音節之間的切分點，一直都在（學生看得到「這裡可以切」） */
+.phw .cut{display:inline-flex;flex-direction:column;align-items:center;color:#2B343B;
+ padding:0 .07em;transition:color .3s,padding .34s cubic-bezier(.2,1.4,.35,1)}
+.phw.split .cut{color:#9FB4C8;padding:0 .26em}
+.phw .syl.beat .g{animation:phbeat .52s ease-in-out both}
+@keyframes phbeat{0%{color:inherit}38%{color:#FFFFFF;text-shadow:0 0 24px rgba(159,180,200,.95)}
+ 100%{color:inherit;text-shadow:none}}
+/* 母音一顆一顆數 */
+.phw .u.count .g i.v{animation:phcount .5s ease-in-out both}
+@keyframes phcount{0%{text-shadow:none}40%{text-shadow:0 0 26px rgba(255,90,90,.95)}100%{text-shadow:none}}
+
+.phbox{display:flex;flex-direction:column;align-items:center;gap:clamp(4px,.8vh,9px)}
+.phnote{font-size:clamp(13px,1.85vh,17px);color:#8E8E8E;letter-spacing:.02em;min-height:1.35em}
+.phnote b{color:#F2F2F2;font-weight:700}
+.phnote .rv{color:#FF5A5A;font-weight:700}
+.phchips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.phchips button{background:#131313;border:1px solid #333;color:#8E8E8E;border-radius:99px;
+ font-family:inherit;font-size:clamp(12px,1.7vh,15px);padding:5px 12px;min-height:32px;cursor:pointer}
+.phchips button.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A;font-weight:700}
+.phchips button:active{background:#2A2A2A}
+.phchips button.on:active{background:#B4C6D6}
+
+/* 念到哪一個字，那一個字就放大、變亮（使用者 2026-09-25 指定，每一頁都一樣） */
+.speak{color:#FFD24A!important;text-shadow:0 0 16px rgba(255,210,74,.8);transform:scale(1.14);display:inline-block;
+ transition:transform .15s}
+.phw.speak .g i,.phw.speak .g i.v{color:#FFD24A!important}
+/* 任何一段英文都可以點來聽（補充單字、字詞、用法） */
+.sp{cursor:pointer;border-bottom:1px dotted #4F6472}
+.sp:active,.sp.ping{color:#9FB4C8;border-bottom-color:#9FB4C8}
+.reduce .phw .syl.beat .g,.reduce .phw .u.count .g i.v{animation:none!important}
+
+#src{position:fixed;inset:0;z-index:40;background:#000;display:none;flex-direction:column;
+ padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) max(10px,env(safe-area-inset-bottom));text-align:left}
+#src.on{display:flex}
+#src .shd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto}
+#src .sttl{color:#9FB4C8;font-size:clamp(17px,2.6vh,24px);font-weight:700;letter-spacing:.2em}
+#src .scnt{color:#D8D3C5;font-size:clamp(16px,2.4vh,22px);font-weight:700}
+#src .sbody{flex:1 1 auto;min-height:0;overflow:auto;display:flex}
+#src .sl{display:none;flex-direction:column;justify-content:center;gap:clamp(10px,2vh,22px);
+ width:100%;max-width:980px;margin:auto}
+#src .sl.on{display:flex}
+#src .lt{font-size:clamp(28px,5.6vh,54px);font-weight:700;color:#F2F2F2;line-height:1.3;text-align:center;
+ animation:srcIn .45s cubic-bezier(.2,1.3,.4,1) both}
+#src .sl.w .lt{color:#F0B45C}
+#src .lt .wtag{display:inline-block;font-size:.5em;vertical-align:middle;background:#3A2A0C;color:#F0B45C;
+ border:1px solid #6B4E1A;border-radius:99px;padding:4px 12px;margin-right:10px;letter-spacing:.1em}
+#src .vis{display:flex;justify-content:center;animation:srcIn .45s cubic-bezier(.2,1.3,.4,1) .15s both}
+#src .ck{display:flex;align-items:center;gap:clamp(10px,1.6vw,20px);border-radius:18px;
+ padding:clamp(10px,1.8vh,18px) clamp(14px,2vw,24px);animation:srcIn .5s cubic-bezier(.2,1.3,.4,1) both}
+#src .ck .ci{font-size:clamp(30px,5.4vh,52px);flex:0 0 auto}
+#src .ck .cl{display:block;font-size:clamp(13px,1.9vh,17px);letter-spacing:.14em;margin-bottom:4px;font-weight:700}
+#src .ck .cv{display:block;line-height:1.5}
+#src .ck.s{background:#17140C;border:1px solid #3A3018;animation-delay:.35s}
+#src .ck.s .cl{color:#B79A5C}
+#src .ck.s .cv{color:#EBD9A8;font-size:clamp(18px,3vh,30px);font-weight:700}
+#src .ck.d{background:#0E1A12;border:1px solid #21402B;animation-delay:.75s}
+#src .ck.d .cl{color:#6FAE7C}
+#src .ck.d .cv{color:#E6E6E6;font-size:clamp(20px,3.4vh,34px)}
+#src .ck.d .cv b{color:#FFD24A}
+#src .sl.w .ck.d{background:#1A1206;border-color:#4A3510}
+#src .car{text-align:center;color:#5A5A5A;font-size:clamp(20px,3vh,30px);line-height:1;
+ animation:srcIn .4s ease .6s both}
+@keyframes srcIn{0%{opacity:0;transform:translateY(16px) scale(.94)}100%{opacity:1;transform:none}}
+#src .snav{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,18px);flex:0 0 auto;
+ padding-top:8px}
+#src .snav button,#src .shd button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
+ font-size:clamp(16px,2.4vh,22px);padding:10px 22px;min-height:50px;font-family:inherit;cursor:pointer}
+#src .snav button:disabled{opacity:.3}
+#src .sdots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:46vw}
+#src .sdots i{width:10px;height:10px;border-radius:50%;background:#2A2A2A}
+#src .sdots i.on{background:#FFD24A}
+/* 出處裡的秒懂動畫（字母一格一格跳出來、插進來的字母會發光） */
+#src .ev{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:clamp(8px,1.4vw,18px)}
+#src .ev .st{display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0;
+ animation:srcIn .5s cubic-bezier(.2,1.3,.4,1) both}
+#src .ev .st b{font-size:clamp(24px,4.6vh,46px);color:#F2F2F2;letter-spacing:.02em}
+#src .ev .st em{font-style:normal;font-size:clamp(12px,1.8vh,16px);color:#8E8E8E;white-space:nowrap}
+#src .ev .ar{color:#5A5A5A;font-size:clamp(20px,3vh,30px);padding-bottom:1.1em;opacity:0;animation:srcIn .4s ease both}
+#src .ev .new{color:#FFD24A;display:inline-block;animation:newT 1.2s ease-in-out 1.6s 3}
+#src .ev .no{color:#FF6B6B}
+@keyframes newT{0%,100%{transform:none;text-shadow:none}50%{transform:translateY(-.25em) scale(1.5);text-shadow:0 0 18px rgba(255,210,74,.9)}}
+#src .stoc{display:none;position:absolute;left:0;right:0;top:calc(max(10px,env(safe-area-inset-top)) + 64px);bottom:0;
+ background:#000;z-index:2;overflow:auto;padding:10px clamp(12px,3vw,34px) 20px;
+ grid-template-columns:repeat(auto-fill,minmax(clamp(220px,28vw,320px),1fr));gap:8px;align-content:start}
+#src .stoc.on{display:grid}
+#src .stoc button{display:flex;align-items:center;gap:10px;text-align:left;background:#0C0C0C;border:1px solid #2A2A2A;
+ border-radius:14px;color:#F2F2F2;font-family:inherit;font-size:clamp(15px,2.3vh,21px);padding:10px 14px;min-height:54px;cursor:pointer}
+#src .stoc button b{flex:0 0 auto;width:2em;height:2em;border-radius:50%;background:#1E2A36;display:flex;align-items:center;justify-content:center}
+#src .stoc button.w b{background:#3A2A0C;color:#F0B45C}
+#src .stoc button.cur{border-color:#FFD24A;background:#1D1908}
+#src .shd button#srct{margin-left:auto}
+.reduce #src *{animation:none!important;opacity:1!important}
+
+.nfams{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,2vw,26px);width:100%;max-width:900px}
+.nfam{border-radius:20px;padding:clamp(6px,1.2vh,14px) clamp(10px,1.6vw,20px);display:flex;flex-direction:column;gap:clamp(2px,.5vh,6px)}
+.nfam.o{background:#0A1622;border:2px solid #5AD1FF}.nfam.t{background:#1F1406;border:2px solid #FFB35A}
+.nft{font-size:clamp(20px,3.4vh,32px);font-weight:700;text-align:center}
+.nfam.o .nft{color:#5AD1FF}.nfam.t .nft{color:#FFB35A}
+.nfw{display:flex;align-items:baseline;justify-content:space-between;gap:10px;opacity:0;animation:nfIn .6s cubic-bezier(.2,1.3,.4,1) forwards}
+.nfw .sp{font-size:clamp(22px,4vh,40px);font-weight:700;border-bottom:0;color:#F2F2F2}
+.nfam.o .nfw b{color:#5AD1FF}.nfam.t .nfw b{color:#FFB35A}
+.nfw em{font-style:normal;font-size:clamp(15px,2.4vh,23px);color:#D8D3C5;font-weight:700;white-space:nowrap}
+@keyframes nfIn{from{opacity:0;transform:translateX(-30px) scale(.8)}to{opacity:1;transform:none}}
+/* eleven ＝ 10 ＋ 1：藍色 ＝ 幾個、金色粗體 ＝ 10 */
+.ten1{display:grid;grid-template-columns:auto auto auto;align-items:center;justify-content:center;column-gap:clamp(12px,2.4vw,30px);row-gap:clamp(6px,1.4vh,16px)}
+.ten1 .w{font-size:clamp(42px,8.4vh,86px);font-weight:700;border-bottom:0;opacity:0;animation:nfIn .6s ease forwards}
+.ten1 .w .one{color:#5AD1FF}.ten1 .w .ten{color:#FFD24A;font-weight:800;text-decoration:underline;text-decoration-thickness:.08em;text-underline-offset:.12em}
+.ten1 .eq{font-size:clamp(30px,6vh,60px);color:#8E8E8E;opacity:0;animation:nfIn .5s ease forwards}
+.ten1 .m{font-size:clamp(36px,7.4vh,74px);font-weight:700;opacity:0;animation:nfIn .6s cubic-bezier(.2,1.5,.4,1) forwards;white-space:nowrap}
+.ten1 .m .one{color:#5AD1FF}.ten1 .m .ten{color:#FFD24A}
+.leg{display:flex;gap:clamp(10px,2vw,26px);justify-content:center;flex-wrap:wrap;font-size:clamp(19px,3.2vh,30px);font-weight:700}
+.leg span{padding:.1em .6em;border-radius:99px}
+.leg .one{color:#5AD1FF;background:#0A1622;border:1px solid #29465E}.leg .ten{color:#FFD24A;background:#1D1908;border:1px solid #6B5714}
+.fing{font-size:clamp(34px,6.6vh,64px);letter-spacing:.05em}
+.fing .p1{display:inline-block;animation:p1 1.2s cubic-bezier(.2,1.6,.4,1) 1.4s both}
+@keyframes p1{from{transform:scale(0) rotate(-40deg);opacity:0}to{transform:none;opacity:1}}
+/* thirteen／thirty：teen 金色、ty 藍色，粗體 */
+.tt{display:grid;grid-template-columns:auto auto auto;align-items:center;justify-content:center;column-gap:clamp(12px,2.4vw,30px);row-gap:clamp(8px,1.6vh,18px)}
+.tt .w{font-size:clamp(44px,8.8vh,88px);font-weight:700;border-bottom:0;opacity:0;animation:nfIn .6s ease forwards}
+.tt .teen{color:#FFD24A;font-weight:800}.tt .ty{color:#5AD1FF;font-weight:800}
+.tt .m{font-size:clamp(26px,5.2vh,52px);font-weight:700;opacity:0;animation:nfIn .6s ease forwards;white-space:nowrap}
+.tt .m .teen{color:#FFD24A}.tt .m .ty{color:#5AD1FF}
+.fr80{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,20px);flex-wrap:wrap;font-size:clamp(34px,7vh,70px);font-weight:700}
+.fr80 span{opacity:0;animation:nfIn .6s cubic-bezier(.2,1.5,.4,1) forwards}
+.fr80 .x{color:#FF9EC7}.fr80 .v{color:#5AD1FF}
+.birds{font-size:clamp(20px,3.6vh,34px);line-height:1.1;max-width:14em;text-align:center}
+.birds i{font-style:normal;display:inline-block;opacity:0;animation:nfIn .3s ease forwards}
+
+</style>
+<script src="../../words/audio/sv/aud.js"></script><script>window.SVDIR="../../words/audio/sv/"</script>
+</head>
+<body class="sa big">
+<div id="dots"></div>
+<button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
+<div id="stage"></div>
+<button class="nav" id="next" aria-label="下一頁">&#8594;</button>
+<div id="bar" class="c3"><span class="bl"><button id="slow">🐢 放慢</button><button id="phmode">🔤 音標：無</button><button id="again">▶ 從頭看</button></span><button id="say">🔊 唸一次</button><span class="br"><button id="back">← 基礎 0～10</button><button id="fwd">進階 30～100 →</button><button id="home">🏠 首頁</button><button id="srcb">📖 出處</button></span></div>
+<button id="tocb" class="tocfix">📑 目次</button>
+<div class="topicfix">🌍 環遊世界　進階 1</div>
+<div id="toc"><div class="thd"><b>📑 目次</b><button id="tocx">✕ 關閉</button></div><div class="tgd" id="tocg"></div></div>
+<footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span><span class="scnt"><span id="srcn">1</span> ／ 27</span><button id="srct">📑 目次</button><button id="srcx">✕ 關閉</button></div><div class="stoc" id="stoc"><button data-k="0"><b>1</b><span>古日耳曼語是什麼？</span></button><button data-k="1"><b>2</b><span>歐洲在台灣的哪裡</span></button><button data-k="2"><b>3</b><span>語言也有家人</span></button><button data-k="3"><b>4</b><span>為什麼挑這五國</span></button><button data-k="4"><b>5</b><span>大約 1500 年前，坐船到英國</span></button><button data-k="5"><b>6</b><span>五國的數字</span></button><button data-k="6"><b>7</b><span>為什麼要看德文、荷蘭文的數字？</span></button><button data-k="7"><b>8</b><span>英文 t ＝ 德文 z</span></button><button data-k="8"><b>9</b><span>英文 th ＝ 德文、荷蘭文 d</span></button><button data-k="9"><b>10</b><span>英文 gh ＝ 德文、荷蘭文 ch</span></button><button data-k="10"><b>11</b><span>seven ＝ sieben ＝ zeven</span></button><button data-k="11"><b>12</b><span>-teen ＝ -zehn ＝ -tien</span></button><button data-k="12"><b>13</b><span>-ty ＝ -zig ＝ -tig</span></button><button data-k="13"><b>14</b><span>eleven ＝ 10 ＋ 1、twelve ＝ 10 ＋ 2</span></button><button data-k="14"><b>15</b><span>法文、西班牙文：從拉丁文來</span></button><button data-k="15"><b>16</b><span>法文 20 個一數</span></button><button data-k="16"><b>17</b><span>西班牙文 16 ＝ 10 和 6</span></button><button data-k="17"><b>18</b><span>four and twenty ＝ 24</span></button><button data-k="18"><b>19</b><span>荷蘭文 80 多一個 t</span></button><button data-k="19"><b>20</b><span>zero 家族</span></button><button data-k="20" class="w"><b>21</b><span>瑞典文的聲音</span></button><button data-k="21"><b>22</b><span>音標（美式）</span></button><button data-k="22"><b>23</b><span>KK 音標</span></button><button data-k="23"><b>24</b><span>音節怎麼切</span></button><button data-k="24" class="w"><b>25</b><span>辭典的 fam·i·ly 也對</span></button><button data-k="25" class="w"><b>26</b><span>淺灰色的字母不算</span></button><button data-k="26"><b>27</b><span>唸出來的聲音</span></button></div><div class="sbody"><section class="sl on" data-k="0" data-id="gmc"><div class="lt">古日耳曼語是什麼？</div><div class="vis"><div class="ev"><span class="st" style="animation-delay:.2s"><b>👵 古日耳曼語</b><em>2000 多年前，沒有留下書</em></span><span class="ar" style="animation-delay:.6s">➜</span><span class="st" style="animation-delay:.9s"><b>mother</b><em>英文</em></span><span class="st" style="animation-delay:1.1s"><b>Mutter</b><em>德文</em></span><span class="st" style="animation-delay:1.3s"><b>moeder</b><em>荷蘭文</em></span><span class="st" style="animation-delay:1.5s"><b>mor</b><em>瑞典文</em></span></div></div><div class="ck s"><span class="ci">🌐</span><span><span class="cl">證據在這本書</span><span class="cv">Wikipedia「Proto-Germanic language」；Ringe《From Proto-Indo-European to Proto-Germanic》(2006)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">大約 <b>2000 多年前</b>，住在<b>北歐和德國北部</b>的人說的話。<b>沒有留下書</b>，是學者把英文、德文、荷蘭文、瑞典文<b>拿來比對</b>，推回去的。</span></span></div></section><section class="sl" data-k="1" data-id="where"><div class="lt">歐洲在台灣的哪裡</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">任何一本世界地圖／Google 地圖</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">歐洲在台灣的<b>西北邊</b>；台北飛倫敦、法蘭克福的直飛班機，大約要飛<b>十幾個小時</b>。</span></span></div></section><section class="sl" data-k="2" data-id="map"><div class="lt">語言也有家人</div><div class="ck s"><span class="ci">🌐</span><span><span class="cl">證據在這本書</span><span class="cv">Wikipedia「Germanic languages」「Indo-European languages」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">英文、德文、荷蘭文、瑞典文都是<b>日耳曼語族</b>——像兄弟姊妹。</span></span></div></section><section class="sl" data-k="3" data-id="why5"><div class="lt">為什麼挑這五國</div><div class="ck s"><span class="ci">🌐</span><span><span class="cl">證據在這本書</span><span class="cv">Wikipedia「Germanic languages」「Norman Conquest」「Romance languages」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">德、荷、瑞典：<b>日耳曼家族</b>，跟英文最像；法文：<b>1066 年</b>以後借給英文很多字；西班牙文：跟法文同一個<b>拉丁家族</b>，拿來比較。</span></span></div></section><section class="sl" data-k="4" data-id="boat"><div class="lt">大約 1500 年前，坐船到英國</div><div class="ck s"><span class="ci">🌐</span><span><span class="cl">證據在這本書</span><span class="cv">Bede《英吉利教會史》(731)；Wikipedia「Anglo-Saxon settlement of Britain」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv"><b>盎格魯人、撒克遜人</b>從今天的<b>德國北部、丹麥</b>坐船到英國，帶去的話就是英文的老祖先。</span></span></div></section><section class="sl" data-k="5" data-id="w-num"><div class="lt">五國的數字</div><div class="ck s"><span class="ci">📗</span><span><span class="cl">證據在這本書</span><span class="cv">Duden；Van Dale；SAOL（瑞典學院詞典）；Larousse；RAE（西班牙皇家學院詞典）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">每一張卡上的外國數字，都照這五本字典的拼法。</span></span></div></section><section class="sl" data-k="6" data-id="help"><div class="lt">為什麼要看德文、荷蘭文的數字？</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「eight」「two」；Duden「acht」；Van Dale「twee」；Durkin《The Oxford Guide to Etymology》(2009)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">德文、荷蘭文是英文的兄弟姊妹。英文裡<b>不唸的字母</b>（eight 的 gh、two 的 w），在兄弟姊妹的字裡<b>還聽得到</b>：acht 的 ch、twee 的 w。</span></span></div></section><section class="sl" data-k="7" data-id="t-z"><div class="lt">英文 t ＝ 德文 z</div><div class="vis"><div class="ev"><span class="st"><b>ten ➜ zehn</b><em>t ➜ z</em></span><span class="st" style="animation-delay:.5s"><b>two ➜ zwei</b><em>t ➜ z</em></span></div></div><div class="ck s"><span class="ci">📗</span><span><span class="cl">證據在這本書</span><span class="cv">Wikipedia「High German consonant shift」；Durkin (2009)；Duden「zehn」「zwei」「zwölf」「zwanzig」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">大約 1500 年前，德國南部的人把 <b>t</b> 唸成 <b>ts</b>（寫成 z）；英文、荷蘭文沒有跟著變，還是 t。</span></span></div></section><section class="sl" data-k="8" data-id="th-d"><div class="lt">英文 th ＝ 德文、荷蘭文 d</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「three」「thirty」；Duden「drei」；Van Dale「drie」；Wikipedia「Voiceless dental fricative」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">古英文寫 þ（th）；德文、荷蘭文後來唸成 d：three ➜ drei、drie。</span></span></div></section><section class="sl" data-k="9" data-id="gh-ch"><div class="lt">英文 gh ＝ 德文、荷蘭文 ch</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「eight」「night」；Duden「acht」「Nacht」；Van Dale「acht」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">古英文 eahta 的 h 有唸出來（像德文 acht 的 ch）；後來英文不唸了，gh 留著。night ＝ Nacht、light ＝ Licht 也一樣。</span></span></div></section><section class="sl" data-k="10" data-id="v-b"><div class="lt">seven ＝ sieben ＝ zeven</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「seven」；Duden「sieben」；Van Dale「zeven」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">英文 v ＝ 德文 b；荷蘭文開頭的 s 常常寫成 z（zeven、zes）。</span></span></div></section><section class="sl" data-k="11" data-id="teen"><div class="lt">-teen ＝ -zehn ＝ -tien</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「-teen, suffix」；Duden「-zehn」；Van Dale「-tien」；SAOL「-ton」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">十三到十九的尾巴，四種語言都是「<b>十</b>」：thir<b>teen</b>、drei<b>zehn</b>、der<b>tien</b>、tret<b>ton</b>。</span></span></div></section><section class="sl" data-k="12" data-id="ty"><div class="lt">-ty ＝ -zig ＝ -tig</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「-ty, suffix2」；Duden「-zig」；Van Dale「-tig」；SAOL「-tio」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">幾十的尾巴：古英文 <b>-tig</b> ＝ 幾個十：thir<b>ty</b>、drei<b>ßig</b>、der<b>tig</b>、tret<b>tio</b>。</span></span></div></section><section class="sl" data-k="13" data-id="lif"><div class="lt">eleven ＝ 10 ＋ 1、twelve ＝ 10 ＋ 2</div><div class="vis"><div class="ev"><span class="st"><b>*ain ＋ lif</b><em>一 ＋ 剩下</em></span><span class="st" style="animation-delay:.5s"><b>eleven</b><em>10 ＋ 1</em></span></div></div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「eleven」「twelve」；Kroonen《Etymological Dictionary of Proto-Germanic》(2013)「*ainalif」「*twalif」；Watkins 詞根 leikʷ-（留下）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">很久以前 eleven ＝ <b>*ain-lif</b>：ain ＝ 一、lif ＝ <b>剩下</b>（跟 leave、left 同一家）。數完 10，還剩 1 ＝ 11。</span></span></div></section><section class="sl" data-k="14" data-id="romance"><div class="lt">法文、西班牙文：從拉丁文來</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">Larousse；RAE；OED「December」「century」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">拉丁文 decem ＝ 10 ➜ 法 dix、西 diez、英文 December（以前第 10 個月）；centum ＝ 100 ➜ cent、cien、century。</span></span></div></section><section class="sl" data-k="15" data-id="fr20"><div class="lt">法文 20 個一數</div><div class="ck s"><span class="ci">🌐</span><span><span class="cl">證據在這本書</span><span class="cv">Larousse「soixante-dix」「quatre-vingts」「quatre-vingt-dix」；Wikipedia「French numerals」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">70 ＝ soixante-dix（60 ＋ 10）、80 ＝ quatre-vingts（4 ✕ 20）、90 ＝ quatre-vingt-dix（4 ✕ 20 ＋ 10）。</span></span></div></section><section class="sl" data-k="16" data-id="es16"><div class="lt">西班牙文 16 ＝ 10 和 6</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">RAE「dieciséis」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">dieciséis ＝ diez y seis（10 和 6）；17、18、19 也是。</span></span></div></section><section class="sl" data-k="17" data-id="rhyme"><div class="lt">four and twenty ＝ 24</div><div class="ck s"><span class="ci">📗</span><span><span class="cl">證據在這本書</span><span class="cv">Opie & Opie《The Oxford Dictionary of Nursery Rhymes》(1951)「Sing a Song of Sixpence」；Duden「einundzwanzig」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">英國童謠：<b>Four and twenty blackbirds</b>（24 隻黑鳥）。以前英文也像德文一樣先說個位：ein-und-zwanzig ＝ 一和二十 ＝ 21。</span></span></div></section><section class="sl" data-k="18" data-id="tachtig"><div class="lt">荷蘭文 80 多一個 t</div><div class="ck s"><span class="ci">📙</span><span><span class="cl">證據在這本書</span><span class="cv">Van Dale「tachtig」；Philippa e.a.《Etymologisch Woordenboek van het Nederlands》(2003–2009)「tachtig」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">荷蘭文 80 ＝ <b>t</b>achtig：前面多出來的 t，是古時候說法留下來的尾巴。</span></span></div></section><section class="sl" data-k="19" data-id="zero-w"><div class="lt">zero 家族</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「zero」「cipher」；Duden「Null」；Larousse「zéro」；RAE「cero」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">法 zéro、西 cero、英 zero：從阿拉伯文 ṣifr（空的）經過義大利傳來；德、荷、瑞典用拉丁文 nulla（沒有）➜ Null、nul、noll。</span></span></div></section><section class="sl w" data-k="20"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>瑞典文的聲音</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">瑞典文用的是<b>預先做好的語音檔</b>（Piper sv_SE-nst，瑞典母語者錄音 NST 訓練，CC0）；還沒做成語音檔的字用電腦的瑞典文語音。</span></span></div></section><section class="sl" data-k="21"><div class="lt">音標（美式）</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries（NAmE）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">本教材的 IPA 一律用<b>美式</b>。</span></span></div></section><section class="sl" data-k="22"><div class="lt">KK 音標</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">台灣課本用的標法。例：bed 的 e ＝ IPA <b>/e/</b> ＝ KK <b>/ɛ/</b>。</span></span></div></section><section class="sl" data-k="23"><div class="lt">音節怎麼切</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Louisa Moats《Speech to Print》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">母音後面切：<b>fa．mi．ly</b>。<b>一個出聲的母音 ＝ 一個音節</b>。</span></span></div></section><section class="sl w" data-k="24"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>辭典的 fam·i·ly 也對</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">那是<b>排版斷行</b>用的；本教材教的是<b>唸的時候</b>怎麼切。兩種都對。</span></span></div></section><section class="sl w" data-k="25"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>淺灰色的字母不算</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">不出聲的字母（淺灰色）<b>不算母音</b>，數紅色的就對了。</span></span></div></section><section class="sl" data-k="26"><div class="lt">唸出來的聲音</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Web Speech API（瀏覽器內建語音，en-US）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">不用連網。<b>嗓音由這台電腦決定</b>。外語另外指定：德 de-DE、荷 nl-NL、瑞典 sv-SE、法 fr-FR、西 es-ES。</span></span></div></section></div><div class="snav"><button id="srcp">◀ 上一條</button><span class="sdots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><button id="srcf">下一條 ▶</button></div></footer>
+
+<script>
+
+var PH=(function(){
+ var D={"family":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"i","i":"ə","k":"ə","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]],"parent":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"e","k":"ɛ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}],[{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"mother":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"father":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"brother":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"sister":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"son":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"daughter":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"au","i":"ɔː","k":"ɔ","s":0,"n":1},{"L":"gh","i":"","k":"","s":1,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"grandfather":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"grandmother":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"uncle":[[{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"ŋ","k":"ŋ","s":0,"n":0}],[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"l","i":"əl","k":"əl","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"aunt":[[{"L":"au","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"cousin":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}],[{"L":"i","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"nephew":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"ph","i":"f","k":"f","s":0,"n":0}],[{"L":"ew","i":"juː","k":"ju","s":0,"n":1}]],"niece":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"i","i":"","k":"","s":1,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1},{"L":"c","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"husband":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"wife":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"older":[[{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"younger":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"ou","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"ŋ","k":"ŋ","s":0,"n":0}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"big":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0}]],"little":[[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}],[{"L":"t","i":"","k":"","s":1,"n":0},{"L":"l","i":"əl","k":"əl","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"elder":[[{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"parents":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"e","k":"ɛ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}],[{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"mom":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ɑ","k":"ɑ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"mum":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"dad":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"sun":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"grandpa":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}]],"grandma":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}]],"auntie":[[{"L":"au","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ie","i":"i","k":"ɪ","s":0,"n":1}]],"sis":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"bro":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"me":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1}]],"tree":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ee","i":"iː","k":"i","s":0,"n":1}]],"grand":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"house":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"ou","i":"aʊ","k":"aʊ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"student":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"u","i":"uː","k":"u","s":0,"n":1}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"teacher":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1}],[{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"doctor":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"c","i":"k","k":"k","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"or","i":"ɚ","k":"ɚ","s":0,"n":1}]],"farmer":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"nurse":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"ur","i":"ɝː","k":"ɝ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"teach":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1},{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"farm":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"study":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]],"zero":[[{"L":"z","i":"z","k":"z","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"one":[[{"L":"o","i":"wʌ","k":"wʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"two":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"w","i":"","k":"","s":1,"n":0},{"L":"o","i":"uː","k":"u","s":0,"n":1}]],"three":[[{"L":"th","i":"θ","k":"θ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"four":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"o","i":"ɔː","k":"ɔ","s":0,"n":1},{"L":"u","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"five":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"six":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"x","i":"ks","k":"ks","s":0,"n":0}]],"seven":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"eight":[[{"L":"ei","i":"eɪ","k":"e","s":0,"n":1},{"L":"gh","i":"","k":"","s":1,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"nine":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"ten":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"eleven":[[{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"twelve":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"i":[[{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1}]],"my":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1}]],"you":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"uː","k":"u","s":0,"n":1}]],"your":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"ʊ","k":"ʊ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"am":[[{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"are":[[{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"name":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"is":[[{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"what":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"what's":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"'s","i":"s","k":"s","s":0,"n":0}]],"how":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"ow","i":"aʊ","k":"aʊ","s":0,"n":1}]],"old":[[{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"year":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"a","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"years":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"a","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"who":[[{"L":"w","i":"","k":"","s":1,"n":0},{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"o","i":"uː","k":"u","s":0,"n":1}]],"where":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"when":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"why":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1}]],"tea":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1}]],"ketchup":[[{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"tch","i":"tʃ","k":"tʃ","s":0,"n":0}],[{"L":"u","i":"ə","k":"ə","s":0,"n":1},{"L":"p","i":"p","k":"p","s":0,"n":0}]],"hamburger":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"ur","i":"ɜːr","k":"ɝ","s":0,"n":1}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"sandwich":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"breakfast":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"e","k":"ɛ","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}],[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"goodbye":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"oo","i":"ʊ","k":"ʊ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"break":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"eɪ","k":"e","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}]],"fast":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]]};
+ var MODES=["","ipa","kk"],mode=0,slow=false,timers=[];
+ try{var m=localStorage.getItem("phMode");if(m!==null)mode=+m||0}catch(e){}
+ function V(ch){return "aeiou".indexOf(ch.toLowerCase())>=0}
+ function isNuc(u){return u.n===1}
+ /* 這一格是音節的核心，但字母裡一個 a/e/i/o/u 都沒有（uncle／little 的 l 自己就發 əl）
+    → 整格標紅。不這樣做，學生「數紅色 ＝ 數音節」就會少數一個，規則當場破功。 */
+ function noVowelNucleus(u){var k;if(!isNuc(u))return false;
+  for(k=0;k<u.L.length;k++)if(V(u.L[k]))return false;return true}
+ function letters(u){var h="",L=u.L,k,nv=noVowelNucleus(u);
+  for(k=0;k<L.length;k++){
+   var red=(!u.s)&&(nv||V(L[k])||(L[k].toLowerCase()==="y"&&isNuc(u)));
+   h+='<i class="'+(red?"v":"")+'">'+L[k]+'</i>'}
+  return h}
+ /* 一個單字的完整元件：字母（母音紅／不發音灰）＋ 正下方對齊的音標 ＋ 音節切分點 */
+ /* 查不到音標的字（外語家人單字等）：**不硬掰音標、不硬切音節**，
+    只把母音字母標紅，一樣點得下去唸。這是誠實界線，不要拿掉。 */
+ function plain(w,lang){
+  var h='<span class="phw phplain" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
+        '><span class="syl"><span class="u"><span class="g">',k;
+  for(k=0;k<w.length;k++)h+='<i class="'+(V(w[k])?"v":"")+'">'+w[k]+'</i>';
+  return h+'</span></span></span></span>'}
+ function word(w,lang){
+  /* **這兩個 \s 一定要寫兩條斜線**：這整段是 JS 模板字串，寫一條會被吃掉，
+     變成 /s/ 與 /s+/ ——凡是拼法裡有 s 的字（sister／son／cousin／husband…）
+     都會被當成「多個字」從 s 那裡切開，s 不見、發音也唸錯。2026-09-20 訂正。 */
+  if(/\s/.test(w))return w.split(/\s+/).map(function(x){return word(x,lang)}).join(" ");
+  var key=w.toLowerCase().replace(/[’]/g,"'"),d=D[key];
+  if(!d)return plain(w,lang);
+  /* 字母照原本的大小寫畫（I、My、What 開頭要大寫；資料裡一律小寫） */
+  var CS=w.replace(/[’]/g,"’"),cp=0;
+  var h='<span class="phw '+MODES[mode]+'" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
+        ' data-n="'+d.length+'">',si,ui;
+  for(si=0;si<d.length;si++){
+   if(si)h+='<span class="cut"><span class="g">·</span><span class="p">&nbsp;</span></span>';
+   h+='<span class="syl">';
+   for(ui=0;ui<d[si].length;ui++){var u=d[si][ui];
+    var lu=letters(u).replace(/>([^<])</g,function(m,c){var o=CS.charAt(cp++);return '>'+(o&&o.toLowerCase()===c.toLowerCase()?o:(c==="'"&&o==="’"?o:c))+'<'});
+    h+='<span class="u'+(u.s?" mute":"")+'"><span class="g">'+lu+'</span>'+
+       '<span class="p" data-i="'+(u.s?"–":u.i)+'" data-k="'+(u.s?"–":u.k)+'">'+
+       (u.s?"–":(mode===2?u.k:u.i))+'</span></span>'}
+   h+='</span>'}
+  return h+'</span>'}
+ /* 字卡上的三段切換（無／IPA／KK）＋ 音節按鈕 */
+ function chips(w){
+  return '<div class="phchips" data-for="'+w+'">'+
+   '<button data-m="0"'+(mode===0?' class="on"':'')+'>無音標</button>'+
+   '<button data-m="1"'+(mode===1?' class="on"':'')+'>IPA</button>'+
+   '<button data-m="2"'+(mode===2?' class="on"':'')+'>KK</button>'+
+   '<button data-syl="1">✂️ 音節</button></div>'}
+ /* 字卡上**只放單字本身**——切換鈕與說明文字都移到下方 #bar，
+    讓學生一眼只看到要學的那個英文單字（使用者 2026-09-20 指定）。 */
+ function box(w){return word(w)}
+ /* {{單字}} → 畫成單字元件；{{de-DE:Mutter}} → 指定語言（外語家人單字） */
+ function expand(h){
+  return String(h)
+   .replace(/{{([a-zA-Z]{2}-[A-Z]{2}):([^{}]+)}}/g,function(m,lang,w){return word(w.trim(),lang)})
+   .replace(/{{([^{}:]+)}}/g,function(m,w){return word(w.trim())})}
+ function clear(){while(timers.length)clearTimeout(timers.pop())}
+ function at(ms,fn){timers.push(setTimeout(fn,ms))}
+ function reduced(){return document.body.classList.contains("reduce")}
+ /* 說話：全頁共用一個放慢開關。
+    瑞典文先查預先做好的語音檔（window.SVAUD，使用者 2026-09-25 指定：要真實正確的瑞典語發音），
+    很多電腦沒有瑞典文語音，瀏覽器會用英文腔亂唸。查不到才用瀏覽器語音。
+    fin：唸完（或出錯）要做的事；一定會被呼叫，而且只呼叫一次。 */
+ var AU=null;
+ function akey(t){return String(t).replace(/[’]/g,"'").replace(/s+/g," ").trim().toLowerCase()}
+ function stopAll(){try{speechSynthesis.cancel()}catch(e){}try{if(AU)AU.pause()}catch(e){}}
+ function say(t,lang,fin){
+  var done=false,end=function(){if(done)return;done=true;if(fin)try{fin()}catch(e){}};
+  if(!t){end();return}
+  stopAll();
+  var A=(lang&&/^sv/i.test(lang)&&window.SVAUD)?SVAUD[akey(t)]:null;
+  if(A){try{if(!AU)AU=new Audio();AU.onended=end;AU.onerror=end;
+    AU.src=(window.SVDIR||"audio/sv/")+A[0];AU.playbackRate=slow?.7:1;
+    var pr=AU.play();if(pr&&pr.catch)pr.catch(end);setTimeout(end,A[1]*1000/(slow?.7:1)+1500);return}catch(e){}}
+  try{var u=new SpeechSynthesisUtterance(t);
+   u.lang=lang||"en-US";u.rate=slow?.45:.85;u.onend=end;u.onerror=end;speechSynthesis.speak(u)}catch(e){end();return}
+  setTimeout(end,1400+String(t).length*(slow?260:140));   /* 瀏覽器不發 onend 也不會卡住 */
+ }
+ /* 一個字一個字唸：唸到哪一個字，那一個字就放大、變亮（使用者 2026-09-25 指定：每一個單字都要有發音） */
+ var chainId=0;
+ function sayChain(els,fin){
+  var my=++chainId,k=0;stopAll();
+  function next(){
+   [].forEach.call(document.querySelectorAll(".speak"),function(x){x.classList.remove("speak")});
+   if(my!==chainId)return;
+   if(k>=els.length){if(fin)fin();return}
+   var el=els[k++],t=el.getAttribute("data-say");
+   if(!t){next();return}
+   el.classList.add("speak");
+   say(t,el.getAttribute("data-lang")||"en-US",function(){if(my===chainId)setTimeout(next,160)});
+  }
+  setTimeout(next,90);
+ }
+ function chainStop(){chainId++;stopAll();
+  [].forEach.call(document.querySelectorAll(".speak"),function(x){x.classList.remove("speak")})}
+ /* 唸單字：一格一格亮過去，字母和聲音對起來 */
+ function sayWord(el,lang){
+  var w=el.getAttribute("data-say");say(w,lang);
+  if(reduced())return;
+  var us=el.querySelectorAll(".u"),k,step=(slow?300:170);
+  clear();
+  for(k=0;k<us.length;k++)(function(u,k){
+   at(160+k*step,function(){u.classList.add("lit")});
+   at(160+k*step+step*1.25,function(){u.classList.remove("lit")})})(us[k],k)}
+ /* 音節動畫：先一顆一顆數紅色母音，再把音節拉開 */
+ function syl(el,note){
+  var n=+el.getAttribute("data-n")||1,vs=el.querySelectorAll(".u"),sy=el.querySelectorAll(".syl"),k,c=0;
+  clear();el.classList.remove("split");
+  if(note)note.innerHTML="";
+  var reds=[];for(k=0;k<vs.length;k++)if(vs[k].querySelector("i.v")&&!/mute/.test(vs[k].className))reds.push(vs[k]);
+  reds.forEach(function(u,k){at(120+k*430,function(){
+   u.classList.add("count");c=k+1;
+   if(note)note.innerHTML='<span class="rv">●</span> 紅色母音 <b>'+c+'</b> 個';
+   at(520,function(){u.classList.remove("count")})})});
+  var t0=120+reds.length*430+180;
+  at(t0,function(){el.classList.add("split")});
+  for(k=0;k<sy.length;k++)(function(s,k){at(t0+120+k*360,function(){
+   s.classList.remove("beat");void s.offsetWidth;s.classList.add("beat");
+   if(note)note.innerHTML='✂️ 切成 <b>'+(k+1)+'</b> 段'})})(sy[k],k);
+  at(t0+120+sy.length*360+240,function(){
+   if(note)note.innerHTML='<span class="rv">'+n+'</span> 個母音 ＝ <b>'+n+' 個音節</b>'})}
+ /* 把說明文字裡的英文字詞變成可以點來聽（補充單字、字詞、用法都算）。
+   **只掃說明文字的容器**：.en 這種手工排版（dau<span>gh</span>ter）拆開來會壞掉，
+   那種地方改用 {{單字}} 標記，由 PH.word() 直接畫。 */
+ var HOSTS=".sub,.mid,.note,.qtext,.big,.parts,.zh";
+ function autoSay(root){
+  if(!root)return;
+  var list=[];
+  [].forEach.call(root.querySelectorAll(HOSTS),function(host){
+   if(host.closest(".nosay"))return;
+   var walk=document.createTreeWalker(host,NodeFilter.SHOW_TEXT,null,false),n;
+   while((n=walk.nextNode())){
+    var pe=n.parentNode;
+    if(!pe||pe.nodeType!==1)continue;
+    if(pe.closest(".sp,.phw,.phchips,.nosay,button,a,#src"))continue;
+    if(/[A-Za-z]{2}/.test(n.nodeValue))list.push(n)}});
+  list.forEach(function(t){
+   var s=t.nodeValue,re=/[A-Za-z][A-Za-z'\u2019-]*(?:[ ][A-Za-z][A-Za-z'\u2019-]*)*/g,
+       frag=document.createDocumentFragment(),last=0,m,any=false;
+   while((m=re.exec(s))){
+    if(m[0].length<2)continue;
+    if(m.index>last)frag.appendChild(document.createTextNode(s.slice(last,m.index)));
+    var sp=document.createElement("span");
+    sp.className="sp";sp.setAttribute("data-say",m[0]);sp.textContent=m[0];
+    frag.appendChild(sp);last=m.index+m[0].length;any=true}
+   if(!any)return;
+   if(last<s.length)frag.appendChild(document.createTextNode(s.slice(last)));
+   t.parentNode.replaceChild(frag,t)})}
+ /* 切換音標：直接換掉每個字母下面那一行，不用重畫整幕 */
+ function apply(){
+  [].forEach.call(document.querySelectorAll(".phw"),function(p){
+   p.className="phw "+MODES[mode];
+   [].forEach.call(p.querySelectorAll(".u .p"),function(g){
+    g.textContent=(mode===2?g.getAttribute("data-k"):g.getAttribute("data-i"))||""})});
+  [].forEach.call(document.querySelectorAll(".phchips button[data-m]"),function(b){
+   b.classList.toggle("on",(+b.getAttribute("data-m")||0)===mode)})}
+ /* 全頁共用：點任何一個英文字詞就唸、切換音標、播音節動畫 */
+ document.addEventListener("click",function(e){
+  var c=e.target.closest?e.target.closest(".phchips button"):null;
+  if(c){
+   var box=c.closest(".phbox"),w=box?box.querySelector(".phw"):null;
+   if(c.hasAttribute("data-syl")){if(w)syl(w,box.querySelector(".phnote"));return}
+   mode=+c.getAttribute("data-m")||0;
+   try{localStorage.setItem("phMode",mode)}catch(x){}
+   apply();
+   return}
+  var t=e.target.closest?e.target.closest(".phw,[data-say]"):null;
+  if(!t)return;
+  if(t.classList.contains("phw"))sayWord(t,t.getAttribute("data-lang"));
+  else{say(t.getAttribute("data-say"),t.getAttribute("data-lang"));
+   t.classList.add("ping");setTimeout(function(){t.classList.remove("ping")},260)}
+ });
+ /* 畫面上的主角單字：#card／#stage 裡字最大的那一個 .phw */
+ function main(){
+  var all=document.querySelectorAll("#card .phw,#stage .phw"),best=null,bs=0,k;
+  for(k=0;k<all.length;k++){var f=parseFloat(getComputedStyle(all[k]).fontSize)||0;
+   if(f>bs){bs=f;best=all[k]}}
+  return best}
+ function setMode(m){mode=((+m||0)%3+3)%3;try{localStorage.setItem("phMode",mode)}catch(e){}apply();return mode}
+ return{word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
+  has:function(w){return !!D[(w||"").toLowerCase()]},
+  slow:function(v){slow=(v===undefined)?!slow:!!v;return slow},
+  isSlow:function(){return slow},
+  mode:function(){return mode}};
+})();
+/* #bar 的「🐢 放慢」：管全頁所有發音（單字、補充字詞、用法） */
+(function(){var b=document.getElementById("slow");if(!b)return;
+ b.addEventListener("click",function(){
+  var on=PH.slow();b.textContent=on?"🐢 放慢：開":"🐢 放慢";
+  b.style.background=on?"#9FB4C8":"";b.style.color=on?"#0A0A0A":"";
+  b.style.borderColor=on?"#9FB4C8":""});})();
+/* #bar 的「🔤 音標」：無 → IPA → KK →（回到）無。字卡是用卡片上的三顆 chips。 */
+(function(){var b=document.getElementById("phmode");if(!b)return;
+ var N=["無","IPA","KK"];
+ function lab(){b.textContent="🔤 音標："+N[PH.mode()]}
+ lab();b.addEventListener("click",function(){PH.setMode(PH.mode()+1);lab()});})();
+/* #bar 的「✂️ 音節」：動畫跑在單字上，數出來的結果寫回按鈕，字卡保持乾淨 */
+(function(){var b=document.getElementById("phsyl");if(!b)return;
+ b.addEventListener("click",function(){
+  var el=PH.main();if(!el)return;
+  var n=+el.getAttribute("data-n")||0;
+  if(!n){b.textContent="✂️ 音節";return}
+  PH.syl(el,null);
+  b.textContent="✂️ 音節";
+  setTimeout(function(){b.textContent="✂️ "+n+" 個音節"},220+n*430+120+n*360);});})();
+
+var S=[
+ {
+  "emoji": "🌍",
+  "mid": "十幾，環遊世界",
+  "lines": [
+   "<b>進階版 1</b>：別的國家怎麼說 11～20？"
+  ]
+ },
+ {
+  "tag": "🔑 字母密碼：-teen ＝ -zehn ＝ -tien ＝ 十",
+  "src": "teen",
+  "h": "<div class=\"tt fo\"><span class=\"m\" style=\"animation-delay:0.2s\">🇬🇧</span><span class=\"w sp\" data-say=\"thirteen\" style=\"animation-delay:0.3s\">thir<span class=\"teen\">teen</span></span><span class=\"m\" style=\"animation-delay:0.4s\">3 ＋ <span class=\"teen\">10</span></span><span class=\"m\" style=\"animation-delay:0.6000000000000001s\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg></span><span class=\"w sp\" data-say=\"dreizehn\" data-lang=\"de-DE\" style=\"animation-delay:0.7s\">drei<span class=\"teen\">zehn</span></span><span class=\"m\" style=\"animation-delay:0.8s\">3 ＋ <span class=\"teen\">10</span></span><span class=\"m\" style=\"animation-delay:1s\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg></span><span class=\"w sp\" data-say=\"dertien\" data-lang=\"nl-NL\" style=\"animation-delay:1.1s\">der<span class=\"teen\">tien</span></span><span class=\"m\" style=\"animation-delay:1.2000000000000002s\">3 ＋ <span class=\"teen\">10</span></span><span class=\"m\" style=\"animation-delay:1.4000000000000001s\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#006AA7\"/><rect x=\"9\" width=\"4\" height=\"20\" fill=\"#FECC00\"/><rect y=\"8\" width=\"30\" height=\"4\" fill=\"#FECC00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg></span><span class=\"w sp\" data-say=\"tretton\" data-lang=\"sv-SE\" style=\"animation-delay:1.5000000000000002s\">tret<span class=\"teen\">ton</span></span><span class=\"m\" style=\"animation-delay:1.6s\">3 ＋ <span class=\"teen\">10</span></span></div>",
+  "lines": [
+   "四種語言，十三的尾巴<b>都是「十」</b>"
+  ]
+ },
+ {
+  "tag": "🌍 別的國家怎麼說 11",
+  "sayAll": 1,
+  "src": "lif",
+  "h": "<div class=\"guess many fo\"><div class=\"gen\">英文 <span class=\"sp gbig\" data-say=\"eleven\">eleven</span><em>十一</em></div><div class=\"glist\"><div class=\"grow near\" style=\"animation-delay:0.20s\"><span class=\"sp gw\" data-say=\"elf\" data-lang=\"de-DE\">elf</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>德文</b><em>（德國）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.32s\"><span class=\"sp gw\" data-say=\"elf\" data-lang=\"nl-NL\">elf</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>荷蘭文</b><em>（荷蘭）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.44s\"><span class=\"sp gw\" data-say=\"elva\" data-lang=\"sv-SE\">elva</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#006AA7\"/><rect x=\"9\" width=\"4\" height=\"20\" fill=\"#FECC00\"/><rect y=\"8\" width=\"30\" height=\"4\" fill=\"#FECC00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>瑞典文</b><em>（瑞典）</em></span></div><div class=\"grow\" style=\"animation-delay:0.56s\"><span class=\"sp gw\" data-say=\"onze\" data-lang=\"fr-FR\">onze</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"10\" height=\"20\" fill=\"#0055A4\"/><rect x=\"10\" y=\"0\" width=\"10\" height=\"20\" fill=\"#FFF\"/><rect x=\"20\" y=\"0\" width=\"10\" height=\"20\" fill=\"#EF4135\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>法文</b><em>（法國）</em></span></div><div class=\"grow\" style=\"animation-delay:0.68s\"><span class=\"sp gw\" data-say=\"once\" data-lang=\"es-ES\">once</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect x=\"0\" y=\"5\" width=\"30\" height=\"10\" fill=\"#F1BF00\"/><rect x=\"0\" y=\"15\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>西班牙文</b><em>（西班牙）</em></span></div></div><button class=\"grev\">🔍 公布答案</button><div class=\"gwhy\">德、荷、瑞典也是「<b>數完 10，剩下 1</b>」</div><div class=\"gstory\"><span class=\"cx\"><span>🇬🇧 e<b class=\"e\">leven</b></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> e<b class=\"d\">lf</b></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#006AA7\"/><rect x=\"9\" width=\"4\" height=\"20\" fill=\"#FECC00\"/><rect y=\"8\" width=\"30\" height=\"4\" fill=\"#FECC00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> e<b class=\"d\">lva</b></span></span></div></div>"
+ },
+ {
+  "tag": "🌍 別的國家怎麼說 12",
+  "sayAll": 1,
+  "src": "lif",
+  "h": "<div class=\"guess many fo\"><div class=\"gen\">英文 <span class=\"sp gbig\" data-say=\"twelve\">twelve</span><em>十二</em></div><div class=\"glist\"><div class=\"grow near\" style=\"animation-delay:0.20s\"><span class=\"sp gw\" data-say=\"zwölf\" data-lang=\"de-DE\">zwölf</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>德文</b><em>（德國）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.32s\"><span class=\"sp gw\" data-say=\"twaalf\" data-lang=\"nl-NL\">twaalf</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>荷蘭文</b><em>（荷蘭）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.44s\"><span class=\"sp gw\" data-say=\"tolv\" data-lang=\"sv-SE\">tolv</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#006AA7\"/><rect x=\"9\" width=\"4\" height=\"20\" fill=\"#FECC00\"/><rect y=\"8\" width=\"30\" height=\"4\" fill=\"#FECC00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>瑞典文</b><em>（瑞典）</em></span></div><div class=\"grow\" style=\"animation-delay:0.56s\"><span class=\"sp gw\" data-say=\"douze\" data-lang=\"fr-FR\">douze</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"10\" height=\"20\" fill=\"#0055A4\"/><rect x=\"10\" y=\"0\" width=\"10\" height=\"20\" fill=\"#FFF\"/><rect x=\"20\" y=\"0\" width=\"10\" height=\"20\" fill=\"#EF4135\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>法文</b><em>（法國）</em></span></div><div class=\"grow\" style=\"animation-delay:0.68s\"><span class=\"sp gw\" data-say=\"doce\" data-lang=\"es-ES\">doce</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect x=\"0\" y=\"5\" width=\"30\" height=\"10\" fill=\"#F1BF00\"/><rect x=\"0\" y=\"15\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>西班牙文</b><em>（西班牙）</em></span></div></div><button class=\"grev\">🔍 公布答案</button><div class=\"gwhy\">「<b>數完 10，剩下 2</b>」；荷蘭文 <b>tw</b>aalf 最像</div><div class=\"gstory\"><span class=\"cx\"><span>🇬🇧 <b class=\"e\">tw</b>elve</span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> <b class=\"d\">tw</b>aalf</span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> <b class=\"d\">zw</b>ölf</span></span></div></div>"
+ },
+ {
+  "tag": "🌍 別的國家怎麼說 13",
+  "sayAll": 1,
+  "src": "teen",
+  "h": "<div class=\"guess many fo\"><div class=\"gen\">英文 <span class=\"sp gbig\" data-say=\"thirteen\">thirteen</span><em>十三</em></div><div class=\"glist\"><div class=\"grow near\" style=\"animation-delay:0.20s\"><span class=\"sp gw\" data-say=\"dreizehn\" data-lang=\"de-DE\">dreizehn</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>德文</b><em>（德國）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.32s\"><span class=\"sp gw\" data-say=\"dertien\" data-lang=\"nl-NL\">dertien</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>荷蘭文</b><em>（荷蘭）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.44s\"><span class=\"sp gw\" data-say=\"tretton\" data-lang=\"sv-SE\">tretton</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#006AA7\"/><rect x=\"9\" width=\"4\" height=\"20\" fill=\"#FECC00\"/><rect y=\"8\" width=\"30\" height=\"4\" fill=\"#FECC00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>瑞典文</b><em>（瑞典）</em></span></div><div class=\"grow\" style=\"animation-delay:0.56s\"><span class=\"sp gw\" data-say=\"treize\" data-lang=\"fr-FR\">treize</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"10\" height=\"20\" fill=\"#0055A4\"/><rect x=\"10\" y=\"0\" width=\"10\" height=\"20\" fill=\"#FFF\"/><rect x=\"20\" y=\"0\" width=\"10\" height=\"20\" fill=\"#EF4135\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>法文</b><em>（法國）</em></span></div><div class=\"grow\" style=\"animation-delay:0.68s\"><span class=\"sp gw\" data-say=\"trece\" data-lang=\"es-ES\">trece</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect x=\"0\" y=\"5\" width=\"30\" height=\"10\" fill=\"#F1BF00\"/><rect x=\"0\" y=\"15\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>西班牙文</b><em>（西班牙）</em></span></div></div><button class=\"grev\">🔍 公布答案</button><div class=\"gwhy\">尾巴都是「<b>十</b>」：-teen ＝ -zehn ＝ -tien</div><div class=\"gstory\"><span class=\"cx\"><span>🇬🇧 thir<b class=\"e\">teen</b></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> drei<b class=\"d\">zehn</b></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> der<b class=\"d\">tien</b></span></span></div></div>"
+ },
+ {
+  "tag": "🌍 別的國家怎麼說 14",
+  "sayAll": 1,
+  "src": "teen",
+  "h": "<div class=\"guess many fo\"><div class=\"gen\">英文 <span class=\"sp gbig\" data-say=\"fourteen\">fourteen</span><em>十四</em></div><div class=\"glist\"><div class=\"grow near\" style=\"animation-delay:0.20s\"><span class=\"sp gw\" data-say=\"vierzehn\" data-lang=\"de-DE\">vierzehn</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>德文</b><em>（德國）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.32s\"><span class=\"sp gw\" data-say=\"veertien\" data-lang=\"nl-NL\">veertien</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>荷蘭文</b><em>（荷蘭）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.44s\"><span class=\"sp gw\" data-say=\"fjorton\" data-lang=\"sv-SE\">fjorton</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#006AA7\"/><rect x=\"9\" width=\"4\" height=\"20\" fill=\"#FECC00\"/><rect y=\"8\" width=\"30\" height=\"4\" fill=\"#FECC00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>瑞典文</b><em>（瑞典）</em></span></div><div class=\"grow\" style=\"animation-delay:0.56s\"><span class=\"sp gw\" data-say=\"quatorze\" data-lang=\"fr-FR\">quatorze</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"10\" height=\"20\" fill=\"#0055A4\"/><rect x=\"10\" y=\"0\" width=\"10\" height=\"20\" fill=\"#FFF\"/><rect x=\"20\" y=\"0\" width=\"10\" height=\"20\" fill=\"#EF4135\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>法文</b><em>（法國）</em></span></div><div class=\"grow\" style=\"animation-delay:0.68s\"><span class=\"sp gw\" data-say=\"catorce\" data-lang=\"es-ES\">catorce</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect x=\"0\" y=\"5\" width=\"30\" height=\"10\" fill=\"#F1BF00\"/><rect x=\"0\" y=\"15\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>西班牙文</b><em>（西班牙）</em></span></div></div><button class=\"grev\">🔍 公布答案</button><div class=\"gwhy\">4 ＋ <b>10</b>：vier-<b>zehn</b>、veer-<b>tien</b></div><div class=\"gstory\"><span class=\"cx\"><span>🇬🇧 four<b class=\"e\">teen</b></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> vier<b class=\"d\">zehn</b></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> veer<b class=\"d\">tien</b></span></span></div></div>"
+ },
+ {
+  "tag": "🌍 別的國家怎麼說 15",
+  "sayAll": 1,
+  "src": "teen",
+  "h": "<div class=\"guess many fo\"><div class=\"gen\">英文 <span class=\"sp gbig\" data-say=\"fifteen\">fifteen</span><em>十五</em></div><div class=\"glist\"><div class=\"grow near\" style=\"animation-delay:0.20s\"><span class=\"sp gw\" data-say=\"fünfzehn\" data-lang=\"de-DE\">fünfzehn</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>德文</b><em>（德國）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.32s\"><span class=\"sp gw\" data-say=\"vijftien\" data-lang=\"nl-NL\">vijftien</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>荷蘭文</b><em>（荷蘭）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.44s\"><span class=\"sp gw\" data-say=\"femton\" data-lang=\"sv-SE\">femton</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#006AA7\"/><rect x=\"9\" width=\"4\" height=\"20\" fill=\"#FECC00\"/><rect y=\"8\" width=\"30\" height=\"4\" fill=\"#FECC00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>瑞典文</b><em>（瑞典）</em></span></div><div class=\"grow\" style=\"animation-delay:0.56s\"><span class=\"sp gw\" data-say=\"quinze\" data-lang=\"fr-FR\">quinze</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"10\" height=\"20\" fill=\"#0055A4\"/><rect x=\"10\" y=\"0\" width=\"10\" height=\"20\" fill=\"#FFF\"/><rect x=\"20\" y=\"0\" width=\"10\" height=\"20\" fill=\"#EF4135\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>法文</b><em>（法國）</em></span></div><div class=\"grow\" style=\"animation-delay:0.68s\"><span class=\"sp gw\" data-say=\"quince\" data-lang=\"es-ES\">quince</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect x=\"0\" y=\"5\" width=\"30\" height=\"10\" fill=\"#F1BF00\"/><rect x=\"0\" y=\"15\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>西班牙文</b><em>（西班牙）</em></span></div></div><button class=\"grev\">🔍 公布答案</button><div class=\"gwhy\">5 ＋ <b>10</b>：英文 five 變成 <b>fif</b></div><div class=\"gstory\"><span class=\"cx\"><span>🇬🇧 <b class=\"e\">fif</b>teen</span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> <b class=\"d\">fünf</b>zehn</span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> <b class=\"d\">vijf</b>tien</span></span></div></div>"
+ },
+ {
+  "tag": "🌍 別的國家怎麼說 16",
+  "sayAll": 1,
+  "src": "es16",
+  "h": "<div class=\"guess many fo\"><div class=\"gen\">英文 <span class=\"sp gbig\" data-say=\"sixteen\">sixteen</span><em>十六</em></div><div class=\"glist\"><div class=\"grow near\" style=\"animation-delay:0.20s\"><span class=\"sp gw\" data-say=\"sechzehn\" data-lang=\"de-DE\">sechzehn</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>德文</b><em>（德國）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.32s\"><span class=\"sp gw\" data-say=\"zestien\" data-lang=\"nl-NL\">zestien</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>荷蘭文</b><em>（荷蘭）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.44s\"><span class=\"sp gw\" data-say=\"sexton\" data-lang=\"sv-SE\">sexton</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#006AA7\"/><rect x=\"9\" width=\"4\" height=\"20\" fill=\"#FECC00\"/><rect y=\"8\" width=\"30\" height=\"4\" fill=\"#FECC00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>瑞典文</b><em>（瑞典）</em></span></div><div class=\"grow\" style=\"animation-delay:0.56s\"><span class=\"sp gw\" data-say=\"seize\" data-lang=\"fr-FR\">seize</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"10\" height=\"20\" fill=\"#0055A4\"/><rect x=\"10\" y=\"0\" width=\"10\" height=\"20\" fill=\"#FFF\"/><rect x=\"20\" y=\"0\" width=\"10\" height=\"20\" fill=\"#EF4135\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>法文</b><em>（法國）</em></span></div><div class=\"grow\" style=\"animation-delay:0.68s\"><span class=\"sp gw\" data-say=\"dieciséis\" data-lang=\"es-ES\">dieciséis</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect x=\"0\" y=\"5\" width=\"30\" height=\"10\" fill=\"#F1BF00\"/><rect x=\"0\" y=\"15\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>西班牙文</b><em>（西班牙）</em></span></div></div><button class=\"grev\">🔍 公布答案</button><div class=\"gwhy\">西班牙文：dieci-séis ＝ <b>10 和 6</b></div><div class=\"gstory\"><span class=\"cx\"><span>🇬🇧 six<b class=\"e\">teen</b><em>6 ＋ 10</em></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect x=\"0\" y=\"5\" width=\"30\" height=\"10\" fill=\"#F1BF00\"/><rect x=\"0\" y=\"15\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> <b class=\"n\">dieci</b>séis<em>10 和 6</em></span></span></div></div>"
+ },
+ {
+  "tag": "🌍 別的國家怎麼說 17",
+  "sayAll": 1,
+  "src": "teen",
+  "h": "<div class=\"guess many fo\"><div class=\"gen\">英文 <span class=\"sp gbig\" data-say=\"seventeen\">seventeen</span><em>十七</em></div><div class=\"glist\"><div class=\"grow near\" style=\"animation-delay:0.20s\"><span class=\"sp gw\" data-say=\"siebzehn\" data-lang=\"de-DE\">siebzehn</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>德文</b><em>（德國）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.32s\"><span class=\"sp gw\" data-say=\"zeventien\" data-lang=\"nl-NL\">zeventien</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>荷蘭文</b><em>（荷蘭）</em></span></div><div class=\"grow\" style=\"animation-delay:0.44s\"><span class=\"sp gw\" data-say=\"sjutton\" data-lang=\"sv-SE\">sjutton</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#006AA7\"/><rect x=\"9\" width=\"4\" height=\"20\" fill=\"#FECC00\"/><rect y=\"8\" width=\"30\" height=\"4\" fill=\"#FECC00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>瑞典文</b><em>（瑞典）</em></span></div><div class=\"grow\" style=\"animation-delay:0.56s\"><span class=\"sp gw\" data-say=\"dix-sept\" data-lang=\"fr-FR\">dix-sept</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"10\" height=\"20\" fill=\"#0055A4\"/><rect x=\"10\" y=\"0\" width=\"10\" height=\"20\" fill=\"#FFF\"/><rect x=\"20\" y=\"0\" width=\"10\" height=\"20\" fill=\"#EF4135\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>法文</b><em>（法國）</em></span></div><div class=\"grow\" style=\"animation-delay:0.68s\"><span class=\"sp gw\" data-say=\"diecisiete\" data-lang=\"es-ES\">diecisiete</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect x=\"0\" y=\"5\" width=\"30\" height=\"10\" fill=\"#F1BF00\"/><rect x=\"0\" y=\"15\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>西班牙文</b><em>（西班牙）</em></span></div></div><button class=\"grev\">🔍 公布答案</button><div class=\"gwhy\">法文 <b>dix-sept</b> ＝ 10 ＋ 7：<b>先說 10，再說 7</b>！</div><div class=\"gstory\"><span class=\"cx\"><span>🇬🇧 seven<b class=\"e\">teen</b></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> sieb<b class=\"d\">zehn</b></span></span><span class=\"cx\"><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"10\" height=\"20\" fill=\"#0055A4\"/><rect x=\"10\" y=\"0\" width=\"10\" height=\"20\" fill=\"#FFF\"/><rect x=\"20\" y=\"0\" width=\"10\" height=\"20\" fill=\"#EF4135\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> <b class=\"n\">dix</b>-sept<em>10、7</em></span></span></div></div>"
+ },
+ {
+  "tag": "🌍 別的國家怎麼說 18",
+  "sayAll": 1,
+  "src": "gh-ch",
+  "h": "<div class=\"guess many fo\"><div class=\"gen\">英文 <span class=\"sp gbig\" data-say=\"eighteen\">eighteen</span><em>十八</em></div><div class=\"glist\"><div class=\"grow near\" style=\"animation-delay:0.20s\"><span class=\"sp gw\" data-say=\"achtzehn\" data-lang=\"de-DE\">achtzehn</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>德文</b><em>（德國）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.32s\"><span class=\"sp gw\" data-say=\"achttien\" data-lang=\"nl-NL\">achttien</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>荷蘭文</b><em>（荷蘭）</em></span></div><div class=\"grow\" style=\"animation-delay:0.44s\"><span class=\"sp gw\" data-say=\"arton\" data-lang=\"sv-SE\">arton</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#006AA7\"/><rect x=\"9\" width=\"4\" height=\"20\" fill=\"#FECC00\"/><rect y=\"8\" width=\"30\" height=\"4\" fill=\"#FECC00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>瑞典文</b><em>（瑞典）</em></span></div><div class=\"grow\" style=\"animation-delay:0.56s\"><span class=\"sp gw\" data-say=\"dix-huit\" data-lang=\"fr-FR\">dix-huit</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"10\" height=\"20\" fill=\"#0055A4\"/><rect x=\"10\" y=\"0\" width=\"10\" height=\"20\" fill=\"#FFF\"/><rect x=\"20\" y=\"0\" width=\"10\" height=\"20\" fill=\"#EF4135\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>法文</b><em>（法國）</em></span></div><div class=\"grow\" style=\"animation-delay:0.68s\"><span class=\"sp gw\" data-say=\"dieciocho\" data-lang=\"es-ES\">dieciocho</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect x=\"0\" y=\"5\" width=\"30\" height=\"10\" fill=\"#F1BF00\"/><rect x=\"0\" y=\"15\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>西班牙文</b><em>（西班牙）</em></span></div></div><button class=\"grev\">🔍 公布答案</button><div class=\"gwhy\">德、荷：<b>acht</b> ＋ 十，ch 還在唸</div><div class=\"gstory\"><span class=\"cx\"><span>🇬🇧 ei<b class=\"e\">gh</b>t<b class=\"e\">een</b></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> a<b class=\"d\">ch</b>t<b class=\"d\">zehn</b></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> a<b class=\"d\">ch</b>t<b class=\"d\">tien</b></span></span></div></div>"
+ },
+ {
+  "tag": "🌍 別的國家怎麼說 19",
+  "sayAll": 1,
+  "src": "teen",
+  "h": "<div class=\"guess many fo\"><div class=\"gen\">英文 <span class=\"sp gbig\" data-say=\"nineteen\">nineteen</span><em>十九</em></div><div class=\"glist\"><div class=\"grow near\" style=\"animation-delay:0.20s\"><span class=\"sp gw\" data-say=\"neunzehn\" data-lang=\"de-DE\">neunzehn</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>德文</b><em>（德國）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.32s\"><span class=\"sp gw\" data-say=\"negentien\" data-lang=\"nl-NL\">negentien</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>荷蘭文</b><em>（荷蘭）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.44s\"><span class=\"sp gw\" data-say=\"nitton\" data-lang=\"sv-SE\">nitton</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#006AA7\"/><rect x=\"9\" width=\"4\" height=\"20\" fill=\"#FECC00\"/><rect y=\"8\" width=\"30\" height=\"4\" fill=\"#FECC00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>瑞典文</b><em>（瑞典）</em></span></div><div class=\"grow\" style=\"animation-delay:0.56s\"><span class=\"sp gw\" data-say=\"dix-neuf\" data-lang=\"fr-FR\">dix-neuf</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"10\" height=\"20\" fill=\"#0055A4\"/><rect x=\"10\" y=\"0\" width=\"10\" height=\"20\" fill=\"#FFF\"/><rect x=\"20\" y=\"0\" width=\"10\" height=\"20\" fill=\"#EF4135\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>法文</b><em>（法國）</em></span></div><div class=\"grow\" style=\"animation-delay:0.68s\"><span class=\"sp gw\" data-say=\"diecinueve\" data-lang=\"es-ES\">diecinueve</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect x=\"0\" y=\"5\" width=\"30\" height=\"10\" fill=\"#F1BF00\"/><rect x=\"0\" y=\"15\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>西班牙文</b><em>（西班牙）</em></span></div></div><button class=\"grev\">🔍 公布答案</button><div class=\"gwhy\">9 ＋ <b>10</b>：neun-<b>zehn</b>、negen-<b>tien</b></div><div class=\"gstory\"><span class=\"cx\"><span>🇬🇧 nine<b class=\"e\">teen</b></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> neun<b class=\"d\">zehn</b></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> negen<b class=\"d\">tien</b></span></span></div></div>"
+ },
+ {
+  "tag": "🌍 別的國家怎麼說 20",
+  "sayAll": 1,
+  "src": "rhyme",
+  "h": "<div class=\"guess many fo\"><div class=\"gen\">英文 <span class=\"sp gbig\" data-say=\"twenty\">twenty</span><em>二十</em></div><div class=\"glist\"><div class=\"grow near\" style=\"animation-delay:0.20s\"><span class=\"sp gw\" data-say=\"zwanzig\" data-lang=\"de-DE\">zwanzig</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>德文</b><em>（德國）</em></span></div><div class=\"grow near\" style=\"animation-delay:0.32s\"><span class=\"sp gw\" data-say=\"twintig\" data-lang=\"nl-NL\">twintig</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>荷蘭文</b><em>（荷蘭）</em></span></div><div class=\"grow\" style=\"animation-delay:0.44s\"><span class=\"sp gw\" data-say=\"tjugo\" data-lang=\"sv-SE\">tjugo</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#006AA7\"/><rect x=\"9\" width=\"4\" height=\"20\" fill=\"#FECC00\"/><rect y=\"8\" width=\"30\" height=\"4\" fill=\"#FECC00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>瑞典文</b><em>（瑞典）</em></span></div><div class=\"grow\" style=\"animation-delay:0.56s\"><span class=\"sp gw\" data-say=\"vingt\" data-lang=\"fr-FR\">vingt</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"10\" height=\"20\" fill=\"#0055A4\"/><rect x=\"10\" y=\"0\" width=\"10\" height=\"20\" fill=\"#FFF\"/><rect x=\"20\" y=\"0\" width=\"10\" height=\"20\" fill=\"#EF4135\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>法文</b><em>（法國）</em></span></div><div class=\"grow\" style=\"animation-delay:0.68s\"><span class=\"sp gw\" data-say=\"veinte\" data-lang=\"es-ES\">veinte</span><span class=\"gunk\">❓ 哪一國？</span><span class=\"gans\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect x=\"0\" y=\"5\" width=\"30\" height=\"10\" fill=\"#F1BF00\"/><rect x=\"0\" y=\"15\" width=\"30\" height=\"5\" fill=\"#AA151B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg><b>西班牙文</b><em>（西班牙）</em></span></div></div><button class=\"grev\">🔍 公布答案</button><div class=\"gwhy\"><b>tw</b> ＝ 二、<b>-ty</b> ＝ 幾個十：兩個十 ＝ 20</div><div class=\"gstory\"><span class=\"cx\"><span>🇬🇧 <b class=\"e\">tw</b>en<b class=\"e\">ty</b></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> <b class=\"d\">tw</b>in<b class=\"d\">tig</b></span><i>⇄</i><span><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg> <b class=\"d\">zw</b>an<b class=\"d\">zig</b></span></span></div></div>"
+ },
+ {
+  "tag": "記住這件事",
+  "sayAll": 1,
+  "src": "boat",
+  "h": "<table class=\"rem fo\"><tr><th>🇬🇧 英文</th><th><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg>德文</th><th><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg>荷蘭文</th><th>中文</th></tr><tr><td class=\"\" style=\"animation-delay:0.15s\"><span class=\"sp\" data-say=\"eleven\">e<b class=\"e\">leven</b></span></td><td class=\"\" style=\"animation-delay:0.15s\"><span class=\"sp\" data-say=\"elf\" data-lang=\"de-DE\">e<b class=\"d\">lf</b></span></td><td class=\"\" style=\"animation-delay:0.15s\"><span class=\"sp\" data-say=\"elf\" data-lang=\"nl-NL\">e<b class=\"d\">lf</b></span></td><td class=\"z\" style=\"animation-delay:0.15s\">十一</td></tr><tr><td class=\"\" style=\"animation-delay:0.27s\"><span class=\"sp\" data-say=\"twelve\"><b class=\"e\">tw</b>elve</span></td><td class=\"\" style=\"animation-delay:0.27s\"><span class=\"sp\" data-say=\"zwölf\" data-lang=\"de-DE\"><b class=\"d\">zw</b>ölf</span></td><td class=\"\" style=\"animation-delay:0.27s\"><span class=\"sp\" data-say=\"twaalf\" data-lang=\"nl-NL\"><b class=\"d\">tw</b>aalf</span></td><td class=\"z\" style=\"animation-delay:0.27s\">十二</td></tr><tr><td class=\"\" style=\"animation-delay:0.39s\"><span class=\"sp\" data-say=\"thirteen\">thir<b class=\"e\">teen</b></span></td><td class=\"\" style=\"animation-delay:0.39s\"><span class=\"sp\" data-say=\"dreizehn\" data-lang=\"de-DE\">drei<b class=\"d\">zehn</b></span></td><td class=\"\" style=\"animation-delay:0.39s\"><span class=\"sp\" data-say=\"dertien\" data-lang=\"nl-NL\">der<b class=\"d\">tien</b></span></td><td class=\"z\" style=\"animation-delay:0.39s\">十三</td></tr><tr><td class=\"\" style=\"animation-delay:0.51s\"><span class=\"sp\" data-say=\"fourteen\">four<b class=\"e\">teen</b></span></td><td class=\"\" style=\"animation-delay:0.51s\"><span class=\"sp\" data-say=\"vierzehn\" data-lang=\"de-DE\">vier<b class=\"d\">zehn</b></span></td><td class=\"\" style=\"animation-delay:0.51s\"><span class=\"sp\" data-say=\"veertien\" data-lang=\"nl-NL\">veer<b class=\"d\">tien</b></span></td><td class=\"z\" style=\"animation-delay:0.51s\">十四</td></tr><tr><td class=\"\" style=\"animation-delay:0.63s\"><span class=\"sp\" data-say=\"twenty\"><b class=\"e\">tw</b>enty</span></td><td class=\"\" style=\"animation-delay:0.63s\"><span class=\"sp\" data-say=\"zwanzig\" data-lang=\"de-DE\"><b class=\"d\">zw</b>anzig</span></td><td class=\"\" style=\"animation-delay:0.63s\"><span class=\"sp\" data-say=\"twintig\" data-lang=\"nl-NL\"><b class=\"d\">tw</b>intig</span></td><td class=\"z\" style=\"animation-delay:0.63s\">二十</td></tr></table><div class=\"bro3\"><span class=\"b3\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg>德文</span><span class=\"sail\">⛵➜</span><span class=\"b3\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg>荷蘭文</span><span class=\"sail\">⛵➜</span><span class=\"b3\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#012169\"/><path d=\"M0,0L30,20M30,0L0,20\" stroke=\"#FFF\" stroke-width=\"4\"/><path d=\"M0,0L30,20M30,0L0,20\" stroke=\"#C8102E\" stroke-width=\"1.6\"/><path d=\"M15,0V20M0,10H30\" stroke=\"#FFF\" stroke-width=\"6\"/><path d=\"M15,0V20M0,10H30\" stroke=\"#C8102E\" stroke-width=\"3.4\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg>英文</span></div>",
+  "lines": [
+   "1500 年前，<b>德國北部、荷蘭一帶的人坐船到英國</b>",
+   "英文、德文、荷蘭文 ＝ <b>同一家的兄弟姊妹</b>，數字當然像"
+  ]
+ }
+];
+
+
+function draw(s){
+ var h="";
+ if(s.emoji)h+='<div class="emoji '+(s.emojiCls||"pop")+'">'+s.emoji+'</div>';
+ if(s.mid)h+='<div class="mid in d1">'+s.mid+'</div>';
+ if(s.h)h+=s.h;
+ (s.lines||[]).forEach(function(t,k){h+='<div class="sub in d'+(k+2)+'">'+t+'</div>'});
+ var t=s.tag?'<div class="tag in">'+s.tag+'</div>':'';
+ /* 猜猜看：先答題，答了（或按「直接看答案」）才揭曉 */
+ if(s.q){var o=s.q.o.map(function(x,n){return{x:x,n:n}});
+  for(var a=o.length-1;a>0;a--){var b=Math.floor(Math.random()*(a+1)),c=o[a];o[a]=o[b];o[b]=c}
+  return PH.expand(t+'<div class="qz"><div class="qq">🤔 '+s.q.q+'</div><div class="qo">'+
+   o.map(function(x){return '<button data-ok="'+(x.n===0?1:0)+'">'+x.x+'</button>'}).join('')+
+   '</div><button class="qskip">👀 直接看答案</button><div class="qresw"></div></div><div class="rv">'+h+'</div>')}
+ return PH.expand(t+h);
+}
+function qAns(b){
+ if(!stage.classList.contains("qwait"))return;
+ var s=S[i];if(!s.q)return;
+ var ok=b&&b.getAttribute("data-ok")==="1";
+ [].forEach.call(stage.querySelectorAll(".qo button"),function(x){
+  x.classList.add(x.getAttribute("data-ok")==="1"?"ok":(x===b?"bad":"dim"))});
+ var r=stage.querySelector(".qresw");
+ var right=s.q.o[0].replace(/<[^>]+>/g,"");
+ if(r)r.innerHTML='<div class="qres '+(ok?'ok':'no')+'">'+(b?(ok?'🎉 答對了！':'😮 答案是：'+s.q.o[0]):'✅ 答案是：'+s.q.o[0])+'</div>';
+ setTimeout(function(){stage.classList.remove("qwait");stage.classList.add("qdone");PH.autoSay(stage)},b?900:200);
+}
+
+var i=0,reduce=false;
+try{reduce=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)}catch(e){}
+if(reduce)document.body.classList.add("reduce");
+
+var dots=document.getElementById("dots");
+for(var k=0;k<S.length;k++)dots.appendChild(document.createElement("i"));
+
+/* 唸一次：這一幕看得到的每一個字，一個一個唸完，念到哪個字那個字就亮
+   （使用者 2026-09-24 指定，parts.html／world.html）。外語照各自的語言唸。 */
+var SAYALL=1,chainId=0;
+function visible(el){if(!el.getClientRects().length)return false;
+ for(var p=el;p&&p!==document.body;p=p.parentElement){var cs=getComputedStyle(p);
+  if(cs.display==="none"||cs.visibility==="hidden")return false}return true}
+function sayAll(){
+ var els=[].filter.call(stage.querySelectorAll(".phw,.sp"),function(el){
+  return visible(el)&&!(el.parentElement&&el.parentElement.closest(".phw,.sp"))});
+ PH.sayChain(els);    /* 瑞典文會先查預先做好的語音檔（_phonics.js） */
+}
+function say(){if(SAYALL){sayAll();return}
+ var w=S[i].say;if(!w)return;
+ var el=stage.querySelector('.phw[data-say="'+w+'"]');
+ if(el){PH.sayWord(el,S[i].sayLang)}else{PH.say(w,S[i].sayLang)}}
+
+var stage=document.getElementById("stage");
+function show(n){
+ chainId++;PH.chainStop();
+ var back=(n<i);
+ i=Math.max(0,Math.min(S.length-1,n));
+ window.SRCAT=S[i].src||"";   /* 按「📖 出處」直接跳到這一幕的證據（使用者 2026-09-25 指定） */
+ stage.innerHTML=draw(S[i]);
+ stage.classList.toggle("qwait",!!S[i].q);stage.classList.remove("qdone");
+ PH.autoSay(stage);      // 補充單字、字詞、用法都可以點來聽
+ if(!reduce){stage.classList.remove("turnR","turnL");void stage.offsetWidth;
+  stage.classList.add(back?"turnL":"turnR")}
+ var d=dots.children;
+ for(var k=0;k<d.length;k++)d[k].className=(k===i?"on":"");
+ document.getElementById("prev").disabled=(i===0);
+ document.getElementById("next").disabled=(i===S.length-1);
+}
+
+document.getElementById("prev").addEventListener("click",function(){show(i-1)});
+document.getElementById("next").addEventListener("click",function(){show(i+1)});
+document.getElementById("again").addEventListener("click",function(){show(0)});
+document.getElementById("say").addEventListener("click",say);
+/* 猜猜看：公布答案／藏起來、右邊看中文／英文／德文 */
+stage.addEventListener("click",function(e){
+ var t=e.target;
+ var qb=t.closest?t.closest(".qo button"):null;if(qb){qAns(qb);return}
+ if(t.closest&&t.closest(".qskip")){qAns(null);return}
+ var r=t.closest?t.closest(".grev"):null;
+ if(r){var g=r.closest(".guess");var on=!g.classList.contains("rev");g.classList.toggle("rev",on);
+  r.textContent=on?"🙈 藏起來再猜一次":"🔍 公布答案";return}
+ var m=t.closest?t.closest(".gmode button"):null;
+ if(m){var g2=m.closest(".guess");g2.setAttribute("data-m",m.getAttribute("data-m"));
+  [].forEach.call(g2.querySelectorAll(".gmode button"),function(b){b.classList.toggle("on",b===m)});}
+});
+document.addEventListener("keydown",function(e){
+ if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();show(i+1)}
+ if(e.key==="ArrowLeft")show(i-1);
+});
+
+var jump=0;
+try{var hh=parseInt((location.hash||"").slice(1),10);if(!isNaN(hh))jump=hh}catch(e){}
+show(jump);
+document.getElementById("back").addEventListener("click",function(){
+ if(history.length>1){history.back()}else{location.href="numbers-world.html"}});
+document.getElementById("fwd").addEventListener("click",function(){location.href="numbers-world-3.html"});
+document.getElementById("home").addEventListener("click",function(){location.href="../index.html"});
+(function(){var T=document.getElementById("toc");
+ function lbl(s,k){var t=(s.tag||s.k||s.mid||(k===0?"開場":"第 "+(k+1)+" 幕"));return String(t).replace(/<[^>]+>/g,"")}
+ function open(){document.getElementById("tocg").innerHTML=S.map(function(s,k){
+   return '<button data-k="'+k+'"'+(k===i?' class="cur"':'')+'><b>'+(k+1)+'</b><span>'+lbl(s,k)+'</span></button>'}).join("");
+  T.classList.add("on")}
+ document.getElementById("tocb").addEventListener("click",open);
+ document.getElementById("tocx").addEventListener("click",function(){T.classList.remove("on")});
+ T.addEventListener("click",function(e){var b=e.target.closest?e.target.closest("[data-k]"):null;if(!b)return;
+  T.classList.remove("on");show(+b.getAttribute("data-k"))});
+ document.addEventListener("keydown",function(e){if(T.classList.contains("on")){if(e.key==="Escape")T.classList.remove("on");
+  e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation()}},true);
+})();
+
+(function(){var s=document.getElementById("src");if(!s)return;
+ var L=s.querySelectorAll(".sl"),D=s.querySelectorAll(".sdots i"),k=0;
+ function go(n){k=Math.max(0,Math.min(L.length-1,n));
+  for(var j=0;j<L.length;j++){L[j].classList.toggle("on",j===k);D[j].classList.toggle("on",j===k)}
+  /* 換頁時動畫重播一次 */
+  var c=L[k];c.style.display="none";void c.offsetWidth;c.style.display="";
+  document.getElementById("srcn").textContent=k+1;
+  document.getElementById("srcp").disabled=(k===0);
+  document.getElementById("srcf").disabled=(k===L.length-1)}
+ /* 從哪一條開始：這一幕／這一張字卡對應的那一條（window.SRCAT：出處的 id 或第幾條），
+    沒有對應就從第一條開始（使用者 2026-09-25 指定：按「出處」直接跳到這一張的證據） */
+ function at(v){if(v==null||v==="")return 0;if(typeof v==="number")return v;
+  for(var j=0;j<L.length;j++)if(L[j].getAttribute("data-id")===v)return j;return 0}
+ var T=document.getElementById("stoc");
+ function toc(v){T.classList.toggle("on",v);if(v){[].forEach.call(T.querySelectorAll("button"),function(b,j){b.classList.toggle("cur",j===k)})}}
+ function t(v,from){s.classList.toggle("on",v);toc(false);if(v)go(at(from))}
+ window.SRCOPEN=function(id){t(true,id)};
+ document.getElementById("srcb").addEventListener("click",function(){
+  if(s.classList.contains("on"))t(false);else t(true,window.SRCAT)});
+ document.getElementById("srcx").addEventListener("click",function(){t(false)});
+ document.getElementById("srct").addEventListener("click",function(){toc(!T.classList.contains("on"))});
+ T.addEventListener("click",function(e){var b=e.target.closest?e.target.closest("button"):null;if(!b)return;
+  toc(false);go(+b.getAttribute("data-k")||0)});
+ document.getElementById("srcp").addEventListener("click",function(){go(k-1)});
+ document.getElementById("srcf").addEventListener("click",function(){go(k+1)});
+ /* 出處開著的時候，← → 翻的是出處，不是後面那一頁（先攔下來） */
+ document.addEventListener("keydown",function(e){
+  if(!s.classList.contains("on"))return;
+  if(e.key==="Escape"){if(T.classList.contains("on"))toc(false);else t(false)}
+  else if(e.key==="ArrowRight"||e.key===" "){go(k+1)}
+  else if(e.key==="ArrowLeft"){go(k-1)}
+  else return;
+  e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();
+ },true);})();
+</script>
+</body>
+</html>

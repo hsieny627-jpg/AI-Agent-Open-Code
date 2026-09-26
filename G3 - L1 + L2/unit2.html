@@ -76,11 +76,12 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 
 .ap{color:var(--ap);font-weight:700}
 
-#miss,#missAll{position:fixed;inset:0;z-index:95;background:#000;display:none;flex-direction:column;
+#miss,#missAll,#look{position:fixed;inset:0;z-index:95;background:#000;display:none;flex-direction:column;
  align-items:center;padding:calc(var(--safeT) + clamp(8px,1.6vh,20px)) clamp(14px,3vw,40px)
  calc(var(--safeB) + clamp(8px,1.6vh,20px));overflow-y:auto}
-#miss.on,#missAll.on{display:flex}
-#miss .mbox,#missAll .mbox{width:100%;max-width:1060px;margin:auto 0;display:flex;flex-direction:column;
+#miss.on,#missAll.on,#look.on{display:flex}
+#look{z-index:96}
+#miss .mbox,#missAll .mbox,#look .mbox{width:100%;max-width:1060px;margin:auto 0;display:flex;flex-direction:column;
  align-items:center;gap:clamp(6px,1.4vh,16px)}
 .mhd{font-size:clamp(30px,6vh,60px);font-weight:700;color:var(--no);text-align:center;line-height:1.1;
  animation:mShake .5s cubic-bezier(.3,.8,.3,1)}
@@ -166,6 +167,16 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .mcard .say{align-self:flex-start;background:#10301F;border:1px solid var(--ok);border-radius:999px;color:#fff;
  font-size:clamp(15px,2.4vh,22px);padding:6px 16px}
 .mbtns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:clamp(4px,1vh,10px)}
+/* 2026-09-26 使用者指定：正確答案每一個英文字正下方 ＝ 它的中文；下面一行整句翻譯 */
+.mv.glw,.ma.gl .mv{display:inline-flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:0 .32em}
+.gw{display:inline-flex;flex-direction:column;align-items:center;line-height:1.1}
+.gw b{font-weight:700}
+.gw i{font-style:normal;font-size:.46em;color:#FFE9A8;font-weight:700;margin-top:.12em;white-space:nowrap;letter-spacing:.02em}
+.gw.gc{margin-left:-.3em}.gw.gp{margin-left:-.3em}.gw.gp i{visibility:hidden}
+.mtr{font-size:clamp(22px,4.2vh,42px);color:var(--fg);text-align:center;line-height:1.3;opacity:0;animation:mIn .45s ease .8s forwards}
+.mtr b{color:#FFE9A8}
+#look .lk{font-size:clamp(15px,2.4vh,22px);color:var(--dim)}
+.mvar{font-size:clamp(15px,2.4vh,22px);color:var(--acc);letter-spacing:.06em}
 .mbtns button{background:#0F3323;border-color:var(--ok)}
 
 .reduce *{animation:none!important;transition:none!important}
@@ -194,7 +205,7 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 
 /* 卡片類型標籤 */
 .kind{position:absolute;top:clamp(9px,1.5vh,16px);left:clamp(12px,1.8vw,22px);
- font-size:clamp(11px,1.6vh,14px);color:#3E3E3E;letter-spacing:.14em}
+ font-size:clamp(15px,2.3vh,21px);color:#FFD66B;font-weight:700;letter-spacing:.1em}  /* 2026-09-26 使用者：左上方寫這張卡的主題，要看得見 */
 
 /* ── 句子（一個字一欄：英文／中文／圖示）── */
 .wrap{width:100%;display:flex;align-items:center;justify-content:center;
@@ -313,6 +324,9 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .sub.on{background:#2C3A48;border-color:var(--acc);color:#fff}
 .sub:active{transform:scale(.95)}
 .sub.adv{border-style:dashed;border-color:#3A4650}
+.subs.many{gap:clamp(2px,.4vh,5px)}
+.subs.many .subrow{gap:clamp(3px,.5vw,6px)}
+.subs.many .sub{font-size:clamp(11.5px,1.65vh,15px);padding:clamp(3px,.5vh,5px) clamp(6px,.8vw,10px);gap:3px}
 
 /* ── 等式卡：兩句「一句一句亮起來、一句一句唸出來」，最後兩句一起亮＋等號放大
    （使用者 2026-09-21 指定：兩句都要完整聽到，而且要秒懂它們是同一句）── */
@@ -392,6 +406,8 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .fgrid .fe{font-size:clamp(30px,6.2vh,62px);color:var(--be);font-weight:700;text-align:center;line-height:1}
 .fgrid .fb{font-size:clamp(32px,6.8vh,68px);color:var(--acc);font-weight:700;text-align:left;white-space:nowrap;line-height:1.1}
 .fgrid .fh{opacity:0;transform:translateY(18px) scale(.7)}
+/* left:1 ＝ 英文靠左，每一行的第一個字母上下對齊（使用者 2026-09-26：You／Your 的 Y、What／How／How old） */
+.fgrid.left .fa{text-align:left}
 .fgrid.uses{row-gap:clamp(4px,.9vh,10px)}
 .fgrid.uses .fa{font-size:clamp(32px,6.6vh,68px)}
 .fgrid.uses .fb{font-size:clamp(26px,5vh,50px)}
@@ -607,6 +623,10 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .rvhud{display:flex;align-items:center;justify-content:space-between;gap:clamp(8px,1.6vw,20px);width:100%}
 .rvhud .k{font-size:clamp(10.5px,1.5vh,13px);color:#5C5C5C;letter-spacing:.12em}
 .rvhud .v{font-size:clamp(16px,2.7vh,26px);font-weight:700}
+/* 2026-09-26 使用者：右上角分數和文字放大 */
+.rvsb{display:flex;flex-direction:column;align-items:center;line-height:1.05}
+.rvsb b{font-size:clamp(34px,6.4vh,64px);font-weight:700;color:var(--gold);text-shadow:0 0 18px rgba(255,210,74,.45)}
+.rvsb em{font-style:normal;font-size:clamp(13px,2vh,19px);color:#BFA75A;font-weight:700;letter-spacing:.06em}
 .rvq{font-size:clamp(24px,4.6vh,46px);font-weight:700;text-align:center;line-height:1.3}
 .rvsim{font-size:clamp(14px,2.2vh,20px);color:var(--gold);border:1px solid #5A4A18;background:#1A1508;
  border-radius:999px;padding:3px 14px;font-weight:700}
@@ -621,7 +641,7 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .rvo button.dim{opacity:.32}
 .rvfb{min-height:clamp(42px,7vh,70px);text-align:center;font-size:clamp(14px,2.3vh,22px);
  color:var(--body);line-height:1.45}
-.rvfb .gain{font-size:clamp(20px,3.6vh,34px);font-weight:700;color:var(--ok)}
+.rvfb .gain{font-size:clamp(28px,5.4vh,54px);font-weight:700;color:var(--ok)}
 .rvfb .surp{color:var(--gold);font-weight:700}
 .rvbtns{display:flex;gap:clamp(7px,1.3vw,14px);flex-wrap:wrap;justify-content:center}
 .rvbtns button{background:var(--btn);border:1px solid var(--line);border-radius:999px;
@@ -869,11 +889,15 @@ function mPaint(s,T,keep,cls){ /* 把沒對上的字包起來，其他字照原�
 }
 function mEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 function mStrip(h){var d=document.createElement('div');d.innerHTML=String(h||'');return d.textContent||''}
-function mPair(o){ /* 你選的（紅框）／正確答案（金框） */
- var pick=o.pick==null?null:mStrip(o.pick), ans=mStrip(o.ans), dp='', da='';
- if(pick!=null&&pick!==''){var d=mDiff(pick,ans);dp=mPaint(pick,d.A,d.ia,'x');da=mPaint(ans,d.B,d.ib,'f')}
+function mPair(o){ /* 你選的（紅框）／正確答案（金框）＋ 逐字中文、整句翻譯（2026-09-26） */
+ var pick=o.pick==null?null:mStrip(o.pick), ans=mStrip(o.ans), dp='', da='', bad=[];
+ if(pick!=null&&pick!==''){var d=mDiff(pick,ans);dp=mPaint(pick,d.A,d.ia,'x');da=mPaint(ans,d.B,d.ib,'f');
+  d.B.forEach(function(t,k){if(!d.ib[k])bad.push(t)})}
  else da=ap(mEsc(ans));
- return {p:(pick==null?'⏰ 時間到，沒有作答':(pick===''?'（沒有選）':dp)),a:da,en:/[A-Za-z]/.test(ans),ans:ans};
+ var src=gSrc(o),g='',tr='';
+ if(src){g=src.en===ans?mGloss(ans,bad):null;tr=src.zh||'';
+  if(g===null){g='';o._gq=mGloss(src.en,null)}}
+ return {p:(pick==null?'⏰ 時間到，沒有作答':(pick===''?'（沒有選）':dp)),a:da,g:g,tr:tr,gq:o._gq||'',en:/[A-Za-z]/.test(ans),ans:ans};
 }
 var MISSLOG=[], missT=null, missCB=null, MS=null, MISSN=8;
 function mEl(){
@@ -910,21 +934,23 @@ function mStrip4(cur){ /* 加分的秒懂說明：⭐ ➜ 👀 8 秒 ➜ 📝 �
  return '<div class="mbn'+(cur!=null?' cur':'')+'">'+st.map(function(x,k){
   return (k?'<i>➜</i>':'')+'<span'+(cur===k?' class="now"':'')+'>'+x+'</span>'}).join('')+'</div>';
 }
-function mCan(){return !!(MS&&MS.o&&MS.o.gain&&((MS.o.sims&&MS.o.sims.length)||MS.o.sim0))}
+function mCan(){return !!(MS&&MS.o&&MS.o.gain&&(MS.o.self||(MS.o.sims&&MS.o.sims.length)||MS.o.sim0))}
 /* 錯題分析頁：reread ＝ 按了加分以後的「再看 8 秒」 */
 function mRead(reread){
  var o=MS.o, p=mPair(o), m=mEl();
  m.innerHTML='<div class="mbox">'+
   '<div class="mhd'+(reread?' bn':'')+'">'+(reread?'👀 再仔細看一次':(o.pick==null?'⏰ 時間到':'❌ 答錯了'))+'</div>'+
   (o.q?'<div class="mq">'+ap(o.q)+'</div>':'')+
+  (p.gq?'<div class="mcmp"><div class="ma gl" style="animation-delay:.1s;font-size:clamp(26px,5.6vh,56px)"><span class="mi">🔤</span><span class="mv">'+p.gq+'</span></div></div>':'')+
   '<div class="mcmp"><div class="mp"><span class="mi">❌</span><span class="mv">'+p.p+'</span></div>'+
-  '<div class="mar">⬇</div><div class="ma"><span class="mi">✅</span><span class="mv">'+p.a+'</span></div></div>'+
+  '<div class="mar">⬇</div><div class="ma'+(p.g?' gl':'')+'"><span class="mi">✅</span><span class="mv">'+(p.g?p.g:p.a)+'</span></div></div>'+
+  (p.tr?'<div class="mtr">整句：<b>'+mEsc(p.tr)+'</b></div>':'')+
   (o.why?'<div class="mw">💡 '+ap(o.why)+'</div>':'')+
   (mCan()?mStrip4(reread?1:null):'')+
   '<div class="mft" id="mft">'+(p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+
    '<span class="mcd" id="mcdn">'+MISSN+'</span></div></div>';
  m.scrollTop=0;m.classList.add('on');
- mSay3(p.ans);
+ mSay3(/[A-Za-z]{2}/.test(p.ans)?p.ans:((gSrc(o)||{}).en||''));
  mCount(MISSN,function(){
   if(reread){mQuiz();return}
   var f=document.getElementById('mft');if(!f)return;
@@ -940,21 +966,22 @@ function missShow(o,cb){
  MISSLOG=MISSLOG.filter(function(x){return x.key!==key});
  MISSLOG.push({key:key,q:o.q,pick:o.pick,ans:o.ans,why:o.why});
  missCB=cb||null;
- MS={o:o};
+ o.self0=o.self;MS={o:o};
  mRead(false);
 }
 function missBonus(){if(!mCan())return;sayStop();mRead(true)}
 /* 加分題：字放大的類似題，選項重洗 */
 function mQuiz(){
- var o=MS.o, s=(o.sims&&o.sims.length)?o.sims.shift():o.sim0;
+ /* 2026-09-26 使用者指定：加分題 ＝ 同一題換個樣子（mVar），一律四個選項；原題不能轉就用最像的一題 */
+ var o=MS.o, s=o.self?mVar(o.self,o.self===o.self0?o.pick:null):((o.sims&&o.sims.length)?mVar(o.sims.shift()):mVar(o.sim0));
  if(!s){missHide(true);return}
  MS.s=s;
  var opts=shuf(s.o.map(function(x,n){return{x:x,n:n}}));
  var m=mEl();
- m.innerHTML='<div class="mbox"><div class="mhd bn">⭐ 加分題</div>'+mStrip4(2)+
+ m.innerHTML='<div class="mbox"><div class="mhd bn">⭐ 加分題</div><div class="mvar">🔁 同一個重點，換個樣子再考一次</div>'+mStrip4(2)+
   '<div class="mbq">'+ap(s.q)+'</div>'+
   (s.say?'<div class="mft"><button class="say" data-say="'+mEsc(s.say).replace(/"/g,'&quot;')+'">🔊 再聽一次</button></div>':'')+
-  '<div class="mbo'+(opts.length<3?' one':'')+'">'+opts.map(function(t,k){
+  '<div class="mbo">'+opts.map(function(t,k){
    return '<button data-ok="'+(t.n===0)+'" data-t="'+mEsc(t.x).replace(/"/g,'&quot;')+'" style="animation-delay:'+(0.15+k*0.1).toFixed(2)+'s">'+ap(t.x)+'</button>'}).join('')+'</div>'+
   '<div class="mx2">答對 ＝ <b>'+o.pts+' ✕ 2</b></div></div>';
  m.scrollTop=0;
@@ -982,7 +1009,7 @@ function missPick(b){
  setTimeout(function(){
   if(!missOn())return;
   var no={q:s.q,pick:b.getAttribute('data-t'),ans:s.o[0],why:s.h,pts:o.pts,gain:o.gain,
-   sims:o.sims,sim0:o.sim0||s};
+   sims:o.sims,sim0:o.sim0||s,self:o.self||s,look:o.look};
   var key=mStrip(no.q)+'|'+mStrip(no.ans);
   MISSLOG=MISSLOG.filter(function(x){return x.key!==key});
   MISSLOG.push({key:key,q:no.q,pick:no.pick,ans:no.ans,why:no.why});
@@ -1010,7 +1037,8 @@ function missAll(title,done){
   MISSLOG.map(function(x,k){var p=mPair(x);
    return '<div class="mcard" style="animation-delay:'+(0.1+k*0.14).toFixed(2)+'s">'+
    '<span class="mn">第 '+(k+1)+' 題</span>'+(x.q?'<div class="cq">📝 '+ap(x.q)+'</div>':'')+
-   '<div class="cp">❌ '+p.p+'</div><div class="ca">✅ <b>'+p.a+'</b></div>'+
+   '<div class="cp">❌ '+p.p+'</div><div class="ca">✅ <b>'+(p.g?'<span class="mv glw">'+p.g+'</span>':p.a)+'</b></div>'+
+   (p.tr?'<div class="cw">整句：<b>'+mEsc(p.tr)+'</b></div>':'')+
    (x.why?'<div class="cw">💡 '+ap(x.why)+'</div>':'')+
    (p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+'</div>'}).join('')+
   '<div class="mbtns"><button id="mAllOk">✅ 我都弄懂了</button></div></div>';
@@ -1029,9 +1057,150 @@ function simRank(me,list,txt,hint){
   return {x:x,s:(t?n/t:0)+(ha&&hint(x)===ha?1:0)+Math.random()*.01}}).sort(function(p,q){return q.s-p.s})
   .map(function(p){return p.x});
 }
+var GL={"how":"如何","how old":"幾歲","years old":"歲","year old":"歲","year":"年","years":"年","old":"老的","i":"我","my":"我的","you":"你","your":"你的","he":"他","she":"她","his":"他的","her":"她的","him":"他","is":"是","am":"是","are":"是","'s":"是","'m":"是","'re":"是","not":"不","isn't":"不是","n't":"不","what":"什麼","who":"誰","where":"哪裡","when":"什麼時候","why":"為什麼","whose":"誰的","name":"名字","a":"一位","an":"一個","yes":"是的","no":"不","and":"和","but":"但是","this":"這","my name":"我的 名字","like":"喜歡","likes":"喜歡","to":"去","can":"會","hi":"嗨","it":"它","it's":"它是","book":"書","gh":"（不發音）","many":"多少","the":"這個","one":"一","me":"我","hello":"哈囉","about":"關於","family":"家人","was":"是（過去）","has":"有","have":"有","do":"做","does":"做","ken":"Ken","emma":"Emma","ten":"十","alan":"Alan","wendy":"Wendy","mike":"Mike","six":"六","seven":"七","eight":"八","nine":"九","eleven":"十一","twelve":"十二","basketball":"籃球","dodgeball":"躲避球","pokémon cards":"寶可夢卡","switch games":"Switch 遊戲","minecraft":"當個創世神","lego":"樂高","comics":"漫畫","recess":"下課時間","pe class":"體育課","bubble tea":"珍珠奶茶","books":"書","baseball":"棒球","soccer":"足球","video games":"電玩","art class":"美勞課","music":"音樂","ice cream":"冰淇淋","fried chicken":"炸雞","dogs":"狗","cats":"貓","play basketball":"打籃球","play dodgeball":"打躲避球","play tag":"玩鬼抓人","play video games":"打電動","collect pokémon cards":"收集寶可夢卡","build lego":"組樂高","draw":"畫畫","sing":"唱歌","dance":"跳舞","read":"閱讀","swim":"游泳","cook":"做菜","play baseball":"打棒球","play badminton":"打羽毛球","play the piano":"彈鋼琴","play the guitar":"彈吉他","ride my bike":"騎我的腳踏車","skateboard":"溜滑板","jump rope":"跳繩","play with my dog":"和我的狗玩"},TR={"what's your name?":"你的名字是什麼？","my name is ken.":"我的名字是 Ken。","my name is alan.":"我的名字是 Alan。","my name is wendy.":"我的名字是 Wendy。","my name is mike.":"我的名字是 Mike。","my name is emma.":"我的名字是 Emma。","i'm ken.":"我是 Ken。","i'm alan.":"我是 Alan。","i'm wendy.":"我是 Wendy。","i'm mike.":"我是 Mike。","i'm emma.":"我是 Emma。","my name is emma. ＝ i'm emma.":"我的 名字 是 Emma。＝ 我 是 Emma。","my name is ken. ＝ i'm emma.":"我的 名字 是 Ken。＝ 我 是 Emma。","my name is alan. ＝ i'm emma.":"我的 名字 是 Alan。＝ 我 是 Emma。","my name is wendy. ＝ i'm emma.":"我的 名字 是 Wendy。＝ 我 是 Emma。","my name is mike. ＝ i'm emma.":"我的 名字 是 Mike。＝ 我 是 Emma。","my name is emma. ＝ i'm ken.":"我的 名字 是 Ken。＝ 我 是 Emma。","my name is emma. ＝ i'm alan.":"我的 名字 是 Alan。＝ 我 是 Emma。","my name is emma. ＝ i'm wendy.":"我的 名字 是 Wendy。＝ 我 是 Emma。","my name is emma. ＝ i'm mike.":"我的 名字 是 Mike。＝ 我 是 Emma。","how old are you?":"你幾歲？","i'm ten years old.":"我十歲。","i'm six years old.":"我六歲。","i'm seven years old.":"我七歲。","i'm eight years old.":"我八歲。","i'm nine years old.":"我九歲。","i'm eleven years old.":"我十一歲。","i'm twelve years old.":"我十二歲。","i'm ten.":"我十歲。","i'm six.":"我 是 六 歲。","i'm seven.":"我七歲。","i'm eight.":"我八歲。","i'm nine.":"我九歲。","i'm eleven.":"我十一歲。","i'm twelve.":"我十二歲。","i am ken.":"我是 Ken。","i am nine.":"我九歲。","hi! my name is alan.":"嗨！我的名字是 Alan。","hello! my name is wendy.":"哈囉！我的名字是 Wendy。","i am seven years old.":"我七歲。","what is your name?":"你的名字是什麼？","i am emma.":"我是 Emma。","i am six.":"我六歲。","my name":"我的名字","i'm":"我是","what":"什麼","how old":"幾歲","name":"名字","years old":"歲","i":"我","my":"我的","you":"你","your":"你的","six":"六","seven":"七","nine":"九","eleven":"十一","twelve":"十二","you're":"你是","you're six.":"你六歲。","you are seven.":"你七歲。","you're seven.":"你七歲。","i am ten.":"我十歲。","i am ten years old.":"我十歲。"};
+/* sentences/_miss_rt.js — 瀏覽器端程式（原封不動塞進網頁，跟 _shared.js 的 MISS 放在一起）
+ * 使用者 2026-09-26 指定的三件事：
+ *  ① 答錯頁：正確答案的每一個英文字正下方 ＝ 它的中文；下面再一行整句翻譯（mGloss／mTr）
+ *  ② 加分題：不是換一題「不像的題目」，而是**同一題換個樣子**（名字／職業／數字換掉、選項換位置、
+ *     選項文字稍微變一下），一律**四個選項**，錯的選項都是學生真的會寫錯的樣子（mVar）
+ *  ③ 火眼金睛：答對也要看 6 秒（正確句子＋逐字中文＋整句翻譯＋自動唸）才得分（lookShow）
+ * GL（字 ➜ 中文）、TR（句 ➜ 中文）由 _gloss.js 在 build 時從這個網站的資料自動收集。
+ */
+function gKey(s){return String(s).replace(/<[^>]+>/g,'').replace(/[’‘]/g,"'").replace(/\s+/g,' ')
+ .replace(/\s+([?.!,])/g,'$1').replace(/\s+'/g,"'").trim().toLowerCase()}
+/* 切成一個一個「字」：What's ➜ What ＋ 's（使用者的例子：'s 正下方是「是」）；How old、years old 算一個 */
+function gUnits(s){
+ s=String(s);var r=[],re=/[A-Za-z]+n[’']t\b|[A-Za-z]+|[’'][A-Za-z]+|[?.!,]/g,m;
+ while((m=re.exec(s)))r.push({t:m[0],s:m.index,e:m.index+m[0].length});
+ for(var i=0;i+1<r.length;i++){var two=gKey(r[i].t+' '+r[i+1].t);
+  if(/[a-z]/.test(r[i+1].t)&&GL[two]&&/^(how old|years old|year old)$/.test(two)){
+   r.splice(i,2,{t:s.slice(r[i].s,r[i+1].e),s:r[i].s,e:r[i+1].e})}}
+ return r;
+}
+function gZh(t){var k=gKey(t);if(GL[k]!=null)return GL[k];
+ if(/^[a-z]+n't$/.test(k)&&GL[k.replace(/n't$/,'')])return GL[k.replace(/n't$/,'')]+' 不';
+ return ''}
+/* 名字、數字、職業換掉以後的句子，也翻得出來 */
+var GSW=[['Ken','Ken'],['Alan','Alan'],['Wendy','Wendy'],['Mike','Mike'],['Emma','Emma']];
+var GSA=[['six','六'],['seven','七'],['eight','八'],['nine','九'],['ten','十'],['eleven','十一'],['twelve','十二']];
+var GSJ=[['doctor','醫生'],['teacher','老師'],['student','學生'],['farmer','農夫'],['nurse','護理師'],['cook','廚師']];
+function mTr(s){
+ var k=gKey(s);if(!k||!/[a-z]/.test(k))return '';
+ if(TR[k])return TR[k];
+ var sets=[GSW,GSA,GSJ];
+ for(var a=0;a<sets.length;a++)for(var i=0;i<sets[a].length;i++){
+  var w=sets[a][i],re=new RegExp('\\b'+w[0].toLowerCase()+'\\b');if(!re.test(k))continue;
+  for(var j=0;j<sets[a].length;j++){if(j===i)continue;var v=sets[a][j],k2=k.replace(re,v[0].toLowerCase());
+   if(TR[k2]&&TR[k2].indexOf(v[1])>=0)return TR[k2].replace(v[1],w[1])}}
+ return '';
+}
+/* 正確答案畫成「英文在上、中文在下」一欄一欄；bad ＝ 要框金色（改對的字）的字元範圍 */
+function mGloss(ans,bad){
+ var U=gUnits(ans),h='',hit=function(u){if(!bad)return false;for(var i=0;i<bad.length;i++)
+  if(u.s<bad[i].e&&u.e>bad[i].s)return true;return false};
+ U.forEach(function(u){
+  if(/^[?.!,]$/.test(u.t)){h+='<span class="gw gp"><b>'+u.t+'</b><i>&nbsp;</i></span>';return}
+  var z=gZh(u.t);
+  h+='<span class="gw'+(/^['’]/.test(u.t)?' gc':'')+'"><b'+(hit(u)?' class="f"':'')+'>'+ap(mEsc(u.t))+'</b><i>'+(z?mEsc(z):'&nbsp;')+'</i></span>'});
+ return h;
+}
+function gIsEn(s){s=mStrip(s);return /[A-Za-z]{2,}|^I\b/.test(s)&&!/[一-鿿]/.test(s)}
+/* 答案是中文（看英文選中文）：就拿題目裡引號中的英文句子來逐字對照 */
+function gSrc(o){var a=mStrip(o.ans);if(gIsEn(a))return {en:a,zh:mTr(a)};
+ var q=mStrip(o.q||''),m=q.match(/["“「]([^"”」]*[A-Za-z][^"”」]*)["”」]/);
+ if(m&&gIsEn(m[1])&&/[一-鿿]/.test(a))return {en:m[1],zh:a.replace(/^[^一-鿿]+/,'')};
+ return null}
+
+/* ── ② 加分題：同一題換個樣子，四個選項 ── */
+function gCanon(s){s=gKey(s).replace(/[?.!]$/,'');
+ return s.replace(/'s\b/g,' is').replace(/'m\b/g,' am').replace(/'re\b/g,' are').replace(/n't\b/g,' not')
+  .replace(/ years old\b/g,'').replace(/^my name is /,'i am ').replace(/\s+/g,' ').trim()}
+var MUT=[
+ [/\byour\b/,'you'],[/\byou\b/,'your'],[/\bYour\b/,'You'],[/\bYou\b(?![’'])/,'Your'],
+ [/\bMy name\b/,'I name'],[/\bI[’']m\b/,'I are'],[/\bI[’']m\b/,'Me'],[/\bYou[’']re\b/,'You is'],[/\bYou[’']re\b/,'You’s'],[/\bYou[’']re\b/,'Your are'],[/\bmy\b/,'I'],[/\bI[’']m\b/,'My'],[/\bI am\b/,'I is'],
+ [/\bis\b/,'are'],[/\bare\b/,'is'],[/\bam\b/,'is'],[/([A-Za-z])[’']s\b/,'$1'],[/([A-Za-z])[’']m\b/,'$1'],
+ [/\byears old\b/,'year old'],[/\bHow old\b/,'How'],[/\bWhat\b/,'How'],[/\bHow\b(?! old)/,'What'],
+ [/\bhe\b/,'she'],[/\bshe\b/,'he'],[/\bHe\b/,'She'],[/\bShe\b/,'He'],[/\bhe\b/,'him'],[/\bHe[’']s\b/,'His'],
+ [/\ba ([a-z]+)/,'$1'],[/\bIs (he|she)\b/,'$1 is'],[/\bWho\b/,'What'],[/\bisn[’']t\b/,'not'],[/\bWho[’']s\b/,'Whose'],
+ [/他/,'她'],[/她/,'他'],[/你的/,'我的'],[/我的/,'你的'],[/誰/,'什麼'],[/什麼/,'誰'],[/幾歲/,'好嗎'],[/名字/,'年紀']
+];
+/* 一個字的答案：同一組容易搞混的字 */
+var MSET=[['is','are','am','be','was','do'],["'s","'m","'re",'is','are'],['I','My','You','Your','Me'],['my','your','I','you','me'],
+ ['he','she','him','his','her'],['He','She','His','Her','Him'],['What','How','Who','Where','When'],['Who','Whose','What','How'],
+ ['How old','How','What','How many'],['year','years','old','years old'],['a','an','the','one']];
+function mMuts(c){var out=[];MUT.forEach(function(r){if(r[0].test(c)){var x=c.replace(r[0],r[1]);if(x!==c)out.push(x)}});
+ MSET.forEach(function(S){if(S.indexOf(c)>=0)S.forEach(function(x){if(x!==c)out.push(x)})});
+ /* 中文答案：職業、數字換一個 */
+ [GSJ,GSA].forEach(function(S){S.forEach(function(w){if(c.indexOf(w[1])>=0)S.forEach(function(v){
+  if(v!==w&&c.indexOf(v[1])<0&&!(S===GSA&&/十[一二]/.test(c)))out.push(c.replace(w[1],v[1]))})})});
+ /* 兩個字對調（語序錯），開頭大寫 */
+ var w=c.split(' ');if(w.length>=3&&/[A-Za-z]/.test(c)){for(var n=0;n<2;n++){var i=Math.floor(Math.random()*(w.length-1));
+  var v=w.slice(),t=v[i];v[i]=v[i+1];v[i+1]=t;if(/[?.!,]$/.test(w[i])||/[?.!,]$/.test(w[i+1]))continue;
+  var y=v.join(' ');y=y.charAt(0).toUpperCase()+y.slice(1);out.push(y)}}
+ /* 少一個字 */
+ if(w.length>=3&&/[A-Za-z]/.test(c)){var d=1+Math.floor(Math.random()*(w.length-2));var z=w.slice();z.splice(d,1);
+  if(!/^[?.!]$/.test(z[z.length-1]))out.push(z.join(' '))}
+ return shuf(out)}
+function gSame(a,b){return gKey(a)===gKey(b)}
+function mSwapIn(b){ /* 名字 ➜ 職業 ➜ 數字，換一組（題目、選項、提示一起換，答案還是對的） */
+ var all=[b.q].concat(b.o).concat([b.h||'',b.say||'']).join(' ');
+ var cjk=/[六七八九十]/.test(all);
+ var sets=[GSW,GSJ].concat(cjk?[]:[GSA]);
+ for(var a=0;a<sets.length;a++){
+  var S=sets[a],had=S.filter(function(w){return new RegExp('\\b'+w[0]+'\\b','i').test(all)});
+  if(!had.length)continue;
+  var from=pick(had),rest=S.filter(function(w){return !new RegExp('\\b'+w[0]+'\\b','i').test(all)});
+  if(!rest.length)continue;var to=pick(rest);
+  var rep=function(s){if(s==null)return s;s=String(s).replace(new RegExp('\\b'+from[0]+'\\b','g'),to[0])
+    .replace(new RegExp('\\b'+from[0].charAt(0).toUpperCase()+from[0].slice(1)+'\\b','g'),to[0].charAt(0).toUpperCase()+to[0].slice(1));
+   if(from[1]!==from[0]&&S!==GSA)s=s.split(from[1]).join(to[1]);return s};
+  return {q:rep(b.q),o:b.o.map(rep),h:rep(b.h),say:rep(b.say),sw:1};
+ }
+ return null;
+}
+/* base ＝ 原題（{q,o:[正解,...],h,say}）；pick ＝ 學生選錯的那一個 */
+function mVar(base,pick){
+ if(!base||!base.o||!base.o.length)return base;
+ var sw=mSwapIn(base)||{q:base.q,o:base.o.slice(),h:base.h,say:base.say};
+ var c=sw.o[0],opts=[c],cc=gCanon(c);
+ var ok=function(x){if(!x)return false;x=String(x);if(/<[^>]+>/.test(x)&&!mStrip(x))return false;
+  for(var i=0;i<opts.length;i++)if(gSame(opts[i],x))return false;
+  if(/[A-Za-z]/.test(x)&&gCanon(x)===cc)return false;return true};
+ /* 先放「學生真的會錯」的：原題的錯選項（換過名字的）、學生自己選的那一個、正解改一個地方 */
+ var cand=shuf(sw.o.slice(1));
+ if(pick&&!sw.sw)cand.unshift(pick);
+ var mm=base.nm?[]:mMuts(c);
+ /* 原題的錯選項最多留兩個，至少換一個成「正解改一個地方」：選項文字跟原題不一樣，不能背 */
+ var keep=cand.filter(ok).slice(0,2);keep.forEach(function(x){if(ok(x))opts.push(x)});
+ mm.forEach(function(x){if(opts.length<4&&ok(x))opts.push(x)});
+ cand.forEach(function(x){if(opts.length<4&&ok(x))opts.push(x)});
+ return {q:sw.q,o:opts,h:sw.h,say:sw.say,v:1};
+}
+
+/* ── ③ 火眼金睛：答對也要看 6 秒才得分 ── */
+var lookT=null;
+function lookShow(en,cb){
+ var m=document.getElementById('look');
+ if(!m){m=document.createElement('div');m.id='look';document.body.appendChild(m);
+  m.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('.say'):null;if(b)say(b.getAttribute('data-say'))})}
+ var zh=mTr(en),n=6;
+ m.innerHTML='<div class="mbox"><div class="mhd ok">🔍 看清楚，記起來</div>'+
+  '<div class="mcmp"><div class="ma gl"><span class="mi">✅</span><span class="mv">'+mGloss(en,null)+'</span></div></div>'+
+  (zh?'<div class="mtr">整句：<b>'+mEsc(zh)+'</b></div>':'')+
+  '<div class="mft"><button class="say" data-say="'+mEsc(en).replace(/"/g,'&quot;')+'">🔊 發音</button>'+
+  '<span class="mcd" id="lcdn">'+n+'</span></div>'+
+  '<div class="lk">看完 6 秒 ➜ 才拿得到分數</div></div>';
+ m.classList.add('on');
+ setTimeout(function(){if(m.classList.contains('on'))say(en)},500);
+ if(lookT)clearInterval(lookT);
+ lookT=setInterval(function(){n--;var c=document.getElementById('lcdn');
+  if(n>0){if(c){c.textContent=n;c.classList.remove('tick');void c.offsetWidth;c.classList.add('tick')}return}
+  clearInterval(lookT);lookT=null;m.classList.remove('on');sayStop();if(cb)cb()},1000);
+}
+function lookHide(){if(lookT){clearInterval(lookT);lookT=null}var m=document.getElementById('look');if(m)m.classList.remove('on')}
 
 
-var CARDS=[{"type":"focus","eqRow":1,"title":"How old ＝ 問「幾歲」","rows":[["What","什麼","❓"],["How","怎麼樣","🤔"],["How old","幾歲","🎂"]],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👧","b":"How old are you?","r":"👦","rt":"❓","use":"想知道對方幾歲，就用 How old。"}},{"type":"sent","zh":"你幾歲？","tk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"lp"},{"en":"?","zh":"？","ic":"","tight":1}],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👩","b":"How old are you?","r":"👦","rt":"🎂","use":"問對方「你幾歲？」"}},{"type":"order","zhRow":[["你","<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","lp"],["是","＝","y"],["幾歲","🎂","r"],["？","","g"]],"enRow":[["How old","🎂","r"],["are","＝","y"],["you","<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","lp"],["?","","g"]],"say":"How old are you?","scene":{"at":"🔁 中文 ➜ 英文","bg":"🔁","l":"🧒","ln":"中文","b":"你幾歲？","bzh":1,"r":"🧒","rn":"英文","b2":"How old are you?","use":"中文「幾歲」在最後，英文 How old 在最前面。"}},{"type":"sent","zh":"我是十歲。","slot":"age","tk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👩","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"說自己幾歲：I’m ＋ 數字 ＋ years old。"}},{"type":"morph","a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1}],"say":"I'm","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"I am","r":"🐇","rn":"說快一點","b2":"I’m","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"I am ten years old.","r":"🐇","rn":"說快一點","b2":"I’m ten years old.","use":"意思一模一樣，只是說得比較快。"}},{"type":"sent","zh":"我是十歲。","slot":"age","tk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🛝 操場","bg":"🛝","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten.","use":"更短的回答：I’m ＋ 數字。"}},{"type":"eq","a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"note":"years old 可以省略","scene":{"at":"✂️ 省略","bg":"✂️","l":"🐢","ln":"說完整","b":"I’m ten years old.","r":"🐇","rn":"省略","b2":"I’m ten.","use":"years old 可以省略，意思一樣。"}},{"type":"eq","left":1,"a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"c":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"✂️ 三句一樣","bg":"✂️","l":"🐢","ln":"說完整","b":"I am ten years old.","r":"🐇","rn":"最短","b2":"I’m ten.","use":"三種說法，意思都一樣。"}},{"type":"morph","a":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"lp"},{"en":"are","zh":"是","ic":"＝","ri":"a"}],"b":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"lp"},{"en":"'re","zh":"是","ic":"＝","tight":1}],"say":"You're","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"You are","r":"🐇","rn":"說快一點","b2":"You’re","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","a":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"lp"},{"en":"are","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"lp"},{"en":"'re","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"You are ten.","r":"🐇","rn":"說快一點","b2":"You’re ten.","use":"意思一模一樣，只是說得比較快。"}},{"type":"echo","rows":[{"q":"How old are you?","qk":"you","qzh":"你 幾歲？","a":"I’m ______ years old.","ak":"I","azh":"我 是 ______ 歲。","cls":"lp"},{"q":"How old are you?","qk":"you","qzh":"你 幾歲？","a":"I’m ______.","ak":"I","azh":"我 是 ______ 歲。","cls":"lp"}],"scene":{"at":"🎤 一問一答","bg":"💬","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten.","use":"問 you（你），答 I（我）。"}},{"type":"focus","title":"How old are you? 要答什麼？","rows":[["I’m ten years old.","✅ 幾歲","✅"],["I’m ten.","✅ 幾歲","✅"],["I’m Mike.","❌ 這是名字","❌"],["I’m ten year old.","❌ years 要有 s","❌"]],"scene":{"at":"🎤 一問一答","bg":"💬","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"問幾歲，就答幾歲。"}},{"type":"focus","title":"問什麼，就答什麼","rows":[["What’s your name?","📛 答名字","<span class=\"nmtag\"><b>HELLO</b><i>Ken</i></span>"],["How old are you?","🎂 答幾歲","🎂"]],"scene":{"at":"🎤 問什麼答什麼","bg":"💬","l":"📛","ln":"問名字","b":"What’s your name?","r":"🎂","rn":"問幾歲","b2":"How old are you?","use":"兩個問題，答案不一樣。"}},{"type":"pair","cls":"lp","slot":"age","qic":"🎂","aic":"🔟","qtk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"lp"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"你 幾歲？","azh":"我 是 十 歲。","scene":{"at":"🏫 教室","bg":"🏫","l":"👩‍🏫","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"老師問你幾歲，這樣回答。"}},{"type":"pair","cls":"lp","slot":"age","qic":"🎂","aic":"🔟","qtk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"lp"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"你 幾歲？","azh":"我 是 十 歲。","scene":{"at":"🏫 教室","bg":"🏫","l":"👩‍🏫","b":"How old are you?","r":"👧","b2":"I’m ten.","use":"也可以只說 I’m ＋ 數字。"}},{"type":"focus","title":"淺灰色的字母 ＝ 不發音","rows":[["are","e 不唸","🤫"],["you","o 不唸","🤫"],["years","a 不唸","🤫"],["eight","gh 不唸","🤫"],["nine","e 不唸","🤫"],["twelve","e 不唸","🤫"]],"scene":{"at":"🤫 小聲一點","bg":"🤫","l":"🧒","b":"eight","r":"🧒","b2":"nine","use":"淺灰色的字母，唸的時候不發音。"}}], UNIT=2, SUB={"name":{"basic":[["Ken","Ken","<img class=\"av\" src=\"avatars/ken.png\" alt=\"ken\">"],["Alan","Alan","<img class=\"av\" src=\"avatars/alan.png\" alt=\"alan\">"],["Wendy","Wendy","<img class=\"av\" src=\"avatars/wendy.png\" alt=\"wendy\">"],["Mike","Mike","<img class=\"av\" src=\"avatars/mike.png\" alt=\"mike\">"],["Emma","Emma","<img class=\"av\" src=\"avatars/emma.png\" alt=\"emma\">"]],"adv":[]},"age":{"basic":[["six","六","6️⃣"],["seven","七","7️⃣"],["eight","八","8️⃣"],["nine","九","9️⃣"],["ten","十","🔟"],["eleven","十一","1️⃣1️⃣"],["twelve","十二","1️⃣2️⃣"]],"adv":[]}}, RVG=[{"t":"第 1～4 張","q":[{"q":"How old 是在問什麼？","o":["幾歲","名字","什麼東西","在哪裡"],"h":"How old ＝ 問年紀（幾歲）。"},{"q":"How old are you? 的中文是？","o":["你幾歲？","你的名字是什麼？","你好嗎？","我幾歲？"],"h":"How old ＝ 幾歲，you ＝ 你。"},{"q":"「你幾歲？」英文第一個字是？","o":["How","You","Are","Old"],"h":"中文「幾歲」在最後，英文 How old 在最前面。"},{"q":"I’m eight years old. 的中文是？","o":["我是八歲。","我是八年。","你是八歲。","我的名字是八。"],"h":"years old ＝ 歲。"}]},{"t":"第 5～8 張","q":[{"q":"I am nine years old. 縮寫成？","o":["I’m nine years old.","Im nine years old.","I’am nine years old.","My nine years old."],"h":"I am ➜ I’m，紅色的 ’ 藏起來的是 a。"},{"q":"I’m ten. 的意思跟哪一句一樣？","o":["I’m ten years old.","I’m ten year.","My name is ten.","How old are you?"],"h":"years old 可以省略，意思一樣。"},{"q":"How old are you? 可以怎麼回答？","o":["I’m ten.","I’m Ken.","My name is ten.","You’re ten."],"h":"問幾歲，就答幾歲。"},{"q":"eight 的哪兩個字母不發音？","o":["gh","ei","ht","eg"],"h":"eight 的 gh 淺灰色，不發音。"}]},{"t":"第 9～12 張","q":[{"q":"You are 縮寫成？","o":["You’re","Your","Youre","You’are"],"h":"are 的 a 被紅色的 ’ 藏起來：You are ➜ You’re。"},{"q":"問 you（你），答句開頭用哪一個？","o":["I","You","My","Your"],"h":"問「你」，就答「我」：you ➜ I。"},{"q":"哪一句「不是」在回答 How old are you?","o":["I’m Mike.","I’m nine.","I’m nine years old.","I’m twelve."],"h":"I’m Mike. 是在說名字，不是幾歲。"},{"q":"哪一句是對的？","o":["I’m nine years old.","I’m nine year old.","I’m nine years.","I nine years old."],"h":"years 要有 s，old 不能少。"}]},{"t":"第 13～17 張","q":[{"q":"What’s your name? 要答什麼？","o":["名字","幾歲","天氣","東西"],"h":"What’s your name? ➜ 答名字。"},{"q":"「我十一歲。」英文是？","o":["I’m eleven years old.","I’m eleven year old.","My eleven years old.","I eleven years old."],"h":"I’m ＋ 數字 ＋ years old。"},{"q":"twelve 的哪一個字母不發音？","o":["最後的 e","t","w","v"],"h":"twelve 最後的 e 淺灰色，不發音。"},{"q":"you 的哪一個字母不發音？","o":["o","y","u","都要發音"],"h":"you 的 o 淺灰色，不發音。"}]}];
+var CARDS=[{"type":"focus","eqRow":1,"left":1,"title":"How old ＝ 問「幾歲」","rows":[["What","什麼","❓"],["How","怎麼樣","🤔"],["How old","幾歲","🎂"]],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👧","b":"How old are you?","r":"👦","rt":"❓","use":"想知道對方幾歲，就用 How old。"}},{"type":"sent","zh":"你幾歲？","tk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👩","b":"How old are you?","r":"👦","rt":"🎂","use":"問對方「你幾歲？」"}},{"type":"order","zhRow":[["你","<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","b"],["是","＝","y"],["幾歲","🎂","r"],["？","","g"]],"enRow":[["How old","🎂","r"],["are","＝","y"],["you","<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","b"],["?","","g"]],"say":"How old are you?","scene":{"at":"🔁 中文 ➜ 英文","bg":"🔁","l":"🧒","ln":"中文","b":"你幾歲？","bzh":1,"r":"🧒","rn":"英文","b2":"How old are you?","use":"中文「幾歲」在最後，英文 How old 在最前面。"}},{"type":"sent","zh":"我是十歲。","slot":"age","tk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👩","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"說自己幾歲：I’m ＋ 數字 ＋ years old。"}},{"type":"morph","a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1}],"say":"I'm","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"I am","r":"🐇","rn":"說快一點","b2":"I’m","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","all":1,"a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"I am ten years old.","r":"🐇","rn":"說快一點","b2":"I’m ten years old.","use":"意思一模一樣，只是說得比較快。"}},{"type":"sent","zh":"我是十歲。","slot":"age","tk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🛝 操場","bg":"🛝","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten.","use":"更短的回答：I’m ＋ 數字。"}},{"type":"eq","left":1,"a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"note":"years old 可以省略","scene":{"at":"✂️ 省略","bg":"✂️","l":"🐢","ln":"說完整","b":"I’m ten years old.","r":"🐇","rn":"省略","b2":"I’m ten.","use":"years old 可以省略，意思一樣。"}},{"type":"eq","left":1,"all":1,"a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"c":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"✂️ 三句一樣","bg":"✂️","l":"🐢","ln":"說完整","b":"I am ten years old.","r":"🐇","rn":"最短","b2":"I’m ten.","use":"三種說法，意思都一樣。"}},{"type":"morph","a":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"are","zh":"是","ic":"＝","ri":"a"}],"b":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"'re","zh":"是","ic":"＝","tight":1}],"say":"You're","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"You are","r":"🐇","rn":"說快一點","b2":"You’re","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","a":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"are","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"'re","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"You are ten.","r":"🐇","rn":"說快一點","b2":"You’re ten.","use":"意思一模一樣，只是說得比較快。"}},{"type":"echo","rows":[{"q":"How old are you?","qk":"you","qzh":"你 幾歲？","a":"I’m ______ years old.","ak":"I","azh":"我 是 ______ 歲。","cls":"b"},{"q":"How old are you?","qk":"you","qzh":"你 幾歲？","a":"I’m ______.","ak":"I","azh":"我 是 ______ 歲。","cls":"b"}],"scene":{"at":"🎤 一問一答","bg":"💬","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten.","use":"問 you（你），答 I（我）。"}},{"type":"focus","title":"How old are you? 要答什麼？","rows":[["I’m ten years old.","✅ 幾歲","✅"],["I’m ten.","✅ 幾歲","✅"],["I’m Mike.","❌ 這是名字","❌"],["I’m ten year old.","❌ years 要有 s","❌"]],"scene":{"at":"🎤 一問一答","bg":"💬","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"問幾歲，就答幾歲。"}},{"type":"focus","title":"問什麼，就答什麼","rows":[["What’s your name?","📛 答名字","<span class=\"nmtag\"><b>HELLO</b><i>Ken</i></span>"],["How old are you?","🎂 答幾歲","🎂"]],"scene":{"at":"🎤 問什麼答什麼","bg":"💬","l":"📛","ln":"問名字","b":"What’s your name?","r":"🎂","rn":"問幾歲","b2":"How old are you?","use":"兩個問題，答案不一樣。"}},{"type":"pair","cls":"b","slot":"age","qic":"🎂","aic":"🔟","qtk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"你 幾歲？","azh":"我 是 十 歲。","scene":{"at":"🏫 教室","bg":"🏫","l":"👩‍🏫","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"老師問你幾歲，這樣回答。"}},{"type":"pair","cls":"b","slot":"age","qic":"🎂","aic":"🔟","qtk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"你 幾歲？","azh":"我 是 十 歲。","scene":{"at":"🏫 教室","bg":"🏫","l":"👩‍🏫","b":"How old are you?","r":"👧","b2":"I’m ten.","use":"也可以只說 I’m ＋ 數字。"}},{"type":"focus","title":"淺灰色的字母 ＝ 不發音","rows":[["are","e 不唸","🤫"],["you","o 不唸","🤫"],["years","a 不唸","🤫"],["eight","gh 不唸","🤫"],["nine","e 不唸","🤫"],["twelve","e 不唸","🤫"]],"scene":{"at":"🤫 小聲一點","bg":"🤫","l":"🧒","b":"eight","r":"🧒","b2":"nine","use":"淺灰色的字母，唸的時候不發音。"}}], UNIT=2, SUB={"name":{"basic":[["Ken","Ken","<img class=\"av\" src=\"avatars/ken.png\" alt=\"ken\">"],["Alan","Alan","<img class=\"av\" src=\"avatars/alan.png\" alt=\"alan\">"],["Wendy","Wendy","<img class=\"av\" src=\"avatars/wendy.png\" alt=\"wendy\">"],["Mike","Mike","<img class=\"av\" src=\"avatars/mike.png\" alt=\"mike\">"],["Emma","Emma","<img class=\"av\" src=\"avatars/emma.png\" alt=\"emma\">"]],"adv":[]},"age":{"basic":[["six","六","6️⃣"],["seven","七","7️⃣"],["eight","八","8️⃣"],["nine","九","9️⃣"],["ten","十","🔟"],["eleven","十一","1️⃣1️⃣"],["twelve","十二","1️⃣2️⃣"]],"adv":[]},"age3":{"basic":[["eight","八","8️⃣"],["nine","九","9️⃣"],["ten","十","🔟"]],"adv":[]},"like":{"lb":"🔥 最愛","la":"✨ 還有","basic":[["basketball","籃球","🏀"],["dodgeball","躲避球","🔴"],["Pokémon cards","寶可夢卡","🃏"],["Switch games","Switch 遊戲","🎮"],["Minecraft","當個創世神","⛏️"],["LEGO","樂高","🧱"],["comics","漫畫","📖"],["recess","下課時間","🔔"],["PE class","體育課","🤸"],["bubble tea","珍珠奶茶","🧋"]],"adv":[["books","書","📚"],["baseball","棒球","⚾"],["soccer","足球","⚽"],["video games","電玩","🕹️"],["art class","美勞課","🎨"],["music","音樂","🎵"],["ice cream","冰淇淋","🍦"],["fried chicken","炸雞","🍗"],["dogs","狗","🐶"],["cats","貓","🐱"]]},"liketo":{"lb":"🔥 最愛","la":"✨ 還有","basic":[["play basketball","打籃球","🏀"],["play dodgeball","打躲避球","🔴"],["play tag","玩鬼抓人","🏃"],["play video games","打電動","🎮"],["collect Pokémon cards","收集寶可夢卡","🃏"],["build LEGO","組樂高","🧱"],["draw","畫畫","✏️"],["sing","唱歌","🎤"],["dance","跳舞","💃"],["read","閱讀","📖"]],"adv":[["swim","游泳","🏊"],["cook","做菜","🍳"],["play baseball","打棒球","⚾"],["play badminton","打羽毛球","🏸"],["play the piano","彈鋼琴","🎹"],["play the guitar","彈吉他","🎸"],["ride my bike","騎我的腳踏車","🚲"],["skateboard","溜滑板","🛹"],["jump rope","跳繩","🪢"],["play with my dog","和我的狗玩","🐕"]]}}, RVG=[{"t":"第 1～4 張","q":[{"q":"How old 是在問什麼？","o":["幾歲","名字","什麼東西","在哪裡"],"h":"How old ＝ 問年紀（幾歲）。"},{"q":"How old are you? 的中文是？","o":["你幾歲？","你的名字是什麼？","你好嗎？","我幾歲？"],"h":"How old ＝ 幾歲，you ＝ 你。"},{"q":"「你幾歲？」英文第一個字是？","o":["How","You","Are","Old"],"h":"中文「幾歲」在最後，英文 How old 在最前面。"},{"q":"I’m eight years old. 的中文是？","o":["我是八歲。","我是八年。","你是八歲。","我的名字是八。"],"h":"years old ＝ 歲。"}]},{"t":"第 5～8 張","q":[{"q":"I am nine years old. 縮寫成？","o":["I’m nine years old.","Im nine years old.","I’am nine years old.","My nine years old."],"h":"I am ➜ I’m，紅色的 ’ 藏起來的是 a。"},{"q":"I’m ten. 的意思跟哪一句一樣？","o":["I’m ten years old.","I’m ten year.","My name is ten.","How old are you?"],"h":"years old 可以省略，意思一樣。"},{"q":"How old are you? 可以怎麼回答？","o":["I’m ten.","I’m Ken.","My name is ten.","You’re ten."],"h":"問幾歲，就答幾歲。"},{"q":"eight 的哪兩個字母不發音？","o":["gh","ei","ht","eg"],"h":"eight 的 gh 淺灰色，不發音。"}]},{"t":"第 9～12 張","q":[{"q":"You are 縮寫成？","o":["You’re","Your","Youre","You’are"],"h":"are 的 a 被紅色的 ’ 藏起來：You are ➜ You’re。"},{"q":"問 you（你），答句開頭用哪一個？","o":["I","You","My","Your"],"h":"問「你」，就答「我」：you ➜ I。"},{"q":"哪一句「不是」在回答 How old are you?","o":["I’m Mike.","I’m nine.","I’m nine years old.","I’m twelve."],"h":"I’m Mike. 是在說名字，不是幾歲。"},{"q":"哪一句是對的？","o":["I’m nine years old.","I’m nine year old.","I’m nine years.","I nine years old."],"h":"years 要有 s，old 不能少。"}]},{"t":"第 13～17 張","q":[{"q":"What’s your name? 要答什麼？","o":["名字","幾歲","天氣","東西"],"h":"What’s your name? ➜ 答名字。"},{"q":"「我十一歲。」英文是？","o":["I’m eleven years old.","I’m eleven year old.","My eleven years old.","I eleven years old."],"h":"I’m ＋ 數字 ＋ years old。"},{"q":"twelve 的哪一個字母不發音？","o":["最後的 e","t","w","v"],"h":"twelve 最後的 e 淺灰色，不發音。"},{"q":"you 的哪一個字母不發音？","o":["o","y","u","都要發音"],"h":"you 的 o 淺灰色，不發音。"}]}];
 var i=0, show={en:true,zh:true,ic:true,full:true}, reveal='word', step=0, playing=0;
 var scenes=false, zhSay='zh';   /* zhSay：點中文要唸中文還是唸對應的英文 */
 var MOR=0, morT=[], demoT=null, demoN=0;
@@ -1059,7 +1228,7 @@ function enHTML(s,ri){
 }
 /* 不發音字母改查 SIL：後面這一個 enHTML 會蓋掉上面那一個 */
 function enHTML(s,ri){
-  s=String(s);var out='',did=0,SL={"what":[1],"name":[3],"are":[2],"you":[1],"year":[2],"years":[2],"eight":[2,3],"nine":[3],"twelve":[5],"mike":[3]},sil={},re=/[A-Za-z]+/g,m;
+  s=String(s);var out='',did=0,SL={"what":[1],"name":[3],"are":[2],"you":[1],"your":[1],"year":[2],"years":[2],"eight":[2,3],"nine":[3],"twelve":[5],"mike":[3]},sil={},re=/[A-Za-z]+/g,m;
   /* 不發音的字母 ＝ 淺灰色：一個字一個字查 SIL（What’s 的 What、name? 的 name 都查得到） */
   while((m=re.exec(s))){var L=SL[m[0].toLowerCase()];if(L)L.forEach(function(k){sil[m.index+k]=1})}
   for(var n=0;n<s.length;n++){
@@ -1113,9 +1282,14 @@ function sayEls(els,opt){
   opt=opt||{};var g=spGroups(els);
   if(!g.length){if(opt.done)opt.done();return}
   var txt=g.map(function(x){return x.t}).join(' ');
+  /* 一格裡有兩個英文字（How old、years old）：第 k 個「字」要對到第幾格（2026-09-26 修：原本亮到下一格去） */
+  var map=[];g.forEach(function(x,gi){x.t.split(/s+/).forEach(function(w){if(w)map.push(gi)})});
+  var last=-2;
   say(txt,null,{keep:opt.keep,done:opt.done,start:opt.start,hl:function(k){
+    var gi=k>=0?map[k]:-1;if(gi==null)gi=-1;
     g.forEach(function(x){x.els.forEach(function(e){e.classList.remove('spk')})});
-    if(k>=0&&g[k])g[k].els.forEach(function(e){e.classList.add('spk')});
+    if(gi>=0&&g[gi])g[gi].els.forEach(function(e){e.classList.add('spk')});
+    if(opt.onk&&gi!==last){last=gi;try{opt.onk(gi,g[gi])}catch(e){}}
   }});
 }
 /* 唸一個東西（一個字、一個按鈕），唸的時候它整個亮 */
@@ -1170,15 +1344,21 @@ function sceneHTML(c){
     bub(s.b2,'R')+act(s.r,s.rn,s.rt,'R'+(s.b2?' ans':''))+
     '</div><div class="suse">\uD83D\uDCA1 '+ap(s.use)+'</div></div>';
 }
-function subsHTML(kind){
+function subsHTML(kind,inner){
+  /* 一張卡兩排替換字（2026-09-26 Review 1：He’s／She’s ＋ 職業）：c.slots ＝ ['pr','job']；
+     替換字很多（20 個以上）就排小一點（.many），句子才有位置 */
+  var ks=Object.prototype.toString.call(kind)==='[object Array]'?kind:[kind];
+  if(!inner){var n=0;ks.forEach(function(k){var x=SUB[k];if(x)n+=x.basic.length+x.adv.length});
+    var body=ks.map(function(k){return subsHTML(k,1)}).join('');
+    return body?'<div class="subs'+(n>12?' many':'')+'">'+body+'</div>':''}
   var s=SUB[kind];if(!s)return '';
   var row=function(list,lbl,cls){
     if(!list.length)return '';
     return '<div class="subrow"><span class="lbl">'+lbl+'</span>'+list.map(function(w){
-      return '<button class="sub '+cls+'" data-w="'+w[0]+'" data-z="'+w[1]+'" data-ic="'+String(w[2]).replace(/"/g,'&quot;')+'">'+
+      return '<button class="sub '+cls+'" data-k="'+kind+'" data-w="'+w[0]+'" data-z="'+w[1]+'" data-ic="'+String(w[2]).replace(/"/g,'&quot;')+'">'+
        w[2]+' '+w[0]+(w[1]!==w[0]?' <em>'+w[1]+'</em>':'')+'</button>'}).join('')+'</div>';
   };
-  return '<div class="subs">'+row(s.basic,'基礎','')+row(s.adv,'進階','adv')+'</div>';
+  return row(s.basic,s.lb||'基礎','')+row(s.adv,s.la||'進階','adv');
 }
 function noteHTML(n){return n?'<div class="note">'+mk(n)+'</div>':''}
 /* 說明文字裡的 [i]／[o] ＝ 那個被藏起來的字母，一樣上紅色 */
@@ -1196,7 +1376,7 @@ function draw(dir){
     /* 整句發音一律照畫面上的字：畫面是 Who’s he? 就唸 Who’s he?，不可以唸成 Who is he?
        （使用者 2026-09-24 指定） */
     h=lineHTML(c.tk)+fullHTML(c.zh,plain(c.tk));
-    subs=c.slot?subsHTML(c.slot):'';
+    subs=c.slots?subsHTML(c.slots):(c.slot?subsHTML(c.slot):'');
   } else if(c.type==='eq'){
     kind='縮寫';
     /* 兩句都要完整聽得到，而且要看得出「這兩句是同一句」（使用者 2026-09-21 指定） */
@@ -1254,7 +1434,7 @@ function draw(dir){
     /* 2026-09-25 使用者指定：①一次出現一個英文字，英文出來以後才出現它的中文
        ② 英文、＝、中文三欄上下對齊（同一個 grid）③「💡 問什麼？」按了才用動畫演出用法 ④ 字放大 */
     var hasU=c.rows.some(function(r){return r[3]});
-    h='<div class="focus fq"><h2>'+ap(c.title)+'</h2><div class="fgrid'+(hasU?' hasu':'')+'">'+c.rows.map(function(r,n){
+    h='<div class="focus fq"><h2>'+ap(c.title)+'</h2><div class="fgrid'+(hasU?' hasu':'')+(c.left?' left':'')+'">'+c.rows.map(function(r,n){
       return '<span class="gi ic fh" data-r="'+n+'" data-p="0">'+r[2]+'</span>'+
         '<span class="fa en fh" data-r="'+n+'" data-p="0" data-w="'+esc(spk(r[0]))+'" data-say="'+esc(spk(r[0]))+'">'+enHTML(r[0])+'</span>'+
         '<span class="fe fh" data-r="'+n+'" data-p="1">＝</span>'+
@@ -1304,6 +1484,7 @@ function draw(dir){
     subs=c.slot?subsHTML(c.slot):'';
   }
   card.className='';
+  if(c.kind)kind=c.kind;
   card.innerHTML='<span class="kind">'+kind+'</span><div id="cardIn">'+sceneHTML(c)+h+
     '<div id="tapHint" class="off">點卡片：一次出現一個字</div></div>'+subs;
   applyMode();
@@ -1443,7 +1624,7 @@ function playOrder(){
   }
   function eStep(){
     if(i!==myI)return;
-    if(k>=ec.length){morT.push(setTimeout(function(){if(i===myI)sayEls(ec,{keep:1})},600));return}
+    if(k>=ec.length){morT.push(setTimeout(function(){if(i===myI)sayOrd(ec,{keep:1})},600));return}
     var c=ec[k++], col=c.getAttribute('data-c'), src=null, used=0;
     for(var j=0;j<zc.length;j++)if(zc[j].getAttribute('data-c')===col){src=zc[j];break}
     var kk=parseFloat(card.getAttribute('data-k')||'1')||1;
@@ -1461,6 +1642,19 @@ function playOrder(){
     else morT.push(setTimeout(nx,760));
   }
   morT.push(setTimeout(zStep,350));
+}
+/* 整句唸的時候，唸到哪一個英文字，它和它的中文（同一個顏色）一起放大變亮（使用者 2026-09-26 指定）
+   What’s 是一個聲音：先亮 What ＋ 什麼，再亮 ’s ＋ 是 */
+function sayOrd(ec,opt){
+  opt=opt||{};var lt=null;
+  var off=function(){if(lt){clearTimeout(lt);lt=null}$$('.ordgrid .chip.lnk',card).forEach(function(x){x.classList.remove('lnk')})};
+  sayEls(ec,{keep:opt.keep,done:function(){off();if(opt.done)opt.done()},onk:function(gi,G){
+    if(lt){clearTimeout(lt);lt=null}
+    if(!G){off();return}
+    var cols=G.els.map(function(e){return e.getAttribute('data-c')});
+    lnk(cols[0],60000);
+    if(cols[1]&&cols[1]!==cols[0])lt=setTimeout(function(){lnk(cols[1],60000)},240);
+  }});
 }
 /* 中英連動：同一個顏色的中文和英文，一起放大變亮 */
 function lnk(col,ms){
@@ -1643,9 +1837,14 @@ function sayCard(opt){
   opt=opt||{};
   var c=CARDS[i], A=function(sel){return $$(sel,card)};
   if(c.type==='sent'||c.type==='swap'||c.type==='swapdemo'){sayEls(A('#cardIn .line .tk'),opt);return}
+  /* all:1 ＝ 每一句都唸（使用者 2026-09-26 指定：I am ten years old. ＝ I’m ten years old. 兩句都要唸） */
+  if(c.type==='eq'&&c.all){var rs=A('.eqrow'),k=0,myI=i;
+    var nx=function(){if(i!==myI)return;if(k>=rs.length){if(opt.done)opt.done();return}
+      var r=rs[k++];sayEls($$('.tk',r),{keep:k>1?1:opt.keep,done:function(){if(k<rs.length)morT.push(setTimeout(nx,500));else nx()}})};
+    nx();return}
   if(c.type==='eq'){sayEls(A(c.c?'.eqrow.c .tk':'.eqrow.b .tk'),opt);return}
   if(c.type==='morph'){sayEls(A('#morLine .tk'),opt);return}
-  if(c.type==='order'){sayEls(A('.chip.ce'),opt);return}
+  if(c.type==='order'){sayOrd(A('.chip.ce'),opt);return}
   if(c.type==='focus'){sayEls(A(c.eqRow?'.fgrid .fa':'.frow .fa'),opt);return}
   /* 他問他答：一列唸完，停 1 秒，才唸下一列（使用者 2026-09-25 指定：He’s ______. 唸完等一秒才唸 Who’s she?） */
   if(c.type==='echo'){var rs=A('.erow'),k=0,myI=i;
@@ -1693,9 +1892,8 @@ function autoPlay(){
 
 /* ---------- 替換字 ---------- */
 function markSubs(){
-  var cur=curSlotWord();
   $$('.sub',card).forEach(function(b){
-    b.classList.toggle('on',b.getAttribute('data-w')===cur)});
+    b.classList.toggle('on',b.getAttribute('data-w')===curSlotWord(b.getAttribute('data-k')))});
 }
 /* 一張卡裡所有的句子（對話卡有兩句，變身卡有直述句和問句） */
 function tkLists(c){
@@ -1703,24 +1901,27 @@ function tkLists(c){
   if(c.type==='swap'||c.type==='swapdemo')return [c.st,c.qu];
   return c.tk?[c.tk]:[];
 }
-function curSlot(){
-  var L=tkLists(CARDS[i]);
-  for(var a=0;a<L.length;a++)for(var n=0;n<L[a].length;n++)if(L[a][n].slot)return L[a][n];
+function curSlot(k){
+  var L=tkLists(CARDS[i]),multi=!!CARDS[i].slots;
+  for(var a=0;a<L.length;a++)for(var n=0;n<L[a].length;n++)if(L[a][n].slot&&(!multi||!k||L[a][n].slot===k))return L[a][n];
   return null;
 }
-function curSlotWord(){var s=curSlot();return s?s.en:''}
+function curSlotWord(k){var s=curSlot(k);return s?s.en:''}
 function rep(s,a,b){return (s&&a)?String(s).split(a).join(b):s}
 /* 換了字，整句的發音和整句中文一定要跟著換（使用者 2026-09-20 指定修掉的 bug） */
-function setSlot(w,z,ic){
+function setSlot(w,z,ic,k){
   var c=CARDS[i];
-  var s0=curSlot(), oldEn=s0?s0.en:'', oldZh=s0?s0.zh:'';
+  if(!c.slots)k=null;
+  var s0=curSlot(k), oldEn=s0?s0.en:'', oldZh=s0?s0.zh:'';
   if(c.type==='pair'&&s0){       /* 換掉的字在問句還是答句，那一邊的圖示就跟著換 */
     if(c.qtk.indexOf(s0)>=0)c.qic=ic;else c.aic=ic;
   }
   tkLists(c).forEach(function(L){
-    L.forEach(function(t){if(t.slot){t.en=w;t.zh=z;t.ic=ic;t.blank=0}})});
-  ['say','zh','stzh','quzh','qzh','azh'].forEach(function(k){
-    if(c[k]){c[k]=rep(rep(c[k],oldEn,w),oldZh,z)}
+    L.forEach(function(t){if(t.slot&&(!k||t.slot===k)){t.en=w;t.zh=z;t.ic=ic;t.blank=0}})});
+  /* say 是英文、其他是中文：分開換（空格 ______ 的英文和中文一樣，一起換會把英文換進中文句子裡） */
+  if(c.say)c.say=rep(c.say,oldEn,w);
+  ['zh','stzh','quzh','qzh','azh'].forEach(function(k){
+    if(c[k]){c[k]=rep(c[k],oldZh,z)}
   });
   var keepStep=step, wasAll=(step>=$$('.tk',card).length);
   draw(0);
@@ -1870,7 +2071,7 @@ function cardTap(){
 card.addEventListener('click',function(e){
   var t=e.target;
   var sub=t.closest?t.closest('.sub'):null;
-  if(sub){setSlot(sub.getAttribute('data-w'),sub.getAttribute('data-z'),sub.getAttribute('data-ic'));return}
+  if(sub){setSlot(sub.getAttribute('data-w'),sub.getAttribute('data-z'),sub.getAttribute('data-ic'),sub.getAttribute('data-k'));return}
   if(t.closest&&t.closest('#swapGo')){doSwap();return}
   if(t.closest&&t.closest('#puncGo')){puncToggle();return}
   if(t.closest&&t.closest('#ordGo')){playOrder();return}
@@ -1958,7 +2159,7 @@ function rvHome(){
   rvStop();
   $('#rv').classList.add('on');
   var best=function(n){return store('rv_'+UNIT+'_'+n)||0};
-  $('#rvbox').innerHTML='<h2>📝 Unit '+UNIT+' 複習　挑一組開始</h2>'+
+  $('#rvbox').innerHTML='<h2>📝 '+(typeof UNIT==='number'?'Unit '+UNIT:UNIT)+' 複習　挑一組開始</h2>'+
    '<p class="lead">20 秒一題，愈快答對分數愈高。題目和選項每一次都重洗。</p>'+
    '<div class="rvpick">'+RVG.map(function(g,n){
      return '<button class="rvg" data-g="'+n+'">'+g.t+
@@ -1981,7 +2182,7 @@ function rvAsk(){
      '<span class="v">'+RVG[rvGi].t+'</span></span>'+
     '<span id="rvring"><svg viewBox="0 0 100 100"><circle id="rvbg" cx="50" cy="50" r="46"></circle>'+
      '<circle id="rvfg" cx="50" cy="50" r="46"></circle></svg><span id="rvnum">'+RVT+'</span></span>'+
-    '<span style="text-align:right"><span class="k">分數</span><br><span class="v" id="rvsc">'+rvScore+'</span></span></div>'+
+    '<span class="rvsb"><b id="rvsc">'+rvScore+'</b><em>🏆 總分</em></span></div>'+
    (q.sim?'<div class="rvsim">🔁 類似題　剛剛錯的，再練一次</div>':'')+
    '<div class="rvq">'+ap(q.q)+'</div>'+
    '<div class="rvo">'+o.map(function(t,n){
@@ -2032,7 +2233,7 @@ function rvDone(btn,ok,timeout){
     if(sims[1]&&!q.sim){var sq={q:sims[1].q,o:sims[1].o,h:sims[1].h,sim:1};
       rvQ.splice(Math.min(rvQ.length,rvN+3+Math.floor(Math.random()*2)),0,sq)}
     missShow({q:q.q,pick:btn?btn.getAttribute('data-t'):null,ans:q.o[0],why:q.h,
-      sims:sims.slice(0,3),pts:500,gain:function(n){rvScore+=n;var e=$('#rvsc');if(e)e.textContent=rvScore}},
+      sims:sims.slice(0,3),self:{q:q.q,o:q.o,h:q.h},pts:500,gain:function(n){rvScore+=n;var e=$('#rvsc');if(e)e.textContent=rvScore}},
       function(){if(rvGi===myG&&$('#rv').classList.contains('on')){rvN++;rvAsk()}});
     return;
   }

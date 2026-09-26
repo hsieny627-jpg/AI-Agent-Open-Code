@@ -18,7 +18,7 @@ h1{margin:0;font-size:clamp(25px,4.8vh,46px);font-weight:700;letter-spacing:.03e
 .url{margin-top:5px;font-size:clamp(11px,1.55vh,13.5px);color:#5F5F5F}
 .url b{color:#8E8E8E;font-weight:400}
 
-#menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,268px),1fr));
+#menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));
  gap:clamp(9px,1.5vh,15px);width:100%;max-width:1060px}
 .card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:clamp(3px,.6vh,7px);
  text-align:left;text-decoration:none;background:linear-gradient(180deg,#0E0E0E,#050505);
@@ -43,7 +43,7 @@ h1{margin:0;font-size:clamp(25px,4.8vh,46px);font-weight:700;letter-spacing:.03e
 const body = `
 <main id="stage">
 <header>
- <h1>英文句型　秒懂教室</h1>
+ <h1>四年級 英文句型　秒懂教室</h1>
  <div class="sub">四年級　Unit 1 ・ Unit 2</div>
  <div class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code/sentences/</b></div>
 </header>
@@ -67,8 +67,21 @@ const body = `
   <span class="d">He is a doctor. ⇄ Is he a doctor?　主詞藍色、be 動詞黃色，看顏色就知道位置怎麼換，下面還有「📝 複習」。</span>
   <span class="f">${D.U2.length} 張字卡</span></a>
 
+ <!-- 2026-09-26 使用者指定新增：Review 1 About My Family、Unit 1／Unit 2 句型環遊世界 -->
+ <a class="card" href="review1.html">
+  <span class="n">4</span><span class="ic">📝</span>
+  <span class="t">Review 1　About My Family</span>
+  <span class="d">My name is ___.／This is my ___.／He’s a ___.／He likes ___, but I like ___.／He can ___, and I can ___.　20 種夢想職業、20 種很酷的活動任你換。</span>
+  <span class="f">${D.XPAGES[0].cards.length} 張字卡</span></a>
+
+ <a class="card" href="world.html">
+  <span class="n">5</span><span class="ic">🌍</span>
+  <span class="t">句型環遊世界</span>
+  <span class="d">別的國家怎麼說 他是誰？她是我的阿姨。他是一位醫生嗎？……先猜再公布，看出誰是英文的兄弟姊妹。</span>
+  <span class="f">8 句　✕ 5 國</span></a>
+
  <a class="card go" href="games.html">
-  <span class="n">4</span><span class="ic">🎮</span>
+  <span class="n">6</span><span class="ic">🎮</span>
   <span class="t">複習遊戲</span>
   <span class="d">10 種玩法，每個遊戲 <b>5 分鐘</b>、愈快分數愈高。<b>連對 3 題</b>翻一張驚喜卡（每個遊戲 30 張，張張不一樣）。</span>
   <span class="f">${B.GAMES.length} 種　共 ${B.GAMES.reduce((a, g) => a + g.n, 0)} 題</span></a>
@@ -76,13 +89,13 @@ const body = `
 
 <div id="order">
  上課順序：<b>暖身題</b><span class="ar">➜</span><b>Unit 1</b><span class="ar">➜</span>
- <b>Unit 2</b><span class="ar">➜</span><b>遊戲</b>
+ <b>Unit 2</b><span class="ar">➜</span><b>Review 1</b><span class="ar">➜</span><b>遊戲</b>
  <span class="ar">｜</span>暖身題老師可以跳過，直接上句型
 </div>
 </main>
 
 <nav id="bar">
- <a href="../index.html">🏠 回家人單字首頁</a>
+ <a href="../index.html">🏠 回首頁</a>
 </nav>
 
 <script>

@@ -24,32 +24,37 @@ const fs = require('fs'), path = require('path');
 const DIR = __dirname, ROOT = path.join(__dirname, '..');
 const WORDS = JSON.parse(fs.readFileSync(path.join(DIR, '_words.json'), 'utf8'));
 
-/* 上課順序。href 一律相對於專案根目錄。 */
+/* 上課順序。href 一律相對於專案根目錄。
+   2026-09-26 使用者指定：首頁分成「四年級」「三年級」兩區；
+   四年級 ＝ (A) 家人（七站，照上課順序 1～7）、(B) 職業、(C) 四年級 句型；三年級 ＝ 一張卡（原「三年級 句型」）。 */
 const STEPS = [
  { n: '1', ic: '🎯', t: '暖身 20 題', href: 'words/quiz.html',
-   d: '四選一，倒數 50 秒，小組討論後作答。6 題挑戰題 分數 ✕ 2' },
+   d: '四選一，小組討論後作答' },
  { n: '2', ic: '📖', t: '家人單字時光機', href: 'family-time-machine-ipad.html',
-   d: '主課程：17 站「學習」＋「遊戲」兩種模式' },
+   d: '17 站：學習＋遊戲' },
  { n: '3', ic: '🃏', t: '17 張單字卡', href: '#cards',
-   d: '一個單字一張卡，翻卡換頁。點這裡展開' },
- { n: '4', ic: '🌳', t: 'family tree 家庭樹', href: 'words/family-tree.html',
-   d: '一次只亮一個家人，六種顯示切換' },
+   d: '點這裡展開' },
+ { n: '4', ic: '🌳', t: 'Family tree 家庭樹', href: 'words/family-tree.html',
+   d: '一次只亮一個家人' },
  { n: '5', ic: '🧩', t: '單字結構', href: 'words/parts.html',
-   d: 'grand ＝ 大、hus ＝ house、-ther 是家人字的尾巴' },
+   d: 'grand ＝ 大、-ther 尾巴' },
  { n: '6', ic: '📜', t: '單字故事', href: 'words/why.html',
-   d: '家人單字為什麼長這樣，一個字一幕' },
- { n: '7', ic: '🎬', t: 'About My Family', href: 'about-my-family/index.html',
-   d: '用英文介紹我的家人（影片）' }
-,
- /* 2026-09-25 使用者指定：次標題改成「四年級 Unit 1, Unit 2」 */
- { n: '8', ic: '💬', t: '四年級 句型', href: 'sentences/index.html',
-   d: '英文句型 秒懂教室：Who’s he?／Is he a doctor?' },
- /* 2026-09-24 新增：三年級第一冊 L1＋L2（引擎跟 sentences 共用，規格在 G3 - L1 + L2/CLAUDE.md） */
- { n: '9', ic: '📛', t: '三年級 句型', href: 'G3%20-%20L1%20+%20L2/index.html',
-   d: 'What’s your name?／How old are you?　＋ 🔢 數字、👀 Sight Words' },
- /* 2026-09-25 使用者指定新增：職業單字（照家人單字的架構：字卡、結構、故事、環遊世界、出處） */
- { n: '10', ic: '💼', t: '職業單字', href: 'words/jobs.html',
-   d: 'student、teacher、doctor、farmer、nurse' }
+   d: '家人單字為什麼長這樣' },
+ { n: '7', ic: '🎬', t: 'About my family', href: 'about-my-family/index.html',
+   d: '用英文介紹我的家人' }
+];
+const GROUPS = [
+ { g: '四年級', rows: [
+   { l: '👪 家人', cards: STEPS },
+   { l: '💼 職業', cards: [{ n: '', ic: '💼', t: '職業單字', href: 'words/jobs.html',
+       d: 'student、teacher、doctor、farmer、nurse' }] },
+   { l: '💬 句型', cards: [{ n: '', ic: '💬', t: '四年級 句型', href: 'sentences/index.html',
+       d: 'Who’s he?／Is he a doctor?　＋ 🌍 環遊世界、📝 Review 1' }] }
+ ] },
+ { g: '三年級', rows: [
+   { l: '📛 句型\n單字', cards: [{ n: '', ic: '📛', t: '三年級', href: 'G3%20-%20L1%20+%20L2/index.html',
+       d: 'What’s your name?／How old are you?　＋ 🔢 數字、👀 Sight Words、📝 Review 1' }] }
+ ] }
 ];
 
 /* 延伸與老師專用，放最下面一排小字，不搶版面 */
@@ -82,7 +87,7 @@ const HTML = `<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>家人單字｜首頁</title>
+<title>首頁</title>
 <!-- 本檔由 words/_build_hub.js 產生，不要手改。 -->
 <style>
 @font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
@@ -104,24 +109,36 @@ h1{margin:0;font-size:clamp(26px,4.4vh,42px);font-weight:700;letter-spacing:.04e
 .url{margin-top:5px;font-size:clamp(11.5px,1.6vh,14px);color:#6F6F6F;letter-spacing:.02em}
 .url b{color:#9E9E9E;font-weight:400}
 
-/* 236px（原本 268）：第 9 張卡加進來以後，直式 iPad 排成三欄才不會有捲軸（2026-09-24 量測）
-   2026-09-25 第 10 張卡（職業單字）加進來 ➜ 180px：橫的排五欄、直的排四欄，還是不會有捲軸 */
-#hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));
- gap:clamp(9px,1.5vh,15px);width:100%;max-width:1000px}
+/* 2026-09-26 分成四年級／三年級兩區（使用者指定）。關著的時候照樣不可以有捲軸 */
+#hub{display:flex;flex-direction:column;gap:clamp(8px,1.4vh,14px);width:100%;max-width:1100px}
+.grade{border:1px solid #1E1E1E;border-radius:20px;padding:clamp(8px,1.3vh,14px) clamp(10px,1.4vw,16px);
+ background:#060606}
+.grade h2{margin:0 0 clamp(6px,1vh,10px);font-size:clamp(20px,3.2vh,30px);color:#FFD66B;letter-spacing:.08em}
+.row{display:flex;align-items:stretch;gap:clamp(8px,1.2vw,14px);margin-top:clamp(6px,1vh,10px)}
+.rl{flex:0 0 auto;white-space:pre-line;width:clamp(64px,8vw,92px);display:flex;align-items:center;justify-content:center;
+ font-size:clamp(15px,2.2vh,20px);font-weight:700;color:#9FB4C8;text-align:center}
+.rc{flex:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,100px),1fr));
+ gap:clamp(7px,1.1vh,12px)}
+.row:not(.many) .rc{grid-template-columns:1fr}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,1.2vw,14px)}
+@media (max-width:700px){.row{flex-direction:column}.rl{width:auto;justify-content:flex-start}.duo{grid-template-columns:1fr}}
 
 .card{position:relative;display:flex;flex-direction:column;align-items:flex-start;
- gap:clamp(3px,.6vh,7px);text-align:left;text-decoration:none;cursor:pointer;
+ gap:clamp(2px,.4vh,5px);text-align:left;text-decoration:none;cursor:pointer;
  background:linear-gradient(180deg,#0E0E0E 0%,#050505 100%);
- border:1px solid #2A2A2A;border-radius:18px;color:#F2F2F2;font-family:inherit;
- padding:clamp(10px,1.7vh,18px) clamp(11px,1.5vw,18px);
- min-height:clamp(100px,14vh,140px);transition:border-color .2s,transform .12s}
+ border:1px solid #2A2A2A;border-radius:16px;color:#F2F2F2;font-family:inherit;
+ padding:clamp(8px,1.3vh,14px) clamp(9px,1.2vw,14px);
+ min-height:clamp(78px,11vh,120px);transition:border-color .2s,transform .12s}
+.row:not(.many) .card{min-height:0;flex-direction:row;align-items:center;gap:clamp(8px,1.2vw,14px)}
+.row:not(.many) .t{white-space:nowrap}
+.many .t{font-size:clamp(14px,2.1vh,19px)}
 .card:hover{border-color:#9FB4C8}
 .card:active{transform:scale(.985)}
-.n{position:absolute;top:clamp(9px,1.5vh,15px);right:clamp(12px,1.6vw,18px);
- font-size:clamp(20px,3.2vh,30px);font-weight:700;color:#242424;line-height:1}
-.ic{font-size:clamp(28px,4.4vh,40px);line-height:1.1}
-.t{font-size:clamp(18px,2.8vh,25px);font-weight:700;letter-spacing:.02em}
-.d{font-size:clamp(12.5px,1.85vh,16px);color:#9E9E9E;line-height:1.45}
+.n{position:absolute;top:clamp(7px,1.2vh,12px);right:clamp(9px,1.2vw,14px);
+ font-size:clamp(18px,2.8vh,26px);font-weight:700;color:#2E2E2E;line-height:1}
+.ic{font-size:clamp(24px,3.8vh,36px);line-height:1.1}
+.t{font-size:clamp(15px,2.3vh,21px);font-weight:700;letter-spacing:.02em}
+.d{font-size:clamp(11.5px,1.6vh,14.5px);color:#9E9E9E;line-height:1.4}
 .caret{color:#9FB4C8;font-size:.8em}
 #cardsBtn[aria-expanded="true"] .caret{color:#F2F2F2}
 
@@ -145,13 +162,19 @@ footer .sep{color:#2A2A2A;font-size:12px}
 </head>
 <body>
 <header>
- <h1>家人單字　首頁</h1>
- <div class="sub">照順序上，從 1 到 7</div>
+ <h1>首頁</h1>
  <div class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></div>
 </header>
 
 <main id="hub">
-${STEPS.map(card).join('\n')}
+${GROUPS.map(G => `<section class="grade"><h2>${G.g}</h2>
+${(() => { const one = R => `<div class="row${R.cards.length > 1 ? ' many' : ''}"><div class="rl">${R.l}</div><div class="rc">
+${R.cards.map(card).join('\n')}
+</div></div>`;
+  /* 一張卡的那幾列兩兩並排，省高度（關著時不可以有捲軸） */
+  const big = G.rows.filter(R => R.cards.length > 1), small = G.rows.filter(R => R.cards.length === 1);
+  return big.map(one).join('\n') + (small.length > 1 ? `<div class="duo">${small.map(one).join('\n')}</div>` : small.map(one).join('')); })()}
+</section>`).join('\n')}
 </main>
 
 <section id="cards">

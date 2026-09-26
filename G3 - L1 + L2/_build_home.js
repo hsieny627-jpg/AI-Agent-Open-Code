@@ -19,7 +19,7 @@ h1{margin:0;font-size:clamp(25px,4.8vh,46px);font-weight:700;letter-spacing:.03e
 .url{margin-top:5px;font-size:clamp(11px,1.55vh,13.5px);color:#5F5F5F}
 .url b{color:#8E8E8E;font-weight:400}
 
-#menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,268px),1fr));
+#menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));
  gap:clamp(9px,1.5vh,15px);width:100%;max-width:1060px}
 .card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:clamp(3px,.6vh,7px);
  text-align:left;text-decoration:none;background:linear-gradient(180deg,#0E0E0E,#050505);
@@ -44,7 +44,7 @@ h1{margin:0;font-size:clamp(25px,4.8vh,46px);font-weight:700;letter-spacing:.03e
 const body = `
 <main id="stage">
 <header>
- <h1>三年級 英文句型　秒懂教室</h1>
+ <h1>三年級　秒懂教室</h1>
  <div class="sub">第一冊　Unit 1 ・ Unit 2</div>
  <div class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code/G3%20-%20L1%20+%20L2/</b></div>
 </header>
@@ -68,21 +68,28 @@ const body = `
   <span class="d">How old are you?　I’m ten years old.／I’m ten.　you 問 ➜ I 答、數字 6～12 替換字，下面還有「📝 複習」。</span>
   <span class="f">${D.U2.length} 張字卡</span></a>
 
+ <!-- 2026-09-26 使用者指定新增：Review 1（學以致用，用英文介紹自己） -->
+ <a class="card" href="review1.html">
+  <span class="n">4</span><span class="ic">📝</span>
+  <span class="t">Review 1　介紹我自己</span>
+  <span class="d">Hi.／My name is ___.／I’m ___ years old.／I like ___.／I like to ___.／How about you?　最酷的 20 個東西、20 個活動任你換。</span>
+  <span class="f">${D.XPAGES[0].cards.length} 張字卡</span></a>
+
  <a class="card go" href="games.html">
-  <span class="n">4</span><span class="ic">🎮</span>
+  <span class="n">5</span><span class="ic">🎮</span>
   <span class="t">複習遊戲</span>
   <span class="d">10 種玩法，每個遊戲 <b>5 分鐘</b>、愈快分數愈高。<b>連對 3 題</b>翻一張驚喜卡（${B.SURP.g1.length} 張張張不一樣）。</span>
   <span class="f">${B.GAMES.length} 種　共 ${B.GAMES.reduce((a, g) => a + g.n, 0)} 題</span></a>
 
  <!-- 2026-09-25 使用者指定新增：數字單字、Sight Words（照家人單字的架構） -->
  <a class="card" href="numbers/index.html">
-  <span class="n">5</span><span class="ic">🔢</span>
+  <span class="n">6</span><span class="ic">🔢</span>
   <span class="t">數字單字</span>
   <span class="d">zero～twelve 字卡、結構、故事、環遊世界。母音紅色、不發音淺灰。</span>
   <span class="f">13 張字卡</span></a>
 
  <a class="card" href="sight/index.html">
-  <span class="n">6</span><span class="ic">👀</span>
+  <span class="n">7</span><span class="ic">👀</span>
   <span class="t">Sight Words 常見字</span>
   <span class="d">I、My、You、Your、name、What、How old…… 字卡、結構、故事、環遊世界。</span>
   <span class="f">15 張字卡</span></a>
@@ -90,7 +97,7 @@ const body = `
 
 <div id="order">
  上課順序：<b>暖身題</b><span class="ar">➜</span><b>Unit 1</b><span class="ar">➜</span>
- <b>Unit 2</b><span class="ar">➜</span><b>遊戲</b>
+ <b>Unit 2</b><span class="ar">➜</span><b>Review 1</b><span class="ar">➜</span><b>遊戲</b>
  <span class="ar">｜</span>暖身題老師可以跳過，直接上句型
 </div>
 </main>
