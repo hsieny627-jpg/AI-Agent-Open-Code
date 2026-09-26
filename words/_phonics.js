@@ -96,10 +96,10 @@ const RAW = {
 
 /* ── G3 數字單字（使用者 2026-09-25 指定；不發音的字母照使用者列的：one 的 e、three 字尾 e、
       four 的 u、five 的 e、eight 的 gh、nine 的 e、twelve 字尾 e）──
-   two 的 w 其實也不唸（/tuː/），使用者的清單沒有列，先照清單不標灰，tw 放同一格、音標只寫 /t/ */
+   two 的 w 也不唸（/tuː/）：使用者 2026-09-26 確認「改成灰色」 */
  zero:        'z|z|z e|ɪ|ɪ / r|r|r o|oʊ|o',
  one:         'o|wʌ|wʌ n|n|n e|-|-',
- two:         'tw|t|t o|uː|u',
+ two:         't|t|t w|-|- o|uː|u',
  three:       'th|θ|θ r|r|r e|iː|i e|-|-',
  four:        'f|f|f o|ɔː|ɔ u|-|- r|r|r',
  five:        'f|f|f i|aɪ|aɪ v|v|v e|-|-',

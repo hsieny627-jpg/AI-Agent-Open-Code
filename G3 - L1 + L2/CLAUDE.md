@@ -17,7 +17,7 @@
 | 19(3)(4) | 全部句型的語調不自然，要美式英語自然正確的語調 | **全部預先做成語音檔**：`audio/`（Kokoro 神經語音，美式女聲 af_bella，Apache-2.0），`_audio.js` 收集這一課會唸到的每一句、每一個字、每一個答案（316 句）。網頁唸英文先查 `audio/aud.js`，查得到就播音檔，查不到才用瀏覽器語音（引擎：`_shared.js` 的 `aPlay()`，有 `audio/aud.js` 才載入，sentences 沒有）。語速六段照樣管（`playbackRate`） |
 | 19(5)(6) | I’m Mike ➜ **I’m Ken**；縮寫卡 **I am Ken. ＝ I’m Ken.** | `U1[6]`、`U1[8]` |
 | 19(7) | 名字不翻譯 | 名字的中文那一格就寫英文名字（`W.nm()`、`SUB.name`、遊戲和暖身題的中文句子也一樣） |
-| 19(8) | 名字的頭像照老師的截圖 | **截圖沒有傳進這個對話**。先用 emoji；把圖片放進 `avatars/`（`ken.png`、`mike.png`、`alan.png`、`wendy.png`、`emma.png`）重新 build 就會換成圖片（`av()`） |
+| 19(8) | 名字的頭像照老師的截圖 | 圖片在老師電腦 `C:\Users\ＪＤ\Documents\Codex\2026-09-26\5-ken-ken\outputs`（雲端環境讀不到）。先用 emoji；把圖片放進 `avatars/`（`ken.png`、`mike.png`、`alan.png`、`wendy.png`、`emma.png`）重新 build 就會換成圖片（`av()`） |
 | 19(9) | 秒懂重點：英文、中文、等號上下對齊 | 引擎的 `.fgrid`（`eqRow` 的卡都是） |
 | 19(10) | 一問一答 My name is Wendy ➜ **Emma** | `U1[13]` |
 | 19(11) | 新卡：**My name is Ken. ＝ I am Ken. ＝ I’m Ken.** | `U1[9]`：`eq` 卡多一個 `c`（第三句），`left:1` 三句靠左 |
@@ -32,7 +32,7 @@
 
 **不發音字母照使用者的清單**：one 的 e、three 字尾 e、four 的 u、five 的 e、eight 的 gh、nine 的 e、twelve 字尾 e；
 You／Your 的 o、are 的 e、name 的 e、What 的 h、year 的 a（`words/_phonics.js` 的 `RAW`）。
-**two 的 w 其實也不唸**（/tuː/），清單沒有列，**先照清單不標灰**（tw 放同一格、音標寫 /t/），已經問使用者要不要也標灰。
+**two 的 w 也標灰**（/tuː/，w 不唸）：使用者 2026-09-26 確認。
 
 **語音檔怎麼重做**（改了句子才需要；舊的句子不會重做）：
 
