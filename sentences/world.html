@@ -178,7 +178,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 .rem{border-collapse:separate;border-spacing:clamp(4px,.8vw,10px) clamp(3px,.6vh,8px);margin:0 auto}
 .rem th{font-size:clamp(16px,2.6vh,24px);color:#9FB4C8;font-weight:700;padding:0 .4em}
 .rem th .flag{width:1.4em;vertical-align:-.2em;margin-right:.2em}
-.rem td{font-size:clamp(24px,4.4vh,44px);font-weight:700;text-align:center;background:#0C0C0C;border:1px solid #232323;
+.rem td{font-size:clamp(17px,min(4.4vh,4.4vw),44px);font-weight:700;text-align:center;background:#0C0C0C;border:1px solid #232323;
  border-radius:14px;padding:.08em .5em;line-height:1.15;opacity:0;animation:cxIn .5s ease forwards}
 .rem td em{display:block;font-style:normal;font-size:.5em;color:#D8D3C5;font-weight:700}
 .rem td.z{color:#FFE9A8;font-size:clamp(22px,4vh,40px)}
@@ -355,7 +355,9 @@ body{margin:0;background:#000;color:#F2F2F2;
 /* 故事頁字放大（使用者 2026-09-26：標題和說明文字放大） */
 .big .tag{font-size:clamp(22px,3.6vh,34px);letter-spacing:.14em;color:#BFD3E6}
 .big .sub{font-size:clamp(19px,3vh,29px);line-height:1.4}
-.qdone .qz .qres{font-size:clamp(20px,3.6vh,34px)}
+.qdone .qz .qres{font-size:clamp(20px,3.4vh,32px)}
+.big .rv .emoji{font-size:clamp(40px,min(8vh,10vw),80px)}
+.qdone .qz .qq{margin-bottom:0}
 .big .mid{font-size:clamp(34px,6.4vh,60px)}
 #toc{position:fixed;inset:0;z-index:45;background:#000;display:none;flex-direction:column;
  padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) max(10px,env(safe-area-inset-bottom));overflow:auto}
@@ -508,9 +510,9 @@ body{margin:0;background:#000;color:#F2F2F2;
 @keyframes p1{from{transform:scale(0) rotate(-40deg);opacity:0}to{transform:none;opacity:1}}
 /* thirteen／thirty：teen 金色、ty 藍色，粗體 */
 .tt{display:grid;grid-template-columns:auto auto auto;align-items:center;justify-content:center;column-gap:clamp(12px,2.4vw,30px);row-gap:clamp(8px,1.6vh,18px)}
-.tt .w{font-size:clamp(44px,8.8vh,88px);font-weight:700;border-bottom:0;opacity:0;animation:nfIn .6s ease forwards}
+.tt .w{font-size:clamp(30px,min(8.8vh,8vw),88px);font-weight:700;border-bottom:0;opacity:0;animation:nfIn .6s ease forwards}
 .tt .teen{color:#FFD24A;font-weight:800}.tt .ty{color:#5AD1FF;font-weight:800}
-.tt .m{font-size:clamp(26px,5.2vh,52px);font-weight:700;opacity:0;animation:nfIn .6s ease forwards;white-space:nowrap}
+.tt .m{font-size:clamp(20px,min(5.2vh,5vw),52px);font-weight:700;opacity:0;animation:nfIn .6s ease forwards;white-space:nowrap}
 .tt .m .teen{color:#FFD24A}.tt .m .ty{color:#5AD1FF}
 .fr80{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,20px);flex-wrap:wrap;font-size:clamp(34px,7vh,70px);font-weight:700}
 .fr80 span{opacity:0;animation:nfIn .6s cubic-bezier(.2,1.5,.4,1) forwards}
@@ -518,7 +520,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 .birds{font-size:clamp(20px,3.6vh,34px);line-height:1.1;max-width:14em;text-align:center}
 .birds i{font-style:normal;display:inline-block;opacity:0;animation:nfIn .3s ease forwards}
 
-.rem td{font-size:clamp(18px,3.2vh,32px)}
+.rem td{font-size:clamp(15px,min(3vh,3.2vw),30px)}
 </style>
 <script src="../words/audio/sv/aud.js"></script><script>window.SVDIR="../words/audio/sv/"</script>
 </head>
@@ -864,7 +866,6 @@ var S=[
   "src": "boat",
   "h": "<table class=\"rem fo\"><tr><th>🇬🇧 英文</th><th><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg>德文</th><th><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg>荷蘭文</th><th>中文</th></tr><tr><td class=\"\" style=\"animation-delay:0.15s\"><span class=\"sp\" data-say=\"Who is he?\">Who is he?</span></td><td class=\"\" style=\"animation-delay:0.15s\"><span class=\"sp\" data-say=\"Wer ist er?\" data-lang=\"de-DE\">Wer ist er?</span></td><td class=\"\" style=\"animation-delay:0.15s\"><span class=\"sp\" data-say=\"Wie is hij?\" data-lang=\"nl-NL\">Wie is hij?</span></td><td class=\"z\" style=\"animation-delay:0.15s\">他是誰？</td></tr><tr><td class=\"\" style=\"animation-delay:0.27s\"><span class=\"sp\" data-say=\"Is he a doctor?\">Is he a doctor?</span></td><td class=\"\" style=\"animation-delay:0.27s\"><span class=\"sp\" data-say=\"Ist er Arzt?\" data-lang=\"de-DE\">Ist er Arzt?</span></td><td class=\"\" style=\"animation-delay:0.27s\"><span class=\"sp\" data-say=\"Is hij dokter?\" data-lang=\"nl-NL\">Is hij dokter?</span></td><td class=\"z\" style=\"animation-delay:0.27s\">他是醫生嗎？</td></tr><tr><td class=\"\" style=\"animation-delay:0.39s\"><span class=\"sp\" data-say=\"Yes, he is.\">Yes, he is.</span></td><td class=\"\" style=\"animation-delay:0.39s\"><span class=\"sp\" data-say=\"Ja, das ist er.\" data-lang=\"de-DE\">Ja, das ist er.</span></td><td class=\"\" style=\"animation-delay:0.39s\"><span class=\"sp\" data-say=\"Ja, dat is hij.\" data-lang=\"nl-NL\">Ja, dat is hij.</span></td><td class=\"z\" style=\"animation-delay:0.39s\">對，他是。</td></tr><tr><td class=\"\" style=\"animation-delay:0.51s\"><span class=\"sp\" data-say=\"He is a doctor.\">He is <b class=\"e\">a</b> doctor.</span></td><td class=\"\" style=\"animation-delay:0.51s\"><span class=\"sp\" data-say=\"Er ist Arzt.\" data-lang=\"de-DE\">Er ist Arzt.</span></td><td class=\"\" style=\"animation-delay:0.51s\"><span class=\"sp\" data-say=\"Hij is dokter.\" data-lang=\"nl-NL\">Hij is dokter.</span></td><td class=\"z\" style=\"animation-delay:0.51s\">只有英文要 a</td></tr></table><div class=\"bro3\"><span class=\"b3\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#000\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#DD0000\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFCE00\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg>德文</span><span class=\"sail\">⛵➜</span><span class=\"b3\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"30\" height=\"6.666666666666666\" fill=\"#AE1C28\"/><rect x=\"0\" y=\"6.666666666666666\" width=\"30\" height=\"6.666666666666666\" fill=\"#FFF\"/><rect x=\"0\" y=\"13.333333333333332\" width=\"30\" height=\"6.666666666666666\" fill=\"#21468B\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg>荷蘭文</span><span class=\"sail\">⛵➜</span><span class=\"b3\"><svg class=\"flag\" viewBox=\"0 0 30 20\" aria-hidden=\"true\"><rect width=\"30\" height=\"20\" fill=\"#012169\"/><path d=\"M0,0L30,20M30,0L0,20\" stroke=\"#FFF\" stroke-width=\"4\"/><path d=\"M0,0L30,20M30,0L0,20\" stroke=\"#C8102E\" stroke-width=\"1.6\"/><path d=\"M15,0V20M0,10H30\" stroke=\"#FFF\" stroke-width=\"6\"/><path d=\"M15,0V20M0,10H30\" stroke=\"#C8102E\" stroke-width=\"3.4\"/><rect width=\"30\" height=\"20\" fill=\"none\" stroke=\"#555\" stroke-width=\"1\"/></svg>英文</span></div>",
   "lines": [
-   "英文、德文、荷蘭文 ＝ <b>同一家的兄弟姊妹</b>",
    "句子的順序也很像：<b>Is he…? ＝ Ist er…?</b>"
   ]
  }

@@ -131,9 +131,9 @@ const CSS = `
 @keyframes p1{from{transform:scale(0) rotate(-40deg);opacity:0}to{transform:none;opacity:1}}
 /* thirteen／thirty：teen 金色、ty 藍色，粗體 */
 .tt{display:grid;grid-template-columns:auto auto auto;align-items:center;justify-content:center;column-gap:clamp(12px,2.4vw,30px);row-gap:clamp(8px,1.6vh,18px)}
-.tt .w{font-size:clamp(44px,8.8vh,88px);font-weight:700;border-bottom:0;opacity:0;animation:nfIn .6s ease forwards}
+.tt .w{font-size:clamp(30px,min(8.8vh,8vw),88px);font-weight:700;border-bottom:0;opacity:0;animation:nfIn .6s ease forwards}
 .tt .teen{color:#FFD24A;font-weight:800}.tt .ty{color:#5AD1FF;font-weight:800}
-.tt .m{font-size:clamp(26px,5.2vh,52px);font-weight:700;opacity:0;animation:nfIn .6s ease forwards;white-space:nowrap}
+.tt .m{font-size:clamp(20px,min(5.2vh,5vw),52px);font-weight:700;opacity:0;animation:nfIn .6s ease forwards;white-space:nowrap}
 .tt .m .teen{color:#FFD24A}.tt .m .ty{color:#5AD1FF}
 .fr80{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,20px);flex-wrap:wrap;font-size:clamp(34px,7vh,70px);font-weight:700}
 .fr80 span{opacity:0;animation:nfIn .6s cubic-bezier(.2,1.5,.4,1) forwards}
@@ -331,7 +331,7 @@ const TY = { tag: '🔑 字母密碼：-ty ＝ -zig ＝ -tig ＝ 幾個十', src
       '<span class="w sp" data-say="' + r[0] + '"' + (r[3] === 'de' ? ' data-lang="de-DE"' : r[3] === 'nl' ? ' data-lang="nl-NL"' : r[3] === 'sv' ? ' data-lang="sv-SE"' : '') + ' style="animation-delay:' + (0.3 + k * 0.4) + 's">' + r[1] + '<span class="ty">' + r[2] + '</span></span>' +
       '<span class="m" style="animation-delay:' + (0.4 + k * 0.4) + 's">3 ✕ <span class="ty">10</span></span>').join('') + '</div>',
   lines: ['幾十的尾巴，<b>都是「幾個十」</b>'] };
-const REM = (rows, next) => ({ tag: '記住這件事', sayAll: 1, src: 'boat', h: rem(rows) + BRO3 + (next ? '<a class="golink pop" href="' + next[0] + '">' + next[1] + '</a>' : ''), lines: next ? [REMLINE[1]] : REMLINE });
+const REM = (rows, next) => ({ tag: '記住這件事', sayAll: 1, src: 'boat', h: rem(rows) + BRO3 + (next ? '<a class="golink pop" href="' + next[0] + '">' + next[1] + '</a>' : ''), lines: next ? [] : REMLINE });
 
 const worldPages = [
   { file: 'numbers-world.html', title: '數字環遊世界　基礎 0～10', sayAll: 1, big: 1, srcRows: SRCW, topic: '🌍 環遊世界　基礎',

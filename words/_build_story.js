@@ -614,7 +614,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 .rem{border-collapse:separate;border-spacing:clamp(4px,.8vw,10px) clamp(3px,.6vh,8px);margin:0 auto}
 .rem th{font-size:clamp(16px,2.6vh,24px);color:#9FB4C8;font-weight:700;padding:0 .4em}
 .rem th .flag{width:1.4em;vertical-align:-.2em;margin-right:.2em}
-.rem td{font-size:clamp(24px,4.4vh,44px);font-weight:700;text-align:center;background:#0C0C0C;border:1px solid #232323;
+.rem td{font-size:clamp(17px,min(4.4vh,4.4vw),44px);font-weight:700;text-align:center;background:#0C0C0C;border:1px solid #232323;
  border-radius:14px;padding:.08em .5em;line-height:1.15;opacity:0;animation:cxIn .5s ease forwards}
 .rem td em{display:block;font-style:normal;font-size:.5em;color:#D8D3C5;font-weight:700}
 .rem td.z{color:#FFE9A8;font-size:clamp(22px,4vh,40px)}
@@ -791,7 +791,9 @@ body{margin:0;background:#000;color:#F2F2F2;
 /* 故事頁字放大（使用者 2026-09-26：標題和說明文字放大） */
 .big .tag{font-size:clamp(22px,3.6vh,34px);letter-spacing:.14em;color:#BFD3E6}
 .big .sub{font-size:clamp(19px,3vh,29px);line-height:1.4}
-.qdone .qz .qres{font-size:clamp(20px,3.6vh,34px)}
+.qdone .qz .qres{font-size:clamp(20px,3.4vh,32px)}
+.big .rv .emoji{font-size:clamp(40px,min(8vh,10vw),80px)}
+.qdone .qz .qq{margin-bottom:0}
 .big .mid{font-size:clamp(34px,6.4vh,60px)}
 ${TOCCSS}
 ${PH.CSS}

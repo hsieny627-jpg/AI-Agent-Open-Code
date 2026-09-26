@@ -62,10 +62,10 @@ const S = [
   { tag: '記住這件事', sayAll: 1, src: 'boat',
     h: rem([['Who is he?', 'Wer ist er?', 'Wie is hij?', '他是誰？'], ['Is he a doctor?', 'Ist er Arzt?', 'Is hij dokter?', '他是醫生嗎？'],
       ['Yes, he is.', 'Ja, das ist er.', 'Ja, dat is hij.', '對，他是。'], ['He is ' + E('a') + ' doctor.', 'Er ist Arzt.', 'Hij is dokter.', '只有英文要 a']]) + BRO3,
-    lines: ['英文、德文、荷蘭文 ＝ <b>同一家的兄弟姊妹</b>', '句子的順序也很像：<b>Is he…? ＝ Ist er…?</b>'] }
+    lines: ['句子的順序也很像：<b>Is he…? ＝ Ist er…?</b>'] }
 ];
 const CSS = NP.CSS + `
-.rem td{font-size:clamp(18px,3.2vh,32px)}`;
+.rem td{font-size:clamp(15px,min(3vh,3.2vw),30px)}`;
 fs.writeFileSync(path.join(__dirname, 'world.html'), tpl({
   file: 'world.html', title: '句型環遊世界', suffix: '四年級 句型', sayAll: 1, big: 1, css: CSS, topic: '🌍 句型環遊世界',
   font: '../words/fonts/', home: 'index.html', svjs: SVA, srcRows: SRC, S
