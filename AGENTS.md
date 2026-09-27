@@ -103,6 +103,9 @@
    Sight Words 進階 Who Where When Why、四年級句型環遊世界、G3／G4 Review 1、所有故事先猜再揭曉、ten 重音語音檔）。
    細節在 `sentences/CLAUDE.md`、`G3 - L1 + L2/CLAUDE.md`、`words/CLAUDE.md` 最上面「2026-09-26」那一節。
 
+14. 📋 使用者開新對話修改教學網站時，用的開場白存在 `新對話開場白_修改教學網站.md`
+   （讀哪一份規格、每一點寫哪一頁哪一張、看不懂先問、只量改到的頁、0 失敗才推 main）。
+
 ---
 
 ## 三、提示機制（重要）
