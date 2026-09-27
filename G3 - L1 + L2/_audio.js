@@ -58,7 +58,8 @@ G.G9.forEach(c => add(c[0]));
 /* 句子重音（使用者 2026-09-26 指定）：數字是 content word，音高比較高（stressed）；years old 是 function words，唸得比較輕。
    + ＝ 重音、- ＝ 輕讀，做法見 tools/stress.py */
 ['six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'].forEach(n => {
-  T.push("I'm +" + n + ' -years -old.', 'I am +' + n + ' -years -old.', "I'm +" + n + '.', 'I am +' + n + '.');
+  /* 2026-09-27 使用者：years、old 都是輕聲，接近中文三聲（低、平）；old 不可以像中文四聲往下掉 ➜ ~ ＝ 低平 */
+  T.push("I'm +" + n + ' ~years ~old.', 'I am +' + n + ' ~years ~old.', "I'm +" + n + '.', 'I am +' + n + '.');
 });
 /* Review 1（2026-09-26 新增）：每一句、每一個替換字換進去的句子 */
 (D.XPAGES || []).forEach(P => (P.cards || []).forEach(c => {

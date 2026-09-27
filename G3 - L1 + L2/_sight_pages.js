@@ -98,13 +98,16 @@ const whyS = [
     q: { q: '英文的「我」<b>I</b>，為什麼永遠大寫？', o: ['小小的 i 太容易看漏，就寫大一點', '因為「我」最重要', '國王規定的', '電腦自動改的'] },
     h: '<div class="gstory" style="display:flex">' + R2('ic<em>古英文</em>', .2) + R2('<span style="font-size:.6em">i</span><em>太小了！</em>', .8) + R2('<span style="font-size:1.6em;color:#FFD24A">I</span><em>寫大一點</em>', 1.4) + '</div>',
     lines: ['小小的 i <b>太容易看漏</b>，抄書的人就把它<b>寫成大寫</b>', '（這是最多學者支持的說法）'] },
-  { tag: '今天：你、你們 都是 you', emoji: '👉', say: 'you', src: 'you',
-    q: { q: '英文的「<b>你們</b>」怎麼說？', o: ['也是 you', 'yous', 'you們', 'thou'] },
-    h: '<div class="lk fo" style="grid-template-columns:auto auto">' +
-      '<span class="w" style="animation-delay:.2s">👉🧒</span><span class="w sp" data-say="you" style="animation-delay:.5s">you<span class="fl" style="display:block;opacity:1">你</span></span>' +
-      '<span class="w" style="animation-delay:.9s">👉🧒🧒🧒</span><span class="w sp" data-say="you" style="animation-delay:1.2s">you<span class="fl" style="display:block;opacity:1">你們</span></span></div>',
-    lines: ['今天：<b>你</b>、<b>你們</b> 都是 <b>you</b>', '以前的「你」是 <b>thou</b>，you 只用在「你們」'] },
-  { tag: 'name 以前唸兩個音節', emoji: '📛', say: 'name', src: 'name',
+  /* 2026-09-27 使用者：you 的故事看不懂、太複雜 ➜ 只講一件事「一個人、很多人，都叫 you」＋ 一格時光機；
+     題目上面不可以洩題；選項刪掉 you們，加 your，四個都是真的英文字、長得很像（誘答力） */
+  { tag: 'you 的故事', emoji: '👉', say: 'you', src: 'you',
+    q: { q: '英文的「<b>你們</b>」怎麼說？', o: ['you', 'your', 'yours', 'you’re'] },
+    h: '<div class="gstory" style="display:flex">' +
+      R2('👉🧒 <b class="e">you</b><em>你</em>', .2) + R2('👉🧒🧒🧒 <b class="e">you</b><em>你們</em>', .8) + '</div>' +
+      '<div class="gstory" style="display:flex">' +
+      R2('⏳ 以前：一個人 ＝ <b class="n">thou</b><em>很多人 ＝ you</em>', 1.5) + R2('👋 <s style="opacity:.5">thou</s> ➜ <b class="e">you</b><em>今天：全部 you</em>', 2.2) + '</div>',
+    lines: ['一個人、很多人，<b>都叫 you</b>', '<b>your</b> ＝ 你的　<b>yours</b> ＝ 你的東西　<b>you’re</b> ＝ you are'] },
+  { tag: 'name 以前唸兩個音節', emoji: require('../sentences/_nametag').TAG, say: 'name', src: 'name',
     q: { q: '<b>name</b> 字尾的 e 不唸。很久以前的人怎麼唸 name？', o: ['na-ma（兩個音節）', '跟今天一樣', 'nem', 'nam-ee-ee'] },
     h: '<div class="gstory" style="display:flex">' + R2('na-ma<em>以前</em>', .2) + R2('nam<span style="opacity:.35">e</span><em>今天：e 不唸</em>', .9) + '</div>',
     lines: ['以前的人唸 <b>na-ma</b>', '後來 e <b>不唸了</b>，字母還留著'] },

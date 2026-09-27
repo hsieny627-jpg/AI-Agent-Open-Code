@@ -45,10 +45,12 @@ function pi(who, own) {
   return '<span class="pi"><i class="L' + (who === 'I' ? ' on' : '') + '">🧒<em>💬</em>' + (who === 'I' && own ? '<u>🎒</u>' : '') + '</i>' +
     '<i class="R' + (who === 'you' ? ' on' : '') + '">👧' + (who === 'you' && own ? '<u>🎒</u>' : '') + '</i></span>';
 }
+var NAMETAG = require('../sentences/_nametag').TAG;   /* name 的圖示（2026-09-27） */
 var ICON = {
   what:'❓', how:'🤔', howold:'🎂', is:'＝',
-  /* name ＝ 名牌：Hello, my name is … 的那種貼紙（使用者 2026-09-25 指定：原本的 📛 看不懂） */
-  name:'<span class="nmtag"><b>HELLO</b><i>Ken</i></span>',
+  /* name ＝ 名牌：Hello, my name is … 的那種貼紙（使用者 2026-09-25 指定：原本的 📛 看不懂；
+     2026-09-27：改成更有質感的 SVG 名牌，全站 name 的圖示都用 sentences/_nametag.js） */
+  name:NAMETAG,
   i:pi('I'), my:pi('I', 1), you:pi('you'), your:pi('you', 1), yold:'🎂',
   q:'', dot:'', yes:'✅', no:'❌',
   ken:av('ken','👦'), alan:av('alan','🧑'), wendy:av('wendy','👧'), mike:av('mike','👦🏻'), emma:av('emma','👧🏻'),
@@ -246,7 +248,7 @@ var U2 = [
 
  /* 14 問什麼，就答什麼：What ➜ 名字、How old ➜ 幾歲 */
  {type:'focus', title:'問什麼，就答什麼',
-  rows:[['What’s your name?','📛 答名字',ICON.name],['How old are you?','🎂 答幾歲',ICON.howold]]},
+  rows:[['What’s your name?',NAMETAG+' 答名字',ICON.name],['How old are you?','🎂 答幾歲',ICON.howold]]},
 
  /* 15 一問一答 (1) */
  {type:'pair', cls:'b', slot:'age', qic:ICON.howold, aic:ICON.ten,
@@ -366,7 +368,7 @@ var SC2 = [
  SLOW('You are ten.','You’re ten.','意思一模一樣，只是說得比較快。'),
  sc({at:'🎤 一問一答',bg:'💬',l:'👧',b:'How old are you?',r:'👦',b2:'I’m ten.',use:'問 you（你），答 I（我）。'}),
  sc({at:'🎤 一問一答',bg:'💬',l:'👧',b:'How old are you?',r:'👦',b2:'I’m ten years old.',use:'問幾歲，就答幾歲。'}),
- sc({at:'🎤 問什麼答什麼',bg:'💬',l:'📛',ln:'問名字',b:'What’s your name?',r:'🎂',rn:'問幾歲',b2:'How old are you?',use:'兩個問題，答案不一樣。'}),
+ sc({at:'🎤 問什麼答什麼',bg:'💬',l:NAMETAG,ln:'問名字',b:'What’s your name?',r:'🎂',rn:'問幾歲',b2:'How old are you?',use:'兩個問題，答案不一樣。'}),
  sc({at:'🏫 教室',bg:'🏫',l:'👩‍🏫',b:'How old are you?',r:'👦',b2:'I’m ten years old.',use:'老師問你幾歲，這樣回答。'}),
  sc({at:'🏫 教室',bg:'🏫',l:'👩‍🏫',b:'How old are you?',r:'👧',b2:'I’m ten.',use:'也可以只說 I’m ＋ 數字。'}),
  sc({at:'🤫 小聲一點',bg:'🤫',l:'🧒',b:'eight',r:'🧒',b2:'nine',use:'淺灰色的字母，唸的時候不發音。'})
@@ -388,11 +390,7 @@ var CSS = '@media (max-aspect-ratio:1/1){.erow{flex-direction:column;gap:clamp(4
   '.pi i u{position:absolute;right:-.45em;bottom:-.1em;text-decoration:none;font-size:.62em}' +
   '.pi i.on u{animation:piBag 1.2s ease-in-out infinite}' +
   '@keyframes piBag{0%,100%{transform:none}50%{transform:translateY(-.15em) scale(1.12)}}' +
-  /* name 的名牌 */
-  '.nmtag{display:inline-flex;flex-direction:column;align-items:center;border-radius:.18em;overflow:hidden;' +
-  'font-size:.44em;line-height:1.1;margin:0 -.2em;border:1px solid #C9302C}' +
-  '.nmtag b{background:#C9302C;color:#fff;padding:.08em .4em;letter-spacing:.08em;font-size:.72em}' +
-  '.nmtag i{background:#fff;color:#111;font-style:normal;font-weight:700;padding:.1em .5em;font-size:1.05em}' +
+  /* name 的名牌：2026-09-27 改成 SVG（sentences/_nametag.js），大小跟著字走，不用另外的 CSS */
   '.av{width:auto;height:1.6em;object-fit:contain;vertical-align:middle}' /* 老師給的是全身角色圖（透明底）：不裁成圓形，整個人都看得到 */ +
   '.chip .ci .pi,.bub .bi .pi{margin:0}';
 

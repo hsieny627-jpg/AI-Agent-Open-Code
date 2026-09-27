@@ -44,7 +44,7 @@ h1{margin:0;font-size:clamp(25px,4.8vh,46px);font-weight:700;letter-spacing:.03e
 const body = `
 <main id="stage">
 <header>
- <h1>三年級　秒懂教室</h1>
+ <h1>三年級</h1>
  <div class="sub">第一冊　Unit 1 ・ Unit 2</div>
  <div class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code/G3%20-%20L1%20+%20L2/</b></div>
 </header>
@@ -57,7 +57,7 @@ const body = `
   <span class="f">${Q.length} 題　其中 ${Q.filter(q => q.x2).length} 題 分數 ✕ 2</span></a>
 
  <a class="card" href="unit1.html">
-  <span class="n">2</span><span class="ic">📛</span>
+  <span class="n">2</span><span class="ic">${require('../sentences/_nametag').TAG}</span>
   <span class="t">Unit 1 句型</span>
   <span class="d">What’s your name?　My name is Ken.／I’m Ken.　逐字動畫、縮寫變身、中英語序、名字替換字，下面還有「📝 複習」。</span>
   <span class="f">${D.U1.length} 張字卡</span></a>
@@ -78,7 +78,7 @@ const body = `
  <a class="card go" href="games.html">
   <span class="n">5</span><span class="ic">🎮</span>
   <span class="t">複習遊戲</span>
-  <span class="d">10 種玩法，每個遊戲 <b>5 分鐘</b>、愈快分數愈高。<b>連對 3 題</b>翻一張驚喜卡（${B.SURP.g1.length} 張張張不一樣）。</span>
+  <span class="d">10 種玩法，每個遊戲 <b>3 分鐘</b>、愈快分數愈高。<b>連對 3 題</b>抽驚喜卡：二～五選一，每次卡包樣式都不一樣。</span>
   <span class="f">${B.GAMES.length} 種　共 ${B.GAMES.reduce((a, g) => a + g.n, 0)} 題</span></a>
 
  <!-- 2026-09-25 使用者指定新增：數字單字、Sight Words（照家人單字的架構） -->
@@ -113,5 +113,5 @@ ${S.TTS}
 </body>
 </html>`;
 
-fs.writeFileSync(DIR + '/index.html', S.HEAD('三年級 英文句型　秒懂教室', CSS) + body);
+fs.writeFileSync(DIR + '/index.html', S.HEAD('三年級', CSS) + body);
 console.log('home ok');

@@ -6,6 +6,7 @@
  *     dir      輸出資料夾
  *     font     字體路徑（words/ 是 'fonts/'；G3 的子資料夾是 '../../words/fonts/'）
  *     home     「🏠 首頁」連到哪裡
+ *     whome    「🔤 單字首頁」連到哪裡（沒寫 ＝ 這一組的 index；2026-09-27）
  *     words    單字卡（欄位跟 _build.js 的 WORDS 一樣：f zh sub icon old now e1 e2 build src）
  *     srcW     單字 ➜ 出處（跟 _sources.js 的 W 一樣）
  *     pages    故事頁（欄位跟 _build_story.js 的 PAGES 一樣，另外 srcRows ＝ 這一頁的出處）
@@ -76,11 +77,11 @@ function build(o) {
   fs.mkdirSync(o.dir, { recursive: true });
   const WL = buildSet(o.words, { dir: o.dir, font: o.font, home: o.home, srcW: o.srcW, title: o.suffix, head: o.head || '' });
   o.pages.forEach(p => fs.writeFileSync(path.join(o.dir, p.file),
-    tpl(Object.assign({ font: o.font, home: o.home, suffix: o.suffix, svjs: o.svjs || '' }, p)), 'utf8'));
+    tpl(Object.assign({ font: o.font, home: o.home, whome: o.whome || (o.index ? o.index.file : ''), suffix: o.suffix, svjs: o.svjs || '' }, p)), 'utf8'));
   if (o.index) {
     const links = o.index.links.map(l => l.cards === true ? Object.assign({}, l, { cards: WL.map(w => ({ f: w.f, zh: w.zh, icon: w.icon, href: w.f + '.html' })) }) : l);
     fs.writeFileSync(path.join(o.dir, o.index.file), indexHTML(Object.assign({ font: o.font, home: o.home }, o.index, { links })), 'utf8');
   }
   return [o.index ? o.index.file : null].concat(WL.map(w => w.f + '.html'), o.pages.map(p => p.file)).filter(Boolean);
 }
-module.exports = { build };
+module.exports = { build, indexHTML };

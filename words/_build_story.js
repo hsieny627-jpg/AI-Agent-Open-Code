@@ -764,6 +764,8 @@ body{margin:0;background:#000;color:#F2F2F2;
  background:#10301F;border-color:#39D98A;min-height:54px;white-space:nowrap}
 .reduce *{animation:none!important;transition:none!important}
 /* 2026-09-26 使用者指定：畫面左上方寫這一頁的主題（例：🧩 單字結構） */
+.whfix{position:fixed;top:max(10px,env(safe-area-inset-top));right:12px;z-index:30;background:#10253A;border:2px solid #5AC8FF;
+ color:#fff;border-radius:99px;font-family:inherit;font-weight:700;font-size:clamp(15px,2.1vh,19px);padding:8px 16px;cursor:pointer}
 .topicfix{position:fixed;top:max(10px,env(safe-area-inset-top));left:112px;z-index:30;color:#FFD66B;font-weight:700;
  font-size:clamp(16px,2.4vh,22px);letter-spacing:.08em;padding:8px 4px;pointer-events:none;white-space:nowrap}
 /* 每一幕先來一題「猜猜看」（使用者 2026-09-26 指定：故事融入暖身題），答了才揭曉故事 */
@@ -785,6 +787,23 @@ body{margin:0;background:#000;color:#F2F2F2;
 .qz .qres{font-size:clamp(26px,5vh,48px);font-weight:700;animation:qIn .5s cubic-bezier(.2,1.6,.4,1) both}
 .qz .qres.ok{color:#39D98A}.qz .qres.no{color:#FFB35A}
 .qwait .rv{display:none}
+/* 思考時間 20 秒（2026-09-27）：鎖住的選項變暗、不能按；倒數圈 ＋ 提早回答 ＋ 暫停 */
+.qtm{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.4vw,16px);flex-wrap:wrap}
+.qring{position:relative;width:clamp(58px,9vh,86px);height:clamp(58px,9vh,86px);display:inline-flex;align-items:center;justify-content:center}
+.qring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.qring .qbg{fill:none;stroke:#1F1F1F;stroke-width:9}
+.qring .qfg{fill:none;stroke:#39D98A;stroke-width:9;stroke-linecap:round;stroke-dasharray:276.5;transition:stroke-dashoffset .1s linear}
+.qz.warn .qring .qfg{stroke:#FF9F43}.qz.warn .qsec{color:#FF9F43;animation:qBeat .5s infinite}
+.qring .qsec{position:relative;font-size:clamp(24px,4.2vh,40px);font-weight:700;font-variant-numeric:tabular-nums}
+@keyframes qBeat{0%,100%{transform:none}50%{transform:scale(1.15)}}
+.qz.paused .qring{opacity:.55}.qz.paused .qring .qsec{animation:none}
+.qlk{font-size:clamp(17px,2.8vh,26px);color:#FFE9A8;font-weight:700}
+.qtm button{background:#1E1E1E;border:2px solid #4A4A4A;color:#fff;border-radius:99px;font-family:inherit;font-weight:700;
+ font-size:clamp(17px,2.7vh,25px);padding:.35em 1em;cursor:pointer}
+.qtm .qearly{border-color:#39D98A;color:#BFF5DA}
+.qz.lock .qo button{opacity:.45;pointer-events:none;filter:grayscale(.4)}
+.qz.open .qtm{display:none}
+.qdone .qz .qtm{display:none}
 .qdone .qz .qo,.qdone .qz .qskip{display:none}
 .qdone .qz{gap:4px}
 .qdone .qz .qq{font-size:clamp(17px,2.6vh,24px);color:#9E9E9E}
@@ -812,6 +831,7 @@ ${P.svjs!=null?P.svjs:SVJS}
 ${P.sayAll?`<div id="bar" class="c3"><span class="bl">${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button></span><button id="say">🔊 唸一次</button><span class="br">${P.back?`<button id="back">${P.back.label}</button>`:''}${P.fwd?`<button id="fwd">${P.fwd.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</span></div>`:
 `<div id="bar"><button id="say">🔊 念一次</button>${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button>${P.back?`<button id="back">${P.back.label}</button>`:''}${P.fwd?`<button id="fwd">${P.fwd.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>`}
 <button id="tocb" class="tocfix">📑 目次</button>
+${P.whome?`<button id="whome" class="whfix">🔤 單字首頁</button>`:''}
 <div class="topicfix">${P.topic||(/parts/.test(P.file)?'🧩 單字結構':/why/.test(P.file)?'📜 單字故事':/world/.test(P.file)?'🌍 環遊世界':'📖 '+P.title)}</div>
 ${TOCHTML}
 ${SRC.html(P.srcRows||SRC.P[P.src||'why'])}
@@ -834,11 +854,30 @@ function draw(s){
   for(var a=o.length-1;a>0;a--){var b=Math.floor(Math.random()*(a+1)),c=o[a];o[a]=o[b];o[b]=c}
   return PH.expand(t+'<div class="qz"><div class="qq">🤔 '+s.q.q+'</div><div class="qo">'+
    o.map(function(x){return '<button data-ok="'+(x.n===0?1:0)+'">'+x.x+'</button>'}).join('')+
-   '</div><button class="qskip">👀 直接看答案</button><div class="qresw"></div></div><div class="rv">'+h+'</div>')}
+   '</div><div class="qtm"><span class="qring"><svg viewBox="0 0 100 100"><circle class="qbg" cx="50" cy="50" r="44"/><circle class="qfg" cx="50" cy="50" r="44"/></svg><b class="qsec">'+QTHINK+'</b></span>'+
+   '<span class="qlk">🤔 先想一想、討論一下</span><button class="qearly">✋ 提早回答</button><button class="qpause">⏸ 暫停</button></div>'+
+   '<button class="qskip">👀 直接看答案</button><div class="qresw"></div></div><div class="rv">'+h+'</div>')}
  return PH.expand(t+h);
 }
+/* 猜猜看的思考時間（使用者 2026-09-27 指定）：倒數 20 秒，選項先鎖住，時間到才能選；
+   「✋ 提早回答」馬上開放；「⏸ 暫停」停住倒數（再按一次繼續） */
+var QTHINK=20,qLeft=QTHINK,qTk=null,qPaused=false;
+function qStop(){if(qTk){clearInterval(qTk);qTk=null}}
+function qOpen(){qStop();var z=stage.querySelector(".qz");if(z){z.classList.remove("lock");z.classList.add("open")}}
+function qPaint(){var z=stage.querySelector(".qz");if(!z)return;
+ var n=z.querySelector(".qsec"),f=z.querySelector(".qfg");
+ if(n)n.textContent=Math.ceil(qLeft);
+ if(f)f.style.strokeDashoffset=(276.5*(1-qLeft/QTHINK)).toFixed(1);
+ z.classList.toggle("warn",qLeft<=5)}
+function qStart(){qStop();qLeft=QTHINK;qPaused=false;
+ var z=stage.querySelector(".qz");if(!z)return;z.classList.add("lock");qPaint();
+ qTk=setInterval(function(){if(qPaused)return;qLeft=Math.max(0,qLeft-0.1);qPaint();if(qLeft<=0)qOpen()},100)}
+function qPause(b){qPaused=!qPaused;b.textContent=qPaused?"▶ 繼續":"⏸ 暫停";
+ var z=stage.querySelector(".qz");if(z)z.classList.toggle("paused",qPaused)}
 function qAns(b){
  if(!stage.classList.contains("qwait"))return;
+ var z0=stage.querySelector(".qz");if(b&&z0&&z0.classList.contains("lock"))return;
+ qStop();
  var s=S[i];if(!s.q)return;
  var ok=b&&b.getAttribute("data-ok")==="1";
  [].forEach.call(stage.querySelectorAll(".qo button"),function(x){
@@ -880,6 +919,7 @@ function show(n){
  window.SRCAT=S[i].src||"";   /* 按「📖 出處」直接跳到這一幕的證據（使用者 2026-09-25 指定） */
  stage.innerHTML=draw(S[i]);
  stage.classList.toggle("qwait",!!S[i].q);stage.classList.remove("qdone");
+ qStop();if(S[i].q)qStart();
  PH.autoSay(stage);      // 補充單字、字詞、用法都可以點來聽
  if(!reduce){stage.classList.remove("turnR","turnL");void stage.offsetWidth;
   stage.classList.add(back?"turnL":"turnR")}
@@ -898,6 +938,8 @@ stage.addEventListener("click",function(e){
  var t=e.target;
  var qb=t.closest?t.closest(".qo button"):null;if(qb){qAns(qb);return}
  if(t.closest&&t.closest(".qskip")){qAns(null);return}
+ if(t.closest&&t.closest(".qearly")){qOpen();return}
+ var qp=t.closest?t.closest(".qpause"):null;if(qp){qPause(qp);return}
  var r=t.closest?t.closest(".grev"):null;
  if(r){var g=r.closest(".guess");var on=!g.classList.contains("rev");g.classList.toggle("rev",on);
   r.textContent=on?"🙈 藏起來再猜一次":"🔍 公布答案";return}
@@ -917,6 +959,8 @@ ${P.back?`document.getElementById("back").addEventListener("click",function(){
  if(history.length>1){history.back()}else{location.href=${JSON.stringify(P.back.href)}}});`:''}
 ${P.fwd?`document.getElementById("fwd").addEventListener("click",function(){location.href=${JSON.stringify(P.fwd.href)}});`:''}
 document.getElementById("home").addEventListener("click",function(){location.href=${JSON.stringify(P.home||'../index.html')}});
+${P.whome?`/* 🔤 單字首頁：回到這一組單字的首頁（不是年級首頁；使用者 2026-09-27 指定） */
+document.getElementById("whome").addEventListener("click",function(){location.href=${JSON.stringify(P.whome)}});`:''}
 ${TOCJS}
 ${SRC.JS}
 </script>
@@ -926,6 +970,6 @@ ${SRC.JS}
 
 module.exports={tpl};
 if(require.main===module){
- PAGES.forEach(p=>fs.writeFileSync(path.join(DIR,p.file),tpl(p),'utf8'));
+ PAGES.forEach(p=>fs.writeFileSync(path.join(DIR,p.file),tpl(Object.assign({whome:'index.html'},p)),'utf8'));  /* 🔤 單字首頁 ＝ words/index.html（2026-09-27） */
  console.log('已產生：'+PAGES.map(p=>p.file).join('  '));
 }

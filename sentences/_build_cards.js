@@ -612,13 +612,21 @@ function lineHTML(tk,id){
   return '<div class="wrap"><div class="line"'+(id?' id="'+id+'"':'')+'>'+
     tk.map(tkHTML).join('')+'</div></div>';
 }
+/* 「慢慢說 ➜ 說快一點」：慢慢說那一句裡，等一下會被 ’ 藏起來的字母上紅色
+   （使用者 2026-09-27 指定：I am ＝ I’m 的 a 和 ’ 一律紅色；What is 的 i、You are 的 a 同一個規則） */
+function hidRed(h,mate){
+  var m=String(mate).replace(/\u2019/g,"'");
+  return h.replace(/\b(I) (a)(m)\b/,function(x,p,c,r){return /\bI'm\b/.test(m)?p+' <b class="ri">'+c+'</b>'+r:x})
+   .replace(/\b(You|you|We|we|They|they) (a)(re)\b/,function(x,p,c,r){return new RegExp('\\b'+p+"'re\\b").test(m)?p+' <b class="ri">'+c+'</b>'+r:x})
+   .replace(/\b(What|Who|He|She|It|That|Where|How) (i)(s)\b/,function(x,p,c,r){return new RegExp('\\b'+p+"'s\\b").test(m)?p+' <b class="ri">'+c+'</b>'+r:x});
+}
 /* 情境：兩個人演一次（使用者 2026-09-24 指定改版）。對話框點了就唸 */
 function sceneHTML(c){
   var s=c.scene;if(!s)return '';
   var bub=function(txt,side,zh,mate){
     if(!txt)return '';
     var at=zh?' data-zh="'+esc(txt)+'" data-en="'+esc(mate||'')+'"':' data-say="'+esc(txt)+'"';
-    return '<div class="sbub '+side+'"'+at+'>'+ap(txt)+'</div>';
+    return '<div class="sbub '+side+'"'+at+'>'+(!zh&&mate?hidRed(ap(txt),mate):ap(txt))+'</div>';
   };
   var act=function(f,nm,tag,side){
     return '<div class="sact '+side+'"><span class="sfig">'+f+'</span>'+

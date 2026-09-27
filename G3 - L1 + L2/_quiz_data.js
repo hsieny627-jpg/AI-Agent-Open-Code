@@ -18,12 +18,12 @@ const Q = [
  why:'中文「<b>什麼</b>」在最後，英文 <b>What</b> 放第一個；「你的」是 <b>your</b>。'},
 
 {t:'think', q:'"What’s your name?" 要怎麼回答？', x2:true,
- o:['My name is Ken.','I’m eight.','Your name is Ken.','I’m eight years old.'], a:0,
- why:'問<b>名字</b>，就答<b>名字</b>。I’m eight. 是在說<b>幾歲</b>。'},
+ o:['My name is Ken.','Your name is Ken.','My name are Ken.','I’m eight.'], a:0,
+ why:'問<b>名字</b>，就答<b>名字</b>：<b>My</b> name <b>is</b> Ken.（Your ＝ 你的；I’m eight. 是在說<b>幾歲</b>）'},
 
 {t:'think', q:'"How old are you?" 要怎麼回答？', x2:true,
- o:['I’m nine years old.','I’m Mike.','My name is nine.','How old are you?'], a:0,
- why:'問<b>幾歲</b>，就答<b>幾歲</b>：I’m ＋ 數字 ＋ years old。I’m Mike. 是在說名字。'},
+ o:['I’m nine years old.','I’m nine year old.','You’re nine years old.','I’m Mike.'], a:0,
+ why:'問<b>幾歲</b>，就答<b>幾歲</b>：<b>I’m</b> ＋ 數字 ＋ year<b>s</b> old。I’m Mike. 是在說名字。'},
 
 {t:'think', q:'What’s 是哪兩個字合起來的？',
  o:['What is','What are','What am','What your'], a:0,
@@ -42,7 +42,7 @@ const Q = [
  why:'<b>How old</b> ＝ 幾歲，<b>you</b> ＝ 你：<b>你幾歲？</b>'},
 
 {t:'see-en', q:'"My name is Wendy." 的中文意思是？',
- o:['我的名字是 Wendy。','你的名字是 Wendy。','Wendy 幾歲？','我是 Wendy 的。'], a:0,
+ o:['我的名字是 Wendy。','你的名字是 Wendy。','我的名字是什麼？','我是 Wendy 的。'], a:0,
  why:'<b>My</b> ＝ 我的，<b>name</b> ＝ 名字。'},
 
 {t:'see-en', q:'"I’m twelve years old." 的中文意思是？',
@@ -58,7 +58,7 @@ const Q = [
  why:'<b>years</b> 要有 <b>s</b>，後面的 <b>old</b> 也不能少。'},
 
 {t:'see-zh', q:'「我是 Alan。」英文怎麼說？',
- o:["I'm Alan.","My Alan.","I Alan.","You're Alan."], a:0,
+ o:["I'm Alan.","I am is Alan.","My Alan.","You're Alan."], a:0,
  why:'我是 ＝ <b>I’m</b>（I am）。You’re 是「你是」。'},
 
 {t:'think', q:'I ＝ 我，那 My ＝ ？',
@@ -74,8 +74,8 @@ const Q = [
  why:'問「<b>你的</b>」名字，就答「<b>我的</b>」名字：your ➜ <b>My</b> name is …'},
 
 {t:'think', q:'哪一個是用來問「幾歲」的？',
- o:['How old','What','How','Who'], a:0,
- why:'<b>How old</b> 問年紀；What 問「什麼」；How 問「怎麼樣」。'},
+ o:['How old','How','What','How are'], a:0,
+ why:'<b>How old</b> 問年紀；How 問「怎麼樣」；How are 問「好嗎」；What 問「什麼」。'},
 
 {t:'think', q:'What 的哪一個字母不發音（淺灰色）？',
  o:['h','W','a','t'], a:0,

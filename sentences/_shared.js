@@ -120,6 +120,9 @@ const MISSCSS = `
 .gw{display:inline-flex;flex-direction:column;align-items:center;line-height:1.1}
 .gw b{font-weight:700}
 .gw i{font-style:normal;font-size:.46em;color:#FFE9A8;font-weight:700;margin-top:.12em;white-space:nowrap;letter-spacing:.02em}
+.gw b,.gw i{transition:transform .16s ease,filter .16s ease,text-shadow .16s ease}
+.gw.spk b{transform:scale(1.14);filter:brightness(1.4);text-shadow:0 0 .35em rgba(255,236,160,.75)}
+.gw.spk i{transform:scale(1.1);filter:brightness(1.3)}
 .gw.gc{margin-left:-.3em}.gw.gp{margin-left:-.3em}.gw.gp i{visibility:hidden}
 .mtr{font-size:clamp(22px,4.2vh,42px);color:var(--fg);text-align:center;line-height:1.3;opacity:0;animation:mIn .45s ease .8s forwards}
 .mtr b{color:#FFE9A8}
@@ -473,7 +476,7 @@ function mEl(){
  if(!m){m=document.createElement('div');m.id='miss';document.body.appendChild(m);
   m.addEventListener('click',function(e){
    var t=e.target,b=t.closest?t.closest('button'):null;if(!b)return;
-   if(b.classList.contains('say')){say(b.getAttribute('data-say'));return}
+   if(b.classList.contains('say')){var t=b.getAttribute('data-say');say(t,null,{hl:gHL(t)});return}
    if(b.classList.contains('bon')){missBonus();return}
    if(b.classList.contains('nxt')){missHide(true);return}
    if(b.hasAttribute('data-ok'))missPick(b);
@@ -485,7 +488,7 @@ function mSay3(t){
  if(!/[A-Za-z]/.test(t))return;
  var k=0,my=MS;
  var go=function(){if(MS!==my||!missOn()||k>=3)return;k++;
-  say(t,null,{keep:k>1?1:0,done:function(){setTimeout(go,650)}})};
+  say(t,null,{keep:k>1?1:0,hl:gHL(t),done:function(){setTimeout(go,650)}})};
  setTimeout(go,700);
 }
 function mCount(n,fn){

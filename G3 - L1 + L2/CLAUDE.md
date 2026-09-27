@@ -5,6 +5,20 @@
 **引擎跟 `sentences/` 共用**，所以 `sentences/CLAUDE.md` 裡的字卡規則、發音引擎、答錯獨立頁、
 語速六段、音效暫時刪除……全部適用，這一份只寫「這一課不一樣的地方」。
 
+## 2026-09-27 改版（使用者 16 點的第一批）——先讀這一節
+
+引擎的改動（name 名牌圖示、答錯頁唸到哪亮到哪、遊戲 3 分鐘／火眼金睛 4 分鐘、驚喜卡外觀 38 種＋一律二～五選一、選項誘答力）
+寫在 `sentences/CLAUDE.md` 最上面「2026-09-27」，**兩個網站共用**。單字頁（數字、Sight Words）的樣板改動寫在 `words/CLAUDE.md`。這一課自己的：
+
+| # | 使用者要的 | 做法（在哪裡） |
+|---|---|---|
+| 1 | 首頁「三年級」的圖示、Unit 1 的圖示 ➜ 更有質感、更好認的 name 圖示 | `ICON.name`、`_build_home.js` 第 2 張卡、`words/_build_hub.js` 三年級那一列：一律 `sentences/_nametag.js`。舊的 `.nmtag` CSS 刪掉了 |
+| 2 | 「三年級 秒懂教室」➜「三年級」 | `_build_home.js` 的 `<h1>` 和分頁名稱 |
+| 4 | I’m ten years old.：years、old 都是輕聲、接近中文三聲；old 不是四聲 | `tools/stress.py` 新記號 **`~` ＝ 低平**：那一段音高壓到全句中位數 ✕ 0.80 並**拉平**（不往下掉）、音量 ✕ 0.75。`_audio.js` 改成 `I'm +ten ~years ~old.`（six～twelve、I’m／I am 都做）。`-`（只是壓低 0.86）不用了 |
+| 5 | Sight Words 單字結構：’ 一律紅色；I am ＝ I’m：a 和 ’ 一律紅色 | `words/_phonics.js` 的 `apRed()`（見 `words/CLAUDE.md`）＋ 句型卡情境 `hidRed()`（見 `sentences/CLAUDE.md`） |
+| 13 | you 的故事看不懂 ➜ 更簡單；暖身題選項刪掉 you們、加 your、提升誘答力 | `_sight_pages.js` 的 `whyS`：標題改「you 的故事」（原本「今天：你、你們 都是 you」**洩題**）；題目「你們怎麼說？」四個選項 **you／your／yours／you’re**（四個都是真的字、長得很像）；動畫只講一件事：👉🧒 you ＝ 你、👉🧒🧒🧒 you ＝ 你們，再一格時光機「以前一個人 ＝ thou ➜ 今天全部 you」 |
+| 14 | 選項誘答力（這一課） | `_quiz_data.js` 第 2、3、8、12、16 題；`_game_data.js` G1、G10 幾題（見 `sentences/CLAUDE.md`） |
+
 ## 2026-09-26 改版（使用者 26 點）——先讀這一節
 
 引擎的改動（答錯頁逐字中文、加分題、火眼金睛 6 秒頁、驚喜卡、右上角分數、語序卡唸到哪亮到哪、多排替換字……）

@@ -115,6 +115,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 .phw .g i{font-style:normal}
 .phw .g i.v{color:#FF5A5A}            /* 母音字母 ＝ 紅色 */
 .phw .u.mute .g i,.phw .u.mute .g i.v{color:#9A9A9A}  /* 不發音 ＝ 淺灰色 */
+.phw .g i.ap,.phw .u.mute .g i.ap,.aprd{color:#FF5A5A!important}  /* ’ ＝ 紅色（2026-09-27） */
 .phw .p{display:none;font-size:max(.34em,13px);font-weight:400;letter-spacing:0;white-space:nowrap;
  color:#9FB4C8;margin-top:.30em;min-height:1.1em}
 .phw.ipa .p,.phw.kk .p{display:block}
@@ -252,7 +253,8 @@ var PH=(function(){
  function letters(u){var h="",L=u.L,k,nv=noVowelNucleus(u);
   for(k=0;k<L.length;k++){
    var red=(!u.s)&&(nv||V(L[k])||(L[k].toLowerCase()==="y"&&isNuc(u)));
-   h+='<i class="'+(red?"v":"")+'">'+L[k]+'</i>'}
+   /* ’ 一律紅色（使用者 2026-09-27 指定） */
+   h+='<i class="'+(/['’]/.test(L[k])?"ap":(red?"v":""))+'">'+L[k]+'</i>'}
   return h}
  /* 一個單字的完整元件：字母（母音紅／不發音灰）＋ 正下方對齊的音標 ＋ 音節切分點 */
  /* 查不到音標的字（外語家人單字等）：**不硬掰音標、不硬切音節**，
@@ -260,7 +262,7 @@ var PH=(function(){
  function plain(w,lang){
   var h='<span class="phw phplain" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
         '><span class="syl"><span class="u"><span class="g">',k;
-  for(k=0;k<w.length;k++)h+='<i class="'+(V(w[k])?"v":"")+'">'+w[k]+'</i>';
+  for(k=0;k<w.length;k++)h+='<i class="'+(/['’]/.test(w[k])?"ap":(V(w[k])?"v":""))+'">'+w[k]+'</i>';
   return h+'</span></span></span></span>'}
  function word(w,lang){
   /* **這兩個 \s 一定要寫兩條斜線**：這整段是 JS 模板字串，寫一條會被吃掉，
@@ -389,7 +391,21 @@ var PH=(function(){
     frag.appendChild(sp);last=m.index+m[0].length;any=true}
    if(!any)return;
    if(last<s.length)frag.appendChild(document.createTextNode(s.slice(last)));
-   t.parentNode.replaceChild(frag,t)})}
+   t.parentNode.replaceChild(frag,t)});
+  apRed(root)}
+ /* ’ 一律紅色；I am（會變成 I’m 的那個 a）也紅色（使用者 2026-09-27 指定）。出處的書名不動 */
+ function apRed(root){
+  var walk=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false),n,L=[];
+  while((n=walk.nextNode())){var pe=n.parentNode;
+   if(!pe||pe.nodeType!==1||pe.closest("script,style,.aprd,.rs,.ap,.phw,.sbody,.stoc,#src,.srcbox,.cv,.cl"))continue;
+   if(/’|[A-Za-z]'[A-Za-z]|\bI am\b/.test(n.nodeValue))L.push(n)}
+  L.forEach(function(t){
+   var h=t.nodeValue.replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/\bI am\b/g,'I <b class="aprd">a</b>m')
+    .replace(/’|([A-Za-z])'(?=[A-Za-z])/g,function(x,c){return (c||"")+'<b class="aprd">’</b>'});
+   var sp=document.createElement("span");sp.innerHTML=h;
+   var f=document.createDocumentFragment();while(sp.firstChild)f.appendChild(sp.firstChild);
+   t.parentNode.replaceChild(f,t)})}
  /* 切換音標：直接換掉每個字母下面那一行，不用重畫整幕 */
  function apply(){
   [].forEach.call(document.querySelectorAll(".phw"),function(p){

@@ -71,7 +71,7 @@
 
 ### 5. "My name is Wendy." 的中文意思是？
 
-- Wendy 幾歲？
+- 我的名字是什麼？
 - 你的名字是 Wendy。
 - 我是 Wendy 的。
 - ✅ 我的名字是 Wendy。
@@ -80,9 +80,9 @@
 
 ### 6. 「我是 Alan。」英文怎麼說？
 
-- My Alan.
+- I am is Alan.
 - ✅ I'm Alan.
-- I Alan.
+- My Alan.
 - You're Alan.
 
 > 秒懂說明：我是 ＝ **I’m**（I am）。You’re 是「你是」。
@@ -118,12 +118,12 @@
 
 ### 10. 哪一個是用來問「幾歲」的？
 
-- What
-- ✅ How old
-- Who
 - How
+- ✅ How old
+- How are
+- What
 
-> 秒懂說明：**How old** 問年紀；What 問「什麼」；How 問「怎麼樣」。
+> 秒懂說明：**How old** 問年紀；How 問「怎麼樣」；How are 問「好嗎」；What 問「什麼」。
 
 ### 11. "I’m twelve years old." 的中文意思是？
 
@@ -205,12 +205,12 @@
 
 ### 19. ⭐ 分數✕2　"How old are you?" 要怎麼回答？
 
-- I’m Mike.
+- I’m nine year old.
 - ✅ I’m nine years old.
-- How old are you?
-- My name is nine.
+- I’m Mike.
+- You’re nine years old.
 
-> 秒懂說明：問**幾歲**，就答**幾歲**：I’m ＋ 數字 ＋ years old。I’m Mike. 是在說名字。
+> 秒懂說明：問**幾歲**，就答**幾歲**：**I’m** ＋ 數字 ＋ year**s** old。I’m Mike. 是在說名字。
 
 ### 20. ⭐ 分數✕2　「你的名字是什麼？」英文怎麼說？
 
@@ -252,12 +252,12 @@
 
 ### 24. ⭐ 分數✕2　"What’s your name?" 要怎麼回答？
 
-- I’m eight years old.
 - I’m eight.
 - Your name is Ken.
+- My name are Ken.
 - ✅ My name is Ken.
 
-> 秒懂說明：問**名字**，就答**名字**。I’m eight. 是在說**幾歲**。
+> 秒懂說明：問**名字**，就答**名字**：**My** name **is** Ken.（Your ＝ 你的；I’m eight. 是在說**幾歲**）
 
 ---
 

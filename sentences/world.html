@@ -328,6 +328,8 @@ body{margin:0;background:#000;color:#F2F2F2;
  background:#10301F;border-color:#39D98A;min-height:54px;white-space:nowrap}
 .reduce *{animation:none!important;transition:none!important}
 /* 2026-09-26 使用者指定：畫面左上方寫這一頁的主題（例：🧩 單字結構） */
+.whfix{position:fixed;top:max(10px,env(safe-area-inset-top));right:12px;z-index:30;background:#10253A;border:2px solid #5AC8FF;
+ color:#fff;border-radius:99px;font-family:inherit;font-weight:700;font-size:clamp(15px,2.1vh,19px);padding:8px 16px;cursor:pointer}
 .topicfix{position:fixed;top:max(10px,env(safe-area-inset-top));left:112px;z-index:30;color:#FFD66B;font-weight:700;
  font-size:clamp(16px,2.4vh,22px);letter-spacing:.08em;padding:8px 4px;pointer-events:none;white-space:nowrap}
 /* 每一幕先來一題「猜猜看」（使用者 2026-09-26 指定：故事融入暖身題），答了才揭曉故事 */
@@ -349,6 +351,23 @@ body{margin:0;background:#000;color:#F2F2F2;
 .qz .qres{font-size:clamp(26px,5vh,48px);font-weight:700;animation:qIn .5s cubic-bezier(.2,1.6,.4,1) both}
 .qz .qres.ok{color:#39D98A}.qz .qres.no{color:#FFB35A}
 .qwait .rv{display:none}
+/* 思考時間 20 秒（2026-09-27）：鎖住的選項變暗、不能按；倒數圈 ＋ 提早回答 ＋ 暫停 */
+.qtm{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.4vw,16px);flex-wrap:wrap}
+.qring{position:relative;width:clamp(58px,9vh,86px);height:clamp(58px,9vh,86px);display:inline-flex;align-items:center;justify-content:center}
+.qring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.qring .qbg{fill:none;stroke:#1F1F1F;stroke-width:9}
+.qring .qfg{fill:none;stroke:#39D98A;stroke-width:9;stroke-linecap:round;stroke-dasharray:276.5;transition:stroke-dashoffset .1s linear}
+.qz.warn .qring .qfg{stroke:#FF9F43}.qz.warn .qsec{color:#FF9F43;animation:qBeat .5s infinite}
+.qring .qsec{position:relative;font-size:clamp(24px,4.2vh,40px);font-weight:700;font-variant-numeric:tabular-nums}
+@keyframes qBeat{0%,100%{transform:none}50%{transform:scale(1.15)}}
+.qz.paused .qring{opacity:.55}.qz.paused .qring .qsec{animation:none}
+.qlk{font-size:clamp(17px,2.8vh,26px);color:#FFE9A8;font-weight:700}
+.qtm button{background:#1E1E1E;border:2px solid #4A4A4A;color:#fff;border-radius:99px;font-family:inherit;font-weight:700;
+ font-size:clamp(17px,2.7vh,25px);padding:.35em 1em;cursor:pointer}
+.qtm .qearly{border-color:#39D98A;color:#BFF5DA}
+.qz.lock .qo button{opacity:.45;pointer-events:none;filter:grayscale(.4)}
+.qz.open .qtm{display:none}
+.qdone .qz .qtm{display:none}
 .qdone .qz .qo,.qdone .qz .qskip{display:none}
 .qdone .qz{gap:4px}
 .qdone .qz .qq{font-size:clamp(17px,2.6vh,24px);color:#9E9E9E}
@@ -386,6 +405,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 .phw .g i{font-style:normal}
 .phw .g i.v{color:#FF5A5A}            /* 母音字母 ＝ 紅色 */
 .phw .u.mute .g i,.phw .u.mute .g i.v{color:#9A9A9A}  /* 不發音 ＝ 淺灰色 */
+.phw .g i.ap,.phw .u.mute .g i.ap,.aprd{color:#FF5A5A!important}  /* ’ ＝ 紅色（2026-09-27） */
 .phw .p{display:none;font-size:max(.34em,13px);font-weight:400;letter-spacing:0;white-space:nowrap;
  color:#9FB4C8;margin-top:.30em;min-height:1.1em}
 .phw.ipa .p,.phw.kk .p{display:block}
@@ -533,6 +553,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
 <div id="bar" class="c3"><span class="bl"><button id="slow">🐢 放慢</button><button id="phmode">🔤 音標：無</button><button id="again">▶ 從頭看</button></span><button id="say">🔊 唸一次</button><span class="br"><button id="home">🏠 首頁</button><button id="srcb">📖 出處</button></span></div>
 <button id="tocb" class="tocfix">📑 目次</button>
+
 <div class="topicfix">🌍 句型環遊世界</div>
 <div id="toc"><div class="thd"><b>📑 目次</b><button id="tocx">✕ 關閉</button></div><div class="tgd" id="tocg"></div></div>
 <footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span><span class="scnt"><span id="srcn">1</span> ／ 19</span><button id="srct">📑 目次</button><button id="srcx">✕ 關閉</button></div><div class="stoc" id="stoc"><button data-k="0"><b>1</b><span>古日耳曼語是什麼？</span></button><button data-k="1"><b>2</b><span>歐洲在台灣的哪裡</span></button><button data-k="2"><b>3</b><span>語言也有家人</span></button><button data-k="3"><b>4</b><span>為什麼挑這五國</span></button><button data-k="4"><b>5</b><span>大約 1500 年前，坐船到英國</span></button><button data-k="5"><b>6</b><span>1066 年，法文進來了</span></button><button data-k="6"><b>7</b><span>Who’s he? 家族</span></button><button data-k="7"><b>8</b><span>cousin 家族</span></button><button data-k="8"><b>9</b><span>aunt 家族</span></button><button data-k="9"><b>10</b><span>只有英文要 a</span></button><button data-k="10"><b>11</b><span>問句：「是」搬到最前面</span></button><button data-k="11"><b>12</b><span>Yes、No 家族</span></button><button data-k="12" class="w"><b>13</b><span>瑞典文的聲音</span></button><button data-k="13"><b>14</b><span>音標（美式）</span></button><button data-k="14"><b>15</b><span>KK 音標</span></button><button data-k="15"><b>16</b><span>音節怎麼切</span></button><button data-k="16" class="w"><b>17</b><span>辭典的 fam·i·ly 也對</span></button><button data-k="17" class="w"><b>18</b><span>淺灰色的字母不算</span></button><button data-k="18"><b>19</b><span>唸出來的聲音</span></button></div><div class="sbody"><section class="sl on" data-k="0" data-id="gmc"><div class="lt">古日耳曼語是什麼？</div><div class="vis"><div class="ev"><span class="st" style="animation-delay:.2s"><b>👵 古日耳曼語</b><em>2000 多年前，沒有留下書</em></span><span class="ar" style="animation-delay:.6s">➜</span><span class="st" style="animation-delay:.9s"><b>mother</b><em>英文</em></span><span class="st" style="animation-delay:1.1s"><b>Mutter</b><em>德文</em></span><span class="st" style="animation-delay:1.3s"><b>moeder</b><em>荷蘭文</em></span><span class="st" style="animation-delay:1.5s"><b>mor</b><em>瑞典文</em></span></div></div><div class="ck s"><span class="ci">🌐</span><span><span class="cl">證據在這本書</span><span class="cv">Wikipedia「Proto-Germanic language」；Ringe《From Proto-Indo-European to Proto-Germanic》(2006)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">大約 <b>2000 多年前</b>，住在<b>北歐和德國北部</b>的人說的話。<b>沒有留下書</b>，是學者把英文、德文、荷蘭文、瑞典文<b>拿來比對</b>，推回去的。</span></span></div></section><section class="sl" data-k="1" data-id="where"><div class="lt">歐洲在台灣的哪裡</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">任何一本世界地圖／Google 地圖</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">歐洲在台灣的<b>西北邊</b>；台北飛倫敦、法蘭克福的直飛班機，大約要飛<b>十幾個小時</b>。</span></span></div></section><section class="sl" data-k="2" data-id="map"><div class="lt">語言也有家人</div><div class="ck s"><span class="ci">🌐</span><span><span class="cl">證據在這本書</span><span class="cv">Wikipedia「Germanic languages」「Indo-European languages」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">英文、德文、荷蘭文、瑞典文都是<b>日耳曼語族</b>——像兄弟姊妹。</span></span></div></section><section class="sl" data-k="3" data-id="why5"><div class="lt">為什麼挑這五國</div><div class="ck s"><span class="ci">🌐</span><span><span class="cl">證據在這本書</span><span class="cv">Wikipedia「Germanic languages」「Norman Conquest」「Romance languages」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">德、荷、瑞典：<b>日耳曼家族</b>，跟英文最像；法文：<b>1066 年</b>以後借給英文很多字；西班牙文：跟法文同一個<b>拉丁家族</b>，拿來比較。</span></span></div></section><section class="sl" data-k="4" data-id="boat"><div class="lt">大約 1500 年前，坐船到英國</div><div class="ck s"><span class="ci">🌐</span><span><span class="cl">證據在這本書</span><span class="cv">Bede《英吉利教會史》(731)；Wikipedia「Anglo-Saxon settlement of Britain」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv"><b>盎格魯人、撒克遜人</b>從今天的<b>德國北部、丹麥</b>坐船到英國，帶去的話就是英文的老祖先。</span></span></div></section><section class="sl" data-k="5" data-id="1066"><div class="lt">1066 年，法文進來了</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">Wikipedia「Norman Conquest」；OED「uncle」「aunt」「cousin」「nephew」「niece」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv"><b>講法文的諾曼人</b>打贏英國。<b>uncle、aunt、cousin、nephew、niece</b> 都是那之後從法文借來的。</span></span></div></section><section class="sl" data-k="6" data-id="s-who"><div class="lt">Who’s he? 家族</div><div class="ck s"><span class="ci">📗</span><span><span class="cl">證據在這本書</span><span class="cv">Duden；Van Dale；SAOL（瑞典學院詞典）；Larousse；RAE（西班牙皇家學院詞典）「wer」「wie」「vem」「qui」「quién」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">德 Wer ist er?、荷 Wie is hij?、瑞典 Vem är han?：一個字對一個字。德文 <b>wer ＝ who</b>（長得像 where！）、荷蘭文 <b>wie ＝ who</b>。</span></span></div></section><section class="sl" data-k="7" data-id="s-cousin"><div class="lt">cousin 家族</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「cousin」；Duden「Cousin」；SAOL「kusin」；Larousse「cousin」；Van Dale「neef」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">英文 cousin 是 1066 年以後從法文來的；德文 Cousin、瑞典文 kusin 也是跟法文借的。荷蘭文 neef ＝ 表哥、也 ＝ 姪子（跟 nephew 是一家）。</span></span></div></section><section class="sl" data-k="8" data-id="s-aunt"><div class="lt">aunt 家族</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「aunt」；Duden「Tante」；Van Dale「tante」；SAOL「moster」「faster」；Larousse「tante」；RAE「tía」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">aunt 從古法文 ante 來；德、荷 Tante 從法文 tante 來。瑞典文：<b>moster</b> ＝ mor ＋ syster（媽媽的姊妹）、<b>faster</b> ＝ far ＋ syster（爸爸的姊妹）。</span></span></div></section><section class="sl" data-k="9" data-id="s-job"><div class="lt">只有英文要 a</div><div class="vis"><div class="ev"><span class="st"><b>He is a doctor.</b><em>英文：要 a</em></span><span class="st" style="animation-delay:.5s"><b>Er ist Arzt.</b><em>德文：不用</em></span></div></div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Duden；Van Dale；SAOL（瑞典學院詞典）；Larousse；RAE（西班牙皇家學院詞典）「Arzt」「dokter」「läkare」「médecin」「médico」；Cambridge Grammar「a/an with jobs」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">說「他是醫生」：德 Er ist Arzt.、荷 Hij is dokter.、瑞典 Han är läkare.、法 Il est médecin.、西 Él es médico.——<b>都不用「一位」</b>；英文一定要 <b>a</b>：He is a doctor.</span></span></div></section><section class="sl" data-k="10" data-id="s-q"><div class="lt">問句：「是」搬到最前面</div><div class="ck s"><span class="ci">📗</span><span><span class="cl">證據在這本書</span><span class="cv">Duden；Van Dale；SAOL（瑞典學院詞典）；Larousse；RAE（西班牙皇家學院詞典）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">德 Ist er Arzt?、荷 Is hij dokter?、瑞典 Är han läkare?、法 Est-il médecin ?：跟英文 Is he a doctor? 一樣，<b>「是」搬到最前面</b>。</span></span></div></section><section class="sl" data-k="11" data-id="s-yes"><div class="lt">Yes、No 家族</div><div class="ck s"><span class="ci">📗</span><span><span class="cl">證據在這本書</span><span class="cv">Duden；Van Dale；SAOL（瑞典學院詞典）；Larousse；RAE（西班牙皇家學院詞典）「ja」「nein」「nee」「nej」「oui」「non」「sí」「no」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">Yes ＝ 德、荷、瑞典 <b>Ja</b>；No ＝ Nein／Nee／Nej：都是 n 開頭。</span></span></div></section><section class="sl w" data-k="12"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>瑞典文的聲音</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">瑞典文用的是<b>預先做好的語音檔</b>（Piper sv_SE-nst，瑞典母語者錄音 NST 訓練，CC0）；還沒做成語音檔的句子用電腦的瑞典文語音。</span></span></div></section><section class="sl" data-k="13"><div class="lt">音標（美式）</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries（NAmE）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">本教材的 IPA 一律用<b>美式</b>。</span></span></div></section><section class="sl" data-k="14"><div class="lt">KK 音標</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">台灣課本用的標法。例：bed 的 e ＝ IPA <b>/e/</b> ＝ KK <b>/ɛ/</b>。</span></span></div></section><section class="sl" data-k="15"><div class="lt">音節怎麼切</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Louisa Moats《Speech to Print》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">母音後面切：<b>fa．mi．ly</b>。<b>一個出聲的母音 ＝ 一個音節</b>。</span></span></div></section><section class="sl w" data-k="16"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>辭典的 fam·i·ly 也對</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">那是<b>排版斷行</b>用的；本教材教的是<b>唸的時候</b>怎麼切。兩種都對。</span></span></div></section><section class="sl w" data-k="17"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>淺灰色的字母不算</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">不出聲的字母（淺灰色）<b>不算母音</b>，數紅色的就對了。</span></span></div></section><section class="sl" data-k="18"><div class="lt">唸出來的聲音</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Web Speech API（瀏覽器內建語音，en-US）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">不用連網。<b>嗓音由這台電腦決定</b>。外語另外指定：德 de-DE、荷 nl-NL、瑞典 sv-SE、法 fr-FR、西 es-ES。</span></span></div></section></div><div class="snav"><button id="srcp">◀ 上一條</button><span class="sdots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><button id="srcf">下一條 ▶</button></div></footer>
@@ -552,7 +573,8 @@ var PH=(function(){
  function letters(u){var h="",L=u.L,k,nv=noVowelNucleus(u);
   for(k=0;k<L.length;k++){
    var red=(!u.s)&&(nv||V(L[k])||(L[k].toLowerCase()==="y"&&isNuc(u)));
-   h+='<i class="'+(red?"v":"")+'">'+L[k]+'</i>'}
+   /* ’ 一律紅色（使用者 2026-09-27 指定） */
+   h+='<i class="'+(/['’]/.test(L[k])?"ap":(red?"v":""))+'">'+L[k]+'</i>'}
   return h}
  /* 一個單字的完整元件：字母（母音紅／不發音灰）＋ 正下方對齊的音標 ＋ 音節切分點 */
  /* 查不到音標的字（外語家人單字等）：**不硬掰音標、不硬切音節**，
@@ -560,7 +582,7 @@ var PH=(function(){
  function plain(w,lang){
   var h='<span class="phw phplain" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
         '><span class="syl"><span class="u"><span class="g">',k;
-  for(k=0;k<w.length;k++)h+='<i class="'+(V(w[k])?"v":"")+'">'+w[k]+'</i>';
+  for(k=0;k<w.length;k++)h+='<i class="'+(/['’]/.test(w[k])?"ap":(V(w[k])?"v":""))+'">'+w[k]+'</i>';
   return h+'</span></span></span></span>'}
  function word(w,lang){
   /* **這兩個 \s 一定要寫兩條斜線**：這整段是 JS 模板字串，寫一條會被吃掉，
@@ -689,7 +711,21 @@ var PH=(function(){
     frag.appendChild(sp);last=m.index+m[0].length;any=true}
    if(!any)return;
    if(last<s.length)frag.appendChild(document.createTextNode(s.slice(last)));
-   t.parentNode.replaceChild(frag,t)})}
+   t.parentNode.replaceChild(frag,t)});
+  apRed(root)}
+ /* ’ 一律紅色；I am（會變成 I’m 的那個 a）也紅色（使用者 2026-09-27 指定）。出處的書名不動 */
+ function apRed(root){
+  var walk=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false),n,L=[];
+  while((n=walk.nextNode())){var pe=n.parentNode;
+   if(!pe||pe.nodeType!==1||pe.closest("script,style,.aprd,.rs,.ap,.phw,.sbody,.stoc,#src,.srcbox,.cv,.cl"))continue;
+   if(/’|[A-Za-z]'[A-Za-z]|\bI am\b/.test(n.nodeValue))L.push(n)}
+  L.forEach(function(t){
+   var h=t.nodeValue.replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/\bI am\b/g,'I <b class="aprd">a</b>m')
+    .replace(/’|([A-Za-z])'(?=[A-Za-z])/g,function(x,c){return (c||"")+'<b class="aprd">’</b>'});
+   var sp=document.createElement("span");sp.innerHTML=h;
+   var f=document.createDocumentFragment();while(sp.firstChild)f.appendChild(sp.firstChild);
+   t.parentNode.replaceChild(f,t)})}
  /* 切換音標：直接換掉每個字母下面那一行，不用重畫整幕 */
  function apply(){
   [].forEach.call(document.querySelectorAll(".phw"),function(p){
@@ -886,11 +922,30 @@ function draw(s){
   for(var a=o.length-1;a>0;a--){var b=Math.floor(Math.random()*(a+1)),c=o[a];o[a]=o[b];o[b]=c}
   return PH.expand(t+'<div class="qz"><div class="qq">🤔 '+s.q.q+'</div><div class="qo">'+
    o.map(function(x){return '<button data-ok="'+(x.n===0?1:0)+'">'+x.x+'</button>'}).join('')+
-   '</div><button class="qskip">👀 直接看答案</button><div class="qresw"></div></div><div class="rv">'+h+'</div>')}
+   '</div><div class="qtm"><span class="qring"><svg viewBox="0 0 100 100"><circle class="qbg" cx="50" cy="50" r="44"/><circle class="qfg" cx="50" cy="50" r="44"/></svg><b class="qsec">'+QTHINK+'</b></span>'+
+   '<span class="qlk">🤔 先想一想、討論一下</span><button class="qearly">✋ 提早回答</button><button class="qpause">⏸ 暫停</button></div>'+
+   '<button class="qskip">👀 直接看答案</button><div class="qresw"></div></div><div class="rv">'+h+'</div>')}
  return PH.expand(t+h);
 }
+/* 猜猜看的思考時間（使用者 2026-09-27 指定）：倒數 20 秒，選項先鎖住，時間到才能選；
+   「✋ 提早回答」馬上開放；「⏸ 暫停」停住倒數（再按一次繼續） */
+var QTHINK=20,qLeft=QTHINK,qTk=null,qPaused=false;
+function qStop(){if(qTk){clearInterval(qTk);qTk=null}}
+function qOpen(){qStop();var z=stage.querySelector(".qz");if(z){z.classList.remove("lock");z.classList.add("open")}}
+function qPaint(){var z=stage.querySelector(".qz");if(!z)return;
+ var n=z.querySelector(".qsec"),f=z.querySelector(".qfg");
+ if(n)n.textContent=Math.ceil(qLeft);
+ if(f)f.style.strokeDashoffset=(276.5*(1-qLeft/QTHINK)).toFixed(1);
+ z.classList.toggle("warn",qLeft<=5)}
+function qStart(){qStop();qLeft=QTHINK;qPaused=false;
+ var z=stage.querySelector(".qz");if(!z)return;z.classList.add("lock");qPaint();
+ qTk=setInterval(function(){if(qPaused)return;qLeft=Math.max(0,qLeft-0.1);qPaint();if(qLeft<=0)qOpen()},100)}
+function qPause(b){qPaused=!qPaused;b.textContent=qPaused?"▶ 繼續":"⏸ 暫停";
+ var z=stage.querySelector(".qz");if(z)z.classList.toggle("paused",qPaused)}
 function qAns(b){
  if(!stage.classList.contains("qwait"))return;
+ var z0=stage.querySelector(".qz");if(b&&z0&&z0.classList.contains("lock"))return;
+ qStop();
  var s=S[i];if(!s.q)return;
  var ok=b&&b.getAttribute("data-ok")==="1";
  [].forEach.call(stage.querySelectorAll(".qo button"),function(x){
@@ -932,6 +987,7 @@ function show(n){
  window.SRCAT=S[i].src||"";   /* 按「📖 出處」直接跳到這一幕的證據（使用者 2026-09-25 指定） */
  stage.innerHTML=draw(S[i]);
  stage.classList.toggle("qwait",!!S[i].q);stage.classList.remove("qdone");
+ qStop();if(S[i].q)qStart();
  PH.autoSay(stage);      // 補充單字、字詞、用法都可以點來聽
  if(!reduce){stage.classList.remove("turnR","turnL");void stage.offsetWidth;
   stage.classList.add(back?"turnL":"turnR")}
@@ -950,6 +1006,8 @@ stage.addEventListener("click",function(e){
  var t=e.target;
  var qb=t.closest?t.closest(".qo button"):null;if(qb){qAns(qb);return}
  if(t.closest&&t.closest(".qskip")){qAns(null);return}
+ if(t.closest&&t.closest(".qearly")){qOpen();return}
+ var qp=t.closest?t.closest(".qpause"):null;if(qp){qPause(qp);return}
  var r=t.closest?t.closest(".grev"):null;
  if(r){var g=r.closest(".guess");var on=!g.classList.contains("rev");g.classList.toggle("rev",on);
   r.textContent=on?"🙈 藏起來再猜一次":"🔍 公布答案";return}
@@ -968,6 +1026,7 @@ show(jump);
 
 
 document.getElementById("home").addEventListener("click",function(){location.href="index.html"});
+
 (function(){var T=document.getElementById("toc");
  function lbl(s,k){var t=(s.tag||s.k||s.mid||(k===0?"開場":"第 "+(k+1)+" 幕"));return String(t).replace(/<[^>]+>/g,"")}
  function open(){document.getElementById("tocg").innerHTML=S.map(function(s,k){

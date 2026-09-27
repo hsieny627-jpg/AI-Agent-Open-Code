@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🔤 四年級 單字首頁</title>
+<!-- 本檔由 words/_section.js 產生，不要手改。 -->
+<style>
+@font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;src:url(fonts/andika-400.woff2) format("woff2")}
+@font-face{font-family:Andika;font-style:normal;font-weight:700;font-display:swap;src:url(fonts/andika-700.woff2) format("woff2")}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#000;color:#F2F2F2;font-family:Andika,-apple-system,"PingFang TC","Noto Sans TC",sans-serif}
+body{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:clamp(14px,3vh,34px) clamp(12px,3vw,34px) 90px}
+h1{margin:0;font-size:clamp(28px,5.4vh,52px);text-align:center}
+.sub{margin:6px 0 clamp(12px,2.4vh,26px);color:#9FB4C8;font-size:clamp(15px,2.3vh,21px);letter-spacing:.12em;text-align:center}
+#grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(8px,1.6vh,16px);width:100%;max-width:1060px}
+.card{position:relative;display:flex;flex-direction:column;gap:4px;text-align:left;background:linear-gradient(180deg,#0E0E0E,#050505);
+ border:1px solid #272727;border-radius:20px;color:#F2F2F2;text-decoration:none;font-family:inherit;cursor:pointer;
+ padding:clamp(12px,2vh,20px) clamp(14px,1.8vw,22px);min-height:clamp(110px,16vh,150px)}
+.card:active{transform:scale(.985)}
+.card .n{position:absolute;top:10px;right:16px;font-size:clamp(20px,3.2vh,30px);font-weight:700;color:#262626}
+.card .ic{font-size:clamp(30px,5vh,46px);line-height:1.1}
+.card .t{font-size:clamp(20px,3.2vh,28px);font-weight:700}
+.card .d{font-size:clamp(14px,2vh,18px);color:#9E9E9E;line-height:1.45}
+#cards{display:none;grid-column:1/-1;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+#cards.on{display:grid}
+#cards a{display:flex;flex-direction:column;align-items:center;gap:2px;background:#0C0C0C;border:1px solid #2A2A2A;border-radius:14px;
+ color:#F2F2F2;text-decoration:none;padding:10px 6px}
+#cards a span{font-size:30px}#cards a b{font-size:clamp(18px,2.6vh,24px)}#cards a em{font-style:normal;color:#9FB4C8;font-size:15px}
+#bar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:10px;padding:12px;background:linear-gradient(180deg,transparent,#000 40%)}
+#bar a{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;text-decoration:none;font-size:16px;padding:11px 20px}
+</style>
+</head>
+<body>
+<h1>🔤 四年級 單字首頁</h1>
+<div class="sub">家人　職業　結構　故事　環遊世界</div>
+<div id="grid"><a class="card" href="quiz.html"><span class="n">1</span><span class="ic">🎯</span><span class="t">暖身 20 題</span><span class="d">四選一，小組討論後作答</span></a><a class="card" href="../family-time-machine-ipad.html"><span class="n">2</span><span class="ic">📖</span><span class="t">家人單字時光機</span><span class="d">17 站：學習＋遊戲</span></a><button class="card" id="cardsBtn"><span class="n">3</span><span class="ic">🃏</span><span class="t">17 張家人單字卡 ▾</span><span class="d">點這裡展開</span></button><div id="cards"><a href="family.html"><span>👨‍👩‍👧‍👦</span><b>family</b><em>家庭</em></a><a href="parent.html"><span>👨‍👩</span><b>parent</b><em>家長</em></a><a href="mother.html"><span>❤️</span><b>mother</b><em>母親</em></a><a href="father.html"><span>🧔</span><b>father</b><em>父親</em></a><a href="brother.html"><span>🧒👦</span><b>brother</b><em>哥哥、弟弟</em></a><a href="sister.html"><span>👧👩</span><b>sister</b><em>姊姊、妹妹</em></a><a href="son.html"><span>👦</span><b>son</b><em>兒子</em></a><a href="daughter.html"><span>👧</span><b>daughter</b><em>女兒</em></a><a href="grandfather.html"><span>👴</span><b>grandfather</b><em>爺爺</em></a><a href="grandmother.html"><span>👵</span><b>grandmother</b><em>奶奶</em></a><a href="uncle.html"><span>🧓</span><b>uncle</b><em>叔叔</em></a><a href="aunt.html"><span>👩‍🦰</span><b>aunt</b><em>阿姨</em></a><a href="cousin.html"><span>🧑‍🤝‍🧑</span><b>cousin</b><em>堂表兄弟姊妹</em></a><a href="nephew.html"><span>👦💙</span><b>nephew</b><em>姪子</em></a><a href="niece.html"><span>👧💜</span><b>niece</b><em>姪女</em></a><a href="husband.html"><span>🤵</span><b>husband</b><em>丈夫</em></a><a href="wife.html"><span>👰</span><b>wife</b><em>妻子</em></a></div><a class="card" href="family-tree.html"><span class="n">4</span><span class="ic">🌳</span><span class="t">Family tree 家庭樹</span><span class="d">一次只亮一個家人（進階版：親戚）</span></a><a class="card" href="parts.html"><span class="n">5</span><span class="ic">🧩</span><span class="t">單字結構</span><span class="d">grand ＝ 大、-ther 尾巴</span></a><a class="card" href="why.html"><span class="n">6</span><span class="ic">📜</span><span class="t">單字故事 ①</span><span class="d">家人單字為什麼長這樣</span></a><a class="card" href="why-2.html"><span class="n">7</span><span class="ic">📜</span><span class="t">單字故事 ②</span><span class="d">grandmother … wife</span></a><a class="card" href="world.html"><span class="n">8</span><span class="ic">🌍</span><span class="t">家人單字環遊世界</span><span class="d">別的國家怎麼叫爸爸、媽媽、哥哥……</span></a><a class="card" href="jobs.html"><span class="n">9</span><span class="ic">💼</span><span class="t">職業單字</span><span class="d">student、teacher、doctor、farmer、nurse</span></a><a class="card" href="why-more.html"><span class="n">10</span><span class="ic">🔍</span><span class="t">更多字的故事</span><span class="d">daughter 的 gh、哥哥還是弟弟、tea、ketchup……</span></a></div>
+<nav id="bar"><a href="../index.html">🏠 首頁</a></nav>
+<script>
+(function(){var b=document.getElementById("cardsBtn"),c=document.getElementById("cards");if(!b||!c)return;
+ b.addEventListener("click",function(){c.classList.toggle("on")});})();
+</script>
+</body>
+</html>

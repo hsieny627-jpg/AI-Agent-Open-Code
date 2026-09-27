@@ -21,6 +21,7 @@
  * 按開「17 張單字卡」之後可以往下捲。`_verify.js` 會照這個規則量。
  */
 const fs = require('fs'), path = require('path');
+const NAMETAG = require('../sentences/_nametag').TAG;   /* 三年級的圖示 ＝ name 名牌（2026-09-27） */
 const DIR = __dirname, ROOT = path.join(__dirname, '..');
 const WORDS = JSON.parse(fs.readFileSync(path.join(DIR, '_words.json'), 'utf8'));
 
@@ -46,13 +47,16 @@ const STEPS = [
 const GROUPS = [
  { g: '四年級', rows: [
    { l: '👪 家人', cards: STEPS },
-   { l: '💼 職業', cards: [{ n: '', ic: '💼', t: '職業單字', href: 'words/jobs.html',
+   /* 2026-09-27：四年級 單字首頁跟職業放同一列（多一列，直式 iPad 首頁就會有捲軸，量過） */
+   { l: '🔤 單字', cards: [{ n: '', ic: '🔤', t: '四年級 單字首頁', href: 'words/index.html',
+       d: '家人、職業、結構、故事、🌍 家人環遊世界' },
+     { n: '', ic: '💼', t: '職業單字', href: 'words/jobs.html',
        d: 'student、teacher、doctor、farmer、nurse' }] },
    { l: '💬 句型', cards: [{ n: '', ic: '💬', t: '四年級 句型', href: 'sentences/index.html',
        d: 'Who’s he?／Is he a doctor?　＋ 🌍 環遊世界、📝 Review 1' }] }
  ] },
  { g: '三年級', rows: [
-   { l: '📛 句型\n單字', cards: [{ n: '', ic: '📛', t: '三年級', href: 'G3%20-%20L1%20+%20L2/index.html',
+   { l: '<span style="font-size:.8em">' + NAMETAG + '</span>句型\n單字', cards: [{ n: '', ic: NAMETAG, t: '三年級', href: 'G3%20-%20L1%20+%20L2/index.html',
        d: 'What’s your name?／How old are you?　＋ 🔢 數字、👀 Sight Words、📝 Review 1' }] }
  ] }
 ];
@@ -202,5 +206,25 @@ ${TEACHER.map(x => `<a href="${x.href}">${x.t}</a>`).join('<span class="sep">·<
 `;
 
 fs.writeFileSync(path.join(ROOT, 'index.html'), HTML, 'utf8');
+
+/* 四年級 單字首頁（使用者 2026-09-27 指定）：四年級所有單字頁的「🔤 單字首頁」都回這一頁。
+   家人單字環遊世界獨立成一張卡。樣板跟 G3 的數字／Sight Words 首頁同一個（words/_section.js） */
+const WH = require('./_section').indexHTML({
+  font: 'fonts/', home: '../index.html', title: '🔤 四年級 單字首頁',
+  sub: '家人　職業　結構　故事　環遊世界',
+  links: [
+    { ic: '🎯', t: '暖身 20 題', d: '四選一，小組討論後作答', href: 'quiz.html' },
+    { ic: '📖', t: '家人單字時光機', d: '17 站：學習＋遊戲', href: '../family-time-machine-ipad.html' },
+    { ic: '🃏', t: '17 張家人單字卡', d: '點這裡展開', cards: require('./_words.json').map(w => ({ f: w.f, zh: w.zh, icon: w.icon, href: w.f + '.html' })) },
+    { ic: '🌳', t: 'Family tree 家庭樹', d: '一次只亮一個家人（進階版：親戚）', href: 'family-tree.html' },
+    { ic: '🧩', t: '單字結構', d: 'grand ＝ 大、-ther 尾巴', href: 'parts.html' },
+    { ic: '📜', t: '單字故事 ①', d: '家人單字為什麼長這樣', href: 'why.html' },
+    { ic: '📜', t: '單字故事 ②', d: 'grandmother … wife', href: 'why-2.html' },
+    { ic: '🌍', t: '家人單字環遊世界', d: '別的國家怎麼叫爸爸、媽媽、哥哥……', href: 'world.html' },
+    { ic: '💼', t: '職業單字', d: 'student、teacher、doctor、farmer、nurse', href: 'jobs.html' },
+    { ic: '🔍', t: '更多字的故事', d: 'daughter 的 gh、哥哥還是弟弟、tea、ketchup……', href: 'why-more.html' }
+  ]
+});
+fs.writeFileSync(path.join(DIR, 'index.html'), WH, 'utf8');
 console.log('已產生 index.html（首頁）：' + STEPS.length + ' 個步驟 ＋ ' +
  WORDS.length + ' 張單字卡 ＋ ' + (EXTRA.length + TEACHER.length) + ' 個延伸連結');

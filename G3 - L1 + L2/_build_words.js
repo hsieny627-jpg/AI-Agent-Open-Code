@@ -143,7 +143,7 @@ const SIGHT = [
   build:{a:'You',b:'are',note:'<b>You</b> 你 ＋ <b>are</b> 是 ＝ 你是'},
   parts:{href:'sight-parts.html#3'},
   e1:'You are ＝ <b>You<b class="rs">’</b>re</b>',e2:'🤫 are 的 <b>e</b> 不唸'},
- {f:'name',zh:'名字',icon:'📛',old:'nama',now:'name',src:[0,0,1],
+ {f:'name',zh:'名字',icon:require('../sentences/_nametag').TAG,old:'nama',now:'name',src:[0,0,1],
   e1:'🤫 字尾 <b>e</b> 不唸',e2:'以前 e 有唸，後來不唸了，<b>字母留著</b>'},
  {f:'is',zh:'是',icon:'＝',old:'is',now:'is',src:[0,0,0],
   e1:'一千多年，<b>拼法都沒有變</b>',e2:'荷蘭文的「是」<b>也寫 is</b>'},

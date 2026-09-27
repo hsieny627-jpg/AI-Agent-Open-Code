@@ -4,13 +4,16 @@
 #   文字裡在字前面加 + ＝ 重音（音高 ✕1.25、音量 ✕1.35），加 - ＝ 輕讀（音高 ✕0.86、音量 ✕0.7）。
 #   每一個字佔多長：先把每一個字單獨唸一次量長度，照比例分（句尾的字多給一點）。
 #   例："I'm +ten -years -old."
+#   2026-09-27 使用者：years、old 都是輕聲，接近中文的三聲（低、平）；old 不可以唸成四聲（高往下掉）。
+#   ➜ 新記號 ~ ＝ 低平：那一段的音高整段壓到「全句中位數 ✕ 0.80」並拉平（不往下掉）、音量 ✕ 0.75。
+#   例："I'm +ten ~years ~old."
 import numpy as np, re
 def parse(marked):
     words=marked.split()
-    plain=' '.join(w.lstrip('+-') if re.match(r'^[+-][A-Za-z]',w) else w for w in words)
-    lv=[(1 if w.startswith('+') else -1 if re.match(r'^-[A-Za-z]',w) else 0) for w in words]
-    return plain,[w.lstrip('+-') for w in words],lv
-def has(marked): return bool(re.search(r'(^|\s)[+-][A-Za-z]',marked))
+    lv=[(1 if w.startswith('+') else -1 if re.match(r'^-[A-Za-z]',w) else 2 if re.match(r'^~[A-Za-z]',w) else 0) for w in words]
+    plain=' '.join(w.lstrip('+-~') if re.match(r'^[+~-][A-Za-z]',w) else w for w in words)
+    return plain,[w.lstrip('+-~') for w in words],lv
+def has(marked): return bool(re.search(r'(^|\s)[+~-][A-Za-z]',marked))
 def apply(tts,sid,a,sr,marked):
     import pyworld as pw
     plain,ws,lv=parse(marked)
@@ -27,11 +30,16 @@ def apply(tts,sid,a,sr,marked):
     for d in wd: acc+=d; b.append(s0+int((s1-s0)*acc/tot))
     f0,t=pw.harvest(a,sr,frame_period=5.0); sp=pw.cheaptrick(a,f0,t,sr); ap=pw.d4c(a,f0,t,sr)
     fk=np.ones(len(f0)); gk=np.ones(len(a))
-    FF={1:1.25,-1:0.86,0:1.0}; GG={1:1.35,-1:0.7,0:1.0}
+    FF={1:1.25,-1:0.86,0:1.0}; GG={1:1.35,-1:0.7,0:1.0,2:0.75}
+    voiced=f0[f0>0]; low=(np.median(voiced) if len(voiced) else 180.0)*0.80
     for k,l in enumerate(lv):
         if not l: continue
         lo,hi=b[k],b[k+1]
-        fk[int(lo/sr*200):int(hi/sr*200)+1]=FF[l]; gk[lo:hi]=GG[l]
+        i0,i1=int(lo/sr*200),min(len(f0),int(hi/sr*200)+1)
+        if l==2:   # 低平：目標音高 ÷ 原本音高 ＝ 這一格要乘多少（原本沒有聲帶振動的格子不動）
+            seg=f0[i0:i1]; fk[i0:i1]=np.where(seg>0,low/np.maximum(seg,1),1.0)
+        else: fk[i0:i1]=FF[l]
+        gk[lo:hi]=GG[l]
     # 平滑：不要一格一格跳（50 ms）
     fk=np.convolve(fk,np.ones(10)/10,'same'); gk=np.convolve(gk,np.ones(int(sr*.05))/int(sr*.05),'same')
     y=pw.synthesize(f0*fk,sp,ap,sr,frame_period=5.0)[:len(a)]

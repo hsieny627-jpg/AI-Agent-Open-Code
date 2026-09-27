@@ -83,7 +83,7 @@ const body = `
  <a class="card go" href="games.html">
   <span class="n">6</span><span class="ic">🎮</span>
   <span class="t">複習遊戲</span>
-  <span class="d">10 種玩法，每個遊戲 <b>5 分鐘</b>、愈快分數愈高。<b>連對 3 題</b>翻一張驚喜卡（每個遊戲 30 張，張張不一樣）。</span>
+  <span class="d">10 種玩法，每個遊戲 <b>3 分鐘</b>、愈快分數愈高。<b>連對 3 題</b>抽驚喜卡：二～五選一，每次卡包樣式都不一樣。</span>
   <span class="f">${B.GAMES.length} 種　共 ${B.GAMES.reduce((a, g) => a + g.n, 0)} 題</span></a>
 </nav>
 

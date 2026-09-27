@@ -434,7 +434,7 @@ var BL = function(k){return t('______','______','',{slot:k,blank:1})};
 var HE = function(){return t('He','他',ICON.he,{slot:'pr'})};
 var RV4C = [
  {type:'sent', kind:R4, zh:'我的名字是 ______。', slot:'nm4',
-  tk:[t('My','我的',ICON.my),t('name','名字','📛'),t('is','是',ICON.is),BL('nm4'),t('.','。',ICON.dot,{tight:1})]},
+  tk:[t('My','我的',ICON.my),t('name','名字',require('./_nametag').TAG),t('is','是',ICON.is),BL('nm4'),t('.','。',ICON.dot,{tight:1})]},
  {type:'sent', kind:R4, zh:'這是我的 ______。', slot:'fam',
   tk:[t('This','這','👇'),t('is','是',ICON.is),t('my','我的',ICON.my),BL('fam'),t('.','。',ICON.dot,{tight:1})]},
  {type:'sent', kind:R4, zh:'他是一位 ______。', slots:['pr','job4'],

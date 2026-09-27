@@ -115,6 +115,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 .phw .g i{font-style:normal}
 .phw .g i.v{color:#FF5A5A}            /* 母音字母 ＝ 紅色 */
 .phw .u.mute .g i,.phw .u.mute .g i.v{color:#9A9A9A}  /* 不發音 ＝ 淺灰色 */
+.phw .g i.ap,.phw .u.mute .g i.ap,.aprd{color:#FF5A5A!important}  /* ’ ＝ 紅色（2026-09-27） */
 .phw .p{display:none;font-size:max(.34em,13px);font-weight:400;letter-spacing:0;white-space:nowrap;
  color:#9FB4C8;margin-top:.30em;min-height:1.1em}
 .phw.ipa .p,.phw.kk .p{display:block}
@@ -234,7 +235,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 </nav>
 <div id="bar"><button id="say">🔊 念一次</button><button id="tocb">📑 目次</button><button id="slow">🐢 放慢</button><button id="phmode">🔤 音標：無</button><button id="phsyl">✂️ 音節</button><button id="home">🏠 首頁</button><button id="srcb">📖 出處</button></div>
 </div>
-<div id="toc"><div class="thd"><b>📑 目次</b><button id="tocx">✕ 關閉</button></div><div class="tgd"><a href="i.html"><b>1</b><span>🙋 I　我</span></a><a href="my.html" class="cur"><b>2</b><span>🙋🎒 My　我的</span></a><a href="you.html"><b>3</b><span>👉 You　你</span></a><a href="your.html"><b>4</b><span>👉🎒 Your　你的</span></a><a href="i-am.html"><b>5</b><span>🙋＝ I am　我 是</span></a><a href="you-are.html"><b>6</b><span>👉＝ You are　你 是</span></a><a href="name.html"><b>7</b><span>📛 name　名字</span></a><a href="is.html"><b>8</b><span>＝ is　是</span></a><a href="what.html"><b>9</b><span>❓ What　什麼</span></a><a href="whats.html"><b>10</b><span>❓＝ What’s　什麼 是</span></a><a href="how.html"><b>11</b><span>🤔 How　怎麼樣</span></a><a href="old.html"><b>12</b><span>👴 old　老的；…歲</span></a><a href="how-old.html"><b>13</b><span>🎂 How old　幾歲</span></a><a href="year.html"><b>14</b><span>📅 year　年</span></a><a href="years-old.html"><b>15</b><span>🎂 years old　…歲</span></a><a href="who.html"><b>16</b><span>👤❓ Who　誰</span></a><a href="where.html"><b>17</b><span>📍❓ Where　哪裡</span></a><a href="when.html"><b>18</b><span>⏰❓ When　什麼時候</span></a><a href="why.html"><b>19</b><span>🤔❓ Why　為什麼</span></a></div></div>
+<div id="toc"><div class="thd"><b>📑 目次</b><button id="tocx">✕ 關閉</button></div><div class="tgd"><a href="i.html"><b>1</b><span>🙋 I　我</span></a><a href="my.html" class="cur"><b>2</b><span>🙋🎒 My　我的</span></a><a href="you.html"><b>3</b><span>👉 You　你</span></a><a href="your.html"><b>4</b><span>👉🎒 Your　你的</span></a><a href="i-am.html"><b>5</b><span>🙋＝ I am　我 是</span></a><a href="you-are.html"><b>6</b><span>👉＝ You are　你 是</span></a><a href="name.html"><b>7</b><span><svg class="nmsvg" viewBox="0 0 140 100" role="img" aria-label="name" style="width:1.4em;height:1em;vertical-align:-.14em;overflow:visible;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.35))"><rect x="3" y="3" width="134" height="94" rx="14" fill="#E53935" stroke="#9F1B1B" stroke-width="3"/><path d="M9 12q0-6 6-6h110q6 0 6 6v8H9z" fill="#fff" opacity=".16"/><text x="70" y="31" text-anchor="middle" font-family="Arial Black,Arial,Helvetica,sans-serif" font-weight="900" font-size="27" letter-spacing="2" fill="#fff">HELLO</text><text x="70" y="45" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="11.5" fill="#FFE3E0">my name is</text><rect x="12" y="51" width="116" height="38" rx="6" fill="#fff"/><text x="70" y="80" text-anchor="middle" font-family="Chalkboard SE,Comic Sans MS,Marker Felt,cursive" font-weight="700" font-size="27" fill="#1B3A8A">Ken</text></svg> name　名字</span></a><a href="is.html"><b>8</b><span>＝ is　是</span></a><a href="what.html"><b>9</b><span>❓ What　什麼</span></a><a href="whats.html"><b>10</b><span>❓＝ What’s　什麼 是</span></a><a href="how.html"><b>11</b><span>🤔 How　怎麼樣</span></a><a href="old.html"><b>12</b><span>👴 old　老的；…歲</span></a><a href="how-old.html"><b>13</b><span>🎂 How old　幾歲</span></a><a href="year.html"><b>14</b><span>📅 year　年</span></a><a href="years-old.html"><b>15</b><span>🎂 years old　…歲</span></a><a href="who.html"><b>16</b><span>👤❓ Who　誰</span></a><a href="where.html"><b>17</b><span>📍❓ Where　哪裡</span></a><a href="when.html"><b>18</b><span>⏰❓ When　什麼時候</span></a><a href="why.html"><b>19</b><span>🤔❓ Why　為什麼</span></a></div></div>
 <footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span><span class="scnt"><span id="srcn">1</span> ／ 8</span><button id="srct">📑 目次</button><button id="srcx">✕ 關閉</button></div><div class="stoc" id="stoc"><button data-k="0"><b>1</b><span>my 的來源</span></button><button data-k="1"><b>2</b><span>my ＋ 東西</span></button><button data-k="2"><b>3</b><span>音標（美式）</span></button><button data-k="3"><b>4</b><span>KK 音標</span></button><button data-k="4"><b>5</b><span>音節怎麼切</span></button><button data-k="5" class="w"><b>6</b><span>辭典的 fam·i·ly 也對</span></button><button data-k="6" class="w"><b>7</b><span>淺灰色的字母不算</span></button><button data-k="7"><b>8</b><span>唸出來的聲音</span></button></div><div class="sbody"><section class="sl on" data-k="0"><div class="lt">my 的來源</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「my, adj.」「mine, pron.」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">古英文 <b>mīn</b>；放在名詞前面的時候變短，就是 <b>my</b>。</span></span></div></section><section class="sl" data-k="1"><div class="lt">my ＋ 東西</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Cambridge Dictionary「my」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">my name、my bag：<b>我的</b>。</span></span></div></section><section class="sl" data-k="2"><div class="lt">音標（美式）</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries（NAmE）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">本教材的 IPA 一律用<b>美式</b>。</span></span></div></section><section class="sl" data-k="3"><div class="lt">KK 音標</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">台灣課本用的標法。例：bed 的 e ＝ IPA <b>/e/</b> ＝ KK <b>/ɛ/</b>。</span></span></div></section><section class="sl" data-k="4"><div class="lt">音節怎麼切</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Louisa Moats《Speech to Print》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">母音後面切：<b>fa．mi．ly</b>。<b>一個出聲的母音 ＝ 一個音節</b>。</span></span></div></section><section class="sl w" data-k="5"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>辭典的 fam·i·ly 也對</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">那是<b>排版斷行</b>用的；本教材教的是<b>唸的時候</b>怎麼切。兩種都對。</span></span></div></section><section class="sl w" data-k="6"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>淺灰色的字母不算</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">不出聲的字母（淺灰色）<b>不算母音</b>，數紅色的就對了。</span></span></div></section><section class="sl" data-k="7"><div class="lt">唸出來的聲音</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Web Speech API（瀏覽器內建語音，en-US）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">不用連網。<b>嗓音由這台電腦決定</b>。外語另外指定：德 de-DE、荷 nl-NL、瑞典 sv-SE、法 fr-FR、西 es-ES。</span></span></div></section></div><div class="snav"><button id="srcp">◀ 上一條</button><span class="sdots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><button id="srcf">下一條 ▶</button></div></footer>
 
 <script>
@@ -252,7 +253,8 @@ var PH=(function(){
  function letters(u){var h="",L=u.L,k,nv=noVowelNucleus(u);
   for(k=0;k<L.length;k++){
    var red=(!u.s)&&(nv||V(L[k])||(L[k].toLowerCase()==="y"&&isNuc(u)));
-   h+='<i class="'+(red?"v":"")+'">'+L[k]+'</i>'}
+   /* ’ 一律紅色（使用者 2026-09-27 指定） */
+   h+='<i class="'+(/['’]/.test(L[k])?"ap":(red?"v":""))+'">'+L[k]+'</i>'}
   return h}
  /* 一個單字的完整元件：字母（母音紅／不發音灰）＋ 正下方對齊的音標 ＋ 音節切分點 */
  /* 查不到音標的字（外語家人單字等）：**不硬掰音標、不硬切音節**，
@@ -260,7 +262,7 @@ var PH=(function(){
  function plain(w,lang){
   var h='<span class="phw phplain" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
         '><span class="syl"><span class="u"><span class="g">',k;
-  for(k=0;k<w.length;k++)h+='<i class="'+(V(w[k])?"v":"")+'">'+w[k]+'</i>';
+  for(k=0;k<w.length;k++)h+='<i class="'+(/['’]/.test(w[k])?"ap":(V(w[k])?"v":""))+'">'+w[k]+'</i>';
   return h+'</span></span></span></span>'}
  function word(w,lang){
   /* **這兩個 \s 一定要寫兩條斜線**：這整段是 JS 模板字串，寫一條會被吃掉，
@@ -389,7 +391,21 @@ var PH=(function(){
     frag.appendChild(sp);last=m.index+m[0].length;any=true}
    if(!any)return;
    if(last<s.length)frag.appendChild(document.createTextNode(s.slice(last)));
-   t.parentNode.replaceChild(frag,t)})}
+   t.parentNode.replaceChild(frag,t)});
+  apRed(root)}
+ /* ’ 一律紅色；I am（會變成 I’m 的那個 a）也紅色（使用者 2026-09-27 指定）。出處的書名不動 */
+ function apRed(root){
+  var walk=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false),n,L=[];
+  while((n=walk.nextNode())){var pe=n.parentNode;
+   if(!pe||pe.nodeType!==1||pe.closest("script,style,.aprd,.rs,.ap,.phw,.sbody,.stoc,#src,.srcbox,.cv,.cl"))continue;
+   if(/’|[A-Za-z]'[A-Za-z]|\bI am\b/.test(n.nodeValue))L.push(n)}
+  L.forEach(function(t){
+   var h=t.nodeValue.replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/\bI am\b/g,'I <b class="aprd">a</b>m')
+    .replace(/’|([A-Za-z])'(?=[A-Za-z])/g,function(x,c){return (c||"")+'<b class="aprd">’</b>'});
+   var sp=document.createElement("span");sp.innerHTML=h;
+   var f=document.createDocumentFragment();while(sp.firstChild)f.appendChild(sp.firstChild);
+   t.parentNode.replaceChild(f,t)})}
  /* 切換音標：直接換掉每個字母下面那一行，不用重畫整幕 */
  function apply(){
   [].forEach.call(document.querySelectorAll(".phw"),function(p){

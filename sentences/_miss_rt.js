@@ -34,14 +34,24 @@ function mTr(s){
    if(TR[k2]&&TR[k2].indexOf(v[1])>=0)return TR[k2].replace(v[1],w[1])}}
  return '';
 }
+/* 念到哪一個字，那一個字（和它的中文）稍微放大、變亮（使用者 2026-09-27 指定）
+   gHash：同一句的每一格都記著「我是哪一句」；gHL(句子) 回傳給 say() 的 hl：第 k 個字 ➜ 那幾格亮 */
+function gHash(s){s=gKey(s);var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return 'g'+(h>>>0).toString(36)}
+function gHL(t){
+ var gk=gHash(t),ws=[],re=/[^\s=\uFF1D\u2260\u279C\u2192\u21D2\u2026\uFF3F_\u3000]+/g,m;
+ while((m=re.exec(String(t))))ws.push([m.index,m.index+m[0].length]);
+ return function(k){[].forEach.call(document.querySelectorAll('.gw[data-g="'+gk+'"]'),function(x){
+  var a=+x.getAttribute('data-s'),b=+x.getAttribute('data-e');
+  x.classList.toggle('spk',k>=0&&!!ws[k]&&a<ws[k][1]&&b>ws[k][0])})};
+}
 /* 正確答案畫成「英文在上、中文在下」一欄一欄；bad ＝ 要框金色（改對的字）的字元範圍 */
 function mGloss(ans,bad){
- var U=gUnits(ans),h='',hit=function(u){if(!bad)return false;for(var i=0;i<bad.length;i++)
+ var gk=gHash(ans),U=gUnits(ans),h='',hit=function(u){if(!bad)return false;for(var i=0;i<bad.length;i++)
   if(u.s<bad[i].e&&u.e>bad[i].s)return true;return false};
  U.forEach(function(u){
   if(/^[?.!,]$/.test(u.t)){h+='<span class="gw gp"><b>'+u.t+'</b><i>&nbsp;</i></span>';return}
   var z=gZh(u.t);
-  h+='<span class="gw'+(/^['’]/.test(u.t)?' gc':'')+'"><b'+(hit(u)?' class="f"':'')+'>'+ap(mEsc(u.t))+'</b><i>'+(z?mEsc(z):'&nbsp;')+'</i></span>'});
+  h+='<span class="gw'+(/^['’]/.test(u.t)?' gc':'')+'" data-g="'+gk+'" data-s="'+u.s+'" data-e="'+u.e+'"><b'+(hit(u)?' class="f"':'')+'>'+ap(mEsc(u.t))+'</b><i>'+(z?mEsc(z):'&nbsp;')+'</i></span>'});
  return h;
 }
 function gIsEn(s){s=mStrip(s);return /[A-Za-z]{2,}|^I\b/.test(s)&&!/[一-鿿]/.test(s)}
@@ -122,7 +132,7 @@ var lookT=null;
 function lookShow(en,cb){
  var m=document.getElementById('look');
  if(!m){m=document.createElement('div');m.id='look';document.body.appendChild(m);
-  m.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('.say'):null;if(b)say(b.getAttribute('data-say'))})}
+  m.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('.say'):null;if(b){var t=b.getAttribute('data-say');say(t,null,{hl:gHL(t)})}})}
  var zh=mTr(en),n=6;
  m.innerHTML='<div class="mbox"><div class="mhd ok">🔍 看清楚，記起來</div>'+
   '<div class="mcmp"><div class="ma gl"><span class="mi">✅</span><span class="mv">'+mGloss(en,null)+'</span></div></div>'+
@@ -131,7 +141,7 @@ function lookShow(en,cb){
   '<span class="mcd" id="lcdn">'+n+'</span></div>'+
   '<div class="lk">看完 6 秒 ➜ 才拿得到分數</div></div>';
  m.classList.add('on');
- setTimeout(function(){if(m.classList.contains('on'))say(en)},500);
+ setTimeout(function(){if(m.classList.contains('on'))say(en,null,{hl:gHL(en)})},500);
  if(lookT)clearInterval(lookT);
  lookT=setInterval(function(){n--;var c=document.getElementById('lcdn');
   if(n>0){if(c){c.textContent=n;c.classList.remove('tick');void c.offsetWidth;c.classList.add('tick')}return}

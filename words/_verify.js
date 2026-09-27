@@ -119,14 +119,21 @@ async function scenePage(p,f,vp,e){
    on:[...document.querySelectorAll('#dots i')].findIndex(x=>x.className==='on'),
    n:document.querySelectorAll('#dots i').length,
    pd:document.getElementById('prev').disabled,nd:document.getElementById('next').disabled,
-   ox:box.ox,oy:box.oy,h:box.h}},BOX.toString());
- const first=await snap();const N=first.n;let acts=0;
+   ox:box.ox,oy:box.oy,h:box.h,
+   /* 2026-09-27：右上角「🔤 單字首頁」不可以蓋到這一幕的字 */
+   wh:(()=>{const w=document.getElementById('whome');if(!w)return null;const r=w.getBoundingClientRect();
+    for(const el of st.querySelectorAll('*')){if(el.children.length||!el.textContent.trim())continue;const q=el.getBoundingClientRect();
+     if(q.width&&q.left<r.right&&q.right>r.left&&q.top<r.bottom&&q.bottom>r.top)return (el.className||el.tagName)+'「'+el.textContent.trim().slice(0,10)+'」'}
+    return ''})()}},BOX.toString());
+ const first=await snap();const N=first.n;let acts=0,qChecked=false;
+ if(first.wh===null&&!/(^|\/)brother-why\.html$/.test(f)&&await p.evaluate(()=>/單字結構|單字故事|環遊世界/.test((document.querySelector('.topicfix')||{}).textContent||'')))e.push('沒有「🔤 單字首頁」按鈕');
  if(N<3)e.push('幕數只有 '+N);
  for(let i=0;i<N;i++){
   if(i){await p.click('#next');await p.waitForTimeout(650)}
   const s=await snap();acts++;
   if(showText&&vp.n===VPS[0].n)console.log('  '+f+' 幕'+(i+1)+'  '+s.t);
   if(s.on!==i)e.push('幕'+(i+1)+'進度點錯');
+  if(s.wh)e.push('幕'+(i+1)+' 「單字首頁」按鈕蓋到 '+s.wh);
   if(s.ox>0)e.push('幕'+(i+1)+'橫向溢出'+s.ox);
   if(s.oy>0)e.push('幕'+(i+1)+'縱向溢出'+s.oy);
   if(s.h)e.push('幕'+(i+1)+' '+s.h);
@@ -138,6 +145,21 @@ async function scenePage(p,f,vp,e){
     rv:[...document.querySelectorAll('#stage .rv')].some(x=>x.getClientRects().length)}));
    if(q0.n!==4)e.push('幕'+(i+1)+' 猜猜看不是四個選項（'+q0.n+'）');
    if(q0.rv)e.push('幕'+(i+1)+' 還沒作答就看得到故事');
+   /* 2026-09-27：思考時間 20 秒 ➜ 選項先鎖住；⏸ 暫停會停住倒數；✋ 提早回答馬上開放 */
+   const lk=await p.evaluate(()=>{const z=document.querySelector('#stage .qz');return{lock:!!(z&&z.classList.contains('lock')),
+    sec:+((document.querySelector('#stage .qsec')||{}).textContent||0),early:!!document.querySelector('#stage .qearly'),pause:!!document.querySelector('#stage .qpause')}});
+   if(!lk.lock)e.push('幕'+(i+1)+' 猜猜看沒有先鎖住 20 秒');
+   if(lk.sec<15||lk.sec>20)e.push('幕'+(i+1)+' 思考倒數不是 20 秒（'+lk.sec+'）');
+   if(!lk.early||!lk.pause)e.push('幕'+(i+1)+' 沒有「提早回答」或「暫停」按鈕');
+   if(!qChecked){qChecked=true;
+    await p.click('#stage .qpause');const a1=await p.evaluate(()=>qLeft);await p.waitForTimeout(1200);const a2=await p.evaluate(()=>qLeft);
+    if(a2!==a1)e.push('幕'+(i+1)+' 按了暫停，倒數還在走');
+    await p.click('#stage .qpause');await p.waitForTimeout(1200);
+    if(await p.evaluate(()=>qLeft)>=a2)e.push('幕'+(i+1)+' 按了繼續，倒數沒有走');
+    await p.evaluate(()=>{qLeft=0.2});await p.waitForTimeout(600);
+    if(await p.evaluate(()=>document.querySelector('#stage .qz').classList.contains('lock')))e.push('幕'+(i+1)+' 倒數到 0 沒有開放作答');
+   }else await p.click('#stage .qearly');
+   await p.waitForTimeout(200);
    await p.click('#stage .qo button:not([data-ok="1"])');await p.waitForTimeout(3800);
    const q1=await p.evaluate(BOXSRC=>{const box=eval('('+BOXSRC+')')();
     const bs=[...document.querySelectorAll('#bar button')].map(b=>b.getBoundingClientRect());let hit=null;

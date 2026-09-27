@@ -36,11 +36,11 @@ const Q = [
  why:'聽最後一個字：<b>he</b>（他）還是 <b>she</b>（她）。she 前面多一個「ㄕ」的氣音。'},
 
 {t:'think', q:'"Who’s he?" 的回答，第一個字要用哪一個？',
- o:['He','She','It','Who'], a:0,
+ o:['He','She','His','Him'], a:0,
  why:'問句最後問 <b>he</b>，答句第一個字就用 <b>He</b>：He’s my father.'},
 
 {t:'think', q:'"Who’s she?" 的回答，第一個字要用哪一個？',
- o:['She','He','Her','Who'], a:0,
+ o:['She','He','Her','His'], a:0,
  why:'問 <b>she</b> 就答 <b>She</b>。Her 不能放句子開頭當主詞。'},
 
 {t:'see-en', q:'"He\'s my father." 的中文意思是？',
@@ -64,8 +64,8 @@ const Q = [
  why:'開頭是 <b>He</b>，最後是 <b>brother</b>（哥哥、弟弟都是這個字）。'},
 
 {t:'see-en', q:'"grandfather" 是誰？',
- o:['爺爺（外公也是）','奶奶','叔叔','哥哥'], a:0,
- why:'英文<b>一個字管中文兩個稱呼</b>：爺爺和外公都叫 grandfather。'},
+ o:['爺爺（外公也是）','爸爸','奶奶','叔叔'], a:0,
+ why:'grand（大）＋ father（爸爸）＝ <b>爸爸的爸爸</b>。英文<b>一個字管中文兩個稱呼</b>：爺爺和外公都叫 grandfather。'},
 
 {t:'think', q:'"He is a student." 改成問句，要怎麼寫？',
  o:['Is he a student?','He is a student?','Is a student he?','Does he a student?'], a:0, x2:true,
@@ -104,7 +104,7 @@ const Q = [
  why:'<b>Who 問人</b>、What 問東西、How 問好不好、Where 問地方。看到 Who，答案一定是一個人。'},
 
 {t:'see-en', q:'"She\'s my aunt." 的 aunt 是誰？',
- o:['阿姨（姑姑、舅媽也是）','奶奶','姊姊','姪女'], a:0,
+ o:['阿姨（姑姑、舅媽也是）','叔叔','姪女','表姊'], a:0,
  why:'英文的 <b>aunt</b> 一個字，管中文的<b>阿姨、姑姑、舅媽</b>好幾個稱呼。'}
 ];
 

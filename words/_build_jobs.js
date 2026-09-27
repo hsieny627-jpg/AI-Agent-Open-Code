@@ -198,7 +198,7 @@ const PAGES = [
 ];
 
 const files = build({
-  dir: __dirname, font: 'fonts/', home: '../index.html', suffix: '職業單字',
+  dir: __dirname, font: 'fonts/', home: '../index.html', whome: 'index.html', suffix: '職業單字',
   svjs: require('fs').existsSync(path.join(__dirname, 'audio', 'sv', 'aud.js')) ? '<script src="audio/sv/aud.js"></script>' : '',
   head: require('fs').existsSync(path.join(__dirname, 'audio', 'sv', 'aud.js')) ? '<script src="audio/sv/aud.js"></script>' : '',
   words: WORDS, srcW: W, pages: PAGES,

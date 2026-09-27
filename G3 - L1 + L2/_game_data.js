@@ -6,6 +6,7 @@
  */
 
 /* 名字不翻譯（使用者 2026-09-25 指定）：中文句子裡一樣寫英文名字 */
+const NAMETAG = require('../sentences/_nametag').TAG;   /* name 的圖示（2026-09-27） */
 const NAMES = [['Ken','Ken'],['Alan','Alan'],['Wendy','Wendy'],['Mike','Mike'],['Emma','Emma']];
 const AGES = [['six','六'],['seven','七'],['eight','八'],['nine','九'],['ten','十'],['eleven','十一'],['twelve','十二']];
 
@@ -22,7 +23,7 @@ const G1 = [
  {q:'Your 的中文是？', o:['你的','你','我的','我'], h:'You 你，Your 你的。'},
  {q:'「我」的英文是？', o:['I','My','You','Your'], h:'I ＝ 我（永遠大寫）。'},
  {q:'「你」的英文是？', o:['You','Your','I','My'], h:'You ＝ 你。'},
- {q:'"What’s your name?" 的回答？', o:['My name is Emma.','I’m nine.','Your name is Emma.','I’m nine years old.'], h:'問名字，答名字。'},
+ {q:'"What’s your name?" 的回答？', o:['My name is Emma.','Your name is Emma.','My name are Emma.','I’m nine.'], h:'問名字，答名字：My name is ＿。'},
  {q:'"How old are you?" 的回答？', o:['I’m ten.','I’m Ken.','My name is ten.','You’re ten.'], h:'問幾歲，答幾歲。'},
  {q:'「你的名字是什麼？」', o:['What’s your name?','What’s my name?','How old are you?','What your name?'], h:'your ＝ 你的。'},
  {q:'「你幾歲？」', o:['How old are you?','How are you?','How old you are?','What’s your name?'], h:'How old ＋ are ＋ you。'},
@@ -33,8 +34,8 @@ const G1 = [
  {q:'seven 是多少？', o:['七','十一','六','九'], h:'seven ＝ 7。'},
  {q:'「九」的英文是？', o:['nine','night','five','ten'], h:'nine 最後的 e 不發音。'},
  {q:'「六」的英文是？', o:['six','seven','sick','ten'], h:'six ＝ 6。'},
- {q:'years old 的中文是？', o:['歲','年','老','名字'], h:'years old ＝ 歲。'},
- {q:'I’m ten. 省略了什麼？', o:['years old','name','my','are'], h:'I’m ten years old. 的 years old 可以省略。'}
+ {q:'years old 的中文是？', o:['歲','年','老','幾歲'], h:'years old ＝ 歲。'},
+ {q:'I’m ten. 省略了什麼？', o:['years old','years','year old','my name'], h:'I’m ten years old. 的 years old（兩個字）可以一起省略。'}
 ];
 
 /* ── 🙋 G2 I 還是 My（24 題）：看到就按：左邊 I（我）、右邊 My（我的）──
@@ -205,13 +206,13 @@ const G10 = [
  {q:'魔王問：You’re ＝ ?', o:['You are','Your','You is','You am'], h:'Your 是「你的」，You’re 是「你是」。'},
  {q:'魔王問：「你的名字是什麼？」', o:['What’s your name?','What’s you name?','How’s your name?','What your name?'], h:'What’s ＋ your ＋ name。'},
  {q:'魔王問：「你幾歲？」', o:['How old are you?','What old are you?','How are you?','How old is you?'], h:'How old are you?'},
- {q:'魔王問：What’s your name? 的回答？', o:['I’m Wendy.','I’m ten.','Your name is Wendy.','I’m ten years old.'], h:'問名字，答名字。'},
+ {q:'魔王問：What’s your name? 的回答？', o:['I’m Wendy.','Your name is Wendy.','My name Wendy.','I’m ten.'], h:'問名字，答名字：I’m Wendy. ＝ My name is Wendy.'},
  {q:'魔王問：How old are you? 的回答？', o:['I’m eleven years old.','I’m Alan.','My name is eleven.','You’re eleven.'], h:'問幾歲，答幾歲。'},
  {q:'魔王問：問 your，要答？', o:['My','Your','You','I'], h:'your（你的）➜ My（我的）。'},
  {q:'魔王問：問 you，要答？', o:['I','You','My','Your'], h:'you（你）➜ I（我）。'},
  {q:'魔王問：哪一句是對的？', o:['I’m nine years old.','I’m nine year old.','I nine years old.','My nine years old.'], h:'I’m ＋ 數字 ＋ years old。'},
  {q:'魔王問：哪一句是對的？', o:['My name is Mike.','I name is Mike.','My name Mike.','Me name is Mike.'], h:'My name is ＋ 名字。'},
- {q:'魔王問：I’m eight. 等於？', o:['I’m eight years old.','I’m eight year.','My name is eight.','I eat.'], h:'years old 可以省略。'},
+ {q:'魔王問：I’m eight. 等於？', o:['I’m eight years old.','I’m eight year old.','I’m eight years.','My name is eight.'], h:'years old 可以省略。'},
  {q:'魔王問：How old 問什麼？', o:['幾歲','名字','怎麼樣','什麼'], h:'How old ＝ 問年紀。'},
  {q:'魔王問：How 單獨是什麼？', o:['怎麼樣','幾歲','什麼','名字'], h:'How 問程度；How old 才是問幾歲。'},
  {q:'魔王問：What 的哪個字母不發音？', o:['h','W','a','t'], h:'What 的 h 淺灰色。'},
@@ -223,7 +224,7 @@ const G10 = [
  {q:'魔王問：「你是七歲。」', o:['You’re seven.','Your seven.','I’m seven.','You seven.'], h:'You’re ＝ You are ＝ 你是。'},
  {q:'魔王問：My 的中文？', o:['我的','我','你的','你'], h:'I 我，My 我的。'},
  {q:'魔王問：Your 的中文？', o:['你的','你','我的','我'], h:'You 你，Your 你的。'},
- {q:'魔王問：I’m Ken. 在回答哪一題？', o:['What’s your name?','How old are you?','How are you?','Who are you?'], h:'Ken 是名字 ➜ What’s your name?'}
+ {q:'魔王問：I’m Ken. 在回答哪一題？', o:['What’s your name?','What’s my name?','How old are you?','How are you?'], h:'Ken 是名字 ➜ What’s your name?'}
 ];
 
 /* ── 🎁 正向驚喜卡：十個遊戲各 30 張，300 張名字全部不重複（使用者 2026-09-24 指定；2026-09-25 改版）──
@@ -255,8 +256,8 @@ const GAMES = [
  {id:'g6', ic:'🃏', name:'記憶配對',  rule:'翻開兩張，英文配中文，配對成功就消失。', st:'🐬 海洋', n:G6.length},
  {id:'g7', ic:'🔍', name:'火眼金睛',  rule:'句子裡有一個字是錯的，點出來。全對的句子按「✅ 這句沒錯」。', st:'💎 尋寶', n:G7.length},
  {id:'g8', ic:'✏️', name:'填空高手',  rule:'句子少了一個字，選出正確的那一個。', st:'⚽ 運動', n:G8.length},
- {id:'g9', ic:'🗂', name:'問名字還是問幾歲', rule:'這一句在回答哪一題？📛 名字 ／ 🎂 幾歲。', st:'🌈 大自然', n:G9.length,
- duo:[{v:'n',t:'📛',d:'問名字　What’s your name?',c:'he'},{v:'a',t:'🎂',d:'問幾歲　How old are you?',c:'she'}]},
+ {id:'g9', ic:'🗂', name:'問名字還是問幾歲', rule:'這一句在回答哪一題？'+NAMETAG+' 名字 ／ 🎂 幾歲。', st:'🌈 大自然', n:G9.length,
+ duo:[{v:'n',t:NAMETAG,d:'問名字　What’s your name?',c:'he'},{v:'a',t:'🎂',d:'問幾歲　How old are you?',c:'she'}]},
  {id:'g10', ic:'👑', name:'魔王挑戰',  rule:'打倒魔王！答對扣血，答錯魔王放技能。', st:'⚔️ 勇者', n:G10.length}
 ];
 

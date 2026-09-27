@@ -24,7 +24,7 @@ function pack(o) {
   fs.mkdirSync(dir, { recursive: true });
   const want = {};
   /* 重音記號（2026-09-26）：字前面的 + ＝ 重音、- ＝ 輕讀（見 tools/stress.py）。鑰匙不含記號；有記號的版本優先 */
-  const MK = /(^|\s)[+-](?=[A-Za-z])/g, marked = t => /(^|\s)[+-][A-Za-z]/.test(t);
+  const MK = /(^|\s)[+~-](?=[A-Za-z])/g, marked = t => /(^|\s)[+~-][A-Za-z]/.test(t);   /* ~ ＝ 低平（2026-09-27） */
   o.texts.forEach(t => {
     const m = marked(String(t)), s = sayText(String(t).replace(MK, '$1')); if (!/[A-Za-zÅÄÖåäö]/.test(s)) return;
     const k = akey(s); if (!want[k] || (m && !marked(want[k]))) want[k] = m ? sayText(t) : s;

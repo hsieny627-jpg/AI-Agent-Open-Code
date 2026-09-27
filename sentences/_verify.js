@@ -691,28 +691,34 @@ async function gamesPage(p, f, vp, e) {
     });
     acts++;
     if (fxBad.length) e.push('驚喜卡：' + fxBad.join('、'));
-    /* 翻一張 */
-    await p.evaluate(() => { lastGain = 500; fire(function () {}) }); await p.waitForTimeout(1600);
-    const ev = await p.evaluate(() => ({
-      on: document.getElementById('evt').classList.contains('on'),
-      big: (document.querySelector('#evt .ebig') || {}).textContent || '',
-      burst: document.querySelectorAll('#burst i').length,
-      opened: opened.length, ox: document.documentElement.scrollWidth - document.documentElement.clientWidth
-    }));
+    /* 2026-09-27：沒有單張了；surprise() 一律二～五選一；卡包外觀每一次都不一樣 */
+    const mode = await p.evaluate(() => { const r = []; const f = pickN; window.pickN = function (n, d) { r.push(n) }; for (let i = 0; i < 200; i++) surprise(function () {}); window.pickN = f; return r });
     acts++;
-    if (!ev.on || !ev.big) e.push('翻驚喜卡沒有出現／卡片上沒有寫拿到什麼');
-    if (ev.opened !== 1) e.push('翻了 1 張驚喜卡，記到 ' + ev.opened + ' 張');
-    if (ev.burst < 10) e.push('驚喜卡翻開沒有炸滿畫面（' + ev.burst + ' 個）');
-    if (ev.ox > 0) e.push('驚喜卡翻開以後橫向溢出 ' + ev.ox);
-    await p.waitForTimeout(2600);
-    /* 自己選一張（三選一） */
-    await p.evaluate(() => pickN(3, function () {})); await p.waitForTimeout(900);
-    const pk = await p.evaluate(() => document.querySelectorAll('#pick .prow .c3').length);
-    if (pk !== 3) e.push('三選一的驚喜卡不是 3 張（' + pk + '）');
-    else { await p.click('#pick .prow .c3'); await p.waitForTimeout(800); }
-    const op2 = await p.evaluate(() => opened.length);
-    if (op2 !== 2) e.push('三選一選了一張，沒有記到（' + op2 + '）');
-    await p.waitForTimeout(3400);
+    if (mode.some(n => n < 2 || n > 5)) e.push('驚喜卡出現了單張或超過五張');
+    if (await p.evaluate(() => typeof fire === 'function')) e.push('單張驚喜卡 fire() 還在');
+    const skinN = await p.evaluate(() => SKIN.length);
+    if (skinN < 30) e.push('驚喜卡外觀只有 ' + skinN + ' 種（要 30 種以上）');
+    const seen = [];
+    for (let t = 0; t < 2; t++) {
+      await p.evaluate(() => { lastGain = 500 });
+      await p.evaluate(n => pickN(n, function () {}), 2 + t); await p.waitForTimeout(900);
+      const pk = await p.evaluate(() => ({ n: document.querySelectorAll('#pick .prow .c3').length,
+        sk: (document.querySelector('#pick .fc.bk.sk') || {}).outerHTML || '', svg: document.querySelectorAll('#pick .fc.bk svg').length }));
+      acts++;
+      if (pk.n !== 2 + t) e.push((2 + t) + ' 選 1 的驚喜卡不是 ' + (2 + t) + ' 張（' + pk.n + '）');
+      if (pk.svg !== pk.n) e.push('驚喜卡卡背沒有圖');
+      seen.push(pk.sk.replace(/style="animation-delay[^"]*"/, ''));
+      if (pk.n) { await p.click('#pick .prow .c3'); await p.waitForTimeout(1400); }
+      const r = await p.evaluate(() => ({ big: (document.querySelector('#pick .pres .pb') || {}).textContent || '', jk: (document.querySelector('#pick .pres .pj') || {}).textContent || '',
+        burst: document.querySelectorAll('#burst i').length, ox: document.documentElement.scrollWidth - document.documentElement.clientWidth, op: opened.length }));
+      if (!r.big) e.push('選了驚喜卡，沒有寫拿到什麼');
+      if (!r.jk) e.push('驚喜卡沒有會心一笑的那一句');
+      if (r.burst < 10) e.push('驚喜卡翻開沒有炸滿畫面（' + r.burst + ' 個）');
+      if (r.ox > 0) e.push('驚喜卡翻開以後橫向溢出 ' + r.ox);
+      if (r.op !== t + 1) e.push('選了驚喜卡，沒有記到（' + r.op + '）');
+      await p.waitForTimeout(4200);
+    }
+    if (seen[0] && seen[0] === seen[1]) e.push('連續兩次驚喜卡的外觀一樣');
     /* 答對：加分用獨立視窗 */
     const okb = await p.$('#arena .o[data-ok="true"]:not(.cut)');
     if (okb) {
@@ -723,13 +729,15 @@ async function gamesPage(p, f, vp, e) {
       acts++;
       await p.waitForTimeout(6000);
     }
-    /* ⏳ 一場 5 分鐘：時間到就結算 */
+    /* ⏳ 一場 3 分鐘、火眼金睛 4 分鐘（2026-09-27）：時間到就結算 */
     const c0 = await p.evaluate(() => (document.getElementById('gclock') || {}).textContent || '');
-    if (!/⏳\s*[45]:\d\d/.test(c0)) e.push('遊戲沒有 5 分鐘倒數（' + c0 + '）');
+    const gt0 = await p.evaluate(() => gtOf(g));
+    if (gt0 !== 180) e.push('遊戲限時不對（' + gt0 + ' 秒）');
+    if (!/⏳\s*[1-4]:\d\d/.test(c0)) e.push('遊戲沒有倒數（' + c0 + '）');
     await p.evaluate(() => { missHide(false); gLeft = 0.3; }); await p.waitForTimeout(1500);
     const end = await p.evaluate(() => document.getElementById('gend').classList.contains('on'));
     acts++;
-    if (!end) e.push('5 分鐘到了沒有結算');
+    if (!end) e.push('時間到了沒有結算');
     await p.evaluate(() => { const m = document.getElementById('missAll'); if (m) m.classList.remove('on') });
     await p.click('#quit'); await p.waitForTimeout(500);
   }
@@ -743,6 +751,8 @@ async function gamesPage(p, f, vp, e) {
     if (g.inner < 3) e.push('遊戲 ' + i + '（' + id + '）畫面是空的');
     if (!g.clickable) e.push('遊戲 ' + i + '（' + id + '）沒有可以點的東西');
     if (g.sec > 60) e.push('遊戲 ' + i + ' 一題的倒數不是 15 秒（' + g.sec + '）');
+    const gtI = await p.evaluate(() => [g, gLeft]);
+    if (gtI[1] > (gtI[0] === 'g7' ? 240 : 180) || gtI[1] < (gtI[0] === 'g7' ? 230 : 170)) e.push('遊戲 ' + i + ' 限時不對（剩 ' + Math.round(gtI[1]) + ' 秒）');
     if (g.ox > 0) e.push('遊戲 ' + i + ' 橫向溢出 ' + g.ox);
     /* 倒數要真的在跑 */
     const a1 = g.sec; await p.waitForTimeout(2400);
