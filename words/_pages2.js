@@ -109,6 +109,7 @@ const enDeNl = {
 const CSS = `
 /* 2026-09-28：放大版地圖、三國對照表、母音大搬家 */
 .bigm{width:min(94vw,860px,calc(42vh * 1.08));margin:0 auto}
+@media (max-aspect-ratio:1/1){.bigm{width:min(94vw,860px,calc(36vh * 1.08))}}   /* 直式：地圖小一點，下面的字才不會壓到按鈕 */
 .bigmap .mt{font-size:18px}.bigmap .mt.big{font-size:22px}.bigmap .mc{font-size:16px}.bigmap .mboat{font-size:30px}
 .mchips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
 .mchips span{display:inline-flex;align-items:center;gap:8px;background:#0C0C0C;border:2px solid #2E2E2E;border-radius:99px;padding:4px 14px;

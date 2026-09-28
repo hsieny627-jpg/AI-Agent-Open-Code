@@ -126,7 +126,7 @@ async function scenePage(p,f,vp,e){
      if(q.width&&q.left<r.right&&q.right>r.left&&q.top<r.bottom&&q.bottom>r.top)return (el.className||el.tagName)+'「'+el.textContent.trim().slice(0,10)+'」'}
     return ''})()}},BOX.toString());
  const first=await snap();const N=first.n;let acts=0,qChecked=false;
- if(first.wh===null&&!/(^|\/)brother-why\.html$/.test(f)&&await p.evaluate(()=>/單字結構|單字故事|環遊世界/.test((document.querySelector('.topicfix')||{}).textContent||'')))e.push('沒有「🔤 單字首頁」按鈕');
+ if(first.wh===null&&!/(^|\/)brother-why\.html$/.test(f)&&!/sentences\//.test(f)&&await p.evaluate(()=>/單字結構|單字故事|環遊世界/.test((document.querySelector('.topicfix')||{}).textContent||'')))e.push('沒有「🔤 單字首頁」按鈕');
  if(N<3)e.push('幕數只有 '+N);
  for(let i=0;i<N;i++){
   if(i){await p.click('#next');await p.waitForTimeout(650)}
