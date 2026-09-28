@@ -739,7 +739,8 @@ async function gamesPage(p, f, vp, e) {
     const gt0 = await p.evaluate(() => gtOf(g));
     if (gt0 !== 180) e.push('遊戲限時不對（' + gt0 + ' 秒）');
     if (!/⏳\s*[1-4]:\d\d/.test(c0)) e.push('遊戲沒有倒數（' + c0 + '）');
-    await p.evaluate(() => { missHide(false); gLeft = 0.3; }); await p.waitForTimeout(1500);
+    /* 驚喜卡在等學生選的時候時鐘會暫停（本來就這樣設計），量「時間到會結算」要先解除暫停 */
+    await p.evaluate(() => { missHide(false); gPause = 0; gLeft = 0.3; }); await p.waitForTimeout(1500);
     const end = await p.evaluate(() => document.getElementById('gend').classList.contains('on'));
     acts++;
     if (!end) e.push('時間到了沒有結算');
