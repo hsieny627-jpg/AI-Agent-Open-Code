@@ -121,7 +121,7 @@ h1{margin:0;font-size:clamp(26px,4.4vh,42px);font-weight:700;letter-spacing:.04e
 .grade{border:1px solid #1E1E1E;border-radius:20px;padding:clamp(8px,1.3vh,14px) clamp(10px,1.4vw,16px);
  background:#060606}
 .grade h2{margin:0 0 clamp(6px,1vh,10px);font-size:clamp(20px,3.2vh,30px);color:#FFD66B;letter-spacing:.08em}
-.row{display:flex;align-items:stretch;gap:clamp(8px,1.2vw,14px);margin-top:clamp(6px,1vh,10px)}
+.row{display:flex;align-items:stretch;gap:clamp(8px,1.2vw,14px);margin-top:clamp(4px,.6vh,8px)}
 .rl{flex:0 0 auto;white-space:pre-line;width:clamp(64px,8vw,92px);display:flex;align-items:center;justify-content:center;
  font-size:clamp(15px,2.2vh,20px);font-weight:700;color:#9FB4C8;text-align:center}
 .rc{flex:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,100px),1fr));

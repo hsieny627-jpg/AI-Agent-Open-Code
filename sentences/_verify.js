@@ -649,6 +649,11 @@ async function quizPage(p, f, vp, e) {
 }
 
 /* ---------- 遊戲頁 ---------- */
+/* 回遊戲大廳：驚喜卡（#pick）剛好跳出來會蓋住按鈕，先收掉再按（2026-09-28：量測腳本本身的問題，不是網頁的問題） */
+async function quitG(p) {
+  await p.evaluate(() => { ['pick', 'gain', 'miss', 'missAll'].forEach(id => { const k = document.getElementById(id); if (k) k.classList.remove('on') }) });
+  await p.click('#quit');
+}
 async function gamesPage(p, f, vp, e) {
   const snap = () => p.evaluate(OVS => {
     const ov = eval('(' + OVS + ')')();
@@ -739,7 +744,7 @@ async function gamesPage(p, f, vp, e) {
     acts++;
     if (!end) e.push('時間到了沒有結算');
     await p.evaluate(() => { const m = document.getElementById('missAll'); if (m) m.classList.remove('on') });
-    await p.click('#quit'); await p.waitForTimeout(500);
+    await quitG(p); await p.waitForTimeout(500);
   }
   if (s.ox > 0) e.push('大廳橫向溢出 ' + s.ox);
 
@@ -747,7 +752,7 @@ async function gamesPage(p, f, vp, e) {
     await p.click('.gcard:nth-of-type(' + i + ')'); await p.waitForTimeout(900);
     let g = await snap(); acts++;
     const id = await p.evaluate(() => (document.getElementById('gname').textContent || ''));
-    if (!g.arena) { e.push('遊戲 ' + i + ' 沒有進到遊戲場'); await p.click('#quit'); continue }
+    if (!g.arena) { e.push('遊戲 ' + i + ' 沒有進到遊戲場'); await quitG(p); continue }
     if (g.inner < 3) e.push('遊戲 ' + i + '（' + id + '）畫面是空的');
     if (!g.clickable) e.push('遊戲 ' + i + '（' + id + '）沒有可以點的東西');
     if (g.sec > 60) e.push('遊戲 ' + i + ' 一題的倒數不是 15 秒（' + g.sec + '）');
@@ -778,7 +783,7 @@ async function gamesPage(p, f, vp, e) {
       else await p.locator('#arena .o,#arena .dbtn,#arena .cw,#arena .mc').first().click({ timeout: 8000 });
     } catch (err) {
       e.push('遊戲 ' + i + '（' + id + '）點不下去：' + String(err.message).split('\n')[0]);
-      await p.click('#quit'); await p.waitForTimeout(400); continue;
+      await quitG(p); await p.waitForTimeout(400); continue;
     }
     await p.waitForTimeout(250);
     /* 答錯頁在紅綠亮 0.5 秒以後才蓋上來；他還是她、語序、火眼金睛、分類的「錯」不是 .o，所以用 PICK 判斷有沒有答錯 */
@@ -791,7 +796,7 @@ async function gamesPage(p, f, vp, e) {
     if (!g.arena && !g.end) e.push('遊戲 ' + i + ' 作答後畫面不見了');
     if (g.arena && g.inner < 3) e.push('遊戲 ' + i + ' 作答後出不了下一題');
     if (g.ox > 0) e.push('遊戲 ' + i + ' 作答後橫向溢出 ' + g.ox);
-    await p.click('#quit'); await p.waitForTimeout(500);
+    await quitG(p); await p.waitForTimeout(500);
     if ((await snap()).cards !== 10) e.push('遊戲 ' + i + ' 回不了大廳');
   }
   /* 2026-09-26 Review 1：每一張的空格都點得到替換字，點了英文句子和整句中文都要跟著換（不可以把英文換進中文） */
