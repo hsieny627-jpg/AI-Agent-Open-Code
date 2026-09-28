@@ -51,7 +51,10 @@ const GROUPS = [
    { l: '🔤 單字', cards: [{ n: '', ic: '🔤', t: '四年級 單字首頁', href: 'words/index.html',
        d: '家人、職業、結構、故事、🌍 家人環遊世界' },
      { n: '', ic: '💼', t: '職業單字', href: 'words/jobs.html',
-       d: 'student、teacher、doctor、farmer、nurse' }] },
+       d: 'student、teacher、doctor、farmer、nurse' },
+     /* 2026-09-28 使用者第 8(1) 點：家人環遊世界獨立成一個主題（首頁直接一張卡） */
+     { n: '', ic: '🌍', t: '家人單字環遊世界', href: 'words/world.html',
+       d: '別的國家怎麼叫爸爸、媽媽？為什麼像？' }] },
    { l: '💬 句型', cards: [{ n: '', ic: '💬', t: '四年級 句型', href: 'sentences/index.html',
        d: 'Who’s he?／Is he a doctor?　＋ 🌍 環遊世界、📝 Review 1' }] }
  ] },
@@ -220,7 +223,11 @@ const WH = require('./_section').indexHTML({
     { ic: '🧩', t: '單字結構', d: 'grand ＝ 大、-ther 尾巴', href: 'parts.html' },
     { ic: '📜', t: '單字故事 ①', d: '家人單字為什麼長這樣', href: 'why.html' },
     { ic: '📜', t: '單字故事 ②', d: 'grandmother … wife', href: 'why-2.html' },
+    { ic: '⏳', t: '單字時光機（家人 17 字）', d: '每一個字：拼法怎麼變？以前、今天大對比？哪個字母不唸了？', cards: require('./_words.json').map(w => ({ f: w.f, zh: w.zh, icon: '⏳', href: w.f + '-evo.html' })) },
+    { ic: '⚔️', t: '1066：法文送給英文的字', d: 'uncle、aunt、cousin 為什麼是法文？cow 和 beef', href: 'french-1066.html' },
     { ic: '🌍', t: '家人單字環遊世界', d: '別的國家怎麼叫爸爸、媽媽、哥哥……', href: 'world.html' },
+    { ic: '🗺', t: '英文的大旅行', d: '放大地圖：拼法和發音為什麼變成今天這樣', href: 'map-story.html' },
+    { ic: '👪', t: '英德荷三兄弟', d: '為什麼英文、德文、荷蘭文這麼像？四組字母密碼', href: 'en-de-nl.html' },
     { ic: '💼', t: '職業單字', d: 'student、teacher、doctor、farmer、nurse', href: 'jobs.html' },
     { ic: '🔍', t: '更多字的故事', d: 'daughter 的 gh、哥哥還是弟弟、tea、ketchup……', href: 'why-more.html' }
   ]

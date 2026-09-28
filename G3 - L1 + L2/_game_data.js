@@ -256,8 +256,9 @@ const GAMES = [
  {id:'g6', ic:'🃏', name:'記憶配對',  rule:'翻開兩張，英文配中文，配對成功就消失。', st:'🐬 海洋', n:G6.length},
  {id:'g7', ic:'🔍', name:'火眼金睛',  rule:'句子裡有一個字是錯的，點出來。全對的句子按「✅ 這句沒錯」。', st:'💎 尋寶', n:G7.length},
  {id:'g8', ic:'✏️', name:'填空高手',  rule:'句子少了一個字，選出正確的那一個。', st:'⚽ 運動', n:G8.length},
- {id:'g9', ic:'🗂', name:'問名字還是問幾歲', rule:'這一句在回答哪一題？'+NAMETAG+' 名字 ／ 🎂 幾歲。', st:'🌈 大自然', n:G9.length,
- duo:[{v:'n',t:NAMETAG,d:'問名字　What’s your name?',c:'he'},{v:'a',t:'🎂',d:'問幾歲　How old are you?',c:'she'}]},
+ {id:'g9', ic:'🗂', name:'問名字還是問幾歲', rule:'這一句在回答哪一題？What’s your name? 還是 How old are you?', st:'🌈 大自然', n:G9.length,
+ /* 使用者 2026-09-28：選項直接寫英文、不加任何圖示、同一個顏色，位置每題隨機（逼學生讀句子，不是背位置／背顏色） */
+ duo:[{v:'n',t:'What’s your name?',c:'nt'},{v:'a',t:'How old are you?',c:'nt'}], duoShuf:1},
  {id:'g10', ic:'👑', name:'魔王挑戰',  rule:'打倒魔王！答對扣血，答錯魔王放技能。', st:'⚔️ 勇者', n:G10.length}
 ];
 

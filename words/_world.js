@@ -68,6 +68,16 @@ function guessOne(o) {
   };
 }
 
+/* 句子可以寫成「Wer ist er?|誰 是 他」：| 後面是每一個字的中文（用空白隔開，_ ＝ 不寫）。
+   2026-09-28 使用者第 9(1)(2) 點：每一個外國字的正下方寫中文；公布以後一個字一個字跳出來（動畫逐字對照） */
+const gwOf = x => {
+  const [sen, gl] = x[1].split('|'), say = sen.replace(/／/g, ', ');
+  if (!gl) return '<span class="sp gw" data-say="' + say + '" data-lang="' + LANG[x[0]] + '">' + sen + '</span>';
+  const tk = sen.split(' '), g = gl.split(' ');
+  if (tk.length !== g.length) throw new Error('_world：逐字中文的數目不對：' + x[1]);
+  return '<span class="sp gw gws" data-say="' + say + '" data-lang="' + LANG[x[0]] + '">' + tk.map((t, k) =>
+    '<span class="gt" style="--d:' + (0.3 + k * 0.35).toFixed(2) + 's"><b>' + t + '</b><i>' + (g[k] === '_' ? '&nbsp;' : g[k]) + '</i></span>').join('') + '</span>';
+};
 /* ── ② 一個英文字、五個國家：先猜每一個是哪一國，公布以後最像的那幾個會亮起來 ──
    r：[國家代碼, 那一國的字（可以有兩個，用／隔開）] */
 function guessMany(o) {
@@ -78,8 +88,7 @@ function guessMany(o) {
       '<div class="gen">英文 <span class="sp gbig" data-say="' + o.en + '">' + o.en + '</span><em>' + o.zh + '</em></div>' +
       '<div class="glist">' + o.r.map((x, k) =>
         '<div class="grow' + (o.near.indexOf(x[0]) >= 0 ? ' near' : '') + '" style="animation-delay:' + (0.2 + k * 0.12).toFixed(2) + 's">' +
-        '<span class="sp gw" data-say="' + x[1].replace(/／/g, ', ') + '" data-lang="' + LANG[x[0]] + '">' + x[1] + '</span>' +
-        q + ans(x[0]) + '</div>').join('') + '</div>' +
+        gwOf(x) + q + ans(x[0]) + '</div>').join('') + '</div>' +
       '<button class="grev">🔍 公布答案</button>' +
       '<div class="gwhy">' + o.why + '</div>' +
       /* 公布以後才出現的「為什麼這麼像」小動畫（使用者 2026-09-26 指定：每一張都要有語言演變的真實故事） */
@@ -107,7 +116,7 @@ const STEPPE = [40, 48.5], NORTH = [10, 55], ROME = [12.5, 42], ENG = [-1.2, 52.
   DE = [10.5, 51], NL = [5.6, 52.3], SE = [15.5, 60.5], FR = [2.4, 46.8], ES = [-3.7, 40.3];
 
 /* 今天的國家名字：每一張地圖都標出來（使用者 2026-09-25 指定：學生不知道地圖上的地方是哪一國） */
-const CTRY = [['gb', -2.2, 53.2, '英國'], ['de', 10.2, 51.2, '德國'], ['nl', 5.4, 52.4, '荷蘭'], ['sv', 15.2, 62.2, '瑞典'],
+const CTRY = [['gb', -2.4, 52.3, '英國'], ['de', 10.2, 51.2, '德國'], ['nl', 2.9, 53.5, '荷蘭'], ['sv', 15.2, 62.2, '瑞典'],
   ['fr', 2.3, 46.6, '法國'], ['es', -3.8, 40.0, '西班牙'], ['it', 12.8, 43.2, '義大利']];
 const names = () => CTRY.map(c => { const [x, y] = pt(c[1], c[2]); return '<text class="mc" x="' + x + '" y="' + y + '">' + c[3] + '</text>'; }).join('');
 /* 時間軸：現在演到哪一段（使用者 2026-09-25 指定：學生搞不清楚歷史，用一條看得到的時間線帶著走） */
@@ -126,9 +135,9 @@ const MAPS = [
     txt(NORTH[0] - 8, NORTH[1] + 2.4, '🌲 日耳曼家族', 'big g', 1.2) + txt(ROME[0] - 7, ROME[1] - 2.2, '🏛 拉丁家族', 'big l', 2),
     ['往北：<b>🌲 日耳曼家族</b>', '往南：<b>🏛 拉丁家族</b>'], '', 1, 'steppe'),
   mapScene('🗺 坐船到英國（1500 年前）',
-    txt(DE[0] - 1, DE[1] - 1.2, 'Mutter', 'g', .2) + txt(1.5, 54.6, 'moeder', 'g', .5) +
+    txt(DE[0] - .5, DE[1] - 2.6, 'Mutter', 'g', .2) + txt(2.6, 56.4, 'moeder', 'g', .5) +
     txt(SE[0] - 3, SE[1] - 1.4, 'mor', 'g', .8) +
-    boat([7.5, 55.5], [-0.5, 53.6], 1.2, '') + txt(-3.6, 51.2, 'mother', 'big e', 2.6),
+    boat([7.5, 55.5], [0.6, 54.2], 1.2, '') + txt(-5.4, 50.2, 'mother', 'big e', 2.6),
     ['德國北部、丹麥的人<b>坐船到英國</b>', 'mother、Mutter、moeder <b>是兄弟姊妹</b>'], '', 2, 'boat'),
   mapScene('🗺 拉丁家族',
     dot(ROME[0], ROME[1], 'pulse l', .2) + txt(ROME[0] + .8, ROME[1] + .6, 'māter', 'l', .4) +
@@ -193,4 +202,14 @@ const TREE = {
   lines: ['英文、德文、荷蘭文、瑞典文 ＝ <b>同一個媽媽生的兄弟姊妹</b>']
 };
 
-module.exports = { flag, guessOne, guessMany, MAPS, TREE, NAME, LANG, WHERE, SIX, WHY5 };
+/* ── ’ 只有英文這樣縮（使用者 2026-09-28 第 9(3) 點：別的國家的 Who’s he? 也用 ’ 嗎？）──
+   rows：[國家, 句子, 說明]；英文那一列的 ’ 會一直亮、其他列蓋「✕ 不縮」 */
+function apos(o) {
+  return { tag: o.tag || '’ 只有英文這樣縮', src: o.src, q: o.q, sayAll: 1,
+    h: '<div class="apt fo">' + o.rows.map((r, k) =>
+      '<div class="apr' + (r[0] === 'gb' ? ' en' : '') + '" style="animation-delay:' + (0.2 + k * 0.45).toFixed(2) + 's">' + flag(r[0]) +
+      '<span class="sp apw" data-say="' + r[1].replace(/<[^>]+>/g, '') + '" data-lang="' + LANG[r[0]] + '">' + r[1] + '</span>' +
+      '<span class="apn">' + r[2] + '</span></div>').join('') + '</div>',
+    lines: o.lines };
+}
+module.exports = { txt, dot, arrow, boat, names, M, apos, flag, guessOne, guessMany, MAPS, TREE, NAME, LANG, WHERE, SIX, WHY5 };

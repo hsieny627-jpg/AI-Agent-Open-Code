@@ -110,16 +110,16 @@ body{margin:0;background:#000;color:#F2F2F2;
 .phw{display:inline-flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;margin:0 .17em;
  line-height:1.04;cursor:pointer;position:relative}
 .phw .syl{display:inline-flex;align-items:flex-end}
-.phw .u{display:inline-flex;flex-direction:column;align-items:center;transition:color .2s}
+.phw .u{display:inline-flex;flex-direction:column;align-items:center;transition:color .2s;position:relative}
 .phw .g{display:block;white-space:nowrap}
 .phw .g i{font-style:normal}
 .phw .g i.v{color:#FF5A5A}            /* 母音字母 ＝ 紅色 */
-.phw .u.mute .g i,.phw .u.mute .g i.v{color:#9A9A9A}  /* 不發音 ＝ 淺灰色 */
+.phw .u.mute .g i,.phw .u.mute .g i.v{color:#8C8C8C}  /* 不發音 ＝ 灰色（2026-09-28 使用者：一眼認得出、不太淺也不太深，全部字卡同一個灰） */
 .phw .g i.ap,.phw .u.mute .g i.ap,.aprd{color:#FF5A5A!important}  /* ’ ＝ 紅色（2026-09-27） */
 .phw .p{display:none;font-size:max(.34em,13px);font-weight:400;letter-spacing:0;white-space:nowrap;
  color:#9FB4C8;margin-top:.30em;min-height:1.1em}
 .phw.ipa .p,.phw.kk .p{display:block}
-.phw .u.mute .p{color:#6A6A6A}
+.phw .u.mute .p{color:transparent}   /* 不發音的字母下面空白（2026-09-28） */
 /* 唸到哪一格，哪一格就亮起來（字母 ↔ 聲音） */
 .phw .u.lit .g i{color:#FFFFFF;text-shadow:0 0 20px rgba(159,180,200,.95)}
 .phw .u.lit .g i.v{color:#FF9090}
@@ -154,6 +154,40 @@ body{margin:0;background:#000;color:#F2F2F2;
 .sp{cursor:pointer;border-bottom:1px dotted #4F6472}
 .sp:active,.sp.ping{color:#9FB4C8;border-bottom-color:#9FB4C8}
 .reduce .phw .syl.beat .g,.reduce .phw .u.count .g i.v{animation:none!important}
+/* ✂️ 音節動畫（2026-09-28 使用者指定：更好玩、更秒懂）
+   ① 紅色母音一顆一顆亮，頭上跳出 ①②③（數母音）
+   ② ✂️ 剪刀從上面剪下來，喀嚓一聲把字剪開
+   ③ 每一段變成一塊彩色積木、一段一段跳一下，頭上寫「第 1 拍、第 2 拍」
+   ④ 最後一行大字：N 個紅色母音 ＝ N 個音節 */
+.phw .phn{position:absolute;left:50%;bottom:100%;transform:translate(-50%,0) scale(0);
+ font-size:max(.36em,15px);line-height:1;font-weight:700;color:#0A0A0A;background:#FF5A5A;border-radius:99px;
+ min-width:1.35em;padding:.12em .28em;text-align:center;pointer-events:none;box-shadow:0 0 14px rgba(255,90,90,.7)}
+.phw .phn.on{animation:phnIn .45s cubic-bezier(.2,1.5,.4,1) forwards}
+@keyframes phnIn{0%{transform:translate(-50%,.3em) scale(0)}100%{transform:translate(-50%,-.12em) scale(1)}}
+.phw .cut{position:relative}
+.phw .phsc{position:absolute;left:50%;top:-1.1em;font-size:.62em;line-height:1;transform:translate(-50%,-60%) rotate(-90deg);
+ opacity:0;pointer-events:none}
+.phw .phsc.on{animation:phsnip .62s cubic-bezier(.3,1.3,.5,1) forwards}
+@keyframes phsnip{0%{opacity:0;transform:translate(-50%,-160%) rotate(-90deg)}
+ 45%{opacity:1;transform:translate(-50%,-10%) rotate(-90deg) scale(1.15)}
+ 60%{transform:translate(-50%,-10%) rotate(-70deg) scale(1.15)}
+ 75%{transform:translate(-50%,-10%) rotate(-100deg) scale(1.15)}
+ 100%{opacity:0;transform:translate(-50%,60%) rotate(-90deg) scale(.8)}}
+.phw.split .syl{border-radius:.16em;padding:0 .06em;transition:background .3s,box-shadow .3s}
+.phw.split .syl.k0{background:rgba(90,169,255,.16);box-shadow:inset 0 -.08em 0 #5AA9FF}
+.phw.split .syl.k1{background:rgba(57,217,138,.16);box-shadow:inset 0 -.08em 0 #39D98A}
+.phw.split .syl.k2{background:rgba(245,179,1,.16);box-shadow:inset 0 -.08em 0 #F5B301}
+.phw.split .syl.k3{background:rgba(200,120,255,.16);box-shadow:inset 0 -.08em 0 #C878FF}
+.phw .syl.hop{animation:phhop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes phhop{0%{transform:translateY(0)}40%{transform:translateY(-.22em) scale(1.08)}100%{transform:translateY(0)}}
+.phsum{position:fixed;left:50%;top:14%;transform:translate(-50%,0) scale(.6);opacity:0;z-index:60;pointer-events:none;
+ background:#0B0B0B;border:2px solid #FF5A5A;border-radius:22px;padding:.35em .9em;white-space:nowrap;
+ font-size:clamp(24px,4.6vh,46px);font-weight:700;color:#F2F2F2;box-shadow:0 0 40px rgba(255,90,90,.35)}
+.phsum .rv{color:#FF5A5A}
+.phsum.on{animation:phsum 3.2s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes phsum{0%{opacity:0;transform:translate(-50%,0) scale(.6)}12%{opacity:1;transform:translate(-50%,0) scale(1.06)}
+ 20%{transform:translate(-50%,0) scale(1)}85%{opacity:1}100%{opacity:0;transform:translate(-50%,-10px) scale(1)}}
+.reduce .phw .phn.on,.reduce .phw .phsc.on,.reduce .phw .syl.hop,.reduce .phsum.on{animation:none!important;opacity:1}
 
 #src{position:fixed;inset:0;z-index:40;background:#000;display:none;flex-direction:column;
  padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) max(10px,env(safe-area-inset-bottom));text-align:left}
@@ -233,7 +267,7 @@ body{margin:0;background:#000;color:#F2F2F2;
  <span class="pos">7 / 13</span>
  <a href="seven.html" title="下一個單字"><span class="w">seven</span> ▶</a>
 </nav>
-<div id="bar"><button id="say">🔊 念一次</button><button id="tocb">📑 目次</button><button id="slow">🐢 放慢</button><button id="phmode">🔤 音標：無</button><button id="phsyl">✂️ 音節</button><button id="home">🏠 首頁</button><button id="srcb">📖 出處</button></div>
+<div id="bar"><button id="say">🔊 念一次</button><button id="tocb">📑 目次</button><button id="slow">🐢 放慢</button><button id="phmode">🔤 音標：無</button><button id="phsyl">✂️ 音節</button><button id="evo">⏳ 時光機</button><button id="home">🏠 首頁</button><button id="srcb">📖 出處</button></div>
 </div>
 <div id="toc"><div class="thd"><b>📑 目次</b><button id="tocx">✕ 關閉</button></div><div class="tgd"><a href="zero.html"><b>1</b><span>0️⃣ zero　零</span></a><a href="one.html"><b>2</b><span>1️⃣ one　一</span></a><a href="two.html"><b>3</b><span>2️⃣ two　二</span></a><a href="three.html"><b>4</b><span>3️⃣ three　三</span></a><a href="four.html"><b>5</b><span>4️⃣ four　四</span></a><a href="five.html"><b>6</b><span>5️⃣ five　五</span></a><a href="six.html" class="cur"><b>7</b><span>6️⃣ six　六</span></a><a href="seven.html"><b>8</b><span>7️⃣ seven　七</span></a><a href="eight.html"><b>9</b><span>8️⃣ eight　八</span></a><a href="nine.html"><b>10</b><span>9️⃣ nine　九</span></a><a href="ten.html"><b>11</b><span>🔟 ten　十</span></a><a href="eleven.html"><b>12</b><span>1️⃣1️⃣ eleven　十一</span></a><a href="twelve.html"><b>13</b><span>1️⃣2️⃣ twelve　十二</span></a></div></div>
 <footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span><span class="scnt"><span id="srcn">1</span> ／ 7</span><button id="srct">📑 目次</button><button id="srcx">✕ 關閉</button></div><div class="stoc" id="stoc"><button data-k="0"><b>1</b><span>six 的家人</span></button><button data-k="1"><b>2</b><span>音標（美式）</span></button><button data-k="2"><b>3</b><span>KK 音標</span></button><button data-k="3"><b>4</b><span>音節怎麼切</span></button><button data-k="4" class="w"><b>5</b><span>辭典的 fam·i·ly 也對</span></button><button data-k="5" class="w"><b>6</b><span>淺灰色的字母不算</span></button><button data-k="6"><b>7</b><span>唸出來的聲音</span></button></div><div class="sbody"><section class="sl on" data-k="0"><div class="lt">six 的家人</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「six, adj.」；Larousse「six」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">古英文 <b>siex</b>；法文的六<b>也拼成 six</b>。</span></span></div></section><section class="sl" data-k="1"><div class="lt">音標（美式）</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries（NAmE）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">本教材的 IPA 一律用<b>美式</b>。</span></span></div></section><section class="sl" data-k="2"><div class="lt">KK 音標</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">台灣課本用的標法。例：bed 的 e ＝ IPA <b>/e/</b> ＝ KK <b>/ɛ/</b>。</span></span></div></section><section class="sl" data-k="3"><div class="lt">音節怎麼切</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Louisa Moats《Speech to Print》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">母音後面切：<b>fa．mi．ly</b>。<b>一個出聲的母音 ＝ 一個音節</b>。</span></span></div></section><section class="sl w" data-k="4"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>辭典的 fam·i·ly 也對</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">那是<b>排版斷行</b>用的；本教材教的是<b>唸的時候</b>怎麼切。兩種都對。</span></span></div></section><section class="sl w" data-k="5"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>淺灰色的字母不算</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">不出聲的字母（淺灰色）<b>不算母音</b>，數紅色的就對了。</span></span></div></section><section class="sl" data-k="6"><div class="lt">唸出來的聲音</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Web Speech API（瀏覽器內建語音，en-US）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">不用連網。<b>嗓音由這台電腦決定</b>。外語另外指定：德 de-DE、荷 nl-NL、瑞典 sv-SE、法 fr-FR、西 es-ES。</span></span></div></section></div><div class="snav"><button id="srcp">◀ 上一條</button><span class="sdots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i></span><button id="srcf">下一條 ▶</button></div></footer>
@@ -281,8 +315,8 @@ var PH=(function(){
    for(ui=0;ui<d[si].length;ui++){var u=d[si][ui];
     var lu=letters(u).replace(/>([^<])</g,function(m,c){var o=CS.charAt(cp++);return '>'+(o&&o.toLowerCase()===c.toLowerCase()?o:(c==="'"&&o==="’"?o:c))+'<'});
     h+='<span class="u'+(u.s?" mute":"")+'"><span class="g">'+lu+'</span>'+
-       '<span class="p" data-i="'+(u.s?"–":u.i)+'" data-k="'+(u.s?"–":u.k)+'">'+
-       (u.s?"–":(mode===2?u.k:u.i))+'</span></span>'}
+       '<span class="p" data-i="'+(u.s?"&nbsp;":u.i)+'" data-k="'+(u.s?"&nbsp;":u.k)+'">'+
+       (u.s?"&nbsp;":(mode===2?u.k:u.i))+'</span></span>'}
    h+='</span>'}
   return h+'</span>'}
  /* 字卡上的三段切換（無／IPA／KK）＋ 音節按鈕 */
@@ -348,23 +382,42 @@ var PH=(function(){
   for(k=0;k<us.length;k++)(function(u,k){
    at(160+k*step,function(){u.classList.add("lit")});
    at(160+k*step+step*1.25,function(){u.classList.remove("lit")})})(us[k],k)}
- /* 音節動畫：先一顆一顆數紅色母音，再把音節拉開 */
+ /* 音節動畫（2026-09-28 改版）：① 數紅色母音（頭上跳 ①②③）② ✂️ 喀嚓剪開 ③ 一段一段變彩色積木、跳一下
+    ④ 大字：N 個紅色母音 ＝ N 個音節。一個音節的字：不剪，直接說「1 個母音 ＝ 1 個音節，不用剪」 */
+ var CIR="①②③④⑤⑥";
+ function sylReset(el){[].forEach.call(el.querySelectorAll(".phn,.phsc"),function(x){x.parentNode.removeChild(x)});
+  [].forEach.call(el.querySelectorAll(".syl"),function(x){x.classList.remove("k0","k1","k2","k3","hop","beat")});
+  el.classList.remove("split");var o=document.getElementById("phsum");if(o)o.classList.remove("on")}
+ function sylSum(h){var o=document.getElementById("phsum");
+  if(!o){o=document.createElement("div");o.id="phsum";o.className="phsum";document.body.appendChild(o)}
+  o.innerHTML=h;o.classList.remove("on");void o.offsetWidth;o.classList.add("on")}
  function syl(el,note){
-  var n=+el.getAttribute("data-n")||1,vs=el.querySelectorAll(".u"),sy=el.querySelectorAll(".syl"),k,c=0;
-  clear();el.classList.remove("split");
+  var n=+el.getAttribute("data-n")||1,vs=el.querySelectorAll(".u"),sy=el.querySelectorAll(".syl"),cs=el.querySelectorAll(".cut"),k;
+  clear();sylReset(el);
   if(note)note.innerHTML="";
   var reds=[];for(k=0;k<vs.length;k++)if(vs[k].querySelector("i.v")&&!/mute/.test(vs[k].className))reds.push(vs[k]);
-  reds.forEach(function(u,k){at(120+k*430,function(){
-   u.classList.add("count");c=k+1;
-   if(note)note.innerHTML='<span class="rv">●</span> 紅色母音 <b>'+c+'</b> 個';
+  /* 一格裡有兩個紅色字母（ou、au、ee…）也只算一個聲音：一格一個號碼 */
+  reds.forEach(function(u,k){at(150+k*520,function(){
+   u.classList.add("count");var b=document.createElement("span");b.className="phn";b.textContent=CIR.charAt(k)||(k+1);
+   u.appendChild(b);void b.offsetWidth;b.classList.add("on");
+   if(note)note.innerHTML='<span class="rv">●</span> 紅色母音 <b>'+(k+1)+'</b> 個';
    at(520,function(){u.classList.remove("count")})})});
-  var t0=120+reds.length*430+180;
-  at(t0,function(){el.classList.add("split")});
-  for(k=0;k<sy.length;k++)(function(s,k){at(t0+120+k*360,function(){
-   s.classList.remove("beat");void s.offsetWidth;s.classList.add("beat");
-   if(note)note.innerHTML='✂️ 切成 <b>'+(k+1)+'</b> 段'})})(sy[k],k);
-  at(t0+120+sy.length*360+240,function(){
+  var t0=150+reds.length*520+250;
+  if(sy.length<2){at(t0,function(){sylSum('<span class="rv">1</span> 個紅色母音 ＝ <b>1</b> 個音節　不用剪 👍');
+   if(note)note.innerHTML='<span class="rv">1</span> 個母音 ＝ <b>1 個音節</b>'});return}
+  for(k=0;k<cs.length;k++)(function(c,k){at(t0+k*520,function(){
+   var s=document.createElement("span");s.className="phsc";s.textContent="✂️";c.appendChild(s);void s.offsetWidth;s.classList.add("on");
+   if(k===cs.length-1)at(330,function(){el.classList.add("split")})})})(cs[k],k);
+  var t1=t0+cs.length*520+200;
+  for(k=0;k<sy.length;k++)(function(s,k){at(t1+k*480,function(){
+   s.classList.add("k"+(k%4));s.classList.remove("hop");void s.offsetWidth;s.classList.add("hop");
+   if(note)note.innerHTML='✂️ 第 <b>'+(k+1)+'</b> 段'})})(sy[k],k);
+  at(t1+sy.length*480+200,function(){
+   sylSum('<span class="rv">'+n+'</span> 個紅色母音 ＝ <b>'+n+'</b> 個音節');
    if(note)note.innerHTML='<span class="rv">'+n+'</span> 個母音 ＝ <b>'+n+' 個音節</b>'})}
+ function sylTime(el){var n=el.querySelectorAll(".syl").length,r=0,v=el.querySelectorAll(".u"),k;
+  for(k=0;k<v.length;k++)if(v[k].querySelector("i.v")&&!/mute/.test(v[k].className))r++;
+  return 150+r*520+250+(n<2?0:(n-1)*520+200+n*480+200)}
  /* 把說明文字裡的英文字詞變成可以點來聽（補充單字、字詞、用法都算）。
    **只掃說明文字的容器**：.en 這種手工排版（dau<span>gh</span>ter）拆開來會壞掉，
    那種地方改用 {{單字}} 標記，由 PH.word() 直接畫。 */
@@ -437,7 +490,7 @@ var PH=(function(){
    if(f>bs){bs=f;best=all[k]}}
   return best}
  function setMode(m){mode=((+m||0)%3+3)%3;try{localStorage.setItem("phMode",mode)}catch(e){}apply();return mode}
- return{word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
+ return{word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,sylTime:sylTime,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
   has:function(w){return !!D[(w||"").toLowerCase()]},
   slow:function(v){slow=(v===undefined)?!slow:!!v;return slow},
   isSlow:function(){return slow},
@@ -462,7 +515,7 @@ var PH=(function(){
   if(!n){b.textContent="✂️ 音節";return}
   PH.syl(el,null);
   b.textContent="✂️ 音節";
-  setTimeout(function(){b.textContent="✂️ "+n+" 個音節"},220+n*430+120+n*360);});})();
+  setTimeout(function(){b.textContent="✂️ "+n+" 個音節"},PH.sylTime(el));});})();
 
 var W={zh:"六",sub:"",icon:"6️⃣",old:"siex",now:"six",
  e1:"{{sixteen}} 十六、{{sixty}} 六十",e2:"法文的「六」<b>也寫 six</b>"};
@@ -536,6 +589,7 @@ show(0);
 armFirstTouch();
 
 
+document.getElementById("evo").addEventListener("click",function(){location.href="six-evo.html"});
 document.getElementById("home").addEventListener("click",function(){location.href="../index.html"});
 (function(){var T=document.getElementById("toc");
  document.getElementById("tocb").addEventListener("click",function(){T.classList.add("on")});

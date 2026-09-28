@@ -168,7 +168,7 @@ ${SET.head||''}
  <span class="pos">${W.idx} / ${W.total}</span>
  <a href="${W.next}.html" title="下一個單字"><span class="w">${W.nextL||W.next}</span> ▶</a>
 </nav>
-<div id="bar"><button id="say">🔊 念一次</button>${TOC.TOCB}${PH.btnSlow}${PH.btnMode}${PH.btnSyl}${W.more?`<button id="more">${W.more.label}</button>`:''}${W.parts?`<button id="parts">🧩 結構</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>
+<div id="bar"><button id="say">🔊 念一次</button>${TOC.TOCB}${PH.btnSlow}${PH.btnMode}${PH.btnSyl}${W.more?`<button id="more">${W.more.label}</button>`:''}${W.parts?`<button id="parts">🧩 結構</button>`:''}${W.evo?`<button id="evo">⏳ 時光機</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>
 </div>
 ${TOC.linksHTML(SET.list,W.f)}
 ${SRC.html((SET.srcW||SRC.W)[W.f])}
@@ -254,6 +254,7 @@ show(0);
 armFirstTouch();
 ${W.more?`document.getElementById("more").addEventListener("click",function(){location.href=${JSON.stringify(W.more.href)}});`:''}
 ${W.parts?`document.getElementById("parts").addEventListener("click",function(){location.href=${JSON.stringify(W.parts.href)}});`:''}
+${W.evo?`document.getElementById("evo").addEventListener("click",function(){location.href=${JSON.stringify(W.evo)}});`:''}
 document.getElementById("home").addEventListener("click",function(){location.href=${JSON.stringify(SET.home||'../index.html')}});
 ${TOC.LINKJS}
 ${SRC.JS}
@@ -274,6 +275,8 @@ function buildSet(WL,SET){
   w.idx=k+1; w.total=WL.length;
  });
  SET.list=WL.map(w=>({f:w.now||w.f,zh:w.zh,icon:w.icon,href:w.f+'.html',k:w.f}));
+ /* ⏳ 單字時光機（2026-09-28）：有資料的字，字卡多一顆「⏳ 時光機」 */
+ WL.forEach(w=>{if(require('./_evo_data').EVO.some(r=>r.w===w.f))w.evo=w.f+'-evo.html'});
  WL.forEach(w=>fs.writeFileSync(path.join(SET.dir||DIR,w.f+'.html'),tpl(w,SET),'utf8'));
  return WL;
 }

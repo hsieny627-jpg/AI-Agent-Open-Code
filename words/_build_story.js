@@ -39,10 +39,17 @@ const FAM=[
   lines:['全世界的寶寶，最先發得出來的音就是 <b>ma</b>',
          '媽媽的英文 <b>mother</b>、<b>mom</b>，都從 <b>m</b> 開頭']},
 
- {tag:'寶寶先叫出來的',emoji:'👶',say:'dad',
-  h:'<div class="en"><span class="bub b1">da</span><span class="bub b2">da</span><span class="bub b3">da</span></div>'+
-    '<div class="en pop" style="animation-delay:1.3s">{{dad}}</div>',
-  lines:['小寶寶還不會說 <b>father</b>','先叫出 <b>da-da</b>，就變成 <b>dad</b>']},
+ /* 2026-09-28 使用者第 7(1) 點：學生不相信「寶寶叫 da-da」，覺得應該叫 pa-pa ➜ 兩個都對！
+    d、p、b、m 都是寶寶嘴唇、舌尖一碰就發得出來的音（Jakobson 1960；嬰兒 6～10 個月的「重複音節」ba-ba、da-da）；
+    每一國挑的不一樣：英文最常說 dad，也說 papa（1680 年代從法文借來）、pa；中文說爸爸 */
+ {tag:'da-da 還是 pa-pa？',emoji:'👶',say:'dad',
+  h:'<div class="en" style="font-size:clamp(28px,5vh,48px)"><span class="bub b1">da</span><span class="bub b2">pa</span><span class="bub b3">ba</span></div>'+
+    '<div class="dpw">'+
+    '<span class="dp" style="animation-delay:1.2s">'+WD.flag('gb')+' <b>{{dad}}</b>　<b>{{papa}}</b><em>英文</em></span>'+
+    '<span class="dp" style="animation-delay:1.7s"><b class="zhb">爸爸</b><em>中文</em></span>'+
+    '<span class="dp" style="animation-delay:2.2s">'+WD.flag('fr')+' <b><span class="sp" data-say="papa" data-lang="fr-FR">papa</span></b><em>法文</em></span>'+
+    '<span class="dp" style="animation-delay:2.7s">'+WD.flag('es')+' <b><span class="sp" data-say="papá" data-lang="es-ES">papá</span></b><em>西班牙文</em></span></div>',
+  lines:['<b>d、p、b</b>：寶寶<b>嘴巴一碰</b>就發得出來，<b>兩個都對！</b>','英文最常說 <b>dad</b>，也會說 <b>papa</b>']},
 
  {tag:'不見了的字母',emoji:'🧒👦',say:'brother',
   h:'<div class="en in d1"><span class="flag">þ</span> <span class="ar">就是</span> th</div>',
@@ -52,13 +59,14 @@ const FAM=[
  /* 2026-09-20 訂正：原本寫「住進同一個村子」——**查不到任何一個村子的紀錄**，
     史料講的是一整片地區（丹麥區 Danelaw），不是單一村子，那句是編的，已刪。
     留下來的都是查得到的：維京人住在英格蘭東北邊，地名到今天還是維京話（-by ＝ 村子）。 */
+ /* 2026-09-28 使用者第 7(3) 點：學生看不懂 sister 的故事 ➜ 兩個人坐船撞在一起的動畫：
+    左邊英國人 sweostor、右邊維京人 systir，撞在一起 ➜ 大家學維京人唸 sis ➜ sister（Etymonline「sister」：受古北歐語 systir 影響） */
  {tag:'兩邊人唸得不一樣',emoji:'👧',say:'sister',
-  h:'<div class="en in d1" style="font-size:clamp(17px,3vh,28px);line-height:1.6">'+
-    '<span class="fromL">🏴 英國人唸 sweostor</span><br>'+
-    '<span class="fromR">⛵ 維京人唸 systir</span></div>'+
-    '<div class="en pop" style="animation-delay:1.3s">{{sister}}</div>',
-  lines:['<b>同一個姊姊</b>，英國人唸 <b class="nosay">sweostor</b>，坐船來的維京人唸 <b class="nosay">systir</b>',
-         '維京人<b>住在英格蘭東北邊</b>，後來大家都唸 <b>sister</b>']},
+  h:'<div class="sis2"><span class="sL">🏰 英國人<b class="nosay">s<i>weo</i>stor</b></span>'+
+    '<span class="sZ">💥</span><span class="sR">⛵ 維京人<b class="nosay">s<i class="vk">y</i>stir</b></span></div>'+
+    '<div class="sisN"><span class="sp" data-say="sister"><i class="vk">sis</i>ter</span><em>今天：學維京人唸 <b>sis</b></em></div>',
+  lines:['英國人說 <b class="nosay">sweostor</b>，坐船來的維京人說 <b class="nosay">systir</b>',
+         '維京人住進英格蘭東北邊，大家學他們唸 <b>sis</b> ➜ <b>sister</b>']},
 
  {tag:'唸起來一樣',emoji:'☀️👦',say:'son',
   h:'<div class="en in d1" style="font-size:clamp(26px,4.8vh,46px)">'+
@@ -128,7 +136,7 @@ const FQ={
  family:{q:'很久以前的 <b>family</b>，連誰都算「家裡的人」？',o:['幫忙做事的僕人','隔壁鄰居','學校老師','路過的客人']},
  parent:{q:'<b>parent</b> 最早的意思是？',o:['把孩子生下來的人','家裡最老的人','會煮飯的人','住在隔壁的人']},
  mother:{q:'全世界的寶寶，<b>最先</b>發得出來的音是？',o:['ma','ka','sa','la']},
- dad:{q:'寶寶還不會說 father，<b>先叫出</b>什麼？',o:['da-da','fa-fa','ka-ka','sa-sa']},
+ dad:{q:'寶寶叫爸爸，是 <b>da-da</b> 還是 <b>pa-pa</b>？',o:['兩個都有！','只有 da-da','只有 pa-pa','兩個都不是']},
  brother:{q:'英文以前有一個像小旗子的字母 <b>þ</b>，今天變成了？',o:['th','b','p','f']},
  sister:{q:'<b>sister</b> 這樣唸，是誰帶來的？',o:['坐船來的維京人','法國國王','美國人','羅馬人']},
  son:{q:'哪一個字跟 <b>son</b> 唸起來<b>一模一樣</b>？',o:['sun 太陽','sing 唱歌','soon 很快','song 歌']},
@@ -145,6 +153,32 @@ const FQ={
 };
 FAM.forEach(s=>{if(s.say&&FQ[s.say])s.q=FQ[s.say]});
 FAM.forEach(s=>{if(s.say==='dad')s.q=FQ.dad});
+/* 每一張：以前 ⚡ 今天（大約 N 年前）＋ 自己的出處（使用者 2026-09-28 第 6(3)(4)、7(2) 點：嚴禁通則文字） */
+const EVD=require('./_evo_data').EVO,EVB={};EVD.forEach(r=>{EVB[r.w]=r});
+const WASW={dad:'father'};
+FAM.forEach(s=>{if(!s.say)return;const w=WASW[s.say]||s.say,r=EVB[w];if(!r)return;
+ const o=r.st[0];s.was={o:o[0],y:o[1],e:o[2].replace(/（.*$/,''),n:w};s.src='f-'+s.say});
+const esc2=x=>String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const chainV=st=>'<div class="ev">'+st.map((x,k)=>(k?'<span class="ar" style="animation-delay:'+(0.3+k*0.7).toFixed(1)+'s">➜</span>':'')+
+ '<span class="st" style="animation-delay:'+(0.2+k*0.7).toFixed(1)+'s"><b'+(k===st.length-1?' class="new"':'')+'>'+esc2(x[0])+'</b><em>'+(x[1]==='今天'?'📱 今天':'⏳ 大約 '+x[1]+' 年前')+'</em></span>').join('')+'</div>';
+const EXTRA={
+ mother:[SRC.ev('ma：全世界的寶寶最先發得出來','Roman Jakobson (1960)《Why “Mama” and “Papa”?》；Etymonline「ma」','嘴唇閉起來喝奶的時候，最容易發出 <b>m</b>；拉丁文 mamma、希臘文 mamme、法文 maman、中文 媽媽 都是 m 開頭。',
+   '<div class="ev"><span class="st" style="animation-delay:.2s"><b>mamma</b><em>拉丁文</em></span><span class="st" style="animation-delay:.5s"><b>maman</b><em>法文</em></span><span class="st" style="animation-delay:.8s"><b>媽媽</b><em>中文</em></span><span class="st" style="animation-delay:1.1s"><b class="new">mom</b><em>英文</em></span></div>')],
+ dad:[SRC.ev('da-da、pa-pa 都對','Etymonline「dad」「papa」；Wikipedia「Mama and papa」「Babbling」','<b>dad</b> 1500 年左右就有紀錄，來自寶寶的話；<b>papa</b> 1680 年代從法文借進英文。寶寶 <b>6～10 個月</b>會一直重複 ba-ba、da-da、ma-ma。',
+   '<div class="ev"><span class="st" style="animation-delay:.2s"><b>ba-ba</b><em>6～10 個月</em></span><span class="st" style="animation-delay:.5s"><b>da-da</b><em>寶寶</em></span><span class="st" style="animation-delay:.8s"><b>pa-pa</b><em>寶寶</em></span><span class="ar" style="animation-delay:1.1s">➜</span><span class="st" style="animation-delay:1.3s"><b class="new">dad／papa</b><em>英文兩個都有</em></span></div>'),
+  SRC.e('為什麼是 d、p、b、m','Roman Jakobson (1960)《Why “Mama” and “Papa”?》','嘴唇一碰（p、b、m）或舌尖一碰（d）就發得出來，是寶寶<b>最早會的聲音</b>。')],
+ sister:[SRC.e('維京人住進英格蘭','Wikipedia「Danelaw」；Anglo-Saxon Chronicle 876–877 年條','<b>800～900 年代</b>，維京人住進英格蘭東北部一整片地區（丹麥區）。'),
+  SRC.e('證據是地名','Wikipedia「Whitby」「Derby」','<b>-by</b> ＝ 古北歐語的「村子」：Whitby（白色的村子）、Derby（鹿的村子）。')],
+ family:[SRC.warn('這個說法是假的','「Father And Mother, I Love You」<b>查無一手出處</b>，是後人倒推的順口溜，<b>不是 family 的來源</b>。')],
+ son:[SRC.e('u 為什麼寫成 o','Wikipedia「O」；The Literacy Nest「Scribal O」','手寫的 u、n 都是直線，連在一起分不出來，抄書的人就把 <b>u</b> 寫成 <b>o</b>：sunu ➜ sone ➜ son。')],
+ daughter:[SRC.e('德文、荷蘭文還在唸','Duden「Tochter」；Van Dale「dochter」','ch 還唸成喉嚨呼氣的聲音；英文的 gh 大約 400 年前不唸了（Wikipedia「Gh (digraph)」）。')],
+ brother:[SRC.e('þ 變成 th','Wikipedia「Thorn (letter)」','1476 年英國第一台印刷機<b>沒有 þ</b>，就用 th 代替。')]
+};
+const FAMSRC=[];FAM.forEach(s=>{if(!s.src)return;const w=WASW[s.say]||s.say,r=EVB[w],a0=r.src.a.filter(x=>!/古英文 ＝ 大約 1000 年前/.test(x.t))[0]||r.src.a[0];
+ const ex=EXTRA[s.say]||[];
+ FAMSRC.push(SRC.I(s.src,SRC.ev(a0.t,a0.s,a0.d,chainV(r.st.map(x=>[x[0],x[1]])))));
+ ex.forEach(x=>FAMSRC.push(x))});
+FAMSRC.push(SRC.I('f-oe',SRC.e.apply(null,require('./_evo_data').S.oe)));
 
 /* 第二頁的開場 */
 const OPEN2={emoji:'👨‍👩‍👧‍👦',mid:'還有八個家人單字',
@@ -152,8 +186,51 @@ const OPEN2={emoji:'👨‍👩‍👧‍👦',mid:'還有八個家人單字',
 
 const PAGES=[
 /* 19 幕一次放太長，拆成兩頁：前 9 個字／後 8 個字，各 10 幕 */
-{file:'why.html',title:'家人單字的故事 ①',src:'why',big:1,S:FAM.slice(0,10)},
-{file:'why-2.html',title:'家人單字的故事 ②',src:'why',big:1,S:[OPEN2].concat(FAM.slice(10,18),[FAM[18]])},
+/* 使用者 2026-09-28 第 12(1)(5) 點：放大版地圖的大旅行、英德荷為什麼這麼像（內容在 _pages2.js；三年級另有一份在 G3 sight/） */
+Object.assign({file:'map-story.html',css:require('./_pages2').CSS},require('./_pages2').mapStory),
+Object.assign({file:'en-de-nl.html',css:require('./_pages2').CSS},require('./_pages2').enDeNl),
+{file:'why.html',title:'家人單字的故事 ①',src:'why',big:1,srcRows:FAMSRC,S:FAM.slice(0,10)},
+{file:'why-2.html',title:'家人單字的故事 ②',src:'why',big:1,srcRows:FAMSRC,S:[OPEN2].concat(FAM.slice(10,18),[FAM[18]])},
+
+/* 1066：法文送給英文的字（使用者 2026-09-28 第 7(4) 點：為什麼法國給英國某些字？什麼時候？哪些類別？為什麼是這些字？）
+   事實：Britannica「Norman Conquest」、Merriam-Webster「Norman Conquest: New English Words」、Etymonline 各字；
+   「養的說英文、吃的說法文」是常見的簡化說法（Walter Scott《Ivanhoe》1819 年寫進小說），出處頁有誠實註記。 */
+{file:'french-1066.html',title:'1066：法文送給英文的字',topic:'⚔️ 1066 法文送的字',big:1,
+ srcRows:[
+  SRC.I('fr-1066',SRC.ev('1066 年發生什麼事','Britannica「Norman Conquest」；Wikipedia「Battle of Hastings」',
+   '<b>1066 年 10 月 14 日</b>，法國諾曼第的<b>威廉公爵</b>在黑斯廷斯打贏，當上英國國王（大約 960 年前）。',
+   '<div class="ev"><span class="st" style="animation-delay:.2s"><b>⛵ 諾曼第</b><em>法國北部</em></span><span class="ar" style="animation-delay:.6s">➜</span><span class="st" style="animation-delay:.9s"><b>⚔️ 1066</b><em>黑斯廷斯</em></span><span class="ar" style="animation-delay:1.3s">➜</span><span class="st" style="animation-delay:1.6s"><b class="new">👑 英國國王</b><em>威廉一世</em></span></div>')),
+  SRC.I('fr-who',SRC.e('誰說法文、誰說英文','Britannica「Norman Conquest」；Wikipedia「Anglo-Norman language」','之後兩三百年，<b>國王、貴族、法官</b>說法文（Anglo-Norman），<b>一般老百姓</b>繼續說英文。')),
+  SRC.I('fr-kind',SRC.ev('哪些字是法文送的','Merriam-Webster「Norman Conquest: New English Words」；Etymonline「judge」「jury」「beef」「pork」「uncle」「aunt」「cousin」',
+   '<b>幾千個</b>法文字進了英文：👑 宮廷（royal、prince）、⚖️ 法律（judge、jury、justice）、🍖 餐桌（beef、pork）、👪 親戚（uncle、aunt、cousin）。',
+   '<div class="ev"><span class="st" style="animation-delay:.2s"><b>👑 royal</b><em>宮廷</em></span><span class="st" style="animation-delay:.5s"><b>⚖️ judge</b><em>法律</em></span><span class="st" style="animation-delay:.8s"><b>🍖 beef</b><em>餐桌</em></span><span class="st" style="animation-delay:1.1s"><b class="new">👪 uncle</b><em>親戚</em></span></div>')),
+  SRC.I('fr-meat',SRC.e('cow 和 beef','Wikipedia「List of English words with dual French and Old English variations」；Etymonline「beef」「cow」','cow、pig、sheep 是英文；beef、pork、mutton 是法文（牛、豬、羊的<b>肉</b>）。')),
+  SRC.warn('這個故事是簡化版','beef、pork 這些字大多在 1066 年之後<b>兩三百年</b>才進英文；「養的人說英文、吃的人說法文」是常見的簡化說法，最早被 Walter Scott 寫進小說《Ivanhoe》（1819）。「肉的字是法文」這件事是真的。'),
+  SRC.I('fr-fam',SRC.e('家人字：誰是英文、誰是法文','Etymonline「mother」「father」「brother」「sister」「son」「daughter」「uncle」「aunt」「cousin」「nephew」「niece」「parent」',
+   '<b>mother、father、brother、sister、son、daughter</b> 古英文就有；<b>uncle、aunt、cousin、nephew、niece、parent</b> 是 1300～1400 年代從法文來的。'))
+ ],
+ S:[
+ {emoji:'⛵👑',mid:'1066 年，一艘一艘船從法國開過來',lines:['英文從這一年開始，<b>多了好幾千個法文字</b>']},
+ {tag:'1066 年發生什麼事？',src:'fr-1066',q:{q:'1066 年，誰當上了英國國王？',o:['法國諾曼第的威廉公爵','維京國王','羅馬皇帝','美國總統']},
+  h:'<div class="f66"><span class="sea">🌊🌊🌊</span><span class="ship">⛵⛵⛵</span><span class="land">🏰 英格蘭</span></div>',
+  lines:['法國諾曼第的 <b>威廉公爵</b> 坐船過來，打贏了','他當上 <b>英國國王</b>，帶來很多說法文的貴族']},
+ {tag:'誰說法文？誰說英文？',src:'fr-who',q:{q:'1066 年以後，英國的<b>法官</b>說哪一種話？',o:['法文','英文','拉丁文','中文']},
+  h:'<div class="f66b"><span class="up">👑🤴⚖️<em>國王、貴族、法官：<b>法文</b></em></span><span class="dn">🧑‍🌾👩‍🌾🐄<em>農夫、老百姓：<b>英文</b></em></span></div>',
+  lines:['上面的人說 <b>法文</b>，下面的人說 <b>英文</b>','兩種話住在一起好幾百年，<b>英文就借了很多法文字</b>']},
+ {tag:'哪些字是法文送的？',src:'fr-kind',q:{q:'下面哪一個字，是法文送給英文的？',o:['judge 法官','father 爸爸','house 房子','bread 麵包']},
+  h:'<div class="f66c"><span style="animation-delay:.2s"><i>👑 {{royal}}</i><em>宮廷</em></span><span style="animation-delay:.6s"><i>⚖️ {{judge}}</i><em>法律</em></span>'+
+    '<span style="animation-delay:1s"><i>🍖 {{beef}}</i><em>餐桌</em></span><span style="animation-delay:1.4s"><i>👪 {{uncle}}</i><em>親戚</em></span></div>',
+  lines:['<b>宮廷、法律、餐桌、親戚</b>：貴族天天在用的字','貴族說法文，這些字就<b>從法文來</b>']},
+ {tag:'為什麼是這些字？',src:'fr-meat',q:{q:'在田裡養牛的人說 <b>cow</b>，餐桌上吃牛肉的貴族說？',o:['beef','cow','milk','bull']},
+  h:'<div class="f66d"><span class="l">🐄 <b>{{cow}}</b><em>牛（英文）</em></span><span class="ar2">➜ 🍽️ ➜</span><span class="r">🥩 <b>{{beef}}</b><em>牛肉（法文）</em></span></div>'+
+    '<div class="f66d" style="animation-delay:.8s"><span class="l">🐖 <b>{{pig}}</b><em>豬（英文）</em></span><span class="ar2">➜ 🍽️ ➜</span><span class="r">🥓 <b>{{pork}}</b><em>豬肉（法文）</em></span></div>',
+  lines:['<b>養</b>動物的農夫說英文：cow、pig','<b>吃</b>肉的貴族說法文：beef、pork']},
+ {tag:'家人字：一半一半',src:'fr-fam',q:{q:'下面哪一個家人字，是法文送的？',o:['cousin','mother','brother','son']},
+  h:'<div class="f66e"><div class="en1"><em>🏠 古英文就有</em>{{mother}} {{father}} {{brother}} {{sister}} {{son}} {{daughter}}</div>'+
+    '<div class="fr1"><em>'+WD.flag('fr')+' 1066 年以後，法文送的</em>{{uncle}} {{aunt}} {{cousin}} {{nephew}} {{niece}} {{parent}}</div></div>',
+  lines:['<b>最親的家人</b>：古英文就有','<b>親戚</b>：法文送的']},
+ {tag:'所以',emoji:WD.flag('gb')+' ＋ '+WD.flag('fr'),mid:'英文 ＝ 自己的字 ＋ 法文送的字',lines:['看到 <b>uncle、aunt、cousin</b>，就想到 <b>1066 年</b>']}
+ ]},
 
 /* 哥哥／姊姊／弟弟／妹妹的說法（使用者 2026-09-19 指定要務必補充）。
    **2026-09-20 使用者指定改寫**：原本文字太囉嗦，學生看不懂。
@@ -201,7 +278,7 @@ const PAGES=[
   lines:['聊天這樣說<b>也對</b>','<b>big</b> ＝ 大　<b>little</b> ＝ 小']},
 
  /* 11：elder 要註明哪個國家的用法 */
- {tag:'課本上會看到',emoji:'🇬🇧',say:'elder brother',
+ {tag:'課本上會看到',emoji:WD.flag('gb'),say:'elder brother',
   h:'<div class="en big2 in d1"><span class="stamp">✅</span> {{elder}} {{brother}} <span class="ar">＝</span> 哥哥</div>',
   lines:['<b>elder</b> 是<b>英國</b>的寫法，意思一樣',
          '（證據在右下角 <b>📖 出處</b>：Cambridge「elder or older?」）']},
@@ -378,11 +455,11 @@ const PAGES=[
  {tag:'重要補充',emoji:'👧',mid:'daughter 的 gh，以前唸得出來',
   lines:['怎麼知道？<b>去聽德文就知道了</b>']},
 
- {tag:'德文',emoji:'🇩🇪',say:'Tochter',sayLang:'de-DE',
+ {tag:'德文',emoji:WD.flag('de'),say:'Tochter',sayLang:'de-DE',
   h:'<div class="en in d1">To<span class="keep">ch</span>ter</div>',
   lines:['德文的「女兒」寫成 <b>Tochter</b>','中間的 <b>ch</b> 到今天<b>還在發音</b>（喉嚨後面的摩擦音）']},
 
- {tag:'荷蘭文',emoji:'🇳🇱',say:'dochter',sayLang:'nl-NL',
+ {tag:'荷蘭文',emoji:WD.flag('nl'),say:'dochter',sayLang:'nl-NL',
   h:'<div class="en in d1">do<span class="keep">ch</span>ter</div>',
   lines:['荷蘭文的「女兒」寫成 <b>dochter</b>','<b>ch</b> 也<b>還在發音</b>']},
 
@@ -434,6 +511,19 @@ const {TOCB,TOCHTML,TOCJS,TOCCSS}=require('./_toc');
 /* 瑞典文語音檔（_audio_sv.js 做的）：有才載入，沒有就用瀏覽器語音 */
 const SVJS=fs.existsSync(path.join(DIR,'audio','sv','aud.js'))?'<script src="audio/sv/aud.js"></script>':'';
 
+/* 以前 ⚡ 現在（使用者 2026-09-28 第 6(3)(4)A 點）：幕裡寫 was:{o:'舊拼法',y:'1000',n:'今天的字',e:'古英文'}，
+   揭曉的最上面就是一張強烈對比：左邊「⏳ 大約 N 年前」舊羊皮紙、中間閃電、右邊「📱 今天」 */
+/* 幕裡只寫 evo:'eight' ＝ 從 ⏳ 時光機的資料（_evo_data.js）拿「最早的樣子、大約幾年前」 */
+const wasOf=s=>{if(s.was||!s.evo)return s;const r=EVB[s.evo];if(!r)return s;const o=r.st[0];
+ return Object.assign({},s,{was:{o:o[0],y:o[1],e:o[2].replace(/（.*$/,''),n:r.show||r.w,raw:!!r.show&&/[’ ]/.test(r.show)}})};
+/* 出處：這一幕有「以前 ⚡ 今天」，那一條出處就配一個「以前 ➜ 今天」的秒懂動畫（沒有動畫的才加） */
+const srcWithV=(rows,S)=>{const out=rows.map(r=>Object.assign({},r));
+ S.map(wasOf).forEach(s=>{if(!s.was||!s.src)return;const r=out.filter(x=>x.id===s.src)[0];if(!r||r.v)return;
+  const st=s.evo&&EVB[s.evo]?EVB[s.evo].st.map(x=>[x[0],x[1]]):[[s.was.o,s.was.y],[s.was.n.replace(/<[^>]+>/g,''),'今天']];
+  r.v=chainV(st)});return out};
+const wasPre=s0=>{const s=wasOf(s0);if(!s.was)return s;const w=s.was;
+ return Object.assign({},s,{emojiCls:(s.emojiCls||'pop')+' sm',h:'<div class="wasb"><span class="wo"><em>⏳ 大約 '+w.y+' 年前'+(w.e?'｜'+w.e:'')+'</em><b class="nosay">'+w.o+'</b></span>'+
+  '<span class="wz">⚡</span><span class="wn"><em>📱 今天</em><b>'+(w.raw?w.n:'{{'+w.n+'}}')+'</b></span></div>'+(s.h||'')})};
 const tpl=(P)=>`<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -515,6 +605,49 @@ body{margin:0;background:#000;color:#F2F2F2;
 @keyframes squeeze{0%{opacity:0;letter-spacing:.40em}100%{opacity:1;letter-spacing:.01em}}
 /* 兩邊靠攏，黏成一個字 */
 .fromL{display:inline-block;animation:fromL .9s cubic-bezier(.2,.9,.3,1) both}
+/* 1066（2026-09-28） */
+.f66{position:relative;display:flex;align-items:center;gap:14px;font-size:clamp(30px,5.6vh,54px)}
+.f66 .ship{animation:f66s 2.4s cubic-bezier(.3,.8,.4,1) both}
+@keyframes f66s{0%{opacity:0;transform:translateX(-160px)}100%{opacity:1;transform:none}}
+.f66 .land{font-size:.7em;font-weight:700;color:#FFD24A;opacity:0;animation:pop .6s ease 2.2s both}
+.f66 .sea{position:absolute;left:0;right:0;bottom:-.45em;font-size:.5em;opacity:.5;letter-spacing:.2em;text-align:center}
+.f66b{display:flex;flex-direction:column;gap:10px;font-size:clamp(34px,6vh,58px)}
+.f66b>span{display:flex;align-items:center;gap:12px;border-radius:16px;padding:6px 16px;opacity:0;animation:pop .6s ease both}
+.f66b .up{background:#1A1230;border:2px solid #7A5AE0}.f66b .dn{background:#0E1E10;border:2px solid #3FA05A;animation-delay:.8s}
+.f66b em{font-style:normal;font-size:clamp(18px,3vh,28px);color:#E6E6E6}.f66b em b{color:#FFD24A}
+.f66c{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.f66c{display:grid!important;grid-template-columns:repeat(4,auto)}@media (max-aspect-ratio:1/1){.f66c{grid-template-columns:repeat(2,auto)}}
+.f66c>span>i{font-style:normal;font-weight:700;font-size:clamp(20px,3.4vh,32px);white-space:nowrap}
+.f66c>span{display:flex;flex-direction:column;align-items:center;font-size:clamp(20px,3.4vh,32px);background:#0C0C0C;border:2px solid #2E2E2E;border-radius:16px;padding:6px 14px;opacity:0;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.f66c>span>b{font-size:clamp(20px,3.4vh,32px)}.f66c em{font-style:normal;font-size:clamp(15px,2.2vh,21px);color:#A8B8C4}
+.f66d{display:flex;align-items:center;justify-content:center;gap:12px;opacity:0;animation:pop .6s ease both}
+.f66d>span{display:flex;flex-direction:column;align-items:center;font-size:clamp(30px,5vh,48px)}
+.f66d>span>b{font-size:clamp(26px,4.4vh,42px)}.f66d em{font-style:normal;font-size:clamp(15px,2.2vh,21px);color:#A8B8C4}
+.f66d .ar2{font-size:clamp(20px,3vh,30px);color:#6B7B88}
+.f66e{display:flex;flex-direction:column;gap:10px;font-size:clamp(24px,4vh,38px);font-weight:700}
+.f66e>div{border-radius:16px;padding:6px 14px;opacity:0;animation:pop .6s ease both}
+.f66e em .flag{height:.9em;width:auto;vertical-align:middle}.emoji .flag{height:.8em;width:auto;vertical-align:middle}
+.f66e em{display:block;font-style:normal;font-size:clamp(16px,2.4vh,23px);font-weight:700}
+.f66e .en1{background:#0E1E10;border:2px solid #3FA05A}.f66e .en1 em{color:#7CF0B0}
+.f66e .fr1{background:#0B1830;border:2px solid #4A7AE0;animation-delay:.8s}.f66e .fr1 em{color:#8FB4FF}
+/* da-da 還是 pa-pa（2026-09-28） */
+.dpw{display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(8px,1.2vw,14px)}
+.dp{display:flex;flex-direction:column;align-items:center;gap:2px;background:#0C0C0C;border:2px solid #2E2E2E;border-radius:16px;
+ padding:6px 14px;opacity:0;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.dp b{font-size:clamp(20px,3.6vh,34px)}.dp .zhb{color:#FFD24A}.dp em{font-style:normal;color:#A8B8C4;font-size:clamp(14px,2vh,19px)}
+.dp .flag{height:.9em;width:auto;vertical-align:middle}
+/* sister：兩個人撞在一起（2026-09-28） */
+.sis2{display:flex;align-items:center;justify-content:center;gap:clamp(6px,1vw,12px);font-size:clamp(18px,3vh,28px);flex-wrap:nowrap}
+.sis2 .sL,.sis2 .sR{display:flex;flex-direction:column;align-items:center;background:#0C0C0C;border:2px solid #2E2E2E;border-radius:16px;padding:6px 12px}
+.sis2 b{font-family:Georgia,serif;font-size:clamp(26px,4.6vh,44px)}
+.sis2 .sL{animation:sisL 1.4s cubic-bezier(.3,1.2,.4,1) both}.sis2 .sR{animation:sisR 1.4s cubic-bezier(.3,1.2,.4,1) both}
+@keyframes sisL{0%{opacity:0;transform:translateX(-90px)}70%{opacity:1;transform:translateX(12px)}100%{transform:none}}
+@keyframes sisR{0%{opacity:0;transform:translateX(90px)}70%{opacity:1;transform:translateX(-12px)}100%{transform:none}}
+.sis2 .sZ{font-size:1.4em;opacity:0;animation:pop .5s ease 1.1s both}
+.sis2 i{font-style:normal;color:#8C8C8C}.sis2 i.vk,.sisN i.vk{font-style:normal;color:#5AC8FF;font-weight:700}
+.sisN{display:flex;flex-direction:column;align-items:center;opacity:0;animation:pop .6s cubic-bezier(.2,1.5,.4,1) 1.8s both}
+.sisN .sp{font-size:clamp(40px,7.4vh,72px);font-weight:700;border-bottom:0}
+.sisN em{font-style:normal;font-size:clamp(16px,2.4vh,23px);color:#A8B8C4}
 .fromR{display:inline-block;animation:fromR .9s cubic-bezier(.2,.9,.3,1) both}
 @keyframes fromL{0%{opacity:0;transform:translateX(-58px)}100%{opacity:1;transform:none}}
 @keyframes fromR{0%{opacity:0;transform:translateX(58px)}100%{opacity:1;transform:none}}
@@ -589,21 +722,40 @@ body{margin:0;background:#000;color:#F2F2F2;
 .guess.many .gunk,.guess.many .gans{font-size:clamp(17px,2.8vh,26px)}
 .guess.many.rev .grow.near{border-color:#FFD24A;background:#1D1908;animation:nearGlow 1.2s ease-in-out .5s 2}
 @keyframes nearGlow{0%,100%{transform:none}50%{transform:scale(1.04);box-shadow:0 0 22px rgba(255,210,74,.45)}}
-.gwhy{display:none;font-size:clamp(16px,2.6vh,24px);color:#F2F2F2;text-align:center}
+.gwhy{display:none;font-size:clamp(20px,3.4vh,32px);line-height:1.6;color:#F2F2F2;text-align:center}
+/* ’ 只有英文這樣縮（2026-09-28） */
+.apt{display:flex;flex-direction:column;gap:clamp(3px,.6vh,7px);width:100%;max-width:760px}
+.apr{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:12px;background:#0C0C0C;border:1px solid #232323;border-radius:14px;
+ padding:clamp(2px,.5vh,6px) 14px;opacity:0;animation:pop .5s cubic-bezier(.2,1.5,.4,1) both}
+.apr .flag{width:1.9em;height:1.3em}
+.apr .apw{font-size:clamp(20px,3.4vh,32px);font-weight:700;border-bottom:0;white-space:nowrap}
+.apr .apn{font-size:clamp(15px,2.3vh,22px);color:#BFD3E6;text-align:left}
+.apr .apn b{color:#FFD24A}
+.apr.en{border:2px solid #FFD24A;background:#1D1908}
+.apr .ap1{color:#FF5A5A;display:inline-block;animation:apPulse 1.2s ease-in-out infinite}
+@keyframes apPulse{0%,100%{transform:none}50%{transform:scale(1.5) translateY(-.1em);text-shadow:0 0 14px rgba(255,90,90,.9)}}
+.apr .apx{color:#FF7B7B;font-weight:700}
+/* 逐字中文（2026-09-28）：每一個外國字的正下方是中文；公布以後一個字一個字亮起來 */
+.gws{display:inline-flex;flex-wrap:wrap;gap:.08em .28em;align-items:flex-start}
+.gws .gt{display:inline-flex;flex-direction:column;align-items:center;line-height:1.1}
+.gws .gt i{font-style:normal;font-size:.56em;font-weight:700;color:#8FD0FF;min-height:1.1em;white-space:nowrap}
+.guess.rev .gws .gt{animation:gtIn .5s cubic-bezier(.2,1.5,.4,1) both;animation-delay:var(--d)}
+.guess.rev .gws .gt i{color:#FFD24A}
+@keyframes gtIn{0%{transform:scale(1)}40%{transform:scale(1.25);text-shadow:0 0 16px rgba(255,210,74,.8)}100%{transform:none}}
 .mbelow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}
 .mbelow span{background:#1A1208;border:1px solid #5A3E1C;color:#F3B06B;border-radius:99px;font-weight:700;
  font-size:clamp(14px,2.2vh,20px);padding:3px 10px;white-space:nowrap;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
 .gwhy b{color:#FFD24A}
 .guess.rev .gwhy{display:block;animation:fadeOnly .5s ease .4s both}
 /* 公布以後：為什麼這麼像（2026-09-26）——字母密碼 t ⇄ z、th ⇄ d、gh ⇄ ch 一格一格亮 */
-.gstory{display:none;flex-wrap:wrap;gap:clamp(4px,.8vw,10px);justify-content:center;align-items:center;margin-top:2px}
+.gstory{display:none;flex-wrap:wrap;gap:clamp(6px,1vh,12px) clamp(6px,1vw,12px);justify-content:center;align-items:center;margin-top:2px}
 .cx>span{display:inline-flex;align-items:baseline;gap:.2em;white-space:nowrap}
 /* 公布答案以後，清單排緊一點，字母密碼才放得下 */
 .guess.many.rev .grow{padding-top:0;padding-bottom:0}
 .guess.many.rev .gen{font-size:clamp(17px,2.6vh,26px)}
 .guess.rev .gstory{display:flex}
 .cx{display:inline-flex;align-items:center;gap:.35em;background:#0B1620;border:1px solid #29465E;border-radius:14px;
- padding:.08em .5em;font-size:clamp(16px,2.8vh,28px);font-weight:700;color:#F2F2F2;opacity:0;animation:cxIn .6s cubic-bezier(.2,1.4,.4,1) forwards}
+ padding:.12em .55em;font-size:clamp(19px,3.3vh,32px);line-height:1.4;font-weight:700;color:#F2F2F2;opacity:0;animation:cxIn .6s cubic-bezier(.2,1.4,.4,1) forwards}
 .cx:nth-child(2){animation-delay:.5s}.cx:nth-child(3){animation-delay:1s}.cx:nth-child(4){animation-delay:1.5s}
 .cx .e{color:#FFD24A}.cx .d{color:#5AD1FF}.cx .n{color:#FF9EC7}.cx .x{color:#8CF08A}
 .cx i{font-style:normal;color:#5E7A8E;font-size:.8em;animation:cxAr 1.2s ease-in-out infinite}
@@ -659,10 +811,10 @@ body{margin:0;background:#000;color:#F2F2F2;
 /* 地圖 */
 .mapbox{width:min(92vw,500px,calc(40vh * 1.08))}
 .map{display:block;width:100%;height:auto}
-.map .mt{font-size:13px;font-weight:700;fill:#F2F2F2;opacity:0;animation:mtIn .5s ease both}
-.map .mt.big{font-size:16px}.map .mt.small{font-size:9px}
-.map .mt.g{fill:#8FD19E}.map .mt.l{fill:#F3B06B}.map .mt.e{fill:#FFD24A}.map .mt.say{fill:#FFD24A;font-size:12px}
-.map .mt.chip{fill:#F3B06B;font-size:12px}
+.map .mt{font-size:17px;font-weight:700;fill:#F2F2F2;opacity:0;animation:mtIn .5s ease both}
+.map .mt.big{font-size:21px}.map .mt.small{font-size:13px}
+.map .mt.g{fill:#8FD19E}.map .mt.l{fill:#F3B06B}.map .mt.e{fill:#FFD24A}.map .mt.say{fill:#FFD24A;font-size:16px}
+.map .mt.chip{fill:#F3B06B;font-size:16px}
 @keyframes mtIn{from{opacity:0}to{opacity:1}}
 .map .md{fill:#FFD24A;opacity:0;animation:mtIn .4s ease both}
 .map .md.pulse{animation:mtIn .4s ease both,mdP 1.4s ease-in-out infinite}
@@ -672,14 +824,14 @@ body{margin:0;background:#000;color:#F2F2F2;
  animation:maDraw 1.2s ease forwards}
 .map .ma.g{stroke:#8FD19E}.map .ma.l{stroke:#F3B06B}
 @keyframes maDraw{to{stroke-dashoffset:0}}
-.map .mboat{font-size:18px}
+.map .mboat{font-size:24px}
 .map .mb{opacity:0;animation:mbGo 2s ease-in-out both}
 @keyframes mbGo{0%{opacity:0;transform:none}10%{opacity:1}90%{opacity:1;transform:translate(var(--dx),var(--dy))}
  100%{opacity:1;transform:translate(var(--dx),var(--dy))}}
 /* 語言也有家人 */
 .ltree{display:flex;flex-direction:column;align-items:center;width:100%;max-width:660px}
 .lroot{font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#FFD24A;display:flex;flex-direction:column;align-items:center}
-.lroot em{font-style:normal;font-size:.55em;color:#8E8E8E;font-weight:400}
+.lroot em{font-style:normal;font-size:.62em;color:#BFD3E6;font-weight:400}
 .llines{width:100%;height:clamp(26px,4.5vh,44px)}
 .llines path{fill:none;stroke:#5A6E7E;stroke-width:3;stroke-dasharray:100;stroke-dashoffset:100;
  animation:maDraw .7s ease forwards;vector-effect:non-scaling-stroke}
@@ -691,9 +843,9 @@ body{margin:0;background:#000;color:#F2F2F2;
 .lkid .flag{width:2.4em;height:1.6em}
 /* 2026-09-25：地圖放大、國名、時間軸、歐洲在哪裡、為什麼五國、統整表 */
 .sa .mapbox{width:min(94vw,680px,calc(50vh * 1.08))}
-.map .mc{font-size:11px;fill:#6F8797;font-weight:700;letter-spacing:.05em}
+.map .mc{font-size:17px;fill:#B8CCDA;font-weight:700;letter-spacing:.05em;paint-order:stroke;stroke:#000;stroke-width:3px}
 .map .cpop{opacity:0;animation:mtIn .5s ease both}
-.tline{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:center;font-size:clamp(11px,1.7vh,15px)}
+.tline{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:center;font-size:clamp(13px,1.9vh,18px)}
 .tline span{color:#4A4A4A;border:1px solid #2A2A2A;border-radius:99px;padding:1px 7px;white-space:nowrap}
 .tline span.past{color:#8E8E8E;border-color:#3A3A3A}
 .tline span.now{color:#000;background:#FFD24A;border-color:#FFD24A;font-weight:700;animation:pop .5s cubic-bezier(.2,1.5,.4,1) both}
@@ -812,10 +964,42 @@ body{margin:0;background:#000;color:#F2F2F2;
 .big .sub{font-size:clamp(19px,3vh,29px);line-height:1.4}
 .qdone .qz .qres{font-size:clamp(20px,3.4vh,32px)}
 .big .rv .emoji{font-size:clamp(40px,min(8vh,10vw),80px)}
+.big .rv .emoji.sm,.rv .emoji.sm{font-size:clamp(28px,min(5vh,7vw),50px)}
 @media (max-aspect-ratio:1/1){.big .rv .emoji{font-size:clamp(36px,7vw,64px)}.big .sub{font-size:clamp(18px,3.2vw,27px)}.big .tag{font-size:clamp(20px,3.6vw,30px)}}
 .qdone .qz .qq{display:none}
 .cx{flex-wrap:wrap;max-width:100%;justify-content:center}
 .big .mid{font-size:clamp(34px,6.4vh,60px)}
+/* 2026-09-28 使用者（第 6(2)、12(4) 點）：單字故事每一個字「務必放大」、行距加寬 */
+.big #stage{max-width:980px}
+.big .tag{font-size:clamp(26px,4.2vh,42px)}
+.big .sub{font-size:clamp(22px,3.7vh,36px);line-height:1.6}
+.big .mid{font-size:clamp(38px,7vh,68px)}
+.big .qz .qq{font-size:clamp(28px,5.2vh,52px)}
+.big .qz .qo button{font-size:clamp(22px,4.2vh,40px)}
+@media (max-aspect-ratio:1/1){.big .sub{font-size:clamp(20px,3.7vw,32px)}.big .tag{font-size:clamp(22px,4vw,34px)}}
+/* 以前 ⚡ 現在：強烈對比（第 6(3)(4)A 點）：左邊舊羊皮紙、右邊今天的螢幕，中間閃電；標註「大約 N 年前」 */
+.wasb{display:flex;align-items:stretch;justify-content:center;gap:clamp(8px,1.4vw,18px);flex-wrap:wrap}
+.wasb .wo,.wasb .wn{display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:18px;
+ padding:clamp(4px,.7vh,8px) clamp(12px,1.8vw,24px);opacity:0;animation:wasIn .6s cubic-bezier(.2,1.4,.4,1) both}
+.wasb .wo{background:linear-gradient(180deg,#2A2112,#140F07);border:2px solid #6B5220;animation-delay:.2s;filter:sepia(.2)}
+.wasb .wn{background:linear-gradient(180deg,#0B2233,#06121A);border:2px solid #4AA3E8;box-shadow:0 0 28px rgba(90,169,255,.4);animation-delay:1.3s}
+.wasb em{font-style:normal;font-weight:700;font-size:clamp(13px,2vh,19px);white-space:nowrap}
+.wasb .wo em{color:#E0B868}.wasb .wn em{color:#8FD0FF}
+.wasb .wo b{font-family:Georgia,"Times New Roman",serif;font-size:clamp(24px,4.4vh,44px);color:#F2E6C8;white-space:nowrap;line-height:1.15}
+.wasb .wn b{font-size:clamp(26px,4.8vh,48px);color:#FFF;white-space:nowrap;line-height:1.15}
+.wasb .wz{align-self:center;font-size:clamp(22px,4vh,38px);opacity:0;animation:wasZap .8s ease-in-out .8s both}
+@keyframes wasIn{0%{opacity:0;transform:scale(.6) rotate(-3deg)}100%{opacity:1;transform:none}}
+@keyframes wasZap{0%{opacity:0;transform:scale(2.4)}50%{opacity:1;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}
+/* 唸一次：在字卡正下方、放大（第 6(4)F 點） */
+#say.sayc,#sayc{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(max(20px,env(safe-area-inset-bottom)) + 60px);z-index:20;
+ background:#12324A;border:2px solid #5AA9FF;color:#fff;border-radius:99px;font-family:inherit;font-weight:700;
+ font-size:clamp(20px,3.2vh,30px);padding:.3em 1.2em;min-height:52px;cursor:pointer;box-shadow:0 0 18px rgba(90,169,255,.35)}
+#say.sayc:active{background:#1B4A6B}
+body.sayc{padding-bottom:clamp(70px,11vh,110px)}
+#bar.c3 #say{font-size:clamp(19px,2.8vh,26px);font-weight:700;background:#12324A;border:2px solid #5AA9FF;padding:.22em 1.1em;min-height:48px}
+/* 答錯：正確答案停留倒數 3 秒（第 6(4)D 點） */
+.qcd{display:inline-flex;align-items:center;justify-content:center;width:1.6em;height:1.6em;margin-left:.4em;border-radius:50%;
+ border:3px solid #FFB35A;color:#FFB35A;font-variant-numeric:tabular-nums;animation:qBeat 1s infinite}
 ${TOCCSS}
 ${PH.CSS}
 ${SRC.CSS}
@@ -823,23 +1007,23 @@ ${P.css||''}
 </style>
 ${P.svjs!=null?P.svjs:SVJS}
 </head>
-<body class="${[P.sayAll?'sa':'',P.big?'big':''].join(' ').trim()}">
+<body class="${[P.sayAll?'sa':'sayc',P.big?'big':''].join(' ').trim()}">
 <div id="dots"></div>
 <button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
 <div id="stage"></div>
 <button class="nav" id="next" aria-label="下一頁">&#8594;</button>
 ${P.sayAll?`<div id="bar" class="c3"><span class="bl">${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button></span><button id="say">🔊 唸一次</button><span class="br">${P.back?`<button id="back">${P.back.label}</button>`:''}${P.fwd?`<button id="fwd">${P.fwd.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</span></div>`:
-`<div id="bar"><button id="say">🔊 念一次</button>${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button>${P.back?`<button id="back">${P.back.label}</button>`:''}${P.fwd?`<button id="fwd">${P.fwd.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>`}
+`<button id="say" class="sayc">🔊 唸一次</button><div id="bar">${PH.btnSlow}${PH.btnMode}<button id="again">▶ 從頭看</button>${P.back?`<button id="back">${P.back.label}</button>`:''}${P.fwd?`<button id="fwd">${P.fwd.label}</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>`}
 <button id="tocb" class="tocfix">📑 目次</button>
 ${P.whome?`<button id="whome" class="whfix">🔤 單字首頁</button>`:''}
 <div class="topicfix">${P.topic||(/parts/.test(P.file)?'🧩 單字結構':/why/.test(P.file)?'📜 單字故事':/world/.test(P.file)?'🌍 環遊世界':'📖 '+P.title)}</div>
 ${TOCHTML}
-${SRC.html(P.srcRows||SRC.P[P.src||'why'])}
+${SRC.html(srcWithV(P.srcRows||SRC.P[P.src||'why'],P.S))}
 
 <script>
 ${PH.JS}
 
-var S=${JSON.stringify(P.S,null,1)};
+var S=${JSON.stringify(P.S.map(wasPre),null,1)};
 
 
 function draw(s){
@@ -884,8 +1068,11 @@ function qAns(b){
   x.classList.add(x.getAttribute("data-ok")==="1"?"ok":(x===b?"bad":"dim"))});
  var r=stage.querySelector(".qresw");
  var right=s.q.o[0].replace(/<[^>]+>/g,"");
- if(r)r.innerHTML='<div class="qres '+(ok?'ok':'no')+'">'+(b?(ok?'🎉 答對了！':'😮 答案是：'+s.q.o[0]):'✅ 答案是：'+s.q.o[0])+'</div>';
- setTimeout(function(){stage.classList.remove("qwait");stage.classList.add("qdone");PH.autoSay(stage)},b?900:200);
+ if(r)r.innerHTML='<div class="qres '+(ok?'ok':'no')+'">'+(b?(ok?'🎉 答對了！':'😮 答案是：'+s.q.o[0]+'<span class="qcd">3</span>'):'✅ 答案是：'+s.q.o[0])+'</div>';
+ /* 答錯：正確答案停留倒數 3 秒，印象更深刻（使用者 2026-09-28 第 6(4)D 點） */
+ var wait=b?(ok?900:3000):200,me=i;
+ if(b&&!ok){var cd=r.querySelector(".qcd"),n=3;var tk=setInterval(function(){n--;if(cd&&n>0)cd.textContent=n;if(n<=0||i!==me)clearInterval(tk)},1000)}
+ setTimeout(function(){if(i!==me)return;stage.classList.remove("qwait");stage.classList.add("qdone");PH.autoSay(stage)},wait);
 }
 
 var i=0,reduce=false;

@@ -19,10 +19,11 @@ const { buildSet } = require('./_build');
 const { tpl } = require('./_build_story');
 
 function indexHTML(o) {
+  let nc = 0;   /* 可以有好幾組「點開才展開」的卡（2026-09-28：⏳ 時光機）；第一組的 id 維持 cardsBtn／cards */
   const cards = o.links.map((l, k) => l.cards
-    ? `<button class="card" id="cardsBtn"><span class="n">${k + 1}</span><span class="ic">${l.ic}</span>` +
+    ? (x => `<button class="card cardsBtn" id="cardsBtn${x}" data-c="cards${x}"><span class="n">${k + 1}</span><span class="ic">${l.ic}</span>` +
       `<span class="t">${l.t} ▾</span><span class="d">${l.d}</span></button>` +
-      `<div id="cards">${l.cards.map(w => `<a href="${w.href}"><span>${w.icon}</span><b>${w.f}</b><em>${w.zh}</em></a>`).join('')}</div>`
+      `<div id="cards${x}" class="cards">${l.cards.map(w => `<a href="${w.href}"><span>${w.icon}</span><b>${w.f}</b><em>${w.zh}</em></a>`).join('')}</div>`)(nc++ ? nc : '')
     : `<a class="card" href="${l.href}"><span class="n">${k + 1}</span><span class="ic">${l.ic}</span>` +
       `<span class="t">${l.t}</span><span class="d">${l.d}</span></a>`).join('');
   return `<!DOCTYPE html>
@@ -50,11 +51,11 @@ h1{margin:0;font-size:clamp(28px,5.4vh,52px);text-align:center}
 .card .ic{font-size:clamp(30px,5vh,46px);line-height:1.1}
 .card .t{font-size:clamp(20px,3.2vh,28px);font-weight:700}
 .card .d{font-size:clamp(14px,2vh,18px);color:#9E9E9E;line-height:1.45}
-#cards{display:none;grid-column:1/-1;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-#cards.on{display:grid}
-#cards a{display:flex;flex-direction:column;align-items:center;gap:2px;background:#0C0C0C;border:1px solid #2A2A2A;border-radius:14px;
+#cards,.cards{display:none;grid-column:1/-1;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+#cards.on,.cards.on{display:grid}
+#cards a,.cards a{display:flex;flex-direction:column;align-items:center;gap:2px;background:#0C0C0C;border:1px solid #2A2A2A;border-radius:14px;
  color:#F2F2F2;text-decoration:none;padding:10px 6px}
-#cards a span{font-size:30px}#cards a b{font-size:clamp(18px,2.6vh,24px)}#cards a em{font-style:normal;color:#9FB4C8;font-size:15px}
+#cards a span,.cards a span{font-size:30px}#cards a b,.cards a b{font-size:clamp(18px,2.6vh,24px)}#cards a em,.cards a em{font-style:normal;color:#9FB4C8;font-size:15px}
 #bar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:10px;padding:12px;background:linear-gradient(180deg,transparent,#000 40%)}
 #bar a{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;text-decoration:none;font-size:16px;padding:11px 20px}
 </style>
@@ -65,8 +66,8 @@ h1{margin:0;font-size:clamp(28px,5.4vh,52px);text-align:center}
 <div id="grid">${cards}</div>
 <nav id="bar"><a href="${o.home}">🏠 首頁</a></nav>
 <script>
-(function(){var b=document.getElementById("cardsBtn"),c=document.getElementById("cards");if(!b||!c)return;
- b.addEventListener("click",function(){c.classList.toggle("on")});})();
+[].forEach.call(document.querySelectorAll(".cardsBtn"),function(b){var c=document.getElementById(b.getAttribute("data-c"));
+ if(c)b.addEventListener("click",function(){c.classList.toggle("on")});});
 </script>
 </body>
 </html>

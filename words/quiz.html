@@ -100,16 +100,16 @@ body{margin:0;background:#000;color:#F2F2F2;
 .phw{display:inline-flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;margin:0 .17em;
  line-height:1.04;cursor:pointer;position:relative}
 .phw .syl{display:inline-flex;align-items:flex-end}
-.phw .u{display:inline-flex;flex-direction:column;align-items:center;transition:color .2s}
+.phw .u{display:inline-flex;flex-direction:column;align-items:center;transition:color .2s;position:relative}
 .phw .g{display:block;white-space:nowrap}
 .phw .g i{font-style:normal}
 .phw .g i.v{color:#FF5A5A}            /* 母音字母 ＝ 紅色 */
-.phw .u.mute .g i,.phw .u.mute .g i.v{color:#9A9A9A}  /* 不發音 ＝ 淺灰色 */
+.phw .u.mute .g i,.phw .u.mute .g i.v{color:#8C8C8C}  /* 不發音 ＝ 灰色（2026-09-28 使用者：一眼認得出、不太淺也不太深，全部字卡同一個灰） */
 .phw .g i.ap,.phw .u.mute .g i.ap,.aprd{color:#FF5A5A!important}  /* ’ ＝ 紅色（2026-09-27） */
 .phw .p{display:none;font-size:max(.34em,13px);font-weight:400;letter-spacing:0;white-space:nowrap;
  color:#9FB4C8;margin-top:.30em;min-height:1.1em}
 .phw.ipa .p,.phw.kk .p{display:block}
-.phw .u.mute .p{color:#6A6A6A}
+.phw .u.mute .p{color:transparent}   /* 不發音的字母下面空白（2026-09-28） */
 /* 唸到哪一格，哪一格就亮起來（字母 ↔ 聲音） */
 .phw .u.lit .g i{color:#FFFFFF;text-shadow:0 0 20px rgba(159,180,200,.95)}
 .phw .u.lit .g i.v{color:#FF9090}
@@ -144,6 +144,40 @@ body{margin:0;background:#000;color:#F2F2F2;
 .sp{cursor:pointer;border-bottom:1px dotted #4F6472}
 .sp:active,.sp.ping{color:#9FB4C8;border-bottom-color:#9FB4C8}
 .reduce .phw .syl.beat .g,.reduce .phw .u.count .g i.v{animation:none!important}
+/* ✂️ 音節動畫（2026-09-28 使用者指定：更好玩、更秒懂）
+   ① 紅色母音一顆一顆亮，頭上跳出 ①②③（數母音）
+   ② ✂️ 剪刀從上面剪下來，喀嚓一聲把字剪開
+   ③ 每一段變成一塊彩色積木、一段一段跳一下，頭上寫「第 1 拍、第 2 拍」
+   ④ 最後一行大字：N 個紅色母音 ＝ N 個音節 */
+.phw .phn{position:absolute;left:50%;bottom:100%;transform:translate(-50%,0) scale(0);
+ font-size:max(.36em,15px);line-height:1;font-weight:700;color:#0A0A0A;background:#FF5A5A;border-radius:99px;
+ min-width:1.35em;padding:.12em .28em;text-align:center;pointer-events:none;box-shadow:0 0 14px rgba(255,90,90,.7)}
+.phw .phn.on{animation:phnIn .45s cubic-bezier(.2,1.5,.4,1) forwards}
+@keyframes phnIn{0%{transform:translate(-50%,.3em) scale(0)}100%{transform:translate(-50%,-.12em) scale(1)}}
+.phw .cut{position:relative}
+.phw .phsc{position:absolute;left:50%;top:-1.1em;font-size:.62em;line-height:1;transform:translate(-50%,-60%) rotate(-90deg);
+ opacity:0;pointer-events:none}
+.phw .phsc.on{animation:phsnip .62s cubic-bezier(.3,1.3,.5,1) forwards}
+@keyframes phsnip{0%{opacity:0;transform:translate(-50%,-160%) rotate(-90deg)}
+ 45%{opacity:1;transform:translate(-50%,-10%) rotate(-90deg) scale(1.15)}
+ 60%{transform:translate(-50%,-10%) rotate(-70deg) scale(1.15)}
+ 75%{transform:translate(-50%,-10%) rotate(-100deg) scale(1.15)}
+ 100%{opacity:0;transform:translate(-50%,60%) rotate(-90deg) scale(.8)}}
+.phw.split .syl{border-radius:.16em;padding:0 .06em;transition:background .3s,box-shadow .3s}
+.phw.split .syl.k0{background:rgba(90,169,255,.16);box-shadow:inset 0 -.08em 0 #5AA9FF}
+.phw.split .syl.k1{background:rgba(57,217,138,.16);box-shadow:inset 0 -.08em 0 #39D98A}
+.phw.split .syl.k2{background:rgba(245,179,1,.16);box-shadow:inset 0 -.08em 0 #F5B301}
+.phw.split .syl.k3{background:rgba(200,120,255,.16);box-shadow:inset 0 -.08em 0 #C878FF}
+.phw .syl.hop{animation:phhop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes phhop{0%{transform:translateY(0)}40%{transform:translateY(-.22em) scale(1.08)}100%{transform:translateY(0)}}
+.phsum{position:fixed;left:50%;top:14%;transform:translate(-50%,0) scale(.6);opacity:0;z-index:60;pointer-events:none;
+ background:#0B0B0B;border:2px solid #FF5A5A;border-radius:22px;padding:.35em .9em;white-space:nowrap;
+ font-size:clamp(24px,4.6vh,46px);font-weight:700;color:#F2F2F2;box-shadow:0 0 40px rgba(255,90,90,.35)}
+.phsum .rv{color:#FF5A5A}
+.phsum.on{animation:phsum 3.2s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes phsum{0%{opacity:0;transform:translate(-50%,0) scale(.6)}12%{opacity:1;transform:translate(-50%,0) scale(1.06)}
+ 20%{transform:translate(-50%,0) scale(1)}85%{opacity:1}100%{opacity:0;transform:translate(-50%,-10px) scale(1)}}
+.reduce .phw .phn.on,.reduce .phw .phsc.on,.reduce .phw .syl.hop,.reduce .phsum.on{animation:none!important;opacity:1}
 
 #src{position:fixed;inset:0;z-index:40;background:#000;display:none;flex-direction:column;
  padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) max(10px,env(safe-area-inset-bottom));text-align:left}
@@ -275,8 +309,8 @@ var PH=(function(){
    for(ui=0;ui<d[si].length;ui++){var u=d[si][ui];
     var lu=letters(u).replace(/>([^<])</g,function(m,c){var o=CS.charAt(cp++);return '>'+(o&&o.toLowerCase()===c.toLowerCase()?o:(c==="'"&&o==="’"?o:c))+'<'});
     h+='<span class="u'+(u.s?" mute":"")+'"><span class="g">'+lu+'</span>'+
-       '<span class="p" data-i="'+(u.s?"–":u.i)+'" data-k="'+(u.s?"–":u.k)+'">'+
-       (u.s?"–":(mode===2?u.k:u.i))+'</span></span>'}
+       '<span class="p" data-i="'+(u.s?"&nbsp;":u.i)+'" data-k="'+(u.s?"&nbsp;":u.k)+'">'+
+       (u.s?"&nbsp;":(mode===2?u.k:u.i))+'</span></span>'}
    h+='</span>'}
   return h+'</span>'}
  /* 字卡上的三段切換（無／IPA／KK）＋ 音節按鈕 */
@@ -342,23 +376,42 @@ var PH=(function(){
   for(k=0;k<us.length;k++)(function(u,k){
    at(160+k*step,function(){u.classList.add("lit")});
    at(160+k*step+step*1.25,function(){u.classList.remove("lit")})})(us[k],k)}
- /* 音節動畫：先一顆一顆數紅色母音，再把音節拉開 */
+ /* 音節動畫（2026-09-28 改版）：① 數紅色母音（頭上跳 ①②③）② ✂️ 喀嚓剪開 ③ 一段一段變彩色積木、跳一下
+    ④ 大字：N 個紅色母音 ＝ N 個音節。一個音節的字：不剪，直接說「1 個母音 ＝ 1 個音節，不用剪」 */
+ var CIR="①②③④⑤⑥";
+ function sylReset(el){[].forEach.call(el.querySelectorAll(".phn,.phsc"),function(x){x.parentNode.removeChild(x)});
+  [].forEach.call(el.querySelectorAll(".syl"),function(x){x.classList.remove("k0","k1","k2","k3","hop","beat")});
+  el.classList.remove("split");var o=document.getElementById("phsum");if(o)o.classList.remove("on")}
+ function sylSum(h){var o=document.getElementById("phsum");
+  if(!o){o=document.createElement("div");o.id="phsum";o.className="phsum";document.body.appendChild(o)}
+  o.innerHTML=h;o.classList.remove("on");void o.offsetWidth;o.classList.add("on")}
  function syl(el,note){
-  var n=+el.getAttribute("data-n")||1,vs=el.querySelectorAll(".u"),sy=el.querySelectorAll(".syl"),k,c=0;
-  clear();el.classList.remove("split");
+  var n=+el.getAttribute("data-n")||1,vs=el.querySelectorAll(".u"),sy=el.querySelectorAll(".syl"),cs=el.querySelectorAll(".cut"),k;
+  clear();sylReset(el);
   if(note)note.innerHTML="";
   var reds=[];for(k=0;k<vs.length;k++)if(vs[k].querySelector("i.v")&&!/mute/.test(vs[k].className))reds.push(vs[k]);
-  reds.forEach(function(u,k){at(120+k*430,function(){
-   u.classList.add("count");c=k+1;
-   if(note)note.innerHTML='<span class="rv">●</span> 紅色母音 <b>'+c+'</b> 個';
+  /* 一格裡有兩個紅色字母（ou、au、ee…）也只算一個聲音：一格一個號碼 */
+  reds.forEach(function(u,k){at(150+k*520,function(){
+   u.classList.add("count");var b=document.createElement("span");b.className="phn";b.textContent=CIR.charAt(k)||(k+1);
+   u.appendChild(b);void b.offsetWidth;b.classList.add("on");
+   if(note)note.innerHTML='<span class="rv">●</span> 紅色母音 <b>'+(k+1)+'</b> 個';
    at(520,function(){u.classList.remove("count")})})});
-  var t0=120+reds.length*430+180;
-  at(t0,function(){el.classList.add("split")});
-  for(k=0;k<sy.length;k++)(function(s,k){at(t0+120+k*360,function(){
-   s.classList.remove("beat");void s.offsetWidth;s.classList.add("beat");
-   if(note)note.innerHTML='✂️ 切成 <b>'+(k+1)+'</b> 段'})})(sy[k],k);
-  at(t0+120+sy.length*360+240,function(){
+  var t0=150+reds.length*520+250;
+  if(sy.length<2){at(t0,function(){sylSum('<span class="rv">1</span> 個紅色母音 ＝ <b>1</b> 個音節　不用剪 👍');
+   if(note)note.innerHTML='<span class="rv">1</span> 個母音 ＝ <b>1 個音節</b>'});return}
+  for(k=0;k<cs.length;k++)(function(c,k){at(t0+k*520,function(){
+   var s=document.createElement("span");s.className="phsc";s.textContent="✂️";c.appendChild(s);void s.offsetWidth;s.classList.add("on");
+   if(k===cs.length-1)at(330,function(){el.classList.add("split")})})})(cs[k],k);
+  var t1=t0+cs.length*520+200;
+  for(k=0;k<sy.length;k++)(function(s,k){at(t1+k*480,function(){
+   s.classList.add("k"+(k%4));s.classList.remove("hop");void s.offsetWidth;s.classList.add("hop");
+   if(note)note.innerHTML='✂️ 第 <b>'+(k+1)+'</b> 段'})})(sy[k],k);
+  at(t1+sy.length*480+200,function(){
+   sylSum('<span class="rv">'+n+'</span> 個紅色母音 ＝ <b>'+n+'</b> 個音節');
    if(note)note.innerHTML='<span class="rv">'+n+'</span> 個母音 ＝ <b>'+n+' 個音節</b>'})}
+ function sylTime(el){var n=el.querySelectorAll(".syl").length,r=0,v=el.querySelectorAll(".u"),k;
+  for(k=0;k<v.length;k++)if(v[k].querySelector("i.v")&&!/mute/.test(v[k].className))r++;
+  return 150+r*520+250+(n<2?0:(n-1)*520+200+n*480+200)}
  /* 把說明文字裡的英文字詞變成可以點來聽（補充單字、字詞、用法都算）。
    **只掃說明文字的容器**：.en 這種手工排版（dau<span>gh</span>ter）拆開來會壞掉，
    那種地方改用 {{單字}} 標記，由 PH.word() 直接畫。 */
@@ -431,7 +484,7 @@ var PH=(function(){
    if(f>bs){bs=f;best=all[k]}}
   return best}
  function setMode(m){mode=((+m||0)%3+3)%3;try{localStorage.setItem("phMode",mode)}catch(e){}apply();return mode}
- return{word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
+ return{word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,sylTime:sylTime,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
   has:function(w){return !!D[(w||"").toLowerCase()]},
   slow:function(v){slow=(v===undefined)?!slow:!!v;return slow},
   isSlow:function(){return slow},
@@ -456,7 +509,7 @@ var PH=(function(){
   if(!n){b.textContent="✂️ 音節";return}
   PH.syl(el,null);
   b.textContent="✂️ 音節";
-  setTimeout(function(){b.textContent="✂️ "+n+" 個音節"},220+n*430+120+n*360);});})();
+  setTimeout(function(){b.textContent="✂️ "+n+" 個音節"},PH.sylTime(el));});})();
 
 var Q=[{"q":"很久以前的 family，連誰都算在裡面？","o":["家裡幫忙做事的人","隔壁的鄰居","只有爸爸和媽媽","學校的同學"],"a":0,"x2":false,"why":"以前的 family 指的是<b>整個家戶</b>，連家裡幫忙做事的人都算。<b>後來才縮小成一家人</b>。"},{"q":"有人說 family 是 Father And Mother I Love You 拼出來的。這是真的嗎？","o":["真的，造這個字的人取的","真的，英國國王規定的","假的，是後來的人倒著湊出來的","真的，英文課本第一課就有"],"a":2,"x2":true,"why":"family 真正的來源是拉丁文 <b>familia</b>。那句順口溜<b>查不到任何一手出處</b>，是後人倒著湊的。"},{"q":"dad 這個字是怎麼來的？","o":["把 father 剪短","老師發明的","從法國借來的","寶寶自己先發出來的音"],"a":3,"x2":false,"why":"dad 大約 <b>1500 年</b>就有紀錄，是寶寶最早發得出來的音，<b>不是誰把 father 剪短</b>。"},{"q":"為什麼全世界的「媽媽」幾乎都用 m 開頭（mother、mom、媽媽、mama）？","o":["ma 是寶寶最早發得出來的音","大家互相抄來抄去","因為有人規定","因為 m 最好寫"],"a":0,"x2":false,"why":"嘴唇一閉一開就是 <b>ma</b>，這是寶寶最早會的音。<b>全世界的媽媽就被這個音命名</b>。"},{"q":"daughter 中間的 gh，以前的人怎麼處理？","o":["以前唸成 f","以前會發出聲音，後來才不唸","以前根本沒有這兩個字母","從古到今都不唸"],"a":1,"x2":true,"why":"gh 以前代表<b>喉嚨後面的摩擦音</b>，大約 1500～1700 年間消失。<b>聲音不見了，字母留著</b>。"},{"q":"哪一個是「daughter 的 gh 以前真的有聲音」最有力的證據？","o":["沒有證據，只是傳說","德文 Tochter、荷蘭文 dochter 的 ch 到今天還唸得出來","因為字典上這樣寫","因為 gh 很難唸"],"a":1,"x2":true,"why":"這三個字是<b>同一個字的不同分支</b>。英文把聲音丟了，<b>德文和荷蘭文還留著</b>——放一次 Tochter 就聽得到。"},{"q":"husband 裡面的 hus，就是今天的哪一個字？","o":["his（他的）","house（房子）","nurse（護士）","bus（公車）"],"a":1,"x2":false,"why":"husband ＝ <b>hús（房子）</b> ＋ bóndi（住在裡面管這個家的人）。<b>字裡面藏了一間房子</b>。"},{"q":"以前的 wīf（也就是 wife），可以用在誰身上？","o":["只有老人家","每個女生都可以","只有結婚的女生","只有當媽媽的人"],"a":1,"x2":false,"why":"wīf 以前的意思就是「<b>女人</b>」。midwife（助產士）還留著這個舊意思。"},{"q":"uncle 最早只有一個意思，是下面哪一個？","o":["舅舅（媽媽的兄弟）","叔叔（爸爸的弟弟）","姑丈","伯伯（爸爸的哥哥）"],"a":0,"x2":true,"why":"uncle 最早<b>專指「媽媽的兄弟」</b>。後來叔叔、伯伯、姑丈、姨丈<b>全都變成 uncle</b>。"},{"q":"中文有姑姑、阿姨、伯母、舅媽，英文要用幾個字？","o":["四個，每個都不一樣","一個就夠：aunt","三個","兩個"],"a":1,"x2":false,"why":"英文的親戚字比中文少很多，<b>aunt 一個字全包</b>。"},{"q":"今天的 sister 是怎麼來的？","o":["從法國借來的","把 brother 改一個字母","英國人唸 sweostor、維京人唸 systir，住久了唸成 sister","老師取的"],"a":2,"x2":false,"why":"<b>同一個姊姊</b>，兩群人唸法不一樣。維京人在英格蘭住了幾百年，<b>兩種唸法混成今天的 sister</b>。"},{"q":"grandfather 前面的 grand，是從哪裡借來的？","o":["日語","英文本來就有","維京人帶來的","法語"],"a":3,"x2":true,"why":"家人稱呼用的 <b>grand-</b> 是<b>從法語借來的</b>，裝在 father 前面就變成爸爸的爸爸。"},{"q":"brother 以前寫成 brōþor，那個 þ 相當於今天的哪兩個字母？","o":["ph","ch","th","sh"],"a":2,"x2":false,"why":"<b>þ</b> 是以前英文的一個字母，<b>長得像一面小旗子</b>，就是今天的 <b>th</b>。"},{"q":"想說「我哥哥」和「我弟弟」，英文怎麼分？","o":["加 big / small","用兩個完全不同的字","都是 brother，要分就加 older / younger","一個是 brother，一個是 bro"],"a":2,"x2":false,"why":"英文<b>不用不同的字</b>分長幼，靠 <b>older brother</b> ／ <b>younger brother</b>。"},{"q":"son 和 sun 的關係是？","o":["唸起來不一樣","son 是 sun 的縮寫","唸起來一模一樣，拼法和意思都不一樣","是同一個字"],"a":2,"x2":false,"why":"兩個字唸起來<b>完全一樣</b>，可是<b>拼法不一樣、意思也不一樣</b>。"},{"q":"我哥哥的女兒，對我來說英文是？","o":["sister","niece","cousin","daughter"],"a":1,"x2":false,"why":"<b>兄弟姊妹的女兒 ＝ niece</b>。<b>自己的</b>女兒才是 daughter。"},{"q":"我阿姨的小孩，對我來說英文是？","o":["nephew","brother","niece","cousin"],"a":3,"x2":false,"why":"叔叔阿姨的小孩，<b>不管堂表、不管男女，全都是 cousin</b>。"},{"q":"nephew 最早寫成 nepos，那時候可以用在誰身上？","o":["只有姪子","任何小孩都可以","只有外甥","孫子、姪子、外甥都可以"],"a":3,"x2":true,"why":"nepos 以前很好用，<b>一個字涵蓋孫子、姪子、外甥</b>。現在只剩「<b>兄弟姊妹的兒子</b>」。"},{"q":"parent 最早寫成 parens，意思是？","o":["把孩子生下來的人","管這個家的人","家裡最老的人","教小孩的人"],"a":0,"x2":false,"why":"parens 就是「<b>把孩子生下來的人</b>」，所以爸爸媽媽都算 parent。"},{"q":"「一位家長」和「兩位家長」，英文分別怎麼寫？","o":["a parent ／ parents","parent ／ parent","a parents ／ parent","a parent ／ parenties"],"a":0,"x2":false,"why":"一位就是 <b>a parent</b>，兩位以上<b>字尾加 s</b> 變 <b>parents</b>。"}];
 var SHAPE=["▲","◆","●","■"];

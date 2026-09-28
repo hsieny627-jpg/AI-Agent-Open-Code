@@ -86,7 +86,7 @@ const WHY = [
  I('farmer', e('farmer', 'OED「farm, n.1」「farmer, n.」', 'ferme ＝ 租金 ➜ 收租的人 ➜ 租地種田的人 ➜ 農夫。')),
  I('nurse', e('nurse', 'OED「nurse, n.1」', '拉丁文 nūtrīx ＝ 餵奶的人 ➜ 照顧小孩 ➜ 照顧病人。')),
  I('bauer', e('Bauer 和 neighbor', 'OED「neighbour, n.」；Duden「Bauer」「Nachbar」',
-   '英文 <b>neighbor</b>（鄰居）＝ <b>near</b>（近）＋ <b>bour</b>（住在那裡的人），bour 跟德文 <b>Bauer</b>（農夫）是同一個字。'))
+   '古英文 <b>nēahgebūr</b>（大約 1000 年前）＝ <b>nēah</b>（近）＋ <b>gebūr</b>（住在那裡的人）➜ <b>neighbor</b>；bour 跟德文 <b>Bauer</b>（農夫）是同一個字。'))
 ];
 const WORLD = [
  ...require('./_sources').P.world.filter(r => r.id === 'map' || r.id === 'why5'),
@@ -147,23 +147,23 @@ const PAGES = [
 {file:'jobs-why.html',title:'職業單字的故事',srcRows:WHY,big:1,
  S:[
  {emoji:'🧑‍🎓👩‍🏫👨‍⚕️👨‍🌾👩‍⚕️',mid:'職業單字，以前是什麼意思？',lines:['每一個字，<b>意思都變過</b>']},
- {tag:'很認真的人',emoji:'📖',say:'student',src:'student',q:{q:'student 從拉丁文 <b>studēre</b> 來，它的意思是？',o:['很認真','很會考試','穿制服','住在學校']},
+ {tag:'很認真的人',emoji:'📖',say:'student',src:'student',evo:'student',q:{q:'student 從拉丁文 <b>studēre</b> 來，它的意思是？',o:['很認真','很會考試','穿制服','住在學校']},
   h:'<div class="en in d1">{{student}}</div>',
   lines:['拉丁文 <b class="nosay">studēre</b> ＝ <b>很認真</b>','很認真學習的人 ➜ <b>student</b>']},
- {tag:'指給你看',emoji:'👉📖',say:'teacher',src:'teacher',q:{q:'以前的 <b>teach</b>，意思是？',o:['指給你看','打分數','罵人','唱歌']},
+ {tag:'指給你看',emoji:'👉📖',say:'teacher',src:'teacher',evo:'teacher',q:{q:'以前的 <b>teach</b>，意思是？',o:['指給你看','打分數','罵人','唱歌']},
   h:'<div class="en in d1"><span class="fromL">{{teach}}</span> <span class="ar">＋</span> <span class="fromR hi">er</span></div>' +
     '<div class="en pop" style="animation-delay:1.2s">{{teacher}}</div>',
   lines:['以前的 <b>teach</b> ＝ <b>指給你看</b>','指給你看、教你的人 ➜ <b>teacher</b>']},
- {tag:'以前是老師',emoji:'👨‍🏫<span class="plus">➜ 👨‍⚕️</span>',say:'doctor',src:'doctor',q:{q:'最早的 <b>doctor</b> 是做什麼的？',o:['老師','醫生','廚師','農夫']},
+ {tag:'以前是老師',emoji:'👨‍🏫<span class="plus">➜ 👨‍⚕️</span>',say:'doctor',src:'doctor',evo:'doctor',q:{q:'最早的 <b>doctor</b> 是做什麼的？',o:['老師','醫生','廚師','農夫']},
   h:'<div class="en in d1">{{doctor}}</div>',
   lines:['最早的 doctor 是 <b>老師</b>','大約 <b>600 年前</b>，才用來叫<b>醫生</b>']},
- {tag:'以前是收租金的人',emoji:'💰<span class="plus">➜ 🌾</span>',say:'farmer',src:'farmer',q:{q:'最早的 <b>farmer</b> 是做什麼的？',o:['收租金的人','種田的人','養牛的人','賣菜的人']},
+ {tag:'以前是收租金的人',emoji:'💰<span class="plus">➜ 🌾</span>',say:'farmer',src:'farmer',evo:'farmer',q:{q:'最早的 <b>farmer</b> 是做什麼的？',o:['收租金的人','種田的人','養牛的人','賣菜的人']},
   h:'<div class="en in d1">{{farmer}}</div>',
   lines:['最早的 farmer ＝ <b>收租金的人</b>','後來 ＝ <b>租一塊地來種田的人</b> ➜ 農夫']},
- {tag:'以前是餵奶的人',emoji:'🍼<span class="plus">➜ 🏥</span>',say:'nurse',src:'nurse',q:{q:'最早的 <b>nurse</b> 是做什麼的？',o:['餵寶寶喝奶的人','打針的人','醫生的太太','送信的人']},
+ {tag:'以前是餵奶的人',emoji:'🍼<span class="plus">➜ 🏥</span>',say:'nurse',src:'nurse',evo:'nurse',q:{q:'最早的 <b>nurse</b> 是做什麼的？',o:['餵寶寶喝奶的人','打針的人','醫生的太太','送信的人']},
   h:'<div class="en in d1">{{nurse}}</div>',
   lines:['最早的 nurse ＝ <b>餵寶寶喝奶的人</b>','大約 <b>400 多年前</b> ➜ <b>照顧病人</b>的人']},
- {tag:'加碼：農夫和鄰居',emoji:'🏡',say:'neighbor',src:'bauer',q:{q:'neighbor 的 <b>bor</b>，跟德文哪一個字是同一個字？',o:['Bauer 農夫','Bär 熊','Boot 船','Brot 麵包']},
+ {tag:'加碼：農夫和鄰居',emoji:'🏡',say:'neighbor',src:'bauer',was:{o:'nēahgebūr',y:'1000',e:'古英文',n:'neighbor'},q:{q:'neighbor 的 <b>bor</b>，跟德文哪一個字是同一個字？',o:['Bauer 農夫','Bär 熊','Boot 船','Brot 麵包']},
   h:'<div class="en in d1"><span class="sp" data-say="neighbor">neigh<span class="hi">bor</span></span></div>',
   lines:['<b>neighbor</b> 鄰居 ＝ 住在<b>附近</b>的人','bor 跟德文 <b>Bauer</b>（農夫）是同一個字']},
  {tag:'所以',emoji:'🗣️⏳',mid:'字的意思，會慢慢變',lines:['老師 ➜ 醫生、收租 ➜ 種田、餵奶 ➜ 照顧病人']}
@@ -205,6 +205,7 @@ const files = build({
   index: { file: 'jobs.html', title: '💼 職業單字', sub: 'student　teacher　doctor　farmer　nurse',
     links: [
       { ic: '🃏', t: '5 張單字卡', d: '中文 ➜ 以前 ➜ 現在，一個字一張卡', cards: true },
+      { ic: '⏳', t: '職業單字時光機', d: '每一個字：以前是什麼意思？拼法怎麼變？', cards: WORDS.map(w => ({ f: w.now || w.f, zh: w.zh, icon: '⏳', href: w.f + '-evo.html' })) },
       { ic: '🧩', t: '單字結構', d: '-er、-or、-ent ＝ 做這件事的人', href: 'jobs-parts.html' },
       { ic: '📜', t: '職業故事', d: 'doctor 以前是老師？nurse 以前是餵奶的人？', href: 'jobs-why.html' },
       { ic: '🌍', t: '職業單字環遊世界', d: '猜猜看是哪一國；五國比一比', href: 'jobs-world.html' }

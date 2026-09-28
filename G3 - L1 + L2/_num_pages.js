@@ -14,7 +14,7 @@ const { e, warn, ev, I } = require('../words/_sources');
 const WD = require('../words/_world');
 const F = WD.flag;
 
-/* 字母密碼的小卡：cx(['<b class="e">t</b>en','🇬🇧'],['<b class="d">z</b>ehn','de']) */
+/* 字母密碼的小卡：cx(['<b class="e">t</b>en','gb'],['<b class="d">z</b>ehn','de']) */
 const cx = (...xs) => '<span class="cx">' + xs.map(x => '<span>' + x + '</span>').join('<i>⇄</i>') + '</span>';
 const E = s => '<b class="e">' + s + '</b>', Dd = s => '<b class="d">' + s + '</b>', N = s => '<b class="n">' + s + '</b>';
 /* 一張數字卡：先猜哪一國（遊戲），公布以後出現「為什麼這麼像」的字母密碼（故事） */
@@ -24,7 +24,7 @@ const card = (o) => WD.guessMany({ src: o.src || 'w-num', en: o.en, zh: o.zh, tz
 const BRO3 = '<div class="bro3"><span class="b3">' + F('de') + '德文</span><span class="sail">⛵➜</span>' +
   '<span class="b3">' + F('nl') + '荷蘭文</span><span class="sail">⛵➜</span><span class="b3">' + F('gb') + '英文</span></div>';
 /* 記住這件事：字放大、每一個字底下有中文 */
-const rem = (rows, head) => '<table class="rem fo"><tr>' + (head || ['🇬🇧 英文', '德文', '荷蘭文', '中文']).map((h, k) =>
+const rem = (rows, head) => '<table class="rem fo"><tr>' + (head || [F('gb') + ' 英文', '德文', '荷蘭文', '中文']).map((h, k) =>
   '<th>' + (k === 1 ? F('de') : k === 2 ? F('nl') : '') + h + '</th>').join('') + '</tr>' +
   rows.map((r, j) => '<tr>' + r.map((x, k) => '<td class="' + (k === 3 ? 'z' : '') + '" style="animation-delay:' + (0.15 + j * 0.12).toFixed(2) + 's">' +
     (k === 3 ? x : '<span class="sp" data-say="' + x.replace(/<[^>]+>/g, '') + '"' + (k === 1 ? ' data-lang="de-DE"' : k === 2 ? ' data-lang="nl-NL"' : '') + '>' + x + '</span>') +
@@ -106,6 +106,22 @@ const famBox = (cls, title, rows, hl) => '<div class="nfam ' + cls + '"><div cla
 const oneAt = w => { const i = w.indexOf('one'); if (i >= 0) return [i, i + 3]; if (w.indexOf('on') === 0) return [0, 2]; return [0, 1]; };
 const twoAt = w => { const i = w.indexOf('tw'); return [i, i + 2]; };
 const CSS = `
+/* zero 的旅行（2026-09-28）：四站路線、字放大 */
+.zj{display:grid;grid-template-columns:repeat(7,auto);align-items:center;justify-content:center;gap:clamp(4px,.8vw,10px)}
+@media (max-aspect-ratio:1/1){.zj{grid-template-columns:repeat(3,auto)}.zj .zar:nth-of-type(2){display:none}}
+.zs{display:flex;flex-direction:column;align-items:center;gap:2px;background:#0C0C0C;border:2px solid #2E2E2E;border-radius:18px;
+ padding:clamp(6px,1vh,12px) clamp(8px,1.2vw,14px);opacity:0;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+.zs:last-child{border-color:#4AA3E8;box-shadow:0 0 22px rgba(90,169,255,.35)}
+.zs .zi{font-size:clamp(26px,4.4vh,42px);line-height:1}.zs .zi .flag{height:.8em;width:auto}
+.zs .zn{font-size:clamp(18px,3vh,28px);color:#F2F2F2}
+.zs .zy{font-size:clamp(13px,2vh,18px);color:#E0B868;font-weight:700;white-space:nowrap}
+.zs .zw{font-size:clamp(24px,4.4vh,42px);font-weight:700;color:#FFD24A;font-family:Georgia,serif}
+.zs:last-child .zw{font-family:inherit;color:#FFF}
+.zs em{font-style:normal;font-size:clamp(13px,2vh,18px);color:#A8B8C4;white-space:nowrap}
+.zar{position:relative;width:clamp(26px,3.4vw,44px);height:4px;background:#3A4A56;border-radius:2px;opacity:0;animation:pop .4s ease both}
+.zar i{position:absolute;top:50%;left:0;transform:translate(-50%,-50%);font-style:normal;font-weight:700;color:#FFD24A;
+ font-size:clamp(16px,2.6vh,24px);animation:zGo 1.2s ease-in-out infinite}
+@keyframes zGo{0%{left:0}100%{left:100%}}
 .nfams{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,2vw,26px);width:100%;max-width:900px}
 .nfam{border-radius:20px;padding:clamp(6px,1.2vh,14px) clamp(10px,1.6vw,20px);display:flex;flex-direction:column;gap:clamp(2px,.5vh,6px)}
 .nfam.o{background:#0A1622;border:2px solid #5AD1FF}.nfam.t{background:#1F1406;border:2px solid #FFB35A}
@@ -202,42 +218,49 @@ const WHYR = [
   I('months', e('September 是第 7 個月？', 'OED「September, n.」「October」「November」「December」；Wikipedia「Roman calendar」',
     '羅馬人最早的曆法<b>從三月開始算</b>：septem 7、octo 8、novem 9、decem 10。後來一月、二月排到最前面，名字沒改。')),
   ...SRCW.filter(r => ['gh-ch', 'lif', 'rhyme', 'fr20'].indexOf(r.id) >= 0),
+  e('童謠最早印在哪一年', 'Wikipedia「Sing a Song of Sixpence」', '這首童謠最早印在 <b>1744 年</b>的《Tommy Thumb’s Pretty Song Book》（大約 280 年前）。'),
+  e('英文以前也 20 個一數', 'Etymonline「fourscore」「score」；Wikipedia「Gettysburg Address」', '<b>score ＝ 20</b>：fourscore ＝ 4 ✕ 20 ＝ 80。<b>1863 年</b>林肯的演講第一句：<b>Four score and seven years ago</b>（87 年前）。'),
   I('two', e('two 的 w', 'OED「two」「twin」「twice」', '古英文 <b>twā</b> 的 w 有唸出來；後來 two 的 w 不唸了，twin、twice 的 w 到今天還在唸。'))
 ];
 const sayR = (w, d) => '<span class="cx" style="animation-delay:' + d + 's"><span>' + w + '</span></span>';
 const numW = [
   { emoji: '🔢', mid: '數字，藏著好多故事', lines: ['<b>先猜一猜</b>，再看答案'] },
+  /* 2026-09-28 使用者第 12(2) 點：學生看不懂 zero 的演變、字太小 ➜ 四站路線圖，一站一站亮，每一站：地方、大約幾年前、那裡的字、意思；
+     一顆「0」沿著路線走過去。śūnya ➜ ṣifr 是「翻譯」（意思一樣），ṣifr ➜ zefiro ➜ zero 才是「唸法變了」，畫面照實寫 */
   { tag: 'zero 的旅行', src: 'zero', say: 'zero',
     q: { q: '把「<b>0</b>」當成數字來算，最早是哪裡的人？', o: ['印度', '英國', '美國', '日本'] },
-    h: '<div class="gstory" style="display:flex">' + sayR('🇮🇳 śūnya<em>空的</em>', .2) + sayR('🕌 ṣifr<em>空的</em>', .7) +
-      sayR('🇮🇹 zefiro<em>1202 年</em>', 1.2) + sayR('🇬🇧 {{zero}}', 1.7) + '</div>',
-    lines: ['「<b>空的</b>」：印度 ➜ 阿拉伯 ➜ 義大利 ➜ 英國', '<b>cipher</b>（密碼）也是 ṣifr 變的'] },
-  { tag: '月份的祕密', src: 'months', say: 'September',
+    h: '<div class="zj">' + [['🛕', '印度', '1400', 'śūnya', '空的'], ['🕌', '阿拉伯', '1200', 'ṣifr', '空的（翻譯過來）'],
+      ['🏛', '義大利', '800', 'zephirum', '1202 年 Fibonacci 寫進書裡'], [F('gb'), '英國', '400', 'zero', '零']].map((r, k) =>
+      (k ? '<span class="zar" style="animation-delay:' + (0.3 + k * 0.9).toFixed(1) + 's"><i>0</i></span>' : '') +
+      '<div class="zs" style="animation-delay:' + (0.2 + k * 0.9).toFixed(1) + 's"><span class="zi">' + r[0] + '</span><b class="zn">' + r[1] + '</b>' +
+      '<span class="zy">⏳ 大約 ' + r[2] + ' 年前</span>' + (k === 3 ? '<span class="zw">{{zero}}</span>' : '<span class="zw nosay">' + r[3] + '</span>') + '<em>' + r[4] + '</em></div>').join('') + '</div>',
+    lines: ['「<b>空的</b>」這個想法，從<b>印度</b>一路走到<b>英國</b>', '阿拉伯人翻成 <b class="nosay">ṣifr</b>，義大利人唸成 <b>zero</b>'] },
+  { tag: '月份的祕密', src: 'months', say: 'September', was: { o: 'septem', y: '2000', e: '羅馬人的拉丁文：7', n: 'September' },
     q: { q: '<b>Sept</b>ember 是 9 月。可是 <b>Sept</b> 在拉丁文是幾？', o: ['7', '9', '1', '12'] },
     h: '<div class="en in d1" style="font-size:clamp(24px,4.4vh,42px);line-height:1.6">' +
       '<span class="sp" data-say="September"><span class="hi">Sept</span>ember</span> ＝ 7　<span class="sp" data-say="October"><span class="hi">Oct</span>ober</span> ＝ 8<br>' +
       '<span class="sp" data-say="November"><span class="hi">Nov</span>ember</span> ＝ 9　<span class="sp" data-say="December"><span class="hi">Dec</span>ember</span> ＝ 10</div>',
     lines: ['羅馬人以前一年<b>從三月開始算</b>', '所以 September 原本是<b>第 7 個月</b>'] },
-  { tag: 'gh 以前會唸', src: 'gh-ch', say: 'eight',
+  { tag: 'gh 以前會唸', src: 'gh-ch', say: 'eight', evo: 'eight',
     q: { q: '<b>eight</b> 的 gh 為什麼不唸？', o: ['以前會唸，後來不唸，字母留下來', '寫錯字了', '為了好看', '只有美國人不唸'] },
     h: '<div class="lk fo" style="grid-template-columns:auto auto">' +
       '<span class="w" style="animation-delay:.2s">ei<span class="e" style="opacity:.35">gh</span>t</span><span class="w sp" data-say="acht" data-lang="de-DE" style="animation-delay:.6s">' + F('de') + ' a<span class="d">ch</span>t</span>' +
       '<span class="w" style="animation-delay:1s">ni<span class="e" style="opacity:.35">gh</span>t</span><span class="w sp" data-say="Nacht" data-lang="de-DE" style="animation-delay:1.4s">' + F('de') + ' Na<span class="d">ch</span>t</span></div>',
     lines: ['英文 gh ＝ 德文 <b>ch</b>：德文到今天<b>還在唸</b>', 'night 晚上 ＝ Nacht，<b>一樣的密碼</b>'] },
-  { tag: 'two 的 w', src: 'two', say: 'two',
+  { tag: 'two 的 w', src: 'two', say: 'two', evo: 'two',
     q: { q: '<b>two</b> 的 w 不唸。下面哪一個字的 w <b>還在唸</b>？', o: ['twin 雙胞胎', 'write 寫', 'answer 回答', 'sword 劍'] },
     h: '<div class="en in d1" style="font-size:clamp(30px,5.6vh,54px)">{{two}}　{{twin}}　{{twice}}</div>',
     lines: ['以前 two 的 <b>w 有唸</b>', 'twin、twice 的 w <b>到今天還在唸</b>'] },
-  { tag: '數手指', src: 'lif', say: 'eleven',
+  { tag: '數手指', src: 'lif', say: 'eleven', evo: 'eleven',
     q: { q: '<b>eleven</b> 最早的意思是？', o: ['數完 10，還剩 1', '兩個 1', '一個人十根手指', '很多很多'] },
     h: '<div class="fing"><span>🖐🖐</span> <span class="p1">＋ ☝️</span></div><div class="en in d1" style="font-size:clamp(30px,5.6vh,54px)">{{eleven}}　{{twelve}}</div>',
     lines: ['數完十根手指，<b>還剩一</b> ➜ eleven', '<b>還剩二</b> ➜ twelve'] },
-  { tag: '童謠裡的 24', src: 'rhyme', say: 'four and twenty',
+  { tag: '童謠裡的 24', src: 'rhyme', say: 'four and twenty', was: { o: 'four and twenty', y: '280', e: '英國童謠（1744 年）', n: 'twenty-four', raw: 1 },
     q: { q: '英國童謠唱「<b>four and twenty</b> blackbirds」，是幾隻鳥？', o: ['24', '420', '4', '6'] },
     h: '<div class="birds">' + Array.from({ length: 24 }, (_, k) => '<i style="animation-delay:' + (0.1 + k * 0.06).toFixed(2) + 's">🐦‍⬛</i>').join('') + '</div>' +
       '<div class="gstory" style="display:flex">' + sayR('four and twenty<em>4 和 20</em>', .4) + sayR(F('de') + ' vierundzwanzig<em>4 和 20</em>', 1) + sayR('＝ 24', 1.6) + '</div>',
     lines: ['以前英文也像德文：<b>先說 4，再說 20</b>', '今天英文改成 <b>twenty-four</b>'] },
-  { tag: '法國人怎麼數 80', src: 'fr20', say: 'eighty',
+  { tag: '法國人怎麼數 80', src: 'fr20', say: 'eighty', was: { o: 'fourscore', y: '160', e: '林肯演講（1863 年）', n: 'eighty' },
     q: { q: '法文的「<b>80</b>」，直接翻成中文是？', o: ['4 個 20', '8 個 10', '100 少 20', '80'] },
     h: '<div class="fr80"><span style="animation-delay:.2s">' + F('fr') + '</span><span class="x" style="animation-delay:.5s">quatre</span><span style="animation-delay:.8s">✕</span>' +
       '<span class="v" style="animation-delay:1.1s">vingts</span><span style="animation-delay:1.4s">＝</span><span style="animation-delay:1.7s">4 ✕ 20 ＝ 80</span></div>',
@@ -249,67 +272,67 @@ const numW = [
 const R = (de, nl, sv, fr, es) => [['de', de], ['nl', nl], ['sv', sv], ['fr', fr], ['es', es]];
 const W0 = [
   card({ n: '0', en: 'zero', zh: '零', src: 'zero-w', r: R('Null', 'nul', 'noll', 'zéro', 'cero'), near: ['fr', 'es'],
-    why: '法、西 <b>zéro、cero</b> 跟英文一樣，從阿拉伯文「空的」來', story: cx(F('fr') + ' z<b class="e">é</b>ro', F('es') + ' <b class="e">c</b>ero', '🇬🇧 zero') + cx(F('de') + ' Null<em>沒有</em>', '🇬🇧 null<em>無效</em>') }),
+    why: '法、西 <b>zéro、cero</b> 跟英文一樣，從阿拉伯文「空的」來', story: cx(F('fr') + ' z<b class="e">é</b>ro', F('es') + ' <b class="e">c</b>ero', F('gb') + ' zero') + cx(F('de') + ' Null<em>沒有</em>', F('gb') + ' null<em>無效</em>') }),
   card({ n: '1', en: 'one', zh: '一', r: R('eins', 'een', 'en／ett', 'un', 'uno'),
-    why: '六國都是 <b>母音 ＋ n</b>', story: cx('🇬🇧 o<b class="e">n</b>e', F('de') + ' ei<b class="d">n</b>s', F('nl') + ' ee<b class="d">n</b>', F('sv') + ' e<b class="d">n</b>') }),
+    why: '六國都是 <b>母音 ＋ n</b>', story: cx(F('gb') + ' o<b class="e">n</b>e', F('de') + ' ei<b class="d">n</b>s', F('nl') + ' ee<b class="d">n</b>', F('sv') + ' e<b class="d">n</b>') }),
   card({ n: '2', en: 'two', zh: '二', src: 't-z', r: R('zwei', 'twee', 'två', 'deux', 'dos'), near: ['nl', 'sv'],
-    why: '荷蘭文 <b>twee</b> 還在唸 w！德文 t 變 <b>z</b>', story: cx('🇬🇧 ' + E('t') + 'wo', F('de') + ' ' + Dd('z') + 'wei') + cx('🇬🇧 t' + E('w') + 'o<em>w 不唸</em>', F('nl') + ' t' + Dd('w') + 'ee<em>w 還在唸</em>') }),
+    why: '荷蘭文 <b>twee</b> 還在唸 w！德文 t 變 <b>z</b>', story: cx(F('gb') + ' ' + E('t') + 'wo', F('de') + ' ' + Dd('z') + 'wei') + cx(F('gb') + ' t' + E('w') + 'o<em>w 不唸</em>', F('nl') + ' t' + Dd('w') + 'ee<em>w 還在唸</em>') }),
   card({ n: '3', en: 'three', zh: '三', src: 'th-d', r: R('drei', 'drie', 'tre', 'trois', 'tres'), near: ['de', 'nl', 'sv', 'fr', 'es'],
-    why: '六國都像！英文 <b>th</b> ＝ 德、荷 <b>d</b>', story: cx('🇬🇧 ' + E('th') + 'ree', F('de') + ' ' + Dd('d') + 'rei', F('nl') + ' ' + Dd('d') + 'rie') }),
+    why: '六國都像！英文 <b>th</b> ＝ 德、荷 <b>d</b>', story: cx(F('gb') + ' ' + E('th') + 'ree', F('de') + ' ' + Dd('d') + 'rei', F('nl') + ' ' + Dd('d') + 'rie') }),
   card({ n: '4', en: 'four', zh: '四', r: R('vier', 'vier', 'fyra', 'quatre', 'cuatro'), near: ['de', 'nl', 'sv'],
-    why: '德文 <b>v</b> 唸成 <b>f</b>：vier 聽起來像「fear」', story: cx('🇬🇧 ' + E('f') + 'our', F('de') + ' ' + Dd('v') + 'ier<em>v 唸 f</em>', F('sv') + ' ' + Dd('f') + 'yra') }),
+    why: '德文 <b>v</b> 唸成 <b>f</b>：vier 聽起來像「fear」', story: cx(F('gb') + ' ' + E('f') + 'our', F('de') + ' ' + Dd('v') + 'ier<em>v 唸 f</em>', F('sv') + ' ' + Dd('f') + 'yra') }),
   card({ n: '5', en: 'five', zh: '五', r: R('fünf', 'vijf', 'fem', 'cinq', 'cinco'),
-    why: '德、荷、瑞典都是 <b>f／v</b> 開頭', story: cx('🇬🇧 ' + E('f') + 'ive', F('de') + ' ' + Dd('f') + 'ünf', F('nl') + ' ' + Dd('v') + 'ijf', F('sv') + ' ' + Dd('f') + 'em') }),
+    why: '德、荷、瑞典都是 <b>f／v</b> 開頭', story: cx(F('gb') + ' ' + E('f') + 'ive', F('de') + ' ' + Dd('f') + 'ünf', F('nl') + ' ' + Dd('v') + 'ijf', F('sv') + ' ' + Dd('f') + 'em') }),
   card({ n: '6', en: 'six', zh: '六', src: 'v-b', r: R('sechs', 'zes', 'sex', 'six', 'seis'), near: ['de', 'sv', 'fr'],
-    why: '法文<b>一模一樣：six</b>！荷蘭文 s 寫成 <b>z</b>', story: cx('🇬🇧 six', F('fr') + ' six<em>一模一樣</em>') + cx('🇬🇧 ' + E('s') + 'ix', F('nl') + ' ' + Dd('z') + 'es') }),
+    why: '法文<b>一模一樣：six</b>！荷蘭文 s 寫成 <b>z</b>', story: cx(F('gb') + ' six', F('fr') + ' six<em>一模一樣</em>') + cx(F('gb') + ' ' + E('s') + 'ix', F('nl') + ' ' + Dd('z') + 'es') }),
   card({ n: '7', en: 'seven', zh: '七', src: 'v-b', r: R('sieben', 'zeven', 'sju', 'sept', 'siete'), near: ['de', 'nl'],
-    why: '英文 <b>v</b> ＝ 德文 <b>b</b>；荷蘭文 <b>zeven</b> 最像', story: cx('🇬🇧 se' + E('v') + 'en', F('de') + ' sie' + Dd('b') + 'en', F('nl') + ' ' + Dd('z') + 'e' + Dd('v') + 'en') }),
+    why: '英文 <b>v</b> ＝ 德文 <b>b</b>；荷蘭文 <b>zeven</b> 最像', story: cx(F('gb') + ' se' + E('v') + 'en', F('de') + ' sie' + Dd('b') + 'en', F('nl') + ' ' + Dd('z') + 'e' + Dd('v') + 'en') }),
   card({ n: '8', en: 'eight', zh: '八', src: 'gh-ch', r: R('acht', 'acht', 'åtta', 'huit', 'ocho'), near: ['de', 'nl'],
-    why: '德、荷的 <b>ch</b>，就是英文 <b>gh</b> 以前的聲音', story: cx('🇬🇧 ei' + E('gh') + 't<em>gh 不唸</em>', F('de') + ' a' + Dd('ch') + 't<em>ch 還在唸</em>') }),
+    why: '德、荷的 <b>ch</b>，就是英文 <b>gh</b> 以前的聲音', story: cx(F('gb') + ' ei' + E('gh') + 't<em>gh 不唸</em>', F('de') + ' a' + Dd('ch') + 't<em>ch 還在唸</em>') }),
   card({ n: '9', en: 'nine', zh: '九', r: R('neun', 'negen', 'nio', 'neuf', 'nueve'), near: ['de', 'nl', 'sv', 'fr', 'es'],
-    why: '六國都是 <b>n</b> 開頭！', story: cx('🇬🇧 ' + E('n') + 'ine', F('de') + ' ' + Dd('n') + 'eun', F('nl') + ' ' + Dd('n') + 'egen', F('fr') + ' ' + Dd('n') + 'euf') }),
+    why: '六國都是 <b>n</b> 開頭！', story: cx(F('gb') + ' ' + E('n') + 'ine', F('de') + ' ' + Dd('n') + 'eun', F('nl') + ' ' + Dd('n') + 'egen', F('fr') + ' ' + Dd('n') + 'euf') }),
   card({ n: '10', en: 'ten', zh: '十', src: 't-z', r: R('zehn', 'tien', 'tio', 'dix', 'diez'), near: ['nl', 'sv'],
-    why: '荷蘭文 <b>tien</b> 最像；德文 t 變 <b>z</b>：zehn', story: cx('🇬🇧 ' + E('t') + 'en', F('de') + ' ' + Dd('z') + 'ehn', F('nl') + ' ' + Dd('t') + 'ien') + cx(F('fr') + ' dix', '🇬🇧 <b class="x">Dec</b>ember<em>以前第 10 個月</em>') })
+    why: '荷蘭文 <b>tien</b> 最像；德文 t 變 <b>z</b>：zehn', story: cx(F('gb') + ' ' + E('t') + 'en', F('de') + ' ' + Dd('z') + 'ehn', F('nl') + ' ' + Dd('t') + 'ien') + cx(F('fr') + ' dix', F('gb') + ' <b class="x">Dec</b>ember<em>以前第 10 個月</em>') })
 ];
 const W1 = [
   card({ n: '11', en: 'eleven', zh: '十一', src: 'lif', r: R('elf', 'elf', 'elva', 'onze', 'once'),
-    why: '德、荷、瑞典也是「<b>數完 10，剩下 1</b>」', story: cx('🇬🇧 e' + E('leven'), F('de') + ' e' + Dd('lf'), F('sv') + ' e' + Dd('lva')) }),
+    why: '德、荷、瑞典也是「<b>數完 10，剩下 1</b>」', story: cx(F('gb') + ' e' + E('leven'), F('de') + ' e' + Dd('lf'), F('sv') + ' e' + Dd('lva')) }),
   card({ n: '12', en: 'twelve', zh: '十二', src: 'lif', r: R('zwölf', 'twaalf', 'tolv', 'douze', 'doce'),
-    why: '「<b>數完 10，剩下 2</b>」；荷蘭文 <b>tw</b>aalf 最像', story: cx('🇬🇧 ' + E('tw') + 'elve', F('nl') + ' ' + Dd('tw') + 'aalf', F('de') + ' ' + Dd('zw') + 'ölf') }),
+    why: '「<b>數完 10，剩下 2</b>」；荷蘭文 <b>tw</b>aalf 最像', story: cx(F('gb') + ' ' + E('tw') + 'elve', F('nl') + ' ' + Dd('tw') + 'aalf', F('de') + ' ' + Dd('zw') + 'ölf') }),
   card({ n: '13', en: 'thirteen', zh: '十三', src: 'teen', r: R('dreizehn', 'dertien', 'tretton', 'treize', 'trece'),
-    why: '尾巴都是「<b>十</b>」：-teen ＝ -zehn ＝ -tien', story: cx('🇬🇧 thir' + E('teen'), F('de') + ' drei' + Dd('zehn'), F('nl') + ' der' + Dd('tien')) }),
+    why: '尾巴都是「<b>十</b>」：-teen ＝ -zehn ＝ -tien', story: cx(F('gb') + ' thir' + E('teen'), F('de') + ' drei' + Dd('zehn'), F('nl') + ' der' + Dd('tien')) }),
   card({ n: '14', en: 'fourteen', zh: '十四', src: 'teen', r: R('vierzehn', 'veertien', 'fjorton', 'quatorze', 'catorce'),
-    why: '4 ＋ <b>10</b>：vier-<b>zehn</b>、veer-<b>tien</b>', story: cx('🇬🇧 four' + E('teen'), F('de') + ' vier' + Dd('zehn'), F('nl') + ' veer' + Dd('tien')) }),
+    why: '4 ＋ <b>10</b>：vier-<b>zehn</b>、veer-<b>tien</b>', story: cx(F('gb') + ' four' + E('teen'), F('de') + ' vier' + Dd('zehn'), F('nl') + ' veer' + Dd('tien')) }),
   card({ n: '15', en: 'fifteen', zh: '十五', src: 'teen', r: R('fünfzehn', 'vijftien', 'femton', 'quinze', 'quince'),
-    why: '5 ＋ <b>10</b>：英文 five 變成 <b>fif</b>', story: cx('🇬🇧 ' + E('fif') + 'teen', F('de') + ' ' + Dd('fünf') + 'zehn', F('nl') + ' ' + Dd('vijf') + 'tien') }),
+    why: '5 ＋ <b>10</b>：英文 five 變成 <b>fif</b>', story: cx(F('gb') + ' ' + E('fif') + 'teen', F('de') + ' ' + Dd('fünf') + 'zehn', F('nl') + ' ' + Dd('vijf') + 'tien') }),
   card({ n: '16', en: 'sixteen', zh: '十六', src: 'es16', r: R('sechzehn', 'zestien', 'sexton', 'seize', 'dieciséis'),
-    why: '西班牙文：dieci-séis ＝ <b>10 和 6</b>', story: cx('🇬🇧 six' + E('teen') + '<em>6 ＋ 10</em>', F('es') + ' ' + N('dieci') + 'séis<em>10 和 6</em>') }),
+    why: '西班牙文：dieci-séis ＝ <b>10 和 6</b>', story: cx(F('gb') + ' six' + E('teen') + '<em>6 ＋ 10</em>', F('es') + ' ' + N('dieci') + 'séis<em>10 和 6</em>') }),
   card({ n: '17', en: 'seventeen', zh: '十七', src: 'teen', r: R('siebzehn', 'zeventien', 'sjutton', 'dix-sept', 'diecisiete'), near: ['de', 'nl'],
-    why: '法文 <b>dix-sept</b> ＝ 10 ＋ 7：<b>先說 10，再說 7</b>！', story: cx('🇬🇧 seven' + E('teen'), F('de') + ' sieb' + Dd('zehn')) + cx(F('fr') + ' ' + N('dix') + '-sept<em>10、7</em>') }),
+    why: '法文 <b>dix-sept</b> ＝ 10 ＋ 7：<b>先說 10，再說 7</b>！', story: cx(F('gb') + ' seven' + E('teen'), F('de') + ' sieb' + Dd('zehn')) + cx(F('fr') + ' ' + N('dix') + '-sept<em>10、7</em>') }),
   card({ n: '18', en: 'eighteen', zh: '十八', src: 'gh-ch', r: R('achtzehn', 'achttien', 'arton', 'dix-huit', 'dieciocho'), near: ['de', 'nl'],
-    why: '德、荷：<b>acht</b> ＋ 十，ch 還在唸', story: cx('🇬🇧 ei' + E('gh') + 't' + E('een'), F('de') + ' a' + Dd('ch') + 't' + Dd('zehn'), F('nl') + ' a' + Dd('ch') + 't' + Dd('tien')) }),
+    why: '德、荷：<b>acht</b> ＋ 十，ch 還在唸', story: cx(F('gb') + ' ei' + E('gh') + 't' + E('een'), F('de') + ' a' + Dd('ch') + 't' + Dd('zehn'), F('nl') + ' a' + Dd('ch') + 't' + Dd('tien')) }),
   card({ n: '19', en: 'nineteen', zh: '十九', src: 'teen', r: R('neunzehn', 'negentien', 'nitton', 'dix-neuf', 'diecinueve'),
-    why: '9 ＋ <b>10</b>：neun-<b>zehn</b>、negen-<b>tien</b>', story: cx('🇬🇧 nine' + E('teen'), F('de') + ' neun' + Dd('zehn'), F('nl') + ' negen' + Dd('tien')) }),
+    why: '9 ＋ <b>10</b>：neun-<b>zehn</b>、negen-<b>tien</b>', story: cx(F('gb') + ' nine' + E('teen'), F('de') + ' neun' + Dd('zehn'), F('nl') + ' negen' + Dd('tien')) }),
   card({ n: '20', en: 'twenty', zh: '二十', src: 'rhyme', r: R('zwanzig', 'twintig', 'tjugo', 'vingt', 'veinte'), near: ['de', 'nl'],
-    why: '<b>tw</b> ＝ 二、<b>-ty</b> ＝ 幾個十：兩個十 ＝ 20', story: cx('🇬🇧 ' + E('tw') + 'en' + E('ty'), F('nl') + ' ' + Dd('tw') + 'in' + Dd('tig'), F('de') + ' ' + Dd('zw') + 'an' + Dd('zig')) })
+    why: '<b>tw</b> ＝ 二、<b>-ty</b> ＝ 幾個十：兩個十 ＝ 20', story: cx(F('gb') + ' ' + E('tw') + 'en' + E('ty'), F('nl') + ' ' + Dd('tw') + 'in' + Dd('tig'), F('de') + ' ' + Dd('zw') + 'an' + Dd('zig')) })
 ];
 const W2 = [
   card({ n: '30', en: 'thirty', zh: '三十', src: 'ty', r: R('dreißig', 'dertig', 'trettio', 'trente', 'treinta'),
-    why: '英文 <b>th</b> ＝ 德、荷 <b>d</b>；尾巴 -ty ＝ -ßig ＝ -tig', story: cx('🇬🇧 ' + E('th') + 'ir' + E('ty'), F('de') + ' ' + Dd('d') + 'rei' + Dd('ßig'), F('nl') + ' ' + Dd('d') + 'er' + Dd('tig')) }),
+    why: '英文 <b>th</b> ＝ 德、荷 <b>d</b>；尾巴 -ty ＝ -ßig ＝ -tig', story: cx(F('gb') + ' ' + E('th') + 'ir' + E('ty'), F('de') + ' ' + Dd('d') + 'rei' + Dd('ßig'), F('nl') + ' ' + Dd('d') + 'er' + Dd('tig')) }),
   card({ n: '40', en: 'forty', zh: '四十', src: 'ty', r: R('vierzig', 'veertig', 'fyrtio', 'quarante', 'cuarenta'),
-    why: 'forty <b>沒有 u</b>！德文 vier-<b>zig</b>', story: cx('🇬🇧 fo' + E('r') + E('ty') + '<em>沒有 u</em>', F('de') + ' vier' + Dd('zig'), F('nl') + ' veer' + Dd('tig')) }),
+    why: 'forty <b>沒有 u</b>！德文 vier-<b>zig</b>', story: cx(F('gb') + ' fo' + E('r') + E('ty') + '<em>沒有 u</em>', F('de') + ' vier' + Dd('zig'), F('nl') + ' veer' + Dd('tig')) }),
   card({ n: '50', en: 'fifty', zh: '五十', src: 'ty', r: R('fünfzig', 'vijftig', 'femtio', 'cinquante', 'cincuenta'),
-    why: '英文 five 又變成 <b>fif</b>（fifteen、fifty）', story: cx('🇬🇧 ' + E('fif') + 'ty', F('de') + ' ' + Dd('fünf') + 'zig', F('nl') + ' ' + Dd('vijf') + 'tig') }),
+    why: '英文 five 又變成 <b>fif</b>（fifteen、fifty）', story: cx(F('gb') + ' ' + E('fif') + 'ty', F('de') + ' ' + Dd('fünf') + 'zig', F('nl') + ' ' + Dd('vijf') + 'tig') }),
   card({ n: '60', en: 'sixty', zh: '六十', src: 'ty', r: R('sechzig', 'zestig', 'sextio', 'soixante', 'sesenta'),
-    why: '6 ✕ <b>10</b>：six-<b>ty</b>、zes-<b>tig</b>', story: cx('🇬🇧 six' + E('ty'), F('nl') + ' zes' + Dd('tig'), F('sv') + ' sex' + Dd('tio')) }),
+    why: '6 ✕ <b>10</b>：six-<b>ty</b>、zes-<b>tig</b>', story: cx(F('gb') + ' six' + E('ty'), F('nl') + ' zes' + Dd('tig'), F('sv') + ' sex' + Dd('tio')) }),
   card({ n: '70', en: 'seventy', zh: '七十', src: 'fr20', r: R('siebzig', 'zeventig', 'sjuttio', 'soixante-dix', 'setenta'), near: ['de', 'nl'],
-    why: '法文 70 ＝ soixante-dix ＝ <b>60 ＋ 10</b>！', story: cx('🇬🇧 seven' + E('ty') + '<em>7 ✕ 10</em>', F('fr') + ' ' + N('soixante') + '-' + N('dix') + '<em>60 ＋ 10</em>') }),
+    why: '法文 70 ＝ soixante-dix ＝ <b>60 ＋ 10</b>！', story: cx(F('gb') + ' seven' + E('ty') + '<em>7 ✕ 10</em>', F('fr') + ' ' + N('soixante') + '-' + N('dix') + '<em>60 ＋ 10</em>') }),
   card({ n: '80', en: 'eighty', zh: '八十', src: 'fr20', r: R('achtzig', 'tachtig', 'åttio', 'quatre-vingts', 'ochenta'), near: ['de', 'nl'],
-    why: '法文 80 ＝ <b>4 個 20</b>；荷蘭文前面多一個 <b>t</b>', story: cx('🇬🇧 ei' + E('gh') + 'ty', F('de') + ' a' + Dd('ch') + 'tzig') + cx(F('fr') + ' ' + N('quatre') + '-' + N('vingts') + '<em>4 ✕ 20</em>') }),
+    why: '法文 80 ＝ <b>4 個 20</b>；荷蘭文前面多一個 <b>t</b>', story: cx(F('gb') + ' ei' + E('gh') + 'ty', F('de') + ' a' + Dd('ch') + 'tzig') + cx(F('fr') + ' ' + N('quatre') + '-' + N('vingts') + '<em>4 ✕ 20</em>') }),
   card({ n: '90', en: 'ninety', zh: '九十', src: 'fr20', r: R('neunzig', 'negentig', 'nittio', 'quatre-vingt-dix', 'noventa'),
-    why: '法文 90 ＝ <b>4 ✕ 20 ＋ 10</b>！英文簡單多了', story: cx('🇬🇧 nine' + E('ty') + '<em>9 ✕ 10</em>', F('fr') + ' ' + N('quatre-vingt-dix') + '<em>4 ✕ 20 ＋ 10</em>') }),
+    why: '法文 90 ＝ <b>4 ✕ 20 ＋ 10</b>！英文簡單多了', story: cx(F('gb') + ' nine' + E('ty') + '<em>9 ✕ 10</em>', F('fr') + ' ' + N('quatre-vingt-dix') + '<em>4 ✕ 20 ＋ 10</em>') }),
   card({ n: '100', en: 'one hundred', zh: '一百', src: 'romance', r: R('hundert', 'honderd', 'hundra', 'cent', 'cien'),
-    why: '日耳曼家族都是 <b>hund</b>；法、西 cent ＝ 100', story: cx('🇬🇧 ' + E('hund') + 'red', F('de') + ' ' + Dd('hund') + 'ert', F('sv') + ' ' + Dd('hund') + 'ra') + cx(F('fr') + ' ' + N('cent'), '🇬🇧 ' + N('cent') + 'ury<em>100 年</em>') })
+    why: '日耳曼家族都是 <b>hund</b>；法、西 cent ＝ 100', story: cx(F('gb') + ' ' + E('hund') + 'red', F('de') + ' ' + Dd('hund') + 'ert', F('sv') + ' ' + Dd('hund') + 'ra') + cx(F('fr') + ' ' + N('cent'), F('gb') + ' ' + N('cent') + 'ury<em>100 年</em>') })
 ];
 const T_Z = { tag: '🔑 字母密碼：英文 t ＝ 德文 z', src: 't-z',
   h: '<div class="lk fo" style="grid-template-columns:auto auto auto">' +
@@ -317,16 +340,16 @@ const T_Z = { tag: '🔑 字母密碼：英文 t ＝ 德文 z', src: 't-z',
       '<span class="w sp" data-say="' + r[0] + '" style="animation-delay:' + (0.2 + k * 0.4) + 's"><span class="e">t</span>' + r[0].slice(1) + '</span>' +
       '<span class="w sp" data-say="' + r[1] + '" data-lang="de-DE" style="animation-delay:' + (0.35 + k * 0.4) + 's"><span class="d">z</span>' + r[1].slice(1) + '</span>' +
       '<span class="w sp" data-say="' + r[2] + '" data-lang="nl-NL" style="animation-delay:' + (0.5 + k * 0.4) + 's"><span class="e">t</span>' + r[2].slice(1) + '</span>').join('') +
-    '<span class="zz">🇬🇧 英文　' + F('de') + ' 德文　' + F('nl') + ' 荷蘭文</span></div>',
+    '<span class="zz">' + F('gb') + ' 英文　' + F('de') + ' 德文　' + F('nl') + ' 荷蘭文</span></div>',
   lines: ['1500 年前，<b>德國南部的人把 t 唸成 z</b>', '看到德文 <b>z</b>，換成 <b>t</b> 就是英文！'] };
 const TEEN = { tag: '🔑 字母密碼：-teen ＝ -zehn ＝ -tien ＝ 十', src: 'teen',
-  h: '<div class="tt fo">' + [['thirteen', 'thir', 'teen', '🇬🇧'], ['dreizehn', 'drei', 'zehn', 'de'], ['dertien', 'der', 'tien', 'nl'], ['tretton', 'tret', 'ton', 'sv']].map((r, k) =>
+  h: '<div class="tt fo">' + [['thirteen', 'thir', 'teen', 'gb'], ['dreizehn', 'drei', 'zehn', 'de'], ['dertien', 'der', 'tien', 'nl'], ['tretton', 'tret', 'ton', 'sv']].map((r, k) =>
       '<span class="m" style="animation-delay:' + (0.2 + k * 0.4) + 's">' + (r[3].length === 2 ? F(r[3]) : r[3]) + '</span>' +
       '<span class="w sp" data-say="' + r[0] + '"' + (r[3] === 'de' ? ' data-lang="de-DE"' : r[3] === 'nl' ? ' data-lang="nl-NL"' : r[3] === 'sv' ? ' data-lang="sv-SE"' : '') + ' style="animation-delay:' + (0.3 + k * 0.4) + 's">' + r[1] + '<span class="teen">' + r[2] + '</span></span>' +
       '<span class="m" style="animation-delay:' + (0.4 + k * 0.4) + 's">3 ＋ <span class="teen">10</span></span>').join('') + '</div>',
   lines: ['四種語言，十三的尾巴<b>都是「十」</b>'] };
 const TY = { tag: '🔑 字母密碼：-ty ＝ -zig ＝ -tig ＝ 幾個十', src: 'ty',
-  h: '<div class="tt fo">' + [['thirty', 'thir', 'ty', '🇬🇧'], ['dreißig', 'drei', 'ßig', 'de'], ['dertig', 'der', 'tig', 'nl'], ['trettio', 'tret', 'tio', 'sv']].map((r, k) =>
+  h: '<div class="tt fo">' + [['thirty', 'thir', 'ty', 'gb'], ['dreißig', 'drei', 'ßig', 'de'], ['dertig', 'der', 'tig', 'nl'], ['trettio', 'tret', 'tio', 'sv']].map((r, k) =>
       '<span class="m" style="animation-delay:' + (0.2 + k * 0.4) + 's">' + (r[3].length === 2 ? F(r[3]) : r[3]) + '</span>' +
       '<span class="w sp" data-say="' + r[0] + '"' + (r[3] === 'de' ? ' data-lang="de-DE"' : r[3] === 'nl' ? ' data-lang="nl-NL"' : r[3] === 'sv' ? ' data-lang="sv-SE"' : '') + ' style="animation-delay:' + (0.3 + k * 0.4) + 's">' + r[1] + '<span class="ty">' + r[2] + '</span></span>' +
       '<span class="m" style="animation-delay:' + (0.4 + k * 0.4) + 's">3 ✕ <span class="ty">10</span></span>').join('') + '</div>',

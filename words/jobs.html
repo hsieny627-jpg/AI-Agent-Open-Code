@@ -23,11 +23,11 @@ h1{margin:0;font-size:clamp(28px,5.4vh,52px);text-align:center}
 .card .ic{font-size:clamp(30px,5vh,46px);line-height:1.1}
 .card .t{font-size:clamp(20px,3.2vh,28px);font-weight:700}
 .card .d{font-size:clamp(14px,2vh,18px);color:#9E9E9E;line-height:1.45}
-#cards{display:none;grid-column:1/-1;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-#cards.on{display:grid}
-#cards a{display:flex;flex-direction:column;align-items:center;gap:2px;background:#0C0C0C;border:1px solid #2A2A2A;border-radius:14px;
+#cards,.cards{display:none;grid-column:1/-1;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+#cards.on,.cards.on{display:grid}
+#cards a,.cards a{display:flex;flex-direction:column;align-items:center;gap:2px;background:#0C0C0C;border:1px solid #2A2A2A;border-radius:14px;
  color:#F2F2F2;text-decoration:none;padding:10px 6px}
-#cards a span{font-size:30px}#cards a b{font-size:clamp(18px,2.6vh,24px)}#cards a em{font-style:normal;color:#9FB4C8;font-size:15px}
+#cards a span,.cards a span{font-size:30px}#cards a b,.cards a b{font-size:clamp(18px,2.6vh,24px)}#cards a em,.cards a em{font-style:normal;color:#9FB4C8;font-size:15px}
 #bar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:10px;padding:12px;background:linear-gradient(180deg,transparent,#000 40%)}
 #bar a{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;text-decoration:none;font-size:16px;padding:11px 20px}
 </style>
@@ -35,11 +35,11 @@ h1{margin:0;font-size:clamp(28px,5.4vh,52px);text-align:center}
 <body>
 <h1>💼 職業單字</h1>
 <div class="sub">student　teacher　doctor　farmer　nurse</div>
-<div id="grid"><button class="card" id="cardsBtn"><span class="n">1</span><span class="ic">🃏</span><span class="t">5 張單字卡 ▾</span><span class="d">中文 ➜ 以前 ➜ 現在，一個字一張卡</span></button><div id="cards"><a href="student.html"><span>🧑‍🎓</span><b>student</b><em>學生</em></a><a href="teacher.html"><span>👩‍🏫</span><b>teacher</b><em>老師</em></a><a href="doctor.html"><span>👨‍⚕️</span><b>doctor</b><em>醫生</em></a><a href="farmer.html"><span>👨‍🌾</span><b>farmer</b><em>農夫</em></a><a href="nurse.html"><span>👩‍⚕️</span><b>nurse</b><em>護理師</em></a></div><a class="card" href="jobs-parts.html"><span class="n">2</span><span class="ic">🧩</span><span class="t">單字結構</span><span class="d">-er、-or、-ent ＝ 做這件事的人</span></a><a class="card" href="jobs-why.html"><span class="n">3</span><span class="ic">📜</span><span class="t">職業故事</span><span class="d">doctor 以前是老師？nurse 以前是餵奶的人？</span></a><a class="card" href="jobs-world.html"><span class="n">4</span><span class="ic">🌍</span><span class="t">職業單字環遊世界</span><span class="d">猜猜看是哪一國；五國比一比</span></a></div>
+<div id="grid"><button class="card cardsBtn" id="cardsBtn" data-c="cards"><span class="n">1</span><span class="ic">🃏</span><span class="t">5 張單字卡 ▾</span><span class="d">中文 ➜ 以前 ➜ 現在，一個字一張卡</span></button><div id="cards" class="cards"><a href="student.html"><span>🧑‍🎓</span><b>student</b><em>學生</em></a><a href="teacher.html"><span>👩‍🏫</span><b>teacher</b><em>老師</em></a><a href="doctor.html"><span>👨‍⚕️</span><b>doctor</b><em>醫生</em></a><a href="farmer.html"><span>👨‍🌾</span><b>farmer</b><em>農夫</em></a><a href="nurse.html"><span>👩‍⚕️</span><b>nurse</b><em>護理師</em></a></div><button class="card cardsBtn" id="cardsBtn2" data-c="cards2"><span class="n">2</span><span class="ic">⏳</span><span class="t">職業單字時光機 ▾</span><span class="d">每一個字：以前是什麼意思？拼法怎麼變？</span></button><div id="cards2" class="cards"><a href="student-evo.html"><span>⏳</span><b>student</b><em>學生</em></a><a href="teacher-evo.html"><span>⏳</span><b>teacher</b><em>老師</em></a><a href="doctor-evo.html"><span>⏳</span><b>doctor</b><em>醫生</em></a><a href="farmer-evo.html"><span>⏳</span><b>farmer</b><em>農夫</em></a><a href="nurse-evo.html"><span>⏳</span><b>nurse</b><em>護理師</em></a></div><a class="card" href="jobs-parts.html"><span class="n">3</span><span class="ic">🧩</span><span class="t">單字結構</span><span class="d">-er、-or、-ent ＝ 做這件事的人</span></a><a class="card" href="jobs-why.html"><span class="n">4</span><span class="ic">📜</span><span class="t">職業故事</span><span class="d">doctor 以前是老師？nurse 以前是餵奶的人？</span></a><a class="card" href="jobs-world.html"><span class="n">5</span><span class="ic">🌍</span><span class="t">職業單字環遊世界</span><span class="d">猜猜看是哪一國；五國比一比</span></a></div>
 <nav id="bar"><a href="../index.html">🏠 首頁</a></nav>
 <script>
-(function(){var b=document.getElementById("cardsBtn"),c=document.getElementById("cards");if(!b||!c)return;
- b.addEventListener("click",function(){c.classList.toggle("on")});})();
+[].forEach.call(document.querySelectorAll(".cardsBtn"),function(b){var c=document.getElementById(b.getAttribute("data-c"));
+ if(c)b.addEventListener("click",function(){c.classList.toggle("on")});});
 </script>
 </body>
 </html>

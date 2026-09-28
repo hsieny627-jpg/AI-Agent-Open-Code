@@ -230,6 +230,9 @@ const SIGHTWORLD = [
  I('w-name', e('name 家族', 'Duden「Name」；Van Dale「naam」；SAOL「namn」；Larousse「nom」；RAE「nombre」', '五國都像：<b>n ＋ m</b>。')),
  I('w-is', e('is 家族', 'Duden「ist」；Van Dale「is」；SAOL「är」；Larousse「est」；RAE「es」', '荷蘭文<b>一模一樣</b>：is。')),
  I('w-what', e('what 家族', 'Duden「was」；Van Dale「wat」；SAOL「vad」；Larousse「que／quoi」；RAE「qué」', '德 was、荷 wat、瑞典 vad：w／v 開頭。')),
+ I('w-apos', ev('別的國家也用 ’ 嗎？', 'Duden「heißen」「Apostroph」；Van Dale「heten」；SAOL「heta」；Académie française「L’apostrophe」；RAE《Diccionario panhispánico de dudas》「apóstrofo」',
+   '德、荷、瑞典問名字用「<b>叫做</b>」（heißen、heten、heta），<b>沒有「是」</b>，也就沒有 ’s；法文 <b>t’appelles ＝ te appelles</b>（藏 e）；西班牙文今天<b>幾乎不用</b> ’。',
+   '<div class="ev"><span class="st"><b>What’s</b><em>英文：is ➜ ’s</em></span><span class="st" style="animation-delay:.6s"><b>t’appelles</b><em>法文：te ➜ t’</em></span></div>')),
  I('w-name-s', e('My name is Ken.', 'Van Dale「naam」；Duden「heißen」；SAOL「heta」；Larousse「s’appeler」；RAE「llamarse」',
    '荷蘭文 <b>Mijn naam is Ken.</b> 幾乎一模一樣；法、西說「我叫自己 Ken」。')),
  I('w-age', e('I’m ten years old.', 'Duden「alt」；Van Dale「oud」；SAOL「gammal」；Larousse「avoir … ans」；RAE「tener … años」',
@@ -272,6 +275,8 @@ const SIGHTPAGES = [
 ]},
 
 /* 2026-09-26 使用者指定改版（第 19、20、23、24 點）：內容在 _sight_pages.js */
+Object.assign({file:'map-story.html',css:require('../words/_pages2').CSS},require('../words/_pages2').mapStory),
+Object.assign({file:'en-de-nl.html',css:require('../words/_pages2').CSS},require('../words/_pages2').enDeNl),
 {file:'sight-why.html',title:'常見字的故事',big:1,css:NPG.CSS,srcRows:SP.WHYR,S:SP.whyS},
 {file:'sight-world.html',title:'常見字環遊世界',sayAll:1,big:1,css:NPG.CSS,srcRows:SP.SRCW,
  back:{href:'sight-parts.html',label:'← 字的結構'}, S:SP.worldS}
@@ -286,6 +291,9 @@ out.push.apply(out, build({
       { ic: '🃏', t: '13 張數字卡', d: '母音紅色、不發音淺灰、兩個音節切開', cards: true },
       { ic: '🧩', t: '數字的結構', d: 'eleven ＝ 數完十，剩下一', href: 'numbers-parts.html' },
       { ic: '📜', t: '數字的故事', d: '先猜再看：zero 的旅行、September、four and twenty', href: 'numbers-why.html' },
+      { ic: '🗺', t: '英文的大旅行', d: '放大地圖：拼法和發音為什麼變成今天這樣', href: '../sight/map-story.html' },
+      { ic: '👪', t: '英德荷三兄弟', d: '為什麼英文、德文、荷蘭文這麼像？四組字母密碼', href: '../sight/en-de-nl.html' },
+      { ic: '⏳', t: '數字時光機', d: '每一個數字：拼法怎麼變？以前、今天大對比？哪個字母不唸了？', cards: NUM.map(w => ({ f: w.now || w.f, zh: w.zh, icon: '⏳', href: w.f + '-evo.html' })) },
       { ic: '🌍', t: '數字環遊世界　基礎', d: '0～10：猜猜看是哪一國；字母密碼 t ＝ z、gh ＝ ch', href: 'numbers-world.html' },
       { ic: '🌍', t: '數字環遊世界　進階 1', d: '11～20：-teen ＝ -zehn ＝ -tien', href: 'numbers-world-2.html' },
       { ic: '🌍', t: '數字環遊世界　進階 2', d: '30～100：法國人 80 ＝ 4 個 20！', href: 'numbers-world-3.html' }
@@ -298,7 +306,10 @@ out.push.apply(out, build({
     links: [
       { ic: '🃏', t: '19 張常見字卡', d: '母音紅色、不發音淺灰；進階：Who、Where、When、Why', cards: true },
       { ic: '🧩', t: '常見字的結構', d: 'you ＋ r ＝ your、’ ＝ 藏起來的字母', href: 'sight-parts.html' },
-      { ic: '📜', t: '常見字的故事', d: '先猜再看：I 為什麼大寫？wh 家族、德文 Jahr', href: 'sight-why.html' },
+      { ic: '📜', t: '常見字的故事', d: '先猜再看：I 為什麼大寫？wh 家族、year 的祕密', href: 'sight-why.html' },
+      { ic: '🗺', t: '英文的大旅行', d: '放大地圖：拼法和發音為什麼變成今天這樣', href: 'map-story.html' },
+      { ic: '👪', t: '英德荷三兄弟', d: '為什麼英文、德文、荷蘭文這麼像？四組字母密碼', href: 'en-de-nl.html' },
+      { ic: '⏳', t: '常見字時光機', d: '每一個字：拼法怎麼變？以前、今天大對比？哪個字母不唸了？', cards: SIGHT.map(w => ({ f: w.now || w.f, zh: w.zh, icon: '⏳', href: w.f + '-evo.html' })) },
       { ic: '🌍', t: '常見字環遊世界', d: '別的國家怎麼說 你、你的、你幾歲？別國的「我」也大寫嗎？', href: 'sight-world.html' }
     ] }
 }).map(f => 'sight/' + f));

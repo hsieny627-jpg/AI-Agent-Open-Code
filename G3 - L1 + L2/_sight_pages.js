@@ -53,33 +53,42 @@ const CAP = {
 };
 const worldS = [
   { emoji: '🌍', mid: '常見字，環遊世界', lines: ['別的國家怎麼說「我」「你」「你幾歲？」'] },
-  WD.WHERE, WD.SIX, WD.WHY5, WD.TREE, Object.assign({}, WD.MAPS[2], { lines: REMLINE }),
+  WD.WHERE, WD.SIX, WD.WHY5, WD.TREE, Object.assign({}, WD.MAPS[2], { lines: [REMLINE[0], '英文、德文、荷蘭文 ＝ <b>同一家的兄弟姊妹</b>，常見字當然像'] }),
   card({ src: 'w-i', en: 'I', zh: '我', r: R('ich', 'ik', 'jag', 'je', 'yo'), near: ['de', 'nl'],
-    why: '德 <b>ich</b>、荷 <b>ik</b>，最像以前的英文 <b>ic</b>', story: cx('🇬🇧 ic<em>以前的「我」</em>', F('de') + ' ich', F('nl') + ' ik') }),
+    why: '德 <b>ich</b>、荷 <b>ik</b>，最像以前的英文 <b>ic</b>', story: cx(F('gb') + ' ic<em>以前的「我」</em>', F('de') + ' ich', F('nl') + ' ik') }),
   CAP,
   card({ src: 'w-my', en: 'my', zh: '我的', r: R('mein', 'mijn', 'min', 'mon', 'mi'), near: ['de', 'nl', 'sv', 'fr', 'es'],
-    why: '五國都用 <b>m</b> 開頭', story: cx('🇬🇧 ' + E('m') + 'y<em>以前 mīn</em>', F('de') + ' ' + Dd('m') + 'ein', F('nl') + ' ' + Dd('m') + 'ijn', F('sv') + ' ' + Dd('m') + 'in') }),
+    why: '五國都用 <b>m</b> 開頭', story: cx(F('gb') + ' ' + E('m') + 'y<em>以前 mīn</em>', F('de') + ' ' + Dd('m') + 'ein', F('nl') + ' ' + Dd('m') + 'ijn', F('sv') + ' ' + Dd('m') + 'in') }),
   card({ src: 'w-you', en: 'you', zh: '你', r: R('du', 'jij', 'du', 'tu', 'tú'), near: ['de', 'sv'],
-    why: '以前英文的「你」是 <b>thou</b>，跟 <b>du</b> 是一家！', story: cx('🇬🇧 ' + E('th') + 'ou<em>以前的「你」</em>', F('de') + ' ' + Dd('d') + 'u', F('sv') + ' ' + Dd('d') + 'u') }),
+    why: '以前英文的「你」是 <b>thou</b>，跟 <b>du</b> 是一家！', story: cx(F('gb') + ' ' + E('th') + 'ou<em>以前的「你」</em>', F('de') + ' ' + Dd('d') + 'u', F('sv') + ' ' + Dd('d') + 'u') }),
   card({ src: 'w-your', en: 'your', zh: '你的', r: R('dein', 'jouw', 'din', 'ton', 'tu'), near: ['de', 'sv'],
-    why: '以前英文的「你的」是 <b>thine</b>，跟 <b>dein、din</b> 是一家', story: cx('🇬🇧 ' + E('th') + 'ine<em>以前的「你的」</em>', F('de') + ' ' + Dd('d') + 'ein', F('sv') + ' ' + Dd('d') + 'in') }),
+    why: '以前英文的「你的」是 <b>thine</b>，跟 <b>dein、din</b> 是一家', story: cx(F('gb') + ' ' + E('th') + 'ine<em>以前的「你的」</em>', F('de') + ' ' + Dd('d') + 'ein', F('sv') + ' ' + Dd('d') + 'in') }),
   card({ src: 'w-name', en: 'name', zh: '名字', r: R('Name', 'naam', 'namn', 'nom', 'nombre'), near: ['de', 'nl', 'sv', 'fr', 'es'],
-    why: '五國都像：<b>n ＋ m</b>', story: cx('🇬🇧 ' + E('n') + 'a' + E('m') + 'e', F('de') + ' ' + Dd('N') + 'a' + Dd('m') + 'e<em>名詞都大寫</em>', F('nl') + ' ' + Dd('n') + 'aa' + Dd('m')) }),
+    why: '五國都像：<b>n ＋ m</b>', story: cx(F('gb') + ' ' + E('n') + 'a' + E('m') + 'e', F('de') + ' ' + Dd('N') + 'a' + Dd('m') + 'e<em>名詞都大寫</em>', F('nl') + ' ' + Dd('n') + 'aa' + Dd('m')) }),
   card({ src: 'w-is', en: 'is', zh: '是', r: R('ist', 'is', 'är', 'est', 'es'), near: ['nl', 'de'],
-    why: '荷蘭文<b>一模一樣</b>：is', story: cx('🇬🇧 is', F('nl') + ' is<em>一模一樣</em>', F('de') + ' is' + Dd('t')) }),
+    why: '荷蘭文<b>一模一樣</b>：is', story: cx(F('gb') + ' is', F('nl') + ' is<em>一模一樣</em>', F('de') + ' is' + Dd('t')) }),
   card({ src: 'w-what', en: 'what', zh: '什麼', r: R('was', 'wat', 'vad', 'quoi', 'qué'), near: ['de', 'nl', 'sv'],
-    why: '德、荷、瑞典都是 <b>w／v</b> 開頭', story: cx('🇬🇧 ' + E('w') + 'hat', F('de') + ' ' + Dd('w') + 'as', F('nl') + ' ' + Dd('w') + 'at', F('sv') + ' ' + Dd('v') + 'ad') }),
-  card({ src: 'w-whats', en: 'What’s your name?', zh: '你的名字是什麼？', tz: '你的名字是什麼？', r: R('Wie heißt du?', 'Hoe heet je?', 'Vad heter du?', 'Comment tu t’appelles ?', '¿Cómo te llamas?'), near: ['sv', 'de', 'nl'],
-    why: '他們問「你<b>叫</b>什麼？」德文 heißt ＝ 以前英文的 <b>hight</b>（叫做）', story: cx(F('de') + ' ' + Dd('heiß') + 'en<em>叫做</em>', '🇬🇧 ' + E('hight') + '<em>以前的英文：叫做</em>') }),
-  card({ src: 'w-name-s', en: 'My name is Ken.', zh: '我的名字是 Ken。', tz: '我的名字是 Ken。', r: R('Mein Name ist Ken.', 'Mijn naam is Ken.', 'Jag heter Ken.', 'Je m’appelle Ken.', 'Me llamo Ken.'), near: ['nl', 'de'],
-    why: '荷蘭文<b>幾乎一模一樣</b>！法、西說「我叫自己 Ken」', story: cx('🇬🇧 My name is', F('nl') + ' Mijn naam is', F('de') + ' Mein Name ist') }),
-  card({ src: 'w-howold', en: 'How old are you?', zh: '你幾歲？', tz: '你幾歲？', r: R('Wie alt bist du?', 'Hoe oud ben je?', 'Hur gammal är du?', 'Quel âge as-tu ?', '¿Cuántos años tienes?'), near: ['de', 'nl'],
-    why: '德、荷<b>一個字對一個字</b>！法、西：你「<b>有</b>」幾歲？', story: cx('🇬🇧 ' + E('How') + ' ' + E('old'), F('de') + ' ' + Dd('Wie') + ' ' + Dd('alt'), F('nl') + ' ' + Dd('Hoe') + ' ' + Dd('oud')) }),
-  card({ src: 'w-age', en: 'I’m ten years old.', zh: '我十歲。', tz: '我十歲。', r: R('Ich bin zehn Jahre alt.', 'Ik ben tien jaar oud.', 'Jag är tio år gammal.', 'J’ai dix ans.', 'Tengo diez años.'), near: ['de', 'nl'],
-    why: '法、西說「<b>我有十年</b>」！', story: cx('🇬🇧 ten ' + E('years') + ' ' + E('old'), F('de') + ' zehn ' + Dd('Jahre') + ' ' + Dd('alt'), F('nl') + ' tien ' + Dd('jaar') + ' ' + Dd('oud')) }),
+    why: '德、荷、瑞典都是 <b>w／v</b> 開頭', story: cx(F('gb') + ' ' + E('w') + 'hat', F('de') + ' ' + Dd('w') + 'as', F('nl') + ' ' + Dd('w') + 'at', F('sv') + ' ' + Dd('v') + 'ad') }),
+  card({ src: 'w-whats', en: 'What’s your name?', zh: '你的名字是什麼？', tz: '你的名字是什麼？', r: R('Wie heißt du?|怎麼 叫做 你', 'Hoe heet je?|怎麼 叫做 你', 'Vad heter du?|什麼 叫做 你', 'Comment tu t’appelles ?|怎麼 你 叫你自己 _', '¿Cómo te llamas?|怎麼 你自己 叫'), near: ['sv', 'de', 'nl'],
+    why: '他們問「你<b>叫</b>什麼？」德文 heißt ＝ 以前英文的 <b>hight</b>（叫做）', story: cx(F('de') + ' ' + Dd('heiß') + 'en<em>叫做</em>', F('gb') + ' ' + E('hight') + '<em>以前的英文：叫做</em>') }),
+  WD.apos({ src: 'w-apos',
+    q: { q: '英文 <b>What’s</b> ＝ What is。德文問名字，也用 ’ 嗎？', o: ['不用：德文說 Wie heißt du?', '要：Was’s dein Name?', '德文不能問名字', '德文只說 Name?'] },
+    rows: [['gb', 'What<b class="ap1">’</b>s your name?', '✅ <b>’s ＝ is</b>'],
+      ['de', 'Wie heißt du?', '<span class="apx">✕</span> 沒有「是」：你<b>叫做</b>什麼？'],
+      ['nl', 'Hoe heet je?', '<span class="apx">✕</span> 沒有「是」：你<b>叫做</b>什麼？'],
+      ['sv', 'Vad heter du?', '<span class="apx">✕</span> 沒有「是」：你<b>叫做</b>什麼？'],
+      ['fr', 'Comment tu t’appelles ?', '有 ’！可是藏的是 <b>e</b>：te appelles ➜ t’appelles'],
+      ['es', '¿Cómo te llamas?', '<span class="apx">✕</span> 西班牙文今天<b>幾乎不用</b> ’']],
+    lines: ['把 <b>is</b> 縮成 <b>’s</b>：<b>只有英文</b>', '法文也有 ’，可是<b>藏的是 e</b>'] }),
+  card({ src: 'w-name-s', en: 'My name is Ken.', zh: '我的名字是 Ken。', tz: '我的名字是 Ken。', r: R('Mein Name ist Ken.|我的 名字 是 Ken', 'Mijn naam is Ken.|我的 名字 是 Ken', 'Jag heter Ken.|我 叫做 Ken', 'Je m’appelle Ken.|我 叫我自己 Ken', 'Me llamo Ken.|我自己 叫 Ken'), near: ['nl', 'de'],
+    why: '荷蘭文<b>幾乎一模一樣</b>！法、西說「我叫自己 Ken」', story: cx(F('gb') + ' My name is', F('nl') + ' Mijn naam is', F('de') + ' Mein Name ist') }),
+  card({ src: 'w-howold', en: 'How old are you?', zh: '你幾歲？', tz: '你幾歲？', r: R('Wie alt bist du?|多 老 是 你', 'Hoe oud ben je?|多 老 是 你', 'Hur gammal är du?|多 老 是 你', 'Quel âge as-tu ?|什麼 年紀 有-你 _', '¿Cuántos años tienes?|多少 年 你有'), near: ['de', 'nl'],
+    why: '德、荷<b>一個字對一個字</b>！法、西：你「<b>有</b>」幾歲？', story: cx(F('gb') + ' ' + E('How') + ' ' + E('old'), F('de') + ' ' + Dd('Wie') + ' ' + Dd('alt'), F('nl') + ' ' + Dd('Hoe') + ' ' + Dd('oud')) }),
+  card({ src: 'w-age', en: 'I’m ten years old.', zh: '我十歲。', tz: '我十歲。', r: R('Ich bin zehn Jahre alt.|我 是 十 年 老', 'Ik ben tien jaar oud.|我 是 十 年 老', 'Jag är tio år gammal.|我 是 十 年 老', 'J’ai dix ans.|我有 十 年', 'Tengo diez años.|我有 十 年'), near: ['de', 'nl'],
+    why: '法、西說「<b>我有十年</b>」！', story: cx(F('gb') + ' ten ' + E('years') + ' ' + E('old'), F('de') + ' zehn ' + Dd('Jahre') + ' ' + Dd('alt'), F('nl') + ' tien ' + Dd('jaar') + ' ' + Dd('oud')) }),
   { tag: '記住這件事', sayAll: 1, src: 'boat',
     h: rem([['I', 'ich', 'ik', '我'], ['my', 'mein', 'mijn', '我的'], ['name', 'Name', 'naam', '名字'], ['is', 'ist', 'is', '是'], ['what', 'was', 'wat', '什麼'], ['How old', 'Wie alt', 'Hoe oud', '幾歲']]) + BRO3,
-    lines: [REMLINE[1]] }
+    lines: ['英文、德文、荷蘭文 ＝ <b>同一家的兄弟姊妹</b>，常見字當然像'] }
 ];
 
 /* ═════════ 📜 常見字的故事（第 20、23、24 點）═════════ */
@@ -94,29 +103,29 @@ const WHYR = [
 const R2 = (w, d) => '<span class="cx" style="animation-delay:' + d + 's"><span>' + w + '</span></span>';
 const whyS = [
   { emoji: '👀', mid: '天天用的字，也有故事', lines: ['<b>先猜一猜</b>，再看答案'] },
-  { tag: 'I 為什麼永遠大寫', emoji: '✍️', say: 'I', src: 'i',
+  { tag: 'I 為什麼永遠大寫', emoji: '✍️', say: 'I', src: 'i', evo: 'i',
     q: { q: '英文的「我」<b>I</b>，為什麼永遠大寫？', o: ['小小的 i 太容易看漏，就寫大一點', '因為「我」最重要', '國王規定的', '電腦自動改的'] },
     h: '<div class="gstory" style="display:flex">' + R2('ic<em>古英文</em>', .2) + R2('<span style="font-size:.6em">i</span><em>太小了！</em>', .8) + R2('<span style="font-size:1.6em;color:#FFD24A">I</span><em>寫大一點</em>', 1.4) + '</div>',
     lines: ['小小的 i <b>太容易看漏</b>，抄書的人就把它<b>寫成大寫</b>', '（這是最多學者支持的說法）'] },
   /* 2026-09-27 使用者：you 的故事看不懂、太複雜 ➜ 只講一件事「一個人、很多人，都叫 you」＋ 一格時光機；
      題目上面不可以洩題；選項刪掉 you們，加 your，四個都是真的英文字、長得很像（誘答力） */
-  { tag: 'you 的故事', emoji: '👉', say: 'you', src: 'you',
+  { tag: 'you 的故事', emoji: '👉', say: 'you', src: 'you', evo: 'you',
     q: { q: '英文的「<b>你們</b>」怎麼說？', o: ['you', 'your', 'yours', 'you’re'] },
     h: '<div class="gstory" style="display:flex">' +
       R2('👉🧒 <b class="e">you</b><em>你</em>', .2) + R2('👉🧒🧒🧒 <b class="e">you</b><em>你們</em>', .8) + '</div>' +
       '<div class="gstory" style="display:flex">' +
       R2('⏳ 以前：一個人 ＝ <b class="n">thou</b><em>很多人 ＝ you</em>', 1.5) + R2('👋 <s style="opacity:.5">thou</s> ➜ <b class="e">you</b><em>今天：全部 you</em>', 2.2) + '</div>',
     lines: ['一個人、很多人，<b>都叫 you</b>', '<b>your</b> ＝ 你的　<b>yours</b> ＝ 你的東西　<b>you’re</b> ＝ you are'] },
-  { tag: 'name 以前唸兩個音節', emoji: require('../sentences/_nametag').TAG, say: 'name', src: 'name',
+  { tag: 'name 以前唸兩個音節', emoji: require('../sentences/_nametag').TAG, say: 'name', src: 'name', evo: 'name',
     q: { q: '<b>name</b> 字尾的 e 不唸。很久以前的人怎麼唸 name？', o: ['na-ma（兩個音節）', '跟今天一樣', 'nem', 'nam-ee-ee'] },
     h: '<div class="gstory" style="display:flex">' + R2('na-ma<em>以前</em>', .2) + R2('nam<span style="opacity:.35">e</span><em>今天：e 不唸</em>', .9) + '</div>',
     lines: ['以前的人唸 <b>na-ma</b>', '後來 e <b>不唸了</b>，字母還留著'] },
-  { tag: 'Who What Where When Why', emoji: '❓', say: 'what', src: 'wh',
+  { tag: 'Who What Where When Why', emoji: '❓', say: 'what', src: 'wh', evo: 'what',
     q: { q: '<b>Who What Where When Why</b>，為什麼都是 wh 開頭？', o: ['以前都是 hw 開頭的一家人', '巧合', '為了押韻', '因為後面都有問號'] },
     h: '<div class="gstory" style="display:flex">' + [['hwā', 'who'], ['hwæt', 'what'], ['hwǣr', 'where'], ['hwanne', 'when'], ['hwȳ', 'why']].map((r, k) =>
       R2('<b class="e">hw</b>' + r[0].slice(2) + ' <i>➜</i> {{' + r[1] + '}}', (0.2 + k * 0.4).toFixed(1))).join('') + '</div>',
     lines: ['以前 h 寫在前面：<b>hw</b>', '後來改成 <b>wh</b>，h 也不唸了'] },
-  { tag: 'year ＝ 德文 Jahr（年）', emoji: '📅', say: 'year', src: 'year',
+  { tag: '📅 year 的祕密', emoji: '📅', say: 'year', src: 'year', evo: 'year',
     q: { q: '德文 <b>Jahr</b> 是什麼意思？', o: ['年', '耳朵', '是的', '一月'] },
     h: '<div class="lk fo" style="grid-template-columns:auto auto auto">' +
       '<span class="w" style="animation-delay:.2s"><span class="e">g</span>ēar</span><span class="w sp" data-say="year" style="animation-delay:.6s"><span class="e">y</span>ear</span>' +

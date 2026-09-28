@@ -525,7 +525,7 @@ function sOk(){}function sNo(){}function sTick(){}function sPop(){}function sWow
 
 
 /* 找出「哪裡錯」：兩句逐字比對，錯的字框紅色、改對的字框金色 */
-function mTok(s){var r=[],re=/[A-Za-z’']+|[^\sA-Za-z’']/g,m;s=String(s);
+function mTok(s){var r=[],re=/[A-Za-z’']+|[\uD800-\uDBFF][\uDC00-\uDFFF]\uFE0F?|[^\sA-Za-z’']\uFE0F?/g,m;s=String(s);
  while((m=re.exec(s)))r.push({t:m[0],s:m.index,e:m.index+m[0].length});return r}
 function mKey(t){return t.replace(/’/g,"'").toLowerCase()}
 function mDiff(a,b){ /* 回傳：a 裡面哪些字不在共同的部分、b 裡面哪些字不在共同的部分 */

@@ -21,9 +21,9 @@ const B = SITE.load('_game_data');
    META g2／g9 的 duo：兩顆大按鈕各是什麼（[{v,t,d,c}]），g9 題目的第 3 格是答錯的提示 */
 const NS = B.SURP.g1.length;                          /* 每一個遊戲幾張驚喜卡 */
 const metaOf = id => B.GAMES.filter(m => m.id === id)[0] || {};
-const duoBtns = d => d.map(x => `     '<button class="dbtn ${x.c}" data-v="${x.v}">${x.t}<span class="ds">${x.d}</span></button>'+`).join('\n');
+const duoBtns = d => d.map(x => `     '<button class="dbtn ${x.c}" data-v="${x.v}">${x.t}${x.d ? `<span class="ds">${x.d}</span>` : ''}</button>'+`).join('\n');
 const DUO2 = metaOf('g2').duo, DUO9 = metaOf('g9').duo;
-const LAB9 = DUO9 ? JSON.stringify(DUO9.reduce((o, x) => { o[x.v] = x.t + ' ' + x.d.split('　')[0]; return o }, {})) : '';
+const LAB9 = DUO9 ? JSON.stringify(DUO9.reduce((o, x) => { o[x.v] = x.d ? x.t + ' ' + x.d.split('　')[0] : x.t; return o }, {})) : '';
 const OTHER2 = DUO2 ? JSON.stringify(DUO2.map(x => x.v)) : '["he","she"]';
 const CSS = `
 #stage{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
@@ -241,10 +241,10 @@ const CSS = `
 #arena{display:none;flex-direction:column;align-items:center;gap:clamp(8px,1.5vh,16px);
  width:100%;max-width:1080px;margin:0 auto}
 #arena.on{display:flex}
-.qh{font-size:clamp(25px,5vh,50px);font-weight:700;text-align:center;line-height:1.3;max-width:26ch}
+.qh{font-size:clamp(28px,6.2vh,62px);font-weight:700;text-align:center;line-height:1.3;max-width:26ch}
 .qs{font-size:clamp(17px,2.8vh,28px);color:var(--acc);text-align:center}
-.qbig{font-size:clamp(30px,6.6vh,66px);font-weight:700;text-align:center;line-height:1.2}
-.qzh{font-size:clamp(19px,3.2vh,32px);color:var(--acc);text-align:center}
+.qbig{font-size:clamp(34px,8vh,80px);font-weight:700;text-align:center;line-height:1.2}
+.qzh{font-size:clamp(22px,4.2vh,42px);color:var(--acc);text-align:center}
 .tagline{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .tg{font-size:clamp(11px,1.65vh,14px);letter-spacing:.08em;color:var(--acc);
  border:1px solid #2C3A48;border-radius:999px;padding:3px 11px}
@@ -259,7 +259,7 @@ const CSS = `
 .opts.one{grid-template-columns:1fr}
 .o{display:flex;align-items:center;gap:clamp(7px,1.2vw,14px);text-align:left;
  background:#0C0C0C;border:1px solid #262626;border-radius:15px;color:var(--fg);
- font-size:clamp(20px,3.8vh,38px);font-weight:700;line-height:1.25;
+ font-size:clamp(24px,4.8vh,48px);font-weight:700;line-height:1.25;white-space:nowrap;
  padding:clamp(8px,1.5vh,16px) clamp(11px,1.7vw,22px);min-height:clamp(56px,9vh,92px)}
 .o .sh{flex:0 0 auto;width:1.25em;text-align:center;font-size:.82em}
 .o.s0 .sh{color:#FF5E5E}.o.s1 .sh{color:#F5B301}.o.s2 .sh{color:#39D98A}.o.s3 .sh{color:#5AA9FF}
@@ -272,11 +272,11 @@ const CSS = `
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,1.5vw,18px);width:100%}
 .dbtn{border-radius:20px;border:2px solid #2A2A2A;background:#0A0A0A;color:var(--fg);
  min-height:clamp(84px,15vh,150px);display:flex;flex-direction:column;align-items:center;
- justify-content:center;gap:5px;font-size:clamp(24px,4.4vh,44px);font-weight:700}
+ justify-content:center;gap:5px;font-size:clamp(28px,5.4vh,54px);font-weight:700;white-space:nowrap}
 .dbtn .ds{font-size:clamp(12px,1.9vh,17px);color:var(--dim);font-weight:400}
 .dbtn.he{border-color:var(--he)}.dbtn.he.fill{background:var(--he)}
 .dbtn.she{border-color:var(--she)}.dbtn.she.fill{background:var(--she)}
-.dbtn.st{border-color:#3A6E52}.dbtn.qu{border-color:#3A5A7E}
+.dbtn.st{border-color:#3A6E52}.dbtn.nt{border-color:#3A5A7E}.dbtn.qu{border-color:#3A5A7E}
 .dbtn:active{transform:scale(.97)}
 .dbtn.ok{background:#0F3323;border-color:var(--ok)}
 .dbtn.bad{background:#3A1111;border-color:var(--no)}
@@ -284,7 +284,7 @@ const CSS = `
 /* 語序／火眼金睛的字塊 */
 .chips{display:flex;flex-wrap:wrap;gap:clamp(6px,1vw,11px);justify-content:center;width:100%}
 .cw{background:#111;border:1px solid #2C2C2C;border-radius:13px;color:var(--fg);
- font-size:clamp(22px,4.2vh,42px);font-weight:700;
+ font-size:clamp(26px,5.2vh,52px);font-weight:700;white-space:nowrap;
  padding:clamp(7px,1.3vh,14px) clamp(11px,1.6vw,22px)}
 .cw:active{transform:scale(.95)}
 .cw.used{opacity:.18;pointer-events:none}
@@ -638,8 +638,20 @@ function next(){
     var tl=$('.tagline',a);if(tl&&tl.nextSibling)a.insertBefore(hl,tl.nextSibling);else a.insertBefore(hl,a.firstChild)}
   if(cutNext&&OPTG[g]){var bad=shuf($$('#arena .o[data-ok="false"]')).slice(0,cutNext);cutNext=0;
     bad.forEach(function(b){b.classList.add('cutting');setTimeout(function(){b.classList.remove('cutting');b.classList.add('cut')},700)})}
+  fitO();
   run(g==='g6'?QT*4:QT);     /* 記憶配對一局四對，時間比照四題 */
 }
+/* 選項一律一行（使用者 2026-09-28：字放大，但不可以折成兩行）：
+   字先用大字，放不下的那一個選項才縮到剛好一行 */
+function fitO(root){
+  $$('.o,.dbtn',root||$('#arena')).forEach(function(b){
+    b.style.fontSize='';
+    for(var k=0;k<4&&b.scrollWidth>b.clientWidth+1;k++){
+      var f=parseFloat(getComputedStyle(b).fontSize);
+      b.style.fontSize=Math.max(14,Math.floor(f*b.clientWidth/b.scrollWidth*.97))+'px'}
+  });
+}
+addEventListener('resize',function(){if($('#arena')&&$('#arena').classList.contains('on'))fitO()});
 /* 標籤：現在身上有什麼好東西、再連對幾題翻驚喜卡（字少、看得懂） */
 function tagsIn(){
   var h='', need=3-(streak%3);
@@ -720,7 +732,7 @@ function toMcq(c){
     if(same.length&&diff.length>=3)return {q:'「'+c[0]+'」是'+(c[1]==='q'?'❓ 問句':'🙋 直述句')+'。<br>哪一句跟它<b>同一種</b>？',
       o:[pick(same)[0]].concat(diff.slice(0,3).map(function(y){return y[0]})),h:c[2]||'',nm:1}}
   if(g==='g9'&&${DUO9 ? 1 : 0}){ /* 在回答哪一題：四個問句選一個 */
-    var qs=${DUO9 ? JSON.stringify(DUO9.map(x => x.d.split('　')[1] || '')) : '[]'},ks9=${DUO9 ? JSON.stringify(DUO9.map(x => x.v)) : '[]'};
+    var qs=${DUO9 ? JSON.stringify(DUO9.map(x => x.d ? x.d.split('　')[1] || '' : x.t)) : '[]'},ks9=${DUO9 ? JSON.stringify(DUO9.map(x => x.v)) : '[]'};
     var qq=qs[ks9.indexOf(c[1])];
     if(qq)return {q:'「'+c[0]+'」<br>在回答哪一題？',say:c[0],o:[qq].concat(qs.filter(function(x){return x!==qq})),h:c[2]||''}}
   if(g==='g9'){var lab=${DUO9 ? 'LAB9' : "{q:'❓ 問句',s:'🙋 直述句'}"},ks=Object.keys(lab);
@@ -959,6 +971,7 @@ function rSort(){
 ${DUO9 ? duoBtns(DUO9) : `     '<button class="dbtn st" data-v="s">🙋<span class="ds">直述句　在講一件事</span></button>'+
      '<button class="dbtn qu" data-v="q">❓<span class="ds">問句　在問問題</span></button>'+`}
     '</div>'+fbBox();
+${DUO9 && metaOf('g9').duoShuf ? `  if(Math.random()<.5){var du=$('#arena .duo');du.appendChild(du.firstElementChild)}` : ''}
   say(cur[0]);
   $$('.dbtn').forEach(function(b){b.addEventListener('click',function(){
     if(busy)return;var ok=b.getAttribute('data-v')===cur[1];

@@ -754,6 +754,19 @@ async function gamesPage(p, f, vp, e) {
     const gtI = await p.evaluate(() => [g, gLeft]);
     if (gtI[1] > (gtI[0] === 'g7' ? 240 : 180) || gtI[1] < (gtI[0] === 'g7' ? 230 : 170)) e.push('遊戲 ' + i + ' 限時不對（剩 ' + Math.round(gtI[1]) + ' 秒）');
     if (g.ox > 0) e.push('遊戲 ' + i + ' 橫向溢出 ' + g.ox);
+    /* 2026-09-28：選項字放大，而且每一個選項都只有一行、不可以超出按鈕 */
+    const ow = await p.evaluate(() => [...document.querySelectorAll('#arena .o,#arena .dbtn')].filter(b => {
+      const r = b.getBoundingClientRect(); if (!r.width) return false;
+      const fs = parseFloat(getComputedStyle(b).fontSize);
+      return b.scrollWidth > b.clientWidth + 1 || getComputedStyle(b).whiteSpace !== 'nowrap' || fs < 14 }).map(b => b.textContent.trim()));
+    if (ow.length) e.push('遊戲 ' + i + '（' + id + '）選項折行或超出：' + ow.slice(0, 3).join('／'));
+    if (SITE_DIR && /問名字/.test(id)) {
+      const d9 = await p.evaluate(async () => { const r = []; for (let k = 0; k < 16; k++) { rSort();
+        r.push([...document.querySelectorAll('#arena .dbtn')].map(b => b.textContent.trim() + (b.querySelector('svg,img') || /\p{Extended_Pictographic}/u.test(b.textContent) ? '＋圖示' : '')).join('|')) } next(); return r });
+      if (d9.some(x => /圖示/.test(x))) e.push('問名字還是問幾歲：選項不可以有圖示');
+      if (!d9.every(x => /What’s your name\?/.test(x) && /How old are you\?/.test(x))) e.push('問名字還是問幾歲：選項要直接寫英文句子');
+      if (new Set(d9).size < 2) e.push('問名字還是問幾歲：選項位置沒有隨機');
+    }
     /* 倒數要真的在跑 */
     const a1 = g.sec; await p.waitForTimeout(2400);
     const a2 = (await snap()).sec;
