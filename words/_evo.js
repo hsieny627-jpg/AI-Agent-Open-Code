@@ -130,7 +130,7 @@ const has = w => !!byW[w];
 
 const CSS = `
 /* ⏳ 單字時光機（2026-09-28） */
-.evbig{font-size:clamp(64px,min(14vh,15vw),132px);font-weight:700;color:#FFD24A;letter-spacing:.02em;line-height:1.1}
+.evbig{font-size:clamp(40px,min(13vh,9vw),128px);font-weight:700;color:#FFD24A;letter-spacing:.02em;line-height:1.1}
 .evtl{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:clamp(6px,1vw,12px);max-width:100%}
 .evn{display:flex;flex-direction:column;align-items:center;gap:3px;background:linear-gradient(180deg,#1C160C,#0E0B06);
  border:2px solid #5A4520;border-radius:18px;padding:clamp(6px,1.1vh,12px) clamp(10px,1.4vw,18px);

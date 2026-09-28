@@ -49,12 +49,12 @@ const GROUPS = [
    { l: '👪 家人', cards: STEPS },
    /* 2026-09-27：四年級 單字首頁跟職業放同一列（多一列，直式 iPad 首頁就會有捲軸，量過） */
    { l: '🔤 單字', cards: [{ n: '', ic: '🔤', t: '四年級 單字首頁', href: 'words/index.html',
-       d: '家人、職業、結構、故事、🌍 家人環遊世界' },
+       d: '家人、職業、結構、故事、時光機' },
      { n: '', ic: '💼', t: '職業單字', href: 'words/jobs.html',
        d: 'student、teacher、doctor、farmer、nurse' },
      /* 2026-09-28 使用者第 8(1) 點：家人環遊世界獨立成一個主題（首頁直接一張卡） */
      { n: '', ic: '🌍', t: '家人單字環遊世界', href: 'words/world.html',
-       d: '別的國家怎麼叫爸爸、媽媽？為什麼像？' }] },
+       d: '別國怎麼叫爸爸媽媽' }] },
    { l: '💬 句型', cards: [{ n: '', ic: '💬', t: '四年級 句型', href: 'sentences/index.html',
        d: 'Who’s he?／Is he a doctor?　＋ 🌍 環遊世界、📝 Review 1' }] }
  ] },

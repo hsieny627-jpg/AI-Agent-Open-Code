@@ -127,7 +127,7 @@ const mapScene = (tag, inner, lines, below, k, src) => ({ tag, map: 1, src: src 
 
 const MAPS = [
   mapScene('🗺 很久很久以前（6000 年前）',
-    dot(STEPPE[0], STEPPE[1], 'pulse', .3) + txt(STEPPE[0] - 5, STEPPE[1] + 3.2, '👨‍👩‍👧 草原', 'big', .5) +
+    dot(STEPPE[0], STEPPE[1], 'pulse', .3) + txt(STEPPE[0] - 14, STEPPE[1] + 3.2, '👨‍👩‍👧 草原', 'big', .5) +
     txt(STEPPE[0] - 7, STEPPE[1] - 3.2, '「mā-ter！」', 'say', 1.1),
     ['有一群人住在<b>黑海北邊的草原</b>', '很多家人字，<b>從這裡出發</b>'], '', 0, 'steppe'),
   mapScene('🗺 搬家，分成兩大家族',

@@ -260,7 +260,9 @@ async function scenePage(p,f,vp,e){
   const want=await p.evaluate(()=>document.getElementById('fwd').textContent);
   await Promise.all([p.waitForNavigation({timeout:5000}).catch(()=>null),p.click('#fwd')]);
   acts++;
-  if(!/world\.html$/.test(p.url()))e.push('按「'+want+'」沒有到環遊世界（'+p.url().split('/').pop()+'）');
+  /* ⏳ 時光機（2026-09-28）的「🃏 回到字卡」要到那一個字的字卡；其他頁的 fwd 都是環遊世界 */
+  const wantF=/-evo\.html$/.test(f)?f.split('/').pop().replace('-evo',''):null;
+  if(wantF?p.url().split('/').pop()!==wantF:!/world\.html$/.test(p.url()))e.push('按「'+want+'」沒有到'+(wantF||'環遊世界')+'（'+p.url().split('/').pop()+'）');
   await p.goBack().catch(()=>null);await p.waitForTimeout(500);
  }
  /* ④ 出處：一條一頁、字要大、翻得動、關得掉（每一頁都量） */
