@@ -7,6 +7,20 @@
 **引擎跟 `sentences/` 共用**，所以 `sentences/CLAUDE.md` 裡的字卡規則、發音引擎、答錯獨立頁、
 語速六段、音效暫時刪除……全部適用，這一份只寫「這一課不一樣的地方」。
 
+## 2026-09-28 改版（第二批＋新增 (二)～(五)）——先讀這一節
+
+共用的改動寫在 `sentences/CLAUDE.md`、`words/CLAUDE.md` 最上面「2026-09-28」。這一課自己的：
+
+| # | 使用者要的 | 做法（在哪裡） |
+|---|---|---|
+| (三) | 問名字還是問幾歲：選項英文、位置隨機、不加圖示；答錯頁正確 | `_game_data.js` 的 G9 `duo`（見 sentences/CLAUDE.md） |
+| 6(4)E | 每個字的時光機 | `numbers/<字>-evo.html` 13 頁、`sight/<字>-evo.html` 19 頁（`node words/_build_evo.js`），兩個首頁各多一張「⏳ 時光機」 |
+| 6(3)(4) | 故事每一張以前 ⚡ 今天、N 年前、自己的出處 | `_num_pages.js` 的 `numW`、`_sight_pages.js` 的 `whyS`：`evo:` 或 `was:`；童謠 four and twenty ＝ 1744 年、法國 80 那一幕加英文 **fourscore**（林肯 1863：Four score and seven years ago） |
+| 6(4)C | 德文「年」標題洩題 | `whyS` 標題改「📅 year 的祕密」 |
+| 12(2) | zero 的旅行看不懂、字太小 | `numW` 第 2 幕：四站路線（印度 śūnya ➜ 阿拉伯 ṣifr（翻譯）➜ 義大利 zephirum（1202 Fibonacci）➜ 英國 zero），每一站「⏳ 大約 N 年前」，一顆 0 沿著路線走 |
+| 12(1)(5) | 放大地圖、英德荷三兄弟 | `sight/map-story.html`、`sight/en-de-nl.html`（內容跟四年級同一份 `words/_pages2.js`，回的是三年級的首頁）；數字首頁也連過去 |
+| 9 | 常見字環遊世界：逐字中文、’ 那一幕 | `worldS`（What’s your name? 後面：德荷瑞典問名字用「叫做」，沒有 ’s；法文 t’appelles 的 ’ 藏 e） |
+
 ## 2026-09-27 改版（使用者 16 點的第一批）——先讀這一節
 
 引擎的改動（name 名牌圖示、答錯頁唸到哪亮到哪、遊戲 3 分鐘／火眼金睛 4 分鐘、驚喜卡外觀 38 種＋一律二～五選一、選項誘答力）
