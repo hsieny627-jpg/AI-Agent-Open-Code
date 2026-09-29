@@ -32,12 +32,15 @@ const {chromium}=require('/opt/node22/lib/node_modules/playwright');
 const fs=require('fs'),DIR=__dirname+'/';
 const args=process.argv.slice(2);
 const showText=args.includes('--text');
-const files=args.filter(a=>a!=='--text');
+/* 2026-09-29：全部量一次超過 40 分鐘會被切斷 ➜ --group=1/4 只量第 1 組（輪流分，慢頁會平均分散），四組同時跑 */
+const grp=(args.find(a=>a.startsWith('--group='))||'').slice(8).split('/').map(Number);
+const files=args.filter(a=>a!=='--text'&&!a.startsWith('--group='));
 /* 2026-09-25：G3 的數字單字、Sight Words 也是這一套樣板產生的，一起量 */
 const G3W=['numbers','sight'].map(d=>'../G3 - L1 + L2/'+d+'/').filter(d=>fs.existsSync(DIR+d))
  .map(d=>fs.readdirSync(DIR+d).filter(f=>f.endsWith('.html')).sort().map(f=>d+f)).reduce((a,b)=>a.concat(b),[]);
-const FILES=files.length?files:
+const ALL=files.length?files:
  fs.readdirSync(DIR).filter(f=>f.endsWith('.html')).sort().concat(['../index.html']).concat(G3W);
+const FILES=grp.length===2&&grp[1]>0?ALL.filter((f,i)=>i%grp[1]===grp[0]-1):ALL;
 const VPS=[{n:'1024x768',width:1024,height:768},{n:'820x1180',width:820,height:1180}];
 
 /* 共用：量溢出與「被箭頭壓到」 */
@@ -377,5 +380,5 @@ for(const vp of VPS){
 }
 await b.close();
 if(bad.length){console.log(bad.join('\n'));console.log('=== 失敗 '+bad.length+' 項');process.exit(1)}
-console.log('=== 全部通過：'+FILES.length+' 頁 × '+VPS.length+' 尺寸 × 共 '+acts+' 個檢查點');
+console.log('=== 全部通過'+(grp.length===2?'（第 '+grp.join('/')+' 組）':'')+'：'+FILES.length+' 頁 × '+VPS.length+' 尺寸 × 共 '+acts+' 個檢查點');
 })();

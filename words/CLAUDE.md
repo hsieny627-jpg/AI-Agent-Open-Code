@@ -736,6 +736,17 @@ node words/_verify.js son.html           # 只量改到的那一頁（省額度�
 node words/_verify.js --text why.html    # 順便印出每一幕的文字
 ```
 
+**全部量一定要分 4 組同時跑**（2026-09-29 使用者指定）：頁數多、每頁要等動畫，
+一次跑完超過 40 分鐘，前兩次都被切斷——不是網站有錯。`--group=k/4` 只量第 k 組
+（輪流分配，慢頁平均分散），四組同時在背景跑，四組都印「全部通過」才算 0 失敗：
+
+```bash
+for k in 1 2 3 4; do node words/_verify.js --group=$k/4 > /tmp/v$k.log 2>&1 & done; wait
+tail -n 3 /tmp/v*.log                    # 每組最後一行是總結；有失敗項會列在前面
+```
+
+只量改到的那幾頁時不必分組。
+
 `_verify.js` 會在 1024×768 與 820×1180 兩種尺寸、`offline:true` 下檢查，
 **自動分辨兩種頁型**：
 
