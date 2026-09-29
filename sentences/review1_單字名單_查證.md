@@ -7,6 +7,15 @@
 > 名單來源：`sentences/Review1_單字名單_草稿.md` 第二版（使用者 2026-09-28 確認的 100 個字；字源、證據等級、使用者的決定都在那一份）。
 > 2026-09-28 那一次的證據是用**搜尋結果摘要**查的（製作環境打不開原始網頁），所以全部先標 ⏳。
 
+> ⛔ **2026-09-29 嘗試核對：網路被擋，0 條核對**。這個雲端環境的網路政策擋掉了這份檔案 32 個出處網域中的 31 個
+> （只有 en.wikipedia.org 打得開）。所有字維持 ⏳，**沒有一個字憑記憶改狀態**。
+> 要繼續 ①：請使用者在雲端環境設定 ➜ Network access 改成「Full」，或把下面這些網域加進允許清單，再開新對話從物品1 #1 開始：
+> blog.google、canaa.jp、djsresearch.co.uk、flipedu.parenting.com.tw、gnn.gamer.com.tw、kidscreen.com、kingcar.org.tw、
+> news.ltn.com.tw、news.nate.com、news.tvbs.com.tw、news.yahoo.co.jp、nlab.itmedia.co.jp、projectplay.org、prtimes.jp、
+> supertaste.tvbs.com.tw、tw.stock.yahoo.com、udn.com、vocus.cc、www.agriharvest.tw、www.children.org.tw、www.cmoney.tw、
+> www.commonsensemedia.org、www.consumers.org.tw、www.cspdailynews.com、www.ctee.com.tw、www.healthnews.com.tw、
+> www.moa.gov.tw、www.nicopuchi.jp、www.openbook.org.tw、www.parenting.com.tw、youthsportsbusinessreport.com
+
 ## 狀態說明
 
 | 狀態 | 意思 |
