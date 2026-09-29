@@ -731,12 +731,9 @@ brother    me     sister                             └──────┬─
 perl -0777 -ne 'if(/<script>(.*?)<\/script>/s){print $1}' words/<檔名>.html > /tmp/a.js && node --check /tmp/a.js
 
 # 量測（Playwright 已內建 Chromium）
-node words/_verify.js                    # 全部
+node words/_verify.js                    # 全部（一次跑會被切斷 ➜ 改用下面的分 4 組）
 node words/_verify.js son.html           # 只量改到的那一頁（省額度）
-# ⚠️ 2026-09-28：64 頁一次量會超過 40 分鐘（大多在等動畫），製作環境會被切斷。全部量時分 4 組同時跑：
-#   cd words && ls *.html | awk '{print > "/tmp/wgrp" (NR%4)}' && cd ..
-#   for g in 0 1 2 3; do node words/_verify.js $(cat /tmp/wgrp$g) > /tmp/vw$g.txt 2>&1 & done; wait; tail -n 2 /tmp/vw*.txt
-#   根目錄首頁另外量：node words/_verify.js ../index.html
+# ⚠️ 全部量要分 4 組同時跑，指令在下面（2026-09-29 起用 --group，連 G3 數字／Sight Words 一起量）
 node words/_verify.js --text why.html    # 順便印出每一幕的文字
 ```
 
