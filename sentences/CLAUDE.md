@@ -746,6 +746,31 @@ node sentences/_build_kahoot.js  # 根目錄 kahoot xlsx ＋ 上架說明
   名單 98 個字：全部 ✅（2026-10-01 名詞 dodgeball 刪、加 play with LEGO；吉他保留，烏克麗麗沒有台灣數據）。
   **名單已定（使用者 2026-10-01 要開新對話做 ③ 字卡）。** 字卡用詞：play with LEGO（不是 build LEGO、不寫 Legos）。
 
+**2026-10-01 ③ 字卡：使用者決定（10 點「全部照建議」）＋ 3 張樣品已做好（分支 `claude/eager-tesla-6dfygq`，還沒進 main）**
+
+| # | 決定 |
+|---|---|
+| 1 | 字卡三幕：① 中文＋擬真圖示 ② 英文（母音紅、不發音灰、音節；片語每個字正下方中文＋圖示）＋字的結構一行 ③ 放進句子（物品 I like ___.／活動 I like to ___.）。「以前」不硬湊，字源有查證才放進出處 |
+| 2 | 新資料夾 `review1/`（三、四年級共用），四組：物品1（26）、物品2（24）、活動1（22）、活動2（26）＋一頁單字首頁；兩個年級首頁各一張卡連過去 |
+| 3 | 句型卡替換字切換（📘 課本／物品1／物品2）**這次不做**，跟第 ④ 步遊戲一起做 |
+| 4 | 出處每個字：第 1 條 ＝ 查證檔備註裡的數字畫成小圖表（必有）；第 2 條 ＝ 字源／結構（Etymonline／Cambridge 查得到才放） |
+| 5 | 沒有人氣數字的字（play with LEGO、play dodgeball、dolls）照實寫：第一行「老師選的字」＋已有的證據，不寫沒證據的說法 |
+| 6 | milk 移到「飲料」 |
+| 7 | 片語小字：with ＝ 和、my ＝ 我的、in ＝ 在……裡；the／a／an／to 下面空白 |
+| 8 | 品牌圖示自己畫、不像 logo（YouTube ＝ 螢幕＋播放三角形灰白色、Minecraft ＝ 像素方塊、Pokémon 卡 ＝ 卡片、Splatoon ＝ 油漆潑灑） |
+| 9 | 發音：Kokoro 美式女聲預錄（`review1/_audio.js` ➜ `review1/audio/`）；語音檔沒有的才用瀏覽器語音 |
+| 10 | 樣品：stickers（物品）、play basketball（活動）、stickers 的出處頁 |
+
+**樣品還在等使用者回覆的 3 件事（回覆後才做全部 98 張）**：
+(a) 音節照零件切（stick·ers、bas·ket·ball，建議）還是母音後面切（sti·ckers、ba·sket·ball）；
+(b) to 的音標用輕讀 /tə/（建議，跟語音檔一樣）還是 /tuː/；(c) play 的圖示每個活動用自己的（樣品 ⛹️、piano 🎹）。
+
+**檔案**：`review1/_data.js`（唯一真相來源：音標 RAW、自畫圖示 ICON、每個字的 tk／pt／ex／ev／et）、
+`review1/_build.js`（用 `words/_build.js` 的 buildSet，`W.scenes`／`W.say`／`SET.common` 是「資料裡有寫才開」，其他字卡逐位元組不變，已驗證）、
+`review1/_audio.js`、`review1/_verify.js`（片語不折行不超出、英文 ≧ 30px、每句有語音檔、出處每條一頁放得下、第 1 條有圖表）。
+量測：`node words/_verify.js ../review1/<檔>.html` ＋ `node review1/_verify.js`，樣品兩支都 0 失敗。
+**換電腦要重做語音檔**：`pip install sherpa-onnx lameenc numpy`，下載 `kokoro-en-v0_19`（見 `G3 - L1 + L2/CLAUDE.md`），`TTS_MODELS=<資料夾> node review1/_audio.js`。
+
 **➡️ 第三批的下一步順序（使用者 2026-09-29 指定：照順序做，不可跳步、不可並行）**
 
 | 步驟 | 做什麼 | 做完的判準 |
