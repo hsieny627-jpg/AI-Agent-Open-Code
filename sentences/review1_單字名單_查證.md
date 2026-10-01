@@ -7,6 +7,12 @@
 > 名單來源：`sentences/Review1_單字名單_草稿.md` 第二版（使用者 2026-09-28 確認的 100 個字；字源、證據等級、使用者的決定都在那一份）。
 > 2026-09-28 那一次的證據是用**搜尋結果摘要**查的（製作環境打不開原始網頁），所以全部先標 ⏳。
 
+> 🔄 **2026-10-01 第四次（使用者 6 點指定）：✅ 97、⏳ 1、🗑️ 3（名單現在 98 個字）**。
+> 盲盒→**stickers**、組樂高→**collect stickers**、拉小提琴→**play the drums**（都是找不到 2024 以後兒童證據才換）；
+> 加入 **dolls**、**play dodgeball**（使用者決定；躲避球最新證據只到 2019）；課本字：吉他、烤蛋糕找到證據保留，
+> **跳繩、滑板、放風箏刪除**（🗑️，列保留在表裡方便追查）；音樂、聽音樂換更強的證據。
+> ⏳ 只剩物品2 的名詞 dodgeball（等使用者決定要不要跟「打躲避球」一起留）。
+
 > 🔄 **2026-09-29 第三次（使用者指定：❌ 的字再找 2024 以後的兒童證據，找不到才換字）：現在 ✅ 93、❌ 0、⏳ 7**。
 > 同一個字找到新證據 ➜ 保留（可樂、果汁、電視、狗、貓、腳踏車、跑步、公園、待在家、聊天、玩具、爺爺奶奶、音樂、繪本…）；
 > 找不到 ➜ 換成有證據的字：cake→**donuts**、sausages→**spaghetti**、mangoes→**milk**、Block Blast!→**Splatoon**、
@@ -77,7 +83,8 @@
 | 22 | 水果 | milk | 牛奶 | S5 農委會 2007 十大經典國產水果票選、農糧署票選（2007） https://www.agriharvest.tw/archives/26447 https://www.moa.gov.tw/theme_data.php?theme=news&sub_theme=agri&id=2901 | ✅ | **2026-09-29 換字**：原本 mangoes 芒果，2024 以後找不到兒童證據（只有 2007 全民票選）。HK HugKum／小學館《小学一年生》2024年11月號讀者調查 500 人（2024-12-30） https://hugkum.sho.jp/668458：**第2名 牛乳 30.8%**；K1 韓國小學生 2024：牛奶 11% 第4名。⚠️ 這一格從「水果」變成「飲料」 |
 | 23 | 玩具 | stuffed animals | 絨毛娃娃 | J4 🇯🇵 小學館 JS研究所×コロコロ研究所 2025 小學生年度趨勢（PR TIMES）（2025） https://prtimes.jp/main/html/rd/p/000000018.000140019.html | ✅ | J4（2025-11-26）：女生「宝物」**第1名 ぬいぐるみ** |
 | 24 | 玩具 | Beyblades | 戰鬥陀螺 | J4 🇯🇵 小學館 JS研究所×コロコロ研究所 2025 小學生年度趨勢（PR TIMES）（2025） https://prtimes.jp/main/html/rd/p/000000018.000140019.html | ✅ | J4：男生「一番欲しいもの」**第1名 ベイブレード X**；男生和朋友熱中的事第3名「ベイブレードなどのホビー」 |
-| 25 | 玩具 | blind boxes | 盲盒 | 2026 兒童節禮物趨勢文（年份待核對）https://vocus.cc/article/69cb9528fd897800010a6b1e | ✅ | vocus 2026-03-31（年份核對：2026）：「高年級則是泡泡瑪特盲盒」。⚠️ 是個人部落格文章，沒有調查數據，證據力弱 |
+| 25 | 玩具 | stickers | 貼紙 | 2026 兒童節禮物趨勢文（年份待核對）https://vocus.cc/article/69cb9528fd897800010a6b1e | ✅ | **2026-10-01 換字**：原本 blind boxes 盲盒，只有部落格文章，找不到 2024 以後的兒童調查（泡泡瑪特官方標示 15 歲以上）。NS ニフティキッズ「シール」調查（2025-12-23～2026-01-26，小中學生 2,484 人；共同通信 OVO 2026-03-02 報導） https://ovo.kyodo.co.jp/news/culture/a-2078237：**77.5% 的小學生正熱衷收集貼紙**，有貼紙本的小學生九成會交換 |
+| 26 | 玩具 | dolls | 娃娃 | J4 小學館 2025 小學生年度趨勢 https://prtimes.jp/main/html/rd/p/000000018.000140019.html | ✅ | **使用者 2026-10-01 決定加入**。J4（2025-11-26）：女生「宝物」**第5名 人形**（排行圖看過）；萬代 2025 聖誕調查「人形（抱き人形・着せ替え人形）」是孩子想要的玩具類別之一（沒有百分比） https://www.bandainamco.co.jp/files/E29885webE38090E38390E383B3E38380E382A4E38193E381A_2.pdf |
 
 ## 物品2
 
@@ -99,13 +106,13 @@
 | 14 | 球類 | badminton | 羽毛球 | S10 金車 2026 國中小學生運動調查（聯合報）（2026） https://udn.com/news/story/6885/9529187<br>S11 兒福聯盟 2024 兒少運動狀況調查（聯合報）（2024） https://udn.com/news/story/6898/8120416 | ✅ | S10：女生偏好**羽球 68.6%**。S11 沒有提到羽球 |
 | 15 | 球類 | soccer | 足球 | U2 🇺🇸 Project Play《State of Play 2025》（2025） https://projectplay.org/state-of-play-2025/participation-trends<br>J2 🇯🇵 學研《小學生白書》2024-11 習い事（ねとらぼ）（2024） https://nlab.itmedia.co.jp/research/articles/3163692/<br>S11 兒福聯盟 2024 兒少運動狀況調查（聯合報）（2024） https://udn.com/news/story/6898/8120416 | ✅ | J2（2024-11 調查）：習い事**第8名 サッカー・フットサル**；J4 男生熱中第4名 サッカー。U2 說 6～12 歲足球 -3%；S11 沒有提到足球 |
 | 16 | 球類 | baseball | 棒球 | U2 🇺🇸 Project Play《State of Play 2025》（2025） https://projectplay.org/state-of-play-2025/participation-trends<br>S11 兒福聯盟 2024 兒少運動狀況調查（聯合報）（2024） https://udn.com/news/story/6898/8120416 | ✅ | U2 Project Play 2025 其實說 6～12 歲**打棒球 -19%**（不是熱門的證據）；S11 沒有提到棒球。**核對補** J2 學研 2024-11 習い事（ねとらぼ第1～2頁） https://nlab.itmedia.co.jp/research/articles/3163692/：**第13名 硬式野球・軟式野球・ソフトボール** |
-| 17 | 球類 | dodgeball | 躲避球 | 親子天下：小學體育課為什麼上躲避球（年份待核對）https://www.parenting.com.tw/article/5080465 | ⏳ | 親子天下打不開（Cloudflare 403）；2026-09-29 再找 2024 以後的躲避球兒童證據：**沒有找到**（找到的都是 2018 年）。等使用者打開那一頁 |
+| 17 | 球類 | dodgeball | 躲避球 | 親子天下：小學體育課為什麼上躲避球（年份待核對）https://www.parenting.com.tw/article/5080465 | ⏳ | 親子天下原文的 Yahoo 轉載打得開：是 **2019-12-17** 的文章（躲避球是台灣小學體育課的共同記憶），**不是 2024 以後**。2026-10-01 使用者決定「打躲避球」要加入；這個名詞 dodgeball 要不要也留，等使用者回覆 |
 | 18 | 漫畫 | comics | 漫畫 | S17 親子天下 國中小樂讀少年閱讀習慣調查（Openbook）（年份待核對） https://www.openbook.org.tw/article/p-71149<br>J4 🇯🇵 小學館 JS研究所×コロコロ研究所 2025 小學生年度趨勢（PR TIMES）（2025） https://prtimes.jp/main/html/rd/p/000000018.000140019.html | ✅ | S17 年份核對：**2025-06-16**，高年級最喜歡的課外書**第1名漫畫**；J4 女生最想要第1名「本・まんが」 |
 | 19 | 書 | picture books | 繪本 | S14 親子天下：2025 博客來／誠品暢銷童書（2025） https://www.parenting.com.tw/article/6001747 | ✅ | 親子天下 S14 還是打不開（403），**2026-09-29 找到新證據**：G24 學研《小学生白書》2024年11月調查（官方網站）：好きな本・雑誌 **第4名 絵本 11.8%**，一年級 28.5% https://www.gakken.jp/kyouikusouken/whitepaper/202411/chapter4/14.html |
 | 20 | 書 | detective stories | 偵探故事 | S14 親子天下：2025 博客來／誠品暢銷童書（2025） https://www.parenting.com.tw/article/6001747 | ✅ | S14 親子天下**打不開**（403）。**核對補** S17 親子天下樂讀少年調查（Openbook 2025-06-16） https://www.openbook.org.tw/article/p-71149：低年級、中年級最喜歡的課外書都有「**偵探冒險**」 |
 | 21 | 漫畫 | science comics | 科學漫畫 | S14 親子天下：2025 博客來／誠品暢銷童書（2025） https://www.parenting.com.tw/article/6001747<br>S17 親子天下 國中小樂讀少年閱讀習慣調查（Openbook）（年份待核對） https://www.openbook.org.tw/article/p-71149 | ✅ | S14 **打不開**（403）。S17 2025-06-16：「近年受到許多孩子喜愛的**學習漫畫**，如《達克比辦案》…」 |
 | 22 | 書 | books | 書 | U4 🇬🇧 DJS Research：Sainsbury’s 兒童休閒調查（年份待核對） https://djsresearch.co.uk/insights/poll-reveals-top-pastimes-of-todays-kids-04452 | ✅ | U4 DJS 是 **2019**（太舊）。**核對補** J4 小學館 2025 小學生年度趨勢 https://prtimes.jp/main/html/rd/p/000000018.000140019.html：女生趣味第2名「読書・まんがを読む」、最想要第1名「本・まんが」；S17 2025 |
-| 23 | 生活愛用品 | music | 音樂 | S13 金車 青少年休閒調查（年份待核對） https://kingcar.org.tw/survey/500574 | ✅ | **2026-09-29 找到新證據**：G25 學研《小学生白書》2025年11月調查（官方網站，1,200 名小學生本人作答）：最快樂的事「音楽（聴く）」**4.6%**（https://www.gakken.jp/kyouikusouken/whitepaper/202511/chapter4/05.html）。⚠️ 比例低；如果要換，候選是 dolls 娃娃（J4 女生宝物第5名） |
+| 23 | 生活愛用品 | music | 音樂 | S13 金車 青少年休閒調查（年份待核對） https://kingcar.org.tw/survey/500574 | ✅ | **2026-10-01 找到更強的證據**：NM ニフティキッズ 小中學生影音／音樂調查（2024-04-11） https://prtimes.jp/main/html/rd/p/000000314.000023383.html：**87% 的小中學生用 YouTube 等影音平台聽音樂**；SG 小學館《コロコロコミック》讀者調查（2025-04～05；2025-08-07 發表） https://prtimes.jp/main/html/rd/p/000000016.000140019.html：小學生最喜歡的歌手排行（第1名 Mrs. GREEN APPLE）；G25 學研《小学生白書》2025-11 習い事ランキング（圖表看過） https://www.gakken.jp/kyouikusouken/whitepaper/202511/chapter6/01.html：音楽教室（歌や楽器など）12.7% 第4名 |
 | 24 | 生活愛用品 | dogs | 狗 | S19 1111 人力銀行 寵物調查（年份待核對） https://tw.stock.yahoo.com/news/%E9%A4%8A%E5%B0%8F%E5%AD%A9%E4%B8%8D%E5%A6%82%E9%A4%8A%E6%AF%9B%E5%B0%8F%E5%AD%A9%EF%BC%9F%E8%AA%BF%E6%9F%A5%EF%BC%9A%E9%80%BE9%E6%88%90%E4%B8%8A%E7%8F%AD%E6%97%8F%E6%AF%8F%E5%A4%A9%E9%99%AA%E5%AF%B5%E7%89%A925%E5%B0%8F%E6%99%82-024114136.html | ✅ | **2026-09-29 找到兒童證據**：NF ニフティキッズ 小中學生 2,220 人寵物調查（2024-11-14） https://prtimes.jp/main/html/rd/p/000000346.000023383.html：家裡養的寵物 **第1名 イヌ**、想養的第2名 |
 | 25 | 生活愛用品 | cats | 貓 | S19 1111 人力銀行 寵物調查（年份待核對） https://tw.stock.yahoo.com/news/%E9%A4%8A%E5%B0%8F%E5%AD%A9%E4%B8%8D%E5%A6%82%E9%A4%8A%E6%AF%9B%E5%B0%8F%E5%AD%A9%EF%BC%9F%E8%AA%BF%E6%9F%A5%EF%BC%9A%E9%80%BE9%E6%88%90%E4%B8%8A%E7%8F%AD%E6%97%8F%E6%AF%8F%E5%A4%A9%E9%99%AA%E5%AF%B5%E7%89%A925%E5%B0%8F%E6%99%82-024114136.html | ✅ | **2026-09-29 找到兒童證據**：NF ニフティキッズ 小中學生 2,220 人寵物調查（2024-11-14） https://prtimes.jp/main/html/rd/p/000000346.000023383.html：家裡養的寵物 **第2名 ネコ**、想養的 **第1名** |
 
@@ -117,13 +124,13 @@
 | 2 | 球類運動 | play badminton | 打羽毛球 | S10 金車 2026 國中小學生運動調查（聯合報）（2026） https://udn.com/news/story/6885/9529187<br>S11 兒福聯盟 2024 兒少運動狀況調查（聯合報）（2024） https://udn.com/news/story/6898/8120416 | ✅ | S10：女生偏好羽球 68.6% |
 | 3 | 球類運動 | play soccer | 踢足球 | U2 🇺🇸 Project Play《State of Play 2025》（2025） https://projectplay.org/state-of-play-2025/participation-trends<br>J2 🇯🇵 學研《小學生白書》2024-11 習い事（ねとらぼ）（2024） https://nlab.itmedia.co.jp/research/articles/3163692/ | ✅ | J2 第8名 サッカー（2024-11 調查）；J4 男生熱中第4名 サッカー |
 | 4 | 球類運動 | play baseball | 打棒球 | U2 🇺🇸 Project Play《State of Play 2025》（2025） https://projectplay.org/state-of-play-2025/participation-trends<br>S11 兒福聯盟 2024 兒少運動狀況調查（聯合報）（2024） https://udn.com/news/story/6898/8120416 | ✅ | U2 說打棒球 -19%，S11 沒有提到。**核對補** J2 學研 2024-11 習い事（ねとらぼ第1～2頁） https://nlab.itmedia.co.jp/research/articles/3163692/：第13名 野球 |
-| 5 | 球類運動 | play dodgeball | 打躲避球 | 親子天下：小學體育課為什麼上躲避球（年份待核對）https://www.parenting.com.tw/article/5080465 | ⏳ | 同物品2 #17：打不開、也沒有新證據，等使用者打開那一頁 |
+| 5 | 球類運動 | play dodgeball | 打躲避球 | 親子天下：小學體育課為什麼上躲避球（年份待核對）https://www.parenting.com.tw/article/5080465 | ✅ | **使用者 2026-10-01 決定加入**（跟 9/28 的課本字一樣，由使用者決定）。⚠️ 找得到的最新證據只到 2019：親子天下〈為什麼小學體育課要上躲避球〉Yahoo 轉載（**2019-12-17**） https://tw.news.yahoo.com/%E6%A0%A1%E5%9C%92%E5%86%B7%E7%9F%A5%E8%AD%98%E4%B9%8B-%E7%82%BA%E4%BB%80%E9%BA%BC%E5%B0%8F%E5%AD%B8%E9%AB%94%E8%82%B2%E8%AA%B2%E8%A6%81%E4%B8%8A%E8%BA%B2%E9%81%BF%E7%90%83-001303875.html；2024 以後沒有躲避球的兒童調查 |
 | 6 | 個人運動 | run | 跑步 | S10 金車 2026 國中小學生運動調查（聯合報）（2026） https://udn.com/news/story/6885/9529187 | ✅ | **2026-09-29 找到新證據**：OIA 美國 Outdoor Foundation《2025 Outdoor Participation Trends Report》（2024 年資料，6～17 歲） https://material-civet.files.svdcdn.com/production/images/documents/2025-OIA_Participation_Trends_Full_Report_2025-12-15-211912_fchj.pdf：6～17 歲最常做的戶外活動 **第4名 Running, Jogging 20.3%**。⚠️ 美國資料 |
 | 7 | 個人運動 | swim | 游泳 | J2 🇯🇵 學研《小學生白書》2024-11 習い事（ねとらぼ）（2024） https://nlab.itmedia.co.jp/research/articles/3163692/ | ✅ | J2（2024-11 調查，1,200 名小學生）：**第1名 水泳**；S20 才藝 #游泳 |
 | 8 | 個人運動 | ride my bike | 騎我的腳踏車 | S12 兒福聯盟 2018 兒童運動現況（2018） https://www.children.org.tw/news/news_detail/1942 | ✅ | **2026-09-29 找到新證據**：OIA 美國 Outdoor Foundation《2025 Outdoor Participation Trends Report》（2024 年資料，6～17 歲） https://material-civet.files.svdcdn.com/production/images/documents/2025-OIA_Participation_Trends_Full_Report_2025-12-15-211912_fchj.pdf：6～17 歲 **第2名 Bicycling 27.8%**。⚠️ 美國資料 |
 | 9 | 個人運動 | go camping | 去露營 | S12 兒福聯盟 2018 兒童運動現況（2018） https://www.children.org.tw/news/news_detail/1942 | ✅ | **2026-09-29 換字**：原本 go for a walk，2024 以後沒有兒童證據。OIA 美國 Outdoor Foundation《2025 Outdoor Participation Trends Report》（2024 年資料，6～17 歲） https://material-civet.files.svdcdn.com/production/images/documents/2025-OIA_Participation_Trends_Full_Report_2025-12-15-211912_fchj.pdf：6～17 歲 **第1名 Camping 29.1%**；G24 學研《小学生白書》2024年11月調查（官方網站）：暑假想去 キャンプ・バーベキュー 15.8% |
-| 10 | 才藝 | play the piano | 彈鋼琴 | J2 🇯🇵 學研《小學生白書》2024-11 習い事（ねとらぼ）（2024） https://nlab.itmedia.co.jp/research/articles/3163692/ | ✅ | J2 只寫「音楽教室（歌や楽器など）」第4名，**沒有寫鋼琴**。**核對補** S20 TVBS 兒童才藝網路聲量（2024-05-17） https://news.tvbs.com.tw/life/2486448：音樂類 #鋼琴（家長網路聲量，2023-04～2024-04） |
-| 11 | 才藝 | play the violin | 拉小提琴 | S20 TVBS 兒童才藝網路聲量（年份待核對） https://news.tvbs.com.tw/life/2486448 | ✅ | S20 年份核對：**2024-05-17**，網友熱議兒童才藝 TOP6：音樂 #小提琴（⚠️ 是家長網路聲量，不是孩子的喜好） |
+| 10 | 才藝 | play the piano | 彈鋼琴 | J2 🇯🇵 學研《小學生白書》2024-11 習い事（ねとらぼ）（2024） https://nlab.itmedia.co.jp/research/articles/3163692/ | ✅ | **2026-10-01 換更強的證據**：SG 小學館《コロコロコミック》讀者調查（2025-04～05；2025-08-07 發表） https://prtimes.jp/main/html/rd/p/000000016.000140019.html：小學生正在學的樂器 **第2名 ピアノ 18.5%**（第1名是「沒有」）、想開始學的前三名有ピアノ |
+| 11 | 才藝 | play the drums | 打鼓 | S20 TVBS 兒童才藝網路聲量（年份待核對） https://news.tvbs.com.tw/life/2486448 | ✅ | **2026-10-01 換字**：原本 play the violin 拉小提琴，只有家長網路聲量，2024 以後的兒童調查都沒有小提琴（小學館 2025 樂器調查也沒有）。SG 小學館《コロコロコミック》讀者調查（2025-04～05；2025-08-07 發表） https://prtimes.jp/main/html/rd/p/000000016.000140019.html：小學生「想開始學的樂器」**前三名：ドラム、ギター、ピアノ**（新聞稿摘要寫 ドラム第1，內文寫 ドラム第3，兩處不一致，字卡只寫「前三名」） |
 | 12 | 才藝 | do taekwondo | 學跆拳道 | S20 TVBS 兒童才藝網路聲量（年份待核對） https://news.tvbs.com.tw/life/2486448 | ✅ | S20：運動 #跆拳道（第1類） |
 | 13 | 才藝 | dance | 跳舞 | S11 兒福聯盟 2024 兒少運動狀況調查（聯合報）（2024） https://udn.com/news/story/6898/8120416<br>J4 🇯🇵 小學館 JS研究所×コロコロ研究所 2025 小學生年度趨勢（PR TIMES）（2025） https://prtimes.jp/main/html/rd/p/000000018.000140019.html | ✅ | S11 **沒有提到跳舞**。J4 女生趣味**第5名 ダンス**；J2 第11名 ダンス |
 | 14 | 才藝 | sing | 唱歌 | J4 🇯🇵 小學館 JS研究所×コロコロ研究所 2025 小學生年度趨勢（PR TIMES）（2025） https://prtimes.jp/main/html/rd/p/000000018.000140019.html | ✅ | J4 只有「アイドル・歌手」是**想當的職業**，不是活動（對不上）。**核對補** S20 TVBS 兒童才藝網路聲量（2024-05-17） https://news.tvbs.com.tw/life/2486448：網友推薦「開口就行的唱歌」；J2 音楽教室（歌や楽器など）第4名 |
@@ -133,10 +140,10 @@
 | 18 | 戶外玩耍 | play in the park | 在公園玩 | S12 兒福聯盟 2018 兒童運動現況（2018） https://www.children.org.tw/news/news_detail/1942<br>S13 金車 青少年休閒調查（年份待核對） https://kingcar.org.tw/survey/500574 | ✅ | **2026-09-29 找到新證據**：G25 學研《小学生白書》2025年11月調查（官方網站，1,200 名小學生本人作答）：放課後最常玩的地方 **第2名「公園・運動場」27.7%** https://www.gakken.jp/kyouikusouken/whitepaper/202511/chapter4/04.html |
 | 19 | 戶外玩耍 | play outside | 在外面玩 | U5 🇺🇸 Harris Poll（Youth Sports Business Report）（年份待核對） https://youthsportsbusinessreport.com/survey-shows-45-of-kids-prefer-unstructured-play-over-organized-sports-activities/ | ✅ | U5 YSBR **2025-08-05**（Harris Poll 2025 年 3 月，500 多名 8～12 歲）：45% 最喜歡 unstructured play（投籃、在社區探險）；J4 男生熱中第2名「鬼ごっこなどの外遊び」 |
 | 20 | 戶外玩耍 | play tag | 玩鬼抓人 | 自由時報 懷念的童年遊戲（年份待核對）https://news.ltn.com.tw/news/life/breakingnews/2444572 | ✅ | 自由時報是 **2018-06-02** 大人懷舊文（太舊、對象不是兒童）。**核對補** J4 小學館 2025 小學生年度趨勢 https://prtimes.jp/main/html/rd/p/000000018.000140019.html：男生和朋友熱中**第2名「鬼ごっこなどの外遊び」** |
-| 21 | 個人運動 | jump rope | 跳繩 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ⏳ | 課本的字，沒有網址可開；打開的 42 份出處裡也沒有提到跳繩 |
-| 22 | 個人運動 | skateboard | 溜滑板 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ⏳ | 課本的字，沒有網址可開；打開的出處裡沒有提到滑板 |
-| 23 | 戶外玩耍 | fly a kite | 放風箏 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ⏳ | 課本的字，沒有網址可開；打開的出處裡沒有提到風箏 |
-| 24 | 才藝 | play the guitar | 彈吉他 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ⏳ | 課本的字，沒有網址可開；打開的出處裡沒有提到吉他（S20 只有鋼琴、小提琴、烏克麗麗） |
+| 21 | 個人運動 | jump rope | 跳繩 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | 🗑️ | **2026-10-01 刪除**（使用者：課本字找不到最新證據就刪）。日文、中文、英文都只找到 2014～2018 的舊調查 |
+| 22 | 個人運動 | skateboard | 溜滑板 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | 🗑️ | **2026-10-01 刪除**（同上）。萬代 2024、2025 聖誕調查只有「滑板車・滑板」這個類別，沒有百分比 |
+| 23 | 戶外玩耍 | fly a kite | 放風箏 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | 🗑️ | **2026-10-01 刪除**（同上）。沒有找到任何 2024 以後的兒童放風箏調查 |
+| 24 | 才藝 | play the guitar | 彈吉他 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ✅ | 課本的字。**2026-10-01 找到證據**：SG 小學館《コロコロコミック》讀者調查（2025-04～05；2025-08-07 發表） https://prtimes.jp/main/html/rd/p/000000016.000140019.html：小學生「想開始學的樂器」**前三名有ギター**；正在學的樂器 ギター 2.5%（第4名） |
 | 25 | 才藝 | do magic tricks | 變魔術 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ✅ | 課本的字。**核對找到證據** J2 學研 2024-11 習い事（ねとらぼ第1～2頁） https://nlab.itmedia.co.jp/research/articles/3163692/：第21名「将棋・囲碁（他ボードゲーム・**手品**などを含む）」（⚠️ 是和將棋、圍棋放在同一類） |
 
 ## 活動2
@@ -152,7 +159,7 @@
 | 7 | 3C 和電玩 | play Mario Kart | 玩瑪利歐賽車 | J4 🇯🇵 小學館 JS研究所×コロコロ研究所 2025 小學生年度趨勢（PR TIMES）（2025） https://prtimes.jp/main/html/rd/p/000000018.000140019.html<br>U7 🌍 Switch 2 暢銷遊戲（維基百科）（年份待核對） https://en.wikipedia.org/wiki/List_of_best-selling_Nintendo_Switch_2_games | ✅ | J4 男生想要的遊戲第2名 マリオカート ワールド；維基百科 2026-09-11 版 |
 | 8 | 競賽 | collect Pokémon cards | 收集寶可夢卡 | S18 翻轉教育：小學生的卡牌世界（年份待核對） https://flipedu.parenting.com.tw/article/009694<br>S9 Google Play 台灣 2025 年度最佳（2025） https://blog.google/intl/zh-tw/products/android-chrome-play/googleplay-best-of-2025/ | ✅ | S18 翻轉教育 **打不開**（Cloudflare HTTP 403，維持沒核對）。**核對補** J4 小學館 2025 小學生年度趨勢 https://prtimes.jp/main/html/rd/p/000000018.000140019.html：男生「一番欲しいもの」**第4名 ポケモンカード**；S9 Google Play 2025 是卡牌**手遊** |
 | 9 | 競賽 | play Beyblade | 玩戰鬥陀螺 | J4 🇯🇵 小學館 JS研究所×コロコロ研究所 2025 小學生年度趨勢（PR TIMES）（2025） https://prtimes.jp/main/html/rd/p/000000018.000140019.html | ✅ | J4：男生和朋友熱中第3名「ベイブレードなどのホビー」、最想要第1名 ベイブレード X |
-| 10 | 靜態活動 | listen to music | 聽音樂 | S13 金車 青少年休閒調查（年份待核對） https://kingcar.org.tw/survey/500574<br>S16 兒福聯盟 台灣學童手機使用狀況（年份待核對） https://www.children.org.tw/news/news_detail/339 | ✅ | **2026-09-29 找到新證據**：G25 學研《小学生白書》2025年11月調查（官方網站，1,200 名小學生本人作答）：最快樂的事「音楽（聴く）」4.6%。⚠️ 比例低 |
+| 10 | 靜態活動 | listen to music | 聽音樂 | S13 金車 青少年休閒調查（年份待核對） https://kingcar.org.tw/survey/500574<br>S16 兒福聯盟 台灣學童手機使用狀況（年份待核對） https://www.children.org.tw/news/news_detail/339 | ✅ | **2026-10-01 找到更強的證據**：NM ニフティキッズ 小中學生影音／音樂調查（2024-04-11） https://prtimes.jp/main/html/rd/p/000000314.000023383.html：**87% 的小中學生用 YouTube 等影音平台聽音樂**、50% 用音樂 App；學研 2025 最快樂的事「音楽（聴く）」4.6% |
 | 11 | 靜態活動 | read | 閱讀 | U4 🇬🇧 DJS Research：Sainsbury’s 兒童休閒調查（年份待核對） https://djsresearch.co.uk/insights/poll-reveals-top-pastimes-of-todays-kids-04452 | ✅ | U4 是 **2019**（太舊）。**核對補** J4 小學館 2025 小學生年度趨勢 https://prtimes.jp/main/html/rd/p/000000018.000140019.html：女生趣味第2名「読書・まんがを読む」；S17 2025 樂讀少年調查 |
 | 12 | 靜態活動 | read comics | 看漫畫 | S17 親子天下 國中小樂讀少年閱讀習慣調查（Openbook）（年份待核對） https://www.openbook.org.tw/article/p-71149 | ✅ | S17 **2025-06-16**：高年級最喜歡的課外書第1名漫畫；J4 女生趣味第2名「読書・まんがを読む」 |
 | 13 | 靜態活動 | chat with my friends | 跟朋友聊天 | S16 兒福聯盟 台灣學童手機使用狀況（年份待核對） https://www.children.org.tw/news/news_detail/339 | ✅ | **2026-09-29 找到新證據**：G25 學研《小学生白書》2025年11月調查（官方網站，1,200 名小學生本人作答）：最快樂的事 **第2名「友だちとおしゃべり」26.1%**（女生第1名 34.5%） https://www.gakken.jp/kyouikusouken/whitepaper/202511/chapter4/05.html |
@@ -164,9 +171,9 @@
 | 19 | 假日出遊 | go to an amusement park | 去遊樂園 | S13 金車 青少年休閒調查（年份待核對） https://kingcar.org.tw/survey/500574 | ✅ | **2026-09-29 換字**：原本 go on a family trip（沒有兒童證據）。G24 學研《小学生白書》2024年11月調查（官方網站）：長假想去哪裡旅行 **寒假、春假、暑假都是第1名「テーマパーク・遊園地」**（58.2%、60.1%、53.7%） https://www.gakken.jp/kyouikusouken/whitepaper/202411/chapter4/10.html |
 | 20 | 假日出遊 | visit my grandparents | 去看爺爺奶奶 | S13 金車 青少年休閒調查（年份待核對） https://kingcar.org.tw/survey/500574 | ✅ | **2026-09-29 找到新證據**：NPO 放課後NPOアフタースクール《小学生の長期休みの過ごし方 実態調査2025》（2025-06-26，就勞家庭小學生 1,200 人） https://npoafterschool.org/wp-content/uploads/2025/06/ab79fb745d6583fa98fcb7132dff32e9.pdf：長假在「祖父母や親戚の家」過的 **48.2%**，比平常放學後多 10.7 個百分點。⚠️ 是「去了多少」不是「最喜歡」；對象是雙薪家庭 |
 | 21 | 假日出遊 | go shopping | 去買東西 | S13 金車 青少年休閒調查（年份待核對） https://kingcar.org.tw/survey/500574 | ✅ | **2026-09-29 換字**：原本 go to the mall（沒有「百貨公司」的兒童證據）。CZ シチズン「親子のふれあい時間」調査 2025（2025-06-10，小學生家長 400 組） https://www.citizen.co.jp/research/20250610/05.html：假日親子一起「ショッピング」平均 1 小時 1 分；G25 學研《小学生白書》2025年11月調查（官方網站，1,200 名小學生本人作答）：最快樂的事「買い物」5.0% |
-| 22 | 家裡的活動 | bake cakes | 烤蛋糕 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ⏳ | 課本的字，沒有網址可開；打開的出處裡沒有提到烤蛋糕 |
+| 22 | 家裡的活動 | bake cakes | 烤蛋糕 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ✅ | 課本的字。**2026-10-01 找到證據**：PT ねとらぼ「小學生女子 將來想做的職業」2025（調查 2025-12-02～16，女子小學生 900 人；2026-02-21 刊出） https://nlab.itmedia.co.jp/research/articles/3736419/：女生將來想做的職業 **第1名 パティシエ**，最多人的理由是「**お菓子・ケーキ（作り）が好きだから**」；J4 小學館 2025 女生想做的職業第2名 パティシエ |
 | 23 | 家裡的活動 | play with my dog | 和我的狗玩 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ✅ | 課本的字。**2026-09-29 找到證據**：NF ニフティキッズ 小中學生 2,220 人寵物調查（2024-11-14） https://prtimes.jp/main/html/rd/p/000000346.000023383.html：養的寵物第1名是狗，養寵物的好處孩子寫「一緒に遊べる」（可以一起玩） |
-| 24 | 家裡的活動 | build LEGO | 組樂高 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ✅ | 課本的字。**核對找到證據** vocus 2026 兒童節禮物趨勢文（2026-03-31） https://vocus.cc/article/69cb9528fd897800010a6b1e：「兒童節禮物流行趨勢裡**樂高依然是長青款**」（⚠️ 部落格，沒有數據） |
+| 24 | 家裡的活動 | collect stickers | 收集貼紙 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ✅ | **2026-10-01 換字**：原本 build LEGO（課本字，只有部落格文章）。樂高 2025 只找到「積木類全球銷售 +18%」（大人也算在內），沒有兒童喜好調查。NS ニフティキッズ「シール」調查（2025-12-23～2026-01-26，小中學生 2,484 人；共同通信 OVO 2026-03-02 報導） https://ovo.kyodo.co.jp/news/culture/a-2078237：**77.5% 的小學生熱衷收集貼紙**、九成會交換 |
 | 25 | 3C 和電玩 | write code | 寫程式 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ✅ | 課本的字。**核對找到證據** J2 學研 2024-11 習い事（ねとらぼ第1～2頁） https://nlab.itmedia.co.jp/research/articles/3163692/：第16名「**プログラミング**・ロボット教室」 |
 
 ## 文具（等核對）
@@ -224,4 +231,12 @@
 | NPO アフタースクール | 2025-06-26 | 日本雙薪家庭小學生 1,200 人 | 長假在祖父母・親戚家過 48.2%，比平常 +10.7pt |
 | CZ シチズン | 2025-06-10 | 小學生家長 400 組 | 假日親子：テレビ 1:15、ゲーム 1:06、ショッピング 1:01 |
 | NTT docomo 白書 2025 | 2025 | 日本小中學生 | 只說低年級約九成「會」用相機拍照（是能力不是喜好）——沒有採用 |
+| NS ニフティキッズ シール | 調查 2025-12-23～2026-01-26（OVO 2026-03-02） | 日本小中學生 2,484 人 | 小學生 77.5% 熱衷收集貼紙；有貼紙本的小學生九成會交換 |
+| SG 小學館コロコロ | 2025-08-07（調查 2025-04～05） | コロコロ讀者（小學生） | 最喜歡的歌手 1 Mrs. GREEN APPLE；正在學的樂器：なし 71.6、ピアノ 18.5、ギター 2.5、ドラム 1.8；想開始學：ドラム、ギター、ピアノ（摘要與內文順序不一致）；**沒有小提琴** |
+| NM ニフティキッズ 影音 | 2024-04-11 | 日本小中學生 | 87% 用 YouTube 等影音平台聽音樂、50% 用音樂 App |
+| G25 習い事 | 2025-11 | 日本小學生 1,200 人 | 水泳 24.5、英会話 17.5、塾 15.9、音楽教室（歌や楽器）12.7、体操 10.5 … プログラミング 2.9、趣味（手芸・料理）1.1、将棋・囲碁（手品含む）1.0、動画制作 0.8 |
+| PT ねとらぼ職業 | 2026-02-21（調查 2025-12） | 日本女子小學生 900 人 | 想做的職業 1 パティシエ，理由最多「お菓子・ケーキ（作り）が好き」 |
+| 萬代 Vol.263 | 2025-11-27 | 3～12 歲孩子的家長 600 人 | 孩子想要的聖誕禮物：玩具類 37.7% 第1，玩具裡 ぬいぐるみ 第1；人形、ブロック、スケートボード只有類別、沒有百分比 |
+| Toy Association | 2026（2025 全年） | 全球玩具銷售 | 積木類 +18%（大人也算）——不是兒童喜好，沒有採用 |
+| Yahoo 轉載親子天下 | **2019-12-17** | 文章 | 躲避球是台灣小學體育課共同記憶（太舊；使用者決定照樣加入） |
 
