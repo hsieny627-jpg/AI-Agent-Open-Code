@@ -408,8 +408,8 @@ const slide = (r, k, n) =>
 
 /* 出處的 📑 目次（使用者 2026-09-25 指定）：一條一格，點了直接跳過去 */
 const strip = h => String(h).replace(/<[^>]+>/g, '').replace(/&amp;/g, '&');
-const html = (rows) => {
- const all = rows.concat(COMMON);
+const html = (rows, common) => {
+ const all = rows.concat(common || COMMON);   /* common：這一組自己的共通出處（Review 1 用預錄語音，2026-10-01） */
  return '<footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span>' +
   '<span class="scnt"><span id="srcn">1</span> ／ ' + all.length + '</span>' +
   '<button id="srct">📑 目次</button><button id="srcx">✕ 關閉</button></div>' +

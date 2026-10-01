@@ -171,7 +171,7 @@ ${SET.head||''}
 <div id="bar"><button id="say">🔊 念一次</button>${TOC.TOCB}${PH.btnSlow}${PH.btnMode}${PH.btnSyl}${W.more?`<button id="more">${W.more.label}</button>`:''}${W.parts?`<button id="parts">🧩 結構</button>`:''}${W.evo?`<button id="evo">⏳ 時光機</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>
 </div>
 ${TOC.linksHTML(SET.list,W.f)}
-${SRC.html((SET.srcW||SRC.W)[W.f])}
+${SRC.html((SET.srcW||SRC.W)[W.f],SET.common)}
 
 <script>
 ${PH.JS}
@@ -205,7 +205,7 @@ var SCENES=[
    PH.box(W.now)+'</div>'+
    '<div class="sub in d2" style="margin-top:2px">'+W.e1+'</div>'+
    (W.e2?'<div class="sub in d3">'+W.e2+'</div>':'')}
-];
+];${W.scenes?'\n/* 這一組自己的幕（Review 1，2026-10-01）*/\nSCENES='+W.scenes+';':''}
 
 var i=0,reduce=false;
 try{reduce=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)}catch(e){}
@@ -216,7 +216,7 @@ for(var k=0;k<SCENES.length;k++)dots.appendChild(document.createElement("i"));
 
 /* 念一次：整個單字唸出來，同時一格一格亮過去（字母 ↔ 聲音） */
 function say(){spoke=true;var el=PH.main();
- if(el){PH.sayWord(el)}else{PH.say(W.now)}}
+ if(el){PH.sayWord(el)}else{PH.say(W.now)}}${W.say?'\nsay=function(){spoke=true;'+W.say+'};':''}
 
 var card=document.getElementById("card");
 function show(n){

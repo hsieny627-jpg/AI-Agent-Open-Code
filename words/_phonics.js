@@ -505,4 +505,4 @@ const btnMode = '<button id="phmode">🔤 音標：無</button>';
 /* #bar 上的音節動畫鈕。結果直接寫在按鈕上，不佔字卡版面。 */
 const btnSyl  = '<button id="phsyl">✂️ 音節</button>';
 
-module.exports = { DATA, RAW, CSS, JS, btnSlow, btnMode, btnSyl };
+module.exports = { DATA, RAW, CSS, JS, btnSlow, btnMode, btnSyl, parse };

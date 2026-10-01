@@ -1,0 +1,2 @@
+/* 由 tools/audio_pack.js 產生，不要手改。鑰匙 ➜ [檔名, 秒數] */
+window.ENAUD={"ball":["8bec0406497c.mp3",0.487],"basket":["c9be014f81ae.mp3",0.646],"basketball":["468ee5cbd54e.mp3",0.789],"i":["042dc4512fa3.mp3",0.389],"i like stickers.":["59837f0426aa.mp3",0.982],"i like to play basketball.":["550764cdb14d.mp3",1.487],"like":["c4eb7d7fea3c.mp3",0.442],"play":["516626bf8a50.mp3",0.487],"play basketball":["194d3f28cf63.mp3",1.036],"stick":["946466f6c963.mp3",0.517],"stickers":["ebbc5f564b4b.mp3",0.694],"to":["4374aaee247f.mp3",0.311]};
