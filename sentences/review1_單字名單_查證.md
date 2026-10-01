@@ -7,6 +7,10 @@
 > 名單來源：`sentences/Review1_單字名單_草稿.md` 第二版（使用者 2026-09-28 確認的 100 個字；字源、證據等級、使用者的決定都在那一份）。
 > 2026-09-28 那一次的證據是用**搜尋結果摘要**查的（製作環境打不開原始網頁），所以全部先標 ⏳。
 
+> 🔄 **2026-10-01 第五次**：名詞 dodgeball 刪除（🗑️）；加入 **play with LEGO**（使用者決定；用詞以語料庫＋LEGO 官方規定查證）；
+> 吉他 vs 烏克麗麗：**找不到 2024 以後台灣小學生「最想學的樂器」調查**（只有學校社團頁、樂器行文章、2019 年碩士論文），
+> 烏克麗麗沒有可核對的數據 ➜ **保留 play the guitar**（有小學館 2025 數據）。名單 98 個字，全部 ✅。
+
 > 🔄 **2026-10-01 第四次（使用者 6 點指定）：✅ 97、⏳ 1、🗑️ 3（名單現在 98 個字）**。
 > 盲盒→**stickers**、組樂高→**collect stickers**、拉小提琴→**play the drums**（都是找不到 2024 以後兒童證據才換）；
 > 加入 **dolls**、**play dodgeball**（使用者決定；躲避球最新證據只到 2019）；課本字：吉他、烤蛋糕找到證據保留，
@@ -106,7 +110,7 @@
 | 14 | 球類 | badminton | 羽毛球 | S10 金車 2026 國中小學生運動調查（聯合報）（2026） https://udn.com/news/story/6885/9529187<br>S11 兒福聯盟 2024 兒少運動狀況調查（聯合報）（2024） https://udn.com/news/story/6898/8120416 | ✅ | S10：女生偏好**羽球 68.6%**。S11 沒有提到羽球 |
 | 15 | 球類 | soccer | 足球 | U2 🇺🇸 Project Play《State of Play 2025》（2025） https://projectplay.org/state-of-play-2025/participation-trends<br>J2 🇯🇵 學研《小學生白書》2024-11 習い事（ねとらぼ）（2024） https://nlab.itmedia.co.jp/research/articles/3163692/<br>S11 兒福聯盟 2024 兒少運動狀況調查（聯合報）（2024） https://udn.com/news/story/6898/8120416 | ✅ | J2（2024-11 調查）：習い事**第8名 サッカー・フットサル**；J4 男生熱中第4名 サッカー。U2 說 6～12 歲足球 -3%；S11 沒有提到足球 |
 | 16 | 球類 | baseball | 棒球 | U2 🇺🇸 Project Play《State of Play 2025》（2025） https://projectplay.org/state-of-play-2025/participation-trends<br>S11 兒福聯盟 2024 兒少運動狀況調查（聯合報）（2024） https://udn.com/news/story/6898/8120416 | ✅ | U2 Project Play 2025 其實說 6～12 歲**打棒球 -19%**（不是熱門的證據）；S11 沒有提到棒球。**核對補** J2 學研 2024-11 習い事（ねとらぼ第1～2頁） https://nlab.itmedia.co.jp/research/articles/3163692/：**第13名 硬式野球・軟式野球・ソフトボール** |
-| 17 | 球類 | dodgeball | 躲避球 | 親子天下：小學體育課為什麼上躲避球（年份待核對）https://www.parenting.com.tw/article/5080465 | ⏳ | 親子天下原文的 Yahoo 轉載打得開：是 **2019-12-17** 的文章（躲避球是台灣小學體育課的共同記憶），**不是 2024 以後**。2026-10-01 使用者決定「打躲避球」要加入；這個名詞 dodgeball 要不要也留，等使用者回覆 |
+| 17 | 球類 | dodgeball | 躲避球 | 親子天下：小學體育課為什麼上躲避球（年份待核對）https://www.parenting.com.tw/article/5080465 | 🗑️ | **使用者 2026-10-01 決定不留**（名詞 dodgeball 刪除；活動「play dodgeball」照樣保留） |
 | 18 | 漫畫 | comics | 漫畫 | S17 親子天下 國中小樂讀少年閱讀習慣調查（Openbook）（年份待核對） https://www.openbook.org.tw/article/p-71149<br>J4 🇯🇵 小學館 JS研究所×コロコロ研究所 2025 小學生年度趨勢（PR TIMES）（2025） https://prtimes.jp/main/html/rd/p/000000018.000140019.html | ✅ | S17 年份核對：**2025-06-16**，高年級最喜歡的課外書**第1名漫畫**；J4 女生最想要第1名「本・まんが」 |
 | 19 | 書 | picture books | 繪本 | S14 親子天下：2025 博客來／誠品暢銷童書（2025） https://www.parenting.com.tw/article/6001747 | ✅ | 親子天下 S14 還是打不開（403），**2026-09-29 找到新證據**：G24 學研《小学生白書》2024年11月調查（官方網站）：好きな本・雑誌 **第4名 絵本 11.8%**，一年級 28.5% https://www.gakken.jp/kyouikusouken/whitepaper/202411/chapter4/14.html |
 | 20 | 書 | detective stories | 偵探故事 | S14 親子天下：2025 博客來／誠品暢銷童書（2025） https://www.parenting.com.tw/article/6001747 | ✅ | S14 親子天下**打不開**（403）。**核對補** S17 親子天下樂讀少年調查（Openbook 2025-06-16） https://www.openbook.org.tw/article/p-71149：低年級、中年級最喜歡的課外書都有「**偵探冒險**」 |
@@ -175,6 +179,7 @@
 | 23 | 家裡的活動 | play with my dog | 和我的狗玩 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ✅ | 課本的字。**2026-09-29 找到證據**：NF ニフティキッズ 小中學生 2,220 人寵物調查（2024-11-14） https://prtimes.jp/main/html/rd/p/000000346.000023383.html：養的寵物第1名是狗，養寵物的好處孩子寫「一緒に遊べる」（可以一起玩） |
 | 24 | 家裡的活動 | collect stickers | 收集貼紙 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ✅ | **2026-10-01 換字**：原本 build LEGO（課本字，只有部落格文章）。樂高 2025 只找到「積木類全球銷售 +18%」（大人也算在內），沒有兒童喜好調查。NS ニフティキッズ「シール」調查（2025-12-23～2026-01-26，小中學生 2,484 人；共同通信 OVO 2026-03-02 報導） https://ovo.kyodo.co.jp/news/culture/a-2078237：**77.5% 的小學生熱衷收集貼紙**、九成會交換 |
 | 25 | 3C 和電玩 | write code | 寫程式 | （沒有出處：課本的字，使用者 2026-09-28 同意放） | ✅ | 課本的字。**核對找到證據** J2 學研 2024-11 習い事（ねとらぼ第1～2頁） https://nlab.itmedia.co.jp/research/articles/3163692/：第16名「**プログラミング**・ロボット教室」 |
+| 26 | 家裡的活動 | play with LEGO | 玩樂高 | Google Books Ngram（英文書籍語料庫，2018～2022 平均，大小寫合併） https://books.google.com/ngrams/graph?content=playing+with+Lego%2Cbuilding+Lego%2Cplay+with+Lego%2Cbuild+Lego&year_start=2000&year_end=2022&corpus=en&smoothing=0&case_insensitive=true<br>LEGO 官方 Fair Play https://www.lego.com/en-us/legal/notices-and-policies/fair-play | ✅ | **使用者 2026-10-01 決定加入**（2024 以後找不到兒童喜好調查，跟 play dodgeball 一樣由使用者決定）。**用詞查證**：語料庫裡「play with」一族（playing with Lego 5.98＋play with Lego 2.75＋played with Lego 1.13＝9.86／十億字）多於「build」一族（building 4.72＋build 1.97＋built 1.21＝7.90）；美國英文差更多（含 Legos：play with 一族 23.5，build 一族 7.2，「build Legos」少到語料庫沒有收）。LEGO 官方規定 LEGO 當形容詞、不加 s（正式寫法 LEGO bricks）。字卡用 **play with LEGO**；build 是「蓋出一個作品」，要強調蓋東西時才用 |
 
 ## 文具（等核對）
 
@@ -239,4 +244,6 @@
 | 萬代 Vol.263 | 2025-11-27 | 3～12 歲孩子的家長 600 人 | 孩子想要的聖誕禮物：玩具類 37.7% 第1，玩具裡 ぬいぐるみ 第1；人形、ブロック、スケートボード只有類別、沒有百分比 |
 | Toy Association | 2026（2025 全年） | 全球玩具銷售 | 積木類 +18%（大人也算）——不是兒童喜好，沒有採用 |
 | Yahoo 轉載親子天下 | **2019-12-17** | 文章 | 躲避球是台灣小學體育課共同記憶（太舊；使用者決定照樣加入） |
+| Ngram | 2018～2022 平均 | 英文書籍語料庫 | 每十億字：playing with Lego 5.98、building Lego 4.72、play with Lego 2.75、building with Lego 2.49、playing Lego 2.07、build Lego 1.97；美國英文 playing with Legos 8.50、play with Legos 4.54，build Legos 未收錄（太少） |
+| LEGO Fair Play | 官方網頁 | LEGO 公司 | LEGO 一律當形容詞；例句 MODELS BUILT OF LEGO BRICKS，不說 LEGOs |
 

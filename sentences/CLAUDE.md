@@ -743,7 +743,8 @@ node sentences/_build_kahoot.js  # 根目錄 kahoot xlsx ＋ 上架說明
   ⏳ 7 ＝ 躲避球 ×2（親子天下打不開，要使用者自己打開看）＋課本字 5 個。➜ 下一步還是 ②，使用者 OK 才做字卡。
   **2026-10-01 使用者再決定**：盲盒、樂高、小提琴找更強證據（找不到 ➜ 換成 stickers、collect stickers、play the drums）；
   加入 play dodgeball、dolls；課本字找不到最新證據就刪（刪了跳繩、滑板、放風箏；吉他、烤蛋糕有證據保留）。
-  名單 98 個字：✅ 97、⏳ 1（名詞 dodgeball 等使用者決定）。
+  名單 98 個字：全部 ✅（2026-10-01 名詞 dodgeball 刪、加 play with LEGO；吉他保留，烏克麗麗沒有台灣數據）。
+  **名單已定（使用者 2026-10-01 要開新對話做 ③ 字卡）。** 字卡用詞：play with LEGO（不是 build LEGO、不寫 Legos）。
 
 **➡️ 第三批的下一步順序（使用者 2026-09-29 指定：照順序做，不可跳步、不可並行）**
 
