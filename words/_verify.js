@@ -264,7 +264,7 @@ async function scenePage(p,f,vp,e){
   if(L[0]!=='tocb'||ix('phsyl')!==1||ix('phmode')!==2||ix('slow')!==3||ix('say3')!==4||L[L.length-1]!=='home'||ix('whome')!==L.length-2||ix('srcb')!==L.length-3||ix('say')>=0)
    e.push('按鈕順序不對：'+L.join(' '));
   if(c.n){await p.click('#phsyl');
-   const t=await p.evaluate(()=>{const ps=document.querySelectorAll('#card .c.t .phw');return ps.length>1?[].reduce.call(ps,(a,x)=>a+PH.sylTime(x)+3300,0):PH.sylTime(PH.main())});
+   const t=await p.evaluate(()=>{const ps=document.querySelectorAll('#card .c.t .phw');return ps.length?[].reduce.call(ps,(a,x)=>a+PH.sylTime(x)+3300,0):PH.sylTime(PH.main())});
    await p.waitForTimeout(t+600);
    const sp=await p.evaluate(()=>{const ps=[...document.querySelectorAll('#card .c.t .phw')];const L=ps.length?ps:[PH.main()];
     return L.filter(x=>x&&+x.getAttribute('data-n')>1).every(x=>x.classList.contains('split'))});
