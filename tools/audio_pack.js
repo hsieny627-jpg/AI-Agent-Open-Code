@@ -1,6 +1,7 @@
 /* tools/audio_pack.js — 把要唸的句子做成語音檔，並寫出查表用的 aud.js
  *
- * pack({ texts, dir, lang:'en'|'sv', varName:'AUD' })
+ * pack({ texts, dir, lang:'en'|'sv', varName:'AUD', speak })
+ *   speak   （可省略）鑰匙不變、只換掉要唸的文字：例 LEGO ➜ Lego（大寫會被唸成一個一個字母）
  *   texts   要唸的每一句（重複的會自動合併）
  *   dir     輸出資料夾（mp3 ＋ aud.js 都放這裡）
  *   varName 網頁上查表的變數名稱（sentences／G3 用 AUD；單字網站的瑞典文用 SVAUD）
@@ -27,7 +28,7 @@ function pack(o) {
   const MK = /(^|\s)[+~-](?=[A-Za-z])/g, marked = t => /(^|\s)[+~-][A-Za-z]/.test(t);   /* ~ ＝ 低平（2026-09-27） */
   o.texts.forEach(t => {
     const m = marked(String(t)), s = sayText(String(t).replace(MK, '$1')); if (!/[A-Za-zÅÄÖåäö]/.test(s)) return;
-    const k = akey(s); if (!want[k] || (m && !marked(want[k]))) want[k] = m ? sayText(t) : s;
+    const k = akey(s); if (!want[k] || (m && !marked(want[k]))) want[k] = m ? sayText(t) : (o.speak ? o.speak(s) : s);
   });
   const manPath = path.join(dir, 'aud.js');
   let old = {};

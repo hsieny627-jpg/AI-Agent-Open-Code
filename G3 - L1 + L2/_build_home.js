@@ -75,21 +75,28 @@ const body = `
   <span class="d">Hi.／My name is ___.／I’m ___ years old.／I like ___.／I like to ___.／How about you?　最酷的 20 個東西、20 個活動任你換。</span>
   <span class="f">${D.XPAGES[0].cards.length} 張字卡</span></a>
 
+ <!-- 2026-10-02：Review 1 單字卡（物品／活動 98 個字，三、四年級共用 review1/） -->
+ <a class="card" href="../review1/index.html">
+  <span class="n">5</span><span class="ic">🃏</span>
+  <span class="t">Review 1 單字卡</span>
+  <span class="d">I like ___.／I like to ___.　小學生最喜歡的 50 個東西、48 個活動：每個字都有「小學生真的喜歡嗎？」的證據。</span>
+  <span class="f">${require('../review1/_data').WORDS.length} 張字卡</span></a>
+
  <a class="card go" href="games.html">
-  <span class="n">5</span><span class="ic">🎮</span>
+  <span class="n">6</span><span class="ic">🎮</span>
   <span class="t">複習遊戲</span>
   <span class="d">10 種玩法，每個遊戲 <b>3 分鐘</b>、愈快分數愈高。<b>連對 3 題</b>抽驚喜卡：二～五選一，每次卡包樣式都不一樣。</span>
   <span class="f">${B.GAMES.length} 種　共 ${B.GAMES.reduce((a, g) => a + g.n, 0)} 題</span></a>
 
  <!-- 2026-09-25 使用者指定新增：數字單字、Sight Words（照家人單字的架構） -->
  <a class="card" href="numbers/index.html">
-  <span class="n">6</span><span class="ic">🔢</span>
+  <span class="n">7</span><span class="ic">🔢</span>
   <span class="t">數字單字</span>
   <span class="d">zero～twelve 字卡、結構、故事、環遊世界。母音紅色、不發音淺灰。</span>
   <span class="f">13 張字卡</span></a>
 
  <a class="card" href="sight/index.html">
-  <span class="n">7</span><span class="ic">👀</span>
+  <span class="n">8</span><span class="ic">👀</span>
   <span class="t">Sight Words 常見字</span>
   <span class="d">I、My、You、Your、name、What、How old…… 字卡、結構、故事、環遊世界。</span>
   <span class="f">15 張字卡</span></a>

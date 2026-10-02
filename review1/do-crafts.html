@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>do crafts｜Review 1 單字卡</title>
+<!-- 本檔由 words/_build.js 產生，不要手改。改樣板請改 _build.js 再重跑。 -->
+<style>
+/* Andika 隨檔案放在 fonts/，離線也一定是 Andika（不靠網路） */
+@font-face{font-family:Andika;font-style:normal;font-weight:400;font-display:swap;
+ src:url(../words/fonts/andika-400.woff2) format("woff2")}
+@font-face{font-family:Andika;font-style:normal;font-weight:700;font-display:swap;
+ src:url(../words/fonts/andika-700.woff2) format("woff2")}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:#000;color:#F2F2F2;
+ font-family:Andika,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;user-select:none}
+
+#dots{display:flex;gap:10px;position:fixed;top:max(18px,env(safe-area-inset-top))}
+#dots i{width:26px;height:4px;border-radius:99px;background:#2A2A2A;transition:background .3s}
+#dots i.on{background:#9FB4C8}
+
+/* 左右翻頁箭頭：**貼在字卡自己的左右邊**（使用者 2026-09-20 指定，老師點起來比較順手）。
+   放在 #stage 裡、不放在 #card 裡——#card 每翻一幕都整個 innerHTML 重寫，
+   而且翻卡時會做 3D 旋轉，箭頭當它的子元素會被洗掉、也會跟著歪。
+   絕對定位的基準是 #stage 的 padding 邊，所以左右偏移用同一個 --pad 對齊卡片邊緣。 */
+.nav{position:absolute;top:0;bottom:0;width:var(--navw);border:0;background:none;
+ color:#9FB4C8;font-size:clamp(38px,5.4vw,58px);font-family:inherit;line-height:1;z-index:2;
+ display:flex;align-items:center;justify-content:center;cursor:pointer}
+.nav:disabled{color:#202020;cursor:default}
+.nav:active:not(:disabled){background:rgba(255,255,255,.06)}
+#prev{left:var(--pad);border-radius:clamp(18px,3vh,30px) 0 0 clamp(18px,3vh,30px)}
+#next{right:var(--pad);border-radius:0 clamp(18px,3vh,30px) clamp(18px,3vh,30px) 0}
+
+/* 字卡：一張卡就是一幕，翻頁＝翻卡（使用者 2026-09-19 指定） */
+#stage{--pad:clamp(10px,2.5vw,28px);--navw:clamp(56px,7.5vw,86px);
+ position:relative;width:100%;max-width:760px;padding:0 var(--pad);
+ display:flex;align-items:center;justify-content:center;perspective:1500px}
+#card{width:100%;text-align:center;min-height:clamp(300px,57vh,520px);
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:clamp(8px,1.6vh,18px);
+ border:1px solid #242424;border-radius:clamp(18px,3vh,30px);
+ background:linear-gradient(180deg,#0B0B0B 0%,#040404 100%);
+ box-shadow:0 18px 50px rgba(0,0,0,.65);
+ padding:clamp(10px,2.4vh,24px) calc(var(--navw) + clamp(6px,1.2vw,12px))}
+.tag{font-size:clamp(13px,1.6vh,16px);color:#9FB4C8;letter-spacing:.4em;font-weight:700;padding-left:.4em}
+.emoji{font-size:clamp(84px,17vh,150px);line-height:1.05}
+.zh{font-size:clamp(50px,9vh,84px);font-weight:700;letter-spacing:.06em}
+/* 中央的學習焦點單字：使用者 2026-09-20 指定再放大，最後一排要看得清楚 */
+/* 高度與寬度都要夾住，否則直式（820 寬）會折行 */
+.word{font-size:clamp(50px,min(10.6vh,11.5vw),104px);font-weight:700;letter-spacing:.01em}
+.word.past{color:#D8D3C5}
+.parts{font-size:clamp(36px,6.4vh,62px);font-weight:700;color:#D8D3C5;letter-spacing:.01em}
+.parts b{color:#9FB4C8;font-weight:700}
+.sub{font-size:clamp(19px,2.7vh,26px);color:#D8D3C5;line-height:1.5}
+.sub b{color:#F2F2F2;font-weight:700}
+
+/* 底部固定兩排：上排「上一個／下一個單字」，下排工具鈕。
+   使用者 2026-09-20 指定：**字卡本身不放任何按鈕與說明文字**，讓單字聚焦。 */
+#bottom{position:fixed;left:0;right:0;bottom:max(16px,env(safe-area-inset-bottom));
+ display:flex;flex-direction:column;align-items:center;gap:9px;padding:0 10px}
+#wnav{display:flex;align-items:center;justify-content:center;gap:clamp(10px,2.4vw,26px);
+ width:100%;max-width:640px}
+#wnav a{display:flex;align-items:center;gap:7px;text-decoration:none;color:#D8D3C5;
+ background:#141414;border:1px solid #333;border-radius:99px;font-family:inherit;
+ font-size:clamp(14px,2vh,17px);padding:9px 17px;min-height:44px;white-space:nowrap}
+#wnav a:hover{border-color:#9FB4C8;color:#F2F2F2}
+#wnav a .w{font-weight:700}
+#wnav .pos{font-size:clamp(12px,1.7vh,14px);color:#5E5E5E;letter-spacing:.1em;white-space:nowrap}
+/* 按鈕列（使用者 2026-10-02 指定，全站單字卡）：一排，「🔊 唸 3 次」在正中央；
+   左：目次｜音節｜音標｜放慢　右：（結構／時光機）｜出處｜單字首頁｜總首頁。
+   三欄格線 1fr auto 1fr ＝ 中間那顆不管兩邊幾顆都在正中央。圖示在上、字在下，iPad 直放也一排放得下。 */
+#bar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:clamp(3px,.6vw,10px);width:100%;max-width:1180px}
+#bar .bL,#bar .bR{display:flex;gap:clamp(3px,.5vw,9px);align-items:stretch}
+#bar .bL{justify-content:flex-end}
+#bar .bR{justify-content:flex-start}
+#bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:16px;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+ font-size:clamp(12px,min(1.55vh,1.5vw),15px);padding:5px clamp(3px,.6vw,12px);min-height:56px;min-width:clamp(44px,5.4vw,64px);
+ font-family:inherit;cursor:pointer;white-space:nowrap;line-height:1.1}
+#bar button>.bic{font-size:1.5em;line-height:1;margin:0}
+#bar #say3{background:#22303A;border-color:#9FB4C8;font-weight:700;min-width:clamp(70px,9vw,96px)}
+#bar button:active{background:#2A2A2A}
+/* 念到哪個字，那個字稍微放大、稍微變亮（2026-10-02：不可太亮、不刺眼；字母原本的紅／灰保留） */
+#card .sent{cursor:pointer;white-space:nowrap}
+#card .sw{display:inline-block;transition:transform .15s,filter .15s}
+#card .speak{color:inherit!important;text-shadow:none;transform:scale(1.08);filter:brightness(1.22) drop-shadow(0 0 6px rgba(255,236,170,.32))}
+#card .phw.speak .g i,#card .phw.speak .g i.v{color:inherit!important}
+/* 句點（2026-10-02，全站單字卡）：緊接最後一個字母；唸完句子稍微放大、稍微變亮，最後停在比原來大一點點 */
+.pdot{display:inline-block;transform-origin:30% 85%;margin-left:-.17em}
+.pdot.go{animation:pdot 1.3s cubic-bezier(.3,1.4,.4,1) forwards}
+.pdot.done{transform:scale(1.25)}
+@keyframes pdot{0%{transform:scale(1)}40%{transform:scale(1.7);color:#FFF3C4;text-shadow:0 0 8px rgba(255,230,150,.45)}
+ 100%{transform:scale(1.25);color:inherit;text-shadow:none}}
+
+.in{animation:rise .5s cubic-bezier(.2,.9,.3,1) both}
+.d1{animation-delay:.10s}.d2{animation-delay:.24s}.d3{animation-delay:.40s}
+.d4{animation-delay:1.55s}.d5{animation-delay:1.75s}
+@keyframes rise{0%{opacity:0;transform:translateY(20px) scale(.92)}100%{opacity:1;transform:none}}
+.pop{animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes pop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+/* 翻卡：往後翻從右邊翻進來，往回翻從左邊翻進來（420ms，翻完才是穩定畫面） */
+.turnR{animation:turnR .42s cubic-bezier(.25,.85,.3,1) both}
+.turnL{animation:turnL .42s cubic-bezier(.25,.85,.3,1) both}
+@keyframes turnR{0%{opacity:.2;transform:rotateY(54deg) translateX(24px) scale(.94)}
+ 100%{opacity:1;transform:none}}
+@keyframes turnL{0%{opacity:.2;transform:rotateY(-54deg) translateX(-24px) scale(.94)}
+ 100%{opacity:1;transform:none}}
+.reduce *{animation:none!important;transition:none!important}
+#toc{position:fixed;inset:0;z-index:45;background:#000;display:none;flex-direction:column;
+ padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) max(10px,env(safe-area-inset-bottom));overflow:auto}
+#toc.on{display:flex}
+#toc .thd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#toc .thd b{font-size:clamp(20px,3.4vh,30px);color:#9FB4C8}
+#toc .thd button,#toc .tgd button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;font-family:inherit;
+ font-size:clamp(15px,2.3vh,21px);padding:8px 18px;min-height:46px;cursor:pointer}
+#toc .tgd{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(200px,26vw,300px),1fr));gap:8px}
+#toc .tgd button{display:flex;align-items:center;gap:10px;text-align:left;border-radius:14px;background:#0C0C0C;border-color:#2A2A2A}
+#toc .tgd button b{flex:0 0 auto;width:2em;height:2em;border-radius:50%;background:#1E2A36;display:flex;align-items:center;justify-content:center}
+#toc .tgd button.cur{border-color:#FFD24A;background:#1D1908}
+#toc .tgd a{display:flex;align-items:center;gap:10px;text-align:left;border-radius:14px;background:#0C0C0C;border:1px solid #2A2A2A;
+ color:#F2F2F2;text-decoration:none;font-size:clamp(15px,2.3vh,21px);padding:8px 14px;min-height:50px}
+#toc .tgd a b{flex:0 0 auto;width:2em;height:2em;border-radius:50%;background:#1E2A36;display:flex;align-items:center;justify-content:center}
+#toc .tgd a.cur{border-color:#FFD24A;background:#1D1908}
+.rs{color:#FF5A5A!important}
+
+/* 單字的音標／音節元件。字級跟著外層 font-size 走，所以字卡與故事頁共用一份。 */
+.phw{display:inline-flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;margin:0 .17em;
+ line-height:1.04;cursor:pointer;position:relative}
+.phw .syl{display:inline-flex;align-items:flex-end}
+.phw .u{display:inline-flex;flex-direction:column;align-items:center;transition:color .2s;position:relative}
+.phw .g{display:block;white-space:nowrap}
+.phw .g i{font-style:normal}
+.phw .g i.v{color:#FF5A5A}            /* 母音字母 ＝ 紅色 */
+.phw .u.mute .g i,.phw .u.mute .g i.v{color:#8C8C8C}  /* 不發音 ＝ 灰色（2026-09-28 使用者：一眼認得出、不太淺也不太深，全部字卡同一個灰） */
+.phw .g i.ap,.phw .u.mute .g i.ap,.aprd{color:#FF5A5A!important}  /* ’ ＝ 紅色（2026-09-27） */
+.phw .p{display:none;font-size:max(.34em,13px);font-weight:400;letter-spacing:0;white-space:nowrap;
+ color:#9FB4C8;margin-top:.30em;min-height:1.1em}
+.phw.ipa .p,.phw.kk .p{display:block}
+.phw .u.mute .p{color:transparent}   /* 不發音的字母下面空白（2026-09-28） */
+/* 唸到哪一格，哪一格就亮起來（字母 ↔ 聲音） */
+.phw .u.lit .g i{color:#FFFFFF;text-shadow:0 0 20px rgba(159,180,200,.95)}
+.phw .u.lit .g i.v{color:#FF9090}
+.phw .u.lit .p{color:#F2F2F2}
+/* 音節之間的切分點：**平常看不到**，按「✂️ 音節」演完動畫才出現（使用者 2026-10-02 指定，全站）。
+   寬度收成 0（字母緊緊連在一起），剪刀還是掛在這裡演；演完 .split 才把「·」打開。 */
+.phw .cut{display:inline-flex;flex-direction:column;align-items:center;color:transparent;
+ width:0;padding:0;overflow:visible;transition:color .3s,padding .34s cubic-bezier(.2,1.4,.35,1)}
+.phw .cut>.g,.phw .cut>.p{visibility:hidden}
+.phw.split .cut{color:#9FB4C8;width:auto;padding:0 .26em}
+.phw.split .cut>.g,.phw.split .cut>.p{visibility:visible}
+.phw .syl.beat .g{animation:phbeat .52s ease-in-out both}
+@keyframes phbeat{0%{color:inherit}38%{color:#FFFFFF;text-shadow:0 0 24px rgba(159,180,200,.95)}
+ 100%{color:inherit;text-shadow:none}}
+/* 母音一顆一顆數 */
+.phw .u.count .g i.v{animation:phcount .5s ease-in-out both}
+@keyframes phcount{0%{text-shadow:none}40%{text-shadow:0 0 26px rgba(255,90,90,.95)}100%{text-shadow:none}}
+
+button>.bic{margin-right:.3em}
+.phbox{display:flex;flex-direction:column;align-items:center;gap:clamp(4px,.8vh,9px)}
+.phnote{font-size:clamp(13px,1.85vh,17px);color:#8E8E8E;letter-spacing:.02em;min-height:1.35em}
+.phnote b{color:#F2F2F2;font-weight:700}
+.phnote .rv{color:#FF5A5A;font-weight:700}
+.phchips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.phchips button{background:#131313;border:1px solid #333;color:#8E8E8E;border-radius:99px;
+ font-family:inherit;font-size:clamp(12px,1.7vh,15px);padding:5px 12px;min-height:32px;cursor:pointer}
+.phchips button.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A;font-weight:700}
+.phchips button:active{background:#2A2A2A}
+.phchips button.on:active{background:#B4C6D6}
+
+/* 念到哪一個字，那一個字就放大、變亮（使用者 2026-09-25 指定，每一頁都一樣） */
+.speak{color:#FFD24A!important;text-shadow:0 0 16px rgba(255,210,74,.8);transform:scale(1.14);display:inline-block;
+ transition:transform .15s}
+.phw.speak .g i,.phw.speak .g i.v{color:#FFD24A!important}
+/* 任何一段英文都可以點來聽（補充單字、字詞、用法） */
+.sp{cursor:pointer;border-bottom:1px dotted #4F6472}
+.sp:active,.sp.ping{color:#9FB4C8;border-bottom-color:#9FB4C8}
+.reduce .phw .syl.beat .g,.reduce .phw .u.count .g i.v{animation:none!important}
+/* ✂️ 音節動畫（2026-09-28 使用者指定：更好玩、更秒懂）
+   ① 紅色母音一顆一顆亮，頭上跳出 ①②③（數母音）
+   ② ✂️ 剪刀從上面剪下來，喀嚓一聲把字剪開
+   ③ 每一段變成一塊彩色積木、一段一段跳一下，頭上寫「第 1 拍、第 2 拍」
+   ④ 最後一行大字：N 個紅色母音 ＝ N 個音節 */
+.phw .phn{position:absolute;left:50%;bottom:100%;transform:translate(-50%,0) scale(0);
+ font-size:max(.36em,15px);line-height:1;font-weight:700;color:#0A0A0A;background:#FF5A5A;border-radius:99px;
+ min-width:1.35em;padding:.12em .28em;text-align:center;pointer-events:none;box-shadow:0 0 14px rgba(255,90,90,.7)}
+.phw .phn.on{animation:phnIn .45s cubic-bezier(.2,1.5,.4,1) forwards}
+@keyframes phnIn{0%{transform:translate(-50%,.3em) scale(0)}100%{transform:translate(-50%,-.12em) scale(1)}}
+.phw .cut{position:relative}
+.phw .phsc{position:absolute;left:50%;top:-1.1em;font-size:.62em;line-height:1;transform:translate(-50%,-60%) rotate(-90deg);
+ opacity:0;pointer-events:none}
+.phw .phsc.on{animation:phsnip .62s cubic-bezier(.3,1.3,.5,1) forwards}
+@keyframes phsnip{0%{opacity:0;transform:translate(-50%,-160%) rotate(-90deg)}
+ 45%{opacity:1;transform:translate(-50%,-10%) rotate(-90deg) scale(1.15)}
+ 60%{transform:translate(-50%,-10%) rotate(-70deg) scale(1.15)}
+ 75%{transform:translate(-50%,-10%) rotate(-100deg) scale(1.15)}
+ 100%{opacity:0;transform:translate(-50%,60%) rotate(-90deg) scale(.8)}}
+.phw.split .syl{border-radius:.16em;padding:0 .06em;transition:background .3s,box-shadow .3s}
+.phw.split .syl.k0{background:rgba(90,169,255,.16);box-shadow:inset 0 -.08em 0 #5AA9FF}
+.phw.split .syl.k1{background:rgba(57,217,138,.16);box-shadow:inset 0 -.08em 0 #39D98A}
+.phw.split .syl.k2{background:rgba(245,179,1,.16);box-shadow:inset 0 -.08em 0 #F5B301}
+.phw.split .syl.k3{background:rgba(200,120,255,.16);box-shadow:inset 0 -.08em 0 #C878FF}
+.phw .syl.hop{animation:phhop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes phhop{0%{transform:translateY(0)}40%{transform:translateY(-.22em) scale(1.08)}100%{transform:translateY(0)}}
+.phsum{position:fixed;left:50%;top:14%;transform:translate(-50%,0) scale(.6);opacity:0;z-index:60;pointer-events:none;
+ background:#0B0B0B;border:2px solid #FF5A5A;border-radius:22px;padding:.35em .9em;white-space:nowrap;
+ font-size:clamp(24px,4.6vh,46px);font-weight:700;color:#F2F2F2;box-shadow:0 0 40px rgba(255,90,90,.35)}
+.phsum .rv{color:#FF5A5A}
+.phsum.on{animation:phsum 3.2s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes phsum{0%{opacity:0;transform:translate(-50%,0) scale(.6)}12%{opacity:1;transform:translate(-50%,0) scale(1.06)}
+ 20%{transform:translate(-50%,0) scale(1)}85%{opacity:1}100%{opacity:0;transform:translate(-50%,-10px) scale(1)}}
+.reduce .phw .phn.on,.reduce .phw .phsc.on,.reduce .phw .syl.hop,.reduce .phsum.on{animation:none!important;opacity:1}
+
+#src{position:fixed;inset:0;z-index:40;background:#000;display:none;flex-direction:column;
+ padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) max(10px,env(safe-area-inset-bottom));text-align:left}
+#src.on{display:flex}
+#src .shd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto}
+#src .sttl{color:#9FB4C8;font-size:clamp(17px,2.6vh,24px);font-weight:700;letter-spacing:.2em}
+#src .scnt{color:#D8D3C5;font-size:clamp(16px,2.4vh,22px);font-weight:700}
+#src .sbody{flex:1 1 auto;min-height:0;overflow:auto;display:flex}
+#src .sl{display:none;flex-direction:column;justify-content:center;gap:clamp(10px,2vh,22px);
+ width:100%;max-width:980px;margin:auto}
+#src .sl.on{display:flex}
+#src .lt{font-size:clamp(28px,5.6vh,54px);font-weight:700;color:#F2F2F2;line-height:1.3;text-align:center;
+ animation:srcIn .45s cubic-bezier(.2,1.3,.4,1) both}
+#src .sl.w .lt{color:#F0B45C}
+#src .lt .wtag{display:inline-block;font-size:.5em;vertical-align:middle;background:#3A2A0C;color:#F0B45C;
+ border:1px solid #6B4E1A;border-radius:99px;padding:4px 12px;margin-right:10px;letter-spacing:.1em}
+#src .vis{display:flex;justify-content:center;animation:srcIn .45s cubic-bezier(.2,1.3,.4,1) .15s both}
+#src .ck{display:flex;align-items:center;gap:clamp(10px,1.6vw,20px);border-radius:18px;
+ padding:clamp(10px,1.8vh,18px) clamp(14px,2vw,24px);animation:srcIn .5s cubic-bezier(.2,1.3,.4,1) both}
+#src .ck .ci{font-size:clamp(30px,5.4vh,52px);flex:0 0 auto}
+#src .ck .cl{display:block;font-size:clamp(13px,1.9vh,17px);letter-spacing:.14em;margin-bottom:4px;font-weight:700}
+#src .ck .cv{display:block;line-height:1.5}
+#src .ck.s{background:#17140C;border:1px solid #3A3018;animation-delay:.35s}
+#src .ck.s .cl{color:#B79A5C}
+#src .ck.s .cv{color:#EBD9A8;font-size:clamp(18px,3vh,30px);font-weight:700}
+#src .ck.d{background:#0E1A12;border:1px solid #21402B;animation-delay:.75s}
+#src .ck.d .cl{color:#6FAE7C}
+#src .ck.d .cv{color:#E6E6E6;font-size:clamp(20px,3.4vh,34px)}
+#src .ck.d .cv b{color:#FFD24A}
+#src .sl.w .ck.d{background:#1A1206;border-color:#4A3510}
+#src .car{text-align:center;color:#5A5A5A;font-size:clamp(20px,3vh,30px);line-height:1;
+ animation:srcIn .4s ease .6s both}
+@keyframes srcIn{0%{opacity:0;transform:translateY(16px) scale(.94)}100%{opacity:1;transform:none}}
+#src .snav{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.6vw,18px);flex:0 0 auto;
+ padding-top:8px}
+#src .snav button,#src .shd button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
+ font-size:clamp(16px,2.4vh,22px);padding:10px 22px;min-height:50px;font-family:inherit;cursor:pointer}
+#src .snav button:disabled{opacity:.3}
+#src .sdots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:46vw}
+#src .sdots i{width:10px;height:10px;border-radius:50%;background:#2A2A2A}
+#src .sdots i.on{background:#FFD24A}
+/* 出處裡的秒懂動畫（字母一格一格跳出來、插進來的字母會發光） */
+#src .ev{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:clamp(8px,1.4vw,18px)}
+#src .ev .st{display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0;
+ animation:srcIn .5s cubic-bezier(.2,1.3,.4,1) both}
+#src .ev .st b{font-size:clamp(24px,4.6vh,46px);color:#F2F2F2;letter-spacing:.02em}
+#src .ev .st em{font-style:normal;font-size:clamp(12px,1.8vh,16px);color:#8E8E8E;white-space:nowrap}
+#src .ev .ar{color:#5A5A5A;font-size:clamp(20px,3vh,30px);padding-bottom:1.1em;opacity:0;animation:srcIn .4s ease both}
+#src .ev .new{color:#FFD24A;display:inline-block;animation:newT 1.2s ease-in-out 1.6s 3}
+#src .ev .no{color:#FF6B6B}
+@keyframes newT{0%,100%{transform:none;text-shadow:none}50%{transform:translateY(-.25em) scale(1.5);text-shadow:0 0 18px rgba(255,210,74,.9)}}
+#src .stoc{display:none;position:absolute;left:0;right:0;top:calc(max(10px,env(safe-area-inset-top)) + 64px);bottom:0;
+ background:#000;z-index:2;overflow:auto;padding:10px clamp(12px,3vw,34px) 20px;
+ grid-template-columns:repeat(auto-fill,minmax(clamp(220px,28vw,320px),1fr));gap:8px;align-content:start}
+#src .stoc.on{display:grid}
+#src .stoc button{display:flex;align-items:center;gap:10px;text-align:left;background:#0C0C0C;border:1px solid #2A2A2A;
+ border-radius:14px;color:#F2F2F2;font-family:inherit;font-size:clamp(15px,2.3vh,21px);padding:10px 14px;min-height:54px;cursor:pointer}
+#src .stoc button b{flex:0 0 auto;width:2em;height:2em;border-radius:50%;background:#1E2A36;display:flex;align-items:center;justify-content:center}
+#src .stoc button.w b{background:#3A2A0C;color:#F0B45C}
+#src .stoc button.cur{border-color:#FFD24A;background:#1D1908}
+#src .shd button#srct{margin-left:auto}
+.reduce #src *{animation:none!important;opacity:1!important}
+.topicfix{position:fixed;top:max(10px,env(safe-area-inset-top));left:14px;z-index:30;color:#FFD66B;font-weight:700;
+ font-size:clamp(16px,2.4vh,22px);letter-spacing:.08em;pointer-events:none;white-space:nowrap}
+</style>
+<script src="audio/aud.js" onerror="window.ENAUD=null"></script><script>window.ENDIR="audio/";</script>
+<style>
+.r1i{width:1em;height:1em;vertical-align:middle}
+.emoji .r1i{width:1em;height:1em}
+.r1sm{font-size:clamp(50px,9vh,84px)!important}
+#toc .r1i{width:1.3em;height:1.3em}
+/* 片語、句子：一格一個字，圖示在上、英文在中、中文在下（對齊） */
+.r1ph{--k:1;display:flex;align-items:flex-end;justify-content:center;gap:calc(clamp(10px,2vw,26px)*var(--k)*var(--k));flex-wrap:nowrap}
+.r1ph .phw{flex-wrap:nowrap}
+.r1ph .c{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:clamp(2px,.6vh,8px);transition:transform .15s}
+.r1ph .ic{font-size:calc(clamp(34px,6.4vh,62px)*var(--k));line-height:1.1;min-height:1.1em}
+.r1ph .w{font-size:calc(clamp(44px,min(9vh,9.5vw),92px)*var(--k));font-weight:700;line-height:1.05;white-space:nowrap}
+.r1ph .z{font-size:calc(clamp(22px,3.6vh,36px)*var(--k));color:#D8D3C5;font-weight:700;white-space:nowrap}
+.r1ph.r1s .w{font-size:calc(clamp(36px,min(7.4vh,7.6vw),76px)*var(--k))}
+.r1ph.r1s .ic{font-size:calc(clamp(28px,5.2vh,52px)*var(--k))}
+.r1ph .w{position:relative}
+.r1ph .w .pdot{position:absolute;left:100%;bottom:0;margin-left:-.17em;line-height:1.05}
+#stage{max-width:980px}
+/* 唸到哪一格：整格（圖示、英文、中文）稍微放大、稍微變亮（樣式在 words/_build.js 的 #card .speak） */
+/* 出處的小圖表 */
+#src .r1c{display:flex;flex-direction:column;gap:clamp(3px,.8vh,8px);width:min(100%,760px)}
+#src .r1who{display:flex;align-items:center;gap:12px;font-size:clamp(20px,3.2vh,30px);color:#F2F2F2}
+#src .r1fl{height:1.1em;width:auto;border-radius:3px}
+#src .r1bar{display:grid;grid-template-columns:1fr auto;grid-template-areas:"l p" "t t";gap:4px 14px;align-items:end}
+#src .r1bl{grid-area:l;font-size:clamp(18px,2.6vh,27px);color:#D8D3C5}
+#src .r1bl b{color:#FFD24A}
+#src .r1bp{grid-area:p;font-size:clamp(24px,4vh,44px);line-height:1;font-weight:700;color:#FFD24A;opacity:0;animation:srcIn .5s ease calc(var(--d) + 1s) both}
+#src .r1bt{grid-area:t;height:clamp(12px,2vh,22px);background:#1A1A1A;border:1px solid #333;border-radius:99px;overflow:hidden}
+#src .r1bt i{display:block;height:100%;width:0;background:linear-gradient(90deg,#C9962B,#FFD24A);border-radius:99px;
+ animation:r1grow 1.1s cubic-bezier(.3,.9,.3,1) var(--d) forwards}
+@keyframes r1grow{to{width:var(--p)}}
+#src .r1kids{display:flex;align-items:center;flex-wrap:wrap;gap:2px;font-size:clamp(22px,3.4vh,38px)}
+#src .r1kids span{opacity:0;filter:grayscale(1) brightness(.35);animation:srcIn .35s ease both}
+#src .r1kids span.on{filter:none}
+#src .r1kids em{font-style:normal;font-size:clamp(18px,2.8vh,26px);color:#D8D3C5;margin-left:10px}
+#src .r1kids em b{color:#FFD24A}
+/* 第幾名／老師選的字／一句話：一列一件事，一列一列跳出來 */
+#src .r1rk{display:flex;align-items:center;gap:10px;line-height:1.25;opacity:0;animation:srcIn .5s cubic-bezier(.2,1.4,.4,1) var(--d) both;
+ background:#141414;border:1px solid #2E2E2E;border-radius:14px;padding:3px 12px}
+#src .r1md{font-size:clamp(24px,4vh,40px);line-height:1}
+#src .r1rn{font-size:clamp(18px,2.8vh,28px);color:#D8D3C5;white-space:nowrap}
+#src .r1rn b{font-size:1.5em;color:#FFD24A}
+#src .r1rk .r1bl{font-size:clamp(17px,2.5vh,25px);color:#D8D3C5;line-height:1.35}
+#src .r1rk .r1bl b{color:#FFD24A}
+#src .r1tp{border-color:#9FB4C8}
+#src .ev .st em{font-size:clamp(16px,2.4vh,22px);color:#B8B8B8}
+#src .r1eqi{font-size:clamp(34px,6vh,58px);line-height:1.1}
+#src .r1eqi .r1i{width:1em;height:1em}
+#src .r1eqi .flag{width:1.3em;height:auto;vertical-align:middle}
+.reduce #src .r1bt i{width:var(--p)}
+</style>
+</head>
+<body>
+<div class="topicfix">🃏 Review 1 單字卡</div>
+<div id="dots"></div>
+<div id="stage"><div id="card"></div>
+<button class="nav" id="prev" aria-label="上一頁">&#8592;</button>
+<button class="nav" id="next" aria-label="下一頁">&#8594;</button></div>
+<div id="bottom">
+<nav id="wnav">
+ <a href="speak-english.html" title="上一個單字">◀ <span class="w">speak English</span></a>
+ <span class="pos">67 / 98</span>
+ <a href="play-in-the-park.html" title="下一個單字"><span class="w">play in the park</span> ▶</a>
+</nav>
+<div id="bar"><div class="bL"><button id="tocb"><span class="bic">📑</span><span class="blb">目次</span></button><button id="phsyl"><span class="bic">✂️</span><span class="blb">音節</span></button><button id="phmode"><span class="bic">🔤</span><span class="blb">音標：無</span></button><button id="slow"><span class="bic">🐢</span><span class="blb">放慢</span></button></div><button id="say3"><span class="bic">🔊</span><span class="blb">唸 3 次</span></button><div class="bR"><button id="srcb"><span class="bic">📖</span><span class="blb">出處</span></button><button id="whome"><span class="bic">🔤</span><span class="blb">單字首頁</span></button><button id="home"><span class="bic">🏠</span><span class="blb">總首頁</span></button></div></div>
+</div>
+<div id="toc"><div class="thd"><b>📑 目次</b><button id="tocx">✕ 關閉</button></div><div class="tgd"><a href="potato-chips.html"><b>1</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="洋芋片"><path d="M22 12h56l-4 8 4 8v44l-4 8 4 8H22l4-8-4-8V28l4-8z" fill="#F5C518" stroke="#C9971A" stroke-width="2"/><path d="M22 12l4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4M22 88l4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4" fill="none" stroke="#C9971A" stroke-width="2"/><ellipse cx="50" cy="44" rx="18" ry="11" fill="#E53935"/><text x="50" y="49" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">CHIPS</text><path d="M30 70c6-8 20-8 24 0-5 6-18 7-24 0z" fill="#FFE08A" stroke="#D9A520" stroke-width="1.5"/><path d="M52 76c7-7 19-5 22 2-6 6-17 5-22-2z" fill="#FFD966" stroke="#D9A520" stroke-width="1.5"/></svg> potato chips　洋芋片</span></a><a href="instant-noodles.html"><b>2</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="泡麵"><path d="M24 38h52l-7 52H31z" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="2"/><path d="M26 50h48l-1.6 12H27.6z" fill="#E53935"/><path d="M20 34h60v6H20z" fill="#F0F0F0" stroke="#BDBDBD" stroke-width="2"/><path d="M30 34c2-6 6-6 8 0M40 34c2-6 6-6 8 0M50 34c2-6 6-6 8 0M60 34c2-6 6-6 8 0" fill="none" stroke="#F2C14E" stroke-width="3"/><path d="M38 26c-4-5 4-8 0-14M50 24c-4-5 4-8 0-14M62 26c-4-5 4-8 0-14" fill="none" stroke="#B0BEC5" stroke-width="3" stroke-linecap="round"/></svg> instant noodles　泡麵</span></a><a href="chocolate.html"><b>3</b><span>🍫 chocolate　巧克力</span></a><a href="cookies.html"><b>4</b><span>🍪 cookies　餅乾</span></a><a href="candy.html"><b>5</b><span>🍬 candy　糖果</span></a><a href="gummies.html"><b>6</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="小熊軟糖"><g fill="#FF5A7A" fill-opacity=".88" stroke="#C2185B" stroke-width="2"><circle cx="34" cy="20" r="8"/><circle cx="66" cy="20" r="8"/><circle cx="50" cy="30" r="17"/><ellipse cx="50" cy="64" rx="22" ry="25"/><ellipse cx="25" cy="54" rx="8" ry="10"/><ellipse cx="75" cy="54" rx="8" ry="10"/><ellipse cx="34" cy="86" rx="10" ry="8"/><ellipse cx="66" cy="86" rx="10" ry="8"/></g><ellipse cx="42" cy="56" rx="5" ry="9" fill="#fff" fill-opacity=".45"/><circle cx="44" cy="28" r="2.4" fill="#7A0E2E"/><circle cx="56" cy="28" r="2.4" fill="#7A0E2E"/></svg> gummies　軟糖</span></a><a href="donuts.html"><b>7</b><span>🍩 donuts　甜甜圈</span></a><a href="ice-cream.html"><b>8</b><span>🍦 ice cream　冰淇淋</span></a><a href="bubble-tea.html"><b>9</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="珍珠奶茶"><path d="M28 34h44l-6 56H34z" fill="#D9B48F" stroke="#A47148" stroke-width="2"/><path d="M24 34c0-12 52-12 52 0z" fill="#F5F5F5" stroke="#BDBDBD" stroke-width="2"/><rect x="22" y="32" width="56" height="5" rx="2" fill="#E0E0E0"/><rect x="52" y="6" width="7" height="58" rx="3" fill="#EF5350" transform="rotate(12 55 35)"/><g fill="#3E2723"><circle cx="40" cy="82" r="4.5"/><circle cx="50" cy="84" r="4.5"/><circle cx="60" cy="82" r="4.5"/><circle cx="45" cy="75" r="4.5"/><circle cx="55" cy="75" r="4.5"/><circle cx="38" cy="72" r="4"/><circle cx="62" cy="72" r="4"/></g></svg> bubble tea　珍珠奶茶</span></a><a href="cola.html"><b>10</b><span>🥤 cola　可樂</span></a><a href="juice.html"><b>11</b><span>🧃 juice　果汁</span></a><a href="french-fries.html"><b>12</b><span>🍟 French fries　薯條</span></a><a href="fried-chicken.html"><b>13</b><span>🍗 fried chicken　炸雞</span></a><a href="hamburgers.html"><b>14</b><span>🍔 hamburgers　漢堡</span></a><a href="hot-dogs.html"><b>15</b><span>🌭 hot dogs　熱狗</span></a><a href="spaghetti.html"><b>16</b><span>🍝 spaghetti　義大利麵</span></a><a href="sushi.html"><b>17</b><span>🍣 sushi　壽司</span></a><a href="ramen.html"><b>18</b><span>🍜 ramen　拉麵</span></a><a href="curry.html"><b>19</b><span>🍛 curry　咖哩</span></a><a href="pizza.html"><b>20</b><span>🍕 pizza　披薩</span></a><a href="strawberries.html"><b>21</b><span>🍓 strawberries　草莓</span></a><a href="milk.html"><b>22</b><span>🥛 milk　牛奶</span></a><a href="stuffed-animals.html"><b>23</b><span>🧸 stuffed animals　絨毛娃娃</span></a><a href="beyblades.html"><b>24</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="戰鬥陀螺"><path d="M18 50a32 32 0 0 1 10-23M82 50a32 32 0 0 1-10 23M50 14a36 36 0 0 1 30 14M50 86a36 36 0 0 1-30-14" fill="none" stroke="#90CAF9" stroke-width="3" stroke-linecap="round"/><g transform="translate(50 50)"><path d="M0-30l9 12 20-2-10 13 10 13-20-2-9 12-9-12-20 2 10-13-10-13 20 2z" fill="#B0BEC5" stroke="#546E7A" stroke-width="2"/><circle r="16" fill="#1E88E5" stroke="#0D47A1" stroke-width="2"/><circle r="7" fill="#FFCA28" stroke="#F57F17" stroke-width="2"/></g></svg> Beyblades　戰鬥陀螺</span></a><a href="stickers.html"><b>25</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="貼紙"><rect x="8" y="10" width="84" height="80" rx="10" fill="#F4F1E8" stroke="#C9C2AE" stroke-width="2"/><path d="M30 20l5.3 10.8 11.9 1.7-8.6 8.4 2 11.8L30 47.1l-10.6 5.6 2-11.8-8.6-8.4 11.9-1.7z" fill="#FFC93C" stroke="#fff" stroke-width="2.5"/><path d="M70 34c-6-9-18-4-14 6 2 5 14 13 14 13s12-8 14-13c4-10-8-15-14-6z" fill="#FF6B8A" stroke="#fff" stroke-width="2.5"/><circle cx="28" cy="70" r="11" fill="#4FC3F7" stroke="#fff" stroke-width="2.5"/><path d="M52 60h30v22H60z" fill="#7ED957" stroke="#fff" stroke-width="2.5"/><path d="M60 82l22-22c-4 12-10 18-22 22z" fill="#DCD6C4" stroke="#B5AD95" stroke-width="1.5"/></svg> stickers　貼紙</span></a><a href="dolls.html"><b>26</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="娃娃"><path d="M30 30c-8 10-6 26-2 34l8-6M70 30c8 10 6 26 2 34l-8-6" fill="#6D4C41"/><circle cx="50" cy="30" r="17" fill="#FFD7B5" stroke="#E0A97E" stroke-width="1.5"/><path d="M33 28c2-14 32-14 34 0-8-6-26-6-34 0z" fill="#6D4C41"/><circle cx="44" cy="31" r="2.2" fill="#3E2723"/><circle cx="56" cy="31" r="2.2" fill="#3E2723"/><path d="M45 38q5 4 10 0" fill="none" stroke="#C62828" stroke-width="2" stroke-linecap="round"/><circle cx="40" cy="36" r="2.6" fill="#FF8A80" fill-opacity=".7"/><circle cx="60" cy="36" r="2.6" fill="#FF8A80" fill-opacity=".7"/><path d="M40 48h20l14 32H26z" fill="#EC407A" stroke="#AD1457" stroke-width="1.5"/><path d="M26 80h48" stroke="#fff" stroke-width="3" stroke-dasharray="4 3"/><rect x="40" y="80" width="6" height="12" fill="#FFD7B5"/><rect x="54" y="80" width="6" height="12" fill="#FFD7B5"/><path d="M41 50l-12 14M59 50l12 14" stroke="#FFD7B5" stroke-width="5" stroke-linecap="round"/></svg> dolls　娃娃</span></a><a href="smartphones.html"><b>27</b><span>📱 smartphones　智慧型手機</span></a><a href="tablets.html"><b>28</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="平板"><rect x="8" y="20" width="84" height="60" rx="8" fill="#263238" stroke="#90A4AE" stroke-width="2"/><rect x="15" y="26" width="70" height="48" rx="3" fill="#4FC3F7"/><g fill="#fff" fill-opacity=".9"><rect x="21" y="32" width="12" height="12" rx="3"/><rect x="38" y="32" width="12" height="12" rx="3"/><rect x="55" y="32" width="12" height="12" rx="3"/><rect x="21" y="52" width="12" height="12" rx="3"/><rect x="38" y="52" width="12" height="12" rx="3"/></g><circle cx="88.5" cy="50" r="1.6" fill="#90A4AE"/></svg> tablets　平板電腦</span></a><a href="youtube-videos.html"><b>29</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="影片"><rect x="10" y="20" width="80" height="54" rx="8" fill="#ECEFF1" stroke="#90A4AE" stroke-width="2.5"/><path d="M42 34v26l22-13z" fill="#78909C"/><rect x="18" y="80" width="64" height="5" rx="2.5" fill="#CFD8DC"/><rect x="18" y="80" width="26" height="5" rx="2.5" fill="#90A4AE"/></svg> YouTube videos　YouTube 影片</span></a><a href="tv.html"><b>30</b><span>📺 TV　電視</span></a><a href="video-games.html"><b>31</b><span>🎮 video games　電玩</span></a><a href="minecraft.html"><b>32</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="像素方塊"><path d="M50 12l36 18-36 18-36-18z" fill="#6BBF59"/><path d="M14 30l36 18v40L14 70z" fill="#8D5A3B"/><path d="M86 30L50 48v40l36-18z" fill="#6F4529"/><path d="M14 30l36 18 36-18v8L50 56 14 38z" fill="#5AA04A"/><g fill="#5B3A22"><rect x="20" y="48" width="7" height="7"/><rect x="32" y="62" width="7" height="7"/><rect x="22" y="66" width="6" height="6"/></g><g fill="#4E3119"><rect x="60" y="58" width="7" height="7"/><rect x="72" y="50" width="7" height="7"/><rect x="66" y="70" width="6" height="6"/></g><g fill="#7FD06A"><rect x="44" y="20" width="7" height="5"/><rect x="62" y="28" width="7" height="5"/><rect x="32" y="27" width="7" height="5"/></g></svg> Minecraft　當個創世神</span></a><a href="roblox.html"><b>33</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="方塊人"><rect x="30" y="8" width="40" height="34" rx="4" fill="#FFD54F" stroke="#C49000" stroke-width="2"/><rect x="39" y="20" width="6" height="8" fill="#212121"/><rect x="55" y="20" width="6" height="8" fill="#212121"/><path d="M41 33h18" stroke="#212121" stroke-width="3"/><rect x="28" y="44" width="44" height="30" fill="#42A5F5" stroke="#1565C0" stroke-width="2"/><rect x="14" y="44" width="12" height="28" fill="#FFD54F" stroke="#C49000" stroke-width="2"/><rect x="74" y="44" width="12" height="28" fill="#FFD54F" stroke="#C49000" stroke-width="2"/><rect x="30" y="74" width="19" height="20" fill="#66BB6A" stroke="#2E7D32" stroke-width="2"/><rect x="51" y="74" width="19" height="20" fill="#66BB6A" stroke="#2E7D32" stroke-width="2"/></svg> Roblox　機器磚塊</span></a><a href="pokemon-tcg-pocket.html"><b>34</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="卡牌手遊"><rect x="26" y="6" width="48" height="88" rx="9" fill="#263238" stroke="#90A4AE" stroke-width="2"/><rect x="31" y="14" width="38" height="70" rx="3" fill="#E3F2FD"/><rect x="37" y="22" width="26" height="40" rx="3" fill="#FFD84D" stroke="#C9A100" stroke-width="1.5"/><path d="M53 27l-7 10h5l-2 8 7-11h-5z" fill="#F57F17"/><rect x="40" y="50" width="20" height="3" rx="1.5" fill="#E8C33A"/><rect x="38" y="68" width="24" height="8" rx="4" fill="#42A5F5"/></svg> Pokémon TCG Pocket　寶可夢卡牌手遊</span></a><a href="splatoon.html"><b>35</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="油漆潑灑"><path d="M50 14c6 0 6 12 12 12s10-8 15-3-3 12 2 16 13 1 13 8-11 6-11 12 9 11 4 15-12-3-16 2-2 14-9 14-7-10-13-10-10 9-15 4 1-11-4-15-14 1-15-6 9-9 7-14-11-8-7-13 13 0 16-5-2-14 4-16 9 4 13 0 3-11 9-11z" fill="#FF7A00"/><circle cx="84" cy="22" r="5" fill="#FF7A00"/><circle cx="14" cy="80" r="6" fill="#FF7A00"/><circle cx="20" cy="18" r="3.5" fill="#FF7A00"/><path d="M38 40c4-8 22-8 26 2 3 10-8 20-14 18s-16-10-12-20z" fill="#8E24AA" fill-opacity=".85"/></svg> Splatoon　漆彈大作戰</span></a><a href="mario-kart.html"><b>36</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="卡丁車"><path d="M14 62h62l10-10v-6H64l-8-12H36l-6 12H14z" fill="#E53935" stroke="#8E1B1B" stroke-width="2"/><rect x="38" y="36" width="16" height="10" rx="2" fill="#90CAF9"/><path d="M28 34v-12M22 22h12" stroke="#424242" stroke-width="3" stroke-linecap="round"/><circle cx="28" cy="68" r="11" fill="#212121"/><circle cx="28" cy="68" r="4.5" fill="#BDBDBD"/><circle cx="72" cy="68" r="11" fill="#212121"/><circle cx="72" cy="68" r="4.5" fill="#BDBDBD"/><path d="M4 54h8M2 62h8M6 46h8" stroke="#FFCA28" stroke-width="3" stroke-linecap="round"/></svg> Mario Kart　瑪利歐賽車</span></a><a href="animal-crossing.html"><b>37</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="小島"><ellipse cx="50" cy="78" rx="44" ry="12" fill="#4FC3F7"/><ellipse cx="50" cy="72" rx="34" ry="10" fill="#FFE082"/><path d="M20 70c4-14 56-14 60 0z" fill="#81C784"/><rect x="26" y="38" width="5" height="26" fill="#795548"/><circle cx="28" cy="34" r="12" fill="#43A047"/><circle cx="22" cy="40" r="4" fill="#E53935"/><path d="M48 46l14-12 14 12v18H48z" fill="#FFF3E0" stroke="#8D6E63" stroke-width="2"/><path d="M45 47l17-15 17 15" fill="none" stroke="#6D4C41" stroke-width="4" stroke-linejoin="round"/><rect x="58" y="52" width="8" height="12" fill="#8D6E63"/></svg> Animal Crossing　動物森友會</span></a><a href="switch-games.html"><b>38</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="遊戲機"><rect x="24" y="26" width="52" height="48" rx="3" fill="#37474F"/><rect x="28" y="30" width="44" height="40" rx="2" fill="#80DEEA"/><rect x="6" y="26" width="18" height="48" rx="9" fill="#29B6F6"/><rect x="76" y="26" width="18" height="48" rx="9" fill="#EF5350"/><circle cx="15" cy="40" r="4.5" fill="#263238"/><g fill="#263238"><circle cx="85" cy="36" r="2.5"/><circle cx="85" cy="46" r="2.5"/><circle cx="80" cy="41" r="2.5"/><circle cx="90" cy="41" r="2.5"/></g><circle cx="85" cy="60" r="4.5" fill="#263238"/><g fill="#263238"><rect x="13" y="54" width="4" height="12"/><rect x="9" y="58" width="12" height="4"/></g></svg> Switch games　Switch 遊戲</span></a><a href="basketball.html"><b>39</b><span>🏀 basketball　籃球</span></a><a href="badminton.html"><b>40</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="羽毛球"><path d="M30 14h40L60 66H40z" fill="#FAFAFA" stroke="#B0BEC5" stroke-width="2"/><path d="M40 14l3 52M50 14v52M60 14l-3 52M35 30h30M37 46h26" stroke="#CFD8DC" stroke-width="2"/><rect x="38" y="64" width="24" height="6" fill="#90A4AE"/><path d="M38 70h24c0 14-24 14-24 0z" fill="#ECEFF1" stroke="#90A4AE" stroke-width="2"/></svg> badminton　羽毛球</span></a><a href="soccer.html"><b>41</b><span>⚽ soccer　足球</span></a><a href="baseball.html"><b>42</b><span>⚾ baseball　棒球</span></a><a href="comics.html"><b>43</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="漫畫"><rect x="16" y="8" width="68" height="84" rx="4" fill="#FFFDE7" stroke="#8D6E63" stroke-width="2"/><rect x="22" y="14" width="56" height="26" fill="#FFE082" stroke="#5D4037" stroke-width="1.5"/><rect x="22" y="44" width="26" height="42" fill="#90CAF9" stroke="#5D4037" stroke-width="1.5"/><rect x="52" y="44" width="26" height="42" fill="#EF9A9A" stroke="#5D4037" stroke-width="1.5"/><path d="M28 18h28a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H40l-6 5v-5h-6a4 4 0 0 1-4-4v-6a4 4 0 0 1 4-4z" fill="#fff" stroke="#5D4037" stroke-width="1.2"/><path d="M60 54l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" fill="#FFF176" stroke="#F57F17"/></svg> comics　漫畫</span></a><a href="picture-books.html"><b>44</b><span>📖 picture books　繪本</span></a><a href="detective-stories.html"><b>45</b><span>🕵️ detective stories　偵探故事</span></a><a href="science-comics.html"><b>46</b><span>🔬 science comics　科學漫畫</span></a><a href="books.html"><b>47</b><span>📚 books　書</span></a><a href="music.html"><b>48</b><span>🎵 music　音樂</span></a><a href="dogs.html"><b>49</b><span>🐶 dogs　狗</span></a><a href="cats.html"><b>50</b><span>🐱 cats　貓</span></a><a href="play-basketball.html"><b>51</b><span>⛹️ play basketball　打 籃球</span></a><a href="play-badminton.html"><b>52</b><span>🏸 play badminton　打 羽毛球</span></a><a href="play-soccer.html"><b>53</b><span>⚽ play soccer　踢 足球</span></a><a href="play-baseball.html"><b>54</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="球棒和球"><path d="M18 86l6 6 52-56c6-6 10-14 6-18s-12 0-18 6z" fill="#C8955C" stroke="#8D6238" stroke-width="2"/><rect x="12" y="80" width="10" height="16" rx="3" fill="#5D4037" transform="rotate(-45 17 88)"/><circle cx="76" cy="74" r="13" fill="#FAFAFA" stroke="#BDBDBD" stroke-width="2"/><path d="M68 64c5 5 5 15 0 20M84 64c-5 5-5 15 0 20" fill="none" stroke="#E53935" stroke-width="2" stroke-dasharray="3 2"/></svg> play baseball　打 棒球</span></a><a href="play-dodgeball.html"><b>55</b><span>🤾 play dodgeball　打 躲避球</span></a><a href="run.html"><b>56</b><span>🏃 run　跑步</span></a><a href="swim.html"><b>57</b><span>🏊 swim　游泳</span></a><a href="ride-my-bike.html"><b>58</b><span>🚴 ride my bike　騎 我的 腳踏車</span></a><a href="go-camping.html"><b>59</b><span>🏕️ go camping　去 露營</span></a><a href="play-the-piano.html"><b>60</b><span>🎹 play the piano　彈 鋼琴</span></a><a href="play-the-drums.html"><b>61</b><span>🥁 play the drums　打 鼓</span></a><a href="do-taekwondo.html"><b>62</b><span>🥋 do taekwondo　學 跆拳道</span></a><a href="dance.html"><b>63</b><span>💃 dance　跳舞</span></a><a href="sing.html"><b>64</b><span>🎤 sing　唱歌</span></a><a href="draw.html"><b>65</b><span>🎨 draw　畫畫</span></a><a href="speak-english.html"><b>66</b><span>🗣️ speak English　說 英文</span></a><a href="do-crafts.html" class="cur"><b>67</b><span>✂️ do crafts　做 手工藝</span></a><a href="play-in-the-park.html"><b>68</b><span>🏞️ play in the park　在公園 玩</span></a><a href="play-outside.html"><b>69</b><span>🌳 play outside　在外面 玩</span></a><a href="play-tag.html"><b>70</b><span>🏃 play tag　玩 鬼抓人</span></a><a href="play-the-guitar.html"><b>71</b><span>🎸 play the guitar　彈 吉他</span></a><a href="do-magic-tricks.html"><b>72</b><span>🎩 do magic tricks　變 魔術</span></a><a href="play-video-games.html"><b>73</b><span>🕹️ play video games　打 電動</span></a><a href="play-mobile-games.html"><b>74</b><span>📱 play mobile games　玩 手遊</span></a><a href="watch-videos.html"><b>75</b><span>🎬 watch videos　看 影片</span></a><a href="watch-tv.html"><b>76</b><span>📺 watch TV　看 電視</span></a><a href="play-minecraft.html"><b>77</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="像素方塊"><path d="M50 12l36 18-36 18-36-18z" fill="#6BBF59"/><path d="M14 30l36 18v40L14 70z" fill="#8D5A3B"/><path d="M86 30L50 48v40l36-18z" fill="#6F4529"/><path d="M14 30l36 18 36-18v8L50 56 14 38z" fill="#5AA04A"/><g fill="#5B3A22"><rect x="20" y="48" width="7" height="7"/><rect x="32" y="62" width="7" height="7"/><rect x="22" y="66" width="6" height="6"/></g><g fill="#4E3119"><rect x="60" y="58" width="7" height="7"/><rect x="72" y="50" width="7" height="7"/><rect x="66" y="70" width="6" height="6"/></g><g fill="#7FD06A"><rect x="44" y="20" width="7" height="5"/><rect x="62" y="28" width="7" height="5"/><rect x="32" y="27" width="7" height="5"/></g></svg> play Minecraft　玩 當個創世神</span></a><a href="play-roblox.html"><b>78</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="方塊人"><rect x="30" y="8" width="40" height="34" rx="4" fill="#FFD54F" stroke="#C49000" stroke-width="2"/><rect x="39" y="20" width="6" height="8" fill="#212121"/><rect x="55" y="20" width="6" height="8" fill="#212121"/><path d="M41 33h18" stroke="#212121" stroke-width="3"/><rect x="28" y="44" width="44" height="30" fill="#42A5F5" stroke="#1565C0" stroke-width="2"/><rect x="14" y="44" width="12" height="28" fill="#FFD54F" stroke="#C49000" stroke-width="2"/><rect x="74" y="44" width="12" height="28" fill="#FFD54F" stroke="#C49000" stroke-width="2"/><rect x="30" y="74" width="19" height="20" fill="#66BB6A" stroke="#2E7D32" stroke-width="2"/><rect x="51" y="74" width="19" height="20" fill="#66BB6A" stroke="#2E7D32" stroke-width="2"/></svg> play Roblox　玩 機器磚塊</span></a><a href="play-mario-kart.html"><b>79</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="卡丁車"><path d="M14 62h62l10-10v-6H64l-8-12H36l-6 12H14z" fill="#E53935" stroke="#8E1B1B" stroke-width="2"/><rect x="38" y="36" width="16" height="10" rx="2" fill="#90CAF9"/><path d="M28 34v-12M22 22h12" stroke="#424242" stroke-width="3" stroke-linecap="round"/><circle cx="28" cy="68" r="11" fill="#212121"/><circle cx="28" cy="68" r="4.5" fill="#BDBDBD"/><circle cx="72" cy="68" r="11" fill="#212121"/><circle cx="72" cy="68" r="4.5" fill="#BDBDBD"/><path d="M4 54h8M2 62h8M6 46h8" stroke="#FFCA28" stroke-width="3" stroke-linecap="round"/></svg> play Mario Kart　玩 瑪利歐賽車</span></a><a href="collect-pokemon-cards.html"><b>80</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="卡片"><rect x="22" y="8" width="56" height="84" rx="6" fill="#FFD84D" stroke="#C9A100" stroke-width="2"/><rect x="28" y="20" width="44" height="34" rx="2" fill="#7EC8E3" stroke="#3E8EB0" stroke-width="1.5"/><path d="M54 24L42 40h8l-4 12 12-17h-8z" fill="#FFF176" stroke="#F57F17" stroke-width="1.5"/><rect x="28" y="60" width="44" height="5" rx="2" fill="#E8C33A"/><rect x="28" y="70" width="34" height="4" rx="2" fill="#E8C33A"/><rect x="28" y="79" width="40" height="4" rx="2" fill="#E8C33A"/><text x="70" y="17" font-size="8" font-weight="700" text-anchor="end" fill="#B71C1C" font-family="Arial,sans-serif">HP 60</text></svg> collect Pokémon cards　收集 寶可夢卡</span></a><a href="play-beyblade.html"><b>81</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="戰鬥陀螺"><path d="M18 50a32 32 0 0 1 10-23M82 50a32 32 0 0 1-10 23M50 14a36 36 0 0 1 30 14M50 86a36 36 0 0 1-30-14" fill="none" stroke="#90CAF9" stroke-width="3" stroke-linecap="round"/><g transform="translate(50 50)"><path d="M0-30l9 12 20-2-10 13 10 13-20-2-9 12-9-12-20 2 10-13-10-13 20 2z" fill="#B0BEC5" stroke="#546E7A" stroke-width="2"/><circle r="16" fill="#1E88E5" stroke="#0D47A1" stroke-width="2"/><circle r="7" fill="#FFCA28" stroke="#F57F17" stroke-width="2"/></g></svg> play Beyblade　玩 戰鬥陀螺</span></a><a href="listen-to-music.html"><b>82</b><span>🎧 listen to music　聽 音樂</span></a><a href="read.html"><b>83</b><span>📖 read　閱讀</span></a><a href="read-comics.html"><b>84</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="漫畫"><rect x="16" y="8" width="68" height="84" rx="4" fill="#FFFDE7" stroke="#8D6E63" stroke-width="2"/><rect x="22" y="14" width="56" height="26" fill="#FFE082" stroke="#5D4037" stroke-width="1.5"/><rect x="22" y="44" width="26" height="42" fill="#90CAF9" stroke="#5D4037" stroke-width="1.5"/><rect x="52" y="44" width="26" height="42" fill="#EF9A9A" stroke="#5D4037" stroke-width="1.5"/><path d="M28 18h28a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H40l-6 5v-5h-6a4 4 0 0 1-4-4v-6a4 4 0 0 1 4-4z" fill="#fff" stroke="#5D4037" stroke-width="1.2"/><path d="M60 54l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" fill="#FFF176" stroke="#F57F17"/></svg> read comics　看 漫畫</span></a><a href="chat-with-my-friends.html"><b>85</b><span>💬 chat with my friends　跟朋友 聊天</span></a><a href="eat-snacks.html"><b>86</b><span>🍪 eat snacks　吃 點心</span></a><a href="play-with-toys.html"><b>87</b><span>🧸 play with toys　玩 玩具</span></a><a href="cook.html"><b>88</b><span>🍳 cook　做菜</span></a><a href="stay-home.html"><b>89</b><span>🏠 stay home　待 在家</span></a><a href="make-videos.html"><b>90</b><span>🎥 make videos　拍 影片</span></a><a href="go-to-an-amusement-park.html"><b>91</b><span>🎡 go to an amusement park　去 遊樂園</span></a><a href="visit-my-grandparents.html"><b>92</b><span>👴 visit my grandparents　去看 爺爺奶奶</span></a><a href="go-shopping.html"><b>93</b><span>🛍️ go shopping　去 買東西</span></a><a href="bake-cakes.html"><b>94</b><span>🎂 bake cakes　烤 蛋糕</span></a><a href="play-with-my-dog.html"><b>95</b><span>🐕 play with my dog　和我的狗 玩</span></a><a href="collect-stickers.html"><b>96</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="貼紙"><rect x="8" y="10" width="84" height="80" rx="10" fill="#F4F1E8" stroke="#C9C2AE" stroke-width="2"/><path d="M30 20l5.3 10.8 11.9 1.7-8.6 8.4 2 11.8L30 47.1l-10.6 5.6 2-11.8-8.6-8.4 11.9-1.7z" fill="#FFC93C" stroke="#fff" stroke-width="2.5"/><path d="M70 34c-6-9-18-4-14 6 2 5 14 13 14 13s12-8 14-13c4-10-8-15-14-6z" fill="#FF6B8A" stroke="#fff" stroke-width="2.5"/><circle cx="28" cy="70" r="11" fill="#4FC3F7" stroke="#fff" stroke-width="2.5"/><path d="M52 60h30v22H60z" fill="#7ED957" stroke="#fff" stroke-width="2.5"/><path d="M60 82l22-22c-4 12-10 18-22 22z" fill="#DCD6C4" stroke="#B5AD95" stroke-width="1.5"/></svg> collect stickers　收集 貼紙</span></a><a href="write-code.html"><b>97</b><span>💻 write code　寫 程式</span></a><a href="play-with-lego.html"><b>98</b><span><svg class="r1i" viewBox="0 0 100 100" role="img" aria-label="積木"><path d="M10 46l40-18 40 18v26L50 90 10 72z" fill="#E53935"/><path d="M10 46l40 18v26L10 72z" fill="#C62828"/><path d="M90 46L50 64v26l40-18z" fill="#B71C1C"/><g fill="#EF5350" stroke="#B71C1C" stroke-width="1.5"><ellipse cx="34" cy="44" rx="8" ry="4"/><ellipse cx="50" cy="37" rx="8" ry="4"/><ellipse cx="50" cy="51" rx="8" ry="4"/><ellipse cx="66" cy="44" rx="8" ry="4"/></g><g fill="#F26B67"><path d="M26 44v-6a8 4 0 0 1 16 0v6a8 4 0 0 1-16 0z"/><path d="M42 37v-6a8 4 0 0 1 16 0v6a8 4 0 0 1-16 0z"/><path d="M42 51v-6a8 4 0 0 1 16 0v6a8 4 0 0 1-16 0z"/><path d="M58 44v-6a8 4 0 0 1 16 0v6a8 4 0 0 1-16 0z"/></g><g fill="#FF8A80"><ellipse cx="34" cy="38" rx="8" ry="4"/><ellipse cx="50" cy="31" rx="8" ry="4"/><ellipse cx="50" cy="45" rx="8" ry="4"/><ellipse cx="66" cy="38" rx="8" ry="4"/></g></svg> play with LEGO　玩 樂高</span></a></div></div>
+<footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span><span class="scnt"><span id="srcn">1</span> ／ 9</span><button id="srct">📑 目次</button><button id="srcx">✕ 關閉</button></div><div class="stoc" id="stoc"><button data-k="0"><b>1</b><span>📊 小學生學手工藝嗎？</span></button><button data-k="1"><b>2</b><span>✂️ craft 本來是「力氣」</span></button><button data-k="2"><b>3</b><span>音標（美式）</span></button><button data-k="3"><b>4</b><span>KK 音標</span></button><button data-k="4"><b>5</b><span>音節怎麼切</span></button><button data-k="5" class="w"><b>6</b><span>辭典寫 stick·er 也對</span></button><button data-k="6" class="w"><b>7</b><span>品牌名和縮寫</span></button><button data-k="7" class="w"><b>8</b><span>淺灰色的字母不算</span></button><button data-k="8"><b>9</b><span>唸出來的聲音</span></button></div><div class="sbody"><section class="sl on" data-k="0"><div class="lt">📊 小學生學手工藝嗎？</div><div class="vis"><div class="r1c"><div class="r1who"><svg class="r1fl" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#FFF"/><circle cx="15" cy="10" r="6" fill="#BC002D"/><rect width="30" height="20" fill="none" stroke="#555"/></svg><b>日本小學生</b></div><div class="r1rk" style="--d:0.4s"><span class="r1md">🏅</span><span class="r1rn">第 <b>20</b> 名</span><span class="r1bl">才藝課排行：<b>手芸・料理</b>（手工藝、做菜）</span></div></div></div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">學研 2024-11 才藝課調查（日本小學生 1,200 人）；ねとらぼ報導</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">日本小學生的才藝課，<b>手工藝、做菜第 20 名</b>。</span></span></div></section><section class="sl" data-k="1"><div class="lt">✂️ craft 本來是「力氣」</div><div class="vis"><div class="ev"><span class="st" style="animation-delay:0.0s"><span class="r1eqi">💪</span><b>cræft</b><em>古英文：力氣</em></span><span class="ar" style="animation-delay:0.3s">➜</span><span class="st" style="animation-delay:0.6s"><span class="r1eqi">✂️</span><b><span class="new">craft</span></b><em>手藝</em></span></div></div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Etymonline「craft (n.)」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">古英文 <b>cræft</b> ＝ <b>力氣</b>，後來變成「<b>手藝、技術</b>」；德文 <b>Kraft</b> 今天還是「力氣」。</span></span></div></section><section class="sl" data-k="2"><div class="lt">音標（美式）</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Cambridge Dictionary 各詞條的 US 發音</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">本教材的 IPA 一律用<b>美式</b>。</span></span></div></section><section class="sl" data-k="3"><div class="lt">KK 音標</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">台灣課本用的標法。</span></span></div></section><section class="sl" data-k="4"><div class="lt">音節怎麼切</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">本教材的切法（老師指定，2026-10-02）；對照 Merriam-Webster、Cambridge Dictionary</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv"><b>一個出聲的母音 ＝ 一個音節</b>。兩個母音中間只有<b>一個子音的聲音</b>（ck、ll、tt 也只唸一個）➜ 搬到後面：<b>sti．ckers</b>；有兩個子音的聲音 ➜ 從中間切：<b>bas．ket．ball</b>。</span></span></div></section><section class="sl w" data-k="5"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>辭典寫 stick·er 也對</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">Merriam-Webster 寫 <b>stick·er</b>、Cambridge 標 <b>/ˈstɪk.ɚ/</b>：那是辭典的切法。本教材教的是<b>一個子音聲跟著後面的母音</b>，切法不同，都不是錯。</span></span></div></section><section class="sl w" data-k="6"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>品牌名和縮寫</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">Minecraft、Splatoon、Beyblade 辭典沒有收：照組成的英文字標音（mine＋craft）。Roblox、Mario 照維基百科的標音。<b>TV、TCG</b> 是一個字母一個字母唸的縮寫，<b>不標母音顏色和音標</b>。</span></span></div></section><section class="sl w" data-k="7"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>淺灰色的字母不算</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">不出聲的字母（淺灰色）<b>不算母音</b>，數紅色的就對了。</span></span></div></section><section class="sl" data-k="8"><div class="lt">唸出來的聲音</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Kokoro（神經語音，美式女聲 af_bella，Apache-2.0），預先做成語音檔</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">每一個字、每一句都先做好。<b>不是真人錄音</b>；語音檔沒有的才用瀏覽器內建語音。</span></span></div></section></div><div class="snav"><button id="srcp">◀ 上一條</button><span class="sdots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><button id="srcf">下一條 ▶</button></div></footer>
+
+<script>
+
+var PH=(function(){
+ var D={"family":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"i","i":"ə","k":"ə","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]],"parent":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"mother":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"father":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"brother":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"sister":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"son":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"daughter":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"au","i":"ɔː","k":"ɔ","s":0,"n":1},{"L":"gh","i":"","k":"","s":1,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"grandfather":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"grandmother":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"uncle":[[{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"ŋ","k":"ŋ","s":0,"n":0}],[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"l","i":"əl","k":"əl","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"aunt":[[{"L":"au","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"cousin":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"s","i":"z","k":"z","s":0,"n":0},{"L":"i","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"nephew":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"ph","i":"f","k":"f","s":0,"n":0},{"L":"ew","i":"juː","k":"ju","s":0,"n":1}]],"niece":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"i","i":"","k":"","s":1,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1},{"L":"c","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"husband":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"wife":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"older":[[{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"younger":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"ou","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"ŋ","k":"ŋ","s":0,"n":0}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"big":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0}]],"little":[[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"t","i":"","k":"","s":1,"n":0},{"L":"l","i":"əl","k":"əl","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"elder":[[{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"parents":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"mom":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ɑ","k":"ɑ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"mum":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"dad":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"sun":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"grandpa":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}]],"grandma":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}]],"auntie":[[{"L":"au","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ie","i":"i","k":"ɪ","s":0,"n":1}]],"sis":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"bro":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"me":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1}]],"tree":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ee","i":"iː","k":"i","s":0,"n":1}]],"grand":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"house":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"ou","i":"aʊ","k":"aʊ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"student":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"u","i":"uː","k":"u","s":0,"n":1}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"teacher":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1}],[{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"doctor":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"c","i":"k","k":"k","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"or","i":"ɚ","k":"ɚ","s":0,"n":1}]],"farmer":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"nurse":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"ur","i":"ɝː","k":"ɝ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"teach":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1},{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"farm":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"study":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]],"zero":[[{"L":"z","i":"z","k":"z","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"one":[[{"L":"o","i":"wʌ","k":"wʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"two":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"w","i":"","k":"","s":1,"n":0},{"L":"o","i":"uː","k":"u","s":0,"n":1}]],"three":[[{"L":"th","i":"θ","k":"θ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"e","i":"iː","k":"i","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"four":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"o","i":"ɔː","k":"ɔ","s":0,"n":1},{"L":"u","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"five":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"six":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"x","i":"ks","k":"ks","s":0,"n":0}]],"seven":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"eight":[[{"L":"ei","i":"eɪ","k":"e","s":0,"n":1},{"L":"gh","i":"","k":"","s":1,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"nine":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"ten":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"eleven":[[{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"twelve":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"i":[[{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1}]],"my":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1}]],"you":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"uː","k":"u","s":0,"n":1}]],"your":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0},{"L":"u","i":"ʊ","k":"ʊ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"am":[[{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"are":[[{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"name":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"is":[[{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"what":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"what's":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"'s","i":"s","k":"s","s":0,"n":0}]],"how":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"ow","i":"aʊ","k":"aʊ","s":0,"n":1}]],"old":[[{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"year":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"a","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0}]],"years":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"a","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"who":[[{"L":"w","i":"","k":"","s":1,"n":0},{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"o","i":"uː","k":"u","s":0,"n":1}]],"where":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"when":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"why":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1}]],"tea":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1}]],"ketchup":[[{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"tch","i":"tʃ","k":"tʃ","s":0,"n":0},{"L":"u","i":"ə","k":"ə","s":0,"n":1},{"L":"p","i":"p","k":"p","s":0,"n":0}]],"hamburger":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"ur","i":"ɜːr","k":"ɝ","s":0,"n":1}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"sandwich":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"breakfast":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"e","k":"ɛ","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}],[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"goodbye":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"oo","i":"ʊ","k":"ʊ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"y","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"break":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"eɪ","k":"e","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}]],"fast":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"like":[[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"to":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"o","i":"ə","k":"ə","s":0,"n":1}]],"the":[[{"L":"th","i":"ð","k":"ð","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1}]],"an":[[{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"in":[[{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"with":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"th","i":"ð","k":"ð","s":0,"n":0}]],"play":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"ay","i":"eɪ","k":"e","s":0,"n":1}]],"do":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"o","i":"uː","k":"u","s":0,"n":1}]],"go":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"potato":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"o","i":"ə","k":"ə","s":0,"n":1}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"chips":[[{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"instant":[[{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}],[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"noodles":[[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"oo","i":"uː","k":"u","s":0,"n":1}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"l","i":"əl","k":"əl","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"chocolate":[[{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"o","i":"","k":"","s":1,"n":0}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"cookies":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"oo","i":"ʊ","k":"ʊ","s":0,"n":1}],[{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"ie","i":"i","k":"ɪ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"candy":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]],"gummies":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"m","i":"","k":"","s":1,"n":0},{"L":"ie","i":"i","k":"ɪ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"donuts":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}],[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"ice":[[{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"c","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"cream":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"bubble":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"b","i":"","k":"","s":1,"n":0},{"L":"l","i":"əl","k":"əl","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"cola":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1}]],"juice":[[{"L":"j","i":"dʒ","k":"dʒ","s":0,"n":0},{"L":"ui","i":"uː","k":"u","s":0,"n":1},{"L":"c","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"french":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"fries":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ie","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"fried":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ie","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"chicken":[[{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"c","i":"","k":"","s":1,"n":0},{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"hamburgers":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"ur","i":"ɝː","k":"ɝ","s":0,"n":1}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"hot":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"dogs":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɔ","s":0,"n":1},{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"spaghetti":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"h","i":"","k":"","s":1,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"t","i":"","k":"","s":1,"n":0},{"L":"i","i":"i","k":"ɪ","s":0,"n":1}]],"sushi":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"u","i":"uː","k":"u","s":0,"n":1}],[{"L":"sh","i":"ʃ","k":"ʃ","s":0,"n":0},{"L":"i","i":"i","k":"ɪ","s":0,"n":1}]],"ramen":[[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"curry":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"ur","i":"ɝː","k":"ɝ","s":0,"n":1}],[{"L":"r","i":"","k":"","s":1,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]],"pizza":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"i","i":"iː","k":"i","s":0,"n":1},{"L":"z","i":"t","k":"t","s":0,"n":0}],[{"L":"z","i":"s","k":"s","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1}]],"strawberries":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"aw","i":"ɑː","k":"ɔ","s":0,"n":1}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"r","i":"","k":"","s":1,"n":0},{"L":"ie","i":"i","k":"ɪ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"milk":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"k","i":"k","k":"k","s":0,"n":0}]],"stuffed":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"f","i":"","k":"","s":1,"n":0},{"L":"e","i":"","k":"","s":1,"n":0},{"L":"d","i":"t","k":"t","s":0,"n":0}]],"animals":[[{"L":"a","i":"æ","k":"æ","s":0,"n":1}],[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"beyblades":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"ey","i":"eɪ","k":"e","s":0,"n":1}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"stick":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"c","i":"","k":"","s":1,"n":0},{"L":"k","i":"k","k":"k","s":0,"n":0}]],"stickers":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"c","i":"","k":"","s":1,"n":0},{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"dolls":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"l","i":"","k":"","s":1,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"smartphones":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}],[{"L":"ph","i":"f","k":"f","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"smart":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"phone":[[{"L":"ph","i":"f","k":"f","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"tablets":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"b","i":"b","k":"b","s":0,"n":0}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"youtube":[[{"L":"y","i":"j","k":"j","s":0,"n":0},{"L":"ou","i":"uː","k":"u","s":0,"n":1}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"u","i":"uː","k":"u","s":0,"n":1},{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"videos":[[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"i","k":"ɪ","s":0,"n":1}],[{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"video":[[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"i","k":"ɪ","s":0,"n":1}],[{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"games":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"television":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1}],[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"s","i":"ʒ","k":"ʒ","s":0,"n":0},{"L":"i","i":"","k":"","s":1,"n":0},{"L":"o","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"minecraft":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}],[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"roblox":[[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"x","i":"ks","k":"ks","s":0,"n":0}]],"pokémon":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}],[{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"é","i":"iː","k":"i","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"pocket":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"c","i":"","k":"","s":1,"n":0},{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"splatoon":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"oo","i":"uː","k":"u","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"mario":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"i","i":"i","k":"ɪ","s":0,"n":1}],[{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"kart":[[{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"animal":[[{"L":"a","i":"æ","k":"æ","s":0,"n":1}],[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"a","i":"ə","k":"ə","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0}]],"crossing":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɔ","s":0,"n":1}],[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"s","i":"","k":"","s":1,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"ng","i":"ŋ","k":"ŋ","s":0,"n":0}]],"switch":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"tch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"basket":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}],[{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"ball":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɔ","s":0,"n":1},{"L":"ll","i":"l","k":"l","s":0,"n":0}]],"basketball":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0}],[{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɔ","s":0,"n":1},{"L":"ll","i":"l","k":"l","s":0,"n":0}]],"badminton":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"o","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"soccer":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"c","i":"","k":"","s":1,"n":0},{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"er","i":"ɚ","k":"ɚ","s":0,"n":1}]],"base":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"baseball":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1},{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɔ","s":0,"n":1},{"L":"ll","i":"l","k":"l","s":0,"n":0}]],"comics":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"picture":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"c","i":"k","k":"k","s":0,"n":0}],[{"L":"t","i":"tʃ","k":"tʃ","s":0,"n":0},{"L":"ur","i":"ɚ","k":"ɚ","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"books":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"oo","i":"ʊ","k":"ʊ","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"detective":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"c","i":"k","k":"k","s":0,"n":0}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"stories":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"o","i":"ɔː","k":"ɔ","s":0,"n":1}],[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ie","i":"i","k":"ɪ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"science":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"c","i":"","k":"","s":1,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1}],[{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"c","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"music":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"u","i":"juː","k":"ju","s":0,"n":1}],[{"L":"s","i":"z","k":"z","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"c","i":"k","k":"k","s":0,"n":0}]],"cats":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"dog":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɔ","s":0,"n":1},{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0}]],"run":[[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"swim":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}]],"ride":[[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"bike":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"bicycle":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1}],[{"L":"c","i":"s","k":"s","s":0,"n":0},{"L":"y","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"l","i":"əl","k":"əl","s":0,"n":1},{"L":"e","i":"","k":"","s":1,"n":0}]],"camping":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0}],[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"ng","i":"ŋ","k":"ŋ","s":0,"n":0}]],"piano":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"i","i":"i","k":"ɪ","s":0,"n":1}],[{"L":"a","i":"æ","k":"æ","s":0,"n":1}],[{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"drums":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"u","i":"ʌ","k":"ʌ","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"taekwondo":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ae","i":"aɪ","k":"aɪ","s":0,"n":1}],[{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}],[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"dance":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"c","i":"s","k":"s","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"sing":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"ng","i":"ŋ","k":"ŋ","s":0,"n":0}]],"draw":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"aw","i":"ɑː","k":"ɔ","s":0,"n":1}]],"speak":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}]],"english":[[{"L":"e","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"n","i":"ŋ","k":"ŋ","s":0,"n":0}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"sh","i":"ʃ","k":"ʃ","s":0,"n":0}]],"crafts":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"park":[[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}]],"outside":[[{"L":"ou","i":"aʊ","k":"aʊ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}],[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"out":[[{"L":"ou","i":"aʊ","k":"aʊ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"side":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"tag":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0}]],"guitar":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"u","i":"","k":"","s":1,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1}]],"magic":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1}],[{"L":"g","i":"dʒ","k":"dʒ","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"c","i":"k","k":"k","s":0,"n":0}]],"tricks":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"c","i":"","k":"","s":1,"n":0},{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"dodge":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"d","i":"","k":"","s":1,"n":0},{"L":"g","i":"dʒ","k":"dʒ","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"dodgeball":[[{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"d","i":"","k":"","s":1,"n":0},{"L":"g","i":"dʒ","k":"dʒ","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɔ","s":0,"n":1},{"L":"ll","i":"l","k":"l","s":0,"n":0}]],"mobile":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"i","i":"ə","k":"ə","s":0,"n":1},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"watch":[[{"L":"w","i":"w","k":"w","s":0,"n":0},{"L":"a","i":"ɑː","k":"ɑ","s":0,"n":1},{"L":"tch","i":"tʃ","k":"tʃ","s":0,"n":0}]],"collect":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"o","i":"ə","k":"ə","s":0,"n":1}],[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"l","i":"","k":"","s":1,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"cards":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"ar","i":"ɑːr","k":"ɑr","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"beyblade":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"ey","i":"eɪ","k":"e","s":0,"n":1}],[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"listen":[[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"","k":"","s":1,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0}]],"read":[[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"ea","i":"iː","k":"i","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0}]],"chat":[[{"L":"ch","i":"tʃ","k":"tʃ","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"friends":[[{"L":"f","i":"f","k":"f","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"i","i":"","k":"","s":1,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"eat":[[{"L":"ea","i":"iː","k":"i","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"snacks":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"c","i":"","k":"","s":1,"n":0},{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"toys":[[{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"oy","i":"ɔɪ","k":"ɔɪ","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0}]],"cook":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"oo","i":"ʊ","k":"ʊ","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0}]],"stay":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"ay","i":"eɪ","k":"e","s":0,"n":1}]],"home":[[{"L":"h","i":"h","k":"h","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"make":[[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"amusement":[[{"L":"a","i":"ə","k":"ə","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"u","i":"juː","k":"ju","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"amuse":[[{"L":"a","i":"ə","k":"ə","s":0,"n":1}],[{"L":"m","i":"m","k":"m","s":0,"n":0},{"L":"u","i":"juː","k":"ju","s":0,"n":1},{"L":"s","i":"z","k":"z","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"visit":[[{"L":"v","i":"v","k":"v","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1}],[{"L":"s","i":"z","k":"z","s":0,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0}]],"grandparents":[[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"a","i":"æ","k":"æ","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"d","i":"d","k":"d","s":0,"n":0}],[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"a","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"e","i":"ə","k":"ə","s":0,"n":1},{"L":"n","i":"n","k":"n","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"shopping":[[{"L":"sh","i":"ʃ","k":"ʃ","s":0,"n":0},{"L":"o","i":"ɑː","k":"ɑ","s":0,"n":1}],[{"L":"p","i":"p","k":"p","s":0,"n":0},{"L":"p","i":"","k":"","s":1,"n":0},{"L":"i","i":"ɪ","k":"ɪ","s":0,"n":1},{"L":"ng","i":"ŋ","k":"ŋ","s":0,"n":0}]],"bake":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"cakes":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"a","i":"eɪ","k":"e","s":0,"n":1},{"L":"k","i":"k","k":"k","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0},{"L":"s","i":"s","k":"s","s":0,"n":0}]],"write":[[{"L":"w","i":"","k":"","s":1,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"i","i":"aɪ","k":"aɪ","s":0,"n":1},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"code":[[{"L":"c","i":"k","k":"k","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1},{"L":"d","i":"d","k":"d","s":0,"n":0},{"L":"e","i":"","k":"","s":1,"n":0}]],"lego":[[{"L":"l","i":"l","k":"l","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"g","i":"ɡ","k":"ɡ","s":0,"n":0},{"L":"o","i":"oʊ","k":"o","s":0,"n":1}]],"straw":[[{"L":"s","i":"s","k":"s","s":0,"n":0},{"L":"t","i":"t","k":"t","s":0,"n":0},{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"aw","i":"ɑː","k":"ɔ","s":0,"n":1}]],"berry":[[{"L":"b","i":"b","k":"b","s":0,"n":0},{"L":"e","i":"e","k":"ɛ","s":0,"n":1}],[{"L":"r","i":"r","k":"r","s":0,"n":0},{"L":"r","i":"","k":"","s":1,"n":0},{"L":"y","i":"i","k":"ɪ","s":0,"n":1}]]};
+ var MODES=["","ipa","kk"],mode=0,slow=false,timers=[];
+ try{var m=localStorage.getItem("phMode");if(m!==null)mode=+m||0}catch(e){}
+ function V(ch){return "aeiou".indexOf(ch.toLowerCase())>=0}
+ function isNuc(u){return u.n===1}
+ /* 這一格是音節的核心，但字母裡一個 a/e/i/o/u 都沒有（uncle／little 的 l 自己就發 əl）
+    → 整格標紅。不這樣做，學生「數紅色 ＝ 數音節」就會少數一個，規則當場破功。 */
+ function noVowelNucleus(u){var k;if(!isNuc(u))return false;
+  for(k=0;k<u.L.length;k++)if(V(u.L[k]))return false;return true}
+ function letters(u){var h="",L=u.L,k,nv=noVowelNucleus(u);
+  for(k=0;k<L.length;k++){
+   var red=(!u.s)&&(nv||V(L[k])||(L[k].toLowerCase()==="y"&&isNuc(u)));
+   /* ’ 一律紅色（使用者 2026-09-27 指定） */
+   h+='<i class="'+(/['’]/.test(L[k])?"ap":(red?"v":""))+'">'+L[k]+'</i>'}
+  return h}
+ /* 一個單字的完整元件：字母（母音紅／不發音灰）＋ 正下方對齊的音標 ＋ 音節切分點 */
+ /* 查不到音標的字（外語家人單字等）：**不硬掰音標、不硬切音節**，
+    只把母音字母標紅，一樣點得下去唸。這是誠實界線，不要拿掉。 */
+ function plain(w,lang){
+  var h='<span class="phw phplain" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
+        '><span class="syl"><span class="u"><span class="g">',k;
+  for(k=0;k<w.length;k++)h+='<i class="'+(/['’]/.test(w[k])?"ap":(V(w[k])?"v":""))+'">'+w[k]+'</i>';
+  return h+'</span></span></span></span>'}
+ function word(w,lang){
+  /* **這兩個 \s 一定要寫兩條斜線**：這整段是 JS 模板字串，寫一條會被吃掉，
+     變成 /s/ 與 /s+/ ——凡是拼法裡有 s 的字（sister／son／cousin／husband…）
+     都會被當成「多個字」從 s 那裡切開，s 不見、發音也唸錯。2026-09-20 訂正。 */
+  if(/\s/.test(w))return w.split(/\s+/).map(function(x){return word(x,lang)}).join(" ");
+  var key=w.toLowerCase().replace(/[’]/g,"'"),d=D[key];
+  if(!d)return plain(w,lang);
+  /* 字母照原本的大小寫畫（I、My、What 開頭要大寫；資料裡一律小寫） */
+  var CS=w.replace(/[’]/g,"’"),cp=0;
+  var h='<span class="phw '+MODES[mode]+'" data-say="'+w+'"'+(lang?' data-lang="'+lang+'"':'')+
+        ' data-n="'+d.length+'">',si,ui;
+  for(si=0;si<d.length;si++){
+   if(si)h+='<span class="cut"><span class="g">·</span><span class="p">&nbsp;</span></span>';
+   h+='<span class="syl">';
+   for(ui=0;ui<d[si].length;ui++){var u=d[si][ui];
+    var lu=letters(u).replace(/>([^<])</g,function(m,c){var o=CS.charAt(cp++);return '>'+(o&&o.toLowerCase()===c.toLowerCase()?o:(c==="'"&&o==="’"?o:c))+'<'});
+    h+='<span class="u'+(u.s?" mute":"")+'"><span class="g">'+lu+'</span>'+
+       '<span class="p" data-i="'+(u.s?"&nbsp;":u.i)+'" data-k="'+(u.s?"&nbsp;":u.k)+'">'+
+       (u.s?"&nbsp;":(mode===2?u.k:u.i))+'</span></span>'}
+   h+='</span>'}
+  return h+'</span>'}
+ /* 字卡上的三段切換（無／IPA／KK）＋ 音節按鈕 */
+ function chips(w){
+  return '<div class="phchips" data-for="'+w+'">'+
+   '<button data-m="0"'+(mode===0?' class="on"':'')+'>無音標</button>'+
+   '<button data-m="1"'+(mode===1?' class="on"':'')+'>IPA</button>'+
+   '<button data-m="2"'+(mode===2?' class="on"':'')+'>KK</button>'+
+   '<button data-syl="1">✂️ 音節</button></div>'}
+ /* 字卡上**只放單字本身**——切換鈕與說明文字都移到下方 #bar，
+    讓學生一眼只看到要學的那個英文單字（使用者 2026-09-20 指定）。 */
+ function box(w){return word(w)}
+ /* {{單字}} → 畫成單字元件；{{de-DE:Mutter}} → 指定語言（外語家人單字） */
+ function expand(h){
+  return String(h)
+   .replace(/{{([a-zA-Z]{2}-[A-Z]{2}):([^{}]+)}}/g,function(m,lang,w){return word(w.trim(),lang)})
+   .replace(/{{([^{}:]+)}}/g,function(m,w){return word(w.trim())})}
+ function clear(){while(timers.length)clearTimeout(timers.pop())}
+ function at(ms,fn){timers.push(setTimeout(fn,ms))}
+ function reduced(){return document.body.classList.contains("reduce")}
+ /* 說話：全頁共用一個放慢開關。
+    瑞典文先查預先做好的語音檔（window.SVAUD，使用者 2026-09-25 指定：要真實正確的瑞典語發音），
+    很多電腦沒有瑞典文語音，瀏覽器會用英文腔亂唸。查不到才用瀏覽器語音。
+    fin：唸完（或出錯）要做的事；一定會被呼叫，而且只呼叫一次。 */
+ var AU=null,sid=0,wq=[];
+ /* 等「現在這一句」唸完再做下一件事（換成別句就作廢）：🔊 唸 3 次用 */
+ function after(f){wq.push(f)}
+ function lbl(b,t){var l=b.querySelector(".blb");if(l)l.textContent=t;else b.textContent=t}
+ function akey(t){return String(t).replace(/[’]/g,"'").replace(/s+/g," ").trim().toLowerCase()}
+ function stopAll(){try{speechSynthesis.cancel()}catch(e){}try{if(AU)AU.pause()}catch(e){}}
+ function say(t,lang,fin){
+  var my=++sid,done=false,end=function(){if(done)return;done=true;if(fin)try{fin()}catch(e){}
+   if(my===sid){var q=wq;wq=[];q.forEach(function(f){try{f()}catch(e){}})}};
+  wq=[];
+  if(!t){end();return}
+  stopAll();
+  var EN=!(lang&&!/^en/i.test(lang))&&window.ENAUD,A=(lang&&/^sv/i.test(lang)&&window.SVAUD)?SVAUD[akey(t)]:(EN?ENAUD[akey(t)]:null);
+  if(A){try{if(!AU)AU=new Audio();AU.onended=end;AU.onerror=end;
+    AU.src=(EN?(window.ENDIR||"audio/"):(window.SVDIR||"audio/sv/"))+A[0];AU.playbackRate=slow?.7:1;
+    var pr=AU.play();if(pr&&pr.catch)pr.catch(end);setTimeout(end,A[1]*1000/(slow?.7:1)+1500);return}catch(e){}}
+  try{var u=new SpeechSynthesisUtterance(t);
+   u.lang=lang||"en-US";u.rate=slow?.45:.85;u.onend=end;u.onerror=end;speechSynthesis.speak(u)}catch(e){end();return}
+  setTimeout(end,1400+String(t).length*(slow?260:140));   /* 瀏覽器不發 onend 也不會卡住 */
+ }
+ /* 一個字一個字唸：唸到哪一個字，那一個字就放大、變亮（使用者 2026-09-25 指定：每一個單字都要有發音） */
+ var chainId=0;
+ function sayChain(els,fin){
+  var my=++chainId,k=0;stopAll();
+  function next(){
+   [].forEach.call(document.querySelectorAll(".speak"),function(x){x.classList.remove("speak")});
+   if(my!==chainId)return;
+   if(k>=els.length){if(fin)fin();return}
+   var el=els[k++],t=el.getAttribute("data-say");
+   if(!t){next();return}
+   el.classList.add("speak");
+   say(t,el.getAttribute("data-lang")||"en-US",function(){if(my===chainId)setTimeout(next,160)});
+  }
+  setTimeout(next,90);
+ }
+ function chainStop(){chainId++;stopAll();
+  [].forEach.call(document.querySelectorAll(".speak"),function(x){x.classList.remove("speak")})}
+ /* 唸單字：一格一格亮過去，字母和聲音對起來 */
+ function sayWord(el,lang){
+  var w=el.getAttribute("data-say");say(w,lang);
+  if(reduced())return;
+  var us=el.querySelectorAll(".u"),k,step=(slow?300:170);
+  clear();
+  for(k=0;k<us.length;k++)(function(u,k){
+   at(160+k*step,function(){u.classList.add("lit")});
+   at(160+k*step+step*1.25,function(){u.classList.remove("lit")})})(us[k],k)}
+ /* 音節動畫（2026-09-28 改版）：① 數紅色母音（頭上跳 ①②③）② ✂️ 喀嚓剪開 ③ 一段一段變彩色積木、跳一下
+    ④ 大字：N 個紅色母音 ＝ N 個音節。一個音節的字：不剪，直接說「1 個母音 ＝ 1 個音節，不用剪」 */
+ var CIR="①②③④⑤⑥";
+ function sylReset(el){[].forEach.call(el.querySelectorAll(".phn,.phsc"),function(x){x.parentNode.removeChild(x)});
+  [].forEach.call(el.querySelectorAll(".syl"),function(x){x.classList.remove("k0","k1","k2","k3","hop","beat")});
+  el.classList.remove("split");var o=document.getElementById("phsum");if(o)o.classList.remove("on")}
+ function sylSum(h){var o=document.getElementById("phsum");
+  if(!o){o=document.createElement("div");o.id="phsum";o.className="phsum";document.body.appendChild(o)}
+  o.innerHTML=h;o.classList.remove("on");void o.offsetWidth;o.classList.add("on")}
+ function syl(el,note){
+  var n=+el.getAttribute("data-n")||1,vs=el.querySelectorAll(".u"),sy=el.querySelectorAll(".syl"),cs=el.querySelectorAll(".cut"),k;
+  clear();sylReset(el);
+  if(note)note.innerHTML="";
+  var reds=[];for(k=0;k<vs.length;k++)if(vs[k].querySelector("i.v")&&!/mute/.test(vs[k].className))reds.push(vs[k]);
+  /* 一格裡有兩個紅色字母（ou、au、ee…）也只算一個聲音：一格一個號碼 */
+  reds.forEach(function(u,k){at(150+k*520,function(){
+   u.classList.add("count");var b=document.createElement("span");b.className="phn";b.textContent=CIR.charAt(k)||(k+1);
+   u.appendChild(b);void b.offsetWidth;b.classList.add("on");
+   if(note)note.innerHTML='<span class="rv">●</span> 紅色母音 <b>'+(k+1)+'</b> 個';
+   at(520,function(){u.classList.remove("count")})})});
+  var t0=150+reds.length*520+250;
+  if(sy.length<2){at(t0,function(){sylSum('<span class="rv">1</span> 個紅色母音 ＝ <b>1</b> 個音節　不用剪 👍');
+   if(note)note.innerHTML='<span class="rv">1</span> 個母音 ＝ <b>1 個音節</b>'});return}
+  for(k=0;k<cs.length;k++)(function(c,k){at(t0+k*520,function(){
+   var s=document.createElement("span");s.className="phsc";s.textContent="✂️";c.appendChild(s);void s.offsetWidth;s.classList.add("on");
+   if(k===cs.length-1)at(330,function(){el.classList.add("split")})})})(cs[k],k);
+  var t1=t0+cs.length*520+200;
+  for(k=0;k<sy.length;k++)(function(s,k){at(t1+k*480,function(){
+   s.classList.add("k"+(k%4));s.classList.remove("hop");void s.offsetWidth;s.classList.add("hop");
+   if(note)note.innerHTML='✂️ 第 <b>'+(k+1)+'</b> 段'})})(sy[k],k);
+  at(t1+sy.length*480+200,function(){
+   sylSum('<span class="rv">'+n+'</span> 個紅色母音 ＝ <b>'+n+'</b> 個音節');
+   if(note)note.innerHTML='<span class="rv">'+n+'</span> 個母音 ＝ <b>'+n+' 個音節</b>'})}
+ function sylTime(el){var n=el.querySelectorAll(".syl").length,r=0,v=el.querySelectorAll(".u"),k;
+  for(k=0;k<v.length;k++)if(v[k].querySelector("i.v")&&!/mute/.test(v[k].className))r++;
+  return 150+r*520+250+(n<2?0:(n-1)*520+200+n*480+200)}
+ /* 把說明文字裡的英文字詞變成可以點來聽（補充單字、字詞、用法都算）。
+   **只掃說明文字的容器**：.en 這種手工排版（dau<span>gh</span>ter）拆開來會壞掉，
+   那種地方改用 {{單字}} 標記，由 PH.word() 直接畫。 */
+ var HOSTS=".sub,.mid,.note,.qtext,.big,.parts,.zh";
+ function autoSay(root){
+  if(!root)return;
+  var list=[];
+  [].forEach.call(root.querySelectorAll(HOSTS),function(host){
+   if(host.closest(".nosay"))return;
+   var walk=document.createTreeWalker(host,NodeFilter.SHOW_TEXT,null,false),n;
+   while((n=walk.nextNode())){
+    var pe=n.parentNode;
+    if(!pe||pe.nodeType!==1)continue;
+    if(pe.closest(".sp,.phw,.phchips,.nosay,button,a,#src"))continue;
+    if(/[A-Za-z]{2}/.test(n.nodeValue))list.push(n)}});
+  list.forEach(function(t){
+   var s=t.nodeValue,re=/[A-Za-z][A-Za-z'\u2019-]*(?:[ ][A-Za-z][A-Za-z'\u2019-]*)*/g,
+       frag=document.createDocumentFragment(),last=0,m,any=false;
+   while((m=re.exec(s))){
+    if(m[0].length<2)continue;
+    if(m.index>last)frag.appendChild(document.createTextNode(s.slice(last,m.index)));
+    var sp=document.createElement("span");
+    sp.className="sp";sp.setAttribute("data-say",m[0]);sp.textContent=m[0];
+    frag.appendChild(sp);last=m.index+m[0].length;any=true}
+   if(!any)return;
+   if(last<s.length)frag.appendChild(document.createTextNode(s.slice(last)));
+   t.parentNode.replaceChild(frag,t)});
+  apRed(root)}
+ /* ’ 一律紅色；I am（會變成 I’m 的那個 a）也紅色（使用者 2026-09-27 指定）。出處的書名不動 */
+ function apRed(root){
+  var walk=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false),n,L=[];
+  while((n=walk.nextNode())){var pe=n.parentNode;
+   if(!pe||pe.nodeType!==1||pe.closest("script,style,.aprd,.rs,.ap,.phw,.sbody,.stoc,#src,.srcbox,.cv,.cl"))continue;
+   if(/’|[A-Za-z]'[A-Za-z]|\bI am\b/.test(n.nodeValue))L.push(n)}
+  L.forEach(function(t){
+   var h=t.nodeValue.replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/\bI am\b/g,'I <b class="aprd">a</b>m')
+    .replace(/’|([A-Za-z])'(?=[A-Za-z])/g,function(x,c){return (c||"")+'<b class="aprd">’</b>'});
+   var sp=document.createElement("span");sp.innerHTML=h;
+   var f=document.createDocumentFragment();while(sp.firstChild)f.appendChild(sp.firstChild);
+   t.parentNode.replaceChild(f,t)})}
+ /* 切換音標：直接換掉每個字母下面那一行，不用重畫整幕 */
+ function apply(){
+  [].forEach.call(document.querySelectorAll(".phw"),function(p){
+   p.className="phw "+MODES[mode];
+   [].forEach.call(p.querySelectorAll(".u .p"),function(g){
+    g.textContent=(mode===2?g.getAttribute("data-k"):g.getAttribute("data-i"))||""})});
+  [].forEach.call(document.querySelectorAll(".phchips button[data-m]"),function(b){
+   b.classList.toggle("on",(+b.getAttribute("data-m")||0)===mode)})}
+ /* 全頁共用：點任何一個英文字詞就唸、切換音標、播音節動畫 */
+ document.addEventListener("click",function(e){
+  var c=e.target.closest?e.target.closest(".phchips button"):null;
+  if(c){
+   var box=c.closest(".phbox"),w=box?box.querySelector(".phw"):null;
+   if(c.hasAttribute("data-syl")){if(w)syl(w,box.querySelector(".phnote"));return}
+   mode=+c.getAttribute("data-m")||0;
+   try{localStorage.setItem("phMode",mode)}catch(x){}
+   apply();
+   return}
+  var t=e.target.closest?e.target.closest(".phw,[data-say]"):null;
+  if(!t)return;
+  if(t.classList.contains("phw"))sayWord(t,t.getAttribute("data-lang"));
+  else{say(t.getAttribute("data-say"),t.getAttribute("data-lang"));
+   t.classList.add("ping");setTimeout(function(){t.classList.remove("ping")},260)}
+ });
+ /* 畫面上的主角單字：#card／#stage 裡字最大的那一個 .phw */
+ function main(){
+  var all=document.querySelectorAll("#card .phw,#stage .phw"),best=null,bs=0,k;
+  for(k=0;k<all.length;k++){var f=parseFloat(getComputedStyle(all[k]).fontSize)||0;
+   if(f>bs){bs=f;best=all[k]}}
+  return best}
+ function setMode(m){mode=((+m||0)%3+3)%3;try{localStorage.setItem("phMode",mode)}catch(e){}apply();return mode}
+ return{after:after,lbl:lbl,word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,sylTime:sylTime,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
+  has:function(w){return !!D[(w||"").toLowerCase()]},
+  slow:function(v){slow=(v===undefined)?!slow:!!v;return slow},
+  isSlow:function(){return slow},
+  mode:function(){return mode}};
+})();
+/* #bar 的「🐢 放慢」：管全頁所有發音（單字、補充字詞、用法） */
+(function(){var b=document.getElementById("slow");if(!b)return;
+ b.addEventListener("click",function(){
+  var on=PH.slow();PH.lbl(b,on?"放慢：開":"放慢");
+  b.style.background=on?"#9FB4C8":"";b.style.color=on?"#0A0A0A":"";
+  b.style.borderColor=on?"#9FB4C8":""});})();
+/* #bar 的「🔤 音標」：無 → IPA → KK →（回到）無。字卡是用卡片上的三顆 chips。 */
+(function(){var b=document.getElementById("phmode");if(!b)return;
+ var N=["無","IPA","KK"];
+ function lab(){PH.lbl(b,"音標："+N[PH.mode()])}
+ lab();b.addEventListener("click",function(){PH.setMode(PH.mode()+1);lab()});})();
+/* #bar 的「✂️ 音節」：動畫跑在單字上，數出來的結果寫回按鈕，字卡保持乾淨 */
+(function(){var b=document.getElementById("phsyl");if(!b)return;
+ b.addEventListener("click",function(){
+  var el=PH.main();if(!el)return;
+  var n=+el.getAttribute("data-n")||0;
+  if(!n){PH.lbl(b,"音節");return}
+  PH.syl(el,null);
+  PH.lbl(b,"音節");
+  setTimeout(function(){PH.lbl(b,n+" 個音節")},PH.sylTime(el));});})();
+
+var R1=(function(){
+ /* 念：幕① 唸這個字／片語；片語、句子交給 SENT（唸到哪一格那一格亮，唸完句點動一下） */
+ function say(i){var f=document.querySelector("#card .r1f");
+  if(!f||i===0){PH.say(W.now);return}
+  if(f.hasAttribute("data-sent")){SENT.play(f);return}
+  var p=f.querySelector(".phw");if(p)PH.sayWord(p);else PH.say(W.now)}
+ /* ✂️ 音節：片語、句子 ＝ 這一課要學的那幾個字，一個一個剪 */
+ document.addEventListener("click",function(e){var b=e.target.closest?e.target.closest("#phsyl"):null;if(!b)return;
+  var f=document.querySelector("#card .r1f");if(!f)return;
+  var ps=f.querySelectorAll(".c.t .phw");if(!ps.length)return;
+  e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();
+  var t0=0;[].forEach.call(ps,function(p){setTimeout(function(){PH.syl(p,null)},t0);t0+=PH.sylTime(p)+3300});
+ },true);
+ /* 片語、句子放不下就整排一起縮小（不折行、不蓋到左右箭頭）；量的是字卡裡面真的能放字的寬度，留 4% 給「唸到哪一格放大」 */
+ function fit(){var f=document.querySelector("#card .r1ph");if(!f)return;var c=document.getElementById("card"),cs=getComputedStyle(c),
+  av=c.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),k=1;
+  f.style.setProperty("--k",1);while(f.scrollWidth>av*.96&&k>.4){k-=.03;f.style.setProperty("--k",k.toFixed(2))}}
+ try{new MutationObserver(fit).observe(document.getElementById("card"),{childList:true})}catch(e){}
+ window.addEventListener("resize",fit);
+ return{say:say,fit:fit}})();
+var W={zh:"做 手工藝",sub:"",icon:"✂️",old:undefined,now:"do crafts",
+ e1:"",e2:""};
+
+var SCENES=[
+ // ① 中文意思
+ /* zhp（2026-09-26 使用者指定）：「我 是」兩個字中間空一格，每個字正上方對齊它自己的圖示（我 ↔ 🙋、是 ↔ ＝） */
+ function(){return (W.zhp?'<div style="display:flex;gap:clamp(22px,5vw,60px);justify-content:center;align-items:flex-end">'+
+   W.zhp.map(function(p,k){return '<div style="display:flex;flex-direction:column;align-items:center;gap:6px">'+
+    '<div class="emoji pop'+(k?' d1':'')+'" style="margin:0">'+p[1]+'</div><div class="zh in d'+(k+1)+'" style="margin:0">'+p[0]+'</div></div>'}).join('')+'</div>':
+   '<div class="emoji pop">'+W.icon+'</div>'+
+   '<div class="zh in d1">'+W.zh+'</div>')+
+   (W.sub?'<div class="sub in d2">'+W.sub+'</div>':'')},
+ // ② 以前的樣貌（圖示就是意思，不再加說明）；grandfather / grandmother 改成「怎麼組的」
+ function(){return '<div class="tag in">以前</div>'+
+   '<div class="word past in d1">'+W.old+'</div>'+
+   '<div class="emoji pop d2" style="font-size:clamp(66px,12vh,104px)">'+W.icon+'</div>'},
+ // ③ 現在的單字＋秒懂收尾
+ function(){return '<div class="tag in">現在</div>'+
+   '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
+   '<div class="word in d1"'+(W.now.length>=11?' style="font-size:clamp(38px,min(7.5vh,8.2vw),74px)"':'')+'>'+
+   PH.box(W.now)+'</div>'+
+   '<div class="sub in d2" style="margin-top:2px">'+W.e1+'</div>'+
+   (W.e2?'<div class="sub in d3">'+W.e2+'</div>':'')}
+];
+/* 這一組自己的幕（Review 1，2026-10-01）*/
+SCENES=[function(){return "<div class=\"emoji pop\">✂️</div><div class=\"zh in d1\">做 手工藝</div>"},function(){return "<div class=\"tag in\">英文</div><div class=\"r1ph r1f in d1\" data-sent=\"do crafts\"><div class=\"c sw t\" data-w=\"do\"><div class=\"ic\">💪</div><div class=\"w\">{{do}}</div><div class=\"z\">做</div></div><div class=\"c sw t\" data-w=\"crafts\"><div class=\"ic\">✂️</div><div class=\"w\">{{crafts}}</div><div class=\"z\">手工藝</div></div></div>"},function(){return "<div class=\"tag in\">用在句子裡</div><div class=\"r1ph r1s r1f in d1\" data-sent=\"I like to do crafts.\"><div class=\"c sw\" data-w=\"I\"><div class=\"ic\">🙋</div><div class=\"w\">{{I}}</div><div class=\"z\">我</div></div><div class=\"c sw\" data-w=\"like\"><div class=\"ic\">❤️</div><div class=\"w\">{{like}}</div><div class=\"z\">喜歡</div></div><div class=\"c sw\" data-w=\"to\"><div class=\"ic\"></div><div class=\"w\">{{to}}</div><div class=\"z\">&nbsp;</div></div><div class=\"c sw t\" data-w=\"do\"><div class=\"ic\">💪</div><div class=\"w\">{{do}}</div><div class=\"z\">做</div></div><div class=\"c sw t\" data-w=\"crafts\"><div class=\"ic\">✂️</div><div class=\"w\">{{crafts}}<span class=\"pdot\">.</span></div><div class=\"z\">手工藝</div></div></div><div class=\"sub in d2\">我喜歡做手工藝。</div>"}];
+
+var i=0,reduce=false;
+try{reduce=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)}catch(e){}
+if(reduce)document.body.classList.add("reduce");
+
+var dots=document.getElementById("dots");
+for(var k=0;k<SCENES.length;k++)dots.appendChild(document.createElement("i"));
+
+/* 念一次：整個單字唸出來，同時一格一格亮過去（字母 ↔ 聲音） */
+function say(){spoke=true;var el=PH.main();
+ if(el){PH.sayWord(el)}else{PH.say(W.now)}}
+say=function(){spoke=true;R1.say(i)};
+
+var card=document.getElementById("card");
+/* 英文句子（2026-10-02，全站單字卡）：唸到哪個字那個字稍微放大變亮；唸完句子，句點放大一下再停在大一點點。
+   一句 ＝ 有 data-sent 的外框，裡面一個字一個 .sw，句點是 .pdot。說明文字裡的句子（I’m ten years old.）也自動包成這樣。 */
+var SENT=(function(){
+ var tm=[];
+ function dur(t){var k=String(t).replace(/[’]/g,"'").replace(/s+/g," ").trim().toLowerCase(),a=window.ENAUD&&ENAUD[k];
+  return a?a[1]*1000/(PH.isSlow()?.7:1):(450+String(t).length*(PH.isSlow()?130:80))}
+ function clr(){while(tm.length)clearTimeout(tm.pop());
+  [].forEach.call(document.querySelectorAll("#card .sw.speak"),function(x){x.classList.remove("speak")})}
+ function play(f){clr();var ws=f.querySelectorAll(".sw"),dot=f.querySelector(".pdot"),t=f.getAttribute("data-sent"),
+  d=dur(t),n=[],tot=0,acc=0;
+  if(dot)dot.classList.remove("go","done");
+  [].forEach.call(ws,function(w){var L=(w.getAttribute("data-w")||w.textContent).length+1;n.push(L);tot+=L});
+  PH.say(t);
+  [].forEach.call(ws,function(w,k){tm.push(setTimeout(function(){
+   [].forEach.call(ws,function(y){y.classList.remove("speak")});w.classList.add("speak")},120+acc));acc+=d*n[k]/tot});
+  PH.after(function(){clr();if(dot){void dot.offsetWidth;dot.classList.add("go");
+   tm.push(setTimeout(function(){dot.classList.remove("go");dot.classList.add("done")},1350))}})}
+ /* autoSay 包好的「多個字」＋ 後面緊接 . ? ! ＝ 一句 */
+ function wrap(root){[].forEach.call(root.querySelectorAll(".sp"),function(sp){
+  var t=sp.getAttribute("data-say")||"",nx=sp.nextSibling;
+  if(!/s/.test(t)||!nx||nx.nodeType!==3||!/^[.?!]/.test(nx.nodeValue))return;
+  var p=nx.nodeValue.charAt(0),h=document.createElement("span");h.className="sent";h.setAttribute("data-sent",t+p);
+  h.innerHTML=t.split(/s+/).map(function(w){return '<span class="sw">'+w+'</span>'}).join(" ")+
+   (p==="."?'<span class="pdot">.</span>':p);
+  nx.nodeValue=nx.nodeValue.slice(1);sp.parentNode.replaceChild(h,sp);PH.autoSay(h)})}
+ document.addEventListener("click",function(e){var f=e.target.closest?e.target.closest(".sent"):null;if(!f)return;
+  e.stopPropagation();play(f)},true);
+ return{play:play,wrap:wrap,clr:clr}})();
+function show(n){
+ var back=(n<i);s3++;
+ i=Math.max(0,Math.min(SCENES.length-1,n));
+ window.SRCAT=[0,1,0][i];   /* 按「📖 出處」直接跳到這一張字卡的證據（使用者 2026-09-25 指定） */
+ card.innerHTML=PH.expand(SCENES[i]());
+ PH.autoSay(card);       // 補充單字、字詞、用法都可以點來聽
+ SENT.clr();SENT.wrap(card);
+ if(!reduce){card.classList.remove("turnR","turnL");void card.offsetWidth;
+  card.classList.add(back?"turnL":"turnR")}
+ var d=dots.children;
+ for(var k=0;k<d.length;k++)d[k].className=(k===i?"on":"");
+ document.getElementById("prev").disabled=(i===0);
+ document.getElementById("next").disabled=(i===SCENES.length-1);
+ /* 使用者 2026-09-20 指定：一翻到中文意思那一幕，就自動唸一次英文單字。
+    （有些瀏覽器規定要先碰過畫面才准發聲，所以下面補一個「第一次碰到就補唸」。） */
+ if(i===0||i===SCENES.length-1)say();
+}
+var spoke=false;
+function armFirstTouch(){
+ function go(){if(!spoke&&i===0)say();
+  document.removeEventListener("pointerdown",go);document.removeEventListener("keydown",go)}
+ document.addEventListener("pointerdown",go);document.addEventListener("keydown",go);
+}
+
+document.getElementById("prev").addEventListener("click",function(){show(i-1)});
+document.getElementById("next").addEventListener("click",function(){show(i+1)});
+/* 🔊 唸 3 次（2026-10-02 指定；「唸 1 次」刪掉了，點單字就會唸一次）：唸完一次才唸下一次，換幕或點別的就停 */
+var s3=0;
+function say3(){var my=++s3,n=0;(function go(){if(my!==s3)return;say();if(++n<3)PH.after(function(){setTimeout(go,650)})})()}
+document.getElementById("say3").addEventListener("click",say3);
+document.addEventListener("keydown",function(e){
+ if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();show(i+1)}
+ if(e.key==="ArrowLeft")show(i-1);
+});
+
+show(0);
+armFirstTouch();
+
+
+
+document.getElementById("home").addEventListener("click",function(){location.href="../index.html"});
+document.getElementById("whome").addEventListener("click",function(){location.href="index.html"});
+(function(){var T=document.getElementById("toc");
+ document.getElementById("tocb").addEventListener("click",function(){T.classList.add("on")});
+ document.getElementById("tocx").addEventListener("click",function(){T.classList.remove("on")});
+ document.addEventListener("keydown",function(e){if(T.classList.contains("on")){if(e.key==="Escape")T.classList.remove("on");
+  e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation()}},true);
+})();
+
+(function(){var s=document.getElementById("src");if(!s)return;
+ var L=s.querySelectorAll(".sl"),D=s.querySelectorAll(".sdots i"),k=0;
+ function go(n){k=Math.max(0,Math.min(L.length-1,n));
+  for(var j=0;j<L.length;j++){L[j].classList.toggle("on",j===k);D[j].classList.toggle("on",j===k)}
+  /* 換頁時動畫重播一次 */
+  var c=L[k];c.style.display="none";void c.offsetWidth;c.style.display="";
+  document.getElementById("srcn").textContent=k+1;
+  document.getElementById("srcp").disabled=(k===0);
+  document.getElementById("srcf").disabled=(k===L.length-1)}
+ /* 從哪一條開始：這一幕／這一張字卡對應的那一條（window.SRCAT：出處的 id 或第幾條），
+    沒有對應就從第一條開始（使用者 2026-09-25 指定：按「出處」直接跳到這一張的證據） */
+ function at(v){if(v==null||v==="")return 0;if(typeof v==="number")return v;
+  for(var j=0;j<L.length;j++)if(L[j].getAttribute("data-id")===v)return j;return 0}
+ var T=document.getElementById("stoc");
+ function toc(v){T.classList.toggle("on",v);if(v){[].forEach.call(T.querySelectorAll("button"),function(b,j){b.classList.toggle("cur",j===k)})}}
+ function t(v,from){s.classList.toggle("on",v);toc(false);if(v)go(at(from))}
+ window.SRCOPEN=function(id){t(true,id)};
+ document.getElementById("srcb").addEventListener("click",function(){
+  if(s.classList.contains("on"))t(false);else t(true,window.SRCAT)});
+ document.getElementById("srcx").addEventListener("click",function(){t(false)});
+ document.getElementById("srct").addEventListener("click",function(){toc(!T.classList.contains("on"))});
+ T.addEventListener("click",function(e){var b=e.target.closest?e.target.closest("button"):null;if(!b)return;
+  toc(false);go(+b.getAttribute("data-k")||0)});
+ document.getElementById("srcp").addEventListener("click",function(){go(k-1)});
+ document.getElementById("srcf").addEventListener("click",function(){go(k+1)});
+ /* 出處開著的時候，← → 翻的是出處，不是後面那一頁（先攔下來） */
+ document.addEventListener("keydown",function(e){
+  if(!s.classList.contains("on"))return;
+  if(e.key==="Escape"){if(T.classList.contains("on"))toc(false);else t(false)}
+  else if(e.key==="ArrowRight"||e.key===" "){go(k+1)}
+  else if(e.key==="ArrowLeft"){go(k-1)}
+  else return;
+  e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();
+ },true);})();
+</script>
+</body>
+</html>

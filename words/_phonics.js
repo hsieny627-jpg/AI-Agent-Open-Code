@@ -34,11 +34,14 @@
 const VS = 'aæɑʌəɚɜɝeɛɪioɔʊuɒ';
 
 const RAW = {
+/* 音節規則（使用者 2026-10-02 指定，全站）：兩個母音中間只有「一個子音的聲音」（ck、th、ph、tch、tt 算一個）
+   ➜ 整組搬到下一個音節（pa．rent、cou．sin、ne．phew、li．ttle、ke．tchup、sti．ckers）；
+   有兩個子音的聲音 ➜ 從中間切（sis．ter、bas．ket．ball、ham．bur．ger）。新加的字一律照這條。 */
 /* ── 17 張單字卡 ── */
  /* 使用者 2026-09-20 指定切成 fa．mi．ly（開音節切法，母音後面切）。
     辭典的連字號斷法是 fam·i·ly（那是排版斷行用的），出處卡裡兩種都寫清楚。 */
  family:      'f|f|f a|æ|æ / m|m|m i|ə|ə / l|l|l y|i|ɪ',
- parent:      'p|p|p a|e|ɛ r|r|r / e|ə|ə n|n|n t|t|t',
+ parent:      'p|p|p a|e|ɛ / r|r|r e|ə|ə n|n|n t|t|t',
  mother:      'm|m|m o|ʌ|ʌ / th|ð|ð er|ɚ|ɚ',
  father:      'f|f|f a|ɑː|ɑ / th|ð|ð er|ɚ|ɚ',
  brother:     'b|b|b r|r|r o|ʌ|ʌ / th|ð|ð er|ɚ|ɚ',
@@ -52,8 +55,8 @@ const RAW = {
  uncle:       'u|ʌ|ʌ n|ŋ|ŋ / c|k|k l|əl|əl e|-|-',
  aunt:        'au|æ|æ n|n|n t|t|t',
  /* o 不出聲（使用者 2026-09-20 指定）：ou 拆成 o 淺灰 ＋ u 發 /ʌ/ */
- cousin:      'c|k|k o|-|- u|ʌ|ʌ s|z|z / i|ə|ə n|n|n',
- nephew:      'n|n|n e|e|ɛ ph|f|f / ew|juː|ju',
+ cousin:      'c|k|k o|-|- u|ʌ|ʌ / s|z|z i|ə|ə n|n|n',
+ nephew:      'n|n|n e|e|ɛ / ph|f|f ew|juː|ju',
  /* i 不出聲（使用者 2026-09-20 指定）：ie 的 /iː/ 由 e 出聲，i 淺灰 */
  niece:       'n|n|n i|-|- e|iː|i c|s|s e|-|-',
  husband:     'h|h|h u|ʌ|ʌ s|z|z / b|b|b a|ə|ə n|n|n d|d|d',
@@ -64,11 +67,11 @@ const RAW = {
  younger:     'y|j|j ou|ʌ|ʌ n|ŋ|ŋ / g|ɡ|ɡ er|ɚ|ɚ',
  big:         'b|b|b i|ɪ|ɪ g|ɡ|ɡ',
  /* 跟 uncle 同一個 -le：e 不出聲，母音的聲音在 l 身上（兩頁要一致，學生才不會亂） */
- little:      'l|l|l i|ɪ|ɪ t|t|t / t|-|- l|əl|əl e|-|-',
+ little:      'l|l|l i|ɪ|ɪ / t|t|t t|-|- l|əl|əl e|-|-',
  elder:       'e|e|ɛ l|l|l / d|d|d er|ɚ|ɚ',
 
 /* ── 常一起出現的補充字 ── */
- parents:     'p|p|p a|e|ɛ r|r|r / e|ə|ə n|n|n t|t|t s|s|s',
+ parents:     'p|p|p a|e|ɛ / r|r|r e|ə|ə n|n|n t|t|t s|s|s',
  mom:         'm|m|m o|ɑ|ɑ m|m|m',
  mum:         'm|m|m u|ʌ|ʌ m|m|m',
  dad:         'd|d|d a|æ|æ d|d|d',
@@ -135,7 +138,7 @@ const RAW = {
 
 /* ── 更多字的故事那一頁 ── */
  tea:         't|t|t ea|iː|i',
- ketchup:     'k|k|k e|e|ɛ tch|tʃ|tʃ / u|ə|ə p|p|p',
+ ketchup:     'k|k|k e|e|ɛ / tch|tʃ|tʃ u|ə|ə p|p|p',
  hamburger:   'h|h|h a|æ|æ m|m|m / b|b|b ur|ɜːr|ɝ / g|ɡ|ɡ er|ɚ|ɚ',
  sandwich:    's|s|s a|æ|æ n|n|n d|d|d / w|w|w i|ɪ|ɪ ch|tʃ|tʃ',
  breakfast:   'b|b|b r|r|r ea|e|ɛ k|k|k / f|f|f a|ə|ə s|s|s t|t|t',
@@ -187,10 +190,13 @@ const CSS = `
 .phw .u.lit .g i{color:#FFFFFF;text-shadow:0 0 20px rgba(159,180,200,.95)}
 .phw .u.lit .g i.v{color:#FF9090}
 .phw .u.lit .p{color:#F2F2F2}
-/* 音節之間的切分點，一直都在（學生看得到「這裡可以切」） */
-.phw .cut{display:inline-flex;flex-direction:column;align-items:center;color:#2B343B;
- padding:0 .07em;transition:color .3s,padding .34s cubic-bezier(.2,1.4,.35,1)}
-.phw.split .cut{color:#9FB4C8;padding:0 .26em}
+/* 音節之間的切分點：**平常看不到**，按「✂️ 音節」演完動畫才出現（使用者 2026-10-02 指定，全站）。
+   寬度收成 0（字母緊緊連在一起），剪刀還是掛在這裡演；演完 .split 才把「·」打開。 */
+.phw .cut{display:inline-flex;flex-direction:column;align-items:center;color:transparent;
+ width:0;padding:0;overflow:visible;transition:color .3s,padding .34s cubic-bezier(.2,1.4,.35,1)}
+.phw .cut>.g,.phw .cut>.p{visibility:hidden}
+.phw.split .cut{color:#9FB4C8;width:auto;padding:0 .26em}
+.phw.split .cut>.g,.phw.split .cut>.p{visibility:visible}
 .phw .syl.beat .g{animation:phbeat .52s ease-in-out both}
 @keyframes phbeat{0%{color:inherit}38%{color:#FFFFFF;text-shadow:0 0 24px rgba(159,180,200,.95)}
  100%{color:inherit;text-shadow:none}}
@@ -198,6 +204,7 @@ const CSS = `
 .phw .u.count .g i.v{animation:phcount .5s ease-in-out both}
 @keyframes phcount{0%{text-shadow:none}40%{text-shadow:0 0 26px rgba(255,90,90,.95)}100%{text-shadow:none}}
 
+button>.bic{margin-right:.3em}
 .phbox{display:flex;flex-direction:column;align-items:center;gap:clamp(4px,.8vh,9px)}
 .phnote{font-size:clamp(13px,1.85vh,17px);color:#8E8E8E;letter-spacing:.02em;min-height:1.35em}
 .phnote b{color:#F2F2F2;font-weight:700}
@@ -253,7 +260,7 @@ const CSS = `
 .reduce .phw .phn.on,.reduce .phw .phsc.on,.reduce .phw .syl.hop,.reduce .phsum.on{animation:none!important;opacity:1}`;
 
 /* #bar 上那顆放慢語速的按鈕（每一頁都放） */
-const btnSlow = '<button id="slow">🐢 放慢</button>';
+const btnSlow = '<button id="slow"><span class="bic">🐢</span><span class="blb">放慢</span></button>';
 
 /* ───────────────────── 頁面內的程式 ───────────────────── */
 const JS = `
@@ -324,11 +331,16 @@ var PH=(function(){
     瑞典文先查預先做好的語音檔（window.SVAUD，使用者 2026-09-25 指定：要真實正確的瑞典語發音），
     很多電腦沒有瑞典文語音，瀏覽器會用英文腔亂唸。查不到才用瀏覽器語音。
     fin：唸完（或出錯）要做的事；一定會被呼叫，而且只呼叫一次。 */
- var AU=null;
+ var AU=null,sid=0,wq=[];
+ /* 等「現在這一句」唸完再做下一件事（換成別句就作廢）：🔊 唸 3 次用 */
+ function after(f){wq.push(f)}
+ function lbl(b,t){var l=b.querySelector(".blb");if(l)l.textContent=t;else b.textContent=t}
  function akey(t){return String(t).replace(/[\u2019]/g,"'").replace(/\s+/g," ").trim().toLowerCase()}
  function stopAll(){try{speechSynthesis.cancel()}catch(e){}try{if(AU)AU.pause()}catch(e){}}
  function say(t,lang,fin){
-  var done=false,end=function(){if(done)return;done=true;if(fin)try{fin()}catch(e){}};
+  var my=++sid,done=false,end=function(){if(done)return;done=true;if(fin)try{fin()}catch(e){}
+   if(my===sid){var q=wq;wq=[];q.forEach(function(f){try{f()}catch(e){}})}};
+  wq=[];
   if(!t){end();return}
   stopAll();
   var A=(lang&&/^sv/i.test(lang)&&window.SVAUD)?SVAUD[akey(t)]:null;
@@ -473,7 +485,7 @@ var PH=(function(){
    if(f>bs){bs=f;best=all[k]}}
   return best}
  function setMode(m){mode=((+m||0)%3+3)%3;try{localStorage.setItem("phMode",mode)}catch(e){}apply();return mode}
- return{word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,sylTime:sylTime,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
+ return{after:after,lbl:lbl,word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,sylTime:sylTime,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
   has:function(w){return !!D[(w||"").toLowerCase()]},
   slow:function(v){slow=(v===undefined)?!slow:!!v;return slow},
   isSlow:function(){return slow},
@@ -482,27 +494,27 @@ var PH=(function(){
 /* #bar 的「🐢 放慢」：管全頁所有發音（單字、補充字詞、用法） */
 (function(){var b=document.getElementById("slow");if(!b)return;
  b.addEventListener("click",function(){
-  var on=PH.slow();b.textContent=on?"🐢 放慢：開":"🐢 放慢";
+  var on=PH.slow();PH.lbl(b,on?"放慢：開":"放慢");
   b.style.background=on?"#9FB4C8":"";b.style.color=on?"#0A0A0A":"";
   b.style.borderColor=on?"#9FB4C8":""});})();
 /* #bar 的「🔤 音標」：無 → IPA → KK →（回到）無。字卡是用卡片上的三顆 chips。 */
 (function(){var b=document.getElementById("phmode");if(!b)return;
  var N=["無","IPA","KK"];
- function lab(){b.textContent="🔤 音標："+N[PH.mode()]}
+ function lab(){PH.lbl(b,"音標："+N[PH.mode()])}
  lab();b.addEventListener("click",function(){PH.setMode(PH.mode()+1);lab()});})();
 /* #bar 的「✂️ 音節」：動畫跑在單字上，數出來的結果寫回按鈕，字卡保持乾淨 */
 (function(){var b=document.getElementById("phsyl");if(!b)return;
  b.addEventListener("click",function(){
   var el=PH.main();if(!el)return;
   var n=+el.getAttribute("data-n")||0;
-  if(!n){b.textContent="✂️ 音節";return}
+  if(!n){PH.lbl(b,"音節");return}
   PH.syl(el,null);
-  b.textContent="✂️ 音節";
-  setTimeout(function(){b.textContent="✂️ "+n+" 個音節"},PH.sylTime(el));});})();`;
+  PH.lbl(b,"音節");
+  setTimeout(function(){PH.lbl(b,n+" 個音節")},PH.sylTime(el));});})();`;
 
 /* #bar 上的音標切換鈕（每一頁都放；字卡上不再放 chips，版面要聚焦） */
-const btnMode = '<button id="phmode">🔤 音標：無</button>';
+const btnMode = '<button id="phmode"><span class="bic">🔤</span><span class="blb">音標：無</span></button>';
 /* #bar 上的音節動畫鈕。結果直接寫在按鈕上，不佔字卡版面。 */
-const btnSyl  = '<button id="phsyl">✂️ 音節</button>';
+const btnSyl  = '<button id="phsyl"><span class="bic">✂️</span><span class="blb">音節</span></button>';
 
 module.exports = { DATA, RAW, CSS, JS, btnSlow, btnMode, btnSyl, parse };

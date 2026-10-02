@@ -11,9 +11,10 @@ const SENT = { i1: 'I like', i2: 'I like', a1: 'I like to', a2: 'I like to' };
 const T = ['I', 'like', 'to'];
 WORDS.forEach(w => {
   T.push(w.en);
-  w.tk.forEach(t => T.push(t[0]));
+  w.tk.forEach(t => { T.push(t[0]); t[0].split(/\s+/).forEach(x => T.push(x)); });
   T.push(SENT[w.g] + ' ' + w.en + '.');
   String(w.pt || '').replace(/\{\{([^{}]+)\}\}/g, (m, x) => T.push(x));
 });
-const r = pack({ texts: T, dir: path.join(__dirname, 'audio'), varName: 'ENAUD' });
+/* LEGO 全大寫會被唸成 L-E-G-O：鑰匙照畫面，唸的時候換成 Lego */
+const r = pack({ texts: T, dir: path.join(__dirname, 'audio'), varName: 'ENAUD', speak: s => s.replace(/\bLEGO\b/g, 'Lego') });
 console.log('review1 語音檔：' + r.total + ' 個（新做 ' + r.made + ' 個）');

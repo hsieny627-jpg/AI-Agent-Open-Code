@@ -76,7 +76,7 @@ h1{margin:0;font-size:clamp(28px,5.4vh,52px);text-align:center}
 
 function build(o) {
   fs.mkdirSync(o.dir, { recursive: true });
-  const WL = buildSet(o.words, { dir: o.dir, font: o.font, home: o.home, srcW: o.srcW, title: o.suffix, head: o.head || '' });
+  const WL = buildSet(o.words, { dir: o.dir, font: o.font, home: o.home, whome: o.whome || (o.index ? o.index.file : 'index.html'), srcW: o.srcW, title: o.suffix, head: o.head || '' });
   o.pages.forEach(p => fs.writeFileSync(path.join(o.dir, p.file),
     tpl(Object.assign({ font: o.font, home: o.home, whome: o.whome || (o.index ? o.index.file : ''), suffix: o.suffix, svjs: o.svjs || '' }, p)), 'utf8'));
   if (o.index) {

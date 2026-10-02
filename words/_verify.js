@@ -242,6 +242,45 @@ async function scenePage(p,f,vp,e){
   else{await p.click('#tocx');await p.waitForTimeout(200)}
   if(await p.evaluate(()=>document.getElementById('toc').classList.contains('on')))e.push('目次關不掉');
  }else if(!/family-tree|brother-why|quiz/.test(f))e.push('沒有 📑 目次按鈕');
+ /* ⑦ 2026-10-02 字卡（全站）：音節平常看不到、按了才切；按鈕一排、「唸 3 次」正中央、順序對；總首頁／單字首頁連得到；卡片不壓到按鈕 */
+ if(await p.$('#say3')){
+  await p.evaluate(()=>show(SCENES.length-1));await p.waitForTimeout(700);
+  const c=await p.evaluate(()=>{const cuts=[...document.querySelectorAll('#card .phw .cut')];
+   const vis=cuts.filter(x=>x.getBoundingClientRect().width>1||getComputedStyle(x.firstChild).visibility!=='hidden').length;
+   const bs=[...document.querySelectorAll('#bar button')],r=bs.map(b=>b.getBoundingClientRect());
+   const s3=document.getElementById('say3').getBoundingClientRect(),cd=document.getElementById('card').getBoundingClientRect(),
+    bt=document.getElementById('bottom').getBoundingClientRect();
+   return{n:cuts.length,vis,ids:bs.map(b=>b.id),rows:new Set(r.map(x=>Math.round(x.top/4))).size,
+    out:r.some(x=>x.left<0||x.right>innerWidth)||r.some((x,k)=>k&&x.left<r[k-1].right-1),mid:Math.round(s3.left+s3.width/2-innerWidth/2),
+    lap:Math.round(cd.bottom-bt.top),wrap:bs.filter(b=>b.querySelector('.blb')&&b.querySelector('.blb').getClientRects().length>1).map(b=>b.id)}});
+  acts++;
+  if(c.vis)e.push('字卡一開始就看得到音節切分（'+c.vis+' 處）');
+  if(c.rows!==1)e.push('按鈕列不是一排（'+c.rows+' 排）');
+  if(c.out)e.push('按鈕超出畫面或互相重疊');
+  if(Math.abs(c.mid)>3)e.push('「唸 3 次」沒有在正中央（偏 '+c.mid+'px）');
+  if(c.lap>0)e.push('字卡壓到下面的按鈕（'+c.lap+'px）');
+  if(c.wrap.length)e.push('按鈕的字折行：'+c.wrap.join('、'));
+  const L=c.ids,ix=x=>L.indexOf(x);
+  if(L[0]!=='tocb'||ix('phsyl')!==1||ix('phmode')!==2||ix('slow')!==3||ix('say3')!==4||L[L.length-1]!=='home'||ix('whome')!==L.length-2||ix('srcb')!==L.length-3||ix('say')>=0)
+   e.push('按鈕順序不對：'+L.join(' '));
+  if(c.n){await p.click('#phsyl');
+   const t=await p.evaluate(()=>{const ps=document.querySelectorAll('#card .c.t .phw');return ps.length>1?[].reduce.call(ps,(a,x)=>a+PH.sylTime(x)+3300,0):PH.sylTime(PH.main())});
+   await p.waitForTimeout(t+600);
+   const sp=await p.evaluate(()=>{const ps=[...document.querySelectorAll('#card .c.t .phw')];const L=ps.length?ps:[PH.main()];
+    return L.filter(x=>x&&+x.getAttribute('data-n')>1).every(x=>x.classList.contains('split'))});
+   acts++;if(!sp)e.push('按了「音節」沒有切開');}
+  if(vp.n===VPS[1].n){const h=fs.readFileSync(require('path').resolve(DIR,f),'utf8'),base=require('path').dirname(require('path').resolve(DIR,f));
+   for(const id of ['home','whome']){const m=h.match(new RegExp('getElementById\\("'+id+'"\\)\\.addEventListener\\("click",function\\(\\)\\{location\\.href="([^"]+)"'));
+    if(!m||!fs.existsSync(require('path').resolve(base,m[1])))e.push((id==='home'?'總首頁':'單字首頁')+'連不到（'+(m&&m[1])+'）')}
+   if(/(^|\/)(family|seven|stickers|play-basketball)\.html$/.test(f)){
+    /* 唸 3 次：真的唸三遍（數 Audio.play／speechSynthesis.speak 的次數） */
+    await p.evaluate(()=>{window.__n=0;const sp=speechSynthesis.speak.bind(speechSynthesis);speechSynthesis.speak=u=>{__n++;setTimeout(()=>u.onend&&u.onend(),300)};
+     HTMLAudioElement.prototype.play=function(){__n++;setTimeout(()=>this.onended&&this.onended(),300);return Promise.resolve()};show(0)});
+    await p.waitForTimeout(800);await p.evaluate(()=>{__n=0});await p.click('#say3');await p.waitForTimeout(4200);
+    const n3=await p.evaluate(()=>__n);acts++;if(n3!==3)e.push('「唸 3 次」唸了 '+n3+' 次');}
+  }
+  await p.evaluate(()=>show(0));await p.waitForTimeout(300);
+ }
  /* ⑥ 出處直接跳到這一幕的證據（使用者 2026-09-25 指定）：SRCAT 指到的那一條 */
  if(await p.$('#srcb')){
   let bad=[];

@@ -56,6 +56,8 @@ const WORDS=[
  e1:'👰 <b>my wife</b> 是「我的妻子」',e2:'不可以隨便這樣叫別人'}
 ];
 
+/* 字卡按鈕：圖示在上、字在下 */
+const B=(id,ic,t)=>'<button id="'+id+'"><span class="bic">'+ic+'</span><span class="blb">'+t+'</span></button>';
 const tpl=(W,SET)=>`<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -128,10 +130,31 @@ body{margin:0;background:#000;color:#F2F2F2;
 #wnav a:hover{border-color:#9FB4C8;color:#F2F2F2}
 #wnav a .w{font-weight:700}
 #wnav .pos{font-size:clamp(12px,1.7vh,14px);color:#5E5E5E;letter-spacing:.1em;white-space:nowrap}
-#bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-#bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;
- font-size:15px;padding:10px 17px;min-height:46px;font-family:inherit;cursor:pointer}
+/* 按鈕列（使用者 2026-10-02 指定，全站單字卡）：一排，「🔊 唸 3 次」在正中央；
+   左：目次｜音節｜音標｜放慢　右：（結構／時光機）｜出處｜單字首頁｜總首頁。
+   三欄格線 1fr auto 1fr ＝ 中間那顆不管兩邊幾顆都在正中央。圖示在上、字在下，iPad 直放也一排放得下。 */
+#bar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:clamp(3px,.6vw,10px);width:100%;max-width:1180px}
+#bar .bL,#bar .bR{display:flex;gap:clamp(3px,.5vw,9px);align-items:stretch}
+#bar .bL{justify-content:flex-end}
+#bar .bR{justify-content:flex-start}
+#bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:16px;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+ font-size:clamp(12px,min(1.55vh,1.5vw),15px);padding:5px clamp(3px,.6vw,12px);min-height:56px;min-width:clamp(44px,5.4vw,64px);
+ font-family:inherit;cursor:pointer;white-space:nowrap;line-height:1.1}
+#bar button>.bic{font-size:1.5em;line-height:1;margin:0}
+#bar #say3{background:#22303A;border-color:#9FB4C8;font-weight:700;min-width:clamp(70px,9vw,96px)}
 #bar button:active{background:#2A2A2A}
+/* 念到哪個字，那個字稍微放大、稍微變亮（2026-10-02：不可太亮、不刺眼；字母原本的紅／灰保留） */
+#card .sent{cursor:pointer;white-space:nowrap}
+#card .sw{display:inline-block;transition:transform .15s,filter .15s}
+#card .speak{color:inherit!important;text-shadow:none;transform:scale(1.08);filter:brightness(1.22) drop-shadow(0 0 6px rgba(255,236,170,.32))}
+#card .phw.speak .g i,#card .phw.speak .g i.v{color:inherit!important}
+/* 句點（2026-10-02，全站單字卡）：緊接最後一個字母；唸完句子稍微放大、稍微變亮，最後停在比原來大一點點 */
+.pdot{display:inline-block;transform-origin:30% 85%;margin-left:-.17em}
+.pdot.go{animation:pdot 1.3s cubic-bezier(.3,1.4,.4,1) forwards}
+.pdot.done{transform:scale(1.25)}
+@keyframes pdot{0%{transform:scale(1)}40%{transform:scale(1.7);color:#FFF3C4;text-shadow:0 0 8px rgba(255,230,150,.45)}
+ 100%{transform:scale(1.25);color:inherit;text-shadow:none}}
 
 .in{animation:rise .5s cubic-bezier(.2,.9,.3,1) both}
 .d1{animation-delay:.10s}.d2{animation-delay:.24s}.d3{animation-delay:.40s}
@@ -168,7 +191,7 @@ ${SET.head||''}
  <span class="pos">${W.idx} / ${W.total}</span>
  <a href="${W.next}.html" title="下一個單字"><span class="w">${W.nextL||W.next}</span> ▶</a>
 </nav>
-<div id="bar"><button id="say">🔊 念一次</button>${TOC.TOCB}${PH.btnSlow}${PH.btnMode}${PH.btnSyl}${W.more?`<button id="more">${W.more.label}</button>`:''}${W.parts?`<button id="parts">🧩 結構</button>`:''}${W.evo?`<button id="evo">⏳ 時光機</button>`:''}<button id="home">🏠 首頁</button>${SRC.btn}</div>
+<div id="bar"><div class="bL">${B('tocb','📑','目次')}${PH.btnSyl}${PH.btnMode}${PH.btnSlow}</div>${B('say3','🔊','唸 3 次')}<div class="bR">${W.more?B('more',W.more.label.split(' ')[0],W.more.label.split(' ').slice(1).join(' ')):''}${W.parts?B('parts','🧩','結構'):''}${W.evo?B('evo','⏳','時光機'):''}${B('srcb','📖','出處')}${B('whome','🔤','單字首頁')}${B('home','🏠','總首頁')}</div></div>
 </div>
 ${TOC.linksHTML(SET.list,W.f)}
 ${SRC.html((SET.srcW||SRC.W)[W.f],SET.common)}
@@ -219,12 +242,41 @@ function say(){spoke=true;var el=PH.main();
  if(el){PH.sayWord(el)}else{PH.say(W.now)}}${W.say?'\nsay=function(){spoke=true;'+W.say+'};':''}
 
 var card=document.getElementById("card");
+/* 英文句子（2026-10-02，全站單字卡）：唸到哪個字那個字稍微放大變亮；唸完句子，句點放大一下再停在大一點點。
+   一句 ＝ 有 data-sent 的外框，裡面一個字一個 .sw，句點是 .pdot。說明文字裡的句子（I’m ten years old.）也自動包成這樣。 */
+var SENT=(function(){
+ var tm=[];
+ function dur(t){var k=String(t).replace(/[\u2019]/g,"'").replace(/\s+/g," ").trim().toLowerCase(),a=window.ENAUD&&ENAUD[k];
+  return a?a[1]*1000/(PH.isSlow()?.7:1):(450+String(t).length*(PH.isSlow()?130:80))}
+ function clr(){while(tm.length)clearTimeout(tm.pop());
+  [].forEach.call(document.querySelectorAll("#card .sw.speak"),function(x){x.classList.remove("speak")})}
+ function play(f){clr();var ws=f.querySelectorAll(".sw"),dot=f.querySelector(".pdot"),t=f.getAttribute("data-sent"),
+  d=dur(t),n=[],tot=0,acc=0;
+  if(dot)dot.classList.remove("go","done");
+  [].forEach.call(ws,function(w){var L=(w.getAttribute("data-w")||w.textContent).length+1;n.push(L);tot+=L});
+  PH.say(t);
+  [].forEach.call(ws,function(w,k){tm.push(setTimeout(function(){
+   [].forEach.call(ws,function(y){y.classList.remove("speak")});w.classList.add("speak")},120+acc));acc+=d*n[k]/tot});
+  PH.after(function(){clr();if(dot){void dot.offsetWidth;dot.classList.add("go");
+   tm.push(setTimeout(function(){dot.classList.remove("go");dot.classList.add("done")},1350))}})}
+ /* autoSay 包好的「多個字」＋ 後面緊接 . ? ! ＝ 一句 */
+ function wrap(root){[].forEach.call(root.querySelectorAll(".sp"),function(sp){
+  var t=sp.getAttribute("data-say")||"",nx=sp.nextSibling;
+  if(!/\s/.test(t)||!nx||nx.nodeType!==3||!/^[.?!]/.test(nx.nodeValue))return;
+  var p=nx.nodeValue.charAt(0),h=document.createElement("span");h.className="sent";h.setAttribute("data-sent",t+p);
+  h.innerHTML=t.split(/\s+/).map(function(w){return '<span class="sw">'+w+'</span>'}).join(" ")+
+   (p==="."?'<span class="pdot">.</span>':p);
+  nx.nodeValue=nx.nodeValue.slice(1);sp.parentNode.replaceChild(h,sp);PH.autoSay(h)})}
+ document.addEventListener("click",function(e){var f=e.target.closest?e.target.closest(".sent"):null;if(!f)return;
+  e.stopPropagation();play(f)},true);
+ return{play:play,wrap:wrap,clr:clr}})();
 function show(n){
- var back=(n<i);
+ var back=(n<i);s3++;
  i=Math.max(0,Math.min(SCENES.length-1,n));
  window.SRCAT=${JSON.stringify(W.src||[0,0,0])}[i];   /* 按「📖 出處」直接跳到這一張字卡的證據（使用者 2026-09-25 指定） */
  card.innerHTML=PH.expand(SCENES[i]());
  PH.autoSay(card);       // 補充單字、字詞、用法都可以點來聽
+ SENT.clr();SENT.wrap(card);
  if(!reduce){card.classList.remove("turnR","turnL");void card.offsetWidth;
   card.classList.add(back?"turnL":"turnR")}
  var d=dots.children;
@@ -244,7 +296,10 @@ function armFirstTouch(){
 
 document.getElementById("prev").addEventListener("click",function(){show(i-1)});
 document.getElementById("next").addEventListener("click",function(){show(i+1)});
-document.getElementById("say").addEventListener("click",say);
+/* 🔊 唸 3 次（2026-10-02 指定；「唸 1 次」刪掉了，點單字就會唸一次）：唸完一次才唸下一次，換幕或點別的就停 */
+var s3=0;
+function say3(){var my=++s3,n=0;(function go(){if(my!==s3)return;say();if(++n<3)PH.after(function(){setTimeout(go,650)})})()}
+document.getElementById("say3").addEventListener("click",say3);
 document.addEventListener("keydown",function(e){
  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();show(i+1)}
  if(e.key==="ArrowLeft")show(i-1);
@@ -255,7 +310,8 @@ armFirstTouch();
 ${W.more?`document.getElementById("more").addEventListener("click",function(){location.href=${JSON.stringify(W.more.href)}});`:''}
 ${W.parts?`document.getElementById("parts").addEventListener("click",function(){location.href=${JSON.stringify(W.parts.href)}});`:''}
 ${W.evo?`document.getElementById("evo").addEventListener("click",function(){location.href=${JSON.stringify(W.evo)}});`:''}
-document.getElementById("home").addEventListener("click",function(){location.href=${JSON.stringify(SET.home||'../index.html')}});
+document.getElementById("home").addEventListener("click",function(){location.href=${JSON.stringify(SET.top)}});
+document.getElementById("whome").addEventListener("click",function(){location.href=${JSON.stringify(SET.whome||'index.html')}});
 ${TOC.LINKJS}
 ${SRC.JS}
 </script>
@@ -266,6 +322,9 @@ ${SRC.JS}
 /* 一組單字卡（家人、職業，或 G3 的數字、常見字）：同一個樣板，一組一組產出。
    SET：dir 輸出資料夾、font 字體路徑、home 首頁、srcW 出處（單字 ➜ 出處）、title 網頁標題後綴、head 額外放進 <head> 的東西 */
 function buildSet(WL,SET){
+ /* 🏠 總首頁 ＝ 三、四年級的總首頁（repo 根目錄 index.html），從輸出資料夾算相對路徑 */
+ SET.top=path.relative(SET.dir||DIR,path.join(__dirname,'..')).split(path.sep).join('/');
+ SET.top=(SET.top?SET.top+'/':'')+'index.html';
  /* 上一個／下一個單字（頭尾相接），使用者 2026-09-20 指定加在每張字卡下方 */
  WL.forEach((w,k)=>{
   w.prev=WL[(k-1+WL.length)%WL.length].f;

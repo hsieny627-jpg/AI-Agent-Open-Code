@@ -771,6 +771,33 @@ node sentences/_build_kahoot.js  # 根目錄 kahoot xlsx ＋ 上架說明
 量測：`node words/_verify.js ../review1/<檔>.html` ＋ `node review1/_verify.js`，樣品兩支都 0 失敗。
 **換電腦要重做語音檔**：`pip install sherpa-onnx lameenc numpy`，下載 `kokoro-en-v0_19`（見 `G3 - L1 + L2/CLAUDE.md`），`TTS_MODELS=<資料夾> node review1/_audio.js`。
 
+**2026-10-02 使用者看完樣品的決定（③ 字卡照這個做 98 張；標「全站」的連四年級、G3 數字、Sight Words、職業單字卡一起改，不含句型卡）**
+
+| # | 決定 |
+|---|---|
+| (a) | **全站**：單字一開始**不顯示音節切分**（沒有「·」）；按「✂️ 音節」才演音節動畫，演完留下切好的單字（例：bas·ket·ball） |
+| (b) | to 的音標用輕讀 /tə/（跟語音檔一樣） |
+| (c) | play 的圖示每個活動用自己的（打籃球 ⛹️、彈鋼琴 🎹…） |
+| 音節規則（**全站**） | **兩個母音中間只有「一個子音的聲音」就整組搬到下一個音節**（ck、th、ch、ph、tch、tt 這種幾個字母唸一個音的算一個）；**有兩個子音的聲音就從中間切**。所以 sti·ckers、pa·rent、cou·sin、ne·phew、li·ttle、ke·tchup；sis·ter、bas·ket·ball、ham·bur·ger、doc·tor 不變。跟 fa·mi·ly、mo·ther、tea·cher 同一套。辭典（Merriam-Webster stick·er、Cambridge /ˈstɪk.ɚ/）的切法在出處卡寫清楚 |
+| stickers 的 c | 淺灰色（不發音，ck 只唸一個 /k/） |
+| 中文空格 | 動詞片語的中文：動詞和名詞中間空一格（打 籃球、彈 吉他）；**只改片語本身**（幕①、目次、單字首頁、上一個／下一個），整句翻譯不空（我喜歡打籃球。） |
+| 句點（**全站單字卡**） | 句點緊接最後一個字母，不可有空格；唸完句子，句點稍微放大、稍微變亮（不刺眼），最後停在比原來大一點點的靜態句點（提醒學生寫句點） |
+| 唸到哪亮到哪（**全站單字卡**） | 英文句子唸到哪個字，那個字稍微放大、稍微變亮，不可太亮太刺眼 |
+| 按鈕列（**全站單字卡**） | 一排，由左到右：📑 目次｜✂️ 音節｜🔤 音標｜語速｜**🔊 唸 3 次（正中央）**｜🧩 結構／⏳ 時光機（有才放）｜📚 出處｜🔤 單字首頁｜🏠 總首頁（三、四年級總首頁）。**刪掉「唸 1 次」**（點單字就會唸一次） |
+
+**2026-10-02 ③ 字卡做完了（98 張＋單字首頁＋兩個年級首頁的卡）**——細節：
+- 檔案：`review1/_data.js`（音標 RAW、PLAIN 縮寫、出處名稱 SRC、字源 ET、98 個字）、`review1/_icons.js`（22 個自己畫的圖示）、
+  `review1/_build.js`（字卡＋`review1/index.html` 單字首頁）、`review1/_audio.js`（291 個語音檔；LEGO 唸成 Lego：`tools/audio_pack.js` 新增 `speak` 選項，鑰匙照畫面）、`review1/_verify.js`。
+- 年級首頁的卡：`sentences/_build_home.js`（四年級句型首頁第 5 張）、`G3 - L1 + L2/_build_home.js`（三年級首頁第 5 張），都連 `../review1/index.html`。
+- 出處第 1 條（人氣證據）一列一件事：`{p}` 百分比長條＋10 個小孩圖、`{rk}` 第幾名獎牌、`{tp}` 老師選的字（dolls、play dodgeball、play with LEGO）、`{tx}` 一句話。**數字只用查證檔備註**；日本、韓國、美國、英國的證據照實標國旗和對象。
+- 出處第 2 條（字源／結構）：2026-10-02 逐條打開 Etymonline、Merriam-Webster、維基百科、教育部臺灣台語常用詞辭典核對；**查不到的不放**
+  （hot dogs、Minecraft、Roblox、Splatoon、Beyblade 只有第 1 條）。「為什麼叫這個名字沒有定論」的照實寫（hamburger、pizza、strawberry、toy）。
+- 品牌名音標：Roblox、Mario 照維基百科；Minecraft、Splatoon、Beyblade 照組成的字；**TV、TCG 是縮寫，不標母音顏色和音標**（`PLAIN`）。
+- 片語小字照決定 7（with ＝ 和、in ＝ 在……裡、the／a／an／to 空白）；do 跟著片語中文（學 跆拳道、做 手工藝、變 魔術），make videos 的 make ＝ 拍。
+- 量測：`node review1/_verify.js`（一排不折行、英文 ≧ 30px、每一句有語音檔、句點緊接、句點動畫、唸到的字不刺眼、動詞片語中文有空格、sticker 的 c 淺灰、出處每條放得下、第 1 條有圖表）
+  ＋ `node words/_verify.js ../review1/<檔>.html`（版面、按鈕列、音節）。
+- 下一步：④ 遊戲（物品1 五種、物品2 五種、＋1 進階；活動同），規則在上面 2026-09-28 那一段。句型卡替換字切換（📘 課本／物品1／物品2）跟遊戲一起做。
+
 **➡️ 第三批的下一步順序（使用者 2026-09-29 指定：照順序做，不可跳步、不可並行）**
 
 | 步驟 | 做什麼 | 做完的判準 |

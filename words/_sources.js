@@ -312,9 +312,9 @@ const COMMON = [
    '本教材的 IPA 一律用<b>美式</b>。'),
  e('KK 音標', 'Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)',
    '台灣課本用的標法。例：bed 的 e ＝ IPA <b>/e/</b> ＝ KK <b>/ɛ/</b>。'),
- e('音節怎麼切', 'Louisa Moats《Speech to Print》',
-   '母音後面切：<b>fa．mi．ly</b>。<b>一個出聲的母音 ＝ 一個音節</b>。'),
- warn('辭典的 fam·i·ly 也對', '那是<b>排版斷行</b>用的；本教材教的是<b>唸的時候</b>怎麼切。兩種都對。'),
+ e('音節怎麼切', '本教材的切法（老師指定，2026-09-20、2026-10-02）；Louisa Moats《Speech to Print》',
+   '<b>一個出聲的母音 ＝ 一個音節</b>。兩個母音中間只有<b>一個子音的聲音</b>（ck、th、ph、tch 算一個）➜ 搬到後面：<b>fa．mi．ly、mo．ther</b>；有<b>兩個</b>子音的聲音 ➜ 從中間切：<b>sis．ter</b>。'),
+ warn('辭典的 fam·i·ly 也對', 'Merriam-Webster 的點是<b>排版斷行</b>用的；Cambridge 的音標又是另一種切法。本教材教的是<b>唸的時候</b>一個子音聲跟著後面的母音。切法不同，都不是錯。'),
  warn('淺灰色的字母不算', '不出聲的字母（淺灰色）<b>不算母音</b>，數紅色的就對了。'),
  e('唸出來的聲音', 'Web Speech API（瀏覽器內建語音，en-US）',
    '不用連網。<b>嗓音由這台電腦決定</b>。外語另外指定：德 de-DE、荷 nl-NL、瑞典 sv-SE、法 fr-FR、西 es-ES。')
