@@ -793,10 +793,10 @@ node sentences/_build_kahoot.js  # 根目錄 kahoot xlsx ＋ 上架說明
 - 出處第 2 條（字源／結構）：2026-10-02 逐條打開 Etymonline、Merriam-Webster、維基百科、教育部臺灣台語常用詞辭典核對；**查不到的不放**
   （hot dogs、Minecraft、Roblox、Splatoon、Beyblade 只有第 1 條）。「為什麼叫這個名字沒有定論」的照實寫（hamburger、pizza、strawberry、toy）。
 - 品牌名音標：Roblox、Mario 照維基百科；Minecraft、Splatoon、Beyblade 照組成的字；**TV、TCG 是縮寫，不標母音顏色和音標**（`PLAIN`）。
-- 片語小字照決定 7（with ＝ 和、in ＝ 在……裡、the／a／an／to 空白）；do 跟著片語中文（學 跆拳道、做 手工藝、變 魔術），make videos 的 make ＝ 拍。
+- 片語小字照決定 7（with ＝ 和；**使用者 2026-10-02：play with toys、play with LEGO 的 with ＝ 用**；in ＝ 在……裡、the／a／an／to 空白）；do 跟著片語中文（學 跆拳道、做 手工藝、變 魔術），make videos 的 make ＝ 拍。
 - 量測：`node review1/_verify.js`（一排不折行、英文 ≧ 30px、每一句有語音檔、句點緊接、句點動畫、唸到的字不刺眼、動詞片語中文有空格、sticker 的 c 淺灰、出處每條放得下、第 1 條有圖表）
   ＋ `node words/_verify.js ../review1/<檔>.html`（版面、按鈕列、音節）。
-- 下一步：④ 遊戲（物品1 五種、物品2 五種、＋1 進階；活動同），規則在上面 2026-09-28 那一段。句型卡替換字切換（📘 課本／物品1／物品2）跟遊戲一起做。
+- 下一步：④ 遊戲（開場白在 `新對話開場白_修改教學網站.md` 最下面「Review 1 遊戲」，有 4 個先回答的問題）（物品1 五種、物品2 五種、＋1 進階；活動同），規則在上面 2026-09-28 那一段。句型卡替換字切換（📘 課本／物品1／物品2）跟遊戲一起做。
 
 **➡️ 第三批的下一步順序（使用者 2026-09-29 指定：照順序做，不可跳步、不可並行）**
 
