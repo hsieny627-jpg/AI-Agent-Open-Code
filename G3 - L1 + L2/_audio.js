@@ -22,7 +22,9 @@ function list(tk) {
   if (!tk) return;
   add(plain(tk)); words(tk);
   const sl = tk.filter(t => t.slot)[0];
-  if (sl && D.SUB[sl.slot]) D.SUB[sl.slot].basic.concat(D.SUB[sl.slot].adv).forEach(w => {
+  /* 2026-10-02：替換字切換（物品 1／物品 2、活動 1／活動 2）的字也要整句做成語音檔 */
+  const more = sl && D.SUB[sl.slot] && D.SUB[sl.slot].sets ? [].concat(...D.SUB[sl.slot].sets.slice(1).map(x => [].concat(...x.rows.map(r => r[1])))) : [];
+  if (sl && D.SUB[sl.slot]) D.SUB[sl.slot].basic.concat(D.SUB[sl.slot].adv).concat(more).forEach(w => {
     const tt = tk.map(t => t.slot ? Object.assign({}, t, { en: w[0] }) : t);
     add(plain(tt)); add(w[0]);
   });
@@ -66,5 +68,6 @@ G.G9.forEach(c => add(c[0]));
   list(c.tk); const s = c.scene; if (s) { add(s.b); add(s.b2); }
 }));
 (D.XPAGES || []).forEach(P => (P.rv || []).forEach(g => g.q.forEach(q => add(q.o[0]))));
-const r = pack({ texts: T, dir: path.join(__dirname, 'audio'), lang: 'en', varName: 'AUD' });
+/* LEGO 全大寫會被唸成 L-E-G-O：鑰匙照畫面，唸的時候換成 Lego（跟 review1 一樣；2026-10-02 起新做的句子適用） */
+const r = pack({ texts: T, dir: path.join(__dirname, 'audio'), lang: 'en', varName: 'AUD', speak: s => s.replace(/\bLEGO\b/g, 'Lego') });
 console.log('語音檔：' + r.total + ' 句（這次新做 ' + r.made + ' 句）');

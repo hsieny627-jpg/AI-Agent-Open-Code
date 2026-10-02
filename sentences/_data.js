@@ -429,6 +429,8 @@ SUB.can = { lb:'📘 課本', la:'😎 還有',
          ['play the guitar','彈吉他','🎸'],['play video games','打電動','🎮'],['ride a bike','騎腳踏車','🚲'],['skateboard','溜滑板','🛹'],
          ['jump rope','跳繩','🪢'],['speak English','說英文','🗣️'],['do magic tricks','變魔術','🎩'],['make videos','拍影片','📹'],
          ['write code','寫程式','💻'],['take photos','拍照','📷'],['bake cakes','烤蛋糕','🎂'],['fly a kite','放風箏','🪁']] };
+/* 替換字切換（2026-10-02）：📘 課本 ＝ 上面的 can；活動 1／活動 2 ＝ review1/ 的技能類活動（can 只放技能，review1/_subsets.js） */
+SUB.can.sets = require('../review1/_subsets').SETS.can;
 var R4 = '📝 Review 1';
 var BL = function(k){return t('______','______','',{slot:k,blank:1})};
 var HE = function(){return t('He','他',ICON.he,{slot:'pr'})};

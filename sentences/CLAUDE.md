@@ -796,7 +796,39 @@ node sentences/_build_kahoot.js  # 根目錄 kahoot xlsx ＋ 上架說明
 - 片語小字照決定 7（with ＝ 和；**使用者 2026-10-02：play with toys、play with LEGO 的 with ＝ 用**；in ＝ 在……裡、the／a／an／to 空白）；do 跟著片語中文（學 跆拳道、做 手工藝、變 魔術），make videos 的 make ＝ 拍。
 - 量測：`node review1/_verify.js`（一排不折行、英文 ≧ 30px、每一句有語音檔、句點緊接、句點動畫、唸到的字不刺眼、動詞片語中文有空格、sticker 的 c 淺灰、出處每條放得下、第 1 條有圖表）
   ＋ `node words/_verify.js ../review1/<檔>.html`（版面、按鈕列、音節）。
-- 下一步：④ 遊戲（開場白在 `新對話開場白_修改教學網站.md` 最下面「Review 1 遊戲」，有 4 個先回答的問題）（物品1 五種、物品2 五種、＋1 進階；活動同），規則在上面 2026-09-28 那一段。句型卡替換字切換（📘 課本／物品1／物品2）跟遊戲一起做。
+- ~~下一步：④ 遊戲~~ ➜ **2026-10-02 做完了**，見下一段。
+
+**2026-10-02 ④ 遊戲做完了（`review1/games.html`，三、四年級共用）＋句型卡替換字切換**——使用者的決定：
+
+| # | 決定 |
+|---|---|
+| 1 | 物品 5 種：⚡ 閃電四選一（看圖選字）、🎧 聽力狙擊、🃏 記憶配對（圖↔字）、✏️ 填空高手（I like ___.）、🗂 分類大師；活動 5 種：⚡ 閃電四選一、🎧 聽力狙擊、🃏 記憶配對、🧩 語序大挑戰（I like to ___.）、✏️ 填空高手。物品 1、物品 2、活動 1、活動 2 各一套 ＝ **20 個**，＋三年級進階、四年級進階 ＝ **22 個** |
+| 2 | 一頁 `review1/games.html`，大廳分五區（🍟 物品 1／🎮 物品 2／⛹️ 活動 1／🎧 活動 2／👑 進階）；進階兩顆：「三年級進階」「四年級進階」 |
+| 3 | 進階 ＝ 👑 **魔王挑戰**（看圖＋整句中文，選正確的英文句子）。三年級：I like ___.／I like to ___.；四年級：He likes ___.／He can ___, and I can ___.／I can’t ___.。**can／can’t 只用技能類活動**（`review1/_subsets.js` 的 `SKILL` 21 個：球類、游泳、樂器、跆拳道、唱歌跳舞畫畫、說英文、手工藝、魔術、閱讀、做菜、拍影片、烤蛋糕、寫程式；不放 run、stay home、watch TV、eat snacks、play outside…；**不放 ride my bike**——He can ride my bike.〔他會騎「我的」腳踏車〕意思怪。can 句的 do taekwondo ＝「他會跆拳道」〔`CANZH`〕，不是字卡的「學 跆拳道」） |
+| 4 | 分類大師 ＝ **東西（I like ___）vs 動作（I like to ___）**，物品 1 配活動 1、物品 2 配活動 2。dance 不考（I like dance. 也對） |
+| 5 | 驚喜卡每個遊戲 30 張；**物品 1、物品 2 的同一種遊戲共用一副**：物品 5 副、活動 5 副（跟物品完全不同）、進階 2 副 ＝ **360 張名字全部不重複**（`review1/_game_data.js` 的 `THEME`） |
+| 6 | 四年級句型卡：He can ___,／and I can ___. ➜ 📘 課本／⛹️ 活動 1／🎧 活動 2，**只放技能類**；He likes ___, 保留顏色（那一張在教 and／but 比顏色） |
+
+**檔案**：
+- `review1/_game_data.js`：**題庫和驚喜卡的唯一真相來源**。字、中文、圖示、整句中文全部從 `review1/_data.js` 拿；每一題 `o[0]` ＝ 正解。
+  錯的選項**只放確定錯的**：活動填空的錯動詞一個一個挑過（`DV`：listen to music 不放 dance、…in the park／outside／with… 只放 do／make／put，
+  因為 read in the park、eat outside、go with LEGO 其實也對）；juice、milk 也是動詞 ➜ 不出「I like to juice.」；不出 I like swimming.、play piano 這種其實也對的句子。
+- `review1/_build_games.js`：`node review1/_build_games.js`。**引擎 100% 用 `sentences/_build_games.js`**（設 `SITE_DIR=review1`），
+  Review 1 才要的地方用 `PATCH`（找得到才換、次數不對 build 就失敗）：遊戲代號 `gid`（i1_1…）≠ 玩法 `g`（g1…）、大廳分五區、
+  選項圖示 `oX()`（看圖選英文的選項不放圖示；看英文選圖的選項 ＝ 圖示＋中文）、整句太長一列一個 `oOne()`、記憶配對圖卡（圖示＋中文，翻開唸中文）、
+  語序兩個 to 先點哪一個都對、填空句點緊接、答錯頁逐字中文照字卡（`mGloss`：play the piano 的 play ＝ 彈）、Pokémon 的 é、
+  加分題只換確定錯的地方（`mMuts`；`mSwapIn` 關掉：cook 在這裡是做菜，不可以被換成 doctor）。英文先唸 `review1/audio/`（`window.AUD=window.ENAUD`）。
+- 引擎（sentences）只改了三個「資料有寫才開」的地方：`B.BANK`、`metaOf` 看 `ty`、`NS` 不寫死 g1；`_gloss.js` 讀題庫的 `GLX`／`TRX`。**sentences、G3 的 games.html 逐位元組不變（已比對）。**
+- 句型卡替換字切換：`review1/_subsets.js`（`SETS.like`／`liketo`／`can`，一類一排、小類併排）；`G3 - L1 + L2/_data.js` 的 `SUB.like.sets`、`SUB.liketo.sets`，
+  `sentences/_data.js` 的 `SUB.can.sets`。引擎 `_build_cards.js` 的 `SSPATCH`：**只有用到 sets 的那一頁**才放切換（unit1／unit2 逐位元組不變），
+  按「📘 課本／物品 1／物品 2」只換下面那一區（`subSw()`），句子和逐字進度不動。
+- 語音：`review1/_audio.js` 也收遊戲的句子（`_game_data.js` 的 `SAY`，He likes／can／can’t 新做 94 句）；`G3 - L1 + L2/_audio.js` 收切換的字（新做 134 句，LEGO 唸成 Lego）。
+  四年級句型卡還是瀏覽器語音（Q11「四年級也改成預錄」還沒做）。
+- 入口：四年級句型首頁第 6 張、三年級首頁第 6 張（`_build_home.js`，「🕹️ Review 1 遊戲」）、Review 1 單字首頁第 5 張（`review1/_build.js` 的 `index()`）。
+- 版面：魔王題的整句選項一列一個、題目 h2 不留預設上下邊距（1024×768 不用捲動就看得到四個選項）；記憶配對圖卡 ＝ 圖示在上、中文在下。
+- 量測：`node review1/_verify_games.js`（① 題庫：≧ 20 題、選項不重複、錯的選項不是其實也對的句子、看英文選圖的選項圖示不重複、can 只用技能、驚喜卡 12 副 360 張不重複、物品活動不同；
+  ② 網頁：`sentences/_verify.js` 的遊戲頁量測〔遊戲數改成讀題庫 `NG`〕＋ `review1/_verify_r1.js`〔五區、按鈕列一排、每種玩法的圖示、句點緊接、記憶配對、兩個 to、整句選項一列一個、每一句有語音檔、答錯頁每個英文字下面有中文〕）。
+  句型卡：`node sentences/_verify.js review1.html`、`node "G3 - L1 + L2/_verify.js" review1.html`（每一組切換都按、點最後一個字、句子和中文都換、有語音檔、不溢出）。
 
 **➡️ 第三批的下一步順序（使用者 2026-09-29 指定：照順序做，不可跳步、不可並行）**
 

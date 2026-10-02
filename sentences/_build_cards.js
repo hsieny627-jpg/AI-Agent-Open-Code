@@ -1569,8 +1569,51 @@ $('#rvBtn').addEventListener('click',function(){
 draw(0);
 `;
 
+/* 替換字切換（2026-10-02 Review 1：📘 課本／物品 1／物品 2）：SUB[k].sets 有寫才開，而且只放進用得到的那一頁
+   （其他頁的 SUB 不帶 sets ➜ 跟原本逐位元組一樣） */
+const SUBJSON = JSON.stringify(D.SUB, (k, v) => k === 'sets' ? undefined : v);
+function setsOf(cards) {
+  const o = {};
+  (cards || []).forEach(c => [].concat(c.slots || [], c.slot ? [c.slot] : []).forEach(k => { if (D.SUB[k] && D.SUB[k].sets) o[k] = D.SUB[k].sets; }));
+  return o;
+}
+const SSCSS = `
+/* 替換字切換：📘 課本／物品 1／物品 2（一次只顯示一組，一類一排） */
+.subsw{display:flex;gap:clamp(4px,.7vw,8px);justify-content:center;flex-wrap:wrap;margin-bottom:clamp(1px,.3vh,4px)}
+.ssw{background:#101010;border:1px solid #3A4650;border-radius:999px;color:var(--dim);font-weight:700;
+ font-size:clamp(13px,2vh,18px);padding:clamp(3px,.6vh,7px) clamp(10px,1.4vw,18px)}
+.ssw.on{background:#2C3A48;border-color:var(--acc);color:#fff}
+.ssw:active{transform:scale(.95)}
+.r1i{width:1em;height:1em;vertical-align:-.12em}
+/* 唸到長片語（go to an amusement park）放大 1.14 倍會蓋到旁邊的 to ➜ 多字的片語只放大一點點 */
+.tk[data-w*=" "].spk .en{transform:scale(1.05)}
+/* 替換字放大（2026-09-28 使用者：替換字放大、分門別類）：iPad 一樣，教室的大螢幕字再大一點 */
+.subs.many .sub{font-size:clamp(11.5px,min(1.65vh,1.85vw),20px)}
+`;
+const SSPATCH = [
+  ["if(!inner){var n=0;ks.forEach(function(k){var x=SUB[k];if(x)n+=x.basic.length+x.adv.length});",
+   "if(!inner){var n=0;ks.forEach(function(k){var x=SUB[k];if(x)n+=(SUBSEL[k]&&SUBSETS[k])?SUBSETS[k][SUBSEL[k]].rows.reduce(function(a,r){return a+r[1].length},0):x.basic.length+x.adv.length});"],
+  ["  return row(s.basic,s.lb||'基礎','')+row(s.adv,s.la||'進階','adv');",
+   "  var ss=SUBSETS[kind],cs=SUBSEL[kind]||0;\n  if(!ss)return row(s.basic,s.lb||'基礎','')+row(s.adv,s.la||'進階','adv');\n" +
+   "  return '<div class=\"subsw\">'+ss.map(function(x,n){return '<button class=\"ssw'+(n===cs?' on':'')+'\" data-k=\"'+kind+'\" data-n=\"'+n+'\">'+x.n+'</button>'}).join('')+'</div>'+\n" +
+   "   (cs?ss[cs].rows.map(function(r){return row(r[1],r[0],'')}).join(''):row(s.basic,s.lb||'基礎','')+row(s.adv,s.la||'進階','adv'));"],
+  ["  var sub=t.closest?t.closest('.sub'):null;",
+   "  var ssw=t.closest?t.closest('.ssw'):null;\n  if(ssw){subSw(ssw.getAttribute('data-k'),+ssw.getAttribute('data-n'));return}\n  var sub=t.closest?t.closest('.sub'):null;"],
+  ["var CARDS=__CARDS__",
+   "/* 替換字切換：按「📘 課本／物品 1／物品 2」只換下面那一區，句子和逐字的進度不動 */\n" +
+   "var SUBSETS=__SUBSETS__,SUBSEL={};\n" +
+   "function subSw(k,n){SUBSEL[k]=n;var c=CARDS[i],o=card.querySelector('.subs');if(!o)return;\n" +
+   " var d=document.createElement('div');d.innerHTML=subsHTML(c.slots||c.slot);if(d.firstChild)o.parentNode.replaceChild(d.firstChild,o);markSubs()}\n" +
+   "var CARDS=__CARDS__"]
+];
 function page(unit, cards, title, other, otherName, P) {
   P = P || {};
+  const SS = setsOf(cards), hasSS = Object.keys(SS).length > 0;
+  let js = JS;
+  if (hasSS) SSPATCH.forEach(([a, b]) => {
+    if (js.split(a).length !== 2) throw new Error('替換字切換：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
+    js = js.replace(a, () => b.replace('__SUBSETS__', JSON.stringify(SS)));
+  });
   const body = `
 <div id="dots"></div>
 <button class="nav l" id="prev" aria-label="上一張"><span><i>◀</i><b>上一張</b></span></button>
@@ -1608,15 +1651,15 @@ ${S.UTIL}
 ${S.TTS}
 ${S.SFX}
 ${S.MISS}
-${JS.replace('__CARDS__', () => JSON.stringify(cards))
+${js.replace('__CARDS__', () => JSON.stringify(cards))
     .replace('__UNIT__', () => JSON.stringify(unit))
-    .replace('__SUB__', () => JSON.stringify(D.SUB))
+    .replace('__SUB__', () => SUBJSON)
     .replace('__RVG__', () => JSON.stringify(P.rv || (unit === 1 ? D.RV1 : D.RV2)))}
 ${S.RATEJS}
 </script>
 </body>
 </html>`;
-  return S.HEAD(title, CSS) + body;
+  return S.HEAD(title, CSS + (hasSS ? SSCSS : '')) + body;
 }
 
 /* 產出哪幾頁：別的課次可以在 _data.js 寫 PAGES 換標題，沒寫就是 sentences 原本的兩頁 */

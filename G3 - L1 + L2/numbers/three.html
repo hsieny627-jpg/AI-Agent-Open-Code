@@ -73,17 +73,18 @@ body{margin:0;background:#000;color:#F2F2F2;
 /* 按鈕列（使用者 2026-10-02 指定，全站單字卡）：一排，「🔊 唸 3 次」在正中央；
    左：目次｜音節｜音標｜放慢　右：（結構／時光機）｜出處｜單字首頁｜總首頁。
    三欄格線 1fr auto 1fr ＝ 中間那顆不管兩邊幾顆都在正中央。圖示在上、字在下，iPad 直放也一排放得下。 */
-#bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:clamp(4px,.8vw,10px);width:100%;max-width:1180px}
-#bar .bL,#bar .bR{display:flex;gap:clamp(4px,.7vw,9px);align-items:stretch}
+#bar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:clamp(3px,.6vw,10px);width:100%;max-width:1180px}
+#bar .bL,#bar .bR{display:flex;gap:clamp(3px,.5vw,9px);align-items:stretch}
 #bar .bL{justify-content:flex-end}
 #bar .bR{justify-content:flex-start}
 #bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:16px;
  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
- font-size:clamp(12px,1.55vh,15px);padding:5px clamp(5px,.9vw,12px);min-height:56px;min-width:clamp(46px,6vw,64px);
+ font-size:clamp(12px,min(1.55vh,1.5vw),15px);padding:5px clamp(3px,.6vw,12px);min-height:56px;min-width:clamp(44px,5.4vw,64px);
  font-family:inherit;cursor:pointer;white-space:nowrap;line-height:1.1}
 #bar button>.bic{font-size:1.5em;line-height:1;margin:0}
 #bar #say3{background:#22303A;border-color:#9FB4C8;font-weight:700;min-width:clamp(70px,9vw,96px)}
 #bar button:active{background:#2A2A2A}
+#bar #phsee.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A}
 /* 念到哪個字，那個字稍微放大、稍微變亮（2026-10-02：不可太亮、不刺眼；字母原本的紅／灰保留） */
 #card .sent{cursor:pointer;white-space:nowrap}
 #card .sw{display:inline-block;transition:transform .15s,filter .15s}
@@ -292,7 +293,7 @@ button>.bic{margin-right:.3em}
  <span class="pos">4 / 13</span>
  <a href="four.html" title="下一個單字"><span class="w">four</span> ▶</a>
 </nav>
-<div id="bar"><div class="bL"><button id="tocb"><span class="bic">📑</span><span class="blb">目次</span></button><button id="phsyl"><span class="bic">✂️</span><span class="blb">音節</span></button><button id="phmode"><span class="bic">🔤</span><span class="blb">音標：無</span></button><button id="slow"><span class="bic">🐢</span><span class="blb">放慢</span></button></div><button id="say3"><span class="bic">🔊</span><span class="blb">唸 3 次</span></button><div class="bR"><button id="evo"><span class="bic">⏳</span><span class="blb">時光機</span></button><button id="srcb"><span class="bic">📖</span><span class="blb">出處</span></button><button id="whome"><span class="bic">🔤</span><span class="blb">單字首頁</span></button><button id="home"><span class="bic">🏠</span><span class="blb">總首頁</span></button></div></div>
+<div id="bar"><div class="bL"><button id="tocb"><span class="bic">📑</span><span class="blb">目次</span></button><button id="phsyl"><span class="bic">✂️</span><span class="blb">音節動畫</span></button><button id="phsee"><span class="bic">👀</span><span class="blb">看音節</span></button><button id="phmode"><span class="bic">🔤</span><span class="blb">音標：無</span></button><button id="slow"><span class="bic">🐢</span><span class="blb">放慢</span></button></div><button id="say3"><span class="bic">🔊</span><span class="blb">唸 3 次</span></button><div class="bR"><button id="evo"><span class="bic">⏳</span><span class="blb">時光機</span></button><button id="srcb"><span class="bic">📖</span><span class="blb">出處</span></button><button id="whome"><span class="bic">🔤</span><span class="blb">單字首頁</span></button><button id="home"><span class="bic">🏠</span><span class="blb">總首頁</span></button></div></div>
 </div>
 <div id="toc"><div class="thd"><b>📑 目次</b><button id="tocx">✕ 關閉</button></div><div class="tgd"><a href="zero.html"><b>1</b><span>0️⃣ zero　零</span></a><a href="one.html"><b>2</b><span>1️⃣ one　一</span></a><a href="two.html"><b>3</b><span>2️⃣ two　二</span></a><a href="three.html" class="cur"><b>4</b><span>3️⃣ three　三</span></a><a href="four.html"><b>5</b><span>4️⃣ four　四</span></a><a href="five.html"><b>6</b><span>5️⃣ five　五</span></a><a href="six.html"><b>7</b><span>6️⃣ six　六</span></a><a href="seven.html"><b>8</b><span>7️⃣ seven　七</span></a><a href="eight.html"><b>9</b><span>8️⃣ eight　八</span></a><a href="nine.html"><b>10</b><span>9️⃣ nine　九</span></a><a href="ten.html"><b>11</b><span>🔟 ten　十</span></a><a href="eleven.html"><b>12</b><span>1️⃣1️⃣ eleven　十一</span></a><a href="twelve.html"><b>13</b><span>1️⃣2️⃣ twelve　十二</span></a></div></div>
 <footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span><span class="scnt"><span id="srcn">1</span> ／ 7</span><button id="srct">📑 目次</button><button id="srcx">✕ 關閉</button></div><div class="stoc" id="stoc"><button data-k="0"><b>1</b><span>three 的家人</span></button><button data-k="1"><b>2</b><span>音標（美式）</span></button><button data-k="2"><b>3</b><span>KK 音標</span></button><button data-k="3"><b>4</b><span>音節怎麼切</span></button><button data-k="4" class="w"><b>5</b><span>辭典的 fam·i·ly 也對</span></button><button data-k="5" class="w"><b>6</b><span>淺灰色的字母不算</span></button><button data-k="6"><b>7</b><span>唸出來的聲音</span></button></div><div class="sbody"><section class="sl on" data-k="0"><div class="lt">three 的家人</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「three」「third」「thirteen」「thirty」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">古英文 <b>þrēo</b>；third、thirteen、thirty 都是它的家人。</span></span></div></section><section class="sl" data-k="1"><div class="lt">音標（美式）</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries（NAmE）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">本教材的 IPA 一律用<b>美式</b>。</span></span></div></section><section class="sl" data-k="2"><div class="lt">KK 音標</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">台灣課本用的標法。例：bed 的 e ＝ IPA <b>/e/</b> ＝ KK <b>/ɛ/</b>。</span></span></div></section><section class="sl" data-k="3"><div class="lt">音節怎麼切</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">本教材的切法（老師指定，2026-09-20、2026-10-02）；Louisa Moats《Speech to Print》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv"><b>一個出聲的母音 ＝ 一個音節</b>。兩個母音中間只有<b>一個子音的聲音</b>（ck、th、ph、tch 算一個）➜ 搬到後面：<b>fa．mi．ly、mo．ther</b>；有<b>兩個</b>子音的聲音 ➜ 從中間切：<b>sis．ter</b>。</span></span></div></section><section class="sl w" data-k="4"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>辭典的 fam·i·ly 也對</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">Merriam-Webster 的點是<b>排版斷行</b>用的；Cambridge 的音標又是另一種切法。本教材教的是<b>唸的時候</b>一個子音聲跟著後面的母音。切法不同，都不是錯。</span></span></div></section><section class="sl w" data-k="5"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>淺灰色的字母不算</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">不出聲的字母（淺灰色）<b>不算母音</b>，數紅色的就對了。</span></span></div></section><section class="sl" data-k="6"><div class="lt">唸出來的聲音</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Web Speech API（瀏覽器內建語音，en-US）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">不用連網。<b>嗓音由這台電腦決定</b>。外語另外指定：德 de-DE、荷 nl-NL、瑞典 sv-SE、法 fr-FR、西 es-ES。</span></span></div></section></div><div class="snav"><button id="srcp">◀ 上一條</button><span class="sdots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i></span><button id="srcf">下一條 ▶</button></div></footer>
@@ -448,6 +449,8 @@ var PH=(function(){
  function sylTime(el){var n=el.querySelectorAll(".syl").length,r=0,v=el.querySelectorAll(".u"),k;
   for(k=0;k<v.length;k++)if(v[k].querySelector("i.v")&&!/mute/.test(v[k].className))r++;
   return 150+r*520+250+(n<2?0:(n-1)*520+200+n*480+200)}
+ /* 👀 看音節（使用者 2026-10-02 指定）：不演動畫，直接顯示切好的音節（bas·ket·ball）；on＝false 收回去 */
+ function sylSee(el,on){clear();sylReset(el);if(on)el.classList.add("split")}
  /* 把說明文字裡的英文字詞變成可以點來聽（補充單字、字詞、用法都算）。
    **只掃說明文字的容器**：.en 這種手工排版（dau<span>gh</span>ter）拆開來會壞掉，
    那種地方改用 {{單字}} 標記，由 PH.word() 直接畫。 */
@@ -520,7 +523,7 @@ var PH=(function(){
    if(f>bs){bs=f;best=all[k]}}
   return best}
  function setMode(m){mode=((+m||0)%3+3)%3;try{localStorage.setItem("phMode",mode)}catch(e){}apply();return mode}
- return{after:after,lbl:lbl,word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,sylTime:sylTime,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
+ return{after:after,lbl:lbl,word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,sylTime:sylTime,sylSee:sylSee,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
   has:function(w){return !!D[(w||"").toLowerCase()]},
   slow:function(v){slow=(v===undefined)?!slow:!!v;return slow},
   isSlow:function(){return slow},
@@ -542,10 +545,16 @@ var PH=(function(){
  b.addEventListener("click",function(){
   var el=PH.main();if(!el)return;
   var n=+el.getAttribute("data-n")||0;
-  if(!n){PH.lbl(b,"音節");return}
+  if(!n){PH.lbl(b,"音節動畫");return}
   PH.syl(el,null);
-  PH.lbl(b,"音節");
+  PH.lbl(b,"音節動畫");var sb=document.getElementById("phsee");if(sb)sb.classList.remove("on");
   setTimeout(function(){PH.lbl(b,n+" 個音節")},PH.sylTime(el));});})();
+/* #bar 的「👀 看音節」：點一下直接顯示切好的音節，再點一次收回去（完全不演動畫） */
+(function(){var b=document.getElementById("phsee");if(!b)return;
+ b.addEventListener("click",function(){
+  var el=PH.main();if(!el)return;
+  var on=!el.classList.contains("split");PH.sylSee(el,on);
+  b.classList.toggle("on",on)});})();
 
 var W={zh:"三",sub:"",icon:"3️⃣",old:"þrēo",now:"three",
  e1:"{{third}} 第三、{{thirteen}} 十三",e2:"都是 <b>three</b> 的家人"};

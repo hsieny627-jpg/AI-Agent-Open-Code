@@ -414,6 +414,9 @@ SUB.liketo = { lb:'🔥 最愛', la:'✨ 還有',
   adv:  [['swim','游泳','🏊'],['cook','做菜','🍳'],['play baseball','打棒球','⚾'],['play badminton','打羽毛球','🏸'],
          ['play the piano','彈鋼琴','🎹'],['play the guitar','彈吉他','🎸'],['ride my bike','騎我的腳踏車','🚲'],['skateboard','溜滑板','🛹'],
          ['jump rope','跳繩','🪢'],['play with my dog','和我的狗玩','🐕']] };
+/* 替換字切換（2026-10-02）：📘 課本 ＝ 上面這 20 個；物品 1／物品 2、活動 1／活動 2 ＝ review1/ 的 98 個字（review1/_subsets.js） */
+SUB.like.sets = require('../review1/_subsets').SETS.like;
+SUB.liketo.sets = require('../review1/_subsets').SETS.liketo;
 var R1K = '📝 Review 1';
 var RV1C = [
  {type:'sent', kind:R1K, zh:'嗨。', tk:[t('Hi','嗨','👋'),W.dot()]},

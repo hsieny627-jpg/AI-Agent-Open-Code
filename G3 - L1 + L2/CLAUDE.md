@@ -7,6 +7,16 @@
 **引擎跟 `sentences/` 共用**，所以 `sentences/CLAUDE.md` 裡的字卡規則、發音引擎、答錯獨立頁、
 語速六段、音效暫時刪除……全部適用，這一份只寫「這一課不一樣的地方」。
 
+
+## 2026-10-02 Review 1 替換字切換（先讀這一節）
+
+- `review1.html` 的 I like ___.／I like to ___. 兩張卡多一排切換：**📘 課本**（原本的 20 個）／🍟 物品 1／🎮 物品 2、📘 課本／⛹️ 活動 1／🎧 活動 2。
+  字、中文、圖示都從 `review1/_data.js` 來（`review1/_subsets.js` 的 `SETS`；這裡的 `_data.js` 只寫 `SUB.like.sets`、`SUB.liketo.sets`）。一類一排，小類併成一排。
+- 引擎：`sentences/_build_cards.js` 的 `SSPATCH`（只有用到 sets 的頁才放，unit1／unit2 逐位元組不變）。
+- 語音：`_audio.js` 也收切換的字換進去的整句（新做 134 句）；**LEGO 唸成 Lego**（`speak`，2026-10-02 起新做的句子適用）。
+- 量測：`node "G3 - L1 + L2/_verify.js" review1.html`（每一組都按、點最後一個字、句子和中文都換、整句有語音檔、不溢出、不蓋到句子）。
+- Review 1 的物品／活動**遊戲**在 `review1/games.html`（三、四年級共用），規格在 `sentences/CLAUDE.md` 待辦 13。
+
 ## 2026-09-28 改版（第二批＋新增 (二)～(五)）——先讀這一節
 
 共用的改動寫在 `sentences/CLAUDE.md`、`words/CLAUDE.md` 最上面「2026-09-28」。這一課自己的：

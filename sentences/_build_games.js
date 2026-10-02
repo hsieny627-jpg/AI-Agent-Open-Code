@@ -19,8 +19,9 @@ const B = SITE.load('_game_data');
 
 /* ── 別的課次共用這一套遊戲引擎時才會用到的設定（sentences 沒寫 ➜ 用 sentences 自己的）──
    META g2／g9 的 duo：兩顆大按鈕各是什麼（[{v,t,d,c}]），g9 題目的第 3 格是答錯的提示 */
-const NS = B.SURP.g1.length;                          /* 每一個遊戲幾張驚喜卡 */
-const metaOf = id => B.GAMES.filter(m => m.id === id)[0] || {};
+const NS = (B.SURP.g1 || B.SURP[Object.keys(B.SURP)[0]]).length;   /* 每一個遊戲幾張驚喜卡（Review 1 的遊戲代號不是 g1～g10） */
+/* ty ＝ 玩法（Review 1：一個玩法有好幾個遊戲，例 i1_9、i2_9 都是 g9 分類大師；沒寫 ty 就是 id 本身） */
+const metaOf = id => B.GAMES.filter(m => (m.ty || m.id) === id)[0] || {};
 const duoBtns = d => d.map(x => `     '<button class="dbtn ${x.c}" data-v="${x.v}">${x.t}${x.d ? `<span class="ds">${x.d}</span>` : ''}</button>'+`).join('\n');
 const DUO2 = metaOf('g2').duo, DUO9 = metaOf('g9').duo;
 const LAB9 = DUO9 ? JSON.stringify(DUO9.reduce((o, x) => { o[x.v] = x.d ? x.t + ' ' + x.d.split('　')[0] : x.t; return o }, {})) : '';
@@ -1132,7 +1133,7 @@ ${S.UTIL}
 ${S.TTS}
 ${S.SFX}
 ${S.MISS}
-${JS.replace('__BANK__', () => JSON.stringify({
+${JS.replace('__BANK__', () => JSON.stringify(B.BANK || {
     g1: B.G1, g2: B.G2, g3: B.G3, g4: B.G4, g5: B.G5,
     g6: B.G6, g7: B.G7, g8: B.G8, g9: B.G9, g10: B.G10
   })).replace('__META__', () => JSON.stringify(B.GAMES))

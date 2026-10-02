@@ -261,8 +261,19 @@ async function scenePage(p,f,vp,e){
   if(c.lap>0)e.push('字卡壓到下面的按鈕（'+c.lap+'px）');
   if(c.wrap.length)e.push('按鈕的字折行：'+c.wrap.join('、'));
   const L=c.ids,ix=x=>L.indexOf(x);
-  if(L[0]!=='tocb'||ix('phsyl')!==1||ix('phmode')!==2||ix('slow')!==3||ix('say3')!==4||L[L.length-1]!=='home'||ix('whome')!==L.length-2||ix('srcb')!==L.length-3||ix('say')>=0)
+  if(L[0]!=='tocb'||ix('phsyl')!==1||ix('phsee')!==2||ix('phmode')!==3||ix('slow')!==4||ix('say3')!==5||L[L.length-1]!=='home'||ix('whome')!==L.length-2||ix('srcb')!==L.length-3||ix('say')>=0)
    e.push('按鈕順序不對：'+L.join(' '));
+  /* 2026-10-02：「✂️ 音節動畫」改名；「👀 看音節」點了立刻切好（不演動畫），再點收回去 */
+  if(await p.evaluate(()=>{const b=document.querySelector('#phsyl .blb');return !b||b.textContent!=='音節動畫'}))e.push('「✂️ 音節動畫」的名字不對');
+  if(c.n){const T=()=>{const ps=[...document.querySelectorAll('#card .c.t .phw')];const L=(ps.length?ps:[PH.main()]).filter(x=>x&&+x.getAttribute('data-n')>1);
+    return{n:L.length,sp:L.filter(x=>x.classList.contains('split')).length,anim:document.querySelectorAll('#card .phn,#card .phsc,#card .syl.k0').length,
+     on:document.getElementById('phsee').classList.contains('on')}};
+   await p.click('#phsee');await p.waitForTimeout(150);const s1=await p.evaluate(T);
+   await p.waitForTimeout(900);const s1b=await p.evaluate(T);
+   await p.click('#phsee');await p.waitForTimeout(150);const s2=await p.evaluate(T);acts+=2;
+   if(s1.sp!==s1.n||!s1.on)e.push('按了「👀 看音節」沒有馬上切好（'+s1.sp+'／'+s1.n+'）');
+   if(s1.anim||s1b.anim)e.push('「👀 看音節」演了動畫');
+   if(s2.sp||s2.on)e.push('再按一次「👀 看音節」沒有收回去');}
   if(c.n){await p.click('#phsyl');
    const t=await p.evaluate(()=>{const ps=document.querySelectorAll('#card .c.t .phw');return ps.length?[].reduce.call(ps,(a,x)=>a+PH.sylTime(x)+3300,0):PH.sylTime(PH.main())});
    await p.waitForTimeout(t+600);

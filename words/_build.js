@@ -144,6 +144,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 #bar button>.bic{font-size:1.5em;line-height:1;margin:0}
 #bar #say3{background:#22303A;border-color:#9FB4C8;font-weight:700;min-width:clamp(70px,9vw,96px)}
 #bar button:active{background:#2A2A2A}
+#bar #phsee.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A}
 /* 念到哪個字，那個字稍微放大、稍微變亮（2026-10-02：不可太亮、不刺眼；字母原本的紅／灰保留） */
 #card .sent{cursor:pointer;white-space:nowrap}
 #card .sw{display:inline-block;transition:transform .15s,filter .15s}

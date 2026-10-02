@@ -413,6 +413,8 @@ var PH=(function(){
  function sylTime(el){var n=el.querySelectorAll(".syl").length,r=0,v=el.querySelectorAll(".u"),k;
   for(k=0;k<v.length;k++)if(v[k].querySelector("i.v")&&!/mute/.test(v[k].className))r++;
   return 150+r*520+250+(n<2?0:(n-1)*520+200+n*480+200)}
+ /* 👀 看音節（使用者 2026-10-02 指定）：不演動畫，直接顯示切好的音節（bas·ket·ball）；on＝false 收回去 */
+ function sylSee(el,on){clear();sylReset(el);if(on)el.classList.add("split")}
  /* 把說明文字裡的英文字詞變成可以點來聽（補充單字、字詞、用法都算）。
    **只掃說明文字的容器**：.en 這種手工排版（dau<span>gh</span>ter）拆開來會壞掉，
    那種地方改用 {{單字}} 標記，由 PH.word() 直接畫。 */
@@ -485,7 +487,7 @@ var PH=(function(){
    if(f>bs){bs=f;best=all[k]}}
   return best}
  function setMode(m){mode=((+m||0)%3+3)%3;try{localStorage.setItem("phMode",mode)}catch(e){}apply();return mode}
- return{after:after,lbl:lbl,word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,sylTime:sylTime,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
+ return{after:after,lbl:lbl,word:word,box:box,chips:chips,expand:expand,say:say,sayWord:sayWord,sayChain:sayChain,chainStop:chainStop,syl:syl,sylTime:sylTime,sylSee:sylSee,autoSay:autoSay,apply:apply,setMode:setMode,main:main,
   has:function(w){return !!D[(w||"").toLowerCase()]},
   slow:function(v){slow=(v===undefined)?!slow:!!v;return slow},
   isSlow:function(){return slow},
@@ -507,14 +509,22 @@ var PH=(function(){
  b.addEventListener("click",function(){
   var el=PH.main();if(!el)return;
   var n=+el.getAttribute("data-n")||0;
-  if(!n){PH.lbl(b,"音節");return}
+  if(!n){PH.lbl(b,"音節動畫");return}
   PH.syl(el,null);
-  PH.lbl(b,"音節");
-  setTimeout(function(){PH.lbl(b,n+" 個音節")},PH.sylTime(el));});})();`;
+  PH.lbl(b,"音節動畫");var sb=document.getElementById("phsee");if(sb)sb.classList.remove("on");
+  setTimeout(function(){PH.lbl(b,n+" 個音節")},PH.sylTime(el));});})();
+/* #bar 的「👀 看音節」：點一下直接顯示切好的音節，再點一次收回去（完全不演動畫） */
+(function(){var b=document.getElementById("phsee");if(!b)return;
+ b.addEventListener("click",function(){
+  var el=PH.main();if(!el)return;
+  var on=!el.classList.contains("split");PH.sylSee(el,on);
+  b.classList.toggle("on",on)});})();`;
 
 /* #bar 上的音標切換鈕（每一頁都放；字卡上不再放 chips，版面要聚焦） */
 const btnMode = '<button id="phmode"><span class="bic">🔤</span><span class="blb">音標：無</span></button>';
 /* #bar 上的音節動畫鈕。結果直接寫在按鈕上，不佔字卡版面。 */
-const btnSyl  = '<button id="phsyl"><span class="bic">✂️</span><span class="blb">音節</span></button>';
+const btnSyl  = '<button id="phsyl"><span class="bic">✂️</span><span class="blb">音節動畫</span></button>' +
+  /* 👀 看音節（2026-10-02 使用者指定）：放在「✂️ 音節動畫」右邊，點了直接看切好的音節、再點收回去 */
+  '<button id="phsee"><span class="bic">👀</span><span class="blb">看音節</span></button>';
 
 module.exports = { DATA, RAW, CSS, JS, btnSlow, btnMode, btnSyl, parse };

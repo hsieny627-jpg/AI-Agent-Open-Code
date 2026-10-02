@@ -14,7 +14,8 @@ const DIR = (SITE_DIR || __dirname) + '/';
 /* 這個課次自己的資料：不發音字母（SIL）、驚喜卡（SURP）、題目要不要每次重洗（CFG.random） */
 const SD = SITE_DIR ? require(DIR + '_data.js') : {};
 const SG = require(DIR + '_game_data.js');
-const SQ = SITE_DIR ? require(DIR + '_quiz_data.js') : {};
+const SQ = SITE_DIR && fs.existsSync(DIR + '_quiz_data.js') ? require(DIR + '_quiz_data.js') : {};   /* review1 只有遊戲，沒有暖身題 */
+const NG = SG.GAMES.length;   /* 遊戲幾種（sentences、G3 是 10；review1 是 22） */
 const args = process.argv.slice(2);
 const ALL = ['index.html', 'warmup.html', 'unit1.html', 'unit2.html', 'games.html']
   .concat(require('fs').existsSync(DIR + 'review1.html') ? ['review1.html'] : []);   /* 2026-09-26：Review 1 */
@@ -549,6 +550,43 @@ async function cardsPage(p, f, vp, e) {
       if (!await fwd(p)) break;
     }
     await rewind(p, N);
+    /* 2026-10-02 替換字切換（📘 課本／物品 1／物品 2）：每一組都按一次 ➜ 那一組亮、字數對、不溢出、不壓到句子；
+       點那一組最後一個字 ➜ 英文句子、整句中文都換、整句有語音檔（有 audio/ 的網站）；最後切回 📘 課本 */
+    let swN = 0;
+    for (let i = 0; i < N; i++) {
+      const ks = await p.evaluate(() => [...new Set([...document.querySelectorAll('#card .ssw')].map(b => b.getAttribute('data-k')))]);
+      for (const k of ks) {
+        const sets = await p.evaluate(k => SUBSETS[k].map(x => x.rows ? x.rows.reduce((a, r) => a + r[1].length, 0) : SUB[k].basic.length + SUB[k].adv.length), k);
+        for (const n of sets.map((x, n) => n).slice(1).concat([0])) {
+          await p.click('#card .ssw[data-k="' + k + '"][data-n="' + n + '"]'); await p.waitForTimeout(350); swN++;
+          const r = await p.evaluate((k) => ({ on: [...document.querySelectorAll('#card .ssw.on[data-k="' + k + '"]')].map(b => +b.getAttribute('data-n')),
+            cnt: document.querySelectorAll('#card .sub[data-k="' + k + '"]').length,
+            wrap: (() => { const hs = [...document.querySelectorAll('#card .sub')].map(b => b.getBoundingClientRect().height), m = Math.min(...hs);
+              return hs.filter(h => h > m * 1.45).length; })() }), k);   /* 折成兩行 ＝ 比最矮的那一顆高很多 */
+          const o = await snap(); acts++;
+          if (r.on.join() !== String(n)) e.push('第' + (i + 1) + '張按了切換第 ' + n + ' 組，亮的不是它（' + r.on.join() + '）');
+          if (r.cnt !== sets[n]) e.push('第' + (i + 1) + '張切換第 ' + n + ' 組：替換字 ' + r.cnt + ' 個（要 ' + sets[n] + ' 個）');
+          if (r.wrap) e.push('第' + (i + 1) + '張切換第 ' + n + ' 組：有替換字折行（' + r.wrap + ' 個）');
+          if (o.spill > 2 || o.ox > 0 || o.oy > 0 || o.hit) e.push('第' + (i + 1) + '張切換第 ' + n + ' 組以後溢出／壓到箭頭（' + o.spill + '）');
+          if (o.subTop && o.lineBot && o.subTop < o.lineBot) e.push('第' + (i + 1) + '張切換第 ' + n + ' 組：替換字蓋到句子');
+          if (n) {
+            const last = (await p.$$('#card .sub[data-k="' + k + '"]')).pop();
+            const w = await last.getAttribute('data-w'), z = await last.getAttribute('data-z');
+            await last.click(); await p.waitForTimeout(650);
+            const t = await p.evaluate(() => { const f = document.querySelector('#cardIn .full'); const en = f ? f.getAttribute('data-en') : '';
+              return { en, zh: f ? f.textContent : '', aud: !window.AUD || !!AUD[akey(en)] }; });
+            const o2 = await snap(); acts++;
+            if (t.en.indexOf(w) < 0) e.push('第' + (i + 1) + '張點了「' + w + '」英文句子沒有換（' + t.en + '）');
+            if (t.zh.indexOf(z) < 0) e.push('第' + (i + 1) + '張點了「' + w + '」整句中文沒有換成「' + z + '」');
+            if (!t.aud) e.push('第' + (i + 1) + '張「' + t.en + '」沒有語音檔');
+            if (o2.spill > 2 || o2.ox > 0 || o2.oy > 0 || o2.hit) e.push('第' + (i + 1) + '張換成「' + w + '」以後溢出／壓到箭頭（' + o2.spill + '）');
+          }
+        }
+      }
+      if (!await fwd(p)) break;
+    }
+    await rewind(p, N);
+    if (SD.SUB && Object.keys(SD.SUB).some(k => SD.SUB[k].sets) && !swN) e.push('找不到替換字切換（📘 課本／物品 1／物品 2）');
   }
   acts += await rateBar(p, e);
   return acts;
@@ -670,13 +708,14 @@ async function gamesPage(p, f, vp, e) {
   }, OV.toString());
 
   let acts = 0, s = await snap(); acts++;
-  if (s.cards !== 10) e.push('遊戲大廳不是 10 種（' + s.cards + '）');
+  if (s.cards !== NG) e.push('遊戲大廳不是 ' + NG + ' 種（' + s.cards + '）');
 
   /* 驚喜卡：每一個遊戲張數一樣、十個遊戲的名字全部不重複；翻開一張要真的出現、炸得出來、不溢出 */
   if (SG.SURP) {
-    const all = [], need = SG.SURP.g1.length;
+    const all = [], need = SG.SURP[Object.keys(SG.SURP)[0]].length, decks = new Set();   /* review1：同一副卡給兩個遊戲用，只算一次 */
     for (const k in SG.SURP) {
       if (SG.SURP[k].length !== need) e.push(k + ' 的驚喜卡是 ' + SG.SURP[k].length + ' 張（其他是 ' + need + ' 張）');
+      if (decks.has(SG.SURP[k])) continue; decks.add(SG.SURP[k]);
       SG.SURP[k].forEach(x => all.push(x.t));
     }
     const dup = all.filter((t, n) => all.indexOf(t) !== n);
@@ -749,7 +788,7 @@ async function gamesPage(p, f, vp, e) {
   }
   if (s.ox > 0) e.push('大廳橫向溢出 ' + s.ox);
 
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= NG; i++) {
     await p.click('.gcard:nth-of-type(' + i + ')'); await p.waitForTimeout(900);
     let g = await snap(); acts++;
     const id = await p.evaluate(() => (document.getElementById('gname').textContent || ''));
@@ -798,7 +837,7 @@ async function gamesPage(p, f, vp, e) {
     if (g.arena && g.inner < 3) e.push('遊戲 ' + i + ' 作答後出不了下一題');
     if (g.ox > 0) e.push('遊戲 ' + i + ' 作答後橫向溢出 ' + g.ox);
     await quitG(p); await p.waitForTimeout(500);
-    if ((await snap()).cards !== 10) e.push('遊戲 ' + i + ' 回不了大廳');
+    if ((await snap()).cards !== NG) e.push('遊戲 ' + i + ' 回不了大廳');
   }
   /* 2026-09-26 Review 1：每一張的空格都點得到替換字，點了英文句子和整句中文都要跟著換（不可以把英文換進中文） */
   if (/review/.test(f)) {
@@ -821,6 +860,7 @@ async function gamesPage(p, f, vp, e) {
     }
     await rewind(p, N);
   }
+  if (SG.R1) acts += await require(DIR + '_verify_r1.js')(p, e, snap, missCheck, quitG);   /* review1 遊戲自己的檢查 */
   acts += await rateBar(p, e);
   return acts;
 }

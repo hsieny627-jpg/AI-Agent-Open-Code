@@ -82,7 +82,15 @@ var R1=(function(){
   var f=document.querySelector("#card .r1f");if(!f)return;
   var ps=f.querySelectorAll(".c.t .phw");if(!ps.length)return;
   e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();
+  var sb=document.getElementById("phsee");if(sb)sb.classList.remove("on");
   var t0=0;[].forEach.call(ps,function(p){setTimeout(function(){PH.syl(p,null)},t0);t0+=PH.sylTime(p)+3300});
+ },true);
+ /* 👀 看音節：片語、句子裡要學的那幾個字一起切開／一起收回去，不演動畫 */
+ document.addEventListener("click",function(e){var b=e.target.closest?e.target.closest("#phsee"):null;if(!b)return;
+  var f=document.querySelector("#card .r1f");if(!f)return;
+  var ps=f.querySelectorAll(".c.t .phw");if(!ps.length)return;
+  e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();
+  var on=!ps[0].classList.contains("split");[].forEach.call(ps,function(p){PH.sylSee(p,on)});b.classList.toggle("on",on);
  },true);
  /* 片語、句子放不下就整排一起縮小（不折行、不蓋到左右箭頭）；量的是字卡裡面真的能放字的寬度，留 4% 給「唸到哪一格放大」 */
  function fit(){var f=document.querySelector("#card .r1ph");if(!f)return;var c=document.getElementById("card"),cs=getComputedStyle(c),
@@ -213,7 +221,13 @@ function index(list) {
         cards: L.map(w => ({ f: w.en, zh: w.zh, icon: w.ic, href: w.f + '.html' })) }; }) });
   /* 自己畫的圖示跟著字級走；三、四年級共用 ➜ 首頁按鈕是總首頁 */
   h = h.replace('</style>', '.r1i{width:1em;height:1em;vertical-align:middle}\n.card .ic .r1i{width:1.1em;height:1.1em}\n</style>')
-    .replace('🏠 首頁</a>', '🏠 總首頁</a>');
+    .replace('🏠 首頁</a>', '🏠 總首頁</a>')
+    /* 2026-10-02：第 5 張卡 ＝ Review 1 遊戲（22 種，review1/games.html） */
+    .replace('</style>', 'a.card{text-decoration:none;color:inherit}\n</style>')
+    .replace(/<\/div><\/div>\n<nav id="bar">/, () => '</div><a class="card" href="games.html"><span class="n">5</span><span class="ic">🕹️</span>' +
+      '<span class="t">Review 1 遊戲（' + require('./_game_data').GAMES.length + ' 種）</span>' +
+      '<span class="d">物品 1、物品 2、活動 1、活動 2 各 5 種玩法 ＋ 三年級進階、四年級進階魔王挑戰</span></a></div>\n<nav id="bar">');
+  if (!/href="games.html"/.test(h)) throw new Error('review1 單字首頁：遊戲卡沒有放進去');
   fs.writeFileSync(path.join(DIR, 'index.html'), h, 'utf8');
 }
 if (require.main === module) {

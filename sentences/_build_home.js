@@ -81,14 +81,21 @@ const body = `
   <span class="d">I like ___.／I like to ___.　小學生最喜歡的 50 個東西、48 個活動：每個字都有「小學生真的喜歡嗎？」的證據。</span>
   <span class="f">${require('../review1/_data').WORDS.length} 張字卡</span></a>
 
+ <!-- 2026-10-02：Review 1 遊戲（物品／活動 22 種，三、四年級共用 review1/games.html） -->
+ <a class="card go" href="../review1/games.html">
+  <span class="n">6</span><span class="ic">🕹️</span>
+  <span class="t">Review 1 遊戲</span>
+  <span class="d">I like ___.／I like to ___.　物品、活動各 10 種玩法，還有三年級進階、四年級進階魔王挑戰。</span>
+  <span class="f">${require('../review1/_game_data').GAMES.length} 種　共 ${require('../review1/_game_data').GAMES.reduce((a, g) => a + g.n, 0)} 題</span></a>
+
  <a class="card" href="world.html">
-  <span class="n">6</span><span class="ic">🌍</span>
+  <span class="n">7</span><span class="ic">🌍</span>
   <span class="t">句型環遊世界</span>
   <span class="d">別的國家怎麼說 他是誰？她是我的阿姨。他是一位醫生嗎？……先猜再公布，看出誰是英文的兄弟姊妹。</span>
   <span class="f">8 句　✕ 5 國</span></a>
 
  <a class="card go" href="games.html">
-  <span class="n">7</span><span class="ic">🎮</span>
+  <span class="n">8</span><span class="ic">🎮</span>
   <span class="t">複習遊戲</span>
   <span class="d">10 種玩法，每個遊戲 <b>3 分鐘</b>、愈快分數愈高。<b>連對 3 題</b>抽驚喜卡：二～五選一，每次卡包樣式都不一樣。</span>
   <span class="f">${B.GAMES.length} 種　共 ${B.GAMES.reduce((a, g) => a + g.n, 0)} 題</span></a>

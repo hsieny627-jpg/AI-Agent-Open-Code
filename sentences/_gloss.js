@@ -76,6 +76,9 @@ function collect() {
   (G.G8 || []).forEach(c => addS((c.b + ' ' + c.o[0] + ' ' + c.a).replace(/ ([?.,])/g, '$1').replace(/ '/g, "'"), c.zh));
   if (D.TRX) for (const k in D.TRX) addS(k, D.TRX[k]);
   if (D.GLX) for (const k in D.GLX) addW(k, D.GLX[k]);
+  /* Review 1 遊戲（2026-10-02）：題庫自己帶整句翻譯 TRX、逐字中文 GLX（可以是空白：I like to 的 to 下面不寫中文） */
+  if (G.TRX) for (const k in G.TRX) addS(k, G.TRX[k]);
+  if (G.GLX) for (const k in G.GLX) GL[key(k)] = G.GLX[k];
   return { GL, TR };
 }
 
