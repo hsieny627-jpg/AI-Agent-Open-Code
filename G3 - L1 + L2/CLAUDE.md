@@ -8,6 +8,20 @@
 語速六段、音效暫時刪除……全部適用，這一份只寫「這一課不一樣的地方」。
 
 
+## 2026-10-03 改版（使用者 13 點；引擎改動寫在 `sentences/CLAUDE.md` 最上面「2026-10-03」，先讀那一節）
+
+這一課自己的：
+
+| # | 使用者要的 | 做法（在哪裡） |
+|---|---|---|
+| 1 | Unit 1 上方四個按鈕：一-1 What’s your name?（基礎 11 張／進階 3 張）、一-2 中英語序、二 My name is ___.（基礎 13 張／進階 5 張）、三 一問一答（3 張）、四 原本句型 | `_data.js` 的 `U1T`、`TABS1`。基礎第 5 張 What is your name? ＝ 逐字卡（點一下出一個字、最後唸整句）；第 8 張 What is ______?（空格、?、＝ 不唸）。「沿用原來字卡」＝ 直接用 `U1[n]` |
+| 9 | Unit 2 上方四個按鈕：一-1 How old are you?（基礎 7 張／進階 2 張）、一-2 中英語序、二 I’m ten years old.（基礎 8 張／進階 3 張）、三 一問一答（3 張，第 2 張 I’m ten years old. ＝ I’m ten. 新做）、四 原本句型 | `U2T`、`TABS2`。單字卡 How ＝ 如何、old ＝ 老的（👴）、years ＝ 年（📅）；「______ years old.」寫了替換 ➜ 一開始是 ten |
+| 6 | 一問一答：答句 Ken／Alan／Mike 男聲、Emma／Wendy 女聲（那一句的問句換男聲） | 引擎 `qaV()`；語音檔 `_audio.js`（收集方法 `sentences/_audio_collect.js`），男聲的鑰匙前面有 `m:`；ten 的重音（`+ten ~years ~old`）男聲也做一份 |
+| 7 | 三年級原本的發音也要最高品質 | 全部重做：Kokoro v1.0、女聲 af_bella、男聲 am_michael，修好剪靜音（見 sentences/CLAUDE.md）|
+| 12 | 三年級複習（`g3-review/`） | `RPAGES`（u1／u2：進階句型 ①②、中英語序、縮寫動畫 What is ➜ What’s、I am ➜ I’m、You are ➜ You’re），首頁和遊戲 `sentences/_build_review.js`；遊戲：語序大挑戰、聽力狙擊、問名字還是問幾歲；補充：數字、Sight Words 的單字結構和單字故事 |
+
+**語音檔怎麼重做**（2026-10-03 起）：`pip install sherpa-onnx lameenc numpy pyworld onnxruntime`，下載 `kokoro-multi-lang-v1_0`（同一個 tts-models 頁面）到 `$TTS_MODELS`，然後 `TTS_MODELS=<資料夾> node "G3 - L1 + L2/_audio.js"`。聽寫驗證：再下載 `sherpa-onnx-whisper-small.en`（asr-models 頁面）放同一個資料夾，`TTS_MODELS=<資料夾> python3 tools/asr_check.py "G3 - L1 + L2/audio"`。
+
 ## 2026-10-02 Review 1 替換字切換（先讀這一節）
 
 - `review1.html` 的 I like ___.／I like to ___. 兩張卡多一排切換：**📘 課本**（原本的 20 個）／🍟 物品 1／🎮 物品 2、📘 課本／⛹️ 活動 1／🎧 活動 2。

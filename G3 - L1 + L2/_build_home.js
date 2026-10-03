@@ -8,7 +8,10 @@ const { Q } = require('./_quiz_data');
 const B = require('./_game_data');
 const D = require('./_data');
 
+const GR = require('../words/_grades');
 const CSS = `
+${GR.CSS}
+.gr{border:0;background:none;padding:0}
 #stage{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
  display:flex;flex-direction:column;align-items:center;justify-content:center;
  padding:calc(var(--safeT) + clamp(16px,3vh,32px)) clamp(14px,3.4vw,40px)
@@ -49,71 +52,8 @@ const body = `
  <div class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code/G3%20-%20L1%20+%20L2/</b></div>
 </header>
 
-<nav id="menu">
- <a class="card" href="warmup.html">
-  <span class="n">1</span><span class="ic">🎯</span>
-  <span class="t">暖身題</span>
-  <span class="d">四選一，倒數 50 秒，題目和選項每次都重新洗牌，<b>愈快答對分數愈高</b>。答錯的題目最後再考一次。</span>
-  <span class="f">${Q.length} 題　其中 ${Q.filter(q => q.x2).length} 題 分數 ✕ 2</span></a>
-
- <a class="card" href="unit1.html">
-  <span class="n">2</span><span class="ic">${require('../sentences/_nametag').TAG}</span>
-  <span class="t">Unit 1 句型</span>
-  <span class="d">What’s your name?　My name is Ken.／I’m Ken.　逐字動畫、縮寫變身、中英語序、名字替換字，下面還有「📝 複習」。</span>
-  <span class="f">${D.U1.length} 張字卡</span></a>
-
- <a class="card" href="unit2.html">
-  <span class="n">3</span><span class="ic">🎂</span>
-  <span class="t">Unit 2 句型</span>
-  <span class="d">How old are you?　I’m ten years old.／I’m ten.　you 問 ➜ I 答、數字 6～12 替換字，下面還有「📝 複習」。</span>
-  <span class="f">${D.U2.length} 張字卡</span></a>
-
- <!-- 2026-09-26 使用者指定新增：Review 1（學以致用，用英文介紹自己） -->
- <a class="card" href="review1.html">
-  <span class="n">4</span><span class="ic">📝</span>
-  <span class="t">Review 1　介紹我自己</span>
-  <span class="d">Hi.／My name is ___.／I’m ___ years old.／I like ___.／I like to ___.／How about you?　最酷的 20 個東西、20 個活動任你換。</span>
-  <span class="f">${D.XPAGES[0].cards.length} 張字卡</span></a>
-
- <!-- 2026-10-02：Review 1 單字卡（物品／活動 98 個字，三、四年級共用 review1/） -->
- <a class="card" href="../review1/index.html">
-  <span class="n">5</span><span class="ic">🃏</span>
-  <span class="t">Review 1 單字卡</span>
-  <span class="d">I like ___.／I like to ___.　小學生最喜歡的 50 個東西、48 個活動：每個字都有「小學生真的喜歡嗎？」的證據。</span>
-  <span class="f">${require('../review1/_data').WORDS.length} 張字卡</span></a>
-
- <!-- 2026-10-02：Review 1 遊戲（物品／活動 22 種，三、四年級共用 review1/games.html） -->
- <a class="card go" href="../review1/games.html">
-  <span class="n">6</span><span class="ic">🕹️</span>
-  <span class="t">Review 1 遊戲</span>
-  <span class="d">I like ___.／I like to ___.　物品、活動各 10 種玩法，還有三年級進階、四年級進階魔王挑戰。</span>
-  <span class="f">${require('../review1/_game_data').GAMES.length} 種　共 ${require('../review1/_game_data').GAMES.reduce((a, g) => a + g.n, 0)} 題</span></a>
-
- <a class="card go" href="games.html">
-  <span class="n">7</span><span class="ic">🎮</span>
-  <span class="t">複習遊戲</span>
-  <span class="d">10 種玩法，每個遊戲 <b>3 分鐘</b>、愈快分數愈高。<b>連對 3 題</b>抽驚喜卡：二～五選一，每次卡包樣式都不一樣。</span>
-  <span class="f">${B.GAMES.length} 種　共 ${B.GAMES.reduce((a, g) => a + g.n, 0)} 題</span></a>
-
- <!-- 2026-09-25 使用者指定新增：數字單字、Sight Words（照家人單字的架構） -->
- <a class="card" href="numbers/index.html">
-  <span class="n">8</span><span class="ic">🔢</span>
-  <span class="t">數字單字</span>
-  <span class="d">zero～twelve 字卡、結構、故事、環遊世界。母音紅色、不發音淺灰。</span>
-  <span class="f">13 張字卡</span></a>
-
- <a class="card" href="sight/index.html">
-  <span class="n">9</span><span class="ic">👀</span>
-  <span class="t">Sight Words 常見字</span>
-  <span class="d">I、My、You、Your、name、What、How old…… 字卡、結構、故事、環遊世界。</span>
-  <span class="f">15 張字卡</span></a>
-</nav>
-
-<div id="order">
- 上課順序：<b>暖身題</b><span class="ar">➜</span><b>Unit 1</b><span class="ar">➜</span>
- <b>Unit 2</b><span class="ar">➜</span><b>Review 1</b><span class="ar">➜</span><b>遊戲</b>
- <span class="ar">｜</span>暖身題老師可以跳過，直接上句型
-</div>
+<!-- 2026-10-03 使用者指定：年級首頁跟總首頁同一個順序（words/_grades.js）：(1) 暖身題 … (7) 在家複習 -->
+${GR.rows(GR.GRADES[0], '../').replace(/<h2>[^<]*<a[^>]*>[^<]*<\/a><\/h2>/, '')}
 </main>
 
 <nav id="bar">

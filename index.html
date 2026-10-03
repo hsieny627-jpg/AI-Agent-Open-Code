@@ -17,13 +17,13 @@ html,body{min-height:100%}
 body{margin:0;background:#000;color:#F2F2F2;
  font-family:Andika,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;
  display:flex;flex-direction:column;align-items:center;justify-content:center;
- padding:clamp(14px,3vh,28px) clamp(14px,3vw,30px);overflow-x:hidden}
+ padding:clamp(8px,1.6vh,20px) clamp(14px,3vw,30px);overflow-x:hidden}
 
-header{text-align:center;margin-bottom:clamp(10px,2vh,20px)}
+header{text-align:center;margin-bottom:clamp(6px,1.2vh,14px)}
 h1{margin:0;font-size:clamp(26px,4.4vh,42px);font-weight:700;letter-spacing:.04em}
 .sub{margin-top:6px;font-size:clamp(13px,1.9vh,17px);color:#9FB4C8;letter-spacing:.16em}
 /* 首頁網址：老師只要記這一個（使用者 2026-09-20 指定寫在畫面上） */
-.url{margin-top:5px;font-size:clamp(11.5px,1.6vh,14px);color:#6F6F6F;letter-spacing:.02em}
+.url{margin-left:12px;font-weight:400;font-size:clamp(11.5px,1.6vh,14px);color:#6F6F6F;letter-spacing:.02em}
 .url b{color:#9E9E9E;font-weight:400}
 
 /* 2026-09-26 分成四年級／三年級兩區（使用者指定）。關著的時候照樣不可以有捲軸 */
@@ -69,7 +69,28 @@ h1{margin:0;font-size:clamp(26px,4.4vh,42px);font-weight:700;letter-spacing:.04e
 #cards .w{font-size:clamp(14px,2vh,18px);font-weight:700}
 #cards .z{font-size:clamp(11px,1.5vh,13px);color:#8E8E8E;margin-left:auto}
 
-footer{width:100%;max-width:1000px;margin-top:clamp(12px,2.2vh,22px);
+
+.gr{width:100%;max-width:1100px;border:1px solid #1E1E1E;border-radius:18px;background:#060606;
+ padding:clamp(6px,1.1vh,12px) clamp(10px,1.4vw,16px)}
+.gr h2{margin:0 0 clamp(4px,.7vh,8px);font-size:clamp(20px,3.2vh,30px);color:#FFD66B;letter-spacing:.08em;display:flex;align-items:baseline;gap:12px}
+.gr h2 a{font-size:clamp(12px,1.7vh,15px);color:#9FB4C8;text-decoration:none;letter-spacing:.04em;border-bottom:1px solid #2A3A48}
+.gl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:repeat(4,auto);grid-auto-flow:column;gap:clamp(5px,.8vh,9px) clamp(8px,1.2vw,14px)}
+@media (max-width:860px){.gl{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}}
+.gi{display:flex;align-items:center;gap:clamp(8px,1vw,12px);background:#0C0C0C;border:1px solid #232323;border-radius:14px;
+ padding:clamp(4px,.7vh,8px) clamp(8px,1vw,12px);min-height:clamp(46px,6.4vh,62px)}
+.gi .gn{flex:0 0 auto;width:1.7em;height:1.7em;border-radius:50%;background:#1A2530;color:#9FB4C8;font-weight:700;
+ display:flex;align-items:center;justify-content:center;font-size:clamp(13px,1.9vh,17px)}
+.gi .gx{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:1px}
+.gi .gx b{font-size:clamp(15px,2.3vh,21px);line-height:1.25}
+.gi .gx b .gic{margin-right:6px}
+.gi .gx b .gic svg{height:1em;width:auto;vertical-align:-.12em}
+.gi .gx i{font-style:normal;font-size:clamp(11.5px,1.6vh,14px);color:#8E8E8E;white-space:nowrap}
+.gi .gb{flex:0 0 auto;display:flex;gap:clamp(5px,.7vw,8px)}
+.gi .gb a{display:flex;align-items:center;gap:5px;text-decoration:none;color:#F2F2F2;background:#18222B;border:1px solid #3A4A58;
+ border-radius:99px;padding:clamp(6px,.9vh,9px) clamp(10px,1.3vw,15px);font-size:clamp(14px,2.1vh,18px);font-weight:700;white-space:nowrap;min-height:42px}
+.gi .gb a:hover{border-color:#9FB4C8}
+.gi .gb a:active{transform:scale(.97)}
+footer{width:100%;max-width:1000px;margin-top:clamp(6px,1.2vh,16px);
  display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;align-items:center}
 footer a{color:#7E7E7E;text-decoration:none;font-size:clamp(12px,1.7vh,14.5px);
  border-bottom:1px solid #242424;padding-bottom:1px}
@@ -79,103 +100,19 @@ footer .sep{color:#2A2A2A;font-size:12px}
 </head>
 <body>
 <header>
- <h1>首頁</h1>
- <div class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></div>
+ <h1>首頁 <span class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></span></h1>
 </header>
 
 <main id="hub">
-<section class="grade"><h2>四年級</h2>
-<div class="row many"><div class="rl">👪 家人</div><div class="rc">
-<a class="card" href="words/quiz.html">
-   <span class="n">1</span><span class="ic">🎯</span>
-   <span class="t">暖身 20 題</span><span class="d">四選一，小組討論後作答</span></a>
-<a class="card" href="family-time-machine-ipad.html">
-   <span class="n">2</span><span class="ic">📖</span>
-   <span class="t">家人單字時光機</span><span class="d">17 站：學習＋遊戲</span></a>
-<button class="card" id="cardsBtn" aria-expanded="false" aria-controls="cards">
-   <span class="n">3</span><span class="ic">🃏</span>
-   <span class="t">17 張單字卡 <span class="caret">▾</span></span><span class="d">點這裡展開</span></button>
-<a class="card" href="words/family-tree.html">
-   <span class="n">4</span><span class="ic">🌳</span>
-   <span class="t">Family tree 家庭樹</span><span class="d">一次只亮一個家人</span></a>
-<a class="card" href="words/parts.html">
-   <span class="n">5</span><span class="ic">🧩</span>
-   <span class="t">單字結構</span><span class="d">grand ＝ 大、-ther 尾巴</span></a>
-<a class="card" href="words/why.html">
-   <span class="n">6</span><span class="ic">📜</span>
-   <span class="t">單字故事</span><span class="d">家人單字為什麼長這樣</span></a>
-<a class="card" href="about-my-family/index.html">
-   <span class="n">7</span><span class="ic">🎬</span>
-   <span class="t">About my family</span><span class="d">用英文介紹我的家人</span></a>
-</div></div>
-<div class="row many"><div class="rl">🔤 單字</div><div class="rc">
-<a class="card" href="words/index.html">
-   <span class="n"></span><span class="ic">🔤</span>
-   <span class="t">四年級 單字首頁</span><span class="d">家人、職業、結構、故事、時光機</span></a>
-<a class="card" href="words/jobs.html">
-   <span class="n"></span><span class="ic">💼</span>
-   <span class="t">職業單字</span><span class="d">student、teacher、doctor、farmer、nurse</span></a>
-<a class="card" href="words/world.html">
-   <span class="n"></span><span class="ic">🌍</span>
-   <span class="t">家人單字環遊世界</span><span class="d">別國怎麼叫爸爸媽媽</span></a>
-</div></div><div class="row"><div class="rl">💬 句型</div><div class="rc">
-<a class="card" href="sentences/index.html">
-   <span class="n"></span><span class="ic">💬</span>
-   <span class="t">四年級 句型</span><span class="d">Who’s he?／Is he a doctor?　＋ 🌍 環遊世界、📝 Review 1</span></a>
-</div></div>
-</section>
-<section class="grade"><h2>三年級</h2>
-<div class="row"><div class="rl"><span style="font-size:.8em"><svg class="nmsvg" viewBox="0 0 140 100" role="img" aria-label="name" style="width:1.4em;height:1em;vertical-align:-.14em;overflow:visible;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.35))"><rect x="3" y="3" width="134" height="94" rx="14" fill="#E53935" stroke="#9F1B1B" stroke-width="3"/><path d="M9 12q0-6 6-6h110q6 0 6 6v8H9z" fill="#fff" opacity=".16"/><text x="70" y="31" text-anchor="middle" font-family="Arial Black,Arial,Helvetica,sans-serif" font-weight="900" font-size="27" letter-spacing="2" fill="#fff">HELLO</text><text x="70" y="45" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="11.5" fill="#FFE3E0">my name is</text><rect x="12" y="51" width="116" height="38" rx="6" fill="#fff"/><text x="70" y="80" text-anchor="middle" font-family="Chalkboard SE,Comic Sans MS,Marker Felt,cursive" font-weight="700" font-size="27" fill="#1B3A8A">Ken</text></svg></span>句型
-單字</div><div class="rc">
-<a class="card" href="G3%20-%20L1%20+%20L2/index.html">
-   <span class="n"></span><span class="ic"><svg class="nmsvg" viewBox="0 0 140 100" role="img" aria-label="name" style="width:1.4em;height:1em;vertical-align:-.14em;overflow:visible;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.35))"><rect x="3" y="3" width="134" height="94" rx="14" fill="#E53935" stroke="#9F1B1B" stroke-width="3"/><path d="M9 12q0-6 6-6h110q6 0 6 6v8H9z" fill="#fff" opacity=".16"/><text x="70" y="31" text-anchor="middle" font-family="Arial Black,Arial,Helvetica,sans-serif" font-weight="900" font-size="27" letter-spacing="2" fill="#fff">HELLO</text><text x="70" y="45" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="11.5" fill="#FFE3E0">my name is</text><rect x="12" y="51" width="116" height="38" rx="6" fill="#fff"/><text x="70" y="80" text-anchor="middle" font-family="Chalkboard SE,Comic Sans MS,Marker Felt,cursive" font-weight="700" font-size="27" fill="#1B3A8A">Ken</text></svg></span>
-   <span class="t">三年級</span><span class="d">What’s your name?／How old are you?　＋ 🔢 數字、👀 Sight Words、📝 Review 1</span></a>
-</div></div>
-</section>
+<section class="gr"><h2>三年級 <a href="G3%20-%20L1%20+%20L2/index.html">年級首頁 ➜</a></h2><div class="gl"><div class="gi"><span class="gn">1</span><span class="gx"><b><span class="gic">🎯</span>暖身題</b></span><span class="gb"><a href="G3%20-%20L1%20+%20L2/warmup.html">🎯 暖身 24 題</a></span></div><div class="gi"><span class="gn">2</span><span class="gx"><b><span class="gic"><svg class="nmsvg" viewBox="0 0 140 100" role="img" aria-label="name" style="width:1.4em;height:1em;vertical-align:-.14em;overflow:visible;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.35))"><rect x="3" y="3" width="134" height="94" rx="14" fill="#E53935" stroke="#9F1B1B" stroke-width="3"/><path d="M9 12q0-6 6-6h110q6 0 6 6v8H9z" fill="#fff" opacity=".16"/><text x="70" y="31" text-anchor="middle" font-family="Arial Black,Arial,Helvetica,sans-serif" font-weight="900" font-size="27" letter-spacing="2" fill="#fff">HELLO</text><text x="70" y="45" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="11.5" fill="#FFE3E0">my name is</text><rect x="12" y="51" width="116" height="38" rx="6" fill="#fff"/><text x="70" y="80" text-anchor="middle" font-family="Chalkboard SE,Comic Sans MS,Marker Felt,cursive" font-weight="700" font-size="27" fill="#1B3A8A">Ken</text></svg></span>Unit 1　名字</b><i>What’s your name?</i></span><span class="gb"><a href="G3%20-%20L1%20+%20L2/sight/index.html">👀 單字</a><a href="G3%20-%20L1%20+%20L2/unit1.html">💬 句型</a></span></div><div class="gi"><span class="gn">3</span><span class="gx"><b><span class="gic">🎂</span>Unit 2　年齡</b><i>How old are you?</i></span><span class="gb"><a href="G3%20-%20L1%20+%20L2/numbers/index.html">🔢 單字</a><a href="G3%20-%20L1%20+%20L2/unit2.html">💬 句型</a></span></div><div class="gi"><span class="gn">4</span><span class="gx"><b><span class="gic">📝</span>Review 1</b><i>介紹我自己</i></span><span class="gb"><a href="G3%20-%20L1%20+%20L2/review1.html">💬 句型</a><a href="review1/index.html">🃏 單字</a><a href="review1/games.html">🕹️ 遊戲</a></span></div><div class="gi"><span class="gn">5</span><span class="gx"><b><span class="gic">🌍</span>句型環遊世界</b></span><span class="gb"><a href="G3%20-%20L1%20+%20L2/sight/sight-world.html">🌍 別的國家怎麼說</a></span></div><div class="gi"><span class="gn">6</span><span class="gx"><b><span class="gic">🎮</span>複習遊戲</b></span><span class="gb"><a href="G3%20-%20L1%20+%20L2/games.html">🎮 10 種遊戲</a></span></div><div class="gi"><span class="gn">7</span><span class="gx"><b><span class="gic">🏠</span>三年級複習</b><i>在家複習</i></span><span class="gb"><a href="g3-review/index.html">🏠 三年級複習</a></span></div></div></section>
+<section class="gr"><h2>四年級 <a href="sentences/index.html">年級首頁 ➜</a></h2><div class="gl"><div class="gi"><span class="gn">1</span><span class="gx"><b><span class="gic">🎯</span>暖身題</b></span><span class="gb"><a href="words/quiz.html">🔤 單字 20 題</a><a href="sentences/warmup.html">💬 句型 22 題</a></span></div><div class="gi"><span class="gn">2</span><span class="gx"><b><span class="gic">👪</span>Unit 1　家人</b><i>Who’s he?</i></span><span class="gb"><a href="words/index.html">🔤 單字</a><a href="sentences/unit1.html">💬 句型</a></span></div><div class="gi"><span class="gn">3</span><span class="gx"><b><span class="gic">💼</span>Unit 2　職業</b><i>Is he a doctor?</i></span><span class="gb"><a href="words/jobs.html">💼 單字</a><a href="sentences/unit2.html">💬 句型</a></span></div><div class="gi"><span class="gn">4</span><span class="gx"><b><span class="gic">📝</span>Review 1</b><i>About my family</i></span><span class="gb"><a href="sentences/review1.html">💬 句型</a><a href="review1/index.html">🃏 單字</a><a href="review1/games.html">🕹️ 遊戲</a></span></div><div class="gi"><span class="gn">5</span><span class="gx"><b><span class="gic">🌍</span>句型環遊世界</b></span><span class="gb"><a href="sentences/world.html">🌍 別的國家怎麼說</a></span></div><div class="gi"><span class="gn">6</span><span class="gx"><b><span class="gic">🎮</span>複習遊戲</b></span><span class="gb"><a href="sentences/games.html">🎮 10 種遊戲</a></span></div><div class="gi"><span class="gn">7</span><span class="gx"><b><span class="gic">🏠</span>四年級複習</b><i>在家複習</i></span><span class="gb"><a href="g4-review/index.html">🏠 四年級複習</a></span></div></div></section>
 </main>
 
-<section id="cards">
-<a href="words/family.html"><span class="w">family</span><span class="z">家庭</span></a>
-<a href="words/parent.html"><span class="w">parent</span><span class="z">家長</span></a>
-<a href="words/mother.html"><span class="w">mother</span><span class="z">母親</span></a>
-<a href="words/father.html"><span class="w">father</span><span class="z">父親</span></a>
-<a href="words/brother.html"><span class="w">brother</span><span class="z">哥哥、弟弟</span></a>
-<a href="words/sister.html"><span class="w">sister</span><span class="z">姊姊、妹妹</span></a>
-<a href="words/son.html"><span class="w">son</span><span class="z">兒子</span></a>
-<a href="words/daughter.html"><span class="w">daughter</span><span class="z">女兒</span></a>
-<a href="words/grandfather.html"><span class="w">grandfather</span><span class="z">爺爺</span></a>
-<a href="words/grandmother.html"><span class="w">grandmother</span><span class="z">奶奶</span></a>
-<a href="words/uncle.html"><span class="w">uncle</span><span class="z">叔叔</span></a>
-<a href="words/aunt.html"><span class="w">aunt</span><span class="z">阿姨</span></a>
-<a href="words/cousin.html"><span class="w">cousin</span><span class="z">堂表兄弟姊妹</span></a>
-<a href="words/nephew.html"><span class="w">nephew</span><span class="z">姪子</span></a>
-<a href="words/niece.html"><span class="w">niece</span><span class="z">姪女</span></a>
-<a href="words/husband.html"><span class="w">husband</span><span class="z">丈夫</span></a>
-<a href="words/wife.html"><span class="w">wife</span><span class="z">妻子</span></a>
-</section>
-
 <footer>
-<a href="words/why-2.html">單字故事 ②</a><span class="sep">·</span>
-<a href="words/why-more.html">更多字的故事</a><span class="sep">·</span>
-<a href="words/daughter-gh.html">daughter 的 gh</a><span class="sep">·</span>
-<a href="words/older-younger.html">哥哥還是弟弟</a><span class="sep">·</span>
-<a href="words/family-tree-2.html">家庭樹 進階版（親戚）</a><span class="sep">·</span>
-<a href="words/world.html">🌍 家人單字環遊世界</a>
-<span class="sep">|</span>
 <a href="https://github.com/hsieny627-jpg/AI-Agent-Open-Code/blob/main/kahoot_20_%E9%A1%8C%E7%9B%AE%E8%88%87%E4%B8%8A%E6%9E%B6%E8%AA%AA%E6%98%8E.md">📋 Kahoot 20 題與上架說明</a><span class="sep">·</span>
 <a href="words/quiz-demo.html">🎮 暖身題試玩一題</a><span class="sep">·</span>
 <a href="offline.html">💾 離線版：沒有網路也能上課</a>
 </footer>
 
-<script>
-(function(){
- var b=document.getElementById("cardsBtn"),g=document.getElementById("cards");
- b.addEventListener("click",function(){
-  var on=g.classList.toggle("on");
-  b.setAttribute("aria-expanded",on?"true":"false");
-  if(on)g.scrollIntoView({block:"nearest",behavior:"smooth"});
- });
-})();
-</script>
 </body>
 </html>

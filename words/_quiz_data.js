@@ -19,7 +19,7 @@ const Q = [
  why:'以前的 family 指的是<b>整個家戶</b>，連家裡幫忙做事的人都算。<b>後來才縮小成一家人</b>。'},
 
 {q:'有人說 family 是 Father And Mother I Love You 拼出來的。這是真的嗎？',
- o:['假的，是後來的人倒著湊出來的','真的，造這個字的人取的','真的，英文課本第一課就有','真的，英國國王規定的'],a:0,x2:true,
+ o:['假的，是後來的人倒著湊出來的','真的，造這個字的人取的','真的，每個字母各代表一個英文字','真的，是英國小朋友發明的口訣'],a:0,x2:true,
  why:'family 真正的來源是拉丁文 <b>familia</b>。那句順口溜<b>查不到任何一手出處</b>，是後人倒著湊的。'},
 
 {q:'dad 這個字是怎麼來的？',
@@ -31,7 +31,7 @@ const Q = [
  why:'嘴唇一閉一開就是 <b>ma</b>，這是寶寶最早會的音。<b>全世界的媽媽就被這個音命名</b>。'},
 
 {q:'daughter 中間的 gh，以前的人怎麼處理？',
- o:['以前會發出聲音，後來才不唸','以前根本沒有這兩個字母','以前唸成 f','從古到今都不唸'],a:0,x2:true,
+ o:['以前會發出聲音，後來才不唸','以前根本沒有這兩個字母','以前唸成 g','從古到今都不唸'],a:0,x2:true,
  why:'gh 以前代表<b>喉嚨後面的摩擦音</b>，大約 1500～1700 年間消失。<b>聲音不見了，字母留著</b>。'},
 
 {q:'哪一個是「daughter 的 gh 以前真的有聲音」最有力的證據？',
@@ -39,7 +39,7 @@ const Q = [
  why:'這三個字是<b>同一個字的不同分支</b>。英文把聲音丟了，<b>德文和荷蘭文還留著</b>——放一次 Tochter 就聽得到。'},
 
 {q:'husband 裡面的 hus，就是今天的哪一個字？',
- o:['house（房子）','bus（公車）','his（他的）','nurse（護士）'],a:0,
+ o:['house（房子）','bus（公車）','his（他的）','hug（抱抱）'],a:0,
  why:'husband ＝ <b>hús（房子）</b> ＋ bóndi（住在裡面管這個家的人）。<b>字裡面藏了一間房子</b>。'},
 
 {q:'以前的 wīf（也就是 wife），可以用在誰身上？',
@@ -55,11 +55,11 @@ const Q = [
  why:'英文的親戚字比中文少很多，<b>aunt 一個字全包</b>。'},
 
 {q:'今天的 sister 是怎麼來的？',
- o:['英國人唸 sweostor、維京人唸 systir，住久了唸成 sister','從法國借來的','把 brother 改一個字母','老師取的'],a:0,
+ o:['英國人唸 sweostor、維京人唸 systir，住久了唸成 sister','從法國借來的','把 brother 改一個字母','從德文 Schwester 借來的'],a:0,
  why:'<b>同一個姊姊</b>，兩群人唸法不一樣。維京人在英格蘭住了幾百年，<b>兩種唸法混成今天的 sister</b>。'},
 
 {q:'grandfather 前面的 grand，是從哪裡借來的？',
- o:['法語','日語','英文本來就有','維京人帶來的'],a:0,x2:true,
+ o:['法語','德文','英文本來就有','維京人帶來的'],a:0,x2:true,
  why:'家人稱呼用的 <b>grand-</b> 是<b>從法語借來的</b>，裝在 father 前面就變成爸爸的爸爸。'},
 
 {q:'brother 以前寫成 brōþor，那個 þ 相當於今天的哪兩個字母？',
@@ -67,7 +67,7 @@ const Q = [
  why:'<b>þ</b> 是以前英文的一個字母，<b>長得像一面小旗子</b>，就是今天的 <b>th</b>。'},
 
 {q:'想說「我哥哥」和「我弟弟」，英文怎麼分？',
- o:['都是 brother，要分就加 older / younger','一個是 brother，一個是 bro','加 big / small','用兩個完全不同的字'],a:0,
+ o:['都是 brother，要分就加 older / younger','一個是 brother，一個是 bro','加 old / young','用兩個完全不同的字'],a:0,
  why:'英文<b>不用不同的字</b>分長幼，靠 <b>older brother</b> ／ <b>younger brother</b>。'},
 
 {q:'son 和 sun 的關係是？',
@@ -91,7 +91,7 @@ const Q = [
  why:'parens 就是「<b>把孩子生下來的人</b>」，所以爸爸媽媽都算 parent。'},
 
 {q:'「一位家長」和「兩位家長」，英文分別怎麼寫？',
- o:['a parent ／ parents','a parents ／ parent','parent ／ parent','a parent ／ parenties'],a:0,
+ o:['a parent ／ two parents','a parents ／ two parent','a parent ／ two parent','parent ／ two parents'],a:0,
  why:'一位就是 <b>a parent</b>，兩位以上<b>字尾加 s</b> 變 <b>parents</b>。'}
 ];
 

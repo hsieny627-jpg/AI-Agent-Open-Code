@@ -440,7 +440,8 @@ function pump(){
  var it=SQ.shift();if(!it)return;
  var t=sayText(it.t);
  if(!t){if(it.done)try{it.done()}catch(e){};setTimeout(pump,0);return}
- if(it.l!=='zh'&&window.AUD){var au=AUD[akey(t)];if(au&&aPlay(it,t,au))return}
+ /* 兩種聲音（2026-10-03）：it.v＝'m' 先查男聲的鑰匙 'm:…'，沒有才用一般的 */
+ if(it.l!=='zh'&&window.AUD){var au=(it.v&&AUD[it.v+':'+akey(t)])||AUD[akey(t)];if(au&&aPlay(it,t,au))return}
  var u;try{u=new SpeechSynthesisUtterance(t)}catch(e){if(it.done)try{it.done()}catch(e2){};return}
  if(it.l==='zh'){u.lang='zh-TW';if(VOXZH)u.voice=VOXZH;u.rate=RATE}
  else{u.lang='en-US';if(VOX)u.voice=VOX;u.rate=RATE}
@@ -479,11 +480,14 @@ function pump(){
    say(字,null,{keep:1}) ＝ 排隊，前一個講完才講（自動播、逐字用這個）
    say(句子,null,{done:fn}) ＝ 講完再做一件事
    say(句子,null,{hl:fn})   ＝ 念到第 k 個字就呼叫 fn(k)，念完呼叫 fn(-1)（念到哪亮到哪）
-   say(句子,null,{start:fn})＝ 真的開始出聲的那一刻呼叫 fn */
+   say(句子,null,{start:fn})＝ 真的開始出聲的那一刻呼叫 fn
+   say(句子,null,{v:'m'})   ＝ 用男聲（答句；2026-10-03 使用者指定問句、答句聽得出是不同人） */
+/* 問答兩種聲音：答句說女生名字（Emma、Wendy、Amy、Mia）➜ 問句男聲、答句女聲；其他 ➜ 問句女聲、答句男聲（Ken、Alan、Mike 一律男聲） */
+function qaV(ans){return /(Emma|Wendy|Amy|Mia)/.test(String(ans))?['m','']:['','m']}
 function say(txt,lang,opt){
  opt=opt||{};
  if(!txt||!sayText(txt)){if(opt.done)opt.done();return}
- var item={t:txt,l:lang,done:opt.done,hl:opt.hl,start:opt.start};
+ var item={t:txt,l:lang,done:opt.done,hl:opt.hl,start:opt.start,v:opt.v};
  if(opt.keep){if(SQ.length>4)SQ.length=4;SQ.push(item);pump();return}
  SQ.length=0;SID++;SBUSY=false;APLAY=false;
  if(window.HLCLR)try{HLCLR()}catch(e){}

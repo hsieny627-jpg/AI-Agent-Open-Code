@@ -123,6 +123,7 @@ body{margin:0;background:#000;color:#F2F2F2;
 ${PH.CSS}
 ${SRC.CSS}
 </style>
+${require('./_aud').head(__dirname)}
 </head>
 <body>
 <div id="hud">

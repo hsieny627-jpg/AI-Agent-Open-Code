@@ -10,16 +10,20 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 const fs = require('fs'), path = require('path'), { pathToFileURL } = require('url');
 /* 別的課次（例：「G3 - L1 + L2」）共用這一支：SITE_DIR ＝ 那個資料夾，它自己的 _verify.js 會設好 */
 const SITE_DIR = process.env.SITE_DIR ? path.resolve(process.env.SITE_DIR) : '';
-const DIR = (SITE_DIR || __dirname) + '/';
+/* 複習網站（2026-10-03）：REVIEW_DIR ＝ g3-review／g4-review，資料還是讀 SITE_DIR（那一課），頁面讀 REVIEW_DIR */
+const RDIR = process.env.REVIEW_DIR ? path.resolve(process.env.REVIEW_DIR) + '/' : '';
+const DDIR = (SITE_DIR || __dirname) + '/';
+const DIR = RDIR || DDIR;
 /* 這個課次自己的資料：不發音字母（SIL）、驚喜卡（SURP）、題目要不要每次重洗（CFG.random） */
-const SD = SITE_DIR ? require(DIR + '_data.js') : {};
-const SG = require(DIR + '_game_data.js');
-const SQ = SITE_DIR && fs.existsSync(DIR + '_quiz_data.js') ? require(DIR + '_quiz_data.js') : {};   /* review1 只有遊戲，沒有暖身題 */
+const SD = SITE_DIR ? require(DDIR + '_data.js') : {};
+const SG0 = require(DDIR + '_game_data.js');
+const SG = process.env.GAMES_ONLY ? Object.assign({}, SG0, { GAMES: process.env.GAMES_ONLY.split(',').map(id => SG0.GAMES.filter(m => m.id === id)[0]) }) : SG0;
+const SQ = SITE_DIR && fs.existsSync(DDIR + '_quiz_data.js') ? require(DDIR + '_quiz_data.js') : {};   /* review1 只有遊戲，沒有暖身題 */
 const NG = SG.GAMES.length;   /* 遊戲幾種（sentences、G3 是 10；review1 是 22） */
 const args = process.argv.slice(2);
 const ALL = ['index.html', 'warmup.html', 'unit1.html', 'unit2.html', 'games.html']
   .concat(require('fs').existsSync(DIR + 'review1.html') ? ['review1.html'] : []);   /* 2026-09-26：Review 1 */
-const FILES = args.length ? args : ALL;
+const FILES = args.length ? args : (RDIR ? ['u1.html', 'u2.html', 'games.html'] : ALL);
 const VPS = [{ n: '1024x768', width: 1024, height: 768 }, { n: '820x1180', width: 820, height: 1180 }];
 
 const OV = () => {
@@ -36,7 +40,7 @@ async function links(p, e) {
   const hs = await p.$$eval('a[href]', as => as.map(a => a.getAttribute('href')));
   for (const h of hs) {
     if (!h || /^(https?:|mailto:|#)/.test(h)) continue;
-    const fp = path.resolve(DIR, h.split('#')[0].split('?')[0]);
+    const fp = path.resolve(DIR, decodeURIComponent(h.split('#')[0].split('?')[0]));   /* %20 要先解開（2026-10-03：年級首頁連到 G3 的資料夾） */
     if (!fs.existsSync(fp)) e.push('連結指到不存在的檔案：' + h);
   }
 }
@@ -169,7 +173,53 @@ async function cardsPage(p, f, vp, e) {
     };
   }, OV.toString());
 
-  const first = await snap(); const N = first.n; let acts = 0, anyRed = false;
+  /* 上方分頁（2026-10-03）：每一個分頁、每一級（基礎／進階）的每一張卡都量版面、量語音檔；
+     接著切到「四 原本句型」照原本的規則全部再量一次（複習網站沒有原本句型，量完分頁就結束） */
+  let acts = 0;
+  if (await p.evaluate(() => !!window.TABM)) {
+    const T = await p.evaluate(() => TABM.map(t => ({ lb: t.lb, sub: t.sub ? t.sub.length : 0 })));
+    for (let t = 0; t < T.length; t++) for (let l = 0; l < Math.max(1, T[t].sub); l++) {
+      await p.evaluate(([t, l]) => setDeck(t, l), [t, l]); await p.waitForTimeout(250);
+      const tb = await p.evaluate(() => {
+        const r = document.getElementById('tabs').getBoundingClientRect(), c = document.getElementById('card').getBoundingClientRect();
+        const lv = document.getElementById('lvGrp'), on = [].slice.call(document.querySelectorAll('#tabs .tb.on'));
+        return { n: CARDS.length, over: r.bottom > c.top + 1, lv: !lv.hidden && lv.getBoundingClientRect().width > 0, sub: !!TABM[TCUR].sub, on: on.length };
+      });
+      const nm = '分頁「' + T[t].lb + '」' + (T[t].sub ? (l ? '進階' : '基礎') : '');
+      if (tb.over) e.push(nm + '：上方分頁按鈕壓到字卡');
+      if (tb.lv !== tb.sub) e.push(nm + '：基礎／進階按鈕' + (tb.sub ? '沒有出現' : '不該出現'));
+      if (tb.on !== 1) e.push(nm + '：亮著的分頁按鈕不是一個');
+      for (let i = 0; i < tb.n; i++) {
+        await p.evaluate(k => { stopPlay(); sayStop(); i = k; draw(0); }, i); await p.waitForTimeout(700);
+        const s = await snap(); acts++;
+        const w = nm + '第' + (i + 1) + '張';
+        if (s.ox > 0) e.push(w + '橫向溢出 ' + s.ox);
+        if (s.oy > 0) e.push(w + '縱向溢出 ' + s.oy);
+        if (s.spill > 2) e.push(w + '內容超出卡片 ' + s.spill + 'px');
+        if (s.hit) e.push(w + ' ' + s.hit);
+        if (s.k < 0.5) e.push(w + '被縮到 ' + s.k + '（字太小）');
+        /* 每一句都要有預錄語音檔（有 audio/aud.js 的網站才量）：問句、答句照兩種聲音查 */
+        const miss = await p.evaluate(() => {
+          if (!window.AUD) return [];
+          const c = CARDS[i], L = [], out = [];
+          const has = (t, v) => !!((v && AUD[v + ':' + akey(t)]) || AUD[akey(t)]);
+          if (c.type === 'pair') { const V = qaV(plain(c.atk)); L.push([plain(c.qtk), V[0]], [plain(c.atk), V[1]]); }
+          else if (c.type === 'eq') { L.push([plain(c.a)], [plain(c.b)]); if (c.c) L.push([plain(c.c)]); }
+          else if (c.type === 'echo') c.rows.forEach(r => { const V = qaV(r.a); L.push([r.q, V[0]], [r.a, V[1]]); });
+          else { const s0 = sentOf(); if (s0) L.push([s0]); }
+          (c.tk || []).forEach(function (t, k) { const el = document.querySelectorAll('#cardIn .tk')[k]; if (el) { const w = el.getAttribute('data-say'); if (w && /[A-Za-z]/.test(w)) L.push([w]); } });
+          L.forEach(x => { if (sayText(x[0]) && /[A-Za-z]/.test(sayText(x[0])) && !has(x[0], x[1])) out.push((x[1] ? x[1] + ':' : '') + x[0]); });
+          return out;
+        });
+        miss.forEach(m => e.push(w + '沒有語音檔：' + m));
+        if (await p.evaluate(() => !!CARDS[i].one && !document.getElementById('card').classList.contains('one'))) e.push(w + '一個字一張，但字沒有放大');
+      }
+    }
+    const orig = await p.evaluate(() => TABM.findIndex(t => t.lb === '原本句型'));
+    if (orig < 0) { acts += await rateBar(p, e); return acts; }
+    await p.evaluate(k => setDeck(k, 0), orig); await p.waitForTimeout(500);
+  }
+  const first = await snap(); const N = first.n; let anyRed = false;
   if (N < 5) e.push('卡片數只有 ' + N);
   for (let i = 0; i < N; i++) {
     if (i) { await p.click('#next'); await p.waitForTimeout(520); }
@@ -860,7 +910,7 @@ async function gamesPage(p, f, vp, e) {
     }
     await rewind(p, N);
   }
-  if (SG.R1) acts += await require(DIR + '_verify_r1.js')(p, e, snap, missCheck, quitG);   /* review1 遊戲自己的檢查 */
+  if (SG.R1) acts += await require(DDIR + '_verify_r1.js')(p, e, snap, missCheck, quitG);   /* review1 遊戲自己的檢查 */
   acts += await rateBar(p, e);
   return acts;
 }
@@ -870,8 +920,9 @@ async function homePage(p, f, vp, e) {
   const s = await p.evaluate(OVS => eval('(' + OVS + ')')(), OV.toString());
   if (s.ox > 0) e.push('首頁橫向溢出 ' + s.ox);
   if (s.oy > 0) e.push('首頁有捲軸（投影會被切掉）' + s.oy);
-  const n = await p.$$eval('#menu .card', a => a.length);
-  if (n < 4) e.push('首頁少於四個部分（' + n + '）');
+  /* 2026-10-03：年級首頁改成 7 項（words/_grades.js），一列一件事 */
+  const n = await p.$$eval('.gi', a => a.length);
+  if (n !== 7) e.push('年級首頁不是 7 項（' + n + '）');
   return 2;
 }
 

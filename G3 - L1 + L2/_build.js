@@ -9,3 +9,4 @@ process.env.SITE_DIR = __dirname;
 require('./_build_home');
 ['_build_cards', '_build_quiz', '_build_games', '_build_kahoot']
   .forEach(m => require('../sentences/' + m));
+require('../sentences/_build_review');   /* 2026-10-03：三年級複習／四年級複習網站（g3-review／g4-review）的首頁和遊戲 */

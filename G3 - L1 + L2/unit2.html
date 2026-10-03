@@ -184,6 +184,43 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 
 .reduce *{animation:none!important;transition:none!important}
 
+/* 一個字一張（2026-10-03）：字放大 */
+#card.one .tk .en{font-size:clamp(64px,17vh,170px)}
+#card.one .tk .zh{font-size:clamp(30px,6vh,60px)}
+#card.one .tk .ic{font-size:clamp(40px,9vh,90px)}
+/* 上方分頁（2026-10-03 使用者指定：句型一-1、一-2、二、三、四 原本句型；有的分頁再分 基礎／進階） */
+#tabs{position:fixed;left:0;right:0;top:calc(var(--safeT) + 6px);z-index:36;display:flex;flex-wrap:wrap;gap:6px;
+ justify-content:center;align-items:center;padding:0 clamp(70px,9vw,110px)}
+#tabs .tb{background:#141414;border:1px solid #333;color:#D8D8D8;border-radius:12px;font-family:inherit;
+ font-size:clamp(13px,1.9vh,17px);padding:clamp(6px,.9vh,9px) clamp(9px,1.1vw,14px);white-space:nowrap;cursor:pointer;line-height:1.15}
+#tabs .tb b{color:#FFD66B;margin-right:5px}
+#tabs .tb.on{background:#22303A;border-color:var(--acc);color:#fff;font-weight:700}
+#tabs .lv{display:inline-flex;gap:3px;background:#101010;border:1px solid #2A2A2A;border-radius:999px;padding:3px;margin-left:6px}
+#tabs .lv[hidden]{display:none}
+#tabs .lv button{border:0;background:none;color:#BBB;font-family:inherit;border-radius:999px;cursor:pointer;
+ font-size:clamp(13px,1.9vh,17px);padding:clamp(5px,.8vh,8px) clamp(10px,1.2vw,15px)}
+#tabs .lv button.on{background:var(--acc);color:#000;font-weight:700}
+body.hastabs #dots{top:calc(var(--safeT) + var(--tabH,48px) + 10px)}
+body.hastabs #stage{padding-top:calc(var(--safeT) + var(--tabH,48px) + clamp(26px,4vh,40px))}
+/* 按鈕列（2026-10-03 使用者指定）：第一排 左 ＝ 中文／英文／圖示 Y/N，正中央 ＝ 🔊 唸 1 次，右 ＝ 🔊 唸 3 次、▶ 自動播放；
+   其他按鈕在第二排 */
+/* 左右箭頭往字卡中央靠近一點（2026-10-03 使用者指定）：箭頭靠在翻頁區的內側（貼近字卡），翻頁區本身不伸進字卡，不碰到句子 */
+.nav.l{justify-content:flex-end;padding-right:2px}
+.nav.r{justify-content:flex-start;padding-left:2px}
+.nav span{display:flex;flex-direction:column;align-items:center}
+#bar.cbar{flex-direction:column;flex-wrap:nowrap;gap:clamp(4px,.7vh,7px)}
+#bar.cbar .r1{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+ align-items:center;gap:clamp(6px,1vw,12px)}
+#bar.cbar .r1 .L{justify-self:end}
+#bar.cbar .r1 .R{justify-self:start;display:inline-flex;gap:clamp(5px,.8vw,9px)}
+#bar.cbar .r2{display:flex;flex-wrap:wrap;gap:clamp(4px,.7vh,7px);justify-content:center;align-items:center}
+#bar.cbar .r2 button,#bar.cbar .r2 a{font-size:clamp(11.5px,1.65vh,14.5px);padding:clamp(6px,.95vh,9px) clamp(6px,.8vw,12px)}
+#bar.cbar .r2 .grp button{font-size:clamp(11px,1.6vh,14px);padding:clamp(5px,.85vh,8px) clamp(5px,.7vw,10px)}
+#bar.cbar .r2{gap:clamp(3px,.5vw,7px)}
+#bar.cbar .r1 button{font-size:clamp(14px,2.1vh,18px)}
+#bar.cbar #sayBtn{font-size:clamp(16px,2.5vh,22px);font-weight:700;border-color:var(--acc);
+ padding:clamp(9px,1.4vh,13px) clamp(16px,2.2vw,26px)}
+#bar.cbar #play.on,#bar.cbar #say3.on{background:var(--acc);color:#000;font-weight:700}
 #stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
  padding:calc(var(--safeT) + clamp(34px,5.4vh,52px)) clamp(76px,9.6vw,112px)
          calc(var(--barH,72px) + clamp(6px,1vh,12px)) clamp(76px,9.6vw,112px);
@@ -657,6 +694,7 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 </style>
 </head>
 <body>
+<nav id="tabs"><button class="tb" data-t="0"><b>一-1</b>How old are you?</button><button class="tb" data-t="1"><b>一-2</b>中英語序</button><button class="tb" data-t="2"><b>二</b>I’m ten years old.</button><button class="tb" data-t="3"><b>三</b>一問一答</button><button class="tb" data-t="4"><b>四</b>原本句型</button><span class="lv" id="lvGrp" hidden><button data-l="0">基礎</button><button data-l="1">進階</button></span></nav>
 <div id="dots"></div>
 <button class="nav l" id="prev" aria-label="上一張"><span><i>◀</i><b>上一張</b></span></button>
 <button class="nav r" id="next" aria-label="下一張"><span><i>▶</i><b>下一張</b></span></button>
@@ -666,21 +704,24 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 <div id="toc" aria-label="目次"><div class="th"><h2>📑 目次　點一張，直接跳過去</h2>
  <button class="tx">✕ 關閉</button></div><div class="tg" id="tocG"></div></div>
 
-<nav id="bar">
+<nav id="bar" class="cbar">
+ <div class="r1">
+  <span class="grp L" id="ynGrp">
+   <button id="bZh" class="on">中文 Y</button>
+   <button id="bEn" class="on">英文 Y</button>
+   <button id="bIc" class="on">圖示 Y</button>
+  </span>
+  <button id="sayBtn" class="big">🔊 唸 1 次</button>
+  <span class="R"><button id="say3">🔊 唸 3 次</button><button id="play">▶ 自動播放</button></span>
+ </div>
+ <div class="r2">
  <button id="tocBtn">📑 目次</button>
- <span class="grp" id="ynGrp">
-  <button id="bEn" class="on">英文 Y</button>
-  <button id="bZh" class="on">中文 Y</button>
-  <button id="bIc" class="on">圖示 Y</button>
-  <button id="bFull" class="on">整句中文 Y</button>
- </span>
+ <span class="grp"><button id="bFull" class="on">整句中文 Y</button></span>
  <button id="scBtn">🎞 情境</button>
  <span class="grp" id="revGrp">
   <button data-r="word" class="on">🎬 逐字</button>
   <button data-r="whole">📄 整句</button>
  </span>
- <button id="play">▶ 自動播</button>
- <button id="sayBtn">🔊 念一次</button>
  <button id="rvBtn">📝 複習</button>
  <button id="zhBtn">🔤 點中文唸 中文</button>
  <span class="grp" id="rateGrp">
@@ -691,6 +732,7 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
  </span>
  <a href="unit1.html">⬅ Unit 1</a>
  <a href="index.html">🏠 首頁</a>
+ </div>
 </nav>
 
 <script>
@@ -786,7 +828,8 @@ function pump(){
  var it=SQ.shift();if(!it)return;
  var t=sayText(it.t);
  if(!t){if(it.done)try{it.done()}catch(e){};setTimeout(pump,0);return}
- if(it.l!=='zh'&&window.AUD){var au=AUD[akey(t)];if(au&&aPlay(it,t,au))return}
+ /* 兩種聲音（2026-10-03）：it.v＝'m' 先查男聲的鑰匙 'm:…'，沒有才用一般的 */
+ if(it.l!=='zh'&&window.AUD){var au=(it.v&&AUD[it.v+':'+akey(t)])||AUD[akey(t)];if(au&&aPlay(it,t,au))return}
  var u;try{u=new SpeechSynthesisUtterance(t)}catch(e){if(it.done)try{it.done()}catch(e2){};return}
  if(it.l==='zh'){u.lang='zh-TW';if(VOXZH)u.voice=VOXZH;u.rate=RATE}
  else{u.lang='en-US';if(VOX)u.voice=VOX;u.rate=RATE}
@@ -825,11 +868,14 @@ function pump(){
    say(字,null,{keep:1}) ＝ 排隊，前一個講完才講（自動播、逐字用這個）
    say(句子,null,{done:fn}) ＝ 講完再做一件事
    say(句子,null,{hl:fn})   ＝ 念到第 k 個字就呼叫 fn(k)，念完呼叫 fn(-1)（念到哪亮到哪）
-   say(句子,null,{start:fn})＝ 真的開始出聲的那一刻呼叫 fn */
+   say(句子,null,{start:fn})＝ 真的開始出聲的那一刻呼叫 fn
+   say(句子,null,{v:'m'})   ＝ 用男聲（答句；2026-10-03 使用者指定問句、答句聽得出是不同人） */
+/* 問答兩種聲音：答句說女生名字（Emma、Wendy、Amy、Mia）➜ 問句男聲、答句女聲；其他 ➜ 問句女聲、答句男聲（Ken、Alan、Mike 一律男聲） */
+function qaV(ans){return /(Emma|Wendy|Amy|Mia)/.test(String(ans))?['m','']:['','m']}
 function say(txt,lang,opt){
  opt=opt||{};
  if(!txt||!sayText(txt)){if(opt.done)opt.done();return}
- var item={t:txt,l:lang,done:opt.done,hl:opt.hl,start:opt.start};
+ var item={t:txt,l:lang,done:opt.done,hl:opt.hl,start:opt.start,v:opt.v};
  if(opt.keep){if(SQ.length>4)SQ.length=4;SQ.push(item);pump();return}
  SQ.length=0;SID++;SBUSY=false;APLAY=false;
  if(window.HLCLR)try{HLCLR()}catch(e){}
@@ -1215,7 +1261,7 @@ function lookShow(en,cb){
 function lookHide(){if(lookT){clearInterval(lookT);lookT=null}var m=document.getElementById('look');if(m)m.classList.remove('on')}
 
 
-var CARDS=[{"type":"focus","eqRow":1,"left":1,"title":"How old ＝ 問「幾歲」","rows":[["What","什麼","❓"],["How","怎麼樣","🤔"],["How old","幾歲","🎂"]],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👧","b":"How old are you?","r":"👦","rt":"❓","use":"想知道對方幾歲，就用 How old。"}},{"type":"sent","zh":"你幾歲？","tk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👩","b":"How old are you?","r":"👦","rt":"🎂","use":"問對方「你幾歲？」"}},{"type":"order","zhRow":[["你","<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","b"],["是","＝","y"],["幾歲","🎂","r"],["？","","g"]],"enRow":[["How old","🎂","r"],["are","＝","y"],["you","<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","b"],["?","","g"]],"say":"How old are you?","scene":{"at":"🔁 中文 ➜ 英文","bg":"🔁","l":"🧒","ln":"中文","b":"你幾歲？","bzh":1,"r":"🧒","rn":"英文","b2":"How old are you?","use":"中文「幾歲」在最後，英文 How old 在最前面。"}},{"type":"sent","zh":"我是十歲。","slot":"age","tk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👩","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"說自己幾歲：I’m ＋ 數字 ＋ years old。"}},{"type":"morph","a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1}],"say":"I'm","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"I am","r":"🐇","rn":"說快一點","b2":"I’m","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","all":1,"a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"I am ten years old.","r":"🐇","rn":"說快一點","b2":"I’m ten years old.","use":"意思一模一樣，只是說得比較快。"}},{"type":"sent","zh":"我是十歲。","slot":"age","tk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🛝 操場","bg":"🛝","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten.","use":"更短的回答：I’m ＋ 數字。"}},{"type":"eq","left":1,"a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"note":"years old 可以省略","scene":{"at":"✂️ 省略","bg":"✂️","l":"🐢","ln":"說完整","b":"I’m ten years old.","r":"🐇","rn":"省略","b2":"I’m ten.","use":"years old 可以省略，意思一樣。"}},{"type":"eq","left":1,"all":1,"a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"c":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"✂️ 三句一樣","bg":"✂️","l":"🐢","ln":"說完整","b":"I am ten years old.","r":"🐇","rn":"最短","b2":"I’m ten.","use":"三種說法，意思都一樣。"}},{"type":"morph","a":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"are","zh":"是","ic":"＝","ri":"a"}],"b":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"'re","zh":"是","ic":"＝","tight":1}],"say":"You're","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"You are","r":"🐇","rn":"說快一點","b2":"You’re","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","a":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"are","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"'re","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"You are ten.","r":"🐇","rn":"說快一點","b2":"You’re ten.","use":"意思一模一樣，只是說得比較快。"}},{"type":"echo","rows":[{"q":"How old are you?","qk":"you","qzh":"你 幾歲？","a":"I’m ______ years old.","ak":"I","azh":"我 是 ______ 歲。","cls":"b"},{"q":"How old are you?","qk":"you","qzh":"你 幾歲？","a":"I’m ______.","ak":"I","azh":"我 是 ______ 歲。","cls":"b"}],"scene":{"at":"🎤 一問一答","bg":"💬","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten.","use":"問 you（你），答 I（我）。"}},{"type":"focus","title":"How old are you? 要答什麼？","rows":[["I’m ten years old.","✅ 幾歲","✅"],["I’m ten.","✅ 幾歲","✅"],["I’m Mike.","❌ 這是名字","❌"],["I’m ten year old.","❌ years 要有 s","❌"]],"scene":{"at":"🎤 一問一答","bg":"💬","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"問幾歲，就答幾歲。"}},{"type":"focus","title":"問什麼，就答什麼","rows":[["What’s your name?","<svg class=\"nmsvg\" viewBox=\"0 0 140 100\" role=\"img\" aria-label=\"name\" style=\"width:1.4em;height:1em;vertical-align:-.14em;overflow:visible;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.35))\"><rect x=\"3\" y=\"3\" width=\"134\" height=\"94\" rx=\"14\" fill=\"#E53935\" stroke=\"#9F1B1B\" stroke-width=\"3\"/><path d=\"M9 12q0-6 6-6h110q6 0 6 6v8H9z\" fill=\"#fff\" opacity=\".16\"/><text x=\"70\" y=\"31\" text-anchor=\"middle\" font-family=\"Arial Black,Arial,Helvetica,sans-serif\" font-weight=\"900\" font-size=\"27\" letter-spacing=\"2\" fill=\"#fff\">HELLO</text><text x=\"70\" y=\"45\" text-anchor=\"middle\" font-family=\"Arial,Helvetica,sans-serif\" font-weight=\"700\" font-size=\"11.5\" fill=\"#FFE3E0\">my name is</text><rect x=\"12\" y=\"51\" width=\"116\" height=\"38\" rx=\"6\" fill=\"#fff\"/><text x=\"70\" y=\"80\" text-anchor=\"middle\" font-family=\"Chalkboard SE,Comic Sans MS,Marker Felt,cursive\" font-weight=\"700\" font-size=\"27\" fill=\"#1B3A8A\">Ken</text></svg> 答名字","<svg class=\"nmsvg\" viewBox=\"0 0 140 100\" role=\"img\" aria-label=\"name\" style=\"width:1.4em;height:1em;vertical-align:-.14em;overflow:visible;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.35))\"><rect x=\"3\" y=\"3\" width=\"134\" height=\"94\" rx=\"14\" fill=\"#E53935\" stroke=\"#9F1B1B\" stroke-width=\"3\"/><path d=\"M9 12q0-6 6-6h110q6 0 6 6v8H9z\" fill=\"#fff\" opacity=\".16\"/><text x=\"70\" y=\"31\" text-anchor=\"middle\" font-family=\"Arial Black,Arial,Helvetica,sans-serif\" font-weight=\"900\" font-size=\"27\" letter-spacing=\"2\" fill=\"#fff\">HELLO</text><text x=\"70\" y=\"45\" text-anchor=\"middle\" font-family=\"Arial,Helvetica,sans-serif\" font-weight=\"700\" font-size=\"11.5\" fill=\"#FFE3E0\">my name is</text><rect x=\"12\" y=\"51\" width=\"116\" height=\"38\" rx=\"6\" fill=\"#fff\"/><text x=\"70\" y=\"80\" text-anchor=\"middle\" font-family=\"Chalkboard SE,Comic Sans MS,Marker Felt,cursive\" font-weight=\"700\" font-size=\"27\" fill=\"#1B3A8A\">Ken</text></svg>"],["How old are you?","🎂 答幾歲","🎂"]],"scene":{"at":"🎤 問什麼答什麼","bg":"💬","l":"<svg class=\"nmsvg\" viewBox=\"0 0 140 100\" role=\"img\" aria-label=\"name\" style=\"width:1.4em;height:1em;vertical-align:-.14em;overflow:visible;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.35))\"><rect x=\"3\" y=\"3\" width=\"134\" height=\"94\" rx=\"14\" fill=\"#E53935\" stroke=\"#9F1B1B\" stroke-width=\"3\"/><path d=\"M9 12q0-6 6-6h110q6 0 6 6v8H9z\" fill=\"#fff\" opacity=\".16\"/><text x=\"70\" y=\"31\" text-anchor=\"middle\" font-family=\"Arial Black,Arial,Helvetica,sans-serif\" font-weight=\"900\" font-size=\"27\" letter-spacing=\"2\" fill=\"#fff\">HELLO</text><text x=\"70\" y=\"45\" text-anchor=\"middle\" font-family=\"Arial,Helvetica,sans-serif\" font-weight=\"700\" font-size=\"11.5\" fill=\"#FFE3E0\">my name is</text><rect x=\"12\" y=\"51\" width=\"116\" height=\"38\" rx=\"6\" fill=\"#fff\"/><text x=\"70\" y=\"80\" text-anchor=\"middle\" font-family=\"Chalkboard SE,Comic Sans MS,Marker Felt,cursive\" font-weight=\"700\" font-size=\"27\" fill=\"#1B3A8A\">Ken</text></svg>","ln":"問名字","b":"What’s your name?","r":"🎂","rn":"問幾歲","b2":"How old are you?","use":"兩個問題，答案不一樣。"}},{"type":"pair","cls":"b","slot":"age","qic":"🎂","aic":"🔟","qtk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"你 幾歲？","azh":"我 是 十 歲。","scene":{"at":"🏫 教室","bg":"🏫","l":"👩‍🏫","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"老師問你幾歲，這樣回答。"}},{"type":"pair","cls":"b","slot":"age","qic":"🎂","aic":"🔟","qtk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"你 幾歲？","azh":"我 是 十 歲。","scene":{"at":"🏫 教室","bg":"🏫","l":"👩‍🏫","b":"How old are you?","r":"👧","b2":"I’m ten.","use":"也可以只說 I’m ＋ 數字。"}},{"type":"focus","title":"淺灰色的字母 ＝ 不發音","rows":[["are","e 不唸","🤫"],["you","o 不唸","🤫"],["years","a 不唸","🤫"],["eight","gh 不唸","🤫"],["nine","e 不唸","🤫"],["twelve","e 不唸","🤫"]],"scene":{"at":"🤫 小聲一點","bg":"🤫","l":"🧒","b":"eight","r":"🧒","b2":"nine","use":"淺灰色的字母，唸的時候不發音。"}}], UNIT=2, SUB={"name":{"basic":[["Ken","Ken","<img class=\"av\" src=\"avatars/ken.png\" alt=\"ken\">"],["Alan","Alan","<img class=\"av\" src=\"avatars/alan.png\" alt=\"alan\">"],["Wendy","Wendy","<img class=\"av\" src=\"avatars/wendy.png\" alt=\"wendy\">"],["Mike","Mike","<img class=\"av\" src=\"avatars/mike.png\" alt=\"mike\">"],["Emma","Emma","<img class=\"av\" src=\"avatars/emma.png\" alt=\"emma\">"]],"adv":[]},"age":{"basic":[["six","六","6️⃣"],["seven","七","7️⃣"],["eight","八","8️⃣"],["nine","九","9️⃣"],["ten","十","🔟"],["eleven","十一","1️⃣1️⃣"],["twelve","十二","1️⃣2️⃣"]],"adv":[]},"age3":{"basic":[["eight","八","8️⃣"],["nine","九","9️⃣"],["ten","十","🔟"]],"adv":[]},"like":{"lb":"🔥 最愛","la":"✨ 還有","basic":[["basketball","籃球","🏀"],["dodgeball","躲避球","🔴"],["Pokémon cards","寶可夢卡","🃏"],["Switch games","Switch 遊戲","🎮"],["Minecraft","當個創世神","⛏️"],["LEGO","樂高","🧱"],["comics","漫畫","📖"],["recess","下課時間","🔔"],["PE class","體育課","🤸"],["bubble tea","珍珠奶茶","🧋"]],"adv":[["books","書","📚"],["baseball","棒球","⚾"],["soccer","足球","⚽"],["video games","電玩","🕹️"],["art class","美勞課","🎨"],["music","音樂","🎵"],["ice cream","冰淇淋","🍦"],["fried chicken","炸雞","🍗"],["dogs","狗","🐶"],["cats","貓","🐱"]]},"liketo":{"lb":"🔥 最愛","la":"✨ 還有","basic":[["play basketball","打籃球","🏀"],["play dodgeball","打躲避球","🔴"],["play tag","玩鬼抓人","🏃"],["play video games","打電動","🎮"],["collect Pokémon cards","收集寶可夢卡","🃏"],["build LEGO","組樂高","🧱"],["draw","畫畫","✏️"],["sing","唱歌","🎤"],["dance","跳舞","💃"],["read","閱讀","📖"]],"adv":[["swim","游泳","🏊"],["cook","做菜","🍳"],["play baseball","打棒球","⚾"],["play badminton","打羽毛球","🏸"],["play the piano","彈鋼琴","🎹"],["play the guitar","彈吉他","🎸"],["ride my bike","騎我的腳踏車","🚲"],["skateboard","溜滑板","🛹"],["jump rope","跳繩","🪢"],["play with my dog","和我的狗玩","🐕"]]}}, RVG=[{"t":"第 1～4 張","q":[{"q":"How old 是在問什麼？","o":["幾歲","名字","什麼東西","在哪裡"],"h":"How old ＝ 問年紀（幾歲）。"},{"q":"How old are you? 的中文是？","o":["你幾歲？","你的名字是什麼？","你好嗎？","我幾歲？"],"h":"How old ＝ 幾歲，you ＝ 你。"},{"q":"「你幾歲？」英文第一個字是？","o":["How","You","Are","Old"],"h":"中文「幾歲」在最後，英文 How old 在最前面。"},{"q":"I’m eight years old. 的中文是？","o":["我是八歲。","我是八年。","你是八歲。","我的名字是八。"],"h":"years old ＝ 歲。"}]},{"t":"第 5～8 張","q":[{"q":"I am nine years old. 縮寫成？","o":["I’m nine years old.","Im nine years old.","I’am nine years old.","My nine years old."],"h":"I am ➜ I’m，紅色的 ’ 藏起來的是 a。"},{"q":"I’m ten. 的意思跟哪一句一樣？","o":["I’m ten years old.","I’m ten year.","My name is ten.","How old are you?"],"h":"years old 可以省略，意思一樣。"},{"q":"How old are you? 可以怎麼回答？","o":["I’m ten.","I’m Ken.","My name is ten.","You’re ten."],"h":"問幾歲，就答幾歲。"},{"q":"eight 的哪兩個字母不發音？","o":["gh","ei","ht","eg"],"h":"eight 的 gh 淺灰色，不發音。"}]},{"t":"第 9～12 張","q":[{"q":"You are 縮寫成？","o":["You’re","Your","Youre","You’are"],"h":"are 的 a 被紅色的 ’ 藏起來：You are ➜ You’re。"},{"q":"問 you（你），答句開頭用哪一個？","o":["I","You","My","Your"],"h":"問「你」，就答「我」：you ➜ I。"},{"q":"哪一句「不是」在回答 How old are you?","o":["I’m Mike.","I’m nine.","I’m nine years old.","I’m twelve."],"h":"I’m Mike. 是在說名字，不是幾歲。"},{"q":"哪一句是對的？","o":["I’m nine years old.","I’m nine year old.","I’m nine years.","I nine years old."],"h":"years 要有 s，old 不能少。"}]},{"t":"第 13～17 張","q":[{"q":"What’s your name? 要答什麼？","o":["名字","幾歲","天氣","東西"],"h":"What’s your name? ➜ 答名字。"},{"q":"「我十一歲。」英文是？","o":["I’m eleven years old.","I’m eleven year old.","My eleven years old.","I eleven years old."],"h":"I’m ＋ 數字 ＋ years old。"},{"q":"twelve 的哪一個字母不發音？","o":["最後的 e","t","w","v"],"h":"twelve 最後的 e 淺灰色，不發音。"},{"q":"you 的哪一個字母不發音？","o":["o","y","u","都要發音"],"h":"you 的 o 淺灰色，不發音。"}]}];
+var CARDS=[{"type":"sent","one":1,"tk":[{"en":"How","zh":"如何","ic":"🤔"}]},{"type":"sent","one":1,"tk":[{"en":"old","zh":"老的","ic":"👴"}]},{"type":"sent","one":1,"tk":[{"en":"are","zh":"是","ic":"＝"}]},{"type":"sent","one":1,"tk":[{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"}]},{"type":"sent","zh":"你幾歲？","tk":[{"en":"How","zh":"如何","ic":"🤔"},{"en":"old","zh":"老的","ic":"👴"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}]},{"type":"sent","zh":"______ 幾歲？","tk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"______","zh":"______","ic":"","blank":1},{"en":"?","zh":"？","ic":"","tight":1}]},{"type":"sent","zh":"你幾歲？","tk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👩","b":"How old are you?","r":"👦","rt":"🎂","use":"問對方「你幾歲？」"}}], UNIT=2, SUB={"name":{"basic":[["Ken","Ken","<img class=\"av\" src=\"avatars/ken.png\" alt=\"ken\">"],["Alan","Alan","<img class=\"av\" src=\"avatars/alan.png\" alt=\"alan\">"],["Wendy","Wendy","<img class=\"av\" src=\"avatars/wendy.png\" alt=\"wendy\">"],["Mike","Mike","<img class=\"av\" src=\"avatars/mike.png\" alt=\"mike\">"],["Emma","Emma","<img class=\"av\" src=\"avatars/emma.png\" alt=\"emma\">"]],"adv":[]},"age":{"basic":[["six","六","6️⃣"],["seven","七","7️⃣"],["eight","八","8️⃣"],["nine","九","9️⃣"],["ten","十","🔟"],["eleven","十一","1️⃣1️⃣"],["twelve","十二","1️⃣2️⃣"]],"adv":[]},"age3":{"basic":[["eight","八","8️⃣"],["nine","九","9️⃣"],["ten","十","🔟"]],"adv":[]},"like":{"lb":"🔥 最愛","la":"✨ 還有","basic":[["basketball","籃球","🏀"],["dodgeball","躲避球","🔴"],["Pokémon cards","寶可夢卡","🃏"],["Switch games","Switch 遊戲","🎮"],["Minecraft","當個創世神","⛏️"],["LEGO","樂高","🧱"],["comics","漫畫","📖"],["recess","下課時間","🔔"],["PE class","體育課","🤸"],["bubble tea","珍珠奶茶","🧋"]],"adv":[["books","書","📚"],["baseball","棒球","⚾"],["soccer","足球","⚽"],["video games","電玩","🕹️"],["art class","美勞課","🎨"],["music","音樂","🎵"],["ice cream","冰淇淋","🍦"],["fried chicken","炸雞","🍗"],["dogs","狗","🐶"],["cats","貓","🐱"]]},"liketo":{"lb":"🔥 最愛","la":"✨ 還有","basic":[["play basketball","打籃球","🏀"],["play dodgeball","打躲避球","🔴"],["play tag","玩鬼抓人","🏃"],["play video games","打電動","🎮"],["collect Pokémon cards","收集寶可夢卡","🃏"],["build LEGO","組樂高","🧱"],["draw","畫畫","✏️"],["sing","唱歌","🎤"],["dance","跳舞","💃"],["read","閱讀","📖"]],"adv":[["swim","游泳","🏊"],["cook","做菜","🍳"],["play baseball","打棒球","⚾"],["play badminton","打羽毛球","🏸"],["play the piano","彈鋼琴","🎹"],["play the guitar","彈吉他","🎸"],["ride my bike","騎我的腳踏車","🚲"],["skateboard","溜滑板","🛹"],["jump rope","跳繩","🪢"],["play with my dog","和我的狗玩","🐕"]]}}, RVG=[{"t":"第 1～4 張","q":[{"q":"How old 是在問什麼？","o":["幾歲","名字","什麼東西","在哪裡"],"h":"How old ＝ 問年紀（幾歲）。"},{"q":"How old are you? 的中文是？","o":["你幾歲？","你的名字是什麼？","你好嗎？","我幾歲？"],"h":"How old ＝ 幾歲，you ＝ 你。"},{"q":"「你幾歲？」英文第一個字是？","o":["How","You","Are","Old"],"h":"中文「幾歲」在最後，英文 How old 在最前面。"},{"q":"I’m eight years old. 的中文是？","o":["我是八歲。","我是八年。","你是八歲。","我的名字是八。"],"h":"years old ＝ 歲。"}]},{"t":"第 5～8 張","q":[{"q":"I am nine years old. 縮寫成？","o":["I’m nine years old.","Im nine years old.","I’am nine years old.","My nine years old."],"h":"I am ➜ I’m，紅色的 ’ 藏起來的是 a。"},{"q":"I’m ten. 的意思跟哪一句一樣？","o":["I’m ten years old.","I’m ten year.","My name is ten.","How old are you?"],"h":"years old 可以省略，意思一樣。"},{"q":"How old are you? 可以怎麼回答？","o":["I’m ten.","I’m Ken.","My name is ten.","You’re ten."],"h":"問幾歲，就答幾歲。"},{"q":"eight 的哪兩個字母不發音？","o":["gh","ei","ht","eg"],"h":"eight 的 gh 淺灰色，不發音。"}]},{"t":"第 9～12 張","q":[{"q":"You are 縮寫成？","o":["You’re","Your","Youre","You’are"],"h":"are 的 a 被紅色的 ’ 藏起來：You are ➜ You’re。"},{"q":"問 you（你），答句開頭用哪一個？","o":["I","You","My","Your"],"h":"問「你」，就答「我」：you ➜ I。"},{"q":"哪一句「不是」在回答 How old are you?","o":["I’m Mike.","I’m nine.","I’m nine years old.","I’m twelve."],"h":"I’m Mike. 是在說名字，不是幾歲。"},{"q":"哪一句是對的？","o":["I’m nine years old.","I’m nine year old.","I’m nine years.","I nine years old."],"h":"years 要有 s，old 不能少。"}]},{"t":"第 13～17 張","q":[{"q":"What’s your name? 要答什麼？","o":["名字","幾歲","天氣","東西"],"h":"What’s your name? ➜ 答名字。"},{"q":"「我十一歲。」英文是？","o":["I’m eleven years old.","I’m eleven year old.","My eleven years old.","I eleven years old."],"h":"I’m ＋ 數字 ＋ years old。"},{"q":"twelve 的哪一個字母不發音？","o":["最後的 e","t","w","v"],"h":"twelve 最後的 e 淺灰色，不發音。"},{"q":"you 的哪一個字母不發音？","o":["o","y","u","都要發音"],"h":"you 的 o 淺灰色，不發音。"}]}];
 var i=0, show={en:true,zh:true,ic:true,full:true}, reveal='word', step=0, playing=0;
 var scenes=false, zhSay='zh';   /* zhSay：點中文要唸中文還是唸對應的英文 */
 var MOR=0, morT=[], demoT=null, demoN=0;
@@ -1300,7 +1346,7 @@ function sayEls(els,opt){
   /* 一格裡有兩個英文字（How old、years old）：第 k 個「字」要對到第幾格（2026-09-26 修：原本亮到下一格去） */
   var map=[];g.forEach(function(x,gi){x.t.split(/s+/).forEach(function(w){if(w)map.push(gi)})});
   var last=-2;
-  say(txt,null,{keep:opt.keep,done:opt.done,start:opt.start,hl:function(k){
+  say(txt,null,{keep:opt.keep,done:opt.done,start:opt.start,v:opt.v,hl:function(k){
     var gi=k>=0?map[k]:-1;if(gi==null)gi=-1;
     g.forEach(function(x){x.els.forEach(function(e){e.classList.remove('spk')})});
     if(gi>=0&&g[gi])g[gi].els.forEach(function(e){e.classList.add('spk')});
@@ -1310,7 +1356,7 @@ function sayEls(els,opt){
 /* 唸一個東西（一個字、一個按鈕），唸的時候它整個亮 */
 function sayOne(el,txt,opt){
   opt=opt||{};
-  say(txt,null,{keep:opt.keep,done:opt.done,hl:function(k){
+  say(txt,null,{keep:opt.keep,done:opt.done,v:opt.v,hl:function(k){
     if(k>=0){el.classList.add('spk');
       if(el.classList.contains('tight')&&el.previousElementSibling)el.previousElementSibling.classList.add('spk')}
     else{el.classList.remove('spk');if(el.previousElementSibling)el.previousElementSibling.classList.remove('spk')}
@@ -1352,9 +1398,12 @@ function hidRed(h,mate){
 /* 情境：兩個人演一次（使用者 2026-09-24 指定改版）。對話框點了就唸 */
 function sceneHTML(c){
   var s=c.scene;if(!s)return '';
+  /* 問句、答句兩種聲音（2026-10-03）：有答句（b2）才分 */
+  var SV=s.b2?qaV(s.b2):['',''];
   var bub=function(txt,side,zh,mate){
     if(!txt)return '';
-    var at=zh?' data-zh="'+esc(txt)+'" data-en="'+esc(mate||'')+'"':' data-say="'+esc(txt)+'"';
+    var vv=SV[side==='L'?0:1];
+    var at=zh?' data-zh="'+esc(txt)+'" data-en="'+esc(mate||'')+'"':' data-say="'+esc(txt)+'"'+(vv?' data-v="'+vv+'"':'');
     return '<div class="sbub '+side+'"'+at+'>'+(!zh&&mate?hidRed(ap(txt),mate):ap(txt))+'</div>';
   };
   var act=function(f,nm,tag,side){
@@ -1412,6 +1461,8 @@ function draw(dir){
       (c.c?'<div class="eqmark">＝</div><div class="eqrow c" data-say="'+esc(plain(c.c))+'">'+lineHTML(c.c)+'</div>':'')+
       '<button class="swapbtn" id="eqGo">🔁 再聽一次</button></div>'+
       fullHTML(c.zh,plain(c.b))+noteHTML(c.note);
+    /* 等號卡也可以放替換字（2026-10-03：He is a doctor. ＝ He’s a doctor. 下面換職業） */
+    subs=c.slots?subsHTML(c.slots):(c.slot?subsHTML(c.slot):'');
   } else if(c.type==='morph'){
     kind='縮寫變身';
     MOR=1;
@@ -1479,10 +1530,10 @@ function draw(dir){
     kind='秒懂重點';
     h='<div class="echo">'+c.rows.map(function(r,n){
       return '<div class="erow" style="animation-delay:'+(0.12+n*0.24).toFixed(2)+'s">'+
-       '<span class="ebub q"><span class="et en" data-say="'+esc(r.q)+'">'+wordsHTML(r.q,r.qk,r.cls)+'</span>'+
+       '<span class="ebub q"><span class="et en" data-say="'+esc(r.q)+'"'+(qaV(r.a)[0]?' data-v="m"':'')+'>'+wordsHTML(r.q,r.qk,r.cls)+'</span>'+
          '<span class="ez zh" data-zh="'+esc(r.qzh)+'" data-en="'+esc(r.q)+'">'+r.qzh+'</span></span>'+
        '<span class="earr">\u279C</span>'+
-       '<span class="ebub a"><span class="et en" data-say="'+esc(r.a)+'">'+wordsHTML(r.a,r.ak,r.cls)+'</span>'+
+       '<span class="ebub a"><span class="et en" data-say="'+esc(r.a)+'"'+(qaV(r.a)[1]?' data-v="m"':'')+'>'+wordsHTML(r.a,r.ak,r.cls)+'</span>'+
          '<span class="ez zh" data-zh="'+esc(r.azh)+'" data-en="'+esc(r.a)+'">'+r.azh+'</span></span>'+
        '</div>'}).join('')+'</div>';
   } else if(c.type==='pair'){
@@ -1495,7 +1546,7 @@ function draw(dir){
       '<div class="bub a" style="animation-delay:.55s"><span class="bi ic">'+c.aic+'</span>'+
         '<span class="bt">'+lineHTML(c.atk)+fullHTML(c.azh,plain(c.atk))+'</span></div>'+
       '</div>';
-    subs=c.slot?subsHTML(c.slot):'';
+    subs=c.slots?subsHTML(c.slots):(c.slot?subsHTML(c.slot):'');
   } else if(c.type==='swap'||c.type==='swapdemo'){
     kind=c.type==='swap'?'變身術':'秒懂重點';
     c._cur=c._cur||'st';
@@ -1521,7 +1572,9 @@ function draw(dir){
   if(c.type==='echo')playEcho();
   if(c.type==='pair')playPair();
   if(c.type==='swapdemo'){demoN=0;demoT=setTimeout(function(){doSwap(1)},1600)}
-  if(reveal==='word'&&(c.type==='sent'||c.type==='swap')){startWord()}
+  if(reveal==='word'&&(c.type==='sent'||c.type==='swap')&&!c.one){startWord()}
+  /* 一個字一張（2026-10-03）：字直接出現，切到這張自動唸一次 */
+  if(c.one){card.classList.add('one');var kd=$('.kind',card);if(kd)kd.textContent='單字';var oc=c;morT.push(setTimeout(function(){if(CARDS[i]===oc&&!AUTO)sayCard()},450))}
   $$('#dots i').forEach(function(d,n){d.className=n===i?'on':''});
   $('#prev').disabled=i===0;
   $('#next').disabled=i===CARDS.length-1;
@@ -1872,23 +1925,34 @@ function sayCard(opt){
   /* 他問他答：一列唸完，停 1 秒，才唸下一列（使用者 2026-09-25 指定：He’s ______. 唸完等一秒才唸 Who’s she?） */
   if(c.type==='echo'){var rs=A('.erow'),k=0,myI=i;
     var nx=function(){if(i!==myI)return;if(k>=rs.length){if(opt.done)opt.done();return}
-      var r=rs[k++];sayEls($$('.w',r),{keep:k>1?1:opt.keep,done:function(){
+      /* 問句、答句兩種聲音（2026-10-03） */
+      var r=rs[k++],V=qaV(($('.ebub.a .et',r)||{}).getAttribute?$('.ebub.a .et',r).getAttribute('data-say'):'');
+      sayEls($$('.ebub.q .w',r),{keep:k>1?1:opt.keep,v:V[0]});
+      sayEls($$('.ebub.a .w',r),{keep:1,v:V[1],done:function(){
         if(k<rs.length)morT.push(setTimeout(nx,1000));else nx()}})};
     nx();return}
-  if(c.type==='pair'){sayEls(A('.bub.q .tk'),opt);sayEls(A('.bub.a .tk'),{keep:1});return}
+  if(c.type==='pair'){var V=qaV(plain(c.atk));sayEls(A('.bub.q .tk'),Object.assign({},opt,{v:V[0]}));sayEls(A('.bub.a .tk'),{keep:1,v:V[1],done:opt.done});return}
   var s=sentOf();if(s)say(s,null,opt);
 }
-/* 自動播：一個字唸完才出下一個字（不再用固定秒數硬推，整句也不會延遲） */
+/* ▶ 自動播放（2026-10-03 使用者指定，取代原本只在這一張逐字出現的「▶ 自動播」）：
+   這一張唸完 ➜ 自動換下一張 ➜ 再唸……到這一組最後一張停。按任何翻頁、目次、再按一次「自動播放」就停。
+   句子卡照樣一個字一個字出來（唸完一個字才出下一個字，最後唸整句）。 */
+var AUTO=0,AID=0,AUTOT=null,autoFin=null,R3T=null;
 function stopPlay(){
   if(playing){clearTimeout(playing);playing=0}
+  if(AUTOT){clearTimeout(AUTOT);AUTOT=null}
+  if(R3T){clearTimeout(R3T);R3T=null}
+  AUTO=0;autoFin=null;
   var b=$('#play');if(b)b.classList.remove('on');
+  var b3=$('#say3');if(b3)b3.classList.remove('on');
 }
 function autoStep(){
   if(!playing)return;
   var tks=$$('.tk',card);
   if(step>=tks.length){
-    stopPlay();
-    sayCard();
+    playing=0;
+    var f0=autoFin;autoFin=null;
+    sayCard(f0?{done:f0}:{});
     return;
   }
   var t=tks[step];t.classList.remove('hide');t.classList.add('pop');sPop();
@@ -1904,13 +1968,60 @@ function autoStep(){
   if(w&&/[A-Za-z]/.test(w))sayOne(t,w,{keep:1,done:go});
   else setTimeout(go,SLOW?700:380);
 }
-function autoPlay(){
-  if(playing){stopPlay();sayStop();return}
+/* 會自己演的卡（語序、縮寫變身、等號、他問他答、秒懂重點）：等它安靜 2 秒才算演完；開演 1.5 秒都沒聲音就自己唸一次 */
+function waitQuiet(fin){
+  var my=AUTO,t0=Date.now(),q=0,spoke=false,asked=false;
+  var tick=function(){
+    if(AUTO!==my)return;
+    var busy=SBUSY||SQ.length;
+    if(busy){spoke=true;q=0}else q+=250;
+    if(!spoke&&!asked&&Date.now()-t0>1500){asked=true;sayCard({done:fin});return}
+    if((spoke&&q>=2000)||Date.now()-t0>30000){fin();return}
+    AUTOT=setTimeout(tick,250);
+  };
+  AUTOT=setTimeout(tick,250);
+}
+function autoCard(){
+  var my=AUTO;if(!my)return;
   var c=CARDS[i];
-  if(c.type!=='sent'&&c.type!=='swap'){sayCard();return}
-  startWord();
-  playing=1;$('#play').classList.add('on');
-  autoStep();
+  var fin=function(){
+    if(AUTO!==my)return;
+    AUTOT=setTimeout(function(){
+      if(AUTO!==my)return;
+      if(i>=CARDS.length-1){stopPlay();return}
+      sayStop();i++;draw(1);
+      AUTOT=setTimeout(autoCard,750);
+    },900);
+  };
+  if((c.type==='sent'||c.type==='swap')&&reveal==='word'&&step<$$('.tk',card).length){
+    autoFin=fin;playing=1;autoStep();return}
+  if(c.type==='order'||c.type==='morph'||c.type==='eq'||c.type==='echo'||(c.type==='focus'&&c.eqRow)){waitQuiet(fin);return}
+  sayCard({done:fin});
+}
+function autoPlay(){
+  if(AUTO){stopPlay();sayStop();return}
+  stopPlay();sayStop();
+  AUTO=++AID;$('#play').classList.add('on');
+  draw(0);
+  AUTOT=setTimeout(autoCard,500);
+}
+/* 唸 1 次／唸 3 次：句子先整句出現，再唸（唸 3 次 ＝ 唸完一次才唸下一次） */
+function showAll(){
+  var tks=$$('.tk',card);if(!tks.length)return;
+  tks.forEach(function(t){t.classList.remove('hide')});
+  step=tks.length;
+  var f=$('.full',card);if(f)f.classList.remove('hide');
+  var hint=$('#tapHint');if(hint)hint.classList.add('off');
+  fit();
+}
+function sayOnce(){stopPlay();showAll();sayCard()}
+function say3(){
+  stopPlay();showAll();sayStop();
+  var n=0,myI=i,b=$('#say3');if(b)b.classList.add('on');
+  var one=function(){if(i!==myI||!b.classList.contains('on'))return;
+    sayCard({done:function(){if(i!==myI)return;
+      if(++n<3)R3T=setTimeout(one,700);else b.classList.remove('on')}})};
+  one();
 }
 
 /* ---------- 替換字 ---------- */
@@ -1922,6 +2033,7 @@ function markSubs(){
 function tkLists(c){
   if(c.type==='pair')return [c.qtk,c.atk];
   if(c.type==='swap'||c.type==='swapdemo')return [c.st,c.qu];
+  if(c.type==='eq')return [c.a,c.b].concat(c.c?[c.c]:[]);
   return c.tk?[c.tk]:[];
 }
 function curSlot(k){
@@ -1946,6 +2058,12 @@ function setSlot(w,z,ic,k){
   ['zh','stzh','quzh','qzh','azh'].forEach(function(k){
     if(c[k]){c[k]=rep(c[k],oldZh,z)}
   });
+  /* 兩排替換字要不一樣（2026-10-03：Is he a cook? No, he isn’t. He’s a cook. 不合理）：c.diff ＝ ['job','job2']，選到一樣就自動換下一個 */
+  if(c.diff){var d0=curSlot(c.diff[0]),d1=curSlot(c.diff[1]);
+    if(d0&&d1&&!d1.blank&&d0.en===d1.en){var Sx=SUB[c.diff[1]],LL=Sx.basic.concat(Sx.adv),ix=0;
+      LL.forEach(function(x,n){if(x[0]===d1.en)ix=n});var nx=LL[(ix+1)%LL.length],oz=d1.zh;
+      tkLists(c).forEach(function(L){L.forEach(function(t){if(t.slot===c.diff[1]){t.en=nx[0];t.zh=nx[1];t.ic=nx[2];t.blank=0}})});
+      if(c.azh)c.azh=rep(c.azh,oz,nx[1]);if(c.type==='pair')c.aic=nx[2]}}
   var keepStep=step, wasAll=(step>=$$('.tk',card).length);
   draw(0);
   if(reveal==='word'&&(c.type==='sent'||c.type==='swap')){
@@ -2122,7 +2240,7 @@ card.addEventListener('click',function(e){
     else if(/[A-Za-z]/.test(w2))sayOne(tk,w2);
     return}
   var sy=t.closest?t.closest('[data-say]'):null;
-  if(sy){sayOne(sy,sy.getAttribute('data-say'));return}
+  if(sy){sayOne(sy,sy.getAttribute('data-say'),{v:sy.getAttribute('data-v')||''});return}
   cardTap();
 });
 
@@ -2163,7 +2281,8 @@ $('#zhBtn').addEventListener('click',function(){
   $('#zhBtn').innerHTML=zhSay==='en'?'🔤 點中文唸 英文':'🔤 點中文唸 中文';
 });
 $('#play').addEventListener('click',autoPlay);
-$('#sayBtn').addEventListener('click',function(){sayCard()});
+$('#sayBtn').addEventListener('click',sayOnce);
+$('#say3').addEventListener('click',function(){if(this.classList.contains('on')){stopPlay();sayStop();return}say3()});
 window.addEventListener('resize',function(){fixBar();padBottom();fit()});
 /* 字體載到、按鈕列換行以後，版面要重新量一次（不然替換字會被按鈕列蓋住） */
 try{document.fonts.ready.then(function(){fixBar();padBottom();fit()})}catch(e){}
@@ -2309,6 +2428,29 @@ draw(0);
     setRate(parseFloat(b.getAttribute('data-r')));store('rate',RATE);mark();sayStop();
   });
 })();
+
+
+/* 分頁：換一組卡片（2026-10-03） */
+var DECKS=[[{"type":"sent","one":1,"tk":[{"en":"How","zh":"如何","ic":"🤔"}]},{"type":"sent","one":1,"tk":[{"en":"old","zh":"老的","ic":"👴"}]},{"type":"sent","one":1,"tk":[{"en":"are","zh":"是","ic":"＝"}]},{"type":"sent","one":1,"tk":[{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"}]},{"type":"sent","zh":"你幾歲？","tk":[{"en":"How","zh":"如何","ic":"🤔"},{"en":"old","zh":"老的","ic":"👴"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}]},{"type":"sent","zh":"______ 幾歲？","tk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"______","zh":"______","ic":"","blank":1},{"en":"?","zh":"？","ic":"","tight":1}]},{"type":"sent","zh":"你幾歲？","tk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👩","b":"How old are you?","r":"👦","rt":"🎂","use":"問對方「你幾歲？」"}}],[{"type":"sent","zh":"______ 幾歲？","tk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"______","zh":"______","ic":"","blank":1},{"en":"?","zh":"？","ic":"","tight":1}]},{"type":"sent","zh":"你幾歲？","tk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👩","b":"How old are you?","r":"👦","rt":"🎂","use":"問對方「你幾歲？」"}}],[{"type":"order","zhRow":[["你","<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","b"],["是","＝","y"],["幾歲","🎂","r"],["？","","g"]],"enRow":[["How old","🎂","r"],["are","＝","y"],["you","<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","b"],["?","","g"]],"say":"How old are you?","scene":{"at":"🔁 中文 ➜ 英文","bg":"🔁","l":"🧒","ln":"中文","b":"你幾歲？","bzh":1,"r":"🧒","rn":"英文","b2":"How old are you?","use":"中文「幾歲」在最後，英文 How old 在最前面。"}}],[{"type":"sent","one":1,"tk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1}]},{"type":"sent","one":1,"tk":[{"en":"ten","zh":"十","ic":"🔟"}]},{"type":"sent","one":1,"tk":[{"en":"years","zh":"年","ic":"📅"}]},{"type":"sent","one":1,"tk":[{"en":"old","zh":"老的","ic":"👴"}]},{"type":"sent","zh":"十歲。","slot":"age","tk":[{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}]},{"type":"sent","zh":"我是十歲。","slot":"age","tk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👩","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"說自己幾歲：I’m ＋ 數字 ＋ years old。"}},{"type":"eq","left":1,"a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"note":"years old 可以省略","scene":{"at":"✂️ 省略","bg":"✂️","l":"🐢","ln":"說完整","b":"I’m ten years old.","r":"🐇","rn":"省略","b2":"I’m ten.","use":"years old 可以省略，意思一樣。"}},{"type":"sent","zh":"我是十歲。","slot":"age","tk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🛝 操場","bg":"🛝","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten.","use":"更短的回答：I’m ＋ 數字。"}}],[{"type":"sent","zh":"我是十歲。","slot":"age","tk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👩","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"說自己幾歲：I’m ＋ 數字 ＋ years old。"}},{"type":"eq","left":1,"a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"note":"years old 可以省略","scene":{"at":"✂️ 省略","bg":"✂️","l":"🐢","ln":"說完整","b":"I’m ten years old.","r":"🐇","rn":"省略","b2":"I’m ten.","use":"years old 可以省略，意思一樣。"}},{"type":"sent","zh":"我是十歲。","slot":"age","tk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🛝 操場","bg":"🛝","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten.","use":"更短的回答：I’m ＋ 數字。"}}],[{"type":"pair","cls":"b","slot":"age","qic":"🎂","aic":"🔟","qtk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"你 幾歲？","azh":"我 是 十 歲。","scene":{"at":"🏫 教室","bg":"🏫","l":"👩‍🏫","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"老師問你幾歲，這樣回答。"}},{"type":"pair","cls":"b","slot":"age","qic":"🎂","aic":"🔟","qtk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1},{"en":"＝","zh":"","ic":"","eqs":1},{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"你 幾歲？","azh":"我 是 十 歲。＝ 我 是 十 歲。"},{"type":"pair","cls":"b","slot":"age","qic":"🎂","aic":"🔟","qtk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"你 幾歲？","azh":"我 是 十 歲。","scene":{"at":"🏫 教室","bg":"🏫","l":"👩‍🏫","b":"How old are you?","r":"👧","b2":"I’m ten.","use":"也可以只說 I’m ＋ 數字。"}}],[{"type":"focus","eqRow":1,"left":1,"title":"How old ＝ 問「幾歲」","rows":[["What","什麼","❓"],["How","怎麼樣","🤔"],["How old","幾歲","🎂"]],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👧","b":"How old are you?","r":"👦","rt":"❓","use":"想知道對方幾歲，就用 How old。"}},{"type":"sent","zh":"你幾歲？","tk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👩","b":"How old are you?","r":"👦","rt":"🎂","use":"問對方「你幾歲？」"}},{"type":"order","zhRow":[["你","<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","b"],["是","＝","y"],["幾歲","🎂","r"],["？","","g"]],"enRow":[["How old","🎂","r"],["are","＝","y"],["you","<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","b"],["?","","g"]],"say":"How old are you?","scene":{"at":"🔁 中文 ➜ 英文","bg":"🔁","l":"🧒","ln":"中文","b":"你幾歲？","bzh":1,"r":"🧒","rn":"英文","b2":"How old are you?","use":"中文「幾歲」在最後，英文 How old 在最前面。"}},{"type":"sent","zh":"我是十歲。","slot":"age","tk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🎂 生日派對","bg":"🎈","l":"👩","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"說自己幾歲：I’m ＋ 數字 ＋ years old。"}},{"type":"morph","a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1}],"say":"I'm","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"I am","r":"🐇","rn":"說快一點","b2":"I’m","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","all":1,"a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"I am ten years old.","r":"🐇","rn":"說快一點","b2":"I’m ten years old.","use":"意思一模一樣，只是說得比較快。"}},{"type":"sent","zh":"我是十歲。","slot":"age","tk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"🛝 操場","bg":"🛝","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten.","use":"更短的回答：I’m ＋ 數字。"}},{"type":"eq","left":1,"a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"note":"years old 可以省略","scene":{"at":"✂️ 省略","bg":"✂️","l":"🐢","ln":"說完整","b":"I’m ten years old.","r":"🐇","rn":"省略","b2":"I’m ten.","use":"years old 可以省略，意思一樣。"}},{"type":"eq","left":1,"all":1,"a":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"am","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"c":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"✂️ 三句一樣","bg":"✂️","l":"🐢","ln":"說完整","b":"I am ten years old.","r":"🐇","rn":"最短","b2":"I’m ten.","use":"三種說法，意思都一樣。"}},{"type":"morph","a":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"are","zh":"是","ic":"＝","ri":"a"}],"b":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"'re","zh":"是","ic":"＝","tight":1}],"say":"You're","scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"You are","r":"🐇","rn":"說快一點","b2":"You’re","use":"說快一點，兩個字黏成一個字。"}},{"type":"eq","a":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"are","zh":"是","ic":"＝","ri":"a"},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"b":[{"en":"You","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"'re","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"scene":{"at":"⚡ 說快一點","bg":"💨","l":"🐢","ln":"慢慢說","b":"You are ten.","r":"🐇","rn":"說快一點","b2":"You’re ten.","use":"意思一模一樣，只是說得比較快。"}},{"type":"echo","rows":[{"q":"How old are you?","qk":"you","qzh":"你 幾歲？","a":"I’m ______ years old.","ak":"I","azh":"我 是 ______ 歲。","cls":"b"},{"q":"How old are you?","qk":"you","qzh":"你 幾歲？","a":"I’m ______.","ak":"I","azh":"我 是 ______ 歲。","cls":"b"}],"scene":{"at":"🎤 一問一答","bg":"💬","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten.","use":"問 you（你），答 I（我）。"}},{"type":"focus","title":"How old are you? 要答什麼？","rows":[["I’m ten years old.","✅ 幾歲","✅"],["I’m ten.","✅ 幾歲","✅"],["I’m Mike.","❌ 這是名字","❌"],["I’m ten year old.","❌ years 要有 s","❌"]],"scene":{"at":"🎤 一問一答","bg":"💬","l":"👧","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"問幾歲，就答幾歲。"}},{"type":"focus","title":"問什麼，就答什麼","rows":[["What’s your name?","<svg class=\"nmsvg\" viewBox=\"0 0 140 100\" role=\"img\" aria-label=\"name\" style=\"width:1.4em;height:1em;vertical-align:-.14em;overflow:visible;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.35))\"><rect x=\"3\" y=\"3\" width=\"134\" height=\"94\" rx=\"14\" fill=\"#E53935\" stroke=\"#9F1B1B\" stroke-width=\"3\"/><path d=\"M9 12q0-6 6-6h110q6 0 6 6v8H9z\" fill=\"#fff\" opacity=\".16\"/><text x=\"70\" y=\"31\" text-anchor=\"middle\" font-family=\"Arial Black,Arial,Helvetica,sans-serif\" font-weight=\"900\" font-size=\"27\" letter-spacing=\"2\" fill=\"#fff\">HELLO</text><text x=\"70\" y=\"45\" text-anchor=\"middle\" font-family=\"Arial,Helvetica,sans-serif\" font-weight=\"700\" font-size=\"11.5\" fill=\"#FFE3E0\">my name is</text><rect x=\"12\" y=\"51\" width=\"116\" height=\"38\" rx=\"6\" fill=\"#fff\"/><text x=\"70\" y=\"80\" text-anchor=\"middle\" font-family=\"Chalkboard SE,Comic Sans MS,Marker Felt,cursive\" font-weight=\"700\" font-size=\"27\" fill=\"#1B3A8A\">Ken</text></svg> 答名字","<svg class=\"nmsvg\" viewBox=\"0 0 140 100\" role=\"img\" aria-label=\"name\" style=\"width:1.4em;height:1em;vertical-align:-.14em;overflow:visible;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.35))\"><rect x=\"3\" y=\"3\" width=\"134\" height=\"94\" rx=\"14\" fill=\"#E53935\" stroke=\"#9F1B1B\" stroke-width=\"3\"/><path d=\"M9 12q0-6 6-6h110q6 0 6 6v8H9z\" fill=\"#fff\" opacity=\".16\"/><text x=\"70\" y=\"31\" text-anchor=\"middle\" font-family=\"Arial Black,Arial,Helvetica,sans-serif\" font-weight=\"900\" font-size=\"27\" letter-spacing=\"2\" fill=\"#fff\">HELLO</text><text x=\"70\" y=\"45\" text-anchor=\"middle\" font-family=\"Arial,Helvetica,sans-serif\" font-weight=\"700\" font-size=\"11.5\" fill=\"#FFE3E0\">my name is</text><rect x=\"12\" y=\"51\" width=\"116\" height=\"38\" rx=\"6\" fill=\"#fff\"/><text x=\"70\" y=\"80\" text-anchor=\"middle\" font-family=\"Chalkboard SE,Comic Sans MS,Marker Felt,cursive\" font-weight=\"700\" font-size=\"27\" fill=\"#1B3A8A\">Ken</text></svg>"],["How old are you?","🎂 答幾歲","🎂"]],"scene":{"at":"🎤 問什麼答什麼","bg":"💬","l":"<svg class=\"nmsvg\" viewBox=\"0 0 140 100\" role=\"img\" aria-label=\"name\" style=\"width:1.4em;height:1em;vertical-align:-.14em;overflow:visible;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.35))\"><rect x=\"3\" y=\"3\" width=\"134\" height=\"94\" rx=\"14\" fill=\"#E53935\" stroke=\"#9F1B1B\" stroke-width=\"3\"/><path d=\"M9 12q0-6 6-6h110q6 0 6 6v8H9z\" fill=\"#fff\" opacity=\".16\"/><text x=\"70\" y=\"31\" text-anchor=\"middle\" font-family=\"Arial Black,Arial,Helvetica,sans-serif\" font-weight=\"900\" font-size=\"27\" letter-spacing=\"2\" fill=\"#fff\">HELLO</text><text x=\"70\" y=\"45\" text-anchor=\"middle\" font-family=\"Arial,Helvetica,sans-serif\" font-weight=\"700\" font-size=\"11.5\" fill=\"#FFE3E0\">my name is</text><rect x=\"12\" y=\"51\" width=\"116\" height=\"38\" rx=\"6\" fill=\"#fff\"/><text x=\"70\" y=\"80\" text-anchor=\"middle\" font-family=\"Chalkboard SE,Comic Sans MS,Marker Felt,cursive\" font-weight=\"700\" font-size=\"27\" fill=\"#1B3A8A\">Ken</text></svg>","ln":"問名字","b":"What’s your name?","r":"🎂","rn":"問幾歲","b2":"How old are you?","use":"兩個問題，答案不一樣。"}},{"type":"pair","cls":"b","slot":"age","qic":"🎂","aic":"🔟","qtk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":"years old","zh":"歲","ic":"🎂"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"你 幾歲？","azh":"我 是 十 歲。","scene":{"at":"🏫 教室","bg":"🏫","l":"👩‍🏫","b":"How old are you?","r":"👦","b2":"I’m ten years old.","use":"老師問你幾歲，這樣回答。"}},{"type":"pair","cls":"b","slot":"age","qic":"🎂","aic":"🔟","qtk":[{"en":"How old","zh":"幾歲","ic":"🎂"},{"en":"are","zh":"是","ic":"＝"},{"en":"you","zh":"你","ic":"<span class=\"pi\"><i class=\"L\">🧒<em>💬</em></i><i class=\"R on\">👧</i></span>","hl":"b"},{"en":"?","zh":"？","ic":"","tight":1}],"atk":[{"en":"I","zh":"我","ic":"<span class=\"pi\"><i class=\"L on\">🧒<em>💬</em></i><i class=\"R\">👧</i></span>","hl":"lp"},{"en":"'m","zh":"是","ic":"＝","tight":1},{"en":"ten","zh":"十","ic":"🔟","slot":"age"},{"en":".","zh":"。","ic":"","tight":1}],"qzh":"你 幾歲？","azh":"我 是 十 歲。","scene":{"at":"🏫 教室","bg":"🏫","l":"👩‍🏫","b":"How old are you?","r":"👧","b2":"I’m ten.","use":"也可以只說 I’m ＋ 數字。"}},{"type":"focus","title":"淺灰色的字母 ＝ 不發音","rows":[["are","e 不唸","🤫"],["you","o 不唸","🤫"],["years","a 不唸","🤫"],["eight","gh 不唸","🤫"],["nine","e 不唸","🤫"],["twelve","e 不唸","🤫"]],"scene":{"at":"🤫 小聲一點","bg":"🤫","l":"🧒","b":"eight","r":"🧒","b2":"nine","use":"淺灰色的字母，唸的時候不發音。"}}]],TABM=[{"n":"一-1","lb":"How old are you?","sub":[{"lb":"基礎","d":0},{"lb":"進階","d":1}],"d":null},{"n":"一-2","lb":"中英語序","sub":null,"d":2},{"n":"二","lb":"I’m ten years old.","sub":[{"lb":"基礎","d":3},{"lb":"進階","d":4}],"d":null},{"n":"三","lb":"一問一答","sub":null,"d":5},{"n":"四","lb":"原本句型","sub":null,"d":6}],TCUR=0,LCUR=0;
+document.body.classList.add('hastabs');
+function tabH(){var t=document.getElementById('tabs');if(t)document.documentElement.style.setProperty('--tabH',t.offsetHeight+'px')}
+function setDeck(t,l,keep){
+  var tb=TABM[t];if(!tb)return;TCUR=t;LCUR=tb.sub?(l||0):0;
+  stopPlay();sayStop();tocClose();
+  CARDS=DECKS[tb.sub?tb.sub[LCUR].d:tb.d];i=0;
+  dots.innerHTML=CARDS.map(function(){return '<i></i>'}).join('');
+  $$('#tabs .tb').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-t')===t)});
+  var lv=$('#lvGrp');lv.hidden=!tb.sub;
+  $$('#lvGrp button').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-l')===LCUR)});
+  try{history.replaceState(null,'','#t'+t+(tb.sub?'-'+LCUR:''))}catch(e){}
+  tabH();draw(0);
+}
+$('#tabs').addEventListener('click',function(e){
+  var b=e.target.closest?e.target.closest('.tb'):null;if(b){setDeck(+b.getAttribute('data-t'),0);return}
+  var l=e.target.closest?e.target.closest('#lvGrp button'):null;if(l)setDeck(TCUR,+l.getAttribute('data-l'));
+});
+window.addEventListener('resize',tabH);
+(function(){var m=/#t(\d+)(?:-(\d))?/.exec(location.hash);setDeck(m?+m[1]:0,m&&m[2]?+m[2]:0)})();
 
 </script>
 </body>

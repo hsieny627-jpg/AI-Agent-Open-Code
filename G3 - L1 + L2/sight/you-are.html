@@ -32,6 +32,9 @@ body{margin:0;background:#000;color:#F2F2F2;
  display:flex;align-items:center;justify-content:center;cursor:pointer}
 .nav:disabled{color:#202020;cursor:default}
 .nav:active:not(:disabled){background:rgba(255,255,255,.06)}
+/* 箭頭往字卡中央靠近一點（2026-10-03 使用者指定）：靠在翻頁區的內側，還是在字卡留白裡，不碰到單字 */
+#prev{justify-content:flex-end;padding-right:4px}
+#next{justify-content:flex-start;padding-left:4px}
 #prev{left:var(--pad);border-radius:clamp(18px,3vh,30px) 0 0 clamp(18px,3vh,30px)}
 #next{right:var(--pad);border-radius:0 clamp(18px,3vh,30px) clamp(18px,3vh,30px) 0}
 
@@ -73,16 +76,26 @@ body{margin:0;background:#000;color:#F2F2F2;
 /* 按鈕列（使用者 2026-10-02 指定，全站單字卡）：一排，「🔊 唸 3 次」在正中央；
    左：目次｜音節｜音標｜放慢　右：（結構／時光機）｜出處｜單字首頁｜總首頁。
    三欄格線 1fr auto 1fr ＝ 中間那顆不管兩邊幾顆都在正中央。圖示在上、字在下，iPad 直放也一排放得下。 */
-#bar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:clamp(3px,.6vw,10px);width:100%;max-width:1180px}
-#bar .bL,#bar .bR{display:flex;gap:clamp(3px,.5vw,9px);align-items:stretch}
+#bar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:clamp(2px,.5vw,10px);width:100%;max-width:1180px}
+#bar .bL,#bar .bR{display:flex;gap:clamp(2px,.4vw,9px);align-items:stretch}
 #bar .bL{justify-content:flex-end}
 #bar .bR{justify-content:flex-start}
 #bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:16px;
  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
- font-size:clamp(12px,min(1.55vh,1.5vw),15px);padding:5px clamp(3px,.6vw,12px);min-height:56px;min-width:clamp(44px,5.4vw,64px);
+ font-size:clamp(11px,min(1.55vh,1.45vw),15px);padding:5px clamp(2px,.5vw,12px);min-height:56px;min-width:clamp(40px,5vw,64px);
  font-family:inherit;cursor:pointer;white-space:nowrap;line-height:1.1}
 #bar button>.bic{font-size:1.5em;line-height:1;margin:0}
-#bar #say3{background:#22303A;border-color:#9FB4C8;font-weight:700;min-width:clamp(70px,9vw,96px)}
+#bar #say1{background:#22303A;border-color:#9FB4C8;font-weight:700;min-width:clamp(70px,9vw,96px)}
+#autogo{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:60;font-family:inherit;font-weight:700;
+ font-size:clamp(26px,4.4vh,40px);padding:22px 40px;border-radius:24px;background:#9FB4C8;color:#0A0A0A;border:0;
+ box-shadow:0 0 0 9999px rgba(0,0,0,.55);cursor:pointer}
+#bar #say3.on,#bar #autob.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A}
+/* 補充（2026-10-03 使用者指定）：說明的小字平常收起來，按「💡 補充」才出現在單字下方，再按一次收回 */
+#card .sub:not(.zfull){display:none}
+body.sup #card .sub{display:block}
+#card .supb{margin-top:clamp(2px,.6vh,8px);background:#141414;border:1px solid #3A3A3A;color:#D8D3C5;border-radius:99px;
+ font-family:inherit;font-size:clamp(15px,2.1vh,19px);padding:7px 16px;cursor:pointer}
+body.sup #card .supb{border-color:#9FB4C8;color:#F2F2F2}
 #bar button:active{background:#2A2A2A}
 #bar #phsee.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A}
 /* 念到哪個字，那個字稍微放大、稍微變亮（2026-10-02：不可太亮、不刺眼；字母原本的紅／灰保留） */
@@ -205,6 +218,11 @@ button>.bic{margin-right:.3em}
 .phw.split .syl.k2{background:rgba(245,179,1,.16);box-shadow:inset 0 -.08em 0 #F5B301}
 .phw.split .syl.k3{background:rgba(200,120,255,.16);box-shadow:inset 0 -.08em 0 #C878FF}
 .phw .syl.hop{animation:phhop .5s cubic-bezier(.2,1.6,.4,1)}
+/* 唸到這一個音節（2026-10-03）：整段放大、變亮；紅色母音往上浮一點點，不擠到旁邊的字母 */
+.phw .syl{transition:transform .18s,filter .18s;transform-origin:50% 100%}
+.phw .syl.sayon{transform:scale(1.14);filter:brightness(1.35) drop-shadow(0 0 8px rgba(255,236,170,.35));position:relative;z-index:1}
+.phw .syl .g i.v{display:inline-block;transition:transform .18s}
+.phw .syl.sayon .g i.v{transform:translateY(-.12em)}
 @keyframes phhop{0%{transform:translateY(0)}40%{transform:translateY(-.22em) scale(1.08)}100%{transform:translateY(0)}}
 .phsum{position:fixed;left:50%;top:14%;transform:translate(-50%,0) scale(.6);opacity:0;z-index:60;pointer-events:none;
  background:#0B0B0B;border:2px solid #FF5A5A;border-radius:22px;padding:.35em .9em;white-space:nowrap;
@@ -279,7 +297,7 @@ button>.bic{margin-right:.3em}
 .topicfix{position:fixed;top:max(10px,env(safe-area-inset-top));left:14px;z-index:30;color:#FFD66B;font-weight:700;
  font-size:clamp(16px,2.4vh,22px);letter-spacing:.08em;pointer-events:none;white-space:nowrap}
 </style>
-<script src="../../words/audio/sv/aud.js"></script><script>window.SVDIR="../../words/audio/sv/"</script>
+<script src="../../words/audio/sv/aud.js"></script><script>window.SVDIR="../../words/audio/sv/"</script><script src="../../words/audio/en/aud.js" onerror="window.ENAUD=null"></script><script>window.ENDIR="../../words/audio/en/";</script>
 </head>
 <body>
 <div class="topicfix">🃏 單字卡</div>
@@ -293,7 +311,7 @@ button>.bic{margin-right:.3em}
  <span class="pos">6 / 19</span>
  <a href="name.html" title="下一個單字"><span class="w">name</span> ▶</a>
 </nav>
-<div id="bar"><div class="bL"><button id="tocb"><span class="bic">📑</span><span class="blb">目次</span></button><button id="phsyl"><span class="bic">✂️</span><span class="blb">音節動畫</span></button><button id="phsee"><span class="bic">👀</span><span class="blb">看音節</span></button><button id="phmode"><span class="bic">🔤</span><span class="blb">音標：無</span></button><button id="slow"><span class="bic">🐢</span><span class="blb">放慢</span></button></div><button id="say3"><span class="bic">🔊</span><span class="blb">唸 3 次</span></button><div class="bR"><button id="parts"><span class="bic">🧩</span><span class="blb">結構</span></button><button id="evo"><span class="bic">⏳</span><span class="blb">時光機</span></button><button id="srcb"><span class="bic">📖</span><span class="blb">出處</span></button><button id="whome"><span class="bic">🔤</span><span class="blb">單字首頁</span></button><button id="home"><span class="bic">🏠</span><span class="blb">總首頁</span></button></div></div>
+<div id="bar"><div class="bL"><button id="home"><span class="bic">🏠</span><span class="blb">總首頁</span></button><button id="whome"><span class="bic">🔤</span><span class="blb">單字首頁</span></button><button id="tocb"><span class="bic">📑</span><span class="blb">目次</span></button><button id="phsyl"><span class="bic">✂️</span><span class="blb">音節動畫</span></button><button id="phsee"><span class="bic">👀</span><span class="blb">看音節</span></button><button id="phmode"><span class="bic">🔤</span><span class="blb">音標：無</span></button><button id="slow"><span class="bic">🐢</span><span class="blb">放慢</span></button></div><button id="say1"><span class="bic">🔊</span><span class="blb">唸 1 次</span></button><div class="bR"><button id="say3"><span class="bic">🔊</span><span class="blb">唸 3 次</span></button><button id="autob"><span class="bic">▶</span><span class="blb">自動播放</span></button><button id="parts"><span class="bic">🧩</span><span class="blb">結構</span></button><button id="evo"><span class="bic">⏳</span><span class="blb">時光機</span></button><button id="srcb"><span class="bic">📖</span><span class="blb">出處</span></button></div></div>
 </div>
 <div id="toc"><div class="thd"><b>📑 目次</b><button id="tocx">✕ 關閉</button></div><div class="tgd"><a href="i.html"><b>1</b><span>🙋 I　我</span></a><a href="my.html"><b>2</b><span>🙋🎒 My　我的</span></a><a href="you.html"><b>3</b><span>👉 You　你</span></a><a href="your.html"><b>4</b><span>👉🎒 Your　你的</span></a><a href="i-am.html"><b>5</b><span>🙋＝ I am　我 是</span></a><a href="you-are.html" class="cur"><b>6</b><span>👉＝ You are　你 是</span></a><a href="name.html"><b>7</b><span><svg class="nmsvg" viewBox="0 0 140 100" role="img" aria-label="name" style="width:1.4em;height:1em;vertical-align:-.14em;overflow:visible;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.35))"><rect x="3" y="3" width="134" height="94" rx="14" fill="#E53935" stroke="#9F1B1B" stroke-width="3"/><path d="M9 12q0-6 6-6h110q6 0 6 6v8H9z" fill="#fff" opacity=".16"/><text x="70" y="31" text-anchor="middle" font-family="Arial Black,Arial,Helvetica,sans-serif" font-weight="900" font-size="27" letter-spacing="2" fill="#fff">HELLO</text><text x="70" y="45" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="11.5" fill="#FFE3E0">my name is</text><rect x="12" y="51" width="116" height="38" rx="6" fill="#fff"/><text x="70" y="80" text-anchor="middle" font-family="Chalkboard SE,Comic Sans MS,Marker Felt,cursive" font-weight="700" font-size="27" fill="#1B3A8A">Ken</text></svg> name　名字</span></a><a href="is.html"><b>8</b><span>＝ is　是</span></a><a href="what.html"><b>9</b><span>❓ What　什麼</span></a><a href="whats.html"><b>10</b><span>❓＝ What’s　什麼 是</span></a><a href="how.html"><b>11</b><span>🤔 How　怎麼樣</span></a><a href="old.html"><b>12</b><span>👴 old　老的；…歲</span></a><a href="how-old.html"><b>13</b><span>🎂 How old　幾歲</span></a><a href="year.html"><b>14</b><span>📅 year　年</span></a><a href="years-old.html"><b>15</b><span>🎂 years old　…歲</span></a><a href="who.html"><b>16</b><span>👤❓ Who　誰</span></a><a href="where.html"><b>17</b><span>📍❓ Where　哪裡</span></a><a href="when.html"><b>18</b><span>⏰❓ When　什麼時候</span></a><a href="why.html"><b>19</b><span>🤔❓ Why　為什麼</span></a></div></div>
 <footer id="src" aria-label="出處"><div class="shd"><span class="sttl">📖 出處</span><span class="scnt"><span id="srcn">1</span> ／ 8</span><button id="srct">📑 目次</button><button id="srcx">✕ 關閉</button></div><div class="stoc" id="stoc"><button data-k="0"><b>1</b><span>are</span></button><button data-k="1"><b>2</b><span>You’re</span></button><button data-k="2"><b>3</b><span>音標（美式）</span></button><button data-k="3"><b>4</b><span>KK 音標</span></button><button data-k="4"><b>5</b><span>音節怎麼切</span></button><button data-k="5" class="w"><b>6</b><span>辭典的 fam·i·ly 也對</span></button><button data-k="6" class="w"><b>7</b><span>淺灰色的字母不算</span></button><button data-k="7"><b>8</b><span>唸出來的聲音</span></button></div><div class="sbody"><section class="sl on" data-k="0"><div class="lt">are</div><div class="ck s"><span class="ci">📕</span><span><span class="cl">證據在這本書</span><span class="cv">OED「be, v.」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">are 是「是」在 you、we、they 後面的樣子。</span></span></div></section><section class="sl" data-k="1"><div class="lt">You’re</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Cambridge Dictionary「you’re」</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">You are ＝ <b>You’re</b>。</span></span></div></section><section class="sl" data-k="2"><div class="lt">音標（美式）</div><div class="ck s"><span class="ci">📘</span><span><span class="cl">證據在這本書</span><span class="cv">Cambridge Dictionary 各詞條的 US 發音；Oxford Learner’s Dictionaries（NAmE）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">本教材的 IPA 一律用<b>美式</b>。</span></span></div></section><section class="sl" data-k="3"><div class="lt">KK 音標</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Kenyon &amp; Knott《A Pronouncing Dictionary of American English》(1944)</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">台灣課本用的標法。例：bed 的 e ＝ IPA <b>/e/</b> ＝ KK <b>/ɛ/</b>。</span></span></div></section><section class="sl" data-k="4"><div class="lt">音節怎麼切</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">本教材的切法（老師指定，2026-09-20、2026-10-02）；Louisa Moats《Speech to Print》</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv"><b>一個出聲的母音 ＝ 一個音節</b>。兩個母音中間只有<b>一個子音的聲音</b>（ck、th、ph、tch 算一個）➜ 搬到後面：<b>fa．mi．ly、mo．ther</b>；有<b>兩個</b>子音的聲音 ➜ 從中間切：<b>sis．ter</b>。</span></span></div></section><section class="sl w" data-k="5"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>辭典的 fam·i·ly 也對</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">Merriam-Webster 的點是<b>排版斷行</b>用的；Cambridge 的音標又是另一種切法。本教材教的是<b>唸的時候</b>一個子音聲跟著後面的母音。切法不同，都不是錯。</span></span></div></section><section class="sl w" data-k="6"><div class="lt"><span class="wtag">⚠️ 誠實註記</span>淺灰色的字母不算</div><div class="ck d"><span class="ci">⚠️</span><span><span class="cl">要知道的事</span><span class="cv">不出聲的字母（淺灰色）<b>不算母音</b>，數紅色的就對了。</span></span></div></section><section class="sl" data-k="7"><div class="lt">唸出來的聲音</div><div class="ck s"><span class="ci">📖</span><span><span class="cl">證據在這本書</span><span class="cv">Web Speech API（瀏覽器內建語音，en-US）</span></span></div><div class="car">⬇</div><div class="ck d"><span class="ci">✅</span><span><span class="cl">翻開會看到</span><span class="cv">不用連網。<b>嗓音由這台電腦決定</b>。外語另外指定：德 de-DE、荷 nl-NL、瑞典 sv-SE、法 fr-FR、西 es-ES。</span></span></div></section></div><div class="snav"><button id="srcp">◀ 上一條</button><span class="sdots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><button id="srcf">下一條 ▶</button></div></footer>
@@ -360,7 +378,7 @@ var PH=(function(){
   return String(h)
    .replace(/{{([a-zA-Z]{2}-[A-Z]{2}):([^{}]+)}}/g,function(m,lang,w){return word(w.trim(),lang)})
    .replace(/{{([^{}:]+)}}/g,function(m,w){return word(w.trim())})}
- function clear(){while(timers.length)clearTimeout(timers.pop())}
+ function clear(){sylId++;while(timers.length)clearTimeout(timers.pop())}
  function at(ms,fn){timers.push(setTimeout(fn,ms))}
  function reduced(){return document.body.classList.contains("reduce")}
  /* 說話：全頁共用一個放慢開關。
@@ -379,9 +397,9 @@ var PH=(function(){
   wq=[];
   if(!t){end();return}
   stopAll();
-  var A=(lang&&/^sv/i.test(lang)&&window.SVAUD)?SVAUD[akey(t)]:null;
+  var EN=!(lang&&!/^en/i.test(lang))&&window.ENAUD,A=(lang&&/^sv/i.test(lang)&&window.SVAUD)?SVAUD[akey(t)]:(EN?ENAUD[akey(t)]:null);   /* 英文預錄語音檔（2026-10-03 全站單字卡）：有 ENAUD 才用 */
   if(A){try{if(!AU)AU=new Audio();AU.onended=end;AU.onerror=end;
-    AU.src=(window.SVDIR||"audio/sv/")+A[0];AU.playbackRate=slow?.7:1;
+    AU.src=(EN?(window.ENDIR||"audio/"):(window.SVDIR||"audio/sv/"))+A[0];AU.playbackRate=slow?.7:1;
     var pr=AU.play();if(pr&&pr.catch)pr.catch(end);setTimeout(end,A[1]*1000/(slow?.7:1)+1500);return}catch(e){}}
   try{var u=new SpeechSynthesisUtterance(t);
    u.lang=lang||"en-US";u.rate=slow?.45:.85;u.onend=end;u.onerror=end;speechSynthesis.speak(u)}catch(e){end();return}
@@ -417,7 +435,7 @@ var PH=(function(){
     ④ 大字：N 個紅色母音 ＝ N 個音節。一個音節的字：不剪，直接說「1 個母音 ＝ 1 個音節，不用剪」 */
  var CIR="①②③④⑤⑥";
  function sylReset(el){[].forEach.call(el.querySelectorAll(".phn,.phsc"),function(x){x.parentNode.removeChild(x)});
-  [].forEach.call(el.querySelectorAll(".syl"),function(x){x.classList.remove("k0","k1","k2","k3","hop","beat")});
+  [].forEach.call(el.querySelectorAll(".syl"),function(x){x.classList.remove("k0","k1","k2","k3","hop","beat","sayon")});
   el.classList.remove("split");var o=document.getElementById("phsum");if(o)o.classList.remove("on")}
  function sylSum(h){var o=document.getElementById("phsum");
   if(!o){o=document.createElement("div");o.id="phsum";o.className="phsum";document.body.appendChild(o)}
@@ -440,15 +458,29 @@ var PH=(function(){
    var s=document.createElement("span");s.className="phsc";s.textContent="✂️";c.appendChild(s);void s.offsetWidth;s.classList.add("on");
    if(k===cs.length-1)at(330,function(){el.classList.add("split")})})})(cs[k],k);
   var t1=t0+cs.length*520+200;
-  for(k=0;k<sy.length;k++)(function(s,k){at(t1+k*480,function(){
-   s.classList.add("k"+(k%4));s.classList.remove("hop");void s.offsetWidth;s.classList.add("hop");
-   if(note)note.innerHTML='✂️ 第 <b>'+(k+1)+'</b> 段'})})(sy[k],k);
-  at(t1+sy.length*480+200,function(){
-   sylSum('<span class="rv">'+n+'</span> 個紅色母音 ＝ <b>'+n+'</b> 個音節');
-   if(note)note.innerHTML='<span class="rv">'+n+'</span> 個母音 ＝ <b>'+n+' 個音節</b>'})}
+  /* ③ 一段一段唸（2026-10-03 使用者指定）：唸到哪一個音節，那個音節的字母一起放大、變亮，紅色母音再往上浮一點點
+     （一個母音 ＝ 一個音節）。每一段的聲音是照音標預先錄好的（鑰匙「syl 單字 第幾段」），最後整個字再唸一次 */
+  var my=++sylId,wk=sylKey(el);
+  at(t1,function(){var k=0;(function nx(){
+   if(my!==sylId)return;
+   [].forEach.call(sy,function(x){x.classList.remove("sayon")});
+   if(k>=sy.length){say(el.getAttribute("data-say"),el.getAttribute("data-lang")||"",function(){if(my!==sylId)return;
+     at(200,function(){sylSum('<span class="rv">'+n+'</span> 個紅色母音 ＝ <b>'+n+'</b> 個音節');
+      if(note)note.innerHTML='<span class="rv">'+n+'</span> 個母音 ＝ <b>'+n+' 個音節</b>'})});return}
+   var s=sy[k];s.classList.add("k"+(k%4),"sayon");s.classList.remove("hop");void s.offsetWidth;s.classList.add("hop");
+   if(note)note.innerHTML='✂️ 第 <b>'+(k+1)+'</b> 段';
+   var kk=k;k++;
+   sylSay(wk,kk,function(){if(my!==sylId)return;s.classList.remove("sayon");setTimeout(nx,240)});
+  })()})}
+ var sylId=0;
+ function sylKey(el){return String(el.getAttribute("data-say")||"").toLowerCase().replace(/[’]/g,"'")}
+ function sylA(w,k){var t="syl "+w+" "+k;return window.ENAUD&&ENAUD[akey(t)]?t:null}
+ function sylSay(w,k,fin){var t=sylA(w,k);if(t)say(t,"en-US",fin);else setTimeout(fin,650)}
  function sylTime(el){var n=el.querySelectorAll(".syl").length,r=0,v=el.querySelectorAll(".u"),k;
   for(k=0;k<v.length;k++)if(v[k].querySelector("i.v")&&!/mute/.test(v[k].className))r++;
-  return 150+r*520+250+(n<2?0:(n-1)*520+200+n*480+200)}
+  var w=sylKey(el),d=0,A=window.ENAUD||{},sp=slow?.7:1;for(k=0;k<n;k++){var x=A[akey("syl "+w+" "+k)];d+=(x?x[1]*1000/sp:650)+240+200}
+  var ww=A[akey(w)];d+=(ww?ww[1]*1000/sp:900)+600;
+  return 150+r*520+250+(n<2?0:(n-1)*520+200+d)}
  /* 👀 看音節（使用者 2026-10-02 指定）：不演動畫，直接顯示切好的音節（bas·ket·ball）；on＝false 收回去 */
  function sylSee(el,on){clear();sylReset(el);if(on)el.classList.add("split")}
  /* 把說明文字裡的英文字詞變成可以點來聽（補充單字、字詞、用法都算）。
@@ -571,12 +603,12 @@ var SCENES=[
    '<div class="zh in d1">'+W.zh+'</div>')+
    (W.sub?'<div class="sub in d2">'+W.sub+'</div>':'')},
  // ② 以前的樣貌（圖示就是意思，不再加說明）；grandfather / grandmother 改成「怎麼組的」
- function(){return '<div class="tag in">怎麼組的</div>'+
+ function(){return ''+
    '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
    '<div class="parts in d1">{{'+W.build.a+'}} ＋ {{'+W.build.b+'}}</div>'+
    '<div class="sub in d2" style="margin-top:2px">'+W.build.note+'</div>'},
  // ③ 現在的單字＋秒懂收尾
- function(){return '<div class="tag in">現在</div>'+
+ function(){return ''+
    '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
    '<div class="word in d1"'+(W.now.length>=11?' style="font-size:clamp(38px,min(7.5vh,8.2vw),74px)"':'')+'>'+
    PH.box(W.now)+'</div>'+
@@ -625,21 +657,26 @@ var SENT=(function(){
   e.stopPropagation();play(f)},true);
  return{play:play,wrap:wrap,clr:clr}})();
 function show(n){
- var back=(n<i);s3++;
+ var back=(n<i);s3++;var b3=document.getElementById("say3");if(b3)b3.classList.remove("on");
  i=Math.max(0,Math.min(SCENES.length-1,n));
  window.SRCAT=[0,0,1][i];   /* 按「📖 出處」直接跳到這一張字卡的證據（使用者 2026-09-25 指定） */
  card.innerHTML=PH.expand(SCENES[i]());
+ /* 💡 補充：這一幕有說明小字才放（2026-10-03） */
+ if(card.querySelector(".sub:not(.zfull)"))card.insertAdjacentHTML("beforeend",'<button class="supb" type="button">'+(document.body.classList.contains("sup")?"💡 收起補充":"💡 補充")+'</button>');
  PH.autoSay(card);       // 補充單字、字詞、用法都可以點來聽
  SENT.clr();SENT.wrap(card);
  if(!reduce){card.classList.remove("turnR","turnL");void card.offsetWidth;
   card.classList.add(back?"turnL":"turnR")}
  var d=dots.children;
  for(var k=0;k<d.length;k++)d[k].className=(k===i?"on":"");
- document.getElementById("prev").disabled=(i===0);
- document.getElementById("next").disabled=(i===SCENES.length-1);
+ /* 第一幕的左箭頭 ＝ 上一個單字；最後一幕的右箭頭 ＝ 下一個單字（2026-10-03 使用者指定），所以兩個箭頭都不關 */
+ document.getElementById("prev").title=(i===0?"上一個單字":"上一頁");
+ document.getElementById("next").title=(i===SCENES.length-1?"下一個單字":"下一頁");
  /* 使用者 2026-09-20 指定：一翻到中文意思那一幕，就自動唸一次英文單字。
     （有些瀏覽器規定要先碰過畫面才准發聲，所以下面補一個「第一次碰到就補唸」。） */
- if(i===0||i===SCENES.length-1)say();
+ /* 2026-10-03 使用者指定：到第二幕也要自動唸英文 ➜ 每一幕都自動唸一次 */
+ say();
+ if(AUTO)autoNext();
 }
 var spoke=false;
 function armFirstTouch(){
@@ -648,18 +685,43 @@ function armFirstTouch(){
  document.addEventListener("pointerdown",go);document.addEventListener("keydown",go);
 }
 
-document.getElementById("prev").addEventListener("click",function(){show(i-1)});
-document.getElementById("next").addEventListener("click",function(){show(i+1)});
+var WPREV="i-am.html",WNEXT="name.html",WLAST=false;
+function goPrev(){stopAuto();if(i===0){location.href=WPREV+"#last";return}show(i-1)}
+function goNext(){stopAuto();if(i===SCENES.length-1){location.href=WNEXT;return}show(i+1)}
+document.getElementById("prev").addEventListener("click",goPrev);
+document.getElementById("next").addEventListener("click",goNext);
+/* 💡 補充：按一次出現、再按一次收回（記住開關，換幕、換字都一樣） */
+card.addEventListener("click",function(e){var b=e.target.closest?e.target.closest(".supb"):null;if(!b)return;
+ e.stopPropagation();var on=!document.body.classList.contains("sup");document.body.classList.toggle("sup",on);
+ b.textContent=on?"💡 收起補充":"💡 補充";try{sessionStorage.setItem("wsup",on?"1":"")}catch(x){}},true);
+try{if(sessionStorage.getItem("wsup"))document.body.classList.add("sup")}catch(x){}
+/* ▶ 自動播放（2026-10-03 使用者指定）：每一幕唸完自動換下一幕，最後一幕唸完換下一個單字，到這一組最後一個字停 */
+var AUTO=false,AT=null;
+function stopAuto(){AUTO=false;if(AT){clearTimeout(AT);AT=null}var b=document.getElementById("autob");if(b)b.classList.remove("on")}
+function autoNext(){var my=i;PH.after(function(){if(!AUTO||i!==my)return;AT=setTimeout(function(){if(!AUTO||i!==my)return;
+ if(i<SCENES.length-1){show(i+1);return}
+ if(WLAST){stopAuto();return}
+ location.href=WNEXT+"#auto"},1100)})}
+document.getElementById("autob").addEventListener("click",function(){
+ if(AUTO){stopAuto();PH.stop&&PH.stop();return}
+ AUTO=true;this.classList.add("on");show(i)});
 /* 🔊 唸 3 次（2026-10-02 指定；「唸 1 次」刪掉了，點單字就會唸一次）：唸完一次才唸下一次，換幕或點別的就停 */
 var s3=0;
-function say3(){var my=++s3,n=0;(function go(){if(my!==s3)return;say();if(++n<3)PH.after(function(){setTimeout(go,650)})})()}
-document.getElementById("say3").addEventListener("click",say3);
+function say3(){stopAuto();var my=++s3,n=0,b=document.getElementById("say3");b.classList.add("on");
+ (function go(){if(my!==s3)return;say();if(++n<3)PH.after(function(){setTimeout(go,650)});else PH.after(function(){if(my===s3)b.classList.remove("on")})})()}
+document.getElementById("say3").addEventListener("click",function(){if(this.classList.contains("on")){s3++;this.classList.remove("on");return}say3()});
 document.addEventListener("keydown",function(e){
- if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();show(i+1)}
- if(e.key==="ArrowLeft")show(i-1);
+ if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();goNext()}
+ if(e.key==="ArrowLeft")goPrev();
 });
+document.getElementById("say1").addEventListener("click",function(){stopAuto();s3++;say()});
 
-show(0);
+/* 自動播放換到下一個字：iPad 的規定是「換一頁就要再點一下才可以出聲」，所以先出現一顆大按鈕，點一下就接著播 */
+if(location.hash==="#auto"){spoke=true;
+ document.body.insertAdjacentHTML("beforeend",'<button id="autogo" type="button">▶ 繼續自動播放</button>');
+ document.getElementById("autogo").addEventListener("click",function(){this.parentNode.removeChild(this);
+  AUTO=true;document.getElementById("autob").classList.add("on");show(0)})}
+show(location.hash==="#last"?SCENES.length-1:0);
 armFirstTouch();
 
 document.getElementById("parts").addEventListener("click",function(){location.href="sight-parts.html#3"});

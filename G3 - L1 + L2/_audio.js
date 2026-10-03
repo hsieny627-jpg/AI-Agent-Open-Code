@@ -11,63 +11,15 @@ const path = require('path');
 const D = require('./_data'), Q = require('./_quiz_data'), G = require('./_game_data');
 const { pack } = require('../tools/audio_pack');
 
-const T = [];
-const add = s => { if (s && /[A-Za-z]/.test(String(s))) T.push(String(s)); };
-const CON = /^['’](s|m|re)$/;
-const plain = tk => tk.map(t => t.tight ? t.en : ' ' + t.en).join('').trim();
-const words = tk => tk.forEach((t, i) => add(CON.test(t.en) && i ? tk[i - 1].en + "'" + t.en.slice(1) : (t.say || t.en)));
-const spk = s => String(s).replace(/[➜…]/g, ' ');
-/* 一串 token：整句、每一個字，再加上每一個替換字換進去以後的整句 */
-function list(tk) {
-  if (!tk) return;
-  add(plain(tk)); words(tk);
-  const sl = tk.filter(t => t.slot)[0];
-  /* 2026-10-02：替換字切換（物品 1／物品 2、活動 1／活動 2）的字也要整句做成語音檔 */
-  const more = sl && D.SUB[sl.slot] && D.SUB[sl.slot].sets ? [].concat(...D.SUB[sl.slot].sets.slice(1).map(x => [].concat(...x.rows.map(r => r[1])))) : [];
-  if (sl && D.SUB[sl.slot]) D.SUB[sl.slot].basic.concat(D.SUB[sl.slot].adv).concat(more).forEach(w => {
-    const tt = tk.map(t => t.slot ? Object.assign({}, t, { en: w[0] }) : t);
-    add(plain(tt)); add(w[0]);
-  });
-}
-D.U1.concat(D.U2).forEach(c => {
-  ['tk', 'a', 'b', 'c', 'qtk', 'atk', 'st', 'qu'].forEach(k => list(c[k]));
-  if (c.type === 'pair') { add(plain(c.qtk) + ' ' + plain(c.atk)); }
-  if (c.type === 'morph') add(c.say);
-  if (c.type === 'focus') { c.rows.forEach(r => add(spk(r[0]))); add(c.rows.map(r => spk(r[0])).join(' ')); add(c.rows.map(r => spk(r[0])).join(', ')); }
-  if (c.type === 'echo') c.rows.forEach(r => { add(r.q); add(r.a); add(r.q + ' ' + r.a); r.q.split(' ').concat(r.a.split(' ')).forEach(add); });
-  if (c.type === 'order') { add(c.say); c.enRow.forEach((x, n) => add(CON.test(x[0]) && n ? c.enRow[n - 1][0] + "'" + x[0].slice(1) : x[0])); }
-  const s = c.scene; if (s) { if (!s.bzh) add(s.b); add(s.b2); }
-});
-/* 複習題：答錯頁會唸正確答案 */
-D.RV1.concat(D.RV2).forEach(g => g.q.forEach(q => add(q.o[0])));
-/* 暖身題：聽力題的句子、正確答案 */
-Q.Q.forEach(q => { add(q.say); add(q.o[q.a != null ? q.a : 0]); });
-/* 遊戲：每一種遊戲會唸出來的東西 */
-const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
-const fillBl = (txt, w) => String(txt).replace(/___/g, (m, off, all) => {
-  const pre = all.slice(0, off); return (/^\s*$/.test(pre) || /[.?!]\s*$/.test(pre)) ? cap(w) : w; });
-const joinS = a => a.join(' ').replace(/ ([?.,!])/g, '$1').replace(/ (['’]s)/g, '$1');
-G.G1.concat(G.G10).forEach(c => c.o.forEach(add));
-G.G2.forEach(c => { add(fillBl(c.txt, c.a)); add(fillBl(c.txt, c.a === 'I' ? 'my' : 'I')); });
-G.G3.forEach(c => { c.s.forEach(add); add(joinS(c.s)); });
-G.G4.forEach(c => { add(c.f); c.o.forEach(add); });
-G.G5.forEach(c => { add(c.s); c.o.forEach(add); });
-G.G6.forEach(p => add(p[0]));
-G.G7.forEach(c => { add(joinS(c.w)); if (c.b >= 0) { const w = c.w.slice(); w[c.b] = c.fix; add(joinS(w)); } });
-G.G8.forEach(c => c.o.forEach(o => add((c.b + ' ' + o + ' ' + c.a).replace(/ ([?.,])/g, '$1'))));
-G.G9.forEach(c => add(c[0]));
-
+/* 2026-10-03：收集的方法搬到 sentences/_audio_collect.js（四年級也用同一套）：原本的卡、上方分頁的卡、Review 1、
+   每一個替換字、問句女聲／答句男聲（'m:'）、複習題、暖身題、遊戲 */
+const T = require('../sentences/_audio_collect').collect(D, Q, G);
 /* 句子重音（使用者 2026-09-26 指定）：數字是 content word，音高比較高（stressed）；years old 是 function words，唸得比較輕。
    + ＝ 重音、- ＝ 輕讀，做法見 tools/stress.py */
 ['six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'].forEach(n => {
   /* 2026-09-27 使用者：years、old 都是輕聲，接近中文三聲（低、平）；old 不可以像中文四聲往下掉 ➜ ~ ＝ 低平 */
-  T.push("I'm +" + n + ' ~years ~old.', 'I am +' + n + ' ~years ~old.', "I'm +" + n + '.', 'I am +' + n + '.');
+  [''].concat(['m:']).forEach(v => T.push(v + "I'm +" + n + ' ~years ~old.', v + 'I am +' + n + ' ~years ~old.', v + "I'm +" + n + '.', v + 'I am +' + n + '.'));   /* m: ＝ 答句的男聲（2026-10-03） */
 });
-/* Review 1（2026-09-26 新增）：每一句、每一個替換字換進去的句子 */
-(D.XPAGES || []).forEach(P => (P.cards || []).forEach(c => {
-  list(c.tk); const s = c.scene; if (s) { add(s.b); add(s.b2); }
-}));
-(D.XPAGES || []).forEach(P => (P.rv || []).forEach(g => g.q.forEach(q => add(q.o[0]))));
 /* LEGO 全大寫會被唸成 L-E-G-O：鑰匙照畫面，唸的時候換成 Lego（跟 review1 一樣；2026-10-02 起新做的句子適用） */
 const r = pack({ texts: T, dir: path.join(__dirname, 'audio'), lang: 'en', varName: 'AUD', speak: s => s.replace(/\bLEGO\b/g, 'Lego') });
 console.log('語音檔：' + r.total + ' 句（這次新做 ' + r.made + ' 句）');

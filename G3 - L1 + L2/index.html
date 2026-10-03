@@ -184,6 +184,28 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 
 .reduce *{animation:none!important;transition:none!important}
 
+
+.gr{width:100%;max-width:1100px;border:1px solid #1E1E1E;border-radius:18px;background:#060606;
+ padding:clamp(6px,1.1vh,12px) clamp(10px,1.4vw,16px)}
+.gr h2{margin:0 0 clamp(4px,.7vh,8px);font-size:clamp(20px,3.2vh,30px);color:#FFD66B;letter-spacing:.08em;display:flex;align-items:baseline;gap:12px}
+.gr h2 a{font-size:clamp(12px,1.7vh,15px);color:#9FB4C8;text-decoration:none;letter-spacing:.04em;border-bottom:1px solid #2A3A48}
+.gl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:repeat(4,auto);grid-auto-flow:column;gap:clamp(5px,.8vh,9px) clamp(8px,1.2vw,14px)}
+@media (max-width:860px){.gl{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}}
+.gi{display:flex;align-items:center;gap:clamp(8px,1vw,12px);background:#0C0C0C;border:1px solid #232323;border-radius:14px;
+ padding:clamp(4px,.7vh,8px) clamp(8px,1vw,12px);min-height:clamp(46px,6.4vh,62px)}
+.gi .gn{flex:0 0 auto;width:1.7em;height:1.7em;border-radius:50%;background:#1A2530;color:#9FB4C8;font-weight:700;
+ display:flex;align-items:center;justify-content:center;font-size:clamp(13px,1.9vh,17px)}
+.gi .gx{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:1px}
+.gi .gx b{font-size:clamp(15px,2.3vh,21px);line-height:1.25}
+.gi .gx b .gic{margin-right:6px}
+.gi .gx b .gic svg{height:1em;width:auto;vertical-align:-.12em}
+.gi .gx i{font-style:normal;font-size:clamp(11.5px,1.6vh,14px);color:#8E8E8E;white-space:nowrap}
+.gi .gb{flex:0 0 auto;display:flex;gap:clamp(5px,.7vw,8px)}
+.gi .gb a{display:flex;align-items:center;gap:5px;text-decoration:none;color:#F2F2F2;background:#18222B;border:1px solid #3A4A58;
+ border-radius:99px;padding:clamp(6px,.9vh,9px) clamp(10px,1.3vw,15px);font-size:clamp(14px,2.1vh,18px);font-weight:700;white-space:nowrap;min-height:42px}
+.gi .gb a:hover{border-color:#9FB4C8}
+.gi .gb a:active{transform:scale(.97)}
+.gr{border:0;background:none;padding:0}
 #stage{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
  display:flex;flex-direction:column;align-items:center;justify-content:center;
  padding:calc(var(--safeT) + clamp(16px,3vh,32px)) clamp(14px,3.4vw,40px)
@@ -225,71 +247,8 @@ h1{margin:0;font-size:clamp(25px,4.8vh,46px);font-weight:700;letter-spacing:.03e
  <div class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code/G3%20-%20L1%20+%20L2/</b></div>
 </header>
 
-<nav id="menu">
- <a class="card" href="warmup.html">
-  <span class="n">1</span><span class="ic">🎯</span>
-  <span class="t">暖身題</span>
-  <span class="d">四選一，倒數 50 秒，題目和選項每次都重新洗牌，<b>愈快答對分數愈高</b>。答錯的題目最後再考一次。</span>
-  <span class="f">24 題　其中 6 題 分數 ✕ 2</span></a>
-
- <a class="card" href="unit1.html">
-  <span class="n">2</span><span class="ic"><svg class="nmsvg" viewBox="0 0 140 100" role="img" aria-label="name" style="width:1.4em;height:1em;vertical-align:-.14em;overflow:visible;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.35))"><rect x="3" y="3" width="134" height="94" rx="14" fill="#E53935" stroke="#9F1B1B" stroke-width="3"/><path d="M9 12q0-6 6-6h110q6 0 6 6v8H9z" fill="#fff" opacity=".16"/><text x="70" y="31" text-anchor="middle" font-family="Arial Black,Arial,Helvetica,sans-serif" font-weight="900" font-size="27" letter-spacing="2" fill="#fff">HELLO</text><text x="70" y="45" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="11.5" fill="#FFE3E0">my name is</text><rect x="12" y="51" width="116" height="38" rx="6" fill="#fff"/><text x="70" y="80" text-anchor="middle" font-family="Chalkboard SE,Comic Sans MS,Marker Felt,cursive" font-weight="700" font-size="27" fill="#1B3A8A">Ken</text></svg></span>
-  <span class="t">Unit 1 句型</span>
-  <span class="d">What’s your name?　My name is Ken.／I’m Ken.　逐字動畫、縮寫變身、中英語序、名字替換字，下面還有「📝 複習」。</span>
-  <span class="f">17 張字卡</span></a>
-
- <a class="card" href="unit2.html">
-  <span class="n">3</span><span class="ic">🎂</span>
-  <span class="t">Unit 2 句型</span>
-  <span class="d">How old are you?　I’m ten years old.／I’m ten.　you 問 ➜ I 答、數字 6～12 替換字，下面還有「📝 複習」。</span>
-  <span class="f">17 張字卡</span></a>
-
- <!-- 2026-09-26 使用者指定新增：Review 1（學以致用，用英文介紹自己） -->
- <a class="card" href="review1.html">
-  <span class="n">4</span><span class="ic">📝</span>
-  <span class="t">Review 1　介紹我自己</span>
-  <span class="d">Hi.／My name is ___.／I’m ___ years old.／I like ___.／I like to ___.／How about you?　最酷的 20 個東西、20 個活動任你換。</span>
-  <span class="f">6 張字卡</span></a>
-
- <!-- 2026-10-02：Review 1 單字卡（物品／活動 98 個字，三、四年級共用 review1/） -->
- <a class="card" href="../review1/index.html">
-  <span class="n">5</span><span class="ic">🃏</span>
-  <span class="t">Review 1 單字卡</span>
-  <span class="d">I like ___.／I like to ___.　小學生最喜歡的 50 個東西、48 個活動：每個字都有「小學生真的喜歡嗎？」的證據。</span>
-  <span class="f">98 張字卡</span></a>
-
- <!-- 2026-10-02：Review 1 遊戲（物品／活動 22 種，三、四年級共用 review1/games.html） -->
- <a class="card go" href="../review1/games.html">
-  <span class="n">6</span><span class="ic">🕹️</span>
-  <span class="t">Review 1 遊戲</span>
-  <span class="d">I like ___.／I like to ___.　物品、活動各 10 種玩法，還有三年級進階、四年級進階魔王挑戰。</span>
-  <span class="f">22 種　共 827 題</span></a>
-
- <a class="card go" href="games.html">
-  <span class="n">7</span><span class="ic">🎮</span>
-  <span class="t">複習遊戲</span>
-  <span class="d">10 種玩法，每個遊戲 <b>3 分鐘</b>、愈快分數愈高。<b>連對 3 題</b>抽驚喜卡：二～五選一，每次卡包樣式都不一樣。</span>
-  <span class="f">10 種　共 222 題</span></a>
-
- <!-- 2026-09-25 使用者指定新增：數字單字、Sight Words（照家人單字的架構） -->
- <a class="card" href="numbers/index.html">
-  <span class="n">8</span><span class="ic">🔢</span>
-  <span class="t">數字單字</span>
-  <span class="d">zero～twelve 字卡、結構、故事、環遊世界。母音紅色、不發音淺灰。</span>
-  <span class="f">13 張字卡</span></a>
-
- <a class="card" href="sight/index.html">
-  <span class="n">9</span><span class="ic">👀</span>
-  <span class="t">Sight Words 常見字</span>
-  <span class="d">I、My、You、Your、name、What、How old…… 字卡、結構、故事、環遊世界。</span>
-  <span class="f">15 張字卡</span></a>
-</nav>
-
-<div id="order">
- 上課順序：<b>暖身題</b><span class="ar">➜</span><b>Unit 1</b><span class="ar">➜</span>
- <b>Unit 2</b><span class="ar">➜</span><b>Review 1</b><span class="ar">➜</span><b>遊戲</b>
- <span class="ar">｜</span>暖身題老師可以跳過，直接上句型
-</div>
+<!-- 2026-10-03 使用者指定：年級首頁跟總首頁同一個順序（words/_grades.js）：(1) 暖身題 … (7) 在家複習 -->
+<section class="gr"><div class="gl"><div class="gi"><span class="gn">1</span><span class="gx"><b><span class="gic">🎯</span>暖身題</b></span><span class="gb"><a href="../G3%20-%20L1%20+%20L2/warmup.html">🎯 暖身 24 題</a></span></div><div class="gi"><span class="gn">2</span><span class="gx"><b><span class="gic"><svg class="nmsvg" viewBox="0 0 140 100" role="img" aria-label="name" style="width:1.4em;height:1em;vertical-align:-.14em;overflow:visible;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.35))"><rect x="3" y="3" width="134" height="94" rx="14" fill="#E53935" stroke="#9F1B1B" stroke-width="3"/><path d="M9 12q0-6 6-6h110q6 0 6 6v8H9z" fill="#fff" opacity=".16"/><text x="70" y="31" text-anchor="middle" font-family="Arial Black,Arial,Helvetica,sans-serif" font-weight="900" font-size="27" letter-spacing="2" fill="#fff">HELLO</text><text x="70" y="45" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="11.5" fill="#FFE3E0">my name is</text><rect x="12" y="51" width="116" height="38" rx="6" fill="#fff"/><text x="70" y="80" text-anchor="middle" font-family="Chalkboard SE,Comic Sans MS,Marker Felt,cursive" font-weight="700" font-size="27" fill="#1B3A8A">Ken</text></svg></span>Unit 1　名字</b><i>What’s your name?</i></span><span class="gb"><a href="../G3%20-%20L1%20+%20L2/sight/index.html">👀 單字</a><a href="../G3%20-%20L1%20+%20L2/unit1.html">💬 句型</a></span></div><div class="gi"><span class="gn">3</span><span class="gx"><b><span class="gic">🎂</span>Unit 2　年齡</b><i>How old are you?</i></span><span class="gb"><a href="../G3%20-%20L1%20+%20L2/numbers/index.html">🔢 單字</a><a href="../G3%20-%20L1%20+%20L2/unit2.html">💬 句型</a></span></div><div class="gi"><span class="gn">4</span><span class="gx"><b><span class="gic">📝</span>Review 1</b><i>介紹我自己</i></span><span class="gb"><a href="../G3%20-%20L1%20+%20L2/review1.html">💬 句型</a><a href="../review1/index.html">🃏 單字</a><a href="../review1/games.html">🕹️ 遊戲</a></span></div><div class="gi"><span class="gn">5</span><span class="gx"><b><span class="gic">🌍</span>句型環遊世界</b></span><span class="gb"><a href="../G3%20-%20L1%20+%20L2/sight/sight-world.html">🌍 別的國家怎麼說</a></span></div><div class="gi"><span class="gn">6</span><span class="gx"><b><span class="gic">🎮</span>複習遊戲</b></span><span class="gb"><a href="../G3%20-%20L1%20+%20L2/games.html">🎮 10 種遊戲</a></span></div><div class="gi"><span class="gn">7</span><span class="gx"><b><span class="gic">🏠</span>三年級複習</b><i>在家複習</i></span><span class="gb"><a href="../g3-review/index.html">🏠 三年級複習</a></span></div></div></section>
 </main>
 
 <nav id="bar">
@@ -389,7 +348,8 @@ function pump(){
  var it=SQ.shift();if(!it)return;
  var t=sayText(it.t);
  if(!t){if(it.done)try{it.done()}catch(e){};setTimeout(pump,0);return}
- if(it.l!=='zh'&&window.AUD){var au=AUD[akey(t)];if(au&&aPlay(it,t,au))return}
+ /* 兩種聲音（2026-10-03）：it.v＝'m' 先查男聲的鑰匙 'm:…'，沒有才用一般的 */
+ if(it.l!=='zh'&&window.AUD){var au=(it.v&&AUD[it.v+':'+akey(t)])||AUD[akey(t)];if(au&&aPlay(it,t,au))return}
  var u;try{u=new SpeechSynthesisUtterance(t)}catch(e){if(it.done)try{it.done()}catch(e2){};return}
  if(it.l==='zh'){u.lang='zh-TW';if(VOXZH)u.voice=VOXZH;u.rate=RATE}
  else{u.lang='en-US';if(VOX)u.voice=VOX;u.rate=RATE}
@@ -428,11 +388,14 @@ function pump(){
    say(字,null,{keep:1}) ＝ 排隊，前一個講完才講（自動播、逐字用這個）
    say(句子,null,{done:fn}) ＝ 講完再做一件事
    say(句子,null,{hl:fn})   ＝ 念到第 k 個字就呼叫 fn(k)，念完呼叫 fn(-1)（念到哪亮到哪）
-   say(句子,null,{start:fn})＝ 真的開始出聲的那一刻呼叫 fn */
+   say(句子,null,{start:fn})＝ 真的開始出聲的那一刻呼叫 fn
+   say(句子,null,{v:'m'})   ＝ 用男聲（答句；2026-10-03 使用者指定問句、答句聽得出是不同人） */
+/* 問答兩種聲音：答句說女生名字（Emma、Wendy、Amy、Mia）➜ 問句男聲、答句女聲；其他 ➜ 問句女聲、答句男聲（Ken、Alan、Mike 一律男聲） */
+function qaV(ans){return /(Emma|Wendy|Amy|Mia)/.test(String(ans))?['m','']:['','m']}
 function say(txt,lang,opt){
  opt=opt||{};
  if(!txt||!sayText(txt)){if(opt.done)opt.done();return}
- var item={t:txt,l:lang,done:opt.done,hl:opt.hl,start:opt.start};
+ var item={t:txt,l:lang,done:opt.done,hl:opt.hl,start:opt.start,v:opt.v};
  if(opt.keep){if(SQ.length>4)SQ.length=4;SQ.push(item);pump();return}
  SQ.length=0;SID++;SBUSY=false;APLAY=false;
  if(window.HLCLR)try{HLCLR()}catch(e){}

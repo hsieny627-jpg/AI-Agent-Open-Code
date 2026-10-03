@@ -323,10 +323,92 @@ var RV2 = [
  ]}
 ];
 
+/* ════════ 分頁（使用者 2026-10-03 指定）════════
+ * Unit 1／Unit 2 上方的按鈕：一-1 句型、一-2 中英語序、二 回答、三 一問一答、四 原本句型（原本全部的卡）。
+ * 一-1 和 二 再分「基礎／進階」。寫「沿用原來字卡」的 ＝ 直接用上面 U1／U2 那一張（同一個物件）。
+ * 「______」的規則（2026-10-03 Q2）：有寫「字卡下方：替換…」的卡一開始就有字（Ken／ten），點替換字就換；
+ *   沒寫的空格卡（What is ______?）＝ 底線、沒有替換字，空格不唸。
+ * one:1 ＝ 一個字一張：字放大、切到這張自動唸一次。 */
+var BL = function () { return t('______', '______', '', { blank: 1 }); };
+var ONE = function (tk) { return { type: 'sent', one: 1, tk: tk }; };
+var old1 = function () { return t('old', '老的', '👴'); };
+var How1 = function () { return t('How', '如何', ICON.how); };
+var U1T = {
+  b11: [ONE([W.What()]), ONE([W.is()]), ONE([W.your()]), ONE([W.name()]),
+    { type: 'sent', zh: '你的名字是什麼？', tk: [W.What(), W.is(), W.your(), W.name(), W.q()] },
+    U1[3], U1[1],
+    { type: 'sent', zh: '______ 是什麼？', tk: [W.What(), W.is(), BL(), W.q()] },
+    { type: 'eq', a: [W.What(), W.is({ ri: 'i' }), BL(), W.q()], b: [W.What(), W.s(), BL(), W.q()] },
+    U1[3], U1[1]],
+  a11: [{ type: 'sent', zh: '你的名字是什麼？', tk: [W.What(), W.is(), W.your(), W.name(), W.q()] }, U1[3], U1[1]],
+  b2: [ONE([W.My()]), ONE([W.name()]), ONE([W.is()]), U1[5],
+    { type: 'eq', a: [W.My(), W.name(), W.is(), BL(), W.dot()], b: [W.I(), W.am(), BL(), W.dot()] },
+    U1[9],
+    { type: 'eq', a: [W.My(), W.name(), W.is(), BL(), W.dot()], b: [W.I(), W.m(), BL(), W.dot()] },
+    ONE([W.I()]), ONE([W.am()]),
+    { type: 'sent', zh: '我是 Ken。', slot: 'name', tk: [W.I(), W.am(), W.nm('Ken'), W.dot()] },
+    U1[8],
+    { type: 'sent', zh: '我是 ______。', tk: [W.I(), W.m(), BL(), W.dot()] },
+    { type: 'eq', a: [W.My(), W.name(), W.is(), BL(), W.dot()], b: [W.I(), W.m(), BL(), W.dot()] }],
+  a2: [{ type: 'sent', zh: '我的名字是 ______。', tk: [W.My(), W.name(), W.is(), BL(), W.dot()] },
+    { type: 'eq', a: [W.My(), W.name(), W.is(), BL(), W.dot()], b: [W.I(), W.am(), BL(), W.dot()] },
+    { type: 'eq', left: 1, a: [W.My(), W.name(), W.is(), BL(), W.dot()], b: [W.I(), W.am({ ri: 'a' }), BL(), W.dot()], c: [W.I(), W.m(), BL(), W.dot()] },
+    { type: 'eq', a: [W.My(), W.name(), W.is(), BL(), W.dot()], b: [W.I(), W.m(), BL(), W.dot()] },
+    { type: 'sent', zh: '我是 ______。', tk: [W.I(), W.m(), BL(), W.dot()] }]
+};
+var U2T = {
+  b11: [ONE([How1()]), ONE([old1()]), ONE([W.are()]), ONE([W.you()]),
+    { type: 'sent', zh: '你幾歲？', tk: [How1(), old1(), W.are(), W.you(), W.q()] },
+    { type: 'sent', zh: '______ 幾歲？', tk: [W.HowOld(), BL(), W.q()] },
+    U2[1]],
+  a11: [{ type: 'sent', zh: '______ 幾歲？', tk: [W.HowOld(), BL(), W.q()] }, U2[1]],
+  b2: [ONE([W.I(), W.m()]), ONE([t('ten', '十', ICON.ten)]), ONE([t('years', '年', '📅')]), ONE([old1()]),
+    { type: 'sent', zh: '十歲。', slot: 'age', tk: [W.ten(), W.yo(), W.dot()] },
+    U2[3], U2[7], U2[6]],
+  a2: [U2[3], U2[7], U2[6]],
+  /* 一問一答：How old are you? I’m ten years old. ＝ I’m ten.（新做，樣子跟 Unit 1 最後一張一樣） */
+  p3: { type: 'pair', cls: 'b', slot: 'age', qic: ICON.howold, aic: ICON.ten,
+    qtk: [W.HowOld(), W.are(), W.you(), W.q()],
+    atk: [W.I(), W.m(), W.ten(), W.yo(), W.dot(), t('＝', '', '', { eqs: 1 }), W.I(), W.m(), W.ten(), W.dot()],
+    qzh: '你 幾歲？', azh: '我 是 十 歲。＝ 我 是 十 歲。' }
+};
+var TABS1 = [
+  { n: '一-1', lb: 'What’s your name?', sub: [{ lb: '基礎', cards: U1T.b11 }, { lb: '進階', cards: U1T.a11 }] },
+  { n: '一-2', lb: '中英語序', cards: [U1[4]] },
+  { n: '二', lb: 'My name is ___.', sub: [{ lb: '基礎', cards: U1T.b2 }, { lb: '進階', cards: U1T.a2 }] },
+  { n: '三', lb: '一問一答', cards: [U1[13], U1[15], U1[14]] },
+  { n: '四', lb: '原本句型', cards: U1 }
+];
+var TABS2 = [
+  { n: '一-1', lb: 'How old are you?', sub: [{ lb: '基礎', cards: U2T.b11 }, { lb: '進階', cards: U2T.a11 }] },
+  { n: '一-2', lb: '中英語序', cards: [U2[2]] },
+  { n: '二', lb: 'I’m ten years old.', sub: [{ lb: '基礎', cards: U2T.b2 }, { lb: '進階', cards: U2T.a2 }] },
+  { n: '三', lb: '一問一答', cards: [U2[14], U2T.p3, U2[15]] },
+  { n: '四', lb: '原本句型', cards: U2 }
+];
+
+/* 三年級複習網站（2026-10-03 使用者指定，獨立網址 g3-review/）：Unit 1、Unit 2 的進階句型、中英語序、縮寫動畫。
+   頁面寫到 ../g3-review/，語音檔和頭像還是用這一課的（fix 換路徑）；首頁和遊戲由 sentences/_build_review.js 產生 */
+var G3D = '../G3%20-%20L1%20+%20L2/';
+var RFIX = function (h) {
+  var n0 = h.split('<script src="audio/aud.js"></script>').length;
+  if (n0 !== 2) throw new Error('三年級複習：找不到語音檔那一行');
+  return h.replace('<script src="audio/aud.js"></script>', '<script src="' + G3D + 'audio/aud.js"></script><script>window.AUDDIR="' + G3D + 'audio/";</script>')
+    .split('src="avatars/').join('src="' + G3D + 'avatars/').split("src=\"avatars/").join("src=\"" + G3D + "avatars/");
+};
+var RPAGES = [
+  { file:'../g3-review/u1.html', unit:1, title:'三年級複習｜Unit 1 What’s your name?', other:'u2.html', otherName:'➡ Unit 2', fix:RFIX,
+    tabs:[{ n:'一', lb:'What’s your name?', cards:U1T.a11 }, { n:'二', lb:'My name is ___.', cards:U1T.a2 },
+          { n:'三', lb:'中英語序', cards:[U1[4]] }, { n:'四', lb:'縮寫動畫', cards:[U1[2], U1[7]] }] },
+  { file:'../g3-review/u2.html', unit:2, title:'三年級複習｜Unit 2 How old are you?', other:'u1.html', otherName:'⬅ Unit 1', fix:RFIX,
+    tabs:[{ n:'一', lb:'How old are you?', cards:U2T.a11 }, { n:'二', lb:'I’m ten years old.', cards:U2T.a2 },
+          { n:'三', lb:'中英語序', cards:[U2[2]] }, { n:'四', lb:'縮寫動畫', cards:[U2[4], U2[9]] }] }
+];
+
 /* 頁面：標題、互相連結 */
 var PAGES = [
-  { file:'unit1.html', unit:1, title:'Unit 1 句型｜What’s your name?', other:'unit2.html', otherName:'➡ Unit 2' },
-  { file:'unit2.html', unit:2, title:'Unit 2 句型｜How old are you?', other:'unit1.html', otherName:'⬅ Unit 1' }
+  { file:'unit1.html', unit:1, title:'Unit 1 句型｜What’s your name?', other:'unit2.html', otherName:'➡ Unit 2', tabs:TABS1 },
+  { file:'unit2.html', unit:2, title:'Unit 2 句型｜How old are you?', other:'unit1.html', otherName:'⬅ Unit 1', tabs:TABS2 }
 ];
 
 /* ── 情境：兩個人演一次的小劇場（欄位跟 sentences 一樣）──
@@ -462,4 +544,4 @@ var XPAGES = [
 var GLX = { 'how':'如何' };
 var TRX = { 'You are seven.':'你七歲。', "You're seven.":'你七歲。', 'I am ten.':'我十歲。', "I'm ten.":'我十歲。',
   'I am ten years old.':'我十歲。', "I'm ten years old.":'我十歲。', 'I am Ken.':'我是 Ken。', "I'm Ken.":'我是 Ken。' };
-module.exports = { XPAGES:XPAGES, GLX:GLX, TRX:TRX, ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, SIL:SIL, CONTR:CONTR, PAGES:PAGES, CSS:CSS };
+module.exports = { RPAGES:RPAGES, TABS1:TABS1, TABS2:TABS2, XPAGES:XPAGES, GLX:GLX, TRX:TRX, ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, SIL:SIL, CONTR:CONTR, PAGES:PAGES, CSS:CSS };

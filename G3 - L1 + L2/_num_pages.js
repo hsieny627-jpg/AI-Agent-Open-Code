@@ -228,7 +228,7 @@ const numW = [
   /* 2026-09-28 使用者第 12(2) 點：學生看不懂 zero 的演變、字太小 ➜ 四站路線圖，一站一站亮，每一站：地方、大約幾年前、那裡的字、意思；
      一顆「0」沿著路線走過去。śūnya ➜ ṣifr 是「翻譯」（意思一樣），ṣifr ➜ zefiro ➜ zero 才是「唸法變了」，畫面照實寫 */
   { tag: 'zero 的旅行', src: 'zero', say: 'zero',
-    q: { q: '把「<b>0</b>」當成數字來算，最早是哪裡的人？', o: ['印度', '英國', '美國', '日本'] },
+    q: { q: '把「<b>0</b>」當成數字來算，最早是哪裡的人？', o: ['印度', '英國', '美國', '阿拉伯'] },
     h: '<div class="zj">' + [['🛕', '印度', '1400', 'śūnya', '空的'], ['🕌', '阿拉伯', '1200', 'ṣifr', '空的（翻譯過來）'],
       ['🏛', '義大利', '800', 'zephirum', '1202 年 Fibonacci 寫進書裡'], [F('gb'), '英國', '400', 'zero', '零']].map((r, k) =>
       (k ? '<span class="zar" style="animation-delay:' + (0.3 + k * 0.9).toFixed(1) + 's"><i>0</i></span>' : '') +
@@ -256,7 +256,7 @@ const numW = [
     h: '<div class="fing"><span>🖐🖐</span> <span class="p1">＋ ☝️</span></div><div class="en in d1" style="font-size:clamp(30px,5.6vh,54px)">{{eleven}}　{{twelve}}</div>',
     lines: ['數完十根手指，<b>還剩一</b> ➜ eleven', '<b>還剩二</b> ➜ twelve'] },
   { tag: '童謠裡的 24', src: 'rhyme', say: 'four and twenty', was: { o: 'four and twenty', y: '280', e: '英國童謠（1744 年）', n: 'twenty-four', raw: 1 },
-    q: { q: '英國童謠唱「<b>four and twenty</b> blackbirds」，是幾隻鳥？', o: ['24', '420', '4', '6'] },
+    q: { q: '英國童謠唱「<b>four and twenty</b> blackbirds」，是幾隻鳥？', o: ['24', '420', '4', '42'] },
     h: '<div class="birds">' + Array.from({ length: 24 }, (_, k) => '<i style="animation-delay:' + (0.1 + k * 0.06).toFixed(2) + 's">🐦‍⬛</i>').join('') + '</div>' +
       '<div class="gstory" style="display:flex">' + sayR('four and twenty<em>4 和 20</em>', .4) + sayR(F('de') + ' vierundzwanzig<em>4 和 20</em>', 1) + sayR('＝ 24', 1.6) + '</div>',
     lines: ['以前英文也像德文：<b>先說 4，再說 20</b>', '今天英文改成 <b>twenty-four</b>'] },

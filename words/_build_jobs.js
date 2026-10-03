@@ -150,7 +150,7 @@ const PAGES = [
  {tag:'很認真的人',emoji:'📖',say:'student',src:'student',evo:'student',q:{q:'student 從拉丁文 <b>studēre</b> 來，它的意思是？',o:['很認真','很會考試','穿制服','住在學校']},
   h:'<div class="en in d1">{{student}}</div>',
   lines:['拉丁文 <b class="nosay">studēre</b> ＝ <b>很認真</b>','很認真學習的人 ➜ <b>student</b>']},
- {tag:'指給你看',emoji:'👉📖',say:'teacher',src:'teacher',evo:'teacher',q:{q:'以前的 <b>teach</b>，意思是？',o:['指給你看','打分數','罵人','唱歌']},
+ {tag:'指給你看',emoji:'👉📖',say:'teacher',src:'teacher',evo:'teacher',q:{q:'以前的 <b>teach</b>，意思是？',o:['指給你看','打分數','說故事','寫黑板']},
   h:'<div class="en in d1"><span class="fromL">{{teach}}</span> <span class="ar">＋</span> <span class="fromR hi">er</span></div>' +
     '<div class="en pop" style="animation-delay:1.2s">{{teacher}}</div>',
   lines:['以前的 <b>teach</b> ＝ <b>指給你看</b>','指給你看、教你的人 ➜ <b>teacher</b>']},

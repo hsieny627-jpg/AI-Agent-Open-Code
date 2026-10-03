@@ -25,7 +25,9 @@ const NAMETAG = require('../sentences/_nametag').TAG;   /* 三年級的圖示 �
 const DIR = __dirname, ROOT = path.join(__dirname, '..');
 const WORDS = JSON.parse(fs.readFileSync(path.join(DIR, '_words.json'), 'utf8'));
 
-/* 上課順序。href 一律相對於專案根目錄。
+/* 2026-10-03 使用者指定：首頁簡化，三年級在上、四年級在下，每個年級照 (1) 暖身題 … (7) 在家複習 的順序，
+   內容寫在 words/_grades.js（年級首頁也用同一份）。下面的 STEPS／GROUPS／EXTRA 是舊版，留著給四年級單字首頁參考，首頁不再用。
+   上課順序。href 一律相對於專案根目錄。
    2026-09-26 使用者指定：首頁分成「四年級」「三年級」兩區；
    四年級 ＝ (A) 家人（七站，照上課順序 1～7）、(B) 職業、(C) 四年級 句型；三年級 ＝ 一張卡（原「三年級 句型」）。 */
 const STEPS = [
@@ -107,13 +109,13 @@ html,body{min-height:100%}
 body{margin:0;background:#000;color:#F2F2F2;
  font-family:Andika,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;
  display:flex;flex-direction:column;align-items:center;justify-content:center;
- padding:clamp(14px,3vh,28px) clamp(14px,3vw,30px);overflow-x:hidden}
+ padding:clamp(8px,1.6vh,20px) clamp(14px,3vw,30px);overflow-x:hidden}
 
-header{text-align:center;margin-bottom:clamp(10px,2vh,20px)}
+header{text-align:center;margin-bottom:clamp(6px,1.2vh,14px)}
 h1{margin:0;font-size:clamp(26px,4.4vh,42px);font-weight:700;letter-spacing:.04em}
 .sub{margin-top:6px;font-size:clamp(13px,1.9vh,17px);color:#9FB4C8;letter-spacing:.16em}
 /* 首頁網址：老師只要記這一個（使用者 2026-09-20 指定寫在畫面上） */
-.url{margin-top:5px;font-size:clamp(11.5px,1.6vh,14px);color:#6F6F6F;letter-spacing:.02em}
+.url{margin-left:12px;font-weight:400;font-size:clamp(11.5px,1.6vh,14px);color:#6F6F6F;letter-spacing:.02em}
 .url b{color:#9E9E9E;font-weight:400}
 
 /* 2026-09-26 分成四年級／三年級兩區（使用者指定）。關著的時候照樣不可以有捲軸 */
@@ -159,7 +161,8 @@ h1{margin:0;font-size:clamp(26px,4.4vh,42px);font-weight:700;letter-spacing:.04e
 #cards .w{font-size:clamp(14px,2vh,18px);font-weight:700}
 #cards .z{font-size:clamp(11px,1.5vh,13px);color:#8E8E8E;margin-left:auto}
 
-footer{width:100%;max-width:1000px;margin-top:clamp(12px,2.2vh,22px);
+${require('./_grades').CSS}
+footer{width:100%;max-width:1000px;margin-top:clamp(6px,1.2vh,16px);
  display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;align-items:center}
 footer a{color:#7E7E7E;text-decoration:none;font-size:clamp(12px,1.7vh,14.5px);
  border-bottom:1px solid #242424;padding-bottom:1px}
@@ -169,41 +172,17 @@ footer .sep{color:#2A2A2A;font-size:12px}
 </head>
 <body>
 <header>
- <h1>首頁</h1>
- <div class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></div>
+ <h1>首頁 <span class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></span></h1>
 </header>
 
 <main id="hub">
-${GROUPS.map(G => `<section class="grade"><h2>${G.g}</h2>
-${(() => { const one = R => `<div class="row${R.cards.length > 1 ? ' many' : ''}"><div class="rl">${R.l}</div><div class="rc">
-${R.cards.map(card).join('\n')}
-</div></div>`;
-  /* 一張卡的那幾列兩兩並排，省高度（關著時不可以有捲軸） */
-  const big = G.rows.filter(R => R.cards.length > 1), small = G.rows.filter(R => R.cards.length === 1);
-  return big.map(one).join('\n') + (small.length > 1 ? `<div class="duo">${small.map(one).join('\n')}</div>` : small.map(one).join('')); })()}
-</section>`).join('\n')}
+${require('./_grades').GRADES.map(G => require('./_grades').rows(G, '')).join('\n')}
 </main>
 
-<section id="cards">
-${WORDS.map(w => `<a href="words/${w.f}.html"><span class="w">${w.f}</span><span class="z">${w.zh}</span></a>`).join('\n')}
-</section>
-
 <footer>
-${EXTRA.map(x => `<a href="${x.href}">${x.t}</a>`).join('<span class="sep">·</span>\n')}
-<span class="sep">|</span>
 ${TEACHER.map(x => `<a href="${x.href}">${x.t}</a>`).join('<span class="sep">·</span>\n')}
 </footer>
 
-<script>
-(function(){
- var b=document.getElementById("cardsBtn"),g=document.getElementById("cards");
- b.addEventListener("click",function(){
-  var on=g.classList.toggle("on");
-  b.setAttribute("aria-expanded",on?"true":"false");
-  if(on)g.scrollIntoView({block:"nearest",behavior:"smooth"});
- });
-})();
-</script>
 </body>
 </html>
 `;
@@ -233,5 +212,4 @@ const WH = require('./_section').indexHTML({
   ]
 });
 fs.writeFileSync(path.join(DIR, 'index.html'), WH, 'utf8');
-console.log('已產生 index.html（首頁）：' + STEPS.length + ' 個步驟 ＋ ' +
- WORDS.length + ' 張單字卡 ＋ ' + (EXTRA.length + TEACHER.length) + ' 個延伸連結');
+console.log('已產生 index.html（首頁）：三年級、四年級各 7 項（words/_grades.js）');

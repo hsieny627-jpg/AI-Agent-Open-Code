@@ -336,7 +336,7 @@ var RV1 = [
  {t:'第 1～4 張', q:[
   {q:'看到 Who，答案一定是什麼？', o:['人 👦👧','東西 📦','天氣 🌤','地方 🏫'], h:'Who ＝ 問「人」。'},
   {q:'Who’s he? 等於下面哪一句？', o:['Who is he?','Who are he?','Who he is?','Who am he?'], h:'’ 就是被藏起來的 i：Who is ➜ Who’s。'},
-  {q:'Who’s he? 的中文是？', o:['他是誰？','誰是他？','他好嗎？','他在哪裡？'], h:'中文問「他是誰？」，英文才是 Who 排最前面。'},
+  {q:'Who’s he? 的中文是？', o:['他是誰？','他是我的爸爸。','他好嗎？','他在哪裡？'], h:'中文問「他是誰？」，英文才是 Who 排最前面。'},
   {q:'Who’s 的紅色 ’ 藏起來的是哪一個字母？', o:['i','o','h','e'], h:'is 的 i 被 ’ 藏起來了。'},
   {q:'Who 的 W 為什麼是淺灰色？', o:['不發音','要唸很大聲','因為是大寫','唸成 wu'], h:'Who 的 w 不發音，整個字唸 /huː/。'}
  ]},
@@ -349,21 +349,21 @@ var RV1 = [
  {t:'第 9～12 張', q:[
   {q:'「她是我的媽媽。」的英文是？', o:['She’s my mother.','He’s my mother.','She’s my father.','My mother she is.'], h:'媽媽是女生，主詞用 She。'},
   {q:'She is my mother. 縮寫成哪一句？', o:['She’s my mother.','Shes my mother.','She’is my mother.','She my mother.'], h:'She is ➜ She’s，i 換成 ’。'},
-  {q:'問女生要用哪一句？', o:['Who’s she?','Who’s he?','Who she is?','She’s who?'], h:'she ＝ 她，問女生用 Who’s she?。'},
-  {q:'Who’s she? 的中文是？', o:['她是誰？','誰是她？','她是我的媽媽。','她好嗎？'], h:'英文問句 Who 在最前面，中文「誰」在最後。'}
+  {q:'問女生要用哪一句？', o:['Who’s she?','Who’s he?','Who she is?','Who’s her?'], h:'she ＝ 她，問女生用 Who’s she?。'},
+  {q:'Who’s she? 的中文是？', o:['她是誰？','她是我的媽媽。','她好嗎？','她在哪裡？'], h:'英文問句 Who 在最前面，中文「誰」在最後。'}
  ]},
  {t:'第 13～16 張', q:[
   {q:'Who’s he? 的答句要用哪一個字開頭？', o:['He','She','Who','Yes'], h:'問 he 就答 He；問 she 就答 She。'},
   {q:'Who’s she? 要怎麼回答？', o:['She’s my sister.','He’s my brother.','Yes, she is.','Who is she?'], h:'問 she 就答 She。'},
   {q:'He’s my grandfather. 的中文是？', o:['他是我的爺爺。','她是我的奶奶。','他是我的哥哥。','他是我的叔叔。'], h:'grandfather ＝ 爺爺 👴。'},
-  {q:'問 he 答 He，那問 she 要答什麼？', o:['She','He','It','Who'], h:'問誰就答誰，主詞要對得起來。'}
+  {q:'問 he 答 He，那問 she 要答什麼？', o:['She','He','It','Her'], h:'問誰就答誰，主詞要對得起來。'}
  ]}
 ];
 
 var RV2 = [
  {t:'第 1～4 張', q:[
   {q:'He is a doctor. 縮寫成哪一句？', o:['He’s a doctor.','Hes a doctor.','He’is a doctor.','He are a doctor.'], h:'He is ➜ He’s，i 換成 ’。'},
-  {q:'He is a doctor. 變成問句是？', o:['Is he a doctor?','He is a doctor?','Is a doctor he?','Does he a doctor?'], h:'he 和 is 換位置，Is 排最前面。'},
+  {q:'He is a doctor. 變成問句是？', o:['Is he a doctor?','Is he doctor?','Is a doctor he?','Does he a doctor?'], h:'he 和 is 換位置，Is 排最前面。'},
   {q:'變成問句的時候，句尾的 。 要變成什麼？', o:['?','!',',','不用變'], h:'英文問句句尾一定是問號 ?。'},
   {q:'He’s 的紅色 ’ 藏起來的是哪一個字母？', o:['i','a','e','s'], h:'is 的 i 被 ’ 藏起來了。'}
  ]},
@@ -377,12 +377,12 @@ var RV2 = [
   {q:'isn’t 的 ’ 藏起來的是哪一個字母？', o:['o','i','n','t'], h:'is not ➜ isn’t，不見的是 not 的 o。'},
   {q:'She is a teacher. 縮寫成哪一句？', o:['She’s a teacher.','Shes a teacher.','She’is a teacher.','She are a teacher.'], h:'She is ➜ She’s。'},
   {q:'No, he isn’t. 後面接哪一句最順？', o:['He’s a cook.','She’s a cook.','Is he a cook?','Yes, he is.'], h:'先說不是，再說他真正的工作。'},
-  {q:'「她是一位老師。」的英文是？', o:['She’s a teacher.','He’s a teacher.','She’s a student.','Teacher she is.'], h:'老師是 teacher 👩‍🏫，主詞是 She。'}
+  {q:'「她是一位老師。」的英文是？', o:['She’s a teacher.','He’s a teacher.','She’s a student.','She’s teacher.'], h:'老師是 teacher 👩‍🏫，主詞是 She。'}
  ]},
  {t:'第 13～16 張', q:[
   {q:'Is she a teacher? 答「不是」要怎麼說？', o:['No, she isn’t.','No, he isn’t.','No, she is.','Not, she isn’t.'], h:'問 she 就答 she。'},
   {q:'Is she a nurse? 變回直述句是？', o:['She is a nurse.','Is she a nurse.','She a nurse is.','Nurse is she.'], h:'Is 和 she 換回來，? 變成 。'},
-  {q:'英文問句最前面要放哪一個字？', o:['Is','She','a','nurse'], h:'be 動詞跑到最前面就變問句。'},
+  {q:'She is a nurse. 變成問句，句子最前面放______？', o:['Is','She','a','nurse'], h:'be 動詞跑到最前面就變問句。'},
   {q:'Yes, she is. 的中文是？', o:['是的，她是。','不，她不是。','她是誰？','是的，他是。'], h:'she ＝ 她，Yes ＝ 是的。'}
  ]},
  {t:'第 17～21 張', q:[
@@ -468,14 +468,123 @@ var RVR4 = [
   {q:'He likes blue, ___ I like red.（我喜歡的不一樣）', o:['but','and','so','or'], h:'不一樣 ➜ but（但是）。'}
  ]},
  {t:'can ～ and／but', q:[
-  {q:'He can draw, ___ I can draw, too.（我們都會）', o:['and','but','or','so'], h:'一樣 ➜ and（而且）。'},
+  {q:'He can draw, ___ I can draw, too.（我們都會）', o:['and','but','or','not'], h:'一樣 ➜ and（而且）。'},
   {q:'I can ___. 空格要放什麼？', o:['動作（swim）','顏色（red）','家人（mother）','職業（doctor）'], h:'can 後面接「動作」。'},
   {q:'He’s a pilot. 的中文是？', o:['他是一位飛行員。','她是一位飛行員。','他喜歡飛機。','他會開飛機嗎？'], h:'He’s ＝ 他是，pilot ＝ 飛行員。'},
   {q:'介紹媽媽：This is my mother. 下一句要說？', o:['She’s a teacher.','He’s a teacher.','I’m a teacher.','It’s a teacher.'], h:'媽媽是女生 ➜ She’s。'}
  ]}
 ];
+/* ════════ 分頁（使用者 2026-10-03 指定）════════
+ * Unit 1：一-1 Who’s he/she?、一-2 中英語序、二 He’s/She’s my ___.、三 一問一答、四 原本句型（原本全部的卡）
+ * Unit 2：一-1 He/She is a ___.、一-2 Is he/she a ___?、一-3 中英語序、二 Yes/No 回答、三 一問一答、四 原本句型
+ * 寫「沿用原來字卡」的 ＝ 直接用上面 U1／U2 那一張；「______」規則同 G3（2026-10-03 Q2）：
+ *   寫了「字卡下方：替換…」＝ 一開始有字（father／doctor），點替換字就換；沒寫 ＝ 底線、沒有替換字、空格不唸。
+ * one:1 ＝ 一個字一張。copy() ＝ 原來那一張複製一份再加上替換字（原本句型那一頁不受影響）。 */
+var BL4 = function(){return t('______','______','',{blank:1})};
+var ONE4 = function(tk){return {type:'sent',one:1,tk:tk}};
+var copy = function(c,slot,word){var x=JSON.parse(JSON.stringify(c));x.slot=slot;
+  [x.a,x.b,x.c,x.tk].forEach(function(L){(L||[]).forEach(function(k){if(k.en===word)k.slot=slot})});return x};
+var Who = function(){return t('Who','誰',ICON.who)}, Is_ = function(o){return t('is','是',ICON.is,o)};
+var he1 = function(){return t('he','他',ICON.he,{hl:'b'})}, she1 = function(){return t('she','她',ICON.she,{hl:'lp'})};
+var He1 = function(){return t('He','他',ICON.he,{hl:'b'})}, She1 = function(){return t('She','她',ICON.she,{hl:'lp'})};
+var S_ = function(){return t("'s",'是',ICON.is,{tight:1})}, Q_ = function(){return t('?','？',ICON.q,{tight:1})}, D_ = function(){return t('.','。',ICON.dot,{tight:1})};
+var my1 = function(){return t('my','我的',ICON.my)};
+var U1T = {
+  eqShe: {type:'eq', a:[Who(),Is_({ri:'i'}),she1(),Q_()], b:[Who(),S_(),she1(),Q_()], note:'紅色的 ’ ＝ 被藏起來的 [i]。'},
+  sHe: copy(U1[6],'he','father'), sShe: copy(U1[11],'she','mother')
+};
+U1T.b11 = [ONE4([Who()]),ONE4([Is_()]),ONE4([he1()]),ONE4([she1()]),
+  {type:'sent', zh:'他是誰？', tk:[Who(),Is_(),he1(),Q_()]},
+  U1[3], U1T.eqShe, U1[1], U1[8]];
+U1T.a11 = [U1[3], U1T.eqShe, U1[1], U1[8]];
+U1T.b2 = [ONE4([He1()]),ONE4([She1()]),ONE4([Is_()]),
+  {type:'sent', zh:'他是 ______。', tk:[He1(),Is_(),BL4(),D_()]},
+  {type:'eq', a:[He1(),Is_({ri:'i'}),BL4(),D_()], b:[He1(),S_(),BL4(),D_()]},
+  {type:'eq', a:[She1(),Is_({ri:'i'}),BL4(),D_()], b:[She1(),S_(),BL4(),D_()]},
+  ONE4([my1()]), U1T.sHe, U1T.sShe, U1[4], U1[9]];
+U1T.a2 = [{type:'sent', zh:'他是我的 ______。', tk:[He1(),Is_(),my1(),BL4(),D_()]}, U1T.sHe,
+  {type:'sent', zh:'她是我的 ______。', tk:[She1(),Is_(),my1(),BL4(),D_()]}, U1T.sShe, U1[4], U1[9]];
+
+var he2 = function(){return t('he','他',ICON.he,{hl:'b'})}, she2 = function(){return t('she','她',ICON.she,{hl:'p'})};
+var He2 = function(){return t('He','他',ICON.he,{hl:'b'})}, She2 = function(){return t('She','她',ICON.she,{hl:'p'})};
+var is2 = function(o){return t('is','是',ICON.is,Object.assign({hl:'y'},o||{}))};
+var a2 = function(){return t('a','一位',ICON.a,{say:'uh'})};
+var job = function(en,zh,k){return t(en,zh,ICON[en]||'',{slot:k||'job'})};
+var pqk = function(s,k,slot){return [t('Is','是',ICON.is,{hl:'y'}),s,a2(),job(k[0],k[1],slot),t('?','嗎？',ICON.q,{tight:1})]};
+var U2T = {
+  eqHe: copy(U2[2],'job','doctor'), eqShe: copy(U2[11],'job','teacher'),
+  sHe: {type:'sent', zh:'他是一位醫生。', slot:'job', tk:[He2(),S_(),a2(),job('doctor','醫生'),D_()]},
+  sShe: {type:'sent', zh:'她是一位老師。', slot:'job', tk:[She2(),S_(),a2(),job('teacher','老師'),D_()]}
+};
+U2T.b11 = [ONE4([He2()]),ONE4([is2()]),ONE4([She2()]),ONE4([is2()]),
+  {type:'sent', zh:'他是 ______。', tk:[He2(),is2(),BL4(),D_()]},
+  {type:'eq', a:[He2(),Is_({ri:'i'}),BL4(),D_()], b:[He2(),S_(),BL4(),D_()]},
+  U2T.eqHe, U2T.sHe,
+  {type:'sent', zh:'她是 ______。', tk:[She2(),is2(),BL4(),D_()]},
+  {type:'eq', a:[She2(),Is_({ri:'i'}),BL4(),D_()], b:[She2(),S_(),BL4(),D_()]},
+  U2T.eqShe, U2T.sShe];
+U2T.a11 = [{type:'sent', zh:'他是一位 ______。', tk:[He2(),is2(),a2(),BL4(),D_()]},
+  {type:'sent', zh:'她是一位 ______。', tk:[She2(),is2(),a2(),BL4(),D_()]},
+  U2T.eqHe, U2T.eqShe, U2T.sHe, U2T.sShe];
+U2T.q12 = [ONE4([t('Is','是',ICON.is,{hl:'y'})]),ONE4([he2()]),ONE4([she2()]), U2[4], U2[13]];
+var Yes = function(){return t('Yes','是的',ICON.yes)}, No = function(){return t('No','不',ICON.no)}, isnt = function(){return t("isn't",'不是',ICON.not,{hl:'y'})};
+U2T.b2 = [ONE4([Yes()]),ONE4([he2()]),ONE4([she2()]),ONE4([is2()]), U2[5], U2[14],
+  ONE4([No()]),ONE4([he2()]),ONE4([she2()]),ONE4([isnt()]), U2[7], U2[6], U2[15], U2[17], U2[8]];
+U2T.a2 = [U2[5], U2[14], U2[8], U2[17]];
+/* 一問一答（2026-10-03 Q6）：問的職業、真正的職業兩排替換字；選到一樣的自動換下一個（diff） */
+SUB.job2 = {lb:'真正的職業', basic:SUB.job.basic, adv:SUB.job.adv};
+SUB.jobq = {lb:'問的職業', basic:SUB.job.basic, adv:SUB.job.adv};
+var pq = function(S,s,k){return [t('Is','是',ICON.is,{hl:'y'}),s,a2(),job(k[0],k[1]),t('?','嗎？',ICON.q,{tight:1})]};
+U2T.p3 = [
+  U2[19],
+  {type:'pair', cls:'b', slots:['jobq','job2'], diff:['jobq','job2'], qic:ICON.doctor, aic:ICON.no,
+   qtk:pqk(he2(),['doctor','醫生'],'jobq'),
+   atk:[No(),t(',','，',ICON.comma,{tight:1}),he2(),isnt(),D_(),He2(),S_(),a2(),t('______','______','',{slot:'job2',blank:1}),D_()],
+   qzh:'他 是 一位 醫生 嗎？', azh:'不，他 不是。他 是 一位 ______。'},
+  {type:'pair', cls:'p', slot:'job', qic:ICON.teacher, aic:ICON.yes,
+   qtk:pq(She2(),she2(),['teacher','老師']),
+   atk:[Yes(),t(',','，',ICON.comma,{tight:1}),she2(),is2(),D_()],
+   qzh:'她 是 一位 老師 嗎？', azh:'是的，她 是。'},
+  {type:'pair', cls:'p', slots:['jobq','job2'], diff:['jobq','job2'], qic:ICON.teacher, aic:ICON.no,
+   qtk:pqk(she2(),['teacher','老師'],'jobq'),
+   atk:[No(),t(',','，',ICON.comma,{tight:1}),she2(),isnt(),D_(),She2(),S_(),a2(),t('______','______','',{slot:'job2',blank:1}),D_()],
+   qzh:'她 是 一位 老師 嗎？', azh:'不，她 不是。她 是 一位 ______。'}
+];
+var TABS1 = [
+  {n:'一-1', lb:'Who’s he/she?', sub:[{lb:'基礎',cards:U1T.b11},{lb:'進階',cards:U1T.a11}]},
+  {n:'一-2', lb:'中英語序', cards:[U1[7],U1[12]]},
+  {n:'二', lb:'He’s/She’s my ___.', sub:[{lb:'基礎',cards:U1T.b2},{lb:'進階',cards:U1T.a2}]},
+  {n:'三', lb:'一問一答', cards:[U1[14],U1[15]]},
+  {n:'四', lb:'原本句型', cards:U1}
+];
+var TABS2 = [
+  {n:'一-1', lb:'He/She is a ___.', sub:[{lb:'基礎',cards:U2T.b11},{lb:'進階',cards:U2T.a11}]},
+  {n:'一-2', lb:'Is he/she a ___?', cards:U2T.q12},
+  {n:'一-3', lb:'中英語序', cards:[U2[3],U2[12]]},
+  {n:'二', lb:'Yes／No', sub:[{lb:'基礎',cards:U2T.b2},{lb:'進階',cards:U2T.a2}]},
+  {n:'三', lb:'一問一答', cards:U2T.p3},
+  {n:'四', lb:'原本句型', cards:U2}
+];
+/* 四年級複習網站（2026-10-03 使用者指定，獨立網址 g4-review/）：Unit 1、Unit 2 的進階句型、中英語序、縮寫動畫 */
+var RFIX = function (h) {
+  var tag = '<script src="../sentences/audio/aud.js" onerror="window.AUD=null"></script><script>window.AUDDIR="../sentences/audio/";</script>';
+  return h.indexOf('<script src="audio/aud.js"></script>') >= 0 ? h.replace('<script src="audio/aud.js"></script>', tag) : h.replace('</head>', tag + '\n</head>');
+};
+var RPAGES = [
+  { file:'../g4-review/u1.html', unit:1, title:'四年級複習｜Unit 1 Who’s he?', other:'u2.html', otherName:'➡ Unit 2', fix:RFIX,
+    tabs:[{n:'一', lb:'Who’s he/she?', cards:U1T.a11}, {n:'二', lb:'He’s/She’s my ___.', cards:U1T.a2},
+          {n:'三', lb:'中英語序', cards:[U1[7],U1[12]]}, {n:'四', lb:'縮寫動畫', cards:[U1[2],U1[5],U1[10]]}] },
+  { file:'../g4-review/u2.html', unit:2, title:'四年級複習｜Unit 2 Is he a doctor?', other:'u1.html', otherName:'⬅ Unit 1', fix:RFIX,
+    tabs:[{n:'一', lb:'He/She is a ___.', cards:U2T.a11}, {n:'二', lb:'Yes／No', cards:U2T.a2},
+          {n:'三', lb:'中英語序', cards:[U2[3],U2[12]]}, {n:'四', lb:'縮寫動畫', cards:[U2[1],U2[10],U2[7],U2[16]]}] }
+];
+var PAGES = [
+  { file:'unit1.html', unit:1, title:'Unit 1 句型｜Who’s he? Who’s she?', other:'unit2.html', otherName:'➡ Unit 2', tabs:TABS1 },
+  { file:'unit2.html', unit:2, title:'Unit 2 句型｜Is he a doctor?', other:'unit1.html', otherName:'⬅ Unit 1', tabs:TABS2 }
+];
+
 var XPAGES = [
-  { file:'review1.html', unit:'Review 1', title:'Review 1｜About My Family', other:'unit2.html', otherName:'⬅ Unit 2', cards:RV4C, rv:RVR4 }
+  { file:'review1.html', unit:'Review 1', title:'Review 1｜About My Family', navExtra:'<a href="../about-my-family/index.html">🎬 About my family 影片</a>', other:'unit2.html', otherName:'⬅ Unit 2', cards:RV4C, rv:RVR4 }
 ];
 
 /* 答錯頁「整句翻譯」：資料裡自動收集不到的幾句（使用者 2026-09-26 指定要整句中文，_gloss.js 讀這裡） */
@@ -484,7 +593,7 @@ var TRX = {
   'Is he my father?':'他是我的爸爸嗎？', 'Is she my mother?':'她是我的媽媽嗎？', 'Is he my grandfather?':'他是我的爺爺嗎？',
   'He is my uncle.':'他是我的叔叔。', 'She is my aunt.':'她是我的阿姨。', "It's a book.":'它是一本書。'
 };
-module.exports = { ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, USE:USE, TRX:TRX, XPAGES:XPAGES };
+module.exports = { ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, USE:USE, TRX:TRX, XPAGES:XPAGES, PAGES:PAGES, RPAGES:RPAGES, TABS1:TABS1, TABS2:TABS2 };
 
 /* ── 真實情境：會動的小劇場（使用者 2026-09-24 指定改版）──────────────
  * 原本「地點＋三段 emoji＋一句話」學生完全看不懂，改成**兩個人演一次**：

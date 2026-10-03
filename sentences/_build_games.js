@@ -15,13 +15,17 @@
 const fs = require('fs'), SITE = require('./_site'), DIR = SITE.DIR;
 const S = require('./_shared');
 const SK = require('./_skins');                       /* 驚喜卡的卡包外觀（2026-09-27） */
-const B = SITE.load('_game_data');
+const B0 = SITE.load('_game_data');
+/* 只放其中幾種遊戲（2026-10-03：三年級複習／四年級複習網站）：GAMES_ONLY=g3,g5,g9 GAMES_OUT=<輸出檔> GAMES_TITLE=<標題> */
+const ONLY = process.env.GAMES_ONLY ? process.env.GAMES_ONLY.split(',') : null;
+const B = ONLY ? Object.assign({}, B0, { GAMES: ONLY.map(id => B0.GAMES.filter(m => m.id === id)[0]) }) : B0;
+if (ONLY && B.GAMES.some(m => !m)) throw new Error('GAMES_ONLY 有不存在的遊戲：' + ONLY.join(','));
 
 /* ── 別的課次共用這一套遊戲引擎時才會用到的設定（sentences 沒寫 ➜ 用 sentences 自己的）──
    META g2／g9 的 duo：兩顆大按鈕各是什麼（[{v,t,d,c}]），g9 題目的第 3 格是答錯的提示 */
 const NS = (B.SURP.g1 || B.SURP[Object.keys(B.SURP)[0]]).length;   /* 每一個遊戲幾張驚喜卡（Review 1 的遊戲代號不是 g1～g10） */
 /* ty ＝ 玩法（Review 1：一個玩法有好幾個遊戲，例 i1_9、i2_9 都是 g9 分類大師；沒寫 ty 就是 id 本身） */
-const metaOf = id => B.GAMES.filter(m => (m.ty || m.id) === id)[0] || {};
+const metaOf = id => B0.GAMES.filter(m => (m.ty || m.id) === id)[0] || {};
 const duoBtns = d => d.map(x => `     '<button class="dbtn ${x.c}" data-v="${x.v}">${x.t}${x.d ? `<span class="ds">${x.d}</span>` : ''}</button>'+`).join('\n');
 const DUO2 = metaOf('g2').duo, DUO9 = metaOf('g9').duo;
 const LAB9 = DUO9 ? JSON.stringify(DUO9.reduce((o, x) => { o[x.v] = x.d ? x.t + ' ' + x.d.split('　')[0] : x.t; return o }, {})) : '';
@@ -1078,6 +1082,8 @@ $('#quit').addEventListener('click',function(){
   if($('#arena').classList.contains('on')||$('#gend').classList.contains('on'))hub();
 });
 hub();
+/* 網址 #g3 ＝ 直接開這一個遊戲（2026-10-03：三年級複習／四年級複習網站從自己的首頁直接進遊戲） */
+(function(){var h=(location.hash||'').slice(1);if(h&&META.some(function(m){return m.id===h}))begin(h)})();
 `;
 
 const body = `
@@ -1144,5 +1150,5 @@ ${S.RATEJS}
 </body>
 </html>`;
 
-fs.writeFileSync(DIR + '/games.html', S.HEAD('複習遊戲 10 種｜英文句型', CSS + SK.CSS) + body);
+fs.writeFileSync(process.env.GAMES_OUT || (DIR + '/games.html'), S.HEAD(process.env.GAMES_TITLE || '複習遊戲 10 種｜英文句型', CSS + SK.CSS) + (process.env.GAMES_FIX ? require(process.env.GAMES_FIX)(body) : body));
 console.log('games ok  ' + B.GAMES.length + ' 種，題數 ' + B.GAMES.map(g => g.n).join('/'));

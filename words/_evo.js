@@ -123,7 +123,7 @@ function page(r, k, o) {
 function write(dir, words, o) {
   const out = [];
   words.forEach((w, k) => { const r = byW[w]; if (!r) return;
-    fs.writeFileSync(path.join(dir, r.w + '-evo.html'), tpl(page(r, k, o)), 'utf8'); out.push(r.w + '-evo.html') });
+    fs.writeFileSync(path.join(dir, r.w + '-evo.html'), tpl(page(r, k, Object.assign({ enjs: require('./_aud').head(dir) }, o))), 'utf8'); out.push(r.w + '-evo.html') });
   return out;
 }
 const has = w => !!byW[w];

@@ -78,7 +78,7 @@ function build(o) {
   fs.mkdirSync(o.dir, { recursive: true });
   const WL = buildSet(o.words, { dir: o.dir, font: o.font, home: o.home, whome: o.whome || (o.index ? o.index.file : 'index.html'), srcW: o.srcW, title: o.suffix, head: o.head || '' });
   o.pages.forEach(p => fs.writeFileSync(path.join(o.dir, p.file),
-    tpl(Object.assign({ font: o.font, home: o.home, whome: o.whome || (o.index ? o.index.file : ''), suffix: o.suffix, svjs: o.svjs || '' }, p)), 'utf8'));
+    tpl(Object.assign({ font: o.font, home: o.home, whome: o.whome || (o.index ? o.index.file : ''), suffix: o.suffix, svjs: o.svjs || '', enjs: require('./_aud').head(o.dir) }, p)), 'utf8'));
   if (o.index) {
     const links = o.index.links.map(l => l.cards === true ? Object.assign({}, l, { cards: WL.map(w => ({ f: w.f, zh: w.zh, icon: w.icon, href: w.f + '.html' })) }) : l);
     fs.writeFileSync(path.join(o.dir, o.index.file), indexHTML(Object.assign({ font: o.font, home: o.home }, o.index, { links })), 'utf8');

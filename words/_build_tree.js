@@ -265,6 +265,7 @@ ${SRC.CSS}
 .topicfix{position:fixed;top:max(10px,env(safe-area-inset-top));left:14px;z-index:30;color:#FFD66B;font-weight:700;
  font-size:clamp(16px,2.4vh,22px);letter-spacing:.08em;pointer-events:none;white-space:nowrap}
 </style>
+${require('./_aud').head(__dirname)}
 </head>
 <body>
 <div class="topicfix">🌳 Family tree 家庭樹</div>

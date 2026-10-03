@@ -54,17 +54,18 @@ const col = (t, tgt, dot) => '<div class="c sw' + (tgt ? ' t' : '') + '" data-w=
 function scenes(w) {
   const one = w.tk.length === 1;
   const s1 = '<div class="emoji pop">' + w.ic + '</div><div class="zh in d1">' + w.zh + '</div>';
-  const s2 = '<div class="tag in">英文</div>' + (one
+  /* 2026-10-03 使用者指定：刪掉上方「英文」「用在句子裡」小標題；片語的中文多一層「合起來的意思」（instant 馬上的 ＋ noodles 麵 ➜ 泡麵） */
+  const s2 = (one
     ? '<div class="emoji pop r1sm">' + w.ic + '</div><div class="word in d1 r1f">{{' + w.en + '}}</div>'
-    : '<div class="r1ph r1f in d1" data-sent="' + w.en + '">' + w.tk.map(t => col(t, 1)).join('') + '</div>') +
+    : '<div class="r1grp in d1"><div class="r1ph r1f" data-sent="' + w.en + '">' + w.tk.map(t => col(t, 1)).join('') + '</div>' +
+      '<div class="r1br"></div><div class="r1all">' + w.zh.replace(/\s+/g, '') + '</div></div>') +
     (w.pt ? '<div class="sub in d2">' + w.pt + '</div>' : '');
   const sw = SENT[w.g].map(x => [x, SZH[x][0], SZH[x][1]]);
   const all = sw.concat(w.tk);
   const say = all.map(t => t[0]).join(' ') + '.';
-  const s3 = '<div class="tag in">用在句子裡</div>' +
-    '<div class="r1ph r1s r1f in d1" data-sent="' + say + '">' +
+  const s3 = '<div class="r1ph r1s r1f in d1" data-sent="' + say + '">' +
     sw.map(t => col(t, 0)).join('') + w.tk.map((t, k) => col(t, 1, k === w.tk.length - 1)).join('') +
-    '</div><div class="sub in d2">' + w.ex + '</div>';
+    '</div><div class="sub zfull in d2">' + w.ex + '</div>';
   return '[' + [s1, s2, s3].map(h => 'function(){return ' + JSON.stringify(h) + '}').join(',') + ']';
 }
 
@@ -150,6 +151,10 @@ const HEAD = `<script src="audio/aud.js" onerror="window.ENAUD=null"></script><s
 .r1ph.r1s .w{font-size:calc(clamp(36px,min(7.4vh,7.6vw),76px)*var(--k))}
 .r1ph.r1s .ic{font-size:calc(clamp(28px,5.2vh,52px)*var(--k))}
 .r1ph .w{position:relative}
+/* 片語的第三層：一個括號把每個字的中文接起來，下面寫合起來的意思（2026-10-03） */
+.r1grp{display:inline-flex;flex-direction:column;align-items:stretch;max-width:100%}
+.r1br{height:clamp(10px,1.6vh,16px);margin:clamp(4px,.8vh,8px) clamp(8px,2vw,24px) 0;border:3px solid #6E7F8F;border-top:0;border-radius:0 0 12px 12px}
+.r1all{text-align:center;font-size:clamp(28px,4.6vh,46px);font-weight:700;color:#FFD66B;line-height:1.25;margin-top:clamp(2px,.5vh,6px)}
 .r1ph .w .pdot{position:absolute;left:100%;bottom:0;margin-left:-.17em;line-height:1.05}
 #stage{max-width:980px}
 /* 唸到哪一格：整格（圖示、英文、中文）稍微放大、稍微變亮（樣式在 words/_build.js 的 #card .speak） */
@@ -189,16 +194,14 @@ const HEAD = `<script src="audio/aud.js" onerror="window.ENAUD=null"></script><s
 /* PH 的發音：英文先查這一組的語音檔（ENAUD），查不到才用瀏覽器語音。
    只改這一組的產物（不動 words/_phonics.js，其他網站逐位元組不變）；找不到要換的那一段 build 就失敗 */
 const PATCH = [
-  ['var A=(lang&&/^sv/i.test(lang)&&window.SVAUD)?SVAUD[akey(t)]:null;',
-   'var EN=!(lang&&!/^en/i.test(lang))&&window.ENAUD,A=(lang&&/^sv/i.test(lang)&&window.SVAUD)?SVAUD[akey(t)]:(EN?ENAUD[akey(t)]:null);'],
-  ['AU.src=(window.SVDIR||"audio/sv/")+A[0];', 'AU.src=(EN?(window.ENDIR||"audio/"):(window.SVDIR||"audio/sv/"))+A[0];'],
+  /* 英文語音檔（ENAUD）2026-10-03 起 words/_phonics.js 本來就有，不用再換 */
   ['var D=' + JSON.stringify(PH.DATA) + ';', 'var D=' + JSON.stringify(DATA) + ';']
 ];
 
 function build(list) {
   list.forEach(w => { w.now = w.en; w.icon = w.ic; w.scenes = scenes(w); w.say = SAY; });
   const WL = buildSet(list, { dir: DIR, font: '../words/fonts/', home: '../index.html', srcW, common: COMMON,
-    title: 'Review 1 單字卡', head: HEAD, topic: '🃏 Review 1 單字卡' });
+    title: 'Review 1 單字卡', head: HEAD, enaud: false, topic: '🃏 Review 1 單字卡' });
   WL.forEach(w => {
     const fp = path.join(DIR, w.f + '.html');
     let h = fs.readFileSync(fp, 'utf8');
@@ -213,22 +216,9 @@ module.exports = { WORDS, build, scenes };
 /* ── 🔤 單字首頁（review1/index.html）：四組，按了才展開 ── */
 const GROUP = [['i1', '🍟', '物品 1', '美食、零食、飲料、玩具'], ['i2', '🎮', '物品 2', '3C、電玩、球類、書和漫畫、生活愛用品'],
   ['a1', '⛹️', '活動 1', '球類運動、個人運動、才藝、戶外玩耍'], ['a2', '🎧', '活動 2', '3C 和電玩、競賽、靜態活動、家裡的活動、假日出遊']];
+/* 2026-10-03 使用者指定：單字首頁改成兩種排法（依性質＋最受歡迎先、A～Z＋先簡單後難），產生器在 review1/_index.js */
 function index(list) {
-  const { indexHTML } = require('../words/_section');
-  let h = indexHTML({ title: '🃏 Review 1 單字卡', sub: 'I like ___.　I like to ___.', font: '../words/fonts/', home: '../index.html',
-    links: GROUP.map(([g, ic, t, d]) => { const L = list.filter(w => w.g === g);
-      return { ic, t: t + '（' + L.length + ' 個）', d: (g[0] === 'i' ? 'I like ___.　' : 'I like to ___.　') + d,
-        cards: L.map(w => ({ f: w.en, zh: w.zh, icon: w.ic, href: w.f + '.html' })) }; }) });
-  /* 自己畫的圖示跟著字級走；三、四年級共用 ➜ 首頁按鈕是總首頁 */
-  h = h.replace('</style>', '.r1i{width:1em;height:1em;vertical-align:middle}\n.card .ic .r1i{width:1.1em;height:1.1em}\n</style>')
-    .replace('🏠 首頁</a>', '🏠 總首頁</a>')
-    /* 2026-10-02：第 5 張卡 ＝ Review 1 遊戲（22 種，review1/games.html） */
-    .replace('</style>', 'a.card{text-decoration:none;color:inherit}\n</style>')
-    .replace(/<\/div><\/div>\n<nav id="bar">/, () => '</div><a class="card" href="games.html"><span class="n">5</span><span class="ic">🕹️</span>' +
-      '<span class="t">Review 1 遊戲（' + require('./_game_data').GAMES.length + ' 種）</span>' +
-      '<span class="d">物品 1、物品 2、活動 1、活動 2 各 5 種玩法 ＋ 三年級進階、四年級進階魔王挑戰</span></a></div>\n<nav id="bar">');
-  if (!/href="games.html"/.test(h)) throw new Error('review1 單字首頁：遊戲卡沒有放進去');
-  fs.writeFileSync(path.join(DIR, 'index.html'), h, 'utf8');
+  fs.writeFileSync(path.join(DIR, 'index.html'), require('./_index').build(list, DATA), 'utf8');
 }
 if (require.main === module) {
   const WL = build(WORDS);

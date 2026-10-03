@@ -92,6 +92,9 @@ body{margin:0;background:#000;color:#F2F2F2;
  display:flex;align-items:center;justify-content:center;cursor:pointer}
 .nav:disabled{color:#202020;cursor:default}
 .nav:active:not(:disabled){background:rgba(255,255,255,.06)}
+/* 箭頭往字卡中央靠近一點（2026-10-03 使用者指定）：靠在翻頁區的內側，還是在字卡留白裡，不碰到單字 */
+#prev{justify-content:flex-end;padding-right:4px}
+#next{justify-content:flex-start;padding-left:4px}
 #prev{left:var(--pad);border-radius:clamp(18px,3vh,30px) 0 0 clamp(18px,3vh,30px)}
 #next{right:var(--pad);border-radius:0 clamp(18px,3vh,30px) clamp(18px,3vh,30px) 0}
 
@@ -133,16 +136,26 @@ body{margin:0;background:#000;color:#F2F2F2;
 /* 按鈕列（使用者 2026-10-02 指定，全站單字卡）：一排，「🔊 唸 3 次」在正中央；
    左：目次｜音節｜音標｜放慢　右：（結構／時光機）｜出處｜單字首頁｜總首頁。
    三欄格線 1fr auto 1fr ＝ 中間那顆不管兩邊幾顆都在正中央。圖示在上、字在下，iPad 直放也一排放得下。 */
-#bar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:clamp(3px,.6vw,10px);width:100%;max-width:1180px}
-#bar .bL,#bar .bR{display:flex;gap:clamp(3px,.5vw,9px);align-items:stretch}
+#bar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:clamp(2px,.5vw,10px);width:100%;max-width:1180px}
+#bar .bL,#bar .bR{display:flex;gap:clamp(2px,.4vw,9px);align-items:stretch}
 #bar .bL{justify-content:flex-end}
 #bar .bR{justify-content:flex-start}
 #bar button{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:16px;
  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
- font-size:clamp(12px,min(1.55vh,1.5vw),15px);padding:5px clamp(3px,.6vw,12px);min-height:56px;min-width:clamp(44px,5.4vw,64px);
+ font-size:clamp(11px,min(1.55vh,1.45vw),15px);padding:5px clamp(2px,.5vw,12px);min-height:56px;min-width:clamp(40px,5vw,64px);
  font-family:inherit;cursor:pointer;white-space:nowrap;line-height:1.1}
 #bar button>.bic{font-size:1.5em;line-height:1;margin:0}
-#bar #say3{background:#22303A;border-color:#9FB4C8;font-weight:700;min-width:clamp(70px,9vw,96px)}
+#bar #say1{background:#22303A;border-color:#9FB4C8;font-weight:700;min-width:clamp(70px,9vw,96px)}
+#autogo{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:60;font-family:inherit;font-weight:700;
+ font-size:clamp(26px,4.4vh,40px);padding:22px 40px;border-radius:24px;background:#9FB4C8;color:#0A0A0A;border:0;
+ box-shadow:0 0 0 9999px rgba(0,0,0,.55);cursor:pointer}
+#bar #say3.on,#bar #autob.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A}
+/* 補充（2026-10-03 使用者指定）：說明的小字平常收起來，按「💡 補充」才出現在單字下方，再按一次收回 */
+#card .sub:not(.zfull){display:none}
+body.sup #card .sub{display:block}
+#card .supb{margin-top:clamp(2px,.6vh,8px);background:#141414;border:1px solid #3A3A3A;color:#D8D3C5;border-radius:99px;
+ font-family:inherit;font-size:clamp(15px,2.1vh,19px);padding:7px 16px;cursor:pointer}
+body.sup #card .supb{border-color:#9FB4C8;color:#F2F2F2}
 #bar button:active{background:#2A2A2A}
 #bar #phsee.on{background:#9FB4C8;border-color:#9FB4C8;color:#0A0A0A}
 /* 念到哪個字，那個字稍微放大、稍微變亮（2026-10-02：不可太亮、不刺眼；字母原本的紅／灰保留） */
@@ -178,7 +191,7 @@ ${SRC.CSS}
 .topicfix{position:fixed;top:max(10px,env(safe-area-inset-top));left:14px;z-index:30;color:#FFD66B;font-weight:700;
  font-size:clamp(16px,2.4vh,22px);letter-spacing:.08em;pointer-events:none;white-space:nowrap}
 </style>
-${SET.head||''}
+${SET.head||''}${SET.enaud===false?'':require('./_aud').head(SET.dir||DIR)}
 </head>
 <body>
 <div class="topicfix">${SET.topic||'🃏 單字卡'}</div>
@@ -192,7 +205,7 @@ ${SET.head||''}
  <span class="pos">${W.idx} / ${W.total}</span>
  <a href="${W.next}.html" title="下一個單字"><span class="w">${W.nextL||W.next}</span> ▶</a>
 </nav>
-<div id="bar"><div class="bL">${B('tocb','📑','目次')}${PH.btnSyl}${PH.btnMode}${PH.btnSlow}</div>${B('say3','🔊','唸 3 次')}<div class="bR">${W.more?B('more',W.more.label.split(' ')[0],W.more.label.split(' ').slice(1).join(' ')):''}${W.parts?B('parts','🧩','結構'):''}${W.evo?B('evo','⏳','時光機'):''}${B('srcb','📖','出處')}${B('whome','🔤','單字首頁')}${B('home','🏠','總首頁')}</div></div>
+<div id="bar"><div class="bL">${B('home','🏠','總首頁')}${B('whome','🔤','單字首頁')}${B('tocb','📑','目次')}${PH.btnSyl}${PH.btnMode}${PH.btnSlow}</div>${B('say1','🔊','唸 1 次')}<div class="bR">${B('say3','🔊','唸 3 次')}${B('autob','▶','自動播放')}${W.more?B('more',W.more.label.split(' ')[0],W.more.label.split(' ').slice(1).join(' ')):''}${W.parts?B('parts','🧩','結構'):''}${W.evo?B('evo','⏳','時光機'):''}${B('srcb','📖','出處')}</div></div>
 </div>
 ${TOC.linksHTML(SET.list,W.f)}
 ${SRC.html((SET.srcW||SRC.W)[W.f],SET.common)}
@@ -214,7 +227,7 @@ var SCENES=[
    (W.sub?'<div class="sub in d2">'+W.sub+'</div>':'')},
  // ② 以前的樣貌（圖示就是意思，不再加說明）；grandfather / grandmother 改成「怎麼組的」
  ${W.build?
- `function(){return '<div class="tag in">怎麼組的</div>'+
+ `function(){return ''+
    '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
    '<div class="parts in d1">{{'+W.build.a+'}} ＋ {{'+W.build.b+'}}</div>'+
    '<div class="sub in d2" style="margin-top:2px">'+W.build.note+'</div>'}`
@@ -223,7 +236,7 @@ var SCENES=[
    '<div class="word past in d1">'+W.old+'</div>'+
    '<div class="emoji pop d2" style="font-size:clamp(66px,12vh,104px)">'+W.icon+'</div>'}`},
  // ③ 現在的單字＋秒懂收尾
- function(){return '<div class="tag in">現在</div>'+
+ function(){return ''+
    '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
    '<div class="word in d1"'+(W.now.length>=11?' style="font-size:clamp(38px,min(7.5vh,8.2vw),74px)"':'')+'>'+
    PH.box(W.now)+'</div>'+
@@ -272,21 +285,26 @@ var SENT=(function(){
   e.stopPropagation();play(f)},true);
  return{play:play,wrap:wrap,clr:clr}})();
 function show(n){
- var back=(n<i);s3++;
+ var back=(n<i);s3++;var b3=document.getElementById("say3");if(b3)b3.classList.remove("on");
  i=Math.max(0,Math.min(SCENES.length-1,n));
  window.SRCAT=${JSON.stringify(W.src||[0,0,0])}[i];   /* 按「📖 出處」直接跳到這一張字卡的證據（使用者 2026-09-25 指定） */
  card.innerHTML=PH.expand(SCENES[i]());
+ /* 💡 補充：這一幕有說明小字才放（2026-10-03） */
+ if(card.querySelector(".sub:not(.zfull)"))card.insertAdjacentHTML("beforeend",'<button class="supb" type="button">'+(document.body.classList.contains("sup")?"💡 收起補充":"💡 補充")+'</button>');
  PH.autoSay(card);       // 補充單字、字詞、用法都可以點來聽
  SENT.clr();SENT.wrap(card);
  if(!reduce){card.classList.remove("turnR","turnL");void card.offsetWidth;
   card.classList.add(back?"turnL":"turnR")}
  var d=dots.children;
  for(var k=0;k<d.length;k++)d[k].className=(k===i?"on":"");
- document.getElementById("prev").disabled=(i===0);
- document.getElementById("next").disabled=(i===SCENES.length-1);
+ /* 第一幕的左箭頭 ＝ 上一個單字；最後一幕的右箭頭 ＝ 下一個單字（2026-10-03 使用者指定），所以兩個箭頭都不關 */
+ document.getElementById("prev").title=(i===0?"上一個單字":"上一頁");
+ document.getElementById("next").title=(i===SCENES.length-1?"下一個單字":"下一頁");
  /* 使用者 2026-09-20 指定：一翻到中文意思那一幕，就自動唸一次英文單字。
     （有些瀏覽器規定要先碰過畫面才准發聲，所以下面補一個「第一次碰到就補唸」。） */
- if(i===0||i===SCENES.length-1)say();
+ /* 2026-10-03 使用者指定：到第二幕也要自動唸英文 ➜ 每一幕都自動唸一次 */
+ say();
+ if(AUTO)autoNext();
 }
 var spoke=false;
 function armFirstTouch(){
@@ -295,18 +313,43 @@ function armFirstTouch(){
  document.addEventListener("pointerdown",go);document.addEventListener("keydown",go);
 }
 
-document.getElementById("prev").addEventListener("click",function(){show(i-1)});
-document.getElementById("next").addEventListener("click",function(){show(i+1)});
+var WPREV=${JSON.stringify(W.prev+'.html')},WNEXT=${JSON.stringify(W.next+'.html')},WLAST=${W.idx===W.total?'true':'false'};
+function goPrev(){stopAuto();if(i===0){location.href=WPREV+"#last";return}show(i-1)}
+function goNext(){stopAuto();if(i===SCENES.length-1){location.href=WNEXT;return}show(i+1)}
+document.getElementById("prev").addEventListener("click",goPrev);
+document.getElementById("next").addEventListener("click",goNext);
+/* 💡 補充：按一次出現、再按一次收回（記住開關，換幕、換字都一樣） */
+card.addEventListener("click",function(e){var b=e.target.closest?e.target.closest(".supb"):null;if(!b)return;
+ e.stopPropagation();var on=!document.body.classList.contains("sup");document.body.classList.toggle("sup",on);
+ b.textContent=on?"💡 收起補充":"💡 補充";try{sessionStorage.setItem("wsup",on?"1":"")}catch(x){}},true);
+try{if(sessionStorage.getItem("wsup"))document.body.classList.add("sup")}catch(x){}
+/* ▶ 自動播放（2026-10-03 使用者指定）：每一幕唸完自動換下一幕，最後一幕唸完換下一個單字，到這一組最後一個字停 */
+var AUTO=false,AT=null;
+function stopAuto(){AUTO=false;if(AT){clearTimeout(AT);AT=null}var b=document.getElementById("autob");if(b)b.classList.remove("on")}
+function autoNext(){var my=i;PH.after(function(){if(!AUTO||i!==my)return;AT=setTimeout(function(){if(!AUTO||i!==my)return;
+ if(i<SCENES.length-1){show(i+1);return}
+ if(WLAST){stopAuto();return}
+ location.href=WNEXT+"#auto"},1100)})}
+document.getElementById("autob").addEventListener("click",function(){
+ if(AUTO){stopAuto();PH.stop&&PH.stop();return}
+ AUTO=true;this.classList.add("on");show(i)});
 /* 🔊 唸 3 次（2026-10-02 指定；「唸 1 次」刪掉了，點單字就會唸一次）：唸完一次才唸下一次，換幕或點別的就停 */
 var s3=0;
-function say3(){var my=++s3,n=0;(function go(){if(my!==s3)return;say();if(++n<3)PH.after(function(){setTimeout(go,650)})})()}
-document.getElementById("say3").addEventListener("click",say3);
+function say3(){stopAuto();var my=++s3,n=0,b=document.getElementById("say3");b.classList.add("on");
+ (function go(){if(my!==s3)return;say();if(++n<3)PH.after(function(){setTimeout(go,650)});else PH.after(function(){if(my===s3)b.classList.remove("on")})})()}
+document.getElementById("say3").addEventListener("click",function(){if(this.classList.contains("on")){s3++;this.classList.remove("on");return}say3()});
 document.addEventListener("keydown",function(e){
- if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();show(i+1)}
- if(e.key==="ArrowLeft")show(i-1);
+ if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();goNext()}
+ if(e.key==="ArrowLeft")goPrev();
 });
+document.getElementById("say1").addEventListener("click",function(){stopAuto();s3++;say()});
 
-show(0);
+/* 自動播放換到下一個字：iPad 的規定是「換一頁就要再點一下才可以出聲」，所以先出現一顆大按鈕，點一下就接著播 */
+if(location.hash==="#auto"){spoke=true;
+ document.body.insertAdjacentHTML("beforeend",'<button id="autogo" type="button">▶ 繼續自動播放</button>');
+ document.getElementById("autogo").addEventListener("click",function(){this.parentNode.removeChild(this);
+  AUTO=true;document.getElementById("autob").classList.add("on");show(0)})}
+show(location.hash==="#last"?SCENES.length-1:0);
 armFirstTouch();
 ${W.more?`document.getElementById("more").addEventListener("click",function(){location.href=${JSON.stringify(W.more.href)}});`:''}
 ${W.parts?`document.getElementById("parts").addEventListener("click",function(){location.href=${JSON.stringify(W.parts.href)}});`:''}

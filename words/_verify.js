@@ -140,8 +140,15 @@ async function scenePage(p,f,vp,e){
   if(s.ox>0)e.push('幕'+(i+1)+'橫向溢出'+s.ox);
   if(s.oy>0)e.push('幕'+(i+1)+'縱向溢出'+s.oy);
   if(s.h)e.push('幕'+(i+1)+' '+s.h);
+  /* 2026-10-03：單字卡第一幕的左箭頭 ＝ 上一個單字、最後一幕的右箭頭 ＝ 下一個單字，兩個箭頭都不關 */
+  const WC=!!(await p.$('#say1'));
+  if(WC){if(s.pd||s.nd)e.push('幕'+(i+1)+' 單字卡的箭頭被關掉了');
+   const tt=await p.evaluate(()=>[document.getElementById('prev').title,document.getElementById('next').title]);
+   if(i===0&&tt[0]!=='上一個單字')e.push('幕1 左箭頭不是「上一個單字」');
+   if(i===N-1&&tt[1]!=='下一個單字')e.push('末幕 右箭頭不是「下一個單字」');}
+  else{
   if(i===0&&(!s.pd||s.nd))e.push('幕1箭頭狀態錯');
-  if(i===N-1&&(!s.nd||s.pd))e.push('末幕箭頭狀態錯');
+  if(i===N-1&&(!s.nd||s.pd))e.push('末幕箭頭狀態錯');}
   /* 2026-09-26：故事融入暖身題 ➜ 先有題目、故事藏起來；答了才揭曉，揭曉後也不可以溢出、不可以壓到按鈕 */
   if(await p.$('#stage.qwait')){
    const q0=await p.evaluate(()=>({n:document.querySelectorAll('#stage .qo button').length,
@@ -243,12 +250,12 @@ async function scenePage(p,f,vp,e){
   if(await p.evaluate(()=>document.getElementById('toc').classList.contains('on')))e.push('目次關不掉');
  }else if(!/family-tree|brother-why|quiz/.test(f))e.push('沒有 📑 目次按鈕');
  /* ⑦ 2026-10-02 字卡（全站）：音節平常看不到、按了才切；按鈕一排、「唸 3 次」正中央、順序對；總首頁／單字首頁連得到；卡片不壓到按鈕 */
- if(await p.$('#say3')){
+ if(await p.$('#say1')){
   await p.evaluate(()=>show(SCENES.length-1));await p.waitForTimeout(700);
   const c=await p.evaluate(()=>{const cuts=[...document.querySelectorAll('#card .phw .cut')];
    const vis=cuts.filter(x=>x.getBoundingClientRect().width>1||getComputedStyle(x.firstChild).visibility!=='hidden').length;
    const bs=[...document.querySelectorAll('#bar button')],r=bs.map(b=>b.getBoundingClientRect());
-   const s3=document.getElementById('say3').getBoundingClientRect(),cd=document.getElementById('card').getBoundingClientRect(),
+   const s3=document.getElementById('say1').getBoundingClientRect(),cd=document.getElementById('card').getBoundingClientRect(),
     bt=document.getElementById('bottom').getBoundingClientRect();
    return{n:cuts.length,vis,ids:bs.map(b=>b.id),rows:new Set(r.map(x=>Math.round(x.top/4))).size,
     out:r.some(x=>x.left<0||x.right>innerWidth)||r.some((x,k)=>k&&x.left<r[k-1].right-1),mid:Math.round(s3.left+s3.width/2-innerWidth/2),
@@ -257,12 +264,20 @@ async function scenePage(p,f,vp,e){
   if(c.vis)e.push('字卡一開始就看得到音節切分（'+c.vis+' 處）');
   if(c.rows!==1)e.push('按鈕列不是一排（'+c.rows+' 排）');
   if(c.out)e.push('按鈕超出畫面或互相重疊');
-  if(Math.abs(c.mid)>3)e.push('「唸 3 次」沒有在正中央（偏 '+c.mid+'px）');
+  if(Math.abs(c.mid)>3)e.push('「唸 1 次」沒有在正中央（偏 '+c.mid+'px）');
   if(c.lap>0)e.push('字卡壓到下面的按鈕（'+c.lap+'px）');
   if(c.wrap.length)e.push('按鈕的字折行：'+c.wrap.join('、'));
   const L=c.ids,ix=x=>L.indexOf(x);
-  if(L[0]!=='tocb'||ix('phsyl')!==1||ix('phsee')!==2||ix('phmode')!==3||ix('slow')!==4||ix('say3')!==5||L[L.length-1]!=='home'||ix('whome')!==L.length-2||ix('srcb')!==L.length-3||ix('say')>=0)
+  /* 2026-10-03：左 ＝ 總首頁｜單字首頁｜目次｜音節動畫｜看音節｜音標｜放慢；正中央 ＝ 唸 1 次；右 ＝ 唸 3 次｜自動播放｜（結構／時光機）｜出處 */
+  if(L[0]!=='home'||L[1]!=='whome'||L[2]!=='tocb'||ix('phsyl')!==3||ix('phsee')!==4||ix('phmode')!==5||ix('slow')!==6||ix('say1')!==7||ix('say3')!==8||ix('autob')!==9||L[L.length-1]!=='srcb')
    e.push('按鈕順序不對：'+L.join(' '));
+  /* 💡 補充：小字平常收起來，按了才出現、再按收回 */
+  const SUP=await p.evaluate(()=>{for(let k=0;k<SCENES.length;k++){show(k);const b=document.querySelector('#card .supb');if(b)return k}return -1});
+  if(SUP>=0){const vis=()=>p.evaluate(()=>[...document.querySelectorAll('#card .sub:not(.zfull)')].some(x=>x.getClientRects().length));
+   const v0=await vis();await p.click('#card .supb');await p.waitForTimeout(200);const v1=await vis();await p.click('#card .supb');await p.waitForTimeout(200);const v2=await vis();acts++;
+   if(v0)e.push('補充的小字一開始就看得到');if(!v1)e.push('按了「💡 補充」沒有出現');if(v2)e.push('再按一次「💡 補充」沒有收回');}
+  if(await p.evaluate(()=>[...document.querySelectorAll('#card .tag')].some(t=>/^(英文|用在句子裡|現在|怎麼組的)$/.test(t.textContent.trim()))))e.push('上方的小標題（英文／用在句子裡）沒有刪掉');
+  await p.evaluate(()=>show(SCENES.length-1));await p.waitForTimeout(300);
   /* 2026-10-02：「✂️ 音節動畫」改名；「👀 看音節」點了立刻切好（不演動畫），再點收回去 */
   if(await p.evaluate(()=>{const b=document.querySelector('#phsyl .blb');return !b||b.textContent!=='音節動畫'}))e.push('「✂️ 音節動畫」的名字不對');
   if(c.n){const T=()=>{const ps=[...document.querySelectorAll('#card .c.t .phw')];const L=(ps.length?ps:[PH.main()]).filter(x=>x&&+x.getAttribute('data-n')>1);
@@ -274,12 +289,15 @@ async function scenePage(p,f,vp,e){
    if(s1.sp!==s1.n||!s1.on)e.push('按了「👀 看音節」沒有馬上切好（'+s1.sp+'／'+s1.n+'）');
    if(s1.anim||s1b.anim)e.push('「👀 看音節」演了動畫');
    if(s2.sp||s2.on)e.push('再按一次「👀 看音節」沒有收回去');}
-  if(c.n){await p.click('#phsyl');
+  if(c.n){await p.evaluate(()=>{window.__sy=0;new MutationObserver(()=>{if(document.querySelector('#card .syl.sayon'))window.__sy=1}).observe(document.getElementById('card'),{subtree:true,attributes:true,attributeFilter:['class']})});
+   await p.click('#phsyl');
    const t=await p.evaluate(()=>{const ps=document.querySelectorAll('#card .c.t .phw');return ps.length?[].reduce.call(ps,(a,x)=>a+PH.sylTime(x)+3300,0):PH.sylTime(PH.main())});
    await p.waitForTimeout(t+600);
    const sp=await p.evaluate(()=>{const ps=[...document.querySelectorAll('#card .c.t .phw')];const L=ps.length?ps:[PH.main()];
     return L.filter(x=>x&&+x.getAttribute('data-n')>1).every(x=>x.classList.contains('split'))});
-   acts++;if(!sp)e.push('按了「音節」沒有切開');}
+   acts++;if(!sp)e.push('按了「音節」沒有切開');
+   /* 2026-10-03：唸到哪一個音節，那一段放大變亮（.sayon） */
+   if(!await p.evaluate(()=>window.__sy))e.push('音節動畫沒有「唸到哪一段亮哪一段」');}
   if(vp.n===VPS[1].n){const h=fs.readFileSync(require('path').resolve(DIR,f),'utf8'),base=require('path').dirname(require('path').resolve(DIR,f));
    for(const id of ['home','whome']){const m=h.match(new RegExp('getElementById\\("'+id+'"\\)\\.addEventListener\\("click",function\\(\\)\\{location\\.href="([^"]+)"'));
     if(!m||!fs.existsSync(require('path').resolve(base,m[1])))e.push((id==='home'?'總首頁':'單字首頁')+'連不到（'+(m&&m[1])+'）')}
@@ -288,7 +306,9 @@ async function scenePage(p,f,vp,e){
     await p.evaluate(()=>{window.__n=0;const sp=speechSynthesis.speak.bind(speechSynthesis);speechSynthesis.speak=u=>{__n++;setTimeout(()=>u.onend&&u.onend(),300)};
      HTMLAudioElement.prototype.play=function(){__n++;setTimeout(()=>this.onended&&this.onended(),300);return Promise.resolve()};show(0)});
     await p.waitForTimeout(800);await p.evaluate(()=>{__n=0});await p.click('#say3');await p.waitForTimeout(4200);
-    const n3=await p.evaluate(()=>__n);acts++;if(n3!==3)e.push('「唸 3 次」唸了 '+n3+' 次');}
+    const n3=await p.evaluate(()=>__n);acts++;if(n3!==3)e.push('「唸 3 次」唸了 '+n3+' 次');
+    /* 2026-10-03：到第二幕自動唸英文 */
+    await p.evaluate(()=>{__n=0;show(1)});await p.waitForTimeout(900);if(await p.evaluate(()=>__n)<1)e.push('到第二幕沒有自動唸');}
   }
   await p.evaluate(()=>show(0));await p.waitForTimeout(300);
  }

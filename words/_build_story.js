@@ -138,15 +138,15 @@ const FQ={
  mother:{q:'全世界的寶寶，<b>最先</b>發得出來的音是？',o:['ma','ka','sa','la']},
  dad:{q:'寶寶叫爸爸，是 <b>da-da</b> 還是 <b>pa-pa</b>？',o:['兩個都有！','只有 da-da','只有 pa-pa','兩個都不是']},
  brother:{q:'英文以前有一個像小旗子的字母 <b>þ</b>，今天變成了？',o:['th','b','p','f']},
- sister:{q:'<b>sister</b> 這樣唸，是誰帶來的？',o:['坐船來的維京人','法國國王','美國人','羅馬人']},
+ sister:{q:'<b>sister</b> 這樣唸，是誰帶來的？',o:['坐船來的維京人','法國國王','德國人','羅馬人']},
  son:{q:'哪一個字跟 <b>son</b> 唸起來<b>一模一樣</b>？',o:['sun 太陽','sing 唱歌','soon 很快','song 歌']},
- daughter:{q:'daughter 的 <b>gh</b>，以前的人？',o:['會唸出來','從來不唸','唸成 f','根本沒寫']},
+ daughter:{q:'daughter 的 <b>gh</b>，以前的人？',o:['會唸出來','從來不唸','唸成 g','根本沒寫']},
  grandfather:{q:'<b>grand</b> 的意思是？',o:['大','老','好','爺爺']},
  grandmother:{q:'grandma 的 grand，跟哪一個 grand <b>意思一樣</b>？',o:['Grand Canyon 大峽谷','grab 抓','grade 年級','grass 草']},
  uncle:{q:'<b>uncle</b> 最早只能叫誰？',o:['媽媽的兄弟（舅舅）','爸爸的兄弟（叔叔）','爸爸的爸爸','鄰居先生']},
  aunt:{q:'<b>aunt</b> 最早只能叫誰？',o:['爸爸的姊妹（姑姑）','媽媽的姊妹（阿姨）','媽媽的媽媽','女老師']},
  cousin:{q:'<b>cousin</b> 以前只能叫誰的小孩？',o:['阿姨的小孩','叔叔的小孩','哥哥的小孩','鄰居的小孩']},
- nephew:{q:'nephew 以前的樣子 <b>nepos</b>，還可以叫誰？',o:['孫子','爺爺','爸爸','老師']},
+ nephew:{q:'nephew 以前的樣子 <b>nepos</b>，還可以叫誰？',o:['孫子','外公','弟弟','表哥']},
  niece:{q:'<b>niece</b> 跟哪一個字是一對？',o:['nephew 姪子','nice 很好','nine 九','name 名字']},
  husband:{q:'<b>husband</b> 裡面藏著哪一個東西？',o:['house 房子','horse 馬','hat 帽子','hand 手']},
  wife:{q:'以前的 <b>wīf</b>，指的是誰？',o:['每一個女生','只有媽媽','只有皇后','每一個小孩']}
@@ -211,7 +211,7 @@ Object.assign({file:'en-de-nl.html',css:require('./_pages2').CSS},require('./_pa
  ],
  S:[
  {emoji:'⛵👑',mid:'1066 年，一艘一艘船從法國開過來',lines:['英文從這一年開始，<b>多了好幾千個法文字</b>']},
- {tag:'1066 年發生什麼事？',src:'fr-1066',q:{q:'1066 年，誰當上了英國國王？',o:['法國諾曼第的威廉公爵','維京國王','羅馬皇帝','美國總統']},
+ {tag:'1066 年發生什麼事？',src:'fr-1066',q:{q:'1066 年，誰當上了英國國王？',o:['法國諾曼第的威廉公爵','維京國王','羅馬皇帝','蘇格蘭國王']},
   h:'<div class="f66"><span class="sea">🌊🌊🌊</span><span class="ship">⛵⛵⛵</span><span class="land">🏰 英格蘭</span></div>',
   lines:['法國諾曼第的 <b>威廉公爵</b> 坐船過來，打贏了','他當上 <b>英國國王</b>，帶來很多說法文的貴族']},
  {tag:'誰說法文？誰說英文？',src:'fr-who',q:{q:'1066 年以後，英國的<b>法官</b>說哪一種話？',o:['法文','英文','拉丁文','中文']},
@@ -1007,7 +1007,7 @@ ${PH.CSS}
 ${SRC.CSS}
 ${P.css||''}
 </style>
-${P.svjs!=null?P.svjs:SVJS}
+${P.svjs!=null?P.svjs:SVJS}${P.enjs!=null?P.enjs:require('./_aud').head(DIR)}
 </head>
 <body class="${[P.sayAll?'sa':'sayc',P.big?'big':''].join(' ').trim()}">
 <div id="dots"></div>
