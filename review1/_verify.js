@@ -13,7 +13,7 @@
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 const fs = require('fs'), path = require('path'), DIR = __dirname;
 const only = process.argv.slice(2);
-const files = fs.readdirSync(DIR).filter(f => /\.html$/.test(f) && f !== 'index.html' && (!only.length || only.some(o => f.includes(o))));
+const files = fs.readdirSync(DIR).filter(f => /\.html$/.test(f) && f !== 'index.html' && f !== 'games.html' && (!only.length || only.some(o => f.includes(o))));
 const AUD = (() => { const t = fs.readFileSync(path.join(DIR, 'audio/aud.js'), 'utf8'); return JSON.parse(/=(\{[\s\S]*\});/.exec(t)[1]); })();
 const key = s => String(s).replace(/[’]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 (async () => {

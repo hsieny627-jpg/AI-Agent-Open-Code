@@ -506,8 +506,11 @@ var PH=(function(){
    if(note)note.innerHTML='<span class="rv">●</span> 紅色母音 <b>'+(k+1)+'</b> 個';
    at(520,function(){u.classList.remove("count")})})});
   var t0=150+reds.length*520+250;
-  if(sy.length<2){at(t0,function(){sylSum('<span class="rv">1</span> 個紅色母音 ＝ <b>1</b> 個音節　不用剪 👍');
-   if(note)note.innerHTML='<span class="rv">1</span> 個母音 ＝ <b>1 個音節</b>'});return}
+  /* 一個音節的字（2026-10-03）：不用剪，整個字就是一段 ➜ 一樣放大變亮、紅色母音往上浮，唸完再出「不用剪」 */
+  if(sy.length<2){var my1=++sylId;at(t0,function(){if(my1!==sylId)return;var s0=sy[0];if(s0)s0.classList.add("sayon");
+   say(el.getAttribute("data-say"),el.getAttribute("data-lang")||"",function(){if(my1!==sylId)return;if(s0)s0.classList.remove("sayon");
+    sylSum('<span class="rv">1</span> 個紅色母音 ＝ <b>1</b> 個音節　不用剪 👍');
+    if(note)note.innerHTML='<span class="rv">1</span> 個母音 ＝ <b>1 個音節</b>'})});return}
   for(k=0;k<cs.length;k++)(function(c,k){at(t0+k*520,function(){
    var s=document.createElement("span");s.className="phsc";s.textContent="✂️";c.appendChild(s);void s.offsetWidth;s.classList.add("on");
    if(k===cs.length-1)at(330,function(){el.classList.add("split")})})})(cs[k],k);
@@ -534,7 +537,7 @@ var PH=(function(){
   for(k=0;k<v.length;k++)if(v[k].querySelector("i.v")&&!/mute/.test(v[k].className))r++;
   var w=sylKey(el),d=0,A=window.ENAUD||{},sp=slow?.7:1;for(k=0;k<n;k++){var x=A[akey("syl "+w+" "+k)];d+=(x?x[1]*1000/sp:650)+240+200}
   var ww=A[akey(w)];d+=(ww?ww[1]*1000/sp:900)+600;
-  return 150+r*520+250+(n<2?0:(n-1)*520+200+d)}
+  return 150+r*520+250+(n<2?(ww?ww[1]*1000/sp:900)+300:(n-1)*520+200+d)}
  /* 👀 看音節（使用者 2026-10-02 指定）：不演動畫，直接顯示切好的音節（bas·ket·ball）；on＝false 收回去 */
  function sylSee(el,on){clear();sylReset(el);if(on)el.classList.add("split")}
  /* 把說明文字裡的英文字詞變成可以點來聽（補充單字、字詞、用法都算）。

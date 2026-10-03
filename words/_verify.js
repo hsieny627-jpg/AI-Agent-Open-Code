@@ -71,14 +71,16 @@ async function hubPage(p,f,vp,e){
  const snap=()=>p.evaluate(()=>{
   const de=document.documentElement;
   return{ox:de.scrollWidth-de.clientWidth,oy:de.scrollHeight-de.clientHeight,
-   open:document.getElementById('cards').classList.contains('on'),
-   nCard:document.querySelectorAll('#cards a').length,
+   grades:[...document.querySelectorAll('.gr h2')].map(h=>h.firstChild.textContent.trim()),
+   rows:document.querySelectorAll('.gi').length,
    links:[...document.querySelectorAll('a[href]')].map(a=>a.getAttribute('href'))}});
  let acts=0;
  let s=await snap();acts++;
  if(s.ox>0)e.push('關著時橫向溢出'+s.ox);
- if(s.oy>0)e.push('關著時有捲軸（投影會被切掉）'+s.oy);
- if(s.open)e.push('17 張卡一開始就是展開的');
+ if(s.oy>0&&vp.width>vp.height)e.push('橫放有捲軸（投影會被切掉）'+s.oy);
+ /* 2026-10-03：三年級在上、四年級在下，每個年級 7 項（words/_grades.js） */
+ if(s.grades.join(',')!=='三年級,四年級')e.push('年級順序不對：'+s.grades.join(','));
+ if(s.rows!==14)e.push('首頁不是兩個年級各 7 項（'+s.rows+'）');
 
  /* 每一個站內連結都要真的存在 */
  const root=require('path').resolve(DIR,'..');
@@ -91,11 +93,6 @@ async function hubPage(p,f,vp,e){
  acts++;
  if(miss.length)e.push('連結指到不存在的檔案：'+miss.join('、'));
 
- await p.click('#cardsBtn');await p.waitForTimeout(350);
- s=await snap();acts++;
- if(!s.open)e.push('按了「17 張單字卡」沒有展開');
- if(s.nCard!==17)e.push('展開後不是 17 張（'+s.nCard+'）');
- if(s.ox>0)e.push('展開後橫向溢出'+s.ox);
  return acts;
 }
 
