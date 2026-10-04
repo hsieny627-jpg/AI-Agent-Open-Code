@@ -85,6 +85,7 @@ async function missCheck(p, e, who, bonus, scoreExpr) {
   const d = await p.evaluate(() => ({ nxt: !!document.querySelector('#miss .nxt'), bon: !!document.querySelector('#miss .bon'),
     say: !!document.querySelector('#miss .say') }));
   if (!d.nxt) e.push(who + '倒數 8 秒以後沒有「▶ 繼續」');
+  if (bonus === 0 && d.bon) e.push(who + '不該有「⭐ 加分」（使用者 2026-10-04：複習題沒有加分）');
   if (bonus) {
     if (!d.bon) e.push(who + '倒數 8 秒以後沒有「⭐ 加分」');
     else {
@@ -108,6 +109,111 @@ async function missCheck(p, e, who, bonus, scoreExpr) {
   if (await p.$('#miss .nxt')) { await p.click('#miss .nxt'); await p.waitForTimeout(300); }
   if (await on()) e.push(who + '按了「▶ 繼續」，答錯頁沒有關掉');
   return 1;
+}
+
+/* 📝 複習題 5 題（2026-10-04 對話 B）：每一個分頁、每一級都量
+   ① 靜態：5 題、題型順序（認讀 ➜ 聽力 ➜ 看中文 ➜ 看英文 ➜ 易錯）、四選一、認讀的 4 個 🔊 和聽力的句子都有語音檔
+   ② 每一題畫出來：不溢出、選項沒有超出按鈕、右上角有大數字分數和名次、認讀 20 秒其他 15 秒
+   ③ 字卡下方的〔📝 複習題 5 題〕不壓到字卡和按鈕列；最後一張字卡按 ➡ 進到複習題
+   ④ 第一組完整走一次：開場說明 ➜ 答對分數變多 ➜ 故意答錯（答錯頁照遊戲、沒有 ⭐ 加分）➜ 做完有分數和名次、答錯整理、➡ 下一個分頁 */
+async function tqCheck(p, e, vp) {
+  if (!await p.$('#tqGo')) return 0;
+  let acts = 0;
+  const r = await p.evaluate(async () => {
+    const out = [], wait = ms => new Promise(z => setTimeout(z, ms));
+    const ORD = ['read', 'listen', 'zh2en', 'en2zh', 'trap'];
+    const has = t => !window.AUD || !!(AUD[akey(t)] && (!boyV(t) || AUD['m:' + akey(t)]));
+    if (document.getElementById('rvBtn')) out.push('舊的「📝 複習」按鈕還在（使用者 2026-10-04 B5：刪掉）');
+    for (let t = 0; t < TABM.length; t++) for (let l = 0; l < (TABM[t].sub ? 2 : 1); l++) {
+      setDeck(t, l); await wait(60);
+      const nm = '分頁 ' + TABM[t].n + (TABM[t].sub ? (l ? '進階' : '基礎') : '') + ' 複習題';
+      const Q = tqSet();
+      if (!Q) { out.push(nm + '：沒有題目'); continue; }
+      if (Q.length !== 5) out.push(nm + '：不是 5 題（' + Q.length + '）');
+      Q.forEach((q, k) => {
+        if (q.k !== ORD[k]) out.push(nm + ' 第 ' + (k + 1) + ' 題題型是 ' + q.k + '（要 ' + ORD[k] + '）');
+        if (q.o.length !== 4 || new Set(q.o).size !== 4) out.push(nm + ' 第 ' + (k + 1) + ' 題不是四個不一樣的選項');
+        if (q.k === 'read') q.o.forEach(x => { if (!has(x)) out.push(nm + ' 認讀選項沒有語音檔：' + x); });
+        if (q.k === 'listen' && !has(q.say)) out.push(nm + ' 聽力句子沒有語音檔：' + q.say);
+        if (q.sp && !has(q.sp)) out.push(nm + ' 答錯頁要唸的沒有語音檔：' + q.sp);
+      });
+      /* 字卡下方的按鈕：看得到、不壓到字卡、不壓到按鈕列 */
+      const g = document.getElementById('tqGo').getBoundingClientRect(), c = document.getElementById('card').getBoundingClientRect(),
+            b = document.getElementById('bar').getBoundingClientRect();
+      if (!(g.width > 0) || document.getElementById('tqGo').hidden) out.push(nm + '：字卡下方看不到〔📝 複習題 5 題〕');
+      if (g.top < c.bottom - 1) out.push(nm + '：〔📝 複習題〕壓到字卡（' + Math.round(c.bottom - g.top) + 'px）');
+      if (g.bottom > b.top + 1) out.push(nm + '：〔📝 複習題〕壓到按鈕列');
+      if (g.height < 47.5) out.push(nm + '：〔📝 複習題〕不到 48px 高');
+      /* 每一題畫出來量 */
+      tqOpen(); tqQ = Q;
+      for (let k = 0; k < Q.length; k++) {
+        tqN = k; tqAsk(); await wait(50); tqStop(); sayStop();
+        const de = document.documentElement, w = nm + ' 第 ' + (k + 1) + ' 題';
+        if (de.scrollWidth > de.clientWidth) out.push(w + '橫向溢出');
+        const rv = document.getElementById('rv');
+        if (rv.scrollHeight > rv.clientHeight + 1) out.push(w + '要捲動才看得到全部（' + (rv.scrollHeight - rv.clientHeight) + 'px）');
+        [].forEach.call(document.querySelectorAll('.tqo button, .tqr button, .tqq, .tqshow'), x => {
+          if (x.scrollWidth > x.clientWidth + 1) out.push(w + '字超出框：' + x.textContent.trim().slice(0, 30)); });
+        const sec = +document.getElementById('rvnum').textContent;
+        if (sec !== (Q[k].k === 'read' ? 20 : 15)) out.push(w + '倒數 ' + sec + ' 秒（認讀 20、其他 15）');
+        const top = document.querySelector('.tqtop b'), rk = document.getElementById('tqrk');
+        if (!top || parseFloat(getComputedStyle(top).fontSize) < 40) out.push(w + '右上角的分數不夠大');
+        if (!rk || !/第 \d+ 名/.test(rk.textContent)) out.push(w + '右上角沒有名次');
+        const tr = top && top.getBoundingClientRect();
+        if (tr && (tr.right < innerWidth * 0.6 || tr.top > innerHeight * 0.35)) out.push(w + '分數不在右上角');
+        const n = Q[k].k === 'read' ? document.querySelectorAll('.tqr .pl').length : document.querySelectorAll('.tqo button').length;
+        if (n !== 4) out.push(w + '不是四個選項（' + n + '）');
+        if (Q[k].k === 'read' && [].some.call(document.querySelectorAll('.tqr'), x => /[A-Za-z]{2}/.test(x.textContent))) out.push(w + '認讀選項把英文寫出來了（只能有聲音）');
+      }
+      tqClose();
+      /* 最後一張字卡按 ➡ ＝ 進複習題 */
+      i = CARDS.length - 1; draw(0); await wait(40);
+      if (document.getElementById('next').disabled) out.push(nm + '：最後一張字卡的 ➡ 被關掉（要進複習題）');
+      else { document.getElementById('next').click(); await wait(60);
+        if (!document.body.classList.contains('tqon') || !document.getElementById('tqStart')) out.push(nm + '：最後一張字卡按 ➡ 沒有進到複習題');
+        tqClose(); }
+    }
+    setDeck(0, 0); return out;
+  });
+  r.forEach(m => e.push(m)); acts += 3;
+  /* 完整走一次（第一個分頁） */
+  await p.evaluate(() => { setDeck(0, 0); try { localStorage.removeItem('sent_tq_' + TQPAGE + '_0_0'); } catch (x) {} });
+  await p.click('#tqGo'); await p.waitForTimeout(400);
+  const intro = await p.evaluate(() => ({ t: (document.getElementById('rvbox') || {}).textContent || '', go: !!document.getElementById('tqStart'),
+    bar: !!document.querySelector('.tqdemo i') }));
+  if (!/15/.test(intro.t) || !/愈快/.test(intro.t) || !intro.go || !intro.bar) e.push('複習題開場沒有「15 秒、愈快分數愈高」的秒懂說明');
+  await p.click('#tqStart'); await p.waitForTimeout(500); acts++;
+  const s0 = await p.evaluate(() => tqScore);
+  await p.waitForTimeout(1100);
+  const sec = await p.evaluate(() => +document.getElementById('rvnum').textContent);
+  if (!(sec < 20)) e.push('複習題的倒數沒有在減少（' + sec + '）');
+  await p.click('.tqr .ch[data-ok="true"]'); await p.waitForTimeout(300);
+  const s1 = await p.evaluate(() => ({ s: tqScore, big: document.getElementById('tqsc').textContent, g: !!document.querySelector('.tqgain') }));
+  if (!(s1.s > s0) || String(s1.s) !== s1.big) e.push('複習題答對，右上角分數沒有變多（' + s0 + '→' + s1.big + '）');
+  if (!(s1.s > 100 && s1.s <= 1000)) e.push('複習題答對的分數不在 100～1000（' + s1.s + '）');
+  if (!s1.g) e.push('複習題答對沒有「＋分數」的畫面');
+  await p.waitForTimeout(1400);
+  await p.click('.tqo button[data-ok="false"]'); acts++;
+  acts += await missCheck(p, e, '複習題', 0, () => tqScore);
+  await p.waitForTimeout(500);
+  if (await p.evaluate(() => tqN !== 2 || !document.querySelector('.tqo button'))) e.push('複習題答錯頁關掉以後，沒有出下一題');
+  if (await p.evaluate(() => tqScore) !== s1.s) e.push('複習題答錯，分數不是 0 分');
+  for (let k = 2; k < 5; k++) { await p.click('.tqo button[data-ok="true"]'); await p.waitForTimeout(1500); }
+  await p.waitForTimeout(400);
+  const end = await p.evaluate(() => ({ sc: ((document.querySelector('.tqend .sc') || {}).textContent || ''), s: tqScore,
+    rk: ((document.querySelector('.tqend .rk') || {}).textContent || ''), all: !!(document.getElementById('missAll') || {}).classList && document.getElementById('missAll').classList.contains('on'),
+    nx: !!document.getElementById('tqNext'), ox: document.documentElement.scrollWidth - document.documentElement.clientWidth }));
+  if (end.sc !== String(end.s)) e.push('複習題做完，沒有顯示總分（' + end.sc + '）');
+  if (!/第 1 名/.test(end.rk)) e.push('複習題做完，沒有顯示名次（' + end.rk + '）');
+  if (!end.all) e.push('複習題做完，沒有「📌 答錯整理」');
+  if (!end.nx) e.push('複習題做完，沒有「➡ 下一個分頁」');
+  if (end.ox > 0) e.push('複習題結算橫向溢出 ' + end.ox);
+  await p.evaluate(() => { const m = document.getElementById('missAll'); if (m) m.classList.remove('on'); });
+  await p.click('#tqNext'); await p.waitForTimeout(400); acts++;
+  const nx = await p.evaluate(() => ({ t: TCUR, i: i, on: document.body.classList.contains('tqon') }));
+  if (nx.t !== 1 || nx.i !== 0 || nx.on) e.push('「➡ 下一個分頁」沒有到下一個分頁第一張（' + nx.t + '-' + nx.i + '）');
+  await p.evaluate(() => { try { localStorage.removeItem('sent_tq_' + TQPAGE + '_0_0'); } catch (x) {} setDeck(0, 0); });
+  return acts;
 }
 
 /* 往後翻一張；已經是最後一張就回報 false（停用的按鈕點下去 Playwright 會卡 30 秒） */
@@ -253,6 +359,7 @@ async function cardsPage(p, f, vp, e) {
         }
       }
     }
+    acts += await tqCheck(p, e, vp);
     /* 跨分頁的箭頭（2026-10-04，清單 Q9）：最後一張往右 ＝ 下一個分頁第一張；第一張往左 ＝ 上一個分頁最後一張；基礎走基礎、進階走進階；
        最後一個分頁的最後一張停住。箭頭在字卡裡面，螢幕最右邊留白 */
     {
@@ -260,6 +367,8 @@ async function cardsPage(p, f, vp, e) {
         const out = [], wait = ms => new Promise(z => setTimeout(z, ms)), st = () => [TCUR, LCUR, i];
         for (let t = 0; t < TABM.length - 1; t++) for (let l = 0; l < (TABM[t].sub ? 2 : 1); l++) {
           setDeck(t, l); i = CARDS.length - 1; draw(0); await wait(80);
+          if (window.tqHas && tqHas()) { setDeck(t + 1, TABM[t + 1].sub ? (TABM[t].sub ? l : LMEM) : 0); await wait(80); document.getElementById('prev').click(); await wait(80);
+            const b = st(); if (b[0] !== t || b[2] !== CARDS.length - 1) out.push('分頁 ' + TABM[t + 1].n + ' 第一張往左，沒有回到 ' + TABM[t].n + ' 最後一張（' + b.join('-') + '）'); continue; }
           if (document.getElementById('next').disabled) { out.push('分頁 ' + TABM[t].n + ' 最後一張的右箭頭被關掉'); continue; }
           document.getElementById('next').click(); await wait(80);
           const a = st(), lv = TABM[t + 1].sub ? (TABM[t].sub ? l : LMEM) : 0;
@@ -269,7 +378,7 @@ async function cardsPage(p, f, vp, e) {
           if (b[0] !== t || b[2] !== CARDS.length - 1) out.push('分頁 ' + TABM[t + 1].n + ' 第一張往左，沒有回到 ' + TABM[t].n + ' 最後一張（' + b.join('-') + '）');
         }
         setDeck(TABM.length - 1, 0); i = CARDS.length - 1; draw(0); await wait(80);
-        if (!document.getElementById('next').disabled) out.push('最後一個分頁的最後一張，右箭頭沒有停住');
+        if (!document.getElementById('next').disabled && !(window.tqHas && tqHas())) out.push('最後一個分頁的最後一張，右箭頭沒有停住');
         setDeck(0, 0); await wait(80);
         if (!document.getElementById('prev').disabled) out.push('第一個分頁的第一張，左箭頭沒有停住');
         const n = document.getElementById('next').getBoundingClientRect(), c = document.getElementById('card').getBoundingClientRect();
@@ -282,7 +391,8 @@ async function cardsPage(p, f, vp, e) {
     const orig = await p.evaluate(() => TABM.findIndex(t => t.lb === '原本句型'));
     if (orig < 0) { acts += await rateBar(p, e); return acts; }
     /* 原本句型照原本的規則量（頭尾的箭頭停住）：跨分頁的箭頭上面已經量過，這裡關掉 */
-    await p.evaluate(k => { window.crossTab = null; setDeck(k, 0); }, orig); await p.waitForTimeout(500);
+    /* 複習題的 ➡（最後一張進複習題）上面 tqCheck 已經量過，這裡也關掉 */
+    await p.evaluate(k => { window.crossTab = null; window.tqHas = function () { return false }; setDeck(k, 0); }, orig); await p.waitForTimeout(500);
   }
   const first = await snap(); const N = first.n; let anyRed = false;
   if (N < 5) e.push('卡片數只有 ' + N);
@@ -417,8 +527,8 @@ async function cardsPage(p, f, vp, e) {
     }
   }
 
-  /* 📝 複習：每 4 張一組，20 秒限時，愈快答對分數愈高（使用者 2026-09-21 指定） */
-  {
+  /* 📝 複習：每 4 張一組，20 秒限時，愈快答對分數愈高（使用者 2026-09-21 指定）；有分頁複習題的頁面已經刪掉（2026-10-04 B5），只剩 Review 1 頁 */
+  if (await p.$('#rvBtn')) {
     await p.click('#rvBtn'); await p.waitForTimeout(420); acts++;
     const gs = await p.$$eval('#rv .rvg', a => a.map(x => x.textContent));
     const gn = gs.length;

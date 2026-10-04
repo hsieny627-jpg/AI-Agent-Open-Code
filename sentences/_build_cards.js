@@ -5,6 +5,7 @@
  * 三大重點（使用者 2026-09-20 指定）：版面簡潔清爽、廢話少、秒懂動畫多。
  */
 const fs = require('fs'), SITE = require('./_site'), DIR = SITE.DIR;
+const TQ = require('./_tq');   /* 每個分頁最後面的 📝 複習題 5 題（2026-10-04 對話 B） */
 const S = require('./_shared');
 const D = SITE.load('_data');
 
@@ -1783,6 +1784,18 @@ const SSPATCH = [
    " var d=document.createElement('div');d.innerHTML=subsHTML(c.slots||c.slot);if(d.firstChild)o.parentNode.replaceChild(d.firstChild,o);markSubs();padBottom();fit()}\n" +
    "var CARDS=__CARDS__"]
 ];
+/* 📝 複習題 5 題（2026-10-04 對話 B）：只有資料夾裡有 _tq_data.js、而且這一頁有分頁才接上（Review 1 頁照舊用 📝 複習） */
+const TQPATCH = [
+  ["  $$('#dots i').forEach(function(d,n){d.className=n===i?'on':''});",
+   "  $$('#dots i').forEach(function(d,n){d.className=n===i?'on':''});\n  if(window.tqMark)tqMark();"],
+  /* 最後一張字卡：➡ 進複習題（B2），所以最後一個分頁的最後一張也按得下去 */
+  ["  $('#next').disabled=i===CARDS.length-1&&!(hasT&&TCUR<TABM.length-1);",
+   "  $('#next').disabled=i===CARDS.length-1&&!(hasT&&TCUR<TABM.length-1)&&!(window.tqHas&&tqHas());"],
+  ["  var n=i+d;if(n<0||n>=CARDS.length){if(window.crossTab)crossTab(d);return}",
+   "  var n=i+d;if(n<0||n>=CARDS.length){if(d>0&&window.tqHas&&tqHas()){tqOpen();return}if(window.crossTab)crossTab(d);return}"],
+  /* B5：舊的 📝 複習（每 4 張一組）拿掉，按鈕不在了 */
+  ["$('#rvBtn').addEventListener('click',function(){", "if($('#rvBtn'))$('#rvBtn').addEventListener('click',function(){"]
+];
 function page(unit, cards, title, other, otherName, P) {
   P = P || {};
   /* 分頁（2026-10-03）：P.tabs ＝ [{n:'一-1', lb:'What’s your name?', cards:[…]} 或 {n, lb, sub:[{lb:'基礎',cards},{lb:'進階',cards}]}]
@@ -1794,7 +1807,12 @@ function page(unit, cards, title, other, otherName, P) {
     cards = DECKS[TABM[0].sub ? TABM[0].sub[0].d : TABM[0].d];
   }
   const SS = setsOf(DECKS ? [].concat(...DECKS) : cards), hasSS = Object.keys(SS).length > 0;
+  const TQD = TQ.attach(DIR, D, P);
   let js = JS;
+  if (TQD) TQPATCH.forEach(([a, b]) => {
+    if (js.split(a).length !== 2) throw new Error('複習題：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
+    js = js.replace(a, () => b);
+  });
   if (hasSS) SSPATCH.forEach(([a, b]) => {
     if (js.split(a).length !== 2) throw new Error('替換字切換：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
     js = js.replace(a, () => b.replace('__SUBSETS__', JSON.stringify(SS)));
@@ -1834,7 +1852,7 @@ ${TABHTML}
 <button class="nav r" id="next" aria-label="下一張"><span><i>▶</i><b>下一張</b></span></button>
 <main id="stage"><section id="card"></section></main>
 
-<div id="rv"><div class="rvbox" id="rvbox"></div></div>
+<div id="rv"><div class="rvbox" id="rvbox"></div></div>${TQD ? '\n<button id="tqGo">📝 複習題 5 題</button>' : ''}
 <div id="toc" aria-label="目次"><div class="th"><h2>📑 目次　點一張，直接跳過去</h2>
  <button class="tx">✕ 關閉</button></div><div class="tg" id="tocG"></div></div>
 
@@ -1856,7 +1874,7 @@ ${TABHTML}
   <button data-r="word" class="on">🎬 逐字</button>
   <button data-r="whole">📄 整句</button>
  </span>
- <button id="rvBtn">📝 複習</button>
+${TQD ? '' : ' <button id="rvBtn">📝 複習</button>'}
  <button id="zhBtn">🔤 點中文唸 中文</button>
  ${S.RATEBAR}
  ${P.navExtra || ''}<a href="${other}">${otherName}</a>
@@ -1875,10 +1893,12 @@ ${js.replace('__CARDS__', () => JSON.stringify(cards))
     .replace('__RVG__', () => JSON.stringify(P.rv || (unit === 1 ? D.RV1 : D.RV2)))}
 ${S.RATEJS}
 ${TABJS}
+${TQD ? TQ.JS.replace('__TQD__', () => JSON.stringify(TQD)).replace('__TQPAGE__', () => JSON.stringify(require('path').basename(DIR) + '/' + P.file)) +
+  "document.body.classList.add('hastq');tqMark();window.addEventListener('resize',tqMark);" : ''}
 </script>
 </body>
 </html>`;
-  return S.HEAD(title, CSS + (hasSS ? SSCSS : '') + (P.rv ? R1CSS : '')) + body;
+  return S.HEAD(title, CSS + (hasSS ? SSCSS : '') + (P.rv ? R1CSS : '') + (TQD ? TQ.CSS : '')) + body;
 }
 
 /* 產出哪幾頁：別的課次可以在 _data.js 寫 PAGES 換標題，沒寫就是 sentences 原本的兩頁 */

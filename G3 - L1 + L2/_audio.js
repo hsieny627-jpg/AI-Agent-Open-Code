@@ -13,7 +13,7 @@ const { pack } = require('../tools/audio_pack');
 
 /* 2026-10-03：收集的方法搬到 sentences/_audio_collect.js（四年級也用同一套）：原本的卡、上方分頁的卡、Review 1、
    每一個替換字、問句女聲／答句男聲（'m:'）、複習題、暖身題、遊戲 */
-const T = require('../sentences/_audio_collect').collect(D, Q, G);
+const T = require('../sentences/_audio_collect').collect(D, Q, G, require('./_tq_data'));
 /* 句子重音（使用者 2026-09-26 指定）：數字是 content word，音高比較高（stressed）；years old 是 function words，唸得比較輕。
    + ＝ 重音、- ＝ 輕讀，做法見 tools/stress.py */
 ['six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'].forEach(n => {

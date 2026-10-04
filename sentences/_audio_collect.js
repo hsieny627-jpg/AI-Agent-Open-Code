@@ -9,7 +9,7 @@ const FEM = /\b(Emma|Wendy|Amy|Mia)\b/;
 const qaV = ans => FEM.test(String(ans)) ? ['m', ''] : ['', 'm'];
 const V = (v, s) => (v ? v + ':' : '') + s;
 
-function collect(D, Q, G) {
+function collect(D, Q, G, TQ) {
   const T = [];
   /* 有中文的（遊戲選項「主詞和 is」這種）不做成英文語音檔：Kokoro 會跳過中文，唸出來不完整 */
   const add = s => { if (s && /[A-Za-z]/.test(String(s).replace(/^m:/, '')) && !/[\u3400-\u9fff]/.test(String(s))) T.push(String(s)); };
@@ -69,6 +69,17 @@ function collect(D, Q, G) {
   /* 複習題：答錯頁會唸正確答案 */
   (D.RV1 || []).concat(D.RV2 || []).forEach(g => g.q.forEach(q => add(q.o[0])));
   (D.XPAGES || []).forEach(P => (P.rv || []).forEach(g => g.q.forEach(q => add(q.o[0]))));
+  /* 📝 複習題 5 題（2026-10-04 對話 B，_tq_data.js）：聽力題唸的句子、認讀題的四個 🔊 選項、答錯頁唸的正解（sp）。
+     錯的英文不唸：認讀題的選項全部是正確的英文；看中文選英文、易錯的錯句只寫在畫面上，不做語音檔。
+     男生名字（Ken、Alan、Mike）的句子用男聲（引擎 say(…,{v:boyV(t)})） */
+  if (TQ) Object.keys(TQ).forEach(u => Object.keys(TQ[u]).forEach(k => TQ[u][k].forEach(q => {
+    const both = s => { add(s); if (BOY && BOY.test(s)) add(V('m', s)); };
+    if (q.say) both(q.say);
+    if (q.k === 'read') q.o.forEach(both);
+    if (q.k === 'en2zh') { const m = /「([^」]*[A-Za-z][^」]*)」/.exec(q.q); if (m) both(m[1]); }
+    const sp = q.sp != null ? q.sp : (/[A-Za-z]{2}/.test(q.o[0]) && !/[\u3400-\u9fff]/.test(q.o[0]) ? q.o[0] : '');
+    if (sp) both(sp.replace(/➜/g, ' '));
+  })));
   /* 暖身題：聽力題的句子、正確答案 */
   if (Q) Q.Q.forEach(q => { add(q.say); add(q.o[q.a != null ? q.a : 0]); });
   /* 遊戲：照 _build_games.js 組句子的方法 */

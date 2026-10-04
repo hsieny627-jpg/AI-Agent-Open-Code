@@ -1036,6 +1036,8 @@ function mCan(){return !!(MS&&MS.o&&MS.o.gain&&(MS.o.self||(MS.o.sims&&MS.o.sims
 /* 錯題分析頁：reread ＝ 按了加分以後的「再看 8 秒」 */
 function mRead(reread){
  var o=MS.o, p=mPair(o), m=mEl();
+ /* sp（2026-10-04 句型複習題）：答錯頁要唸什麼；'' ＝ 不唸（正解是字母、或混了中文）。沒寫 ＝ 照原本 */
+ if(o.sp!=null)p.st=o.sp;
  m.innerHTML='<div class="mbox">'+
   '<div class="mhd'+(reread?' bn':'')+'">'+(reread?'👀 再仔細看一次':(o.pick==null?'⏰ 時間到':'❌ 答錯了'))+'</div>'+
   (o.q?'<div class="mq">'+ap(o.q)+'</div>':'')+
@@ -1048,7 +1050,7 @@ function mRead(reread){
   '<div class="mft" id="mft">'+(p.st?'<button class="say" data-say="'+mEsc(p.st).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+
    '<span class="mcd" id="mcdn">'+MISSN+'</span></div></div>';
  m.scrollTop=0;m.classList.add('on');
- mSay3(/[A-Za-z]{2}/.test(p.ans)?p.ans:((gSrc(o)||{}).en||''));
+ mSay3(o.sp!=null?o.sp:(/[A-Za-z]{2}/.test(p.ans)?p.ans:((gSrc(o)||{}).en||'')));
  mCount(MISSN,function(){
   if(reread){mQuiz();return}
   var f=document.getElementById('mft');if(!f)return;
@@ -1062,7 +1064,7 @@ function mRead(reread){
 function missShow(o,cb){
  var key=mStrip(o.q)+'|'+mStrip(o.ans);
  MISSLOG=MISSLOG.filter(function(x){return x.key!==key});
- MISSLOG.push({key:key,q:o.q,pick:o.pick,ans:o.ans,why:o.why});
+ MISSLOG.push({key:key,q:o.q,pick:o.pick,ans:o.ans,why:o.why,sp:o.sp});
  missCB=cb||null;
  o.self0=o.self;MS={o:o};
  mRead(false);
@@ -1138,7 +1140,7 @@ function missAll(title,done){
    '<div class="cp">❌ '+p.p+'</div><div class="ca">✅ <b>'+(p.g?'<span class="mv glw">'+p.g+'</span>':p.a)+'</b></div>'+
    (p.tr?'<div class="cw">整句：<b>'+mEsc(p.tr)+'</b></div>':'')+
    (x.why?'<div class="cw">💡 '+ap(x.why)+'</div>':'')+
-   (p.en?'<button class="say" data-say="'+mEsc(p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+'</div>'}).join('')+
+   ((x.sp!=null?x.sp:(p.en?p.ans:''))?'<button class="say" data-say="'+mEsc(x.sp!=null?x.sp:p.ans).replace(/"/g,'&quot;')+'">🔊 發音</button>':'')+'</div>'}).join('')+
   '<div class="mbtns"><button id="mAllOk">✅ 我都弄懂了</button></div></div>';
  m.scrollTop=0;m.classList.add('on');
  return true;
@@ -2515,6 +2517,7 @@ draw(0);
     setRate(parseFloat(b.getAttribute('data-r')));store('rate',RATE);mark();sayStop();
   });
 })();
+
 
 
 </script>

@@ -8,7 +8,7 @@
 const path = require('path');
 const D = require('./_data'), Q = require('./_quiz_data'), G = require('./_game_data');
 const { pack } = require('../tools/audio_pack');
-const T = require('./_audio_collect').collect(D, Q, G);
+const T = require('./_audio_collect').collect(D, Q, G, require('./_tq_data'));
 /* 2026-10-04 使用者（清單第 7 點）：
    He is my father. 的 my 唸輕 ➜ -my（音高 ✕0.86、音量 ✕0.7）；He’s my／She is my／She’s my 也一樣
    Is he a doctor? 句尾上揚 ➜ 最後一個字前面加 /（音高從 ✕1.0 升到 ✕1.38）；Is he／Is she 開頭的問句全部一樣
