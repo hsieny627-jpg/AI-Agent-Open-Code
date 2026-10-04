@@ -8,6 +8,20 @@
 語速六段、音效暫時刪除……全部適用，這一份只寫「這一課不一樣的地方」。
 
 
+## 2026-10-04 改版（對話 A；引擎改動寫在 `sentences/CLAUDE.md` 最上面「2026-10-04」，單字卡寫在 `words/CLAUDE.md`）
+
+這一課自己的：
+
+| # | 使用者要的 | 做法（在哪裡） |
+|---|---|---|
+| 16 | 縮寫頁（等句／縮寫）下面列出這個句型全部的替換字（名字、數字） | `_data.js`：Unit 1 的 My name is ___. ＝ I am ___.／I’m ___. 那幾張改成 `slot:'name'`、一開始是 Ken；I am Ken. ＝ I’m Ken.、三句那一張也加 `slot:'name'`；Unit 2 的等號卡全部 `slot:'age'`。What is ___? ＝ What’s ___? 空格是「東西」，沒有替換字 |
+| 17 | Unit 2 句型 2 第 7 頁：等句、下面加數字替換字、唸上下兩句 | `U2[7]`（I’m ten years old. ＝ I’m ten.）：`slot:'age'`，左上角自動寫「等句」，兩句都唸 |
+| 5 | 句型 2 第 10 頁 I am Alan／Ken／Mike ＝ 男聲 | `BOYS = ['Ken','Alan','Mike']`（引擎 `boyV()`） |
+| 6 | 數字音高調低、男聲 old 收尾、女聲 years old 的 old 太弱 | `_audio.js`：`^` 數字、男聲 `%years %old`、`years old` ➜ `years !old.`（`tools/stress.py`） |
+| 10・Q12・Q11 | What ➜ is ➜ What is ➜ What’s；Where 圖示 | Sight Words（`_build_words.js`）：`is-2`、`what-is`（新）、`whats`（縮寫動畫 `morph`）、`WHERE`（SVG）。You are、How old、years old 的加號頁刪掉 |
+| Q1 | eleven 是「哪兩個英文單字」組成的？ | `_num_pages.js`：✅ one 和 left／one 和 ten／ten 和 one／elf 和 even；揭曉：很久以前的 one（ain）和 left（lif），數完 10 還剩 1 |
+| 13・18・19・Q10 | 中英語序上英文下中文、Review 1 全部的句子、to 不放中文、build LEGO 小字 | 見 `sentences/CLAUDE.md` |
+
 ## 2026-10-03 改版（使用者 13 點；引擎改動寫在 `sentences/CLAUDE.md` 最上面「2026-10-03」，先讀那一節）
 
 這一課自己的：

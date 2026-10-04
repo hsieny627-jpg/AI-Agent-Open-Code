@@ -795,7 +795,8 @@ var PH=(function(){
  /* 等「現在這一句」唸完再做下一件事（換成別句就作廢）：🔊 唸 3 次用 */
  function after(f){wq.push(f)}
  function lbl(b,t){var l=b.querySelector(".blb");if(l)l.textContent=t;else b.textContent=t}
- function akey(t){return String(t).replace(/[’]/g,"'").replace(/s+/g," ").trim().toLowerCase()}
+ /* 2026-10-04 修：這裡是樣板字串，\s 要寫兩條斜線；原本寫一條變成 s，凡是有 s 的字都查錯語音檔（is 唸成 I、sister 查不到） */
+ function akey(t){return String(t).replace(/[’]/g,"'").replace(/\s+/g," ").trim().toLowerCase()}
  function stopAll(){try{speechSynthesis.cancel()}catch(e){}try{if(AU)AU.pause()}catch(e){}}
  function say(t,lang,fin){
   var my=++sid,done=false,end=function(){if(done)return;done=true;if(fin)try{fin()}catch(e){}
@@ -1048,9 +1049,9 @@ var S=[
    "q": "eleven 為什麼不叫 oneteen？",
    "o": [
     "它比 -teen 更老：意思是「剩下一」",
-    "因為不好聽",
-    "因為國王規定",
-    "因為打錯字"
+    "因為 one 太短",
+    "因為 eleven 是法文",
+    "因為 oneteen 太難唸"
    ]
   },
   "src": "evo-c",

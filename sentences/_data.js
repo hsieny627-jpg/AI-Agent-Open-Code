@@ -460,6 +460,10 @@ var SCR4 = [
  sc({at:'💪 我會什麼',bg:'💪',l:'👦',b:'and I can cook, too.',r:'👨',rt:'😃',use:'一樣用 and，不一樣用 but。'})
 ];
 RV4C.forEach(function (c, i) { c.scene = SCR4[i]; });
+/* 第一頁：這個主題全部的英文句子，學生先讀過整體（2026-10-04 使用者指定） */
+RV4C.unshift({type:'focus', kind:R4, title:'Review 1 全部的句子',
+  rows:[['My name is ______.','我的名字是 ______。',ICON.my],['This is my ______.','這是我的 ______。','👇'],['He’s a ______.','他是一位 ______。',ICON.he],
+        ['He likes ______,','他喜歡 ______，','❤️'],['and I like ______.','而且我喜歡 ______。','➕'],['He can ______,','他會 ______，','💪'],['and I can ______.','而且我會 ______。','➕']]});
 var RVR4 = [
  {t:'This is my ～ likes', q:[
   {q:'This is my father. 的中文是？', o:['這是我的爸爸。','他是我的爸爸。','這是你的爸爸。','那是我的爸爸嗎？'], h:'This ＝ 這，my ＝ 我的。'},
@@ -550,20 +554,22 @@ U2T.p3 = [
    atk:[No(),t(',','，',ICON.comma,{tight:1}),she2(),isnt(),D_(),She2(),S_(),a2(),t('______','______','',{slot:'job2',blank:1}),D_()],
    qzh:'她 是 一位 老師 嗎？', azh:'不，她 不是。她 是 一位 ______。'}
 ];
+/* 中英語序：原本上中文、下英文；下一頁「上英文、下中文」（2026-10-04 使用者指定） */
+var ENTOP = function(c){return Object.assign({},c,{enTop:1})};
 var TABS1 = [
-  {n:'一-1', lb:'Who’s he/she?', sub:[{lb:'基礎',cards:U1T.b11},{lb:'進階',cards:U1T.a11}]},
-  {n:'一-2', lb:'中英語序', cards:[U1[7],U1[12]]},
-  {n:'二', lb:'He’s/She’s my ___.', sub:[{lb:'基礎',cards:U1T.b2},{lb:'進階',cards:U1T.a2}]},
-  {n:'三', lb:'一問一答', cards:[U1[14],U1[15]]},
-  {n:'四', lb:'原本句型', cards:U1}
+  {n:'1-1', lb:'Who’s he/she?', sub:[{lb:'基礎',cards:U1T.b11},{lb:'進階',cards:U1T.a11}]},
+  {n:'1-2', lb:'中英語序', cards:[U1[7],ENTOP(U1[7]),U1[12],ENTOP(U1[12])]},
+  {n:'2', lb:'He’s/She’s my ___.', sub:[{lb:'基礎',cards:U1T.b2},{lb:'進階',cards:U1T.a2}]},
+  {n:'3', lb:'一問一答', cards:[U1[14],U1[15]]},
+  {n:'4', lb:'原本句型', cards:U1}
 ];
 var TABS2 = [
-  {n:'一-1', lb:'He/She is a ___.', sub:[{lb:'基礎',cards:U2T.b11},{lb:'進階',cards:U2T.a11}]},
-  {n:'一-2', lb:'Is he/she a ___?', cards:U2T.q12},
-  {n:'一-3', lb:'中英語序', cards:[U2[3],U2[12]]},
-  {n:'二', lb:'Yes／No', sub:[{lb:'基礎',cards:U2T.b2},{lb:'進階',cards:U2T.a2}]},
-  {n:'三', lb:'一問一答', cards:U2T.p3},
-  {n:'四', lb:'原本句型', cards:U2}
+  {n:'1-1', lb:'He/She is a ___.', sub:[{lb:'基礎',cards:U2T.b11},{lb:'進階',cards:U2T.a11}]},
+  {n:'1-2', lb:'Is he/she a ___?', cards:U2T.q12},
+  {n:'1-3', lb:'中英語序', cards:[U2[3],ENTOP(U2[3]),U2[12],ENTOP(U2[12])]},
+  {n:'2', lb:'Yes／No', sub:[{lb:'基礎',cards:U2T.b2},{lb:'進階',cards:U2T.a2}]},
+  {n:'3', lb:'一問一答', cards:U2T.p3},
+  {n:'4', lb:'原本句型', cards:U2}
 ];
 /* 四年級複習網站（2026-10-03 使用者指定，獨立網址 g4-review/）：Unit 1、Unit 2 的進階句型、中英語序、縮寫動畫 */
 var RFIX = function (h) {
@@ -572,11 +578,11 @@ var RFIX = function (h) {
 };
 var RPAGES = [
   { file:'../g4-review/u1.html', unit:1, title:'四年級複習｜Unit 1 Who’s he?', other:'u2.html', otherName:'➡ Unit 2', fix:RFIX,
-    tabs:[{n:'一', lb:'Who’s he/she?', cards:U1T.a11}, {n:'二', lb:'He’s/She’s my ___.', cards:U1T.a2},
-          {n:'三', lb:'中英語序', cards:[U1[7],U1[12]]}, {n:'四', lb:'縮寫動畫', cards:[U1[2],U1[5],U1[10]]}] },
+    tabs:[{n:'1', lb:'Who’s he/she?', cards:U1T.a11}, {n:'2', lb:'He’s/She’s my ___.', cards:U1T.a2},
+          {n:'3', lb:'中英語序', cards:[U1[7],ENTOP(U1[7]),U1[12],ENTOP(U1[12])]}, {n:'4', lb:'縮寫動畫', cards:[U1[2],U1[5],U1[10]]}] },
   { file:'../g4-review/u2.html', unit:2, title:'四年級複習｜Unit 2 Is he a doctor?', other:'u1.html', otherName:'⬅ Unit 1', fix:RFIX,
-    tabs:[{n:'一', lb:'He/She is a ___.', cards:U2T.a11}, {n:'二', lb:'Yes／No', cards:U2T.a2},
-          {n:'三', lb:'中英語序', cards:[U2[3],U2[12]]}, {n:'四', lb:'縮寫動畫', cards:[U2[1],U2[10],U2[7],U2[16]]}] }
+    tabs:[{n:'1', lb:'He/She is a ___.', cards:U2T.a11}, {n:'2', lb:'Yes／No', cards:U2T.a2},
+          {n:'3', lb:'中英語序', cards:[U2[3],ENTOP(U2[3]),U2[12],ENTOP(U2[12])]}, {n:'4', lb:'縮寫動畫', cards:[U2[1],U2[10],U2[7],U2[16]]}] }
 ];
 var PAGES = [
   { file:'unit1.html', unit:1, title:'Unit 1 句型｜Who’s he? Who’s she?', other:'unit2.html', otherName:'➡ Unit 2', tabs:TABS1 },

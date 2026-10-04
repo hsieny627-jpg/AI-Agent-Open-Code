@@ -33,9 +33,16 @@ function collect(D, Q, G) {
   const list = (tk, v) => {
     if (!tk) return;
     words(tk);
-    variants(tk).forEach(x => { add(V(v, plain(x))); tk.filter(t => t.slot).forEach(() => {}); });
+    /* 男生名字的句子（不是一問一答）另外做一份男聲（2026-10-04 使用者指定：I am Alan／Ken／Mike ＝ 男聲） */
+    variants(tk).forEach(x => { add(V(v, plain(x))); if (BOY && !v && BOY.test(plain(x))) add(V('m', plain(x))); });
+    /* 有空格的卡（My name is ______.）網頁上唸的是「My name is」（空格和後面黏著的句點不唸）：照網頁的唸法也做一份（2026-10-04 量到原本用瀏覽器語音） */
+    if (tk.some(t => t.blank)) add(V(v, spoken(tk)));
     tk.filter(t => t.slot).forEach(t => choices(t.slot).forEach(w => add(w[0])));
   };
+  const BOY = D.BOYS ? new RegExp('\\b(' + D.BOYS.join('|') + ')\\b') : null;
+  /* 網頁上真的唸出來的樣子：空格（______）和黏在空格後面的句點、問號不唸 */
+  const spoken = tk => { const g = []; tk.forEach(t => { if (t.tight && g.length) g[g.length - 1] += t.en; else g.push(t.en); });
+    return g.filter(x => /[A-Za-z]/.test(x.replace(/_+/g, ''))).join(' '); };
   const cards = [];
   const seen = new Set();
   const take = c => { if (c && !seen.has(c)) { seen.add(c); cards.push(c); } };
@@ -45,7 +52,7 @@ function collect(D, Q, G) {
   cards.forEach(c => {
     ['tk', 'a', 'b', 'c', 'st', 'qu'].forEach(k => list(c[k]));
     if (c.type === 'pair') {
-      variants(c.atk).forEach(a => { const vv = qaV(plain(a)); add(V(vv[1], plain(a))); });
+      variants(c.atk).forEach(a => { const vv = qaV(plain(a)); add(V(vv[1], plain(a))); if (a.some(t => t.blank)) add(V(vv[1], spoken(a))); });
       /* 問句的聲音跟著「這一張的答句」：答句可能被換成女生名字 */
       const vs = new Set(variants(c.atk).map(a => qaV(plain(a))[0]));
       variants(c.qtk).forEach(q => vs.forEach(v => add(V(v, plain(q)))));

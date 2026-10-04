@@ -54,6 +54,7 @@ add(__dirname); add(path.join(G3, 'numbers')); add(path.join(G3, 'sight'));
   const texts = [...T].filter(t => /[aeiouy]/i.test(t) && !/[一-鿿+＋{}]/.test(t));
   const syl = SYL.texts(PH.DATA);
   if (process.env.DUMP) fs.writeFileSync(process.env.DUMP, texts.join('\n'));
-  const r = pack({ texts: texts.concat(syl), dir: path.join(__dirname, 'audio', 'en'), varName: 'ENAUD' });
+  /* 2026-10-04 使用者：全站單字卡唸慢一點 ➜ Kokoro 語速參數 0.85（不是播放時放慢，聲音不變調） */
+  const r = pack({ texts: texts.concat(syl), dir: path.join(__dirname, 'audio', 'en'), varName: 'ENAUD', speed: 0.85 });
   console.log('單字網站英文語音檔：' + r.total + ' 個（新做 ' + r.made + ' 個；音節 ' + syl.length + ' 段）');
 })();

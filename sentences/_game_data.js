@@ -33,7 +33,7 @@ const G1 = [
  {q:'「爺爺」的英文是？', o:['grandfather','grandmother','father','uncle'], h:'grand ＝ 大，grandfather ＝ 爸爸的爸爸。'},
  {q:'「阿姨、姑姑、舅媽」的英文都是？', o:['aunt','uncle','niece','sister'], h:'英文一個 aunt，管中文好幾個稱呼。'},
  {q:'「叔叔、伯伯、舅舅」的英文都是？', o:['uncle','aunt','nephew','cousin'], h:'英文一個 uncle，管中文好幾個稱呼。'},
- {q:'"He is a doctor." 改成問句是？', o:['Is he a doctor?','He is a doctor?','Does he a doctor?','Is a doctor he?'], h:'he 和 is 換位置，句號換問號。'},
+ {q:'"He is a doctor." 改成問句是？', o:['Is he a doctor?','Is he doctor?','Does he a doctor?','Is a doctor he?'], h:'he 和 is 換位置，句號換問號。'},
  {q:'"Is she a teacher?" 改成直述句是？', o:['She is a teacher.','Is she a teacher.','Her is a teacher.','She a teacher is.'], h:'Is 和 she 換回來就變直述句。'},
  {q:'直述句變問句，動的是哪兩個字？', o:['主詞和 is','is 和 a','a 和職業','完全不用動'], h:'只動最前面兩個字，後面一個都不動。'},
  {q:'"Is he a cook?" 回答「是的」要說？', o:['Yes, he is.','Yes, he’s.','Yes, she is.','Yes, he isn’t.'], h:'句尾的 is 不可以縮寫。'},
@@ -87,7 +87,7 @@ const G3 = [
 
 /* ── 🔄 G4 變身術（20 題）──────────────────────────────── */
 const G4 = [
- {f:'He is a doctor.', d:'→ 問句', o:['Is he a doctor?','He is a doctor?','Is a doctor he?','Does he a doctor?'], h:'he 和 is 換位置。'},
+ {f:'He is a doctor.', d:'→ 問句', o:['Is he a doctor?','Is he doctor?','Is a doctor he?','Does he a doctor?'], h:'he 和 is 換位置。'},
  {f:'She is a teacher.', d:'→ 問句', o:['Is she a teacher?','She is a teacher?','Is a teacher she?','Do she a teacher?'], h:'she 和 is 換位置。'},
  {f:'He is a student.', d:'→ 問句', o:['Is he a student?','He is student?','Is he student?','He a student is?'], h:'只換前兩個字，a 不能掉。'},
  {f:'She is a nurse.', d:'→ 問句', o:['Is she a nurse?','She is nurse?','Is a she nurse?','She nurse is?'], h:'Is 放最前面。'},

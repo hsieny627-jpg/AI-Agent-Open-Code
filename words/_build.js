@@ -56,6 +56,12 @@ const WORDS=[
  e1:'👰 <b>my wife</b> 是「我的妻子」',e2:'不可以隨便這樣叫別人'}
 ];
 
+/* 兩個字以上的字卡（I am、What is）：一個英文字對一個圖示（2026-10-04 使用者指定）。
+   沒有特別寫 nowp／oldp 的，照 zhp（我 🙋、是 ＝）一個字一個圖示對過去；字數對不上就整組一個圖示 */
+function nowpOf(W){if(!W.zhp)return null;var ws=String(W.now).split(' ');
+ return ws.length===W.zhp.length&&ws.length>1?ws.map((w,k)=>[w,W.zhp[k][1]]):null}
+function oldpOf(W){if(!W.zhp||!W.old||W.build)return null;var ws=String(W.old).split(' ');
+ return ws.length===W.zhp.length&&ws.length>1?W.zhp.map(p=>p[1]):null}
 /* 字卡按鈕：圖示在上、字在下 */
 const B=(id,ic,t)=>'<button id="'+id+'"><span class="bic">'+ic+'</span><span class="blb">'+t+'</span></button>';
 const tpl=(W,SET)=>`<!DOCTYPE html>
@@ -120,6 +126,34 @@ body{margin:0;background:#000;color:#F2F2F2;
 .parts b{color:#9FB4C8;font-weight:700}
 .sub{font-size:clamp(19px,2.7vh,26px);color:#D8D3C5;line-height:1.5}
 .sub b{color:#F2F2F2;font-weight:700}
+/* 一個字對一個圖示（2026-10-04）：每一欄 ＝ 字在上、圖示在正下方；’s 這種黏在前一個字後面的，欄寬只算字（圖示不撐開） */
+.pcols{display:inline-flex;align-items:flex-start;justify-content:center;gap:.32em}
+.pcols.zhc{gap:clamp(22px,5vw,60px)}
+.pcols.zhc.tight1{gap:clamp(4px,1vw,12px)}
+.pc{display:flex;flex-direction:column;align-items:center}
+.pc.tight{margin-left:-.66em}   /* 抵掉欄距 .32em 和單字左右各 .17em 的留白，’s 才會緊貼 What */
+.mor #mA .phw{margin-right:0}
+.pcols.zhc .pc.tight{margin-left:0}
+.pc .pci{font-size:clamp(50px,9vh,84px);line-height:1.05;margin-top:clamp(4px,1vh,10px)}
+.pc.tight .pci{width:0;display:flex;justify-content:center}
+.word.past .pc .pci{font-size:clamp(50px,9vh,84px)}
+.parts .pp+.pp{margin-left:.55em}
+/* What’s 的縮寫動畫（2026-10-04 使用者指定，跟四年級縮寫變身卡同一種五拍） */
+.mor{display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vh,22px)}
+.mor .mrow{position:relative;display:inline-flex;align-items:flex-end;font-size:clamp(50px,min(10.6vh,11.5vw),104px);font-weight:700;white-space:nowrap}
+.mor .mw{display:inline-block;transition:transform .2s,filter .2s}
+.mor .mw.speak{transform:scale(1.08);filter:brightness(1.22) drop-shadow(0 0 6px rgba(255,236,170,.32))}
+.mor .msp{display:inline-block;width:.32em;transition:width .7s cubic-bezier(.3,.9,.3,1)}
+.mor .mi{display:inline-block;color:#FF5A5A;overflow:hidden;vertical-align:bottom;transition:opacity .45s,width .45s;width:.3em}
+.mor .mi.gone{opacity:0;width:0}
+.mor .map{display:inline-block;color:#FF5A5A;width:0;opacity:0;transform:translateY(-1.4em);transition:transform .55s cubic-bezier(.3,1.5,.5,1),opacity .2s,width .45s}
+.mor .map.in{opacity:1;width:.28em;transform:none}
+.mor .ers{position:absolute;font-size:.62em;top:-.75em;opacity:0;transition:opacity .2s}
+.mor .ers.on{opacity:1;animation:ers .5s ease-in-out 2}
+@keyframes ers{0%,100%{transform:translateX(-.12em) rotate(-12deg)}50%{transform:translateX(.12em) rotate(12deg)}}
+.mor .meq{display:flex;align-items:center;gap:.4em;font-size:clamp(34px,6.4vh,62px);font-weight:700;opacity:0;transform:scale(.6);transition:opacity .4s,transform .5s cubic-bezier(.2,1.5,.4,1)}
+.mor .meq.on{opacity:1;transform:none}
+.mor .meq .mq{color:#9FB4C8}
 
 /* 底部固定兩排：上排「上一個／下一個單字」，下排工具鈕。
    使用者 2026-09-20 指定：**字卡本身不放任何按鈕與說明文字**，讓單字聚焦。 */
@@ -133,8 +167,8 @@ body{margin:0;background:#000;color:#F2F2F2;
 #wnav a:hover{border-color:#9FB4C8;color:#F2F2F2}
 #wnav a .w{font-weight:700}
 #wnav .pos{font-size:clamp(12px,1.7vh,14px);color:#5E5E5E;letter-spacing:.1em;white-space:nowrap}
-/* 按鈕列（使用者 2026-10-02 指定，全站單字卡）：一排，「🔊 唸 3 次」在正中央；
-   左：目次｜音節｜音標｜放慢　右：（結構／時光機）｜出處｜單字首頁｜總首頁。
+/* 按鈕列（使用者 2026-10-04 指定，全站單字卡）：一排，「🔊 唸 1 次」在正中央；
+   最左 📑 目次｜音節動畫｜看音節｜音標｜放慢　右：唸 3 次｜自動播放｜（結構／時光機）｜📖 出處｜🔤 單字首頁｜🏠 總首頁（最右）。
    三欄格線 1fr auto 1fr ＝ 中間那顆不管兩邊幾顆都在正中央。圖示在上、字在下，iPad 直放也一排放得下。 */
 #bar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:clamp(2px,.5vw,10px);width:100%;max-width:1180px}
 #bar .bL,#bar .bR{display:flex;gap:clamp(2px,.4vw,9px);align-items:stretch}
@@ -205,7 +239,7 @@ ${SET.head||''}${SET.enaud===false?'':require('./_aud').head(SET.dir||DIR)}
  <span class="pos">${W.idx} / ${W.total}</span>
  <a href="${W.next}.html" title="下一個單字"><span class="w">${W.nextL||W.next}</span> ▶</a>
 </nav>
-<div id="bar"><div class="bL">${B('home','🏠','總首頁')}${B('whome','🔤','單字首頁')}${B('tocb','📑','目次')}${PH.btnSyl}${PH.btnMode}${PH.btnSlow}</div>${B('say1','🔊','唸 1 次')}<div class="bR">${B('say3','🔊','唸 3 次')}${B('autob','▶','自動播放')}${W.more?B('more',W.more.label.split(' ')[0],W.more.label.split(' ').slice(1).join(' ')):''}${W.parts?B('parts','🧩','結構'):''}${W.evo?B('evo','⏳','時光機'):''}${B('srcb','📖','出處')}</div></div>
+<div id="bar"><div class="bL">${B('tocb','📑','目次')}${PH.btnSyl}${PH.btnMode}${PH.btnSlow}</div>${B('say1','🔊','唸 1 次')}<div class="bR">${B('say3','🔊','唸 3 次')}${B('autob','▶','自動播放')}${W.more?B('more',W.more.label.split(' ')[0],W.more.label.split(' ').slice(1).join(' ')):''}${W.parts?B('parts','🧩','結構'):''}${W.evo?B('evo','⏳','時光機'):''}${B('srcb','📖','出處')}${B('whome','🔤','單字首頁')}${B('home','🏠','總首頁')}</div></div>
 </div>
 ${TOC.linksHTML(SET.list,W.f)}
 ${SRC.html((SET.srcW||SRC.W)[W.f],SET.common)}
@@ -214,32 +248,41 @@ ${SRC.html((SET.srcW||SRC.W)[W.f],SET.common)}
 ${PH.JS}
 
 var W={zh:${JSON.stringify(W.zh)},sub:${JSON.stringify(W.sub||'')},icon:${JSON.stringify(W.icon)},old:${JSON.stringify(W.old)},now:${JSON.stringify(W.now)},
- e1:${JSON.stringify(W.e1||'')},e2:${JSON.stringify(W.e2||'')}${W.build?',\n build:'+JSON.stringify(W.build):''}${W.zhp?',\n zhp:'+JSON.stringify(W.zhp):''}};
+ e1:${JSON.stringify(W.e1||'')},e2:${JSON.stringify(W.e2||'')}${W.build?',\n build:'+JSON.stringify(W.build):''}${W.zhp?',\n zhp:'+JSON.stringify(W.zhp):''}${W.zhTight?',zhTight:1':''}${W.morph?',\n morph:'+JSON.stringify(W.morph):''}${W.nowp||nowpOf(W)?',\n nowp:'+JSON.stringify(W.nowp||nowpOf(W)):''}${W.oldp||oldpOf(W)?',\n oldp:'+JSON.stringify(W.oldp||oldpOf(W)):''}};
 
+/* 字卡的排法（使用者 2026-10-04 指定，全站單字卡）：英文（第一幕是中文）在上、圖示在正下方；
+   兩個字以上（I am、What is、What’s）一個字對一個圖示，上下對齊。cols(字串陣列, 圖示陣列, 外框 class, 是不是中文) */
+function cols(ws,ics,cls,zh){return '<div class="pcols '+cls+'">'+ws.map(function(w,k){
+  var tight=/^[’']/.test(w);
+  return '<div class="pc'+(tight?' tight':'')+'"><div class="'+(zh===1?'zh':'pcw')+'">'+(zh?w:PH.box(w))+'</div>'+
+   '<div class="pci emoji pop d'+(k+1)+'">'+(ics[k]||'')+'</div></div>'}).join('')+'</div>'}
+function bigNow(){return W.now.length>=11?' style="font-size:clamp(38px,min(7.5vh,8.2vw),74px)"':''}
 var SCENES=[
- // ① 中文意思
- /* zhp（2026-09-26 使用者指定）：「我 是」兩個字中間空一格，每個字正上方對齊它自己的圖示（我 ↔ 🙋、是 ↔ ＝） */
- function(){return (W.zhp?'<div style="display:flex;gap:clamp(22px,5vw,60px);justify-content:center;align-items:flex-end">'+
-   W.zhp.map(function(p,k){return '<div style="display:flex;flex-direction:column;align-items:center;gap:6px">'+
-    '<div class="emoji pop'+(k?' d1':'')+'" style="margin:0">'+p[1]+'</div><div class="zh in d'+(k+1)+'" style="margin:0">'+p[0]+'</div></div>'}).join('')+'</div>':
-   '<div class="emoji pop">'+W.icon+'</div>'+
-   '<div class="zh in d1">'+W.zh+'</div>')+
+ // ① 中文意思：中文在上、圖示在正下方
+ /* zhp（2026-09-26 使用者指定）：「我 是」兩個字中間空一格，每個字對齊它自己的圖示（我 ↔ 🙋、是 ↔ ＝） */
+ function(){return (W.zhp?'<div class="zh in">'+cols(W.zhp.map(function(p){return p[0]}),W.zhp.map(function(p){return p[1]}),'zhc'+(W.zhTight?' tight1':''),1)+'</div>':
+   '<div class="zh in">'+W.zh+'</div>'+
+   '<div class="emoji pop d1">'+W.icon+'</div>')+
    (W.sub?'<div class="sub in d2">'+W.sub+'</div>':'')},
- // ② 以前的樣貌（圖示就是意思，不再加說明）；grandfather / grandmother 改成「怎麼組的」
+ // ② 以前的樣貌：以前的字在上、圖示在正下方；grandfather / grandmother 改成「怎麼組的」（兩個字分開站，中間不放 ＋，2026-10-04）
  ${W.build?
  `function(){return ''+
-   '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
-   '<div class="parts in d1">{{'+W.build.a+'}} ＋ {{'+W.build.b+'}}</div>'+
-   '<div class="sub in d2" style="margin-top:2px">'+W.build.note+'</div>'}`
- :
+   '<div class="parts in"><span class="pp">{{'+W.build.a+'}}</span><span class="pp">{{'+W.build.b+'}}</span></div>'+
+   '<div class="emoji pop d1" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
+   '<div class="sub in d2" style="margin-top:2px">'+W.build.note+'</div>'},`
+ :W.morph?
+ `function(){return MOR.html()},`
+ :W.old?
  `function(){return '<div class="tag in">以前</div>'+
+   (W.oldp?'<div class="word past in d1">'+cols(W.old.split(' '),W.oldp,'',2)+'</div>':
    '<div class="word past in d1">'+W.old+'</div>'+
-   '<div class="emoji pop d2" style="font-size:clamp(66px,12vh,104px)">'+W.icon+'</div>'}`},
- // ③ 現在的單字＋秒懂收尾
- function(){return ''+
-   '<div class="emoji pop" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>'+
-   '<div class="word in d1"'+(W.now.length>=11?' style="font-size:clamp(38px,min(7.5vh,8.2vw),74px)"':'')+'>'+
-   PH.box(W.now)+'</div>'+
+   '<div class="emoji pop d2" style="font-size:clamp(66px,12vh,104px)">'+W.icon+'</div>')},`
+ :''}
+ // ③ 現在的單字＋秒懂收尾：前一幕是「以前」，上方寫「現在」（2026-10-04 使用者指定，以前 ↔ 現在成對）
+ function(){return (W.old&&!W.build&&!W.morph?'<div class="tag in">現在</div>':'')+
+   (W.nowp?'<div class="word in d1"'+bigNow()+'>'+cols(W.nowp.map(function(p){return p[0]}),W.nowp.map(function(p){return p[1]}),'')+'</div>':
+   '<div class="word in d1"'+bigNow()+'>'+PH.box(W.now)+'</div>'+
+   '<div class="emoji pop d2" style="font-size:clamp(50px,9vh,84px)">'+W.icon+'</div>')+
    '<div class="sub in d2" style="margin-top:2px">'+W.e1+'</div>'+
    (W.e2?'<div class="sub in d3">'+W.e2+'</div>':'')}
 ];${W.scenes?'\n/* 這一組自己的幕（Review 1，2026-10-01）*/\nSCENES='+W.scenes+';':''}
@@ -252,15 +295,52 @@ var dots=document.getElementById("dots");
 for(var k=0;k<SCENES.length;k++)dots.appendChild(document.createElement("i"));
 
 /* 念一次：整個單字唸出來，同時一格一格亮過去（字母 ↔ 聲音） */
-function say(){spoke=true;var el=PH.main();
- if(el){PH.sayWord(el)}else{PH.say(W.now)}}${W.say?'\nsay=function(){spoke=true;'+W.say+'};':''}
+/* 2026-10-04 修：兩個字的卡（I am、You are、How old）原本「唸 1 次」只唸第一個字 ➜ 整組一起唸，一個字一個字亮過去 */
+function say(){spoke=true;
+ if(W.morph&&i===MORI){MOR.play();return}
+ var el=PH.main(),g=el&&el.closest?el.closest(".word,.parts"):null,ws=g?g.querySelectorAll(".phw"):[];
+ if(ws.length>1&&g.classList.contains("parts")){PH.sayChain(ws);return}   /* grand father：一個字一個字唸 */
+ if(ws.length>1){sayGroup(ws);return}
+ if(el){PH.sayWord(el)}else{PH.say(W.now)}}
+var GT=[];
+function sayGroup(ws){while(GT.length)clearTimeout(GT.pop());
+ var A=window.ENAUD&&ENAUD[String(W.now).replace(/[\u2019]/g,"'").toLowerCase()],d=A?A[1]*1000/(PH.isSlow()?.7:1):900,n=[],tot=0,acc=0;
+ [].forEach.call(ws,function(w){var L=(w.getAttribute("data-say")||"").replace(/[^A-Za-z]/g,"").length||1;n.push(L);tot+=L});
+ PH.say(W.now);
+ [].forEach.call(ws,function(w,k){GT.push(setTimeout(function(){[].forEach.call(ws,function(y){y.classList.remove("speak")});w.classList.add("speak")},100+acc));acc+=d*n[k]/tot});
+ GT.push(setTimeout(function(){[].forEach.call(ws,function(y){y.classList.remove("speak")})},150+d))}
+/* 這一幕「唸完」的時候要做的事（縮寫動畫那一幕會唸好幾次，要等整個動畫演完） */
+function whenDone(f){if(W.morph&&i===MORI){MOR.done=f;return}PH.after(f)}
+var MORI=1,MOR={tm:[],id:0,done:null,
+ stop:function(){this.id++;while(this.tm.length)clearTimeout(this.tm.pop())},
+ html:function(){var m=W.morph||{};return '<div class="mor"><div class="mrow">'+
+  '<span class="mw" id="mA">'+PH.box(m.a||'')+'</span><span class="msp" id="mSp"></span>'+
+  '<span class="mw" id="mB"><span class="ers" id="mE">🧽</span><span class="mi" id="mI">'+(m.drop||'')+'</span><span class="map" id="mAp">\u2019</span>'+(m.rest||'')+'</span></div>'+
+  '<div class="meq" id="mEq"><span class="mw">'+PH.box((m.a||'')+' '+(m.b||''))+'</span><span class="mq">＝</span><span class="mw">'+PH.box(m.res||'')+'</span></div></div>'},
+ play:function(){var M=this,m=W.morph;M.stop();var my=M.id,$=function(x){return document.getElementById(x)};
+  var at=function(ms,f){M.tm.push(setTimeout(function(){if(my===M.id)f()},ms))};
+  var fin=function(){if(my!==M.id)return;var f=M.done;M.done=null;if(f)f()};
+  if(!$("mA"))return;
+  ["mI","mAp","mE","mEq"].forEach(function(x){$(x).classList.remove("gone","in","on")});$("mSp").style.width="";
+  /* ① What is 亮起來唸一次 */
+  $("mA").classList.add("speak");$("mB").classList.add("speak");
+  PH.say(m.a+" "+m.b,null,function(){if(my!==M.id)return;$("mA").classList.remove("speak");$("mB").classList.remove("speak");
+   /* ② 橡皮擦擦掉 i ③ 紅色的 ’ 從上面掉下來補位 ④ s 往左滑、貼上 */
+   at(250,function(){$("mE").classList.add("on")});
+   at(900,function(){$("mI").classList.add("gone")});
+   at(1350,function(){$("mE").classList.remove("on");$("mAp").classList.add("in")});
+   at(2050,function(){$("mSp").style.width="0"});
+   /* ⑤ 變成 What’s 唸一次，最後亮出 What is ＝ What’s */
+   at(2900,function(){$("mA").classList.add("speak");$("mB").classList.add("speak");
+    PH.say(m.res,null,function(){if(my!==M.id)return;$("mA").classList.remove("speak");$("mB").classList.remove("speak");
+     at(250,function(){$("mEq").classList.add("on")});at(1500,fin)})})})}};${W.say?'\nsay=function(){spoke=true;'+W.say+'};':''}
 
 var card=document.getElementById("card");
 /* 英文句子（2026-10-02，全站單字卡）：唸到哪個字那個字稍微放大變亮；唸完句子，句點放大一下再停在大一點點。
    一句 ＝ 有 data-sent 的外框，裡面一個字一個 .sw，句點是 .pdot。說明文字裡的句子（I’m ten years old.）也自動包成這樣。 */
 var SENT=(function(){
  var tm=[];
- function dur(t){var k=String(t).replace(/[\u2019]/g,"'").replace(/\s+/g," ").trim().toLowerCase(),a=window.ENAUD&&ENAUD[k];
+ function dur(t){var k=String(t).replace(/[\u2019]/g,"'").replace(/\\s+/g," ").trim().toLowerCase(),a=window.ENAUD&&ENAUD[k];
   return a?a[1]*1000/(PH.isSlow()?.7:1):(450+String(t).length*(PH.isSlow()?130:80))}
  function clr(){while(tm.length)clearTimeout(tm.pop());
   [].forEach.call(document.querySelectorAll("#card .sw.speak"),function(x){x.classList.remove("speak")})}
@@ -276,16 +356,16 @@ var SENT=(function(){
  /* autoSay 包好的「多個字」＋ 後面緊接 . ? ! ＝ 一句 */
  function wrap(root){[].forEach.call(root.querySelectorAll(".sp"),function(sp){
   var t=sp.getAttribute("data-say")||"",nx=sp.nextSibling;
-  if(!/\s/.test(t)||!nx||nx.nodeType!==3||!/^[.?!]/.test(nx.nodeValue))return;
+  if(!/\\s/.test(t)||!nx||nx.nodeType!==3||!/^[.?!]/.test(nx.nodeValue))return;
   var p=nx.nodeValue.charAt(0),h=document.createElement("span");h.className="sent";h.setAttribute("data-sent",t+p);
-  h.innerHTML=t.split(/\s+/).map(function(w){return '<span class="sw">'+w+'</span>'}).join(" ")+
+  h.innerHTML=t.split(/\\s+/).map(function(w){return '<span class="sw">'+w+'</span>'}).join(" ")+
    (p==="."?'<span class="pdot">.</span>':p);
   nx.nodeValue=nx.nodeValue.slice(1);sp.parentNode.replaceChild(h,sp);PH.autoSay(h)})}
  document.addEventListener("click",function(e){var f=e.target.closest?e.target.closest(".sent"):null;if(!f)return;
   e.stopPropagation();play(f)},true);
  return{play:play,wrap:wrap,clr:clr}})();
 function show(n){
- var back=(n<i);s3++;var b3=document.getElementById("say3");if(b3)b3.classList.remove("on");
+ var back=(n<i);s3++;if(W.morph)MOR.stop();var b3=document.getElementById("say3");if(b3)b3.classList.remove("on");
  i=Math.max(0,Math.min(SCENES.length-1,n));
  window.SRCAT=${JSON.stringify(W.src||[0,0,0])}[i];   /* 按「📖 出處」直接跳到這一張字卡的證據（使用者 2026-09-25 指定） */
  card.innerHTML=PH.expand(SCENES[i]());
@@ -326,7 +406,7 @@ try{if(sessionStorage.getItem("wsup"))document.body.classList.add("sup")}catch(x
 /* ▶ 自動播放（2026-10-03 使用者指定）：每一幕唸完自動換下一幕，最後一幕唸完換下一個單字，到這一組最後一個字停 */
 var AUTO=false,AT=null;
 function stopAuto(){AUTO=false;if(AT){clearTimeout(AT);AT=null}var b=document.getElementById("autob");if(b)b.classList.remove("on")}
-function autoNext(){var my=i;PH.after(function(){if(!AUTO||i!==my)return;AT=setTimeout(function(){if(!AUTO||i!==my)return;
+function autoNext(){var my=i;whenDone(function(){if(!AUTO||i!==my)return;AT=setTimeout(function(){if(!AUTO||i!==my)return;
  if(i<SCENES.length-1){show(i+1);return}
  if(WLAST){stopAuto();return}
  location.href=WNEXT+"#auto"},1100)})}
@@ -336,7 +416,7 @@ document.getElementById("autob").addEventListener("click",function(){
 /* 🔊 唸 3 次（2026-10-02 指定；「唸 1 次」刪掉了，點單字就會唸一次）：唸完一次才唸下一次，換幕或點別的就停 */
 var s3=0;
 function say3(){stopAuto();var my=++s3,n=0,b=document.getElementById("say3");b.classList.add("on");
- (function go(){if(my!==s3)return;say();if(++n<3)PH.after(function(){setTimeout(go,650)});else PH.after(function(){if(my===s3)b.classList.remove("on")})})()}
+ (function go(){if(my!==s3)return;say();if(++n<3)whenDone(function(){setTimeout(go,650)});else whenDone(function(){if(my===s3)b.classList.remove("on")})})()}
 document.getElementById("say3").addEventListener("click",function(){if(this.classList.contains("on")){s3++;this.classList.remove("on");return}say3()});
 document.addEventListener("keydown",function(e){
  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();goNext()}
@@ -379,7 +459,7 @@ function buildSet(WL,SET){
  });
  SET.list=WL.map(w=>({f:w.now||w.f,zh:w.zh,icon:w.icon,href:w.f+'.html',k:w.f}));
  /* ⏳ 單字時光機（2026-09-28）：有資料的字，字卡多一顆「⏳ 時光機」 */
- WL.forEach(w=>{if(require('./_evo_data').EVO.some(r=>r.w===w.f))w.evo=w.f+'-evo.html'});
+ WL.forEach(w=>{const k=w.evoOf||w.f;if(require('./_evo_data').EVO.some(r=>r.w===k))w.evo=k+'-evo.html'});   /* evoOf：同一個字出現第二次（is-2 ＝ is，2026-10-04） */
  WL.forEach(w=>fs.writeFileSync(path.join(SET.dir||DIR,w.f+'.html'),tpl(w,SET),'utf8'));
  return WL;
 }

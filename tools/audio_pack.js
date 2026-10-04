@@ -27,22 +27,25 @@ const MODEL = 'k1c';   /* Kokoro v1.0（英文）＋ 2026-10-03 修好的剪靜�
 const VOICE = { '': 2, m: 16 };   /* af_bella、am_michael（tools/tts_gen.py） */
 const vOf = k => (/^m:/.test(k) ? 'm' : '');
 let LANG = 'en';
-const fname = k => crypto.createHash('sha1').update(LANG === 'sv' ? k : MODEL + '|' + k).digest('hex').slice(0, 12);
+let SPEED = 1;
+/* 語速（2026-10-04 使用者指定：全站單字卡唸慢一點）：pack({…, speed:0.85})。語速不是 1 的，檔名雜湊多一段，跟原本的分開 */
+const fname = k => crypto.createHash('sha1').update(LANG === 'sv' ? k : MODEL + '|' + (SPEED !== 1 ? 's' + SPEED + '|' : '') + k).digest('hex').slice(0, 12);
 
 function pack(o) {
   const dir = o.dir, varName = o.varName || 'AUD';
-  LANG = o.lang === 'sv' ? 'sv' : 'en';
+  LANG = o.lang === 'sv' ? 'sv' : 'en'; SPEED = o.speed || 1;
   fs.mkdirSync(dir, { recursive: true });
-  const want = {};
+  const want = {}, SPOKE = new Set();
   /* 重音記號（2026-09-26）：字前面的 + ＝ 重音、- ＝ 輕讀（見 tools/stress.py）。鑰匙不含記號；有記號的版本優先 */
-  const MK = /(^|\s)[+~-](?=[A-Za-z])/g, marked = t => /(^|\s)[+~-][A-Za-z]/.test(t);   /* ~ ＝ 低平（2026-09-27） */
+  /* ~ ＝ 低平（2026-09-27）；^ % ! / ＝ 溫和重音、溫和低平、大聲一點、句尾上揚（2026-10-04，見 tools/stress.py） */
+  const MK = /(^|\s)[+~\-^%!/](?=[A-Za-z])/g, marked = t => /(^|\s)[+~\-^%!/][A-Za-z]/.test(t);
   o.texts.forEach(t0 => {
     /* {k:'syl basketball 0', ph:'b ˈ æ s'}：照音標直接唸（音節動畫，2026-10-03）；鑰匙照 k */
     if (t0 && typeof t0 === 'object') { want[akey(t0.k)] = '§' + t0.ph; return; }
     let t = String(t0), v = '';
     if (/^m:/.test(t)) { v = 'm:'; t = t.slice(2); }
     const m = marked(t), s = sayText(t.replace(MK, '$1')); if (!/[A-Za-zÅÄÖåäö]/.test(s)) return;
-    const k = v + akey(s); if (!want[k] || (m && !marked(want[k]))) want[k] = m ? sayText(t) : (o.speak ? o.speak(s) : s);
+    const k = v + akey(s); if (!want[k] || (m && !marked(want[k]))) { want[k] = m ? sayText(t) : (o.speak ? o.speak(s) : s); if (!m && want[k] !== s) SPOKE.add(k); else SPOKE.delete(k); }
   });
   const manPath = path.join(dir, 'aud.js');
   let old = {};
@@ -50,17 +53,19 @@ function pack(o) {
     const m = /=\s*(\{[\s\S]*\});/.exec(fs.readFileSync(manPath, 'utf8'));
     if (m) old = JSON.parse(m[1]);
   }
+  /* 要記住「實際唸的文字」的：有重音記號、照音標唸、或 speak 換過文字的（2026-10-04：she ➜ She.）；換了文字就重做 */
+  const keep3 = k => marked(want[k]) || want[k][0] === '§' || SPOKE.has(k);
   const todo = Object.keys(want).filter(k => !(old[k] && old[k][0] === fname(k) + '.mp3' && fs.existsSync(path.join(dir, old[k][0])) &&
-    ((!marked(want[k]) && want[k][0] !== '§') || old[k][2] === want[k])));
+    (!keep3(k) || old[k][2] === want[k] || (old[k][2] === undefined && SPOKE.has(k)))));   /* 舊的 speak 檔（LEGO ➜ Lego）不重做；要重做就刪掉那一個 mp3 */
   if (todo.length) {
     const models = process.env.TTS_MODELS;
     if (!models) throw new Error('要做 ' + todo.length + ' 個新語音檔，但沒有設定 TTS_MODELS（模型資料夾），見 tools/tts_gen.py');
     const tmp = path.join(dir, '_todo.json');
-    fs.writeFileSync(tmp, JSON.stringify(todo.map(k => LANG === 'sv' ? [fname(k), want[k]] : [fname(k), want[k], VOICE[vOf(k)]])));
+    fs.writeFileSync(tmp, JSON.stringify(todo.map(k => LANG === 'sv' ? [fname(k), want[k]] : [fname(k), want[k], VOICE[vOf(k)], SPEED])));
     cp.execFileSync('python3', [path.join(__dirname, 'tts_gen.py'), o.lang === 'sv' ? 'sv' : 'ko',
       String(o.lang === 'sv' ? 0 : VOICE['']), tmp, dir], { stdio: 'inherit', env: process.env });
     const dur = JSON.parse(fs.readFileSync(path.join(dir, '_dur.json'), 'utf8'));
-    todo.forEach(k => { old[k] = [fname(k) + '.mp3', dur[fname(k)]].concat(marked(want[k]) || want[k][0] === '§' ? [want[k]] : []); });
+    todo.forEach(k => { old[k] = [fname(k) + '.mp3', dur[fname(k)]].concat(keep3(k) ? [want[k]] : []); });
     fs.unlinkSync(tmp); fs.unlinkSync(path.join(dir, '_dur.json'));
   }
   const man = {};

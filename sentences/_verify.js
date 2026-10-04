@@ -164,6 +164,8 @@ async function cardsPage(p, f, vp, e) {
         if (!sc) return 0;
         return (sc.offsetParent !== null || sc.getClientRects().length) ? 2 : 1;
       })(),
+      /* Review 1 第一張「全部的句子」（2026-10-04）：只是讓學生先讀過整體，沒有情境 */
+      noSc: !!(window.CARDS && CARDS[i] && CARDS[i].type === 'focus' && /全部的句子/.test(CARDS[i].title || '')),
       k: parseFloat(card.getAttribute('data-k') || '1'),
       en: document.querySelectorAll('#cardIn [data-en]').length,
       zhLbl: (document.getElementById('zhBtn') || {}).textContent || '',
@@ -213,11 +215,74 @@ async function cardsPage(p, f, vp, e) {
         });
         miss.forEach(m => e.push(w + '沒有語音檔：' + m));
         if (await p.evaluate(() => !!CARDS[i].one && !document.getElementById('card').classList.contains('one'))) e.push(w + '一個字一張，但字沒有放大');
+        /* 2026-10-04（清單第 2、3、4、5 點）：「唸 1 次」唸的 ＝ 卡片上的每一句（等句、縮寫每一行都唸；男生名字男聲）；
+           一問一答「唸 3 次」＝ 問、答、問、答、問、答，答句不可以被切掉。攔下播放的語音檔，對回鑰匙 */
+        if (vp.n === VPS[0].n && await p.evaluate(() => !!window.AUD)) {
+          const r = await p.evaluate(async () => {
+            const rev = {}; for (const k in AUD) rev[AUD[k][0]] = k;
+            const said = [], op = HTMLMediaElement.prototype.play;
+            HTMLMediaElement.prototype.play = function () { const me = this, f = (me.src || '').split('/').pop(); said.push(rev[f] || ('?' + f)); setTimeout(() => me.dispatchEvent(new Event('playing')), 5); setTimeout(() => me.dispatchEvent(new Event('ended')), 60); return Promise.resolve(); };
+            const c = CARDS[i], want = [], bv = t => (window.boyV && boyV(t)) ? 'm:' : '';
+            if (c.type === 'pair') { const V = qaV(plain(c.atk)); want.push((V[0] ? 'm:' : '') + akey(plain(c.qtk)), (V[1] ? 'm:' : '') + akey(plain(c.atk))); }
+            else if (c.type === 'eq') [c.a, c.b, c.c].filter(Boolean).forEach(x => want.push(bv(plain(x)) + akey(plain(x))));
+            else if (c.type === 'sent') want.push(bv(plain(c.tk)) + akey(plain(c.tk)));
+            const nz = k => (/^m:/.test(k) ? 'm:' : '') + k.replace(/^m:/, '').replace(/[^a-z' ]+/g, ' ').replace(/\s+/g, ' ').trim();
+            const out = {};
+            if (want.length) {
+              stopPlay(); sayStop(); showAll(); await new Promise(z => setTimeout(z, 300)); said.length = 0;
+              document.getElementById('sayBtn').click(); await new Promise(z => setTimeout(z, 1600 + 700 * want.length));
+              const got = said.map(nz).join(' | '), exp = want.map(nz).join(' | ');
+              if (got !== exp) out.one = '唸了「' + got + '」，卡片上是「' + exp + '」';
+            }
+            if (c.type === 'pair') {
+              stopPlay(); sayStop(); await new Promise(z => setTimeout(z, 200)); said.length = 0;
+              document.getElementById('say3').click(); await new Promise(z => setTimeout(z, 6500));
+              const exp = want.concat(want, want).map(nz).join(' | '), got = said.map(nz).join(' | ');
+              if (got !== exp) out.three = '唸了「' + got + '」，應該是「' + exp + '」';
+            }
+            stopPlay(); sayStop(); HTMLMediaElement.prototype.play = op; return out;
+          });
+          if (r.one) e.push(w + '「唸 1 次」' + r.one);
+          if (r.three) e.push(w + '「唸 3 次」' + r.three);
+        }
+        /* Review 1 的替換字（2026-10-04）：每一顆至少 48px 高、字至少跟按鈕列一樣大 */
+        if (/Review 1/.test(await p.title())) {
+          const sb = await p.evaluate(() => { const ref = parseFloat(getComputedStyle(document.getElementById('say3')).fontSize);
+            return [].map.call(document.querySelectorAll('#card .subs .sub'), b => { const r = b.getBoundingClientRect(); return r.height < 47.5 || parseFloat(getComputedStyle(b).fontSize) < ref - .5 ? b.getAttribute('data-w') + '（' + Math.round(r.height) + 'px、' + getComputedStyle(b).fontSize + '）' : null }).filter(Boolean); });
+          if (sb.length) e.push(w + '替換字太小：' + sb.slice(0, 4).join('、'));
+        }
       }
+    }
+    /* 跨分頁的箭頭（2026-10-04，清單 Q9）：最後一張往右 ＝ 下一個分頁第一張；第一張往左 ＝ 上一個分頁最後一張；基礎走基礎、進階走進階；
+       最後一個分頁的最後一張停住。箭頭在字卡裡面，螢幕最右邊留白 */
+    {
+      const x = await p.evaluate(async () => {
+        const out = [], wait = ms => new Promise(z => setTimeout(z, ms)), st = () => [TCUR, LCUR, i];
+        for (let t = 0; t < TABM.length - 1; t++) for (let l = 0; l < (TABM[t].sub ? 2 : 1); l++) {
+          setDeck(t, l); i = CARDS.length - 1; draw(0); await wait(80);
+          if (document.getElementById('next').disabled) { out.push('分頁 ' + TABM[t].n + ' 最後一張的右箭頭被關掉'); continue; }
+          document.getElementById('next').click(); await wait(80);
+          const a = st(), lv = TABM[t + 1].sub ? (TABM[t].sub ? l : LMEM) : 0;
+          if (a[0] !== t + 1 || a[2] !== 0 || a[1] !== lv) out.push('分頁 ' + TABM[t].n + (TABM[t].sub ? (l ? '進階' : '基礎') : '') + ' 最後一張往右，跑到 ' + a.join('-'));
+          document.getElementById('prev').click(); await wait(80);
+          const b = st();
+          if (b[0] !== t || b[2] !== CARDS.length - 1) out.push('分頁 ' + TABM[t + 1].n + ' 第一張往左，沒有回到 ' + TABM[t].n + ' 最後一張（' + b.join('-') + '）');
+        }
+        setDeck(TABM.length - 1, 0); i = CARDS.length - 1; draw(0); await wait(80);
+        if (!document.getElementById('next').disabled) out.push('最後一個分頁的最後一張，右箭頭沒有停住');
+        setDeck(0, 0); await wait(80);
+        if (!document.getElementById('prev').disabled) out.push('第一個分頁的第一張，左箭頭沒有停住');
+        const n = document.getElementById('next').getBoundingClientRect(), c = document.getElementById('card').getBoundingClientRect();
+        if (innerWidth - n.right < 12) out.push('右箭頭貼著螢幕邊（只留 ' + Math.round(innerWidth - n.right) + 'px）');
+        if (n.left < c.left || n.right > c.right + 1) out.push('右箭頭不在字卡裡面');
+        return out;
+      });
+      acts++; x.forEach(m => e.push(m));
     }
     const orig = await p.evaluate(() => TABM.findIndex(t => t.lb === '原本句型'));
     if (orig < 0) { acts += await rateBar(p, e); return acts; }
-    await p.evaluate(k => setDeck(k, 0), orig); await p.waitForTimeout(500);
+    /* 原本句型照原本的規則量（頭尾的箭頭停住）：跨分頁的箭頭上面已經量過，這裡關掉 */
+    await p.evaluate(k => { window.crossTab = null; setDeck(k, 0); }, orig); await p.waitForTimeout(500);
   }
   const first = await snap(); const N = first.n; let anyRed = false;
   if (N < 5) e.push('卡片數只有 ' + N);
@@ -233,7 +298,7 @@ async function cardsPage(p, f, vp, e) {
     if (i === N - 1 && (!s.nd || s.pd)) e.push('最後一張箭頭狀態錯');
     if (s.red) anyRed = true;
     if (s.txt.indexOf('\u2019') >= 0 && !s.red) e.push('第' + (i + 1) + '張的撇號 ’ 沒有上紅色');
-    if (s.scene === 0) e.push('第' + (i + 1) + '張沒有情境');
+    if (s.scene === 0 && !s.noSc) e.push('第' + (i + 1) + '張沒有情境');
     if (s.scene === 2) e.push('第' + (i + 1) + '張情境沒關起來就跑出來了');
   }
   if (!anyRed) e.push('整本找不到紅色的撇號 ’');
@@ -243,7 +308,7 @@ async function cardsPage(p, f, vp, e) {
   for (let i = 0; i < N; i++) {
     if (i && !await fwd(p)) break;
     const s = await snap(); acts++;
-    if (s.scene !== 2) e.push('情境開著，第' + (i + 1) + '張沒有出現情境');
+    if (s.scene !== 2 && !s.noSc) e.push('情境開著，第' + (i + 1) + '張沒有出現情境');
     if (s.ox > 0) e.push('情境開著，第' + (i + 1) + '張橫向溢出 ' + s.ox);
     if (s.oy > 0) e.push('情境開著，第' + (i + 1) + '張縱向溢出 ' + s.oy);
     if (s.spill > 2) e.push('情境開著，第' + (i + 1) + '張內容超出卡片 ' + s.spill + 'px');

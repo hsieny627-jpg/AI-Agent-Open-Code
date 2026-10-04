@@ -163,17 +163,16 @@ const numP = [
   { tag: '拆不開：整個背', emoji: '✋', src: 'cant',
     h: '<div class="en in d1" style="font-size:clamp(26px,4.8vh,48px);line-height:1.6">{{one}} {{two}} {{three}} {{four}} {{five}}<br>{{six}} {{seven}} {{eight}} {{nine}} {{ten}}</div>',
     lines: ['one 到 ten <b>拆不開</b>，整個背起來'] },
-  /* 第 12、16 點：eleven 是不是 1 ＋ 10？是！藍色 ＝ 幾個，金色粗體 ＝ 10 */
-  { tag: 'eleven ＝ 10 ＋ 1？', src: 'lif',
-    q: { q: '<b>eleven</b> 是 11。它是怎麼組起來的？', o: ['10 ＋ 1', '1 ＋ 1', '5 ＋ 6', '11 ✕ 1'] },
+  /* 2026-10-04 使用者確認（清單 Q1）：題目改成「eleven 是『哪兩個英文單字』組成的？」✅ one 和 left（很久以前的 ain、lif）
+     查證：OED「eleven」；Kroonen 2013「*ainalif」＝ *ain（one）＋ *lif（剩下，跟 leave、left 同一家）。藍色 ＝ one、金色 ＝ left */
+  { tag: 'eleven 是哪兩個字？', src: 'lif',
+    q: { q: '<b>eleven</b> 是「哪兩個英文單字」組成的？', o: ['one 和 left', 'one 和 ten', 'ten 和 one', 'elf 和 even'] },
     h: '<div class="fing"><span>🖐🖐</span> <span class="p1">＋ ☝️</span></div>' +
       '<div class="ten1">' +
       '<span class="w sp" data-say="eleven" style="animation-delay:.3s"><span class="one">e</span><span class="ten">leven</span></span><span class="eq" style="animation-delay:.6s">＝</span>' +
-      '<span class="m" style="animation-delay:.9s"><span class="ten">10</span> ＋ <span class="one">1</span></span>' +
-      '<span class="w sp" data-say="twelve" style="animation-delay:1.3s"><span class="one">tw</span><span class="ten">elve</span></span><span class="eq" style="animation-delay:1.6s">＝</span>' +
-      '<span class="m" style="animation-delay:1.9s"><span class="ten">10</span> ＋ <span class="one">2</span></span></div>' +
-      '<div class="leg"><span class="one">藍色 ＝ 1、2</span><span class="ten">金色 ＝ 10</span></div>',
-    lines: ['<b>對！</b>eleven ＝ <b>10 ＋ 1</b>，twelve ＝ <b>10 ＋ 2</b>'] },
+      '<span class="m" style="animation-delay:.9s"><span class="one">ain</span>　<span class="ten">lif</span></span></div>' +
+      '<div class="leg"><span class="one">ain ＝ one 一</span><span class="ten">lif ＝ left 剩下</span></div>',
+    lines: ['<b>對！</b>很久以前的 <b>one</b>（ain）和 <b>left</b>（lif）', '數完 10，<b>還剩 1</b> ➜ 11'] },
   { tag: '金色的 leven、lve 是什麼？', src: 'lif',
     h: '<div class="lk fo" style="grid-template-columns:auto auto">' +
       '<span class="w sp" data-say="leave" style="animation-delay:.2s"><span class="e">leave</span></span><span class="fl" style="animation-delay:.4s;font-size:clamp(20px,3.4vh,32px)">留下、剩下</span>' +

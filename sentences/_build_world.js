@@ -80,6 +80,7 @@ const CSS = NP.CSS + `
 .rem td{font-size:clamp(15px,min(3vh,3.2vw),30px)}`;
 fs.writeFileSync(path.join(__dirname, 'world.html'), tpl({
   file: 'world.html', title: '句型環遊世界', suffix: '四年級 句型', sayAll: 1, big: 1, css: CSS, topic: '🌍 句型環遊世界',
-  font: '../words/fonts/', home: 'index.html', svjs: SVA, srcRows: SRC, S
+  font: '../words/fonts/', home: 'index.html', svjs: SVA, srcRows: SRC, S,
+  enjs: require('../words/_aud').head(__dirname)   /* 2026-10-04 修：原本指到不存在的 sentences/audio/en/，英文一直用瀏覽器語音 */
 }), 'utf8');
 console.log('world ok  ' + S.length + ' 幕');

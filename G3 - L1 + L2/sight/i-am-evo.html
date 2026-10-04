@@ -795,7 +795,8 @@ var PH=(function(){
  /* 等「現在這一句」唸完再做下一件事（換成別句就作廢）：🔊 唸 3 次用 */
  function after(f){wq.push(f)}
  function lbl(b,t){var l=b.querySelector(".blb");if(l)l.textContent=t;else b.textContent=t}
- function akey(t){return String(t).replace(/[’]/g,"'").replace(/s+/g," ").trim().toLowerCase()}
+ /* 2026-10-04 修：這裡是樣板字串，\s 要寫兩條斜線；原本寫一條變成 s，凡是有 s 的字都查錯語音檔（is 唸成 I、sister 查不到） */
+ function akey(t){return String(t).replace(/[’]/g,"'").replace(/\s+/g," ").trim().toLowerCase()}
  function stopAll(){try{speechSynthesis.cancel()}catch(e){}try{if(AU)AU.pause()}catch(e){}}
  function say(t,lang,fin){
   var my=++sid,done=false,end=function(){if(done)return;done=true;if(fin)try{fin()}catch(e){}
@@ -1049,8 +1050,8 @@ var S=[
    "o": [
     "大約 470 年前，印刷工人",
     "一千年前",
-    "去年",
-    "從來沒用過"
+    "大約 100 年前，打字機",
+    "大約 2000 年前，羅馬人"
    ]
   },
   "src": "evo-c",

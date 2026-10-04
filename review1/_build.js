@@ -48,15 +48,16 @@ const SZH = { I: ['我', '🙋'], like: ['喜歡', '❤️'], to: ['', ''] };
 /* 一格：圖示／英文／中文（片語、句子都用）。t ＝ 這一課要學的字（音節動畫跑這幾格） */
 /* 句點緊接最後一個字母（2026-10-02）：句點掛在那一格英文的右邊，中文還是對齊單字正中間 */
 const col = (t, tgt, dot) => '<div class="c sw' + (tgt ? ' t' : '') + '" data-w="' + t[0] + '">' +
-  '<div class="ic">' + (t[2] || '') + '</div><div class="w">{{' + t[0] + '}}' + (dot ? '<span class="pdot">.</span>' : '') +
-  '</div><div class="z">' + (t[1] || '&nbsp;') + '</div></div>';
+  '<div class="w">{{' + t[0] + '}}' + (dot ? '<span class="pdot">.</span>' : '') +
+  '</div><div class="ic">' + (t[2] || '') + '</div><div class="z">' + (t[1] || '&nbsp;') + '</div></div>';   /* 2026-10-04：英文在上、圖示在正下方 */
 
 function scenes(w) {
   const one = w.tk.length === 1;
-  const s1 = '<div class="emoji pop">' + w.ic + '</div><div class="zh in d1">' + w.zh + '</div>';
+  /* 2026-10-04 使用者指定（全站單字卡）：中文／英文在上、圖示在正下方 */
+  const s1 = '<div class="zh in">' + w.zh + '</div><div class="emoji pop d1">' + w.ic + '</div>';
   /* 2026-10-03 使用者指定：刪掉上方「英文」「用在句子裡」小標題；片語的中文多一層「合起來的意思」（instant 馬上的 ＋ noodles 麵 ➜ 泡麵） */
   const s2 = (one
-    ? '<div class="emoji pop r1sm">' + w.ic + '</div><div class="word in d1 r1f">{{' + w.en + '}}</div>'
+    ? '<div class="word in r1f">{{' + w.en + '}}</div><div class="emoji pop d1 r1sm">' + w.ic + '</div>'
     : '<div class="r1grp in d1"><div class="r1ph r1f" data-sent="' + w.en + '">' + w.tk.map(t => col(t, 1)).join('') + '</div>' +
       '<div class="r1br"></div><div class="r1all">' + w.zh.replace(/\s+/g, '') + '</div></div>') +
     (w.pt ? '<div class="sub in d2">' + w.pt + '</div>' : '');

@@ -138,12 +138,12 @@ var U1 = [
  {type:'morph', a:[W.I(),W.am({ri:'a'})], b:[W.I(),W.m()], say:"I'm"},
 
  /* 9 I am Ken. ＝ I’m Ken.（使用者 2026-09-25 指定） */
- {type:'eq',
+ {type:'eq', slot:'name',   /* 2026-10-04：等句／縮寫下面也放替換字 */
   a:[W.I(),W.am({ri:'a'}),W.nm('Ken'),W.dot()],
   b:[W.I(),W.m(),W.nm('Ken'),W.dot()]},
 
  /* 10 三種說法一樣（使用者 2026-09-25 指定新增）：My name is Ken. ＝ I am Ken. ＝ I’m Ken. */
- {type:'eq', left:1,
+ {type:'eq', left:1, slot:'name',
   a:[W.My(),W.name(),W.is(),W.nm('Ken'),W.dot()],
   b:[W.I(),W.am({ri:'a'}),W.nm('Ken'),W.dot()],
   c:[W.I(),W.m(),W.nm('Ken'),W.dot()]},
@@ -208,7 +208,7 @@ var U2 = [
  {type:'morph', a:[W.I(),W.am({ri:'a'})], b:[W.I(),W.m()], say:"I'm"},
 
  /* 6 使用者 2026-09-26：按「唸一次」兩句都要唸（all:1） */
- {type:'eq', all:1,
+ {type:'eq', all:1, slot:'age',
   a:[W.I(),W.am({ri:'a'}),W.ten(),W.yo(),W.dot()],
   b:[W.I(),W.m(),W.ten(),W.yo(),W.dot()]},
 
@@ -217,13 +217,13 @@ var U2 = [
   tk:[W.I(),W.m(),W.ten(),W.dot()]},
 
  /* 8 years old 可以省略：兩句意思一樣 */
- {type:'eq', left:1,   /* 使用者 2026-09-26：兩句的 I 上下對齊 */
+ {type:'eq', left:1, slot:'age',   /* 使用者 2026-09-26：兩句的 I 上下對齊；2026-10-04：等句、下面加數字替換字、上下兩句都唸 */
   a:[W.I(),W.m(),W.ten(),W.yo(),W.dot()],
   b:[W.I(),W.m(),W.ten(),W.dot()],
   note:'years old 可以省略'},
 
  /* 9 三句一樣（使用者 2026-09-25 指定新增）：I am ten years old. ＝ I am ten. ＝ I’m ten.，三句的 I 上下對齊 */
- {type:'eq', left:1, all:1,   /* all：三句都唸（2026-09-26） */
+ {type:'eq', left:1, all:1, slot:'age',   /* all：三句都唸（2026-09-26） */
   a:[W.I(),W.am({ri:'a'}),W.ten(),W.yo(),W.dot()],
   b:[W.I(),W.am({ri:'a'}),W.ten(),W.dot()],
   c:[W.I(),W.m(),W.ten(),W.dot()]},
@@ -232,7 +232,7 @@ var U2 = [
  {type:'morph', a:[W.You(),W.are({ri:'a'})], b:[W.You(),W.re()], say:"You're"},
 
  /* 11 */
- {type:'eq',
+ {type:'eq', slot:'age',
   a:[W.You(),W.are({ri:'a'}),W.ten(),W.dot()],
   b:[W.You(),W.re(),W.ten(),W.dot()]},
 
@@ -342,18 +342,18 @@ var U1T = {
     U1[3], U1[1]],
   a11: [{ type: 'sent', zh: '你的名字是什麼？', tk: [W.What(), W.is(), W.your(), W.name(), W.q()] }, U1[3], U1[1]],
   b2: [ONE([W.My()]), ONE([W.name()]), ONE([W.is()]), U1[5],
-    { type: 'eq', a: [W.My(), W.name(), W.is(), BL(), W.dot()], b: [W.I(), W.am(), BL(), W.dot()] },
+    { type: 'eq', slot: 'name', a: [W.My(), W.name(), W.is(), W.nm('Ken'), W.dot()], b: [W.I(), W.am(), W.nm('Ken'), W.dot()] },
     U1[9],
-    { type: 'eq', a: [W.My(), W.name(), W.is(), BL(), W.dot()], b: [W.I(), W.m(), BL(), W.dot()] },
+    { type: 'eq', slot: 'name', a: [W.My(), W.name(), W.is(), W.nm('Ken'), W.dot()], b: [W.I(), W.m(), W.nm('Ken'), W.dot()] },
     ONE([W.I()]), ONE([W.am()]),
     { type: 'sent', zh: '我是 Ken。', slot: 'name', tk: [W.I(), W.am(), W.nm('Ken'), W.dot()] },
     U1[8],
     { type: 'sent', zh: '我是 ______。', tk: [W.I(), W.m(), BL(), W.dot()] },
-    { type: 'eq', a: [W.My(), W.name(), W.is(), BL(), W.dot()], b: [W.I(), W.m(), BL(), W.dot()] }],
+    { type: 'eq', slot: 'name', a: [W.My(), W.name(), W.is(), W.nm('Ken'), W.dot()], b: [W.I(), W.m(), W.nm('Ken'), W.dot()] }],
   a2: [{ type: 'sent', zh: '我的名字是 ______。', tk: [W.My(), W.name(), W.is(), BL(), W.dot()] },
-    { type: 'eq', a: [W.My(), W.name(), W.is(), BL(), W.dot()], b: [W.I(), W.am(), BL(), W.dot()] },
-    { type: 'eq', left: 1, a: [W.My(), W.name(), W.is(), BL(), W.dot()], b: [W.I(), W.am({ ri: 'a' }), BL(), W.dot()], c: [W.I(), W.m(), BL(), W.dot()] },
-    { type: 'eq', a: [W.My(), W.name(), W.is(), BL(), W.dot()], b: [W.I(), W.m(), BL(), W.dot()] },
+    { type: 'eq', slot: 'name', a: [W.My(), W.name(), W.is(), W.nm('Ken'), W.dot()], b: [W.I(), W.am(), W.nm('Ken'), W.dot()] },
+    { type: 'eq', slot: 'name', left: 1, a: [W.My(), W.name(), W.is(), W.nm('Ken'), W.dot()], b: [W.I(), W.am({ ri: 'a' }), W.nm('Ken'), W.dot()], c: [W.I(), W.m(), W.nm('Ken'), W.dot()] },
+    { type: 'eq', slot: 'name', a: [W.My(), W.name(), W.is(), W.nm('Ken'), W.dot()], b: [W.I(), W.m(), W.nm('Ken'), W.dot()] },
     { type: 'sent', zh: '我是 ______。', tk: [W.I(), W.m(), BL(), W.dot()] }]
 };
 var U2T = {
@@ -372,19 +372,21 @@ var U2T = {
     atk: [W.I(), W.m(), W.ten(), W.yo(), W.dot(), t('＝', '', '', { eqs: 1 }), W.I(), W.m(), W.ten(), W.dot()],
     qzh: '你 幾歲？', azh: '我 是 十 歲。＝ 我 是 十 歲。' }
 };
+/* 中英語序：原本上中文、下英文；下一頁「上英文、下中文」（2026-10-04 使用者指定） */
+var ENTOP = function (c) { return Object.assign({}, c, { enTop: 1 }); };
 var TABS1 = [
-  { n: '一-1', lb: 'What’s your name?', sub: [{ lb: '基礎', cards: U1T.b11 }, { lb: '進階', cards: U1T.a11 }] },
-  { n: '一-2', lb: '中英語序', cards: [U1[4]] },
-  { n: '二', lb: 'My name is ___.', sub: [{ lb: '基礎', cards: U1T.b2 }, { lb: '進階', cards: U1T.a2 }] },
-  { n: '三', lb: '一問一答', cards: [U1[13], U1[15], U1[14]] },
-  { n: '四', lb: '原本句型', cards: U1 }
+  { n:'1-1', lb: 'What’s your name?', sub: [{ lb: '基礎', cards: U1T.b11 }, { lb: '進階', cards: U1T.a11 }] },
+  { n:'1-2', lb: '中英語序', cards: [U1[4], ENTOP(U1[4])] },
+  { n:'2', lb: 'My name is ___.', sub: [{ lb: '基礎', cards: U1T.b2 }, { lb: '進階', cards: U1T.a2 }] },
+  { n:'3', lb: '一問一答', cards: [U1[13], U1[15], U1[14]] },
+  { n:'4', lb: '原本句型', cards: U1 }
 ];
 var TABS2 = [
-  { n: '一-1', lb: 'How old are you?', sub: [{ lb: '基礎', cards: U2T.b11 }, { lb: '進階', cards: U2T.a11 }] },
-  { n: '一-2', lb: '中英語序', cards: [U2[2]] },
-  { n: '二', lb: 'I’m ten years old.', sub: [{ lb: '基礎', cards: U2T.b2 }, { lb: '進階', cards: U2T.a2 }] },
-  { n: '三', lb: '一問一答', cards: [U2[14], U2T.p3, U2[15]] },
-  { n: '四', lb: '原本句型', cards: U2 }
+  { n:'1-1', lb: 'How old are you?', sub: [{ lb: '基礎', cards: U2T.b11 }, { lb: '進階', cards: U2T.a11 }] },
+  { n:'1-2', lb: '中英語序', cards: [U2[2], ENTOP(U2[2])] },
+  { n:'2', lb: 'I’m ten years old.', sub: [{ lb: '基礎', cards: U2T.b2 }, { lb: '進階', cards: U2T.a2 }] },
+  { n:'3', lb: '一問一答', cards: [U2[14], U2T.p3, U2[15]] },
+  { n:'4', lb: '原本句型', cards: U2 }
 ];
 
 /* 三年級複習網站（2026-10-03 使用者指定，獨立網址 g3-review/）：Unit 1、Unit 2 的進階句型、中英語序、縮寫動畫。
@@ -394,15 +396,17 @@ var RFIX = function (h) {
   var n0 = h.split('<script src="audio/aud.js"></script>').length;
   if (n0 !== 2) throw new Error('三年級複習：找不到語音檔那一行');
   return h.replace('<script src="audio/aud.js"></script>', '<script src="' + G3D + 'audio/aud.js"></script><script>window.AUDDIR="' + G3D + 'audio/";</script>')
-    .split('src="avatars/').join('src="' + G3D + 'avatars/').split("src=\"avatars/").join("src=\"" + G3D + "avatars/");
+    .split('src="avatars/').join('src="' + G3D + 'avatars/').split("src=\"avatars/").join("src=\"" + G3D + "avatars/")
+    /* 替換字（2026-10-04 等號卡也有名字替換字）的頭像寫在 JSON 裡：src=\"avatars/ 也要換 */
+    .split('src=\\"avatars/').join('src=\\"' + G3D + 'avatars/');
 };
 var RPAGES = [
   { file:'../g3-review/u1.html', unit:1, title:'三年級複習｜Unit 1 What’s your name?', other:'u2.html', otherName:'➡ Unit 2', fix:RFIX,
-    tabs:[{ n:'一', lb:'What’s your name?', cards:U1T.a11 }, { n:'二', lb:'My name is ___.', cards:U1T.a2 },
-          { n:'三', lb:'中英語序', cards:[U1[4]] }, { n:'四', lb:'縮寫動畫', cards:[U1[2], U1[7]] }] },
+    tabs:[{ n:'1', lb:'What’s your name?', cards:U1T.a11 }, { n:'2', lb:'My name is ___.', cards:U1T.a2 },
+          { n:'3', lb:'中英語序', cards:[U1[4], ENTOP(U1[4])] }, { n:'4', lb:'縮寫動畫', cards:[U1[2], U1[7]] }] },
   { file:'../g3-review/u2.html', unit:2, title:'三年級複習｜Unit 2 How old are you?', other:'u1.html', otherName:'⬅ Unit 1', fix:RFIX,
-    tabs:[{ n:'一', lb:'How old are you?', cards:U2T.a11 }, { n:'二', lb:'I’m ten years old.', cards:U2T.a2 },
-          { n:'三', lb:'中英語序', cards:[U2[2]] }, { n:'四', lb:'縮寫動畫', cards:[U2[4], U2[9]] }] }
+    tabs:[{ n:'1', lb:'How old are you?', cards:U2T.a11 }, { n:'2', lb:'I’m ten years old.', cards:U2T.a2 },
+          { n:'3', lb:'中英語序', cards:[U2[2], ENTOP(U2[2])] }, { n:'4', lb:'縮寫動畫', cards:[U2[4], U2[9]] }] }
 ];
 
 /* 頁面：標題、互相連結 */
@@ -491,7 +495,7 @@ SUB.like = { lb:'🔥 最愛', la:'✨ 還有',
          ['dogs','狗','🐶'],['cats','貓','🐱']] };
 SUB.liketo = { lb:'🔥 最愛', la:'✨ 還有',
   basic:[['play basketball','打籃球','🏀'],['play dodgeball','打躲避球','🔴'],['play tag','玩鬼抓人','🏃'],['play video games','打電動','🎮'],
-         ['collect Pokémon cards','收集寶可夢卡','🃏'],['build LEGO','組樂高','🧱'],['draw','畫畫','✏️'],['sing','唱歌','🎤'],
+         ['collect Pokémon cards','收集寶可夢卡','🃏'],['build LEGO','組樂高','🧱','最常說：play with LEGO'],['draw','畫畫','✏️'],['sing','唱歌','🎤'],
          ['dance','跳舞','💃'],['read','閱讀','📖']],
   adv:  [['swim','游泳','🏊'],['cook','做菜','🍳'],['play baseball','打棒球','⚾'],['play badminton','打羽毛球','🏸'],
          ['play the piano','彈鋼琴','🎹'],['play the guitar','彈吉他','🎸'],['ride my bike','騎我的腳踏車','🚲'],['skateboard','溜滑板','🛹'],
@@ -509,7 +513,7 @@ var RV1C = [
  {type:'sent', kind:R1K, zh:'我喜歡 ______。', slot:'like',
   tk:[W.I(),t('like','喜歡','❤️'),t('______','______','',{slot:'like',blank:1}),W.dot()]},
  {type:'sent', kind:R1K, zh:'我喜歡 ______。', slot:'liketo', note:'like to ＋ <b>動作</b>',
-  tk:[W.I(),t('like','喜歡','❤️'),t('to','（做）','➡️'),t('______','______','',{slot:'liketo',blank:1}),W.dot()]},
+  tk:[W.I(),t('like','喜歡','❤️'),t('to','',''),t('______','______','',{slot:'liketo',blank:1}),W.dot()]},   /* 2026-10-04 使用者：to 下面不放中文 */
  {type:'sent', kind:R1K, zh:'你呢？',
   tk:[t('How','如何',ICON.how),t('about','關於','💭'),W.you(),W.q()]}
 ];
@@ -522,6 +526,10 @@ var SCR1 = [
  sc({at:'🔁 換你說',bg:'🔁',l:'👦',b:'How about you?',r:'👧',rt:'😃',use:'說完自己，問對方：你呢？'})
 ];
 RV1C.forEach(function (c, i) { c.scene = SCR1[i]; });
+/* 第一頁：這個主題全部的英文句子，學生先讀過整體（2026-10-04 使用者指定） */
+RV1C.unshift({type:'focus', kind:R1K, title:'Review 1 全部的句子',
+  rows:[['Hi.','嗨。','👋'],['My name is ______.','我的名字是 ______。',ICON.name],['I’m ______ years old.','我 ______ 歲。',ICON.howold],
+        ['I like ______.','我喜歡 ______。','❤️'],['I like to ______.','我喜歡 ______。','❤️'],['How about you?','你呢？','💭']]});
 var RVR1 = [
  {t:'Hi ～ years old', q:[
   {q:'Hi. 的中文是？', o:['嗨。','再見。','謝謝。','你好嗎？'], h:'Hi ＝ 嗨，見面打招呼。'},
@@ -544,4 +552,6 @@ var XPAGES = [
 var GLX = { 'how':'如何' };
 var TRX = { 'You are seven.':'你七歲。', "You're seven.":'你七歲。', 'I am ten.':'我十歲。', "I'm ten.":'我十歲。',
   'I am ten years old.':'我十歲。', "I'm ten years old.":'我十歲。', 'I am Ken.':'我是 Ken。', "I'm Ken.":'我是 Ken。' };
-module.exports = { RPAGES:RPAGES, TABS1:TABS1, TABS2:TABS2, XPAGES:XPAGES, GLX:GLX, TRX:TRX, ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, SIL:SIL, CONTR:CONTR, PAGES:PAGES, CSS:CSS };
+/* 男生名字的句子（不是一問一答）用男聲（2026-10-04 使用者指定）：引擎 boyV()、語音檔 sentences/_audio_collect.js */
+var BOYS = ['Ken', 'Alan', 'Mike'];
+module.exports = { BOYS:BOYS, RPAGES:RPAGES, TABS1:TABS1, TABS2:TABS2, XPAGES:XPAGES, GLX:GLX, TRX:TRX, ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, SIL:SIL, CONTR:CONTR, PAGES:PAGES, CSS:CSS };

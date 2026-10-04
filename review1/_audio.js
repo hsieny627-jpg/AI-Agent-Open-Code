@@ -23,5 +23,6 @@ require('./_game_data').SAY.forEach(x => T.push(x));
   Object.keys(RAW).forEach(w => { DATA[w] = PH.parse(w, RAW[w]); });
   require('../tools/syl_ph').texts(DATA).forEach(x => T.push(x)); }
 /* LEGO 全大寫會被唸成 L-E-G-O：鑰匙照畫面，唸的時候換成 Lego */
-const r = pack({ texts: T, dir: path.join(__dirname, 'audio'), varName: 'ENAUD', speak: s => s.replace(/\bLEGO\b/g, 'Lego') });
+/* 2026-10-04 使用者：全站單字卡唸慢一點 ➜ Kokoro 語速參數 0.85（不是播放時放慢，聲音不變調） */
+const r = pack({ texts: T, dir: path.join(__dirname, 'audio'), varName: 'ENAUD', speak: s => s.replace(/\bLEGO\b/g, 'Lego'), speed: 0.85 });
 console.log('review1 語音檔：' + r.total + ' 個（新做 ' + r.made + ' 個）');

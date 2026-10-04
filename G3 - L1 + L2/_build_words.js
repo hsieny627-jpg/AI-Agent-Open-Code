@@ -126,11 +126,26 @@ const NUMPAGES = [
 ];
 
 /* ══════════════ 👀 Sight Words 常見字 ══════════════ */
+/* Where 的圖示（使用者 2026-10-04 指定，清單 Q11）：📍 在很多 iPad 上像棒棒糖 ➜ 自己畫：小朋友左右張望 ＋ 頭上一個大 ❓ ＋ 旁邊一張小地圖 */
+const WHERE = '<svg class="whi" viewBox="0 0 128 128" width="1em" height="1em" role="img" aria-label="哪裡" style="vertical-align:-.12em">' +
+ '<g transform="translate(80,74)"><path d="M0,6L15,0L30,6L45,0V40L30,46L15,40L0,46Z" fill="#F4E6B8" stroke="#8A6D2E" stroke-width="1.6" stroke-linejoin="round"/>' +
+ '<path d="M15,0V40M30,6V46" stroke="#C9B27A" stroke-width="1.2"/>' +
+ '<path d="M6,38C12,30 18,33 22,25S35,15 38,10" fill="none" stroke="#E0453A" stroke-width="2.2" stroke-dasharray="3.5 3"/>' +
+ '<path d="M34,6l8,8M42,6l-8,8" stroke="#E0453A" stroke-width="2.6" stroke-linecap="round"/></g>' +
+ '<path d="M14,128Q14,100 40,98Q66,100 66,128Z" fill="#3D8BFD"/>' +
+ '<g><animateTransform attributeName="transform" type="rotate" values="-9 40 96;9 40 96;-9 40 96" dur="2.4s" repeatCount="indefinite"/>' +
+ '<circle cx="40" cy="78" r="20" fill="#FFD7B0"/>' +
+ '<path d="M20,76Q21,56 40,56Q59,56 60,76Q52,64 40,66Q28,64 20,76Z" fill="#3A2A1E"/>' +
+ '<circle cx="32" cy="79" r="5" fill="#FFF"/><circle cx="48" cy="79" r="5" fill="#FFF"/>' +
+ '<g><animateTransform attributeName="transform" type="translate" values="-2.6 0;2.6 0;-2.6 0" dur="2.4s" repeatCount="indefinite"/>' +
+ '<circle cx="32" cy="79.5" r="2.6" fill="#222"/><circle cx="48" cy="79.5" r="2.6" fill="#222"/></g>' +
+ '<ellipse cx="40" cy="90" rx="2.6" ry="3.2" fill="#B5523B"/></g>' +
+ '<text x="44" y="50" text-anchor="middle" font-size="62" font-weight="700" fill="#FFD66B" stroke="#7A5A00" stroke-width="1.5" font-family="Arial,sans-serif">?</text></svg>';
 const SIGHT = [
  {f:'i',zh:'我',icon:'🙋',old:'ic',now:'I',src:[0,0,1],
   e1:'✍️ <b>I</b> 永遠大寫',e2:'一個小小的 i 太容易看漏，<b>寫大一點</b>'},
  {f:'my',zh:'我的',icon:'🙋🎒',old:'mīn',now:'My',src:[0,0,1],
-  e1:'{{my}} 是 {{mine}} 變短的',e2:'my ＋ 東西：my name、my bag'},
+  e1:'{{my}} 是 {{mine}} 變短的',e2:'my 後面放東西：my name、my bag'},
  {f:'you',zh:'你',icon:'👉',old:'ēow',now:'You',src:[0,0,1],
   e1:'🤫 <b>o</b> 不唸',e2:'以前的 you 是「<b>你們</b>」'},
  {f:'your',zh:'你的',icon:'👉🎒',old:'ēower',now:'Your',src:[0,0,1],
@@ -139,8 +154,8 @@ const SIGHT = [
  {f:'i-am',zh:'我 是',zhp:[['我','🙋'],['是','＝']],icon:'🙋＝',old:'ic eom',now:'I am',src:[0,0,1],
   parts:{href:'sight-parts.html#3'},
   e1:'I am ＝ <b>I<b class="rs">’</b>m</b>',e2:'紅色的 <b class="rs">’</b> ＝ 藏起來的 a'},
- {f:'you-are',zh:'你 是',zhp:[['你','👉'],['是','＝']],icon:'👉＝',now:'You are',src:[0,0,1],
-  build:{a:'You',b:'are',note:'<b>You</b> 你 ＋ <b>are</b> 是 ＝ 你是'},
+ /* 2026-10-04 使用者：只有加號的那一頁（You ＋ are、How ＋ old、years ＋ old、What ＋ is）刪掉 */
+ {f:'you-are',zh:'你 是',zhp:[['你','👉'],['是','＝']],icon:'👉＝',now:'You are',src:[0,1],
   parts:{href:'sight-parts.html#3'},
   e1:'You are ＝ <b>You<b class="rs">’</b>re</b>',e2:'🤫 are 的 <b>e</b> 不唸'},
  {f:'name',zh:'名字',icon:require('../sentences/_nametag').TAG,old:'nama',now:'name',src:[0,0,1],
@@ -149,29 +164,34 @@ const SIGHT = [
   e1:'一千多年，<b>拼法都沒有變</b>',e2:'荷蘭文的「是」<b>也寫 is</b>'},
  {f:'what',zh:'什麼',icon:'❓',old:'hwæt',now:'What',src:[0,0,1],
   e1:'以前寫成 <b>hw</b>：h 在前面',e2:'🤫 今天 <b>h</b> 不唸'},
- {f:'whats',zh:'什麼 是',zhp:[['什麼','❓'],['是','＝']],icon:'❓＝',now:'What’s',src:[0,0,0],
-  build:{a:'What',b:'is',note:'<b>What is</b> ＝ <b>What<b class="rs">’</b>s</b>　紅色的 <b class="rs">’</b> ＝ 藏起來的 i'},
+ /* 2026-10-04 使用者（清單 Q12）：What ➜ is（再一次）➜ What is（新的一張）➜ What’s */
+ {f:'is-2',evoOf:'is',zh:'是',icon:'＝',old:'is',now:'is',src:[0,0,0],
+  e1:'一千多年，<b>拼法都沒有變</b>',e2:'荷蘭文的「是」<b>也寫 is</b>'},
+ {f:'what-is',zh:'什麼 是',zhp:[['什麼','❓'],['是','＝']],icon:'❓＝',old:'hwæt is',now:'What is',src:[0,0,2],
+  e1:'What is your name?',e2:'你的名字是什麼？'},
+ /* What’s：① 什麼是 ② 縮寫動畫（What is 唸一次 ➜ 橡皮擦擦掉 i、紅色 ’ 掉下來補位 ➜ s 往左貼上 ➜ What’s 唸一次 ➜ What is ＝ What’s）
+    ③ What 正下方 ❓、’s 正下方 ＝ */
+ {f:'whats',zh:'什麼是',zhp:[['什麼','❓'],['是','＝']],zhTight:1,icon:'❓＝',now:'What’s',src:[0,0,0],
+  morph:{a:'What',b:'is',drop:'i',rest:'s',res:'What’s'},nowp:[['What','❓'],['’s','＝']],
   parts:{href:'sight-parts.html#3'},
   e1:'What’s your name?',e2:'你的名字是什麼？'},
  {f:'how',zh:'怎麼樣',icon:'🤔',old:'hū',now:'How',src:[0,0,1],
   e1:'問「<b>程度</b>」、問「<b>方式</b>」',e2:'How old? ＝ 多老 ＝ <b>幾歲</b>'},
  {f:'old',zh:'老的；…歲',icon:'👴',old:'ald',now:'old',src:[0,0,0],
   e1:'ten years <b>old</b> ＝ 十歲',e2:'{{older}} 年紀比較大'},
- {f:'how-old',zh:'幾歲',icon:'🎂',now:'How old',src:[0,0,0],
-  build:{a:'How',b:'old',note:'<b>How</b> 多 ＋ <b>old</b> 老 ＝ <b>幾歲</b>'},
+ {f:'how-old',zh:'幾歲',icon:'🎂',now:'How old',src:[0,0],
   parts:{href:'sight-parts.html#4'},
   e1:'How old are you?',e2:'你幾歲？'},
  {f:'year',zh:'年',icon:'📅',old:'gēar',now:'year',src:[0,0,1],
   e1:'🤫 <b>a</b> 不唸',e2:'以前寫成 <b>g</b> 開頭，g 唸成 y'},
- {f:'years-old',zh:'…歲',icon:'🎂',now:'years old',src:[0,0,0],
-  build:{a:'years',b:'old',note:'<b>ten years old</b> ＝ 十「年」那麼「老」＝ <b>十歲</b>'},
+ {f:'years-old',zh:'…歲',icon:'🎂',now:'years old',src:[0,0],
   parts:{href:'sight-parts.html#5'},
   e1:'I’m ten years old. ＝ I’m ten.',e2:'<b>years old</b> 可以省略'}
 ,
  /* 2026-09-26 使用者指定新增【進階】：Who, Where, When, Why */
  {f:'who',zh:'誰',icon:'👤❓',old:'hwā',now:'Who',src:[0,0,1],adv:1,
   e1:'🤫 <b>W</b> 不唸：唸 /huː/',e2:'以前寫成 <b>hwā</b>：h 在前面'},
- {f:'where',zh:'哪裡',icon:'📍❓',old:'hwǣr',now:'Where',src:[0,0,1],adv:1,
+ {f:'where',zh:'哪裡',icon:WHERE,old:'hwǣr',now:'Where',src:[0,0,1],adv:1,
   e1:'🤫 <b>h</b>、字尾 <b>e</b> 不唸',e2:'{{here}} 這裡、{{there}} 那裡、{{where}} 哪裡'},
  {f:'when',zh:'什麼時候',icon:'⏰❓',old:'hwanne',now:'When',src:[0,0,1],adv:1,
   e1:'🤫 <b>h</b> 不唸',e2:'{{then}} 那時候 ↔ {{when}} 什麼時候'},
@@ -197,6 +217,9 @@ const SIGHTW = {
  is:[e('is 一千多年沒變','OED「is」（be, v. 的形）；Van Dale「is」','古英文就寫成 <b>is</b>；荷蘭文的「是」到今天也寫 <b>is</b>。')],
  what:[e('what 的來源','OED「what, pron.」','古英文 <b>hwæt</b>：<b>h 寫在 w 前面</b>，也有唸出來。'),
   e('h 不唸了','Wikipedia「Pronunciation of English ⟨wh⟩」；Cambridge Dictionary「what」','後來抄書的人把 hw 改寫成 <b>wh</b>；今天大部分的人不唸 h，唸 <b>/wɑt/</b>。')],
+ 'what-is':[e('what 的來源','OED「what, pron.」','古英文 <b>hwæt</b>：<b>h 寫在 w 前面</b>，也有唸出來。'),
+  e('is 一千多年沒變','OED「is」（be, v. 的形）；Van Dale「is」','古英文就寫成 <b>is</b>；荷蘭文的「是」到今天也寫 <b>is</b>。'),
+  e('What is ＝ What’s','Cambridge Dictionary「what’s」','What is 說快一點 ＝ <b>What’s</b>。')],
  whats:[e('What’s ＝ What is','Cambridge Dictionary「what’s」','What is 說快一點 ＝ <b>What’s</b>。')],
  how:[e('how 的來源','OED「how, adv.」','古英文 <b>hū</b>。'),
   e('How 問什麼','Cambridge Dictionary「how」','問<b>方式</b>（怎麼做）、問<b>程度</b>（多…）：How old ＝ 多老 ＝ 幾歲。')],
@@ -207,6 +230,7 @@ const SIGHTW = {
  'years-old':[e('years old','Cambridge Dictionary「old」「year」','I’m ten years old. ＝ I’m ten.：<b>years old 可以省略</b>。')]
 };
 /* 進階 Who, Where, When, Why 的出處（2026-09-26） */
+SIGHTW['is-2'] = SIGHTW.is;   /* What 後面再出現一次 is（2026-10-04） */
 Object.assign(SIGHTW, {
  who:[e('who 的來源','OED「who, pron.」','古英文 <b>hwā</b>：h 寫在 w 前面。'),e('W 不唸','Cambridge Dictionary「who」','who 唸 <b>/huː/</b>，W 不發音（淺灰色）。')],
  where:[e('where 的來源','OED「where, adv.」','古英文 <b>hwǣr</b>。'),e('here、there、where','OED「here」「there」「where」','三個字都是 -ere 結尾：這裡、那裡、哪裡。')],
@@ -306,7 +330,7 @@ out.push.apply(out, build({
       { ic: '📜', t: '常見字的故事', d: '先猜再看：I 為什麼大寫？wh 家族、year 的祕密', href: 'sight-why.html' },
       { ic: '🗺', t: '英文的大旅行', d: '放大地圖：拼法和發音為什麼變成今天這樣', href: 'map-story.html' },
       { ic: '👪', t: '英德荷三兄弟', d: '為什麼英文、德文、荷蘭文這麼像？四組字母密碼', href: 'en-de-nl.html' },
-      { ic: '⏳', t: '常見字時光機', d: '每一個字：拼法怎麼變？以前、今天大對比？哪個字母不唸了？', cards: SIGHT.map(w => ({ f: w.now || w.f, zh: w.zh, icon: '⏳', href: w.f + '-evo.html' })) },
+      { ic: '⏳', t: '常見字時光機', d: '每一個字：拼法怎麼變？以前、今天大對比？哪個字母不唸了？', cards: SIGHT.filter(w => !w.evoOf && require('../words/_evo_data').EVO.some(r => r.w === w.f)).map(w => ({ f: w.now || w.f, zh: w.zh, icon: '⏳', href: w.f + '-evo.html' })) },   /* 2026-10-04：is-2（再一次的 is）、What is（新字卡，沒有時光機）不重複放 */
       { ic: '🌍', t: '常見字環遊世界', d: '別的國家怎麼說 你、你的、你幾歲？別國的「我」也大寫嗎？', href: 'sight-world.html' }
     ] }
 }).map(f => 'sight/' + f));

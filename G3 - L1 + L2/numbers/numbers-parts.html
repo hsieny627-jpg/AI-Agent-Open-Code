@@ -785,7 +785,8 @@ var PH=(function(){
  /* 等「現在這一句」唸完再做下一件事（換成別句就作廢）：🔊 唸 3 次用 */
  function after(f){wq.push(f)}
  function lbl(b,t){var l=b.querySelector(".blb");if(l)l.textContent=t;else b.textContent=t}
- function akey(t){return String(t).replace(/[’]/g,"'").replace(/s+/g," ").trim().toLowerCase()}
+ /* 2026-10-04 修：這裡是樣板字串，\s 要寫兩條斜線；原本寫一條變成 s，凡是有 s 的字都查錯語音檔（is 唸成 I、sister 查不到） */
+ function akey(t){return String(t).replace(/[’]/g,"'").replace(/\s+/g," ").trim().toLowerCase()}
  function stopAll(){try{speechSynthesis.cancel()}catch(e){}try{if(AU)AU.pause()}catch(e){}}
  function say(t,lang,fin){
   var my=++sid,done=false,end=function(){if(done)return;done=true;if(fin)try{fin()}catch(e){}
@@ -1005,20 +1006,21 @@ var S=[
   ]
  },
  {
-  "tag": "eleven ＝ 10 ＋ 1？",
+  "tag": "eleven 是哪兩個字？",
   "src": "lif",
   "q": {
-   "q": "<b>eleven</b> 是 11。它是怎麼組起來的？",
+   "q": "<b>eleven</b> 是「哪兩個英文單字」組成的？",
    "o": [
-    "10 ＋ 1",
-    "1 ＋ 1",
-    "5 ＋ 6",
-    "11 ✕ 1"
+    "one 和 left",
+    "one 和 ten",
+    "ten 和 one",
+    "elf 和 even"
    ]
   },
-  "h": "<div class=\"fing\"><span>🖐🖐</span> <span class=\"p1\">＋ ☝️</span></div><div class=\"ten1\"><span class=\"w sp\" data-say=\"eleven\" style=\"animation-delay:.3s\"><span class=\"one\">e</span><span class=\"ten\">leven</span></span><span class=\"eq\" style=\"animation-delay:.6s\">＝</span><span class=\"m\" style=\"animation-delay:.9s\"><span class=\"ten\">10</span> ＋ <span class=\"one\">1</span></span><span class=\"w sp\" data-say=\"twelve\" style=\"animation-delay:1.3s\"><span class=\"one\">tw</span><span class=\"ten\">elve</span></span><span class=\"eq\" style=\"animation-delay:1.6s\">＝</span><span class=\"m\" style=\"animation-delay:1.9s\"><span class=\"ten\">10</span> ＋ <span class=\"one\">2</span></span></div><div class=\"leg\"><span class=\"one\">藍色 ＝ 1、2</span><span class=\"ten\">金色 ＝ 10</span></div>",
+  "h": "<div class=\"fing\"><span>🖐🖐</span> <span class=\"p1\">＋ ☝️</span></div><div class=\"ten1\"><span class=\"w sp\" data-say=\"eleven\" style=\"animation-delay:.3s\"><span class=\"one\">e</span><span class=\"ten\">leven</span></span><span class=\"eq\" style=\"animation-delay:.6s\">＝</span><span class=\"m\" style=\"animation-delay:.9s\"><span class=\"one\">ain</span>　<span class=\"ten\">lif</span></span></div><div class=\"leg\"><span class=\"one\">ain ＝ one 一</span><span class=\"ten\">lif ＝ left 剩下</span></div>",
   "lines": [
-   "<b>對！</b>eleven ＝ <b>10 ＋ 1</b>，twelve ＝ <b>10 ＋ 2</b>"
+   "<b>對！</b>很久以前的 <b>one</b>（ain）和 <b>left</b>（lif）",
+   "數完 10，<b>還剩 1</b> ➜ 11"
   ]
  },
  {

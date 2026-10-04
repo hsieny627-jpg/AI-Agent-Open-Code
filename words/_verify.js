@@ -127,7 +127,8 @@ async function scenePage(p,f,vp,e){
     return ''})()}},BOX.toString());
  const first=await snap();const N=first.n;let acts=0,qChecked=false;
  if(first.wh===null&&!/(^|\/)brother-why\.html$/.test(f)&&!/sentences\//.test(f)&&await p.evaluate(()=>/單字結構|單字故事|環遊世界/.test((document.querySelector('.topicfix')||{}).textContent||'')))e.push('沒有「🔤 單字首頁」按鈕');
- if(N<3)e.push('幕數只有 '+N);
+ /* 2026-10-04：只有加號的那一頁刪掉了（You are、How old、years old）➜ 沒有「以前」的字卡可以只有兩幕（中文 ➜ 現在） */
+ if(N<(await p.evaluate(()=>!!(window.W&&W.now&&!W.old&&!W.build&&!W.morph&&document.getElementById('say1')))?2:3))e.push('幕數只有 '+N);
  for(let i=0;i<N;i++){
   if(i){await p.click('#next');await p.waitForTimeout(650)}
   const s=await snap();acts++;
@@ -265,15 +266,41 @@ async function scenePage(p,f,vp,e){
   if(c.lap>0)e.push('字卡壓到下面的按鈕（'+c.lap+'px）');
   if(c.wrap.length)e.push('按鈕的字折行：'+c.wrap.join('、'));
   const L=c.ids,ix=x=>L.indexOf(x);
-  /* 2026-10-03：左 ＝ 總首頁｜單字首頁｜目次｜音節動畫｜看音節｜音標｜放慢；正中央 ＝ 唸 1 次；右 ＝ 唸 3 次｜自動播放｜（結構／時光機）｜出處 */
-  if(L[0]!=='home'||L[1]!=='whome'||L[2]!=='tocb'||ix('phsyl')!==3||ix('phsee')!==4||ix('phmode')!==5||ix('slow')!==6||ix('say1')!==7||ix('say3')!==8||ix('autob')!==9||L[L.length-1]!=='srcb')
+  /* 2026-10-04（清單 Q5）：最左 目次｜音節動畫｜看音節｜音標｜放慢；正中央 ＝ 唸 1 次；右 ＝ 唸 3 次｜自動播放｜（結構／時光機）｜出處｜單字首頁｜總首頁（最右） */
+  if(L[0]!=='tocb'||ix('phsyl')!==1||ix('phsee')!==2||ix('phmode')!==3||ix('slow')!==4||ix('say1')!==5||ix('say3')!==6||ix('autob')!==7||L[L.length-3]!=='srcb'||L[L.length-2]!=='whome'||L[L.length-1]!=='home')
    e.push('按鈕順序不對：'+L.join(' '));
   /* 💡 補充：小字平常收起來，按了才出現、再按收回 */
   const SUP=await p.evaluate(()=>{for(let k=0;k<SCENES.length;k++){show(k);const b=document.querySelector('#card .supb');if(b)return k}return -1});
   if(SUP>=0){const vis=()=>p.evaluate(()=>[...document.querySelectorAll('#card .sub:not(.zfull)')].some(x=>x.getClientRects().length));
    const v0=await vis();await p.click('#card .supb');await p.waitForTimeout(200);const v1=await vis();await p.click('#card .supb');await p.waitForTimeout(200);const v2=await vis();acts++;
    if(v0)e.push('補充的小字一開始就看得到');if(!v1)e.push('按了「💡 補充」沒有出現');if(v2)e.push('再按一次「💡 補充」沒有收回');}
-  if(await p.evaluate(()=>[...document.querySelectorAll('#card .tag')].some(t=>/^(英文|用在句子裡|現在|怎麼組的)$/.test(t.textContent.trim()))))e.push('上方的小標題（英文／用在句子裡）沒有刪掉');
+  if(await p.evaluate(()=>[...document.querySelectorAll('#card .tag')].some(t=>/^(英文|用在句子裡|怎麼組的)$/.test(t.textContent.trim()))))e.push('上方的小標題（英文／用在句子裡）沒有刪掉');
+  /* 2026-10-04（清單 Q6）：有「以前」那一頁，下一頁上方寫「現在」；沒有「以前」的字不寫「現在」 */
+  {const tg=await p.evaluate(()=>{const o=[];for(let k=0;k<SCENES.length;k++){show(k);o.push([...document.querySelectorAll('#card .tag')].map(t=>t.textContent.trim()).join('|'))}return o});
+   tg.forEach((t,k)=>{if(t==='以前'&&tg[k+1]!=='現在')e.push('幕'+(k+1)+' 有「以前」，下一幕上方沒有「現在」');
+    if(t==='現在'&&tg[k-1]!=='以前')e.push('幕'+(k+1)+' 寫了「現在」，前一幕卻不是「以前」')})}
+  /* 2026-10-04 修（清單第 2 點）：「唸 1 次」唸的字 ＝ 卡片上的字（I am 原本只唸 I）。攔下播放的語音檔，對回鑰匙 */
+  if(vp.n===VPS[0].n){
+   const bad=await p.evaluate(async()=>{
+    const rev={};for(const k in (window.ENAUD||{}))rev[ENAUD[k][0]]=k;
+    const said=[];const op=HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play=function(){const me=this,f=(me.src||'').split('/').pop();said.push(rev[f]||('?'+f));setTimeout(()=>me.dispatchEvent(new Event('ended')),40);return Promise.resolve()};
+    try{speechSynthesis.speak=u=>{said.push(u.text);setTimeout(()=>u.onend&&u.onend(),20)}}catch(x){}
+    const nz=t=>String(t).toLowerCase().replace(/[\u2019]/g,"'").replace(/[^a-z' ]+/g,' ').replace(/\s+/g,' ').trim();
+    const out=[];
+    for(let k=0;k<SCENES.length;k++){show(k);await new Promise(r=>setTimeout(r,(window.W&&W.morph&&k===1)?6500:500));
+     const mo=document.querySelector('#card .mor'),sn=document.querySelector('#card .r1ph[data-sent]'),g=document.querySelector('#card .word:not(.past),#card .parts');
+     let exp;
+     if(mo)exp=[W.morph.a+' '+W.morph.b,W.morph.res];
+     else if(sn)exp=[sn.getAttribute('data-sent')];
+     else if(g){const ws=[...g.querySelectorAll('.phw')].map(x=>x.getAttribute('data-say'));exp=g.classList.contains('parts')?ws:[ws.length>1?W.now:ws[0]]}
+     else exp=[W.now];
+     said.length=0;document.getElementById('say1').click();
+     await new Promise(r=>setTimeout(r,mo?6500:900));
+     const got=said.map(nz).join(' | '),want=exp.map(nz).join(' | ');
+     if(got!==want)out.push('幕'+(k+1)+'：唸了「'+got+'」，卡片上是「'+want+'」')}
+    HTMLMediaElement.prototype.play=op;return out});
+   acts++;bad.forEach(x=>e.push('「唸 1 次」'+x))}
   await p.evaluate(()=>show(SCENES.length-1));await p.waitForTimeout(300);
   /* 2026-10-02：「✂️ 音節動畫」改名；「👀 看音節」點了立刻切好（不演動畫），再點收回去 */
   if(await p.evaluate(()=>{const b=document.querySelector('#phsyl .blb');return !b||b.textContent!=='音節動畫'}))e.push('「✂️ 音節動畫」的名字不對');

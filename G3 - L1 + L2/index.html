@@ -391,7 +391,8 @@ function pump(){
    say(句子,null,{start:fn})＝ 真的開始出聲的那一刻呼叫 fn
    say(句子,null,{v:'m'})   ＝ 用男聲（答句；2026-10-03 使用者指定問句、答句聽得出是不同人） */
 /* 問答兩種聲音：答句說女生名字（Emma、Wendy、Amy、Mia）➜ 問句男聲、答句女聲；其他 ➜ 問句女聲、答句男聲（Ken、Alan、Mike 一律男聲） */
-function qaV(ans){return /(Emma|Wendy|Amy|Mia)/.test(String(ans))?['m','']:['','m']}
+/* 2026-10-04 修：這裡是樣板字串，\b 要寫兩條斜線；原本寫一條變成「倒退鍵」，女生名字的答句從來沒有換成男聲問句 */
+function qaV(ans){return /\b(Emma|Wendy|Amy|Mia)\b/.test(String(ans))?['m','']:['','m']}
 function say(txt,lang,opt){
  opt=opt||{};
  if(!txt||!sayText(txt)){if(opt.done)opt.done();return}

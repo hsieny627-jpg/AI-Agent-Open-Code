@@ -27,7 +27,7 @@ def mk_sv():
         model=d+'/'+onnx,tokens=d+'/tokens.txt',data_dir=d+'/espeak-ng-data'),num_threads=4))
     return sherpa_onnx.OfflineTts(cfg)
 RAW=None
-def raw_ph(ph,sid):
+def raw_ph(ph,sid,spd=1.0):
     # 跳過文字轉音標，直接把音標送進 Kokoro 模型（sherpa-onnx 沒有這個入口，所以用 onnxruntime 直接跑同一個 model.onnx）
     global RAW
     import onnxruntime as ort
@@ -40,7 +40,7 @@ def raw_ph(ph,sid):
         V=np.fromfile(d+'voices.bin',dtype=np.float32).reshape(-1,510,256)
         RAW=(tok,V,ort.InferenceSession(d+'model.onnx'))
     tok,V,S=RAW; ids=[tok[c] for c in ph.split()]
-    return S.run(None,{'tokens':np.array([[0]+ids+[0]],dtype=np.int64),'style':V[sid][len(ids)][None,:],'speed':np.array([1.0],dtype=np.float32)})[0]
+    return S.run(None,{'tokens':np.array([[0]+ids+[0]],dtype=np.int64),'style':V[sid][len(ids)][None,:],'speed':np.array([spd],dtype=np.float32)})[0]
 def mp3(samples,sr,path):
     a=np.clip(np.array(samples),-1,1)
     # 剪掉前後的靜音（2026-10-03 修：原本門檻 0.01、只留 0.03 秒，f、h、s 這種很輕的開頭音會被剪掉 ➜ fast 聽成 vast、ham 聽成 tam）
@@ -60,18 +60,24 @@ if __name__=='__main__':
     ASR=asr_lib.available()
     for it in items:
         key,text=it[0],it[1]; sid=int(it[2]) if len(it)>2 else sid0
+        spd=float(it[3]) if len(it)>3 else 1.0   # 語速（2026-10-04：全站單字卡 0.85，比較慢、聲音不變調）
         if kind=='ko' and text.startswith('§'):   # 音標直接唸（音節動畫的一段一段，2026-10-03）：§ 後面是 Kokoro 的音標，空白隔開
-            smp=raw_ph(text[1:],sid); res[key]=round(mp3(smp,24000,os.path.join(outdir,key+'.mp3')),3); continue
+            smp=raw_ph(text[1:],sid,spd); res[key]=round(mp3(smp,24000,os.path.join(outdir,key+'.mp3')),3); continue
         if kind=='ko' and stress.has(text):   # 句子重音：+ten -years -old（tools/stress.py）
             plain,_,_=stress.parse(text)
-            au=tts.generate(plain,sid=sid,speed=1.0)
-            smp=stress.apply(tts,sid,au.samples,au.sample_rate,text)
+            au=tts.generate(plain,sid=sid,speed=spd)
+            smp=stress.apply(tts,sid,au.samples,au.sample_rate,text,spd)
+            # 有記號的也當場聽一次（2026-10-04：句尾上揚的 Is she a cook? 聽成 cock）：聽錯就換語速重做
+            if ASR and asr_lib.english(plain) and asr_lib.norm(asr_lib.hear(smp,au.sample_rate))!=asr_lib.norm(plain):
+                for sp in (0.95,1.05,0.9,1.1):
+                    b=tts.generate(plain,sid=sid,speed=sp*spd); y=stress.apply(tts,sid,b.samples,b.sample_rate,text,sp*spd)
+                    if asr_lib.norm(asr_lib.hear(y,b.sample_rate))==asr_lib.norm(plain): smp=y; break
         else:
-            au=tts.generate(text,sid=sid,speed=1.0); smp=au.samples
+            au=tts.generate(text,sid=sid,speed=spd); smp=au.samples
             # 當場聽一次（2026-10-03）：Kokoro 偶爾把一個字唸歪（句尾的 cook 唸得像 cock），聽錯就換語速重做，最多 4 次，留聽得對的那一版
             if kind=='ko' and ASR and asr_lib.english(text) and asr_lib.norm(asr_lib.hear(smp,au.sample_rate))!=asr_lib.norm(text):
                 for sp in (0.95,1.05,0.9):
-                    b=tts.generate(text,sid=sid,speed=sp)
+                    b=tts.generate(text,sid=sid,speed=sp*spd)
                     if asr_lib.norm(asr_lib.hear(b.samples,b.sample_rate))==asr_lib.norm(text): smp=b.samples; break
         res[key]=round(mp3(smp,au.sample_rate,os.path.join(outdir,key+'.mp3')),3)
     json.dump(res,open(os.path.join(outdir,'_dur.json'),'w'))

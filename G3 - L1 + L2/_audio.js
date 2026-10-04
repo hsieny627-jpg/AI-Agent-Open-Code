@@ -17,9 +17,14 @@ const T = require('../sentences/_audio_collect').collect(D, Q, G);
 /* 句子重音（使用者 2026-09-26 指定）：數字是 content word，音高比較高（stressed）；years old 是 function words，唸得比較輕。
    + ＝ 重音、- ＝ 輕讀，做法見 tools/stress.py */
 ['six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'].forEach(n => {
-  /* 2026-09-27 使用者：years、old 都是輕聲，接近中文三聲（低、平）；old 不可以像中文四聲往下掉 ➜ ~ ＝ 低平 */
-  [''].concat(['m:']).forEach(v => T.push(v + "I'm +" + n + ' ~years ~old.', v + 'I am +' + n + ' ~years ~old.', v + "I'm +" + n + '.', v + 'I am +' + n + '.'));   /* m: ＝ 答句的男聲（2026-10-03） */
+  /* 2026-09-27 使用者：years、old 都是輕聲，接近中文三聲（低、平）；old 不可以像中文四聲往下掉 ➜ ~ ＝ 低平
+     2026-10-04 使用者：數字的音高稍微調低 ➜ ^ ＝ 溫和的重音（✕1.12，原本 + 是 ✕1.25）；
+     男聲 old 收尾不自然（~ 把男聲壓到 88Hz，變成氣泡音）➜ 男聲改用 % ＝ 溫和的低平（全句中位數 ✕0.92）。見 tools/stress.py */
+  T.push("I'm ^" + n + ' ~years ~old.', 'I am ^' + n + ' ~years ~old.', "I'm ^" + n + '.', 'I am ^' + n + '.');
+  T.push("m:I'm ^" + n + ' %years %old.', 'm:I am ^' + n + ' %years %old.', "m:I'm ^" + n + '.', 'm:I am ^' + n + '.');   /* m: ＝ 男聲（2026-10-03） */
 });
 /* LEGO 全大寫會被唸成 L-E-G-O：鑰匙照畫面，唸的時候換成 Lego（跟 review1 一樣；2026-10-02 起新做的句子適用） */
-const r = pack({ texts: T, dir: path.join(__dirname, 'audio'), lang: 'en', varName: 'AUD', speak: s => s.replace(/\bLEGO\b/g, 'Lego') });
+/* 2026-10-04 使用者：女聲單獨唸 years old，old 太弱（只有 years 的 1/4 大聲）➜ ! ＝ old 大聲一點、加句點（量過：old ＝ years 的 0.87，男聲本來就 0.94） */
+const SPK = { 'years old': 'years !old.' };
+const r = pack({ texts: T, dir: path.join(__dirname, 'audio'), lang: 'en', varName: 'AUD', speak: s => SPK[s] || s.replace(/\bLEGO\b/g, 'Lego') });
 console.log('語音檔：' + r.total + ' 句（這次新做 ' + r.made + ' 句）');
