@@ -151,7 +151,7 @@
    `blooket_Whos_he_四選一.csv`（Blooket 官方 CSV 匯入格式，使用者自己建新題組 ➜ CSV Import 上傳）、
    `Whos_he_四選一_題目清單.md`（19 題＋每個錯誤選項考什麼）、`_make_who.py`（**改題目只改這支，再跑 `python3 blooket/_make_who.py`**）。
    規則：每個錯誤選項只錯一個點（he／she、He's／His、Who's／Whose、漏 's 或 a、a／an、is／are、直述／問句、farmer／father）；
-   不放「其實也算對」的選項；**三年級沒學過的字不放**（使用者：He was／She was 換掉）；每題 20 秒；正解平均分在 ①～④。
+   不放「其實也算對」的選項；**題目只放句子本身**（他是誰？／He's my father.／Who's  =  _______）；**三年級沒學過的字不放**（使用者：He was／She was 換掉）；每題 20 秒；正解平均分在 ①～④。
    ⚠️ 雲端讀不到 Blooket 網址（Cloudflare 擋＋要登入），也讀不到使用者桌面路徑：請使用者**把截圖拖進對話**或貼文字。
 
 14. 📋 使用者開新對話修改教學網站時，用的開場白存在 `新對話開場白_修改教學網站.md`
