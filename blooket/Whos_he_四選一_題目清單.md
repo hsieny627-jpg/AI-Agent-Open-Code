@@ -11,6 +11,7 @@
 - 題型交錯：中翻英 13 題、英翻中 3 題、縮寫 3 題。
 - 正解平均分在 ①②③④（5／4／5／5）。
 - 不用「可能也算對」的選項（例如 grandpa、口語 He is a nurse? 都不放）。
+- 三年級沒學過的字不放（2026-10-05 使用者：He was／She was 換掉）。每題 20 秒（使用者確認）。
 
 ## 19 題
 | # | 題目 | ① | ② | ③ | ④ | 答案 | 錯誤選項在考什麼 |
@@ -23,9 +24,9 @@
 | 6 | She's my grandmother. 是什麼意思？ | 她是我的媽媽。 | 他是我的爺爺。 | 她是我的奶奶嗎？ | **她是我的奶奶。** ✔ | ④ | 漏看 grand-；she／he＋grandmother／grandfather；直述句／問句 |
 | 7 | 「她是我的媽媽。」英文怎麼說？ | **She's my mother.** ✔ | She's my grandmother. | He's my mother. | She my mother. | ① | mother／grandmother；she／he 混淆；漏掉 's（is） |
 | 8 | 「她是我的妹妹。」英文怎麼說？ | She's my brother. | He's my sister. | **She's my sister.** ✔ | Her's my sister. | ③ | sister／brother；she／he 混淆；She's／Her 混淆 |
-| 9 | Who's 是哪兩個字縮寫成的？ | **Who is** ✔ | Who are | Whose | Who was | ① | is／are；Who's／Whose 同音；is／was |
-| 10 | He's 是哪兩個字縮寫成的？ | His | He are | He was | **He is** ✔ | ④ | He's／His 同音；is／are；is／was |
-| 11 | She's 是哪兩個字縮寫成的？ | Her | She are | **She is** ✔ | She was | ③ | She's／Her 混淆；is／are；is／was |
+| 9 | Who's 是哪兩個字縮寫成的？ | **Who is** ✔ | Who are | Whose | How is | ① | is／are；Who's／Whose 同音；Who／How 字母相似 |
+| 10 | He's 是哪兩個字縮寫成的？ | His | He are | She is | **He is** ✔ | ④ | He's／His 同音；is／are；he／she 混淆 |
+| 11 | She's 是哪兩個字縮寫成的？ | Her | She are | **She is** ✔ | He is | ③ | She's／Her 混淆；is／are；she／he 混淆 |
 | 12 | 「他是一位護理師。」英文怎麼說？ | Is he a nurse? | **He is a nurse.** ✔ | He is nurse. | He is an nurse. | ② | 直述句／問句；漏掉 a；a／an 混淆 |
 | 13 | 「他是一位護理師嗎？」英文怎麼說？ | Is she a nurse? | Are he a nurse? | Is he nurse? | **Is he a nurse?** ✔ | ④ | he／she 混淆；is／are；漏掉 a |
 | 14 | She is a doctor. 是什麼意思？ | **她是一位醫師。** ✔ | 她是一位護理師。 | 他是一位醫師。 | 她是一位醫師嗎？ | ① | doctor／nurse；she／he 混淆；直述句／問句 |
