@@ -5,22 +5,24 @@ Question #,Question Text,Answer 1,Answer 2,"Answer 3
 (Optional)","Time Limit (sec)
 (Max: 300 seconds)","Correct Answer(s)
 (Only include Answer #)"
-1,他是誰？,Who's he?,Who's she?,Whose he?,Who he's?,20,1
-2,他是我的爺爺。,She's my grandfather.,He's my grandmother.,He's my grandfather.,His my grandfather.,20,3
-3,He's my father.,他是我的爺爺。,他是我的爸爸。,他是我的哥哥。,他是我的爸爸嗎？,20,2
-4,他是我的哥哥。,She's my brother.,He's my sister.,He my brother.,He's my brother.,20,4
-5,她是誰？,Who's he?,Who's she?,Who's her?,Whose she?,20,2
-6,She's my grandmother.,她是我的媽媽。,他是我的爺爺。,她是我的奶奶嗎？,她是我的奶奶。,20,4
-7,她是我的媽媽。,She's my mother.,She's my grandmother.,He's my mother.,She my mother.,20,1
-8,她是我的妹妹。,She's my brother.,He's my sister.,She's my sister.,Her's my sister.,20,3
+1,他 是 誰？,Who's he?,Who's she?,Whose he?,Who he's?,20,1
+2,他 是 我的 爺爺。,She's my grandfather.,He's my grandmother.,He's my grandfather.,His my grandfather.,20,3
+3,He's my father.,他 是 我的 爺爺。,他 是 我的 爸爸。,他 是 我的 哥哥。,他 是 我的 爸爸 嗎？,20,2
+4,他 是 我的 哥哥。,She's my brother.,He's my sister.,He my brother.,He's my brother.,20,4
+5,她 是 誰？,Who's he?,Who's she?,Who's her?,Whose she?,20,2
+6,She's my grandmother.,她 是 我的 媽媽。,他 是 我的 爺爺。,她 是 我的 奶奶 嗎？,她 是 我的 奶奶。,20,4
+7,她 是 我的 媽媽。,She's my mother.,She's my grandmother.,He's my mother.,She my mother.,20,1
+8,她 是 我的 妹妹。,She's my brother.,He's my sister.,She's my sister.,Her's my sister.,20,3
 9,Who's  =  _______,Who is,Who are,Whose,How is,20,1
 10,He's  =  _______,His,He are,She is,He is,20,4
 11,She's  =  _______,Her,She are,She is,He is,20,3
-12,他是一位護理師。,Is he a nurse?,He is a nurse.,He is nurse.,He is an nurse.,20,2
-13,他是一位護理師嗎？,Is she a nurse?,Are he a nurse?,Is he nurse?,Is he a nurse?,20,4
-14,She is a doctor.,她是一位醫師。,她是一位護理師。,他是一位醫師。,她是一位醫師嗎？,20,1
-15,她是一位醫師嗎？,Is he a doctor?,Does she a doctor?,Is she a doctor?,Is she doctor?,20,3
-16,他是一位學生。,His a student.,He's a student.,He's student.,Is he a student?,20,2
-17,Is he a student?,他是一位學生。,她是一位學生嗎？,他是一位老師嗎？,他是一位學生嗎？,20,4
-18,她是一位農夫。,She's a father.,He's a farmer.,She's a farmer.,She's an farmer.,20,3
-19,她是一位農夫嗎？,Is she a farmer?,Is she a father?,Is he a farmer?,Is she farmer?,20,1
+12,他 是 一位 護理師。,Is he a nurse?,He is a nurse.,He is nurse.,He is an nurse.,20,2
+13,他 是 一位 護理師 嗎？,Is she a nurse?,Are he a nurse?,Is he nurse?,Is he a nurse?,20,4
+14,She is a doctor.,她 是 一位 醫師。,她 是 一位 護理師。,他 是 一位 醫師。,她 是 一位 醫師 嗎？,20,1
+15,她 是 一位 醫師 嗎？,Is he a doctor?,Does she a doctor?,Is she a doctor?,Is she doctor?,20,3
+16,他 是 一位 學生。,His a student.,He's a student.,He's student.,Is he a student?,20,2
+17,Is he a student?,他 是 一位 學生。,她 是 一位 學生 嗎？,他 是 一位 老師 嗎？,他 是 一位 學生 嗎？,20,4
+18,她 是 一位 農夫。,She's a father.,He's a farmer.,She's a farmer.,She's an farmer.,20,3
+19,她 是 一位 農夫 嗎？,Is she a farmer?,Is she a father?,Is he a farmer?,Is she farmer?,20,1
+20,她 是 一位 廚師。,She's a cooker.,She's a cook.,He's a cook.,She's cook.,20,2
+21,她 是 一位 廚師 嗎？,Is she a cooker?,Is he a cook?,Is she cook?,Is she a cook?,20,4

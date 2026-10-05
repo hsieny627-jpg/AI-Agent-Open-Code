@@ -147,11 +147,11 @@
    引擎 `sentences/_tq.js`。名次先跟「這台平板」比，**C 做好登入以後改全班名次**。細節在 `sentences/CLAUDE.md` 最上面「2026-10-04 第十二次改版」。➡️ 下一個對話做 C。
 
 21. ✅ 2026-10-05：**Blooket 題組改成四選一誘答版**（原題組 https://dashboard.blooket.com/set/626a30cdc8fedb02ba7f48f5，
-   三年級 Who's he? 家人／職業 19 張卡）。檔案在 `blooket/`：
+   三年級 Who's he? 家人／職業 19 張卡＋使用者加的 20、21 題「她 是 一位 廚師（嗎）？」＝ cook，共 21 題）。檔案在 `blooket/`：
    `blooket_Whos_he_四選一.csv`（Blooket 官方 CSV 匯入格式，使用者自己建新題組 ➜ CSV Import 上傳）、
    `Whos_he_四選一_題目清單.md`（19 題＋每個錯誤選項考什麼）、`_make_who.py`（**改題目只改這支，再跑 `python3 blooket/_make_who.py`**）。
-   規則：每個錯誤選項只錯一個點（he／she、He's／His、Who's／Whose、漏 's 或 a、a／an、is／are、直述／問句、farmer／father）；
-   不放「其實也算對」的選項；**題目只放句子本身**（他是誰？／He's my father.／Who's  =  _______）；**三年級沒學過的字不放**（使用者：He was／She was 換掉）；每題 20 秒；正解平均分在 ①～④。
+   規則：每個錯誤選項只錯一個點（he／she、He's／His、Who's／Whose、漏 's 或 a、a／an、is／are、直述／問句、farmer／father、cook／cooker）；
+   不放「其實也算對」的選項；**題目只放句子本身**（他 是 誰？／He's my father.／Who's  =  _______）；**中文詞與詞之間空一格**（他 是 一位 廚師 嗎？／他 是 我的 爺爺。題目和選項都要）；**三年級沒學過的字不放**（使用者：He was／She was 換掉）；每題 20 秒；正解平均分在 ①～④。
    ⚠️ 雲端讀不到 Blooket 網址（Cloudflare 擋＋要登入），也讀不到使用者桌面路徑：請使用者**把截圖拖進對話**或貼文字。
 
 14. 📋 使用者開新對話修改教學網站時，用的開場白存在 `新對話開場白_修改教學網站.md`
