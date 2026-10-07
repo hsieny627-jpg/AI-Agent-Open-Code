@@ -37,8 +37,8 @@ function pack(o) {
   fs.mkdirSync(dir, { recursive: true });
   const want = {}, SPOKE = new Set();
   /* 重音記號（2026-09-26）：字前面的 + ＝ 重音、- ＝ 輕讀（見 tools/stress.py）。鑰匙不含記號；有記號的版本優先 */
-  /* ~ ＝ 低平（2026-09-27）；^ % ! / ＝ 溫和重音、溫和低平、大聲一點、句尾上揚（2026-10-04，見 tools/stress.py） */
-  const MK = /(^|\s)[+~\-^%!/](?=[A-Za-z])/g, marked = t => /(^|\s)[+~\-^%!/][A-Za-z]/.test(t);
+  /* ~ ＝ 低平（2026-09-27）；^ % ! / ＝ 溫和重音、溫和低平、大聲一點、句尾上揚（2026-10-04）；& ＝ 輕聲（2026-10-07，見 tools/stress.py） */
+  const MK = /(^|\s)[+~\-^%!/&](?=[A-Za-z])/g, marked = t => /(^|\s)[+~\-^%!/&][A-Za-z]/.test(t);
   o.texts.forEach(t0 => {
     /* {k:'syl basketball 0', ph:'b ˈ æ s'}：照音標直接唸（音節動畫，2026-10-03）；鑰匙照 k */
     if (t0 && typeof t0 === 'object') { want[akey(t0.k)] = '§' + t0.ph; return; }

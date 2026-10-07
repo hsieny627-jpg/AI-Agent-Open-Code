@@ -25,7 +25,7 @@ const NAMETAG = require('../sentences/_nametag').TAG;   /* 三年級的圖示 �
 const DIR = __dirname, ROOT = path.join(__dirname, '..');
 const WORDS = JSON.parse(fs.readFileSync(path.join(DIR, '_words.json'), 'utf8'));
 
-/* 2026-10-03 使用者指定：首頁簡化，三年級在上、四年級在下，每個年級照 (1) 暖身題 … (7) 在家複習 的順序，
+/* 2026-10-03 使用者指定：首頁簡化，三年級在上、四年級在下，每個年級照 words/_grades.js 的順序（2026-10-07 起 (1) Unit 1 … (9) 在家複習），
    內容寫在 words/_grades.js（年級首頁也用同一份）。下面的 STEPS／GROUPS／EXTRA 是舊版，留著給四年級單字首頁參考，首頁不再用。
    上課順序。href 一律相對於專案根目錄。
    2026-09-26 使用者指定：首頁分成「四年級」「三年級」兩區；
@@ -162,6 +162,13 @@ h1{margin:0;font-size:clamp(26px,4.4vh,42px);font-weight:700;letter-spacing:.04e
 #cards .z{font-size:clamp(11px,1.5vh,13px);color:#8E8E8E;margin-left:auto}
 
 ${require('./_grades').CSS}
+/* 2026-10-07：兩個年級各 9 項（使用者第 11 點），iPad 橫放 1024×768 不可以有捲軸 ➜ 總首頁每一列壓扁一點（按鈕照樣 ≧ 44px 高） */
+header{margin-bottom:clamp(4px,.7vh,10px)}
+h1{font-size:clamp(24px,3.6vh,40px)}
+.gl{gap:clamp(3px,.45vh,7px) clamp(8px,1.2vw,14px)}
+.gr h2{margin-bottom:clamp(2px,.4vh,6px);font-size:clamp(19px,2.8vh,28px)}
+.gi{padding:2px clamp(8px,1vw,12px);min-height:48px}
+.gi .gb a{min-height:44px;padding:4px clamp(10px,1.3vw,15px)}
 footer{width:100%;max-width:1000px;margin-top:clamp(6px,1.2vh,16px);
  display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;align-items:center}
 footer a{color:#7E7E7E;text-decoration:none;font-size:clamp(12px,1.7vh,14.5px);
@@ -208,8 +215,10 @@ const WH = require('./_section').indexHTML({
     { ic: '🗺', t: '英文的大旅行', d: '放大地圖：拼法和發音為什麼變成今天這樣', href: 'map-story.html' },
     { ic: '👪', t: '英德荷三兄弟', d: '為什麼英文、德文、荷蘭文這麼像？四組字母密碼', href: 'en-de-nl.html' },
     { ic: '💼', t: '職業單字', d: 'student、teacher、doctor、farmer、nurse', href: 'jobs.html' },
-    { ic: '🔍', t: '更多字的故事', d: 'daughter 的 gh、哥哥還是弟弟、tea、ketchup……', href: 'why-more.html' }
+    { ic: '🔍', t: '更多字的故事', d: 'daughter 的 gh、tea、ketchup……', href: 'why-more.html' },
+    /* 2026-10-07 使用者第 1 點：「哥哥還是弟弟」獨立成第 15 個主題 */
+    { ic: '🧒', t: '哥哥還是弟弟', d: 'older／younger brother、sister', href: 'older-younger.html' }
   ]
 });
 fs.writeFileSync(path.join(DIR, 'index.html'), WH, 'utf8');
-console.log('已產生 index.html（首頁）：三年級、四年級各 7 項（words/_grades.js）');
+console.log('已產生 index.html（首頁）：三年級、四年級各 9 項（words/_grades.js）');

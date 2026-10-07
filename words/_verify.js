@@ -80,7 +80,7 @@ async function hubPage(p,f,vp,e){
  if(s.oy>0&&vp.width>vp.height)e.push('橫放有捲軸（投影會被切掉）'+s.oy);
  /* 2026-10-03：三年級在上、四年級在下，每個年級 7 項（words/_grades.js） */
  if(s.grades.join(',')!=='三年級,四年級')e.push('年級順序不對：'+s.grades.join(','));
- if(s.rows!==14)e.push('首頁不是兩個年級各 7 項（'+s.rows+'）');
+ if(s.rows!==18)e.push('首頁不是兩個年級各 9 項（'+s.rows+'）');   /* 2026-10-07 使用者第 11 點：9 項 */
 
  /* 每一個站內連結都要真的存在 */
  const root=require('path').resolve(DIR,'..');

@@ -499,6 +499,8 @@ var U1T = {
 };
 U1T.b11 = [ONE4([Who()]),ONE4([Is_()]),ONE4([he1()]),ONE4([she1()]),
   {type:'sent', zh:'他是誰？', tk:[Who(),Is_(),he1(),Q_()]},
+  /* 2026-10-07 使用者第 9 點：第 5 張後面加 Who is ______? ＝ Who’s ______? 縮寫動畫（演完亮出兩行，＝ 在第二行第一個字母左邊） */
+  {type:'morph', rows:1, a:[Who(),Is_({ri:'i'}),BL4(),Q_()], b:[Who(),S_(),BL4(),Q_()]},
   U1[3], U1T.eqShe, U1[1], U1[8]];
 U1T.a11 = [U1[3], U1T.eqShe, U1[1], U1[8]];
 U1T.b2 = [ONE4([He1()]),ONE4([She1()]),ONE4([Is_()]),

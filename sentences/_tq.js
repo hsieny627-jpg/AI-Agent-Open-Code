@@ -34,13 +34,12 @@ function attach(DIR, D, P) {
 const CSS = `
 /* ── 📝 複習題 5 題（2026-10-04）：字卡下方的切換按鈕 ── */
 body.hastq #stage{padding-bottom:calc(var(--barH,72px) + var(--tqH,52px) + clamp(8px,1.4vh,14px))}
+/* 2026-10-07 使用者第 3 點：〔📝 複習題 5 題〕這一顆按鈕不發亮、不放大（沒有光暈、沒有閃三下、按下去也不縮放），以免學習失焦 */
 #tqGo,#tqBack{position:fixed;left:50%;transform:translateX(-50%);z-index:30;bottom:calc(var(--barH,72px) + clamp(4px,.8vh,8px));
  background:linear-gradient(180deg,#2A2208,#171204);border:2px solid var(--gold);color:#FFE9A8;font-family:inherit;font-weight:700;
  font-size:clamp(17px,2.6vh,24px);border-radius:999px;padding:clamp(7px,1.1vh,11px) clamp(20px,2.6vw,32px);min-height:48px;
- white-space:nowrap;box-shadow:0 0 18px rgba(255,210,74,.25);cursor:pointer}
-#tqGo:active,#tqBack:active{transform:translateX(-50%) scale(.96)}
-#tqGo.pulse{animation:tqPulse 1.1s ease-in-out 3}
-@keyframes tqPulse{50%{box-shadow:0 0 34px rgba(255,210,74,.75);transform:translateX(-50%) scale(1.07)}}
+ white-space:nowrap;box-shadow:none;cursor:pointer}
+#tqGo:active{background:#3A2F0B}
 #tqBack{position:static;transform:none;margin-top:clamp(4px,1vh,10px);border-color:#5A6A78;color:#DDE6EE;background:#141A20;box-shadow:none}
 #tqBack:active{transform:scale(.96)}
 /* 右上角：大數字的累計分數＋名次 */
@@ -244,10 +243,9 @@ $('#rv').addEventListener('click',function(e){
   if((b=c('.tqr .ch'))||(b=c('.tqo button'))){if(!tqBusy)tqDone(b,b.getAttribute('data-ok')==='true');return}
 });
 $('#tqGo').addEventListener('click',tqOpen);
-/* 分頁換了：這一組有沒有題目（目前每一個分頁都有）；最後一張字卡的 ➡ 進複習題，按鈕閃一下提醒 */
+/* 分頁換了：這一組有沒有題目（目前每一個分頁都有）；最後一張字卡的 ➡ 進複習題（2026-10-07：按鈕不再閃） */
 function tqMark(){var g=$('#tqGo');if(!g)return;g.hidden=!tqHas();
-  document.documentElement.style.setProperty('--tqH',(g.hidden?0:g.offsetHeight)+'px');
-  g.classList.toggle('pulse',tqHas()&&i===CARDS.length-1)}
+  document.documentElement.style.setProperty('--tqH',(g.hidden?0:g.offsetHeight)+'px')}
 `;
 
 module.exports = { attach, CSS, JS };

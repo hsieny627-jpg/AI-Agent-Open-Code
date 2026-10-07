@@ -46,12 +46,12 @@ h1{margin:0;font-size:clamp(25px,4.8vh,46px);font-weight:700;letter-spacing:.03e
 const body = `
 <main id="stage">
 <header>
- <h1>四年級 英文句型　秒懂教室</h1>
+ <h1>四年級</h1>
  <div class="sub">四年級　Unit 1 ・ Unit 2</div>
  <div class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code/sentences/</b></div>
 </header>
 
-<!-- 2026-10-03 使用者指定：年級首頁跟總首頁同一個順序（words/_grades.js）：(1) 暖身題 … (7) 在家複習 -->
+<!-- 2026-10-03 使用者指定：年級首頁跟總首頁同一個順序（words/_grades.js）：(1) Unit 1 … (9) 三(四)年級複習（2026-10-07） -->
 ${GR.rows(GR.GRADES[1], '../').replace(/<h2>[^<]*<a[^>]*>[^<]*<\/a><\/h2>/, '')}
 </main>
 
@@ -66,5 +66,5 @@ ${S.TTS}
 </body>
 </html>`;
 
-fs.writeFileSync(DIR + '/index.html', S.HEAD('英文句型　秒懂教室', CSS) + body);
+fs.writeFileSync(DIR + '/index.html', S.HEAD('四年級', CSS) + body);
 console.log('home ok');

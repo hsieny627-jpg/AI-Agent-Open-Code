@@ -45,6 +45,13 @@
 **改版面或互動 → 改 `_build.js` 的 `tpl()`，跑一次，17 頁同步。**
 **改某一個字的文案 → 改 `_build.js` 的 `WORDS` 陣列，跑一次，只量那一頁。**
 
+## 2026-10-07 使用者指定（先讀這一節）
+
+- 四年級單字首頁（`words/index.html`，`_build_hub.js` 的 `WH`）：**第 15 個主題 ＝ 🧒 哥哥還是弟弟**（older-younger.html）；第 14 個「更多字的故事」說明不再寫哥哥還是弟弟。
+- 在家複習（`g3-review/`、`g4-review/`）的「補充」是這裡的單字結構、單字故事頁**複製一份**（`sentences/_build_review.js`）：
+  **改了 parts／why／jobs-parts／jobs-why（或三年級 numbers-parts／numbers-why／sight-parts／sight-why）以後，要再跑 `node sentences/_build_review.js`**，複習網站那一份才會跟著更新。
+- 總首頁、兩個年級首頁的順序改成 9 項（`_grades.js`，見 `sentences/CLAUDE.md`「2026-10-07」第 11 點）。
+
 ## 2026-10-04 使用者指定（全站單字卡；先讀這一節）
 
 問題與使用者的決定在 `sentences/2026-10-04_待確認清單.md`（第三段 1～10 點、Q5～Q7、Q11、Q12；第四段是使用者的回覆）。

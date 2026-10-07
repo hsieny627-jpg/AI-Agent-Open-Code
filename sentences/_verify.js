@@ -232,6 +232,94 @@ async function rewind(p, N) {
 }
 
 /* ---------- 字卡頁 ---------- */
+/* 縮寫動畫、比較（2026-10-07）：每一張量版面、語音檔、「唸 1 次」唸的每一句；
+   縮寫動畫：兩行第一個字母上下對齊、＝ 在第二行第一個字母左邊、縮掉的母音和 ’ 紅色、不發音的字母淡灰；
+   比較：每一行第一個字母上下對齊、只有重點字（.kw）唸到的時候放大變亮（其他字不亮） */
+async function freeDeck(p, f, vp, e, snap) {
+  let acts = 0;
+  const N = await p.evaluate(() => CARDS.length);
+  const T = await p.title();
+  if (T === '縮寫動畫' && N !== 10) e.push('縮寫動畫不是 10 張（' + N + '）');
+  if (T === '比較' && N !== 12) e.push('比較不是 12 張（' + N + '）');
+  if (await p.$('#rvBtn')) e.push('多了 📝 複習按鈕（這兩頁沒有複習題）');
+  const toc = await p.evaluate(() => { tocOpen(); const h = document.getElementById('tocH'), x = document.querySelector('#toc .tx');
+    const r = { t: h.textContent, below: x.getBoundingClientRect().top >= h.getBoundingClientRect().bottom - 1 }; tocClose(); return r; });
+  if (toc.t !== T) e.push('目次左上角不是主題名稱（' + toc.t + '）');
+  if (!toc.below) e.push('目次的〔關閉〕不在主題名稱下面');
+  for (let k = 0; k < N; k++) {
+    await p.evaluate(k => { stopPlay(); sayStop(); document.body.classList.add('reduce'); i = k; draw(0); }, k); await p.waitForTimeout(450);
+    const s = await snap(); acts++;
+    const w = '第' + (k + 1) + '張';
+    if (s.ox > 0) e.push(w + '橫向溢出 ' + s.ox);
+    if (s.oy > 0) e.push(w + '縱向溢出 ' + s.oy);
+    if (s.spill > 2) e.push(w + '內容超出卡片 ' + s.spill + 'px');
+    if (s.hit) e.push(w + ' ' + s.hit);
+    if (s.k < 0.5) e.push(w + '被縮到 ' + s.k + '（字太小）');
+    const x = await p.evaluate(() => {
+      const c = CARDS[i], out = [], L = (el) => el.getBoundingClientRect().left, has = (t, v) => !!((v && AUD[v + ':' + akey(t)]) || AUD[akey(t)]);
+      const col = el => getComputedStyle(el).color;
+      const RED = col(document.querySelector('#cardIn .ap') || document.body);
+      const want = [];
+      if (c.type === 'morph') {
+        const m = document.querySelector('.moreq'), ms = m ? m.querySelectorAll('.ms') : [], mq = m && m.querySelector('.mq');
+        if (!c.rows || !m || !m.classList.contains('rows')) out.push('縮寫動畫最後不是兩行');
+        else {
+          if (Math.abs(L(ms[0]) - L(ms[1])) > 1.5) out.push('兩行第一個字母沒有上下對齊（' + Math.round(L(ms[0])) + '／' + Math.round(L(ms[1])) + '）');
+          if (!(mq.getBoundingClientRect().right <= L(ms[1]) + 1 && Math.abs(mq.getBoundingClientRect().top - ms[1].getBoundingClientRect().top) < ms[1].getBoundingClientRect().height)) out.push('＝ 不在第二行第一個字母的左邊');
+          if (ms[0].getBoundingClientRect().top >= ms[1].getBoundingClientRect().top) out.push('第一行不在上面');
+          const ri = ms[0].querySelector('.ri');
+          if (!ri || col(ri) !== RED) out.push('上面一行縮掉的母音沒有紅色');
+          const ap = ms[1].querySelector('.ap'); if (!ap || col(ap) !== RED) out.push('下面一行的 ’ 沒有紅色');
+          want.push(ms[0].getAttribute('data-say'), ms[1].getAttribute('data-say'));
+          /* 不發音的字母（使用者 2026-10-07 指定）：are／’re 的 e、What 的 h、Who 的 W、Where 的 h 和最後的 e */
+          const exp = { are: 'e', "'re": 'e', What: 'h', Who: 'W', Where: 'he' };
+          [ms[0], ms[1]].forEach(b => { const tx = b.textContent.replace(/\u2019/g, "'");
+            Object.keys(exp).forEach(wd => { if (new RegExp('(^|[^A-Za-z])' + wd.replace("'", "'") + '([^A-Za-z]|$)').test(tx) || (wd === "'re" && /'re/.test(tx))) {
+              const g = [].map.call(b.querySelectorAll('.sil'), z => z.textContent).join('');
+              if (g.indexOf(exp[wd].charAt(0)) < 0 || (exp[wd].length > 1 && g.indexOf(exp[wd].charAt(1)) < 0)) out.push(b.textContent + '：' + wd + ' 的 ' + exp[wd] + ' 沒有淡灰'); } }); });
+        }
+      } else if (c.type === 'cmp') {
+        const rs = [].slice.call(document.querySelectorAll('.cmp .crow'));
+        const x0 = rs.map(r => L(r.querySelector('.tk')));
+        if (Math.max.apply(0, x0) - Math.min.apply(0, x0) > 1.5) out.push('每一行第一個字母沒有上下對齊（' + x0.map(Math.round).join('／') + '）');
+        rs.forEach(r => want.push(spoken(CARDS[i].rows.concat(CARDS[i].ex || [])[+r.getAttribute('data-n')])));
+        /* 只有重點字唸到的時候放大變亮 */
+        const tks = [].slice.call(document.querySelectorAll('.cmp .tk'));
+        tks.forEach(t => t.classList.add('spk'));
+        tks.forEach(t => { const tr = getComputedStyle(t.querySelector('.en')).transform, kw = t.classList.contains('kw');
+          if (kw && (tr === 'none' || /^matrix\(1, 0, 0, 1/.test(tr))) out.push(t.getAttribute('data-w') + '（重點字）唸到的時候沒有放大');
+          if (!kw && tr !== 'none' && !/^matrix\(1, 0, 0, 1/.test(tr)) out.push(t.getAttribute('data-w') + '（不是重點字）唸到的時候也放大了');
+          if (kw && getComputedStyle(t.querySelector('.zh')).transform === 'none') out.push(t.getAttribute('data-w') + ' 的中文唸到的時候沒有放大'); });
+        tks.forEach(t => t.classList.remove('spk'));
+        if (!tks.some(t => t.classList.contains('kw'))) out.push('比較卡沒有重點字');
+      } else if (c.type === 'focus') c.rows.forEach(r => want.push(spk(r[0])));
+      want.forEach(t => { if (t && !has(t, boyV(t) ? 'm' : '')) out.push('沒有語音檔：' + t); });
+      return { out, want: want.map(t => (boyV(t) ? 'm:' : '') + akey(t)), type: c.type };
+    });
+    x.out.forEach(m => e.push(w + m));
+    /* 「唸 1 次」唸的 ＝ 卡片上的每一句（縮寫動畫：兩行；比較：每一行） */
+    if (vp.n === VPS[0].n && x.type !== 'focus') {
+      const got = await p.evaluate(async () => {
+        const rev = {}; for (const k in AUD) rev[AUD[k][0]] = k;
+        const said = [], op = HTMLMediaElement.prototype.play;
+        HTMLMediaElement.prototype.play = function () { const me = this, f = (me.src || '').split('/').pop(); said.push(rev[f] || ('?' + f)); setTimeout(() => me.dispatchEvent(new Event('playing')), 5); setTimeout(() => me.dispatchEvent(new Event('ended')), 60); return Promise.resolve(); };
+        stopPlay(); sayStop(); await new Promise(z => setTimeout(z, 300)); said.length = 0;
+        document.getElementById('sayBtn').click(); await new Promise(z => setTimeout(z, 1800 + 900 * (Array.isArray(CARDS[i].rows) ? CARDS[i].rows.length : 2) + 900 * ((CARDS[i].ex || []).length)));
+        stopPlay(); sayStop(); HTMLMediaElement.prototype.play = op; return said;
+      });
+      const nz = k => (/^m:/.test(k) ? 'm:' : '') + k.replace(/^m:/, '').replace(/[^a-z' ]+/g, ' ').replace(/\s+/g, ' ').trim();
+      if (got.map(nz).join(' | ') !== x.want.map(nz).join(' | ')) e.push(w + '「唸 1 次」唸了「' + got.map(nz).join(' | ') + '」，卡片上是「' + x.want.map(nz).join(' | ') + '」');
+    }
+    /* 動畫照常演一次（不是 reduce）：不可以有 JS 例外、演完不可以溢出 */
+    await p.evaluate(() => { document.body.classList.remove('reduce'); stopPlay(); sayStop(); draw(0); });
+    await p.waitForTimeout(x.type === 'morph' ? 5200 : (x.type === 'cmp' ? 4200 : 600));
+    const s2 = await snap();
+    if (s2.ox > 0 || s2.oy > 0 || s2.spill > 2 || s2.hit) e.push(w + '動畫演完版面跑掉（' + [s2.ox, s2.oy, s2.spill, s2.hit].join('、') + '）');
+  }
+  await p.evaluate(() => { stopPlay(); sayStop(); });
+  acts += await rateBar(p, e);
+  return acts;
+}
 async function cardsPage(p, f, vp, e) {
   const snap = () => p.evaluate(OVS => {
     const ov = eval('(' + OVS + ')')();
@@ -394,6 +482,8 @@ async function cardsPage(p, f, vp, e) {
     /* 複習題的 ➡（最後一張進複習題）上面 tqCheck 已經量過，這裡也關掉 */
     await p.evaluate(k => { window.crossTab = null; window.tqHas = function () { return false }; setDeck(k, 0); }, orig); await p.waitForTimeout(500);
   }
+  /* 縮寫動畫、比較（2026-10-07 使用者第 13、14 點，g34/_data.js）：沒有分頁、沒有情境，一張一張量 */
+  if (await p.evaluate(() => /^(縮寫動畫|比較)$/.test(document.title.trim()))) return acts + await freeDeck(p, f, vp, e, snap);
   const first = await snap(); const N = first.n; let anyRed = false;
   if (N < 5) e.push('卡片數只有 ' + N);
   for (let i = 0; i < N; i++) {
@@ -1097,7 +1187,7 @@ async function homePage(p, f, vp, e) {
   if (s.oy > 0) e.push('首頁有捲軸（投影會被切掉）' + s.oy);
   /* 2026-10-03：年級首頁改成 7 項（words/_grades.js），一列一件事 */
   const n = await p.$$eval('.gi', a => a.length);
-  if (n !== 7) e.push('年級首頁不是 7 項（' + n + '）');
+  if (n !== 9) e.push('年級首頁不是 9 項（' + n + '）');   /* 2026-10-07：9 項 */
   return 2;
 }
 

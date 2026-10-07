@@ -21,7 +21,9 @@ const T = require('../sentences/_audio_collect').collect(D, Q, G, require('./_tq
      2026-10-04 使用者：數字的音高稍微調低 ➜ ^ ＝ 溫和的重音（✕1.12，原本 + 是 ✕1.25）；
      男聲 old 收尾不自然（~ 把男聲壓到 88Hz，變成氣泡音）➜ 男聲改用 % ＝ 溫和的低平（全句中位數 ✕0.92）。見 tools/stress.py */
   T.push("I'm ^" + n + ' ~years ~old.', 'I am ^' + n + ' ~years ~old.', "I'm ^" + n + '.', 'I am ^' + n + '.');
-  T.push("m:I'm ^" + n + ' %years %old.', 'm:I am ^' + n + ' %years %old.', "m:I'm ^" + n + '.', 'm:I am ^' + n + '.');   /* m: ＝ 男聲（2026-10-03） */
+  /* 2026-10-07 使用者：男聲 old 聽起來像機器人收尾 ➜ old 改 & ＝ 輕聲（不拉平、低一點、輕一點、慢慢收小）；一問一答的兩句那一份也一樣 */
+  T.push("m:I'm ^" + n + ' %years &old.', 'm:I am ^' + n + ' %years &old.', "m:I'm ^" + n + '.', 'm:I am ^' + n + '.');   /* m: ＝ 男聲（2026-10-03） */
+  T.push("m:I'm ^" + n + ' %years &old. I\'m ^' + n + '.');
 });
 /* LEGO 全大寫會被唸成 L-E-G-O：鑰匙照畫面，唸的時候換成 Lego（跟 review1 一樣；2026-10-02 起新做的句子適用） */
 /* 2026-10-04 使用者：女聲單獨唸 years old，old 太弱（只有 years 的 1/4 大聲）➜ ! ＝ old 大聲一點、加句點（量過：old ＝ years 的 0.87，男聲本來就 0.94） */

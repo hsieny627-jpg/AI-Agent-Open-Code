@@ -20,17 +20,18 @@ const SITES = [
   { out: 'g3-review', src: 'G3 - L1 + L2', g: '三年級複習', games: ['g3', 'g5', 'g9'],
     units: [{ ic: NAMETAG, t: 'Unit 1　What’s your name?', f: 'u1.html', tabs: ['What’s your name?', 'My name is ___.'] },
             { ic: '🎂', t: 'Unit 2　How old are you?', f: 'u2.html', tabs: ['How old are you?', 'I’m ten years old.'] }],
-    more: [{ ic: '🔢', t: '數字：單字結構', href: '../G3%20-%20L1%20+%20L2/numbers/numbers-parts.html' },
-           { ic: '🔢', t: '數字：單字故事', href: '../G3%20-%20L1%20+%20L2/numbers/numbers-why.html' },
-           { ic: '👀', t: 'Sight Words：單字結構', href: '../G3%20-%20L1%20+%20L2/sight/sight-parts.html' },
-           { ic: '👀', t: 'Sight Words：單字故事', href: '../G3%20-%20L1%20+%20L2/sight/sight-why.html' }] },
+    /* 補充（2026-10-07 使用者第 12 點）：複製一份進複習網站（from ＝ 老師網站的那一頁），按鈕只回複習首頁 */
+    more: [{ ic: '🔢', t: '數字：單字結構', from: 'G3 - L1 + L2/numbers/numbers-parts.html' },
+           { ic: '🔢', t: '數字：單字故事', from: 'G3 - L1 + L2/numbers/numbers-why.html' },
+           { ic: '👀', t: 'Sight Words：單字結構', from: 'G3 - L1 + L2/sight/sight-parts.html' },
+           { ic: '👀', t: 'Sight Words：單字故事', from: 'G3 - L1 + L2/sight/sight-why.html' }] },
   { out: 'g4-review', src: 'sentences', g: '四年級複習', games: ['g3', 'g4', 'g5'],
     units: [{ ic: '👪', t: 'Unit 1　Who’s he?', f: 'u1.html', tabs: ['Who’s he/she?', 'He’s/She’s my ___.'] },
             { ic: '💼', t: 'Unit 2　Is he a doctor?', f: 'u2.html', tabs: ['He/She is a ___.', 'Yes／No'] }],
-    more: [{ ic: '👪', t: '家人：單字結構', href: '../words/parts.html' },
-           { ic: '👪', t: '家人：單字故事', href: '../words/why.html' },
-           { ic: '💼', t: '職業：單字結構', href: '../words/jobs-parts.html' },
-           { ic: '💼', t: '職業：單字故事', href: '../words/jobs-why.html' }] }
+    more: [{ ic: '👪', t: '家人：單字結構', from: 'words/parts.html' },
+           { ic: '👪', t: '家人：單字故事', from: 'words/why.html' },
+           { ic: '💼', t: '職業：單字結構', from: 'words/jobs-parts.html' },
+           { ic: '💼', t: '職業：單字故事', from: 'words/jobs-why.html' }] }
 ];
 function indexHTML(S, META) {
   const btn = (href, ic, t, d) => '<a class="b" href="' + href + '"><span class="i">' + ic + '</span><span class="x"><b>' + t + '</b>' + (d ? '<em>' + d + '</em>' : '') + '</span></a>';
@@ -73,10 +74,28 @@ ${S.units.map(u => '<div class="u"><h3>' + u.ic + ' ' + u.t + '</h3><div class="
 ${META.map(m => btn('games.html#' + m.id, m.ic, m.name, m.rule)).join('')}
 </div></section>
 <section><h2><span>3</span>📚 補充</h2><div class="g">
-${S.more.map(x => btn(x.href, x.ic, x.t, '')).join('')}
+${S.more.map(x => btn(path.basename(x.from), x.ic, x.t, '')).join('')}
 </div></section>
-<nav id="bar"><a href="../index.html">🏠 總首頁</a></nav>
 </body></html>`;
+}
+/* 2026-10-07 使用者第 12 點：學生在家複習的網站要獨立，不可以連到老師教學用的頁面 ➜ 補充的單字結構、單字故事複製一份進來。
+   ① 字體、語音檔、圖片這些資源照舊用原本的檔案（相對路徑換成從複習網站算）
+   ② 🏠 首頁 ➜ 回複習首頁；🔤 單字首頁、🌍 環遊世界（老師網站的頁面）藏起來
+   ③ 換完以後還有任何連到別的頁面的地方 ➜ build 失敗 */
+function copyIn(file, dir) {
+  const sd = path.dirname(file);
+  const re = u => /^(https?:|data:|#|mailto:|javascript:)/.test(u) || !u ? u :
+    encodeURI(path.relative(dir, path.resolve(sd, decodeURIComponent(u))).split(path.sep).join('/')) + (/\/$/.test(u) ? '/' : '');
+  let h = fs.readFileSync(file, 'utf8');
+  const nav = { '../index.html': 'index.html' };
+  h = h.replace(/location\.href="([^"]+)"/g, (m, u) => 'location.href="' + (nav[u] || 'index.html') + '"');
+  h = h.replace(/(?<![.\w])(src|href)="([^"]+)"/g, (m, a, u) => a + '="' + re(u) + '"')
+    .replace(/url\(([^)"']+)\)/g, (m, u) => 'url(' + re(u) + ')')
+    .replace(/(window\.[A-Z]+DIR=")([^"]+)"/g, (m, a, u) => a + re(u) + '"');
+  h = h.replace('</head>', '<style>#fwd,#whome{display:none!important}</style>\n</head>');
+  const bad = (h.match(/(?<![.\w])href="([^"#:]+\.html)"/g) || []).concat(h.match(/location\.href="(?!index\.html")[^"]*"/g) || []);
+  if (bad.length) throw new Error('複習網站的 ' + path.basename(file) + ' 還連到別的頁面：' + bad.join(' '));
+  return h;
 }
 SITES.forEach(S => {
   const dir = path.join(ROOT, S.out);
@@ -97,5 +116,6 @@ SITES.forEach(S => {
   h = h.split('src="avatars/').join('src="' + rel + 'avatars/').split('src=\\"avatars/').join('src=\\"' + rel + 'avatars/');
   fs.writeFileSync(path.join(dir, 'games.html'), h);
   fs.writeFileSync(path.join(dir, 'index.html'), indexHTML(S, META));
+  S.more.forEach(x => fs.writeFileSync(path.join(dir, path.basename(x.from)), copyIn(path.join(ROOT, x.from), dir)));
   console.log(S.g + '：' + S.out + '/index.html、u1.html、u2.html、games.html（' + S.games.join('、') + '）');
 });

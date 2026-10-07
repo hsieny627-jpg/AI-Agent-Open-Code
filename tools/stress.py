@@ -13,9 +13,13 @@
 #     % ＝ 溫和的低平（音高拉平到「全句中位數 ✕ 0.92」、音量 ✕0.9；男聲壓到 ✕0.80 會變成氣泡音，聽起來不自然）
 #     ! ＝ 大聲一點（音高不變、音量 ✕2.0；女聲單獨唸 years old，old 只有 years 的 1/4 大聲）
 #     / ＝ 句尾上揚（那一個字的音高直接畫成「全句中位數 ✕0.95 ➜ ✕1.45」一路往上）
+#   2026-10-07 使用者：男聲 years old 的 old 聽起來像「機器人結束的聲音」，要唸得更輕、更接近注音三聲或輕聲
+#     原因：% 把 old 的音高「拉平」成一條直線，聲碼器再合成就像機器人。
+#     & ＝ 輕聲：保留原本自然的音高起伏（不拉平），整段音高 ✕0.90（低一點，像三聲）、音量 ✕0.55，
+#          最後 40% 慢慢收小（不是一下子切掉）
 import numpy as np, re
-MK=r'[+~\-^%!/]'
-CODE={'+':1,'-':-1,'~':2,'^':3,'%':4,'!':5,'/':6}
+MK=r'[+~\-^%!/&]'
+CODE={'+':1,'-':-1,'~':2,'^':3,'%':4,'!':5,'/':6,'&':7}
 def parse(marked):
     words=marked.split()
     lv=[(CODE[w[0]] if re.match(r'^'+MK+r'[A-Za-z]',w) else 0) for w in words]
@@ -38,7 +42,7 @@ def apply(tts,sid,a,sr,marked,speed=1.0):
     for d in wd: acc+=d; b.append(s0+int((s1-s0)*acc/tot))
     f0,t=pw.harvest(a,sr,frame_period=5.0); sp=pw.cheaptrick(a,f0,t,sr); ap=pw.d4c(a,f0,t,sr)
     fk=np.ones(len(f0)); gk=np.ones(len(a)); rise=[]
-    FF={1:1.25,-1:0.86,0:1.0,3:1.12,5:1.0}; GG={1:1.35,-1:0.7,0:1.0,2:0.75,3:1.2,4:0.9,5:2.0,6:1.0}
+    FF={1:1.25,-1:0.86,0:1.0,3:1.12,5:1.0,7:0.90}; GG={1:1.35,-1:0.7,0:1.0,2:0.75,3:1.2,4:0.9,5:2.0,6:1.0,7:0.55}
     voiced=f0[f0>0]; med=(np.median(voiced) if len(voiced) else 180.0); low=med*0.80
     for k,l in enumerate(lv):
         if not l: continue
@@ -51,6 +55,9 @@ def apply(tts,sid,a,sr,marked,speed=1.0):
             rise.append((i0,i1))
         else: fk[i0:i1]=FF[l]
         gk[lo:hi]=GG[l]
+        if l==7:   # 輕聲：最後 40% 慢慢收小
+            n=hi-lo; f=int(n*.4)
+            if f>0: gk[hi-f:hi]=GG[l]*np.linspace(1.0,0.35,f)
     # 平滑：不要一格一格跳（50 ms）
     fk=np.convolve(fk,np.ones(10)/10,'same'); gk=np.convolve(gk,np.ones(int(sr*.05))/int(sr*.05),'same')
     f1=f0*fk

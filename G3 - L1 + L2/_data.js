@@ -348,7 +348,8 @@ var U1T = {
     ONE([W.I()]), ONE([W.am()]),
     { type: 'sent', zh: '我是 Ken。', slot: 'name', tk: [W.I(), W.am(), W.nm('Ken'), W.dot()] },
     U1[8],
-    { type: 'sent', zh: '我是 ______。', tk: [W.I(), W.m(), BL(), W.dot()] },
+    /* 2026-10-07 使用者第 6 點：原本第 12 張 I’m ______. 刪掉，改成 I’m Ken.（下面 Ken、Mike…替換字） */
+    U1[6],
     { type: 'eq', slot: 'name', a: [W.My(), W.name(), W.is(), W.nm('Ken'), W.dot()], b: [W.I(), W.m(), W.nm('Ken'), W.dot()] }],
   a2: [{ type: 'sent', zh: '我的名字是 ______。', tk: [W.My(), W.name(), W.is(), BL(), W.dot()] },
     { type: 'eq', slot: 'name', a: [W.My(), W.name(), W.is(), W.nm('Ken'), W.dot()], b: [W.I(), W.am(), W.nm('Ken'), W.dot()] },
@@ -362,7 +363,8 @@ var U2T = {
     { type: 'sent', zh: '______ 幾歲？', tk: [W.HowOld(), BL(), W.q()] },
     U2[1]],
   a11: [{ type: 'sent', zh: '______ 幾歲？', tk: [W.HowOld(), BL(), W.q()] }, U2[1]],
-  b2: [ONE([W.I(), W.m()]), ONE([t('ten', '十', ICON.ten)]), ONE([t('years', '年', '📅')]), ONE([old1()]),
+  /* 2026-10-07 使用者第 7 點：第 4 張 old 後面加 years old（歲） */
+  b2: [ONE([W.I(), W.m()]), ONE([t('ten', '十', ICON.ten)]), ONE([t('years', '年', '📅')]), ONE([old1()]), ONE([W.yo()]),
     { type: 'sent', zh: '十歲。', slot: 'age', tk: [W.ten(), W.yo(), W.dot()] },
     U2[3], U2[7], U2[6]],
   a2: [U2[3], U2[7], U2[6]],

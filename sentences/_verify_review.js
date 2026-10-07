@@ -23,8 +23,24 @@ const SITES = [{ d: 'g3-review', src: 'G3 - L1 + L2', games: 'g3,g5,g9' }, { d: 
     if (r.sec !== 3) e.push('首頁不是三區（' + r.sec + '）');
     if (/精簡/.test(r.txt)) e.push('網站上出現「精簡」');
     if (r.small) e.push(r.small + ' 個按鈕的字小於 16px');
-    r.links.forEach(h => { if (/^https?:/.test(h)) return; const q = path.resolve(path.dirname(f), decodeURIComponent(h.split('#')[0])); if (!fs.existsSync(q)) e.push('連不到 ' + h); });
+    r.links.forEach(h => { if (/^https?:/.test(h)) return; const q = path.resolve(path.dirname(f), decodeURIComponent(h.split('#')[0])); if (!fs.existsSync(q)) e.push('連不到 ' + h);
+      /* 2026-10-07 使用者第 12 點：在家複習的網站獨立，不可以連到老師教學用的頁面 */
+      if (path.dirname(q) !== path.join(ROOT, S.d)) e.push('連到複習網站外面：' + h); });
     n += 5 + r.links.length;
+    /* 補充（複製進來的單字結構、單字故事）：沒有 JS 錯誤、字體和語音檔載得到、🏠 回複習首頁、老師網站的按鈕藏起來 */
+    for (const h of r.links.filter(h => !/^(u[12]|games|index)\.html/.test(h))) {
+      const q = await br.newPage({ viewport: { width: vp[0], height: vp[1] } }), er = [];
+      q.on('pageerror', x => er.push('JS 例外：' + x.message)); q.on('requestfailed', x => er.push('載不到：' + x.url().split('/').slice(-2).join('/')));
+      await q.goto(pathToFileURL(path.join(ROOT, S.d, h)).href); await q.waitForTimeout(500);
+      const x = await q.evaluate(async () => { await document.fonts.ready; const vis = id => { const b = document.getElementById(id); return !!b && b.getBoundingClientRect().width > 0; };
+        return { font: document.fonts.check('700 48px Andika'), aud: !!window.ENAUD, fwd: vis('fwd'), wh: vis('whome'), home: vis('home'), ox: document.documentElement.scrollWidth - innerWidth }; });
+      if (!x.font) er.push('Andika 沒有載到'); if (!x.aud) er.push('英文語音檔沒有載到');
+      if (x.fwd || x.wh) er.push('老師網站的按鈕（🌍 環遊世界／🔤 單字首頁）還看得到'); if (x.ox > 0) er.push('橫向溢出 ' + x.ox);
+      if (x.home) { await q.click('#home'); await q.waitForTimeout(400); if (path.resolve(decodeURIComponent(new URL(q.url()).pathname)) !== path.join(ROOT, S.d, 'index.html')) er.push('🏠 沒有回到複習首頁（' + q.url() + '）'); }
+      else er.push('看不到 🏠 首頁');
+      n += 6; if (er.length) { fails += er.length; console.log('✗ ' + S.d + '/' + h + ' @' + vp.join('x')); er.forEach(z => console.log('   ' + z)); }
+      await q.close();
+    }
     if (e.length) { fails += e.length; console.log('✗ ' + S.d + '/index.html @' + vp.join('x')); e.forEach(x => console.log('   ' + x)); }
     await p.close();
   }
