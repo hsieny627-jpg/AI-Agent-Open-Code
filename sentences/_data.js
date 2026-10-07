@@ -580,10 +580,10 @@ var RFIX = function (h) {
 };
 var RPAGES = [
   { file:'../g4-review/u1.html', unit:1, title:'四年級複習｜Unit 1 Who’s he?', other:'u2.html', otherName:'➡ Unit 2', fix:RFIX,
-    tabs:[{n:'1', lb:'Who’s he/she?', cards:U1T.a11}, {n:'2', lb:'He’s/She’s my ___.', cards:U1T.a2},
+    tabs:[{n:'1', lb:'Who’s he/she?', sub:[{lb:'基礎',cards:U1T.b11},{lb:'進階',cards:U1T.a11}]}, {n:'2', lb:'He’s/She’s my ___.', sub:[{lb:'基礎',cards:U1T.b2},{lb:'進階',cards:U1T.a2}]},
           {n:'3', lb:'中英語序', cards:[U1[7],ENTOP(U1[7]),U1[12],ENTOP(U1[12])]}, {n:'4', lb:'縮寫動畫', cards:[U1[2],U1[5],U1[10]]}] },
   { file:'../g4-review/u2.html', unit:2, title:'四年級複習｜Unit 2 Is he a doctor?', other:'u1.html', otherName:'⬅ Unit 1', fix:RFIX,
-    tabs:[{n:'1', lb:'He/She is a ___.', cards:U2T.a11}, {n:'2', lb:'Yes／No', cards:U2T.a2},
+    tabs:[{n:'1', lb:'He/She is a ___.', sub:[{lb:'基礎',cards:U2T.b11},{lb:'進階',cards:U2T.a11}]}, {n:'2', lb:'Yes／No', sub:[{lb:'基礎',cards:U2T.b2},{lb:'進階',cards:U2T.a2}]},
           {n:'3', lb:'中英語序', cards:[U2[3],ENTOP(U2[3]),U2[12],ENTOP(U2[12])]}, {n:'4', lb:'縮寫動畫', cards:[U2[1],U2[10],U2[7],U2[16]]}] }
 ];
 var PAGES = [

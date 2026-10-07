@@ -16,19 +16,30 @@ const fs = require('fs'), path = require('path');
 
 /* 每個分頁要放哪一組題目：教學網站照分頁編號（有基礎／進階 ➜ 1-1b、1-1a）；
    在家複習（RPAGES）照分頁名稱找教學網站同名的分頁（有分級就用進階那一組），「縮寫動畫」用 r4 */
-function attach(DIR, D, P) {
+function map(DIR, D, P, asKey) {
   const f = path.join(DIR, '_tq_data.js');
   if (!P.tabs || !fs.existsSync(f) || (P.unit !== 1 && P.unit !== 2)) return null;
   const T = require(f)['u' + P.unit], MAIN = P.unit === 1 ? D.TABS1 : D.TABS2;
-  const need = (k, why) => { if (!T[k]) throw new Error('複習題：找不到 ' + P.file + ' 「' + why + '」的題目（' + k + '）'); return T[k]; };
+  const need = (k, why) => { if (!T[k]) throw new Error('複習題：找不到 ' + P.file + ' 「' + why + '」的題目（' + k + '）'); return asKey ? k : T[k]; };
   const isR = P.tabs !== MAIN;
   return P.tabs.map(tb => {
     if (!isR) return tb.sub ? tb.sub.map((x, n) => need(tb.n + (n ? 'a' : 'b'), tb.lb + ' ' + x.lb)) : need(tb.n, tb.lb);
     if (tb.lb === '縮寫動畫') return need('r4', tb.lb);
     const m = MAIN.filter(x => x.lb === tb.lb)[0];
     if (!m) throw new Error('複習題：在家複習的分頁「' + tb.lb + '」在教學網站找不到同名的分頁');
+    /* 2026-10-07 對話 C（Q15-A）：在家複習的分頁 1、2 也分「基礎／進階」，用教學網站同一組題目（成績算在一起） */
+    if (tb.sub) return tb.sub.map((x, n) => need(m.n + (n ? 'a' : 'b'), tb.lb + ' ' + x.lb));
     return need(m.n + (m.sub ? 'a' : ''), tb.lb);
   });
+}
+const attach = (DIR, D, P) => map(DIR, D, P, false);
+/* 成績紀錄（2026-10-07 對話 C）：學生端的程式（score/_client.js），題組代號 ＝ g年級u單元_分頁（例 g3u1_1-1b），教學網站和在家複習同一組題目同一個代號 */
+const SCC = require('../score/_client.js');
+function scJS(DIR, D, P) {
+  const b = path.basename(DIR), g = b === 'sentences' ? 4 : (b === 'G3 - L1 + L2' ? 3 : 0);
+  if (!g) throw new Error('成績紀錄：不知道 ' + b + ' 是幾年級');
+  return SCC.JS.replace('__SCG__', g).replace('__SCU__', P.unit).replace('__SCSRC__', JSON.stringify(/^\.\.\//.test(P.file) ? 'home' : 'school'))
+    .replace('__SCKEYS__', () => JSON.stringify(map(DIR, D, P, true)));
 }
 
 const CSS = `
@@ -115,9 +126,11 @@ function tqNm(){var tb=TABM[TCUR];return tb.n+' '+tb.lb+(tb.sub?'・'+tb.sub[LCU
 function tqStop(){if(tqTick){clearInterval(tqTick);tqTick=null}}
 /* 名次：跟這台平板做過這一組的成績比（B3）；平手算同一名 */
 function tqRank(s){var n=1;tqHist.forEach(function(x){if(x>s)n++});return n}
-function tqRkHTML(s){return '🏆 第 '+tqRank(s)+' 名'+(tqHist.length?'<em>共 '+(tqHist.length+1)+' 次</em>':'<em>第一次</em>')}
+function tqRkHTML(s){if(window.scLive&&scLive())return scRk(s);return '🏆 第 '+tqRank(s)+' 名'+(tqHist.length?'<em>共 '+(tqHist.length+1)+' 次</em>':'<em>第一次</em>')}
 function tqOpen(){
   stopPlay();sayStop();
+  /* 成績紀錄：還沒登入 ➜ 先登入（在家複習可以按〔👀 先練習，不記成績〕） */
+  if(SCON&&!SCID&&!SCGUEST){scLogin(tqOpen);return}
   var Q=tqSet();if(!Q)return;
   tqKey='tq_'+TQPAGE+'_'+TCUR+'_'+LCUR;tqHist=store(tqKey)||[];
   $('#rv').classList.add('on');document.body.classList.add('tqon');
@@ -126,7 +139,7 @@ function tqOpen(){
    '<div class="tqrow"><span>⏱ 每題 <b style="color:var(--gold)">15</b> 秒</span><span style="color:#9E9E9E">（👀 認讀 20 秒）</span></div>'+
    '<div class="tqrow"><span>✅ 答對</span><span>＋</span><span>⚡ 愈快</span><span>＝</span><span>🏆 分數愈高</span></div>'+
    '<div class="tqdemo"><i></i></div><div class="tqdn" id="tqdn">1000</div>'+
-   '<div class="tqrow" style="font-size:clamp(17px,2.8vh,26px);color:#CFCFCF">右上角 ＝ 🏆 總分和名次</div>'+
+   '<div class="tqrow" style="font-size:clamp(17px,2.8vh,26px);color:#CFCFCF">右上角 ＝ 🏆 總分和'+(scLive()?'本班':'')+'名次</div>'+scMeHTML()+
    '<div class="rvbtns"><button class="go" id="tqStart" style="font-size:clamp(22px,4vh,36px);padding:12px 40px">▶ 開始</button></div>'+
    '<button id="tqBack">🃏 回到字卡</button></div>';
   var t0=Date.now();tqStop();
@@ -135,25 +148,25 @@ function tqOpen(){
 }
 function tqStart(){
   tqStop();sayStop();missHide(false);
-  tqQ=tqSet();tqN=0;tqScore=0;tqOK=0;MISSLOG=[];
+  tqQ=tqSet();tqN=0;tqScore=0;tqOK=0;MISSLOG=[];clearTimeout(SCAUTO);SCEND=null;scStart();
   tqAsk();
 }
 function tqTop(){return '<span class="tqtop"><b id="tqsc">'+tqScore+'</b><span class="rk" id="tqrk">'+tqRkHTML(tqScore)+'</span></span>'}
 function tqAsk(){
   tqBusy=false;tqStop();
   if(tqN>=tqQ.length){tqEnd();return}
-  var q=tqQ[tqN];tqT=q.k==='read'?20:15;
+  var q=tqQ[tqN];tqT=q.k==='read'?20:15;scAsk(q);
   var o=shuf(q.o.map(function(x,n){return{x:x,n:n}})), body='';
   if(q.k==='read'){
     body='<div class="tqshow">'+ap(q.show)+'</div><div class="tqsub">'+q.q+'</div>'+
      '<div class="tqo rd">'+o.map(function(t,n){return '<div class="tqr" data-i="'+n+'">'+
        '<button class="pl" data-say="'+esc(t.x)+'">🔊 '+(n+1)+'</button>'+
-       '<button class="ch" data-ok="'+(t.n===0)+'" data-t="'+esc(t.x)+'">👆 選 '+(n+1)+'</button></div>'}).join('')+'</div>';
+       '<button class="ch" data-ok="'+(t.n===0)+'" data-n="'+t.n+'" data-t="'+esc(t.x)+'">👆 選 '+(n+1)+'</button></div>'}).join('')+'</div>';
   }else{
     body=(q.k==='listen'?'<button class="tqear" id="tqear">🔊 再聽一次</button>':'')+
      '<div class="tqq">'+ap(q.q)+'</div>'+
      '<div class="tqo">'+o.map(function(t,n){
-       return '<button data-ok="'+(t.n===0)+'" data-t="'+esc(t.x)+'"><span class="sh">'+SHP[n]+'</span><span>'+ap(t.x)+'</span></button>'}).join('')+'</div>';
+       return '<button data-ok="'+(t.n===0)+'" data-n="'+t.n+'" data-t="'+esc(t.x)+'"><span class="sh">'+SHP[n]+'</span><span>'+ap(t.x)+'</span></button>'}).join('')+'</div>';
   }
   $('#rvbox').innerHTML='<div class="tqhud"><span class="lt"><span class="k">📝 第 '+(tqN+1)+' ／ '+tqQ.length+' 題</span>'+
     '<span class="tqkind">'+TQK[q.k]+'</span></span>'+
@@ -174,7 +187,7 @@ function tqAsk(){
       rs.forEach(function(r){r.classList.remove('spk')});
       if(tqN!==my||tqBusy||k>=rs.length||!$('#rv').classList.contains('on'))return;
       var r=rs[k++],t=$('.pl',r).getAttribute('data-say');r.classList.add('spk');
-      say(t,null,{v:boyV(t),done:function(){setTimeout(nx,350)}})};
+      say(t,null,{v:boyV(t),done:function(){scHeard();setTimeout(nx,350)}})};
     setTimeout(nx,500)}
   if(q.k==='listen'){var ear=$('#tqear');ear.classList.add('spk');
     setTimeout(function(){if(tqN===my)say(q.say,null,{v:boyV(q.say),done:function(){ear.classList.remove('spk')}})},450)}
@@ -188,7 +201,7 @@ function tqPaint(){
   var l=$('#tqlive');if(l)l.textContent='⚡ ＋'+tqPts();
 }
 function tqDone(btn,ok){
-  if(tqBusy)return;tqBusy=true;tqStop();sayStop();
+  if(tqBusy)return;tqBusy=true;tqStop();sayStop();scDone(btn,ok);
   var q=tqQ[tqN], rd=q.k==='read';
   $$(rd?'.tqr':'.tqo button').forEach(function(x){
     var c=rd?$('.ch',x):x;
@@ -216,6 +229,7 @@ function tqDone(btn,ok){
 }
 function tqEnd(){
   tqStop();sayStop();
+  if(scLive()){scEnd();sWow();return}
   var r=tqRank(tqScore),tot=tqHist.length+1;
   tqHist.push(tqScore);tqHist.sort(function(a,b){return b-a});store(tqKey,tqHist.slice(0,50));
   var nxt=TCUR<TABM.length-1;
@@ -228,7 +242,7 @@ function tqEnd(){
   sWow();
   missAll(tqNm()+'　答錯整理');
 }
-function tqClose(){tqStop();sayStop();missHide(false);var m=$('#missAll');if(m)m.classList.remove('on');
+function tqClose(){tqStop();sayStop();clearTimeout(SCAUTO);SCEND=null;missHide(false);var m=$('#missAll');if(m)m.classList.remove('on');
   $('#rv').classList.remove('on');document.body.classList.remove('tqon');var g=$('.tqgain');if(g&&g.parentNode)g.parentNode.removeChild(g)}
 $('#rv').addEventListener('click',function(e){
   if(!document.body.classList.contains('tqon'))return;
@@ -248,4 +262,4 @@ function tqMark(){var g=$('#tqGo');if(!g)return;g.hidden=!tqHas();
   document.documentElement.style.setProperty('--tqH',(g.hidden?0:g.offsetHeight)+'px')}
 `;
 
-module.exports = { attach, CSS, JS };
+module.exports = { attach, scJS, CSS: CSS + SCC.CSS, JS };

@@ -2,3 +2,4 @@
  * node sentences/_build.js
  */
 ['_build_home', '_build_cards', '_build_quiz', '_build_games', '_build_world', '_build_review'].forEach(m => require('./' + m));   /* _build_world：2026-09-26 句型環遊世界；_build_review：2026-10-03 三年級複習／四年級複習 */
+require('../score/_build.js');   /* 2026-10-07 對話 C：成績紀錄 Code.gs ＋ 老師看板（題庫從兩個年級的 _tq_data.js 來） */

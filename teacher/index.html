@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>老師看板</title>
+<!-- 本檔由 score/_build.js 產生，不要手改。 -->
+<style>
+@font-face{font-family:Andika;font-weight:400;src:url(../words/fonts/andika-400.woff2) format("woff2")}
+@font-face{font-family:Andika;font-weight:700;src:url(../words/fonts/andika-700.woff2) format("woff2")}
+:root{--bg:#000;--pn:#0B0B0B;--ln:#262626;--tx:#F2F2F2;--dim:#A8A8A8;--acc:#7FBFFF;--gold:#FFD24A;--ok:#5BE39A;--no:#FF7A7A;--bar:#4D8FCC}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:Andika,-apple-system,"PingFang TC","Noto Sans TC",sans-serif}
+body{padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 24px)}
+button,select,input{font-family:inherit;font-size:17px;color:var(--tx)}
+button{background:#1A1A1A;border:1px solid #3A3A3A;border-radius:999px;padding:9px 18px;min-height:44px;cursor:pointer;font-weight:700}
+button:active{transform:scale(.97)}
+button.on{background:#0F2236;border-color:var(--acc)}
+select,input{background:#141414;border:1px solid #3A3A3A;border-radius:12px;padding:8px 10px;min-height:44px}
+h1{margin:0;font-size:clamp(24px,3.4vw,34px)}
+#login{max-width:460px;margin:12vh auto 0;display:flex;flex-direction:column;gap:16px;align-items:center;text-align:center}
+#login input{font-size:28px;text-align:center;width:100%;letter-spacing:.2em}
+#login button{font-size:22px;padding:12px 40px;background:#0F3323;border-color:var(--ok)}
+#lmsg{min-height:1.4em;color:var(--no);font-weight:700;font-size:19px}
+#app[hidden],#login[hidden]{display:none}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px}
+.top .sp{flex:1}
+.grp{display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center}
+.grp>span{color:var(--dim);font-weight:700}
+#dl{background:#2A2208;border-color:var(--gold);color:#FFE9A8;font-size:19px}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:8px 0 12px}
+.tile{background:var(--pn);border:1px solid var(--ln);border-radius:18px;padding:12px 16px}
+.tile .k{color:var(--dim);font-weight:700;font-size:17px}
+.tile .v{font-size:clamp(32px,4.4vw,48px);font-weight:700;line-height:1.1}
+.tile .d{color:var(--dim);font-size:14px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{font-size:19px;padding:10px 20px}
+.tabs button.on{background:#2A2208;border-color:var(--gold);color:#FFE9A8}
+.pane{background:var(--pn);border:1px solid var(--ln);border-radius:18px;padding:14px}
+.note{color:var(--dim);font-size:15px;margin:6px 0}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th,td{padding:8px 10px;border-bottom:1px solid #1E1E1E;text-align:right;white-space:nowrap}
+th{position:sticky;top:0;background:#151515;color:#DDD;cursor:pointer;user-select:none}
+th:first-child,td:first-child{text-align:left}
+th.s::after{content:' ▼';color:var(--gold)}
+tr.row{cursor:pointer}tr.row:hover td,tr.row:active td{background:#141A20}
+td .mb{display:inline-block;height:10px;border-radius:4px;background:var(--bar);vertical-align:middle;margin-left:6px}
+td.lo{color:var(--no)}
+.bars{display:flex;flex-direction:column;gap:8px;margin:6px 0 18px}
+.br{display:grid;grid-template-columns:7.5em 1fr 6.5em;gap:10px;align-items:center;font-size:17px;font-weight:700}
+.br .t{height:26px;background:#141414;border-radius:6px;overflow:hidden}
+.br .t i{display:block;height:100%;background:var(--bar);border-radius:0 4px 4px 0}
+.br.hi .t i{background:var(--gold)}.br.ok .t i{background:var(--ok)}.br.no .t i{background:var(--no)}
+.br .v{text-align:right;color:#DDD}
+.br .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+h3{margin:14px 0 6px;font-size:20px}
+.wq{display:grid;grid-template-columns:2.2em 1fr 13em;gap:10px;align-items:center;padding:10px;border:1px solid #1E1E1E;border-radius:14px;margin-bottom:8px;cursor:pointer;font-size:17px}
+.wq:active{background:#141A20}
+.wq .n{font-size:22px;font-weight:700;color:var(--gold);text-align:center}
+.wq .q{min-width:0}.wq .q b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wq .q em{font-style:normal;color:var(--dim);font-size:14px}
+.wq .r .t{height:14px;background:#141414;border-radius:6px;overflow:hidden}.wq .r .t i{display:block;height:100%;background:var(--no)}
+.wq .r span{font-weight:700}
+#modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.86);display:none;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
+#modal.on{display:flex}
+#mbox{background:#0B0B0B;border:1px solid #333;border-radius:20px;padding:16px;width:min(900px,100%);margin:auto 0}
+#mbox .x{float:right}
+.opt{display:grid;grid-template-columns:2.2em 1fr 8em;gap:10px;align-items:center;font-size:19px;font-weight:700;margin:6px 0}
+.opt .t{height:24px;background:#141414;border-radius:6px;overflow:hidden}.opt .t i{display:block;height:100%;background:#555}
+.opt.ok .t i{background:var(--ok)}.opt.mis .t i{background:var(--no)}
+.opt .w{grid-column:2/4;font-size:16px}
+.why{background:#141A20;border:1px solid #2A3A4A;border-radius:14px;padding:10px 14px;font-size:18px;margin:10px 0}
+#show{position:fixed;inset:0;z-index:60;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:3vh;padding:4vh 5vw;text-align:center}
+#show.on{display:flex}
+#show .sq{font-size:clamp(30px,6vh,64px);font-weight:700;line-height:1.3}
+#show .so{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2vh 2vw;width:min(1200px,92vw)}
+#show .so div{background:#121212;border:3px solid #333;border-radius:22px;padding:2vh 2vw;font-size:clamp(24px,4.4vh,46px);font-weight:700;display:flex;flex-direction:column;gap:1vh}
+#show .so div.ok{border-color:var(--ok);background:#0F3323}#show .so div.mis{border-color:var(--no)}
+#show .so .pc{font-size:.7em;color:var(--gold)}
+#show .sw{font-size:clamp(20px,3.4vh,34px);color:#CFE3F5;max-width:1100px}
+#show .sb{display:flex;gap:14px}
+#show .sb button{font-size:clamp(20px,3.2vh,30px);padding:12px 32px}
+.svgl{width:100%;height:120px;background:#0E0E0E;border-radius:10px}
+.att{font-size:15px}.att td,.att th{padding:5px 8px}
+.att tr.void td{color:#666;text-decoration:line-through}
+.att button{min-height:34px;padding:4px 12px;font-size:14px}
+@media (max-width:900px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.wq{grid-template-columns:2em 1fr}.wq .r{grid-column:2}}
+</style></head><body>
+<div id="login"><h1>👩‍🏫 老師看板</h1><div class="note">輸入老師密碼（密碼存在你的 Google Apps Script，網頁裡沒有）</div>
+ <input id="pw" type="password" inputmode="numeric" autocomplete="current-password" aria-label="密碼"><button id="go">進入</button><div id="lmsg"></div></div>
+<div id="app" hidden>
+ <div class="top"><h1>👩‍🏫 老師看板</h1><span class="sp"></span>
+  <button id="bd">🏆 學生排行榜：開</button><button id="rf">🔄 重新整理</button><button id="dl">⬇ 一鍵下載 Excel</button></div>
+ <div class="top">
+  <span class="grp" id="fg"><button data-g="3" class="on">三年級</button><button data-g="4">四年級</button></span>
+  <span class="grp"><span>班級</span><select id="fc"></select></span>
+  <span class="grp"><span>期間</span><select id="fp"><option value="w">本週</option><option value="lw">上週</option><option value="all">這學期全部</option><option value="c">自訂日期</option></select>
+   <input type="date" id="f1" hidden><input type="date" id="f2" hidden></span>
+  <span class="grp"><span>來源</span><select id="fs"><option value="">全部</option><option value="school">🏫 在校</option><option value="home">🏠 在家</option></select></span>
+ </div>
+ <div class="tiles" id="tiles"></div>
+ <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 排行榜</button><button data-t="c">🏫 班際</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心</button></div>
+ <div class="pane" id="pane"></div>
+</div>
+<div id="modal"><div id="mbox"></div></div>
+<div id="show"></div>
+<script src="../score/url.js"></script>
+<script>
+/* score/_calc.js — 成績紀錄的「怎麼算」：唯一真相來源（2026-10-07 對話 C，使用者決定在 sentences/2026-10-07_C_設計與研究清單.md，Q1～Q18 全部照建議）
+ *
+ * 同一份程式用在三個地方：① Google Apps Script（score/_build.js 把它接進 Code.gs）② 老師看板（teacher/index.html）③ 量測（node）。
+ * 寫法只用 ES5（iPad iOS 14 也跑得動；Apps Script V8 也可以）。不要用 ?? ?. 箭頭函式。
+ *
+ * 規則（照使用者的決定）：
+ *   🎯 正確率（百分制）   一組 ＝ 答對 ÷ 題數 ✕ 100
+ *   ⚡ 總分（百分制）     一組 ＝ 每題答對 60 ÷ 題數 ＋ 速度 40 ÷ 題數 ✕（剩下秒數 ÷ 總秒數）（Q1-A：答對 60 ＋ 速度 40）
+ *   個人成績             每一組取「最近一次」，再把做過的組平均（Q8-A）
+ *   🔁 作答次數           答對數 ≧ 題數 ✕ 2/3 才算 1 次（5 題至少對 4 題）；同一組一天最多算 3 次（Q11-A）
+ *   🚀 進步               每一組：最近一次 − 上一次（所有作答都算，但「⚡ 秒按」超過一半的那一次不拿來比）；
+ *                        個人 ＝ 這段期間做過兩次以上的組平均；上次、這次都 100 ＝「🔥 保持滿分」，不算進平均（Q3-A）
+ *   ⚡ 秒按               開始作答 1 秒內就按（Q10-A），只給老師看
+ *   同分                 正確率同分比總分，總分也同 ＝ 同名次；其他榜同分 ＝ 同名次（Q14-A）
+ *   本週                 台灣時間星期一 00:00 開始（Q12-A）
+ *   班級                 三年級 304、307、311；四年級 402、406、409、410；座號 01～40；只跟同年級比（Q9-A）
+ */
+var SC = (function () {
+  var CLASSES = { 3: ['304', '307', '311'], 4: ['402', '406', '409', '410'] };
+  var COLS = ['時間', '5碼', '年級', '班級', '座號', '題組', '題組名稱', '題數', '答對', '正確率', '總分百分制', '原始分數', '秒按', '來源', '平板', '編號', '每題', '作廢'];
+  var DAY = 864e5, TZ = 8 * 36e5, CAP = 3, TOP = 10;
+
+  /* 5 碼 ➜ 班級、座號；不對就回報原因（登入防呆，Q17：年級網站互相擋） */
+  function checkId(id, g) {
+    id = String(id || '');
+    if (!/^\d{5}$/.test(id)) return { err: 'len' };
+    var c = id.slice(0, 3), s = +id.slice(3);
+    var gg = c.charAt(0) === '3' ? 3 : (c.charAt(0) === '4' ? 4 : 0);
+    if (!gg || CLASSES[gg].indexOf(c) < 0) return { err: 'cls', cls: c };
+    if (g && gg !== +g) return { err: 'grade', g: gg };
+    if (s < 1 || s > 40) return { err: 'seat', seat: s };
+    return { id: id, g: gg, cls: c, seat: s };
+  }
+  function counts(ok, n) { return n > 0 && ok * 3 >= n * 2; }          /* 答對 2/3 以上才算 1 次 */
+  function need(n) { return Math.ceil(n * 2 / 3); }                     /* 至少要對幾題 */
+  function day(t) { return Math.floor((t + TZ) / DAY); }
+  function weekStart(t) { var d = day(t), wd = (d + 3) % 7; return (d - wd) * DAY - TZ; }   /* 1970-01-01 是星期四 ➜ +3 ＝ 星期一是 0 */
+  function r1(x) { return Math.round(x * 10) / 10; }
+  function mean(a) { if (!a.length) return null; var s = 0; for (var i = 0; i < a.length; i++) s += a[i]; return s / a.length; }
+
+  /* 一題的紀錄：[答對 1/0, 選了第幾個（0 ＝ 正解，-1 ＝ 時間到）, 用了幾秒, 秒按 1/0, 剩下秒數 ÷ 總秒數] */
+  function s100(qs) {
+    var n = qs.length, s = 0;
+    for (var i = 0; i < n; i++) if (qs[i][0]) s += 60 / n + 40 / n * Math.max(0, Math.min(1, +qs[i][4] || 0));
+    return Math.round(s * 10) / 10;
+  }
+  /* 一列（試算表）➜ 一筆紀錄 */
+  function fromRow(r) {
+    var qs = []; try { qs = typeof r[16] === 'string' ? JSON.parse(r[16] || '[]') : (r[16] || []); } catch (e) { qs = []; }
+    var t = r[0] instanceof Date ? r[0].getTime() : (typeof r[0] === 'number' ? r[0] : Date.parse(r[0]));
+    var id = String(r[1]).replace(/\D/g, ''); while (id.length < 5 && id.length) id = '0' + id;
+    return { t: t, id: id, g: +r[2], cls: String(r[3]), seat: +r[4], set: String(r[5]), name: String(r[6]), n: +r[7], ok: +r[8],
+      acc: +r[9], s: +r[10], raw: +r[11], fast: +r[12], src: String(r[13]), dev: String(r[14]), u: String(r[15]), qs: qs,
+      x: r[17] === true || String(r[17]).toUpperCase() === 'TRUE' || r[17] === '✔' || r[17] === 'v' || r[17] === 'V' };
+  }
+  function toRow(R) {
+    return [new Date(R.t), R.id, R.g, R.cls, R.seat, R.set, R.name, R.n, R.ok, R.acc, R.s, R.raw, R.fast, R.src, R.dev, R.u, JSON.stringify(R.qs), false];
+  }
+  /* 學生端送來的一筆 ➜ 檢查＋算好欄位（不相信學生端算的分數） */
+  function clean(o, now) {
+    var c = checkId(o.id); if (c.err) return null;
+    var qs = o.qs; if (!qs || !qs.length || qs.length > 10) return null;
+    var Q = [];
+    for (var i = 0; i < qs.length; i++) { var q = qs[i];
+      Q.push([q[0] ? 1 : 0, Math.max(-1, Math.min(3, Math.round(+q[1] || 0))), Math.max(0, Math.min(30, r1(+q[2] || 0))), q[3] ? 1 : 0, Math.max(0, Math.min(1, Math.round((+q[4] || 0) * 1000) / 1000))]); }
+    var ok = 0, f = 0; for (i = 0; i < Q.length; i++) { ok += Q[i][0]; f += Q[i][3]; }
+    var t = +o.t; if (!(t > now - 30 * DAY && t < now + 5 * 6e4)) t = now;   /* 平板時間不對就用伺服器時間；沒網路補送的照當時 */
+    if (!/^g[34]u[12]_[\w-]{1,8}$/.test(String(o.set))) return null;
+    return { t: t, id: c.id, g: c.g, cls: c.cls, seat: c.seat, set: String(o.set), name: String(o.name || '').slice(0, 60), n: Q.length, ok: ok,
+      acc: Math.round(ok / Q.length * 100), s: s100(Q), raw: Math.max(0, Math.min(10000, Math.round(+o.raw || 0))), fast: f,
+      src: o.src === 'home' ? 'home' : 'school', dev: String(o.dev || '').replace(/[^\w]/g, '').slice(0, 12), u: String(o.u || '').replace(/[^\w]/g, '').slice(0, 24), qs: Q, x: false };
+  }
+  function pick(rs, f) { /* f: {g, cls, from, to, src} */
+    var out = [];
+    for (var i = 0; i < rs.length; i++) { var r = rs[i];
+      if (r.x) continue; if (f.g && r.g !== +f.g) continue; if (f.cls && r.cls !== f.cls) continue;
+      if (f.from != null && r.t < f.from) continue; if (f.to != null && r.t >= f.to) continue; if (f.src && r.src !== f.src) continue;
+      out.push(r); }
+    return out;
+  }
+  /* 每一個人：🎯 正確率、⚡ 總分、🔁 次數、🚀 進步、🔥 保持滿分 */
+  function students(rs) {
+    var by = {}, ids = [];
+    rs.slice().sort(function (a, b) { return a.t - b.t; }).forEach(function (r) {
+      var p = by[r.id]; if (!p) { p = by[r.id] = { id: r.id, g: r.g, cls: r.cls, seat: r.seat, sets: {}, all: 0, last: 0, fastQ: 0, q: 0 }; ids.push(r.id); }
+      (p.sets[r.set] = p.sets[r.set] || []).push(r); p.all++; p.last = r.t; p.fastQ += r.fast; p.q += r.n;
+    });
+    return ids.map(function (id) {
+      var p = by[id], A = [], S = [], D = [], keep = false, cnt = 0, nsets = 0;
+      for (var k in p.sets) { var a = p.sets[k], L = a[a.length - 1]; nsets++;
+        A.push(L.acc); S.push(L.s);
+        var perDay = {}; a.forEach(function (r) { if (counts(r.ok, r.n)) { var d = day(r.t); perDay[d] = (perDay[d] || 0) + 1; if (perDay[d] <= CAP) cnt++; } });
+        var v = a.filter(function (r) { return r.fast * 2 <= r.n; });
+        if (v.length >= 2) { var x = v[v.length - 1].acc, y = v[v.length - 2].acc; if (x === 100 && y === 100) keep = true; else D.push(x - y); }
+      }
+      var acc = mean(A), s = mean(S), pr = mean(D);
+      return { id: id, g: p.g, cls: p.cls, seat: p.seat, acc: acc == null ? null : r1(acc), s: s == null ? null : r1(s), count: cnt,
+        prog: pr == null ? null : r1(pr), keep: keep && pr == null ? true : keep, sets: nsets, all: p.all, last: p.last, fastQ: p.fastQ, q: p.q };
+    });
+  }
+  /* 排名：同分同名次（1、1、3）；正確率同分比總分 */
+  var BOARDS = {
+    acc: { v: function (p) { return p.acc; }, cmp: function (a, b) { return (b.acc - a.acc) || (b.s - a.s); }, eq: function (a, b) { return a.acc === b.acc && a.s === b.s; }, ok: function (p) { return p.acc != null; } },
+    s: { v: function (p) { return p.s; }, cmp: function (a, b) { return b.s - a.s; }, eq: function (a, b) { return a.s === b.s; }, ok: function (p) { return p.s != null; } },
+    count: { v: function (p) { return p.count; }, cmp: function (a, b) { return b.count - a.count; }, eq: function (a, b) { return a.count === b.count; }, ok: function (p) { return p.count > 0; } },
+    prog: { v: function (p) { return p.prog; }, cmp: function (a, b) { return b.prog - a.prog; }, eq: function (a, b) { return a.prog === b.prog; }, ok: function (p) { return p.prog != null && p.prog > 0; } }
+  };
+  function rank(ps, key) {
+    var B = BOARDS[key], L = ps.filter(B.ok).sort(function (a, b) { return B.cmp(a, b) || (a.id < b.id ? -1 : 1); });
+    var out = [], rk = 0;
+    for (var i = 0; i < L.length; i++) { if (!i || !B.eq(L[i], L[i - 1])) rk = i + 1; out.push({ id: L[i].id, cls: L[i].cls, v: B.v(L[i]), rk: rk }); }
+    return out;
+  }
+  /* 班級：有做的人的平均（Q13-A）＋參與率（要老師填人數） */
+  function classes(ps, g, sizes) {
+    return CLASSES[g].map(function (c) {
+      var m = ps.filter(function (p) { return p.cls === c; });
+      var nn = function (k) { return m.filter(function (p) { return p[k] != null; }).map(function (p) { return p[k]; }); };
+      var a = mean(nn('acc')), s = mean(nn('s')), pr = mean(nn('prog')), cnt = 0;
+      m.forEach(function (p) { cnt += p.count; });
+      var size = sizes && +sizes[c] > 0 ? +sizes[c] : null;
+      return { cls: c, n: m.length, size: size, acc: a == null ? null : r1(a), s: s == null ? null : r1(s), count: cnt, prog: pr == null ? null : r1(pr) };
+    });
+  }
+  /* 錯題：每一題答了幾次、錯幾次、四個選項各被選幾次（選項 0 ＝ 正解，-1 ＝ 時間到） */
+  function questions(rs) {
+    var Q = {};
+    rs.forEach(function (r) { r.qs.forEach(function (q, i) {
+      var k = r.set + '#' + i, o = Q[k] = Q[k] || { k: k, set: r.set, i: i, n: 0, bad: 0, p: { '-1': 0, 0: 0, 1: 0, 2: 0, 3: 0 }, fast: 0 };
+      o.n++; if (!q[0]) o.bad++; o.p[q[1]] = (o.p[q[1]] || 0) + 1; o.fast += q[3]; }); });
+    var L = []; for (var k in Q) { Q[k].rate = Math.round(Q[k].bad / Q[k].n * 100); L.push(Q[k]); }
+    return L.sort(function (a, b) { return (b.rate - a.rate) || (b.bad - a.bad); });
+  }
+  /* 學生看得到的（Q2、Q4、使用者 2026-10-07：只公開前 10 名；自己不在前 10 名只給差距，不給名次數字） */
+  function top(list) { return list.filter(function (x) { return x.rk <= TOP; }); }
+  function mine(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
+  function view(all, o, now, boardsOn) {
+    var c = checkId(o.id); if (c.err) return { err: c.err };
+    var from = weekStart(now), W = pick(all, { g: c.g, from: from });
+    var ps = students(W), me = mine(ps, c.id) || { id: c.id, acc: null, s: null, count: 0, prog: null, keep: false };
+    var out = { id: c.id, cls: c.cls, g: c.g, week: from, boards: !!boardsOn,
+      me: { acc: me.acc, s: me.s, count: me.count, prog: me.prog, keep: !!me.keep } };
+    /* 這一組（作答中右上角的名次）：本班別人這週在這一組最好的原始分數，前 10 個 */
+    if (o.set) {
+      var best = {}; W.forEach(function (r) { if (r.set === o.set && r.cls === c.cls && r.id !== c.id) best[r.id] = Math.max(best[r.id] || 0, r.raw); });
+      var v = []; for (var k in best) v.push(best[k]); v.sort(function (a, b) { return b - a; });
+      var mineSet = W.filter(function (r) { return r.set === o.set && r.id === c.id; });
+      out.set = { others: boardsOn ? v.slice(0, TOP) : [], tries: mineSet.length,
+        prev: mineSet.length ? mineSet[mineSet.length - 1].acc : null,
+        prevValid: (function () { var a = mineSet.filter(function (r) { return r.fast * 2 <= r.n; }); return a.length ? a[a.length - 1].acc : null; })(),
+        best: mineSet.length ? Math.max.apply(null, mineSet.map(function (r) { return r.acc; })) : null,
+        today: mineSet.filter(function (r) { return day(r.t) === day(now) && counts(r.ok, r.n); }).length };
+    }
+    /* 班級長條（我幫全班）：這週各班平均正確率 */
+    var cl = classes(ps, c.g, null);
+    out.classes = cl.map(function (x) { return { cls: x.cls, acc: x.acc, n: x.n }; });
+    if (o.u) { var ps0 = students(W.filter(function (r) { return r.u !== o.u; }));
+      var b0 = classes(ps0, c.g, null).filter(function (x) { return x.cls === c.cls; })[0], b1 = cl.filter(function (x) { return x.cls === c.cls; })[0];
+      out.delta = b0.acc == null || b1.acc == null ? null : r1(b1.acc - b0.acc); }
+    if (boardsOn) {
+      out.top = {}; out.cut = {}; out.rk = {};
+      ['acc', 's', 'count', 'prog'].forEach(function (k) {
+        var g = rank(ps, k), cc = rank(ps.filter(function (p) { return p.cls === c.cls; }), k);
+        out.top[k] = { cls: top(cc), grade: top(g) };
+        /* 第 10 名的分數（給「再多 N 就進前 10」）；人數不到 10 個 ＝ 有做就進得去 */
+        var cut = function (L) { var t = top(L); return t.length >= TOP ? t[t.length - 1].v : null; };
+        out.cut[k] = { cls: cut(cc), grade: cut(g) };
+        var a = mine(cc, c.id), b = mine(g, c.id);
+        out.rk[k] = { cls: a && a.rk <= TOP ? a.rk : null, grade: b && b.rk <= TOP ? b.rk : null };   /* 只有前 10 名才給名次 */
+      });
+      out.keep = ps.filter(function (p) { return p.keep && p.cls === c.cls; }).map(function (p) { return p.id; });
+    }
+    return out;
+  }
+  return { CLASSES: CLASSES, COLS: COLS, CAP: CAP, TOP: TOP, checkId: checkId, counts: counts, need: need, day: day, weekStart: weekStart,
+    s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, questions: questions, view: view };
+})();
+
+/* score/_xlsx.js — 最小的 Excel（.xlsx）產生器：老師看板「⬇ 一鍵下載 Excel」用（Q16-A：一個檔、五張工作表）
+ * 不用外部函式庫（網站零外部相依）。zip 用「不壓縮（stored）」＋ CRC32，Excel、Google 試算表、Numbers 都打得開。
+ * XLSX.make([{name:'個人', rows:[['5碼','正確率'],['30405',80]]}, …]) ➜ Uint8Array */
+var XLSX = (function () {
+  var T = []; for (var n = 0; n < 256; n++) { var c = n; for (var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; T[n] = c >>> 0; }
+  function crc(b) { var c = 0xFFFFFFFF; for (var i = 0; i < b.length; i++) c = T[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+  function utf8(s) { return typeof TextEncoder !== 'undefined' ? new TextEncoder().encode(s) : new Uint8Array(Buffer.from(s, 'utf8')); }
+  function x(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, ''); }
+  function col(i) { var s = ''; i++; while (i) { var m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; }
+  function sheet(rows) {
+    var w = [], o = '';
+    rows.forEach(function (r) { r.forEach(function (v, j) { var l = String(v == null ? '' : v).length; w[j] = Math.max(w[j] || 6, Math.min(60, l * 1.6 + 2)); }); });
+    o += '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">';
+    o += '<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>';
+    if (w.length) o += '<cols>' + w.map(function (v, j) { return '<col min="' + (j + 1) + '" max="' + (j + 1) + '" width="' + Math.round(v) + '" customWidth="1"/>'; }).join('') + '</cols>';
+    o += '<sheetData>';
+    rows.forEach(function (r, i) {
+      o += '<row r="' + (i + 1) + '">';
+      r.forEach(function (v, j) {
+        var ref = col(j) + (i + 1), st = i === 0 ? ' s="1"' : '';
+        if (v == null || v === '') return;
+        if (typeof v === 'number' && isFinite(v)) o += '<c r="' + ref + '"' + st + '><v>' + v + '</v></c>';
+        else o += '<c r="' + ref + '" t="inlineStr"' + st + '><is><t xml:space="preserve">' + x(v) + '</t></is></c>';
+      });
+      o += '</row>';
+    });
+    return o + '</sheetData></worksheet>';
+  }
+  function zip(files) {
+    var parts = [], cen = [], off = 0;
+    files.forEach(function (f) {
+      var nm = utf8(f.n), d = utf8(f.d), c = crc(d), h = new Uint8Array(30 + nm.length), v = new DataView(h.buffer);
+      v.setUint32(0, 0x04034b50, true); v.setUint16(4, 20, true); v.setUint16(6, 0x0800, true); v.setUint16(8, 0, true);
+      v.setUint32(14, c, true); v.setUint32(18, d.length, true); v.setUint32(22, d.length, true); v.setUint16(26, nm.length, true); h.set(nm, 30);
+      var e = new Uint8Array(46 + nm.length), w = new DataView(e.buffer);
+      w.setUint32(0, 0x02014b50, true); w.setUint16(4, 20, true); w.setUint16(6, 20, true); w.setUint16(8, 0x0800, true);
+      w.setUint32(16, c, true); w.setUint32(20, d.length, true); w.setUint32(24, d.length, true); w.setUint16(28, nm.length, true); w.setUint32(42, off, true); e.set(nm, 46);
+      parts.push(h, d); cen.push(e); off += h.length + d.length;
+    });
+    var cs = 0; cen.forEach(function (e) { cs += e.length; });
+    var end = new Uint8Array(22), q = new DataView(end.buffer);
+    q.setUint32(0, 0x06054b50, true); q.setUint16(8, files.length, true); q.setUint16(10, files.length, true); q.setUint32(12, cs, true); q.setUint32(16, off, true);
+    var all = parts.concat(cen, [end]), n = 0; all.forEach(function (a) { n += a.length; });
+    var out = new Uint8Array(n), p = 0; all.forEach(function (a) { out.set(a, p); p += a.length; });
+    return out;
+  }
+  function make(sheets) {
+    var ws = sheets.map(function (s, i) { return '<sheet name="' + x(s.name.slice(0, 31)) + '" sheetId="' + (i + 1) + '" r:id="rId' + (i + 1) + '"/>'; }).join('');
+    var files = [
+      { n: '[Content_Types].xml', d: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+        '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>' +
+        '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
+        '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' +
+        sheets.map(function (s, i) { return '<Override PartName="/xl/worksheets/sheet' + (i + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'; }).join('') + '</Types>' },
+      { n: '_rels/.rels', d: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>' },
+      { n: 'xl/workbook.xml', d: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>' + ws + '</sheets></workbook>' },
+      { n: 'xl/_rels/workbook.xml.rels', d: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+        sheets.map(function (s, i) { return '<Relationship Id="rId' + (i + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + (i + 1) + '.xml"/>'; }).join('') +
+        '<Relationship Id="rId' + (sheets.length + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>' },
+      { n: 'xl/styles.xml', d: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
+        '<fonts count="2"><font><sz val="12"/><name val="Calibri"/></font><font><b/><sz val="12"/><name val="Calibri"/></font></fonts>' +
+        '<fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFF2CC"/></patternFill></fill></fills>' +
+        '<borders count="1"><border/></borders><cellStyleXfs count="1"><xf/></cellStyleXfs>' +
+        '<cellXfs count="2"><xf xfId="0"/><xf xfId="0" fontId="1" fillId="2" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>' }
+    ];
+    sheets.forEach(function (s, i) { files.push({ n: 'xl/worksheets/sheet' + (i + 1) + '.xml', d: sheet(s.rows) }); });
+    return zip(files);
+  }
+  return { make: make };
+})();
+
+var BANK={"g3u1_3":{"name":"三年級 Unit 1｜3 一問一答","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"I’m Emma.","o":["I’m Emma.","I’m eight.","My name is Ken.","I’m Alan."],"h":"聽 Emma。"},{"k":"listen","q":"要怎麼回答？","say":"What’s your name?","o":["My name is Emma.","I’m ten years old.","Your name is Emma.","How old are you?"],"h":"問名字，就答名字。"},{"k":"zh2en","q":"「你的名字是什麼？」「我是 Emma。」答句的英文是？","o":["I’m Emma.","You’re Emma.","My Emma.","I Emma."],"h":"我是 ＝ I’m。"},{"k":"en2zh","q":"「My name is Emma.」　中文是？","o":["我的名字是 Emma。","你的名字是 Emma。","我是 Emma 的。","Emma 的名字是什麼？"],"h":"My ＝ 我的。"},{"k":"trap","q":"別人問 What’s your name?，哪一個回答<b class=\"em\">不對</b>？","o":["Your name is Emma.","My name is Emma.","I’m Emma.","My name is Ken."],"h":"問「你的」名字，要答「我的」：My。"}]},"g3u1_4":{"name":"三年級 Unit 1｜4 原本句型","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"I am Ken.","o":["I am Ken.","I’m Ken.","My name is Ken.","I am ten."],"h":"I am 兩個字分開唸；I’m 是一個音節。"},{"k":"listen","q":"你聽到哪一句？","say":"What is your name?","o":["What is your name?","What’s your name?","What is my name?","What’s my name?"],"h":"聽到 is 分開唸 ＝ What is。"},{"k":"zh2en","q":"「我的名字是______。」　英文是？","o":["My name is ______.","I name is ______.","My name ______.","Name my is ______."],"h":"My name is ___.。"},{"k":"en2zh","q":"「I am Ken.」　中文是？","o":["我是 Ken。","Ken 是我的。","我叫你 Ken。","你是 Ken。"],"h":"I am ＝ 我是。"},{"k":"trap","q":"What 的哪一個字母<b class=\"em\">不發音</b>（淺灰色）？","sp":"","o":["h","W","a","t"],"h":"What 的 h 不發音。"}]},"g3u1_1-1b":{"name":"三年級 Unit 1｜1-1 What’s your name?・基礎","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"name","o":["name","nine","my","am"],"h":"name 唸 /neɪm/，e 不發音。"},{"k":"listen","q":"你聽到哪一個字？","say":"your","o":["your","you","my","name"],"h":"your ＝ 你的；you ＝ 你，少了 r。"},{"k":"zh2en","q":"「你的」　英文是？","o":["your","you","my","name"],"h":"你 ＝ you，你的 ＝ your。"},{"k":"en2zh","q":"「What」　中文是？","o":["什麼","誰","幾歲","名字"],"h":"What ＝ 什麼。"},{"k":"trap","q":"What’s 的 ’ 藏起來的是哪一個字母？","sp":"","o":["i","s","a","h"],"h":"What is ➜ What’s：is 的 i 被 ’ 換掉。"}]},"g3u1_1-1a":{"name":"三年級 Unit 1｜1-1 What’s your name?・進階","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"What’s your name?","o":["What’s your name?","What’s my name?","What’s his name?","How old are you?"],"h":"聽 your，不是 my、his。"},{"k":"listen","q":"你聽到哪一句？","say":"What is your name?","o":["What is your name?","What is my name?","What is his name?","How old are you?"],"h":"your ＝ 你的。"},{"k":"zh2en","q":"「你的名字是什麼？」　英文是？","o":["What’s your name?","What’s my name?","What’s name your?","Your what’s name?"],"h":"中文「什麼」在最後，英文 What 在最前面。"},{"k":"en2zh","q":"「What’s your name?」　中文是？","o":["你的名字是什麼？","我的名字是什麼？","你幾歲？","他的名字是什麼？"],"h":"your ＝ 你的，name ＝ 名字。"},{"k":"trap","q":"What is your name? 縮寫成？","o":["What’s your name?","Whats your name?","What’is your name?","What’ your name?"],"h":"’ 放在 is 的位置，換掉 i：What’s。"}]},"g3u1_1-2":{"name":"三年級 Unit 1｜1-2 中英語序","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"What’s your name?","o":["What’s your name?","What is your name?","What’s my name?","My name is Ken."],"h":"聽 What’s（一個音節）和 your。"},{"k":"listen","q":"你聽到的<b class=\"em\">第一個字</b>是？","say":"What’s your name?","o":["What","Your","Name","Is"],"h":"問「什麼」，What 放最前面。"},{"k":"zh2en","q":"「你的 名字 是 什麼？」英文的順序是？","sp":"What’s your name?","o":["What’s ➜ your ➜ name?","Your ➜ name ➜ what’s?","Name ➜ your ➜ what’s?","What’s ➜ name ➜ your?"],"h":"中文「什麼」在最後，英文 What 跑到最前面。"},{"k":"en2zh","q":"What’s your name? 的 <b class=\"em\">What</b> 是中文的哪一個詞？","o":["什麼","你的","名字","是"],"h":"What ＝ 什麼。"},{"k":"trap","q":"中文「什麼」在句子最後，英文 What 放在哪裡？","sp":"","o":["最前面","最後面","中間","不用說"],"h":"英文問句，問的字（What）放最前面。"}]},"g3u1_2b":{"name":"三年級 Unit 1｜2 My name is ___.・基礎","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"My","o":["My","I","am","name"],"h":"My 唸 /maɪ/。"},{"k":"listen","q":"你聽到哪一句？","say":"My name is Ken.","o":["My name is Ken.","I am Ken.","Your name is Ken.","My name is Emma."],"h":"My ＝ 我的；名字是 Ken。"},{"k":"zh2en","q":"「我」　英文是？","o":["I","My","am","you"],"h":"我 ＝ I，我的 ＝ My。"},{"k":"en2zh","q":"「am」　中文是？","o":["是","我","我的","名字"],"h":"I am ＝ 我是，am ＝ 是。"},{"k":"trap","q":"I am 縮寫成？","o":["I’m","Im","I’am","Am"],"h":"am 的 a 被 ’ 換掉：I’m。"}]},"g3u1_2a":{"name":"三年級 Unit 1｜2 My name is ___.・進階","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"My name is Mike.","o":["My name is Mike.","Your name is Mike.","My name is Ken.","What’s your name?"],"h":"聽 My 和 Mike。"},{"k":"listen","q":"你聽到哪一句？","say":"I’m Wendy.","o":["I’m Wendy.","You’re Wendy.","I’m Emma.","I’m ten."],"h":"I’m ＝ 我是。"},{"k":"zh2en","q":"「我的名字是 Alan。」　英文是？","o":["My name is Alan.","I name is Alan.","My name Alan.","Your name is Alan."],"h":"My name is ___.，is 不能少。"},{"k":"en2zh","q":"「I’m Ken.」　中文是？","o":["我是 Ken。","我的名字是什麼？","你是 Ken。","我十歲。"],"h":"I ＝ 我，’m ＝ 是。"},{"k":"trap","q":"哪一句跟 My name is Emma. 意思一樣？","o":["I’m Emma.","I name is Emma.","My Emma.","Me is Emma."],"h":"My name is ___. ＝ I’m ___.。"}]},"g3u1_r4":{"name":"三年級 Unit 1｜縮寫動畫（在家複習）","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"What’s","o":["What’s","What is","What","Who’s"],"h":"What’s 是一個音節，最後有 /s/。"},{"k":"listen","q":"你聽到哪一句？","say":"I am Ken.","o":["I am Ken.","I’m Ken.","I am ten.","I’m ten."],"h":"I am 兩個字分開唸。"},{"k":"zh2en","q":"「我是」的縮寫　英文是？","o":["I’m","Im","I’am","My"],"h":"am 的 a 被 ’ 換掉：I’m。"},{"k":"en2zh","q":"「What’s」　中文是？","o":["什麼是","誰是","幾歲","我是"],"h":"What’s ＝ What is ＝ 什麼是。"},{"k":"trap","q":"I’m 的 ’ 藏起來的是哪一個字母？","sp":"","o":["a","m","I","i"],"h":"I am ➜ I’m：a 被 ’ 換掉。"}]},"g3u2_3":{"name":"三年級 Unit 2｜3 一問一答","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"I’m ten years old.","o":["I’m ten years old.","You’re ten years old.","I’m seven years old.","My name is Ken."],"h":"聽 I’m 和 ten。"},{"k":"listen","q":"要怎麼回答？","say":"How old are you?","o":["I’m ten.","I’m Ken.","My name is ten.","You’re ten."],"h":"問幾歲，就答幾歲。"},{"k":"zh2en","q":"「你幾歲？」「我十歲。」答句的英文是？","o":["I’m ten years old.","You’re ten years old.","I ten years old.","My ten years old."],"h":"我是 ＝ I’m，’m 不能少。"},{"k":"en2zh","q":"A：How old are you?　B：I’m nine.　B 說什麼？","o":["我九歲。","我是九號。","你九歲。","我叫 Nine。"],"h":"I’m nine. ＝ 我九歲。"},{"k":"trap","q":"別人問 How old are you?，哪一個回答<b class=\"em\">不對</b>？","o":["My name is Mike.","I’m nine.","I’m nine years old.","I’m twelve."],"h":"問幾歲要答數字，不是名字。"}]},"g3u2_4":{"name":"三年級 Unit 2｜4 原本句型","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"You’re ten.","o":["You’re ten.","I’m ten.","You’re eleven.","You’re Ken."],"h":"You’re ＝ 你是。"},{"k":"listen","q":"你聽到哪一句？","say":"I’m ten.","o":["I’m ten.","I’m Ken.","I’m nine.","I’m twelve."],"h":"ten 和 Ken 押韻，聽第一個音：t。"},{"k":"zh2en","q":"「你十歲。」　英文是？","o":["You’re ten.","Your ten.","I’m ten.","You ten."],"h":"你是 ＝ You’re（You are）；Your ＝ 你的。"},{"k":"en2zh","q":"「I’m eight years old.」　中文是？","o":["我八歲。","我八年。","你八歲。","我是八號。"],"h":"years old ＝ 歲。"},{"k":"trap","q":"eight 的哪兩個字母<b class=\"em\">不發音</b>？","sp":"","o":["gh","ei","ht","eg"],"h":"eight 的 gh 不發音。"}]},"g3u2_1-1b":{"name":"三年級 Unit 2｜1-1 How old are you?・基礎","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"old","o":["old","are","you","How"],"h":"old 唸 /oʊld/。"},{"k":"listen","q":"你聽到哪一句？","say":"How old are you?","o":["How old are you?","How are you?","Who are you?","What’s your name?"],"h":"有 old ＝ 問幾歲。"},{"k":"zh2en","q":"「你」　英文是？","o":["you","your","I","are"],"h":"你 ＝ you，你的 ＝ your。"},{"k":"en2zh","q":"「How old」　中文是？","o":["幾歲","名字","什麼","你"],"h":"How old ＝ 幾歲。"},{"k":"trap","q":"How old ___ you? 空格填？","o":["are","is","am","your"],"h":"you 配 are：How old are you?"}]},"g3u2_1-1a":{"name":"三年級 Unit 2｜1-1 How old are you?・進階","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"How old are you?","o":["How old are you?","How are you?","Who are you?","What’s your name?"],"h":"聽 old。"},{"k":"listen","q":"這一句在問什麼？","say":"How old are you?","sp":"","o":["幾歲","名字","你好嗎","你是誰"],"h":"How old ＝ 幾歲。"},{"k":"zh2en","q":"「你幾歲？」　英文是？","o":["How old are you?","How are you old?","You are how old?","How old you are?"],"h":"How old 放最前面，再 are you。"},{"k":"en2zh","q":"「How old are you?」　中文是？","o":["你幾歲？","你好嗎？","你是誰？","你的名字是什麼？"],"h":"How old ＝ 幾歲，you ＝ 你。"},{"k":"trap","q":"哪一句是對的？","o":["How old are you?","How old is you?","How old you?","How old am you?"],"h":"you 配 are，are 不能少。"}]},"g3u2_1-2":{"name":"三年級 Unit 2｜1-2 中英語序","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"How old are you?","o":["How old are you?","How are you?","How old is he?","I’m ten years old."],"h":"聽 How old 和 you。"},{"k":"listen","q":"你聽到的<b class=\"em\">第一個詞</b>是？","say":"How old are you?","o":["How old","You","Are","Years"],"h":"問幾歲，How old 放最前面。"},{"k":"zh2en","q":"「你 是 幾歲？」英文的順序是？","sp":"How old are you?","o":["How old ➜ are ➜ you?","You ➜ are ➜ how old?","Are ➜ you ➜ how old?","How old ➜ you ➜ are?"],"h":"中文「幾歲」在最後，英文 How old 跑到最前面。"},{"k":"en2zh","q":"How old are you? 的 <b class=\"em\">How old</b> 是中文的哪一個詞？","o":["幾歲","你","是","名字"],"h":"How old ＝ 幾歲。"},{"k":"trap","q":"中文「幾歲」在句子最後，英文 How old 放在哪裡？","sp":"","o":["最前面","最後面","中間","不用說"],"h":"英文問句，問的字（How old）放最前面。"}]},"g3u2_2b":{"name":"三年級 Unit 2｜2 I’m ten years old.・基礎","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"years","o":["years","year","old","ten"],"h":"years 最後有 /z/。"},{"k":"listen","q":"你聽到哪一句？","say":"I’m ten years old.","o":["I’m ten years old.","I’m eleven years old.","I’m seven years old.","I’m twelve years old."],"h":"聽數字：ten ＝ 十。"},{"k":"zh2en","q":"「歲」　英文是？","o":["years old","years","old","year"],"h":"幾歲 ＝ 數字 ＋ years old。"},{"k":"en2zh","q":"「I’m」　中文是？","o":["我是","我","我的","你是"],"h":"I’m ＝ I am ＝ 我是。"},{"k":"trap","q":"I’m ten ___ old. 空格填？","o":["years","year","yeas","ears"],"h":"十年不只一年，要加 s：years。"}]},"g3u2_2a":{"name":"三年級 Unit 2｜2 I’m ten years old.・進階","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"I’m eight.","o":["I’m eight.","I’m ten.","I’m nine.","I’m Emma."],"h":"eight ＝ 8，gh 不發音。"},{"k":"listen","q":"你聽到哪一句？","say":"I’m twelve years old.","o":["I’m twelve years old.","I’m eleven years old.","I’m seven years old.","I’m six years old."],"h":"twelve ＝ 12。"},{"k":"zh2en","q":"「我十一歲。」　英文是？","o":["I’m eleven years old.","I’m eleven year old.","My eleven years old.","I eleven years old."],"h":"I’m ＋ 數字 ＋ years old。"},{"k":"en2zh","q":"「I’m ten.」　中文是？","o":["我十歲。","我是十號。","你十歲。","我有十個。"],"h":"years old 省略了，還是「十歲」。"},{"k":"trap","q":"I’m ten years old. 可以省略哪裡，意思不變？","o":["years old","I’m","ten","old"],"h":"I’m ten years old. ＝ I’m ten.。"}]},"g3u2_r4":{"name":"三年級 Unit 2｜縮寫動畫（在家複習）","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"You’re","o":["You’re","You are","You","I’m"],"h":"You’re 是一個音節。"},{"k":"listen","q":"你聽到哪一句？","say":"You are ten.","o":["You are ten.","You’re ten.","I am ten.","I’m ten."],"h":"You are 兩個字分開唸。"},{"k":"zh2en","q":"You are 縮寫成？","o":["You’re","Your","Youre","You’are"],"h":"are 的 a 被 ’ 換掉：You’re；Your ＝ 你的。"},{"k":"en2zh","q":"「You’re」　中文是？","o":["你是","你的","我是","他是"],"h":"You’re ＝ You are ＝ 你是。"},{"k":"trap","q":"You’re 的 ’ 藏起來的是哪一個字母？","sp":"","o":["a","r","e","u"],"h":"You are ➜ You’re：a 被 ’ 換掉。"}]},"g4u1_3":{"name":"四年級 Unit 1｜3 一問一答","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"She’s my mother.","o":["She’s my mother.","He’s my father.","Who’s she?","She’s my sister."],"h":"聽 She 和 mother。"},{"k":"listen","q":"要怎麼回答？","say":"Who’s he?","o":["He’s my father.","She’s my mother.","Yes, he is.","I’m ten."],"h":"問「他」是誰，答 He’s ___.。"},{"k":"zh2en","q":"「她是誰？」「她是我的媽媽。」答句的英文是？","o":["She’s my mother.","He’s my mother.","She’s my father.","Who’s my mother?"],"h":"她 ＝ She，媽媽 ＝ mother。"},{"k":"en2zh","q":"A：Who’s he?　B：He’s my brother.　B 說什麼？","o":["他是我的哥哥。","她是我的姊姊。","他是誰？","他是我的爸爸。"],"h":"brother ＝ 哥哥。"},{"k":"trap","q":"別人問 Who’s she?，回答要用哪一個開頭？","o":["She’s","He’s","Who’s","I’m"],"h":"問 she，答 She’s。"}]},"g4u1_4":{"name":"四年級 Unit 1｜4 原本句型","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"Who’s he?","o":["Who’s he?","Who is he?","Who’s she?","Who is she?"],"h":"Who’s 是一個音節；Who is 兩個字分開唸。"},{"k":"listen","q":"你聽到哪一句？","say":"She is my mother.","o":["She is my mother.","She’s my mother.","He is my father.","He’s my father."],"h":"聽到 is 分開唸 ＝ She is。"},{"k":"zh2en","q":"「他是我的爸爸。」　英文是？","o":["He’s my father.","His my father.","He’s me father.","He my father."],"h":"他是 ＝ He’s；我的 ＝ my。"},{"k":"en2zh","q":"「She is my grandmother.」　中文是？","o":["她是我的奶奶。","她是我的媽媽。","他是我的爺爺。","她是誰？"],"h":"grandmother ＝ 奶奶。"},{"k":"trap","q":"He’s 的 ’ 藏起來的是哪一個字母？","sp":"","o":["i","s","e","h"],"h":"He is ➜ He’s：is 的 i 被 ’ 換掉。"}]},"g4u1_1-1b":{"name":"四年級 Unit 1｜1-1 Who’s he/she?・基礎","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"she","o":["she","he","see","is"],"h":"she 開頭是 sh /ʃ/。"},{"k":"listen","q":"你聽到哪一句？","say":"Who is he?","o":["Who is he?","Who is she?","How is he?","Who are you?"],"h":"Who ＝ 誰，he ＝ 他。"},{"k":"zh2en","q":"「誰」　英文是？","o":["Who","What","How","he"],"h":"誰 ＝ Who。"},{"k":"en2zh","q":"「he」　中文是？","o":["他","她","誰","是"],"h":"he ＝ 他，she ＝ 她。"},{"k":"trap","q":"Who 的哪一個字母<b class=\"em\">不發音</b>？","sp":"","o":["W","h","o","都要發音"],"h":"Who 唸 /huː/，W 不發音。"}]},"g4u1_1-1a":{"name":"四年級 Unit 1｜1-1 Who’s he/she?・進階","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"Who’s she?","o":["Who’s she?","Who’s he?","How’s she?","She’s my mother."],"h":"聽 she。"},{"k":"listen","q":"你聽到哪一句？","say":"Who is she?","o":["Who is she?","Who is he?","Who’s he?","She is my sister."],"h":"she ＝ 她。"},{"k":"zh2en","q":"「他是誰？」　英文是？","o":["Who’s he?","Who he is?","Who’s she?","He who is?"],"h":"問「誰」，Who 放最前面。"},{"k":"en2zh","q":"「Who’s she?」　中文是？","o":["她是誰？","他是誰？","她是我的媽媽。","誰是你？"],"h":"Who ＝ 誰，she ＝ 她。"},{"k":"trap","q":"Who is he? 縮寫成？","o":["Who’s he?","Whos he?","Who’is he?","Who he’s?"],"h":"is 的 i 被 ’ 換掉：Who’s。"}]},"g4u1_1-2":{"name":"四年級 Unit 1｜1-2 中英語序","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"Who’s he?","o":["Who’s he?","Who’s she?","How’s he?","He’s my father."],"h":"聽 Who’s 和 he。"},{"k":"listen","q":"你聽到的<b class=\"em\">第一個字</b>是？","say":"Who’s she?","o":["Who","She","Is","My"],"h":"問「誰」，Who 放最前面。"},{"k":"zh2en","q":"「他 是 誰？」英文的順序是？","sp":"Who’s he?","o":["Who ➜ ’s ➜ he?","He ➜ ’s ➜ who?","’s ➜ he ➜ who?","Who ➜ he ➜ ’s?"],"h":"中文「誰」在最後，英文 Who 跑到最前面。"},{"k":"en2zh","q":"Who’s she? 的 <b class=\"em\">she</b> 是中文的哪一個字？","o":["她","他","誰","是"],"h":"she ＝ 她。"},{"k":"trap","q":"中文「誰」在句子最後，英文 Who 放在哪裡？","sp":"","o":["最前面","最後面","中間","不用說"],"h":"英文問句，問的字（Who）放最前面。"}]},"g4u1_2b":{"name":"四年級 Unit 1｜2 He’s/She’s my ___.・基礎","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"my","o":["my","me","mom","he"],"h":"my 唸 /maɪ/。"},{"k":"listen","q":"你聽到哪一句？","say":"He’s my father.","o":["He’s my father.","She’s my mother.","He’s my brother.","Who’s he?"],"h":"father ＝ 爸爸。"},{"k":"zh2en","q":"「我的」　英文是？","o":["my","I","he","she"],"h":"我的 ＝ my。"},{"k":"en2zh","q":"「She」　中文是？","o":["她","他","我的","誰"],"h":"She ＝ 她。"},{"k":"trap","q":"He is 縮寫成？","o":["He’s","Hes","He’is","His"],"h":"He’s ＝ 他是；His ＝ 他的，不一樣。"}]},"g4u1_2a":{"name":"四年級 Unit 1｜2 He’s/She’s my ___.・進階","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"She’s my grandmother.","o":["She’s my grandmother.","She’s my grandfather.","She’s my mother.","She’s my sister."],"h":"grandmother ＝ 奶奶。"},{"k":"listen","q":"你聽到哪一句？","say":"He is my brother.","o":["He is my brother.","He is my father.","She is my sister.","He’s my brother."],"h":"聽到 is 分開唸 ＝ He is。"},{"k":"zh2en","q":"「她是我的姊姊。」　英文是？","o":["She’s my sister.","He’s my sister.","She’s my brother.","She my sister."],"h":"她 ＝ She，姊姊 ＝ sister。"},{"k":"en2zh","q":"「He’s my grandfather.」　中文是？","o":["他是我的爺爺。","她是我的奶奶。","他是我的爸爸。","他是誰？"],"h":"grandfather ＝ 爺爺。"},{"k":"trap","q":"哪一句是對的？","o":["She’s my mother.","He’s my mother.","She my mother.","She’s me mother."],"h":"媽媽是「她」She；’s 不能少；我的 ＝ my。"}]},"g4u1_r4":{"name":"四年級 Unit 1｜縮寫動畫（在家複習）","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"He’s","o":["He’s","His","He is","She’s"],"h":"He’s 的 e 唸長音 /iː/；His 是短音 /ɪ/。"},{"k":"listen","q":"你聽到哪一句？","say":"Who is she?","o":["Who is she?","Who’s she?","Who is he?","Who’s he?"],"h":"Who is 兩個字分開唸。"},{"k":"zh2en","q":"She is 縮寫成？","o":["She’s","Shes","She’is","Her"],"h":"is 的 i 被 ’ 換掉：She’s。"},{"k":"en2zh","q":"「Who’s」　中文是？","o":["誰是","什麼是","他是","她是"],"h":"Who’s ＝ Who is ＝ 誰是。"},{"k":"trap","q":"Who’s 的 ’ 藏起來的是哪一個字母？","sp":"","o":["i","s","o","h"],"h":"Who is ➜ Who’s：is 的 i 被 ’ 換掉。"}]},"g4u2_3":{"name":"四年級 Unit 2｜3 一問一答","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"Yes, she is.","o":["Yes, she is.","Yes, he is.","No, she isn’t.","She is."],"h":"聽 Yes 和 she。"},{"k":"listen","q":"他真的是醫生，要怎麼回答？","say":"Is he a doctor?","o":["Yes, he is.","No, he isn’t.","Yes, she is.","Yes, he’s."],"h":"是 ➜ Yes, he is.（問 he 答 he）。"},{"k":"zh2en","q":"「她是老師嗎？」「不，她不是。她是一位護理師。」答句的英文是？","o":["No, she isn’t. She’s a nurse.","No, she is. She’s a nurse.","No, she isn’t. She’s nurse.","No, he isn’t. He’s a nurse."],"h":"No 配 isn’t；問 she 答 she；一位 ＝ a。"},{"k":"en2zh","q":"A：Is she a teacher?　B：Yes, she is.　B 說什麼？","o":["是的，她是。","不，她不是。","是的，他是。","她是誰？"],"h":"Yes ＝ 是的。"},{"k":"trap","q":"別人問 Is he …?，回答 Yes, ___ is. 空格填？","o":["he","she","I","you"],"h":"問 he，答 he。"}]},"g4u2_4":{"name":"四年級 Unit 2｜4 原本句型","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"She’s a teacher.","o":["She’s a teacher.","Is she a teacher?","She isn’t a teacher.","He’s a teacher."],"h":"She’s 開頭，句尾往下。"},{"k":"listen","q":"你聽到哪一句？","say":"No, she isn’t.","o":["No, she isn’t.","No, he isn’t.","Yes, she is.","No, she is."],"h":"she ＝ 她，isn’t ＝ 不是。"},{"k":"zh2en","q":"「他是一位醫生。」　英文是？","o":["He’s a doctor.","His a doctor.","He’s doctor.","He a doctor."],"h":"他是 ＝ He’s；一位 ＝ a。"},{"k":"en2zh","q":"「isn’t」　中文是？","o":["不是","是","是的","不"],"h":"isn’t ＝ is not ＝ 不是。"},{"k":"trap","q":"isn’t 的 ’ 藏起來的是哪一個字母？","sp":"","o":["o","i","s","t"],"h":"is not ➜ isn’t：not 的 o 被 ’ 換掉。"}]},"g4u2_1-1b":{"name":"四年級 Unit 2｜1-1 He/She is a ___.・基礎","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"He’s a doctor.","o":["He’s a doctor.","She’s a doctor.","He’s a teacher.","Is he a doctor?"],"h":"聽 He’s 和 doctor，句尾往下。"},{"k":"listen","q":"你聽到哪一句？","say":"She is a teacher.","o":["She is a teacher.","She is a nurse.","She is a student.","He is a teacher."],"h":"teacher ＝ 老師。"},{"k":"zh2en","q":"「醫生」　英文是？","o":["doctor","teacher","nurse","cook"],"h":"醫生 ＝ doctor。"},{"k":"en2zh","q":"「She’s a nurse.」　中文是？","o":["她是一位護理師。","他是一位護理師。","她是一位老師。","她是一位醫生。"],"h":"nurse ＝ 護理師。"},{"k":"trap","q":"「他是」是哪一個？","o":["He’s","His","兩個都是","兩個都不是"],"h":"He’s ＝ He is ＝ 他是；His ＝ 他的。"}]},"g4u2_1-1a":{"name":"四年級 Unit 2｜1-1 He/She is a ___.・進階","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"He’s a farmer.","o":["He’s a farmer.","He’s my father.","He’s a teacher.","She’s a farmer."],"h":"farmer（農夫）和 father（爸爸）聽起來很像。"},{"k":"listen","q":"你聽到哪一句？","say":"He is a cook.","o":["He is a cook.","He is a doctor.","She is a cook.","He is a student."],"h":"cook ＝ 廚師。"},{"k":"zh2en","q":"「她是一位學生。」　英文是？","o":["She’s a student.","She’s student.","He’s a student.","She a student."],"h":"一位 ＝ a，不能少。"},{"k":"en2zh","q":"「He’s a farmer.」　中文是？","o":["他是一位農夫。","他是我的爸爸。","他是一位廚師。","她是一位農夫。"],"h":"farmer ＝ 農夫。"},{"k":"trap","q":"He is ___ doctor. 空格填？","o":["a","an","he","is"],"h":"「一位」醫生：a doctor。"}]},"g4u2_1-2":{"name":"四年級 Unit 2｜1-2 Is he/she a ___?","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"Is he a doctor?","o":["Is he a doctor?","He is a doctor.","Is she a doctor?","Is he a teacher?"],"h":"Is 先說，句尾往上揚。"},{"k":"listen","q":"你聽到哪一句？","say":"Is she a teacher?","o":["Is she a teacher?","She is a teacher.","Is he a teacher?","Is she a nurse?"],"h":"問句：Is 在最前面。"},{"k":"zh2en","q":"「他是醫生嗎？」　英文是？","o":["Is he a doctor?","Is he doctor?","He a doctor is?","Is a doctor he?"],"h":"Is ＋ he ＋ a doctor ＋ ?。"},{"k":"en2zh","q":"「Is she a nurse?」　中文是？","o":["她是護理師嗎？","她是護理師。","他是護理師嗎？","她是老師嗎？"],"h":"Is 開頭 ＝ 問「是不是」。"},{"k":"trap","q":"問「他是醫生嗎？」，Is 要放在哪裡？","sp":"","o":["最前面","he 的後面","最後面","不用放"],"h":"問句：Is 跑到最前面。"}]},"g4u2_1-3":{"name":"四年級 Unit 2｜1-3 中英語序","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"Is she a teacher?","o":["Is she a teacher?","She is a teacher.","Is he a teacher?","Is she a nurse?"],"h":"問句：Is she 先說，句尾往上揚。"},{"k":"listen","q":"你聽到的<b class=\"em\">第一個字</b>是？","say":"Is he a cook?","o":["Is","He","A","Cook"],"h":"問句：Is 放最前面。"},{"k":"zh2en","q":"He is a doctor. 變成問句「他是醫生嗎？」　英文是？","o":["Is he a doctor?","Is he doctor?","He a doctor is?","Doctor is he a?"],"h":"He 和 is 換位置。"},{"k":"en2zh","q":"「Is he a doctor?」　中文是？","o":["他是醫生嗎？","他是醫生。","醫生是他嗎？","他不是醫生。"],"h":"Is 開頭 ＝ 問「是不是」。"},{"k":"trap","q":"直述句變問句，哪兩個字<b class=\"em\">交換位置</b>？","sp":"","o":["He 和 is","is 和 a","a 和 doctor","He 和 doctor"],"h":"He is ➜ Is he。"}]},"g4u2_2b":{"name":"四年級 Unit 2｜2 Yes／No・基礎","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"isn’t","o":["isn’t","is","Yes","No"],"h":"isn’t 最後有 /nt/。"},{"k":"listen","q":"你聽到哪一句？","say":"No, he isn’t.","o":["No, he isn’t.","Yes, he is.","No, she isn’t.","No, he is."],"h":"No ＋ isn’t ＝ 不是。"},{"k":"zh2en","q":"「是的，她是。」　英文是？","o":["Yes, she is.","Yes, she’s.","Yes, she isn’t.","Yes, he is."],"h":"Yes 的答句最後不能縮寫：she is。"},{"k":"en2zh","q":"「No, he isn’t.」　中文是？","o":["不，他不是。","是的，他是。","不，她不是。","他是誰？"],"h":"isn’t ＝ 不是。"},{"k":"trap","q":"is not 縮寫成？","o":["isn’t","is’nt","isnt","is’t"],"h":"not 的 o 被 ’ 換掉：isn’t。"}]},"g4u2_2a":{"name":"四年級 Unit 2｜2 Yes／No・進階","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"No, she isn’t. She’s a nurse.","o":["No, she isn’t. She’s a nurse.","No, she isn’t. She’s a teacher.","No, he isn’t. He’s a nurse.","Yes, she is."],"h":"聽 she 和 nurse。"},{"k":"listen","q":"你聽到哪一句？","say":"Yes, he is.","o":["Yes, he is.","Yes, she is.","No, he isn’t.","He is."],"h":"Yes ＝ 是的。"},{"k":"zh2en","q":"「不，他不是。他是一位廚師。」　英文是？","o":["No, he isn’t. He’s a cook.","No, he is. He’s a cook.","Yes, he isn’t. He’s a cook.","No, he isn’t. He’s cook."],"h":"No 配 isn’t；一位 ＝ a。"},{"k":"en2zh","q":"「No, she isn’t. She’s a doctor.」　中文是？","o":["不，她不是。她是一位醫生。","是的，她是。她是一位醫生。","不，她不是醫生。","不，他不是。他是一位醫生。"],"h":"先說「不是」，再說她真正的工作。"},{"k":"trap","q":"Yes, he ___. 空格填？","o":["is","’s","isn’t","are"],"h":"Yes 的答句最後不能縮寫：Yes, he is.。"}]},"g4u2_r4":{"name":"四年級 Unit 2｜縮寫動畫（在家複習）","qs":[{"k":"read","q":"🔊 聽 1～4，哪一個唸的是它？","show":"isn’t","o":["isn’t","is not","is","it’s"],"h":"isn’t 是一個字，最後有 /nt/。"},{"k":"listen","q":"你聽到哪一句？","say":"He is a doctor.","o":["He is a doctor.","He’s a doctor.","She is a doctor.","She’s a doctor."],"h":"He is 兩個字分開唸。"},{"k":"zh2en","q":"「不是」　英文是？","o":["isn’t","is","Yes","No"],"h":"isn’t ＝ is not ＝ 不是。"},{"k":"en2zh","q":"「She’s a teacher.」　中文是？","o":["她是一位老師。","她的老師。","他是一位老師。","她不是老師。"],"h":"She’s ＝ She is ＝ 她是。"},{"k":"trap","q":"哪一個<b class=\"em\">不能</b>縮寫？","sp":"Yes, he is.","o":["Yes, he is. 的 he is","He is a doctor. 的 He is","She is my mother. 的 She is","is not"],"h":"句子最後的 he is 不能縮寫。"}]}};
+var URL0=String(window.SCORE_URL||'').trim(),PW='',DATA=null,ALL=[],SIZES={},F={g:3,cls:'',p:'w',src:''},TAB='p',SORT={k:'acc',d:1},BT='acc',BS='grade';
+function $(s){return document.querySelector(s)}function $$(s){return [].slice.call(document.querySelectorAll(s))}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function f1(v){return v==null?'—':(Math.round(v*10)/10)}
+function post(o){return fetch(URL0,{method:'POST',body:JSON.stringify(o)}).then(function(r){return r.json()})}
+function login(pw){
+  $('#lmsg').textContent='⏳ 讀取中…';
+  if(!URL0){$('#lmsg').textContent='還沒有貼上 Apps Script 網址（score/url.js）';return}
+  post({a:'teacher',pw:pw}).then(function(j){
+    if(j.err==='pw'){$('#lmsg').textContent='❌ 密碼不對';try{sessionStorage.removeItem('tpw')}catch(e){}return}
+    if(j.err){$('#lmsg').textContent='❌ 伺服器：'+(j.msg||j.err);return}
+    PW=pw;try{sessionStorage.setItem('tpw',pw)}catch(e){}
+    load(j);$('#login').hidden=true;$('#app').hidden=false;
+  },function(){$('#lmsg').textContent='📶 連不到伺服器，請檢查網路'});
+}
+function load(j){DATA=j;SIZES=j.sizes||{};ALL=j.rows.map(SC.fromRow).filter(function(r){return r.id&&!isNaN(r.t)});
+  $('#bd').textContent='🏆 學生排行榜：'+(j.boards?'開':'關');$('#bd').classList.toggle('on',!!j.boards);clsSel();draw()}
+function clsSel(){$('#fc').innerHTML='<option value="">全部班</option>'+SC.CLASSES[F.g].map(function(c){return '<option value="'+c+'"'+(F.cls===c?' selected':'')+'>'+c+' 班</option>'}).join('')}
+function range(){var now=DATA.now,w=SC.weekStart(now);
+  if(F.p==='w')return{from:w,to:null};if(F.p==='lw')return{from:w-7*864e5,to:w};if(F.p==='all')return{from:null,to:null};
+  var a=$('#f1').value,b=$('#f2').value;return{from:a?Date.parse(a+'T00:00:00+08:00'):null,to:b?Date.parse(b+'T00:00:00+08:00')+864e5:null}}
+function sets(){var r=range(),G=SC.pick(ALL,{g:F.g,from:r.from,to:r.to,src:F.src}),C=F.cls?G.filter(function(x){return x.cls===F.cls}):G;return{G:G,C:C}}
+/* 名次：班內（每班自己排）、全年級 */
+function ranks(psG){var R={};['acc','s','count','prog'].forEach(function(k){
+  SC.rank(psG,k).forEach(function(x){(R[x.id]=R[x.id]||{})['g'+k]=x.rk});
+  SC.CLASSES[F.g].forEach(function(c){SC.rank(psG.filter(function(p){return p.cls===c}),k).forEach(function(x){(R[x.id]=R[x.id]||{})['c'+k]=x.rk})})});return R}
+function draw(){
+  var S=sets(),psG=SC.students(S.G),ps=F.cls?psG.filter(function(p){return p.cls===F.cls}):psG,RK=ranks(psG);
+  var m=function(k){var a=ps.filter(function(p){return p[k]!=null}).map(function(p){return p[k]});return a.length?a.reduce(function(x,y){return x+y},0)/a.length:null};
+  var cnt=0;ps.forEach(function(p){cnt+=p.count});
+  var cs=F.cls?[F.cls]:SC.CLASSES[F.g],size=0;cs.forEach(function(c){size+=+SIZES[c]||0});
+  $('#tiles').innerHTML=[['🎯 正確率',f1(m('acc')),'分（百分制）'],['⚡ 總分',f1(m('s')),'分（答對 60＋速度 40）'],['🔁 作答次數',cnt,'次（5 題對 4 題才算）'],
+    ['👥 有做的人',ps.length+(size?'／'+size:''),size?'人（參與率 '+Math.round(ps.length/size*100)+'%）':'人（班級人數在試算表「班級人數」填）']]
+    .map(function(t){return '<div class="tile"><div class="k">'+t[0]+'</div><div class="v">'+t[1]+'</div><div class="d">'+t[2]+'</div></div>'}).join('');
+  var h='';
+  if(TAB==='p')h=paneP(ps,RK);else if(TAB==='b')h=paneB(psG);else if(TAB==='c')h=paneC(psG);else if(TAB==='w')h=paneW(S.C);else h=paneK(ps,S);
+  $('#pane').innerHTML=h;
+}
+var PCOL=[['id','5碼'],['acc','🎯 正確率'],['s','⚡ 總分'],['count','🔁 次數'],['prog','🚀 進步'],['cacc','班內 🎯'],['cs','班內 ⚡'],['ccount','班內 🔁'],['cprog','班內 🚀'],
+  ['gacc','年級 🎯'],['gs','年級 ⚡'],['gcount','年級 🔁'],['gprog','年級 🚀'],['sets','做了幾組'],['all','作答幾次'],['fast','⚡ 秒按'],['last','最後作答']];
+function rowOf(p,RK){var r=RK[p.id]||{};return{id:p.id,acc:p.acc,s:p.s,count:p.count,prog:p.prog,keep:p.keep,cacc:r.cacc,cs:r.cs,ccount:r.ccount,cprog:r.cprog,
+  gacc:r.gacc,gs:r.gs,gcount:r.gcount,gprog:r.gprog,sets:p.sets,all:p.all,fast:p.q?Math.round(p.fastQ/p.q*100):0,last:p.last}}
+function dt(t){var d=new Date(t+288e5);return (d.getUTCMonth()+1)+'/'+d.getUTCDate()+' '+('0'+d.getUTCHours()).slice(-2)+':'+('0'+d.getUTCMinutes()).slice(-2)}
+function paneP(ps,RK){
+  if(!ps.length)return '<div class="note">這段期間還沒有人作答。</div>';
+  var L=ps.map(function(p){return rowOf(p,RK)}),k=SORT.k,low=/^[cg]/.test(k)&&k!=='count';
+  L.sort(function(a,b){var x=a[k],y=b[k];if(x==null&&y==null)return a.id<b.id?-1:1;if(x==null)return 1;if(y==null)return -1;
+    var asc=k==='id'||/^[cg](acc|s|count|prog)$/.test(k);return (asc?(x>y?1:x<y?-1:0):(y>x?1:y<x?-1:0))*SORT.d});
+  return '<div class="note">點一個人看他每一組每一次的紀錄（可以把冒用的那一次「作廢」）。點欄位標題排序。</div><div class="tw"><table><thead><tr>'+
+   PCOL.map(function(c){return '<th data-k="'+c[0]+'"'+(c[0]===k?' class="s"':'')+'>'+c[1]+'</th>'}).join('')+'</tr></thead><tbody>'+
+   L.map(function(r){return '<tr class="row" data-id="'+r.id+'">'+PCOL.map(function(c){var v=r[c[0]];
+     if(c[0]==='acc'||c[0]==='s')return '<td'+(v!=null&&v<60?' class="lo"':'')+'>'+f1(v)+'<span class="mb" style="width:'+(v||0)*.6+'px"></span></td>';
+     if(c[0]==='prog')return '<td>'+(v==null?(r.keep?'🔥 保持滿分':'—'):(v>0?'＋':'')+f1(v)+'%')+'</td>';
+     if(c[0]==='fast')return '<td'+(v>30?' class="lo"':'')+'>'+v+'%</td>';
+     if(c[0]==='last')return '<td>'+dt(v)+'</td>';
+     return '<td>'+(v==null?'—':esc(v))+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div>';
+}
+var BN={acc:'🎯 正確率',s:'⚡ 總分',count:'🔁 作答次數',prog:'🚀 進步'};
+function fmt(k,v){return k==='count'?v+' 次':k==='prog'?'＋'+f1(v)+'%':f1(v)+' 分'}
+function paneB(psG){
+  var h='<div class="top"><span class="grp">'+['acc','s','count','prog'].map(function(k){return '<button data-bt="'+k+'"'+(BT===k?' class="on"':'')+'>'+BN[k]+'</button>'}).join('')+'</span>'+
+   '<span class="grp"><button data-bs="cls"'+(BS==='cls'?' class="on"':'')+'>🏫 班內</button><button data-bs="grade"'+(BS==='grade'?' class="on"':'')+'>🏆 全年級</button></span></div>'+
+   '<div class="note">老師看得到全部學生的名次；學生只看得到前 10 名（自己不在前 10 名，只看到「再多幾分進前 10」）。</div>';
+  var lists=BS==='grade'?[['全年級',SC.rank(psG,BT)]]:(F.cls?[F.cls]:SC.CLASSES[F.g]).map(function(c){return [c+' 班',SC.rank(psG.filter(function(p){return p.cls===c}),BT)]});
+  lists.forEach(function(L){var mx=0;L[1].forEach(function(x){mx=Math.max(mx,x.v)});
+    h+='<h3>'+L[0]+'</h3>'+(L[1].length?'<div class="bars">'+L[1].map(function(x){return '<div class="br'+(x.rk<=10?' hi':'')+'"><span class="l">第 '+x.rk+' 名　'+x.id+'</span><span class="t"><i style="width:'+(mx?x.v/mx*100:0)+'%"></i></span><span class="v">'+fmt(BT,x.v)+'</span></div>'}).join('')+'</div>':'<div class="note">還沒有人上榜。</div>')});
+  return h;
+}
+function paneC(psG){
+  var C=SC.classes(psG,F.g,SIZES),h='<div class="note">只跟同年級的班比（題目不一樣）。平均 ＝ 有做的人的平均；參與率要在試算表「班級人數」填人數。</div>';
+  [['acc','🎯 平均正確率',100,function(v){return f1(v)+' 分'}],['s','⚡ 平均總分',100,function(v){return f1(v)+' 分'}],['count','🔁 作答總次數',0,function(v){return v+' 次'}],
+   ['rate','👥 參與率',100,function(v){return v==null?'（沒填人數）':Math.round(v)+'%'}],['prog','🚀 平均進步',0,function(v){return v==null?'—':(v>0?'＋':'')+f1(v)+'%'}]].forEach(function(K){
+    var vs=C.map(function(c){return K[0]==='rate'?(c.size?c.n/c.size*100:null):c[K[0]]}),mx=K[2]||Math.max.apply(null,vs.map(function(v){return Math.abs(v||0)}).concat([1]));
+    h+='<h3>'+K[1]+'</h3><div class="bars">'+C.map(function(c,n){var v=vs[n];return '<div class="br'+(c.cls===F.cls?' hi':'')+'"><span class="l">'+c.cls+' 班（'+c.n+' 人）</span><span class="t"><i style="width:'+(v==null?0:Math.max(0,v)/mx*100)+'%"></i></span><span class="v">'+K[3](v)+'</span></div>'}).join('')+'</div>'});
+  return h;
+}
+function qOf(k){var a=k.split('#'),b=BANK[a[0]];return b?{set:b,q:b.qs[+a[1]]}:null}
+var KN={read:'👀 認讀',listen:'🎧 聽力',zh2en:'看中文選英文',en2zh:'看英文選中文',trap:'⚠️ 易錯'};
+function qText(q){return q.k==='read'?'「'+q.show+'」哪一個唸的是它？':q.k==='listen'?'🔊 '+q.say+'　'+q.q:q.q}
+function paneW(R){
+  var Q=SC.questions(R).filter(function(x){return x.bad>0&&qOf(x.k)}).slice(0,10);
+  if(!Q.length)return '<div class="note">這段期間沒有答錯的題目 🎉</div>';
+  return '<div class="note">'+(F.cls?F.cls+' 班':'全年級')+'最常錯的 10 題（答錯率高的在前面）。點一題看四個選項各有幾 % 的人選，再按〔📺 全班訂正〕投影。</div>'+
+   Q.map(function(x,n){var o=qOf(x.k);return '<div class="wq" data-q="'+x.k+'"><span class="n">'+(n+1)+'</span><span class="q"><b>'+esc(qText(o.q))+'</b><em>'+esc(o.set.name)+'・第 '+(x.i+1)+' 題・'+KN[o.q.k]+'</em></span>'+
+     '<span class="r"><span>答錯 '+x.rate+'%（'+x.bad+'／'+x.n+'）</span><span class="t"><i style="width:'+x.rate+'%"></i></span></span></div>'}).join('');
+}
+function paneK(ps,S){
+  var r=range(),before=SC.students(SC.pick(ALL,{g:F.g,to:r.from,src:F.src}).filter(function(x){return !F.cls||x.cls===F.cls}));
+  var now={};ps.forEach(function(p){now[p.id]=1});
+  var gone=before.filter(function(p){return !now[p.id]}).map(function(p){return p.id});
+  var low=ps.filter(function(p){return p.acc!=null&&p.acc<60}).sort(function(a,b){return a.acc-b.acc});
+  var fast=ps.filter(function(p){return p.q&&p.fastQ/p.q>.3}).sort(function(a,b){return b.fastQ/b.q-a.fastQ/a.q});
+  var li=function(L,f){return L.length?'<div class="bars">'+L.map(f).join('')+'</div>':'<div class="note">沒有 👍</div>'};
+  return '<div class="note">這一頁只有老師看得到。沒有名單，所以「從來沒做過的人」看不到——對照上面的參與率。</div>'+
+   '<h3>📭 以前做過、這段期間還沒做（'+gone.length+' 人）</h3>'+(r.from==null?'<div class="note">選「本週」「上週」或自訂日期才看得出來。</div>':(gone.length?'<div class="note" style="font-size:18px;color:#DDD">'+gone.join('、')+'</div>':'<div class="note">沒有 👍</div>'))+
+   '<h3>🎯 平均正確率不到 60 分（'+low.length+' 人）</h3>'+li(low,function(p){return '<div class="br no"><span class="l">'+p.id+'</span><span class="t"><i style="width:'+p.acc+'%"></i></span><span class="v">'+f1(p.acc)+' 分</span></div>'})+
+   '<h3>⚡ 秒按很多（1 秒內就按的題目超過 3 成）（'+fast.length+' 人）</h3>'+li(fast,function(p){var v=Math.round(p.fastQ/p.q*100);return '<div class="br no"><span class="l">'+p.id+'</span><span class="t"><i style="width:'+v+'%"></i></span><span class="v">'+v+'%</span></div>'});
+}
+/* 一個人：每一組每一次（折線圖＋表格）；作廢 */
+function person(id){
+  var r=range(),A=ALL.filter(function(x){return x.id===id&&x.g===F.g&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)&&(!F.src||x.src===F.src)}).sort(function(a,b){return a.t-b.t});
+  var by={};A.forEach(function(x){(by[x.set]=by[x.set]||[]).push(x)});
+  var h='<button class="x" id="mx">✕ 關閉</button><h3 style="font-size:26px">🪑 '+id+'</h3><div class="note">每一組：正確率的變化（綠點 ＝ 算 1 次；灰色刪除線 ＝ 作廢）。</div>';
+  Object.keys(by).forEach(function(k){var L=by[k],n=L.length,W=600,H=120,pts=L.map(function(x,i){return [n>1?20+i*(W-40)/(n-1):W/2,H-12-(x.acc/100)*(H-24),x]});
+    h+='<h3>'+esc((BANK[k]||{}).name||k)+'</h3><svg class="svgl" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><line x1="0" x2="'+W+'" y1="'+(H-12-.6*(H-24))+'" y2="'+(H-12-.6*(H-24))+'" stroke="#333" stroke-dasharray="4 4"/>'+
+     '<polyline fill="none" stroke="#7FBFFF" stroke-width="2" points="'+pts.filter(function(p){return !p[2].x}).map(function(p){return p[0]+','+p[1]}).join(' ')+'"/>'+
+     pts.map(function(p){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="6" fill="'+(p[2].x?'#555':SC.counts(p[2].ok,p[2].n)?'#5BE39A':'#FFB86B')+'"/>'}).join('')+'</svg>'+
+     '<div class="tw"><table class="att"><tr><th>時間</th><th>正確率</th><th>總分</th><th>秒按</th><th>來源</th><th>平板</th><th></th></tr>'+
+     L.map(function(x){return '<tr'+(x.x?' class="void"':'')+'><td>'+dt(x.t)+'</td><td>'+x.acc+'</td><td>'+f1(x.s)+'</td><td>'+x.fast+'／'+x.n+'</td><td>'+(x.src==='home'?'🏠 在家':'🏫 在校')+'</td><td>'+esc(x.dev)+'</td>'+
+       '<td><button data-void="'+esc(x.u)+'" data-v="'+(x.x?0:1)+'">'+(x.x?'↩ 恢復':'🚫 作廢')+'</button></td></tr>'}).join('')+'</table></div>'});
+  $('#mbox').innerHTML=h;$('#modal').classList.add('on');
+}
+function qDetail(k){
+  var R=sets()[F.cls?'C':'G'],x=SC.questions(R).filter(function(z){return z.k===k})[0],o=qOf(k),q=o.q;
+  var mis=-9,mv=0;[1,2,3].forEach(function(i){if((x.p[i]||0)>mv){mv=x.p[i];mis=i}});
+  var h='<button class="x" id="mx">✕ 關閉</button><h3 style="font-size:24px">'+esc(qText(q))+'</h3><div class="note">'+esc(o.set.name)+'・第 '+(x.i+1)+' 題・'+KN[q.k]+'・'+x.n+' 人次作答</div>';
+  h+=q.o.map(function(t,i){var c=x.p[i]||0,pc=Math.round(c/x.n*100);return '<div class="opt'+(i===0?' ok':i===mis?' mis':'')+'"><span>'+(i===0?'✅':i===mis?'❌':'　')+'</span><span>'+esc(t)+'</span><span>'+pc+'%（'+c+'）</span>'+
+    '<span class="t" style="grid-column:2/4"><i style="width:'+pc+'%"></i></span>'+(i===mis?'<span class="w" style="color:var(--no)">最常見的誤會</span>':'')+'</div>'}).join('');
+  if(x.p[-1])h+='<div class="note">⏰ 時間到沒有作答：'+x.p[-1]+' 人次</div>';
+  h+='<div class="why">💡 為什麼：'+esc(q.h)+'</div><button id="sh" data-q="'+k+'" style="background:#2A2208;border-color:var(--gold);font-size:20px">📺 全班訂正（投影）</button>';
+  $('#mbox').innerHTML=h;$('#modal').classList.add('on');
+}
+/* 📺 全班訂正：① 先讓全班猜 ➜ ② 亮出大家選什麼 ➜ ③ 公布正解並唸 3 次（R19：錯了馬上訂正最好記） */
+var SH=null;
+function say3(t){try{var s=window.speechSynthesis;s.cancel();for(var i=0;i<3;i++){var u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.85;s.speak(u)}}catch(e){}}
+function show(k,st){
+  var R=sets()[F.cls?'C':'G'],x=SC.questions(R).filter(function(z){return z.k===k})[0],o=qOf(k),q=o.q;SH={k:k,st:st};
+  var mis=-9,mv=0;[1,2,3].forEach(function(i){if((x.p[i]||0)>mv){mv=x.p[i];mis=i}});
+  var ord=SH.ord||(SH.ord=[0,1,2,3].sort(function(){return Math.random()-.5}));
+  $('#show').innerHTML='<div class="sq">'+esc(qText(q))+'</div><div class="so">'+ord.map(function(i,n){var pc=Math.round((x.p[i]||0)/x.n*100);
+    return '<div class="'+(st>=2&&i===0?'ok':st>=2&&i===mis?'mis':'')+'"><span>'+'①②③④'.charAt(n)+' '+(q.k==='read'&&st<2?'🔊':esc(q.o[i]))+'</span>'+(st>=1?'<span class="pc">'+pc+'% 的人選這個</span>':'')+'</div>'}).join('')+'</div>'+
+   (st>=2?'<div class="sw">✅ '+esc(q.o[0])+'　💡 '+esc(q.h)+'</div>':'<div class="sw">'+(st?'哪一個才對？':'先想一想：你會選哪一個？')+'</div>')+
+   '<div class="sb">'+(st<2?'<button id="sn" style="background:#0F3323;border-color:var(--ok)">'+(st?'✅ 公布正解':'👀 看大家選什麼')+'</button>':'<button id="ss">🔊 再唸 3 次</button>')+'<button id="sc">✕ 結束</button></div>';
+  $('#show').classList.add('on');
+  if(st===2)say3(q.sp||q.say||q.o[0]);
+}
+/* ⬇ 一鍵下載 Excel：五張工作表 */
+function excel(){
+  var S=sets(),psG=SC.students(S.G),ps=F.cls?psG.filter(function(p){return p.cls===F.cls}):psG,RK=ranks(psG);
+  var P=[PCOL.map(function(c){return c[1]})].concat(ps.map(function(p){var r=rowOf(p,RK);return PCOL.map(function(c){var v=r[c[0]];
+    return c[0]==='last'?dt(v):c[0]==='fast'?v/100:c[0]==='prog'&&v==null&&r.keep?'保持滿分':v==null?'':v})}));
+  var B=[['榜','範圍','名次','5碼','分數']];['acc','s','count','prog'].forEach(function(k){
+    SC.rank(psG,k).forEach(function(x){if(!F.cls||x.cls===F.cls)B.push([BN[k],'全年級',x.rk,x.id,x.v])});
+    (F.cls?[F.cls]:SC.CLASSES[F.g]).forEach(function(c){SC.rank(psG.filter(function(p){return p.cls===c}),k).forEach(function(x){B.push([BN[k],c+' 班',x.rk,x.id,x.v])})})});
+  var C=[['班級','有做的人','班級人數','參與率','平均正確率','平均總分','作答總次數','平均進步']].concat(SC.classes(psG,F.g,SIZES).map(function(c){
+    return [c.cls,c.n,c.size||'',c.size?Math.round(c.n/c.size*100)/100:'',c.acc==null?'':c.acc,c.s==null?'':c.s,c.count,c.prog==null?'':c.prog]}));
+  var W=[['題組','第幾題','題型','題目','正確答案','答錯率','答錯','作答人次','選正解','選項 2','選項 2 人次','選項 3','選項 3 人次','選項 4','選項 4 人次','時間到','為什麼']];
+  SC.questions(S.C).forEach(function(x){var o=qOf(x.k);if(!o)return;var q=o.q;W.push([o.set.name,x.i+1,KN[q.k],qText(q),q.o[0],x.rate/100,x.bad,x.n,x.p[0]||0,q.o[1],x.p[1]||0,q.o[2],x.p[2]||0,q.o[3],x.p[3]||0,x.p[-1]||0,q.h])});
+  var r=range(),RAW=[SC.COLS].concat(ALL.filter(function(x){return x.g===F.g&&(!F.cls||x.cls===F.cls)&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)&&(!F.src||x.src===F.src)})
+    .sort(function(a,b){return a.t-b.t}).map(function(x){return [dt(x.t),x.id,x.g,x.cls,x.seat,x.set,(BANK[x.set]||{}).name||x.name,x.n,x.ok,x.acc,x.s,x.raw,x.fast,x.src==='home'?'在家':'在校',x.dev,x.u,JSON.stringify(x.qs),x.x?'作廢':'']}));
+  var b=XLSX.make([{name:'個人',rows:P},{name:'排行榜',rows:B},{name:'班際',rows:C},{name:'錯題',rows:W},{name:'原始紀錄',rows:RAW}]);
+  /* 檔名只用英文和數字：有些瀏覽器（量測用的 Chromium）遇到中文檔名會改成 download */
+  var pn={w:'week',lw:'lastweek',all:'all',c:'custom'}[F.p],d=new Date(DATA.now+288e5).toISOString().slice(0,10);
+  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([b],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+  a.download='score_G'+F.g+(F.cls?'_'+F.cls:'')+'_'+pn+'_'+d+'.xlsx';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000);
+  window.LASTXLSX=b;
+}
+document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
+  if(c('#go')){login($('#pw').value.trim());return}
+  if((b=c('#fg button'))){F.g=+b.getAttribute('data-g');F.cls='';$$('#fg button').forEach(function(x){x.classList.toggle('on',x===b)});clsSel();draw();return}
+  if((b=c('#tabs button'))){TAB=b.getAttribute('data-t');$$('#tabs button').forEach(function(x){x.classList.toggle('on',x===b)});draw();return}
+  if((b=c('th[data-k]'))){var k=b.getAttribute('data-k');SORT={k:k,d:SORT.k===k?-SORT.d:1};draw();return}
+  if((b=c('tr.row'))){person(b.getAttribute('data-id'));return}
+  if((b=c('[data-bt]'))){BT=b.getAttribute('data-bt');draw();return}
+  if((b=c('[data-bs]'))){BS=b.getAttribute('data-bs');draw();return}
+  if((b=c('.wq'))){qDetail(b.getAttribute('data-q'));return}
+  if(c('#mx')||t.id==='modal'){$('#modal').classList.remove('on');return}
+  if((b=c('#sh'))){$('#modal').classList.remove('on');SH={};show(b.getAttribute('data-q'),0);return}
+  if(c('#sn')){show(SH.k,SH.st+1);return}
+  if(c('#ss')){var o=qOf(SH.k);say3(o.q.sp||o.q.say||o.q.o[0]);return}
+  if(c('#sc')){$('#show').classList.remove('on');SH=null;try{speechSynthesis.cancel()}catch(x){}return}
+  if((b=c('[data-void]'))){var u=b.getAttribute('data-void'),v=b.getAttribute('data-v')==='1';b.disabled=true;
+    post({a:'void',pw:PW,u:u,v:v}).then(function(j){if(j.ok){ALL.forEach(function(x){if(x.u===u)x.x=v});var id=($('#mbox h3')||{}).textContent.replace(/\D/g,'');draw();person(id)}else b.disabled=false},function(){b.disabled=false});return}
+  if(c('#bd')){var on=!DATA.boards;post({a:'set',pw:PW,boards:on}).then(function(j){if(j.ok){DATA.boards=j.boards;$('#bd').textContent='🏆 學生排行榜：'+(j.boards?'開':'關');$('#bd').classList.toggle('on',j.boards)}});return}
+  if(c('#rf')){post({a:'teacher',pw:PW}).then(load);return}
+  if(c('#dl')){excel();return}
+});
+$('#fc').addEventListener('change',function(){F.cls=this.value;draw()});
+$('#fs').addEventListener('change',function(){F.src=this.value;draw()});
+$('#fp').addEventListener('change',function(){F.p=this.value;$('#f1').hidden=$('#f2').hidden=F.p!=='c';draw()});
+$('#f1').addEventListener('change',draw);$('#f2').addEventListener('change',draw);
+$('#pw').addEventListener('keydown',function(e){if(e.key==='Enter')login(this.value.trim())});
+try{var sp=sessionStorage.getItem('tpw');if(sp)login(sp)}catch(e){}
+</script>
+</body></html>

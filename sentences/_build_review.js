@@ -67,7 +67,9 @@ h2 span{display:inline-flex;align-items:center;justify-content:center;width:1.5e
 <h1>🏠 ${S.g}</h1>
 <section><h2><span>1</span>📖 句型</h2>
 ${S.units.map(u => '<div class="u"><h3>' + u.ic + ' ' + u.t + '</h3><div class="g">' +
-    btn(u.f + '#t0', '⭐', '進階句型 ①', u.tabs[0]) + btn(u.f + '#t1', '⭐', '進階句型 ②', u.tabs[1]) +
+    /* 2026-10-07 對話 C（使用者需求第 5 題、Q15-A）：加基礎句型；分頁 1、2 都有〔基礎｜進階〕 */
+    btn(u.f + '#t0-0', '🌱', '基礎句型 ①', u.tabs[0]) + btn(u.f + '#t0-1', '⭐', '進階句型 ①', u.tabs[0]) +
+    btn(u.f + '#t1-0', '🌱', '基礎句型 ②', u.tabs[1]) + btn(u.f + '#t1-1', '⭐', '進階句型 ②', u.tabs[1]) +
     btn(u.f + '#t2', '🔀', '中英語序動畫', '中文和英文的順序不一樣') + btn(u.f + '#t3', '✂️', '縮寫動畫', '兩個字黏成一個字') + '</div></div>').join('')}
 </section>
 <section><h2><span>2</span>🎮 遊戲</h2><div class="g">

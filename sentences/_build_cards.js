@@ -1920,7 +1920,7 @@ ${TABHTML}
 <button class="nav r" id="next" aria-label="下一張"><span><i>▶</i><b>下一張</b></span></button>
 <main id="stage"><section id="card"></section></main>
 
-<div id="rv"><div class="rvbox" id="rvbox"></div></div>${TQD ? '\n<button id="tqGo">📝 複習題 5 題</button>' : ''}
+<div id="rv"><div class="rvbox" id="rvbox"></div></div>${TQD ? '\n<button id="tqGo">📝 複習題 5 題</button>\n<script src="../score/url.js"></script>' : ''}
 <div id="toc" aria-label="目次"><div class="th"><h2 id="tocH">${String(title).replace(/&/g, '&amp;').replace(/</g, '&lt;')}</h2>
  <button class="tx">✕ 關閉</button></div><div class="tg" id="tocG"></div></div>
 
@@ -1961,7 +1961,7 @@ ${js.replace('__CARDS__', () => JSON.stringify(cards))
     .replace('__RVG__', () => JSON.stringify(P.rv || (unit === 1 ? D.RV1 : D.RV2)))}
 ${S.RATEJS}
 ${TABJS}
-${TQD ? TQ.JS.replace('__TQD__', () => JSON.stringify(TQD)).replace('__TQPAGE__', () => JSON.stringify(require('path').basename(DIR) + '/' + P.file)) +
+${TQD ? TQ.scJS(DIR, D, P) + TQ.JS.replace('__TQD__', () => JSON.stringify(TQD)).replace('__TQPAGE__', () => JSON.stringify(require('path').basename(DIR) + '/' + P.file)) +
   "document.body.classList.add('hastq');tqMark();window.addEventListener('resize',tqMark);" : ''}
 </script>
 </body>

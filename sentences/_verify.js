@@ -1197,6 +1197,8 @@ async function homePage(p, f, vp, e) {
   for (const f of FILES) {
     for (const vp of VPS) {
       const ctx = await br.newContext({ viewport: { width: vp.width, height: vp.height }, offline: true });
+      /* 2026-10-07 對話 C：成績紀錄在這裡關掉（原本的 📝 複習題流程照舊量）；成績紀錄自己量 score/_verify.js */
+      await ctx.addInitScript(() => { window.__SCORE_TEST_OFF = 1; });
       const p = await ctx.newPage();
       const e = [];
       p.on('pageerror', err => e.push('JS 例外：' + err.message));
