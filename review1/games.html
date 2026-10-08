@@ -653,7 +653,11 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .scstat b{font-size:clamp(40px,8vh,78px);line-height:1;color:var(--gold)}
 .scstat span{font-size:clamp(17px,2.8vh,26px);font-weight:700;color:#DDE6EE;white-space:nowrap}
 .scrow2{display:flex;align-items:center;justify-content:center;gap:clamp(12px,3vw,40px);flex-wrap:wrap}
-#scme{min-height:44px}
+#scme:empty{display:none}
+/* 遊戲上面的登入（在家複習多一顆〔先練習〕）：iPad 橫放一頁放得下 */
+#scov .sclog h2,#scov .sct{margin:0}
+@media (max-height:860px){#scov{padding-top:calc(env(safe-area-inset-top) + 8px);padding-bottom:calc(env(safe-area-inset-bottom) + 8px)}
+ #scov .sclog{gap:6px}#scov .sckey button{min-height:58px}}
 /* iPad 橫放（768 高）：排行榜那一幕要一頁放得下 */
 @media (min-width:900px){.sclist{grid-template-columns:repeat(3,minmax(0,1fr));width:min(900px,92vw)}}
 @media (max-height:860px){.scn{min-height:0;gap:clamp(6px,1.1vh,10px)}
@@ -1965,7 +1969,7 @@ function bossTap(e){
     bossHP=Math.max(0,bossHP-dmg);
     $('#hp').style.width=bossHP+'%';
     $('#bossface').classList.add('hit');
-    if(bossHP<=0){sWow();stop();setTimeout(win,700);return}
+    if(bossHP<=0){gScRec(true,false);sWow();stop();setTimeout(win,700);return}   /* 最後一擊也記成績（不走 judge） */
     judge(true,'');
   }else{
     /* 三個技能都是「真的會發生的事」，而且都寫明下一題會怎樣——

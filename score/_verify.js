@@ -223,7 +223,7 @@ async function teacher(br, vp) {
     const d = await p.evaluate(() => ({ o: document.querySelectorAll('#mbox .opt').length, ok: !!document.querySelector('#mbox .opt.ok'), t: document.getElementById('mbox').textContent }));
     if (d.o < 2 || !d.ok || !/第一次作答/.test(d.t)) e.push('遊戲錯題詳細：要有選項的 %、正解、寫「只算第一次作答」');
     await p.click('#mx'); }
-  await p.click('#tabs button[data-t="p"]'); await p.click('tr.row'); await p.waitForTimeout(150);
+  await p.click('#tabs button[data-t="p"]'); await p.click('tr.row[data-id="30411"]'); await p.waitForTimeout(150);
   if (!/配完幾對/.test(await p.textContent('#mbox'))) e.push('個人紀錄看不到 🃏 記憶配對的配完幾對');
   await p.click('#mx'); await p.selectOption('#fk', '');
   n += 3;
