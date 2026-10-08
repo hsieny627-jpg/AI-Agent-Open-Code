@@ -30,6 +30,10 @@
 學生端 `score/_client.js` 現在是**共用的**：畫在哪裡、題組叫什麼由那一頁的 `SCH` 決定（`_tq.js` ＝ `#rvbox`、Review 1 頁 ＝ `#rvbox`、遊戲 ＝ 蓋在遊戲上面的 `#scov`）。
 三種結束畫面 `SCLIST`：題目 6 幕（照舊）、遊戲 3 幕、記憶配對 1 幕。遊戲大廳上面一行 `#scme`（🪑 5 碼〔換人〕／🔢 還沒登入〔登入〕／👀 練習模式）。
 
+2026-10-08 量測（全部 0 失敗）：`score/_test.js` 208 項、`score/_verify.js` 1074 項（複習題 606、遊戲 342、Review 1 複習 24、老師看板 102）、`score/_verify_deploy.js` 730 項、
+`sentences/_verify.js` 855 項、`G3 _verify.js` 778 項、`_verify_review.js` 637 項、`review1/_verify_games.js` 1171 項。
+量測抓到改掉的：① 註解裡寫了 `</script>`，遊戲頁整段程式被切斷 ➜ `_test.js` 加「每一頁的程式要能跑」② 在家複習的遊戲上面登入（多一顆〔先練習〕）iPad 橫放多 64px ➜ `#scov` 裡登入畫面壓扁 ③ 魔王最後一擊不走 `judge` ➜ 另外記。
+
 ## 這是什麼
 
 兩個教學網站（三年級 `G3 - L1 + L2/`、四年級 `sentences/`）和在家複習（`g3-review/`、`g4-review/`）每一個分頁最後面的〔📝 複習題 5 題〕，
