@@ -1,7 +1,7 @@
 /* score/_server.js — Google Apps Script 那一半（score/_build.js 把 _calc.js 和這一份接成 score/Code.gs，老師整份貼進 Apps Script）
  *
  * 試算表三張工作表（第一次執行 setup 自動建立）：
- *   紀錄       一次作答一列（欄位 ＝ SC.COLS）；最後一欄「作廢」打勾 ＝ 不算（Q7-A：有人冒用別人的 5 碼）
+ *   紀錄       一次作答（或一場遊戲）一列（欄位 ＝ SC.COLS）；最後一欄「作廢」打勾 ＝ 不算（Q7-A：有人冒用別人的 5 碼）
  *   班級人數   班級｜人數（只填數字，不填名字；算參與率用，Q13-A）
  *   名單       班級｜座號｜姓名（「名單」開關預設關；使用者 2026-10-07：暫時不用名單，只用 5 碼）
  * 指令碼屬性（專案設定 ➜ 指令碼屬性）：
@@ -47,11 +47,11 @@ function who(id) {
   for (var i = 0; i < L.length; i++) if (String(L[i][0]) === c.cls && +L[i][1] === c.seat) return String(L[i][2]);
   return null;
 }
-/* 學生：GET ?a=view&id=30509&set=g3u1_1-1b ／ ?a=who&id=30509 */
+/* 學生：GET ?a=view&id=30509&set=g3u1_1-1b（遊戲加 &gt=1 ＝ 要這個遊戲本班前 10 名）／ ?a=who&id=30509 */
 function doGet(e) {
   var q = (e && e.parameter) || {};
   try {
-    if (q.a === 'view') return out(SC.view(records(), { id: q.id, set: q.set }, Date.now(), boardsOn()));
+    if (q.a === 'view') return out(SC.view(records(), { id: q.id, set: q.set, gt: q.gt === '1' }, Date.now(), boardsOn()));
     if (q.a === 'who') { var c = SC.checkId(q.id); return out(c.err ? { err: c.err } : { roster: prop('ROSTER') === 'on', name: who(q.id) }); }
     return out({ ok: true, app: 'score' });
   } catch (x) { return out({ err: 'server', msg: String(x) }); }
@@ -67,18 +67,18 @@ function doPost(e) {
       var lock = LockService.getScriptLock(); lock.waitLock(20000);
       try {
         var s = sheet(SHEET), n = s.getLastRow(), dup = false;
-        if (R.u && n >= 2) { var us = s.getRange(2, 16, n - 1, 1).getValues(); for (var i = 0; i < us.length; i++) if (String(us[i][0]) === R.u) { dup = true; break; } }
+        if (R.u && n >= 2) { var us = s.getRange(2, SC.CI['編號'] + 1, n - 1, 1).getValues(); for (var i = 0; i < us.length; i++) if (String(us[i][0]) === R.u) { dup = true; break; } }
         if (!dup) s.appendRow(SC.toRow(R));
       } finally { lock.releaseLock(); }
-      var v = SC.view(records(), { id: R.id, set: R.set, u: R.u }, now, boardsOn()); v.saved = true; v.dup = dup;
+      var v = SC.view(records(), { id: R.id, set: R.set, u: R.u, gt: R.m === 'g' }, now, boardsOn()); v.saved = true; v.dup = dup;
       return out(v);
     }
     if (o.a === 'teacher' || o.a === 'void' || o.a === 'set') {
       if (!pwOk(o.pw)) return out({ err: 'pw' });
       if (o.a === 'void') {
         var s2 = sheet(SHEET), m = s2.getLastRow(), done = false;
-        if (m >= 2) { var u2 = s2.getRange(2, 16, m - 1, 1).getValues();
-          for (var j = 0; j < u2.length; j++) if (String(u2[j][0]) === String(o.u)) { s2.getRange(j + 2, 18).setValue(!!o.v); done = true; break; } }
+        if (m >= 2) { var u2 = s2.getRange(2, SC.CI['編號'] + 1, m - 1, 1).getValues();
+          for (var j = 0; j < u2.length; j++) if (String(u2[j][0]) === String(o.u)) { s2.getRange(j + 2, SC.COLS.length).setValue(!!o.v); done = true; break; } }
         return out({ ok: done });
       }
       if (o.a === 'set') { if (o.boards != null) PropertiesService.getScriptProperties().setProperty('BOARDS', o.boards ? 'on' : 'off'); return out({ ok: true, boards: boardsOn() }); }

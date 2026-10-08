@@ -11,10 +11,18 @@
  *    ⭐ 加分 ➜ 再看 8 秒 ➜ 字放大的類似題 ➜ 答對拿 500 ✕ 2；過兩三題再出一題類似題，選項重洗
  *  - 題序、選項每一次都重新打散 → 每次重玩都不一樣
  *  - 最佳紀錄存在這台 iPad 上
+ *  - **成績紀錄**（2026-10-08 對話 D，score/2026-10-08_D_全部遊戲納入成績_需求.md 最下面的表）：每一個用這顆引擎做的遊戲頁都自動接上
+ *    score/_client.js。年級和代號查 score/_sites.js（沒登記 build 失敗）；在家複習的遊戲 SCORE_SRC=home。
+ *    只記每一題「第一次作答」（GQ）；🔁 類似題、⭐ 加分題、再出一次的題目算 ✨ 訂正成功（gFix）；
+ *    驚喜卡幫過忙的那一題（💡 提示、✂️ 刪選項）不算；速度用真的秒數算（驚喜卡加的秒數不算）；
+ *    玩完整場（時間到、打倒魔王）才送，中途回大廳不送；🃏 記憶配對只送配完幾對、用幾秒、翻錯幾次。
+ *    遊戲原本的結算（＋答錯整理）➜ 接成績精簡版（score/_client.js 的 SCLIST.g／mem）
  */
 const fs = require('fs'), SITE = require('./_site'), DIR = SITE.DIR;
 const S = require('./_shared');
 const SK = require('./_skins');                       /* 驚喜卡的卡包外觀（2026-09-27） */
+const SCC = require('../score/_client.js'), SCS = require('../score/_sites.js').of(DIR);   /* 成績紀錄（2026-10-08 對話 D） */
+const SCSRC = process.env.SCORE_SRC === 'home' ? 'home' : 'school';
 const B0 = SITE.load('_game_data');
 /* 只放其中幾種遊戲（2026-10-03：三年級複習／四年級複習網站）：GAMES_ONLY=g3,g5,g9 GAMES_OUT=<輸出檔> GAMES_TITLE=<標題> */
 const ONLY = process.env.GAMES_ONLY ? process.env.GAMES_ONLY.split(',') : null;
@@ -377,6 +385,8 @@ var bossHP=100,bossMax=100,bossShield=0;
 var gLeft=GT,gTick=null,gPause=0,ended=false;
 var pool=[],skinQ=[],jokeQ=[],rainN=0,rainV=0;
 var PICK=null;   /* 學生按了什麼（答錯的獨立頁要用） */
+/* 成績紀錄（2026-10-08 對話 D）：GQ ＝ 每一題第一次作答；GSEEN 出過的題、GSIM 插進去的類似題；gFix 訂正成功；gMp／gMw 記憶配對配完幾對、翻錯幾次 */
+var GQ=[],GSEEN=[],GSIM=[],gFirst=false,gHelp=0,gT0=0,gQi=0,gFix=0,gMp=0,gMw=0,gScT=null;
 
 var R=2*Math.PI*46;$('#gfg').setAttribute('stroke-dasharray',R);
 
@@ -550,6 +560,7 @@ function hub(){
   $('#hub').style.display='';$('#ghud').classList.remove('on');
   $('#arena').classList.remove('on');$('#gend').classList.remove('on');
   $('#stage').classList.remove('lock');
+  gScHub();
   $('#grid').innerHTML=META.map(function(m,n){
     var b=store('best_'+m.id)||0;
     return '<button class="gcard" data-g="'+m.id+'"><span class="gn">'+(n+1)+'</span>'+
@@ -561,7 +572,7 @@ function hub(){
 }
 $('#grid').addEventListener('click',function(e){
   var c=e.target.closest?e.target.closest('.gcard'):null;
-  if(c)begin(c.getAttribute('data-g'));
+  if(c)gGo(c.getAttribute('data-g'));
 });
 
 /* ── 開一場 ── */
@@ -573,7 +584,7 @@ function begin(id){
   cutNext=0;hintNext=0;goldNext=0;freezeNext=0;frozenTo=0;combo=null;
   left=QT;qt=QT;
   bossHP=bossMax=100;bossShield=0;
-  memLeft=0;memOpen=[];memPairs=[];MISSLOG=[];missHide(false);
+  memLeft=0;memOpen=[];memPairs=[];MISSLOG=[];missHide(false);gScBegin();
   queue=shuf(BANK[id].slice());
   $('#hub').style.display='none';$('#ghud').classList.add('on');
   $('#arena').classList.add('on');$('#gend').classList.remove('on');
@@ -636,12 +647,12 @@ function next(){
   busy=false;PICK=null;
   var fb=$('#gfb');if(fb)fb.innerHTML='';   /* 第一題時 #gfb 還沒被畫出來 */
   if(!queue.length)queue=shuf(BANK[g].slice());
-  cur=queue.shift();
+  cur=queue.shift();gScNext();
   ({g1:rMcq,g2:rTwo,g3:rOrder,g4:rTrans,g5:rHear,g6:rMem,g7:rSpot,g8:rFill,g9:rSort,g10:rBoss}[g])();
   /* 驚喜卡的效果：💡 先看到提示、✂️ 刪掉錯的選項 */
-  if(hintNext&&cur&&cur.h&&g!=='g6'){hintNext=0;var a=$('#arena'),hl=el('div','hintl','💡 '+ap(cur.h));
+  if(hintNext&&cur&&cur.h&&g!=='g6'){hintNext=0;gHelp=1;var a=$('#arena'),hl=el('div','hintl','💡 '+ap(cur.h));
     var tl=$('.tagline',a);if(tl&&tl.nextSibling)a.insertBefore(hl,tl.nextSibling);else a.insertBefore(hl,a.firstChild)}
-  if(cutNext&&OPTG[g]){var bad=shuf($$('#arena .o[data-ok="false"]')).slice(0,cutNext);cutNext=0;
+  if(cutNext&&OPTG[g]){gHelp=1;var bad=shuf($$('#arena .o[data-ok="false"]')).slice(0,cutNext);cutNext=0;
     bad.forEach(function(b){b.classList.add('cutting');setTimeout(function(){b.classList.remove('cutting');b.classList.add('cut')},700)})}
   fitO();
   run(g==='g6'?QT*4:QT);     /* 記憶配對一局四對，時間比照四題 */
@@ -767,7 +778,7 @@ function judge(ok,hint,after,timeout){
   if(busy||ended)return;busy=true;
   window.LASTOK=ok;   /* 量測用：這一題是答對還是答錯（火眼金睛答對以後要先看 6 秒，busy 會一直是 true） */
   tstop();
-  asked++;
+  asked++;gScRec(ok,timeout);
   if(ok){
     var sp0=Math.round(900*(left/qt));
     var fin=function(){
@@ -791,7 +802,8 @@ function judge(ok,hint,after,timeout){
   sNo();
   var sims=simsOf(cur);
   /* 過兩三題再出一題類似題（選項每次都重洗），練到會為止 */
-  queue.splice(Math.min(queue.length,2+Math.floor(Math.random()*2)),0,sims[1]||sims[0]||cur);
+  var simQ=sims[1]||sims[0]||cur;GSIM.push(simQ);
+  queue.splice(Math.min(queue.length,2+Math.floor(Math.random()*2)),0,simQ);
   if(hint&&wrongList.indexOf(hint)<0)wrongList.push(hint);
   paint();
   var mi=mInfo();mi.why=(saved?'🛡 免死金牌：這一次不算錯！　':'')+(hint||'');
@@ -800,7 +812,7 @@ function judge(ok,hint,after,timeout){
   mi.self=cur?toMcq(cur):null;   /* 加分題 ＝ 這一題換個樣子（_miss_rt.js 的 mVar） */
   if(!mi.sims.length&&cur)mi.sim0=toMcq(cur);
   mi.pts=500;
-  mi.gain=function(n){score+=n;popScore(n);paint()};
+  mi.gain=function(n){gFix++;score+=n;popScore(n);paint()};
   /* 先讓學生看一眼紅綠（0.5 秒），再蓋上錯題分析頁 */
   setTimeout(function(){
     if(ended||!$('#arena').classList.contains('on'))return;
@@ -910,7 +922,7 @@ function memTap(e){
   if(memOpen.length===2){
     var a=memOpen[0],c=memOpen[1];
     if(a.getAttribute('data-k')===c.getAttribute('data-k')&&a!==c){
-      a.classList.add('ok');c.classList.add('ok');memOpen=[];memLeft--;
+      a.classList.add('ok');c.classList.add('ok');memOpen=[];memLeft--;gMp++;
       busy=true;
       var d=award(Math.round(900*(left/qt)/4),true);
       var cont=function(){
@@ -925,7 +937,7 @@ function memTap(e){
         if(streak>0&&streak%3===0)surprise(go);else go();
       });
     }else{
-      busy=true;a.classList.add('bad');c.classList.add('bad');sNo();
+      busy=true;a.classList.add('bad');c.classList.add('bad');sNo();gMw++;
       if(shield)shield--;else{streak=0;combo=null;wrong++}
       paint();
       setTimeout(function(){[a,c].forEach(function(x){
@@ -1010,7 +1022,7 @@ function bossTap(e){
     bossHP=Math.max(0,bossHP-dmg);
     $('#hp').style.width=bossHP+'%';
     $('#bossface').classList.add('hit');
-    if(bossHP<=0){sWow();stop();setTimeout(win,700);return}
+    if(bossHP<=0){gScRec(true,false);sWow();stop();setTimeout(win,700);return}   /* 最後一擊也記成績（不走 judge） */
     judge(true,'');
   }else{
     /* 三個技能都是「真的會發生的事」，而且都寫明下一題會怎樣——
@@ -1056,6 +1068,7 @@ function over(title){
   ended=true;stop();gStop();
   $('#arena').classList.remove('on');$('#gend').classList.add('on');
   $('#gendh').textContent=title||'🏁 這一場結束！';
+  gScOver();
   endBody();
 }
 function endBody(){
@@ -1073,17 +1086,39 @@ function endBody(){
   var mb=$('#missBtn');if(mb)mb.style.display=MISSLOG.length?'':'none';
   sWow();
   /* 遊戲結束：答錯整理用獨立的一整頁先蓋上來（使用者 2026-09-24 指定） */
-  missAll('這一場　答錯整理');
+  /* 答錯整理看完（沒有答錯 ＝ 先看 2.5 秒原本的結算）➜ 成績精簡版 */
+  var had=missAll('這一場　答錯整理',function(){gScOpen(had?300:2500)});
 }
 $('#retry').addEventListener('click',function(){begin(g)});
 $('#missBtn').addEventListener('click',function(){missAll('這一場　答錯整理')});
 $('#backhub').addEventListener('click',hub);
+$('#gscore').addEventListener('click',function(){if(SCEND){SCH.open();scScene()}});
+/* ══ 成績紀錄（2026-10-08 對話 D）══ */
+function gGo(id){scGate(function(){if(SCH.on())SCH.close();begin(id)})}
+function gScHub(){clearTimeout(gScT);clearTimeout(SCAUTO);SCEND=null;if(SCH)SCH.close();var m=$('#scme');if(m)m.innerHTML=scMeHTML()}
+function gScBegin(){GQ=[];GSEEN=[];GSIM=[];gFix=0;gMp=0;gMw=0;gFirst=false;gHelp=0;clearTimeout(gScT);SCH.close();$('#gscore').hidden=true;scStart(g!=='g6')}
+/* 這一題算不算「第一次作答」：插進去的類似題、出過的題目不算 */
+function gScNext(){gHelp=0;gT0=Date.now();if(g==='g6'||!cur)return;
+  var si=GSIM.indexOf(cur);if(si>=0){GSIM.splice(si,1);gFirst=false}else gFirst=GSEEN.indexOf(cur)<0;
+  if(GSEEN.indexOf(cur)<0)GSEEN.push(cur);gQi=BANK[window.gid||g].indexOf(cur)}
+/* 一題：[答對, 選了第幾個（0 ＝ 正解、-1 ＝ 時間到；沒有選項的玩法 1 ＝ 錯）, 秒數, 秒按, 剩下的時間（照 15 秒算，驚喜卡加的秒數不算）, 題庫第幾題] */
+function gScRec(ok,timeout){
+  if(g==='g6'||!cur)return;
+  if(gFirst&&!gHelp){var o=cur.o,pk=-1,sec=(Date.now()-gT0)/1000;
+    if(!timeout){pk=ok?0:1;if(o&&PICK!=null){var i=o.indexOf(PICK);if(i>=0)pk=i}}
+    GQ.push([ok?1:0,pk,Math.round(sec*10)/10,!timeout&&sec<1?1:0,ok?Math.round(Math.max(0,Math.min(1,1-sec/QT))*1000)/1000:0,gQi]);gFirst=false}
+  else if(ok)gFix++;
+}
+function gScOver(){if(!scLive())return;
+  $('#gscore').hidden=!scEnd({m:g==='g6'?'mem':'g',qs:GQ,raw:score,fix:gFix,mp:gMp,mw:gMw,sec:gtOf(g)-gLeft})}
+function gScOpen(ms){clearTimeout(gScT);if(!SCEND)return;
+  gScT=setTimeout(function(){if(!SCEND||!ended||!$('#gend').classList.contains('on')||missOn())return;SCH.open();scScene()},ms)}
 $('#quit').addEventListener('click',function(){
   if($('#arena').classList.contains('on')||$('#gend').classList.contains('on'))hub();
 });
-hub();
-/* 網址 #g3 ＝ 直接開這一個遊戲（2026-10-03：三年級複習／四年級複習網站從自己的首頁直接進遊戲） */
-(function(){var h=(location.hash||'').slice(1);if(h&&META.some(function(m){return m.id===h}))begin(h)})();
+/* 一開始：大廳；網址 #g3 ＝ 直接開這一個遊戲（2026-10-03：三年級複習／四年級複習網站從自己的首頁直接進遊戲）
+   成績紀錄的程式（SCH）在後面才定義，所以等它好了才跑（gInit 在這一段程式的最後面呼叫） */
+function gInit(){hub();var h=(location.hash||'').slice(1);if(h&&META.some(function(m){return m.id===h}))gGo(h)}
 `;
 
 const body = `
@@ -1099,6 +1134,7 @@ const body = `
   <p class="lead">⏳ 每個遊戲 <b>3 分鐘</b>（🔍 火眼金睛 4 分鐘）　⚡ 每題 15 秒，<b>愈快分數愈高</b><br>
      🔥 <b>連對 3 題</b> ➜ 🎁 驚喜卡 <b>二～五選一</b>（每次卡包樣式都不一樣）<br>
      ❌ 答錯 ➜ 看清楚 ➜ ⭐ 加分題答對 <b>✕ 2</b></p>
+  <div id="scme"></div>
   <div id="grid"></div>
  </section>
 
@@ -1122,6 +1158,7 @@ const body = `
   <div class="rev" id="gendrev"></div>
   <div class="rowbtn">
    <button class="big" id="missBtn">📌 答錯整理</button>
+   <button class="big" id="gscore" hidden>📊 我的成績</button>
    <button class="big go" id="retry">🔁 再玩一次</button>
    <button class="big" id="backhub">🎮 換一個遊戲</button>
   </div>
@@ -1134,6 +1171,7 @@ const body = `
  <a href="index.html">🏠 首頁</a>
 </nav>
 
+<script src="../score/url.js"></script>
 <script>
 ${S.UTIL}
 ${S.TTS}
@@ -1145,10 +1183,25 @@ ${JS.replace('__BANK__', () => JSON.stringify(B.BANK || {
   })).replace('__META__', () => JSON.stringify(B.GAMES))
      .replace('__SURP__', () => JSON.stringify(B.SURP))
      .replace('__SKIN__', () => JSON.stringify(SK.SKINS)).replace('__OPENA__', () => JSON.stringify(SK.OPEN)).replace('__JOKE__', () => JSON.stringify(SK.JOKES))}
+${SCC.js(SCS, SCSRC)}
+/* 遊戲的成績畫面：蓋在遊戲上面的 #scov（score/_client.js 的 SCH） */
+var SCTAG=${JSON.stringify(SCS.game)};
+function gOv(){var o=document.getElementById('scov');if(!o){o=document.createElement('div');o.id='scov';o.innerHTML='<div id="scovb"></div>';document.body.appendChild(o)}return o}
+SCH={on:function(){return gOv().classList.contains('on')},open:function(){gOv().classList.add('on')},
+ close:function(){clearTimeout(SCAUTO);gOv().classList.remove('on')},box:function(){return $('#scovb')},
+ back:'<div class="scnav"><button data-sca="close">⬅ 回遊戲大廳</button></div>',
+ key:function(){return 'g'+scGr()+SCTAG+'_'+(window.gid||g)},
+ name:function(){var id=window.gid||g,m=META.filter(function(x){return x.id===id})[0]||{};
+   return (window.SEC&&m.sec&&SEC[m.sec]?String(SEC[m.sec]).replace(/<[^>]*>/g,'').split('　')[0]+'・':'')+(m.ic||'')+' '+(m.name||id)},
+ reopen:function(){SCH.close();var m=$('#scme');if(m)m.innerHTML=scMeHTML()},
+ miss:function(){return '這一場　答錯整理'},
+ act:function(a){SCH.close();if(a==='again')begin(window.gid||g);else if(a==='hub')hub()},
+ btns:function(){return '<div class="scnav"><button class="go" data-sca="again">🔁 再玩一次</button><button data-sca="hub">🎮 換一個遊戲</button><button data-sca="close">📋 回到結算</button></div>'}};
+gInit();
 ${S.RATEJS}
 </script>
 </body>
 </html>`;
 
-fs.writeFileSync(process.env.GAMES_OUT || (DIR + '/games.html'), S.HEAD(process.env.GAMES_TITLE || '複習遊戲 10 種｜英文句型', CSS + SK.CSS) + (process.env.GAMES_FIX ? require(process.env.GAMES_FIX)(body) : body));
+fs.writeFileSync(process.env.GAMES_OUT || (DIR + '/games.html'), S.HEAD(process.env.GAMES_TITLE || '複習遊戲 10 種｜英文句型', CSS + SK.CSS + SCC.CSS) + (process.env.GAMES_FIX ? require(process.env.GAMES_FIX)(body) : body));
 console.log('games ok  ' + B.GAMES.length + ' 種，題數 ' + B.GAMES.map(g => g.n).join('/'));

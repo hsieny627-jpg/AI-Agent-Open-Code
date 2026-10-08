@@ -45,7 +45,7 @@ module.exports = function (CODE) {
     { t: '複製網址，貼給 Claude', m: `
       <div class="win"><div class="sec">網頁應用程式</div><div class="kv"><span class="box url2">https://script.google.com/…/exec</span><span class="btn" data-tap="1" data-say="① 複製">複製</span>
         <span class="btn blue" data-tap="2" data-say="② 完成">完成</span></div></div>
-      <div class="chat" data-tap="3" data-say="③ 貼給 Claude">💬 貼到和 Claude 的對話</div>`, tip: 'Claude 放上網站，成績紀錄就開始' }
+      <div class="chat" data-tap="3" data-say="③ 貼給 Claude">💬 貼到和 Claude 的對話</div>`, tip: 'Claude 放上網站，📝 複習題、🎮 遊戲、📘 Review 1 的成績就開始記' }
   ];
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   return `<!DOCTYPE html>
@@ -135,7 +135,7 @@ function draw(){
   TT.forEach(clearTimeout);TT=[];
   $('#dots').innerHTML=STEPS.map(function(s,n){return '<i data-k="'+n+'" class="'+(n===K?'on':n<K?'done':'')+'"></i>'}).join('')+'<i data-k="'+STEPS.length+'" class="'+(K===STEPS.length?'on':'')+'" style="border-radius:6px"></i>';
   if(K===STEPS.length){
-    $('#main').innerHTML='<div class="end"><div class="n">🎉 完成了！</div><h1>做完以後試一次</h1><ol><li>平板打開句型頁，按〔📝 複習題 5 題〕</li><li>看到「🔢 輸入你的號碼」＝ 成功</li><li>打 30401，做完 5 題</li><li>試算表「紀錄」多一列 ✅</li></ol></div>';
+    $('#main').innerHTML='<div class="end"><div class="n">🎉 完成了！</div><h1>做完以後試一次</h1><ol><li>平板打開句型頁，按〔📝 複習題 5 題〕</li><li>看到「🔢 輸入你的號碼」＝ 成功</li><li>打 30401，做完 5 題</li><li>試算表「紀錄」多一列 ✅</li><li>🎮 玩一個遊戲到時間到 ➜ 再多一列 ✅</li></ol></div>';
   }else{
     var s=STEPS[K];
     $('#main').innerHTML='<div class="n">第 '+(K+1)+' 步　／　共 '+STEPS.length+' 步</div><h1>'+s.t+'</h1><div class="stage" id="stage"><span id="say"></span>'+s.m+'<span id="fing">👆</span></div>'+(s.tip?'<div class="tip">💡 '+s.tip+'</div>':'');

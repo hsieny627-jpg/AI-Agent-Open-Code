@@ -33,13 +33,24 @@ function map(DIR, D, P, asKey) {
   });
 }
 const attach = (DIR, D, P) => map(DIR, D, P, false);
-/* 成績紀錄（2026-10-07 對話 C）：學生端的程式（score/_client.js），題組代號 ＝ g年級u單元_分頁（例 g3u1_1-1b），教學網站和在家複習同一組題目同一個代號 */
-const SCC = require('../score/_client.js');
+/* 成績紀錄（2026-10-07 對話 C）：學生端的程式（score/_client.js），題組代號 ＝ g年級u單元_分頁（例 g3u1_1-1b），教學網站和在家複習同一組題目同一個代號。
+   年級查 score/_sites.js（2026-10-08 對話 D：沒登記的資料夾 build 失敗）；SCH ＝ 這一頁的畫法（畫在 #rvbox） */
+const SCC = require('../score/_client.js'), SITES = require('../score/_sites.js');
 function scJS(DIR, D, P) {
-  const b = path.basename(DIR), g = b === 'sentences' ? 4 : (b === 'G3 - L1 + L2' ? 3 : 0);
-  if (!g) throw new Error('成績紀錄：不知道 ' + b + ' 是幾年級');
-  return SCC.JS.replace('__SCG__', g).replace('__SCU__', P.unit).replace('__SCSRC__', JSON.stringify(/^\.\.\//.test(P.file) ? 'home' : 'school'))
-    .replace('__SCKEYS__', () => JSON.stringify(map(DIR, D, P, true)));
+  const S = SITES.of(DIR);
+  if (!S.g) throw new Error('成績紀錄：📝 複習題要有固定的年級（' + S.dir + '）');
+  return SCC.js(S, /^\.\.\//.test(P.file) ? 'home' : 'school') + `
+var SCKEYS=${JSON.stringify(map(DIR, D, P, true))},SCU=${JSON.stringify(P.unit)};
+SCH={on:function(){return document.body.classList.contains('tqon')&&$('#rv').classList.contains('on')},
+ open:function(){$('#rv').classList.add('on');document.body.classList.add('tqon')},box:function(){return $('#rvbox')},
+ back:'<button id="tqBack">🃏 回到字卡</button>',
+ key:function(){var k=SCKEYS[TCUR];return 'g'+SCG+'u'+SCU+'_'+(Object.prototype.toString.call(k)==='[object Array]'?k[LCUR]:k)},
+ name:function(){return tqNm()},reopen:function(){tqOpen()},rk:function(){var r=$('#tqrk');if(r)r.innerHTML=tqRkHTML(tqScore)},
+ miss:function(){return tqNm()+'　答錯整理'},
+ btns:function(){return '<div class="rvbtns">'+(MISSLOG.length?'<button id="tqMiss">📌 答錯整理</button>':'')+
+   '<button class="go" id="tqAgain">🔁 再挑戰一次</button>'+(TCUR<TABM.length-1?'<button class="go" id="tqNext">➡ 下一個分頁</button>':'')+'</div>'+
+   '<button id="tqBack">🃏 回到字卡</button>'}};
+`;
 }
 
 const CSS = `
@@ -155,7 +166,7 @@ function tqTop(){return '<span class="tqtop"><b id="tqsc">'+tqScore+'</b><span c
 function tqAsk(){
   tqBusy=false;tqStop();
   if(tqN>=tqQ.length){tqEnd();return}
-  var q=tqQ[tqN];tqT=q.k==='read'?20:15;scAsk(q);
+  var q=tqQ[tqN];tqT=q.k==='read'?20:15;scAsk(q,tqN);
   var o=shuf(q.o.map(function(x,n){return{x:x,n:n}})), body='';
   if(q.k==='read'){
     body='<div class="tqshow">'+ap(q.show)+'</div><div class="tqsub">'+q.q+'</div>'+
@@ -201,7 +212,7 @@ function tqPaint(){
   var l=$('#tqlive');if(l)l.textContent='⚡ ＋'+tqPts();
 }
 function tqDone(btn,ok){
-  if(tqBusy)return;tqBusy=true;tqStop();sayStop();scDone(btn,ok);
+  if(tqBusy)return;tqBusy=true;tqStop();sayStop();scDone(btn?+(btn.getAttribute('data-n')||0):-1,ok,tqLeft/tqT);
   var q=tqQ[tqN], rd=q.k==='read';
   $$(rd?'.tqr':'.tqo button').forEach(function(x){
     var c=rd?$('.ch',x):x;
@@ -229,7 +240,7 @@ function tqDone(btn,ok){
 }
 function tqEnd(){
   tqStop();sayStop();
-  if(scLive()){scEnd();sWow();return}
+  if(scLive()){scEnd({m:'q',raw:tqScore});sWow();return}
   var r=tqRank(tqScore),tot=tqHist.length+1;
   tqHist.push(tqScore);tqHist.sort(function(a,b){return b-a});store(tqKey,tqHist.slice(0,50));
   var nxt=TCUR<TABM.length-1;

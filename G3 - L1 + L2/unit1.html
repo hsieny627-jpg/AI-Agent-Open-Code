@@ -904,6 +904,21 @@ body.hastq #stage{padding-bottom:calc(var(--barH,72px) + var(--tqH,52px) + clamp
 .scmine.in{color:var(--gold);border-color:var(--gold)}
 .sckeep{font-size:clamp(15px,2.4vh,22px);color:#FFB86B;font-weight:700}
 .scempty{font-size:clamp(18px,3vh,28px);color:#9E9E9E;font-weight:700;padding:20px}
+/* 2026-10-08 對話 D：遊戲的成績畫面蓋在遊戲上面（#scov）；作答結束的大分數 */
+#scov{position:fixed;inset:0;z-index:92;background:rgba(0,0,0,.96);display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;
+ padding:calc(env(safe-area-inset-top) + clamp(10px,2vh,20px)) clamp(12px,3vw,36px) calc(env(safe-area-inset-bottom) + clamp(10px,2vh,20px))}
+#scov.on{display:flex}
+#scovb{width:100%;max-width:1100px;margin:auto;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vh,16px)}
+#scov .sckey button,#scov .scnav button{color:#fff}
+.scraw{font-size:clamp(70px,15vh,150px);font-weight:700;color:var(--gold);line-height:1}
+.scfix{font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#8FE3FF}
+.scnote{font-size:clamp(15px,2.4vh,21px);color:#9E9E9E;font-weight:700}
+.scstat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,1.4vw,16px);width:min(820px,92vw)}
+.scstat div{background:#111;border:2px solid #2A2A2A;border-radius:20px;padding:clamp(8px,1.6vh,16px) 6px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.scstat b{font-size:clamp(40px,8vh,78px);line-height:1;color:var(--gold)}
+.scstat span{font-size:clamp(17px,2.8vh,26px);font-weight:700;color:#DDE6EE;white-space:nowrap}
+.scrow2{display:flex;align-items:center;justify-content:center;gap:clamp(12px,3vw,40px);flex-wrap:wrap}
+#scme{min-height:44px}
 /* iPad 橫放（768 高）：排行榜那一幕要一頁放得下 */
 @media (min-width:900px){.sclist{grid-template-columns:repeat(3,minmax(0,1fr));width:min(900px,92vw)}}
 @media (max-height:860px){.scn{min-height:0;gap:clamp(6px,1.1vh,10px)}
@@ -2759,23 +2774,29 @@ window.addEventListener('resize',tabH);
 (function(){var m=/#t(\d+)(?:-(\d))?/.exec(location.hash);setDeck(m?+m[1]:0,m&&m[2]?+m[2]:0)})();
 
 
-/* ══════════ 成績紀錄（2026-10-07 對話 C）══════════ */
-var SCG=3,SCU=1,SCSRC="school",SCKEYS=[["1-1b","1-1a"],"1-2",["2b","2a"],"3","4"];
+
+/* ══════════ 成績紀錄（2026-10-07 對話 C；2026-10-08 對話 D：遊戲、Review 1 也記）══════════
+   SCG ＝ 這一頁是幾年級（0 ＝ 三、四年級共用的 Review 1 遊戲：年級看登入的 5 碼）
+   SCH ＝ 這一頁怎麼畫（下面那一段由 _tq.js／遊戲引擎／Review 1 複習各自給）：
+     on() 畫面開著嗎、open() 打開、box() 畫在哪、back 回去的按鈕、key() 題組代號、name() 題組名稱、
+     reopen() 換人以後回哪裡、rk() 作答中名次、btns(E) 最後一幕的按鈕、miss() 答錯整理的標題、act(a) data-sca 按鈕 */
+var SCG=3,SCSRC="school";
 var SCURL=String(window.SCORE_URL||'').replace(/^\s+|\s+$/g,''),SCON=!!SCURL&&!window.__SCORE_TEST_OFF;
-var SCCLS={3:['304','307','311'],4:['402','406','409','410']},SCDEMO={3:'30405',4:'40205'};
+var SCCLS={3:['304','307','311'],4:['402','406','409','410']},SCDEMO={0:'30405',3:'30405',4:'40205'};
 function scGet(k){try{return JSON.parse(localStorage.getItem('score_'+k)||'null')}catch(e){return null}}
 function scPut(k,v){try{localStorage.setItem('score_'+k,JSON.stringify(v))}catch(e){}}
-var SCID=scGet('id_g'+SCG),SCGUEST=false,SCDEV=scGet('dev'),SCV=null,SCQ=[],SCT0=0,SCREF=0,SCIN='',SCDT=null,SCEND=null;
+var SCID=scGet(SCG?'id_g'+SCG:'last'),SCGUEST=false,SCDEV=scGet('dev'),SCV=null,SCQ=[],SCT0=0,SCREF=0,SCQI=0,SCIN='',SCEND=null,SCH=null;
 if(!SCDEV){SCDEV=Math.random().toString(36).slice(2,8);scPut('dev',SCDEV)}
-function scKey(){var k=SCKEYS[TCUR];return 'g'+SCG+'u'+SCU+'_'+(Object.prototype.toString.call(k)==='[object Array]'?k[LCUR]:k)}
+function scGr(){return SCG||(SCID?+String(SCID).charAt(0):0)}
 function scLive(){return SCON&&!!SCID&&!SCGUEST}
+function scOn(){return !!(SCH&&SCH.on())}
 function scCheck(id){
   if(!/^\d{5}$/.test(id))return{err:'len'};
   var c=id.slice(0,3),s=+id.slice(3),g=c.charAt(0)==='3'?3:(c.charAt(0)==='4'?4:0);
   if(!g||SCCLS[g].indexOf(c)<0)return{err:'cls',cls:c};
-  if(g!==SCG)return{err:'grade',g:g};
+  if(SCG&&g!==SCG)return{err:'grade',g:g};
   if(s<1||s>40)return{err:'seat'};
-  return{id:id,cls:c,seat:s};
+  return{id:id,cls:c,seat:s,g:g};
 }
 function scMsg(r){
   var G={3:'三',4:'四'};
@@ -2806,20 +2827,21 @@ function scFlush(){
   return step();
 }
 if(SCON){setTimeout(scFlush,1500);window.addEventListener('online',function(){scFlush()})}
+/* 要記成績的地方先過這一關：還沒登入 ➜ 先登入（在家可以〔👀 先練習，不記成績〕）；登入好了 ➜ 直接做 fn */
+function scGate(fn){if(SCON&&!SCID&&!SCGUEST){scLogin(fn);return}fn()}
 /* ── 登入：5 碼（班級 3 碼＋座號 2 碼） ── */
 var SCTYPED='',SCDEMOT=null;
 function scLogin(after){
-  stopPlay();sayStop();
-  $('#rv').classList.add('on');document.body.classList.add('tqon');
+  if(window.stopPlay)stopPlay();sayStop();
+  SCH.open();
   SCTYPED='';var demo=SCDEMO[SCG];
-  $('#rvbox').innerHTML='<div class="sclog"><h2>🔢 輸入你的號碼</h2>'+
+  SCH.box().innerHTML='<div class="sclog"><h2>🔢 輸入你的號碼</h2>'+
    '<div class="scbox" id="scBox">'+[0,1,2,3,4].map(function(n){return (n===3?'<span class="gap"></span>':'')+'<i class="'+(n<3?'c':'s')+'"></i>'}).join('')+'</div>'+
    '<div class="scmean"><span class="mc">🏫 <b id="scC">＿＿＿</b> 班</span><span class="ms">🪑 <b id="scS">＿</b> 號</span></div>'+
    '<div class="scmsg" id="scMsg">例：'+demo+' ＝ '+demo.slice(0,3)+' 班 '+(+demo.slice(3))+' 號</div>'+
    '<div class="sckey">'+[1,2,3,4,5,6,7,8,9].map(function(n){return '<button data-k="'+n+'">'+n+'</button>'}).join('')+
    '<button class="bs" data-k="b">⌫</button><button data-k="0">0</button><button class="okb" data-k="ok">✅</button></div>'+
-   (SCSRC==='home'?'<button id="scGuest">👀 先練習，不記成績</button>':'')+
-   '<button id="tqBack">🃏 回到字卡</button></div>';
+   (SCSRC==='home'?'<button id="scGuest">👀 先練習，不記成績</button>':'')+SCH.back+'</div>';
   SCLOGAFTER=after;
   /* 動畫：示範一次 3 0 4 0 5 自己跳進格子（前 3 格 ➜ 🏫 班、後 2 格 ➜ 🪑 號），再清空換學生打 */
   var k=0;clearInterval(SCDEMOT);
@@ -2849,11 +2871,11 @@ function scKeyPress(k){
 }
 /* 名單開關（預設關）：開了才問「你是 304 班 5 號 ○○○ 嗎？」，學生不自己打名字 */
 function scWho(r){
-  var go=function(){SCID=r.id;scPut('id_g'+SCG,SCID);SCGUEST=false;var a=SCLOGAFTER;SCLOGAFTER=null;if(a)a()};
+  var go=function(){SCID=r.id;scPut('id_g'+r.g,SCID);scPut('last',SCID);SCGUEST=false;var a=SCLOGAFTER;SCLOGAFTER=null;if(a)a()};
   var m=$('#scMsg');m.className='scmsg ok';m.textContent='✅ '+r.cls+' 班 '+r.seat+' 號';
   scFetch('a=who&id='+r.id,null,3000).then(function(j){
     if(!j||!j.roster||!j.name){go();return}
-    $('#rvbox').innerHTML='<div class="scwho"><div>你是 '+r.cls+' 班 '+r.seat+' 號</div><div style="color:var(--gold);font-size:1.3em">'+esc(j.name)+'</div><div>嗎？</div>'+
+    SCH.box().innerHTML='<div class="scwho"><div>你是 '+r.cls+' 班 '+r.seat+' 號</div><div style="color:var(--gold);font-size:1.3em">'+esc(j.name)+'</div><div>嗎？</div>'+
      '<div class="scnav"><button class="go" id="scYes">✅ 是我</button><button id="scNo">❌ 重新輸入</button></div></div>';
     $('#scYes').onclick=go;$('#scNo').onclick=function(){scLogin(SCLOGAFTER)};
   },function(){setTimeout(go,500)});
@@ -2861,14 +2883,15 @@ function scWho(r){
 function scMeHTML(){
   if(!SCON)return '';
   if(SCGUEST)return '<div class="scme">👀 練習模式（不記成績）<button id="scSwap">🔢 登入</button></div>';
+  if(!SCID)return '<div class="scme">🔢 還沒登入<button id="scSwap">🔢 登入</button></div>';
   return '<div class="scme">🪑 '+SCID+'<button id="scSwap">換人</button></div>';
 }
 /* ── 作答中：本班這一組的名次（只有前 10 名給名次；不在前 10 ＝ 再幾分進前 10） ── */
-function scStart(){
-  SCQ=[];SCV=null;SCIN='';
+function scStart(gt){
+  SCQ=[];SCV=null;SCIN='';clearTimeout(SCAUTO);SCEND=null;
   if(!scLive())return;
-  var my=scKey();
-  scFetch('a=view&id='+SCID+'&set='+encodeURIComponent(my),null,6000).then(function(j){if(j&&!j.err&&scKey()===my){SCV=j;var r=$('#tqrk');if(r)r.innerHTML=tqRkHTML(tqScore)}},function(){});
+  var my=SCH.key();
+  scFetch('a=view&id='+SCID+'&set='+encodeURIComponent(my)+(gt?'&gt=1':''),null,6000).then(function(j){if(j&&!j.err&&SCH.key()===my){SCV=j;if(SCH.rk)SCH.rk()}},function(){});
 }
 function scRk(s){
   if(!SCV)return '🏫 本班排名';
@@ -2877,109 +2900,147 @@ function scRk(s){
   if(n<=10)return '🏅 本班第 '+n+' 名';
   return '⬆ 再 '+(o[9]-s+1)+' 分進前 10';
 }
-function scAsk(q){SCT0=Date.now();SCREF=q.k==='read'?0:SCT0}
+function scAsk(q,qi){SCT0=Date.now();SCREF=q&&q.k==='read'?0:SCT0;SCQI=qi||0}
 function scHeard(){if(!SCREF)SCREF=Date.now()}
-function scDone(btn,ok){
+/* 一題：選了第幾個（0 ＝ 正解，-1 ＝ 時間到）、答對、剩下秒數 ÷ 總秒數 */
+function scDone(pick,ok,ratio){
   var now=Date.now(),sec=(now-SCT0)/1000;
-  var fast=btn?(SCREF?(now-SCREF<1000?1:0):1):0;
-  SCQ.push([ok?1:0,btn?+(btn.getAttribute('data-n')||0):-1,Math.round(sec*10)/10,fast,ok?Math.round(tqLeft/tqT*1000)/1000:0]);
+  var fast=pick>=0?(SCREF?(now-SCREF<1000?1:0):1):0;
+  SCQ.push([ok?1:0,pick,Math.round(sec*10)/10,fast,ok?Math.round(Math.max(0,Math.min(1,ratio))*1000)/1000:0,SCQI]);
 }
-/* ── 作答結束：六幕 ① 正確率 ② 跟上一次比 ③ 算不算 1 次 ④ 我幫全班 ⑤ 排行榜 ⑥ 答錯整理 ── */
+/* ── 作答結束 ──
+   題目（m:'q'）六幕：① 正確率 ② 跟上一次比 ③ 算不算 1 次 ④ 我幫全班 ⑤ 排行榜 ⑥ 答錯整理
+   遊戲（m:'g'）精簡版三幕：① 正確率（第一次作答）＋✨ 訂正成功 ② 跟上一次比＋算不算 1 次 ③ 這個遊戲本班前 10 名
+   🃏 記憶配對（m:'mem'）一幕：配完幾對、用幾秒、翻錯幾次＋算 1 次（不算正確率、不算總分） */
+var SCLIST={q:['acc','prev','count','class','board','end'],g:['acc','gprog','gtop'],mem:['mem']};
 function scS100(Q){var n=Q.length,s=0;Q.forEach(function(q){if(q[0])s+=60/n+40/n*q[4]});return Math.round(s)}
-function scEnd(){
-  var key=scKey(),n=SCQ.length,ok=0,fast=0;SCQ.forEach(function(q){ok+=q[0];fast+=q[3]});
-  var acc=Math.round(ok/n*100),u=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-  var R={id:SCID,set:key,name:tqNm(),qs:SCQ,raw:tqScore,src:SCSRC,dev:SCDEV,u:u,t:Date.now()};
+function scEnd(o){
+  o=o||{};var m=o.m||'q',Q=o.qs||SCQ,key=SCH.key(),n=Q.length,ok=0,fast=0;Q.forEach(function(q){ok+=q[0];fast+=q[3]});
+  if(m!=='mem'&&!n)return false;
+  var acc=m==='mem'?null:Math.round(ok/n*100),u=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  var R={id:SCID,set:key,name:SCH.name(),m:m,qs:m==='mem'?[]:Q,raw:Math.round(o.raw||0),fix:o.fix||0,mp:o.mp||0,mw:o.mw||0,sec:Math.round(o.sec||0),
+    src:SCSRC,dev:SCDEV,u:u,t:Date.now()};
   var hk='h_'+SCID+'_'+key,H=scGet(hk)||[],sv=SCV&&SCV.set;
   var prev=sv&&sv.tries?sv.prev:(H.length?H[H.length-1].acc:null);
-  var best=sv&&sv.tries?sv.best:(H.length?Math.max.apply(null,H.map(function(x){return x.acc})):null);
-  var today=Math.floor((Date.now()+288e5)/864e5),cnt=ok*3>=n*2;
+  var best=sv&&sv.tries?sv.best:(H.length?Math.max.apply(null,H.map(function(x){return x.acc||0})):null);
+  var today=Math.floor((Date.now()+288e5)/864e5),cnt=m==='mem'?true:(m==='g'&&n<10?false:ok*3>=n*2);
   var todayN=sv?sv.today:H.filter(function(x){return x.d===today&&x.c}).length;
   H.push({t:R.t,acc:acc,c:cnt,d:today});scPut(hk,H.slice(-50));
-  var Q=scGet('q')||[];Q.push(R);scPut('q',Q.slice(-200));SCIN=u;
-  SCEND={acc:acc,ok:ok,n:n,s:scS100(SCQ),raw:tqScore,prev:prev,best:best,cnt:cnt,cap:cnt&&todayN>=3,
+  var QQ=scGet('q')||[];QQ.push(R);scPut('q',QQ.slice(-200));SCIN=u;
+  SCEND={m:m,list:SCLIST[m],acc:acc,ok:ok,n:n,s:m==='mem'?null:scS100(Q),raw:R.raw,fix:R.fix,mp:R.mp,mw:R.mw,sec:R.sec,prev:prev,best:best,cnt:cnt,cap:cnt&&todayN>=3,
     week:(SCV&&SCV.me?SCV.me.count:null),res:null,fail:false,k:0,tab:'acc',scope:'cls'};
   /* 送出：前一次補送還在跑就等一下再試（最多 3 次），還是送不出去 ＝ 沒有網路，先存平板 */
   var send=function(n){scFlush().then(function(){if(!SCEND||SCIN!==u)return;
     var j=SCRES[u],left=(scGet('q')||[]).some(function(x){return x.u===u});
     if(!j&&left&&n<3){setTimeout(function(){send(n+1)},1500);return}
     if(j)SCEND.res=j;else SCEND.fail=true;
-    if(SCEND.k===3)scScene()})};
+    var nm=SCEND.list[SCEND.k];if(nm==='class'||nm==='gtop'||nm==='gprog')scScene()})};
   send(0);
   scScene();
+  return true;
 }
-var SCAUTO=null,SCSN=6;
+var SCAUTO=null;
 function scGo(k){SCEND.k=k;scScene()}
-function scNext(){var k=SCEND.k+1;if(k===4&&!(SCEND.res&&SCEND.res.boards))k=5;scGo(Math.min(k,5))}
-function scScene(){
-  clearTimeout(SCAUTO);if(!SCEND||!document.body.classList.contains('tqon'))return;var E=SCEND,k=E.k,h='',C=SCCLS[SCG];
-  var dots='<div class="scdots">'+[0,1,2,3,4,5].map(function(n){return '<i'+(n===k?' class="on"':'')+'></i>'}).join('')+'</div>';
-  var nav=function(more){return '<div class="scnav">'+(more||'')+(k<5?'<button class="go" id="scNx">➡ 下一步</button><button id="scSkip">⏭ 跳過</button>':'')+'</div>'};
-  if(k===0){
-    var R=46,L=2*Math.PI*R;
-    h='<div class="sct">🎯 正確率</div><div class="scring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="'+R+'"></circle>'+
-      '<circle class="fg" id="scFg" cx="50" cy="50" r="'+R+'" stroke-dasharray="'+L+'" stroke-dashoffset="'+L+'"></circle></svg>'+
-      '<b><span id="scAcc">0</span><small>'+E.ok+' ／ '+E.n+' 題</small></b></div>'+
-      '<div class="scs">⚡ 總分 '+E.s+' 分（答對 60 ＋ 速度 40）</div>'+nav();
-    SCAUTO=setTimeout(scNext,3000);
-  }else if(k===1){
-    var up=E.prev!=null?E.acc-E.prev:null,pb=E.best!=null&&E.acc>E.best;
-    var big=E.prev==null?'<div class="scbig pb scpop scburst">⭐ 第一次紀錄：'+E.acc+'%</div><div class="scs">下次打敗它！</div>':
-      E.acc===100&&E.prev===100?'<div class="scbig pb scpop scburst">🔥 保持 100%！</div>':
-      pb?'<div class="scbig pb scpop scburst">🏅 新紀錄！</div><div class="scbig up scpop">🚀 ＋'+up+'%</div>':
-      up>0?'<div class="scbig up scpop">🚀 ＋'+up+'%</div>':
-      up===0?'<div class="scbig scpop">👍 跟上次一樣 '+E.acc+'%</div><div class="scs">再快一點、再多對一題，就破紀錄！</div>':
-      '<div class="scbig scpop" style="font-size:clamp(30px,6vh,56px)">💪 上次 '+E.prev+'%，這次 '+E.acc+'%</div><div class="scs">再挑戰一次！</div>';
-    h='<div class="sct">🚀 跟上一次比</div>'+(E.prev!=null?'<div class="scbars">'+
-      '<div class="scbar"><span class="lb">上一次</span><span class="tr"><i data-w="'+E.prev+'"></i></span><span class="vl">'+E.prev+'%</span></div>'+
-      '<div class="scbar now"><span class="lb">這一次</span><span class="tr"><i data-w="'+E.acc+'"></i></span><span class="vl">'+E.acc+'%</span></div></div>':'')+big+nav();
-    SCAUTO=setTimeout(scNext,3400);
-  }else if(k===2){
-    var res=E.res&&E.res.me?E.res.me.count:(E.week!=null?E.week+(E.cnt&&!E.cap?1:0):null);
-    h='<div class="sct">🔁 算不算 1 次？</div>'+
-     (E.cnt?(E.cap?'<div class="scstamp">✅ 很棒！</div><div class="scs">今天這一組已經算滿 3 次，明天再來，次數會再加！📅</div>':
+function scNext(){var L=SCEND.list,k=SCEND.k+1;if(L[k]==='board'&&!(SCEND.res&&SCEND.res.boards))k++;scGo(Math.min(k,L.length-1))}
+function scRing(E,t){var R=46,L=2*Math.PI*R;
+  return '<div class="sct">'+t+'</div><div class="scring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="'+R+'"></circle>'+
+    '<circle class="fg" id="scFg" cx="50" cy="50" r="'+R+'" stroke-dasharray="'+L+'" stroke-dashoffset="'+L+'"></circle></svg>'+
+    '<b><span id="scAcc">0</span><small>'+E.ok+' ／ '+E.n+' 題</small></b></div>'}
+function scPrevHTML(E,small){
+  var up=E.prev!=null?E.acc-E.prev:null,pb=E.best!=null&&E.acc>E.best,f=small?' style="font-size:clamp(34px,6.6vh,64px)"':'';
+  var big=E.prev==null?'<div class="scbig pb scpop scburst"'+f+'>⭐ 第一次紀錄：'+E.acc+'%</div>'+(small?'':'<div class="scs">下次打敗它！</div>'):
+    E.acc===100&&E.prev===100?'<div class="scbig pb scpop scburst"'+f+'>🔥 保持 100%！</div>':
+    pb?'<div class="scbig pb scpop scburst"'+f+'>🏅 新紀錄！🚀 ＋'+up+'%</div>':
+    up>0?'<div class="scbig up scpop"'+f+'>🚀 ＋'+up+'%</div>':
+    up===0?'<div class="scbig scpop"'+f+'>👍 跟上次一樣 '+E.acc+'%</div>'+(small?'':'<div class="scs">再快一點、再多對一題，就破紀錄！</div>'):
+    '<div class="scbig scpop" style="font-size:clamp(30px,6vh,56px)">💪 上次 '+E.prev+'%，這次 '+E.acc+'%</div>'+(small?'':'<div class="scs">再挑戰一次！</div>');
+  return (E.prev!=null?'<div class="scbars">'+
+    '<div class="scbar"><span class="lb">上一次</span><span class="tr"><i data-w="'+E.prev+'"></i></span><span class="vl">'+E.prev+'%</span></div>'+
+    '<div class="scbar now"><span class="lb">這一次</span><span class="tr"><i data-w="'+E.acc+'"></i></span><span class="vl">'+E.acc+'%</span></div></div>':'')+big}
+function scCntHTML(E){
+  var res=E.res&&E.res.me?E.res.me.count:(E.week!=null?E.week+(E.cnt&&!E.cap?1:0):null),need=Math.ceil(E.n*2/3);
+  return (E.cnt?(E.cap?'<div class="scstamp">✅ 很棒！</div><div class="scs">今天這'+(E.m==='q'?'一組':'個遊戲')+'已經算滿 3 次，明天再來，次數會再加！📅</div>':
        '<div class="scstamp">✅ 算 1 次！</div>'):
-       '<div class="scstamp no">再多對 '+(Math.ceil(E.n*2/3)-E.ok)+' 題</div><div class="scs">就算 1 次 💪（'+E.n+' 題要對 '+Math.ceil(E.n*2/3)+' 題）</div>')+
-     (res!=null?'<div class="sccnt">🔁 這週 <b class="pop">'+res+'</b> 次</div>':'')+nav();
+     E.m==='g'&&E.n<10?'<div class="scstamp no">再多答 '+(10-E.n)+' 題</div><div class="scs">一場要答 10 題以上才算 1 次 💪</div>':
+       '<div class="scstamp no">再多對 '+(need-E.ok)+' 題</div><div class="scs">就算 1 次 💪（'+E.n+' 題要對 '+need+' 題）</div>')+
+   (res!=null?'<div class="sccnt">🔁 這週 <b class="pop">'+res+'</b> 次</div>':'')}
+function scScene(){
+  clearTimeout(SCAUTO);if(!SCEND||!scOn())return;var E=SCEND,L=E.list,k=E.k,nm=L[k],h='',last=k===L.length-1;
+  var dots=L.length>1?'<div class="scdots">'+L.map(function(x,n){return '<i'+(n===k?' class="on"':'')+'></i>'}).join('')+'</div>':'';
+  var nav=function(more){return '<div class="scnav">'+(more||'')+(!last?'<button class="go" id="scNx">➡ 下一步</button><button id="scSkip">⏭ 跳過</button>':'')+'</div>'};
+  if(nm==='acc'){
+    h=scRing(E,E.m==='g'?'🎯 正確率（每一題第一次作答）':'🎯 正確率')+
+      '<div class="scs">⚡ 總分 '+E.s+' 分（答對 60 ＋ 速度 40）</div>'+
+      (E.m==='g'?(E.fix?'<div class="scfix">✨ 訂正成功 '+E.fix+' 題</div>':'')+'<div class="scnote">🎁 驚喜卡、連對加成是運氣，不算進成績</div>':'')+nav();
+    SCAUTO=setTimeout(scNext,E.m==='g'?3600:3000);
+  }else if(nm==='prev'){
+    h='<div class="sct">🚀 跟上一次比</div>'+scPrevHTML(E)+nav();
+    SCAUTO=setTimeout(scNext,3400);
+  }else if(nm==='count'){
+    h='<div class="sct">🔁 算不算 1 次？</div>'+scCntHTML(E)+nav();
     SCAUTO=setTimeout(scNext,3000);
-  }else if(k===3){
+  }else if(nm==='gprog'){
+    h='<div class="sct">🚀 跟上一次比</div>'+scPrevHTML(E,1)+scCntHTML(E)+nav();
+    SCAUTO=setTimeout(scNext,4200);
+  }else if(nm==='class'){
     var V=E.res;
     if(!V&&!E.fail)h='<div class="sct">🏫 我幫全班</div><div class="scwait"><i>⏳</i> 正在送出成績…</div>'+nav();
     else if(!V)h='<div class="sct">📶 現在沒有網路</div><div class="scs">成績先存在這台平板，連上網會自動送出 ✅</div>'+nav();
-    else{var my=V.cls,mx=0;
+    else{var my=V.cls;
       h='<div class="sct">🏫 我幫全班</div><div class="scbars">'+V.classes.map(function(c){
         return '<div class="scbar'+(c.cls===my?' me':'')+'"><span class="lb">'+c.cls+' 班</span><span class="tr"><i data-w="'+(c.acc||0)+'"></i></span><span class="vl">'+(c.acc==null?'—':Math.round(c.acc))+'</span></div>'}).join('')+'</div>'+
        '<div class="scs">'+(V.delta>0?'你這一次幫 '+my+' 班 ＋'+V.delta+' 分 💪':'你為 '+my+' 班又多練了一次 💪')+'</div>'+
        '<div class="scs" style="font-size:clamp(14px,2.2vh,19px);color:#9E9E9E">各班這週的平均正確率</div>'+nav();
       SCAUTO=setTimeout(scNext,3600)}
-  }else if(k===4){
+  }else if(nm==='board'){
     h=scBoardHTML()+nav();
+  }else if(nm==='gtop'){
+    h=scGtopHTML()+SCH.btns(E);
+  }else if(nm==='mem'){
+    var per=E.mp?Math.round(E.sec/E.mp*10)/10:null;
+    h='<div class="sct">🃏 記憶配對</div><div class="scstat">'+
+      '<div><b>'+E.mp+'</b><span>✅ 配完幾對</span></div><div><b>'+E.sec+'</b><span>⏱ 用了幾秒</span></div><div><b>'+E.mw+'</b><span>🔁 翻錯幾次</span></div></div>'+
+      (per!=null?'<div class="scs">平均 '+per+' 秒配一對</div>':'')+scCntHTML(E)+
+      '<div class="scnote">記憶配對是記位置，不算正確率、不算總分（老師看得到這三個數字）</div>'+SCH.btns(E);
   }else{
     h='<div class="sct">'+(E.ok===E.n?'🎉 全對！':'答錯是大腦在學習 🧠')+'</div>'+
-     '<div class="tqend"><div class="sc">'+E.raw+'</div></div><div class="scs">🏆 這一次的分數　✅ 答對 '+E.ok+' ／ '+E.n+' 題</div>'+
-     '<div class="rvbtns">'+(MISSLOG.length?'<button id="tqMiss">📌 答錯整理</button>':'')+
-     '<button class="go" id="tqAgain">🔁 再挑戰一次</button>'+(TCUR<TABM.length-1?'<button class="go" id="tqNext">➡ 下一個分頁</button>':'')+'</div>'+
-     '<button id="tqBack">🃏 回到字卡</button>';
-    if(MISSLOG.length)setTimeout(function(){if(SCEND&&SCEND.k===5)missAll(tqNm()+'　答錯整理')},600);
+     '<div class="scraw">'+E.raw+'</div><div class="scs">🏆 這一次的分數　✅ 答對 '+E.ok+' ／ '+E.n+' 題</div>'+SCH.btns(E);
+    if(MISSLOG.length)setTimeout(function(){if(SCEND&&SCEND.list[SCEND.k]==='end'&&scOn())missAll(SCH.miss())},600);
   }
-  $('#rvbox').innerHTML='<div class="scn" id="scn">'+dots+h+'</div>';
-  if(k===0)setTimeout(function(){var f=$('#scFg'),a=$('#scAcc');if(!f)return;var L=+f.getAttribute('stroke-dasharray');
+  SCH.box().innerHTML='<div class="scn" id="scn">'+dots+h+'</div>';
+  if(nm==='acc')setTimeout(function(){var f=$('#scFg'),a=$('#scAcc');if(!f)return;var L=+f.getAttribute('stroke-dasharray');
     f.setAttribute('stroke-dashoffset',L*(1-E.acc/100));var t0=Date.now(),iv=setInterval(function(){var x=Math.min(1,(Date.now()-t0)/1300);
       if(!$('#scAcc')){clearInterval(iv);return}a.textContent=Math.round(E.acc*x)+'%';if(x>=1)clearInterval(iv)},40)},80);
   setTimeout(function(){$$('.scbar .tr i').forEach(function(x){x.style.width=x.getAttribute('data-w')+'%'})},80);
 }
 var SCBN={acc:'🎯 正確率',s:'⚡ 總分',count:'🔁 次數',prog:'🚀 進步'};
 function scFmt(t,v){return t==='count'?v+' 次':t==='prog'?'＋'+v+'%':Math.round(v)+' 分'}
+function scPodHTML(L,fmt){
+  var pod=[1,0,2].map(function(n){var x=L[n];if(!x)return '<div></div>';
+    return '<div class="p'+Math.min(x.rk,3)+(x.id===SCID?' me':'')+'"><span class="id">'+x.id+'</span><span class="v">'+fmt(x)+'</span><span class="st">'+(x.rk===1?'🥇':x.rk===2?'🥈':'🥉')+'</span></div>'}).join('');
+  var rest=L.slice(3).map(function(x){return '<div'+(x.id===SCID?' class="me"':'')+'><span><em>'+x.rk+'</em> '+x.id+'</span><span>'+fmt(x)+'</span></div>'}).join('');
+  return '<div class="scpod">'+pod+'</div>'+(rest?'<div class="sclist">'+rest+'</div>':'');
+}
 function scBoardHTML(){
   var E=SCEND,V=E.res,t=E.tab,sc=E.scope;
-  var L=(V.top[t]||{})[sc]||[],me=V.me,my=V.rk[t][sc];
+  var L=(V.top[t]||{})[sc]||[];
   var tabs='<div class="sctabs">'+['acc','s','count','prog'].map(function(x){return '<button data-bt="'+x+'"'+(x===t?' class="on"':'')+'>'+SCBN[x]+'</button>'}).join('')+'</div>'+
    '<div class="scscope"><button data-bs="cls"'+(sc==='cls'?' class="on"':'')+'>🏫 本班</button><button data-bs="grade"'+(sc==='grade'?' class="on"':'')+'>🏆 全年級</button></div>';
   if(!L.length)return '<div class="sct">🏆 排行榜（這週）</div>'+tabs+'<div class="scempty">'+(t==='prog'?'同一組做兩次，就能上 🚀 進步榜！':'這週還沒有人上榜，你可以當第一個！')+'</div>'+scMineHTML(t,sc);
-  var pod=[1,0,2].map(function(n){var x=L[n];if(!x)return '<div></div>';
-    return '<div class="p'+x.rk+(x.id===SCID?' me':'')+'"><span class="id">'+x.id+'</span><span class="v">'+scFmt(t,x.v)+'</span><span class="st">'+(x.rk===1?'🥇':x.rk===2?'🥈':'🥉')+'</span></div>'}).join('');
-  var rest=L.slice(3).map(function(x){return '<div'+(x.id===SCID?' class="me"':'')+'><span><em>'+x.rk+'</em> '+x.id+'</span><span>'+scFmt(t,x.v)+'</span></div>'}).join('');
-  return '<div class="sct">🏆 排行榜（這週）</div>'+tabs+'<div class="scpod">'+pod+'</div>'+(rest?'<div class="sclist">'+rest+'</div>':'')+scMineHTML(t,sc);
+  return '<div class="sct">🏆 排行榜（這週）</div>'+tabs+scPodHTML(L,function(x){return scFmt(t,x.v)})+scMineHTML(t,sc);
+}
+/* 遊戲：這個遊戲本班前 10 名（這週，每個人最好的一次；正確率同分比總分） */
+function scGtopHTML(){
+  var E=SCEND,V=E.res,T='<div class="sct">🏆 這個遊戲　本班前 10 名（這週）</div>';
+  if(!V&&!E.fail)return T+'<div class="scwait"><i>⏳</i> 正在送出成績…</div>';
+  if(!V)return '<div class="sct">📶 現在沒有網路</div><div class="scs">成績先存在這台平板，連上網會自動送出 ✅</div>';
+  if(!V.boards||!V.gtop)return '<div class="sct">💪 成績送出去了 ✅</div><div class="scs">下次再挑戰更高的正確率！</div>';
+  var G=V.gtop,L=G.list,mine;
+  if(G.rk)mine='<div class="scmine in">🪑 你是第 '+G.rk+' 名！🎉</div>';
+  else if(G.cut!=null&&G.best&&G.cut-G.best.acc>=0&&G.cut-G.best.acc<=20)mine='<div class="scmine">🪑 你：⬆ 再 '+Math.max(1,G.cut-G.best.acc)+' 分進前 10</div>';
+  else mine='<div class="scmine">🪑 你：⭐ 你的紀錄 '+(G.best?G.best.acc:E.acc)+'%，下次打敗它！</div>';
+  if(!L.length)return T+'<div class="scempty">這週還沒有人上榜，你可以當第一個！</div>'+mine;
+  return T+scPodHTML(L,function(x){return x.acc+'%'})+mine;
 }
 /* 自己：前 10 名 ＝ 名次；不在前 10 名 ＝ 不顯示名次數字，差距小才寫「再多 N 進前 10」，差太多改寫自己的進步（Q2-A） */
 function scMineHTML(t,sc){
@@ -2993,21 +3054,33 @@ function scMineHTML(t,sc){
   else txt='⭐ 你的紀錄：'+(E.best!=null?Math.max(E.best,E.acc):E.acc)+'%，下次打敗它！';
   return keep+'<div class="scmine">🪑 你：'+txt+'</div>';
 }
-$('#rv').addEventListener('click',function(e){
-  if(!document.body.classList.contains('tqon'))return;
+document.addEventListener('click',function(e){
   var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
+  if(c('#scSwap')){if(!SCH)return;SCID=null;scPut('id_g'+scGr(),null);scPut('last',null);SCGUEST=false;scLogin(SCH.reopen);return}
+  if(!scOn())return;
   if((b=c('.sckey button'))){scKeyPress(b.getAttribute('data-k'));return}
   if(c('#scGuest')){SCGUEST=true;var a=SCLOGAFTER;SCLOGAFTER=null;if(a)a();return}
-  if(c('#scSwap')){SCID=null;scPut('id_g'+SCG,null);SCGUEST=false;scLogin(tqOpen);return}
+  if((b=c('[data-sca]'))){if(SCH.act)SCH.act(b.getAttribute('data-sca'));return}
   if(!SCEND||!c('#scn'))return;
   if((b=c('[data-bt]'))){SCEND.tab=b.getAttribute('data-bt');scScene();return}
   if((b=c('[data-bs]'))){SCEND.scope=b.getAttribute('data-bs');scScene();return}
-  if(c('#scSkip')){scGo(5);return}
+  if(c('#scSkip')){scGo(SCEND.list.length-1);return}
   if(c('#scNx')){scNext();return}
-  if(SCEND.k<4&&!c('button'))scNext();
+  var nm=SCEND.list[SCEND.k];if((nm==='acc'||nm==='prev'||nm==='count'||nm==='class'||nm==='gprog')&&!c('button'))scNext();
 });
 document.addEventListener('keydown',function(e){if(!$('#scBox'))return;
   if(/^\d$/.test(e.key))scKeyPress(e.key);else if(e.key==='Backspace')scKeyPress('b');else if(e.key==='Enter')scKeyPress('ok')});
+
+var SCKEYS=[["1-1b","1-1a"],"1-2",["2b","2a"],"3","4"],SCU=1;
+SCH={on:function(){return document.body.classList.contains('tqon')&&$('#rv').classList.contains('on')},
+ open:function(){$('#rv').classList.add('on');document.body.classList.add('tqon')},box:function(){return $('#rvbox')},
+ back:'<button id="tqBack">🃏 回到字卡</button>',
+ key:function(){var k=SCKEYS[TCUR];return 'g'+SCG+'u'+SCU+'_'+(Object.prototype.toString.call(k)==='[object Array]'?k[LCUR]:k)},
+ name:function(){return tqNm()},reopen:function(){tqOpen()},rk:function(){var r=$('#tqrk');if(r)r.innerHTML=tqRkHTML(tqScore)},
+ miss:function(){return tqNm()+'　答錯整理'},
+ btns:function(){return '<div class="rvbtns">'+(MISSLOG.length?'<button id="tqMiss">📌 答錯整理</button>':'')+
+   '<button class="go" id="tqAgain">🔁 再挑戰一次</button>'+(TCUR<TABM.length-1?'<button class="go" id="tqNext">➡ 下一個分頁</button>':'')+'</div>'+
+   '<button id="tqBack">🃏 回到字卡</button>'}};
 
 /* ══════════ 📝 複習題 5 題（2026-10-04 對話 B）══════════ */
 var TQD=[[[{"k":"read","o":["name","nine","my","am"],"h":"name 唸 /neɪm/，e 不發音。","show":"name","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["your","you","my","name"],"h":"your ＝ 你的；you ＝ 你，少了 r。","say":"your","q":"你聽到哪一個字？"},{"k":"zh2en","o":["your","you","my","name"],"h":"你 ＝ you，你的 ＝ your。","q":"「你的」　英文是？"},{"k":"en2zh","o":["什麼","誰","幾歲","名字"],"h":"What ＝ 什麼。","q":"「What」　中文是？"},{"k":"trap","o":["i","s","a","h"],"h":"What is ➜ What’s：is 的 i 被 ’ 換掉。","q":"What’s 的 ’ 藏起來的是哪一個字母？","sp":""}],[{"k":"read","o":["What’s your name?","What’s my name?","What’s his name?","How old are you?"],"h":"聽 your，不是 my、his。","show":"What’s your name?","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["What is your name?","What is my name?","What is his name?","How old are you?"],"h":"your ＝ 你的。","say":"What is your name?","q":"你聽到哪一句？"},{"k":"zh2en","o":["What’s your name?","What’s my name?","What’s name your?","Your what’s name?"],"h":"中文「什麼」在最後，英文 What 在最前面。","q":"「你的名字是什麼？」　英文是？"},{"k":"en2zh","o":["你的名字是什麼？","我的名字是什麼？","你幾歲？","他的名字是什麼？"],"h":"your ＝ 你的，name ＝ 名字。","q":"「What’s your name?」　中文是？"},{"k":"trap","o":["What’s your name?","Whats your name?","What’is your name?","What’ your name?"],"h":"’ 放在 is 的位置，換掉 i：What’s。","q":"What is your name? 縮寫成？"}]],[{"k":"read","o":["What’s your name?","What is your name?","What’s my name?","My name is Ken."],"h":"聽 What’s（一個音節）和 your。","show":"What’s your name?","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["What","Your","Name","Is"],"h":"問「什麼」，What 放最前面。","say":"What’s your name?","q":"你聽到的<b class=\"em\">第一個字</b>是？"},{"k":"zh2en","o":["What’s ➜ your ➜ name?","Your ➜ name ➜ what’s?","Name ➜ your ➜ what’s?","What’s ➜ name ➜ your?"],"h":"中文「什麼」在最後，英文 What 跑到最前面。","q":"「你的 名字 是 什麼？」英文的順序是？","sp":"What’s your name?"},{"k":"en2zh","o":["什麼","你的","名字","是"],"h":"What ＝ 什麼。","q":"What’s your name? 的 <b class=\"em\">What</b> 是中文的哪一個詞？"},{"k":"trap","o":["最前面","最後面","中間","不用說"],"h":"英文問句，問的字（What）放最前面。","q":"中文「什麼」在句子最後，英文 What 放在哪裡？","sp":""}],[[{"k":"read","o":["My","I","am","name"],"h":"My 唸 /maɪ/。","show":"My","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["My name is Ken.","I am Ken.","Your name is Ken.","My name is Emma."],"h":"My ＝ 我的；名字是 Ken。","say":"My name is Ken.","q":"你聽到哪一句？"},{"k":"zh2en","o":["I","My","am","you"],"h":"我 ＝ I，我的 ＝ My。","q":"「我」　英文是？"},{"k":"en2zh","o":["是","我","我的","名字"],"h":"I am ＝ 我是，am ＝ 是。","q":"「am」　中文是？"},{"k":"trap","o":["I’m","Im","I’am","Am"],"h":"am 的 a 被 ’ 換掉：I’m。","q":"I am 縮寫成？"}],[{"k":"read","o":["My name is Mike.","Your name is Mike.","My name is Ken.","What’s your name?"],"h":"聽 My 和 Mike。","show":"My name is Mike.","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["I’m Wendy.","You’re Wendy.","I’m Emma.","I’m ten."],"h":"I’m ＝ 我是。","say":"I’m Wendy.","q":"你聽到哪一句？"},{"k":"zh2en","o":["My name is Alan.","I name is Alan.","My name Alan.","Your name is Alan."],"h":"My name is ___.，is 不能少。","q":"「我的名字是 Alan。」　英文是？"},{"k":"en2zh","o":["我是 Ken。","我的名字是什麼？","你是 Ken。","我十歲。"],"h":"I ＝ 我，’m ＝ 是。","q":"「I’m Ken.」　中文是？"},{"k":"trap","o":["I’m Emma.","I name is Emma.","My Emma.","Me is Emma."],"h":"My name is ___. ＝ I’m ___.。","q":"哪一句跟 My name is Emma. 意思一樣？"}]],[{"k":"read","o":["I’m Emma.","I’m eight.","My name is Ken.","I’m Alan."],"h":"聽 Emma。","show":"I’m Emma.","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["My name is Emma.","I’m ten years old.","Your name is Emma.","How old are you?"],"h":"問名字，就答名字。","say":"What’s your name?","q":"要怎麼回答？"},{"k":"zh2en","o":["I’m Emma.","You’re Emma.","My Emma.","I Emma."],"h":"我是 ＝ I’m。","q":"「你的名字是什麼？」「我是 Emma。」答句的英文是？"},{"k":"en2zh","o":["我的名字是 Emma。","你的名字是 Emma。","我是 Emma 的。","Emma 的名字是什麼？"],"h":"My ＝ 我的。","q":"「My name is Emma.」　中文是？"},{"k":"trap","o":["Your name is Emma.","My name is Emma.","I’m Emma.","My name is Ken."],"h":"問「你的」名字，要答「我的」：My。","q":"別人問 What’s your name?，哪一個回答<b class=\"em\">不對</b>？"}],[{"k":"read","o":["I am Ken.","I’m Ken.","My name is Ken.","I am ten."],"h":"I am 兩個字分開唸；I’m 是一個音節。","show":"I am Ken.","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["What is your name?","What’s your name?","What is my name?","What’s my name?"],"h":"聽到 is 分開唸 ＝ What is。","say":"What is your name?","q":"你聽到哪一句？"},{"k":"zh2en","o":["My name is ______.","I name is ______.","My name ______.","Name my is ______."],"h":"My name is ___.。","q":"「我的名字是______。」　英文是？"},{"k":"en2zh","o":["我是 Ken。","Ken 是我的。","我叫你 Ken。","你是 Ken。"],"h":"I am ＝ 我是。","q":"「I am Ken.」　中文是？"},{"k":"trap","o":["h","W","a","t"],"h":"What 的 h 不發音。","q":"What 的哪一個字母<b class=\"em\">不發音</b>（淺灰色）？","sp":""}]], TQPAGE="G3 - L1 + L2/unit1.html";
@@ -3048,7 +3121,7 @@ function tqTop(){return '<span class="tqtop"><b id="tqsc">'+tqScore+'</b><span c
 function tqAsk(){
   tqBusy=false;tqStop();
   if(tqN>=tqQ.length){tqEnd();return}
-  var q=tqQ[tqN];tqT=q.k==='read'?20:15;scAsk(q);
+  var q=tqQ[tqN];tqT=q.k==='read'?20:15;scAsk(q,tqN);
   var o=shuf(q.o.map(function(x,n){return{x:x,n:n}})), body='';
   if(q.k==='read'){
     body='<div class="tqshow">'+ap(q.show)+'</div><div class="tqsub">'+q.q+'</div>'+
@@ -3094,7 +3167,7 @@ function tqPaint(){
   var l=$('#tqlive');if(l)l.textContent='⚡ ＋'+tqPts();
 }
 function tqDone(btn,ok){
-  if(tqBusy)return;tqBusy=true;tqStop();sayStop();scDone(btn,ok);
+  if(tqBusy)return;tqBusy=true;tqStop();sayStop();scDone(btn?+(btn.getAttribute('data-n')||0):-1,ok,tqLeft/tqT);
   var q=tqQ[tqN], rd=q.k==='read';
   $$(rd?'.tqr':'.tqo button').forEach(function(x){
     var c=rd?$('.ch',x):x;
@@ -3122,7 +3195,7 @@ function tqDone(btn,ok){
 }
 function tqEnd(){
   tqStop();sayStop();
-  if(scLive()){scEnd();sWow();return}
+  if(scLive()){scEnd({m:'q',raw:tqScore});sWow();return}
   var r=tqRank(tqScore),tot=tqHist.length+1;
   tqHist.push(tqScore);tqHist.sort(function(a,b){return b-a});store(tqKey,tqHist.slice(0,50));
   var nxt=TCUR<TABM.length-1;

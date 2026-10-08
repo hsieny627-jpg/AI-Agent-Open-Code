@@ -1854,6 +1854,34 @@ const SSPATCH = [
    "var CARDS=__CARDS__"]
 ];
 /* 📝 複習題 5 題（2026-10-04 對話 B）：只有資料夾裡有 _tq_data.js、而且這一頁有分頁才接上（Review 1 頁照舊用 📝 複習） */
+/* Review 1 頁的〔📝 複習〕也記成績（2026-10-08 對話 D，使用者第 1 題）：題組代號 g年級r1_rv第幾組（score/_sites.js 的 rv）。
+   只算每一題第一次（🔁 類似題、⭐ 加分題不算，另外記 ✨ 訂正成功）；做完接六幕（跟 📝 複習題一樣） */
+const SCC = require('../score/_client.js'), SITES = require('../score/_sites.js');
+const RVPATCH = [
+  ["   '<p class=\"lead\">20 秒一題，愈快答對分數愈高。題目和選項每一次都重洗。</p>'+",
+   "   '<p class=\"lead\">20 秒一題，愈快答對分數愈高。題目和選項每一次都重洗。</p>'+scMeHTML()+"],
+  ["function rvHome(){\n  rvStop();", "function rvHome(){\n  rvStop();clearTimeout(SCAUTO);SCEND=null;"],
+  ["function rvStart(gi){\n  rvGi=gi;", "var rvFix=0;\nfunction rvStart(gi){\n  if(SCON&&!SCID&&!SCGUEST){scLogin(function(){rvStart(gi)});return}\n  rvGi=gi;rvFix=0;scStart();"],
+  ["  var q=rvQ[rvN];\n  var o=shuf(", "  var q=rvQ[rvN];scAsk(q,RVG[rvGi].q.indexOf(q));\n  var o=shuf("],
+  ["  if(rvBusy)return;rvBusy=true;rvStop();\n  var q=rvQ[rvN];",
+   "  if(rvBusy)return;rvBusy=true;rvStop();\n  var q=rvQ[rvN];\n  if(q.sim){if(ok)rvFix++}else{var pk=btn?q.o.indexOf(btn.getAttribute('data-t')):-1;scDone(btn&&pk<0?(ok?0:1):pk,ok,rvLeft/RVT)}"],
+  ["pts:500,gain:function(n){rvScore+=n;", "pts:500,gain:function(n){rvFix++;rvScore+=n;"],
+  ["function rvEnd(){\n  rvStop();", "function rvEnd(){\n  rvStop();\n  if(scLive()&&scEnd({m:'q',raw:rvScore,fix:rvFix})){sWow();return}"],
+  ["if(t.closest&&t.closest('#rvClose')){rvStop();", "if(t.closest&&t.closest('#rvClose')){clearTimeout(SCAUTO);SCEND=null;rvStop();"]
+];
+function rvJS(DIR) {
+  const S = SITES.of(DIR);
+  if (!S.g || !S.rv) throw new Error('成績紀錄：Review 1 頁的 📝 複習要有固定的年級和代號（score/_sites.js 的 ' + S.dir + '）');
+  return SCC.js(S, 'school') + `
+var SCRV=${JSON.stringify(S.rv)};
+SCH={on:function(){return $('#rv').classList.contains('on')},open:function(){$('#rv').classList.add('on')},box:function(){return $('#rvbox')},
+ back:'<div class="rvbtns"><button id="rvClose">⬅ 回卡片</button></div>',
+ key:function(){return 'g'+SCG+SCRV+'_rv'+(rvGi+1)},name:function(){return RVG[rvGi].t},reopen:function(){rvHome()},
+ miss:function(){return RVG[rvGi].t+'　答錯整理'},
+ btns:function(){return '<div class="rvbtns">'+(MISSLOG.length?'<button id="rvMissBtn">📌 答錯整理</button>':'')+
+   '<button class="go" id="rvAgain">🔁 再玩一次</button><button id="rvBack">📚 換一組</button><button id="rvClose">⬅ 回卡片</button></div>'}};
+`;
+}
 const TQPATCH = [
   ["  $$('#dots i').forEach(function(d,n){d.className=n===i?'on':''});",
    "  $$('#dots i').forEach(function(d,n){d.className=n===i?'on':''});\n  if(window.tqMark)tqMark();"],
@@ -1875,8 +1903,12 @@ function page(unit, cards, title, other, otherName, P) {
     cards = DECKS[TABM[0].sub ? TABM[0].sub[0].d : TABM[0].d];
   }
   const SS = setsOf(DECKS ? [].concat(...DECKS) : cards), hasSS = Object.keys(SS).length > 0;
-  const TQD = TQ.attach(DIR, D, P);
+  const TQD = TQ.attach(DIR, D, P), RVSC = !TQD && !!P.rv;   /* RVSC：Review 1 頁的 📝 複習記成績 */
   let js = JS;
+  if (RVSC) RVPATCH.forEach(([a, b]) => {
+    if (js.split(a).length !== 2) throw new Error('Review 1 複習的成績紀錄：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
+    js = js.replace(a, () => b);
+  });
   if (TQD) TQPATCH.forEach(([a, b]) => {
     if (js.split(a).length !== 2) throw new Error('複習題：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
     js = js.replace(a, () => b);
@@ -1920,7 +1952,7 @@ ${TABHTML}
 <button class="nav r" id="next" aria-label="下一張"><span><i>▶</i><b>下一張</b></span></button>
 <main id="stage"><section id="card"></section></main>
 
-<div id="rv"><div class="rvbox" id="rvbox"></div></div>${TQD ? '\n<button id="tqGo">📝 複習題 5 題</button>\n<script src="../score/url.js"></script>' : ''}
+<div id="rv"><div class="rvbox" id="rvbox"></div></div>${TQD ? '\n<button id="tqGo">📝 複習題 5 題</button>\n<script src="../score/url.js"></script>' : ''}${RVSC ? '\n<script src="../score/url.js"></script>' : ''}
 <div id="toc" aria-label="目次"><div class="th"><h2 id="tocH">${String(title).replace(/&/g, '&amp;').replace(/</g, '&lt;')}</h2>
  <button class="tx">✕ 關閉</button></div><div class="tg" id="tocG"></div></div>
 
@@ -1961,12 +1993,13 @@ ${js.replace('__CARDS__', () => JSON.stringify(cards))
     .replace('__RVG__', () => JSON.stringify(P.rv || (unit === 1 ? D.RV1 : D.RV2)))}
 ${S.RATEJS}
 ${TABJS}
+${RVSC ? rvJS(DIR) : ''}
 ${TQD ? TQ.scJS(DIR, D, P) + TQ.JS.replace('__TQD__', () => JSON.stringify(TQD)).replace('__TQPAGE__', () => JSON.stringify(require('path').basename(DIR) + '/' + P.file)) +
   "document.body.classList.add('hastq');tqMark();window.addEventListener('resize',tqMark);" : ''}
 </script>
 </body>
 </html>`;
-  return S.HEAD(title, CSS + (hasSS ? SSCSS : '') + (P.rv ? R1CSS : '') + (TQD ? TQ.CSS : '')) + body;
+  return S.HEAD(title, CSS + (hasSS ? SSCSS : '') + (P.rv ? R1CSS : '') + (TQD ? TQ.CSS : '') + (RVSC ? SCC.CSS : '')) + body;
 }
 
 /* 產出哪幾頁：別的課次可以在 _data.js 寫 PAGES 換標題，沒寫就是 sentences 原本的兩頁 */

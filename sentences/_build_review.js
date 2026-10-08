@@ -110,7 +110,8 @@ SITES.forEach(S => {
   const fix = path.join(dir, '_fix.tmp.js');
   fs.writeFileSync(fix, 'module.exports=h=>h;');
   cp.execFileSync('node', [path.join(__dirname, '_build_games.js')], { stdio: 'ignore', env: Object.assign({}, process.env, {
-    SITE_DIR: src, GAMES_ONLY: S.games.join(','), GAMES_OUT: path.join(dir, 'games.html'), GAMES_TITLE: S.g + '｜遊戲' }) });
+    SITE_DIR: src, GAMES_ONLY: S.games.join(','), GAMES_OUT: path.join(dir, 'games.html'), GAMES_TITLE: S.g + '｜遊戲',
+    SCORE_SRC: 'home' }) });   /* 2026-10-08 對話 D：在家複習的遊戲也記成績（來源 🏠 在家，代號跟教學網站同一個遊戲一樣） */
   fs.unlinkSync(fix);
   let h = fs.readFileSync(path.join(dir, 'games.html'), 'utf8');
   const tag = '<script src="' + rel + 'audio/aud.js" onerror="window.AUD=null"></script><script>window.AUDDIR="' + rel + 'audio/";</script>';
