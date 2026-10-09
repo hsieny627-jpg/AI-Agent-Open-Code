@@ -844,6 +844,11 @@ body.hastq #stage{padding-bottom:calc(var(--barH,72px) + var(--tqH,52px) + clamp
 .sckey .okb{background:#0F3323;border-color:var(--ok)}
 .sckey .okb.ready{background:var(--ok);color:#000;animation:scStep 1.2s ease-in-out infinite}
 .sckey .bs{font-size:clamp(24px,4vh,36px)}
+.scl{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.3vh,14px)}
+/* 橫的螢幕（iPad 橫放、教室觸控螢幕）：數字鍵盤放在格子右邊，字不用縮小也放得下 */
+@media (min-aspect-ratio:5/4){.sclog{display:grid;grid-template-columns:auto auto;justify-content:center;align-items:center;column-gap:clamp(24px,4vw,60px)}
+ .sclog>*{grid-column:1/-1;justify-self:center}.sclog>.scl{grid-column:1;grid-row:3}.sclog>.sckey{grid-column:2;grid-row:3}
+ .scl .scmsg{max-width:min(46vw,520px)}}
 #scGuest{background:#141A20;border:2px solid #5A6A78;color:#DDE6EE;border-radius:999px;font-family:inherit;font-weight:700;
  font-size:clamp(17px,2.7vh,24px);padding:10px 26px;min-height:48px;cursor:pointer}
 .scme{display:flex;align-items:center;gap:12px;font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#DDE6EE}
@@ -919,7 +924,7 @@ body.hastq #stage{padding-bottom:calc(var(--barH,72px) + var(--tqH,52px) + clamp
 .sckeep{font-size:clamp(15px,2.4vh,22px);color:#FFB86B;font-weight:700}
 .scempty{font-size:clamp(18px,3vh,28px);color:#9E9E9E;font-weight:700;padding:20px}
 /* 2026-10-08 對話 D：遊戲的成績畫面蓋在遊戲上面（#scov）；作答結束的大分數 */
-#scov{position:fixed;inset:0;z-index:92;background:rgba(0,0,0,.96);display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;
+#scov{position:fixed;inset:0;z-index:92;background:#000;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;
  padding:calc(env(safe-area-inset-top) + clamp(10px,2vh,20px)) clamp(12px,3vw,36px) calc(env(safe-area-inset-bottom) + clamp(10px,2vh,20px))}
 #scov.on{display:flex}
 #scovb{width:100%;max-width:1100px;margin:auto;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vh,16px)}
@@ -2845,9 +2850,9 @@ function scLogin(after){
   var box=function(n,k){var s='';for(var i=0;i<n;i++)s+='<i class="'+k+'"></i>';return s};
   SCH.box().innerHTML='<div class="sclog"><h2>🔢 先登入，成績才會記下來</h2>'+
    '<div class="scsteps"><span id="scSt1">① 🏫 打班級</span><b>➜</b><span id="scSt2">② 🪑 打座號</span><b>➜</b><span id="scSt3">③ ✅ 按綠色勾勾</span></div>'+
-   '<div class="scbox" id="scBox"><div class="scg c" id="scGc"><span class="lb">🏫 班級</span><div class="cells">'+box(3,'c')+'</div></div>'+
+   '<div class="scl"><div class="scbox" id="scBox"><div class="scg c" id="scGc"><span class="lb">🏫 班級</span><div class="cells">'+box(3,'c')+'</div></div>'+
    '<div class="scg s" id="scGs"><span class="lb">🪑 座號</span><div class="cells">'+box(2,'s')+'</div></div></div>'+
-   '<div class="scmsg" id="scMsg"></div>'+
+   '<div class="scmsg" id="scMsg"></div></div>'+
    '<div class="sckey">'+[1,2,3,4,5,6,7,8,9].map(function(n){return '<button data-k="'+n+'">'+n+'</button>'}).join('')+
    '<button class="bs" data-k="b" aria-label="刪掉">⌫</button><button data-k="0">0</button><button class="okb" data-k="ok" aria-label="確定">✅</button></div>'+
    (SCSRC==='home'?'<button id="scGuest">👀 先練習，不記成績</button>':'')+SCH.back+'</div>';
@@ -2867,7 +2872,7 @@ function scPaint(err){
   m.className='scmsg';
   m.innerHTML=v.length===0?'👆 先打你的<b class="kc">班級</b>（3 個數字）<small>例：304 班 5 號 ➜ 打 3 0 4 0 5</small>':
    v.length<3?'🏫 班級還要打 '+(3-v.length)+' 個數字':
-   v.length===3?'👍 '+v+' 班！再打你的<b class="ks">座號</b>（2 個數字）<small>5 號 ➜ 打 0 5　　打錯班級 ➜ 按 ⌫ 重打</small>':
+   v.length===3?'👍 '+v+' 班！再打<b class="ks">座號</b><small>5 號 ➜ 打 0 5<br>班級打錯 ➜ 按 ⌫ 重打</small>':
    v.length===4?'🪑 座號還要打 1 個數字':
    '對嗎？<b class="kc">'+v.slice(0,3)+' 班</b> <b class="ks">'+(+v.slice(3))+' 號</b> ➜ 按綠色的 ✅';
 }
