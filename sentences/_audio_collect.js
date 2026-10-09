@@ -13,6 +13,8 @@ function collect(D, Q, G, TQ) {
   const T = [];
   /* 有中文的（遊戲選項「主詞和 is」這種）不做成英文語音檔：Kokoro 會跳過中文，唸出來不完整 */
   const add = s => { if (s && /[A-Za-z]/.test(String(s).replace(/^m:/, '')) && !/[\u3400-\u9fff]/.test(String(s))) T.push(String(s)); };
+  /* 2026-10-09 使用者：最後一張卡再按 ➡ 的「完成 All done!」頁（sentences/_tq.js tqFin）會唸 All done! */
+  if (TQ) add('All done!');
   const CON = /^['’](s|m|re)$/;
   const plain = tk => tk.map(t => t.tight ? t.en : ' ' + t.en).join('').trim();
   const words = tk => tk.forEach((t, i) => add(CON.test(t.en) && i ? tk[i - 1].en + "'" + t.en.slice(1) : (t.say || t.en)));

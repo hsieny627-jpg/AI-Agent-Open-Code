@@ -181,17 +181,20 @@ async function tqCheck(p, e, vp) {
         if (Q[k].k === 'read' && [].some.call(document.querySelectorAll('.tqr'), x => /[A-Za-z]{2}/.test(x.textContent))) out.push(w + '認讀選項把英文寫出來了（只能有聲音）');
       }
       tqClose();
-      /* 最後一張字卡按 ➡ ＝「🎉 講完了！」〔📝 做 5 題複習〕〔➡ 下一個主題〕（2026-10-09 E17） */
+      /* 最後一張字卡按 ➡ ＝「完成 All done! ✔」〔📝 做 5 題複習〕〔➡ 下一個主題〕（2026-10-09 E17；使用者再改：完成＋英文＋秒懂圖示） */
       i = CARDS.length - 1; draw(0); await wait(40);
       if (document.getElementById('next').disabled) out.push(nm + '：最後一張字卡的 ➡ 被關掉（要進「講完了」）');
       else { document.getElementById('next').click(); await wait(60);
         const fin = document.querySelector('.tqfin'), nx = !!document.getElementById('tqNext');
-        if (!document.body.classList.contains('tqon') || !fin || !/講完了/.test(fin.textContent) || !document.getElementById('tqDo')) out.push(nm + '：最後一張字卡按 ➡ 沒有出現「🎉 講完了！」〔📝 做 5 題複習〕');
+        if (!document.body.classList.contains('tqon') || !fin || !/完成/.test(fin.textContent) || !/All done!/.test(fin.textContent) || !fin.querySelector('.tqdone svg .k') || fin.querySelectorAll('.tqdone i').length < 20 || !document.getElementById('tqDo')) out.push(nm + '：最後一張字卡按 ➡ 沒有出現「🎉 講完了！」〔📝 做 5 題複習〕');
         else {
           if (nx !== (t < TABM.length - 1)) out.push(nm + '：「講完了」頁〔➡ 下一個主題〕' + (nx ? '不該出現' : '沒有出現'));
+          if (!has('All done!')) out.push(nm + '：All done! 沒有語音檔');
+          if (parseFloat(getComputedStyle(fin.querySelector('h2')).fontSize) < 44 || parseFloat(getComputedStyle(document.getElementById('tqEn')).fontSize) < 34) out.push(nm + '：「完成」或 All done! 的字不夠大');
+          { const ic = fin.querySelector('.tqdone').getBoundingClientRect(); if (ic.width < 105) out.push(nm + '：完成的圖示太小（' + Math.round(ic.width) + 'px）'); }
           const rv = document.getElementById('rv'), de = document.documentElement;
           if (rv.scrollHeight > rv.clientHeight + 1 || de.scrollWidth > de.clientWidth) out.push(nm + '：「講完了」頁溢出');
-          [].forEach.call(fin.querySelectorAll('button'), x => { if (x.getBoundingClientRect().height < 56 && x.id !== 'tqBack') out.push(nm + '：「講完了」頁的按鈕不夠大：' + x.textContent);
+          [].forEach.call(fin.querySelectorAll('button'), x => { if (x.getBoundingClientRect().height < 56 && x.id !== 'tqBack' && x.id !== 'tqEn') out.push(nm + '：「講完了」頁的按鈕不夠大：' + x.textContent);
             if (x.scrollWidth > x.clientWidth + 1) out.push(nm + '：「講完了」頁按鈕的字超出框'); });
           document.getElementById('tqDo').click(); await wait(60);
           if (!document.getElementById('tqStart')) out.push(nm + '：「講完了」頁按〔📝 做 5 題複習〕沒有進到複習題');

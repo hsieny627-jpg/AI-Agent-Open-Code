@@ -750,10 +750,23 @@ body.hastq #stage{padding-bottom:calc(var(--barH,72px) + var(--tqH,52px) + clamp
  white-space:nowrap;box-shadow:none;cursor:pointer}
 #tqGo:active{background:#3A2F0B}
 #tqBar[hidden]{display:none}
-/* 講完了！一頁兩顆大按鈕 */
-.tqfin{display:flex;flex-direction:column;align-items:center;gap:clamp(12px,2.4vh,26px);text-align:center}
-.tqfin h2{font-size:clamp(34px,6.4vh,62px)!important;color:var(--gold)}
-.tqfin .tqsub{font-size:clamp(22px,3.8vh,36px)}
+/* 完成 All done!（2026-10-09 使用者：中文「完成」＋英文＋超酷秒懂圖示：綠色大圓圈裡 ✔ 一筆畫出來，彩帶從四周噴出來）＋兩顆大按鈕 */
+.tqfin{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.4vh,16px);text-align:center}
+.tqdone{position:relative;width:clamp(110px,22vh,200px);height:clamp(110px,22vh,200px)}
+.tqdone svg{width:100%;height:100%;overflow:visible;animation:tqPop .5s .95s ease-out both}
+.tqdone .c{fill:#0F3323;stroke:var(--ok);stroke-width:7;stroke-dasharray:330;stroke-dashoffset:330;animation:tqDraw .6s .05s ease-out forwards}
+.tqdone .k{fill:none;stroke:#fff;stroke-width:11;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:90;stroke-dashoffset:90;animation:tqDraw .4s .6s ease-out forwards}
+@keyframes tqDraw{to{stroke-dashoffset:0}}
+@keyframes tqPop{50%{transform:scale(1.16)}}
+.tqdone i{position:absolute;left:50%;top:50%;width:12px;height:20px;border-radius:3px;opacity:0;background:var(--cc);
+ animation:tqConf 1.5s cubic-bezier(.15,.7,.3,1) var(--d) forwards}
+@keyframes tqConf{0%{opacity:1;transform:translate(-50%,-50%) rotate(0)}100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) rotate(var(--r))}}
+body.reduce .tqdone *{animation-duration:0s!important;animation-delay:0s!important}
+body.reduce .tqdone i{display:none}
+.tqfin h2{font-size:clamp(44px,8.6vh,84px)!important;color:#fff;margin:0;line-height:1.05;letter-spacing:.1em}
+.tqen{font-family:Andika,inherit;font-size:clamp(34px,6.6vh,64px);font-weight:700;color:var(--gold);background:none;border:0;cursor:pointer;line-height:1.1;padding:0 8px}
+.tqen.spk{animation:tqBump .6s ease-out}
+.tqfin .tqsub{font-size:clamp(18px,3vh,28px)}
 .tqfin .rvbtns button{font-size:clamp(24px,4.4vh,40px);padding:clamp(12px,2vh,20px) clamp(24px,3.2vw,40px);min-height:72px}
 #tqBack{margin-top:clamp(4px,1vh,10px);border-color:#5A6A78;color:#DDE6EE;background:#141A20;box-shadow:none}
 #tqBack:active{transform:scale(.96)}
@@ -3216,9 +3229,15 @@ function tqSeen(){return !!(TQSEEN&&TQSEEN[tqSk()])}
 function tqFin(){stopPlay();sayStop();
   var nxt=TCUR<TABM.length-1;
   $('#rv').classList.add('on');document.body.classList.add('tqon');
-  $('#rvbox').innerHTML='<div class="tqfin"><h2>🎉 講完了！</h2><div class="tqsub">'+esc(tqNm())+'</div>'+
+  var cf='',CC=['#FFD24A','#5BE39A','#7FBFFF','#FF7EB6','#FF9F43'];
+  for(var n=0;n<26;n++){var a=n/26*6.283+Math.random()*.3,d=95+Math.random()*120;
+    cf+='<i style="--cc:'+CC[n%5]+';--x:'+Math.round(Math.cos(a)*d*1.5)+'px;--y:'+Math.round(Math.sin(a)*d)+'px;--r:'+Math.round(Math.random()*720-360)+'deg;--d:'+(0.95+Math.random()*.15).toFixed(2)+'s"></i>'}
+  $('#rvbox').innerHTML='<div class="tqfin"><div class="tqdone" aria-hidden="true"><svg viewBox="0 0 120 120"><circle class="c" cx="60" cy="60" r="52"/><path class="k" d="M35 62 L53 80 L87 43"/></svg>'+cf+'</div>'+
+   '<h2>完成</h2><button class="tqen" id="tqEn">All done!</button><div class="tqsub">'+esc(tqNm())+'</div>'+
    '<div class="rvbtns"><button class="go" id="tqDo">📝 做 5 題複習</button>'+(nxt?'<button class="go" id="tqNext">➡ 下一個主題</button>':'')+'</div>'+
-   '<button id="tqBack">🃏 回到字卡</button></div>'}
+   '<button id="tqBack">🃏 回到字卡</button></div>';
+  clearTimeout(tqFin.t);tqFin.t=setTimeout(tqSayDone,1100)}   /* ✔ 畫好、彩帶噴出來的時候唸 All done!（點英文可以再聽） */
+function tqSayDone(){var b=$('#tqEn');if(!b||!document.body.classList.contains('tqon'))return;b.classList.remove('spk');void b.offsetWidth;b.classList.add('spk');say('All done!')}
 function tqNm(){var tb=TABM[TCUR];return tb.n+' '+tb.lb+(tb.sub?'・'+tb.sub[LCUR].lb:'')}
 function tqStop(){if(tqTick){clearInterval(tqTick);tqTick=null}}
 /* 名次：跟這台平板做過這一組的成績比（B3）；平手算同一名 */
@@ -3347,7 +3366,8 @@ $('#rv').addEventListener('click',function(e){
   if(!document.body.classList.contains('tqon'))return;
   var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
   if(c('#tqStart')||c('#tqAgain')){tqStart();return}
-  if(c('#tqDo')){tqClose();tqOpen();return}
+  if(c('#tqDo')){clearTimeout(tqFin.t);tqClose();tqOpen();return}
+  if(c('#tqEn')){tqSayDone();return}
   if(c('#tqBack')){tqClose();return}
   if(c('#tqMiss')){missAll(tqNm()+'　答錯整理');return}
   if(c('#tqNext')){tqClose();setDeck(TCUR+1,TABM[TCUR+1].sub?LMEM:0);return}
