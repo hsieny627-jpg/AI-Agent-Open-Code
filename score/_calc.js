@@ -13,7 +13,7 @@
  *   ⚡ 秒按               開始作答 1 秒內就按（Q10-A），只給老師看
  *   同分                 正確率同分比總分，總分也同 ＝ 同名次；其他榜同分 ＝ 同名次（Q14-A）
  *   本週                 台灣時間星期一 00:00 開始（Q12-A）
- *   班級                 三年級 304、307、311；四年級 402、406、409、410；座號 01～40；只跟同年級比（Q9-A）
+ *   班級                 三年級 304、307、311；四年級 402、406、409、410；座號 01～30（使用者 2026-10-09，原本 01～40）；只跟同年級比（Q9-A）
  *
  * 2026-10-08 對話 D（使用者決定在 score/2026-10-08_D_全部遊戲納入成績_需求.md 最下面那張表）：遊戲、Review 1 也記
  *   三種紀錄（m）       q ＝ 題目（📝 複習題、Review 1 頁的 📝 複習）；g ＝ 遊戲；mem ＝ 🃏 記憶配對
@@ -31,6 +31,7 @@ var SC = (function () {
   var COLS = ['時間', '5碼', '年級', '班級', '座號', '類別', '題組', '題組名稱', '玩法', '題數', '答對', '正確率', '總分百分制', '訂正成功',
     '配對', '翻錯', '秒數', '原始分數', '秒按', '來源', '平板', '編號', '每題', '作廢'];
   var CI = {}; for (var ci = 0; ci < COLS.length; ci++) CI[COLS[ci]] = ci;
+  var SEAT = 30;                                                     /* 座號 01～30（使用者 2026-10-09） */
   var DAY = 864e5, TZ = 8 * 36e5, CAP = 3, TOP = 10, GMIN = 6;
   var MT = { q: '題目', g: '遊戲', mem: '記憶配對' }, TM = { '題目': 'q', '遊戲': 'g', '記憶配對': 'mem' };
   var SETRE = /^g([34])(u\d{1,2}|gm|r\d{1,2})_[\w-]{1,16}$/;
@@ -51,7 +52,7 @@ var SC = (function () {
     var gg = c.charAt(0) === '3' ? 3 : (c.charAt(0) === '4' ? 4 : 0);
     if (!gg || CLASSES[gg].indexOf(c) < 0) return { err: 'cls', cls: c };
     if (g && gg !== +g) return { err: 'grade', g: gg };
-    if (s < 1 || s > 40) return { err: 'seat', seat: s };
+    if (s < 1 || s > SEAT) return { err: 'seat', seat: s };
     return { id: id, g: gg, cls: c, seat: s };
   }
   /* 算不算 1 次：題目 ＝ 答對 2/3 以上；遊戲 ＝ 還要第一次作答 ≧ GMIN 題；記憶配對 ＝ 玩完整場就算 */
@@ -224,7 +225,7 @@ var SC = (function () {
     }
     return out;
   }
-  return { CLASSES: CLASSES, COLS: COLS, CI: CI, CAP: CAP, TOP: TOP, GMIN: GMIN, MT: MT, checkId: checkId, cat: cat, counts: counts, need: need, day: day, weekStart: weekStart,
+  return { CLASSES: CLASSES, SEAT: SEAT, COLS: COLS, CI: CI, CAP: CAP, TOP: TOP, GMIN: GMIN, MT: MT, checkId: checkId, cat: cat, counts: counts, need: need, day: day, weekStart: weekStart,
     s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, questions: questions, gtop: gtop, view: view };
 })();
 if (typeof module !== 'undefined') module.exports = SC;

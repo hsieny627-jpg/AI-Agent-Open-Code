@@ -13,6 +13,7 @@ eq(SC.weekStart(MON - 1), MON - 7 * 864e5, '星期日 23:59 是上一週');
 eq(SC.checkId('30405').cls, '304', '30405 ＝ 304 班'); eq(SC.checkId('30405').seat, 5, '30405 ＝ 5 號');
 eq(SC.checkId('30505').err, 'cls', '沒有 305 班'); eq(SC.checkId('30400').err, 'seat', '座號 00 不行'); eq(SC.checkId('30441').err, 'seat', '座號 41 不行');
 eq(SC.checkId('3040').err, 'len', '要 5 碼'); eq(SC.checkId('40205', 3).err, 'grade', '三年級網站擋四年級'); eq(SC.checkId('41005').g, 4, '410 班');
+eq(SC.checkId('30430').seat, 30, '座號 30 可以'); eq(SC.checkId('30431').err, 'seat', '座號 31 擋下來（01～30，使用者 2026-10-09）');
 /* 2/3 門檻：5 題對 4 題才算；6 題對 4 題算 */
 ok(!SC.counts(3, 5) && SC.counts(4, 5) && SC.counts(4, 6) && !SC.counts(3, 6), '答對 2/3 以上才算 1 次（5 題要對 4 題）'); eq(SC.need(5), 4, '5 題要對 4 題');
 /* 總分百分制：答對 60 ＋ 速度 40（Q1-A） */

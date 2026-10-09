@@ -2028,7 +2028,7 @@ function gInit(){hub();var h=(location.hash||'').slice(1);if(h&&META.some(functi
      reopen() 換人以後回哪裡、rk() 作答中名次、btns(E) 最後一幕的按鈕、miss() 答錯整理的標題、act(a) data-sca 按鈕 */
 var SCG=4,SCSRC="school";
 var SCURL=String(window.SCORE_URL||'').replace(/^\s+|\s+$/g,''),SCON=!!SCURL&&!window.__SCORE_TEST_OFF;
-var SCCLS={3:['304','307','311'],4:['402','406','409','410']},SCSEAT=40;
+var SCCLS={3:['304','307','311'],4:['402','406','409','410']},SCSEAT=30;
 function scGet(k){try{return JSON.parse(localStorage.getItem('score_'+k)||'null')}catch(e){return null}}
 function scPut(k,v){try{localStorage.setItem('score_'+k,JSON.stringify(v))}catch(e){}}
 var SCID=scGet(SCG?'id_g'+SCG:'last'),SCGUEST=false,SCDEV=scGet('dev'),SCV=null,SCQ=[],SCT0=0,SCREF=0,SCQI=0,SCIN='',SCEND=null,SCH=null;

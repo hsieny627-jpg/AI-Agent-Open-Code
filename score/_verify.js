@@ -90,7 +90,7 @@ async function student(br, P, vp) {
   n += 8;
   /* ② 防呆：班級打錯（第 3 個數字打完）立刻清空；座號錯只清座號 */
   const bad = [[P.g === 3 ? '305' : (P.g === 4 ? '405' : '305'), '沒有', ''], [P.other.slice(0, 3), '年級的網站', ''],
-    [P.me.slice(0, 3) + '41', '座號', P.me.slice(0, 3)], [P.me.slice(0, 3) + '00', '座號', P.me.slice(0, 3)]].filter(x => P.g || x[1] !== '年級的網站');
+    [P.me.slice(0, 3) + '31', '座號', P.me.slice(0, 3)], [P.me.slice(0, 3) + '00', '座號', P.me.slice(0, 3)]].filter(x => P.g || x[1] !== '年級的網站');
   for (const [id, want, left] of bad) {
     await keys(p, id); const m = await p.evaluate(() => document.getElementById('scMsg').textContent);
     if (m.indexOf(want) < 0) e.push('輸入 ' + id + ' 沒有擋下來（' + m + '）');
