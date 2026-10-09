@@ -49,7 +49,8 @@ module.exports = function (CODE, kind) {
         <span class="btn blue" data-tap="2" data-say="② 完成">完成</span></div></div>
       <div class="chat" data-tap="3" data-say="③ 貼給 Claude">💬 貼到和 Claude 的對話</div>`, tip: 'Claude 放上網站，📝 複習題、🎮 遊戲、📘 Review 1 的成績就開始記' }
   ];
-  /* 2026-10-09 使用者：座號改 1～30、老師看板加名單 ➜ 貼名單＋程式更新（網址不變，url.js 不用改） */
+  /* 2026-10-09 使用者：座號改 1～30、老師看板加名單 ➜ 貼名單＋程式更新（網址不變，url.js 不用改）
+     2026-10-09 E：派任務、課後班 400 ➜ 同一頁再做一次（其他班、課後班的名單接在同一個「名單」分頁下面，不用新增分頁） */
   const UPDATE = [
     { t: '打開上次的成績試算表', m: `
       <div class="win"><div class="url">sheets.google.com</div>
@@ -58,11 +59,11 @@ module.exports = function (CODE, kind) {
     { t: '按最下面的「名單」分頁', m: `
       <div class="win"><div class="lines">　</div><div class="menu"><span>紀錄</span><span>班級人數</span><span class="hot" data-tap="1" data-say="最下面這一排">名單</span></div></div>`,
       tip: '沒有「名單」？按左下角 ＋，改名「名單」，第一列打：班級　座號　姓名' },
-    { t: '點 A2，貼上名單', m: `
+    { t: '點最後一個人的下一列，貼上別班的名單', m: `
       <div class="win"><div class="code"><div class="file">名單</div>
-        <div class="lines">A　班級　　B　座號　　C　姓名<br><span class="hot" data-tap="1" data-say="① 點 A2">304</span>　　1　　　（名字）</div></div></div>
+        <div class="lines">304　　24　　（最後一個）<br><span class="hot" data-tap="1" data-say="① 點下一列的 A">307</span>　　1　　　（名字）</div></div></div>
       <div class="keys"><span class="key" data-tap="2" data-say="② 貼上">Ctrl</span>＋<span class="key">V</span></div>`,
-      tip: '只要三欄：班級、座號、姓名（不要性別）。別班以後貼在下面' },
+      tip: '不用新增分頁：一班接一班往下貼。課後班的班級打 400' },
     FIRST[1], FIRST[2],
     Object.assign({}, FIRST[3], { t: '複製新程式 ➜ 貼上 ➜ 存檔' }),
     { t: '按「部署」➜「管理部署作業」', m: `
@@ -163,7 +164,7 @@ function draw(){
   TT.forEach(clearTimeout);TT=[];
   $('#dots').innerHTML=STEPS.map(function(s,n){return '<i data-k="'+n+'" class="'+(n===K?'on':n<K?'done':'')+'"></i>'}).join('')+'<i data-k="'+STEPS.length+'" class="'+(K===STEPS.length?'on':'')+'" style="border-radius:6px"></i>';
   if(K===STEPS.length){
-    $('#main').innerHTML=${UPD ? `'<div class="end"><div class="n">🎉 完成了！</div><h1>做完以後看一次</h1><ol><li><a href="../teacher/" target="_blank" rel="noopener" style="color:var(--acc)">打開老師看板</a>，打密碼</li><li>👤 個人：多一欄「姓名」✅</li><li>🔔 要關心：列出還沒做的人 ✅</li><li>平板打 30431：說「沒有 31 號」✅</li></ol></div>'` : `'<div class="end"><div class="n">🎉 完成了！</div><h1>做完以後試一次</h1><ol><li>平板打開句型頁，按〔📝 複習題 5 題〕</li><li>看到「🔢 輸入你的號碼」＝ 成功</li><li>打 30401，做完 5 題</li><li>試算表「紀錄」多一列 ✅</li><li>🎮 玩一個遊戲到時間到 ➜ 再多一列 ✅</li></ol></div>'`};
+    $('#main').innerHTML=${UPD ? `'<div class="end"><div class="n">🎉 完成了！</div><h1>做完以後看一次</h1><ol><li><a href="../teacher/" target="_blank" rel="noopener" style="color:var(--acc)">打開老師看板</a>，打密碼</li><li>👤 個人：多一欄「姓名」✅</li><li>🔔 要關心：列出還沒做的人 ✅</li><li>平板打 30431：說「沒有 31 號」✅</li><li>平板打 40001：課後班可以登入 ✅</li><li>📌 任務：派一個任務，試算表多一個「任務」分頁 ✅</li></ol></div>'` : `'<div class="end"><div class="n">🎉 完成了！</div><h1>做完以後試一次</h1><ol><li>平板打開句型頁，按〔📝 複習題 5 題〕</li><li>看到「🔢 輸入你的號碼」＝ 成功</li><li>打 30401，做完 5 題</li><li>試算表「紀錄」多一列 ✅</li><li>🎮 玩一個遊戲到時間到 ➜ 再多一列 ✅</li></ol></div>'`};
   }else{
     var s=STEPS[K];
     $('#main').innerHTML='<div class="n">第 '+(K+1)+' 步　／　共 '+STEPS.length+' 步</div><h1>'+s.t+'</h1><div class="stage" id="stage"><span id="say"></span>'+s.m+'<span id="fing">👆</span></div>'+(s.tip?'<div class="tip">💡 '+s.tip+'</div>':'');

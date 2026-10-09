@@ -1,0 +1,2367 @@
+{
+ "memory": {
+  "name": "🃏 記憶翻牌",
+  "qs": [
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🩺 醫生",
+    "o": [
+     "doctor",
+     "❌ 沒答對"
+    ],
+    "say": "doctor"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🏃 職業運動員",
+    "o": [
+     "professional athlete",
+     "❌ 沒答對"
+    ],
+    "say": "professional athlete"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "📹 YouTube 創作者",
+    "o": [
+     "YouTuber",
+     "❌ 沒答對"
+    ],
+    "say": "YouTuber"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "⚖️ 律師",
+    "o": [
+     "lawyer",
+     "❌ 沒答對"
+    ],
+    "say": "lawyer"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🎭 演員",
+    "o": [
+     "actor",
+     "❌ 沒答對"
+    ],
+    "say": "actor"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "💻 程式設計師",
+    "o": [
+     "programmer",
+     "❌ 沒答對"
+    ],
+    "say": "programmer"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🐶 獸醫",
+    "o": [
+     "veterinarian",
+     "❌ 沒答對"
+    ],
+    "say": "veterinarian"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "👮 警察",
+    "o": [
+     "police officer",
+     "❌ 沒答對"
+    ],
+    "say": "police officer"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "👷 工程師",
+    "o": [
+     "engineer",
+     "❌ 沒答對"
+    ],
+    "say": "engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🎥 內容創作者",
+    "o": [
+     "content creator",
+     "❌ 沒答對"
+    ],
+    "say": "content creator"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🎮 電競選手",
+    "o": [
+     "esports player",
+     "❌ 沒答對"
+    ],
+    "say": "esports player"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🧑‍🏫 老師",
+    "o": [
+     "teacher",
+     "❌ 沒答對"
+    ],
+    "say": "teacher"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "💼 企業經理",
+    "o": [
+     "business manager",
+     "❌ 沒答對"
+    ],
+    "say": "business manager"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🎮 遊戲試玩員",
+    "o": [
+     "game tester",
+     "❌ 沒答對"
+    ],
+    "say": "game tester"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "✈️ 機師",
+    "o": [
+     "pilot",
+     "❌ 沒答對"
+    ],
+    "say": "pilot"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "📣 網紅",
+    "o": [
+     "influencer",
+     "❌ 沒答對"
+    ],
+    "say": "influencer"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🧠 心理諮商師",
+    "o": [
+     "counselor",
+     "❌ 沒答對"
+    ],
+    "say": "counselor"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🚒 消防員",
+    "o": [
+     "firefighter",
+     "❌ 沒答對"
+    ],
+    "say": "firefighter"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🎭 演藝人員",
+    "o": [
+     "entertainer",
+     "❌ 沒答對"
+    ],
+    "say": "entertainer"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🍞 麵包糕點師",
+    "o": [
+     "baker",
+     "❌ 沒答對"
+    ],
+    "say": "baker"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "💉 護理師",
+    "o": [
+     "nurse",
+     "❌ 沒答對"
+    ],
+    "say": "nurse"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🧭 導遊",
+    "o": [
+     "tour guide",
+     "❌ 沒答對"
+    ],
+    "say": "tour guide"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🧠 心理師",
+    "o": [
+     "psychologist",
+     "❌ 沒答對"
+    ],
+    "say": "psychologist"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🎨 畫家",
+    "o": [
+     "painter",
+     "❌ 沒答對"
+    ],
+    "say": "painter"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🖌️ 設計師",
+    "o": [
+     "designer",
+     "❌ 沒答對"
+    ],
+    "say": "designer"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🧳 空服員",
+    "o": [
+     "flight attendant",
+     "❌ 沒答對"
+    ],
+    "say": "flight attendant"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🎤 歌手",
+    "o": [
+     "singer",
+     "❌ 沒答對"
+    ],
+    "say": "singer"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🔧 汽車技師",
+    "o": [
+     "mechanic",
+     "❌ 沒答對"
+    ],
+    "say": "mechanic"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🖥️ 電腦工程師",
+    "o": [
+     "computer engineer",
+     "❌ 沒答對"
+    ],
+    "say": "computer engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🏠 房仲",
+    "o": [
+     "real estate agent",
+     "❌ 沒答對"
+    ],
+    "say": "real estate agent"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "✂️ 髮型師",
+    "o": [
+     "hairstylist",
+     "❌ 沒答對"
+    ],
+    "say": "hairstylist"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🏛️ 建築師",
+    "o": [
+     "architect",
+     "❌ 沒答對"
+    ],
+    "say": "architect"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🎧 DJ（放音樂的人）",
+    "o": [
+     "DJ",
+     "❌ 沒答對"
+    ],
+    "say": "DJ"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "⚙️ 機械工程師",
+    "o": [
+     "mechanical engineer",
+     "❌ 沒答對"
+    ],
+    "say": "mechanical engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🃏 記憶翻牌",
+    "q": "🧑‍🍳 廚師",
+    "o": [
+     "chef",
+     "❌ 沒答對"
+    ],
+    "say": "chef"
+   }
+  ]
+ },
+ "mole": {
+  "name": "🔨 打地鼠",
+  "qs": [
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🩺 醫生",
+    "o": [
+     "doctor",
+     "❌ 沒答對"
+    ],
+    "say": "doctor"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🏃 職業運動員",
+    "o": [
+     "professional athlete",
+     "❌ 沒答對"
+    ],
+    "say": "professional athlete"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "📹 YouTube 創作者",
+    "o": [
+     "YouTuber",
+     "❌ 沒答對"
+    ],
+    "say": "YouTuber"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "⚖️ 律師",
+    "o": [
+     "lawyer",
+     "❌ 沒答對"
+    ],
+    "say": "lawyer"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🎭 演員",
+    "o": [
+     "actor",
+     "❌ 沒答對"
+    ],
+    "say": "actor"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "💻 程式設計師",
+    "o": [
+     "programmer",
+     "❌ 沒答對"
+    ],
+    "say": "programmer"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🐶 獸醫",
+    "o": [
+     "veterinarian",
+     "❌ 沒答對"
+    ],
+    "say": "veterinarian"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "👮 警察",
+    "o": [
+     "police officer",
+     "❌ 沒答對"
+    ],
+    "say": "police officer"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "👷 工程師",
+    "o": [
+     "engineer",
+     "❌ 沒答對"
+    ],
+    "say": "engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🎥 內容創作者",
+    "o": [
+     "content creator",
+     "❌ 沒答對"
+    ],
+    "say": "content creator"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🎮 電競選手",
+    "o": [
+     "esports player",
+     "❌ 沒答對"
+    ],
+    "say": "esports player"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🧑‍🏫 老師",
+    "o": [
+     "teacher",
+     "❌ 沒答對"
+    ],
+    "say": "teacher"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "💼 企業經理",
+    "o": [
+     "business manager",
+     "❌ 沒答對"
+    ],
+    "say": "business manager"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🎮 遊戲試玩員",
+    "o": [
+     "game tester",
+     "❌ 沒答對"
+    ],
+    "say": "game tester"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "✈️ 機師",
+    "o": [
+     "pilot",
+     "❌ 沒答對"
+    ],
+    "say": "pilot"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "📣 網紅",
+    "o": [
+     "influencer",
+     "❌ 沒答對"
+    ],
+    "say": "influencer"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🧠 心理諮商師",
+    "o": [
+     "counselor",
+     "❌ 沒答對"
+    ],
+    "say": "counselor"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🚒 消防員",
+    "o": [
+     "firefighter",
+     "❌ 沒答對"
+    ],
+    "say": "firefighter"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🎭 演藝人員",
+    "o": [
+     "entertainer",
+     "❌ 沒答對"
+    ],
+    "say": "entertainer"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🍞 麵包糕點師",
+    "o": [
+     "baker",
+     "❌ 沒答對"
+    ],
+    "say": "baker"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "💉 護理師",
+    "o": [
+     "nurse",
+     "❌ 沒答對"
+    ],
+    "say": "nurse"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🧭 導遊",
+    "o": [
+     "tour guide",
+     "❌ 沒答對"
+    ],
+    "say": "tour guide"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🧠 心理師",
+    "o": [
+     "psychologist",
+     "❌ 沒答對"
+    ],
+    "say": "psychologist"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🎨 畫家",
+    "o": [
+     "painter",
+     "❌ 沒答對"
+    ],
+    "say": "painter"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🖌️ 設計師",
+    "o": [
+     "designer",
+     "❌ 沒答對"
+    ],
+    "say": "designer"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🧳 空服員",
+    "o": [
+     "flight attendant",
+     "❌ 沒答對"
+    ],
+    "say": "flight attendant"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🎤 歌手",
+    "o": [
+     "singer",
+     "❌ 沒答對"
+    ],
+    "say": "singer"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🔧 汽車技師",
+    "o": [
+     "mechanic",
+     "❌ 沒答對"
+    ],
+    "say": "mechanic"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🖥️ 電腦工程師",
+    "o": [
+     "computer engineer",
+     "❌ 沒答對"
+    ],
+    "say": "computer engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🏠 房仲",
+    "o": [
+     "real estate agent",
+     "❌ 沒答對"
+    ],
+    "say": "real estate agent"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "✂️ 髮型師",
+    "o": [
+     "hairstylist",
+     "❌ 沒答對"
+    ],
+    "say": "hairstylist"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🏛️ 建築師",
+    "o": [
+     "architect",
+     "❌ 沒答對"
+    ],
+    "say": "architect"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🎧 DJ（放音樂的人）",
+    "o": [
+     "DJ",
+     "❌ 沒答對"
+    ],
+    "say": "DJ"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "⚙️ 機械工程師",
+    "o": [
+     "mechanical engineer",
+     "❌ 沒答對"
+    ],
+    "say": "mechanical engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🔨 打地鼠",
+    "q": "🧑‍🍳 廚師",
+    "o": [
+     "chef",
+     "❌ 沒答對"
+    ],
+    "say": "chef"
+   }
+  ]
+ },
+ "lava": {
+  "name": "🌋 火山大逃亡",
+  "qs": [
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🩺 醫生",
+    "o": [
+     "doctor",
+     "❌ 沒答對"
+    ],
+    "say": "doctor"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🏃 職業運動員",
+    "o": [
+     "professional athlete",
+     "❌ 沒答對"
+    ],
+    "say": "professional athlete"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "📹 YouTube 創作者",
+    "o": [
+     "YouTuber",
+     "❌ 沒答對"
+    ],
+    "say": "YouTuber"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "⚖️ 律師",
+    "o": [
+     "lawyer",
+     "❌ 沒答對"
+    ],
+    "say": "lawyer"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🎭 演員",
+    "o": [
+     "actor",
+     "❌ 沒答對"
+    ],
+    "say": "actor"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "💻 程式設計師",
+    "o": [
+     "programmer",
+     "❌ 沒答對"
+    ],
+    "say": "programmer"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🐶 獸醫",
+    "o": [
+     "veterinarian",
+     "❌ 沒答對"
+    ],
+    "say": "veterinarian"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "👮 警察",
+    "o": [
+     "police officer",
+     "❌ 沒答對"
+    ],
+    "say": "police officer"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "👷 工程師",
+    "o": [
+     "engineer",
+     "❌ 沒答對"
+    ],
+    "say": "engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🎥 內容創作者",
+    "o": [
+     "content creator",
+     "❌ 沒答對"
+    ],
+    "say": "content creator"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🎮 電競選手",
+    "o": [
+     "esports player",
+     "❌ 沒答對"
+    ],
+    "say": "esports player"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🧑‍🏫 老師",
+    "o": [
+     "teacher",
+     "❌ 沒答對"
+    ],
+    "say": "teacher"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "💼 企業經理",
+    "o": [
+     "business manager",
+     "❌ 沒答對"
+    ],
+    "say": "business manager"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🎮 遊戲試玩員",
+    "o": [
+     "game tester",
+     "❌ 沒答對"
+    ],
+    "say": "game tester"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "✈️ 機師",
+    "o": [
+     "pilot",
+     "❌ 沒答對"
+    ],
+    "say": "pilot"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "📣 網紅",
+    "o": [
+     "influencer",
+     "❌ 沒答對"
+    ],
+    "say": "influencer"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🧠 心理諮商師",
+    "o": [
+     "counselor",
+     "❌ 沒答對"
+    ],
+    "say": "counselor"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🚒 消防員",
+    "o": [
+     "firefighter",
+     "❌ 沒答對"
+    ],
+    "say": "firefighter"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🎭 演藝人員",
+    "o": [
+     "entertainer",
+     "❌ 沒答對"
+    ],
+    "say": "entertainer"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🍞 麵包糕點師",
+    "o": [
+     "baker",
+     "❌ 沒答對"
+    ],
+    "say": "baker"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "💉 護理師",
+    "o": [
+     "nurse",
+     "❌ 沒答對"
+    ],
+    "say": "nurse"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🧭 導遊",
+    "o": [
+     "tour guide",
+     "❌ 沒答對"
+    ],
+    "say": "tour guide"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🧠 心理師",
+    "o": [
+     "psychologist",
+     "❌ 沒答對"
+    ],
+    "say": "psychologist"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🎨 畫家",
+    "o": [
+     "painter",
+     "❌ 沒答對"
+    ],
+    "say": "painter"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🖌️ 設計師",
+    "o": [
+     "designer",
+     "❌ 沒答對"
+    ],
+    "say": "designer"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🧳 空服員",
+    "o": [
+     "flight attendant",
+     "❌ 沒答對"
+    ],
+    "say": "flight attendant"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🎤 歌手",
+    "o": [
+     "singer",
+     "❌ 沒答對"
+    ],
+    "say": "singer"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🔧 汽車技師",
+    "o": [
+     "mechanic",
+     "❌ 沒答對"
+    ],
+    "say": "mechanic"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🖥️ 電腦工程師",
+    "o": [
+     "computer engineer",
+     "❌ 沒答對"
+    ],
+    "say": "computer engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🏠 房仲",
+    "o": [
+     "real estate agent",
+     "❌ 沒答對"
+    ],
+    "say": "real estate agent"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "✂️ 髮型師",
+    "o": [
+     "hairstylist",
+     "❌ 沒答對"
+    ],
+    "say": "hairstylist"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🏛️ 建築師",
+    "o": [
+     "architect",
+     "❌ 沒答對"
+    ],
+    "say": "architect"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🎧 DJ（放音樂的人）",
+    "o": [
+     "DJ",
+     "❌ 沒答對"
+    ],
+    "say": "DJ"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "⚙️ 機械工程師",
+    "o": [
+     "mechanical engineer",
+     "❌ 沒答對"
+    ],
+    "say": "mechanical engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🌋 火山大逃亡",
+    "q": "🧑‍🍳 廚師",
+    "o": [
+     "chef",
+     "❌ 沒答對"
+    ],
+    "say": "chef"
+   }
+  ]
+ },
+ "dark": {
+  "name": "🔦 黑夜搜查",
+  "qs": [
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🩺 醫生",
+    "o": [
+     "doctor",
+     "❌ 沒答對"
+    ],
+    "say": "doctor"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🏃 職業運動員",
+    "o": [
+     "professional athlete",
+     "❌ 沒答對"
+    ],
+    "say": "professional athlete"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "📹 YouTube 創作者",
+    "o": [
+     "YouTuber",
+     "❌ 沒答對"
+    ],
+    "say": "YouTuber"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "⚖️ 律師",
+    "o": [
+     "lawyer",
+     "❌ 沒答對"
+    ],
+    "say": "lawyer"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🎭 演員",
+    "o": [
+     "actor",
+     "❌ 沒答對"
+    ],
+    "say": "actor"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "💻 程式設計師",
+    "o": [
+     "programmer",
+     "❌ 沒答對"
+    ],
+    "say": "programmer"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🐶 獸醫",
+    "o": [
+     "veterinarian",
+     "❌ 沒答對"
+    ],
+    "say": "veterinarian"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "👮 警察",
+    "o": [
+     "police officer",
+     "❌ 沒答對"
+    ],
+    "say": "police officer"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "👷 工程師",
+    "o": [
+     "engineer",
+     "❌ 沒答對"
+    ],
+    "say": "engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🎥 內容創作者",
+    "o": [
+     "content creator",
+     "❌ 沒答對"
+    ],
+    "say": "content creator"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🎮 電競選手",
+    "o": [
+     "esports player",
+     "❌ 沒答對"
+    ],
+    "say": "esports player"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🧑‍🏫 老師",
+    "o": [
+     "teacher",
+     "❌ 沒答對"
+    ],
+    "say": "teacher"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "💼 企業經理",
+    "o": [
+     "business manager",
+     "❌ 沒答對"
+    ],
+    "say": "business manager"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🎮 遊戲試玩員",
+    "o": [
+     "game tester",
+     "❌ 沒答對"
+    ],
+    "say": "game tester"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "✈️ 機師",
+    "o": [
+     "pilot",
+     "❌ 沒答對"
+    ],
+    "say": "pilot"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "📣 網紅",
+    "o": [
+     "influencer",
+     "❌ 沒答對"
+    ],
+    "say": "influencer"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🧠 心理諮商師",
+    "o": [
+     "counselor",
+     "❌ 沒答對"
+    ],
+    "say": "counselor"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🚒 消防員",
+    "o": [
+     "firefighter",
+     "❌ 沒答對"
+    ],
+    "say": "firefighter"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🎭 演藝人員",
+    "o": [
+     "entertainer",
+     "❌ 沒答對"
+    ],
+    "say": "entertainer"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🍞 麵包糕點師",
+    "o": [
+     "baker",
+     "❌ 沒答對"
+    ],
+    "say": "baker"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "💉 護理師",
+    "o": [
+     "nurse",
+     "❌ 沒答對"
+    ],
+    "say": "nurse"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🧭 導遊",
+    "o": [
+     "tour guide",
+     "❌ 沒答對"
+    ],
+    "say": "tour guide"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🧠 心理師",
+    "o": [
+     "psychologist",
+     "❌ 沒答對"
+    ],
+    "say": "psychologist"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🎨 畫家",
+    "o": [
+     "painter",
+     "❌ 沒答對"
+    ],
+    "say": "painter"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🖌️ 設計師",
+    "o": [
+     "designer",
+     "❌ 沒答對"
+    ],
+    "say": "designer"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🧳 空服員",
+    "o": [
+     "flight attendant",
+     "❌ 沒答對"
+    ],
+    "say": "flight attendant"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🎤 歌手",
+    "o": [
+     "singer",
+     "❌ 沒答對"
+    ],
+    "say": "singer"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🔧 汽車技師",
+    "o": [
+     "mechanic",
+     "❌ 沒答對"
+    ],
+    "say": "mechanic"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🖥️ 電腦工程師",
+    "o": [
+     "computer engineer",
+     "❌ 沒答對"
+    ],
+    "say": "computer engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🏠 房仲",
+    "o": [
+     "real estate agent",
+     "❌ 沒答對"
+    ],
+    "say": "real estate agent"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "✂️ 髮型師",
+    "o": [
+     "hairstylist",
+     "❌ 沒答對"
+    ],
+    "say": "hairstylist"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🏛️ 建築師",
+    "o": [
+     "architect",
+     "❌ 沒答對"
+    ],
+    "say": "architect"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🎧 DJ（放音樂的人）",
+    "o": [
+     "DJ",
+     "❌ 沒答對"
+    ],
+    "say": "DJ"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "⚙️ 機械工程師",
+    "o": [
+     "mechanical engineer",
+     "❌ 沒答對"
+    ],
+    "say": "mechanical engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🔦 黑夜搜查",
+    "q": "🧑‍🍳 廚師",
+    "o": [
+     "chef",
+     "❌ 沒答對"
+    ],
+    "say": "chef"
+   }
+  ]
+ },
+ "beat": {
+  "name": "🥁 拍數節奏",
+  "qs": [
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🩺 醫生",
+    "o": [
+     "doctor",
+     "❌ 沒答對"
+    ],
+    "say": "doctor"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🏃 職業運動員",
+    "o": [
+     "professional athlete",
+     "❌ 沒答對"
+    ],
+    "say": "professional athlete"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "📹 YouTube 創作者",
+    "o": [
+     "YouTuber",
+     "❌ 沒答對"
+    ],
+    "say": "YouTuber"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "⚖️ 律師",
+    "o": [
+     "lawyer",
+     "❌ 沒答對"
+    ],
+    "say": "lawyer"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🎭 演員",
+    "o": [
+     "actor",
+     "❌ 沒答對"
+    ],
+    "say": "actor"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "💻 程式設計師",
+    "o": [
+     "programmer",
+     "❌ 沒答對"
+    ],
+    "say": "programmer"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🐶 獸醫",
+    "o": [
+     "veterinarian",
+     "❌ 沒答對"
+    ],
+    "say": "veterinarian"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "👮 警察",
+    "o": [
+     "police officer",
+     "❌ 沒答對"
+    ],
+    "say": "police officer"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "👷 工程師",
+    "o": [
+     "engineer",
+     "❌ 沒答對"
+    ],
+    "say": "engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🎥 內容創作者",
+    "o": [
+     "content creator",
+     "❌ 沒答對"
+    ],
+    "say": "content creator"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🎮 電競選手",
+    "o": [
+     "esports player",
+     "❌ 沒答對"
+    ],
+    "say": "esports player"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🧑‍🏫 老師",
+    "o": [
+     "teacher",
+     "❌ 沒答對"
+    ],
+    "say": "teacher"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "💼 企業經理",
+    "o": [
+     "business manager",
+     "❌ 沒答對"
+    ],
+    "say": "business manager"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🎮 遊戲試玩員",
+    "o": [
+     "game tester",
+     "❌ 沒答對"
+    ],
+    "say": "game tester"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "✈️ 機師",
+    "o": [
+     "pilot",
+     "❌ 沒答對"
+    ],
+    "say": "pilot"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "📣 網紅",
+    "o": [
+     "influencer",
+     "❌ 沒答對"
+    ],
+    "say": "influencer"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🧠 心理諮商師",
+    "o": [
+     "counselor",
+     "❌ 沒答對"
+    ],
+    "say": "counselor"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🚒 消防員",
+    "o": [
+     "firefighter",
+     "❌ 沒答對"
+    ],
+    "say": "firefighter"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🎭 演藝人員",
+    "o": [
+     "entertainer",
+     "❌ 沒答對"
+    ],
+    "say": "entertainer"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🍞 麵包糕點師",
+    "o": [
+     "baker",
+     "❌ 沒答對"
+    ],
+    "say": "baker"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "💉 護理師",
+    "o": [
+     "nurse",
+     "❌ 沒答對"
+    ],
+    "say": "nurse"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🧭 導遊",
+    "o": [
+     "tour guide",
+     "❌ 沒答對"
+    ],
+    "say": "tour guide"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🧠 心理師",
+    "o": [
+     "psychologist",
+     "❌ 沒答對"
+    ],
+    "say": "psychologist"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🎨 畫家",
+    "o": [
+     "painter",
+     "❌ 沒答對"
+    ],
+    "say": "painter"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🖌️ 設計師",
+    "o": [
+     "designer",
+     "❌ 沒答對"
+    ],
+    "say": "designer"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🧳 空服員",
+    "o": [
+     "flight attendant",
+     "❌ 沒答對"
+    ],
+    "say": "flight attendant"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🎤 歌手",
+    "o": [
+     "singer",
+     "❌ 沒答對"
+    ],
+    "say": "singer"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🔧 汽車技師",
+    "o": [
+     "mechanic",
+     "❌ 沒答對"
+    ],
+    "say": "mechanic"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🖥️ 電腦工程師",
+    "o": [
+     "computer engineer",
+     "❌ 沒答對"
+    ],
+    "say": "computer engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🏠 房仲",
+    "o": [
+     "real estate agent",
+     "❌ 沒答對"
+    ],
+    "say": "real estate agent"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "✂️ 髮型師",
+    "o": [
+     "hairstylist",
+     "❌ 沒答對"
+    ],
+    "say": "hairstylist"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🏛️ 建築師",
+    "o": [
+     "architect",
+     "❌ 沒答對"
+    ],
+    "say": "architect"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🎧 DJ（放音樂的人）",
+    "o": [
+     "DJ",
+     "❌ 沒答對"
+    ],
+    "say": "DJ"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "⚙️ 機械工程師",
+    "o": [
+     "mechanical engineer",
+     "❌ 沒答對"
+    ],
+    "say": "mechanical engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🥁 拍數節奏",
+    "q": "🧑‍🍳 廚師",
+    "o": [
+     "chef",
+     "❌ 沒答對"
+    ],
+    "say": "chef"
+   }
+  ]
+ },
+ "detect": {
+  "name": "🕵️ 職業神探",
+  "qs": [
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🔧 汽車技師",
+    "o": [
+     "mechanic",
+     "❌ 沒答對"
+    ],
+    "say": "mechanic"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🐶 獸醫",
+    "o": [
+     "veterinarian",
+     "❌ 沒答對"
+    ],
+    "say": "veterinarian"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🎨 畫家",
+    "o": [
+     "painter",
+     "❌ 沒答對"
+    ],
+    "say": "painter"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🧑‍🏫 老師",
+    "o": [
+     "teacher",
+     "❌ 沒答對"
+    ],
+    "say": "teacher"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "💼 企業經理",
+    "o": [
+     "business manager",
+     "❌ 沒答對"
+    ],
+    "say": "business manager"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "💻 程式設計師",
+    "o": [
+     "programmer",
+     "❌ 沒答對"
+    ],
+    "say": "programmer"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🍞 麵包糕點師",
+    "o": [
+     "baker",
+     "❌ 沒答對"
+    ],
+    "say": "baker"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🎮 遊戲試玩員",
+    "o": [
+     "game tester",
+     "❌ 沒答對"
+    ],
+    "say": "game tester"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🖌️ 設計師",
+    "o": [
+     "designer",
+     "❌ 沒答對"
+    ],
+    "say": "designer"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "💉 護理師",
+    "o": [
+     "nurse",
+     "❌ 沒答對"
+    ],
+    "say": "nurse"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "⚖️ 律師",
+    "o": [
+     "lawyer",
+     "❌ 沒答對"
+    ],
+    "say": "lawyer"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🧳 空服員",
+    "o": [
+     "flight attendant",
+     "❌ 沒答對"
+    ],
+    "say": "flight attendant"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🚒 消防員",
+    "o": [
+     "firefighter",
+     "❌ 沒答對"
+    ],
+    "say": "firefighter"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🩺 醫生",
+    "o": [
+     "doctor",
+     "❌ 沒答對"
+    ],
+    "say": "doctor"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🎤 歌手",
+    "o": [
+     "singer",
+     "❌ 沒答對"
+    ],
+    "say": "singer"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🧠 心理諮商師",
+    "o": [
+     "counselor",
+     "❌ 沒答對"
+    ],
+    "say": "counselor"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🏠 房仲",
+    "o": [
+     "real estate agent",
+     "❌ 沒答對"
+    ],
+    "say": "real estate agent"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "👮 警察",
+    "o": [
+     "police officer",
+     "❌ 沒答對"
+    ],
+    "say": "police officer"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🏃 職業運動員",
+    "o": [
+     "professional athlete",
+     "❌ 沒答對"
+    ],
+    "say": "professional athlete"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "⚙️ 機械工程師",
+    "o": [
+     "mechanical engineer",
+     "❌ 沒答對"
+    ],
+    "say": "mechanical engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🎭 演員",
+    "o": [
+     "actor",
+     "❌ 沒答對"
+    ],
+    "say": "actor"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🧭 導遊",
+    "o": [
+     "tour guide",
+     "❌ 沒答對"
+    ],
+    "say": "tour guide"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🧑‍🍳 廚師",
+    "o": [
+     "chef",
+     "❌ 沒答對"
+    ],
+    "say": "chef"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "✂️ 髮型師",
+    "o": [
+     "hairstylist",
+     "❌ 沒答對"
+    ],
+    "say": "hairstylist"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🧠 心理師",
+    "o": [
+     "psychologist",
+     "❌ 沒答對"
+    ],
+    "say": "psychologist"
+   },
+   {
+    "k": "g",
+    "kn": "🕵️ 職業神探",
+    "q": "🎧 DJ（放音樂的人）",
+    "o": [
+     "DJ",
+     "❌ 沒答對"
+    ],
+    "say": "DJ"
+   }
+  ]
+ },
+ "magnet": {
+  "name": "🧲 興趣磁鐵",
+  "qs": [
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🩺 醫生",
+    "o": [
+     "doctor",
+     "❌ 沒答對"
+    ],
+    "say": "doctor"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🏃 職業運動員",
+    "o": [
+     "professional athlete",
+     "❌ 沒答對"
+    ],
+    "say": "professional athlete"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "⚖️ 律師",
+    "o": [
+     "lawyer",
+     "❌ 沒答對"
+    ],
+    "say": "lawyer"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🎭 演員",
+    "o": [
+     "actor",
+     "❌ 沒答對"
+    ],
+    "say": "actor"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "💻 程式設計師",
+    "o": [
+     "programmer",
+     "❌ 沒答對"
+    ],
+    "say": "programmer"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🐶 獸醫",
+    "o": [
+     "veterinarian",
+     "❌ 沒答對"
+    ],
+    "say": "veterinarian"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "👮 警察",
+    "o": [
+     "police officer",
+     "❌ 沒答對"
+    ],
+    "say": "police officer"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "👷 工程師",
+    "o": [
+     "engineer",
+     "❌ 沒答對"
+    ],
+    "say": "engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🎮 電競選手",
+    "o": [
+     "esports player",
+     "❌ 沒答對"
+    ],
+    "say": "esports player"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🧑‍🏫 老師",
+    "o": [
+     "teacher",
+     "❌ 沒答對"
+    ],
+    "say": "teacher"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "💼 企業經理",
+    "o": [
+     "business manager",
+     "❌ 沒答對"
+    ],
+    "say": "business manager"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🎮 遊戲試玩員",
+    "o": [
+     "game tester",
+     "❌ 沒答對"
+    ],
+    "say": "game tester"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "✈️ 機師",
+    "o": [
+     "pilot",
+     "❌ 沒答對"
+    ],
+    "say": "pilot"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🧠 心理諮商師",
+    "o": [
+     "counselor",
+     "❌ 沒答對"
+    ],
+    "say": "counselor"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🚒 消防員",
+    "o": [
+     "firefighter",
+     "❌ 沒答對"
+    ],
+    "say": "firefighter"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🎭 演藝人員",
+    "o": [
+     "entertainer",
+     "❌ 沒答對"
+    ],
+    "say": "entertainer"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🍞 麵包糕點師",
+    "o": [
+     "baker",
+     "❌ 沒答對"
+    ],
+    "say": "baker"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "💉 護理師",
+    "o": [
+     "nurse",
+     "❌ 沒答對"
+    ],
+    "say": "nurse"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🧭 導遊",
+    "o": [
+     "tour guide",
+     "❌ 沒答對"
+    ],
+    "say": "tour guide"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🧠 心理師",
+    "o": [
+     "psychologist",
+     "❌ 沒答對"
+    ],
+    "say": "psychologist"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🎨 畫家",
+    "o": [
+     "painter",
+     "❌ 沒答對"
+    ],
+    "say": "painter"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🖌️ 設計師",
+    "o": [
+     "designer",
+     "❌ 沒答對"
+    ],
+    "say": "designer"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🧳 空服員",
+    "o": [
+     "flight attendant",
+     "❌ 沒答對"
+    ],
+    "say": "flight attendant"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🎤 歌手",
+    "o": [
+     "singer",
+     "❌ 沒答對"
+    ],
+    "say": "singer"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🔧 汽車技師",
+    "o": [
+     "mechanic",
+     "❌ 沒答對"
+    ],
+    "say": "mechanic"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🖥️ 電腦工程師",
+    "o": [
+     "computer engineer",
+     "❌ 沒答對"
+    ],
+    "say": "computer engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🏠 房仲",
+    "o": [
+     "real estate agent",
+     "❌ 沒答對"
+    ],
+    "say": "real estate agent"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "✂️ 髮型師",
+    "o": [
+     "hairstylist",
+     "❌ 沒答對"
+    ],
+    "say": "hairstylist"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🏛️ 建築師",
+    "o": [
+     "architect",
+     "❌ 沒答對"
+    ],
+    "say": "architect"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🎧 DJ（放音樂的人）",
+    "o": [
+     "DJ",
+     "❌ 沒答對"
+    ],
+    "say": "DJ"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "⚙️ 機械工程師",
+    "o": [
+     "mechanical engineer",
+     "❌ 沒答對"
+    ],
+    "say": "mechanical engineer"
+   },
+   {
+    "k": "g",
+    "kn": "🧲 興趣磁鐵",
+    "q": "🧑‍🍳 廚師",
+    "o": [
+     "chef",
+     "❌ 沒答對"
+    ],
+    "say": "chef"
+   }
+  ]
+ }
+}

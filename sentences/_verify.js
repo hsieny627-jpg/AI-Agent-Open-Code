@@ -124,6 +124,8 @@ async function tqCheck(p, e, vp) {
     const ORD = ['read', 'listen', 'zh2en', 'en2zh', 'trap'];
     const has = t => !window.AUD || !!(AUD[akey(t)] && (!boyV(t) || AUD['m:' + akey(t)]));
     if (document.getElementById('rvBtn')) out.push('舊的「📝 複習」按鈕還在（使用者 2026-10-04 B5：刪掉）');
+    TQSEEN = {};   /* 2026-10-09 E16～E20：從「都還沒講完」開始量 */
+    const vis = id => { const x = document.getElementById(id), r = x.getBoundingClientRect(); return !x.hidden && r.width > 0 && getComputedStyle(x).visibility !== 'hidden' && !x.closest('[hidden]'); };
     for (let t = 0; t < TABM.length; t++) for (let l = 0; l < (TABM[t].sub ? 2 : 1); l++) {
       setDeck(t, l); await wait(60);
       const nm = '分頁 ' + TABM[t].n + (TABM[t].sub ? (l ? '進階' : '基礎') : '') + ' 複習題';
@@ -137,6 +139,19 @@ async function tqCheck(p, e, vp) {
         if (q.k === 'listen' && !has(q.say)) out.push(nm + ' 聽力句子沒有語音檔：' + q.say);
         if (q.sp && !has(q.sp)) out.push(nm + ' 答錯頁要唸的沒有語音檔：' + q.sp);
       });
+      /* 講完才選（2026-10-09 E16～E20）：還沒看到最後一張 ＝ 看不到〔📝 複習題〕；最後一張 ＝〔📝 做 5 題複習〕＋〔➡ 下一個主題〕；講完以後一直在 */
+      if (vis('tqGo')) out.push(nm + '：還沒看到最後一張卡，就看得到〔📝 複習題〕');
+      if (CARDS.length > 2) { i = 1; draw(0); await wait(30); if (vis('tqGo')) out.push(nm + '：第 2 張就看得到〔📝 複習題〕（還不是最後一張）'); }
+      i = CARDS.length - 1; draw(0); await wait(40);
+      if (!vis('tqGo') || !/做 5 題複習/.test(document.getElementById('tqGo').textContent)) out.push(nm + '：最後一張卡下面沒有〔📝 做 5 題複習〕');
+      if (vis('tqNx') !== (t < TABM.length - 1)) out.push(nm + '：最後一張卡〔➡ 下一個主題〕' + (t < TABM.length - 1 ? '沒有出現' : '不該出現（最後一個分頁）'));
+      { const a = document.getElementById('tqGo').getBoundingClientRect(), n2 = document.getElementById('tqNx').getBoundingClientRect();
+        if (vis('tqNx') && (a.right > n2.left + 1 || Math.abs(a.top - n2.top) > 2)) out.push(nm + '：〔📝 做 5 題複習〕〔➡ 下一個主題〕沒有排成一排');
+        if (vis('tqNx') && n2.height < 47.5) out.push(nm + '：〔➡ 下一個主題〕不到 48px 高'); }
+      i = 0; draw(0); await wait(30);
+      if (!vis('tqGo')) out.push(nm + '：講完以後回到第一張，〔📝 複習題〕不見了');
+      if (vis('tqNx')) out.push(nm + '：不是最後一張也有〔➡ 下一個主題〕');
+      if (l === 0 && TABM[t].sub) { setDeck(t, 1); await wait(30); if (vis('tqGo')) out.push(nm + '：基礎講完，進階還沒看就有〔📝 複習題〕（要各自算）'); setDeck(t, 0); await wait(30); }
       /* 字卡下方的按鈕：看得到、不壓到字卡、不壓到按鈕列 */
       const g = document.getElementById('tqGo').getBoundingClientRect(), c = document.getElementById('card').getBoundingClientRect(),
             b = document.getElementById('bar').getBoundingClientRect();
@@ -166,11 +181,25 @@ async function tqCheck(p, e, vp) {
         if (Q[k].k === 'read' && [].some.call(document.querySelectorAll('.tqr'), x => /[A-Za-z]{2}/.test(x.textContent))) out.push(w + '認讀選項把英文寫出來了（只能有聲音）');
       }
       tqClose();
-      /* 最後一張字卡按 ➡ ＝ 進複習題 */
+      /* 最後一張字卡按 ➡ ＝「🎉 講完了！」〔📝 做 5 題複習〕〔➡ 下一個主題〕（2026-10-09 E17） */
       i = CARDS.length - 1; draw(0); await wait(40);
-      if (document.getElementById('next').disabled) out.push(nm + '：最後一張字卡的 ➡ 被關掉（要進複習題）');
+      if (document.getElementById('next').disabled) out.push(nm + '：最後一張字卡的 ➡ 被關掉（要進「講完了」）');
       else { document.getElementById('next').click(); await wait(60);
-        if (!document.body.classList.contains('tqon') || !document.getElementById('tqStart')) out.push(nm + '：最後一張字卡按 ➡ 沒有進到複習題');
+        const fin = document.querySelector('.tqfin'), nx = !!document.getElementById('tqNext');
+        if (!document.body.classList.contains('tqon') || !fin || !/講完了/.test(fin.textContent) || !document.getElementById('tqDo')) out.push(nm + '：最後一張字卡按 ➡ 沒有出現「🎉 講完了！」〔📝 做 5 題複習〕');
+        else {
+          if (nx !== (t < TABM.length - 1)) out.push(nm + '：「講完了」頁〔➡ 下一個主題〕' + (nx ? '不該出現' : '沒有出現'));
+          const rv = document.getElementById('rv'), de = document.documentElement;
+          if (rv.scrollHeight > rv.clientHeight + 1 || de.scrollWidth > de.clientWidth) out.push(nm + '：「講完了」頁溢出');
+          [].forEach.call(fin.querySelectorAll('button'), x => { if (x.getBoundingClientRect().height < 56 && x.id !== 'tqBack') out.push(nm + '：「講完了」頁的按鈕不夠大：' + x.textContent);
+            if (x.scrollWidth > x.clientWidth + 1) out.push(nm + '：「講完了」頁按鈕的字超出框'); });
+          document.getElementById('tqDo').click(); await wait(60);
+          if (!document.getElementById('tqStart')) out.push(nm + '：「講完了」頁按〔📝 做 5 題複習〕沒有進到複習題');
+          if (t < TABM.length - 1) { tqClose(); document.getElementById('next').click(); await wait(60);
+            const k0 = TCUR; document.getElementById('tqNext').click(); await wait(60);
+            if (TCUR !== k0 + 1 || i !== 0 || document.body.classList.contains('tqon')) out.push(nm + '：「講完了」頁按〔➡ 下一個主題〕沒有到下一個分頁的第一張');
+            setDeck(t, l); await wait(30); }
+        }
         tqClose(); }
     }
     setDeck(0, 0); return out;
@@ -1024,6 +1053,25 @@ async function gamesPage(p, f, vp, e) {
 
   let acts = 0, s = await snap(); acts++;
   if (s.cards !== NG) e.push('遊戲大廳不是 ' + NG + ' 種（' + s.cards + '）');
+
+  /* 2026-10-09 使用者：驚喜卡一整場加起來最多 ＋20 秒；加滿以後不再出加時的卡 */
+  const gtc = await p.evaluate(() => {
+    if (typeof doEvt !== 'function' || typeof GTMAX === 'undefined') return '引擎沒有 GTMAX';
+    const keep = [g, gLeft, gtAdd, gPause, pool];
+    const ids = Object.keys(SURP).filter(k => SURP[k].some(c => c.k === 'gt'));
+    if (!ids.length) return '';
+    const vs = SURP[ids[0]].filter(c => c.k === 'gt').map(c => c.v).sort((a, b) => a - b).join(',');
+    let r = vs !== '10,20' ? '加時的卡不是 ＋10、＋20（' + vs + '）' : '';
+    gtAdd = 0; const l0 = gLeft; doEvt({ k: 'gt', v: 20 }); doEvt({ k: 'gt', v: 10 });
+    if (Math.round(gLeft - l0) !== 20 || gtAdd !== 20) r += '｜加時超過 20 秒（' + Math.round(gLeft - l0) + '）';
+    g = ids[0]; let bad = 0;
+    for (let n = 0; n < 30; n++) { pool = SURP[g].slice(); pickN(5, null);
+      const bx = document.getElementById('pick'); if (/整場 ＋/.test(bx.innerHTML)) bad++; bx.classList.remove('on'); bx.innerHTML = ''; gPause = keep[3]; }
+    if (bad) r += '｜加滿 20 秒還出加時的卡（' + bad + ' 次）';
+    [g, gLeft, gtAdd, gPause, pool] = keep;
+    return r;
+  });
+  if (gtc) e.push('驚喜卡加時：' + gtc);
 
   /* 驚喜卡：每一個遊戲張數一樣、十個遊戲的名字全部不重複；翻開一張要真的出現、炸得出來、不溢出 */
   if (SG.SURP) {

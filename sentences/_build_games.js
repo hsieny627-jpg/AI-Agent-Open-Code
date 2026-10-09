@@ -385,6 +385,7 @@ var mult=1,multLeft=0,fastV=0,cutNext=0,hintNext=0,goldNext=0,freezeNext=0,froze
 var wrongList=[],busy=false,memPairs=[],memOpen=[],memLeft=0;
 var bossHP=100,bossMax=100,bossShield=0;
 var gLeft=GT,gTick=null,gPause=0,ended=false;
+var GTMAX=20,gtAdd=0;   /* 2026-10-09 使用者：驚喜卡一整場加起來最多 ＋20 秒；加滿就不再出加時的卡 */
 var pool=[],skinQ=[],jokeQ=[],rainN=0,rainV=0;
 var PICK=null;   /* 學生按了什麼（答錯的獨立頁要用） */
 /* 成績紀錄（2026-10-08 對話 D）：GQ ＝ 每一題第一次作答；GSEEN 出過的題、GSIM 插進去的類似題；gFix 訂正成功；gMp／gMw 記憶配對配完幾對、翻錯幾次 */
@@ -451,7 +452,7 @@ function doEvt(e){
   else if(e.k==='cut')cutNext=v;
   else if(e.k==='shield')shield+=v;
   else if(e.k==='slot'||e.k==='pct'||e.k==='dbl'){score+=e.got;popScore(e.got)}
-  else if(e.k==='gt'){gLeft+=v;gPaint()}
+  else if(e.k==='gt'){var ad=Math.min(v,GTMAX-gtAdd);gtAdd+=ad;gLeft+=ad;gPaint()}
   else if(e.k==='rain'){rainV=v[0];rainN=v[1]}
   else if(e.k==='combo')combo={need:v[0],mul:v[1],n:0};
   else if(e.k==='hint')hintNext=1;
@@ -483,6 +484,7 @@ function cardHTML(e,sk){
    其他張也翻開給你看（變暗），沒選到的放回牌堆 */
 function pickN(n,done){
   var cs=[],t=0;while(cs.length<n&&t++<40){var e=draw1();if(!e)break;
+    if(e.k==='gt'&&gtAdd+e.v>GTMAX)continue;   /* 加時的卡超過 20 秒 ➜ 這一場不再出，換別的好事 */
     if(cs.some(function(x){return x.t===e.t})){pool.push(e);continue}cs.push(e)}
   if(!cs.length){if(done)done();return}
   var sk=nextSkin();
@@ -563,6 +565,7 @@ function hub(){
   $('#arena').classList.remove('on');$('#gend').classList.remove('on');
   $('#stage').classList.remove('lock');
   gScHub();
+  setTimeout(function(){if(SCH&&SCH.tk)SCH.tk()},0);   /* 老師的任務：🔒／⏰、被指定的放前面（2026-10-09 E） */
   $('#grid').innerHTML=META.map(function(m,n){
     var b=store('best_'+m.id)||0;
     return '<button class="gcard" data-g="'+m.id+'"><span class="gn">'+(n+1)+'</span>'+
@@ -583,7 +586,7 @@ function begin(id){
   score=0;streak=0;best=0;right=0;wrong=0;mult=1;multLeft=0;fastV=0;wrongList=[];busy=false;
   asked=0;speedSum=0;shield=0;timeAdd=0;opened=[];lastGain=0;pool=shuf((SURP[id]||[]).slice());
   skinQ=shuf(SKIN.map(function(x,i){return i}));jokeQ=shuf(JOKE.slice());rainN=0;rainV=0;
-  cutNext=0;hintNext=0;goldNext=0;freezeNext=0;frozenTo=0;combo=null;
+  cutNext=0;hintNext=0;goldNext=0;freezeNext=0;frozenTo=0;combo=null;gtAdd=0;
   left=QT;qt=QT;
   bossHP=bossMax=100;bossShield=0;
   memLeft=0;memOpen=[];memPairs=[];MISSLOG=[];missHide(false);gScBegin();
@@ -1098,7 +1101,8 @@ $('#missBtn').addEventListener('click',function(){missAll('這一場　答錯整
 $('#backhub').addEventListener('click',hub);
 $('#gscore').addEventListener('click',function(){if(SCEND){SCH.open();scScene()}});
 /* ══ 成績紀錄（2026-10-08 對話 D）══ */
-function gGo(id){scGate(function(){if(SCH.on())SCH.close();begin(id)})}
+/* 2026-10-09 E：老師派了任務 ➜ 沒被指定的（或還沒開放、已經截止的）按了只說為什麼鎖住，不能開始 */
+function gGo(id){scGate(function(){scTkGo(SCH.keyOf(id),function(){if(SCH.on())SCH.close();begin(id)})})}
 function gScHub(){clearTimeout(gScT);clearTimeout(SCAUTO);SCEND=null;if(SCH)SCH.close();var m=$('#scme');if(m)m.innerHTML=scMeHTML()}
 function gScBegin(){GQ=[];GSEEN=[];GSIM=[];gFix=0;gMp=0;gMw=0;gFirst=false;gHelp=0;clearTimeout(gScT);SCH.close();$('#gscore').hidden=true;scStart(g!=='g6')}
 /* 這一題算不算「第一次作答」：插進去的類似題、出過的題目不算 */
@@ -1122,7 +1126,9 @@ $('#quit').addEventListener('click',function(){
 });
 /* 一開始：大廳；網址 #g3 ＝ 直接開這一個遊戲（2026-10-03：三年級複習／四年級複習網站從自己的首頁直接進遊戲）
    成績紀錄的程式（SCH）在後面才定義，所以等它好了才跑（gInit 在這一段程式的最後面呼叫） */
-function gInit(){hub();var h=(location.hash||'').slice(1);if(h&&META.some(function(m){return m.id===h}))gGo(h)}
+function gInit(){hub();var h=(location.hash||'').slice(1);if(h&&META.some(function(m){return m.id===h}))gGo(h);
+  /* 2026-10-09 E：一打開遊戲大廳就先登入（登入完才知道老師的任務、才顯示鎖）；在家可以〔👀 先練習〕 */
+  else if(SCON&&!SCID)setTimeout(function(){if(!SCID&&!SCGUEST&&!scOn())scLogin(SCH.reopen)},500)}
 `;
 
 const body = `
@@ -1138,7 +1144,7 @@ const body = `
   <p class="lead">⏳ 每個遊戲 <b>1 分 30 秒</b>　⚡ 每題 15 秒，<b>愈快分數愈高</b><br>
      🔥 <b>連對 3 題</b> ➜ 🎁 驚喜卡 <b>二～五選一</b>（每次卡包樣式都不一樣）<br>
      ❌ 答錯 ➜ 看清楚 ➜ ⭐ 加分題答對 <b>✕ 2</b></p>
-  <div id="scme"></div>
+  <div id="scme"></div><div id="sctaskb"></div>
   <div id="grid"></div>
  </section>
 
@@ -1195,6 +1201,8 @@ SCH={on:function(){return gOv().classList.contains('on')},open:function(){gOv().
  close:function(){clearTimeout(SCAUTO);gOv().classList.remove('on')},box:function(){return $('#scovb')},
  back:'<div class="scnav"><button data-sca="close">⬅ 回遊戲大廳</button></div>',
  key:function(){return 'g'+scGr()+SCTAG+'_'+(window.gid||g)},
+ keyOf:function(id){return 'g'+scGr()+SCTAG+'_'+id},
+ tk:function(){if($('#hub').style.display==='none')return;scTkPaint($$('#grid .gcard'),SCH.keyOf,$('#sctaskb'))},
  name:function(){var id=window.gid||g,m=META.filter(function(x){return x.id===id})[0]||{};
    return (window.SEC&&m.sec&&SEC[m.sec]?String(SEC[m.sec]).replace(/<[^>]*>/g,'').split('　')[0]+'・':'')+(m.ic||'')+' '+(m.name||id)},
  reopen:function(){SCH.close();var m=$('#scme');if(m)m.innerHTML=scMeHTML()},

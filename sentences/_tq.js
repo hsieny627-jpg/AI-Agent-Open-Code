@@ -11,6 +11,9 @@
  *         **不傳 gain ➜ 沒有 ⭐ 加分**；也不插類似題（B6）
  *   錯的英文不唸：認讀題的 🔊 選項全部是正確的英文；答錯頁只唸正解（題目的 sp:'' ＝ 不唸）
  *   進入：字卡下方的〔📝 複習題 5 題〕，或最後一張字卡按 ➡（B2）；題目畫面同一個位置是〔🃏 回到字卡〕
+ *   2026-10-09 使用者（E16～E20）：**講完才選**——看到這個分頁（這一級）的最後一張卡以前，〔📝 複習題 5 題〕藏起來；
+ *     最後一張卡下面 ＝〔📝 做 5 題複習〕〔➡ 下一個主題〕；最後一張再按 ➡ ＝「🎉 講完了！」一頁兩顆大按鈕；
+ *     講完以後按鈕就一直在（這台平板記住 TQSEEN）；基礎、進階各自算；📑 目次跳到最後一張也算講完；在家複習一樣
  */
 const fs = require('fs'), path = require('path');
 
@@ -45,7 +48,7 @@ SCH={on:function(){return document.body.classList.contains('tqon')&&$('#rv').cla
  open:function(){$('#rv').classList.add('on');document.body.classList.add('tqon')},box:function(){return $('#rvbox')},
  back:'<button id="tqBack">🃏 回到字卡</button>',
  key:function(){var k=SCKEYS[TCUR];return 'g'+SCG+'u'+SCU+'_'+(Object.prototype.toString.call(k)==='[object Array]'?k[LCUR]:k)},
- name:function(){return tqNm()},reopen:function(){tqOpen()},rk:function(){var r=$('#tqrk');if(r)r.innerHTML=tqRkHTML(tqScore)},
+ name:function(){return tqNm()},tk:function(){tqMark()},reopen:function(){tqOpen()},rk:function(){var r=$('#tqrk');if(r)r.innerHTML=tqRkHTML(tqScore)},
  miss:function(){return tqNm()+'　答錯整理'},
  btns:function(){return '<div class="rvbtns">'+(MISSLOG.length?'<button id="tqMiss">📌 答錯整理</button>':'')+
    '<button class="go" id="tqAgain">🔁 再挑戰一次</button>'+(TCUR<TABM.length-1?'<button class="go" id="tqNext">➡ 下一個分頁</button>':'')+'</div>'+
@@ -57,12 +60,24 @@ const CSS = `
 /* ── 📝 複習題 5 題（2026-10-04）：字卡下方的切換按鈕 ── */
 body.hastq #stage{padding-bottom:calc(var(--barH,72px) + var(--tqH,52px) + clamp(8px,1.4vh,14px))}
 /* 2026-10-07 使用者第 3 點：〔📝 複習題 5 題〕這一顆按鈕不發亮、不放大（沒有光暈、沒有閃三下、按下去也不縮放），以免學習失焦 */
-#tqGo,#tqBack{position:fixed;left:50%;transform:translateX(-50%);z-index:30;bottom:calc(var(--barH,72px) + clamp(4px,.8vh,8px));
+/* 2026-10-09（E16～E20）：#tqBar 一排，最後一張卡多一顆〔➡ 下一個主題〕；還沒講完 ＝ 看不見但位置留著（字卡不會跳） */
+#tqBar{position:fixed;left:0;right:0;z-index:30;bottom:calc(var(--barH,72px) + clamp(4px,.8vh,8px));display:flex;justify-content:center;
+ gap:clamp(10px,1.6vw,18px);pointer-events:none}
+#tqBar button{pointer-events:auto}
+#tqBar.wait #tqGo{visibility:hidden;pointer-events:none}
+#tqNx{border-color:var(--acc)!important;color:#DDEEFF!important;background:linear-gradient(180deg,#0F2236,#0A1520)!important}
+#tqGo,#tqNx,#tqBack{position:static;z-index:30;
  background:linear-gradient(180deg,#2A2208,#171204);border:2px solid var(--gold);color:#FFE9A8;font-family:inherit;font-weight:700;
  font-size:clamp(17px,2.6vh,24px);border-radius:999px;padding:clamp(7px,1.1vh,11px) clamp(20px,2.6vw,32px);min-height:48px;
  white-space:nowrap;box-shadow:none;cursor:pointer}
 #tqGo:active{background:#3A2F0B}
-#tqBack{position:static;transform:none;margin-top:clamp(4px,1vh,10px);border-color:#5A6A78;color:#DDE6EE;background:#141A20;box-shadow:none}
+#tqBar[hidden]{display:none}
+/* 講完了！一頁兩顆大按鈕 */
+.tqfin{display:flex;flex-direction:column;align-items:center;gap:clamp(12px,2.4vh,26px);text-align:center}
+.tqfin h2{font-size:clamp(34px,6.4vh,62px)!important;color:var(--gold)}
+.tqfin .tqsub{font-size:clamp(22px,3.8vh,36px)}
+.tqfin .rvbtns button{font-size:clamp(24px,4.4vh,40px);padding:clamp(12px,2vh,20px) clamp(24px,3.2vw,40px);min-height:72px}
+#tqBack{margin-top:clamp(4px,1vh,10px);border-color:#5A6A78;color:#DDE6EE;background:#141A20;box-shadow:none}
 #tqBack:active{transform:scale(.96)}
 /* 右上角：大數字的累計分數＋名次 */
 .tqhud{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:clamp(8px,1.6vw,20px);width:100%}
@@ -133,6 +148,16 @@ var TQK={read:'👀 認讀',listen:'🎧 聽力',zh2en:'🀄 ➜ 🔤 看中文�
 var tqQ=null,tqN=0,tqT=15,tqLeft=15,tqTick=null,tqScore=0,tqOK=0,tqBusy=false,tqKey='',tqHist=[];
 function tqSet(){if(!TQD)return null;var tb=TABM[TCUR];if(!tb)return null;var s=TQD[TCUR];return tb.sub?(s?s[LCUR]:null):s}
 function tqHas(){return !!tqSet()}
+/* 2026-10-09（E16～E20）：這個分頁（這一級）講完了沒有 ＝ 有沒有看到最後一張卡；這台平板記住 */
+var TQSEEN=store('tqseen_'+TQPAGE)||{};
+function tqSk(){return TCUR+'_'+LCUR}
+function tqSeen(){return !!(TQSEEN&&TQSEEN[tqSk()])}
+function tqFin(){stopPlay();sayStop();
+  var nxt=TCUR<TABM.length-1;
+  $('#rv').classList.add('on');document.body.classList.add('tqon');
+  $('#rvbox').innerHTML='<div class="tqfin"><h2>🎉 講完了！</h2><div class="tqsub">'+esc(tqNm())+'</div>'+
+   '<div class="rvbtns"><button class="go" id="tqDo">📝 做 5 題複習</button>'+(nxt?'<button class="go" id="tqNext">➡ 下一個主題</button>':'')+'</div>'+
+   '<button id="tqBack">🃏 回到字卡</button></div>'}
 function tqNm(){var tb=TABM[TCUR];return tb.n+' '+tb.lb+(tb.sub?'・'+tb.sub[LCUR].lb:'')}
 function tqStop(){if(tqTick){clearInterval(tqTick);tqTick=null}}
 /* 名次：跟這台平板做過這一組的成績比（B3）；平手算同一名 */
@@ -143,6 +168,8 @@ function tqOpen(){
   /* 成績紀錄：還沒登入 ➜ 先登入（在家複習可以按〔👀 先練習，不記成績〕） */
   if(SCON&&!SCID&&!SCGUEST){scLogin(tqOpen);return}
   var Q=tqSet();if(!Q)return;
+  /* 2026-10-09 E：老師派了任務，這一組沒被指定（或還沒開放、已經截止）➜ 說為什麼鎖住 */
+  if(!scTkOk(SCH.key())){scLockShow(scLockOf(SCH.key()));return}
   tqKey='tq_'+TQPAGE+'_'+TCUR+'_'+LCUR;tqHist=store(tqKey)||[];
   $('#rv').classList.add('on');document.body.classList.add('tqon');
   /* 開場：秒懂說明（會動的時間條 ＋ 會往下掉的分數） */
@@ -259,6 +286,7 @@ $('#rv').addEventListener('click',function(e){
   if(!document.body.classList.contains('tqon'))return;
   var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
   if(c('#tqStart')||c('#tqAgain')){tqStart();return}
+  if(c('#tqDo')){tqClose();tqOpen();return}
   if(c('#tqBack')){tqClose();return}
   if(c('#tqMiss')){missAll(tqNm()+'　答錯整理');return}
   if(c('#tqNext')){tqClose();setDeck(TCUR+1,TABM[TCUR+1].sub?LMEM:0);return}
@@ -268,9 +296,14 @@ $('#rv').addEventListener('click',function(e){
   if((b=c('.tqr .ch'))||(b=c('.tqo button'))){if(!tqBusy)tqDone(b,b.getAttribute('data-ok')==='true');return}
 });
 $('#tqGo').addEventListener('click',tqOpen);
-/* 分頁換了：這一組有沒有題目（目前每一個分頁都有）；最後一張字卡的 ➡ 進複習題（2026-10-07：按鈕不再閃） */
-function tqMark(){var g=$('#tqGo');if(!g)return;g.hidden=!tqHas();
-  document.documentElement.style.setProperty('--tqH',(g.hidden?0:g.offsetHeight)+'px')}
+$('#tqNx').addEventListener('click',function(){if(TCUR<TABM.length-1)setDeck(TCUR+1,TABM[TCUR+1].sub?LMEM:0)});
+/* 換卡、換分頁：這一組有沒有題目（目前每一個分頁都有）；最後一張卡 ＝ 講完了（2026-10-09 E16～E20）；按鈕不閃（2026-10-07） */
+function tqMark(){var bar=$('#tqBar'),g=$('#tqGo');if(!bar||!TQSEEN||typeof TCUR!=='number')return;   /* 換卡引擎比這一段先跑：還沒準備好就先不畫 */var has=tqHas(),last=typeof i==='number'&&i===CARDS.length-1;
+  if(has&&last&&!tqSeen()){TQSEEN[tqSk()]=1;store('tqseen_'+TQPAGE,TQSEEN)}
+  bar.hidden=!has;bar.classList.toggle('wait',!tqSeen());
+  g.textContent=(window.SCH&&SCH.key&&!scTkOk(SCH.key())?'🔒 ':'📝 ')+(last?'做 5 題複習':'複習題 5 題');   /* 🔒 ＝ 老師現在沒有指定這一組（2026-10-09 E） */
+  $('#tqNx').hidden=!(has&&last&&TCUR<TABM.length-1);
+  document.documentElement.style.setProperty('--tqH',(bar.hidden?0:g.offsetHeight)+'px')}
 `;
 
 module.exports = { attach, scJS, CSS: CSS + SCC.CSS, JS };

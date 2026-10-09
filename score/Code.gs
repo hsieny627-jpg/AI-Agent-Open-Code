@@ -25,12 +25,23 @@
  *   遊戲的 ⚡ 總分       一樣是答對 60 ＋ 速度 40（s100）；🎁 驚喜卡、連對加成不算（原始分數照存，只給老師看）
  *   遊戲算 1 次          玩完整場（時間到或打倒魔王；中途離開不送）、第一次作答 ≧ 6 題（使用者 2026-10-09：遊戲改 1 分 30 秒，原本 10 題）、正確率 ≧ 2/3；同一個遊戲一天最多 3 次
  *   🃏 記憶配對          不算正確率、不算總分；只記配完幾對、用幾秒、翻錯幾次（給老師看）；玩完整場就算 1 次
+ *
+ * 2026-10-09 E（使用者決定在 score/2026-10-09_E_任務期限_課後班_聲音_複習題時機_需求.md 最下面）：老師派任務
+ *   任務                 老師看板派：名稱、年級、哪幾班（可以一鍵全年級）、項目（遊戲、📝 複習題、Review 1 的 📝 複習、💼 職業單字遊戲）、
+ *                        從幾月幾日幾點 到 幾月幾日幾點。存在試算表「任務」分頁
+ *   鎖（tkLock）          這一班「沒有任何正在進行的任務」＝ 全部開放（E2-A，跟以前一樣）；
+ *                        有任務正在進行 ＝ 只開任務裡的，其他 🔒；任務裡的東西只在它的時段開（還沒到 ＝ 🔒 幾點開放、過了 ＝ 🔒 已經截止，
+ *                        老師把任務刪掉或改期限才會再開）；在家複習同一個代號，一樣管（E3-A）
+ *   做到一半截止          讓他做完、成績照記（E4）；截止以後才不能「開始」；做完 ＝ 時段裡（截止後 10 分鐘內送到也算）有一筆紀錄
  *   排行榜               四種榜照舊合在一起（複習題＋遊戲都算）；遊戲結束另外給「這個遊戲本班前 10 名」（gtop）
  *   題組代號             g年級＋教材＋_＋題組：u1／u2 ＝ 📝 複習題、gm ＝ 🎮 句型遊戲、r1 ＝ 📘 Review 1（遊戲和頁面的 📝 複習）
  *                        以後新的教材在 score/_sites.js 登記一行，代號自動產生（例 u3、r2）
  */
 var SC = (function () {
-  var CLASSES = { 3: ['304', '307', '311'], 4: ['402', '406', '409', '410'] };
+  var CLASSES = { 3: ['304', '307', '311'], 4: ['402', '406', '409', '410', '400'] };
+  /* 課後班（使用者 2026-10-09 E9・E10・E11）：400 ＝ 四年級課後班（只有四年級、座號 01～30）；不放進班際比較（人數、上課時間都不一樣） */
+  var AFTER = { '400': '課後班' };
+  function cname(c) { return AFTER[c] ? c + ' ' + AFTER[c] : c + ' 班'; }
   /* 試算表的欄位（「作廢」一定在最後一欄：老師在試算表打 TRUE ＝ 不算） */
   var COLS = ['時間', '5碼', '年級', '班級', '座號', '類別', '題組', '題組名稱', '玩法', '題數', '答對', '正確率', '總分百分制', '訂正成功',
     '配對', '翻錯', '秒數', '原始分數', '秒按', '來源', '平板', '編號', '每題', '作廢'];
@@ -157,9 +168,50 @@ var SC = (function () {
     for (var i = 0; i < L.length; i++) { if (!i || !B.eq(L[i], L[i - 1])) rk = i + 1; out.push({ id: L[i].id, cls: L[i].cls, v: B.v(L[i]), rk: rk }); }
     return out;
   }
+  /* ── 老師派任務（2026-10-09 E）── */
+  var TKGRACE = 10 * 6e4, TKMAXI = 80;
+  function tkClean(t, now) {
+    t = t || {}; var g = +t.g; if (g !== 3 && g !== 4) return null;
+    var cls = [], items = [], nm = {}, i;
+    for (i = 0; i < (t.cls || []).length; i++) { var c = String(t.cls[i]); if (CLASSES[g].indexOf(c) >= 0 && cls.indexOf(c) < 0) cls.push(c); }
+    for (i = 0; i < (t.items || []).length && items.length < TKMAXI; i++) { var k = String(t.items[i]), m = SETRE.exec(k);
+      if (m && +m[1] === g && items.indexOf(k) < 0) { items.push(k); nm[k] = String((t.nm || {})[k] || k).slice(0, 60); } }
+    var from = Math.round(+t.from), to = Math.round(+t.to);
+    if (!cls.length || !items.length || !(from > 0) || !(to > from)) return null;
+    var id = String(t.id || '').replace(/[^\w]/g, '').slice(0, 24) || ('t' + now);
+    return { id: id, name: String(t.name || '任務').replace(/^\s+|\s+$/g, '').slice(0, 30) || '任務', g: g, cls: cls, items: items, nm: nm, from: from, to: to };
+  }
+  /* 這個學生（5 碼）的班有哪些任務（給學生端：不給別班的） */
+  function tkFor(T, id) {
+    var c = checkId(id); if (c.err) return [];
+    return T.filter(function (t) { return t.g === c.g && t.cls.indexOf(c.cls) >= 0; })
+      .map(function (t) { return { id: t.id, name: t.name, items: t.items, nm: t.nm, from: t.from, to: t.to }; });
+  }
+  /* 做完了沒有：時段裡（截止後 10 分鐘內送到也算，E4）有一筆這個項目的紀錄 */
+  function tkDone(rs, t, id) {
+    var d = [];
+    rs.forEach(function (r) { if (!r.x && r.id === id && r.t >= t.from && r.t <= t.to + TKGRACE && t.items.indexOf(r.set) >= 0 && d.indexOf(r.set) < 0) d.push(r.set); });
+    return d;
+  }
+  /* 鎖：T ＝ 這一班的任務、key ＝ 題組代號、now ＝ 現在
+     回傳 k：free 沒有任務（全部開放）｜open 任務裡、正在開（to ＝ 截止）｜soon 還沒到（from）｜end 已經截止（to）｜off 老師現在指定別的（act ＝ 正在進行的任務） */
+  function tkLock(T, key, now) {
+    var act = [], mine = [], i, t;
+    for (i = 0; i < (T || []).length; i++) { t = T[i]; var on = t.from <= now && now <= t.to;
+      if (on) act.push(t); if (t.items.indexOf(key) >= 0) mine.push(t); }
+    var a = mine.filter(function (x) { return x.from <= now && now <= x.to; });
+    if (a.length) return { k: 'open', to: Math.max.apply(null, a.map(function (x) { return x.to; })), task: a[0] };
+    if (mine.length) {
+      var f = mine.filter(function (x) { return x.from > now; });
+      if (f.length) return { k: 'soon', from: Math.min.apply(null, f.map(function (x) { return x.from; })), task: f[0] };
+      return { k: 'end', to: Math.max.apply(null, mine.map(function (x) { return x.to; })), task: mine[0] };
+    }
+    if (act.length) return { k: 'off', act: act };
+    return { k: 'free' };
+  }
   /* 班級：有做的人的平均（Q13-A）＋參與率（要老師填人數） */
   function classes(ps, g, sizes) {
-    return CLASSES[g].map(function (c) {
+    return CLASSES[g].filter(function (c) { return !AFTER[c]; }).map(function (c) {
       var m = ps.filter(function (p) { return p.cls === c; });
       var nn = function (k) { return m.filter(function (p) { return p[k] != null; }).map(function (p) { return p[k]; }); };
       var a = mean(nn('acc')), s = mean(nn('s')), pr = mean(nn('prog')), cnt = 0;
@@ -213,7 +265,7 @@ var SC = (function () {
     out.classes = cl.map(function (x) { return { cls: x.cls, acc: x.acc, n: x.n }; });
     if (o.u) { var ps0 = students(W.filter(function (r) { return r.u !== o.u; }));
       var b0 = classes(ps0, c.g, null).filter(function (x) { return x.cls === c.cls; })[0], b1 = cl.filter(function (x) { return x.cls === c.cls; })[0];
-      out.delta = b0.acc == null || b1.acc == null ? null : r1(b1.acc - b0.acc); }
+      out.delta = !b0 || !b1 || b0.acc == null || b1.acc == null ? null : r1(b1.acc - b0.acc); }   /* 課後班不在班際比較 ➜ 沒有 delta */
     if (boardsOn) {
       out.top = {}; out.cut = {}; out.rk = {};
       ['acc', 's', 'count', 'prog'].forEach(function (k) {
@@ -229,8 +281,9 @@ var SC = (function () {
     }
     return out;
   }
-  return { CLASSES: CLASSES, SEAT: SEAT, COLS: COLS, CI: CI, CAP: CAP, TOP: TOP, GMIN: GMIN, MT: MT, checkId: checkId, cat: cat, counts: counts, need: need, day: day, weekStart: weekStart,
-    s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, questions: questions, gtop: gtop, view: view };
+  return { CLASSES: CLASSES, AFTER: AFTER, cname: cname, SEAT: SEAT, COLS: COLS, CI: CI, CAP: CAP, TOP: TOP, GMIN: GMIN, MT: MT, checkId: checkId, cat: cat, counts: counts, need: need, day: day, weekStart: weekStart,
+    s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, questions: questions, gtop: gtop, view: view,
+    tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE };
 })();
 
 /* score/_server.js — Google Apps Script 那一半（score/_build.js 把 _calc.js 和這一份接成 score/Code.gs，老師整份貼進 Apps Script）
@@ -238,13 +291,14 @@ var SC = (function () {
  * 試算表三張工作表（第一次執行 setup 自動建立）：
  *   紀錄       一次作答（或一場遊戲）一列（欄位 ＝ SC.COLS）；最後一欄「作廢」打勾 ＝ 不算（Q7-A：有人冒用別人的 5 碼）
  *   班級人數   班級｜人數（只填數字，不填名字；算參與率用，Q13-A）
+ *   任務       老師看板派的任務（2026-10-09 E）：編號｜名稱｜年級｜班級｜開始｜截止｜項目。**請用老師看板改**，不要在這裡手改
  *   名單       班級｜座號｜姓名（使用者 2026-10-09：只留這三欄，不要性別）。**只給老師看板**（要密碼）；學生端永遠拿不到姓名（Q4）
  * 指令碼屬性（專案設定 ➜ 指令碼屬性）：
  *   TEACHER_PW  老師看板的密碼（只放在這裡，網頁和 GitHub 上都沒有）
  *   BOARDS      on／off：學生看不看得到排行榜（老師看板可以切，S8／Q4-A）
  *   ROSTER      （2026-10-09 起不用了：學生端一律不問「你是 ○○○ 嗎？」）
  */
-var SHEET = '紀錄', SIZES = '班級人數', ROSTER = '名單';
+var SHEET = '紀錄', SIZES = '班級人數', ROSTER = '名單', TASKS = '任務', TKCOLS = ['編號', '名稱', '年級', '班級', '開始', '截止', '項目'];
 function setup() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var a = ss.getSheetByName(SHEET) || ss.insertSheet(SHEET);
@@ -253,6 +307,8 @@ function setup() {
   if (b.getLastRow() < 1) { b.appendRow(['班級', '人數']); [3, 4].forEach(function (g) { SC.CLASSES[g].forEach(function (c) { b.appendRow([c, '']); }); }); }
   var c = ss.getSheetByName(ROSTER) || ss.insertSheet(ROSTER);
   if (c.getLastRow() < 1) c.appendRow(['班級', '座號', '姓名']);
+  var d = ss.getSheetByName(TASKS) || ss.insertSheet(TASKS);
+  if (d.getLastRow() < 1) { d.appendRow(TKCOLS); d.setFrozenRows(1); }
   var P = PropertiesService.getScriptProperties();
   if (!P.getProperty('BOARDS')) P.setProperty('BOARDS', 'on');
   if (!P.getProperty('ROSTER')) P.setProperty('ROSTER', 'off');
@@ -286,10 +342,31 @@ function roster() {
   });
   return out;
 }
+/* 任務（2026-10-09 E）：一列一個；項目 ＝ JSON（代號和名稱）。讀不懂的列跳過 */
+function tasks() {
+  var s = sheet(TASKS), n = s.getLastRow(), out = [];
+  if (n < 2) return out;
+  s.getRange(2, 1, n - 1, TKCOLS.length).getValues().forEach(function (r) {
+    var it = {}; try { it = JSON.parse(String(r[6] || '{}')); } catch (x) { it = {}; }
+    var tm = function (v) { return v instanceof Date ? v.getTime() : +v || Date.parse(v); };
+    var t = SC.tkClean({ id: r[0], name: r[1], g: r[2], cls: String(r[3]).split(/[^\d]+/), from: tm(r[4]), to: tm(r[5]), items: it.items || [], nm: it.nm || {} }, 0);
+    if (t) out.push(t);
+  });
+  return out;
+}
+function tasksSave(T) {
+  var s = sheet(TASKS), n = s.getLastRow();
+  if (n >= 2) s.getRange(2, 1, n - 1, TKCOLS.length).clearContent();
+  if (T.length) s.getRange(2, 1, T.length, TKCOLS.length).setValues(T.map(function (t) {
+    return [t.id, t.name, t.g, t.cls.join('、'), new Date(t.from), new Date(t.to), JSON.stringify({ items: t.items, nm: t.nm })]; }));
+}
 /* 學生：GET ?a=view&id=30509&set=g3u1_1-1b（遊戲加 &gt=1 ＝ 要這個遊戲本班前 10 名）／ ?a=who&id=30509 */
 function doGet(e) {
   var q = (e && e.parameter) || {};
   try {
+    /* 任務：這一班的任務＋我做完了哪些（不用密碼：只有班級的任務，沒有姓名）；now ＝ 伺服器時間（平板時鐘不準也鎖得對） */
+    if (q.a === 'tasks') { var c0 = SC.checkId(q.id); if (c0.err) return out({ err: c0.err });
+      var rs = records(); return out({ ok: true, now: Date.now(), tasks: SC.tkFor(tasks(), c0.id).map(function (t) { t.done = SC.tkDone(rs, t, c0.id); return t; }) }); }
     if (q.a === 'view') return out(SC.view(records(), { id: q.id, set: q.set, gt: q.gt === '1' }, Date.now(), boardsOn()));
     /* 學生端不給姓名（使用者 2026-10-09 Q4：不用密碼就查得到姓名太危險）；舊的平板還會問，一律回「沒有名單」 */
     if (q.a === 'who') { var c = SC.checkId(q.id); return out(c.err ? { err: c.err } : { roster: false, name: null }); }
@@ -313,7 +390,7 @@ function doPost(e) {
       var v = SC.view(records(), { id: R.id, set: R.set, u: R.u, gt: R.m === 'g' }, now, boardsOn()); v.saved = true; v.dup = dup;
       return out(v);
     }
-    if (o.a === 'teacher' || o.a === 'void' || o.a === 'set') {
+    if (o.a === 'teacher' || o.a === 'void' || o.a === 'set' || o.a === 'task') {
       if (!pwOk(o.pw)) return out({ err: 'pw' });
       if (o.a === 'void') {
         var s2 = sheet(SHEET), m = s2.getLastRow(), done = false;
@@ -321,8 +398,20 @@ function doPost(e) {
           for (var j = 0; j < u2.length; j++) if (String(u2[j][0]) === String(o.u)) { s2.getRange(j + 2, SC.COLS.length).setValue(!!o.v); done = true; break; } }
         return out({ ok: done });
       }
+      /* 派任務／改時間／刪掉（老師看板） */
+      if (o.a === 'task') {
+        var lk = LockService.getScriptLock(); lk.waitLock(20000);
+        try {
+          var T = tasks();
+          if (o.op === 'del') T = T.filter(function (t) { return t.id !== String(o.id); });
+          else { var t = SC.tkClean(o.t, Date.now()); if (!t) return out({ err: 'task' });
+            var k = -1; T.forEach(function (x, j) { if (x.id === t.id) k = j; }); if (k >= 0) T[k] = t; else T.push(t); }
+          tasksSave(T);
+        } finally { lk.releaseLock(); }
+        return out({ ok: true, tasks: tasks() });
+      }
       if (o.a === 'set') { if (o.boards != null) PropertiesService.getScriptProperties().setProperty('BOARDS', o.boards ? 'on' : 'off'); return out({ ok: true, boards: boardsOn() }); }
-      return out({ ok: true, now: Date.now(), cols: SC.COLS, rows: rows().map(function (r) { return r.map(function (x) { return x instanceof Date ? x.getTime() : x; }); }), sizes: sizes(), roster: roster(), boards: boardsOn() });
+      return out({ ok: true, now: Date.now(), cols: SC.COLS, rows: rows().map(function (r) { return r.map(function (x) { return x instanceof Date ? x.getTime() : x; }); }), sizes: sizes(), roster: roster(), boards: boardsOn(), tasks: tasks() });
     }
     return out({ err: 'a' });
   } catch (x) { return out({ err: 'server', msg: String(x) }); }

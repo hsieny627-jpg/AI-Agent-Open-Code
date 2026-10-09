@@ -194,6 +194,7 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 #tabs .tb{background:#141414;border:1px solid #333;color:#D8D8D8;border-radius:12px;font-family:inherit;
  font-size:clamp(13px,1.9vh,17px);padding:clamp(6px,.9vh,9px) clamp(9px,1.1vw,14px);white-space:nowrap;cursor:pointer;line-height:1.15}
 #tabs .tb b{color:#FFD66B;margin-right:5px}
+#tabs a.tb{text-decoration:none;display:inline-flex;align-items:center;border-color:#5A4A1A;color:#FFE9A8}
 #tabs .tb.on{background:#22303A;border-color:var(--acc);color:#fff;font-weight:700}
 #tabs .lv{display:inline-flex;gap:3px;background:#101010;border:1px solid #2A2A2A;border-radius:999px;padding:3px;margin-left:6px}
 #tabs .lv[hidden]{display:none}
@@ -759,6 +760,23 @@ body.hastabs #stage{padding-top:calc(var(--safeT) + var(--tabH,48px) + clamp(26p
 .subs,.subs.many{gap:clamp(4px,.7vh,8px)}
 .subs .subrow,.subs.many .subrow{gap:clamp(5px,.7vw,9px)}
 
+/* ── 老師派任務（2026-10-09 E）：大廳上面的任務條、遊戲卡的 🔒／⏰、鎖住時的一整頁 ── */
+.sctask{display:flex;flex-direction:column;gap:6px;margin:0 auto clamp(6px,1.2vh,12px);max-width:1100px;width:100%}
+.sctkl{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;background:#2A2208;border:3px solid var(--gold);border-radius:18px;
+ padding:clamp(6px,1vh,10px) clamp(10px,1.6vw,18px);font-size:clamp(19px,3vh,28px);font-weight:700;color:#FFE9A8;line-height:1.3}
+.sctkl b{color:#fff}.sctkl span{white-space:nowrap}.sctkl span.ok{color:var(--ok)}.sctkl em{font-style:normal;color:#FFD24A;white-space:nowrap;margin-left:auto}
+.gcard.tklock{filter:grayscale(1);opacity:.45}
+.gcard.tkon{border-color:var(--gold)!important;box-shadow:0 0 0 3px rgba(255,210,74,.55),0 0 26px rgba(255,210,74,.45)!important}
+.sctkc{display:block;margin-top:4px;font-size:clamp(16px,2.5vh,22px);font-weight:700;color:#FFE9A8;white-space:nowrap}
+.sctkc.open{color:#FFD24A}
+#sctk{position:fixed;inset:0;z-index:95;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.88);padding:16px}
+#sctk.on{display:flex}
+.sctkb{display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vh,20px);max-width:1000px;width:100%;text-align:center}
+.sctki{font-size:clamp(70px,14vh,140px);line-height:1}
+.sctkw{font-size:clamp(28px,5vh,50px);font-weight:700;color:#fff}.sctkw b{color:var(--gold)}
+.sctks{font-size:clamp(22px,3.6vh,34px);font-weight:700;color:#CFCFCF}
+#sctkOk{font-family:inherit;font-weight:700;font-size:clamp(24px,4.2vh,40px);border-radius:999px;border:3px solid var(--ok);background:#0F3323;color:#fff;
+ padding:clamp(10px,1.8vh,18px) clamp(30px,4vw,56px);min-height:64px;cursor:pointer}
 /* ── 成績紀錄（2026-10-07 對話 C） ── */
 .sclog{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.3vh,14px);width:100%}
 .sclog h2{font-size:clamp(28px,5vh,50px)!important;margin:0}
@@ -2613,6 +2631,7 @@ function rvStop(){if(rvTick){clearInterval(rvTick);rvTick=null}}
 var rvFix=0;
 function rvStart(gi){
   if(SCON&&!SCID&&!SCGUEST){scLogin(function(){rvStart(gi)});return}
+  if(!scTkOk('g'+SCG+SCRV+'_rv'+(gi+1))){scLockShow(scLockOf('g'+SCG+SCRV+'_rv'+(gi+1)));return}
   rvGi=gi;rvFix=0;scStart();rvScore=0;rvOK=0;rvN=0;rvMiss=[];MISSLOG=[];
   rvQ=shuf(RVG[gi].q.slice());
   rvAsk();
@@ -2743,7 +2762,8 @@ draw(0);
      reopen() 換人以後回哪裡、rk() 作答中名次、btns(E) 最後一幕的按鈕、miss() 答錯整理的標題、act(a) data-sca 按鈕 */
 var SCG=3,SCSRC="school";
 var SCURL=String(window.SCORE_URL||'').replace(/^\s+|\s+$/g,''),SCON=!!SCURL&&!window.__SCORE_TEST_OFF;
-var SCCLS={3:['304','307','311'],4:['402','406','409','410']},SCSEAT=30;
+var SCCLS={3:['304','307','311'],4:['402','406','409','410','400']},SCSEAT=30,SCAFTER={'400':'課後班'};   /* 400 ＝ 四年級課後班（2026-10-09 E9～E11）；跟 _calc.js 的 CLASSES／AFTER 一樣 */
+function scCn(c){return SCAFTER[c]?c+' '+SCAFTER[c]:c+' 班'}
 function scGet(k){try{return JSON.parse(localStorage.getItem('score_'+k)||'null')}catch(e){return null}}
 function scPut(k,v){try{localStorage.setItem('score_'+k,JSON.stringify(v))}catch(e){}}
 var SCID=scGet(SCG?'id_g'+SCG:'last'),SCGUEST=false,SCDEV=scGet('dev'),SCV=null,SCQ=[],SCT0=0,SCREF=0,SCQI=0,SCIN='',SCEND=null,SCH=null;
@@ -2779,7 +2799,7 @@ function scFlush(){
   if(!SCON||SCBUSY)return Promise.resolve(null);
   var Q=scGet('q')||[];if(!Q.length)return Promise.resolve(null);
   SCBUSY=true;var last=null;
-  var step=function(){Q=scGet('q')||[];if(!Q.length){SCBUSY=false;return last}
+  var step=function(){Q=scGet('q')||[];if(!Q.length){SCBUSY=false;if(last)scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk()});return last}   /* 送出去了 ➜ 任務的 ✅ 重拿 */
     var r=Q[0];
     return scFetch('',{a:'rec',r:r}).then(function(j){
       if(j&&(j.saved||j.err==='bad')){Q=scGet('q')||[];Q=Q.filter(function(x){return x.u!==r.u});scPut('q',Q);if(j.saved){SCRES[r.u]=j;last=j}return step()}
@@ -2794,7 +2814,7 @@ function scGate(fn){if(SCON&&!SCID&&!SCGUEST){scLogin(fn);return}fn()}
    正在做的那一步會亮、要打的那一格會閃；班級打錯（第 3 個數字打完就檢查）立刻清空；想改班級 ＝ 點班級的格子或按 ⌫，整個班級清空重打 ── */
 var SCTYPED='';
 function scClsList(){var G={3:'三',4:'四'},gs=SCG?[SCG]:[3,4];
-  return gs.map(function(g){return G[g]+'年級：'+SCCLS[g].join('、')}).join('　')}
+  return gs.map(function(g){return G[g]+'年級：'+SCCLS[g].map(function(c){return SCAFTER[c]?c+'（'+SCAFTER[c]+'）':c}).join('、')}).join('　')}
 function scLogin(after){
   if(window.stopPlay)stopPlay();sayStop();
   SCH.open();
@@ -2824,15 +2844,15 @@ function scPaint(err){
   m.className='scmsg';
   m.innerHTML=v.length===0?'👆 先打你的<b class="kc">班級</b>（3 個數字）<small>例：304 班 5 號 ➜ 打 3 0 4 0 5</small>':
    v.length<3?'🏫 班級還要打 '+(3-v.length)+' 個數字':
-   v.length===3?'👍 '+v+' 班！再打<b class="ks">座號</b><small>5 號 ➜ 打 0 5<br>班級打錯 ➜ 按 ⌫ 重打</small>':
+   v.length===3?'👍 '+scCn(v)+'！再打<b class="ks">座號</b><small>5 號 ➜ 打 0 5<br>班級打錯 ➜ 按 ⌫ 重打</small>':
    v.length===4?'🪑 座號還要打 1 個數字':
-   '對嗎？<b class="kc">'+v.slice(0,3)+' 班</b> <b class="ks">'+(+v.slice(3))+' 號</b> ➜ 按綠色的 ✅';
+   '對嗎？<b class="kc">'+scCn(v.slice(0,3))+'</b> <b class="ks">'+(+v.slice(3))+' 號</b> ➜ 按綠色的 ✅';
 }
 function scShake(){var b=$('#scBox');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
 /* 班級（前 3 個數字）對不對：沒有這一班、或不是這個年級的網站 */
 function scClsErr(c){var g=c.charAt(0)==='3'?3:(c.charAt(0)==='4'?4:0),G={3:'三',4:'四'};
   if(!g||SCCLS[g].indexOf(c)<0)return '🏫 沒有 '+c+' 班！已經幫你清掉了，請重新打班級<small>'+scClsList()+'</small>';
-  if(SCG&&g!==SCG)return '🏫 '+c+' 班是'+G[g]+'年級，這是'+G[SCG]+'年級的網站！已經幫你清掉了<small>'+scClsList()+'</small>';
+  if(SCG&&g!==SCG)return '🏫 '+scCn(c)+'是'+G[g]+'年級，這是'+G[SCG]+'年級的網站！已經幫你清掉了<small>'+scClsList()+'</small>';
   return ''}
 function scKeyPress(k){
   if(!$('#scBox'))return;
@@ -2852,8 +2872,9 @@ function scKeyPress(k){
 }
 /* 登入好了（2026-10-09 Q4：學生端不顯示姓名，不再問伺服器「你是 ○○○ 嗎？」） */
 function scWho(r){
-  var go=function(){SCID=r.id;scPut('id_g'+r.g,SCID);scPut('last',SCID);SCGUEST=false;var a=SCLOGAFTER;SCLOGAFTER=null;if(a)a()};
-  var m=$('#scMsg');m.className='scmsg ok';m.textContent='✅ '+r.cls+' 班 '+r.seat+' 號';
+  var go=function(){SCID=r.id;scPut('id_g'+r.g,SCID);scPut('last',SCID);SCGUEST=false;var a=SCLOGAFTER;SCLOGAFTER=null;
+    scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk();if(a)a()})};   /* 登入好了先拿老師的任務（2026-10-09 E），再做要做的事 */
+  var m=$('#scMsg');m.className='scmsg ok';m.textContent='✅ '+scCn(r.cls)+' '+r.seat+' 號';
   setTimeout(go,500);
 }
 function scMeHTML(){
@@ -2903,7 +2924,8 @@ function scEnd(o){
   var todayN=sv?sv.today:H.filter(function(x){return x.d===today&&x.c}).length;
   H.push({t:R.t,acc:acc,c:cnt,d:today});scPut(hk,H.slice(-50));
   var QQ=scGet('q')||[];QQ.push(R);scPut('q',QQ.slice(-200));SCIN=u;
-  SCEND={m:m,list:SCLIST[m],acc:acc,ok:ok,n:n,s:m==='mem'?null:scS100(Q),raw:R.raw,fix:R.fix,mp:R.mp,mw:R.mw,sec:R.sec,prev:prev,best:best,cnt:cnt,cap:cnt&&todayN>=3,
+  SCEND={m:m,list:SCLIST[m].filter(function(x){return x!=='class'||!SCAFTER[String(SCID).slice(0,3)]}),   /* 課後班沒有「我幫全班」（不放進班際比較） */
+    acc:acc,ok:ok,n:n,s:m==='mem'?null:scS100(Q),raw:R.raw,fix:R.fix,mp:R.mp,mw:R.mw,sec:R.sec,prev:prev,best:best,cnt:cnt,cap:cnt&&todayN>=3,
     week:(SCV&&SCV.me?SCV.me.count:null),res:null,fail:false,k:0,tab:'acc',scope:'cls'};
   /* 送出：前一次補送還在跑就等一下再試（最多 3 次），還是送不出去 ＝ 沒有網路，先存平板 */
   var send=function(n){scFlush().then(function(){if(!SCEND||SCIN!==u)return;
@@ -3030,8 +3052,58 @@ function scMineHTML(t,sc){
   else txt='⭐ 你的紀錄：'+(E.best!=null?Math.max(E.best,E.acc):E.acc)+'%，下次打敗它！';
   return keep+'<div class="scmine">🪑 你：'+txt+'</div>';
 }
+/* ══ 老師派任務（2026-10-09 E；規則在 score/_calc.js 的 tkLock，這裡用同一份）══
+   登入以後問伺服器「我這一班有什麼任務、我做完了哪些」（a=tasks）；時間用伺服器的（平板時鐘不準也鎖得對）。
+   沒網路 ＝ 用這台平板上一次拿到的；從來沒拿到過 ＝ 全部開放（F）。👀 練習模式（不記成績）不鎖。 */
+var scTkLock=function tkLock(T, key, now) {
+    var act = [], mine = [], i, t;
+    for (i = 0; i < (T || []).length; i++) { t = T[i]; var on = t.from <= now && now <= t.to;
+      if (on) act.push(t); if (t.items.indexOf(key) >= 0) mine.push(t); }
+    var a = mine.filter(function (x) { return x.from <= now && now <= x.to; });
+    if (a.length) return { k: 'open', to: Math.max.apply(null, a.map(function (x) { return x.to; })), task: a[0] };
+    if (mine.length) {
+      var f = mine.filter(function (x) { return x.from > now; });
+      if (f.length) return { k: 'soon', from: Math.min.apply(null, f.map(function (x) { return x.from; })), task: f[0] };
+      return { k: 'end', to: Math.max.apply(null, mine.map(function (x) { return x.to; })), task: mine[0] };
+    }
+    if (act.length) return { k: 'off', act: act };
+    return { k: 'free' };
+  };
+var SCTK=null,SCTKID=null;
+function scTkGet(){if(!scLive())return null;if(SCTKID!==SCID){SCTKID=SCID;SCTK=scGet('tk_'+SCID)}return SCTK}
+function scTkNow(){var t=scTkGet();return Date.now()+((t&&t.off)||0)}
+function scTkLoad(cb){if(!scLive()){if(cb)cb();return}var id=SCID;
+  scFetch('a=tasks&id='+id,null,7000).then(function(j){if(j&&j.ok&&id===SCID){SCTK={at:Date.now(),off:(+j.now||Date.now())-Date.now(),tasks:j.tasks||[]};SCTKID=id;scPut('tk_'+id,SCTK)}if(cb)cb()},function(){if(cb)cb()})}
+function scLockOf(key){var t=scTkGet();if(!t||!t.tasks||!key)return {k:'free'};return scTkLock(t.tasks,key,scTkNow())}
+function scTkOk(key){var k=scLockOf(key).k;return k==='free'||k==='open'}
+var SCWD='日一二三四五六';
+function scTkT(ms){var d=new Date(ms),p=function(n){return (n<10?'0':'')+n};return (d.getMonth()+1)+'/'+d.getDate()+'（'+SCWD.charAt(d.getDay())+'）'+p(d.getHours())+':'+p(d.getMinutes())}
+function scLockTxt(L){return L.k==='open'?'⏰ 到 '+scTkT(L.to):L.k==='soon'?'🔒 '+scTkT(L.from)+' 開放':L.k==='end'?'🔒 已經截止':L.k==='off'?'🔒 老師現在指定別的':''}
+function scTkAct(){var t=scTkGet(),n=scTkNow();return t&&t.tasks?t.tasks.filter(function(x){return x.from<=n&&n<=x.to}):[]}
+/* 一個任務一行：📌 名稱：項目 ✅／⏳ … ⏰ 到 幾點 */
+function scTkLine(x){var dn=x.done||[];return '<div class="sctkl"><b>📌 '+x.name+'</b>'+x.items.map(function(k){return '<span class="'+(dn.indexOf(k)>=0?'ok':'')+'">'+(dn.indexOf(k)>=0?'✅ ':'⏳ ')+(x.nm&&x.nm[k]||k)+'</span>'}).join('')+'<em>⏰ 到 '+scTkT(x.to)+'</em></div>'}
+function scTaskBar(){var a=scTkAct();return a.length?'<div class="sctask">'+a.map(scTkLine).join('')+'</div>':''}
+/* 鎖住的時候：一整頁大字（為什麼鎖、老師現在指定什麼、到什麼時候） */
+function scLockShow(L){var o=document.getElementById('sctk');if(!o){o=document.createElement('div');o.id='sctk';document.body.appendChild(o)}
+  var why=L.k==='soon'?'老師設定 <b>'+scTkT(L.from)+'</b> 才開放':L.k==='end'?'已經截止了（'+scTkT(L.to)+'）':'老師現在指定的不是這一個';
+  var a=scTkAct();
+  o.innerHTML='<div class="sctkb"><div class="sctki">🔒</div><div class="sctkw">'+why+'</div>'+(a.length?'<div class="sctks">老師現在指定的是：</div>'+a.map(scTkLine).join(''):'')+
+   '<button id="sctkOk">👌 知道了</button></div>';o.classList.add('on')}
+/* 打開網頁就拿一次；之後每 2 分鐘再拿（老師隨時會改時間）、每 30 秒重畫（時間到了就鎖） */
+if(SCON){setTimeout(function(){if(scLive())scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk()})},400);
+  setInterval(function(){if(scLive())scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk()})},120000);
+  setInterval(function(){if(SCH&&SCH.tk&&scLive())SCH.tk()},30000)}
+function scTkGo(key,fn){if(scTkOk(key)){fn();return true}scLockShow(scLockOf(key));return false}
+/* 遊戲大廳：被指定的放最前面、會發亮；沒被指定的變灰 🔒（D）；上面一條老師的任務（E7） */
+function scTkPaint(cards,keyOf,bar){
+  [].forEach.call(cards,function(c){var L=scLockOf(keyOf(c.getAttribute('data-g'))),x=c.querySelector('.sctkc');if(x)x.parentNode.removeChild(x);
+    c.classList.toggle('tkon',L.k==='open');c.classList.toggle('tklock',L.k!=='open'&&L.k!=='free');
+    if(L.k!=='free'){x=document.createElement('span');x.className='sctkc '+L.k;x.textContent=scLockTxt(L);c.appendChild(x)}});
+  [].filter.call(cards,function(c){return c.classList.contains('tkon')}).reverse().forEach(function(c){c.parentNode.insertBefore(c,c.parentNode.firstChild)});
+  if(bar)bar.innerHTML=scTaskBar()}
 document.addEventListener('click',function(e){
   var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
+  if(c('#sctkOk')){document.getElementById('sctk').classList.remove('on');return}
   if(c('#scSwap')){if(!SCH)return;SCID=null;scPut('id_g'+scGr(),null);scPut('last',null);SCGUEST=false;scLogin(SCH.reopen);return}
   if(!scOn())return;
   if((b=c('.sckey button'))){scKeyPress(b.getAttribute('data-k'));return}

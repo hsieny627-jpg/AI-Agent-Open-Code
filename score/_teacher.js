@@ -10,6 +10,9 @@
  *   🃏 記憶配對（不算正確率、總分）在個人紀錄裡看配完幾對、用幾秒、翻錯幾次。
  * 2026-10-09（使用者第 5 點）：名單（試算表「名單」分頁：班級｜座號｜姓名，伺服器只在密碼對了才給）➜ 個人、排行榜、要關心、個人紀錄、Excel 都加姓名；
  *   🔔 要關心多「這段期間一次都沒做」；試算表「班級人數」沒填的班，參與率用名單人數。投影的〔📺 全班訂正〕不放姓名。
+ * 2026-10-09 E（使用者：老師決定哪些遊戲、什麼時段開放，過了期限就鎖住）：第六個分頁〔📌 任務〕
+ *   ➕ 派新任務（名稱、哪幾班＋〔全年級〕、項目＝遊戲／📝 複習題／📘 Review 1／💼 職業單字、從幾月幾日幾點 到 幾月幾日幾點）、
+ *   ✏️ 隨時改時間、🗑 刪掉；每個任務一張卡：誰做完 ✅、誰還沒 ⏳（要名單才有名字，E6）。鎖的規則在 _calc.js 的 tkLock。
  */
 module.exports = function (CALC, XL, BANK) {
   return `<!DOCTYPE html>
@@ -98,6 +101,24 @@ h3{margin:14px 0 6px;font-size:20px}
 .att{font-size:15px}.att td,.att th{padding:5px 8px}
 .att tr.void td{color:#666;text-decoration:line-through}
 .att button{min-height:34px;padding:4px 12px;font-size:14px}
+.tk{border:2px solid #2A2A2A;border-radius:18px;padding:12px 14px;margin:0 0 12px}
+.tk.on{border-color:var(--gold);background:#141006}.tk.end{opacity:.75}
+.tk h3{margin:0 0 6px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tk .st{font-size:16px;border-radius:999px;padding:3px 12px;background:#1A1A1A;border:1px solid #444}
+.tk.on .st{background:#2A2208;border-color:var(--gold);color:#FFE9A8}
+.tk .tm{font-size:19px;font-weight:700;color:#FFE9A8;margin:2px 0 6px}
+.tk .it{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}.tk .it span{background:#141A20;border:1px solid #2A3A4A;border-radius:10px;padding:3px 10px;font-size:16px}
+.tk .who{display:flex;flex-wrap:wrap;gap:6px;font-size:16px;margin:4px 0}.tk .who span{border-radius:10px;padding:3px 9px;background:#1A1A1A}
+.tk .who span.ok{background:#0F3323;color:var(--ok)}.tk .who span.no{background:#2A1414;color:#FFB0B0}
+.tk .bt{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+#tkf label{display:inline-flex;align-items:center;gap:6px;font-size:18px;margin:4px 12px 4px 0;cursor:pointer}
+#tkf input[type=checkbox]{width:24px;height:24px}
+#tkf h4{margin:14px 0 4px;font-size:19px;color:var(--gold)}
+#tkf .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#tkf input[type=text],#tkf input[type=datetime-local]{font-size:19px}
+#tkf .gl{border:1px solid #222;border-radius:12px;padding:6px 10px;margin:6px 0;max-height:36vh;overflow-y:auto}
+#tkf .gl b{display:block;margin:6px 0 2px;color:#DDD}
+#tkmsg{color:var(--no);font-weight:700;min-height:1.3em;font-size:18px}
 @media (max-width:900px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.wq{grid-template-columns:2em 1fr}.wq .r{grid-column:2}}
 </style></head><body>
 <div id="login"><h1>👩‍🏫 老師看板</h1><div class="note">輸入老師密碼（密碼存在你的 Google Apps Script，網頁裡沒有）</div>
@@ -114,7 +135,7 @@ h3{margin:14px 0 6px;font-size:20px}
   <span class="grp"><span>來源</span><select id="fs"><option value="">全部</option><option value="school">🏫 在校</option><option value="home">🏠 在家</option></select></span>
  </div>
  <div class="tiles" id="tiles"></div>
- <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 排行榜</button><button data-t="c">🏫 班際</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心</button></div>
+ <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 排行榜</button><button data-t="c">🏫 班際</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心</button><button data-t="t">📌 任務</button></div>
  <div class="pane" id="pane"></div>
 </div>
 <div id="modal"><div id="mbox"></div></div>
@@ -146,7 +167,7 @@ function load(j){DATA=j;NM={};RCLS={};(j.roster||[]).forEach(function(r){var id=
   SIZES={};var sz=j.sizes||{};Object.keys(RCLS).forEach(function(c){SIZES[c]=RCLS[c].length});Object.keys(sz).forEach(function(c){if(+sz[c]>0)SIZES[c]=+sz[c]});
   ALL=j.rows.map(SC.fromRow).filter(function(r){return r.id&&!isNaN(r.t)});
   $('#bd').textContent='🏆 學生排行榜：'+(j.boards?'開':'關');$('#bd').classList.toggle('on',!!j.boards);clsSel();draw()}
-function clsSel(){$('#fc').innerHTML='<option value="">全部班</option>'+SC.CLASSES[F.g].map(function(c){return '<option value="'+c+'"'+(F.cls===c?' selected':'')+'>'+c+' 班</option>'}).join('')}
+function clsSel(){$('#fc').innerHTML='<option value="">全部班</option>'+SC.CLASSES[F.g].map(function(c){return '<option value="'+c+'"'+(F.cls===c?' selected':'')+'>'+SC.cname(c)+'</option>'}).join('')}
 function range(){var now=DATA.now,w=SC.weekStart(now);
   if(F.p==='w')return{from:w,to:null};if(F.p==='lw')return{from:w-7*864e5,to:w};if(F.p==='all')return{from:null,to:null};
   var a=$('#f1').value,b=$('#f2').value;return{from:a?Date.parse(a+'T00:00:00+08:00'):null,to:b?Date.parse(b+'T00:00:00+08:00')+864e5:null}}
@@ -164,7 +185,7 @@ function draw(){
     ['👥 有做的人',ps.length+(size?'／'+size:''),size?'人（參與率 '+Math.round(ps.length/size*100)+'%）':'人（試算表貼上「名單」就算得出參與率）']]
     .map(function(t){return '<div class="tile"><div class="k">'+t[0]+'</div><div class="v">'+t[1]+'</div><div class="d">'+t[2]+'</div></div>'}).join('');
   var h='';
-  if(TAB==='p')h=paneP(ps,RK);else if(TAB==='b')h=paneB(psG);else if(TAB==='c')h=paneC(psG);else if(TAB==='w')h=paneW(S.C);else h=paneK(ps,S);
+  if(TAB==='p')h=paneP(ps,RK);else if(TAB==='b')h=paneB(psG);else if(TAB==='c')h=paneC(psG);else if(TAB==='w')h=paneW(S.C);else if(TAB==='t')h=paneT();else h=paneK(ps,S);
   $('#pane').innerHTML=h;
 }
 var PCOL=[['id','5碼'],['nm','姓名'],['acc','🎯 正確率'],['s','⚡ 總分'],['count','🔁 次數'],['prog','🚀 進步'],['cacc','班內 🎯'],['cs','班內 ⚡'],['ccount','班內 🔁'],['cprog','班內 🚀'],
@@ -192,13 +213,13 @@ function paneB(psG){
   var h='<div class="top"><span class="grp">'+['acc','s','count','prog'].map(function(k){return '<button data-bt="'+k+'"'+(BT===k?' class="on"':'')+'>'+BN[k]+'</button>'}).join('')+'</span>'+
    '<span class="grp"><button data-bs="cls"'+(BS==='cls'?' class="on"':'')+'>🏫 班內</button><button data-bs="grade"'+(BS==='grade'?' class="on"':'')+'>🏆 全年級</button></span></div>'+
    '<div class="note">老師看得到全部學生的名次；學生只看得到前 10 名（自己不在前 10 名，只看到「再多幾分進前 10」）。</div>';
-  var lists=BS==='grade'?[['全年級',SC.rank(psG,BT)]]:(F.cls?[F.cls]:SC.CLASSES[F.g]).map(function(c){return [c+' 班',SC.rank(psG.filter(function(p){return p.cls===c}),BT)]});
+  var lists=BS==='grade'?[['全年級',SC.rank(psG,BT)]]:(F.cls?[F.cls]:SC.CLASSES[F.g]).map(function(c){return [SC.cname(c),SC.rank(psG.filter(function(p){return p.cls===c}),BT)]});
   lists.forEach(function(L){var mx=0;L[1].forEach(function(x){mx=Math.max(mx,x.v)});
     h+='<h3>'+L[0]+'</h3>'+(L[1].length?'<div class="bars">'+L[1].map(function(x){return '<div class="br'+(x.rk<=10?' hi':'')+'"><span class="l">第 '+x.rk+' 名　'+who(x.id)+'</span><span class="t"><i style="width:'+(mx?x.v/mx*100:0)+'%"></i></span><span class="v">'+fmt(BT,x.v)+'</span></div>'}).join('')+'</div>':'<div class="note">還沒有人上榜。</div>')});
   return h;
 }
 function paneC(psG){
-  var C=SC.classes(psG,F.g,SIZES),h='<div class="note">只跟同年級的班比（題目不一樣）。平均 ＝ 有做的人的平均；參與率 ＝ 有做的人 ÷ 名單人數（試算表「班級人數」有填就用那個數字）。</div>';
+  var C=SC.classes(psG,F.g,SIZES),h='<div class="note">只跟同年級的班比（題目不一樣）。平均 ＝ 有做的人的平均；參與率 ＝ 有做的人 ÷ 名單人數（試算表「班級人數」有填就用那個數字）。'+(SC.CLASSES[F.g].some(function(c){return SC.AFTER[c]})?'課後班（'+SC.CLASSES[F.g].filter(function(c){return SC.AFTER[c]}).join('、')+'）人數、上課時間不一樣，不放進班際比較。':'')+'</div>';
   [['acc','🎯 平均正確率',100,function(v){return f1(v)+' 分'}],['s','⚡ 平均總分',100,function(v){return f1(v)+' 分'}],['count','🔁 作答總次數',0,function(v){return v+' 次'}],
    ['rate','👥 參與率',100,function(v){return v==null?'（沒填人數）':Math.round(v)+'%'}],['prog','🚀 平均進步',0,function(v){return v==null?'—':(v>0?'＋':'')+f1(v)+'%'}]].forEach(function(K){
     var vs=C.map(function(c){return K[0]==='rate'?(c.size?c.n/c.size*100:null):c[K[0]]}),mx=K[2]||Math.max.apply(null,vs.map(function(v){return Math.abs(v||0)}).concat([1]));
@@ -214,7 +235,7 @@ function qText(q){return q.k==='g'||q.k==='rv'?q.q:q.k==='read'?'「'+q.show+'�
 function paneW(R){
   var Q=SC.questions(R).filter(function(x){return x.bad>0&&qOf(x.k)}).slice(0,10);
   if(!Q.length)return '<div class="note">這段期間沒有答錯的題目 🎉</div>';
-  return '<div class="note">'+(F.cls?F.cls+' 班':'全年級')+'最常錯的 10 題（答錯率高的在前面）。點一題看四個選項各有幾 % 的人選，再按〔📺 全班訂正〕投影。</div>'+
+  return '<div class="note">'+(F.cls?SC.cname(F.cls):'全年級')+'最常錯的 10 題（答錯率高的在前面）。點一題看四個選項各有幾 % 的人選，再按〔📺 全班訂正〕投影。</div>'+
    Q.map(function(x,n){var o=qOf(x.k);return '<div class="wq" data-q="'+x.k+'"><span class="n">'+(n+1)+'</span><span class="q"><b>'+esc(qText(o.q))+'</b><em>'+esc(o.set.name)+'・第 '+(x.i+1)+' 題・'+kn(o.q)+'</em></span>'+
      '<span class="r"><span>答錯 '+x.rate+'%（'+x.bad+'／'+x.n+'）</span><span class="t"><i style="width:'+x.rate+'%"></i></span></span></div>'}).join('');
 }
@@ -285,7 +306,7 @@ function excel(){
     return c[0]==='last'?dt(v):c[0]==='fast'?v/100:c[0]==='prog'&&v==null&&r.keep?'保持滿分':v==null?'':v})}));
   var B=[['榜','範圍','名次','5碼','姓名','分數']];['acc','s','count','prog'].forEach(function(k){
     SC.rank(psG,k).forEach(function(x){if(!F.cls||x.cls===F.cls)B.push([BN[k],'全年級',x.rk,x.id,nm(x.id),x.v])});
-    (F.cls?[F.cls]:SC.CLASSES[F.g]).forEach(function(c){SC.rank(psG.filter(function(p){return p.cls===c}),k).forEach(function(x){B.push([BN[k],c+' 班',x.rk,x.id,nm(x.id),x.v])})})});
+    (F.cls?[F.cls]:SC.CLASSES[F.g]).forEach(function(c){SC.rank(psG.filter(function(p){return p.cls===c}),k).forEach(function(x){B.push([BN[k],SC.cname(c),x.rk,x.id,nm(x.id),x.v])})})});
   var C=[['班級','有做的人','班級人數','參與率','平均正確率','平均總分','作答總次數','平均進步']].concat(SC.classes(psG,F.g,SIZES).map(function(c){
     return [c.cls,c.n,c.size||'',c.size?Math.round(c.n/c.size*100)/100:'',c.acc==null?'':c.acc,c.s==null?'':c.s,c.count,c.prog==null?'':c.prog]}));
   var W=[['題組','第幾題','題型','題目','正確答案','答錯率','答錯','作答人次','選正解','選項 2','選項 2 人次','選項 3','選項 3 人次','選項 4','選項 4 人次','時間到','為什麼']];
@@ -300,7 +321,62 @@ function excel(){
   a.download='score_G'+F.g+(F.cls?'_'+F.cls:'')+'_'+pn+'_'+d+'.xlsx';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000);
   window.LASTXLSX=b;
 }
+/* ══ 📌 任務（2026-10-09 E）══ */
+var WD='日一二三四五六';
+function tkT(ms){var d=new Date(ms),p=function(n){return (n<10?'0':'')+n};return (d.getMonth()+1)+'/'+d.getDate()+'（'+WD.charAt(d.getDay())+'）'+p(d.getHours())+':'+p(d.getMinutes())}
+function tkV(ms){var d=new Date(ms),p=function(n){return (n<10?'0':'')+n};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes())}
+function tkList(){return (DATA&&DATA.tasks||[]).filter(function(t){return t.g===F.g&&(!F.cls||t.cls.indexOf(F.cls)>=0)})}
+/* 這一個年級可以派的項目：老師看板的題庫（遊戲、📝 複習題、📘 Review 1、💼 職業單字） */
+function tkItems(g){var G={};Object.keys(BANK).forEach(function(k){if(k.indexOf('g'+g)!==0&&k.indexOf('g*')!==0)return;
+  var key=k.replace('g*','g'+g),c=SC.cat(key),gr=/^g.gm_job-/.test(key)?'💼 職業單字':c.t;if(g===3&&gr==='💼 職業單字')return;   /* 職業單字是四年級 Unit 2 的主題 */(G[gr]=G[gr]||[]).push([key,BANK[k].name])});return G}
+function paneT(){
+  var now=Date.now(),L=tkList().sort(function(a,b){var s=function(t){return t.from<=now&&now<=t.to?0:(t.from>now?1:2)};return s(a)-s(b)||a.from-b.from});
+  var h='<div class="row" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button id="tkNew" style="font-size:20px;background:#2A2208;border-color:var(--gold);color:#FFE9A8">➕ 派新任務</button>'+
+   '<span class="note">有任務正在進行的班：只開任務裡的，其他鎖住 🔒；沒有任務正在進行 ＝ 全部開放。任務裡的東西過了截止時間就鎖住，<b>刪掉任務或改時間</b>才會再開。做到一半截止的，讓他做完、成績照記。</span></div>';
+  if(!L.length)return h+'<div class="note" style="font-size:18px;margin-top:12px">'+(F.g===3?'三':'四')+'年級'+(F.cls?' '+SC.cname(F.cls):'')+'還沒有任務 ➜ 學生全部都可以自由練習。</div>';
+  return h+L.map(function(t){var st=t.from<=now&&now<=t.to?['on','🟢 進行中']:(t.from>now?['soon','⏳ 還沒開始']:['end','⛔ 已經截止']);
+    var who='';(F.cls?[F.cls]:t.cls).forEach(function(c){var ids=(RCLS[c]||[]).slice(),done={};
+      ALL.forEach(function(r){if(!r.x&&r.cls===c&&r.t>=t.from&&r.t<=t.to+SC.TKGRACE&&t.items.indexOf(r.set)>=0){(done[r.id]=done[r.id]||{})[r.set]=1}});
+      Object.keys(done).forEach(function(id){if(ids.indexOf(id)<0)ids.push(id)});ids.sort();
+      var all=ids.filter(function(id){return done[id]&&Object.keys(done[id]).length>=t.items.length});
+      who+='<div class="who"><b style="min-width:7em">'+esc(SC.cname(c))+'　✅ '+all.length+(RCLS[c]?'／'+RCLS[c].length:'')+'</b>'+
+       (ids.length?ids.map(function(id){var n=done[id]?Object.keys(done[id]).length:0;return '<span class="'+(n>=t.items.length?'ok':(n?'':'no'))+'">'+(n>=t.items.length?'✅':(n?'◐ '+n+'/'+t.items.length:'⏳'))+' '+who0(id)+'</span>'}).join(''):'<span>（試算表「名單」貼上這一班，就看得到誰還沒做）</span>')+'</div>'});
+    return '<div class="tk '+st[0]+'"><h3><span class="st">'+st[1]+'</span>📌 '+esc(t.name)+'<span class="note" style="margin:0">'+t.cls.map(SC.cname).join('、')+'</span></h3>'+
+     '<div class="tm">⏰ 從 '+tkT(t.from)+' 到 '+tkT(t.to)+'</div>'+
+     '<div class="it">'+t.items.map(function(k){return '<span>'+esc(t.nm&&t.nm[k]||k)+'</span>'}).join('')+'</div>'+who+
+     '<div class="bt"><button data-tke="'+esc(t.id)+'">✏️ 改時間／內容</button><button data-tkd="'+esc(t.id)+'">🗑 刪掉這個任務</button></div></div>'}).join('');
+}
+function who0(id){var n=nm(id);return esc(id.slice(3))+' 號'+(n?' '+esc(n):'')}
+function tkForm(t){
+  var now=Date.now(),d=new Date();d.setHours(23,59,0,0);
+  t=t||{id:'',name:'課堂任務',g:F.g,cls:F.cls?[F.cls]:SC.CLASSES[F.g].slice(),items:[],from:Math.floor(now/6e4)*6e4,to:d.getTime()};
+  var G=tkItems(t.g);
+  $('#mbox').innerHTML='<button class="x" id="mx">✕ 關閉</button><h2 style="margin:0 0 6px">'+(t.id?'✏️ 改任務':'➕ 派新任務')+'（'+(t.g===3?'三':'四')+'年級）</h2><div id="tkf" data-id="'+esc(t.id)+'" data-g="'+t.g+'">'+
+   '<h4>① 名稱</h4><div class="row"><input type="text" id="tkn" maxlength="30" value="'+esc(t.name)+'"><button data-tkq="課堂任務">🏫 課堂任務</button><button data-tkq="回家作業">🏠 回家作業</button></div>'+
+   '<h4>② 哪幾班</h4><div class="row">'+SC.CLASSES[t.g].map(function(c){return '<label><input type="checkbox" name="tkc" value="'+c+'"'+(t.cls.indexOf(c)>=0?' checked':'')+'>'+esc(SC.cname(c))+'</label>'}).join('')+'<button id="tkAll">✅ 全年級</button></div>'+
+   '<h4>③ 要做什麼（可以選好幾個）</h4><div class="gl">'+Object.keys(G).map(function(gr){return '<b>'+gr+'</b>'+G[gr].map(function(x){return '<label><input type="checkbox" name="tki" value="'+esc(x[0])+'" data-nm="'+esc(x[1])+'"'+(t.items.indexOf(x[0])>=0?' checked':'')+'>'+esc(x[1].replace(/^[三四]年級 ?/,''))+'</label>'}).join('')}).join('')+'</div>'+
+   '<h4>④ 時間：從 幾月幾日幾點 到 幾月幾日幾點</h4><div class="row"><span>從</span><input type="datetime-local" id="tkf1" value="'+tkV(t.from)+'"><span>到</span><input type="datetime-local" id="tkf2" value="'+tkV(t.to)+'"></div>'+
+   '<div id="tkmsg"></div><div class="row" style="margin-top:10px"><button id="tkSave" style="font-size:21px;background:#0F3323;border-color:var(--ok)">💾 '+(t.id?'改好了，存起來':'派出去')+'</button></div></div>';
+  $('#modal').classList.add('on');
+}
+function tkSave(){
+  var f=$('#tkf'),g=+f.getAttribute('data-g'),cls=$$('input[name=tkc]:checked').map(function(x){return x.value}),its=$$('input[name=tki]:checked'),nmz={};
+  its.forEach(function(x){nmz[x.value]=x.getAttribute('data-nm')});
+  var a=Date.parse($('#tkf1').value),b=Date.parse($('#tkf2').value),m=$('#tkmsg');
+  if(!cls.length){m.textContent='② 請選至少一班';return}if(!its.length){m.textContent='③ 請選至少一個要做的';return}
+  if(!(a>0)||!(b>0)){m.textContent='④ 請填好開始和截止的時間';return}if(b<=a){m.textContent='④ 截止要比開始晚';return}
+  var t={id:f.getAttribute('data-id')||('t'+Date.now()),name:$('#tkn').value.trim()||'任務',g:g,cls:cls,items:its.map(function(x){return x.value}),nm:nmz,from:a,to:b};
+  m.style.color='var(--dim)';m.textContent='⏳ 存起來中…';
+  post({a:'task',pw:PW,op:'set',t:t}).then(function(j){if(j.ok){DATA.tasks=j.tasks;$('#modal').classList.remove('on');draw()}else{m.style.color='';m.textContent='❌ 存不起來（'+(j.err||'')+'）'}},function(){m.style.color='';m.textContent='📶 連不到伺服器'});
+}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
+  if(c('#tkNew')){tkForm(null);return}
+  if((b=c('[data-tke]'))){var id=b.getAttribute('data-tke');tkForm((DATA.tasks||[]).filter(function(x){return x.id===id})[0]);return}
+  if((b=c('[data-tkd]'))){var id2=b.getAttribute('data-tkd');if(!confirm('刪掉這個任務？（刪掉以後，裡面的東西學生可以自由練習）'))return;
+    post({a:'task',pw:PW,op:'del',id:id2}).then(function(j){if(j.ok){DATA.tasks=j.tasks;draw()}});return}
+  if((b=c('[data-tkq]'))){$('#tkn').value=b.getAttribute('data-tkq');return}
+  if(c('#tkAll')){$$('input[name=tkc]').forEach(function(x){x.checked=true});return}
+  if(c('#tkSave')){tkSave();return}
   if(c('#go')){login($('#pw').value.trim());return}
   if((b=c('#fg button'))){F.g=+b.getAttribute('data-g');F.cls='';$$('#fg button').forEach(function(x){x.classList.toggle('on',x===b)});clsSel();draw();return}
   if((b=c('#tabs button'))){TAB=b.getAttribute('data-t');$$('#tabs button').forEach(function(x){x.classList.toggle('on',x===b)});draw();return}

@@ -28,7 +28,9 @@ const GRADES = [
     { ic: '👪', l: 'Unit 1　家人', s: 'Who’s he?', b: [
       { ic: '🔤', t: '單字', href: 'words/index.html' }, { ic: '💬', t: '句型', href: 'sentences/unit1.html' }] },
     { ic: '💼', l: 'Unit 2　職業', s: 'Is he a doctor?', b: [
-      { ic: '💼', t: '單字', href: 'words/jobs.html' }, { ic: '💬', t: '句型', href: 'sentences/unit2.html' }] },
+      { ic: '💼', t: '單字', href: 'words/jobs.html' }, { ic: '💬', t: '句型', href: 'sentences/unit2.html' },
+      /* 2026-10-09 使用者（E 第 4 點）：Unit 2 新的主題 ＝ 職業單字網站（English-Jobs-New），成績進老師看板（score/_jobs_bank.js） */
+      { ic: '🎮', t: '職業單字網站', href: 'https://hsieny627-jpg.github.io/English-Jobs-New/index.html' }] },
     { ic: '📝', l: 'Review 1', s: 'About my family', b: [
       { ic: '💬', t: '句型', href: 'sentences/review1.html' }, { ic: '🃏', t: '單字', href: 'review1/index.html' },
       { ic: '🕹️', t: '遊戲', href: 'review1/games.html' }] },
@@ -68,7 +70,7 @@ function rows(G, pre) {
   return '<section class="gr"><h2>' + G.g + (G.home && pre !== null ? ' <a href="' + pre + G.home + '">年級首頁 ➜</a>' : '') + '</h2><div class="gl">' +
     G.rows.map((r, k) => '<div class="gi"><span class="gn">' + (k + 1) + '</span><span class="gx"><b><span class="gic">' + r.ic + '</span>' + r.l + '</b>' +
       (r.s ? '<i>' + r.s + '</i>' : '') + '</span><span class="gb">' +
-      r.b.map(x => '<a href="' + (pre || '') + x.href + '">' + x.ic + ' ' + x.t + '</a>').join('') + '</span></div>').join('') +
+      r.b.map(x => '<a href="' + (/^https?:/.test(x.href) ? '' : (pre || '')) + x.href + '">' + x.ic + ' ' + x.t + '</a>').join('') + '</span></div>').join('') +
     '</div></section>';
 }
 module.exports = { GRADES, CSS, rows };

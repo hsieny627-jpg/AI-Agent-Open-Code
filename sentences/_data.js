@@ -588,7 +588,9 @@ var RPAGES = [
 ];
 var PAGES = [
   { file:'unit1.html', unit:1, title:'Unit 1 句型｜Who’s he? Who’s she?', other:'unit2.html', otherName:'➡ Unit 2', tabs:TABS1 },
-  { file:'unit2.html', unit:2, title:'Unit 2 句型｜Is he a doctor?', other:'unit1.html', otherName:'⬅ Unit 1', tabs:TABS2 }
+  { file:'unit2.html', unit:2, title:'Unit 2 句型｜Is he a doctor?', other:'unit1.html', otherName:'⬅ Unit 1', tabs:TABS2,
+    /* 2026-10-09 使用者（E 第 4 點）：Unit 2 新的主題 ＝ 職業單字網站（English-Jobs-New，自己的遊戲和成績都接老師看板） */
+    links:[{ n:'5', lb:'💼 職業單字網站', href:'https://hsieny627-jpg.github.io/English-Jobs-New/index.html' }] }
 ];
 
 var XPAGES = [

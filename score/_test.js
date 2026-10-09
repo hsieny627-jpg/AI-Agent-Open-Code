@@ -13,6 +13,13 @@ eq(SC.weekStart(MON - 1), MON - 7 * 864e5, '星期日 23:59 是上一週');
 eq(SC.checkId('30405').cls, '304', '30405 ＝ 304 班'); eq(SC.checkId('30405').seat, 5, '30405 ＝ 5 號');
 eq(SC.checkId('30505').err, 'cls', '沒有 305 班'); eq(SC.checkId('30400').err, 'seat', '座號 00 不行'); eq(SC.checkId('30441').err, 'seat', '座號 41 不行');
 eq(SC.checkId('3040').err, 'len', '要 5 碼'); eq(SC.checkId('40205', 3).err, 'grade', '三年級網站擋四年級'); eq(SC.checkId('41005').g, 4, '410 班');
+/* 課後班 400（使用者 2026-10-09 E9～E11）：四年級、座號 01～30、不放進班際比較 */
+eq(SC.checkId('40001').g, 4, '40001 ＝ 四年級課後班'); eq(SC.checkId('40030').cls, '400', '40030 可以'); eq(SC.checkId('40031').err, 'seat', '課後班 31 號擋下來');
+eq(SC.checkId('40019', 3).err, 'grade', '三年級網站擋課後班 400（只有四年級）'); eq(SC.checkId('39001').err, 'cls', '沒有 390 班');
+eq(SC.cname('400'), '400 課後班', '400 叫「課後班」'); eq(SC.cname('402'), '402 班', '402 班');
+ok(SC.classes([{ id: '40001', cls: '400', acc: 90, s: 80, count: 1, prog: null }], 4, null).every(x => x.cls !== '400'), '班際比較沒有課後班');
+{ const v = SC.view([{ id: '40001', cls: '400', g: 4, set: 'g4u1_1-1b', m: 'q', acc: 80, s: 70, n: 5, ok: 4, fast: 0, raw: 3000, t: NOW, u: 'x', qs: [] }], { id: '40001', set: 'g4u1_1-1b', u: 'y' }, NOW, true);
+  ok(v && !v.err && v.delta === null, '課後班學生看自己的成績不會壞（沒有 delta）'); }
 eq(SC.checkId('30430').seat, 30, '座號 30 可以'); eq(SC.checkId('30431').err, 'seat', '座號 31 擋下來（01～30，使用者 2026-10-09）');
 /* 2/3 門檻：5 題對 4 題才算；6 題對 4 題算 */
 ok(!SC.counts(3, 5) && SC.counts(4, 5) && SC.counts(4, 6) && !SC.counts(3, 6), '答對 2/3 以上才算 1 次（5 題要對 4 題）'); eq(SC.need(5), 4, '5 題要對 4 題');
@@ -114,6 +121,41 @@ eq(grec('40205', 'g4r1_i1_1', 12, 12).saved, true, 'Review 1 遊戲三、四年�
 ok(G2.post({ a: 'rec', r: { id: '30405', set: 'g3r1_rv1', name: 'rv', m: 'q', raw: 3000, src: 'school', dev: 'd', u: 'rv1', t: Date.now(), qs: GQ(4, 3) } }).saved, 'Review 1 頁的 📝 複習存得進去（g3r1_rv1）');
 eq(SC.pick(G2.books['紀錄'].d.slice(1).map(SC.fromRow), { g: 3, cat: 'game' }).length, 5, '老師看板「類別」篩選：🎮 遊戲');
 const T2 = G2.post({ a: 'void', pw: 'pw', u: 'mem1', v: true }); ok(T2.ok && SC.fromRow(G2.books['紀錄'].d.filter(r => r[SC.CI['編號']] === 'mem1')[0]).x, '作廢打勾在最後一欄（新的欄位）');
+
+/* ══ 老師派任務（2026-10-09 E）══ */
+{ const H = 36e5, N = Date.parse('2026-10-09T10:00:00+08:00');
+  const A = { id: 'a', items: ['g4gm_g1', 'g4u1_1-1b'], from: N - H, to: N + H }, Bf = { id: 'b', items: ['g4gm_g2'], from: N + 2 * H, to: N + 3 * H }, C = { id: 'c', items: ['g4gm_g3'], from: N - 3 * H, to: N - 2 * H };
+  eq(SC.tkLock([], 'g4gm_g1', N).k, 'free', '沒有任務 ➜ 全部開放（E2-A）');
+  eq(SC.tkLock([A], 'g4gm_g1', N).k, 'open', '任務裡、時段裡 ➜ 開');
+  eq(SC.tkLock([A], 'g4gm_g5', N).k, 'off', '有任務正在進行，沒被指定的 ➜ 🔒');
+  eq(SC.tkLock([Bf], 'g4gm_g5', N).k, 'free', '任務還沒開始：其他的照常開放');
+  eq(SC.tkLock([Bf], 'g4gm_g2', N).k, 'soon', '任務裡的還沒到時間 ➜ 🔒 幾點開放');
+  eq(SC.tkLock([C], 'g4gm_g3', N).k, 'end', '過了截止時間 ➜ 🔒 已經截止（老師刪掉或改期限才開）');
+  eq(SC.tkLock([C], 'g4gm_g5', N).k, 'free', '只有截止的任務：其他的照常開放');
+  eq(SC.tkLock([A, C], 'g4gm_g3', N).k, 'end', '截止的不會因為別的任務正在進行就開');
+  eq(SC.tkLock([A, Object.assign({}, A, { id: 'h', to: N + 5 * H })], 'g4gm_g1', N).to, N + 5 * H, '同時有兩個任務都有它 ➜ 截止照晚的');
+  eq(SC.tkLock([A], 'g4gm_g1', N + H + 1).k, 'end', '截止那一刻以後就不能開始');
+  eq(SC.tkClean({ g: 4, cls: ['402', '304', '400'], items: ['g4gm_g1', 'g3gm_g1', 'x'], from: 2, to: 1 }, N), null, '截止比開始早 ➜ 不收');
+  const t = SC.tkClean({ g: 4, name: '  回家作業 ', cls: ['402', '304', '400', '402'], items: ['g4gm_g1', 'g3gm_g1', 'g4gm_job-memory'], nm: { g4gm_g1: '⚡ 閃電' }, from: N, to: N + H }, N);
+  eq([t.name, t.cls, t.items], ['回家作業', ['402', '400'], ['g4gm_g1', 'g4gm_job-memory']], '派任務：別的年級的班、別的年級的題目不收；課後班 400、職業單字收');
+  const G3 = make({ TEACHER_PW: 'pw' });
+  eq(G3.post({ a: 'task', pw: 'x', op: 'set', t }).err, 'pw', '派任務要老師密碼');
+  let j = G3.post({ a: 'task', pw: 'pw', op: 'set', t: Object.assign({}, t, { id: 't1', from: Date.now() - H, to: Date.now() + H }) });
+  ok(j.ok && j.tasks.length === 1 && G3.books['任務'].d.length === 2, '任務存進試算表「任務」分頁（一個任務一列）');
+  G3.post({ a: 'task', pw: 'pw', op: 'set', t: Object.assign({}, t, { id: 't2', name: '課堂', cls: ['406'], from: Date.now() - H, to: Date.now() + H }) });
+  j = G3.post({ a: 'task', pw: 'pw', op: 'set', t: Object.assign({}, t, { id: 't1', from: Date.now() - H, to: Date.now() + 2 * H }) });
+  ok(j.tasks.length === 2 && j.tasks.filter(x => x.id === 't1')[0].to > Date.now() + 1.9 * H, '改時間 ＝ 同一個任務換掉（不會變兩個）');
+  G3.post({ a: 'rec', r: { id: '40205', set: 'g4gm_g1', name: 'g', m: 'g', raw: 1, src: 'school', dev: 'd', u: 'tk1', t: Date.now(), qs: GQ(8, 8) } });
+  let v2 = G3.get({ a: 'tasks', id: '40205' });
+  ok(v2.ok && v2.now > 0 && v2.tasks.length === 1 && v2.tasks[0].id === 't1', '學生只拿到自己班的任務（402 沒有 406 的）');
+  eq(v2.tasks[0].done, ['g4gm_g1'], '學生拿到「我做完了哪些」');
+  ok(!JSON.stringify(v2).match(/姓名|roster/), '學生拿任務不會拿到名單');
+  eq(G3.get({ a: 'tasks', id: '40001' }).tasks.length, 1, '課後班 400 也拿得到任務');
+  eq(G3.get({ a: 'tasks', id: '30405' }).tasks.length, 0, '三年級拿不到四年級的任務');
+  ok(G3.post({ a: 'teacher', pw: 'pw' }).tasks.length === 2, '老師看板拿得到全部任務');
+  j = G3.post({ a: 'task', pw: 'pw', op: 'del', id: 't2' }); ok(j.ok && j.tasks.length === 1 && G3.books['任務'].d.length === 2, '刪掉任務（試算表那一列也清掉）');
+  eq(G3.post({ a: 'task', pw: 'pw', op: 'set', t: { g: 4, cls: [], items: ['g4gm_g1'], from: 1, to: 2 } }).err, 'task', '沒有班級的任務不收');
+}
 
 /* ══ 以後的新題目、新遊戲（使用者第 9 題）：每一個有題目或遊戲的網頁都要接上成績系統 ══ */
 const fs = require('fs'), path = require('path'), ROOT = path.join(__dirname, '..');

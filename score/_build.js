@@ -81,6 +81,11 @@ Object.keys(SITES).forEach(dir => {
     }));
   }
 });
+/* 💼 職業單字（English-Jobs-New，2026-10-09 E 使用者第 4 點）：三、四年級共用 ➜ g*gm_job-遊戲；題庫由 score/_jobs_bank.js 從那一頁讀出來 */
+if (fs.existsSync(path.join(__dirname, '_jobs_bank.json'))) {
+  const JB = JSON.parse(fs.readFileSync(path.join(__dirname, '_jobs_bank.json'), 'utf8'));
+  Object.keys(JB).forEach(id => put('g*gm_job-' + id, { name: '💼 職業單字｜' + JB[id].name, qs: JB[id].qs }));
+}
 /* 代號一定要是 _calc.js 認得的（以後新的教材登記錯了 build 就失敗） */
 const SC = require('./_calc.js');
 Object.keys(BANK).forEach(k => { if (!SC.cat(k.replace('g*', 'g3')).k) throw new Error('老師看板：題組代號 ' + k + ' 不合規則（score/_calc.js 的 SETRE）'); });

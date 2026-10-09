@@ -39,6 +39,7 @@ const CSS = `
 #tabs .tb{background:#141414;border:1px solid #333;color:#D8D8D8;border-radius:12px;font-family:inherit;
  font-size:clamp(13px,1.9vh,17px);padding:clamp(6px,.9vh,9px) clamp(9px,1.1vw,14px);white-space:nowrap;cursor:pointer;line-height:1.15}
 #tabs .tb b{color:#FFD66B;margin-right:5px}
+#tabs a.tb{text-decoration:none;display:inline-flex;align-items:center;border-color:#5A4A1A;color:#FFE9A8}
 #tabs .tb.on{background:#22303A;border-color:var(--acc);color:#fff;font-weight:700}
 #tabs .lv{display:inline-flex;gap:3px;background:#101010;border:1px solid #2A2A2A;border-radius:999px;padding:3px;margin-left:6px}
 #tabs .lv[hidden]{display:none}
@@ -1861,7 +1862,7 @@ const RVPATCH = [
   ["   '<p class=\"lead\">20 秒一題，愈快答對分數愈高。題目和選項每一次都重洗。</p>'+",
    "   '<p class=\"lead\">20 秒一題，愈快答對分數愈高。題目和選項每一次都重洗。</p>'+scMeHTML()+"],
   ["function rvHome(){\n  rvStop();", "function rvHome(){\n  rvStop();clearTimeout(SCAUTO);SCEND=null;"],
-  ["function rvStart(gi){\n  rvGi=gi;", "var rvFix=0;\nfunction rvStart(gi){\n  if(SCON&&!SCID&&!SCGUEST){scLogin(function(){rvStart(gi)});return}\n  rvGi=gi;rvFix=0;scStart();"],
+  ["function rvStart(gi){\n  rvGi=gi;", "var rvFix=0;\nfunction rvStart(gi){\n  if(SCON&&!SCID&&!SCGUEST){scLogin(function(){rvStart(gi)});return}\n  if(!scTkOk('g'+SCG+SCRV+'_rv'+(gi+1))){scLockShow(scLockOf('g'+SCG+SCRV+'_rv'+(gi+1)));return}\n  rvGi=gi;rvFix=0;scStart();"],
   ["  var q=rvQ[rvN];\n  var o=shuf(", "  var q=rvQ[rvN];scAsk(q,RVG[rvGi].q.indexOf(q));\n  var o=shuf("],
   ["  if(rvBusy)return;rvBusy=true;rvStop();\n  var q=rvQ[rvN];",
    "  if(rvBusy)return;rvBusy=true;rvStop();\n  var q=rvQ[rvN];\n  if(q.sim){if(ok)rvFix++}else{var pk=btn?q.o.indexOf(btn.getAttribute('data-t')):-1;scDone(btn&&pk<0?(ok?0:1):pk,ok,rvLeft/RVT)}"],
@@ -1889,7 +1890,7 @@ const TQPATCH = [
   ["  $('#next').disabled=i===CARDS.length-1&&!(hasT&&TCUR<TABM.length-1);",
    "  $('#next').disabled=i===CARDS.length-1&&!(hasT&&TCUR<TABM.length-1)&&!(window.tqHas&&tqHas());"],
   ["  var n=i+d;if(n<0||n>=CARDS.length){if(window.crossTab)crossTab(d);return}",
-   "  var n=i+d;if(n<0||n>=CARDS.length){if(d>0&&window.tqHas&&tqHas()){tqOpen();return}if(window.crossTab)crossTab(d);return}"],
+   "  var n=i+d;if(n<0||n>=CARDS.length){if(d>0&&window.tqHas&&tqHas()){tqFin();return}if(window.crossTab)crossTab(d);return}"],   /* 2026-10-09 E17：講完了一頁 */
   /* B5：舊的 📝 複習（每 4 張一組）拿掉，按鈕不在了 */
 ];
 function page(unit, cards, title, other, otherName, P) {
@@ -1918,6 +1919,8 @@ function page(unit, cards, title, other, otherName, P) {
     js = js.replace(a, () => b.replace('__SUBSETS__', JSON.stringify(SS)));
   });
   const TABHTML = TABM ? '<nav id="tabs">' + TABM.map((tb, k) => '<button class="tb" data-t="' + k + '"><b>' + tb.n + '</b>' + tb.lb + '</button>').join('') +
+    /* 連到別的網站的主題（2026-10-09：四年級 Unit 2 的 💼 職業單字網站）：不是一組卡片，按了直接過去；跨分頁的箭頭不會走到它 */
+    (/^\.\.\//.test(P.file || '') || process.env.REVIEW_DIR ? [] : (P.links || [])).map(x =>   /* 在家複習不連出去（2026-10-07 第 12 點） */ '<a class="tb tbl" href="' + x.href + '"><b>' + x.n + '</b>' + x.lb + ' ↗</a>').join('') +
     '<span class="lv" id="lvGrp" hidden><button data-l="0">基礎</button><button data-l="1">進階</button></span></nav>' : '';
   const TABJS = TABM ? `
 /* 分頁：換一組卡片（2026-10-03） */
@@ -1932,14 +1935,14 @@ function setDeck(t,l,keep){
   stopPlay();sayStop();tocClose();
   CARDS=DECKS[tb.sub?tb.sub[LCUR].d:tb.d];i=0;
   dots.innerHTML=CARDS.map(function(){return '<i></i>'}).join('');
-  $$('#tabs .tb').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-t')===t)});
+  $$('#tabs .tb[data-t]').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-t')===t)});
   var lv=$('#lvGrp');lv.hidden=!tb.sub;
   $$('#lvGrp button').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-l')===LCUR)});
   try{history.replaceState(null,'','#t'+t+(tb.sub?'-'+LCUR:''))}catch(e){}
   tabH();draw(0);
 }
 $('#tabs').addEventListener('click',function(e){
-  var b=e.target.closest?e.target.closest('.tb'):null;if(b){setDeck(+b.getAttribute('data-t'),0);return}
+  var b=e.target.closest?e.target.closest('.tb[data-t]'):null;if(b){setDeck(+b.getAttribute('data-t'),0);return}
   var l=e.target.closest?e.target.closest('#lvGrp button'):null;if(l)setDeck(TCUR,+l.getAttribute('data-l'));
 });
 window.addEventListener('resize',tabH);
@@ -1952,7 +1955,7 @@ ${TABHTML}
 <button class="nav r" id="next" aria-label="下一張"><span><i>▶</i><b>下一張</b></span></button>
 <main id="stage"><section id="card"></section></main>
 
-<div id="rv"><div class="rvbox" id="rvbox"></div></div>${TQD ? '\n<button id="tqGo">📝 複習題 5 題</button>\n<script src="../score/url.js"></script>' : ''}${RVSC ? '\n<script src="../score/url.js"></script>' : ''}
+<div id="rv"><div class="rvbox" id="rvbox"></div></div>${TQD ? '\n<div id="tqBar" class="wait"><button id="tqGo">📝 複習題 5 題</button><button id="tqNx" hidden>➡ 下一個主題</button></div>\n<script src="../score/url.js"></script>' : ''}${RVSC ? '\n<script src="../score/url.js"></script>' : ''}
 <div id="toc" aria-label="目次"><div class="th"><h2 id="tocH">${String(title).replace(/&/g, '&amp;').replace(/</g, '&lt;')}</h2>
  <button class="tx">✕ 關閉</button></div><div class="tg" id="tocG"></div></div>
 

@@ -21,12 +21,23 @@
  *   遊戲的 ⚡ 總分       一樣是答對 60 ＋ 速度 40（s100）；🎁 驚喜卡、連對加成不算（原始分數照存，只給老師看）
  *   遊戲算 1 次          玩完整場（時間到或打倒魔王；中途離開不送）、第一次作答 ≧ 6 題（使用者 2026-10-09：遊戲改 1 分 30 秒，原本 10 題）、正確率 ≧ 2/3；同一個遊戲一天最多 3 次
  *   🃏 記憶配對          不算正確率、不算總分；只記配完幾對、用幾秒、翻錯幾次（給老師看）；玩完整場就算 1 次
+ *
+ * 2026-10-09 E（使用者決定在 score/2026-10-09_E_任務期限_課後班_聲音_複習題時機_需求.md 最下面）：老師派任務
+ *   任務                 老師看板派：名稱、年級、哪幾班（可以一鍵全年級）、項目（遊戲、📝 複習題、Review 1 的 📝 複習、💼 職業單字遊戲）、
+ *                        從幾月幾日幾點 到 幾月幾日幾點。存在試算表「任務」分頁
+ *   鎖（tkLock）          這一班「沒有任何正在進行的任務」＝ 全部開放（E2-A，跟以前一樣）；
+ *                        有任務正在進行 ＝ 只開任務裡的，其他 🔒；任務裡的東西只在它的時段開（還沒到 ＝ 🔒 幾點開放、過了 ＝ 🔒 已經截止，
+ *                        老師把任務刪掉或改期限才會再開）；在家複習同一個代號，一樣管（E3-A）
+ *   做到一半截止          讓他做完、成績照記（E4）；截止以後才不能「開始」；做完 ＝ 時段裡（截止後 10 分鐘內送到也算）有一筆紀錄
  *   排行榜               四種榜照舊合在一起（複習題＋遊戲都算）；遊戲結束另外給「這個遊戲本班前 10 名」（gtop）
  *   題組代號             g年級＋教材＋_＋題組：u1／u2 ＝ 📝 複習題、gm ＝ 🎮 句型遊戲、r1 ＝ 📘 Review 1（遊戲和頁面的 📝 複習）
  *                        以後新的教材在 score/_sites.js 登記一行，代號自動產生（例 u3、r2）
  */
 var SC = (function () {
-  var CLASSES = { 3: ['304', '307', '311'], 4: ['402', '406', '409', '410'] };
+  var CLASSES = { 3: ['304', '307', '311'], 4: ['402', '406', '409', '410', '400'] };
+  /* 課後班（使用者 2026-10-09 E9・E10・E11）：400 ＝ 四年級課後班（只有四年級、座號 01～30）；不放進班際比較（人數、上課時間都不一樣） */
+  var AFTER = { '400': '課後班' };
+  function cname(c) { return AFTER[c] ? c + ' ' + AFTER[c] : c + ' 班'; }
   /* 試算表的欄位（「作廢」一定在最後一欄：老師在試算表打 TRUE ＝ 不算） */
   var COLS = ['時間', '5碼', '年級', '班級', '座號', '類別', '題組', '題組名稱', '玩法', '題數', '答對', '正確率', '總分百分制', '訂正成功',
     '配對', '翻錯', '秒數', '原始分數', '秒按', '來源', '平板', '編號', '每題', '作廢'];
@@ -153,9 +164,50 @@ var SC = (function () {
     for (var i = 0; i < L.length; i++) { if (!i || !B.eq(L[i], L[i - 1])) rk = i + 1; out.push({ id: L[i].id, cls: L[i].cls, v: B.v(L[i]), rk: rk }); }
     return out;
   }
+  /* ── 老師派任務（2026-10-09 E）── */
+  var TKGRACE = 10 * 6e4, TKMAXI = 80;
+  function tkClean(t, now) {
+    t = t || {}; var g = +t.g; if (g !== 3 && g !== 4) return null;
+    var cls = [], items = [], nm = {}, i;
+    for (i = 0; i < (t.cls || []).length; i++) { var c = String(t.cls[i]); if (CLASSES[g].indexOf(c) >= 0 && cls.indexOf(c) < 0) cls.push(c); }
+    for (i = 0; i < (t.items || []).length && items.length < TKMAXI; i++) { var k = String(t.items[i]), m = SETRE.exec(k);
+      if (m && +m[1] === g && items.indexOf(k) < 0) { items.push(k); nm[k] = String((t.nm || {})[k] || k).slice(0, 60); } }
+    var from = Math.round(+t.from), to = Math.round(+t.to);
+    if (!cls.length || !items.length || !(from > 0) || !(to > from)) return null;
+    var id = String(t.id || '').replace(/[^\w]/g, '').slice(0, 24) || ('t' + now);
+    return { id: id, name: String(t.name || '任務').replace(/^\s+|\s+$/g, '').slice(0, 30) || '任務', g: g, cls: cls, items: items, nm: nm, from: from, to: to };
+  }
+  /* 這個學生（5 碼）的班有哪些任務（給學生端：不給別班的） */
+  function tkFor(T, id) {
+    var c = checkId(id); if (c.err) return [];
+    return T.filter(function (t) { return t.g === c.g && t.cls.indexOf(c.cls) >= 0; })
+      .map(function (t) { return { id: t.id, name: t.name, items: t.items, nm: t.nm, from: t.from, to: t.to }; });
+  }
+  /* 做完了沒有：時段裡（截止後 10 分鐘內送到也算，E4）有一筆這個項目的紀錄 */
+  function tkDone(rs, t, id) {
+    var d = [];
+    rs.forEach(function (r) { if (!r.x && r.id === id && r.t >= t.from && r.t <= t.to + TKGRACE && t.items.indexOf(r.set) >= 0 && d.indexOf(r.set) < 0) d.push(r.set); });
+    return d;
+  }
+  /* 鎖：T ＝ 這一班的任務、key ＝ 題組代號、now ＝ 現在
+     回傳 k：free 沒有任務（全部開放）｜open 任務裡、正在開（to ＝ 截止）｜soon 還沒到（from）｜end 已經截止（to）｜off 老師現在指定別的（act ＝ 正在進行的任務） */
+  function tkLock(T, key, now) {
+    var act = [], mine = [], i, t;
+    for (i = 0; i < (T || []).length; i++) { t = T[i]; var on = t.from <= now && now <= t.to;
+      if (on) act.push(t); if (t.items.indexOf(key) >= 0) mine.push(t); }
+    var a = mine.filter(function (x) { return x.from <= now && now <= x.to; });
+    if (a.length) return { k: 'open', to: Math.max.apply(null, a.map(function (x) { return x.to; })), task: a[0] };
+    if (mine.length) {
+      var f = mine.filter(function (x) { return x.from > now; });
+      if (f.length) return { k: 'soon', from: Math.min.apply(null, f.map(function (x) { return x.from; })), task: f[0] };
+      return { k: 'end', to: Math.max.apply(null, mine.map(function (x) { return x.to; })), task: mine[0] };
+    }
+    if (act.length) return { k: 'off', act: act };
+    return { k: 'free' };
+  }
   /* 班級：有做的人的平均（Q13-A）＋參與率（要老師填人數） */
   function classes(ps, g, sizes) {
-    return CLASSES[g].map(function (c) {
+    return CLASSES[g].filter(function (c) { return !AFTER[c]; }).map(function (c) {
       var m = ps.filter(function (p) { return p.cls === c; });
       var nn = function (k) { return m.filter(function (p) { return p[k] != null; }).map(function (p) { return p[k]; }); };
       var a = mean(nn('acc')), s = mean(nn('s')), pr = mean(nn('prog')), cnt = 0;
@@ -209,7 +261,7 @@ var SC = (function () {
     out.classes = cl.map(function (x) { return { cls: x.cls, acc: x.acc, n: x.n }; });
     if (o.u) { var ps0 = students(W.filter(function (r) { return r.u !== o.u; }));
       var b0 = classes(ps0, c.g, null).filter(function (x) { return x.cls === c.cls; })[0], b1 = cl.filter(function (x) { return x.cls === c.cls; })[0];
-      out.delta = b0.acc == null || b1.acc == null ? null : r1(b1.acc - b0.acc); }
+      out.delta = !b0 || !b1 || b0.acc == null || b1.acc == null ? null : r1(b1.acc - b0.acc); }   /* 課後班不在班際比較 ➜ 沒有 delta */
     if (boardsOn) {
       out.top = {}; out.cut = {}; out.rk = {};
       ['acc', 's', 'count', 'prog'].forEach(function (k) {
@@ -225,7 +277,8 @@ var SC = (function () {
     }
     return out;
   }
-  return { CLASSES: CLASSES, SEAT: SEAT, COLS: COLS, CI: CI, CAP: CAP, TOP: TOP, GMIN: GMIN, MT: MT, checkId: checkId, cat: cat, counts: counts, need: need, day: day, weekStart: weekStart,
-    s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, questions: questions, gtop: gtop, view: view };
+  return { CLASSES: CLASSES, AFTER: AFTER, cname: cname, SEAT: SEAT, COLS: COLS, CI: CI, CAP: CAP, TOP: TOP, GMIN: GMIN, MT: MT, checkId: checkId, cat: cat, counts: counts, need: need, day: day, weekStart: weekStart,
+    s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, questions: questions, gtop: gtop, view: view,
+    tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE };
 })();
 if (typeof module !== 'undefined') module.exports = SC;
