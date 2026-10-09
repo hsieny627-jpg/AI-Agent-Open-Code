@@ -51,10 +51,10 @@ module.exports = function (CODE, kind) {
   ];
   /* 2026-10-09 使用者：座號改 1～30、老師看板加名單 ➜ 貼名單＋程式更新（網址不變，url.js 不用改） */
   const UPDATE = [
-    { t: '打開成績的 Google 試算表', m: `
+    { t: '打開上次的成績試算表', m: `
       <div class="win"><div class="url">sheets.google.com</div>
         <div class="row"><div class="tile ghost"></div><div class="tile" data-tap="1" data-say="上次做的那一個">📊<small>成績</small></div><div class="tile ghost"></div></div></div>
-      <a class="big go" href="https://sheets.google.com" target="_blank" rel="noopener">🌐 打開 Google 試算表</a>`, tip: '就是上次部署時開的那一個' },
+      <a class="big go" href="https://sheets.google.com" target="_blank" rel="noopener">🌐 打開 Google 試算表</a>` },
     { t: '按最下面的「名單」分頁', m: `
       <div class="win"><div class="lines">　</div><div class="menu"><span>紀錄</span><span>班級人數</span><span class="hot" data-tap="1" data-say="最下面這一排">名單</span></div></div>`,
       tip: '沒有「名單」？按左下角 ＋，改名「名單」，第一列打：班級　座號　姓名' },
