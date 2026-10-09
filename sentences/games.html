@@ -541,29 +541,43 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 
 /* ── 成績紀錄（2026-10-07 對話 C） ── */
 .sclog{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.3vh,14px);width:100%}
-.sclog h2{font-size:clamp(28px,5.2vh,50px)!important}
-.scbox{display:flex;gap:clamp(6px,1.2vw,12px);align-items:center}
-.scbox i{font-style:normal;display:flex;align-items:center;justify-content:center;width:clamp(52px,8.4vh,80px);height:clamp(64px,10.4vh,98px);
- border-radius:16px;background:#111;border:3px solid #333;font-size:clamp(38px,7vh,66px);font-weight:700;color:#fff;transition:transform .2s,border-color .2s}
+.sclog h2{font-size:clamp(28px,5vh,50px)!important;margin:0}
+/* 2026-10-09：① 打班級 ➜ ② 打座號 ➜ ③ 按 ✅，正在做的那一步會亮 */
+.scsteps{display:flex;align-items:center;justify-content:center;gap:clamp(4px,1vw,10px);flex-wrap:wrap}
+.scsteps span{display:flex;align-items:center;padding:clamp(4px,.8vh,8px) clamp(10px,1.6vw,20px);border-radius:999px;border:3px solid #333;color:#8A8A8A;
+ font-size:clamp(20px,3.4vh,32px);font-weight:700;white-space:nowrap;transition:transform .3s}
+.scsteps b{color:#555;font-size:clamp(20px,3.2vh,30px)}
+.scsteps span.now{border-color:var(--gold);color:#fff;background:#2A2208;transform:scale(1.08);animation:scStep 1.4s ease-in-out infinite}
+.scsteps span.done{border-color:var(--ok);color:var(--ok);background:#0F3323}
+@keyframes scStep{50%{box-shadow:0 0 0 8px rgba(255,200,60,.22)}}
+.scbox{display:flex;gap:clamp(14px,3vw,40px);align-items:flex-end}
+.scg{display:flex;flex-direction:column;align-items:center;gap:6px;padding:clamp(4px,.8vh,10px);border-radius:20px;border:3px solid transparent;cursor:pointer}
+.scg .lb{font-size:clamp(22px,3.8vh,36px);font-weight:700}.scg.c .lb{color:var(--acc)}.scg.s .lb{color:var(--ok)}
+.scg.now{border-color:#4A4A2A;background:#16140A}
+.scg .cells{display:flex;gap:clamp(6px,1.2vw,12px)}
+.scbox i{font-style:normal;display:flex;align-items:center;justify-content:center;width:clamp(56px,9vh,86px);height:clamp(68px,11vh,104px);position:relative;
+ border-radius:16px;background:#111;border:4px solid #333;font-size:clamp(40px,7.4vh,70px);font-weight:700;color:#fff;transition:transform .2s,border-color .2s}
 .scbox i.c{border-color:#3A6FA8}.scbox i.s{border-color:#3A8F5E}
 .scbox i.c.f{background:#0F2236;border-color:var(--acc)}.scbox i.s.f{background:#0F3323;border-color:var(--ok)}
+/* 要打的那一格會閃 */
+.scbox i.cur{border-color:var(--gold);box-shadow:0 0 0 5px rgba(255,200,60,.3)}
+.scbox i.cur::after{content:'';position:absolute;bottom:14%;width:42%;height:6px;border-radius:3px;background:var(--gold);animation:scBlink 1s steps(1) infinite}
+@keyframes scBlink{50%{opacity:0}}
 .scbox i.pop{animation:scPop .3s ease-out}
-.scbox .gap{width:clamp(6px,1.4vw,16px)}
 @keyframes scPop{50%{transform:scale(1.18)}}
-.scbox.shake{animation:scShake .45s}
+.scbox.shake .scg.c{animation:scShake .45s}
 @keyframes scShake{20%,60%{transform:translateX(-14px)}40%,80%{transform:translateX(14px)}}
-.scmean{display:flex;gap:clamp(14px,3vw,40px);font-size:clamp(22px,4vh,38px);font-weight:700}
-.scmean span{display:flex;align-items:center;gap:8px;padding:4px 16px;border-radius:999px;background:#111;border:1px solid #2A2A2A;transition:transform .3s}
-.scmean .mc b{color:var(--acc)}.scmean .ms b{color:var(--ok)}
-.scmean span.lit{transform:scale(1.12);border-color:#888}
-.scmsg{min-height:1.4em;font-size:clamp(19px,3.2vh,30px);font-weight:700;color:#FFB3B3;text-align:center}
-.scmsg.ok{color:var(--ok)}
-.sckey{display:grid;grid-template-columns:repeat(3,clamp(84px,13vh,128px));gap:clamp(6px,1.1vh,12px)}
-.sckey button{min-height:clamp(60px,8.6vh,84px);border-radius:18px;background:#1A1A1A;border:2px solid #3A3A3A;color:#fff;
- font-family:inherit;font-weight:700;font-size:clamp(28px,5vh,46px);cursor:pointer}
+.scmsg{min-height:2.6em;font-size:clamp(21px,3.6vh,34px);font-weight:700;color:#fff;text-align:center;line-height:1.3}
+.scmsg b.kc{color:var(--acc)}.scmsg b.ks{color:var(--ok)}
+.scmsg small{display:block;font-size:.74em;color:#BDBDBD}
+.scmsg.err{color:#FF9A9A}.scmsg.ok{color:var(--ok)}
+.sckey{display:grid;grid-template-columns:repeat(3,clamp(88px,13.6vh,132px));gap:clamp(6px,1.1vh,12px)}
+.sckey button{min-height:clamp(60px,8.6vh,86px);border-radius:18px;background:#1A1A1A;border:2px solid #3A3A3A;color:#fff;
+ font-family:inherit;font-weight:700;font-size:clamp(30px,5.2vh,48px);cursor:pointer}
 .sckey button:active{transform:scale(.94);background:#2A2A2A}
 .sckey .okb{background:#0F3323;border-color:var(--ok)}
-.sckey .bs{font-size:clamp(22px,3.8vh,34px)}
+.sckey .okb.ready{background:var(--ok);color:#000;animation:scStep 1.2s ease-in-out infinite}
+.sckey .bs{font-size:clamp(24px,4vh,36px)}
 #scGuest{background:#141A20;border:2px solid #5A6A78;color:#DDE6EE;border-radius:999px;font-family:inherit;font-weight:700;
  font-size:clamp(17px,2.7vh,24px);padding:10px 26px;min-height:48px;cursor:pointer}
 .scme{display:flex;align-items:center;gap:12px;font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#DDE6EE}
@@ -2009,7 +2023,7 @@ function gInit(){hub();var h=(location.hash||'').slice(1);if(h&&META.some(functi
      reopen() 換人以後回哪裡、rk() 作答中名次、btns(E) 最後一幕的按鈕、miss() 答錯整理的標題、act(a) data-sca 按鈕 */
 var SCG=4,SCSRC="school";
 var SCURL=String(window.SCORE_URL||'').replace(/^\s+|\s+$/g,''),SCON=!!SCURL&&!window.__SCORE_TEST_OFF;
-var SCCLS={3:['304','307','311'],4:['402','406','409','410']},SCDEMO={0:'30405',3:'30405',4:'40205'};
+var SCCLS={3:['304','307','311'],4:['402','406','409','410']},SCSEAT=40;
 function scGet(k){try{return JSON.parse(localStorage.getItem('score_'+k)||'null')}catch(e){return null}}
 function scPut(k,v){try{localStorage.setItem('score_'+k,JSON.stringify(v))}catch(e){}}
 var SCID=scGet(SCG?'id_g'+SCG:'last'),SCGUEST=false,SCDEV=scGet('dev'),SCV=null,SCQ=[],SCT0=0,SCREF=0,SCQI=0,SCIN='',SCEND=null,SCH=null;
@@ -2022,13 +2036,13 @@ function scCheck(id){
   var c=id.slice(0,3),s=+id.slice(3),g=c.charAt(0)==='3'?3:(c.charAt(0)==='4'?4:0);
   if(!g||SCCLS[g].indexOf(c)<0)return{err:'cls',cls:c};
   if(SCG&&g!==SCG)return{err:'grade',g:g};
-  if(s<1||s>40)return{err:'seat'};
+  if(s<1||s>SCSEAT)return{err:'seat'};
   return{id:id,cls:c,seat:s,g:g};
 }
 function scMsg(r){
   var G={3:'三',4:'四'};
   return r.err==='len'?'要打 5 個數字':r.err==='cls'?'🏫 沒有 '+r.cls+' 班，再看一次':
-   r.err==='grade'?'這是'+G[SCG]+'年級的網站（'+G[r.g]+'年級請用'+G[r.g]+'年級的網站）':'🪑 座號要 01～40';
+   r.err==='grade'?'這是'+G[SCG]+'年級的網站（'+G[r.g]+'年級請用'+G[r.g]+'年級的網站）':'🪑 座號要 01～'+SCSEAT;
 }
 /* 網路：GET 看排行、POST 送成績（text/plain ＝ 不用預檢，Apps Script 收得到） */
 function scFetch(q,body,ms){
@@ -2056,45 +2070,65 @@ function scFlush(){
 if(SCON){setTimeout(scFlush,1500);window.addEventListener('online',function(){scFlush()})}
 /* 要記成績的地方先過這一關：還沒登入 ➜ 先登入（在家可以〔👀 先練習，不記成績〕）；登入好了 ➜ 直接做 fn */
 function scGate(fn){if(SCON&&!SCID&&!SCGUEST){scLogin(fn);return}fn()}
-/* ── 登入：5 碼（班級 3 碼＋座號 2 碼） ── */
-var SCTYPED='',SCDEMOT=null;
+/* ── 登入（2026-10-09 改版，照 English-Jobs-New 的 jobdex 新登入）：① 🏫 打班級 ➜ ② 🪑 打座號 ➜ ③ ✅ 按綠色勾勾
+   正在做的那一步會亮、要打的那一格會閃；班級打錯（第 3 個數字打完就檢查）立刻清空；想改班級 ＝ 點班級的格子或按 ⌫，整個班級清空重打 ── */
+var SCTYPED='';
+function scClsList(){var G={3:'三',4:'四'},gs=SCG?[SCG]:[3,4];
+  return gs.map(function(g){return G[g]+'年級：'+SCCLS[g].join('、')}).join('　')}
 function scLogin(after){
   if(window.stopPlay)stopPlay();sayStop();
   SCH.open();
-  SCTYPED='';var demo=SCDEMO[SCG];
-  SCH.box().innerHTML='<div class="sclog"><h2>🔢 輸入你的號碼</h2>'+
-   '<div class="scbox" id="scBox">'+[0,1,2,3,4].map(function(n){return (n===3?'<span class="gap"></span>':'')+'<i class="'+(n<3?'c':'s')+'"></i>'}).join('')+'</div>'+
-   '<div class="scmean"><span class="mc">🏫 <b id="scC">＿＿＿</b> 班</span><span class="ms">🪑 <b id="scS">＿</b> 號</span></div>'+
-   '<div class="scmsg" id="scMsg">例：'+demo+' ＝ '+demo.slice(0,3)+' 班 '+(+demo.slice(3))+' 號</div>'+
+  SCTYPED='';SCLOGAFTER=after;
+  var box=function(n,k){var s='';for(var i=0;i<n;i++)s+='<i class="'+k+'"></i>';return s};
+  SCH.box().innerHTML='<div class="sclog"><h2>🔢 先登入，成績才會記下來</h2>'+
+   '<div class="scsteps"><span id="scSt1">① 🏫 打班級</span><b>➜</b><span id="scSt2">② 🪑 打座號</span><b>➜</b><span id="scSt3">③ ✅ 按綠色勾勾</span></div>'+
+   '<div class="scbox" id="scBox"><div class="scg c" id="scGc"><span class="lb">🏫 班級</span><div class="cells">'+box(3,'c')+'</div></div>'+
+   '<div class="scg s" id="scGs"><span class="lb">🪑 座號</span><div class="cells">'+box(2,'s')+'</div></div></div>'+
+   '<div class="scmsg" id="scMsg"></div>'+
    '<div class="sckey">'+[1,2,3,4,5,6,7,8,9].map(function(n){return '<button data-k="'+n+'">'+n+'</button>'}).join('')+
-   '<button class="bs" data-k="b">⌫</button><button data-k="0">0</button><button class="okb" data-k="ok">✅</button></div>'+
+   '<button class="bs" data-k="b" aria-label="刪掉">⌫</button><button data-k="0">0</button><button class="okb" data-k="ok" aria-label="確定">✅</button></div>'+
    (SCSRC==='home'?'<button id="scGuest">👀 先練習，不記成績</button>':'')+SCH.back+'</div>';
-  SCLOGAFTER=after;
-  /* 動畫：示範一次 3 0 4 0 5 自己跳進格子（前 3 格 ➜ 🏫 班、後 2 格 ➜ 🪑 號），再清空換學生打 */
-  var k=0;clearInterval(SCDEMOT);
-  SCDEMOT=setInterval(function(){
-    if(!$('#scBox')||SCTYPED){clearInterval(SCDEMOT);return}
-    if(k<5){scPaint(demo.slice(0,++k),true)}
-    else if(k++>8){clearInterval(SCDEMOT);scPaint('',true);var m=$('#scMsg');if(m)m.textContent='換你了！👆'}
-  },420);
+  scPaint();
 }
 var SCLOGAFTER=null;
-function scPaint(v,demo){
-  var cs=$$('#scBox i');cs.forEach(function(c,n){var d=v.charAt(n);if(c.textContent!==d&&d){c.classList.remove('pop');void c.offsetWidth;c.classList.add('pop')}
-    c.textContent=d;c.classList.toggle('f',!!d)});
-  $('#scC').textContent=v.length>=3?v.slice(0,3):'＿＿＿';
-  $('#scS').textContent=v.length>=5?String(+v.slice(3)):'＿';
-  $('.scmean .mc').classList.toggle('lit',v.length===3);$('.scmean .ms').classList.toggle('lit',v.length===5);
-  if(!demo){var m=$('#scMsg');m.className='scmsg';m.textContent=v.length===5?'對嗎？按 ✅':''}
+function scPaint(err){
+  var v=SCTYPED;if(!$('#scBox'))return;
+  $$('#scBox i').forEach(function(c,n){var d=v.charAt(n);if(c.textContent!==d&&d){c.classList.remove('pop');void c.offsetWidth;c.classList.add('pop')}
+    c.textContent=d;c.classList.toggle('f',!!d);c.classList.toggle('cur',n===v.length)});
+  var st=v.length<3?1:v.length<5?2:3;
+  [1,2,3].forEach(function(k){var s=$('#scSt'+k);s.classList.toggle('now',k===st);s.classList.toggle('done',k<st)});
+  $('#scGc').classList.toggle('now',st===1);$('#scGs').classList.toggle('now',st===2);
+  $('.sckey .okb').classList.toggle('ready',v.length===5);
+  var m=$('#scMsg');
+  if(err){m.className='scmsg err';m.innerHTML=err;return}
+  m.className='scmsg';
+  m.innerHTML=v.length===0?'👆 先打你的<b class="kc">班級</b>（3 個數字）<small>例：304 班 5 號 ➜ 打 3 0 4 0 5</small>':
+   v.length<3?'🏫 班級還要打 '+(3-v.length)+' 個數字':
+   v.length===3?'👍 '+v+' 班！再打你的<b class="ks">座號</b>（2 個數字）<small>5 號 ➜ 打 0 5　　打錯班級 ➜ 按 ⌫ 重打</small>':
+   v.length===4?'🪑 座號還要打 1 個數字':
+   '對嗎？<b class="kc">'+v.slice(0,3)+' 班</b> <b class="ks">'+(+v.slice(3))+' 號</b> ➜ 按綠色的 ✅';
 }
+function scShake(){var b=$('#scBox');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
+/* 班級（前 3 個數字）對不對：沒有這一班、或不是這個年級的網站 */
+function scClsErr(c){var g=c.charAt(0)==='3'?3:(c.charAt(0)==='4'?4:0),G={3:'三',4:'四'};
+  if(!g||SCCLS[g].indexOf(c)<0)return '🏫 沒有 '+c+' 班！已經幫你清掉了，請重新打班級<small>'+scClsList()+'</small>';
+  if(SCG&&g!==SCG)return '🏫 '+c+' 班是'+G[g]+'年級，這是'+G[SCG]+'年級的網站！已經幫你清掉了<small>'+scClsList()+'</small>';
+  return ''}
 function scKeyPress(k){
-  if(SCDEMOT){clearInterval(SCDEMOT);SCDEMOT=null}
-  if(k==='b')SCTYPED=SCTYPED.slice(0,-1);
-  else if(k==='ok'){var r=scCheck(SCTYPED);
-    if(r.err){var m=$('#scMsg');m.className='scmsg';m.textContent=scMsg(r);var b=$('#scBox');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');return}
+  if(!$('#scBox'))return;
+  if(k==='c'){SCTYPED='';scPaint();return}                             /* 點班級的格子 ＝ 整個班級清掉重打 */
+  if(k==='s'){SCTYPED=SCTYPED.slice(0,3);scPaint();return}              /* 點座號的格子 ＝ 座號清掉重打 */
+  if(k==='b'){SCTYPED=SCTYPED.length<=3?'':SCTYPED.slice(0,-1);scPaint();return}   /* 班級裡按 ⌫ ＝ 整個班級清掉 */
+  if(k==='ok'){var r=scCheck(SCTYPED);
+    if(r.err==='len'){scShake();scPaint(SCTYPED.length<3?'🏫 先打完班級（3 個數字）':'🪑 座號要打 2 個數字（5 號 ➜ 0 5）');return}
+    if(r.err){scShake();scPaint(scMsg(r));return}
     scWho(r);return}
-  else if(SCTYPED.length<5)SCTYPED+=k;
-  scPaint(SCTYPED,false);
+  if(SCTYPED.length>=5)return;
+  SCTYPED+=k;
+  if(SCTYPED.length===3){var ce=scClsErr(SCTYPED);if(ce){SCTYPED='';scShake();scPaint(ce);return}}
+  if(SCTYPED.length===5){var s=+SCTYPED.slice(3);if(s<1||s>SCSEAT){var bad=SCTYPED.slice(3);SCTYPED=SCTYPED.slice(0,3);scShake();
+    scPaint('🪑 沒有 '+bad+' 號！請重新打座號<small>座號是 01～'+SCSEAT+'</small>');return}}
+  scPaint();
 }
 /* 名單開關（預設關）：開了才問「你是 304 班 5 號 ○○○ 嗎？」，學生不自己打名字 */
 function scWho(r){
@@ -2286,6 +2320,7 @@ document.addEventListener('click',function(e){
   if(c('#scSwap')){if(!SCH)return;SCID=null;scPut('id_g'+scGr(),null);scPut('last',null);SCGUEST=false;scLogin(SCH.reopen);return}
   if(!scOn())return;
   if((b=c('.sckey button'))){scKeyPress(b.getAttribute('data-k'));return}
+  if(c('#scGc')){scKeyPress('c');return}if(c('#scGs')&&SCTYPED.length>3){scKeyPress('s');return}
   if(c('#scGuest')){SCGUEST=true;var a=SCLOGAFTER;SCLOGAFTER=null;if(a)a();return}
   if((b=c('[data-sca]'))){if(SCH.act)SCH.act(b.getAttribute('data-sca'));return}
   if(!SCEND||!c('#scn'))return;

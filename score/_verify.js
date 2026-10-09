@@ -40,6 +40,8 @@ const fit = p => p.evaluate(() => { const de = document.documentElement, rv = do
   if (rv && rv.classList.contains('on') && rv.scrollHeight > rv.clientHeight + 1) e.push('要捲動才看得到全部（' + (rv.scrollHeight - rv.clientHeight) + 'px）');
   [].forEach.call(document.querySelectorAll('#rv button, .scbar, .sclist div, .scmine, .scpod .id'), x => { if (x.getBoundingClientRect().width && x.scrollWidth > x.clientWidth + 2) e.push('字超出框：' + x.textContent.trim().slice(0, 24)); });
   return e; });
+async function keys(p, ks) { for (const d of ks) await p.click('.sckey button[data-k="' + d + '"]'); await p.waitForTimeout(150); }
+const typed = p => p.evaluate(() => [].map.call(document.querySelectorAll('#scBox i'), x => x.textContent).join(''));
 async function typeId(p, id) { for (const d of id) await p.click('.sckey button[data-k="' + d + '"]'); await p.click('.sckey button[data-k="ok"]'); await p.waitForTimeout(250); }
 async function quiz(p, wrongAt, started) {
   if (!started) await p.click('#tqStart'); await p.waitForTimeout(700);
@@ -69,16 +71,32 @@ async function student(br, P, vp) {
   if (demo.font < 36) e.push('登入格子的數字太小（' + demo.font + 'px）');
   if (demo.guest !== (P.src === 'home')) e.push(P.src === 'home' ? '在家複習沒有〔👀 先練習，不記成績〕' : '教學網站不可以有「不記成績」');
   e.push(...await fit(p)); n += 5;
-  /* 示範動畫：3 0 4 0 5 自己跳進去 */
-  const demoSeen = await p.evaluate(() => document.getElementById('scMsg').textContent);
-  if (!/換你了|例/.test(demoSeen)) e.push('登入沒有示範動畫的提示（' + demoSeen + '）');
-  /* ② 防呆 */
-  const bad = [[P.g === 3 ? '30505' : '40505', '沒有'], [P.other, '年級的網站'], [P.me.slice(0, 3) + '41', '座號'], [P.me.slice(0, 3) + '00', '座號']];
-  for (const [id, want] of bad) {
-    await typeId(p, id); const m = await p.evaluate(() => document.getElementById('scMsg').textContent);
+  /* 2026-10-09 新登入：① 打班級 ➜ ② 打座號 ➜ ③ 按 ✅（那一步會亮、那一格會閃）；班級打錯立刻清空 */
+  const L = () => p.evaluate(() => ({ now: [1, 2, 3].filter(k => document.getElementById('scSt' + k).classList.contains('now')),
+    cur: [].findIndex.call(document.querySelectorAll('#scBox i'), x => x.classList.contains('cur')), msg: document.getElementById('scMsg').textContent,
+    ready: document.querySelector('.sckey .okb').classList.contains('ready'), stepPx: parseFloat(getComputedStyle(document.getElementById('scSt1')).fontSize) }));
+  let l = await L();
+  if (l.now.join() !== '1' || l.cur !== 0) e.push('登入一開始不是「① 打班級」亮、第 1 格閃（' + l.now + '／' + l.cur + '）');
+  if (!/班級/.test(l.msg) || !/例/.test(l.msg)) e.push('登入一開始沒有寫先打班級和例子（' + l.msg + '）');
+  if (l.stepPx < 20) e.push('登入步驟的字太小（' + l.stepPx + 'px）');
+  await keys(p, P.me.slice(0, 3)); l = await L();
+  if (l.now.join() !== '2' || l.cur !== 3) e.push('班級打完不是「② 打座號」亮、第 4 格閃');
+  await keys(p, P.me.slice(3)); l = await L();
+  if (l.now.join() !== '3' || !l.ready) e.push('5 碼打完不是「③ 按 ✅」亮、✅ 沒有變亮');
+  await keys(p, 'b'); if ((await typed(p)) !== P.me.slice(0, 4)) e.push('座號裡按 ⌫ 不是刪一個數字');
+  await keys(p, 'b'); await keys(p, 'b'); if ((await typed(p)) !== '') e.push('班級裡按 ⌫ 沒有整個班級清掉');
+  await keys(p, P.me.slice(0, 3)); await p.click('#scGc'); await p.waitForTimeout(150);
+  if ((await typed(p)) !== '') e.push('點班級的格子沒有整個班級清掉重打');
+  n += 8;
+  /* ② 防呆：班級打錯（第 3 個數字打完）立刻清空；座號錯只清座號 */
+  const bad = [[P.g === 3 ? '305' : (P.g === 4 ? '405' : '305'), '沒有', ''], [P.other.slice(0, 3), '年級的網站', ''],
+    [P.me.slice(0, 3) + '41', '座號', P.me.slice(0, 3)], [P.me.slice(0, 3) + '00', '座號', P.me.slice(0, 3)]].filter(x => P.g || x[1] !== '年級的網站');
+  for (const [id, want, left] of bad) {
+    await keys(p, id); const m = await p.evaluate(() => document.getElementById('scMsg').textContent);
     if (m.indexOf(want) < 0) e.push('輸入 ' + id + ' 沒有擋下來（' + m + '）');
-    for (let k = 0; k < 5; k++) await p.click('.sckey button[data-k="b"]');
-    n++;
+    if ((await typed(p)) !== left) e.push('輸入 ' + id + ' 以後沒有清掉（剩「' + (await typed(p)) + '」）');
+    await p.click('#scGc'); await p.waitForTimeout(100);
+    n += 2;
   }
   if (P.src === 'home') {
     /* ③ 在家：先練習不記成績 */
@@ -312,8 +330,8 @@ async function game(br, P, vp) {
     await p.click('.gcard[data-g="' + P.game + '"]'); await p.waitForTimeout(400);
   } else {
     if (P.g === 0) {   /* Review 1 遊戲三、四年級共用：兩個年級的號碼都可以 */
-      await typeId(p, '30505'); if (!/沒有/.test(await p.textContent('#scMsg'))) e.push('沒有 305 班也讓他登入');
-      for (let k = 0; k < 5; k++) await p.click('.sckey button[data-k="b"]');
+      await keys(p, '305'); if (!/沒有/.test(await p.textContent('#scMsg'))) e.push('沒有 305 班也讓他登入');
+      if ((await typed(p)) !== '') e.push('沒有 305 班沒有立刻清空');
     }
     await typeId(p, P.me); await p.waitForTimeout(500);
   }
