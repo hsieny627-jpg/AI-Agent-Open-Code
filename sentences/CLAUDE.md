@@ -29,6 +29,11 @@
 | `_verify.js` | 量測腳本。`node sentences/_verify.js` 量全部；`node sentences/_verify.js unit1.html` 只量一頁 |
 | `index.html` `warmup.html` `unit1.html` `unit2.html` `games.html` | **產物，不要手改**，會被下一次 build 蓋掉 |
 
+## 2026-10-09：遊戲改 1 分 30 秒（先讀這一節）
+
+使用者 2026-10-09：**每一種遊戲 1 分 30 秒（🔍 火眼金睛也一樣，取代 2026-09-27 的 3／4 分鐘）**；答錯頁的時候時鐘暫停；👑 魔王打 6 下就倒。
+做法 `_build_games.js`（`GT=90`、`gtTxt()`、`judge()` 的 `gPause`、魔王傷害 17）。其他（座號、登入、名單）寫在 `score/CLAUDE.md` 最上面「2026-10-09」。
+
 ## 2026-10-07 對話 C：在家複習加基礎句型＋成績紀錄（先讀這一節）
 
 使用者 2026-10-07：`2026-10-07_C_設計與研究清單.md` 的 Q1～Q18 **全部照建議**。成績紀錄的規格在 **`score/CLAUDE.md`**（規則表、檔案分工、量測），部署說明 `score/Google部署說明.md`。
