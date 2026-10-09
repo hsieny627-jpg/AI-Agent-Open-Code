@@ -8,6 +8,8 @@
  * 算法全部用 score/_calc.js（跟 Apps Script 同一份）。
  * 2026-10-08 對話 D（使用者第 10 題）：加「類別」篩選（📝 複習題／🎮 遊戲／📘 Review 1）；錯題分析看得到遊戲的題目和選項；
  *   🃏 記憶配對（不算正確率、總分）在個人紀錄裡看配完幾對、用幾秒、翻錯幾次。
+ * 2026-10-09（使用者第 5 點）：名單（試算表「名單」分頁：班級｜座號｜姓名，伺服器只在密碼對了才給）➜ 個人、排行榜、要關心、個人紀錄、Excel 都加姓名；
+ *   🔔 要關心多「這段期間一次都沒做」；試算表「班級人數」沒填的班，參與率用名單人數。投影的〔📺 全班訂正〕不放姓名。
  */
 module.exports = function (CALC, XL, BANK) {
   return `<!DOCTYPE html>
@@ -59,7 +61,7 @@ tr.row{cursor:pointer}tr.row:hover td,tr.row:active td{background:#141A20}
 td .mb{display:inline-block;height:10px;border-radius:4px;background:var(--bar);vertical-align:middle;margin-left:6px}
 td.lo{color:var(--no)}
 .bars{display:flex;flex-direction:column;gap:8px;margin:6px 0 18px}
-.br{display:grid;grid-template-columns:7.5em 1fr 6.5em;gap:10px;align-items:center;font-size:17px;font-weight:700}
+.br{display:grid;grid-template-columns:12em 1fr 6.5em;gap:10px;align-items:center;font-size:17px;font-weight:700}
 .br .t{height:26px;background:#141414;border-radius:6px;overflow:hidden}
 .br .t i{display:block;height:100%;background:var(--bar);border-radius:0 4px 4px 0}
 .br.hi .t i{background:var(--gold)}.br.ok .t i{background:var(--ok)}.br.no .t i{background:var(--no)}
@@ -122,7 +124,7 @@ h3{margin:14px 0 6px;font-size:20px}
 ${CALC}
 ${XL}
 var BANK=${JSON.stringify(BANK)};
-var URL0=String(window.SCORE_URL||'').trim(),PW='',DATA=null,ALL=[],SIZES={},F={g:3,cls:'',p:'w',src:'',cat:''},TAB='p',SORT={k:'acc',d:1},BT='acc',BS='grade';
+var URL0=String(window.SCORE_URL||'').trim(),PW='',DATA=null,ALL=[],SIZES={},NM={},RCLS={},F={g:3,cls:'',p:'w',src:'',cat:''},TAB='p',SORT={k:'acc',d:1},BT='acc',BS='grade';
 function $(s){return document.querySelector(s)}function $$(s){return [].slice.call(document.querySelectorAll(s))}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function f1(v){return v==null?'—':(Math.round(v*10)/10)}
@@ -137,7 +139,12 @@ function login(pw){
     load(j);$('#login').hidden=true;$('#app').hidden=false;
   },function(){$('#lmsg').textContent='📶 連不到伺服器，請檢查網路'});
 }
-function load(j){DATA=j;SIZES=j.sizes||{};ALL=j.rows.map(SC.fromRow).filter(function(r){return r.id&&!isNaN(r.t)});
+/* 名單：5 碼 ➜ 姓名；試算表「班級人數」沒填的班，用名單人數 */
+function nm(id){return NM[id]||''}
+function who(id){var n=nm(id);return esc(id)+(n?' '+esc(n):'')}
+function load(j){DATA=j;NM={};RCLS={};(j.roster||[]).forEach(function(r){var id=r[0]+(r[1]<10?'0':'')+r[1];NM[id]=r[2];(RCLS[r[0]]=RCLS[r[0]]||[]).push(id)});
+  SIZES={};var sz=j.sizes||{};Object.keys(RCLS).forEach(function(c){SIZES[c]=RCLS[c].length});Object.keys(sz).forEach(function(c){if(+sz[c]>0)SIZES[c]=+sz[c]});
+  ALL=j.rows.map(SC.fromRow).filter(function(r){return r.id&&!isNaN(r.t)});
   $('#bd').textContent='🏆 學生排行榜：'+(j.boards?'開':'關');$('#bd').classList.toggle('on',!!j.boards);clsSel();draw()}
 function clsSel(){$('#fc').innerHTML='<option value="">全部班</option>'+SC.CLASSES[F.g].map(function(c){return '<option value="'+c+'"'+(F.cls===c?' selected':'')+'>'+c+' 班</option>'}).join('')}
 function range(){var now=DATA.now,w=SC.weekStart(now);
@@ -154,15 +161,15 @@ function draw(){
   var cnt=0;ps.forEach(function(p){cnt+=p.count});
   var cs=F.cls?[F.cls]:SC.CLASSES[F.g],size=0;cs.forEach(function(c){size+=+SIZES[c]||0});
   $('#tiles').innerHTML=[['🎯 正確率',f1(m('acc')),'分（百分制）'],['⚡ 總分',f1(m('s')),'分（答對 60＋速度 40）'],['🔁 作答次數',cnt,'次（對 2/3 才算；遊戲要答 6 題以上）'],
-    ['👥 有做的人',ps.length+(size?'／'+size:''),size?'人（參與率 '+Math.round(ps.length/size*100)+'%）':'人（班級人數在試算表「班級人數」填）']]
+    ['👥 有做的人',ps.length+(size?'／'+size:''),size?'人（參與率 '+Math.round(ps.length/size*100)+'%）':'人（試算表貼上「名單」就算得出參與率）']]
     .map(function(t){return '<div class="tile"><div class="k">'+t[0]+'</div><div class="v">'+t[1]+'</div><div class="d">'+t[2]+'</div></div>'}).join('');
   var h='';
   if(TAB==='p')h=paneP(ps,RK);else if(TAB==='b')h=paneB(psG);else if(TAB==='c')h=paneC(psG);else if(TAB==='w')h=paneW(S.C);else h=paneK(ps,S);
   $('#pane').innerHTML=h;
 }
-var PCOL=[['id','5碼'],['acc','🎯 正確率'],['s','⚡ 總分'],['count','🔁 次數'],['prog','🚀 進步'],['cacc','班內 🎯'],['cs','班內 ⚡'],['ccount','班內 🔁'],['cprog','班內 🚀'],
+var PCOL=[['id','5碼'],['nm','姓名'],['acc','🎯 正確率'],['s','⚡ 總分'],['count','🔁 次數'],['prog','🚀 進步'],['cacc','班內 🎯'],['cs','班內 ⚡'],['ccount','班內 🔁'],['cprog','班內 🚀'],
   ['gacc','年級 🎯'],['gs','年級 ⚡'],['gcount','年級 🔁'],['gprog','年級 🚀'],['sets','做了幾組'],['all','作答幾次'],['fix','✨ 訂正成功'],['fast','⚡ 秒按'],['last','最後作答']];
-function rowOf(p,RK){var r=RK[p.id]||{};return{id:p.id,acc:p.acc,s:p.s,count:p.count,prog:p.prog,keep:p.keep,cacc:r.cacc,cs:r.cs,ccount:r.ccount,cprog:r.cprog,
+function rowOf(p,RK){var r=RK[p.id]||{};return{id:p.id,nm:nm(p.id),acc:p.acc,s:p.s,count:p.count,prog:p.prog,keep:p.keep,cacc:r.cacc,cs:r.cs,ccount:r.ccount,cprog:r.cprog,
   gacc:r.gacc,gs:r.gs,gcount:r.gcount,gprog:r.gprog,sets:p.sets,all:p.all,fix:p.fix,fast:p.q?Math.round(p.fastQ/p.q*100):0,last:p.last}}
 function dt(t){var d=new Date(t+288e5);return (d.getUTCMonth()+1)+'/'+d.getUTCDate()+' '+('0'+d.getUTCHours()).slice(-2)+':'+('0'+d.getUTCMinutes()).slice(-2)}
 function paneP(ps,RK){
@@ -187,11 +194,11 @@ function paneB(psG){
    '<div class="note">老師看得到全部學生的名次；學生只看得到前 10 名（自己不在前 10 名，只看到「再多幾分進前 10」）。</div>';
   var lists=BS==='grade'?[['全年級',SC.rank(psG,BT)]]:(F.cls?[F.cls]:SC.CLASSES[F.g]).map(function(c){return [c+' 班',SC.rank(psG.filter(function(p){return p.cls===c}),BT)]});
   lists.forEach(function(L){var mx=0;L[1].forEach(function(x){mx=Math.max(mx,x.v)});
-    h+='<h3>'+L[0]+'</h3>'+(L[1].length?'<div class="bars">'+L[1].map(function(x){return '<div class="br'+(x.rk<=10?' hi':'')+'"><span class="l">第 '+x.rk+' 名　'+x.id+'</span><span class="t"><i style="width:'+(mx?x.v/mx*100:0)+'%"></i></span><span class="v">'+fmt(BT,x.v)+'</span></div>'}).join('')+'</div>':'<div class="note">還沒有人上榜。</div>')});
+    h+='<h3>'+L[0]+'</h3>'+(L[1].length?'<div class="bars">'+L[1].map(function(x){return '<div class="br'+(x.rk<=10?' hi':'')+'"><span class="l">第 '+x.rk+' 名　'+who(x.id)+'</span><span class="t"><i style="width:'+(mx?x.v/mx*100:0)+'%"></i></span><span class="v">'+fmt(BT,x.v)+'</span></div>'}).join('')+'</div>':'<div class="note">還沒有人上榜。</div>')});
   return h;
 }
 function paneC(psG){
-  var C=SC.classes(psG,F.g,SIZES),h='<div class="note">只跟同年級的班比（題目不一樣）。平均 ＝ 有做的人的平均；參與率要在試算表「班級人數」填人數。</div>';
+  var C=SC.classes(psG,F.g,SIZES),h='<div class="note">只跟同年級的班比（題目不一樣）。平均 ＝ 有做的人的平均；參與率 ＝ 有做的人 ÷ 名單人數（試算表「班級人數」有填就用那個數字）。</div>';
   [['acc','🎯 平均正確率',100,function(v){return f1(v)+' 分'}],['s','⚡ 平均總分',100,function(v){return f1(v)+' 分'}],['count','🔁 作答總次數',0,function(v){return v+' 次'}],
    ['rate','👥 參與率',100,function(v){return v==null?'（沒填人數）':Math.round(v)+'%'}],['prog','🚀 平均進步',0,function(v){return v==null?'—':(v>0?'＋':'')+f1(v)+'%'}]].forEach(function(K){
     var vs=C.map(function(c){return K[0]==='rate'?(c.size?c.n/c.size*100:null):c[K[0]]}),mx=K[2]||Math.max.apply(null,vs.map(function(v){return Math.abs(v||0)}).concat([1]));
@@ -215,19 +222,24 @@ function paneK(ps,S){
   var r=range(),before=SC.students(SC.pick(ALL,{g:F.g,to:r.from,src:F.src}).filter(function(x){return !F.cls||x.cls===F.cls}));
   var now={};ps.forEach(function(p){now[p.id]=1});
   var gone=before.filter(function(p){return !now[p.id]}).map(function(p){return p.id});
+  /* 名單上這段期間一次都沒做的人（使用者 2026-10-09 Q7） */
+  var cs=F.cls?[F.cls]:SC.CLASSES[F.g],hasR=cs.some(function(c){return RCLS[c]}),never=[];
+  cs.forEach(function(c){(RCLS[c]||[]).forEach(function(id){if(!now[id])never.push(id)})});
+  var ids=function(L){return '<div class="note" style="font-size:18px;color:#DDD;line-height:1.7">'+L.map(who).join('、')+'</div>'};
   var low=ps.filter(function(p){return p.acc!=null&&p.acc<60}).sort(function(a,b){return a.acc-b.acc});
   var fast=ps.filter(function(p){return p.q&&p.fastQ/p.q>.3}).sort(function(a,b){return b.fastQ/b.q-a.fastQ/a.q});
   var li=function(L,f){return L.length?'<div class="bars">'+L.map(f).join('')+'</div>':'<div class="note">沒有 👍</div>'};
-  return '<div class="note">這一頁只有老師看得到。沒有名單，所以「從來沒做過的人」看不到——對照上面的參與率。</div>'+
-   '<h3>📭 以前做過、這段期間還沒做（'+gone.length+' 人）</h3>'+(r.from==null?'<div class="note">選「本週」「上週」或自訂日期才看得出來。</div>':(gone.length?'<div class="note" style="font-size:18px;color:#DDD">'+gone.join('、')+'</div>':'<div class="note">沒有 👍</div>'))+
-   '<h3>🎯 平均正確率不到 60 分（'+low.length+' 人）</h3>'+li(low,function(p){return '<div class="br no"><span class="l">'+p.id+'</span><span class="t"><i style="width:'+p.acc+'%"></i></span><span class="v">'+f1(p.acc)+' 分</span></div>'})+
-   '<h3>⚡ 秒按很多（1 秒內就按的題目超過 3 成）（'+fast.length+' 人）</h3>'+li(fast,function(p){var v=Math.round(p.fastQ/p.q*100);return '<div class="br no"><span class="l">'+p.id+'</span><span class="t"><i style="width:'+v+'%"></i></span><span class="v">'+v+'%</span></div>'});
+  return '<div class="note">這一頁只有老師看得到。</div>'+
+   '<h3>📭 這段期間一次都沒做（'+(hasR?never.length+' 人':'要名單')+'）</h3>'+(!hasR?'<div class="note">在試算表「名單」分頁貼上 班級｜座號｜姓名，這裡就會列出還沒做的人。</div>':(never.length?ids(never):'<div class="note">全部都做了 👍</div>'))+
+   '<h3>📭 以前做過、這段期間還沒做（'+gone.length+' 人）</h3>'+(r.from==null?'<div class="note">選「本週」「上週」或自訂日期才看得出來。</div>':(gone.length?ids(gone):'<div class="note">沒有 👍</div>'))+
+   '<h3>🎯 平均正確率不到 60 分（'+low.length+' 人）</h3>'+li(low,function(p){return '<div class="br no"><span class="l">'+who(p.id)+'</span><span class="t"><i style="width:'+p.acc+'%"></i></span><span class="v">'+f1(p.acc)+' 分</span></div>'})+
+   '<h3>⚡ 秒按很多（1 秒內就按的題目超過 3 成）（'+fast.length+' 人）</h3>'+li(fast,function(p){var v=Math.round(p.fastQ/p.q*100);return '<div class="br no"><span class="l">'+who(p.id)+'</span><span class="t"><i style="width:'+v+'%"></i></span><span class="v">'+v+'%</span></div>'});
 }
 /* 一個人：每一組每一次（折線圖＋表格）；作廢 */
 function person(id){
   var r=range(),A=ALL.filter(function(x){return x.id===id&&x.g===F.g&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)&&(!F.src||x.src===F.src)}).sort(function(a,b){return a.t-b.t});
   var by={};A.forEach(function(x){if(!F.cat||SC.cat(x.set).k===F.cat)(by[x.set]=by[x.set]||[]).push(x)});
-  var h='<button class="x" id="mx">✕ 關閉</button><h3 style="font-size:26px">🪑 '+id+'</h3><div class="note">每一組：正確率的變化（綠點 ＝ 算 1 次；灰色刪除線 ＝ 作廢）。遊戲的正確率只算每一題第一次作答。</div>';
+  var h='<button class="x" id="mx">✕ 關閉</button><h3 style="font-size:26px">🪑 '+who(id)+'</h3><div class="note">每一組：正確率的變化（綠點 ＝ 算 1 次；灰色刪除線 ＝ 作廢）。遊戲的正確率只算每一題第一次作答。</div>';
   Object.keys(by).forEach(function(k){var L=by[k],n=L.length,W=600,H=120,pts=L.map(function(x,i){return [n>1?20+i*(W-40)/(n-1):W/2,H-12-((x.acc||0)/100)*(H-24),x]});
     var nm=esc((bankOf(k)||{}).name||L[L.length-1].name||k);
     /* 🃏 記憶配對：沒有正確率，只列配完幾對、用幾秒、翻錯幾次 */
@@ -271,16 +283,16 @@ function excel(){
   var S=sets(),psG=SC.students(S.G),ps=F.cls?psG.filter(function(p){return p.cls===F.cls}):psG,RK=ranks(psG);
   var P=[PCOL.map(function(c){return c[1]})].concat(ps.map(function(p){var r=rowOf(p,RK);return PCOL.map(function(c){var v=r[c[0]];
     return c[0]==='last'?dt(v):c[0]==='fast'?v/100:c[0]==='prog'&&v==null&&r.keep?'保持滿分':v==null?'':v})}));
-  var B=[['榜','範圍','名次','5碼','分數']];['acc','s','count','prog'].forEach(function(k){
-    SC.rank(psG,k).forEach(function(x){if(!F.cls||x.cls===F.cls)B.push([BN[k],'全年級',x.rk,x.id,x.v])});
-    (F.cls?[F.cls]:SC.CLASSES[F.g]).forEach(function(c){SC.rank(psG.filter(function(p){return p.cls===c}),k).forEach(function(x){B.push([BN[k],c+' 班',x.rk,x.id,x.v])})})});
+  var B=[['榜','範圍','名次','5碼','姓名','分數']];['acc','s','count','prog'].forEach(function(k){
+    SC.rank(psG,k).forEach(function(x){if(!F.cls||x.cls===F.cls)B.push([BN[k],'全年級',x.rk,x.id,nm(x.id),x.v])});
+    (F.cls?[F.cls]:SC.CLASSES[F.g]).forEach(function(c){SC.rank(psG.filter(function(p){return p.cls===c}),k).forEach(function(x){B.push([BN[k],c+' 班',x.rk,x.id,nm(x.id),x.v])})})});
   var C=[['班級','有做的人','班級人數','參與率','平均正確率','平均總分','作答總次數','平均進步']].concat(SC.classes(psG,F.g,SIZES).map(function(c){
     return [c.cls,c.n,c.size||'',c.size?Math.round(c.n/c.size*100)/100:'',c.acc==null?'':c.acc,c.s==null?'':c.s,c.count,c.prog==null?'':c.prog]}));
   var W=[['題組','第幾題','題型','題目','正確答案','答錯率','答錯','作答人次','選正解','選項 2','選項 2 人次','選項 3','選項 3 人次','選項 4','選項 4 人次','時間到','為什麼']];
   SC.questions(S.C).forEach(function(x){var o=qOf(x.k);if(!o)return;var q=o.q;W.push([o.set.name,x.i+1,kn(q),qText(q),q.o[0],x.rate/100,x.bad,x.n,x.p[0]||0,q.o[1],x.p[1]||0,q.o[2],x.p[2]||0,q.o[3],x.p[3]||0,x.p[-1]||0,q.h])});
-  var r=range(),RAW=[SC.COLS].concat(ALL.filter(function(x){return x.g===F.g&&(!F.cls||x.cls===F.cls)&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)&&(!F.src||x.src===F.src)&&(!F.cat||SC.cat(x.set).k===F.cat)})
+  var r=range(),RAW=[SC.COLS.slice(0,2).concat(['姓名'],SC.COLS.slice(2))].concat(ALL.filter(function(x){return x.g===F.g&&(!F.cls||x.cls===F.cls)&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)&&(!F.src||x.src===F.src)&&(!F.cat||SC.cat(x.set).k===F.cat)})
     .sort(function(a,b){return a.t-b.t}).map(function(x){var row=SC.toRow(x);row[0]=dt(x.t);row[SC.CI['題組名稱']]=(bankOf(x.set)||{}).name||x.name;
-      row[SC.CI['來源']]=x.src==='home'?'在家':'在校';row[SC.CI['作廢']]=x.x?'作廢':'';return row}));
+      row[SC.CI['來源']]=x.src==='home'?'在家':'在校';row[SC.CI['作廢']]=x.x?'作廢':'';row.splice(2,0,nm(x.id));return row}));
   var b=XLSX.make([{name:'個人',rows:P},{name:'排行榜',rows:B},{name:'班際',rows:C},{name:'錯題',rows:W},{name:'原始紀錄',rows:RAW}]);
   /* 檔名只用英文和數字：有些瀏覽器（量測用的 Chromium）遇到中文檔名會改成 download */
   var pn={w:'week',lw:'lastweek',all:'all',c:'custom'}[F.p],d=new Date(DATA.now+288e5).toISOString().slice(0,10);

@@ -1,12 +1,13 @@
-/* score/_verify_deploy.js — 量部署步驟網頁 score/deploy.html（大字、一頁放得下、手指點到對的地方、複製程式真的複製到）。只印失敗項。
+/* score/_verify_deploy.js — 量部署步驟網頁 score/deploy.html、score/update.html（2026-10-09 程式更新＋貼名單）（大字、一頁放得下、手指點到對的地方、複製程式真的複製到）。只印失敗項。
  *   node score/_verify_deploy.js */
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 const path = require('path'), fs = require('fs'), { pathToFileURL } = require('url');
-const F = pathToFileURL(path.join(__dirname, 'deploy.html')).href, CODE = fs.readFileSync(path.join(__dirname, 'Code.gs'), 'utf8');
+const PG = [{ f: 'deploy.html', copy: 3, key: 4 }, { f: 'update.html', copy: 5, key: -1 }], CODE = fs.readFileSync(path.join(__dirname, 'Code.gs'), 'utf8');
 const VPS = [[1024, 768], [820, 1180], [1920, 1080], [1366, 768], [390, 844]];
 (async () => {
   const br = await chromium.launch(); let fails = 0, n = 0;
-  for (const vp of VPS) for (const z of [1, 1.3]) {
+  for (const P of PG) for (const vp of VPS) for (const z of [1, 1.3]) {
+    const F = pathToFileURL(path.join(__dirname, P.f)).href;
     const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] }, permissions: ['clipboard-read', 'clipboard-write'] });
     const p = await ctx.newPage(), e = [], phone = vp[0] < 600;
     p.on('pageerror', x => e.push('JS 例外：' + x.message));
@@ -45,17 +46,18 @@ const VPS = [[1024, 768], [820, 1180], [1920, 1080], [1366, 768], [390, 844]];
       n += 4 + r.taps;
     }
     /* 複製程式 */
-    await p.evaluate(() => { K = 3; draw(); }); await p.waitForTimeout(200); await p.click('#copy'); await p.waitForTimeout(300);
+    await p.evaluate(k => { K = k; draw(); }, P.copy); await p.waitForTimeout(200); await p.click('#copy'); await p.waitForTimeout(300);
     const clip = await p.evaluate(() => navigator.clipboard.readText());
     if (clip !== CODE) e.push('〔📋 複製程式〕複製到的不是整份 Code.gs（' + clip.length + '／' + CODE.length + ' 字）');
     if (!/複製好了/.test(await p.textContent('#copy'))) e.push('按〔📋 複製程式〕沒有寫「✅ 複製好了」');
-    await p.evaluate(() => { K = 4; draw(); }); await p.waitForTimeout(200); await p.click('#copyk'); await p.waitForTimeout(300);
-    if (await p.evaluate(() => navigator.clipboard.readText()) !== 'TEACHER_PW') e.push('〔📋 複製 TEACHER_PW〕沒有複製到');
+    if (P.key >= 0) { await p.evaluate(k => { K = k; draw(); }, P.key); await p.waitForTimeout(200); await p.click('#copyk'); await p.waitForTimeout(300);
+      if (await p.evaluate(() => navigator.clipboard.readText()) !== 'TEACHER_PW') e.push('〔📋 複製 TEACHER_PW〕沒有複製到'); }
+    else { await p.evaluate(() => { K = STEPS.length; draw(); }); if (!await p.$('main a[href="../teacher/"]')) e.push('完成頁沒有〔打開老師看板〕'); }
     /* 下一步／上一步 */
     await p.evaluate(() => { K = 0; draw(); }); await p.click('#nx'); await p.click('#nx'); await p.click('#pv');
     if (await p.evaluate(() => K) !== 1) e.push('〔下一步〕〔上一步〕不對');
     n += 4;
-    if (e.length) { fails += e.length; console.log('✗ deploy.html @' + vp.join('x') + ' 字 ✕' + z); e.forEach(x => console.log('   ' + x)); }
+    if (e.length) { fails += e.length; console.log('✗ ' + P.f + ' @' + vp.join('x') + ' 字 ✕' + z); e.forEach(x => console.log('   ' + x)); }
     await ctx.close();
   }
   await br.close();

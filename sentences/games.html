@@ -588,7 +588,6 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .scme{display:flex;align-items:center;gap:12px;font-size:clamp(20px,3.4vh,32px);font-weight:700;color:#DDE6EE}
 .scme button{background:#141A20;border:1px solid #5A6A78;color:#DDE6EE;border-radius:999px;font-family:inherit;font-weight:700;
  font-size:clamp(15px,2.3vh,20px);padding:8px 18px;min-height:44px;cursor:pointer}
-.scwho{display:flex;flex-direction:column;align-items:center;gap:14px;font-size:clamp(26px,4.8vh,46px);font-weight:700;text-align:center}
 .tqtop .rk.sc2{font-size:clamp(18px,3.2vh,32px)}
 /* 作答結束：一幕一幕 */
 .scn{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vh,18px);width:100%;text-align:center;min-height:min(70vh,640px);justify-content:center}
@@ -2135,16 +2134,11 @@ function scKeyPress(k){
     scPaint('🪑 沒有 '+bad+' 號！請重新打座號<small>座號是 01～'+SCSEAT+'</small>');return}}
   scPaint();
 }
-/* 名單開關（預設關）：開了才問「你是 304 班 5 號 ○○○ 嗎？」，學生不自己打名字 */
+/* 登入好了（2026-10-09 Q4：學生端不顯示姓名，不再問伺服器「你是 ○○○ 嗎？」） */
 function scWho(r){
   var go=function(){SCID=r.id;scPut('id_g'+r.g,SCID);scPut('last',SCID);SCGUEST=false;var a=SCLOGAFTER;SCLOGAFTER=null;if(a)a()};
   var m=$('#scMsg');m.className='scmsg ok';m.textContent='✅ '+r.cls+' 班 '+r.seat+' 號';
-  scFetch('a=who&id='+r.id,null,3000).then(function(j){
-    if(!j||!j.roster||!j.name){go();return}
-    SCH.box().innerHTML='<div class="scwho"><div>你是 '+r.cls+' 班 '+r.seat+' 號</div><div style="color:var(--gold);font-size:1.3em">'+esc(j.name)+'</div><div>嗎？</div>'+
-     '<div class="scnav"><button class="go" id="scYes">✅ 是我</button><button id="scNo">❌ 重新輸入</button></div></div>';
-    $('#scYes').onclick=go;$('#scNo').onclick=function(){scLogin(SCLOGAFTER)};
-  },function(){setTimeout(go,500)});
+  setTimeout(go,500);
 }
 function scMeHTML(){
   if(!SCON)return '';

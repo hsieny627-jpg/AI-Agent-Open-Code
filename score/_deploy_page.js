@@ -4,9 +4,11 @@
  * 〔📋 複製程式〕按一下就把 Code.gs 複製好（build 時放進網頁，不用去 GitHub 找）。
  * 字：標題 ≧ 48px、內文 ≧ 30px；右上角 A＋／A－ 可以再放大。score/_build.js 呼叫，不要手改 deploy.html。
  */
-module.exports = function (CODE) {
+module.exports = function (CODE, kind) {
+  /* kind ＝ 'update'：score/update.html（2026-10-09：程式更新＋貼名單，網址不變）；沒寫 ＝ score/deploy.html（第一次部署） */
+  const UPD = kind === 'update';
   /* 每一步：t ＝ 一句話、m ＝ 示意圖（data-tap="1"、"2"… ＝ 手指點的順序；data-say ＝ 手指旁邊的小字）、tip ＝ 小提醒（可以沒有） */
-  const STEPS = [
+  const FIRST = [
     { t: '開一個新的 Google 試算表', m: `
       <div class="win"><div class="url">sheets.google.com</div>
         <div class="row"><div class="tile plus" data-tap="1" data-say="按這裡">＋<small>空白試算表</small></div><div class="tile ghost"></div><div class="tile ghost"></div></div></div>
@@ -47,12 +49,38 @@ module.exports = function (CODE) {
         <span class="btn blue" data-tap="2" data-say="② 完成">完成</span></div></div>
       <div class="chat" data-tap="3" data-say="③ 貼給 Claude">💬 貼到和 Claude 的對話</div>`, tip: 'Claude 放上網站，📝 複習題、🎮 遊戲、📘 Review 1 的成績就開始記' }
   ];
+  /* 2026-10-09 使用者：座號改 1～30、老師看板加名單 ➜ 貼名單＋程式更新（網址不變，url.js 不用改） */
+  const UPDATE = [
+    { t: '打開成績的 Google 試算表', m: `
+      <div class="win"><div class="url">sheets.google.com</div>
+        <div class="row"><div class="tile ghost"></div><div class="tile" data-tap="1" data-say="上次做的那一個">📊<small>成績</small></div><div class="tile ghost"></div></div></div>
+      <a class="big go" href="https://sheets.google.com" target="_blank" rel="noopener">🌐 打開 Google 試算表</a>`, tip: '就是上次部署時開的那一個' },
+    { t: '按最下面的「名單」分頁', m: `
+      <div class="win"><div class="lines">　</div><div class="menu"><span>紀錄</span><span>班級人數</span><span class="hot" data-tap="1" data-say="最下面這一排">名單</span></div></div>`,
+      tip: '沒有「名單」？按左下角 ＋，改名「名單」，第一列打：班級　座號　姓名' },
+    { t: '點 A2，貼上名單', m: `
+      <div class="win"><div class="code"><div class="file">名單</div>
+        <div class="lines">A　班級　　B　座號　　C　姓名<br><span class="hot" data-tap="1" data-say="① 點 A2">304</span>　　1　　　（名字）</div></div></div>
+      <div class="keys"><span class="key" data-tap="2" data-say="② 貼上">Ctrl</span>＋<span class="key">V</span></div>`,
+      tip: '只要三欄：班級、座號、姓名（不要性別）。別班以後貼在下面' },
+    FIRST[1], FIRST[2],
+    Object.assign({}, FIRST[3], { t: '複製新程式 ➜ 貼上 ➜ 存檔' }),
+    { t: '按「部署」➜「管理部署作業」', m: `
+      <div class="win"><div class="bar"><span class="sp"></span><span class="btn blue" data-tap="1" data-say="① 右上角">部署 ▾</span></div>
+        <div class="drop r"><div>新增部署作業</div><div class="hot" data-tap="2" data-say="② 按這個">管理部署作業</div></div></div>`,
+      tip: '不要按「新增部署作業」：網址會變' },
+    { t: '按 ✏️ ➜ 版本選「新版本」➜ 部署', m: `
+      <div class="win"><div class="kv2"><span class="hot gear" data-tap="1" data-say="① 鉛筆">✏️</span></div>
+        <div class="form"><div><b>版本</b><span class="sel2" data-tap="2" data-say="② 選「新版本」">新版本</span></div></div>
+        <div class="btn blue" data-tap="3" data-say="③ 部署">部署</div></div>`, tip: '網址不會變，不用貼給 Claude' }
+  ];
+  const STEPS = UPD ? UPDATE : FIRST, KEY = UPD ? 'upd' : 'dep';
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   return `<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>成績紀錄 部署步驟</title>
+<title>${UPD ? '成績紀錄 程式更新＋名單' : '成績紀錄 部署步驟'}</title>
 <!-- 本檔由 score/_build.js 產生（score/_deploy_page.js），不要手改。 -->
 <style>
 @font-face{font-family:Andika;font-weight:400;src:url(../words/fonts/andika-400.woff2) format("woff2")}
@@ -128,20 +156,20 @@ nav button:disabled{opacity:.3}
 var STEPS=${JSON.stringify(STEPS)};
 var CODE=${JSON.stringify(CODE).replace(/</g, '\\u003c')};
 var K=0,TT=[],Z=1;
-try{K=Math.max(0,Math.min(STEPS.length,+(localStorage.getItem('dep_k')||0)));Z=+(localStorage.getItem('dep_z')||1)||1}catch(e){}
+try{K=Math.max(0,Math.min(STEPS.length,+(localStorage.getItem('${KEY}_k')||0)));Z=+(localStorage.getItem('${KEY}_z')||1)||1}catch(e){}
 function $(s){return document.querySelector(s)}
-function zoom(z){Z=Math.max(.8,Math.min(1.6,z));document.documentElement.style.setProperty('--z',Z);try{localStorage.setItem('dep_z',Z)}catch(e){};play()}
+function zoom(z){Z=Math.max(.8,Math.min(1.6,z));document.documentElement.style.setProperty('--z',Z);try{localStorage.setItem('${KEY}_z',Z)}catch(e){};play()}
 function draw(){
   TT.forEach(clearTimeout);TT=[];
   $('#dots').innerHTML=STEPS.map(function(s,n){return '<i data-k="'+n+'" class="'+(n===K?'on':n<K?'done':'')+'"></i>'}).join('')+'<i data-k="'+STEPS.length+'" class="'+(K===STEPS.length?'on':'')+'" style="border-radius:6px"></i>';
   if(K===STEPS.length){
-    $('#main').innerHTML='<div class="end"><div class="n">🎉 完成了！</div><h1>做完以後試一次</h1><ol><li>平板打開句型頁，按〔📝 複習題 5 題〕</li><li>看到「🔢 輸入你的號碼」＝ 成功</li><li>打 30401，做完 5 題</li><li>試算表「紀錄」多一列 ✅</li><li>🎮 玩一個遊戲到時間到 ➜ 再多一列 ✅</li></ol></div>';
+    $('#main').innerHTML=${UPD ? `'<div class="end"><div class="n">🎉 完成了！</div><h1>做完以後看一次</h1><ol><li><a href="../teacher/" target="_blank" rel="noopener" style="color:var(--acc)">打開老師看板</a>，打密碼</li><li>👤 個人：多一欄「姓名」✅</li><li>🔔 要關心：列出還沒做的人 ✅</li><li>平板打 30431：說「沒有 31 號」✅</li></ol></div>'` : `'<div class="end"><div class="n">🎉 完成了！</div><h1>做完以後試一次</h1><ol><li>平板打開句型頁，按〔📝 複習題 5 題〕</li><li>看到「🔢 輸入你的號碼」＝ 成功</li><li>打 30401，做完 5 題</li><li>試算表「紀錄」多一列 ✅</li><li>🎮 玩一個遊戲到時間到 ➜ 再多一列 ✅</li></ol></div>'`};
   }else{
     var s=STEPS[K];
     $('#main').innerHTML='<div class="n">第 '+(K+1)+' 步　／　共 '+STEPS.length+' 步</div><h1>'+s.t+'</h1><div class="stage" id="stage"><span id="say"></span>'+s.m+'<span id="fing">👆</span></div>'+(s.tip?'<div class="tip">💡 '+s.tip+'</div>':'');
   }
   $('#pv').disabled=K===0;$('#nx').disabled=K===STEPS.length;$('#rp').hidden=K===STEPS.length;
-  try{localStorage.setItem('dep_k',K)}catch(e){}
+  try{localStorage.setItem('${KEY}_k',K)}catch(e){}
   play();
 }
 /* 手指照 data-tap 的順序一格一格點，點到的那一格亮金框，旁邊寫要做什麼；點完停一下再重來 */

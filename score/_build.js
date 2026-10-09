@@ -88,5 +88,6 @@ fs.mkdirSync(path.join(ROOT, 'teacher'), { recursive: true });
 fs.writeFileSync(path.join(ROOT, 'teacher', 'index.html'), require('./_teacher.js')(CALC, XL, BANK));
 /* 部署步驟的大字秒懂網頁（使用者 2026-10-07：說明看不懂、視力不佳） */
 fs.writeFileSync(path.join(__dirname, 'deploy.html'), require('./_deploy_page.js')(fs.readFileSync(path.join(__dirname, 'Code.gs'), 'utf8')));
+fs.writeFileSync(path.join(__dirname, 'update.html'), require('./_deploy_page.js')(fs.readFileSync(path.join(__dirname, 'Code.gs'), 'utf8'), 'update'));   /* 2026-10-09 程式更新＋貼名單 */
 module.exports = BANK;
-console.log('score ok  Code.gs、teacher/index.html、score/deploy.html（題組 ' + Object.keys(BANK).length + ' 組）');
+console.log('score ok  Code.gs、teacher/index.html、score/deploy.html、update.html（題組 ' + Object.keys(BANK).length + ' 組）');

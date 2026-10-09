@@ -3,11 +3,11 @@
  * 試算表三張工作表（第一次執行 setup 自動建立）：
  *   紀錄       一次作答（或一場遊戲）一列（欄位 ＝ SC.COLS）；最後一欄「作廢」打勾 ＝ 不算（Q7-A：有人冒用別人的 5 碼）
  *   班級人數   班級｜人數（只填數字，不填名字；算參與率用，Q13-A）
- *   名單       班級｜座號｜姓名（「名單」開關預設關；使用者 2026-10-07：暫時不用名單，只用 5 碼）
+ *   名單       班級｜座號｜姓名（使用者 2026-10-09：只留這三欄，不要性別）。**只給老師看板**（要密碼）；學生端永遠拿不到姓名（Q4）
  * 指令碼屬性（專案設定 ➜ 指令碼屬性）：
  *   TEACHER_PW  老師看板的密碼（只放在這裡，網頁和 GitHub 上都沒有）
  *   BOARDS      on／off：學生看不看得到排行榜（老師看板可以切，S8／Q4-A）
- *   ROSTER      on／off：名單開關（預設 off）
+ *   ROSTER      （2026-10-09 起不用了：學生端一律不問「你是 ○○○ 嗎？」）
  */
 var SHEET = '紀錄', SIZES = '班級人數', ROSTER = '名單';
 function setup() {
@@ -39,20 +39,25 @@ function sizes() {
 }
 function boardsOn() { return prop('BOARDS') !== 'off'; }
 function pwOk(pw) { var p = prop('TEACHER_PW'); return !!p && String(pw) === String(p); }
-function who(id) {
-  if (prop('ROSTER') !== 'on') return null;
-  var c = SC.checkId(id); if (c.err) return null;
-  var s = sheet(ROSTER), n = s.getLastRow(); if (n < 2) return null;
-  var L = s.getRange(2, 1, n - 1, 3).getValues();
-  for (var i = 0; i < L.length; i++) if (String(L[i][0]) === c.cls && +L[i][1] === c.seat) return String(L[i][2]);
-  return null;
+/* 名單（只給老師看板）：讀前三欄 班級｜座號｜姓名；班級寫 304 或「304班」都可以、座號 5 或 05 都可以；第一列是標題 */
+function roster() {
+  var s = sheet(ROSTER), n = s.getLastRow(), out = [];
+  if (n < 2) return out;
+  s.getRange(2, 1, n - 1, 3).getValues().forEach(function (r) {
+    var cls = String(r[0]).replace(/\D/g, ''), seat = parseInt(String(r[1]).replace(/\D/g, ''), 10), nm = String(r[2] == null ? '' : r[2]).replace(/^\s+|\s+$/g, '');
+    if (!nm || isNaN(seat)) return;
+    var c = SC.checkId(cls + (seat < 10 ? '0' : '') + seat); if (c.err) return;
+    out.push([c.cls, c.seat, nm.slice(0, 20)]);
+  });
+  return out;
 }
 /* 學生：GET ?a=view&id=30509&set=g3u1_1-1b（遊戲加 &gt=1 ＝ 要這個遊戲本班前 10 名）／ ?a=who&id=30509 */
 function doGet(e) {
   var q = (e && e.parameter) || {};
   try {
     if (q.a === 'view') return out(SC.view(records(), { id: q.id, set: q.set, gt: q.gt === '1' }, Date.now(), boardsOn()));
-    if (q.a === 'who') { var c = SC.checkId(q.id); return out(c.err ? { err: c.err } : { roster: prop('ROSTER') === 'on', name: who(q.id) }); }
+    /* 學生端不給姓名（使用者 2026-10-09 Q4：不用密碼就查得到姓名太危險）；舊的平板還會問，一律回「沒有名單」 */
+    if (q.a === 'who') { var c = SC.checkId(q.id); return out(c.err ? { err: c.err } : { roster: false, name: null }); }
     return out({ ok: true, app: 'score' });
   } catch (x) { return out({ err: 'server', msg: String(x) }); }
 }
@@ -82,7 +87,7 @@ function doPost(e) {
         return out({ ok: done });
       }
       if (o.a === 'set') { if (o.boards != null) PropertiesService.getScriptProperties().setProperty('BOARDS', o.boards ? 'on' : 'off'); return out({ ok: true, boards: boardsOn() }); }
-      return out({ ok: true, now: Date.now(), cols: SC.COLS, rows: rows().map(function (r) { return r.map(function (x) { return x instanceof Date ? x.getTime() : x; }); }), sizes: sizes(), boards: boardsOn() });
+      return out({ ok: true, now: Date.now(), cols: SC.COLS, rows: rows().map(function (r) { return r.map(function (x) { return x instanceof Date ? x.getTime() : x; }); }), sizes: sizes(), roster: roster(), boards: boardsOn() });
     }
     return out({ err: 'a' });
   } catch (x) { return out({ err: 'server', msg: String(x) }); }

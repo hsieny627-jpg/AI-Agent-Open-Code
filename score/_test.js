@@ -72,7 +72,12 @@ const uu = G.books['紀錄'].d[1][SC.CI['編號']]; eq(G.post({ a: 'void', pw: '
 eq(SC.fromRow(G.books['紀錄'].d[1]).x, true, '作廢那一筆打勾了');
 eq(G.post({ a: 'void', pw: 'nope', u: uu, v: false }).err, 'pw', '沒密碼不能作廢');
 eq(G.get({ a: 'who', id: '30405' }).name, null, '名單開關預設關 ➜ 不給名字');
-G.P.ROSTER = 'on'; G.books['名單'].d.push(['304', 5, '測試']); eq(G.get({ a: 'who', id: '30405' }).name, '測試', '名單開關打開才給名字');
+/* 2026-10-09 名單：只給老師（要密碼）；學生端就算 ROSTER 開著也拿不到姓名（Q4） */
+G.P.ROSTER = 'on'; G.books['名單'].d.push(['304', 5, '測試'], ['304班', '06', ' 王小明 '], [307, 1, '李大華'], ['304', 31, '座號超過'], ['305', 2, '沒有這班'], ['304', 7, ''], ['', '', '']);
+eq(G.get({ a: 'who', id: '30405' }).name, null, '學生端拿不到姓名（ROSTER 開著也一樣）');
+ok(JSON.stringify(G.get({ a: 'view', id: '30405', set: 'g3u1_1-1b' })).indexOf('測試') < 0, '學生看排行榜也拿不到姓名');
+eq(G.post({ a: 'teacher', pw: 'wrong' }).roster, undefined, '密碼錯 ➜ 沒有名單');
+eq(G.post({ a: 'teacher', pw: 'pw-test' }).roster, [['304', 5, '測試'], ['304', 6, '王小明'], ['307', 1, '李大華']], '老師拿到名單（304班／06／前後空白都讀得懂；座號 31、沒有的班、空白姓名不收）');
 const noPw = make({}); eq(noPw.post({ a: 'teacher', pw: '' }).err, 'pw', '沒設定密碼 ➜ 看板打不開');
 
 /* ══ 2026-10-08 對話 D：遊戲、Review 1 也記成績 ══ */

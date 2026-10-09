@@ -188,6 +188,9 @@ async function teacher(br, vp) {
   const G = make({ TEACHER_PW: PW }); seed(G, 3); seed(G, 4); seedGame(G, 'g3gm_g1');
   G.post({ a: 'rec', r: { id: '30411', set: 'g3gm_g6', name: 'm', m: 'mem', mp: 9, mw: 4, sec: 180, raw: 3000, src: 'school', dev: 'x', u: 'mem', t: Date.now() - 6e5, qs: [] } });
   G.books['班級人數'].d[1][1] = 25;
+  /* 2026-10-09 名單（假的名字）：304 班有做的人＋一個這週一次都沒做的 30 號 */
+  const did = [...new Set(G.books['紀錄'].d.slice(1).map(r => String(r[CI['5碼']])).filter(id => id.slice(0, 3) === '304'))];
+  did.forEach(id => G.books['名單'].d.push(['304', +id.slice(3), '測試' + id.slice(3)])); G.books['名單'].d.push(['304班', '30', '沒做小明']);
   const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] }, acceptDownloads: true }); await route(ctx, G);
   const p = await ctx.newPage(), e = [], W = 'teacher/index.html @' + vp.join('x');
   p.on('pageerror', x => e.push('JS 例外：' + x.message));
@@ -213,9 +216,19 @@ async function teacher(br, vp) {
   }
   await p.click('#tabs button[data-t="b"]'); await p.click('[data-bs="grade"]');
   const rkT = await p.textContent('#pane'); if (!/第 15 名/.test(rkT)) e.push('老師的排行榜沒有列出全部學生（看不到第 15 名）');
+  if (!/測試\d\d/.test(rkT)) e.push('排行榜沒有姓名');
+  /* 2026-10-09 名單：個人表有「姓名」欄、要關心列出一次都沒做的人 */
+  await p.click('#tabs button[data-t="p"]'); await p.waitForTimeout(150);
+  const pt = await p.evaluate(() => ({ th: [].map.call(document.querySelectorAll('#pane th'), x => x.textContent), td: document.getElementById('pane').textContent }));
+  if (pt.th[1] !== '姓名' || !/測試\d\d/.test(pt.td)) e.push('個人表沒有姓名欄');
+  await p.click('#tabs button[data-t="k"]'); await p.waitForTimeout(150);
+  const kt = await p.textContent('#pane');
+  if (!/一次都沒做（1 人）/.test(kt) || !/30430 沒做小明/.test(kt)) e.push('要關心沒有列出名單上一次都沒做的人（' + kt.slice(0, 80) + '）');
+  n += 3;
   /* 個人 ➜ 作廢 */
   await p.click('#tabs button[data-t="p"]'); await p.click('tr.row'); await p.waitForTimeout(150);
   if (!await p.$('#modal.on .svgl')) e.push('點一個人沒有出現他的紀錄和折線圖');
+  if (!/測試\d\d/.test(await p.textContent('#mbox h3'))) e.push('個人紀錄的標題沒有姓名');
   const vu = await p.getAttribute('[data-void]', 'data-void'); await p.click('[data-void]'); await p.waitForTimeout(300);
   const row = G.books['紀錄'].d.filter(r => r[CI['編號']] === vu)[0];
   if (!row || row[CI['作廢']] !== true) e.push('按〔🚫 作廢〕伺服器沒有打勾');
@@ -252,9 +265,10 @@ async function teacher(br, vp) {
   /* ⬇ 一鍵下載 Excel */
   const [dl] = await Promise.all([p.waitForEvent('download'), p.click('#dl')]);
   const f = path.join(require('os').tmpdir(), 'score_verify.xlsx'); await dl.saveAs(f);
-  try { const o = cp.execFileSync('python3', ['-W', 'error', '-c', 'import openpyxl,sys;wb=openpyxl.load_workbook(sys.argv[1]);print("|".join(wb.sheetnames));print(wb["個人"].max_row)', f]).toString().trim().split('\n');
+  try { const o = cp.execFileSync('python3', ['-W', 'error', '-c', 'import openpyxl,sys;wb=openpyxl.load_workbook(sys.argv[1]);print("|".join(wb.sheetnames));print(wb["個人"].max_row);print(wb["個人"]["B1"].value,wb["原始紀錄"]["C1"].value,wb["排行榜"]["E1"].value)', f]).toString().trim().split('\n');
     if (o[0] !== '個人|排行榜|班際|錯題|原始紀錄') e.push('Excel 工作表不對：' + o[0]);
     if (+o[1] < 2) e.push('Excel 個人表是空的');
+    if (o[2] !== '姓名 姓名 姓名') e.push('Excel 個人、原始紀錄、排行榜沒有姓名欄（' + o[2] + '）');
     if (!/^score_G3_week_\d{4}-\d\d-\d\d\.xlsx$/.test(dl.suggestedFilename())) e.push('Excel 檔名不對：' + dl.suggestedFilename());
   } catch (x) { e.push('Excel 打不開：' + String(x).slice(0, 200)); }
   n += 5;
