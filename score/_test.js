@@ -76,7 +76,7 @@ const noPw = make({}); eq(noPw.post({ a: 'teacher', pw: '' }).err, 'pw', '沒設
 
 /* ══ 2026-10-08 對話 D：遊戲、Review 1 也記成績 ══ */
 eq(SC.COLS[SC.COLS.length - 1], '作廢', '「作廢」還是最後一欄（老師在試算表打 TRUE）');
-ok(!SC.counts(9, 9, 'g') && SC.counts(7, 10, 'g') && !SC.counts(6, 10, 'g'), '遊戲算 1 次：第一次作答 ≧ 10 題、正確率 ≧ 2/3');
+ok(!SC.counts(5, 5, 'g') && SC.counts(4, 6, 'g') && !SC.counts(3, 6, 'g') && SC.counts(7, 10, 'g'), '遊戲算 1 次：第一次作答 ≧ 6 題、正確率 ≧ 2/3');
 ok(SC.counts(0, 0, 'mem'), '🃏 記憶配對：玩完整場就算 1 次');
 eq(['g3u1_1-1b', 'g4gm_g1', 'g3r1_i1_1', 'g4r1_rv2', 'g3x_1'].map(k => SC.cat(k).t), ['📝 複習題', '🎮 遊戲', '📘 Review 1', '📘 Review 1', ''], '題組代號 ➜ 類別');
 const GQ = (n, okN, extra) => Array.from({ length: n }, (_, i) => [i < okN ? 1 : 0, i < okN ? 0 : 2, 3, 0, i < okN ? .8 : 0, i]);

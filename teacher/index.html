@@ -128,7 +128,7 @@ h3{margin:14px 0 6px;font-size:20px}
  *   三種紀錄（m）       q ＝ 題目（📝 複習題、Review 1 頁的 📝 複習）；g ＝ 遊戲；mem ＝ 🃏 記憶配對
  *   遊戲的 🎯 正確率     只算每一題「第一次作答」（🔁 類似題、⭐ 加分題、再出一次的題目不算，另外記 ✨ 訂正成功）
  *   遊戲的 ⚡ 總分       一樣是答對 60 ＋ 速度 40（s100）；🎁 驚喜卡、連對加成不算（原始分數照存，只給老師看）
- *   遊戲算 1 次          玩完整場（時間到或打倒魔王；中途離開不送）、第一次作答 ≧ 10 題、正確率 ≧ 2/3；同一個遊戲一天最多 3 次
+ *   遊戲算 1 次          玩完整場（時間到或打倒魔王；中途離開不送）、第一次作答 ≧ 6 題（使用者 2026-10-09：遊戲改 1 分 30 秒，原本 10 題）、正確率 ≧ 2/3；同一個遊戲一天最多 3 次
  *   🃏 記憶配對          不算正確率、不算總分；只記配完幾對、用幾秒、翻錯幾次（給老師看）；玩完整場就算 1 次
  *   排行榜               四種榜照舊合在一起（複習題＋遊戲都算）；遊戲結束另外給「這個遊戲本班前 10 名」（gtop）
  *   題組代號             g年級＋教材＋_＋題組：u1／u2 ＝ 📝 複習題、gm ＝ 🎮 句型遊戲、r1 ＝ 📘 Review 1（遊戲和頁面的 📝 複習）
@@ -140,7 +140,7 @@ var SC = (function () {
   var COLS = ['時間', '5碼', '年級', '班級', '座號', '類別', '題組', '題組名稱', '玩法', '題數', '答對', '正確率', '總分百分制', '訂正成功',
     '配對', '翻錯', '秒數', '原始分數', '秒按', '來源', '平板', '編號', '每題', '作廢'];
   var CI = {}; for (var ci = 0; ci < COLS.length; ci++) CI[COLS[ci]] = ci;
-  var DAY = 864e5, TZ = 8 * 36e5, CAP = 3, TOP = 10, GMIN = 10;
+  var DAY = 864e5, TZ = 8 * 36e5, CAP = 3, TOP = 10, GMIN = 6;
   var MT = { q: '題目', g: '遊戲', mem: '記憶配對' }, TM = { '題目': 'q', '遊戲': 'g', '記憶配對': 'mem' };
   var SETRE = /^g([34])(u\d{1,2}|gm|r\d{1,2})_[\w-]{1,16}$/;
   /* 題組代號 ➜ 類別（老師看板的篩選）：u ＝ 📝 複習題、gm ＝ 🎮 遊戲、r1 ＝ 📘 Review 1 */
@@ -163,7 +163,7 @@ var SC = (function () {
     if (s < 1 || s > 40) return { err: 'seat', seat: s };
     return { id: id, g: gg, cls: c, seat: s };
   }
-  /* 算不算 1 次：題目 ＝ 答對 2/3 以上；遊戲 ＝ 還要第一次作答 ≧ 10 題；記憶配對 ＝ 玩完整場就算 */
+  /* 算不算 1 次：題目 ＝ 答對 2/3 以上；遊戲 ＝ 還要第一次作答 ≧ GMIN 題；記憶配對 ＝ 玩完整場就算 */
   function counts(ok, n, m) { if (m === 'mem') return true; if (m === 'g' && n < GMIN) return false; return n > 0 && ok * 3 >= n * 2; }
   function need(n) { return Math.ceil(n * 2 / 3); }                     /* 至少要對幾題 */
   function day(t) { return Math.floor((t + TZ) / DAY); }
@@ -440,7 +440,7 @@ function draw(){
   var m=function(k){var a=ps.filter(function(p){return p[k]!=null}).map(function(p){return p[k]});return a.length?a.reduce(function(x,y){return x+y},0)/a.length:null};
   var cnt=0;ps.forEach(function(p){cnt+=p.count});
   var cs=F.cls?[F.cls]:SC.CLASSES[F.g],size=0;cs.forEach(function(c){size+=+SIZES[c]||0});
-  $('#tiles').innerHTML=[['🎯 正確率',f1(m('acc')),'分（百分制）'],['⚡ 總分',f1(m('s')),'分（答對 60＋速度 40）'],['🔁 作答次數',cnt,'次（對 2/3 才算；遊戲要答 10 題以上）'],
+  $('#tiles').innerHTML=[['🎯 正確率',f1(m('acc')),'分（百分制）'],['⚡ 總分',f1(m('s')),'分（答對 60＋速度 40）'],['🔁 作答次數',cnt,'次（對 2/3 才算；遊戲要答 6 題以上）'],
     ['👥 有做的人',ps.length+(size?'／'+size:''),size?'人（參與率 '+Math.round(ps.length/size*100)+'%）':'人（班級人數在試算表「班級人數」填）']]
     .map(function(t){return '<div class="tile"><div class="k">'+t[0]+'</div><div class="v">'+t[1]+'</div><div class="d">'+t[2]+'</div></div>'}).join('');
   var h='';

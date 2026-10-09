@@ -675,7 +675,7 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 <main id="stage">
  <section id="hub">
   <h1>🎮 複習遊戲　10 種玩法</h1>
-  <p class="lead">⏳ 每個遊戲 <b>3 分鐘</b>（🔍 火眼金睛 4 分鐘）　⚡ 每題 15 秒，<b>愈快分數愈高</b><br>
+  <p class="lead">⏳ 每個遊戲 <b>1 分 30 秒</b>　⚡ 每題 15 秒，<b>愈快分數愈高</b><br>
      🔥 <b>連對 3 題</b> ➜ 🎁 驚喜卡 <b>二～五選一</b>（每次卡包樣式都不一樣）<br>
      ❌ 答錯 ➜ 看清楚 ➜ ⭐ 加分題答對 <b>✕ 2</b></p>
   <div id="scme"></div>
@@ -1254,8 +1254,9 @@ var BANK={"g1":[{"q":"What’s ＝ ?","o":["What is","What are","What am","What 
 var LAB9={"n":"What’s your name?","a":"How old are you?"};
 var DUOV=["I","my"];
 var SHAPE=['▲','◆','●','■'];
-var QT=15, GT=180;                    /* 每一題 15 秒；每一個遊戲 3 分鐘、🔍 火眼金睛 4 分鐘（使用者 2026-09-27 指定） */
-function gtOf(id){return id==='g7'?240:GT}
+var QT=15, GT=90;                     /* 每一題 15 秒；每一個遊戲（包括 🔍 火眼金睛）1 分 30 秒（使用者 2026-10-09 指定） */
+function gtOf(id){return GT}
+function gtTxt(s){var m=Math.floor(s/60),x=s%60;return x?(m?m+' 分 ':'')+x+' 秒':m+' 分鐘'}
 var OPTG={g1:1,g4:1,g5:1,g8:1,g10:1}; /* 有四個選項的遊戲（驚喜卡「刪掉錯的選項」只給它們） */
 var g=null,queue=[],cur=null,left=QT,qt=QT,tick=null,score=0,streak=0,best=0,right=0,wrong=0;
 var asked=0,speedSum=0,shield=0,timeAdd=0,opened=[],lastGain=0;
@@ -1446,7 +1447,7 @@ function hub(){
     return '<button class="gcard" data-g="'+m.id+'"><span class="gn">'+(n+1)+'</span>'+
       '<span class="gi">'+m.ic+'</span><span class="gt">'+m.name+'</span>'+
       '<span class="gr">'+m.rule+'</span>'+
-      '<span class="gb">⏳ '+(gtOf(m.id)/60)+' 分鐘　🎁 '+m.st+' 30 張'+
+      '<span class="gb">⏳ '+gtTxt(gtOf(m.id))+'　🎁 '+m.st+' 30 張'+
       (b?'　最佳 <b>'+b+'</b>':'')+'</span></button>';
   }).join('');
 }
@@ -1473,7 +1474,7 @@ function begin(id){
   gStart();
   next();
 }
-/* ⏳ 一場 3 分鐘（火眼金睛 4 分鐘）：答錯分析頁也照算（驚喜卡、加分視窗的動畫時間不算） */
+/* ⏳ 一場 1 分 30 秒：答錯分析頁、驚喜卡、加分視窗的時間都不算（gPause；使用者 2026-10-09） */
 function gStart(){gStop();gLeft=gtOf(g);gPause=0;gPaint();
   gTick=setInterval(function(){if(ended)return;if(!gPause){gLeft-=0.1;if(gLeft<=0){gLeft=0;gPaint();timeOver();return}}gPaint()},100)}
 function gStop(){if(gTick){clearInterval(gTick);gTick=null}}
@@ -1484,7 +1485,7 @@ function timeOver(){
   if(ended)return;
   stop();gStop();missHide(false);lookHide();
   ['#evt','#pick','#gain'].forEach(function(s){var x=$(s);x.classList.remove('on');x.innerHTML=''});gPause=0;
-  over('⏰ '+(gtOf(g)/60)+' 分鐘到！');
+  over('⏰ '+gtTxt(gtOf(g))+'到！');
 }
 /* 每一題自己的倒數：時間到就算答錯；❄️ 凍結的那幾秒不會少 */
 function run(sec){
@@ -1693,10 +1694,12 @@ function judge(ok,hint,after,timeout){
   if(!mi.sims.length&&cur)mi.sim0=toMcq(cur);
   mi.pts=500;
   mi.gain=function(n){gFix++;score+=n;popScore(n);paint()};
-  /* 先讓學生看一眼紅綠（0.5 秒），再蓋上錯題分析頁 */
+  /* 先讓學生看一眼紅綠（0.5 秒），再蓋上錯題分析頁；這段時間時鐘暫停（使用者 2026-10-09） */
+  gPause++;var mOn=1,mOff=function(){if(mOn){mOn=0;gPause=Math.max(0,gPause-1)}};
   setTimeout(function(){
-    if(ended||!$('#arena').classList.contains('on'))return;
+    if(ended||!$('#arena').classList.contains('on')){mOff();return}
     missShow(mi,function(){
+      mOff();
       if(ended||!$('#arena').classList.contains('on'))return;
       (after||next)();
     });
@@ -1896,7 +1899,7 @@ function bossTap(e){
   var ok=b.getAttribute('data-ok')==='true';
   markO(b,ok);PICK=b.getAttribute('data-t');
   if(ok){
-    var dmg=bossShield?5:10;bossShield=0;   /* 打十下倒，一場 12 題打得完 */
+    var dmg=bossShield?9:17;bossShield=0;   /* 打 6 下倒（使用者 2026-10-09；17 ✕ 6 ＝ 102）；護盾 ＝ 只扣一半 */
     bossHP=Math.max(0,bossHP-dmg);
     $('#hp').style.width=bossHP+'%';
     $('#bossface').classList.add('hit');
@@ -2185,7 +2188,7 @@ function scCntHTML(E){
   var res=E.res&&E.res.me?E.res.me.count:(E.week!=null?E.week+(E.cnt&&!E.cap?1:0):null),need=Math.ceil(E.n*2/3);
   return (E.cnt?(E.cap?'<div class="scstamp">✅ 很棒！</div><div class="scs">今天這'+(E.m==='q'?'一組':'個遊戲')+'已經算滿 3 次，明天再來，次數會再加！📅</div>':
        '<div class="scstamp">✅ 算 1 次！</div>'):
-     E.m==='g'&&E.n<10?'<div class="scstamp no">再多答 '+(10-E.n)+' 題</div><div class="scs">一場要答 10 題以上才算 1 次 💪</div>':
+     E.m==='g'&&E.n<6?'<div class="scstamp no">再多答 '+(6-E.n)+' 題</div><div class="scs">一場要答 6 題以上才算 1 次 💪</div>':
        '<div class="scstamp no">再多對 '+(need-E.ok)+' 題</div><div class="scs">就算 1 次 💪（'+E.n+' 題要對 '+need+' 題）</div>')+
    (res!=null?'<div class="sccnt">🔁 這週 <b class="pop">'+res+'</b> 次</div>':'')}
 function scScene(){

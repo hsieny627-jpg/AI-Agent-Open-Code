@@ -1088,11 +1088,11 @@ async function gamesPage(p, f, vp, e) {
       acts++;
       await p.waitForTimeout(6000);
     }
-    /* ⏳ 一場 3 分鐘、火眼金睛 4 分鐘（2026-09-27）：時間到就結算 */
+    /* ⏳ 一場 1 分 30 秒，火眼金睛也一樣（2026-10-09）：時間到就結算 */
     const c0 = await p.evaluate(() => (document.getElementById('gclock') || {}).textContent || '');
     const gt0 = await p.evaluate(() => gtOf(g));
-    if (gt0 !== 180) e.push('遊戲限時不對（' + gt0 + ' 秒）');
-    if (!/⏳\s*[1-4]:\d\d/.test(c0)) e.push('遊戲沒有倒數（' + c0 + '）');
+    if (gt0 !== 90) e.push('遊戲限時不對（' + gt0 + ' 秒）');
+    if (!/⏳\s*[01]:\d\d/.test(c0)) e.push('遊戲沒有倒數（' + c0 + '）');
     /* 驚喜卡在等學生選的時候時鐘會暫停（本來就這樣設計），量「時間到會結算」要先解除暫停 */
     await p.evaluate(() => { missHide(false); gPause = 0; gLeft = 0.3; }); await p.waitForTimeout(1500);
     const end = await p.evaluate(() => document.getElementById('gend').classList.contains('on'));
@@ -1112,7 +1112,7 @@ async function gamesPage(p, f, vp, e) {
     if (!g.clickable) e.push('遊戲 ' + i + '（' + id + '）沒有可以點的東西');
     if (g.sec > 60) e.push('遊戲 ' + i + ' 一題的倒數不是 15 秒（' + g.sec + '）');
     const gtI = await p.evaluate(() => [g, gLeft]);
-    if (gtI[1] > (gtI[0] === 'g7' ? 240 : 180) || gtI[1] < (gtI[0] === 'g7' ? 230 : 170)) e.push('遊戲 ' + i + ' 限時不對（剩 ' + Math.round(gtI[1]) + ' 秒）');
+    if (gtI[1] > 90 || gtI[1] < 80) e.push('遊戲 ' + i + ' 限時不對（剩 ' + Math.round(gtI[1]) + ' 秒）');
     if (g.ox > 0) e.push('遊戲 ' + i + ' 橫向溢出 ' + g.ox);
     /* 2026-09-28：選項字放大，而且每一個選項都只有一行、不可以超出按鈕 */
     const ow = await p.evaluate(() => [...document.querySelectorAll('#arena .o,#arena .dbtn')].filter(b => {
@@ -1153,6 +1153,37 @@ async function gamesPage(p, f, vp, e) {
     if (g.ox > 0) e.push('遊戲 ' + i + ' 作答後橫向溢出 ' + g.ox);
     await quitG(p); await p.waitForTimeout(500);
     if ((await snap()).cards !== NG) e.push('遊戲 ' + i + ' 回不了大廳');
+  }
+  /* 2026-10-09：答錯頁的時候遊戲時鐘暫停；👑 魔王打 6 下就倒 */
+  {
+    await p.click('.gcard:nth-of-type(1)'); await p.waitForTimeout(900);
+    const wr = await p.$('#arena .o[data-ok="false"]');
+    if (wr) {
+      await wr.click(); await p.waitForTimeout(1200);
+      const t1 = await p.evaluate(() => [document.getElementById('miss').classList.contains('on'), gLeft]);
+      await p.waitForTimeout(2000);
+      const t2 = await p.evaluate(() => gLeft); acts++;
+      if (!t1[0]) e.push('時鐘暫停：答錯頁沒有出現');
+      else if (Math.abs(t1[1] - t2) > 0.15) e.push('答錯頁的時候遊戲時鐘沒有暫停（' + t1[1].toFixed(1) + '→' + t2.toFixed(1) + '）');
+      await p.evaluate(() => missHide(false));
+    }
+    await quitG(p); await p.waitForTimeout(500);
+    const bi = await p.evaluate(() => [...document.querySelectorAll('.gcard')].findIndex(c => /魔王/.test(c.textContent)));
+    if (bi >= 0) {
+      await p.locator('.gcard').nth(bi).click(); await p.waitForTimeout(900);
+      let hits = 0;
+      for (let k = 0; k < 10; k++) {
+        await p.evaluate(() => { ['#pick', '#evt', '#gain'].forEach(s => { const x = document.querySelector(s); x.classList.remove('on'); x.innerHTML = '' }); gPause = 0; busy = false; });
+        const ok = await p.$('#arena .o[data-ok="true"]'); if (!ok) break;
+        await ok.click(); hits++; await p.waitForTimeout(400);
+        if (await p.evaluate(() => bossHP <= 0)) break;
+        await p.evaluate(() => { stop(); next(); }); await p.waitForTimeout(300);
+      }
+      acts++;
+      const hp = await p.evaluate(() => bossHP);
+      if (hits !== 6 || hp > 0) e.push('魔王不是打 6 下就倒（打了 ' + hits + ' 下，血量 ' + hp + '）');
+      await p.waitForTimeout(1200); await quitG(p); await p.waitForTimeout(500);
+    }
   }
   /* 2026-09-26 Review 1：每一張的空格都點得到替換字，點了英文句子和整句中文都要跟著換（不可以把英文換進中文） */
   if (/review/.test(f)) {

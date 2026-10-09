@@ -11,6 +11,8 @@
  *     唸到哪個字那個字亮（不刺眼：亮度 ≦ 1.3 倍）；動詞片語的中文中間有空格；sticker 的 c 是淺灰（不發音）
  * 只印失敗項與一行總結。先跑 words/_verify.js 量一般版面。 */
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+/* 2026-10-09：量測絕對不可以送到真的 Google 成績表（使用者指定）➜ 擋掉 Google Apps Script */
+const NOGAS = p => p.route(/script\.google(usercontent)?\.com/, r => r.abort());
 const fs = require('fs'), path = require('path'), DIR = __dirname;
 const only = process.argv.slice(2);
 const files = fs.readdirSync(DIR).filter(f => /\.html$/.test(f) && f !== 'index.html' && f !== 'games.html' && (!only.length || only.some(o => f.includes(o))));
@@ -19,7 +21,7 @@ const key = s => String(s).replace(/[’]/g, "'").replace(/\s+/g, ' ').trim().to
 (async () => {
   const b = await chromium.launch(); const bad = []; let n = 0;
   for (const vp of [[1024, 768], [820, 1180]]) {
-    const p = await b.newPage({ viewport: { width: vp[0], height: vp[1] } });
+    const p = await b.newPage({ viewport: { width: vp[0], height: vp[1] } }); await NOGAS(p);
     for (const f of files) {
       await p.goto('file://' + path.join(DIR, f)); await p.waitForTimeout(400);
       const tag = f + ' ' + vp.join('×');

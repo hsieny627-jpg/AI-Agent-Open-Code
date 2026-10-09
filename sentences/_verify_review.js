@@ -5,6 +5,8 @@
  * 只印失敗項和一行總結。
  */
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+/* 2026-10-09：量測絕對不可以送到真的 Google 成績表（使用者指定）➜ 擋掉 Google Apps Script */
+const NOGAS = p => p.route(/script\.google(usercontent)?\.com/, r => r.abort());
 const fs = require('fs'), path = require('path'), cp = require('child_process'), { pathToFileURL } = require('url');
 const ROOT = path.join(__dirname, '..');
 const SITES = [{ d: 'g3-review', src: 'G3 - L1 + L2', games: 'g3,g5,g9' }, { d: 'g4-review', src: 'sentences', games: 'g3,g4,g5' }];
@@ -12,7 +14,7 @@ const SITES = [{ d: 'g3-review', src: 'G3 - L1 + L2', games: 'g3,g5,g9' }, { d: 
   let fails = 0, n = 0;
   const br = await chromium.launch();
   for (const S of SITES) for (const vp of [[1024, 768], [820, 1180]]) {
-    const p = await br.newPage({ viewport: { width: vp[0], height: vp[1] } });
+    const p = await br.newPage({ viewport: { width: vp[0], height: vp[1] } }); await NOGAS(p);
     const f = path.join(ROOT, S.d, 'index.html');
     await p.goto(pathToFileURL(f).href); await p.waitForTimeout(300);
     const r = await p.evaluate(() => ({ ox: document.documentElement.scrollWidth - innerWidth, sec: document.querySelectorAll('section').length,
@@ -29,7 +31,7 @@ const SITES = [{ d: 'g3-review', src: 'G3 - L1 + L2', games: 'g3,g5,g9' }, { d: 
     n += 5 + r.links.length;
     /* 補充（複製進來的單字結構、單字故事）：沒有 JS 錯誤、字體和語音檔載得到、🏠 回複習首頁、老師網站的按鈕藏起來 */
     for (const h of r.links.filter(h => !/^(u[12]|games|index)\.html/.test(h))) {
-      const q = await br.newPage({ viewport: { width: vp[0], height: vp[1] } }), er = [];
+      const q = await br.newPage({ viewport: { width: vp[0], height: vp[1] } }), er = []; await NOGAS(q);
       q.on('pageerror', x => er.push('JS 例外：' + x.message)); q.on('requestfailed', x => er.push('載不到：' + x.url().split('/').slice(-2).join('/')));
       await q.goto(pathToFileURL(path.join(ROOT, S.d, h)).href); await q.waitForTimeout(500);
       const x = await q.evaluate(async () => { await document.fonts.ready; const vis = id => { const b = document.getElementById(id); return !!b && b.getBoundingClientRect().width > 0; };

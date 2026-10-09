@@ -2890,7 +2890,7 @@ function scCntHTML(E){
   var res=E.res&&E.res.me?E.res.me.count:(E.week!=null?E.week+(E.cnt&&!E.cap?1:0):null),need=Math.ceil(E.n*2/3);
   return (E.cnt?(E.cap?'<div class="scstamp">✅ 很棒！</div><div class="scs">今天這'+(E.m==='q'?'一組':'個遊戲')+'已經算滿 3 次，明天再來，次數會再加！📅</div>':
        '<div class="scstamp">✅ 算 1 次！</div>'):
-     E.m==='g'&&E.n<10?'<div class="scstamp no">再多答 '+(10-E.n)+' 題</div><div class="scs">一場要答 10 題以上才算 1 次 💪</div>':
+     E.m==='g'&&E.n<6?'<div class="scstamp no">再多答 '+(6-E.n)+' 題</div><div class="scs">一場要答 6 題以上才算 1 次 💪</div>':
        '<div class="scstamp no">再多對 '+(need-E.ok)+' 題</div><div class="scs">就算 1 次 💪（'+E.n+' 題要對 '+need+' 題）</div>')+
    (res!=null?'<div class="sccnt">🔁 這週 <b class="pop">'+res+'</b> 次</div>':'')}
 function scScene(){

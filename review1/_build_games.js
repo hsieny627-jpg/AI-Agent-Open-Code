@@ -76,7 +76,6 @@ const PATCH = [
   ['<script src="audio/aud.js"></script>\n', '<script src="audio/aud.js"></script>\n<script>window.AUD=window.ENAUD;</script>\n'],
   ['<title>複習遊戲 10 種｜英文句型</title>', '<title>' + GD.R1.title + '</title>'],
   ['<h1>🎮 複習遊戲　10 種玩法</h1>', '<h1>' + GD.R1.h1 + '</h1>'],
-  ['⏳ 每個遊戲 <b>3 分鐘</b>（🔍 火眼金睛 4 分鐘）', '⏳ 每個遊戲 <b>3 分鐘</b>'],
   ['<a href="index.html">🏠 首頁</a>', '<a href="index.html">🔤 單字首頁</a>\n <a href="../index.html">🏠 總首頁</a>'],
   ['var BANK=', RT + 'var BANK='],
   /* 遊戲代號 gid ≠ 玩法 g */

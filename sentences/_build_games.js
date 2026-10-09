@@ -3,7 +3,8 @@
  * 題庫與驚喜卡改 _game_data.js，玩法與版面改這裡。
  *
  * 十個遊戲共用一顆引擎（2026-09-21 使用者指定改版；2026-09-25 再改版）：
- *  - **每一個遊戲限時 3 分鐘，🔍 火眼金睛 4 分鐘**（使用者 2026-09-27 指定；⏳ 一直看得到），每一題限時 15 秒，愈快答對分數愈高
+ *  - **每一個遊戲限時 1 分 30 秒（火眼金睛也一樣）**（使用者 2026-10-09 指定，取代 2026-09-27 的 3／4 分鐘；⏳ 一直看得到），每一題限時 15 秒，愈快答對分數愈高
+ *    **答錯頁的時候時鐘暫停**（使用者 2026-10-09：1 分 30 秒都是真的在答題）；👑 魔王打 6 下就倒（使用者 2026-10-09）
  *  - **答對：加分畫面用獨立視窗**（✅ ＋880，下面一排圖示算式 ✅100 ＋ ⚡720 ＋ 🔥60），字大、字少
  *  - **連續答對 3 題才抽驚喜卡**：2026-09-27 起沒有單張，一律自己選（二選一 40%、三選一 30%、四選一 20%、五選一 10%）
  *    每一個遊戲 30 張：名字、效果、翻開的特效全部不一樣，**只給好事**（_surprise.js）
@@ -374,8 +375,9 @@ const JS = `
 var BANK=__BANK__, META=__META__, SURP=__SURP__, SKIN=__SKIN__, OPENA=__OPENA__, JOKE=__JOKE__;${DUO9 ? '\nvar LAB9=' + LAB9 + ';' : ''}
 var DUOV=${OTHER2};
 var SHAPE=['▲','◆','●','■'];
-var QT=15, GT=180;                    /* 每一題 15 秒；每一個遊戲 3 分鐘、🔍 火眼金睛 4 分鐘（使用者 2026-09-27 指定） */
-function gtOf(id){return id==='g7'?240:GT}
+var QT=15, GT=90;                     /* 每一題 15 秒；每一個遊戲（包括 🔍 火眼金睛）1 分 30 秒（使用者 2026-10-09 指定） */
+function gtOf(id){return GT}
+function gtTxt(s){var m=Math.floor(s/60),x=s%60;return x?(m?m+' 分 ':'')+x+' 秒':m+' 分鐘'}
 var OPTG={g1:1,g4:1,g5:1,g8:1,g10:1}; /* 有四個選項的遊戲（驚喜卡「刪掉錯的選項」只給它們） */
 var g=null,queue=[],cur=null,left=QT,qt=QT,tick=null,score=0,streak=0,best=0,right=0,wrong=0;
 var asked=0,speedSum=0,shield=0,timeAdd=0,opened=[],lastGain=0;
@@ -566,7 +568,7 @@ function hub(){
     return '<button class="gcard" data-g="'+m.id+'"><span class="gn">'+(n+1)+'</span>'+
       '<span class="gi">'+m.ic+'</span><span class="gt">'+m.name+'</span>'+
       '<span class="gr">'+m.rule+'</span>'+
-      '<span class="gb">⏳ '+(gtOf(m.id)/60)+' 分鐘　🎁 '+m.st+' ${NS} 張'+
+      '<span class="gb">⏳ '+gtTxt(gtOf(m.id))+'　🎁 '+m.st+' ${NS} 張'+
       (b?'　最佳 <b>'+b+'</b>':'')+'</span></button>';
   }).join('');
 }
@@ -593,7 +595,7 @@ function begin(id){
   gStart();
   next();
 }
-/* ⏳ 一場 3 分鐘（火眼金睛 4 分鐘）：答錯分析頁也照算（驚喜卡、加分視窗的動畫時間不算） */
+/* ⏳ 一場 1 分 30 秒：答錯分析頁、驚喜卡、加分視窗的時間都不算（gPause；使用者 2026-10-09） */
 function gStart(){gStop();gLeft=gtOf(g);gPause=0;gPaint();
   gTick=setInterval(function(){if(ended)return;if(!gPause){gLeft-=0.1;if(gLeft<=0){gLeft=0;gPaint();timeOver();return}}gPaint()},100)}
 function gStop(){if(gTick){clearInterval(gTick);gTick=null}}
@@ -604,7 +606,7 @@ function timeOver(){
   if(ended)return;
   stop();gStop();missHide(false);lookHide();
   ['#evt','#pick','#gain'].forEach(function(s){var x=$(s);x.classList.remove('on');x.innerHTML=''});gPause=0;
-  over('⏰ '+(gtOf(g)/60)+' 分鐘到！');
+  over('⏰ '+gtTxt(gtOf(g))+'到！');
 }
 /* 每一題自己的倒數：時間到就算答錯；❄️ 凍結的那幾秒不會少 */
 function run(sec){
@@ -813,10 +815,12 @@ function judge(ok,hint,after,timeout){
   if(!mi.sims.length&&cur)mi.sim0=toMcq(cur);
   mi.pts=500;
   mi.gain=function(n){gFix++;score+=n;popScore(n);paint()};
-  /* 先讓學生看一眼紅綠（0.5 秒），再蓋上錯題分析頁 */
+  /* 先讓學生看一眼紅綠（0.5 秒），再蓋上錯題分析頁；這段時間時鐘暫停（使用者 2026-10-09） */
+  gPause++;var mOn=1,mOff=function(){if(mOn){mOn=0;gPause=Math.max(0,gPause-1)}};
   setTimeout(function(){
-    if(ended||!$('#arena').classList.contains('on'))return;
+    if(ended||!$('#arena').classList.contains('on')){mOff();return}
     missShow(mi,function(){
+      mOff();
       if(ended||!$('#arena').classList.contains('on'))return;
       (after||next)();
     });
@@ -1018,7 +1022,7 @@ function bossTap(e){
   var ok=b.getAttribute('data-ok')==='true';
   markO(b,ok);PICK=b.getAttribute('data-t');
   if(ok){
-    var dmg=bossShield?5:10;bossShield=0;   /* 打十下倒，一場 12 題打得完 */
+    var dmg=bossShield?9:17;bossShield=0;   /* 打 6 下倒（使用者 2026-10-09；17 ✕ 6 ＝ 102）；護盾 ＝ 只扣一半 */
     bossHP=Math.max(0,bossHP-dmg);
     $('#hp').style.width=bossHP+'%';
     $('#bossface').classList.add('hit');
@@ -1131,7 +1135,7 @@ const body = `
 <main id="stage">
  <section id="hub">
   <h1>🎮 複習遊戲　10 種玩法</h1>
-  <p class="lead">⏳ 每個遊戲 <b>3 分鐘</b>（🔍 火眼金睛 4 分鐘）　⚡ 每題 15 秒，<b>愈快分數愈高</b><br>
+  <p class="lead">⏳ 每個遊戲 <b>1 分 30 秒</b>　⚡ 每題 15 秒，<b>愈快分數愈高</b><br>
      🔥 <b>連對 3 題</b> ➜ 🎁 驚喜卡 <b>二～五選一</b>（每次卡包樣式都不一樣）<br>
      ❌ 答錯 ➜ 看清楚 ➜ ⭐ 加分題答對 <b>✕ 2</b></p>
   <div id="scme"></div>

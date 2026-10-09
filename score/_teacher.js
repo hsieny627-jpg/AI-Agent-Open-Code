@@ -153,7 +153,7 @@ function draw(){
   var m=function(k){var a=ps.filter(function(p){return p[k]!=null}).map(function(p){return p[k]});return a.length?a.reduce(function(x,y){return x+y},0)/a.length:null};
   var cnt=0;ps.forEach(function(p){cnt+=p.count});
   var cs=F.cls?[F.cls]:SC.CLASSES[F.g],size=0;cs.forEach(function(c){size+=+SIZES[c]||0});
-  $('#tiles').innerHTML=[['🎯 正確率',f1(m('acc')),'分（百分制）'],['⚡ 總分',f1(m('s')),'分（答對 60＋速度 40）'],['🔁 作答次數',cnt,'次（對 2/3 才算；遊戲要答 10 題以上）'],
+  $('#tiles').innerHTML=[['🎯 正確率',f1(m('acc')),'分（百分制）'],['⚡ 總分',f1(m('s')),'分（答對 60＋速度 40）'],['🔁 作答次數',cnt,'次（對 2/3 才算；遊戲要答 6 題以上）'],
     ['👥 有做的人',ps.length+(size?'／'+size:''),size?'人（參與率 '+Math.round(ps.length/size*100)+'%）':'人（班級人數在試算表「班級人數」填）']]
     .map(function(t){return '<div class="tile"><div class="k">'+t[0]+'</div><div class="v">'+t[1]+'</div><div class="d">'+t[2]+'</div></div>'}).join('');
   var h='';
