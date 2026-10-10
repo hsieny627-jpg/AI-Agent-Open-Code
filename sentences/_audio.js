@@ -17,7 +17,8 @@ const MARK = [];
 T.forEach(x => {
   const m = /^(m:)?(.*)$/.exec(String(x)), v = m[1] || '', s = m[2];
   if (/^(He|She)('s| is) my [A-Za-z]+\.$/.test(s)) MARK.push(v + s.replace(/ my /, ' -my '));
-  if (/^Is (he|she) .*\?$/.test(s)) MARK.push(v + s.replace(/(\S+)\?$/, '/$1?'));
+  /* 2026-10-10 使用者第 1 點：Is he a teacher? 的 cher 被 / 硬拉高、像機器 ➜ 拿掉 /；改成 a 唸 ㄜ、模型自己唸問句，
+     在聽得對的版本裡挑句尾自己往上最多的（tools/tts_gen.py 的 gen_schwa，不改音高） */
 });
 const SPK = { she: 'She.' };
 const r = pack({ texts: T.concat(MARK), dir: path.join(__dirname, 'audio'), lang: 'en', varName: 'AUD', speak: s => SPK[s] || s.replace(/\bLEGO\b/g, 'Lego') });

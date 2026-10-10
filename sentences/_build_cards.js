@@ -1838,6 +1838,15 @@ const R1CSS = `
 .subs,.subs.many{gap:clamp(4px,.7vh,8px)}
 .subs .subrow,.subs.many .subrow{gap:clamp(5px,.7vw,9px)}
 `;
+/* 2026-10-10 使用者第 5 點：等式卡的空格點家人 ➜ He is my father.：token 寫 ifSlot:'he' ＝ 這個字先藏著，那一個 slot 換了字才出現（跟著唸、跟著有中文）。
+   資料裡有寫才換（G3 的產物逐位元組不變） */
+const IFPATCH = [
+  ["function tkHTML(t,idx,arr){\n", "function tkHTML(t,idx,arr){\n  if(t.ifSlot&&!t.on)return '';\n"],
+  ["function plain(tk){return tk.map(", "function plain(tk){return tk.filter(function(t){return !(t.ifSlot&&!t.on)}).map("],
+  ["function spoken(tk){var g=[];tk.forEach(", "function spoken(tk){var g=[];tk.filter(function(t){return !(t.ifSlot&&!t.on)}).forEach("],
+  ["    L.forEach(function(t){if(t.slot&&(!k||t.slot===k)){t.en=w;t.zh=z;t.ic=ic;t.blank=0}})});\n  /* say",
+   "    L.forEach(function(t){if(t.slot&&(!k||t.slot===k)){t.en=w;t.zh=z;t.ic=ic;t.blank=0}if(t.ifSlot&&(!k||t.ifSlot===k||t.ifSlot===c.slot))t.on=1})});\n  /* say"]
+];
 const SSPATCH = [
   ["if(!inner){var n=0;ks.forEach(function(k){var x=SUB[k];if(x)n+=x.basic.length+x.adv.length});",
    "if(!inner){var n=0;ks.forEach(function(k){var x=SUB[k];if(x)n+=(SUBSEL[k]&&SUBSETS[k])?SUBSETS[k][SUBSEL[k]].rows.reduce(function(a,r){return a+r[1].length},0):x.basic.length+x.adv.length});"],
@@ -1912,6 +1921,11 @@ function page(unit, cards, title, other, otherName, P) {
   });
   if (TQD) TQPATCH.forEach(([a, b]) => {
     if (js.split(a).length !== 2) throw new Error('複習題：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
+    js = js.replace(a, () => b);
+  });
+  const hasIF = JSON.stringify(DECKS || cards).indexOf('"ifSlot"') >= 0;
+  if (hasIF) IFPATCH.forEach(([a, b]) => {
+    if (js.split(a).length !== 2) throw new Error('ifSlot：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
     js = js.replace(a, () => b);
   });
   if (hasSS) SSPATCH.forEach(([a, b]) => {

@@ -29,6 +29,20 @@
 | `_verify.js` | 量測腳本。`node sentences/_verify.js` 量全部；`node sentences/_verify.js unit1.html` 只量一頁 |
 | `index.html` `warmup.html` `unit1.html` `unit2.html` `games.html` | **產物，不要手改**，會被下一次 build 蓋掉 |
 
+## 2026-10-10 第十四次改版（使用者 7 點的第 1～5 點；先讀這一節）
+
+需求原文、選擇題、使用者的回覆：`sentences/2026-10-10_修改清單.md`（第五節 ＝ 定案）。第 6 點（登入、老師看板）、第 7 點（職業單字網站）**各開新對話做**（使用者 Q17）。
+
+| # | 使用者要的／決定 | 做法（在哪裡） |
+|---|---|---|
+| 1 | Is he/she a ___? 句尾語調不自然（teacher 的 cher） | 原因：`/` 把最後一個字最後 35% 畫成直線拉到 ✕1.45。量過：Kokoro 自己唸是非問句句尾會**往下**（0.8～0.95），換語速、換風格、加 ↗ 都一樣，所以還是要改音高。新記號 **`@` ＝ 是非問句的低升調**（`tools/stress.py`）：從最後一個字開頭（重音 TEA）慢慢往上、愈後面升得愈快（t^1.6），到全句中位數 ✕1.28，**保留原本的小起伏**（只改大方向）。`tools/tts_gen.py`：Is／Are／Am／Can／Do／Does／Was／Were 開頭、? 結尾的句子**新做的時候自動加 @**（以後新教材一樣）；`sentences/_audio.js` 拿掉 `/`。試聽檔給過使用者 |
+| 2 | 刪四年級 Unit 2 的 1-3 中英語序第 2、4 頁（上英文、下中文） | `TABS2` 1-3 ＝ `[U2[3],U2[12]]`；四年級在家複習 Unit 2「3 中英語序」也一樣。**三年級不刪**（使用者追問確認）；四年級 Unit 1 不刪 |
+| 3 | 四年級 Unit 2 進階 1-1 加 4 頁 | `U2T.a11`：① He is a ___. ② She is a ___. ③ **He is a ______. ＝ He’s a ______. 縮寫動畫**（`morph rows:1`，跟 Unit 1 1-1 基礎第 6 張同一種）④ She… ⑤ He is a doctor. ＝ He’s a doctor. ⑥ She… ⑦ **He’s a ______.**（一開始底線，點下面的職業才填進去並唸整句；`BLS('job')`）⑧ She’s a ______.。原本的 He’s a doctor.／She’s a teacher.（`sHe`／`sShe`）在進階拿掉（基礎還在） |
+| 4 | 句型裡的 a 一律唸 ㄜ（/ə/），以後新課程、新教材一律如此 | 原因：Kokoro 的前處理（espeak）把句中的 a 唸 /ɐ/（介於 ㄚ、ㄜ），**句子停在 a 的地方（He’s a ______.，空格不唸）唸 /ˈeɪ/（ㄟ）**。`tools/tts_gen.py` 的 `gen_schwa()`：開一個 debug 版 sherpa-onnx 把音標序號接下來、單字 a 那一段換成 ə，再直接送進同一個模型（`raw_ph`）；做完照樣 Whisper 聽一次，聽錯換語速重做。`tools/audio_pack.js` 的 `SCHWA`：有 a 的句子檔名雜湊多一段 `ə1|` ➜ **只重做這些**。所有用 `audio_pack` 的網站（三年級、四年級、Review 1、單字網站、縮寫動畫）自動適用；點單獨一個 a 本來就唸 uh |
+| 5 | 全部等式卡：第一個字母對齊、＝ 在第二行左邊、縮掉的字母和 ’ 紅色、下面一律列替換字 | 前三件 2026-10-04／10-07 已做，`_verify.js` 照舊量。第 4 件（Q5 A）：每張列**它自己能換的字**；「原本句型」分頁的 He is my father.、She is my mother.、He is a doctor.、She is a teacher. 也加了（`copy()`）。使用者追問決定：**Unit 1 句型 2 基礎的 He is ______. ＝ He’s ______. 列 my 家人**（點 father ➜ He is my father. ＝ He’s my father.）；**Unit 2 基礎 He is ______. ＝ He’s ______.（沒有 a）不動、不列**；縮寫動畫卡（`morph`）不列；Who is he? ＝ Who’s he?、What is your name? ＝ What’s your name? 沒有字可換，不列 |
+
+新的引擎功能（資料有寫才開，三年級逐位元組不變）：token **`ifSlot:'he'`** ＝ 這個字先藏著，那一個 slot 換了字才出現（跟著唸、跟著有中文）。`_build_cards.js` 的 `IFPATCH`、`_audio_collect.js` 的 `vis()`、`_gloss.js` 的 `plain()`。
+
 ## 2026-10-09 E：複習題講完才選、驚喜卡最多 ＋20 秒、老師的任務、Unit 2 職業單字網站（兩個網站＋在家複習共用，先讀這一節）
 
 規格全部在 `score/CLAUDE.md` 最上面「2026-10-09 E」；這裡只記句型網站這邊改了哪裡：

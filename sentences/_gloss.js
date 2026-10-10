@@ -29,7 +29,7 @@ function key(s) {
     .replace(/\s+([?.!,])/g, '$1').replace(/\s+'/g, "'").trim().toLowerCase();
 }
 function plain(tk) {
-  return tk.map((t, i) => (i && !t.tight ? ' ' : '') + t.en).join('').replace(/[’]/g, "'");
+  return tk.filter(t => !(t.ifSlot && !t.on)).map((t, i) => (i && !t.tight ? ' ' : '') + t.en).join('').replace(/[’]/g, "'");
 }
 
 function collect() {

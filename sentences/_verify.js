@@ -426,6 +426,33 @@ async function cardsPage(p, f, vp, e) {
         if (s.spill > 2) e.push(w + '內容超出卡片 ' + s.spill + 'px');
         if (s.hit) e.push(w + ' ' + s.hit);
         if (s.k < 0.5) e.push(w + '被縮到 ' + s.k + '（字太小）');
+        /* 2026-10-10 使用者第 5 點：全部等式卡 ①每一行第一個字母上下對齊 ②第二行的 ＝ 在第一個單字左邊 ③縮掉的字母和 ’ 紅色 ④下面列替換字
+           （沒有字可換的：Who is he?／What is your name?、使用者決定不列的 Unit 2 He is ______.（沒有 a）、三年級 What is ______?）；
+           ifSlot 的卡（He is ______. ＝ He’s ______.）點一個家人要變成 He is my father. */
+        (await p.evaluate(async () => {
+          const c = CARDS[i], out = []; if (c.type !== 'eq') return out;
+          const L = el => el.getBoundingClientRect().left, col = el => getComputedStyle(el).color;
+          const rows = [].slice.call(document.querySelectorAll('#cardIn .eqrow')), mk = [].slice.call(document.querySelectorAll('#cardIn .eqmark:not(.nil)'));
+          const RED = col(document.querySelector('#cardIn .ap') || document.body);
+          const first = r => r.querySelector('.tk .en');
+          if (rows.length < 2) return ['等式卡不是兩行'];
+          const x0 = rows.map(r => L(first(r)));
+          if (Math.max.apply(0, x0) - Math.min.apply(0, x0) > 1.5) out.push('等式卡每一行第一個字母沒有上下對齊（' + x0.map(Math.round).join('／') + '）');
+          mk.forEach((m, n) => { const f = first(rows[n + 1]).getBoundingClientRect(), r = m.getBoundingClientRect();
+            if (!(r.right <= f.left + 1 && Math.abs((r.top + r.bottom) / 2 - (f.top + f.bottom) / 2) < f.height)) out.push('等式卡第 ' + (n + 2) + ' 行的 ＝ 不在第一個單字左邊'); });
+          rows.forEach(r => r.querySelectorAll('.ri,.ap').forEach(x => { if (col(x) !== RED) out.push('等式卡「' + x.textContent + '」不是紅色'); }));
+          if (!rows[0].querySelector('.ri') && c.a.length === c.b.length) out.push('等式卡上面一行縮掉的字母沒有標紅色');
+          const txt = plain(c.a), OK = /^(Who is (he|she)\?|What is your name\?|What is ______\?|(He|She) is ______\.)$/;
+          const subs = [].slice.call(document.querySelectorAll('#card .subs .sub'));
+          if (!subs.length && !(OK.test(txt) && !/my/.test(JSON.stringify(c)))) out.push('等式卡下面沒有列替換字（' + txt + '）');
+          if (subs.length && JSON.stringify(c).indexOf('"ifSlot"') >= 0) {
+            const w0 = subs[0].getAttribute('data-w'); subs[0].click(); await new Promise(z => setTimeout(z, 300));
+            const now = plain(CARDS[i].a);
+            if (!new RegExp(' my ' + w0 + '\\.$').test(now)) out.push('點 ' + w0 + ' 以後應該是「… my ' + w0 + '.」，現在是「' + now + '」');
+            if (!document.querySelector('#cardIn .eqrow .tk[data-w="my"]')) out.push('點了家人以後 my 沒有出現');
+          }
+          return out;
+        })).forEach(m => e.push(w + m));
         /* 每一句都要有預錄語音檔（有 audio/aud.js 的網站才量）：問句、答句照兩種聲音查 */
         const miss = await p.evaluate(() => {
           if (!window.AUD) return [];

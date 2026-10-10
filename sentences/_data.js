@@ -493,6 +493,7 @@ var he1 = function(){return t('he','他',ICON.he,{hl:'b'})}, she1 = function(){r
 var He1 = function(){return t('He','他',ICON.he,{hl:'b'})}, She1 = function(){return t('She','她',ICON.she,{hl:'lp'})};
 var S_ = function(){return t("'s",'是',ICON.is,{tight:1})}, Q_ = function(){return t('?','？',ICON.q,{tight:1})}, D_ = function(){return t('.','。',ICON.dot,{tight:1})};
 var my1 = function(){return t('my','我的',ICON.my)};
+var myIf = function(k){return t('my','我的',ICON.my,{ifSlot:k})}, BLS = function(k){return t('______','______','',{slot:k,blank:1})};
 var U1T = {
   eqShe: {type:'eq', a:[Who(),Is_({ri:'i'}),she1(),Q_()], b:[Who(),S_(),she1(),Q_()], note:'紅色的 ’ ＝ 被藏起來的 [i]。'},
   sHe: copy(U1[6],'he','father'), sShe: copy(U1[11],'she','mother')
@@ -505,8 +506,10 @@ U1T.b11 = [ONE4([Who()]),ONE4([Is_()]),ONE4([he1()]),ONE4([she1()]),
 U1T.a11 = [U1[3], U1T.eqShe, U1[1], U1[8]];
 U1T.b2 = [ONE4([He1()]),ONE4([She1()]),ONE4([Is_()]),
   {type:'sent', zh:'他是 ______。', tk:[He1(),Is_(),BL4(),D_()]},
-  {type:'eq', a:[He1(),Is_({ri:'i'}),BL4(),D_()], b:[He1(),S_(),BL4(),D_()]},
-  {type:'eq', a:[She1(),Is_({ri:'i'}),BL4(),D_()], b:[She1(),S_(),BL4(),D_()]},
+  /* 2026-10-10 使用者第 5 點：等式卡下面一律列替換字 ➜ 列「my 家人」：點 father ➜ He is my father. ＝ He’s my father.
+     my 先藏著（ifSlot），點了家人才跟著出現（空格裡只放得下一個字，每個字下面還要有中文） */
+  {type:'eq', slot:'he', a:[He1(),Is_({ri:'i'}),myIf('he'),BLS('he'),D_()], b:[He1(),S_(),myIf('he'),BLS('he'),D_()]},
+  {type:'eq', slot:'she', a:[She1(),Is_({ri:'i'}),myIf('she'),BLS('she'),D_()], b:[She1(),S_(),myIf('she'),BLS('she'),D_()]},
   ONE4([my1()]), U1T.sHe, U1T.sShe, U1[4], U1[9]];
 U1T.a2 = [{type:'sent', zh:'他是我的 ______。', tk:[He1(),Is_(),my1(),BL4(),D_()]}, U1T.sHe,
   {type:'sent', zh:'她是我的 ______。', tk:[She1(),Is_(),my1(),BL4(),D_()]}, U1T.sShe, U1[4], U1[9]];
@@ -529,9 +532,15 @@ U2T.b11 = [ONE4([He2()]),ONE4([is2()]),ONE4([She2()]),ONE4([is2()]),
   {type:'sent', zh:'她是 ______。', tk:[She2(),is2(),BL4(),D_()]},
   {type:'eq', a:[She2(),Is_({ri:'i'}),BL4(),D_()], b:[She2(),S_(),BL4(),D_()]},
   U2T.eqShe, U2T.sShe];
+/* 2026-10-10 使用者第 3 點（Q3 選 A）：第 2 頁後面加 He is a ______. ＝ He’s a ______.、She… 縮寫動畫（跟 Unit 1 1-1 基礎第 6 張同一種，五拍演完亮出兩行，不列替換字）；
+   原本第 4 頁後面 He’s a ______.／She’s a ______.：一開始底線，點下面的職業才填進去並唸整句（取代原本的 He’s a doctor.／She’s a teacher.） */
 U2T.a11 = [{type:'sent', zh:'他是一位 ______。', tk:[He2(),is2(),a2(),BL4(),D_()]},
   {type:'sent', zh:'她是一位 ______。', tk:[She2(),is2(),a2(),BL4(),D_()]},
-  U2T.eqHe, U2T.eqShe, U2T.sHe, U2T.sShe];
+  {type:'morph', rows:1, a:[He2(),Is_({ri:'i'}),a2(),BL4(),D_()], b:[He2(),S_(),a2(),BL4(),D_()]},
+  {type:'morph', rows:1, a:[She2(),Is_({ri:'i'}),a2(),BL4(),D_()], b:[She2(),S_(),a2(),BL4(),D_()]},
+  U2T.eqHe, U2T.eqShe,
+  {type:'sent', zh:'他是一位 ______。', slot:'job', tk:[He2(),S_(),a2(),BLS('job'),D_()]},
+  {type:'sent', zh:'她是一位 ______。', slot:'job', tk:[She2(),S_(),a2(),BLS('job'),D_()]}];
 U2T.q12 = [ONE4([t('Is','是',ICON.is,{hl:'y'})]),ONE4([he2()]),ONE4([she2()]), U2[4], U2[13]];
 var Yes = function(){return t('Yes','是的',ICON.yes)}, No = function(){return t('No','不',ICON.no)}, isnt = function(){return t("isn't",'不是',ICON.not,{hl:'y'})};
 U2T.b2 = [ONE4([Yes()]),ONE4([he2()]),ONE4([she2()]),ONE4([is2()]), U2[5], U2[14],
@@ -556,6 +565,8 @@ U2T.p3 = [
    atk:[No(),t(',','，',ICON.comma,{tight:1}),she2(),isnt(),D_(),She2(),S_(),a2(),t('______','______','',{slot:'job2',blank:1}),D_()],
    qzh:'她 是 一位 老師 嗎？', azh:'不，她 不是。她 是 一位 ______。'}
 ];
+/* 2026-10-10 使用者第 5 點：「原本句型」分頁的等式卡下面也一律列替換字（家人、職業） */
+U1[6]=copy(U1[6],'he','father'); U1[11]=copy(U1[11],'she','mother'); U2[2]=copy(U2[2],'job','doctor'); U2[11]=copy(U2[11],'job','teacher');
 /* 中英語序：原本上中文、下英文；下一頁「上英文、下中文」（2026-10-04 使用者指定） */
 var ENTOP = function(c){return Object.assign({},c,{enTop:1})};
 var TABS1 = [
@@ -568,7 +579,7 @@ var TABS1 = [
 var TABS2 = [
   {n:'1-1', lb:'He/She is a ___.', sub:[{lb:'基礎',cards:U2T.b11},{lb:'進階',cards:U2T.a11}]},
   {n:'1-2', lb:'Is he/she a ___?', cards:U2T.q12},
-  {n:'1-3', lb:'中英語序', cards:[U2[3],ENTOP(U2[3]),U2[12],ENTOP(U2[12])]},
+  {n:'1-3', lb:'中英語序', cards:[U2[3],U2[12]]},   /* 2026-10-10 使用者第 2 點：刪掉第 2、4 頁（上英文、下中文）；四年級在家複習也刪，三年級不刪 */
   {n:'2', lb:'Yes／No', sub:[{lb:'基礎',cards:U2T.b2},{lb:'進階',cards:U2T.a2}]},
   {n:'3', lb:'一問一答', cards:U2T.p3},
   {n:'4', lb:'原本句型', cards:U2}
@@ -584,7 +595,7 @@ var RPAGES = [
           {n:'3', lb:'中英語序', cards:[U1[7],ENTOP(U1[7]),U1[12],ENTOP(U1[12])]}, {n:'4', lb:'縮寫動畫', cards:[U1[2],U1[5],U1[10]]}] },
   { file:'../g4-review/u2.html', unit:2, title:'四年級複習｜Unit 2 Is he a doctor?', other:'u1.html', otherName:'⬅ Unit 1', fix:RFIX,
     tabs:[{n:'1', lb:'He/She is a ___.', sub:[{lb:'基礎',cards:U2T.b11},{lb:'進階',cards:U2T.a11}]}, {n:'2', lb:'Yes／No', sub:[{lb:'基礎',cards:U2T.b2},{lb:'進階',cards:U2T.a2}]},
-          {n:'3', lb:'中英語序', cards:[U2[3],ENTOP(U2[3]),U2[12],ENTOP(U2[12])]}, {n:'4', lb:'縮寫動畫', cards:[U2[1],U2[10],U2[7],U2[16]]}] }
+          {n:'3', lb:'中英語序', cards:[U2[3],U2[12]]}, {n:'4', lb:'縮寫動畫', cards:[U2[1],U2[10],U2[7],U2[16]]}] }
 ];
 var PAGES = [
   { file:'unit1.html', unit:1, title:'Unit 1 句型｜Who’s he? Who’s she?', other:'unit2.html', otherName:'➡ Unit 2', tabs:TABS1 },

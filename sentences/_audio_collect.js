@@ -16,7 +16,9 @@ function collect(D, Q, G, TQ) {
   /* 2026-10-09 使用者：最後一張卡再按 ➡ 的「完成 All done!」頁（sentences/_tq.js tqFin）會唸 All done! */
   if (TQ) add('All done!');
   const CON = /^['’](s|m|re)$/;
-  const plain = tk => tk.map(t => t.tight ? t.en : ' ' + t.en).join('').trim();
+  /* ifSlot（2026-10-10）：藏著的字（my）要等那一個 slot 換了字才唸 */
+  const vis = tk => tk.filter(t => !(t.ifSlot && !t.on));
+  const plain = tk => vis(tk).map(t => t.tight ? t.en : ' ' + t.en).join('').trim();
   const words = tk => tk.forEach((t, i) => add(CON.test(t.en) && i ? tk[i - 1].en + "'" + t.en.slice(1) : (t.say || t.en)));
   const spk = s => String(s).replace(/[➜…]/g, ' ');
   /* 一個替換位置（slot）可以換成哪些字（含 Review 1 的物品／活動切換） */
@@ -29,7 +31,7 @@ function collect(D, Q, G, TQ) {
   const variants = tk => {
     const out = [tk];
     const ks = [...new Set(tk.filter(t => t.slot).map(t => t.slot))];
-    ks.forEach(k => choices(k).forEach(w => out.push(tk.map(t => t.slot === k ? Object.assign({}, t, { en: w[0], blank: 0 }) : t))));
+    ks.forEach(k => choices(k).forEach(w => out.push(tk.map(t => t.slot === k ? Object.assign({}, t, { en: w[0], blank: 0 }) : t.ifSlot === k ? Object.assign({}, t, { on: 1 }) : t))));
     return out;
   };
   const list = (tk, v) => {
@@ -43,7 +45,7 @@ function collect(D, Q, G, TQ) {
   };
   const BOY = D.BOYS ? new RegExp('\\b(' + D.BOYS.join('|') + ')\\b') : null;
   /* 網頁上真的唸出來的樣子：空格（______）和黏在空格後面的句點、問號不唸 */
-  const spoken = tk => { const g = []; tk.forEach(t => { if (t.tight && g.length) g[g.length - 1] += t.en; else g.push(t.en); });
+  const spoken = tk => { const g = []; vis(tk).forEach(t => { if (t.tight && g.length) g[g.length - 1] += t.en; else g.push(t.en); });
     return g.filter(x => /[A-Za-z]/.test(x.replace(/_+/g, ''))).join(' '); };
   const cards = [];
   const seen = new Set();

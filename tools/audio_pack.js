@@ -29,7 +29,10 @@ const vOf = k => (/^m:/.test(k) ? 'm' : '');
 let LANG = 'en';
 let SPEED = 1;
 /* 語速（2026-10-04 使用者指定：全站單字卡唸慢一點）：pack({…, speed:0.85})。語速不是 1 的，檔名雜湊多一段，跟原本的分開 */
-const fname = k => crypto.createHash('sha1').update(LANG === 'sv' ? k : MODEL + '|' + (SPEED !== 1 ? 's' + SPEED + '|' : '') + k).digest('hex').slice(0, 12);
+/* 2026-10-10 使用者第 1、4 點：句子裡的 a 一律唸 ㄜ（/ə/）、是非問句不再硬拉高（tools/tts_gen.py 的 gen_schwa）。
+   有 a 的句子雜湊多一段 |ə1 ➜ 只有這些重做，其他語音檔不動。以後新教材自動照這個規則做 */
+const SCHWA = k => /(^|[^a-z'])a([^a-z']|$)/.test(k.replace(/^m:/, '')) ? 'ə1|' : '';
+const fname = k => crypto.createHash('sha1').update(LANG === 'sv' ? k : MODEL + '|' + (SPEED !== 1 ? 's' + SPEED + '|' : '') + SCHWA(k) + k).digest('hex').slice(0, 12);
 
 function pack(o) {
   const dir = o.dir, varName = o.varName || 'AUD';
@@ -56,7 +59,8 @@ function pack(o) {
   /* 要記住「實際唸的文字」的：有重音記號、照音標唸、或 speak 換過文字的（2026-10-04：she ➜ She.）；換了文字就重做 */
   const keep3 = k => marked(want[k]) || want[k][0] === '§' || SPOKE.has(k);
   const todo = Object.keys(want).filter(k => !(old[k] && old[k][0] === fname(k) + '.mp3' && fs.existsSync(path.join(dir, old[k][0])) &&
-    (!keep3(k) || old[k][2] === want[k] || (old[k][2] === undefined && SPOKE.has(k)))));   /* 舊的 speak 檔（LEGO ➜ Lego）不重做；要重做就刪掉那一個 mp3 */
+    ((!keep3(k) && old[k][2] === undefined) || old[k][2] === want[k] ||   /* 2026-10-10：以前有記號（/）、現在拿掉的也要重做 */
+    (old[k][2] === undefined && SPOKE.has(k)))));   /* 舊的 speak 檔（LEGO ➜ Lego）不重做；要重做就刪掉那一個 mp3 */
   if (todo.length) {
     const models = process.env.TTS_MODELS;
     if (!models) throw new Error('要做 ' + todo.length + ' 個新語音檔，但沒有設定 TTS_MODELS（模型資料夾），見 tools/tts_gen.py');
