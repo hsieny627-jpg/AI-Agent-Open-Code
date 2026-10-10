@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A 組要確認的字</title>
+<style>
+:root{--bg:#FFFDF7;--fg:#1F2937;--card:#fff;--line:#E5E7EB;--he:#2563EB;--she:#E8467C;--lp:#F7A8C4;--is:#FACC15;--red:#DC2626;--sil:#9CA3AF}
+body{margin:0;background:var(--bg);color:var(--fg);font:26px/1.55 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+main{max-width:980px;margin:0 auto;padding:16px}
+h1{font-size:40px;margin:.3em 0}
+h2{font-size:34px;margin:1.2em 0 .4em;padding:.2em .5em;background:#FEF3C7;border-radius:12px}
+.q{background:var(--card);border:3px solid var(--line);border-radius:18px;padding:14px 18px;margin:14px 0}
+.row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:10px 0;border-bottom:2px dashed var(--line)}
+.row:last-child{border-bottom:0}
+.no{font-size:36px;font-weight:800;min-width:2.2em}
+button.pl{font-size:30px;padding:.25em .9em;border-radius:14px;border:3px solid #111;background:#FDE68A;cursor:pointer}
+button.pl.on{background:#86EFAC}
+.n{flex:1;min-width:10em}
+.en{font-family:Andika,Arial,sans-serif;font-size:42px;font-weight:700}
+.sw{display:inline-block;width:2.4em;height:1.4em;border-radius:10px;vertical-align:middle;border:2px solid #0002}
+.w{display:inline-flex;flex-direction:column;align-items:center;margin:0 .12em}
+.w b{font-family:Andika,Arial,sans-serif;font-size:44px;padding:0 .15em;border-radius:10px}
+.w i{font-style:normal;font-size:30px}
+.b{background:var(--he);color:#fff}.p{background:var(--she);color:#fff}.y{background:var(--is)}
+.r{color:var(--red)}.g{color:var(--sil)}
+small{font-size:22px;color:#555}
+</style></head><body><main><h1>新聲音：請聽這幾個字</h1>
+<p>全站 2,000 多個語音檔已經換成您選的聲音。<br>電腦聽寫有 3 個<b>真的單字</b>聽成別的字，請您用耳朵判斷：<b>唸得對嗎？</b></p>
+<div class="q"><div class="row"><span class="n en" style="font-size:40px">three</span><button class="pl" data-s="6b3e04548d16.mp3">▶ 聽</button><span class="n">單字卡：three（電腦聽成 free）</span></div>
+<div class="row"><span class="n en" style="font-size:40px">aunt</span><button class="pl" data-s="0b1d3e05c838.mp3">▶ 聽</button><span class="n">單字卡：aunt（美式 /ænt/；電腦聽成 and）</span></div>
+<div class="row"><span class="n en" style="font-size:40px">auntie</span><button class="pl" data-s="0921c6293285.mp3">▶ 聽</button><span class="n">單字卡：auntie（電腦聽成 and t）</span></div>
+<div class="row"><span class="n en" style="font-size:40px">She’s my aunt.</span><button class="pl" data-s="30b65befe911.mp3">▶ 聽</button><span class="n">句子裡的 aunt（電腦聽對）</span></div>
+<div class="row"><span class="n en" style="font-size:40px">She’s</span><button class="pl" data-s="18bec7d74eda.mp3">▶ 聽</button><span class="n">單獨唸 She’s（電腦聽成 cheese；以前的聲音也一樣）</span></div>
+</div>
+<p>請回答：<b>都 OK</b>，或是哪一個不對（例：three 不對）。<br>不對的字我會改用別的方法再做一次給您聽。</p>
+</main>
+<script>
+var cur=null,btn=null;
+document.querySelectorAll('button.pl').forEach(function(b){b.onclick=function(){
+  if(cur){cur.pause();if(btn)btn.classList.remove('on')}
+  cur=new Audio(b.getAttribute('data-s'));btn=b;b.classList.add('on');
+  cur.onended=function(){b.classList.remove('on')};cur.play();
+}});
+</script>
+</body></html>
