@@ -2580,13 +2580,13 @@ function doSwap(auto){
 /* ⚡ 全部出來（2026-10-10 使用者第 10 點）：這一張卡的句子、中文、圖示立刻全部出現，不用等動畫（不唸）；
    之後點字照樣會唸；換到下一張又是正常的動畫。做法：跟量測一樣用 .reduce 畫這一張（每一種卡本來就支援），換卡才拿掉 */
 var ALLSET=0,ALLKEEP=0,SYSRED=false;
-function showAll(){
+function allNow(){
   if(!ALLSET)SYSRED=document.body.classList.contains('reduce');
   stopPlay();sayStop();ALLKEEP=1;ALLSET=1;document.body.classList.add('reduce');
   var rv=reveal;reveal='whole';draw(0);reveal=rv;clearAnim();step=$$('.tk',card).length;
   var hint=$('#tapHint');if(hint)hint.classList.add('off');
 }
-(function(){var ag=document.getElementById('allGo');if(ag)ag.addEventListener('click',function(e){e.stopPropagation();showAll()})})();
+(function(){var ag=document.getElementById('allGo');if(ag)ag.addEventListener('click',function(e){e.stopPropagation();allNow()})})();
 var PUNC=store('punc')==='first'?'first':'after';
 function puncLbl(){return PUNC==='first'?'⏱ 標點：先放大':'⏱ 標點：唸完才放大'}
 function puncToggle(){PUNC=PUNC==='first'?'after':'first';store('punc',PUNC);
