@@ -368,11 +368,11 @@ async function freeDeck(p, f, vp, e, snap) {
 }
 /* 2026-10-10 第 10 點：〔⚡ 全部出來〕：每一種卡各按一次 ➜ 這一張全部看得見（沒有藏著的字、沒有透明的東西）、不唸、
    按鈕 ≧ 48px、不壓到字卡和按鈕列；換下一張又是正常的動畫 */
-async function allCheck(p, e) {
-  const out = await p.evaluate(async () => {
+async function allCheck(p, e, seen0) {
+  const out = await p.evaluate(async (seen0) => {
     const wait = ms => new Promise(r => setTimeout(r, ms)), o = [];
     const g = document.getElementById('allGo'); if (!g) return ['沒有〔⚡ 全部出來〕'];
-    const seen = {}, ks = []; CARDS.forEach((c, k) => { const t = c.type + (c.one ? '1' : '') + (c.enTop ? 'E' : ''); if (!seen[t]) { seen[t] = 1; ks.push(k); } });
+    const seen = seen0, ks = []; CARDS.forEach((c, k) => { const t = c.type + (c.one ? '1' : '') + (c.enTop ? 'E' : ''); if (!seen[t]) { seen[t] = 1; ks.push(k); } });
     for (const k of ks) {
       document.body.classList.remove('reduce'); stopPlay(); i = k; draw(0); await wait(150); g.click(); await wait(250);
       const r = g.getBoundingClientRect(), c = document.getElementById('card').getBoundingClientRect(), b = document.getElementById('bar').getBoundingClientRect();
@@ -385,9 +385,51 @@ async function allCheck(p, e) {
       if (window.speechSynthesis && speechSynthesis.speaking) o.push('第' + (k + 1) + '張按 ⚡ 以後在唸');
       if (k + 1 < CARDS.length) { i = k + 1; draw(0); await wait(60); if (document.body.classList.contains('reduce')) o.push('換下一張還是「全部出來」（動畫沒有回來）'); }
     }
-    return o;
-  });
-  out.forEach(m => e.push(m)); return 1;
+    return { o, seen };
+  }, seen0 || {});
+  if (seen0) Object.assign(seen0, out.seen);
+  out.o.forEach(m => e.push(m)); return 1;
+}
+/* 2026-10-10：⚡ 全部出來、Review 1 全部的句子、中英語序（第一個字母、標點、換字）——有分頁的頁每一個分頁每一級都量，量完回到原本的卡 */
+async function deckChecks(p, e, seen) {
+  let acts = 0;
+  acts += await allCheck(p, e, seen);
+  /* 2026-10-10 第 3 點：中英語序卡（order）唸的時候第一個字母放大（.capgo）、唸完句點／問號放大（.ppgo）；
+     可以換字的卡：點替換字 ➜ 英文、中文兩排都換、整句語音檔有 */
+  const oks = await p.evaluate(one => { const r = []; CARDS.forEach((c, k) => { if (c.type === 'order' && ((!one && r.length < 1) || c.enRow.some(x => x[3]))) r.push(k); }); return r; }, !!seen.ord);
+  if (oks.length) seen.ord = 1;
+  for (const k of oks) {
+    await p.evaluate(k => { document.body.classList.remove('reduce'); stopPlay(); sayStop(); i = k; draw(0); window.__cap = 0; window.__pp = 0;
+      window.__mo && window.__mo.disconnect(); window.__mo = new MutationObserver(() => { if (document.querySelector('#cardIn .capgo')) __cap = 1; if (document.querySelector('#cardIn .ppgo')) __pp = 1; });
+      __mo.observe(document.getElementById('card'), { subtree: true, attributes: true, childList: true }); }, k);
+    let got = null; for (let t = 0; t < 80; t++) { await p.waitForTimeout(250); got = await p.evaluate(() => [__cap, __pp]); if (got[0] && got[1]) break; }
+    if (!got[0]) e.push('中英語序第' + (k + 1) + '張：唸的時候第一個字母沒有放大');
+    if (!got[1]) e.push('中英語序第' + (k + 1) + '張：唸完句點／問號沒有放大');
+    const sw = await p.evaluate(() => { const c = CARDS[i]; if (!c.enRow.some(x => x[3])) return null; const b = [...document.querySelectorAll('#card .sub')].find(x => !x.classList.contains('on'));
+      if (!b) return ['沒有替換字']; stopPlay(); b.click(); const en = [...document.querySelectorAll('.chip.ce')].map(x => x.textContent).join(' '), zh = [...document.querySelectorAll('.chip.cz')].map(x => x.textContent).join(' ');
+      const c2 = CARDS[i], w = c2.enRow.find(x => x[3])[0], z = c2.zhRow.find(x => x[3])[0], o = [];
+      if (en.indexOf(w) < 0 || zh.indexOf(z) < 0) o.push('換字以後兩排沒有一起換（' + w + '／' + z + '）');
+      if (c2.say.indexOf(w) < 0) o.push('換字以後整句沒有換');
+      if (!(AUD[akey(c2.say)])) o.push('換字以後的整句沒有語音檔（' + c2.say + '）');
+      return o; });
+    if (sw) sw.forEach(m => e.push('中英語序第' + (k + 1) + '張：' + m));
+    acts++;
+  }
+  /* 2026-10-10 第 6 點：Review 1 全部的句子（rd:1）唸 1 次 ＝ 一句一句亮，同時只有一句亮，唸完全部恢復 */
+  const rdk = await p.evaluate(() => CARDS.findIndex(c => c.rd));
+  if (rdk >= 0) {
+    await p.evaluate(k => { document.body.classList.remove('reduce'); stopPlay(); i = k; draw(0); }, rdk); await p.waitForTimeout(2600);
+    await p.evaluate(() => sayCard()); const seq = [];
+    for (let t = 0; t < 70; t++) { await p.waitForTimeout(250);
+      seq.push(await p.evaluate(() => { const r = [...document.querySelectorAll('.frow')]; return [r.filter(x => x.classList.contains('rd')).length, r.findIndex(x => x.classList.contains('rd')), r.length]; }));
+      if (t > 4 && seq[seq.length - 1][1] < 0) break; }
+    const order = []; seq.forEach(x => { if (x[1] >= 0 && order[order.length - 1] !== x[1]) order.push(x[1]); });
+    if (seq.some(x => x[0] > 1)) e.push('Review 1 全部的句子：同時亮不只一句');
+    if (order.join() !== [...Array(seq[0][2]).keys()].join()) e.push('Review 1 全部的句子：亮的順序不對（' + order.join(',') + '）');
+    if (seq[seq.length - 1][1] >= 0) e.push('Review 1 全部的句子：唸完還在亮');
+    acts++;
+  }
+  return acts;
 }
 async function cardsPage(p, f, vp, e) {
   const snap = () => p.evaluate(OVS => {
@@ -578,21 +620,11 @@ async function cardsPage(p, f, vp, e) {
     /* 複習題的 ➡（最後一張進複習題）上面 tqCheck 已經量過，這裡也關掉 */
     await p.evaluate(k => { window.crossTab = null; window.tqHas = function () { return false }; setDeck(k, 0); }, orig); await p.waitForTimeout(500);
   }
-  acts += await allCheck(p, e);
-  /* 2026-10-10 第 6 點：Review 1 全部的句子（rd:1）唸 1 次 ＝ 一句一句亮，同時只有一句亮，唸完全部恢復 */
-  const rdk = await p.evaluate(() => CARDS.findIndex(c => c.rd));
-  if (rdk >= 0) {
-    await p.evaluate(k => { document.body.classList.remove('reduce'); stopPlay(); i = k; draw(0); }, rdk); await p.waitForTimeout(2600);
-    await p.evaluate(() => sayCard()); const seq = [];
-    for (let t = 0; t < 70; t++) { await p.waitForTimeout(250);
-      seq.push(await p.evaluate(() => { const r = [...document.querySelectorAll('.frow')]; return [r.filter(x => x.classList.contains('rd')).length, r.findIndex(x => x.classList.contains('rd')), r.length]; }));
-      if (t > 4 && seq[seq.length - 1][1] < 0) break; }
-    const order = []; seq.forEach(x => { if (x[1] >= 0 && order[order.length - 1] !== x[1]) order.push(x[1]); });
-    if (seq.some(x => x[0] > 1)) e.push('Review 1 全部的句子：同時亮不只一句');
-    if (order.join() !== [...Array(seq[0][2]).keys()].join()) e.push('Review 1 全部的句子：亮的順序不對（' + order.join(',') + '）');
-    if (seq[seq.length - 1][1] >= 0) e.push('Review 1 全部的句子：唸完還在亮');
-    acts++;
-  }
+  { const st = await p.evaluate(() => ({ red: document.body.classList.contains('reduce'), t: window.TABM ? TCUR : -1, l: window.TABM ? LCUR : 0 }));
+    const decks = await p.evaluate(() => window.TABM ? [].concat.apply([], TABM.map((t, a) => t.sub ? t.sub.map((_, b) => [a, b]) : [[a, 0]])) : [null]);
+    const seen = {};
+    for (const d of decks) { if (d) await p.evaluate(d => setDeck(d[0], d[1]), d); acts += await deckChecks(p, e, seen); }
+    await p.evaluate(st => { stopPlay(); sayStop(); document.body.classList.toggle('reduce', st.red); if (st.t >= 0) setDeck(st.t, st.l); i = 0; draw(0); }, st); await p.waitForTimeout(300); }
   /* 縮寫動畫、比較（2026-10-07 使用者第 13、14 點，g34/_data.js）：沒有分頁、沒有情境，一張一張量 */
   if (await p.evaluate(() => /^(縮寫動畫|比較)$/.test(document.title.trim()))) return acts + await freeDeck(p, f, vp, e, snap);
   const first = await snap(); const N = first.n; let anyRed = false;

@@ -67,6 +67,8 @@ function collect(D, Q, G, TQ) {
     if (c.type === 'focus') { c.rows.forEach(r => add(spk(r[0]))); add(c.rows.map(r => spk(r[0])).join(' ')); add(c.rows.map(r => spk(r[0])).join(', ')); }
     if (c.type === 'echo') c.rows.forEach(r => { const vv = qaV(r.a); add(V(vv[0], r.q)); add(V(vv[1], r.a)); add(r.q); add(r.a); r.q.split(' ').concat(r.a.split(' ')).forEach(add); });
     if (c.type === 'order') { add(c.say); c.enRow.forEach((x, n) => add(CON.test(x[0]) && n ? c.enRow[n - 1][0] + "'" + x[0].slice(1) : x[0])); }
+    /* 可以換字的中英語序卡（2026-10-10，enRow 第 4 格 ＝ slot）：每一個替換字的整句、單字 */
+    if (c.type === 'order') c.enRow.filter(x => x[3]).forEach(x => choices(x[3]).forEach(w => { add(c.say.split(x[0]).join(w[0])); add(w[0]); }));
     const s = c.scene;
     if (s) { const vv = s.b2 ? qaV(s.b2) : ['', '']; if (!s.bzh) { add(s.b); add(V(vv[0], s.b)); } if (s.b2) { add(s.b2); add(V(vv[1], s.b2)); } }
   });

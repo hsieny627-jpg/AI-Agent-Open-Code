@@ -440,6 +440,9 @@ body.hastabs #stage{padding-top:calc(var(--safeT) + var(--tabH,48px) + clamp(26p
  opacity:0;animation:rowIn .48s cubic-bezier(.2,.9,.3,1.25) forwards}
 @keyframes rowIn{from{opacity:0;transform:translateY(20px) scale(.94)}to{opacity:1;transform:none}}
 .reduce .frow{opacity:1;animation:none}
+/* 唸到哪一句那一句才放大變亮（rd:1，2026-10-10 第 6 點）：動畫已經演完，關掉進場動畫才改得動亮度和大小 */
+.focus.rding .frow{animation:none;opacity:1;filter:brightness(.45);transition:filter .25s,transform .25s,border-color .25s}
+.focus.rding .frow.rd{filter:brightness(1.3);transform:scale(1.05);border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,210,74,.45)}
 .frow .fi{font-size:clamp(26px,4.2vh,44px);flex:0 0 auto;width:1.5em;text-align:center}
 .frow .fa{font-size:clamp(23px,4.3vh,44px);font-weight:700;flex:0 0 auto}
 .frow .fb{font-size:clamp(19px,3.4vh,34px);color:var(--acc);flex:1 1 auto;text-align:right}
@@ -549,6 +552,13 @@ body.hastabs #stage{padding-top:calc(var(--safeT) + var(--tabH,48px) + clamp(26p
 .chip.lp{background:#FFDCE8;color:#4A0E26}
 .chip.gr{background:#1E9E62;color:#fff}
 .chip.v{background:#7A4DFF;color:#fff}
+.chip.g2{background:#4A4F5C;color:#fff}   /* 2026-10-10：a ＝ 一位（中英語序新卡，跟別的顏色分得開） */
+/* 2026-10-10 第 3 點 C・D：第一個字母、句點／問號放大變亮再變回來 */
+.cap1{display:inline-block;transform-origin:50% 80%}
+.capgo{animation:capPop 1.2s ease}
+@keyframes capPop{0%{transform:none}30%,55%{transform:scale(1.75);text-shadow:0 0 6px #fff,0 0 18px rgba(255,210,74,.95)}100%{transform:none}}   /* 不換顏色：黃底的 Is 換成金色會看不見 */
+.ppgo{display:inline-block;animation:ppPop 1.3s ease}
+@keyframes ppPop{0%{transform:none}30%,55%{transform:scale(2.4);filter:brightness(1.7);color:#FFD24A;text-shadow:0 0 18px rgba(255,210,74,.85)}100%{transform:none}}
 /* 底色上的不發音字母：淺灰會糊掉（are 的 e 在黃底上看不清楚），改成跟底色對比夠的半透明 */
 .chip.y .sil,.chip.lp .sil,.tk.y .en .sil,.tk.lp .en .sil,.key.lp .sil{color:rgba(0,0,0,.42)}
 .chip.b .sil,.chip.p .sil,.chip.r .sil,.chip.gr .sil,.chip.v .sil,.tk.b .en .sil,.tk.p .en .sil,.key.b .sil,.key.p .sil{color:rgba(255,255,255,.55)}
@@ -1569,6 +1579,7 @@ function draw(dir){
           return c.enTop?er+zr:zr+er})()+
       '</div><button class="swapbtn" id="ordGo">🔁 再演一次</button>'+
       '</div>'+noteHTML(c.note);
+    subs=c.enRow.some(function(x){return x[3]})?subsHTML(c.enRow.filter(function(x){return x[3]})[0][3]):'';   /* 2026-10-10：可以換字的中英語序卡 */
   } else if(c.type==='focus'&&c.eqRow){
     kind='秒懂重點';
     /* 2026-09-25 使用者指定：①一次出現一個英文字，英文出來以後才出現它的中文
@@ -1794,6 +1805,7 @@ function playOrder(){
     if(i!==myI)return;
     if(k>=zc.length){k=0;morT.push(setTimeout(eStep,500));return}
     var z=zc[k++];z.classList.remove('zin');
+    if(k===1&&z.classList.contains('ce'))capPop(z);   /* 上英文的卡：第一個英文字一出來就提醒大寫 */
     var t=z.getAttribute('data-say')||'';
     if(/[一-鿿]/.test(t)){var d=0,nx=function(){if(d)return;d=1;morT.push(setTimeout(zStep,180))};
       sayZh(t,{keep:1,done:nx});morT.push(setTimeout(nx,1500))}
@@ -1805,6 +1817,7 @@ function playOrder(){
     if(i!==myI)return;
     if(k>=ec.length){morT.push(setTimeout(function(){if(i===myI)sayOrd(EC,{keep:1})},600));return}
     var c=ec[k++], col=c.getAttribute('data-c'), src=null, used=0;
+    if(k===1&&c.classList.contains('ce')){var c1=c;morT.push(setTimeout(function(){capPop(c1)},760))}
     for(var j=0;j<zc.length;j++)if(zc[j].getAttribute('data-c')===col){src=zc[j];break}
     var kk=parseFloat(card.getAttribute('data-k')||'1')||1;
     if(src){var a=src.getBoundingClientRect(), b=c.getBoundingClientRect();
@@ -1825,10 +1838,26 @@ function playOrder(){
 }
 /* 整句唸的時候，唸到哪一個英文字，它和它的中文（同一個顏色）一起放大變亮（使用者 2026-09-26 指定）
    What’s 是一個聲音：先亮 What ＋ 什麼，再亮 ’s ＋ 是 */
+/* 2026-10-10 使用者第 3 點 C・D（中英語序全部的卡）：
+   C 英文句子一開始唸 ➜ 第一個字的第一個字母放大、變亮，再變回來（提醒：英文句子第一個字母要大寫）
+   D 句子唸完 ➜ 句點／問號放大、變亮，再變回來（提醒：句子結束要加句點、問號） */
+function capPop(el){
+  if(!el||document.body.classList.contains('reduce'))return;
+  var t=$('.cen',el)||$('.en',el)||el, f=null, n=t.firstChild;
+  if(n&&n.nodeType===1&&n.textContent.length===1)f=n;
+  else if(n&&n.nodeType===3&&n.nodeValue){f=document.createElement('b');f.textContent=n.nodeValue.charAt(0);n.nodeValue=n.nodeValue.slice(1);t.insertBefore(f,n)}
+  if(!f)return;f.classList.add('cap1');f.classList.remove('capgo');void f.offsetWidth;f.classList.add('capgo');
+}
+function punctPop(el){
+  if(!el||document.body.classList.contains('reduce'))return;
+  var t=$('.cen',el)||$('.en',el)||el;if(!/^[.?!]$/.test((t.textContent||'').trim()))return;
+  t.classList.remove('ppgo');void t.offsetWidth;t.classList.add('ppgo');
+}
 function sayOrd(ec,opt){
   opt=opt||{};var lt=null;
   var off=function(){if(lt){clearTimeout(lt);lt=null}$$('.ordgrid .chip.lnk',card).forEach(function(x){x.classList.remove('lnk')})};
-  sayEls(ec,{keep:opt.keep,done:function(){off();if(opt.done)opt.done()},onk:function(gi,G){
+  capPop(ec[0]);   /* 2026-10-10 第 3 點：句子一開始唸，第一個字母放大變亮（提醒大寫） */
+  sayEls(ec,{keep:opt.keep,done:function(){off();punctPop(ec[ec.length-1]);if(opt.done)opt.done()},onk:function(gi,G){
     if(lt){clearTimeout(lt);lt=null}
     if(!G){off();return}
     var cols=G.els.map(function(e){return e.getAttribute('data-c')});
@@ -2033,6 +2062,7 @@ function sentOf(){
 function sayCard(opt){
   opt=opt||{};
   var c=CARDS[i], A=function(sel){return $$(sel,card)};
+  if(c.type==='swap')capPop($('#cardIn .line .tk'));   /* 2026-10-10 第 3 點 C：中英語序分頁的變身術也提醒大寫 */
   if(c.type==='sent'||c.type==='swap'||c.type==='swapdemo'){var bv=c.type==='sent'?boyV(plain(c.tk)):undefined;sayEls(A('#cardIn .line .tk'),bv?Object.assign({},opt,{v:bv}):opt);return}
   /* all:1 ＝ 每一句都唸（使用者 2026-09-26 指定：I am ten years old. ＝ I’m ten years old. 兩句都要唸） */
   /* 2026-10-04 使用者指定：兩行、三行英文的卡（等句、縮寫），唸 1 次／唸 3 次每一行都唸（原本只有 all:1 的卡） */
@@ -2050,6 +2080,12 @@ function sayCard(opt){
         done:function(){if(k<rs.length)morT.push(setTimeout(nx,600));else nx()}})};
     nx();return}
   if(c.type==='order'){sayOrd(A('.chip.ce'),opt);return}
+  /* Review 1 全部的句子（卡片寫 rd:1，2026-10-10 使用者第 6 點）：一句一句唸，唸到哪一句那一句（圖示、英文、中文）才放大變亮，其他句變暗 */
+  if(c.type==='focus'&&c.rd){var rs=A('.frow'),k=0,myI=i,bx=$('.focus',card);if(bx)bx.classList.add('rding');
+    var nx=function(){rs.forEach(function(r){r.classList.remove('rd')});if(i!==myI)return;
+      if(k>=rs.length){if(bx)bx.classList.remove('rding');if(opt.done)opt.done();return}
+      var r=rs[k++];r.classList.add('rd');sayEls([$('.fa',r)],{keep:k>1?1:opt.keep,done:function(){morT.push(setTimeout(nx,450))}})};
+    nx();return}
   if(c.type==='focus'){sayEls(A(c.eqRow?'.fgrid .fa':'.frow .fa'),opt);return}
   /* 他問他答：一列唸完，停 1 秒，才唸下一列（使用者 2026-09-25 指定：He’s ______. 唸完等一秒才唸 Who’s she?） */
   if(c.type==='echo'){var rs=A('.erow'),k=0,myI=i;
@@ -2167,6 +2203,9 @@ function tkLists(c){
   return c.tk?[c.tk]:[];
 }
 function curSlot(k){
+  /* 中英語序卡（order）也可以換字（2026-10-10 第 3 點 Q4）：enRow／zhRow 第 4 格 ＝ slot */
+  if(CARDS[i].type==='order'){var oc=CARDS[i],e=null,z=null;oc.enRow.forEach(function(x){if(x[3])e=x});oc.zhRow.forEach(function(x){if(x[3])z=x});
+    return e?{en:e[0],zh:z?z[0]:'',slot:e[3]}:null}
   var L=tkLists(CARDS[i]),multi=!!CARDS[i].slots;
   for(var a=0;a<L.length;a++)for(var n=0;n<L[a].length;n++)if(L[a][n].slot&&(!multi||!k||L[a][n].slot===k))return L[a][n];
   return null;
@@ -2178,6 +2217,9 @@ function setSlot(w,z,ic,k){
   var c=CARDS[i];
   if(!c.slots)k=null;
   var s0=curSlot(k), oldEn=s0?s0.en:'', oldZh=s0?s0.zh:'';
+  if(c.type==='order'){if(!s0)return;
+    c.enRow.forEach(function(x){if(x[3]){x[0]=w;x[1]=ic}});c.zhRow.forEach(function(x){if(x[3]){x[0]=z;x[1]=ic}});
+    if(c.say)c.say=rep(c.say,oldEn,w);draw(0);return}   /* 換完重新演一次（中文、英文、整句都換） */
   if(c.type==='pair'&&s0){       /* 換掉的字在問句還是答句，那一邊的圖示就跟著換 */
     if(c.qtk.indexOf(s0)>=0)c.qic=ic;else c.aic=ic;
   }
@@ -2265,6 +2307,7 @@ function doSwap(auto){
   sPop();
   step=now.length;
   setTimeout(function(){if(CARDS[i]!==c)return;
+    capPop($('#cardIn .line .tk'));
     sayEls($$('#cardIn .line .tk'),{done:function(){if(PUNC!=='first')setTimeout(punc,120)}});
     if(PUNC!=='first')morT.push(setTimeout(punc,5200));      /* 瀏覽器沒有回報唸完，最多等 5.2 秒 */
   },document.body.classList.contains('reduce')?60:700);

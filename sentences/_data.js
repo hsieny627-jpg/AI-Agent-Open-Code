@@ -570,6 +570,26 @@ U2T.p3 = [
 U1[6]=copy(U1[6],'he','father'); U1[11]=copy(U1[11],'she','mother'); U2[2]=copy(U2[2],'job','doctor'); U2[11]=copy(U2[11],'job','teacher');
 /* 中英語序：原本上中文、下英文；下一頁「上英文、下中文」（2026-10-04 使用者指定） */
 var ENTOP = function(c){return Object.assign({},c,{enTop:1})};
+/* 2026-10-10 使用者第二批第 3 點：Unit 2「1-3 中英語序」最後加 4 頁（四年級網站＋四年級在家複習）
+   ① He is a teacher.／他 是 一位 老師。（上英文）② Is he a teacher?／他 是 一位 老師 嗎？（上英文）
+   ③ 她 是 一位 護理師。／She is a nurse.（上中文）④ 她 是 一位 護理師 嗎？／Is she a nurse?（上中文）
+   He／他 藍、is／是 黃、She／她 玫瑰紅（Q11 ①：跟 Unit 2 的 she 一樣）；a／一位、職業各自一個顏色（同一個顏色 ＝ 同一個意思，字才飛得到自己的位置）。
+   問句照中文順序排、字飛到自己的位置（Q6 ①）；下面列職業替換字（Q4 ①，第 4 格 'job'）。 */
+var OJ = function (job, zh, ic) { return [job, ic, 'v', 'job']; }, OZ = function (zh, ic) { return [zh, ic, 'v', 'job']; };
+var ORD2 = [
+  {type:'order', enTop:1, say:'He is a teacher.',
+   enRow:[['He',ICON.he,'b'],['is',ICON.is,'y'],['a',ICON.a,'g2'],OJ('teacher','老師',ICON.teacher),['.','','g']],
+   zhRow:[['他',ICON.he,'b'],['是',ICON.is,'y'],['一位',ICON.a,'g2'],OZ('老師',ICON.teacher),['。','','g']]},
+  {type:'order', enTop:1, say:'Is he a teacher?',
+   enRow:[['Is',ICON.is,'y'],['he',ICON.he,'b'],['a',ICON.a,'g2'],OJ('teacher','老師',ICON.teacher),['?','','g']],
+   zhRow:[['他',ICON.he,'b'],['是',ICON.is,'y'],['一位',ICON.a,'g2'],OZ('老師',ICON.teacher),['嗎？','','g']]},
+  {type:'order', say:'She is a nurse.',
+   zhRow:[['她',ICON.she,'p'],['是',ICON.is,'y'],['一位',ICON.a,'g2'],OZ('護理師',ICON.nurse),['。','','g']],
+   enRow:[['She',ICON.she,'p'],['is',ICON.is,'y'],['a',ICON.a,'g2'],OJ('nurse','護理師',ICON.nurse),['.','','g']]},
+  {type:'order', say:'Is she a nurse?',
+   zhRow:[['她',ICON.she,'p'],['是',ICON.is,'y'],['一位',ICON.a,'g2'],OZ('護理師',ICON.nurse),['嗎？','','g']],
+   enRow:[['Is',ICON.is,'y'],['she',ICON.she,'p'],['a',ICON.a,'g2'],OJ('nurse','護理師',ICON.nurse),['?','','g']]}
+];
 var TABS1 = [
   {n:'1-1', lb:'Who’s he/she?', sub:[{lb:'基礎',cards:U1T.b11},{lb:'進階',cards:U1T.a11}]},
   {n:'1-2', lb:'中英語序', cards:[U1[7],ENTOP(U1[7]),U1[12],ENTOP(U1[12])]},
@@ -580,7 +600,7 @@ var TABS1 = [
 var TABS2 = [
   {n:'1-1', lb:'He/She is a ___.', sub:[{lb:'基礎',cards:U2T.b11},{lb:'進階',cards:U2T.a11}]},
   {n:'1-2', lb:'Is he/she a ___?', cards:U2T.q12},
-  {n:'1-3', lb:'中英語序', cards:[U2[3],U2[12]]},   /* 2026-10-10 使用者第 2 點：刪掉第 2、4 頁（上英文、下中文）；四年級在家複習也刪，三年級不刪 */
+  {n:'1-3', lb:'中英語序', cards:[U2[3],U2[12]].concat(ORD2)},   /* 2026-10-10 第二批第 3 點：最後加 4 頁（ORD2）；使用者第 2 點：刪掉第 2、4 頁（上英文、下中文）；四年級在家複習也刪，三年級不刪 */
   {n:'2', lb:'Yes／No', sub:[{lb:'基礎',cards:U2T.b2},{lb:'進階',cards:U2T.a2}]},
   {n:'3', lb:'一問一答', cards:U2T.p3},
   {n:'4', lb:'原本句型', cards:U2}
@@ -596,7 +616,7 @@ var RPAGES = [
           {n:'3', lb:'中英語序', cards:[U1[7],ENTOP(U1[7]),U1[12],ENTOP(U1[12])]}, {n:'4', lb:'縮寫動畫', cards:[U1[2],U1[5],U1[10]]}] },
   { file:'../g4-review/u2.html', unit:2, title:'四年級複習｜Unit 2 Is he a doctor?', other:'u1.html', otherName:'⬅ Unit 1', fix:RFIX,
     tabs:[{n:'1', lb:'He/She is a ___.', sub:[{lb:'基礎',cards:U2T.b11},{lb:'進階',cards:U2T.a11}]}, {n:'2', lb:'Yes／No', sub:[{lb:'基礎',cards:U2T.b2},{lb:'進階',cards:U2T.a2}]},
-          {n:'3', lb:'中英語序', cards:[U2[3],U2[12]]}, {n:'4', lb:'縮寫動畫', cards:[U2[1],U2[10],U2[7],U2[16]]}] }
+          {n:'3', lb:'中英語序', cards:[U2[3],U2[12]].concat(ORD2)}, {n:'4', lb:'縮寫動畫', cards:[U2[1],U2[10],U2[7],U2[16]]}] }
 ];
 var PAGES = [
   { file:'unit1.html', unit:1, title:'Unit 1 句型｜Who’s he? Who’s she?', other:'unit2.html', otherName:'➡ Unit 2', tabs:TABS1 },
