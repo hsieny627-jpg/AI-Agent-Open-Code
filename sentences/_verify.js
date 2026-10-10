@@ -515,7 +515,11 @@ async function cardsPage(p, f, vp, e) {
           const RED = col(document.querySelector('#cardIn .ap') || document.body);
           const first = r => r.querySelector('.tk .en');
           if (rows.length < 2) return ['等式卡不是兩行'];
+          /* 2026-10-10：量的時候第一行可能正在「唸到亮起來」（放大），先把放大拿掉、停掉轉場，量靜止的位置 */
+          const st = document.createElement('style'); st.textContent = '#cardIn *{transition:none!important;animation:none!important}'; document.head.appendChild(st);
+          const lit = [].slice.call(document.querySelectorAll('#cardIn .lit,#cardIn .spk')); lit.forEach(x => x.classList.remove('lit', 'spk')); void document.body.offsetWidth;
           const x0 = rows.map(r => L(first(r)));
+          st.remove();
           if (Math.max.apply(0, x0) - Math.min.apply(0, x0) > 1.5) out.push('等式卡每一行第一個字母沒有上下對齊（' + x0.map(Math.round).join('／') + '）');
           mk.forEach((m, n) => { const f = first(rows[n + 1]).getBoundingClientRect(), r = m.getBoundingClientRect();
             if (!(r.right <= f.left + 1 && Math.abs((r.top + r.bottom) / 2 - (f.top + f.bottom) / 2) < f.height)) out.push('等式卡第 ' + (n + 2) + ' 行的 ＝ 不在第一個單字左邊'); });
