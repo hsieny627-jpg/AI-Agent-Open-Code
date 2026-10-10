@@ -444,7 +444,7 @@ async function cardsPage(p, f, vp, e) {
           if (!rows[0].querySelector('.ri') && c.a.length === c.b.length) out.push('等式卡上面一行縮掉的字母沒有標紅色');
           const txt = plain(c.a), OK = /^(Who is (he|she)\?|What is your name\?|What is ______\?|(He|She) is ______\.)$/;
           const subs = [].slice.call(document.querySelectorAll('#card .subs .sub'));
-          if (!subs.length && !(OK.test(txt) && !/my/.test(JSON.stringify(c)))) out.push('等式卡下面沒有列替換字（' + txt + '）');
+          if (!subs.length && !(OK.test(txt) && JSON.stringify(c).indexOf('"ifSlot"') < 0)) out.push('等式卡下面沒有列替換字（' + txt + '）');
           if (subs.length && JSON.stringify(c).indexOf('"ifSlot"') >= 0) {
             const w0 = subs[0].getAttribute('data-w'); subs[0].click(); await new Promise(z => setTimeout(z, 300));
             const now = plain(CARDS[i].a);
