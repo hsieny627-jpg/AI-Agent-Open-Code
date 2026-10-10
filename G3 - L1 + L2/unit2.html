@@ -440,6 +440,9 @@ body.hastabs #stage{padding-top:calc(var(--safeT) + var(--tabH,48px) + clamp(26p
  opacity:0;animation:rowIn .48s cubic-bezier(.2,.9,.3,1.25) forwards}
 @keyframes rowIn{from{opacity:0;transform:translateY(20px) scale(.94)}to{opacity:1;transform:none}}
 .reduce .frow{opacity:1;animation:none}
+/* 唸到哪一句那一句才放大變亮（rd:1，2026-10-10 第 6 點）：動畫已經演完，關掉進場動畫才改得動亮度和大小 */
+.focus.rding .frow{animation:none;opacity:1;filter:brightness(.45);transition:filter .25s,transform .25s,border-color .25s}
+.focus.rding .frow.rd{filter:brightness(1.3);transform:scale(1.05);border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,210,74,.45)}
 .frow .fi{font-size:clamp(26px,4.2vh,44px);flex:0 0 auto;width:1.5em;text-align:center}
 .frow .fa{font-size:clamp(23px,4.3vh,44px);font-weight:700;flex:0 0 auto}
 .frow .fb{font-size:clamp(19px,3.4vh,34px);color:var(--acc);flex:1 1 auto;text-align:right}
@@ -2308,6 +2311,12 @@ function sayCard(opt){
         done:function(){if(k<rs.length)morT.push(setTimeout(nx,600));else nx()}})};
     nx();return}
   if(c.type==='order'){sayOrd(A('.chip.ce'),opt);return}
+  /* Review 1 全部的句子（卡片寫 rd:1，2026-10-10 使用者第 6 點）：一句一句唸，唸到哪一句那一句（圖示、英文、中文）才放大變亮，其他句變暗 */
+  if(c.type==='focus'&&c.rd){var rs=A('.frow'),k=0,myI=i,bx=$('.focus',card);if(bx)bx.classList.add('rding');
+    var nx=function(){rs.forEach(function(r){r.classList.remove('rd')});if(i!==myI)return;
+      if(k>=rs.length){if(bx)bx.classList.remove('rding');if(opt.done)opt.done();return}
+      var r=rs[k++];r.classList.add('rd');sayEls([$('.fa',r)],{keep:k>1?1:opt.keep,done:function(){morT.push(setTimeout(nx,450))}})};
+    nx();return}
   if(c.type==='focus'){sayEls(A(c.eqRow?'.fgrid .fa':'.frow .fa'),opt);return}
   /* 他問他答：一列唸完，停 1 秒，才唸下一列（使用者 2026-09-25 指定：He’s ______. 唸完等一秒才唸 Who’s she?） */
   if(c.type==='echo'){var rs=A('.erow'),k=0,myI=i;

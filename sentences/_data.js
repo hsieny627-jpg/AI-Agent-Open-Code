@@ -461,7 +461,8 @@ var SCR4 = [
 ];
 RV4C.forEach(function (c, i) { c.scene = SCR4[i]; });
 /* 第一頁：這個主題全部的英文句子，學生先讀過整體（2026-10-04 使用者指定） */
-RV4C.unshift({type:'focus', kind:R4, title:'Review 1 全部的句子',
+RV4C.unshift({type:'focus', kind:R4, title:'Review 1 全部的句子', rd:1,   /* 2026-10-10 第 6 點：唸到哪一句那一句才放大變亮 */
+ 
   rows:[['My name is ______.','我的名字是 ______。',ICON.my],['This is my ______.','這是我的 ______。','👇'],['He’s a ______.','他是一位 ______。',ICON.he],
         ['He likes ______,','他喜歡 ______，','❤️'],['and I like ______.','而且我喜歡 ______。','➕'],['He can ______,','他會 ______，','💪'],['and I can ______.','而且我會 ______。','➕']]});
 var RVR4 = [

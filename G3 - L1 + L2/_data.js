@@ -529,7 +529,8 @@ var SCR1 = [
 ];
 RV1C.forEach(function (c, i) { c.scene = SCR1[i]; });
 /* 第一頁：這個主題全部的英文句子，學生先讀過整體（2026-10-04 使用者指定） */
-RV1C.unshift({type:'focus', kind:R1K, title:'Review 1 全部的句子',
+RV1C.unshift({type:'focus', kind:R1K, title:'Review 1 全部的句子', rd:1,   /* 2026-10-10 第 6 點：唸到哪一句那一句才放大變亮 */
+ 
   rows:[['Hi.','嗨。','👋'],['My name is ______.','我的名字是 ______。',ICON.name],['I’m ______ years old.','我 ______ 歲。',ICON.howold],
         ['I like ______.','我喜歡 ______。','❤️'],['I like to ______.','我喜歡 ______。','❤️'],['How about you?','你呢？','💭']]});
 var RVR1 = [

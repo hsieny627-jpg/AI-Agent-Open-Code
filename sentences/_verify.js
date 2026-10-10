@@ -579,6 +579,20 @@ async function cardsPage(p, f, vp, e) {
     await p.evaluate(k => { window.crossTab = null; window.tqHas = function () { return false }; setDeck(k, 0); }, orig); await p.waitForTimeout(500);
   }
   acts += await allCheck(p, e);
+  /* 2026-10-10 第 6 點：Review 1 全部的句子（rd:1）唸 1 次 ＝ 一句一句亮，同時只有一句亮，唸完全部恢復 */
+  const rdk = await p.evaluate(() => CARDS.findIndex(c => c.rd));
+  if (rdk >= 0) {
+    await p.evaluate(k => { document.body.classList.remove('reduce'); stopPlay(); i = k; draw(0); }, rdk); await p.waitForTimeout(2600);
+    await p.evaluate(() => sayCard()); const seq = [];
+    for (let t = 0; t < 70; t++) { await p.waitForTimeout(250);
+      seq.push(await p.evaluate(() => { const r = [...document.querySelectorAll('.frow')]; return [r.filter(x => x.classList.contains('rd')).length, r.findIndex(x => x.classList.contains('rd')), r.length]; }));
+      if (t > 4 && seq[seq.length - 1][1] < 0) break; }
+    const order = []; seq.forEach(x => { if (x[1] >= 0 && order[order.length - 1] !== x[1]) order.push(x[1]); });
+    if (seq.some(x => x[0] > 1)) e.push('Review 1 全部的句子：同時亮不只一句');
+    if (order.join() !== [...Array(seq[0][2]).keys()].join()) e.push('Review 1 全部的句子：亮的順序不對（' + order.join(',') + '）');
+    if (seq[seq.length - 1][1] >= 0) e.push('Review 1 全部的句子：唸完還在亮');
+    acts++;
+  }
   /* 縮寫動畫、比較（2026-10-07 使用者第 13、14 點，g34/_data.js）：沒有分頁、沒有情境，一張一張量 */
   if (await p.evaluate(() => /^(縮寫動畫|比較)$/.test(document.title.trim()))) return acts + await freeDeck(p, f, vp, e, snap);
   const first = await snap(); const N = first.n; let anyRed = false;
