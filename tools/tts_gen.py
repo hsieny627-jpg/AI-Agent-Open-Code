@@ -55,6 +55,8 @@ def toks():
             if not l: continue
             p=l.rsplit(' ',1); TOK[int(p[1])]=p[0] if p[0] else ' '
     return TOK
+def SPACE_ID():
+    return [k for k,v in toks().items() if v==' '][0]
 def ids_of(text,sid):
     global DBG
     if DBG is None: DBG=mk_ko(debug=True)
@@ -65,7 +67,10 @@ def ids_of(text,sid):
     ids=[]
     for l in out.splitlines():
         l=l.strip()
-        if re.fullmatch(r'0( \d+)+ 0',l): ids+= [int(x) for x in l.split()][1:-1]
+        if re.fullmatch(r'0( \d+)+ 0',l):
+            sq=[int(x) for x in l.split()][1:-1]
+            if ids and toks().get(ids[-1])!=' ': ids.append(SPACE_ID())   # 兩句之間補一個空白（不然 ? 會黏到下一個字）
+            ids+=sq
     return ids
 A_WORD=re.compile(r"(^|[^A-Za-z'])[Aa]([^A-Za-z']|$)")
 def needs_schwa(text): return bool(A_WORD.search(text))
@@ -80,10 +85,14 @@ def schwa_ph(text,sid):
             if groups[-1]: groups.append([])
         else: groups[-1].append(c)
     if not groups[-1]: groups.pop()
-    if len(groups)!=len(words): return None
-    for w,g in zip(words,groups):
-        if w.lower()=='a':
-            tail=[c for c in g if c in PUNC]; g[:]=['ə']+tail
+    # 找「a」那一段：去掉重音記號和標點以後，音標 ＝ ɐ／ə／eɪ 的那一個字（YouTuber 這種字 espeak 會切成兩段，不靠字數對齊）
+    na=sum(1 for w in words if w.lower()=='a'); hit=[]
+    for g in groups:
+        core=''.join(c for c in g if c not in PUNC and c not in 'ˈˌ')
+        if core in ('ɐ','ə','eɪ'): hit.append(g)
+    if len(hit)!=na: return None
+    for g in hit:
+        tail=[c for c in g if c in PUNC]; g[:]=['ə']+tail
     out=[]
     for g in groups: out+= ([' '] if out else [])+g
     return out
