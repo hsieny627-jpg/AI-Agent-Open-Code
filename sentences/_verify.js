@@ -624,7 +624,7 @@ async function cardsPage(p, f, vp, e) {
     const decks = await p.evaluate(() => window.TABM ? [].concat.apply([], TABM.map((t, a) => t.sub ? t.sub.map((_, b) => [a, b]) : [[a, 0]])) : [null]);
     const seen = {};
     for (const d of decks) { if (d) await p.evaluate(d => setDeck(d[0], d[1]), d); acts += await deckChecks(p, e, seen); }
-    await p.evaluate(st => { stopPlay(); sayStop(); document.body.classList.toggle('reduce', st.red); if (st.t >= 0) setDeck(st.t, st.l); i = 0; draw(0); }, st); await p.waitForTimeout(300); }
+    await p.evaluate(st => { stopPlay(); sayStop(); ALLSET = 0; ALLKEEP = 0; document.body.classList.toggle('reduce', st.red); if (st.t >= 0) setDeck(st.t, st.l); i = 0; draw(0); }, st); await p.waitForTimeout(300); }
   /* 縮寫動畫、比較（2026-10-07 使用者第 13、14 點，g34/_data.js）：沒有分頁、沒有情境，一張一張量 */
   if (await p.evaluate(() => /^(縮寫動畫|比較)$/.test(document.title.trim()))) return acts + await freeDeck(p, f, vp, e, snap);
   const first = await snap(); const N = first.n; let anyRed = false;
