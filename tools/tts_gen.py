@@ -137,6 +137,7 @@ def mp3(samples,sr,path):
 #   § 開頭 ＝ 音標直接唸（單字卡音節動畫；Kokoro 的音標字元，同一套 espeak IPA）
 HF={}; HFTOK={}; PHZ=None
 HFBASE=0.95
+HFLEX={'taekwondo':'tˈaɪkwˈɑːndˈoʊ'}
 def hf_dir(v): return T+'/vits-piper-en_US-hfc_'+('male' if v==1 else 'female')+'-medium'
 def hf(v):
     if v not in HF:
@@ -192,7 +193,17 @@ def gen_hf(text,v,spd,ASR):
         return hf_raw(ph,v,spd),22050
     import stress
     if stress.has(text): text=stress.parse(text)[0]   # 不改音高：記號拿掉
-    ph=hf_a_fix(text); best=None
+    # 沒有句點／問號的（單字、片語）：模型最後一個音會被切掉（stuffed 聽成 stuff、pig 0/4 ➜ 加句點 4/4）➜ 唸的時候補一個句點
+    if re.search(r"[A-Za-z']$",text): text=text+'.'
+    ph=hf_a_fix(text)
+    # 字典改音（espeak 唸錯的字）：taekwondo ＝ /ˈtaɪˈkwɑːnˈdoʊ/（Merriam-Webster「tae kwon do」ˈtī-ˈkwän-ˈdō；espeak 唸成 tee-kwun-doh）
+    if any(w in text.lower() for w in HFLEX):
+        words=re.sub(r"[^A-Za-z0-9' ]",' ',text).split(); gs=(ph or phz(text)).split(' ')
+        if len(gs)==len(words):
+            for n,w in enumerate(words):
+                if w.lower() in HFLEX: gs[n]=HFLEX[w.lower()]+''.join(c for c in gs[n] if c in '.,?!')
+            ph=' '.join(gs)
+    best=None
     for tr in range(8):   # VITS 每次做出來會有一點不同：聽寫聽錯就重做（最多 8 次）
         if ph is not None: y,sr=hf_raw(ph,v,spd),22050
         else:
