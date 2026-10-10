@@ -21,10 +21,10 @@ function sayText(s) {
     .replace(/\s+/g, ' ').trim();
 }
 const akey = s => sayText(s).toLowerCase();
-const MODEL = 'k1c';   /* Kokoro v1.0（英文）＋ 2026-10-03 修好的剪靜音。瑞典文不變 */
+const MODEL = 'hfc1';   /* 2026-10-10 第二批 A 組：HiFi-Captain（使用者三次試聽選定，tools/tts_gen.py 的 hf）。以前 'k1c' ＝ Kokoro v1.0。瑞典文不變 */
 /* 2026-10-03 用語音辨識（tools/asr_check.py）比過 11 個美式聲音：句子每個都 100% 聽對；單獨一個字 af_bella 最準
    （af_heart 單字尾巴常多出雜音：pig 聽成 PEG PEG）。男聲 am_michael 單字、句子全對。 */
-const VOICE = { '': 2, m: 16 };   /* af_bella、am_michael（tools/tts_gen.py） */
+const VOICE = { '': 0, m: 1 };   /* 2026-10-10：hfc_female、hfc_male（以前 Kokoro af_bella ＝ 2、am_michael ＝ 16） */
 const vOf = k => (/^m:/.test(k) ? 'm' : '');
 let LANG = 'en';
 let SPEED = 1;
@@ -66,7 +66,7 @@ function pack(o) {
     if (!models) throw new Error('要做 ' + todo.length + ' 個新語音檔，但沒有設定 TTS_MODELS（模型資料夾），見 tools/tts_gen.py');
     const tmp = path.join(dir, '_todo.json');
     fs.writeFileSync(tmp, JSON.stringify(todo.map(k => LANG === 'sv' ? [fname(k), want[k]] : [fname(k), want[k], VOICE[vOf(k)], SPEED])));
-    cp.execFileSync('python3', [path.join(__dirname, 'tts_gen.py'), o.lang === 'sv' ? 'sv' : 'ko',
+    cp.execFileSync('python3', [path.join(__dirname, 'tts_gen.py'), o.lang === 'sv' ? 'sv' : 'hf',
       String(o.lang === 'sv' ? 0 : VOICE['']), tmp, dir], { stdio: 'inherit', env: process.env });
     const dur = JSON.parse(fs.readFileSync(path.join(dir, '_dur.json'), 'utf8'));
     todo.forEach(k => { old[k] = [fname(k) + '.mp3', dur[fname(k)]].concat(keep3(k) ? [want[k]] : []); });

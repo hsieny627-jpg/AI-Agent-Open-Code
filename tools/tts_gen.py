@@ -2,7 +2,8 @@
 #   英文：Kokoro v1.0（2026-10-03 升級：美式女聲 af_bella ＝ sid 2、美式男聲 am_michael ＝ sid 16，Apache-2.0；聲音由 tools/audio_pack.js 的 VOICE 決定）
 #         以前是 kokoro-en-v0_19 的 af_bella；舊模型還在的話設 TTS_KOKORO=v0_19 可以退回去
 #   瑞典文：Piper sv_SE-nst（KBLab／瑞典國家圖書館用瑞典母語者錄音 NST 訓練，CC0）
-# 用法：python3 tools/tts_gen.py ko|sv <speaker id> items.json <輸出資料夾>
+# 2026-10-10 起英文用 hf（HiFi-Captain，見下面「第二批 A 組」）；ko 留著可以退回 Kokoro
+# 用法：python3 tools/tts_gen.py hf|ko|sv <speaker id> items.json <輸出資料夾>
 #   items.json ＝ [[檔名, 文字, (聲音 sid，可省略)], ...]；輸出 <檔名>.mp3 ＋ _dur.json（每個檔幾秒）
 # 模型不放進 repo（太大）：環境變數 TTS_MODELS 指到放模型的資料夾，裡面要有
 #   kokoro-multi-lang-v1_0/  與  vits-piper-sv_SE-nst-medium/
@@ -128,8 +129,88 @@ def mp3(samples,sr,path):
     e=lameenc.Encoder();e.set_bit_rate(48);e.set_in_sample_rate(sr);e.set_channels(1);e.set_quality(2)
     open(path,'wb').write(e.encode(pcm)+e.flush())
     return len(a)/sr
+# ── 2026-10-10 第二批 A 組：全站英文改用 HiFi-Captain（Piper／VITS，日本 NICT 專業配音員錄音，CC BY-NC-SA 4.0）────────
+#   使用者三次試聽以後選定：女聲 ＝ hfc_female、男聲 ＝ hfc_male（Kokoro 改音高不及格、男聲喉音太重）。
+#   這兩個聲音的是非問句句尾**自己會往上**、How about you? 自己會往下 ➜ **不再改音高**：stress.py 的記號（+ - ~ ^ % ! / & @）一律拿掉、照原文唸。
+#   語速：試聽用 0.95 ➜ 全站 ✕0.95（單字卡 0.85 再 ✕0.95）。模型資料夾：vits-piper-en_US-hfc_female-medium、vits-piper-en_US-hfc_male-medium
+#   a 一律 ㄜ：句子中間的 a，espeak 的音標是 ɐ（模型唸 ㄜ）；句子停在 a（He's a ______.）是 ˈeɪ（ㄟ）➜ 換成 ɐ，再直接把音標送進模型（hf_raw）
+#   § 開頭 ＝ 音標直接唸（單字卡音節動畫；Kokoro 的音標字元，同一套 espeak IPA）
+HF={}; HFTOK={}; PHZ=None
+HFBASE=0.95
+def hf_dir(v): return T+'/vits-piper-en_US-hfc_'+('male' if v==1 else 'female')+'-medium'
+def hf(v):
+    if v not in HF:
+        d=hf_dir(v); onnx=[f for f in os.listdir(d) if f.endswith('.onnx')][0]
+        HF[v]=sherpa_onnx.OfflineTts(sherpa_onnx.OfflineTtsConfig(model=sherpa_onnx.OfflineTtsModelConfig(vits=sherpa_onnx.OfflineTtsVitsModelConfig(
+            model=d+'/'+onnx,tokens=d+'/tokens.txt',data_dir=d+'/espeak-ng-data'),num_threads=4)))
+    return HF[v]
+def hf_raw(ph,v,spd):
+    """音標（字串，一個字元一個音標，空白 ＝ 字和字中間）直接送進同一個 onnx：^ _ p _ p _ … $（Piper 的格式）"""
+    import onnxruntime as ort
+    if v not in HFTOK:
+        d=hf_dir(v); tok={}
+        for l in open(d+'/tokens.txt',encoding='utf8'):
+            l=l.rstrip('\n')
+            if not l: continue
+            q=l.rsplit(' ',1); tok[q[0] if q[0] else ' ']=int(q[1])
+        onnx=[f for f in os.listdir(d) if f.endswith('.onnx')][0]
+        HFTOK[v]=(tok,ort.InferenceSession(d+'/'+onnx))
+    tok,S=HFTOK[v]; ids=[tok['^'],tok['_']]
+    for c in ph:
+        if c in tok: ids+=[tok[c],tok['_']]
+    ids.append(tok['$'])
+    y=S.run(None,{'input':np.array([ids],dtype=np.int64),'input_lengths':np.array([len(ids)],dtype=np.int64),
+        'scales':np.array([0.667,1.0/spd,0.8],dtype=np.float32)})[0]
+    return np.asarray(y,dtype=np.float32).ravel()
+def phz(text):
+    global PHZ
+    if PHZ is None:
+        import espeakng_loader
+        from phonemizer.backend.espeak.wrapper import EspeakWrapper
+        EspeakWrapper.set_library(espeakng_loader.get_library_path()); EspeakWrapper.set_data_path(espeakng_loader.get_data_path())
+        from phonemizer import phonemize
+        PHZ=lambda t: phonemize(t,language='en-us',backend='espeak',with_stress=True,preserve_punctuation=True,strip=True)
+    return PHZ(text)
+def hf_a_fix(text):
+    """句子停在 a、或一整句只有 a 的那一格：音標 ˈeɪ ➜ ɐ。回傳要直接唸的音標；不用改就回 None"""
+    if not needs_schwa(text): return None
+    words=re.sub(r"[^A-Za-z0-9' ]",' ',text).split(); ph=phz(text); gs=ph.split(' ')
+    if len(gs)!=len(words): return None
+    ch=False
+    for n,w in enumerate(words):
+        if w.lower()=='a':
+            core=''.join(c for c in gs[n] if c not in 'ˈˌ.,?!;:')
+            if core=='eɪ': gs[n]=gs[n].replace('ˈ','').replace('ˌ','').replace('eɪ','ɐ'); ch=True
+    return ' '.join(gs) if ch else None
+def gen_hf(text,v,spd,ASR):
+    import asr_lib
+    spd=spd*HFBASE
+    if text.startswith('§'):   # 音節：照音標唸
+        # Kokoro 的音標有幾個自己的寫法（misaki）：I ＝ aɪ、O ＝ oʊ、A ＝ eɪ、W ＝ aʊ、Y ＝ ɔɪ、ʧ ＝ tʃ、ʤ ＝ dʒ、ᵊ ＝ ə
+        KM={'I':'aɪ','O':'oʊ','A':'eɪ','W':'aʊ','Y':'ɔɪ','ʧ':'tʃ','ʤ':'dʒ','ᵊ':'ə'}
+        ph=''.join(KM.get(c,c) for c in text[1:].split(' '))
+        return hf_raw(ph,v,spd),22050
+    import stress
+    if stress.has(text): text=stress.parse(text)[0]   # 不改音高：記號拿掉
+    ph=hf_a_fix(text); best=None
+    for tr in range(8):   # VITS 每次做出來會有一點不同：聽寫聽錯就重做（最多 8 次）
+        if ph is not None: y,sr=hf_raw(ph,v,spd),22050
+        else:
+            a=hf(v).generate(text,sid=0,speed=spd); y,sr=np.array(a.samples,dtype=np.float32),a.sample_rate
+        if best is None: best=(y,sr)
+        if (not ASR) or (not asr_lib.english(text)) or asr_lib.norm(asr_lib.hear(y,sr))==asr_lib.norm(text): return y,sr
+    print('⚠️ 聽寫 8 次都對不上（保留第一次）：'+text)
+    return best
 if __name__=='__main__':
     kind,sid0,items,outdir=sys.argv[1],int(sys.argv[2]),json.load(open(sys.argv[3])),sys.argv[4]
+    if kind=='hf':   # 2026-10-10：HiFi-Captain（item 第 3 格：0 ＝ 女聲、1 ＝ 男聲）
+        sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
+        import asr_lib
+        ASR=asr_lib.available(); res={}
+        for it in items:
+            key,text=it[0],it[1]; v=int(it[2]) if len(it)>2 else 0; spd=float(it[3]) if len(it)>3 else 1.0
+            y,sr=gen_hf(text,v,spd,ASR); res[key]=round(mp3(y,sr,os.path.join(outdir,key+'.mp3')),3)
+        json.dump(res,open(os.path.join(outdir,'_dur.json'),'w')); print('done',len(res)); sys.exit(0)
     tts=mk_ko() if kind=='ko' else mk_sv()
     res={}
     sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))

@@ -4,6 +4,9 @@
 
 使用者是國小英語教師。**這份規格是使用者反覆修正後的結果，不要自行「優化」。**
 
+> **2026-10-10 起全站英文語音 ＝ HiFi-Captain 女聲／男聲**（使用者三次試聽選定，不再改音高；`stress.py` 的記號照原文唸）。
+> 重做：`pip install sherpa-onnx lameenc numpy onnxruntime espeakng-loader phonemizer-fork`，下載 `vits-piper-en_US-hfc_female-medium`、`vits-piper-en_US-hfc_male-medium`（sherpa-onnx tts-models）、`sherpa-onnx-whisper-small.en`（asr-models）到 `$TTS_MODELS`，再跑各網站的 `_audio.js`。細節 `sentences/CLAUDE.md` 最上面「2026-10-10 第二批 A 組」。下面寫 Kokoro 的段落是以前的紀錄。
+
 ## 這是什麼
 
 一個單字一個獨立網頁，`words/<單字>.html`，單檔、零外部相依。

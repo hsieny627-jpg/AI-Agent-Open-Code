@@ -8,6 +8,9 @@
 語速六段、音效暫時刪除……全部適用，這一份只寫「這一課不一樣的地方」。
 
 
+> **2026-10-10 起全站英文語音 ＝ HiFi-Captain 女聲／男聲**（使用者三次試聽選定，不再改音高；`stress.py` 的記號照原文唸）。
+> 重做：`pip install sherpa-onnx lameenc numpy onnxruntime espeakng-loader phonemizer-fork`，下載 `vits-piper-en_US-hfc_female-medium`、`vits-piper-en_US-hfc_male-medium`（sherpa-onnx tts-models）、`sherpa-onnx-whisper-small.en`（asr-models）到 `$TTS_MODELS`，再跑各網站的 `_audio.js`。細節 `sentences/CLAUDE.md` 最上面「2026-10-10 第二批 A 組」。下面寫 Kokoro 的段落是以前的紀錄。
+
 ## 2026-10-07 改版（使用者 14 點；引擎、首頁、在家複習寫在 `sentences/CLAUDE.md` 最上面「2026-10-07」）
 
 這一課自己的：
