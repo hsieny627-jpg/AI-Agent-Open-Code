@@ -91,9 +91,10 @@ var CMP = [
          [t('How old', '幾歲', ICON.howold), ARE(K), t('you', '你', ICON.you, { hl: 'b', kw: 1 }), Q()]] },
   /* C. My name ／ Your name */
   { type: 'cmp', title: 'My name ／ Your name',
-    rows: [[t('My', '我的', ICON.my, { hl: 'b', kw: 1 }), t('name', '名字', ICON.name, K)],
+    /* 2026-10-10 使用者第 9(1) 點（Q8 ①）：My、Your 底色不同 ➜ My 淺粉（跟 I 一樣）、Your 藍（跟 You 一樣） */
+    rows: [[t('My', '我的', ICON.my, { hl: 'lp', kw: 1 }), t('name', '名字', ICON.name, K)],
            [t('Your', '你的', ICON.your, { hl: 'b', kw: 1 }), t('name', '名字', ICON.name, K)]],
-    ex: [[t('My', '我的', ICON.my, { hl: 'b', kw: 1 }), t('name', '名字', ICON.name, K), IS(), t('Ken', 'Ken', ICON.ken), DOT()],
+    ex: [[t('My', '我的', ICON.my, { hl: 'lp', kw: 1 }), t('name', '名字', ICON.name, K), IS(), t('Ken', 'Ken', ICON.ken), DOT()],
          [P.What(), S_(), t('your', '你的', ICON.your, { hl: 'b', kw: 1 }), t('name', '名字', ICON.name, K), Q()]] },
   /* D. How old ／ years old */
   { type: 'cmp', title: 'How old ／ years old',
@@ -116,10 +117,55 @@ var CMP = [
   { type: 'cmp', title: 'What ／ Who ／ Where ／ When ／ Why ／ How',
     rows: [[P.What(K), BL(), Q()], [P.Who(K), BL(), Q()], [P.Where(K), BL(), Q()],
            [P.When(K), BL(), Q()], [P.Why(K), BL(), Q()], [P.How(K), BL(), Q()]] },
-  { type: 'focus', eqRow: 1, left: 1, title: '問什麼？',
+  /* 2026-10-10 使用者第 9(2) 點（Q7 ①）：唸出母音的字母紅色（vr：第幾個字母）；Why 的 y、How 的 ow 也紅；
+     Where 最後的 e 不發音，照 SIL 淡灰（淡灰優先） */
+  { type: 'focus', eqRow: 1, left: 1, title: '問什麼？', vr: { What: [2], Who: [2], Where: [2], When: [2], Why: [2], How: [1, 2] },
     rows: [['What', '什麼', '📦', USE.what], ['Who', '誰', '❓', USE.who], ['Where', '哪裡', '📍', USE.where],
            ['When', '什麼時候', '⏰', USE.when], ['Why', '為什麼', '💡', USE.why], ['How', '怎麼樣', '🤔', USE.how]] }
 ];
+/* ════════ 2026-10-10 使用者第 9(3) 點：最後加 6 頁（What ×3、How、Where ×2）════════
+   每一個字下面中文＋圖示；一行一行出現、一行一行唸，唸到哪一個字那個字和它的中文一起放大變亮（每個字都是 kw）。
+   中文（Q9 ①）：What time ＝ 幾點、How often ＝ 多常、to the movies ＝ 看電影；it、the、do 沒有意思，空白（跟 I like to 的 to 一樣）。
+   How old 的 old 黃底（使用者指定）➜ How ＝ 幾、old ＝ 歲 分兩格。
+   How often do you go to movies? ➜ 加 the（查證：Longman「the movies」、Merriam-Webster「movie」、Google Ngram；需求檔第二節） */
+var KW = function (x) { x.kw = 1; return x; };
+var A = function (arr) { return arr.map(KW); };
+var BLK = function (en) { return t(en, '', ''); };
+var W2 = {
+  is: function () { return IS(); }, are: function () { return ARE(); },
+  your: function () { return t('your', '你的', ICON.your); }, name: function () { return t('name', '名字', ICON.name); },
+  this: function () { return t('this', '這個', '👉'); }, these: function () { return t('these', '這些', '👉👉'); },
+  you: function () { return t('you', '你', ICON.you, { hl: 'b' }); },
+  wtime: function () { return t('What time', '幾點', '🕒'); }
+};
+var CMP2 = [
+  { type: 'cmp', title: 'What ______?',
+    rows: [A([P.What(), BL(), Q()])],
+    ex: [A([P.What(), W2.is(), W2.your(), W2.name(), Q()]), A([P.What(), W2.is(), W2.this(), Q()]),
+         A([W2.wtime(), W2.is(), BLK('it'), Q()])] },
+  { type: 'cmp', title: 'What’s ______?',
+    rows: [A([P.What(), S_(), BL(), Q()])],
+    ex: [A([P.What(), S_(), W2.your(), W2.name(), Q()]), A([P.What(), S_(), W2.this(), Q()]),
+         A([W2.wtime(), W2.is(), BLK('it'), Q()])] },
+  { type: 'cmp', title: 'What ______?',
+    rows: [A([P.What(), BL(), Q()])],
+    ex: [A([P.What(), W2.is(), W2.this(), Q()]), A([P.What(), W2.are(), W2.these(), Q()])] },
+  { type: 'cmp', title: 'How ______?',
+    rows: [A([P.How(), BL(), Q()])],
+    ex: [A([P.How(), W2.are(), W2.you(), Q()]),
+         A([t('How', '幾', ICON.howold), t('old', '歲', '', { hl: 'y' }), W2.are(), W2.you(), Q()]),
+         A([P.How(), W2.is(), BLK('the'), t('weather', '天氣', '🌤️'), Q()]),
+         A([t('How often', '多常', '🔁'), BLK('do'), W2.you(), t('go', '去', '🚶'), t('to the movies', '看電影', '🎬'), Q()])] },
+  { type: 'cmp', title: 'Where ______?',
+    rows: [A([P.Where(), BL(), Q()])],
+    ex: [A([P.Where(), W2.are(), W2.you(), Q()]), A([P.Where(), IS(), t('he', '他', '👦', { hl: 'b' }), Q()]),
+         A([P.Where(), IS(), t('she', '她', '👧', { hl: 'lp' }), Q()]), A([P.Where(), IS(), t('Emma', 'Emma', '👧'), Q()])] },
+  { type: 'cmp', title: 'Where’s ______?',
+    rows: [A([P.Where(), S_(), BL(), Q()])],
+    ex: [A([P.Where(), W2.are(), W2.you(), Q()]), A([P.Where(), S_(), t('he', '他', '👦', { hl: 'b' }), Q()]),
+         A([P.Where(), S_(), t('she', '她', '👧', { hl: 'lp' }), Q()]), A([P.Where(), S_(), t('Emma', 'Emma', '👧'), Q()])] }
+];
+CMP = CMP.concat(CMP2);
 
 /* 頁面寫到兩個年級的資料夾：語音檔改用 g34/audio/；四年級那一份的頭像改用三年級的 avatars/ */
 var AUDT = '<script src="audio/aud.js"></script>';

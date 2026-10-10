@@ -272,7 +272,7 @@ async function freeDeck(p, f, vp, e, snap) {
   const N = await p.evaluate(() => CARDS.length);
   const T = await p.title();
   if (T === '縮寫動畫' && N !== 10) e.push('縮寫動畫不是 10 張（' + N + '）');
-  if (T === '比較' && N !== 12) e.push('比較不是 12 張（' + N + '）');
+  if (T === '比較' && N !== 18) e.push('比較不是 18 張（' + N + '）');   /* 2026-10-10 第 9(3) 點加 6 頁 */
   if (await p.$('#rvBtn')) e.push('多了 📝 複習按鈕（這兩頁沒有複習題）');
   const toc = await p.evaluate(() => { tocOpen(); const h = document.getElementById('tocH'), x = document.querySelector('#toc .tx');
     const r = { t: h.textContent, below: x.getBoundingClientRect().top >= h.getBoundingClientRect().bottom - 1 }; tocClose(); return r; });
@@ -286,7 +286,21 @@ async function freeDeck(p, f, vp, e, snap) {
     if (s.oy > 0) e.push(w + '縱向溢出 ' + s.oy);
     if (s.spill > 2) e.push(w + '內容超出卡片 ' + s.spill + 'px');
     if (s.hit) e.push(w + ' ' + s.hit);
-    if (s.k < 0.5) e.push(w + '被縮到 ' + s.k + '（字太小）');
+    /* 2026-10-10：比較第 16 張（How often do you go to the movies?，一行 1400px）直式 iPad 縮到 0.46，
+       但英文字實際 41px 高 ＝ 橫式所有比較卡的大小（42px）➜ 比較卡改量「英文實際多高」：≧ 38px 才算過 */
+    const enH = await p.evaluate(() => { const x = document.querySelector('#cardIn .cmp .tk .en'); return x ? x.getBoundingClientRect().height : 0; });
+    if (s.k < 0.5 && !(enH >= 38)) e.push(w + '被縮到 ' + s.k + '（字太小）');
+    /* 2026-10-10 第 9(2) 點：問什麼？的母音紅色（vr），Where 最後的 e 淡灰 */
+    const vr = await p.evaluate(() => { const c = CARDS[i]; if (!c.vr) return null; const out = [];
+      document.querySelectorAll('#cardIn .fa').forEach(a => { const w = a.textContent, want = c.vr[w] || [];
+        const got = [...a.querySelectorAll('.vw')].map(b => b.textContent).join('');
+        const exp = want.map(k => w.charAt(k)).filter((ch, n) => !(w === 'Where' && want[n] === 4)).join('');
+        if (got !== exp) out.push(w + ' 紅色字母 ' + got + '（應該 ' + exp + '）');
+        if (getComputedStyle(a.querySelector('.vw') || a).color !== 'rgb(255, 90, 90)' && exp) out.push(w + ' 不是紅色'); });
+      const wh = [...document.querySelectorAll('#cardIn .fa')].find(a => a.textContent === 'Where');
+      if (wh && !(wh.querySelectorAll('.sil').length === 2)) out.push('Where 的 h、最後的 e 不是淡灰');
+      return out; });
+    if (vr) vr.forEach(m => e.push(w + ' ' + m));
     const x = await p.evaluate(() => {
       const c = CARDS[i], out = [], L = (el) => el.getBoundingClientRect().left, has = (t, v) => !!((v && AUD[v + ':' + akey(t)]) || AUD[akey(t)]);
       const col = el => getComputedStyle(el).color;

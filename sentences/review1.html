@@ -541,6 +541,7 @@ body.hastabs #stage{padding-top:calc(var(--safeT) + var(--tabH,48px) + clamp(26p
 .eq .ri{color:var(--ap)}
 /* 一個字一張（What、is、your…）是單字：母音紅色，跟單字卡一樣（清單 Q8）*/
 #card.one .vw{color:#FF5A5A}
+.fgrid .fa .vw{color:#FF5A5A}
 .tk.lp .en{background:#F7A8C4;color:#3A0A1C;border-radius:10px;padding:0 .18em}
 /* 2026-09-25 使用者指定：「她」的底色跟「誰」太接近 ➜ 改成很淡的粉紅色 */
 .chip.lp{background:#FFDCE8;color:#4A0E26}
@@ -1526,6 +1527,11 @@ function enHTML(s,ri){
   }
   return out;
 }
+/* 母音字母紅色（2026-10-10 使用者第 9(2) 點；卡片寫 vr:{字:[第幾個字母]} 才開）：淡灰（不發音）優先 */
+function enV(s,ix){
+  var h=enHTML(s),k=-1;
+  return h.replace(/(<b class="[^"]*">.<\/b>)|([^<])/g,function(m,b,ch){k++;if(b)return b;return ix.indexOf(k)>=0?'<b class="vw">'+ch+'</b>':ch});
+}
 /* 縮寫動畫專用：紅色的字母原地讓位給紅色的 ’ */
 function morphEn(en,ri){
   var n=String(en).indexOf(ri);
@@ -1745,7 +1751,7 @@ function draw(dir){
     var hasU=c.rows.some(function(r){return r[3]});
     h='<div class="focus fq"><h2>'+ap(c.title)+'</h2><div class="fgrid'+(hasU?' hasu':'')+(c.left?' left':'')+'">'+c.rows.map(function(r,n){
       return '<span class="gi ic fh" data-r="'+n+'" data-p="0">'+r[2]+'</span>'+
-        '<span class="fa en fh" data-r="'+n+'" data-p="0" data-w="'+esc(spk(r[0]))+'" data-say="'+esc(spk(r[0]))+'">'+enHTML(r[0])+'</span>'+
+        '<span class="fa en fh" data-r="'+n+'" data-p="0" data-w="'+esc(spk(r[0]))+'" data-say="'+esc(spk(r[0]))+'">'+(c.vr&&c.vr[r[0]]?enV(r[0],c.vr[r[0]]):enHTML(r[0]))+'</span>'+
         '<span class="fe fh" data-r="'+n+'" data-p="1">＝</span>'+
         '<span class="fb zh fh" data-r="'+n+'" data-p="1" data-zh="'+esc(r[1])+'" data-en="'+esc(spk(r[0]))+'">'+ap(r[1])+'</span>'+
         (hasU?'<span class="fu" data-r="'+n+'">'+(r[3]?'<b data-zh="'+esc(r[3].u.replace(/[「」]/g,''))+'" data-en="'+esc(spk(r[0]))+'">'+r[3].u+'</b><span class="fv">'+(r[3].v||'')+'</span>':'')+'</span>':'');
