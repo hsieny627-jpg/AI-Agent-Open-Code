@@ -184,6 +184,8 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 
 .reduce *{animation:none!important;transition:none!important}
 
+/* ⚡ 全部出來（2026-10-10 第 10 點）：放在按鈕列第一排最右邊（字卡下方；不佔字卡的高度，字不會變小） */
+#bar #allGo{border-color:#5EE6F0;color:#D8FBFF}
 /* 一個字一張（2026-10-03）：字放大 */
 #card.one .tk .en{font-size:clamp(64px,17vh,170px)}
 #card.one .tk .zh{font-size:clamp(30px,6vh,60px)}
@@ -217,7 +219,7 @@ body.hastabs #stage{padding-top:calc(var(--safeT) + var(--tabH,48px) + clamp(26p
 #bar.cbar .r1{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
  align-items:center;gap:clamp(6px,1vw,12px)}
 #bar.cbar .r1 .L{justify-self:end}
-#bar.cbar .r1 .R{justify-self:start;display:inline-flex;gap:clamp(5px,.8vw,9px)}
+#bar.cbar .r1 .R{justify-self:start;display:inline-flex;gap:clamp(5px,.8vw,9px);flex-wrap:wrap;max-width:100%}   /* 2026-10-10：直式 iPad 放不下〔⚡ 全部出來〕就排到下一行 */
 #bar.cbar .r2{display:flex;flex-wrap:wrap;gap:clamp(4px,.7vh,7px);justify-content:center;align-items:center}
 #bar.cbar .r2 button,#bar.cbar .r2 a{font-size:clamp(11.5px,1.65vh,14.5px);padding:clamp(6px,.95vh,9px) clamp(6px,.8vw,12px)}
 #bar.cbar .r2 .grp button{font-size:clamp(11px,1.6vh,14px);padding:clamp(5px,.85vh,8px) clamp(5px,.7vw,10px)}
@@ -1014,7 +1016,7 @@ body.reduce .tqdone i{display:none}
    <button id="bIc" class="on">圖示 Y</button>
   </span>
   <button id="sayBtn" class="big">🔊 唸 1 次</button>
-  <span class="R"><button id="say3">🔊 唸 3 次</button><button id="play">▶ 自動播放</button></span>
+  <span class="R"><button id="say3">🔊 唸 3 次</button><button id="play">▶ 自動播放</button><button id="allGo">⚡ 全部出來</button></span>
  </div>
  <div class="r2">
  <button id="tocBtn">📑 目次</button>
@@ -1759,6 +1761,7 @@ function fullHTML(zh,en){
 function draw(dir){
   var c=CARDS[i], h='', kind='', subs='';
   step=0;clearAnim();
+  if(ALLKEEP)ALLKEEP=0;else if(ALLSET){ALLSET=0;if(!SYSRED)document.body.classList.remove('reduce')}   /* ⚡ 全部出來只管那一張 */
   if(c.type==='sent'){
     kind='句型';
     /* 整句發音一律照畫面上的字：畫面是 Who’s he? 就唸 Who’s he?，不可以唸成 Who is he?
@@ -2531,6 +2534,16 @@ function doSwap(auto){
   }
 }
 /* ⏱ 標點什麼時候放大：after ＝ 整句唸完才放大（預設）、first ＝ 一變身就先放大 */
+/* ⚡ 全部出來（2026-10-10 使用者第 10 點）：這一張卡的句子、中文、圖示立刻全部出現，不用等動畫（不唸）；
+   之後點字照樣會唸；換到下一張又是正常的動畫。做法：跟量測一樣用 .reduce 畫這一張（每一種卡本來就支援），換卡才拿掉 */
+var ALLSET=0,ALLKEEP=0,SYSRED=false;
+function showAll(){
+  if(!ALLSET)SYSRED=document.body.classList.contains('reduce');
+  stopPlay();sayStop();ALLKEEP=1;ALLSET=1;document.body.classList.add('reduce');
+  var rv=reveal;reveal='whole';draw(0);reveal=rv;clearAnim();step=$$('.tk',card).length;
+  var hint=$('#tapHint');if(hint)hint.classList.add('off');
+}
+(function(){var ag=document.getElementById('allGo');if(ag)ag.addEventListener('click',function(e){e.stopPropagation();showAll()})})();
 var PUNC=store('punc')==='first'?'first':'after';
 function puncLbl(){return PUNC==='first'?'⏱ 標點：先放大':'⏱ 標點：唸完才放大'}
 function puncToggle(){PUNC=PUNC==='first'?'after':'first';store('punc',PUNC);

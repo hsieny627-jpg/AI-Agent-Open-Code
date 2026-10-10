@@ -366,6 +366,29 @@ async function freeDeck(p, f, vp, e, snap) {
   acts += await rateBar(p, e);
   return acts;
 }
+/* 2026-10-10 第 10 點：〔⚡ 全部出來〕：每一種卡各按一次 ➜ 這一張全部看得見（沒有藏著的字、沒有透明的東西）、不唸、
+   按鈕 ≧ 48px、不壓到字卡和按鈕列；換下一張又是正常的動畫 */
+async function allCheck(p, e) {
+  const out = await p.evaluate(async () => {
+    const wait = ms => new Promise(r => setTimeout(r, ms)), o = [];
+    const g = document.getElementById('allGo'); if (!g) return ['沒有〔⚡ 全部出來〕'];
+    const seen = {}, ks = []; CARDS.forEach((c, k) => { const t = c.type + (c.one ? '1' : '') + (c.enTop ? 'E' : ''); if (!seen[t]) { seen[t] = 1; ks.push(k); } });
+    for (const k of ks) {
+      document.body.classList.remove('reduce'); stopPlay(); i = k; draw(0); await wait(150); g.click(); await wait(250);
+      const r = g.getBoundingClientRect(), c = document.getElementById('card').getBoundingClientRect(), b = document.getElementById('bar').getBoundingClientRect();
+      const s3 = document.getElementById('say3').getBoundingClientRect();
+      if (r.height < s3.height - 1) o.push('⚡ 按鈕比〔唸 3 次〕小（' + Math.round(r.height) + 'px）');
+      if (r.top < c.bottom - 1 || r.right > innerWidth || r.left < 0 || r.top < b.top - 1) o.push('⚡ 按鈕不在字卡下方的按鈕列（或超出螢幕）');
+      const bad = [...document.querySelectorAll('#cardIn .tk,#cardIn .chip,#cardIn .fgrid [data-p],#cardIn .crow,#cardIn .bub,#cardIn .erow,#cardIn .frow,#cardIn .full')]
+        .filter(x => !x.closest('.fu') && (x.classList.contains('hide') || parseFloat(getComputedStyle(x).opacity) < 0.6));
+      if (bad.length) o.push('第' + (k + 1) + '張（' + CARDS[k].type + '）按 ⚡ 以後還有 ' + bad.length + ' 個沒出現（' + (bad[0].className) + '）');
+      if (window.speechSynthesis && speechSynthesis.speaking) o.push('第' + (k + 1) + '張按 ⚡ 以後在唸');
+      if (k + 1 < CARDS.length) { i = k + 1; draw(0); await wait(60); if (document.body.classList.contains('reduce')) o.push('換下一張還是「全部出來」（動畫沒有回來）'); }
+    }
+    return o;
+  });
+  out.forEach(m => e.push(m)); return 1;
+}
 async function cardsPage(p, f, vp, e) {
   const snap = () => p.evaluate(OVS => {
     const ov = eval('(' + OVS + ')')();
@@ -555,6 +578,7 @@ async function cardsPage(p, f, vp, e) {
     /* 複習題的 ➡（最後一張進複習題）上面 tqCheck 已經量過，這裡也關掉 */
     await p.evaluate(k => { window.crossTab = null; window.tqHas = function () { return false }; setDeck(k, 0); }, orig); await p.waitForTimeout(500);
   }
+  acts += await allCheck(p, e);
   /* 縮寫動畫、比較（2026-10-07 使用者第 13、14 點，g34/_data.js）：沒有分頁、沒有情境，一張一張量 */
   if (await p.evaluate(() => /^(縮寫動畫|比較)$/.test(document.title.trim()))) return acts + await freeDeck(p, f, vp, e, snap);
   const first = await snap(); const N = first.n; let anyRed = false;
