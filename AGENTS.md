@@ -207,7 +207,8 @@
    ✅ 第 6 點（Review 1 第一頁唸到哪一句那一句才亮）、✅ 第 9 點（比較：My／Your 不同底色、母音紅色、加 6 頁，How often do you go to **the** movies? 已查證）、
    ✅ 第 10 點（每張句型卡〔⚡ 全部出來〕）。
    ✅ **第 1 點語音**：Kokoro 改音高三次試聽不及格 ➜ 使用者選定 **HiFi-Captain 女聲／男聲**（專業配音員錄音，問句句尾自己會往上，**不再改音高**），
-   **全站英文語音檔重做**（`tools/tts_gen.py` 的 `hf`、`tools/audio_pack.js` 的 `MODEL='hfc1'`；以後新教材自動用這個聲音）。➡️ 下一組 B（開場白在 `新對話開場白_修改教學網站.md` 最下面）。
+   **全站英文語音檔重做**（`tools/tts_gen.py` 的 `hf`、`tools/audio_pack.js` 的 `MODEL='hfc1'`；以後新教材自動用這個聲音）。
+   ❓ 等使用者用耳朵確認 3 個單字（電腦聽寫聽成別的字）：three（free）、aunt（and）、auntie ➜ https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-10-10_A4/➡️ 下一組 B（開場白在 `新對話開場白_修改教學網站.md` 最下面）。
 
 14. 📋 使用者開新對話修改教學網站時，用的開場白存在 `新對話開場白_修改教學網站.md`
    （讀哪一份規格、每一點寫哪一頁哪一張、看不懂先問、只量改到的頁、0 失敗才推 main）。
