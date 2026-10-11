@@ -21,7 +21,8 @@ NUM = {'0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four', '5': 'fiv
 SAME = [{'two', 'to', 'too'}, {'son', 'sun'}, {'four', 'for'}, {'eight', 'ate'}, {'one', 'won'}, {'i', 'eye'}, {'you', 'u'},
         {'whos', 'whose'}, {'hi', 'high'}, {'tv', 'tvs'}, {'mom', 'mum'}, {'okay', 'ok'}, {'youre', 'your'},
         {'lego', 'legos'}, {'pokemon', 'pokémon'}, {'write', 'right'}, {'park', 'part'}, {'kart', 'cart'}, {'tea', 't'}, {'see', 'c'},
-        {'taekwondo', 'tae kwon do'}, {'by', 'bye'}, {'aunt', 'ant'}]
+        {'taekwondo', 'tae kwon do'}, {'by', 'bye'}, {'aunt', 'ant'},
+        {'auntie', 'anti'}]   # 2026-10-11：auntie 和 anti 美式同音 /ˈænti/（Merriam-Webster），聽寫寫成 anti 不算錯
 CANON = {}
 for g in SAME:
     k = sorted(g)[0]

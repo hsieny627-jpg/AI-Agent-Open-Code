@@ -137,7 +137,8 @@ def mp3(samples,sr,path):
 #   § 開頭 ＝ 音標直接唸（單字卡音節動畫；Kokoro 的音標字元，同一套 espeak IPA）
 HF={}; HFTOK={}; PHZ=None
 HFBASE=0.95
-HFLEX={'taekwondo':'tˈaɪkwˈɑːndˈoʊ'}
+HFLEX={'taekwondo':'tˈaɪkwˈɑːndˈoʊ',
+       'three':'θθɹˈiː'}   # 2026-10-11 A2：θ 拉長（女聲 three 原本 8 次 6 次聽成 free）
 def hf_dir(v): return T+'/vits-piper-en_US-hfc_'+('male' if v==1 else 'female')+'-medium'
 def hf(v):
     if v not in HF:
@@ -183,7 +184,55 @@ def hf_a_fix(text):
             core=''.join(c for c in gs[n] if c not in 'ˈˌ.,?!;:')
             if core=='eɪ': gs[n]=gs[n].replace('ˈ','').replace('ˌ','').replace('eɪ','ɐ'); ch=True
     return ' '.join(gs) if ch else None
+# ── 2026-10-11 A2：使用者聽出來的三個字（three 像 free、aunt／auntie 要最精準、She's 的 Sh 像 Ch）─────────────
+#   VITS 每次做出來都有一點不同，問題是「有時候對、有時候不對」：電腦聽寫 three 女聲 8 次有 6 次聽成 free；
+#   aunt 最後的 t 有一半沒有爆破音（量高頻：0.001 ＝ 完全沒有 t，聽起來像 an／and）；女聲 She's 開頭的嘶聲 0.04 秒就衝到最大，
+#   跟 Ch（tʃ）幾乎一樣陡（男聲 0.06 秒）。做法：
+#   ① three ＝ θ 拉長（HFLEX 'θθɹˈiː'：8 次 7 次聽成 three），再聽寫確認
+#   ② 句子最後是 aunt：多做幾次，挑 t 爆破音最清楚的（a2_burst）；auntie：聽寫要聽成 auntie／anti（美式兩個同音）
+#   ③ 句子開頭是 She：多做幾次，挑開頭嘶聲上升最慢的（a2_rise，愈慢愈像 Sh），再在嘶聲開頭加 0.09 秒淡入（試過：真的 Ch 句子 30 次有 8 次被聽成 cheese，淡入 0.06 秒 7 次、0.09 秒 2 次；正常的 She's a nurse 30 次全對、不受影響）；
+#      兩句話、第二句才是 She's 的（No, she isn't. She's a cook.）：兩句分開做、中間停 0.3 秒，第二句也照這樣挑
+A2N=12          # 最多做幾次來挑
+A2SR=22050
+def _hfband(y,sr,ms,lo):
+    y=np.asarray(y,dtype=np.float32); f=int(ms/1000*sr); n=len(y)//f
+    if n<1: return np.zeros(1),np.zeros(1)
+    fr=np.fft.rfftfreq(f,1/sr); hb=[];al=[]
+    for i in range(n):
+        F=np.abs(np.fft.rfft(y[i*f:(i+1)*f])); hb.append(np.sqrt(np.sum(F[fr>lo]**2))); al.append(np.sqrt(np.sum(F**2)))
+    return np.array(hb),np.array(al)
+def a2_burst(y,sr=A2SR):
+    """最後一個音附近（0.15 秒內）3.5kHz 以上的嘶聲最大值 ÷ 整句最大音量：t 有爆破 ≈ 0.2～0.5，沒有 ≈ 0.00x"""
+    hb,al=_hfband(y,sr,10,3500); idx=np.where(al>al.max()*.02)[0]
+    if not len(idx): return 0.0
+    last=idx[-1]; return float(hb[max(0,last-15):last+1].max()/al.max())
+def a2_rise(y,sr=A2SR):
+    """開頭的嘶聲（2kHz 以上）從開始到 80% 要幾毫秒：Sh 慢慢變大、Ch 一下子衝上來"""
+    hb,_=_hfband(y,sr,4,2000)
+    if hb.max()<=0: return 0
+    i1=int(np.argmax(hb>hb.max()*.05)); w=hb[i1:i1+30]; return int(np.argmax(w>=w.max()*.8))*4
+def a2_fade(y,sr=A2SR,ms=90):
+    """嘶聲開頭 0.09 秒淡入（升餘弦）：把太陡的開頭磨圓，聽起來是 Sh 不是 Ch"""
+    y=np.array(y,dtype=np.float32); hb,_=_hfband(y,sr,4,2000)
+    i1=int(np.argmax(hb>hb.max()*.05))*int(.004*sr); n=int(ms/1000*sr)
+    if i1+n<len(y): y[i1:i1+n]*=(0.5-0.5*np.cos(np.linspace(0,np.pi,n))).astype(np.float32); y[:i1]=0
+    return y
+def a2_kind(text):
+    t=text.strip()
+    if re.match(r"^She\b",t): return 'she'
+    if re.search(r"\baunt[.?!]?$",t,re.I): return 'aunt'
+    return None
+def a2_trim(y,sr):
+    a=np.asarray(y,dtype=np.float32); pk=float(np.max(np.abs(a))) if len(a) else 0; idx=np.where(np.abs(a)>max(0.002,pk*0.015))[0]
+    return a[max(0,idx[0]-int(.03*sr)):min(len(a),idx[-1]+int(.05*sr))] if len(idx) else a
 def gen_hf(text,v,spd,ASR):
+    # ③ 兩句話、第二句以 She 開頭：分開做再接起來（第一句、第二句各自照規則挑）
+    m=re.match(r"^(.*?[.?!])\s+(She\b.*)$",text.strip())
+    if m and not text.startswith('§'):
+        a,sr=gen_hf(m.group(1),v,spd,ASR); b,_=gen_hf(m.group(2),v,spd,ASR)
+        return np.concatenate([a2_trim(a,sr),np.zeros(int(.3*sr),dtype=np.float32),a2_trim(b,sr)]),sr
+    return gen_hf1(text,v,spd,ASR)
+def gen_hf1(text,v,spd,ASR):
     import asr_lib
     spd=spd*HFBASE
     if text.startswith('§'):   # 音節：照音標唸
@@ -203,15 +252,27 @@ def gen_hf(text,v,spd,ASR):
             for n,w in enumerate(words):
                 if w.lower() in HFLEX: gs[n]=HFLEX[w.lower()]+''.join(c for c in gs[n] if c in '.,?!')
             ph=' '.join(gs)
-    best=None
-    for tr in range(8):   # VITS 每次做出來會有一點不同：聽寫聽錯就重做（最多 8 次）
+    best=None; kind=a2_kind(text); pick=None
+    # 單獨一個 aunt：聽寫一定聽成 and（單獨一個字，and 常見太多；aunt 跟 ant 美式同音），只看 t 的爆破音
+    solo=bool(re.fullmatch(r"(?i)aunt[.?!]?",text.strip()))
+    for tr in range(A2N if kind else 8):   # VITS 每次做出來會有一點不同：聽寫聽錯就重做（最多 8 次；A2 的字最多 12 次、挑最好的）
         if ph is not None: y,sr=hf_raw(ph,v,spd),22050
         else:
             a=hf(v).generate(text,sid=0,speed=spd); y,sr=np.array(a.samples,dtype=np.float32),a.sample_rate
         if best is None: best=(y,sr)
-        if (not ASR) or (not asr_lib.english(text)) or asr_lib.norm(asr_lib.hear(y,sr))==asr_lib.norm(text): return y,sr
-    print('⚠️ 聽寫 8 次都對不上（保留第一次）：'+text)
-    return best
+        ok=solo or (not ASR) or (not asr_lib.english(text)) or asr_lib.norm(asr_lib.hear(y,sr))==asr_lib.norm(text)
+        if not kind:
+            if ok: return y,sr
+            continue
+        if not ok: continue
+        sc=a2_burst(y,sr) if kind=='aunt' else a2_rise(y,sr)
+        if pick is None or sc>pick[0]: pick=(sc,y,sr)
+        if (kind=='aunt' and sc>=0.3) or (kind=='she' and sc>=80): break
+    if pick is not None:
+        y,sr=pick[1],pick[2]
+        return (a2_fade(y,sr) if kind=='she' else y),sr
+    print('⚠️ 聽寫 '+str(A2N if kind else 8)+' 次都對不上（保留第一次）：'+text)
+    return (a2_fade(*best),best[1]) if kind=='she' else best
 if __name__=='__main__':
     kind,sid0,items,outdir=sys.argv[1],int(sys.argv[2]),json.load(open(sys.argv[3])),sys.argv[4]
     if kind=='hf':   # 2026-10-10：HiFi-Captain（item 第 3 格：0 ＝ 女聲、1 ＝ 男聲）
