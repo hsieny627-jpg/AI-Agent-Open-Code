@@ -35,9 +35,9 @@
 
 | 字 | 原因（量出來的） | 做法（`tools/tts_gen.py`） | 使用者 |
 |---|---|---|---|
-| three | 女聲 th 太短，聽寫 8 次 6 次聽成 free | `HFLEX` three ＝ `θθθɹˈiː`（th 拉長） | A：OK |
+| three | 女聲 th 太短，聽寫 8 次 6 次聽成 free | `HFLEX` three ＝ `θθθɹˈiː`（th 拉長） | A：OK；男聲不用做（使用者最後確認） |
 | aunt | 最後的 t 一半沒有爆破（`a2_burst`：3.5 kHz 以上 ≈ 0.001） | 單獨的 aunt 做 12 次挑 t 最清楚的；聽寫一定聽成 and（單獨一個字），不看聽寫 | ① /ænt/（跟 ant 同音，Merriam-Webster 第一個；時光機已經這樣教） |
-| auntie | 中間的 t 有時候像 d | 聽寫要聽成 auntie／anti（`asr_lib.py` 加 auntie＝anti，美式同音） | ① /ˈænti/ |
+| auntie | 中間的 t 有時候像 d | 聽寫要聽成 auntie／anti（`asr_lib.py` 加 auntie＝anti，美式同音）；**轉成 mp3 以後要再聽一次**（試聽通過的那一個轉檔後聽成 empty，重做） | ① /ˈænti/；重做的那一個使用者說可以 |
 | She’s | 女聲開頭嘶聲 0.04 秒就衝到最大，跟 Ch 一樣陡 | 挑開頭上升最慢的（`a2_rise`）＋開頭 0.09 秒淡入（`a2_fade`）；**只用在**女聲 She’s my aunt.（`A2SHE`）和「兩句話、第二句是 She’s」的第二句（兩句分開做、中間停 0.3 秒） | 一句話的 She’s…、單獨的 She’s、She is…：**現在的比較好，不改**（不可以擴大到別的句子） |
 
 **以後**：要改哪一個字的音，先做試聽頁比「現在 vs 新的」，使用者說新的比較好才換；使用者通過的檔直接複製進去（重做會不一樣）。
