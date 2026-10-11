@@ -138,7 +138,7 @@ def mp3(samples,sr,path):
 HF={}; HFTOK={}; PHZ=None
 HFBASE=0.95
 HFLEX={'taekwondo':'tˈaɪkwˈɑːndˈoʊ',
-       'three':'θθɹˈiː'}   # 2026-10-11 A2：θ 拉長（女聲 three 原本 8 次 6 次聽成 free）
+       'three':'θθθɹˈiː'}   # 2026-10-11 A2：θ 拉長（女聲 three 原本 8 次 6 次聽成 free；θθ 使用者聽了還像 free ➜ θθθ，使用者試聽 A：OK）
 def hf_dir(v): return T+'/vits-piper-en_US-hfc_'+('male' if v==1 else 'female')+'-medium'
 def hf(v):
     if v not in HF:
@@ -190,7 +190,7 @@ def hf_a_fix(text):
 #   跟 Ch（tʃ）幾乎一樣陡（男聲 0.06 秒）。做法：
 #   ① three ＝ θ 拉長（HFLEX 'θθɹˈiː'：8 次 7 次聽成 three），再聽寫確認
 #   ② 句子最後是 aunt：多做幾次，挑 t 爆破音最清楚的（a2_burst）；auntie：聽寫要聽成 auntie／anti（美式兩個同音）
-#   ③ 句子開頭是 She：多做幾次，挑開頭嘶聲上升最慢的（a2_rise，愈慢愈像 Sh），再在嘶聲開頭加 0.09 秒淡入（試過：真的 Ch 句子 30 次有 8 次被聽成 cheese，淡入 0.06 秒 7 次、0.09 秒 2 次；正常的 She's a nurse 30 次全對、不受影響）；
+#   ③ 句子開頭是 She（只有使用者試聽選了新的那幾種，見 a2_kind）：多做幾次，挑開頭嘶聲上升最慢的（a2_rise，愈慢愈像 Sh），再在嘶聲開頭加 0.09 秒淡入（試過：真的 Ch 句子 30 次有 8 次被聽成 cheese，淡入 0.06 秒 7 次、0.09 秒 2 次；正常的 She's a nurse 30 次全對、不受影響）；
 #      兩句話、第二句才是 She's 的（No, she isn't. She's a cook.）：兩句分開做、中間停 0.3 秒，第二句也照這樣挑
 A2N=12          # 最多做幾次來挑
 A2SR=22050
@@ -217,22 +217,26 @@ def a2_fade(y,sr=A2SR,ms=90):
     i1=int(np.argmax(hb>hb.max()*.05))*int(.004*sr); n=int(ms/1000*sr)
     if i1+n<len(y): y[i1:i1+n]*=(0.5-0.5*np.cos(np.linspace(0,np.pi,n))).astype(np.float32); y[:i1]=0
     return y
-def a2_kind(text):
+# 使用者 2026-10-11 試聽以後的決定（sentences/2026-10-11_A2_需求與問題.md 第五節）：
+#   一句話的 She's…（She's a nurse.、單獨的 She's、男聲 She's my aunt.）和 She is…：**現在的比較好／比較自然 ➜ 不挑、不淡入**；
+#   只有女聲 She's my aunt.（使用者選 ② 新的）和「兩句話、第二句是 She's」的第二句（女聲男聲都選新的）才挑＋淡入
+A2SHE={"She's my aunt."}
+def a2_kind(text,v=0,second=False):
     t=text.strip()
-    if re.match(r"^She\b",t): return 'she'
-    if re.search(r"\baunt[.?!]?$",t,re.I): return 'aunt'
+    if re.match(r"^She's\b",t) and (second or (v==0 and t in A2SHE)): return 'she'
+    if re.fullmatch(r"(?i)aunt[.?!]?",t): return 'aunt'
     return None
 def a2_trim(y,sr):
     a=np.asarray(y,dtype=np.float32); pk=float(np.max(np.abs(a))) if len(a) else 0; idx=np.where(np.abs(a)>max(0.002,pk*0.015))[0]
     return a[max(0,idx[0]-int(.03*sr)):min(len(a),idx[-1]+int(.05*sr))] if len(idx) else a
 def gen_hf(text,v,spd,ASR):
     # ③ 兩句話、第二句以 She 開頭：分開做再接起來（第一句、第二句各自照規則挑）
-    m=re.match(r"^(.*?[.?!])\s+(She\b.*)$",text.strip())
+    m=re.match(r"^(.*?[.?!])\s+(She's\b.*)$",text.strip())
     if m and not text.startswith('§'):
-        a,sr=gen_hf(m.group(1),v,spd,ASR); b,_=gen_hf(m.group(2),v,spd,ASR)
+        a,sr=gen_hf(m.group(1),v,spd,ASR); b,_=gen_hf1(m.group(2),v,spd,ASR,second=True)
         return np.concatenate([a2_trim(a,sr),np.zeros(int(.3*sr),dtype=np.float32),a2_trim(b,sr)]),sr
     return gen_hf1(text,v,spd,ASR)
-def gen_hf1(text,v,spd,ASR):
+def gen_hf1(text,v,spd,ASR,second=False):
     import asr_lib
     spd=spd*HFBASE
     if text.startswith('§'):   # 音節：照音標唸
@@ -252,7 +256,7 @@ def gen_hf1(text,v,spd,ASR):
             for n,w in enumerate(words):
                 if w.lower() in HFLEX: gs[n]=HFLEX[w.lower()]+''.join(c for c in gs[n] if c in '.,?!')
             ph=' '.join(gs)
-    best=None; kind=a2_kind(text); pick=None
+    best=None; kind=a2_kind(text,v,second); pick=None
     # 單獨一個 aunt：聽寫一定聽成 and（單獨一個字，and 常見太多；aunt 跟 ant 美式同音），只看 t 的爆破音
     solo=bool(re.fullmatch(r"(?i)aunt[.?!]?",text.strip()))
     for tr in range(A2N if kind else 8):   # VITS 每次做出來會有一點不同：聽寫聽錯就重做（最多 8 次；A2 的字最多 12 次、挑最好的）

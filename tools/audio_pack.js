@@ -32,7 +32,10 @@ let SPEED = 1;
 /* 2026-10-10 使用者第 1、4 點：句子裡的 a 一律唸 ㄜ（/ə/）、是非問句不再硬拉高（tools/tts_gen.py 的 gen_schwa）。
    有 a 的句子雜湊多一段 |ə1 ➜ 只有這些重做，其他語音檔不動。以後新教材自動照這個規則做 */
 const SCHWA = k => /(^|[^a-z'])a([^a-z']|$)/.test(k.replace(/^m:/, '')) ? 'ə1|' : '';
-const fname = k => crypto.createHash('sha1').update(LANG === 'sv' ? k : MODEL + '|' + (SPEED !== 1 ? 's' + SPEED + '|' : '') + SCHWA(k) + k).digest('hex').slice(0, 12);
+/* 2026-10-11 A2（使用者試聽決定，sentences/2026-10-11_A2_需求與問題.md 第五節）：只有這幾種重做，其他語音檔不動
+   單字 three（th 拉長）、aunt（挑 t 最清楚）、auntie；女聲 She's my aunt.；兩句話、第二句是 She's 的（No, she isn't. She's a cook.） */
+const A2 = k => /^(three|aunt|auntie)$/.test(k) || k === "she's my aunt." || /[.?!] she's\b/.test(k) ? 'a2|' : '';
+const fname = k => crypto.createHash('sha1').update(LANG === 'sv' ? k : MODEL + '|' + (SPEED !== 1 ? 's' + SPEED + '|' : '') + SCHWA(k) + A2(k) + k).digest('hex').slice(0, 12);
 
 function pack(o) {
   const dir = o.dir, varName = o.varName || 'AUD';
@@ -81,4 +84,4 @@ function pack(o) {
     JSON.stringify(man) + ';\n');
   return { total: Object.keys(man).length, made: todo.length };
 }
-module.exports = { pack, sayText, akey };
+module.exports = { pack, sayText, akey, fname };
