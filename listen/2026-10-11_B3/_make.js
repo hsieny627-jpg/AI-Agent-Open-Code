@@ -1,4 +1,4 @@
-// 產生 listen/2026-10-11_B3/index.html（B3 選擇題的大字頁）
+// 產生 listen/2026-10-11_B3/r1.html（B3 選擇題的大字頁）
 const fs=require('fs');
 // 一格： [英文, 中文, 連在一起?]
 const W=(parts,join)=>'<span class="wd'+(join?' j':'')+'">'+parts.map(p=>'<span class="pc"><span class="e">'+p[0]+'</span><span class="z">'+p[1]+'</span></span>').join('')+'</span>';
@@ -142,4 +142,4 @@ ${BAD.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td class="small">'+r[2]+'</
 <h2>還有：男聲要先試聽</h2>
 <p>回覆以後，先做「男聲試聽頁」（12 個字和句子：女聲 vs 男聲），您聽過說 OK，才做 98 張卡全部的男聲。</p>
 </body></html>`;
-fs.writeFileSync('listen/2026-10-11_B3/index.html',h);
+fs.writeFileSync('listen/2026-10-11_B3/r1.html',h);
