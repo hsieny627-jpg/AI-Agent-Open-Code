@@ -208,7 +208,11 @@
    ✅ 第 10 點（每張句型卡〔⚡ 全部出來〕）。
    ✅ **第 1 點語音**：Kokoro 改音高三次試聽不及格 ➜ 使用者選定 **HiFi-Captain 女聲／男聲**（專業配音員錄音，問句句尾自己會往上，**不再改音高**），
    **全站英文語音檔重做**（`tools/tts_gen.py` 的 `hf`、`tools/audio_pack.js` 的 `MODEL='hfc1'`；以後新教材自動用這個聲音）。
-   ❓ 等使用者用耳朵確認 3 個單字（電腦聽寫聽成別的字）：three（free）、aunt（and）、auntie ➜ https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-10-10_A4/➡️ 下一組 B（開場白在 `新對話開場白_修改教學網站.md` 最下面）。
+   ❓ 等使用者用耳朵確認 3 個單字（電腦聽寫聽成別的字）：three（free）、aunt（and）、auntie ➜ https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-10-10_A4/ ➜ 2026-10-11 使用者：three 像 free、aunt／auntie 要最精準、She’s 的 Sh 像 Ch ➜ 第三批 A2 組修。（開場白在 `新對話開場白_修改教學網站.md` 最下面）。
+
+30. 🚧 2026-10-11：使用者聽完新聲音以後**第三批**（還沒動手）：原文＋分組 `sentences/2026-10-11_第三批_使用者原文.md`。
+   **A2 語音修正先做**（three 像 free、aunt／auntie 最精準、She’s 的 Sh 像 Ch）；在家複習 Unit 2 縮寫動畫刪第 4 頁 ➜ C；職業單字網站刪音效、職業興趣探索、職業代表人物短文 ➜ F；教師看板錯題分析 ➜ D。
+   開場白：`新對話開場白_修改教學網站.md` 最下面「2026-10-11 第三批」，一組一個新對話（A2 ➜ B ➜ C ➜ D ➜ E ➜ F）。
 
 14. 📋 使用者開新對話修改教學網站時，用的開場白存在 `新對話開場白_修改教學網站.md`
    （讀哪一份規格、每一點寫哪一頁哪一張、看不懂先問、只量改到的頁、0 失敗才推 main）。
