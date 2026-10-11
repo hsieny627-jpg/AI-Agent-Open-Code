@@ -505,6 +505,8 @@ SUB.liketo = { lb:'🔥 最愛', la:'✨ 還有',
 /* 替換字切換（2026-10-02）：📘 課本 ＝ 上面這 20 個；物品 1／物品 2、活動 1／活動 2 ＝ review1/ 的 98 個字（review1/_subsets.js） */
 SUB.like.sets = require('../review1/_subsets').SETS.like;
 SUB.liketo.sets = require('../review1/_subsets').SETS.liketo;
+/* play ＋ 球類：句型卡拆兩格 play／玩、basketball／籃球（2026-10-11 B 組 Q5 ②；只有用到替換字切換的 Review 1 頁會讀） */
+var GL = require('../review1/_subsets').GL;
 var R1K = '📝 Review 1';
 var RV1C = [
  {type:'sent', kind:R1K, zh:'嗨。', tk:[t('Hi','嗨','👋'),W.dot()]},
@@ -512,9 +514,9 @@ var RV1C = [
   tk:[W.My(),W.name(),W.is(),t('______','______','',{slot:'name',blank:1}),W.dot()]},
  {type:'sent', kind:R1K, zh:'我是 ______ 歲。', slot:'age3',
   tk:[W.I(),W.m(),t('______','______','',{slot:'age3',blank:1}),W.yo(),W.dot()]},
- {type:'sent', kind:R1K, zh:'我喜歡 ______。', slot:'like',
+ {type:'sent', kind:R1K, zh:'我喜歡 ______。', slot:'like', pick:1,
   tk:[W.I(),t('like','喜歡','❤️'),t('______','______','',{slot:'like',blank:1}),W.dot()]},
- {type:'sent', kind:R1K, zh:'我喜歡 ______。', slot:'liketo', note:'like to ＋ <b>動作</b>',
+ {type:'sent', kind:R1K, zh:'我喜歡 ______。', slot:'liketo', pick:1, note:'like to ＋ <b>動作</b>',
   tk:[W.I(),t('like','喜歡','❤️'),t('to','',''),t('______','______','',{slot:'liketo',blank:1}),W.dot()]},   /* 2026-10-04 使用者：to 下面不放中文 */
  {type:'sent', kind:R1K, zh:'你呢？',
   tk:[t('How','如何',ICON.how),t('about','關於','💭'),W.you(),W.q()]}
@@ -557,4 +559,4 @@ var TRX = { 'You are seven.':'你七歲。', "You're seven.":'你七歲。', 'I 
   'I am ten years old.':'我十歲。', "I'm ten years old.":'我十歲。', 'I am Ken.':'我是 Ken。', "I'm Ken.":'我是 Ken。' };
 /* 男生名字的句子（不是一問一答）用男聲（2026-10-04 使用者指定）：引擎 boyV()、語音檔 sentences/_audio_collect.js */
 var BOYS = ['Ken', 'Alan', 'Mike'];
-module.exports = { BOYS:BOYS, RPAGES:RPAGES, TABS1:TABS1, TABS2:TABS2, XPAGES:XPAGES, GLX:GLX, TRX:TRX, ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, SIL:SIL, CONTR:CONTR, PAGES:PAGES, CSS:CSS };
+module.exports = { GL:GL, BOYS:BOYS, RPAGES:RPAGES, TABS1:TABS1, TABS2:TABS2, XPAGES:XPAGES, GLX:GLX, TRX:TRX, ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, SIL:SIL, CONTR:CONTR, PAGES:PAGES, CSS:CSS };

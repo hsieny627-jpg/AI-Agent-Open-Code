@@ -29,6 +29,18 @@
 | `_verify.js` | 量測腳本。`node sentences/_verify.js` 量全部；`node sentences/_verify.js unit1.html` 只量一頁 |
 | `index.html` `warmup.html` `unit1.html` `unit2.html` `games.html` | **產物，不要手改**，會被下一次 build 蓋掉 |
 
+## 2026-10-11 第三批 B 組（Review 1 替換字獨立頁、play ＝ 玩、because 句子；先讀這一節）
+
+需求、選擇題、使用者的回答：`sentences/2026-10-11_B_需求與問題.md`（第四節 ＝ 定案）。原文：第二批第 7、8 點。
+
+| # | 使用者要的／決定 | 做法（在哪裡） |
+|---|---|---|
+| 7(2)・Q5 ②・Q6 ① | 所有「play ＋ 球類」（basketball、badminton、soccer、baseball、dodgeball）：play 正下方 ＝「玩」；**片語和整句的翻譯照舊**（打 籃球、踢 足球、我喜歡打籃球。） | 單字卡：`review1/_data.js` 那五個字 `tk` 的 play ＝ 玩。句型卡：`review1/_subsets.js` 的 `GL`（字 ➜ 逐字中文，從字卡拿）➜ 兩個年級 `_data.js` 的 `GL` ➜ 引擎 `_build_cards.js` 的 `GLPATCH`：替換進去的 play basketball 畫成兩格（play／玩、basketball／籃球，圖示一個；`.tk.glw`）。**只有有替換字切換的 Review 1 頁會開**（unit1／unit2 逐位元組不變）。遊戲答錯頁逐字中文跟著字卡（`R1PHR`）自動變 |
+| 7(1)・8・Q1～Q4・Q12 | 三年級 Review 1 第 5、6 頁（I like ___.／I like to ___.）、四年級第 3～8 頁（This is my ___.／He’s a ___.／He likes ___,／and I like ___.／He can ___,／and I can ___.）下面的替換字太小太亂 ➜〔🔤 選單字〕獨立頁 | **`sentences/_pick.js`**（卡片寫 `pick:1` 才開）：句型卡下面只剩一顆大按鈕〔🔤 選單字（N 個）〕；按下去蓋上整個畫面（同一個網址，〔✕ 回到句型卡〕／Esc 回來）；上面「📘 課本／物品 1／物品 2」＋類別分頁，**一頁最多 8 個字**（類別太多平均切成 1、2、3 頁），橫式 4✕2、直式 2✕4，不用捲動；每格大圖示＋英文（≧ 22px，太長縮到兩行）＋中文；點一個字 ➜ 下面立刻出現大字整句（每個字下面有中文和圖示、唸到哪亮到哪），學生照抄；〔✅ 用這個字〕回到句型卡把字換進去。四年級上面有〔他 He｜她 She〕〔and｜but〕大按鈕，整句跟著換。第 2 頁（名字）、三年級第 3 頁（名字、歲數）不動 |
+| 7(3) | 三年級進階：I like ___ because ___.／I like to ___ because ___.，每個字至少 5 句 | **句子 ＝ `review1/_because.js`（唯一真相來源）**：使用者決定 ① it’s ___.／they’re ___. ② it makes me ___.（照情境挑字）③ I ___. ④⑤⑥ 不固定、**優先寫學生自己的內心（感受、成就感、表達自己、喜悅、被陪伴）**；**不可以用 sweet（甜）**，例句一律健康正向；零食飲料只寫偶爾吃、分享、慶祝、一起做；用字以國小為主（劍橋兒童英檢字表），更道地的字可以用（yummy、cute 可以）。課本＋物品＋活動去重 107 個字、536 句。**使用者審查中**：大字審查頁 `node review1/_because_review.js` ➜ `listen/2026-10-11_B/`（★ ＝ 劍橋字表沒有的字）。使用者 OK 以後才做句型卡（Review 1 上面加分頁）和語音檔 |
+
+量測：`sentences/_verify_pick.js`（`_verify.js` 的 Review 1 頁會呼叫）：每一張 pick 卡的大按鈕（≧ 56px、沒有小替換字）；獨立頁每一組每一頁：不用捲動、方塊在畫面裡、英文 ≧ 22px、不超出方塊、圖示不壓到英文、按鈕 ≧ 48px；每頁第一個和最後一個字：大字整句和整句中文換了、一行放得下、≧ 28px、有語音檔、那一格亮；他／她、and／but；〔✅ 用這個字〕回到同一張卡而且句子換了；✕、Esc。
+
 ## 2026-10-11 第三批 A2 組（three、aunt／auntie、She’s 語音修正；先讀這一節）
 
 需求、試聽、使用者回覆：`sentences/2026-10-11_A2_需求與問題.md`（第五節 ＝ 定案）。試聽頁 `listen/2026-10-11_A2/`、`listen/2026-10-11_A2b/`。

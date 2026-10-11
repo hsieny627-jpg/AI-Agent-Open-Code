@@ -35,4 +35,10 @@ const SETS = {
   liketo: [{ n: '📘 課本' }, { n: '⛹️ 活動 1', rows: rows('a1') }, { n: '🎧 活動 2', rows: rows('a2') }],
   can: [{ n: '📘 課本' }, { n: '⛹️ 活動 1', rows: rows('a1', sk) }, { n: '🎧 活動 2', rows: rows('a2', sk) }]
 };
-module.exports = { SKILL, SETS, CANZH };
+/* play ＋ 球類（使用者 2026-10-11 B 組 Q5 ②）：句型卡上 play basketball 拆成兩格 ＝ play／玩、basketball／籃球；
+ * 片語的完整翻譯照舊（打籃球、踢足球）。字和逐字中文照字卡（_data.js 的 tk），課本的 play basketball 也用這一份 */
+const BALL = ['play-basketball', 'play-badminton', 'play-soccer', 'play-baseball', 'play-dodgeball'];
+const GL = {};
+WORDS.filter(w => BALL.indexOf(w.f) >= 0).forEach(w => { GL[w.en] = w.tk.map(t => [t[0], t[1]]); });
+if (Object.keys(GL).length !== BALL.length) throw new Error('GL：play ＋ 球類少了');
+module.exports = { SKILL, SETS, CANZH, GL };

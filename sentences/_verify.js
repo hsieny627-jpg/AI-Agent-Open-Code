@@ -1048,7 +1048,10 @@ async function cardsPage(p, f, vp, e) {
       if (!await fwd(p)) break;
     }
     await rewind(p, N);
-    if (SD.SUB && Object.keys(SD.SUB).some(k => SD.SUB[k].sets) && !swN) e.push('找不到替換字切換（📘 課本／物品 1／物品 2）');
+    /* 2026-10-11 B 組：有〔🔤 選單字〕的卡，替換字切換搬到獨立頁裡（_verify_pick.js 量） */
+    const nPick = await p.evaluate(() => CARDS.filter(c => c.pick).length);
+    if (SD.SUB && Object.keys(SD.SUB).some(k => SD.SUB[k].sets) && !swN && !nPick) e.push('找不到替換字切換（📘 課本／物品 1／物品 2）');
+    if (nPick) { acts += await require('./_verify_pick.js')(p, e); await rewind(p, N); }
   }
   acts += await rateBar(p, e);
   return acts;

@@ -1909,6 +1909,16 @@ const IFPATCH = [
   ["    L.forEach(function(t){if(t.slot&&(!k||t.slot===k)){t.en=w;t.zh=z;t.ic=ic;t.blank=0}})});\n  /* say",
    "    L.forEach(function(t){if(t.slot&&(!k||t.slot===k)){t.en=w;t.zh=z;t.ic=ic;t.blank=0}if(t.ifSlot&&(!k||t.ifSlot===k||t.ifSlot===c.slot))t.on=1})});\n  /* say"]
 ];
+/* play ＋ 球類（2026-10-11 B 組 Q5 ②）：替換進去的 play basketball 畫成兩格（play／玩、basketball／籃球），圖示一個在下面。
+   資料有寫 GL、而且這一頁有替換字切換才開（其他頁逐位元組不變） */
+const GLCSS = `
+.tk.glw .glr{display:flex;align-items:flex-start;gap:clamp(8px,1.8vw,22px)}
+.tk.glw .glc{display:flex;flex-direction:column;align-items:center;gap:clamp(2px,.5vh,7px)}
+`;
+const GLPATCH = [
+  ["function tkHTML(t,idx,arr){\n", "function tkHTML(t,idx,arr){\n  var glp=!t.blank&&GLMAP[t.en];\n  if(glp)return '<span class=\"tk glw'+(t.hl?' '+t.hl:'')+'\" data-i=\"'+idx+'\" data-k=\"'+(t.k||'')+'\" data-w=\"'+esc(t.en)+'\" data-say=\"'+esc(t.say||t.en)+'\"><span class=\"glr\">'+\n   glp.map(function(p){return '<span class=\"glc\"><span class=\"en\">'+enHTML(p[0])+'</span><span class=\"zh\">'+p[1]+'</span></span>'}).join('')+'</span><span class=\"ic\">'+(t.ic||'')+'</span></span>';\n"],
+  ["var CARDS=__CARDS__", "var GLMAP=__GL__;\nvar CARDS=__CARDS__"]
+];
 const SSPATCH = [
   ["if(!inner){var n=0;ks.forEach(function(k){var x=SUB[k];if(x)n+=x.basic.length+x.adv.length});",
    "if(!inner){var n=0;ks.forEach(function(k){var x=SUB[k];if(x)n+=(SUBSEL[k]&&SUBSETS[k])?SUBSETS[k][SUBSEL[k]].rows.reduce(function(a,r){return a+r[1].length},0):x.basic.length+x.adv.length});"],
@@ -1928,6 +1938,7 @@ const SSPATCH = [
 /* 📝 複習題 5 題（2026-10-04 對話 B）：只有資料夾裡有 _tq_data.js、而且這一頁有分頁才接上（Review 1 頁照舊用 📝 複習） */
 /* Review 1 頁的〔📝 複習〕也記成績（2026-10-08 對話 D，使用者第 1 題）：題組代號 g年級r1_rv第幾組（score/_sites.js 的 rv）。
    只算每一題第一次（🔁 類似題、⭐ 加分題不算，另外記 ✨ 訂正成功）；做完接六幕（跟 📝 複習題一樣） */
+const PICK = require('./_pick.js');
 const SCC = require('../score/_client.js'), SITES = require('../score/_sites.js');
 const RVPATCH = [
   ["   '<p class=\"lead\">20 秒一題，愈快答對分數愈高。題目和選項每一次都重洗。</p>'+",
@@ -1993,6 +2004,17 @@ function page(unit, cards, title, other, otherName, P) {
   if (hasSS) SSPATCH.forEach(([a, b]) => {
     if (js.split(a).length !== 2) throw new Error('替換字切換：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
     js = js.replace(a, () => b.replace('__SUBSETS__', JSON.stringify(SS)));
+  });
+  const hasGL = hasSS && D.GL && Object.keys(D.GL).length > 0;
+  if (hasGL) GLPATCH.forEach(([a, b]) => {
+    if (js.split(a).length !== 2) throw new Error('play ＋ 球類：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
+    js = js.replace(a, () => b.replace('__GL__', JSON.stringify(D.GL)));
+  });
+  /*〔🔤 選單字〕獨立頁（2026-10-11 B 組）：卡片寫 pick:1 才開（sentences/_pick.js） */
+  const hasPK = JSON.stringify(DECKS || cards).indexOf('"pick":1') >= 0;
+  if (hasPK) PICK.PATCH.forEach(([a, b]) => {
+    if (js.split(a).length !== 2) throw new Error('選單字：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
+    js = js.replace(a, () => b);
   });
   const TABHTML = TABM ? '<nav id="tabs">' + TABM.map((tb, k) => '<button class="tb" data-t="' + k + '"><b>' + tb.n + '</b>' + tb.lb + '</button>').join('') +
     /* 連到別的網站的主題（2026-10-09：四年級 Unit 2 的 💼 職業單字網站）：不是一組卡片，按了直接過去；跨分頁的箭頭不會走到它 */
@@ -2078,7 +2100,7 @@ ${TQD ? TQ.scJS(DIR, D, P) + TQ.JS.replace('__TQD__', () => JSON.stringify(TQD))
 </script>
 </body>
 </html>`;
-  return S.HEAD(title, CSS + (hasSS ? SSCSS : '') + (P.rv ? R1CSS : '') + (TQD ? TQ.CSS : '') + (RVSC ? SCC.CSS : '')) + body;
+  return S.HEAD(title, CSS + (hasSS ? SSCSS : '') + (hasGL ? GLCSS : '') + (hasPK ? PICK.CSS : '') + (P.rv ? R1CSS : '') + (TQD ? TQ.CSS : '') + (RVSC ? SCC.CSS : '')) + body;
 }
 
 /* 產出哪幾頁：別的課次可以在 _data.js 寫 PAGES 換標題，沒寫就是 sentences 原本的兩頁 */

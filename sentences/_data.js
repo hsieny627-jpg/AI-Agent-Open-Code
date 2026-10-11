@@ -431,23 +431,25 @@ SUB.can = { lb:'📘 課本', la:'😎 還有',
          ['write code','寫程式','💻'],['take photos','拍照','📷'],['bake cakes','烤蛋糕','🎂'],['fly a kite','放風箏','🪁']] };
 /* 替換字切換（2026-10-02）：📘 課本 ＝ 上面的 can；活動 1／活動 2 ＝ review1/ 的技能類活動（can 只放技能，review1/_subsets.js） */
 SUB.can.sets = require('../review1/_subsets').SETS.can;
+/* play ＋ 球類：句型卡拆兩格 play／玩、basketball／籃球（2026-10-11 B 組 Q5 ②；只有用到替換字切換的 Review 1 頁會讀） */
+var GL = require('../review1/_subsets').GL;
 var R4 = '📝 Review 1';
 var BL = function(k){return t('______','______','',{slot:k,blank:1})};
 var HE = function(){return t('He','他',ICON.he,{slot:'pr'})};
 var RV4C = [
  {type:'sent', kind:R4, zh:'我的名字是 ______。', slot:'nm4',
   tk:[t('My','我的',ICON.my),t('name','名字',require('./_nametag').TAG),t('is','是',ICON.is),BL('nm4'),t('.','。',ICON.dot,{tight:1})]},
- {type:'sent', kind:R4, zh:'這是我的 ______。', slot:'fam',
+ {type:'sent', kind:R4, zh:'這是我的 ______。', slot:'fam', pick:1,
   tk:[t('This','這','👇'),t('is','是',ICON.is),t('my','我的',ICON.my),BL('fam'),t('.','。',ICON.dot,{tight:1})]},
- {type:'sent', kind:R4, zh:'他是一位 ______。', slots:['pr','job4'],
+ {type:'sent', kind:R4, zh:'他是一位 ______。', slots:['pr','job4'], pick:1,
   tk:[HE(),t("'s",'是',ICON.is,{tight:1}),t('a','一位',ICON.a,{say:'uh'}),BL('job4'),t('.','。',ICON.dot,{tight:1})]},
- {type:'sent', kind:R4, zh:'他喜歡 ______，', slots:['pr','color'],
+ {type:'sent', kind:R4, zh:'他喜歡 ______，', slots:['pr','color'], pick:1,
   tk:[HE(),t('likes','喜歡','❤️'),BL('color'),t(',','，','',{tight:1})]},
- {type:'sent', kind:R4, zh:'而且我喜歡 ______。', slots:['cj','color'],
+ {type:'sent', kind:R4, zh:'而且我喜歡 ______。', slots:['cj','color'], pick:1,
   tk:[t('and','而且','➕',{slot:'cj'}),t('I','我','🙋'),t('like','喜歡','❤️'),BL('color'),t('.','。',ICON.dot,{tight:1})]},
- {type:'sent', kind:R4, zh:'他會 ______，', slots:['pr','can'],
+ {type:'sent', kind:R4, zh:'他會 ______，', slots:['pr','can'], pick:1,
   tk:[HE(),t('can','會','💪'),BL('can'),t(',','，','',{tight:1})]},
- {type:'sent', kind:R4, zh:'而且我會 ______。', slots:['cj','can'],
+ {type:'sent', kind:R4, zh:'而且我會 ______。', slots:['cj','can'], pick:1,
   tk:[t('and','而且','➕',{slot:'cj'}),t('I','我','🙋'),t('can','會','💪'),BL('can'),t('.','。',ICON.dot,{tight:1})]}
 ];
 var SCR4 = [
@@ -635,7 +637,7 @@ var TRX = {
   'Is he my father?':'他是我的爸爸嗎？', 'Is she my mother?':'她是我的媽媽嗎？', 'Is he my grandfather?':'他是我的爺爺嗎？',
   'He is my uncle.':'他是我的叔叔。', 'She is my aunt.':'她是我的阿姨。', "It's a book.":'它是一本書。'
 };
-module.exports = { ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, USE:USE, TRX:TRX, XPAGES:XPAGES, PAGES:PAGES, RPAGES:RPAGES, TABS1:TABS1, TABS2:TABS2 };
+module.exports = { GL:GL, ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, USE:USE, TRX:TRX, XPAGES:XPAGES, PAGES:PAGES, RPAGES:RPAGES, TABS1:TABS1, TABS2:TABS2 };
 
 /* ── 真實情境：會動的小劇場（使用者 2026-09-24 指定改版）──────────────
  * 原本「地點＋三段 emoji＋一句話」學生完全看不懂，改成**兩個人演一次**：
