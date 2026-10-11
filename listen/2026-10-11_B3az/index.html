@@ -1,0 +1,53 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>雲端聲音申請</title><style>
+:root{color-scheme:dark}
+body{margin:0;background:#05070A;color:#fff;font-family:"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 90px;font-size:28px;line-height:1.55}
+h1{font-size:38px;color:#FFD54A;margin:20px 0 8px}
+.st{background:#0B0F14;border:3px solid #24303C;border-radius:20px;padding:16px 20px;margin:22px 0}
+.st h2{font-size:34px;margin:0 0 8px;color:#7FD4FF}
+b.y{color:#FFD54A}.g{color:#8DFF9E;font-weight:700}.r{color:#FF8A8A;font-weight:700}
+code{font-size:28px;background:#1C2733;border:2px solid #3A4650;border-radius:10px;padding:2px 10px;color:#fff}
+a{color:#7FD4FF}
+table{border-collapse:collapse;width:100%;margin:8px 0}td,th{border:2px solid #2A3540;padding:8px 12px;text-align:left;vertical-align:top}th{background:#14202B}
+</style></head><body>
+<h1>雲端聲音（Microsoft）申請步驟：大字版</h1>
+<p>選 <b class="y">Microsoft Azure 語音服務</b>的原因：</p>
+<table>
+<tr><td>💰 免費</td><td>「免費 F0」方案每個月 <b class="y">50 萬個字母</b>免費。全站男聲＋女聲大約 10～15 萬個字母，<span class="g">夠用</span></td></tr>
+<tr><td>🛡️ 不會扣錢</td><td>F0 方案<b class="y">用完就停</b>，不會自動收費（申請時要信用卡，是用來確認身分）</td></tr>
+<tr><td>🎙️ 聲音</td><td>美式英語男聲、女聲很多種，我做好以後放進盲聽頁給您選</td></tr>
+</table>
+<p class="r">⚠️ 申請畫面常常改版，下面的按鈕名稱可能跟您看到的有一點不一樣。卡住了就截圖拖進對話，我看圖告訴您下一步。</p>
+
+<div class="st"><h2>第 1 步：建立免費帳戶</h2>
+打開 <a href="https://azure.microsoft.com/free">https://azure.microsoft.com/free</a><br>
+按〔免費開始使用〕➜ 用您的 Microsoft 帳號（或 Gmail 註冊一個）登入 ➜ 填資料、手機驗證、信用卡驗證身分。</div>
+
+<div class="st"><h2>第 2 步：建立「語音服務」</h2>
+打開 <a href="https://portal.azure.com">https://portal.azure.com</a><br>
+最上面的搜尋框打 <code>語音服務</code>（或 <code>Speech</code>）➜ 點〔語音服務〕➜ 按〔＋ 建立〕。</div>
+
+<div class="st"><h2>第 3 步：填 4 格</h2>
+<table>
+<tr><th>格子</th><th>填什麼</th></tr>
+<tr><td>資源群組</td><td>按〔新建〕，打 <code>english</code></td></tr>
+<tr><td>區域</td><td>選 <code>East US</code></td></tr>
+<tr><td>名稱</td><td>打 <code>english-voice-你的英文名字</code>（全世界不能重複，被用走就加數字）</td></tr>
+<tr><td>定價層</td><td>一定選 <b class="y">Free F0</b> <span class="r">（不要選 S0，S0 會收費）</span></td></tr>
+</table>
+按〔檢閱 + 建立〕➜〔建立〕，等 1 分鐘。</div>
+
+<div class="st"><h2>第 4 步：拿「鑰匙」</h2>
+按〔前往資源〕➜ 左邊點〔金鑰與端點〕。<br>
+您會看到 <b class="y">金鑰 1（KEY 1）</b>（一長串英文數字）和 <b class="y">位置／區域</b>（eastus）。<br>
+<span class="r">🔒 鑰匙不要貼到對話裡、不要給別人。</span></div>
+
+<div class="st"><h2>第 5 步：把鑰匙放進 Claude 的環境設定</h2>
+在 Claude 這個對話最上面的標題列，點<b class="y">雲端環境的選單</b> ➜〔Edit／編輯〕。<br>
+在「環境變數」（或「Network secrets／API credentials」）加兩行：<br>
+<code>AZURE_SPEECH_KEY=（貼上金鑰 1）</code><br>
+<code>AZURE_SPEECH_REGION=eastus</code><br>
+儲存 ➜ <b class="y">開一個新對話</b>（新對話才讀得到鑰匙），用開場白檔案裡「B3 盲聽」那一段開始。</div>
+
+<div class="st"><h2>做完以後</h2>
+我會用 Microsoft 的美式男聲、女聲各做同樣的 13 句，放進盲聽頁，跟現在的聲音、免費的新聲音放在一起，<b class="y">不寫名字</b>讓您選。</div>
+</body></html>
