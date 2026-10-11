@@ -37,4 +37,4 @@ ${Q('R10','按鈕放哪裡、怎麼記住？',['每一頁的按鈕列都有一�
 <h2>回覆以後</h2>
 <p>1. 我用老師的例子再對一次（basketball、他 是 誰？）。<br>2. 先做「男聲試聽頁」（女聲 vs 男聲 12 句），老師聽過 OK，才做全站約 2,000 個男聲語音檔。</p>
 </body></html>`;
-fs.writeFileSync(__dirname+'/index.html',h);
+fs.writeFileSync(__dirname+'/r2.html',h);
