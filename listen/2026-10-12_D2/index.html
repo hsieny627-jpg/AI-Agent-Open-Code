@@ -1,0 +1,198 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>成績系統 D 組 再對一次</title><style>
+@font-face{font-family:Andika;src:url(../../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#05070A;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 120px;font-size:26px;line-height:1.55;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:40px;color:#FFD54A;margin:22px 0 6px}
+h2{font-size:34px;color:#FFD54A;margin:46px 0 10px;border-top:4px solid #24303C;padding-top:20px}
+.lead{font-size:26px;color:#DDE6EE}
+.howto{background:#102016;border:3px solid #3BD16F;border-radius:20px;padding:14px 20px;margin:16px 0}
+.q{background:#0B0F14;border:3px solid #24303C;border-radius:20px;padding:16px 20px;margin:18px 0}
+.q>.t{font-size:30px;color:#7FD4FF;margin-bottom:8px}
+.op{display:block;border:3px solid #2A3540;border-radius:16px;padding:10px 16px;margin:10px 0;background:#0E141A}
+.op.rec{border-color:#3BD16F;background:#0D1B12}
+.op b.k{display:inline-block;min-width:1.6em;color:#FFD54A;font-size:32px}
+.rec .tag{display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px;margin-left:8px;vertical-align:middle}
+.why{color:#CFE3F5;font-size:24px;margin-top:6px}
+.small{font-size:22px;color:#B9C4CE}
+.cmp{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin:12px 0}
+.cmp .ar{font-size:54px;color:#FFD54A}
+.cmp.v{grid-template-columns:1fr}.cmp.v .ar{transform:rotate(90deg);text-align:center;line-height:1}
+.cmp .lab{font-size:24px;color:#B9C4CE;margin-bottom:4px}
+@media (max-width:760px){.cmp{grid-template-columns:1fr}.cmp .ar{transform:rotate(90deg);text-align:center}}
+.shot{width:100%;border:3px solid #3A4650;border-radius:14px;display:block}
+table{border-collapse:collapse;width:100%;margin:10px 0}
+td,th{border:2px solid #2A3540;padding:8px 12px;text-align:left;vertical-align:middle}
+th{background:#14202B;color:#CFE6FF}
+.big{font-size:44px}
+.mock{background:#000;border:3px solid #3A4650;border-radius:16px;padding:14px;overflow:hidden}
+/* D1 首頁 */
+.hhead{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.hhead .ti{font-size:40px}
+.tbtn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(#FFE07A,#E8A900);color:#2A1A00;border-radius:22px;padding:12px 26px;font-size:32px;box-shadow:0 0 0 4px #5A4300,0 0 26px #FFD54A88;animation:glow 2s infinite}
+@keyframes glow{50%{box-shadow:0 0 0 4px #5A4300,0 0 44px #FFD54ACC}}
+.fake{height:16px;background:#1A1F26;border-radius:8px;margin:10px 0}
+/* D4 圖示 */
+.ic{font-size:46px;line-height:1;vertical-align:middle}
+/* D7 成績卡 */
+.card{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:760px){.card{grid-template-columns:repeat(2,1fr)}}
+.g{background:#0F151C;border:2px solid #2A3540;border-radius:16px;padding:10px;text-align:center}
+.g .l{font-size:24px;color:#CFE3F5}
+.ring{width:120px;height:120px;margin:4px auto}
+.ring circle{fill:none;stroke-width:14}
+.ring .bg{stroke:#222}
+.ring .fg{stroke:#3BD16F;stroke-linecap:round;stroke-dasharray:314;stroke-dashoffset:314;animation:ring 1.6s ease-out forwards;transform:rotate(-90deg);transform-origin:60px 60px}
+@keyframes ring{to{stroke-dashoffset:var(--o)}}
+.ring text{fill:#fff;font-size:30px;font-weight:700;text-anchor:middle;dominant-baseline:central}
+.stars{font-size:34px;letter-spacing:2px}
+.stars i{font-style:normal;opacity:.2;display:inline-block}
+.stars i.on{opacity:1;animation:pop .4s backwards}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.4)}}
+.up{font-size:52px;color:#3BD16F;animation:upk 1.4s infinite}
+@keyframes upk{50%{transform:translateY(-10px)}}
+.cal{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.cal span{width:58px;height:58px;border-radius:12px;background:#1A1F26;display:flex;align-items:center;justify-content:center;font-size:22px;flex-direction:column;line-height:1.1}
+.cal span.on{background:#14532D;border:2px solid #3BD16F}
+.sw{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media (max-width:760px){.sw{grid-template-columns:1fr}}
+.sw div{background:#0F151C;border:2px solid #2A3540;border-radius:16px;padding:10px 14px;font-size:24px}
+.bar{height:22px;border-radius:11px;background:#222;overflow:hidden;margin:4px 0 8px}
+.bar b{display:block;height:100%;border-radius:11px;animation:grow 1.4s ease-out backwards}
+@keyframes grow{from{width:0!important}}
+/* 榮譽榜示範 */
+.demo{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:900px){.demo{grid-template-columns:1fr}}
+.st{position:relative;height:300px;border-radius:18px;overflow:hidden;background:#000;border:3px solid #3A4650;cursor:pointer}
+.st .cap{position:absolute;left:0;right:0;bottom:0;background:#000C;font-size:22px;text-align:center;padding:4px}
+.st .rp{position:absolute;top:8px;right:10px;font-size:20px;color:#B9C4CE}
+/* 1 獎盃從天而降 */
+.s1{background:radial-gradient(circle at 50% 30%,#3A2A00,#000 70%)}
+.s1 .cup{position:absolute;left:50%;top:40px;font-size:110px;transform:translateX(-50%);animation:drop 1.2s cubic-bezier(.3,1.6,.5,1) backwards}
+@keyframes drop{0%{transform:translate(-50%,-260px) scale(.4)}100%{transform:translate(-50%,0) scale(1)}}
+.s1 .nm{position:absolute;left:0;right:0;top:165px;text-align:center;font-size:30px;color:#FFE07A;animation:fade .6s 1.2s backwards}
+.s1 .rays{position:absolute;left:50%;top:95px;width:420px;height:420px;margin:-210px 0 0 -210px;background:repeating-conic-gradient(#FFD54A33 0 8deg,transparent 8deg 22deg);animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.conf{position:absolute;top:-20px;width:10px;height:18px;animation:fall 2.4s linear infinite}
+@keyframes fall{to{transform:translateY(340px) rotate(540deg)}}
+@keyframes fade{from{opacity:0;transform:scale(.6)}}
+/* 2 皇冠加冕 */
+.s2{background:linear-gradient(#1A0630,#000)}
+.s2 .crown{position:absolute;left:50%;top:-80px;font-size:80px;transform:translateX(-50%);animation:crown 1.4s .3s ease-out forwards}
+@keyframes crown{to{top:44px}}
+.s2 .who{position:absolute;left:50%;top:95px;transform:translateX(-50%);font-size:90px}
+.s2 .nm{position:absolute;left:0;right:0;top:192px;text-align:center;font-size:28px;color:#E9C8FF;animation:fade .6s 1.7s backwards}
+.s2 .spark{position:absolute;font-size:26px;animation:tw 1.2s infinite}
+@keyframes tw{50%{opacity:.1;transform:scale(.5)}}
+/* 3 奧運頒獎台 */
+.s3{background:linear-gradient(#001A33,#000)}
+.pod{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;align-items:flex-end;gap:6px}
+.pod div{width:86px;border-radius:10px 10px 0 0;text-align:center;font-size:20px;padding-top:6px;animation:rise .9s ease-out backwards}
+.pod .p1{height:150px;background:linear-gradient(#FFE07A,#B88A00);color:#2A1A00;animation-delay:1.2s}
+.pod .p2{height:110px;background:linear-gradient(#E6EEF5,#8D9AA6);color:#111;animation-delay:.6s}
+.pod .p3{height:80px;background:linear-gradient(#F0B27A,#9C5A1E);color:#111;animation-delay:.1s}
+.pod span{display:block;font-size:40px;margin-top:-56px}
+@keyframes rise{from{height:0}}
+.again{display:inline-block;margin-top:8px;font-size:24px;background:#14202B;border:2px solid #4A90C8;border-radius:14px;padding:6px 18px;color:#CFE6FF;cursor:pointer}
+.list12{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media (max-width:760px){.list12{grid-template-columns:1fr}}
+.list12 div{background:#0F151C;border:2px solid #2A3540;border-radius:14px;padding:8px 12px;font-size:24px}
+.sw2{display:inline-flex;border:3px solid #FFD54A;border-radius:16px;overflow:hidden}
+.sw2 b{padding:8px 18px;font-size:26px;color:#9AA7B3}
+.sw2 b.on{background:#FFD54A;color:#111}
+.tg{display:inline-flex;align-items:center;gap:8px;border-radius:14px;padding:8px 16px;font-size:26px;margin:4px}
+.tg.on{background:#14532D;border:3px solid #3BD16F}
+.tg.off{background:#4A1414;border:3px solid #FF6B6B}
+.seat{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+@media (max-width:760px){.seat{grid-template-columns:repeat(3,1fr)}}
+.seat div{border-radius:12px;padding:6px 8px;font-size:22px;background:#0F151C;border:3px solid #2A3540;line-height:1.3}
+.seat .gr{border-color:#3BD16F}.seat .ye{border-color:#FFD54A}.seat .rd{border-color:#FF6B6B}.seat .gy{border-color:#555;color:#888}
+.tw{overflow-x:auto}
+@media (max-width:760px){table{display:block;overflow-x:auto}body{font-size:24px}}
+.ans{position:sticky;bottom:0;background:#0D1B12;border:3px solid #3BD16F;border-radius:18px;padding:10px 16px;margin-top:30px;font-size:24px}
+.upa{width:1em;height:1.2em;vertical-align:-.2em}
+.icx{display:inline-flex;align-items:center;gap:8px;background:#0F151C;border:3px solid #2A3540;border-radius:16px;padding:8px 16px;font-size:30px;margin:4px}
+.icx .e{font-size:44px;line-height:1}
+.aw{display:inline-block;animation:upj 1.2s ease-in-out infinite}
+@keyframes upj{50%{transform:translateY(-8px)}}
+.hon{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media (max-width:760px){.hon{grid-template-columns:1fr}}
+.hon div{background:#14110A;border:3px solid #6B5310;border-radius:16px;padding:10px 14px;font-size:24px}
+.hon b{font-size:28px;color:#FFE07A;display:block}
+.ex{background:#0D1622;border:3px solid #4A90C8;border-radius:18px;padding:12px 18px;margin:12px 0}
+</style></head><body><div class="wrap">
+<h1>✅ 老師的回答收到了：再對一次（6 題）</h1>
+<div class="lead">老師說：✅ 和 📈 太像、進步要有向上箭頭、投影要姓名（加按鈕、一開始顯示）、學生平板做完每一次都有不同的榮譽動畫，而且<b>努力、進步、用心、肯花時間</b>跟成績好一樣值得被肯定。下面用老師的話再對一次，對了我才動手。</div>
+<div class="howto">✍️ 在對話裡打「<b>全部照建議</b>」，或「<b>F1 A、F2 B……</b>」。</div>
+
+<h2>已經記下來的（不用再選）</h2>
+<table>
+<tr><th>題</th><th>老師的決定</th></tr>
+<tr><td>D10</td><td>投影的榮譽榜<b>要姓名</b>；老師看板多一顆〔👤 姓名 顯示／隱藏〕，<b>一開始是「顯示」</b></td></tr>
+<tr><td>其他</td><td>D1～D18 照建議（例：總首頁金色〔👩‍🏫 老師看板〕、記住我 7 天、12 種風格、印獎狀…）</td></tr>
+</table>
+<div class="small">✅ 第 1 件已經做好上線：總首頁「首頁」右邊金色〔👩‍🏫 老師看板〕、登入畫面放大、〔☑ 這台電腦記住我（7 天）〕、〔🚪 登出〕。</div>
+
+<div class="q"><div class="t">F1　圖示換成這樣，分得清楚嗎？</div>
+<div class="cmp"><div><div class="lab">原本的建議（老師說太像）</div><span class="icx"><span class="e">✅</span>次數</span><span class="icx"><span class="e">📈</span>進步</span></div><div class="ar">➜</div>
+<div><div class="lab">改之後（A）</div><span class="icx"><span class="e">💪</span>練習次數</span><span class="icx"><span class="e aw"><svg class="upa" viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg></span>進步</span></div></div>
+<div class="mock" style="text-align:center"><span class="icx"><span class="e">🎯</span>正確率</span><span class="icx"><span class="e">💯</span>總分</span><span class="icx"><span class="e">💪</span>練習次數</span><span class="icx"><span class="e aw"><svg class="upa" viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg></span>進步</span></div>
+<label class="op rec"><b class="k">A</b>💪 練習次數（肯練習 ＝ 有力氣）、<b>綠色粗箭頭往上跳</b> ＝ 進步（自己畫的，每一台電腦都一樣，不會變成小方塊）<span class="tag">建議</span><div class="why">四個圖示形狀、顏色都不一樣：靶、紅色 100、手臂、綠色箭頭。</div></label>
+<label class="op"><b class="k">B</b>練習次數改用 🔢；進步一樣是綠色粗箭頭</label>
+</div>
+
+<h2>老師的第 4 點：學生做完的榮譽動畫</h2>
+<div class="ex"><b>老師的話</b>：「只要努力，只要進步，只要用心、認真付出，肯花時間練習：都值得受到同等的尊重和獎勵和榮耀和肯定。」</div>
+
+<div class="q"><div class="t">F2　每一個學生、每一次做完，都有自己的榮譽動畫嗎？</div>
+<label class="op rec"><b class="k">A</b><b>每一次都有</b>：最少一個「💪 努力獎」（你又完成了一次練習），有進步、用心、訂正……再多加<span class="tag">建議</span><div class="why">研究（Henderlong & Lepper 2002）：稱讚自己做得到的事（努力、方法）最有用；正確率低的孩子也看得到自己的努力被肯定。</div></label>
+<label class="op"><b class="k">B</b>拿到某一個獎（進步、用心、名次……）才演；沒拿到就沒有</label>
+</div>
+
+<div class="q"><div class="t">F3　個人獎有哪些？（大小一樣、動畫一樣隆重，每次挑最好的 1～3 個演）</div>
+<div class="hon">
+<div><b>💪 努力獎</b>這週第 3 次練習！（每一次都有）</div>
+<div><b><span class="aw"><svg class="upa" viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg></span> 進步獎</b>比上一次多 12 分！</div>
+<div><b>👆 用心獎</b>每一題都看完、聽完才選（沒有太快亂按）</div>
+<div><b>✨ 訂正獎</b>答錯的 2 題，後來都改對了！</div>
+<div><b>⏱ 時間獎</b>這週已經練了 25 分鐘！</div>
+<div><b>📅 天天練獎</b>這週第 3 天練習！</div>
+<div><b>🎯 成績獎</b>正確率 90 以上／🏅 破自己的紀錄</div>
+</div>
+<label class="op rec"><b class="k">A</b>照上面 7 種；話都寫「你做了什麼」，不寫「你很聰明」<span class="tag">建議</span></label>
+<label class="op"><b class="k">B</b>要增加或刪掉（請寫哪一個）</label>
+</div>
+
+<div class="q"><div class="t">F4　「練習次數」怎麼算？</div>
+<table>
+<tr><th></th><th>現在</th><th>A（建議）</th></tr>
+<tr><td>算 1 次</td><td>要<b>對 2/3</b>（5 題對 4 題）才算</td><td><b>做完就算</b>；只有「太快亂按」超過一半的那一次不算</td></tr>
+<tr><td>例：小華 5 題對 2 題，每一題都認真看完</td><td>❌ 不算</td><td>✅ 算 1 次 ＋ 💪 努力獎</td></tr>
+</table>
+<label class="op rec"><b class="k">A</b>做完就算（不用對 2/3），亂按的不算；一天同一組最多算 3 次（照舊）<span class="tag">建議</span><div class="why">老師說「肯花時間練習都值得」；擋掉亂按，學生就不能靠亂按刷次數。</div></label>
+<label class="op"><b class="k">B</b>照現在，要對 2/3 才算</label>
+</div>
+
+<div class="q"><div class="t">F5　本班、班際的榮譽榜有幾種？</div>
+<table>
+<tr><th>哪裡</th><th>A（建議）：6 種，大小一樣、動畫一樣隆重</th></tr>
+<tr><td>👤 本班榜</td><td>🎯 正確率｜💯 總分｜💪 練習次數｜<span class="aw"><svg class="upa" viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg></span> 進步｜👆 用心｜⏱ 練習時間</td></tr>
+<tr><td>🏫 班際</td><td>每一班都有自己最強的一項：<span class="aw"><svg class="upa" viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg></span> 進步最多的班｜💪 平均練最多次的班｜👥 最多人參加的班｜🎯 正確率最高的班……（不會有班級沒有獎）</td></tr>
+</table>
+<label class="op rec"><b class="k">A</b>上面這樣（原本 4 種榜 ＋ 👆 用心、⏱ 練習時間）；用心、練習時間要等第 8 件「用心程度」做好才有分數<span class="tag">建議</span></label>
+<label class="op"><b class="k">B</b>維持原本 4 種</label>
+</div>
+
+<div class="q"><div class="t">F6　學生平板上的榮譽動畫：多長？要不要聲音？</div>
+<div class="ex"><b>用老師的例子對一次</b>：小華 30415（正確率 43、比上次多 12 分、這週第 3 次、沒有亂按）做完 ➜ 平板演：<br>
+① 🎆 <b>小華自己的獎</b>（今天這一次是「煙火大會」風格）：<span class="aw"><svg class="upa" viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg></span> 進步獎 ＋12 分、💪 這週第 3 次、👆 用心獎<br>
+② 👤 <b>本班榮譽榜</b>：<span class="aw"><svg class="upa" viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg></span> 進步榜 — 小華第 2 名（座號，平板上沒有姓名）<br>
+③ 🏫 <b>班際</b>：304 班 ＝ <span class="aw"><svg class="upa" viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg></span> 這週進步最多的班<br>
+下一次做完 ➜ 換另一種風格（例：皇冠加冕）。</div>
+<label class="op rec"><b class="k">A</b>大約 10 秒（①②③ 自己換），隨時可以按〔⏭ 跳過〕；<b>學生平板不放聲音</b>（教室 25 台一起響會很吵；老師投影的才有聲音）<span class="tag">建議</span></label>
+<label class="op"><b class="k">B</b>大約 20 秒、學生平板也有聲音</label>
+</div>
+
+<div class="ans">✍️ 在對話裡回答：「全部照建議」，或「F1 A、F2 B……」</div>
+</div></body></html>

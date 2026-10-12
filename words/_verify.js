@@ -81,6 +81,10 @@ async function hubPage(p,f,vp,e){
  /* 2026-10-03：三年級在上、四年級在下，每個年級 7 項（words/_grades.js） */
  if(s.grades.join(',')!=='三年級,四年級')e.push('年級順序不對：'+s.grades.join(','));
  if(s.rows!==18)e.push('首頁不是兩個年級各 9 項（'+s.rows+'）');   /* 2026-10-07 使用者第 11 點：9 項 */
+ /* 2026-10-12 D1-A：「首頁」右邊金色〔👩‍🏫 老師看板〕➜ teacher/index.html，夠大、在畫面裡 */
+ const tb=await p.evaluate(()=>{const b=document.querySelector('h1 .tbtn');if(!b)return null;const r=b.getBoundingClientRect();return{h:r.height,href:b.getAttribute('href'),in:r.right<=innerWidth&&r.top>=0,fs:parseFloat(getComputedStyle(b).fontSize)}});acts++;
+ if(!tb)e.push('首頁沒有〔老師看板〕按鈕');
+ else{if(tb.href!=='teacher/index.html')e.push('〔老師看板〕連結不對：'+tb.href);if(tb.h<44||tb.fs<18)e.push('〔老師看板〕太小（'+tb.h+'px／字 '+tb.fs+'px）');if(!tb.in)e.push('〔老師看板〕跑出畫面');}
 
  /* 每一個站內連結都要真的存在 */
  const root=require('path').resolve(DIR,'..');

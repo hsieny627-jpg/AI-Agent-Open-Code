@@ -273,6 +273,23 @@ async function teacher(br, vp) {
     if (!/^score_G3_week_\d{4}-\d\d-\d\d\.xlsx$/.test(dl.suggestedFilename())) e.push('Excel 檔名不對：' + dl.suggestedFilename());
   } catch (x) { e.push('Excel 打不開：' + String(x).slice(0, 200)); }
   n += 5;
+  /* 2026-10-12 D3-A：沒勾「記住我」不存在這台電腦；〔🚪 登出〕回到密碼畫面；勾了 ➜ 重新打開不用打密碼；登入畫面字夠大 */
+  const st = () => p.evaluate(() => ({ ls: localStorage.getItem('tpw7'), app: !document.getElementById('app').hidden }));
+  if ((await st()).ls) e.push('沒勾「記住我」卻存進這台電腦');
+  await p.click('#out'); await p.waitForTimeout(200);
+  if ((await st()).app) e.push('按〔🚪 登出〕沒有回到密碼畫面');
+  await p.reload(); await p.waitForTimeout(400);
+  if ((await st()).app) e.push('登出以後重新打開還是進得去');
+  const lz = await p.evaluate(() => ({ note: parseFloat(getComputedStyle(document.querySelector('#login .note')).fontSize), rm: parseFloat(getComputedStyle(document.getElementById('rmb')).fontSize), go: document.getElementById('go').getBoundingClientRect().height }));
+  if (lz.note < 22 || lz.rm < 22 || lz.go < 60) e.push('登入畫面字或按鈕太小（' + JSON.stringify(lz) + '）');
+  if (await ox()) e.push('登入畫面橫向溢出');
+  await p.fill('#pw', PW); await p.check('#rm'); await p.click('#go'); await p.waitForTimeout(500);
+  const r7 = await st(); if (!r7.app || !r7.ls) e.push('勾「記住我」登入以後沒有存起來');
+  await p.evaluate(() => sessionStorage.clear()); await p.reload(); await p.waitForTimeout(600);
+  if (!(await st()).app) e.push('勾了「記住我」重新打開還要打密碼');
+  await p.evaluate(() => localStorage.setItem('tpw7', JSON.stringify({ p: 'x', x: Date.now() - 1 }))); await p.evaluate(() => sessionStorage.clear()); await p.reload(); await p.waitForTimeout(400);
+  if ((await st()).app || (await st()).ls) e.push('過了 7 天還記得密碼');
+  n += 7;
   out(W, e); await ctx.close();
 }
 /* ══ 2026-10-08 對話 D：遊戲、Review 1 頁的 📝 複習也記成績 ══ */

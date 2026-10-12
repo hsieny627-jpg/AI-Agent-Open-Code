@@ -17,10 +17,16 @@ button:active{transform:scale(.97)}
 button.on{background:#0F2236;border-color:var(--acc)}
 select,input{background:#141414;border:1px solid #3A3A3A;border-radius:12px;padding:8px 10px;min-height:44px}
 h1{margin:0;font-size:clamp(24px,3.4vw,34px)}
-#login{max-width:460px;margin:12vh auto 0;display:flex;flex-direction:column;gap:16px;align-items:center;text-align:center}
-#login input{font-size:28px;text-align:center;width:100%;letter-spacing:.2em}
-#login button{font-size:22px;padding:12px 40px;background:#0F3323;border-color:var(--ok)}
-#lmsg{min-height:1.4em;color:var(--no);font-weight:700;font-size:19px}
+#login{max-width:620px;margin:10vh auto 0;display:flex;flex-direction:column;gap:20px;align-items:center;text-align:center}
+#login h1{font-size:clamp(36px,5vw,52px)}
+#login .note{font-size:24px;color:#CFE3F5;margin:0}
+#login input{font-size:40px;text-align:center;width:100%;letter-spacing:.25em;min-height:72px;border-radius:16px}
+#login button{font-size:32px;padding:14px 56px;background:#0F3323;border-color:var(--ok);min-height:72px}
+#rmb{display:flex;align-items:center;gap:12px;font-size:26px;font-weight:700;cursor:pointer;color:#FFE9A8}
+#rmb input{width:34px;height:34px;min-height:0;accent-color:#E8A900;margin:0}
+#rmb em{font-style:normal;display:block;font-size:20px;color:var(--dim);font-weight:400}
+#lmsg{min-height:1.4em;color:var(--no);font-weight:700;font-size:26px}
+#out{border-color:#7A3A3A}
 #app[hidden],#login[hidden]{display:none}
 .top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px}
 .top .sp{flex:1}
@@ -104,11 +110,13 @@ h3{margin:14px 0 6px;font-size:20px}
 #tkmsg{color:var(--no);font-weight:700;min-height:1.3em;font-size:18px}
 @media (max-width:900px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.wq{grid-template-columns:2em 1fr}.wq .r{grid-column:2}}
 </style></head><body>
-<div id="login"><h1>👩‍🏫 老師看板</h1><div class="note">輸入老師密碼（密碼存在你的 Google Apps Script，網頁裡沒有）</div>
- <input id="pw" type="password" inputmode="numeric" autocomplete="current-password" aria-label="密碼"><button id="go">進入</button><div id="lmsg"></div></div>
+<div id="login"><h1>👩‍🏫 老師看板</h1><div class="note">🔑 輸入老師密碼</div>
+ <input id="pw" type="password" inputmode="numeric" autocomplete="current-password" aria-label="密碼">
+ <label id="rmb"><input type="checkbox" id="rm"><span>這台電腦記住我（7 天）<em>只在老師自己的電腦勾；教室公用電腦不要勾</em></span></label>
+ <button id="go">🔓 進入</button><div id="lmsg"></div></div>
 <div id="app" hidden>
  <div class="top"><h1>👩‍🏫 老師看板</h1><span class="sp"></span>
-  <button id="bd">🏆 學生排行榜：開</button><button id="rf">🔄 重新整理</button><button id="dl">⬇ 一鍵下載 Excel</button></div>
+  <button id="bd">🏆 學生排行榜：開</button><button id="rf">🔄 重新整理</button><button id="dl">⬇ 一鍵下載 Excel</button><button id="out">🚪 登出</button></div>
  <div class="top">
   <span class="grp" id="fg"><button data-g="3" class="on">三年級</button><button data-g="4">四年級</button></span>
   <span class="grp"><span>班級</span><select id="fc"></select></span>
@@ -486,13 +494,16 @@ function $(s){return document.querySelector(s)}function $$(s){return [].slice.ca
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function f1(v){return v==null?'—':(Math.round(v*10)/10)}
 function post(o){return fetch(URL0,{method:'POST',body:JSON.stringify(o)}).then(function(r){return r.json()})}
+/* 2026-10-12 D3-A：勾「這台電腦記住我（7 天）」才存在這台電腦（localStorage，7 天後自動失效）；沒勾 ＝ 分頁關掉就要重打（sessionStorage）。〔🚪 登出〕兩個都清掉 */
+function forget(){try{sessionStorage.removeItem('tpw');localStorage.removeItem('tpw7')}catch(e){}}
+function remembered(){try{var r=JSON.parse(localStorage.getItem('tpw7')||'null');if(r&&r.p&&r.x>Date.now())return r.p;localStorage.removeItem('tpw7')}catch(e){}return ''}
 function login(pw){
   $('#lmsg').textContent='⏳ 讀取中…';
   if(!URL0){$('#lmsg').textContent='還沒有貼上 Apps Script 網址（score/url.js）';return}
   post({a:'teacher',pw:pw}).then(function(j){
-    if(j.err==='pw'){$('#lmsg').textContent='❌ 密碼不對';try{sessionStorage.removeItem('tpw')}catch(e){}return}
+    if(j.err==='pw'){$('#lmsg').textContent='❌ 密碼不對';forget();return}
     if(j.err){$('#lmsg').textContent='❌ 伺服器：'+(j.msg||j.err);return}
-    PW=pw;try{sessionStorage.setItem('tpw',pw)}catch(e){}
+    PW=pw;try{sessionStorage.setItem('tpw',pw);if($('#rm').checked)localStorage.setItem('tpw7',JSON.stringify({p:pw,x:Date.now()+7*864e5}))}catch(e){}
     load(j);$('#login').hidden=true;$('#app').hidden=false;
   },function(){$('#lmsg').textContent='📶 連不到伺服器，請檢查網路'});
 }
@@ -714,6 +725,7 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if(c('#tkAll')){$$('input[name=tkc]').forEach(function(x){x.checked=true});return}
   if(c('#tkSave')){tkSave();return}
   if(c('#go')){login($('#pw').value.trim());return}
+  if(c('#out')){forget();PW='';DATA=null;$('#pw').value='';$('#lmsg').textContent='👋 已經登出';$('#app').hidden=true;$('#login').hidden=false;return}
   if((b=c('#fg button'))){F.g=+b.getAttribute('data-g');F.cls='';$$('#fg button').forEach(function(x){x.classList.toggle('on',x===b)});clsSel();draw();return}
   if((b=c('#tabs button'))){TAB=b.getAttribute('data-t');$$('#tabs button').forEach(function(x){x.classList.toggle('on',x===b)});draw();return}
   if((b=c('th[data-k]'))){var k=b.getAttribute('data-k');SORT={k:k,d:SORT.k===k?-SORT.d:1};draw();return}
@@ -738,6 +750,6 @@ $('#fk').addEventListener('change',function(){F.cat=this.value;draw()});
 $('#fp').addEventListener('change',function(){F.p=this.value;$('#f1').hidden=$('#f2').hidden=F.p!=='c';draw()});
 $('#f1').addEventListener('change',draw);$('#f2').addEventListener('change',draw);
 $('#pw').addEventListener('keydown',function(e){if(e.key==='Enter')login(this.value.trim())});
-try{var sp=sessionStorage.getItem('tpw');if(sp)login(sp)}catch(e){}
+try{var sp=sessionStorage.getItem('tpw')||remembered();if(sp)login(sp)}catch(e){}
 </script>
 </body></html>

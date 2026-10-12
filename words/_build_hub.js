@@ -169,6 +169,20 @@ h1{font-size:clamp(24px,3.6vh,40px)}
 .gr h2{margin-bottom:clamp(2px,.4vh,6px);font-size:clamp(19px,2.8vh,28px)}
 .gi{padding:2px clamp(8px,1vw,12px);min-height:48px}
 .gi .gb a{min-height:44px;padding:4px clamp(10px,1.3vw,15px)}
+/* 2026-10-12 使用者 D 組第 3 點（D1 A、D2 A）：「首頁」右邊一顆金色會發光的〔👩‍🏫 老師看板〕，按了直接到密碼畫面；不擋學生（有密碼） */
+.tbtn{display:inline-flex;align-items:center;gap:.3em;vertical-align:middle;margin-left:.5em;text-decoration:none;
+ font-size:clamp(18px,2.9vh,28px);font-weight:700;letter-spacing:.02em;line-height:1.1;color:#2A1A00;
+ background:linear-gradient(#FFE07A,#E8A900);border-radius:999px;padding:clamp(5px,.8vh,9px) clamp(14px,1.6vw,22px);min-height:44px;
+ box-shadow:0 0 0 3px #5A4300,0 0 18px #FFD54A88;animation:tglow 2.2s ease-in-out infinite}
+.tbtn:active{transform:scale(.97)}
+@keyframes tglow{50%{box-shadow:0 0 0 3px #5A4300,0 0 34px #FFD54ACC}}
+@media (prefers-reduced-motion:reduce){.tbtn{animation:none}}
+/* 2026-10-12：四年級 Unit 2 那一列有 3 顆按鈕（含〔職業單字網站〕），標題被擠成三行、iPad 橫放多出 33px 捲軸 ➜ 只在總首頁：按鈕內距縮一點、標題兩行；矮的螢幕不放那一列的小字 */
+.gi.b3w .gb{gap:5px}
+.gi.b3w .gb a{padding:4px 9px;gap:3px}
+.gi.b3w .gx b{font-size:clamp(14px,2.1vh,19px)}
+.gi.b3w .gx b .gic{margin-right:3px}
+@media (max-height:800px){.gi.b3w .gx i{display:none}.gi.b3w{padding-top:2px;padding-bottom:2px}}
 footer{width:100%;max-width:1000px;margin-top:clamp(6px,1.2vh,16px);
  display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;align-items:center}
 footer a{color:#7E7E7E;text-decoration:none;font-size:clamp(12px,1.7vh,14.5px);
@@ -179,7 +193,7 @@ footer .sep{color:#2A2A2A;font-size:12px}
 </head>
 <body>
 <header>
- <h1>首頁 <span class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></span></h1>
+ <h1>首頁 <a class="tbtn" href="teacher/index.html">👩‍🏫 老師看板</a> <span class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></span></h1>
 </header>
 
 <main id="hub">

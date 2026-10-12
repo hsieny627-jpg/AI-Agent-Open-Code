@@ -68,7 +68,7 @@ const CSS = `
 function rows(G, pre) {
   pre = pre || '';
   return '<section class="gr"><h2>' + G.g + (G.home && pre !== null ? ' <a href="' + pre + G.home + '">年級首頁 ➜</a>' : '') + '</h2><div class="gl">' +
-    G.rows.map((r, k) => '<div class="gi"><span class="gn">' + (k + 1) + '</span><span class="gx"><b><span class="gic">' + r.ic + '</span>' + r.l + '</b>' +
+    G.rows.map((r, k) => '<div class="gi' + (r.b.length >= 3 && r.b.some(x => x.t.length >= 5) ? ' b3w' : '') + '"><span class="gn">' + (k + 1) + '</span><span class="gx"><b><span class="gic">' + r.ic + '</span>' + r.l + '</b>' +
       (r.s ? '<i>' + r.s + '</i>' : '') + '</span><span class="gb">' +
       r.b.map(x => '<a href="' + (/^https?:/.test(x.href) ? '' : (pre || '')) + x.href + '">' + x.ic + ' ' + x.t + '</a>').join('') + '</span></div>').join('') +
     '</div></section>';
