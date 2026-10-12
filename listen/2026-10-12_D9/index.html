@@ -1,0 +1,87 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>用心程度怎麼做</title><style>
+@font-face{font-family:Andika;src:url(../../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#05070A;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 120px;font-size:26px;line-height:1.55;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:40px;color:#FFD54A;margin:22px 0 6px}
+h2{font-size:34px;color:#FFD54A;margin:46px 0 10px;border-top:4px solid #24303C;padding-top:20px}
+.lead{font-size:26px;color:#DDE6EE}
+.howto{background:#102016;border:3px solid #3BD16F;border-radius:20px;padding:14px 20px;margin:16px 0}
+.q{background:#0B0F14;border:3px solid #24303C;border-radius:20px;padding:16px 20px;margin:18px 0}
+.q>.t{font-size:30px;color:#7FD4FF;margin-bottom:8px}
+.op{display:block;border:3px solid #2A3540;border-radius:16px;padding:10px 16px;margin:10px 0;background:#0E141A}
+.op.rec{border-color:#3BD16F;background:#0D1B12}
+.op b.k{display:inline-block;min-width:1.6em;color:#FFD54A;font-size:32px}
+.rec .tag{display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px;margin-left:8px;vertical-align:middle}
+.why{color:#CFE3F5;font-size:24px;margin-top:6px}
+.small{font-size:22px;color:#B9C4CE}
+.cmp{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin:12px 0}
+.cmp .ar{font-size:54px;color:#FFD54A}
+.cmp.v{grid-template-columns:1fr}.cmp.v .ar{transform:rotate(90deg);text-align:center;line-height:1}
+.cmp .lab{font-size:24px;color:#B9C4CE;margin-bottom:4px}
+@media (max-width:760px){.cmp{grid-template-columns:1fr}.cmp .ar{transform:rotate(90deg);text-align:center}}
+.shot{width:100%;border:3px solid #3A4650;border-radius:14px;display:block}
+table{border-collapse:collapse;width:100%;margin:10px 0}
+td,th{border:2px solid #2A3540;padding:8px 12px;text-align:left;vertical-align:middle}
+th{background:#14202B;color:#CFE6FF}
+.big{font-size:44px}
+.mock{background:#000;border:3px solid #3A4650;border-radius:16px;padding:14px;overflow:hidden}
+.opt{background:#0F151C;border:4px solid #2A3540;border-radius:22px;padding:16px 18px;margin:20px 0}
+.opt.rec{border-color:#3BD16F;background:#0D1B12}
+.opt .hd{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:32px}
+.opt .k{color:#FFD54A;font-size:44px}
+.three{display:grid;grid-template-columns:200px 1fr 1fr;gap:14px;align-items:stretch;margin-top:12px}
+@media (max-width:900px){.three{grid-template-columns:1fr}}
+.box{background:#05070A;border:2px solid #2A3540;border-radius:16px;padding:10px;text-align:center}
+.box .lab{font-size:22px;color:#B9C4CE}
+.bigic{height:150px;display:flex;align-items:center;justify-content:center}
+.bigic .eA,.bigic .eB{font-size:120px;line-height:1}
+.bigic .MS{height:150px}
+.eA{display:inline-block;animation:shine 1.6s ease-in-out infinite;filter:drop-shadow(0 0 10px #FFD54A)}
+@keyframes shine{50%{transform:scale(1.15) rotate(12deg);filter:drop-shadow(0 0 26px #FFE07A)}}
+.eB{display:inline-block;transform-origin:50% 0;animation:swing 1.8s ease-in-out infinite}
+@keyframes swing{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.MS{transform-origin:50% 0;animation:swing 1.8s ease-in-out infinite;vertical-align:middle}
+.MS .st{transform-origin:60px 93px;animation:shine2 1.6s ease-in-out infinite}
+@keyframes shine2{50%{transform:scale(1.18);filter:drop-shadow(0 0 6px #fff)}}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:center;font-size:28px;background:#0B1118;border-radius:12px;padding:8px}
+.row .eA,.row .eB{font-size:48px;animation:none}.row .MS{height:58px;animation:none}.row .MS .st{animation:none}
+.tab{background:radial-gradient(circle at 50% 35%,#2A2000,#000 75%);border-radius:14px;padding:16px 8px}
+.tab .t1{font-size:34px;color:#FFE07A;margin-top:6px}.tab .t2{font-size:24px;color:#fff}
+.tab .eA,.tab .eB{font-size:96px}.tab .MS{height:130px}
+.pro{color:#9FF0B8;font-size:24px}.con{color:#FFB38A;font-size:24px}
+.why{font-size:24px}
+
+.mk{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}.mk.one{grid-template-columns:1fr}
+@media (max-width:900px){.mk{grid-template-columns:1fr}}
+.dev{border:6px solid #3A4650;border-radius:26px;background:#000;padding:10px 12px 14px;text-align:center}
+.dev.pj{border-color:#5B4A12;border-radius:8px}
+.dev .lab{font-size:22px;color:#B9C4CE;text-align:left;margin-bottom:6px}
+.dev .t1{font-size:34px;color:#FFE07A;line-height:1.3}.dev .t2{font-size:26px;color:#fff;line-height:1.4}.dev .t3{font-size:22px;color:#CFE3F5;line-height:1.4}
+.bars5{display:grid;gap:8px;text-align:left;max-width:560px;margin:8px auto}
+.bars5 div{display:grid;grid-template-columns:8.5em 1fr 3.2em;gap:10px;align-items:center;font-size:22px}
+.bars5 i{display:block;height:22px;border-radius:999px;background:linear-gradient(90deg,#3BD16F,#9BE7B5)}
+.bars5 .lo i{background:linear-gradient(90deg,#FF7A7A,#FFB4B4)}
+.ev td,.ev th{font-size:22px;overflow-wrap:anywhere}
+@media (max-width:900px){.ev,.ev tbody,.ev tr,.ev td,.ev th{display:block;width:100%}.ev tr:first-child{display:none}.ev tr{margin-bottom:12px}}
+.ans{background:#1A1400;border:4px solid #FFD54A;border-radius:20px;padding:14px 20px;margin:30px 0;font-size:28px}
+</style></head><body><div class="wrap">
+<h1>❓ 第 8 件「👆 用心程度」：先問老師 3 題</h1>
+<div class="lead">第 4 件修正、第 6 件學生登入、第 7 件〔🔒 開關〕已經做好了。第 8 件有 3 個地方有兩種意思，<b>老師選好才動手</b>。</div><h2>❓ 第 1 題：「👆 用心程度」給誰看？</h2>
+<div class="why">之前（D17）說「最用心的人上榮譽榜」；後來老師定案「榮譽只有三種：最認真練習、成績最優、進步最多」。兩句話不一樣，所以要問。</div><div class="opt rec"><div class="hd"><b class="k">A</b>只給老師看（不多一種獎） <span class="tag" style="display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px">建議</span></div><div class="mk"><div class="dev"><div class="lab">📺 老師看板：點一個學生 ＝ 成績卡多一塊</div><div class="t1">👆 用心程度 82 分</div><div class="bars5">
+<div><span>📅 分天練</span><i style="width:100%"></i><b>20</b></div>
+<div><span>📝 自己考自己</span><i style="width:80%"></i><b>16</b></div>
+<div class="lo"><span>🐢 不亂按</span><i style="width:40%"></i><b>8</b></div>
+<div><span>✨ 訂正</span><i style="width:95%"></i><b>19</b></div>
+<div><span>🕒 真的在練</span><i style="width:95%"></i><b>19</b></div></div><div class="t3">🌱 要加油：🐢 不亂按</div></div><div class="dev"><div class="lab">📺 老師看板：🔔 要關心</div><div class="t2">🔔 要關心：每一格多寫</div><div class="t1">👆 82</div><div class="t3">最弱：🐢 不亂按</div></div></div><div class="pro">👍 榮譽還是只有三種，跟老師定案的一樣</div><div class="con">⚠️ 學生看不到自己的用心分數</div></div><div class="opt"><div class="hd"><b class="k">B</b>多一種最高榮譽「最用心」（班內前 10 名、全年級前 10 名）</div><div class="mk"><div class="dev"><div class="lab">📱 學生平板＋📺 投影＋🖨 獎狀</div><div class="t1">最用心</div><div class="t2">304 班 第 3 名</div><div class="t3">用心程度 92 分</div></div></div><div class="pro">👍 學生也看得到</div><div class="con">⚠️ 榮譽變成四種</div></div><h2>❓ 第 2 題：看字卡、按 🔊 聆聽，要不要記下來？</h2>
+<div class="why">現在「練習時間」只算作答的秒數。老師之前說「真的付出時間：字卡和聽力和答題」都要算。</div><div class="opt rec"><div class="hd"><b class="k">A</b>要記：登入的學生看句型卡、單字卡，翻一張、按一次 🔊 都記下來 <span class="tag" style="display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px">建議</span></div><table class="ev"><tr><th>記什麼</th><th>算進哪裡</th></tr>
+<tr><td>看了幾張卡、按了幾次 🔊、看了幾分鐘（一張卡停超過 2 分鐘只算 2 分鐘，開著不動不算）</td><td>🕒 練習時間（＝ 最認真練習也算進去）、👆 用心程度</td></tr></table><div class="pro">👍 只看卡、聽發音的學生，努力也看得見</div><div class="con">⚠️ 在家複習也要登入才記得到（沒登入照樣能看，只是不記）</div></div><div class="opt"><div class="hd"><b class="k">B</b>不記：練習時間只算作答</div><div class="pro">👍 最簡單</div><div class="con">⚠️ 只看卡、聽發音的學生，努力看不見</div></div><h2>❓ 第 3 題：五項（各 20 分，加起來 100 分）這樣算可以嗎？</h2>
+<div class="why">D17 原本寫「合格 5 次」；後來老師定案「做完就算，不用對 2/3」，所以「合格」改成「做完」。</div>
+<table class="ev"><tr><th>項目</th><th>怎樣拿滿 20 分</th><th>沒滿怎麼算</th></tr>
+<tr><td>📅 分天練</td><td>這週有 4 天以上練習</td><td>少 1 天 −5 分</td></tr>
+<tr><td>📝 自己考自己</td><td>這週做完 5 次以上（複習題＋遊戲；太快亂按超過一半的不算）</td><td>少 1 次 −4 分</td></tr>
+<tr><td>🐢 不亂按</td><td>太快亂按 0%</td><td>每多 5% 扣 4 分</td></tr>
+<tr><td>✨ 訂正</td><td>答錯的題目，後來都改對了（沒有答錯 ＝ 20 分）</td><td>改對幾成 ＝ 20 ✕ 幾成</td></tr>
+<tr><td>🕒 真的在練</td><td>這週 30 分鐘以上（第 2 題選 A ＝ 看卡、聽發音也算）</td><td>15 分鐘 ＝ 10 分（照比例）</td></tr></table>
+<div class="small">每一項的研究證據（Cepeda 2006 分天練、Roediger 2006 自己考自己、Wise & Kong 2005 太快亂按、Hattie & Timperley 2007 訂正、Fredricks 2004 投入時間）動手前會一篇一篇打開原文核對；核對不過的那一項，先拿來問老師再換。</div><div class="opt rec"><div class="hd"><b class="k">A</b>照上面這張表 <span class="tag" style="display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px">建議</span></div></div><div class="opt"><div class="hd"><b class="k">B</b>我要改（寫「哪一項 ➜ 改成什麼」）</div></div><div class="ans">✍️ 例：「<b>1A 2A 3A</b>」。看不懂哪一題，直接說「第幾題看不懂」。</div></div></body></html>

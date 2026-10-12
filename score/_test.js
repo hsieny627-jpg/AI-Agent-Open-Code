@@ -32,13 +32,22 @@ eq(SC.checkId('30430').seat, 30, '座號 30 可以'); eq(SC.checkId('30431').err
   eq(b.count, 0, '太快亂按超過一半（5 題按了 3 題）不算練習次數');
   eq(m.sec, 90, '記憶配對的練習時間 ＝ 整場秒數');
   const C = SC.classes(P, 3, { '304': 25, '307': 2 }), c4 = C.filter(c => c.cls === '304')[0], c7 = C.filter(c => c.cls === '307')[0];
-  eq([c4.cntP, c7.cntP, c7.secP], [0.1, 0.5, 49], '班際平均每一個人：除以全班人數（304 班 25 人練 2 次 ＝ 0.1、307 班 2 人練 1 次 ＝ 0.5）');
+  eq([c4.cntP, c7.cntP, c7.secP], [0.1, 0.5, 45], '班際平均每一個人：除以全班人數（304 班 25 人練 2 次 ＝ 0.1、307 班 2 人練 1 次 ＝ 0.5；307 班太快亂按那一次不算時間 ＝ 90 秒 ÷ 2）');
+  eq(SC.secOf(R[2]), 0, '太快亂按超過一半：這一次的練習時間不算（D8）');
+  eq(SC.secOf({ m: 'q', n: 5, fast: 1, qs: [q(1, 8), q(1, 8), [1, 0, 0.5, 1, 1, 0], q(1, 8), q(1, 8)] }), 32, '只有一題太快亂按：那一題的秒數不算');
   const A = SC.clsAwards(C);
-  eq([A.best['304'].k, A.best['307'].k], ['prog', 'count'], '每一班都有自己最強的一項（304 ＝ 進步最多、307 ＝ 最努力）');
+  eq(Object.keys(A.rk), ['sec', 'acc', 'prog'], '班級只有三種：最認真練習的班、成績最優的班、進步最多的班（D6～D8）');
+  eq([A.rk.sec.map(x => x.cls), A.rk.prog.map(x => x.cls)], [['307', '304'], ['304']], '最認真練習的班 ＝ 平均每一個人練習時間；進步最多只有進步的班');
   ok(!A.best['311'], '沒有人做的班沒有獎');
   const v2 = SC.view(R, { id: '30401' }, NOW, true, { '304': 25 });
-  eq([v2.me.sec, v2.me.days, v2.mycls.count, v2.caw && v2.caw.k, v2.cls1.prog], [70, 2, 2, 'prog', '304'], '學生拿到：練習時間、天數、本班一起練幾次、我們班最強的一項');
-  ok(v2.top.sec && v2.rk.sec, '學生也有 ⏱ 練習時間榜'); }
+  eq([v2.me.sec, v2.me.days, v2.me.pf, v2.me.pt, v2.cls1.prog, v2.crk.prog.rk], [70, 2, 40, 80, '304', 1], '學生拿到：練習時間、天數、進步從 40 分到 80 分、班級名次');
+  ok(v2.top.sec && v2.rk.sec, '學生也有 ⏱ 練習時間榜');
+  /* 第一次進榜或名次上升才演（rk0 ＝ 這一次以前的名次） */
+  const v3 = SC.view(R, { id: '30401', u: 'b' }, NOW, true, { '304': 25 });
+  eq([v3.rk.sec.cls, v3.rk0.sec.cls, v3.rk.prog.cls, v3.rk0.prog.cls], [1, 1, 1, null], '小華這一次：最認真練習 名次沒變（1 ➜ 1，不演）、進步最多 第一次進榜（演）');
+  /* 上週的練習時間（比上週多 練習 N 分鐘） */
+  const LW = R.concat([{ id: '30401', cls: '304', g: 3, set: 'g3u1_b', m: 'q', acc: 60, s: 50, n: 5, ok: 3, fast: 0, t: MON - 864e5, u: 'e', qs: [q(1, 4), q(1, 4), q(1, 4), q(0, 4), q(0, 4)] }]);
+  eq(SC.view(LW, { id: '30401' }, NOW, true).me.secPrev, 20, '上週練了 20 秒（這週 70 秒 ➜ 比上週多）'); }
 /* 2/3 門檻：5 題對 4 題才算；6 題對 4 題算 */
 ok(SC.counts(2, 5, 'q', 0) && SC.counts(0, 5, 'q', 2) && !SC.counts(5, 5, 'q', 3) && !SC.counts(0, 0, 'q', 0), '練習次數做完就算（F4）；太快亂按超過一半不算'); eq(SC.need(5), 4, '5 題要對 4 題');
 /* 總分百分制：答對 60 ＋ 速度 40（Q1-A） */
@@ -81,11 +90,21 @@ eq(G.post({ a: 'rec', r: { id: '30505', set: 'g3u1_1-1b', qs: [[1, 0, 1, 0, 1]] 
 eq(G.post({ a: 'rec', r: { id: '30405', set: 'x<script>', qs: [[1, 0, 1, 0, 1]] } }).err, 'bad', '題組代號不對 ➜ 不存');
 for (let s = 1; s <= 12; s++) G.post(body('304' + String(s + 10).padStart(2, '0'), 'g3u1_1-1b', s % 2 ? 5 : 4));
 G.post(body('30701', 'g3u1_1-1b', 3)); G.post(body('40205', 'g4u1_1-1b', 5));
+/* 2026-10-12 D 第 7 件：〔🔒 開關〕 */
+{ eq(G.post({ a: 'lock', pw: 'wrong', cls: ['304'], keys: ['g3rv_u1-t0-0'], on: true }).err, 'pw', '〔🔒 開關〕要老師密碼');
+  const L1 = G.post({ a: 'lock', pw: 'pw-test', cls: ['304', '307'], keys: ['g3rv_u1-t0-0', 'g3rv_gm-g3', 'g4rv_u1-t0-0', 'x<b>'], on: true }).locks;
+  eq(L1, { '304': ['g3rv_gm-g3', 'g3rv_u1-t0-0'], '307': ['g3rv_gm-g3', 'g3rv_u1-t0-0'] }, '鎖 304、307 兩班；別的年級、亂寫的代號不收');
+  eq(G.post({ a: 'lock', pw: 'pw-test', cls: ['307'], keys: ['g3rv_gm-g3'], on: false }).locks['307'], ['g3rv_u1-t0-0'], '307 班開一個，其他照舊');
+  const an = G.get({ a: 'locks', g: '3' }); eq(an.any, ['g3rv_gm-g3', 'g3rv_u1-t0-0'], '沒登入：只知道任何一班鎖了哪些主題');
+  ok(!/30[47]/.test(JSON.stringify(an)), '沒登入拿到的不寫哪幾班（D6 第 13 題）');
+  eq([G.get({ a: 'tasks', id: '30405' }).locks, G.get({ a: 'tasks', id: '30701' }).locks, G.get({ a: 'tasks', id: '31101' }).locks], [['g3rv_gm-g3', 'g3rv_u1-t0-0'], ['g3rv_u1-t0-0'], []], '登入了：只拿自己班的');
+  eq(G.post({ a: 'teacher', pw: 'pw-test' }).locks['304'].length, 2, '老師看板拿得到全部');
+  G.post({ a: 'lock', pw: 'pw-test', cls: ['304', '307'], keys: ['g3rv_u1-t0-0', 'g3rv_gm-g3'], on: false }); eq(G.get({ a: 'locks', g: '3' }).any, [], '全部開'); }
 v = G.get({ a: 'view', id: '30405', set: 'g3u1_1-1b' });
 ok(v.boards && v.top.acc.cls.length >= 10 && v.top.acc.cls.every(x => x.rk <= 10), '學生只看得到前 10 名');
 ok(v.top.acc.grade.every(x => x.id[0] === '3'), '全年級榜只有三年級');
 ok(v.rk.acc.cls === null || v.rk.acc.cls <= 10, '自己不在前 10 名 ➜ 沒有名次數字');
-eq(Object.keys(v).sort(), ['boards', 'caw', 'classes', 'cls', 'cls1', 'cut', 'g', 'id', 'keep', 'me', 'mycls', 'rk', 'set', 'top', 'week'], '學生看得到的只有這些（沒有別人的名次）');
+eq(Object.keys(v).sort(), ['boards', 'caw', 'classes', 'cls', 'cls1', 'crk', 'cut', 'g', 'id', 'keep', 'me', 'mycls', 'rk', 'set', 'top', 'week'], '學生看得到的只有這些（沒有別人的名次；crk ＝ 自己班的名次）');
 ok(v.set.others.length <= 10 && v.set.others.every(x => typeof x === 'number'), '作答中名次只拿到別人前 10 個分數（沒有 5 碼）');
 eq(v.classes.map(c => c.cls), ['304', '307', '311'], '班級長條 ＝ 同年級三班');
 eq(G.post({ a: 'teacher', pw: 'wrong' }).err, 'pw', '老師密碼錯 ➜ 拒絕');

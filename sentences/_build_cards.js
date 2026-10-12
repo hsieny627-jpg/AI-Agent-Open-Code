@@ -2029,7 +2029,8 @@ function crossTab(d){var t=TCUR+d;if(t<0||t>=TABM.length)return false;
 document.body.classList.add('hastabs');
 function tabH(){var t=document.getElementById('tabs');if(t)document.documentElement.style.setProperty('--tabH',t.offsetHeight+'px')}
 function setDeck(t,l,keep){
-  var tb=TABM[t];if(!tb)return;TCUR=t;LCUR=tb.sub?(l||0):0;if(tb.sub)LMEM=LCUR;
+  var tb=TABM[t];if(!tb)return;
+  if(typeof scLkGate==='function'&&!scLkGate(scLkTab(t,l),function(){setDeck(t,l,keep)}))return;   /* 在家複習：老師〔🔒 開關〕鎖住的分頁（score/_client.js，D 第 7 件） */TCUR=t;LCUR=tb.sub?(l||0):0;if(tb.sub)LMEM=LCUR;
   stopPlay();sayStop();tocClose();
   CARDS=DECKS[tb.sub?tb.sub[LCUR].d:tb.d];i=0;
   dots.innerHTML=CARDS.map(function(){return '<i></i>'}).join('');

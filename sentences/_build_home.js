@@ -45,6 +45,7 @@ h1{margin:0;font-size:clamp(25px,4.8vh,46px);font-weight:700;letter-spacing:.03e
 
 const body = `
 <main id="stage">
+${require('../score/_client.js').home(4, '../', 'school')}
 <header>
  <h1>四年級</h1>
  <div class="sub">四年級　Unit 1 ・ Unit 2</div>

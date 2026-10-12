@@ -192,8 +192,9 @@ footer .sep{color:#2A2A2A;font-size:12px}
 </style>
 </head>
 <body>
+${require('../score/_client.js').home(0, '', 'school', 1)}
 <header>
- <h1>首頁 <a class="tbtn" href="teacher/index.html">👩‍🏫 老師看板</a> <span class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></span></h1>
+ <h1>首頁 <a class="tbtn" href="teacher/index.html">👩‍🏫 老師看板</a><span id="scbar" class="inl" hidden></span> <span class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></span></h1>
 </header>
 
 <main id="hub">

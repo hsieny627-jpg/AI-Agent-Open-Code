@@ -1102,7 +1102,8 @@ $('#backhub').addEventListener('click',hub);
 $('#gscore').addEventListener('click',function(){if(SCEND){SCH.open();scScene()}});
 /* ══ 成績紀錄（2026-10-08 對話 D）══ */
 /* 2026-10-09 E：老師派了任務 ➜ 沒被指定的（或還沒開放、已經截止的）按了只說為什麼鎖住，不能開始 */
-function gGo(id){scGate(function(){scTkGo(SCH.keyOf(id),function(){if(SCH.on())SCH.close();begin(id)})})}
+function gGo(id){if(typeof scLkGate==='function'&&!scLkGate('gm-'+id,function(){gGo(id)}))return;   /* 在家複習：老師〔🔒 開關〕鎖住的遊戲（D 第 7 件） */
+  scGate(function(){scTkGo(SCH.keyOf(id),function(){if(SCH.on())SCH.close();begin(id)})})}
 function gScHub(){clearTimeout(gScT);clearTimeout(SCAUTO);SCEND=null;if(SCH)SCH.close();var m=$('#scme');if(m)m.innerHTML=scMeHTML()}
 function gScBegin(){GQ=[];GSEEN=[];GSIM=[];gFix=0;gMp=0;gMw=0;gFirst=false;gHelp=0;clearTimeout(gScT);SCH.close();$('#gscore').hidden=true;scStart(g!=='g6')}
 /* 這一題算不算「第一次作答」：插進去的類似題、出過的題目不算 */

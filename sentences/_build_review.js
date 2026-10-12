@@ -16,25 +16,10 @@
 const fs = require('fs'), path = require('path'), cp = require('child_process');
 const ROOT = path.join(__dirname, '..');
 const NAMETAG = require('./_nametag').TAG;
-const SITES = [
-  { out: 'g3-review', src: 'G3 - L1 + L2', g: '三年級複習', games: ['g3', 'g5', 'g9'],
-    units: [{ ic: NAMETAG, t: 'Unit 1　What’s your name?', f: 'u1.html', tabs: ['What’s your name?', 'My name is ___.'] },
-            { ic: '🎂', t: 'Unit 2　How old are you?', f: 'u2.html', tabs: ['How old are you?', 'I’m ten years old.'] }],
-    /* 補充（2026-10-07 使用者第 12 點）：複製一份進複習網站（from ＝ 老師網站的那一頁），按鈕只回複習首頁 */
-    more: [{ ic: '🔢', t: '數字：單字結構', from: 'G3 - L1 + L2/numbers/numbers-parts.html' },
-           { ic: '🔢', t: '數字：單字故事', from: 'G3 - L1 + L2/numbers/numbers-why.html' },
-           { ic: '👀', t: 'Sight Words：單字結構', from: 'G3 - L1 + L2/sight/sight-parts.html' },
-           { ic: '👀', t: 'Sight Words：單字故事', from: 'G3 - L1 + L2/sight/sight-why.html' }] },
-  { out: 'g4-review', src: 'sentences', g: '四年級複習', games: ['g3', 'g4', 'g5'],
-    units: [{ ic: '👪', t: 'Unit 1　Who’s he?', f: 'u1.html', tabs: ['Who’s he/she?', 'He’s/She’s my ___.'] },
-            { ic: '💼', t: 'Unit 2　Is he a doctor?', f: 'u2.html', tabs: ['He/She is a ___.', 'Yes／No'] }],
-    more: [{ ic: '👪', t: '家人：單字結構', from: 'words/parts.html' },
-           { ic: '👪', t: '家人：單字故事', from: 'words/why.html' },
-           { ic: '💼', t: '職業：單字結構', from: 'words/jobs-parts.html' },
-           { ic: '💼', t: '職業：單字故事', from: 'words/jobs-why.html' }] }
-];
+const { SITES, topics } = require('./_review_sites.js');
 function indexHTML(S, META) {
-  const btn = (href, ic, t, d) => '<a class="b" href="' + href + '"><span class="i">' + ic + '</span><span class="x"><b>' + t + '</b>' + (d ? '<em>' + d + '</em>' : '') + '</span></a>';
+  const T = topics(S), lk = href => { const x = T.filter(o => o.href === href)[0]; if (!x) throw new Error('在家複習首頁的 ' + href + ' 沒有〔🔒 開關〕代號'); return x.k; };
+  const btn = (href, ic, t, d) => '<a class="b" data-lk="' + lk(href) + '" href="' + href + '"><span class="i">' + ic + '</span><span class="x"><b>' + t + '</b>' + (d ? '<em>' + d + '</em>' : '') + '</span></a>';
   return `<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -64,6 +49,7 @@ h2 span{display:inline-flex;align-items:center;justify-content:center;width:1.5e
 #bar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;padding:10px;background:linear-gradient(180deg,transparent,#000 40%)}
 #bar a{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;text-decoration:none;font-size:16px;padding:11px 20px}
 </style></head><body>
+${require('../score/_client.js').home(S.out === 'g3-review' ? 3 : 4, '../', 'home')}
 <h1>🏠 ${S.g}</h1>
 <section><h2><span>1</span>📖 句型</h2>
 ${S.units.map(u => '<div class="u"><h3>' + u.ic + ' ' + u.t + '</h3><div class="g">' +
@@ -119,6 +105,9 @@ SITES.forEach(S => {
   h = h.split('src="avatars/').join('src="' + rel + 'avatars/').split('src=\\"avatars/').join('src=\\"' + rel + 'avatars/');
   fs.writeFileSync(path.join(dir, 'games.html'), h);
   fs.writeFileSync(path.join(dir, 'index.html'), indexHTML(S, META));
-  S.more.forEach(x => fs.writeFileSync(path.join(dir, path.basename(x.from)), copyIn(path.join(ROOT, x.from), dir)));
+  /* 補充頁也接登入（這是您嗎、3 分鐘）和〔🔒 開關〕（2026-10-12 D 第 6、7 件）：SCLKPAGE ＝ 這一頁的代號 */
+  const T = topics(S), SC1 = require('../score/_client.js');
+  S.more.forEach(x => { const f = path.basename(x.from), k = T.filter(o => o.href === f)[0].k.replace(/^g\drv_/, '');
+    fs.writeFileSync(path.join(dir, f), copyIn(path.join(ROOT, x.from), dir).replace('</body>', () => '<script>window.SCLKPAGE=' + JSON.stringify(k) + '</script>\n' + SC1.home(S.out === 'g3-review' ? 3 : 4, '../', 'home', 1) + '</body>')); });
   console.log(S.g + '：' + S.out + '/index.html、u1.html、u2.html、games.html（' + S.games.join('、') + '）');
 });

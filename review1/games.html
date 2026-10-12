@@ -647,8 +647,45 @@ button{font-family:inherit;color:inherit;background:none;border:0;padding:0;
 .sccnt{font-size:clamp(26px,4.8vh,46px);font-weight:700}
 .sccnt b{color:var(--gold);display:inline-block}
 .sccnt b.pop{animation:scPop .5s ease-out .6s}
+/* 學生登入（D 第 6 件）：首頁橫幅、整頁大字 */
+#scbar{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 16px;align-self:stretch;width:auto;margin:0 0 8px;background:#10240F;border-bottom:3px solid #3BD16F;color:#fff;
+  font-size:clamp(22px,3.4vh,32px);font-weight:700;padding:8px 16px;position:relative;z-index:5}
+#scbar[hidden]{display:none}#scbar b{color:#FFE07A;letter-spacing:.04em}
+#scbar button,.scfull button,.scbye button{font-family:inherit;font-weight:700;border-radius:14px;border:0;cursor:pointer;min-height:52px;padding:6px 22px;font-size:clamp(22px,3.2vh,30px);color:#000}
+.scfull{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;padding:16px;text-align:center;color:#fff}
+.scfull.on{display:flex}.scfb{display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2.4vh,24px);max-width:900px}
+.scfull .sfic{font-size:clamp(90px,16vh,160px);line-height:1}
+.scfull .sf1{font-size:clamp(36px,6.4vh,64px);font-weight:700;color:#FFE07A}
+.scfull .sf2{font-size:clamp(32px,5.6vh,56px);font-weight:700}.scfull .sf2 b{color:#FFE07A;font-size:1.3em}
+.scfull .sf3{font-size:clamp(26px,4.4vh,40px);font-weight:700;color:#CFE3F5}
+.scfull .sfid{font-size:clamp(80px,15vh,150px);font-weight:700;letter-spacing:.08em;line-height:1.1}
+.scfull .sfbt{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.scfull button{min-height:clamp(64px,10vh,90px);padding:8px 30px;font-size:clamp(28px,4.6vh,42px)}
+.scY{background:#3BD16F!important}.scN{background:#FF8A80!important}.scK{background:#FFD54A!important}
+/* 總首頁：一頁要放得下（iPad 橫放不可以有捲軸）➜ 橫幅放在「首頁」那一行，不多佔一行 */
+#scbar.inl{display:inline-flex;border:2px solid #3BD16F;border-radius:999px;padding:0 3px 0 14px;font-size:clamp(22px,2.9vh,28px);vertical-align:middle;margin-left:.5em;gap:8px;letter-spacing:0}
+body.scq .url{display:none}
+#scbar.inl[hidden]{display:none}#scbar.inl button{min-height:48px;padding:2px 16px;font-size:clamp(22px,2.9vh,28px)}
+.scbye{display:flex;align-items:center;justify-content:center;gap:12px 18px;flex-wrap:wrap;background:#1F1A08;border:3px solid #FFD54A;border-radius:18px;padding:6px 16px;
+  font-size:clamp(20px,3vh,28px);font-weight:700;color:#fff}
+.scbye span{display:flex;flex-direction:column;align-items:center;line-height:1.25}.scbye small{font-size:.8em;color:#CFE3F5}
+.scbye button{background:#FF8A80;min-height:48px}
+.sclkb{display:inline-block;margin-left:auto;background:#3A0E0E;border:2px solid #FF8A80;color:#FFD6D2;border-radius:999px;padding:2px 12px;font-size:clamp(16px,2.4vh,22px);font-weight:700;white-space:nowrap}
+.sclocked{opacity:.75}.gcard .sclkb{position:absolute;top:8px;right:8px}
+.sctime{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.4vh,14px);padding:clamp(8px,2vh,20px) 0}
+.sctime .stic{font-size:clamp(80px,14vh,130px);line-height:1}.sctime .stic svg{height:clamp(90px,15vh,140px);width:auto}
+.sctime .st1{font-size:clamp(30px,5.4vh,52px);font-weight:700;color:#FFE07A;line-height:1.25}
+.sctime .st2{font-size:clamp(26px,4.6vh,44px);font-weight:700;line-height:1.3}
+.sctime .st3{font-size:clamp(24px,4.2vh,40px);font-weight:700;color:#CFE3F5;line-height:1.3}
+.sctime .st4{font-size:clamp(20px,3.2vh,30px);font-weight:700;color:#CFCFCF}
+.sctime .hclkm{transform-origin:50px 50px;transform:rotate(0deg)}
+.sctime.go .hclkm{animation:scClk 1.6s cubic-bezier(.3,1.3,.6,1) forwards}
+.sctime>div{animation:scUp .5s backwards}.sctime>div:nth-child(2){animation-delay:.25s}.sctime>div:nth-child(3){animation-delay:.5s}.sctime>div:nth-child(4){animation-delay:.75s}
+@keyframes scClk{to{transform:rotate(420deg)}}
+@keyframes scUp{from{opacity:0;transform:translateY(16px)}}
+@media (prefers-reduced-motion:reduce){.sctime>div,.sctime.go .hclkm{animation:none}}
 .scwait{font-size:clamp(22px,4vh,38px);font-weight:700;color:#CFCFCF}
-.scwait i{display:inline-block;animation:scSpin 1s linear infinite;font-style:normal}
+.scwait i,.scspin{display:inline-block;animation:scSpin 1s linear infinite;font-style:normal}
 @keyframes scSpin{to{transform:rotate(360deg)}}
 /* 排行榜 */
 .sctabs,.scscope{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
@@ -2217,7 +2254,8 @@ $('#backhub').addEventListener('click',hub);
 $('#gscore').addEventListener('click',function(){if(SCEND){SCH.open();scScene()}});
 /* ══ 成績紀錄（2026-10-08 對話 D）══ */
 /* 2026-10-09 E：老師派了任務 ➜ 沒被指定的（或還沒開放、已經截止的）按了只說為什麼鎖住，不能開始 */
-function gGo(id){scGate(function(){scTkGo(SCH.keyOf(id),function(){if(SCH.on())SCH.close();begin(id)})})}
+function gGo(id){if(typeof scLkGate==='function'&&!scLkGate('gm-'+id,function(){gGo(id)}))return;   /* 在家複習：老師〔🔒 開關〕鎖住的遊戲（D 第 7 件） */
+  scGate(function(){scTkGo(SCH.keyOf(id),function(){if(SCH.on())SCH.close();begin(id)})})}
 function gScHub(){clearTimeout(gScT);clearTimeout(SCAUTO);SCEND=null;if(SCH)SCH.close();var m=$('#scme');if(m)m.innerHTML=scMeHTML()}
 function gScBegin(){GQ=[];GSEEN=[];GSIM=[];gFix=0;gMp=0;gMw=0;gFirst=false;gHelp=0;clearTimeout(gScT);SCH.close();$('#gscore').hidden=true;scStart(g!=='g6')}
 /* 這一題算不算「第一次作答」：插進去的類似題、出過的題目不算 */
@@ -2250,7 +2288,19 @@ function gInit(){hub();var h=(location.hash||'').slice(1);if(h&&META.some(functi
    稱讚努力和方法、不稱讚聰明（Mueller & Dweck 1998、Henderlong & Lepper 2002）➜ 每一句都寫「你做了什麼」。 */
 var HON=(function(){
   /* 努力獎：獎牌上面有星星（使用者 2026-10-12 第 1 題 C；自己畫的，每一台都一樣） */
-  var EFF='<svg class="heff" viewBox="0 0 120 150" aria-label="努力獎"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="#FFC928"/><circle cx="60" cy="95" r="40" fill="#FFF1A8" opacity=".35"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path d="M60 68l8.2 16.6 18.3 2.7-13.2 12.9 3.1 18.2L60 109.8l-16.4 8.6 3.1-18.2-13.2-12.9 18.3-2.7z" fill="#FFFDF0" stroke="#FFB300" stroke-width="2.5" stroke-linejoin="round"/></svg>';
+  var EFF='<svg class="heff" viewBox="0 0 120 150" aria-label="最認真練習"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="#FFC928"/><circle cx="60" cy="95" r="40" fill="#FFF1A8" opacity=".35"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path d="M60 68l8.2 16.6 18.3 2.7-13.2 12.9 3.1 18.2L60 109.8l-16.4 8.6 3.1-18.2-13.2-12.9 18.3-2.7z" fill="#FFFDF0" stroke="#FFB300" stroke-width="2.5" stroke-linejoin="round"/></svg>';
+  /* 練習時間：自己畫的時鐘（白底金框、紅色指針；使用者 2026-10-12 D8 第 1 題 A，取代 ⏱） */
+  var CLK='<svg class="hclk" viewBox="0 0 100 100" aria-label="時鐘"><circle cx="50" cy="50" r="44" fill="#FFF8E6" stroke="#FFB300" stroke-width="8"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00" transform="rotate(90 50 50)"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00" transform="rotate(180 50 50)"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00" transform="rotate(270 50 50)"/><rect x="47" y="24" width="6" height="28" rx="3" fill="#333"/><rect class="hclkm" x="47" y="34" width="6" height="18" rx="3" fill="#D84315" transform="rotate(60 50 50)"/><circle cx="50" cy="50" r="6" fill="#333"/></svg>';
+  /* 三種最高榮譽（使用者 2026-10-12 D6～D8 定案）：學生平板、老師投影、印獎狀、老師看板的字一模一樣，只寫在這裡 */
+  var AWK=['sec','acc','prog'],AWN={sec:'最認真練習',acc:'成績最優',prog:'進步最多'};
+  function mn(sec){sec=Math.round(+sec||0);return sec<60?sec+' 秒':Math.round(sec/60)+' 分鐘'}
+  function f1(v){return Math.round(v*10)/10}
+  /* 個人獎下面那一句：per ＝ 這週／上週／這學期／這段期間；p ＝ {sec, acc, pf, pt} */
+  function awl(k,p,per){return k==='sec'?(per||'這週')+' 練習 '+mn(p.sec):k==='acc'?'正確率 '+f1(p.acc)+' 分：每一題都看清楚才選。':
+    (p.pf!=null&&p.pt!=null?'正確率從 '+p.pf+' 分進步到 '+p.pt+' 分（多了 '+(p.pt-p.pf)+' 分）。':'正確率進步 '+f1(p.prog)+' 分。')}
+  /* 班級獎下面那一句：v ＝ 那一種的數字（練習時間 ＝ 平均每一個人幾秒） */
+  function awc(k,v){return k==='sec'?'平均每一個人 練習 '+mn(v):k==='acc'?'平均正確率 '+f1(v)+' 分':'平均每一個人 正確率進步 '+f1(v)+' 分'}
+  function awi(k){return k==='sec'?EFF:k==='prog'?UP:'🎯'}
   /* 進步：綠色粗箭頭（跟老師看板同一個） */
   var UP='<svg class="hup" viewBox="0 0 40 48" aria-label="進步"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg>';
   var ST=[{nm:'金色獎盃從天而降',h:'🏆',fx:'cf'},{nm:'皇冠加冕',h:'👑',fx:'tw'},{nm:'頒獎台升起',h:'🥇',fx:'cf'},{nm:'煙火大會',h:'🎆',fx:'fw'},
@@ -2303,7 +2353,7 @@ var HON=(function(){
     drum:function(d){d=d||1.4;for(var t=0;t<d;t+=.06)noise(t,.05,.12+.2*t/d,180);noise(d,.7,.35,4000)},
     clap:function(d){d=d||2.2;for(var i=0;i<70;i++)noise(Math.random()*d,.05,rnd(.05,.16),rnd(900,2400))},
     ding:function(){tone(1319,0,.5,'sine',.12);tone(1760,.08,.6,'sine',.08)}};
-  return {EFF:EFF,UP:UP,ST:ST,pick:pick,scene:scene,fx:fx,snd:snd,ac:ac};
+  return {EFF:EFF,UP:UP,CLK:CLK,AWK:AWK,AWN:AWN,mn:mn,awl:awl,awc:awc,awi:awi,ST:ST,pick:pick,scene:scene,fx:fx,snd:snd,ac:ac};
 })();
 
 /* ══════════ 成績紀錄（2026-10-07 對話 C；2026-10-08 對話 D：遊戲、Review 1 也記）══════════
@@ -2423,16 +2473,16 @@ function scKeyPress(k){
 }
 /* 登入好了（2026-10-09 Q4：學生端不顯示姓名，不再問伺服器「你是 ○○○ 嗎？」） */
 function scWho(r){
-  var go=function(){SCID=r.id;scPut('id_g'+r.g,SCID);scPut('last',SCID);SCGUEST=false;var a=SCLOGAFTER;SCLOGAFTER=null;
+  var go=function(){SCID=r.id;scPut('id_g'+r.g,SCID);scPut('last',SCID);SCGUEST=false;scOk();scAct();scBar();var a=SCLOGAFTER;SCLOGAFTER=null;
     scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk();if(a)a()})};   /* 登入好了先拿老師的任務（2026-10-09 E），再做要做的事 */
   var m=$('#scMsg');m.className='scmsg ok';m.textContent='✅ '+scCn(r.cls)+' '+r.seat+' 號';
   setTimeout(go,500);
 }
 function scMeHTML(){
   if(!SCON)return '';
-  if(SCGUEST)return '<div class="scme">👀 練習模式（不記成績）<button id="scSwap">🔢 登入</button></div>';
-  if(!SCID)return '<div class="scme">🔢 還沒登入<button id="scSwap">🔢 登入</button></div>';
-  return '<div class="scme">'+SCID+'<button id="scSwap">換人</button></div>';
+  if(SCGUEST)return '<div class="scme">👀 練習模式（不記成績）<button id="scSwap">🔑 登入</button></div>';
+  if(!SCID)return '<div class="scme">👤 還沒登入<button id="scSwap">🔑 登入</button></div>';
+  return '<div class="scme">'+SCID+'<button id="scSwap">👋 登出</button></div>';
 }
 /* ── 作答中：本班這一組的名次（只有前 10 名給名次；不在前 10 ＝ 再幾分進前 10） ── */
 function scStart(gt){
@@ -2456,12 +2506,11 @@ function scDone(pick,ok,ratio){
   var fast=pick>=0?(now-(SCREF||SCT0)<1000?1:0):0;   /* 認讀題聽完才開始算；聲音沒播出來（沒有 scHeard）就從題目出來開始算，不要整份都變成太快亂按（練習次數 2026-10-12 F4 會看它） */
   SCQ.push([ok?1:0,pick,Math.round(sec*10)/10,fast,ok?Math.round(Math.max(0,Math.min(1,ratio))*1000)/1000:0,SCQI]);
 }
-/* ── 作答結束（2026-10-12 D 第 4 件，使用者第 3 題 A）──
-   題目（m:'q'）：① 正確率 ➜ 🏆 榮譽動畫（約 10 秒：自己的獎 ➜ 本班榮譽榜 ➜ 班際）➜ ③ 答錯整理
-     （原本的 ② 跟上一次比 ＝ 進步獎、③ 算 1 次 ＝ 努力獎「練習次數 ＋1」、④ 我幫全班 ＝ 班際、⑤ 排行榜 ＝ 本班榮譽榜，都搬進榮譽動畫，不重複）
-   遊戲（m:'g'）：① 正確率（第一次作答）＋✨ 訂正成功 ➜ 🏆 榮譽動畫 ➜ 這個遊戲本班前 10 名
-   🃏 記憶配對（m:'mem'）：配完幾對、用幾秒、翻錯幾次 ➜ 🏆 榮譽動畫（不算正確率、不算總分） */
-var SCLIST={q:['acc','honor','end'],g:['acc','honor','gtop'],mem:['mem','honor']};
+/* ── 作答結束（2026-10-12 D 第 4 件；第 4 件修正 ＝ 使用者 D6～D8 定案）──
+   題目（m:'q'）：① 正確率 ➜ ② 練習時間（每一個人都看得到，不是獎）➜ ③ 🏆 榮譽動畫（只有這一次讓他第一次進榜或名次上升才演）➜ 答錯整理
+   遊戲（m:'g'）：① 正確率（第一次作答）＋✨ 訂正成功 ➜ ② 練習時間 ➜ ③ 🏆（同上）➜ 這個遊戲本班前 10 名
+   🃏 記憶配對（m:'mem'）：配完幾對、用幾秒、翻錯幾次 ➜ ② 練習時間 ➜ ③ 🏆（同上） */
+var SCLIST={q:['acc','time','honor','end'],g:['acc','time','honor','gtop'],mem:['mem','time','honor']};
 function scS100(Q){var n=Q.length,s=0;Q.forEach(function(q){if(q[0])s+=60/n+40/n*q[4]});return Math.round(s)}
 function scEnd(o){
   o=o||{};var m=o.m||'q',Q=o.qs||SCQ,key=SCH.key(),n=Q.length,ok=0,fast=0;Q.forEach(function(q){ok+=q[0];fast+=q[3]});
@@ -2476,7 +2525,8 @@ function scEnd(o){
   var todayN=sv?sv.today:H.filter(function(x){return x.d===today&&x.c}).length;
   H.push({t:R.t,acc:acc,c:cnt,d:today});scPut(hk,H.slice(-50));
   var QQ=scGet('q')||[];QQ.push(R);scPut('q',QQ.slice(-200));SCIN=u;
-  SCEND={m:m,list:SCLIST[m].slice(),fast:fast,
+  var me1=m==='mem'?R.sec:(fast*2>n?0:Q.reduce(function(t,q){return t+(q[3]?0:+q[2]||0)},0));   /* 這一次練了幾秒（太快亂按不算，跟 _calc.js secOf 一樣） */
+  SCEND={m:m,list:SCLIST[m].slice(),fast:fast,me1:me1,
     acc:acc,ok:ok,n:n,s:m==='mem'?null:scS100(Q),raw:R.raw,fix:R.fix,mp:R.mp,mw:R.mw,sec:R.sec,prev:prev,best:best,cnt:cnt,cap:cnt&&todayN>=3,
     week:(SCV&&SCV.me?SCV.me.count:null),res:null,fail:false,k:0,tab:'acc',scope:'cls'};
   /* 送出：前一次補送還在跑就等一下再試（最多 3 次），還是送不出去 ＝ 沒有網路，先存平板 */
@@ -2484,7 +2534,7 @@ function scEnd(o){
     var j=SCRES[u],left=(scGet('q')||[]).some(function(x){return x.u===u});
     if(!j&&left&&n<3){setTimeout(function(){send(n+1)},1500);return}
     if(j)SCEND.res=j;else SCEND.fail=true;
-    var nm=SCEND.list[SCEND.k];if(nm==='gtop'||(nm==='honor'&&!SCEND.hgo))scScene()})};
+    var nm=SCEND.list[SCEND.k];if(nm==='gtop'||(nm==='time'&&!SCEND.tgo))scScene()})};
   send(0);
   scScene();
   return true;
@@ -2496,48 +2546,37 @@ function scRing(E,t){var R=46,L=2*Math.PI*R;
   return '<div class="sct">'+t+'</div><div class="scring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="'+R+'"></circle>'+
     '<circle class="fg" id="scFg" cx="50" cy="50" r="'+R+'" stroke-dasharray="'+L+'" stroke-dashoffset="'+L+'"></circle></svg>'+
     '<b><span id="scAcc">0</span><small>'+E.ok+' ／ '+E.n+' 題</small></b></div>'}
-/* ── 🏆 榮譽動畫（2026-10-12 D 第 4 件）：使用者「只要努力、只要進步、只要用心、肯花時間，都值得同等的肯定」
-   ① 自己的獎（最多 3 個；練習次數 ＋1 一定有努力獎）➜ ② 本班榮譽榜（我上了哪一個榜；沒上榜 ＝ 本班一起練了幾次）➜ ③ 班際（我們班最強的一項）
-   12 種風格輪流（HON.pick，這台平板記得上一次）；約 10 秒、可以跳過、平板不放聲音（F6-A）。字一律稱讚「你做了什麼」，不寫聰明 */
-var SCHB={acc:['🎯','精準獎'],s:['💯','高分獎'],count:['','努力獎'],prog:['','進步獎'],sec:['⏱','時間獎']};
-var SCCB={count:'這週最努力的班',prog:'這週進步最多的班',sec:'這週練習時間最多的班',acc:'這週成績最優的班'};
-var SCCB2={count:'最努力',prog:'進步最多',sec:'練習時間最多',acc:'成績最優'};
-function scIc(k){return k==='count'?HON.EFF:k==='prog'?HON.UP:(SCHB[k]||['🏆'])[0]}
-function scMin(sec){var m=Math.round(sec/60);return m<1?'不到 1 分鐘':m+' 分鐘'}
-function scAwards(E){
-  var V=E.res,me=V&&V.me,A=[],X=[];
-  if(E.m!=='mem'&&E.n>0&&E.fast*2>E.n)return [{ic:'💡',nm:'小提醒',l:'每一題看完、聽完再選，練習次數就會 ＋1'}];   /* 太快亂按超過一半：這一次不算，也不給獎（F4） */
-  if(E.cnt)A.push({ic:HON.EFF,nm:'努力獎',l:E.cap?'今天這一組練滿 3 次了！換一組，練習次數還會 ＋1':'<span class="nw">練習次數 ＋1！</span>'+(me&&me.count?'<br><span class="nw">這週第 '+me.count+' 次練習</span>':'')});
-  if(E.acc!=null&&E.prev!=null&&E.acc>E.prev&&E.fast*2<=E.n)X.push({ic:HON.UP,nm:'進步獎',l:'比上一次多 '+(E.acc-E.prev)+' 分！'});
-  if(E.acc!=null&&E.best!=null&&E.acc>E.best)X.push({ic:'🎯',nm:'成績獎',l:'破了自己的紀錄：'+E.acc+' 分！'});
-  else if(E.acc!=null&&E.acc>=90)X.push({ic:'🎯',nm:'成績獎',l:'正確率 '+E.acc+' 分！'});
-  if(E.fix>0)X.push({ic:'✨',nm:'訂正獎',l:'答錯的題目，後來改對了 '+E.fix+' 題！'});
-  if(me&&me.days>=2)X.push({ic:'📅',nm:'天天練獎',l:'這週第 '+me.days+' 天練習！'});
-  if(me&&me.sec>=300)X.push({ic:'⏱',nm:'時間獎',l:'這週已經練了 '+scMin(me.sec)+'！'});
-  if(E.m!=='mem'&&E.n>0&&!E.fast)X.push({ic:'👆',nm:'用心獎',l:'每一題都看完、聽完才選！'});
-  A=A.concat(X).slice(0,3);
-  if(!A.length)A.push({ic:'💡',nm:'小提醒',l:E.m==='g'&&E.n<6?'一場答 6 題以上，練習次數就會 ＋1':'每一題看完、聽完再選，練習次數就會 ＋1'});
-  return A}
+/* ── ② 練習時間＋③ 🏆 榮譽動畫（2026-10-12 D 第 4 件修正，使用者 D6～D8 定案，listen/2026-10-12_D8 ①②）──
+   ② 每一個人：自己畫的時鐘「這週你已經練習 12 分鐘」「這一次 練習 3 分鐘。」；沒上榜 ＝ 加正確率＋「比上週多 練習 4 分鐘。」（有多才寫）；
+      太快亂按超過一半 ＝「⚠️ 太快亂按，不算時間」「請 看完、聽完再選」
+   ③ 只有三種最高榮譽（最認真練習、成績最優、進步最多 × 班內前 10 名、全年級前 10 名；班級三種、前 3 名）；
+      這一次讓他第一次進榜或名次上升才演（伺服器給 rk0 ＝ 這一次以前的名次）；名次沒變 ＝ 什麼都不演、不寫。12 種風格輪流、平板不放聲音 */
+function scMin(sec){return HON.mn(sec)}
+function scFast(E){return E.m!=='mem'&&E.n>0&&E.fast*2>E.n}
+/* 這一次讓名次上升的獎（最多 3 個：班內 ➜ 全年級 ➜ 班級） */
+function scUps(E){var V=E.res,U=[];if(!V||!V.boards||!V.rk||!V.rk0||scFast(E))return U;
+  var my=String(SCID).slice(0,3),G={3:'三',4:'四'}[scGr()]||'';
+  ['cls','grade'].forEach(function(sc){HON.AWK.forEach(function(k){var a=V.rk[k]&&V.rk[k][sc],b=V.rk0[k]&&V.rk0[k][sc];
+    if(a&&(!b||a<b))U.push({k:k,rk:a,w:(sc==='cls'?scCn(my):G+'年級')+' 第 '+a+' 名',l:HON.awl(k,V.me,'這週')})})});
+  if(V.crk&&V.crk0&&!SCAFTER[my])HON.AWK.forEach(function(k){var a=V.crk[k],b=V.crk0[k];
+    if(a&&a.rk<=3&&(!b||a.rk<b))U.push({k:k,rk:a.rk,c:1,w:G+'年級 第 '+a.rk+' 名',l:HON.awc(k,a.v)})});
+  return U.slice(0,3)}
+function scTimeHTML(E){var V=E.res,me=V&&V.me,up=scUps(E).length;
+  if(scFast(E))return '<div class="sctime"><div class="stic">⚠️</div><div class="st1">太快亂按，不算時間</div><div class="st2">請 看完、聽完再選</div></div>';
+  var more=me&&!up?Math.round((me.sec-(me.secPrev||0))/60):0;
+  return '<div class="sctime"><div class="stic">'+HON.CLK+'</div>'+
+    (!up&&E.acc!=null?'<div class="st2">🎯 正確率 '+E.acc+' 分</div>':'')+
+    (me?'<div class="st1">這週你已經練習 '+scMin(me.sec)+'</div>':'')+
+    '<div class="st3">這一次 練習 '+scMin(E.me1)+'。</div>'+
+    (more>0?'<div class="st3">比上週多 練習 '+more+' 分鐘。</div>':'')+
+    (!V?'<div class="st4">'+(E.fail?'📶 現在沒有網路：成績先存在這台平板，連上網會自動送出 ✅':'<i class="scspin">⏳</i> 成績還在送出…')+'</div>':'')+'</div>'}
 function scHonGo(E){
-  var el=$('#scHon');if(!el)return;E.hgo=1;if(E.hst==null)E.hst=HON.pick('s');
-  var my=String(SCID).slice(0,3);
-  /* 每一段到了才看伺服器回來了沒有（慢的網路也接得上） */
-  var part=function(i){var V=E.res;
-    if(i===0)return {kick:'🎉 '+SCID+' 的榮譽',cards:scAwards(E)};
-    if(!V)return i===1?{heroIc:'📶',tit:E.fail?'現在沒有網路':'成績還在送出',sub:'成績先存在這台平板，連上網會自動送出 ✅'}:null;
-    if(i===1){var bk=null;if(V.boards&&V.rk)['prog','count','sec','acc','s'].forEach(function(k){var r=V.rk[k]&&V.rk[k].cls;if(r&&(!bk||r<bk.rk))bk={k:k,rk:r}});
-      if(bk){var mv=V.me[bk.k],vt=bk.k==='count'?'這週練了 '+mv+' 次':bk.k==='prog'?'正確率進步 '+mv+' 分':bk.k==='sec'?'這週練了 '+scMin(mv):'這週 '+Math.round(mv)+' 分';
-        return {kick:'👤 '+scCn(my)+' 榮譽榜',heroIc:bk.rk<=3?['🥇','🥈','🥉'][bk.rk-1]:'🎖',cards:[{ic:scIc(bk.k),nm:SCHB[bk.k][1]+'　第 '+bk.rk+' 名',l:vt,me:1}]}}
-      if(V.mycls&&V.mycls.count)return {kick:'👤 '+scCn(my),heroIc:'🤝',tit:scCn(my)+' 這週一起練了 '+V.mycls.count+' 次！',sub:'你的每一次練習都算進去了 ✅'};
-      return null}
-    if(V.boards&&V.caw&&!SCAFTER[my]){var c=V.caw;
-      return {kick:'🏫 班際榮譽',heroIc:c.rk===1?'🏆':'🎖',cards:[{ic:scIc(c.k),nm:c.rk===1?SCCB[c.k]:SCCB2[c.k]+'　第 '+c.rk+' 名',w:scCn(my),me:1}]}}
-    return null};
-  var i=0,T=[4600,3000,3000];
-  (function go(){if(SCEND!==E||!$('#scHon'))return;var o=part(i);
-    if(!o){i++;if(i<3)return go();if(E.k<E.list.length-1)scNext();return}
-    HON.scene($('#scHon'),E.hst,o);
-    SCAUTO=setTimeout(function(){i++;if(i<3)go();else if(E.k<E.list.length-1)scNext()},T[i]||3000)})();
+  var el=$('#scHon');if(!el)return;if(E.hst==null)E.hst=HON.pick('s');
+  var U=E.ups,i=0;
+  (function go(){if(SCEND!==E||!$('#scHon'))return;var u=U[i];
+    if(!u){if(E.k<E.list.length-1)scNext();return}
+    HON.scene($('#scHon'),E.hst,{kick:'🏆 本週 榮譽榜',cards:[{ic:HON.awi(u.k),nm:HON.AWN[u.k]+(u.c?'的班':''),w:u.w,l:u.l,me:1}]});
+    SCAUTO=setTimeout(function(){i++;go()},4600)})();
 }
 function scScene(){
   clearTimeout(SCAUTO);if(!SCEND||!scOn())return;var E=SCEND,L=E.list,k=E.k,nm=L[k],h='',last=k===L.length-1;
@@ -2548,12 +2587,16 @@ function scScene(){
       '<div class="scs">⚡ 總分 '+E.s+' 分（答對 60 ＋ 速度 40）</div>'+
       (E.m==='g'?(E.fix?'<div class="scfix">✨ 訂正成功 '+E.fix+' 題</div>':'')+'<div class="scnote">🎁 驚喜卡、連對加成是運氣，不算進成績</div>':'')+nav();
     SCAUTO=setTimeout(scNext,E.m==='g'?3600:3000);
+  }else if(nm==='time'){
+    /* 成績還在送：最多等 3 秒，送不到就先寫這一次的時間（這週的時間、榮譽要等伺服器） */
+    if(E.hw0==null)E.hw0=Date.now();var hw=!E.res&&!E.fail&&!E.hto;
+    if(hw){SCAUTO=setTimeout(function(){if(SCEND===E){E.hto=1;scScene()}},Math.max(0,3000-(Date.now()-E.hw0)));
+      h='<div class="sct">'+HON.CLK+'</div><div class="scwait"><i>⏳</i> 正在送出成績…</div>'+nav()}
+    else{if(E.res||E.fail)E.tgo=1;E.ups=scUps(E);
+      if(!E.ups.length&&E.tgo){var hi=L.indexOf('honor');if(hi>k)L.splice(hi,1);last=k===L.length-1;dots=L.length>1?'<div class="scdots">'+L.map(function(x,n){return '<i'+(n===k?' class="on"':'')+'></i>'}).join('')+'</div>':''}
+      h=scTimeHTML(E)+(last?SCH.btns(E):nav());if(!last&&E.tgo)SCAUTO=setTimeout(scNext,4200)}   /* 還在送就等（送到或確定沒網路會再畫一次） */
   }else if(nm==='honor'){
-    /* 成績還在送：最多等 3 秒，送不到就先演自己的獎（本班、班際要等伺服器） */
-    if(E.hw0==null)E.hw0=Date.now();var hw=!E.res&&!E.fail&&!E.hto&&!E.hgo;
-    if(hw)SCAUTO=setTimeout(function(){if(SCEND===E&&!E.hgo){E.hto=1;scScene()}},Math.max(0,3000-(Date.now()-E.hw0)));
-    if(hw)h='<div class="sct">🏆 榮譽榜</div><div class="scwait"><i>⏳</i> 正在送出成績…</div>'+nav();
-    else h='<div class="hon" id="scHon"></div>'+(last?SCH.btns(E):nav());
+    h='<div class="hon" id="scHon"></div>'+(last?SCH.btns(E):nav());
   }else if(nm==='gtop'){
     h=scGtopHTML()+SCH.btns(E);
   }else if(nm==='mem'){
@@ -2568,8 +2611,10 @@ function scScene(){
      '<div class="scraw">'+E.raw+'</div><div class="scs">🏆 這一次的分數　✅ 答對 '+E.ok+' ／ '+E.n+' 題</div>'+SCH.btns(E);
     if(MISSLOG.length)setTimeout(function(){if(SCEND&&SCEND.list[SCEND.k]==='end'&&scOn())missAll(SCH.miss())},600);
   }
+  if(last&&scLive())h+=scByeHTML();   /* 每一個題目、遊戲做完：提醒登出（D 第 6 件 ③） */
   SCH.box().innerHTML='<div class="scn" id="scn">'+dots+h+'</div>';
   if(nm==='honor'&&$('#scHon'))scHonGo(E);
+  if(nm==='time'&&$('.sctime .hclkm'))$('.sctime').classList.add('go');
   if(nm==='acc')setTimeout(function(){var f=$('#scFg'),a=$('#scAcc');if(!f)return;var L=+f.getAttribute('stroke-dasharray');
     f.setAttribute('stroke-dashoffset',L*(1-E.acc/100));var t0=Date.now(),iv=setInterval(function(){var x=Math.min(1,(Date.now()-t0)/1300);
       if(!$('#scAcc')){clearInterval(iv);return}a.textContent=Math.round(E.acc*x)+'%';if(x>=1)clearInterval(iv)},40)},80);
@@ -2615,7 +2660,7 @@ var SCTK=null,SCTKID=null;
 function scTkGet(){if(!scLive())return null;if(SCTKID!==SCID){SCTKID=SCID;SCTK=scGet('tk_'+SCID)}return SCTK}
 function scTkNow(){var t=scTkGet();return Date.now()+((t&&t.off)||0)}
 function scTkLoad(cb){if(!scLive()){if(cb)cb();return}var id=SCID;
-  scFetch('a=tasks&id='+id,null,7000).then(function(j){if(j&&j.ok&&id===SCID){SCTK={at:Date.now(),off:(+j.now||Date.now())-Date.now(),tasks:j.tasks||[]};SCTKID=id;scPut('tk_'+id,SCTK)}if(cb)cb()},function(){if(cb)cb()})}
+  scFetch('a=tasks&id='+id,null,7000).then(function(j){if(j&&j.ok&&id===SCID){SCTK={at:Date.now(),off:(+j.now||Date.now())-Date.now(),tasks:j.tasks||[],locks:j.locks||[]};SCTKID=id;scPut('tk_'+id,SCTK)}if(cb)cb()},function(){if(cb)cb()})}
 function scLockOf(key){var t=scTkGet();if(!t||!t.tasks||!key)return {k:'free'};return scTkLock(t.tasks,key,scTkNow())}
 function scTkOk(key){var k=scLockOf(key).k;return k==='free'||k==='open'}
 var SCWD='日一二三四五六';
@@ -2631,6 +2676,53 @@ function scLockShow(L){var o=document.getElementById('sctk');if(!o){o=document.c
   var a=scTkAct();
   o.innerHTML='<div class="sctkb"><div class="sctki">🔒</div><div class="sctkw">'+why+'</div>'+(a.length?'<div class="sctks">老師現在指定的是：</div>'+a.map(scTkLine).join(''):'')+
    '<button id="sctkOk">👌 知道了</button></div>';o.classList.add('on')}
+/* ══〔🔒 開關〕（2026-10-12 D 第 7 件，使用者 D16 A、D6 第 13 題、D8 ⑦）：老師鎖住的在家複習主題（只管在家複習網站 SCSRC home）══
+   代號 ＝ g年級rv_主題（u1-t0-0 句型卡分頁、gm-g3 遊戲、mo-parts 補充頁）；鎖住的連任務也打不開
+   沒登入（或 👀 先練習）＋任何一班鎖住 ＝「🔒 請先登入〔🔑 登入〕」；登入了＋自己的班鎖住 ＝「🔒 還沒開放」。**不寫鎖了哪幾班**（學生才不會假裝別班）
+   沒網路 ＝ 用這台平板上一次拿到的；從來沒拿到 ＝ 全部開放 */
+var SCLKANY=null,SCLKPAGE=window.SCLKPAGE||'';
+function scLkG(){return SCG||scGr()}
+function scLkOf(k){if(!SCON||SCSRC!=='home'||!k)return '';var K='g'+scLkG()+'rv_'+k;
+  if(scLive()){var t=scTkGet();return t&&t.locks&&t.locks.indexOf(K)>=0?'no':''}
+  var a=SCLKANY||scGet('lk_any_g'+scLkG())||[];return a.indexOf(K)>=0?'login':''}
+function scLkLoad(cb){if(!SCON||SCSRC!=='home'){if(cb)cb();return}
+  if(scLive()){scTkLoad(cb);return}
+  var g=scLkG();if(!g){if(cb)cb();return}
+  scFetch('a=locks&g='+g,null,6000).then(function(j){if(j&&j.ok){SCLKANY=j.any||[];scPut('lk_any_g'+g,SCLKANY)}if(cb)cb()},function(){if(cb)cb()})}
+/* 句型卡的分頁代號（在家複習的 u1.html／u2.html） */
+function scLkTab(t,l){var u=/(u\d)\.html/.exec(location.pathname);if(!u||typeof TABM==='undefined'||!TABM[t])return '';return u[1]+'-t'+t+(TABM[t].sub?'-'+(l||0):'')}
+/* 一整頁大字：🔒 請先登入〔🔑 登入〕／🔒 還沒開放（〔⬅ 回首頁〕） */
+var SCLKRETRY=null;
+function scLkShow(st,retry){SCLKRETRY=retry||null;var home=SCHOMEP;
+  scFull('sclk','<div class="sfic">🔒</div><div class="sf1">'+(st==='login'?'請先登入':'還沒開放')+'</div><div class="sfbt">'+
+    (st==='login'?'<button class="scK" id="scLkIn">🔑 登入</button>':'')+(home?'<button class="scN" id="scLkX">👌 知道了</button>':'<button class="scN" id="scLkHome">⬅ 回首頁</button>')+'</div>')}
+function scLkGate(k,retry){var st=scLkOf(k);if(!st){scFullOff('sclk');return true}scLkShow(st,retry);return false}
+/* 鎖住的主題按了也打得開以前：先換成一個蓋滿整頁的登入畫面，登入好了再試一次 */
+function scLkLogin(){var o=SCH,ov=function(){var x=document.getElementById('scov');if(!x){x=document.createElement('div');x.id='scov';x.innerHTML='<div id="scovb"></div>';document.body.appendChild(x)}return x},
+  fin=function(go){if(SCH&&SCH.close)SCH.close();SCH=o;if(go)scLkLoad(function(){var r=SCLKRETRY;if(r)r();scLkRe()});else{var r=SCLKRETRY;if(r)r()}};
+  scFullOff('sclk');
+  SCH={on:function(){return ov().classList.contains('on')},open:function(){ov().classList.add('on')},close:function(){ov().classList.remove('on')},box:function(){return document.getElementById('scovb')},
+    back:'<div class="scnav"><button data-sca="close">⬅ 回去</button></div>',key:function(){return ''},name:function(){return ''},reopen:function(){fin(1)},act:function(){fin(0)},btns:function(){return ''},miss:function(){return ''}};
+  scLogin(function(){fin(1)})}
+/* 首頁的主題、遊戲大廳的遊戲卡：鎖住的貼上 🔒；現在這一頁（句型卡分頁、補充頁）鎖住了 ＝ 蓋上一整頁 */
+function scLkRe(){if(!SCON||SCSRC!=='home')return;
+  $$('[data-lk]').forEach(function(a){var k=a.getAttribute('data-lk').replace(/^g\drv_/,''),st=scLkOf(k),x=a.querySelector('.sclkb');if(x)x.parentNode.removeChild(x);
+    a.classList.toggle('sclocked',!!st);if(st){x=document.createElement('span');x.className='sclkb';x.textContent=st==='login'?'🔒 請先登入':'🔒 還沒開放';a.appendChild(x)}});
+  $$('#grid .gcard[data-g]').forEach(function(c){var st=scLkOf('gm-'+c.getAttribute('data-g')),x=c.querySelector('.sclkb');if(x)x.parentNode.removeChild(x);
+    c.classList.toggle('sclocked',!!st);if(st){x=document.createElement('span');x.className='sclkb';x.textContent=st==='login'?'🔒 請先登入':'🔒 還沒開放';c.appendChild(x)}});
+  if(SCLKPAGE){scLkGate(SCLKPAGE,null);return}
+  if(typeof TCUR!=='undefined'&&scLkTab(TCUR,typeof LCUR!=='undefined'?LCUR:0)){var t=TCUR,l=typeof LCUR!=='undefined'?LCUR:0;scLkGate(scLkTab(t,l),function(){setDeck(t,l)})}}
+if(SCON&&SCSRC==='home'){
+  document.addEventListener('DOMContentLoaded',function(){scLkRe();scLkLoad(scLkRe)});
+  if(document.readyState!=='loading')setTimeout(function(){scLkRe();scLkLoad(scLkRe)},0);
+  setInterval(function(){scLkLoad(scLkRe)},120000);
+  document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},a;
+    if(c('#scLkIn')){scLkLogin();return}
+    if(c('#scLkHome')){location.href='index.html';return}
+    if(c('#scLkX')){scFullOff('sclk');return}
+    if((a=c('a[data-lk]'))){var k=a.getAttribute('data-lk').replace(/^g\drv_/,''),href=a.getAttribute('href');
+      if(!scLkGate(k,function(){location.href=href})){e.preventDefault();e.stopPropagation()}}},true);
+}
 /* 打開網頁就拿一次；之後每 2 分鐘再拿（老師隨時會改時間）、每 30 秒重畫（時間到了就鎖） */
 if(SCON){setTimeout(function(){if(scLive())scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk()})},400);
   setInterval(function(){if(scLive())scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk()})},120000);
@@ -2646,7 +2738,7 @@ function scTkPaint(cards,keyOf,bar){
 document.addEventListener('click',function(e){
   var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
   if(c('#sctkOk')){document.getElementById('sctk').classList.remove('on');return}
-  if(c('#scSwap')){if(!SCH)return;SCID=null;scPut('id_g'+scGr(),null);scPut('last',null);SCGUEST=false;scLogin(SCH.reopen);return}
+  if(c('#scSwap')||c('#scBye')){if(!SCH)return;scOut();scLogin(SCH.reopen);return}   /* 一鍵登出、原地馬上登入（D 第 6 件 ④） */
   if(!scOn())return;
   if((b=c('.sckey button'))){scKeyPress(b.getAttribute('data-k'));return}
   if(c('#scGc')){scKeyPress('c');return}if(c('#scGs')&&SCTYPED.length>3){scKeyPress('s');return}
@@ -2656,6 +2748,58 @@ document.addEventListener('click',function(e){
   if(c('#scSkip')){scGo(SCEND.list.length-1);return}
   if(c('#scNx')){scNext();return}
   var nm=SCEND.list[SCEND.k];if((nm==='acc'||nm==='mem')&&!c('button'))scNext();
+});
+/* ══ 學生登入（2026-10-12 D 第 6 件；使用者 D6 第 10～12 題 A、D7、D8 定案：1A 2A 3A）══
+   ① 打開網站的第一頁問一次（整頁大字）「請問 這是您嗎？30412〔✅ 是，繼續〕〔👋 不是，登出〕」（這個分頁記住，換頁不再問）
+   ② 首頁最上面一條橫幅（不蓋住）：沒登入「👤 還沒登入〔🔑 登入〕」；登入了「請問 這是您嗎？30412〔✅ 是〕〔👋 不是，登出〕」，按 ✅ 以後「👤 30412〔👋 登出〕」
+   ③ 3 分鐘沒有動作（學校、在家都一樣，D15 A）就登出；最後 30 秒大字提醒「⏳ 30 秒後自動登出〔👆 我還在〕」（不寫「請問 您還在嗎？」）；
+      時間到「👋 已經登出了／3 分鐘沒有動作〔🔑 登入〕」。作答中、遊戲中一直在點 ＝ 有動作，不會被登出
+   ④ 每一個題目、遊戲做完：「👋 做完了，記得登出／下一個人才不會用到您的號碼〔👋 登出〕」；登出一律 👋（不用 🚪）
+   「最後一次動作」存在這台平板（score_act），每一頁都看同一個時間；登出 ＝ 三、四年級的號碼都清掉 */
+var SCIDLE=180000,SCWARN=30000,SCHOMEP=false,SCIT=null;
+function scOk(){try{sessionStorage.setItem('sc_ok',String(SCID||''))}catch(e){}}
+function scAsked(){try{return sessionStorage.getItem('sc_ok')===String(SCID||'')}catch(e){return true}}
+function scAct(){scPut('act',Date.now())}
+function scOut(){SCID=null;SCGUEST=false;['id_g3','id_g4','last'].forEach(function(k){scPut(k,null)});try{sessionStorage.removeItem('sc_ok')}catch(e){}
+  SCTK=null;SCTKID=null;scIdleHide();scBar();if(SCSRC==='home')setTimeout(scLkRe,0);var m=document.getElementById('scme');if(m&&typeof scMeHTML==='function'&&m.innerHTML)m.innerHTML=scMeHTML()}
+function scByeHTML(){return '<div class="scbye"><span>👋 做完了，記得登出<small>下一個人才不會用到您的號碼</small></span><button id="scBye">👋 登出</button></div>'}
+/* 蓋滿整頁的大字（這是您嗎、30 秒提醒、已經登出了） */
+function scFull(id,h){var o=document.getElementById(id);if(!o){o=document.createElement('div');o.id=id;o.className='scfull';document.body.appendChild(o)}o.innerHTML='<div class="scfb">'+h+'</div>';o.classList.add('on');return o}
+function scFullOff(id){var o=document.getElementById(id);if(o)o.classList.remove('on')}
+function scAskWho(){if(!SCON||!SCID||SCGUEST||scAsked())return;
+  scFull('scwho','<div class="sf1">請問 這是您嗎？</div><div class="sfid">'+SCID+'</div><div class="sfbt"><button class="scY" id="scWhoY">✅ 是，繼續</button><button class="scN" id="scWhoN">👋 不是，登出</button></div>')}
+function scIdleHide(){scFullOff('scidle')}
+function scIdleTick(){if(!SCON||!SCID||SCGUEST){scIdleHide();return}
+  var a=scGet('act'),left=a?SCIDLE-(Date.now()-a):SCIDLE;if(!a){scAct();return}
+  if(left<=0){scOut();scFull('scbye2','<div class="sfic">👋</div><div class="sf1">已經登出了</div><div class="sf3">3 分鐘沒有動作</div><div class="sfbt"><button class="scK" id="scByeIn">🔑 登入</button></div>');return}
+  if(left<=SCWARN){var o=document.getElementById('scidle');if(!o||!o.classList.contains('on'))scFull('scidle','<div class="sfic">⏳</div><div class="sf2"><b id="scIdleN">30</b> 秒後自動登出</div><div class="sfbt"><button class="scY" id="scStay">👆 我還在</button></div>');
+    var n=document.getElementById('scIdleN');if(n)n.textContent=Math.max(1,Math.ceil(left/1000))}
+  else scIdleHide()}
+/* 首頁的橫幅（只有首頁有 #scbar） */
+function scBar(){var b=document.getElementById('scbar');if(!b)return;document.body.classList.toggle('scq',!!(SCON&&SCID&&!scAsked()));
+  if(!SCON){b.innerHTML='';b.hidden=true;return}b.hidden=false;
+  b.innerHTML=!SCID?'<span>👤 還沒登入</span><button class="scK" id="scBarIn">🔑 登入</button>':
+    scAsked()?'<span>👤 <b>'+SCID+'</b></span><button class="scN" id="scBarOut">👋 登出</button>':
+    '<span>請問 這是您嗎？<b>'+SCID+'</b></span><button class="scY" id="scBarY">✅ 是</button><button class="scN" id="scBarOut">👋 不是，登出</button>'}
+function scHomeLogin(){if(!SCH)return;scFullOff('scbye2');scLogin(SCH.reopen)}
+if(SCON){
+  (function(){var a=scGet('act');if(SCID&&a&&Date.now()-a>=SCIDLE)scOut()})();   /* 上一次動作已經超過 3 分鐘 ＝ 已經登出了 */
+  ['pointerdown','keydown','touchstart','wheel'].forEach(function(k){document.addEventListener(k,function(e){
+    if(SCID&&!SCGUEST&&!(e.target&&e.target.closest&&e.target.closest('#scbye2')))scAct()},true)});
+  SCIT=setInterval(scIdleTick,1000);
+  window.addEventListener('storage',function(e){if(e.key==='score_last'&&!e.newValue&&SCID){SCID=null;scBar()}});
+  document.addEventListener('DOMContentLoaded',function(){scBar();scAskWho()});
+  if(document.readyState!=='loading')setTimeout(function(){scBar();scAskWho()},0);
+}
+document.addEventListener('click',function(e){
+  var t=e.target,c=function(s){return t.closest?t.closest(s):null};
+  if(c('#scWhoY')){scOk();scAct();scFullOff('scwho');scBar();return}
+  if(c('#scWhoN')){scOut();scFullOff('scwho');if(SCHOMEP)scHomeLogin();return}
+  if(c('#scStay')){scAct();scIdleHide();return}
+  if(c('#scByeIn')){scFullOff('scbye2');if(SCHOMEP)scHomeLogin();return}
+  if(c('#scBarIn')){scHomeLogin();return}
+  if(c('#scBarY')){scOk();scAct();scBar();return}
+  if(c('#scBarOut')){scOut();return}
 });
 document.addEventListener('keydown',function(e){if(!$('#scBox'))return;
   if(/^\d$/.test(e.key))scKeyPress(e.key);else if(e.key==='Backspace')scKeyPress('b');else if(e.key==='Enter')scKeyPress('ok')});

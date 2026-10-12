@@ -164,7 +164,7 @@ function draw(){
   TT.forEach(clearTimeout);TT=[];
   $('#dots').innerHTML=STEPS.map(function(s,n){return '<i data-k="'+n+'" class="'+(n===K?'on':n<K?'done':'')+'"></i>'}).join('')+'<i data-k="'+STEPS.length+'" class="'+(K===STEPS.length?'on':'')+'" style="border-radius:6px"></i>';
   if(K===STEPS.length){
-    $('#main').innerHTML=${UPD ? `'<div class="end"><div class="n">🎉 完成了！</div><h1>做完以後看一次</h1><ol><li><a href="../teacher/" target="_blank" rel="noopener" style="color:var(--acc)">打開老師看板</a>，打密碼</li><li>👤 個人：多一欄「姓名」✅</li><li>🔔 要關心：列出還沒做的人 ✅</li><li>平板打 30431：說「沒有 31 號」✅</li><li>平板打 40001：課後班可以登入 ✅</li><li>📌 任務：派一個任務，試算表多一個「任務」分頁 ✅</li></ol></div>'` : `'<div class="end"><div class="n">🎉 完成了！</div><h1>做完以後試一次</h1><ol><li>平板打開句型頁，按〔📝 複習題 5 題〕</li><li>看到「🔢 輸入你的號碼」＝ 成功</li><li>打 30401，做完 5 題</li><li>試算表「紀錄」多一列 ✅</li><li>🎮 玩一個遊戲到時間到 ➜ 再多一列 ✅</li></ol></div>'`};
+    $('#main').innerHTML=${UPD ? `'<div class="end"><div class="n">🎉 完成了！</div><h1>做完以後看一次</h1><ol><li><a href="../teacher/" target="_blank" rel="noopener" style="color:var(--acc)">打開老師看板</a>，打密碼</li><li>多一個分頁〔🔒 開關〕✅</li><li>🏆 排行榜：最認真練習、成績最優、進步最多 ✅</li><li>平板做完 5 題：看到時鐘「這週你已經練習…」✅</li><li>在家複習：老師鎖一個主題，沒登入看到「🔒 請先登入」✅</li></ol></div>'` : `'<div class="end"><div class="n">🎉 完成了！</div><h1>做完以後試一次</h1><ol><li>平板打開句型頁，按〔📝 複習題 5 題〕</li><li>看到「🔢 輸入你的號碼」＝ 成功</li><li>打 30401，做完 5 題</li><li>試算表「紀錄」多一列 ✅</li><li>🎮 玩一個遊戲到時間到 ➜ 再多一列 ✅</li></ol></div>'`};
   }else{
     var s=STEPS[K];
     $('#main').innerHTML='<div class="n">第 '+(K+1)+' 步　／　共 '+STEPS.length+' 步</div><h1>'+s.t+'</h1><div class="stage" id="stage"><span id="say"></span>'+s.m+'<span id="fing">👆</span></div>'+(s.tip?'<div class="tip">💡 '+s.tip+'</div>':'');

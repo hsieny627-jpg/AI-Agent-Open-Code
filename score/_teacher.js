@@ -15,6 +15,9 @@
  *   ✏️ 隨時改時間、🗑 刪掉；每個任務一張卡：誰做完 ✅、誰還沒 ⏳（要名單才有名字，E6）。鎖的規則在 _calc.js 的 tkLock。
  */
 const HONCSS = require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8'), HONRT = require('fs').readFileSync(require('path').join(__dirname, '_honor_rt.js'), 'utf8');
+/* 〔🔒 開關〕（2026-10-12 D 第 7 件）：在家複習網站每一個主題（sentences/_review_sites.js） */
+const RVS = require('../sentences/_review_sites.js'), RVT = {};
+RVS.SITES.forEach(S => { RVT[S.out === 'g3-review' ? 3 : 4] = RVS.topics(S).map(x => ({ k: x.k, grp: x.grp, t: x.t })); });
 module.exports = function (CALC, XL, BANK) {
   return `<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="UTF-8">
@@ -128,6 +131,15 @@ h3{margin:18px 0 8px;font-size:clamp(22px,1.8vw,32px)}
 .att tr.void td{color:#666;text-decoration:line-through}
 .att button{min-height:44px;padding:4px 14px;font-size:.9em}
 .tk{border:2px solid #2A2A2A;border-radius:18px;padding:12px 14px;margin:0 0 12px}
+/* 〔🔒 開關〕（D 第 7 件） */
+.lkrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.lkrow button.on{background:#10240F;border-color:var(--ok)}
+.lkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:10px}
+.lkb{display:flex;align-items:center;gap:10px;text-align:left;min-height:64px;flex-wrap:wrap}.lkb .lki{font-size:1.3em}.lkb .lkt{flex:1;min-width:0}.lkb em{font-style:normal;width:100%;font-size:.8em;color:#FFE9A8}
+button.lkg,b.lkg{background:#0F3323!important;border-color:#3BD16F!important;color:#D7FBE4!important}
+button.lkr,b.lkr{background:#3A0E0E!important;border-color:#FF6B6B!important;color:#FFD6D2!important}
+button.lky{background:#3A3000!important;border-color:#FFD54A!important;color:#FFF3C4!important}
+b.lkg,b.lkr{padding:0 8px;border:2px solid;border-radius:10px}
+.lkh{margin:14px 0 6px}#lkmsg{font-weight:700;color:#7EE2A8}
 .tk.on{border-color:var(--gold);background:#141006}.tk.end{opacity:.75}
 .tk h3{margin:0 0 6px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .tk .st{font-size:clamp(17px,1.3vw,24px);border-radius:999px;padding:3px 12px;background:#1A1A1A;border:1px solid #444}
@@ -195,6 +207,7 @@ td.nmc{text-align:left}td.nmc b{color:#9FB4C8;margin-right:.4em}
 @media (max-width:900px){.pc4{grid-template-columns:repeat(2,minmax(0,1fr))}.hl{grid-template-columns:1fr}}
 /* 2026-10-12 D 第 4 件：🏆 榮譽榜（投影） */
 .hh{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.bic{display:inline-flex;vertical-align:middle;margin-right:4px}.bic svg{height:1.25em;width:auto}
 .hbtn{background:linear-gradient(#FFE07A,#E8A900);color:#2A1A00;border-color:#5A4300;font-size:clamp(20px,1.6vw,28px);box-shadow:0 0 18px #FFD54A66}
 #honov{position:fixed;inset:0;z-index:70;background:#000;display:none;flex-direction:column;gap:8px;padding:8px}
 #honov.on{display:flex}
@@ -220,7 +233,7 @@ ${HONCSS}
  <button id="go">🔓 進入</button><div id="lmsg"></div></div>
 <div id="app" hidden>
  <div class="top"><h1>👩‍🏫 老師看板</h1><span class="sp"></span>
-  <button id="bd">🏆 學生排行榜：開</button><button id="rf">🔄 重新整理</button><span id="zm"><button id="zo" aria-label="字變小">A－</button><button id="zi" aria-label="字變大">A＋</button></span><button id="dl">⬇ 一鍵下載 Excel</button><button id="out">🚪 登出</button></div>
+  <button id="bd">🏆 學生排行榜：開</button><button id="rf">🔄 重新整理</button><span id="zm"><button id="zo" aria-label="字變小">A－</button><button id="zi" aria-label="字變大">A＋</button></span><button id="dl">⬇ 一鍵下載 Excel</button><button id="out">👋 登出</button></div>
  <div class="top">
   <span class="grp" id="fg"><button data-g="3" class="on">三年級</button><button data-g="4">四年級</button></span>
   <span class="grp"><span>班級</span><select id="fc"></select></span>
@@ -230,7 +243,7 @@ ${HONCSS}
   <span class="grp"><span>來源</span><select id="fs"><option value="">全部</option><option value="school">🏫 在校</option><option value="home">🏠 在家</option></select></span>
  </div>
  <div class="tiles" id="tiles"></div>
- <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 排行榜</button><button data-t="c">🏫 班際</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心</button><button data-t="t">📌 任務</button></div>
+ <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 排行榜</button><button data-t="c">🏫 班際</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心</button><button data-t="t">📌 任務</button><button data-t="l">🔒 開關</button></div>
  <div class="pane" id="pane"></div>
 </div>
 <div id="modal"><div id="mbox"></div></div>
@@ -244,9 +257,10 @@ ${CALC}
 ${XL}
 ${HONRT}
 var BANK=${JSON.stringify(BANK)};
+var RVT=${JSON.stringify(RVT)};
 /* 2026-10-12 D4-A／F1：🎯 正確率、💯 總分、練習次數（圖示等使用者選：G1；CNTIC 空白 ＝ 只寫字）、綠色粗箭頭 ＝ 進步、🥇 本班名次、⚠️ 太快亂按 */
 var UA='<svg class="ua" viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg>',CNTIC='';
-var URL0=String(window.SCORE_URL||'').trim(),PW='',DATA=null,ALL=[],SIZES={},NM={},RCLS={},F={g:3,cls:'',p:'w',src:'',cat:''},TAB='p',SORT={k:'acc',d:1},BT='acc',BS='grade';
+var URL0=String(window.SCORE_URL||'').trim(),PW='',DATA=null,ALL=[],SIZES={},NM={},RCLS={},F={g:3,cls:'',p:'w',src:'',cat:''},TAB='p',SORT={k:'acc',d:1},BT='sec',BS='grade';
 function $(s){return document.querySelector(s)}function $$(s){return [].slice.call(document.querySelectorAll(s))}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function f1(v){return v==null?'—':(Math.round(v*10)/10)}
@@ -291,7 +305,7 @@ function draw(){
     ['👥 有做的人',ps.length+(size?'／'+size:''),size?'人（參與率 '+Math.round(ps.length/size*100)+'%）':'人（試算表貼上「名單」就算得出參與率）']]
     .map(function(t){return '<div class="tile"><div class="k">'+t[0]+'</div><div class="v">'+t[1]+'</div><div class="d">'+t[2]+'</div></div>'}).join('');
   var h='';
-  if(TAB==='p')h=paneP(ps,RK);else if(TAB==='b')h=paneB(psG);else if(TAB==='c')h=paneC(psG);else if(TAB==='w')h=paneW(S.C);else if(TAB==='t')h=paneT();else h=paneK(ps,S);
+  if(TAB==='p')h=paneP(ps,RK);else if(TAB==='b')h=paneB(psG);else if(TAB==='c')h=paneC(psG);else if(TAB==='w')h=paneW(S.C);else if(TAB==='t')h=paneT();else if(TAB==='l')h=paneL();else h=paneK(ps,S);
   $('#pane').innerHTML=h;
 }
 /* 2026-10-12 D6-A：只留 7 欄（其他點那個人看；Excel 照樣全部都有）。燈號：🔴 正確率不到 60 或太快亂按超過 3 成；🟡 正確率不到 80 或太快亂按超過 1 成；🟢 其他 */
@@ -299,7 +313,7 @@ var PCOL=[['id','座號 姓名'],['acc','🎯 正確率'],['s','💯 總分'],['
 /* Excel 照樣全部欄位（文字，不放圖示） */
 var XCOL=[['id','5碼'],['nm','姓名'],['acc','正確率'],['s','總分'],['count','練習次數'],['prog','進步'],['cacc','本班名次（正確率）'],['cs','本班名次（總分）'],['ccount','本班名次（練習次數）'],['cprog','本班名次（進步）'],
   ['gacc','全年級名次（正確率）'],['gs','全年級名次（總分）'],['gcount','全年級名次（練習次數）'],['gprog','全年級名次（進步）'],['sets','做了幾組'],['all','作答幾次'],['fix','訂正成功'],['fast','太快亂按'],['last','最後作答']];
-var BNX={acc:'正確率',s:'總分',count:'練習次數',prog:'進步'};
+var BNX={sec:'最認真練習（練習秒數）',acc:'成績最優（正確率）',prog:'進步最多（正確率進步）',s:'總分',count:'練習次數'};
 var SDIR={id:'小的在上面',cacc:'第 1 名在上面',lt:'🔴 在上面'};
 function light(r){return r.acc==null?3:(r.acc<60||r.fast>30)?0:(r.acc<80||r.fast>10)?1:2}
 var LTS=['🔴','🟡','🟢','⚪'];
@@ -323,17 +337,20 @@ function paneP(ps,RK){
      if(c[0]==='last')return '<td>'+dt(v)+'</td>';
      return '<td>'+(v==null?'—':esc(v))+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div>';
 }
-var BN={acc:'🎯 正確率',s:'💯 總分',count:CNTIC+'練習次數',prog:UA+' 進步',sec:'⏱ 練習時間'};
-function mins(v){var m=Math.round(v/60);return m<1?'不到 1 分鐘':m+' 分鐘'}
+var BN={acc:'🎯 成績最優',s:'💯 總分',count:CNTIC+'練習次數',prog:UA+' 進步最多',sec:'最認真練習'};
+/* 🏆 三種最高榮譽才有〔🏆 榮譽榜〕（使用者 2026-10-12 D6～D8）；總分、練習次數只是排行，沒有獎 */
+function bnb(k){return HON.AWK.indexOf(k)>=0?'<span class="bic">'+HON.awi(k)+'</span>'+HON.AWN[k]:BN[k]}
+function mins(v){return HON.mn(v)}
 function fmt(k,v){return k==='count'?v+' 次':k==='prog'?'＋'+f1(v)+'%':k==='sec'?mins(v):f1(v)+' 分'}
 function paneB(psG){
-  var h='<div class="top"><span class="grp">'+['acc','s','count','prog','sec'].map(function(k){return '<button data-bt="'+k+'"'+(BT===k?' class="on"':'')+'>'+BN[k]+'</button>'}).join('')+'</span>'+
+  var h='<div class="top"><span class="grp">'+['sec','acc','prog'].map(function(k){return '<button data-bt="'+k+'"'+(BT===k?' class="on"':'')+'>🏆 '+bnb(k)+'</button>'}).join('')+'</span>'+
+   '<span class="grp">'+['s','count'].map(function(k){return '<button data-bt="'+k+'"'+(BT===k?' class="on"':'')+'>'+BN[k]+'</button>'}).join('')+'</span>'+
    '<span class="grp"><button data-bs="cls"'+(BS==='cls'?' class="on"':'')+'>🏫 班內</button><button data-bs="grade"'+(BS==='grade'?' class="on"':'')+'>🏆 全年級</button></span></div>'+
    '<div class="note">老師看得到全部學生的名次；學生只看得到前 10 名（自己不在前 10 名，只看到「再多幾分進前 10」）。</div>';
   var lists=BS==='grade'?[['全年級',SC.rank(psG,BT)]]:(F.cls?[F.cls]:SC.CLASSES[F.g]).map(function(c){return [SC.cname(c),SC.rank(psG.filter(function(p){return p.cls===c}),BT)]});
   HLISTS=lists.map(function(L,i){return {t:L[0],L:L[1],cls:BS==='grade'?'':(F.cls||SC.CLASSES[F.g][i])}});
   lists.forEach(function(L,i){var mx=0;L[1].forEach(function(x){mx=Math.max(mx,x.v)});
-    h+='<h3 class="hh">'+L[0]+(L[1].length?'<button class="hbtn" data-hon="'+i+'">🏆 榮譽榜</button>':'')+'</h3>'+(L[1].length?'<div class="bars">'+L[1].map(function(x){return '<div class="br'+(x.rk<=10?' hi':'')+'"><span class="l">第 '+x.rk+' 名　'+who(x.id)+'</span><span class="t"><i style="width:'+(mx?x.v/mx*100:0)+'%"></i></span><span class="v">'+fmt(BT,x.v)+'</span></div>'}).join('')+'</div>':'<div class="note">還沒有人上榜。</div>')});
+    h+='<h3 class="hh">'+L[0]+(L[1].length&&HON.AWK.indexOf(BT)>=0?'<button class="hbtn" data-hon="'+i+'">🏆 榮譽榜</button>':'')+'</h3>'+(L[1].length?'<div class="bars">'+L[1].map(function(x){return '<div class="br'+(x.rk<=10?' hi':'')+'"><span class="l">第 '+x.rk+' 名　'+who(x.id)+'</span><span class="t"><i style="width:'+(mx?x.v/mx*100:0)+'%"></i></span><span class="v">'+fmt(BT,x.v)+'</span></div>'}).join('')+'</div>':'<div class="note">還沒有人上榜。</div>')});
   return h;
 }
 function paneC(psG){
@@ -346,46 +363,40 @@ function paneC(psG){
   return h;
 }
 /* ══ 2026-10-12 D 第 4 件：🏆 榮譽榜（老師投影）══
-   D8：排行榜每一個榜、班際各一顆〔🏆 榮譽榜〕｜D9：開場 ➜ 第 10～4 名一個一個上台 ➜ 頒獎台 3、2、1（第 1 名最後揭曉）➜ 第 1 名的話 ➜ 進步之星 ➜ 全班合照
+   D8：三種最高榮譽的榜、班際各一顆〔🏆 榮譽榜〕｜D9：開場 ➜ 第 10～4 名一個一個上台 ➜ 頒獎台 3、2、1（第 1 名最後揭曉）➜ 第 1 名的話
    D10：〔👤 姓名 顯示／隱藏〕一開始顯示｜D11：12 種風格輪流（跟上一次一定不一樣）｜D12：號角、鼓聲、掌聲〔🔊 聲音 開／關〕一開始開
    D13：期間 ＝ 上面選的期間｜D14：〔🖨 印獎狀〕每一個上榜的人一張 A4 橫式｜G2・F5：班際 4 種排行（平均每一個人）＋每一班都有最強的一項 */
 var HLISTS=[],HN=null,HNM=lsg0('hnm',1),HSND=lsg0('hsnd',1);
 function lsg0(k,d){try{var v=localStorage.getItem(k);return v==null?d:+v}catch(e){return d}}
 function lss0(k,v){try{localStorage.setItem(k,v)}catch(e){}}
-var HAW={acc:['🎯','精準獎'],s:['💯','高分獎'],count:['','努力獎'],prog:['','進步之星'],sec:['⏱','時間獎']};
-var HPR={acc:function(v){return '每一題都看清楚再選，正確率 '+f1(v)+' 分。你的專心看得見！'},s:function(v){return '又準又快，總分 '+f1(v)+' 分。你的認真看得見！'},
-  count:function(v){return '練了 '+v+' 次，一次一次累積實力。你的努力看得見！'},prog:function(v){return '正確率進步 '+f1(v)+' 分，你的用心有了回報！'},sec:function(v){return '花了 '+mins(v)+'練習，肯花時間最了不起！'}};
-var HCB={count:['','最努力的班','平均每一個人練了 '],prog:['','進步最多的班','平均進步 '],sec:['⏱','練習時間最多的班','平均每一個人練了 '],acc:['🎯','成績最優的班','平均正確率 ']};
-function hic(k){return k==='count'?HON.EFF:k==='prog'?HON.UP:(HAW[k]||HCB[k]||['🏆'])[0]}
+/* 第 4 件修正（使用者 2026-10-12 D6～D8 定案）：只有三種最高榮譽（HON.AWK：最認真練習、成績最優、進步最多），字全部用 HON.AWN／HON.awl／HON.awc
+   （學生平板、老師投影、印獎狀一模一樣）；拿掉進步之星、全班合照「一起練了 N 次」、班際「每一班都有自己最強的一項」 */
 function hwho(id){var n=nm(id);return esc(id)+(HNM&&n?' '+esc(n):'')}
 function hper(){return {w:'本週',lw:'上週',all:'這學期',c:'這段期間'}[F.p]}
-function hcv(k,v){return k==='count'?f1(v)+' 次':k==='sec'?mins(v):k==='prog'?'＋'+f1(v)+' 分':f1(v)+' 分'}
+function hper2(){return {w:'這週',lw:'上週',all:'這學期',c:'這段期間'}[F.p]}
+function hgr(){return (F.g===3?'三':'四')+'年級'}
 function hpod(R,f){return [1,2,3].map(function(r){var a=R.filter(function(x){return x.rk===r});return a.length?{w:a.map(f).join('<br>'),v:a[0].vt,d:[3.2,1.6,0][r-1]}:null})}
-/* 一個人的榜 ➜ 一幕一幕 */
-function hPlan(o){var P=[],k=o.k,top=o.L.filter(function(x){return x.rk<=10});top.forEach(function(x){x.vt=fmt(k,x.v)});
-  P.push({o:{kick:hper()+'　'+esc(o.t),heroIc:hic(k),tit:'🏆 '+BN[k]+' 榮譽榜'},t:3500,snd:'horn'});
+/* 一個人的榜 ➜ 一幕一幕：開場 ➜ 第 10～4 名 ➜ 頒獎台 3、2、1 ➜ 第 1 名 */
+function hPlan(o){var P=[],k=o.k,top=o.L.filter(function(x){return x.rk<=10}),pm={};o.ps.forEach(function(p){pm[p.id]=p});top.forEach(function(x){x.vt=fmt(k,x.v)});
+  P.push({o:{kick:esc(o.t)+'　'+HON.AWN[k],heroIc:HON.awi(k),tit:'🏆 '+hper()+' 榮譽榜'},t:3500,snd:'horn'});
   var mid=top.filter(function(x){return x.rk>=4}).reverse();
-  if(mid.length)P.push({o:{hero:false,kick:'第 '+mid[0].rk+' 名 ➜ 第 4 名',rows:mid.map(function(x){return {rk:x.rk,w:hwho(x.id),v:x.vt}}),gap:.9},t:1800+mid.length*900,snd:'clap'});
+  if(mid.length)P.push({o:{hero:false,kick:HON.AWN[k]+'　第 '+mid[0].rk+' 名 ➜ 第 4 名',rows:mid.map(function(x){return {rk:x.rk,w:hwho(x.id),v:x.vt}}),gap:.9},t:1800+mid.length*900,snd:'clap'});
   var G=hpod(top,function(x){return hwho(x.id)});
-  if(G[0])P.push({o:{hero:false,kick:'🥉 第 3 名 ➜ 🥈 第 2 名 ➜ 🥇 第 1 名',pod:G},t:7600,snd:'drum'});
-  if(top[0])P.push({o:{heroIc:hic(k),kick:'🥇 第 1 名',cards:top.filter(function(x){return x.rk===1}).map(function(x){return {nm:HAW[k][1],w:hwho(x.id),l:HPR[k](x.v)}})},t:5000,snd:'clap'});
-  if(k!=='prog'){var S=SC.rank(o.ps,'prog').slice(0,3);if(S.length)P.push({o:{heroIc:HON.UP,kick:'不在前 10 名也上得了',tit:'進步之星',cards:S.map(function(x){return {nm:'進步之星',w:hwho(x.id),l:'正確率進步 '+f1(x.v)+' 分！'}})},t:5200,snd:'clap'})}
-  var tot=0;o.ps.forEach(function(p){tot+=p.count});
-  P.push({o:{heroIc:'🤝',kick:'全班合照',tit:(o.cls?SC.cname(o.cls):'全年級')+'　'+hper()+'一起練了 '+tot+' 次！',sub:o.ps.length+' 個人一起努力 ✅　每一次練習都算數'},t:5000,snd:'horn'});
+  if(G[0])P.push({o:{hero:false,kick:HON.AWN[k]+'　🥉 第 3 名 ➜ 🥈 第 2 名 ➜ 🥇 第 1 名',pod:G},t:7600,snd:'drum'});
+  if(top[0])P.push({o:{heroIc:HON.awi(k),kick:'🥇 '+esc(o.t)+' 第 1 名',cards:top.filter(function(x){return x.rk===1}).map(function(x){return {nm:HON.AWN[k],w:hwho(x.id),l:HON.awl(k,pm[x.id]||{},hper2())}})},t:5000,snd:'clap'});
   return P}
-/* 班際 ➜ 4 種排行（頒獎台）＋每一班都有最強的一項 */
+/* 班際 ➜ 3 種（頒獎台：平均每一個人） */
 function hPlanC(ps){var C=SC.classes(ps,F.g,SIZES),A=SC.clsAwards(C),P=[];
-  P.push({o:{kick:hper()+'　'+(F.g===3?'三':'四')+'年級',heroIc:'🏫',tit:'🏆 班際榮譽榜'},t:3500,snd:'horn'});
-  ['count','prog','sec','acc'].forEach(function(k){var R=A.rk[k];if(!R.length)return;R.forEach(function(x){x.vt=hcv(k,x.v)});
-    P.push({o:{hero:false,kick:HCB[k][1].replace('的班','')+'（'+(k==='acc'?'平均正確率':k==='prog'?'平均進步':'平均每一個人')+'）',pod:hpod(R,function(x){return SC.cname(x.cls)})},t:7600,snd:'drum'})});
-  P.push({o:{heroIc:'🏆',kick:'每一班都有自己最強的一項',cards:C.filter(function(c){return A.best[c.cls]}).map(function(c){var b=A.best[c.cls];
-    return {ic:hic(b.k),nm:b.rk===1?HCB[b.k][1]:HCB[b.k][1].replace('的班','')+'　第 '+b.rk+' 名',w:SC.cname(c.cls),l:HCB[b.k][2]+hcv(b.k,b.v)}})},t:6500,snd:'clap'});
+  P.push({o:{kick:hgr(),heroIc:'🏫',tit:'🏆 '+hper()+' 榮譽榜'},t:3500,snd:'horn'});
+  HON.AWK.forEach(function(k){var R=A.rk[k];if(!R.length)return;R.forEach(function(x){x.vt=HON.awc(k,x.v)});
+    P.push({o:{hero:false,kick:hgr()+'　'+HON.AWN[k]+'的班',pod:hpod(R,function(x){return SC.cname(x.cls)})},t:7600,snd:'drum'})});
   return {P:P,A:A,C:C}}
 function hOpen(key){var S=sets(),psG=SC.students(S.G);HN={i:0,tm:null,key:key,st:HON.pick('t')};
-  if(key==='c'){var r=hPlanC(psG);HN.P=r.P;HN.cert=r.C.filter(function(c){return r.A.best[c.cls]}).map(function(c){var b=r.A.best[c.cls];return {w:SC.cname(c.cls),aw:b.rk===1?HCB[b.k][1]:HCB[b.k][1].replace('的班','')+' 第 '+b.rk+' 名',l:'全班一起努力，'+HCB[b.k][2]+hcv(b.k,b.v)+'。'}})}
-  else{var o=HLISTS[+key],ps=o.cls?psG.filter(function(p){return p.cls===o.cls}):psG;HN.P=hPlan({t:o.t,L:o.L,k:BT,ps:ps,cls:o.cls});
-    HN.cert=o.L.filter(function(x){return x.rk<=10}).map(function(x){return {id:x.id,aw:HAW[BT][1]+'（第 '+x.rk+' 名）',l:HPR[BT](x.v)}});
-    if(BT!=='prog')SC.rank(ps,'prog').slice(0,3).forEach(function(x){HN.cert.push({id:x.id,aw:'進步之星',l:HPR.prog(x.v)})})}
+  if(key==='c'){var r=hPlanC(psG);HN.P=r.P;HN.cert=[];
+    /* 班級獎狀：每一種的第 1 名 */
+    HON.AWK.forEach(function(k){r.A.rk[k].filter(function(x){return x.rk===1}).forEach(function(x){HN.cert.push({w:hgr()+' '+SC.cname(x.cls),aw:'榮獲 '+hgr()+'「'+HON.AWN[k]+'的班」第 1 名',l:HON.awc(k,x.v)+'：全班一起努力。'})})})}
+  else{var o=HLISTS[+key],ps=o.cls?psG.filter(function(p){return p.cls===o.cls}):psG,pm={};ps.forEach(function(p){pm[p.id]=p});HN.P=hPlan({t:o.t,L:o.L,k:BT,ps:ps,cls:o.cls});
+    HN.cert=o.L.filter(function(x){return x.rk<=10}).map(function(x){return {id:x.id,aw:'榮獲 '+(o.cls?SC.cname(o.cls):hgr())+'「'+HON.AWN[BT]+'」第 '+x.rk+' 名',l:HON.awl(BT,pm[x.id]||{},hper2())}})}
   $('#honov').classList.add('on');hCtl();hShow()}
 function hShow(){clearTimeout(HN.tm);var p=HN.P[HN.i];if(!p)return;HON.scene($('#honst'),HN.st,p.o);
   if(HSND&&p.snd)HON.snd[p.snd]();
@@ -396,7 +407,7 @@ function hClose(){if(HN)clearTimeout(HN.tm);HN=null;$('#honov').classList.remove
 /* 🖨 印獎狀：A4 橫式，一個人（一班）一張 */
 function hPrint(){var d=new Date(DATA.now+288e5),dt0=d.getUTCFullYear()+' 年 '+(d.getUTCMonth()+1)+' 月 '+d.getUTCDate()+' 日';
   $('#prt').innerHTML=HN.cert.map(function(c){var n=c.id?nm(c.id):'';
-    return '<div class="cert"><div class="ct">🏆 榮譽獎狀</div><div class="cw">'+(c.id?esc(SC.cname(c.id.slice(0,3)))+'　'+(+c.id.slice(3))+' 號'+(HNM&&n?'　'+esc(n):''):esc(c.w))+'</div>'+
+    return '<div class="cert"><div class="ct">榮 譽 狀</div><div class="cw">'+(c.id?hgr()+' '+esc(SC.cname(c.id.slice(0,3)))+'　'+esc(c.id)+(HNM&&n?'　'+esc(n):''):esc(c.w))+'</div>'+
       '<div class="ca">'+esc(c.aw)+'</div><div class="cl">'+esc(c.l)+'</div><div class="cd">'+dt0+'</div></div>'}).join('');
   window.print()}
 /* 題庫：三、四年級共用的（Review 1 遊戲）存成 g*r1_… */
@@ -532,7 +543,7 @@ function excel(){
   var S=sets(),psG=SC.students(S.G),ps=F.cls?psG.filter(function(p){return p.cls===F.cls}):psG,RK=ranks(psG);
   var P=[XCOL.map(function(c){return c[1]})].concat(ps.map(function(p){var r=rowOf(p,RK);return XCOL.map(function(c){var v=r[c[0]];
     return c[0]==='last'?dt(v):c[0]==='fast'?v/100:c[0]==='prog'&&v==null&&r.keep?'保持滿分':v==null?'':v})}));
-  var B=[['榜','範圍','名次','5碼','姓名','分數']];['acc','s','count','prog'].forEach(function(k){
+  var B=[['榜','範圍','名次','5碼','姓名','分數']];['sec','acc','prog','s','count'].forEach(function(k){
     SC.rank(psG,k).forEach(function(x){if(!F.cls||x.cls===F.cls)B.push([BNX[k],'全年級',x.rk,x.id,nm(x.id),x.v])});
     (F.cls?[F.cls]:SC.CLASSES[F.g]).forEach(function(c){SC.rank(psG.filter(function(p){return p.cls===c}),k).forEach(function(x){B.push([BNX[k],SC.cname(c),x.rk,x.id,nm(x.id),x.v])})})});
   var C=[['班級','有做的人','班級人數','參與率','平均正確率','平均總分','作答總次數','平均進步']].concat(SC.classes(psG,F.g,SIZES).map(function(c){
@@ -554,6 +565,32 @@ var WD='日一二三四五六';
 function tkT(ms){var d=new Date(ms),p=function(n){return (n<10?'0':'')+n};return (d.getMonth()+1)+'/'+d.getDate()+'（'+WD.charAt(d.getDay())+'）'+p(d.getHours())+':'+p(d.getMinutes())}
 function tkV(ms){var d=new Date(ms),p=function(n){return (n<10?'0':'')+n};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes())}
 function tkList(){return (DATA&&DATA.tasks||[]).filter(function(t){return t.g===F.g&&(!F.cls||t.cls.indexOf(F.cls)>=0)})}
+/* ══ 2026-10-12 D 第 7 件：〔🔒 開關〕在家複習網站的每一個主題（使用者 D16 A）══
+   選班級（可以好幾班、〔✅ 全年級〕）➜ 按一個主題 ＝ 鎖／開（綠 🔓 開、紅 🔒 鎖、黃 ＝ 只有幾班鎖），按一下就存；〔🔓 全部開〕〔🔒 全部鎖〕
+   學生看到：沒登入「🔒 請先登入」、登入了自己的班鎖住「🔒 還沒開放」（不寫哪幾班）。鎖住的連任務也打不開；教學網站不鎖 */
+var LKC=null,LKMSG='';
+function lkCls(){var all=SC.CLASSES[F.g];if(!LKC||LKC.g!==F.g)LKC={g:F.g,c:F.cls?[F.cls]:all.slice()};return LKC.c}
+function lkSt(k){var L=DATA.locks||{},cs=lkCls(),f=function(c){return (L[c]||[]).indexOf(k)>=0},n=cs.filter(f),G=SC.CLASSES[F.g].filter(f);return {n:n.length,all:cs.length,who:G,gall:G.length===SC.CLASSES[F.g].length}}
+function paneL(){var T=RVT[F.g]||[],cs=lkCls(),G={},h;
+  T.forEach(function(x){(G[x.grp]=G[x.grp]||[]).push(x)});
+  h='<div class="note">在家複習網站（'+(F.g===3?'三':'四')+'年級複習）：<b class="lkg">🔓 綠色 ＝ 開</b>、<b class="lkr">🔒 紅色 ＝ 鎖</b>。按一下就換、馬上存好。鎖住的主題連任務也打不開；學生只看到「🔒 請先登入」或「🔒 還沒開放」，看不到鎖了哪幾班。教學網站（老師上課用）不鎖。</div>'+
+   '<h3>① 哪幾班</h3><div class="lkrow">'+SC.CLASSES[F.g].map(function(c){return '<button data-lkc="'+c+'" class="'+(cs.indexOf(c)>=0?'on':'')+'">'+(cs.indexOf(c)>=0?'☑ ':'☐ ')+esc(SC.cname(c))+'</button>'}).join('')+'<button data-lkc="*">✅ 全年級</button></div>'+
+   '<h3>② 一鍵</h3><div class="lkrow"><button data-lka="0" class="lkg">🔓 全部開</button><button data-lka="1" class="lkr">🔒 全部鎖</button><span id="lkmsg">'+LKMSG+'</span></div>'+
+   '<h3>③ 一個一個（按一下 ＝ 換）</h3>';
+  Object.keys(G).forEach(function(gr){h+='<h4 class="lkh">'+esc(gr)+'</h4><div class="lkgrid">'+G[gr].map(function(x){var st=lkSt(x.k),on=st.n===st.all&&st.all>0,part=st.n&&!on;
+    return '<button data-lk="'+x.k+'" class="lkb '+(on?'lkr':part?'lky':'lkg')+'"><span class="lki">'+(on||part?'🔒':'🔓')+'</span><span class="lkt">'+esc(x.t)+'</span>'+
+      (st.who.length&&!st.gall?'<em>只有 '+st.who.map(function(c){return esc(c)}).join('、')+' 鎖</em>':'')+'</button>'}).join('')+'</div>'});
+  return h}
+function lkPost(keys,on){var cs=lkCls();if(!cs.length){LKMSG='❗ 請先選班級';draw();return}
+  var old=DATA.locks||{};DATA.locks=SC.lkSet(old,cs,keys,on);LKMSG='⏳ 存起來中…';draw();
+  post({a:'lock',pw:PW,cls:cs,keys:keys,on:on}).then(function(j){if(j&&j.ok){DATA.locks=j.locks;LKMSG='✔ 存好了'}else{DATA.locks=old;LKMSG='❌ 存不起來（'+((j&&j.err)||'')+'）'}if(TAB==='l')draw()},
+    function(){DATA.locks=old;LKMSG='📶 連不到伺服器，沒有存';if(TAB==='l')draw()})}
+document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;if(TAB!=='l')return;
+  if((b=c('[data-lkc]'))){var k=b.getAttribute('data-lkc'),cs=lkCls();LKMSG='';
+    if(k==='*')LKC.c=SC.CLASSES[F.g].slice();else{var i=cs.indexOf(k);if(i>=0)cs.splice(i,1);else cs.push(k)}draw();return}
+  if((b=c('[data-lka]'))){lkPost((RVT[F.g]||[]).map(function(x){return x.k}),b.getAttribute('data-lka')==='1');return}
+  if((b=c('#pane [data-lk]'))){var kk=b.getAttribute('data-lk'),st=lkSt(kk);lkPost([kk],!(st.n===st.all&&st.all>0));return}
+});
 /* 這一個年級可以派的項目：老師看板的題庫（遊戲、📝 複習題、📘 Review 1、💼 職業單字） */
 function tkItems(g){var G={};Object.keys(BANK).forEach(function(k){if(k.indexOf('g'+g)!==0&&k.indexOf('g*')!==0)return;
   var key=k.replace('g*','g'+g),c=SC.cat(key),gr=/^g.gm_job-/.test(key)?'💼 職業單字':c.t;if(g===3&&gr==='💼 職業單字')return;   /* 職業單字是四年級 Unit 2 的主題 */(G[gr]=G[gr]||[]).push([key,BANK[k].name])});return G}
