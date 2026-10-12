@@ -1,0 +1,91 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>再對一次</title><style>
+@font-face{font-family:Andika;src:url(../../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#05070A;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 120px;font-size:26px;line-height:1.55;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:40px;color:#FFD54A;margin:22px 0 6px}
+h2{font-size:34px;color:#FFD54A;margin:46px 0 10px;border-top:4px solid #24303C;padding-top:20px}
+.lead{font-size:26px;color:#DDE6EE}
+.howto{background:#102016;border:3px solid #3BD16F;border-radius:20px;padding:14px 20px;margin:16px 0}
+.q{background:#0B0F14;border:3px solid #24303C;border-radius:20px;padding:16px 20px;margin:18px 0}
+.q>.t{font-size:30px;color:#7FD4FF;margin-bottom:8px}
+.op{display:block;border:3px solid #2A3540;border-radius:16px;padding:10px 16px;margin:10px 0;background:#0E141A}
+.op.rec{border-color:#3BD16F;background:#0D1B12}
+.op b.k{display:inline-block;min-width:1.6em;color:#FFD54A;font-size:32px}
+.rec .tag{display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px;margin-left:8px;vertical-align:middle}
+.why{color:#CFE3F5;font-size:24px;margin-top:6px}
+.small{font-size:22px;color:#B9C4CE}
+.cmp{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin:12px 0}
+.cmp .ar{font-size:54px;color:#FFD54A}
+.cmp.v{grid-template-columns:1fr}.cmp.v .ar{transform:rotate(90deg);text-align:center;line-height:1}
+.cmp .lab{font-size:24px;color:#B9C4CE;margin-bottom:4px}
+@media (max-width:760px){.cmp{grid-template-columns:1fr}.cmp .ar{transform:rotate(90deg);text-align:center}}
+.shot{width:100%;border:3px solid #3A4650;border-radius:14px;display:block}
+table{border-collapse:collapse;width:100%;margin:10px 0}
+td,th{border:2px solid #2A3540;padding:8px 12px;text-align:left;vertical-align:middle}
+th{background:#14202B;color:#CFE6FF}
+.big{font-size:44px}
+.mock{background:#000;border:3px solid #3A4650;border-radius:16px;padding:14px;overflow:hidden}
+.opt{background:#0F151C;border:4px solid #2A3540;border-radius:22px;padding:16px 18px;margin:20px 0}
+.opt.rec{border-color:#3BD16F;background:#0D1B12}
+.opt .hd{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:32px}
+.opt .k{color:#FFD54A;font-size:44px}
+.three{display:grid;grid-template-columns:200px 1fr 1fr;gap:14px;align-items:stretch;margin-top:12px}
+@media (max-width:900px){.three{grid-template-columns:1fr}}
+.box{background:#05070A;border:2px solid #2A3540;border-radius:16px;padding:10px;text-align:center}
+.box .lab{font-size:22px;color:#B9C4CE}
+.bigic{height:150px;display:flex;align-items:center;justify-content:center}
+.bigic .eA,.bigic .eB{font-size:120px;line-height:1}
+.bigic .MS{height:150px}
+.eA{display:inline-block;animation:shine 1.6s ease-in-out infinite;filter:drop-shadow(0 0 10px #FFD54A)}
+@keyframes shine{50%{transform:scale(1.15) rotate(12deg);filter:drop-shadow(0 0 26px #FFE07A)}}
+.eB{display:inline-block;transform-origin:50% 0;animation:swing 1.8s ease-in-out infinite}
+@keyframes swing{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.MS{transform-origin:50% 0;animation:swing 1.8s ease-in-out infinite;vertical-align:middle}
+.MS .st{transform-origin:60px 93px;animation:shine2 1.6s ease-in-out infinite}
+@keyframes shine2{50%{transform:scale(1.18);filter:drop-shadow(0 0 6px #fff)}}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:center;font-size:28px;background:#0B1118;border-radius:12px;padding:8px}
+.row .eA,.row .eB{font-size:48px;animation:none}.row .MS{height:58px;animation:none}.row .MS .st{animation:none}
+.tab{background:radial-gradient(circle at 50% 35%,#2A2000,#000 75%);border-radius:14px;padding:16px 8px}
+.tab .t1{font-size:34px;color:#FFE07A;margin-top:6px}.tab .t2{font-size:24px;color:#fff}
+.tab .eA,.tab .eB{font-size:96px}.tab .MS{height:130px}
+.pro{color:#9FF0B8;font-size:24px}.con{color:#FFB38A;font-size:24px}
+.why{font-size:24px}
+
+.MS.sm{height:120px}.UPA{height:110px}
+.mk{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.mk.one{grid-template-columns:1fr}
+@media (max-width:900px){.mk{grid-template-columns:1fr}}
+.dev{border:6px solid #3A4650;border-radius:26px;background:#000;padding:10px 12px 14px;text-align:center}
+.dev.pj{border-color:#5B4A12;border-radius:8px;background:radial-gradient(circle at 50% 30%,#2A2000,#000 75%)}
+.dev .lab{font-size:22px;color:#B9C4CE;text-align:left;margin-bottom:6px}
+.dev .ic{font-size:96px;line-height:1.1}
+.dev .t1{font-size:38px;color:#FFE07A;line-height:1.3}
+.dev .t2{font-size:28px;color:#fff;line-height:1.4}
+.dev .t3{font-size:24px;color:#CFE3F5;line-height:1.4}
+.dev .no{opacity:.55}
+.lst{text-align:left;font-size:26px;margin:6px auto;max-width:520px}
+.lst div{border-bottom:2px solid #2A3540;padding:4px 6px}
+.lst .me{background:#3A2E00;color:#FFE07A;border-radius:8px}
+.cert{background:#FFF8E6;color:#3A2A00;border:10px double #C9A227;border-radius:6px;padding:12px;text-align:center}
+.cert .c1{font-size:34px;color:#8A5A00}.cert .c2{font-size:26px}.cert .c3{font-size:22px;color:#6A5A3A}
+.ev td{font-size:22px;overflow-wrap:anywhere}
+@media (max-width:900px){.ev,.ev tbody,.ev tr,.ev td,.ev th{display:block;width:100%}.ev tr:first-child{display:none}.ev tr{margin-bottom:12px}}
+.ev th{font-size:22px}
+.ans{background:#1A1400;border:4px solid #FFD54A;border-radius:20px;padding:14px 20px;margin:30px 0;font-size:28px}
+.nw{white-space:nowrap}
+</style></head><body><div class="wrap">
+<h1>✅ 請老師再對一次：改完以後長這樣</h1>
+<div class="lead">老師的回答：<b>13 題全部 A</b>（第 7、8 題 ＝ 甲），再加 4 點修改（下面都已經改進去了）。</div>
+<table><tr><th>老師的修改</th><th>改成</th></tr>
+<tr><td>1. 「最努力」</td><td>「<b>最認真練習</b>」（平板、投影、獎狀、老師看板全部一樣）</td></tr>
+<tr><td>2. 「全年級約 90 人裡的第 4 名」</td><td>刪掉</td></tr>
+<tr><td>3. 「本週榮譽榜」</td><td>「<b>本週 榮譽榜</b>」</td></tr>
+<tr><td>4. 第 10～12 題</td><td>「<b>請問 這是您嗎？</b>」「<b>請問 您還在嗎？</b>」</td></tr>
+<tr><td>5. 第 13 題</td><td>不告訴學生鎖了哪幾班；只寫「🔒 請先登入」「🔒 還沒開放」</td></tr></table>
+<div class="howto">✍️ 都對 ＝ 在對話裡打「<b>對</b>」；哪裡不對 ＝ 寫「第幾區＋要改成什麼」。老師說「對」才改網站。</div><h2>①　學生平板：小華這一次「第一次進榜」</h2><div class="mk"><div class="dev"><div class="lab">📱 學生平板（30412）：班內</div><div class="ic"><svg class="MS sm" viewBox="0 0 120 150" aria-label="獎牌上面有星星"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><path d="M41 0h8l16 46h-8z" fill="#fff" opacity=".6"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="url(#gg)"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path class="st" d="M60 68l8.2 16.6 18.3 2.7-13.2 12.9 3.1 18.2L60 109.8l-16.4 8.6 3.1-18.2-13.2-12.9 18.3-2.7z" fill="#FFFDF0" stroke="#FFB300" stroke-width="2.5" stroke-linejoin="round"/><defs><radialGradient id="gg" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFF1A8"/><stop offset=".55" stop-color="#FFC928"/><stop offset="1" stop-color="#D99A00"/></radialGradient></defs></svg></div><div class="t1">最認真練習</div><div class="t2">304 班 第 2 名</div><div class="t3">這週練習 48 分鐘，<br>每一題都看完、聽完才選。</div></div><div class="dev"><div class="lab">📱 學生平板（30412）：全年級</div><div class="ic"><svg class="MS sm" viewBox="0 0 120 150" aria-label="獎牌上面有星星"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><path d="M41 0h8l16 46h-8z" fill="#fff" opacity=".6"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="url(#gg)"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path class="st" d="M60 68l8.2 16.6 18.3 2.7-13.2 12.9 3.1 18.2L60 109.8l-16.4 8.6 3.1-18.2-13.2-12.9 18.3-2.7z" fill="#FFFDF0" stroke="#FFB300" stroke-width="2.5" stroke-linejoin="round"/><defs><radialGradient id="gg" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFF1A8"/><stop offset=".55" stop-color="#FFC928"/><stop offset="1" stop-color="#D99A00"/></radialGradient></defs></svg></div><div class="t1">最認真練習</div><div class="t2">三年級 第 4 名</div><div class="t3">這週練習 48 分鐘，<br>每一題都看完、聽完才選。</div></div></div><div class="why">名次沒有變（還是第 2 名）的時候不演動畫，只寫一行：「你還在 304 班 最認真練習 第 2 名」。</div><h2>②　學生平板：每一個人做完都看得到（不是獎）</h2><div class="mk"><div class="dev"><div class="lab">📱 學生平板（30412）</div><div class="ic">⏱</div><div class="t1">這週你已經練習 12 分鐘</div><div class="t3">這一次 3 分鐘</div></div><div class="dev"><div class="lab">📱 太快亂按的時候</div><div class="ic">⚠️</div><div class="t2">這一次太快亂按，<br>不算進練習時間</div><div class="t3">每一題看完、聽完再選</div></div></div><div class="mk one"><div class="dev"><div class="lab">📱 沒上榜的學生（30720）：不演動畫</div><div class="ic">🎯</div><div class="t1">正確率 80 分</div><div class="t2">⏱ 這週你已經練習 9 分鐘</div><div class="t3">比上週多 4 分鐘</div></div></div><h2>③　三種最高榮譽（個人、班級都一樣）</h2><table><tr><th>獎</th><th>怎麼比</th><th>那一句話（例）</th></tr>
+<tr><td>最認真練習</td><td>練習時間最多（太快亂按的不算）</td><td>這週練習 48 分鐘，每一題都看完、聽完才選。</td></tr>
+<tr><td>成績最優</td><td>正確率最高（一樣多再比總分）</td><td>正確率 96 分：每一題都看清楚才選。</td></tr>
+<tr><td>進步最多</td><td>正確率進步最多</td><td>正確率從 70 分進步到 92 分（多了 22 分）。</td></tr></table>
+<div class="why">個人：304 班前 10 名、三年級前 10 名。班級：三年級 3 班（四年級 4 班）互相比。<br>拿掉：努力獎、天天練獎、時間獎、訂正獎、用心獎、成績獎、進步獎（做完幾乎都拿得到的小獎）。</div><h2>④　老師投影（每週一次）</h2><div class="mk"><div class="dev pj"><div class="lab">📺 老師投影</div><div class="t1">🏆 本週 榮譽榜</div><div class="t2">304 班 最認真練習</div><div class="lst"><div>🥇 30405 陳小安　52 分鐘</div><div class="me">🥈 30412 小華　48 分鐘</div><div>🥉 30420 林小宇　41 分鐘</div></div></div><div class="dev pj"><div class="lab">📺 老師投影：班級</div><div class="t1">🏆 本週 榮譽榜</div><div class="t2">三年級 最認真練習的班</div><div class="lst"><div class="me">🥇 304 班　平均每一個人 35 分鐘</div><div>🥈 311 班　平均每一個人 31 分鐘</div><div>🥉 307 班　平均每一個人 28 分鐘</div></div></div></div><h2>⑤　印獎狀</h2><div class="mk"><div class="cert"><div class="c1">榮 譽 狀</div><div class="c2">三年級 304 班 30412 小華</div><div class="c2">榮獲 304 班「<b>最認真練習</b>」第 2 名</div><div class="c3">這週練習 48 分鐘，每一題都看完、聽完才選。</div><div class="c3">2026 年 10 月 12 日</div></div><div class="cert"><div class="c1">榮 譽 狀</div><div class="c2">三年級 304 班</div><div class="c2">榮獲 三年級「<b>最認真練習的班</b>」第 1 名</div><div class="c3">平均每一個人練習 35 分鐘：全班一起努力。</div><div class="c3">2026 年 10 月 12 日</div></div></div><h2>⑥　學生登入</h2><div class="mk"><div class="dev"><div class="lab">📱 總首頁、三年級、四年級首頁：還沒登入</div><div style="background:#1A2A10;border:3px solid #3BD16F;border-radius:14px;padding:8px 12px;font-size:28px;text-align:left">👤 還沒登入 <b style="display:inline-block;background:#FFD54A;color:#000;border-radius:12px;padding:4px 16px;margin:4px">🔑 登入</b></div><div style="text-align:left;font-size:24px;color:#B9C4CE;margin-top:8px">🏠 三年級｜四年級｜…（畫面照常，不蓋住）</div></div><div class="dev"><div class="lab">📱 登入了</div><div style="background:#1A2A10;border:3px solid #3BD16F;border-radius:14px;padding:8px 12px;font-size:28px;text-align:left">請問 這是您嗎？<b>30412</b> <b style="display:inline-block;background:#3BD16F;color:#000;border-radius:12px;padding:4px 16px;margin:4px">✅ 是</b><b style="display:inline-block;background:#FF7A7A;color:#000;border-radius:12px;padding:4px 16px;margin:4px">🚪 不是，登出</b></div><div style="text-align:left;font-size:24px;color:#B9C4CE;margin-top:8px">🏠 三年級｜四年級｜…（畫面照常，不蓋住）</div></div></div><div class="mk"><div class="dev"><div class="lab">📱 打開網站的第一頁（只問一次）</div><div class="t1">請問 這是您嗎？</div><div class="ic" style="font-size:80px">30412</div><div class="t2"><b style="display:inline-block;background:#3BD16F;color:#000;border-radius:12px;padding:4px 16px;margin:4px">✅ 是，繼續</b><b style="display:inline-block;background:#FF7A7A;color:#000;border-radius:12px;padding:4px 16px;margin:4px">🚪 不是，登出</b></div></div><div class="dev"><div class="lab">📱 3 分鐘沒動作：最後 30 秒</div><div class="ic">⏳</div><div class="t1">請問 您還在嗎？</div><div class="t2">30 秒後自動登出</div><div class="t2"><b style="display:inline-block;background:#3BD16F;color:#000;border-radius:12px;padding:4px 16px;margin:4px">👆 我還在</b></div></div></div><div class="mk"><div class="dev"><div class="lab">📱 時間到</div><div class="ic">🚪</div><div class="t1">已經登出了</div><div class="t3">3 分鐘沒有動作</div><div class="t2"><b style="display:inline-block;background:#FFD54A;color:#000;border-radius:12px;padding:4px 16px;margin:4px">🔑 登入</b></div></div><div class="dev"><div class="lab">📱 每一個題目、遊戲做完</div><div class="ic">🚪</div><div class="t2">做完了，記得登出</div><div class="t3">下一個人才不會用到您的號碼</div><div class="t2"><b style="display:inline-block;background:#FF7A7A;color:#000;border-radius:12px;padding:4px 16px;margin:4px">🚪 登出</b></div></div></div><h2>⑦　在家複習：被鎖的主題（不寫哪幾班）</h2><div class="mk"><div class="dev"><div class="lab">📱 沒登入的時候</div><div class="ic">🔒</div><div class="t1">請先登入</div><div class="t2"><b style="display:inline-block;background:#FFD54A;color:#000;border-radius:12px;padding:4px 16px;margin:4px">🔑 登入</b></div></div><div class="dev"><div class="lab">📱 登入了，自己的班被鎖</div><div class="ic">🔒</div><div class="t1">還沒開放</div></div></div><div class="why">沒被鎖的主題：照樣不用登入就能練。</div><div class="ans">✍️ 都對 ＝ 打「<b>對</b>」。哪裡不對 ＝ 寫「第幾區＋要改成什麼」。</div></div></body></html>

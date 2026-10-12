@@ -1,0 +1,90 @@
+// 產生 listen/2026-10-12_D7/index.html（老師回答 13 題以後：用小華的例子再對一次）
+const fs = require('fs'), SP = __dirname + '/../2026-10-12_D6';
+const head = fs.readFileSync(SP + '/head.html', 'utf8').replace(/\n<style>\n/, '\n');
+const MS = fs.readFileSync(SP + '/ms.svg', 'utf8').trim();
+const MSs = MS.replace('class="MS"', 'class="MS sm"');
+const UP = '<svg class="UPA" viewBox="0 0 100 120" aria-label="進步"><path d="M50 4 92 52H66v62H34V52H8z" fill="#3BD16F" stroke="#0E5C2A" stroke-width="5" stroke-linejoin="round"/></svg>';
+const css = `
+.MS.sm{height:120px}.UPA{height:110px}
+.mk{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.mk.one{grid-template-columns:1fr}
+@media (max-width:900px){.mk{grid-template-columns:1fr}}
+.dev{border:6px solid #3A4650;border-radius:26px;background:#000;padding:10px 12px 14px;text-align:center}
+.dev.pj{border-color:#5B4A12;border-radius:8px;background:radial-gradient(circle at 50% 30%,#2A2000,#000 75%)}
+.dev .lab{font-size:22px;color:#B9C4CE;text-align:left;margin-bottom:6px}
+.dev .ic{font-size:96px;line-height:1.1}
+.dev .t1{font-size:38px;color:#FFE07A;line-height:1.3}
+.dev .t2{font-size:28px;color:#fff;line-height:1.4}
+.dev .t3{font-size:24px;color:#CFE3F5;line-height:1.4}
+.dev .no{opacity:.55}
+.lst{text-align:left;font-size:26px;margin:6px auto;max-width:520px}
+.lst div{border-bottom:2px solid #2A3540;padding:4px 6px}
+.lst .me{background:#3A2E00;color:#FFE07A;border-radius:8px}
+.cert{background:#FFF8E6;color:#3A2A00;border:10px double #C9A227;border-radius:6px;padding:12px;text-align:center}
+.cert .c1{font-size:34px;color:#8A5A00}.cert .c2{font-size:26px}.cert .c3{font-size:22px;color:#6A5A3A}
+.ev td{font-size:22px;overflow-wrap:anywhere}
+@media (max-width:900px){.ev,.ev tbody,.ev tr,.ev td,.ev th{display:block;width:100%}.ev tr:first-child{display:none}.ev tr{margin-bottom:12px}}
+.ev th{font-size:22px}
+.ans{background:#1A1400;border:4px solid #FFD54A;border-radius:20px;padding:14px 20px;margin:30px 0;font-size:28px}
+.nw{white-space:nowrap}
+`;
+const tab = (inner, lab) => `<div class="dev"><div class="lab">📱 ${lab || '學生平板（小華 ＝ 30412）'}</div>${inner}</div>`;
+const pj = (inner, lab) => `<div class="dev pj"><div class="lab">📺 ${lab || '老師投影'}</div>${inner}</div>`;
+const btn = (t, c) => `<b style="display:inline-block;background:${c};color:#000;border-radius:12px;padding:4px 16px;margin:4px">${t}</b>`;
+const G = '#3BD16F', Y = '#FFD54A', R = '#FF7A7A';
+const sec = (n, t, inner) => `<h2>${n}　${t}</h2>${inner}`;
+const mk = (...a) => `<div class="mk${a.length === 1 ? ' one' : ''}">${a.join('')}</div>`;
+const bar = (inner) => `<div style="background:#1A2A10;border:3px solid #3BD16F;border-radius:14px;padding:8px 12px;font-size:28px;text-align:left">${inner}</div>`;
+
+let h = head.replace('<title>榮譽榜怎麼給</title>', '<title>再對一次</title>').replace('</style>', css + '</style></head><body><div class="wrap">');
+h += `<h1>✅ 請老師再對一次：改完以後長這樣</h1>
+<div class="lead">老師的回答：<b>13 題全部 A</b>（第 7、8 題 ＝ 甲），再加 4 點修改（下面都已經改進去了）。</div>
+<table><tr><th>老師的修改</th><th>改成</th></tr>
+<tr><td>1. 「最努力」</td><td>「<b>最認真練習</b>」（平板、投影、獎狀、老師看板全部一樣）</td></tr>
+<tr><td>2. 「全年級約 90 人裡的第 4 名」</td><td>刪掉</td></tr>
+<tr><td>3. 「本週榮譽榜」</td><td>「<b>本週 榮譽榜</b>」</td></tr>
+<tr><td>4. 第 10～12 題</td><td>「<b>請問 這是您嗎？</b>」「<b>請問 您還在嗎？</b>」</td></tr>
+<tr><td>5. 第 13 題</td><td>不告訴學生鎖了哪幾班；只寫「🔒 請先登入」「🔒 還沒開放」</td></tr></table>
+<div class="howto">✍️ 都對 ＝ 在對話裡打「<b>對</b>」；哪裡不對 ＝ 寫「第幾區＋要改成什麼」。老師說「對」才改網站。</div>`;
+
+h += sec('①', '學生平板：小華這一次「第一次進榜」', mk(
+  tab(`<div class="ic">${MSs}</div><div class="t1">最認真練習</div><div class="t2">304 班 第 2 名</div><div class="t3">這週練習 48 分鐘，<br>每一題都看完、聽完才選。</div>`, '學生平板（30412）：班內'),
+  tab(`<div class="ic">${MSs}</div><div class="t1">最認真練習</div><div class="t2">三年級 第 4 名</div><div class="t3">這週練習 48 分鐘，<br>每一題都看完、聽完才選。</div>`, '學生平板（30412）：全年級')) +
+  `<div class="why">名次沒有變（還是第 2 名）的時候不演動畫，只寫一行：「你還在 304 班 最認真練習 第 2 名」。</div>`);
+
+h += sec('②', '學生平板：每一個人做完都看得到（不是獎）', mk(
+  tab(`<div class="ic">⏱</div><div class="t1">這週你已經練習 12 分鐘</div><div class="t3">這一次 3 分鐘</div>`, '學生平板（30412）'),
+  tab(`<div class="ic">⚠️</div><div class="t2">這一次太快亂按，<br>不算進練習時間</div><div class="t3">每一題看完、聽完再選</div>`, '太快亂按的時候')) +
+  mk(tab(`<div class="ic">🎯</div><div class="t1">正確率 80 分</div><div class="t2">⏱ 這週你已經練習 9 分鐘</div><div class="t3">比上週多 4 分鐘</div>`, '沒上榜的學生（30720）：不演動畫')));
+
+h += sec('③', '三種最高榮譽（個人、班級都一樣）', `<table><tr><th>獎</th><th>怎麼比</th><th>那一句話（例）</th></tr>
+<tr><td>最認真練習</td><td>練習時間最多（太快亂按的不算）</td><td>這週練習 48 分鐘，每一題都看完、聽完才選。</td></tr>
+<tr><td>成績最優</td><td>正確率最高（一樣多再比總分）</td><td>正確率 96 分：每一題都看清楚才選。</td></tr>
+<tr><td>進步最多</td><td>正確率進步最多</td><td>正確率從 70 分進步到 92 分（多了 22 分）。</td></tr></table>
+<div class="why">個人：304 班前 10 名、三年級前 10 名。班級：三年級 3 班（四年級 4 班）互相比。<br>拿掉：努力獎、天天練獎、時間獎、訂正獎、用心獎、成績獎、進步獎（做完幾乎都拿得到的小獎）。</div>`);
+
+h += sec('④', '老師投影（每週一次）', mk(
+  pj(`<div class="t1">🏆 本週 榮譽榜</div><div class="t2">304 班 最認真練習</div><div class="lst"><div>🥇 30405 陳小安　52 分鐘</div><div class="me">🥈 30412 小華　48 分鐘</div><div>🥉 30420 林小宇　41 分鐘</div></div>`),
+  pj(`<div class="t1">🏆 本週 榮譽榜</div><div class="t2">三年級 最認真練習的班</div><div class="lst"><div class="me">🥇 304 班　平均每一個人 35 分鐘</div><div>🥈 311 班　平均每一個人 31 分鐘</div><div>🥉 307 班　平均每一個人 28 分鐘</div></div>`, '老師投影：班級')));
+
+h += sec('⑤', '印獎狀', mk(
+  `<div class="cert"><div class="c1">榮 譽 狀</div><div class="c2">三年級 304 班 30412 小華</div><div class="c2">榮獲 304 班「<b>最認真練習</b>」第 2 名</div><div class="c3">這週練習 48 分鐘，每一題都看完、聽完才選。</div><div class="c3">2026 年 10 月 12 日</div></div>`,
+  `<div class="cert"><div class="c1">榮 譽 狀</div><div class="c2">三年級 304 班</div><div class="c2">榮獲 三年級「<b>最認真練習的班</b>」第 1 名</div><div class="c3">平均每一個人練習 35 分鐘：全班一起努力。</div><div class="c3">2026 年 10 月 12 日</div></div>`));
+
+const hub = `<div style="text-align:left;font-size:24px;color:#B9C4CE;margin-top:8px">🏠 三年級｜四年級｜…（畫面照常，不蓋住）</div>`;
+h += sec('⑥', '學生登入', mk(
+  tab(bar(`👤 還沒登入 ${btn('🔑 登入', Y)}`) + hub, '總首頁、三年級、四年級首頁：還沒登入'),
+  tab(bar(`請問 這是您嗎？<b>30412</b> ${btn('✅ 是', G)}${btn('🚪 不是，登出', R)}`) + hub, '登入了')) +
+  mk(tab(`<div class="t1">請問 這是您嗎？</div><div class="ic" style="font-size:80px">30412</div><div class="t2">${btn('✅ 是，繼續', G)}${btn('🚪 不是，登出', R)}</div>`, '打開網站的第一頁（只問一次）'),
+     tab(`<div class="ic">⏳</div><div class="t1">請問 您還在嗎？</div><div class="t2">30 秒後自動登出</div><div class="t2">${btn('👆 我還在', G)}</div>`, '3 分鐘沒動作：最後 30 秒')) +
+  mk(tab(`<div class="ic">🚪</div><div class="t1">已經登出了</div><div class="t3">3 分鐘沒有動作</div><div class="t2">${btn('🔑 登入', Y)}</div>`, '時間到'),
+     tab(`<div class="ic">🚪</div><div class="t2">做完了，記得登出</div><div class="t3">下一個人才不會用到您的號碼</div><div class="t2">${btn('🚪 登出', R)}</div>`, '每一個題目、遊戲做完')));
+
+h += sec('⑦', '在家複習：被鎖的主題（不寫哪幾班）', mk(
+  tab(`<div class="ic">🔒</div><div class="t1">請先登入</div><div class="t2">${btn('🔑 登入', Y)}</div>`, '沒登入的時候'),
+  tab(`<div class="ic">🔒</div><div class="t1">還沒開放</div>`, '登入了，自己的班被鎖')) +
+  `<div class="why">沒被鎖的主題：照樣不用登入就能練。</div>`);
+
+h += `<div class="ans">✍️ 都對 ＝ 打「<b>對</b>」。哪裡不對 ＝ 寫「第幾區＋要改成什麼」。</div></div></body></html>`;
+fs.writeFileSync(process.argv[2], h);
+console.log('ok', h.length);
