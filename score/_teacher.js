@@ -80,6 +80,23 @@ td.lo{color:var(--no)}
 .br .v{text-align:right;color:#DDD}
 .br .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 h3{margin:18px 0 8px;font-size:clamp(22px,1.8vw,32px)}
+/* 2026-10-12 D 第 5 件：🔔 要關心 一班一張表、照座號一格一格 */
+.klg{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0 4px}
+.klg .kx{font-size:clamp(18px,1.35vw,24px);color:#C8C8C8}
+.kp{display:inline-flex;gap:6px;align-items:center;border-radius:999px;padding:4px 14px;font-size:clamp(19px,1.5vw,28px);border:2px solid #333;background:#111}
+.kp.no{border-color:#FF6B6B}.kp.md{border-color:#FFD24A}.kp.ok{border-color:#3BD16F}.kp.nd{border-color:#666}
+.kcls h3{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:22px 0 10px;font-size:clamp(26px,2.2vw,40px)}
+.kct{display:flex;flex-wrap:wrap;gap:8px}
+.kg{display:grid;grid-template-columns:repeat(auto-fill,minmax(8.4em,1fr));gap:10px;font-size:clamp(20px,1.6vw,30px)}
+.kc{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:10px 12px;border-radius:14px;border:3px solid #333;background:#121212;
+  font-size:1em;min-height:52px;min-width:0;color:#fff;cursor:pointer;animation:kin .35s ease-out both}
+.kc b{font-size:1.1em;letter-spacing:.02em}.kc .kn{font-size:1em;color:#F2F2F2}.kc .kw{font-size:.85em;color:#DDD;white-space:nowrap}
+.kc.no{border-color:#FF6B6B;background:#2A1010;animation:kin .35s ease-out both,kbl 1.6s ease-in-out .6s infinite}
+.kc.md{border-color:#FFD24A;background:#2A2208}.kc.ok{border-color:#3BD16F;background:#0D1F14}.kc.nd{border-color:#555;background:#161616;color:#BBB}
+.kc.nd .kn{color:#BBB}
+@keyframes kin{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+@keyframes kbl{50%{box-shadow:0 0 0 4px rgba(255,107,107,.45)}}
+@media (prefers-reduced-motion:reduce){.kc,.kc.no{animation:none}}
 .wq{display:grid;grid-template-columns:2.2em 1fr 13em;gap:10px;align-items:center;padding:10px;border:1px solid #1E1E1E;border-radius:14px;margin-bottom:8px;cursor:pointer;font-size:clamp(19px,1.5vw,28px)}
 .wq:active{background:#141A20}
 .wq .n{font-size:1.3em;font-weight:700;color:var(--gold);text-align:center}
@@ -395,22 +412,29 @@ function paneW(R){
    Q.map(function(x,n){var o=qOf(x.k);return '<div class="wq" data-q="'+x.k+'"><span class="n">'+(n+1)+'</span><span class="q"><b>'+esc(qText(o.q))+'</b><em>'+esc(o.set.name)+'・第 '+(x.i+1)+' 題・'+kn(o.q)+'</em></span>'+
      '<span class="r"><span>答錯 '+x.rate+'%（'+x.bad+'／'+x.n+'）</span><span class="t"><i style="width:'+x.rate+'%"></i></span></span></div>'}).join('');
 }
+/* 2026-10-12 D 第 5 件（使用者第二批 4(3)）：🔔 要關心 ＝ 每一班一張表，照座號一格一格（班級、號碼、姓名）。
+   每一格的顏色跟 👤 個人表的燈號同一套（light）：🔴 要關心（正確率不到 60 分、或太快亂按超過 3 成）🟡 要注意（不到 80 分、或亂按超過 1 成）
+   🟢 很好 ⚪ 這段期間還沒做（以前做過的多寫「以前有做」）。格子一格一格跳出來，🔴 的框慢慢閃；點一格 ＝ 那個人的秒懂成績卡。
+   有名單 ＝ 名單上的每一個人都有一格；沒有名單 ＝ 只有做過的人（上面寫怎麼貼名單） */
+var KST=[['🔴','要關心','no'],['🟡','要注意','md'],['🟢','很好','ok'],['⚪','還沒做','nd']];
 function paneK(ps,S){
   var r=range(),before=SC.students(SC.pick(ALL,{g:F.g,to:r.from,src:F.src}).filter(function(x){return !F.cls||x.cls===F.cls}));
-  var now={};ps.forEach(function(p){now[p.id]=1});
-  var gone=before.filter(function(p){return !now[p.id]}).map(function(p){return p.id});
-  /* 名單上這段期間一次都沒做的人（使用者 2026-10-09 Q7） */
-  var cs=F.cls?[F.cls]:SC.CLASSES[F.g],hasR=cs.some(function(c){return RCLS[c]}),never=[];
-  cs.forEach(function(c){(RCLS[c]||[]).forEach(function(id){if(!now[id])never.push(id)})});
-  var ids=function(L){return '<div class="note" style="color:#DDD;line-height:1.7">'+L.map(who).join('、')+'</div>'};
-  var low=ps.filter(function(p){return p.acc!=null&&p.acc<60}).sort(function(a,b){return a.acc-b.acc});
-  var fast=ps.filter(function(p){return p.q&&p.fastQ/p.q>.3}).sort(function(a,b){return b.fastQ/b.q-a.fastQ/a.q});
-  var li=function(L,f){return L.length?'<div class="bars">'+L.map(f).join('')+'</div>':'<div class="note">沒有 👍</div>'};
-  return '<div class="note">這一頁只有老師看得到。</div>'+
-   '<h3>📭 這段期間一次都沒做（'+(hasR?never.length+' 人':'要名單')+'）</h3>'+(!hasR?'<div class="note">在試算表「名單」分頁貼上 班級｜座號｜姓名，這裡就會列出還沒做的人。</div>':(never.length?ids(never):'<div class="note">全部都做了 👍</div>'))+
-   '<h3>📭 以前做過、這段期間還沒做（'+gone.length+' 人）</h3>'+(r.from==null?'<div class="note">選「本週」「上週」或自訂日期才看得出來。</div>':(gone.length?ids(gone):'<div class="note">沒有 👍</div>'))+
-   '<h3>🎯 平均正確率不到 60 分（'+low.length+' 人）</h3>'+li(low,function(p){return '<div class="br no"><span class="l">'+who(p.id)+'</span><span class="t"><i style="width:'+p.acc+'%"></i></span><span class="v">'+f1(p.acc)+' 分</span></div>'})+
-   '<h3>⚠️ 太快亂按（1 秒內就按、還沒看完題目的題目超過 3 成）（'+fast.length+' 人）</h3>'+li(fast,function(p){var v=Math.round(p.fastQ/p.q*100);return '<div class="br no"><span class="l">'+who(p.id)+'</span><span class="t"><i style="width:'+v+'%"></i></span><span class="v">'+v+'%</span></div>'});
+  var now={},old={};ps.forEach(function(p){now[p.id]=p});
+  if(r.from!=null)before.forEach(function(p){old[p.id]=1});
+  var cs=F.cls?[F.cls]:SC.CLASSES[F.g],hasR=cs.some(function(c){return RCLS[c]}),h='',k=0;
+  cs.forEach(function(c){
+    var ids=(RCLS[c]||[]).slice();ps.concat(before).forEach(function(p){if(p.cls===c&&ids.indexOf(p.id)<0)ids.push(p.id)});
+    ids.sort();if(!ids.length)return;
+    var cnt=[0,0,0,0],cells=ids.map(function(id){var p=now[id],o=p?rowOf(p,{}):{acc:null,fast:0},lt=!p?3:o.acc==null?2:o.lt;cnt[lt]++;
+      var why=!p?(old[id]?'以前有做':'還沒做'):o.acc==null?'🃏 只玩記憶配對':o.fast>30?'⚠️ 亂按 '+o.fast+'%':f1(o.acc)+' 分';
+      if(p&&o.acc!=null&&o.acc>=60&&o.fast>10&&o.fast<=30)why='⚠️ 亂按 '+o.fast+'%';
+      return '<button class="kc '+KST[lt][2]+'" data-pid="'+id+'" style="animation-delay:'+Math.min(k++*22,900)+'ms"><b>'+esc(id)+'</b><span class="kn">'+(esc(nm(id))||'&nbsp;')+'</span><span class="kw">'+KST[lt][0]+' '+why+'</span></button>'});
+    h+='<section class="kcls"><h3>'+esc(SC.cname(c))+'<span class="kct">'+KST.map(function(s,i){return '<span class="kp '+s[2]+'">'+s[0]+' '+s[1]+' <b>'+cnt[i]+'</b></span>'}).join('')+'</span></h3><div class="kg">'+cells.join('')+'</div></section>'});
+  return '<div class="note">這一頁只有老師看得到。每一班照座號一格一格；<b>點一格看那個人的成績卡</b>。</div>'+
+   '<div class="klg">'+KST.map(function(s){return '<span class="kp '+s[2]+'">'+s[0]+' '+s[1]+'</span>'}).join('')+
+   '<span class="kx">🔴 ＝ 正確率不到 60 分、或太快亂按超過 3 成　🟡 ＝ 不到 80 分、或太快亂按超過 1 成</span></div>'+
+   (!hasR?'<div class="note">在試算表「名單」分頁貼上 班級｜座號｜姓名，還沒做的人也會有一格。</div>':'')+
+   (h||'<div class="note">這段期間還沒有人作答。</div>');
 }
 /* 2026-10-12 D 第 3 件（D7 ①～⑤⑦）：點一個人 ＝ 秒懂成績卡。
    ① 四個大圖（正確率、總分 ＝ 圓圈從 0 轉上去；練習次數 ＝ 大數字＋綠色小方格一格 ＝ 一次；進步 ＝ 綠色箭頭往上跳，退步不寫負數寫「再加油」）
@@ -588,6 +612,7 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if((b=c('#tabs button'))){TAB=b.getAttribute('data-t');$$('#tabs button').forEach(function(x){x.classList.toggle('on',x===b)});draw();return}
   if((b=c('th[data-k]'))){var k=b.getAttribute('data-k');SORT={k:k,d:SORT.k===k?-SORT.d:1};draw();return}
   if((b=c('tr.row'))){person(b.getAttribute('data-id'));return}
+  if((b=c('.kc'))){person(b.getAttribute('data-pid'));return}
   if((b=c('[data-bt]'))){BT=b.getAttribute('data-bt');draw();return}
   if((b=c('[data-bs]'))){BS=b.getAttribute('data-bs');draw();return}
   if((b=c('[data-hon]'))){hOpen(b.getAttribute('data-hon'));return}

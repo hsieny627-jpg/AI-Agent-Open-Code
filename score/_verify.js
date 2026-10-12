@@ -217,7 +217,7 @@ async function teacher(br, vp) {
   n += 5;
   for (const t of ['p', 'b', 'c', 'w', 'k']) {
     await p.click('#tabs button[data-t="' + t + '"]'); await p.waitForTimeout(150);
-    const r = await p.evaluate(() => ({ t: document.getElementById('pane').textContent, small: [].filter.call(document.querySelectorAll('#pane td,#pane .br,#pane button,#pane .note,#pane h3,.tile .k,.tile .d,#tabs button'), x => x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < (innerWidth >= 1900 ? 22 : 16)).length, old: /⚡|🔁|🚀|秒按/.test(document.getElementById('pane').textContent + document.getElementById('tiles').textContent) }));
+    const r = await p.evaluate(() => ({ t: document.getElementById('pane').textContent, small: [].filter.call(document.querySelectorAll('#pane td,#pane .br,#pane button,#pane .kc span,#pane .kp,#pane .note,#pane h3,.tile .k,.tile .d,#tabs button'), x => x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < (innerWidth >= 1900 ? 22 : 16)).length, old: /⚡|🔁|🚀|秒按/.test(document.getElementById('pane').textContent + document.getElementById('tiles').textContent) }));
     if ((await ox()) > 0) e.push('分頁 ' + t + ' 橫向溢出');
     if (r.small) e.push('分頁 ' + t + ' 有 ' + r.small + ' 個字太小（觸控螢幕要 ≧ 22px、iPad ≧ 16px）');
     if (r.old && t !== 't' && t !== 'w') e.push('分頁 ' + t + ' 還有看不懂的舊圖示（⚡🔁🚀／秒按）');
@@ -281,9 +281,32 @@ async function teacher(br, vp) {
   if (!(z1.h > z0) || z1.z !== '1.1') e.push('〔A＋〕沒有放大（' + JSON.stringify(z1) + '）');
   await p.click('#zo'); await p.waitForTimeout(150); n += 5;
   await p.click('#tabs button[data-t="k"]'); await p.waitForTimeout(150);
-  const kt = await p.textContent('#pane');
-  if (!/一次都沒做（1 人）/.test(kt) || !/30430 沒做小明/.test(kt)) e.push('要關心沒有列出名單上一次都沒做的人（' + kt.slice(0, 80) + '）');
-  n += 3;
+  /* 2026-10-12 D 第 5 件：一班一張表、照座號一格一格（號碼＋姓名＋燈號），沒做的人也有一格（⚪），點一格 ＝ 成績卡 */
+  await p.waitForTimeout(1200); if (process.env.KSHOT) await p.screenshot({ path: process.env.KSHOT + vp[0] + '.png', fullPage: true });   /* 只拍照片 */
+  const kk = await p.evaluate(() => {
+    const S = [].map.call(document.querySelectorAll('.kcls'), s => ({ h: s.querySelector('h3').textContent,
+      c: [].map.call(s.querySelectorAll('.kc'), c => ({ id: c.querySelector('b').textContent, n: c.querySelector('.kn').textContent, w: c.querySelector('.kw').textContent, k: c.className,
+        r: c.getBoundingClientRect(), o: c.scrollWidth > c.clientWidth + 1, op: +getComputedStyle(c).opacity })) }));
+    return { S: S, lg: !!document.querySelector('.klg'), W: innerWidth };
+  });
+  const s304 = kk.S.find(s => /^304/.test(s.h));
+  if (!kk.lg) e.push('要關心沒有圖例（🔴🟡🟢⚪）');
+  if (!s304) e.push('要關心沒有 304 班的表');
+  else {
+    const ids = s304.c.map(c => c.id);
+    if (ids.join() !== ids.slice().sort().join()) e.push('要關心 304 班不是照座號排');
+    if (new Set(ids).size !== ids.length) e.push('要關心 304 班同一個人有兩格');
+    const z = s304.c.find(c => c.id === '30430');
+    if (!z || z.n !== '沒做小明' || !/⚪/.test(z.w) || !/nd/.test(z.k)) e.push('要關心：名單上一次都沒做的 30430 沒做小明沒有 ⚪ 那一格');
+    if (!/⚪ 還沒做 1/.test(s304.h.replace(/\s+/g, ' '))) e.push('要關心 304 班標題沒有寫「⚪ 還沒做 1」（' + s304.h + '）');
+    if (s304.c.some(c => c.id !== '30430' && !/測試\d\d/.test(c.n))) e.push('要關心有做的人沒有姓名');
+    if (s304.c.some(c => !/[🔴🟡🟢⚪]/.test(c.w))) e.push('要關心有格子沒有燈號');
+  }
+  if (kk.S.some(s => s.c.some(c => c.o || c.r.right > kk.W || c.r.height < 52 || c.op < .99))) e.push('要關心的格子超出、太矮、或動畫沒有跑完' + JSON.stringify(kk.S.flatMap(s => s.c).filter(c => c.o || c.r.right > kk.W || c.r.height < 52 || c.op < .99).slice(0, 2).map(c => [c.id, c.w, c.o, Math.round(c.r.right), Math.round(c.r.height), c.op])));
+  await p.click('.kc[data-pid="30430"]'); await p.waitForTimeout(200);
+  if (!/30430/.test(await p.textContent('#mbox h3').catch(() => ''))) e.push('要關心點一格沒有打開成績卡');
+  await p.click('#mx').catch(() => {}); await p.waitForTimeout(100);
+  n += 10;
   /* 個人 ➜ 作廢 */
   await p.click('#tabs button[data-t="p"]'); await p.click('tr.row'); await p.waitForTimeout(150);
   if (!/測試\d\d/.test(await p.textContent('#mbox h3'))) e.push('個人紀錄的標題沒有姓名');

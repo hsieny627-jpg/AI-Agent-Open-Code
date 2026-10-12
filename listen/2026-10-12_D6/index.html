@@ -1,0 +1,116 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>榮譽榜怎麼給</title><style>
+@font-face{font-family:Andika;src:url(../../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#05070A;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 120px;font-size:26px;line-height:1.55;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:40px;color:#FFD54A;margin:22px 0 6px}
+h2{font-size:34px;color:#FFD54A;margin:46px 0 10px;border-top:4px solid #24303C;padding-top:20px}
+.lead{font-size:26px;color:#DDE6EE}
+.howto{background:#102016;border:3px solid #3BD16F;border-radius:20px;padding:14px 20px;margin:16px 0}
+.q{background:#0B0F14;border:3px solid #24303C;border-radius:20px;padding:16px 20px;margin:18px 0}
+.q>.t{font-size:30px;color:#7FD4FF;margin-bottom:8px}
+.op{display:block;border:3px solid #2A3540;border-radius:16px;padding:10px 16px;margin:10px 0;background:#0E141A}
+.op.rec{border-color:#3BD16F;background:#0D1B12}
+.op b.k{display:inline-block;min-width:1.6em;color:#FFD54A;font-size:32px}
+.rec .tag{display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px;margin-left:8px;vertical-align:middle}
+.why{color:#CFE3F5;font-size:24px;margin-top:6px}
+.small{font-size:22px;color:#B9C4CE}
+.cmp{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin:12px 0}
+.cmp .ar{font-size:54px;color:#FFD54A}
+.cmp.v{grid-template-columns:1fr}.cmp.v .ar{transform:rotate(90deg);text-align:center;line-height:1}
+.cmp .lab{font-size:24px;color:#B9C4CE;margin-bottom:4px}
+@media (max-width:760px){.cmp{grid-template-columns:1fr}.cmp .ar{transform:rotate(90deg);text-align:center}}
+.shot{width:100%;border:3px solid #3A4650;border-radius:14px;display:block}
+table{border-collapse:collapse;width:100%;margin:10px 0}
+td,th{border:2px solid #2A3540;padding:8px 12px;text-align:left;vertical-align:middle}
+th{background:#14202B;color:#CFE6FF}
+.big{font-size:44px}
+.mock{background:#000;border:3px solid #3A4650;border-radius:16px;padding:14px;overflow:hidden}
+.opt{background:#0F151C;border:4px solid #2A3540;border-radius:22px;padding:16px 18px;margin:20px 0}
+.opt.rec{border-color:#3BD16F;background:#0D1B12}
+.opt .hd{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:32px}
+.opt .k{color:#FFD54A;font-size:44px}
+.three{display:grid;grid-template-columns:200px 1fr 1fr;gap:14px;align-items:stretch;margin-top:12px}
+@media (max-width:900px){.three{grid-template-columns:1fr}}
+.box{background:#05070A;border:2px solid #2A3540;border-radius:16px;padding:10px;text-align:center}
+.box .lab{font-size:22px;color:#B9C4CE}
+.bigic{height:150px;display:flex;align-items:center;justify-content:center}
+.bigic .eA,.bigic .eB{font-size:120px;line-height:1}
+.bigic .MS{height:150px}
+.eA{display:inline-block;animation:shine 1.6s ease-in-out infinite;filter:drop-shadow(0 0 10px #FFD54A)}
+@keyframes shine{50%{transform:scale(1.15) rotate(12deg);filter:drop-shadow(0 0 26px #FFE07A)}}
+.eB{display:inline-block;transform-origin:50% 0;animation:swing 1.8s ease-in-out infinite}
+@keyframes swing{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.MS{transform-origin:50% 0;animation:swing 1.8s ease-in-out infinite;vertical-align:middle}
+.MS .st{transform-origin:60px 93px;animation:shine2 1.6s ease-in-out infinite}
+@keyframes shine2{50%{transform:scale(1.18);filter:drop-shadow(0 0 6px #fff)}}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:center;font-size:28px;background:#0B1118;border-radius:12px;padding:8px}
+.row .eA,.row .eB{font-size:48px;animation:none}.row .MS{height:58px;animation:none}.row .MS .st{animation:none}
+.tab{background:radial-gradient(circle at 50% 35%,#2A2000,#000 75%);border-radius:14px;padding:16px 8px}
+.tab .t1{font-size:34px;color:#FFE07A;margin-top:6px}.tab .t2{font-size:24px;color:#fff}
+.tab .eA,.tab .eB{font-size:96px}.tab .MS{height:130px}
+.pro{color:#9FF0B8;font-size:24px}.con{color:#FFB38A;font-size:24px}
+.why{font-size:24px}
+
+.MS.sm{height:120px}.UPA{height:110px}
+.mk{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.mk.one{grid-template-columns:1fr}
+@media (max-width:900px){.mk{grid-template-columns:1fr}}
+.dev{border:6px solid #3A4650;border-radius:26px;background:#000;padding:10px 12px 14px;text-align:center}
+.dev.pj{border-color:#5B4A12;border-radius:8px;background:radial-gradient(circle at 50% 30%,#2A2000,#000 75%)}
+.dev .lab{font-size:22px;color:#B9C4CE;text-align:left;margin-bottom:6px}
+.dev .ic{font-size:96px;line-height:1.1}
+.dev .t1{font-size:38px;color:#FFE07A;line-height:1.3}
+.dev .t2{font-size:28px;color:#fff;line-height:1.4}
+.dev .t3{font-size:24px;color:#CFE3F5;line-height:1.4}
+.dev .no{opacity:.55}
+.lst{text-align:left;font-size:26px;margin:6px auto;max-width:520px}
+.lst div{border-bottom:2px solid #2A3540;padding:4px 6px}
+.lst .me{background:#3A2E00;color:#FFE07A;border-radius:8px}
+.cert{background:#FFF8E6;color:#3A2A00;border:10px double #C9A227;border-radius:6px;padding:12px;text-align:center}
+.cert .c1{font-size:34px;color:#8A5A00}.cert .c2{font-size:26px}.cert .c3{font-size:22px;color:#6A5A3A}
+.ev td{font-size:22px;overflow-wrap:anywhere}
+@media (max-width:900px){.ev,.ev tbody,.ev tr,.ev td,.ev th{display:block;width:100%}.ev tr:first-child{display:none}.ev tr{margin-bottom:12px}}
+.ev th{font-size:22px}
+.ans{background:#1A1400;border:4px solid #FFD54A;border-radius:20px;padding:14px 20px;margin:30px 0;font-size:28px}
+.nw{white-space:nowrap}
+</style></head><body><div class="wrap">
+<h1>🏆 榮譽榜怎麼給？請老師挑 9 題</h1>
+<div class="lead">老師說得對：<b>現在的網站「每一次做完都有獎」</b>，跟老師的意思不一樣。<br>
+老師的意思（我的整理）：<b>最高榮譽只給真正付出、真正做到的人和班</b>——班內前 10 名、全年級前 10 名、最努力（最重要）、成績最優、進步最多。</div>
+<div class="howto">✍️ 在對話裡打答案，例：「<b>全部照建議</b>」或「<b>1A 2A 3A 4A 5A 6A 7甲 8甲 9A</b>」。都不喜歡就寫老師想要的樣子。<br>
+例子一律用 <b>小華（304 班 12 號 ＝ 30412）</b>。<b>學生平板上只有號碼，沒有姓名</b>（平板拿不到名單）；老師投影、獎狀才有姓名。<br>
+答完以後，我會用「小華」再對一次給老師看，<b>對了才改網站</b>。</div>
+
+<h2>📚 先看研究（每一篇都打開原文核對過）</h2>
+<table class="ev"><tr><th>研究</th><th>發現</th><th>所以</th></tr>
+<tr><td>Robinson、Gallus、Lee、Rogers（哈佛等，2018 工作論文；2021 刊登）<br>15,329 個 6～12 年級學生的實驗<br><span class="small">https://www.hks.harvard.edu/publications/demotivating-effect-and-unintended-message-awards</span></td>
+<td>發「全勤獎」給學生，<b>學生後來反而更常缺席</b>。原因：獎讓學生以為「這件事大家都做不到，我已經比別人好了」</td>
+<td>❌ 不要為「本來就該做的事」發獎（做完一次、沒亂按）➜ 這就是<b>安慰獎</b>的感覺<br>✅ 獎只給<b>真的比別人多</b>的</td></tr>
+<tr><td>Gallus（2017，Management Science 63(12)）<br>維基百科新手編輯的實驗<br><span class="small">https://doi.org/10.1287/mnsc.2016.2540</span></td>
+<td>沒有錢、只有名字的獎（只發給少數做得好的人），讓新手<b>留下來繼續付出</b>，效果維持一年</td>
+<td>✅ 獎要<b>少</b>、要<b>真</b>，名字掛出來就有榮譽感</td></tr>
+<tr><td>Corpus & Lepper（2007，Educational Psychology 27(4)）<br>93 個四、五年級學生<br><span class="small">https://doi.org/10.1080/01443410601159852</span></td>
+<td>稱讚「<b>做了什麼、怎麼做的</b>」（例：你很仔細）比稱讚「你很棒、你很聰明」好；四、五年級的孩子已經會想「大人為什麼稱讚我」</td>
+<td>✅ 那一句話寫<b>具體的事實和做法</b>（練了幾分鐘、從幾分進步到幾分），不寫空泛的好話</td></tr>
+<tr><td>（第 4 件已核對）Deci 1999、Henderlong & Lepper 2002、Mueller & Dweck 1998、Sailer & Homner 2020</td>
+<td>事先講好「做到就給」會傷害動機；稱讚努力和方法；個人＋班級合作最有效</td>
+<td>✅ 班級榮譽照留；稱讚努力和方法</td></tr>
+</table>
+<div class="small">另外查到 Amemiya & Wang（2018）：國高中生聽到「你好努力」，有時候會以為「我能力不好才要這麼努力」。我只核對到摘要和報導、沒打開全文，所以<b>不拿來當證據</b>；但它也提醒我們：誇努力要寫「你做到了什麼」，不要只寫「你好努力」。</div>
+<h2>第 1 題：「班際前 10 名」是什麼？</h2><div class="lead">三年級只有 304、307、311 三班；四年級 402、406、409、410 四班。所以「班際前 10 名」有兩種意思。</div><div class="opt rec"><div class="hd"><b class="k">A</b>全年級所有學生一起排前 10 名＋班級和班級另外比 <span class="tag" style="display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px">建議</span></div><div class="mk"><div class="dev"><div class="lab">📱 學生平板（小華 ＝ 30412）</div><div class="ic">🏆</div><div class="t1">三年級 第 4 名</div><div class="t2">最努力</div><div class="t3">全年級約 90 人裡的第 4 名</div></div><div class="dev pj"><div class="lab">📺 老師投影（班級和班級比）</div><div class="t1">🏫 三年級 最努力的班</div><div class="lst"><div class="me">🥇 304 班　平均每人 35 分鐘</div><div>🥈 311 班　平均每人 31 分鐘</div><div>🥉 307 班　平均每人 28 分鐘</div></div></div></div><div class="pro">👍 小華可以跟全年級的人比；班級也有自己的榜</div></div><div class="opt"><div class="hd"><b class="k">B</b>只有班級和班級比（三年級只有 3 班）</div><div class="mk one"><div class="dev pj"><div class="lab">📺 老師投影</div><div class="t1">🏫 三年級 最努力的班</div><div class="lst"><div class="me">🥇 304 班</div><div>🥈 311 班</div><div>🥉 307 班</div></div></div></div><div class="con">⚠️ 只有 3～4 班，「前 10 名」用不到；小華個人只有「班內前 10 名」</div></div><h2>第 2 題：沒上榜的學生，做完以後看到什麼？</h2><div class="lead">例：307 班 20 號 ＝ 30720，這週練了 9 分鐘，沒有進任何一個前 10 名。</div><div class="opt rec"><div class="hd"><b class="k">A</b>不演榮譽動畫；看到自己的成績＋「跟上週的自己比」 <span class="tag" style="display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px">建議</span></div><div class="mk one"><div class="dev"><div class="lab">📱 學生平板（30720）</div><div class="ic">🎯</div><div class="t1">正確率 80 分</div><div class="t2">⏱ 這週你已經練習 9 分鐘</div><div class="t3">比上週多 4 分鐘</div></div></div><div class="pro">👍 沒有安慰獎；只寫真的事實；跟自己比不會丟臉（研究：班上排名低的人看到名次會更沒自信）</div></div><div class="opt"><div class="hd"><b class="k">B</b>看到自己的成績＋「離本班第 10 名還差幾分鐘」</div><div class="mk one"><div class="dev"><div class="lab">📱 學生平板（30720）</div><div class="ic">🎯</div><div class="t1">正確率 80 分</div><div class="t2">再練 6 分鐘，就能進 307 班最努力前 10 名！</div></div></div><div class="pro">👍 目標很清楚</div><div class="con">⚠️ 差很多的人（例：還差 60 分鐘）看了會想放棄</div></div><div class="opt"><div class="hd"><b class="k">C</b>只看自己的正確率，其他什麼都不寫</div><div class="mk one"><div class="dev"><div class="lab">📱 學生平板（30720）</div><div class="ic">🎯</div><div class="t1">正確率 80 分</div></div></div><div class="pro">👍 最簡單</div><div class="con">⚠️ 看不到自己付出的時間</div></div><h2>第 3 題：「最努力」怎麼算？</h2><div class="lead">老師說：努力最重要，例：付出最多練習時間。</div><div class="opt rec"><div class="hd"><b class="k">A</b>練習時間（這週加起來幾分鐘） <span class="tag" style="display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px">建議</span></div><div class="mk one"><div class="dev pj"><div class="lab">📺 老師投影</div><div class="t1">👤 304 班 最努力</div><div class="lst"><div>🥇 30405 陳小安　52 分鐘</div><div class="me">🥈 30412 小華　48 分鐘</div><div>🥉 30420 林小宇　41 分鐘</div></div></div></div>
+  <div class="why">現在先算「作答的時間」；第 8 件（用心程度）做好以後，<b>看字卡、按聆聽的時間也加進去</b>。太快亂按的那一次不算。</div><div class="pro">👍 跟老師的話一樣；認真看、認真聽的人時間就多</div></div><div class="opt"><div class="hd"><b class="k">B</b>練習次數（這週做完幾次）</div><div class="con">⚠️ 做很快、很短的也算 1 次；學生看不懂「次數」（老師已經說過）</div></div><div class="opt"><div class="hd"><b class="k">C</b>兩個都有：「最努力（時間）」和「練最多次」兩個榜</div><div class="con">⚠️ 榜變多，獎就沒那麼珍貴</div></div><h2>第 4 題：學生平板什麼時候演榮譽動畫？</h2><div class="opt rec"><div class="hd"><b class="k">A</b>平板：「這一次」讓他第一次進榜或名次往上升，才演一次＋每週老師投影頒一次 <span class="tag" style="display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px">建議</span></div><div class="mk"><div class="dev"><div class="lab">📱 學生平板（小華 ＝ 30412）</div><div class="ic"><svg class="MS sm" viewBox="0 0 120 150" aria-label="獎牌上面有星星"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><path d="M41 0h8l16 46h-8z" fill="#fff" opacity=".6"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="url(#gg)"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path class="st" d="M60 68l8.2 16.6 18.3 2.7-13.2 12.9 3.1 18.2L60 109.8l-16.4 8.6 3.1-18.2-13.2-12.9 18.3-2.7z" fill="#FFFDF0" stroke="#FFB300" stroke-width="2.5" stroke-linejoin="round"/><defs><radialGradient id="gg" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFF1A8"/><stop offset=".55" stop-color="#FFC928"/><stop offset="1" stop-color="#D99A00"/></radialGradient></defs></svg></div><div class="t1">你進榜了！</div><div class="t2">304 班 最努力 第 2 名</div><div class="t3">這週練習 48 分鐘</div></div><div class="dev pj"><div class="lab">📺 老師投影（每週一次，全班一起看）</div><div class="t1">🏆 本週榮譽榜</div><div class="t2">304 班 最努力 第 2 名</div><div class="t1">30412 小華</div></div></div>
+  <div class="why">名次沒變（還是第 2 名）＝ 平板不再演，只寫一行「你還在 304 班最努力第 2 名」。</div><div class="pro">👍 真的做到才演，所以每一次都珍貴；全班看的頒獎最隆重</div></div><div class="opt"><div class="hd"><b class="k">B</b>只有每週老師投影，平板做完不演</div><div class="pro">👍 最隆重、最少</div><div class="con">⚠️ 學生做完當下不知道自己進榜了</div></div><div class="opt"><div class="hd"><b class="k">C</b>只要在前 10 名，每一次做完都演</div><div class="con">⚠️ 同一個人一天看到好幾次，就會覺得獎不值錢</div></div><h2>第 5 題：現在的 7 種小獎怎麼辦？</h2><div class="lead">現在：努力獎、進步獎、成績獎、訂正獎、天天練獎、時間獎、用心獎（做完幾乎都拿得到 ➜ 學生覺得像安慰獎）。</div><div class="opt rec"><div class="hd"><b class="k">A</b>7 種全部拿掉，只留 3 種最高榮譽（最努力、成績最優、進步最多），個人和班級都一樣 <span class="tag" style="display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px">建議</span></div><div class="mk one"><table><tr><th></th><th>最努力</th><th>成績最優</th><th>進步最多</th></tr>
+  <tr><td>個人</td><td>班內前 10 名、全年級前 10 名</td><td>班內前 10 名、全年級前 10 名</td><td>班內前 10 名、全年級前 10 名</td></tr>
+  <tr><td>班級</td><td>班級和班級比</td><td>班級和班級比</td><td>班級和班級比</td></tr></table></div>
+  <div class="why">訂正、天天練、沒有亂按：<b>不發獎</b>，老師看板照樣看得到（成績卡、要關心）。</div><div class="pro">👍 獎少才有榮譽感（研究：為本來就該做的事發獎，反而有反效果）</div></div><div class="opt"><div class="hd"><b class="k">B</b>拿掉 5 種，留「訂正」和「天天練」改個名字</div><div class="con">⚠️ 這兩個大部分人都拿得到，還是像安慰獎</div></div><h2>第 6 題：「成績最優」看哪一個？</h2><div class="lead">現在老師看板有兩個成績：🎯 正確率（答對幾成）、💯 總分（答對 60 ＋ 速度 40）。</div><div class="opt rec"><div class="hd"><b class="k">A</b>🎯 正確率；一樣多的時候再比總分 <span class="tag" style="display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px">建議</span></div><div class="pro">👍 學生最懂；不會因為「按很快」就贏（不鼓勵亂按）</div></div><div class="opt"><div class="hd"><b class="k">B</b>💯 總分</div><div class="con">⚠️ 速度占 40 分：會讓學生為了快而亂按</div></div><div class="opt"><div class="hd"><b class="k">C</b>兩個都有（兩個榜）</div><div class="con">⚠️ 榜變多，獎就沒那麼珍貴</div></div><h2>第 7 題：獎的名字（學生平板、老師投影、印獎狀三個地方一模一樣）</h2><div class="lead">要有榮譽感、像真的獎、三四年級一看就懂、不幼稚。</div><div class="opt rec"><div class="hd"><b class="k">甲</b>用老師的話＋名次：「最努力」「成績最優」「進步最多」 <span class="tag" style="display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px">建議</span></div><div class="mk"><div class="dev"><div class="lab">📱 學生平板（小華 ＝ 30412）</div><div class="ic"><svg class="MS sm" viewBox="0 0 120 150" aria-label="獎牌上面有星星"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><path d="M41 0h8l16 46h-8z" fill="#fff" opacity=".6"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="url(#gg)"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path class="st" d="M60 68l8.2 16.6 18.3 2.7-13.2 12.9 3.1 18.2L60 109.8l-16.4 8.6 3.1-18.2-13.2-12.9 18.3-2.7z" fill="#FFFDF0" stroke="#FFB300" stroke-width="2.5" stroke-linejoin="round"/><defs><radialGradient id="gg" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFF1A8"/><stop offset=".55" stop-color="#FFC928"/><stop offset="1" stop-color="#D99A00"/></radialGradient></defs></svg></div><div class="t1">最努力</div><div class="t2">304 班 第 2 名</div></div>
+<div class="dev pj"><div class="lab">📺 老師投影</div><div class="t1">🏆 304 班 最努力 <span class="nw">第 2 名</span></div><div class="t1">30412 小華</div></div>
+<div class="cert"><div class="c1">榮 譽 狀</div><div class="c2">三年級 304 班 30412 小華</div><div class="c2">榮獲 <b>304 班「最努力」第 2 名</b></div><div class="c3">這週練習 48 分鐘，特頒此狀</div></div>
+<div class="dev"><div class="lab">📱 三個獎的名字</div><div class="t2">個人 3 個獎：</div><div class="t1">最努力｜成績最優｜進步最多</div></div></div><div class="pro">👍 一看就懂做到了什麼；名次是真的，不是誰都拿得到；班級獎一樣叫「三年級最努力的班」</div></div><div class="opt"><div class="hd"><b class="k">乙</b>「之星」：「勤學之星」「卓越之星」「進步之星」</div><div class="mk"><div class="dev"><div class="lab">📱 學生平板（小華 ＝ 30412）</div><div class="ic"><svg class="MS sm" viewBox="0 0 120 150" aria-label="獎牌上面有星星"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><path d="M41 0h8l16 46h-8z" fill="#fff" opacity=".6"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="url(#gg)"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path class="st" d="M60 68l8.2 16.6 18.3 2.7-13.2 12.9 3.1 18.2L60 109.8l-16.4 8.6 3.1-18.2-13.2-12.9 18.3-2.7z" fill="#FFFDF0" stroke="#FFB300" stroke-width="2.5" stroke-linejoin="round"/><defs><radialGradient id="gg" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFF1A8"/><stop offset=".55" stop-color="#FFC928"/><stop offset="1" stop-color="#D99A00"/></radialGradient></defs></svg></div><div class="t1">勤學之星</div><div class="t2">304 班 第 2 名</div></div>
+<div class="dev pj"><div class="lab">📺 老師投影</div><div class="t1">🏆 304 班 勤學之星 <span class="nw">第 2 名</span></div><div class="t1">30412 小華</div></div>
+<div class="cert"><div class="c1">榮 譽 狀</div><div class="c2">三年級 304 班 30412 小華</div><div class="c2">榮獲 <b>304 班「勤學之星」</b></div><div class="c3">這週練習 48 分鐘，特頒此狀</div></div>
+<div class="dev"><div class="lab">📱 三個獎的名字</div><div class="t2">個人 3 個獎：</div><div class="t1">勤學之星｜卓越之星｜進步之星</div></div></div><div class="pro">👍 像學校朝會頒的獎</div><div class="con">⚠️ 「勤學」「卓越」三年級不一定懂；「進步之星」有些學生會覺得是安慰獎</div></div><div class="opt"><div class="hd"><b class="k">丙</b>「榜」：「勤學榜」「精熟榜」「進步榜」，第 1 名叫「榜首」</div><div class="mk"><div class="dev"><div class="lab">📱 學生平板（小華 ＝ 30412）</div><div class="ic"><svg class="MS sm" viewBox="0 0 120 150" aria-label="獎牌上面有星星"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><path d="M41 0h8l16 46h-8z" fill="#fff" opacity=".6"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="url(#gg)"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path class="st" d="M60 68l8.2 16.6 18.3 2.7-13.2 12.9 3.1 18.2L60 109.8l-16.4 8.6 3.1-18.2-13.2-12.9 18.3-2.7z" fill="#FFFDF0" stroke="#FFB300" stroke-width="2.5" stroke-linejoin="round"/><defs><radialGradient id="gg" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFF1A8"/><stop offset=".55" stop-color="#FFC928"/><stop offset="1" stop-color="#D99A00"/></radialGradient></defs></svg></div><div class="t1">勤學榜</div><div class="t2">304 班 第 2 名</div></div>
+<div class="dev pj"><div class="lab">📺 老師投影</div><div class="t1">🏆 304 班 勤學榜 <span class="nw">第 2 名</span></div><div class="t1">30412 小華</div></div>
+<div class="cert"><div class="c1">榮 譽 狀</div><div class="c2">三年級 304 班 30412 小華</div><div class="c2">榮獲 <b>304 班「勤學榜」第 2 名</b></div><div class="c3">這週練習 48 分鐘，特頒此狀</div></div>
+<div class="dev"><div class="lab">📱 三個獎的名字</div><div class="t2">個人 3 個獎：</div><div class="t1">勤學榜｜精熟榜｜進步榜</div></div></div><div class="pro">👍 像考試放榜，很正式</div><div class="con">⚠️ 「精熟」三年級看不懂</div></div><h2>第 8 題：獎下面那一句話</h2><div class="lead">用小華的三個例子：這週練習 48 分鐘、正確率 96 分、正確率從 70 分進步到 92 分。</div><div class="opt rec"><div class="hd"><b class="k">甲</b>寫具體的事實＋做法（不寫空泛的好話） <span class="tag" style="display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px">建議</span></div><div class="mk one"><table><tr><th>最努力</th><td>這週練習 48 分鐘，每一題都看完、聽完才選。</td></tr><tr><th>成績最優</th><td>正確率 96 分：每一題都看清楚才選。</td></tr><tr><th>進步最多</th><td>正確率從 70 分進步到 92 分（多了 22 分）。</td></tr><tr><th>班級</th><td>304 班平均每一個人練習 35 分鐘：全班一起努力。</td></tr></table></div><div class="pro">👍 研究：稱讚「做了什麼、怎麼做」最有效；學生知道獎是真的</div></div><div class="opt"><div class="hd"><b class="k">乙</b>事實＋一句稱讚（例：「這週練習 48 分鐘。你的努力，全年級都看見了！」）</div><div class="pro">👍 比較熱鬧</div><div class="con">⚠️ 四年級的學生可能覺得是客套話</div></div><div class="opt"><div class="hd"><b class="k">丙</b>只有數字（「48 分鐘」）</div><div class="pro">👍 最短</div><div class="con">⚠️ 比較冷，沒有說明為什麼得獎</div></div><h2>第 9 題：「練習次數 ＋1」換成什麼？</h2><div class="lead">學生看不懂「練習次數 ＋1」（之前的「算 1 次」也看不懂）。這一句會出現在<b>每一個人</b>做完的畫面（不是獎）。</div><div class="opt rec"><div class="hd"><b class="k">A</b>寫時間：「⏱ 這週你已經練習 12 分鐘（這一次 3 分鐘）」 <span class="tag" style="display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px">建議</span></div><div class="mk"><div class="dev"><div class="lab">📱 學生平板（小華 ＝ 30412）</div><div class="ic">⏱</div><div class="t1">這週你已經練習 12 分鐘</div><div class="t3">這一次 3 分鐘</div></div><div class="dev"><div class="lab">📱 太快亂按的時候</div><div class="ic">⚠️</div><div class="t2">這一次太快亂按，<br>不算進練習時間</div><div class="t3">每一題看完、聽完再選</div></div></div><div class="pro">👍 跟「最努力 ＝ 練習時間」同一個標準；「分鐘」學生一看就懂</div></div><div class="opt"><div class="hd"><b class="k">B</b>寫次數：「✅ 這是你這週第 5 次練習」</div><div class="con">⚠️ 跟最努力的標準（時間）不一樣，學生會搞混</div></div><div class="opt"><div class="hd"><b class="k">C</b>不寫</div><div class="con">⚠️ 學生不知道自己付出了多少</div></div><div class="ans">✍️ 答完請打在對話裡，例：「<b>全部照建議</b>」或「<b>1A 2A 3A 4A 5A 6A 7甲 8甲 9A</b>」。<br>我會用小華再對一次，老師說「對」才改網站。</div></div></body></html>
