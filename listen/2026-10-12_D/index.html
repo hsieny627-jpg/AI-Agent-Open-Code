@@ -1,0 +1,384 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>成績系統 D 組 問題</title><style>
+@font-face{font-family:Andika;src:url(../../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#05070A;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 120px;font-size:26px;line-height:1.55;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:40px;color:#FFD54A;margin:22px 0 6px}
+h2{font-size:34px;color:#FFD54A;margin:46px 0 10px;border-top:4px solid #24303C;padding-top:20px}
+.lead{font-size:26px;color:#DDE6EE}
+.howto{background:#102016;border:3px solid #3BD16F;border-radius:20px;padding:14px 20px;margin:16px 0}
+.q{background:#0B0F14;border:3px solid #24303C;border-radius:20px;padding:16px 20px;margin:18px 0}
+.q>.t{font-size:30px;color:#7FD4FF;margin-bottom:8px}
+.op{display:block;border:3px solid #2A3540;border-radius:16px;padding:10px 16px;margin:10px 0;background:#0E141A}
+.op.rec{border-color:#3BD16F;background:#0D1B12}
+.op b.k{display:inline-block;min-width:1.6em;color:#FFD54A;font-size:32px}
+.rec .tag{display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px;margin-left:8px;vertical-align:middle}
+.why{color:#CFE3F5;font-size:24px;margin-top:6px}
+.small{font-size:22px;color:#B9C4CE}
+.cmp{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin:12px 0}
+.cmp .ar{font-size:54px;color:#FFD54A}
+.cmp.v{grid-template-columns:1fr}.cmp.v .ar{transform:rotate(90deg);text-align:center;line-height:1}
+.cmp .lab{font-size:24px;color:#B9C4CE;margin-bottom:4px}
+@media (max-width:760px){.cmp{grid-template-columns:1fr}.cmp .ar{transform:rotate(90deg);text-align:center}}
+.shot{width:100%;border:3px solid #3A4650;border-radius:14px;display:block}
+table{border-collapse:collapse;width:100%;margin:10px 0}
+td,th{border:2px solid #2A3540;padding:8px 12px;text-align:left;vertical-align:middle}
+th{background:#14202B;color:#CFE6FF}
+.big{font-size:44px}
+.mock{background:#000;border:3px solid #3A4650;border-radius:16px;padding:14px;overflow:hidden}
+/* D1 首頁 */
+.hhead{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.hhead .ti{font-size:40px}
+.tbtn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(#FFE07A,#E8A900);color:#2A1A00;border-radius:22px;padding:12px 26px;font-size:32px;box-shadow:0 0 0 4px #5A4300,0 0 26px #FFD54A88;animation:glow 2s infinite}
+@keyframes glow{50%{box-shadow:0 0 0 4px #5A4300,0 0 44px #FFD54ACC}}
+.fake{height:16px;background:#1A1F26;border-radius:8px;margin:10px 0}
+/* D4 圖示 */
+.ic{font-size:46px;line-height:1;vertical-align:middle}
+/* D7 成績卡 */
+.card{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:760px){.card{grid-template-columns:repeat(2,1fr)}}
+.g{background:#0F151C;border:2px solid #2A3540;border-radius:16px;padding:10px;text-align:center}
+.g .l{font-size:24px;color:#CFE3F5}
+.ring{width:120px;height:120px;margin:4px auto}
+.ring circle{fill:none;stroke-width:14}
+.ring .bg{stroke:#222}
+.ring .fg{stroke:#3BD16F;stroke-linecap:round;stroke-dasharray:314;stroke-dashoffset:314;animation:ring 1.6s ease-out forwards;transform:rotate(-90deg);transform-origin:60px 60px}
+@keyframes ring{to{stroke-dashoffset:var(--o)}}
+.ring text{fill:#fff;font-size:30px;font-weight:700;text-anchor:middle;dominant-baseline:central}
+.stars{font-size:34px;letter-spacing:2px}
+.stars i{font-style:normal;opacity:.2;display:inline-block}
+.stars i.on{opacity:1;animation:pop .4s backwards}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.4)}}
+.up{font-size:52px;color:#3BD16F;animation:upk 1.4s infinite}
+@keyframes upk{50%{transform:translateY(-10px)}}
+.cal{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.cal span{width:58px;height:58px;border-radius:12px;background:#1A1F26;display:flex;align-items:center;justify-content:center;font-size:22px;flex-direction:column;line-height:1.1}
+.cal span.on{background:#14532D;border:2px solid #3BD16F}
+.sw{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media (max-width:760px){.sw{grid-template-columns:1fr}}
+.sw div{background:#0F151C;border:2px solid #2A3540;border-radius:16px;padding:10px 14px;font-size:24px}
+.bar{height:22px;border-radius:11px;background:#222;overflow:hidden;margin:4px 0 8px}
+.bar b{display:block;height:100%;border-radius:11px;animation:grow 1.4s ease-out backwards}
+@keyframes grow{from{width:0!important}}
+/* 榮譽榜示範 */
+.demo{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:900px){.demo{grid-template-columns:1fr}}
+.st{position:relative;height:300px;border-radius:18px;overflow:hidden;background:#000;border:3px solid #3A4650;cursor:pointer}
+.st .cap{position:absolute;left:0;right:0;bottom:0;background:#000C;font-size:22px;text-align:center;padding:4px}
+.st .rp{position:absolute;top:8px;right:10px;font-size:20px;color:#B9C4CE}
+/* 1 獎盃從天而降 */
+.s1{background:radial-gradient(circle at 50% 30%,#3A2A00,#000 70%)}
+.s1 .cup{position:absolute;left:50%;top:40px;font-size:110px;transform:translateX(-50%);animation:drop 1.2s cubic-bezier(.3,1.6,.5,1) backwards}
+@keyframes drop{0%{transform:translate(-50%,-260px) scale(.4)}100%{transform:translate(-50%,0) scale(1)}}
+.s1 .nm{position:absolute;left:0;right:0;top:165px;text-align:center;font-size:30px;color:#FFE07A;animation:fade .6s 1.2s backwards}
+.s1 .rays{position:absolute;left:50%;top:95px;width:420px;height:420px;margin:-210px 0 0 -210px;background:repeating-conic-gradient(#FFD54A33 0 8deg,transparent 8deg 22deg);animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.conf{position:absolute;top:-20px;width:10px;height:18px;animation:fall 2.4s linear infinite}
+@keyframes fall{to{transform:translateY(340px) rotate(540deg)}}
+@keyframes fade{from{opacity:0;transform:scale(.6)}}
+/* 2 皇冠加冕 */
+.s2{background:linear-gradient(#1A0630,#000)}
+.s2 .crown{position:absolute;left:50%;top:-80px;font-size:80px;transform:translateX(-50%);animation:crown 1.4s .3s ease-out forwards}
+@keyframes crown{to{top:44px}}
+.s2 .who{position:absolute;left:50%;top:95px;transform:translateX(-50%);font-size:90px}
+.s2 .nm{position:absolute;left:0;right:0;top:192px;text-align:center;font-size:28px;color:#E9C8FF;animation:fade .6s 1.7s backwards}
+.s2 .spark{position:absolute;font-size:26px;animation:tw 1.2s infinite}
+@keyframes tw{50%{opacity:.1;transform:scale(.5)}}
+/* 3 奧運頒獎台 */
+.s3{background:linear-gradient(#001A33,#000)}
+.pod{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;align-items:flex-end;gap:6px}
+.pod div{width:86px;border-radius:10px 10px 0 0;text-align:center;font-size:20px;padding-top:6px;animation:rise .9s ease-out backwards}
+.pod .p1{height:150px;background:linear-gradient(#FFE07A,#B88A00);color:#2A1A00;animation-delay:1.2s}
+.pod .p2{height:110px;background:linear-gradient(#E6EEF5,#8D9AA6);color:#111;animation-delay:.6s}
+.pod .p3{height:80px;background:linear-gradient(#F0B27A,#9C5A1E);color:#111;animation-delay:.1s}
+.pod span{display:block;font-size:40px;margin-top:-56px}
+@keyframes rise{from{height:0}}
+.again{display:inline-block;margin-top:8px;font-size:24px;background:#14202B;border:2px solid #4A90C8;border-radius:14px;padding:6px 18px;color:#CFE6FF;cursor:pointer}
+.list12{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media (max-width:760px){.list12{grid-template-columns:1fr}}
+.list12 div{background:#0F151C;border:2px solid #2A3540;border-radius:14px;padding:8px 12px;font-size:24px}
+.sw2{display:inline-flex;border:3px solid #FFD54A;border-radius:16px;overflow:hidden}
+.sw2 b{padding:8px 18px;font-size:26px;color:#9AA7B3}
+.sw2 b.on{background:#FFD54A;color:#111}
+.tg{display:inline-flex;align-items:center;gap:8px;border-radius:14px;padding:8px 16px;font-size:26px;margin:4px}
+.tg.on{background:#14532D;border:3px solid #3BD16F}
+.tg.off{background:#4A1414;border:3px solid #FF6B6B}
+.seat{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+@media (max-width:760px){.seat{grid-template-columns:repeat(3,1fr)}}
+.seat div{border-radius:12px;padding:6px 8px;font-size:22px;background:#0F151C;border:3px solid #2A3540;line-height:1.3}
+.seat .gr{border-color:#3BD16F}.seat .ye{border-color:#FFD54A}.seat .rd{border-color:#FF6B6B}.seat .gy{border-color:#555;color:#888}
+.tw{overflow-x:auto}
+@media (max-width:760px){table{display:block;overflow-x:auto}body{font-size:24px}}
+.ans{position:sticky;bottom:0;background:#0D1B12;border:3px solid #3BD16F;border-radius:18px;padding:10px 16px;margin-top:30px;font-size:24px}
+</style></head><body><div class="wrap">
+
+<h1>🏆 成績系統大改版（D 組）：動手前請老師選</h1>
+<div class="lead">老師說的 7 點＋之前說過的（學生登入、老師看板、錯題分析），我先把現在的畫面打開、量了字的大小，下面一題一題請老師選。</div>
+<div class="howto">✍️ <b>怎麼回答</b>：在對話裡打「<b>D1 A、D2 A、D3 A……</b>」就好。<br>
+綠框 ＋ <span style="background:#3BD16F;color:#05210F;border-radius:999px;padding:0 12px">建議</span> ＝ Claude 建議的。全部照建議 ➜ 打「<b>全部照建議</b>」，有不同的再寫那一題。</div>
+
+<h2>先看：現在的樣子（量出來的）</h2>
+<table>
+<tr><th>畫面</th><th>現在的字</th><th>問題</th></tr>
+<tr><td>老師看板 👤 個人</td><td><b class="big">16px</b></td><td>98% 的字小於 20px；一張表 19 欄</td></tr>
+<tr><td>老師看板 說明文字</td><td><b class="big">14px</b></td><td>太小</td></tr>
+<tr><td>總首頁</td><td>12～39px</td><td>沒有老師看板的入口</td></tr>
+<tr><td>❌ 錯題 清單</td><td>17px</td><td>聽力題直接寫出答案：「🔊 your 你聽到哪一個字？」➜ 會改掉（不用選）</td></tr>
+</table>
+<img class="shot" src="now_person_table.jpg" alt="現在的個人表">
+<div class="small">↑ 現在的〔👤 個人〕：字小、欄太多、「班內 🎯」「班內 🔁 🔽」看不懂。</div>
+
+<!-- ============ 第 3 點 總首頁 ============ -->
+<h2>一、總首頁放老師看板（第 3 點）</h2>
+<div class="q"><div class="t">D1　〔老師看板〕按鈕放在總首頁哪裡？</div>
+<div class="cmp"><div><div class="lab">現在：沒有</div><img class="shot" src="now_home.jpg" alt="現在的總首頁"></div><div class="ar">➜</div>
+<div><div class="lab">改之後（A）</div><div class="mock"><div class="hhead"><span class="ti">首頁</span><span class="tbtn">👩‍🏫 老師看板</span></div><div class="fake"></div><div class="fake" style="width:80%"></div><div class="fake"></div></div></div></div>
+<label class="op rec"><b class="k">A</b>「首頁」兩個字的<b>右邊</b>，一顆金色會發光的大按鈕〔👩‍🏫 老師看板〕，按了直接到輸入密碼的畫面<span class="tag">建議</span><div class="why">一打開就在眼睛正前方，不會跟三年級、四年級的按鈕搞混。</div></label>
+<label class="op"><b class="k">B</b>最上面一整條金色橫幅「👩‍🏫 老師看板 ➜ 點這裡」</label>
+<label class="op"><b class="k">C</b>最下面一排（跟「離線版」放一起）</label>
+</div>
+
+<div class="q"><div class="t">D2　學生也看得到這顆按鈕，要不要擋？</div>
+<label class="op rec"><b class="k">A</b>不擋：學生按了只看到「請輸入老師密碼」，沒有密碼什麼都看不到<span class="tag">建議</span><div class="why">密碼本來就擋住了；多一道「按住 2 秒」老師自己也比較慢。</div></label>
+<label class="op"><b class="k">B</b>要按住 2 秒才進去（學生一點不會進去）</label>
+</div>
+
+<div class="q"><div class="t">D3　老師的電腦要不要記住密碼（不用每次打）？</div>
+<div class="cmp"><div><div class="lab">現在：每次都要打</div><img class="shot" src="now_tlogin.jpg" alt="現在的老師登入"></div><div class="ar">➜</div>
+<div class="mock" style="text-align:center"><div style="font-size:36px">👩‍🏫 老師看板</div><div style="border:3px solid #555;border-radius:14px;padding:10px;margin:10px 0;font-size:30px">● ● ● ● ● ●</div><div style="font-size:28px">☑ 這台電腦記住我（7 天）</div><div class="tbtn" style="animation:none;margin-top:10px">🔓 進入</div></div></div>
+<label class="op rec"><b class="k">A</b>多一個勾勾「☑ 這台電腦記住我（7 天）」，<b>只有老師自己勾才記</b>；看板右上角有〔🚪 登出〕<span class="tag">建議</span><div class="why">老師自己的電腦一秒進去；教室公用電腦不要勾，學生就打不開。</div></label>
+<label class="op"><b class="k">B</b>維持每次都要打密碼（最安全）</label>
+</div>
+
+<!-- ============ 第 4、6 點 圖示、放大 ============ -->
+<h2>二、圖示換成秒懂的、字放大（第 4、6 點）</h2>
+<div class="q"><div class="t">D4　每一個圖示換成什麼？</div>
+<img class="shot" src="../../score/2026-10-12_排行榜圖示截圖.png" alt="老師的截圖" style="max-width:900px">
+<table>
+<tr><th>現在</th><th>意思</th><th>改之後（A）</th></tr>
+<tr><td><span class="ic">🎯</span></td><td>正確率</td><td><span class="ic">🎯</span> 正確率（不變，老師看得懂）</td></tr>
+<tr><td><span class="ic">⚡</span></td><td>總分（答對 60 ＋ 速度 40）</td><td><span class="ic">💯</span> 總分</td></tr>
+<tr><td><span class="ic">🔁</span></td><td>次數（對 2/3 才算 1 次）</td><td><span class="ic">✅</span> 合格次數</td></tr>
+<tr><td><span class="ic">🚀</span></td><td>進步（這次比上次多幾分）</td><td><span class="ic">📈</span> 進步</td></tr>
+<tr><td><span class="ic">🔽</span></td><td>不是成績：這一欄<b>正在排序</b>，由大到小</td><td>欄位標題變金色底＋「⬇ 高的在上面」</td></tr>
+<tr><td>班內 🎯</td><td>在本班第幾名（正確率）</td><td><span class="ic">🥇</span> 本班第幾名</td></tr>
+<tr><td>年級 🎯</td><td>在全年級第幾名</td><td><span class="ic">🏆</span> 全年級第幾名</td></tr>
+<tr><td>⚡ 秒按</td><td>1 秒內就按（還沒看完題目）＝ 不好</td><td><span class="ic">⚠️</span> 太快亂按（紅字）</td></tr>
+</table>
+<label class="op rec"><b class="k">A</b>照上面那一欄換；<b>每一個圖示旁邊一定有字</b>（不會只有圖示）<span class="tag">建議</span><div class="why">⚡ 同時代表「總分」和「秒按」，學生和老師都會搞混；💯、✅、📈 是大家天天看到的意思。</div></label>
+<label class="op"><b class="k">B</b>不要圖示，只寫字（正確率、總分、次數、進步）</label>
+</div>
+
+<div class="q"><div class="t">D5　字和圖示放多大？</div>
+<table>
+<tr><th>哪裡</th><th>現在</th><th>A（建議）</th><th>B（更大）</th></tr>
+<tr><td>表格、名單</td><td>16px</td><td><b style="font-size:28px">28px</b></td><td><b style="font-size:34px">34px</b></td></tr>
+<tr><td>說明文字</td><td>14px</td><td><b style="font-size:24px">24px</b></td><td><b style="font-size:28px">28px</b></td></tr>
+<tr><td>分頁按鈕</td><td>19px</td><td><b style="font-size:30px">30px</b></td><td><b style="font-size:34px">34px</b></td></tr>
+<tr><td>大數字</td><td>48px</td><td><b style="font-size:72px">72</b></td><td><b style="font-size:88px">88</b></td></tr>
+<tr><td>圖示</td><td>17px</td><td><span style="font-size:36px">🎯</span></td><td><span style="font-size:44px">🎯</span></td></tr>
+</table>
+<label class="op rec"><b class="k">A</b>上面 A 那一欄（老師電腦、教室觸控螢幕都一樣；iPad 自動縮到放得下）<span class="tag">建議</span><div class="why">28px ＝ 現在的 1.75 倍；配合 D6 減成 7 欄，一行放得下、不用左右捲。</div></label>
+<label class="op"><b class="k">B</b>更大（B 那一欄）：表格要分兩頁看</label>
+<div class="small">另外：右上角加〔A＋〕〔A－〕，老師可以自己再放大（記在這台電腦）。</div>
+</div>
+
+<!-- ============ 第 5 點 個人 ============ -->
+<h2>三、〔👤 個人〕秒懂（第 5 點）</h2>
+<div class="q"><div class="t">D6　個人表留幾欄？</div>
+<div class="mock" style="overflow-x:auto"><table style="font-size:28px;min-width:880px">
+<tr><th>座號 姓名</th><th>🎯 正確率</th><th>💯 總分</th><th>✅ 次數</th><th>📈 進步</th><th>🥇 本班</th><th>燈號</th></tr>
+<tr><td>30414 王小明</td><td>100 <div class="bar" style="width:140px;display:inline-block;vertical-align:middle"><b style="width:100%;background:#3BD16F"></b></div></td><td>92</td><td>⭐⭐</td><td style="color:#3BD16F">⬆ 12</td><td>🥇 1</td><td>🟢</td></tr>
+<tr><td>30415 林小華</td><td>43 <div class="bar" style="width:140px;display:inline-block;vertical-align:middle"><b style="width:43%;background:#FF6B6B"></b></div></td><td>39</td><td>⭐</td><td>—</td><td>13</td><td>🔴</td></tr>
+</table></div>
+<div class="small">（名字是示範用的假名字）</div>
+<label class="op rec"><b class="k">A</b>只留 7 欄（上面這樣）；其他 12 欄（年級名次、做了幾組、訂正、太快亂按、最後作答…）點那個人就看得到；Excel 照樣全部都有<span class="tag">建議</span><div class="why">燈號：🟢 很好、🟡 要注意、🔴 要關心、⚪ 沒做。一眼就知道要找誰。</div></label>
+<label class="op"><b class="k">B</b>19 欄全部留著、全部放大（要左右捲才看得到）</label>
+</div>
+
+<div class="q"><div class="t">D7　點一個學生 ➜ 看到什麼？（可以選好幾個，打「D7 ①②③…」）</div>
+<div class="cmp v"><div><div class="lab">現在</div><img class="shot" src="now_person.jpg" alt="現在點一個人"></div><div class="ar">➜</div>
+<div class="mock"><div style="font-size:30px;margin-bottom:6px">🪑 30414 王小明（示範）</div>
+<div class="card">
+<div class="g"><div class="l">🎯 正確率</div><svg class="ring" viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" cx="60" cy="60" r="50" style="--o:31"/><text x="60" y="60">90</text></svg></div>
+<div class="g"><div class="l">💯 總分</div><svg class="ring" viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" cx="60" cy="60" r="50" style="--o:60;stroke:#FFD54A"/><text x="60" y="60">81</text></svg></div>
+<div class="g"><div class="l">✅ 次數</div><div class="stars"><i class="on" style="animation-delay:.2s">⭐</i><i class="on" style="animation-delay:.5s">⭐</i><i class="on" style="animation-delay:.8s">⭐</i><i>⭐</i><i>⭐</i></div><div>3 次</div></div>
+<div class="g"><div class="l">📈 進步</div><div class="up">⬆</div><div>＋12 分</div></div>
+</div></div></div>
+<table>
+<tr><th>#</th><th>內容</th><th>畫成什麼</th></tr>
+<tr><td>①</td><td>四個大數字</td><td>正確率、總分 ＝ <b>圓圈儀表</b>從 0 轉上去；次數 ＝ <b>星星</b>一顆一顆跳出來；進步 ＝ <b>綠色箭頭往上跳</b>（退步不寫負數，寫「再加油」）</td></tr>
+<tr><td>②</td><td>最強的 3 組／要加油的 3 組</td><td>兩欄：💪 綠色長條（最高的 3 組）｜🌱 橘色長條（最低的 3 組）</td></tr>
+<tr><td>③</td><td>這週哪幾天有練</td><td><b>月曆格子</b>：一 二 三 四 五 六 日，有練的那天亮綠燈 ✅</td></tr>
+<tr><td>④</td><td>每一組的變化</td><td>折線圖放大（點變大、每個點上面寫分數），一次只看一組，左右切換</td></tr>
+<tr><td>⑤</td><td>他最常錯的 3 題</td><td>題目＋他選的 ❌＋正確答案 ✅（老師可以直接跟他講）</td></tr>
+<tr><td>⑥</td><td>👆 用心程度（D17）</td><td>五顆小電池，充到幾格就是幾分</td></tr>
+<tr><td>⑦</td><td>每一次作答的明細表</td><td>放在最下面〔📋 看全部明細〕（作廢在這裡）</td></tr>
+</table>
+<label class="op rec"><b class="k">建議</b>①②③④⑤⑥⑦ 全部都要，順序就是上面這樣<span class="tag">建議</span><div class="why">一打開先看到四個大圖（好不好），往下才是強弱、哪天練、錯哪裡；明細表放最後。</div></label>
+</div>
+
+<!-- ============ 第 7 點 榮譽榜 ============ -->
+<h2>四、🏆 榮譽榜（第 7 點）</h2>
+<div class="q"><div class="t">先看研究：怎樣的表揚真的有用？（每一篇都打開原文核對過）</div>
+<table>
+<tr><th>研究</th><th>發現</th><th>所以榮譽榜要…</th></tr>
+<tr><td>Deci 等 1999（128 個實驗）<br><span class="small">doi.org/10.1037/0033-2909.125.6.627</span></td><td>口頭的肯定會<b>提高</b>學習動機；<b>事先不知道</b>的獎勵不會傷害動機</td><td>✅ 每一次風格都不一樣、事先不知道 ＝ 驚喜</td></tr>
+<tr><td>Henderlong & Lepper 2002<br><span class="small">doi.org/10.1037/0033-2909.128.5.774</span></td><td>表揚要真誠、稱讚<b>自己做得到的事</b>（努力、方法），不要只靠跟別人比</td><td>✅ 獎狀寫「你很用心、練了 5 次」<br>✅ 也頒「進步之星」</td></tr>
+<tr><td>Mueller & Dweck 1998（五年級）<br><span class="small">doi.org/10.1037/0022-3514.75.1.33</span></td><td>被稱讚「聰明」的孩子，失敗後比較會放棄；被稱讚「努力」的比較會堅持</td><td>✅ 不寫「最聰明」，寫「最用心」「最努力」</td></tr>
+<tr><td>Sailer & Homner 2020（遊戲化統合分析）<br><span class="small">doi.org/10.1007/s10648-019-09498-w</span></td><td>有效；<b>競爭＋合作</b>一起、加上故事情境，效果最好</td><td>✅ 一定要有「班級榮譽」（全班一起）<br>✅ 動畫要像頒獎典禮（有故事）</td></tr>
+<tr><td>Bursztyn & Jensen 2015（高中生）</td><td>公開排名讓有些前段學生<b>怕被同學看到</b>，反而不努力</td><td>⚠️ 投影要不要姓名，老師決定（D10）</td></tr>
+</table>
+</div>
+
+<div class="q"><div class="t">D8　〔🏆 榮譽榜〕按鈕放在哪裡？</div>
+<div class="mock"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><span class="tg" style="background:#14202B;border:3px solid #4A90C8">🎯 正確率</span><span class="tg" style="background:#14202B;border:3px solid #333">💯 總分</span><span class="tg" style="background:#14202B;border:3px solid #333">✅ 次數</span><span class="tg" style="background:#14202B;border:3px solid #333">📈 進步</span>
+<span class="sw2"><b class="on">📊 排行榜</b><b>🏆 榮譽榜</b></span></div><div class="small" style="margin-top:8px">↑ 每一種榜上面一顆〔📊 排行榜｜🏆 榮譽榜〕切換：按 🏆 ➜ 蓋上整個畫面演榮譽榜</div></div>
+<label class="op rec"><b class="k">A</b>老師看板：每一種排行榜（正確率、總分、次數、進步 ✕ 本班、全年級）＋🏫 班際 都有；<b>學生平板</b>：結束畫面「🏆 排行榜」那一幕也有一顆<span class="tag">建議</span><div class="why">老師投影給全班看（典禮感最強）；學生自己也能再看一次。</div></label>
+<label class="op"><b class="k">B</b>只放老師看板（只有老師投影的時候才看得到）</label>
+<label class="op"><b class="k">C</b>只放學生平板</label>
+</div>
+
+<div class="q"><div class="t">D9　榮譽榜演誰？</div>
+<table>
+<tr><th>幕</th><th>演什麼</th></tr>
+<tr><td>①</td><td>開場：「本週 🎯 正確率 榮譽榜」大字＋燈光</td></tr>
+<tr><td>②</td><td>第 10 名 ➜ 第 4 名：一個一個上台，每人一面獎牌＋一句稱讚</td></tr>
+<tr><td>③</td><td>第 3、2、1 名：頒獎台升起，獎盃最大，<b>第 1 名最後揭曉</b></td></tr>
+<tr><td>④</td><td>📈 進步之星（進步最多的 3 人，不在前 10 名也上得了）</td></tr>
+<tr><td>⑤</td><td>結尾：全班合照「🏫 304 班 這週一起練了 85 次！」</td></tr>
+</table>
+<div class="small">每一種榜一個獎名：🎯 正確率 ＝「🎯 精準獎」、💯 總分 ＝「💯 高分獎」、✅ 次數 ＝「💪 勤練獎」、📈 進步 ＝「🚀 進步之星」、🏫 班際 ＝「🏫 榮譽班級」。</div>
+<label class="op rec"><b class="k">A</b>上面 ①～⑤ 全部（班際：冠軍班大獎盃＋每一班都有一張「全班一起努力」獎狀）<span class="tag">建議</span><div class="why">研究：進步、全班合作也要被表揚，後段的學生才有搆得到的目標。</div></label>
+<label class="op"><b class="k">B</b>只演前 10 名（②③）</label>
+<label class="op"><b class="k">C</b>只演前 3 名</label>
+<div class="small">獎名要改的話，D9 後面寫上新名字。</div>
+</div>
+
+<div class="q"><div class="t">D10　投影的榮譽榜要不要中文姓名？</div>
+<div class="cmp"><div class="mock" style="text-align:center"><div class="lab">只有座號</div><div style="font-size:44px">🥇 30414</div></div><div class="ar">或</div><div class="mock" style="text-align:center"><div class="lab">座號＋姓名</div><div style="font-size:44px">🥇 30414 王小明</div></div></div>
+<label class="op rec"><b class="k">A</b>老師看板開的榮譽榜：<b>座號＋姓名</b>；學生平板的榮譽榜：只有座號（學生平板拿不到名單）<span class="tag">建議</span><div class="why">老師之前說過要「班級號碼和中文全名」；名單只有老師密碼拿得到，學生平板永遠看不到姓名。</div></label>
+<label class="op"><b class="k">B</b>老師看板多一顆〔👤 姓名 顯示／隱藏〕，<b>一開始是隱藏</b>，老師要的時候才按</label>
+<label class="op"><b class="k">C</b>都只有座號</label>
+</div>
+
+<div class="q"><div class="t">D11　「每一次都不同」：做幾種、怎麼換？　👇 點一下可以重播</div>
+<div class="demo">
+<div class="st s1" data-re><div class="rays"></div><div class="cup">🏆</div><div class="nm">🥇 30414</div><div class="rp">↻</div><div class="cap">① 金色獎盃從天而降</div></div>
+<div class="st s2" data-re><div class="spark" style="left:20%;top:30%">✨</div><div class="spark" style="left:75%;top:20%;animation-delay:.4s">✨</div><div class="spark" style="left:70%;top:60%;animation-delay:.8s">✨</div><div class="crown">👑</div><div class="who">🧑</div><div class="nm">加冕！30414</div><div class="rp">↻</div><div class="cap">② 皇冠加冕</div></div>
+<div class="st s3" data-re><div class="pod"><div class="p2"><span>🥈</span>2</div><div class="p1"><span>🏆</span>1</div><div class="p3"><span>🥉</span>3</div></div><div class="rp">↻</div><div class="cap">③ 奧運頒獎台升起</div></div>
+</div>
+<div class="small" style="margin:10px 0">↑ 這只是小樣品（真的會是整個螢幕、更精緻）。12 種風格：</div>
+<div class="list12">
+<div>① 🏆 金色獎盃從天而降＋光芒</div><div>② 👑 皇冠加冕＋星光</div><div>③ 🥇 奧運頒獎台升起＋升旗</div>
+<div>④ 🎆 煙火大會（名字在煙火裡出現）</div><div>⑤ 🌟 紅毯＋聚光燈＋閃光燈</div><div>⑥ 🏅 金牌鑄造（熔金倒進模子）</div>
+<div>⑦ 📜 皇家獎狀（展開卷軸＋蓋大印）</div><div>⑧ 🚀 火箭升空（名字寫在星空）</div><div>⑨ 💎 寶箱打開（寶石噴出來）</div>
+<div>⑩ 🌠 流星雨（每一顆流星一個名字）</div><div>⑪ 🐉 神龍守護（金龍繞著獎盃）</div><div>⑫ 🏛 名人堂（名字刻上大理石牆）</div>
+</div>
+<label class="op rec"><b class="k">A</b>12 種，每次隨機、<b>跟上一次一定不一樣</b>，12 種輪完才會重複<span class="tag">建議</span><div class="why">研究：事先不知道的驚喜不會傷害動機；12 種一週一次 ＝ 一學期都不會重複太多次。</div></label>
+<label class="op"><b class="k">B</b>20 種（做比較久）</label>
+<label class="op"><b class="k">C</b>6 種，每一種做得更久、更精緻</label>
+</div>
+
+<div class="q"><div class="t">D12　榮譽榜要不要聲音？</div>
+<label class="op rec"><b class="k">A</b>要：<b>只有榮譽榜</b>有號角＋鼓聲＋掌聲（網頁自己做出來的聲音），右上角〔🔊 聲音 開／關〕，一開始是開<span class="tag">建議</span><div class="why">投影給全班看時，聲音最能做出「頒獎典禮」的震撼；其他網頁照舊沒有音效。</div></label>
+<label class="op"><b class="k">B</b>不要（跟全站一樣沒有音效）</label>
+</div>
+
+<div class="q"><div class="t">D13　頒哪一段期間的獎？</div>
+<label class="op rec"><b class="k">A</b>跟老師看板上面選的「期間」一樣（預設本週；星期一上課可以選「上週」頒上週的獎）<span class="tag">建議</span></label>
+<label class="op"><b class="k">B</b>只有本週</label>
+</div>
+
+<div class="q"><div class="t">D14　要不要印獎狀？</div>
+<div class="mock" style="max-width:560px;margin:0 auto;background:#FFF8E1;color:#3A2A00;text-align:center;border:8px double #C9A227"><div style="font-size:36px">🏆 榮譽獎狀</div><div style="font-size:28px">304 班 14 號　王小明（示範）</div><div style="font-size:30px;color:#9C2A00">🚀 進步之星</div><div style="font-size:22px">這週你練了 5 次，正確率進步 12 分。<br>你的用心看得見！</div><div style="font-size:20px">2026 年 10 月 12 日</div></div>
+<label class="op rec"><b class="k">A</b>要：榮譽榜最後〔🖨 印獎狀〕，每一個上榜的人一張 A4 橫式（姓名、哪一個獎、稱讚努力的一句話、日期）<span class="tag">建議</span></label>
+<label class="op"><b class="k">B</b>不要</label>
+</div>
+
+<!-- ============ 學生登入 ============ -->
+<h2>五、學生登入（第 1 點：之前說過的）</h2>
+<div class="q"><div class="t">已經決定的（2026-10-10，不用再選）</div>
+<table>
+<tr><td>①</td><td>學生會打開的每一個首頁最上面：沒登入 ＝ 大字「先登入」；登入了 ＝ 大字「這是你嗎？40415　✅ 是／🚪 不是，登出」</td></tr>
+<tr><td>②</td><td>每次打開網站先問「這是你嗎？」＋ <b>3 分鐘</b>沒動作自動登出</td></tr>
+<tr><td>③</td><td>每一個題目、遊戲做完都提醒「🚪 記得登出」並說原因（下一個人才不會用你的號碼）</td></tr>
+<tr><td>④</td><td>登出、登入按鈕放大；一鍵登出、原地馬上登入</td></tr>
+</table>
+<img class="shot" src="now_login.jpg" alt="現在的登入" style="max-width:640px">
+<div class="small">↑ 現在的登入（2026-10-09 改過，這次再加 ①～④）</div>
+</div>
+<div class="q"><div class="t">D15　「3 分鐘沒動作自動登出」在家也算嗎？</div>
+<label class="op rec"><b class="k">A</b>學校、在家都一樣 3 分鐘<span class="tag">建議</span><div class="why">在家複習網站上課也會用；規則只有一個，學生不會搞混。在家登出了，再打一次 5 碼就好。</div></label>
+<label class="op"><b class="k">B</b>教學網站 3 分鐘；在家複習網站 20 分鐘</label>
+<div class="small">注意：作答中、遊戲中（還在點）不算「沒動作」；題目、遊戲做到一半不會被登出。</div>
+</div>
+
+<!-- ============ 開關 ============ -->
+<h2>六、老師〔🔒 開關〕一鍵完成（之前說過的）</h2>
+<div class="q"><div class="t">D16　開關長這樣可以嗎？</div>
+<div class="mock">
+<div style="font-size:28px;margin-bottom:8px">班級：<span class="tg" style="background:#14202B;border:3px solid #4A90C8">✅ 全年級</span><span class="tg" style="background:#14202B;border:3px solid #333">402</span><span class="tg" style="background:#14202B;border:3px solid #333">406</span></div>
+<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px"><span class="tg on" style="font-size:32px">🔓 全部開</span><span class="tg off" style="font-size:32px">🔒 全部鎖</span></div>
+<div><span class="tg on">🔓 Unit 1 句型</span><span class="tg on">🔓 Unit 1 複習題</span><span class="tg off">🔒 Unit 2 句型</span><span class="tg on">🔓 ⚡ 閃電四選一</span><span class="tg off">🔒 👑 魔王挑戰</span></div>
+<div class="small" style="margin-top:6px">綠色 ＝ 開 🔓；紅色 ＝ 鎖 🔒；按一下立刻換顏色＋出現「✔ 存好了」</div>
+</div>
+<label class="op rec"><b class="k">A</b>上面這樣；<b>在家複習網站的每一個主題（連句型卡）都能鎖</b>；教學網站的字卡、句型卡不鎖（老師上課投影要用）；<b>鎖上的連任務也打不開</b><span class="tag">建議</span><div class="why">老師第二批第 2 點：「主要鎖住在家複習網站的任何主題、任何題目、任何任務、任何遊戲」。</div></label>
+<label class="op"><b class="k">B</b>在家複習的句型卡也不鎖，只鎖會記成績的（遊戲、複習題）</label>
+</div>
+
+<!-- ============ 用心程度 ============ -->
+<h2>七、👆 用心程度 100 分（之前說過的）</h2>
+<div class="q"><div class="t">D17　用心分數怎麼算？</div>
+<table>
+<tr><th>項目（各 20 分）</th><th>怎樣拿滿分</th><th>證據</th></tr>
+<tr><td>📅 隔天再練</td><td>這週有 4 天以上練習</td><td>分好幾天練記得比較久（Cepeda 2006）</td></tr>
+<tr><td>📝 自己考自己</td><td>這週合格 5 次以上（複習題＋遊戲）</td><td>考自己比再看一次記得牢（Roediger 2006）</td></tr>
+<tr><td>🐢 不亂按</td><td>太快亂按 0%（每多 5% 扣 4 分）</td><td>Wise & Kong 2005</td></tr>
+<tr><td>✨ 訂正成功</td><td>答錯的題目，後來都改對了</td><td>Hattie & Timperley 2007</td></tr>
+<tr><td>⏱ 真的在練的分鐘數</td><td>這週 30 分鐘以上（開著不動不算）；看字卡、按聆聽也算進來</td><td>Fredricks 2004</td></tr>
+</table>
+<div class="small">（證據 2026-10-10 列過，動手前會逐條打開原文核對，核對不過的不放）</div>
+<label class="op rec"><b class="k">A</b>五項各 20 分（上面這樣）；最用心的人上 🏆 榮譽榜「👆 用心獎」，並寫出他哪一項最強<span class="tag">建議</span></label>
+<label class="op"><b class="k">B</b>六項：把「看字卡、按聆聽的次數」獨立出來當第六項（每項 100÷6 分）</label>
+</div>
+
+<!-- ============ 錯題分析 ============ -->
+<h2>八、❌ 錯題分析（第三批 D）</h2>
+<div class="q"><div class="t">D18　看不懂的字眼換成什麼？</div>
+<img class="shot" src="now_wrong.jpg" alt="現在的錯題">
+<table>
+<tr><th>現在</th><th>A（建議）</th><th>B</th></tr>
+<tr><td>最常見的誤會</td><td>👥 最多人選的錯答案</td><td>😵 最多人搞錯的</td></tr>
+<tr><td>「she」　哪一個唸的是它？</td><td>👀 she　🔊 聽 1～4：哪一個是 she？</td><td>🔊 哪一個在唸「she」？</td></tr>
+<tr><td>🔊 聽 1～4，哪一個唸的是它？</td><td>🔊 聽 1～4：哪一個是上面這個字？</td><td>🔊 哪一個聲音跟上面一樣？</td></tr>
+</table>
+<label class="op rec"><b class="k">A</b>照 A 那一欄改；<b>另外</b>把全部網站的題目和選項的中文一條一條審查，有問題的先列成一頁給老師看，老師 OK 才改<span class="tag">建議</span></label>
+<label class="op"><b class="k">B</b>照 B 那一欄改，其他的不審查</label>
+<div class="why" style="margin-top:12px">不用選、一定會做的：題目、選項、每一步的字和圖示放大（坐最後一排看得到）；一步一步的動畫引導學生想；最後一步正確答案唸的時候<b>每唸一次放大變亮一次</b>；正確答案<b>每個英文字正下方寫中文</b>；<b>聽力題附上聽力檔</b>（〔🔊 再聽一次〕）；清單裡的聽力題不再寫出答案。</div>
+</div>
+
+<div class="q"><div class="t">做的順序（老師回答以後，一次做一件，每一件做完量測 0 失敗才上線）</div>
+<table>
+<tr><td>1</td><td>總首頁〔老師看板〕</td><td>6</td><td>學生登入（這是你嗎、3 分鐘、提醒登出）</td></tr>
+<tr><td>2</td><td>老師看板放大＋圖示</td><td>7</td><td>〔🔒 開關〕</td></tr>
+<tr><td>3</td><td>👤 個人成績卡</td><td>8</td><td>👆 用心程度</td></tr>
+<tr><td>4</td><td>🏆 榮譽榜</td><td>9</td><td>❌ 錯題分析</td></tr>
+<tr><td>5</td><td>🔔 要關心（每班照座號一格一格）</td><td></td><td></td></tr>
+</table>
+<div class="small">第 4、6、7、8 件會改到 Google 那一邊的程式：做完會給老師大字版的更新步驟網址，老師重新部署一次（網址不變）。</div>
+<div class="mock" style="margin-top:10px"><div style="font-size:26px;margin-bottom:6px">第 5 件的樣子（老師第二批 4(3) 指定：每一班照座號一格一格）：</div><div class="seat">
+<div class="gr">30401<br>王小明</div><div class="gr">30402<br>陳小美</div><div class="ye">30403<br>林小華</div><div class="rd">30404<br>李大同</div><div class="gy">30405<br>張小強</div><div class="gr">30406<br>黃小芳</div></div>
+<div class="small" style="margin-top:6px">🟢 很好　🟡 要注意　🔴 要關心　⚪ 一次都沒做（示範用假名字）</div></div>
+</div>
+
+<div class="ans">✍️ 在對話裡回答：「全部照建議」，或「D1 A、D2 B、……」</div>
+</div>
+<script>
+// 小樣品：點一下重播
+document.querySelectorAll('[data-re]').forEach(function(b){b.addEventListener('click',function(){var c=b.cloneNode(true);b.parentNode.replaceChild(c,b);c.addEventListener('click',arguments.callee)})});
+// 彩帶
+var s1=document.querySelector('.s1');for(var i=0;i<18;i++){var d=document.createElement('i');d.className='conf';d.style.left=(Math.random()*100)+'%';d.style.background=['#FFD54A','#FF6B6B','#3BD16F','#7FD4FF'][i%4];d.style.animationDelay=(Math.random()*2.4)+'s';s1.appendChild(d)}
+</script>
+</body></html>
