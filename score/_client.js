@@ -320,7 +320,7 @@ function scHeard(){if(!SCREF)SCREF=Date.now()}
 /* 一題：選了第幾個（0 ＝ 正解，-1 ＝ 時間到）、答對、剩下秒數 ÷ 總秒數 */
 function scDone(pick,ok,ratio){
   var now=Date.now(),sec=(now-SCT0)/1000;
-  var fast=pick>=0?(SCREF?(now-SCREF<1000?1:0):1):0;
+  var fast=pick>=0?(now-(SCREF||SCT0)<1000?1:0):0;   /* 認讀題聽完才開始算；聲音沒播出來（沒有 scHeard）就從題目出來開始算，不要整份都變成太快亂按（練習次數 2026-10-12 F4 會看它） */
   SCQ.push([ok?1:0,pick,Math.round(sec*10)/10,fast,ok?Math.round(Math.max(0,Math.min(1,ratio))*1000)/1000:0,SCQI]);
 }
 /* ── 作答結束（2026-10-12 D 第 4 件，使用者第 3 題 A）──

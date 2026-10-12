@@ -478,7 +478,7 @@ async function game(br, P, vp) {
     names.push(s.nm); (await ovFit(p)).forEach(x => e.push('成績第 ' + (k + 1) + ' 幕：' + x));
     if (k === 0 && !/第一次作答/.test(s.t)) e.push('第 1 幕沒有寫「每一題第一次作答」：' + s.t.slice(0, 40));
     if (k === 0 && !/驚喜卡/.test(s.t)) e.push('第 1 幕沒有說驚喜卡不算進成績');
-    if (k === 1) { const h = await honNow(p); if (!h || !/練習次數 ＋1/.test(h.t)) e.push('遊戲 12 題沒有亂按，榮譽動畫卻沒有「練習次數 ＋1」：' + (h ? h.t.slice(0, 60) : '沒有榮譽動畫')); else h.e.forEach(x => e.push('遊戲榮譽動畫：' + x)); }
+    if (k === 1) { await p.waitForTimeout(2600); const h = await honNow(p);   /* 卡片一張一張掉下來（約 2.5 秒）演完才量 */ if (!h || !/練習次數 ＋1/.test(h.t)) e.push('遊戲 12 題沒有亂按，榮譽動畫卻沒有「練習次數 ＋1」：' + (h ? h.t.slice(0, 60) : '沒有榮譽動畫')); else h.e.forEach(x => e.push('遊戲榮譽動畫：' + x)); }
     if (k === 2 && !/本班前 10 名/.test(s.t)) e.push('最後一幕不是「這個遊戲本班前 10 名」：' + s.t.slice(0, 60));
     if (k === 2 && !/第 \d+ 名|進前 10|你的紀錄/.test(s.t)) e.push('最後一幕沒有「你」那一行');
     if (k < 2) await p.click('#scNx');
@@ -534,12 +534,15 @@ async function rvPage(br, f, g, me, vp) {
   await typeId(p, me); await p.waitForTimeout(400);
   const b = G.books['紀錄'].d.length;
   for (let k = 0; k < 8 && !(await p.$('#scn')); k++) {
+    await p.waitForTimeout(1200);   /* 看完題目才按（1 秒內 ＝ 太快亂按，練習次數不會 ＋1） */
     if (k === 0) { await p.click('.rvo button[data-ok="false"]'); await p.waitForSelector('#miss .nxt', { timeout: 12000 }); await p.click('#miss .nxt'); await p.waitForTimeout(400); }
     else { await p.click('.rvo button[data-ok="true"]'); await p.waitForTimeout(1400); }
   }
   const sc = [];
-  for (let k = 0; k < 6; k++) { await p.waitForTimeout(k ? 400 : 900); sc.push(await p.evaluate(() => SCEND && SCEND.list[SCEND.k])); (await fit(p)).forEach(x => e.push('第 ' + (k + 1) + ' 幕' + x)); if (k < 5 && await p.$('#scNx')) await p.click('#scNx'); }
-  if (sc.join() !== 'acc,prev,count,class,board,end') e.push('六幕不對：' + sc.join());
+  for (let k = 0; k < 3; k++) { await p.waitForTimeout(k === 1 ? 3200 : 900); sc.push(await p.evaluate(() => SCEND && SCEND.list[SCEND.k])); (await fit(p)).forEach(x => e.push('第 ' + (k + 1) + ' 幕' + x));
+    if (k === 1) { const h = await honNow(p); if (!h || !/練習次數 ＋1/.test(h.t)) e.push('榮譽動畫沒有「練習次數 ＋1」：' + (h ? h.t.slice(0, 50) : '') + JSON.stringify(await p.evaluate(() => SCEND && [SCEND.fast, SCEND.n]))); else { h.e.forEach(x => e.push('榮譽動畫：' + x)); if (h.e.length && process.env.SHOT) await p.screenshot({ path: process.env.SHOT + '_rv.png' }); } }
+    if (k < 2 && await p.$('#scNx')) await p.click('#scNx'); }
+  if (sc.join() !== 'acc,honor,end') e.push('結束畫面不是 正確率 ➜ 榮譽動畫 ➜ 最後一幕：' + sc.join());
   await p.evaluate(() => { const m = document.getElementById('missAll'); if (m) m.classList.remove('on'); });
   if (!await p.$('#rvAgain') || !await p.$('#rvBack')) e.push('最後一幕沒有〔🔁 再玩一次〕〔📚 換一組〕');
   const rows = G.books['紀錄'].d.slice(b).map(SC.fromRow);
