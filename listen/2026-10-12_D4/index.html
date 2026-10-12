@@ -1,0 +1,129 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>練習次數的圖示</title><style>
+@font-face{font-family:Andika;src:url(../../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#05070A;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 120px;font-size:26px;line-height:1.55;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:40px;color:#FFD54A;margin:22px 0 6px}
+h2{font-size:34px;color:#FFD54A;margin:46px 0 10px;border-top:4px solid #24303C;padding-top:20px}
+.lead{font-size:26px;color:#DDE6EE}
+.howto{background:#102016;border:3px solid #3BD16F;border-radius:20px;padding:14px 20px;margin:16px 0}
+.q{background:#0B0F14;border:3px solid #24303C;border-radius:20px;padding:16px 20px;margin:18px 0}
+.q>.t{font-size:30px;color:#7FD4FF;margin-bottom:8px}
+.op{display:block;border:3px solid #2A3540;border-radius:16px;padding:10px 16px;margin:10px 0;background:#0E141A}
+.op.rec{border-color:#3BD16F;background:#0D1B12}
+.op b.k{display:inline-block;min-width:1.6em;color:#FFD54A;font-size:32px}
+.rec .tag{display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px;margin-left:8px;vertical-align:middle}
+.why{color:#CFE3F5;font-size:24px;margin-top:6px}
+.small{font-size:22px;color:#B9C4CE}
+.cmp{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin:12px 0}
+.cmp .ar{font-size:54px;color:#FFD54A}
+.cmp.v{grid-template-columns:1fr}.cmp.v .ar{transform:rotate(90deg);text-align:center;line-height:1}
+.cmp .lab{font-size:24px;color:#B9C4CE;margin-bottom:4px}
+@media (max-width:760px){.cmp{grid-template-columns:1fr}.cmp .ar{transform:rotate(90deg);text-align:center}}
+.shot{width:100%;border:3px solid #3A4650;border-radius:14px;display:block}
+table{border-collapse:collapse;width:100%;margin:10px 0}
+td,th{border:2px solid #2A3540;padding:8px 12px;text-align:left;vertical-align:middle}
+th{background:#14202B;color:#CFE6FF}
+.big{font-size:44px}
+.mock{background:#000;border:3px solid #3A4650;border-radius:16px;padding:14px;overflow:hidden}
+/* D1 首頁 */
+.hhead{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.hhead .ti{font-size:40px}
+.tbtn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(#FFE07A,#E8A900);color:#2A1A00;border-radius:22px;padding:12px 26px;font-size:32px;box-shadow:0 0 0 4px #5A4300,0 0 26px #FFD54A88;animation:glow 2s infinite}
+@keyframes glow{50%{box-shadow:0 0 0 4px #5A4300,0 0 44px #FFD54ACC}}
+.fake{height:16px;background:#1A1F26;border-radius:8px;margin:10px 0}
+/* D4 圖示 */
+.ic{font-size:46px;line-height:1;vertical-align:middle}
+/* D7 成績卡 */
+.card{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:760px){.card{grid-template-columns:repeat(2,1fr)}}
+.g{background:#0F151C;border:2px solid #2A3540;border-radius:16px;padding:10px;text-align:center}
+.g .l{font-size:24px;color:#CFE3F5}
+.ring{width:120px;height:120px;margin:4px auto}
+.ring circle{fill:none;stroke-width:14}
+.ring .bg{stroke:#222}
+.ring .fg{stroke:#3BD16F;stroke-linecap:round;stroke-dasharray:314;stroke-dashoffset:314;animation:ring 1.6s ease-out forwards;transform:rotate(-90deg);transform-origin:60px 60px}
+@keyframes ring{to{stroke-dashoffset:var(--o)}}
+.ring text{fill:#fff;font-size:30px;font-weight:700;text-anchor:middle;dominant-baseline:central}
+.stars{font-size:34px;letter-spacing:2px}
+.stars i{font-style:normal;opacity:.2;display:inline-block}
+.stars i.on{opacity:1;animation:pop .4s backwards}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.4)}}
+.up{font-size:52px;color:#3BD16F;animation:upk 1.4s infinite}
+@keyframes upk{50%{transform:translateY(-10px)}}
+.cal{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.cal span{width:58px;height:58px;border-radius:12px;background:#1A1F26;display:flex;align-items:center;justify-content:center;font-size:22px;flex-direction:column;line-height:1.1}
+.cal span.on{background:#14532D;border:2px solid #3BD16F}
+.sw{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media (max-width:760px){.sw{grid-template-columns:1fr}}
+.sw div{background:#0F151C;border:2px solid #2A3540;border-radius:16px;padding:10px 14px;font-size:24px}
+.bar{height:22px;border-radius:11px;background:#222;overflow:hidden;margin:4px 0 8px}
+.bar b{display:block;height:100%;border-radius:11px;animation:grow 1.4s ease-out backwards}
+@keyframes grow{from{width:0!important}}
+/* 榮譽榜示範 */
+.demo{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:900px){.demo{grid-template-columns:1fr}}
+.st{position:relative;height:300px;border-radius:18px;overflow:hidden;background:#000;border:3px solid #3A4650;cursor:pointer}
+.st .cap{position:absolute;left:0;right:0;bottom:0;background:#000C;font-size:22px;text-align:center;padding:4px}
+.st .rp{position:absolute;top:8px;right:10px;font-size:20px;color:#B9C4CE}
+/* 1 獎盃從天而降 */
+.s1{background:radial-gradient(circle at 50% 30%,#3A2A00,#000 70%)}
+.s1 .cup{position:absolute;left:50%;top:40px;font-size:110px;transform:translateX(-50%);animation:drop 1.2s cubic-bezier(.3,1.6,.5,1) backwards}
+@keyframes drop{0%{transform:translate(-50%,-260px) scale(.4)}100%{transform:translate(-50%,0) scale(1)}}
+.s1 .nm{position:absolute;left:0;right:0;top:165px;text-align:center;font-size:30px;color:#FFE07A;animation:fade .6s 1.2s backwards}
+.s1 .rays{position:absolute;left:50%;top:95px;width:420px;height:420px;margin:-210px 0 0 -210px;background:repeating-conic-gradient(#FFD54A33 0 8deg,transparent 8deg 22deg);animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.conf{position:absolute;top:-20px;width:10px;height:18px;animation:fall 2.4s linear infinite}
+@keyframes fall{to{transform:translateY(340px) rotate(540deg)}}
+@keyframes fade{from{opacity:0;transform:scale(.6)}}
+/* 2 皇冠加冕 */
+.s2{background:linear-gradient(#1A0630,#000)}
+.s2 .crown{position:absolute;left:50%;top:-80px;font-size:80px;transform:translateX(-50%);animation:crown 1.4s .3s ease-out forwards}
+@keyframes crown{to{top:44px}}
+.s2 .who{position:absolute;left:50%;top:95px;transform:translateX(-50%);font-size:90px}
+.s2 .nm{position:absolute;left:0;right:0;top:192px;text-align:center;font-size:28px;color:#E9C8FF;animation:fade .6s 1.7s backwards}
+.s2 .spark{position:absolute;font-size:26px;animation:tw 1.2s infinite}
+@keyframes tw{50%{opacity:.1;transform:scale(.5)}}
+/* 3 奧運頒獎台 */
+.s3{background:linear-gradient(#001A33,#000)}
+.pod{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;align-items:flex-end;gap:6px}
+.pod div{width:86px;border-radius:10px 10px 0 0;text-align:center;font-size:20px;padding-top:6px;animation:rise .9s ease-out backwards}
+.pod .p1{height:150px;background:linear-gradient(#FFE07A,#B88A00);color:#2A1A00;animation-delay:1.2s}
+.pod .p2{height:110px;background:linear-gradient(#E6EEF5,#8D9AA6);color:#111;animation-delay:.6s}
+.pod .p3{height:80px;background:linear-gradient(#F0B27A,#9C5A1E);color:#111;animation-delay:.1s}
+.pod span{display:block;font-size:40px;margin-top:-56px}
+@keyframes rise{from{height:0}}
+.again{display:inline-block;margin-top:8px;font-size:24px;background:#14202B;border:2px solid #4A90C8;border-radius:14px;padding:6px 18px;color:#CFE6FF;cursor:pointer}
+.list12{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media (max-width:760px){.list12{grid-template-columns:1fr}}
+.list12 div{background:#0F151C;border:2px solid #2A3540;border-radius:14px;padding:8px 12px;font-size:24px}
+.sw2{display:inline-flex;border:3px solid #FFD54A;border-radius:16px;overflow:hidden}
+.sw2 b{padding:8px 18px;font-size:26px;color:#9AA7B3}
+.sw2 b.on{background:#FFD54A;color:#111}
+.tg{display:inline-flex;align-items:center;gap:8px;border-radius:14px;padding:8px 16px;font-size:26px;margin:4px}
+.tg.on{background:#14532D;border:3px solid #3BD16F}
+.tg.off{background:#4A1414;border:3px solid #FF6B6B}
+.seat{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+@media (max-width:760px){.seat{grid-template-columns:repeat(3,1fr)}}
+.seat div{border-radius:12px;padding:6px 8px;font-size:22px;background:#0F151C;border:3px solid #2A3540;line-height:1.3}
+.seat .gr{border-color:#3BD16F}.seat .ye{border-color:#FFD54A}.seat .rd{border-color:#FF6B6B}.seat .gy{border-color:#555;color:#888}
+.tw{overflow-x:auto}
+@media (max-width:760px){table{display:block;overflow-x:auto}body{font-size:24px}}
+.ans{position:sticky;bottom:0;background:#0D1B12;border:3px solid #3BD16F;border-radius:18px;padding:10px 16px;margin-top:30px;font-size:24px}
+.upa{width:1em;height:1.2em;vertical-align:-.2em}
+.icx{display:inline-flex;align-items:center;gap:8px;background:#0F151C;border:3px solid #2A3540;border-radius:16px;padding:8px 16px;font-size:30px;margin:4px}
+.icx .e{font-size:44px;line-height:1}
+.aw{display:inline-block;animation:upj 1.2s ease-in-out infinite}
+@keyframes upj{50%{transform:translateY(-8px)}}
+.hon{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media (max-width:760px){.hon{grid-template-columns:1fr}}
+.hon div{background:#14110A;border:3px solid #6B5310;border-radius:16px;padding:10px 14px;font-size:24px}
+.hon b{font-size:28px;color:#FFE07A;display:block}
+.ex{background:#0D1622;border:3px solid #4A90C8;border-radius:18px;padding:12px 18px;margin:12px 0}
+.big2{font-size:64px;line-height:1}.opg{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:6px 0 2px 34px}.opg .icx{margin:0}.opg2{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media (max-width:860px){.opg2{grid-template-columns:repeat(2,1fr)}}@media (max-width:520px){.opg2{grid-template-columns:1fr}}.opc{background:#0F151C;border:3px solid #2A3540;border-radius:18px;padding:12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px}.opc .k{color:#FFD54A;font-size:34px}.opc .e2{font-size:70px;line-height:1.1}.opc .nm{font-size:28px}</style></head><body><div class="wrap"><h1>🎨「練習次數」「努力獎」的圖示：請老師挑一個號碼</h1>
+<div class="lead">老師不喜歡 💪、正、✏️、🏃、🧗。這裡多給 10 種＋「不要圖示」。不用跟建議一樣，挑老師看了最喜歡、最秒懂的就好。</div>
+<div class="howto">✍️ 在對話裡打號碼，例：「<b>練習次數 3、努力獎 8</b>」（兩個可以不一樣），或「<b>都用 1</b>」。都不喜歡也可以直接說老師想要的東西（例：小蝸牛、時鐘），我照著畫。</div>
+<div class="opg2"><div class="opc"><b class="k">1</b><span class="e2">🐝</span><b class="nm">勤勞的小蜜蜂</b><span class="small">兒歌「小蜜蜂」、「像蜜蜂一樣勤勞」，一直飛來飛去做事</span></div><div class="opc"><b class="k">2</b><span class="e2">🐜</span><b class="nm">勤勞的螞蟻</b><span class="small">「螞蟻一點一點搬」，每天都練一點</span></div><div class="opc"><b class="k">3</b><span class="e2">👣</span><b class="nm">腳印</b><span class="small">練一次 ＝ 往前走一步</span></div><div class="opc"><b class="k">4</b><span class="e2">🏋️</span><b class="nm">舉重練習</b><span class="small">每練一次就更有力量</span></div><div class="opc"><b class="k">5</b><span class="e2">📚</span><b class="nm">一疊書</b><span class="small">練得愈多，書疊得愈高</span></div><div class="opc"><b class="k">6</b><span class="e2">🎒</span><b class="nm">書包</b><span class="small">每天都背著書包來練習</span></div><div class="opc"><b class="k">7</b><span class="e2">🌟</span><b class="nm">發亮的星星</b><span class="small">認真練習的人會發光</span></div><div class="opc"><b class="k">8</b><span class="e2">🏅</span><b class="nm">獎牌</b><span class="small">（努力獎用獎牌；練習次數另外用別的）</span></div><div class="opc"><b class="k">9</b><span class="e2">🧱</span><b class="nm">一塊一塊的磚</b><span class="small">每練一次蓋一塊磚，房子愈蓋愈高</span></div><div class="opc"><b class="k">10</b><span class="e2">💧</span><b class="nm">汗水</b><span class="small">努力流汗</span></div><div class="opc"><b class="k">0</b><span class="e2" style="font-size:40px;line-height:1.75">🚫🖼</span><b class="nm">只寫字</b><span class="small">「練習次數」「努力獎」只寫字，不放圖</span></div></div>
+<div class="small" style="margin-top:14px">別的圖示不變：🎯 正確率｜💯 總分｜綠色粗箭頭 ＝ 進步｜⏱ 練習時間｜👆 用心。為了不搞混，🔥（連對）、⏳（遊戲時間）、📝（複習題）已經有別的意思，所以不放進來。</div>
+<div class="ans">✍️ 例：「練習次數 3、努力獎 8」</div></div></body></html>

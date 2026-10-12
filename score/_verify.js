@@ -209,9 +209,10 @@ async function teacher(br, vp) {
   n += 5;
   for (const t of ['p', 'b', 'c', 'w', 'k']) {
     await p.click('#tabs button[data-t="' + t + '"]'); await p.waitForTimeout(150);
-    const r = await p.evaluate(() => ({ t: document.getElementById('pane').textContent, small: [].filter.call(document.querySelectorAll('#pane td,#pane .br,#pane button'), x => parseFloat(getComputedStyle(x).fontSize) < 14).length }));
+    const r = await p.evaluate(() => ({ t: document.getElementById('pane').textContent, small: [].filter.call(document.querySelectorAll('#pane td,#pane .br,#pane button,#pane .note,#pane h3,.tile .k,.tile .d,#tabs button'), x => x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < (innerWidth >= 1900 ? 22 : 16)).length, old: /⚡|🔁|🚀|秒按/.test(document.getElementById('pane').textContent + document.getElementById('tiles').textContent) }));
     if ((await ox()) > 0) e.push('分頁 ' + t + ' 橫向溢出');
-    if (r.small) e.push('分頁 ' + t + ' 有 ' + r.small + ' 個字小於 14px');
+    if (r.small) e.push('分頁 ' + t + ' 有 ' + r.small + ' 個字太小（觸控螢幕要 ≧ 22px、iPad ≧ 16px）');
+    if (r.old && t !== 't' && t !== 'w') e.push('分頁 ' + t + ' 還有看不懂的舊圖示（⚡🔁🚀／秒按）');
     if (r.t.length < 20) e.push('分頁 ' + t + ' 是空的');
     n += 3;
   }
@@ -221,7 +222,15 @@ async function teacher(br, vp) {
   /* 2026-10-09 名單：個人表有「姓名」欄、要關心列出一次都沒做的人 */
   await p.click('#tabs button[data-t="p"]'); await p.waitForTimeout(150);
   const pt = await p.evaluate(() => ({ th: [].map.call(document.querySelectorAll('#pane th'), x => x.textContent), td: document.getElementById('pane').textContent }));
-  if (pt.th[1] !== '姓名' || !/測試\d\d/.test(pt.td)) e.push('個人表沒有姓名欄');
+  if (!/姓名/.test(pt.th[0]) || !/測試\d\d/.test(pt.td)) e.push('個人表沒有姓名欄');
+  /* 2026-10-12 D6-A：7 欄、燈號、排序那一欄金色＋寫怎麼排；D5：〔A＋〕真的放大 */
+  if (pt.th.length !== 7) e.push('個人表不是 7 欄（' + pt.th.length + '）');
+  if (!/[🔴🟡🟢]/.test(pt.td)) e.push('個人表沒有燈號');
+  if (!/高的在上面/.test(pt.th.join())) e.push('排序的那一欄沒有寫「高的在上面」');
+  const z0 = await p.evaluate(() => document.getElementById('app').getBoundingClientRect().height); await p.click('#zi'); await p.waitForTimeout(150);
+  const z1 = await p.evaluate(() => ({ h: document.getElementById('app').getBoundingClientRect().height, z: localStorage.getItem('tzoom') }));
+  if (!(z1.h > z0) || z1.z !== '1.1') e.push('〔A＋〕沒有放大（' + JSON.stringify(z1) + '）');
+  await p.click('#zo'); await p.waitForTimeout(150); n += 5;
   await p.click('#tabs button[data-t="k"]'); await p.waitForTimeout(150);
   const kt = await p.textContent('#pane');
   if (!/一次都沒做（1 人）/.test(kt) || !/30430 沒做小明/.test(kt)) e.push('要關心沒有列出名單上一次都沒做的人（' + kt.slice(0, 80) + '）');
