@@ -237,11 +237,41 @@ async function teacher(br, vp) {
   n += 3;
   /* 個人 ➜ 作廢 */
   await p.click('#tabs button[data-t="p"]'); await p.click('tr.row'); await p.waitForTimeout(150);
-  if (!await p.$('#modal.on .svgl')) e.push('點一個人沒有出現他的紀錄和折線圖');
   if (!/測試\d\d/.test(await p.textContent('#mbox h3'))) e.push('個人紀錄的標題沒有姓名');
+  /* 2026-10-12 D 第 3 件：秒懂成績卡（四個大圖、最拿手／要加油、哪幾天有練、每一組的變化、最常錯的 3 題、明細收起來） */
+  await p.waitForTimeout(1700);
+  const pc = await p.evaluate(() => { const m = document.getElementById('mbox'), T = m.textContent;
+    return { g: m.querySelectorAll('.pc4 .pg').length, ring: m.querySelectorAll('.pc4 .ring').length, cal: m.querySelectorAll('.cal .cw span').length, on: m.querySelectorAll('.cal .cw span.on').length,
+      ch: !!m.querySelector('#pch svg circle'), hl: /最拿手/.test(T) && /要加油/.test(T), w: /最常錯的 3 題/.test(T), neg: /進步[^]*?－|進步[^]*?-\d/.test(m.querySelector('.pc4').textContent),
+      det: document.getElementById('pdet').hidden, old: /⚡|🔁|🚀|秒按/.test(m.querySelector('.pc4').textContent + [].map.call(m.querySelectorAll('h3:not(#pdet h3)'), x => x.textContent).join()),
+      small: [].filter.call(m.querySelectorAll('h3,.note,.pk,.pd,.sb2,.cw span,.pcn b,.pw,button,.pa span'), x => x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < (innerWidth >= 1900 ? 22 : 16)).length,
+      over: [].filter.call(m.querySelectorAll('*'), x => x.getBoundingClientRect().right > innerWidth + 1).length,
+      rk: getComputedStyle(m.querySelector('.ring .fg')).strokeDashoffset };
+  });
+  /* SHOT=路徑 ＝ 只拍成績卡的照片給人看（會加假紀錄、改期間，所以這時後面的項目會失敗，不算量測） */
+  if (process.env.SHOT) { await p.evaluate(() => { const b = ALL.filter(x => x.id === PID && x.m === 'q')[0], ws = SC.weekStart(DATA.now);
+    [[-9, 40, 2], [-6, 60, 3], [-3, 60, 3], [-1, 80, 4]].forEach((a, i) => ALL.push(Object.assign({}, b, { t: ws + a[0] * 864e5 + 36e6, acc: a[1], ok: a[2], u: 'shot' + i, qs: b.qs.map((q, j) => j < 5 - a[2] ? [0, 2, 3, 0, 0, j] : q) })));
+    F.p = 'all'; person(PID); }); await p.waitForTimeout(1800); }
+  if (process.env.SHOT) { await p.evaluate(() => document.getElementById('pch').scrollIntoView()); await p.waitForTimeout(1500); await p.screenshot({ path: process.env.SHOT + '_' + vp[0] + '.png' }); }
+  if (pc.g !== 4 || pc.ring !== 2) e.push('成績卡不是四個大圖（' + pc.g + '／圓圈 ' + pc.ring + '）');
+  if (parseFloat(pc.rk) >= 314) e.push('成績卡的圓圈沒有轉上去');
+  if (pc.cal % 7 || !pc.on) e.push('成績卡「哪幾天有練」不對（' + pc.cal + ' 格、亮 ' + pc.on + ' 格）');
+  if (!pc.ch) e.push('成績卡沒有「每一組的變化」折線圖');
+  if (!pc.hl) e.push('成績卡沒有「最拿手／要加油」');
+  if (!pc.w) e.push('成績卡沒有「最常錯的 3 題」');
+  if (!pc.det) e.push('明細沒有收起來（要放在最下面〔📋 看全部明細〕）');
+  if (pc.old) e.push('成績卡還有看不懂的舊圖示');
+  if (pc.small) e.push('成績卡有 ' + pc.small + ' 個字太小');
+  if (pc.over) e.push('成績卡有 ' + pc.over + ' 個東西超出螢幕右邊');
+  const nb = await p.$$('#pcx:not([disabled])');
+  if (nb.length) { const t0 = await p.textContent('.pcn b'); await p.click('#pcx'); if (t0 === await p.textContent('.pcn b')) e.push('按 ▶ 沒有換下一組'); }
+  await p.click('#pdb'); await p.waitForTimeout(100);
+  if (!await p.$('#modal.on #pdet:not([hidden]) .svgl')) e.push('按〔📋 看全部明細〕沒有出現每一次的紀錄');
+  n += 12;
   const vu = await p.getAttribute('[data-void]', 'data-void'); await p.click('[data-void]'); await p.waitForTimeout(300);
   const row = G.books['紀錄'].d.filter(r => r[CI['編號']] === vu)[0];
   if (!row || row[CI['作廢']] !== true) e.push('按〔🚫 作廢〕伺服器沒有打勾');
+  if (!await p.$('#pdet:not([hidden])')) e.push('作廢以後明細又收起來了');
   await p.click('#mx');
   /* 錯題 ➜ 選項分布 ➜ 全班訂正 */
   await p.click('#tabs button[data-t="w"]'); await p.waitForTimeout(150);
