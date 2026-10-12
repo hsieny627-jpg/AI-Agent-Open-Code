@@ -1,0 +1,133 @@
+/* score/_honor.css — 榮譽動畫（2026-10-12 D 第 4 件）：學生平板做完的榮譽動畫、老師投影的榮譽榜共用。12 種風格 .hs1～.hs12 */
+.hon{position:relative;width:100%;height:var(--hh,clamp(420px,66vh,800px));border-radius:22px;overflow:hidden;background:#000;color:#fff;text-align:center;isolation:isolate;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;justify-content:safe center;gap:clamp(6px,1.4vh,16px);padding:2vh 2vw;box-sizing:border-box}
+.hon *{box-sizing:border-box}
+.hon .hbg,.hon .hfx{position:absolute;inset:0;pointer-events:none}
+.hon .hbg{z-index:-2}.hon .hfx{z-index:-1;overflow:hidden}
+.hon .hhero{font-size:clamp(70px,13vh,150px);line-height:1;position:relative;filter:drop-shadow(0 0 24px rgba(255,214,74,.55))}
+.hon .hkick{font-size:clamp(20px,3.2vh,34px);font-weight:700;color:#FFE9A8;letter-spacing:.06em;animation:hfade .7s backwards}
+.hon .htit{font-size:clamp(30px,5.6vh,60px);font-weight:700;line-height:1.2;text-shadow:0 3px 14px #000;animation:hzoom .8s .2s backwards}
+.hon .hsub{font-size:clamp(20px,3.2vh,34px);font-weight:700;color:#E8F0F8;text-shadow:0 2px 10px #000;animation:hfade .8s .5s backwards}
+.hon .hcards{display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));gap:clamp(8px,1.6vh,18px);width:100%;max-width:calc(var(--n,3)*440px)}
+.hon .hcards.many{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.hon .hcard{background:rgba(10,12,16,.78);border:3px solid rgba(255,214,74,.85);border-radius:22px;padding:clamp(8px,1.4vh,16px) clamp(12px,1.6vw,24px);
+  min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 0 26px rgba(255,214,74,.35);animation-fill-mode:backwards}
+.hon .hcard .hi{font-size:clamp(46px,8vh,90px);line-height:1.05;display:flex;align-items:center;justify-content:center;height:1.1em}
+.hon .hcard .hi svg{height:1.15em;width:auto}
+.hon .nw{white-space:nowrap}
+.hon .hcard .hn{font-size:clamp(26px,4.4vh,46px);font-weight:700;color:#FFE07A}
+.hon .hcard .hl{font-size:clamp(20px,3.2vh,32px);font-weight:700;line-height:1.3}
+.hon .hcard .hw{font-size:clamp(24px,4vh,42px);font-weight:700;color:#fff}
+.hon .hcard.me{border-color:#5BE39A;box-shadow:0 0 30px rgba(91,227,154,.6)}
+.hon .hrow{display:flex;flex-direction:column;gap:clamp(4px,.9vh,10px);width:min(1100px,100%)}
+.hon .hr{display:grid;grid-template-columns:3.2em 1fr auto;gap:12px;align-items:center;background:rgba(10,12,16,.8);border:2px solid rgba(255,214,74,.6);border-radius:16px;
+  padding:4px 16px;font-size:clamp(22px,3.6vh,40px);font-weight:700;text-align:left;animation:hslide .6s backwards}
+.hon .hr b{color:#FFE07A;text-align:center}.hon .hr em{font-style:normal;color:#CFE3F5}
+.hon .hpod{display:flex;align-items:flex-end;justify-content:center;gap:clamp(8px,1.4vw,22px);width:100%}
+.hon .hpod>div{display:flex;flex-direction:column;align-items:center;gap:6px;width:min(30%,360px)}
+.hon .hpod .blk{width:100%;border-radius:16px 16px 0 0;display:flex;align-items:flex-start;justify-content:center;font-size:clamp(40px,8vh,90px);font-weight:700;padding-top:6px;
+  animation:hrise 1s cubic-bezier(.2,1.4,.5,1) backwards;color:#2A1A00}
+.hon .hpod .p1 .blk{height:clamp(110px,22vh,260px);background:linear-gradient(#FFE07A,#E8A900)}
+.hon .hpod .p2 .blk{height:clamp(80px,15vh,180px);background:linear-gradient(#F2F2F2,#A9B4BE)}
+.hon .hpod .p3 .blk{height:clamp(60px,11vh,130px);background:linear-gradient(#F0B080,#B4642C)}
+.hon .hpod .nm{font-size:clamp(24px,4.2vh,46px);font-weight:700;line-height:1.15;animation:hzoom .7s backwards}
+.hon .hpod .vv{font-size:clamp(20px,3.2vh,34px);color:#FFE9A8;font-weight:700;animation:hzoom .7s backwards}
+.hon .hpod .md{font-size:clamp(46px,9vh,110px);line-height:1;animation:hdrop .9s cubic-bezier(.3,1.6,.5,1) backwards}
+.hon .hpod .hide{visibility:hidden}
+@keyframes hfade{from{opacity:0;transform:translateY(16px)}}
+@keyframes hzoom{from{opacity:0;transform:scale(.4)}}
+@keyframes hslide{from{opacity:0;transform:translateX(-60px)}}
+@keyframes hrise{from{transform:scaleY(0);transform-origin:bottom}}
+@keyframes hdrop{0%{opacity:0;transform:translateY(-60vh) scale(.5)}100%{opacity:1}}
+@keyframes hspin{to{transform:rotate(360deg)}}
+@keyframes htw{50%{opacity:.15;transform:scale(.4)}}
+@keyframes hfall{from{transform:translateY(-12vh) rotate(0)}to{transform:translateY(110vh) rotate(var(--r,540deg))}}
+@keyframes hpulse{50%{transform:scale(1.12)}}
+/* 1 🏆 金色獎盃從天而降＋光芒 */
+.hs1 .hbg{background:radial-gradient(circle at 50% 30%,#4A3400,#120C00 55%,#000 80%)}
+.hs1 .hbg::after{content:"";position:absolute;left:50%;top:28%;width:180vmax;height:180vmax;margin:-90vmax 0 0 -90vmax;background:repeating-conic-gradient(rgba(255,214,74,.16) 0 8deg,transparent 8deg 22deg);animation:hspin 14s linear infinite}
+.hs1 .hhero{animation:hdrop 1.1s cubic-bezier(.3,1.6,.5,1) backwards}
+.hs1 .hcard{animation:hdrop .9s cubic-bezier(.3,1.5,.5,1) backwards}
+/* 2 👑 皇冠加冕＋星光 */
+.hs2 .hbg{background:radial-gradient(circle at 50% 35%,#3A0F5C,#12031F 60%,#000)}
+.hs2 .hhero{animation:hcrown 1.3s ease-out backwards}
+@keyframes hcrown{0%{opacity:0;transform:translateY(-40vh) rotate(-20deg)}70%{transform:translateY(8px) rotate(6deg)}}
+.hs2 .hcard{border-color:#D9A8FF;box-shadow:0 0 28px rgba(200,140,255,.55);animation:hzoom .8s backwards}
+.hs2 .hcard .hn{color:#F0D4FF}
+/* 3 🥇 奧運頒獎台升起 */
+.hs3 .hbg{background:linear-gradient(#00264D,#000 75%)}
+.hs3 .hbg::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22%;background:linear-gradient(transparent,rgba(255,214,74,.18))}
+.hs3 .hhero{animation:hrise 1s ease-out backwards}
+.hs3 .hcard{animation:hrise .9s cubic-bezier(.2,1.3,.5,1) backwards;border-radius:22px 22px 6px 6px}
+/* 4 🎆 煙火大會 */
+.hs4 .hbg{background:linear-gradient(#020414,#0A0F2E 70%,#140A20)}
+.hs4 .hcard{background:rgba(5,8,25,.8);border-color:#7FD4FF;box-shadow:0 0 30px rgba(127,212,255,.5);animation:hfade 1s backwards}
+.hs4 .hcard .hn{color:#9FE6FF}
+.hfx .fw{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);animation:hburst 1.6s ease-out infinite;opacity:0}
+@keyframes hburst{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.3)}}
+/* 5 🌟 紅毯＋聚光燈＋閃光燈 */
+.hs5 .hbg{background:linear-gradient(#14000A,#000 55%,#5A0012 56%,#8A0A20)}
+.hs5 .hbg::before,.hs5 .hbg::after{content:"";position:absolute;top:-10%;width:40%;height:120%;background:linear-gradient(rgba(255,250,220,.32),transparent 80%);clip-path:polygon(45% 0,55% 0,100% 100%,0 100%);animation:hsweep 3.2s ease-in-out infinite alternate}
+.hs5 .hbg::before{left:5%}.hs5 .hbg::after{right:5%;animation-delay:-1.6s}
+@keyframes hsweep{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
+.hfx .fl{position:absolute;width:30px;height:30px;border-radius:50%;background:#fff;box-shadow:0 0 40px 20px #fff;opacity:0;animation:hflash 2.2s infinite}
+@keyframes hflash{0%,8%,100%{opacity:0}4%{opacity:.95}}
+.hs5 .hcard{animation:hside .8s backwards}.hs5 .hcard:nth-child(even){animation-name:hside2}
+@keyframes hside{from{opacity:0;transform:translateX(-50vw)}}@keyframes hside2{from{opacity:0;transform:translateX(50vw)}}
+/* 6 🏅 金牌鑄造（熔金倒進模子） */
+.hs6 .hbg{background:radial-gradient(circle at 50% 100%,#5A2400,#120600 60%,#000)}
+.hs6 .hhero{animation:hmelt 1.6s ease-out backwards}
+@keyframes hmelt{0%{filter:brightness(3) saturate(0) blur(6px);transform:scale(1.4)}60%{filter:brightness(2) blur(1px)}}
+.hs6 .hcard{position:relative;overflow:hidden;animation:hzoom .8s backwards}
+.hs6 .hcard::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,240,180,.55),transparent);animation:hshine 2.4s 1s infinite}
+@keyframes hshine{to{left:130%}}
+/* 7 📜 皇家獎狀（展開卷軸＋蓋大印） */
+.hs7 .hbg{background:radial-gradient(circle,#3A2A12,#120C04 70%)}
+.hs7 .hcard{background:linear-gradient(#FFF6DE,#F1DDB0);color:#3A2400;border-color:#8A5A1A;animation:hunroll 1s backwards;position:relative}
+.hs7 .hcard .hn{color:#8A1A1A}.hs7 .hcard .hw{color:#3A2400}
+.hs7 .hcard::after{content:"印";position:absolute;right:8px;top:8px;width:1.8em;height:1.8em;border:3px solid #C0261F;border-radius:8px;color:#C0261F;font-weight:700;
+  display:flex;align-items:center;justify-content:center;font-size:clamp(16px,2.4vh,24px);transform:rotate(-12deg);animation:hstamp .5s 1.4s backwards}
+@keyframes hunroll{from{transform:scaleY(.04);opacity:.3}}
+@keyframes hstamp{from{opacity:0;transform:rotate(-12deg) scale(3)}}
+/* 8 🚀 火箭升空（名字寫在星空） */
+.hs8 .hbg{background:linear-gradient(#000,#0A1240 80%,#1A2A70)}
+.hs8 .hhero{animation:hrocket 1.4s ease-out backwards}
+@keyframes hrocket{0%{transform:translateY(60vh) scale(.6)}80%{transform:translateY(-6px)}}
+.hs8 .hcard{border-color:#9FB8FF;box-shadow:0 0 26px rgba(159,184,255,.6);animation:hzoom 1s backwards}
+.hfx .sr{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;animation:htw 1.8s infinite}
+/* 9 💎 寶箱打開（寶石噴出來） */
+.hs9 .hbg{background:radial-gradient(circle at 50% 70%,#003A3A,#001414 60%,#000)}
+.hs9 .hhero{animation:hpop 1s cubic-bezier(.3,1.8,.5,1) backwards}
+@keyframes hpop{from{transform:scale(0) rotate(-30deg)}}
+.hs9 .hcard{border-color:#5BE3D8;box-shadow:0 0 28px rgba(91,227,216,.55);animation:hpop .8s backwards}
+.hs9 .hcard .hn{color:#A8FFF6}
+.hfx .gm{position:absolute;left:50%;bottom:30%;font-size:clamp(26px,4vh,44px);animation:hgem 2.2s ease-out infinite;opacity:0}
+@keyframes hgem{0%{opacity:1;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(260deg)}}
+/* 10 🌠 流星雨 */
+.hs10 .hbg{background:linear-gradient(#000014,#0B0B33)}
+.hfx .mt{position:absolute;width:3px;height:120px;background:linear-gradient(#fff,transparent);transform:rotate(35deg);animation:hmeteor 1.6s linear infinite;opacity:0}
+@keyframes hmeteor{0%{opacity:1;transform:translate(0,0) rotate(35deg)}100%{opacity:0;transform:translate(-50vw,70vh) rotate(35deg)}}
+.hs10 .hcard{animation:hstar 1s backwards;border-color:#FFF2A8}
+@keyframes hstar{from{opacity:0;transform:translate(30vw,-40vh) scale(.3)}}
+/* 11 🐉 神龍守護（金龍繞著獎盃） */
+.hs11 .hbg{background:radial-gradient(circle at 50% 40%,#3A0A00,#140200 60%,#000)}
+.hs11 .hhero::after{content:"🐉";position:absolute;left:50%;top:50%;font-size:.55em;margin:-.6em 0 0 -.5em;animation:horbit 3s linear infinite}
+@keyframes horbit{from{transform:rotate(0) translateX(1.5em) rotate(0)}to{transform:rotate(360deg) translateX(1.5em) rotate(-360deg)}}
+.hs11 .hcard{border-color:#FF9A3C;box-shadow:0 0 30px rgba(255,120,40,.55);animation:hzoom .9s backwards}
+.hs11 .hcard .hn{color:#FFC27A}
+.hfx .em{position:absolute;bottom:-10px;width:6px;height:6px;border-radius:50%;background:#FF9A3C;box-shadow:0 0 8px #FF6A00;animation:hember 3s linear infinite}
+@keyframes hember{to{transform:translateY(-110vh);opacity:0}}
+/* 12 🏛 名人堂（名字刻上大理石牆） */
+.hs12 .hbg{background:repeating-linear-gradient(115deg,#2A2D33 0 40px,#33373E 40px 44px,#26292E 44px 90px),linear-gradient(#3A3E46,#1A1C20)}
+.hs12 .hcard{background:linear-gradient(#E9E6E0,#BDB8AE);color:#2A2620;border-color:#8C7A50;animation:hcarve 1.2s backwards}
+.hs12 .hcard .hn{color:#6A4A00}.hs12 .hcard .hw{color:#1A1610}
+@keyframes hcarve{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+/* 直的螢幕（iPad 直放）：一張獎一列，圖示在左邊 */
+@media (max-aspect-ratio:1/1){.hon .hcards,.hon .hcards.many{grid-template-columns:1fr;max-width:640px}
+ .hon .hcard{display:grid;grid-template-columns:auto 1fr;column-gap:16px;text-align:left;align-items:center;justify-items:start}
+ .hon .hcard .hi{grid-row:1/span 3}}
+/* 彩帶（1、3、4、9 用） */
+.hfx .cf{position:absolute;top:0;width:12px;height:20px;background:var(--c);animation:hfall var(--d,3s) linear infinite}
+/* 跳過、聲音、控制列 */
+.hctl{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+@media (prefers-reduced-motion:reduce){.hon *,.hon .hbg::after,.hon .hbg::before{animation-duration:.01s!important;animation-iteration-count:1!important}}

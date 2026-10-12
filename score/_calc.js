@@ -7,7 +7,10 @@
  *   🎯 正確率（百分制）   一組 ＝ 答對 ÷ 題數 ✕ 100
  *   ⚡ 總分（百分制）     一組 ＝ 每題答對 60 ÷ 題數 ＋ 速度 40 ÷ 題數 ✕（剩下秒數 ÷ 總秒數）（Q1-A：答對 60 ＋ 速度 40）
  *   個人成績             每一組取「最近一次」，再把做過的組平均（Q8-A）
- *   🔁 作答次數           答對數 ≧ 題數 ✕ 2/3 才算 1 次（5 題至少對 4 題）；同一組一天最多算 3 次（Q11-A）
+ *   練習次數             做完就算（使用者 2026-10-12 F4：不用對 2/3）；只有「太快亂按」超過一半的那一次不算；同一組一天最多算 3 次（Q11-A）
+ *   ⏱ 練習時間           每一題從出現到按下去的秒數加起來（記憶配對 ＝ 整場秒數）（使用者 2026-10-12 第 4 題 A；第 8 件再加看字卡、按聆聽）
+ *   📅 天天練             這段期間有練的天數
+ *   班際（G2-A）          練習次數、練習時間 ＝ 全班加起來 ÷ 全班人數（班級人數 ＞ 名單人數 ＞ 有做的人）；每一班都有自己最強的一項（clsAwards）
  *   🚀 進步               每一組：最近一次 − 上一次（所有作答都算，但「⚡ 秒按」超過一半的那一次不拿來比）；
  *                        個人 ＝ 這段期間做過兩次以上的組平均；上次、這次都 100 ＝「🔥 保持滿分」，不算進平均（Q3-A）
  *   ⚡ 秒按               開始作答 1 秒內就按（Q10-A），只給老師看
@@ -66,8 +69,10 @@ var SC = (function () {
     if (s < 1 || s > SEAT) return { err: 'seat', seat: s };
     return { id: id, g: gg, cls: c, seat: s };
   }
-  /* 算不算 1 次：題目 ＝ 答對 2/3 以上；遊戲 ＝ 還要第一次作答 ≧ GMIN 題；記憶配對 ＝ 玩完整場就算 */
-  function counts(ok, n, m) { if (m === 'mem') return true; if (m === 'g' && n < GMIN) return false; return n > 0 && ok * 3 >= n * 2; }
+  /* 練習次數 ＋1 嗎（2026-10-12 F4）：做完就算；太快亂按超過一半不算；遊戲還要第一次作答 ≧ GMIN 題；記憶配對 ＝ 玩完整場就算（ok 留著給舊的呼叫） */
+  function counts(ok, n, m, fast) { if (m === 'mem') return true; if (m === 'g' && n < GMIN) return false; return n > 0 && (+fast || 0) * 2 <= n; }
+  /* 一筆紀錄練了幾秒 */
+  function secOf(r) { if (r.m === 'mem') return +r.sec || 0; var s = 0; for (var i = 0; i < (r.qs || []).length; i++) s += +r.qs[i][2] || 0; return s; }
   function need(n) { return Math.ceil(n * 2 / 3); }                     /* 至少要對幾題 */
   function day(t) { return Math.floor((t + TZ) / DAY); }
   function weekStart(t) { var d = day(t), wd = (d + 3) % 7; return (d - wd) * DAY - TZ; }   /* 1970-01-01 是星期四 ➜ +3 ＝ 星期一是 0 */
@@ -135,20 +140,22 @@ var SC = (function () {
   function students(rs) {
     var by = {}, ids = [];
     rs.slice().sort(function (a, b) { return a.t - b.t; }).forEach(function (r) {
-      var p = by[r.id]; if (!p) { p = by[r.id] = { id: r.id, g: r.g, cls: r.cls, seat: r.seat, sets: {}, all: 0, last: 0, fastQ: 0, q: 0, fix: 0 }; ids.push(r.id); }
-      (p.sets[r.set] = p.sets[r.set] || []).push(r); p.all++; p.last = r.t; p.fastQ += r.fast; p.q += r.n; p.fix += r.fix || 0;
+      var p = by[r.id]; if (!p) { p = by[r.id] = { id: r.id, g: r.g, cls: r.cls, seat: r.seat, sets: {}, all: 0, last: 0, fastQ: 0, q: 0, fix: 0, sec: 0, dd: {}, nd: 0 }; ids.push(r.id); }
+      (p.sets[r.set] = p.sets[r.set] || []).push(r); p.all++; p.last = r.t; p.fastQ += r.fast; p.q += r.n; p.fix += r.fix || 0; p.sec += secOf(r);
+      var d0 = day(r.t); if (!p.dd[d0]) { p.dd[d0] = 1; p.nd++; }
     });
     return ids.map(function (id) {
       var p = by[id], A = [], S = [], D = [], keep = false, cnt = 0, nsets = 0;
       for (var k in p.sets) { var a = p.sets[k], L = a[a.length - 1]; nsets++;
         if (L.acc != null) A.push(L.acc); if (L.s != null) S.push(L.s);   /* 記憶配對沒有正確率、總分 */
-        var perDay = {}; a.forEach(function (r) { if (counts(r.ok, r.n, r.m)) { var d = day(r.t); perDay[d] = (perDay[d] || 0) + 1; if (perDay[d] <= CAP) cnt++; } });
+        var perDay = {}; a.forEach(function (r) { if (counts(r.ok, r.n, r.m, r.fast)) { var d = day(r.t); perDay[d] = (perDay[d] || 0) + 1; if (perDay[d] <= CAP) cnt++; } });
         var v = a.filter(function (r) { return r.acc != null && r.fast * 2 <= r.n; });
         if (v.length >= 2) { var x = v[v.length - 1].acc, y = v[v.length - 2].acc; if (x === 100 && y === 100) keep = true; else D.push(x - y); }
       }
       var acc = mean(A), s = mean(S), pr = mean(D);
       return { id: id, g: p.g, cls: p.cls, seat: p.seat, acc: acc == null ? null : r1(acc), s: s == null ? null : r1(s), count: cnt,
-        prog: pr == null ? null : r1(pr), keep: keep && pr == null ? true : keep, sets: nsets, all: p.all, last: p.last, fastQ: p.fastQ, q: p.q, fix: p.fix };
+        prog: pr == null ? null : r1(pr), keep: keep && pr == null ? true : keep, sets: nsets, all: p.all, last: p.last, fastQ: p.fastQ, q: p.q, fix: p.fix,
+        sec: Math.round(p.sec), days: p.nd };
     });
   }
   /* 排名：同分同名次（1、1、3）；正確率同分比總分 */
@@ -156,7 +163,8 @@ var SC = (function () {
     acc: { v: function (p) { return p.acc; }, cmp: function (a, b) { return (b.acc - a.acc) || (b.s - a.s); }, eq: function (a, b) { return a.acc === b.acc && a.s === b.s; }, ok: function (p) { return p.acc != null; } },
     s: { v: function (p) { return p.s; }, cmp: function (a, b) { return b.s - a.s; }, eq: function (a, b) { return a.s === b.s; }, ok: function (p) { return p.s != null; } },
     count: { v: function (p) { return p.count; }, cmp: function (a, b) { return b.count - a.count; }, eq: function (a, b) { return a.count === b.count; }, ok: function (p) { return p.count > 0; } },
-    prog: { v: function (p) { return p.prog; }, cmp: function (a, b) { return b.prog - a.prog; }, eq: function (a, b) { return a.prog === b.prog; }, ok: function (p) { return p.prog != null && p.prog > 0; } }
+    prog: { v: function (p) { return p.prog; }, cmp: function (a, b) { return b.prog - a.prog; }, eq: function (a, b) { return a.prog === b.prog; }, ok: function (p) { return p.prog != null && p.prog > 0; } },
+    sec: { v: function (p) { return p.sec; }, cmp: function (a, b) { return b.sec - a.sec; }, eq: function (a, b) { return a.sec === b.sec; }, ok: function (p) { return p.sec > 0; } }
   };
   function rank(ps, key) {
     var B = BOARDS[key], L = ps.filter(B.ok).sort(function (a, b) { return B.cmp(a, b) || (a.id < b.id ? -1 : 1); });
@@ -210,11 +218,25 @@ var SC = (function () {
     return CLASSES[g].filter(function (c) { return !AFTER[c]; }).map(function (c) {
       var m = ps.filter(function (p) { return p.cls === c; });
       var nn = function (k) { return m.filter(function (p) { return p[k] != null; }).map(function (p) { return p[k]; }); };
-      var a = mean(nn('acc')), s = mean(nn('s')), pr = mean(nn('prog')), cnt = 0;
-      m.forEach(function (p) { cnt += p.count; });
-      var size = sizes && +sizes[c] > 0 ? +sizes[c] : null;
-      return { cls: c, n: m.length, size: size, acc: a == null ? null : r1(a), s: s == null ? null : r1(s), count: cnt, prog: pr == null ? null : r1(pr) };
+      var a = mean(nn('acc')), s = mean(nn('s')), pr = mean(nn('prog')), cnt = 0, sec = 0;
+      m.forEach(function (p) { cnt += p.count; sec += p.sec || 0; });
+      var size = sizes && +sizes[c] > 0 ? +sizes[c] : null, per = Math.max(size || 0, m.length) || 1;   /* G2-A：平均每一個人（除以全班人數） */
+      return { cls: c, n: m.length, size: size, acc: a == null ? null : r1(a), s: s == null ? null : r1(s), count: cnt, prog: pr == null ? null : r1(pr),
+        sec: sec, cntP: m.length ? r1(cnt / per) : null, secP: m.length ? Math.round(sec / per) : null };
     });
+  }
+  /* 班際榮譽（G2-A、F5）：4 種排行（最努力 ＝ 平均每人練習次數、進步最多、練習時間最多 ＝ 平均每人、成績最優 ＝ 平均正確率）；
+     每一班都有自己最強的一項（名次最前面的那一種；同名次照這個順序） */
+  var CB = [['count', 'cntP'], ['prog', 'prog'], ['sec', 'secP'], ['acc', 'acc']];
+  function clsAwards(cl) {
+    var R = {}, best = {};
+    CB.forEach(function (b) {
+      var L = cl.filter(function (c) { return c.n > 0 && c[b[1]] != null && (b[0] !== 'prog' || c.prog > 0) && (b[0] === 'acc' || c[b[1]] > 0); })
+        .sort(function (x, y) { return (y[b[1]] - x[b[1]]) || (x.cls < y.cls ? -1 : 1); });
+      var rk = 0; R[b[0]] = L.map(function (c, i) { if (!i || c[b[1]] !== L[i - 1][b[1]]) rk = i + 1; return { cls: c.cls, v: c[b[1]], rk: rk }; });
+      R[b[0]].forEach(function (x) { if (!best[x.cls] || x.rk < best[x.cls].rk) best[x.cls] = { k: b[0], rk: x.rk, v: x.v }; });
+    });
+    return { rk: R, best: best };
   }
   /* 錯題：每一題答了幾次、錯幾次、四個選項各被選幾次（選項 0 ＝ 正解，-1 ＝ 時間到）
      題目 ＝ 題組＋題庫裡第幾題（每題第 6 格；舊紀錄沒有 ＝ 第幾個） */
@@ -237,12 +259,12 @@ var SC = (function () {
       rk: mm && mm.rk <= TOP ? mm.rk : null, best: bm ? { acc: bm.acc, s: bm.s } : null, cut: L.length >= TOP ? b[top(L)[top(L).length - 1].id].acc : null };
   }
   function mine(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
-  function view(all, o, now, boardsOn) {
+  function view(all, o, now, boardsOn, sizes) {
     var c = checkId(o.id); if (c.err) return { err: c.err };
     var from = weekStart(now), W = pick(all, { g: c.g, from: from });
     var ps = students(W), me = mine(ps, c.id) || { id: c.id, acc: null, s: null, count: 0, prog: null, keep: false };
     var out = { id: c.id, cls: c.cls, g: c.g, week: from, boards: !!boardsOn,
-      me: { acc: me.acc, s: me.s, count: me.count, prog: me.prog, keep: !!me.keep } };
+      me: { acc: me.acc, s: me.s, count: me.count, prog: me.prog, keep: !!me.keep, sec: me.sec || 0, days: me.days || 0 } };
     /* 這一組（作答中右上角的名次）：本班別人這週在這一組最好的原始分數，前 10 個 */
     if (o.set) {
       var best = {}; W.forEach(function (r) { if (r.set === o.set && r.cls === c.cls && r.id !== c.id) best[r.id] = Math.max(best[r.id] || 0, r.raw); });
@@ -252,19 +274,21 @@ var SC = (function () {
         prev: mineSet.length ? mineSet[mineSet.length - 1].acc : null,
         prevValid: (function () { var a = mineSet.filter(function (r) { return r.fast * 2 <= r.n; }); return a.length ? a[a.length - 1].acc : null; })(),
         best: mineSet.length ? Math.max.apply(null, mineSet.map(function (r) { return r.acc; })) : null,
-        today: mineSet.filter(function (r) { return day(r.t) === day(now) && counts(r.ok, r.n, r.m); }).length };
+        today: mineSet.filter(function (r) { return day(r.t) === day(now) && counts(r.ok, r.n, r.m, r.fast); }).length };
       /* 遊戲：這個遊戲本班前 10 名（這週，每個人最好的一次：正確率，同分比總分） */
       if (o.gt && boardsOn) out.gtop = gtop(W.filter(function (r) { return r.set === o.set && r.cls === c.cls && r.acc != null; }), c.id);
     }
     /* 班級長條（我幫全班）：這週各班平均正確率 */
-    var cl = classes(ps, c.g, null);
-    out.classes = cl.map(function (x) { return { cls: x.cls, acc: x.acc, n: x.n }; });
+    var cl = classes(ps, c.g, sizes || null);
+    out.classes = cl.map(function (x) { return { cls: x.cls, acc: x.acc, n: x.n, count: x.count }; });
+    var myc = ps.filter(function (p) { return p.cls === c.cls; }), tot = 0; myc.forEach(function (p) { tot += p.count; });
+    out.mycls = { n: myc.length, count: tot };   /* 本班這週一起練了幾次（全班合照） */
     if (o.u) { var ps0 = students(W.filter(function (r) { return r.u !== o.u; }));
       var b0 = classes(ps0, c.g, null).filter(function (x) { return x.cls === c.cls; })[0], b1 = cl.filter(function (x) { return x.cls === c.cls; })[0];
       out.delta = !b0 || !b1 || b0.acc == null || b1.acc == null ? null : r1(b1.acc - b0.acc); }   /* 課後班不在班際比較 ➜ 沒有 delta */
     if (boardsOn) {
       out.top = {}; out.cut = {}; out.rk = {};
-      ['acc', 's', 'count', 'prog'].forEach(function (k) {
+      ['acc', 's', 'count', 'prog', 'sec'].forEach(function (k) {
         var g = rank(ps, k), cc = rank(ps.filter(function (p) { return p.cls === c.cls; }), k);
         out.top[k] = { cls: top(cc), grade: top(g) };
         /* 第 10 名的分數（給「再多 N 就進前 10」）；人數不到 10 個 ＝ 有做就進得去 */
@@ -274,11 +298,12 @@ var SC = (function () {
         out.rk[k] = { cls: a && a.rk <= TOP ? a.rk : null, grade: b && b.rk <= TOP ? b.rk : null };   /* 只有前 10 名才給名次 */
       });
       out.keep = ps.filter(function (p) { return p.keep && p.cls === c.cls; }).map(function (p) { return p.id; });
+      if (!AFTER[c.cls]) { var ca = clsAwards(cl); out.caw = ca.best[c.cls] || null; out.cls1 = {}; CB.forEach(function (b) { out.cls1[b[0]] = (ca.rk[b[0]][0] || {}).cls || null; }); }
     }
     return out;
   }
   return { CLASSES: CLASSES, AFTER: AFTER, cname: cname, SEAT: SEAT, COLS: COLS, CI: CI, CAP: CAP, TOP: TOP, GMIN: GMIN, MT: MT, checkId: checkId, cat: cat, counts: counts, need: need, day: day, weekStart: weekStart,
-    s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, questions: questions, gtop: gtop, view: view,
+    s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, clsAwards: clsAwards, secOf: secOf, questions: questions, gtop: gtop, view: view,
     tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE };
 })();
 if (typeof module !== 'undefined') module.exports = SC;

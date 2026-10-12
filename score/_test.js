@@ -21,8 +21,26 @@ ok(SC.classes([{ id: '40001', cls: '400', acc: 90, s: 80, count: 1, prog: null }
 { const v = SC.view([{ id: '40001', cls: '400', g: 4, set: 'g4u1_1-1b', m: 'q', acc: 80, s: 70, n: 5, ok: 4, fast: 0, raw: 3000, t: NOW, u: 'x', qs: [] }], { id: '40001', set: 'g4u1_1-1b', u: 'y' }, NOW, true);
   ok(v && !v.err && v.delta === null, '課後班學生看自己的成績不會壞（沒有 delta）'); }
 eq(SC.checkId('30430').seat, 30, '座號 30 可以'); eq(SC.checkId('30431').err, 'seat', '座號 31 擋下來（01～30，使用者 2026-10-09）');
+/* 2026-10-12 D 第 4 件：練習時間、天天練、班際平均每一個人、每一班都有最強的一項 */
+{ const q = (ok, sec) => [ok, 0, sec, 0, 1, 0];
+  const R = [{ id: '30401', cls: '304', g: 3, set: 'g3u1_a', m: 'q', acc: 40, s: 30, n: 5, ok: 2, fast: 0, t: NOW - 864e5, u: 'a', qs: [q(1, 8), q(1, 8), q(0, 8), q(0, 8), q(0, 8)] },
+    { id: '30401', cls: '304', g: 3, set: 'g3u1_a', m: 'q', acc: 80, s: 70, n: 5, ok: 4, fast: 0, t: NOW, u: 'b', qs: [q(1, 6), q(1, 6), q(1, 6), q(1, 6), q(0, 6)] },
+    { id: '30701', cls: '307', g: 3, set: 'g3u1_a', m: 'q', acc: 100, s: 90, n: 5, ok: 5, fast: 3, t: NOW, u: 'c', qs: [q(1, 1), q(1, 1), q(1, 1), q(1, 2), q(1, 2)] },
+    { id: '30702', cls: '307', g: 3, set: 'g3gm_g6', m: 'mem', acc: null, s: null, n: 0, ok: 0, fast: 0, sec: 90, t: NOW, u: 'd', qs: [] }];
+  const P = SC.students(R), a = P.filter(p => p.id === '30401')[0], b = P.filter(p => p.id === '30701')[0], m = P.filter(p => p.id === '30702')[0];
+  eq([a.count, a.sec, a.days, a.prog], [2, 70, 2, 40], '小華：對 2 題也算 ＋1（F4）、練習時間 70 秒、練了 2 天、進步 ＋40');
+  eq(b.count, 0, '太快亂按超過一半（5 題按了 3 題）不算練習次數');
+  eq(m.sec, 90, '記憶配對的練習時間 ＝ 整場秒數');
+  const C = SC.classes(P, 3, { '304': 25, '307': 2 }), c4 = C.filter(c => c.cls === '304')[0], c7 = C.filter(c => c.cls === '307')[0];
+  eq([c4.cntP, c7.cntP, c7.secP], [0.1, 0.5, 49], '班際平均每一個人：除以全班人數（304 班 25 人練 2 次 ＝ 0.1、307 班 2 人練 1 次 ＝ 0.5）');
+  const A = SC.clsAwards(C);
+  eq([A.best['304'].k, A.best['307'].k], ['prog', 'count'], '每一班都有自己最強的一項（304 ＝ 進步最多、307 ＝ 最努力）');
+  ok(!A.best['311'], '沒有人做的班沒有獎');
+  const v2 = SC.view(R, { id: '30401' }, NOW, true, { '304': 25 });
+  eq([v2.me.sec, v2.me.days, v2.mycls.count, v2.caw && v2.caw.k, v2.cls1.prog], [70, 2, 2, 'prog', '304'], '學生拿到：練習時間、天數、本班一起練幾次、我們班最強的一項');
+  ok(v2.top.sec && v2.rk.sec, '學生也有 ⏱ 練習時間榜'); }
 /* 2/3 門檻：5 題對 4 題才算；6 題對 4 題算 */
-ok(!SC.counts(3, 5) && SC.counts(4, 5) && SC.counts(4, 6) && !SC.counts(3, 6), '答對 2/3 以上才算 1 次（5 題要對 4 題）'); eq(SC.need(5), 4, '5 題要對 4 題');
+ok(SC.counts(2, 5, 'q', 0) && SC.counts(0, 5, 'q', 2) && !SC.counts(5, 5, 'q', 3) && !SC.counts(0, 0, 'q', 0), '練習次數做完就算（F4）；太快亂按超過一半不算'); eq(SC.need(5), 4, '5 題要對 4 題');
 /* 總分百分制：答對 60 ＋ 速度 40（Q1-A） */
 eq(SC.s100([[1, 0, 1, 0, 1], [1, 0, 1, 0, 1], [1, 0, 1, 0, 1], [1, 0, 1, 0, 1], [1, 0, 1, 0, 1]]), 100, '全對又最快 ＝ 100');
 eq(SC.s100([[1, 0, 10, 0, 1 / 3], [1, 0, 10, 0, 1 / 3], [1, 0, 10, 0, 1 / 3], [1, 0, 10, 0, 1 / 3], [1, 0, 10, 0, 1 / 3]]), 73.3, '全對但每題剩 1/3 時間 ＝ 60＋13.3');
@@ -67,7 +85,7 @@ v = G.get({ a: 'view', id: '30405', set: 'g3u1_1-1b' });
 ok(v.boards && v.top.acc.cls.length >= 10 && v.top.acc.cls.every(x => x.rk <= 10), '學生只看得到前 10 名');
 ok(v.top.acc.grade.every(x => x.id[0] === '3'), '全年級榜只有三年級');
 ok(v.rk.acc.cls === null || v.rk.acc.cls <= 10, '自己不在前 10 名 ➜ 沒有名次數字');
-eq(Object.keys(v).sort(), ['boards', 'classes', 'cls', 'cut', 'g', 'id', 'keep', 'me', 'rk', 'set', 'top', 'week'], '學生看得到的只有這些（沒有別人的名次）');
+eq(Object.keys(v).sort(), ['boards', 'caw', 'classes', 'cls', 'cls1', 'cut', 'g', 'id', 'keep', 'me', 'mycls', 'rk', 'set', 'top', 'week'], '學生看得到的只有這些（沒有別人的名次）');
 ok(v.set.others.length <= 10 && v.set.others.every(x => typeof x === 'number'), '作答中名次只拿到別人前 10 個分數（沒有 5 碼）');
 eq(v.classes.map(c => c.cls), ['304', '307', '311'], '班級長條 ＝ 同年級三班');
 eq(G.post({ a: 'teacher', pw: 'wrong' }).err, 'pw', '老師密碼錯 ➜ 拒絕');
@@ -89,7 +107,7 @@ const noPw = make({}); eq(noPw.post({ a: 'teacher', pw: '' }).err, 'pw', '沒設
 
 /* ══ 2026-10-08 對話 D：遊戲、Review 1 也記成績 ══ */
 eq(SC.COLS[SC.COLS.length - 1], '作廢', '「作廢」還是最後一欄（老師在試算表打 TRUE）');
-ok(!SC.counts(5, 5, 'g') && SC.counts(4, 6, 'g') && !SC.counts(3, 6, 'g') && SC.counts(7, 10, 'g'), '遊戲算 1 次：第一次作答 ≧ 6 題、正確率 ≧ 2/3');
+ok(!SC.counts(5, 5, 'g', 0) && SC.counts(4, 6, 'g', 0) && SC.counts(1, 6, 'g', 3) && !SC.counts(6, 6, 'g', 4), '遊戲練習次數 ＋1：第一次作答 ≧ 6 題、太快亂按不超過一半');
 ok(SC.counts(0, 0, 'mem'), '🃏 記憶配對：玩完整場就算 1 次');
 eq(['g3u1_1-1b', 'g4gm_g1', 'g3r1_i1_1', 'g4r1_rv2', 'g3x_1'].map(k => SC.cat(k).t), ['📝 複習題', '🎮 遊戲', '📘 Review 1', '📘 Review 1', ''], '題組代號 ➜ 類別');
 const GQ = (n, okN, extra) => Array.from({ length: n }, (_, i) => [i < okN ? 1 : 0, i < okN ? 0 : 2, 3, 0, i < okN ? .8 : 0, i]);

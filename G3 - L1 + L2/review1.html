@@ -981,6 +981,139 @@ body.hastabs #stage{padding-top:calc(var(--safeT) + var(--tabH,48px) + clamp(26p
 @media (max-height:860px){.scn{min-height:0;gap:clamp(6px,1.1vh,10px)}
  .scpod .p1 .st{height:clamp(60px,9vh,80px)}.scpod .p2 .st{height:clamp(44px,6.6vh,60px)}.scpod .p3 .st{height:clamp(32px,4.8vh,44px)}
  .sctabs button,.scscope button{min-height:44px;padding:5px 14px}}
+/* score/_honor.css — 榮譽動畫（2026-10-12 D 第 4 件）：學生平板做完的榮譽動畫、老師投影的榮譽榜共用。12 種風格 .hs1～.hs12 */
+.hon{position:relative;width:100%;height:var(--hh,clamp(420px,66vh,800px));border-radius:22px;overflow:hidden;background:#000;color:#fff;text-align:center;isolation:isolate;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;justify-content:safe center;gap:clamp(6px,1.4vh,16px);padding:2vh 2vw;box-sizing:border-box}
+.hon *{box-sizing:border-box}
+.hon .hbg,.hon .hfx{position:absolute;inset:0;pointer-events:none}
+.hon .hbg{z-index:-2}.hon .hfx{z-index:-1;overflow:hidden}
+.hon .hhero{font-size:clamp(70px,13vh,150px);line-height:1;position:relative;filter:drop-shadow(0 0 24px rgba(255,214,74,.55))}
+.hon .hkick{font-size:clamp(20px,3.2vh,34px);font-weight:700;color:#FFE9A8;letter-spacing:.06em;animation:hfade .7s backwards}
+.hon .htit{font-size:clamp(30px,5.6vh,60px);font-weight:700;line-height:1.2;text-shadow:0 3px 14px #000;animation:hzoom .8s .2s backwards}
+.hon .hsub{font-size:clamp(20px,3.2vh,34px);font-weight:700;color:#E8F0F8;text-shadow:0 2px 10px #000;animation:hfade .8s .5s backwards}
+.hon .hcards{display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));gap:clamp(8px,1.6vh,18px);width:100%;max-width:calc(var(--n,3)*440px)}
+.hon .hcards.many{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.hon .hcard{background:rgba(10,12,16,.78);border:3px solid rgba(255,214,74,.85);border-radius:22px;padding:clamp(8px,1.4vh,16px) clamp(12px,1.6vw,24px);
+  min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 0 26px rgba(255,214,74,.35);animation-fill-mode:backwards}
+.hon .hcard .hi{font-size:clamp(46px,8vh,90px);line-height:1.05;display:flex;align-items:center;justify-content:center;height:1.1em}
+.hon .hcard .hi svg{height:1.15em;width:auto}
+.hon .nw{white-space:nowrap}
+.hon .hcard .hn{font-size:clamp(26px,4.4vh,46px);font-weight:700;color:#FFE07A}
+.hon .hcard .hl{font-size:clamp(20px,3.2vh,32px);font-weight:700;line-height:1.3}
+.hon .hcard .hw{font-size:clamp(24px,4vh,42px);font-weight:700;color:#fff}
+.hon .hcard.me{border-color:#5BE39A;box-shadow:0 0 30px rgba(91,227,154,.6)}
+.hon .hrow{display:flex;flex-direction:column;gap:clamp(4px,.9vh,10px);width:min(1100px,100%)}
+.hon .hr{display:grid;grid-template-columns:3.2em 1fr auto;gap:12px;align-items:center;background:rgba(10,12,16,.8);border:2px solid rgba(255,214,74,.6);border-radius:16px;
+  padding:4px 16px;font-size:clamp(22px,3.6vh,40px);font-weight:700;text-align:left;animation:hslide .6s backwards}
+.hon .hr b{color:#FFE07A;text-align:center}.hon .hr em{font-style:normal;color:#CFE3F5}
+.hon .hpod{display:flex;align-items:flex-end;justify-content:center;gap:clamp(8px,1.4vw,22px);width:100%}
+.hon .hpod>div{display:flex;flex-direction:column;align-items:center;gap:6px;width:min(30%,360px)}
+.hon .hpod .blk{width:100%;border-radius:16px 16px 0 0;display:flex;align-items:flex-start;justify-content:center;font-size:clamp(40px,8vh,90px);font-weight:700;padding-top:6px;
+  animation:hrise 1s cubic-bezier(.2,1.4,.5,1) backwards;color:#2A1A00}
+.hon .hpod .p1 .blk{height:clamp(110px,22vh,260px);background:linear-gradient(#FFE07A,#E8A900)}
+.hon .hpod .p2 .blk{height:clamp(80px,15vh,180px);background:linear-gradient(#F2F2F2,#A9B4BE)}
+.hon .hpod .p3 .blk{height:clamp(60px,11vh,130px);background:linear-gradient(#F0B080,#B4642C)}
+.hon .hpod .nm{font-size:clamp(24px,4.2vh,46px);font-weight:700;line-height:1.15;animation:hzoom .7s backwards}
+.hon .hpod .vv{font-size:clamp(20px,3.2vh,34px);color:#FFE9A8;font-weight:700;animation:hzoom .7s backwards}
+.hon .hpod .md{font-size:clamp(46px,9vh,110px);line-height:1;animation:hdrop .9s cubic-bezier(.3,1.6,.5,1) backwards}
+.hon .hpod .hide{visibility:hidden}
+@keyframes hfade{from{opacity:0;transform:translateY(16px)}}
+@keyframes hzoom{from{opacity:0;transform:scale(.4)}}
+@keyframes hslide{from{opacity:0;transform:translateX(-60px)}}
+@keyframes hrise{from{transform:scaleY(0);transform-origin:bottom}}
+@keyframes hdrop{0%{opacity:0;transform:translateY(-60vh) scale(.5)}100%{opacity:1}}
+@keyframes hspin{to{transform:rotate(360deg)}}
+@keyframes htw{50%{opacity:.15;transform:scale(.4)}}
+@keyframes hfall{from{transform:translateY(-12vh) rotate(0)}to{transform:translateY(110vh) rotate(var(--r,540deg))}}
+@keyframes hpulse{50%{transform:scale(1.12)}}
+/* 1 🏆 金色獎盃從天而降＋光芒 */
+.hs1 .hbg{background:radial-gradient(circle at 50% 30%,#4A3400,#120C00 55%,#000 80%)}
+.hs1 .hbg::after{content:"";position:absolute;left:50%;top:28%;width:180vmax;height:180vmax;margin:-90vmax 0 0 -90vmax;background:repeating-conic-gradient(rgba(255,214,74,.16) 0 8deg,transparent 8deg 22deg);animation:hspin 14s linear infinite}
+.hs1 .hhero{animation:hdrop 1.1s cubic-bezier(.3,1.6,.5,1) backwards}
+.hs1 .hcard{animation:hdrop .9s cubic-bezier(.3,1.5,.5,1) backwards}
+/* 2 👑 皇冠加冕＋星光 */
+.hs2 .hbg{background:radial-gradient(circle at 50% 35%,#3A0F5C,#12031F 60%,#000)}
+.hs2 .hhero{animation:hcrown 1.3s ease-out backwards}
+@keyframes hcrown{0%{opacity:0;transform:translateY(-40vh) rotate(-20deg)}70%{transform:translateY(8px) rotate(6deg)}}
+.hs2 .hcard{border-color:#D9A8FF;box-shadow:0 0 28px rgba(200,140,255,.55);animation:hzoom .8s backwards}
+.hs2 .hcard .hn{color:#F0D4FF}
+/* 3 🥇 奧運頒獎台升起 */
+.hs3 .hbg{background:linear-gradient(#00264D,#000 75%)}
+.hs3 .hbg::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22%;background:linear-gradient(transparent,rgba(255,214,74,.18))}
+.hs3 .hhero{animation:hrise 1s ease-out backwards}
+.hs3 .hcard{animation:hrise .9s cubic-bezier(.2,1.3,.5,1) backwards;border-radius:22px 22px 6px 6px}
+/* 4 🎆 煙火大會 */
+.hs4 .hbg{background:linear-gradient(#020414,#0A0F2E 70%,#140A20)}
+.hs4 .hcard{background:rgba(5,8,25,.8);border-color:#7FD4FF;box-shadow:0 0 30px rgba(127,212,255,.5);animation:hfade 1s backwards}
+.hs4 .hcard .hn{color:#9FE6FF}
+.hfx .fw{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);animation:hburst 1.6s ease-out infinite;opacity:0}
+@keyframes hburst{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.3)}}
+/* 5 🌟 紅毯＋聚光燈＋閃光燈 */
+.hs5 .hbg{background:linear-gradient(#14000A,#000 55%,#5A0012 56%,#8A0A20)}
+.hs5 .hbg::before,.hs5 .hbg::after{content:"";position:absolute;top:-10%;width:40%;height:120%;background:linear-gradient(rgba(255,250,220,.32),transparent 80%);clip-path:polygon(45% 0,55% 0,100% 100%,0 100%);animation:hsweep 3.2s ease-in-out infinite alternate}
+.hs5 .hbg::before{left:5%}.hs5 .hbg::after{right:5%;animation-delay:-1.6s}
+@keyframes hsweep{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
+.hfx .fl{position:absolute;width:30px;height:30px;border-radius:50%;background:#fff;box-shadow:0 0 40px 20px #fff;opacity:0;animation:hflash 2.2s infinite}
+@keyframes hflash{0%,8%,100%{opacity:0}4%{opacity:.95}}
+.hs5 .hcard{animation:hside .8s backwards}.hs5 .hcard:nth-child(even){animation-name:hside2}
+@keyframes hside{from{opacity:0;transform:translateX(-50vw)}}@keyframes hside2{from{opacity:0;transform:translateX(50vw)}}
+/* 6 🏅 金牌鑄造（熔金倒進模子） */
+.hs6 .hbg{background:radial-gradient(circle at 50% 100%,#5A2400,#120600 60%,#000)}
+.hs6 .hhero{animation:hmelt 1.6s ease-out backwards}
+@keyframes hmelt{0%{filter:brightness(3) saturate(0) blur(6px);transform:scale(1.4)}60%{filter:brightness(2) blur(1px)}}
+.hs6 .hcard{position:relative;overflow:hidden;animation:hzoom .8s backwards}
+.hs6 .hcard::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,240,180,.55),transparent);animation:hshine 2.4s 1s infinite}
+@keyframes hshine{to{left:130%}}
+/* 7 📜 皇家獎狀（展開卷軸＋蓋大印） */
+.hs7 .hbg{background:radial-gradient(circle,#3A2A12,#120C04 70%)}
+.hs7 .hcard{background:linear-gradient(#FFF6DE,#F1DDB0);color:#3A2400;border-color:#8A5A1A;animation:hunroll 1s backwards;position:relative}
+.hs7 .hcard .hn{color:#8A1A1A}.hs7 .hcard .hw{color:#3A2400}
+.hs7 .hcard::after{content:"印";position:absolute;right:8px;top:8px;width:1.8em;height:1.8em;border:3px solid #C0261F;border-radius:8px;color:#C0261F;font-weight:700;
+  display:flex;align-items:center;justify-content:center;font-size:clamp(16px,2.4vh,24px);transform:rotate(-12deg);animation:hstamp .5s 1.4s backwards}
+@keyframes hunroll{from{transform:scaleY(.04);opacity:.3}}
+@keyframes hstamp{from{opacity:0;transform:rotate(-12deg) scale(3)}}
+/* 8 🚀 火箭升空（名字寫在星空） */
+.hs8 .hbg{background:linear-gradient(#000,#0A1240 80%,#1A2A70)}
+.hs8 .hhero{animation:hrocket 1.4s ease-out backwards}
+@keyframes hrocket{0%{transform:translateY(60vh) scale(.6)}80%{transform:translateY(-6px)}}
+.hs8 .hcard{border-color:#9FB8FF;box-shadow:0 0 26px rgba(159,184,255,.6);animation:hzoom 1s backwards}
+.hfx .sr{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;animation:htw 1.8s infinite}
+/* 9 💎 寶箱打開（寶石噴出來） */
+.hs9 .hbg{background:radial-gradient(circle at 50% 70%,#003A3A,#001414 60%,#000)}
+.hs9 .hhero{animation:hpop 1s cubic-bezier(.3,1.8,.5,1) backwards}
+@keyframes hpop{from{transform:scale(0) rotate(-30deg)}}
+.hs9 .hcard{border-color:#5BE3D8;box-shadow:0 0 28px rgba(91,227,216,.55);animation:hpop .8s backwards}
+.hs9 .hcard .hn{color:#A8FFF6}
+.hfx .gm{position:absolute;left:50%;bottom:30%;font-size:clamp(26px,4vh,44px);animation:hgem 2.2s ease-out infinite;opacity:0}
+@keyframes hgem{0%{opacity:1;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(260deg)}}
+/* 10 🌠 流星雨 */
+.hs10 .hbg{background:linear-gradient(#000014,#0B0B33)}
+.hfx .mt{position:absolute;width:3px;height:120px;background:linear-gradient(#fff,transparent);transform:rotate(35deg);animation:hmeteor 1.6s linear infinite;opacity:0}
+@keyframes hmeteor{0%{opacity:1;transform:translate(0,0) rotate(35deg)}100%{opacity:0;transform:translate(-50vw,70vh) rotate(35deg)}}
+.hs10 .hcard{animation:hstar 1s backwards;border-color:#FFF2A8}
+@keyframes hstar{from{opacity:0;transform:translate(30vw,-40vh) scale(.3)}}
+/* 11 🐉 神龍守護（金龍繞著獎盃） */
+.hs11 .hbg{background:radial-gradient(circle at 50% 40%,#3A0A00,#140200 60%,#000)}
+.hs11 .hhero::after{content:"🐉";position:absolute;left:50%;top:50%;font-size:.55em;margin:-.6em 0 0 -.5em;animation:horbit 3s linear infinite}
+@keyframes horbit{from{transform:rotate(0) translateX(1.5em) rotate(0)}to{transform:rotate(360deg) translateX(1.5em) rotate(-360deg)}}
+.hs11 .hcard{border-color:#FF9A3C;box-shadow:0 0 30px rgba(255,120,40,.55);animation:hzoom .9s backwards}
+.hs11 .hcard .hn{color:#FFC27A}
+.hfx .em{position:absolute;bottom:-10px;width:6px;height:6px;border-radius:50%;background:#FF9A3C;box-shadow:0 0 8px #FF6A00;animation:hember 3s linear infinite}
+@keyframes hember{to{transform:translateY(-110vh);opacity:0}}
+/* 12 🏛 名人堂（名字刻上大理石牆） */
+.hs12 .hbg{background:repeating-linear-gradient(115deg,#2A2D33 0 40px,#33373E 40px 44px,#26292E 44px 90px),linear-gradient(#3A3E46,#1A1C20)}
+.hs12 .hcard{background:linear-gradient(#E9E6E0,#BDB8AE);color:#2A2620;border-color:#8C7A50;animation:hcarve 1.2s backwards}
+.hs12 .hcard .hn{color:#6A4A00}.hs12 .hcard .hw{color:#1A1610}
+@keyframes hcarve{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+/* 直的螢幕（iPad 直放）：一張獎一列，圖示在左邊 */
+@media (max-aspect-ratio:1/1){.hon .hcards,.hon .hcards.many{grid-template-columns:1fr;max-width:640px}
+ .hon .hcard{display:grid;grid-template-columns:auto 1fr;column-gap:16px;text-align:left;align-items:center;justify-items:start}
+ .hon .hcard .hi{grid-row:1/span 3}}
+/* 彩帶（1、3、4、9 用） */
+.hfx .cf{position:absolute;top:0;width:12px;height:20px;background:var(--c);animation:hfall var(--d,3s) linear infinite}
+/* 跳過、聲音、控制列 */
+.hctl{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+@media (prefers-reduced-motion:reduce){.hon *,.hon .hbg::after,.hon .hbg::before{animation-duration:.01s!important;animation-iteration-count:1!important}}
 
 </style>
 </head>
@@ -2950,6 +3083,66 @@ draw(0);
 })();
 
 
+/* score/_honor_rt.js — 榮譽動畫的執行程式（2026-10-12 D 第 4 件）。學生平板（score/_client.js）、老師看板（score/_teacher.js）共用。只寫 ES5。
+   研究（score/2026-10-12_D_需求與問題.md 第三節）：事先不知道的驚喜不傷動機（Deci 1999）➜ 12 種風格輪流、跟上一次一定不一樣、12 種輪完才重複；
+   稱讚努力和方法、不稱讚聰明（Mueller & Dweck 1998、Henderlong & Lepper 2002）➜ 每一句都寫「你做了什麼」。 */
+var HON=(function(){
+  /* 努力獎：獎牌上面有星星（使用者 2026-10-12 第 1 題 C；自己畫的，每一台都一樣） */
+  var EFF='<svg class="heff" viewBox="0 0 120 150" aria-label="努力獎"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="#FFC928"/><circle cx="60" cy="95" r="40" fill="#FFF1A8" opacity=".35"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path d="M60 68l8.2 16.6 18.3 2.7-13.2 12.9 3.1 18.2L60 109.8l-16.4 8.6 3.1-18.2-13.2-12.9 18.3-2.7z" fill="#FFFDF0" stroke="#FFB300" stroke-width="2.5" stroke-linejoin="round"/></svg>';
+  /* 進步：綠色粗箭頭（跟老師看板同一個） */
+  var UP='<svg class="hup" viewBox="0 0 40 48" aria-label="進步"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg>';
+  var ST=[{nm:'金色獎盃從天而降',h:'🏆',fx:'cf'},{nm:'皇冠加冕',h:'👑',fx:'tw'},{nm:'頒獎台升起',h:'🥇',fx:'cf'},{nm:'煙火大會',h:'🎆',fx:'fw'},
+    {nm:'紅毯＋聚光燈',h:'🌟',fx:'fl'},{nm:'金牌鑄造',h:'🏅',fx:'em'},{nm:'皇家獎狀',h:'📜',fx:'tw'},{nm:'火箭升空',h:'🚀',fx:'sr'},
+    {nm:'寶箱打開',h:'💎',fx:'gm'},{nm:'流星雨',h:'🌠',fx:'mt'},{nm:'神龍守護',h:'🏆',fx:'em'},{nm:'名人堂',h:'🏛️',fx:'tw'}];
+  function lsg(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
+  function lss(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+  /* 下一種風格：12 種洗牌，一種一種用；輪完再洗，新的第一種不會跟上一次一樣 */
+  function pick(key){key='hon_'+(key||'s');var o=lsg(key)||{q:[],last:-1};
+    if(!o.q||!o.q.length){var a=[],i;for(i=0;i<ST.length;i++)a.push(i);
+      for(i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}
+      if(a[0]===o.last){a.push(a.shift())}o.q=a}
+    var n=o.q.shift();o.last=n;lss(key,o);return n}
+  function rnd(a,b){return a+Math.random()*(b-a)}
+  var COL=['#FFD54A','#FF6B6B','#5BE39A','#7FD4FF','#D9A8FF','#FF9A3C','#FFFFFF'];
+  /* 粒子：彩帶、星星、煙火、閃光燈、寶石、流星、火花 */
+  function fx(el,k){var h='',i,n;
+    if(k==='cf'){for(i=0;i<36;i++)h+='<i class="cf" style="left:'+rnd(0,100).toFixed(1)+'%;--c:'+COL[i%COL.length]+';--d:'+rnd(2.4,4.6).toFixed(2)+'s;--r:'+Math.round(rnd(200,720))+'deg;animation-delay:-'+rnd(0,4).toFixed(2)+'s"></i>'}
+    else if(k==='tw'||k==='sr'){for(i=0;i<60;i++)h+='<i class="sr" style="left:'+rnd(0,100).toFixed(1)+'%;top:'+rnd(0,100).toFixed(1)+'%;animation-delay:-'+rnd(0,2).toFixed(2)+'s;'+(k==='tw'?'background:#FFE9A8;width:5px;height:5px':'')+'"></i>'}
+    else if(k==='fw'){for(n=0;n<5;n++){var cx=rnd(10,90),cy=rnd(8,55),c=COL[n%COL.length],dl=rnd(0,1.6);
+      for(i=0;i<16;i++){var a=i/16*Math.PI*2,r=rnd(70,140);h+='<i class="fw" style="left:'+cx.toFixed(1)+'%;top:'+cy.toFixed(1)+'%;--c:'+c+';--dx:'+Math.round(Math.cos(a)*r)+'px;--dy:'+Math.round(Math.sin(a)*r)+'px;animation-delay:'+dl.toFixed(2)+'s"></i>'}}}
+    else if(k==='fl'){for(i=0;i<8;i++)h+='<i class="fl" style="left:'+rnd(5,95).toFixed(1)+'%;top:'+rnd(55,90).toFixed(1)+'%;animation-delay:'+rnd(0,2.2).toFixed(2)+'s"></i>'}
+    else if(k==='gm'){var G=['💎','💠','🔷','💚','❤️','💛'];for(i=0;i<22;i++){var a2=rnd(-Math.PI*.95,-Math.PI*.05),r2=rnd(160,420);h+='<i class="gm" style="--dx:'+Math.round(Math.cos(a2)*r2)+'px;--dy:'+Math.round(Math.sin(a2)*r2)+'px;animation-delay:'+rnd(0,2.2).toFixed(2)+'s">'+G[i%G.length]+'</i>'}}
+    else if(k==='mt'){for(i=0;i<14;i++)h+='<i class="mt" style="left:'+rnd(30,110).toFixed(1)+'%;top:'+rnd(-10,40).toFixed(1)+'%;animation-delay:'+rnd(0,1.6).toFixed(2)+'s"></i>'}
+    else if(k==='em'){for(i=0;i<30;i++)h+='<i class="em" style="left:'+rnd(0,100).toFixed(1)+'%;animation-delay:-'+rnd(0,3).toFixed(2)+'s;animation-duration:'+rnd(2.4,4).toFixed(2)+'s"></i>'}
+    el.innerHTML=h}
+  /* 畫一幕：o ＝ {kick, tit, sub, hero(要不要大圖示), cards:[{ic,nm,l,w,me}], rows:[{rk,w,v}], pod:[第1,第2,第3]}，st ＝ 第幾種風格 */
+  function scene(el,st,o){var S=ST[st]||ST[0],h='<div class="hbg"></div><div class="hfx"></div>';
+    if(o.hero!==false)h+='<div class="hhero">'+(o.heroIc||S.h)+'</div>';
+    if(o.kick)h+='<div class="hkick">'+o.kick+'</div>';
+    if(o.tit)h+='<div class="htit">'+o.tit+'</div>';
+    if(o.cards&&o.cards.length)h+='<div class="hcards'+(o.cards.length>3?' many':'')+'" style="--n:'+o.cards.length+'">'+o.cards.map(function(c,i){return '<div class="hcard'+(c.me?' me':'')+'" style="animation-delay:'+(.5+i*(o.gap||.55)).toFixed(2)+'s">'+
+      (c.ic?'<div class="hi">'+c.ic+'</div>':'')+(c.nm?'<div class="hn">'+c.nm+'</div>':'')+(c.w?'<div class="hw">'+c.w+'</div>':'')+(c.l?'<div class="hl">'+c.l+'</div>':'')+'</div>'}).join('')+'</div>';
+    if(o.rows&&o.rows.length)h+='<div class="hrow">'+o.rows.map(function(r,i){return '<div class="hr" style="animation-delay:'+(.3+i*(o.gap||.9)).toFixed(2)+'s"><b>'+r.rk+'</b><span>'+r.w+'</span><em>'+r.v+'</em></div>'}).join('')+'</div>';
+    if(o.pod){var P=o.pod,ord=[1,0,2];h+='<div class="hpod">'+ord.map(function(n){var x=P[n];if(!x)return '<div></div>';var d=x.d||0;
+      return '<div class="p'+(n+1)+'"><div class="md" style="animation-delay:'+(d+.6)+'s">'+['🥇','🥈','🥉'][n]+'</div><div class="nm" style="animation-delay:'+(d+.8)+'s">'+x.w+'</div><div class="vv" style="animation-delay:'+(d+1)+'s">'+x.v+'</div>'+
+        '<div class="blk" style="animation-delay:'+d+'s">'+(n+1)+'</div></div>'}).join('')+'</div>'}
+    if(o.sub)h+='<div class="hsub">'+o.sub+'</div>';
+    el.className='hon hs'+(st+1)+(o.cls?' '+o.cls:'');el.innerHTML=h;fx(el.querySelector('.hfx'),S.fx)}
+  /* 聲音（只有老師投影用；網頁自己做出來的聲音，不用音檔）：號角、鼓聲、掌聲 */
+  var AC=null;function ac(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume()}catch(e){AC=null}return AC}
+  function tone(f,t0,d,type,vol){var c=ac();if(!c)return;var o=c.createOscillator(),g=c.createGain();o.type=type||'triangle';o.frequency.value=f;
+    g.gain.setValueAtTime(0,c.currentTime+t0);g.gain.linearRampToValueAtTime(vol||.18,c.currentTime+t0+.03);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t0+d);
+    o.connect(g);g.connect(c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+d+.05)}
+  function noise(t0,d,vol,fq){var c=ac();if(!c)return;var n=Math.floor(c.sampleRate*d),b=c.createBuffer(1,n,c.sampleRate),x=b.getChannelData(0);for(var i=0;i<n;i++)x[i]=Math.random()*2-1;
+    var s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='bandpass';f.frequency.value=fq||1200;f.Q.value=.8;
+    g.gain.setValueAtTime(vol||.2,c.currentTime+t0);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t0+d);s.connect(f);f.connect(g);g.connect(c.destination);s.start(c.currentTime+t0)}
+  var snd={
+    horn:function(){[[523,0,.25],[659,.22,.25],[784,.44,.25],[1047,.66,.9]].forEach(function(n){tone(n[0],n[1],n[2],'sawtooth',.07);tone(n[0],n[1],n[2],'triangle',.16)})},
+    drum:function(d){d=d||1.4;for(var t=0;t<d;t+=.06)noise(t,.05,.12+.2*t/d,180);noise(d,.7,.35,4000)},
+    clap:function(d){d=d||2.2;for(var i=0;i<70;i++)noise(Math.random()*d,.05,rnd(.05,.16),rnd(900,2400))},
+    ding:function(){tone(1319,0,.5,'sine',.12);tone(1760,.08,.6,'sine',.08)}};
+  return {EFF:EFF,UP:UP,ST:ST,pick:pick,scene:scene,fx:fx,snd:snd,ac:ac};
+})();
 
 /* ══════════ 成績紀錄（2026-10-07 對話 C；2026-10-08 對話 D：遊戲、Review 1 也記）══════════
    SCG ＝ 這一頁是幾年級（0 ＝ 三、四年級共用的 Review 1 遊戲：年級看登入的 5 碼）
@@ -3077,7 +3270,7 @@ function scMeHTML(){
   if(!SCON)return '';
   if(SCGUEST)return '<div class="scme">👀 練習模式（不記成績）<button id="scSwap">🔢 登入</button></div>';
   if(!SCID)return '<div class="scme">🔢 還沒登入<button id="scSwap">🔢 登入</button></div>';
-  return '<div class="scme">🪑 '+SCID+'<button id="scSwap">換人</button></div>';
+  return '<div class="scme">'+SCID+'<button id="scSwap">換人</button></div>';
 }
 /* ── 作答中：本班這一組的名次（只有前 10 名給名次；不在前 10 ＝ 再幾分進前 10） ── */
 function scStart(gt){
@@ -3101,11 +3294,12 @@ function scDone(pick,ok,ratio){
   var fast=pick>=0?(SCREF?(now-SCREF<1000?1:0):1):0;
   SCQ.push([ok?1:0,pick,Math.round(sec*10)/10,fast,ok?Math.round(Math.max(0,Math.min(1,ratio))*1000)/1000:0,SCQI]);
 }
-/* ── 作答結束 ──
-   題目（m:'q'）六幕：① 正確率 ② 跟上一次比 ③ 算不算 1 次 ④ 我幫全班 ⑤ 排行榜 ⑥ 答錯整理
-   遊戲（m:'g'）精簡版三幕：① 正確率（第一次作答）＋✨ 訂正成功 ② 跟上一次比＋算不算 1 次 ③ 這個遊戲本班前 10 名
-   🃏 記憶配對（m:'mem'）一幕：配完幾對、用幾秒、翻錯幾次＋算 1 次（不算正確率、不算總分） */
-var SCLIST={q:['acc','prev','count','class','board','end'],g:['acc','gprog','gtop'],mem:['mem']};
+/* ── 作答結束（2026-10-12 D 第 4 件，使用者第 3 題 A）──
+   題目（m:'q'）：① 正確率 ➜ 🏆 榮譽動畫（約 10 秒：自己的獎 ➜ 本班榮譽榜 ➜ 班際）➜ ③ 答錯整理
+     （原本的 ② 跟上一次比 ＝ 進步獎、③ 算 1 次 ＝ 努力獎「練習次數 ＋1」、④ 我幫全班 ＝ 班際、⑤ 排行榜 ＝ 本班榮譽榜，都搬進榮譽動畫，不重複）
+   遊戲（m:'g'）：① 正確率（第一次作答）＋✨ 訂正成功 ➜ 🏆 榮譽動畫 ➜ 這個遊戲本班前 10 名
+   🃏 記憶配對（m:'mem'）：配完幾對、用幾秒、翻錯幾次 ➜ 🏆 榮譽動畫（不算正確率、不算總分） */
+var SCLIST={q:['acc','honor','end'],g:['acc','honor','gtop'],mem:['mem','honor']};
 function scS100(Q){var n=Q.length,s=0;Q.forEach(function(q){if(q[0])s+=60/n+40/n*q[4]});return Math.round(s)}
 function scEnd(o){
   o=o||{};var m=o.m||'q',Q=o.qs||SCQ,key=SCH.key(),n=Q.length,ok=0,fast=0;Q.forEach(function(q){ok+=q[0];fast+=q[3]});
@@ -3116,11 +3310,11 @@ function scEnd(o){
   var hk='h_'+SCID+'_'+key,H=scGet(hk)||[],sv=SCV&&SCV.set;
   var prev=sv&&sv.tries?sv.prev:(H.length?H[H.length-1].acc:null);
   var best=sv&&sv.tries?sv.best:(H.length?Math.max.apply(null,H.map(function(x){return x.acc||0})):null);
-  var today=Math.floor((Date.now()+288e5)/864e5),cnt=m==='mem'?true:(m==='g'&&n<10?false:ok*3>=n*2);
+  var today=Math.floor((Date.now()+288e5)/864e5),cnt=m==='mem'?true:(m==='g'&&n<6?false:fast*2<=n);   /* 練習次數 ＋1：做完就算，太快亂按超過一半不算（F4，跟 _calc.js counts 一樣） */
   var todayN=sv?sv.today:H.filter(function(x){return x.d===today&&x.c}).length;
   H.push({t:R.t,acc:acc,c:cnt,d:today});scPut(hk,H.slice(-50));
   var QQ=scGet('q')||[];QQ.push(R);scPut('q',QQ.slice(-200));SCIN=u;
-  SCEND={m:m,list:SCLIST[m].filter(function(x){return x!=='class'||!SCAFTER[String(SCID).slice(0,3)]}),   /* 課後班沒有「我幫全班」（不放進班際比較） */
+  SCEND={m:m,list:SCLIST[m].slice(),fast:fast,
     acc:acc,ok:ok,n:n,s:m==='mem'?null:scS100(Q),raw:R.raw,fix:R.fix,mp:R.mp,mw:R.mw,sec:R.sec,prev:prev,best:best,cnt:cnt,cap:cnt&&todayN>=3,
     week:(SCV&&SCV.me?SCV.me.count:null),res:null,fail:false,k:0,tab:'acc',scope:'cls'};
   /* 送出：前一次補送還在跑就等一下再試（最多 3 次），還是送不出去 ＝ 沒有網路，先存平板 */
@@ -3128,36 +3322,61 @@ function scEnd(o){
     var j=SCRES[u],left=(scGet('q')||[]).some(function(x){return x.u===u});
     if(!j&&left&&n<3){setTimeout(function(){send(n+1)},1500);return}
     if(j)SCEND.res=j;else SCEND.fail=true;
-    var nm=SCEND.list[SCEND.k];if(nm==='class'||nm==='gtop'||nm==='gprog')scScene()})};
+    var nm=SCEND.list[SCEND.k];if(nm==='gtop'||(nm==='honor'&&!SCEND.hgo))scScene()})};
   send(0);
   scScene();
   return true;
 }
 var SCAUTO=null;
 function scGo(k){SCEND.k=k;scScene()}
-function scNext(){var L=SCEND.list,k=SCEND.k+1;if(L[k]==='board'&&!(SCEND.res&&SCEND.res.boards))k++;scGo(Math.min(k,L.length-1))}
+function scNext(){var L=SCEND.list;scGo(Math.min(SCEND.k+1,L.length-1))}
 function scRing(E,t){var R=46,L=2*Math.PI*R;
   return '<div class="sct">'+t+'</div><div class="scring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="'+R+'"></circle>'+
     '<circle class="fg" id="scFg" cx="50" cy="50" r="'+R+'" stroke-dasharray="'+L+'" stroke-dashoffset="'+L+'"></circle></svg>'+
     '<b><span id="scAcc">0</span><small>'+E.ok+' ／ '+E.n+' 題</small></b></div>'}
-function scPrevHTML(E,small){
-  var up=E.prev!=null?E.acc-E.prev:null,pb=E.best!=null&&E.acc>E.best,f=small?' style="font-size:clamp(34px,6.6vh,64px)"':'';
-  var big=E.prev==null?'<div class="scbig pb scpop scburst"'+f+'>⭐ 第一次紀錄：'+E.acc+'%</div>'+(small?'':'<div class="scs">下次打敗它！</div>'):
-    E.acc===100&&E.prev===100?'<div class="scbig pb scpop scburst"'+f+'>🔥 保持 100%！</div>':
-    pb?'<div class="scbig pb scpop scburst"'+f+'>🏅 新紀錄！🚀 ＋'+up+'%</div>':
-    up>0?'<div class="scbig up scpop"'+f+'>🚀 ＋'+up+'%</div>':
-    up===0?'<div class="scbig scpop"'+f+'>👍 跟上次一樣 '+E.acc+'%</div>'+(small?'':'<div class="scs">再快一點、再多對一題，就破紀錄！</div>'):
-    '<div class="scbig scpop" style="font-size:clamp(30px,6vh,56px)">💪 上次 '+E.prev+'%，這次 '+E.acc+'%</div>'+(small?'':'<div class="scs">再挑戰一次！</div>');
-  return (E.prev!=null?'<div class="scbars">'+
-    '<div class="scbar"><span class="lb">上一次</span><span class="tr"><i data-w="'+E.prev+'"></i></span><span class="vl">'+E.prev+'%</span></div>'+
-    '<div class="scbar now"><span class="lb">這一次</span><span class="tr"><i data-w="'+E.acc+'"></i></span><span class="vl">'+E.acc+'%</span></div></div>':'')+big}
-function scCntHTML(E){
-  var res=E.res&&E.res.me?E.res.me.count:(E.week!=null?E.week+(E.cnt&&!E.cap?1:0):null),need=Math.ceil(E.n*2/3);
-  return (E.cnt?(E.cap?'<div class="scstamp">✅ 很棒！</div><div class="scs">今天這'+(E.m==='q'?'一組':'個遊戲')+'已經算滿 3 次，明天再來，次數會再加！📅</div>':
-       '<div class="scstamp">✅ 算 1 次！</div>'):
-     E.m==='g'&&E.n<6?'<div class="scstamp no">再多答 '+(6-E.n)+' 題</div><div class="scs">一場要答 6 題以上才算 1 次 💪</div>':
-       '<div class="scstamp no">再多對 '+(need-E.ok)+' 題</div><div class="scs">就算 1 次 💪（'+E.n+' 題要對 '+need+' 題）</div>')+
-   (res!=null?'<div class="sccnt">🔁 這週 <b class="pop">'+res+'</b> 次</div>':'')}
+/* ── 🏆 榮譽動畫（2026-10-12 D 第 4 件）：使用者「只要努力、只要進步、只要用心、肯花時間，都值得同等的肯定」
+   ① 自己的獎（最多 3 個；練習次數 ＋1 一定有努力獎）➜ ② 本班榮譽榜（我上了哪一個榜；沒上榜 ＝ 本班一起練了幾次）➜ ③ 班際（我們班最強的一項）
+   12 種風格輪流（HON.pick，這台平板記得上一次）；約 10 秒、可以跳過、平板不放聲音（F6-A）。字一律稱讚「你做了什麼」，不寫聰明 */
+var SCHB={acc:['🎯','精準獎'],s:['💯','高分獎'],count:['','努力獎'],prog:['','進步獎'],sec:['⏱','時間獎']};
+var SCCB={count:'這週最努力的班',prog:'這週進步最多的班',sec:'這週練習時間最多的班',acc:'這週成績最優的班'};
+var SCCB2={count:'最努力',prog:'進步最多',sec:'練習時間最多',acc:'成績最優'};
+function scIc(k){return k==='count'?HON.EFF:k==='prog'?HON.UP:(SCHB[k]||['🏆'])[0]}
+function scMin(sec){var m=Math.round(sec/60);return m<1?'不到 1 分鐘':m+' 分鐘'}
+function scAwards(E){
+  var V=E.res,me=V&&V.me,A=[],X=[];
+  if(E.m!=='mem'&&E.n>0&&E.fast*2>E.n)return [{ic:'💡',nm:'小提醒',l:'每一題看完、聽完再選，練習次數就會 ＋1'}];   /* 太快亂按超過一半：這一次不算，也不給獎（F4） */
+  if(E.cnt)A.push({ic:HON.EFF,nm:'努力獎',l:E.cap?'今天這一組練滿 3 次了！換一組，練習次數還會 ＋1':'<span class="nw">練習次數 ＋1！</span>'+(me&&me.count?'<br><span class="nw">這週第 '+me.count+' 次練習</span>':'')});
+  if(E.acc!=null&&E.prev!=null&&E.acc>E.prev&&E.fast*2<=E.n)X.push({ic:HON.UP,nm:'進步獎',l:'比上一次多 '+(E.acc-E.prev)+' 分！'});
+  if(E.acc!=null&&E.best!=null&&E.acc>E.best)X.push({ic:'🎯',nm:'成績獎',l:'破了自己的紀錄：'+E.acc+' 分！'});
+  else if(E.acc!=null&&E.acc>=90)X.push({ic:'🎯',nm:'成績獎',l:'正確率 '+E.acc+' 分！'});
+  if(E.fix>0)X.push({ic:'✨',nm:'訂正獎',l:'答錯的題目，後來改對了 '+E.fix+' 題！'});
+  if(me&&me.days>=2)X.push({ic:'📅',nm:'天天練獎',l:'這週第 '+me.days+' 天練習！'});
+  if(me&&me.sec>=300)X.push({ic:'⏱',nm:'時間獎',l:'這週已經練了 '+scMin(me.sec)+'！'});
+  if(E.m!=='mem'&&E.n>0&&!E.fast)X.push({ic:'👆',nm:'用心獎',l:'每一題都看完、聽完才選！'});
+  A=A.concat(X).slice(0,3);
+  if(!A.length)A.push({ic:'💡',nm:'小提醒',l:E.m==='g'&&E.n<6?'一場答 6 題以上，練習次數就會 ＋1':'每一題看完、聽完再選，練習次數就會 ＋1'});
+  return A}
+function scHonGo(E){
+  var el=$('#scHon');if(!el)return;E.hgo=1;if(E.hst==null)E.hst=HON.pick('s');
+  var my=String(SCID).slice(0,3);
+  /* 每一段到了才看伺服器回來了沒有（慢的網路也接得上） */
+  var part=function(i){var V=E.res;
+    if(i===0)return {kick:'🎉 '+SCID+' 的榮譽',cards:scAwards(E)};
+    if(!V)return i===1?{heroIc:'📶',tit:E.fail?'現在沒有網路':'成績還在送出',sub:'成績先存在這台平板，連上網會自動送出 ✅'}:null;
+    if(i===1){var bk=null;if(V.boards&&V.rk)['prog','count','sec','acc','s'].forEach(function(k){var r=V.rk[k]&&V.rk[k].cls;if(r&&(!bk||r<bk.rk))bk={k:k,rk:r}});
+      if(bk){var mv=V.me[bk.k],vt=bk.k==='count'?'這週練了 '+mv+' 次':bk.k==='prog'?'正確率進步 '+mv+' 分':bk.k==='sec'?'這週練了 '+scMin(mv):'這週 '+Math.round(mv)+' 分';
+        return {kick:'👤 '+scCn(my)+' 榮譽榜',heroIc:bk.rk<=3?['🥇','🥈','🥉'][bk.rk-1]:'🎖',cards:[{ic:scIc(bk.k),nm:SCHB[bk.k][1]+'　第 '+bk.rk+' 名',l:vt,me:1}]}}
+      if(V.mycls&&V.mycls.count)return {kick:'👤 '+scCn(my),heroIc:'🤝',tit:scCn(my)+' 這週一起練了 '+V.mycls.count+' 次！',sub:'你的每一次練習都算進去了 ✅'};
+      return null}
+    if(V.boards&&V.caw&&!SCAFTER[my]){var c=V.caw;
+      return {kick:'🏫 班際榮譽',heroIc:c.rk===1?'🏆':'🎖',cards:[{ic:scIc(c.k),nm:c.rk===1?SCCB[c.k]:SCCB2[c.k]+'　第 '+c.rk+' 名',w:scCn(my),me:1}]}}
+    return null};
+  var i=0,T=[4600,3000,3000];
+  (function go(){if(SCEND!==E||!$('#scHon'))return;var o=part(i);
+    if(!o){i++;if(i<3)return go();if(E.k<E.list.length-1)scNext();return}
+    HON.scene($('#scHon'),E.hst,o);
+    SCAUTO=setTimeout(function(){i++;if(i<3)go();else if(E.k<E.list.length-1)scNext()},T[i]||3000)})();
+}
 function scScene(){
   clearTimeout(SCAUTO);if(!SCEND||!scOn())return;var E=SCEND,L=E.list,k=E.k,nm=L[k],h='',last=k===L.length-1;
   var dots=L.length>1?'<div class="scdots">'+L.map(function(x,n){return '<i'+(n===k?' class="on"':'')+'></i>'}).join('')+'</div>':'';
@@ -3167,61 +3386,38 @@ function scScene(){
       '<div class="scs">⚡ 總分 '+E.s+' 分（答對 60 ＋ 速度 40）</div>'+
       (E.m==='g'?(E.fix?'<div class="scfix">✨ 訂正成功 '+E.fix+' 題</div>':'')+'<div class="scnote">🎁 驚喜卡、連對加成是運氣，不算進成績</div>':'')+nav();
     SCAUTO=setTimeout(scNext,E.m==='g'?3600:3000);
-  }else if(nm==='prev'){
-    h='<div class="sct">🚀 跟上一次比</div>'+scPrevHTML(E)+nav();
-    SCAUTO=setTimeout(scNext,3400);
-  }else if(nm==='count'){
-    h='<div class="sct">🔁 算不算 1 次？</div>'+scCntHTML(E)+nav();
-    SCAUTO=setTimeout(scNext,3000);
-  }else if(nm==='gprog'){
-    h='<div class="sct">🚀 跟上一次比</div>'+scPrevHTML(E,1)+scCntHTML(E)+nav();
-    SCAUTO=setTimeout(scNext,4200);
-  }else if(nm==='class'){
-    var V=E.res;
-    if(!V&&!E.fail)h='<div class="sct">🏫 我幫全班</div><div class="scwait"><i>⏳</i> 正在送出成績…</div>'+nav();
-    else if(!V)h='<div class="sct">📶 現在沒有網路</div><div class="scs">成績先存在這台平板，連上網會自動送出 ✅</div>'+nav();
-    else{var my=V.cls;
-      h='<div class="sct">🏫 我幫全班</div><div class="scbars">'+V.classes.map(function(c){
-        return '<div class="scbar'+(c.cls===my?' me':'')+'"><span class="lb">'+c.cls+' 班</span><span class="tr"><i data-w="'+(c.acc||0)+'"></i></span><span class="vl">'+(c.acc==null?'—':Math.round(c.acc))+'</span></div>'}).join('')+'</div>'+
-       '<div class="scs">'+(V.delta>0?'你這一次幫 '+my+' 班 ＋'+V.delta+' 分 💪':'你為 '+my+' 班又多練了一次 💪')+'</div>'+
-       '<div class="scs" style="font-size:clamp(14px,2.2vh,19px);color:#9E9E9E">各班這週的平均正確率</div>'+nav();
-      SCAUTO=setTimeout(scNext,3600)}
-  }else if(nm==='board'){
-    h=scBoardHTML()+nav();
+  }else if(nm==='honor'){
+    /* 成績還在送：最多等 3 秒，送不到就先演自己的獎（本班、班際要等伺服器） */
+    if(E.hw0==null)E.hw0=Date.now();var hw=!E.res&&!E.fail&&!E.hto&&!E.hgo;
+    if(hw)SCAUTO=setTimeout(function(){if(SCEND===E&&!E.hgo){E.hto=1;scScene()}},Math.max(0,3000-(Date.now()-E.hw0)));
+    if(hw)h='<div class="sct">🏆 榮譽榜</div><div class="scwait"><i>⏳</i> 正在送出成績…</div>'+nav();
+    else h='<div class="hon" id="scHon"></div>'+(last?SCH.btns(E):nav());
   }else if(nm==='gtop'){
     h=scGtopHTML()+SCH.btns(E);
   }else if(nm==='mem'){
     var per=E.mp?Math.round(E.sec/E.mp*10)/10:null;
     h='<div class="sct">🃏 記憶配對</div><div class="scstat">'+
       '<div><b>'+E.mp+'</b><span>✅ 配完幾對</span></div><div><b>'+E.sec+'</b><span>⏱ 用了幾秒</span></div><div><b>'+E.mw+'</b><span>🔁 翻錯幾次</span></div></div>'+
-      (per!=null?'<div class="scs">平均 '+per+' 秒配一對</div>':'')+scCntHTML(E)+
-      '<div class="scnote">記憶配對是記位置，不算正確率、不算總分（老師看得到這三個數字）</div>'+SCH.btns(E);
+      (per!=null?'<div class="scs">平均 '+per+' 秒配一對</div>':'')+
+      '<div class="scnote">記憶配對是記位置，不算正確率、不算總分（老師看得到這三個數字）</div>'+nav();
+    SCAUTO=setTimeout(scNext,4000);
   }else{
     h='<div class="sct">'+(E.ok===E.n?'🎉 全對！':'答錯是大腦在學習 🧠')+'</div>'+
      '<div class="scraw">'+E.raw+'</div><div class="scs">🏆 這一次的分數　✅ 答對 '+E.ok+' ／ '+E.n+' 題</div>'+SCH.btns(E);
     if(MISSLOG.length)setTimeout(function(){if(SCEND&&SCEND.list[SCEND.k]==='end'&&scOn())missAll(SCH.miss())},600);
   }
   SCH.box().innerHTML='<div class="scn" id="scn">'+dots+h+'</div>';
+  if(nm==='honor'&&$('#scHon'))scHonGo(E);
   if(nm==='acc')setTimeout(function(){var f=$('#scFg'),a=$('#scAcc');if(!f)return;var L=+f.getAttribute('stroke-dasharray');
     f.setAttribute('stroke-dashoffset',L*(1-E.acc/100));var t0=Date.now(),iv=setInterval(function(){var x=Math.min(1,(Date.now()-t0)/1300);
       if(!$('#scAcc')){clearInterval(iv);return}a.textContent=Math.round(E.acc*x)+'%';if(x>=1)clearInterval(iv)},40)},80);
   setTimeout(function(){$$('.scbar .tr i').forEach(function(x){x.style.width=x.getAttribute('data-w')+'%'})},80);
 }
-var SCBN={acc:'🎯 正確率',s:'⚡ 總分',count:'🔁 次數',prog:'🚀 進步'};
-function scFmt(t,v){return t==='count'?v+' 次':t==='prog'?'＋'+v+'%':Math.round(v)+' 分'}
 function scPodHTML(L,fmt){
   var pod=[1,0,2].map(function(n){var x=L[n];if(!x)return '<div></div>';
     return '<div class="p'+Math.min(x.rk,3)+(x.id===SCID?' me':'')+'"><span class="id">'+x.id+'</span><span class="v">'+fmt(x)+'</span><span class="st">'+(x.rk===1?'🥇':x.rk===2?'🥈':'🥉')+'</span></div>'}).join('');
   var rest=L.slice(3).map(function(x){return '<div'+(x.id===SCID?' class="me"':'')+'><span><em>'+x.rk+'</em> '+x.id+'</span><span>'+fmt(x)+'</span></div>'}).join('');
   return '<div class="scpod">'+pod+'</div>'+(rest?'<div class="sclist">'+rest+'</div>':'');
-}
-function scBoardHTML(){
-  var E=SCEND,V=E.res,t=E.tab,sc=E.scope;
-  var L=(V.top[t]||{})[sc]||[];
-  var tabs='<div class="sctabs">'+['acc','s','count','prog'].map(function(x){return '<button data-bt="'+x+'"'+(x===t?' class="on"':'')+'>'+SCBN[x]+'</button>'}).join('')+'</div>'+
-   '<div class="scscope"><button data-bs="cls"'+(sc==='cls'?' class="on"':'')+'>🏫 本班</button><button data-bs="grade"'+(sc==='grade'?' class="on"':'')+'>🏆 全年級</button></div>';
-  if(!L.length)return '<div class="sct">🏆 排行榜（這週）</div>'+tabs+'<div class="scempty">'+(t==='prog'?'同一組做兩次，就能上 🚀 進步榜！':'這週還沒有人上榜，你可以當第一個！')+'</div>'+scMineHTML(t,sc);
-  return '<div class="sct">🏆 排行榜（這週）</div>'+tabs+scPodHTML(L,function(x){return scFmt(t,x.v)})+scMineHTML(t,sc);
 }
 /* 遊戲：這個遊戲本班前 10 名（這週，每個人最好的一次；正確率同分比總分） */
 function scGtopHTML(){
@@ -3230,23 +3426,11 @@ function scGtopHTML(){
   if(!V)return '<div class="sct">📶 現在沒有網路</div><div class="scs">成績先存在這台平板，連上網會自動送出 ✅</div>';
   if(!V.boards||!V.gtop)return '<div class="sct">💪 成績送出去了 ✅</div><div class="scs">下次再挑戰更高的正確率！</div>';
   var G=V.gtop,L=G.list,mine;
-  if(G.rk)mine='<div class="scmine in">🪑 你是第 '+G.rk+' 名！🎉</div>';
-  else if(G.cut!=null&&G.best&&G.cut-G.best.acc>=0&&G.cut-G.best.acc<=20)mine='<div class="scmine">🪑 你：⬆ 再 '+Math.max(1,G.cut-G.best.acc)+' 分進前 10</div>';
-  else mine='<div class="scmine">🪑 你：⭐ 你的紀錄 '+(G.best?G.best.acc:E.acc)+'%，下次打敗它！</div>';
+  if(G.rk)mine='<div class="scmine in">你是第 '+G.rk+' 名！🎉</div>';
+  else if(G.cut!=null&&G.best&&G.cut-G.best.acc>=0&&G.cut-G.best.acc<=20)mine='<div class="scmine">⬆ 你再 '+Math.max(1,G.cut-G.best.acc)+' 分進前 10</div>';
+  else mine='<div class="scmine">⭐ 你的紀錄 '+(G.best?G.best.acc:E.acc)+'%，下次打敗它！</div>';
   if(!L.length)return T+'<div class="scempty">這週還沒有人上榜，你可以當第一個！</div>'+mine;
   return T+scPodHTML(L,function(x){return x.acc+'%'})+mine;
-}
-/* 自己：前 10 名 ＝ 名次；不在前 10 名 ＝ 不顯示名次數字，差距小才寫「再多 N 進前 10」，差太多改寫自己的進步（Q2-A） */
-function scMineHTML(t,sc){
-  var E=SCEND,V=E.res,me=V.me,my=V.rk[t][sc],cut=V.cut[t][sc],v=me[t],keep='';
-  if(t==='prog'&&V.keep&&V.keep.length&&sc==='cls')keep='<div class="sckeep">🔥 保持滿分：'+V.keep.slice(0,12).join('、')+'</div>';
-  if(my)return keep+'<div class="scmine in">🪑 你是第 '+my+' 名！🎉</div>';
-  var gap=v==null||cut==null?null:(t==='count'?cut-v:Math.ceil(cut-v)),lim=t==='count'?5:20,txt;
-  if(v==null&&t==='prog')txt=me.keep?'🔥 你保持滿分！':'同一組再做一次，就能比進步！';
-  else if(gap!=null&&gap>=0&&gap<=lim)txt=gap===0?'⬆ 再快一點就進前 10！':'⬆ 再 '+gap+(t==='count'?' 次':' 分')+'進前 10';
-  else if(E.prev!=null&&E.acc>E.prev)txt='🚀 你這次比上次 ＋'+(E.acc-E.prev)+'%';
-  else txt='⭐ 你的紀錄：'+(E.best!=null?Math.max(E.best,E.acc):E.acc)+'%，下次打敗它！';
-  return keep+'<div class="scmine">🪑 你：'+txt+'</div>';
 }
 /* ══ 老師派任務（2026-10-09 E；規則在 score/_calc.js 的 tkLock，這裡用同一份）══
    登入以後問伺服器「我這一班有什麼任務、我做完了哪些」（a=tasks）；時間用伺服器的（平板時鐘不準也鎖得對）。
@@ -3307,11 +3491,9 @@ document.addEventListener('click',function(e){
   if(c('#scGuest')){SCGUEST=true;var a=SCLOGAFTER;SCLOGAFTER=null;if(a)a();return}
   if((b=c('[data-sca]'))){if(SCH.act)SCH.act(b.getAttribute('data-sca'));return}
   if(!SCEND||!c('#scn'))return;
-  if((b=c('[data-bt]'))){SCEND.tab=b.getAttribute('data-bt');scScene();return}
-  if((b=c('[data-bs]'))){SCEND.scope=b.getAttribute('data-bs');scScene();return}
   if(c('#scSkip')){scGo(SCEND.list.length-1);return}
   if(c('#scNx')){scNext();return}
-  var nm=SCEND.list[SCEND.k];if((nm==='acc'||nm==='prev'||nm==='count'||nm==='class'||nm==='gprog')&&!c('button'))scNext();
+  var nm=SCEND.list[SCEND.k];if((nm==='acc'||nm==='mem')&&!c('button'))scNext();
 });
 document.addEventListener('keydown',function(e){if(!$('#scBox'))return;
   if(/^\d$/.test(e.key))scKeyPress(e.key);else if(e.key==='Backspace')scKeyPress('b');else if(e.key==='Enter')scKeyPress('ok')});

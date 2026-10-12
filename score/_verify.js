@@ -40,6 +40,12 @@ const fit = p => p.evaluate(() => { const de = document.documentElement, rv = do
   if (rv && rv.classList.contains('on') && rv.scrollHeight > rv.clientHeight + 1) e.push('要捲動才看得到全部（' + (rv.scrollHeight - rv.clientHeight) + 'px）');
   [].forEach.call(document.querySelectorAll('#rv button, .scbar, .sclist div, .scmine, .scpod .id'), x => { if (x.getBoundingClientRect().width && x.scrollWidth > x.clientWidth + 2) e.push('字超出框：' + x.textContent.trim().slice(0, 24)); });
   return e; });
+/* 2026-10-12 D 第 4 件：榮譽動畫的一幕（字夠大、卡片在框裡、有風格） */
+const honNow = p => p.evaluate(() => { const h = document.getElementById('scHon'); if (!h) return null; const r = h.getBoundingClientRect(), e = [];
+  [].forEach.call(h.querySelectorAll('.hkick,.htit,.hsub,.hcard .hn,.hcard .hl,.hcard .hw'), x => { const z = parseFloat(getComputedStyle(x).fontSize); if (z < (innerWidth >= 1900 ? 22 : 18)) e.push('字太小 ' + z + 'px：' + x.textContent.slice(0, 12)); });
+  [].forEach.call(h.querySelectorAll('.hcard'), x => { const b = x.getBoundingClientRect(); if (b.right > r.right + 2 || b.left < r.left - 2 || b.bottom > r.bottom + 2 || b.top < r.top - 2) e.push('卡片超出榮譽動畫的框：' + x.textContent.slice(0, 16)); });
+  if (r.bottom > innerHeight + 1 && !document.getElementById('scov')) e.push('榮譽動畫超出畫面下面 ' + Math.round(r.bottom - innerHeight) + 'px');
+  return { cls: h.className, t: h.textContent, cards: h.querySelectorAll('.hcard').length, e: e }; });
 async function keys(p, ks) { for (const d of ks) await p.click('.sckey button[data-k="' + d + '"]'); await p.waitForTimeout(150); }
 const typed = p => p.evaluate(() => [].map.call(document.querySelectorAll('#scBox i'), x => x.textContent).join(''));
 async function typeId(p, id) { for (const d of id) await p.click('.sckey button[data-k="' + d + '"]'); await p.click('.sckey button[data-k="ok"]'); await p.waitForTimeout(250); }
@@ -47,7 +53,7 @@ async function quiz(p, wrongAt, started) {
   if (!started) await p.click('#tqStart'); await p.waitForTimeout(700);
   for (let k = 0; k < 5; k++) {
     const sel = (await p.$('.tqr .ch')) ? '.tqr .ch' : '.tqo button';
-    await p.waitForTimeout(k === 0 ? 1200 : 400);
+    await p.waitForTimeout(k === 0 ? 1200 : 1150);   /* 看完題目才按（1 秒內按 ＝ 太快亂按，練習次數不會 ＋1） */
     if (k === wrongAt) { await p.click(sel + '[data-ok="false"]'); await p.waitForTimeout(900); await p.waitForSelector('#miss .nxt', { timeout: 12000 }); await p.click('#miss .nxt'); await p.waitForTimeout(500); }
     else { await p.click(sel + '[data-ok="true"]'); await p.waitForTimeout(1500); }
   }
@@ -116,7 +122,7 @@ async function student(br, P, vp) {
   /* ④ 登入、作答（第 2 題故意答錯） */
   await typeId(p, P.me); await p.waitForTimeout(400);
   const intro = await p.evaluate(() => document.getElementById('rvbox').textContent);
-  if (!new RegExp('🪑 ' + P.me).test(intro)) e.push('開場沒有顯示「🪑 ' + P.me + '」');
+  if (!new RegExp(P.me).test(intro) || /🪑 ?\d/.test(intro)) e.push('開場沒有顯示「' + P.me + '」（號碼前面不放 🪑）');
   if (!/本班/.test(intro)) e.push('開場沒有寫「本班名次」');
   e.push(...await fit(p)); n += 3;
   const before = G.books['紀錄'].d.length;
@@ -127,33 +133,35 @@ async function student(br, P, vp) {
   await p.evaluate(() => { tqClose(); });
   await p.click('#tqGo'); await p.waitForTimeout(300);
   await quiz(p, 1);
-  /* ⑤ 結束六幕 */
-  const sc = [];
-  for (let k = 0; k < 6; k++) {
-    await p.waitForTimeout(k === 0 ? 1600 : 1300);
-    const s = await p.evaluate(() => ({ k: SCEND && SCEND.k, t: (document.getElementById('scn') || {}).textContent || '' }));
-    sc.push(s);
-    const f = await fit(p); f.forEach(x => e.push('第 ' + (k + 1) + ' 幕' + x));
-    if (k === 4) {
-      for (const t of ['acc', 's', 'count', 'prog']) for (const s2 of ['cls', 'grade']) {
-        await p.click('[data-bt="' + t + '"]'); await p.click('[data-bs="' + s2 + '"]'); await p.waitForTimeout(150);
-        const b = await p.evaluate(() => ({ t: document.getElementById('scn').textContent, mine: (document.querySelector('.scmine') || {}).textContent || '' }));
-        (await fit(p)).forEach(x => e.push('排行榜 ' + t + '/' + s2 + '：' + x));
-        if (!b.mine) e.push('排行榜 ' + t + '/' + s2 + '：沒有「🪑 你：」那一行');
-        if (/你是第 \d+ 名/.test(b.mine) && t === 'acc') e.push('排行榜：不在前 10 名卻顯示名次（' + b.mine + '）');
-        n += 2;
-      }
-    }
-    if (k < 5) { if (await p.$('#scNx')) await p.click('#scNx'); else { e.push('第 ' + (k + 1) + ' 幕沒有〔➡ 下一步〕'); break; } }
+  /* ⑤ 結束畫面（2026-10-12 D 第 4 件）：① 正確率 ➜ 🏆 榮譽動畫（自己的獎 ➜ 本班榮譽榜 ➜ 班際）➜ ③ 答錯整理 */
+  await p.waitForTimeout(1600);
+  const s0 = await p.evaluate(() => ({ k: SCEND && SCEND.k, t: (document.getElementById('scn') || {}).textContent || '' }));
+  if (s0.k !== 0 || !/正確率/.test(s0.t) || !/80%/.test(s0.t)) e.push('第 1 幕不是正確率 80%：' + s0.t.slice(0, 40));
+  (await fit(p)).forEach(x => e.push('第 1 幕' + x));
+  if (await p.$('#scNx')) await p.click('#scNx'); else e.push('第 1 幕沒有〔➡ 下一步〕');
+  const HP = [], want = [/努力獎/, /榮譽榜|一起練了/, /班際榮譽/];
+  for (let i = 0; i < 3; i++) {
+    await p.waitForTimeout(i ? 3000 : 1500);
+    const h = await honNow(p); if (!h) { e.push('榮譽動畫第 ' + (i + 1) + ' 段沒有出現'); break; }
+    HP.push(h); h.e.forEach(x => e.push('榮譽動畫第 ' + (i + 1) + ' 段：' + x)); (await fit(p)).forEach(x => e.push('榮譽動畫第 ' + (i + 1) + ' 段' + x));
+    if (!want[i].test(h.t)) e.push('榮譽動畫第 ' + (i + 1) + ' 段不對：' + h.t.slice(0, 50));
+    if (!/\bhs\d+\b/.test(h.cls)) e.push('榮譽動畫沒有風格（' + h.cls + '）');
+    if (i === 0) await p.waitForTimeout(1600);
   }
-  const want = [/正確率/, /跟上一次比/, /算不算 1 次/, /我幫全班/, /排行榜/, /答對/];
-  sc.forEach((s, k) => { if (s.k !== k || !want[k].test(s.t)) e.push('第 ' + (k + 1) + ' 幕不對（k=' + s.k + '）：' + s.t.slice(0, 40)); });
-  if (sc[0] && !/80%/.test(sc[0].t)) e.push('第 1 幕正確率不是 80%：' + sc[0].t.slice(0, 40));
-  if (sc[2] && !/算 1 次/.test(sc[2].t)) e.push('對 4 題卻沒有「算 1 次」');
-  if (sc[3] && !/班/.test(sc[3].t)) e.push('第 4 幕沒有各班長條');
+  if (HP[0] && !/練習次數 ＋1/.test(HP[0].t)) e.push('對 4 題（沒有亂按）卻沒有「練習次數 ＋1」：' + HP[0].t.slice(0, 60));
+  if (HP[0] && !/這週第 \d+ 次練習/.test(HP[0].t)) e.push('努力獎沒有寫「這週第幾次練習」');
+  if (HP.some(h => /聰明|算 1 次|算不算/.test(h.t))) e.push('榮譽動畫有「聰明」或學生看不懂的「算 1 次」');
+  /* 12 種風格：輪完才重複、跟上一次一定不一樣；沒有亂按以外的情況：小提醒 */
+  const rot = await p.evaluate(() => { localStorage.removeItem('hon_v'); const a = []; for (let i = 0; i < 25; i++) a.push(HON.pick('v')); return a; });
+  if (new Set(rot.slice(0, 12)).size !== 12 || new Set(rot.slice(12, 24)).size !== 12 || rot.some((x, i) => i && x === rot[i - 1])) e.push('12 種風格沒有輪流（' + rot.join(',') + '）');
+  const tip = await p.evaluate(() => scAwards({ cnt: false, m: 'q', n: 5, ok: 5, acc: 100, fast: 3, prev: null, best: null, fix: 0, res: null }));
+  if (tip.length !== 1 || tip[0].nm !== '小提醒') e.push('太快亂按超過一半：應該只有「💡 小提醒」，沒有獎（' + JSON.stringify(tip.map(x => x.nm)) + '）');
+  await p.waitForTimeout(3600);
+  const s2 = await p.evaluate(() => ({ k: SCEND && SCEND.k, nm: SCEND && SCEND.list[SCEND.k], t: (document.getElementById('scn') || {}).textContent || '' }));
+  if (s2.nm !== 'end' || !/答對/.test(s2.t)) e.push('榮譽動畫演完沒有自己到最後一幕（' + s2.nm + '）');
   await p.evaluate(() => { const m = document.getElementById('missAll'); if (m) m.classList.remove('on'); });
   if (!await p.$('#tqAgain') || !await p.$('#tqMiss')) e.push('最後一幕沒有〔🔁 再挑戰一次〕〔📌 答錯整理〕');
-  n += 10;
+  n += 16;
   /* ⑥ 伺服器收到的那一筆 */
   const rows = G.books['紀錄'].d.slice(before);
   if (rows.length !== 1) e.push('伺服器收到 ' + rows.length + ' 筆（要 1 筆）');
@@ -169,11 +177,11 @@ async function student(br, P, vp) {
   await p.click('#tqAgain'); await p.waitForTimeout(300);
   const b2 = G.books['紀錄'].d.length;
   await quiz(p, -1, true); await p.waitForTimeout(1500);
-  for (let k = 0; k < 3; k++) { await p.click('#scNx'); await p.waitForTimeout(300); }
-  /* 送不出去會再試 3 次（每次隔 1.5 秒），之後才寫「沒有網路」；學生看完前三幕（約 9 秒）早就好了 */
-  await p.waitForFunction(() => /沒有網路/.test((document.getElementById('scn') || {}).textContent || ''), null, { timeout: 9000 }).catch(() => {});
+  await p.click('#scNx'); await p.waitForTimeout(300);
+  /* 送不出去會再試 3 次（每次隔 1.5 秒），之後才寫「沒有網路」；榮譽動畫第 2 段（約 8 秒）早就好了 */
+  await p.waitForFunction(() => /沒有網路/.test((document.getElementById('scn') || {}).textContent || ''), null, { timeout: 14000 }).catch(() => {});
   const off = await p.evaluate(() => ({ t: document.getElementById('scn').textContent, q: JSON.parse(localStorage.getItem('score_q') || '[]').length }));
-  if (!/沒有網路/.test(off.t)) e.push('沒有網路時第 4 幕沒有寫「成績先存在這台平板」（' + off.t.slice(0, 30) + '）');
+  if (!/沒有網路/.test(off.t) || !/成績先存在這台平板/.test(off.t)) e.push('沒有網路時榮譽動畫沒有寫「現在沒有網路，成績先存在這台平板」（' + off.t.slice(0, 30) + '）');
   if (off.q !== 1) e.push('沒有網路時平板裡沒有存著那一筆（' + off.q + '）');
   OFF = false; await p.evaluate(() => window.dispatchEvent(new Event('online'))); await p.waitForTimeout(800);
   if (G.books['紀錄'].d.length !== b2 + 1) e.push('連上網以後沒有自動補送');
@@ -219,6 +227,47 @@ async function teacher(br, vp) {
   await p.click('#tabs button[data-t="b"]'); await p.click('[data-bs="grade"]');
   const rkT = await p.textContent('#pane'); if (!/第 15 名/.test(rkT)) e.push('老師的排行榜沒有列出全部學生（看不到第 15 名）');
   if (!/測試\d\d/.test(rkT)) e.push('排行榜沒有姓名');
+  /* 2026-10-12 D 第 4 件：🏆 榮譽榜（投影）：每一個榜一顆、全螢幕、12 種風格之一、字夠大、▶ 下一幕、姓名顯示／隱藏、印獎狀、班際 */
+  await p.evaluate(() => { window.print = () => { window.__pr = (window.__pr || 0) + 1; }; });
+  if (!await p.$('[data-hon="0"]')) e.push('排行榜沒有〔🏆 榮譽榜〕');
+  else {
+    await p.click('[data-hon="0"]'); await p.waitForTimeout(1200);
+    const hn = () => p.evaluate(() => { const o = document.getElementById('honov'), h = document.getElementById('honst'), r = o.getBoundingClientRect(), e = [];
+      [].forEach.call(h.querySelectorAll('.hkick,.htit,.hsub,.hcard .hn,.hcard .hl,.hcard .hw,.hr,.hpod .nm'), x => { const z = parseFloat(getComputedStyle(x).fontSize); if (z < (innerWidth >= 1900 ? 26 : 20)) e.push('字太小 ' + z + 'px'); });
+      [].forEach.call(document.querySelectorAll('#hctl button'), x => { if (x.getBoundingClientRect().height < 48) e.push('按鈕太小：' + x.textContent); });
+      return { on: o.classList.contains('on'), full: r.width >= innerWidth - 2 && r.height >= innerHeight - 2, cls: h.className, t: h.textContent, pg: document.getElementById('hpg').textContent, e: e,
+        over: document.getElementById('hctl').getBoundingClientRect().bottom > innerHeight + 1 }; });
+    let h = await hn();
+    if (!h.on || !h.full) e.push('〔🏆 榮譽榜〕沒有蓋滿整個螢幕');
+    if (!/\bhs\d+\b/.test(h.cls)) e.push('榮譽榜沒有風格');
+    if (!/榮譽榜/.test(h.t) || !/本週/.test(h.t)) e.push('榮譽榜開場不對：' + h.t.slice(0, 40));
+    if (h.over) e.push('榮譽榜下面的按鈕超出螢幕');
+    const seen = [h.t]; h.e.forEach(x => e.push('榮譽榜開場：' + x));
+    const tot = +h.pg.split('／')[1];
+    for (let i = 1; i < tot; i++) { await p.click('#hnx'); await p.waitForTimeout(i === 2 ? 4800 : 1400); h = await hn(); seen.push(h.t); h.e.forEach(x => e.push('榮譽榜第 ' + (i + 1) + ' 幕：' + x)); }
+    const all = seen.join('|');
+    if (!/第 1 名/.test(all) || !/一起練了/.test(all)) e.push('榮譽榜沒有第 1 名或全班合照（' + tot + ' 幕）');
+    if (!/測試\d\d/.test(all)) e.push('榮譽榜一開始沒有顯示姓名（D10：預設顯示）');
+    if (/聰明/.test(all)) e.push('榮譽榜寫了「聰明」');
+    await p.click('#hnmb'); await p.waitForTimeout(400);
+    if (/測試\d\d/.test((await hn()).t)) e.push('按〔👤 姓名：隱藏〕還看得到姓名');
+    await p.click('#hnmb'); await p.waitForTimeout(200);
+    const s0 = await p.evaluate(() => localStorage.getItem('hsnd')); await p.click('#hsd'); const s1 = await p.evaluate(() => localStorage.getItem('hsnd'));
+    if (s0 === s1) e.push('〔🔊 聲音〕按了沒有切換'); await p.click('#hsd');
+    await p.click('#hpr'); await p.waitForTimeout(200);
+    const pr = await p.evaluate(() => ({ n: document.querySelectorAll('#prt .cert').length, t: document.getElementById('prt').textContent, pr: window.__pr }));
+    if (!pr.pr || pr.n < 1 || !/榮譽獎狀/.test(pr.t) || !/號/.test(pr.t)) e.push('〔🖨 印獎狀〕沒有做出獎狀（' + pr.n + ' 張）');
+    await p.click('#hx'); await p.waitForTimeout(200);
+    if (await p.$('#honov.on')) e.push('〔✕ 關閉〕沒有關掉榮譽榜');
+    await p.click('#tabs button[data-t="c"]'); await p.waitForTimeout(200);
+    if (!await p.$('[data-hon="c"]')) e.push('班際沒有〔🏆 班際榮譽榜〕');
+    else { await p.click('[data-hon="c"]'); await p.waitForTimeout(600); h = await hn(); const tc = +h.pg.split('／')[1], ct = [h.t];
+      for (let i = 1; i < tc; i++) { await p.click('#hnx'); await p.waitForTimeout(1200); ct.push((await hn()).t); }
+      if (!/每一班都有自己最強的一項/.test(ct.join('|'))) e.push('班際榮譽榜沒有「每一班都有自己最強的一項」');
+      if (!/最努力|練習時間最多|進步最多|成績最優/.test(ct.join('|'))) e.push('班際榮譽榜沒有 4 種排行');
+      await p.click('#hx'); }
+    n += 14;
+  }
   /* 2026-10-09 名單：個人表有「姓名」欄、要關心列出一次都沒做的人 */
   await p.click('#tabs button[data-t="p"]'); await p.waitForTimeout(150);
   const pt = await p.evaluate(() => ({ th: [].map.call(document.querySelectorAll('#pane th'), x => x.textContent), td: document.getElementById('pane').textContent }));
@@ -397,7 +446,7 @@ async function game(br, P, vp) {
     await p.click('#scSwap'); await p.waitForTimeout(300); n += 3;
     if (!await p.$('#scov.on #scBox')) { e.push('大廳按〔🔢 登入〕沒有出登入畫面'); out(W, e); await ctx.close(); return; }
     await typeId(p, P.me); await p.waitForTimeout(400);
-    if (!new RegExp(P.me).test(await p.textContent('#scme'))) e.push('登入以後大廳沒有顯示 🪑 ' + P.me);
+    if (!new RegExp(P.me).test(await p.textContent('#scme'))) e.push('登入以後大廳沒有顯示 ' + P.me);
     await p.click('.gcard[data-g="' + P.game + '"]'); await p.waitForTimeout(400);
   } else {
     if (P.g === 0) {   /* Review 1 遊戲三、四年級共用：兩個年級的號碼都可以 */
@@ -429,12 +478,12 @@ async function game(br, P, vp) {
     names.push(s.nm); (await ovFit(p)).forEach(x => e.push('成績第 ' + (k + 1) + ' 幕：' + x));
     if (k === 0 && !/第一次作答/.test(s.t)) e.push('第 1 幕沒有寫「每一題第一次作答」：' + s.t.slice(0, 40));
     if (k === 0 && !/驚喜卡/.test(s.t)) e.push('第 1 幕沒有說驚喜卡不算進成績');
-    if (k === 1 && !/算 1 次/.test(s.t)) e.push('對 2/3 以上、12 題卻沒有「算 1 次」：' + s.t.slice(0, 60));
+    if (k === 1) { const h = await honNow(p); if (!h || !/練習次數 ＋1/.test(h.t)) e.push('遊戲 12 題沒有亂按，榮譽動畫卻沒有「練習次數 ＋1」：' + (h ? h.t.slice(0, 60) : '沒有榮譽動畫')); else h.e.forEach(x => e.push('遊戲榮譽動畫：' + x)); }
     if (k === 2 && !/本班前 10 名/.test(s.t)) e.push('最後一幕不是「這個遊戲本班前 10 名」：' + s.t.slice(0, 60));
-    if (k === 2 && !/第 \d+ 名|進前 10|你的紀錄/.test(s.t)) e.push('最後一幕沒有「🪑 你」那一行');
+    if (k === 2 && !/第 \d+ 名|進前 10|你的紀錄/.test(s.t)) e.push('最後一幕沒有「你」那一行');
     if (k < 2) await p.click('#scNx');
   }
-  if (names.join() !== 'acc,gprog,gtop') e.push('遊戲的成績畫面不是三幕（' + names.join() + '）');
+  if (names.join() !== 'acc,honor,gtop') e.push('遊戲的成績畫面不是 正確率 ➜ 榮譽動畫 ➜ 本班前 10 名（' + names.join() + '）');
   if (!await p.$('[data-sca="again"]') || !await p.$('[data-sca="hub"]')) e.push('最後一幕沒有〔🔁 再玩一次〕〔🎮 換一個遊戲〕');
   n += 9;
   const rows = G.books['紀錄'].d.slice(b1);
@@ -589,10 +638,10 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
 (async () => {
   const srv = await serve();
   const br = await chromium.launch();
-  const safe = async (W, fn) => { try { await fn(); } catch (x) { fails++; console.log('✗ ' + W + '\n   量測卡住：' + String(x.message).split('\n')[0]); } };
-  const O = process.env.ONLY || '';
-  for (const vp of VPS) {
-    if (!O || O === 'tq') for (const P of PAGES) await safe(P.f + ' @' + vp.join('x'), () => student(br, P, vp));
+  const safe = async (W, fn) => { try { await fn(); } catch (x) { fails++; console.log('✗ ' + W + '\n   量測卡住：' + String(x.message).split('\n')[0] + '（' + (String(x.stack).match(/_verify\.js:\d+/g) || []).slice(0, 2).join(' ') + '）'); } };
+  const O = process.env.ONLY || '', PF = process.env.PAGE || '', VF = process.env.VP || '';   /* PAGE=檔名一部分、VP=1024 只量一頁一種尺寸（找問題用） */
+  for (const vp of VPS) { if (VF && String(vp[0]) !== VF) continue;
+    if (!O || O === 'tq') for (const P of PAGES.filter(P => P.f.indexOf(PF) >= 0)) await safe(P.f + ' @' + vp.join('x'), () => student(br, P, vp));
     if (!O || O === 'game') for (const P of GPAGES) await safe(P.f + ' @' + vp.join('x'), () => game(br, P, vp));
     if (!O || O === 'rv') for (const R of [['G3 - L1 + L2/review1.html', 3, '30405'], ['sentences/review1.html', 4, '40205']]) await safe(R[0] + ' @' + vp.join('x'), () => rvPage(br, R[0], R[1], R[2], vp));
     if (!O || O === 'teacher') await safe('teacher @' + vp.join('x'), () => teacher(br, vp));
