@@ -672,6 +672,7 @@ async function task(br, vp) {
   /* 學生（402）：📝 複習題沒被指定 ➜ 🔒 */
   const q = await ctx.newPage(); q.on('pageerror', x => e.push('學生 JS 例外：' + x.message));
   await q.goto(pathToFileURL(path.join(ROOT, 'sentences/unit2.html')).href); await q.waitForTimeout(900);
+  if (await q.$('#scwho.on #scWhoY')) await q.click('#scWhoY'); else e.push('新的分頁（已經登入）沒有先問「請問 這是您嗎？」');
   await q.evaluate(() => { TABM.forEach((tb, t) => { TQSEEN[t + '_0'] = 1; TQSEEN[t + '_1'] = 1; }); tqMark(); });
   if (!/🔒/.test(await q.textContent('#tqGo'))) e.push('沒被指定的 📝 複習題按鈕沒有 🔒');
   await q.click('#tqGo'); await q.waitForTimeout(300);
