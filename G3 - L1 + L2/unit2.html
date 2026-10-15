@@ -967,7 +967,7 @@ body.reduce .tqdone i{display:none}
 .scfull button{min-height:clamp(64px,10vh,90px);padding:8px 30px;font-size:clamp(28px,4.6vh,42px)}
 .scY{background:#3BD16F!important}.scN{background:#FF8A80!important}.scK{background:#FFD54A!important}
 /* 總首頁：一頁要放得下（iPad 橫放不可以有捲軸）➜ 橫幅放在「首頁」那一行，不多佔一行 */
-#scbar.inl{display:inline-flex;border:2px solid #3BD16F;border-radius:999px;padding:0 3px 0 14px;font-size:clamp(22px,2.9vh,28px);vertical-align:middle;margin-left:.5em;gap:8px;letter-spacing:0}
+#scbar.inl{display:inline-flex;border:2px solid #3BD16F;border-radius:999px;padding:0 3px 0 14px;font-size:clamp(22px,2.9vh,28px);vertical-align:middle;margin:0 0 0 .5em;gap:8px;letter-spacing:0}
 body.scq .url{display:none}
 #scbar.inl[hidden]{display:none}#scbar.inl button{min-height:48px;padding:2px 16px;font-size:clamp(22px,2.9vh,28px)}
 .scbye{display:flex;align-items:center;justify-content:center;gap:12px 18px;flex-wrap:wrap;background:#1F1A08;border:3px solid #FFD54A;border-radius:18px;padding:6px 16px;
@@ -1173,6 +1173,85 @@ body.scq .url{display:none}
 /* 跳過、聲音、控制列 */
 .hctl{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 @media (prefers-reduced-motion:reduce){.hon *,.hon .hbg::after,.hon .hbg::before{animation-duration:.01s!important;animation-iteration-count:1!important}}
+/* ══ ❤ 這週 用心程度（2026-10-15 D 第 8 件；老師 D12 ③ 甲 五顆愛心 裝滿、8 種風格 .cs1～.cs8、〔📖 說明〕）══ */
+.care{position:relative;isolation:isolate;overflow:hidden;border-radius:22px;padding:clamp(10px,2vh,22px) clamp(8px,2vw,22px) clamp(12px,2vh,22px);color:#fff;text-align:center;background:#0B1830}
+.care *{box-sizing:border-box}
+.care .cbg,.care .cfx{position:absolute;inset:0;pointer-events:none}.care .cbg{z-index:-2}.care .cfx{z-index:-1;overflow:hidden}
+.care .ct1{font-size:clamp(28px,4.4vh,44px);font-weight:700;color:#FFE07A;line-height:1.2}
+.care .csum{font-size:clamp(24px,3.4vh,34px);color:#CFE3F5;margin:2px 0}.care .csum b{font-size:clamp(60px,10vh,96px);color:#FFE07A;display:inline-block;line-height:1;min-width:1.4em}
+.care .csum.pop b{animation:cpop .6s}
+@keyframes cpop{50%{transform:scale(1.35)}}
+.care .crow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(4px,1.4vw,18px);max-width:760px;margin:6px auto 0;align-items:end}
+.care .chc{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.care .cv{font-size:clamp(26px,3.6vh,36px);font-weight:700;opacity:0;transform:translateY(10px);transition:.4s}.care .chc.on .cv{opacity:1;transform:none}
+.care .chw{position:relative;width:100%;max-width:130px}
+.care svg.ch{width:100%;overflow:visible;display:block}
+.care .cbk{fill:#1A2230;stroke:#55606A;stroke-width:3}.care .cln{fill:none;stroke:#fff;stroke-opacity:.55;stroke-width:2}
+.care .clq{transition:transform 1s cubic-bezier(.3,1.25,.5,1)}
+.care .cwv{animation:cwave 1.2s linear infinite}
+@keyframes cwave{to{transform:translateX(-40px)}}
+.care .cshn{display:none}
+.care .cfc{opacity:0;transition:opacity .3s}.care .chc.full .cfc{opacity:1}
+.care .chc.full svg.ch{animation:cbeat .5s 2}
+@keyframes cbeat{40%{transform:scale(1.2)}}
+.care .cgap{fill:none;stroke:#FFD54A;stroke-width:5;opacity:0}
+.care .chc.wk .cgap{animation:cgp .8s ease-in-out infinite}
+@keyframes cgp{50%{opacity:1}}
+.care .cic{min-height:clamp(40px,6vh,56px);display:flex;align-items:center;justify-content:center;max-width:100%}
+.care .cic svg{height:clamp(30px,5vh,46px);width:auto;max-width:100%}.care .cic .cem{font-size:clamp(30px,5vh,44px);line-height:1}
+.care .chc.wk .cic{animation:cwig .5s ease-in-out infinite}
+@keyframes cwig{0%,100%{transform:rotate(-12deg) scale(1.15)}50%{transform:rotate(12deg) scale(1.15)}}
+.care .cnote{font-size:clamp(20px,2.8vh,26px);color:#B9C4CE;margin-top:6px}
+.care .ctip{font-size:clamp(26px,3.8vh,36px);font-weight:700;color:#FFD54A;margin-top:6px;opacity:0;transform:scale(.6);transition:.5s cubic-bezier(.3,1.6,.5,1)}.care .ctip.on{opacity:1;transform:none}
+.care .cdrop{position:absolute;left:50%;top:-30px;width:16px;height:22px;margin-left:-8px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;opacity:0;display:none}
+.care .cecg{position:absolute;left:0;right:0;top:46%;height:clamp(60px,10vh,100px);width:100%;display:none;pointer-events:none}
+.care .cecg path{fill:none;stroke:#FF4D6D;stroke-width:5;stroke-linejoin:round;stroke-dasharray:2600;stroke-dashoffset:2600;filter:drop-shadow(0 0 6px #FF4D6D)}
+/* 〔📖 說明〕 */
+.care .chb{display:inline-block;margin-top:10px;background:#1E3A5A;color:#fff;border:3px solid #7FD4FF;border-radius:16px;font:inherit;font-size:clamp(22px,3vh,28px);font-weight:700;padding:6px 22px;min-height:52px;cursor:pointer}
+.care .chb.on{background:#2A2208;border-color:#FFD24A}
+.care .chp{margin:10px auto 0;max-width:900px;text-align:left}
+.care .chh{font-size:clamp(22px,3vh,28px);font-weight:700;color:#FFE07A;text-align:center;margin-bottom:6px}
+.care .chr{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(110px,30%);grid-template-areas:"i n b" "i k k";gap:2px 10px;align-items:center;background:rgba(10,14,20,.8);border:3px solid #2A3540;border-radius:16px;padding:8px 12px;margin:6px 0;
+  opacity:0;transform:translateX(-30px);transition:opacity .4s,transform .4s}
+.care .chr.on{opacity:1;transform:none}.care .chr.ok{border-color:#3BD16F}
+.care .chi{grid-area:i;display:flex;align-items:center;justify-content:center;width:clamp(52px,7vh,70px)}.care .chi svg{width:100%;height:auto}.care .chi .cem{font-size:clamp(36px,5vh,48px)}
+.care .chn{grid-area:n;min-width:0}.care .chn b{display:block;font-size:clamp(22px,3vh,28px)}.care .chn small{display:block;font-size:clamp(20px,2.6vh,24px);color:#CFE3F5}
+.care .chbar{grid-area:b;position:relative;height:clamp(34px,4.6vh,44px);background:#1A2230;border-radius:12px;overflow:hidden}
+.care .chbar i{position:absolute;left:0;top:0;bottom:0;width:0;transition:width .8s}
+.care .chr:not(.on) .chbar i{width:0!important}
+.care .chbar em{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700;font-size:clamp(20px,2.8vh,26px);text-shadow:0 1px 3px #000}
+.care .chk{grid-area:k;font-size:clamp(20px,2.8vh,26px);font-weight:700;color:#FFD54A}.care .chr.ok .chk{color:#9FF0B8}
+/* 8 種風格（每一次都不一樣） */
+.care.cs1 .cbg{background:radial-gradient(circle at 50% 20%,#1D3F7A,#081226 70%)}
+.care.cs2 .cbg{background:linear-gradient(#0B3A6B,#3E86C6 70%,#7CC0EE)}
+.care.cs2 .chc{animation:cfloat 1s cubic-bezier(.3,1.4,.5,1) backwards}.care.cs2 .chc:nth-child(2){animation-delay:.15s}.care.cs2 .chc:nth-child(3){animation-delay:.3s}.care.cs2 .chc:nth-child(4){animation-delay:.45s}.care.cs2 .chc:nth-child(5){animation-delay:.6s}
+.care.cs2 .chw::after{content:'';position:absolute;left:50%;top:92%;width:2px;height:26px;background:#fff;opacity:.7}
+.care.cs2 .chc.full .chw{animation:cbob 1.6s ease-in-out infinite}
+@keyframes cfloat{from{transform:translateY(60vh)}}
+@keyframes cbob{50%{transform:translateY(-10px)}}
+.care.cs3 .cbg{background:radial-gradient(circle at 50% 30%,#4A1A7A,#16052A 75%)}
+.care.cs3 .cbk{stroke:#FFD24A}.care.cs3 .cshn{display:block;animation:cshine 2.2s ease-in-out infinite}
+@keyframes cshine{0%{transform:rotate(20deg) translateX(0)}60%,100%{transform:rotate(20deg) translateX(190px)}}
+.care.cs4 .cbg{background:radial-gradient(circle at 50% 110%,#2A1A40,#03060F 70%)}
+.care.cs4 .chc.on svg.ch{filter:drop-shadow(0 0 10px rgba(255,200,90,.6))}.care.cs4 .chc.full svg.ch{animation:cglow 1.4s ease-in-out infinite}
+@keyframes cglow{50%{filter:drop-shadow(0 0 26px rgba(255,214,74,1))}}
+.care.cs5 .cbg{background:radial-gradient(circle at 50% 0,#5A2A10,#1A0A04 75%)}
+.care.cs5 .cdrop{display:block}.care.cs5 .chc.on .cdrop{animation:cdrip .5s ease-in forwards}
+@keyframes cdrip{0%{opacity:1;transform:translateY(-40px)}90%{opacity:1}100%{opacity:0;transform:translateY(60px)}}
+.care.cs6 .cbg{background:linear-gradient(#0B1E10,#14381C 75%,#1E5A2A)}
+.care.cs6 .crow{border-bottom:6px solid #8A6A3A;padding-bottom:4px}
+.care.cs6 .chc{animation:ctrain .9s cubic-bezier(.2,1.2,.5,1) backwards}.care.cs6 .chc:nth-child(2){animation-delay:.12s}.care.cs6 .chc:nth-child(3){animation-delay:.24s}.care.cs6 .chc:nth-child(4){animation-delay:.36s}.care.cs6 .chc:nth-child(5){animation-delay:.48s}
+.care.cs6 .chc.full .chw{animation:ctoot .4s ease-in-out 3}
+@keyframes ctrain{from{transform:translateX(110vw)}}
+@keyframes ctoot{50%{transform:translateY(-8px) rotate(-4deg)}}
+.care.cs7 .cbg{background:radial-gradient(circle at 50% 50%,#3A0A14,#0E0306 75%)}
+.care.cs7 .cecg{display:block}.care.cs7 .cecg path{animation:cecg 4.6s linear .1s forwards}
+@keyframes cecg{to{stroke-dashoffset:0}}
+.care.cs7 .chc.full svg.ch{animation:cbeat .5s 4}
+.care.cs8 .cbg{background:radial-gradient(circle at 50% 10%,#1A2560,#05081A 75%)}
+.care.cs8 .chc.on .chw::before{content:'⭐';position:absolute;left:50%;top:-10px;font-size:28px;margin-left:-.5em;animation:cstar .6s ease-in forwards}
+@keyframes cstar{from{transform:translateY(-70px) scale(1.4)}to{transform:translateY(30px) scale(.3);opacity:0}}
+@media (prefers-reduced-motion:reduce){.care *{animation:none!important;transition:none!important}.care .chr{opacity:1;transform:none}}
 
 </style>
 </head>
@@ -3082,15 +3161,23 @@ var HON=(function(){
   /* 練習時間：自己畫的時鐘（白底金框、紅色指針；使用者 2026-10-12 D8 第 1 題 A，取代 ⏱） */
   var CLK='<svg class="hclk" viewBox="0 0 100 100" aria-label="時鐘"><circle cx="50" cy="50" r="44" fill="#FFF8E6" stroke="#FFB300" stroke-width="8"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00" transform="rotate(90 50 50)"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00" transform="rotate(180 50 50)"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00" transform="rotate(270 50 50)"/><rect x="47" y="24" width="6" height="28" rx="3" fill="#333"/><rect class="hclkm" x="47" y="34" width="6" height="18" rx="3" fill="#D84315" transform="rotate(60 50 50)"/><circle cx="50" cy="50" r="6" fill="#333"/></svg>';
   /* 三種最高榮譽（使用者 2026-10-12 D6～D8 定案）：學生平板、老師投影、印獎狀、老師看板的字一模一樣，只寫在這裡 */
-  var AWK=['sec','acc','prog'],AWN={sec:'最認真練習',acc:'成績最優',prog:'進步最多'};
+  /* 2026-10-15 D 第 8 件：第 4 種最高榮譽「最用心」（老師 D9 第 1 題 A＋B、D12 ④） */
+  var AWK=['sec','acc','prog','care'],AWN={sec:'最認真練習',acc:'成績最優',prog:'進步最多',care:'最用心'};
+  /* 自己畫的圖示（老師 D10 第 2、3 題 A）：獎牌上面有愛心 ＝ 最用心；眼睛＋耳朵 ＝ 看完、聽完 才選；紅 ✗ ➜ 綠 ✓ ＝ 答錯的 改對了 */
+  var HRT='<svg class="hhrt" viewBox="0 0 120 150" aria-label="最用心"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="#FFC928"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path d="M60 122C30 102 34 74 48 72C55 71 59 76 60 80C61 76 65 71 72 72C86 74 90 102 60 122Z" fill="#E8453C" stroke="#FFFDF0" stroke-width="4" stroke-linejoin="round"/></svg>';
+  var EYE='<svg class="heye" viewBox="0 0 200 100" aria-label="看完、聽完"><path d="M8 50Q50 6 92 50Q50 94 8 50Z" fill="#fff" stroke="#333" stroke-width="5"/><circle cx="50" cy="50" r="17" fill="#2F7BE8"/><circle cx="50" cy="50" r="8" fill="#111"/><circle cx="55" cy="44" r="4" fill="#fff"/><path d="M122 52C118 14 182 8 186 46C188 70 162 70 160 88C158 100 138 100 134 88" fill="#FFD3B0" stroke="#B86B3C" stroke-width="6" stroke-linecap="round"/><path d="M142 48C142 30 168 28 168 46C168 58 154 56 154 68" fill="none" stroke="#B86B3C" stroke-width="6" stroke-linecap="round"/></svg>';
+  var FIX='<svg class="hfix" viewBox="0 0 200 100" aria-label="答錯的改對了"><circle cx="38" cy="50" r="32" fill="#E8453C"/><path d="M26 38l24 24M50 38L26 62" stroke="#fff" stroke-width="9" stroke-linecap="round"/><path d="M80 50h34" stroke="#FFD54A" stroke-width="9" stroke-linecap="round"/><path d="M108 36l16 14-16 14z" fill="#FFD54A"/><circle cx="162" cy="50" r="32" fill="#2EB85C"/><path d="M146 51l11 11 21-23" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function mn(sec){sec=Math.round(+sec||0);return sec<60?sec+' 秒':Math.round(sec/60)+' 分鐘'}
   function f1(v){return Math.round(v*10)/10}
   /* 個人獎下面那一句：per ＝ 這週／上週／這學期／這段期間；p ＝ {sec, acc, pf, pt} */
-  function awl(k,p,per){return k==='sec'?(per||'這週')+' 練習 '+mn(p.sec):k==='acc'?'正確率 '+f1(p.acc)+' 分：每一題都看清楚才選。':
+  function awl(k,p,per){return k==='care'?'用心程度 '+Math.round(+p.care||0)+' 分':k==='sec'?(per||'這週')+' 練習 '+mn(p.sec):k==='acc'?'正確率 '+f1(p.acc)+' 分：每一題都看清楚才選。':
     (p.pf!=null&&p.pt!=null?'正確率從 '+p.pf+' 分進步到 '+p.pt+' 分（多了 '+(p.pt-p.pf)+' 分）。':'正確率進步 '+f1(p.prog)+' 分。')}
   /* 班級獎下面那一句：v ＝ 那一種的數字（練習時間 ＝ 平均每一個人幾秒） */
-  function awc(k,v){return k==='sec'?'平均每一個人 練習 '+mn(v):k==='acc'?'平均正確率 '+f1(v)+' 分':'平均每一個人 正確率進步 '+f1(v)+' 分'}
-  function awi(k){return k==='sec'?EFF:k==='prog'?UP:'🎯'}
+  function awc(k,v){return k==='care'?'平均每一個人 用心程度 '+Math.round(+v||0)+' 分':k==='sec'?'平均每一個人 練習 '+mn(v):k==='acc'?'平均正確率 '+f1(v)+' 分':'平均每一個人 正確率進步 '+f1(v)+' 分'}
+  function awi(k){return k==='sec'?EFF:k==='prog'?UP:k==='care'?HRT:'🎯'}
+  /* 獎狀那一行（老師 D11 第 2 題 甲、第 3 題 A：四種都一樣精簡） */
+  function aws(k,p,per){return k==='care'?'用心程度 '+Math.round(+p.care||0)+' 分':k==='sec'?(per||'這週')+' 練習 '+mn(p.sec):k==='acc'?'正確率 '+f1(p.acc)+' 分':
+    (p.pf!=null&&p.pt!=null?'從 '+p.pf+' 分 進步到 '+p.pt+' 分':'正確率 進步 '+f1(p.prog)+' 分')}
   /* 進步：綠色粗箭頭（跟老師看板同一個） */
   var UP='<svg class="hup" viewBox="0 0 40 48" aria-label="進步"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg>';
   var ST=[{nm:'金色獎盃從天而降',h:'🏆',fx:'cf'},{nm:'皇冠加冕',h:'👑',fx:'tw'},{nm:'頒獎台升起',h:'🥇',fx:'cf'},{nm:'煙火大會',h:'🎆',fx:'fw'},
@@ -3143,7 +3230,60 @@ var HON=(function(){
     drum:function(d){d=d||1.4;for(var t=0;t<d;t+=.06)noise(t,.05,.12+.2*t/d,180);noise(d,.7,.35,4000)},
     clap:function(d){d=d||2.2;for(var i=0;i<70;i++)noise(Math.random()*d,.05,rnd(.05,.16),rnd(900,2400))},
     ding:function(){tone(1319,0,.5,'sine',.12);tone(1760,.08,.6,'sine',.08)}};
-  return {EFF:EFF,UP:UP,CLK:CLK,AWK:AWK,AWN:AWN,mn:mn,awl:awl,awc:awc,awi:awi,ST:ST,pick:pick,scene:scene,fx:fx,snd:snd,ac:ac};
+  /* ══ ❤ 這週 用心程度（2026-10-15 D 第 8 件；老師 D12 ③ 甲「五顆愛心 裝滿」＋「每一次都不一樣風格」＋〔📖 說明〕）══
+     一顆愛心 ＝ 一項 ＝ 20 分，五顆裝滿 ＝ 100 分；數字從 0 加上去；裝滿的愛心會笑、會跳；最少的那一顆空的地方閃金光＋那一項的圖示搖＋「💡 請 …」。
+     8 種風格（CST）輪流、跟上一次不一樣（pick 同一套洗牌）；〔📖 說明〕＝ 五項一條一條：做了什麼、幾分、✅ 很用心／💡 可以更好 */
+  var CI=['<span class="cem">📅</span>','<span class="cem">📝</span>',EYE,FIX,CLK.replace('class="hclk"','class="hclk cclk"')];
+  var CN=['這週 練了 幾天','做完 幾次 題目、遊戲','看完、聽完 才選','答錯的 改對了','這週 練習 幾分鐘'];
+  var CF=['4 天','5 次','太快亂按 0 題','全部改對','30 分鐘'];
+  var CT=['請 再多練 1 天','請 再做完 1 次','請 看完、聽完 再選','請 把答錯的 再做一次','請 再多練 幾分鐘'];
+  var CC=['#2F7BE8','#9B59D0','#00A6A6','#2EB85C','#FF9F1C'];
+  var CST=[{nm:'水倒進去',fx:''},{nm:'愛心氣球',fx:'cf'},{nm:'寶石愛心',fx:'tw'},{nm:'燈籠夜空',fx:'sr'},
+    {nm:'顏料滴下來',fx:'cf'},{nm:'愛心火車',fx:''},{nm:'心跳線',fx:''},{nm:'星星雨',fx:'mt'}];
+  var HP='M50 88C20 66 4 48 4 28C4 13 15 4 28 4C38 4 45 10 50 18C55 10 62 4 72 4C85 4 96 13 96 28C96 48 80 66 50 88Z',CUID=0;
+  function cpick(key){key='hon_'+(key||'cs');var o=lsg(key)||{q:[],last:-1};
+    if(!o.q||!o.q.length){var a=[],i;for(i=0;i<CST.length;i++)a.push(i);for(i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}
+      if(a[0]===o.last)a.push(a.shift());o.q=a}
+    var n=o.q.shift();o.last=n;lss(key,o);return n}
+  function cweak(c){var w=-1,m=99;for(var i=0;i<5;i++)if(c.it[i]<20&&c.it[i]<m){m=c.it[i];w=i}return w}
+  /* 五項各做了什麼（說明用） */
+  function cdid(c){var r=c.raw||{};return [r.days+' 天',r.count+' 次',!r.q?'這週 還沒有作答':r.fq?'太快亂按 '+r.fq+' 題（'+r.fp+'%）':'太快亂按 0 題',
+    !r.q?'這週 還沒有作答':!r.W?'沒有答錯':'答錯 '+r.W+' 題，改對 '+r.F+' 題',mn(r.sec)]}
+  function heart(k,v,u){var y=(84*(1-v/20)).toFixed(1);
+    return '<div class="chc" data-k="'+k+'"><div class="cv">'+v+'</div><div class="chw"><i class="cdrop" style="background:'+CC[k]+'"></i>'+
+      '<svg class="ch" viewBox="0 0 100 92"><defs><clipPath id="cc'+u+'_'+k+'"><path d="'+HP+'"/></clipPath></defs><path d="'+HP+'" class="cbk"/>'+
+      '<g clip-path="url(#cc'+u+'_'+k+')"><g class="clq" data-y="'+y+'" style="transform:translateY(92px)"><g class="cwv"><path d="M-40 6Q-30 0 -20 6T0 6T20 6T40 6T60 6T80 6T100 6T120 6T140 6V100H-40Z" fill="'+CC[k]+'"/></g></g>'+
+      '<rect class="cshn" x="-60" y="-10" width="30" height="120" fill="#fff" opacity=".35" transform="rotate(20)"/></g>'+
+      '<path class="cgap" d="'+HP+'"/><g class="cfc" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"><path d="M32 38q5-6 10 0M58 38q5-6 10 0"/><path d="M40 52q10 9 20 0"/></g>'+
+      '<path d="'+HP+'" class="cln"/></svg></div><div class="cic">'+CI[k]+'</div></div>'}
+  /* 畫＋演：el ＝ 放的地方、st ＝ 第幾種風格、c ＝ _calc.js care() 的結果、o ＝ {help:1 有〔📖 說明〕, onHelp(打開說明時), t:標題} */
+  function cscene(el,st,c,o){o=o||{};var S=CST[st]||CST[0],u=++CUID,w=cweak(c),RD=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,G=RD?0:800;
+    el.className='care cs'+(st+1);
+    el.innerHTML='<div class="cbg"></div><div class="hfx cfx"></div><svg class="cecg" viewBox="0 0 1000 100" preserveAspectRatio="none"><path d="M0 60H180L210 20L240 95L270 60H380L410 20L440 95L470 60H580L610 20L640 95L670 60H780L810 20L840 95L870 60H1000"/></svg>'+
+      '<div class="ct1">'+(o.t||'這週 用心程度')+'</div><div class="csum"><b class="cn">0</b><span> ／100</span></div>'+
+      '<div class="crow">'+c.it.map(function(v,k){return heart(k,v,u)}).join('')+'</div><div class="cnote">❤ 1 顆 裝滿 ＝ 20 分</div>'+
+      '<div class="ctip">'+(w<0?'🎉 五顆 都裝滿了！':'💡 '+CT[w])+'</div>'+
+      (o.help?'<button class="chb" type="button">📖 說明</button><div class="chp" hidden></div>':'');
+    fx(el.querySelector('.cfx'),S.fx);
+    var hc=el.querySelectorAll('.chc'),n=el.querySelector('.cn'),s=0,T=[];
+    function up(a,b){var t0=Date.now();(function f(){var p=Math.min(1,(Date.now()-t0)/500);n.textContent=Math.round(a+(b-a)*p);if(p<1&&el.contains(n))requestAnimationFrame(f)})()}
+    c.it.forEach(function(v,k){T.push(setTimeout(function(){var h=hc[k],l=h.querySelector('.clq');h.classList.add('on');
+      T.push(setTimeout(function(){l.style.transform='translateY('+l.getAttribute('data-y')+'px)';up(s,s+v);s+=v;
+        if(v>=20)T.push(setTimeout(function(){h.classList.add('full')},RD?0:800))},RD?0:(st===4||st===7?450:150)))},200+k*G))});
+    T.push(setTimeout(function(){n.parentNode.classList.add('pop');if(w>=0)hc[w].classList.add('wk');el.querySelector('.ctip').classList.add('on')},200+5*G+(RD?0:900)));
+    el._ct=T;
+    if(o.help){var b=el.querySelector('.chb'),P=el.querySelector('.chp');b.onclick=function(){var on=P.hidden;P.hidden=!on;b.textContent=on?'✕ 收起說明':'📖 說明';b.classList.toggle('on',on);
+      if(on){P.innerHTML=chelp(c);if(o.onHelp)o.onHelp();setTimeout(function(){[].forEach.call(P.querySelectorAll('.chr'),function(r){r.classList.add('on')})},30)}}}
+  }
+  function cstop(el){if(el&&el._ct)el._ct.forEach(clearTimeout)}
+  /* 〔📖 說明〕：五項一條一條（圖示、名字、做了什麼、長條 N／20、✅ 很用心 或 💡 怎麼更好） */
+  function chelp(c){var d=cdid(c);
+    return '<div class="chh">5 項 ✕ 20 分 ＝ 100 分</div>'+c.it.map(function(v,k){var ok=v>=20;
+      return '<div class="chr'+(ok?' ok':'')+'" style="transition-delay:'+(k*.25).toFixed(2)+'s"><span class="chi">'+CI[k]+'</span><span class="chn"><b>'+CN[k]+'</b><small>你：'+d[k]+'　滿分：'+CF[k]+'</small></span>'+
+        '<span class="chbar"><i style="width:'+(v*5)+'%;background:'+CC[k]+';transition-delay:'+(.3+k*.25).toFixed(2)+'s"></i><em>'+v+'／20</em></span>'+
+        '<span class="chk">'+(ok?'✅ 很用心':'💡 '+CT[k])+'</span></div>'}).join('')}
+  return {EFF:EFF,UP:UP,CLK:CLK,HRT:HRT,EYE:EYE,FIX:FIX,AWK:AWK,AWN:AWN,mn:mn,awl:awl,awc:awc,awi:awi,aws:aws,ST:ST,pick:pick,scene:scene,fx:fx,snd:snd,ac:ac,
+    CST:CST,CN:CN,CT:CT,cpick:cpick,cscene:cscene,cstop:cstop,chelp:chelp,cweak:cweak,cdid:cdid};
 })();
 
 /* ══════════ 成績紀錄（2026-10-07 對話 C；2026-10-08 對話 D：遊戲、Review 1 也記）══════════
@@ -3299,8 +3439,12 @@ function scDone(pick,ok,ratio){
 /* ── 作答結束（2026-10-12 D 第 4 件；第 4 件修正 ＝ 使用者 D6～D8 定案）──
    題目（m:'q'）：① 正確率 ➜ ② 練習時間（每一個人都看得到，不是獎）➜ ③ 🏆 榮譽動畫（只有這一次讓他第一次進榜或名次上升才演）➜ 答錯整理
    遊戲（m:'g'）：① 正確率（第一次作答）＋✨ 訂正成功 ➜ ② 練習時間 ➜ ③ 🏆（同上）➜ 這個遊戲本班前 10 名
-   🃏 記憶配對（m:'mem'）：配完幾對、用幾秒、翻錯幾次 ➜ ② 練習時間 ➜ ③ 🏆（同上） */
-var SCLIST={q:['acc','time','honor','end'],g:['acc','time','honor','gtop'],mem:['mem','time','honor']};
+   🃏 記憶配對（m:'mem'）：配完幾對、用幾秒、翻錯幾次 ➜ ② 練習時間 ➜ ③ 🏆（同上）
+   2026-10-15 D 第 8 件（老師 D12 ③）：時鐘 ➜ ❤ 這週 用心程度（每一次做完都演、8 種風格輪流、〔📖 說明〕、可以跳過、不放聲音）➜ 🏆 */
+var SCLIST={q:['acc','time','care','honor','end'],g:['acc','time','care','honor','gtop'],mem:['mem','time','care','honor']};
+function scCareOf(E){return E.res&&E.res.me&&E.res.me.care}
+/* 不演的那一幕從清單拿掉（名次沒上升 ＝ 🏆、沒有網路 ＝ ❤） */
+function scDrop(E,nm){var L=E.list,i=L.indexOf(nm);if(i>E.k)L.splice(i,1)}
 function scS100(Q){var n=Q.length,s=0;Q.forEach(function(q){if(q[0])s+=60/n+40/n*q[4]});return Math.round(s)}
 function scEnd(o){
   o=o||{};var m=o.m||'q',Q=o.qs||SCQ,key=SCH.key(),n=Q.length,ok=0,fast=0;Q.forEach(function(q){ok+=q[0];fast+=q[3]});
@@ -3383,8 +3527,13 @@ function scScene(){
     if(hw){SCAUTO=setTimeout(function(){if(SCEND===E){E.hto=1;scScene()}},Math.max(0,3000-(Date.now()-E.hw0)));
       h='<div class="sct">'+HON.CLK+'</div><div class="scwait"><i>⏳</i> 正在送出成績…</div>'+nav()}
     else{if(E.res||E.fail)E.tgo=1;E.ups=scUps(E);
+      if(E.tgo&&!scCareOf(E))scDrop(E,'care');
       if(!E.ups.length&&E.tgo){var hi=L.indexOf('honor');if(hi>k)L.splice(hi,1);last=k===L.length-1;dots=L.length>1?'<div class="scdots">'+L.map(function(x,n){return '<i'+(n===k?' class="on"':'')+'></i>'}).join('')+'</div>':''}
       h=scTimeHTML(E)+(last?SCH.btns(E):nav());if(!last&&E.tgo)SCAUTO=setTimeout(scNext,4200)}   /* 還在送就等（送到或確定沒網路會再畫一次） */
+  }else if(nm==='care'){
+    if(!scCareOf(E)){L.splice(k,1);E.k=Math.min(k,L.length-1);scScene();return}   /* 沒有網路、伺服器還沒回 ＝ 不演 */
+    h='<div id="scCare"></div>'+(last?SCH.btns(E):nav());
+    if(!last)SCAUTO=setTimeout(scNext,7600);
   }else if(nm==='honor'){
     h='<div class="hon" id="scHon"></div>'+(last?SCH.btns(E):nav());
   }else if(nm==='gtop'){
@@ -3404,6 +3553,7 @@ function scScene(){
   if(last&&scLive())h+=scByeHTML();   /* 每一個題目、遊戲做完：提醒登出（D 第 6 件 ③） */
   SCH.box().innerHTML='<div class="scn" id="scn">'+dots+h+'</div>';
   if(nm==='honor'&&$('#scHon'))scHonGo(E);
+  if(nm==='care'&&$('#scCare')){if(E.cst==null)E.cst=HON.cpick('cs');HON.cscene($('#scCare'),E.cst,scCareOf(E),{help:1,onHelp:function(){clearTimeout(SCAUTO)}})}
   if(nm==='time'&&$('.sctime .hclkm'))$('.sctime').classList.add('go');
   if(nm==='acc')setTimeout(function(){var f=$('#scFg'),a=$('#scAcc');if(!f)return;var L=+f.getAttribute('stroke-dasharray');
     f.setAttribute('stroke-dashoffset',L*(1-E.acc/100));var t0=Date.now(),iv=setInterval(function(){var x=Math.min(1,(Date.now()-t0)/1300);
@@ -3483,7 +3633,7 @@ function scLkLoad(cb){if(!SCON||SCSRC!=='home'){if(cb)cb();return}
 function scLkTab(t,l){var u=/(u\d)\.html/.exec(location.pathname);if(!u||typeof TABM==='undefined'||!TABM[t])return '';return u[1]+'-t'+t+(TABM[t].sub?'-'+(l||0):'')}
 /* 一整頁大字：🔒 請先登入〔🔑 登入〕／🔒 還沒開放（〔⬅ 回首頁〕） */
 var SCLKRETRY=null;
-function scLkShow(st,retry){SCLKRETRY=retry||null;var home=SCHOMEP;
+function scLkShow(st,retry){SCLKRETRY=retry||null;var home=SCHOMEP&&!SCLKPAGE;
   scFull('sclk','<div class="sfic">🔒</div><div class="sf1">'+(st==='login'?'請先登入':'還沒開放')+'</div><div class="sfbt">'+
     (st==='login'?'<button class="scK" id="scLkIn">🔑 登入</button>':'')+(home?'<button class="scN" id="scLkX">👌 知道了</button>':'<button class="scN" id="scLkHome">⬅ 回首頁</button>')+'</div>')}
 function scLkGate(k,retry){var st=scLkOf(k);if(!st){scFullOff('sclk');return true}scLkShow(st,retry);return false}
@@ -3565,6 +3715,24 @@ function scIdleTick(){if(!SCON||!SCID||SCGUEST){scIdleHide();return}
   if(left<=SCWARN){var o=document.getElementById('scidle');if(!o||!o.classList.contains('on'))scFull('scidle','<div class="sfic">⏳</div><div class="sf2"><b id="scIdleN">30</b> 秒後自動登出</div><div class="sfbt"><button class="scY" id="scStay">👆 我還在</button></div>');
     var n=document.getElementById('scIdleN');if(n)n.textContent=Math.max(1,Math.ceil(left/1000))}
   else scIdleHide()}
+/* ══ 👀 看字卡、按 🔊 聽，也算練習時間（2026-10-15 D 第 8 件，老師 D12 ②：句型卡、Review 1 頁、在家複習的每一頁）══
+   登入才記；兩次點（點、打字、捲動）之間最多算 2 分鐘（一張卡停超過 2 分鐘只算 2 分鐘）；超過 3 分鐘沒點 ＝ 那一段不算（也會被登出）；
+   換到別的分頁不算；作答中（📝 複習題、📝 複習蓋在上面）不算（作答的秒數另外記）。存成一筆 m:'v'（代號 g年級v_區域），跟成績一起送 */
+var SCVW=null,SCVMAX=120000;
+function scViewOn(a,nm){if(!SCON||SCVW)return;SCVW={a:a,nm:nm||'👀 看字卡',last:0,acc:0,id:null,busy:false};
+  ['pointerdown','keydown','wheel','touchstart'].forEach(function(e){document.addEventListener(e,scVwAct,{passive:true,capture:true})});
+  window.addEventListener('scroll',scVwAct,{passive:true});
+  document.addEventListener('visibilitychange',function(){scVwAct();if(document.hidden)scVwSave()});
+  window.addEventListener('pagehide',function(){scVwAct();scVwSave()});
+  setInterval(function(){if(SCVW.acc>=300000)scVwSave()},30000)}   /* 5 分鐘存一筆 */
+function scVwAct(){var V=SCVW,n=Date.now();if(!V)return;
+  var live=scLive()&&!document.hidden,busy=scOn()||!!document.querySelector('.scfull.on');
+  if(V.id&&V.id!==SCID)scVwSave();
+  if(live&&V.last&&!V.busy&&!busy&&V.id===SCID){var g=n-V.last;if(g<=SCIDLE)V.acc+=Math.min(g,SCVMAX)}
+  V.last=live?n:0;V.busy=busy;if(live)V.id=SCID}
+function scVwSave(){var V=SCVW;if(!V||!V.id)return;var sec=Math.round(V.acc/1000),id=V.id;V.acc=0;if(V.id!==SCID)V.id=null;if(sec<1)return;
+  var QQ=scGet('q')||[];QQ.push({id:id,set:'g'+String(id).charAt(0)+'v_'+V.a,name:V.nm,m:'v',qs:[],sec:Math.min(3600,sec),src:SCSRC,dev:SCDEV,
+    u:id+Date.now().toString(36)+Math.random().toString(36).slice(2,6),t:Date.now()});scPut('q',QQ.slice(-200));scFlush()}
 /* 首頁的橫幅（只有首頁有 #scbar） */
 function scBar(){var b=document.getElementById('scbar');if(!b)return;document.body.classList.toggle('scq',!!(SCON&&SCID&&!scAsked()));
   if(!SCON){b.innerHTML='';b.hidden=true;return}b.hidden=false;
@@ -3604,9 +3772,10 @@ SCH={on:function(){return document.body.classList.contains('tqon')&&$('#rv').cla
  btns:function(){return '<div class="rvbtns">'+(MISSLOG.length?'<button id="tqMiss">📌 答錯整理</button>':'')+
    '<button class="go" id="tqAgain">🔁 再挑戰一次</button>'+(TCUR<TABM.length-1?'<button class="go" id="tqNext">➡ 下一個分頁</button>':'')+'</div>'+
    '<button id="tqBack">🃏 回到字卡</button>'}};
+scViewOn('u'+SCU,'👀 句型卡 Unit '+SCU);   /* 看字卡、按 🔊 也算練習時間（2026-10-15 D 第 8 件） */
 
 /* ══════════ 📝 複習題 5 題（2026-10-04 對話 B）══════════ */
-var TQD=[[[{"k":"read","o":["old","are","you","How"],"h":"old 唸 /oʊld/。","show":"old","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["How old are you?","How are you?","Who are you?","What’s your name?"],"h":"有 old ＝ 問幾歲。","say":"How old are you?","q":"你聽到哪一句？"},{"k":"zh2en","o":["you","your","I","are"],"h":"你 ＝ you，你的 ＝ your。","q":"「你」　英文是？"},{"k":"en2zh","o":["幾歲","名字","什麼","你"],"h":"How old ＝ 幾歲。","q":"「How old」　中文是？"},{"k":"trap","o":["are","is","am","your"],"h":"you 配 are：How old are you?","q":"How old ___ you? 空格填？"}],[{"k":"read","o":["How old are you?","How are you?","Who are you?","What’s your name?"],"h":"聽 old。","show":"How old are you?","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["幾歲","名字","你好嗎","你是誰"],"h":"How old ＝ 幾歲。","say":"How old are you?","q":"這一句在問什麼？","sp":""},{"k":"zh2en","o":["How old are you?","How are you old?","You are how old?","How old you are?"],"h":"How old 放最前面，再 are you。","q":"「你幾歲？」　英文是？"},{"k":"en2zh","o":["你幾歲？","你好嗎？","你是誰？","你的名字是什麼？"],"h":"How old ＝ 幾歲，you ＝ 你。","q":"「How old are you?」　中文是？"},{"k":"trap","o":["How old are you?","How old is you?","How old you?","How old am you?"],"h":"you 配 are，are 不能少。","q":"哪一句是對的？"}]],[{"k":"read","o":["How old are you?","How are you?","How old is he?","I’m ten years old."],"h":"聽 How old 和 you。","show":"How old are you?","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["How old","You","Are","Years"],"h":"問幾歲，How old 放最前面。","say":"How old are you?","q":"你聽到的<b class=\"em\">第一個詞</b>是？"},{"k":"zh2en","o":["How old ➜ are ➜ you?","You ➜ are ➜ how old?","Are ➜ you ➜ how old?","How old ➜ you ➜ are?"],"h":"中文「幾歲」在最後，英文 How old 跑到最前面。","q":"「你 是 幾歲？」英文的順序是？","sp":"How old are you?"},{"k":"en2zh","o":["幾歲","你","是","名字"],"h":"How old ＝ 幾歲。","q":"How old are you? 的 <b class=\"em\">How old</b> 是中文的哪一個詞？"},{"k":"trap","o":["最前面","最後面","中間","不用說"],"h":"英文問句，問的字（How old）放最前面。","q":"中文「幾歲」在句子最後，英文 How old 放在哪裡？","sp":""}],[[{"k":"read","o":["years","year","old","ten"],"h":"years 最後有 /z/。","show":"years","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["I’m ten years old.","I’m eleven years old.","I’m seven years old.","I’m twelve years old."],"h":"聽數字：ten ＝ 十。","say":"I’m ten years old.","q":"你聽到哪一句？"},{"k":"zh2en","o":["years old","years","old","year"],"h":"幾歲 ＝ 數字 ＋ years old。","q":"「歲」　英文是？"},{"k":"en2zh","o":["我是","我","我的","你是"],"h":"I’m ＝ I am ＝ 我是。","q":"「I’m」　中文是？"},{"k":"trap","o":["years","year","yeas","ears"],"h":"十年不只一年，要加 s：years。","q":"I’m ten ___ old. 空格填？"}],[{"k":"read","o":["I’m eight.","I’m ten.","I’m nine.","I’m Emma."],"h":"eight ＝ 8，gh 不發音。","show":"I’m eight.","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["I’m twelve years old.","I’m eleven years old.","I’m seven years old.","I’m six years old."],"h":"twelve ＝ 12。","say":"I’m twelve years old.","q":"你聽到哪一句？"},{"k":"zh2en","o":["I’m eleven years old.","I’m eleven year old.","My eleven years old.","I eleven years old."],"h":"I’m ＋ 數字 ＋ years old。","q":"「我十一歲。」　英文是？"},{"k":"en2zh","o":["我十歲。","我是十號。","你十歲。","我有十個。"],"h":"years old 省略了，還是「十歲」。","q":"「I’m ten.」　中文是？"},{"k":"trap","o":["years old","I’m","ten","old"],"h":"I’m ten years old. ＝ I’m ten.。","q":"I’m ten years old. 可以省略哪裡，意思不變？"}]],[{"k":"read","o":["I’m ten years old.","You’re ten years old.","I’m seven years old.","My name is Ken."],"h":"聽 I’m 和 ten。","show":"I’m ten years old.","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["I’m ten.","I’m Ken.","My name is ten.","You’re ten."],"h":"問幾歲，就答幾歲。","say":"How old are you?","q":"要怎麼回答？"},{"k":"zh2en","o":["I’m ten years old.","You’re ten years old.","I ten years old.","My ten years old."],"h":"我是 ＝ I’m，’m 不能少。","q":"「你幾歲？」「我十歲。」答句的英文是？"},{"k":"en2zh","o":["我九歲。","我是九號。","你九歲。","我叫 Nine。"],"h":"I’m nine. ＝ 我九歲。","q":"A：How old are you?　B：I’m nine.　B 說什麼？"},{"k":"trap","o":["My name is Mike.","I’m nine.","I’m nine years old.","I’m twelve."],"h":"問幾歲要答數字，不是名字。","q":"別人問 How old are you?，哪一個回答<b class=\"em\">不對</b>？"}],[{"k":"read","o":["You’re ten.","I’m ten.","You’re eleven.","You’re Ken."],"h":"You’re ＝ 你是。","show":"You’re ten.","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["I’m ten.","I’m Ken.","I’m nine.","I’m twelve."],"h":"ten 和 Ken 押韻，聽第一個音：t。","say":"I’m ten.","q":"你聽到哪一句？"},{"k":"zh2en","o":["You’re ten.","Your ten.","I’m ten.","You ten."],"h":"你是 ＝ You’re（You are）；Your ＝ 你的。","q":"「你十歲。」　英文是？"},{"k":"en2zh","o":["我八歲。","我八年。","你八歲。","我是八號。"],"h":"years old ＝ 歲。","q":"「I’m eight years old.」　中文是？"},{"k":"trap","o":["gh","ei","ht","eg"],"h":"eight 的 gh 不發音。","q":"eight 的哪兩個字母<b class=\"em\">不發音</b>？","sp":""}]], TQPAGE="G3 - L1 + L2/unit2.html";
+var TQD=[[[{"k":"read","o":["old","are","you","How"],"h":"old 唸 /oʊld/。","show":"old","q":"🔊 聽 1～4：哪一個是上面這個字？"},{"k":"listen","o":["How old are you?","How are you?","Who are you?","What’s your name?"],"h":"有 old ＝ 問幾歲。","say":"How old are you?","q":"你聽到哪一句？"},{"k":"zh2en","o":["you","your","I","are"],"h":"你 ＝ you，你的 ＝ your。","q":"「你」　英文是？"},{"k":"en2zh","o":["幾歲","名字","什麼","你"],"h":"How old ＝ 幾歲。","q":"「How old」　中文是？"},{"k":"trap","o":["are","is","am","your"],"h":"you 配 are：How old are you?","q":"How old ___ you? 空格填？"}],[{"k":"read","o":["How old are you?","How are you?","Who are you?","What’s your name?"],"h":"聽 old。","show":"How old are you?","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["幾歲","名字","你好嗎","你是誰"],"h":"How old ＝ 幾歲。","say":"How old are you?","q":"這一句在問什麼？","sp":""},{"k":"zh2en","o":["How old are you?","How are you old?","You are how old?","How old you are?"],"h":"How old 放最前面，再 are you。","q":"「你幾歲？」　英文是？"},{"k":"en2zh","o":["你幾歲？","你好嗎？","你是誰？","你的名字是什麼？"],"h":"How old ＝ 幾歲，you ＝ 你。","q":"「How old are you?」　中文是？"},{"k":"trap","o":["How old are you?","How old is you?","How old you?","How old am you?"],"h":"you 配 are，are 不能少。","q":"哪一句是對的？"}]],[{"k":"read","o":["How old are you?","How are you?","How old is he?","I’m ten years old."],"h":"聽 How old 和 you。","show":"How old are you?","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["How old","You","Are","Years"],"h":"問幾歲，How old 放最前面。","say":"How old are you?","q":"你聽到的<b class=\"em\">第一個詞</b>是？"},{"k":"zh2en","o":["How old ➜ are ➜ you?","You ➜ are ➜ how old?","Are ➜ you ➜ how old?","How old ➜ you ➜ are?"],"h":"中文「幾歲」在最後，英文 How old 跑到最前面。","q":"「你 是 幾歲？」英文的順序是？","sp":"How old are you?"},{"k":"en2zh","o":["幾歲","你","是","名字"],"h":"How old ＝ 幾歲。","q":"How old are you? 的 <b class=\"em\">How old</b> 是中文的哪一個詞？"},{"k":"trap","o":["最前面","最後面","中間","不用說"],"h":"英文問句，問的字（How old）放最前面。","q":"中文「幾歲」在句子最後，英文 How old 放在哪裡？","sp":""}],[[{"k":"read","o":["years","year","old","ten"],"h":"years 最後有 /z/。","show":"years","q":"🔊 聽 1～4：哪一個是上面這個字？"},{"k":"listen","o":["I’m ten years old.","I’m eleven years old.","I’m seven years old.","I’m twelve years old."],"h":"聽數字：ten ＝ 十。","say":"I’m ten years old.","q":"你聽到哪一句？"},{"k":"zh2en","o":["years old","years","old","year"],"h":"幾歲 ＝ 數字 ＋ years old。","q":"「歲」　英文是？"},{"k":"en2zh","o":["我是","我","我的","你是"],"h":"I’m ＝ I am ＝ 我是。","q":"「I’m」　中文是？"},{"k":"trap","o":["years","year","yeas","ears"],"h":"十年不只一年，要加 s：years。","q":"I’m ten ___ old. 空格填？"}],[{"k":"read","o":["I’m eight.","I’m ten.","I’m nine.","I’m Emma."],"h":"eight ＝ 8，gh 不發音。","show":"I’m eight.","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["I’m twelve years old.","I’m eleven years old.","I’m seven years old.","I’m six years old."],"h":"twelve ＝ 12。","say":"I’m twelve years old.","q":"你聽到哪一句？"},{"k":"zh2en","o":["I’m eleven years old.","I’m eleven year old.","My eleven years old.","I eleven years old."],"h":"I’m ＋ 數字 ＋ years old。","q":"「我十一歲。」　英文是？"},{"k":"en2zh","o":["我十歲。","我是十號。","你十歲。","我有十個。"],"h":"years old 省略了，還是「十歲」。","q":"「I’m ten.」　中文是？"},{"k":"trap","o":["years old","I’m","ten","old"],"h":"I’m ten years old. ＝ I’m ten.。","q":"I’m ten years old. 可以省略哪裡，意思不變？"}]],[{"k":"read","o":["I’m ten years old.","You’re ten years old.","I’m seven years old.","My name is Ken."],"h":"聽 I’m 和 ten。","show":"I’m ten years old.","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["I’m ten.","I’m Ken.","My name is ten.","You’re ten."],"h":"問幾歲，就答幾歲。","say":"How old are you?","q":"要怎麼回答？"},{"k":"zh2en","o":["I’m ten years old.","You’re ten years old.","I ten years old.","My ten years old."],"h":"我是 ＝ I’m，’m 不能少。","q":"「你幾歲？」「我十歲。」答句的英文是？"},{"k":"en2zh","o":["我九歲。","我是九號。","你九歲。","我叫 Nine。"],"h":"I’m nine. ＝ 我九歲。","q":"A：How old are you?　B：I’m nine.　B 說什麼？"},{"k":"trap","o":["My name is Mike.","I’m nine.","I’m nine years old.","I’m twelve."],"h":"問幾歲要答數字，不是名字。","q":"別人問 How old are you?，哪一個回答<b class=\"em\">不對</b>？"}],[{"k":"read","o":["You’re ten.","I’m ten.","You’re eleven.","You’re Ken."],"h":"You’re ＝ 你是。","show":"You’re ten.","q":"🔊 聽 1～4，哪一個唸的是它？"},{"k":"listen","o":["I’m ten.","I’m Ken.","I’m nine.","I’m twelve."],"h":"ten 和 Ken 押韻，聽第一個音：t。","say":"I’m ten.","q":"你聽到哪一句？"},{"k":"zh2en","o":["You’re ten.","Your ten.","I’m ten.","You ten."],"h":"你是 ＝ You’re（You are）；Your ＝ 你的。","q":"「你十歲。」　英文是？"},{"k":"en2zh","o":["我八歲。","我八年。","你八歲。","我是八號。"],"h":"years old ＝ 歲。","q":"「I’m eight years old.」　中文是？"},{"k":"trap","o":["gh","ei","ht","eg"],"h":"eight 的 gh 不發音。","q":"eight 的哪兩個字母<b class=\"em\">不發音</b>？","sp":""}]], TQPAGE="G3 - L1 + L2/unit2.html";
 var TQK={read:'👀 認讀',listen:'🎧 聽力',zh2en:'🀄 ➜ 🔤 看中文選英文',en2zh:'🔤 ➜ 🀄 看英文選中文',trap:'⚠️ 易錯'};
 var tqQ=null,tqN=0,tqT=15,tqLeft=15,tqTick=null,tqScore=0,tqOK=0,tqBusy=false,tqKey='',tqHist=[];
 function tqSet(){if(!TQD)return null;var tb=TABM[TCUR];if(!tb)return null;var s=TQD[TCUR];return tb.sub?(s?s[LCUR]:null):s}
@@ -3726,7 +3895,7 @@ function tqDone(btn,ok){
   }
   sNo();
   /* 答錯：遊戲的答錯頁（不傳 gain ➜ 沒有 ⭐ 加分）；認讀、聽力的題目寫出那一句英文 */
-  var qq=rd?'「'+q.show+'」　哪一個唸的是它？':(q.k==='listen'?'🔊 '+q.say+'　'+q.q:q.q);
+  var qq=rd?'👀 '+q.show+'　🔊 聽 1～4：哪一個是 '+(/s/.test(q.show)?'「'+q.show+'」':q.show)+'？':(q.k==='listen'?'🔊 '+q.say+'　'+q.q:q.q);
   var mo={q:qq,pick:btn?btn.getAttribute('data-t'):null,ans:q.o[0],why:q.h};
   if(q.sp!=null)mo.sp=q.sp;
   var my=tqN;

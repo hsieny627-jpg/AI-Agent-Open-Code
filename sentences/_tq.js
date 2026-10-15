@@ -53,6 +53,7 @@ SCH={on:function(){return document.body.classList.contains('tqon')&&$('#rv').cla
  btns:function(){return '<div class="rvbtns">'+(MISSLOG.length?'<button id="tqMiss">📌 答錯整理</button>':'')+
    '<button class="go" id="tqAgain">🔁 再挑戰一次</button>'+(TCUR<TABM.length-1?'<button class="go" id="tqNext">➡ 下一個分頁</button>':'')+'</div>'+
    '<button id="tqBack">🃏 回到字卡</button>'}};
+scViewOn('u'+SCU,'👀 句型卡 Unit '+SCU);   /* 看字卡、按 🔊 也算練習時間（2026-10-15 D 第 8 件） */
 `;
 }
 
@@ -276,7 +277,7 @@ function tqDone(btn,ok){
   }
   sNo();
   /* 答錯：遊戲的答錯頁（不傳 gain ➜ 沒有 ⭐ 加分）；認讀、聽力的題目寫出那一句英文 */
-  var qq=rd?'「'+q.show+'」　哪一個唸的是它？':(q.k==='listen'?'🔊 '+q.say+'　'+q.q:q.q);
+  var qq=rd?'👀 '+q.show+'　🔊 聽 1～4：哪一個是 '+(/\s/.test(q.show)?'「'+q.show+'」':q.show)+'？':(q.k==='listen'?'🔊 '+q.say+'　'+q.q:q.q);
   var mo={q:qq,pick:btn?btn.getAttribute('data-t'):null,ans:q.o[0],why:q.h};
   if(q.sp!=null)mo.sp=q.sp;
   var my=tqN;

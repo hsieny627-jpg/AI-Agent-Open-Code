@@ -36,11 +36,13 @@ function gameQ(ty, c, B, meta) {
     case 'g5': return { q: '🔊 ' + c.s, o: c.o.map(txt), h, say: c.s };
     case 'g8': return { q: (c.b === '___' ? '' : c.b + ' ') + '＿＿' + (/^[.?!,]/.test(c.a) ? '' : ' ') + c.a + '　' + txt(c.zh), o: c.o.map(txt), h };
     case 'g2': { const d = duo(M('g2')) || [{ v: 'he', t: 'He' }, { v: 'she', t: 'She' }], lab = v => (d.filter(x => x.v === v)[0] || {}).t || v;
-      const fill = v => /___/.test(c.txt) ? c.txt.replace(/^___/, cap(lab(v))).replace(/___/, lab(v)) : lab(v);
-      return { q: txt(c.zh) + '　' + c.txt, o: [fill(c.a)].concat(d.filter(x => x.v !== c.a).map(x => fill(x.v))), h, sp: /___/.test(c.txt) ? fill(c.a) : '' }; }
+      /* 每一個 ___ 都填（句子開頭大寫）；括號裡給學生看的中文提示（例「(爸爸)」）不唸（2026-10-15 第 9 件：原本第二個 ___ 沒有填） */
+      const fill = v => /___/.test(c.txt) ? c.txt.replace(/___/g, (m, off, all) => /^\s*$|[.?!]\s*$/.test(all.slice(0, off)) ? cap(lab(v)) : lab(v)) : lab(v);
+      const spk = t => t.replace(/\s*[（(][^）)]*[）)]\s*/g, ' ').trim();
+      return { q: txt(c.zh) + '　' + c.txt, o: [fill(c.a)].concat(d.filter(x => x.v !== c.a).map(x => fill(x.v))), h, sp: /___/.test(c.txt) ? spk(fill(c.a)) : '' }; }
     case 'g3': return { q: txt(c.zh) + '　排出順序', o: [joinS(c.s), '❌ 順序排錯'], h, sp: joinS(c.s) };
-    case 'g7': { const f = c.w.slice(); if (c.b >= 0) f[c.b] = c.fix;
-      return { q: txt(c.zh) + '　' + joinS(c.w) + '（哪裡錯？）', o: [c.b < 0 ? '✅ 這句沒錯' : '錯在 ' + c.w[c.b] + ' ➜ 改成 ' + c.fix, '❌ 沒找對'], h, sp: joinS(f) }; }
+    case 'g7': { const fx = String(c.fix || '').replace(/^改成\s*/, ''), f = c.w.slice(); if (c.b >= 0) f[c.b] = fx;   /* 有的題庫 fix 自己寫了「改成」，不要變成「改成 改成」 */
+      return { q: txt(c.zh) + '　' + joinS(c.w) + '（哪裡錯？）', o: [c.b < 0 ? '✅ 這句沒錯' : '錯在 ' + c.w[c.b] + ' ➜ 改成 ' + fx, '❌ 沒找對'], h, sp: /^[A-Z]/.test(fx) && c.w[c.b] === '?' ? fx : joinS(f) }; }
     case 'g9': { const d = B.DUO9 || duo(M('g9')) || [{ v: 'q', t: '❓ 問句' }, { v: 's', t: '🙋 直述句' }], lab = v => (d.filter(x => x.v === v)[0] || {}).t || v;
       return { q: '「' + txt(c[0]) + '」', o: [lab(c[1])].concat(d.filter(x => x.v !== c[1]).map(x => lab(x.v))), h, sp: txt(c[3] || c[0]) }; }
   }
@@ -86,6 +88,51 @@ if (fs.existsSync(path.join(__dirname, '_jobs_bank.json'))) {
   const JB = JSON.parse(fs.readFileSync(path.join(__dirname, '_jobs_bank.json'), 'utf8'));
   Object.keys(JB).forEach(id => put('g*gm_job-' + id, { name: '💼 職業單字｜' + JB[id].name, qs: JB[id].qs }));
 }
+/* ❌ 錯題分析（2026-10-15 D 第 9 件，第三批 四-3 (2)(3)、四-4）：每一題先算好
+ *   ae ＝ 正確答案的英文（唸、放大變亮的那一句）：sp ＞ 認讀題畫面上的英文 ＞ 英文的正解 ＞ 題目裡的英文（正解是中文的時候）
+ *   ag ＝ 那一句每一個英文字正下方的中文（sentences/_gloss.js 從那一個網站自己的資料收集，跟學生答錯頁同一份）、az ＝ 整句中文
+ *   au ＝ 那一句的語音檔（那一個網站 audio/ 預先錄好的美式語音）；al ＝ 聽力題聽的那一句的語音檔（〔🔊 再聽一次〕）；ao ＝ 認讀題四個選項的語音檔
+ *   沒有語音檔的（💼 職業單字在別的網站）用瀏覽器的英文語音 */
+const { execFileSync } = require('child_process');
+const GLS = {}, AUDS = {};
+function glossOf(dir) { if (!GLS[dir]) GLS[dir] = JSON.parse(execFileSync(process.execPath, ['-e', "process.stdout.write(JSON.stringify(require('./sentences/_gloss.js').collect()))"],
+  { cwd: ROOT, env: Object.assign({}, process.env, { SITE_DIR: path.join(ROOT, dir) }), maxBuffer: 1 << 26 }).toString()); return GLS[dir]; }
+function audOf(dir) { if (!AUDS[dir]) { const f = path.join(ROOT, dir, 'audio', 'aud.js'); AUDS[dir] = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8').replace(/^[\s\S]*?window\.\w*AUD=/, '').replace(/;\s*$/, '')) : {}; } return AUDS[dir]; }
+const gKey = t => String(t).replace(/<[^>]+>/g, '').replace(/[’‘]/g, "'").replace(/\s+/g, ' ').replace(/\s+([?.!,])/g, '$1').replace(/\s+'/g, "'").trim().toLowerCase();
+const akey = t => String(t).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…＿_　]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+/* Review 1 的單字（review1/_data.js）：兩、三個字的（potato chips、ice cream）算一格，下面寫整個的中文；
+   play ＋ 球類 ＝ 玩（2026-10-11 B 組決定）。其他 Review 1 逐字中文等 B3（這次不碰） */
+const R1W = {}; try { require(path.join(ROOT, 'review1', '_data.js')).WORDS.forEach(w => { R1W[gKey(w.en)] = w.zh; }); } catch (e) {}
+const BALL = /^(basketball|badminton|soccer|baseball|dodgeball)$/i;
+function gUnits(s, GL) { let r = [], re = /[A-Za-zÀ-ÿ]+n[’']t\b|[A-Za-zÀ-ÿ]+|[’'][A-Za-z]+|[?.!,]/g, m;
+  while ((m = re.exec(s))) r.push(m[0]);
+  for (let i = 0; i < r.length; i++) for (let n = 3; n >= 2; n--) { const ph = r.slice(i, i + n); if (ph.length === n && R1W[gKey(ph.join(' '))]) { r.splice(i, n, ph.join(' ')); break; } }
+  for (let i = 0; i + 1 < r.length; i++) { const two = gKey(r[i] + ' ' + r[i + 1]); if (/[a-z]/.test(r[i + 1]) && GL[two] && /^(how old|years old|year old)$/.test(two)) r.splice(i, 2, r[i] + ' ' + r[i + 1]); }
+  return r; }
+function gZh(t, GL, nx) { const k = gKey(t); if (GL[k] != null && GL[k] !== '') return GL[k]; if (R1W[k]) return R1W[k]; if (k === 'play' && BALL.test(nx || '')) return '玩'; if (GL[k] != null) return GL[k]; if (/^[a-z]+n't$/.test(k) && GL[k.replace(/n't$/, '')]) return GL[k.replace(/n't$/, '')] + ' 不'; return ''; }
+const isEn = a => /[A-Za-z]/.test(a) && !/[㐀-鿿]/.test(a);
+function ansEn(q) {
+  if (typeof q.sp === 'string') return isEn(q.sp) || !q.sp ? q.sp : ((q.sp.match(/[A-Za-z][A-Za-z’' ,]*[A-Za-z.?!]/g) || []).sort((x, y) => y.length - x.length)[0] || '');
+  if (q.k === 'read') return q.show;
+  const a = txt(q.o[0]); if (isEn(a)) return a.replace(/^[^A-Za-z’']+/, '');
+  const Q = txt(q.q), m = Q.match(/[「“"]([^」”"]*[A-Za-z][^」”"]*)[」”"]/); if (m && isEn(m[1])) return m[1];
+  const L = (Q.match(/[A-Za-z][A-Za-z’' ,]*[A-Za-z.?!]/g) || []).filter(x => /[A-Za-z]{2,}/.test(x)).sort((x, y) => y.length - x.length);
+  return L[0] || '';
+}
+const SITEOF = k => /^g3/.test(k) ? 'G3 - L1 + L2' : /^g4/.test(k) ? 'sentences' : /^g\*r1_/.test(k) ? 'review1' : 'sentences';
+Object.keys(BANK).forEach(k => {
+  const dir = SITEOF(k), G = glossOf(dir), A = audOf(dir), au = t => { const x = t && A[akey(t)]; return x ? '../' + dir + '/audio/' + x[0] : ''; };
+  BANK[k].qs.forEach(q => {
+    const e = ansEn(q); if (e) { q.ae = e; q.ag = gUnits(e, G.GL).map((t, i, a) => [t, /^[?.!,]$/.test(t) ? '' : gZh(t, G.GL, a[i + 1])]);
+      const qz = txt(q.q).replace(/〔[^〕]*〕/g, '').replace(/[^\u3400-\u9fff]/g, '');   /* 題目只有中文（例「🩺 醫生」）＝ 那個字的中文 */
+      q.az = G.TR[gKey(e)] || (isEn(txt(q.o[0])) ? (!/[A-Za-z]/.test(txt(q.q)) && qz ? qz : '') : txt(q.o[0]));
+      /* 一個字、一個詞（沒有句點、問號）：每一個字都查不到中文 ＝ 整個詞一格，下面寫整個的中文 */
+      if (q.az && !/[.?!]/.test(e) && q.ag.every(x => !x[1])) q.ag = [[e, q.az]];
+      q.au = au(e); }
+    const L = q.say || (q.k === 'read' ? q.show : ''); if (q.say) q.al = au(q.say);
+    if (q.k === 'read') q.ao = q.o.map(au);
+  });
+});
 /* 代號一定要是 _calc.js 認得的（以後新的教材登記錯了 build 就失敗） */
 const SC = require('./_calc.js');
 Object.keys(BANK).forEach(k => { if (!SC.cat(k.replace('g*', 'g3')).k) throw new Error('老師看板：題組代號 ' + k + ' 不合規則（score/_calc.js 的 SETRE）'); });

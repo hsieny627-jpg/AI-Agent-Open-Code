@@ -36,7 +36,7 @@ eq(SC.checkId('30430').seat, 30, '座號 30 可以'); eq(SC.checkId('30431').err
   eq(SC.secOf(R[2]), 0, '太快亂按超過一半：這一次的練習時間不算（D8）');
   eq(SC.secOf({ m: 'q', n: 5, fast: 1, qs: [q(1, 8), q(1, 8), [1, 0, 0.5, 1, 1, 0], q(1, 8), q(1, 8)] }), 32, '只有一題太快亂按：那一題的秒數不算');
   const A = SC.clsAwards(C);
-  eq(Object.keys(A.rk), ['sec', 'acc', 'prog'], '班級只有三種：最認真練習的班、成績最優的班、進步最多的班（D6～D8）');
+  eq(Object.keys(A.rk), ['sec', 'acc', 'prog', 'care'], '班級四種：最認真練習的班、成績最優的班、進步最多的班＋最用心的班（D6～D8、D12 ④）');
   eq([A.rk.sec.map(x => x.cls), A.rk.prog.map(x => x.cls)], [['307', '304'], ['304']], '最認真練習的班 ＝ 平均每一個人練習時間；進步最多只有進步的班');
   ok(!A.best['311'], '沒有人做的班沒有獎');
   const v2 = SC.view(R, { id: '30401' }, NOW, true, { '304': 25 });
@@ -214,5 +214,29 @@ pages.forEach(f => {
 });
 ok(nG >= 5 && nT >= 8 && nR >= 2, '找得到全部的遊戲頁（' + nG + '）、複習題頁（' + nT + '）、Review 1 複習頁（' + nR + '）');
 Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem) ok(b.qs.length && b.qs.every(q => q.q && q.o && q.o.length >= 2 && q.o.length <= 4 && q.o.every(x => x)), '題庫 ' + k + '：每一題都要有題目和 2～4 個選項'); });
+
+/* 2026-10-15 D 第 8 件：❤ 用心程度（D12 ① 小華 87 分）、👀 看字卡（D12 ②） */
+{ eq(SC.care({ days: 3, count: 6, q: 100, fastQ: 5, W: 5, F: 4, sec: 48 * 60 }), { it: [15, 20, 16, 16, 20], tot: 87, raw: { days: 3, count: 6, q: 100, fq: 5, fp: 5, W: 5, F: 4, sec: 2880 } }, '小華：3 天 15＋6 次 20＋太快亂按 5% 16＋答錯 5 改對 4 16＋48 分鐘 20 ＝ 87');
+  eq(SC.care({}).tot, 0, '這週 什麼都沒做 ＝ 0 分');
+  eq(SC.care({ days: 1, count: 0, q: 0, sec: 900 }).it, [5, 0, 0, 0, 10], '只看字卡（沒有作答）：看完聽完、改對 ＝ 0；15 分鐘 ＝ 10 分');
+  eq(SC.care({ days: 5, count: 9, q: 20, fastQ: 0, W: 0, F: 0, sec: 4000 }).tot, 100, '四項都滿、沒有答錯 ＝ 100');
+  eq(SC.care({ days: 2, count: 1, q: 10, fastQ: 10, W: 3, F: 9, sec: 60 }).it, [10, 4, 0, 20, 1], '全部太快亂按 ＝ 0；改對不會超過答錯');
+  const NOWs = NOW, q = (ok, sec, i) => [ok, ok ? 0 : 1, sec, 0, 1, i];
+  const R = [{ id: '30412', cls: '304', g: 3, set: 'g3u1_a', m: 'q', acc: 60, s: 50, n: 5, ok: 3, fast: 0, t: NOWs - 864e5, u: 'a', qs: [q(1, 6, 0), q(0, 6, 1), q(0, 6, 2), q(1, 6, 3), q(1, 6, 4)] },
+    { id: '30412', cls: '304', g: 3, set: 'g3u1_a', m: 'q', acc: 80, s: 70, n: 5, ok: 4, fast: 0, t: NOWs, u: 'b', qs: [q(1, 6, 0), q(1, 6, 1), q(0, 6, 2), q(1, 6, 3), q(1, 6, 4)] },
+    { id: '30412', cls: '304', g: 3, set: 'g3gm_g1', m: 'g', acc: 75, s: 60, n: 8, ok: 6, fix: 1, fast: 0, t: NOWs, u: 'c', qs: [] },
+    { id: '30412', cls: '304', g: 3, set: 'g3v_u1', m: 'v', acc: null, s: null, n: 0, ok: 0, fast: 0, sec: 600, t: NOWs, u: 'd', qs: [] }];
+  const p = SC.students(R)[0];
+  eq([p.W, p.F], [4, 2], '答錯的 改對了：題目 ＝ 同一題錯過又答對（第 2 題改對、第 3 題還沒）＋遊戲 ✨ 訂正成功（答錯 2 改對 1）');
+  eq([p.sec, p.vsec, p.days, p.count, p.sets, p.all], [60 + 600, 600, 2, 3, 2, 3], '👀 看字卡 只加練習時間：不算天數、不算練習次數、不算一組');
+  eq(SC.counts(0, 0, 'v', 0), false, '看字卡不算練習次數');
+  ok(SC.rank([{ id: '1', care: 80, sec: 10 }, { id: '2', care: 80, sec: 99 }, { id: '3', care: 0, sec: 5 }], 'care').map(x => x.id).join() === '2,1', '最用心：同分比練習時間；0 分不上榜');
+  const C = SC.classes(SC.students(R), 3, { '304': 2 }); eq(C.filter(c => c.cls === '304')[0].careP, Math.round(p.care / 2), '最用心的班 ＝ 全班加起來 ÷ 全班人數（沒練 ＝ 0）');
+  const v = SC.view(R, { id: '30412', set: 'g3u1_a', u: 'b' }, NOWs, true);
+  ok(v.me.care && v.me.care.tot === p.care && v.rk.care && v.top.care && v.rk0.care, '平板拿得到 用心程度、最用心 的名次（rk／rk0）');
+  ok(SC.clean({ id: '30412', set: 'g3v_u1', m: 'v', sec: 99999 }, NOWs).sec === 3600, '看字卡一筆最多 1 小時');
+  ok(SC.clean({ id: '30412', set: 'g3u1_a', m: 'v', sec: 60 }, NOWs) === null && SC.clean({ id: '30412', set: 'g3v_u1', m: 'q', qs: [[1, 0, 1, 0, 1, 0]] }, NOWs) === null, '看字卡只能用 g年級v_ 代號');
+  eq(SC.cat('g4v_mo').t, '👀 看字卡', '類別：👀 看字卡');
+}
 console.log((bad ? '✗ ' : '✓ ') + '成績紀錄規則＋Apps Script 量了 ' + n + ' 項，失敗 ' + bad + ' 項');
 process.exit(bad ? 1 : 0);

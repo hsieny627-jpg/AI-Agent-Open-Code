@@ -105,6 +105,7 @@ function doPost(e) {
         if (R.u && n >= 2) { var us = s.getRange(2, SC.CI['編號'] + 1, n - 1, 1).getValues(); for (var i = 0; i < us.length; i++) if (String(us[i][0]) === R.u) { dup = true; break; } }
         if (!dup) s.appendRow(SC.toRow(R));
       } finally { lock.releaseLock(); }
+      if (R.m === 'v') return out({ saved: true, dup: dup });   /* 👀 看字卡（2026-10-15 D 第 8 件）：只存，不用算排行 */
       var v = SC.view(records(), { id: R.id, set: R.set, u: R.u, gt: R.m === 'g' }, now, boardsOn(), clsSizes()); v.saved = true; v.dup = dup;
       return out(v);
     }

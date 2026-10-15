@@ -108,6 +108,6 @@ SITES.forEach(S => {
   /* 補充頁也接登入（這是您嗎、3 分鐘）和〔🔒 開關〕（2026-10-12 D 第 6、7 件）：SCLKPAGE ＝ 這一頁的代號 */
   const T = topics(S), SC1 = require('../score/_client.js');
   S.more.forEach(x => { const f = path.basename(x.from), k = T.filter(o => o.href === f)[0].k.replace(/^g\drv_/, '');
-    fs.writeFileSync(path.join(dir, f), copyIn(path.join(ROOT, x.from), dir).replace('</body>', () => '<script>window.SCLKPAGE=' + JSON.stringify(k) + '</script>\n' + SC1.home(S.out === 'g3-review' ? 3 : 4, '../', 'home', 1) + '</body>')); });
+    fs.writeFileSync(path.join(dir, f), copyIn(path.join(ROOT, x.from), dir).replace('</body>', () => '<script>window.SCLKPAGE=' + JSON.stringify(k) + '</script>\n' + SC1.home(S.out === 'g3-review' ? 3 : 4, '../', 'home', 1) + "<script>scViewOn('mo','👀 補充頁')</script>\n</body>")); });
   console.log(S.g + '：' + S.out + '/index.html、u1.html、u2.html、games.html（' + S.games.join('、') + '）');
 });

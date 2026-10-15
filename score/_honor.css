@@ -132,3 +132,82 @@
 /* 跳過、聲音、控制列 */
 .hctl{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 @media (prefers-reduced-motion:reduce){.hon *,.hon .hbg::after,.hon .hbg::before{animation-duration:.01s!important;animation-iteration-count:1!important}}
+/* ══ ❤ 這週 用心程度（2026-10-15 D 第 8 件；老師 D12 ③ 甲 五顆愛心 裝滿、8 種風格 .cs1～.cs8、〔📖 說明〕）══ */
+.care{position:relative;isolation:isolate;overflow:hidden;border-radius:22px;padding:clamp(10px,2vh,22px) clamp(8px,2vw,22px) clamp(12px,2vh,22px);color:#fff;text-align:center;background:#0B1830}
+.care *{box-sizing:border-box}
+.care .cbg,.care .cfx{position:absolute;inset:0;pointer-events:none}.care .cbg{z-index:-2}.care .cfx{z-index:-1;overflow:hidden}
+.care .ct1{font-size:clamp(28px,4.4vh,44px);font-weight:700;color:#FFE07A;line-height:1.2}
+.care .csum{font-size:clamp(24px,3.4vh,34px);color:#CFE3F5;margin:2px 0}.care .csum b{font-size:clamp(60px,10vh,96px);color:#FFE07A;display:inline-block;line-height:1;min-width:1.4em}
+.care .csum.pop b{animation:cpop .6s}
+@keyframes cpop{50%{transform:scale(1.35)}}
+.care .crow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(4px,1.4vw,18px);max-width:760px;margin:6px auto 0;align-items:end}
+.care .chc{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.care .cv{font-size:clamp(26px,3.6vh,36px);font-weight:700;opacity:0;transform:translateY(10px);transition:.4s}.care .chc.on .cv{opacity:1;transform:none}
+.care .chw{position:relative;width:100%;max-width:130px}
+.care svg.ch{width:100%;overflow:visible;display:block}
+.care .cbk{fill:#1A2230;stroke:#55606A;stroke-width:3}.care .cln{fill:none;stroke:#fff;stroke-opacity:.55;stroke-width:2}
+.care .clq{transition:transform 1s cubic-bezier(.3,1.25,.5,1)}
+.care .cwv{animation:cwave 1.2s linear infinite}
+@keyframes cwave{to{transform:translateX(-40px)}}
+.care .cshn{display:none}
+.care .cfc{opacity:0;transition:opacity .3s}.care .chc.full .cfc{opacity:1}
+.care .chc.full svg.ch{animation:cbeat .5s 2}
+@keyframes cbeat{40%{transform:scale(1.2)}}
+.care .cgap{fill:none;stroke:#FFD54A;stroke-width:5;opacity:0}
+.care .chc.wk .cgap{animation:cgp .8s ease-in-out infinite}
+@keyframes cgp{50%{opacity:1}}
+.care .cic{min-height:clamp(40px,6vh,56px);display:flex;align-items:center;justify-content:center;max-width:100%}
+.care .cic svg{height:clamp(30px,5vh,46px);width:auto;max-width:100%}.care .cic .cem{font-size:clamp(30px,5vh,44px);line-height:1}
+.care .chc.wk .cic{animation:cwig .5s ease-in-out infinite}
+@keyframes cwig{0%,100%{transform:rotate(-12deg) scale(1.15)}50%{transform:rotate(12deg) scale(1.15)}}
+.care .cnote{font-size:clamp(20px,2.8vh,26px);color:#B9C4CE;margin-top:6px}
+.care .ctip{font-size:clamp(26px,3.8vh,36px);font-weight:700;color:#FFD54A;margin-top:6px;opacity:0;transform:scale(.6);transition:.5s cubic-bezier(.3,1.6,.5,1)}.care .ctip.on{opacity:1;transform:none}
+.care .cdrop{position:absolute;left:50%;top:-30px;width:16px;height:22px;margin-left:-8px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;opacity:0;display:none}
+.care .cecg{position:absolute;left:0;right:0;top:46%;height:clamp(60px,10vh,100px);width:100%;display:none;pointer-events:none}
+.care .cecg path{fill:none;stroke:#FF4D6D;stroke-width:5;stroke-linejoin:round;stroke-dasharray:2600;stroke-dashoffset:2600;filter:drop-shadow(0 0 6px #FF4D6D)}
+/* 〔📖 說明〕 */
+.care .chb{display:inline-block;margin-top:10px;background:#1E3A5A;color:#fff;border:3px solid #7FD4FF;border-radius:16px;font:inherit;font-size:clamp(22px,3vh,28px);font-weight:700;padding:6px 22px;min-height:52px;cursor:pointer}
+.care .chb.on{background:#2A2208;border-color:#FFD24A}
+.care .chp{margin:10px auto 0;max-width:900px;text-align:left}
+.care .chh{font-size:clamp(22px,3vh,28px);font-weight:700;color:#FFE07A;text-align:center;margin-bottom:6px}
+.care .chr{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(110px,30%);grid-template-areas:"i n b" "i k k";gap:2px 10px;align-items:center;background:rgba(10,14,20,.8);border:3px solid #2A3540;border-radius:16px;padding:8px 12px;margin:6px 0;
+  opacity:0;transform:translateX(-30px);transition:opacity .4s,transform .4s}
+.care .chr.on{opacity:1;transform:none}.care .chr.ok{border-color:#3BD16F}
+.care .chi{grid-area:i;display:flex;align-items:center;justify-content:center;width:clamp(52px,7vh,70px)}.care .chi svg{width:100%;height:auto}.care .chi .cem{font-size:clamp(36px,5vh,48px)}
+.care .chn{grid-area:n;min-width:0}.care .chn b{display:block;font-size:clamp(22px,3vh,28px)}.care .chn small{display:block;font-size:clamp(20px,2.6vh,24px);color:#CFE3F5}
+.care .chbar{grid-area:b;position:relative;height:clamp(34px,4.6vh,44px);background:#1A2230;border-radius:12px;overflow:hidden}
+.care .chbar i{position:absolute;left:0;top:0;bottom:0;width:0;transition:width .8s}
+.care .chr:not(.on) .chbar i{width:0!important}
+.care .chbar em{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700;font-size:clamp(20px,2.8vh,26px);text-shadow:0 1px 3px #000}
+.care .chk{grid-area:k;font-size:clamp(20px,2.8vh,26px);font-weight:700;color:#FFD54A}.care .chr.ok .chk{color:#9FF0B8}
+/* 8 種風格（每一次都不一樣） */
+.care.cs1 .cbg{background:radial-gradient(circle at 50% 20%,#1D3F7A,#081226 70%)}
+.care.cs2 .cbg{background:linear-gradient(#0B3A6B,#3E86C6 70%,#7CC0EE)}
+.care.cs2 .chc{animation:cfloat 1s cubic-bezier(.3,1.4,.5,1) backwards}.care.cs2 .chc:nth-child(2){animation-delay:.15s}.care.cs2 .chc:nth-child(3){animation-delay:.3s}.care.cs2 .chc:nth-child(4){animation-delay:.45s}.care.cs2 .chc:nth-child(5){animation-delay:.6s}
+.care.cs2 .chw::after{content:'';position:absolute;left:50%;top:92%;width:2px;height:26px;background:#fff;opacity:.7}
+.care.cs2 .chc.full .chw{animation:cbob 1.6s ease-in-out infinite}
+@keyframes cfloat{from{transform:translateY(60vh)}}
+@keyframes cbob{50%{transform:translateY(-10px)}}
+.care.cs3 .cbg{background:radial-gradient(circle at 50% 30%,#4A1A7A,#16052A 75%)}
+.care.cs3 .cbk{stroke:#FFD24A}.care.cs3 .cshn{display:block;animation:cshine 2.2s ease-in-out infinite}
+@keyframes cshine{0%{transform:rotate(20deg) translateX(0)}60%,100%{transform:rotate(20deg) translateX(190px)}}
+.care.cs4 .cbg{background:radial-gradient(circle at 50% 110%,#2A1A40,#03060F 70%)}
+.care.cs4 .chc.on svg.ch{filter:drop-shadow(0 0 10px rgba(255,200,90,.6))}.care.cs4 .chc.full svg.ch{animation:cglow 1.4s ease-in-out infinite}
+@keyframes cglow{50%{filter:drop-shadow(0 0 26px rgba(255,214,74,1))}}
+.care.cs5 .cbg{background:radial-gradient(circle at 50% 0,#5A2A10,#1A0A04 75%)}
+.care.cs5 .cdrop{display:block}.care.cs5 .chc.on .cdrop{animation:cdrip .5s ease-in forwards}
+@keyframes cdrip{0%{opacity:1;transform:translateY(-40px)}90%{opacity:1}100%{opacity:0;transform:translateY(60px)}}
+.care.cs6 .cbg{background:linear-gradient(#0B1E10,#14381C 75%,#1E5A2A)}
+.care.cs6 .crow{border-bottom:6px solid #8A6A3A;padding-bottom:4px}
+.care.cs6 .chc{animation:ctrain .9s cubic-bezier(.2,1.2,.5,1) backwards}.care.cs6 .chc:nth-child(2){animation-delay:.12s}.care.cs6 .chc:nth-child(3){animation-delay:.24s}.care.cs6 .chc:nth-child(4){animation-delay:.36s}.care.cs6 .chc:nth-child(5){animation-delay:.48s}
+.care.cs6 .chc.full .chw{animation:ctoot .4s ease-in-out 3}
+@keyframes ctrain{from{transform:translateX(110vw)}}
+@keyframes ctoot{50%{transform:translateY(-8px) rotate(-4deg)}}
+.care.cs7 .cbg{background:radial-gradient(circle at 50% 50%,#3A0A14,#0E0306 75%)}
+.care.cs7 .cecg{display:block}.care.cs7 .cecg path{animation:cecg 4.6s linear .1s forwards}
+@keyframes cecg{to{stroke-dashoffset:0}}
+.care.cs7 .chc.full svg.ch{animation:cbeat .5s 4}
+.care.cs8 .cbg{background:radial-gradient(circle at 50% 10%,#1A2560,#05081A 75%)}
+.care.cs8 .chc.on .chw::before{content:'⭐';position:absolute;left:50%;top:-10px;font-size:28px;margin-left:-.5em;animation:cstar .6s ease-in forwards}
+@keyframes cstar{from{transform:translateY(-70px) scale(1.4)}to{transform:translateY(30px) scale(.3);opacity:0}}
+@media (prefers-reduced-motion:reduce){.care *{animation:none!important;transition:none!important}.care .chr{opacity:1;transform:none}}

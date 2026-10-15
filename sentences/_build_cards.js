@@ -1963,6 +1963,7 @@ SCH={on:function(){return $('#rv').classList.contains('on')},open:function(){$('
  miss:function(){return RVG[rvGi].t+'　答錯整理'},
  btns:function(){return '<div class="rvbtns">'+(MISSLOG.length?'<button id="rvMissBtn">📌 答錯整理</button>':'')+
    '<button class="go" id="rvAgain">🔁 再玩一次</button><button id="rvBack">📚 換一組</button><button id="rvClose">⬅ 回卡片</button></div>'}};
+scViewOn(SCRV,'👀 Review 1 字卡');   /* 看字卡、按 🔊 也算練習時間（2026-10-15 D 第 8 件） */
 `;
 }
 const TQPATCH = [

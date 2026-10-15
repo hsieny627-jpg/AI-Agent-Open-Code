@@ -17,6 +17,12 @@
  *   🏆 榮譽（使用者 2026-10-12 D6～D8 定案）只有三種：最認真練習 ＝ 練習時間最多（sec）、成績最優 ＝ 正確率（acc，同分比總分）、進步最多（prog）；
  *                        個人 ＝ 班內前 10 名、全年級前 10 名；班級 ＝ 同年級的班互相比（平均每一個人）。做完幾乎都拿得到的小獎全部拿掉
  *   📅 天天練             這段期間有練的天數
+ *   ❤ 用心程度（使用者 2026-10-15 D10～D12 定案）五項，每項最多 20 分，加起來最多 100 分（care）：
+ *                        📅 這週 練了 幾天（4 天以上 20，少 1 天 −5）｜📝 做完 幾次 題目、遊戲（練習次數，5 次以上 20，少 1 次 −4）｜
+ *                        看完、聽完 才選（太快亂按 0 題 20，每多 5% −4）｜答錯的 改對了（全部改對或沒有答錯 20，改對幾成 ＝ 20 ✕ 幾成）｜
+ *                        這週 練習 幾分鐘（30 分鐘以上 20，照比例）；這週 沒有作答 ＝ 第 3、4 項 0 分。第 4 種最高榮譽「最用心」（同分比練習時間）
+ *   👀 看字卡（m:'v'，使用者 2026-10-15 D12 ②）句型卡、Review 1 頁、在家複習的每一頁：登入才記；兩次點之間最多算 2 分鐘、3 分鐘沒點不算、換分頁不算；
+ *                        只加進「練習時間」（最認真練習、時鐘、用心程度第 5 項），不算練了幾天、不算練習次數、不算正確率
  *   班際（G2-A）          練習次數、練習時間 ＝ 全班加起來 ÷ 全班人數（班級人數 ＞ 名單人數 ＞ 有做的人）；每一班都有自己最強的一項（clsAwards）
  *   🚀 進步               每一組：最近一次 − 上一次（所有作答都算，但「⚡ 秒按」超過一半的那一次不拿來比）；
  *                        個人 ＝ 這段期間做過兩次以上的組平均；上次、這次都 100 ＝「🔥 保持滿分」，不算進平均（Q3-A）
@@ -54,14 +60,15 @@ var SC = (function () {
   var CI = {}; for (var ci = 0; ci < COLS.length; ci++) CI[COLS[ci]] = ci;
   var SEAT = 30;                                                     /* 座號 01～30（使用者 2026-10-09） */
   var DAY = 864e5, TZ = 8 * 36e5, CAP = 3, TOP = 10, GMIN = 6;
-  var MT = { q: '題目', g: '遊戲', mem: '記憶配對' }, TM = { '題目': 'q', '遊戲': 'g', '記憶配對': 'mem' };
-  var SETRE = /^g([34])(u\d{1,2}|gm|r\d{1,2})_[\w-]{1,16}$/;
+  var MT = { q: '題目', g: '遊戲', mem: '記憶配對', v: '看字卡' }, TM = { '題目': 'q', '遊戲': 'g', '記憶配對': 'mem', '看字卡': 'v' };
+  var SETRE = /^g([34])(u\d{1,2}|gm|r\d{1,2}|v)_[\w-]{1,16}$/;
   /* 題組代號 ➜ 類別（老師看板的篩選）：u ＝ 📝 複習題、gm ＝ 🎮 遊戲、r1 ＝ 📘 Review 1 */
   function cat(set) {
     var m = SETRE.exec(String(set)); if (!m) return { k: '', t: '' };
     var x = m[2];
     if (x.charAt(0) === 'u') return { k: 'tq', t: '📝 複習題' };
     if (x === 'gm') return { k: 'game', t: '🎮 遊戲' };
+    if (x === 'v') return { k: 'v', t: '👀 看字卡' };
     return { k: x, t: '📘 Review ' + x.slice(1) };
   }
 
@@ -77,9 +84,9 @@ var SC = (function () {
     return { id: id, g: gg, cls: c, seat: s };
   }
   /* 練習次數 ＋1 嗎（2026-10-12 F4）：做完就算；太快亂按超過一半不算；遊戲還要第一次作答 ≧ GMIN 題；記憶配對 ＝ 玩完整場就算（ok 留著給舊的呼叫） */
-  function counts(ok, n, m, fast) { if (m === 'mem') return true; if (m === 'g' && n < GMIN) return false; return n > 0 && (+fast || 0) * 2 <= n; }
+  function counts(ok, n, m, fast) { if (m === 'v') return false; if (m === 'mem') return true; if (m === 'g' && n < GMIN) return false; return n > 0 && (+fast || 0) * 2 <= n; }
   /* 一筆紀錄練了幾秒 */
-  function secOf(r) { if (r.m === 'mem') return +r.sec || 0; if ((+r.fast || 0) * 2 > r.n) return 0;
+  function secOf(r) { if (r.m === 'mem' || r.m === 'v') return +r.sec || 0; if ((+r.fast || 0) * 2 > r.n) return 0;
     var s = 0; for (var i = 0; i < (r.qs || []).length; i++) if (!r.qs[i][3]) s += +r.qs[i][2] || 0; return s; }
   function need(n) { return Math.ceil(n * 2 / 3); }                     /* 至少要對幾題 */
   function day(t) { return Math.floor((t + TZ) / DAY); }
@@ -109,7 +116,7 @@ var SC = (function () {
   }
   function toRow(R) {
     var o = { '時間': new Date(R.t), '5碼': R.id, '年級': R.g, '班級': R.cls, '座號': R.seat, '類別': cat(R.set).t, '題組': R.set, '題組名稱': R.name,
-      '玩法': MT[R.m], '題數': R.m === 'mem' ? '' : R.n, '答對': R.m === 'mem' ? '' : R.ok, '正確率': R.acc == null ? '' : R.acc, '總分百分制': R.s == null ? '' : R.s,
+      '玩法': MT[R.m], '題數': R.m === 'mem' || R.m === 'v' ? '' : R.n, '答對': R.m === 'mem' || R.m === 'v' ? '' : R.ok, '正確率': R.acc == null ? '' : R.acc, '總分百分制': R.s == null ? '' : R.s,
       '訂正成功': R.fix || 0, '配對': R.m === 'mem' ? R.mp : '', '翻錯': R.m === 'mem' ? R.mw : '', '秒數': R.sec || '', '原始分數': R.raw, '秒按': R.fast,
       '來源': R.src, '平板': R.dev, '編號': R.u, '每題': JSON.stringify(R.qs), '作廢': false };
     return COLS.map(function (k) { return o[k]; });
@@ -120,8 +127,9 @@ var SC = (function () {
   function clean(o, now) {
     var c = checkId(o.id); if (c.err) return null;
     var set = String(o.set), sm = SETRE.exec(set); if (!sm || +sm[1] !== c.g) return null;   /* 題組的年級 ＝ 登入的年級 */
-    var m = o.m === 'g' || o.m === 'mem' ? o.m : 'q', qs = o.qs || [];
-    if (m === 'mem') qs = [];
+    var m = o.m === 'g' || o.m === 'mem' || o.m === 'v' ? o.m : 'q', qs = o.qs || [];
+    if ((m === 'v') !== (sm[2] === 'v')) return null;   /* 看字卡只能用 g年級v_ 的代號 */
+    if (m === 'mem' || m === 'v') qs = [];
     else if (!qs.length || qs.length > (m === 'g' ? 150 : 10)) return null;
     var Q = [];
     for (var i = 0; i < qs.length; i++) { var q = qs[i];
@@ -130,7 +138,7 @@ var SC = (function () {
     var ok = 0, f = 0; for (i = 0; i < Q.length; i++) { ok += Q[i][0]; f += Q[i][3]; }
     var t = +o.t; if (!(t > now - 30 * DAY && t < now + 5 * 6e4)) t = now;   /* 平板時間不對就用伺服器時間；沒網路補送的照當時 */
     return { t: t, id: c.id, g: c.g, cls: c.cls, seat: c.seat, set: set, name: String(o.name || '').slice(0, 60), m: m, n: Q.length, ok: ok,
-      acc: m === 'mem' ? null : Math.round(ok / Q.length * 100), s: m === 'mem' ? null : s100(Q), fix: lim(o.fix, 0, 999),
+      acc: m === 'mem' || m === 'v' ? null : Math.round(ok / Q.length * 100), s: m === 'mem' || m === 'v' ? null : s100(Q), fix: lim(o.fix, 0, 999),
       mp: m === 'mem' ? lim(o.mp, 0, 999) : 0, mw: m === 'mem' ? lim(o.mw, 0, 9999) : 0, sec: lim(o.sec, 0, 3600),
       raw: lim(o.raw, 0, 1e8), fast: f,
       src: o.src === 'home' ? 'home' : 'school', dev: String(o.dev || '').replace(/[^\w]/g, '').slice(0, 12), u: String(o.u || '').replace(/[^\w]/g, '').slice(0, 24), qs: Q, x: false };
@@ -148,9 +156,15 @@ var SC = (function () {
   function students(rs) {
     var by = {}, ids = [];
     rs.slice().sort(function (a, b) { return a.t - b.t; }).forEach(function (r) {
-      var p = by[r.id]; if (!p) { p = by[r.id] = { id: r.id, g: r.g, cls: r.cls, seat: r.seat, sets: {}, all: 0, last: 0, fastQ: 0, q: 0, fix: 0, sec: 0, dd: {}, nd: 0 }; ids.push(r.id); }
+      var p = by[r.id]; if (!p) { p = by[r.id] = { id: r.id, g: r.g, cls: r.cls, seat: r.seat, sets: {}, all: 0, last: 0, fastQ: 0, q: 0, fix: 0, sec: 0, vsec: 0, dd: {}, nd: 0, wk: {}, W: 0, F: 0 }; ids.push(r.id); }
+      if (r.m === 'v') { p.sec += secOf(r); p.vsec += secOf(r); return; }   /* 👀 看字卡：只加練習時間 */
       (p.sets[r.set] = p.sets[r.set] || []).push(r); p.all++; p.last = r.t; p.fastQ += r.fast; p.q += r.n; p.fix += r.fix || 0; p.sec += secOf(r);
       var d0 = day(r.t); if (!p.dd[d0]) { p.dd[d0] = 1; p.nd++; }
+      /* 答錯的 改對了：題目 ＝ 同一題（題組＃第幾題）錯過、後來又答對；遊戲 ＝ 第一次答錯幾題、✨ 訂正成功幾題；太快亂按超過一半的那一次不算 */
+      if (r.fast * 2 > r.n) return;
+      if (r.m === 'g') { var bad = r.n - r.ok; p.W += bad; p.F += Math.min(bad, r.fix || 0); return; }
+      (r.qs || []).forEach(function (q, j) { var k = r.set + '#' + (q[5] == null ? j : q[5]);
+        if (!q[0]) { if (!p.wk[k]) { p.wk[k] = 1; p.W++; } } else if (p.wk[k] === 1) { p.wk[k] = 2; p.F++; } });
     });
     return ids.map(function (id) {
       var p = by[id], A = [], S = [], D = [], PF = [], PT = [], keep = false, cnt = 0, nsets = 0;
@@ -163,8 +177,17 @@ var SC = (function () {
       var acc = mean(A), s = mean(S), pr = mean(D);
       return { id: id, g: p.g, cls: p.cls, seat: p.seat, acc: acc == null ? null : r1(acc), s: s == null ? null : r1(s), count: cnt,
         prog: pr == null ? null : r1(pr), pf: pr == null ? null : Math.round(mean(PF)), pt: pr == null ? null : Math.round(mean(PT)), keep: keep && pr == null ? true : keep, sets: nsets, all: p.all, last: p.last, fastQ: p.fastQ, q: p.q, fix: p.fix,
-        sec: Math.round(p.sec), days: p.nd };
-    });
+        sec: Math.round(p.sec), vsec: Math.round(p.vsec), days: p.nd, W: p.W, F: p.F };
+    }).map(function (o) { o.care = care(o).tot; return o; });
+  }
+  /* ❤ 用心程度（使用者 2026-10-15 D10 第 8 題 A、D12 ①）：五項各 0～20 分 ➜ { it:[天, 次, 看完聽完, 改對, 分鐘], tot, raw } */
+  var CAREMAX = { days: 4, count: 5, sec: 1800 };
+  function care(p) {
+    p = p || {}; var days = +p.days || 0, cnt = +p.count || 0, q = +p.q || 0, fq = +p.fastQ || 0, W = +p.W || 0, F = +p.F || 0, sec = +p.sec || 0;
+    var fp = q ? Math.round(fq / q * 100) : 0;
+    var it = [Math.min(20, 5 * days), Math.min(20, 4 * cnt), q ? Math.max(0, Math.round(20 - 0.8 * (fq / q * 100))) : 0,
+      q ? (W ? Math.round(20 * Math.min(F, W) / W) : 20) : 0, Math.min(20, Math.round(20 * sec / CAREMAX.sec))];
+    return { it: it, tot: it[0] + it[1] + it[2] + it[3] + it[4], raw: { days: days, count: cnt, q: q, fq: fq, fp: fp, W: W, F: Math.min(F, W), sec: sec } };
   }
   /* 排名：同分同名次（1、1、3）；正確率同分比總分 */
   var BOARDS = {
@@ -172,7 +195,9 @@ var SC = (function () {
     s: { v: function (p) { return p.s; }, cmp: function (a, b) { return b.s - a.s; }, eq: function (a, b) { return a.s === b.s; }, ok: function (p) { return p.s != null; } },
     count: { v: function (p) { return p.count; }, cmp: function (a, b) { return b.count - a.count; }, eq: function (a, b) { return a.count === b.count; }, ok: function (p) { return p.count > 0; } },
     prog: { v: function (p) { return p.prog; }, cmp: function (a, b) { return b.prog - a.prog; }, eq: function (a, b) { return a.prog === b.prog; }, ok: function (p) { return p.prog != null && p.prog > 0; } },
-    sec: { v: function (p) { return p.sec; }, cmp: function (a, b) { return b.sec - a.sec; }, eq: function (a, b) { return a.sec === b.sec; }, ok: function (p) { return p.sec > 0; } }
+    sec: { v: function (p) { return p.sec; }, cmp: function (a, b) { return b.sec - a.sec; }, eq: function (a, b) { return a.sec === b.sec; }, ok: function (p) { return p.sec > 0; } },
+    /* ❤ 最用心：用心程度，同分比練習時間（D12 ④） */
+    care: { v: function (p) { return p.care; }, cmp: function (a, b) { return (b.care - a.care) || (b.sec - a.sec); }, eq: function (a, b) { return a.care === b.care && a.sec === b.sec; }, ok: function (p) { return p.care > 0; } }
   };
   function rank(ps, key) {
     var B = BOARDS[key], L = ps.filter(B.ok).sort(function (a, b) { return B.cmp(a, b) || (a.id < b.id ? -1 : 1); });
@@ -241,17 +266,17 @@ var SC = (function () {
     return CLASSES[g].filter(function (c) { return !AFTER[c]; }).map(function (c) {
       var m = ps.filter(function (p) { return p.cls === c; });
       var nn = function (k) { return m.filter(function (p) { return p[k] != null; }).map(function (p) { return p[k]; }); };
-      var a = mean(nn('acc')), s = mean(nn('s')), pr = mean(nn('prog')), cnt = 0, sec = 0;
-      m.forEach(function (p) { cnt += p.count; sec += p.sec || 0; });
+      var a = mean(nn('acc')), s = mean(nn('s')), pr = mean(nn('prog')), cnt = 0, sec = 0, cr = 0;
+      m.forEach(function (p) { cnt += p.count; sec += p.sec || 0; cr += p.care || 0; });
       var size = sizes && +sizes[c] > 0 ? +sizes[c] : null, per = Math.max(size || 0, m.length) || 1;   /* G2-A：平均每一個人（除以全班人數） */
       return { cls: c, n: m.length, size: size, acc: a == null ? null : r1(a), s: s == null ? null : r1(s), count: cnt, prog: pr == null ? null : r1(pr),
-        sec: sec, cntP: m.length ? r1(cnt / per) : null, secP: m.length ? Math.round(sec / per) : null };
+        sec: sec, cntP: m.length ? r1(cnt / per) : null, secP: m.length ? Math.round(sec / per) : null, careP: m.length ? Math.round(cr / per) : null };   /* 最用心的班：沒練的人 ＝ 0 分（D12 ④） */
     });
   }
   /* 班際榮譽（使用者 2026-10-12 D6～D8 定案）：3 種（最認真練習的班 ＝ 平均每一個人練習時間、成績最優的班 ＝ 平均正確率、進步最多的班 ＝ 平均進步）。
      best ＝ 每一班名次最前面的那一種（只給老師看板參考；學生平板、投影不再演「每一班都有自己最強的一項」） */
-  var AW = ['sec', 'acc', 'prog'];
-  var CB = [['sec', 'secP'], ['acc', 'acc'], ['prog', 'prog']];
+  var AW = ['sec', 'acc', 'prog', 'care'];
+  var CB = [['sec', 'secP'], ['acc', 'acc'], ['prog', 'prog'], ['care', 'careP']];
   function clsAwards(cl) {
     var R = {}, best = {};
     CB.forEach(function (b) {
@@ -289,7 +314,7 @@ var SC = (function () {
     var ps = students(W), me = mine(ps, c.id) || { id: c.id, acc: null, s: null, count: 0, prog: null, keep: false };
     var lw = students(pick(all, { g: c.g, from: from - 7 * DAY, to: from }).filter(function (r) { return r.id === c.id; }))[0];
     var out = { id: c.id, cls: c.cls, g: c.g, week: from, boards: !!boardsOn,
-      me: { acc: me.acc, s: me.s, count: me.count, prog: me.prog, pf: me.pf, pt: me.pt, keep: !!me.keep, sec: me.sec || 0, days: me.days || 0, secPrev: lw ? lw.sec : 0 } };
+      me: { acc: me.acc, s: me.s, count: me.count, prog: me.prog, pf: me.pf, pt: me.pt, keep: !!me.keep, sec: me.sec || 0, days: me.days || 0, secPrev: lw ? lw.sec : 0, care: care(me) } };
     /* 這一組（作答中右上角的名次）：本班別人這週在這一組最好的原始分數，前 10 個 */
     if (o.set) {
       var best = {}; W.forEach(function (r) { if (r.set === o.set && r.cls === c.cls && r.id !== c.id) best[r.id] = Math.max(best[r.id] || 0, r.raw); });
@@ -318,7 +343,7 @@ var SC = (function () {
       if (ps0) { out.rk0 = {}; AW.forEach(function (k) {
         var a0 = mine(rank(ps0.filter(function (p) { return p.cls === c.cls; }), k), c.id), b0 = mine(rank(ps0, k), c.id);
         out.rk0[k] = { cls: a0 && a0.rk <= TOP ? a0.rk : null, grade: b0 && b0.rk <= TOP ? b0.rk : null }; }); }
-      ['acc', 's', 'count', 'prog', 'sec'].forEach(function (k) {
+      ['acc', 's', 'count', 'prog', 'sec', 'care'].forEach(function (k) {
         var g = rank(ps, k), cc = rank(ps.filter(function (p) { return p.cls === c.cls; }), k);
         out.top[k] = { cls: top(cc), grade: top(g) };
         /* 第 10 名的分數（給「再多 N 就進前 10」）；人數不到 10 個 ＝ 有做就進得去 */
@@ -336,7 +361,7 @@ var SC = (function () {
     return out;
   }
   return { CLASSES: CLASSES, AFTER: AFTER, cname: cname, SEAT: SEAT, COLS: COLS, CI: CI, CAP: CAP, TOP: TOP, GMIN: GMIN, MT: MT, checkId: checkId, cat: cat, counts: counts, need: need, day: day, weekStart: weekStart,
-    AW: AW, s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, clsAwards: clsAwards, secOf: secOf, questions: questions, gtop: gtop, view: view,
+    AW: AW, care: care, CAREMAX: CAREMAX, s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, clsAwards: clsAwards, secOf: secOf, questions: questions, gtop: gtop, view: view,
     lkClean: lkClean, lkSet: lkSet, lkAny: lkAny, lkFor: lkFor, LKRE: LKRE,
     tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE };
 })();
@@ -448,6 +473,7 @@ function doPost(e) {
         if (R.u && n >= 2) { var us = s.getRange(2, SC.CI['編號'] + 1, n - 1, 1).getValues(); for (var i = 0; i < us.length; i++) if (String(us[i][0]) === R.u) { dup = true; break; } }
         if (!dup) s.appendRow(SC.toRow(R));
       } finally { lock.releaseLock(); }
+      if (R.m === 'v') return out({ saved: true, dup: dup });   /* 👀 看字卡（2026-10-15 D 第 8 件）：只存，不用算排行 */
       var v = SC.view(records(), { id: R.id, set: R.set, u: R.u, gt: R.m === 'g' }, now, boardsOn(), clsSizes()); v.saved = true; v.dup = dup;
       return out(v);
     }
