@@ -277,7 +277,7 @@ function tqDone(btn,ok){
   }
   sNo();
   /* 答錯：遊戲的答錯頁（不傳 gain ➜ 沒有 ⭐ 加分）；認讀、聽力的題目寫出那一句英文 */
-  var qq=rd?'👀 '+q.show+'　🔊 聽 1～4：哪一個是 '+(/\s/.test(q.show)?'「'+q.show+'」':q.show)+'？':(q.k==='listen'?'🔊 '+q.say+'　'+q.q:q.q);
+  var qq=rd?'👀 '+q.show+'　🔊 聽 1～4：哪一個號碼 唸的是 '+(/\s/.test(q.show)?'「'+q.show+'」':q.show)+'？':(q.k==='listen'?'🔊 '+q.say+'　'+q.q:q.q);
   var mo={q:qq,pick:btn?btn.getAttribute('data-t'):null,ans:q.o[0],why:q.h};
   if(q.sp!=null)mo.sp=q.sp;
   var my=tqN;

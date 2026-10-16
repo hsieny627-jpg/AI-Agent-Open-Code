@@ -489,7 +489,7 @@ async function teacher(br, vp) {
     if (!/^3 /.test(await p.textContent('#show .sst .on'))) e.push('〔◀ 上一步〕沒有回到第 ③ 步');
     /* 聽力題：清單不寫聽到的那一句；認讀題 ＝ D18 A；題庫算好了正解的英文、逐字中文、語音檔 */
     const lq = await p.evaluate(() => { const Q = [].concat.apply([], Object.keys(BANK).map(k => BANK[k].qs)), L = Q.filter(q => isLsn(q) && q.o.indexOf(q.say) >= 0), R = Q.filter(q => q.k === 'read');
-      return { leak: L.filter(q => qText(q).indexOf(q.say) >= 0).length, nl: L.length, rd: R.filter(q => !/^👀 .+　🔊 聽 1～4：哪一個是 .+？$/.test(qText(q))).length,
+      return { leak: L.filter(q => qText(q).indexOf(q.say) >= 0).length, nl: L.length, rd: R.filter(q => !/^👀 .+　🔊 聽 1～4：哪一個號碼 唸的是 .+？$/.test(qText(q))).length,
         ae: Q.filter(q => q.ae).length, au: Q.filter(q => q.au).length, all: Q.length }; });
     if (!lq.nl || lq.leak) e.push('聽力題清單寫出了答案（' + lq.leak + '／' + lq.nl + '）');
     if (lq.rd) e.push('認讀題不是 D18 A 的寫法：' + lq.rd + ' 題');

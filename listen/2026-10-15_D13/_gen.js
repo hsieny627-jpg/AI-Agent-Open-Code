@@ -5,9 +5,16 @@ const fs = require('fs'), path = require('path'), ROOT = path.join(__dirname, '.
 const head = fs.readFileSync(path.join(__dirname, '..', '2026-10-12_D6', 'head.html'), 'utf8').replace(/\n<style>\n/, '\n');
 const B = JSON.parse(/var BANK=(\{.*?\});\n/s.exec(fs.readFileSync(path.join(ROOT, 'teacher', 'index.html'), 'utf8'))[1]);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const at = (k, i) => { const q = B[k].qs[i - 1]; if (!q) throw new Error('沒有這一題 ' + k + ' #' + i); return Object.assign({ k, i, nm: B[k].name }, q); };
+const at = (k, i) => { const q = B[k].qs[i - 1]; if (!q) throw new Error('沒有這一題 ' + k + ' #' + i); return Object.assign({ k, i, nm: B[k].name }, q, { bk: k }); };
 let total = { q: 0, o: 0 }; const cj = s => /[㐀-鿿]/.test(s || '');
 Object.keys(B).filter(k => !/job-/.test(k)).forEach(k => B[k].qs.forEach(q => { if (cj(q.q)) total.q++; q.o.forEach(o => { if (cj(o)) total.o++; }); }));
+/* 2026-10-16 老師回答了（全部改好）：「以前」＝ 改之前網站上的字（從 git ae2fe7a 抄下來），「改好了」＝ 現在題庫裡真的字。
+   在哪裡的圖示：老師不喜歡 📍 ➜ 用那一類自己的圖示（🎮 句型遊戲、📝 複習題、📘 Review 1，跟老師看板一樣） */
+const OLD = { 'g3gm_g1#14': '「你的名字是什麼？」', 'g3gm_g1#15': '「你幾歲？」', 'g3gm_g1#16': '「我八歲。」', 'g3gm_g1#17': '「我的名字是 Mike。」',
+  'g3gm_g10#4': '魔王問：「你的名字是什麼？」', 'g3gm_g10#5': '魔王問：「你幾歲？」', 'g3gm_g10#20': '魔王問：「我七歲。」', 'g4gm_g10#20': '魔王問：「他是一位農夫。」',
+  'g3gm_g10#21': '魔王問：「你是七歲。」', 'g3gm_g10#8': '魔王問：問 your，要答？', 'g3gm_g10#9': '魔王問：問 you，要答？', 'g3gm_g10#14': '魔王問：How 單獨是什麼？',
+  'g4gm_g10#22': '魔王問：Who’s 和 Whose 唸起來？', 'g4u2_1-1b#5': '「他是」是哪一個？' };
+const ICON = k => /^g[34]gm_/.test(k) ? '🎮' : /^g[34]r\d/.test(k) ? '📘' : '📝';
 /* 審查結果：每一條 ＝ 在哪裡、現在、建議、為什麼 */
 const ISS = [
   { t: '題目沒有說要選什麼（英文？中文？）', why: '只有一句中文，學生不知道要做什麼；同一個網站別的題目都寫「英文是？」', rows: [
@@ -35,11 +42,13 @@ const css = `
 .ans{background:#1A1400;border:4px solid #FFD54A;border-radius:20px;padding:14px 20px;margin:30px 0;font-size:28px}
 .mini{display:flex;flex-wrap:wrap;gap:8px}.mini span{background:#14202B;border:2px solid #2A3540;border-radius:12px;padding:2px 10px;font-size:22px}
 `;
-const row = (q, nw, why) => `<div class="row"><div class="wh">📍 ${esc(q.nm)}・第 ${q.i} 題</div><div class="now"><small>現在</small>${esc(q.q.replace(/<[^>]+>/g, ''))}</div><div class="ar">➜</div><div class="new"><small>建議改成</small>${esc(nw)}</div>
-<div class="ops">選項：${q.o.map((o, j) => (j ? '' : '✅ ') + esc(o)).join('　／　')}</div></div>`;
+const row = (q, nw, why) => { const old = OLD[q.bk + '#' + q.i]; if (!old) throw new Error('沒有以前的字 ' + q.bk + ' #' + q.i);
+  return `<div class="row"><div class="wh">${ICON(q.bk)} ${esc(q.nm)}・第 ${q.i} 題</div><div class="now"><small>以前</small>${esc(old)}</div><div class="ar">➜</div><div class="new"><small>✅ 改好了</small>${esc(q.q.replace(/<[^>]+>/g, ''))}</div>
+<div class="ops">選項：${q.o.map((o, j) => (j ? '' : '✅ ') + esc(o)).join('　／　')}</div></div>`; };
 let n = 0; ISS.forEach(x => n += x.rows.length);
 let h = head.replace('<title>榮譽榜怎麼給</title>', '<title>題目中文審查</title>').replace('</style>', css + '</style></head><body><div class="wrap">');
 h += `<h1>❌ 錯題分析：題目和選項的中文審查</h1>
+<div class="ans">✅ <b>2026-10-16 全部照老師的回答改好了</b>：「魔王問：」三、四年級 48 題全部刪掉；下面每一條左邊 ＝ 以前，右邊 ＝ 現在網站上的字。</div>
 <div class="lead">老師要的：<b>全部網站的題目和選項的中文，一條一條審查</b>，有問題的先列出來，<b>老師說 OK 才改</b>。</div>
 <div class="ok">✅ 審查了：三年級、四年級網站的 📝 複習題、🎮 句型遊戲、📘 Review 1（遊戲、📝 複習）＝ <b>題目 ${total.q} 條、選項 ${total.o} 條</b>（有中文的）。<br>
 大部分都通順、合乎語法；<b>下面 ${n} 條＋認讀題 ${RD.length} 條</b>要請老師決定。<br>
@@ -49,12 +58,13 @@ h += `<h2>${ISS.length + 1}. 認讀題是「句子」的時候怎麼寫（${RD.l
 <div class="why">老師 D18 選 A：「「she」哪一個唸的是它？」➜「👀 she　🔊 聽 1～4：哪一個是 she？」。一個字的認讀題已經照 A 改好了（平板題目 ＝「🔊 聽 1～4：哪一個是上面這個字？」）。<br>
 <b>句子</b>（例 She’s my mother.）寫「上面這個字」不對，所以先照舊，請老師選：</div>
 <div class="q"><div class="t">平板上的題目（上面是 👀 She’s my mother.）</div>
-<label class="op rec"><b class="k">A</b>🔊 聽 1～4：哪一個是上面這<b>句話</b>？<span class="tag">建議</span></label>
-<label class="op"><b class="k">B</b>照現在：🔊 聽 1～4，哪一個唸的是它？</label></div>
+<label class="op rec"><b class="k">✅</b>老師決定：🔊 聽 1～4：哪一個號碼 唸的是上面這<b>句話</b>？<span class="tag">改好了</span></label>
+<label class="op"><b class="k">✅</b>一個字也一樣：🔊 聽 1～4：哪一個號碼 唸的是上面這<b>個字</b>？</label>
+<label class="op"><b class="k">✅</b>老師看板、答錯頁：👀 She’s my mother.　🔊 聽 1～4：哪一個號碼 唸的是「She’s my mother.」？</label></div>
 <div class="small">${RD.length} 條在：</div><div class="mini">${RD.map(q => `<span>${esc(q.nm.replace(/｜.*/, ''))} ${esc(q.show)}</span>`).join('')}</div>`;
 h += `<h2>${ISS.length + 2}. 老師參考：刻意的，建議不改</h2>
-<div class="row"><div class="wh">📍 ${esc(at('g3u2_1-2', 3).nm)}・第 3 題</div><div class="now"><small>現在</small>「你 是 幾歲？」英文的順序是？</div><div class="ar">✋</div>
+<div class="row"><div class="wh">📝 ${esc(at('g3u2_1-2', 3).nm)}・第 3 題</div><div class="now"><small>現在</small>「你 是 幾歲？」英文的順序是？</div><div class="ar">✋</div>
 <div class="new"><small>建議不改</small>這一題在教「are ＝ 是」的語序，中文故意一個字對一個英文字</div></div>`;
-h += `<div class="ans">✍️ 請回答：「<b>全部 OK</b>」（第 1～3 段照建議改、第 4 段選 A），或寫「第幾段第幾條 ➜ 不要改／改成什麼」。</div></div></body></html>`;
+h += `</div></body></html>`;
 fs.writeFileSync(process.argv[2], h);
 console.log('ok', n, RD.length, total);

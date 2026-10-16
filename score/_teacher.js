@@ -477,10 +477,10 @@ function bankOf(set){return BANK[set]||BANK[String(set).replace(/^g\\d/,'g*')]||
 function qOf(k){var a=k.split('#'),b=bankOf(a[0]);return b&&b.qs[+a[1]]?{set:b,q:b.qs[+a[1]]}:null}
 function kn(q){return q.kn||KN[q.k]||''}
 var KN={read:'👀 認讀',listen:'🎧 聽力',zh2en:'看中文選英文',en2zh:'看英文選中文',trap:'⚠️ 易錯'};
-/* D18 A（老師 2026-10-12）：「「she」哪一個唸的是它？」➜「👀 she　🔊 聽 1～4：哪一個是 she？」（句子加「」）
+/* D18 A（老師 2026-10-12）：「「she」哪一個唸的是它？」➜「👀 she　🔊 聽 1～4：哪一個是 she？」（句子加「」）；老師 2026-10-16 ➜「哪一個號碼 唸的是 she？」
    聽力題：清單、第 ① ～ ③ 步不寫出聽到的那一句（那常常就是答案），改〔🔊 再聽一次〕（第三批 四-4） */
 function isLsn(q){return q.k==='listen'||(!!q.say&&/🔊/.test(q.q||''))}
-function rdQ(q){var w=/\s/.test(q.show)?'「'+q.show+'」':q.show;return '👀 '+q.show+'　🔊 聽 1～4：哪一個是 '+w+'？'}
+function rdQ(q){var w=/\s/.test(q.show)?'「'+q.show+'」':q.show;return '👀 '+q.show+'　🔊 聽 1～4：哪一個號碼 唸的是 '+w+'？'}
 function qText(q){return q.k==='read'?rdQ(q):isLsn(q)?'🔊（聽力題）'+(q.k==='listen'?q.q:''):q.q}
 /* 放聲音：預先錄好的語音檔（q.au／q.al／q.ao，score/_build.js 算好的）；沒有 ＝ 瀏覽器的英文語音。cb ＝ 唸完 */
 var AEL=null;
