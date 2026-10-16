@@ -19,7 +19,7 @@ process.env.SITE_DIR = __dirname;
 const GD = require('./_game_data');
 require('../sentences/_build_games');            /* ← 引擎把 games.html 寫進 review1/ */
 
-const FP = path.join(__dirname, 'games.html');
+const FP = process.env.GAMES_OUT || path.join(__dirname, 'games.html');   /* 在家複習（2026-10-16 C4 第 7 題）：GAMES_OUT＋SCORE_SRC=home 寫一份到 g3-review/r1/ */
 let h = fs.readFileSync(FP, 'utf8');
 const J = JSON.stringify;
 
@@ -152,4 +152,4 @@ MANY.forEach(([a, b, c]) => {
 if (h.split('</style>').length - 1 < 1) throw new Error('review1 遊戲：找不到 </style>');
 h = h.replace('</style>', () => CSS + '</style>');
 fs.writeFileSync(FP, h, 'utf8');
-console.log('review1 遊戲：' + GD.GAMES.length + ' 個（' + GD.GAMES.map(g => g.id + ' ' + g.n).join('／') + '），補了 ' + n + ' 處');
+if (!process.env.GAMES_OUT) console.log('review1 遊戲：' + GD.GAMES.length + ' 個（' + GD.GAMES.map(g => g.id + ' ' + g.n).join('／') + '），補了 ' + n + ' 處');

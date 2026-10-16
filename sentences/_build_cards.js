@@ -1953,10 +1953,10 @@ const RVPATCH = [
   ["function rvEnd(){\n  rvStop();", "function rvEnd(){\n  rvStop();\n  if(scLive()&&scEnd({m:'q',raw:rvScore,fix:rvFix})){sWow();return}"],
   ["if(t.closest&&t.closest('#rvClose')){rvStop();", "if(t.closest&&t.closest('#rvClose')){clearTimeout(SCAUTO);SCEND=null;rvStop();"]
 ];
-function rvJS(DIR) {
+function rvJS(DIR, P) {
   const S = SITES.of(DIR);
   if (!S.g || !S.rv) throw new Error('成績紀錄：Review 1 頁的 📝 複習要有固定的年級和代號（score/_sites.js 的 ' + S.dir + '）');
-  return SCC.js(S, 'school') + `
+  return SCC.js(S, /^\.\.\//.test((P && P.file) || '') ? 'home' : 'school') + `
 var SCRV=${JSON.stringify(S.rv)};
 SCH={on:function(){return $('#rv').classList.contains('on')},open:function(){$('#rv').classList.add('on')},box:function(){return $('#rvbox')},
  back:'<div class="rvbtns"><button id="rvClose">⬅ 回卡片</button></div>',
@@ -2020,6 +2020,7 @@ function page(unit, cards, title, other, otherName, P) {
   });
   /* 在家複習（file 寫 '../g3-review/…'）：闖關路線（2026-10-16 C 組，sentences/_route.js）；教學網站照舊 */
   const ROUTE = !!TABM && /^\.\.\//.test(P.file || '');
+  const RVP = /^\.\.\//.test(P.file || '');   /* 在家複習的每一頁（含沒有闖關路線的 Review 1 頁）：金色〔🏠 回首頁〕 */
   const TABHTML = ROUTE ? ROUTEM.html(TABM) : TABM ? '<nav id="tabs">' + TABM.map((tb, k) => '<button class="tb" data-t="' + k + '"><b>' + tb.n + '</b>' + tb.lb + '</button>').join('') +
     /* 連到別的網站的主題（2026-10-09：四年級 Unit 2 的 💼 職業單字網站）：不是一組卡片，按了直接過去；跨分頁的箭頭不會走到它 */
     (/^\.\.\//.test(P.file || '') || process.env.REVIEW_DIR ? [] : (P.links || [])).map(x =>   /* 在家複習不連出去（2026-10-07 第 12 點） */ '<a class="tb tbl" href="' + x.href + '"><b>' + x.n + '</b>' + x.lb + ' ↗</a>').join('') +
@@ -2084,7 +2085,7 @@ ${TQD || P.noRv ? '' : ' <button id="rvBtn">📝 複習</button>'}
  <button id="zhBtn">🔤 點中文唸 中文</button>
  ${S.RATEBAR}
  ${P.navExtra || ''}<a href="${other}">${otherName}</a>
- ${ROUTE ? '<a class="rvhome" href="index.html">🏠 回首頁</a>' : '<a href="index.html">🏠 首頁</a>'}
+ ${RVP ? '<a class="rvhome" href="index.html">🏠 回首頁</a>' : '<a href="index.html">🏠 首頁</a>'}
  </div>
 </nav>
 
@@ -2099,13 +2100,13 @@ ${js.replace('__CARDS__', () => JSON.stringify(cards))
     .replace('__RVG__', () => JSON.stringify(P.rv || (unit === 1 ? D.RV1 : D.RV2)))}
 ${S.RATEJS}
 ${TABJS}
-${RVSC ? rvJS(DIR) : ''}
+${RVSC ? rvJS(DIR, P) : ''}
 ${TQD ? TQ.scJS(DIR, D, P) + TQ.JS.replace('__TQD__', () => JSON.stringify(TQD)).replace('__TQPAGE__', () => JSON.stringify(require('path').basename(DIR) + '/' + P.file)) +
   "document.body.classList.add('hastq');tqMark();window.addEventListener('resize',tqMark);" : ''}${ROUTE ? '\n' + ROUTEM.JS : ''}
 </script>
 </body>
 </html>`;
-  return S.HEAD(title, CSS + (hasSS ? SSCSS : '') + (hasGL ? GLCSS : '') + (hasPK ? PICK.CSS : '') + (P.rv ? R1CSS : '') + (TQD ? TQ.CSS : '') + (RVSC ? SCC.CSS : '') + (ROUTE ? ROUTEM.CSS : '')) + body;
+  return S.HEAD(title, CSS + (hasSS ? SSCSS : '') + (hasGL ? GLCSS : '') + (hasPK ? PICK.CSS : '') + (P.rv ? R1CSS : '') + (TQD ? TQ.CSS : '') + (RVSC ? SCC.CSS : '') + (ROUTE ? ROUTEM.CSS : RVP ? ROUTEM.HOMECSS : '')) + body;
 }
 
 /* 產出哪幾頁：別的課次可以在 _data.js 寫 PAGES 換標題，沒寫就是 sentences 原本的兩頁 */
@@ -2119,6 +2120,8 @@ const PAGES = D.PAGES || [
 /* 在家複習跟教學網站同步（2026-10-16 C 組第 4 題）：在家複習的每一張卡一定是教學網站上那一張（同一份資料）；
    同名的分頁（基礎、進階、一問一答）卡片要一模一樣。對不上 ➜ build 失敗，不發布 */
 (D.RPAGES || []).forEach(P => {
+  /* 2026-10-16 C4 第 7 題：在家複習的 Review 1 句型卡要跟教學網站的 review1.html 同一份卡片、同一組複習題 */
+  if (!P.tabs) { const X = (D.XPAGES || []).filter(x => x.cards === P.cards && x.rv === P.rv)[0]; if (!X) throw new Error('在家複習 ' + P.file + ' 跟教學網站的 Review 1 不一樣'); return; }
   const MAIN = P.unit === 1 ? D.TABS1 : D.TABS2; if (!MAIN) return;
   const all = new Set(); MAIN.forEach(tb => (tb.sub ? tb.sub.map(x => x.cards) : [tb.cards]).forEach(cs => cs.forEach(c => all.add(c))));
   const enT = c => JSON.stringify(c);

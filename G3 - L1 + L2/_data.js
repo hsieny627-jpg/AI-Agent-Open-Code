@@ -561,4 +561,8 @@ var TRX = { 'You are seven.':'你七歲。', "You're seven.":'你七歲。', 'I 
   'I am ten years old.':'我十歲。', "I'm ten years old.":'我十歲。', 'I am Ken.':'我是 Ken。', "I'm Ken.":'我是 Ken。' };
 /* 男生名字的句子（不是一問一答）用男聲（2026-10-04 使用者指定）：引擎 boyV()、語音檔 sentences/_audio_collect.js */
 var BOYS = ['Ken', 'Alan', 'Mike'];
+/* 2026-10-16 C4 第 7 題：在家複習〔📘 Review 1〕句型卡 ＝ 教學網站 review1.html 同一份卡片＋同一組 📝 複習（成績算在一起，來源 🏠 在家）；
+   〔🔒 開關〕代號 r1-s（sentences/_review_sites.js） */
+RPAGES.push({ file:'../g3-review/r1.html', unit:'Review 1', title:'三年級複習｜Review 1', other:'u2.html', otherName:'⬅ Unit 2', cards:XPAGES[0].cards, rv:XPAGES[0].rv,
+  fix:function (h) { return RFIX(h).replace('</head>', '<script>window.SCLKPAGE="r1-s";</script>\n</head>'); } });
 module.exports = { GL:GL, BOYS:BOYS, RPAGES:RPAGES, TABS1:TABS1, TABS2:TABS2, XPAGES:XPAGES, GLX:GLX, TRX:TRX, ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, SIL:SIL, CONTR:CONTR, PAGES:PAGES, CSS:CSS };

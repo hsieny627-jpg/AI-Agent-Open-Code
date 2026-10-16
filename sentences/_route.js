@@ -58,4 +58,7 @@ $('#tabs').addEventListener('click',function(e){var b=e.target.closest?e.target.
   if(typeof tqMark==='function'){var tm=tqMark;tqMark=function(){var r=tm.apply(this,arguments);routeMark();return r}}})();
 routeMark();
 `;
-module.exports = { html, CSS, JS };
+/* 只要〔🏠 回首頁〕金色那一行（沒有闖關路線的在家複習頁：Review 1 句型卡，2026-10-16 C4 第 7 題） */
+const HOMECSS = CSS.split('\n').filter(l => /^#bar a\.rvhome/.test(l)).join('\n') + '\n';
+if (!HOMECSS.trim()) throw new Error('_route.js：找不到 #bar a.rvhome');
+module.exports = { html, CSS, HOMECSS, JS };

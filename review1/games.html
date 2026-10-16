@@ -2868,7 +2868,7 @@ if(SCON&&SCSRC==='home'){
   setInterval(function(){scLkLoad(scLkRe)},120000);
   document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},a;
     if(c('#scLkIn')){scLkLogin();return}
-    if(c('#scLkHome')){location.href='index.html';return}
+    if(c('#scLkHome')){location.href=window.SCLKHOME||'index.html';return}
     if(c('#scLkX')){scFullOff('sclk');return}
     if((a=c('a[data-lk]'))){var k=a.getAttribute('data-lk').replace(/^g\drv_/,''),href=a.getAttribute('href');
       if(!scLkGate(k,function(){location.href=href})){e.preventDefault();e.stopPropagation()}}},true);

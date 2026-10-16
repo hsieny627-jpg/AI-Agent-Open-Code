@@ -259,6 +259,7 @@ async function teacher(br, vp) {
   await p.goto(HTTP + '/teacher/index.html'); await p.waitForTimeout(300);
   const html = fs.readFileSync(path.join(ROOT, 'teacher/index.html'), 'utf8');
   if (html.indexOf(PW) >= 0) e.push('密碼寫進網頁了');
+  if (/👩/.test(html)) e.push('老師看板還有 👩‍🏫（2026-10-16 C4 第 1 題：只留字）');
   await p.fill('#pw', 'wrong'); await p.click('#go'); await p.waitForTimeout(300);
   if (!/密碼不對/.test(await p.textContent('#lmsg'))) e.push('密碼錯沒有擋下來');
   await p.fill('#pw', PW); await p.click('#go'); await p.waitForTimeout(500);
@@ -268,19 +269,23 @@ async function teacher(br, vp) {
   if (tiles.length !== 4) e.push('不是四個大數字');
   if (tiles[3] !== '15／25') e.push('👥 有做的人不是 15／25（' + tiles[3] + '）');
   n += 5;
+  /* l〔🔒 開關〕：遊戲本來的名字有 ⚡（⚡ 閃電四選一，2026-10-16 C4 在家複習加的），不是舊圖示 */
   for (const t of ['p', 'b', 'c', 'w', 'k', 'l']) {
     await p.click('#tabs button[data-t="' + t + '"]'); await p.waitForTimeout(150);
     const r = await p.evaluate(() => ({ t: document.getElementById('pane').textContent, small: [].filter.call(document.querySelectorAll('#pane td,#pane .br,#pane button,#pane .kc span,#pane .kp,#pane .note,#pane h3,.tile .k,.tile .d,#tabs button'), x => x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < (innerWidth >= 1900 ? 22 : 16)).length, old: /⚡|🔁|🚀|秒按/.test(document.getElementById('pane').textContent + document.getElementById('tiles').textContent) }));
     if ((await ox()) > 0) e.push('分頁 ' + t + ' 橫向溢出');
     if (r.small) e.push('分頁 ' + t + ' 有 ' + r.small + ' 個字太小（觸控螢幕要 ≧ 22px、iPad ≧ 16px）');
-    if (r.old && t !== 't' && t !== 'w') e.push('分頁 ' + t + ' 還有看不懂的舊圖示（⚡🔁🚀／秒按）');
+    if (r.old && t !== 't' && t !== 'w' && t !== 'l') e.push('分頁 ' + t + ' 還有看不懂的舊圖示（⚡🔁🚀／秒按）');
     if (r.t.length < 20) e.push('分頁 ' + t + ' 是空的');
     n += 3;
   }
   /* 2026-10-12 D 第 7 件：〔🔒 開關〕在家複習每一個主題（三年級 19 個）；按一下 ＝ 鎖、存到伺服器；只選 304 再開 ＝ 黃色「只有 307、311 鎖」 */
   await p.click('#tabs button[data-t="l"]'); await p.waitForTimeout(200);
   const lk0 = await p.evaluate(() => ({ n: document.querySelectorAll('#pane .lkb').length, g: document.querySelectorAll('#pane .lkb.lkg').length }));
-  if (lk0.n !== 19 || lk0.g !== 19) e.push('〔🔒 開關〕三年級應該 19 個主題、一開始全部綠色（' + lk0.n + '／' + lk0.g + '）');
+  /* 2026-10-16 C4：主題數照 sentences/_review_sites.js 算（加了三種遊戲、📘 Review 1 三個） */
+  const LKN = require('../sentences/_review_sites.js').topics(require('../sentences/_review_sites.js').SITES[0]).length;
+  if (lk0.n !== LKN || lk0.g !== LKN) e.push('〔🔒 開關〕三年級應該 ' + LKN + ' 個主題、一開始全部綠色（' + lk0.n + '／' + lk0.g + '）');
+  if (!(await p.$('#pane [data-lk="g3rv_r1-w"]')) || !(await p.$('#pane [data-lk="g3rv_r1-g"]'))) e.push('〔🔒 開關〕沒有 📘 Review 1');
   await p.click('#pane [data-lk="g3rv_gm-g3"]'); await p.waitForTimeout(500);
   const lk1 = await p.evaluate(() => ({ r: !!document.querySelector('#pane [data-lk="g3rv_gm-g3"].lkr'), m: document.getElementById('lkmsg').textContent }));
   const sv = JSON.parse(G.P.LOCKS || '{}');

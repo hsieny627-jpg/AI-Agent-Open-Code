@@ -12,6 +12,8 @@
  *   三年級 🗂 問名字還是問幾歲：Unit 1、Unit 2 最常答錯的就是「問什麼答什麼」。
  *   四年級 🔄 變身術：直述句 ⇄ 問句（is 跑到最前面）是 Unit 2 的核心。
  *   沒選：閃電四選一、記憶配對、填空偏「認得」；火眼金睛、魔王挑戰比較難，在家沒有老師解說容易卡住。
+ * 2026-10-16 C4 第 8 題（老師照建議）：再放三種 ➜ 三年級 🙋 I 還是 My、🪄 縮寫變身術、⚡ 閃電四選一；四年級 🔵 他還是她、🗂 分類大師、⚡ 閃電四選一。
+ * 2026-10-16 C4 第 7 題：首頁多一區「📘 Review 1」（r1.html 句型卡、r1/ 字卡＋遊戲，見 r1Home）；四年級〔💼 職業單字網站 ↗〕（那個網站不動）。
  */
 const fs = require('fs'), path = require('path'), cp = require('child_process');
 const ROOT = path.join(__dirname, '..');
@@ -61,8 +63,11 @@ ${S.units.map(u => '<div class="u"><h3>' + u.ic + ' ' + u.t + '</h3><div class="
 <section><h2><span>2</span>🎮 遊戲</h2><div class="g">
 ${META.map(m => btn('games.html#' + m.id, m.ic, m.name, m.rule)).join('')}
 </div></section>
-<section><h2><span>3</span>📚 補充</h2><div class="g">
-${S.more.map(x => btn(path.basename(x.from), x.ic, x.t, '')).join('')}
+${S.r1 ? `<section><h2><span>3</span>📘 Review 1</h2><div class="g">
+${btn('r1/index.html', '🃏', 'Review 1 字卡', '物品、活動單字 98 張')}${btn('r1.html', '📖', 'Review 1 句型卡', '全部的句子＋📝 複習')}${btn('r1/games.html', '🎮', 'Review 1 遊戲', '20 種＋' + (S.r1 === 'x3' ? '三' : '四') + '年級進階')}
+</div></section>` : ''}
+<section><h2><span>${S.r1 ? 4 : 3}</span>📚 補充</h2><div class="g">
+${S.more.map(x => btn(path.basename(x.from), x.ic, x.t, '')).join('')}${S.jobs ? '<a class="b" href="' + S.jobs + '"><span class="i">💼</span><span class="x"><b>職業單字網站 ↗</b><em>回來按瀏覽器〔◀ 上一頁〕</em></span></a>' : ''}
 </div></section>
 </body></html>`;
 }
@@ -88,6 +93,62 @@ function copyIn(file, dir) {
   const bad = (h.match(/(?<![.\w])href="([^"#:]+\.html)"/g) || []).concat(h.match(/location\.href="(?!index\.html")[^"]*"/g) || []);
   if (bad.length) throw new Error('複習網站的 ' + path.basename(file) + ' 還連到別的頁面：' + bad.join(' '));
   return h;
+}
+/* 📘 Review 1（2026-10-16 C4 第 7 題，老師選 A）：字卡（review1/ 的單字首頁＋每一張字卡）、遊戲 20 種＋自己年級的進階，複製一份進 在家複習/r1/。
+   ① 字卡之間、單字首頁照舊互連（都在 r1/ 裡）；〔🏠 總首頁〕➜ 金色〔🏠 回首頁〕＝ 在家複習首頁（../index.html）
+   ② 字體、語音檔照舊用 review1/ 原本的檔案（路徑換成從 r1/ 算）
+   ③ 遊戲：同一個引擎（review1/_build_games.js，GAMES_OUT＋SCORE_SRC=home），代號跟教學網站一樣（成績算在一起，來源 🏠 在家）；別的年級的進階藏起來
+   ④ 登入（這是您嗎、3 分鐘）、〔🔒 開關〕（字卡 r1-w、遊戲 r1-g）、看字卡算練習時間
+   ⑤ 換完以後還連到 r1/ 以外的網頁（../index.html 以外）➜ build 失敗 */
+function r1Home(S, dir) {
+  const R1 = path.join(ROOT, 'review1'), out = path.join(dir, 'r1'), g = S.out === 'g3-review' ? 3 : 4, SC1 = require('../score/_client.js');
+  fs.mkdirSync(out, { recursive: true });
+  const rel = u => encodeURI(path.relative(out, u).split(path.sep).join('/'));
+  const re = u => { if (/^(https?:|data:|#|mailto:|javascript:)/.test(u) || !u || /^sc\.(css|js)$/.test(u)) return u;   /* sc.css／sc.js ＝ r1/ 自己的 */
+    const a = path.resolve(R1, decodeURIComponent(u.replace(/[?#].*$/, '')));
+    if (a === path.join(ROOT, 'index.html')) return '../index.html';
+    if (path.dirname(a) === R1 && /\.html$/.test(a)) return u;
+    return rel(a) + (/\/$/.test(u) ? '/' : ''); };
+  const fix = (h, f) => {
+    h = h.replace(/(?<![.\w])(src|href)="([^"]+)"/g, (m, a, u) => a + '="' + re(u) + '"')
+      .replace(/url\(([^)"'#]+)\)/g, (m, u) => 'url(' + re(u) + ')')
+      .replace(/(window\.[A-Z]+DIR=")([^"]+)"/g, (m, a, u) => a + re(u) + '"');
+    const dirs = '<script>window.AUDDIR="' + rel(path.join(R1, 'audio')) + '/";window.SVDIR="' + rel(path.join(R1, 'audio', 'sv')) + '/";window.SCLKHOME="../index.html";</script>';
+    h = h.replace('<head>', () => '<head>\n' + dirs);
+    const bad = (h.match(/(?<![.\w])href="(?!https?:|#)[^"]*"/g) || []).filter(x => !/^href="(\.\.\/index\.html|[\w-]+\.html|sc\.css)"$/.test(x))
+      .concat((h.match(/location\.href="[^"]*"/g) || []).filter(x => !/"(\.\.\/index\.html|index\.html)"/.test(x)));
+    if (bad.length) throw new Error('在家複習 r1/' + f + ' 還連到別的頁面：' + bad.join(' '));
+    if (h.indexOf('<head>\n' + dirs) < 0) throw new Error('在家複習 r1/' + f + '：找不到 <head>');
+    return h;
+  };
+  const one = (x, a, b, f) => { if (x.split(a).length !== 2) throw new Error('在家複習 r1/' + f + '：找不到 ' + a); return x.replace(a, () => b); };
+  const GOLD = '#home,a.rvhome{border:3px solid #FFD54A!important;background:#221B05!important;color:#FFE9A8!important;font-weight:700!important;min-height:48px}';
+  /* 遊戲 */
+  const gf = path.join(out, 'games.html');
+  cp.execFileSync('node', [path.join(R1, '_build_games.js')], { stdio: 'ignore', env: Object.assign({}, process.env, { GAMES_OUT: gf, SCORE_SRC: 'home' }) });
+  let h = fs.readFileSync(gf, 'utf8');
+  h = one(h, '<a href="../index.html">🏠 總首頁</a>', '<a class="rvhome" href="../index.html">🏠 回首頁</a>', 'games.html');
+  const other = S.r1 === 'x3' ? 'x4' : 'x3';
+  h = one(h, '</head>', '<style>' + require('./_route').HOMECSS.replace(/#bar a\.rvhome/g, 'nav#bar a.rvhome') +
+    '.gcard[data-g="' + other + '"]{display:none!important}</style>\n<script>window.SCLKPAGE="r1-g";</script>\n</head>', 'games.html');   /* 別的年級的進階不放 */
+  fs.writeFileSync(gf, fix(h, 'games.html'));
+  /* 登入程式（score/_client.js 的 home）：99 頁共用一份 r1/sc.css＋r1/sc.js（不要每一頁都放一份，網站才不會太大） */
+  const SH = SC1.home(g, '../', 'home', 1), SM = /^(<script src="[^"]+"><\/script>)\n<style>\n([\s\S]*?)<\/style>\n<script>\n([\s\S]*)<\/script>\n$/.exec(SH);
+  if (!SM) throw new Error('在家複習 r1/：score/_client.js 的 home() 變了，拆不開');
+  fs.writeFileSync(path.join(out, 'sc.css'), SM[2]); fs.writeFileSync(path.join(out, 'sc.js'), SM[3]);
+  const SCTAG = SM[1] + '\n<link rel="stylesheet" href="sc.css">\n<script src="sc.js"></script>\n';
+  /* 單字首頁＋每一張字卡 */
+  const files = fs.readdirSync(R1).filter(f => /\.html$/.test(f) && f !== 'games.html');
+  if (files.length < 99) throw new Error('在家複習 r1/：review1/ 的字卡只有 ' + files.length + ' 個檔');
+  files.forEach(f => {
+    let x = fs.readFileSync(path.join(R1, f), 'utf8');
+    x = f === 'index.html' ? one(x, '<a href="../index.html">🏠 總首頁</a>', '<a class="rvhome" href="../index.html">🏠 回首頁</a>', f)
+      : one(x, '<span class="blb">總首頁</span>', '<span class="blb">回首頁</span>', f);
+    x = one(x, '</head>', '<style>' + GOLD + '</style>\n</head>', f);
+    x = one(x, '</body>', '<script>window.SCLKPAGE="r1-w"</script>\n' + SCTAG + "<script>scViewOn('r1w','👀 Review 1 字卡')</script>\n</body>", f);
+    fs.writeFileSync(path.join(out, f), fix(x, f));
+  });
+  return files.length;
 }
 SITES.forEach(S => {
   const dir = path.join(ROOT, S.out);
@@ -118,5 +179,6 @@ SITES.forEach(S => {
   const T = topics(S), SC1 = require('../score/_client.js');
   S.more.forEach(x => { const f = path.basename(x.from), k = T.filter(o => o.href === f)[0].k.replace(/^g\drv_/, '');
     fs.writeFileSync(path.join(dir, f), copyIn(path.join(ROOT, x.from), dir).replace('</body>', () => '<script>window.SCLKPAGE=' + JSON.stringify(k) + '</script>\n' + SC1.home(S.out === 'g3-review' ? 3 : 4, '../', 'home', 1) + "<script>scViewOn('mo','👀 補充頁')</script>\n</body>")); });
-  console.log(S.g + '：' + S.out + '/index.html、u1.html、u2.html、games.html（' + S.games.join('、') + '）');
+  const r1n = S.r1 ? r1Home(S, dir) : 0;
+  console.log(S.g + '：' + S.out + '/index.html、u1.html、u2.html、games.html（' + S.games.join('、') + '）' + (r1n ? '、r1.html、r1/（' + r1n + ' 頁＋遊戲）' : ''));
 });

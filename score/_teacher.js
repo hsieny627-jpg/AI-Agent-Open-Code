@@ -284,12 +284,12 @@ td.nmc{text-align:left}td.nmc b{color:#9FB4C8;margin-right:.4em}
 ${HONCSS}
 @media (max-width:900px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.wq{grid-template-columns:2em 1fr}.wq .r{grid-column:2}}
 </style></head><body>
-<div id="login"><h1>👩‍🏫 老師看板</h1><div class="note">🔑 輸入老師密碼</div>
+<div id="login"><h1>老師看板</h1><div class="note">🔑 輸入老師密碼</div>
  <input id="pw" type="password" inputmode="numeric" autocomplete="current-password" aria-label="密碼">
  <label id="rmb"><input type="checkbox" id="rm"><span>這台電腦記住我（7 天）<em>只在老師自己的電腦勾；教室公用電腦不要勾</em></span></label>
  <button id="go">🔓 進入</button><div id="lmsg"></div></div>
 <div id="app" hidden>
- <div class="top"><h1>👩‍🏫 老師看板</h1><span class="sp"></span>
+ <div class="top"><h1>老師看板</h1><span class="sp"></span>
   <button id="bd">🏆 學生排行榜：開</button><button id="rf">🔄 重新整理</button><span id="zm"><button id="zo" aria-label="字變小">A－</button><button id="zi" aria-label="字變大">A＋</button></span><button id="dl">⬇ 一鍵下載 Excel</button><button id="out">👋 登出</button></div>
  <div class="top">
   <span class="grp" id="fg"><button data-g="3" class="on">三年級</button><button data-g="4">四年級</button></span>

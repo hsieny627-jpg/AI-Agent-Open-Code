@@ -169,7 +169,7 @@ h1{font-size:clamp(24px,3.6vh,40px)}
 .gr h2{margin-bottom:clamp(2px,.4vh,6px);font-size:clamp(19px,2.8vh,28px)}
 .gi{padding:2px clamp(8px,1vw,12px);min-height:48px}
 .gi .gb a{min-height:44px;padding:4px clamp(10px,1.3vw,15px)}
-/* 2026-10-12 使用者 D 組第 3 點（D1 A、D2 A）：「首頁」右邊一顆金色會發光的〔👩‍🏫 老師看板〕，按了直接到密碼畫面；不擋學生（有密碼） */
+/* 2026-10-12 使用者 D 組第 3 點（D1 A、D2 A）：「首頁」右邊一顆金色會發光的〔👩‍🏫 老師看板〕，按了直接到密碼畫面；不擋學生（有密碼） */ 2026-10-16 C4 第 1 題：拿掉 👩‍🏫，只留字。
 .tbtn{display:inline-flex;align-items:center;gap:.3em;vertical-align:middle;margin-left:.5em;text-decoration:none;
  font-size:clamp(18px,2.9vh,28px);font-weight:700;letter-spacing:.02em;line-height:1.1;color:#2A1A00;
  background:linear-gradient(#FFE07A,#E8A900);border-radius:999px;padding:clamp(5px,.8vh,9px) clamp(14px,1.6vw,22px);min-height:44px;
@@ -194,7 +194,7 @@ footer .sep{color:#2A2A2A;font-size:12px}
 <body>
 ${require('../score/_client.js').home(0, '', 'school', 1)}
 <header>
- <h1>首頁 <a class="tbtn" href="teacher/index.html">👩‍🏫 老師看板</a><span id="scbar" class="inl" hidden></span> <span class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></span></h1>
+ <h1>首頁 <a class="tbtn" href="teacher/index.html">老師看板</a><span id="scbar" class="inl" hidden></span> <span class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></span></h1>
 </header>
 
 <main id="hub">

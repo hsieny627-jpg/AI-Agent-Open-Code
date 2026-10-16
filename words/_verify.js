@@ -84,6 +84,7 @@ async function hubPage(p,f,vp,e){
  /* 2026-10-12 D1-A：「首頁」右邊金色〔👩‍🏫 老師看板〕➜ teacher/index.html，夠大、在畫面裡 */
  const tb=await p.evaluate(()=>{const b=document.querySelector('h1 .tbtn');if(!b)return null;const r=b.getBoundingClientRect();return{h:r.height,href:b.getAttribute('href'),in:r.right<=innerWidth&&r.top>=0,fs:parseFloat(getComputedStyle(b).fontSize)}});acts++;
  if(!tb)e.push('首頁沒有〔老師看板〕按鈕');
+ if(/👩/.test(await p.evaluate(()=>(document.querySelector('h1 .tbtn')||{}).textContent||'')))e.push('〔老師看板〕還有 👩‍🏫（2026-10-16 C4 第 1 題：只留字）');
  else{if(tb.href!=='teacher/index.html')e.push('〔老師看板〕連結不對：'+tb.href);if(tb.h<44||tb.fs<18)e.push('〔老師看板〕太小（'+tb.h+'px／字 '+tb.fs+'px）');if(!tb.in)e.push('〔老師看板〕跑出畫面');}
 
  /* 每一個站內連結都要真的存在 */

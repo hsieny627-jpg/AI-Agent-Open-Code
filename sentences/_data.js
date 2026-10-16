@@ -639,6 +639,10 @@ var TRX = {
   'Is he my father?':'他是我的爸爸嗎？', 'Is she my mother?':'她是我的媽媽嗎？', 'Is he my grandfather?':'他是我的爺爺嗎？',
   'He is my uncle.':'他是我的叔叔。', 'She is my aunt.':'她是我的阿姨。', "It's a book.":'它是一本書。'
 };
+/* 2026-10-16 C4 第 7 題：在家複習〔📘 Review 1〕句型卡 ＝ 教學網站 review1.html 同一份卡片＋同一組 📝 複習（成績算在一起，來源 🏠 在家）；
+   〔🔒 開關〕代號 r1-s（sentences/_review_sites.js） */
+RPAGES.push({ file:'../g4-review/r1.html', unit:'Review 1', title:'四年級複習｜Review 1', other:'u2.html', otherName:'⬅ Unit 2', cards:XPAGES[0].cards, rv:XPAGES[0].rv,
+  fix:function (h) { return RFIX(h).replace('</head>', '<script>window.SCLKPAGE="r1-s";</script>\n</head>'); } });
 module.exports = { GL:GL, ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, USE:USE, TRX:TRX, XPAGES:XPAGES, PAGES:PAGES, RPAGES:RPAGES, TABS1:TABS1, TABS2:TABS2 };
 
 /* ── 真實情境：會動的小劇場（使用者 2026-09-24 指定改版）──────────────
