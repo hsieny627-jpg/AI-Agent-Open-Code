@@ -490,12 +490,23 @@ async function cardsPage(p, f, vp, e) {
       const tb = await p.evaluate(() => {
         const r = document.getElementById('tabs').getBoundingClientRect(), c = document.getElementById('card').getBoundingClientRect();
         const lv = document.getElementById('lvGrp'), on = [].slice.call(document.querySelectorAll('#tabs .tb.on'));
+        /* 在家複習的闖關路線（2026-10-16 C 組）：一站一組，〔基礎｜進階〕藏起來；亮著的 ＝「現在在這裡」那一站 */
+        const rt = document.getElementById('tabs').classList.contains('route');
+        if (rt) { const now = [].slice.call(document.querySelectorAll('#tabs .st.now')), nx = document.querySelectorAll('#tabs .st.next').length,
+          ok = now.length === 1 && +now[0].getAttribute('data-t') === TCUR && +now[0].getAttribute('data-l') === LCUR, W = innerWidth,
+          out = [].slice.call(document.querySelectorAll('#tabs .st,#tabs .rh')).filter(b => b.getBoundingClientRect().width && (b.getBoundingClientRect().right > W || b.getBoundingClientRect().left < 0)).length,
+          tg = [].slice.call(document.querySelectorAll('#tabs .st.now .tg,#tabs .st.next .tg')).filter(t => { const a = t.getBoundingClientRect(), b = t.parentNode.getBoundingClientRect(); return a.left < b.left - 1 || a.right > b.right + 1; }).length,
+          small = [].slice.call(document.querySelectorAll('#tabs .lb')).filter(t => t.getBoundingClientRect().width && parseFloat(getComputedStyle(t).fontSize) < 17).length,
+          last = !document.querySelectorAll('#tabs .st')[document.querySelectorAll('#tabs .st').length - 1].classList.contains('now');
+          return { n: CARDS.length, over: r.bottom > c.top + 1, lv: !!TABM[TCUR].sub, sub: !!TABM[TCUR].sub, on: ok ? 1 : 0, rtErr: [nx !== (last ? 1 : 0) ? '「👆 下一個」不是一站' : '', out ? out + ' 站跑出畫面' : '', tg ? '「現在在這裡／下一個」超出那一站' : '', small ? '站名字小於 17px' : ''].filter(x => x) };
+        }
         return { n: CARDS.length, over: r.bottom > c.top + 1, lv: !lv.hidden && lv.getBoundingClientRect().width > 0, sub: !!TABM[TCUR].sub, on: on.length };
       });
       const nm = '分頁「' + T[t].lb + '」' + (T[t].sub ? (l ? '進階' : '基礎') : '');
       if (tb.over) e.push(nm + '：上方分頁按鈕壓到字卡');
       if (tb.lv !== tb.sub) e.push(nm + '：基礎／進階按鈕' + (tb.sub ? '沒有出現' : '不該出現'));
       if (tb.on !== 1) e.push(nm + '：亮著的分頁按鈕不是一個');
+      (tb.rtErr || []).forEach(x => e.push(nm + '：闖關路線 ' + x));
       for (let i = 0; i < tb.n; i++) {
         await p.evaluate(k => { stopPlay(); sayStop(); i = k; draw(0); }, i); await p.waitForTimeout(700);
         const s = await snap(); acts++;

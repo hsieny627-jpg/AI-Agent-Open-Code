@@ -35,12 +35,40 @@ const SITES = [{ d: 'g3-review', src: 'G3 - L1 + L2', games: 'g3,g5,g9' }, { d: 
       q.on('pageerror', x => er.push('JS 例外：' + x.message)); q.on('requestfailed', x => /script\.google/.test(x.url()) || er.push('載不到：' + x.url().split('/').slice(-2).join('/')));
       await q.goto(pathToFileURL(path.join(ROOT, S.d, h)).href); await q.waitForTimeout(500);
       const x = await q.evaluate(async () => { await document.fonts.ready; const vis = id => { const b = document.getElementById(id); return !!b && b.getBoundingClientRect().width > 0; };
-        return { font: document.fonts.check('700 48px Andika'), aud: !!window.ENAUD, fwd: vis('fwd'), wh: vis('whome'), home: vis('home'), ox: document.documentElement.scrollWidth - innerWidth }; });
+        return { font: document.fonts.check('700 48px Andika'), aud: !!window.ENAUD, fwd: vis('fwd'), wh: vis('whome'), home: vis('home'), homeBig: !!document.getElementById('home') && parseFloat(getComputedStyle(document.getElementById('home')).fontSize) >= 18 && /回首頁/.test(document.getElementById('home').textContent), ox: document.documentElement.scrollWidth - innerWidth }; });
       if (!x.font) er.push('Andika 沒有載到'); if (!x.aud) er.push('英文語音檔沒有載到');
       if (x.fwd || x.wh) er.push('老師網站的按鈕（🌍 環遊世界／🔤 單字首頁）還看得到'); if (x.ox > 0) er.push('橫向溢出 ' + x.ox);
+      if (x.home && !x.homeBig) er.push('〔🏠 回首頁〕不夠大（< 18px）或沒寫「回首頁」');
       if (x.home) { await q.click('#home'); await q.waitForTimeout(400); if (path.resolve(decodeURIComponent(new URL(q.url()).pathname)) !== path.join(ROOT, S.d, 'index.html')) er.push('🏠 沒有回到複習首頁（' + q.url() + '）'); }
       else er.push('看不到 🏠 首頁');
       n += 6; if (er.length) { fails += er.length; console.log('✗ ' + S.d + '/' + h + ' @' + vp.join('x')); er.forEach(z => console.log('   ' + z)); }
+      await q.close();
+    }
+    /* 2026-10-16 C 組：闖關路線、一問一答、刪縮寫動畫第 4 頁、〔🏠 回首頁〕金色大按鈕、遊戲頁寫真的幾種 */
+    if (!r.links.some(h => /u1\.html#t4/.test(h)) || !r.links.some(h => /u2\.html#t4/.test(h))) e.push('首頁沒有〔💬 一問一答〕');
+    for (const f of ['u1.html', 'u2.html', 'games.html']) {
+      const q = await br.newPage({ viewport: { width: vp[0], height: vp[1] } }); await NOGAS(q);
+      await q.goto(pathToFileURL(path.join(ROOT, S.d, f)).href); await q.waitForTimeout(600);
+      const x = await q.evaluate(f => { const o = [], hb = document.querySelector('#bar a.rvhome'), R = hb && hb.getBoundingClientRect();
+        if (!hb || !R.width || R.height < 46 || parseFloat(getComputedStyle(hb).fontSize) < 18 || !/回首頁/.test(hb.textContent)) o.push('下面沒有金色大按鈕〔🏠 回首頁〕');
+        else if (hb.getAttribute('href') !== 'index.html') o.push('〔🏠 回首頁〕沒有連回複習首頁');
+        if (f === 'games.html') { const n = document.querySelectorAll('#grid .gcard,#grid > *').length, h1 = document.querySelector('#hub h1').textContent;
+          if (/10 種/.test(h1)) o.push('遊戲大廳標題還寫 10 種'); return o; }
+        if (!window.TABM || TABM[TABM.length - 1].lb !== '一問一答') o.push('最後一站不是一問一答');
+        const st = document.querySelectorAll('#tabs.route .st').length, want = TABM.reduce((a, t) => a + (t.sub ? t.sub.length : 1), 0);
+        if (st !== want) o.push('闖關路線 ' + st + ' 站（應該 ' + want + '）');
+        const rh = document.querySelector('#tabs .rh'); if (innerWidth > 900 && (!rh || !rh.getBoundingClientRect().width)) o.push('上面沒有〔🏠 回首頁〕');
+        if (location.pathname.indexOf('g4-review/u2') >= 0) { const k = TABM.findIndex(t => t.lb === '縮寫動畫'); setDeck(k, 0); if (CARDS.length !== 3) o.push('四年級 Unit 2 縮寫動畫 ' + CARDS.length + ' 頁（應該 3 頁）'); }
+        /* 看到最後一張卡 ➜ 打 ✔、「現在在這裡」還在這一站、下一站寫「下一個」 */
+        try { localStorage.clear(); } catch (z) {} TQSEEN = {}; setDeck(0, 0); i = CARDS.length - 1; draw(0);
+        const b0 = document.querySelector('#tabs .st[data-t="0"][data-l="0"]');
+        if (!b0.classList.contains('done')) o.push('看完 1 基礎最後一張，沒有打 ✔');
+        if (!b0.classList.contains('now')) o.push('「現在在這裡」不在 1 基礎');
+        if (!document.querySelector('#tabs .st[data-t="0"][data-l="1"]').classList.contains('next')) o.push('「下一個」不是 1 進階');
+        document.querySelector('#tabs .st[data-t="0"][data-l="1"]').click();
+        if (TCUR !== 0 || LCUR !== 1) o.push('點 1 進階沒有過去');
+        setDeck(0, 0); return o; }, f);
+      n += 6; if (x.length) { fails += x.length; console.log('✗ ' + S.d + '/' + f + ' @' + vp.join('x')); x.forEach(z => console.log('   ' + z)); }
       await q.close();
     }
     if (e.length) { fails += e.length; console.log('✗ ' + S.d + '/index.html @' + vp.join('x')); e.forEach(x => console.log('   ' + x)); }

@@ -1,0 +1,302 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>老師再選一次</title><style>
+@font-face{font-family:Andika;src:url(../../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#05070A;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 140px;font-size:26px;line-height:1.55;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:42px;color:#FFD54A;margin:22px 0 6px}
+h2{font-size:36px;color:#FFD54A;margin:56px 0 10px;border-top:4px solid #24303C;padding-top:22px}
+.lead{color:#DDE6EE}
+.howto{background:#102016;border:3px solid #3BD16F;border-radius:20px;padding:14px 20px;margin:16px 0}
+.q{background:#0B0F14;border:3px solid #24303C;border-radius:22px;padding:18px 20px;margin:26px 0}
+.q>.t{font-size:32px;color:#7FD4FF;margin-bottom:8px}
+.q>.t .no{display:inline-block;background:#FFD54A;color:#05070A;border-radius:12px;padding:0 14px;margin-right:10px}
+.opt{background:#0F151C;border:4px solid #2A3540;border-radius:20px;padding:14px 18px;margin:16px 0}
+.opt.rec{border-color:#3BD16F;background:#0D1B12}
+.opt .hd{font-size:30px}
+.opt .k{color:#FFD54A;font-size:40px;margin-right:10px}
+.tag{display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px;margin-left:8px;vertical-align:middle}
+.why{color:#CFE3F5;font-size:24px;margin-top:6px}
+.note{color:#B9C4CE;font-size:22px}
+.lab{font-size:22px;color:#B9C4CE;margin:10px 0 4px}
+table{border-collapse:collapse;width:100%;margin:10px 0}
+td,th{border:2px solid #2A3540;padding:8px 12px;text-align:left;vertical-align:middle}
+th{background:#14202B;color:#CFE6FF}
+.ok{color:#3BD16F}.bad{color:#FF6B6B}.gold{color:#FFD54A}
+.mock{background:#000;border:3px solid #3A4650;border-radius:18px;padding:14px;overflow:hidden}
+.sw{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.sw button{font:inherit;font-size:24px;background:#111820;color:#fff;border:3px solid #34404C;border-radius:16px;padding:8px 18px;min-height:56px;cursor:pointer}
+.sw button.on{border-color:#FFD54A;background:#2A2208;color:#FFE07A}
+/* 1 男老師圖示 */
+.tchs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:760px){.tchs{grid-template-columns:1fr}}
+.tch{background:#0F151C;border:4px solid #2A3540;border-radius:20px;padding:14px;text-align:center}
+.tch.rec{border-color:#3BD16F;background:#0D1B12}
+.tch .k{color:#FFD54A;font-size:40px}
+.tch svg.big{width:min(220px,100%);height:auto;display:block;margin:6px auto}
+.tch .small{display:inline-flex;align-items:center;gap:10px;border:3px solid #FFD54A;background:#221B05;color:#FFE9A8;border-radius:16px;padding:6px 16px;font-size:24px;margin-top:8px}
+.tch .small svg{width:48px;height:48px}
+/* 2 練習／用心 */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+.pc{border-radius:18px;padding:14px 16px;border:3px solid}
+.pc.p{border-color:#7FD4FF;background:#0A1822}.pc.h{border-color:#FF7EA8;background:#220A14}
+.pc .t{font-size:34px}.pc .s{font-size:26px;color:#fff}.pc .e{font-size:24px;color:#CFE3F5;margin-top:6px}
+.laps{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap}
+.laps i{font-style:normal;font-size:30px;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#123047;border:3px solid #7FD4FF}
+.pc.h .laps i{background:#3A1020;border-color:#FF7EA8}
+.laps i.x{opacity:.35}
+/* 3 成績卡 */
+.card3{background:#0B1118;border:3px solid #34404C;border-radius:22px;padding:16px;max-width:760px;margin:10px auto}
+.card3 .who{font-size:30px;color:#FFE9A8}
+.big3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.b3{border-radius:18px;padding:12px 8px;text-align:center;border:3px solid}
+.b3 .i{font-size:30px}.b3 .v{font-size:52px;line-height:1.1}.b3 .u{font-size:22px;color:#DDE6EE}
+.b3.c{border-color:#3BD16F;background:#0D1B12}.b3.p{border-color:#7FD4FF;background:#0A1822}.b3.h{border-color:#FF7EA8;background:#220A14}
+.did{font-size:30px;background:#14202B;border-radius:16px;padding:10px 14px;margin:8px 0}
+.next{font-size:28px;background:#2A2208;border:3px dashed #FFD54A;border-radius:16px;padding:10px 14px;margin:8px 0}
+.more{font-size:24px;color:#B9C4CE;border:2px solid #34404C;border-radius:14px;padding:8px 14px;margin-top:10px}
+/* 4 頒獎典禮 */
+#stage4{position:relative;height:520px;background:radial-gradient(ellipse at 50% 120%,#1a1206 0%,#000 60%);border-radius:18px;overflow:hidden}
+#stage4 .beam{position:absolute;left:50%;top:-40px;width:520px;height:620px;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 0%,rgba(255,240,200,.55) 0%,rgba(255,220,140,.18) 38%,transparent 70%);clip-path:polygon(42% 0,58% 0,100% 100%,0 100%);opacity:0}
+#stage4 .floor{position:absolute;left:50%;bottom:30px;width:420px;height:70px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(255,226,150,.5),transparent 70%);opacity:0}
+#stage4 .ribbon{position:absolute;left:50%;top:24px;transform:translateX(-50%) scale(.6);opacity:0;background:linear-gradient(#C8102E,#8E0B20);color:#FFE9A8;font-size:30px;padding:8px 34px;border-radius:10px;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.6)}
+#stage4 .sub{position:absolute;left:0;right:0;top:84px;text-align:center;font-size:24px;color:#FFE9A8;opacity:0}
+#stage4 .cup{position:absolute;left:50%;bottom:150px;width:150px;transform:translateX(-50%) translateY(80px);opacity:0}
+#stage4 .cls{position:absolute;left:0;right:0;bottom:96px;text-align:center;font-size:76px;line-height:1;background:linear-gradient(#FFF4C2,#FFC93C 55%,#C98A12);-webkit-background-clip:text;background-clip:text;color:transparent;transform:scale(.3);opacity:0;filter:drop-shadow(0 4px 10px rgba(255,190,60,.45))}
+#stage4 .say{position:absolute;left:12px;right:12px;bottom:28px;text-align:center;font-size:26px;color:#fff;opacity:0}
+#stage4 .cf{position:absolute;top:-20px;width:12px;height:18px;opacity:0}
+#stage4.go .beam{animation:s4b 1s ease-out .2s forwards}
+#stage4.go .floor{animation:s4f 1s ease-out .6s forwards}
+#stage4.go .ribbon{animation:s4r .7s cubic-bezier(.2,1.6,.4,1) .1s forwards}
+#stage4.go .sub{animation:s4o .6s ease-out .7s forwards}
+#stage4.go .cup{animation:s4c 1s cubic-bezier(.2,1.3,.4,1) 1s forwards}
+#stage4.go .cls{animation:s4n .9s cubic-bezier(.2,1.5,.4,1) 1.9s forwards}
+#stage4.go .say{animation:s4o .7s ease-out 2.8s forwards}
+#stage4.go .cf{animation:s4cf 2.6s linear forwards}
+@keyframes s4b{to{opacity:1}}@keyframes s4f{to{opacity:1}}
+@keyframes s4r{to{opacity:1;transform:translateX(-50%) scale(1)}}
+@keyframes s4o{to{opacity:1}}
+@keyframes s4c{to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes s4n{to{opacity:1;transform:scale(1)}}
+@keyframes s4cf{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:1;transform:translateY(560px) rotate(720deg)}}
+@media (max-width:600px){#stage4 .cls{font-size:58px;bottom:118px}#stage4 .cup{bottom:182px;width:118px}#stage4 .say{font-size:24px}}
+.pods{display:flex;gap:12px;align-items:flex-end;justify-content:center;margin-top:10px}
+.pod{text-align:center;width:150px}
+.pod .c{font-size:34px}.pod .b{border-radius:12px 12px 0 0;display:flex;align-items:flex-start;justify-content:center;font-size:36px;padding-top:6px}
+.pod.g .b{height:120px;background:linear-gradient(#FFD54A,#B98B10);color:#3A2600}
+.pod.s .b{height:86px;background:linear-gradient(#E6EDF3,#8C99A6);color:#1E2833}
+.pod.z .b{height:64px;background:linear-gradient(#E8A46A,#9A5A28);color:#2C1606}
+.aw{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media (max-width:760px){.aw{grid-template-columns:1fr}}
+.aw .a{background:#0F151C;border:3px solid #FFD54A;border-radius:16px;padding:10px}
+.aw .a .n{font-size:28px;color:#FFE07A}.aw .a .d{font-size:22px;color:#DDE6EE}
+</style></head><body><div class="wrap">
+
+<h1>老師看完 C2 的回答：再請老師選 10 題</h1>
+<p class="lead">老師的話全部寫進需求檔了（<b>sentences/2026-10-16_C_需求與問題.md</b> 第四節最下面）。下面每一題都有 <span class="ok">綠框 ＝ 建議</span>。老師回答時只要寫：<b>「1 甲、2 A、3 A、……」</b>，不同意的那一題寫想要的樣子就好。</p>
+
+<div class="howto">✅ <b>這次已經做好、已經上線的（在家複習）</b>
+<table>
+<tr><th>老師說的</th><th>現在的樣子</th></tr>
+<tr><td>找不到〔回首頁〕</td><td>句型頁最上面最左邊一顆 <b class="gold">〔🏠 回首頁〕</b>；每一頁（句型、遊戲、補充）下面一顆 <b class="gold">金色大按鈕〔🏠 回首頁〕</b></td></tr>
+<tr><td>沒有一問一答</td><td>三、四年級 Unit 1、Unit 2 都加 <b>第 5 站「一問一答」</b>（跟老師教學網站同一份卡片＋同一組 5 題複習題）</td></tr>
+<tr><td>上次的第 1～5 題</td><td>闖關路線（金色「現在在這裡」、藍色「👆 下一個」、看完打 ✔）；四年級 Unit 2 縮寫動畫 4 頁 ➜ 3 頁；在家複習和教學網站不一樣就不發布</td></tr>
+<tr><td>遊戲大廳標題寫「10 種玩法」</td><td>改成真的有幾種（現在 3 種）</td></tr>
+</table>
+老師的話裡「國家複習網站」，我照上下文當成<b>「在家複習網站」</b>；不是的話請告訴我。</div>
+
+<h2>一、請老師選（10 題）</h2>
+
+<!-- 1 -->
+<div class="q"><div class="t"><span class="no">1</span>男老師圖示：選哪一個？</div>
+<div class="lab">都是自己畫的（不是 emoji）。會換在：總首頁〔老師看板〕按鈕、老師看板左上角、老師密碼頁。下面金框 ＝ 放在按鈕上的大小。</div>
+<div class="tchs">
+ <div class="tch rec"><div><span class="k">甲</span>西裝領帶<span class="tag">建議</span></div><svg class="big" data-t="a" viewBox="0 0 200 200"></svg><div class="small"><svg data-t="a" viewBox="0 0 200 200"></svg>老師看板</div><div class="why">深藍西裝、白襯衫、紅領帶，最正式、最有質感</div></div>
+ <div class="tch"><div><span class="k">乙</span>眼鏡＋針織背心＋書</div><svg class="big" data-t="b" viewBox="0 0 200 200"></svg><div class="small"><svg data-t="b" viewBox="0 0 200 200"></svg>老師看板</div><div class="why">斯文、有學問的老師</div></div>
+ <div class="tch"><div><span class="k">丙</span>捲袖襯衫＋教鞭</div><svg class="big" data-t="c" viewBox="0 0 200 200"></svg><div class="small"><svg data-t="c" viewBox="0 0 200 200"></svg>老師看板</div><div class="why">陽光、帥氣、正在上課</div></div>
+</div>
+<p class="note">都不喜歡：請寫「哪一個最接近、哪裡要改」（例：甲，頭髮再短一點、加眼鏡）。</p>
+</div>
+
+<!-- 2 -->
+<div class="q"><div class="t"><span class="no">2</span>📅 練習 和 ❤ 用心：怎麼讓學生一眼分得出來？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>一句話＋跑步的比喻<span class="tag">建議</span></div>
+<div class="two">
+ <div class="pc p"><div class="t">📅 練習</div><div class="s">練了「<b>多少</b>」</div><div class="laps"><i>🏃</i><i>🏃</i><i>🏃</i><i>🏃</i></div><div class="e">像<b>跑了幾圈</b>：幾天、幾次、幾分鐘</div></div>
+ <div class="pc h"><div class="t">❤ 用心</div><div class="s">練得「<b>多仔細</b>」</div><div class="laps"><i>✅</i><i>✅</i><i>✅</i><i class="x">💨</i></div><div class="e">像<b>每一圈有沒有認真跑完</b>：聽完才選、答錯有訂正、不亂按</div></div>
+</div>
+<div class="why">成績卡、排行榜、榮譽榜，只要出現這兩個字，旁邊都放這一句（📅 練了多少／❤ 練得多仔細）。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>老師想用別的說法（請寫）</div></div>
+</div>
+
+<!-- 3 -->
+<div class="q"><div class="t"><span class="no">3</span>成績卡：只留學生「有感」的三件事</div>
+<div class="lab">老師說 10 行字學生無感。這次只放<b>三個大答案</b>＋<b>一句「你做到了」</b>＋<b>一句「下一步」</b>。原本的 10 樣細節<b>一個都不刪</b>，收進最下面〔📋 老師看細節〕。</div>
+<div class="opt rec"><div class="hd"><span class="k">甲</span>三個大答案＋你做到了＋下一步<span class="tag">建議</span></div>
+<div class="card3">
+ <div class="who">30412 小華</div>
+ <div class="big3">
+  <div class="b3 c"><div class="i">🎯 正確</div><div class="v">80</div><div class="u">分　⬆ ＋12</div></div>
+  <div class="b3 p"><div class="i">📅 練習</div><div class="v">4</div><div class="u">天　7 次</div></div>
+  <div class="b3 h"><div class="i">❤ 用心</div><div class="v">92</div><div class="u">分</div></div>
+ </div>
+ <div class="did">🌟 你做到了：這週練了 <b class="gold">4 天</b>，正確 <b class="gold">比上次多 12 分</b>！</div>
+ <div class="next">💡 下一步：<b>看完、聽完</b> 再選</div>
+ <div class="more">📋 老師看細節 ▾（圓圈、最拿手／要加油、每一組的變化、最常錯的 3 題、小方格、哪幾天有練、用心程度動畫、明細、作廢）</div>
+</div>
+<div class="why">「你做到了」只挑<b>一件他真的做到、而且最值得說的事</b>（進步最多的那一項）；「下一步」只說<b>一件</b>怎麼做會更好。</div></div>
+<div class="opt"><div class="hd"><span class="k">乙</span>連「你做到了」也不要，只留三個大數字＋下一步</div></div>
+<div class="lab" style="margin-top:14px">3-2　這張卡會給學生看嗎？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>老師看板（老師會投影）＋學生平板做完以後，都是這一張<span class="tag">建議</span></div><div class="why">學生平板<b>不放</b>〔📋 老師看細節〕和姓名。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>只改老師看板</div></div>
+</div>
+
+<!-- 4 -->
+<div class="q"><div class="t"><span class="no">4</span>班級排行榜：改成「頒獎典禮」</div>
+<div class="lab">上次的冠軍牆：分不出 ⏰／❤、看不懂「第 2 304」、沒有榮譽感。這次<b>一個獎一個全螢幕</b>，像真的頒獎：燈光打下來 ➜ 獎盃升起 ➜ 班級出現 ➜ 一句「這一班做到了什麼」。</div>
+<div class="sw" id="sw4"><button data-k="0" class="on">⏰ 最認真練習</button><button data-k="1">🎯 成績最優</button><button data-k="2">⬆ 進步最多</button><button data-k="3">❤ 最用心</button><button data-k="r">🔁 再演一次</button></div>
+<div id="stage4"><div class="beam"></div><div class="floor"></div><div class="ribbon" id="r4"></div><div class="sub" id="s4"></div>
+<svg class="cup" viewBox="0 0 120 130"><defs><linearGradient id="gc" x1="0" x2="1"><stop offset="0" stop-color="#A8740C"/><stop offset=".45" stop-color="#FFE48A"/><stop offset="1" stop-color="#B07A0E"/></linearGradient></defs>
+<path d="M30 10h60v28c0 22-14 38-30 38S30 60 30 38z" fill="url(#gc)"/><path d="M30 18H12c0 20 10 30 22 32M90 18h18c0 20-10 30-22 32" fill="none" stroke="url(#gc)" stroke-width="7"/>
+<rect x="53" y="76" width="14" height="20" fill="url(#gc)"/><rect x="34" y="96" width="52" height="12" rx="3" fill="url(#gc)"/><rect x="26" y="108" width="68" height="16" rx="4" fill="#3A2A10"/>
+<path d="M60 26l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" fill="#FFF7D6"/></svg>
+<div class="cls" id="c4"></div><div class="say" id="y4"></div></div>
+<table style="margin-top:12px">
+<tr><th>老師說看不懂的</th><th>這次怎麼改</th></tr>
+<tr><td>⏰ 和 ❤ 分不出來</td><td>紅色彩帶下面一行寫清楚：⏰ ＝「<b>練最多分鐘</b>」、❤ ＝「<b>聽完才選、答錯有訂正</b>」</td></tr>
+<tr><td>「第 2 304　第 3 311」</td><td>全螢幕只放<b>第 1 名</b>；演完下面出現頒獎台：<b>🥇 第 1 名 307 班　🥈 第 2 名 304 班　🥉 第 3 名 311 班</b>（「第 ○ 名」和「○○ 班」都寫出來）</td></tr>
+<tr><td>沒有榮譽感</td><td>真的燈光、會升起的金色獎盃、金色大字班級、彩帶；最後一句寫<b>這一班做到的事</b>（不寫「你們好棒」）</td></tr>
+</table>
+<div class="pods"><div class="pod s"><div class="c">304 班</div><div class="b">🥈 2</div></div><div class="pod g"><div class="c">307 班</div><div class="b">🥇 1</div></div><div class="pod z"><div class="c">311 班</div><div class="b">🥉 3</div></div></div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>四個最高榮譽一個一個頒（每個約 6 秒，可以按〔⏭ 下一個〕〔⏸ 停〕），最後一頁四個獎一起列＋每一班都看得到自己的名次<span class="tag">建議</span></div>
+<div class="aw" style="margin-top:8px"><div class="a"><div class="n">⏰ 最認真練習　👑 307 班</div><div class="d">練最多分鐘</div></div><div class="a"><div class="n">🎯 成績最優　👑 304 班</div><div class="d">正確最多</div></div><div class="a"><div class="n">⬆ 進步最多　👑 307 班</div><div class="d">比上週進步最多</div></div><div class="a"><div class="n">❤ 最用心　👑 304 班</div><div class="d">聽完才選、答錯有訂正</div></div></div>
+<div class="why">另外 3 項（💯 總分、練習次數、👥 有做的人）不頒獎，放在最下面的表格（原本的全部留著）。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>四個獎一頁（四個頒獎台並排），不輪流</div><div class="why">一眼看完，但每一個獎比較小、震撼比較少。</div></div>
+<p class="note">班級和數字是舉例；網站上照真的成績算。老師按〔🏆 頒獎〕才演，投影時有聲音開關。</p>
+</div>
+
+<!-- 5 -->
+<div class="q"><div class="t"><span class="no">5</span>動畫裡要有學生的名字：⚠️ 跟現在的規則衝突</div>
+<div class="lab">現在的規則（D 組，老師定的）：<b>學生平板永遠拿不到姓名</b>，名單只在老師的試算表。所以平板上的動畫現在只能寫座號。</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>學生平板：<b>座號＋他自己選的角色</b>（第 9 題的動漫人物）；老師看板投影：<b>姓名</b><span class="tag">建議</span></div><div class="why">「這是我選的角色」學生會有感；姓名照舊不會出現在平板上。角色還沒做好以前先寫「30412 號」。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>學生登入以後自己打「我的名字」（只存在那一台平板，不送出去）</div><div class="why">要會打中文名字；同一台平板換人用要重打。</div></div>
+<div class="opt"><div class="hd"><span class="k">C</span>老師同意：平板也顯示姓名（姓名會從老師的試算表送到學生平板）</div><div class="why">⚠️ 學生在家打別人的座號，就看得到別人的姓名。</div></div>
+</div>
+
+<!-- 6 -->
+<div class="q"><div class="t"><span class="no">6</span>聽字卡：怎樣算「聽 1 次」、怎樣算進練習和用心？</div>
+<div class="lab">上次定的（第 6、7 題）：一站從第一張看到最後一張＋1 分鐘以上 ＝ 練習次數 ＋1；那一天看字卡加起來 1 分鐘以上 ＝ 練了 1 天。這次老師說：<b>單字和句子從頭到尾唸完，才算聽 1 次</b>。</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>改成「聽完」為準，不看分鐘<span class="tag">建議</span></div>
+<table>
+<tr><th>學生做了什麼</th><th>算不算</th></tr>
+<tr><td>按〔🔊 唸 1 次〕／〔🔊 唸 3 次〕／〔▶ 自動播放〕，這張卡的單字和句子<b>全部唸完</b></td><td class="ok">✅ 這一張「聽 1 次」</td></tr>
+<tr><td>唸到一半就換卡、按停</td><td class="bad">❌ 不算</td></tr>
+<tr><td>一站<b>每一張都聽完過</b></td><td class="ok">📅 練習次數 ＋1（同一站一天最多 3 次，跟上次一樣）</td></tr>
+<tr><td>那一天至少聽完 1 站</td><td class="ok">📅 練了 1 天</td></tr>
+<tr><td>聽完的張數 ÷ 看過的張數</td><td class="ok">❤ 用心 多一項「字卡有聽完」</td></tr>
+</table></div>
+<div class="opt"><div class="hd"><span class="k">B</span>每聽完 1 張 ＝ 練習次數 ＋1</div><div class="why">⚠️ 30 張卡 ＝ 30 次，比玩一場遊戲多很多，排行榜會不公平。</div></div>
+<div class="opt"><div class="hd"><span class="k">C</span>上次的「1 分鐘」留著，再加「要聽完」</div></div>
+<div class="lab" style="margin-top:14px">6-2　哪些字卡算？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>在家複習裡全部的字卡：句型卡、補充（單字結構、單字故事）、以後放進來的 Review 1 字卡<span class="tag">建議</span></div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>只有句型卡</div></div>
+<p class="note">要改成績的算法 ➜ 做好以後老師要重新部署一次（會給大字版步驟頁）。</p>
+</div>
+
+<!-- 7 -->
+<div class="q"><div class="t"><span class="no">7</span>Review 1、職業單字網站放進在家複習：放哪些？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>首頁多一區「📘 Review 1」：字卡 98 張（4 組）＋句型卡＋遊戲 20 種＋自己年級的進階（三年級進階／四年級進階）<span class="tag">建議</span></div><div class="why">全部<b>複製一份進在家複習</b>（跟補充頁一樣），按鈕只回在家複習首頁，不會跑到老師的頁面；成績照舊記。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>只放字卡和句型卡，不放遊戲</div></div>
+<div class="lab" style="margin-top:14px">7-2　四年級的職業單字網站（English-Jobs-New，是另一個網站）</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>四年級在家複習首頁加一顆〔💼 職業單字網站 ↗〕，按了打開那個網站；那邊的遊戲成績本來就記在老師看板<span class="tag">建議</span></div><div class="why">那個網站老師自己改過（jobdex），所以不複製、不動它。⚠️ 學生要回來，按瀏覽器的〔◀ 上一頁〕。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>在那個網站也加一顆〔🏠 回在家複習〕（要改那個網站一行）</div></div>
+</div>
+
+<!-- 8 -->
+<div class="q"><div class="t"><span class="no">8</span>在家複習再放「另外三種遊戲」：哪三種？</div>
+<table>
+<tr><th></th><th>現在有的 3 種</th><th>建議再放的 3 種</th><th>還沒放的</th></tr>
+<tr><td>三年級</td><td>🧩 語序大挑戰、🎧 聽力狙擊、🗂 問名字還是問幾歲</td><td class="ok">🙋 I 還是 My、🪄 縮寫變身術、⚡ 閃電四選一</td><td>🃏 記憶配對、🔍 火眼金睛、✏️ 填空高手、👑 魔王挑戰</td></tr>
+<tr><td>四年級</td><td>🧩 語序大挑戰、🔄 變身術、🎧 聽力狙擊</td><td class="ok">🔵 他還是她、🗂 分類大師、⚡ 閃電四選一</td><td>🃏 記憶配對、🔍 火眼金睛、✏️ 填空高手、👑 魔王挑戰</td></tr>
+</table>
+<div class="opt rec"><div class="hd"><span class="k">A</span>照上面綠色那 3 種<span class="tag">建議</span></div><div class="why">I／My、He／She 是兩課最常錯的地方；縮寫、問句／直述句是重點；閃電四選一把全部混在一起考。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>老師自己挑（請寫遊戲名字）</div></div>
+</div>
+
+<!-- 9 -->
+<div class="q"><div class="t"><span class="no">9</span>30 種動漫人物＋30 種裝備：先對清楚 4 件事</div>
+<table>
+<tr><th>要對清楚的</th><th>建議</th></tr>
+<tr><td>30 種人物 ＝ 男女一共 30，還是男 30、女 30？</td><td class="ok">A 男 15＋女 15 ＝ 30（每個學生都挑得到喜歡的）／B 男 30＋女 30</td></tr>
+<tr><td>版權</td><td class="ok">全部<b>自己畫的原創</b>日本動漫風格（不可以用鬼滅、火影、寶可夢這些真的角色）</td></tr>
+<tr><td>武器可以嗎？</td><td class="ok">A 武器只放「魔法、科技」類（魔法杖、光之劍、能量盾、火箭背包…），不放槍和真的刀；寵物（小龍、機器貓…）、裝備都可以／B 什麼武器都可以</td></tr>
+<tr><td>怎麼做</td><td class="ok">先畫 <b>6 個人物（男 3、女 3）＋6 個裝備寵物</b> 做成樣品頁給老師看；老師說「對」才畫完 30＋30</td></tr>
+</table>
+<p class="note">人物和裝備要記進成績（老師看板看得到）➜ 要改成績系統，做好以後要重新部署。這是一個<b>新的大功能</b>，建議 C 組做完再開一組做。</p>
+</div>
+
+<!-- 10 -->
+<div class="q"><div class="t"><span class="no">10</span>〔現場任務〕即時對戰：現在的成績系統做不到「真的即時」</div>
+<div class="lab">現在成績存在老師的 Google 試算表。Google 規定：同一個時間最多大約 <b>30 個</b>要求一起處理，全班每一題都送，會塞車、會漏。所以有兩種做法：</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>不用換系統：老師電腦當「大螢幕」，學生平板<b>每 5 秒</b>送一次分數，大螢幕每 3 秒更新排名；時間到 ➜ 頒獎典禮（第 4 題的樣子）<span class="tag">建議先做</span></div><div class="why">一班 30 人以內可以；排名會慢 3～5 秒，不是每一題都即時跳。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>換成「即時資料庫」（Google 的 Firebase，免費）：每一題都即時跳排名、最順</div><div class="why">老師要用 Google 帳號開一個 Firebase 專案（我做大字版一步一步的教學）。</div></div>
+<p class="note">這也是一個<b>新的大功能</b>（比 Kahoot、Blooket 好玩，要另外設計玩法），建議 C 組做完、角色做完再做，到時候先給老師看玩法再做。</p>
+</div>
+
+<h2>二、老師回答以後的順序</h2>
+<table>
+<tr><th>順序</th><th>做什麼</th></tr>
+<tr><td>✅ ①</td><td>在家複習（回首頁、一問一答、闖關路線、刪縮寫動畫第 4 頁、同步檢查）<b>已經做好</b></td></tr>
+<tr><td>②</td><td>在家複習再放：三種遊戲（第 8 題）、Review 1／職業單字網站（第 7 題）</td></tr>
+<tr><td>③</td><td>聽字卡算天數、次數、用心（第 6 題）➜ 老師要重新部署一次</td></tr>
+<tr><td>④</td><td>老師看板排版（男老師圖示、圖表分析更簡潔、成績卡、頒獎典禮；內容功能一個都不刪）</td></tr>
+<tr><td>⑤</td><td>用心程度動畫（甲＋切換＋至少 10 種新的愛心動畫）、故事動畫（聚光燈重做、城市重做、至少 10 種新的）➜ 先做成真的動畫頁給老師挑</td></tr>
+<tr><td>⑥</td><td>新的大功能：角色＋裝備（第 9 題）、現場任務（第 10 題）</td></tr>
+</table>
+</div>
+
+<script>
+/* 1 男老師圖示（自己畫的 SVG） */
+function teacher(t,u){var g=function(id,a,b,v){return '<linearGradient id="'+id+u+'" x1="0" y1="0" x2="'+(v?0:1)+'" y2="'+(v?1:0)+'"><stop offset="0" stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></linearGradient>'};
+ var C={a:{body:['#2E4372','#121C33'],lap:'#1A2747',shirt:'#F6F8FB',tie:['#D23A3A','#8E1620'],bg:['#22344F','#0B121C']},
+        b:{body:['#6F8FB0','#3E5875'],lap:'#516E8C',shirt:'#F3F6FA',tie:['#2F3E56','#1A2333'],bg:['#2A3A30','#0E1712']},
+        c:{body:['#9FD0F5','#5C9BD0'],lap:'#7DB6E4',shirt:'#9FD0F5',tie:['#24396A','#14213F'],bg:['#3A2A14','#160F06']}}[t];
+ var s='<defs>'+g('bg',C.bg[0],C.bg[1],1)+g('bd',C.body[0],C.body[1],1)+g('ti',C.tie[0],C.tie[1],1)+g('hr','#3B2B22','#120C09',1)+
+  '<radialGradient id="sk'+u+'" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#FFE3C8"/><stop offset="1" stop-color="#E7B08A"/></radialGradient>'+
+  '<linearGradient id="gd'+u+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE9A0"/><stop offset=".5" stop-color="#D9A93A"/><stop offset="1" stop-color="#8C6512"/></linearGradient>'+
+  '<clipPath id="cp'+u+'"><circle cx="100" cy="100" r="92"/></clipPath></defs>'+
+  '<circle cx="100" cy="100" r="97" fill="url(#gd'+u+')"/><circle cx="100" cy="100" r="92" fill="url(#bg'+u+')"/><g clip-path="url(#cp'+u+')">'+
+  '<path d="M18 206C22 162 54 140 100 138C146 140 178 162 182 206Z" fill="url(#bd'+u+')"/>';
+ if(t==='c')s+='<path d="M40 206C42 180 50 160 66 150L72 206Z" fill="#7DB6E4"/><path d="M160 206C158 180 150 160 134 150L128 206Z" fill="#7DB6E4"/><path d="M100 140V206" stroke="#5C9BD0" stroke-width="2"/><circle cx="100" cy="172" r="2.6" fill="#3E78A8"/><circle cx="100" cy="190" r="2.6" fill="#3E78A8"/>';
+ if(t!=='c')s+='<path d="M80 139L100 182L120 139Z" fill="'+C.shirt+'"/>';
+ if(t==='b')s+='<path d="M74 142L100 196L126 142L132 146L100 206L68 146Z" fill="#3E5875"/>';
+ s+='<path d="M95 141H105L104 148H96Z" fill="url(#ti'+u+')"/><path d="M96 148H104L107 156L102 186L98 186L93 156Z" fill="url(#ti'+u+')"/>';
+ if(t==='a')s+='<path d="M80 139L70 172L98 186L86 150Z" fill="'+C.lap+'"/><path d="M120 139L130 172L102 186L114 150Z" fill="'+C.lap+'"/><path d="M128 160l8 2" stroke="#F6F8FB" stroke-width="3"/>';
+ s+='<path d="M80 139L92 152L100 141L108 152L120 139L112 134H88Z" fill="'+(t==='c'?'#BFE2FA':'#FFFFFF')+'"/>';
+ s+='<path d="M88 106H112V138Q100 148 88 138Z" fill="#E2A982"/>'+
+  '<ellipse cx="66" cy="84" rx="7" ry="10" fill="#EDB993"/><ellipse cx="134" cy="84" rx="7" ry="10" fill="#EDB993"/>'+
+  '<path d="M66 72Q66 122 100 126Q134 122 134 72Q134 38 100 38Q66 38 66 72Z" fill="url(#sk'+u+')"/>'+
+  (t==='c'?'<path d="M62 80Q56 42 90 30Q128 22 140 50Q144 66 136 82Q136 60 124 50Q112 56 98 48Q84 58 70 56Q66 64 66 82Z" fill="url(#hr'+u+')"/>'
+          :'<path d="M63 80Q58 40 92 30Q130 24 140 52Q142 66 136 80Q134 58 120 52Q104 60 78 56Q68 62 66 82Z" fill="url(#hr'+u+')"/>')+
+  '<path d="M77 70Q86 64 95 68" stroke="#2A1D16" stroke-width="4.5" stroke-linecap="round" fill="none"/><path d="M105 68Q114 64 123 70" stroke="#2A1D16" stroke-width="4.5" stroke-linecap="round" fill="none"/>'+
+  '<ellipse cx="86" cy="82" rx="4.6" ry="5.4" fill="#2A1C14"/><ellipse cx="114" cy="82" rx="4.6" ry="5.4" fill="#2A1C14"/><circle cx="87.6" cy="80" r="1.6" fill="#fff"/><circle cx="115.6" cy="80" r="1.6" fill="#fff"/>'+
+  '<path d="M100 86Q96 98 101 100" stroke="#C48A66" stroke-width="2.6" fill="none" stroke-linecap="round"/>'+
+  '<path d="M87 105Q100 116 113 105Q100 110 87 105Z" fill="#fff" stroke="#9A4B3A" stroke-width="2.6" stroke-linejoin="round"/>'+
+  '<ellipse cx="78" cy="97" rx="6" ry="3.5" fill="#F29A8A" opacity=".28"/><ellipse cx="122" cy="97" rx="6" ry="3.5" fill="#F29A8A" opacity=".28"/>';
+ if(t==='b')s+='<rect x="74" y="72" width="24" height="19" rx="7" fill="rgba(255,255,255,.12)" stroke="#20160F" stroke-width="3"/><rect x="102" y="72" width="24" height="19" rx="7" fill="rgba(255,255,255,.12)" stroke="#20160F" stroke-width="3"/><path d="M98 80h4M74 79l-7-2M126 79l7-2" stroke="#20160F" stroke-width="3"/>'+
+  '<g transform="rotate(-12 50 182)"><rect x="26" y="160" width="50" height="40" rx="4" fill="#C0392B"/><rect x="30" y="164" width="42" height="32" rx="2" fill="#E74C3C"/><path d="M36 174h28M36 182h22" stroke="#FFE9A8" stroke-width="3"/></g>';
+ if(t==='c')s+='<path d="M150 206L176 118" stroke="#8B5A2B" stroke-width="5" stroke-linecap="round"/><circle cx="176" cy="116" r="5" fill="#FFD54A"/><path d="M132 206Q138 182 150 176Q160 172 162 184L156 206Z" fill="#EDB993"/>';
+ return s+'</g>'}
+var n=0;[].forEach.call(document.querySelectorAll('svg[data-t]'),function(e){e.innerHTML=teacher(e.getAttribute('data-t'),'u'+(n++))});
+/* 4 頒獎典禮 */
+var AW=[['⏰ 最認真練習','練最多分鐘','307 班','這週全班一起練了 312 分鐘，全年級最多'],['🎯 成績最優','正確最多','304 班','全班平均 92 分，全年級最高'],['⬆ 進步最多','比上週進步最多','307 班','全班平均比上週多了 15 分'],['❤ 最用心','聽完才選、答錯有訂正','304 班','答錯的題目，九成都訂正好了']],K4=0;
+function play4(){var st=document.getElementById('stage4'),a=AW[K4];st.classList.remove('go');
+ document.getElementById('r4').textContent=a[0];document.getElementById('s4').textContent=a[1];document.getElementById('c4').textContent='👑 '+a[2];document.getElementById('y4').textContent='🌟 '+a[3];
+ [].forEach.call(st.querySelectorAll('.cf'),function(x){x.remove()});var CC=['#FFD54A','#FF6B6B','#7FD4FF','#3BD16F','#FF9FD2'];
+ for(var i=0;i<34;i++){var c=document.createElement('i');c.className='cf';c.style.left=(Math.random()*100)+'%';c.style.background=CC[i%5];c.style.animationDelay=(2+Math.random()*1.4)+'s';c.style.borderRadius=i%3?'2px':'50%';st.appendChild(c)}
+ void st.offsetWidth;st.classList.add('go')}
+document.getElementById('sw4').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var k=b.getAttribute('data-k');if(k!=='r'){K4=+k;[].forEach.call(this.querySelectorAll('button'),function(x){x.classList.toggle('on',x===b)})}play4()});
+play4();
+</script>
+</body></html>

@@ -402,13 +402,15 @@ var RFIX = function (h) {
     /* 替換字（2026-10-04 等號卡也有名字替換字）的頭像寫在 JSON 裡：src=\"avatars/ 也要換 */
     .split('src=\\"avatars/').join('src=\\"' + G3D + 'avatars/');
 };
+/* 2026-10-16 C 組：在家複習的「一問一答」直接用教學網站那一個分頁的卡片（同一份） */
+var QA = function (T) { var t = T.filter(function (x) { return x.lb === '一問一答'; })[0]; return { n:'5', lb:'一問一答', cards:t.cards }; };
 var RPAGES = [
   { file:'../g3-review/u1.html', unit:1, title:'三年級複習｜Unit 1 What’s your name?', other:'u2.html', otherName:'➡ Unit 2', fix:RFIX,
     tabs:[{ n:'1', lb:'What’s your name?', sub:[{ lb:'基礎', cards:U1T.b11 }, { lb:'進階', cards:U1T.a11 }] }, { n:'2', lb:'My name is ___.', sub:[{ lb:'基礎', cards:U1T.b2 }, { lb:'進階', cards:U1T.a2 }] },
-          { n:'3', lb:'中英語序', cards:[U1[4], ENTOP(U1[4])] }, { n:'4', lb:'縮寫動畫', cards:[U1[2], U1[7]] }] },
+          { n:'3', lb:'中英語序', cards:[U1[4], ENTOP(U1[4])] }, { n:'4', lb:'縮寫動畫', cards:[U1[2], U1[7]] }, QA(TABS1)] },
   { file:'../g3-review/u2.html', unit:2, title:'三年級複習｜Unit 2 How old are you?', other:'u1.html', otherName:'⬅ Unit 1', fix:RFIX,
     tabs:[{ n:'1', lb:'How old are you?', sub:[{ lb:'基礎', cards:U2T.b11 }, { lb:'進階', cards:U2T.a11 }] }, { n:'2', lb:'I’m ten years old.', sub:[{ lb:'基礎', cards:U2T.b2 }, { lb:'進階', cards:U2T.a2 }] },
-          { n:'3', lb:'中英語序', cards:[U2[2], ENTOP(U2[2])] }, { n:'4', lb:'縮寫動畫', cards:[U2[4], U2[9]] }] }
+          { n:'3', lb:'中英語序', cards:[U2[2], ENTOP(U2[2])] }, { n:'4', lb:'縮寫動畫', cards:[U2[4], U2[9]] }, QA(TABS2)] }
 ];
 
 /* 頁面：標題、互相連結 */

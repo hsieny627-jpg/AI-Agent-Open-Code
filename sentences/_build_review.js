@@ -56,7 +56,7 @@ ${S.units.map(u => '<div class="u"><h3>' + u.ic + ' ' + u.t + '</h3><div class="
     /* 2026-10-07 對話 C（使用者需求第 5 題、Q15-A）：加基礎句型；分頁 1、2 都有〔基礎｜進階〕 */
     btn(u.f + '#t0-0', '🌱', '基礎句型 ①', u.tabs[0]) + btn(u.f + '#t0-1', '⭐', '進階句型 ①', u.tabs[0]) +
     btn(u.f + '#t1-0', '🌱', '基礎句型 ②', u.tabs[1]) + btn(u.f + '#t1-1', '⭐', '進階句型 ②', u.tabs[1]) +
-    btn(u.f + '#t2', '🔀', '中英語序動畫', '中文和英文的順序不一樣') + btn(u.f + '#t3', '✂️', '縮寫動畫', '兩個字黏成一個字') + '</div></div>').join('')}
+    btn(u.f + '#t2', '🔀', '中英語序動畫', '中文和英文的順序不一樣') + btn(u.f + '#t3', '✂️', '縮寫動畫', '兩個字黏成一個字') + btn(u.f + '#t4', '💬', '一問一答', '一個人問、一個人答') + '</div></div>').join('')}
 </section>
 <section><h2><span>2</span>🎮 遊戲</h2><div class="g">
 ${META.map(m => btn('games.html#' + m.id, m.ic, m.name, m.rule)).join('')}
@@ -80,7 +80,11 @@ function copyIn(file, dir) {
   h = h.replace(/(?<![.\w])(src|href)="([^"]+)"/g, (m, a, u) => a + '="' + re(u) + '"')
     .replace(/url\(([^)"']+)\)/g, (m, u) => 'url(' + re(u) + ')')
     .replace(/(window\.[A-Z]+DIR=")([^"]+)"/g, (m, a, u) => a + re(u) + '"');
-  h = h.replace('</head>', '<style>#fwd,#whome{display:none!important}</style>\n</head>');
+  h = h.replace('</head>', '<style>#fwd,#whome{display:none!important}' +
+    /* 2026-10-16 C 組：〔🏠 回首頁〕金色大按鈕 */
+    '#home{border:3px solid #FFD54A!important;background:#221B05!important;color:#FFE9A8!important;font-weight:700!important;font-size:clamp(18px,2.6vh,22px)!important;min-height:48px}</style>\n</head>');
+  if (h.split('<button id="home">🏠 首頁</button>').length !== 2) throw new Error('複習網站的 ' + path.basename(file) + ' 找不到〔🏠 首頁〕');
+  h = h.replace('<button id="home">🏠 首頁</button>', '<button id="home">🏠 回首頁</button>');
   const bad = (h.match(/(?<![.\w])href="([^"#:]+\.html)"/g) || []).concat(h.match(/location\.href="(?!index\.html")[^"]*"/g) || []);
   if (bad.length) throw new Error('複習網站的 ' + path.basename(file) + ' 還連到別的頁面：' + bad.join(' '));
   return h;
@@ -102,6 +106,11 @@ SITES.forEach(S => {
   let h = fs.readFileSync(path.join(dir, 'games.html'), 'utf8');
   const tag = '<script src="' + rel + 'audio/aud.js" onerror="window.AUD=null"></script><script>window.AUDDIR="' + rel + 'audio/";</script>';
   h = h.indexOf('<script src="audio/aud.js"></script>') >= 0 ? h.replace('<script src="audio/aud.js"></script>', tag) : h.replace('</head>', tag + '\n</head>');
+  /* 2026-10-16 C 組：學生找不到回首頁 ➜ 下面按鈕列那一顆改成金色大按鈕〔🏠 回首頁〕；標題寫真的有幾種玩法（不是 10 種） */
+  const one = (x, a, b) => { if (x.split(a).length !== 2) throw new Error('在家複習遊戲頁：找不到 ' + a); return x.replace(a, () => b); };
+  h = one(h, '<a href="index.html">🏠 首頁</a>', '<a class="rvhome" href="index.html">🏠 回首頁</a>');
+  h = one(h, '10 種玩法', S.games.length + ' 種玩法');
+  h = one(h, '</head>', '<style>' + require('./_route').CSS.replace(/#bar a\.rvhome/g, 'nav#bar a.rvhome') + '</style>\n</head>');
   h = h.split('src="avatars/').join('src="' + rel + 'avatars/').split('src=\\"avatars/').join('src=\\"' + rel + 'avatars/');
   fs.writeFileSync(path.join(dir, 'games.html'), h);
   fs.writeFileSync(path.join(dir, 'index.html'), indexHTML(S, META));

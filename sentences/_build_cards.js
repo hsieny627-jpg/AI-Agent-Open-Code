@@ -5,7 +5,8 @@
  * 三大重點（使用者 2026-09-20 指定）：版面簡潔清爽、廢話少、秒懂動畫多。
  */
 const fs = require('fs'), SITE = require('./_site'), DIR = SITE.DIR;
-const TQ = require('./_tq');   /* 每個分頁最後面的 📝 複習題 5 題（2026-10-04 對話 B） */
+const TQ = require('./_tq');
+const ROUTEM = require('./_route');   /* 在家複習的闖關路線（2026-10-16 C 組） */   /* 每個分頁最後面的 📝 複習題 5 題（2026-10-04 對話 B） */
 const S = require('./_shared');
 const D = SITE.load('_data');
 
@@ -2017,7 +2018,9 @@ function page(unit, cards, title, other, otherName, P) {
     if (js.split(a).length !== 2) throw new Error('選單字：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
     js = js.replace(a, () => b);
   });
-  const TABHTML = TABM ? '<nav id="tabs">' + TABM.map((tb, k) => '<button class="tb" data-t="' + k + '"><b>' + tb.n + '</b>' + tb.lb + '</button>').join('') +
+  /* 在家複習（file 寫 '../g3-review/…'）：闖關路線（2026-10-16 C 組，sentences/_route.js）；教學網站照舊 */
+  const ROUTE = !!TABM && /^\.\.\//.test(P.file || '');
+  const TABHTML = ROUTE ? ROUTEM.html(TABM) : TABM ? '<nav id="tabs">' + TABM.map((tb, k) => '<button class="tb" data-t="' + k + '"><b>' + tb.n + '</b>' + tb.lb + '</button>').join('') +
     /* 連到別的網站的主題（2026-10-09：四年級 Unit 2 的 💼 職業單字網站）：不是一組卡片，按了直接過去；跨分頁的箭頭不會走到它 */
     (/^\.\.\//.test(P.file || '') || process.env.REVIEW_DIR ? [] : (P.links || [])).map(x =>   /* 在家複習不連出去（2026-10-07 第 12 點） */ '<a class="tb tbl" href="' + x.href + '"><b>' + x.n + '</b>' + x.lb + ' ↗</a>').join('') +
     '<span class="lv" id="lvGrp" hidden><button data-l="0">基礎</button><button data-l="1">進階</button></span></nav>' : '';
@@ -2081,7 +2084,7 @@ ${TQD || P.noRv ? '' : ' <button id="rvBtn">📝 複習</button>'}
  <button id="zhBtn">🔤 點中文唸 中文</button>
  ${S.RATEBAR}
  ${P.navExtra || ''}<a href="${other}">${otherName}</a>
- <a href="index.html">🏠 首頁</a>
+ ${ROUTE ? '<a class="rvhome" href="index.html">🏠 回首頁</a>' : '<a href="index.html">🏠 首頁</a>'}
  </div>
 </nav>
 
@@ -2098,11 +2101,11 @@ ${S.RATEJS}
 ${TABJS}
 ${RVSC ? rvJS(DIR) : ''}
 ${TQD ? TQ.scJS(DIR, D, P) + TQ.JS.replace('__TQD__', () => JSON.stringify(TQD)).replace('__TQPAGE__', () => JSON.stringify(require('path').basename(DIR) + '/' + P.file)) +
-  "document.body.classList.add('hastq');tqMark();window.addEventListener('resize',tqMark);" : ''}
+  "document.body.classList.add('hastq');tqMark();window.addEventListener('resize',tqMark);" : ''}${ROUTE ? '\n' + ROUTEM.JS : ''}
 </script>
 </body>
 </html>`;
-  return S.HEAD(title, CSS + (hasSS ? SSCSS : '') + (hasGL ? GLCSS : '') + (hasPK ? PICK.CSS : '') + (P.rv ? R1CSS : '') + (TQD ? TQ.CSS : '') + (RVSC ? SCC.CSS : '')) + body;
+  return S.HEAD(title, CSS + (hasSS ? SSCSS : '') + (hasGL ? GLCSS : '') + (hasPK ? PICK.CSS : '') + (P.rv ? R1CSS : '') + (TQD ? TQ.CSS : '') + (RVSC ? SCC.CSS : '') + (ROUTE ? ROUTEM.CSS : '')) + body;
 }
 
 /* 產出哪幾頁：別的課次可以在 _data.js 寫 PAGES 換標題，沒寫就是 sentences 原本的兩頁 */
@@ -2113,6 +2116,20 @@ const PAGES = D.PAGES || [
 /* XPAGES（2026-09-26 新增：Review 1）：自己帶卡片 cards、複習題 rv；unit 寫名字（例：'Review 1'） */
 /* RPAGES（2026-10-03：三年級複習／四年級複習網站）：寫到別的資料夾（file 寫 '../g3-review/u1.html'），
    P.fix(html) 把語音檔、頭像這些相對路徑改回這一課的資料夾 */
+/* 在家複習跟教學網站同步（2026-10-16 C 組第 4 題）：在家複習的每一張卡一定是教學網站上那一張（同一份資料）；
+   同名的分頁（基礎、進階、一問一答）卡片要一模一樣。對不上 ➜ build 失敗，不發布 */
+(D.RPAGES || []).forEach(P => {
+  const MAIN = P.unit === 1 ? D.TABS1 : D.TABS2; if (!MAIN) return;
+  const all = new Set(); MAIN.forEach(tb => (tb.sub ? tb.sub.map(x => x.cards) : [tb.cards]).forEach(cs => cs.forEach(c => all.add(c))));
+  const enT = c => JSON.stringify(c);
+  P.tabs.forEach(tb => {
+    const m = MAIN.filter(x => x.lb === tb.lb)[0];
+    (tb.sub ? tb.sub.map((x, k) => [x.cards, m && m.sub ? m.sub[k].cards : null]) : [[tb.cards, m && !m.sub ? m.cards : null]]).forEach(([cs, mc]) => {
+      if (mc && (cs.length !== mc.length || cs.some((c, k) => c !== mc[k] && enT(c) !== enT(mc[k])))) throw new Error('在家複習 ' + P.file + '「' + tb.lb + '」跟教學網站不一樣');
+      cs.forEach(c => { if (!all.has(c) && ![...all].some(x => enT(x) === enT(c)) && !(c && c.enTop)) throw new Error('在家複習 ' + P.file + '「' + tb.lb + '」有一張卡不在教學網站上'); });
+    });
+  });
+});
 PAGES.concat(D.XPAGES || []).concat(D.RPAGES || []).forEach(P => fs.writeFileSync(DIR + '/' + P.file,
   (P.fix || (h => h))(page(P.unit, P.cards || (P.unit === 1 ? D.U1 : D.U2), P.title, P.other, P.otherName, P))));
 console.log('cards ok  unit1=' + D.U1.length + ' 張  unit2=' + D.U2.length + ' 張');

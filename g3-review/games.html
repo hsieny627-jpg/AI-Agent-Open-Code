@@ -949,6 +949,37 @@ body.scq .url{display:none}
 @media (prefers-reduced-motion:reduce){.care *{animation:none!important;transition:none!important}.care .chr{opacity:1;transform:none}}
 
 </style>
+<style>
+/* 闖關路線（在家複習，2026-10-16 C 組） */
+#tabs.route{padding:8px clamp(8px,1.2vw,16px) 0;gap:clamp(6px,.8vw,10px);flex-wrap:wrap;align-items:stretch}
+#tabs.route .lv{display:none!important}
+#tabs.route .st,#tabs.route .rh{position:relative;flex:1 1 0;min-width:clamp(100px,11vw,124px);max-width:170px;min-height:clamp(62px,9vh,80px);
+ border:3px solid #34404C;border-radius:16px;background:#111820;color:#E6EDF3;font-family:inherit;cursor:pointer;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 6px;text-align:center;line-height:1.1;text-decoration:none}
+#tabs.route .n{font-size:clamp(22px,3.4vh,30px);font-weight:700;color:#FFD54A;line-height:1}
+#tabs.route .lb{font-size:clamp(17px,2.5vh,22px);white-space:nowrap}
+#tabs.route .rh{border-color:#FFD54A;background:#221B05;color:#FFE9A8;flex:0 0 auto;min-width:clamp(84px,9vw,110px)}
+#tabs.route .rh .i{font-size:clamp(24px,3.6vh,32px);line-height:1}
+#tabs.route .rh .lb{font-weight:700}
+#tabs.route .tg{display:block;visibility:hidden;min-height:1.3em;line-height:1.3;font-size:clamp(15px,2vh,18px);font-weight:700;border-radius:999px;padding:1px 9px;margin-top:3px;white-space:nowrap;color:#05070A}
+#tabs.route .st.done{border-color:#2EB85C;background:#0D1B12}
+#tabs.route .st.done::after{content:'✔';position:absolute;top:-7px;right:-6px;background:#2EB85C;color:#fff;border-radius:50%;
+ width:30px;height:30px;font-size:19px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px #000}
+#tabs.route .st.now{border-color:#FFD54A;background:#2A2208;transform:scale(1.05);z-index:1;animation:rtGlow 1.8s ease-in-out infinite}
+#tabs.route .st.now .tg{visibility:visible;background:#FFD54A}
+#tabs.route .st.now .tg::after{content:'現在在這裡'}
+#tabs.route .st.next{border-color:#7FD4FF;border-style:dashed}
+#tabs.route .st.next .tg{visibility:visible;background:#7FD4FF}
+#tabs.route .st.next .tg::after{content:'下一個'}
+#tabs.route .st.next .tg::before{content:'👆';display:inline-block;margin-right:3px;animation:rtTap 1.2s ease-in-out infinite}
+@keyframes rtGlow{50%{box-shadow:0 0 0 5px rgba(255,213,74,.3),0 0 22px rgba(255,213,74,.55)}}
+@keyframes rtTap{50%{transform:translateY(-5px)}}
+/* 直放 iPad：七站排一排（上面〔🏠 回首頁〕收起來，下面按鈕列那一顆金色的還在），字卡才不會被壓矮 */
+@media (max-width:900px){#tabs.route .rh{display:none}#tabs.route .st{min-width:90px}}
+body.reduce #tabs.route .st.now,body.reduce #tabs.route .st.next .tg::before{animation:none}
+/* 〔🏠 回首頁〕（下面按鈕列那一顆也放大、金色） */
+nav#bar a.rvhome{border:3px solid #FFD54A!important;background:#221B05!important;color:#FFE9A8!important;font-weight:700;font-size:clamp(18px,2.6vh,22px)!important;min-height:48px;display:inline-flex;align-items:center}
+</style>
 </head>
 <body>
 <div id="bad"><div class="bt"></div><div class="bd"></div></div>
@@ -959,7 +990,7 @@ body.scq .url{display:none}
 
 <main id="stage">
  <section id="hub">
-  <h1>🎮 複習遊戲　10 種玩法</h1>
+  <h1>🎮 複習遊戲　3 種玩法</h1>
   <p class="lead">⏳ 每個遊戲 <b>1 分 30 秒</b>　⚡ 每題 15 秒，<b>愈快分數愈高</b><br>
      🔥 <b>連對 3 題</b> ➜ 🎁 驚喜卡 <b>二～五選一</b>（每次卡包樣式都不一樣）<br>
      ❌ 答錯 ➜ 看清楚 ➜ ⭐ 加分題答對 <b>✕ 2</b></p>
@@ -1002,7 +1033,7 @@ body.scq .url{display:none}
   <button data-r="0.7">0.7</button><button data-r="0.8">0.8</button>
   <button data-r="0.9">0.9</button><button data-r="1">1.0</button>
  </span>
- <a href="index.html">🏠 首頁</a>
+ <a class="rvhome" href="index.html">🏠 回首頁</a>
 </nav>
 
 <script src="../score/url.js"></script>

@@ -26,7 +26,7 @@ function topics(S) {
   const g = S.out === 'g3-review' ? 3 : 4, P = 'g' + g + 'rv_', out = [];
   const G = require(path.join(__dirname, '..', S.src, '_game_data'));
   S.units.forEach((u, n) => { const un = 'u' + (n + 1), grp = '📖 ' + u.t.replace(/　.*/, '');
-    [['#t0-0', '🌱 基礎句型 ①'], ['#t0-1', '⭐ 進階句型 ①'], ['#t1-0', '🌱 基礎句型 ②'], ['#t1-1', '⭐ 進階句型 ②'], ['#t2', '🔀 中英語序動畫'], ['#t3', '✂️ 縮寫動畫']]
+    [['#t0-0', '🌱 基礎句型 ①'], ['#t0-1', '⭐ 進階句型 ①'], ['#t1-0', '🌱 基礎句型 ②'], ['#t1-1', '⭐ 進階句型 ②'], ['#t2', '🔀 中英語序動畫'], ['#t3', '✂️ 縮寫動畫'], ['#t4', '💬 一問一答']]   /* 2026-10-16 C 組：加一問一答（接在最後，舊的〔🔒 開關〕代號不變） */
       .forEach(x => out.push({ k: P + un + '-' + x[0].slice(1), href: u.f + x[0], grp, t: x[1] })); });
   S.games.forEach(id => { const m = G.GAMES.filter(x => x.id === id)[0]; out.push({ k: P + 'gm-' + id, href: 'games.html#' + id, grp: '🎮 遊戲', t: m.ic + ' ' + m.name }); });
   S.more.forEach(x => { const f = path.basename(x.from); out.push({ k: P + 'mo-' + f.replace(/\.html$/, ''), href: f, grp: '📚 補充', t: x.ic + ' ' + x.t }); });
