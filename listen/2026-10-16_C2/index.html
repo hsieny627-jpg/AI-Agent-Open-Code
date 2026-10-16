@@ -1,0 +1,561 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>小華再對一次</title><style>
+@font-face{font-family:Andika;src:url(../../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#05070A;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 140px;font-size:26px;line-height:1.55;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:42px;color:#FFD54A;margin:22px 0 6px}
+h2{font-size:36px;color:#FFD54A;margin:56px 0 10px;border-top:4px solid #24303C;padding-top:22px}
+.lead{color:#DDE6EE}
+.howto{background:#102016;border:3px solid #3BD16F;border-radius:20px;padding:14px 20px;margin:16px 0}
+.q{background:#0B0F14;border:3px solid #24303C;border-radius:22px;padding:18px 20px;margin:26px 0}
+.q>.t{font-size:32px;color:#7FD4FF;margin-bottom:8px}
+.q>.t .no{display:inline-block;background:#FFD54A;color:#05070A;border-radius:12px;padding:0 14px;margin-right:10px}
+.opt{background:#0F151C;border:4px solid #2A3540;border-radius:20px;padding:14px 18px;margin:16px 0}
+.opt.rec{border-color:#3BD16F;background:#0D1B12}
+.opt .hd{font-size:30px}
+.opt .k{color:#FFD54A;font-size:40px;margin-right:10px}
+.tag{display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px;margin-left:8px;vertical-align:middle}
+.why{color:#CFE3F5;font-size:24px;margin-top:6px}
+.note{color:#B9C4CE;font-size:22px}
+.shot{width:100%;border:3px solid #3A4650;border-radius:14px;display:block;margin:8px 0}
+.lab{font-size:22px;color:#B9C4CE;margin:10px 0 4px}
+table{border-collapse:collapse;width:100%;margin:10px 0}
+td,th{border:2px solid #2A3540;padding:8px 12px;text-align:left;vertical-align:middle}
+th{background:#14202B;color:#CFE6FF}
+.cmp{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center}
+.cmp .ar{font-size:54px;color:#FFD54A;text-align:center}
+@media (max-width:860px){.cmp{grid-template-columns:1fr}.cmp .ar{transform:rotate(90deg)}}
+.ok{color:#3BD16F}.bad{color:#FF6B6B}.gold{color:#FFD54A}
+/* ── 示意圖共用 ── */
+.mock{background:#000;border:3px solid #3A4650;border-radius:18px;padding:14px;overflow:hidden}
+.blk{background:#0E141A;border:2px solid #24303C;border-radius:16px;padding:12px 14px;margin:10px 0}
+.blk .h{font-size:24px;color:#FFD54A}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;border:3px solid #34404C;border-radius:999px;padding:6px 16px;font-size:22px;background:#111820;white-space:nowrap}
+/* C2 闖關路線 */
+.route{display:flex;gap:8px;flex-wrap:nowrap;align-items:stretch}
+@media (max-width:700px){.route{flex-wrap:wrap}}
+.st{position:relative;flex:1 1 0;min-width:96px;min-height:84px;border:4px solid #34404C;border-radius:18px;background:#111820;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px;padding:6px 8px;text-align:center}
+.st .n{font-size:30px;color:#FFD54A;line-height:1}
+.st.done{border-color:#2EB85C;background:#0D1B12}
+.st.done::after{content:'✔';position:absolute;top:-14px;right:-8px;background:#2EB85C;color:#fff;border-radius:50%;width:36px;height:36px;font-size:24px;display:flex;align-items:center;justify-content:center}
+.st.now{border-color:#FFD54A;background:#2A2208;transform:scale(1.06);animation:glow 1.6s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 0 6px rgba(255,213,74,.35),0 0 26px rgba(255,213,74,.6)}}
+.st .tagnow{font-size:20px;color:#05070A;background:#FFD54A;border-radius:999px;padding:0 10px;margin-top:4px}
+.st.next .hand{position:absolute;bottom:-44px;left:50%;font-size:36px;transform:translateX(-50%);animation:tap 1.2s ease-in-out infinite}
+@keyframes tap{50%{transform:translate(-50%,-10px)}}
+.st.next{border-color:#7FD4FF;border-style:dashed}
+.st .tagnx{font-size:20px;color:#05070A;background:#7FD4FF;border-radius:999px;padding:0 10px;margin-top:4px}
+.tabs2 .st{flex:1 1 200px}
+/* 老師看板示意圖 */
+.dash .top{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.dash .tt{font-size:30px;margin-right:auto}
+.big2{display:inline-flex;border:3px solid #34404C;border-radius:999px;overflow:hidden}
+.big2 span{padding:6px 18px;font-size:24px}
+.big2 .on{background:#FFD54A;color:#05070A}
+.flt{margin:10px 0;padding:8px 14px;border:2px dashed #34404C;border-radius:14px;font-size:22px;color:#DDE6EE}
+.tiles4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:700px){.tiles4{grid-template-columns:repeat(2,1fr)}}
+.tl{background:#0E141A;border:2px solid #24303C;border-radius:14px;padding:8px 12px;text-align:center}
+.tl .v{font-size:44px;line-height:1.1}.tl .k{font-size:22px;color:#B9C4CE}
+.tb{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.tb span{border:3px solid #34404C;border-radius:16px;padding:6px 14px;font-size:22px;background:#111820}
+.tb .on{border-color:#FFD54A;background:#2A2208}
+.badge{display:inline-block;background:#E8453C;color:#fff;border-radius:999px;padding:0 10px;font-size:20px;margin-left:4px}
+.side{display:grid;grid-template-columns:200px 1fr;gap:12px}
+@media (max-width:700px){.side{grid-template-columns:1fr}}
+.side .menu span{display:block;border:3px solid #34404C;border-radius:14px;padding:6px 12px;margin:0 0 8px;font-size:22px;background:#111820}
+.side .menu .on{border-color:#FFD54A;background:#2A2208}
+/* 要關心格子 */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.kc{border-radius:16px;padding:8px 12px;font-size:22px;line-height:1.35}
+.kc .id{font-size:24px}.kc .sc{font-size:34px}
+.kc.r{background:#3A1214;border:3px solid #FF6B6B}.kc.y{background:#33290A;border:3px solid #FFD54A}.kc.g{background:#0D2A16;border:3px solid #2EB85C}.kc.w{background:#1A1F25;border:3px solid #5A6672}
+/* 班級排行榜 */
+.mx td,.mx th{text-align:center;font-size:24px}
+.mx td.best{background:#3A2E05;color:#FFE9A8;border:3px solid #FFD54A}
+.mx td.best::before{content:'👑 ';}
+.mx th:first-child,.mx td:first-child{text-align:left;white-space:nowrap}
+.pods{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.pod{background:#0E141A;border:2px solid #24303C;border-radius:16px;padding:10px;text-align:center}
+.pod .w1{font-size:40px;color:#FFD54A}
+/* 用心程度：甲 一顆大愛心＋五條長條 */
+.cA{display:grid;grid-template-columns:240px 1fr;gap:18px;align-items:center}
+@media (max-width:700px){.cA{grid-template-columns:1fr}}
+.bigH{position:relative;width:220px;height:200px;margin:0 auto}
+.bigH svg{width:100%;height:100%}
+.bigH .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:56px;color:#fff;text-shadow:0 2px 6px #000;padding-top:10px}
+.bars .b{display:grid;grid-template-columns:52px 1fr 100px;gap:10px;align-items:center;margin:6px 0;font-size:22px}
+.bars .tr{height:26px;background:#1A2230;border-radius:999px;overflow:hidden}
+.bars .fl{height:100%;width:0;border-radius:999px;transition:width 1s ease}
+.bars .b.wk .ic{animation:wig 1s ease-in-out infinite}
+@keyframes wig{25%{transform:rotate(-14deg)}75%{transform:rotate(14deg)}}
+.tip{margin-top:6px;font-size:24px;color:#FFE9A8}
+.five{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.five .h5{position:relative;width:110px;text-align:center}
+.five svg{width:100px;height:90px}
+.five .v{position:absolute;top:24px;left:0;right:0;font-size:28px}
+.five rect{transition:y 1.2s ease}
+.replay{font:inherit;font-size:24px;background:#14202B;color:#fff;border:3px solid #7FD4FF;border-radius:14px;padding:6px 18px;cursor:pointer;min-height:52px}
+.sw{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.sw button{font:inherit;font-size:24px;background:#111820;color:#fff;border:3px solid #34404C;border-radius:16px;padding:8px 18px;min-height:56px;cursor:pointer}
+.sw button.on{border-color:#FFD54A;background:#2A2208;color:#FFE07A}
+.yes{display:inline-block;background:#3BD16F;color:#05210F;border-radius:10px;padding:0 10px}
+.re{display:inline-block;background:#FF9F1C;color:#2A1600;border-radius:10px;padding:0 10px}
+td.c{text-align:center}
+/* ── 第 11 題 成績卡 ── */
+.pc{background:#0B1118;border:3px solid #2A3540;border-radius:20px;padding:16px}
+.pc .who{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+.pc .who b{font-size:34px}
+.pc .who .one{font-size:24px;color:#DDE6EE}
+.q3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+@media (max-width:760px){.q3{grid-template-columns:1fr}}
+.qa{border-radius:18px;padding:12px 14px;border:3px solid;cursor:pointer;text-align:center}
+.qa .qq{font-size:24px;color:#DDE6EE}
+.qa .an{font-size:44px;line-height:1.15}
+.qa .an small{font-size:24px}
+.qa.k1{border-color:#2F7BE8;background:#0C1B33}.qa.k2{border-color:#FF9F1C;background:#2A1A06}.qa.k3{border-color:#E8453C;background:#2A0E10}
+.dt{border-left:10px solid;border-radius:14px;background:#0E141A;padding:10px 14px;margin:12px 0}
+.dt.k1{border-color:#2F7BE8}.dt.k2{border-color:#FF9F1C}.dt.k3{border-color:#E8453C}.dt.k4{border-color:#5A6672}
+.dt .h{font-size:28px}
+.dt ul{margin:4px 0 0;padding-left:30px}
+.two{display:grid;grid-template-columns:300px 1fr;gap:14px}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+.two .lf{background:#101820;border:3px solid #FFD54A;border-radius:18px;padding:12px;align-self:start}
+.two .lf .qa{margin:8px 0}
+/* ── 第 13 題 班級排行榜 ── */
+.wall .rw{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:center;border-radius:16px;padding:8px 14px;margin:8px 0;background:#0E141A;border:2px solid #24303C}
+@media (max-width:700px){.wall .rw{grid-template-columns:1fr 1fr}.wall .rw .oth{grid-column:1/-1}}
+.wall .rw.hon{background:#1E1906;border-color:#8A6D12}
+.wall .it{font-size:26px}
+.wall .win{font-size:34px;color:#FFD54A;white-space:nowrap}
+.wall .oth{font-size:22px;color:#9AA7B4}
+.wall .sep{font-size:22px;color:#B9C4CE;margin:14px 0 4px}
+.crown{display:inline-block;animation:cr 1.2s ease-out both}
+@keyframes cr{0%{transform:translateY(-30px) scale(.4);opacity:0}70%{transform:translateY(4px) scale(1.15);opacity:1}100%{transform:none}}
+.ccard{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:760px){.ccard{grid-template-columns:1fr}}
+.cc{background:#0E141A;border:3px solid #34404C;border-radius:18px;padding:12px 14px}
+.cc .cn{font-size:36px;color:#FFD54A}
+.cc .cw{font-size:24px;margin:4px 0}
+/* ── 第 18 題 新主題舞台 ── */
+.ts{position:relative;overflow:hidden;border-radius:22px;border:3px solid #3A4650;width:100%;aspect-ratio:16/10;background:#000;color:#fff;text-align:center;isolation:isolate}
+@media (max-width:700px){.ts{aspect-ratio:auto;height:600px}}
+.ts *{box-sizing:border-box}
+.ts .ttl{position:absolute;left:0;right:0;top:3%;font-size:clamp(24px,3.4vw,40px);color:#FFE07A;z-index:5;opacity:0;animation:fin .6s ease both;animation-delay:var(--d,0s)}
+.ts .big{font-size:clamp(64px,10vw,120px);line-height:1;font-weight:700}
+.ts .big small{font-size:.32em;color:#CFE3F5}
+.ts .tip,.ts .seen{position:absolute;left:4%;right:4%;font-size:clamp(22px,2.6vw,32px);z-index:6;opacity:0;animation:fup .7s ease both;animation-delay:var(--d,0s)}
+.ts .tip{bottom:13%;color:#FFE9A8}
+.ts .seen{bottom:3%;color:#fff;background:rgba(0,0,0,.55);border-radius:999px;padding:2px 16px;width:max-content;max-width:92%;margin:0 auto}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{opacity:0;transform:scale(.3)}70%{opacity:1;transform:scale(1.12)}100%{opacity:1;transform:none}}
+@keyframes wk2{50%{filter:drop-shadow(0 0 14px #FFD54A) brightness(1.35);transform:scale(1.06)}}
+.ts .row5{position:absolute;left:3%;right:3%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2%;z-index:4}
+.ts .ic{font-size:clamp(28px,3.6vw,46px);line-height:1.1}
+.ts .sc{font-size:clamp(22px,2.4vw,30px)}
+/* 1 聚光燈 */
+.t1{background:radial-gradient(ellipse at 50% 110%,#2A1A10 0,#0A0604 55%,#000 100%)}
+.t1 .cur{position:absolute;top:0;bottom:0;width:50%;background:repeating-linear-gradient(90deg,#7A0E16 0 18px,#A3162A 18px 30px,#6A0A12 30px 44px);z-index:3;animation:curo 1s cubic-bezier(.6,0,.3,1) .2s both}
+.t1 .cur.l{left:0;transform-origin:left}.t1 .cur.r{right:0;transform-origin:right}
+@keyframes curo{from{transform:scaleX(1)}to{transform:scaleX(.12)}}
+.t1 .beam{position:absolute;left:25%;width:50%;top:-5%;height:80%;background:linear-gradient(rgba(255,244,200,.0),rgba(255,244,200,.38));clip-path:polygon(44% 0,56% 0,100% 100%,0 100%);transform-origin:50% 0;z-index:1;animation:sweep 1.4s ease-in-out .9s both}
+@keyframes sweep{0%{opacity:0;transform:rotate(-38deg)}30%{opacity:1}60%{transform:rotate(14deg)}100%{opacity:1;transform:rotate(0)}}
+.t1 .pool{position:absolute;left:28%;right:28%;top:58%;height:14%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,240,190,.55),rgba(255,240,190,0) 70%);z-index:1;opacity:0;animation:fin .5s ease 2.2s both}
+.t1 .mid{position:absolute;left:0;right:0;top:20%;z-index:4;opacity:0;animation:pop .7s ease 2.2s both}
+.t1 .plate{display:inline-block;font-size:clamp(24px,3vw,36px);background:#FFD54A;color:#2A1A00;border-radius:12px;padding:0 16px;margin-bottom:6px}
+.t1 .big{color:#FFF6D6;text-shadow:0 0 30px rgba(255,220,120,.9)}
+.t1 .row5{bottom:24%}
+.t1 .lamp{opacity:.15;transition:opacity .4s,filter .4s;padding-top:4px}
+.t1 .lamp .dot{width:56%;margin:0 auto 4px;aspect-ratio:2/1;border-radius:50% 50% 0 0;background:#3A3A3A}
+.t1 .lamp.on{opacity:1}
+.t1 .lamp.on .dot{background:radial-gradient(circle at 50% 100%,#FFF7D0,#FFC928 60%,#8A5A00);box-shadow:0 -10px 30px rgba(255,210,90,.8)}
+.t1 .lamp.on.wk{animation:wk2 1s ease-in-out 1s infinite}
+.t1 .lamp.on.wk .dot{background:radial-gradient(circle at 50% 100%,#FFF7D0,#B98A20 60%,#4A3000);box-shadow:0 -6px 16px rgba(255,210,90,.4)}
+/* 2 老師的信 */
+.t2{background:radial-gradient(circle at 50% 40%,#3B2A4A,#120A18 75%)}
+.t2 .env{position:absolute;left:22%;right:22%;bottom:-2%;height:42%;z-index:2;animation:esink .8s ease 1.4s both}
+.t2 .env .bd{position:absolute;inset:0;background:#E8C27A;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.t2 .env .fp{position:absolute;left:0;right:0;top:0;height:60%;background:#D9AE5E;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;animation:flap .6s ease .4s both;z-index:3}
+@keyframes flap{to{transform:rotateX(180deg)}}
+@keyframes esink{to{transform:translateY(110%);opacity:0}}
+.t2 .let{position:absolute;left:8%;right:8%;top:14%;bottom:4%;background:#FFF8E7;color:#3A2A1A;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,.6);z-index:4;text-align:left;padding:2% 4%;font-family:"BiauKai","DFKai-SB","標楷體","Kaiti TC",KaiTi,serif;animation:lup 1s cubic-bezier(.2,.8,.3,1) .9s both}
+@keyframes lup{from{transform:translateY(80%) scale(.6);opacity:0}to{transform:none;opacity:1}}
+.t2 .let .to{font-size:clamp(24px,3.3vw,42px);color:#6A3A10}
+.t2 .ln{font-size:clamp(22px,2.9vw,38px);line-height:1.6;display:flex;gap:10px;align-items:center;clip-path:inset(0 100% 0 0);animation:write .9s steps(18) both;animation-delay:var(--d)}
+@keyframes write{to{clip-path:inset(0 0 0 0)}}
+.t2 .ln .ok{color:#1F8A4C;margin-left:auto}
+.t2 .ln.wk{color:#B05A00}
+.t2 .ln .ic{font-size:inherit}
+.t2 .seal{position:absolute;right:3%;bottom:3%;width:clamp(110px,15vw,170px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#E8564C,#A3161E 70%);color:#FFE9D6;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 6px rgba(163,22,30,.35);z-index:6;animation:slam .5s cubic-bezier(.5,0,.6,1.4) 4.1s both}
+.t2 .seal b{font-size:clamp(44px,6vw,70px);line-height:1}
+.t2 .seal span{font-size:clamp(20px,1.8vw,24px)}
+@keyframes slam{0%{transform:scale(3) rotate(-20deg);opacity:0}80%{transform:scale(.92) rotate(-8deg);opacity:1}100%{transform:rotate(-8deg);opacity:1}}
+.t2 .sig{position:absolute;right:26%;bottom:8%;font-size:clamp(24px,3vw,36px);color:#6A3A10;font-family:"BiauKai","DFKai-SB","標楷體",KaiTi,serif;z-index:6;opacity:0;animation:fin .6s ease 4.5s both}
+@media (max-width:700px){.t2 .sig{right:8%;bottom:30%}.t2 .seal{right:6%;bottom:3%}}
+/* 3 拍立得 */
+.t3{background:linear-gradient(#2B3A4A,#18222C)}
+.t3 .rope{position:absolute;left:-5%;right:-5%;top:20%;height:16%;border-bottom:4px solid #C9A56A;border-radius:0 0 50% 50%;z-index:1}
+.t3 .row5{top:24%;align-items:start}
+.t3 .pol{background:#FAFAF5;border-radius:4px;padding:6% 6% 4%;box-shadow:0 10px 20px rgba(0,0,0,.45);transform-origin:50% 0;opacity:0;animation:drop .7s cubic-bezier(.3,1.4,.5,1) both;animation-delay:var(--d)}
+.t3 .pol:nth-child(odd){--r:-5deg}.t3 .pol:nth-child(even){--r:4deg}
+@keyframes drop{from{opacity:0;transform:translateY(-140%) rotate(0)}to{opacity:1;transform:rotate(var(--r))}}
+.t3 .pol::before{content:'';display:block;width:22%;height:14px;margin:-12% auto 6%;background:#8D6E4A;border-radius:3px}
+.t3 .ph{aspect-ratio:1;border-radius:2px;display:flex;align-items:center;justify-content:center;background:#2A2A2A;filter:grayscale(1) brightness(.5) blur(3px);animation:dev 1.4s ease both;animation-delay:calc(var(--d) + .5s)}
+@keyframes dev{to{filter:none}}
+.t3 .pol.wk .ph{animation:dev2 1.4s ease both;animation-delay:calc(var(--d) + .5s)}
+@keyframes dev2{to{filter:grayscale(.55) brightness(.9)}}
+.t3 .pol.wk{box-shadow:0 0 0 4px #FFD54A,0 0 26px #FFD54A}
+.t3 .cap{color:#222;font-size:clamp(20px,2.2vw,28px);margin-top:4%}
+.t3 .stk{position:absolute;right:4%;top:60%;width:clamp(140px,19vw,220px);aspect-ratio:1;border-radius:50%;background:conic-gradient(from 0deg,#FFE07A,#FFC928,#FFE07A,#FFB300,#FFE07A);color:#3A2600;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:pop .7s ease 3.6s both}
+.t3 .stk .big{font-size:clamp(56px,7vw,90px)}
+.t3 .stk span{font-size:clamp(20px,1.9vw,26px)}
+@media (max-width:700px){.t3 .row5{grid-template-columns:repeat(3,1fr);row-gap:14px}.t3 .stk{right:4%;top:auto;bottom:21%;width:110px}.t3 .stk .big{font-size:48px}}
+/* 4 城市夜景 */
+.t4{background:linear-gradient(#0B1340 0,#2A1858 55%,#4A2058 100%)}
+.t4 .star{position:absolute;width:4px;height:4px;border-radius:50%;background:#fff;animation:tw 2s ease-in-out infinite}
+@keyframes tw{50%{opacity:.2}}
+.t4 .moon{position:absolute;right:6%;top:12%;width:clamp(120px,17vw,200px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 40% 35%,#FFFBE6,#FFE9A8 60%,#E8C25A);color:#3A2A00;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 60px rgba(255,233,168,.7);z-index:2;animation:rise 1.2s ease 3.4s both}
+.t4 .moon .big{font-size:clamp(52px,6.6vw,84px)}
+.t4 .moon span{font-size:clamp(20px,1.8vw,24px)}
+@keyframes rise{from{opacity:0;transform:translateY(60%)}to{opacity:1;transform:none}}
+.t4 .row5{top:30%;bottom:22%;align-items:end;left:4%;right:28%}
+@media (max-width:700px){.t4 .row5{right:4%}.t4 .moon{top:9%;right:4%}}
+.t4 .bld{background:#14112A;border:3px solid #2C2650;border-bottom:0;border-radius:6px 6px 0 0;padding:8% 10%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(5,1fr);gap:6px}
+.t4 .win{background:#2A2448;border-radius:2px;transition:background .35s,box-shadow .35s}
+.t4 .win.on{background:#FFD866;box-shadow:0 0 10px #FFC928}
+.t4 .bld.wk .win.dk{animation:dk 1s ease-in-out infinite}
+@keyframes dk{50%{background:#7A6420;box-shadow:0 0 12px #FFD54A}}
+.t4 .gnd{position:absolute;left:0;right:0;bottom:0;height:22%;background:#0A0818;z-index:3}
+.t4 .lb{position:absolute;bottom:13.5%;left:4%;right:28%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2%;z-index:4}
+@media (max-width:700px){.t4 .lb{right:4%}}
+/* 5 大螢幕 */
+.t5{background:radial-gradient(ellipse at 50% 120%,#1A3A6A,#05070A 70%)}
+.t5 .jb{position:absolute;left:8%;right:8%;top:5%;height:58%;background:#050505;border:8px solid #2C3440;border-radius:16px;box-shadow:0 0 0 4px #11161C,0 0 60px rgba(80,160,255,.35);overflow:hidden;z-index:2;animation:pop .6s ease .2s both}
+.t5 .jb::after{content:'';position:absolute;inset:0;background:radial-gradient(circle,rgba(0,0,0,0) 45%,rgba(0,0,0,.55) 46%);background-size:6px 6px;pointer-events:none}
+.t5 .jl{font-size:clamp(22px,2.8vw,36px);color:#7FD4FF;margin-top:2%;text-shadow:0 0 12px #2F7BE8}
+.t5 .dgs{display:flex;justify-content:center;gap:1%;margin-top:1%}
+.t5 .dg{height:clamp(90px,13vw,170px);overflow:hidden;font-size:clamp(90px,13vw,170px);line-height:1;color:#FFE07A;text-shadow:0 0 24px #FFB300}
+.t5 .dg .col{display:flex;flex-direction:column;animation:roll 2s cubic-bezier(.2,.7,.2,1) .8s both}
+@keyframes roll{from{transform:translateY(0)}to{transform:translateY(var(--y))}}
+.t5 .flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:3;animation:fl .5s ease 2.8s both;pointer-events:none}
+@keyframes fl{0%{opacity:0}20%{opacity:.7}100%{opacity:0}}
+.t5 .row5{top:66%;left:6%;right:6%}
+.t5 .tile{background:#11161C;border:3px solid #34404C;border-radius:12px;padding:4% 2%;transform-origin:50% 0;animation:flip .6s ease both;animation-delay:var(--d)}
+@keyframes flip{from{transform:rotateX(90deg);opacity:0}to{transform:none;opacity:1}}
+.t5 .tile.wk{border-color:#FFD54A;animation:flip .6s ease both,wk2 1s ease-in-out infinite;animation-delay:var(--d),calc(var(--d) + 1s)}
+.t5 .crowd{position:absolute;left:0;right:0;bottom:0;height:13%;display:flex;justify-content:space-around;align-items:flex-end;z-index:1}
+.t5 .crowd i{display:block;width:3.4%;height:70%;background:#1C2836;border-radius:50% 50% 0 0;animation:wave 1.6s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes wave{0%,60%,100%{transform:none}30%{transform:translateY(-35%)}}
+@media (max-width:700px){.t5 .row5{grid-template-columns:repeat(3,1fr);row-gap:10px;top:56%}.t5 .jb{height:52%}}
+.t5 .jtip{font-size:clamp(22px,2.6vw,32px);color:#FFE9A8;opacity:0;animation:fin .6s ease 4.3s both}
+/* 6 集點卡 */
+.t6{background:repeating-linear-gradient(45deg,#16301E 0 22px,#12281A 22px 44px)}
+.t6 .card{position:absolute;left:6%;right:6%;top:8%;bottom:30%;background:#FFF6E0;border-radius:20px;box-shadow:0 14px 40px rgba(0,0,0,.5);color:#3A2A1A;z-index:2;animation:pop .6s ease .1s both}
+.t6 .card.hit{animation:pop .6s ease .1s both,shk .25s linear 4.1s}
+@keyframes shk{25%{transform:translate(-6px,3px)}50%{transform:translate(5px,-3px)}75%{transform:translate(-3px,2px)}}
+.t6 .ch{font-size:clamp(24px,3vw,38px);margin-top:3%}
+.t6 .ch small{display:block;font-size:clamp(20px,2vw,26px);color:#8A6A3A;margin-left:10px}
+.t6 .row5{top:30%;left:10%;right:10%}
+.t6 .slot{aspect-ratio:1;border:4px dashed #D9C08A;border-radius:50%;position:relative}
+.t6 .ink{position:absolute;inset:-4%;border-radius:50%;border:6px solid var(--c);color:var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-10deg);opacity:0;animation:ink .45s cubic-bezier(.5,0,.6,1.5) both;animation-delay:var(--d);background:rgba(255,255,255,.4)}
+@keyframes ink{0%{opacity:0;transform:scale(2.2) translateY(-30%) rotate(10deg)}70%{opacity:1;transform:scale(.94) rotate(-12deg)}100%{opacity:.92;transform:rotate(-10deg)}}
+.t6 .slot.wk .ink{animation:ink .45s cubic-bezier(.5,0,.6,1.5) both,inkw 1.2s ease-in-out infinite;animation-delay:var(--d),calc(var(--d) + 1s)}
+@keyframes inkw{50%{box-shadow:0 0 0 6px rgba(255,213,74,.6),0 0 24px #FFD54A}}
+.t6 .ink .sc{color:#3A2A1A}
+.t6 .hk{position:absolute;right:4%;bottom:8%;width:clamp(120px,16vw,190px);aspect-ratio:1;border:8px double #C4161C;border-radius:50%;color:#C4161C;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;background:rgba(255,246,224,.85);animation:slam .5s cubic-bezier(.5,0,.6,1.4) 3.9s both}
+.t6 .hk .big{font-size:clamp(50px,6.4vw,84px)}
+.t6 .hk span{font-size:clamp(20px,1.8vw,24px)}
+@media (max-width:700px){.t6 .row5{grid-template-columns:repeat(3,1fr);row-gap:14px;top:26%}.t6 .card{bottom:24%}.t6 .hk{bottom:24%;right:3%}}
+.t4 .tip{bottom:auto;top:15%;left:4%;right:34%}
+@media (max-width:700px){.ts .tip{bottom:16%}.ts .seen{font-size:20px;padding:2px 12px}.t4 .tip{bottom:auto;top:29%;left:4%;right:4%}.t4 .row5{top:38%;bottom:27%}.t4 .gnd{height:27%}.t4 .lb{bottom:15%}.ts .sl{display:none}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-delay:0s!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="../../score/_honor.css">
+</head><body><div class="wrap">
+
+<h1>用小華（30412）再對一次</h1>
+<p class="lead">老師的回答已經寫進需求檔。這一頁用<b>小華</b>把每一題「改了以後會怎樣」演一次。<b>網站還沒改</b>。</p>
+<div class="howto">✍️ <b>回答方式</b>：<br>① 第一節、第二節對不對？對 ➜ 打「<b>對</b>」。<br>② 第三節還要選 4 題：例「<b>11甲 13甲 16-1A 16-2A 18 全部</b>」，或「全部照建議」。<br>綠色框 ＝ 我的建議。看不懂就說「第 N 題看不懂」。</div>
+
+<!-- ═════════ 一、老師的回答 ═════════ -->
+<h2>一、老師的回答（已寫進需求檔）</h2>
+<table>
+<tr><th>題</th><th>問什麼</th><th>老師選的</th></tr>
+<tr><td class="c">1</td><td>縮寫動畫刪第 4 頁</td><td><span class="yes">A</span> 刪</td></tr>
+<tr><td class="c">2</td><td>主題按鈕樣子</td><td><span class="yes">甲</span> 闖關路線</td></tr>
+<tr><td class="c">3</td><td>什麼時候打 ✔</td><td><span class="yes">A</span> 看到最後一張卡</td></tr>
+<tr><td class="c">4</td><td>「跟著改」的意思</td><td><span class="yes">A</span> 同一份資料自動一起改</td></tr>
+<tr><td class="c">5</td><td>教學網站也改嗎</td><td><span class="yes">A</span> 只改在家複習</td></tr>
+<tr><td class="c">6</td><td>看字卡怎樣算練習次數 ＋1</td><td><span class="yes">A</span> 一站看完＋1 分鐘以上</td></tr>
+<tr><td class="c">7</td><td>看字卡怎樣算練了 1 天</td><td><span class="yes">A</span> 那一天看 1 分鐘以上</td></tr>
+<tr><td class="c">8</td><td>改到哪裡</td><td><span class="yes">A</span> 全部一起</td></tr>
+<tr><td class="c">9</td><td>老師看板整體</td><td><span class="yes">甲</span> 上面一條＋篩選一行</td></tr>
+<tr><td class="c">10</td><td>「個人頁面」是哪一頁</td><td><span class="yes">C</span> 兩頁都改</td></tr>
+<tr><td class="c">11</td><td>成績卡排法</td><td><span class="re">都不夠好</span> ➜ 第三節新的</td></tr>
+<tr><td class="c">12</td><td>要關心格子</td><td><span class="yes">乙</span> 三行、整格塗色</td></tr>
+<tr><td class="c">13</td><td>班級排行榜樣子</td><td><span class="re">甲 眼花撩亂</span> ➜ 第三節新的</td></tr>
+<tr><td class="c">14</td><td>放哪裡</td><td><span class="yes">A</span> 改名〔🏫 班級排行榜〕</td></tr>
+<tr><td class="c">15</td><td>比哪幾項</td><td><span class="yes">A</span> 7 項</td></tr>
+<tr><td class="c">16</td><td>用心程度動畫</td><td><span class="yes">甲</span>＋〔切換按鈕〕➜ 第三節對一次</td></tr>
+<tr><td class="c">17</td><td>每一次不一樣放哪裡</td><td><span class="yes">A</span> 用心程度那一幕</td></tr>
+<tr><td class="c">18</td><td>10 種主題</td><td><span class="re">都不理想</span> ➜ 第三節全部重想</td></tr>
+</table>
+
+<!-- ═════════ 二、用小華走一次 ═════════ -->
+<h2>二、用小華走一次（第 1～10、12、14、15 題）</h2>
+
+<div class="q"><div class="t"><span class="no">1–5</span>小華打開在家複習</div>
+<div class="lab">小華昨天看完「1 基礎」，今天看到「1 進階」：</div>
+<div class="mock"><div class="route">
+<div class="st done"><span class="n">1</span>基礎</div>
+<div class="st now"><span class="n">1</span>進階<span class="tagnow">現在在這裡</span></div>
+<div class="st next"><span class="n">2</span>基礎<span class="tagnx">下一個</span><span class="hand">👆</span></div>
+<div class="st"><span class="n">2</span>進階</div>
+<div class="st"><span class="n">3</span>中英語序</div>
+<div class="st"><span class="n">4</span>縮寫動畫</div>
+</div><div style="height:40px"></div></div>
+<table>
+<tr><th>小華做了什麼</th><th>網站會怎樣</th></tr>
+<tr><td>看到「1 進階」的最後一張卡</td><td>「1 進階」打 ✔（第 3 題）；金色「現在在這裡」移到「2 基礎」</td></tr>
+<tr><td>老師改了教學網站「1 進階」的一張卡</td><td>在家複習的「1 進階」<b>自動一樣</b>；兩邊不一樣，網站就不發布（第 4 題）</td></tr>
+<tr><td>老師上課開教學網站</td><td><b>按鈕不變</b>（第 5 題）</td></tr>
+<tr><td>四年級的學生看 Unit 2「4 縮寫動畫」</td><td>4 頁 ➜ <b>3 頁</b>（刪 is not ＝ isn’t 第二次，第 1 題）。小華是三年級，不受影響</td></tr>
+</table></div>
+
+<div class="q"><div class="t"><span class="no">6–8</span>小華這一週：看字卡也算</div>
+<table>
+<tr><th>星期</th><th>小華做了什麼</th><th>練了幾天</th><th>練習次數</th></tr>
+<tr><td class="c">一</td><td>做 5 題複習題、玩 1 個遊戲</td><td class="c ok">✅</td><td class="c">＋2</td></tr>
+<tr><td class="c">二</td><td><b>只看字卡</b>：「1 基礎」從第一張看到最後一張，4 分鐘</td><td class="c">現在 <span class="bad">❌</span> ➜ <span class="ok">✅</span></td><td class="c">現在 0 ➜ <span class="ok">＋1</span></td></tr>
+<tr><td class="c">三</td><td>玩 2 個遊戲</td><td class="c ok">✅</td><td class="c">＋2</td></tr>
+<tr><td class="c">四</td><td>打開字卡 20 秒就關掉</td><td class="c bad">❌（不到 1 分鐘）</td><td class="c">0</td></tr>
+<tr><td class="c">五</td><td>做 5 題複習題、玩 1 個遊戲</td><td class="c ok">✅</td><td class="c">＋2</td></tr>
+<tr><th></th><th>這一週加起來</th><th class="c">3 天 ➜ <span class="gold">4 天</span></th><th class="c">6 次 ➜ <span class="gold">7 次</span></th></tr>
+</table>
+<table>
+<tr><th>老師看板、學生平板</th><th>現在</th><th>改了以後</th></tr>
+<tr><td>❤ 用心程度 📅 練了幾天</td><td class="c">15</td><td class="c gold">20</td></tr>
+<tr><td>❤ 用心程度 📝 做完幾次</td><td class="c">20</td><td class="c">20（5 次以上就滿分）</td></tr>
+<tr><td>❤ 用心程度 總分</td><td class="c">87</td><td class="c gold">92</td></tr>
+<tr><td>成績卡、排行榜〔練習次數〕、Excel</td><td class="c">6</td><td class="c gold">7</td></tr>
+<tr><td>🎯 正確率、💯 總分</td><td class="c">80、76</td><td class="c">不變（看字卡沒有作答）</td></tr>
+</table>
+<p class="note">另外：同一站一天最多加 3 次（小華星期二把「1 基礎」看 5 遍，只加 3 次）；一直按 ➡ 跳到最後、不到 1 分鐘，不加。<br>這是改「怎麼算」，做好以後老師要<b>重新部署一次</b>（我會給大字版步驟頁網址）。</p>
+</div>
+
+<div class="q"><div class="t"><span class="no">9–10</span>老師打開老師看板（第 9 題 甲）</div>
+<div class="mock dash">
+<div class="top"><span class="tt">👩‍🏫 老師看板</span><span class="big2"><span class="on">三年級</span><span>四年級</span></span><span class="pill">⬇ Excel</span><span class="pill">⚙ 更多</span></div>
+<div class="flt">🔎 304 班 · 本週 · 全部類別 · 在校＋在家　〔改〕</div>
+<div class="tiles4"><div class="tl"><div class="v">62</div><div class="k">🎯 正確率</div></div><div class="tl"><div class="v">56.6</div><div class="k">💯 總分</div></div><div class="tl"><div class="v">19</div><div class="k">練習次數</div></div><div class="tl"><div class="v">20</div><div class="k">👥 有做的人</div></div></div>
+<div class="tb"><span class="on">👤 個人</span><span>🏆 排行榜</span><span>🏫 班級排行榜</span><span>❌ 錯題</span><span>🔔 要關心<span class="badge">6</span></span><span>📌 任務</span><span>🔒 開關</span></div>
+<div class="flt" style="border-style:solid">👤 個人：30412 小華　🟢 正確率 80　練習次數 7　❤ 92　〔點這一列 ➜ 成績卡（第 11 題）〕</div>
+</div>
+<p class="note">〔⚙ 更多〕裡面：排行榜開關、重新整理、A－ A＋、登出——<b>一個都沒刪</b>，只是收起來。第 10 題 C：〔👤 個人〕這一頁、成績卡都照這個樣子重排。</p>
+</div>
+
+<div class="q"><div class="t"><span class="no">12</span>老師點〔🔔 要關心〕（照座號，乙）</div>
+<div class="mock">
+<div class="blk"><div class="h">304 班：🔴 1 人要關心　🟡 1 人要注意　🟢 2 人很好　⚪ 1 人還沒做　〔❓ 顏色怎麼看〕</div></div>
+<div class="kgrid">
+<div class="kc r"><div class="id">30411 測試</div><div class="sc">40 分</div>❤ 用心 29</div>
+<div class="kc g" style="box-shadow:0 0 0 4px #FFD54A"><div class="id">30412 小華</div><div class="sc">80 分</div>❤ 用心 92</div>
+<div class="kc y"><div class="id">30413 測試</div><div class="sc">⚠️ 亂按</div>❤ 用心 25</div>
+<div class="kc g"><div class="id">30414 測試</div><div class="sc">100 分</div>❤ 用心 49</div>
+<div class="kc w"><div class="id">30430 測試</div><div class="sc">還沒做</div>　</div>
+</div></div>
+<p class="note">小華那一格：綠色、80 分、❤ 用心 92（看字卡那一天也算進去了）。點那一格 ➜ 成績卡。〔📊 圖表分析〕完全不動。「測試」是假名字。</p>
+</div>
+
+<div class="q"><div class="t"><span class="no">14–15</span>〔🏫 班際〕改名〔🏫 班級排行榜〕</div>
+<table><tr><th>位置</th><th>放什麼</th></tr>
+<tr><td>最上面</td><td>新的班級排行榜（樣子第三節第 13 題選）：比 7 項——⏰ 最認真練習、🎯 成績最優、⬆ 進步最多、❤ 最用心（四種最高榮譽）＋ 💯 總分、練習次數、👥 有做的人</td></tr>
+<tr><td>下面</td><td>原本的長條圖、〔🏆 班際榮譽榜〕<b>全部留著</b></td></tr>
+<tr><td>課後班 400</td><td>照舊不比</td></tr></table>
+</div>
+
+<!-- ═════════ 三、還要再選 ═════════ -->
+<h2>三、還要請老師再選（第 11、13、16、18 題）</h2>
+
+<div class="q"><div class="t"><span class="no">11</span>成績卡（點小華）：新的排法</div>
+<p class="lead">這次的想法：老師看一個學生，心裡只問<b>三個問題</b>——<b>學會了嗎？有練嗎？用心嗎？</b>成績卡就照這三個問題分成三塊，每一塊的標題就是問題，旁邊直接是答案。</p>
+
+<div class="opt rec"><div class="hd"><span class="k">甲</span>三個問題：上面三個大答案，下面三塊細節<span class="tag">建議</span></div>
+<div class="pc">
+<div class="who"><b>30412 小華</b><span class="one">🟢 學得好、練得勤；💡 下次 請 看完、聽完 再選</span></div>
+<div class="q3">
+<div class="qa k1"><div class="qq">🎯 學會了嗎？</div><div class="an">80 <small>分 🟢</small></div></div>
+<div class="qa k2"><div class="qq">📅 有練嗎？</div><div class="an">4 <small>天</small> 7 <small>次 🟢</small></div></div>
+<div class="qa k3"><div class="qq">❤ 用心嗎？</div><div class="an">92 <small>🟢</small></div></div>
+</div>
+<div class="dt k1"><div class="h">🎯 學會了嗎？<b>80 分</b>，比上次 ＋12</div><ul><li>🎯 正確率、💯 總分 兩個圓圈、⬆ 進步</li><li>👍 最拿手 3 組｜🌱 要加油 3 組</li><li>📈 每一組的變化（◀ ▶ 換組）</li><li>❌ 最常錯的 3 題</li></ul></div>
+<div class="dt k2"><div class="h">📅 有練嗎？<b>4 天、7 次、34 分鐘</b></div><ul><li>練習次數 小方格</li><li>📅 哪幾天有練（一週一排、最近 4 週）</li></ul></div>
+<div class="dt k3"><div class="h">❤ 用心嗎？<b>92</b>，最少的是「看完、聽完 才選」</div><ul><li>❤ 用心程度 動畫＋〔切換〕＋〔📖 說明〕</li></ul></div>
+<div class="dt k4"><div class="h">📋 看全部明細（作廢在這裡）▾</div></div>
+</div>
+<div class="why">點上面三個大答案的任何一個 ➜ 直接跳到那一塊。現在成績卡的東西<b>一個都沒少</b>，只是照三個問題放好。</div></div>
+
+<div class="opt"><div class="hd"><span class="k">乙</span>左右兩欄：左邊一眼看完，右邊慢慢看</div>
+<div class="pc two">
+<div class="lf"><b style="font-size:30px">30412 小華</b>
+<div class="qa k1"><div class="qq">🎯 學會了嗎？</div><div class="an">80 <small>🟢</small></div></div>
+<div class="qa k2"><div class="qq">📅 有練嗎？</div><div class="an">4 <small>天</small> 7 <small>次</small></div></div>
+<div class="qa k3"><div class="qq">❤ 用心嗎？</div><div class="an">92</div></div>
+<div class="tip">💡 下次 請 看完、聽完 再選</div></div>
+<div><div class="dt k1"><div class="h">🎯 學會了嗎？</div><ul><li>圓圈、進步、最拿手／要加油、每一組的變化、最常錯</li></ul></div>
+<div class="dt k2"><div class="h">📅 有練嗎？</div><ul><li>小方格、哪幾天有練</li></ul></div>
+<div class="dt k3"><div class="h">❤ 用心嗎？</div><ul><li>用心程度動畫</li></ul></div>
+<div class="dt k4"><div class="h">📋 明細 ▾</div></div></div>
+</div>
+<div class="why">左邊不會動（往下捲也一直看得到）。⚠️ iPad 直放時左邊會變成最上面一條，右邊變窄。</div></div>
+</div>
+
+<div class="q"><div class="t"><span class="no">13</span>班級排行榜：新的樣子</div>
+<p class="lead">上次的冠軍表一次給 21 個數字，眼花撩亂。這次<b>只給答案</b>：每一項只寫「哪一班第 1 名」。數字要看再點。</p>
+
+<div class="opt rec"><div class="hd"><span class="k">甲</span>冠軍牆：一項一行，只寫第 1 名<span class="tag">建議</span></div>
+<div class="mock wall">
+<div class="rw hon"><span class="it">⏰ 最認真練習</span><span class="win"><span class="crown">👑</span> 307 班</span><span class="oth">第 2 304　第 3 311</span></div>
+<div class="rw hon"><span class="it">🎯 成績最優</span><span class="win"><span class="crown">👑</span> 304 班</span><span class="oth">第 2 307　第 3 311</span></div>
+<div class="rw hon"><span class="it">⬆ 進步最多</span><span class="win"><span class="crown">👑</span> 307 班</span><span class="oth">第 2 311　第 3 304</span></div>
+<div class="rw hon"><span class="it">❤ 最用心</span><span class="win"><span class="crown">👑</span> 304 班</span><span class="oth">第 2 307　第 3 311</span></div>
+<div class="sep">下面 3 項：只排名，不發獎</div>
+<div class="rw"><span class="it">💯 總分</span><span class="win" style="color:#fff">304 班</span><span class="oth">第 2 307　第 3 311</span></div>
+<div class="rw"><span class="it">練習次數</span><span class="win" style="color:#fff">307 班</span><span class="oth">第 2 304　第 3 311</span></div>
+<div class="rw"><span class="it">👥 有做的人</span><span class="win" style="color:#fff">311 班</span><span class="oth">第 2 304　第 3 307</span></div>
+</div>
+<div class="why">一行 ＝ 一個答案：「這一項，哪一班最好」。點一行 ➜ 打開那一項三個班的數字。四種最高榮譽金色在上面，另外 3 項白色在下面。</div></div>
+
+<div class="opt"><div class="hd"><span class="k">乙</span>每一班一張卡：寫這一班拿到哪幾個第 1 名</div>
+<div class="mock ccard">
+<div class="cc"><div class="cn">304 班</div><div class="cw">👑 🎯 成績最優</div><div class="cw">👑 ❤ 最用心</div><div class="cw">💯 總分 第 1</div></div>
+<div class="cc"><div class="cn">307 班</div><div class="cw">👑 ⏰ 最認真練習</div><div class="cw">👑 ⬆ 進步最多</div><div class="cw">練習次數 第 1</div></div>
+<div class="cc"><div class="cn">311 班</div><div class="cw">👥 有做的人 第 1</div><div class="cw" style="color:#9AA7B4">最接近的獎：⬆ 進步最多 第 2</div></div>
+</div>
+<div class="why">看自己班最快；但要看完三張卡，才知道「成績最優是哪一班」。</div></div>
+<p class="note">班級和數字是舉例；網站上照真的成績算。</p>
+</div>
+
+<div class="q"><div class="t"><span class="no">16</span>❤ 用心程度：甲＋〔切換按鈕〕</div>
+<p class="lead">下面就是<b>真的可以按</b>的樣子（小華 92 分）。按三顆按鈕，看三種動畫：</p>
+<div class="sw" id="sw16"><button data-m="A" class="on">❤ 大愛心（甲）</button><button data-m="O">💞 原本</button><button data-m="B">🤍 簡潔（乙）</button></div>
+<div class="mock" id="m16"></div>
+<div style="text-align:right;margin-top:8px"><button class="replay" data-r="16">🔁 再演一次</button></div>
+
+<div class="lab" style="font-size:26px;color:#7FD4FF;margin-top:16px">16-1　按鈕的樣子</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>三顆並排（就是上面這樣），正在看的那顆金色<span class="tag">建議</span></div><div class="why">一眼就知道有三種，想看哪一種直接按。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>只有一顆〔🔄 換一種〕，按一次換下一種</div><div class="why">比較省位置，但不知道一共有幾種。</div></div>
+
+<div class="lab" style="font-size:26px;color:#7FD4FF;margin-top:16px">16-2　一打開先演哪一個？（因為第 17 題 A「每一次換主題」）</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>老師成績卡：先演 ❤ 大愛心；學生平板：先演「這一次的新主題」（第 18 題），按鈕多一顆〔✨ 這次的主題〕<span class="tag">建議</span></div><div class="why">老師要每次一樣、一眼比較；學生要每次有驚喜。兩邊都可以按切換看另外三種。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>兩邊都先演 ❤ 大愛心；新主題要按〔✨ 這次的主題〕才看得到</div></div>
+<div class="opt"><div class="hd"><span class="k">C</span>兩邊都先演新主題</div></div>
+</div>
+
+<div class="q"><div class="t"><span class="no">18</span>每一次不一樣的動畫：全部重想（6 種，真的大小）</div>
+<p class="lead">上次的 10 種只是「把東西裝滿」，看起來都一樣。這次每一種都是<b>一個小故事</b>，故事的主角就是學生，最後一句都是一件<b>他真的做到的事</b>：</p>
+<table><tr><th>學生心裡想要的</th><th>動畫怎麼給</th></tr>
+<tr><td>被看見</td><td>聚光燈照到他的座號、大螢幕打出他的座號</td></tr>
+<tr><td>被重視</td><td>老師寫給他一封信、蓋上老師的印</td></tr>
+<tr><td>被肯定</td><td>他的五件事，一件一件被拍下來、被點亮、被蓋章</td></tr>
+<tr><td>被理解</td><td>最少的那一項不罵他，只說「💡 請 …」告訴他怎麼做更好</td></tr>
+</table>
+<p class="note">最後一句一律寫「你做了什麼」（例：老師 看見了：你 這週 練了 4 天），不寫「你好聰明」——Mueller &amp; Dweck（1998）：稱讚努力和做法，孩子遇到困難比較不放棄（D 組已打開原文核對）。平板不放聲音、約 5 秒、可以跳過。</p>
+<div class="sw" id="sw18"></div>
+<div class="ts" id="ts"></div>
+<div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:8px"><button class="replay" data-r="18">🔁 再演一次</button><button class="replay" data-r="18n">➡ 下一種</button></div>
+<div id="d18" class="why"></div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>6 種全部要：每一次洗牌、跟上一次不一樣<span class="tag">建議</span></div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>只要第 ___ 種（請寫號碼）／第 ___ 種改成 ___</div></div>
+<div class="opt"><div class="hd"><span class="k">C</span>都不喜歡：請告訴我最接近的是哪一種、哪裡不喜歡，我再重想</div></div>
+<p class="note">這是給老師看的樣子；老師選好以後，網站上的會照 iPad、教室觸控螢幕的大小再量一次。上次的 10 種、開花、倒瓶子、小火箭都不用。</p>
+</div>
+
+<!-- ═════════ 四、老師說「對」以後 ═════════ -->
+<h2>四、老師說「對」以後</h2>
+<table><tr><th>順序</th><th>做什麼</th></tr>
+<tr><td class="c">①</td><td>在家複習（闖關路線、刪縮寫動畫第 4 頁、同步檢查）</td></tr>
+<tr><td class="c">②</td><td>看字卡算天數和次數 ➜ 老師要<b>重新部署一次</b>（大字版步驟頁）</td></tr>
+<tr><td class="c">③</td><td>老師看板排版（內容功能一個都不刪）</td></tr>
+<tr><td class="c">④</td><td>用心程度動畫（甲＋切換、新主題）</td></tr>
+<tr><td class="c">⑤</td><td>每一頁在 iPad 橫放、直放、教室觸控螢幕量過，0 個失敗才上線</td></tr>
+</table>
+</div>
+
+<script src="../../score/_honor_rt.js"></script>
+<script>
+/* 小華（改了以後）：📅 4 天 20、📝 7 次 20、👁 太快亂按 5% 16、✗➜✓ 答錯 5 改對 4 16、⏰ 34 分鐘 20 ＝ 92 */
+var IT=[{ic:'📅',s:20,c:'#2F7BE8',t:'練了 4 天'},{ic:'📝',s:20,c:'#9B59D0',t:'做完 7 次'},{ic:'👁',s:16,c:'#00A6A6',t:'看完、聽完 才選'},{ic:'✗➜✓',s:16,c:'#2EB85C',t:'答錯的 改對了 4 題'},{ic:'⏰',s:20,c:'#FF9F1C',t:'練了 34 分鐘'}];
+var TOT=92,WK=2,TIP='💡 請 看完、聽完 再選',RM=matchMedia('(prefers-reduced-motion: reduce)').matches,TM16=[],TM18=[],CUR=TM16;
+var CARE={it:[20,20,16,16,20],raw:{days:4,count:7,q:40,fq:2,fp:5,W:5,F:4,sec:2040}};
+function later(f,ms){CUR.push(setTimeout(f,RM?0:ms))}
+function count(el,to,ms){if(RM){el.textContent=to;return}var t0=null;function f(t){if(!t0)t0=t;var k=Math.min(1,(t-t0)/ms);el.textContent=Math.round(to*k);if(k<1&&document.contains(el))requestAnimationFrame(f)}requestAnimationFrame(f)}
+var HP='M50 88C10 60 2 38 12 20C22 4 42 6 50 22C58 6 78 4 88 20C98 38 90 60 50 88Z';
+/* ── 16：三種 ── */
+var M16='A';
+function play16(){TM16.forEach(clearTimeout);TM16=[];CUR=TM16;var m=document.getElementById('m16');if(window.HON&&m.firstChild)HON.cstop(m.firstChild);
+ if(M16==='O'){m.innerHTML='<div data-real="1" id="orig"></div>';HON.cscene(document.getElementById('orig'),0,CARE,{help:1});return}
+ if(M16==='A'){m.innerHTML='<div class="cA"><div class="bigH"><svg viewBox="0 0 100 92"><defs><clipPath id="hc"><path d="'+HP+'"/></clipPath></defs><path d="'+HP+'" fill="#2A1216" stroke="#FF8A8A" stroke-width="3"/><rect id="lvA" clip-path="url(#hc)" x="0" y="92" width="100" height="92" fill="#E8453C"/></svg><div class="num" id="nA">0</div></div><div class="bars" id="barsA"></div></div><div class="tip" id="tipA"></div>';
+  var b=document.getElementById('barsA');b.innerHTML=IT.map(function(x,i){return '<div class="b'+(i===WK?' wk':'')+'"><span class="ic" style="display:inline-block;text-align:center">'+x.ic+'</span><div class="tr"><div class="fl" style="background:'+x.c+'"></div></div><span style="white-space:nowrap">'+x.s+'／20</span></div>'}).join('');
+  var lv=document.getElementById('lvA');count(document.getElementById('nA'),TOT,1600);
+  var y1=92-92*TOT/100,t0=null;(function f(t){if(t){if(!t0)t0=t;var k=RM?1:Math.min(1,(t-t0)/1600);lv.setAttribute('y',92+(y1-92)*k);if(k>=1)return}requestAnimationFrame(f)})();
+  [].forEach.call(b.querySelectorAll('.fl'),function(e,i){later(function(){e.style.width=(IT[i].s*5)+'%'},300+i*300)});
+  later(function(){document.getElementById('tipA').textContent=TIP},2000);return}
+ m.innerHTML='<div class="five" id="fiveB">'+IT.map(function(x,i){return '<div class="h5"><svg viewBox="0 0 100 92"><defs><clipPath id="c5'+i+'"><path d="'+HP+'"/></clipPath></defs><path d="'+HP+'" fill="#1A2230" stroke="'+x.c+'" stroke-width="4"/><rect clip-path="url(#c5'+i+')" x="0" y="92" data-y="'+(92-92*x.s/20)+'" width="100" height="92" fill="'+x.c+'"/></svg><div class="v">'+x.s+'</div><div style="font-size:24px">'+x.ic+'</div></div>'}).join('')+'</div><div class="tip" style="text-align:center" id="tipB"></div>';
+ [].forEach.call(m.querySelectorAll('rect'),function(r,i){later(function(){r.setAttribute('y',r.getAttribute('data-y'))},200+i*300)});
+ later(function(){document.getElementById('tipB').textContent=TIP},1900)}
+/* ── 18：6 種新主題 ── */
+function seen(k){return ['老師 看見了：你 這週 練了 4 天','老師 看見了：你 這週 練了 34 分鐘','老師 看見了：你 答錯的 改對了 4 題','老師 看見了：你 這週 做完 7 次','老師 看見了：你 這週 練了 4 天','老師 看見了：你 這週 練了 34 分鐘'][k]}
+function tail(k,tipD,seenD){return '<div class="tip" style="--d:'+tipD+'s">'+TIP+'</div><div class="seen" style="--d:'+seenD+'s">'+seen(k)+'</div>'}
+var TH=[
+ {nm:'1 🔦 聚光燈',d:'布幕拉開，聚光燈找到他的座號；地上五盞燈一盞一盞亮，最暗的那一盞閃金光。重點：<b>老師看見你了</b>。',
+  h:function(){return '<div class="cur l"></div><div class="cur r"></div><div class="beam"></div><div class="pool"></div><div class="ttl" style="--d:.1s">這週 用心程度</div>'+
+   '<div class="mid"><div class="plate">30412</div><div class="big"><span class="tn">0</span><small> ／100</small></div></div>'+
+   '<div class="row5">'+IT.map(function(x,i){return '<div class="lamp'+(i===WK?' wk':'')+'"><div class="dot"></div><div class="ic">'+x.ic+'</div><div class="sc">'+x.s+'<span class="sl">／20</span></div></div>'}).join('')+'</div>'+tail(0,4.4,4.9)},
+  go:function(s){later(function(){count(s.querySelector('.tn'),TOT,1400)},2300);[].forEach.call(s.querySelectorAll('.lamp'),function(e,i){later(function(){e.classList.add('on')},2600+i*320)})}},
+ {nm:'2 💌 老師的信',d:'信封打開，一封信飛出來，五件事一行一行寫上去，最後「啪」蓋上老師的印。重點：<b>老師在乎你</b>。',
+  h:function(){return '<div class="env"><div class="bd"></div><div class="fp"></div></div><div class="let"><div class="to">30412：</div>'+
+   IT.map(function(x,i){return '<div class="ln'+(i===WK?' wk':'')+'" style="--d:'+(1.8+i*.45).toFixed(2)+'s"><span class="ic">'+x.ic+'</span><span>'+(i===WK?'下次 請 看完、聽完 再選':'你 '+x.t)+'</span><span class="ok">'+(i===WK?'💡':'✔')+'</span></div>'}).join('')+
+   '</div><div class="seal"><b>92</b><span>用心程度</span></div><div class="sig">— 老師</div>'},
+  go:function(){}},
+ {nm:'3 📸 拍立得',d:'五張照片掉下來掛在繩子上，慢慢顯影；還沒洗好的那一張閃金光；最後貼上金色的分數。重點：<b>你做的每一件事都被記下來</b>。',
+  h:function(){return '<div class="rope"></div><div class="ttl" style="--d:.1s">這週的你</div><div class="row5">'+
+   IT.map(function(x,i){return '<div class="pol'+(i===WK?' wk':'')+'" style="--d:'+(.4+i*.35).toFixed(2)+'s"><div class="ph" style="background:'+x.c+'"><span class="ic">'+x.ic+'</span></div><div class="cap">'+x.s+'／20</div></div>'}).join('')+
+   '</div><div class="stk"><div class="big tn">0</div><span>用心程度</span></div>'+tail(2,4.3,4.8)},
+  go:function(s){later(function(){count(s.querySelector('.tn'),TOT,900)},3700)}},
+ {nm:'4 🌃 你點亮的城市',d:'夜晚的城市，五棟大樓的窗戶由下往上一格一格亮起來（亮幾格 ＝ 幾分）；最後月亮升起來，上面是總分。重點：<b>你的努力把城市點亮了</b>。',
+  h:function(){var st='';for(var i=0;i<26;i++)st+='<i class="star" style="left:'+((i*37)%100)+'%;top:'+((i*23)%55)+'%;animation-delay:'+(i%7*.3)+'s"></i>';
+   return st+'<div class="ttl" style="--d:.1s">這週 用心程度</div><div class="moon"><div class="big tn">0</div><span>／100</span></div><div class="row5">'+
+   IT.map(function(x,i){var w='';for(var r=4;r>=0;r--)for(var c=0;c<2;c++)w+='<i class="win" data-r="'+r+'"></i>';return '<div class="bld'+(i===WK?' wk':'')+'" style="height:'+[46,58,40,52,64][i]+'%">'+w+'</div>'}).join('')+'</div><div class="gnd"></div>'+
+   '<div class="lb">'+IT.map(function(x){return '<div><div class="ic">'+x.ic+'</div><div class="sc">'+x.s+'</div></div>'}).join('')+'</div>'+tail(4,4.4,4.9)},
+  go:function(s){[].forEach.call(s.querySelectorAll('.bld'),function(b,i){var lit=Math.round(IT[i].s/4);[].forEach.call(b.querySelectorAll('.win'),function(w){var r=+w.getAttribute('data-r');if(r<lit)later(function(){w.classList.add('on')},500+i*250+r*220);else w.classList.add('dk')})});
+   later(function(){count(s.querySelector('.tn'),TOT,1000)},3600)}},
+ {nm:'5 🏟 大螢幕',d:'球場大螢幕打出他的座號，數字像吃角子老虎一樣轉到 92，閃光燈一閃，觀眾一起起立波浪舞。重點：<b>全場都在為你歡呼</b>。',
+  h:function(){var cr='';for(var i=0;i<22;i++)cr+='<i style="--d:'+(i*.07).toFixed(2)+'s"></i>';
+   function col(n){var a='';for(var r=0;r<=n+10;r++)a+='<span>'+(r%10)+'</span>';return a}
+   return '<div class="jb"><div class="jl">30412　這週 用心程度</div><div class="dgs" data-v="92"><div class="dg"><div class="col" style="--y:-'+(19)+'em">'+col(19)+'</div></div><div class="dg"><div class="col" style="--y:-'+(12)+'em">'+col(12)+'</div></div></div><div class="jtip">'+TIP+'</div></div>'+
+   '<div class="flash"></div><div class="row5">'+IT.map(function(x,i){return '<div class="tile'+(i===WK?' wk':'')+'" style="--d:'+(2.9+i*.25).toFixed(2)+'s"><div class="ic">'+x.ic+'</div><div class="sc">'+x.s+'</div></div>'}).join('')+'</div><div class="crowd">'+cr+'</div>'+
+   '<div class="seen" style="--d:4.8s">'+seen(3)+'</div>'},
+  go:function(){}},
+ {nm:'6 🎫 集點卡',d:'一張集點卡，五個印章「碰、碰、碰」蓋下去；墨水比較淡的那一格閃金光；最後蓋上紅色大印。重點：<b>你這週集滿了這些點</b>。',
+  h:function(){return '<div class="card hit"><div class="ch">用心 集點卡<small>30412・這一週</small></div></div><div class="row5">'+
+   IT.map(function(x,i){return '<div class="slot'+(i===WK?' wk':'')+'"><div class="ink" style="--d:'+(.9+i*.5).toFixed(2)+'s;--c:'+x.c+(i===WK?';opacity:.5':'')+'"><span class="ic">'+x.ic+'</span><span class="sc">'+x.s+'</span></div></div>'}).join('')+
+   '</div><div class="hk"><div class="big">92</div><span>用心程度</span></div>'+tail(5,4.4,4.9)},
+  go:function(){}}
+];
+var K18=0;
+function play18(){TM18.forEach(clearTimeout);TM18=[];CUR=TM18;var s=document.getElementById('ts');s.className='ts t'+(K18+1);s.innerHTML=TH[K18].h();TH[K18].go(s);
+ document.getElementById('d18').innerHTML=TH[K18].d;
+ [].forEach.call(document.querySelectorAll('#sw18 button'),function(b,i){b.classList.toggle('on',i===K18)})}
+document.getElementById('sw18').innerHTML=TH.map(function(t,i){return '<button data-k="'+i+'">'+t.nm+'</button>'}).join('');
+document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('button');if(!t)return;
+ var r=t.getAttribute('data-r'),m=t.getAttribute('data-m'),k=t.getAttribute('data-k');
+ if(m){M16=m;[].forEach.call(document.querySelectorAll('#sw16 button'),function(b){b.classList.toggle('on',b===t)});play16()}
+ if(k!=null){K18=+k;play18()}
+ if(r==='16')play16();if(r==='18')play18();if(r==='18n'){K18=(K18+1)%TH.length;play18()}});
+play16();play18();
+</script>
+</body></html>
