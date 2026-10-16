@@ -29,6 +29,10 @@
 | `_verify.js` | 量測腳本。`node sentences/_verify.js` 量全部；`node sentences/_verify.js unit1.html` 只量一頁 |
 | `index.html` `warmup.html` `unit1.html` `unit2.html` `games.html` | **產物，不要手改**，會被下一次 build 蓋掉 |
 
+## 2026-10-16 第三批 C 組（在家複習）：🚧 等老師回答（先讀這一節）
+
+在家複習主題按鈕放大（闖關路線／兩排）、四年級 Unit 2 縮寫動畫刪第 4 頁（`RPAGES` 的 `U2[16]`）、跟教學網站同步：18 題在 `sentences/2026-10-16_C_需求與問題.md`（大字頁 `listen/2026-10-16_C/`）。**老師回答以前網站不動。**
+
 ## 2026-10-11 第三批 B 組（Review 1 替換字獨立頁、play ＝ 玩、because 句子；先讀這一節）
 
 需求、選擇題、使用者的回答：`sentences/2026-10-11_B_需求與問題.md`（第四節 ＝ 定案）。原文：第二批第 7、8 點。

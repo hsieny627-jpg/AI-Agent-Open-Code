@@ -1,0 +1,365 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>在家複習＋老師看板 先問</title><style>
+@font-face{font-family:Andika;src:url(../../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#05070A;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 140px;font-size:26px;line-height:1.55;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:42px;color:#FFD54A;margin:22px 0 6px}
+h2{font-size:36px;color:#FFD54A;margin:56px 0 10px;border-top:4px solid #24303C;padding-top:22px}
+.lead{color:#DDE6EE}
+.howto{background:#102016;border:3px solid #3BD16F;border-radius:20px;padding:14px 20px;margin:16px 0}
+.q{background:#0B0F14;border:3px solid #24303C;border-radius:22px;padding:18px 20px;margin:26px 0}
+.q>.t{font-size:32px;color:#7FD4FF;margin-bottom:8px}
+.q>.t .no{display:inline-block;background:#FFD54A;color:#05070A;border-radius:12px;padding:0 14px;margin-right:10px}
+.opt{background:#0F151C;border:4px solid #2A3540;border-radius:20px;padding:14px 18px;margin:16px 0}
+.opt.rec{border-color:#3BD16F;background:#0D1B12}
+.opt .hd{font-size:30px}
+.opt .k{color:#FFD54A;font-size:40px;margin-right:10px}
+.tag{display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px;margin-left:8px;vertical-align:middle}
+.why{color:#CFE3F5;font-size:24px;margin-top:6px}
+.note{color:#B9C4CE;font-size:22px}
+.shot{width:100%;border:3px solid #3A4650;border-radius:14px;display:block;margin:8px 0}
+.lab{font-size:22px;color:#B9C4CE;margin:10px 0 4px}
+table{border-collapse:collapse;width:100%;margin:10px 0}
+td,th{border:2px solid #2A3540;padding:8px 12px;text-align:left;vertical-align:middle}
+th{background:#14202B;color:#CFE6FF}
+.cmp{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center}
+.cmp .ar{font-size:54px;color:#FFD54A;text-align:center}
+@media (max-width:860px){.cmp{grid-template-columns:1fr}.cmp .ar{transform:rotate(90deg)}}
+.ok{color:#3BD16F}.bad{color:#FF6B6B}.gold{color:#FFD54A}
+/* ── 示意圖共用 ── */
+.mock{background:#000;border:3px solid #3A4650;border-radius:18px;padding:14px;overflow:hidden}
+.blk{background:#0E141A;border:2px solid #24303C;border-radius:16px;padding:12px 14px;margin:10px 0}
+.blk .h{font-size:24px;color:#FFD54A}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;border:3px solid #34404C;border-radius:999px;padding:6px 16px;font-size:22px;background:#111820;white-space:nowrap}
+/* C2 闖關路線 */
+.route{display:flex;gap:8px;flex-wrap:nowrap;align-items:stretch}
+@media (max-width:700px){.route{flex-wrap:wrap}}
+.st{position:relative;flex:1 1 0;min-width:96px;min-height:84px;border:4px solid #34404C;border-radius:18px;background:#111820;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px;padding:6px 8px;text-align:center}
+.st .n{font-size:30px;color:#FFD54A;line-height:1}
+.st.done{border-color:#2EB85C;background:#0D1B12}
+.st.done::after{content:'✔';position:absolute;top:-14px;right:-8px;background:#2EB85C;color:#fff;border-radius:50%;width:36px;height:36px;font-size:24px;display:flex;align-items:center;justify-content:center}
+.st.now{border-color:#FFD54A;background:#2A2208;transform:scale(1.06);animation:glow 1.6s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 0 6px rgba(255,213,74,.35),0 0 26px rgba(255,213,74,.6)}}
+.st .tagnow{font-size:20px;color:#05070A;background:#FFD54A;border-radius:999px;padding:0 10px;margin-top:4px}
+.st.next .hand{position:absolute;bottom:-44px;left:50%;font-size:36px;transform:translateX(-50%);animation:tap 1.2s ease-in-out infinite}
+@keyframes tap{50%{transform:translate(-50%,-10px)}}
+.st.next{border-color:#7FD4FF;border-style:dashed}
+.st .tagnx{font-size:20px;color:#05070A;background:#7FD4FF;border-radius:999px;padding:0 10px;margin-top:4px}
+.tabs2 .st{flex:1 1 200px}
+/* 老師看板示意圖 */
+.dash .top{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.dash .tt{font-size:30px;margin-right:auto}
+.big2{display:inline-flex;border:3px solid #34404C;border-radius:999px;overflow:hidden}
+.big2 span{padding:6px 18px;font-size:24px}
+.big2 .on{background:#FFD54A;color:#05070A}
+.flt{margin:10px 0;padding:8px 14px;border:2px dashed #34404C;border-radius:14px;font-size:22px;color:#DDE6EE}
+.tiles4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:700px){.tiles4{grid-template-columns:repeat(2,1fr)}}
+.tl{background:#0E141A;border:2px solid #24303C;border-radius:14px;padding:8px 12px;text-align:center}
+.tl .v{font-size:44px;line-height:1.1}.tl .k{font-size:22px;color:#B9C4CE}
+.tb{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.tb span{border:3px solid #34404C;border-radius:16px;padding:6px 14px;font-size:22px;background:#111820}
+.tb .on{border-color:#FFD54A;background:#2A2208}
+.badge{display:inline-block;background:#E8453C;color:#fff;border-radius:999px;padding:0 10px;font-size:20px;margin-left:4px}
+.side{display:grid;grid-template-columns:200px 1fr;gap:12px}
+@media (max-width:700px){.side{grid-template-columns:1fr}}
+.side .menu span{display:block;border:3px solid #34404C;border-radius:14px;padding:6px 12px;margin:0 0 8px;font-size:22px;background:#111820}
+.side .menu .on{border-color:#FFD54A;background:#2A2208}
+/* 要關心格子 */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.kc{border-radius:16px;padding:8px 12px;font-size:22px;line-height:1.35}
+.kc .id{font-size:24px}.kc .sc{font-size:34px}
+.kc.r{background:#3A1214;border:3px solid #FF6B6B}.kc.y{background:#33290A;border:3px solid #FFD54A}.kc.g{background:#0D2A16;border:3px solid #2EB85C}.kc.w{background:#1A1F25;border:3px solid #5A6672}
+/* 班級排行榜 */
+.mx td,.mx th{text-align:center;font-size:24px}
+.mx td.best{background:#3A2E05;color:#FFE9A8;border:3px solid #FFD54A}
+.mx td.best::before{content:'👑 ';}
+.mx th:first-child,.mx td:first-child{text-align:left;white-space:nowrap}
+.pods{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.pod{background:#0E141A;border:2px solid #24303C;border-radius:16px;padding:10px;text-align:center}
+.pod .w1{font-size:40px;color:#FFD54A}
+/* 用心程度：甲 一顆大愛心＋五條長條 */
+.care{display:grid;grid-template-columns:240px 1fr;gap:18px;align-items:center}
+@media (max-width:700px){.care{grid-template-columns:1fr}}
+.bigH{position:relative;width:220px;height:200px;margin:0 auto}
+.bigH svg{width:100%;height:100%}
+.bigH .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:56px;color:#fff;text-shadow:0 2px 6px #000;padding-top:10px}
+.bars .b{display:grid;grid-template-columns:52px 1fr 100px;gap:10px;align-items:center;margin:6px 0;font-size:22px}
+.bars .tr{height:26px;background:#1A2230;border-radius:999px;overflow:hidden}
+.bars .fl{height:100%;width:0;border-radius:999px;background:#E8453C;transition:width 1s ease}
+.bars .b.wk .ic{animation:wig 1s ease-in-out infinite}
+@keyframes wig{25%{transform:rotate(-14deg)}75%{transform:rotate(14deg)}}
+.tip{margin-top:6px;font-size:24px;color:#FFE9A8}
+/* 乙 五顆愛心簡化 */
+.five{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.five .h5{position:relative;width:110px;text-align:center}
+.five svg{width:100px;height:90px}
+.five .v{position:absolute;top:24px;left:0;right:0;font-size:28px}
+/* 10 種主題 */
+.themes{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+.th{background:#0E141A;border:3px solid #24303C;border-radius:18px;padding:10px 12px;text-align:center}
+.th .nm{font-size:26px;color:#FFD54A}
+.th .stage{height:150px;display:flex;align-items:flex-end;justify-content:center;gap:6px;margin:6px 0}
+.th .tot{font-size:30px}
+.th .d{font-size:22px;color:#CFE3F5;text-align:left}
+.seg{transition:all .6s ease;opacity:.18;filter:grayscale(1)}
+.seg.on{opacity:1;filter:none}
+.seg.wk.on{animation:wk 1s ease-in-out infinite}
+@keyframes wk{50%{filter:drop-shadow(0 0 10px #FFD54A) brightness(1.3)}}
+.replay{font:inherit;font-size:24px;background:#14202B;color:#fff;border:3px solid #7FD4FF;border-radius:14px;padding:6px 18px;cursor:pointer;min-height:48px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><div class="wrap">
+
+<h1>在家複習＋老師看板：動手前先問</h1>
+<p class="lead">這一頁只有問題，<b>網站還沒改</b>。老師回答以後，我會用老師自己的例子再對一次，對得上才動手。</p>
+<div class="howto">✍️ <b>回答方式</b>：直接打「1A 2甲 3A …」，或「全部照建議」。<br>綠色框 ＝ 我的建議。看不懂的題目，直接說「第 N 題看不懂」。</div>
+
+<!-- ═════════════ 一、在家複習 ═════════════ -->
+<h2>一、在家複習（第 1～5 題）</h2>
+
+<div class="q"><div class="t"><span class="no">1</span>四年級在家複習 Unit 2「縮寫動畫」：刪掉第 4 頁</div>
+<table><tr><th>第幾頁</th><th>內容</th><th>改了以後</th></tr>
+<tr><td>1</td><td>He is ＝ He’s</td><td class="ok">留著</td></tr>
+<tr><td>2</td><td>She is ＝ She’s</td><td class="ok">留著</td></tr>
+<tr><td>3</td><td>is not ＝ isn’t</td><td class="ok">留著</td></tr>
+<tr><td>4</td><td>is not ＝ isn’t（又一次，換一個情境）</td><td class="bad">刪掉</td></tr></table>
+<div class="opt rec"><div class="hd"><span class="k">A</span>照上面刪第 4 頁；三年級、教學網站都不動<span class="tag">建議</span></div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>不是這一頁（請告訴我是哪一頁）</div></div>
+</div>
+
+<div class="q"><div class="t"><span class="no">2</span>主題按鈕放大：用哪一種樣子？</div>
+<div class="lab">現在（iPad 橫放）：最上面一排小按鈕，「基礎｜進階」在最右邊，學生找不到。</div>
+<img class="shot" src="rv_u2_1024.jpg" alt="現在的在家複習 Unit 2">
+<div class="opt rec"><div class="hd"><span class="k">甲</span>闖關路線：一條路走到底<span class="tag">建議</span></div>
+<div class="why">「基礎、進階」直接變成路上的一站，學生只要照順序往右走。</div>
+<div class="mock" style="padding-bottom:44px"><div class="route">
+ <div class="st done"><span class="n">1</span>基礎</div>
+ <div class="st now"><span class="n">1</span>進階<span class="tagnow">現在在這裡</span></div>
+ <div class="st next"><span class="n">2</span>基礎<span class="tagnx">下一個</span><span class="hand">👆</span></div>
+ <div class="st"><span class="n">2</span>進階</div>
+ <div class="st"><span class="n">3</span>中英語序</div>
+ <div class="st"><span class="n">4</span>縮寫動畫</div>
+</div></div>
+<table><tr><th>老師要的</th><th>怎麼看出來</th></tr>
+<tr><td>① 現在該點哪一個</td><td>藍色虛線框＋👆 手指上下點，寫「下一個」</td></tr>
+<tr><td>② 目前在哪一個</td><td>金色、放大、慢慢發光，寫「現在在這裡」</td></tr>
+<tr><td>③ 下一步到哪裡</td><td>看完的一站打 ✔；最後一張卡下面的〔➡ 下一個主題〕照舊</td></tr></table>
+</div>
+<div class="opt"><div class="hd"><span class="k">乙</span>兩排大按鈕：上面「主題」、下面「基礎｜進階」</div>
+<div class="mock" style="padding-bottom:44px"><div class="route tabs2">
+ <div class="st done"><span class="n">1</span>He/She is a ___.</div>
+ <div class="st now"><span class="n">2</span>Yes／No<span class="tagnow">現在在這裡</span></div>
+ <div class="st"><span class="n">3</span>中英語序</div>
+ <div class="st"><span class="n">4</span>縮寫動畫</div>
+</div><div class="route" style="margin-top:14px;max-width:520px">
+ <div class="st now"><span class="n">🌱</span>基礎<span class="tagnow">現在</span></div>
+ <div class="st next"><span class="n">🚀</span>進階<span class="tagnx">下一個</span><span class="hand">👆</span></div>
+</div></div>
+<div class="why">⚠️ 兩排比較高，iPad 橫放時字卡會變小一點。</div>
+</div>
+<p class="note">兩種都一樣：按鈕比現在大一倍以上、字至少放大到現在的 2 倍；iPad 直放、橫放、教室觸控螢幕都會量。</p>
+</div>
+
+<div class="q"><div class="t"><span class="no">3</span>「✔ 看完了」什麼時候打勾？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>看到這一站的最後一張卡就打 ✔（跟〔📝 做 5 題複習〕出現的時間一樣）<span class="tag">建議</span></div><div class="why">現在網站已經記得「誰看到最後一張」，直接用，不會兩個規則打架。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>做完這一站的 5 題複習題才打 ✔</div></div>
+</div>
+
+<div class="q"><div class="t"><span class="no">4</span>「總首頁改了，在家複習也跟著改」是哪一個意思？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>已經放進在家複習的主題：老師改教學網站的字卡、題目、遊戲，在家複習自動一起改<span class="tag">建議</span></div>
+<div class="why">現在本來就是同一份資料（改一次兩邊都變）。我再加一個檢查：兩邊不一樣，網站就不發布。<br>要放哪些新主題進在家複習，<b>還是老師決定</b>。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>總首頁「新增」的主題，也自動出現在在家複習</div><div class="why">⚠️ 老師就不能自己挑哪些主題放進在家複習。</div></div>
+<p class="note">「老師鎖住每一個主題、題目、遊戲」已經在 D 組第 7 件做好了（老師看板〔🔒 開關〕），這次不動。</p>
+</div>
+
+<div class="q"><div class="t"><span class="no">5</span>新的大按鈕：只改在家複習，還是教學網站也改？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>只改在家複習（照原文）<span class="tag">建議</span></div><div class="why">老師上課用的教學網站，按鈕位置老師已經熟了，不動。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>兩個都改成一樣</div></div>
+</div>
+
+<!-- ═════════════ 二、看字卡算進「練了幾天」「練習次數」 ═════════════ -->
+<h2>二、看字卡、聽字卡也算（第 6～8 題）</h2>
+<table><tr><th></th><th>現在</th><th>改了以後</th></tr>
+<tr><td>⏰ 練習時間</td><td class="ok">✅ 有算</td><td class="ok">✅ 有算</td></tr>
+<tr><td>📅 練了幾天</td><td class="bad">❌ 不算</td><td class="ok">✅ 算</td></tr>
+<tr><td>📝 練習次數</td><td class="bad">❌ 不算</td><td class="ok">✅ 算</td></tr>
+<tr><td>🎯 正確率、💯 總分</td><td>不算</td><td>還是不算（看字卡沒有作答）</td></tr></table>
+
+<div class="q"><div class="t"><span class="no">6</span>看字卡，怎樣算「練習次數 ＋1」？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>一站（例：「1 基礎」）從第一張看到最後一張，而且看了 1 分鐘以上 ＝ ＋1<span class="tag">建議</span></div>
+<div class="why">例：小華（30412）看「1 基礎」12 張，花了 3 分鐘 ➜ 練習次數 ＋1。<br>只是一直按 ▶ 跳到最後（不到 1 分鐘）➜ 不加。同一站一天最多加 3 次（跟題目一樣）。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>看字卡每累積 5 分鐘 ＝ ＋1</div><div class="why">例：小華這週看了 23 分鐘 ➜ ＋4。</div></div>
+<div class="opt"><div class="hd"><span class="k">C</span>每打開一次字卡就 ＋1</div><div class="why">⚠️ 一直打開、關掉就能刷次數。</div></div>
+</div>
+
+<div class="q"><div class="t"><span class="no">7</span>看字卡，怎樣算「練了 1 天」？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>那一天看字卡加起來 1 分鐘以上 ＝ 算 1 天<span class="tag">建議</span></div><div class="why">例：小華星期三只看了字卡 4 分鐘、沒有作答 ➜ 星期三算有練。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>那一天只要打開字卡就算（不管多久）</div></div>
+</div>
+
+<div class="q"><div class="t"><span class="no">8</span>一起改到哪裡？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>全部一起：成績卡、排行榜〔練習次數〕、❤ 用心程度第 1 項（幾天）第 2 項（幾次）、Excel<span class="tag">建議</span></div><div class="why">同一個數字到處都一樣，老師和學生才不會看到兩種答案。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>只算進 ❤ 用心程度，排行榜〔練習次數〕照舊只算題目和遊戲</div></div>
+<p class="note">這一題改的是「怎麼算」，要請老師<b>重新部署一次</b>（我會給大字版步驟頁網址）。</p>
+</div>
+
+<!-- ═════════════ 三、老師看板 ═════════════ -->
+<h2>三、老師看板重新排版（第 9～18 題）</h2>
+<p class="lead">原則：<b>所有內容、功能一個都不刪</b>，只重新排。一個區塊 ＝ 一個重點，區塊最上面一句話就是重點。長長的說明收進〔❓〕，點了才出來。</p>
+
+<div class="q"><div class="t"><span class="no">9</span>整個老師看板：用哪一種排法？</div>
+<div class="lab">現在：上面兩排按鈕＋選單、四個大數字下面有長長的說明、七個分頁。</div>
+<img class="shot" src="t_p_1920.jpg" alt="現在的老師看板">
+<div class="opt rec"><div class="hd"><span class="k">甲</span>上面一條：年級＋Excel＋〔⚙ 更多〕；篩選縮成一行；分頁上面有紅色數字<span class="tag">建議</span></div>
+<div class="mock dash">
+ <div class="top"><span class="tt">👩‍🏫 老師看板</span><span class="big2"><span class="on">三年級</span><span>四年級</span></span><span class="pill">⬇ Excel</span><span class="pill">⚙ 更多</span></div>
+ <div class="flt">🔎 全部班 · 本週 · 全部類別 · 在校＋在家　〔改〕</div>
+ <div class="tiles4"><div class="tl"><div class="v">62</div><div class="k">🎯 正確率</div></div><div class="tl"><div class="v">56.6</div><div class="k">💯 總分</div></div><div class="tl"><div class="v">19</div><div class="k">練習次數</div></div><div class="tl"><div class="v">20</div><div class="k">👥 有做的人</div></div></div>
+ <div class="tb"><span class="on">👤 個人</span><span>🏆 排行榜</span><span>🏫 班級排行榜</span><span>❌ 錯題</span><span>🔔 要關心<b class="badge">6</b></span><span>📌 任務</span><span>🔒 開關</span></div>
+ <div class="blk"><div class="h">🔴 6 人要關心：30411、30413、30415 …</div><div class="note">（下面是全班表格）</div></div>
+</div>
+<table><tr><th>現在</th><th>➜</th><th>改了以後</th></tr>
+<tr><td>排行榜開關、重新整理、A－A＋、登出 排在最上面</td><td>➜</td><td>收進〔⚙ 更多〕，點了才出來</td></tr>
+<tr><td>四個選單一字排開</td><td>➜</td><td>一行字寫「現在看什麼」，點〔改〕才打開</td></tr>
+<tr><td>大數字下面長長的說明</td><td>➜</td><td>只留大數字＋名字；說明收進〔❓〕</td></tr>
+<tr><td>要關心幾個人，要點進去才知道</td><td>➜</td><td>分頁上面直接一個紅色數字</td></tr></table>
+</div>
+<div class="opt"><div class="hd"><span class="k">乙</span>左邊一直排選單、右邊內容</div>
+<div class="mock dash side"><div class="menu"><span class="on">👤 個人</span><span>🏆 排行榜</span><span>🏫 班級排行榜</span><span>❌ 錯題</span><span>🔔 要關心 6</span><span>📌 任務</span><span>🔒 開關</span></div>
+<div><div class="tiles4"><div class="tl"><div class="v">62</div><div class="k">🎯 正確率</div></div><div class="tl"><div class="v">56.6</div><div class="k">💯 總分</div></div><div class="tl"><div class="v">19</div><div class="k">練習次數</div></div><div class="tl"><div class="v">20</div><div class="k">👥 有做</div></div></div><div class="blk"><div class="h">全班表格</div></div></div></div>
+<div class="why">⚠️ iPad 直放時左邊選單會擠到上面去，內容變窄。</div>
+</div>
+</div>
+
+<div class="q"><div class="t"><span class="no">10</span>老師說的「點入〔個人〕的頁面」，是哪一頁？</div>
+<div class="cmp"><div><div class="lab">① 〔👤 個人〕分頁：全班表格</div><img class="shot" src="t_p_1920.jpg" alt="個人分頁"></div><div class="ar">或</div><div><div class="lab">② 點一個學生跳出來的成績卡</div><img class="shot" src="t_person_1920.jpg" alt="成績卡"></div></div>
+<div class="opt"><div class="hd"><span class="k">A</span>只有 ①</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>只有 ②</div></div>
+<div class="opt rec"><div class="hd"><span class="k">C</span>① ② 都重新排<span class="tag">建議</span></div><div class="why">兩頁都在第 9 題的新樣子裡，一起排才整齊。</div></div>
+</div>
+
+<div class="q"><div class="t"><span class="no">11</span>成績卡（點一個學生）：用哪一種排法？</div>
+<div class="opt rec"><div class="hd"><span class="k">甲</span>最上面一句總結，下面一塊一塊往下排<span class="tag">建議</span></div>
+<div class="mock">
+ <div class="blk" style="border-color:#FFD54A"><div class="h" style="font-size:28px">30412 小華　這週：正確率 80、練習 6 次、用心 87</div></div>
+ <div class="tiles4"><div class="tl"><div class="v">80</div><div class="k">🎯 正確率</div></div><div class="tl"><div class="v">76</div><div class="k">💯 總分</div></div><div class="tl"><div class="v">6</div><div class="k">練習次數</div></div><div class="tl"><div class="v ok">＋12</div><div class="k">進步</div></div></div>
+ <div class="blk"><div class="h">❤ 用心程度 87：最少的是「看完、聽完才選」</div></div>
+ <div class="blk"><div class="h">👍 最拿手 1-1 基礎 ｜ 🌱 要加油 3 中英語序</div></div>
+ <div class="blk"><div class="h">📅 這週練了 3 天（一、三、五）</div></div>
+ <div class="blk"><div class="h">📈 每一組的變化　◀ 1-1 基礎 ▶</div></div>
+ <div class="blk"><div class="h">❌ 最常錯的 3 題</div></div>
+ <div class="blk"><div class="h">📋 看全部明細（作廢在這裡）▾</div></div>
+</div>
+<div class="why">每一塊最上面那一句 ＝ 那一塊的重點，不用看圖也懂。內容跟現在一模一樣，一個都不少。</div></div>
+<div class="opt"><div class="hd"><span class="k">乙</span>上面四個分頁籤，一次只看一種</div>
+<div class="mock"><div class="tb"><span class="on">📊 成績</span><span>❤ 用心</span><span>📅 練習</span><span>❌ 錯題</span></div><div class="blk"><div class="h">（只顯示〔📊 成績〕那一塊）</div></div></div>
+<div class="why">⚠️ 很乾淨，但要一直點才看得到全部。</div></div>
+</div>
+
+<div class="q"><div class="t"><span class="no">12</span>〔🔔 要關心〕照座號那一頁：每一格放什麼？</div>
+<div class="lab">現在：上面兩行說明、圖例跟說明擠在一起，每一格四行。〔📊 圖表分析〕那一頁<b>完全不動</b>。</div>
+<img class="shot" src="t_k_1920.jpg" alt="現在的要關心">
+<div class="lab">改了以後：最上面先一塊重點，說明收進〔❓ 顏色怎麼看〕。</div>
+<div class="mock"><div class="blk" style="border-color:#FF6B6B"><div class="h" style="font-size:26px">304 班：🔴 6 人要關心　🟡 3 人要注意　🟢 5 人很好　⚪ 0 人還沒做</div></div></div>
+<div class="opt rec"><div class="hd"><span class="k">乙</span>每一格三行：號碼姓名／大大的分數／❤ 用心<span class="tag">建議</span></div>
+<div class="mock"><div class="kgrid"><div class="kc r"><div class="id">30411 測試</div><div class="sc">40 分</div>❤ 用心 29</div><div class="kc y"><div class="id">30412 小華</div><div class="sc">60 分</div>❤ 用心 87</div><div class="kc g"><div class="id">30414 測試</div><div class="sc">100 分</div>❤ 用心 49</div><div class="kc r"><div class="id">30413 測試</div><div class="sc">⚠️ 亂按</div>❤ 用心 25</div><div class="kc w"><div class="id">30430 測試</div><div class="sc">還沒做</div>　</div></div></div>
+<div class="why">整格塗顏色，就不用再放 🔴🟡🟢 小圓點；分數放大，一眼看到。</div></div>
+<div class="opt"><div class="hd"><span class="k">甲</span>每一格兩行：號碼姓名／大大的分數（用心程度點進去成績卡才看）</div>
+<div class="mock"><div class="kgrid"><div class="kc r"><div class="id">30411 測試</div><div class="sc">40 分</div></div><div class="kc y"><div class="id">30412 小華</div><div class="sc">60 分</div></div><div class="kc g"><div class="id">30414 測試</div><div class="sc">100 分</div></div></div></div></div>
+<p class="note">「測試」是假的名字，網站上會是老師試算表裡的名字（名字不會寫進網站程式）。</p>
+</div>
+
+<div class="q"><div class="t"><span class="no">13</span>新的「班級排行榜」：用哪一種樣子？</div>
+<div class="lab">現在的〔🏫 班際〕：一個項目一張長條圖，要一直往下捲，看不出「哪一班哪一項最好」。</div>
+<img class="shot" src="t_c_1920.jpg" alt="現在的班際">
+<div class="opt rec"><div class="hd"><span class="k">甲</span>冠軍表：橫的是項目、直的是班級，每一項第 1 名金色＋👑<span class="tag">建議</span></div>
+<div class="mock" style="overflow-x:auto"><table class="mx"><tr><th>班級</th><th>⏰ 最認真練習</th><th>🎯 成績最優</th><th>⬆ 進步最多</th><th>❤ 最用心</th></tr>
+<tr><td>304 班</td><td>21 分鐘</td><td class="best">62.9</td><td>＋4</td><td class="best">71</td></tr>
+<tr><td>307 班</td><td class="best">35 分鐘</td><td>60</td><td class="best">＋9</td><td>58</td></tr>
+<tr><td>311 班</td><td>12 分鐘</td><td>55</td><td>＋2</td><td>40</td></tr></table></div>
+<div class="why">看橫的 ➜ 這一項哪一班最好；看直的 ➜ 這一班哪幾項最好。一張表兩個答案。</div></div>
+<div class="opt"><div class="hd"><span class="k">乙</span>每一項一個小頒獎台（第 1 名最大）</div>
+<div class="mock pods"><div class="pod"><div>⏰ 最認真練習</div><div class="w1">🥇 307 班</div><div>🥈 304　🥉 311</div></div><div class="pod"><div>🎯 成績最優</div><div class="w1">🥇 304 班</div><div>🥈 307　🥉 311</div></div></div>
+<div class="why">⚠️ 一項一個台子，要看完全部才知道「304 班哪幾項最好」。</div></div>
+</div>
+
+<div class="q"><div class="t"><span class="no">14</span>班級排行榜放在哪裡？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>〔🏫 班際〕改名〔🏫 班級排行榜〕：冠軍表放最上面，原本的長條圖、〔🏆 班際榮譽榜〕全部留在下面<span class="tag">建議</span></div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>新增一個分頁〔🏫 班級排行榜〕，〔🏫 班際〕照舊</div><div class="why">⚠️ 分頁變 8 個，兩頁內容很像。</div></div>
+</div>
+
+<div class="q"><div class="t"><span class="no">15</span>班級排行榜比哪幾項？（課後班 400 照舊不比）</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>7 項：四種最高榮譽（最認真練習、成績最優、進步最多、最用心）＋ 💯 總分 ＋ 練習次數 ＋ 👥 有做的人（幾成）<span class="tag">建議</span></div><div class="why">最高榮譽 4 項放前面、顏色最亮；後面 3 項只是排行，不發獎。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>只比四種最高榮譽</div></div>
+</div>
+
+<div class="q"><div class="t"><span class="no">16</span>❤ 用心程度動畫：怎麼變簡潔？</div>
+<div class="lab">現在：五顆愛心、上面數字、下面圖示、會笑會跳、底線、說明一行，眼花撩亂。</div>
+<img class="shot" src="t_person_1920.jpg" alt="現在的用心程度" style="max-width:720px">
+<div class="opt rec"><div class="hd"><span class="k">甲</span>左邊一顆大愛心裝到 87；右邊五條長條，一條 ＝ 一項<span class="tag">建議</span></div>
+<div class="mock"><div class="care" id="careA"><div class="bigH"><svg viewBox="0 0 100 92"><defs><clipPath id="hc"><path d="M50 88C10 60 2 38 12 20C22 4 42 6 50 22C58 6 78 4 88 20C98 38 90 60 50 88Z"/></clipPath></defs><path d="M50 88C10 60 2 38 12 20C22 4 42 6 50 22C58 6 78 4 88 20C98 38 90 60 50 88Z" fill="#2A1216" stroke="#FF8A8A" stroke-width="3"/><rect id="lvA" clip-path="url(#hc)" x="0" y="92" width="100" height="92" fill="#E8453C"/></svg><div class="num" id="nA">0</div></div>
+<div class="bars" id="barsA"></div></div><div class="tip" id="tipA"></div><div style="text-align:right"><button class="replay" data-r="A">🔁 再演一次</button></div></div>
+<div class="why">一眼就懂：大愛心 ＝ 總分，長條 ＝ 哪一項多、哪一項少；最少那一項的圖示搖一搖，下面一句「💡 請 …」。〔📖 說明〕照舊。</div></div>
+<div class="opt"><div class="hd"><span class="k">乙</span>五顆愛心留著，但拿掉笑臉、跳動、底線，數字放進愛心裡</div>
+<div class="mock"><div class="five" id="fiveB"></div><div class="tip" style="text-align:center">💡 請 看完、聽完 再選</div></div></div>
+<p class="note">學生平板和老師成績卡是同一個動畫，一起換。小華的例子：📅 15、📝 20、👁 16、✗➜✓ 16、⏰ 20 ＝ 87。</p>
+</div>
+
+<div class="q"><div class="t"><span class="no">17</span>「每一次都不一樣的動畫」是放在哪裡？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>❤ 用心程度那一幕：每一次換一個不同的主題（不只愛心），內容一樣是「總分＋五項＋最少那一項」<span class="tag">建議</span></div><div class="why">學生每一次都期待「這次是什麼」，但看法永遠一樣：大的 ＝ 總分、五個小的 ＝ 五項，一看就懂。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>做完以後的每一幕（🎯 正確率、⏰ 練習時間、❤ 用心程度）都每一次換風格</div><div class="why">⚠️ 正確率圓圈、時鐘學生已經看熟了，一直換反而要重新看懂。</div></div>
+<p class="note">🏆 榮譽榜（名次上升才演）本來就有 12 種風格輪流，不動。</p>
+</div>
+
+<div class="q"><div class="t"><span class="no">18</span>不一樣的主題：這 10 種，哪幾種不要？</div>
+<p class="why">每一種都只有一個區塊：中間大數字 ＝ 用心程度；五個小東西 ＝ 五項，依序亮起來；最少的那一個閃金光，下面一句「💡 請 …」。學生看完心裡的話是「老師看見我了」。<br>
+稱讚的字一律寫「你做了什麼」（例：「這週 練了 3 天」），不寫「你好聰明」——這是 Mueller &amp; Dweck（1998）的研究：稱讚努力和做法，孩子遇到困難比較不放棄（D 組已經打開原文核對過）。</p>
+<div style="text-align:right"><button class="replay" data-r="T">🔁 全部再演一次</button></div>
+<p class="note">下面是小草圖，只看「是什麼東西」；真的動畫會更精緻、放大到真的大小。</p><div class="themes" id="themes"></div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>10 種全部都要，每一次洗牌、跟上一次不一樣<span class="tag">建議</span></div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>刪掉第 ___ 種（請寫號碼），或改成 ___</div></div>
+<p class="note">老師以前說不喜歡的「開花」「倒瓶子」不放；我做好以後會放大到真的大小給老師看一次，老師說好才上線。</p>
+</div>
+
+<h2>四、老師回答以後</h2>
+<table><tr><th>順序</th><th>做什麼</th></tr>
+<tr><td>①</td><td>用小華（30412）和老師的答案，再對一次（一頁大字）</td></tr>
+<tr><td>②</td><td>老師說「對」➜ 動手：在家複習 ➜ 看字卡算次數 ➜ 老師看板排版 ➜ 用心程度動畫</td></tr>
+<tr><td>③</td><td>每一頁在 iPad 橫放、直放、教室觸控螢幕量過，0 個失敗才上線</td></tr>
+<tr><td>④</td><td>第 6～8 題改了「怎麼算」➜ 老師要重新部署一次（大字版步驟頁）</td></tr></table>
+</div>
+
+<script>
+/* 小華的五項（第 8 件「用心程度」的例子） */
+var IT=[{ic:'📅',n:'這週 練了 幾天',s:15,c:'#2F7BE8'},{ic:'📝',n:'做完 幾次',s:20,c:'#9B59D0'},{ic:'👁',n:'看完、聽完 才選',s:16,c:'#00A6A6',tip:'💡 請 看完、聽完 再選'},{ic:'✗➜✓',n:'答錯的 改對了',s:16,c:'#2EB85C'},{ic:'⏰',n:'這週 練習 幾分鐘',s:20,c:'#FF9F1C'}];
+var TOT=87,WK=2,RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function count(el,to,ms){if(RM){el.textContent=to;return}var t0=null;function f(t){if(!t0)t0=t;var k=Math.min(1,(t-t0)/ms);el.textContent=Math.round(to*k);if(k<1)requestAnimationFrame(f)}requestAnimationFrame(f)}
+/* 甲：一顆大愛心＋五條 */
+function playA(){var b=document.getElementById('barsA');b.innerHTML=IT.map(function(x,i){return '<div class="b'+(i===WK?' wk':'')+'"><span class="ic" style="display:inline-block;text-align:center">'+x.ic+'</span><div class="tr"><div class="fl" style="background:'+x.c+'"></div></div><span style="white-space:nowrap">'+x.s+'／20</span></div>'}).join('');
+ var lv=document.getElementById('lvA');lv.setAttribute('y',92);count(document.getElementById('nA'),TOT,1600);document.getElementById('tipA').textContent='';
+ var y0=92,y1=92-92*TOT/100,t0=null;function f(t){if(!t0)t0=t;var k=RM?1:Math.min(1,(t-t0)/1600);lv.setAttribute('y',y0+(y1-y0)*k);if(k<1)requestAnimationFrame(f)}requestAnimationFrame(f);
+ [].forEach.call(b.querySelectorAll('.fl'),function(e,i){setTimeout(function(){e.style.width=(IT[i].s*5)+'%'},RM?0:300+i*300)});
+ setTimeout(function(){document.getElementById('tipA').textContent=IT[WK].tip},RM?0:2000)}
+/* 乙：五顆愛心簡化 */
+(function(){var H='<path d="M50 88C10 60 2 38 12 20C22 4 42 6 50 22C58 6 78 4 88 20C98 38 90 60 50 88Z"';document.getElementById('fiveB').innerHTML=IT.map(function(x,i){return '<div class="h5"><svg viewBox="0 0 100 92"><defs><clipPath id="c5'+i+'">'+H+'/></clipPath></defs>'+H+' fill="#1A2230" stroke="'+x.c+'" stroke-width="4"/><rect clip-path="url(#c5'+i+')" x="0" y="'+(92-92*x.s/20)+'" width="100" height="92" fill="'+x.c+'"/></svg><div class="v">'+x.s+'</div><div style="font-size:24px">'+x.ic+'</div></div>'}).join('')})();
+/* 10 種主題：每一種五個小東西（一項一個），依序亮起來，最少的閃金光 */
+var TH=[
+ {nm:'1 ❤ 愛心裝滿',d:'一顆大愛心，五條彩色帶子一條一條裝進去。',seg:function(i){return '<span style="font-size:46px">❤️</span>'}},
+ {nm:'2 🔋 電池充電',d:'五格電一格一格亮，滿格發出綠光。',seg:function(i){return '<span style="display:inline-block;width:40px;height:'+(40+i*18)+'px;background:#2EB85C;border:3px solid #DFF;border-radius:6px"></span>'}},
+ {nm:'3 🧩 拼圖拼起來',d:'五塊拼圖飛進來拼成一張「我」的圖。',seg:function(i){return '<span style="font-size:46px">🧩</span>'}},
+ {nm:'4 ⭐ 五顆星星連成星座',d:'星星一顆一顆亮，最後連成一條線。',seg:function(i){return '<span style="font-size:46px;display:inline-block;transform:translateY('+(-[10,40,20,50,30][i])+'px)">⭐</span>'}},
+ {nm:'5 ⛰ 爬上山頂',d:'小人走五段階梯，到山頂插上旗子。',seg:function(i){return '<span style="display:inline-block;width:46px;height:'+(24+i*24)+'px;background:#8D6E63;border-top:6px solid #C8E6C9;border-radius:6px 6px 0 0"></span>'}},
+ {nm:'6 🌈 彩虹出來了',d:'五種顏色一條一條畫出來。',seg:function(i){return '<span style="display:inline-block;width:40px;height:110px;border-radius:20px 20px 0 0;background:'+['#E8453C','#FF9F1C','#FFD54A','#2EB85C','#2F7BE8'][i]+'"></span>'}},
+ {nm:'7 🧱 疊積木',d:'五塊積木從上面掉下來疊成一座塔。',seg:function(i){return '<span style="display:inline-block;width:46px;height:46px;border-radius:8px;background:'+['#E8453C','#FF9F1C','#FFD54A','#2EB85C','#2F7BE8'][i]+';transform:translateY('+(-i*0)+'px)"></span>'}},
+ {nm:'8 🎹 彈五個琴鍵',d:'琴鍵一個一個按下去（平板不放聲音）。',seg:function(i){return '<span style="display:inline-block;width:42px;height:120px;background:#FFF;border:3px solid #333;border-radius:0 0 8px 8px"></span>'}},
+ {nm:'9 🌳 小樹長葉子',d:'五片葉子一片一片長出來，樹慢慢長高。',seg:function(i){return '<span style="font-size:46px;display:inline-block;transform:translateY('+(-[0,30,50,30,0][i])+'px)">🍃</span>'}},
+ {nm:'10 🏅 獎牌發光',d:'獎牌中間是總分，五道光一道一道射出去。',seg:function(i){return '<span style="display:inline-block;width:14px;height:'+(60+[0,30,50,30,0][i])+'px;background:linear-gradient(#FFF6C8,#FFC928);border-radius:7px"></span>'}}
+];
+function playT(){document.getElementById('themes').innerHTML=TH.map(function(t,k){return '<div class="th"><div class="nm">'+t.nm+'</div><div class="stage">'+IT.map(function(x,i){return '<span class="seg'+(i===WK?' wk':'')+'" title="'+x.n+'">'+t.seg(i)+'</span>'}).join('')+'</div><div class="tot">用心程度 <span class="gold tn">0</span>／100</div><div class="d">'+t.d+'</div></div>'}).join('');
+ [].forEach.call(document.querySelectorAll('#themes .th'),function(th){count(th.querySelector('.tn'),TOT,1800);[].forEach.call(th.querySelectorAll('.seg'),function(s,i){setTimeout(function(){s.classList.add('on')},RM?0:300+i*350)})})}
+document.addEventListener('click',function(e){var r=e.target.getAttribute&&e.target.getAttribute('data-r');if(r==='A')playA();if(r==='T')playT()});
+playA();playT();
+</script>
+</body></html>
