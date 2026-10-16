@@ -113,7 +113,7 @@ function r1Home(S, dir) {
     h = h.replace(/(?<![.\w])(src|href)="([^"]+)"/g, (m, a, u) => a + '="' + re(u) + '"')
       .replace(/url\(([^)"'#]+)\)/g, (m, u) => 'url(' + re(u) + ')')
       .replace(/(window\.[A-Z]+DIR=")([^"]+)"/g, (m, a, u) => a + re(u) + '"');
-    const dirs = '<script>window.AUDDIR="' + rel(path.join(R1, 'audio')) + '/";window.SVDIR="' + rel(path.join(R1, 'audio', 'sv')) + '/";window.SCLKHOME="../index.html";</script>';
+    const dirs = '<script>window.AUDDIR="' + rel(path.join(R1, 'audio')) + '/";window.SCLKHOME="../index.html";</script>';
     h = h.replace('<head>', () => '<head>\n' + dirs);
     const bad = (h.match(/(?<![.\w])href="(?!https?:|#)[^"]*"/g) || []).filter(x => !/^href="(\.\.\/index\.html|[\w-]+\.html|sc\.css)"$/.test(x))
       .concat((h.match(/location\.href="[^"]*"/g) || []).filter(x => !/"(\.\.\/index\.html|index\.html)"/.test(x)));
