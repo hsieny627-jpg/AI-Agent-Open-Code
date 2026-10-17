@@ -931,5 +931,11 @@ document.getElementById("whome").addEventListener("click",function(){location.hr
 <link rel="stylesheet" href="sc.css">
 <script src="sc.js"></script>
 <script>scViewOn('r1w','👀 Review 1 字卡')</script>
+<script>(function(){if(typeof scHeard!=='function'||typeof SCENES==='undefined'||typeof whenDone!=='function')return;
+ var seen=[],N=SCENES.length,o=say;
+ function got(my){whenDone(function(){if(i!==my)return;if(seen.indexOf(my)<0)seen.push(my);if(seen.length>=N)scHeard("r1w-i1",23,26,"🎧 聽完字卡 Review 1・物品 1")})}
+ say=function(){var my=i,r=o.apply(this,arguments);got(my);return r};
+ if(spoke)got(i);
+})()</script>
 </body>
 </html>

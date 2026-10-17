@@ -100,6 +100,33 @@ function copyIn(file, dir) {
    ③ 遊戲：同一個引擎（review1/_build_games.js，GAMES_OUT＋SCORE_SRC=home），代號跟教學網站一樣（成績算在一起，來源 🏠 在家）；別的年級的進階藏起來
    ④ 登入（這是您嗎、3 分鐘）、〔🔒 開關〕（字卡 r1-w、遊戲 r1-g）、看字卡算練習時間
    ⑤ 換完以後還連到 r1/ 以外的網頁（../index.html 以外）➜ build 失敗 */
+/* 🎧 聽完字卡（2026-10-16 老師 C4 第 6 題 A、6-2 A；C5「1 乙」算進 📅 練習）：score/_client.js 的 scHeard(站, 第幾張, 這一站幾張, 名字)
+   ① 補充頁（單字結構、單字故事）：一頁 ＝ 一站、一幕 ＝ 一張。按〔🔊 唸一次〕這一幕看得到的字全部唸完（sayAll 那種頁）／這一幕的字唸完 ＝ 聽完；
+      沒有字可以唸的幕，看到就算
+   ② Review 1 字卡：一組（物品 1、物品 2、活動 1、活動 2）＝ 一站、一個字 ＝ 一張。這個字的每一幕都唸完（最後一幕 ＝ 句子）＝ 聽完 */
+function hdStory(k, nm) {
+  return `<script>(function(){if(typeof scHeard!=='function'||typeof S==='undefined'||!window.PH)return;
+ var K=${JSON.stringify(k)},NM=${JSON.stringify(nm)},N=S.length,tok=0;
+ function mark(n){scHeard(K,n,N,NM)}
+ function els(){return [].filter.call(stage.querySelectorAll(".phw,.sp"),function(el){return visible(el)&&!(el.parentElement&&el.parentElement.closest(".phw,.sp"))})}
+ function empty(){return SAYALL?!els().length:!S[i].say}
+ function got(){var my=i,t=tok;PH.after(function(){if(i===my&&t===tok)mark(my)})}
+ var oc=PH.sayChain;PH.sayChain=function(e,f){var my=i,t=tok;return oc.call(PH,e,function(){if(f)f();if(SAYALL&&i===my&&t===tok)mark(my)})};
+ var ow=PH.sayWord;PH.sayWord=function(el){var my=i,r=ow.apply(PH,arguments);if(!SAYALL&&el&&el.getAttribute('data-say')===S[my].say)got();return r};
+ var os=PH.say;PH.say=function(t){var my=i,r=os.apply(PH,arguments);if(!SAYALL&&t===S[my].say)got();return r};
+ var oh=show;show=function(){tok++;var r=oh.apply(this,arguments);if(empty())mark(i);return r};
+ if(empty())mark(i);
+})()</script>\n`;
+}
+function hdWord(k, idx, n, nm) {
+  return `<script>(function(){if(typeof scHeard!=='function'||typeof SCENES==='undefined'||typeof whenDone!=='function')return;
+ var seen=[],N=SCENES.length,o=say;
+ function got(my){whenDone(function(){if(i!==my)return;if(seen.indexOf(my)<0)seen.push(my);if(seen.length>=N)scHeard(${JSON.stringify(k)},${idx},${n},${JSON.stringify(nm)})})}
+ say=function(){var my=i,r=o.apply(this,arguments);got(my);return r};
+ if(spoke)got(i);
+})()</script>\n`;
+}
+const R1G = { i1: '物品 1', i2: '物品 2', a1: '活動 1', a2: '活動 2' };
 function r1Home(S, dir) {
   const R1 = path.join(ROOT, 'review1'), out = path.join(dir, 'r1'), g = S.out === 'g3-review' ? 3 : 4, SC1 = require('../score/_client.js');
   fs.mkdirSync(out, { recursive: true });
@@ -139,13 +166,17 @@ function r1Home(S, dir) {
   const SCTAG = SM[1] + '\n<link rel="stylesheet" href="sc.css">\n<script src="sc.js"></script>\n';
   /* 單字首頁＋每一張字卡 */
   const files = fs.readdirSync(R1).filter(f => /\.html$/.test(f) && f !== 'games.html');
+  const WL = require(path.join(R1, '_data.js')).WORDS;
   if (files.length < 99) throw new Error('在家複習 r1/：review1/ 的字卡只有 ' + files.length + ' 個檔');
   files.forEach(f => {
     let x = fs.readFileSync(path.join(R1, f), 'utf8');
     x = f === 'index.html' ? one(x, '<a href="../index.html">🏠 總首頁</a>', '<a class="rvhome" href="../index.html">🏠 回首頁</a>', f)
       : one(x, '<span class="blb">總首頁</span>', '<span class="blb">回首頁</span>', f);
     x = one(x, '</head>', '<style>' + GOLD + '</style>\n</head>', f);
-    x = one(x, '</body>', '<script>window.SCLKPAGE="r1-w"</script>\n' + SCTAG + "<script>scViewOn('r1w','👀 Review 1 字卡')</script>\n</body>", f);
+    const wd = WL.filter(w => w.f + '.html' === f)[0], wg = wd ? WL.filter(w => w.g === wd.g) : null;
+    if (f !== 'index.html' && !wd) throw new Error('在家複習 r1/' + f + '：review1/_data.js 找不到這個字（聽完字卡要知道它在哪一組）');
+    x = one(x, '</body>', '<script>window.SCLKPAGE="r1-w"</script>\n' + SCTAG + "<script>scViewOn('r1w','👀 Review 1 字卡')</script>\n" +
+      (wd ? hdWord('r1w-' + wd.g, wg.indexOf(wd), wg.length, '🎧 聽完字卡 Review 1・' + R1G[wd.g]) : '') + '</body>', f);
     fs.writeFileSync(path.join(out, f), fix(x, f));
   });
   return files.length;
@@ -178,7 +209,7 @@ SITES.forEach(S => {
   /* 補充頁也接登入（這是您嗎、3 分鐘）和〔🔒 開關〕（2026-10-12 D 第 6、7 件）：SCLKPAGE ＝ 這一頁的代號 */
   const T = topics(S), SC1 = require('../score/_client.js');
   S.more.forEach(x => { const f = path.basename(x.from), k = T.filter(o => o.href === f)[0].k.replace(/^g\drv_/, '');
-    fs.writeFileSync(path.join(dir, f), copyIn(path.join(ROOT, x.from), dir).replace('</body>', () => '<script>window.SCLKPAGE=' + JSON.stringify(k) + '</script>\n' + SC1.home(S.out === 'g3-review' ? 3 : 4, '../', 'home', 1) + "<script>scViewOn('mo','👀 補充頁')</script>\n</body>")); });
+    fs.writeFileSync(path.join(dir, f), copyIn(path.join(ROOT, x.from), dir).replace('</body>', () => '<script>window.SCLKPAGE=' + JSON.stringify(k) + '</script>\n' + SC1.home(S.out === 'g3-review' ? 3 : 4, '../', 'home', 1) + "<script>scViewOn('mo','👀 補充頁')</script>\n" + hdStory(k, '🎧 聽完字卡 ' + x.t) + '</body>')); });
   const r1n = S.r1 ? r1Home(S, dir) : 0;
   console.log(S.g + '：' + S.out + '/index.html、u1.html、u2.html、games.html（' + S.games.join('、') + '）' + (r1n ? '、r1.html、r1/（' + r1n + ' 頁＋遊戲）' : ''));
 });

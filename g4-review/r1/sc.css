@@ -408,3 +408,16 @@ body.scq .url{display:none}
 .care.cs8 .chc.on .chw::before{content:'⭐';position:absolute;left:50%;top:-10px;font-size:28px;margin-left:-.5em;animation:cstar .6s ease-in forwards}
 @keyframes cstar{from{transform:translateY(-70px) scale(1.4)}to{transform:translateY(30px) scale(.3);opacity:0}}
 @media (prefers-reduced-motion:reduce){.care *{animation:none!important;transition:none!important}.care .chr{opacity:1;transform:none}}
+
+/* 成績卡（2026-10-16 C3／C4 第 3 題 甲、C5「1 乙」）：🎯 正確、📅 練習 兩大格＋💡 下一步（老師看板、學生平板同一張） */
+.gcard{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0;width:100%}
+.gbx{border-radius:20px;padding:10px 14px;border:3px solid;text-align:center;animation:gpop .5s cubic-bezier(.2,1.5,.4,1) both}
+.gbx.gac{border-color:#3BD16F;background:#0D1B12}.gbx.gpr{border-color:#7FD4FF;background:#0A1822;animation-delay:.15s}
+.gk{font-size:clamp(22px,2.2vw,34px);font-weight:700;color:#EDEDED}
+.gv{font-size:clamp(48px,6vw,88px);font-weight:700;line-height:1.1;color:#fff;display:flex;align-items:baseline;justify-content:center;gap:.25em;flex-wrap:wrap}
+.gup{font-size:.42em;color:#5BE39A}.gsm{font-size:.36em;color:#CFE3F5}
+.gnx{grid-column:1/-1;font-size:clamp(24px,2.4vw,38px);font-weight:700;color:#FFE07A;background:#2A2208;border:3px dashed #FFD54A;border-radius:16px;padding:6px 12px;text-align:center}
+@keyframes gpop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.gbx{animation:none}}
+.scn .gcard{width:min(760px,92vw);margin:0 auto 4px}.scn .gcard .gv{font-size:clamp(34px,6vh,64px)}.scn .gcard .gk{font-size:clamp(20px,3vh,30px)}.scn .gbx{padding:4px 10px}
+.scn .gcard~#scCare .ct1,.scn .gcard~#scCare .csum{display:none}

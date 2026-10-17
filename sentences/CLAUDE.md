@@ -29,6 +29,13 @@
 | `_verify.js` | 量測腳本。`node sentences/_verify.js` 量全部；`node sentences/_verify.js unit1.html` 只量一頁 |
 | `index.html` `warmup.html` `unit1.html` `unit2.html` `games.html` | **產物，不要手改**，會被下一次 build 蓋掉 |
 
+## 2026-10-17 C5 以後：🎧 聽完字卡（在家複習）（先讀這一節）
+
+老師 C5「全部照建議」＋C4 第 6 題 A：在家複習的字卡**從頭到尾唸完**才算聽 1 次，一站每一張都聽完 ＝ 練習次數 ＋1。規格在 `score/CLAUDE.md` 最上面「2026-10-17」。句型網站這邊：
+- `_build_cards.js` 的 `HEARDPATCH`＋`hdJS(P)`：**只有在家複習的頁**（`P.file` 寫 `../`）才包 `sayCard` 的 done（換卡、按停打斷 ＝ 不算）；教學網站 unit1／unit2／review1 不接。
+- `_build_review.js` 的 `hdWord`（Review 1 字卡：一個字每一幕都唸完）、`hdStory`（補充頁：一幕唸完；沒有字的幕看到就算）。
+- 量測：`node score/_verify_heard.js`。
+
 ## 2026-10-16 第三批 C 組（在家複習）：✅ 第 1～5 題＋回首頁＋一問一答＋C4 第 7、8 題（三種遊戲、📘 Review 1、💼 職業單字）做好了；❓ C5 確認頁等老師回答（先讀這一節）
 
 需求、老師兩次回答：`sentences/2026-10-16_C_需求與問題.md` 第四節（最下面「老師看完 C2 的回答」）。大字問題頁：C `listen/2026-10-16_C/`、C2 `listen/2026-10-16_C2/`、**C3 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-10-16_C3/ （量測 `node listen/2026-10-16_C3/_verify.js`）**。

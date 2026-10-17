@@ -1967,6 +1967,18 @@ SCH={on:function(){return $('#rv').classList.contains('on')},open:function(){$('
 scViewOn(SCRV,'👀 Review 1 字卡');   /* 看字卡、按 🔊 也算練習時間（2026-10-15 D 第 8 件） */
 `;
 }
+/* 🎧 聽完字卡（2026-10-16 C4 第 6 題 A、6-2 A；只有在家複習的頁）：這一張的每一句從頭唸到尾（沒有被換卡、按停打斷）＝ 這一張聽 1 次；
+   一站（一組卡片：1 基礎、1 進階…；Review 1 句型卡 ＝ 一站）每一張都聽完 ＝ score/_client.js 的 scHeard() 送一筆 ＝ 練習次數 ＋1 */
+const HEARDPATCH = [
+  ["function sayCard(opt){\n  opt=opt||{};", "function sayCard(opt){\n  opt=opt||{};\n  if(typeof scHeard==='function'){var hdI=i,hdC=CARDS,hdD=opt.done;opt=Object.assign({},opt,{done:function(){\n    if(i===hdI&&CARDS===hdC)scHeard(hdKey(),i,CARDS.length,hdName());if(hdD)hdD()}})}"]
+];
+function hdJS(P) {
+  return P.tabs ? `function hdKey(){return 'u${P.unit}-t'+TCUR+(TABM[TCUR].sub?'-'+LCUR:'')}
+function hdName(){var t=TABM[TCUR];return '🎧 聽完字卡 Unit ${P.unit}・'+t.n+' '+t.lb+(t.sub?(LCUR?' 進階':' 基礎'):'')}
+` : `function hdKey(){return 'r1s'}
+function hdName(){return '🎧 聽完字卡 Review 1 句型卡'}
+`;
+}
 const TQPATCH = [
   ["  $$('#dots i').forEach(function(d,n){d.className=n===i?'on':''});",
    "  $$('#dots i').forEach(function(d,n){d.className=n===i?'on':''});\n  if(window.tqMark)tqMark();"],
@@ -2021,6 +2033,10 @@ function page(unit, cards, title, other, otherName, P) {
   /* 在家複習（file 寫 '../g3-review/…'）：闖關路線（2026-10-16 C 組，sentences/_route.js）；教學網站照舊 */
   const ROUTE = !!TABM && /^\.\.\//.test(P.file || '');
   const RVP = /^\.\.\//.test(P.file || '');   /* 在家複習的每一頁（含沒有闖關路線的 Review 1 頁）：金色〔🏠 回首頁〕 */
+  if (RVP) HEARDPATCH.forEach(([a, b]) => {
+    if (js.split(a).length !== 2) throw new Error('聽完字卡：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
+    js = js.replace(a, () => b);
+  });
   const TABHTML = ROUTE ? ROUTEM.html(TABM) : TABM ? '<nav id="tabs">' + TABM.map((tb, k) => '<button class="tb" data-t="' + k + '"><b>' + tb.n + '</b>' + tb.lb + '</button>').join('') +
     /* 連到別的網站的主題（2026-10-09：四年級 Unit 2 的 💼 職業單字網站）：不是一組卡片，按了直接過去；跨分頁的箭頭不會走到它 */
     (/^\.\.\//.test(P.file || '') || process.env.REVIEW_DIR ? [] : (P.links || [])).map(x =>   /* 在家複習不連出去（2026-10-07 第 12 點） */ '<a class="tb tbl" href="' + x.href + '"><b>' + x.n + '</b>' + x.lb + ' ↗</a>').join('') +
@@ -2100,7 +2116,7 @@ ${js.replace('__CARDS__', () => JSON.stringify(cards))
     .replace('__RVG__', () => JSON.stringify(P.rv || (unit === 1 ? D.RV1 : D.RV2)))}
 ${S.RATEJS}
 ${TABJS}
-${RVSC ? rvJS(DIR, P) : ''}
+${RVSC ? rvJS(DIR, P) : ''}${RVP ? hdJS(P) : ''}
 ${TQD ? TQ.scJS(DIR, D, P) + TQ.JS.replace('__TQD__', () => JSON.stringify(TQD)).replace('__TQPAGE__', () => JSON.stringify(require('path').basename(DIR) + '/' + P.file)) +
   "document.body.classList.add('hastq');tqMark();window.addEventListener('resize',tqMark);" : ''}${ROUTE ? '\n' + ROUTEM.JS : ''}
 </script>

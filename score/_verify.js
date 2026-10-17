@@ -158,7 +158,9 @@ async function student(br, P, vp) {
     tot: SCEND && SCEND.res && SCEND.res.me && SCEND.res.me.care && SCEND.res.me.care.tot, min: c ? Math.min.apply(null, [].map.call(c.querySelectorAll('.ct1,.csum,.cv,.cnote,.ctip,.chb'), x => parseFloat(getComputedStyle(x).fontSize))) : 0 }; });
   if (cs.nm !== 'care' || !cs.c) e.push('練習時間下一幕不是 ❤ 用心程度（' + cs.nm + '）');
   else { if (cs.h !== 5 || cs.on !== 5 || cs.n !== cs.tot) e.push('用心程度：五顆愛心沒有演完或數字不對（' + JSON.stringify(cs) + '）');
-    if (cs.t !== '這週 用心程度' || !/💡 請|🎉 五顆/.test(cs.tip) || !cs.st) e.push('用心程度的字或風格不對：' + cs.t + '｜' + cs.tip + '｜' + cs.st);
+    if (cs.t !== '這週 📅 練習' || !/💡 請|🎉 五顆/.test(cs.tip) || !cs.st) e.push('📅 練習 的字或風格不對（2026-10-16 C5：用心 ➜ 練習）：' + cs.t + '｜' + cs.tip + '｜' + cs.st);
+    const gc = await p.evaluate(() => { const g = document.querySelector('#scn .gcard'); return g ? { b: g.querySelectorAll('.gbx').length, t: g.textContent, nx: !!g.querySelector('.gnx') } : null; });
+    if (!gc || gc.b !== 2 || !/🎯 正確/.test(gc.t) || !/📅 練習/.test(gc.t) || gc.nx || /測試|用心/.test(gc.t)) e.push('學生平板的成績卡不對（要 🎯 正確、📅 練習 兩格，沒有姓名、沒有「用心」）：' + JSON.stringify(gc));
     if (cs.min < 20) e.push('用心程度的字太小 ' + cs.min + 'px');
     (await fit(p)).forEach(x => e.push('用心程度' + x));
     await p.click('#scn .chb'); await p.waitForTimeout(2600);
@@ -267,6 +269,18 @@ async function teacher(br, vp) {
   const ox = () => p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   const tiles = await p.evaluate(() => [].map.call(document.querySelectorAll('.tile .v'), x => x.textContent));
   if (tiles.length !== 4) e.push('不是四個大數字');
+  /* 2026-10-16 C 第 9 題 甲：上面一條（年級、Excel、⚙ 更多）、篩選一行、大數字只留名字（說明在〔❓〕）、🔔 要關心 上面紅色數字 */
+  const tb = await p.evaluate(() => { const b = document.querySelector('.bar1'), r = [].map.call(b.children, x => x.getBoundingClientRect()).filter(x => x.width), fl = document.querySelector('.fline');
+    return { rows: Math.max.apply(null, r.map(x => x.top + x.height / 2)) - Math.min.apply(null, r.map(x => x.top + x.height / 2)), more: !!document.getElementById('more'), bdHid: document.getElementById('bd').getBoundingClientRect().width === 0,
+      fl: new Set([].map.call(fl.querySelectorAll('select'), x => Math.round(x.getBoundingClientRect().top / 20))).size, d: [].filter.call(document.querySelectorAll('.tile .d'), x => x.getBoundingClientRect().width).length,
+      bdg: document.getElementById('kbdg').hidden ? 0 : +document.getElementById('kbdg').textContent }; });
+  if (tb.rows > 30 || !tb.more || !tb.bdHid) e.push('最上面不是一條（年級、Excel、⚙ 更多；排行榜開關收在 ⚙ 裡）：' + JSON.stringify(tb));
+  if (tb.fl !== 1) e.push('篩選沒有縮成一行');
+  if (tb.d) e.push('大數字下面的說明沒有收進〔❓〕');
+  await p.click('#thelp'); if (!await p.evaluate(() => [].filter.call(document.querySelectorAll('.tile .d'), x => x.getBoundingClientRect().width).length)) e.push('按〔❓〕沒有出現說明'); await p.click('#thelp');
+  const red = await p.evaluate(() => { const S = sets(), ps = SC.students(S.G); return ps.filter(q => light(rowOf(q, {})) === 0).length; });
+  if (tb.bdg !== red) e.push('🔔 要關心 上面的紅色數字（' + tb.bdg + '）不是 🔴 的人數（' + red + '）');
+  n += 5;
   if (tiles[3] !== '15／25') e.push('👥 有做的人不是 15／25（' + tiles[3] + '）');
   n += 5;
   /* l〔🔒 開關〕：遊戲本來的名字有 ⚡（⚡ 閃電四選一，2026-10-16 C4 在家複習加的），不是舊圖示 */
@@ -304,8 +318,8 @@ async function teacher(br, vp) {
   /* 2026-10-12 D 第 4 件：🏆 榮譽榜（投影）：每一個榜一顆、全螢幕、12 種風格之一、字夠大、▶ 下一幕、姓名顯示／隱藏、印獎狀、班際 */
   await p.evaluate(() => { window.print = () => { window.__pr = (window.__pr || 0) + 1; }; });
   await p.click('[data-bt="s"]'); await p.waitForTimeout(150); if (await p.$('[data-hon]')) e.push('💯 總分（沒有獎）不應該有〔🏆 榮譽榜〕');
-  await p.click('[data-bt="care"]').catch(() => e.push('排行榜沒有〔🏆 最用心〕（D12 ⑥）')); await p.waitForTimeout(150);
-  if (!/用心程度 \d+ 分/.test(await p.textContent('#pane')) || !await p.$('[data-hon]')) e.push('〔🏆 最用心〕沒有「用心程度 N 分」或沒有〔🏆 榮譽榜〕');
+  if (await p.$('[data-bt="care"]')) e.push('排行榜還有〔🏆 最用心〕（2026-10-16 C5 第 3 題 A：拿掉）');
+  if (/用心/.test(await p.textContent('#app'))) e.push('老師看板還有「用心」兩個字（C5 第 1 題 乙：整個合併成 📅 練習）');
   await p.click('[data-bt="sec"]'); await p.waitForTimeout(150);
   if (!await p.$('[data-hon="0"]')) e.push('排行榜沒有〔🏆 榮譽榜〕');
   else {
@@ -347,11 +361,31 @@ async function teacher(br, vp) {
     else { await p.click('[data-hon="c"]'); await p.waitForTimeout(600); h = await hn(); const tc = +h.pg.split('／')[1], ct = [h.t];
       for (let i = 1; i < tc; i++) { await p.click('#hnx'); await p.waitForTimeout(1200); ct.push((await hn()).t); }
       const cj = ct.join('|');
-      if (!/最用心的班/.test(cj) || !/平均每一個人 用心程度 \d+ 分/.test(cj)) e.push('班際榮譽榜沒有「最用心的班」（D12 ④）');
+      if (/最用心|用心程度/.test(cj)) e.push('班際榮譽榜還有「最用心的班」（C5 第 3 題 A：拿掉）');
       if (!/最認真練習的班/.test(cj) || !/成績最優的班/.test(cj) || !/平均每一個人 練習/.test(cj)) e.push('班際榮譽榜沒有三種（最認真練習的班、成績最優的班…）：' + cj.slice(0, 80));
       if (/每一班都有自己最強的一項|最努力/.test(cj)) e.push('班際榮譽榜還有拿掉的「每一班都有自己最強的一項」或舊的「最努力」');
       await p.click('#hx'); }
     n += 14;
+    /* 2026-10-16 C 第 13、14 題、C3／C4 第 4 題 A、C5 第 3 題 A：〔🏫 班級排行榜〕最上面 頒獎典禮（3 個獎）＋一個獎一個全螢幕 */
+    const cb = await p.evaluate(() => ({ tab: document.querySelector('#tabs button[data-t="c"]').textContent, aw: document.querySelectorAll('.cerb .caw').length, go: !!document.getElementById('cerGo'),
+      first: document.querySelector('#pane').firstElementChild && document.querySelector('#pane').firstElementChild.className,
+      nd: cerData(SC.students(sets().G)).length, aws: HON.AWK.length }));
+    if (cb.aws !== 3) e.push('最高榮譽不是 3 種（C5 第 3 題 A）');
+    if (!/班級排行榜/.test(cb.tab) || cb.aw !== cb.nd || cb.aw < 2 || !cb.go || cb.first !== 'cerb') e.push('班級排行榜最上面沒有頒獎典禮 3 個獎＋〔🏆 開始頒獎典禮〕：' + JSON.stringify(cb));
+    if (cb.go) { await p.click('#cerGo'); await p.waitForTimeout(5600);
+      const ce = await p.evaluate(() => { const st = document.getElementById('cerst'), q = x => st.querySelector(x), o = [];
+        ['.ribbon', '.sub', '.cls', '.say', '.cpod'].forEach(k => { const el = q(k); if (!el || +getComputedStyle(el).opacity < .95) o.push(k); });
+        const sm = [].filter.call(st.querySelectorAll('.ribbon,.sub,.cls,.say,.cp .cc,.cp .cb'), x => parseFloat(getComputedStyle(x).fontSize) < 26).length;
+        const ov = [].filter.call(st.querySelectorAll('.ribbon,.sub,.cls,.say,.cp'), x => { const r = x.getBoundingClientRect(); return r.left < -1 || r.right > innerWidth + 1 || r.bottom > st.getBoundingClientRect().bottom + 1; }).length;
+        const ra = q('.say') && q('.say').getBoundingClientRect(), rp = q('.cpod') && q('.cpod').getBoundingClientRect();
+        return { on: document.getElementById('cer').classList.contains('on'), rb: q('.ribbon') && q('.ribbon').textContent, cl: q('.cls') && q('.cls').textContent, pod: st.querySelectorAll('.cp:not(.nop)').length, o, sm, ov, hit: ra && rp ? ra.bottom > rp.top + 2 : false, pg: document.getElementById('cpg').textContent }; });
+      if (!ce.on || !/最認真練習|成績最優|進步最多/.test(ce.rb) || !/班/.test(ce.cl) || ce.pod < 1 || ce.o.length) e.push('頒獎典禮沒有演出來（獎名、班級、頒獎台）：' + JSON.stringify(ce));
+      if (ce.sm || ce.ov || ce.hit) e.push('頒獎典禮字太小 ' + ce.sm + '、超出畫面 ' + ce.ov + '、一句話壓到頒獎台 ' + ce.hit);
+      const tot = +ce.pg.split('／')[1]; for (let i = 1; i < tot; i++) { await p.click('#cnx'); await p.waitForTimeout(250); }
+      const fin = await p.evaluate(() => ({ f: document.getElementById('cerst').classList.contains('fin'), a: document.querySelectorAll('#cerst .caw').length, t: document.getElementById('cerst').textContent }));
+      if (!fin.f || fin.a !== cb.nd || /用心/.test(fin.t)) e.push('頒獎典禮最後一頁不是 3 個獎＋每一班的名次：' + JSON.stringify([fin.f, fin.a]));
+      await p.click('#cx'); await p.waitForTimeout(150); if (await p.$('#cer.on')) e.push('〔✕ 關閉〕沒有關掉頒獎典禮'); }
+    n += 5;
   }
   /* 2026-10-09 名單：個人表有「姓名」欄、要關心列出一次都沒做的人 */
   await p.click('#tabs button[data-t="p"]'); await p.waitForTimeout(150);
@@ -362,7 +396,7 @@ async function teacher(br, vp) {
   if (!/全年級名次/.test(pt.th.join()) || /本班名次/.test(pt.th.join())) e.push('個人表還是「本班名次」（D12 ⑥：改全年級名次）');
   if (!/[🔴🟡🟢]/.test(pt.td)) e.push('個人表沒有燈號');
   if (!/高的在上面/.test(pt.th.join())) e.push('排序的那一欄沒有寫「高的在上面」');
-  const z0 = await p.evaluate(() => document.getElementById('app').getBoundingClientRect().height); await p.click('#zi'); await p.waitForTimeout(150);
+  const z0 = await p.evaluate(() => document.getElementById('app').getBoundingClientRect().height); await p.click('#more'); await p.click('#zi'); await p.waitForTimeout(150);
   const z1 = await p.evaluate(() => ({ h: document.getElementById('app').getBoundingClientRect().height, z: localStorage.getItem('tzoom') }));
   if (!(z1.h > z0) || z1.z !== '1.1') e.push('〔A＋〕沒有放大（' + JSON.stringify(z1) + '）');
   await p.click('#zo'); await p.waitForTimeout(150); n += 5;
@@ -371,30 +405,36 @@ async function teacher(br, vp) {
   await p.waitForTimeout(1200); if (process.env.KSHOT) await p.screenshot({ path: process.env.KSHOT + vp[0] + '.png', fullPage: true });   /* 只拍照片 */
   const kk = await p.evaluate(() => {
     const S = [].map.call(document.querySelectorAll('.kcls'), s => ({ h: s.querySelector('h3').textContent,
-      c: [].map.call(s.querySelectorAll('.kc'), c => ({ id: c.querySelector('b').textContent, n: c.querySelector('.kn').textContent, w: c.querySelector('.kw').textContent, k: c.className,
+      c: [].map.call(s.querySelectorAll('.kc'), c => ({ id: c.getAttribute('data-pid'), n: c.querySelector('.kn').textContent.replace(/^\d+\s*/, ''), w: c.querySelector('.kw').textContent + c.querySelector('.kh').textContent, k: c.className,
         r: c.getBoundingClientRect(), o: c.scrollWidth > c.clientWidth + 1, op: +getComputedStyle(c).opacity })) }));
-    return { S: S, lg: !!document.querySelector('.klg'), W: innerWidth };
+    return { S: S, lg: !document.querySelector('.klg') && !!document.getElementById('khelp'), W: innerWidth };
   });
+  await p.click('#khelp'); await p.waitForTimeout(100); if (!await p.$('.klg')) kk.lg = false; await p.click('#khelp');
   const s304 = kk.S.find(s => /^304/.test(s.h));
-  if (!kk.lg) e.push('要關心沒有圖例（🔴🟡🟢⚪）');
+  if (!kk.lg) e.push('要關心的圖例沒有收進〔❓ 顏色怎麼看〕（C 第 12 題 乙）');
   if (!s304) e.push('要關心沒有 304 班的表');
   else {
     const ids = s304.c.map(c => c.id);
     if (ids.join() !== ids.slice().sort().join()) e.push('要關心 304 班不是照座號排');
     if (new Set(ids).size !== ids.length) e.push('要關心 304 班同一個人有兩格');
     const z = s304.c.find(c => c.id === '30430');
-    if (!z || z.n !== '沒做小明' || !/⚪/.test(z.w) || !/nd/.test(z.k)) e.push('要關心：名單上一次都沒做的 30430 沒做小明沒有 ⚪ 那一格');
+    if (!z || z.n !== '沒做小明' || !/還沒做/.test(z.w) || !/nd/.test(z.k)) e.push('要關心：名單上一次都沒做的 30430 沒做小明沒有 ⚪ 那一格');
     if (!/⚪ 還沒做 1/.test(s304.h.replace(/\s+/g, ' '))) e.push('要關心 304 班標題沒有寫「⚪ 還沒做 1」（' + s304.h + '）');
     if (s304.c.some(c => c.id !== '30430' && !/測試\d\d/.test(c.n))) e.push('要關心有做的人沒有姓名');
-    if (s304.c.some(c => !/[🔴🟡🟢⚪]/.test(c.w))) e.push('要關心有格子沒有燈號');
+    if (s304.c.some(c => !/\b(no|md|ok|nd)\b/.test(c.k))) e.push('要關心有格子沒有整格塗燈號的顏色');
   }
   if (kk.S.some(s => s.c.some(c => c.o || c.r.right > kk.W || c.r.height < 52 || c.op < .99))) e.push('要關心的格子超出、太矮、或動畫沒有跑完' + JSON.stringify(kk.S.flatMap(s => s.c).filter(c => c.o || c.r.right > kk.W || c.r.height < 52 || c.op < .99).slice(0, 2).map(c => [c.id, c.w, c.o, Math.round(c.r.right), Math.round(c.r.height), c.op])));
   await p.click('.kc[data-pid="30430"]'); await p.waitForTimeout(200);
   if (!/30430/.test(await p.textContent('#mbox h3').catch(() => ''))) e.push('要關心點一格沒有打開成績卡');
   await p.click('#mx').catch(() => {}); await p.waitForTimeout(100);
   /* 2026-10-15 D 第 8 件：有做的格子多一行「❤獎牌 用心 N」；D12 ⑥〔📊 圖表分析〕：全班整體＋每一個人（要關心的排最前面） */
-  if (s304 && s304.c.some(c => c.id !== '30430' && !/用心 \d+/.test(c.w + ''))) { const kh = await p.$$eval('.kcls .kc:not(.nd) .kh', a => a.length); if (!kh) e.push('要關心的格子沒有「用心 N」'); }
+  if (s304 && s304.c.some(c => c.id !== '30430' && !/練習 \d+/.test(c.w + ''))) { const kh = await p.$$eval('.kcls .kc:not(.nd) .kh', a => a.length); if (!kh) e.push('要關心的格子沒有「📅 練習 N」'); }
   await p.click('[data-km="a"]'); await p.waitForTimeout(1500);
+  /* 2026-10-16 C2 第 2 題：圖表分析一次一班、🔴 那一組打開、其他按 ▾ 才打開 */
+  const kg = await p.evaluate(() => ({ fc: F.cls, cls: document.querySelectorAll('.kcls').length, pick: document.querySelectorAll('.kac button').length, open: [].map.call(document.querySelectorAll('.kgrp'), g => g.classList.contains('open')) }));
+  if (!kg.fc && (kg.cls !== 1 || kg.pick < 2)) e.push('〔📊 圖表分析〕沒有一次一班（' + kg.cls + ' 班、' + kg.pick + ' 顆班級按鈕）');
+  if (kg.open.length && kg.open.filter(x => x).length > 1) e.push('〔📊 圖表分析〕要關心以外的組沒有收起來');
+  await p.evaluate(() => document.querySelectorAll('.kgrp').forEach(g => g.classList.add('open')));
   const ka = await p.evaluate(() => { const S = document.querySelector('.kcls'); return { a4: S ? S.querySelectorAll('.ka4 > div').length : 0, st: S ? S.querySelectorAll('.kst span').length : 0, c5: S ? S.querySelectorAll('.kc5 > div').length : 0,
     g: [].map.call(document.querySelectorAll('.kcls'), s => [].map.call(s.querySelectorAll('.kr:not(.kth)'), r => r.className.replace('kr ', ''))),
     small: [].filter.call(document.querySelectorAll('#pane .ka4 div,#pane .kc5 div,#pane .kr,#pane .kgh,#pane .kst span'), x => x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < (innerWidth >= 1900 ? 22 : 16)).length,
@@ -406,12 +446,16 @@ async function teacher(br, vp) {
   if (ka.over) e.push('〔📊 圖表分析〕有 ' + ka.over + ' 個東西超出螢幕右邊');
   if (ka.mem !== 'a') e.push('〔📊 圖表分析〕沒有記在這台電腦');
   await p.click('.kr:not(.kth):not(.nd)'); await p.waitForTimeout(200);
-  if (!await p.$('#modal.on .care')) e.push('〔📊 圖表分析〕點一個人沒有打開成績卡');
+  if (!await p.$('#modal.on .gcard')) e.push('〔📊 圖表分析〕點一個人沒有打開成績卡');
   await p.click('#mx').catch(() => {}); await p.click('[data-km="g"]'); await p.waitForTimeout(200);
   n += 17;
   /* 個人 ➜ 作廢 */
   await p.click('#tabs button[data-t="p"]'); await p.click('tr.row'); await p.waitForTimeout(150);
   if (!/測試\d\d/.test(await p.textContent('#mbox h3'))) e.push('個人紀錄的標題沒有姓名');
+  /* 2026-10-16 C3／C4 第 3 題 甲：最上面成績卡（🎯 正確、📅 練習、💡 下一步），其他收進〔📋 細節 ▾〕 */
+  const gk = await p.evaluate(() => { const g = document.querySelector('#mbox .gcard'); return { b: g ? g.querySelectorAll('.gbx').length : 0, nx: !!(g && g.querySelector('.gnx')), hid: document.getElementById('pmore') && document.getElementById('pmore').hidden }; });
+  if (gk.b !== 2 || !gk.nx || !gk.hid) e.push('成績卡最上面不是 🎯 正確、📅 練習 兩格＋💡，或細節沒有收起來：' + JSON.stringify(gk));
+  await p.click('#pmb');
   /* 2026-10-12 D 第 3 件：秒懂成績卡（四個大圖、最拿手／要加油、哪幾天有練、每一組的變化、最常錯的 3 題、明細收起來） */
   await p.waitForTimeout(1700);
   const pc = await p.evaluate(() => { const m = document.getElementById('mbox'), T = m.textContent;
@@ -443,12 +487,12 @@ async function teacher(br, vp) {
     tip: c.querySelector('.ctip').classList.contains('on'), cs: /\bcs[1-8]\b/.test(c.className), t: c.querySelector('.ct1').textContent }; });
   if (!cr) e.push('成績卡沒有 ❤ 用心程度');
   else { if (cr.h !== 5 || cr.on !== 5 || !cr.tip || !cr.cs) e.push('成績卡的用心程度動畫沒有演完（' + JSON.stringify(cr) + '）');
-    if (!/^這週 用心程度$/.test(cr.t)) e.push('成績卡用心程度的標題不對：' + cr.t);
+    if (!/^這週 📅 練習$/.test(cr.t)) e.push('成績卡 📅 練習 的標題不對：' + cr.t);
     await p.click('#mbox .chb'); await p.waitForTimeout(1800);
     const hp = await p.evaluate(() => { const P = document.querySelector('#mbox .chp'); return { v: !P.hidden, r: P.querySelectorAll('.chr.on').length, t: P.textContent,
       small: [].filter.call(P.querySelectorAll('.chr b,.chr small,.chk,.chbar em'), x => parseFloat(getComputedStyle(x).fontSize) < (innerWidth >= 1900 ? 20 : 16)).length,
       over: [].filter.call(P.querySelectorAll('*'), x => x.getBoundingClientRect().right > innerWidth + 1).length }; });
-    if (!hp.v || hp.r !== 5 || !/／20/.test(hp.t) || !/(✅ 很用心|💡 請)/.test(hp.t)) e.push('〔📖 說明〕沒有五項（' + hp.r + '）');
+    if (!hp.v || hp.r !== 5 || !/／20/.test(hp.t) || !/(✅ 做到了|💡 請)/.test(hp.t)) e.push('〔📖 說明〕沒有五項（' + hp.r + '）');
     if (hp.small || hp.over) e.push('〔📖 說明〕字太小 ' + hp.small + '、超出 ' + hp.over); }
   n += 5;
   const nb = await p.$$('#pcx:not([disabled])');
@@ -515,7 +559,7 @@ async function teacher(br, vp) {
   await p.click('#mx'); await p.selectOption('#fk', '');
   n += 3;
   /* 學生排行榜 開／關 */
-  await p.click('#bd'); await p.waitForTimeout(200);
+  await p.click('#more'); await p.click('#bd'); await p.waitForTimeout(200);
   if (G.P.BOARDS !== 'off') e.push('按〔學生排行榜〕伺服器沒有關掉');
   await p.click('#bd'); await p.waitForTimeout(200);
   /* ⬇ 一鍵下載 Excel */
@@ -531,7 +575,7 @@ async function teacher(br, vp) {
   /* 2026-10-12 D3-A：沒勾「記住我」不存在這台電腦；〔🚪 登出〕回到密碼畫面；勾了 ➜ 重新打開不用打密碼；登入畫面字夠大 */
   const st = () => p.evaluate(() => ({ ls: localStorage.getItem('tpw7'), app: !document.getElementById('app').hidden }));
   if ((await st()).ls) e.push('沒勾「記住我」卻存進這台電腦');
-  await p.click('#out'); await p.waitForTimeout(200);
+  if (await p.isHidden('#out')) await p.click('#more'); await p.click('#out'); await p.waitForTimeout(200);
   if ((await st()).app) e.push('按〔🚪 登出〕沒有回到密碼畫面');
   await p.reload(); await p.waitForTimeout(400);
   if ((await st()).app) e.push('登出以後重新打開還是進得去');
@@ -794,7 +838,7 @@ async function task(br, vp) {
   const E = await s.evaluate(() => ({ lock: [].map.call(document.querySelectorAll('#grid .gcard.tklock'), c => c.getAttribute('data-g')), t: (document.querySelector('#grid .gcard[data-g="g1"] .sctkc') || {}).textContent || '' }));
   if (E.lock.join() !== 'g1' || !/截止/.test(E.t)) e.push('截止以後：任務裡的要 🔒 已經截止、其他全部開放（' + E.lock + '）');
   /* 老師刪掉 ➜ 又開 */
-  await p.click('#rf'); await p.waitForTimeout(300); await p.click('#tabs button[data-t="t"]'); await p.waitForTimeout(150);
+  if (await p.isHidden('#rf')) await p.click('#more'); await p.click('#rf'); await p.waitForTimeout(300); await p.click('#tabs button[data-t="t"]'); await p.waitForTimeout(150);
   if (!/已經截止/.test(await p.textContent('#pane'))) e.push('老師看板沒有寫「⛔ 已經截止」');
   await p.click('[data-tkd]'); await p.waitForTimeout(300);
   if (G.books['任務'].d.length !== 1) e.push('老師看板刪不掉任務');

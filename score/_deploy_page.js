@@ -58,7 +58,7 @@ module.exports = function (CODE, kind) {
       <a class="big go" href="https://sheets.google.com" target="_blank" rel="noopener">🌐 打開 Google 試算表</a>` },
     { t: '按最下面的「名單」分頁', m: `
       <div class="win"><div class="lines">　</div><div class="menu"><span>紀錄</span><span>班級人數</span><span class="hot" data-tap="1" data-say="最下面這一排">名單</span></div></div>`,
-      tip: '沒有「名單」？按左下角 ＋，改名「名單」，第一列打：班級　座號　姓名' },
+      tip: '名單已經貼好了：第 2、3 步直接按〔下一步〕' },   /* 2026-10-17：老師已經貼過名單，這一次只要換程式（第一次部署的說明在 deploy.html） */
     { t: '點最後一個人的下一列，貼上別班的名單', m: `
       <div class="win"><div class="code"><div class="file">名單</div>
         <div class="lines">304　　24　　（最後一個）<br><span class="hot" data-tap="1" data-say="① 點下一列的 A">307</span>　　1　　　（名字）</div></div></div>

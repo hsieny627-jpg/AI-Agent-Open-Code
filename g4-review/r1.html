@@ -1231,6 +1231,19 @@ body.scq .url{display:none}
 .care.cs8 .chc.on .chw::before{content:'⭐';position:absolute;left:50%;top:-10px;font-size:28px;margin-left:-.5em;animation:cstar .6s ease-in forwards}
 @keyframes cstar{from{transform:translateY(-70px) scale(1.4)}to{transform:translateY(30px) scale(.3);opacity:0}}
 @media (prefers-reduced-motion:reduce){.care *{animation:none!important;transition:none!important}.care .chr{opacity:1;transform:none}}
+
+/* 成績卡（2026-10-16 C3／C4 第 3 題 甲、C5「1 乙」）：🎯 正確、📅 練習 兩大格＋💡 下一步（老師看板、學生平板同一張） */
+.gcard{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0;width:100%}
+.gbx{border-radius:20px;padding:10px 14px;border:3px solid;text-align:center;animation:gpop .5s cubic-bezier(.2,1.5,.4,1) both}
+.gbx.gac{border-color:#3BD16F;background:#0D1B12}.gbx.gpr{border-color:#7FD4FF;background:#0A1822;animation-delay:.15s}
+.gk{font-size:clamp(22px,2.2vw,34px);font-weight:700;color:#EDEDED}
+.gv{font-size:clamp(48px,6vw,88px);font-weight:700;line-height:1.1;color:#fff;display:flex;align-items:baseline;justify-content:center;gap:.25em;flex-wrap:wrap}
+.gup{font-size:.42em;color:#5BE39A}.gsm{font-size:.36em;color:#CFE3F5}
+.gnx{grid-column:1/-1;font-size:clamp(24px,2.4vw,38px);font-weight:700;color:#FFE07A;background:#2A2208;border:3px dashed #FFD54A;border-radius:16px;padding:6px 12px;text-align:center}
+@keyframes gpop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.gbx{animation:none}}
+.scn .gcard{width:min(760px,92vw);margin:0 auto 4px}.scn .gcard .gv{font-size:clamp(34px,6vh,64px)}.scn .gcard .gk{font-size:clamp(20px,3vh,30px)}.scn .gbx{padding:4px 10px}
+.scn .gcard~#scCare .ct1,.scn .gcard~#scCare .csum{display:none}
 #bar a.rvhome{border:3px solid #FFD54A!important;background:#221B05!important;color:#FFE9A8!important;font-weight:700;font-size:clamp(18px,2.6vh,22px)!important;min-height:48px;display:inline-flex;align-items:center}
 
 </style>
@@ -2623,6 +2636,8 @@ function sentOf(){
 /* 唸整張卡，念到哪個字那個字就亮（使用者 2026-09-24 指定） */
 function sayCard(opt){
   opt=opt||{};
+  if(typeof scHeard==='function'){var hdI=i,hdC=CARDS,hdD=opt.done;opt=Object.assign({},opt,{done:function(){
+    if(i===hdI&&CARDS===hdC)scHeard(hdKey(),i,CARDS.length,hdName());if(hdD)hdD()}})}
   var c=CARDS[i], A=function(sel){return $$(sel,card)};
   if(c.type==='swap')capPop($('#cardIn .line .tk'));   /* 2026-10-10 第 3 點 C：中英語序分頁的變身術也提醒大寫 */
   if(c.type==='sent'||c.type==='swap'||c.type==='swapdemo'){var bv=c.type==='sent'?boyV(plain(c.tk)):undefined;sayEls(A('#cardIn .line .tk'),bv?Object.assign({},opt,{v:bv}):opt);return}
@@ -3198,21 +3213,22 @@ var HON=(function(){
   var CLK='<svg class="hclk" viewBox="0 0 100 100" aria-label="時鐘"><circle cx="50" cy="50" r="44" fill="#FFF8E6" stroke="#FFB300" stroke-width="8"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00" transform="rotate(90 50 50)"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00" transform="rotate(180 50 50)"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00" transform="rotate(270 50 50)"/><rect x="47" y="24" width="6" height="28" rx="3" fill="#333"/><rect class="hclkm" x="47" y="34" width="6" height="18" rx="3" fill="#D84315" transform="rotate(60 50 50)"/><circle cx="50" cy="50" r="6" fill="#333"/></svg>';
   /* 三種最高榮譽（使用者 2026-10-12 D6～D8 定案）：學生平板、老師投影、印獎狀、老師看板的字一模一樣，只寫在這裡 */
   /* 2026-10-15 D 第 8 件：第 4 種最高榮譽「最用心」（老師 D9 第 1 題 A＋B、D12 ④） */
-  var AWK=['sec','acc','prog','care'],AWN={sec:'最認真練習',acc:'成績最優',prog:'進步最多',care:'最用心'};
+  /* 2026-10-16 老師 C5「1 乙、3 A」：用心 和 練習 整個合併成「📅 練習」，❤ 最用心 拿掉，回到 3 種（care 只剩老師看板的「📅 練習分數」） */
+  var AWK=['sec','acc','prog'],AWN={sec:'最認真練習',acc:'成績最優',prog:'進步最多'};
   /* 自己畫的圖示（老師 D10 第 2、3 題 A）：獎牌上面有愛心 ＝ 最用心；眼睛＋耳朵 ＝ 看完、聽完 才選；紅 ✗ ➜ 綠 ✓ ＝ 答錯的 改對了 */
-  var HRT='<svg class="hhrt" viewBox="0 0 120 150" aria-label="最用心"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="#FFC928"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path d="M60 122C30 102 34 74 48 72C55 71 59 76 60 80C61 76 65 71 72 72C86 74 90 102 60 122Z" fill="#E8453C" stroke="#FFFDF0" stroke-width="4" stroke-linejoin="round"/></svg>';
+  var HRT='<svg class="hhrt" viewBox="0 0 120 150" aria-label="練習"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="#FFC928"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path d="M60 122C30 102 34 74 48 72C55 71 59 76 60 80C61 76 65 71 72 72C86 74 90 102 60 122Z" fill="#E8453C" stroke="#FFFDF0" stroke-width="4" stroke-linejoin="round"/></svg>';
   var EYE='<svg class="heye" viewBox="0 0 200 100" aria-label="看完、聽完"><path d="M8 50Q50 6 92 50Q50 94 8 50Z" fill="#fff" stroke="#333" stroke-width="5"/><circle cx="50" cy="50" r="17" fill="#2F7BE8"/><circle cx="50" cy="50" r="8" fill="#111"/><circle cx="55" cy="44" r="4" fill="#fff"/><path d="M122 52C118 14 182 8 186 46C188 70 162 70 160 88C158 100 138 100 134 88" fill="#FFD3B0" stroke="#B86B3C" stroke-width="6" stroke-linecap="round"/><path d="M142 48C142 30 168 28 168 46C168 58 154 56 154 68" fill="none" stroke="#B86B3C" stroke-width="6" stroke-linecap="round"/></svg>';
   var FIX='<svg class="hfix" viewBox="0 0 200 100" aria-label="答錯的改對了"><circle cx="38" cy="50" r="32" fill="#E8453C"/><path d="M26 38l24 24M50 38L26 62" stroke="#fff" stroke-width="9" stroke-linecap="round"/><path d="M80 50h34" stroke="#FFD54A" stroke-width="9" stroke-linecap="round"/><path d="M108 36l16 14-16 14z" fill="#FFD54A"/><circle cx="162" cy="50" r="32" fill="#2EB85C"/><path d="M146 51l11 11 21-23" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function mn(sec){sec=Math.round(+sec||0);return sec<60?sec+' 秒':Math.round(sec/60)+' 分鐘'}
   function f1(v){return Math.round(v*10)/10}
   /* 個人獎下面那一句：per ＝ 這週／上週／這學期／這段期間；p ＝ {sec, acc, pf, pt} */
-  function awl(k,p,per){return k==='care'?'用心程度 '+Math.round(+p.care||0)+' 分':k==='sec'?(per||'這週')+' 練習 '+mn(p.sec):k==='acc'?'正確率 '+f1(p.acc)+' 分：每一題都看清楚才選。':
+  function awl(k,p,per){return k==='care'?'練習分數 '+Math.round(+p.care||0)+' 分':k==='sec'?(per||'這週')+' 練習 '+mn(p.sec):k==='acc'?'正確率 '+f1(p.acc)+' 分：每一題都看清楚才選。':
     (p.pf!=null&&p.pt!=null?'正確率從 '+p.pf+' 分進步到 '+p.pt+' 分（多了 '+(p.pt-p.pf)+' 分）。':'正確率進步 '+f1(p.prog)+' 分。')}
   /* 班級獎下面那一句：v ＝ 那一種的數字（練習時間 ＝ 平均每一個人幾秒） */
-  function awc(k,v){return k==='care'?'平均每一個人 用心程度 '+Math.round(+v||0)+' 分':k==='sec'?'平均每一個人 練習 '+mn(v):k==='acc'?'平均正確率 '+f1(v)+' 分':'平均每一個人 正確率進步 '+f1(v)+' 分'}
+  function awc(k,v){return k==='care'?'平均每一個人 練習分數 '+Math.round(+v||0)+' 分':k==='sec'?'平均每一個人 練習 '+mn(v):k==='acc'?'平均正確率 '+f1(v)+' 分':'平均每一個人 正確率進步 '+f1(v)+' 分'}
   function awi(k){return k==='sec'?EFF:k==='prog'?UP:k==='care'?HRT:'🎯'}
   /* 獎狀那一行（老師 D11 第 2 題 甲、第 3 題 A：四種都一樣精簡） */
-  function aws(k,p,per){return k==='care'?'用心程度 '+Math.round(+p.care||0)+' 分':k==='sec'?(per||'這週')+' 練習 '+mn(p.sec):k==='acc'?'正確率 '+f1(p.acc)+' 分':
+  function aws(k,p,per){return k==='care'?'練習分數 '+Math.round(+p.care||0)+' 分':k==='sec'?(per||'這週')+' 練習 '+mn(p.sec):k==='acc'?'正確率 '+f1(p.acc)+' 分':
     (p.pf!=null&&p.pt!=null?'從 '+p.pf+' 分 進步到 '+p.pt+' 分':'正確率 進步 '+f1(p.prog)+' 分')}
   /* 進步：綠色粗箭頭（跟老師看板同一個） */
   var UP='<svg class="hup" viewBox="0 0 40 48" aria-label="進步"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg>';
@@ -3266,11 +3282,11 @@ var HON=(function(){
     drum:function(d){d=d||1.4;for(var t=0;t<d;t+=.06)noise(t,.05,.12+.2*t/d,180);noise(d,.7,.35,4000)},
     clap:function(d){d=d||2.2;for(var i=0;i<70;i++)noise(Math.random()*d,.05,rnd(.05,.16),rnd(900,2400))},
     ding:function(){tone(1319,0,.5,'sine',.12);tone(1760,.08,.6,'sine',.08)}};
-  /* ══ ❤ 這週 用心程度（2026-10-15 D 第 8 件；老師 D12 ③ 甲「五顆愛心 裝滿」＋「每一次都不一樣風格」＋〔📖 說明〕）══
+  /* ══ 📅 這週 練習（原本叫「❤ 這週 用心程度」，2026-10-16 老師 C5「1 乙、4 A」：愛心造型留著、標題改「📅 練習」；2026-10-15 D 第 8 件；老師 D12 ③ 甲「五顆愛心 裝滿」＋「每一次都不一樣風格」＋〔📖 說明〕）══
      一顆愛心 ＝ 一項 ＝ 20 分，五顆裝滿 ＝ 100 分；數字從 0 加上去；裝滿的愛心會笑、會跳；最少的那一顆空的地方閃金光＋那一項的圖示搖＋「💡 請 …」。
      8 種風格（CST）輪流、跟上一次不一樣（pick 同一套洗牌）；〔📖 說明〕＝ 五項一條一條：做了什麼、幾分、✅ 很用心／💡 可以更好 */
   var CI=['<span class="cem">📅</span>','<span class="cem">📝</span>',EYE,FIX,CLK.replace('class="hclk"','class="hclk cclk"')];
-  var CN=['這週 練了 幾天','做完 幾次 題目、遊戲','看完、聽完 才選','答錯的 改對了','這週 練習 幾分鐘'];
+  var CN=['這週 練了 幾天','做完 幾次（題目、遊戲、聽完字卡）','看完、聽完 才選','答錯的 改對了','這週 練習 幾分鐘'];
   var CF=['4 天','5 次','太快亂按 0 題','全部改對','30 分鐘'];
   var CT=['請 再多練 1 天','請 再做完 1 次','請 看完、聽完 再選','請 把答錯的 再做一次','請 再多練 幾分鐘'];
   var CC=['#2F7BE8','#9B59D0','#00A6A6','#2EB85C','#FF9F1C'];
@@ -3296,7 +3312,7 @@ var HON=(function(){
   function cscene(el,st,c,o){o=o||{};var S=CST[st]||CST[0],u=++CUID,w=cweak(c),RD=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,G=RD?0:800;
     el.className='care cs'+(st+1);
     el.innerHTML='<div class="cbg"></div><div class="hfx cfx"></div><svg class="cecg" viewBox="0 0 1000 100" preserveAspectRatio="none"><path d="M0 60H180L210 20L240 95L270 60H380L410 20L440 95L470 60H580L610 20L640 95L670 60H780L810 20L840 95L870 60H1000"/></svg>'+
-      '<div class="ct1">'+(o.t||'這週 用心程度')+'</div><div class="csum"><b class="cn">0</b><span> ／100</span></div>'+
+      '<div class="ct1">'+(o.t||'這週 📅 練習')+'</div><div class="csum"><b class="cn">0</b><span> ／100</span></div>'+
       '<div class="crow">'+c.it.map(function(v,k){return heart(k,v,u)}).join('')+'</div><div class="cnote">❤ 1 顆 裝滿 ＝ 20 分</div>'+
       '<div class="ctip">'+(w<0?'🎉 五顆 都裝滿了！':'💡 '+CT[w])+'</div>'+
       (o.help?'<button class="chb" type="button">📖 說明</button><div class="chp" hidden></div>':'');
@@ -3311,15 +3327,23 @@ var HON=(function(){
     if(o.help){var b=el.querySelector('.chb'),P=el.querySelector('.chp');b.onclick=function(){var on=P.hidden;P.hidden=!on;b.textContent=on?'✕ 收起說明':'📖 說明';b.classList.toggle('on',on);
       if(on){P.innerHTML=chelp(c);if(o.onHelp)o.onHelp();setTimeout(function(){[].forEach.call(P.querySelectorAll('.chr'),function(r){r.classList.add('on')})},30)}}}
   }
+  /* ══ 成績卡（2026-10-16 老師 C3 第 3 題 甲＋C4 第 3 題 甲、3-2 A＋C5「1 乙」）：🎯 正確、📅 練習 兩大格＋💡 下一步；
+     老師看板（下面接〔📋 細節 ▾〕）和學生平板（沒有細節、沒有姓名）同一張。p ＝ {acc, prog, keep}、c ＝ care() ══ */
+  var CTS=['多練 1 天','再做完 1 次','聽完再選','答錯的再做一次','多練幾分鐘'];
+  function card(p,c,o){p=p||{};o=o||{};var w=c?cweak(c):-1,r=(c&&c.raw)||{};
+    var pg=p.prog!=null&&p.prog>0?'<span class="gup">⬆ '+f1(p.prog)+'</span>':p.keep?'<span class="gup">🔥 滿分</span>':'';
+    return '<div class="gcard"><div class="gbx gac"><div class="gk">🎯 正確</div><div class="gv">'+(p.acc==null?'—':f1(p.acc))+pg+'</div></div>'+
+      '<div class="gbx gpr"><div class="gk">📅 練習</div><div class="gv">'+(c?c.tot:0)+'<span class="gsm">'+(r.days||0)+'天 '+(r.count||0)+'次</span></div></div>'+
+      (c&&!o.notip?'<div class="gnx">'+(w<0?'🎉 五項都滿分':'💡 '+CTS[w])+'</div>':'')+'</div>'}
   function cstop(el){if(el&&el._ct)el._ct.forEach(clearTimeout)}
   /* 〔📖 說明〕：五項一條一條（圖示、名字、做了什麼、長條 N／20、✅ 很用心 或 💡 怎麼更好） */
   function chelp(c){var d=cdid(c);
     return '<div class="chh">5 項 ✕ 20 分 ＝ 100 分</div>'+c.it.map(function(v,k){var ok=v>=20;
       return '<div class="chr'+(ok?' ok':'')+'" style="transition-delay:'+(k*.25).toFixed(2)+'s"><span class="chi">'+CI[k]+'</span><span class="chn"><b>'+CN[k]+'</b><small>你：'+d[k]+'　滿分：'+CF[k]+'</small></span>'+
         '<span class="chbar"><i style="width:'+(v*5)+'%;background:'+CC[k]+';transition-delay:'+(.3+k*.25).toFixed(2)+'s"></i><em>'+v+'／20</em></span>'+
-        '<span class="chk">'+(ok?'✅ 很用心':'💡 '+CT[k])+'</span></div>'}).join('')}
+        '<span class="chk">'+(ok?'✅ 做到了':'💡 '+CT[k])+'</span></div>'}).join('')}
   return {EFF:EFF,UP:UP,CLK:CLK,HRT:HRT,EYE:EYE,FIX:FIX,AWK:AWK,AWN:AWN,mn:mn,awl:awl,awc:awc,awi:awi,aws:aws,ST:ST,pick:pick,scene:scene,fx:fx,snd:snd,ac:ac,
-    CST:CST,CN:CN,CT:CT,cpick:cpick,cscene:cscene,cstop:cstop,chelp:chelp,cweak:cweak,cdid:cdid};
+    CST:CST,CN:CN,CT:CT,CTS:CTS,card:card,cpick:cpick,cscene:cscene,cstop:cstop,chelp:chelp,cweak:cweak,cdid:cdid};
 })();
 
 /* ══════════ 成績紀錄（2026-10-07 對話 C；2026-10-08 對話 D：遊戲、Review 1 也記）══════════
@@ -3568,7 +3592,8 @@ function scScene(){
       h=scTimeHTML(E)+(last?SCH.btns(E):nav());if(!last&&E.tgo)SCAUTO=setTimeout(scNext,4200)}   /* 還在送就等（送到或確定沒網路會再畫一次） */
   }else if(nm==='care'){
     if(!scCareOf(E)){L.splice(k,1);E.k=Math.min(k,L.length-1);scScene();return}   /* 沒有網路、伺服器還沒回 ＝ 不演 */
-    h='<div id="scCare"></div>'+(last?SCH.btns(E):nav());
+    /* 2026-10-16 C4 第 3-2 題 A：學生平板也看成績卡（🎯 正確、📅 練習；沒有姓名、沒有〔📋 細節〕），下面接 📅 練習 動畫 */
+    var ME=E.res.me;h=HON.card({acc:ME.acc,prog:ME.prog,keep:ME.keep},ME.care,{notip:1})+'<div id="scCare"></div>'+(last?SCH.btns(E):nav());
     if(!last)SCAUTO=setTimeout(scNext,7600);
   }else if(nm==='honor'){
     h='<div class="hon" id="scHon"></div>'+(last?SCH.btns(E):nav());
@@ -3769,6 +3794,16 @@ function scVwAct(){var V=SCVW,n=Date.now();if(!V)return;
 function scVwSave(){var V=SCVW;if(!V||!V.id)return;var sec=Math.round(V.acc/1000),id=V.id;V.acc=0;if(V.id!==SCID)V.id=null;if(sec<1)return;
   var QQ=scGet('q')||[];QQ.push({id:id,set:'g'+String(id).charAt(0)+'v_'+V.a,name:V.nm,m:'v',qs:[],sec:Math.min(3600,sec),src:SCSRC,dev:SCDEV,
     u:id+Date.now().toString(36)+Math.random().toString(36).slice(2,6),t:Date.now()});scPut('q',QQ.slice(-200));scFlush()}
+/* ══ 🎧 聽完字卡（2026-10-16 老師 C4 第 6 題 A、6-2 A、C5「1 乙」：算進 📅 練習）══
+   只有在家複習（SCSRC home）、登入（不是 👀 先練習）才記。頁面在「一張卡的單字和句子從頭到尾唸完」時呼叫 scHeard(站, 第幾張, 這一站幾張, 名字)；
+   一站每一張都聽完 ＝ 送一筆 m:'l'（代號 g年級l_站）＝ 練習次數 ＋1、那一天算練了 1 天（同一站一天最多 3 次由 _calc.js 的 CAP 管）。
+   聽完哪幾張記在這台平板（score_hd：哪一天、誰、每一站），換一天、換一個人就重來；送出以後那一站重來（再聽完一輪才再 ＋1） */
+function scHeard(st,k,n,nm){if(!SCON||!SCID||SCGUEST||SCSRC!=='home'||!(n>0)||!/^[\w-]{1,16}$/.test(st))return;
+  var d=Math.floor((Date.now()+288e5)/864e5),H=scGet('hd');if(!H||H.d!==d||H.id!==SCID||!H.s)H={d:d,id:SCID,s:{}};
+  var a=H.s[st]=H.s[st]||[];if(a.indexOf(k)<0)a.push(k);
+  if(a.length>=n){H.s[st]=[];var QQ=scGet('q')||[];QQ.push({id:SCID,set:'g'+String(SCID).charAt(0)+'l_'+st,name:nm||'🎧 聽完字卡',m:'l',qs:[],sec:0,src:SCSRC,dev:SCDEV,
+    u:SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6),t:Date.now()});scPut('q',QQ.slice(-200));scFlush()}
+  scPut('hd',H)}
 /* 首頁的橫幅（只有首頁有 #scbar） */
 function scBar(){var b=document.getElementById('scbar');if(!b)return;document.body.classList.toggle('scq',!!(SCON&&SCID&&!scAsked()));
   if(!SCON){b.innerHTML='';b.hidden=true;return}b.hidden=false;
@@ -3806,6 +3841,8 @@ SCH={on:function(){return $('#rv').classList.contains('on')},open:function(){$('
  btns:function(){return '<div class="rvbtns">'+(MISSLOG.length?'<button id="rvMissBtn">📌 答錯整理</button>':'')+
    '<button class="go" id="rvAgain">🔁 再玩一次</button><button id="rvBack">📚 換一組</button><button id="rvClose">⬅ 回卡片</button></div>'}};
 scViewOn(SCRV,'👀 Review 1 字卡');   /* 看字卡、按 🔊 也算練習時間（2026-10-15 D 第 8 件） */
+function hdKey(){return 'r1s'}
+function hdName(){return '🎧 聽完字卡 Review 1 句型卡'}
 
 
 </script>

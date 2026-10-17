@@ -13,10 +13,15 @@
  *   🏆 榮譽（使用者 2026-10-12 D6～D8 定案）只有三種：最認真練習 ＝ 練習時間最多（sec）、成績最優 ＝ 正確率（acc，同分比總分）、進步最多（prog）；
  *                        個人 ＝ 班內前 10 名、全年級前 10 名；班級 ＝ 同年級的班互相比（平均每一個人）。做完幾乎都拿得到的小獎全部拿掉
  *   📅 天天練             這段期間有練的天數
- *   ❤ 用心程度（使用者 2026-10-15 D10～D12 定案）五項，每項最多 20 分，加起來最多 100 分（care）：
+ *   📅 練習分數（2026-10-16 老師 C5「1 乙」：原本的「❤ 用心程度」整個合併成「📅 練習」，❤ 用心這兩個字全網站拿掉；程式裡還叫 care）
+ *                        五項，每項最多 20 分，加起來最多 100 分（care）：
  *                        📅 這週 練了 幾天（4 天以上 20，少 1 天 −5）｜📝 做完 幾次 題目、遊戲（練習次數，5 次以上 20，少 1 次 −4）｜
  *                        看完、聽完 才選（太快亂按 0 題 20，每多 5% −4）｜答錯的 改對了（全部改對或沒有答錯 20，改對幾成 ＝ 20 ✕ 幾成）｜
- *                        這週 練習 幾分鐘（30 分鐘以上 20，照比例）；這週 沒有作答 ＝ 第 3、4 項 0 分。第 4 種最高榮譽「最用心」（同分比練習時間）
+ *                        這週 練習 幾分鐘（30 分鐘以上 20，照比例）；這週 沒有作答 ＝ 第 3、4 項 0 分。
+ *                        ~~第 4 種最高榮譽「最用心」~~ ➜ 2026-10-16 C5 第 3 題 A 拿掉，最高榮譽回到 3 種（最認真練習 照舊比分鐘：C5 第 2 題 A）
+ *   🎧 聽完字卡（m:'l'，2026-10-16 C4 第 6 題 A、6-2 A、C5「1 乙」）在家複習的字卡：一張卡的單字和句子從頭到尾唸完 ＝ 聽 1 次；
+ *                        一站（一組卡）每一張都聽完 ＝ 學生端送一筆（代號 g年級l_站）＝ 練習次數 ＋1（同一站一天最多 3 次，跟題目一樣用 CAP）；
+ *                        那一天有一筆 ＝ 練了 1 天。不算正確率、總分、進步、練習時間（時間已經在 👀 看字卡裡）
  *   👀 看字卡（m:'v'，使用者 2026-10-15 D12 ②）句型卡、Review 1 頁、在家複習的每一頁：登入才記；兩次點之間最多算 2 分鐘、3 分鐘沒點不算、換分頁不算；
  *                        只加進「練習時間」（最認真練習、時鐘、用心程度第 5 項），不算練了幾天、不算練習次數、不算正確率
  *   班際（G2-A）          練習次數、練習時間 ＝ 全班加起來 ÷ 全班人數（班級人數 ＞ 名單人數 ＞ 有做的人）；每一班都有自己最強的一項（clsAwards）
@@ -56,8 +61,9 @@ var SC = (function () {
   var CI = {}; for (var ci = 0; ci < COLS.length; ci++) CI[COLS[ci]] = ci;
   var SEAT = 30;                                                     /* 座號 01～30（使用者 2026-10-09） */
   var DAY = 864e5, TZ = 8 * 36e5, CAP = 3, TOP = 10, GMIN = 6;
-  var MT = { q: '題目', g: '遊戲', mem: '記憶配對', v: '看字卡' }, TM = { '題目': 'q', '遊戲': 'g', '記憶配對': 'mem', '看字卡': 'v' };
-  var SETRE = /^g([34])(u\d{1,2}|gm|r\d{1,2}|v)_[\w-]{1,16}$/;
+  var MT = { q: '題目', g: '遊戲', mem: '記憶配對', v: '看字卡', l: '聽完字卡' }, TM = { '題目': 'q', '遊戲': 'g', '記憶配對': 'mem', '看字卡': 'v', '聽完字卡': 'l' };
+  var SETRE = /^g([34])(u\d{1,2}|gm|r\d{1,2}|v|l)_[\w-]{1,16}$/;
+  function noQ(m) { return m === 'mem' || m === 'v' || m === 'l'; }   /* 沒有題目（沒有正確率、總分） */
   /* 題組代號 ➜ 類別（老師看板的篩選）：u ＝ 📝 複習題、gm ＝ 🎮 遊戲、r1 ＝ 📘 Review 1 */
   function cat(set) {
     var m = SETRE.exec(String(set)); if (!m) return { k: '', t: '' };
@@ -65,6 +71,7 @@ var SC = (function () {
     if (x.charAt(0) === 'u') return { k: 'tq', t: '📝 複習題' };
     if (x === 'gm') return { k: 'game', t: '🎮 遊戲' };
     if (x === 'v') return { k: 'v', t: '👀 看字卡' };
+    if (x === 'l') return { k: 'l', t: '🎧 聽完字卡' };
     return { k: x, t: '📘 Review ' + x.slice(1) };
   }
 
@@ -80,9 +87,9 @@ var SC = (function () {
     return { id: id, g: gg, cls: c, seat: s };
   }
   /* 練習次數 ＋1 嗎（2026-10-12 F4）：做完就算；太快亂按超過一半不算；遊戲還要第一次作答 ≧ GMIN 題；記憶配對 ＝ 玩完整場就算（ok 留著給舊的呼叫） */
-  function counts(ok, n, m, fast) { if (m === 'v') return false; if (m === 'mem') return true; if (m === 'g' && n < GMIN) return false; return n > 0 && (+fast || 0) * 2 <= n; }
+  function counts(ok, n, m, fast) { if (m === 'v') return false; if (m === 'mem' || m === 'l') return true; if (m === 'g' && n < GMIN) return false; return n > 0 && (+fast || 0) * 2 <= n; }
   /* 一筆紀錄練了幾秒 */
-  function secOf(r) { if (r.m === 'mem' || r.m === 'v') return +r.sec || 0; if ((+r.fast || 0) * 2 > r.n) return 0;
+  function secOf(r) { if (r.m === 'l') return 0; if (r.m === 'mem' || r.m === 'v') return +r.sec || 0; if ((+r.fast || 0) * 2 > r.n) return 0;
     var s = 0; for (var i = 0; i < (r.qs || []).length; i++) if (!r.qs[i][3]) s += +r.qs[i][2] || 0; return s; }
   function need(n) { return Math.ceil(n * 2 / 3); }                     /* 至少要對幾題 */
   function day(t) { return Math.floor((t + TZ) / DAY); }
@@ -112,7 +119,7 @@ var SC = (function () {
   }
   function toRow(R) {
     var o = { '時間': new Date(R.t), '5碼': R.id, '年級': R.g, '班級': R.cls, '座號': R.seat, '類別': cat(R.set).t, '題組': R.set, '題組名稱': R.name,
-      '玩法': MT[R.m], '題數': R.m === 'mem' || R.m === 'v' ? '' : R.n, '答對': R.m === 'mem' || R.m === 'v' ? '' : R.ok, '正確率': R.acc == null ? '' : R.acc, '總分百分制': R.s == null ? '' : R.s,
+      '玩法': MT[R.m], '題數': noQ(R.m) ? '' : R.n, '答對': noQ(R.m) ? '' : R.ok, '正確率': R.acc == null ? '' : R.acc, '總分百分制': R.s == null ? '' : R.s,
       '訂正成功': R.fix || 0, '配對': R.m === 'mem' ? R.mp : '', '翻錯': R.m === 'mem' ? R.mw : '', '秒數': R.sec || '', '原始分數': R.raw, '秒按': R.fast,
       '來源': R.src, '平板': R.dev, '編號': R.u, '每題': JSON.stringify(R.qs), '作廢': false };
     return COLS.map(function (k) { return o[k]; });
@@ -123,9 +130,9 @@ var SC = (function () {
   function clean(o, now) {
     var c = checkId(o.id); if (c.err) return null;
     var set = String(o.set), sm = SETRE.exec(set); if (!sm || +sm[1] !== c.g) return null;   /* 題組的年級 ＝ 登入的年級 */
-    var m = o.m === 'g' || o.m === 'mem' || o.m === 'v' ? o.m : 'q', qs = o.qs || [];
-    if ((m === 'v') !== (sm[2] === 'v')) return null;   /* 看字卡只能用 g年級v_ 的代號 */
-    if (m === 'mem' || m === 'v') qs = [];
+    var m = o.m === 'g' || o.m === 'mem' || o.m === 'v' || o.m === 'l' ? o.m : 'q', qs = o.qs || [];
+    if ((m === 'v') !== (sm[2] === 'v') || (m === 'l') !== (sm[2] === 'l')) return null;   /* 看字卡只能用 g年級v_、聽完字卡只能用 g年級l_ 的代號 */
+    if (noQ(m)) qs = [];
     else if (!qs.length || qs.length > (m === 'g' ? 150 : 10)) return null;
     var Q = [];
     for (var i = 0; i < qs.length; i++) { var q = qs[i];
@@ -134,8 +141,8 @@ var SC = (function () {
     var ok = 0, f = 0; for (i = 0; i < Q.length; i++) { ok += Q[i][0]; f += Q[i][3]; }
     var t = +o.t; if (!(t > now - 30 * DAY && t < now + 5 * 6e4)) t = now;   /* 平板時間不對就用伺服器時間；沒網路補送的照當時 */
     return { t: t, id: c.id, g: c.g, cls: c.cls, seat: c.seat, set: set, name: String(o.name || '').slice(0, 60), m: m, n: Q.length, ok: ok,
-      acc: m === 'mem' || m === 'v' ? null : Math.round(ok / Q.length * 100), s: m === 'mem' || m === 'v' ? null : s100(Q), fix: lim(o.fix, 0, 999),
-      mp: m === 'mem' ? lim(o.mp, 0, 999) : 0, mw: m === 'mem' ? lim(o.mw, 0, 9999) : 0, sec: lim(o.sec, 0, 3600),
+      acc: noQ(m) ? null : Math.round(ok / Q.length * 100), s: noQ(m) ? null : s100(Q), fix: lim(o.fix, 0, 999),
+      mp: m === 'mem' ? lim(o.mp, 0, 999) : 0, mw: m === 'mem' ? lim(o.mw, 0, 9999) : 0, sec: m === 'l' ? 0 : lim(o.sec, 0, 3600),
       raw: lim(o.raw, 0, 1e8), fast: f,
       src: o.src === 'home' ? 'home' : 'school', dev: String(o.dev || '').replace(/[^\w]/g, '').slice(0, 12), u: String(o.u || '').replace(/[^\w]/g, '').slice(0, 24), qs: Q, x: false };
   }
@@ -152,10 +159,11 @@ var SC = (function () {
   function students(rs) {
     var by = {}, ids = [];
     rs.slice().sort(function (a, b) { return a.t - b.t; }).forEach(function (r) {
-      var p = by[r.id]; if (!p) { p = by[r.id] = { id: r.id, g: r.g, cls: r.cls, seat: r.seat, sets: {}, all: 0, last: 0, fastQ: 0, q: 0, fix: 0, sec: 0, vsec: 0, dd: {}, nd: 0, wk: {}, W: 0, F: 0 }; ids.push(r.id); }
+      var p = by[r.id]; if (!p) { p = by[r.id] = { id: r.id, g: r.g, cls: r.cls, seat: r.seat, sets: {}, all: 0, last: 0, fastQ: 0, q: 0, fix: 0, sec: 0, vsec: 0, lc: 0, dd: {}, nd: 0, wk: {}, W: 0, F: 0 }; ids.push(r.id); }
       if (r.m === 'v') { p.sec += secOf(r); p.vsec += secOf(r); return; }   /* 👀 看字卡：只加練習時間 */
       (p.sets[r.set] = p.sets[r.set] || []).push(r); p.all++; p.last = r.t; p.fastQ += r.fast; p.q += r.n; p.fix += r.fix || 0; p.sec += secOf(r);
       var d0 = day(r.t); if (!p.dd[d0]) { p.dd[d0] = 1; p.nd++; }
+      if (r.m === 'l') { p.lc++; return; }   /* 🎧 聽完字卡：算天數、練習次數（下面照題組一天最多 3 次） */
       /* 答錯的 改對了：題目 ＝ 同一題（題組＃第幾題）錯過、後來又答對；遊戲 ＝ 第一次答錯幾題、✨ 訂正成功幾題；太快亂按超過一半的那一次不算 */
       if (r.fast * 2 > r.n) return;
       if (r.m === 'g') { var bad = r.n - r.ok; p.W += bad; p.F += Math.min(bad, r.fix || 0); return; }
@@ -173,10 +181,11 @@ var SC = (function () {
       var acc = mean(A), s = mean(S), pr = mean(D);
       return { id: id, g: p.g, cls: p.cls, seat: p.seat, acc: acc == null ? null : r1(acc), s: s == null ? null : r1(s), count: cnt,
         prog: pr == null ? null : r1(pr), pf: pr == null ? null : Math.round(mean(PF)), pt: pr == null ? null : Math.round(mean(PT)), keep: keep && pr == null ? true : keep, sets: nsets, all: p.all, last: p.last, fastQ: p.fastQ, q: p.q, fix: p.fix,
-        sec: Math.round(p.sec), vsec: Math.round(p.vsec), days: p.nd, W: p.W, F: p.F };
+        sec: Math.round(p.sec), vsec: Math.round(p.vsec), days: p.nd, W: p.W, F: p.F, lc: p.lc };
     }).map(function (o) { o.care = care(o).tot; return o; });
   }
-  /* ❤ 用心程度（使用者 2026-10-15 D10 第 8 題 A、D12 ①）：五項各 0～20 分 ➜ { it:[天, 次, 看完聽完, 改對, 分鐘], tot, raw } */
+  /* 📅 練習分數（原本的 ❤ 用心程度，2026-10-16 C5 合併改名；使用者 2026-10-15 D10 第 8 題 A、D12 ①）：五項各 0～20 分 ➜ { it:[天, 次, 看完聽完, 改對, 分鐘], tot, raw }
+     天、次 也算 🎧 聽完字卡（2026-10-16 C4 第 6 題 A） */
   var CAREMAX = { days: 4, count: 5, sec: 1800 };
   function care(p) {
     p = p || {}; var days = +p.days || 0, cnt = +p.count || 0, q = +p.q || 0, fq = +p.fastQ || 0, W = +p.W || 0, F = +p.F || 0, sec = +p.sec || 0;
@@ -192,7 +201,7 @@ var SC = (function () {
     count: { v: function (p) { return p.count; }, cmp: function (a, b) { return b.count - a.count; }, eq: function (a, b) { return a.count === b.count; }, ok: function (p) { return p.count > 0; } },
     prog: { v: function (p) { return p.prog; }, cmp: function (a, b) { return b.prog - a.prog; }, eq: function (a, b) { return a.prog === b.prog; }, ok: function (p) { return p.prog != null && p.prog > 0; } },
     sec: { v: function (p) { return p.sec; }, cmp: function (a, b) { return b.sec - a.sec; }, eq: function (a, b) { return a.sec === b.sec; }, ok: function (p) { return p.sec > 0; } },
-    /* ❤ 最用心：用心程度，同分比練習時間（D12 ④） */
+    /* 📅 練習分數，同分比練習時間（原本「❤ 最用心」的榜；2026-10-16 C5 第 3 題 A 不再是最高榮譽，只給老師看板排序） */
     care: { v: function (p) { return p.care; }, cmp: function (a, b) { return (b.care - a.care) || (b.sec - a.sec); }, eq: function (a, b) { return a.care === b.care && a.sec === b.sec; }, ok: function (p) { return p.care > 0; } }
   };
   function rank(ps, key) {
@@ -266,13 +275,13 @@ var SC = (function () {
       m.forEach(function (p) { cnt += p.count; sec += p.sec || 0; cr += p.care || 0; });
       var size = sizes && +sizes[c] > 0 ? +sizes[c] : null, per = Math.max(size || 0, m.length) || 1;   /* G2-A：平均每一個人（除以全班人數） */
       return { cls: c, n: m.length, size: size, acc: a == null ? null : r1(a), s: s == null ? null : r1(s), count: cnt, prog: pr == null ? null : r1(pr),
-        sec: sec, cntP: m.length ? r1(cnt / per) : null, secP: m.length ? Math.round(sec / per) : null, careP: m.length ? Math.round(cr / per) : null };   /* 最用心的班：沒練的人 ＝ 0 分（D12 ④） */
+        sec: sec, cntP: m.length ? r1(cnt / per) : null, secP: m.length ? Math.round(sec / per) : null, careP: m.length ? Math.round(cr / per) : null };   /* 📅 練習分數 平均每一個人：沒練的人 ＝ 0 分 */
     });
   }
   /* 班際榮譽（使用者 2026-10-12 D6～D8 定案）：3 種（最認真練習的班 ＝ 平均每一個人練習時間、成績最優的班 ＝ 平均正確率、進步最多的班 ＝ 平均進步）。
      best ＝ 每一班名次最前面的那一種（只給老師看板參考；學生平板、投影不再演「每一班都有自己最強的一項」） */
-  var AW = ['sec', 'acc', 'prog', 'care'];
-  var CB = [['sec', 'secP'], ['acc', 'acc'], ['prog', 'prog'], ['care', 'careP']];
+  var AW = ['sec', 'acc', 'prog'];   /* 2026-10-16 C5 第 3 題 A：拿掉 ❤ 最用心，回到 3 種 */
+  var CB = [['sec', 'secP'], ['acc', 'acc'], ['prog', 'prog']];
   function clsAwards(cl) {
     var R = {}, best = {};
     CB.forEach(function (b) {
@@ -339,7 +348,7 @@ var SC = (function () {
       if (ps0) { out.rk0 = {}; AW.forEach(function (k) {
         var a0 = mine(rank(ps0.filter(function (p) { return p.cls === c.cls; }), k), c.id), b0 = mine(rank(ps0, k), c.id);
         out.rk0[k] = { cls: a0 && a0.rk <= TOP ? a0.rk : null, grade: b0 && b0.rk <= TOP ? b0.rk : null }; }); }
-      ['acc', 's', 'count', 'prog', 'sec', 'care'].forEach(function (k) {
+      ['acc', 's', 'count', 'prog', 'sec'].forEach(function (k) {
         var g = rank(ps, k), cc = rank(ps.filter(function (p) { return p.cls === c.cls; }), k);
         out.top[k] = { cls: top(cc), grade: top(g) };
         /* 第 10 名的分數（給「再多 N 就進前 10」）；人數不到 10 個 ＝ 有做就進得去 */

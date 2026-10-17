@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>角色和現場任務樣品 C7</title>
+<style>
+@font-face{font-family:Andika;src:url(../../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#05070A;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 140px;font-size:26px;line-height:1.55;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:42px;color:#FFD54A;margin:22px 0 6px}
+h2{font-size:36px;color:#FFD54A;margin:56px 0 10px;border-top:4px solid #24303C;padding-top:22px}
+.lead{color:#DDE6EE}.note{color:#B9C4CE;font-size:22px}
+.howto{background:#102016;border:3px solid #3BD16F;border-radius:20px;padding:14px 20px;margin:16px 0}
+.q{background:#0B0F14;border:3px solid #24303C;border-radius:22px;padding:18px 20px;margin:26px 0}
+.q>.t{font-size:32px;color:#7FD4FF;margin-bottom:8px}
+.q>.t .no{display:inline-block;background:#FFD54A;color:#05070A;border-radius:12px;padding:0 14px;margin-right:10px}
+.opt{background:#0F151C;border:4px solid #2A3540;border-radius:20px;padding:14px 18px;margin:16px 0}
+.opt.rec{border-color:#3BD16F;background:#0D1B12}
+.opt .hd{font-size:30px}.opt .k{color:#FFD54A;font-size:40px;margin-right:10px}
+.tag{display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px;margin-left:8px;vertical-align:middle}
+.why{color:#CFE3F5;font-size:24px;margin-top:6px}
+table{border-collapse:collapse;width:100%;margin:10px 0;table-layout:fixed}
+td,th{border:2px solid #2A3540;padding:8px 12px;text-align:left;vertical-align:middle;word-break:break-word}
+th{background:#14202B;color:#CFE6FF}
+a{color:#7FD4FF;word-break:break-all}
+/* 角色 */
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ch{background:radial-gradient(circle at 50% 30%,#1C2A44,#0A0F18 70%);border:3px solid #2A3A55;border-radius:22px;padding:10px;text-align:center;cursor:pointer;transition:transform .2s,border-color .2s}
+.ch.on{border-color:#FFD54A;transform:scale(1.03)}
+.ch svg{width:100%;height:auto;max-height:300px}
+.ch .nm{font-size:26px;color:#FFE07A}.ch .ds{font-size:21px;color:#CFE3F5;font-weight:400}
+.ch svg .bob{animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+.eq{background:#0E1420;border:3px solid #2A3A55;border-radius:20px;padding:10px;text-align:center;cursor:pointer}
+.eq.on{border-color:#FFD54A}.eq svg{width:70%;height:auto;max-height:150px}.eq .nm{font-size:24px;color:#FFE07A}.eq .ds{font-size:20px;color:#CFE3F5;font-weight:400}
+.eq svg .sp{animation:spin 6s linear infinite;transform-origin:50px 50px}.eq svg .fl{animation:bob 2s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* 平板成績畫面樣子 */
+.tab{position:relative;max-width:960px;margin:12px auto;aspect-ratio:16/10;border-radius:26px;border:10px solid #222;background:linear-gradient(#0B1830,#050A18);overflow:hidden;display:grid;grid-template-columns:42% 1fr;align-items:center;padding:3%}
+@media (max-width:700px){.tab{grid-template-columns:1fr;aspect-ratio:auto}}
+.tab .me{position:relative;text-align:center}.tab .me svg{width:100%;max-height:330px}
+.tab .badge{display:inline-block;background:#FFD54A;color:#2A1A00;border-radius:12px;padding:0 16px;font-size:clamp(24px,3.6vw,36px)}
+.tab .rt{text-align:center}.tab .rt .k{font-size:clamp(22px,3vw,32px);color:#CFE3F5}.tab .rt .v{font-size:clamp(56px,9vw,110px);color:#FFE07A;line-height:1}
+.tab .pet{position:absolute;right:2%;bottom:10%;width:34%}.tab .wpn{position:absolute;left:0;top:30%;width:30%}
+/* 現場任務 */
+.live{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;align-items:start}
+@media (max-width:900px){.live{grid-template-columns:1fr}}
+.big{background:#06101E;border:6px solid #333;border-radius:20px;padding:14px;min-height:520px}
+.big .hd{display:flex;justify-content:space-between;align-items:center;font-size:30px;color:#FFE07A}
+.big .tm{font-size:44px;color:#fff;background:#B3122E;border-radius:14px;padding:0 16px}
+.rows{position:relative;margin-top:10px}
+.row{position:absolute;left:0;right:0;height:54px;display:grid;grid-template-columns:1.6em 4.2em 1fr 4.6em;gap:8px;align-items:center;font-size:26px;transition:top .8s cubic-bezier(.3,1.2,.4,1);background:#0E1A2C;border-radius:12px;padding:0 10px}
+.row .bar{height:22px;border-radius:8px;background:linear-gradient(90deg,#3BD16F,#7FD4FF);transition:width .8s}
+.row.me{outline:3px solid #FFD54A}
+.row .up{color:#5BE39A;font-size:20px;margin-left:6px}
+.pad{background:#0B0B0B;border:8px solid #222;border-radius:26px;padding:14px;text-align:center}
+.pad .qq{font-size:30px;margin:10px 0}.pad .ops{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pad .ops button{font:inherit;font-size:28px;min-height:64px;border-radius:16px;background:#162232;color:#fff;border:3px solid #34506E}
+.pad .snd{font-size:20px;color:#9FC4E8;font-weight:400;margin-top:8px}
+.ctl{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+.ctl button{font:inherit;font-size:24px;background:#1A2230;color:#fff;border:3px solid #3A4A5C;border-radius:16px;padding:6px 18px;min-height:56px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><div class="wrap">
+<h1>老師，請看樣品（C7）：角色、現場任務</h1>
+<p class="lead">這是第 ④ 步「新的大功能」的<b>樣品</b>，還沒有放上網站。老師說「對」才畫完全部、才做真的。</p>
+<div class="howto">回答只要寫：<b>「1 A、2 A」</b>；全部同意寫 <b>「全部照建議」</b>。</div>
+
+<h2>一、角色樣品：男 3、女 3（全部原創日本動漫風格）</h2>
+<p class="lead">老師 C3 第 9 題 B、C4 第 9 題：<b>男 30＋女 30</b>，裝備<b>只放魔法、科技</b>。先畫 6 個給老師看畫風。<b>全部自己畫的</b>（不是任何卡通的人物，沒有版權問題）。點一個角色 ➜ 下面的平板看他穿上的樣子。</p>
+<div class="grid" id="chs"></div>
+
+<h2>二、裝備和寵物樣品：6 種（魔法、科技）</h2>
+<div class="grid" id="eqs"></div>
+
+<h2>三、學生平板做完以後的樣子</h2>
+<p class="lead">C4 第 5 題 A：學生平板寫 <b>座號＋自己選的角色</b>（沒有姓名）。角色旁邊是他選的裝備和寵物。</p>
+<div class="tab" id="tab"></div>
+<div class="q"><div class="t"><span class="no">1</span>角色的畫風、裝備、寵物可以嗎？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>可以：照這個畫風畫完 男 30、女 30、裝備＋寵物 30；學生第一次登入時選角色，以後可以換<span class="tag">建議</span></div>
+<div class="why">選角色只換外表，<b>不會變強、不會加分</b>（成績公平）；角色和裝備存在學生的 5 碼底下，換平板也一樣。</div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>畫風要改：請寫哪裡要改（例：眼睛小一點、更帥、更可愛）</div></div>
+</div>
+
+<h2>四、現場任務樣品（上課即時對戰）</h2>
+<p class="lead">C4 第 10 題 A：先用<b>現在的成績系統</b>（Google 試算表）做；玩法設計成以後可以直接換 Firebase。下面是<b>假的資料</b>演給老師看（按〔▶ 開始〕）：</p>
+<div class="ctl"><button id="go">▶ 開始 2 分鐘任務</button><button id="rs">🔁 重來</button></div>
+<div class="live"><div class="big"><div class="hd"><span>📺 老師的大螢幕：304 班 現場任務</span><span class="tm" id="tm">2:00</span></div><div class="rows" id="rows"></div></div>
+<div class="pad"><div style="color:#9FC4E8;font-size:22px">📱 學生平板（30412）</div><div class="qq" id="pq">Who’s he?</div><div class="ops" id="po"></div><div class="snd" id="ps">每 5 秒把分數送給老師</div></div></div>
+<table><tr><th style="width:26%">怎麼玩</th><th>做法</th></tr>
+<tr><td>① 老師開任務</td><td>老師看板〔📌 任務〕多一顆〔⚡ 現場任務〕：選題目、2～5 分鐘、按〔▶ 開始〕；大螢幕投影排行榜</td></tr>
+<tr><td>② 學生作答</td><td>平板自動跳到同一組題目；<b>每 5 秒</b>把分數送一次（不是每一題都送）</td></tr>
+<tr><td>③ 大螢幕</td><td><b>每 3 秒</b>更新一次排名，名字往上爬的動畫；只放座號＋角色（投影可以切換姓名）</td></tr>
+<tr><td>④ 時間到</td><td>頒獎台：🥇🥈🥉＋「最認真」（答最多題）＋「進步最多」（比這個人上一次）</td></tr>
+<tr><td>做得到嗎</td><td>Google 官方：Apps Script 每個帳號<b>同時最多 30 個執行</b>。一班 30 人、每 5 秒送一次 ＝ 平均每秒 6 個，排隊就好；全年級一起玩會太慢 ➜ 那時再換 Firebase（免費方案同時 100 個連線）</td></tr></table>
+<div class="q"><div class="t"><span class="no">2</span>現場任務的玩法可以嗎？</div>
+<div class="opt rec"><div class="hd"><span class="k">A</span>可以：一次一班、2～5 分鐘、每 5 秒送分數、大螢幕每 3 秒更新、結束頒獎台<span class="tag">建議</span></div></div>
+<div class="opt"><div class="hd"><span class="k">B</span>要改：請寫（例：要分組對戰、要 10 分鐘）</div></div>
+</div>
+</div>
+<script>
+/* ══ 原創動漫風角色（自己畫的 SVG）══ */
+function eye(x,c){return '<g><ellipse cx="'+x+'" cy="96" rx="9" ry="12" fill="#fff"/><ellipse cx="'+x+'" cy="98" rx="7" ry="10" fill="'+c+'"/><ellipse cx="'+x+'" cy="100" rx="4" ry="6" fill="#111"/><circle cx="'+(x-3)+'" cy="93" r="3" fill="#fff"/><circle cx="'+(x+3)+'" cy="104" r="1.5" fill="#fff"/><path d="M'+(x-10)+' 84q10-6 20 0" stroke="#222" stroke-width="3" fill="none" stroke-linecap="round"/></g>'}
+function chibi(o){var sk=o.sk||'#FFE0C8';
+ return '<svg viewBox="0 0 200 260"><g class="bob">'+(o.back||'')+(o.hairB||'')+
+ /* 身體 */'<path d="M70 170q30-14 60 0l8 70h-76z" fill="'+o.c1+'"/><path d="M84 170h32l-6 26h-20z" fill="'+o.c2+'"/>'+(o.belt||'')+
+ '<rect x="74" y="236" width="22" height="16" rx="6" fill="'+o.c3+'"/><rect x="104" y="236" width="22" height="16" rx="6" fill="'+o.c3+'"/>'+
+ '<path d="M66 176q-14 20-8 40" stroke="'+o.c1+'" stroke-width="14" stroke-linecap="round" fill="none"/><path d="M134 176q14 20 8 40" stroke="'+o.c1+'" stroke-width="14" stroke-linecap="round" fill="none"/>'+
+ '<circle cx="58" cy="218" r="8" fill="'+sk+'"/><circle cx="142" cy="218" r="8" fill="'+sk+'"/>'+
+ /* 頭 */'<ellipse cx="100" cy="96" rx="52" ry="56" fill="'+sk+'"/><rect x="92" y="148" width="16" height="16" fill="'+sk+'"/>'+
+ eye(80,o.eye)+eye(120,o.eye)+'<ellipse cx="72" cy="116" rx="7" ry="4" fill="#FF9EB0" opacity=".6"/><ellipse cx="128" cy="116" rx="7" ry="4" fill="#FF9EB0" opacity=".6"/>'+
+ '<path d="'+(o.mouth||'M94 124q6 6 12 0')+'" stroke="#8A3A2A" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+ o.hair+(o.acc||'')+'</g></svg>'}
+var CH=[
+ {nm:'光速劍士 ‧ 迅',ds:'男：藍色刺刺頭、科技光劍',o:{c1:'#1F3A8A',c2:'#E8EEF8',c3:'#14213D',eye:'#2F7BE8',hair:'<path d="M46 92q-4-50 54-58q58 8 54 58l-10-14 4 20-14-22 2 16-16-26-4 20-12-28-6 22-12-24-2 18-14-20 4 22z" fill="#2B59C3"/><path d="M60 50l-16-20 30 10zM96 36l4-30 12 28zM134 46l26-14-14 26z" fill="#2B59C3"/>',belt:'<rect x="70" y="200" width="60" height="8" fill="#FFD54A"/>'}},
+ {nm:'機械發明家 ‧ 鋼',ds:'男：橘色頭髮、護目鏡、機械手臂',o:{c1:'#5A4632',c2:'#F2C14E',c3:'#2B2118',eye:'#D9822B',hair:'<path d="M48 96q-6-56 52-62q58 6 52 62q-12-26-30-30q-6 16-22 8q-16 12-30 0q-14 6-22 22z" fill="#E8742A"/>',acc:'<g><rect x="54" y="62" width="92" height="12" rx="6" fill="#3A3A3A"/><circle cx="80" cy="68" r="12" fill="#7FD4FF" stroke="#555" stroke-width="4"/><circle cx="120" cy="68" r="12" fill="#7FD4FF" stroke="#555" stroke-width="4"/></g>'}},
+ {nm:'星辰魔法師 ‧ 夜',ds:'男：銀色頭髮、星星斗篷',o:{c1:'#2A1A5A',c2:'#FFD54A',c3:'#1A1036',eye:'#9B59D0',back:'<path d="M60 170q40-30 80 0l14 80H46z" fill="#3A2A7A"/><circle cx="66" cy="230" r="3" fill="#FFE07A"/><circle cx="132" cy="214" r="3" fill="#FFE07A"/>',hair:'<path d="M46 100q-2-58 54-64q56 6 54 64q-8-20-20-26l-6 18-10-22-10 20-8-22-10 22-8-20-10 18-6-16q-12 8-20 28z" fill="#D8DEE8"/>'}},
+ {nm:'櫻花魔法少女 ‧ 櫻',ds:'女：粉紅雙馬尾、星星魔杖',o:{c1:'#E85D9A',c2:'#FFF0F6',c3:'#7A1E4A',eye:'#E8457C',hairB:'<path d="M40 90q-26 40-10 100q10-30 24-50zM160 90q26 40 10 100q-10-30-24-50z" fill="#FF8FB8"/>',hair:'<path d="M46 98q-4-60 54-64q58 4 54 64q-14-30-34-30q-20 16-40 4q-20 8-34 26z" fill="#FF8FB8"/><circle cx="52" cy="62" r="10" fill="#FFD54A"/><circle cx="148" cy="62" r="10" fill="#FFD54A"/>',mouth:'M94 122q6 8 12 0'}},
+ {nm:'電光駭客 ‧ 雷',ds:'女：紫色短髮、耳機、全息螢幕',o:{c1:'#2D2D3A',c2:'#7C5CFF',c3:'#14141E',eye:'#7C5CFF',hair:'<path d="M44 120q-8-80 56-86q64 6 56 86q-6-26-14-40q-12 18-42 18q-26 0-40-20q-8 18-16 42z" fill="#6A3FC8"/>',acc:'<path d="M46 92q-2-60 54-60q56 0 54 60" stroke="#222" stroke-width="7" fill="none"/><rect x="38" y="86" width="16" height="26" rx="6" fill="#7FD4FF"/><rect x="146" y="86" width="16" height="26" rx="6" fill="#7FD4FF"/>'}},
+ {nm:'月光弓手 ‧ 月',ds:'女：銀白長髮、魔法光弓',o:{c1:'#1E5A5A',c2:'#BFF3EA',c3:'#0E2E2E',eye:'#27B7A7',hairB:'<path d="M44 96q-14 70 6 120q50 14 100 0q20-50 6-120z" fill="#E6ECF4"/>',hair:'<path d="M46 100q-4-62 54-66q58 4 54 66q-10-26-26-34q-14 14-30 8q-16 10-30 4q-14 10-22 22z" fill="#E6ECF4"/><path d="M84 40q16-10 32 0l-16 10z" fill="#BFF3EA"/>'}}
+];
+var EQ=[
+ {nm:'星光魔杖',ds:'魔法：揮一下灑出星星',svg:'<svg viewBox="0 0 100 100"><rect x="46" y="38" width="8" height="56" rx="4" fill="#8A5A2A" transform="rotate(20 50 60)"/><g class="sp"><path d="M50 8l7 14 15 2-11 10 3 15-14-7-14 7 3-15-11-10 15-2z" fill="#FFD54A" stroke="#FFF3B0" stroke-width="2"/></g></svg>'},
+ {nm:'能量光盾',ds:'科技：藍色六角形護盾',svg:'<svg viewBox="0 0 100 100"><path class="fl" d="M50 6l38 20v28c0 22-16 36-38 42C28 90 12 76 12 54V26z" fill="rgba(127,212,255,.25)" stroke="#7FD4FF" stroke-width="4"/><path d="M50 26l16 9v18l-16 9-16-9V35z" fill="none" stroke="#BFF0FF" stroke-width="3"/></svg>'},
+ {nm:'魔導書',ds:'魔法：會自己翻頁的書',svg:'<svg viewBox="0 0 100 100"><g class="fl"><path d="M14 30q18-8 36 0v54q-18-8-36 0z" fill="#7A2A9A"/><path d="M86 30q-18-8-36 0v54q18-8 36 0z" fill="#9B3FC8"/><circle cx="68" cy="56" r="8" fill="none" stroke="#FFD54A" stroke-width="3"/><path d="M28 50h12M28 60h12" stroke="#FFD54A" stroke-width="3"/></g></svg>'},
+ {nm:'機器小狗 ‧ 波波',ds:'寵物：科技，尾巴是天線',svg:'<svg viewBox="0 0 100 100"><g class="fl"><rect x="22" y="44" width="52" height="30" rx="12" fill="#B8C4D4"/><rect x="58" y="28" width="30" height="28" rx="10" fill="#D8E0EA"/><circle cx="70" cy="40" r="4" fill="#2F7BE8"/><circle cx="80" cy="40" r="4" fill="#2F7BE8"/><path d="M60 30l-6-12 10 6z" fill="#8A96A8"/><rect x="28" y="72" width="8" height="12" rx="3" fill="#8A96A8"/><rect x="58" y="72" width="8" height="12" rx="3" fill="#8A96A8"/><path d="M22 52q-12-8-8-22" stroke="#555" stroke-width="3" fill="none"/><circle cx="14" cy="28" r="4" fill="#FF6B6B"/></g></svg>'},
+ {nm:'雲朵小龍 ‧ 咻咻',ds:'寵物：魔法，坐在雲上',svg:'<svg viewBox="0 0 100 100"><g class="fl"><path d="M14 74q0-12 14-12q4-12 18-8q10-10 22 0q14-2 16 12q10 2 8 12H16q-4 0-2-4z" fill="#fff"/><ellipse cx="54" cy="52" rx="20" ry="16" fill="#5BE39A"/><circle cx="66" cy="38" r="12" fill="#5BE39A"/><circle cx="70" cy="36" r="3" fill="#111"/><path d="M58 28l4-10 4 8M68 26l6-8 1 10" fill="#FFD54A"/><path d="M36 50q-10-14 4-20q2 12 8 14z" fill="#3BC07F"/></g></svg>'},
+ {nm:'電光狐 ‧ 閃閃',ds:'寵物：科技＋魔法，尾巴會發光',svg:'<svg viewBox="0 0 100 100"><g class="fl"><path d="M20 70q-10-30 20-34" stroke="#FFD54A" stroke-width="12" fill="none" stroke-linecap="round"/><ellipse cx="54" cy="64" rx="22" ry="16" fill="#FF9F43"/><circle cx="70" cy="44" r="14" fill="#FF9F43"/><path d="M60 34l-2-16 10 10zM76 32l8-14 0 16z" fill="#FF9F43"/><circle cx="66" cy="44" r="3" fill="#111"/><circle cx="76" cy="44" r="3" fill="#111"/><path d="M80 50l6 2" stroke="#111" stroke-width="2"/></g></svg>'}
+];
+var CI=0,EI=[0,3];
+function drawCh(){document.getElementById('chs').innerHTML=CH.map(function(c,i){return '<div class="ch'+(i===CI?' on':'')+'" data-c="'+i+'">'+chibi(c.o)+'<div class="nm">'+c.nm+'</div><div class="ds">'+c.ds+'</div></div>'}).join('');
+ document.getElementById('eqs').innerHTML=EQ.map(function(e,i){return '<div class="eq'+(EI.indexOf(i)>=0?' on':'')+'" data-e="'+i+'">'+e.svg+'<div class="nm">'+e.nm+'</div><div class="ds">'+e.ds+'</div></div>'}).join('');
+ document.getElementById('tab').innerHTML='<div class="me">'+chibi(CH[CI].o)+'<div class="wpn">'+EQ[EI[0]].svg+'</div><div class="pet">'+EQ[EI[1]].svg+'</div><div class="badge">30412 號 ‧ '+CH[CI].nm.split(' ‧ ')[1]+'</div></div>'+
+  '<div class="rt"><div class="k">🎯 這一次 正確率</div><div class="v">90%</div><div class="k" style="margin-top:4%">⏰ 這週你已經練習 34 分鐘</div></div>'}
+document.addEventListener('click',function(e){var c=e.target.closest('[data-c]'),q=e.target.closest('[data-e]');
+ if(c){CI=+c.getAttribute('data-c');drawCh()}if(q){var i=+q.getAttribute('data-e');if(i<3)EI[0]=i;else EI[1]=i;drawCh()}});
+drawCh();
+/* ══ 現場任務（假的資料）══ */
+var P=[['30412',0],['30403',0],['30407',0],['30411',0],['30415',0],['30418',0],['30402',0],['30409',0]],T=120,TM=null,TK=0;
+function rows(){var L=P.slice().sort(function(a,b){return b[1]-a[1]||(a[0]<b[0]?-1:1)}),mx=Math.max.apply(null,P.map(function(p){return p[1]}).concat([1])),R=document.getElementById('rows');
+ R.style.height=(P.length*62)+'px';P.forEach(function(p){var el=R.querySelector('[data-id="'+p[0]+'"]');
+  if(!el){el=document.createElement('div');el.className='row'+(p[0]==='30412'?' me':'');el.setAttribute('data-id',p[0]);el.innerHTML='<b class="rk"></b><span class="id">'+p[0]+'</span><div class="tr"><div class="bar"></div></div><span class="pt"></span>';R.appendChild(el)}
+  var k=L.indexOf(p),old=el.hasAttribute('data-k')?+el.getAttribute('data-k'):k;el.style.top=(k*62)+'px';el.querySelector('.rk').textContent=k+1;el.querySelector('.bar').style.width=(p[1]/mx*100)+'%';
+  el.querySelector('.pt').innerHTML=p[1]+(old>k?'<span class="up">⬆</span>':'');el.setAttribute('data-k',k)})}
+var QS=[['Who’s he?',['他是誰？','她是誰？','他是我爸爸。','誰是他？']],['He’s my father.',['他是我爸爸。','她是我媽媽。','他是誰？','我是爸爸。']],['Is she a nurse?',['她是護理師嗎？','他是護理師嗎？','她是護理師。','她是誰？']]];
+function pad(){var q=QS[TK%QS.length];document.getElementById('pq').textContent=q[0];document.getElementById('po').innerHTML=q[1].map(function(o){return '<button>'+o+'</button>'}).join('')}
+function tick(){T--;var m=Math.floor(T/60),s=T%60;document.getElementById('tm').textContent=m+':'+(s<10?'0':'')+s;
+ if(T%3===0){P.forEach(function(p){p[1]+=Math.round(Math.random()*400)});rows()}
+ if(T%5===0){TK++;pad();document.getElementById('ps').textContent='✅ 已經送出（'+new Date().toLocaleTimeString()+'）'}
+ if(T<=0){clearInterval(TM);TM=null;document.getElementById('tm').textContent='時間到！';var L=P.slice().sort(function(a,b){return b[1]-a[1]});
+  document.getElementById('rows').insertAdjacentHTML('afterbegin','<div style="position:absolute;inset:0;z-index:5;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;gap:20px;font-size:34px;border-radius:12px">🥈 '+L[1][0]+'　<span style="font-size:48px;color:#FFE07A">🥇 '+L[0][0]+'</span>　🥉 '+L[2][0]+'</div>')}}
+function reset(){clearInterval(TM);TM=null;T=120;P.forEach(function(p){p[1]=0});document.getElementById('rows').innerHTML='';document.getElementById('tm').textContent='2:00';rows();pad()}
+document.getElementById('go').onclick=function(){if(TM)return;if(T<=0)reset();TM=setInterval(tick,RMf()?50:1000)};
+document.getElementById('rs').onclick=reset;function RMf(){return location.hash==='#fast'}
+reset();
+</script>
+</body></html>

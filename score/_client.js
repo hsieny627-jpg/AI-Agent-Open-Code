@@ -456,7 +456,8 @@ function scScene(){
       h=scTimeHTML(E)+(last?SCH.btns(E):nav());if(!last&&E.tgo)SCAUTO=setTimeout(scNext,4200)}   /* 還在送就等（送到或確定沒網路會再畫一次） */
   }else if(nm==='care'){
     if(!scCareOf(E)){L.splice(k,1);E.k=Math.min(k,L.length-1);scScene();return}   /* 沒有網路、伺服器還沒回 ＝ 不演 */
-    h='<div id="scCare"></div>'+(last?SCH.btns(E):nav());
+    /* 2026-10-16 C4 第 3-2 題 A：學生平板也看成績卡（🎯 正確、📅 練習；沒有姓名、沒有〔📋 細節〕），下面接 📅 練習 動畫 */
+    var ME=E.res.me;h=HON.card({acc:ME.acc,prog:ME.prog,keep:ME.keep},ME.care,{notip:1})+'<div id="scCare"></div>'+(last?SCH.btns(E):nav());
     if(!last)SCAUTO=setTimeout(scNext,7600);
   }else if(nm==='honor'){
     h='<div class="hon" id="scHon"></div>'+(last?SCH.btns(E):nav());
@@ -644,6 +645,16 @@ function scVwAct(){var V=SCVW,n=Date.now();if(!V)return;
 function scVwSave(){var V=SCVW;if(!V||!V.id)return;var sec=Math.round(V.acc/1000),id=V.id;V.acc=0;if(V.id!==SCID)V.id=null;if(sec<1)return;
   var QQ=scGet('q')||[];QQ.push({id:id,set:'g'+String(id).charAt(0)+'v_'+V.a,name:V.nm,m:'v',qs:[],sec:Math.min(3600,sec),src:SCSRC,dev:SCDEV,
     u:id+Date.now().toString(36)+Math.random().toString(36).slice(2,6),t:Date.now()});scPut('q',QQ.slice(-200));scFlush()}
+/* ══ 🎧 聽完字卡（2026-10-16 老師 C4 第 6 題 A、6-2 A、C5「1 乙」：算進 📅 練習）══
+   只有在家複習（SCSRC home）、登入（不是 👀 先練習）才記。頁面在「一張卡的單字和句子從頭到尾唸完」時呼叫 scHeard(站, 第幾張, 這一站幾張, 名字)；
+   一站每一張都聽完 ＝ 送一筆 m:'l'（代號 g年級l_站）＝ 練習次數 ＋1、那一天算練了 1 天（同一站一天最多 3 次由 _calc.js 的 CAP 管）。
+   聽完哪幾張記在這台平板（score_hd：哪一天、誰、每一站），換一天、換一個人就重來；送出以後那一站重來（再聽完一輪才再 ＋1） */
+function scHeard(st,k,n,nm){if(!SCON||!SCID||SCGUEST||SCSRC!=='home'||!(n>0)||!/^[\\w-]{1,16}$/.test(st))return;
+  var d=Math.floor((Date.now()+288e5)/864e5),H=scGet('hd');if(!H||H.d!==d||H.id!==SCID||!H.s)H={d:d,id:SCID,s:{}};
+  var a=H.s[st]=H.s[st]||[];if(a.indexOf(k)<0)a.push(k);
+  if(a.length>=n){H.s[st]=[];var QQ=scGet('q')||[];QQ.push({id:SCID,set:'g'+String(SCID).charAt(0)+'l_'+st,name:nm||'🎧 聽完字卡',m:'l',qs:[],sec:0,src:SCSRC,dev:SCDEV,
+    u:SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6),t:Date.now()});scPut('q',QQ.slice(-200));scFlush()}
+  scPut('hd',H)}
 /* 首頁的橫幅（只有首頁有 #scbar） */
 function scBar(){var b=document.getElementById('scbar');if(!b)return;document.body.classList.toggle('scq',!!(SCON&&SCID&&!scAsked()));
   if(!SCON){b.innerHTML='';b.hidden=true;return}b.hidden=false;
