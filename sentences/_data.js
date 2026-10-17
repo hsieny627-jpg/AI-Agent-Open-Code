@@ -592,6 +592,78 @@ var ORD2 = [
    zhRow:[['她',ICON.she,'p'],['是',ICON.is,'y'],['一位',ICON.a,'g2'],OZ('護理師',ICON.nurse),['嗎？','','g']],
    enRow:[['Is',ICON.is,'y'],['she',ICON.she,'p'],['a',ICON.a,'g2'],OJ('nurse','護理師',ICON.nurse),['?','','g']]}
 ];
+/* 2026-10-17 老師 C8 另 5（四年級教學網站＋在家複習）：
+   ① 1-3 中英語序 原本第 2 張後面加 2 張變身卡：He is your father. ➜ Is he your father?（他／她、my／your、家人）、
+      Your brother is a nurse. ➜ Is your brother a nurse?（My／Your、家人、職業）
+   ② 原本第 6 張後面加 6 張中英語序：Is he your grandpa?（上英文）／他 是 你的 爺爺 嗎？（上中文）、Is she your mom?／她 是 你的 媽媽 嗎？、Is your sister a cook?／你的 姊姊 是 一位 廚師 嗎？
+   ③ 3 一問一答 原本第 4 張後面加 3 張：Is he your uncle? Yes, he is.（他／她、家人）、Is your dad a cook? Yes, he is.、Is your mom a farmer? No, she isn’t.（家人、職業）
+   男生女生一定對得上（agree）：選 mother ➜ He 自動變 She；按 She ➜ father 自動變 mother；Is your mom…? 的答句 he ➜ she（引擎 AGPATCH） */
+SUB.pr4 = { lb:'他／她', basic:[['He','他',ICON.he],['She','她',ICON.she]], adv:[] };
+SUB.my4 = { lb:'我的／你的', basic:[['my','我的',ICON.my],['your','你的','👉']], adv:[] };
+SUB.My4 = { lb:'我的／你的', basic:[['My','我的',ICON.my],['Your','你的','👉']], adv:[] };
+SUB.famg = { lb:'📘 家人', la:'✨ 還有',
+  basic:[['father','爸爸',ICON.father],['mother','媽媽',ICON.mother],['brother','哥哥',ICON.brother],['sister','姊姊',ICON.sister],
+         ['grandfather','爺爺',ICON.grandfather],['grandmother','奶奶',ICON.grandmother]],
+  adv:  [['dad','爸爸',ICON.dad],['mom','媽媽',ICON.mom],['grandpa','爺爺',ICON.grandpa],['grandma','奶奶',ICON.grandma],['uncle','叔叔',ICON.uncle],['aunt','阿姨',ICON.aunt]] };
+/* 家人是男生還是女生、換成另一邊是哪一個字（引擎 AGPATCH 用；famg 裡面每一個字都要有） */
+var AGG = { father:'m', dad:'m', brother:'m', grandfather:'m', grandpa:'m', uncle:'m', mother:'f', mom:'f', sister:'f', grandmother:'f', grandma:'f', aunt:'f' };
+var AGP = { father:'mother', mother:'father', dad:'mom', mom:'dad', brother:'sister', sister:'brother', grandfather:'grandmother', grandmother:'grandfather',
+            grandpa:'grandma', grandma:'grandpa', uncle:'aunt', aunt:'uncle' };
+var AG = { fam:'famg', pr:'pr4' };
+var pr4 = function(en){return t(en,/^s/i.test(en)?'她':'他',/^s/i.test(en)?ICON.she:ICON.he,{hl:/^s/i.test(en)?'p':'b',slot:'pr4'})};
+var fm4 = function(en,zh){return t(en,zh,ICON[en],{slot:'famg'})};
+var yr4 = function(en,k){return t(en,'你的','👉',{slot:k})};
+var jb4 = function(en,zh){return t(en,zh,ICON[en],{slot:'job'})};
+/* 變身卡的滑動對應：問句第 n 個字從直述句的哪一個字滑過來（同一個字，大小寫不管；. ⇄ ?） */
+var SMAP = function(c){var f=function(A,B){var used={},m={};B.forEach(function(b,n){var key=/^[.?]$/.test(b.en)?'#p':b.en.toLowerCase();
+  for(var j=0;j<A.length;j++){var ka=/^[.?]$/.test(A[j].en)?'#p':A[j].en.toLowerCase();if(!used[j]&&ka===key){used[j]=1;m[n]=j;break}}});return m};
+  c.smap={qu:f(c.st,c.qu),st:f(c.qu,c.st)};return c};
+var SW4 = [
+  SMAP({type:'swap', slots:['pr4','my4','famg'], agree:AG,
+   st:[pr4('He'),is2(),yr4('your','my4'),fm4('father','爸爸'),D_()],
+   qu:[t('Is','是',ICON.is,{hl:'y'}),pr4('he'),yr4('your','my4'),fm4('father','爸爸'),t('?','？',ICON.q,{tight:1})],
+   stzh:'他 是 你的 爸爸。', quzh:'他 是 你的 爸爸 嗎？', note:'🔵 he 和 🟡 is 換位置，。變成 ？'}),
+  SMAP({type:'swap', slots:['My4','famg','job'],
+   st:[yr4('Your','My4'),fm4('brother','哥哥'),is2(),a2(),jb4('nurse','護理師'),D_()],
+   qu:[t('Is','是',ICON.is,{hl:'y'}),yr4('your','My4'),fm4('brother','哥哥'),a2(),jb4('nurse','護理師'),t('?','？',ICON.q,{tight:1})],
+   stzh:'你的 哥哥 是 一位 護理師。', quzh:'你的 哥哥 是 一位 護理師 嗎？', note:'🟡 is 搬到最前面，。變成 ？'})
+];
+var ORD4 = [
+  {type:'order', enTop:1, say:'Is he your grandpa?',
+   enRow:[['Is',ICON.is,'y'],['he',ICON.he,'b'],['your','👉','gr'],['grandpa',ICON.grandpa,'r'],['?','','g']],
+   zhRow:[['他',ICON.he,'b'],['是',ICON.is,'y'],['你的','👉','gr'],['爺爺',ICON.grandpa,'r'],['嗎？','','g']]},
+  {type:'order', say:'Is he your grandpa?',
+   zhRow:[['他',ICON.he,'b'],['是',ICON.is,'y'],['你的','👉','gr'],['爺爺',ICON.grandpa,'r'],['嗎？','','g']],
+   enRow:[['Is',ICON.is,'y'],['he',ICON.he,'b'],['your','👉','gr'],['grandpa',ICON.grandpa,'r'],['?','','g']]},
+  {type:'order', enTop:1, say:'Is she your mom?',
+   enRow:[['Is',ICON.is,'y'],['she',ICON.she,'p'],['your','👉','gr'],['mom',ICON.mom,'r'],['?','','g']],
+   zhRow:[['她',ICON.she,'p'],['是',ICON.is,'y'],['你的','👉','gr'],['媽媽',ICON.mom,'r'],['嗎？','','g']]},
+  {type:'order', say:'Is she your mom?',
+   zhRow:[['她',ICON.she,'p'],['是',ICON.is,'y'],['你的','👉','gr'],['媽媽',ICON.mom,'r'],['嗎？','','g']],
+   enRow:[['Is',ICON.is,'y'],['she',ICON.she,'p'],['your','👉','gr'],['mom',ICON.mom,'r'],['?','','g']]},
+  {type:'order', enTop:1, say:'Is your sister a cook?',
+   enRow:[['Is',ICON.is,'y'],['your','👉','gr'],['sister',ICON.sister,'r'],['a',ICON.a,'g2'],['cook',ICON.cook,'v'],['?','','g']],
+   zhRow:[['你的','👉','gr'],['姊姊',ICON.sister,'r'],['是',ICON.is,'y'],['一位',ICON.a,'g2'],['廚師',ICON.cook,'v'],['嗎？','','g']]},
+  {type:'order', say:'Is your sister a cook?',
+   zhRow:[['你的','👉','gr'],['姊姊',ICON.sister,'r'],['是',ICON.is,'y'],['一位',ICON.a,'g2'],['廚師',ICON.cook,'v'],['嗎？','','g']],
+   enRow:[['Is',ICON.is,'y'],['your','👉','gr'],['sister',ICON.sister,'r'],['a',ICON.a,'g2'],['cook',ICON.cook,'v'],['?','','g']]}
+];
+var Q4 = function(){return t('?','嗎？',ICON.q,{tight:1})}, CM4 = function(){return t(',','，',ICON.comma,{tight:1})};
+var QA4 = [
+  {type:'pair', cls:'b', slots:['pr4','famg'], agree:AG, qic:ICON.uncle, aic:ICON.yes,
+   qtk:[t('Is','是',ICON.is,{hl:'y'}),pr4('he'),yr4('your'),fm4('uncle','叔叔'),Q4()],
+   atk:[Yes(),CM4(),pr4('he'),is2(),D_()],
+   qzh:'他 是 你的 叔叔 嗎？', azh:'是的，他 是。'},
+  {type:'pair', cls:'b', slots:['famg','job'], agree:AG, qic:ICON.cook, aic:ICON.yes,
+   qtk:[t('Is','是',ICON.is,{hl:'y'}),yr4('your'),fm4('dad','爸爸'),a2(),jb4('cook','廚師'),Q4()],
+   atk:[Yes(),CM4(),pr4('he'),is2(),D_()],
+   qzh:'你的 爸爸 是 一位 廚師 嗎？', azh:'是的，他 是。'},
+  {type:'pair', cls:'p', slots:['famg','job'], agree:AG, qic:ICON.farmer, aic:ICON.no,
+   qtk:[t('Is','是',ICON.is,{hl:'y'}),yr4('your'),fm4('mom','媽媽'),a2(),jb4('farmer','農夫'),Q4()],
+   atk:[No(),CM4(),pr4('she'),isnt(),D_()],
+   qzh:'你的 媽媽 是 一位 農夫 嗎？', azh:'不，她 不是。'}
+];
+U2T.p3.splice(4, 0, QA4[0], QA4[1], QA4[2]);
 var TABS1 = [
   {n:'1-1', lb:'Who’s he/she?', sub:[{lb:'基礎',cards:U1T.b11},{lb:'進階',cards:U1T.a11}]},
   {n:'1-2', lb:'中英語序', cards:[U1[7],ENTOP(U1[7]),U1[12],ENTOP(U1[12])]},
@@ -602,7 +674,7 @@ var TABS1 = [
 var TABS2 = [
   {n:'1-1', lb:'He/She is a ___.', sub:[{lb:'基礎',cards:U2T.b11},{lb:'進階',cards:U2T.a11}]},
   {n:'1-2', lb:'Is he/she a ___?', cards:U2T.q12},
-  {n:'1-3', lb:'中英語序', cards:[U2[3],U2[12]].concat(ORD2)},   /* 2026-10-10 第二批第 3 點：最後加 4 頁（ORD2）；使用者第 2 點：刪掉第 2、4 頁（上英文、下中文）；四年級在家複習也刪，三年級不刪 */
+  {n:'1-3', lb:'中英語序', cards:[U2[3],U2[12]].concat(SW4,ORD2,ORD4)},   /* 2026-10-17 C8 另 5：第 2 張後面 SW4、第 6 張後面 ORD4；2026-10-10 第二批第 3 點：最後加 4 頁（ORD2）；使用者第 2 點：刪掉第 2、4 頁（上英文、下中文）；四年級在家複習也刪，三年級不刪 */
   {n:'2', lb:'Yes／No', sub:[{lb:'基礎',cards:U2T.b2},{lb:'進階',cards:U2T.a2}]},
   {n:'3', lb:'一問一答', cards:U2T.p3},
   {n:'4', lb:'原本句型', cards:U2}
@@ -620,7 +692,7 @@ var RPAGES = [
           {n:'3', lb:'中英語序', cards:[U1[7],ENTOP(U1[7]),U1[12],ENTOP(U1[12])]}, {n:'4', lb:'縮寫動畫', cards:[U1[2],U1[5],U1[10]]}, QA(TABS1)] },
   { file:'../g4-review/u2.html', unit:2, title:'四年級複習｜Unit 2 Is he a doctor?', other:'u1.html', otherName:'⬅ Unit 1', fix:RFIX,
     tabs:[{n:'1', lb:'He/She is a ___.', sub:[{lb:'基礎',cards:U2T.b11},{lb:'進階',cards:U2T.a11}]}, {n:'2', lb:'Yes／No', sub:[{lb:'基礎',cards:U2T.b2},{lb:'進階',cards:U2T.a2}]},
-          {n:'3', lb:'中英語序', cards:[U2[3],U2[12]].concat(ORD2)}, {n:'4', lb:'縮寫動畫', cards:[U2[1],U2[10],U2[7]]}, QA(TABS2)] }   /* 2026-10-16 C 組第 1 題：刪第 4 頁（U2[16] is not ＝ isn’t 第二次）；第 5 站一問一答（老師 2026-10-16：教學網站有，在家複習沒有） */
+          {n:'3', lb:'中英語序', cards:[U2[3],U2[12]].concat(SW4,ORD2,ORD4)}, {n:'4', lb:'縮寫動畫', cards:[U2[1],U2[10],U2[7]]}, QA(TABS2)] }   /* 2026-10-16 C 組第 1 題：刪第 4 頁（U2[16] is not ＝ isn’t 第二次）；第 5 站一問一答（老師 2026-10-16：教學網站有，在家複習沒有） */
 ];
 var PAGES = [
   { file:'unit1.html', unit:1, title:'Unit 1 句型｜Who’s he? Who’s she?', other:'unit2.html', otherName:'➡ Unit 2', tabs:TABS1 },
@@ -643,7 +715,7 @@ var TRX = {
    〔🔒 開關〕代號 r1-s（sentences/_review_sites.js） */
 RPAGES.push({ file:'../g4-review/r1.html', unit:'Review 1', title:'四年級複習｜Review 1', other:'u2.html', otherName:'⬅ Unit 2', cards:XPAGES[0].cards, rv:XPAGES[0].rv,
   fix:function (h) { return RFIX(h).replace('</head>', '<script>window.SCLKPAGE="r1-s";</script>\n</head>'); } });
-module.exports = { GL:GL, ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, USE:USE, TRX:TRX, XPAGES:XPAGES, PAGES:PAGES, RPAGES:RPAGES, TABS1:TABS1, TABS2:TABS2 };
+module.exports = { AGG:AGG, AGP:AGP, GL:GL, ICON:ICON, SUB:SUB, U1:U1, U2:U2, RV1:RV1, RV2:RV2, USE:USE, TRX:TRX, XPAGES:XPAGES, PAGES:PAGES, RPAGES:RPAGES, TABS1:TABS1, TABS2:TABS2 };
 
 /* ── 真實情境：會動的小劇場（使用者 2026-09-24 指定改版）──────────────
  * 原本「地點＋三段 emoji＋一句話」學生完全看不懂，改成**兩個人演一次**：

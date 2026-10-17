@@ -42,7 +42,10 @@ const G1 = [
  {q:'"a nurse" 是什麼意思？', o:['一位護理師','一位醫生','一位廚師','一位老師'], h:'nurse 護理師，doctor 醫生。'},
  {q:'"a cook" 是什麼意思？', o:['一位廚師','一位農夫','一位學生','一位老師'], h:'cook 廚師，farmer 農夫。'},
  {q:'哪一句完全正確？', o:['He’s my dad.','His my dad.','He my dad.','He is my dad?'], h:'He’s ＝ He is；His 是「他的」。'},
- {q:'哪一句完全正確？', o:['She’s my aunt.','She my aunt.','Her’s my aunt.','She is my aunt?'], h:'She’s ＝ She is。'}
+ {q:'哪一句完全正確？', o:['She’s my aunt.','She my aunt.','Her’s my aunt.','She is my aunt?'], h:'She’s ＝ She is。'},
+ /* 2026-10-17 老師 C8 另 5：新加的字卡也進遊戲 */
+ {q:'「你的 姊姊 是 一位 廚師 嗎？」英文第一個字是？', o:['Is','Your','Does','Are'], h:'問句 Is 放最前面：Is your sister a cook?'},
+ {q:'"Is your dad a cook?" 回答「是的」：', o:['Yes, he is.','Yes, she is.','Yes, he’s.','Yes, it is.'], h:'dad 是男生 ➜ he；短答不縮寫。'}
 ];
 
 /* ── 🔵🩷 G2 他還是她（24 題）────────────────────────────── */
@@ -82,7 +85,11 @@ const G3 = [
  {s:['No',',','he',"isn't",'.'], zh:'不，他不是。', h:'isn’t ＝ is not。'},
  {s:['No',',','she',"isn't",'.'], zh:'不，她不是。', h:'isn’t ＝ is not。'},
  {s:['He',"'s",'my','cousin','.'], zh:'他是我的表哥。', h:'cousin 是叔叔阿姨的小孩。'},
- {s:['She','is','a','student','.'], zh:'她是一位學生。', h:'a student 一位學生。'}
+ {s:['She','is','a','student','.'], zh:'她是一位學生。', h:'a student 一位學生。'},
+ /* 2026-10-17 老師 C8 另 5：新加的字卡也進遊戲 */
+ {s:['Is','he','your','grandpa','?'], zh:'他是你的爺爺嗎？', h:'Is 放第一個，問句最後是 ?。'},
+ {s:['Is','she','your','mom','?'], zh:'她是你的媽媽嗎？', h:'中文「嗎」在最後，英文 Is 在最前面。'},
+ {s:['Is','your','sister','a','cook','?'], zh:'你的姊姊是一位廚師嗎？', h:'your sister 是一起的，放在 Is 後面。'}
 ];
 
 /* ── 🔄 G4 變身術（20 題）──────────────────────────────── */
@@ -106,7 +113,10 @@ const G4 = [
  {f:'He’s a doctor.', d:'→ 問句', o:['Is he a doctor?','Is he’s a doctor?','He’s a doctor?','Is a doctor he?'], h:'先把 He’s 拆回 He is，再換位置。'},
  {f:'She’s a teacher.', d:'→ 問句', o:['Is she a teacher?','Is she’s a teacher?','She’s a teacher?','Is a teacher she?'], h:'先把 She’s 拆回 She is。'},
  {f:'Is he a doctor?', d:'→ 回答「是的」', o:['Yes, he is.','Yes, he’s.','Yes, she is.','Yes, he isn’t.'], h:'句尾的 is 不縮寫。'},
- {f:'Is she a doctor?', d:'→ 回答「不是」', o:['No, she isn’t.','No, she is.','No, he isn’t.','No, she not.'], h:'isn’t ＝ is not。'}
+ {f:'Is she a doctor?', d:'→ 回答「不是」', o:['No, she isn’t.','No, she is.','No, he isn’t.','No, she not.'], h:'isn’t ＝ is not。'},
+ /* 2026-10-17 老師 C8 另 5：新加的字卡也進遊戲 */
+ {f:'He is your father.', d:'→ 問句', o:['Is he your father?','He is your father?','Is your father he?','Is he father your?'], h:'he 和 is 換位置，your father 不動。'},
+ {f:'Your brother is a nurse.', d:'→ 問句', o:['Is your brother a nurse?','Your is brother a nurse?','Is brother your a nurse?','Your brother is a nurse?'], h:'Is 搬到最前面；your brother 兩個字一起走。'}
 ];
 
 /* ── 🎧 G5 聽力狙擊（20 題）────────────────────────────── */
@@ -192,7 +202,11 @@ const G8 = [
  {b:'She', a:'a cook.', zh:'她是一位廚師。', o:['is','are','am','be'], h:'She 後面用 is。'},
  {b:'___', a:"'s she?", zh:'她是誰？', o:['Who','What','How','When'], h:'問人用 Who。'},
  {b:"She's my", a:'.', zh:'她是我的阿姨。', o:['aunt','uncle','nephew','grandpa'], h:'aunt 阿姨、姑姑、舅媽。'},
- {b:"He's my", a:'.', zh:'他是我的叔叔。', o:['uncle','aunt','niece','grandma'], h:'uncle 叔叔、伯伯、舅舅。'}
+ {b:"He's my", a:'.', zh:'他是我的叔叔。', o:['uncle','aunt','niece','grandma'], h:'uncle 叔叔、伯伯、舅舅。'},
+ /* 2026-10-17 老師 C8 另 5：新加的字卡也進遊戲 */
+ {b:'___', a:'he your uncle?', zh:'他是你的叔叔嗎？', o:['Is','Are','Am','Does'], h:'問 he 用 Is，放最前面。'},
+ {b:'Is your dad a cook? Yes,', a:'is.', zh:'是的，他是。', o:['he','she','his','him'], h:'dad 是男生 ➜ he。'},
+ {b:'Is your mom a farmer? No, she', a:'.', zh:'不，她不是。', o:["isn't",'is',"aren't",'not'], h:'No 的短答：No, she isn’t.'}
 ];
 
 /* ── 🗂 G9 分類大師（24 題）問句 ❓ ／ 直述句 🙋 ──────────── */
@@ -202,7 +216,8 @@ const G9 = [
  ['Yes, he is.','s'], ['No, she isn’t.','s'], ['Is he your uncle?','q'], ['He is my uncle.','s'],
  ['Who is she?','q'], ['She is my aunt.','s'], ['Is she a nurse?','q'], ['She’s a nurse.','s'],
  ['Is he a farmer?','q'], ['He’s a farmer.','s'], ['Who’s your father?','q'], ['My father is a cook.','s'],
- ['Is she a student?','q'], ['She’s a student.','s'], ['Is he my brother?','q'], ['He’s my brother.','s']
+ ['Is she a student?','q'], ['She’s a student.','s'], ['Is he my brother?','q'], ['He’s my brother.','s'],
+ ['Is your brother a nurse?','q'], ['Your brother is a nurse.','s'], ['Is she your mom?','q'], ['She is your mom.','s']
 ];
 
 /* ── 👑 G10 魔王挑戰（24 題，混合題型）──────────────────── */

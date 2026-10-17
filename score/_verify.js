@@ -403,9 +403,16 @@ async function teacher(br, vp) {
   /* 2026-10-09 名單：個人表有「姓名」欄、要關心列出一次都沒做的人 */
   await p.click('#tabs button[data-t="p"]'); await p.waitForTimeout(150);
   const pt = await p.evaluate(() => ({ th: [].map.call(document.querySelectorAll('#pane th'), x => x.textContent), td: document.getElementById('pane').textContent }));
-  if (!/姓名/.test(pt.th[0]) || !/測試\d\d/.test(pt.td)) e.push('個人表沒有姓名欄');
-  /* 2026-10-12 D6-A：7 欄、燈號、排序那一欄金色＋寫怎麼排；D5：〔A＋〕真的放大 */
-  if (pt.th.length !== 7) e.push('個人表不是 7 欄（' + pt.th.length + '）');
+  if (!/座號/.test(pt.th[0]) || !/姓名/.test(pt.th[1]) || !/測試\d\d/.test(pt.td)) e.push('個人表沒有〔座號〕〔姓名〕兩欄');
+  /* 2026-10-17 C8 另 2：〔姓名〕標題正下方就是姓名（左邊對齊）；班級數字每一班一個顏色 */
+  const al = await p.evaluate(() => { const th = document.querySelector('#pane th[data-k="nm"]'), td = [].slice.call(document.querySelectorAll('#pane td.nmc')).filter(x => x.textContent.trim()), tL = th.getBoundingClientRect().left + parseFloat(getComputedStyle(th).paddingLeft);
+    const off = td.map(x => { const r = document.createRange(); r.selectNodeContents(x); return Math.abs(r.getBoundingClientRect().left - tL); });
+    const col = {}; [].forEach.call(document.querySelectorAll('#pane td.idc .cid'), x => { col[x.textContent] = getComputedStyle(x).color; });
+    return { n: td.length, bad: off.filter(v => v > 3).length, col }; });
+  if (!al.n || al.bad) e.push('〔姓名〕沒有對齊標題（' + al.bad + '／' + al.n + '）');
+  const cc = Object.keys(al.col); if (cc.length < 2 || new Set(cc.map(k => al.col[k])).size !== cc.length) e.push('班級數字不是每一班一個顏色：' + JSON.stringify(al.col));
+  /* 2026-10-12 D6-A：7 欄（2026-10-17 姓名分出來 ＝ 8 欄）、燈號、排序那一欄金色＋寫怎麼排；D5：〔A＋〕真的放大 */
+  if (pt.th.length !== 8) e.push('個人表不是 8 欄（' + pt.th.length + '）');
   if (!/全年級名次/.test(pt.th.join()) || /本班名次/.test(pt.th.join())) e.push('個人表還是「本班名次」（D12 ⑥：改全年級名次）');
   if (!/[🔴🟡🟢]/.test(pt.td)) e.push('個人表沒有燈號');
   if (!/高的在上面/.test(pt.th.join())) e.push('排序的那一欄沒有寫「高的在上面」');
@@ -448,12 +455,16 @@ async function teacher(br, vp) {
   if (!kg.fc && (kg.cls !== 1 || kg.pick < 2)) e.push('〔📊 圖表分析〕沒有一次一班（' + kg.cls + ' 班、' + kg.pick + ' 顆班級按鈕）');
   if (kg.open.length && kg.open.filter(x => x).length > 1) e.push('〔📊 圖表分析〕要關心以外的組沒有收起來');
   await p.evaluate(() => document.querySelectorAll('.kgrp').forEach(g => g.classList.add('open')));
-  const ka = await p.evaluate(() => { const S = document.querySelector('.kcls'); return { a4: S ? S.querySelectorAll('.ka4 > div').length : 0, st: S ? S.querySelectorAll('.kst span').length : 0, c5: S ? S.querySelectorAll('.kc5 > div').length : 0,
+  const ka = await p.evaluate(() => { const S = document.querySelector('.kcls'); return { a4: S ? S.querySelectorAll('.ka3 > div').length : 0, txt: S ? S.textContent : '', wk: S ? S.querySelectorAll('.k5.wk .k5w').length : 0,
+    spill: S ? [].filter.call(S.querySelectorAll('.k5 > *,.kr > *,.ka3 > div'), x => { const r = x.getBoundingClientRect(), q = x.parentNode.getBoundingClientRect(); return r.width && (r.left < q.left - 1 || r.right > q.right + 1 || r.bottom > q.bottom + 1); }).length : 0, st: S ? S.querySelectorAll('.kst span').length : 0, c5: S ? S.querySelectorAll('.kc5 > div').length : 0,
     g: [].map.call(document.querySelectorAll('.kcls'), s => [].map.call(s.querySelectorAll('.kr:not(.kth)'), r => r.className.replace('kr ', ''))),
-    small: [].filter.call(document.querySelectorAll('#pane .ka4 div,#pane .kc5 div,#pane .kr,#pane .kgh,#pane .kst span'), x => x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < (innerWidth >= 1900 ? 22 : 16)).length,
+    small: [].filter.call(document.querySelectorAll('#pane .ka3 div,#pane .k5 span,#pane .kc5 div,#pane .kr,#pane .kgh,#pane .kst span'), x => x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < (innerWidth >= 1900 ? 22 : 16)).length,
     over: [].filter.call(document.querySelectorAll('#pane *'), x => x.getBoundingClientRect().right > innerWidth + 1).length, mem: localStorage.getItem('kmode') }; });
   const rank = { no: 0, nd: 1, md: 2, ok: 3 };
-  if (ka.a4 !== 4 || !ka.st || ka.c5 !== 5) e.push('〔📊 圖表分析〕沒有全班整體（四個大數字 ' + ka.a4 + '、燈號長條 ' + ka.st + '、用心五項 ' + ka.c5 + '）');
+  /* 2026-10-17 C8 另 2(3)：三個大數字、五項寫真的數字＋目標（不寫「最弱 ＝」）、做得最少的那一項「👈 全班最少 ➜ 上課提醒」、長條和字都在自己的格子裡 */
+  if (ka.a4 !== 3 || !ka.st || ka.c5 !== 5) e.push('〔📊 圖表分析〕沒有全班整體（三個大數字 ' + ka.a4 + '、燈號長條 ' + ka.st + '、五項 ' + ka.c5 + '）');
+  if (/最弱 ＝|／20/.test(ka.txt) || !/目標 4 天/.test(ka.txt) || !/目標 30 分鐘/.test(ka.txt) || ka.wk !== 1 || !/👈 全班最少 ➜ 上課提醒：請/.test(ka.txt)) e.push('〔📊 圖表分析〕② 不是真的數字＋目標＋一個「全班最少」');
+  if (ka.spill) e.push('〔📊 圖表分析〕有 ' + ka.spill + ' 個東西跑出自己的格子');
   if (!ka.g.length || ka.g.some(L => L.map(x => rank[x]).some((v, i, a) => i && v < a[i - 1]))) e.push('〔📊 圖表分析〕每一個人不是 🔴 ➜ ⚪ ➜ 🟡 ➜ 🟢 排（' + JSON.stringify(ka.g[0]) + '）');
   if (ka.small) e.push('〔📊 圖表分析〕有 ' + ka.small + ' 個字太小');
   if (ka.over) e.push('〔📊 圖表分析〕有 ' + ka.over + ' 個東西超出螢幕右邊');
@@ -575,6 +586,26 @@ async function teacher(br, vp) {
   await p.click('#more'); await p.click('#bd'); await p.waitForTimeout(200);
   if (G.P.BOARDS !== 'off') e.push('按〔學生排行榜〕伺服器沒有關掉');
   await p.click('#bd'); await p.waitForTimeout(200);
+  /* 2026-10-17 C8 三：頒獎典禮 10 種風格，每一種自己的音效（名字不一樣、開聲音演一次不出錯） */
+  const sd = await p.evaluate(() => { const nm = CERX.SND.map(x => x.nm), ok = CERX.SND.every(x => ['a', 'b', 'r', 'u', 'f'].every(k => typeof x[k] === 'function'));
+    let err = ''; try { CERX.SND.forEach(x => { x.a(); x.f(); }); } catch (z) { err = String(z); } return { n: nm.length, u: new Set(nm).size, ok, err }; });
+  if (sd.n !== 10 || sd.u !== 10 || !sd.ok || sd.err) e.push('頒獎典禮音效不是 10 種不一樣的：' + JSON.stringify(sd));
+  n += 1;
+  /* 2026-10-17 C8 另 4：〔🗑 刪除這個人全部的成績〕：打錯 5 碼按不下去；打對 ➜ 伺服器「紀錄」沒有這個人、「已刪除」有備份、看板上也沒有 */
+  if (vp[0] === 1024) {
+    const vid = '30411', before = G.books['紀錄'].d.filter(r => String(r[CI['5碼']]) === vid).length;
+    await p.click('#tabs button[data-t="p"]'); await p.waitForTimeout(150);
+    await p.evaluate(id => person(id), vid); await p.waitForTimeout(400);
+    await p.click('#delp'); await p.fill('#deli', '30412');
+    const dis = await p.evaluate(() => document.getElementById('delgo').disabled);
+    await p.fill('#deli', vid); await p.waitForTimeout(100);
+    const dis2 = await p.evaluate(() => document.getElementById('delgo').disabled);
+    await p.click('#delgo'); await p.waitForTimeout(700);
+    const after = G.books['紀錄'].d.filter(r => String(r[CI['5碼']]) === vid).length, bk = (G.books['已刪除'] || { d: [] }).d.filter(r => String(r[CI['5碼']]) === vid).length;
+    const gone = await p.evaluate(id => !ALL.some(x => x.id === id) && !document.getElementById('modal').classList.contains('on') && !document.querySelector('#pane tr.row[data-id="' + id + '"]'), vid);
+    if (!dis || dis2 || !before || after || bk !== before || !gone) e.push('刪除個人成績不對：' + JSON.stringify({ 打錯按得下去: !dis, 打對按不下去: dis2, before, after, bk, gone }));
+    n += 1;
+  }
   /* ⬇ 一鍵下載 Excel */
   const [dl] = await Promise.all([p.waitForEvent('download'), p.click('#dl')]);
   const f = path.join(require('os').tmpdir(), 'score_verify.xlsx'); await dl.saveAs(f);

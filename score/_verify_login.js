@@ -26,6 +26,7 @@ async function ctxOf(br, vp) {
   await ctx.route(/script\.google\.com/, r => r.abort());
   ctx.G = G; return ctx;
 }
+const innerHeightOf = vp => vp[1];
 const url = f => HTTP + '/' + f.split('/').map(encodeURIComponent).join('/');
 /* 橫幅：在不在、字多大、有沒有蓋住下面的東西 */
 const bar = p => p.evaluate(() => { const b = document.getElementById('scbar'); if (!b || b.hidden) return null; const r = b.getBoundingClientRect(), e = [];
@@ -53,7 +54,13 @@ async function run(br, vp) {
     await p.goto(url(f)); await p.waitForTimeout(500);
     const b = await bar(p); n += 4;
     if (!b) e.push('沒有登入橫幅');
-    else { b.e.forEach(x => e.push(x)); if (b.t !== '👤 還沒登入 🔑 登入') e.push('沒登入的橫幅不對：' + b.t); if (b.ox > 0) e.push('橫向溢出 ' + b.ox + 'px'); }
+    else { b.e.forEach(x => e.push(x)); if (b.ox > 0) e.push('橫向溢出 ' + b.ox + 'px');
+      /* 2026-10-17 C8 另 6：在家複習首頁 ＝ 大大的〔🔑 先 登入〕＋兩個好習慣（① 先登入 練習才會記下來 ② 練完 一定 登出） */
+      if (/review/.test(f)) { const h = await p.evaluate(() => { const b = document.getElementById('scBarIn'), r = b.getBoundingClientRect(), t = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+          return { h: r.height, f: parseFloat(getComputedStyle(b).fontSize), top: r.top, hit: b.contains(t), st: document.querySelectorAll('#scbar .hst').length }; });
+        if (!/👋 開始練習 以前 🔑 先 登入/.test(b.t) || !/① 先 🔑 登入 ➜ 你的 練習 和 努力 .* 都會 記在 老師 的 成績 裡/.test(b.t) || !/② 練完 ➜ 一定 按 👋 登出 ➜ .* 保護 自己 和 同學 的 成績/.test(b.t)) e.push('在家複習首頁沒有兩個好習慣：' + b.t);
+        if (h.h < 70 || h.f < 32 || h.top > innerHeightOf(vp) * .5 || h.st !== 2) e.push('〔🔑 先 登入〕不夠醒目（要 ≧ 70px 高、字 ≧ 32px、在畫面上半部）：' + JSON.stringify(h)); }
+      else if (b.t !== '👤 還沒登入 🔑 登入') e.push('沒登入的橫幅不對：' + b.t); }
     if (await p.evaluate(() => /🚪/.test(document.body.innerText))) e.push('還有 🚪');
     out(f + ' 沒登入 ' + W, e); await p.close();
   }
@@ -112,6 +119,13 @@ async function run(br, vp) {
     if (await ls(p, 'last') !== 'null') e.push('〔👋 不是，登出〕號碼沒有清掉');
     if (!await p.$('#scBox')) e.push('〔👋 不是，登出〕沒有原地打開數字鍵盤');
     n += 3; out('不是，登出 ' + W, e); await p.close(); }
+  /* 2026-10-17 C8 另 6：在家複習首頁登入以後：「✅ 40205 已經登入：練習 都會 記下來／練完 一定 按 👋 登出」＋〔👋 登出〕 */
+  { const p = await ctx.newPage(), e = []; p.on('pageerror', x => e.push('JS 例外：' + x.message));
+    await p.goto(url('index.html')); await p.evaluate(() => { localStorage.setItem('score_last', '"40205"'); localStorage.setItem('score_id_g4', '"40205"'); localStorage.setItem('score_act', JSON.stringify(Date.now())); sessionStorage.setItem('sc_ok', '40205'); });
+    await p.goto(url('g4-review/index.html')); await p.waitForTimeout(500);
+    const b = await bar(p); if (!b || !/✅ 40205 已經登入：練習 都會 記下來 📊 練完 一定 按 👋 登出 👋 登出/.test(b.t)) e.push('在家複習首頁登入以後橫幅不對：' + (b && b.t)); if (b) b.e.forEach(x => e.push(x));
+    await clk(p, '#scBarOut', e); await p.waitForTimeout(300); if (await ls(p, 'last') !== 'null') e.push('〔👋 登出〕號碼沒有清掉');
+    n += 2; out('在家複習登入以後 ' + W, e); await p.close(); }
   /* ⑥〔🔒 開關〕（D 第 7 件）：老師鎖 304 班的「基礎句型 ①」「🧩 遊戲 g3」「數字：單字結構」 */
   ctx.G.post({ a: 'lock', pw: 'pw-verify', cls: ['304'], keys: ['g3rv_u1-t0-0', 'g3rv_gm-g3', 'g3rv_mo-numbers-parts'], on: true });
   { const p = await ctx.newPage(), e = []; p.on('pageerror', x => e.push('JS 例外：' + x.message));

@@ -969,6 +969,24 @@ body.reduce .tqdone i{display:none}
 /* 總首頁：一頁要放得下（iPad 橫放不可以有捲軸）➜ 橫幅放在「首頁」那一行，不多佔一行 */
 #scbar.inl{display:inline-flex;border:2px solid #3BD16F;border-radius:999px;padding:0 3px 0 14px;font-size:clamp(22px,2.9vh,28px);vertical-align:middle;margin:0 0 0 .5em;gap:8px;letter-spacing:0}
 body.scq .url{display:none}
+/* 在家複習首頁（老師 2026-10-17 C8 另 6）：學生不知道要先登入 ➜ 大大的「兩個好習慣」：① 先〔🔑 登入〕練習才會記到老師那裡 ② 練完〔👋 登出〕保護自己和同學 */
+#scbar.hab{flex-direction:column;gap:clamp(8px,1.6vh,14px);background:radial-gradient(ellipse at 50% 0,#2A2008,#0A0A06 80%);border:3px solid #FFD54A;border-radius:22px;margin:4px 0 14px;padding:clamp(10px,2vh,18px) clamp(12px,2vw,24px)}
+#scbar.hab.in{background:#0D1F14;border-color:#3BD16F;flex-direction:row;padding:10px 16px}
+.hab .hh{font-size:clamp(26px,4.2vh,40px);color:#FFE07A}
+.hab .hgo{position:relative;display:inline-block}
+#scbar.hab .hgo button{min-height:clamp(70px,10vh,92px);font-size:clamp(32px,5vh,48px);padding:8px 44px;border-radius:20px;box-shadow:0 0 0 0 rgba(255,213,74,.7);animation:habPulse 1.6s ease-out infinite}
+@keyframes habPulse{70%{box-shadow:0 0 0 22px rgba(255,213,74,0)}100%{box-shadow:0 0 0 0 rgba(255,213,74,0)}}
+.hab .hf{position:absolute;right:-.2em;bottom:-.75em;font-size:clamp(44px,7vh,66px);pointer-events:none;animation:habTap 1.6s ease-in-out infinite;transform-origin:30% 10%}
+@keyframes habTap{0%,100%{transform:translate(18px,14px) rotate(-12deg)}45%{transform:translate(0,0) rotate(-12deg) scale(.9)}55%{transform:translate(0,0) rotate(-12deg) scale(.8)}}
+.hab .hs{display:grid;grid-template-columns:1fr;gap:clamp(6px,1.2vh,10px);width:min(980px,100%)}
+.hab .hst{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px;background:#111;border:2px solid #3A3A3A;border-radius:16px;padding:6px 14px;font-size:clamp(22px,3.2vh,30px);text-align:left;opacity:0;animation:habIn .6s ease-out forwards}
+.hab .hst:nth-child(2){animation-delay:.9s}.hab .hst .hn{font-size:1.3em;color:#FFE07A}
+.hab .hfl{display:inline-flex;align-items:center;gap:.25em;white-space:nowrap}.hab .hfl i{font-style:normal;display:inline-block;animation:habHop 2.4s ease-in-out infinite}
+.hab .hfl i:nth-child(3){animation-delay:.4s}.hab .hfl i:nth-child(5){animation-delay:.8s}.hab .hfl em{font-style:normal;color:#8FA3B5}
+@keyframes habHop{0%,60%,100%{transform:none}30%{transform:translateY(-8px) scale(1.15)}}
+@keyframes habIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.hab .hok{font-size:clamp(24px,3.6vh,34px)}.hab .hok small{display:block;font-size:.72em;color:#CFE3F5}
+@media (prefers-reduced-motion:reduce){#scbar.hab *{animation:none!important;opacity:1!important}}
 #scbar.inl[hidden]{display:none}#scbar.inl button{min-height:48px;padding:2px 16px;font-size:clamp(22px,2.9vh,28px)}
 .scbye{display:flex;align-items:center;justify-content:center;gap:12px 18px;flex-wrap:wrap;background:#1F1A08;border:3px solid #FFD54A;border-radius:18px;padding:6px 16px;
   font-size:clamp(20px,3vh,28px);font-weight:700;color:#fff}
@@ -3803,6 +3821,13 @@ function scHeard(st,k,n,nm){if(!SCON||!SCID||SCGUEST||SCSRC!=='home'||!(n>0)||!/
 /* 首頁的橫幅（只有首頁有 #scbar） */
 function scBar(){var b=document.getElementById('scbar');if(!b)return;document.body.classList.toggle('scq',!!(SCON&&SCID&&!scAsked()));
   if(!SCON){b.innerHTML='';b.hidden=true;return}b.hidden=false;
+  /* 在家複習首頁：大大的兩個好習慣（2026-10-17 C8 另 6） */
+  var hab=SCSRC==='home'&&!b.classList.contains('inl');b.classList.toggle('hab',hab);b.classList.toggle('in',hab&&!!SCID);
+  if(hab){b.innerHTML=!SCID?'<span class="hh">👋 開始練習 以前</span><span class="hgo"><button class="scK" id="scBarIn">🔑 先 登入</button><span class="hf">👆</span></span>'+
+    '<div class="hs"><div class="hst"><span class="hn">①</span><span>先 <b>🔑 登入</b> ➜ 你的 練習 和 努力 <span class="hfl"><i>📝</i><em>➜</em><i>📊</i></span> 都會 記在 老師 的 成績 裡</span></div>'+
+    '<div class="hst"><span class="hn">②</span><span>練完 ➜ 一定 按 <b>👋 登出</b> ➜ <span class="hfl"><i>🛡</i></span> 保護 自己 和 同學 的 成績</span></div></div>':
+    scAsked()?'<span class="hok">✅ <b>'+SCID+'</b> 已經登入：練習 都會 記下來 📊<small>練完 一定 按 👋 登出</small></span><button class="scN" id="scBarOut">👋 登出</button>':
+    '<span>請問 這是您嗎？<b>'+SCID+'</b></span><button class="scY" id="scBarY">✅ 是</button><button class="scN" id="scBarOut">👋 不是，登出</button>';return}
   b.innerHTML=!SCID?'<span>👤 還沒登入</span><button class="scK" id="scBarIn">🔑 登入</button>':
     scAsked()?'<span>👤 <b>'+SCID+'</b></span><button class="scN" id="scBarOut">👋 登出</button>':
     '<span>請問 這是您嗎？<b>'+SCID+'</b></span><button class="scY" id="scBarY">✅ 是</button><button class="scN" id="scBarOut">👋 不是，登出</button>'}

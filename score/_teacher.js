@@ -86,6 +86,7 @@ table{border-collapse:collapse;width:100%;font-size:clamp(19px,1.5vw,28px)}
 th,td{padding:10px 12px;border-bottom:1px solid #262626;text-align:right;white-space:nowrap}
 th{position:sticky;top:0;background:#151515;color:#DDD;cursor:pointer;user-select:none}
 th:first-child,td:first-child{text-align:left}
+th[data-k="nm"],td.nmc{text-align:left}td.idc{font-weight:700;letter-spacing:.02em}.cid{font-weight:700}
 th.s{background:#3A2E08;color:#FFE9A8;box-shadow:inset 0 -4px 0 var(--gold)}
 th small{display:block;font-size:.62em;color:var(--gold);font-weight:700}
 tr.row{cursor:pointer}tr.row:hover td,tr.row:active td{background:#141A20}
@@ -121,6 +122,9 @@ h3{margin:18px 0 8px;font-size:clamp(22px,1.8vw,32px)}
 .kc .kh{font-size:.85em;color:#FFD0DA;white-space:nowrap;display:flex;align-items:center;gap:4px}.kc .kh svg{height:1.3em;width:auto}
 .kmd{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0}.kmd button{font-size:clamp(20px,1.6vw,30px)}.kmd button.on{background:#2A2208;border-color:var(--gold)}
 .ka4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:6px 0 10px}
+.ka3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:6px 0 4px}.ka3 div{background:#101418;border:2px solid #263038;border-radius:16px;padding:8px;text-align:center;font-size:clamp(19px,1.5vw,26px)}
+.ka3 b{display:block;font-size:clamp(38px,3.4vw,60px);line-height:1.1}.ka3 small{font-size:.5em;color:#AAA}.ka3 svg{height:1.1em;width:auto;vertical-align:middle}.kred{color:#FF8A8A}
+.knote{font-size:clamp(18px,1.35vw,24px);color:#BFD3E6;margin:-2px 0 8px}
 .ka4 div{background:#101418;border:2px solid #263038;border-radius:16px;padding:8px;text-align:center;font-size:clamp(19px,1.5vw,26px)}
 .ka4 b{display:block;font-size:clamp(34px,3vw,54px);line-height:1.15}.ka4 svg{height:1.2em;width:auto;vertical-align:middle}
 .kst{display:flex;height:clamp(44px,3.6vw,60px);border-radius:14px;overflow:hidden;margin:4px 0 10px;font-size:clamp(20px,1.6vw,28px);font-weight:700}
@@ -144,6 +148,17 @@ h3{margin:18px 0 8px;font-size:clamp(22px,1.8vw,32px)}
 .kr small{color:#DDD;font-size:.85em}
 .kr.kth{background:none;border-color:transparent;cursor:default;animation:none;color:#BDBDBD;padding-top:0;padding-bottom:0}.kr.kth svg{height:1.2em;width:auto;vertical-align:middle}
 @media (max-width:1100px){.ka4,.kc5{grid-template-columns:repeat(2,minmax(0,1fr))}.kr{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+/* 2026-10-17 C8 另 2(3)：圖表分析 ② 一項一列（圖示｜一句話＋真的數字｜長條），③ 一個人一列三格 */
+.kc5{display:flex;flex-direction:column;gap:8px;margin:4px 0 6px}
+.kc5 .k5{display:grid;grid-template-columns:clamp(40px,3.4vw,56px) minmax(0,1.5fr) minmax(0,1fr);align-items:center;gap:12px;text-align:left;padding:8px 14px;font-size:clamp(20px,1.6vw,28px);background:#101418;border:2px solid #263038;border-radius:14px}
+.kc5 .k5 .ci{height:clamp(34px,2.8vw,48px);font-size:clamp(30px,2.4vw,42px);display:flex;align-items:center;justify-content:center}.kc5 .k5 .ci svg{height:100%;width:auto}
+.kc5 .k5t b{font-size:1.35em;color:#fff}.kc5 .k5t small{color:#AAB;font-size:.8em;margin-left:4px;white-space:nowrap}
+.kc5 .k5 .t{height:clamp(18px,1.4vw,24px);background:#1A2230;border-radius:999px;overflow:hidden;margin:0;border:2px solid #34404C}.kc5 .k5 .t i{background:#4D8FCC}
+.kc5 .k5.wk{border-color:var(--gold);background:#2A2208}.kc5 .k5.wk .t i{background:var(--gold)}
+.kc5 .k5w{grid-column:2/4;color:#FFE07A;font-weight:700}
+.kr{grid-template-columns:minmax(0,1.3fr) minmax(0,.8fr) minmax(0,1.3fr)!important;font-size:clamp(20px,1.6vw,28px)}
+.kr .kv b{font-size:1.4em}.kr .ky{color:#E8E8E8}.kr .kn2 b{margin-right:.3em}
+@media (max-width:900px){.kc5 .k5{grid-template-columns:clamp(36px,6vw,48px) minmax(0,1fr)}.kc5 .k5 .t{grid-column:2/3}.kc5 .k5w{grid-column:1/3}}
 /* 成績卡的 ❤ 用心程度 */
 .pcare{margin:12px 0}
 .wq{display:grid;grid-template-columns:2.2em 1fr 13em;gap:10px;align-items:center;padding:12px;border:2px solid #262626;border-radius:16px;margin-bottom:10px;cursor:pointer;font-size:clamp(21px,1.8vw,34px)}
@@ -238,7 +253,7 @@ b.lkg,b.lkr{padding:0 8px;border:2px solid;border-radius:10px}
 /* 2026-10-12 D4：進步 ＝ 綠色粗箭頭（自己畫的 SVG，每一台電腦都一樣）；燈號 */
 .ua{width:.9em;height:1.05em;vertical-align:-.14em}
 .lt{font-size:1.15em}
-td.nmc{text-align:left}td.nmc b{color:#9FB4C8;margin-right:.4em}
+td.nmc{text-align:left}
 /* 2026-10-12 D 第 3 件：點一個人 ＝ 秒懂成績卡 */
 #mbox{width:min(1100px,100%)}
 #mbox h3{font-size:clamp(24px,2vw,34px)}
@@ -282,6 +297,10 @@ td.nmc{text-align:left}td.nmc b{color:#9FB4C8;margin-right:.4em}
 .pa{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}.pa span{border-radius:12px;padding:4px 14px;font-weight:700}
 .pa .no{background:#2A1414;color:#FFB0B0}.pa .ok{background:#0F3323;color:var(--ok)}
 .pdb{margin-top:18px;width:100%;background:#141A20;border-color:#2A3A4A}
+.delw{margin-top:26px;border-top:2px dashed #3A2A2A;padding-top:16px}.delb{background:#2A1010;border-color:#B04040;color:#FFB0B0}.delb:disabled{opacity:.4}
+#delc{background:#1A0A0A;border:2px solid #B04040;border-radius:18px;padding:14px 16px}.delq{font-size:clamp(20px,1.6vw,28px);line-height:1.5}.delq small{color:#CFA8A8;font-size:.8em}
+.delr{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px;font-size:clamp(19px,1.5vw,26px)}#deli{width:6.5em;font-size:1.3em;text-align:center;letter-spacing:.15em}#delm{margin-top:8px;color:#FFB0B0;font-weight:700}
+#toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:#0F3323;border:2px solid var(--ok);border-radius:16px;padding:12px 24px;font-size:24px;font-weight:700;z-index:99;opacity:0;transition:opacity .3s;pointer-events:none}#toast.on{opacity:1}
 @media (max-width:900px){.pc4{grid-template-columns:repeat(2,minmax(0,1fr))}.hl{grid-template-columns:1fr}}
 /* 2026-10-12 D 第 4 件：🏆 榮譽榜（投影） */
 .hh{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
@@ -382,6 +401,10 @@ function login(pw){
 }
 /* 名單：5 碼 ➜ 姓名；試算表「班級人數」沒填的班，用名單人數 */
 function nm(id){return NM[id]||''}
+/* 班級顏色（老師 2026-10-17 C8 另 2(2)）：一班一個顏色，老師一眼看出是哪一班（三年級 304 藍、307 橘、311 綠；四年級 402 藍、406 橘、409 綠、410 紫、400 金） */
+var CCOL=['#5AB0FF','#FF9F43','#5BE39A','#D99BFF','#FFD24A','#FF7A9A'];
+function ccol(c){var g=String(c).charAt(0)==='3'?3:4,i=(SC.CLASSES[g]||[]).indexOf(String(c));return CCOL[i<0?5:i]}
+function cidH(id){id=String(id);return '<span class="cid" style="color:'+ccol(id.slice(0,3))+'">'+esc(id.slice(0,3))+'</span><span style="color:#DDE6EE">'+esc(id.slice(3))+'</span>'}
 function who(id){var n=nm(id);return esc(id)+(n?' '+esc(n):'')}
 function load(j){DATA=j;NM={};RCLS={};(j.roster||[]).forEach(function(r){var id=r[0]+(r[1]<10?'0':'')+r[1];NM[id]=r[2];(RCLS[r[0]]=RCLS[r[0]]||[]).push(id)});
   SIZES={};var sz=j.sizes||{};Object.keys(RCLS).forEach(function(c){SIZES[c]=RCLS[c].length});Object.keys(sz).forEach(function(c){if(+sz[c]>0)SIZES[c]=+sz[c]});
@@ -414,13 +437,14 @@ function draw(){
 }
 /* 2026-10-12 D6-A：只留 7 欄（其他點那個人看；Excel 照樣全部都有）。燈號：🔴 正確率不到 60 或太快亂按超過 3 成；🟡 正確率不到 80 或太快亂按超過 1 成；🟢 其他 */
 /* 老師 2026-10-15 D12 ⑥：「本班名次」改成「全年級名次」（正確率，同分比總分） */
-var PCOL=[['id','座號 姓名'],['acc','🎯 正確率'],['s','💯 總分'],['count',CNTIC+'練習次數'],['prog',UA+' 進步'],['gacc','🥇 全年級名次'],['lt','燈號']];
+/* 老師 2026-10-17 C8 另 2(1)：〔姓名〕自己一欄，標題正下方就是姓名（靠左對齊）；(2) 班級數字每一班一個顏色（cidH） */
+var PCOL=[['id','座號'],['nm','姓名'],['acc','🎯 正確率'],['s','💯 總分'],['count',CNTIC+'練習次數'],['prog',UA+' 進步'],['gacc','🥇 全年級名次'],['lt','燈號']];
 /* Excel 照樣全部欄位（文字，不放圖示） */
 var XCOL=[['id','5碼'],['nm','姓名'],['acc','正確率'],['s','總分'],['count','練習次數'],['prog','進步'],['cacc','本班名次（正確率）'],['cs','本班名次（總分）'],['ccount','本班名次（練習次數）'],['cprog','本班名次（進步）'],
   ['gacc','全年級名次（正確率）'],['gs','全年級名次（總分）'],['gcount','全年級名次（練習次數）'],['gprog','全年級名次（進步）'],['sets','做了幾組'],['all','作答幾次'],['fix','訂正成功'],['fast','太快亂按'],['last','最後作答'],
   ['sec','練習時間（分鐘）'],['care','練習分數'],['c0','練習分數：這週 練了 幾天（分）'],['c1','練習分數：做完 幾次（分）'],['c2','練習分數：看完、聽完 才選（分）'],['c3','練習分數：答錯的 改對了（分）'],['c4','練習分數：練習 幾分鐘（分）'],['lc','聽完字卡（站）']];
 var BNX={sec:'最認真練習（練習秒數）',acc:'成績最優（正確率）',prog:'進步最多（正確率進步）',care:'練習分數',s:'總分',count:'練習次數'};
-var SDIR={id:'小的在上面',cacc:'第 1 名在上面',gacc:'第 1 名在上面',lt:'🔴 在上面'};
+var SDIR={id:'小的在上面',nm:'照筆畫',cacc:'第 1 名在上面',gacc:'第 1 名在上面',lt:'🔴 在上面'};
 function light(r){return r.acc==null?3:(r.acc<60||r.fast>30)?0:(r.acc<80||r.fast>10)?1:2}
 var LTS=['🔴','🟡','🟢','⚪'];
 function rowOf(p,RK){var r=RK[p.id]||{},o={id:p.id,nm:nm(p.id),acc:p.acc,s:p.s,count:p.count,prog:p.prog,keep:p.keep,cacc:r.cacc,cs:r.cs,ccount:r.ccount,cprog:r.cprog,
@@ -431,13 +455,15 @@ function paneP(ps,RK){
   if(!ps.length)return '<div class="note">這段期間還沒有人作答。</div>';
   var L=ps.map(function(p){return rowOf(p,RK)}),k=SORT.k,low=/^[cg]/.test(k)&&k!=='count';
   L.sort(function(a,b){var x=a[k],y=b[k];if(x==null&&y==null)return a.id<b.id?-1:1;if(x==null)return 1;if(y==null)return -1;
+    if(k==='nm')return (String(x).localeCompare(String(y),'zh-Hant-TW-u-co-stroke')||(a.id<b.id?-1:1))*SORT.d;
     var asc=k==='id'||k==='lt'||/^[cg](acc|s|count|prog)$/.test(k);return (asc?(x>y?1:x<y?-1:0):(y>x?1:y<x?-1:0))*SORT.d});
   var red=L.filter(function(r){return r.lt===0}).map(function(r){return r.id}).sort();
   return (red.length?'<div class="alert1">🔴 '+red.length+' 人要關心：'+red.slice(0,6).map(esc).join('、')+(red.length>6?' …':'')+'<small>（點這裡看 🔔 要關心）</small></div>':'')+
    '<div class="note">點一個人 ＝ 成績卡　點標題 ＝ 排序</div><div class="tw"><table><thead><tr>'+
    PCOL.map(function(c){return '<th data-k="'+c[0]+'"'+(c[0]===k?' class="s"':'')+'>'+c[1]+(c[0]===k?'<small>⬇ '+(SORT.d>0?(SDIR[k]||'高的在上面'):'反過來排')+'</small>':'')+'</th>'}).join('')+'</tr></thead><tbody>'+
    L.map(function(r){return '<tr class="row" data-id="'+r.id+'">'+PCOL.map(function(c){var v=r[c[0]];
-     if(c[0]==='id')return '<td class="nmc"><b>'+esc(v)+'</b>'+esc(r.nm||'')+'</td>';
+     if(c[0]==='id')return '<td class="idc">'+cidH(v)+'</td>';
+     if(c[0]==='nm')return '<td class="nmc">'+esc(v||'')+'</td>';
      if(c[0]==='acc'||c[0]==='s')return '<td'+(v!=null&&v<60?' class="lo"':'')+'>'+f1(v)+'<span class="mb" style="width:'+(v||0)*.04+'em"></span></td>';
      if(c[0]==='prog')return '<td>'+(v==null?(r.keep?'🔥 保持滿分':'—'):v>0?'<span style="color:var(--ok)">'+UA+' ＋'+f1(v)+'%</span>':f1(v)+'%')+'</td>';
      if(c[0]==='cacc')return '<td>'+(v==null?'—':v<=3?['','🥇','🥈','🥉'][v]+' '+v:v)+'</td>';
@@ -475,7 +501,7 @@ function cerSum(D){return '<div class="cawd">'+D.map(function(d){var one=d.R.fil
 var CER=null;
 function cerOpen(){var S=sets(),D=cerData(SC.students(S.G));if(!D.length)return;CER={D:D,i:0,tm:null,pause:false,st:CERX.pick()};$('#cer').classList.add('on');if(HSND)HON.ac();cerShow()}
 function cerShow(){clearTimeout(CER.tm);var st=$('#cerst'),i=CER.i,D=CER.D;CERX.stop(st);
-  $('#cpg').textContent=(i+1)+'／'+(D.length+1);$('#cnx').textContent=i<D.length?'⏭ 下一個':'⏮ 從頭再演';$('#cstn').textContent='🎨 '+(CER.st+1)+'. '+CERX.ST[CER.st].nm;
+  $('#cpg').textContent=(i+1)+'／'+(D.length+1);$('#cnx').textContent=i<D.length?'⏭ 下一個':'⏮ 從頭再演';$('#cstn').textContent='🎨 '+(CER.st+1)+'. '+CERX.ST[CER.st].nm+'　🎵 '+CERX.SND[CER.st].nm;
   if(i>=D.length){st.className='cx fin';st.style.background='';st.innerHTML='<div class="ctl">🏆 '+hper()+' '+hgr()+' 頒獎典禮</div>'+cerSum(D);return}
   var d=D[i],one=d.R.filter(function(x){return x.rk===1});
   var ms=CERX.play(st,CER.st,{ribbon:CERN[d.k],sub:CERS[d.k],cls:'👑 '+one.map(function(x){return esc(SC.cname(x.cls))}).join('、'),say:'🌟 '+esc(cerSay(d.k,one[0].v)),
@@ -612,25 +638,35 @@ function paneK(ps,S){
    (h||'<div class="note">這段期間還沒有人作答。</div>');
 }
 /* 📊 圖表分析（老師 D12 ⑥）：① 全班整體（四個大數字、燈號長條、用心五項全班平均＋最弱的一項）② 每一個人：🔴 ➜ ⚪ ➜ 🟡 ➜ 🟢，同一組正確率低的在前面 */
+/* 2026-10-17 老師 C8 另 2(3)：要關心〔📊 圖表分析〕太複雜、太亂；看不懂「② 最弱 ＝ 這週 練了 幾天」和直條圖
+   ➜ 一班三塊，每一塊一句大字標題：① 這一班：幾個人要關心（一條顏色長條＋三個大數字）
+   ② 全班平均每一個人：練了幾天、做完幾次、幾成題目看完聽完才選、幾成答錯改對了、練了幾分鐘（寫真的數字，不寫「4／20 分」）；
+      做得最少的那一項金框＋「👈 全班最少 ➜ 上課提醒：…」；長條 ＝ 離做到的目標還有多遠（滿 ＝ 做到了）
+   ③ 每一個人：號碼姓名｜大大的正確率｜為什麼（🔴 的排最前面、打開；其他按 ▾ 才打開） */
+/* ③ 的「為什麼」寫原因，不再重複分數 */
+function kWhy2(x){var o=x.o;if(!x.p||o.acc==null)return x.why;if(o.fast>30||(o.lt===1&&o.fast>10&&o.acc>=80))return '⚠️ 太快亂按 '+o.fast+'%';
+  return x.lt===0?'📉 正確率 不到 60':x.lt===1?'正確率 不到 80':'👍 很好'}
 function kAna(c,R,cnt){
   var did=R.filter(function(x){return x.p}),n=R.length,sz=+SIZES[c]||n,avg=function(f){var a=did.map(f).filter(function(v){return v!=null});return a.length?a.reduce(function(x,y){return x+y},0)/a.length:null};
-  var careSum=0,secSum=0,it=[0,0,0,0,0];did.forEach(function(x){careSum+=x.p.care;secSum+=x.p.sec||0;SC.care(x.p).it.forEach(function(v,i){it[i]+=v})});
+  var it=[0,0,0,0,0],rw={days:0,count:0,q:0,fq:0,W:0,F:0,sec:0};did.forEach(function(x){var C=SC.care(x.p);C.it.forEach(function(v,i){it[i]+=v});for(var k in rw)rw[k]+=+C.raw[k]||0});
   var per=Math.max(sz,did.length)||1,ia=it.map(function(v){return Math.round(v/per)}),w=HON.cweak({it:ia});
-  var ic=['<span>📅</span>','<span>📝</span>',HON.EYE,HON.FIX,HON.CLK];
-  var sz0=cnt[0]+cnt[1]+cnt[2]+cnt[3];
-  var h='<div class="kblk"><div class="khd">① 全班：'+(cnt[0]?'🔴 '+cnt[0]+' 人要關心':'沒有人要關心 🎉')+(cnt[3]?'、⚪ '+cnt[3]+' 人還沒做':'')+'</div>';
-  h+='<div class="kst">'+[0,3,1,2].filter(function(i){return cnt[i]}).map(function(i){return '<span class="'+KST[i][2]+'" style="flex:'+cnt[i]+'">'+KST[i][0]+' '+cnt[i]+' 人</span>'}).join('')+'</div>';
-  h+='<div class="ka4"><div>🎯 平均正確率<b>'+f1(avg(function(x){return x.o.acc}))+'</b>分（有做的人）</div><div>📅 練習分數<b>'+Math.round(careSum/per)+'</b>分（平均每一個人）</div>'+
-    '<div>'+HON.CLK+' 練習時間<b>'+Math.round(secSum/per/60)+'</b>分鐘（平均每一個人）</div><div>👥 這段期間有做<b>'+did.length+'／'+sz+'</b>人</div></div></div>';
-  h+='<div class="kblk"><div class="khd">② 📅 練習 五項（全班平均）'+(w>=0?'：最弱 ＝ '+HON.CN[w]:'')+'</div><div class="kc5">'+HON.CN.map(function(t,i){return '<div'+(i===w?' class="wk"':'')+'><span class="ci">'+ic[i]+'</span>'+t+'<span class="t"><i style="width:'+ia[i]*5+'%;background:'+['#2F7BE8','#9B59D0','#00A6A6','#2EB85C','#FF9F1C'][i]+'"></i></span><b>'+ia[i]+'／20</b>'+(i===w?'<br>💡 全班最弱':'')+'</div>'}).join('')+'</div></div>';
+  var ic=['<span>📅</span>','<span>📝</span>',HON.EYE,HON.FIX,HON.CLK],r1=function(v){return Math.round(v*10)/10};
+  var acc=avg(function(x){return x.o.acc}),secA=Math.round(rw.sec/per/60);
+  /* ② 五項：真的數字＋目標 */
+  var V=[[r1(rw.days/per),'天','這週 平均 練了','4 天'],[r1(rw.count/per),'次','平均 做完','5 次'],[rw.q?Math.round(100-rw.fq/rw.q*100):0,'％','題目 看完、聽完 才選',''],
+    [rw.W?Math.round(rw.F/rw.W*100):(rw.q?100:0),'％','答錯的 改對了',''],[secA,'分鐘','這週 平均 練了','30 分鐘']];
+  var h='<div class="kblk"><div class="khd">① 這一班：'+(cnt[0]?'<span class="kred">🔴 '+cnt[0]+' 人 要關心</span>':'沒有人要關心 🎉')+(cnt[3]?'　⚪ '+cnt[3]+' 人 還沒做':'')+'</div>';
+  h+='<div class="kst">'+[0,1,2,3].filter(function(i){return cnt[i]}).map(function(i){return '<span class="'+KST[i][2]+'" style="flex:'+cnt[i]+'">'+KST[i][0]+' '+cnt[i]+'</span>'}).join('')+'</div>';
+  h+='<div class="ka3"><div><b style="color:'+vc(acc)+'">'+f1(acc)+'</b>🎯 平均 正確率</div><div><b>'+secA+'</b>'+HON.CLK+' 平均 練了 幾分鐘</div><div><b>'+did.length+'<small>／'+sz+'</small></b>👥 有做的人</div></div></div>';
+  h+='<div class="kblk"><div class="khd">② 全班 平均每一個人 練習了多少？</div><div class="knote">長條 ＝ 離目標還有多遠，<b>滿了 ＝ 做到了</b></div><div class="kc5">'+HON.CN.map(function(t,i){var v=V[i];
+    return '<div class="k5'+(i===w?' wk':'')+'"><span class="ci">'+ic[i]+'</span><span class="k5t">'+v[2]+' <b>'+v[0]+'</b> '+v[1]+(v[3]?'<small>（目標 '+v[3]+'）</small>':'')+'</span>'+
+      '<span class="t"><i style="width:'+ia[i]*5+'%"></i></span>'+(i===w?'<span class="k5w">👈 全班最少 ➜ 上課提醒：'+HON.CT[i]+'</span>':'')+'</div>'}).join('')+'</div></div>';
   var ord=[0,3,1,2],k=0;
-  h+='<div class="kblk"><div class="khd">③ 每一個人（🔴 要關心的排最前面；其他按 ▾ 打開）</div><div class="kr kth"><span>號碼 姓名</span><span>🎯 正確率</span><span>📅 練習</span><span>⏱ 時間</span><span>為什麼</span></div>';
+  h+='<div class="kblk"><div class="khd">③ 每一個人（🔴 要關心的排最前面）</div>';
   ord.forEach(function(lt){var L=R.filter(function(x){return x.lt===lt}).sort(function(a,b){return (a.o.acc==null?999:a.o.acc)-(b.o.acc==null?999:b.o.acc)||(a.id<b.id?-1:1)});if(!L.length)return;
-    h+='<div class="kgrp'+(lt===0?' open':'')+'"><button class="kgh" data-kgo="1">'+KST[lt][0]+' '+KST[lt][1]+'（'+L.length+' 人）<span class="kar">▾</span></button><div class="kgl">'+L.map(function(x){var C=x.p?SC.care(x.p):null,wk=C?HON.cweak(C):-1;
-      return '<button class="kr '+KST[lt][2]+'" data-pid="'+x.id+'" style="animation-delay:'+Math.min(k++*30,900)+'ms"><span><b>'+esc(x.id.slice(3))+'</b> '+(esc(nm(x.id))||esc(x.id))+'</span>'+
-        '<span class="t"><i style="width:'+(x.o.acc||0)+'%;background:'+vc(x.o.acc)+'"></i></span>'+
-        '<span class="kh2">'+(C?'📅 '+C.tot:'—')+'</span><span>'+(x.p?Math.round((x.p.sec||0)/60)+' 分鐘':'')+'</span>'+
-        '<span>'+KST[lt][0]+' '+x.why+(wk>=0&&x.p?'<br><small>📅 最少：'+HON.CN[wk]+'</small>':'')+'</span></button>'}).join('')+'</div></div>'});
+    h+='<div class="kgrp'+(lt===0?' open':'')+'"><button class="kgh" data-kgo="1">'+KST[lt][0]+' '+KST[lt][1]+'（'+L.length+' 人）<span class="kar">▾</span></button><div class="kgl">'+L.map(function(x){
+      return '<button class="kr '+KST[lt][2]+'" data-pid="'+x.id+'" style="animation-delay:'+Math.min(k++*30,900)+'ms"><span class="kn2"><b>'+cidH(x.id)+'</b> '+(esc(nm(x.id))||'')+'</span>'+
+        '<span class="kv">'+(x.o.acc==null?'—':'<b style="color:'+vc(x.o.acc)+'">'+f1(x.o.acc)+'</b> 分')+'</span><span class="ky">'+esc(kWhy2(x))+'</span></button>'}).join('')+'</div></div>'});
   return h+'</div>';
 }
 /* 2026-10-12 D 第 3 件（D7 ①～⑤⑦）：點一個人 ＝ 秒懂成績卡。
@@ -682,6 +718,10 @@ function person(id){
   /* ⑦ 明細（作廢在這裡） */
   h+='<button id="pdb" class="pdb">📋 看全部明細（作廢在這裡）</button><div id="pdet" hidden><div class="note">每一組：正確率的變化（綠點 ＝ 練習次數 ＋1；灰色刪除線 ＝ 作廢）。遊戲的正確率只算每一題第一次作答。</div>'+pdetail(A)+'</div>';
   if(V.length)h+='</div>';   /* #pmore */
+  /* 🗑 刪除這個人全部的成績（老師 2026-10-17 C8 另 4）：要打一次 5 碼才刪得掉；伺服器先搬到「已刪除」工作表 */
+  h+='<div class="delw"><button id="delp" class="delb" data-id="'+esc(id)+'">🗑 刪除 '+esc(id)+' 全部的成績</button><div id="delc" hidden>'+
+    '<div class="delq">⚠ 要刪除 <b>'+who(id)+'</b> <b>全部</b>的成績嗎？<br><small>每一週、每一個遊戲、每一次都刪；排行榜、要關心、Excel 都不再有這個人（試算表「已刪除」分頁留一份備份）。</small></div>'+
+    '<div class="delr"><span>請打這個人的 5 碼：</span><input id="deli" inputmode="numeric" maxlength="5" autocomplete="off"><button id="delgo" class="delb" disabled>🗑 確定刪除</button><button id="delno">取消</button></div><div id="delm"></div></div></div>';
   $('#mbox').innerHTML=h;$('#modal').classList.add('on');PCARE=SC.care(p);
   if(!V.length)$('#pdet').hidden=false;
 }
@@ -893,6 +933,11 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if(c('#cnx')){if(CER){CER.i=CER.i<CER.D.length?CER.i+1:0;cerShow()}return}
   if(c('#cps')){if(CER){CER.pause=!CER.pause;$('#cps').textContent=CER.pause?'▶ 繼續':'⏸ 停';if(CER.pause)clearTimeout(CER.tm);else CER.tm=setTimeout(function(){if(CER){CER.i++;cerShow()}},2500)}return}
   if(c('#csd')){HSND=HSND?0:1;lss0('hsnd',HSND);if(HSND)HON.ac();$('#csd').textContent='🔊 聲音：'+(HSND?'開':'關');return}
+  if(c('#delp')){$('#delc').hidden=false;$('#delp').hidden=true;$('#deli').value='';$('#deli').focus();return}
+  if(c('#delno')){$('#delc').hidden=true;$('#delp').hidden=false;return}
+  if(c('#delgo')){var did=$('#delp').getAttribute('data-id');if($('#deli').value.trim()!==did)return;$('#delgo').disabled=true;$('#delm').textContent='⏳ 刪除中…';
+    post({a:'delp',pw:PW,id:did}).then(function(j){if(j.ok){ALL=ALL.filter(function(x){return x.id!==did});$('#modal').classList.remove('on');draw();toast('🗑 已刪除 '+did+' 的成績（'+j.n+' 筆）')}
+      else{$('#delm').textContent='❌ 沒有刪掉（'+(j.err||'')+'），請再試一次';$('#delgo').disabled=false}},function(){$('#delm').textContent='❌ 連不上，請再試一次';$('#delgo').disabled=false});return}
   if(c('#pmb')){pMore($('#pmore').hidden);return}
   if(c('#pdb')){var d=$('#pdet');d.hidden=!d.hidden;$('#pdb').classList.toggle('on',!d.hidden);return}
   if(c('#pcp')||c('#pcx')){PCH.i=(PCH.i+(c('#pcx')?1:-1)+PCH.L.length)%PCH.L.length;pChart();return}
@@ -910,6 +955,8 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if(c('#rf')){post({a:'teacher',pw:PW}).then(load);return}
   if(c('#dl')){excel();return}
 });
+document.addEventListener('input',function(e){if(e.target.id==='deli'){$('#delgo').disabled=e.target.value.trim()!==$('#delp').getAttribute('data-id')}});
+function toast(m){var t=$('#toast');if(!t){t=document.createElement('div');t.id='toast';document.body.appendChild(t)}t.textContent=m;t.classList.add('on');clearTimeout(toast.tm);toast.tm=setTimeout(function(){t.classList.remove('on')},3500)}
 $('#fc').addEventListener('change',function(){F.cls=this.value;draw()});
 $('#fs').addEventListener('change',function(){F.src=this.value;draw()});
 $('#fk').addEventListener('change',function(){F.cat=this.value;draw()});

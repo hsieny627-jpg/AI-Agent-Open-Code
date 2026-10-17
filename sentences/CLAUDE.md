@@ -29,6 +29,23 @@
 | `_verify.js` | 量測腳本。`node sentences/_verify.js` 量全部；`node sentences/_verify.js unit1.html` 只量一頁 |
 | `index.html` `warmup.html` `unit1.html` `unit2.html` `games.html` | **產物，不要手改**，會被下一次 build 蓋掉 |
 
+## 2026-10-17 老師 C8 另 5：四年級 Unit 2 新字卡（教學網站＋在家複習；先讀這一節）
+
+需求檔 `sentences/2026-10-16_C_需求與問題.md` 第四節「第七次」。資料全部在 `_data.js` 的 `SW4`／`ORD4`／`QA4`（TABS2 前面那一段）。
+
+| 在哪裡 | 加了什麼 |
+|---|---|
+| 1-3 中英語序 第 2 張後面（`SW4`，變身卡） | ① He is your father. ⇄ Is he your father?：下面三排〔他／她 He She〕〔我的／你的 my your〕〔家人〕② Your brother is a nurse. ⇄ Is your brother a nurse?：〔My Your〕〔家人〕〔職業〕 |
+| 1-3 中英語序 原本第 6 張後面（`ORD4`，中英語序卡） | Is he your grandpa?（上英文）／他 是 你的 爺爺 嗎？（上中文）、Is she your mom?／她 是 你的 媽媽 嗎？、Is your sister a cook?／你的 姊姊 是 一位 廚師 嗎？。顏色：Is／是 黃、he 藍、she 粉、your／你的 綠 `gr`、家人 紅 `r`、a／一位 灰藍 `g2`、職業 紫 `v` |
+| 3 一問一答 原本第 4 張後面（`QA4`） | Is he your uncle? Yes, he is.（〔他／她〕〔家人〕）、Is your dad a cook? Yes, he is.、Is your mom a farmer? No, she isn’t.（〔家人〕〔職業〕） |
+| 遊戲（`_game_data.js`） | 閃電 2、語序 3、變身術 2、填空 3、分類 4 題（標「2026-10-17 老師 C8 另 5」） |
+| 中文 | mom ＝ 媽媽（2026-09-21 規則；老師這次寫「母親」➜ C9 問） |
+
+**男生女生一定對得上**（資料 `agree:{fam:'famg', pr:'pr4'}`，`AGG` 男生／女生、`AGP` 換成另一邊是哪一個字）：選 mother ➜ He 自動變 She；按 She ➜ father 自動變 mother；一問一答的答句 he／she 跟著問句的家人（Is your mom a cook? ➜ Yes, she is.）。
+**引擎**：`_build_cards.js` 的 `AGPATCH`（資料有 `agree` 或 `smap` 才開，三年級逐位元組不變）：變身卡也可以放好幾排替換字（`slots`）；滑動照 `smap`（`_data.js` 的 `SMAP()` 自動算：Is 從第 3 個字滑到第 1 個、your brother 一起往後）；換字以後句子第一個字大寫、句中 he／she／my／your 小寫、he 藍 she 粉；替換字按鈕亮不亮不分大小寫。
+**語音**：`_audio_collect.js` 的 `combos()`：agree／smap 的卡**每一種組合**都做（家人決定 he／she），不做「一次只換一個」的對不上的句子（`AGC`）。這次新做 338 句（HiFi-Captain）。電腦聽寫對不上的 5 句（dad a 像 data、grandpa a 的 a 很輕）在 C9 給老師聽。
+**練習題目（📝 複習題 5 題）還沒加**：「練習的題目」有兩種意思 ➜ C9 第 12 題。
+
 ## 2026-10-17 C5 以後：🎧 聽完字卡（在家複習）（先讀這一節）
 
 老師 C5「全部照建議」＋C4 第 6 題 A：在家複習的字卡**從頭到尾唸完**才算聽 1 次，一站每一張都聽完 ＝ 練習次數 ＋1。規格在 `score/CLAUDE.md` 最上面「2026-10-17」。句型網站這邊：

@@ -1,0 +1,176 @@
+// listen/2026-10-17_C9/ — 老師看完 C8 以後的問題頁（node listen/2026-10-17_C9/_build.js ➜ index.html）
+// 樣品數字一律用小華（30412）：4 天、做完 7 次、95% 的題目看完聽完才選、答錯 5 題改對 4 題、34 分鐘（跟 C8 的 92 分同一組）
+const fs = require('fs'), path = require('path');
+const opt = (k, hd, why, rec) => `<div class="opt${rec ? ' rec' : ''}"><div class="hd"><span class="k">${k}</span>${hd}${rec ? '<span class="tag">建議</span>' : ''}</div>${why ? '<div class="why">' + why + '</div>' : ''}</div>`;
+let QN = 0; const q = (t, body) => `<div class="q"><div class="t"><span class="no">${++QN}</span>${t}</div>${body}</div>`;
+const pad = n => String(n).padStart(2, '0');
+const gal = (dir, pre, a, b, lab) => { let h = ''; for (let i = a; i <= b; i++) h += `<figure class="pc"><img src="../../rpg/${dir}/${pre}${pad(i)}.jpg" alt="${lab} ${pad(i)}"><figcaption>${lab} ${pad(i)}</figcaption></figure>`; return h; };
+const html = `<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>練習報告、角色、任務 C9</title>
+<style>
+@font-face{font-family:Andika;src:url(../../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#05070A;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 140px;font-size:26px;line-height:1.55;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:42px;color:#FFD54A;margin:22px 0 6px}
+h2{font-size:36px;color:#FFD54A;margin:56px 0 10px;border-top:4px solid #24303C;padding-top:22px}
+.lead{color:#DDE6EE}
+.done{background:#0D1B12;border:3px solid #3BD16F;border-radius:20px;padding:12px 18px;margin:14px 0}
+.q{background:#0B0F14;border:3px solid #24303C;border-radius:22px;padding:18px 20px;margin:26px 0}
+.q>.t{font-size:32px;color:#7FD4FF;margin-bottom:8px}
+.q>.t .no{display:inline-block;background:#FFD54A;color:#05070A;border-radius:12px;padding:0 14px;margin-right:10px}
+.opt{background:#0F151C;border:4px solid #2A3540;border-radius:20px;padding:14px 18px;margin:16px 0}
+.opt.rec{border-color:#3BD16F;background:#0D1B12}
+.opt .hd{font-size:30px}.opt .k{color:#FFD54A;font-size:40px;margin-right:10px}
+.tag{display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px;margin-left:8px;vertical-align:middle}
+.why{color:#CFE3F5;font-size:24px;margin-top:6px}
+table{border-collapse:collapse;width:100%;margin:10px 0;table-layout:fixed}
+td,th{border:2px solid #2A3540;padding:8px 12px;text-align:left;vertical-align:middle;word-break:break-word}
+th{background:#14202B;color:#CFE6FF}
+button{font:inherit;font-size:24px;color:#fff;background:#1B2633;border:3px solid #3A4A5C;border-radius:16px;padding:8px 18px;min-height:52px;cursor:pointer;margin:4px}
+button.on{border-color:#FFD54A;color:#FFD54A}
+.sw{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}
+/* ── 練習報告 樣品 ── */
+.stage{position:relative;border-radius:22px;overflow:hidden;border:3px solid #2A3540;margin:10px 0;background:linear-gradient(#0E1A2C,#05080F);padding:clamp(12px,2.4vw,26px)}
+.rt{font-size:clamp(28px,4.6vw,44px);color:#FFE9A8;text-align:center;margin-bottom:8px}.rt b{color:#fff}
+.rl{display:flex;flex-direction:column;gap:10px}
+.rr{display:grid;grid-template-columns:clamp(46px,7vw,64px) minmax(0,1fr) clamp(118px,17vw,176px);align-items:center;gap:12px;background:#0F1824;border:3px solid #263446;border-radius:18px;padding:8px 14px;
+  font-size:clamp(22px,3.3vw,32px);opacity:0;transform:translateX(-30px);transition:opacity .45s,transform .45s}
+.rr.on{opacity:1;transform:none}.rr .ri{font-size:1.5em;text-align:center}.rr .rn b{font-size:1.3em;color:#fff}.rr .rn small{display:block;font-size:.78em;color:#9FB3C8}
+.rr .rn{display:block}.rr .gb{display:block;height:14px;border-radius:999px;background:#1B2633;overflow:hidden;margin-top:6px;border:2px solid #34404C}.rr .gb i{display:block;height:100%;width:0;background:#4D8FCC;transition:width .9s ease-out}
+.stp{justify-self:end;border:4px solid;border-radius:14px;padding:2px 10px;font-size:.86em;transform:scale(2.4) rotate(-14deg);opacity:0;transition:transform .35s cubic-bezier(.2,1.4,.4,1),opacity .2s;white-space:nowrap;text-align:center}
+.rr.st .stp{transform:rotate(-8deg);opacity:1}.stp.ok{color:#5BE39A;border-color:#5BE39A}.stp.no{color:#FF9F43;border-color:#FF9F43}
+.rr.best{border-color:#FFD54A;background:#2A2208;box-shadow:0 0 22px rgba(255,213,74,.35)}.rr.best .gb i{background:#FFD54A}
+.rr.wk{border-color:#FF9F43;background:#2A1608}.rr.wk .gb i{background:#FF9F43}
+.rs{margin-top:12px;display:grid;gap:8px;opacity:0;transform:translateY(16px);transition:all .6s}.rs.on{opacity:1;transform:none}
+.rs div{border-radius:16px;padding:6px 16px;font-size:clamp(24px,3.6vw,36px)}.rs .s1{background:#3A2E08;border:3px solid #FFD54A}.rs .s2{background:#3A1608;border:3px solid #FF6B3D}
+/* 乙 闖關地圖 */
+.map{position:relative;height:clamp(300px,46vw,430px)}
+.map.nw{height:860px}.map.nw .stn{width:42%}
+.map svg.road{position:absolute;inset:0;width:100%;height:100%}
+.stn{position:absolute;transform:translate(-50%,-50%);text-align:center;width:clamp(88px,19vw,200px);font-size:clamp(17px,2.6vw,26px);opacity:.25;transition:opacity .4s}
+.stn.on{opacity:1}.stn .si{font-size:clamp(38px,6vw,58px);line-height:1;display:block}.stn b{color:#fff;font-size:1.25em}
+.stn .fl{display:inline-block;margin-top:2px;border-radius:10px;padding:0 8px;font-size:1em}.stn .fl.ok{background:#1A5A32}.stn .fl.no{background:#7A3A08}
+.stn.best .si{filter:drop-shadow(0 0 14px #FFD54A)}
+.hero{position:absolute;font-size:clamp(40px,6vw,60px);transform:translate(-50%,-170%);transition:left 1s ease-in-out,top 1s ease-in-out}
+/* 角色 */
+.gal{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+@media (max-width:760px){.gal{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.pc{margin:0;background:#0A0F18;border:3px solid #2A3A55;border-radius:14px;overflow:hidden;text-align:center}
+.pc img{width:100%;display:block;aspect-ratio:3/4.1;object-fit:cover}.pc figcaption{font-size:20px;padding:2px 0}
+.pc.warn{border-color:#FF6B3D}
+.shop{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:8px 0}
+@media (max-width:760px){.shop{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.shop div{border-radius:16px;padding:8px;text-align:center;font-size:22px;border:3px solid}
+.mock{background:#0B1118;border:3px dashed #3A4A5C;border-radius:20px;padding:14px;margin:10px 0}
+.mock .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+.mock .chip{border:3px solid #3A4A5C;border-radius:999px;padding:4px 16px;font-size:22px}.mock .chip.on{border-color:#FFD54A;color:#FFD54A;background:#2A2208}
+.mock .big{background:#0F3323;border:3px solid #3BD16F;border-radius:16px;padding:8px 26px;font-size:28px}
+.mock .lst{display:grid;gap:6px}.mock .lst div{background:#111;border-radius:14px;padding:6px 12px;font-size:22px}
+</style></head><body><div class="wrap">
+<h1>老師，請看（C9）：練習報告、角色、現場任務、老師看板</h1>
+<p class="lead">老師看完 C8 的回答已經寫進需求檔。這一頁是<b>兩種意思</b>、<b>老師要我給建議</b>、<b>先看樣子再做</b>的地方。回答只要寫：<b>「1 甲、2 A…」</b>；全部同意寫<b>「全部照建議」</b>。</p>
+<div class="done">✅ <b>這一次已經做好的</b>（不用回答）：🏆 頒獎典禮 10 種風格，每一種音效都不一樣（〔🔊 聲音 開／關〕留著）｜老師看板：〔姓名〕自己一欄對齊、班級數字每一班一個顏色、要關心〔📊 圖表分析〕重新排版、〔🗑 刪除這個人全部的成績〕｜四年級 Unit 2 新字卡（變身卡 2、中英語序 6、一問一答 3）＋遊戲題目｜在家複習首頁大大的〔🔑 先 登入〕＋兩個好習慣動畫｜切好女 21～30、寵物 1～15，換好男 13、男 16、女 17。</div>
+
+<h2>一、📅 練習 報告（取代愛心和故事）</h2>
+<p>老師說：愛心粗糙、看不懂；故事不精準、看不懂。所以這一次<b>不用比喻</b>，直接寫<b>真的數字</b>和<b>目標</b>：一行一件事，做到了蓋 ✅，差一點蓋 🎯，最後兩行告訴學生「最棒的是什麼」「下一步做什麼」。</p>
+<table><tr><th style="width:36%">小華（30412）這週</th><th>報告上寫</th></tr>
+<tr><td>練了 4 天</td><td>📅 這週 練了 <b>4</b> 天（目標 4 天）✅</td></tr>
+<tr><td>做完 7 次</td><td>📝 做完 <b>7</b> 次（目標 5 次）✅</td></tr>
+<tr><td>95% 的題目 看完聽完 才選</td><td>👀 <b>95%</b> 的題目 看完、聽完 才選 ✅</td></tr>
+<tr><td>答錯 5 題，改對 4 題</td><td>✗➜✓ 答錯的 5 題，改對了 <b>4</b> 題 🎯 還差 1 題</td></tr>
+<tr><td>34 分鐘</td><td>⏰ 這週 練了 <b>34</b> 分鐘（目標 30 分鐘）✅</td></tr></table>
+<div class="sw" id="swR"><button data-r="0" class="on">甲 打勾清單</button><button data-r="1">乙 闖關地圖</button><button data-again="1">🔁 再演一次</button></div>
+<div class="stage" id="sR"></div>
+${q('📅 練習 報告用哪一種？（學生平板、老師看板的成績卡都一樣）', opt('甲', '打勾清單：一行一件事＋真的數字＋目標，一行一行出來、蓋章 ✅／🎯，最後兩行「⭐ 你最棒」「🎯 下一步」', '最精準：每一個數字都看得懂，不用猜圖示；iPad 和觸控螢幕字都大', true) + opt('乙', '闖關地圖：五站，英雄一站一站走過去，做到的站插綠旗、差一點的站插橘旗，最後兩行一樣', '比較好玩，但是一站的字比較少'))}
+${q('故事動畫（16 種）怎麼辦？', opt('A', '不要故事了：上面那一張報告最後兩行就是「老師要說的話」（⭐ 你最棒、🎯 下一步），學生只看一張', '老師說故事不精準、看不懂；兩張重複的東西學生不會看第二次', true) + opt('B', '留一種「英文老師的信」：只寫真的數字（給 30412：這週你練了 4 天、34 分鐘…／英文老師），放在報告後面'))}
+${q('「每一次不同風格」（C3、D12 老師說過）', opt('A', '排法、字一律不變（精準），每一次只換背景顏色和蓋章的樣子（10 種）', '排法一樣，學生第二次就知道去哪裡看；只換顏色還是有新鮮感', true) + opt('B', '排法也要換'))}
+
+<h2>二、角色、武器、寵物、寶物</h2>
+<p>這一次切好了（點圖看大圖不用；下面是切好的樣子）：</p>
+<div class="gal">${gal('chars', 'g', 21, 30, '女')}</div>
+<div class="gal" style="margin-top:10px">${gal('pets', 'p', 1, 15, '寵物')}</div>
+<div class="gal" style="margin-top:10px">${['b13', 'b16', 'g17'].map(x => `<figure class="pc"><img src="../../rpg/chars/${x}.jpg" alt="${x}"><figcaption>新的 ${x[0] === 'b' ? '男' : '女'} ${x.slice(1)}</figcaption></figure>`).join('')}</div>
+${q('⚠ 這一次<b>沒有收到</b>：武器 1～15、武器 16～30、寵物 16～30（老師說要上傳 5 張，收到的是 女 21～30、寵物 1～15、3 張單張新圖）', opt('A', '老師下一個對話再上傳這 3 張；武器、寵物 16～30 先空著，其他先做', '', true) + opt('B', '不用武器（只選英雄、寵物）'))}
+${q('女 25、女 29（Phoenix Dancer）：女 25 露肚子、女 29 領口比較低——跟 C8 第 10 題（男 13、男 16、女 17 換掉）是同一種問題', `<div class="gal" style="grid-template-columns:repeat(2,minmax(0,220px))"><figure class="pc warn"><img src="../../rpg/chars/g25.jpg" alt="女 25"><figcaption>女 25</figcaption></figure><figure class="pc warn"><img src="../../rpg/chars/g29.jpg" alt="女 29"><figcaption>女 29</figcaption></figure></div>` + opt('A', '這 2 張也換掉（老師下一個對話給新圖）', '跟第 10 題同一個標準', true) + opt('B', '可以用'))}
+<p>老師問：「經驗值和金幣越多，越能換到更強、更酷、更帥的角色、武器、寵物、魔法寶物」——我的建議（<b>公平：成績不會因為買東西變好</b>）：</p>
+<table><tr><th style="width:26%">東西</th><th>怎麼拿</th></tr>
+<tr><td>⭐ 經驗值（XP）</td><td><b>練習就有</b>：做完一次 ＋10、聽完一站字卡 ＋10、這一天第一次練 ＋20（天天練最划算）。經驗值 ＝ 英雄等級 Lv，<b>只會升，不會被花掉</b></td></tr>
+<tr><td>🪙 金幣</td><td><b>答對、改對就有</b>：答對 1 題 ＋1、答錯以後改對 ＋3（改錯最多金幣）、比自己上一次進步 ＋10。一天最多 100 枚（練太久不會一直賺，保護沒時間的孩子）</td></tr>
+<tr><td>🏪 商店（換購）</td><td>角色、武器、寵物、寶物分 5 種稀有度（下表），愈稀有愈貴、看起來愈酷愈強；有些要<b>等級夠</b>才換得到（練得多才看得到）</td></tr>
+<tr><td>🎁 每週保底寶箱</td><td>這週練 3 天以上，一定送 1 個寶箱（跟成績好不好無關：每一個肯練的孩子都拿得到）</td></tr>
+<tr><td>📖 圖鑑收集</td><td>集滿一套（例：5 隻冰系寵物）解鎖稱號「❄ 冰之守護者」</td></tr>
+<tr><td>🐣 寵物進化</td><td>寵物陪你練 3 天 ➜ 長大；7 天 ➜ 進化（只要天天練，不用金幣）</td></tr>
+<tr><td>🚫 不做的</td><td>不能交易、不能搶別人的、不能用金幣「抽獎」（花錢抽卡）；買到的東西<b>不加分數、不會讓題目變簡單</b></td></tr></table>
+<div class="shop"><div style="border-color:#8A9AAA">★ 普通<br>50 🪙</div><div style="border-color:#3BD16F">★★ 稀有<br>150 🪙</div><div style="border-color:#5AB0FF">★★★ 史詩<br>400 🪙・Lv 5</div><div style="border-color:#B57BFF">★★★★ 傳說<br>900 🪙・Lv 10</div><div style="border-color:#FFD54A">★★★★★ 神話<br>2000 🪙・Lv 20</div></div>
+${q('「更強」是什麼意思？', opt('A', '更強 ＝ <b>看起來更強</b>：稀有度星星、光芒、登場特效、戰力數字（只是顯示，不加分、不變簡單）', '成績公平：老師看板、排行榜只看真的練習和答題', true) + opt('B', '更強 ＝ 在「全班打魔王」這種<b>全班合作</b>的遊戲裡打得比較痛（幫全班，不影響自己的成績和排行榜）', '有實際用處，但是練得多的孩子在合作遊戲裡比較重要') + opt('C', '真的更強：多幾秒、多一次機會', '會讓練得多的人題目變簡單，成績不公平'))}
+${q('魔法寶物要放哪些？（老師之後也可以上傳寶物圖）', opt('A', '先放 10 種「外觀」寶物：光環、披風、腳印特效、登場煙火、名字框、英雄表情、勝利姿勢、背景、寵物帽子、會發光的武器框', '只換外觀，公平', true) + opt('B', '等老師上傳寶物圖再做'))}
+
+<h2>三、現場任務：干擾、抽獎、驚喜卡</h2>
+<p>老師說：每一種遊戲干擾都不一樣、<b>嚴禁惡意攻擊和霸凌</b>。所以干擾<b>全部是系統自動、好笑、不扣分、2～3 秒</b>，而且<b>沒有一種是學生自己挑人</b>：</p>
+<table><tr><th style="width:26%">遊戲</th><th>干擾（好笑、不扣分）</th></tr>
+<tr><td>1 ⚔️ 全班打魔王</td><td>🤧 魔王打噴嚏：<b>全班</b>畫面一起飄泡泡 2 秒（大家一起，不針對誰）</td></tr>
+<tr><td>2 🏎 賽車衝刺</td><td>🍌 香蕉皮：系統放在跑道上，車子轉一圈 1 秒（誰碰到是運氣）</td></tr>
+<tr><td>3 🚀 太空接力</td><td>☄ 小隕石雨：兩隊都有，點掉隕石 ＝ 多拿燃料（干擾變成加分機會）</td></tr>
+<tr><td>4 🏰 搶地圖</td><td>🌫 起霧：地圖霧 3 秒，答對一題就吹散</td></tr>
+<tr><td>5 🧗 爬高塔</td><td>🌬 大風：塔晃一下、題目字搖 2 秒</td></tr>
+<tr><td>6 🐉 寵物大進化</td><td>😴 寵物打瞌睡：點 3 下叫醒</td></tr>
+<tr><td>7 🎯 神射手</td><td>🎈 靶綁上氣球，飄 3 秒</td></tr>
+<tr><td>8 🗺 尋寶</td><td>🔐 寶箱上鎖：答對一題拿到鑰匙，打開多一個寶物</td></tr>
+<tr><td>9 🌊 衝浪大浪</td><td>🌊 大浪（全部人一起）：抓穩答對多加分</td></tr>
+<tr><td>10 👑 王者擂台</td><td>📣 台下只能送「加油」，不能干擾台上的人</td></tr></table>
+<table><tr><th style="width:50%">答對 5 題 ➜ 抽「🎮 遊戲功能」（二～五選一）</th><th>答對 5 題 ➜ 抽「🎁 獎勵」（二～五選一）</th></tr>
+<tr><td>⏸ 時間暫停 5 秒｜✖2 接下來 3 題分數兩倍｜✂ 刪掉 2 個錯的選項｜🔍 題目放大｜🛡 護盾（下一次答錯不算）｜💡 寵物給提示｜🔁 時光倒流（答錯重來一次）｜🔥 超級連擊｜🚀 加速衝刺（賽車、太空）｜🎆 全班加油（全班一起 ＋）</td>
+<td>🪙 金幣 ✖2｜⭐ 經驗值 ✖2｜💎 寶物碎片｜🏷 限定稱號｜😎 英雄表情｜✨ 登場特效｜🍖 寵物零食（寵物長大快一點）｜🏅 勳章｜🎁 小寶箱｜🎇 大螢幕放煙火（放英雄圖，不放名字）</td></tr></table>
+<p>🃏 驚喜卡（跟複習網站<b>完全不一樣</b>）：不翻卡片，改成<b>你的寵物叼來一個禮物盒</b> ➜ 盒子跳三下 ➜ 打開飛出你的英雄、擺姿勢、說一句話（例：「火焰騎士：時間停止！」）➜ 功能生效。每一種英雄出招的樣子都不一樣。</p>
+${q('現場任務的干擾、抽獎、驚喜卡照上面做？', opt('A', '照上面做（干擾全部自動、不扣分、≦ 3 秒、每人每場最多 2 次、被干擾完送 🛡；老師可以一鍵關掉干擾）', '', true) + opt('B', '要改：請寫哪一個、怎麼改'))}
+
+<h2>四、老師看板</h2>
+${q('〔🏆 學生排行榜 開／關〕是做什麼的？——關掉 ＝ <b>學生平板上看不到「本班前 10 名」</b>（老師看板照樣看得到）。例：考試週不想讓學生比較時可以關', opt('A', '留著，改成看得懂的字：「📱 學生平板 顯示 本班前 10 名：顯示／不顯示」', '有時候用得到（考試週、剛開始用的時候）', true) + opt('B', '刪掉：學生永遠看得到本班前 10 名'))}
+<p>〔🔒 開關〕和〔📌 派新任務〕合併成一頁、加上開始和結束的時間（下面是樣子，還沒做）：</p>
+<div class="mock">
+<div style="font-size:30px;color:#FFE07A">📅 開放時間（一鍵設定）</div>
+<div class="row">① 哪幾班：<span class="chip on">304</span><span class="chip">307</span><span class="chip">311</span><span class="chip">✅ 全年級</span></div>
+<div class="row">② 哪些：<span class="chip on">⚡ 閃電四選一</span><span class="chip on">📝 Unit 1 複習題</span><span class="chip">🃏 字卡</span><span class="chip">＋ 更多</span></div>
+<div class="row">③ 什麼時候：<span class="chip">🔓 現在開</span><span class="chip">🔒 現在關</span><span class="chip on">📅 從 2026/10/20 08:00 到 2026/10/24 16:00</span></div>
+<div class="row"><span class="chip">今天放學前</span><span class="chip">這一週</span><span class="chip">下一週</span>（常用的一按就填好）</div>
+<div class="row"><span class="big">✅ 一鍵設定</span></div>
+<div class="lst"><div>🟢 開放中　304　⚡ 閃電四選一　到 10/24 16:00　✅ 18 人做完〔✏️〕〔🗑〕</div><div>⏳ 還沒開始　307、311　📝 Unit 1 複習題　10/27 08:00 開〔✏️〕〔🗑〕</div></div>
+</div>
+${q('〔🔒 開關〕＋〔📌 派新任務〕', opt('甲', '合併成上面這一頁：選班 ➜ 選項目 ➜ 選時間 ➜〔✅ 一鍵設定〕；下面一條一條看「開放中／還沒開始／結束了」和誰做完', '一個地方設定完；時間到自動開、自動關', true) + opt('乙', '兩頁保留，只在〔🔒 開關〕加時間'))}
+
+<h2>五、四年級新字卡</h2>
+${q('老師說新字卡要加進「<b>練習的題目</b>」——是哪一種？', opt('A', '每一個分頁最後面的〔📝 複習題 5 題〕：「1-3 中英語序」「3 一問一答」這兩組各換 2 題成新句子（還是 5 題、五種題型各一題）', '題目數量不變，學生做得完', true) + opt('B', '這兩組各加成 10 題（五種題型各兩題）') + opt('C', '我說的是別的（請寫）'))}
+${q('「她 是 你的 <b>母親</b> 嗎？」——網站以前定好 mom ＝ 媽媽、dad ＝ 爸爸（2026-09-21 老師指定，不寫爸比媽咪）', opt('A', '照舊寫「媽媽」（現在網站上就是這樣）', 'mom 是口語；「母親」比較正式，配 mother', true) + opt('B', '改寫「母親」'))}
+<p>新字卡的語音檔做好了（新做 320 句以上，電腦聽寫檢查）。下面 5 句電腦聽寫對不上：dad a 連在一起唸像 data、grandpa a 的 a 很輕。請老師用耳朵聽：</p>
+<table><tr><th style="width:58%">句子</th><th>電腦聽到</th></tr><tr><td><button data-au="../../sentences/audio/04595c44cc44.mp3">🔊 聽</button> Is your dad a teacher?</td><td>電腦聽成 Is your data teacher?</td></tr><tr><td><button data-au="../../sentences/audio/c1c56860d10c.mp3">🔊 聽</button> Is your dad a student?</td><td>電腦聽成 Is your data student?</td></tr><tr><td><button data-au="../../sentences/audio/f8c5a58b559f.mp3">🔊 聽</button> Is my grandpa a cook?</td><td>電腦沒有聽到 a</td></tr><tr><td><button data-au="../../sentences/audio/4ed77dc02eeb.mp3">🔊 聽</button> Is my grandpa a student?</td><td>電腦沒有聽到 a</td></tr><tr><td><button data-au="../../sentences/audio/0146f8eae7ef.mp3">🔊 聽</button> Is your grandpa a cook?</td><td>電腦沒有聽到 a</td></tr><tr><td><button data-au="../../sentences/audio/63824a0b41d9.mp3">🔊 聽</button> Is your dad a cook?</td><td>（比較用：電腦聽對了）</td></tr></table>
+${q('這 5 句聽起來？', opt('A', '可以：美國人說話本來就會連在一起（dad a ＝ /ˈdæd ə/）', '', true) + opt('B', '要重做：a 唸清楚一點（做好以後給老師再聽一次）'))}
+<div class="done">回答例：<b>「全部照建議」</b>或<b>「1 甲、2 A、4 B…」</b>。</div>
+</div>
+<script>
+var IT=[{ic:'📅',t:'這週 練了',v:4,u:'天',g:4,ok:1},{ic:'📝',t:'做完',v:7,u:'次',g:5,ok:1},{ic:'👀',t:'的題目 看完、聽完 才選',v:95,u:'%',g:0,ok:1,pre:1},{ic:'✏️',t:'答錯的 5 題，改對了',v:4,u:'題',g:5,ng:1,ok:0,miss:'還差 1 題'},{ic:'⏰',t:'這週 練了',v:34,u:'分鐘',g:30,ok:1}];
+var BEST=4,WK=3,TM=[],KR=0;function clr(){TM.forEach(clearTimeout);TM=[]}function later(f,t){TM.push(setTimeout(f,t))}
+function pct(x){return x.g?Math.min(100,x.v/x.g*100):x.v}
+function sum(){return '<div class="rs"><div class="s1">⭐ 你最棒：這週 練了 34 分鐘（比目標 30 分鐘 還多）</div><div class="s2">🎯 下一步：答錯的 還有 1 題 沒改對 ➜ 再做一次</div></div>'}
+function playR(){clr();var s=document.getElementById('sR');
+ if(KR===0){s.innerHTML='<div class="rt">給 <b>30412</b>：這週 📅 練習</div><div class="rl">'+IT.map(function(x,i){return '<div class="rr'+(i===BEST?' best':'')+(i===WK?' wk':'')+'" data-i="'+i+'"><span class="ri">'+x.ic+'</span><span class="rn">'+(x.pre?'<b>'+x.v+x.u+'</b> '+x.t:x.t+' <b>'+x.v+'</b> '+x.u)+(x.g&&!x.ng?'<small>目標 '+x.g+' '+x.u+'</small>':'')+'<span class="gb"><i></i></span></span><span class="stp '+(x.ok?'ok':'no')+'">'+(x.ok?'✅ 做到了':'🎯 '+x.miss)+'</span></div>'}).join('')+'</div>'+sum();
+  IT.forEach(function(x,i){later(function(){var r=s.querySelector('.rr[data-i="'+i+'"]');r.classList.add('on');later(function(){r.querySelector('.gb i').style.width=pct(x)+'%'},150);later(function(){r.classList.add('st')},900)},300+i*900)});
+  later(function(){s.querySelector('.rs').classList.add('on')},300+IT.length*900+500)}
+ else{var NW=innerWidth<600,P=NW?[[28,10],[72,29],[28,49],[72,68],[28,88]]:[[12,78],[31,30],[50,72],[69,26],[88,70]];
+  s.innerHTML='<div class="rt">給 <b>30412</b>：這週 📅 練習 闖關</div><div class="map'+(NW?' nw':'')+'"><svg class="road" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="'+(NW?'M28 10 L72 29 L28 49 L72 68 L28 88':'M12 78 L31 30 L50 72 L69 26 L88 70')+'" fill="none" stroke="#3A4A5C" stroke-width="3" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/></svg>'+
+   IT.map(function(x,i){return '<div class="stn'+(i===BEST?' best':'')+'" data-i="'+i+'" style="left:'+P[i][0]+'%;top:'+P[i][1]+'%"><span class="si">'+x.ic+'</span>'+['練了 <b>4</b> 天','做完 <b>7</b> 次','<b>95%</b> 看完聽完','改對了 <b>4</b> 題','練了 <b>34</b> 分鐘'][i]+'<br><span class="fl '+(x.ok?'ok':'no')+'">'+(x.ok?'🚩 做到了':'🎯 '+x.miss)+'</span></div>'}).join('')+'<div class="hero" id="hr" style="left:'+P[0][0]+'%;top:'+P[0][1]+'%">🦸</div></div>'+sum();
+  IT.forEach(function(x,i){later(function(){var h=document.getElementById('hr');h.style.left=P[i][0]+'%';h.style.top=P[i][1]+'%';later(function(){s.querySelector('.stn[data-i="'+i+'"]').classList.add('on')},700)},200+i*1100)});
+  later(function(){s.querySelector('.rs').classList.add('on')},200+IT.length*1100+400)}}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button');if(!b)return;
+ if(b.hasAttribute('data-au')){try{new Audio(b.getAttribute('data-au')).play()}catch(x){}return}
+ if(b.hasAttribute('data-r')){KR=+b.getAttribute('data-r');[].forEach.call(document.querySelectorAll('#swR [data-r]'),function(x){x.classList.toggle('on',x===b)});playR()}
+ else if(b.hasAttribute('data-again'))playR()});
+playR();
+</script>
+</body></html>`;
+fs.writeFileSync(path.join(__dirname, 'index.html'), html);
+console.log('C9 ok：' + QN + ' 題');

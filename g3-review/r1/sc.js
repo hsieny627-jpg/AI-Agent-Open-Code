@@ -604,6 +604,13 @@ function scHeard(st,k,n,nm){if(!SCON||!SCID||SCGUEST||SCSRC!=='home'||!(n>0)||!/
 /* 首頁的橫幅（只有首頁有 #scbar） */
 function scBar(){var b=document.getElementById('scbar');if(!b)return;document.body.classList.toggle('scq',!!(SCON&&SCID&&!scAsked()));
   if(!SCON){b.innerHTML='';b.hidden=true;return}b.hidden=false;
+  /* 在家複習首頁：大大的兩個好習慣（2026-10-17 C8 另 6） */
+  var hab=SCSRC==='home'&&!b.classList.contains('inl');b.classList.toggle('hab',hab);b.classList.toggle('in',hab&&!!SCID);
+  if(hab){b.innerHTML=!SCID?'<span class="hh">👋 開始練習 以前</span><span class="hgo"><button class="scK" id="scBarIn">🔑 先 登入</button><span class="hf">👆</span></span>'+
+    '<div class="hs"><div class="hst"><span class="hn">①</span><span>先 <b>🔑 登入</b> ➜ 你的 練習 和 努力 <span class="hfl"><i>📝</i><em>➜</em><i>📊</i></span> 都會 記在 老師 的 成績 裡</span></div>'+
+    '<div class="hst"><span class="hn">②</span><span>練完 ➜ 一定 按 <b>👋 登出</b> ➜ <span class="hfl"><i>🛡</i></span> 保護 自己 和 同學 的 成績</span></div></div>':
+    scAsked()?'<span class="hok">✅ <b>'+SCID+'</b> 已經登入：練習 都會 記下來 📊<small>練完 一定 按 👋 登出</small></span><button class="scN" id="scBarOut">👋 登出</button>':
+    '<span>請問 這是您嗎？<b>'+SCID+'</b></span><button class="scY" id="scBarY">✅ 是</button><button class="scN" id="scBarOut">👋 不是，登出</button>';return}
   b.innerHTML=!SCID?'<span>👤 還沒登入</span><button class="scK" id="scBarIn">🔑 登入</button>':
     scAsked()?'<span>👤 <b>'+SCID+'</b></span><button class="scN" id="scBarOut">👋 登出</button>':
     '<span>請問 這是您嗎？<b>'+SCID+'</b></span><button class="scY" id="scBarY">✅ 是</button><button class="scN" id="scBarOut">👋 不是，登出</button>'}

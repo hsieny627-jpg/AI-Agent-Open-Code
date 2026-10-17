@@ -8,6 +8,7 @@ function make(props) {
     getLastRow() { return this.d.length; },
     appendRow(r) { this.d.push(r.slice()); },
     setFrozenRows() {},
+    deleteRows(r, n) { this.d.splice(r - 1, n); },
     getRange(r, c, nr, nc) { const S = this; nr = nr || 1; nc = nc || 1;
       return { getValues() { const o = []; for (let i = 0; i < nr; i++) { const row = S.d[r - 1 + i] || []; const x = []; for (let j = 0; j < nc; j++) x.push(row[c - 1 + j] === undefined ? '' : row[c - 1 + j]); o.push(x); } return o; },
         setValue(v) { (S.d[r - 1] = S.d[r - 1] || [])[c - 1] = v; },

@@ -1901,6 +1901,31 @@ const R1CSS = `
 .subs,.subs.many{gap:clamp(4px,.7vh,8px)}
 .subs .subrow,.subs.many .subrow{gap:clamp(5px,.7vw,9px)}
 `;
+/* 2026-10-17 老師 C8 另 5：變身卡、一問一答卡可以換好幾排字（他／她、my／your、家人、職業），男生女生一定對得上。
+   資料寫 agree（{fam, pr}）或 smap（變身卡的滑動對應）才開（其他頁逐位元組不變）：
+   ① 變身卡下面放 slots 好幾排 ② 滑動照 smap（Your brother is ➜ Is your brother：is 從第 3 個滑到第 1 個）
+   ③ 換字以後：句子第一個字大寫、句中的 he／she／my／your 小寫；he／she 底色跟著換（藍／粉）
+   ④ agree：選 mother ➜ He 自動變 She；按 She ➜ father 自動變 mother（AGG／AGP 在 _data.js）；一問一答的答句 he／she 跟著問句的家人 */
+const AGPATCH = [
+  ["    subs=c.slot?subsHTML(c.slot):'';\n  }\n  card.className='';", "    subs=c.slots?subsHTML(c.slots):(c.slot?subsHTML(c.slot):'');\n  }\n  card.className='';"],
+  ["  var map={0:1,1:0};", "  var map=c.smap?c.smap[to]:{0:1,1:0};"],
+  ["    b.classList.toggle('on',b.getAttribute('data-w')===curSlotWord(b.getAttribute('data-k')))});",
+   "    b.classList.toggle('on',String(b.getAttribute('data-w')).toLowerCase()===String(curSlotWord(b.getAttribute('data-k'))).toLowerCase())});"],
+  ["  /* say 是英文、其他是中文：分開換", "  if(c.agree||c.smap)agFix(c,k,w);\n  /* say 是英文、其他是中文：分開換"],
+  ["var CARDS=__CARDS__", "var AGG=__AGG__,AGP=__AGP__;\n" +
+   "function agFix(c,k,w){var A=c.agree;\n" +
+   "  var row=function(kk,ww){var S=SUB[kk],L=S.basic.concat(S.adv);for(var j=0;j<L.length;j++)if(L[j][0].toLowerCase()===String(ww).toLowerCase())return L[j];return null};\n" +
+   "  var set=function(kk,r){var s0=curSlot(kk);if(!s0||!r)return;var oz=s0.zh;tkLists(c).forEach(function(L){L.forEach(function(t){if(t.slot===kk){t.en=r[0];t.zh=r[1];t.ic=r[2];t.blank=0}})});\n" +
+   "    ['zh','stzh','quzh','qzh','azh'].forEach(function(f){if(c[f])c[f]=rep(c[f],oz,r[1])})};\n" +
+   "  if(A&&k){var lw=String(w).toLowerCase();\n" +
+   "    if(k===A.fam&&AGG[lw]){var p0=curSlot(A.pr);if(p0&&(/^she$/i.test(p0.en)?'f':'m')!==AGG[lw])set(A.pr,row(A.pr,AGG[lw]==='f'?'She':'He'))}\n" +
+   "    if(k===A.pr){var f0=curSlot(A.fam),g=/^she$/i.test(w)?'f':'m';if(f0&&AGG[f0.en]&&AGG[f0.en]!==g)set(A.fam,row(A.fam,AGP[f0.en]))}}\n" +
+   "  tkLists(c).forEach(function(L){L.forEach(function(t,n){if(!t.slot||t.blank)return;\n" +
+   "    if(n===0)t.en=t.en.charAt(0).toUpperCase()+t.en.slice(1);else if(/^(he|she|my|your)$/i.test(t.en))t.en=t.en.toLowerCase();\n" +
+   "    if(A&&t.slot===A.pr)t.hl=/^she$/i.test(t.en)?'p':'b'})});\n" +
+   "  if(c.type==='pair'&&A){var pp=curSlot(A.pr);if(pp)c.cls=/^she$/i.test(pp.en)?'p':'b'}}\n" +
+   "var CARDS=__CARDS__"]
+];
 /* 2026-10-10 使用者第 5 點：等式卡的空格點家人 ➜ He is my father.：token 寫 ifSlot:'he' ＝ 這個字先藏著，那一個 slot 換了字才出現（跟著唸、跟著有中文）。
    資料裡有寫才換（G3 的產物逐位元組不變） */
 const IFPATCH = [
@@ -2023,6 +2048,11 @@ function page(unit, cards, title, other, otherName, P) {
   if (hasGL) GLPATCH.forEach(([a, b]) => {
     if (js.split(a).length !== 2) throw new Error('play ＋ 球類：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
     js = js.replace(a, () => b.replace('__GL__', JSON.stringify(D.GL)));
+  });
+  const hasAG = /"(agree|smap)"/.test(JSON.stringify(DECKS || cards));
+  if (hasAG) AGPATCH.forEach(([a, b]) => {
+    if (js.split(a).length !== 2) throw new Error('他／她、my／your 對得上：卡片引擎的程式變了，找不到 ' + a.slice(0, 50));
+    js = js.replace(a, () => b.replace('__AGG__', JSON.stringify(D.AGG || {})).replace('__AGP__', JSON.stringify(D.AGP || {})));
   });
   /*〔🔤 選單字〕獨立頁（2026-10-11 B 組）：卡片寫 pick:1 才開（sentences/_pick.js） */
   const hasPK = JSON.stringify(DECKS || cards).indexOf('"pick":1') >= 0;

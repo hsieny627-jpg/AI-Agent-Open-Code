@@ -28,8 +28,10 @@ function collect(D, Q, G, TQ) {
     return S.basic.concat(S.adv).concat(more);
   };
   /* 一串 token 的每一種樣子：原本的、每一個 slot 換成每一個字的（一次只換一個 slot） */
+  let AGC = false;   /* agree 的卡：組合另外做（下面 combos），不做「一次只換一個」的（He is your mother. 這種對不上的句子） */
   const variants = tk => {
     const out = [tk];
+    if (AGC) return out;
     const ks = [...new Set(tk.filter(t => t.slot).map(t => t.slot))];
     ks.forEach(k => choices(k).forEach(w => out.push(tk.map(t => t.slot === k ? Object.assign({}, t, { en: w[0], blank: 0 }) : t.ifSlot === k ? Object.assign({}, t, { on: 1 }) : t))));
     return out;
@@ -54,6 +56,7 @@ function collect(D, Q, G, TQ) {
   [D.TABS1, D.TABS2].forEach(TB => (TB || []).forEach(tb => (tb.cards || []).concat(...(tb.sub || []).map(x => x.cards)).forEach(take)));
   (D.XPAGES || []).forEach(P => (P.cards || []).forEach(take));
   cards.forEach(c => {
+    AGC = !!c.agree;
     ['tk', 'a', 'b', 'c', 'st', 'qu'].forEach(k => list(c[k]));
     if (c.type === 'pair') {
       variants(c.atk).forEach(a => { const vv = qaV(plain(a)); add(V(vv[1], plain(a))); if (a.some(t => t.blank)) add(V(vv[1], spoken(a))); });
@@ -63,6 +66,7 @@ function collect(D, Q, G, TQ) {
       words(c.qtk); words(c.atk);
       add(plain(c.qtk) + ' ' + plain(c.atk));
     }
+    AGC = false;
     if (c.type === 'morph') { add(c.say); add(plain(c.a)); }
     if (c.type === 'focus') { c.rows.forEach(r => add(spk(r[0]))); add(c.rows.map(r => spk(r[0])).join(' ')); add(c.rows.map(r => spk(r[0])).join(', ')); }
     if (c.type === 'echo') c.rows.forEach(r => { const vv = qaV(r.a); add(V(vv[0], r.q)); add(V(vv[1], r.a)); add(r.q); add(r.a); r.q.split(' ').concat(r.a.split(' ')).forEach(add); });
@@ -72,6 +76,23 @@ function collect(D, Q, G, TQ) {
     const s = c.scene;
     if (s) { const vv = s.b2 ? qaV(s.b2) : ['', '']; if (!s.bzh) { add(s.b); add(V(vv[0], s.b)); } if (s.b2) { add(s.b2); add(V(vv[1], s.b2)); } }
   });
+  /* 2026-10-17 C8 另 5：好幾排替換字＋男生女生對得上的卡（agree）、可以換字的變身卡（smap）：每一種組合都做（跟引擎 agFix 同一個規則：
+     家人決定 he／she、句子第一個字大寫、句中 he／she／my／your 小寫） */
+  const AGG = D.AGG || {};
+  const combos = c => {
+    const ks = (c.slots || []).slice(), A = c.agree, L0 = c.type === 'pair' ? [c.qtk, c.atk] : [c.st, c.qu];
+    let sets = [{}];
+    ks.forEach(k => { if (A && k === A.pr && ks.indexOf(A.fam) >= 0) return; const nx = []; sets.forEach(o => choices(k).forEach(w => nx.push(Object.assign({}, o, { [k]: w })))); sets = nx; });
+    return sets.map(o => { const O = Object.assign({}, o);
+      if (A && O[A.fam] && AGG[O[A.fam][0]]) O[A.pr] = (D.SUB[A.pr].basic.filter(x => (/^she$/i.test(x[0]) ? 'f' : 'm') === AGG[O[A.fam][0]])[0]);
+      return L0.map(L => L.map((t, n) => { if (!t.slot || !O[t.slot]) return t; let en = O[t.slot][0];
+        en = n === 0 ? en.charAt(0).toUpperCase() + en.slice(1) : (/^(he|she|my|your)$/i.test(en) ? en.toLowerCase() : en);
+        return Object.assign({}, t, { en, blank: 0 }); })); });
+  };
+  cards.filter(c => c.agree || c.smap).forEach(c => combos(c).forEach(([a, b]) => {
+    if (c.type === 'pair') { const vv = qaV(plain(b)); add(V(vv[0], plain(a))); add(V(vv[1], plain(b))); }
+    else { add(plain(a)); add(plain(b)); }
+  }));
   /* 複習題：答錯頁會唸正確答案 */
   (D.RV1 || []).concat(D.RV2 || []).forEach(g => g.q.forEach(q => add(q.o[0])));
   (D.XPAGES || []).forEach(P => (P.rv || []).forEach(g => g.q.forEach(q => add(q.o[0]))));

@@ -381,6 +381,7 @@ var SC = (function () {
  *   紀錄       一次作答（或一場遊戲）一列（欄位 ＝ SC.COLS）；最後一欄「作廢」打勾 ＝ 不算（Q7-A：有人冒用別人的 5 碼）
  *   班級人數   班級｜人數（只填數字，不填名字；算參與率用，Q13-A）
  *   任務       老師看板派的任務（2026-10-09 E）：編號｜名稱｜年級｜班級｜開始｜截止｜項目。**請用老師看板改**，不要在這裡手改
+ *   已刪除     老師看板〔🗑 刪除這個人全部的成績〕刪掉的列先搬到這裡（2026-10-17 C8 另 4；刪錯可以從這裡抄回「紀錄」）
  *   名單       班級｜座號｜姓名（使用者 2026-10-09：只留這三欄，不要性別）。**只給老師看板**（要密碼）；學生端永遠拿不到姓名（Q4）
  * 指令碼屬性（專案設定 ➜ 指令碼屬性）：
  *   TEACHER_PW  老師看板的密碼（只放在這裡，網頁和 GitHub 上都沒有）
@@ -388,7 +389,7 @@ var SC = (function () {
  *   ROSTER      （2026-10-09 起不用了：學生端一律不問「你是 ○○○ 嗎？」）
  *   LOCKS       〔🔒 開關〕（2026-10-12 D 第 7 件）：每一班鎖住的在家複習主題（JSON）。**請用老師看板改**
  */
-var SHEET = '紀錄', SIZES = '班級人數', ROSTER = '名單', TASKS = '任務', TKCOLS = ['編號', '名稱', '年級', '班級', '開始', '截止', '項目'];
+var DELETED = '已刪除', SHEET = '紀錄', SIZES = '班級人數', ROSTER = '名單', TASKS = '任務', TKCOLS = ['編號', '名稱', '年級', '班級', '開始', '截止', '項目'];
 function setup() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var a = ss.getSheetByName(SHEET) || ss.insertSheet(SHEET);
@@ -486,13 +487,30 @@ function doPost(e) {
       var v = SC.view(records(), { id: R.id, set: R.set, u: R.u, gt: R.m === 'g' }, now, boardsOn(), clsSizes()); v.saved = true; v.dup = dup;
       return out(v);
     }
-    if (o.a === 'teacher' || o.a === 'void' || o.a === 'set' || o.a === 'task' || o.a === 'lock') {
+    if (o.a === 'teacher' || o.a === 'void' || o.a === 'set' || o.a === 'task' || o.a === 'lock' || o.a === 'delp') {
       if (!pwOk(o.pw)) return out({ err: 'pw' });
       if (o.a === 'void') {
         var s2 = sheet(SHEET), m = s2.getLastRow(), done = false;
         if (m >= 2) { var u2 = s2.getRange(2, SC.CI['編號'] + 1, m - 1, 1).getValues();
           for (var j = 0; j < u2.length; j++) if (String(u2[j][0]) === String(o.u)) { s2.getRange(j + 2, SC.COLS.length).setValue(!!o.v); done = true; break; } }
         return out({ ok: done });
+      }
+      /* 刪除一個人全部的成績（老師 2026-10-17 C8 另 4：例 30430 是老師自己測試）：先整列搬到「已刪除」工作表（萬一刪錯，老師可以從那裡抄回來），再從「紀錄」刪掉 */
+      if (o.a === 'delp') {
+        var cd = SC.checkId(o.id); if (cd.err) return out({ err: cd.err });
+        var lk3 = LockService.getScriptLock(), nd = 0; lk3.waitLock(20000);
+        try {
+          var s3 = sheet(SHEET), m3 = s3.getLastRow(), del = [];
+          if (m3 >= 2) { var V3 = s3.getRange(2, 1, m3 - 1, SC.COLS.length).getValues(); for (var r3 = 0; r3 < V3.length; r3++) if (String(V3[r3][SC.CI['5碼']]) === cd.id) del.push(r3); }
+          if (del.length) {
+            var ss3 = SpreadsheetApp.getActiveSpreadsheet(), bk = ss3.getSheetByName(DELETED) || ss3.insertSheet(DELETED);
+            if (bk.getLastRow() < 1) bk.appendRow(SC.COLS.concat(['刪除時間']));
+            del.forEach(function (r) { bk.appendRow(V3[r].concat([new Date()])); });
+            for (var q3 = del.length - 1; q3 >= 0; q3--) s3.deleteRows(del[q3] + 2, 1);
+            nd = del.length;
+          }
+        } finally { lk3.releaseLock(); }
+        return out({ ok: true, n: nd, id: cd.id });
       }
       /* 派任務／改時間／刪掉（老師看板） */
       if (o.a === 'task') {
