@@ -100,6 +100,27 @@ G.post(body('30701', 'g3u1_1-1b', 3)); G.post(body('40205', 'g4u1_1-1b', 5));
   eq([G.get({ a: 'tasks', id: '30405' }).locks, G.get({ a: 'tasks', id: '30701' }).locks, G.get({ a: 'tasks', id: '31101' }).locks], [['g3rv_gm-g3', 'g3rv_u1-t0-0'], ['g3rv_u1-t0-0'], []], '登入了：只拿自己班的');
   eq(G.post({ a: 'teacher', pw: 'pw-test' }).locks['304'].length, 2, '老師看板拿得到全部');
   G.post({ a: 'lock', pw: 'pw-test', cls: ['304', '307'], keys: ['g3rv_u1-t0-0', 'g3rv_gm-g3'], on: false }); eq(G.get({ a: 'locks', g: '3' }).any, [], '全部開'); }
+/* 2026-10-17 第八次 第 10 題 甲＋乙：〔🔒 開關〕的開放時間（LOCKT） */
+{ const H = 36e5, now = Date.now();
+  eq(G.post({ a: 'lockt', pw: 'wrong', cls: ['304'], keys: ['g3rv_u1-t0-0'], from: now, to: now + H }).err, 'pw', '開放時間要老師密碼');
+  let r = G.post({ a: 'lockt', pw: 'pw-test', cls: ['304'], keys: ['g3rv_u1-t0-0'], from: now - H, to: now + H });
+  eq(r.lockt['304']['g3rv_u1-t0-0'], [now - H, now + H], '存好 304 的開放時間');
+  eq(G.get({ a: 'tasks', id: '30405' }).locks, [], '在時間裡 ＝ 開著');
+  G.post({ a: 'lockt', pw: 'pw-test', cls: ['304'], keys: ['g3rv_u1-t0-0'], from: now + H, to: now + 2 * H });
+  eq(G.get({ a: 'tasks', id: '30405' }).locks, ['g3rv_u1-t0-0'], '還沒到 ＝ 鎖住');
+  eq(G.get({ a: 'locks', g: '3' }).any, ['g3rv_u1-t0-0'], '沒登入也知道鎖住');
+  eq(G.get({ a: 'tasks', id: '30701' }).locks, [], '別班不受影響');
+  G.post({ a: 'lockt', pw: 'pw-test', cls: ['304'], keys: ['g3rv_u1-t0-0'], from: now - 2 * H, to: now - H });
+  eq(G.get({ a: 'tasks', id: '30405' }).locks, ['g3rv_u1-t0-0'], '過了 ＝ 鎖住（結束了）');
+  r = G.post({ a: 'lock', pw: 'pw-test', cls: ['304'], keys: ['g3rv_u1-t0-0'], on: false });
+  ok(!r.lockt['304'], '按 🔓 ＝ 時間拿掉');
+  eq(G.get({ a: 'tasks', id: '30405' }).locks, [], '時間拿掉以後 ＝ 開著');
+  G.post({ a: 'lock', pw: 'pw-test', cls: ['304'], keys: ['g3rv_gm-g3'], on: true });
+  r = G.post({ a: 'lockt', pw: 'pw-test', cls: ['304'], keys: ['g3rv_gm-g3'], from: now - H, to: now + H });
+  ok(!r.locks['304'] && r.lockt['304']['g3rv_gm-g3'], '一直鎖的主題設定時間 ＝ 改成照時間開');
+  r = G.post({ a: 'lockt', pw: 'pw-test', cls: ['304'], keys: ['g3rv_gm-g3'], from: null, to: null });
+  ok(!r.lockt['304'], 'from 空白 ＝ 拿掉時間');
+  eq(SC.lktClean({ '304': { 'g4rv_x': [1, 2], 'g3rv_a': [5, 3], 'g3rv_b': [1, 9] }, '999': { 'g3rv_c': [1, 2] } }), { '304': { 'g3rv_b': [1, 9] } }, '讀不懂的、別的年級、時間反過來的 都丟掉'); }
 v = G.get({ a: 'view', id: '30405', set: 'g3u1_1-1b' });
 ok(v.boards && v.top.acc.cls.length >= 10 && v.top.acc.cls.every(x => x.rk <= 10), '學生只看得到前 10 名');
 ok(v.top.acc.grade.every(x => x.id[0] === '3'), '全年級榜只有三年級');
@@ -109,9 +130,8 @@ ok(v.set.others.length <= 10 && v.set.others.every(x => typeof x === 'number'), 
 eq(v.classes.map(c => c.cls), ['304', '307', '311'], '班級長條 ＝ 同年級三班');
 eq(G.post({ a: 'teacher', pw: 'wrong' }).err, 'pw', '老師密碼錯 ➜ 拒絕');
 const T = G.post({ a: 'teacher', pw: 'pw-test' }); ok(T.ok && T.rows.length === 15, '老師密碼對 ➜ 全部紀錄（' + (T.rows && T.rows.length) + '）');
-eq(G.post({ a: 'set', pw: 'pw-test', boards: false }).boards, false, '老師關掉學生排行榜');
-v = G.get({ a: 'view', id: '30405', set: 'g3u1_1-1b' }); ok(!v.boards && !v.top && v.set.others.length === 0, '排行榜關掉 ➜ 學生拿不到任何排行');
-G.post({ a: 'set', pw: 'pw-test', boards: true });
+eq(G.post({ a: 'set', pw: 'pw-test', boards: false }).boards, true, '〔🏆 學生排行榜 開／關〕刪掉了（2026-10-17 C9 第 9 題 B）：舊的看板按了也不會關');
+v = G.get({ a: 'view', id: '30405', set: 'g3u1_1-1b' }); ok(v.boards && v.top, '學生平板永遠看得到排行榜');
 const uu = G.books['紀錄'].d[1][SC.CI['編號']]; eq(G.post({ a: 'void', pw: 'pw-test', u: uu, v: true }).ok, true, '老師作廢一筆');
 eq(SC.fromRow(G.books['紀錄'].d[1]).x, true, '作廢那一筆打勾了');
 eq(G.post({ a: 'void', pw: 'nope', u: uu, v: false }).err, 'pw', '沒密碼不能作廢');
@@ -213,7 +233,7 @@ pages.forEach(f => {
   (h.match(/<script>[\s\S]*?<\/script>/g) || []).forEach((x, i) => { try { new (require('vm').Script)(x.slice(8, -9)); } catch (er) { ok(false, f + '：第 ' + (i + 1) + ' 段程式有語法錯誤：' + er.message); } });
 });
 ok(nG >= 5 && nT >= 8 && nR >= 2, '找得到全部的遊戲頁（' + nG + '）、複習題頁（' + nT + '）、Review 1 複習頁（' + nR + '）');
-Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem) ok(b.qs.length && b.qs.every(q => q.q && q.o && q.o.length >= 2 && q.o.length <= 4 && q.o.every(x => x)), '題庫 ' + k + '：每一題都要有題目和 2～4 個選項'); });
+Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs.length && b.qs.every(q => q.q && q.o && q.o.length >= 2 && q.o.length <= 4 && q.o.every(x => x)), '題庫 ' + k + '：每一題都要有題目和 2～4 個選項'); });
 
 /* 2026-10-15 D 第 8 件：❤ 用心程度（D12 ① 小華 87 分）、👀 看字卡（D12 ②） */
 { eq(SC.care({ days: 3, count: 6, q: 100, fastQ: 5, W: 5, F: 4, sec: 48 * 60 }), { it: [15, 20, 16, 16, 20], tot: 87, raw: { days: 3, count: 6, q: 100, fq: 5, fp: 5, W: 5, F: 4, sec: 2880 } }, '小華：3 天 15＋6 次 20＋太快亂按 5% 16＋答錯 5 改對 4 16＋48 分鐘 20 ＝ 87');
@@ -259,5 +279,38 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem) ok(b.qs.length &
   eq([xs.acc, xs.s, xs.prog, xs.sec], [null, null, null, 0], '只聽字卡：沒有正確率、總分、進步，也不加練習時間');
   ok(SC.toRow(R2[0])[SC.CI['題數']] === '' && SC.toRow(R2[0])[SC.CI['玩法']] === '聽完字卡' && SC.fromRow(SC.toRow(R2[0])).m === 'l', '試算表：玩法「聽完字卡」、題數空白、讀回來還是 l');
 }
+/* 🦸 角色（2026-10-17 第八次）：經驗值、金幣從紀錄算；免費第一個 ★1；金幣不夠、等級不夠買不到；換裝；伺服器 */
+{ const D = 864e5, T0 = Date.parse('2026-10-19T02:00:00Z');   /* 星期一 10:00 台灣 */
+  const q = (set, t, u, oks, fast) => SC.clean({ id: '30412', set, m: 'q', qs: [0, 1, 2, 3, 4].map(i => [i < oks ? 1 : 0, i < oks ? 0 : 1, 5, fast ? 1 : 0, .5, i]), t, u }, t + 6e4);
+  /* 小華：星期一 做 1 組（4 對）、星期二 同一組（5 對：改對 1 題、比上一次高）、星期三 太快亂按、星期四 聽完一站 */
+  const R = [q('g3u1_1-1b', T0, 'a', 4), q('g3u1_1-1b', T0 + D, 'b', 5), q('g3u1_1-1a', T0 + 2 * D, 'c', 5, 1),
+    SC.clean({ id: '30412', set: 'g3l_u1-t0-0', m: 'l', t: T0 + 3 * D, u: 'd' }, T0 + 3 * D + 6e4)];
+  const E = SC.rpEarn(R);
+  /* 經驗值：做完 3 次（太快亂按那一次不算次數）＝ a、b、d 各 10 ＝ 30；4 天各 ＋20 ＝ 80 ➜ 110 */
+  eq(E.xp, 110, '經驗值：做完一次 ＋10（太快亂按不算）、每一天第一次 ＋20');
+  /* 金幣：a 4；b 4（第一次就對）＋3（改對 1 題）＋10（比上一次高）＝ 17；c 太快亂按 0；d 聽字卡 0；4 天 ＞ 3 ＝ 寶箱 ＋60 ➜ 81 */
+  eq([E.coin, E.chests], [81, 1], '金幣：答對 ＋1、改對 ＋3、進步 ＋10、太快亂按 0；這週練 3 天以上 寶箱 ＋60');
+  const big = []; for (let i = 0; i < 40; i++) big.push(SC.clean({ id: '30412', set: 'g3gm_g1', m: 'g', n: 30, ok: 30, fix: 0, qs: Array.from({ length: 30 }, (_, j) => [1, 0, 3, 0, .5, j]), t: T0 + i * 6e4, u: 'g' + i }, T0 + 40 * 6e4));
+  eq(SC.rpEarn(big).coin, 100, '一天最多 100 金幣');
+  eq(SC.rpLv(0) + ',' + SC.rpLv(255) + ',' + SC.rpLv(256), '1,4,5', '等級：256 經驗值 ＝ Lv 5');
+  let st = SC.rpClean({}), r = SC.rpBuy(R, st, 'b01', T0);
+  ok(r.st && r.free && r.paid === 0, '第一個 ★1 英雄免費');
+  r = SC.rpBuy(R, r.st, 'b02', T0); ok(r.st && r.paid === 50, '第二個 ★1 英雄 50 金幣'); st = r.st;
+  eq(SC.rpBuy(R, st, 'b03', T0).err, 'coin', '金幣不夠買不到（81 − 50 ＝ 31 ＜ 50）');
+  eq(SC.rpBuy(R, st, 'b17', T0).err, 'lv', '等級不夠買不到（★3 要 Lv 5）');
+  eq(SC.rpBuy(R, st, 'g29', T0).err, 'item', '女 29（等老師換新圖）不可以買');
+  eq(SC.rpBuy(R, st, 'b02', T0).err, 'own', '買過的不能再買');
+  r = SC.rpBuy(R, st, 'p03', T0 + 3 * D); ok(r.free && r.st.eq.p === 'p03', '第一隻 ★1 寵物免費，自動裝上'); st = r.st;
+  eq(SC.rpEquip(st, 'b01', T0).st.eq.h, 'b01', '換回買過的英雄');
+  eq(SC.rpEquip(st, 'b09', T0).err, 'own', '沒買過的不能裝');
+  const V = SC.rpView(R, st); eq([V.coins, V.lv, V.petDays], [31, 3, 1], '平板看到：剩 31 金幣、Lv 3、寵物陪了 1 天（裝上以後練的那一天）');
+  ok(V.power > 0 && SC.rpDmg(V.power) >= 10 && SC.rpDmg(99999) === 30, '戰力、合作打魔王傷害（最多 30）');
+  /* 伺服器 */
+  eq(G.get({ a: 'rpg', id: '3x' }).err !== undefined, true, '5 碼不對 ➜ 拒絕');
+  const g0 = G.get({ a: 'rpg', id: '30405' }); ok(g0.ok && g0.v.lv >= 1 && !g0.v.st.eq.h, '伺服器：還沒有英雄');
+  let pr = G.post({ a: 'rpg', id: '30405', op: 'buy', item: 'g01' }); ok(pr.ok && pr.free && pr.v.st.eq.h === 'g01', '伺服器：免費選第一個英雄、存進「角色」');
+  ok(G.books['角色'] && G.books['角色'].d.length === 2 && /g01/.test(G.books['角色'].d[1][1]), '試算表「角色」有一列');
+  eq(G.post({ a: 'rpg', id: '30405', op: 'buy', item: 'b30' }).err, 'lv', '伺服器：★5 等級不夠');
+  const rv = G.post(body('30405', 'g3u1_2b', 5, { k: 'rpg' })); ok(rv.rpg && rv.rpg.gx >= 10 && rv.rpg.gc >= 5 && rv.rpg.h === 'g01', '做完一次：回傳這一次拿到的經驗值、金幣、我的英雄'); }
 console.log((bad ? '✗ ' : '✓ ') + '成績紀錄規則＋Apps Script 量了 ' + n + ' 項，失敗 ' + bad + ' 項');
 process.exit(bad ? 1 : 0);

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>現場任務 大螢幕</title>
+<style>
+@font-face{font-family:Andika;src:url(../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+/* live/_live.css — ⚡ 現場任務（大螢幕、學生平板共用；配 live/_build.js） */
+:root{color-scheme:dark;--gold:#FFD54A;--ok:#3BD16F;--line:#34475C}
+*{box-sizing:border-box}
+html,body{margin:0;background:#05070D;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;font-weight:700;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;touch-action:manipulation}
+button,input{font:inherit;font-weight:700}
+button{color:#fff;cursor:pointer;touch-action:manipulation}
+a{color:#7FD4FF}
+.scr .in{max-width:1280px;margin:0 auto;padding:14px 16px 40px}
+.center{text-align:center}
+h1{font-size:clamp(34px,5vh,56px);color:var(--gold);margin:10px 0}
+h2{font-size:clamp(24px,3.2vh,32px);color:#7FD4FF;margin:18px 0 8px}
+.note{color:#BFD3E6;font-size:clamp(20px,2.6vh,26px);margin:6px 0}
+.big2{font-size:clamp(26px,3.8vh,40px)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.row button,.ggrid button{min-height:60px;padding:6px 18px;border-radius:16px;background:#16212D;border:3px solid var(--line);font-size:clamp(20px,2.6vh,26px)}
+.row button.on,.ggrid button.on{border-color:var(--gold);color:#FFE07A;background:#2A2208}
+button.big,a.big{min-height:76px;padding:8px 40px;border-radius:22px;background:#0F3323;border:4px solid var(--ok);font-size:clamp(28px,4vh,40px);margin:14px auto;color:#fff;align-items:center;justify-content:center}
+button.ghost,a.ghost{display:inline-flex;align-items:center;min-height:56px;padding:6px 22px;border-radius:16px;background:#1B2633;border:3px solid #4A5A6C;font-size:22px;margin:10px;text-decoration:none;color:#fff}
+input[type=password]{display:block;margin:12px auto;font-size:32px;padding:10px 18px;border-radius:16px;border:3px solid #4A5A6C;background:#0B1118;color:#fff;min-height:64px;width:min(420px,90vw);text-align:center}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:10px}
+.gcd{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px}.gcd .gi{font-size:40px;line-height:1}.gcd b{font-size:26px}.gcd small{font-size:clamp(19px,2.3vh,26px);color:#BFD3E6;line-height:1.3}
+/* 房間號碼 */
+.code{font-size:clamp(110px,22vh,240px);letter-spacing:.12em;color:var(--gold);line-height:1;text-shadow:0 0 40px rgba(255,213,74,.5)}
+.pls{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:10px 0}
+.pl{width:96px;text-align:center;font-size:20px}.pl img{width:84px;border-radius:12px;border:3px solid #FFD54A;display:block;margin:0 auto}.noh{display:inline-flex;width:84px;height:110px;align-items:center;justify-content:center;font-size:44px;border:3px dashed #4A5A6C;border-radius:12px}
+/* 題目（大螢幕） */
+.qwrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;padding:12px 16px;min-height:100vh;align-items:start}
+@media (max-aspect-ratio:5/4){.qwrap{grid-template-columns:1fr}}
+.qtop{display:flex;justify-content:space-between;align-items:center;font-size:clamp(24px,3.4vh,36px);gap:12px;flex-wrap:wrap}.qtm b{font-size:1.5em;color:var(--gold)}
+.qbar{height:16px;border-radius:999px;background:#1B2633;overflow:hidden;margin:6px 0 12px}.qbar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#3BD16F,#FFD54A);transition:width .2s linear}
+.qq{font-size:clamp(34px,7vh,90px);line-height:1.25;text-align:center;margin:10px 0 18px;min-height:1.3em}.qq small{font-size:.55em;color:#BFD3E6}
+.qos{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.qo{display:flex;align-items:center;gap:14px;border-radius:20px;padding:12px 18px;font-size:clamp(28px,5.4vh,66px);min-height:clamp(90px,19vh,230px);border:5px solid transparent}
+.qo b{display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;border-radius:50%;background:rgba(0,0,0,.35);flex:0 0 auto}
+.c0{background:#C62828}.c1{background:#1565C0}.c2{background:#B8860B}.c3{background:#2E7D32}
+.qo.ok{border-color:#fff;box-shadow:0 0 30px rgba(255,255,255,.7);transform:scale(1.03)}.qo.no{opacity:.35}
+.qctl{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.qctl button{min-height:56px;padding:6px 18px;border-radius:16px;background:#16212D;border:3px solid var(--line);font-size:clamp(22px,2.4vh,30px)}
+/* 遊戲畫面 */
+.qside{background:linear-gradient(#0E1A2C,#060A12);border:3px solid #2A3A50;border-radius:24px;padding:12px;min-height:min(88vh,980px);position:relative;overflow:hidden}
+.gvt{font-size:clamp(26px,3.6vh,38px);color:var(--gold);text-align:center;margin-bottom:8px}
+.rk5{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px;font-size:clamp(20px,2.6vh,30px)}.rk5 span{background:#111;border-radius:12px;padding:2px 10px}.rk5 b{color:var(--gold)}
+.fxb{font-style:normal;font-size:.8em;margin-left:2px;animation:fxbob .5s ease-in-out infinite alternate}@keyframes fxbob{to{transform:translateY(-6px)}}
+.boss{text-align:center}.bm{font-size:clamp(130px,34vh,380px);line-height:1.1;animation:bob 1.6s ease-in-out infinite}.boss.dead .bm{animation:none}@keyframes bob{50%{transform:translateY(-10px)}}
+.hpb{position:relative;height:60px;border-radius:999px;background:#2A0E0E;border:4px solid #FF6B6B;overflow:hidden}.hpb i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#FF3B3B,#FF9F43);transition:width .8s ease-out}.hpb span{position:relative;font-size:clamp(24px,3vh,34px);line-height:52px}
+.lanes{display:grid;gap:3px}.ln{display:grid;grid-template-columns:2.4em 1fr 1.6em;align-items:center;font-size:clamp(18px,2.2vh,26px)}.ln .tr{position:relative;height:clamp(26px,3.6vh,40px);border-bottom:2px dashed #34475C}.ln .car{position:absolute;bottom:0;font-size:clamp(24px,3.4vh,38px);transition:left 1s ease-out;transform:scaleX(-1)}
+.sp{position:relative;height:66vh;display:flex;justify-content:space-around;align-items:flex-end}.sp .moon{position:absolute;top:0;left:50%;transform:translateX(-50%);font-size:70px}
+.sp .rk{position:relative;width:40%;height:80%;border-left:3px dashed #34475C;text-align:center}.sp .rkr{position:absolute;left:50%;transform:translateX(-50%);font-size:70px;transition:bottom 1s ease-out}.sp .rk b{position:absolute;bottom:-34px;left:0;right:0;font-size:22px}
+.mp{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}.mp i{aspect-ratio:1;border-radius:10px;background:#1B2633;transition:background .6s}.mp i.t0{background:#1E88E5}.mp i.t1{background:#E53935}
+.mps{display:flex;justify-content:space-around;margin-top:8px;font-size:26px}
+.tw{display:flex;align-items:flex-end;gap:4px;height:64vh}.tc{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:16px}
+.tcl{width:100%;background:linear-gradient(#5AB0FF,#1E3A5F);border-radius:8px 8px 0 0;position:relative;transition:height 1s ease-out;min-height:4px}.tci{position:absolute;top:-34px;left:50%;transform:translateX(-50%);width:30px;border-radius:6px}.tcl .noh{width:30px;height:34px;font-size:20px}
+.pe{text-align:center}.pei{font-size:clamp(140px,26vh,260px);line-height:1.1;transition:transform .6s}.pei.st4{animation:bob 1.2s ease-in-out infinite;filter:drop-shadow(0 0 20px #FFD54A)}
+.pes{font-size:34px}.pes span{opacity:.3}.pes span.on{opacity:1}
+.sh{position:relative;width:min(100%,64vh);aspect-ratio:1;margin:0 auto}.tgt{position:absolute;inset:0;border-radius:50%;background:repeating-radial-gradient(circle,#E53935 0 8%,#fff 8% 16%)}
+.dt{position:absolute;transform:translate(-50%,-50%);font-style:normal;background:#111;color:#FFE07A;border:2px solid #FFE07A;border-radius:999px;padding:0 6px;font-size:16px}
+.trs{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;font-size:52px;margin-top:20%}.trs em{font-style:normal;font-size:26px;color:#4A5A6C}.trs .now{animation:bob 1s ease-in-out infinite}
+.sf{position:relative;height:64vh}.sf svg{position:absolute;left:0;right:0;bottom:0;width:100%;height:40%}.sfr{position:absolute;font-size:34px;transition:bottom 1s ease-out;text-align:center;line-height:1}.sfr b{display:block;font-size:14px}
+.kg{text-align:center}.kpod{display:flex;align-items:flex-end;justify-content:center;gap:12px;margin-top:10px}
+.kp{display:flex;flex-direction:column;align-items:center;width:30%;font-size:22px}.kp em{font-style:normal;color:var(--gold)}.kpi{width:min(100%,130px);border-radius:12px;border:3px solid var(--gold)}.kp .noh{width:90px;height:120px}
+.kb{width:100%;background:linear-gradient(#FFD54A,#B8860B);color:#000;font-size:40px;border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center}
+.kp.p1 .kb{height:120px}.kp.p2 .kb{height:80px}.kp.p3 .kb{height:50px}.kc{font-size:30px;margin-top:14px}
+.eres{font-size:clamp(34px,5vh,56px);margin:10px 0}.epod .kpi{width:min(100%,170px)}
+.efw{position:relative;min-height:10px}.fwt{font-size:26px}.fwi{width:110px;border-radius:12px;margin:6px;border:3px solid var(--gold)}
+.fwx{position:absolute;inset:0;pointer-events:none}.fwx i{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--c);animation:fwb 1.4s ease-out infinite}
+@keyframes fwb{0%{transform:none;opacity:1}100%{transform:translate(var(--x),var(--y));opacity:0}}
+/* 學生 */
+.cbox{display:flex;justify-content:center;gap:14px;margin:16px 0}.cbox i{width:clamp(70px,12vw,110px);height:clamp(90px,14vh,130px);border-radius:18px;border:4px solid #4A5A6C;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:clamp(50px,8vh,80px)}
+.cbox i.f{border-color:var(--gold);color:var(--gold)}.cbox i.cur{border-color:#7FD4FF;animation:blink 1s infinite}@keyframes blink{50%{border-color:#16212D}}
+.kpad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:420px;margin:0 auto}.kpad button{min-height:clamp(64px,9vh,90px);border-radius:18px;background:#16212D;border:3px solid var(--line);font-size:clamp(32px,5vh,46px)}
+.kpad button:last-child{grid-column:2}
+.wimg{width:min(50vw,240px);border-radius:16px;border:4px solid var(--gold);display:block;margin:14px auto}
+.sqw{max-width:1100px;margin:0 auto;padding:10px 14px 30px;position:relative}
+.sqq{font-size:clamp(26px,4vh,44px);text-align:center;margin:8px 0;line-height:1.3}.sqq small{font-size:.6em;color:#BFD3E6}.sqq.zoom{font-size:clamp(36px,6vh,64px)}
+.sqh[hidden]{display:none}.sqh{background:#0F2A1C;border:3px solid var(--ok);border-radius:16px;padding:6px 14px;font-size:24px;display:flex;align-items:center;gap:10px}.hpet{width:48px;border-radius:8px}
+.sqm{text-align:center;min-height:1.3em}
+.sos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.so{display:flex;align-items:center;gap:12px;border-radius:20px;padding:10px 16px;font-size:clamp(24px,3.8vh,40px);min-height:clamp(90px,16vh,170px);border:5px solid transparent;text-align:left}
+.so b{display:inline-flex;align-items:center;justify-content:center;width:1.5em;height:1.5em;border-radius:50%;background:rgba(0,0,0,.35);flex:0 0 auto}
+.so:disabled{cursor:default}.so.cut{opacity:.15}.so.pk{border-color:#fff;box-shadow:0 0 24px rgba(255,255,255,.6)}.so.ok{border-color:#fff;box-shadow:0 0 30px #fff}.so.no{opacity:.35}
+.sr{text-align:center;font-size:clamp(30px,4.6vh,48px);margin-top:12px}.sr.ok{color:#7BF0A8}.sr.no{color:#FFB38A}.sr.wait{color:#BFD3E6}.ss{text-align:center;font-size:28px}
+.kch{position:fixed;right:16px;bottom:16px;min-height:80px;padding:8px 26px;border-radius:999px;background:#3A2E08;border:4px solid var(--gold);font-size:34px}.kch.pop{animation:kpop .3s}@keyframes kpop{50%{transform:scale(1.2)}}
+.et{font-size:clamp(34px,5vh,52px);color:var(--gold)}
+/* 🐾 禮物盒 */
+#gift{position:fixed;inset:0;background:rgba(0,0,0,.86);display:none;align-items:center;justify-content:center;z-index:40;padding:16px}#gift.on{display:flex}
+.gb{background:#0B1118;border:4px solid var(--gold);border-radius:26px;padding:18px;max-width:640px;width:100%;text-align:center}
+.gt{font-size:clamp(26px,3.8vh,38px);color:#FFE07A}.gt2{font-size:clamp(24px,3.2vh,32px);margin:10px 0}
+.gpet{position:relative;display:inline-block;margin:10px auto}.gpi{width:150px;border-radius:14px;border:3px solid #7FD4FF}.gpet .gbox{position:absolute;right:-30px;bottom:-10px;font-size:64px;animation:hop .5s ease-in-out 3}
+.gpet.walk{animation:walk 1s ease-out}@keyframes walk{from{transform:translateX(-60vw)}}@keyframes hop{50%{transform:translateY(-26px)}}
+.grow{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grow button{min-height:110px;border-radius:20px;border:4px solid #7FD4FF;background:#0E2240;font-size:clamp(26px,3.6vh,34px)}.grow button small{display:block;font-size:20px;color:#BFD3E6}
+.grow button:last-child{border-color:var(--gold);background:#2A2208}
+.gbx{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:10px 0}.bx{font-size:clamp(64px,10vh,96px);background:none;border:0;min-width:96px;min-height:96px;animation:hop .45s ease-in-out 3 both}
+.gopen{position:relative;height:clamp(240px,36vh,330px)}.lid{position:absolute;left:50%;top:40%;font-size:90px;transform:translate(-50%,-50%);animation:lid .7s ease-out forwards}@keyframes lid{to{transform:translate(-50%,-160%) rotate(-25deg);opacity:0}}
+.ghero{position:absolute;left:50%;top:0;transform:translateX(-50%);animation:fly .8s cubic-bezier(.2,1.5,.4,1) .4s both}@keyframes fly{from{transform:translate(-50%,60%) scale(.2);opacity:0}}
+.ghi{width:clamp(150px,22vh,210px);border-radius:16px;border:4px solid var(--gold);box-shadow:0 0 30px rgba(255,213,74,.6)}.say{position:absolute;left:78%;top:4%;white-space:nowrap;background:#fff;color:#000;border-radius:18px;padding:4px 14px;font-size:26px}
+.gget{font-size:clamp(26px,3.6vh,36px);margin-top:8px}.gget span{font-size:.8em;color:#BFD3E6}.goth{font-size:20px;color:#9FB3C8;margin-top:6px}
+.gok{min-height:64px;padding:6px 40px;border-radius:18px;background:#0F3323;border:3px solid var(--ok);font-size:30px;margin-top:12px}
+/* 干擾（好笑、不扣分、≦ 3 秒） */
+#fxo{position:fixed;inset:0;pointer-events:none;z-index:30;display:none}#fxo.on{display:block}
+.fxt{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:#3A2E08;border:3px solid var(--gold);border-radius:18px;padding:6px 18px;font-size:clamp(22px,3vh,30px);white-space:nowrap;max-width:94vw;overflow:hidden;text-overflow:ellipsis}
+.bub{position:absolute;bottom:-60px;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,rgba(160,220,255,.5) 40%,rgba(160,220,255,.15));animation:bub 2s ease-in forwards}@keyframes bub{to{transform:translateY(-115vh)}}
+#fxo .met,#fxo .slp{pointer-events:auto;position:absolute;font-size:64px;background:none;border:0;min-width:80px;min-height:80px;animation:fall 3s linear}@keyframes fall{from{transform:translateY(-40vh)}}
+#fxo .slp{left:50%;top:40%;transform:translate(-50%,-50%);animation:none;background:#0B1118;border:4px solid #7FD4FF;border-radius:20px;padding:10px 20px;font-size:28px}.spi{width:120px;border-radius:12px;display:block;margin:0 auto 6px;animation:zz 1s ease-in-out infinite}@keyframes zz{50%{transform:rotate(-6deg)}}
+.spin .sos{animation:spin1 1.2s ease-in-out}@keyframes spin1{to{transform:rotate(360deg)}}
+.fog .sos,.fog .sqq{filter:blur(6px);transition:filter .3s}
+.wind .sqq{animation:sway .4s ease-in-out infinite alternate}@keyframes sway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+.float .so{animation:flt 1.2s ease-in-out infinite alternate}.float .so:nth-child(2n){animation-delay:.4s}@keyframes flt{to{transform:translateY(-14px)}}
+.shake{animation:shk .25s linear 8}@keyframes shk{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition:none!important}}
+
+</style></head><body class="host">
+<script src="../score/url.js"></script><script src="fb.js"></script>
+<div class="scr" id="hpw" hidden><div class="in center"><h1>⚡ 現場任務</h1><div class="note">老師 密碼（跟 老師看板 一樣）</div>
+ <input type="password" id="pw" autocomplete="current-password"><button id="pwgo" class="big">🔑 進去</button><div id="pwm" class="note"></div>
+ <div class="note">還沒 設定 Firebase？➜ <a href="setup.html">大字版 設定頁</a></div></div></div>
+<div class="scr" id="hset" hidden><div class="in"></div></div>
+<div class="scr" id="hlob" hidden><div class="in center"><div class="note big2">學生 打開 <b>⚡ 現場任務</b>（首頁 的 大按鈕）➜ 輸入：</div><div id="code" class="code"></div><div id="lgame" class="note big2"></div>
+ <div class="note big2">👥 已經 加入 <b id="lcnt">0</b> 人</div><div id="lpl" class="pls"></div><button id="go" class="big">▶ 開始</button><div id="lmsg" class="note"></div><button id="close" class="ghost">✕ 關掉 房間</button></div></div>
+<div class="scr" id="hq" hidden><div class="qwrap"><div class="qmain"><div class="qtop"><span id="qn"></span><span class="qtm">⏱ <b id="qt">15</b></span><span id="qa"></span></div><div class="qbar"><i id="qbar"></i></div>
+ <div id="qq" class="qq"></div><div id="qo" class="qos"></div>
+ <div class="qctl"><button id="hn">⏭ 下一步</button><button id="hp">⏸ 停在 這一題</button><button id="hint">😆 干擾：開</button></div></div><div class="qside" id="gv"></div></div></div>
+<div class="scr" id="hend" hidden><div class="in center"><h1>🏁 任務 完成！</h1><div id="eres" class="eres"></div><div id="epod" class="kpod epod"></div><div id="efw" class="efw"></div>
+ <div id="erw" class="note big2"></div><button id="give" class="big">🎁 發獎勵 到 每一個人 的 英雄</button><div id="gm" class="note big2"></div><button id="close2" class="ghost" onclick="closeRoom()">✕ 關掉 房間，再開 一場</button></div></div>
+<script>var BASE='../',BANK={"3":[{"nm":"三年級 ⚡ 閃電四選一","qs":[{"q":"What’s ＝ ?","o":["What is","What are","What am","What your"],"h":"’ 藏起來的是 is 的 i。"},{"q":"I’m ＝ ?","o":["I am","I is","I are","My am"],"h":"’ 藏起來的是 am 的 a。"},{"q":"You’re ＝ ?","o":["You are","Your","You is","You am"],"h":"You’re ＝ You are；Your 是「你的」。"},{"q":"What 的中文是？","o":["什麼","幾歲","怎麼樣","誰"],"h":"What ＝ 什麼。"},{"q":"How old 在問什麼？","o":["幾歲","名字","什麼","怎麼樣"],"h":"How old ＝ 問年紀。"},{"q":"How 的中文是？","o":["怎麼樣","幾歲","什麼","名字"],"h":"How 問程度（怎麼樣）；加上 old 才是問幾歲。"},{"q":"name 的中文是？","o":["名字","年紀","數字","朋友"],"h":"name ＝ 名字。"},{"q":"My 的中文是？","o":["我的","我","你的","你"],"h":"I 我，My 我的。"},{"q":"Your 的中文是？","o":["你的","你","我的","我"],"h":"You 你，Your 你的。"},{"q":"「我」的英文是？","o":["I","My","You","Your"],"h":"I ＝ 我（永遠大寫）。"},{"q":"「你」的英文是？","o":["You","Your","I","My"],"h":"You ＝ 你。"},{"q":"\"What’s your name?\" 的回答？","o":["My name is Emma.","Your name is Emma.","My name are Emma.","I’m nine."],"h":"問名字，答名字：My name is ＿。"},{"q":"\"How old are you?\" 的回答？","o":["I’m ten.","I’m Ken.","My name is ten.","You’re ten."],"h":"問幾歲，答幾歲。"},{"q":"「你的名字是什麼？」英文是？","o":["What’s your name?","What’s my name?","How old are you?","What your name?"],"h":"your ＝ 你的。"},{"q":"「你幾歲？」英文是？","o":["How old are you?","How are you?","How old you are?","What’s your name?"],"h":"How old ＋ are ＋ you。"},{"q":"「我八歲。」英文是？","o":["I’m eight years old.","I’m eight year old.","My eight years old.","I eight years old."],"h":"years 有 s，I’m 不能少。"},{"q":"「我的名字是 Mike。」英文是？","o":["My name is Mike.","I name is Mike.","My name Mike.","Your name is Mike."],"h":"My name is ＋ 名字。"},{"q":"eleven 是多少？","o":["十一","七","十二","十"],"h":"eleven 11，twelve 12。"},{"q":"twelve 是多少？","o":["十二","十一","二十","十"],"h":"twelve ＝ 12。"},{"q":"seven 是多少？","o":["七","十一","六","九"],"h":"seven ＝ 7。"},{"q":"「九」的英文是？","o":["nine","night","five","ten"],"h":"nine 最後的 e 不發音。"},{"q":"「六」的英文是？","o":["six","seven","sick","ten"],"h":"six ＝ 6。"},{"q":"years old 的中文是？","o":["歲","年","老","幾歲"],"h":"years old ＝ 歲。"},{"q":"I’m ten. 省略了什麼？","o":["years old","years","year old","my name"],"h":"I’m ten years old. 的 years old（兩個字）可以一起省略。"}]},{"nm":"三年級 ✏️ 填空高手","qs":[{"q":"＿＿'s your name?<br><small>你的名字是什麼？</small>","o":["What","How","Who","My"],"h":"問名字用 What。"},{"q":"What's ＿＿ name?<br><small>你的名字是什麼？</small>","o":["your","you","my","I"],"h":"你的 ＝ your。"},{"q":"What's your ＿＿?<br><small>你的名字是什麼？</small>","o":["name","old","years","nine"],"h":"名字 ＝ name。"},{"q":"How ＿＿ are you?<br><small>你幾歲？</small>","o":["old","name","years","is"],"h":"How old ＝ 幾歲。"},{"q":"How old ＿＿ you?<br><small>你幾歲？</small>","o":["are","is","am","do"],"h":"you 配 are。"},{"q":"How old are ＿＿?<br><small>你幾歲？</small>","o":["you","your","I","my"],"h":"你 ＝ you。"},{"q":"＿＿ name is Ken.<br><small>我的名字是 Ken。</small>","o":["My","I","Your","Me"],"h":"我的 ＝ My。"},{"q":"My name ＿＿ Alan.<br><small>我的名字是 Alan。</small>","o":["is","am","are","’m"],"h":"name 配 is。"},{"q":"My ＿＿ is Wendy.<br><small>我的名字是 Wendy。</small>","o":["name","old","years","you"],"h":"名字 ＝ name。"},{"q":"＿＿'m Mike.<br><small>我是 Mike。</small>","o":["I","My","You","Me"],"h":"I’m ＝ I am ＝ 我是。"},{"q":"I ＿＿ Emma.<br><small>我是 Emma。</small>","o":["am","is","are","my"],"h":"I 配 am。"},{"q":"I'm eight ＿＿ old.<br><small>我八歲。</small>","o":["years","year","name","is"],"h":"years 要有 s。"},{"q":"I'm nine years ＿＿.<br><small>我九歲。</small>","o":["old","name","nine","you"],"h":"years old ＝ 歲。"},{"q":"I'm ＿＿ years old.<br><small>我十歲。</small>","o":["ten","Ken","two","tea"],"h":"十 ＝ ten。"},{"q":"I'm ＿＿.<br><small>我十一歲。</small>","o":["eleven","seven","twelve","even"],"h":"十一 ＝ eleven。"},{"q":"I'm ＿＿ years old.<br><small>我十二歲。</small>","o":["twelve","eleven","twenty","two"],"h":"十二 ＝ twelve。"},{"q":"I'm ＿＿.<br><small>我七歲。</small>","o":["seven","six","eleven","nine"],"h":"七 ＝ seven。"},{"q":"I'm ＿＿ years old.<br><small>我六歲。</small>","o":["six","sick","seven","sixty"],"h":"六 ＝ six。"},{"q":"I'm ＿＿.<br><small>我九歲。</small>","o":["nine","night","five","ten"],"h":"九 ＝ nine。"},{"q":"＿＿'re seven.<br><small>你七歲。</small>","o":["You","Your","I","My"],"h":"You’re ＝ You are ＝ 你是。"},{"q":"＿＿ old are you?<br><small>你幾歲？</small>","o":["How","What","Who","My"],"h":"問幾歲用 How old。"},{"q":"I'm ＿＿.<br><small>我八歲。</small>","o":["eight","eat","ten","Ken"],"h":"八 ＝ eight。"}]},{"nm":"三年級 👑 魔王挑戰","qs":[{"q":"What’s ＝ ?","o":["What is","What are","Whats","What am"],"h":"’ 藏起來的是 is 的 i。"},{"q":"I’m ＝ ?","o":["I am","I is","My am","I are"],"h":"I’m ＝ I am。"},{"q":"You’re ＝ ?","o":["You are","Your","You is","You am"],"h":"Your 是「你的」，You’re 是「你是」。"},{"q":"「你的名字是什麼？」英文是？","o":["What’s your name?","What’s you name?","How’s your name?","What your name?"],"h":"What’s ＋ your ＋ name。"},{"q":"「你幾歲？」英文是？","o":["How old are you?","What old are you?","How are you?","How old is you?"],"h":"How old are you?"},{"q":"What’s your name? 的回答？","o":["I’m Wendy.","Your name is Wendy.","My name Wendy.","I’m ten."],"h":"問名字，答名字：I’m Wendy. ＝ My name is Wendy."},{"q":"How old are you? 的回答？","o":["I’m eleven years old.","I’m Alan.","My name is eleven.","You’re eleven."],"h":"問幾歲，答幾歲。"},{"q":"問句用 your（你的），回答要用哪一個英文單字？","o":["My","Your","You","I"],"h":"your（你的）➜ My（我的）。"},{"q":"問句用 you（你），回答要用哪一個英文單字？","o":["I","You","My","Your"],"h":"you（你）➜ I（我）。"},{"q":"哪一句是對的？","o":["I’m nine years old.","I’m nine year old.","I nine years old.","My nine years old."],"h":"I’m ＋ 數字 ＋ years old。"},{"q":"哪一句是對的？","o":["My name is Mike.","I name is Mike.","My name Mike.","Me name is Mike."],"h":"My name is ＋ 名字。"},{"q":"I’m eight. 等於？","o":["I’m eight years old.","I’m eight year old.","I’m eight years.","My name is eight."],"h":"years old 可以省略。"},{"q":"How old 問什麼？","o":["幾歲","名字","怎麼樣","什麼"],"h":"How old ＝ 問年紀。"},{"q":"How 的中文意思是？","o":["怎麼樣","幾歲","什麼","名字"],"h":"How 問程度；How old 才是問幾歲。"},{"q":"What 的哪個字母不發音？","o":["h","W","a","t"],"h":"What 的 h 淺灰色。"},{"q":"eight 的哪兩個字母不發音？","o":["gh","ei","ht","eg"],"h":"eight 的 gh 淺灰色。"},{"q":"name 的哪個字母不發音？","o":["e","n","a","m"],"h":"name 的 e 淺灰色。"},{"q":"twelve 是多少？","o":["十二","十一","二十","十"],"h":"twelve ＝ 12。"},{"q":"eleven 是多少？","o":["十一","七","十二","十"],"h":"eleven ＝ 11。"},{"q":"「我七歲。」英文是？","o":["I’m seven.","I’m eleven.","My seven.","You’re seven."],"h":"I’m ＋ seven。"},{"q":"「你七歲。」英文是？","o":["You’re seven.","Your seven.","I’m seven.","You seven."],"h":"You’re ＝ You are ＝ 你是。"},{"q":"My 的中文？","o":["我的","我","你的","你"],"h":"I 我，My 我的。"},{"q":"Your 的中文？","o":["你的","你","我的","我"],"h":"You 你，Your 你的。"},{"q":"I’m Ken. 在回答哪一題？","o":["What’s your name?","What’s my name?","How old are you?","How are you?"],"h":"Ken 是名字 ➜ What’s your name?"}]}],"4":[{"nm":"四年級 ⚡ 閃電四選一","qs":[{"q":"Who’s ＝ ?","o":["Who is","Who are","Whose","Who was"],"h":"’ 就是把 is 的 i 藏起來。"},{"q":"He’s ＝ ?","o":["He is","His","He has","He was"],"h":"He’s ＝ He is。His 是「他的」。"},{"q":"She’s ＝ ?","o":["She is","Her","She has","Hers"],"h":"She’s ＝ She is。"},{"q":"isn’t ＝ ?","o":["is not","is now","it not","in not"],"h":"’ 藏起來的是 not 的 o。"},{"q":"問「人」要用哪一個字？","o":["Who","What","How","Where"],"h":"Who 問人，答案一定是一個人。"},{"q":"問「東西」要用哪一個字？","o":["What","Who","How","When"],"h":"What 問東西，Who 問人。"},{"q":"\"Who’s he?\" 答句第一個字是？","o":["He","She","Him","Who"],"h":"問 he 就答 He。"},{"q":"\"Who’s she?\" 答句第一個字是？","o":["She","He","Her","Who"],"h":"問 she 就答 She。"},{"q":"「他是誰？」英文第一個字是？","o":["Who","Whose","What","He"],"h":"中文最後問「誰」，英文最前面就是 Who。"},{"q":"\"He’s my father.\" 是什麼意思？","o":["他是我的爸爸。","她是我的爸爸。","他是我的媽媽。","他有爸爸。"],"h":"He 他、’s 是、my 我的、father 爸爸。"},{"q":"\"She’s my grandmother.\" 是什麼意思？","o":["她是我的奶奶。","她是我的爺爺。","他是我的奶奶。","她是我的媽媽。"],"h":"grandmother 是奶奶，也可以是外婆。"},{"q":"「爺爺」的英文是？","o":["grandfather","grandmother","father","uncle"],"h":"grand ＝ 大，grandfather ＝ 爸爸的爸爸。"},{"q":"「阿姨、姑姑、舅媽」的英文都是？","o":["aunt","uncle","niece","sister"],"h":"英文一個 aunt，管中文好幾個稱呼。"},{"q":"「叔叔、伯伯、舅舅」的英文都是？","o":["uncle","aunt","nephew","cousin"],"h":"英文一個 uncle，管中文好幾個稱呼。"},{"q":"\"He is a doctor.\" 改成問句是？","o":["Is he a doctor?","Is he doctor?","Does he a doctor?","Is a doctor he?"],"h":"he 和 is 換位置，句號換問號。"},{"q":"\"Is she a teacher?\" 改成直述句是？","o":["She is a teacher.","Is she a teacher.","Her is a teacher.","She a teacher is."],"h":"Is 和 she 換回來就變直述句。"},{"q":"直述句變問句，動的是哪兩個字？","o":["主詞和 is","is 和 a","a 和職業","完全不用動"],"h":"只動最前面兩個字，後面一個都不動。"},{"q":"\"Is he a cook?\" 回答「是的」要說？","o":["Yes, he is.","Yes, he’s.","Yes, she is.","Yes, he isn’t."],"h":"句尾的 is 不可以縮寫。"},{"q":"\"Is she a nurse?\" 回答「不是」要說？","o":["No, she isn’t.","No, she is.","No, he isn’t.","No, she not."],"h":"問 she 就答 she；不是用 isn’t。"},{"q":"「他是一位農夫。」英文是？","o":["He’s a farmer.","He’s farmer.","He a farmer.","Is he a farmer?"],"h":"職業前面一定要有 a。"},{"q":"\"a nurse\" 是什麼意思？","o":["一位護理師","一位醫生","一位廚師","一位老師"],"h":"nurse 護理師，doctor 醫生。"},{"q":"\"a cook\" 是什麼意思？","o":["一位廚師","一位農夫","一位學生","一位老師"],"h":"cook 廚師，farmer 農夫。"},{"q":"哪一句完全正確？","o":["He’s my dad.","His my dad.","He my dad.","He is my dad?"],"h":"He’s ＝ He is；His 是「他的」。"},{"q":"哪一句完全正確？","o":["She’s my aunt.","She my aunt.","Her’s my aunt.","She is my aunt?"],"h":"She’s ＝ She is。"},{"q":"「你的 姊姊 是 一位 廚師 嗎？」英文第一個字是？","o":["Is","Your","Does","Are"],"h":"問句 Is 放最前面：Is your sister a cook?"},{"q":"\"Is your dad a cook?\" 回答「是的」：","o":["Yes, he is.","Yes, she is.","Yes, he’s.","Yes, it is."],"h":"dad 是男生 ➜ he；短答不縮寫。"}]},{"nm":"四年級 ✏️ 填空高手","qs":[{"q":"＿＿'s he?<br><small>他是誰？</small>","o":["Who","What","How","Where"],"h":"問人用 Who。"},{"q":"Who ＿＿ he?<br><small>他是誰？</small>","o":["'s","are","am","do"],"h":"Who’s ＝ Who is。"},{"q":"He ＿＿ my father.<br><small>他是我的爸爸。</small>","o":["'s","are","am","have"],"h":"He’s ＝ He is。"},{"q":"She ＿＿ my mother.<br><small>她是我的媽媽。</small>","o":["'s","are","am","have"],"h":"She’s ＝ She is。"},{"q":"He's my ＿＿.<br><small>他是我的爺爺。</small>","o":["grandfather","grandmother","aunt","niece"],"h":"He 是男生 → grandfather。"},{"q":"She's my ＿＿.<br><small>她是我的奶奶。</small>","o":["grandmother","grandfather","uncle","nephew"],"h":"She 是女生 → grandmother。"},{"q":"He is ＿＿ doctor.<br><small>他是一位醫生。</small>","o":["a","the","an","is"],"h":"職業前面用 a。"},{"q":"She is a ＿＿.<br><small>她是一位護理師。</small>","o":["nurse","doctor","cook","farmer"],"h":"nurse 護理師。"},{"q":"＿＿ he a doctor?<br><small>他是一位醫生嗎？</small>","o":["Is","He","Are","Does"],"h":"問句把 Is 放最前面。"},{"q":"Is ＿＿ a teacher?<br><small>她是一位老師嗎？</small>","o":["she","her","he","hers"],"h":"Is 後面接 she。"},{"q":"Is he a ＿＿?<br><small>他是一位農夫嗎？</small>","o":["farmer","father","nurse","teacher"],"h":"farmer 農夫。"},{"q":"Yes, he ＿＿.<br><small>是的，他是。</small>","o":["is","'s","are","be"],"h":"句尾的 is 不縮寫。"},{"q":"No, she ＿＿.<br><small>不，她不是。</small>","o":["isn't","is","not","aren’t"],"h":"isn’t ＝ is not。"},{"q":"Yes, ＿＿ is.<br><small>是的，她是。</small>","o":["she","her","he","hers"],"h":"問 she 就答 she。"},{"q":"No, ＿＿ isn't.<br><small>不，他不是。</small>","o":["he","him","she","his"],"h":"問 he 就答 he。"},{"q":"He is a ＿＿.<br><small>他是一位學生。</small>","o":["student","teacher","doctor","cook"],"h":"student 學生。"},{"q":"She ＿＿ a cook.<br><small>她是一位廚師。</small>","o":["is","are","am","be"],"h":"She 後面用 is。"},{"q":"＿＿'s she?<br><small>她是誰？</small>","o":["Who","What","How","When"],"h":"問人用 Who。"},{"q":"She's my ＿＿.<br><small>她是我的阿姨。</small>","o":["aunt","uncle","nephew","grandpa"],"h":"aunt 阿姨、姑姑、舅媽。"},{"q":"He's my ＿＿.<br><small>他是我的叔叔。</small>","o":["uncle","aunt","niece","grandma"],"h":"uncle 叔叔、伯伯、舅舅。"},{"q":"＿＿ he your uncle?<br><small>他是你的叔叔嗎？</small>","o":["Is","Are","Am","Does"],"h":"問 he 用 Is，放最前面。"},{"q":"Is your dad a cook? Yes, ＿＿ is.<br><small>是的，他是。</small>","o":["he","she","his","him"],"h":"dad 是男生 ➜ he。"},{"q":"Is your mom a farmer? No, she ＿＿.<br><small>不，她不是。</small>","o":["isn't","is","aren't","not"],"h":"No 的短答：No, she isn’t."}]},{"nm":"四年級 👑 魔王挑戰","qs":[{"q":"Who’s ＝ ?","o":["Who is","Whose","Who are","Who has"],"h":"’ 藏起來的是 is 的 i。"},{"q":"「他是誰？」英文第一個字？","o":["Who","Whose","What","He"],"h":"中文最後問誰，英文最前面 Who。"},{"q":"\"Who’s she?\" 答句開頭？","o":["She","He","Her","Who"],"h":"問 she 就答 She。"},{"q":"He’s ＝ ?","o":["He is","His","He has","Him is"],"h":"He’s ＝ He is。"},{"q":"\"He is a cook.\" 的問句？","o":["Is he a cook?","He is a cook?","Is a cook he?","Do he a cook?"],"h":"he 和 is 換位置。"},{"q":"\"Is she a nurse?\" 的直述句？","o":["She is a nurse.","Is she a nurse.","Her is a nurse.","She a nurse is."],"h":"Is 和 she 換回來。"},{"q":"\"Is he a teacher?\" 答「是的」？","o":["Yes, he is.","Yes, he’s.","Yes, she is.","Yes, he isn’t."],"h":"句尾的 is 不縮寫。"},{"q":"\"Is she a doctor?\" 答「不是」？","o":["No, she isn’t.","No, she is.","No, he isn’t.","No, she not."],"h":"isn’t ＝ is not。"},{"q":"「奶奶」的英文？","o":["grandmother","grandfather","aunt","mother"],"h":"grandmother 奶奶，也可以是外婆。"},{"q":"「姪女」的英文？","o":["niece","nephew","aunt","cousin"],"h":"niece 姪女，外甥女也是。"},{"q":"「姪子」的英文？","o":["nephew","niece","uncle","cousin"],"h":"nephew 姪子，外甥也是。"},{"q":"aunt 是誰？","o":["阿姨、姑姑、舅媽","叔叔、伯伯、舅舅","姪女","表姊"],"h":"英文一個字管中文好幾個稱呼。"},{"q":"哪一句是對的？","o":["He’s my dad.","His my dad.","He my dad.","Him is my dad."],"h":"He’s ＝ He is。"},{"q":"哪一句是對的？","o":["She is a doctor.","She is doctor.","She are a doctor.","She a doctor."],"h":"is ＋ a 兩個都不能少。"},{"q":"問「東西」用哪個字？","o":["What","Who","How","Where"],"h":"What 問東西，Who 問人。"},{"q":"isn’t ＝ ?","o":["is not","it not","in not","is now"],"h":"’ 藏起來的是 not 的 o。"},{"q":"直述句變問句要動幾個字？","o":["兩個（主詞和 is）","一個","三個","全部"],"h":"只動最前面兩個字。"},{"q":"\"She’s a farmer.\" 的問句？","o":["Is she a farmer?","She’s a farmer?","Is she’s a farmer?","Is a farmer she?"],"h":"先把 She’s 拆回 She is。"},{"q":"a student 是什麼？","o":["一位學生","一位老師","一位醫生","一位廚師"],"h":"student 學生。"},{"q":"「他是一位農夫。」英文是？","o":["He’s a farmer.","He’s farmer.","He a farmer.","Is he a farmer?"],"h":"職業前面要有 a。"},{"q":"\"Who’s he?\" 不可以怎麼回答？","o":["It’s a book.","He’s my dad.","He’s my uncle.","He’s my brother."],"h":"Who 問人，答案一定是一個人。"},{"q":"Who’s 和 Whose 唸起來 ___","o":["一模一樣，但意思不同","完全不同","Whose 不存在","兩個都是「誰是」"],"h":"聽起來一樣，Who’s ＝ Who is，Whose ＝ 誰的。"},{"q":"\"He is my grandfather.\" 的問句？","o":["Is he my grandfather?","He is my grandfather?","Is my grandfather he?","Does he my grandfather?"],"h":"一樣只換前兩個字。"},{"q":"cook 是什麼？","o":["廚師","農夫","護理師","學生"],"h":"cook 廚師，farmer 農夫。"}]}]};
+/* live/_db.js — ⚡ 現場任務的「即時資料庫」：Firebase Realtime Database（老師 C8 第 16 題：Firebase）。只寫 ES5（iPad iOS 14）。
+   不用 Firebase 的程式庫（離線、版本都不怕）：讀 ＝ EventSource（REST 串流，Firebase 官方支援）、寫 ＝ fetch PUT／PATCH／DELETE。
+   網址在 live/fb.js 的 window.LIVE_DB（老師照大字版 live/setup.html 設定好，把網址交給 Claude 貼上；空白 ＝ 現場任務關著）。
+   量測（live/_verify.js）：LIVE_DB 指到量測自己開的假伺服器（同樣的 REST＋串流），**絕對不連真的 Firebase**。
+   資料只有：房間號碼（4 碼）、5 碼、答了第幾個、分數、英雄圖的代號。**沒有姓名**。 */
+var LDB=(function(){
+  var URL=String(window.LIVE_DB||'').replace(/\/+$/,''),L={};
+  function on(){return !!URL}
+  function seg(p){return String(p).replace(/^\/+|\/+$/g,'').split('/').filter(function(x){return x!==''})}
+  function getIn(t,p){var a=seg(p);for(var i=0;i<a.length;i++){if(t==null||typeof t!=='object')return null;t=t[a[i]]}return t==null?null:t}
+  function setIn(t,p,v){var a=seg(p);if(!a.length)return v;var r=t&&typeof t==='object'?t:{},o=r;
+    for(var i=0;i<a.length-1;i++){if(!o[a[i]]||typeof o[a[i]]!=='object')o[a[i]]={};o=o[a[i]]}
+    if(v==null)delete o[a[a.length-1]];else o[a[a.length-1]]=v;return r}
+  function clone(v){return v==null?null:JSON.parse(JSON.stringify(v))}
+  /* ── 真的（Firebase REST）── */
+  var ES={};
+  function listen(p,cb){p=seg(p).join('/');(L[p]=L[p]||[]).push(cb);
+    if(!URL)return function(){};
+    if(!ES[p]){var M={v:null},src=new EventSource(URL+'/'+p+'.json');ES[p]={src:src,M:M};
+      var up=function(e,patch){var d;try{d=JSON.parse(e.data)}catch(x){return}if(!d)return;
+        if(patch){for(var k in d.data||{})M.v=setIn(M.v,d.path+'/'+k,d.data[k])}else M.v=setIn(M.v,d.path,d.data);
+        (L[p]||[]).forEach(function(f){f(clone(M.v))})};
+      src.addEventListener('put',function(e){up(e,false)});src.addEventListener('patch',function(e){up(e,true)})}
+    else setTimeout(function(){cb(clone(ES[p].M.v))},0);
+    return function(){off(p,cb)}}
+  function off(p,cb){L[p]=(L[p]||[]).filter(function(f){return f!==cb});if(!L[p].length&&ES[p]){ES[p].src.close();delete ES[p]}}
+  function req(m,p,v){if(!URL)return Promise.resolve(false);
+    return fetch(URL+'/'+seg(p).join('/')+'.json',{method:m,body:m==='DELETE'?undefined:JSON.stringify(v)}).then(function(r){return r.ok},function(){return false})}
+  function get(p){if(!URL)return Promise.resolve(null);
+    return fetch(URL+'/'+seg(p).join('/')+'.json').then(function(r){return r.json()},function(){return null})}
+  return {on:on,listen:listen,set:function(p,v){return req('PUT',p,v)},patch:function(p,v){return req('PATCH',p,v)},del:function(p){return req('DELETE',p)},get:get}
+})();
+
+/* live/_common.js — ⚡ 現場任務：老師大螢幕（host.html）和學生平板（index.html）共用的東西。只寫 ES5。
+   老師的決定（sentences/2026-10-16_C_需求與問題.md 第四節 第七次 C8-14～17、第八次 C9 第 8 題 A）：
+   ① 10 種現場任務（下面 GAMES）② 每一種遊戲自己的干擾：**全部系統自動、好笑、不扣分、≦ 3 秒、沒有一種是學生自己挑人**；每人每場最多 2 次；被干擾完送 🛡（下一次答錯不算斷連對）；老師可以一鍵關掉
+   ③ 答對 5 題 ➜ 抽「🎮 遊戲功能」或「🎁 獎勵」（自己選一種），二～五選一（40%／30%／20%／10%）
+   ④ 驚喜卡跟複習網站完全不一樣：**你的寵物叼來一個禮物盒** ➜ 盒子跳三下 ➜ 打開飛出你的英雄、擺姿勢、說一句話 ➜ 功能生效 */
+var LV={
+  GAMES:[
+    {k:'boss',ic:'⚔️',nm:'全班打魔王',d:'全班一起：答對一題 ＝ 打魔王一下（英雄愈強打愈痛），血條打光 ＝ 全班贏',fx:{k:'sneeze',all:1,ic:'🤧',t:'魔王 打噴嚏！泡泡 飛滿 全班 的 畫面',ms:2000}},
+    {k:'race',ic:'🏎',nm:'賽車衝刺',d:'答對 ＝ 往前衝，答得愈快 衝愈遠',fx:{k:'banana',ic:'🍌',t:'壓到 香蕉皮！轉一圈',ms:1200}},
+    {k:'space',ic:'🚀',nm:'太空接力',d:'單號隊 vs 雙號隊：答對 ＝ 幫自己的隊 加燃料，火箭先飛到月亮的隊贏',fx:{k:'meteor',ic:'☄️',t:'小隕石雨！點掉 隕石 ＝ 多拿 燃料',ms:3000}},
+    {k:'map',ic:'🏰',nm:'搶地圖',d:'單號隊 vs 雙號隊：答對 ＝ 搶下一塊地，最後 地比較多 的隊贏',fx:{k:'fog',ic:'🌫',t:'起霧了！3 秒 就散',ms:2500}},
+    {k:'tower',ic:'🧗',nm:'爬高塔',d:'答對 ＝ 往上爬一層，看誰 爬最高',fx:{k:'wind',ic:'🌬',t:'大風 吹過來！字 搖一搖',ms:2000}},
+    {k:'pet',ic:'🐉',nm:'寵物大進化',d:'全班一起：答對愈多，全班的寵物 進化 愈多次（🥚 ➜ 🐣 ➜ 🐥 ➜ 🦅 ➜ 🐉）',fx:{k:'sleep',ic:'😴',t:'寵物 打瞌睡！點 3 下 叫醒',ms:3000}},
+    {k:'shoot',ic:'🎯',nm:'神射手',d:'答對 ＝ 射中靶，答得愈快 愈靠近紅心',fx:{k:'balloon',ic:'🎈',t:'答案 綁上 氣球，飄來飄去！',ms:2500}},
+    {k:'treasure',ic:'🗺',nm:'尋寶',d:'全班一起 往前走：答對 愈多，走 愈遠、打開 愈多 寶箱',fx:{k:'lock',ic:'🔐',t:'寶箱 上鎖！答對 這一題 ＝ 拿到 鑰匙（多一個 寶物 ＋50）',ms:2000}},
+    {k:'surf',ic:'🌊',nm:'衝浪大浪',d:'連對 愈多，浪 衝 愈高',fx:{k:'wave',all:1,ic:'🌊',t:'大浪 來了！全部 一起 抓穩，答對 多 ＋50',ms:2000}},
+    {k:'king',ic:'👑',nm:'王者擂台',d:'前 3 名 站上 擂台；台下 只能 送「📣 加油」，不能 干擾 台上的人',fx:{k:'cheer',ic:'📣',t:'台下 可以 按 📣 幫 台上 加油！',ms:0}}],
+  /* 🎮 遊戲功能（10 種）：f ＝ 生效時送給老師大螢幕的記號（算分用）、n ＝ 接下來幾題 */
+  FEAT:[
+    {k:'pause',ic:'⏸',nm:'時間暫停',t:'下一題 多 5 秒',say:'時間 停止！',n:1},
+    {k:'x2',ic:'✖2',nm:'分數兩倍',t:'接下來 3 題 分數 ✖2',say:'力量 加倍！',n:3},
+    {k:'cut',ic:'✂',nm:'刪掉 2 個',t:'下一題 刪掉 2 個 錯的 答案',say:'看我的 劍！',n:1},
+    {k:'zoom',ic:'🔍',nm:'題目放大',t:'接下來 3 題 題目 放大',say:'看清楚 一點！',n:3},
+    {k:'shield',ic:'🛡',nm:'護盾',t:'下一次 答錯 不算 斷連對',say:'防護罩 開啟！',n:1},
+    {k:'hint',ic:'💡',nm:'寵物提示',t:'下一題 寵物 給你 提示',say:'我來 幫你！',n:1},
+    {k:'retry',ic:'🔁',nm:'雙重 機會',t:'下一題 可以 選 2 個 答案（對 一個 就算，分數 一半）',say:'給我 兩次 機會！',n:1},
+    {k:'fire',ic:'🔥',nm:'超級連擊',t:'接下來 3 題 分數 ✖1.5',say:'火力 全開！',n:3},
+    {k:'rocket',ic:'🚀',nm:'加速衝刺',t:'接下來 3 題 分數 ✖1.3（賽車、太空 衝 更遠）',say:'衝 啊！',n:3},
+    {k:'cheer',ic:'🎆',nm:'全班加油',t:'全班 一起 ＋（魔王 多扣 50 血、寵物、寶藏 多走 一步）',say:'大家 一起 加油！',n:1}],
+  /* 🎁 獎勵（10 種）：遊戲結束 老師大螢幕 一次 發（要老師密碼，送到成績系統的「角色」：平板改不了） */
+  RW:[
+    {k:'c2',ic:'🪙',nm:'金幣 ✖2',t:'這一場 拿到的 金幣 再多 一倍'},
+    {k:'x2',ic:'⭐',nm:'經驗值 ✖2',t:'這一場 拿到的 經驗值 再多 一倍'},
+    {k:'frag',ic:'💎',nm:'寶物碎片',t:'💎 一個 碎片 ＝ 20 金幣'},
+    {k:'title',ic:'🏷',nm:'限定稱號',t:'拿到 稱號「⚡ 現場任務 勇者」'},
+    {k:'emo',ic:'😎',nm:'英雄表情',t:'送你 寶物「😎 英雄表情」（有了 ＝ 40 金幣）'},
+    {k:'fx',ic:'✨',nm:'登場特效',t:'送你 寶物「🎆 登場煙火」（有了 ＝ 40 金幣）'},
+    {k:'snack',ic:'🍖',nm:'寵物零食',t:'寵物 多陪你 1 天（長大 快一點）'},
+    {k:'medal',ic:'🏅',nm:'勳章',t:'我的英雄 多一個 🏅 勳章'},
+    {k:'box',ic:'🎁',nm:'小寶箱',t:'打開 ＝ 30 金幣'},
+    {k:'fw',ic:'🎇',nm:'大螢幕放煙火',t:'遊戲 結束 大螢幕 放你的 英雄 和 煙火（不放 名字）'}],
+  /* 二～五選一的機率 */
+  pickN:function(){var r=Math.random();return r<.4?2:r<.7?3:r<.9?4:5},
+  shuf:function(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a},
+  game:function(k){for(var i=0;i<LV.GAMES.length;i++)if(LV.GAMES[i].k===k)return LV.GAMES[i];return LV.GAMES[0]},
+  feat:function(k){for(var i=0;i<LV.FEAT.length;i++)if(LV.FEAT[i].k===k)return LV.FEAT[i];return null},
+  img:function(base,id){return !id?'':base+'rpg/'+(/^[bg]/.test(id)?'chars':/^w/.test(id)?'weapons':'pets')+'/'+id+'.jpg'},
+  /* 算分（老師大螢幕）：答對 100 ＋ 速度（最多 900）；✖2、🔥 ✖1.5、🚀 ✖1.3；🔁 再選一次答對 ＝ 一半 */
+  score:function(ok,ms,dur,f){if(!ok)return 0;f=f||{};var s=100+Math.round(900*Math.max(0,1-ms/dur));if(f.x2)s*=2;if(f.fire)s=Math.round(s*1.5);if(f.rocket)s=Math.round(s*1.3);if(f.rt)s=Math.round(s/2);return s},
+  MAXFX:2, DUR:15000
+};
+
+/* live/_host_rt.js — ⚡ 現場任務 老師大螢幕（live/host.html）。只寫 ES5。要先載入 live/_db.js、live/_common.js，網頁裡有 BANK（題目）、BASE（到 repo 根目錄）。
+   流程：🔑 老師密碼（成績系統同一個，送 Apps Script 比對）➜ ① 年級 ② 班級 ③ 10 種任務 ④ 題目 ⑤ 幾題 ⑥ 干擾 開／關 ➜〔⚡ 開房間〕
+        ➜ 大大的房間號碼（學生打開 …/live/ 輸入）➜〔▶ 開始〕➜ 一題 15 秒（全部答完就提早）➜ 公布 4.5 秒 ➜ 下一題 … ➜ 結束：前 3 名＋任務結果＋〔🎁 發獎勵〕
+   答案只放在這一台（老師的電腦）：題目送出去的時候 **不送答案**，公布的時候才送。分數也是這一台算。 */
+var H={pw:'',g:4,cls:'',game:'boss',sets:{},n:10,int:1,code:'',Q:[],qi:-1,P:{},tot:{},okc:{},st:{},fxc:{},sh:{},gs:{},pause:false,tm:null,unA:null,unP:null,A:{},xt:{},rw:{},done:false,log:[]};
+function $(s){return document.querySelector(s)}function $$(s){return [].slice.call(document.querySelectorAll(s))}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function scr(id){$$('.scr').forEach(function(x){x.hidden=x.id!==id})}
+function post(o){var u=String(window.SCORE_URL||'').trim();if(!u)return Promise.reject(new Error('nourl'));return fetch(u,{method:'POST',body:JSON.stringify(o)}).then(function(r){return r.json()})}
+function seatOf(id){return +String(id).slice(3)}
+/* ── 🔑 密碼 ── */
+function pwGo(){var p=$('#pw').value.trim(),m=$('#pwm');if(!p){m.textContent='請打密碼';return}
+  if(!LDB.on()){m.innerHTML='⚠ 現場任務 還沒有 設定 Firebase ➜ 請看 <a href="setup.html">大字版 設定頁</a>';return}
+  m.textContent='⏳ 檢查中…';post({a:'pw',pw:p}).then(function(j){if(j&&j.ok){H.pw=p;try{sessionStorage.setItem('lvpw',p)}catch(e){}setDraw();scr('hset')}else m.textContent='❌ 密碼 不對'},function(){m.textContent='📶 連不到 成績系統'})}
+/* ── ① ～ ⑥ 設定 ── */
+var CLS={3:['304','307','311'],4:['402','406','409','410','400']};
+function setDraw(){var h='<h2>① 年級</h2><div class="row">'+[3,4].map(function(g){return '<button data-sg="'+g+'" class="'+(H.g===g?'on':'')+'">'+(g===3?'三':'四')+'年級</button>'}).join('')+'</div>'+
+  '<h2>② 班級</h2><div class="row">'+CLS[H.g].map(function(c){return '<button data-sc="'+c+'" class="'+(H.cls===c?'on':'')+'">'+c+(c==='400'?' 課後班':'')+'</button>'}).join('')+'</div>'+
+  '<h2>③ 哪一種 現場任務</h2><div class="ggrid">'+LV.GAMES.map(function(x){return '<button data-sk="'+x.k+'" class="gcd'+(H.game===x.k?' on':'')+'"><span class="gi">'+x.ic+'</span><b>'+x.nm+'</b><small>'+x.d+'</small></button>'}).join('')+'</div>'+
+  '<h2>④ 題目（可以選好幾組）</h2><div class="row">'+(BANK[H.g]||[]).map(function(b,i){var on=!!H.sets[H.g+'_'+i];return '<button data-sb="'+i+'" class="'+(on?'on':'')+'">'+(on?'☑ ':'☐ ')+esc(b.nm)+'（'+b.qs.length+' 題）</button>'}).join('')+'</div>'+
+  '<h2>⑤ 幾題</h2><div class="row">'+[5,10,15,20].map(function(n){return '<button data-sn="'+n+'" class="'+(H.n===n?'on':'')+'">'+n+' 題（約 '+Math.ceil(n*22/60)+' 分鐘）</button>'}).join('')+'</div>'+
+  '<h2>⑥ 好笑的干擾</h2><div class="row"><button data-si="1" class="'+(H.int?'on':'')+'">'+LV.game(H.game).fx.ic+' 開（不扣分、≦ 3 秒）</button><button data-si="0" class="'+(!H.int?'on':'')+'">✖ 關</button><span class="note">'+esc(LV.game(H.game).fx.t)+'</span></div>'+
+  '<div class="row"><button id="mk" class="big">⚡ 開房間</button><span id="mkm" class="note"></span></div>';
+  $('#hset .in').innerHTML=h}
+function selQs(){var a=[];(BANK[H.g]||[]).forEach(function(b,i){if(H.sets[H.g+'_'+i])a=a.concat(b.qs)});return a}
+function mkRoom(){var m=$('#mkm');if(!H.cls){m.textContent='② 請選班級';return}var all=selQs();if(!all.length){m.textContent='④ 請選題目';return}
+  H.Q=LV.shuf(all).slice(0,H.n).map(function(q){var ord=LV.shuf([0,1,2,3]),o=ord.map(function(i){return q.o[i]}),a=ord.indexOf(0),w=LV.shuf([0,1,2,3].filter(function(i){return i!==a})).slice(0,2);return {t:q.q,o:o,a:a,h:q.h||'',x:w}});
+  H.n=H.Q.length;m.textContent='⏳ 開房間中…';
+  (function tryCode(n){var c=String(1000+Math.floor(Math.random()*9000));LDB.get('rooms/'+c+'/m').then(function(v){if(v&&n<8)return tryCode(n+1);H.code=c;
+    return LDB.set('rooms/'+c+'/m',{v:1,g:H.g,cls:H.cls,game:H.game,n:H.n,int:H.int,phase:'lobby',made:Date.now()}).then(function(ok){if(!ok){m.textContent='📶 連不到 Firebase';return}lobby()})})})(0)}
+/* ── 等學生加入 ── */
+function lobby(){scr('hlob');$('#code').textContent=H.code;$('#lgame').innerHTML=LV.game(H.game).ic+' '+LV.game(H.game).nm+'　'+H.cls+' 班　'+H.n+' 題';
+  if(H.unP)H.unP();H.unP=LDB.listen('rooms/'+H.code+'/p',function(v){H.P=v||{};drawLobby();if(H.qi>=0)drawGame()});
+  LDB.listen('rooms/'+H.code+'/xt',function(v){H.xt=v||{}});LDB.listen('rooms/'+H.code+'/ch',function(v){H.ch=v||{};if(H.game==='king'&&H.qi>=0)drawGame()})}
+function ids(){return Object.keys(H.P||{}).filter(function(id){return /^\d{5}$/.test(id)}).sort()}
+function drawLobby(){var L=ids();$('#lcnt').textContent=L.length;
+  $('#lpl').innerHTML=L.map(function(id){var p=H.P[id];return '<div class="pl">'+(p.h?'<img src="'+LV.img(BASE,p.h)+'" alt="">':'<span class="noh">🦸</span>')+'<b>'+seatOf(id)+' 號</b></div>'}).join('')}
+/* ── 一題 ── */
+function start(){if(!ids().length){$('#lmsg').textContent='還沒有 學生 加入';return}H.qi=-1;ids().forEach(function(id){H.tot[id]=0;H.okc[id]=0;H.st[id]=0;H.fxc[id]=0});H.gs=gs0();scr('hq');next()}
+function next(){clearTimeout(H.tm);H.qi++;if(H.qi>=H.n){end();return}
+  var q=H.Q[H.qi],ext=0;for(var id in H.xt)if(+H.xt[id]===H.qi)ext=5000;var dur=LV.DUR+ext;H.dur=dur;H.A={};H.fxNow={};H.t0=Date.now();
+  LDB.patch('rooms/'+H.code+'/m',{phase:'q',qi:H.qi,q:{t:q.t,o:q.o,h:q.h,x:q.x},t0:H.t0,dur:dur,rev:null});
+  if(H.unA)H.unA();H.unA=LDB.listen('rooms/'+H.code+'/a/'+H.qi,function(v){H.A=v||{};drawQ();if(Object.keys(H.A).length>=ids().length&&H.phase==='q')reveal()});
+  H.phase='q';drawQ();drawGame();tick();
+  if(H.int&&LV.game(H.game).fx.ms)H.tm2=setTimeout(fxSend,3000+Math.random()*3000)}
+function tick(){clearTimeout(H.tm);if(H.phase!=='q')return;var left=Math.max(0,H.dur-(Date.now()-H.t0));$('#qt').textContent=Math.ceil(left/1000);$('#qbar').style.width=(left/H.dur*100)+'%';
+  if(left<=0){reveal();return}H.tm=setTimeout(tick,200)}
+/* 干擾（系統自動、好笑、不扣分）：全班一起的 ＝ 每一個人；其他 ＝ 隨機 1～2 個（每人每場最多 2 次、剛被干擾過的有 🛡 不會再被選） */
+function fxSend(){if(H.phase!=='q')return;var F=LV.game(H.game).fx,L=ids().filter(function(id){return (H.fxc[id]||0)<LV.MAXFX&&!H.A[id]});if(!L.length)return;
+  var who=F.all?L:LV.shuf(L).slice(0,Math.random()<.5?1:2),now=Date.now();
+  who.forEach(function(id){H.fxc[id]=(H.fxc[id]||0)+1;H.fxNow[id]=F.k;LDB.set('rooms/'+H.code+'/fx/'+id,{k:F.k,qi:H.qi,at:now})});
+  H.log.push({qi:H.qi,k:F.k,n:who.length});drawGame()}
+function drawQ(){var q=H.Q[H.qi];if(!q)return;$('#qn').textContent=(H.qi+1)+' ／ '+H.n;$('#qq').innerHTML=q.t;
+  $('#qo').innerHTML=q.o.map(function(t,i){return '<div class="qo c'+i+(H.phase==='rev'&&i===q.a?' ok':'')+(H.phase==='rev'&&i!==q.a?' no':'')+'"><b>'+'ABCD'.charAt(i)+'</b><span>'+t+'</span></div>'}).join('');
+  $('#qa').textContent='✋ 已經 答了 '+Object.keys(H.A).length+' ／ '+ids().length+' 人'}
+/* ── 公布 ── */
+function reveal(){if(H.phase!=='q')return;H.phase='rev';clearTimeout(H.tm);clearTimeout(H.tm2);var q=H.Q[H.qi],sc={},ok1={},cheer=0,dmg=0;
+  ids().forEach(function(id){var a=H.A[id],f=(a&&a.f)||{},ok=!!a&&(Object.prototype.toString.call(a.k)==='[object Array]'?a.k.indexOf(q.a)>=0:a.k===q.a),s=LV.score(ok,a?a.ms:H.dur,H.dur,f);
+    if(f.met)s+=30*Math.min(3,+f.met||0);
+    if(ok&&(H.fxNow[id]==='lock'||H.fxNow[id]==='wave'))s+=50;
+    if(ok){H.st[id]++;H.okc[id]++;dmg+=10+Math.min(20,Math.floor((+(H.P[id]||{}).pw||0)/100))}else if(!f.sh)H.st[id]=0;
+    if(f.ch)cheer++;sc[id]=s;ok1[id]=ok?1:0;H.tot[id]+=s});
+  gsUp(ok1,dmg,cheer);
+  LDB.patch('rooms/'+H.code+'/m',{phase:'rev',rev:{qi:H.qi,a:q.a,h:q.h},r:{qi:H.qi,sc:sc,tot:H.tot,ok:ok1,st:H.st,okc:H.okc},gs:H.gs});
+  H.sc=sc;drawQ();drawGame();
+  if(!H.pause)H.tm=setTimeout(next,4500)}
+/* ── 遊戲畫面（大螢幕右邊）── */
+function gs0(){var n=Math.max(1,ids().length);return {hp:n*Math.max(3,Math.round(H.n*.6))*15,hp0:n*Math.max(3,Math.round(H.n*.6))*15,fuel:[0,0],cells:[],pet:0,tr:0,cheer:0}}
+function team(id){return seatOf(id)%2?0:1}
+function gsUp(ok1,dmg,cheer){var G=H.gs;G.hp=Math.max(0,G.hp-dmg-cheer*50);G.cheer+=cheer;
+  ids().forEach(function(id){if(ok1[id]){G.fuel[team(id)]++;if(G.cells.length<30)G.cells.push(team(id))}});
+  var tot=0,max=ids().length*H.n;ids().forEach(function(id){tot+=H.okc[id]});G.pet=Math.min(4,Math.floor((tot+G.cheer)/Math.max(1,max)*5));G.tr=Math.min(6,Math.floor((tot+G.cheer)/Math.max(1,max)*7))}
+function rank(){return ids().map(function(id){return {id:id,v:H.tot[id]||0}}).sort(function(a,b){return b.v-a.v||(a.id<b.id?-1:1)})}
+function heroI(id,cls){var p=H.P[id]||{};return p.h?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,p.h)+'" alt="">':'<span class="noh '+(cls||'')+'">🦸</span>'}
+function drawGame(){var el=$('#gv');if(!el)return;var G=H.gs,k=H.game,L=ids(),R=rank(),mx=Math.max(1,R.length?R[0].v:1),h='<div class="gvt">'+LV.game(k).ic+' '+LV.game(k).nm+'</div>';
+  var fxi=function(id){return H.fxNow&&H.fxNow[id]?'<i class="fxb">'+LV.game(k).fx.ic+'</i>':''};
+  if(k==='boss'){var p=G.hp/G.hp0*100;h+='<div class="boss'+(G.hp<=0?' dead':'')+'"><div class="bm">'+(G.hp<=0?'💥':'🐲')+'</div><div class="hpb"><i style="width:'+p+'%"></i><span>'+(G.hp<=0?'🎉 全班 打倒 魔王！':'❤ '+G.hp+' ／ '+G.hp0)+'</span></div></div>'}
+  else if(k==='race')h+='<div class="lanes">'+L.map(function(id){return '<div class="ln"><b>'+seatOf(id)+'</b><span class="tr"><span class="car" style="left:calc('+((H.tot[id]||0)/Math.max(mx,H.n*600)*88)+'%)">🏎'+fxi(id)+'</span></span><span class="fl">🏁</span></div>'}).join('')+'</div>';
+  else if(k==='space'){var f=G.fuel,top=Math.max(4,Math.ceil(L.length*H.n/2*.7));h+='<div class="sp"><div class="moon">🌕</div>'+[0,1].map(function(t){return '<div class="rk"><div class="rkr" style="bottom:'+Math.min(100,f[t]/top*100)+'%">🚀</div><b>'+(t?'雙號隊':'單號隊')+' '+f[t]+'</b></div>'}).join('')+'</div>'}
+  else if(k==='map'){var c=G.cells,cnt=[0,0];c.forEach(function(t){cnt[t]++});h+='<div class="mp">'+Array.apply(null,{length:30}).map(function(_,i){return '<i class="'+(i<c.length?'t'+c[i]:'')+'"></i>'}).join('')+'</div><div class="mps"><b class="t0">🔵 單號隊 '+cnt[0]+'</b><b class="t1">🔴 雙號隊 '+cnt[1]+'</b></div>'}
+  else if(k==='tower')h+='<div class="tw">'+L.map(function(id){var n=H.okc[id]||0;return '<div class="tc"><div class="tcl" style="height:'+(n/Math.max(1,H.n)*100)+'%">'+heroI(id,'tci')+fxi(id)+'</div><b>'+seatOf(id)+'</b></div>'}).join('')+'</div>';
+  else if(k==='pet')h+='<div class="pe"><div class="pei st'+G.pet+'">'+['🥚','🐣','🐥','🦅','🐉'][G.pet]+'</div><div class="pes">'+['🥚','🐣','🐥','🦅','🐉'].map(function(x,i){return '<span class="'+(i<=G.pet?'on':'')+'">'+x+'</span>'}).join('➜')+'</div></div>';
+  else if(k==='shoot')h+='<div class="sh"><div class="tgt"></div>'+L.map(function(id,i){var s=(H.sc&&H.sc[id])||0,r=s?Math.max(4,46-s/1000*42):0,a=i*137.5*Math.PI/180;return s?'<i class="dt" style="left:calc(50% + '+(Math.cos(a)*r)+'%);top:calc(50% + '+(Math.sin(a)*r)+'%)">'+seatOf(id)+'</i>':''}).join('')+'</div>';
+  else if(k==='treasure')h+='<div class="trs">'+Array.apply(null,{length:7}).map(function(_,i){return '<span class="'+(i<G.tr?'op':i===G.tr?'now':'')+'">'+(i<G.tr?'💰':i===G.tr?'🚶':'🎁')+'</span>'}).join('<em>➜</em>')+'</div>';
+  else if(k==='surf')h+='<div class="sf"><svg viewBox="0 0 400 120" preserveAspectRatio="none"><path d="M0 90Q50 40 100 80T200 70T300 60T400 70V120H0Z" fill="#1E88E5"/><path d="M0 100Q60 70 120 95T240 90T400 95V120H0Z" fill="#64B5F6"/></svg>'+
+    L.map(function(id,i){var s=Math.min(8,H.st[id]||0);return '<div class="sfr" style="left:'+(4+i*(92/Math.max(1,L.length)))+'%;bottom:'+(20+s*9)+'%">🏄<b>'+seatOf(id)+'</b>'+fxi(id)+'</div>'}).join('')+'</div>';
+  else{var t3=R.slice(0,3),cc=0;for(var c2 in (H.ch||{}))cc+=+H.ch[c2]||0;h+='<div class="kg"><div class="kpod">'+[1,0,2].map(function(n){var x=t3[n];return '<div class="kp p'+(n+1)+'">'+(x?heroI(x.id,'kpi')+'<b>'+seatOf(x.id)+' 號</b><em>'+x.v+'</em>':'')+'<div class="kb">'+(n+1)+'</div></div>'}).join('')+'</div><div class="kc">📣 台下 加油 '+cc+' 次</div></div>'}
+  h+='<div class="rk5">'+R.slice(0,5).map(function(x,i){return '<span><b>'+(i+1)+'</b> '+seatOf(x.id)+' 號 '+x.v+'</span>'}).join('')+'</div>';
+  el.innerHTML=h}
+/* ── 結束＋發獎勵 ── */
+function end(){H.phase='end';clearTimeout(H.tm);LDB.patch('rooms/'+H.code+'/m',{phase:'end',r:{qi:H.qi,tot:H.tot,okc:H.okc,st:H.st},gs:H.gs});scr('hend');
+  var R=rank(),G=H.gs,k=H.game,res=k==='boss'?(G.hp<=0?'🎉 全班 打倒 魔王！':'🐲 魔王 還剩 '+G.hp+' 血，下次 再來！'):k==='space'||k==='map'?(function(){var a=k==='space'?G.fuel:[G.cells.filter(function(t){return !t}).length,G.cells.filter(function(t){return t}).length];return a[0]===a[1]?'🤝 兩隊 平手！':(a[0]>a[1]?'🔵 單號隊':'🔴 雙號隊')+' 贏了！'})():
+    k==='pet'?'全班的 寵物 進化到 '+['🥚','🐣','🐥','🦅','🐉'][G.pet]:k==='treasure'?'全班 打開 '+G.tr+' 個 寶箱 💰':'';
+  $('#eres').textContent=res;
+  $('#epod').innerHTML=[1,0,2].map(function(n){var x=R[n];return '<div class="kp p'+(n+1)+'">'+(x?heroI(x.id,'kpi')+'<b>'+seatOf(x.id)+' 號</b><em>'+x.v+' 分</em>':'')+'<div class="kb">'+['🥇','🥈','🥉'][n]+'</div></div>'}).join('');
+  LDB.get('rooms/'+H.code+'/rw').then(function(rw){H.rw=rw||{};var fw=Object.keys(H.rw).filter(function(id){return (H.rw[id]||[]).indexOf('fw')>=0});
+    if(fw.length)$('#efw').innerHTML='<div class="fwt">🎇 煙火 送給：</div>'+fw.map(function(id){return heroI(id,'fwi')}).join('')+fwHTML();
+    $('#erw').textContent='🎁 這一場 抽到 的 獎勵：'+Object.keys(H.rw).reduce(function(s,id){return s+(H.rw[id]||[]).length},0)+' 個（按 下面 的 按鈕 發 到 每一個人 的 英雄）'})}
+function fwHTML(){var h='<div class="fwx">',C=['#FFD54A','#FF6B6B','#7FD4FF','#7BF0A8','#D9A8FF'];for(var n=0;n<5;n++){var x=10+n*20,y=20+(n%2)*25;for(var i=0;i<14;i++){var a=i/14*Math.PI*2;h+='<i style="left:'+x+'%;top:'+y+'%;--c:'+C[n]+';--x:'+Math.round(Math.cos(a)*90)+'px;--y:'+Math.round(Math.sin(a)*90)+'px;animation-delay:'+(n*.3)+'s"></i>'}}return h+'</div>'}
+/* 每一個人：參加 ＋10 經驗值、答對 1 題 ＋1 金幣；抽到的獎勵照 LV.RW */
+function bonusList(){return ids().map(function(id){var rw=H.rw[id]||[],c=H.okc[id]||0,x=10,o={id:id,c:c,x:x,tre:[],title:'',snack:0,medal:0};
+  rw.forEach(function(k){if(k==='c2')o.c+=c;else if(k==='x2')o.x+=x;else if(k==='frag')o.c+=20;else if(k==='title')o.title='⚡ 現場任務 勇者';else if(k==='emo')o.tre.push('t06');else if(k==='fx')o.tre.push('t04');else if(k==='snack')o.snack++;else if(k==='medal')o.medal++;else if(k==='box')o.c+=30});return o})}
+function give(){var b=$('#give'),m=$('#gm');if(H.done){m.textContent='✅ 已經 發過了';return}b.disabled=true;m.textContent='⏳ 發獎勵中…';
+  post({a:'rpgb',pw:H.pw,list:bonusList()}).then(function(j){if(j&&j.ok){H.done=true;b.textContent='✅ 獎勵 發好了';m.textContent='✅ 發好了（'+j.n+' 人）：學生 打開〔🦸 我的英雄〕就看得到';LDB.patch('rooms/'+H.code+'/m',{given:1})}else{b.disabled=false;m.textContent='❌ 沒有 發成（'+((j&&j.err)||'')+'）'}},
+    function(){b.disabled=false;m.textContent='📶 連不到 成績系統'})}
+function closeRoom(){if(H.code)LDB.del('rooms/'+H.code);location.reload()}
+document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
+  if(c('#pwgo')){pwGo();return}
+  if((b=c('[data-sg]'))){H.g=+b.getAttribute('data-sg');H.cls='';setDraw();return}
+  if((b=c('[data-sc]'))){H.cls=b.getAttribute('data-sc');setDraw();return}
+  if((b=c('[data-sk]'))){H.game=b.getAttribute('data-sk');setDraw();return}
+  if((b=c('[data-sb]'))){var k=H.g+'_'+b.getAttribute('data-sb');H.sets[k]=!H.sets[k];setDraw();return}
+  if((b=c('[data-sn]'))){H.n=+b.getAttribute('data-sn');setDraw();return}
+  if((b=c('[data-si]'))){H.int=+b.getAttribute('data-si');setDraw();if(H.code)LDB.patch('rooms/'+H.code+'/m',{int:H.int});return}
+  if(c('#mk')){mkRoom();return}
+  if(c('#go')){start();return}
+  if(c('#hp')){H.pause=!H.pause;$('#hp').textContent=H.pause?'▶ 繼續':'⏸ 停在 這一題';if(H.pause&&H.phase==='rev')clearTimeout(H.tm);if(!H.pause&&H.phase==='rev')next();return}
+  if(c('#hn')){if(H.phase==='q')reveal();else next();return}
+  if(c('#hint')){H.int=H.int?0:1;$('#hint').textContent=H.int?'😆 干擾：開':'✖ 干擾：關';LDB.patch('rooms/'+H.code+'/m',{int:H.int});return}
+  if(c('#give')){give();return}
+  if(c('#close')){if(confirm('關掉 這個 房間？（學生 會 回到 輸入 號碼）'))closeRoom();return}
+});
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement&&document.activeElement.id==='pw')pwGo()});
+(function(){try{var p=sessionStorage.getItem('lvpw');if(p&&LDB.on()){H.pw=p;setDraw();scr('hset');return}}catch(e){}scr('hpw')})();
+
+</script></body></html>

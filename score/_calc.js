@@ -264,8 +264,26 @@ var SC = (function () {
   function lkSet(L, cls, keys, on) { L = lkClean(L);
     (cls || []).forEach(function (c) { c = String(c); var a = (L[c] || []).filter(function (k) { return (keys || []).indexOf(k) < 0; }); if (on) a = a.concat(keys || []); L[c] = a; });
     return lkClean(L); }
-  function lkAny(L, g) { var a = []; L = lkClean(L); for (var c in L) if (c.charAt(0) === String(g)) L[c].forEach(function (k) { if (a.indexOf(k) < 0) a.push(k); }); return a.sort(); }
-  function lkFor(L, id) { var c = checkId(id); if (c.err) return []; return lkClean(L)[c.cls] || []; }
+  /* ── 〔🔒 開關〕的開放時間（2026-10-17 老師看完 C9（第八次）第 10 題 甲＋乙）：LT ＝ { '304': { 'g3rv_u1-t0-0': [從, 到], … }, … }（指令碼屬性 LOCKT）
+     有時間的主題：從～到 之間開，之前 ＝ 還沒開放、之後 ＝ 結束了（都是鎖住）；同一個主題又按 🔒／🔓 ＝ 時間拿掉 */
+  function lktClean(T) { var o = {}; T = T || {};
+    for (var c in T) { var cc = String(c), g = cc.charAt(0) === '3' ? 3 : (cc.charAt(0) === '4' ? 4 : 0); if (!g || CLASSES[g].indexOf(cc) < 0) continue;
+      var m = {}, n = 0, x = T[c] || {};
+      for (var k in x) { var kk = String(k), r = LKRE.exec(kk), w = x[k] || [], a = Math.round(+w[0]), b = Math.round(+w[1]);
+        if (r && +r[1] === g && a > 0 && b > a && n < 200) { m[kk] = [a, b]; n++; } }
+      if (n) o[cc] = m; }
+    return o; }
+  /* 設定（from、to 都有）或拿掉（from 空白）：哪幾班 × 哪些代號 */
+  function lktSet(T, cls, keys, from, to) { T = lktClean(T); from = Math.round(+from); to = Math.round(+to);
+    (cls || []).forEach(function (c) { c = String(c); var m = T[c] || {}; (keys || []).forEach(function (k) { if (from > 0 && to > from) m[String(k)] = [from, to]; else delete m[String(k)]; }); T[c] = m; });
+    return lktClean(T); }
+  /* 這一班現在鎖住的代號：🔒 一直鎖的＋有時間、現在不在時間裡的 */
+  function lkNow(L, T, cls, now) { var a = (lkClean(L)[cls] || []).slice(), m = lktClean(T)[cls] || {};
+    for (var k in m) { var w = m[k]; if ((now < w[0] || now > w[1]) && a.indexOf(k) < 0) a.push(k); }
+    return a.sort(); }
+  function lkAny(L, g, T, now) { var a = [], cs = CLASSES[g] || []; now = now || Date.now();
+    cs.forEach(function (c) { lkNow(L, T, c, now).forEach(function (k) { if (a.indexOf(k) < 0) a.push(k); }); }); return a.sort(); }
+  function lkFor(L, id, T, now) { var c = checkId(id); if (c.err) return []; return lkNow(L, T, c.cls, now || Date.now()); }
   /* 班級：有做的人的平均（Q13-A）＋參與率（要老師填人數） */
   function classes(ps, g, sizes) {
     return CLASSES[g].filter(function (c) { return !AFTER[c]; }).map(function (c) {
@@ -365,9 +383,107 @@ var SC = (function () {
     }
     return out;
   }
+  /* ══ 🦸 角色、武器、寵物、寶物（2026-10-17 老師看完 C9（第八次）：C8 第 12 題 A＋C9 第 6 題 A＋B、第 7 題 A；規格 rpg/CLAUDE.md）══
+     公平（老師 C8-12 A、C9-6）：經驗值、金幣 **全部由伺服器從成績紀錄算出來**（平板改不了）；買到的東西 **不加分數、不改題目**，老師看板、排行榜照舊只看練習和答題。
+     「更強」＝ 看起來更強（★ 稀有度、光芒、登場特效、⚔ 戰力數字）＋ 現場任務「全班打魔王」打得比較痛（只幫全班，不算個人成績）。
+     ⭐ 經驗值（只會升，不會被花掉）：做完一次（練習次數 ＋1 的那一次）＋10、聽完一站字卡 ＋10、那一天第一次練 ＋20
+     🪙 金幣：第一次就答對 1 題 ＋1、答錯以後改對 1 題 ＋3、同一組比自己上一次正確率高 ＋10；一天最多 100（保護沒時間的孩子）；
+             每週保底寶箱：那一週練了 3 天以上 ＋60（跟成績好不好無關）
+     等級 Lv ＝ ⌊√(經驗值 ÷ 16)⌋ ＋ 1（Lv 5 ＝ 256、Lv 10 ＝ 1296、Lv 20 ＝ 5776 經驗值；一週練 4 天約 200 經驗值） */
+  var RPX = { rec: 10, day: 20 }, RPC = { fix: 3, prog: 10, cap: 100, chest: 60, chestDays: 3 };
+  var RPP = [0, 50, 150, 400, 900, 2000], RPL = [0, 1, 1, 5, 10, 20];   /* 稀有度 ★1～★5 的價錢、要幾級 */
+  /* 稀有度（30 個：★1 8 個、★2 8 個、★3 7 個、★4 4 個、★5 3 個）；女 29 等老師換新圖（C9 第 5 題 A：上傳的「新女 29」跟女 17 是同一張） */
+  function rpStars(a) { var o = {}; for (var i = 0; i < a.length; i++) for (var j = 0; j < a[i].length; j++) o[a[i][j]] = i + 1; return o; }
+  function rpSeq(p, a, b) { var o = []; for (var i = a; i <= b; i++) o.push(p + (i < 10 ? '0' : '') + i); return o; }
+  var RPR = {
+    h: (function () { var o = {}, k; [['b', 'h'], ['g', 'h']].forEach(function (x) { var r = rpStars([rpSeq(x[0], 1, 8), rpSeq(x[0], 9, 16), rpSeq(x[0], 17, 23), rpSeq(x[0], 24, 27), rpSeq(x[0], 28, 30)]); for (k in r) o[k] = r[k]; }); return o; })(),
+    w: rpStars([['w03', 'w05', 'w12', 'w13', 'w21', 'w27', 'w28', 'w30'], ['w01', 'w07', 'w09', 'w14', 'w15', 'w20', 'w24', 'w26'], ['w06', 'w10', 'w11', 'w16', 'w19', 'w22', 'w25'], ['w04', 'w08', 'w18', 'w23'], ['w02', 'w17', 'w29']]),
+    p: rpStars([['p03', 'p06', 'p07', 'p08', 'p10', 'p13', 'p14', 'p15'], ['p01', 'p02', 'p04', 'p05', 'p09', 'p11', 'p12', 'p28'], ['p16', 'p22', 'p23', 'p24', 'p25', 'p27', 'p30'], ['p17', 'p19', 'p20', 'p29'], ['p18', 'p21', 'p26']])
+  };
+  var RPHIDE = { g29: 1 };
+  /* 10 種外觀寶物（C9 第 7 題 A：只換外觀，公平） */
+  var RPT = [['t01', '✨ 光環', 100], ['t02', '🦸 披風', 150], ['t03', '👣 閃亮腳印', 120], ['t04', '🎆 登場煙火', 200], ['t05', '🖼 金色名字框', 100],
+    ['t06', '😎 英雄表情', 80], ['t07', '🙌 勝利姿勢', 150], ['t08', '🌌 星空背景', 250], ['t09', '🎩 寵物帽子', 80], ['t10', '💠 發光武器框', 120]];
+  var RPTP = {}; RPT.forEach(function (t) { RPTP[t[0]] = t[2]; });
+  /* 📖 圖鑑：集滿一套 ＝ 稱號（只顯示） */
+  var RPSET = [['🤖 機械軍團', ['p16', 'p19', 'p30']], ['🔥 火焰守護者', ['p05', 'p21', 'p24', 'w08']], ['🌌 星河旅人', ['p01', 'p18', 'w03', 'w15', 'w29']],
+    ['⏳ 時間魔法師', ['w06', 'w18', 'w23']], ['⚡ 雷電之王', ['p03', 'p20', 'w04']], ['❄ 冰雪守護者', ['p13', 'p26', 'p29', 'w09']], ['🌙 夜之守護者', ['p08', 'p09', 'p22', 'p25']]];
+  function rpKind(id) { id = String(id); return /^[bg]\d\d$/.test(id) ? 'h' : /^w\d\d$/.test(id) ? 'w' : /^p\d\d$/.test(id) ? 'p' : /^t\d\d$/.test(id) ? 't' : ''; }
+  function rpStar(id) { var k = rpKind(id); return k === 't' ? 0 : ((RPR[k] || {})[id] || 0); }
+  function rpPrice(id) { var k = rpKind(id); return k === 't' ? (RPTP[id] || 0) : RPP[rpStar(id)]; }
+  function rpNeed(id) { return rpKind(id) === 't' ? 1 : RPL[rpStar(id)]; }
+  function rpOk(id) { var k = rpKind(id); return !!k && !RPHIDE[id] && (k === 't' ? !!RPTP[id] : !!rpStar(id)); }
+  function rpLv(xp) { return Math.floor(Math.sqrt((+xp || 0) / 16)) + 1; }
+  function rpClean(st) { st = st || {}; var o = { own: { h: [], w: [], p: [], t: [] }, eq: { h: '', w: '', p: '', t: [] }, spent: 0, pt: 0, free: {} }, own = st.own || {}, eq = st.eq || {};
+    ['h', 'w', 'p', 't'].forEach(function (k) { (own[k] || []).forEach(function (id) { id = String(id); if (rpKind(id) === k && (rpStar(id) || k === 't') && o.own[k].indexOf(id) < 0) o.own[k].push(id); }); });
+    ['h', 'w', 'p'].forEach(function (k) { var v = String(eq[k] || ''); if (o.own[k].indexOf(v) >= 0) o.eq[k] = v; });
+    (eq.t || []).forEach(function (id) { id = String(id); if (o.own.t.indexOf(id) >= 0 && o.eq.t.indexOf(id) < 0) o.eq.t.push(id); });
+    o.spent = Math.max(0, Math.round(+st.spent || 0)); o.pt = Math.max(0, Math.round(+st.pt || 0));
+    ['h', 'w', 'p'].forEach(function (k) { if (st.free && st.free[k]) o.free[k] = 1; });
+    /* ⚡ 現場任務 老師發的獎勵（rpBonus）：bc 金幣、bx 經驗值、snack 寵物零食（陪伴天數 ＋1）、medal 勳章、lt 稱號 */
+    o.bc = Math.max(0, Math.round(+st.bc || 0)); o.bx = Math.max(0, Math.round(+st.bx || 0)); o.snack = Math.max(0, Math.round(+st.snack || 0)); o.medal = Math.max(0, Math.round(+st.medal || 0));
+    o.lt = []; (st.lt || []).forEach(function (t) { t = String(t).slice(0, 20); if (t && o.lt.indexOf(t) < 0 && o.lt.length < 20) o.lt.push(t); });
+    return o; }
+  /* 這個人全部的紀錄 ➜ 經驗值、金幣（只算沒作廢的） */
+  function rpEarn(rs) {
+    var L = (rs || []).filter(function (r) { return !r.x && r.m !== 'v'; }).sort(function (a, b) { return a.t - b.t; });
+    var xp = 0, days = {}, dayCoin = {}, cnt = {}, prev = {}, wk = {}, coin = 0, wkq = {};
+    L.forEach(function (r) {
+      var d = day(r.t), ck = d + '|' + r.set, fast = (+r.fast || 0) * 2 > r.n;
+      if (counts(r.ok, r.n, r.m, r.fast)) { cnt[ck] = (cnt[ck] || 0) + 1; if (cnt[ck] <= CAP) xp += RPX.rec; }
+      if (!days[d]) { days[d] = 1; xp += RPX.day; var w0 = weekStart(r.t); wk[w0] = (wk[w0] || 0) + 1; }
+      if (r.m === 'l' || r.m === 'mem' || fast) return;
+      var c = 0;
+      if (r.m === 'g') c += (+r.ok || 0) + RPC.fix * (+r.fix || 0);
+      else (r.qs || []).forEach(function (q, j) { var k = r.set + '#' + (q[5] == null ? j : q[5]); if (q[0]) { c += wkq[k] === 1 ? RPC.fix : 1; if (wkq[k] === 1) wkq[k] = 2; } else if (!wkq[k]) wkq[k] = 1; });
+      if (r.acc != null) { if (prev[r.set] != null && r.acc > prev[r.set]) c += RPC.prog; prev[r.set] = r.acc; }
+      var room = RPC.cap - (dayCoin[d] || 0), g = Math.max(0, Math.min(room, c)); dayCoin[d] = (dayCoin[d] || 0) + g; coin += g;
+    });
+    var chests = 0; for (var w in wk) if (wk[w] >= RPC.chestDays) chests++;
+    return { xp: xp, coin: coin + chests * RPC.chest, chests: chests, days: Object.keys(days).length, dd: days };
+  }
+  /* 平板看的：等級、經驗值條、金幣、寵物陪了幾天（裝上以後練了幾天：3 天長大、7 天進化）、戰力、稱號 */
+  function rpView(rs, st) { st = rpClean(st); var E = rpEarn(rs), pd = 0; E.xp += st.bx; E.coin += st.bc; var lv = rpLv(E.xp);
+    if (st.eq.p) { for (var d in E.dd) if (+d >= day(st.pt)) pd++; pd += st.snack; }
+    var ps = pd >= 7 ? 2 : pd >= 3 ? 1 : 0, all = st.own.h.concat(st.own.w, st.own.p);
+    var pow = lv * 10 + ps * 50; ['h', 'w', 'p'].forEach(function (k) { if (st.eq[k]) pow += rpStar(st.eq[k]) * 100; }); pow += st.eq.t.length * 20;
+    var titles = RPSET.filter(function (x) { return x[1].every(function (id) { return all.indexOf(id) >= 0; }); }).map(function (x) { return x[0]; }).concat(st.lt);
+    return { xp: E.xp, lv: lv, lvAt: 16 * (lv - 1) * (lv - 1), lvNext: 16 * lv * lv, earned: E.coin, coins: E.coin - st.spent, chests: E.chests, days: E.days,
+      petDays: pd, petStage: ps, power: pow, titles: titles, medal: st.medal, st: st };
+  }
+  /* 這一次（編號 u）拿到多少：全部 − 沒有這一筆 */
+  function rpGain(rs, st, u) { var a = rpView(rs, st), b = rpView((rs || []).filter(function (r) { return r.u !== u; }), st);
+    return { lv: a.lv, lv0: b.lv, xp: a.xp, gx: a.xp - b.xp, coins: a.coins, gc: a.earned - b.earned, lvAt: a.lvAt, lvNext: a.lvNext, h: a.st.eq.h, w: a.st.eq.w, p: a.st.eq.p, t: a.st.eq.t, ps: a.petStage, pow: a.power }; }
+  /* ⚡ 現場任務結束，老師大螢幕發的獎勵（要老師密碼）：b ＝ {c 金幣, x 經驗值, tre:[寶物], title, snack, medal}；寶物已經有了 ＝ 40 金幣 */
+  function rpBonus(st, b) { st = rpClean(st); b = b || {};
+    st.bc += Math.max(0, Math.min(500, Math.round(+b.c || 0))); st.bx += Math.max(0, Math.min(500, Math.round(+b.x || 0)));
+    st.snack += Math.max(0, Math.min(5, Math.round(+b.snack || 0))); st.medal += Math.max(0, Math.min(5, Math.round(+b.medal || 0)));
+    (b.tre || []).forEach(function (t) { t = String(t); if (!RPTP[t]) return; if (st.own.t.indexOf(t) >= 0) st.bc += 40; else { st.own.t.push(t); st.eq.t.push(t); } });
+    if (b.title) { var tt = String(b.title).slice(0, 20); if (st.lt.indexOf(tt) < 0) st.lt.push(tt); }
+    return st; }
+  /* 合作打魔王的傷害（C9 第 6 題 B）：答對一題 10 ＋ 戰力 ÷ 100（最多 ＋20）；只用在全班一起的血條 */
+  function rpDmg(power) { return 10 + Math.min(20, Math.floor((+power || 0) / 100)); }
+  /* 買：第一個 ★1 英雄、★1 武器、★1 寵物 各送一個（免費選）；其他要金幣夠、等級夠 */
+  function rpBuy(rs, st, id, now) { st = rpClean(st); id = String(id); var k = rpKind(id);
+    if (!rpOk(id)) return { err: 'item' };
+    if (st.own[k].indexOf(id) >= 0) return { err: 'own' };
+    var V = rpView(rs, st), free = k !== 't' && rpStar(id) === 1 && !st.free[k] && !st.own[k].length, pr = free ? 0 : rpPrice(id);
+    if (V.lv < rpNeed(id)) return { err: 'lv', need: rpNeed(id) };
+    if (V.coins < pr) return { err: 'coin', need: pr - V.coins };
+    st.own[k].push(id); st.spent += pr; if (free) st.free[k] = 1;
+    if (k === 't') st.eq.t.push(id); else { st.eq[k] = id; if (k === 'p') st.pt = now || 0; }
+    return { st: st, paid: pr, free: free }; }
+  /* 換裝（買過的才可以）；寶物 ＝ 開／關 */
+  function rpEquip(st, id, now) { st = rpClean(st); id = String(id); var k = rpKind(id);
+    if (!k || st.own[k].indexOf(id) < 0) return { err: 'own' };
+    if (k === 't') { var i = st.eq.t.indexOf(id); if (i >= 0) st.eq.t.splice(i, 1); else st.eq.t.push(id); }
+    else { if (k === 'p' && st.eq.p !== id) st.pt = now || 0; st.eq[k] = id; }
+    return { st: st }; }
   return { CLASSES: CLASSES, AFTER: AFTER, cname: cname, SEAT: SEAT, COLS: COLS, CI: CI, CAP: CAP, TOP: TOP, GMIN: GMIN, MT: MT, checkId: checkId, cat: cat, counts: counts, need: need, day: day, weekStart: weekStart,
     AW: AW, care: care, CAREMAX: CAREMAX, s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, clsAwards: clsAwards, secOf: secOf, questions: questions, gtop: gtop, view: view,
-    lkClean: lkClean, lkSet: lkSet, lkAny: lkAny, lkFor: lkFor, LKRE: LKRE,
-    tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE };
+    lkClean: lkClean, lkSet: lkSet, lkAny: lkAny, lkFor: lkFor, LKRE: LKRE, lktClean: lktClean, lktSet: lktSet, lkNow: lkNow,
+    tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE,
+    RPR: RPR, RPP: RPP, RPL: RPL, RPT: RPT, RPSET: RPSET, RPHIDE: RPHIDE, RPX: RPX, RPC: RPC, rpKind: rpKind, rpStar: rpStar, rpPrice: rpPrice, rpNeed: rpNeed, rpOk: rpOk, rpLv: rpLv,
+    rpClean: rpClean, rpEarn: rpEarn, rpView: rpView, rpBuy: rpBuy, rpEquip: rpEquip, rpDmg: rpDmg, rpGain: rpGain, rpBonus: rpBonus };
 })();
 if (typeof module !== 'undefined') module.exports = SC;

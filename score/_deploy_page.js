@@ -55,7 +55,8 @@ module.exports = function (CODE, kind) {
     { t: '打開上次的成績試算表', m: `
       <div class="win"><div class="url">sheets.google.com</div>
         <div class="row"><div class="tile ghost"></div><div class="tile" data-tap="1" data-say="上次做的那一個">📊<small>成績</small></div><div class="tile ghost"></div></div></div>
-      <a class="big go" href="https://sheets.google.com" target="_blank" rel="noopener">🌐 打開 Google 試算表</a>` },
+      <a class="big go" href="https://sheets.google.com" target="_blank" rel="noopener">🌐 打開 Google 試算表</a>`,
+      tip: '2026-10-17 這一次 新的：🦸 我的英雄（經驗值、金幣、商店）、📅 一鍵設定＋開放時間、⚡ 現場任務 發獎勵、排行榜開關 拿掉。試算表 會 自己 多一張「角色」（不用 自己 建）' },
     { t: '按最下面的「名單」分頁', m: `
       <div class="win"><div class="lines">　</div><div class="menu"><span>紀錄</span><span>班級人數</span><span class="hot" data-tap="1" data-say="最下面這一排">名單</span></div></div>`,
       tip: '名單已經貼好了：第 2、3 步直接按〔下一步〕' },   /* 2026-10-17：老師已經貼過名單，這一次只要換程式（第一次部署的說明在 deploy.html） */

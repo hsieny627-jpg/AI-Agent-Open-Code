@@ -1,7 +1,7 @@
 /* score/_teacher.js — 老師看板 teacher/index.html 的樣板（score/_build.js 呼叫；不要手改 teacher/index.html）
  *
  * 使用者的決定（sentences/2026-10-07_C_設計與研究清單.md 第四節、Q1～Q18 照建議）：
- *   最上面：年級、班級、期間（本週／上週／這學期全部／自訂）、來源（在校／在家）＋〔⬇ 一鍵下載 Excel〕＋〔🏆 學生排行榜 開／關〕
+ *   最上面：年級、班級、期間（本週／上週／這學期全部／自訂）、來源（在校／在家）＋〔⬇ 一鍵下載 Excel〕（〔🏆 學生排行榜 開／關〕2026-10-17 C9 第 9 題 B 刪掉）
  *   四個大數字：🎯 正確率、💯 總分、練習次數、👥 有做的人（2026-10-12 D4：⚡、🔁、🚀 看不懂 ➜ 換掉；進步 ＝ 綠色粗箭頭）
  *   五個分頁：👤 個人｜🏆 排行榜｜🏫 班際｜❌ 錯題｜🔔 要關心
  *   密碼：網頁裡沒有，送去 Apps Script 比對（指令碼屬性 TEACHER_PW）；這個分頁關掉就要重新輸入（sessionStorage）
@@ -15,7 +15,7 @@
  *   ✏️ 隨時改時間、🗑 刪掉；每個任務一張卡：誰做完 ✅、誰還沒 ⏳（要名單才有名字，E6）。鎖的規則在 _calc.js 的 tkLock。
  */
 const CERCSS = require('fs').readFileSync(require('path').join(__dirname, '_cer.css'), 'utf8'), CERRT = require('fs').readFileSync(require('path').join(__dirname, '_cer_rt.js'), 'utf8');
-const HONCSS = require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8'), HONRT = require('fs').readFileSync(require('path').join(__dirname, '_honor_rt.js'), 'utf8');
+const HONCSS = require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report.css'), 'utf8'), HONRT = require('fs').readFileSync(require('path').join(__dirname, '_honor_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report_rt.js'), 'utf8');
 /* 〔🔒 開關〕（2026-10-12 D 第 7 件）：在家複習網站每一個主題（sentences/_review_sites.js） */
 const RVS = require('../sentences/_review_sites.js'), RVT = {};
 RVS.SITES.forEach(S => { RVT[S.out === 'g3-review' ? 3 : 4] = RVS.topics(S).map(x => ({ k: x.k, grp: x.grp, t: x.t })); });
@@ -231,6 +231,20 @@ h3{margin:18px 0 8px;font-size:clamp(22px,1.8vw,32px)}
 button.lkg,b.lkg{background:#0F3323!important;border-color:#3BD16F!important;color:#D7FBE4!important}
 button.lkr,b.lkr{background:#3A0E0E!important;border-color:#FF6B6B!important;color:#FFD6D2!important}
 button.lky{background:#3A3000!important;border-color:#FFD54A!important;color:#FFF3C4!important}
+a.lvb{display:inline-flex;align-items:center;min-height:52px;padding:6px 16px;border-radius:14px;background:#0E2240;border:2px solid #5AB0FF;color:#D6EBFF;text-decoration:none;font-size:1em}
+button.lkt,b.lkt{background:#0E2240!important;border-color:#5AB0FF!important;color:#D6EBFF!important}
+.lkb .lkt0{flex:1;min-width:0}.lkb em.lktm{color:#BFE0FF}
+.lkw{border:3px dashed #5AB0FF;border-radius:16px;padding:8px 12px;margin:6px 0}
+.lkrow input[type=datetime-local]{font:inherit;font-size:max(18px,1em);min-height:52px;background:#0B1118;color:#fff;border:2px solid #4A5A6C;border-radius:12px;padding:4px 10px}
+.okn{font-size:.75em;color:#FFE9A8;margin-left:8px}.okclr{font-size:.8em;margin-left:10px}
+details.okg{border:2px solid #34404C;border-radius:16px;margin:8px 0;padding:4px 12px;background:#0B1118}
+details.okg summary{cursor:pointer;font-size:max(18px,1.05em);min-height:48px;display:flex;align-items:center;gap:6px}
+.okgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:8px;margin:6px 0 10px}
+button.oki{text-align:left;min-height:52px}button.oki.on{background:#2A2208;border-color:var(--gold);color:#FFE9A8}
+button.okgo{background:#0F3323;border:4px solid var(--ok);font-size:1.25em;min-height:64px;padding:6px 30px}
+.oklst{display:grid;gap:8px}.okl{display:grid;grid-template-columns:8.5em 1.6fr 1fr 1.6fr 1.6fr 1fr auto;gap:8px;align-items:center;background:#111;border-radius:14px;padding:8px 12px}
+.okl .okb{display:flex;gap:6px}
+@media (max-width:1100px){.okl{grid-template-columns:1fr 1fr}.okl .okb{justify-content:flex-end}}
 b.lkg,b.lkr{padding:0 8px;border:2px solid;border-radius:10px}
 .lkh{margin:14px 0 6px}#lkmsg{font-weight:700;color:#7EE2A8}
 .tk.on{border-color:var(--gold);background:#141006}.tk.end{opacity:.75}
@@ -350,7 +364,7 @@ ${CERCSS}
  <div class="top bar1"><h1>老師看板</h1>
   <span class="grp" id="fg"><button data-g="3" class="on">三年級</button><button data-g="4">四年級</button></span><span class="sp"></span>
   <button id="dl">⬇ Excel</button><span class="mwrap"><button id="more" aria-expanded="false">⚙ 更多</button>
-  <div id="morep" hidden><button id="bd">🏆 學生排行榜：開</button><button id="rf">🔄 重新整理</button><span id="zm"><button id="zo" aria-label="字變小">A－</button><button id="zi" aria-label="字變大">A＋</button></span><button id="out">👋 登出</button></div></span></div>
+  <div id="morep" hidden><a class="lvb" href="../live/host.html" target="_blank" rel="noopener">⚡ 現場任務 大螢幕</a><button id="rf">🔄 重新整理</button><span id="zm"><button id="zo" aria-label="字變小">A－</button><button id="zi" aria-label="字變大">A＋</button></span><button id="out">👋 登出</button></div></span></div>
  <div class="top fline"><span class="fic">🔎</span>
   <select id="fc" aria-label="班級"></select><i>·</i>
   <span class="grp"><select id="fp" aria-label="期間"><option value="w">本週</option><option value="lw">上週</option><option value="all">這學期全部</option><option value="c">自訂日期</option></select>
@@ -359,7 +373,7 @@ ${CERCSS}
   <select id="fs" aria-label="來源"><option value="">在校＋在家</option><option value="school">🏫 在校</option><option value="home">🏠 在家</option></select>
  </div>
  <div class="tiles" id="tiles"></div>
- <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 排行榜</button><button data-t="c">🏫 班級排行榜</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心<em class="bdg" id="kbdg" hidden></em></button><button data-t="t">📌 任務</button><button data-t="l">🔒 開關</button></div>
+ <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 排行榜</button><button data-t="c">🏫 班級排行榜</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心<em class="bdg" id="kbdg" hidden></em></button><button data-t="o">📅 一鍵設定</button><button data-t="t">📌 任務</button><button data-t="l">🔒 開關</button></div>
  <div class="pane" id="pane"></div>
 </div>
 <div id="modal"><div id="mbox"></div></div>
@@ -409,7 +423,7 @@ function who(id){var n=nm(id);return esc(id)+(n?' '+esc(n):'')}
 function load(j){DATA=j;NM={};RCLS={};(j.roster||[]).forEach(function(r){var id=r[0]+(r[1]<10?'0':'')+r[1];NM[id]=r[2];(RCLS[r[0]]=RCLS[r[0]]||[]).push(id)});
   SIZES={};var sz=j.sizes||{};Object.keys(RCLS).forEach(function(c){SIZES[c]=RCLS[c].length});Object.keys(sz).forEach(function(c){if(+sz[c]>0)SIZES[c]=+sz[c]});
   ALL=j.rows.map(SC.fromRow).filter(function(r){return r.id&&!isNaN(r.t)});
-  $('#bd').textContent='🏆 學生排行榜：'+(j.boards?'開':'關');$('#bd').classList.toggle('on',!!j.boards);clsSel();draw()}
+  clsSel();draw()}
 function clsSel(){$('#fc').innerHTML='<option value="">全部班</option>'+SC.CLASSES[F.g].map(function(c){return '<option value="'+c+'"'+(F.cls===c?' selected':'')+'>'+SC.cname(c)+'</option>'}).join('')}
 function range(){var now=DATA.now,w=SC.weekStart(now);
   if(F.p==='w')return{from:w,to:null};if(F.p==='lw')return{from:w-7*864e5,to:w};if(F.p==='all')return{from:null,to:null};
@@ -432,7 +446,7 @@ function draw(){
   /* 分頁上面的紅色數字：🔔 要關心 ＝ 🔴 幾個人（9 甲） */
   var red=ps.filter(function(p){return light(rowOf(p,{}))===0});$('#kbdg').hidden=!red.length;$('#kbdg').textContent=red.length;RED=red.map(function(p){return p.id}).sort();
   var h='';
-  if(TAB==='p')h=paneP(ps,RK);else if(TAB==='b')h=paneB(psG);else if(TAB==='c')h=paneC(psG);else if(TAB==='w')h=paneW(S.C);else if(TAB==='t')h=paneT();else if(TAB==='l')h=paneL();else h=paneK(ps,S);
+  if(TAB==='p')h=paneP(ps,RK);else if(TAB==='b')h=paneB(psG);else if(TAB==='c')h=paneC(psG);else if(TAB==='w')h=paneW(S.C);else if(TAB==='t')h=paneT();else if(TAB==='l')h=paneL();else if(TAB==='o')h=paneO();else h=paneK(ps,S);
   $('#pane').innerHTML=h;
 }
 /* 2026-10-12 D6-A：只留 7 欄（其他點那個人看；Excel 照樣全部都有）。燈號：🔴 正確率不到 60 或太快亂按超過 3 成；🟡 正確率不到 80 或太快亂按超過 1 成；🟢 其他 */
@@ -728,7 +742,7 @@ function person(id){
 var PCARE=null;
 /*〔📋 細節 ▾〕打開才演圖表和 📅 練習 動畫 */
 function pMore(on){var m=$('#pmore');if(!m)return;m.hidden=!on;$('#pmb').textContent=on?'📋 收起細節 ▴':'📋 細節 ▾';$('#pmb').classList.toggle('on',on);
-  if(on){pChart();if($('#pcare'))HON.cscene($('#pcare'),HON.cpick('ct'),PCARE,{help:1,t:hper2()+' 📅 練習'})}}
+  if(on){pChart();if($('#pcare'))RPT.show($('#pcare'),PCARE,{key:'t',t:hper2()+' 📅 練習'})}}   /* 2026-10-17 第八次：📅 練習報告＋愛心切換（跟學生平板同一份） */
 function pChart(){var el=$('#pch');if(!el||!PCH.L.length)return;var k=PCH.L[PCH.i],L=PCH.by[k],n=L.length,W=800,H=260,T=40,B=40;
   var X=function(i){return n>1?50+i*(W-100)/(n-1):W/2},Y=function(v){return T+(1-v/100)*(H-T-B)};
   var g='<svg class="pcl" viewBox="0 0 '+W+' '+H+'"><line x1="20" x2="'+(W-20)+'" y1="'+Y(60)+'" y2="'+Y(60)+'" stroke="#444" stroke-dasharray="6 6"/><text class="ax" x="'+(W-20)+'" y="'+(Y(60)-8)+'" text-anchor="end">60</text>'+
@@ -828,32 +842,128 @@ function tkList(){return (DATA&&DATA.tasks||[]).filter(function(t){return t.g===
 /* ══ 2026-10-12 D 第 7 件：〔🔒 開關〕在家複習網站的每一個主題（使用者 D16 A）══
    選班級（可以好幾班、〔✅ 全年級〕）➜ 按一個主題 ＝ 鎖／開（綠 🔓 開、紅 🔒 鎖、黃 ＝ 只有幾班鎖），按一下就存；〔🔓 全部開〕〔🔒 全部鎖〕
    學生看到：沒登入「🔒 請先登入」、登入了自己的班鎖住「🔒 還沒開放」（不寫哪幾班）。鎖住的連任務也打不開；教學網站不鎖 */
-var LKC=null,LKMSG='';
+var LKC=null,LKMSG='',LKM='t',LKW=null;
 function lkCls(){var all=SC.CLASSES[F.g];if(!LKC||LKC.g!==F.g)LKC={g:F.g,c:F.cls?[F.cls]:all.slice()};return LKC.c}
-function lkSt(k){var L=DATA.locks||{},cs=lkCls(),f=function(c){return (L[c]||[]).indexOf(k)>=0},n=cs.filter(f),G=SC.CLASSES[F.g].filter(f);return {n:n.length,all:cs.length,who:G,gall:G.length===SC.CLASSES[F.g].length}}
+function lkSt(k){var L=DATA.locks||{},T=DATA.lockt||{},cs=lkCls(),f=function(c){return (L[c]||[]).indexOf(k)>=0},n=cs.filter(f),G=SC.CLASSES[F.g].filter(f);
+  var tw=cs.map(function(c){return (T[c]||{})[k]||null}),t1=tw.filter(Boolean);
+  return {n:n.length,all:cs.length,who:G,gall:G.length===SC.CLASSES[F.g].length,tw:t1.length?t1[0]:null,tn:t1.length,tsame:t1.length===cs.length&&t1.every(function(w){return w[0]===t1[0][0]&&w[1]===t1[0][1]})}}
+/* 開放時間（2026-10-17 第八次 第 10 題 甲＋乙）：常用的一按就填好；預設 ＝ 現在 到 今天 16:00（過了 ＝ 明天 16:00） */
+function wPre(k){var d=new Date(),a=Math.floor(Date.now()/6e4)*6e4,b=new Date();b.setHours(16,0,0,0);
+  if(k==='today'){if(b.getTime()<=a)b.setDate(b.getDate()+1);return [a,b.getTime()]}
+  var wd=(d.getDay()+6)%7,fri=new Date();fri.setHours(16,0,0,0);fri.setDate(fri.getDate()+(4-wd+(wd>4?7:0)));
+  if(k==='week')return [a,fri.getTime()];
+  var mon=new Date();mon.setHours(8,0,0,0);mon.setDate(mon.getDate()+(7-wd));var nf=new Date(mon.getTime());nf.setDate(nf.getDate()+4);nf.setHours(16,0,0,0);return [mon.getTime(),nf.getTime()]}
+function wGet(){if(!LKW)LKW=wPre('today');return LKW}
+function wSt(w,now){return !w?'':now<w[0]?'⏳ 還沒開始':now>w[1]?'⛔ 結束了':'🟢 開放中'}
+function wRow(pre){var w=wGet();return '<div class="lkrow"><span>從</span><input type="datetime-local" id="'+pre+'1" value="'+tkV(w[0])+'"><span>到</span><input type="datetime-local" id="'+pre+'2" value="'+tkV(w[1])+'"></div>'+
+  '<div class="lkrow"><button data-wpre="today">今天 放學前</button><button data-wpre="week">這一週</button><button data-wpre="next">下一週</button><span class="note" style="margin:0">（常用的 一按 就填好）</span></div>'}
+function wRead(pre){var a=Date.parse(($('#'+pre+'1')||{}).value),b=Date.parse(($('#'+pre+'2')||{}).value);if(a>0&&b>a){LKW=[a,b];return LKW}return null}
 function paneL(){var T=RVT[F.g]||[],cs=lkCls(),G={},h;
   T.forEach(function(x){(G[x.grp]=G[x.grp]||[]).push(x)});
   h='<div class="note">在家複習網站（'+(F.g===3?'三':'四')+'年級複習）：<b class="lkg">🔓 綠色 ＝ 開</b>、<b class="lkr">🔒 紅色 ＝ 鎖</b>。按一下就換、馬上存好。鎖住的主題連任務也打不開；學生只看到「🔒 請先登入」或「🔒 還沒開放」，看不到鎖了哪幾班。教學網站（老師上課用）不鎖。</div>'+
    '<h3>① 哪幾班</h3><div class="lkrow">'+SC.CLASSES[F.g].map(function(c){return '<button data-lkc="'+c+'" class="'+(cs.indexOf(c)>=0?'on':'')+'">'+(cs.indexOf(c)>=0?'☑ ':'☐ ')+esc(SC.cname(c))+'</button>'}).join('')+'<button data-lkc="*">✅ 全年級</button></div>'+
-   '<h3>② 一鍵</h3><div class="lkrow"><button data-lka="0" class="lkg">🔓 全部開</button><button data-lka="1" class="lkr">🔒 全部鎖</button><span id="lkmsg">'+LKMSG+'</span></div>'+
-   '<h3>③ 一個一個（按一下 ＝ 換）</h3>';
+   '<h3>② 按主題 要做什麼</h3><div class="lkrow"><button data-lkm="t" class="'+(LKM==='t'?'on':'')+'">🔓🔒 按一下 ＝ 開／鎖</button><button data-lkm="d" class="'+(LKM==='d'?'on':'')+'">📅 按一下 ＝ 設定 開放時間</button></div>'+
+   (LKM==='d'?'<div class="lkw">'+wRow('lkw')+'<div class="lkrow"><button data-lkdall="1" class="lkt">📅 全部主題 都用這段時間</button></div><div class="note">在這段時間 🟢 開放；之前 ⏳ 還沒開始、之後 ⛔ 結束了（都鎖住）。同一個主題 再按一次 ＝ 時間拿掉。</div></div>':
+     '<div class="lkrow"><button data-lka="0" class="lkg">🔓 全部開</button><button data-lka="1" class="lkr">🔒 全部鎖</button></div>')+
+   '<div class="lkrow"><span id="lkmsg">'+LKMSG+'</span></div><h3>③ 一個一個（按一下 ＝ '+(LKM==='d'?'設定 開放時間':'換')+'）</h3>';
+  var now=Date.now();
   Object.keys(G).forEach(function(gr){h+='<h4 class="lkh">'+esc(gr)+'</h4><div class="lkgrid">'+G[gr].map(function(x){var st=lkSt(x.k),on=st.n===st.all&&st.all>0,part=st.n&&!on;
-    return '<button data-lk="'+x.k+'" class="lkb '+(on?'lkr':part?'lky':'lkg')+'"><span class="lki">'+(on||part?'🔒':'🔓')+'</span><span class="lkt">'+esc(x.t)+'</span>'+
-      (st.who.length&&!st.gall?'<em>只有 '+st.who.map(function(c){return esc(c)}).join('、')+' 鎖</em>':'')+'</button>'}).join('')+'</div>'});
+    var tm=st.tw?'<em class="lktm">📅 '+tkT(st.tw[0])+' ～ '+tkT(st.tw[1])+'　'+wSt(st.tw,now)+(st.tn<st.all?'（只有幾班）':'')+'</em>':'';
+    return '<button data-lk="'+x.k+'" class="lkb '+(st.tw&&!st.n?'lkt':on?'lkr':part?'lky':'lkg')+'"><span class="lki">'+(st.tw&&!st.n?'📅':on||part?'🔒':'🔓')+'</span><span class="lkt0">'+esc(x.t)+'</span>'+
+      (st.who.length&&!st.gall?'<em>只有 '+st.who.map(function(c){return esc(c)}).join('、')+' 鎖</em>':'')+tm+'</button>'}).join('')+'</div>'});
   return h}
 function lkPost(keys,on){var cs=lkCls();if(!cs.length){LKMSG='❗ 請先選班級';draw();return}
-  var old=DATA.locks||{};DATA.locks=SC.lkSet(old,cs,keys,on);LKMSG='⏳ 存起來中…';draw();
-  post({a:'lock',pw:PW,cls:cs,keys:keys,on:on}).then(function(j){if(j&&j.ok){DATA.locks=j.locks;LKMSG='✔ 存好了'}else{DATA.locks=old;LKMSG='❌ 存不起來（'+((j&&j.err)||'')+'）'}if(TAB==='l')draw()},
+  var old=DATA.locks||{};DATA.locks=SC.lkSet(old,cs,keys,on);DATA.lockt=SC.lktSet(DATA.lockt||{},cs,keys,null,null);LKMSG='⏳ 存起來中…';draw();
+  post({a:'lock',pw:PW,cls:cs,keys:keys,on:on}).then(function(j){if(j&&j.ok){DATA.locks=j.locks;if(j.lockt)DATA.lockt=j.lockt;LKMSG='✔ 存好了'}else{DATA.locks=old;LKMSG='❌ 存不起來（'+((j&&j.err)||'')+'）'}if(TAB==='l')draw()},
     function(){DATA.locks=old;LKMSG='📶 連不到伺服器，沒有存';if(TAB==='l')draw()})}
+/* 開放時間：w ＝ [從, 到]（null ＝ 拿掉時間） */
+function lktPost(keys,w,cb,cls){var cs=cls||lkCls();if(!cs.length){LKMSG='❗ 請先選班級';draw();return}
+  LKMSG='⏳ 存起來中…';if(TAB==='l')draw();
+  return post({a:'lockt',pw:PW,cls:cs,keys:keys,from:w?w[0]:null,to:w?w[1]:null}).then(function(j){if(j&&j.ok){DATA.locks=j.locks;DATA.lockt=j.lockt;LKMSG='✔ 存好了'}else LKMSG='❌ 存不起來（'+((j&&j.err)||'')+'）';if(TAB==='l')draw();if(cb)cb(j)},
+    function(){LKMSG='📶 連不到伺服器，沒有存';if(TAB==='l')draw();if(cb)cb(null)})}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;if(TAB!=='l')return;
   if((b=c('[data-lkc]'))){var k=b.getAttribute('data-lkc'),cs=lkCls();LKMSG='';
     if(k==='*')LKC.c=SC.CLASSES[F.g].slice();else{var i=cs.indexOf(k);if(i>=0)cs.splice(i,1);else cs.push(k)}draw();return}
   if((b=c('[data-lka]'))){lkPost((RVT[F.g]||[]).map(function(x){return x.k}),b.getAttribute('data-lka')==='1');return}
-  if((b=c('#pane [data-lk]'))){var kk=b.getAttribute('data-lk'),st=lkSt(kk);lkPost([kk],!(st.n===st.all&&st.all>0));return}
+  if((b=c('[data-lkm]'))){LKM=b.getAttribute('data-lkm');LKMSG='';draw();return}
+  if((b=c('[data-lkdall]'))){var w0=wRead('lkw');if(!w0){LKMSG='❗ 請填好時間（截止要比開始晚）';draw();return}lktPost((RVT[F.g]||[]).map(function(x){return x.k}),w0);return}
+  if((b=c('#pane [data-lk]'))){var kk=b.getAttribute('data-lk'),st=lkSt(kk);
+    if(LKM==='d'){var w1=wRead('lkw');if(!w1){LKMSG='❗ 請填好時間（截止要比開始晚）';draw();return}
+      lktPost([kk],st.tsame&&st.tw[0]===w1[0]&&st.tw[1]===w1[1]?null:w1);return}
+    lkPost([kk],!(st.n===st.all&&st.all>0));return}
 });
+/* ══ 2026-10-17 老師看完 C9（第八次）第 10 題 甲＋乙：〔📅 一鍵設定〕＝〔🔒 開關〕＋〔📌 任務〕合併成一頁（原本兩頁照樣留著）══
+   ① 哪幾班 ➜ ② 哪些（🏠 在家複習 的主題＋🎮 遊戲／📝 複習題／📘 Review 1／💼 職業單字）➜ ③ 什麼時候（🔓 現在開／🔒 現在關／📅 從～到）➜〔✅ 一鍵設定〕
+   做法（用原本的兩套，學生端不用改）：
+     🏠 在家複習的主題 ＝〔🔒 開關〕：🔓 開、🔒 鎖、📅 開放時間（LOCKT）
+     其他 ＝〔📌 任務〕：📅 ＝ 派一個任務「📅 一鍵設定」（那段時間只開這些、看得到誰做完）；🔓 ＝ 從這幾班的任務拿掉（自由練習）；🔒 ＝ 一個已經截止的任務「🔒 現在關」（刪掉才再開）
+   下面「📋 現在的設定」：任務（🟢 開放中／⏳ 還沒開始／⛔ 結束了＋✅ 幾個人做完）、開放時間、鎖住的主題 */
+var OK0=null,OKMSG='',OKOPEN={};
+function okS(){if(!OK0||OK0.g!==F.g)OK0={g:F.g,c:F.cls?[F.cls]:SC.CLASSES[F.g].slice(),it:{},w:'d'};return OK0}
+function okGroups(){var G=[],rv={};(RVT[F.g]||[]).forEach(function(x){(rv[x.grp]=rv[x.grp]||[]).push([x.k,x.t])});
+  Object.keys(rv).forEach(function(gr){G.push({t:'🏠 在家複習：'+gr,L:rv[gr],rv:1})});
+  var T=tkItems(F.g);Object.keys(T).forEach(function(gr){G.push({t:gr,L:T[gr].map(function(x){return [x[0],x[1].replace(/^[三四]年級 ?/,'')]})})});return G}
+function paneO(){var S=okS(),G=okGroups(),now=Date.now(),n=Object.keys(S.it).length;
+  var h='<div class="note">一個地方設定完：<b>選班 ➜ 選項目 ➜ 選時間 ➜〔✅ 一鍵設定〕</b>。時間到 自動開、自動關。原本的〔📌 任務〕〔🔒 開關〕也都還在。</div>'+
+   '<h3>① 哪幾班</h3><div class="lkrow">'+SC.CLASSES[F.g].map(function(c){var on=S.c.indexOf(c)>=0;return '<button data-okc="'+c+'" class="'+(on?'on':'')+'">'+(on?'☑ ':'☐ ')+esc(SC.cname(c))+'</button>'}).join('')+'<button data-okc="*">✅ 全年級</button></div>'+
+   '<h3>② 哪些 <span class="okn">已選 '+n+' 個</span>'+(n?'<button data-okclr="1" class="okclr">✕ 全部不選</button>':'')+'</h3>';
+  G.forEach(function(g,gi){var sel=g.L.filter(function(x){return S.it[x[0]]}).length;
+    h+='<details class="okg" data-gi="'+gi+'"'+(sel||OKOPEN[gi]?' open':'')+'><summary>'+esc(g.t)+' <span class="okn">'+(sel?'已選 '+sel+'／':'')+g.L.length+'</span></summary><div class="lkrow"><button data-okall="'+gi+'">'+(sel===g.L.length?'☐ 這一組 全部不選':'☑ 這一組 全選')+'</button></div><div class="okgrid">'+
+      g.L.map(function(x){var on=!!S.it[x[0]];return '<button data-oki="'+esc(x[0])+'" data-nm="'+esc(x[1])+'" class="oki'+(on?' on':'')+'">'+(on?'☑ ':'☐ ')+esc(x[1])+'</button>'}).join('')+'</div></details>'});
+  h+='<h3>③ 什麼時候</h3><div class="lkrow"><button data-okw="open" class="'+(S.w==='open'?'on ':'')+'lkg">🔓 現在 開</button><button data-okw="close" class="'+(S.w==='close'?'on ':'')+'lkr">🔒 現在 關</button><button data-okw="d" class="'+(S.w==='d'?'on ':'')+'lkt">📅 從 ～ 到</button></div>'+
+   (S.w==='d'?wRow('okw'):'')+
+   '<div class="lkrow" style="margin-top:12px"><button id="okgo" class="okgo">✅ 一鍵設定</button><span id="okmsg">'+OKMSG+'</span></div>';
+  /* 📋 現在的設定 */
+  var L=tkList().sort(function(a,b){var st=function(t){return t.from<=now&&now<=t.to?0:(t.from>now?1:2)};return st(a)-st(b)||a.from-b.from});
+  h+='<h3>📋 現在的設定（'+(F.g===3?'三':'四')+'年級'+(F.cls?' '+esc(SC.cname(F.cls)):'')+'）</h3><div class="oklst">';
+  L.forEach(function(t){var st=t.from<=now&&now<=t.to?'🟢 開放中':(t.from>now?'⏳ 還沒開始':'⛔ 結束了'),dn=0,tot=0;
+    (F.cls?[F.cls]:t.cls).forEach(function(c){var done={};ALL.forEach(function(r){if(!r.x&&r.cls===c&&r.t>=t.from&&r.t<=t.to+SC.TKGRACE&&t.items.indexOf(r.set)>=0)(done[r.id]=done[r.id]||{})[r.set]=1});
+      dn+=Object.keys(done).filter(function(id){return Object.keys(done[id]).length>=t.items.length}).length;tot+=(RCLS[c]||[]).length});
+    h+='<div class="okl"><b>'+st+'</b><span>📌 '+esc(t.name)+'</span><span>'+t.cls.map(function(c){return esc(c)}).join('、')+'</span><span>'+t.items.length+' 個：'+t.items.slice(0,3).map(function(k){return esc(t.nm&&t.nm[k]||k)}).join('、')+(t.items.length>3?'…':'')+'</span>'+
+      '<span>⏰ '+tkT(t.from)+' ～ '+tkT(t.to)+'</span><span>✅ '+dn+(tot?'／'+tot:'')+' 人做完</span><span class="okb"><button data-tke="'+esc(t.id)+'">✏️</button><button data-tkd="'+esc(t.id)+'">🗑</button></span></div>'});
+  var T=DATA.lockt||{},Lk=DATA.locks||{},nmOf={};(RVT[F.g]||[]).forEach(function(x){nmOf['g'+F.g+'rv_'+x.k.replace(/^g\drv_/,'')]=x.t;nmOf[x.k]=x.t});
+  (F.cls?[F.cls]:SC.CLASSES[F.g]).forEach(function(c){var m=T[c]||{};Object.keys(m).forEach(function(k){
+    h+='<div class="okl"><b>'+wSt(m[k],now)+'</b><span>🏠 '+esc(nmOf[k]||k)+'</span><span>'+esc(c)+'</span><span>📅 開放時間</span><span>⏰ '+tkT(m[k][0])+' ～ '+tkT(m[k][1])+'</span><span></span><span class="okb"><button data-okdt="'+esc(c)+'|'+esc(k)+'">🗑</button></span></div>'});
+    var lk=Lk[c]||[];if(lk.length)h+='<div class="okl"><b>🔒 關著</b><span>🏠 '+lk.slice(0,4).map(function(k){return esc(nmOf[k]||k)}).join('、')+(lk.length>4?'…（'+lk.length+' 個）':'')+'</span><span>'+esc(c)+'</span><span>〔🔒 開關〕</span><span></span><span></span><span class="okb"></span></div>'});
+  if(h.lastIndexOf('<div class="oklst">')===h.length-19)h+='<div class="note">還沒有設定 ➜ 學生全部都可以自由練習。</div>';
+  return h+'</div>'}
+function okGo(){var S=okS(),keys=Object.keys(S.it),cs=S.c.slice();OKMSG='';
+  if(!cs.length){OKMSG='❗ ① 請選至少一班';draw();return}if(!keys.length){OKMSG='❗ ② 請選至少一個';draw();return}
+  var w=null;if(S.w==='d'){w=wRead('okw');if(!w){OKMSG='❗ ③ 請填好時間（截止要比開始晚）';draw();return}}
+  var rv=keys.filter(function(k){return SC.LKRE.test(k)}),tk=keys.filter(function(k){return !SC.LKRE.test(k)}),nm={};tk.forEach(function(k){nm[k]=S.it[k]});
+  var jobs=[],now=Date.now();
+  if(rv.length){if(S.w==='d')jobs.push({a:'lockt',pw:PW,cls:cs,keys:rv,from:w[0],to:w[1]});else jobs.push({a:'lock',pw:PW,cls:cs,keys:rv,on:S.w==='close'})}
+  if(tk.length){
+    if(S.w==='d')jobs.push({a:'task',pw:PW,op:'set',t:{id:'t'+now,name:'📅 一鍵設定',g:F.g,cls:cs,items:tk,nm:nm,from:w[0],to:w[1]}});
+    else if(S.w==='close')jobs.push({a:'task',pw:PW,op:'set',t:{id:'c'+now,name:'🔒 現在關',g:F.g,cls:cs,items:tk,nm:nm,from:now-6e4,to:now-1000}});
+    else (DATA.tasks||[]).filter(function(t){return t.g===F.g&&t.cls.some(function(c){return cs.indexOf(c)>=0})&&t.items.some(function(k){return tk.indexOf(k)>=0})}).forEach(function(t,i){
+      var rest=t.cls.filter(function(c){return cs.indexOf(c)<0}),mine=t.cls.filter(function(c){return cs.indexOf(c)>=0}),left=t.items.filter(function(k){return tk.indexOf(k)<0});
+      if(rest.length)jobs.push({a:'task',pw:PW,op:'set',t:{id:t.id,name:t.name,g:t.g,cls:rest,items:t.items,nm:t.nm,from:t.from,to:t.to}});
+      else jobs.push({a:'task',pw:PW,op:'del',id:t.id});
+      if(left.length)jobs.push({a:'task',pw:PW,op:'set',t:{id:'s'+now+i,name:t.name,g:t.g,cls:mine,items:left,nm:t.nm,from:t.from,to:t.to}})})}
+  if(!jobs.length){OKMSG='✔ 本來就開著（沒有任務鎖住它們）';draw();return}
+  OKMSG='⏳ 存起來中…';draw();
+  (function next(i){if(i>=jobs.length){OKMSG='✔ 設定好了（'+(S.w==='open'?'🔓 開了':S.w==='close'?'🔒 關了':'📅 '+tkT(w[0])+' ～ '+tkT(w[1]))+'）';S.it={};draw();return}
+    post(jobs[i]).then(function(j){if(!j||!j.ok){OKMSG='❌ 存不起來（'+((j&&j.err)||'')+'）';draw();return}
+      if(j.tasks)DATA.tasks=j.tasks;if(j.locks)DATA.locks=j.locks;if(j.lockt)DATA.lockt=j.lockt;next(i+1)},function(){OKMSG='📶 連不到伺服器，沒有存完';draw()})})(0)}
+document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
+  if((b=c('[data-wpre]'))){LKW=wPre(b.getAttribute('data-wpre'));draw();return}
+  if(TAB!=='o')return;var S=okS();
+  if((b=c('[data-okc]'))){var k=b.getAttribute('data-okc');if(k==='*')S.c=SC.CLASSES[F.g].slice();else{var i=S.c.indexOf(k);if(i>=0)S.c.splice(i,1);else S.c.push(k)}draw();return}
+  if((b=c('[data-oki]'))){var kk=b.getAttribute('data-oki');if(S.it[kk])delete S.it[kk];else S.it[kk]=b.getAttribute('data-nm');draw();return}
+  if((b=c('[data-okall]'))){var g=okGroups()[+b.getAttribute('data-okall')],all=g.L.every(function(x){return S.it[x[0]]});g.L.forEach(function(x){if(all)delete S.it[x[0]];else S.it[x[0]]=x[1]});draw();return}
+  if(c('[data-okclr]')){S.it={};draw();return}
+  if((b=c('[data-okw]'))){S.w=b.getAttribute('data-okw');draw();return}
+  if(c('#okgo')){okGo();return}
+  if((b=c('[data-okdt]'))){var a=b.getAttribute('data-okdt').split('|');if(!confirm('拿掉這個開放時間？（拿掉以後 ＝ 開著）'))return;lktPost([a[1]],null,function(){draw()},[a[0]]);return}
+});
+/* 打開的組記住（重畫以後不會收起來） */
+document.addEventListener('toggle',function(e){var d=e.target;if(d&&d.classList&&d.classList.contains('okg'))OKOPEN[d.getAttribute('data-gi')]=d.open},true);
+/* 時間格子改了要記住（換頁、重畫不會跑回預設） */
+document.addEventListener('change',function(e){var id=e.target.id;if(/^(lkw|okw)[12]$/.test(id))wRead(id.slice(0,3))});
 /* 這一個年級可以派的項目：老師看板的題庫（遊戲、📝 複習題、📘 Review 1、💼 職業單字） */
 function tkItems(g){var G={};Object.keys(BANK).forEach(function(k){if(k.indexOf('g'+g)!==0&&k.indexOf('g*')!==0)return;
-  var key=k.replace('g*','g'+g),c=SC.cat(key),gr=/^g.gm_job-/.test(key)?'💼 職業單字':c.t;if(g===3&&gr==='💼 職業單字')return;   /* 職業單字是四年級 Unit 2 的主題 */(G[gr]=G[gr]||[]).push([key,BANK[k].name])});return G}
+  var key=k.replace('g*','g'+g),c=SC.cat(key),gr=/^g.(gm|l)_job-/.test(key)?'💼 職業單字':c.t;if(g===3&&gr==='💼 職業單字')return;   /* 職業單字是四年級 Unit 2 的主題 */(G[gr]=G[gr]||[]).push([key,BANK[k].name])});return G}
 function paneT(){
   var now=Date.now(),L=tkList().sort(function(a,b){var s=function(t){return t.from<=now&&now<=t.to?0:(t.from>now?1:2)};return s(a)-s(b)||a.from-b.from});
   var h='<div class="row" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button id="tkNew" style="background:#2A2208;border-color:var(--gold);color:#FFE9A8">➕ 派新任務</button>'+
@@ -951,8 +1061,7 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if((b=c('[data-snd]'))){var qq=qOf(b.getAttribute('data-q')).q,w=b.getAttribute('data-snd');SAYN++;if(w==='al')lsn(qq);else{var oi=+w.slice(1);play(qq.ao&&qq.ao[oi],qq.o[oi])}return}
   if((b=c('[data-void]'))){var u=b.getAttribute('data-void'),v=b.getAttribute('data-v')==='1';b.disabled=true;
     post({a:'void',pw:PW,u:u,v:v}).then(function(j){if(j.ok){ALL.forEach(function(x){if(x.u===u)x.x=v});var op=!$('#pdet').hidden;draw();person(PID);if(op){pMore(true);$('#pdet').hidden=false;$('#pdb').classList.add('on')}}else b.disabled=false},function(){b.disabled=false});return}
-  if(c('#bd')){var on=!DATA.boards;post({a:'set',pw:PW,boards:on}).then(function(j){if(j.ok){DATA.boards=j.boards;$('#bd').textContent='🏆 學生排行榜：'+(j.boards?'開':'關');$('#bd').classList.toggle('on',j.boards)}});return}
-  if(c('#rf')){post({a:'teacher',pw:PW}).then(load);return}
+  if(c('#rf')){$('#morep').hidden=true;$('#more').classList.remove('on');post({a:'teacher',pw:PW}).then(load);return}   /* 按了就收起選單（2026-10-17：選單蓋住〔📌 任務〕分頁） */
   if(c('#dl')){excel();return}
 });
 document.addEventListener('input',function(e){if(e.target.id==='deli'){$('#delgo').disabled=e.target.value.trim()!==$('#delp').getAttribute('data-id')}});

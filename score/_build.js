@@ -87,6 +87,8 @@ Object.keys(SITES).forEach(dir => {
 if (fs.existsSync(path.join(__dirname, '_jobs_bank.json'))) {
   const JB = JSON.parse(fs.readFileSync(path.join(__dirname, '_jobs_bank.json'), 'utf8'));
   Object.keys(JB).forEach(id => put('g*gm_job-' + id, { name: '💼 職業單字｜' + JB[id].name, qs: JB[id].qs }));
+  /* 2026-10-17 第八次（使用者：職業單字網站 全部連到成績系統 ➜ 字卡也要算）：story.html 36 張單字卡，6 張一站（English-Jobs-New/_score_cards.js）；老師〔📌〕〔📅〕派得到 */
+  for (let k = 1; k <= 6; k++) put('g*l_job-s' + k, { name: '💼 職業單字｜📇 字卡 第 ' + k + ' 站（第 ' + (k * 6 - 5) + '～' + k * 6 + ' 張）', qs: [], nq: 1 });   /* nq ＝ 沒有題目（聽完字卡） */
 }
 /* ❌ 錯題分析（2026-10-15 D 第 9 件，第三批 四-3 (2)(3)、四-4）：每一題先算好
  *   ae ＝ 正確答案的英文（唸、放大變亮的那一句）：sp ＞ 認讀題畫面上的英文 ＞ 英文的正解 ＞ 題目裡的英文（正解是中文的時候）

@@ -497,14 +497,14 @@ module.exports = {
    {
     "k": "listen",
     "o": [
-     "Yes, he is.",
+     "No, she isn’t.",
      "No, he isn’t.",
      "Yes, she is.",
-     "Yes, he’s."
+     "No, she is."
     ],
-    "h": "是 ➜ Yes, he is.（問 he 答 he）。",
-    "say": "Is he a doctor?",
-    "q": "他真的是醫生，要怎麼回答？"
+    "h": "mom 是女生 ➜ 答 she；不是 ➜ No, she isn’t.",
+    "say": "Is your mom a farmer?",
+    "q": "她不是農夫，要怎麼回答？"
    },
    {
     "k": "zh2en",
@@ -520,13 +520,13 @@ module.exports = {
    {
     "k": "en2zh",
     "o": [
-     "是的，她是。",
-     "不，她不是。",
-     "是的，他是。",
-     "她是誰？"
+     "他是你的叔叔嗎？",
+     "他是我的叔叔嗎？",
+     "她是你的阿姨嗎？",
+     "他是你的叔叔。"
     ],
-    "h": "Yes ＝ 是的。",
-    "q": "A：Is she a teacher?　B：Yes, she is.　B 說什麼？"
+    "h": "your ＝ 你的；Is 開頭 ＝ 問「是不是」。",
+    "q": "A：Is he your uncle?　B：Yes, he is.　A 問什麼？"
    },
    {
     "k": "trap",
@@ -806,24 +806,24 @@ module.exports = {
    {
     "k": "zh2en",
     "o": [
-     "Is he a doctor?",
-     "Is he doctor?",
-     "He a doctor is?",
-     "Doctor is he a?"
+     "Is your brother a nurse?",
+     "Is your brother nurse?",
+     "Your is brother a nurse?",
+     "Is you brother a nurse?"
     ],
-    "h": "He 和 is 換位置。",
-    "q": "He is a doctor. 變成問句「他是醫生嗎？」　英文是？"
+    "h": "Is 放最前面，your brother 一起往後；一位 ＝ a；你的 ＝ your。",
+    "q": "「你的哥哥是一位護理師嗎？」英文是？"
    },
    {
     "k": "en2zh",
     "o": [
-     "他是醫生嗎？",
-     "他是醫生。",
-     "醫生是他嗎？",
-     "他不是醫生。"
+     "她是你的媽媽嗎？",
+     "她是我的媽媽嗎？",
+     "她是你的媽媽。",
+     "他是你的爸爸嗎？"
     ],
-    "h": "Is 開頭 ＝ 問「是不是」。",
-    "q": "「Is he a doctor?」　中文是？"
+    "h": "Is 開頭 ＝ 問「是不是」；your ＝ 你的。",
+    "q": "「Is she your mom?」　中文是？"
    },
    {
     "k": "trap",

@@ -133,6 +133,7 @@ const CSS = `
 .scfull .sfid{font-size:clamp(80px,15vh,150px);font-weight:700;letter-spacing:.08em;line-height:1.1}
 .scfull .sfbt{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
 .scfull button{min-height:clamp(64px,10vh,90px);padding:8px 30px;font-size:clamp(28px,4.6vh,42px)}
+#scbar a.scH{cursor:pointer;display:inline-flex;align-items:center;font-weight:700;border-radius:14px;min-height:52px;padding:6px 18px;font-size:clamp(22px,3.2vh,30px);color:#FFE9A8;background:#3A2E08;border:3px solid #FFD54A;text-decoration:none}
 .scY{background:#3BD16F!important}.scN{background:#FF8A80!important}.scK{background:#FFD54A!important}
 /* 總首頁：一頁要放得下（iPad 橫放不可以有捲軸）➜ 橫幅放在「首頁」那一行，不多佔一行 */
 #scbar.inl{display:inline-flex;border:2px solid #3BD16F;border-radius:999px;padding:0 3px 0 14px;font-size:clamp(22px,2.9vh,28px);vertical-align:middle;margin:0 0 0 .5em;gap:8px;letter-spacing:0}
@@ -156,6 +157,17 @@ body.scq .url{display:none}
 .hab .hok{font-size:clamp(24px,3.6vh,34px)}.hab .hok small{display:block;font-size:.72em;color:#CFE3F5}
 @media (prefers-reduced-motion:reduce){#scbar.hab *{animation:none!important;opacity:1!important}}
 #scbar.inl[hidden]{display:none}#scbar.inl button{min-height:48px;padding:2px 16px;font-size:clamp(22px,2.9vh,28px)}
+.sccare2{width:min(1180px,96vw);margin:0 auto}
+@media (min-aspect-ratio:5/4){.sccare2{display:grid;grid-template-columns:minmax(190px,24%) minmax(0,1fr);gap:14px;align-items:start}.sccare2 .gcard{grid-template-columns:1fr;width:100%;margin:0}}
+.schero{display:flex;align-items:center;justify-content:center;gap:clamp(12px,3vw,40px);flex-wrap:wrap;width:100%}
+.shimg{position:relative;width:clamp(150px,24vh,240px)}.shimg img{display:block;width:100%;border-radius:16px;border:4px solid #FFD54A;box-shadow:0 0 22px rgba(255,213,74,.5);animation:shIn .7s cubic-bezier(.2,1.5,.4,1)}
+.shimg img.shp{position:absolute;right:-22%;bottom:-6%;width:52%;border-color:#7FD4FF;box-shadow:0 0 14px rgba(127,212,255,.6);animation-delay:.25s;animation-fill-mode:both}
+@keyframes shIn{from{transform:scale(.3) translateY(40px);opacity:0}}
+.shno{border:4px dashed #FFD54A;border-radius:16px;padding:30px 10px;font-size:clamp(24px,3.4vh,32px);text-align:center}
+.shst{display:flex;flex-direction:column;gap:10px;min-width:min(100%,340px);font-size:clamp(24px,3.4vh,34px);text-align:left}
+.shx b,.shc b{font-size:1.5em;color:#FFE07A}.shc small{font-size:.7em;color:#CFE3F5;margin-left:6px}
+.shbar{height:26px;border-radius:999px;background:#1B2633;border:3px solid #34404C;overflow:hidden}.shbar i{display:block;height:100%;background:linear-gradient(90deg,#3B7BFF,#7FD4FF);transition:width 1.4s ease-out}
+.shlv b{color:#FFE07A}.shgo{cursor:pointer;display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:6px 22px;border-radius:16px;background:#3A2E08;border:3px solid #FFD54A;color:#FFE9A8;text-decoration:none;font-size:.85em;align-self:flex-start}
 .scbye{display:flex;align-items:center;justify-content:center;gap:12px 18px;flex-wrap:wrap;background:#1F1A08;border:3px solid #FFD54A;border-radius:18px;padding:6px 16px;
   font-size:clamp(20px,3vh,28px);font-weight:700;color:#fff}
 .scbye span{display:flex;flex-direction:column;align-items:center;line-height:1.25}.scbye small{font-size:.8em;color:#CFE3F5}
@@ -227,7 +239,7 @@ body.scq .url{display:none}
  .sctabs button,.scscope button{min-height:44px;padding:5px 14px}}
 `;
 
-const JS = require('fs').readFileSync(require('path').join(__dirname, '_honor_rt.js'), 'utf8') + `
+const JS = require('fs').readFileSync(require('path').join(__dirname, '_honor_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report_rt.js'), 'utf8') + `
 /* ══════════ 成績紀錄（2026-10-07 對話 C；2026-10-08 對話 D：遊戲、Review 1 也記）══════════
    SCG ＝ 這一頁是幾年級（0 ＝ 三、四年級共用的 Review 1 遊戲：年級看登入的 5 碼）
    SCH ＝ 這一頁怎麼畫（下面那一段由 _tq.js／遊戲引擎／Review 1 複習各自給）：
@@ -383,7 +395,7 @@ function scDone(pick,ok,ratio){
    遊戲（m:'g'）：① 正確率（第一次作答）＋✨ 訂正成功 ➜ ② 練習時間 ➜ ③ 🏆（同上）➜ 這個遊戲本班前 10 名
    🃏 記憶配對（m:'mem'）：配完幾對、用幾秒、翻錯幾次 ➜ ② 練習時間 ➜ ③ 🏆（同上）
    2026-10-15 D 第 8 件（老師 D12 ③）：時鐘 ➜ ❤ 這週 用心程度（每一次做完都演、8 種風格輪流、〔📖 說明〕、可以跳過、不放聲音）➜ 🏆 */
-var SCLIST={q:['acc','time','care','honor','end'],g:['acc','time','care','honor','gtop'],mem:['mem','time','care','honor']};
+var SCLIST={q:['acc','time','care','hero','honor','end'],g:['acc','time','care','hero','honor','gtop'],mem:['mem','time','care','hero','honor']};   /* hero：2026-10-17 第八次 🦸 這一次拿到的經驗值、金幣 */
 function scCareOf(E){return E.res&&E.res.me&&E.res.me.care}
 /* 不演的那一幕從清單拿掉（名次沒上升 ＝ 🏆、沒有網路 ＝ ❤） */
 function scDrop(E,nm){var L=E.list,i=L.indexOf(nm);if(i>E.k)L.splice(i,1)}
@@ -470,13 +482,17 @@ function scScene(){
       h='<div class="sct">'+HON.CLK+'</div><div class="scwait"><i>⏳</i> 正在送出成績…</div>'+nav()}
     else{if(E.res||E.fail)E.tgo=1;E.ups=scUps(E);
       if(E.tgo&&!scCareOf(E))scDrop(E,'care');
+      if(E.tgo&&!(E.res&&E.res.rpg))scDrop(E,'hero');
       if(!E.ups.length&&E.tgo){var hi=L.indexOf('honor');if(hi>k)L.splice(hi,1);last=k===L.length-1;dots=L.length>1?'<div class="scdots">'+L.map(function(x,n){return '<i'+(n===k?' class="on"':'')+'></i>'}).join('')+'</div>':''}
       h=scTimeHTML(E)+(last?SCH.btns(E):nav());if(!last&&E.tgo)SCAUTO=setTimeout(scNext,4200)}   /* 還在送就等（送到或確定沒網路會再畫一次） */
   }else if(nm==='care'){
     if(!scCareOf(E)){L.splice(k,1);E.k=Math.min(k,L.length-1);scScene();return}   /* 沒有網路、伺服器還沒回 ＝ 不演 */
     /* 2026-10-16 C4 第 3-2 題 A：學生平板也看成績卡（🎯 正確、📅 練習；沒有姓名、沒有〔📋 細節〕），下面接 📅 練習 動畫 */
-    var ME=E.res.me;h=HON.card({acc:ME.acc,prog:ME.prog,keep:ME.keep},ME.care,{notip:1})+'<div id="scCare"></div>'+(last?SCH.btns(E):nav());
-    if(!last)SCAUTO=setTimeout(scNext,7600);
+    var ME=E.res.me;h='<div class="sccare2">'+HON.card({acc:ME.acc,prog:ME.prog,keep:ME.keep},ME.care,{notip:1})+'<div id="scCare"></div></div>'+(last?SCH.btns(E):nav());   /* 橫的螢幕：成績卡在左、練習報告在右（2026-10-17 第八次：量過 1024✕768 上下排要捲動） */
+    if(!last)SCAUTO=setTimeout(scNext,9000);
+  }else if(nm==='hero'){
+    if(!(E.res&&E.res.rpg)){L.splice(k,1);E.k=Math.min(k,L.length-1);scScene();return}
+    h=scHeroHTML(E.res.rpg)+(last?SCH.btns(E):nav());if(!last)SCAUTO=setTimeout(scNext,5200);
   }else if(nm==='honor'){
     h='<div class="hon" id="scHon"></div>'+(last?SCH.btns(E):nav());
   }else if(nm==='gtop'){
@@ -496,8 +512,9 @@ function scScene(){
   if(last&&scLive())h+=scByeHTML();   /* 每一個題目、遊戲做完：提醒登出（D 第 6 件 ③） */
   SCH.box().innerHTML='<div class="scn" id="scn">'+dots+h+'</div>';
   if(nm==='honor'&&$('#scHon'))scHonGo(E);
-  if(nm==='care'&&$('#scCare')){if(E.cst==null)E.cst=HON.cpick('cs');HON.cscene($('#scCare'),E.cst,scCareOf(E),{help:1,onHelp:function(){clearTimeout(SCAUTO)}})}
+  if(nm==='care'&&$('#scCare'))RPT.show($('#scCare'),scCareOf(E),{key:'s',strip:1,onAct:function(){clearTimeout(SCAUTO)},fit:function(){var b=SCH.box(),o=b&&b.closest?b.closest('#scov,#rv'):null;return o?o.scrollHeight-o.clientHeight:0}});   /* 2026-10-17 第八次：📅 練習報告（打勾清單）＋愛心切換 */
   if(nm==='time'&&$('.sctime .hclkm'))$('.sctime').classList.add('go');
+  if(nm==='hero')setTimeout(function(){var b=$('#scn .shbar i');if(b)b.style.width=b.getAttribute('data-w')+'%'},400);
   if(nm==='acc')setTimeout(function(){var f=$('#scFg'),a=$('#scAcc');if(!f)return;var L=+f.getAttribute('stroke-dasharray');
     f.setAttribute('stroke-dashoffset',L*(1-E.acc/100));var t0=Date.now(),iv=setInterval(function(){var x=Math.min(1,(Date.now()-t0)/1300);
       if(!$('#scAcc')){clearInterval(iv);return}a.textContent=Math.round(E.acc*x)+'%';if(x>=1)clearInterval(iv)},40)},80);
@@ -632,6 +649,15 @@ function scAsked(){try{return sessionStorage.getItem('sc_ok')===String(SCID||'')
 function scAct(){scPut('act',Date.now())}
 function scOut(){SCID=null;SCGUEST=false;['id_g3','id_g4','last'].forEach(function(k){scPut(k,null)});try{sessionStorage.removeItem('sc_ok')}catch(e){}
   SCTK=null;SCTKID=null;scIdleHide();scBar();if(SCSRC==='home')setTimeout(scLkRe,0);var m=document.getElementById('scme');if(m&&typeof scMeHTML==='function'&&m.innerHTML)m.innerHTML=scMeHTML()}
+/* 🦸 這一次拿到的經驗值、金幣（2026-10-17 第八次；規則 score/_calc.js rpEarn）：英雄＋寵物、經驗值條往上長、升級、金幣、〔🦸 我的 英雄〕 */
+var SCRPB=(function(){var s=document.querySelector('script[src$="score/url.js"]');return s?s.getAttribute('src').replace(/score\\/url\\.js$/,''):'../'})();
+function scHeroHTML(G){var D=function(id){return SCRPB+'rpg/'+(/^[bg]/.test(id)?'chars':/^w/.test(id)?'weapons':'pets')+'/'+id+'.jpg'};
+  var a=Math.max(0,G.xp-G.gx),p0=G.lv>G.lv0?0:Math.max(0,(a-G.lvAt)/(G.lvNext-G.lvAt)*100),p1=Math.min(100,(G.xp-G.lvAt)/(G.lvNext-G.lvAt)*100);
+  return '<div class="sct">🦸 這一次 你拿到</div><div class="schero"><div class="shimg">'+(G.h?'<img src="'+D(G.h)+'" alt="我的英雄">'+(G.p?'<img class="shp" src="'+D(G.p)+'" alt="我的寵物">':''):'<div class="shno">🦸<br>還沒有 英雄</div>')+'</div>'+
+    '<div class="shst"><div class="shx">⭐ 經驗值 <b>＋'+G.gx+'</b></div><div class="shbar"><i style="width:'+p0.toFixed(1)+'%" data-w="'+p1.toFixed(1)+'"></i></div>'+
+    '<div class="shlv">'+(G.lv>G.lv0?'🎉 升級了！ Lv '+G.lv0+' ➜ <b>Lv '+G.lv+'</b>':'Lv '+G.lv+'（再 '+(G.lvNext-G.xp)+' 升級）')+'</div>'+
+    '<div class="shc">🪙 金幣 <b>＋'+G.gc+'</b><small>（共 '+G.coins+'）</small></div>'+
+    '<a class="shgo" role="button" tabindex="0" data-rpg="1">'+(G.h?'🦸 我的 英雄 ➜':'🎁 免費 選 1 個 英雄 ➜')+'</a></div></div>'}
 function scByeHTML(){return '<div class="scbye"><span>👋 做完了，記得登出<small>下一個人才不會用到您的號碼</small></span><button id="scBye">👋 登出</button></div>'}
 /* 蓋滿整頁的大字（這是您嗎、30 秒提醒、已經登出了） */
 function scFull(id,h){var o=document.getElementById(id);if(!o){o=document.createElement('div');o.id=id;o.className='scfull';document.body.appendChild(o)}o.innerHTML='<div class="scfb">'+h+'</div>';o.classList.add('on');return o}
@@ -681,11 +707,15 @@ function scBar(){var b=document.getElementById('scbar');if(!b)return;document.bo
   if(hab){b.innerHTML=!SCID?'<span class="hh">👋 開始練習 以前</span><span class="hgo"><button class="scK" id="scBarIn">🔑 先 登入</button><span class="hf">👆</span></span>'+
     '<div class="hs"><div class="hst"><span class="hn">①</span><span>先 <b>🔑 登入</b> ➜ 你的 練習 和 努力 <span class="hfl"><i>📝</i><em>➜</em><i>📊</i></span> 都會 記在 老師 的 成績 裡</span></div>'+
     '<div class="hst"><span class="hn">②</span><span>練完 ➜ 一定 按 <b>👋 登出</b> ➜ <span class="hfl"><i>🛡</i></span> 保護 自己 和 同學 的 成績</span></div></div>':
-    scAsked()?'<span class="hok">✅ <b>'+SCID+'</b> 已經登入：練習 都會 記下來 📊<small>練完 一定 按 👋 登出</small></span><button class="scN" id="scBarOut">👋 登出</button>':
+    scAsked()?'<span class="hok">✅ <b>'+SCID+'</b> 已經登入：練習 都會 記下來 📊<small>練完 一定 按 👋 登出</small></span>'+scHeroA()+'<button class="scN" id="scBarOut">👋 登出</button>':
     '<span>請問 這是您嗎？<b>'+SCID+'</b></span><button class="scY" id="scBarY">✅ 是</button><button class="scN" id="scBarOut">👋 不是，登出</button>';return}
   b.innerHTML=!SCID?'<span>👤 還沒登入</span><button class="scK" id="scBarIn">🔑 登入</button>':
-    scAsked()?'<span>👤 <b>'+SCID+'</b></span><button class="scN" id="scBarOut">👋 登出</button>':
+    scAsked()?'<span>👤 <b>'+SCID+'</b></span>'+scHeroA()+'<button class="scN" id="scBarOut">👋 登出</button>':
     '<span>請問 這是您嗎？<b>'+SCID+'</b></span><button class="scY" id="scBarY">✅ 是</button><button class="scN" id="scBarOut">👋 不是，登出</button>'}
+/* 登入以後橫幅上〔🦸 我的英雄〕（2026-10-17 第八次）；在〔🦸 我的英雄〕那一頁、總首頁（一行的小橫幅，量過放了會多出捲軸）不放 */
+function scHeroA(){var b=document.getElementById('scbar');return location.pathname.indexOf('/rpg/')>=0||(b&&b.classList.contains('inl'))?'':'<a class="scH" role="button" tabindex="0" data-rpg="1">🦸 我的英雄</a>'}
+/* 連結用點的（不寫 href：在家複習 r1/ 的複製程式會把 href 換路徑） */
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-rpg]');if(a){e.preventDefault();location.href=SCRPB+'rpg/index.html'}});
 function scHomeLogin(){if(!SCH)return;scFullOff('scbye2');scLogin(SCH.reopen)}
 if(SCON){
   (function(){var a=scGet('act');if(SCID&&a&&Date.now()-a>=SCIDLE)scOut()})();   /* 上一次動作已經超過 3 分鐘 ＝ 已經登出了 */
@@ -713,7 +743,7 @@ document.addEventListener('keydown',function(e){if(!$('#scBox'))return;
 /* 一頁要放的東西：S ＝ score/_sites.js 查到的這個資料夾、src ＝ school／home、g 覆寫年級（0 ＝ 看登入的 5 碼） */
 function js(S, src) { return JS.replace('__SCG__', S.g).replace('__SCSRC__', JSON.stringify(src === 'home' ? 'home' : 'school')).replace('__TKLOCK__', () => require('./_calc.js').tkLock.toString()); }
 
-const CSSALL = CSS + require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8');
+const CSSALL = CSS + require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report.css'), 'utf8');
 /* 首頁（總首頁、三年級、四年級、在家複習首頁）：最上面的登入橫幅＋「請問 這是您嗎？」＋3 分鐘登出（2026-10-12 D 第 6 件）
    g ＝ 年級（0 ＝ 總首頁：看最後登入的號碼）、rel ＝ 到 repo 根目錄的相對路徑（例 '../'）、src ＝ school／home。登入用遊戲那一種蓋滿整頁的 #scov */
 function home(g, rel, src, inl) {

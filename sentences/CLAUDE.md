@@ -29,6 +29,13 @@
 | `_verify.js` | 量測腳本。`node sentences/_verify.js` 量全部；`node sentences/_verify.js unit1.html` 只量一頁 |
 | `index.html` `warmup.html` `unit1.html` `unit2.html` `games.html` | **產物，不要手改**，會被下一次 build 蓋掉 |
 
+## 2026-10-17 老師看完 C9（第八次）：四年級新字卡的複習題、5 句語音（先讀這一節）
+
+- **C9 第 11 題 A**：四年級 Unit 2「1-3 中英語序」換 2 題（看中文選英文 Is your brother a nurse?、看英文選中文 Is she your mom?）、「3 一問一答」換 2 題（聽力 Is your mom a farmer? ➜ No, she isn’t.、看英文選中文 Is he your uncle?）。改在清單 `2026-10-04_B_複習題_題目清單.md` ➜ `node tools/tq_from_md.js`；還是 5 題、五種題型各一題；語音檔本來就有。
+- **C9 第 12 題 A**：mom ＝ 媽媽（不改「母親」）。
+- **C9 第 13 題 B**：Is your dad a teacher? 等 5 句 a 唸清楚：新做的放在 `listen/2026-10-17_C10/au/`（a 前面停一下 ʔ＋重讀的 ə），**老師在 C10 第 1 題說換才換進 `sentences/audio/`**。
+- 成績系統（練習報告、🦸 那一幕）的改動在 `score/CLAUDE.md` 最上面「第八次」。
+
 ## 2026-10-17 老師 C8 另 5：四年級 Unit 2 新字卡（教學網站＋在家複習；先讀這一節）
 
 需求檔 `sentences/2026-10-16_C_需求與問題.md` 第四節「第七次」。資料全部在 `_data.js` 的 `SW4`／`ORD4`／`QA4`（TABS2 前面那一段）。
