@@ -14,6 +14,7 @@
  *   ➕ 派新任務（名稱、哪幾班＋〔全年級〕、項目＝遊戲／📝 複習題／📘 Review 1／💼 職業單字、從幾月幾日幾點 到 幾月幾日幾點）、
  *   ✏️ 隨時改時間、🗑 刪掉；每個任務一張卡：誰做完 ✅、誰還沒 ⏳（要名單才有名字，E6）。鎖的規則在 _calc.js 的 tkLock。
  */
+const CERCSS = require('fs').readFileSync(require('path').join(__dirname, '_cer.css'), 'utf8'), CERRT = require('fs').readFileSync(require('path').join(__dirname, '_cer_rt.js'), 'utf8');
 const HONCSS = require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8'), HONRT = require('fs').readFileSync(require('path').join(__dirname, '_honor_rt.js'), 'utf8');
 /* 〔🔒 開關〕（2026-10-12 D 第 7 件）：在家複習網站每一個主題（sentences/_review_sites.js） */
 const RVS = require('../sentences/_review_sites.js'), RVT = {};
@@ -314,31 +315,11 @@ td.nmc{text-align:left}td.nmc b{color:#9FB4C8;margin-right:.4em}
 #cer.on{display:flex}
 #cerctl{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;padding:10px;background:#0B0B0B;border-top:1px solid #333}
 #cpg{font-size:clamp(20px,1.6vw,28px);color:#BBB;min-width:4em;text-align:center}
-.cst{position:relative;flex:1;overflow:hidden;background:radial-gradient(ellipse at 50% 120%,#1a1206 0%,#000 60%)}
-.cst .beam{position:absolute;left:50%;top:-6vh;width:min(70vw,900px);height:110vh;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 0%,rgba(255,240,200,.55) 0%,rgba(255,220,140,.18) 38%,transparent 70%);clip-path:polygon(42% 0,58% 0,100% 100%,0 100%);opacity:0}
-.cst .floor{position:absolute;left:50%;top:62%;width:min(60vw,760px);height:12vh;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(255,226,150,.5),transparent 70%);opacity:0}
-.cst .ribbon{position:absolute;left:50%;top:4%;transform:translateX(-50%) scale(.6);opacity:0;background:linear-gradient(#C8102E,#8E0B20);color:#FFE9A8;font-size:clamp(34px,5vh,64px);font-weight:700;padding:.15em 1em;border-radius:12px;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.6)}
-.cst .sub{position:absolute;left:0;right:0;top:15%;text-align:center;font-size:clamp(26px,3.6vh,46px);color:#FFE9A8;opacity:0}
-.cst .cup{position:absolute;left:50%;top:22%;height:22vh;transform:translateX(-50%) translateY(10vh);opacity:0}
-.cst .cls{position:absolute;left:0;right:0;top:45%;text-align:center;font-size:clamp(56px,11vh,140px);font-weight:700;line-height:1;background:linear-gradient(#FFF4C2,#FFC93C 55%,#C98A12);-webkit-background-clip:text;background-clip:text;color:transparent;transform:scale(.3);opacity:0;filter:drop-shadow(0 4px 10px rgba(255,190,60,.45))}
-.cst .say{position:absolute;left:12px;right:12px;top:61%;text-align:center;font-size:clamp(26px,4vh,52px);font-weight:700;color:#fff;opacity:0}
-.cst .cf{position:absolute;top:-20px;width:12px;height:18px;opacity:0}
-.cpod{position:absolute;left:50%;bottom:2%;transform:translateX(-50%) translateY(40px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:12px;width:min(900px,94vw);opacity:0}
-.cp{text-align:center;border-radius:14px 14px 0 0;padding:8px 6px;font-weight:700}
-.cp .cc{font-size:clamp(28px,4vh,46px);color:#fff}.cp .cb{font-size:clamp(26px,3.5vh,40px)}
-.cp.p1{background:#5A4410;border:3px solid #FFD54A;min-height:20vh}.cp.p2{background:#3A3F46;border:3px solid #CFD8DC;min-height:15vh}.cp.p3{background:#4A2C14;border:3px solid #E39A5A;min-height:11vh}.cp.nop{visibility:hidden}
-.cst.go .beam{animation:s4b 1s ease-out .2s forwards}.cst.go .floor{animation:s4b 1s ease-out .6s forwards}
-.cst.go .ribbon{animation:s4r .7s cubic-bezier(.2,1.6,.4,1) .1s forwards}.cst.go .sub{animation:s4b .6s ease-out .7s forwards}
-.cst.go .cup{animation:s4c 1s cubic-bezier(.2,1.3,.4,1) 1s forwards}.cst.go .cls{animation:s4n .9s cubic-bezier(.2,1.5,.4,1) 1.9s forwards}
-.cst.go .say{animation:s4b .7s ease-out 2.8s forwards}.cst.go .cf{animation:s4cf 2.6s linear forwards}.cst.go .cpod{animation:s4p .8s cubic-bezier(.2,1.3,.4,1) 4.2s forwards}
-@keyframes s4b{to{opacity:1}}@keyframes s4r{to{opacity:1;transform:translateX(-50%) scale(1)}}@keyframes s4c{to{opacity:1;transform:translateX(-50%) translateY(0)}}
-@keyframes s4n{to{opacity:1;transform:scale(1)}}@keyframes s4p{to{opacity:1;transform:translateX(-50%) translateY(0)}}
-@keyframes s4cf{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(110vh) rotate(720deg)}}
-.cst.fin{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
-.cst.fin .ctl{font-size:clamp(32px,5vh,60px);font-weight:700;color:#FFE9A8;margin-bottom:12px;text-align:center}
-.cst.fin .cawd{width:min(1300px,96vw)}.cst.fin .caw .ccl{font-size:clamp(22px,2.6vh,32px)}
-@media (prefers-reduced-motion:reduce){.cst.go *{animation-duration:.01s!important;animation-delay:0s!important}}
+.cx.fin{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
+.cx.fin .ctl{font-size:clamp(32px,5vh,60px);font-weight:700;color:#FFE9A8;margin-bottom:12px;text-align:center}
+.cx.fin .cawd{width:min(1300px,96vw)}.cx.fin .caw .ccl{font-size:clamp(22px,2.6vh,32px)}
 ${HONCSS}
+${CERCSS}
 @media (max-width:900px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.wq{grid-template-columns:2em 1fr}.wq .r{grid-column:2}}
 </style></head><body>
 <div id="login"><h1>老師看板</h1><div class="note">🔑 輸入老師密碼</div>
@@ -367,12 +348,13 @@ ${HONCSS}
 <div id="honov"><div class="hon" id="honst"></div><div id="hctl"><button id="hre">⏮ 重來</button><button id="hpv">◀</button><span id="hpg"></span><button id="hnx">▶ 下一幕</button>
  <button id="hsd">🔊 聲音：開</button><button id="hnmb">👤 姓名：顯示</button><button id="hpr">🖨 印獎狀</button><button id="hx">✕ 關閉</button></div></div>
 <div id="prt"></div>
-<div id="cer"><div class="cst" id="cerst"></div><div id="cerctl"><button id="cnx">⏭ 下一個</button><button id="cps">⏸ 停</button><span id="cpg"></span><button id="csd">🔊 聲音：開</button><button id="cx">✕ 關閉</button></div></div>
+<div id="cer"><div class="cx" id="cerst"></div><div id="cerctl"><button id="cnx">⏭ 下一個</button><button id="cps">⏸ 停</button><span id="cpg"></span><span id="cstn"></span><button id="csd">🔊 聲音：開</button><button id="cx">✕ 關閉</button></div></div>
 <script src="../score/url.js"></script>
 <script>
 ${CALC}
 ${XL}
 ${HONRT}
+${CERRT}
 var BANK=${JSON.stringify(BANK)};
 var RVT=${JSON.stringify(RVT)};
 /* 2026-10-12 D4-A／F1：🎯 正確率、💯 總分、練習次數（圖示等使用者選：G1；CNTIC 空白 ＝ 只寫字）、綠色粗箭頭 ＝ 進步、🥇 本班名次、⚠️ 太快亂按 */
@@ -487,24 +469,19 @@ function paneB(psG){
 var CERN={sec:'⏰ 最認真練習',acc:'🎯 成績最優',prog:'⬆ 進步最多'},CERS={sec:'練最多分鐘',acc:'正確最多',prog:'比上一次進步最多'};
 function cerSay(k,v){return k==='sec'?'平均每一個人 練習 '+HON.mn(v)+'，全年級最多':k==='acc'?'全班平均 '+f1(v)+' 分，全年級最高':'全班平均 正確率多了 '+f1(v)+' 分，全年級最多'}
 function cerData(psG){var A=SC.clsAwards(SC.classes(psG,F.g,SIZES));return HON.AWK.map(function(k){return {k:k,R:A.rk[k]||[]}}).filter(function(x){return x.R.length})}
-function cerPod(R){return '<div class="cpod">'+[2,1,3].map(function(r){var a=R.filter(function(x){return x.rk===r});if(!a.length)return '<div class="cp nop"></div>';
-  return '<div class="cp p'+r+'"><div class="cc">'+a.map(function(x){return esc(SC.cname(x.cls))}).join('<br>')+'</div><div class="cb">'+['','🥇','🥈','🥉'][r]+' 第 '+r+' 名</div></div>'}).join('')+'</div>'}
 function cerSum(D){return '<div class="cawd">'+D.map(function(d){var one=d.R.filter(function(x){return x.rk===1});
   return '<div class="caw"><div class="ccn">'+CERN[d.k]+'</div><div class="ccs">'+CERS[d.k]+'</div><div class="cwn">👑 '+one.map(function(x){return esc(SC.cname(x.cls))}).join('、')+'</div>'+
    '<div class="ccl">'+d.R.map(function(x){return '<span>'+(x.rk<=3?['','🥇','🥈','🥉'][x.rk]:'')+' 第 '+x.rk+' 名 '+esc(SC.cname(x.cls))+'</span>'}).join('')+'</div></div>'}).join('')+'</div>'}
-var CER=null,CUP='<svg class="cup" viewBox="0 0 120 130"><defs><linearGradient id="gcup" x1="0" x2="1"><stop offset="0" stop-color="#A8740C"/><stop offset=".45" stop-color="#FFE48A"/><stop offset="1" stop-color="#B07A0E"/></linearGradient></defs><path d="M30 10h60v28c0 22-14 38-30 38S30 60 30 38z" fill="url(#gcup)"/><path d="M30 18H12c0 20 10 30 22 32M90 18h18c0 20-10 30-22 32" fill="none" stroke="url(#gcup)" stroke-width="7"/><rect x="53" y="76" width="14" height="20" fill="url(#gcup)"/><rect x="34" y="96" width="52" height="12" rx="3" fill="url(#gcup)"/><rect x="26" y="108" width="68" height="16" rx="4" fill="#3A2A10"/><path d="M60 26l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" fill="#FFF7D6"/></svg>';
-function cerOpen(){var S=sets(),D=cerData(SC.students(S.G));if(!D.length)return;CER={D:D,i:0,tm:null,pause:false};$('#cer').classList.add('on');if(HSND)HON.ac();cerShow()}
-function cerShow(){clearTimeout(CER.tm);var st=$('#cerst'),i=CER.i,D=CER.D;
-  $('#cpg').textContent=(i+1)+'／'+(D.length+1);$('#cnx').textContent=i<D.length?'⏭ 下一個':'⏮ 從頭再演';
-  if(i>=D.length){st.className='cst fin';st.innerHTML='<div class="ctl">🏆 '+hper()+' '+hgr()+' 頒獎典禮</div>'+cerSum(D);return}
+var CER=null;
+function cerOpen(){var S=sets(),D=cerData(SC.students(S.G));if(!D.length)return;CER={D:D,i:0,tm:null,pause:false,st:CERX.pick()};$('#cer').classList.add('on');if(HSND)HON.ac();cerShow()}
+function cerShow(){clearTimeout(CER.tm);var st=$('#cerst'),i=CER.i,D=CER.D;CERX.stop(st);
+  $('#cpg').textContent=(i+1)+'／'+(D.length+1);$('#cnx').textContent=i<D.length?'⏭ 下一個':'⏮ 從頭再演';$('#cstn').textContent='🎨 '+(CER.st+1)+'. '+CERX.ST[CER.st].nm;
+  if(i>=D.length){st.className='cx fin';st.style.background='';st.innerHTML='<div class="ctl">🏆 '+hper()+' '+hgr()+' 頒獎典禮</div>'+cerSum(D);return}
   var d=D[i],one=d.R.filter(function(x){return x.rk===1});
-  st.className='cst';st.innerHTML='<div class="beam"></div><div class="floor"></div><div class="ribbon">'+CERN[d.k]+'</div><div class="sub">'+CERS[d.k]+'</div>'+CUP+
-    '<div class="cls">👑 '+one.map(function(x){return esc(SC.cname(x.cls))}).join('、')+'</div><div class="say">🌟 '+esc(cerSay(d.k,one[0].v))+'</div>'+cerPod(d.R);
-  var CC=['#FFD54A','#FF6B6B','#7FD4FF','#3BD16F','#FF9FD2'];for(var n=0;n<34;n++){var c=document.createElement('i');c.className='cf';c.style.left=(Math.random()*100)+'%';c.style.background=CC[n%5];c.style.animationDelay=(2+Math.random()*1.4)+'s';c.style.borderRadius=n%3?'2px':'50%';st.appendChild(c)}
-  void st.offsetWidth;st.classList.add('go');
-  if(HSND){HON.snd.horn&&HON.snd.horn();setTimeout(function(){if(CER&&CER.i===i&&HSND&&HON.snd.clap)HON.snd.clap()},1900)}
-  if(!CER.pause)CER.tm=setTimeout(function(){if(CER){CER.i++;cerShow()}},8500)}
-function cerClose(){if(CER)clearTimeout(CER.tm);CER=null;$('#cer').classList.remove('on');$('#cerst').innerHTML=''}
+  var ms=CERX.play(st,CER.st,{ribbon:CERN[d.k],sub:CERS[d.k],cls:'👑 '+one.map(function(x){return esc(SC.cname(x.cls))}).join('、'),say:'🌟 '+esc(cerSay(d.k,one[0].v)),
+    pod:d.R.filter(function(x){return x.rk<=3}).map(function(x){return {rk:x.rk,w:esc(SC.cname(x.cls))}})},{snd:HSND});
+  if(!CER.pause)CER.tm=setTimeout(function(){if(CER){CER.i++;cerShow()}},ms+2600)}
+function cerClose(){if(CER)clearTimeout(CER.tm);CERX.stop($('#cerst'));CER=null;$('#cer').classList.remove('on');$('#cerst').innerHTML=''}
 function paneC(psG){
   var D=cerData(psG),hc='<section class="cerb"><div class="khd">🏆 '+hper()+' 頒獎典禮（'+hgr()+'）</div>'+(D.length?cerSum(D)+'<button id="cerGo" class="cergo">🏆 開始頒獎典禮</button>':'<div class="note">這段期間還沒有班級可以頒獎。</div>')+
     '<div class="note">💯 總分、練習次數、👥 有做的人 不頒獎，在下面的數字裡。</div></section><h3 class="hh">📊 每一班的數字</h3>';

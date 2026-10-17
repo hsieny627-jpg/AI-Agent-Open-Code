@@ -372,15 +372,28 @@ async function teacher(br, vp) {
       nd: cerData(SC.students(sets().G)).length, aws: HON.AWK.length }));
     if (cb.aws !== 3) e.push('最高榮譽不是 3 種（C5 第 3 題 A）');
     if (!/班級排行榜/.test(cb.tab) || cb.aw !== cb.nd || cb.aw < 2 || !cb.go || cb.first !== 'cerb') e.push('班級排行榜最上面沒有頒獎典禮 3 個獎＋〔🏆 開始頒獎典禮〕：' + JSON.stringify(cb));
-    if (cb.go) { await p.click('#cerGo'); await p.waitForTimeout(5600);
-      const ce = await p.evaluate(() => { const st = document.getElementById('cerst'), q = x => st.querySelector(x), o = [];
-        ['.ribbon', '.sub', '.cls', '.say', '.cpod'].forEach(k => { const el = q(k); if (!el || +getComputedStyle(el).opacity < .95) o.push(k); });
-        const sm = [].filter.call(st.querySelectorAll('.ribbon,.sub,.cls,.say,.cp .cc,.cp .cb'), x => parseFloat(getComputedStyle(x).fontSize) < 26).length;
-        const ov = [].filter.call(st.querySelectorAll('.ribbon,.sub,.cls,.say,.cp'), x => { const r = x.getBoundingClientRect(); return r.left < -1 || r.right > innerWidth + 1 || r.bottom > st.getBoundingClientRect().bottom + 1; }).length;
-        const ra = q('.say') && q('.say').getBoundingClientRect(), rp = q('.cpod') && q('.cpod').getBoundingClientRect();
-        return { on: document.getElementById('cer').classList.contains('on'), rb: q('.ribbon') && q('.ribbon').textContent, cl: q('.cls') && q('.cls').textContent, pod: st.querySelectorAll('.cp:not(.nop)').length, o, sm, ov, hit: ra && rp ? ra.bottom > rp.top + 2 : false, pg: document.getElementById('cpg').textContent }; });
-      if (!ce.on || !/最認真練習|成績最優|進步最多/.test(ce.rb) || !/班/.test(ce.cl) || ce.pod < 1 || ce.o.length) e.push('頒獎典禮沒有演出來（獎名、班級、頒獎台）：' + JSON.stringify(ce));
-      if (ce.sm || ce.ov || ce.hit) e.push('頒獎典禮字太小 ' + ce.sm + '、超出畫面 ' + ce.ov + '、一句話壓到頒獎台 ' + ce.hit);
+    if (cb.go) { await p.click('#cerGo'); await p.waitForTimeout(300);
+      /* 2026-10-17 C6 第三題：10 種風格每一種都演完量一次（第 1 名的台子明顯最高、字不壓到台子、不超出畫面） */
+      const pk = await p.evaluate(() => { localStorage.removeItem('cer_st'); const a = []; for (let i = 0; i < 10; i++) a.push(CERX.pick()); return a; });
+      if (new Set(pk).size !== 10) e.push('頒獎典禮 10 種風格沒有輪流：' + pk.join(','));
+      let ce;
+      for (let k = 0; k < 10; k++) {
+        await p.evaluate(k => { CER.st = k; CER.i = 0; CER.pause = true; cerShow(); }, k); await p.waitForTimeout(9300);
+        ce = await p.evaluate(() => { const st = document.getElementById('cerst'), q = x => st.querySelector(x), o = [], SR = st.getBoundingClientRect();
+          ['.ribbon', '.sub', '.cls', '.say', '.cp.p1 .cb', '.cp.p1 .ct'].forEach(k => { const el = q(k); if (!el || +getComputedStyle(el).opacity < .95) o.push(k); });
+          const vis = x => { const r = x.getBoundingClientRect(), f = parseFloat(getComputedStyle(x).fontSize), h = x.offsetHeight || 1; return f * Math.min(1, r.height / h); };
+          const sm = [].filter.call(st.querySelectorAll('.ribbon,.sub,.cls,.say,.cp:not(.nop) .ct,.cp:not(.nop) .cbt'), x => vis(x) < 20).map(x => x.className).join(',');
+          const ov = [].filter.call(st.querySelectorAll('.ribbon,.sub,.cls,.say,.cp:not(.nop) .ct,.cp:not(.nop) .cb'), x => { const r = x.getBoundingClientRect(); return r.left < SR.left - 1 || r.right > SR.right + 1 || r.bottom > SR.bottom + 1 || r.top < SR.top - 1; }).map(x => x.className).join(',');
+          const H = r => { const b = q('.cp.p' + r + ' .cb'); return b ? b.getBoundingClientRect().height : 0; };
+          const ra = q('.say').getBoundingClientRect(), tops = [].map.call(st.querySelectorAll('.cp:not(.nop) .ct'), x => x.getBoundingClientRect().top);
+          return { nm: CERX.ST[CER.st].nm, rb: q('.ribbon').textContent, cl: q('.cls').textContent, pod: st.querySelectorAll('.cp:not(.nop)').length, o, sm, ov, h: [H(1), H(2), H(3)].map(Math.round),
+            hit: ra.bottom > Math.min.apply(null, tops) + 2, pg: document.getElementById('cpg').textContent }; });
+        if (!/最認真練習|成績最優|進步最多/.test(ce.rb) || !/班/.test(ce.cl) || ce.pod < 1 || ce.o.length) e.push('頒獎典禮 ' + ce.nm + ' 沒有演出來：' + JSON.stringify(ce));
+        if (ce.sm || ce.ov || ce.hit) e.push('頒獎典禮 ' + ce.nm + ' 字太小 ' + ce.sm + '、超出畫面 ' + ce.ov + '、一句話壓到班級名字 ' + ce.hit);
+        if (ce.h[1] && ce.h[0] < ce.h[1] * 1.8 || ce.h[2] && ce.h[0] < ce.h[2] * 3) e.push('頒獎典禮 ' + ce.nm + ' 第 1 名的台子不夠高：' + ce.h.join('／'));
+        n += 4;
+      }
+      await p.evaluate(() => { CER.pause = false; });
       const tot = +ce.pg.split('／')[1]; for (let i = 1; i < tot; i++) { await p.click('#cnx'); await p.waitForTimeout(250); }
       const fin = await p.evaluate(() => ({ f: document.getElementById('cerst').classList.contains('fin'), a: document.querySelectorAll('#cerst .caw').length, t: document.getElementById('cerst').textContent }));
       if (!fin.f || fin.a !== cb.nd || /用心/.test(fin.t)) e.push('頒獎典禮最後一頁不是 3 個獎＋每一班的名次：' + JSON.stringify([fin.f, fin.a]));

@@ -1,0 +1,128 @@
+/* score/_cer.css — 🏆 頒獎典禮 10 種風格（_cer_rt.js 用；老師看板、listen/2026-10-17_C8/ 同一份） */
+.cx{position:relative;flex:1;overflow:hidden;background:radial-gradient(ellipse at 50% 120%,#1a1206 0%,#000 60%);color:#fff;font-weight:700}
+.cx .deco{position:absolute;inset:0;pointer-events:none}
+.cx .xfull{position:absolute;inset:0;width:100%;height:100%}
+.cx .xs{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff}
+.cx .beam{position:absolute;left:50%;top:-6vh;width:min(70vw,900px);height:110vh;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 0%,rgba(255,240,200,.55) 0%,rgba(255,220,140,.18) 38%,transparent 70%);clip-path:polygon(42% 0,58% 0,100% 100%,0 100%);opacity:0}
+.cx .floor{position:absolute;left:50%;top:62%;width:min(60vw,760px);height:12vh;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(255,226,150,.5),transparent 70%);opacity:0}
+.cx .ribbon{position:absolute;left:50%;top:3%;transform:translateX(-50%) scale(.6);opacity:0;background:linear-gradient(#C8102E,#8E0B20);color:#FFE9A8;font-size:clamp(34px,5vh,64px);padding:.15em 1em;border-radius:12px;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.6);z-index:3}
+.cx .sub{position:absolute;left:0;right:0;top:13.5%;text-align:center;font-size:clamp(26px,3.6vh,46px);color:#FFE9A8;opacity:0;z-index:3}
+.cx .mid{position:absolute;inset:0;transform-origin:50% 0;transition:transform 1s cubic-bezier(.3,1.2,.5,1);z-index:2}
+.cx .cupw{transition:opacity .6s}
+.cx .cup{position:absolute;left:50%;top:21%;height:22vh;transform:translateX(-50%) translateY(10vh);opacity:0}
+.cx .cls{position:absolute;left:0;right:0;top:45%;text-align:center;font-size:clamp(56px,11vh,140px);line-height:1;background:linear-gradient(#FFF4C2,#FFC93C 55%,#C98A12);-webkit-background-clip:text;background-clip:text;color:transparent;transform:scale(.3);opacity:0;filter:drop-shadow(0 4px 10px rgba(255,190,60,.45))}
+.cx .say{position:absolute;left:12px;right:12px;top:61%;text-align:center;font-size:clamp(26px,4vh,52px);color:#fff;opacity:0}
+.cx .cf{position:absolute;top:-20px;width:12px;height:18px;opacity:0;z-index:4}
+.cx.go .beam{animation:x_o 1s ease-out .2s forwards}.cx.go .floor{animation:x_o 1s ease-out .6s forwards}
+.cx.go .ribbon{animation:x_r .7s cubic-bezier(.2,1.6,.4,1) .1s forwards}.cx.go .sub{animation:x_o .6s ease-out .7s forwards}
+.cx.go .cup{animation:x_c 1s cubic-bezier(.2,1.3,.4,1) 1s forwards}.cx.go .cls{animation:x_n .9s cubic-bezier(.2,1.5,.4,1) 1.9s forwards}
+.cx.go .say{animation:x_o .7s ease-out 2.8s forwards}.cx.go .cf{animation:x_cf 2.6s linear forwards}
+@keyframes x_o{to{opacity:1}}@keyframes x_r{to{opacity:1;transform:translateX(-50%) scale(1)}}@keyframes x_c{to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes x_n{to{opacity:1;transform:scale(1)}}@keyframes x_cf{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(110vh) rotate(720deg)}}
+/* 第二段：獎盃收起來、班級和那一句往上縮，領獎台上場 */
+.cx.p2 .mid{transform:translateY(-6%) scale(.7)}.cx.p2 .cupw{opacity:0}.cx.p2 .floor,.cx.p2 .beam{opacity:.25!important;transition:opacity .8s}
+.cpod{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(1000px,96vw);height:55%;display:grid;grid-template-columns:1fr 1.18fr 1fr;align-items:end;gap:1.4vw;z-index:3}
+.cp{position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;text-align:center}
+.cp.nop{visibility:hidden}
+.cp .ct{position:relative;font-size:clamp(28px,4.6vh,58px);line-height:1.1;padding:0 0 .25em;opacity:0;color:#fff;text-shadow:0 3px 10px rgba(0,0,0,.8)}
+.cp.p1 .ct{font-size:clamp(36px,6.4vh,80px);background:linear-gradient(#FFF4C2,#FFC93C 55%,#C98A12);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 0 14px rgba(255,200,60,.7))}
+.cp .cb{position:relative;border-radius:14px 14px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:.3em;font-size:clamp(24px,3.6vh,44px);opacity:0;transform-origin:50% 100%;box-shadow:inset 0 6px 0 rgba(255,255,255,.35),0 0 24px rgba(0,0,0,.6)}
+.cp .cbm{font-size:1.5em;line-height:1}.cp .cbt{white-space:nowrap}
+.cp.p1 .cb{height:64%;background:linear-gradient(90deg,#8A6410,#FFE48A 45%,#C9911E);color:#3A2400;font-size:clamp(30px,5vh,60px)}
+.cp.p2 .cb{height:33%;background:linear-gradient(90deg,#7C858E,#EEF3F6 45%,#9AA4AC);color:#22282E}
+.cp.p3 .cb{height:16%;background:linear-gradient(90deg,#7A4520,#F0B27A 45%,#9A5A2A);color:#2E1608;flex-direction:row;gap:.3em;justify-content:center;padding-top:0;align-items:center}
+.cp.p3 .cbm{font-size:1.2em}
+.cp .cwl{display:none}
+.cp .cboom{position:absolute;left:50%;bottom:64%;width:10px;height:10px;transform:translate(-50%,50%);border-radius:50%;pointer-events:none;opacity:0}
+.cp .cfl{display:none}
+/* 每一種風格的上台動畫（.cb 台子、.ct 班級）；delay ＝ --d（第 3 名 0 秒、第 2 名 1.1 秒、第 1 名 3 秒） */
+.cx.p2 .cp .cb{animation:x_up .8s cubic-bezier(.2,1.3,.4,1) var(--d) forwards}
+.cx.p2 .cp .ct{animation:x_lb .6s cubic-bezier(.2,1.6,.4,1) calc(var(--d) + .7s) forwards}
+.cx.p2 .cp.p1 .ct{animation:x_lb1 1s cubic-bezier(.2,1.6,.4,1) calc(var(--d) + .7s) forwards}
+.cx.p2 .cp.p1 .cboom{animation:x_bm 1.2s ease-out calc(var(--d) + .6s) forwards}
+@keyframes x_up{from{opacity:1;transform:translateY(105%)}to{opacity:1;transform:none}}
+@keyframes x_lb{from{opacity:0;transform:translateY(-40px) scale(.5)}to{opacity:1;transform:none}}
+@keyframes x_lb1{0%{opacity:0;transform:scale(3)}60%{opacity:1;transform:scale(.9)}100%{opacity:1;transform:none}}
+@keyframes x_bm{0%{opacity:1;box-shadow:0 0 0 0 rgba(255,220,100,.9)}100%{opacity:0;width:70vw;height:70vw;box-shadow:0 0 0 30px rgba(255,220,100,0)}}
+.cx.shk{animation:x_shk .5s ease-out}@keyframes x_shk{20%{transform:translate(-10px,6px)}40%{transform:translate(9px,-6px)}60%{transform:translate(-6px,4px)}80%{transform:translate(4px,-2px)}}
+/* 1 舞台燈光：台子從地板升上來，第 1 名上台時一束聚光燈打下來 */
+.cs1 .cp.p1::before{content:"";position:absolute;left:50%;bottom:0;width:150%;height:200%;transform:translateX(-50%);background:linear-gradient(rgba(255,245,210,.0),rgba(255,245,210,.45));clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);opacity:0;pointer-events:none}
+.cs1.p2 .cp.p1::before{animation:x_o .4s ease-out 3s forwards}
+/* 2 星空：台子是從地上射出的星光柱，第 1 名頭上一顆大星星炸開 */
+.cs2.go .cls{animation:x_blur 1.6s ease-out 1.9s forwards}@keyframes x_blur{from{opacity:0;filter:blur(18px);transform:scale(1.3)}to{opacity:1;filter:blur(0) drop-shadow(0 0 14px #9FB8FF);transform:scale(1)}}
+.cs2 .cp .cb{background:linear-gradient(rgba(190,215,255,.95),rgba(80,110,220,.55));color:#0A1240;box-shadow:0 0 40px rgba(150,190,255,.8)}
+.cs2.p2 .cp .cb{animation:x_sy 1s cubic-bezier(.2,1,.3,1) var(--d) forwards}@keyframes x_sy{from{opacity:1;transform:scaleY(0);filter:brightness(3)}to{opacity:1;transform:scaleY(1);filter:none}}
+.cs2 .cp.p1 .ct::after{content:"★";position:absolute;left:50%;top:-1.1em;transform:translateX(-50%);color:#FFF6C8;font-size:1.3em;-webkit-text-fill-color:#FFF6C8;text-shadow:0 0 20px #fff}
+/* 3 金色煙火：台子像火箭衝上來、往上衝過頭再落下 */
+.cs3.p2 .cp .cb{animation:x_rk .9s cubic-bezier(.3,0,.3,1) var(--d) forwards}@keyframes x_rk{0%{opacity:1;transform:translateY(110%)}55%{opacity:1;transform:translateY(-14%)}75%{transform:translateY(3%)}100%{opacity:1;transform:none}}
+.cs3 .cp .cboom{animation:none}.cs3.p2 .cp .cboom{animation:x_fwb 1.4s ease-out calc(var(--d) + .5s) forwards}
+@keyframes x_fwb{0%{opacity:1;width:10px;height:10px;box-shadow:0 0 0 0 #FFD54A}100%{opacity:0;width:50vmin;height:50vmin;box-shadow:0 0 0 10px #FFD54A,0 0 60px 30px rgba(255,120,60,.6)}}
+/* 4 紅毯：第 3、2 名從兩邊滑進來，第 1 名從天上「咚！」重重掉下來（整個畫面震一下） */
+.cs4.go .ribbon{animation:x_slr .8s cubic-bezier(.2,1.3,.4,1) .1s forwards}@keyframes x_slr{from{opacity:0;transform:translateX(-160%)}to{opacity:1;transform:translateX(-50%)}}
+.cx .xrug{position:absolute;left:50%;bottom:0;width:40%;height:62%;transform:translateX(-50%) perspective(400px) rotateX(55deg);transform-origin:50% 100%;background:linear-gradient(#B3122E,#6E0818);animation:x_rug 1.2s ease-out both}
+@keyframes x_rug{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+.cs4.p2 .cp.p3 .cb{animation:x_sl .8s cubic-bezier(.2,1.2,.4,1) var(--d) forwards}.cs4.p2 .cp.p2 .cb{animation:x_sr .8s cubic-bezier(.2,1.2,.4,1) var(--d) forwards}
+@keyframes x_sl{from{opacity:1;transform:translateX(160%)}to{opacity:1;transform:none}}@keyframes x_sr{from{opacity:1;transform:translateX(-160%)}to{opacity:1;transform:none}}
+.cs4.p2 .cp.p1 .cb{animation:x_drop .55s cubic-bezier(.6,0,.9,.5) var(--d) forwards}@keyframes x_drop{from{opacity:1;transform:translateY(-160%)}to{opacity:1;transform:none}}
+/* 5 升旗典禮：台子像旗子慢慢升上去，每一個台子上面插一面旗，第 1 名的旗子最高 */
+.cs5.go .cls{animation:x_rise 1.2s cubic-bezier(.2,1.2,.4,1) 1.9s forwards}@keyframes x_rise{from{opacity:0;transform:translateY(120%)}to{opacity:1;transform:none}}
+.cs5.p2 .cp .cb{animation:x_sy5 1.6s ease-in-out var(--d) forwards}@keyframes x_sy5{from{opacity:1;transform:scaleY(.02)}to{opacity:1;transform:scaleY(1)}}
+.cs5 .cp .cfl{display:block;position:absolute;left:50%;bottom:100%;width:4px;height:1.6em;background:#ddd}
+.cs5 .cp .cfl::after{content:"";position:absolute;left:4px;top:0;width:1.3em;height:.8em;background:#FFD54A;animation:x_wave 1s ease-in-out infinite alternate;transform-origin:0 50%}
+.cs5 .cp.p2 .cfl::after{background:#CFD8DC}.cs5 .cp.p3 .cfl::after{background:#E39A5A}
+@keyframes x_wave{to{transform:skewY(8deg) scaleX(.9)}}
+/* 6 皇家殿堂：台子是一階一階的金色樓梯堆上去，皇冠戴到第 1 名頭上 */
+.cx .xcol{position:absolute;top:8%;bottom:0;width:6%;background:linear-gradient(90deg,#8A6410,#FFE48A,#8A6410);border-radius:6px 6px 0 0}
+.cx .xcur{position:absolute;top:0;left:0;right:0;height:9%;background:repeating-linear-gradient(90deg,#8E0B20 0 26px,#6E0818 26px 52px);border-bottom:4px solid #FFD54A}
+.cs6 .cup{display:none}.cs6 .crn{position:absolute;left:50%;top:-30%;transform:translateX(-50%);font-size:clamp(56px,12vmin,110px);z-index:2;animation:x_crn 1.2s cubic-bezier(.3,1.3,.5,1) 1s forwards}@keyframes x_crn{to{top:21%}}
+.cs6.p2 .crn{transition:opacity .5s;opacity:0}
+.cs6 .cp .cb{background:repeating-linear-gradient(#FFE48A 0 18%,#C9911E 18% 20%)}
+.cs6 .cp.p2 .cb{background:repeating-linear-gradient(#EEF3F6 0 30%,#9AA4AC 30% 33%)}.cs6 .cp.p3 .cb{background:#F0B27A}
+.cs6.p2 .cp .cb{animation:x_stp 1s steps(5,end) var(--d) forwards}@keyframes x_stp{from{opacity:1;clip-path:inset(100% 0 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+.cs6 .cp.p1 .ct::before{content:"👑";position:absolute;left:50%;top:-1.2em;transform:translateX(-50%);-webkit-text-fill-color:initial;color:#fff;font-size:.9em;animation:x_crn2 .7s cubic-bezier(.3,1.4,.5,1) .5s both}
+@keyframes x_crn2{from{top:-6em;opacity:0}to{opacity:1}}
+/* 7 打開信封：每一個名次先是一張金色信封（？），翻過來才看到班級 */
+.cx .xenv{position:absolute;left:50%;top:44%;width:24%;aspect-ratio:1.5;transform:translateX(-50%);background:linear-gradient(#FFE48A,#C9911E);border-radius:8px;animation:x_env 1.6s ease-in .4s both;display:flex;align-items:center;justify-content:center;color:#3A2400;font-size:clamp(18px,3vmin,28px)}
+@keyframes x_env{0%{transform:translateX(-50%) scale(.3)}60%{transform:translateX(-50%) scale(1)}100%{transform:translateX(-50%) scale(1) translateY(-40px);opacity:0}}
+.cs7.go .cls{animation-delay:2.2s}
+.cs7 .cp .cb{opacity:1;transform:scaleY(.08);background:linear-gradient(#FFE48A,#C9911E)}
+.cs7 .cp .cb .cbm,.cs7 .cp .cb .cbt{opacity:0}
+.cs7.p2 .cp .cb{animation:x_g7 .7s cubic-bezier(.2,1.3,.4,1) calc(var(--d) + .9s) forwards}@keyframes x_g7{to{transform:none}}
+.cs7.p2 .cp .cb .cbm,.cs7.p2 .cp .cb .cbt{animation:x_o .3s calc(var(--d) + 1.4s) forwards}
+.cs7.p2 .cp .ct{animation:x_flip 1s ease-in-out var(--d) forwards}@keyframes x_flip{0%{opacity:1;transform:rotateY(90deg) scale(.6)}100%{opacity:1;transform:none}}
+.cs7 .cp .ct::before{content:"✉";position:absolute;left:50%;top:0;transform:translateX(-50%);-webkit-text-fill-color:#FFE48A;color:#FFE48A;font-size:1.4em;opacity:0}
+.cs7.p2 .cp .ct::before{animation:x_envo .9s ease-in var(--d) forwards}@keyframes x_envo{0%{opacity:1;transform:translateX(-50%) scale(1.4)}100%{opacity:0;transform:translateX(-50%) translateY(-1.5em) scale(.4)}}
+/* 8 冠軍遊行（重做）：氣球飛上天、三台花車從右邊開進來（輪子在轉），第 1 名的花車最高、最後開進來，兩邊彩帶大砲「碰！」 */
+.cx .xroad{position:absolute;left:0;right:0;bottom:0;height:7%;background:repeating-linear-gradient(90deg,#444 0 40px,#555 40px 80px);border-top:4px dashed #fff}
+.cx .xbl{position:absolute;bottom:-12%;width:4.5vmin;height:5.6vmin;border-radius:50% 50% 45% 45%;animation:x_bal 6s ease-in forwards}
+.cx .xbl::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:5vmin;background:#fff}
+@keyframes x_bal{to{transform:translateY(-130vh)}}
+.cs8.go .cls{animation:x_par 1.4s cubic-bezier(.2,1.1,.4,1) 1.9s forwards}@keyframes x_par{from{opacity:1;transform:translateX(110%)}60%{transform:translateX(-4%)}to{opacity:1;transform:none}}
+.cs8 .cpod{bottom:7%;height:50%}
+.cs8 .cp .cb{border-radius:18px;border:4px solid #fff;margin-bottom:2.2vmin}
+.cs8 .cp.p1 .cb{background:repeating-linear-gradient(45deg,#FFD54A 0 20px,#FFC21A 20px 40px)}
+.cs8 .cp .cwl{display:block;position:absolute;bottom:-3vmin;width:5.6vmin;height:5.6vmin;border-radius:50%;background:radial-gradient(#ccc 22%,#222 24% 60%,#555 62%);border:3px dashed #999}
+.cs8 .cp .cwl.l{left:12%}.cs8 .cp .cwl.r{right:12%}
+.cs8.p2 .cp .cwl{animation:x_whl .5s linear infinite;animation-iteration-count:3}
+@keyframes x_whl{to{transform:rotate(360deg)}}
+.cs8.p2 .cp .cb{animation:x_fl 1.4s cubic-bezier(.25,1,.4,1.1) var(--d) forwards}@keyframes x_fl{0%{opacity:1;transform:translateX(110vw)}80%{transform:translateX(-3%) rotate(-1.5deg)}100%{opacity:1;transform:none}}
+.cs8.p2 .cp .cwl{animation-delay:var(--d)}
+.cs8 .cp.p1 .ct::before,.cs8 .cp.p1 .ct::after{content:"🎉";position:absolute;-webkit-text-fill-color:initial;color:#fff;font-size:clamp(50px,10vmin,110px);bottom:6%;opacity:0}
+.cs8 .cp.p1 .ct::before{left:-1.4em;bottom:0}.cs8 .cp.p1 .ct::after{right:-1.4em;bottom:0;transform:scaleX(-1)}
+.cs8.p2 .cp.p1 .ct::before,.cs8.p2 .cp.p1 .ct::after{animation:x_can .6s ease-out 3.7s forwards}
+@keyframes x_can{0%{opacity:1;filter:brightness(1)}30%{filter:brightness(2.5)}100%{opacity:1;filter:none}}
+/* 9 極光：台子是一根一根長出來的冰柱（尖尖的頂），極光照在第 1 名上 */
+.cx .xaur{position:absolute;left:-10%;right:-10%;top:0;height:60%;background:linear-gradient(100deg,transparent 10%,rgba(60,255,170,.35) 30%,rgba(150,90,255,.3) 55%,transparent 80%);filter:blur(18px);animation:x_aur 6s ease-in-out infinite alternate}
+@keyframes x_aur{to{transform:translateX(8%) skewX(-8deg)}}
+.cs9.go .cls{animation:x_n 2s ease-out 1.9s forwards,x_glw 2s ease-in-out 3.9s infinite alternate}@keyframes x_glw{to{filter:drop-shadow(0 0 22px rgba(120,255,200,.7))}}
+.cs9 .cp .cb{background:linear-gradient(rgba(220,255,250,.95),rgba(80,200,220,.6));color:#06303A;clip-path:polygon(0 8%,15% 0,30% 6%,50% 0,70% 6%,85% 0,100% 8%,100% 100%,0 100%);border-radius:0;box-shadow:none}
+.cs9.p2 .cp .cb{animation:x_ice 1.3s cubic-bezier(.2,.9,.3,1) var(--d) forwards}@keyframes x_ice{from{opacity:1;transform:scaleY(0) scaleX(.6);filter:brightness(2.5)}to{opacity:1;transform:none;filter:none}}
+.cs9.p2 .cp.p1 .cb{box-shadow:0 0 60px rgba(120,255,200,.8)}
+/* 10 水晶光芒：台子是透明水晶，一道彩虹光掃過去，光束從第 1 名往外射 */
+.cs10 .cup{filter:hue-rotate(170deg) saturate(.5) brightness(1.5) drop-shadow(0 0 16px #BFF0FF)}
+.cx .xray{position:absolute;left:50%;top:33%;width:48%;height:3px;transform-origin:0 50%;animation:x_ray 1.2s ease-out both}@keyframes x_ray{from{width:0;opacity:0}}
+.cs10 .cp .cb{background:linear-gradient(120deg,rgba(255,255,255,.75),rgba(180,230,255,.35) 40%,rgba(255,200,255,.5) 70%,rgba(255,255,255,.7));color:#0A1A33;border:2px solid rgba(255,255,255,.9)}
+.cs10.p2 .cp .cb{animation:x_cry 1.1s ease-out var(--d) forwards}@keyframes x_cry{0%{opacity:0;transform:scale(.4) rotate(-6deg);filter:hue-rotate(0)}70%{opacity:1;filter:hue-rotate(180deg) brightness(1.6)}100%{opacity:1;transform:none;filter:none}}
+.cs10.p2 .cp.p1 .cboom{animation:x_rays 1.6s ease-out 3.6s forwards;background:conic-gradient(from 0deg,#f55,#fd5,#5f8,#5cf,#a6f,#f5c,#f55);-webkit-mask:radial-gradient(circle,transparent 30%,#000 32%,transparent 70%);mask:radial-gradient(circle,transparent 30%,#000 32%,transparent 70%)}
+@keyframes x_rays{0%{opacity:1;width:10px;height:10px}100%{opacity:0;width:90vmin;height:90vmin}}
+@media (prefers-reduced-motion:reduce){.cx *,.cx{animation-duration:.01s!important;animation-delay:0s!important;transition:none!important}}

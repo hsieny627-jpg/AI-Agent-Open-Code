@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>動畫、角色、現場任務 C8</title>
+<style>
+@font-face{font-family:Andika;src:url(../../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#05070A;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 140px;font-size:26px;line-height:1.55;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:42px;color:#FFD54A;margin:22px 0 6px}
+h2{font-size:36px;color:#FFD54A;margin:56px 0 10px;border-top:4px solid #24303C;padding-top:22px}
+.lead{color:#DDE6EE}
+.howto{background:#102016;border:3px solid #3BD16F;border-radius:20px;padding:14px 20px;margin:16px 0}
+.done{background:#0D1B12;border:3px solid #3BD16F;border-radius:20px;padding:12px 18px;margin:14px 0}
+.q{background:#0B0F14;border:3px solid #24303C;border-radius:22px;padding:18px 20px;margin:26px 0}
+.q>.t{font-size:32px;color:#7FD4FF;margin-bottom:8px}
+.q>.t .no{display:inline-block;background:#FFD54A;color:#05070A;border-radius:12px;padding:0 14px;margin-right:10px}
+.opt{background:#0F151C;border:4px solid #2A3540;border-radius:20px;padding:14px 18px;margin:16px 0}
+.opt.rec{border-color:#3BD16F;background:#0D1B12}
+.opt .hd{font-size:30px}.opt .k{color:#FFD54A;font-size:40px;margin-right:10px}
+.tag{display:inline-block;background:#3BD16F;color:#05210F;border-radius:999px;padding:0 14px;font-size:22px;margin-left:8px;vertical-align:middle}
+.why{color:#CFE3F5;font-size:24px;margin-top:6px}
+table{border-collapse:collapse;width:100%;margin:10px 0;table-layout:fixed}
+td,th{border:2px solid #2A3540;padding:8px 12px;text-align:left;vertical-align:middle;word-break:break-word}
+th{background:#14202B;color:#CFE6FF}
+a{color:#7FD4FF;word-break:break-all}
+button{font:inherit;font-size:24px;color:#fff;background:#1B2633;border:3px solid #3A4A5C;border-radius:16px;padding:8px 18px;min-height:52px;cursor:pointer;margin:4px}
+button.on{border-color:#FFD54A;color:#FFD54A}
+.sw{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}
+/* ── 愛心 新樣品 ── */
+.stage{position:relative;height:min(78vh,620px);border-radius:22px;overflow:hidden;border:3px solid #2A3540;margin:10px 0}
+.hp{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:2.4% 2%;gap:1.4%}
+.hp .ht{font-size:clamp(30px,5.4vmin,52px);color:#FFE9A8}.hp .ht b{font-size:1.35em;color:#fff}
+.hrow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1.4vw;width:100%;max-width:1000px;flex:1;align-items:end}
+.hc{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.hc svg{width:92%;max-width:150px;height:auto;overflow:visible}
+.hc .hn{font-size:clamp(20px,3.2vmin,30px);line-height:1.15;min-height:2.3em;display:flex;align-items:center;justify-content:center}
+.hc .hv{font-size:clamp(26px,4.4vmin,42px)}
+.hc .tg{position:absolute;top:0;left:50%;transform:translateX(-50%) scale(0);white-space:nowrap;border-radius:14px;padding:2px 12px;font-size:clamp(22px,3.4vmin,32px);transition:transform .5s cubic-bezier(.2,1.6,.4,1)}
+.hc .tg.best{background:#FFD54A;color:#2A1A00}.hc .tg.wk{background:#FF6B3D;color:#fff}
+.hc.on .tg{transform:translateX(-50%) scale(1)}
+.hc.isw.on{animation:hwk 1s ease-in-out 2}@keyframes hwk{50%{transform:translateY(-10px)}}
+.hc.isb.on svg{filter:drop-shadow(0 0 16px rgba(255,213,74,.9))}
+.hsum{width:100%;max-width:1000px;display:grid;grid-template-columns:1fr;gap:8px;opacity:0;transform:translateY(20px);transition:all .6s}
+.hsum.on{opacity:1;transform:none}
+.hsum div{border-radius:16px;padding:6px 16px;font-size:clamp(24px,3.8vmin,38px)}
+.hsum .s1{background:#3A2E08;border:3px solid #FFD54A}.hsum .s2{background:#3A1608;border:3px solid #FF6B3D}
+.bars{width:100%;max-width:1000px;display:flex;flex-direction:column;gap:1.2vh;flex:1;justify-content:center}
+.br{display:grid;grid-template-columns:2.2em minmax(0,7em) minmax(0,1fr) 3.3em 5.4em;align-items:center;gap:10px;font-size:clamp(22px,3.6vmin,36px)}
+.br .bt{height:1.2em;border-radius:999px;background:#1B2633;overflow:hidden;border:2px solid #3A4A5C}
+.br .bt i{display:block;height:100%;width:0;border-radius:999px;transition:width 1s cubic-bezier(.3,1,.4,1)}
+.br .bk{opacity:0;transform:scale(.3);transition:all .5s cubic-bezier(.2,1.6,.4,1);border-radius:12px;padding:0 6px;text-align:center;font-size:.8em}
+.br.on .bk{opacity:1;transform:none}.br .bk.best{background:#FFD54A;color:#2A1A00}.br .bk.wk{background:#FF6B3D}
+/* ── 頒獎典禮（老師看板同一份） ── */
+#cst{position:absolute;inset:0;display:flex}
+/* score/_cer.css — 🏆 頒獎典禮 10 種風格（_cer_rt.js 用；老師看板、listen/2026-10-17_C8/ 同一份） */
+.cx{position:relative;flex:1;overflow:hidden;background:radial-gradient(ellipse at 50% 120%,#1a1206 0%,#000 60%);color:#fff;font-weight:700}
+.cx .deco{position:absolute;inset:0;pointer-events:none}
+.cx .xfull{position:absolute;inset:0;width:100%;height:100%}
+.cx .xs{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff}
+.cx .beam{position:absolute;left:50%;top:-6vh;width:min(70vw,900px);height:110vh;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 0%,rgba(255,240,200,.55) 0%,rgba(255,220,140,.18) 38%,transparent 70%);clip-path:polygon(42% 0,58% 0,100% 100%,0 100%);opacity:0}
+.cx .floor{position:absolute;left:50%;top:62%;width:min(60vw,760px);height:12vh;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(255,226,150,.5),transparent 70%);opacity:0}
+.cx .ribbon{position:absolute;left:50%;top:3%;transform:translateX(-50%) scale(.6);opacity:0;background:linear-gradient(#C8102E,#8E0B20);color:#FFE9A8;font-size:clamp(34px,5vh,64px);padding:.15em 1em;border-radius:12px;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.6);z-index:3}
+.cx .sub{position:absolute;left:0;right:0;top:13.5%;text-align:center;font-size:clamp(26px,3.6vh,46px);color:#FFE9A8;opacity:0;z-index:3}
+.cx .mid{position:absolute;inset:0;transform-origin:50% 0;transition:transform 1s cubic-bezier(.3,1.2,.5,1);z-index:2}
+.cx .cupw{transition:opacity .6s}
+.cx .cup{position:absolute;left:50%;top:21%;height:22vh;transform:translateX(-50%) translateY(10vh);opacity:0}
+.cx .cls{position:absolute;left:0;right:0;top:45%;text-align:center;font-size:clamp(56px,11vh,140px);line-height:1;background:linear-gradient(#FFF4C2,#FFC93C 55%,#C98A12);-webkit-background-clip:text;background-clip:text;color:transparent;transform:scale(.3);opacity:0;filter:drop-shadow(0 4px 10px rgba(255,190,60,.45))}
+.cx .say{position:absolute;left:12px;right:12px;top:61%;text-align:center;font-size:clamp(26px,4vh,52px);color:#fff;opacity:0}
+.cx .cf{position:absolute;top:-20px;width:12px;height:18px;opacity:0;z-index:4}
+.cx.go .beam{animation:x_o 1s ease-out .2s forwards}.cx.go .floor{animation:x_o 1s ease-out .6s forwards}
+.cx.go .ribbon{animation:x_r .7s cubic-bezier(.2,1.6,.4,1) .1s forwards}.cx.go .sub{animation:x_o .6s ease-out .7s forwards}
+.cx.go .cup{animation:x_c 1s cubic-bezier(.2,1.3,.4,1) 1s forwards}.cx.go .cls{animation:x_n .9s cubic-bezier(.2,1.5,.4,1) 1.9s forwards}
+.cx.go .say{animation:x_o .7s ease-out 2.8s forwards}.cx.go .cf{animation:x_cf 2.6s linear forwards}
+@keyframes x_o{to{opacity:1}}@keyframes x_r{to{opacity:1;transform:translateX(-50%) scale(1)}}@keyframes x_c{to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes x_n{to{opacity:1;transform:scale(1)}}@keyframes x_cf{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(110vh) rotate(720deg)}}
+/* 第二段：獎盃收起來、班級和那一句往上縮，領獎台上場 */
+.cx.p2 .mid{transform:translateY(-6%) scale(.7)}.cx.p2 .cupw{opacity:0}.cx.p2 .floor,.cx.p2 .beam{opacity:.25!important;transition:opacity .8s}
+.cpod{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(1000px,96vw);height:55%;display:grid;grid-template-columns:1fr 1.18fr 1fr;align-items:end;gap:1.4vw;z-index:3}
+.cp{position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;text-align:center}
+.cp.nop{visibility:hidden}
+.cp .ct{position:relative;font-size:clamp(28px,4.6vh,58px);line-height:1.1;padding:0 0 .25em;opacity:0;color:#fff;text-shadow:0 3px 10px rgba(0,0,0,.8)}
+.cp.p1 .ct{font-size:clamp(36px,6.4vh,80px);background:linear-gradient(#FFF4C2,#FFC93C 55%,#C98A12);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 0 14px rgba(255,200,60,.7))}
+.cp .cb{position:relative;border-radius:14px 14px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:.3em;font-size:clamp(24px,3.6vh,44px);opacity:0;transform-origin:50% 100%;box-shadow:inset 0 6px 0 rgba(255,255,255,.35),0 0 24px rgba(0,0,0,.6)}
+.cp .cbm{font-size:1.5em;line-height:1}.cp .cbt{white-space:nowrap}
+.cp.p1 .cb{height:64%;background:linear-gradient(90deg,#8A6410,#FFE48A 45%,#C9911E);color:#3A2400;font-size:clamp(30px,5vh,60px)}
+.cp.p2 .cb{height:33%;background:linear-gradient(90deg,#7C858E,#EEF3F6 45%,#9AA4AC);color:#22282E}
+.cp.p3 .cb{height:16%;background:linear-gradient(90deg,#7A4520,#F0B27A 45%,#9A5A2A);color:#2E1608;flex-direction:row;gap:.3em;justify-content:center;padding-top:0;align-items:center}
+.cp.p3 .cbm{font-size:1.2em}
+.cp .cwl{display:none}
+.cp .cboom{position:absolute;left:50%;bottom:64%;width:10px;height:10px;transform:translate(-50%,50%);border-radius:50%;pointer-events:none;opacity:0}
+.cp .cfl{display:none}
+/* 每一種風格的上台動畫（.cb 台子、.ct 班級）；delay ＝ --d（第 3 名 0 秒、第 2 名 1.1 秒、第 1 名 3 秒） */
+.cx.p2 .cp .cb{animation:x_up .8s cubic-bezier(.2,1.3,.4,1) var(--d) forwards}
+.cx.p2 .cp .ct{animation:x_lb .6s cubic-bezier(.2,1.6,.4,1) calc(var(--d) + .7s) forwards}
+.cx.p2 .cp.p1 .ct{animation:x_lb1 1s cubic-bezier(.2,1.6,.4,1) calc(var(--d) + .7s) forwards}
+.cx.p2 .cp.p1 .cboom{animation:x_bm 1.2s ease-out calc(var(--d) + .6s) forwards}
+@keyframes x_up{from{opacity:1;transform:translateY(105%)}to{opacity:1;transform:none}}
+@keyframes x_lb{from{opacity:0;transform:translateY(-40px) scale(.5)}to{opacity:1;transform:none}}
+@keyframes x_lb1{0%{opacity:0;transform:scale(3)}60%{opacity:1;transform:scale(.9)}100%{opacity:1;transform:none}}
+@keyframes x_bm{0%{opacity:1;box-shadow:0 0 0 0 rgba(255,220,100,.9)}100%{opacity:0;width:70vw;height:70vw;box-shadow:0 0 0 30px rgba(255,220,100,0)}}
+.cx.shk{animation:x_shk .5s ease-out}@keyframes x_shk{20%{transform:translate(-10px,6px)}40%{transform:translate(9px,-6px)}60%{transform:translate(-6px,4px)}80%{transform:translate(4px,-2px)}}
+/* 1 舞台燈光：台子從地板升上來，第 1 名上台時一束聚光燈打下來 */
+.cs1 .cp.p1::before{content:"";position:absolute;left:50%;bottom:0;width:150%;height:200%;transform:translateX(-50%);background:linear-gradient(rgba(255,245,210,.0),rgba(255,245,210,.45));clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);opacity:0;pointer-events:none}
+.cs1.p2 .cp.p1::before{animation:x_o .4s ease-out 3s forwards}
+/* 2 星空：台子是從地上射出的星光柱，第 1 名頭上一顆大星星炸開 */
+.cs2.go .cls{animation:x_blur 1.6s ease-out 1.9s forwards}@keyframes x_blur{from{opacity:0;filter:blur(18px);transform:scale(1.3)}to{opacity:1;filter:blur(0) drop-shadow(0 0 14px #9FB8FF);transform:scale(1)}}
+.cs2 .cp .cb{background:linear-gradient(rgba(190,215,255,.95),rgba(80,110,220,.55));color:#0A1240;box-shadow:0 0 40px rgba(150,190,255,.8)}
+.cs2.p2 .cp .cb{animation:x_sy 1s cubic-bezier(.2,1,.3,1) var(--d) forwards}@keyframes x_sy{from{opacity:1;transform:scaleY(0);filter:brightness(3)}to{opacity:1;transform:scaleY(1);filter:none}}
+.cs2 .cp.p1 .ct::after{content:"★";position:absolute;left:50%;top:-1.1em;transform:translateX(-50%);color:#FFF6C8;font-size:1.3em;-webkit-text-fill-color:#FFF6C8;text-shadow:0 0 20px #fff}
+/* 3 金色煙火：台子像火箭衝上來、往上衝過頭再落下 */
+.cs3.p2 .cp .cb{animation:x_rk .9s cubic-bezier(.3,0,.3,1) var(--d) forwards}@keyframes x_rk{0%{opacity:1;transform:translateY(110%)}55%{opacity:1;transform:translateY(-14%)}75%{transform:translateY(3%)}100%{opacity:1;transform:none}}
+.cs3 .cp .cboom{animation:none}.cs3.p2 .cp .cboom{animation:x_fwb 1.4s ease-out calc(var(--d) + .5s) forwards}
+@keyframes x_fwb{0%{opacity:1;width:10px;height:10px;box-shadow:0 0 0 0 #FFD54A}100%{opacity:0;width:50vmin;height:50vmin;box-shadow:0 0 0 10px #FFD54A,0 0 60px 30px rgba(255,120,60,.6)}}
+/* 4 紅毯：第 3、2 名從兩邊滑進來，第 1 名從天上「咚！」重重掉下來（整個畫面震一下） */
+.cs4.go .ribbon{animation:x_slr .8s cubic-bezier(.2,1.3,.4,1) .1s forwards}@keyframes x_slr{from{opacity:0;transform:translateX(-160%)}to{opacity:1;transform:translateX(-50%)}}
+.cx .xrug{position:absolute;left:50%;bottom:0;width:40%;height:62%;transform:translateX(-50%) perspective(400px) rotateX(55deg);transform-origin:50% 100%;background:linear-gradient(#B3122E,#6E0818);animation:x_rug 1.2s ease-out both}
+@keyframes x_rug{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+.cs4.p2 .cp.p3 .cb{animation:x_sl .8s cubic-bezier(.2,1.2,.4,1) var(--d) forwards}.cs4.p2 .cp.p2 .cb{animation:x_sr .8s cubic-bezier(.2,1.2,.4,1) var(--d) forwards}
+@keyframes x_sl{from{opacity:1;transform:translateX(160%)}to{opacity:1;transform:none}}@keyframes x_sr{from{opacity:1;transform:translateX(-160%)}to{opacity:1;transform:none}}
+.cs4.p2 .cp.p1 .cb{animation:x_drop .55s cubic-bezier(.6,0,.9,.5) var(--d) forwards}@keyframes x_drop{from{opacity:1;transform:translateY(-160%)}to{opacity:1;transform:none}}
+/* 5 升旗典禮：台子像旗子慢慢升上去，每一個台子上面插一面旗，第 1 名的旗子最高 */
+.cs5.go .cls{animation:x_rise 1.2s cubic-bezier(.2,1.2,.4,1) 1.9s forwards}@keyframes x_rise{from{opacity:0;transform:translateY(120%)}to{opacity:1;transform:none}}
+.cs5.p2 .cp .cb{animation:x_sy5 1.6s ease-in-out var(--d) forwards}@keyframes x_sy5{from{opacity:1;transform:scaleY(.02)}to{opacity:1;transform:scaleY(1)}}
+.cs5 .cp .cfl{display:block;position:absolute;left:50%;bottom:100%;width:4px;height:1.6em;background:#ddd}
+.cs5 .cp .cfl::after{content:"";position:absolute;left:4px;top:0;width:1.3em;height:.8em;background:#FFD54A;animation:x_wave 1s ease-in-out infinite alternate;transform-origin:0 50%}
+.cs5 .cp.p2 .cfl::after{background:#CFD8DC}.cs5 .cp.p3 .cfl::after{background:#E39A5A}
+@keyframes x_wave{to{transform:skewY(8deg) scaleX(.9)}}
+/* 6 皇家殿堂：台子是一階一階的金色樓梯堆上去，皇冠戴到第 1 名頭上 */
+.cx .xcol{position:absolute;top:8%;bottom:0;width:6%;background:linear-gradient(90deg,#8A6410,#FFE48A,#8A6410);border-radius:6px 6px 0 0}
+.cx .xcur{position:absolute;top:0;left:0;right:0;height:9%;background:repeating-linear-gradient(90deg,#8E0B20 0 26px,#6E0818 26px 52px);border-bottom:4px solid #FFD54A}
+.cs6 .cup{display:none}.cs6 .crn{position:absolute;left:50%;top:-30%;transform:translateX(-50%);font-size:clamp(56px,12vmin,110px);z-index:2;animation:x_crn 1.2s cubic-bezier(.3,1.3,.5,1) 1s forwards}@keyframes x_crn{to{top:21%}}
+.cs6.p2 .crn{transition:opacity .5s;opacity:0}
+.cs6 .cp .cb{background:repeating-linear-gradient(#FFE48A 0 18%,#C9911E 18% 20%)}
+.cs6 .cp.p2 .cb{background:repeating-linear-gradient(#EEF3F6 0 30%,#9AA4AC 30% 33%)}.cs6 .cp.p3 .cb{background:#F0B27A}
+.cs6.p2 .cp .cb{animation:x_stp 1s steps(5,end) var(--d) forwards}@keyframes x_stp{from{opacity:1;clip-path:inset(100% 0 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+.cs6 .cp.p1 .ct::before{content:"👑";position:absolute;left:50%;top:-1.2em;transform:translateX(-50%);-webkit-text-fill-color:initial;color:#fff;font-size:.9em;animation:x_crn2 .7s cubic-bezier(.3,1.4,.5,1) .5s both}
+@keyframes x_crn2{from{top:-6em;opacity:0}to{opacity:1}}
+/* 7 打開信封：每一個名次先是一張金色信封（？），翻過來才看到班級 */
+.cx .xenv{position:absolute;left:50%;top:44%;width:24%;aspect-ratio:1.5;transform:translateX(-50%);background:linear-gradient(#FFE48A,#C9911E);border-radius:8px;animation:x_env 1.6s ease-in .4s both;display:flex;align-items:center;justify-content:center;color:#3A2400;font-size:clamp(18px,3vmin,28px)}
+@keyframes x_env{0%{transform:translateX(-50%) scale(.3)}60%{transform:translateX(-50%) scale(1)}100%{transform:translateX(-50%) scale(1) translateY(-40px);opacity:0}}
+.cs7.go .cls{animation-delay:2.2s}
+.cs7 .cp .cb{opacity:1;transform:scaleY(.08);background:linear-gradient(#FFE48A,#C9911E)}
+.cs7 .cp .cb .cbm,.cs7 .cp .cb .cbt{opacity:0}
+.cs7.p2 .cp .cb{animation:x_g7 .7s cubic-bezier(.2,1.3,.4,1) calc(var(--d) + .9s) forwards}@keyframes x_g7{to{transform:none}}
+.cs7.p2 .cp .cb .cbm,.cs7.p2 .cp .cb .cbt{animation:x_o .3s calc(var(--d) + 1.4s) forwards}
+.cs7.p2 .cp .ct{animation:x_flip 1s ease-in-out var(--d) forwards}@keyframes x_flip{0%{opacity:1;transform:rotateY(90deg) scale(.6)}100%{opacity:1;transform:none}}
+.cs7 .cp .ct::before{content:"✉";position:absolute;left:50%;top:0;transform:translateX(-50%);-webkit-text-fill-color:#FFE48A;color:#FFE48A;font-size:1.4em;opacity:0}
+.cs7.p2 .cp .ct::before{animation:x_envo .9s ease-in var(--d) forwards}@keyframes x_envo{0%{opacity:1;transform:translateX(-50%) scale(1.4)}100%{opacity:0;transform:translateX(-50%) translateY(-1.5em) scale(.4)}}
+/* 8 冠軍遊行（重做）：氣球飛上天、三台花車從右邊開進來（輪子在轉），第 1 名的花車最高、最後開進來，兩邊彩帶大砲「碰！」 */
+.cx .xroad{position:absolute;left:0;right:0;bottom:0;height:7%;background:repeating-linear-gradient(90deg,#444 0 40px,#555 40px 80px);border-top:4px dashed #fff}
+.cx .xbl{position:absolute;bottom:-12%;width:4.5vmin;height:5.6vmin;border-radius:50% 50% 45% 45%;animation:x_bal 6s ease-in forwards}
+.cx .xbl::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:5vmin;background:#fff}
+@keyframes x_bal{to{transform:translateY(-130vh)}}
+.cs8.go .cls{animation:x_par 1.4s cubic-bezier(.2,1.1,.4,1) 1.9s forwards}@keyframes x_par{from{opacity:1;transform:translateX(110%)}60%{transform:translateX(-4%)}to{opacity:1;transform:none}}
+.cs8 .cpod{bottom:7%;height:50%}
+.cs8 .cp .cb{border-radius:18px;border:4px solid #fff;margin-bottom:2.2vmin}
+.cs8 .cp.p1 .cb{background:repeating-linear-gradient(45deg,#FFD54A 0 20px,#FFC21A 20px 40px)}
+.cs8 .cp .cwl{display:block;position:absolute;bottom:-3vmin;width:5.6vmin;height:5.6vmin;border-radius:50%;background:radial-gradient(#ccc 22%,#222 24% 60%,#555 62%);border:3px dashed #999}
+.cs8 .cp .cwl.l{left:12%}.cs8 .cp .cwl.r{right:12%}
+.cs8.p2 .cp .cwl{animation:x_whl .5s linear infinite;animation-iteration-count:3}
+@keyframes x_whl{to{transform:rotate(360deg)}}
+.cs8.p2 .cp .cb{animation:x_fl 1.4s cubic-bezier(.25,1,.4,1.1) var(--d) forwards}@keyframes x_fl{0%{opacity:1;transform:translateX(110vw)}80%{transform:translateX(-3%) rotate(-1.5deg)}100%{opacity:1;transform:none}}
+.cs8.p2 .cp .cwl{animation-delay:var(--d)}
+.cs8 .cp.p1 .ct::before,.cs8 .cp.p1 .ct::after{content:"🎉";position:absolute;-webkit-text-fill-color:initial;color:#fff;font-size:clamp(50px,10vmin,110px);bottom:6%;opacity:0}
+.cs8 .cp.p1 .ct::before{left:-1.4em;bottom:0}.cs8 .cp.p1 .ct::after{right:-1.4em;bottom:0;transform:scaleX(-1)}
+.cs8.p2 .cp.p1 .ct::before,.cs8.p2 .cp.p1 .ct::after{animation:x_can .6s ease-out 3.7s forwards}
+@keyframes x_can{0%{opacity:1;filter:brightness(1)}30%{filter:brightness(2.5)}100%{opacity:1;filter:none}}
+/* 9 極光：台子是一根一根長出來的冰柱（尖尖的頂），極光照在第 1 名上 */
+.cx .xaur{position:absolute;left:-10%;right:-10%;top:0;height:60%;background:linear-gradient(100deg,transparent 10%,rgba(60,255,170,.35) 30%,rgba(150,90,255,.3) 55%,transparent 80%);filter:blur(18px);animation:x_aur 6s ease-in-out infinite alternate}
+@keyframes x_aur{to{transform:translateX(8%) skewX(-8deg)}}
+.cs9.go .cls{animation:x_n 2s ease-out 1.9s forwards,x_glw 2s ease-in-out 3.9s infinite alternate}@keyframes x_glw{to{filter:drop-shadow(0 0 22px rgba(120,255,200,.7))}}
+.cs9 .cp .cb{background:linear-gradient(rgba(220,255,250,.95),rgba(80,200,220,.6));color:#06303A;clip-path:polygon(0 8%,15% 0,30% 6%,50% 0,70% 6%,85% 0,100% 8%,100% 100%,0 100%);border-radius:0;box-shadow:none}
+.cs9.p2 .cp .cb{animation:x_ice 1.3s cubic-bezier(.2,.9,.3,1) var(--d) forwards}@keyframes x_ice{from{opacity:1;transform:scaleY(0) scaleX(.6);filter:brightness(2.5)}to{opacity:1;transform:none;filter:none}}
+.cs9.p2 .cp.p1 .cb{box-shadow:0 0 60px rgba(120,255,200,.8)}
+/* 10 水晶光芒：台子是透明水晶，一道彩虹光掃過去，光束從第 1 名往外射 */
+.cs10 .cup{filter:hue-rotate(170deg) saturate(.5) brightness(1.5) drop-shadow(0 0 16px #BFF0FF)}
+.cx .xray{position:absolute;left:50%;top:33%;width:48%;height:3px;transform-origin:0 50%;animation:x_ray 1.2s ease-out both}@keyframes x_ray{from{width:0;opacity:0}}
+.cs10 .cp .cb{background:linear-gradient(120deg,rgba(255,255,255,.75),rgba(180,230,255,.35) 40%,rgba(255,200,255,.5) 70%,rgba(255,255,255,.7));color:#0A1A33;border:2px solid rgba(255,255,255,.9)}
+.cs10.p2 .cp .cb{animation:x_cry 1.1s ease-out var(--d) forwards}@keyframes x_cry{0%{opacity:0;transform:scale(.4) rotate(-6deg);filter:hue-rotate(0)}70%{opacity:1;filter:hue-rotate(180deg) brightness(1.6)}100%{opacity:1;transform:none;filter:none}}
+.cs10.p2 .cp.p1 .cboom{animation:x_rays 1.6s ease-out 3.6s forwards;background:conic-gradient(from 0deg,#f55,#fd5,#5f8,#5cf,#a6f,#f5c,#f55);-webkit-mask:radial-gradient(circle,transparent 30%,#000 32%,transparent 70%);mask:radial-gradient(circle,transparent 30%,#000 32%,transparent 70%)}
+@keyframes x_rays{0%{opacity:1;width:10px;height:10px}100%{opacity:0;width:90vmin;height:90vmin}}
+@media (prefers-reduced-motion:reduce){.cx *,.cx{animation-duration:.01s!important;animation-delay:0s!important;transition:none!important}}
+
+/* ── 角色 ── */
+.gal{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+@media (max-width:760px){.gal{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.hero{position:relative;border-radius:16px;overflow:hidden;cursor:pointer;aspect-ratio:3/4.3;background:#0A0F18;border:3px solid #2A3A55;--a:#7FD4FF}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:hfl 3.2s ease-in-out infinite;animation-delay:var(--dl,0s)}
+@keyframes hfl{50%{transform:translateY(-3%) scale(1.03)}}
+.hero::before{content:"";position:absolute;inset:-30%;background:conic-gradient(from 0deg,transparent,var(--a),transparent 30%);animation:hsp 4s linear infinite;opacity:.55;z-index:0}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);transform:translateX(-120%);animation:hsh 4.5s ease-in-out infinite;animation-delay:var(--dl,0s)}
+@keyframes hsp{to{transform:rotate(360deg)}}@keyframes hsh{30%,100%{transform:translateX(120%)}}
+.hero .in{position:absolute;inset:4px;border-radius:12px;overflow:hidden;z-index:1;background:#0A0F18}
+.hero .pt{position:absolute;bottom:-10px;width:8px;height:8px;border-radius:50%;background:var(--a);box-shadow:0 0 10px var(--a);z-index:2;animation:hpt 2.6s linear infinite}
+@keyframes hpt{to{transform:translateY(-36vh);opacity:0}}
+.hero.jump{animation:hjp .7s cubic-bezier(.2,1.6,.4,1)}@keyframes hjp{40%{transform:translateY(-14px) scale(1.08) rotate(-3deg)}}
+.hero.sel{border-color:#FFD54A;box-shadow:0 0 0 4px #FFD54A,0 0 30px rgba(255,213,74,.7)}
+.hero .no{position:absolute;left:6px;top:6px;z-index:3;background:rgba(0,0,0,.7);border-radius:10px;padding:0 8px;font-size:20px}
+.slot{aspect-ratio:3/4.3;border:3px dashed #3A4A5C;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;color:#8FA3B5;font-size:20px;padding:8px}
+.show{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:center;background:radial-gradient(circle at 30% 40%,#1C2A44,#05070A 70%);border:3px solid #FFD54A;border-radius:22px;padding:16px}
+@media (max-width:760px){.show{grid-template-columns:1fr}}
+.show .hero{cursor:default}
+.show .sl{font-size:28px;line-height:1.6}
+.show .ph{display:inline-block;border:3px dashed #3A4A5C;border-radius:14px;padding:2px 12px;color:#8FA3B5;font-size:22px}
+</style></head><body><div class="wrap">
+<h1>老師，請看（C8）：動畫、角色、現場任務</h1>
+<p class="lead">老師看完 C6、C7 的回答已經寫進需求檔。有<b>兩種意思</b>或<b>跟以前的決定衝突</b>的地方，全部列在這一頁。回答只要寫：<b>「1 A、2 A…」</b>；全部同意寫<b>「全部照建議」</b>。</p>
+<div class="howto">✅ <b>這一次已經做好的</b>（不用回答）：<b>🏆 頒獎典禮 10 種風格</b>放上老師看板了——第 1 名的台子 ≈ 第 2 名的 2 倍高、第 3 名的 4 倍高；每一種風格上台的動畫都不一樣；第 3 名 ➜ 第 2 名 ➜ 鼓聲 ➜ 第 1 名最後上台；「8 冠軍遊行」重做。下面第三段可以一種一種看。</div>
+
+<h2>一、📅 練習 的愛心動畫</h2>
+<p>老師說：10 種新的都不好——<b>看不出：自己哪裡做得最好、哪裡可以更好、要加強什麼</b>。所以這一次改成<b>「一眼看出三件事」</b>，每一次都一樣排法（秒懂、精準），只換顏色和背景：</p>
+<table><tr><th style="width:34%">要看出來的</th><th>畫面上</th></tr>
+<tr><td>⭐ 哪裡做得最好</td><td>那一項上面掛金色牌子「⭐ 最好」、會發光</td></tr>
+<tr><td>🎯 哪裡可以更好</td><td>最少的那一項上面掛橘色牌子「🎯 加強」、會跳</td></tr>
+<tr><td>💡 要加強什麼、怎麼做</td><td>最下面兩行大字：「⭐ 你最棒：…」「🎯 下次加強：… ➜ 怎麼做」</td></tr></table>
+<p>例子：小華（30412）這週 4 天、7 次、看完聽完才選 16 分、改對了 16 分、34 分鐘 ＝ <b>92</b>。</p>
+<div class="sw" id="swH"><button data-h="0" class="on">甲 五顆愛心</button><button data-h="1">乙 五條長條</button><button data-r="H">🔁 再演一次</button></div>
+<div class="stage" id="sH"></div>
+<div class="q"><div class="t"><span class="no">1</span>愛心動畫改成哪一種？</div><div class="opt rec"><div class="hd"><span class="k">甲</span>五顆愛心（愛心造型留著）＋每一顆下面寫名字和分數＋⭐ 最好／🎯 加強 牌子＋最下面兩行<span class="tag">建議</span></div><div class="why">老師 C5 說「愛心造型留著」；名字直接寫在愛心下面，不用看圖示猜</div></div><div class="opt"><div class="hd"><span class="k">乙</span>五條長條（像溫度計）＋⭐／🎯 牌子＋最下面兩行</div><div class="why">長短最好比，但是沒有愛心</div></div></div>
+<div class="q"><div class="t"><span class="no">2</span>「10 種新的都不好」——現在網站上的 8 種、C6 留著的 3 種（❤ 大愛心、💞 原本、🤍 簡潔）也一起換掉嗎？</div><div class="opt rec"><div class="hd"><span class="k">A</span>全部換成上面選的那一種排法（老師看板、學生平板都一樣）；「每一次不同風格」只換背景顏色和小裝飾，排法不變<span class="tag">建議</span></div><div class="why">排法每次都一樣，學生第二次就會看；精準最重要</div></div><div class="opt"><div class="hd"><span class="k">B</span>新的排法加進去，原本的 8 種也留著輪流</div><div class="why">舊的 8 種也一樣看不出「最好／加強」</div></div></div>
+<div class="q"><div class="t"><span class="no">3</span>「這十種新的動畫都不好」是只有愛心，還是<b>故事動畫</b>也包含在內？</div><div class="opt rec"><div class="hd"><span class="k">A</span>只有愛心。16 種故事動畫照老師改的字放上學生平板（📅 練習 的下一幕，約 6 秒、可以跳過）<span class="tag">建議</span></div><div class="why">老師第二段只改了故事的字，所以猜是要用；但是要老師確定</div></div><div class="opt"><div class="hd"><span class="k">B</span>故事也不好，也要重想</div></div></div>
+
+<h2>二、故事動畫（學生平板）的字</h2>
+<table><tr><th style="width:34%">老師說的</th><th>現在</th><th>改好以後</th></tr>
+<tr><td>給 30412 號 一律改「給 30412」</td><td>給 <b>30412 號</b>：</td><td>給 <b>30412</b>：</td></tr>
+<tr><td>老師的信 最後署名</td><td>老師</td><td><b>英文老師</b></td></tr>
+<tr><td>老師 看見了 ➜ 老師看見</td><td>老師 看見了：你 …</td><td><b>老師看見</b>：你 …</td></tr></table>
+<div class="q"><div class="t"><span class="no">4</span>「30412 號 ➜ 30412」是學生平板<b>每一個</b>地方都改嗎（16 種故事、成績卡、榮譽動畫）？</div><div class="opt rec"><div class="hd"><span class="k">A</span>每一個地方都改，平板上不再出現「號」<span class="tag">建議</span></div><div class="why">老師寫「一律」</div></div><div class="opt"><div class="hd"><span class="k">B</span>只改老師的信「給 30412」那一行</div></div></div>
+<div class="q"><div class="t"><span class="no">5</span>「老師 看見了 ➜ 老師看見」是只改老師的信，還是 16 種故事都改？</div><div class="opt rec"><div class="hd"><span class="k">A</span>16 種故事都改（每一種最後都有「老師 看見了」這一句）<span class="tag">建議</span></div><div class="why">同一句話要一樣</div></div><div class="opt"><div class="hd"><span class="k">B</span>只改老師的信</div></div></div>
+<div class="q"><div class="t"><span class="no">6</span>老師的信上那一個紅色圓章（現在寫「老師 的章」），也改成「英文老師」嗎？</div><div class="opt rec"><div class="hd"><span class="k">A</span>圓章也改「英文老師」，跟署名一樣<span class="tag">建議</span></div></div><div class="opt"><div class="hd"><span class="k">B</span>圓章不改</div></div></div>
+
+<h2>三、🏆 頒獎典禮 10 種風格（已經放上老師看板，請看）</h2>
+<p>文字照 C3 一個字都不改。按號碼看；每一種約 9 秒演完。老師看板每按一次〔🏆 開始頒獎典禮〕換一種、跟上一次不一樣（左下角寫第幾種）。</p>
+<div class="sw" id="swC"></div>
+<div class="stage" id="sC"><div id="cst"></div></div>
+<table><tr><th style="width:24%">風格</th><th>領獎台怎麼上台</th></tr>
+<tr><td>1 舞台燈光</td><td>台子從地板升上來，第 1 名上台時一束聚光燈打下來</td></tr>
+<tr><td>2 星空</td><td>台子是從地上射出的星光柱，第 1 名頭上一顆大星星</td></tr>
+<tr><td>3 金色煙火</td><td>台子像火箭衝上來、衝過頭再落下，班級上面放煙火</td></tr>
+<tr><td>4 紅毯</td><td>第 3、2 名從兩邊滑進來，第 1 名從天上「咚！」掉下來、整個畫面震一下</td></tr>
+<tr><td>5 升旗典禮</td><td>台子像升旗一樣慢慢升高，每個台子插一面旗，第 1 名最高</td></tr>
+<tr><td>6 皇家殿堂</td><td>台子是金色樓梯一階一階堆上去，皇冠戴到第 1 名頭上</td></tr>
+<tr><td>7 打開信封</td><td>每一個名次先是金色信封 ✉，打開才看到班級，台子才長高</td></tr>
+<tr><td>8 冠軍遊行（重做）</td><td>氣球飛上天，三台花車從右邊開進來（輪子在轉），第 1 名花車最高、最後開進來，兩邊彩帶大砲</td></tr>
+<tr><td>9 極光</td><td>台子是一根一根長出來的冰柱，第 1 名的冰柱發光</td></tr>
+<tr><td>10 水晶光芒</td><td>台子是透明水晶，彩虹光掃過去，第 1 名射出一圈彩虹光</td></tr></table>
+
+<h2>四、角色（老師上傳的 5 張圖：男 30、女 20）</h2>
+<p>已經把 5 張圖<b>切成一個一個角色</b>（男 01～30、女 01～20），下面就是切好的樣子，而且<b>會動</b>：身體慢慢上下浮、外框一圈光在轉、一道亮光掃過去、小光點往上飄；點一下會跳起來。女 21～30、武器 30、寵物 30 等老師下一個對話上傳。</p>
+<div class="sw" id="swG"><button data-g="b" class="on">帥氣少男 30</button><button data-g="g">唯美少女 20（＋10 待上傳）</button></div>
+<div class="gal" id="gal"></div>
+<p style="margin-top:18px">👇 點上面一個角色，下面是「英雄誕生展示卡」的樣子：</p>
+<div class="show"><div class="hero" id="shH"><div class="in"><img id="shI" alt=""></div></div>
+<div class="sl"><div>🦸 英雄：<b id="shN">男 01</b></div><div>⚔️ 武器：<span class="ph">下一個對話上傳</span></div><div>🐾 寵物：<span class="ph">下一個對話上傳</span></div><div>🏷 30412</div></div></div>
+<div class="q"><div class="t"><span class="no">7</span>「照片改成動畫呈現」是哪一種？</div><div class="opt rec"><div class="hd"><span class="k">A</span>老師的圖本身不變，讓整張圖<b>動起來</b>：上下浮、轉圈的光框、亮光掃過、光點往上飄、點一下跳起來（就是上面的樣子）；答對的時候再加武器特效和寵物助威<span class="tag">建議</span></div><div class="why">圖的品質完全保留；iPad 跑得動</div></div><div class="opt"><div class="hd"><span class="k">B</span>要角色的手腳真的會動（揮劍、眨眼）</div><div class="why">要每一個角色重畫成很多張圖（像卡通一格一格），老師的圖做不到，要另外畫</div></div></div>
+<div class="q"><div class="t"><span class="no">8</span>切圖的方法</div><div class="opt rec"><div class="hd"><span class="k">A</span>照圖上的框，<b>一個角色切成一張小圖</b>（上面就是這樣切的）<span class="tag">建議</span></div><div class="why">老師給的做法（整張圖平均切 5 ✕ 2）會切歪：第 1 張上面有標題「ELEMENTAL KNIGHTS」、每一張的框大小和邊都不一樣，平均切會切到頭或切到別人。結果看起來一樣，只是比較準、iPad 開比較快</div></div><div class="opt"><div class="hd"><span class="k">B</span>照老師給的做法，整張圖平均切</div></div></div>
+<div class="q"><div class="t"><span class="no">9</span>圖上原本的英文字和號碼（FIRE KNIGHT、THUNDER ARCHER、01、02…）</div><div class="opt rec"><div class="hd"><span class="k">A</span>留著（上面就是留著的樣子）<span class="tag">建議</span></div><div class="why">學生看得到英文名字；不過第 3 張有三個都叫 THUNDER ARCHER、第 5 張也有同名的</div></div><div class="opt"><div class="hd"><span class="k">B</span>切掉，網站自己在每一張下面寫一樣格式的號碼（男 01、女 01）</div></div></div>
+<div class="q"><div class="t"><span class="no">10</span>國小學生的服裝（請老師看一下這 3 張）：<b>男 13</b>（衣服打開、露胸）、<b>男 16</b>（沒穿上衣）、<b>女 17</b>（胸口開洞）</div><div class="opt rec"><div class="hd"><span class="k">A</span>這 3 張換掉（老師下一個對話給新的圖）<span class="tag">建議</span></div><div class="why">學校的網站給 8～10 歲用，家長、同事都會看到</div></div><div class="opt"><div class="hd"><span class="k">B</span>可以用，不用換</div></div></div>
+<div class="q"><div class="t"><span class="no">11</span>學生登入：老師的範例寫「輸入姓名、座號、班級」——跟以前定好的「學生端永遠不打姓名、只用 5 碼（班級＋座號）」衝突</div><div class="opt rec"><div class="hd"><span class="k">A</span>照舊只用 5 碼登入（記住我 7 天），不打姓名；第一次登入以後才選英雄、武器、寵物，以後記住<span class="tag">建議</span></div><div class="why">學生平板永遠不給姓名（2026-10-09 決定）；打姓名也比較慢</div></div><div class="opt"><div class="hd"><span class="k">B</span>要打姓名</div></div></div>
+<div class="q"><div class="t"><span class="no">12</span>經驗值與金幣：跟 C7 建議的「選角色只換外表、不會變強、不加分（成績公平）」要一起想</div><div class="opt rec"><div class="hd"><span class="k">A</span>有經驗值和金幣，<b>只能換外表</b>（英雄升級光芒、寵物長大、武器發光），<b>不會變強、不加分數</b>；經驗值 ＝ 練習（做完、聽完就有），金幣 ＝ 答對<span class="tag">建議</span></div><div class="why">有收集的樂趣，成績還是公平</div></div><div class="opt"><div class="hd"><span class="k">B</span>經驗值、金幣可以讓英雄變強（例：多 5 秒、多一次機會）</div><div class="why">會讓練得多的人遊戲更簡單，成績不公平</div></div><div class="opt"><div class="hd"><span class="k">C</span>不要經驗值和金幣</div></div></div>
+<div class="q"><div class="t"><span class="no">13</span>「奇幻學園闖關 RPG」是另外一個新遊戲，還是把英雄帶進現在的遊戲？</div><div class="opt rec"><div class="hd"><span class="k">A</span>把英雄、武器、寵物<b>帶進現在全部的遊戲和複習題</b>：答對 ➜ 武器特效＋寵物助威；成績照舊進老師看板<span class="tag">建議</span></div><div class="why">學生玩的還是老師教的題目，不會多一套要管的系統</div></div><div class="opt"><div class="hd"><span class="k">B</span>另外做一個新的 RPG 闖關遊戲（新的關卡地圖）</div><div class="why">要另外出題、另外接成績</div></div></div>
+
+<h2>五、現場任務（上課即時對戰）</h2>
+<p>老師要：10 種完全不同風格、即時互動、彼此支援、送禮物、連對 5 題抽獎、凍結或干擾。下面是我的建議，<b>老師說「對」才做</b>。</p>
+<table><tr><th style="width:28%">遊戲</th><th>怎麼玩（一句話）</th></tr>
+<tr><td>1 ⚔️ 全班打魔王</td><td>全班一起答，答對就砍魔王的血；時間內打倒，全班一起贏（合作）</td></tr>
+<tr><td>2 🏎 賽車衝刺</td><td>答對車子往前衝，大螢幕看誰先到終點</td></tr>
+<tr><td>3 🚀 太空接力（分紅藍隊）</td><td>答對替自己的隊加燃料，火箭先到月球的隊贏</td></tr>
+<tr><td>4 🏰 搶地圖</td><td>答對插一面旗佔一格，最後地圖上誰的顏色最多</td></tr>
+<tr><td>5 🧗 爬高塔</td><td>答對爬一層；連對 5 題坐電梯跳 3 層</td></tr>
+<tr><td>6 🐉 寵物大進化</td><td>答對餵自己的寵物，寵物長大、變身</td></tr>
+<tr><td>7 🎯 神射手</td><td>題目出現在靶上，愈快答對射得愈準、分數愈高</td></tr>
+<tr><td>8 🗺 尋寶</td><td>答對挖寶箱，寶箱裡有禮物、加速、護盾</td></tr>
+<tr><td>9 🌊 衝浪大浪</td><td>連對愈多浪愈高；答錯掉進水裡，爬上來繼續（不扣分）</td></tr>
+<tr><td>10 👑 王者擂台</td><td>最後 1 分鐘，前 5 名上擂台決戰；台下的同學可以送「應援」</td></tr></table>
+<table><tr><th style="width:28%">驚喜機制</th><th>怎麼做</th></tr>
+<tr><td>🎁 送禮物</td><td>答對時可以把「⏱ ＋3 秒」「🛡 護盾」「⭐ 加油貼圖」送給一位同學（只能送好東西）</td></tr>
+<tr><td>🤝 支援</td><td>分隊遊戲：答對分一點分數給隊友；隊友答錯可以「拉他一把」</td></tr>
+<tr><td>🎰 連對 5 題抽獎</td><td>跟現在的驚喜卡一樣：二～五選一，只抽好東西</td></tr>
+<tr><td>❄️ 凍結／干擾</td><td>看下面第 15 題</td></tr></table>
+<div class="q"><div class="t"><span class="no">14</span>10 種現場任務遊戲可以嗎？</div><div class="opt rec"><div class="hd"><span class="k">A</span>可以：照上面 10 種做（每一種的大螢幕、結束頒獎台都不一樣風格；學生平板都是同一組老師選的題目）<span class="tag">建議</span></div></div><div class="opt"><div class="hd"><span class="k">B</span>要改：請寫號碼和怎麼改</div></div></div>
+<div class="q"><div class="t"><span class="no">15</span>❄️ 凍結或干擾「某一位或某些同學」（老師請我給建議）</div><div class="opt rec"><div class="hd"><span class="k">A</span>干擾可以有，但<b>不讓學生自己挑人</b>：自動打「排名在你正前面的那一位」；效果好笑不嚇人（泡泡蓋住畫面，點 3 下就破，最多 3 秒）；每個人一場最多被干擾 2 次，被干擾完自動拿到 🛡 護盾<span class="tag">建議</span></div><div class="why">學生自己挑人，很容易一直打同一位（常常是比較弱、或比較沒有朋友的孩子），老師在台上看不到；凍結 5 秒對答得慢的孩子傷最大。這樣改，還是很刺激，但不會變成欺負</div></div><div class="opt"><div class="hd"><span class="k">B</span>照老師說的原樣：學生自己挑一位或幾位同學凍結 5 秒</div></div><div class="opt"><div class="hd"><span class="k">C</span>不要干擾，只有送禮物和支援</div></div></div>
+<div class="q"><div class="t"><span class="no">16</span>「即時」要用什麼做？</div><div class="opt rec"><div class="hd"><span class="k">A</span>現場任務改用 <b>Firebase</b>（Google 的即時資料庫）：送禮物、干擾、大螢幕排名 1 秒內就到；成績照舊送進老師的 Google 試算表。老師要多做一次設定（約 10 分鐘，我做大字版一步一步的說明頁）<span class="tag">建議</span></div><div class="why">Google 官方：Firebase 免費方案同時 100 個連線，一班 30 人夠用</div></div><div class="opt"><div class="hd"><span class="k">B</span>照 C4：先用現在的 Google 試算表</div><div class="why">每 3～5 秒才更新一次：禮物、干擾要等幾秒才到，「凍結 5 秒」會不準；Apps Script 每個帳號同時最多 30 個執行，大家一直互動會塞車</div></div></div>
+<div class="q"><div class="t"><span class="no">17</span>學生加入現場任務：最快的方法</div><div class="opt rec"><div class="hd"><span class="k">A</span>學生平板已經用 5 碼登入（記住 7 天）➜ 首頁最上面一顆大按鈕〔⚡ 加入現場任務〕（老師開了任務才亮）➜ 第一次選英雄、武器、寵物（以後記住，直接進）➜ 等老師按開始<span class="tag">建議</span></div><div class="why">一按就進，不用再打號碼</div></div><div class="opt"><div class="hd"><span class="k">B</span>大螢幕顯示 4 個數字的房間號碼，學生打號碼加入</div></div></div>
+<div class="done">回答例：<b>「全部照建議」</b>或<b>「1 甲、2 A、3 A、9 B…」</b>。老師回答以後，順序：愛心＋故事放上網站 ➜ 角色（等老師上傳另外 5 張）➜ 學生選角色 ➜ 現場任務。</div>
+</div>
+<script>/* score/_honor_rt.js — 榮譽動畫的執行程式（2026-10-12 D 第 4 件）。學生平板（score/_client.js）、老師看板（score/_teacher.js）共用。只寫 ES5。
+   研究（score/2026-10-12_D_需求與問題.md 第三節）：事先不知道的驚喜不傷動機（Deci 1999）➜ 12 種風格輪流、跟上一次一定不一樣、12 種輪完才重複；
+   稱讚努力和方法、不稱讚聰明（Mueller & Dweck 1998、Henderlong & Lepper 2002）➜ 每一句都寫「你做了什麼」。 */
+var HON=(function(){
+  /* 努力獎：獎牌上面有星星（使用者 2026-10-12 第 1 題 C；自己畫的，每一台都一樣） */
+  var EFF='<svg class="heff" viewBox="0 0 120 150" aria-label="最認真練習"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="#FFC928"/><circle cx="60" cy="95" r="40" fill="#FFF1A8" opacity=".35"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path d="M60 68l8.2 16.6 18.3 2.7-13.2 12.9 3.1 18.2L60 109.8l-16.4 8.6 3.1-18.2-13.2-12.9 18.3-2.7z" fill="#FFFDF0" stroke="#FFB300" stroke-width="2.5" stroke-linejoin="round"/></svg>';
+  /* 練習時間：自己畫的時鐘（白底金框、紅色指針；使用者 2026-10-12 D8 第 1 題 A，取代 ⏱） */
+  var CLK='<svg class="hclk" viewBox="0 0 100 100" aria-label="時鐘"><circle cx="50" cy="50" r="44" fill="#FFF8E6" stroke="#FFB300" stroke-width="8"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00" transform="rotate(90 50 50)"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00" transform="rotate(180 50 50)"/><rect x="48" y="12" width="4" height="10" fill="#8A5A00" transform="rotate(270 50 50)"/><rect x="47" y="24" width="6" height="28" rx="3" fill="#333"/><rect class="hclkm" x="47" y="34" width="6" height="18" rx="3" fill="#D84315" transform="rotate(60 50 50)"/><circle cx="50" cy="50" r="6" fill="#333"/></svg>';
+  /* 三種最高榮譽（使用者 2026-10-12 D6～D8 定案）：學生平板、老師投影、印獎狀、老師看板的字一模一樣，只寫在這裡 */
+  /* 2026-10-15 D 第 8 件：第 4 種最高榮譽「最用心」（老師 D9 第 1 題 A＋B、D12 ④） */
+  /* 2026-10-16 老師 C5「1 乙、3 A」：用心 和 練習 整個合併成「📅 練習」，❤ 最用心 拿掉，回到 3 種（care 只剩老師看板的「📅 練習分數」） */
+  var AWK=['sec','acc','prog'],AWN={sec:'最認真練習',acc:'成績最優',prog:'進步最多'};
+  /* 自己畫的圖示（老師 D10 第 2、3 題 A）：獎牌上面有愛心 ＝ 最用心；眼睛＋耳朵 ＝ 看完、聽完 才選；紅 ✗ ➜ 綠 ✓ ＝ 答錯的 改對了 */
+  var HRT='<svg class="hhrt" viewBox="0 0 120 150" aria-label="練習"><path d="M30 0h22l18 52H48z" fill="#2F7BE8"/><path d="M90 0H68L50 52h22z" fill="#E8453C"/><circle cx="60" cy="95" r="46" fill="#B8860B"/><circle cx="60" cy="95" r="40" fill="#FFC928"/><circle cx="60" cy="95" r="33" fill="none" stroke="#FFF3B0" stroke-width="2" opacity=".7"/><path d="M60 122C30 102 34 74 48 72C55 71 59 76 60 80C61 76 65 71 72 72C86 74 90 102 60 122Z" fill="#E8453C" stroke="#FFFDF0" stroke-width="4" stroke-linejoin="round"/></svg>';
+  var EYE='<svg class="heye" viewBox="0 0 200 100" aria-label="看完、聽完"><path d="M8 50Q50 6 92 50Q50 94 8 50Z" fill="#fff" stroke="#333" stroke-width="5"/><circle cx="50" cy="50" r="17" fill="#2F7BE8"/><circle cx="50" cy="50" r="8" fill="#111"/><circle cx="55" cy="44" r="4" fill="#fff"/><path d="M122 52C118 14 182 8 186 46C188 70 162 70 160 88C158 100 138 100 134 88" fill="#FFD3B0" stroke="#B86B3C" stroke-width="6" stroke-linecap="round"/><path d="M142 48C142 30 168 28 168 46C168 58 154 56 154 68" fill="none" stroke="#B86B3C" stroke-width="6" stroke-linecap="round"/></svg>';
+  var FIX='<svg class="hfix" viewBox="0 0 200 100" aria-label="答錯的改對了"><circle cx="38" cy="50" r="32" fill="#E8453C"/><path d="M26 38l24 24M50 38L26 62" stroke="#fff" stroke-width="9" stroke-linecap="round"/><path d="M80 50h34" stroke="#FFD54A" stroke-width="9" stroke-linecap="round"/><path d="M108 36l16 14-16 14z" fill="#FFD54A"/><circle cx="162" cy="50" r="32" fill="#2EB85C"/><path d="M146 51l11 11 21-23" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  function mn(sec){sec=Math.round(+sec||0);return sec<60?sec+' 秒':Math.round(sec/60)+' 分鐘'}
+  function f1(v){return Math.round(v*10)/10}
+  /* 個人獎下面那一句：per ＝ 這週／上週／這學期／這段期間；p ＝ {sec, acc, pf, pt} */
+  function awl(k,p,per){return k==='care'?'練習分數 '+Math.round(+p.care||0)+' 分':k==='sec'?(per||'這週')+' 練習 '+mn(p.sec):k==='acc'?'正確率 '+f1(p.acc)+' 分：每一題都看清楚才選。':
+    (p.pf!=null&&p.pt!=null?'正確率從 '+p.pf+' 分進步到 '+p.pt+' 分（多了 '+(p.pt-p.pf)+' 分）。':'正確率進步 '+f1(p.prog)+' 分。')}
+  /* 班級獎下面那一句：v ＝ 那一種的數字（練習時間 ＝ 平均每一個人幾秒） */
+  function awc(k,v){return k==='care'?'平均每一個人 練習分數 '+Math.round(+v||0)+' 分':k==='sec'?'平均每一個人 練習 '+mn(v):k==='acc'?'平均正確率 '+f1(v)+' 分':'平均每一個人 正確率進步 '+f1(v)+' 分'}
+  function awi(k){return k==='sec'?EFF:k==='prog'?UP:k==='care'?HRT:'🎯'}
+  /* 獎狀那一行（老師 D11 第 2 題 甲、第 3 題 A：四種都一樣精簡） */
+  function aws(k,p,per){return k==='care'?'練習分數 '+Math.round(+p.care||0)+' 分':k==='sec'?(per||'這週')+' 練習 '+mn(p.sec):k==='acc'?'正確率 '+f1(p.acc)+' 分':
+    (p.pf!=null&&p.pt!=null?'從 '+p.pf+' 分 進步到 '+p.pt+' 分':'正確率 進步 '+f1(p.prog)+' 分')}
+  /* 進步：綠色粗箭頭（跟老師看板同一個） */
+  var UP='<svg class="hup" viewBox="0 0 40 48" aria-label="進步"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg>';
+  var ST=[{nm:'金色獎盃從天而降',h:'🏆',fx:'cf'},{nm:'皇冠加冕',h:'👑',fx:'tw'},{nm:'頒獎台升起',h:'🥇',fx:'cf'},{nm:'煙火大會',h:'🎆',fx:'fw'},
+    {nm:'紅毯＋聚光燈',h:'🌟',fx:'fl'},{nm:'金牌鑄造',h:'🏅',fx:'em'},{nm:'皇家獎狀',h:'📜',fx:'tw'},{nm:'火箭升空',h:'🚀',fx:'sr'},
+    {nm:'寶箱打開',h:'💎',fx:'gm'},{nm:'流星雨',h:'🌠',fx:'mt'},{nm:'神龍守護',h:'🏆',fx:'em'},{nm:'名人堂',h:'🏛️',fx:'tw'}];
+  function lsg(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
+  function lss(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+  /* 下一種風格：12 種洗牌，一種一種用；輪完再洗，新的第一種不會跟上一次一樣 */
+  function pick(key){key='hon_'+(key||'s');var o=lsg(key)||{q:[],last:-1};
+    if(!o.q||!o.q.length){var a=[],i;for(i=0;i<ST.length;i++)a.push(i);
+      for(i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}
+      if(a[0]===o.last){a.push(a.shift())}o.q=a}
+    var n=o.q.shift();o.last=n;lss(key,o);return n}
+  function rnd(a,b){return a+Math.random()*(b-a)}
+  var COL=['#FFD54A','#FF6B6B','#5BE39A','#7FD4FF','#D9A8FF','#FF9A3C','#FFFFFF'];
+  /* 粒子：彩帶、星星、煙火、閃光燈、寶石、流星、火花 */
+  function fx(el,k){var h='',i,n;
+    if(k==='cf'){for(i=0;i<36;i++)h+='<i class="cf" style="left:'+rnd(0,100).toFixed(1)+'%;--c:'+COL[i%COL.length]+';--d:'+rnd(2.4,4.6).toFixed(2)+'s;--r:'+Math.round(rnd(200,720))+'deg;animation-delay:-'+rnd(0,4).toFixed(2)+'s"></i>'}
+    else if(k==='tw'||k==='sr'){for(i=0;i<60;i++)h+='<i class="sr" style="left:'+rnd(0,100).toFixed(1)+'%;top:'+rnd(0,100).toFixed(1)+'%;animation-delay:-'+rnd(0,2).toFixed(2)+'s;'+(k==='tw'?'background:#FFE9A8;width:5px;height:5px':'')+'"></i>'}
+    else if(k==='fw'){for(n=0;n<5;n++){var cx=rnd(10,90),cy=rnd(8,55),c=COL[n%COL.length],dl=rnd(0,1.6);
+      for(i=0;i<16;i++){var a=i/16*Math.PI*2,r=rnd(70,140);h+='<i class="fw" style="left:'+cx.toFixed(1)+'%;top:'+cy.toFixed(1)+'%;--c:'+c+';--dx:'+Math.round(Math.cos(a)*r)+'px;--dy:'+Math.round(Math.sin(a)*r)+'px;animation-delay:'+dl.toFixed(2)+'s"></i>'}}}
+    else if(k==='fl'){for(i=0;i<8;i++)h+='<i class="fl" style="left:'+rnd(5,95).toFixed(1)+'%;top:'+rnd(55,90).toFixed(1)+'%;animation-delay:'+rnd(0,2.2).toFixed(2)+'s"></i>'}
+    else if(k==='gm'){var G=['💎','💠','🔷','💚','❤️','💛'];for(i=0;i<22;i++){var a2=rnd(-Math.PI*.95,-Math.PI*.05),r2=rnd(160,420);h+='<i class="gm" style="--dx:'+Math.round(Math.cos(a2)*r2)+'px;--dy:'+Math.round(Math.sin(a2)*r2)+'px;animation-delay:'+rnd(0,2.2).toFixed(2)+'s">'+G[i%G.length]+'</i>'}}
+    else if(k==='mt'){for(i=0;i<14;i++)h+='<i class="mt" style="left:'+rnd(30,110).toFixed(1)+'%;top:'+rnd(-10,40).toFixed(1)+'%;animation-delay:'+rnd(0,1.6).toFixed(2)+'s"></i>'}
+    else if(k==='em'){for(i=0;i<30;i++)h+='<i class="em" style="left:'+rnd(0,100).toFixed(1)+'%;animation-delay:-'+rnd(0,3).toFixed(2)+'s;animation-duration:'+rnd(2.4,4).toFixed(2)+'s"></i>'}
+    el.innerHTML=h}
+  /* 畫一幕：o ＝ {kick, tit, sub, hero(要不要大圖示), cards:[{ic,nm,l,w,me}], rows:[{rk,w,v}], pod:[第1,第2,第3]}，st ＝ 第幾種風格 */
+  function scene(el,st,o){var S=ST[st]||ST[0],h='<div class="hbg"></div><div class="hfx"></div>';
+    if(o.hero!==false)h+='<div class="hhero">'+(o.heroIc||S.h)+'</div>';
+    if(o.kick)h+='<div class="hkick">'+o.kick+'</div>';
+    if(o.tit)h+='<div class="htit">'+o.tit+'</div>';
+    if(o.cards&&o.cards.length)h+='<div class="hcards'+(o.cards.length>3?' many':'')+'" style="--n:'+o.cards.length+'">'+o.cards.map(function(c,i){return '<div class="hcard'+(c.me?' me':'')+'" style="animation-delay:'+(.5+i*(o.gap||.55)).toFixed(2)+'s">'+
+      (c.ic?'<div class="hi">'+c.ic+'</div>':'')+(c.nm?'<div class="hn">'+c.nm+'</div>':'')+(c.w?'<div class="hw">'+c.w+'</div>':'')+(c.l?'<div class="hl">'+c.l+'</div>':'')+'</div>'}).join('')+'</div>';
+    if(o.rows&&o.rows.length)h+='<div class="hrow">'+o.rows.map(function(r,i){return '<div class="hr" style="animation-delay:'+(.3+i*(o.gap||.9)).toFixed(2)+'s"><b>'+r.rk+'</b><span>'+r.w+'</span><em>'+r.v+'</em></div>'}).join('')+'</div>';
+    if(o.pod){var P=o.pod,ord=[1,0,2];h+='<div class="hpod">'+ord.map(function(n){var x=P[n];if(!x)return '<div></div>';var d=x.d||0;
+      return '<div class="p'+(n+1)+'"><div class="md" style="animation-delay:'+(d+.6)+'s">'+['🥇','🥈','🥉'][n]+'</div><div class="nm" style="animation-delay:'+(d+.8)+'s">'+x.w+'</div><div class="vv" style="animation-delay:'+(d+1)+'s">'+x.v+'</div>'+
+        '<div class="blk" style="animation-delay:'+d+'s">'+(n+1)+'</div></div>'}).join('')+'</div>'}
+    if(o.sub)h+='<div class="hsub">'+o.sub+'</div>';
+    el.className='hon hs'+(st+1)+(o.cls?' '+o.cls:'');el.innerHTML=h;fx(el.querySelector('.hfx'),S.fx)}
+  /* 聲音（只有老師投影用；網頁自己做出來的聲音，不用音檔）：號角、鼓聲、掌聲 */
+  var AC=null;function ac(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume()}catch(e){AC=null}return AC}
+  function tone(f,t0,d,type,vol){var c=ac();if(!c)return;var o=c.createOscillator(),g=c.createGain();o.type=type||'triangle';o.frequency.value=f;
+    g.gain.setValueAtTime(0,c.currentTime+t0);g.gain.linearRampToValueAtTime(vol||.18,c.currentTime+t0+.03);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t0+d);
+    o.connect(g);g.connect(c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+d+.05)}
+  function noise(t0,d,vol,fq){var c=ac();if(!c)return;var n=Math.floor(c.sampleRate*d),b=c.createBuffer(1,n,c.sampleRate),x=b.getChannelData(0);for(var i=0;i<n;i++)x[i]=Math.random()*2-1;
+    var s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='bandpass';f.frequency.value=fq||1200;f.Q.value=.8;
+    g.gain.setValueAtTime(vol||.2,c.currentTime+t0);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t0+d);s.connect(f);f.connect(g);g.connect(c.destination);s.start(c.currentTime+t0)}
+  var snd={
+    horn:function(){[[523,0,.25],[659,.22,.25],[784,.44,.25],[1047,.66,.9]].forEach(function(n){tone(n[0],n[1],n[2],'sawtooth',.07);tone(n[0],n[1],n[2],'triangle',.16)})},
+    drum:function(d){d=d||1.4;for(var t=0;t<d;t+=.06)noise(t,.05,.12+.2*t/d,180);noise(d,.7,.35,4000)},
+    clap:function(d){d=d||2.2;for(var i=0;i<70;i++)noise(Math.random()*d,.05,rnd(.05,.16),rnd(900,2400))},
+    ding:function(){tone(1319,0,.5,'sine',.12);tone(1760,.08,.6,'sine',.08)}};
+  /* ══ 📅 這週 練習（原本叫「❤ 這週 用心程度」，2026-10-16 老師 C5「1 乙、4 A」：愛心造型留著、標題改「📅 練習」；2026-10-15 D 第 8 件；老師 D12 ③ 甲「五顆愛心 裝滿」＋「每一次都不一樣風格」＋〔📖 說明〕）══
+     一顆愛心 ＝ 一項 ＝ 20 分，五顆裝滿 ＝ 100 分；數字從 0 加上去；裝滿的愛心會笑、會跳；最少的那一顆空的地方閃金光＋那一項的圖示搖＋「💡 請 …」。
+     8 種風格（CST）輪流、跟上一次不一樣（pick 同一套洗牌）；〔📖 說明〕＝ 五項一條一條：做了什麼、幾分、✅ 很用心／💡 可以更好 */
+  var CI=['<span class="cem">📅</span>','<span class="cem">📝</span>',EYE,FIX,CLK.replace('class="hclk"','class="hclk cclk"')];
+  var CN=['這週 練了 幾天','做完 幾次（題目、遊戲、聽完字卡）','看完、聽完 才選','答錯的 改對了','這週 練習 幾分鐘'];
+  var CF=['4 天','5 次','太快亂按 0 題','全部改對','30 分鐘'];
+  var CT=['請 再多練 1 天','請 再做完 1 次','請 看完、聽完 再選','請 把答錯的 再做一次','請 再多練 幾分鐘'];
+  var CC=['#2F7BE8','#9B59D0','#00A6A6','#2EB85C','#FF9F1C'];
+  var CST=[{nm:'水倒進去',fx:''},{nm:'愛心氣球',fx:'cf'},{nm:'寶石愛心',fx:'tw'},{nm:'燈籠夜空',fx:'sr'},
+    {nm:'顏料滴下來',fx:'cf'},{nm:'愛心火車',fx:''},{nm:'心跳線',fx:''},{nm:'星星雨',fx:'mt'}];
+  var HP='M50 88C20 66 4 48 4 28C4 13 15 4 28 4C38 4 45 10 50 18C55 10 62 4 72 4C85 4 96 13 96 28C96 48 80 66 50 88Z',CUID=0;
+  function cpick(key){key='hon_'+(key||'cs');var o=lsg(key)||{q:[],last:-1};
+    if(!o.q||!o.q.length){var a=[],i;for(i=0;i<CST.length;i++)a.push(i);for(i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}
+      if(a[0]===o.last)a.push(a.shift());o.q=a}
+    var n=o.q.shift();o.last=n;lss(key,o);return n}
+  function cweak(c){var w=-1,m=99;for(var i=0;i<5;i++)if(c.it[i]<20&&c.it[i]<m){m=c.it[i];w=i}return w}
+  /* 五項各做了什麼（說明用） */
+  function cdid(c){var r=c.raw||{};return [r.days+' 天',r.count+' 次',!r.q?'這週 還沒有作答':r.fq?'太快亂按 '+r.fq+' 題（'+r.fp+'%）':'太快亂按 0 題',
+    !r.q?'這週 還沒有作答':!r.W?'沒有答錯':'答錯 '+r.W+' 題，改對 '+r.F+' 題',mn(r.sec)]}
+  function heart(k,v,u){var y=(84*(1-v/20)).toFixed(1);
+    return '<div class="chc" data-k="'+k+'"><div class="cv">'+v+'</div><div class="chw"><i class="cdrop" style="background:'+CC[k]+'"></i>'+
+      '<svg class="ch" viewBox="0 0 100 92"><defs><clipPath id="cc'+u+'_'+k+'"><path d="'+HP+'"/></clipPath></defs><path d="'+HP+'" class="cbk"/>'+
+      '<g clip-path="url(#cc'+u+'_'+k+')"><g class="clq" data-y="'+y+'" style="transform:translateY(92px)"><g class="cwv"><path d="M-40 6Q-30 0 -20 6T0 6T20 6T40 6T60 6T80 6T100 6T120 6T140 6V100H-40Z" fill="'+CC[k]+'"/></g></g>'+
+      '<rect class="cshn" x="-60" y="-10" width="30" height="120" fill="#fff" opacity=".35" transform="rotate(20)"/></g>'+
+      '<path class="cgap" d="'+HP+'"/><g class="cfc" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"><path d="M32 38q5-6 10 0M58 38q5-6 10 0"/><path d="M40 52q10 9 20 0"/></g>'+
+      '<path d="'+HP+'" class="cln"/></svg></div><div class="cic">'+CI[k]+'</div></div>'}
+  /* 畫＋演：el ＝ 放的地方、st ＝ 第幾種風格、c ＝ _calc.js care() 的結果、o ＝ {help:1 有〔📖 說明〕, onHelp(打開說明時), t:標題} */
+  function cscene(el,st,c,o){o=o||{};var S=CST[st]||CST[0],u=++CUID,w=cweak(c),RD=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,G=RD?0:800;
+    el.className='care cs'+(st+1);
+    el.innerHTML='<div class="cbg"></div><div class="hfx cfx"></div><svg class="cecg" viewBox="0 0 1000 100" preserveAspectRatio="none"><path d="M0 60H180L210 20L240 95L270 60H380L410 20L440 95L470 60H580L610 20L640 95L670 60H780L810 20L840 95L870 60H1000"/></svg>'+
+      '<div class="ct1">'+(o.t||'這週 📅 練習')+'</div><div class="csum"><b class="cn">0</b><span> ／100</span></div>'+
+      '<div class="crow">'+c.it.map(function(v,k){return heart(k,v,u)}).join('')+'</div><div class="cnote">❤ 1 顆 裝滿 ＝ 20 分</div>'+
+      '<div class="ctip">'+(w<0?'🎉 五顆 都裝滿了！':'💡 '+CT[w])+'</div>'+
+      (o.help?'<button class="chb" type="button">📖 說明</button><div class="chp" hidden></div>':'');
+    fx(el.querySelector('.cfx'),S.fx);
+    var hc=el.querySelectorAll('.chc'),n=el.querySelector('.cn'),s=0,T=[];
+    function up(a,b){var t0=Date.now();(function f(){var p=Math.min(1,(Date.now()-t0)/500);n.textContent=Math.round(a+(b-a)*p);if(p<1&&el.contains(n))requestAnimationFrame(f)})()}
+    c.it.forEach(function(v,k){T.push(setTimeout(function(){var h=hc[k],l=h.querySelector('.clq');h.classList.add('on');
+      T.push(setTimeout(function(){l.style.transform='translateY('+l.getAttribute('data-y')+'px)';up(s,s+v);s+=v;
+        if(v>=20)T.push(setTimeout(function(){h.classList.add('full')},RD?0:800))},RD?0:(st===4||st===7?450:150)))},200+k*G))});
+    T.push(setTimeout(function(){n.parentNode.classList.add('pop');if(w>=0)hc[w].classList.add('wk');el.querySelector('.ctip').classList.add('on')},200+5*G+(RD?0:900)));
+    el._ct=T;
+    if(o.help){var b=el.querySelector('.chb'),P=el.querySelector('.chp');b.onclick=function(){var on=P.hidden;P.hidden=!on;b.textContent=on?'✕ 收起說明':'📖 說明';b.classList.toggle('on',on);
+      if(on){P.innerHTML=chelp(c);if(o.onHelp)o.onHelp();setTimeout(function(){[].forEach.call(P.querySelectorAll('.chr'),function(r){r.classList.add('on')})},30)}}}
+  }
+  /* ══ 成績卡（2026-10-16 老師 C3 第 3 題 甲＋C4 第 3 題 甲、3-2 A＋C5「1 乙」）：🎯 正確、📅 練習 兩大格＋💡 下一步；
+     老師看板（下面接〔📋 細節 ▾〕）和學生平板（沒有細節、沒有姓名）同一張。p ＝ {acc, prog, keep}、c ＝ care() ══ */
+  var CTS=['多練 1 天','再做完 1 次','聽完再選','答錯的再做一次','多練幾分鐘'];
+  function card(p,c,o){p=p||{};o=o||{};var w=c?cweak(c):-1,r=(c&&c.raw)||{};
+    var pg=p.prog!=null&&p.prog>0?'<span class="gup">⬆ '+f1(p.prog)+'</span>':p.keep?'<span class="gup">🔥 滿分</span>':'';
+    return '<div class="gcard"><div class="gbx gac"><div class="gk">🎯 正確</div><div class="gv">'+(p.acc==null?'—':f1(p.acc))+pg+'</div></div>'+
+      '<div class="gbx gpr"><div class="gk">📅 練習</div><div class="gv">'+(c?c.tot:0)+'<span class="gsm">'+(r.days||0)+'天 '+(r.count||0)+'次</span></div></div>'+
+      (c&&!o.notip?'<div class="gnx">'+(w<0?'🎉 五項都滿分':'💡 '+CTS[w])+'</div>':'')+'</div>'}
+  function cstop(el){if(el&&el._ct)el._ct.forEach(clearTimeout)}
+  /* 〔📖 說明〕：五項一條一條（圖示、名字、做了什麼、長條 N／20、✅ 很用心 或 💡 怎麼更好） */
+  function chelp(c){var d=cdid(c);
+    return '<div class="chh">5 項 ✕ 20 分 ＝ 100 分</div>'+c.it.map(function(v,k){var ok=v>=20;
+      return '<div class="chr'+(ok?' ok':'')+'" style="transition-delay:'+(k*.25).toFixed(2)+'s"><span class="chi">'+CI[k]+'</span><span class="chn"><b>'+CN[k]+'</b><small>你：'+d[k]+'　滿分：'+CF[k]+'</small></span>'+
+        '<span class="chbar"><i style="width:'+(v*5)+'%;background:'+CC[k]+';transition-delay:'+(.3+k*.25).toFixed(2)+'s"></i><em>'+v+'／20</em></span>'+
+        '<span class="chk">'+(ok?'✅ 做到了':'💡 '+CT[k])+'</span></div>'}).join('')}
+  return {EFF:EFF,UP:UP,CLK:CLK,HRT:HRT,EYE:EYE,FIX:FIX,AWK:AWK,AWN:AWN,mn:mn,awl:awl,awc:awc,awi:awi,aws:aws,ST:ST,pick:pick,scene:scene,fx:fx,snd:snd,ac:ac,
+    CST:CST,CN:CN,CT:CT,CTS:CTS,card:card,cpick:cpick,cscene:cscene,cstop:cstop,chelp:chelp,cweak:cweak,cdid:cdid};
+})();
+</script>
+<script>/* score/_cer_rt.js — 🏆 頒獎典禮 10 種風格（老師看板〔🏫 班級排行榜〕〔🏆 開始頒獎典禮〕；listen/2026-10-17_C8/ 同一份）
+ * 2026-10-17 老師 C6 第三題：保留 10 種風格；文字照 C3 一個字都不改；
+ *   每一個領獎台 第 1 名明顯比較高（台子高度 第 1 名 ≈ 第 2 名的 2 倍、第 3 名的 4 倍）；
+ *   領獎台每一種風格用不同的動畫上台（第 3 名 ➜ 第 2 名 ➜ 鼓聲 ➜ 第 1 名最後、最大、最震撼）；8 冠軍遊行重做（花車開進來）。
+ * 用法：CERX.play(舞台元素, 第幾種, {ribbon, sub, cls, say, pod:[{rk, w}]}, {snd:true/false})；CERX.stop(舞台)；CERX.pick() ＝ 每按一次換一種、跟上一次不一樣。
+ * 聲音用 HON.snd（_honor_rt.js），沒有 HON 就不出聲。 */
+var CERX=(function(){
+  var CUP='<svg class="cup" viewBox="0 0 120 130"><defs><linearGradient id="gcupx" x1="0" x2="1"><stop offset="0" stop-color="#A8740C"/><stop offset=".45" stop-color="#FFE48A"/><stop offset="1" stop-color="#B07A0E"/></linearGradient></defs><path d="M30 10h60v28c0 22-14 38-30 38S30 60 30 38z" fill="url(#gcupx)"/><path d="M30 18H12c0 20 10 30 22 32M90 18h18c0 20-10 30-22 32" fill="none" stroke="url(#gcupx)" stroke-width="7"/><rect x="53" y="76" width="14" height="20" fill="url(#gcupx)"/><rect x="34" y="96" width="52" height="12" rx="3" fill="url(#gcupx)"/><rect x="26" y="108" width="68" height="16" rx="4" fill="#3A2A10"/><path d="M60 26l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" fill="#FFF7D6"/></svg>';
+  function stars(n){var o='';for(var i=0;i<n;i++)o+='<i class="xs" style="left:'+((i*37)%100)+'%;top:'+((i*23)%70)+'%;opacity:'+(.3+(i%5)/7).toFixed(2)+'"></i>';return o}
+  var ST=[
+   {nm:'舞台燈光',bg:'',deco:function(){return '<div class="beam"></div><div class="floor"></div>'}},
+   {nm:'星空',bg:'radial-gradient(ellipse at 50% 100%,#1A2A60,#020414 70%)',deco:function(){return stars(60)+'<svg viewBox="0 0 100 100" preserveAspectRatio="none" class="xfull"><path d="M8 20L20 12L33 18L45 8M60 10L72 20L86 14L94 24" fill="none" stroke="#9FB8FF" stroke-width=".3" stroke-dasharray="1 1"/></svg>'}},
+   {nm:'金色煙火',bg:'#05040A',deco:function(){var o='';[[20,24],[80,20],[50,12]].forEach(function(p,k){for(var i=0;i<14;i++){var a=i*Math.PI/7;o+='<i class="xfw" style="left:'+p[0]+'%;top:'+p[1]+'%;animation-delay:'+(1+k*.7)+'s;--x:'+(Math.cos(a)*90).toFixed(0)+'px;--y:'+(Math.sin(a)*90).toFixed(0)+'px"></i>'}});return o}},
+   {nm:'紅毯',bg:'linear-gradient(#140608,#000)',deco:function(){return '<div class="xrug"></div>'}},
+   {nm:'升旗典禮',bg:'linear-gradient(#2A6FB0,#0D2A4A)',deco:function(){return ''}},
+   {nm:'皇家殿堂',bg:'linear-gradient(#2A0A10,#120408)',deco:function(){return [6,18,76,88].map(function(x){return '<div class="xcol" style="left:'+x+'%"></div>'}).join('')+'<div class="xcur"></div><div class="beam"></div><div class="crn">👑</div>'}},
+   {nm:'打開信封',bg:'radial-gradient(ellipse at 50% 60%,#2B1E40,#05030A 70%)',deco:function(){return '<div class="xenv">得獎的是……</div>'}},
+   {nm:'冠軍遊行',bg:'linear-gradient(#0E4A8A 0%,#3FA0E8 55%,#1C6B3A 55%,#0D3A1E 100%)',deco:function(){var o='<div class="xroad"></div>';for(var i=0;i<9;i++)o+='<i class="xbl" style="left:'+(4+i*11)+'%;animation-delay:'+(.2+(i%4)*.35)+'s;background:'+['#FF5A5A','#FFD54A','#5AB0FF','#3BD16F','#FF9FD2'][i%5]+'"></i>';return o}},
+   {nm:'極光',bg:'#020812',deco:function(){return '<div class="xaur"></div>'+stars(40)}},
+   {nm:'水晶光芒',bg:'radial-gradient(circle at 50% 35%,#18223A,#03050A 70%)',deco:function(){var o='';for(var i=0;i<12;i++)o+='<i class="xray" style="transform:rotate('+(i*30)+'deg);background:linear-gradient(90deg,hsla('+(i*30)+',90%,70%,.8),transparent);animation-delay:'+(1+i*.05)+'s"></i>';return o}}
+  ];
+  function lsg(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+  function lss(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+  /* 每按一次換一種，10 種輪完再洗牌，跟上一次不一樣 */
+  function pick(){var o=lsg('cer_st')||{q:[],last:-1};if(!o.q||!o.q.length){var a=[],i;for(i=0;i<ST.length;i++)a.push(i);for(i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}
+    if(a[0]===o.last)a.push(a.shift());o.q=a}var n=o.q.shift();o.last=n;lss('cer_st',o);return n}
+  var MD=['','🥇','🥈','🥉'],DL={3:0,2:1.1,1:3.0};   /* 上台順序：第 3 名 ➜ 第 2 名 ➜（鼓聲）➜ 第 1 名 */
+  function pod(P){return '<div class="cpod">'+[2,1,3].map(function(r){var a=P.filter(function(x){return x.rk===r});if(!a.length)return '<div class="cp nop"></div>';
+    return '<div class="cp p'+r+'" style="--d:'+DL[r]+'s"><div class="ct"><div class="cfl"></div>'+a.map(function(x){return x.w}).join('<br>')+'</div><div class="cb"><span class="cbm">'+MD[r]+'</span><span class="cbt">第 '+r+' 名</span><i class="cwl l"></i><i class="cwl r"></i></div><div class="cboom"></div></div>'}).join('')+'</div>'}
+  function stop(el){if(el&&el._cx){el._cx.forEach(clearTimeout);el._cx=null}}
+  function play(el,k,D,o){o=o||{};stop(el);var S=ST[k]||ST[0],T=[],RD=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,H=window.HON&&HON.snd;
+    el.className='cx cs'+(k+1);el.style.background=S.bg||'';
+    el.innerHTML='<div class="deco">'+S.deco()+'</div><div class="ribbon">'+D.ribbon+'</div><div class="sub">'+D.sub+'</div>'+
+      '<div class="mid"><div class="cupw">'+CUP+'</div><div class="cls">'+D.cls+'</div><div class="say">'+D.say+'</div></div>'+pod(D.pod||[]);
+    var CC=['#FFD54A','#FF6B6B','#7FD4FF','#3BD16F','#FF9FD2'],nn=k===7?70:k===0?34:0;
+    for(var n=0;n<nn;n++){var c=document.createElement('i');c.className='cf';c.style.left=(Math.random()*100)+'%';c.style.background=CC[n%5];c.style.animationDelay=(k===7?.6:2)+Math.random()*1.4+'s';c.style.borderRadius=n%3?'2px':'50%';el.appendChild(c)}
+    void el.offsetWidth;el.classList.add('go');
+    if(o.snd&&H){H.horn&&H.horn();T.push(setTimeout(function(){H.clap&&H.clap(1.2)},1900))}
+    var P2=RD?0:4600;T.push(setTimeout(function(){el.classList.add('p2')},P2));
+    if(o.snd&&H&&!RD){T.push(setTimeout(function(){H.ding&&H.ding()},P2+300));T.push(setTimeout(function(){H.ding&&H.ding()},P2+1400));
+      T.push(setTimeout(function(){H.drum&&H.drum(1.5)},P2+1600));T.push(setTimeout(function(){H.horn&&H.horn();H.clap&&H.clap(2.6)},P2+3200))}
+    if(!RD&&(k===3||k===7))T.push(setTimeout(function(){el.classList.add('shk')},P2+3300));
+    el._cx=T;return 9800}
+  return {ST:ST,pick:pick,play:play,stop:stop,pod:pod};
+})();
+</script>
+<script>
+/* 愛心新樣品：小華 92（20、20、16、16、20） */
+var IT=[{n:'練了 4 天',k:'練幾天',v:20,t:'再多練 1 天',ic:'📅'},{n:'做完 7 次',k:'做完幾次',v:20,t:'再做完 1 次',ic:'📝'},{n:'看完聽完 才選',k:'看完聽完',v:16,t:'看完、聽完 再選',ic:'👀'},{n:'答錯的 改對了',k:'改對了',v:16,t:'把答錯的 再做一次',ic:'✗➜✓'},{n:'練了 34 分鐘',k:'練幾分鐘',v:20,t:'再多練幾分鐘',ic:'⏰'}];
+var CL=['#2F7BE8','#9B59D0','#00A6A6','#2EB85C','#FF9F1C'],HP='M50 88C20 66 4 48 4 28C4 13 15 4 28 4C38 4 45 10 50 18C55 10 62 4 72 4C85 4 96 13 96 28C96 48 80 66 50 88Z',TM=[],KH=0;
+function clr(){TM.forEach(clearTimeout);TM=[]}function later(f,t){TM.push(setTimeout(f,t))}
+function ana(){var mx=Math.max.apply(null,IT.map(function(x){return x.v})),mn=Math.min.apply(null,IT.map(function(x){return x.v})),w=-1;IT.forEach(function(x,i){if(w<0&&x.v===mn&&mn<20)w=i});return {best:IT.map(function(x,i){return x.v===mx?i:-1}).filter(function(i){return i>=0}),w:w}}
+function sumH(A){return '<div class="hsum"><div class="s1">⭐ 你最棒：'+A.best.map(function(i){return IT[i].n}).join('、')+'</div>'+(A.w>=0?'<div class="s2">🎯 下次加強：'+IT[A.w].k+' ➜ 💡 '+IT[A.w].t+'</div>':'<div class="s1">🎉 五項都滿分</div>')+'</div>'}
+function playH(){clr();var s=document.getElementById('sH'),A=ana(),tot=0;s.style.background=['linear-gradient(#2A0E22,#0A0410)','linear-gradient(#0E1E36,#04080F)'][KH];
+  if(KH===0){s.innerHTML='<div class="hp"><div class="ht">這週 📅 練習 <b class="nn">0</b> 分</div><div class="hrow">'+IT.map(function(x,i){var y=(84*(1-x.v/20)).toFixed(1);
+    return '<div class="hc'+(A.best.indexOf(i)>=0?' isb':'')+(i===A.w?' isw':'')+'" data-i="'+i+'">'+(A.best.indexOf(i)>=0?'<div class="tg best">⭐ 最好</div>':i===A.w?'<div class="tg wk">🎯 加強</div>':'')+
+    '<svg viewBox="0 0 100 92"><defs><clipPath id="hc'+i+'"><path d="'+HP+'"/></clipPath></defs><path d="'+HP+'" fill="#1B2633" stroke="#3A4A5C" stroke-width="3"/><rect clip-path="url(#hc'+i+')" class="lq" x="0" y="92" width="100" height="92" fill="'+CL[i]+'" style="transition:y 1s ease-out" data-y="'+y+'"/><path d="'+HP+'" fill="none" stroke="#fff" stroke-width="3" opacity=".7"/><text x="50" y="50" text-anchor="middle" font-size="22" fill="#fff">'+x.ic+'</text></svg>'+
+    '<div class="hv">'+x.v+'／20</div><div class="hn">'+x.n+'</div></div>'}).join('')+'</div>'+sumH(A)+'</div>';
+    IT.forEach(function(x,i){later(function(){var r=s.querySelector('.hc[data-i="'+i+'"] .lq');r.setAttribute('y',r.getAttribute('data-y'));tot+=x.v;s.querySelector('.nn').textContent=tot},300+i*600)});}
+  else{s.innerHTML='<div class="hp"><div class="ht">這週 📅 練習 <b class="nn">0</b> 分</div><div class="bars">'+IT.map(function(x,i){return '<div class="br" data-i="'+i+'"><span>'+x.ic+'</span><span>'+x.k+'</span><span class="bt"><i style="background:'+CL[i]+'"></i></span><span>'+x.v+'／20</span>'+
+    (A.best.indexOf(i)>=0?'<span class="bk best">⭐ 最好</span>':i===A.w?'<span class="bk wk">🎯 加強</span>':'<span></span>')+'</div>'}).join('')+'</div>'+sumH(A)+'</div>';
+    IT.forEach(function(x,i){later(function(){s.querySelector('.br[data-i="'+i+'"] .bt i').style.width=(x.v*5)+'%';tot+=x.v;s.querySelector('.nn').textContent=tot},300+i*500)});}
+  later(function(){[].forEach.call(s.querySelectorAll('.hc,.br'),function(h){h.classList.add('on')})},3500);later(function(){s.querySelector('.hsum').classList.add('on')},4300)}
+/* 頒獎典禮：老師看板同一份 */
+var KC=0,CD={ribbon:'⏰ 最認真練習',sub:'練最多分鐘',cls:'👑 307 班',say:'🌟 平均每一個人 練習 35 分鐘，全年級最多',pod:[{rk:1,w:'307 班'},{rk:2,w:'304 班'},{rk:3,w:'311 班'}]};
+function playC(){var st=document.getElementById('cst');CERX.play(st,KC,CD,{snd:false});document.getElementById('swC').innerHTML=CERX.ST.map(function(x,i){return '<button data-c="'+i+'"'+(i===KC?' class="on"':'')+'>'+(i+1)+' '+x.nm+'</button>'}).join('')+'<button data-r="C">🔁 再演一次</button>'}
+/* 角色 */
+var GD='b',AC=['#FF6B3D','#5AB0FF','#3BD16F','#FFD54A','#C9A26B','#FFF1C2','#9B59D0','#BFEFFF','#3BD16F','#5A6BFF'];
+function pad(n){return (n<10?'0':'')+n}
+function gal(){var n=GD==='b'?30:20,h='';for(var i=1;i<=n;i++){var c=AC[(i-1)%10],pts='';for(var k=0;k<3;k++)pts+='<i class="pt" style="left:'+(20+k*30)+'%;animation-delay:'+(k*.8+i%3*.3)+'s"></i>';
+  h+='<div class="hero" data-h="'+GD+pad(i)+'" style="--a:'+c+';--dl:'+((i%5)*.4)+'s"><div class="in"><img loading="lazy" src="../../rpg/chars/'+GD+pad(i)+'.jpg" alt="'+(GD==='b'?'男 ':'女 ')+pad(i)+'"></div>'+pts+'<span class="no">'+(GD==='b'?'男 ':'女 ')+pad(i)+'</span></div>'}
+  if(GD==='g')for(i=21;i<=30;i++)h+='<div class="slot">女 '+i+'<br>下一個對話上傳</div>';document.getElementById('gal').innerHTML=h}
+function pickH(id){document.getElementById('shI').src='../../rpg/chars/'+id+'.jpg';document.getElementById('shN').textContent=(id[0]==='b'?'男 ':'女 ')+id.slice(1);var sh=document.getElementById('shH');sh.style.setProperty('--a',AC[(+id.slice(1)-1)%10]);sh.classList.remove('jump');void sh.offsetWidth;sh.classList.add('jump')}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button,.hero[data-h]');if(!b)return;
+  if(b.hasAttribute('data-h')&&b.tagName==='BUTTON'){KH=+b.getAttribute('data-h');[].forEach.call(document.querySelectorAll('#swH [data-h]'),function(x){x.classList.toggle('on',x===b)});playH()}
+  else if(b.getAttribute('data-r')==='H')playH();else if(b.getAttribute('data-r')==='C')playC();
+  else if(b.hasAttribute('data-c')){KC=+b.getAttribute('data-c');playC()}
+  else if(b.hasAttribute('data-g')){GD=b.getAttribute('data-g');[].forEach.call(document.querySelectorAll('#swG button'),function(x){x.classList.toggle('on',x===b)});gal()}
+  else if(b.classList.contains('hero')){[].forEach.call(document.querySelectorAll('.gal .hero'),function(x){x.classList.toggle('sel',x===b)});b.classList.remove('jump');void b.offsetWidth;b.classList.add('jump');pickH(b.getAttribute('data-h'))}});
+playH();playC();gal();pickH('b01');
+</script></body></html>
