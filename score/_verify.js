@@ -368,6 +368,17 @@ async function teacher(br, vp) {
   await p.click('[data-bt="s"]'); await p.waitForTimeout(150); if (await p.$('[data-hon]')) e.push('💯 總分（沒有獎）不應該有〔🏆 榮譽榜〕');
   if (await p.$('[data-bt="care"]')) e.push('排行榜還有〔🏆 最用心〕（2026-10-16 C5 第 3 題 A：拿掉）');
   if (/用心/.test(await p.textContent('#app'))) e.push('老師看板還有「用心」兩個字（C5 第 1 題 乙：整個合併成 📅 練習）');
+  { /* 2026-10-18 第十一次：老師看板 一鍵 QR Code（學生 掃了 到 live/） */
+    await p.click('#lvqr'); await p.waitForTimeout(200);
+    const q = await p.evaluate(() => { const o = document.getElementById('lvov'), b = document.querySelector('#lvq svg'), r = b ? b.getBoundingClientRect() : { width: 0 }, bx = document.querySelector('.lvbx').getBoundingClientRect();
+      return { on: !o.hidden, w: r.width, u: document.getElementById('lvu').textContent, fit: bx.bottom <= innerHeight + 1 && bx.right <= innerWidth + 1 }; });
+    if (!q.on || q.w < 200 || !/live\/$/.test(q.u) || !q.fit) e.push('〔📱 現場 QR〕不對：' + JSON.stringify(q));
+    await p.click('#lvx'); }
+  { /* 2026-10-18 第十一次：班級數字顏色（304、402 黃；同一年級每一班不一樣） */
+    const cc = await p.evaluate(() => ({ a: ccol('304'), b: ccol('402'), c: [ccol('304'), ccol('307'), ccol('311')], d: [ccol('402'), ccol('406'), ccol('409'), ccol('410'), ccol('400')], sp: [].map.call(document.querySelectorAll('.cid'), x => x.textContent + '|' + getComputedStyle(x).color).slice(0, 40) }));
+    if (cc.a !== '#FFD400' || cc.b !== '#FFD400') e.push('304、402 不是黃色：' + cc.a + ' ' + cc.b);
+    if (new Set(cc.c).size !== 3 || new Set(cc.d).size !== 5) e.push('同一年級有兩班一樣顏色');
+    cc.sp.forEach(x => { if (/^(304|402)\|/.test(x) && !/rgb\(255, 212, 0\)/.test(x)) e.push('畫面上的班級數字顏色不對：' + x); }); }
   await p.click('[data-bt="sec"]'); await p.waitForTimeout(150);
   if (!await p.$('[data-hon="0"]')) e.push('排行榜沒有〔🏆 榮譽榜〕');
   else {
@@ -375,6 +386,13 @@ async function teacher(br, vp) {
     const hn = () => p.evaluate(() => { const o = document.getElementById('honov'), h = document.getElementById('honst'), r = o.getBoundingClientRect(), e = [];
       [].forEach.call(h.querySelectorAll('.hkick,.htit,.hsub,.hcard .hn,.hcard .hl,.hcard .hw,.hr,.hpod .nm'), x => { const z = parseFloat(getComputedStyle(x).fontSize); if (z < (innerWidth >= 1900 ? 26 : 20)) e.push('字太小 ' + z + 'px'); });
       [].forEach.call(document.querySelectorAll('#hctl button'), x => { if (x.getBoundingClientRect().height < 48) e.push('按鈕太小：' + x.textContent); });
+      /* 2026-10-18 第十一次：最後一行（這學期 練習 30 分鐘）在卡片最下面、置中、一行、不超出卡片 */
+      [].forEach.call(h.querySelectorAll('.hcard .hl'), x => { const c = x.closest('.hcard').getBoundingClientRect(), b = x.getBoundingClientRect(), g = document.createRange(); g.selectNodeContents(x); const t = g.getBoundingClientRect(), lh = parseFloat(getComputedStyle(x).lineHeight) || parseFloat(getComputedStyle(x).fontSize) * 1.3;
+        if (getComputedStyle(x).display !== 'block') e.push('最後一行不是 block（被老師看板的 .hl 蓋掉）：' + x.textContent);
+        if (t.height > lh * 1.5) e.push('最後一行折成兩行：' + x.textContent);
+        if (Math.abs((t.left + t.right) / 2 - (c.left + c.right) / 2) > 6) e.push('最後一行沒有置中：' + x.textContent);
+        if (c.bottom - b.bottom > 40) e.push('最後一行不在卡片最下面：' + x.textContent);
+        if (t.left < c.left - 1 || t.right > c.right + 1) e.push('最後一行超出卡片：' + x.textContent); });
       return { on: o.classList.contains('on'), full: r.width >= innerWidth - 2 && r.height >= innerHeight - 2, cls: h.className, t: h.textContent, pg: document.getElementById('hpg').textContent, e: e,
         over: document.getElementById('hctl').getBoundingClientRect().bottom > innerHeight + 1 }; });
     let h = await hn();
@@ -467,7 +485,7 @@ async function teacher(br, vp) {
   const z0 = await p.evaluate(() => document.getElementById('app').getBoundingClientRect().height); await p.click('#more'); await p.click('#zi'); await p.waitForTimeout(150);
   const z1 = await p.evaluate(() => ({ h: document.getElementById('app').getBoundingClientRect().height, z: localStorage.getItem('tzoom') }));
   if (!(z1.h > z0) || z1.z !== '1.1') e.push('〔A＋〕沒有放大（' + JSON.stringify(z1) + '）');
-  await p.click('#zo'); await p.waitForTimeout(150); n += 5;
+  await p.click('#zo'); await p.waitForTimeout(150); n += 5; if (await p.isVisible('#morep')) await p.click('#more');
   await p.click('#tabs button[data-t="k"]'); await p.waitForTimeout(150);
   /* 2026-10-12 D 第 5 件：一班一張表、照座號一格一格（號碼＋姓名＋燈號），沒做的人也有一格（⚪），點一格 ＝ 成績卡 */
   await p.waitForTimeout(1200); if (process.env.KSHOT) await p.screenshot({ path: process.env.KSHOT + vp[0] + '.png', fullPage: true });   /* 只拍照片 */

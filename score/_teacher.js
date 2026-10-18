@@ -231,6 +231,12 @@ h3{margin:18px 0 8px;font-size:clamp(22px,1.8vw,32px)}
 button.lkg,b.lkg{background:#0F3323!important;border-color:#3BD16F!important;color:#D7FBE4!important}
 button.lkr,b.lkr{background:#3A0E0E!important;border-color:#FF6B6B!important;color:#FFD6D2!important}
 button.lky{background:#3A3000!important;border-color:#FFD54A!important;color:#FFF3C4!important}
+button.lvq{background:#0E2240;border-color:#5AB0FF;color:#D6EBFF}
+#lvov{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:16px}#lvov[hidden]{display:none}
+.lvbx{background:#0B1118;border:4px solid #5AB0FF;border-radius:26px;padding:18px 24px;text-align:center;max-width:760px;width:100%;max-height:96vh;overflow:auto}
+.lvbx h2{font-size:clamp(28px,4vh,42px);color:#FFE07A;margin:4px 0 10px}.lvqr{background:#fff;border-radius:20px;padding:10px;width:min(100%,52vh,460px);aspect-ratio:1;margin:0 auto}.lvqr svg{width:100%;height:100%;display:block}
+.lvu{font-size:20px;color:#9FB3C8;word-break:break-all;margin:6px 0}.lvst{list-style:none;padding:0;margin:10px 0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;font-size:clamp(20px,2.6vh,28px)}.lvst li{background:#16212D;border:2px solid #34475C;border-radius:14px;padding:6px 14px}
+.lvbt{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.lvbt button,.lvbt a{min-height:60px;font-size:24px}
 a.lvb{display:inline-flex;align-items:center;min-height:52px;padding:6px 16px;border-radius:14px;background:#0E2240;border:2px solid #5AB0FF;color:#D6EBFF;text-decoration:none;font-size:1em}
 button.lkt,b.lkt{background:#0E2240!important;border-color:#5AB0FF!important;color:#D6EBFF!important}
 .lkb .lkt0{flex:1;min-width:0}.lkb em.lktm{color:#BFE0FF}
@@ -363,7 +369,7 @@ ${CERCSS}
  <!-- 2026-10-16 老師 C 組第 9 題 甲：上面一條（年級、Excel、⚙ 更多）、篩選縮成一行、大數字只留名字（說明收進〔❓〕）、分頁上面紅色數字 -->
  <div class="top bar1"><h1>老師看板</h1>
   <span class="grp" id="fg"><button data-g="3" class="on">三年級</button><button data-g="4">四年級</button></span><span class="sp"></span>
-  <button id="dl">⬇ Excel</button><span class="mwrap"><button id="more" aria-expanded="false">⚙ 更多</button>
+  <button id="lvqr" class="lvq" title="現場遊戲 QR Code">📱 現場 QR</button><button id="dl">⬇ Excel</button><span class="mwrap"><button id="more" aria-expanded="false">⚙ 更多</button>
   <div id="morep" hidden><a class="lvb" href="../live/host.html" target="_blank" rel="noopener">⚡ 現場任務 大螢幕</a><button id="rf">🔄 重新整理</button><span id="zm"><button id="zo" aria-label="字變小">A－</button><button id="zi" aria-label="字變大">A＋</button></span><button id="out">👋 登出</button></div></span></div>
  <div class="top fline"><span class="fic">🔎</span>
   <select id="fc" aria-label="班級"></select><i>·</i>
@@ -381,8 +387,12 @@ ${CERCSS}
 <div id="honov"><div class="hon" id="honst"></div><div id="hctl"><button id="hre">⏮ 重來</button><button id="hpv">◀</button><span id="hpg"></span><button id="hnx">▶ 下一幕</button>
  <button id="hsd">🔊 聲音：開</button><button id="hnmb">👤 姓名：顯示</button><button id="hpr">🖨 印獎狀</button><button id="hx">✕ 關閉</button></div></div>
 <div id="prt"></div>
+<!-- 2026-10-18 第十一次 老師：教師首頁 一鍵 產生 QR Code，學生 掃了 ➜ 打 5 碼 ➜ 自動 進入 自己 班 的 遊戲（不用 打 遊戲 號碼） -->
+<div id="lvov" hidden><div class="lvbx"><h2>📱 現場遊戲：學生 掃 這個</h2><div id="lvq" class="lvqr"></div><div id="lvu" class="lvu"></div>
+ <ol class="lvst"><li>📱 掃 QR Code</li><li>🔢 打 5 碼（班級 ＋ 座號）</li><li>✅ 自動 進入 自己 班 的 遊戲</li></ol>
+ <div class="lvbt"><a class="lvb big" href="../live/host.html" target="_blank" rel="noopener">⚡ 開 現場任務 大螢幕</a><button id="lvx">✕ 關閉</button></div></div></div>
 <div id="cer"><div class="cx" id="cerst"></div><div id="cerctl"><button id="cnx">⏭ 下一個</button><button id="cps">⏸ 停</button><span id="cpg"></span><span id="cstn"></span><button id="csd">🔊 聲音：開</button><button id="cx">✕ 關閉</button></div></div>
-<script src="../score/url.js"></script>
+<script src="../score/url.js"></script><script src="../score/qr.js"></script>
 <script>
 ${CALC}
 ${XL}
@@ -416,7 +426,8 @@ function login(pw){
 /* 名單：5 碼 ➜ 姓名；試算表「班級人數」沒填的班，用名單人數 */
 function nm(id){return NM[id]||''}
 /* 班級顏色（老師 2026-10-17 C8 另 2(2)）：一班一個顏色，老師一眼看出是哪一班（三年級 304 藍、307 橘、311 綠；四年級 402 藍、406 橘、409 綠、410 紫、400 金） */
-var CCOL=['#5AB0FF','#FF9F43','#5BE39A','#D99BFF','#FFD24A','#FF7A9A'];
+/* 2026-10-18 第十一次 老師：班級數字用明顯不同的顏色，「304 黃、402 黃」＝ 同一個「第幾班」同一個顏色：第 1 班 黃、第 2 班 藍、第 3 班 綠、第 4 班 粉紅、第 5 班 橘 */
+var CCOL=['#FFD400','#4DA3FF','#3DDC84','#FF6FB5','#FF8A1F','#C9A0FF'];
 function ccol(c){var g=String(c).charAt(0)==='3'?3:4,i=(SC.CLASSES[g]||[]).indexOf(String(c));return CCOL[i<0?5:i]}
 function cidH(id){id=String(id);return '<span class="cid" style="color:'+ccol(id.slice(0,3))+'">'+esc(id.slice(0,3))+'</span><span style="color:#DDE6EE">'+esc(id.slice(3))+'</span>'}
 function who(id){var n=nm(id);return esc(id)+(n?' '+esc(n):'')}
@@ -1012,6 +1023,9 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if((b=c('[data-tkq]'))){$('#tkn').value=b.getAttribute('data-tkq');return}
   if(c('#tkAll')){$$('input[name=tkc]').forEach(function(x){x.checked=true});return}
   if(c('#tkSave')){tkSave();return}
+  if(c('#lvqr')){var u=String(location.href).split('#')[0].split('?')[0].replace(/teacher[/](index[.]html)?$/,'live/');try{var q=qrcode(0,'M');q.addData(u);q.make();$('#lvq').innerHTML=q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch(e){$('#lvq').textContent='QR Code 做不出來'}
+    $('#lvu').textContent=u.replace(/^https?:[/][/]/,'');$('#lvov').hidden=false;return}
+  if(c('#lvx')||e.target.id==='lvov'){$('#lvov').hidden=true;return}
   if(c('#more')){var mp=$('#morep');mp.hidden=!mp.hidden;$('#more').classList.toggle('on',!mp.hidden);$('#more').setAttribute('aria-expanded',String(!mp.hidden));return}
   if(!c('#morep')&&$('#morep')&&!$('#morep').hidden){$('#morep').hidden=true;$('#more').classList.remove('on')}
   if(c('#khelp')){KHELP=KHELP?0:1;draw();return}

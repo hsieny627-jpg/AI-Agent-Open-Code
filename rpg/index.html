@@ -17,9 +17,17 @@ button:active{transform:scale(.97)}
 .cov>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 32%}
 .cov::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,15,.15) 0,rgba(6,8,15,.05) 40%,rgba(6,8,15,.85) 100%)}
 .cov .home{position:absolute;z-index:2;left:14px;top:14px}
-.cov h1{position:absolute;z-index:2;left:0;right:0;bottom:12px;margin:0;text-align:center;font-size:clamp(40px,7vh,72px);letter-spacing:.12em;line-height:1.1;color:#FFE9A8;
-  background:linear-gradient(180deg,#FFF6D6,#FFD54A 55%,#E59A22);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 3px 10px rgba(0,0,0,.9))}
-.cov h1 small{display:block;font-size:clamp(18px,2.4vh,24px);letter-spacing:.3em;-webkit-text-fill-color:#E8EEF7;filter:none;margin-top:2px}
+.cov h1{position:absolute;z-index:2;left:0;right:0;bottom:10px;margin:0;text-align:center;line-height:1;font-weight:400}
+/* 2026-10-18 第十一次 老師：「戰神之路」字體放大、豪邁書法字體、質感提升、氣勢強大 ➜ 毛筆字 Yuji Boku（SIL OFL，只取這 4 個字 rpg/fonts/zs.woff2，3 KB）
+   金屬金漸層＋深色描邊＋橘紅光暈，一道光每 6 秒掃過去一次 */
+@font-face{font-family:ZS;src:url(fonts/zs.woff2) format('woff2');font-display:block}
+.cov h1 .zs{display:inline-block;font-family:ZS,serif;font-size:clamp(66px,12.5vh,132px);letter-spacing:.06em;padding:0 .1em;
+  background:linear-gradient(100deg,#FFF3C4 0,#FFD54A 22%,#B8741A 42%,#FFE58A 50%,#B8741A 58%,#FFD54A 78%,#FFF3C4 100%);background-size:250% 100%;background-position:100% 0;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;-webkit-text-stroke:1.5px rgba(70,28,0,.85);
+  filter:drop-shadow(0 4px 0 #3A1600) drop-shadow(0 0 18px rgba(255,120,30,.75)) drop-shadow(0 6px 16px rgba(0,0,0,.95));animation:zsShine 6s ease-in-out infinite}
+@keyframes zsShine{0%,55%{background-position:100% 0}85%,100%{background-position:0 0}}
+@media (prefers-reduced-motion:reduce){.cov h1 .zs{animation:none}}
+.cov h1 small{display:block;font-size:clamp(18px,2.4vh,24px);letter-spacing:.3em;color:#E8EEF7;margin-top:4px;text-shadow:0 2px 6px #000}
 .home{display:inline-flex;align-items:center;gap:6px;min-height:52px;padding:6px 18px;border-radius:999px;background:rgba(10,12,20,.72);border:2px solid var(--gold);color:#FFE9A8;text-decoration:none;font-size:clamp(19px,2.4vh,24px);backdrop-filter:blur(6px)}
 .tic{height:1.15em;width:2.3em;object-fit:cover;border-radius:.25em;border:1.5px solid var(--gold);vertical-align:-.2em;margin-right:.3em}
 #rpout{text-align:center;padding:20px 10px;font-size:clamp(26px,3.6vh,38px)}
@@ -438,7 +446,9 @@ body.scq .url{display:none}
 .hon .hcard .hi svg{height:1.15em;width:auto}
 .hon .nw{white-space:nowrap}
 .hon .hcard .hn{font-size:clamp(26px,4.4vh,46px);font-weight:700;color:#FFE07A}
-.hon .hcard .hl{font-size:clamp(20px,3.2vh,32px);font-weight:700;line-height:1.3}
+/* 2026-10-18 第十一次 老師：最後一行（例「這學期 練習 30 分鐘」）放在卡片最下面、置中、一行。
+   ⚠ 老師看板自己有一個 .hl（兩欄的 grid），會把這一行切成兩半、靠左折行 ➜ 這裡一定要寫 display:block */
+.hon .hcard .hl{display:block;width:100%;margin-top:auto;padding-top:4px;text-align:center;white-space:nowrap;font-size:clamp(20px,3.2vh,32px);font-weight:700;line-height:1.3}
 .hon .hcard .hw{font-size:clamp(24px,4vh,42px);font-weight:700;color:#fff}
 .hon .hcard.me{border-color:#5BE39A;box-shadow:0 0 30px rgba(91,227,154,.6)}
 .hon .hrow{display:flex;flex-direction:column;gap:clamp(4px,.9vh,10px);width:min(1100px,100%)}
@@ -547,7 +557,8 @@ body.scq .url{display:none}
 /* 直的螢幕（iPad 直放）：一張獎一列，圖示在左邊 */
 @media (max-aspect-ratio:1/1){.hon .hcards,.hon .hcards.many{grid-template-columns:1fr;max-width:640px}
  .hon .hcard{display:grid;grid-template-columns:auto 1fr;column-gap:16px;text-align:left;align-items:center;justify-items:start}
- .hon .hcard .hi{grid-row:1/span 3;font-size:clamp(44px,5.6vh,70px)}
+ .hon .hcard .hl{grid-column:1/-1;justify-self:stretch}
+ .hon .hcard .hi{grid-row:1/span 2;font-size:clamp(44px,5.6vh,70px)}
  .hon .hhero{font-size:clamp(60px,9vh,110px)}.hon .hcard{padding:8px 16px}.hon .hcard .hn{font-size:clamp(26px,3.6vh,40px)}.hon .hcard .hl{font-size:clamp(20px,2.6vh,30px)}}
 /* 彩帶（1、3、4、9 用） */
 .hfx .cf{position:absolute;top:0;width:12px;height:20px;background:var(--c);animation:hfall var(--d,3s) linear infinite}
@@ -1621,7 +1632,7 @@ SCH={on:function(){return hOv().classList.contains('on')},open:function(){hOv().
 </script>
 
 <main id="rp">
- <header class="cov"><img src="cover.webp" alt="戰神之路"><a class="home" href="../index.html">🏠 回首頁</a><h1>戰神之路<small>練習 ➜ 升級 ➜ 變強</small></h1></header>
+ <header class="cov"><img src="cover.webp" alt="戰神之路"><a class="home" href="../index.html">🏠 回首頁</a><h1><span class="zs">戰神之路</span><small>練習 ➜ 升級 ➜ 變強</small></h1></header>
  <div id="rpout" hidden><div>🔑 先 登入 ➜ 才看得到 你的 英雄</div><button class="big" id="rpIn">🔑 登入</button><div class="note" style="margin-top:20px">⭐ 經驗值、🪙 金幣 都是 從 你的 練習 算出來的：練得 愈多、改對 愈多，英雄 就 愈強！</div></div>
  <div id="rpwait" hidden>⏳ 正在拿 你的 英雄…</div>
  <div id="rpin" hidden>
@@ -1677,7 +1688,7 @@ function atk(){var st=document.getElementById('stage');if(!st||!RV||!RV.st.eq.h)
 function fwHTML(){var h='<div class="fw">',C=['#FFD54A','#FF6B6B','#7FD4FF','#7BF0A8','#D9A8FF'];for(var i=0;i<24;i++){var a=i/24*Math.PI*2,r=90+Math.random()*60;h+='<i style="--c:'+C[i%5]+';--x:'+Math.round(Math.cos(a)*r)+'px;--y:'+Math.round(Math.sin(a)*r)+'px;animation-delay:'+(i%3*.15)+'s"></i>'}return h+'</div>'}
 /* ── 商店 ── */
 function itemHTML(id){var k=kOf(id),s=star(id),o=own(id),eq=isEq(id),fr=!o&&freeOk(id),lk=!o&&RV.lv<need(id),pr=price(id),poor=!o&&!fr&&RV.coins<pr;
-  var tag=eq?'<div class="pr eq">✅ 裝備中</div>':o?'<div class="pr ok">👆 點一下 裝上</div>':fr?'<div class="pr fr">🎁 免費</div>':lk?'<div class="pr lock">🔒 要 Lv '+need(id)+'</div>':'<div class="pr'+(poor?' lock':'')+'">🪙 '+pr+'</div>';
+  var tag=eq?'<div class="pr eq">✅ 裝備中</div>':o?'<div class="pr ok">👆 點一下 裝上</div>':fr?'<div class="pr fr">🎁 免費</div>':lk?'<div class="pr lock">🔒 Lv '+need(id)+'</div>':'<div class="pr'+(poor?' lock':'')+'">🪙 '+pr+'</div>';
   if(k==='s'&&eq)tag='<div class="pr eq">✅ 裝備中<br><small>再點 ＝ 拿下來</small></div>';else if(k==='s'&&o)tag='<div class="pr ok">👆 點一下 裝備</div>';
   if(k==='t'){var t=tre(id);return '<button class="it'+(eq?' eqd':'')+'" data-id="'+id+'"><div class="tre">'+t[1].split(' ')[0]+'<small>'+t[1].split(' ').slice(1).join(' ')+'</small></div>'+tag+'</button>'}
   return '<button class="it'+(eq?' eqd':'')+(lk||poor?' dim':'')+'" data-id="'+id+'" style="--rc:'+RC[s]+'"><img loading="lazy" src="'+img(id)+'" alt="'+id+'"><div class="st">'+stars(s)+' '+RN[s]+'</div>'+tag+'</button>'}
@@ -1691,7 +1702,7 @@ function shopHTML(){var h='<div class="scat">'+CAT.S.map(function(x,i){var c=i+1
   if(!CAT.SON[SCAT])return h+'<div class="soon1">'+X[1]+'<br>🔜 即將 上架<div class="note" style="margin-top:10px">老師 上傳 圖 以後，就 可以 用 🪙 金幣 換。</div></div>';
   var tip={au:'戴在 英雄 後面 會 轉',cp:'穿在 英雄 後面',fx:'⚔ 出招、答對 現場任務、做完 一次 的 時候 放出來',nf:'圍住 你的 號碼',bg:'換掉 英雄 後面 的 背景',po:'穿在 寵物 身上',w:'換成 你的 武器',p:'換成 你的 寵物',wg:'裝在 英雄 背後',mt:'讓 英雄 騎上去'}[X[0]];
   h+='<div class="note">'+X[1]+'：'+tip+'。只換 外觀（不加 分數）；同一類 身上 只 戴 1 個。</div>';
-  for(var r=0;r<4;r++){h+='<div class="srow"><span>第 '+(r+1)+' 排</span><b>🪙 '+CAT.SP[r].toLocaleString()+'</b><span class="stg">'+(CAT.SL[r]>1?'要 Lv '+CAT.SL[r]:'Lv 1 就 可以')+'</span>'+(r===3?'<span class="stg">🎓 學霸 限定 神裝</span>':'')+'</div><div class="sgrid">';
+  for(var r=0;r<4;r++){h+='<div class="srow"><span>第 '+(r+1)+' 排</span><b>🪙 '+CAT.SP[r].toLocaleString()+'</b><span class="stg">'+(CAT.SL[r]>1?'Lv '+CAT.SL[r]:'Lv 1 就 可以')+'</span>'+(r===3?'<span class="stg">🎓 學霸 限定 神裝</span>':'')+'</div><div class="sgrid">';
     for(var n=r*5+1;n<=r*5+5;n++)h+=itemHTML('s'+(SCAT<10?'0':'')+SCAT+(n<10?'0':'')+n);h+='</div>'}
   return h}
 /* ❓ 經驗值、金幣 秒懂動畫（2026-10-18 第十次，老師：學生不懂經驗值和金幣的用處、怎麼賺）：5 幕自己往下演，一幕一句話 */
@@ -1702,7 +1713,7 @@ function tutHTML(){var hi=RV&&RV.st.eq.h?img(RV.st.eq.h):'chars/b01.jpg';
    ['⭐ 經驗值 存滿 ➜ <b>升級！</b>','<div class="lvup">🎉 Lv 4 ➜ Lv 5</div><div class="tbar"><div class="bar"><i style="--a:80%;--b:100%;--d:.2s"></i></div><div class="lab">等級 愈高 ➜ 打開 愈強 的 裝備</div></div><div class="tlock"><img src="shop/s0106.jpg" alt=""><span class="l1">🔒</span><span class="l2">🔓</span></div>'],
    ['答對、改對、進步 ➜ <b>🪙 金幣</b>','<div class="tchips"><span>✅ 答對 1 題　＋1</span><span>✗➜✓ 改對 1 題　＋3</span><span>⬆ 比 上一次 進步　＋10</span></div><div class="tcoin">🪙 <b id="tcn">0</b></div>'],
    ['🪙 金幣 ＝ 錢：<b>換 裝備</b>，英雄 變帥','<div style="text-align:center"><div class="titem"><img src="shop/s0202.jpg" alt=""></div><div class="tpay">🪙 －500</div></div><div class="thero"><img class="on2" src="shop/s0202i.webp" alt=""><img src="'+hi+'" alt=""></div>'],
-   ['<b>Lv 夠</b> ＋ <b>🪙 夠</b> ➜ 換得到！','<div class="tneed"><span>🔓 要 Lv 10　你 Lv 10 ✅</span><span>🪙 要 2,500　你有 2,600 ✅</span><span>🎉 換到了！⭐ 留著、🪙 用掉</span></div>']];
+   ['<b>Lv 夠</b> ＋ <b>🪙 夠</b> ➜ 換得到！','<div class="tneed"><span>🔓 Lv 10　你 Lv 10 ✅</span><span>🪙 要 2,500　你有 2,600 ✅</span><span>🎉 換到了！⭐ 留著、🪙 用掉</span></div>']];
   return '<div class="tut"><div class="tst" id="tst">'+S.map(function(x){return '<div class="tsc"><div class="cap">'+x[0]+'</div><div class="vis">'+x[1]+'</div></div>'}).join('')+'</div>'+
     '<div class="tnav">'+['1 ⭐ 經驗值','2 升級','3 🪙 金幣','4 換 裝備','5 兩個 都要'].map(function(t,i){return '<button data-tut="'+i+'">'+t+'</button>'}).join('')+'<button class="re" data-tut="0">▶ 再看 一次</button></div></div>'}
 function tutStop(){clearTimeout(TUT.tm);TUT.cn.forEach(clearTimeout);TUT.cn=[]}

@@ -1572,7 +1572,9 @@ body.scq .url{display:none}
 .hon .hcard .hi svg{height:1.15em;width:auto}
 .hon .nw{white-space:nowrap}
 .hon .hcard .hn{font-size:clamp(26px,4.4vh,46px);font-weight:700;color:#FFE07A}
-.hon .hcard .hl{font-size:clamp(20px,3.2vh,32px);font-weight:700;line-height:1.3}
+/* 2026-10-18 第十一次 老師：最後一行（例「這學期 練習 30 分鐘」）放在卡片最下面、置中、一行。
+   ⚠ 老師看板自己有一個 .hl（兩欄的 grid），會把這一行切成兩半、靠左折行 ➜ 這裡一定要寫 display:block */
+.hon .hcard .hl{display:block;width:100%;margin-top:auto;padding-top:4px;text-align:center;white-space:nowrap;font-size:clamp(20px,3.2vh,32px);font-weight:700;line-height:1.3}
 .hon .hcard .hw{font-size:clamp(24px,4vh,42px);font-weight:700;color:#fff}
 .hon .hcard.me{border-color:#5BE39A;box-shadow:0 0 30px rgba(91,227,154,.6)}
 .hon .hrow{display:flex;flex-direction:column;gap:clamp(4px,.9vh,10px);width:min(1100px,100%)}
@@ -1681,7 +1683,8 @@ body.scq .url{display:none}
 /* 直的螢幕（iPad 直放）：一張獎一列，圖示在左邊 */
 @media (max-aspect-ratio:1/1){.hon .hcards,.hon .hcards.many{grid-template-columns:1fr;max-width:640px}
  .hon .hcard{display:grid;grid-template-columns:auto 1fr;column-gap:16px;text-align:left;align-items:center;justify-items:start}
- .hon .hcard .hi{grid-row:1/span 3;font-size:clamp(44px,5.6vh,70px)}
+ .hon .hcard .hl{grid-column:1/-1;justify-self:stretch}
+ .hon .hcard .hi{grid-row:1/span 2;font-size:clamp(44px,5.6vh,70px)}
  .hon .hhero{font-size:clamp(60px,9vh,110px)}.hon .hcard{padding:8px 16px}.hon .hcard .hn{font-size:clamp(26px,3.6vh,40px)}.hon .hcard .hl{font-size:clamp(20px,2.6vh,30px)}}
 /* 彩帶（1、3、4、9 用） */
 .hfx .cf{position:absolute;top:0;width:12px;height:20px;background:var(--c);animation:hfall var(--d,3s) linear infinite}

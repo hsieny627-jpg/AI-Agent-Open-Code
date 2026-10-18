@@ -59,7 +59,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     if (coins >= 150 ? !/150/.test(t2) : !/還差/.test(t2)) E.push(tag + '：★2 英雄（' + coins + ' 金幣）的對話框不對：' + t2.slice(0, 40));
     await p.click('#rpmb [data-m="x"]');
     await p.click('#shop [data-id="b30"]'); await p.waitForTimeout(150);
-    if (!/要 Lv 20/.test(await p.textContent('#rpmb'))) E.push(tag + '：★5 英雄沒有擋「要 Lv 20」');
+    if (!/Lv 20/.test(await p.textContent('#rpmb'))) E.push(tag + '：★5 英雄沒有擋「Lv 20」');
     await p.click('#rpmb [data-m="x"]');
     /* 寵物免費一隻 ➜ 舞台有寵物＋「寶寶」 */
     await p.click('#tabs [data-t="p"]'); await p.click('#shop [data-id="p03"]'); await p.click('#rpmb [data-m="buy"]'); await p.waitForTimeout(800); await p.click('#rpmb [data-m="x"]');
@@ -102,7 +102,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
       E.push(tag + '：商城不對（類 ' + m0.cat + '、🔜 ' + m0.soon + '、' + m0.it + ' 種、排：' + m0.rows.join('｜') + '）');
     if (!m0.halo) E.push(tag + '：發獎勵送的舊 ✨ 光環 沒有戴上');
     await p.click('#shop [data-id="s0116"]'); await p.waitForTimeout(150);
-    if (!/要 Lv 20/.test(await p.textContent('#rpmb'))) E.push(tag + '：第 4 排沒有擋「要 Lv 20」'); await p.click('#rpmb [data-m="x"]');
+    if (!/Lv 20/.test(await p.textContent('#rpmb'))) E.push(tag + '：第 4 排沒有擋「Lv 20」'); await p.click('#rpmb [data-m="x"]');
     await p.click('#shop [data-id="s0101"]'); await p.waitForTimeout(150);
     if (!/500/.test(await p.textContent('#rpmb'))) E.push(tag + '：光環 01 沒有問「用 🪙 500 換」');
     await p.click('#rpmb [data-m="buy"]'); await p.waitForTimeout(1000); await p.click('#rpmb [data-m="x"]'); await p.waitForTimeout(400);

@@ -14,8 +14,9 @@ def runs(v, th, n):
   if s is not None: out.append((s, len(v) - 1))
   out = [r for r in out if r[1] - r[0] > 20]
   return out if len(out) == n else None
-# 圖上的英文名字要改的（老師 2026-10-18 第十次：光環 16「Crimson Blood Lust Aura」➜ Crimson Vortex Aura）：蓋掉原本的字、用同樣的白色粗體重寫
-RENAME = {(1, 16): 'Crimson Vortex Aura'}
+# 圖上的英文名字要改的：蓋掉原本的字、用同樣的白色粗體重寫
+#   2026-10-18 第十次：光環 16「Crimson Blood Lust Aura」➜ Crimson Vortex Aura；第十一次老師換了新的光環圖（16 ＝ Sacred Rune Halo）➜ 不用改了
+RENAME = {}
 FONT = '/usr/share/fonts/opentype/inter/Inter-Bold.otf'
 def relabel(cell, text):
   from PIL import ImageDraw, ImageFont
@@ -35,8 +36,16 @@ def relabel(cell, text):
   d.text((cx + 1, cy + 1), text, font=f, fill=(0, 0, 0), anchor='mm'); d.text((cx, cy), text, font=f, fill=(255, 255, 255), anchor='mm')
   return im
 MODE = {4: 'frame', 5: 'bg'}
+# 2026-10-18 第十一次 老師換了 01～04 的新圖：02 披風格子貼得很近、04 名字框沒有格子（框下面一行名字）➜ 自動找不到，直接寫格子的位置（量過）
+#   04：rows ＝ 框，LABEL ＝ 框下面那一行名字（商店卡 ＝ 框＋名字；穿在身上 ＝ 只有框）
+GRID = {2: ([(7, 203), (210, 406), (413, 609), (617, 813), (820, 1016)], [(2, 146), (147, 289), (290, 432), (433, 568)]),
+        4: ([(14, 211), (219, 408), (415, 608), (614, 809), (816, 1009)], [(18, 115), (159, 261), (304, 408), (448, 543)])}
+LABEL = {4: [(129, 141), (271, 283), (416, 428), (549, 561)]}
+# 穿在身上那一張要擦掉的號碼牌（框裡面的比例 左、上、右、下）：02 左上角、03 右下角
+MASK = {2: (0, 0, .22, .2), 3: (.76, .8, 1, 1)}
+LOCALBG = {2, 3}
 # 穿在身上那一張要切掉的（左、上、右、下 的比例）：02 披風上面有號碼牌；05 背景左上角、下面中間有號碼牌、最下面有名字
-INSET = {2: (.08, .19, .08, .19), 5: (.06, .17, .06, .27)}   # 04 名字框：圖上沒有字、整個框都要；05 背景：不可以變透明
+INSET = {2: (.05, .04, .05, .2), 3: (.05, .05, .05, .05), 5: (.06, .17, .06, .27)}   # 04 名字框：圖上沒有字、整個框都要；05 背景：不可以變透明
 def even(r):
   # 格子一樣大：有一格被旁邊的光暈撐寬（例 03 必殺特效的雷射）➜ 照「寬度正常的那幾格」排成等距
   ws = sorted(b - a for a, b in r); w = ws[len(ws) // 2]
@@ -52,16 +61,21 @@ for src in sorted(glob.glob(os.path.join(D, 'shop_[01][0-9]_*.jpg'))):
   bg = np.median(np.concatenate([a[:3].reshape(-1, 3), a[-3:].reshape(-1, 3)]), 0)   # 底色 ＝ 最上、最下三排的中間值
   d = np.abs(a - bg).sum(2) > 40
   cols = rows = None
+  if c in GRID: cols, rows = GRID[c]
   for th in (0.1, 0.15, 0.2, 0.05):   # 找得到 5 欄、4 列為止
     cols = cols or runs(d.mean(0), th, 5); rows = rows or runs(d.mean(1), th, 4)
   if not cols or not rows: raise SystemExit('找不到 5✕4 的框：' + src)
-  cols, rows = even(cols), even(rows)
+  if c not in GRID: cols, rows = even(cols), even(rows)
+  ri = -1
   n = 1
-  for (y0, y1) in rows:
-    for (x0, x1) in cols:
+  for (Y0, Y1) in rows:
+    ri += 1
+    for (X0, X1) in cols:
+      x0, y0, x1, y1 = X0, Y0, X1, Y1
       M = MODE.get(c, '')
       if M == 'frame': x0, y0, x1, y1 = max(0, x0 - 6), max(0, y0 - 6), min(im.width - 1, x1 + 6), min(im.height - 1, y1 + 6)
-      cell = im.crop((x0, y0, x1 + 1, y1 + 1)); w = 240
+      cy1 = min(im.height - 1, LABEL[c][ri][1] + 6) if c in LABEL else y1   # 商店卡：名字框連下面那一行名字
+      cell = im.crop((x0, y0, x1 + 1, cy1 + 1)); w = 240
       if (c, n) in RENAME: cell = relabel(cell, RENAME[(c, n)])
       cell.resize((w, round(cell.height * w / cell.width)), Image.LANCZOS).save(os.path.join(OUT, 's%02d%02d.jpg' % (c, n)), quality=88)
       # 穿在身上：框裡面、名字上面那一塊（框 7%、名字 19%）；接近底色的地方變透明（邊緣慢慢淡掉）
@@ -70,8 +84,21 @@ for src in sorted(glob.glob(os.path.join(D, 'shop_[01][0-9]_*.jpg'))):
       L, T, R, B = INSET.get(c, (.07, .05, .07, .19))
       box = (x0, y0, x1 + 1, y1 + 1) if M == 'frame' else (x0 + int(W * L), y0 + int(H * T), x1 - int(W * R), y1 - int(H * B))
       ic = im.crop(box).convert('RGBA')
-      q = np.asarray(ic).astype(float); dist = np.abs(q[..., :3] - bg).sum(2)
+      q = np.asarray(ic).astype(float)
+      lb = bg
+      if c in LOCALBG:   # 格子裡面自己的底色（02 披風、03 必殺：框裡面是深藍灰，不是整張圖的底色）＝ 這一塊最外面一圈的中間值
+        hh, ww = q.shape[:2]; k = max(2, int(min(hh, ww) * .04))
+        ring = np.concatenate([q[:k, :, :3].reshape(-1, 3), q[-k:, :, :3].reshape(-1, 3), q[:, :k, :3].reshape(-1, 3), q[:, -k:, :3].reshape(-1, 3)])
+        lb = np.median(ring, 0)
+      dist = np.abs(q[..., :3] - lb).sum(2)
       if M != 'bg': q[..., 3] = np.clip((dist - 30) / 90, 0, 1) * 255
+      if c in MASK:
+        hh, ww = q.shape[:2]; m = MASK[c]; bx = (x0, y0, x1 + 1, y1 + 1)
+        # 號碼牌的位置照「整格」算，換成這一張（已經切掉 INSET）的座標
+        X0m = int(x0 + W * m[0]) - box[0]; Y0m = int(y0 + H * m[1]) - box[1]; X1m = int(x0 + W * m[2]) - box[0]; Y1m = int(y0 + H * m[3]) - box[1]
+        yy, xx = np.mgrid[0:hh, 0:ww]   # 擦掉號碼牌：離那一塊愈近愈透明（不留一個方方的洞）
+        dx = np.maximum(np.maximum(X0m - xx, xx - X1m), 0); dy = np.maximum(np.maximum(Y0m - yy, yy - Y1m), 0)
+        q[..., 3] *= np.clip(np.hypot(dx, dy) / (min(hh, ww) * .06), 0, 1)
       if not M:   # 四邊 8% 慢慢淡掉：框的邊角不會跟著光環轉成一條黑線（2026-10-18 第十次量到的）
         hh, ww = q.shape[:2]; e = lambda n: np.clip(np.minimum(np.arange(n), np.arange(n)[::-1]) / (n * .08), 0, 1)
         q[..., 3] *= np.outer(e(hh), e(ww))
