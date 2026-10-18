@@ -36,7 +36,7 @@ function ids(){return Object.keys(H.P||{}).filter(function(id){return /^\d{5}$/.
 function drawLobby(){var L=ids();$('#lcnt').textContent=L.length;
   $('#lpl').innerHTML=L.map(function(id){var p=H.P[id];return '<div class="pl">'+(p.h?'<img src="'+LV.img(BASE,p.h)+'" alt="">':'<span class="noh">🦸</span>')+'<b>'+seatOf(id)+' 號</b></div>'}).join('')}
 /* ── 一題 ── */
-function start(){if(!ids().length){$('#lmsg').textContent='還沒有 學生 加入';return}H.qi=-1;ids().forEach(function(id){H.tot[id]=0;H.okc[id]=0;H.st[id]=0;H.fxc[id]=0});H.gs=gs0();scr('hq');next()}
+function start(){if(!ids().length){$('#lmsg').textContent='還沒有 學生 加入';return}H.qi=-1;H.start=Date.now();ids().forEach(function(id){H.tot[id]=0;H.okc[id]=0;H.st[id]=0;H.fxc[id]=0});H.gs=gs0();scr('hq');next()}
 function next(){clearTimeout(H.tm);H.qi++;if(H.qi>=H.n){end();return}
   var q=H.Q[H.qi],ext=0;for(var id in H.xt)if(+H.xt[id]===H.qi)ext=5000;var dur=LV.DUR+ext;H.dur=dur;H.A={};H.fxNow={};H.t0=Date.now();
   LDB.patch('rooms/'+H.code+'/m',{phase:'q',qi:H.qi,q:{t:q.t,o:q.o,h:q.h,x:q.x},t0:H.t0,dur:dur,rev:null});
@@ -101,7 +101,7 @@ function fwHTML(){var h='<div class="fwx">',C=['#FFD54A','#FF6B6B','#7FD4FF','#7
 function bonusList(){return ids().map(function(id){var rw=H.rw[id]||[],c=H.okc[id]||0,x=10,o={id:id,c:c,x:x,tre:[],title:'',snack:0,medal:0};
   rw.forEach(function(k){if(k==='c2')o.c+=c;else if(k==='x2')o.x+=x;else if(k==='frag')o.c+=20;else if(k==='title')o.title='⚡ 現場任務 勇者';else if(k==='emo')o.tre.push('t06');else if(k==='fx')o.tre.push('t04');else if(k==='snack')o.snack++;else if(k==='medal')o.medal++;else if(k==='box')o.c+=30});return o})}
 function give(){var b=$('#give'),m=$('#gm');if(H.done){m.textContent='✅ 已經 發過了';return}b.disabled=true;m.textContent='⏳ 發獎勵中…';
-  post({a:'rpgb',pw:H.pw,list:bonusList()}).then(function(j){if(j&&j.ok){H.done=true;b.textContent='✅ 獎勵 發好了';m.textContent='✅ 發好了（'+j.n+' 人）：學生 打開〔🦸 我的英雄〕就看得到';LDB.patch('rooms/'+H.code+'/m',{given:1})}else{b.disabled=false;m.textContent='❌ 沒有 發成（'+((j&&j.err)||'')+'）'}},
+  post({a:'rpgb',pw:H.pw,room:H.code,t0:H.start,list:bonusList()}).then(function(j){if(j&&j.ok){H.done=true;b.textContent='✅ 獎勵 發好了';m.textContent='✅ 發好了（'+j.n+' 人）：〔🦸 我的英雄〕拿到 獎勵、老師看板 練習次數 ＋1';LDB.patch('rooms/'+H.code+'/m',{given:1})}else{b.disabled=false;m.textContent='❌ 沒有 發成（'+((j&&j.err)||'')+'）'}},
     function(){b.disabled=false;m.textContent='📶 連不到 成績系統'})}
 function closeRoom(){if(H.code)LDB.del('rooms/'+H.code);location.reload()}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;

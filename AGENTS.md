@@ -285,6 +285,10 @@
    **🦸 我的英雄** `rpg/`（男 30、女 29、武器 30、寵物 30、寶物 10；經驗值、金幣伺服器算；做完一次最後一幕 🦸；規格 `rpg/CLAUDE.md`）、**⚡ 現場任務** `live/`（10 種、干擾、🐾 禮物盒、發獎勵；Firebase 大字版設定頁 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/live/setup.html ；規格 `live/CLAUDE.md`）、
    **職業單字網站 36 張字卡記成績**（English-Jobs-New `_score_cards.js`）。**要重新部署** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html 。
    ❓ C10 4 題 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-10-17_C10/ （5 句語音、稀有度、現場任務算不算練習、女 29：老師上傳的跟女 17 同一張）➜ 開場白最下面「2026-10-17 C10」。
+   ✅ 2026-10-18 老師看完 C10「全部照建議」（需求檔第四節最下面「第九次」，先用選擇題問了 4 個：女 29 藍色＋粉紅當女 31、商城先做整個（只收到光環 1 張）、新舊同一個位置換著戴、必殺特效 ＝ 現場任務答對＋做完一次）＋**做好了**：
+   **5 句 a 唸清楚的新語音換進網站**、**⚡ 現場任務一場 ＝ 練習次數 ＋1、練了 1 天**（正確率不算）、**女 29、女 31**、**🏪 榮耀寶物商城**（10 類 ✕ 20、4 排 500／1,200／2,500／5,000、Lv 1／5／10／20；覺醒光環上架，其他 9 類「🔜」；穿在英雄身上 `rpg/_wear_rt.js`；💥 必殺特效）、Firebase 設定頁第 4 步改新版找法（老師還沒有網址）。
+   規格 `rpg/CLAUDE.md`、`live/CLAUDE.md`、`score/CLAUDE.md` 最上面「2026-10-18」。**要重新部署** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html 。
+   ➡️ 下一個對話：老師上傳商城另外 9 張圖（`rpg/_crop_shop.py`＋`RPSON`）＋Firebase 網址（開場白最下面「2026-10-18 C11」）。
 14. 📋 使用者開新對話修改教學網站時，用的開場白存在 `新對話開場白_修改教學網站.md`
    （讀哪一份規格、每一點寫哪一頁哪一張、看不懂先問、只量改到的頁、0 失敗才推 main）。
 

@@ -22,7 +22,7 @@ for sh, out, n0, pre, cols, rows in SHEETS:
       c = im.crop((x0, y0, x1, y1)); w = 300; h = round(c.height * w / c.width)
       c.resize((w, h), Image.LANCZOS).save(os.path.join(D, out, '%s%02d.jpg' % (pre, n)), quality=88); n += 1
 # 單張換掉的卡（老師 2026-10-17 C8 第 10 題 A：男 13、男 16、女 17 換新圖）
-for f in ('b13', 'b16', 'g17', 'g25'):   # g25：2026-10-17 第八次（C9 第 5 題 A）
+for f in ('b13', 'b16', 'g17', 'g25', 'g29', 'g31'):   # g25：2026-10-17 第八次（C9 第 5 題 A）；g29 藍色 Celestial Aurora Princess、g31 粉紅 Sakura Moonlight Princess：2026-10-18 第九次（g31 左上角的 29 改成 31）
   src = os.path.join(D, 'new_%s.jpg' % f)
   if os.path.exists(src):
     c = Image.open(src).convert('RGB'); w = 300; h = round(c.height * w / c.width)

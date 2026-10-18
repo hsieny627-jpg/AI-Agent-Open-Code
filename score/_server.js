@@ -143,7 +143,12 @@ function doPost(e) {
       /* ⚡ 現場任務 結束：老師大螢幕一次發獎勵（list ＝ [{id, c, x, tre, title, snack, medal}]） */
       if (o.a === 'rpgb') {
         var lk6 = LockService.getScriptLock(), nb = 0; lk6.waitLock(20000);
-        try { (o.list || []).slice(0, 60).forEach(function (b) { var c6 = SC.checkId(b && b.id); if (c6.err) return; var R6 = rpRow(c6.id); rpSave(R6, c6.id, SC.rpBonus(R6.st, b)); nb++; }); } finally { lk6.releaseLock(); }
+        try { var now6 = Date.now(), s6 = sheet(SHEET), n6 = s6.getLastRow(), us6 = {};
+          if (n6 >= 2) s6.getRange(2, SC.CI['編號'] + 1, n6 - 1, 1).getValues().forEach(function (x) { us6[String(x[0])] = 1; });
+          (o.list || []).slice(0, 60).forEach(function (b) { var c6 = SC.checkId(b && b.id); if (c6.err) return; var R6 = rpRow(c6.id); rpSave(R6, c6.id, SC.rpBonus(R6.st, b)); nb++;
+            /* 2026-10-18 C10 第 3 題 B：現場任務 一場 ＝ 練習次數 ＋1、練了 1 天（正確率不算） */
+            var L6 = SC.lvRec(c6.id, o.room, o.t0, now6); if (L6 && !us6[L6.u]) { s6.appendRow(SC.toRow(L6)); us6[L6.u] = 1; } });
+        } finally { lk6.releaseLock(); }
         return out({ ok: true, n: nb });
       }
       if (o.a === 'void') {

@@ -1,0 +1,20 @@
+/* rpg/_wear.css — 🏪 商城寶物穿在英雄身上（rpg/_wear_rt.js）。放在英雄卡（.rw-host）裡面；後面的用 z-index:-1（英雄卡要 isolation:isolate） */
+.rw-host{isolation:isolate}
+/* 前面加 .rw-host img：英雄卡自己的「img 寬 100%、框、陰影、跳進來動畫」不可以蓋過來 */
+.rw-host img.rw-au,.rw-host img.rw-au2,.rw-host img.rw-wg,.rw-host img.rw-cp,.rw-host img.rw-mt,.rw-host img.rw-po,.rw-host img.rw-nf{position:absolute;display:block;pointer-events:none;max-width:none;border:0;border-radius:0;box-shadow:none;height:auto;animation-delay:0s}
+.rw-host img.rw-au{left:50%;top:48%;width:175%;transform:translate(-50%,-50%);z-index:-1;animation:rwSpin 16s linear infinite}
+.rw-host img.rw-au2{left:50%;top:48%;width:118%;transform:translate(-50%,-50%);z-index:3;opacity:.6;mix-blend-mode:screen;animation:rwSpin 9s linear infinite reverse}
+.rw-host img.rw-wg{left:50%;top:40%;width:200%;transform:translate(-50%,-50%);z-index:-2;animation:rwFlap 3s ease-in-out infinite}
+.rw-host img.rw-cp{left:50%;top:62%;width:125%;transform:translate(-50%,-50%);z-index:-1;animation:rwCape 3.4s ease-in-out infinite}
+.rw-host img.rw-mt{left:50%;bottom:-22%;width:120%;transform:translateX(-50%);z-index:-1;animation:rwRide 2.6s ease-in-out infinite}
+.rw-host img.rw-po{right:-14%;top:-16%;width:58%;z-index:4;filter:drop-shadow(0 0 6px #000)}
+.rw-host img.rw-nf{left:50%;top:50%;width:150%;transform:translate(-50%,-50%);z-index:-1}
+@keyframes rwSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes rwFlap{50%{transform:translate(-50%,-50%) scale(1.06,.96)}}
+@keyframes rwCape{50%{transform:translate(-50%,-50%) skewX(-3deg)}}
+@keyframes rwRide{50%{transform:translate(-50%,-8px)}}
+.rw-fx{position:fixed;inset:0;z-index:99999;pointer-events:none;display:flex;align-items:center;justify-content:center;animation:rwFlash 1.4s ease-out forwards}
+.rw-fx img{width:min(76vw,76vh);animation:rwBoom 1.4s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes rwBoom{0%{transform:scale(.1) rotate(-120deg);opacity:0}30%{transform:scale(1.15) rotate(0);opacity:1}70%{transform:scale(1);opacity:1}100%{transform:scale(1.9);opacity:0}}
+@keyframes rwFlash{0%{background:rgba(255,255,255,0)}20%{background:rgba(255,240,200,.35)}100%{background:rgba(255,255,255,0)}}
+@media (prefers-reduced-motion:reduce){.rw-host img.rw-au,.rw-host img.rw-au2,.rw-host img.rw-wg,.rw-host img.rw-cp,.rw-host img.rw-mt{animation:none}.rw-fx{animation-duration:.6s}.rw-fx img{animation-duration:.6s}}

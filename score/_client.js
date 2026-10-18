@@ -239,7 +239,7 @@ body.scq .url{display:none}
  .sctabs button,.scscope button{min-height:44px;padding:5px 14px}}
 `;
 
-const JS = require('fs').readFileSync(require('path').join(__dirname, '_honor_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report_rt.js'), 'utf8') + `
+const JS = require('fs').readFileSync(require('path').join(__dirname, '_honor_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_wear_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report_rt.js'), 'utf8') + `
 /* ══════════ 成績紀錄（2026-10-07 對話 C；2026-10-08 對話 D：遊戲、Review 1 也記）══════════
    SCG ＝ 這一頁是幾年級（0 ＝ 三、四年級共用的 Review 1 遊戲：年級看登入的 5 碼）
    SCH ＝ 這一頁怎麼畫（下面那一段由 _tq.js／遊戲引擎／Review 1 複習各自給）：
@@ -651,9 +651,9 @@ function scOut(){SCID=null;SCGUEST=false;['id_g3','id_g4','last'].forEach(functi
   SCTK=null;SCTKID=null;scIdleHide();scBar();if(SCSRC==='home')setTimeout(scLkRe,0);var m=document.getElementById('scme');if(m&&typeof scMeHTML==='function'&&m.innerHTML)m.innerHTML=scMeHTML()}
 /* 🦸 這一次拿到的經驗值、金幣（2026-10-17 第八次；規則 score/_calc.js rpEarn）：英雄＋寵物、經驗值條往上長、升級、金幣、〔🦸 我的 英雄〕 */
 var SCRPB=(function(){var s=document.querySelector('script[src$="score/url.js"]');return s?s.getAttribute('src').replace(/score\\/url\\.js$/,''):'../'})();
-function scHeroHTML(G){var D=function(id){return SCRPB+'rpg/'+(/^[bg]/.test(id)?'chars':/^w/.test(id)?'weapons':'pets')+'/'+id+'.jpg'};
+function scHeroHTML(G){var D=function(id){return rwSrc(SCRPB,id)},S=G.s||{};if(G.h&&S.fx)setTimeout(function(){rwFx(SCRPB,S.fx)},900);   /* 2026-10-18：🏪 商城寶物、💥 必殺武功特效（做完一次 演一次） */
   var a=Math.max(0,G.xp-G.gx),p0=G.lv>G.lv0?0:Math.max(0,(a-G.lvAt)/(G.lvNext-G.lvAt)*100),p1=Math.min(100,(G.xp-G.lvAt)/(G.lvNext-G.lvAt)*100);
-  return '<div class="sct">🦸 這一次 你拿到</div><div class="schero"><div class="shimg">'+(G.h?'<img src="'+D(G.h)+'" alt="我的英雄">'+(G.p?'<img class="shp" src="'+D(G.p)+'" alt="我的寵物">':''):'<div class="shno">🦸<br>還沒有 英雄</div>')+'</div>'+
+  return '<div class="sct">🦸 這一次 你拿到</div><div class="schero"><div class="shimg rw-host">'+(G.h?rwBack(SCRPB,S)+'<img src="'+D(G.h)+'" alt="我的英雄">'+rwFront(SCRPB,S)+(G.p?'<img class="shp" src="'+D(G.p)+'" alt="我的寵物">':''):'<div class="shno">🦸<br>還沒有 英雄</div>')+'</div>'+
     '<div class="shst"><div class="shx">⭐ 經驗值 <b>＋'+G.gx+'</b></div><div class="shbar"><i style="width:'+p0.toFixed(1)+'%" data-w="'+p1.toFixed(1)+'"></i></div>'+
     '<div class="shlv">'+(G.lv>G.lv0?'🎉 升級了！ Lv '+G.lv0+' ➜ <b>Lv '+G.lv+'</b>':'Lv '+G.lv+'（再 '+(G.lvNext-G.xp)+' 升級）')+'</div>'+
     '<div class="shc">🪙 金幣 <b>＋'+G.gc+'</b><small>（共 '+G.coins+'）</small></div>'+
@@ -743,7 +743,7 @@ document.addEventListener('keydown',function(e){if(!$('#scBox'))return;
 /* 一頁要放的東西：S ＝ score/_sites.js 查到的這個資料夾、src ＝ school／home、g 覆寫年級（0 ＝ 看登入的 5 碼） */
 function js(S, src) { return JS.replace('__SCG__', S.g).replace('__SCSRC__', JSON.stringify(src === 'home' ? 'home' : 'school')).replace('__TKLOCK__', () => require('./_calc.js').tkLock.toString()); }
 
-const CSSALL = CSS + require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report.css'), 'utf8');
+const CSSALL = CSS + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_wear.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report.css'), 'utf8');
 /* 首頁（總首頁、三年級、四年級、在家複習首頁）：最上面的登入橫幅＋「請問 這是您嗎？」＋3 分鐘登出（2026-10-12 D 第 6 件）
    g ＝ 年級（0 ＝ 總首頁：看最後登入的號碼）、rel ＝ 到 repo 根目錄的相對路徑（例 '../'）、src ＝ school／home。登入用遊戲那一種蓋滿整頁的 #scov */
 function home(g, rel, src, inl) {

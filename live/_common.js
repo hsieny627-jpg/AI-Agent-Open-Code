@@ -44,7 +44,7 @@ var LV={
   shuf:function(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a},
   game:function(k){for(var i=0;i<LV.GAMES.length;i++)if(LV.GAMES[i].k===k)return LV.GAMES[i];return LV.GAMES[0]},
   feat:function(k){for(var i=0;i<LV.FEAT.length;i++)if(LV.FEAT[i].k===k)return LV.FEAT[i];return null},
-  img:function(base,id){return !id?'':base+'rpg/'+(/^[bg]/.test(id)?'chars':/^w/.test(id)?'weapons':'pets')+'/'+id+'.jpg'},
+  img:function(base,id){return !id?'':base+'rpg/'+(/^s\d{4}$/.test(id)?'shop/'+id+'.jpg':(/^[bg]/.test(id)?'chars':/^w/.test(id)?'weapons':'pets')+'/'+id+'.jpg')},   /* s ＝ 🏪 商城的魔法武器、新寵物（2026-10-18） */
   /* 算分（老師大螢幕）：答對 100 ＋ 速度（最多 900）；✖2、🔥 ✖1.5、🚀 ✖1.3；🔁 再選一次答對 ＝ 一半 */
   score:function(ok,ms,dur,f){if(!ok)return 0;f=f||{};var s=100+Math.round(900*Math.max(0,1-ms/dur));if(f.x2)s*=2;if(f.fire)s=Math.round(s*1.5);if(f.rocket)s=Math.round(s*1.3);if(f.rt)s=Math.round(s/2);return s},
   MAXFX:2, DUR:15000

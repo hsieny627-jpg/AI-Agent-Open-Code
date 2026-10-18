@@ -1,11 +1,14 @@
 /* rpg/_build.js — 🦸 我的英雄（rpg/index.html）：選英雄、武器、寵物、外觀寶物、經驗值、金幣、商店、圖鑑（2026-10-17 老師看完 C9（第八次）；規格 rpg/CLAUDE.md）
  *   node rpg/_build.js
  * 規則（價錢、稀有度、等級、經驗值、金幣）全部在 score/_calc.js 的 rp…（伺服器、這一頁、量測同一份）；這一頁只負責畫。
- * 圖：rpg/chars/（男 b01～b30、女 g01～g30）、rpg/weapons/w01～w30、rpg/pets/p01～p30（切法 rpg/_crop.py）；女 29 等老師換新圖（SC.RPHIDE）。
+ * 圖：rpg/chars/（男 b01～b30、女 g01～g31）、rpg/weapons/w01～w30、rpg/pets/p01～p30（切法 rpg/_crop.py）；🏪 商城 rpg/shop/s0101～（切法 rpg/_crop_shop.py；穿在身上 rpg/_wear_rt.js）。
  * 登入用成績系統同一個（score/_client.js 的 home()）；買東西、換裝都送伺服器（{a:'rpg'}），平板改不了金幣。 */
 const fs = require('fs'), path = require('path');
 const SC = require('../score/_calc.js'), CL = require('../score/_client.js');
-const CAT = { R: SC.RPR, P: SC.RPP, L: SC.RPL, T: SC.RPT, SET: SC.RPSET, HIDE: SC.RPHIDE, X: SC.RPX, C: SC.RPC };
+const CAT = { R: SC.RPR, P: SC.RPP, L: SC.RPL, T: SC.RPT, SET: SC.RPSET, HIDE: SC.RPHIDE, X: SC.RPX, C: SC.RPC, S: SC.RPS, SON: SC.RPSON, SP: SC.RPSP, SL: SC.RPSL };
+/* 🏪 上架的類：20 張商店卡＋20 張穿在身上的圖都要有 */
+Object.keys(SC.RPSON).forEach(c => { for (let n = 1; n <= 20; n++) { const id = 's' + String(c).padStart(2, '0') + String(n).padStart(2, '0');
+  ['.jpg', 'i.webp'].forEach(x => { if (!fs.existsSync(path.join(__dirname, 'shop', id + x))) throw new Error('rpg：商城少了圖 ' + id + x + '（python3 -I rpg/_crop_shop.py）'); }); } });
 ['h', 'w', 'p'].forEach(k => Object.keys(SC.RPR[k]).forEach(id => {
   const f = path.join(__dirname, k === 'h' ? 'chars' : k === 'w' ? 'weapons' : 'pets', id + '.jpg');
   if (!fs.existsSync(f)) throw new Error('rpg：少了圖 ' + f);
@@ -62,6 +65,14 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 .pose{animation:pose 3.2s ease-in-out infinite}@keyframes pose{0%,70%,100%{transform:none}78%{transform:translateY(-22px) rotate(-3deg)}86%{transform:translateY(0) rotate(2deg)}}
 .hat{position:absolute;left:50%;top:-30px;transform:translateX(-50%);font-size:40px}
 .wglow{animation:wg 1.6s ease-in-out infinite}@keyframes wg{50%{box-shadow:0 0 22px 6px #5AF0FF}}
+/* 🏪 商城（2026-10-18 第九次） */
+.team.mt{padding-bottom:clamp(40px,8vh,80px)}
+.idl{position:relative}.fxb{min-height:56px;padding:4px 18px;border-radius:16px;background:#3A0E2A;border:3px solid #FF7FD0;font-size:clamp(20px,2.6vh,26px)}
+.scat{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.scat button{min-height:56px;padding:4px 14px;border-radius:14px;background:#111;border:3px solid #333;font-size:clamp(19px,2.4vh,24px)}
+.scat button.on{border-color:var(--gold);color:#FFE07A;background:#2A2208}.scat button.soon{color:#8A9AAA;border-style:dashed}
+.srow{margin:14px 0 6px;font-size:clamp(21px,2.7vh,27px);color:#CFE6FF}.srow b{color:#FFE07A}
+.sgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}@media (max-width:700px){.sgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.soon1{background:#111A24;border:3px dashed #4A5A6C;border-radius:20px;padding:26px 18px;text-align:center;font-size:clamp(24px,3.2vh,32px)}
 /* 右邊：數字 */
 .stat{display:grid;gap:12px;font-size:clamp(22px,2.8vh,30px)}
 .idl{display:inline-block;padding:2px 16px;border-radius:12px;background:#111;border:2px solid #333}.idl.gf{border:4px solid var(--gold);box-shadow:0 0 12px rgba(255,213,74,.6)}
@@ -102,39 +113,40 @@ ${CL.home(0, '../', 'home')}
  <div id="rpwait" hidden>⏳ 正在拿 你的 英雄…</div>
  <div id="rpin" hidden>
   <section class="stage" id="stage"></section>
-  <nav class="tabs" id="tabs"><button data-t="h" class="on">🦸 英雄</button><button data-t="w">⚔ 武器</button><button data-t="p">🐾 寵物</button><button data-t="t">✨ 寶物</button><button data-t="s">📖 圖鑑</button><button data-t="q">❓ 怎麼賺</button></nav>
+  <nav class="tabs" id="tabs"><button data-t="h" class="on">🦸 英雄</button><button data-t="w">⚔ 武器</button><button data-t="p">🐾 寵物</button><button data-t="t">✨ 寶物</button><button data-t="m">🏪 榮耀 商城</button><button data-t="s">📖 圖鑑</button><button data-t="q">❓ 怎麼賺</button></nav>
   <section id="shop"></section>
  </div>
 </main>
 <div id="rpm"><div class="box" id="rpmb"></div></div>
 <script>
 var CAT=${JSON.stringify(CAT)};
-var RV=null,TAB='h',SEX='b',LAST='',BUSY=false;
+var RV=null,TAB='h',SEX='b',LAST='',BUSY=false,SCAT=1;
 var DIR={h:'chars',w:'weapons',p:'pets'},RC=['#34475C','#8A9AAA','#3BD16F','#5AB0FF','#B57BFF','#FFD54A'],RN=['','普通','稀有','史詩','傳說','神話'];
-function kOf(id){return /^[bg]\\d\\d$/.test(id)?'h':/^w/.test(id)?'w':/^p/.test(id)?'p':'t'}
-function star(id){var k=kOf(id);return k==='t'?0:(CAT.R[k][id]||0)}
-function img(id){return DIR[kOf(id)]+'/'+id+'.jpg'}
+function sOf(id){var m=/^s(\\d\\d)(\\d\\d)$/.exec(id);return m?{c:+m[1],n:+m[2],row:Math.floor((+m[2]-1)/5),slot:CAT.S[+m[1]-1][0]}:null}
+function kOf(id){var S=sOf(id);if(S)return S.slot==='w'||S.slot==='p'?S.slot:'s';return /^[bg]\\d\\d$/.test(id)?'h':/^w/.test(id)?'w':/^p/.test(id)?'p':'t'}
+function star(id){var S=sOf(id);if(S)return S.row+2;var k=kOf(id);return k==='t'?0:(CAT.R[k][id]||0)}
+function img(id){return sOf(id)?'shop/'+id+'.jpg':DIR[kOf(id)]+'/'+id+'.jpg'}
 function stars(n){var s='';for(var i=0;i<n;i++)s+='★';return s}
 function tre(id){for(var i=0;i<CAT.T.length;i++)if(CAT.T[i][0]===id)return CAT.T[i];return null}
-function price(id){var k=kOf(id);return k==='t'?tre(id)[2]:CAT.P[star(id)]}
-function need(id){return kOf(id)==='t'?1:CAT.L[star(id)]}
+function price(id){var S=sOf(id);if(S)return CAT.SP[S.row];var k=kOf(id);return k==='t'?tre(id)[2]:CAT.P[star(id)]}
+function need(id){var S=sOf(id);if(S)return CAT.SL[S.row];return kOf(id)==='t'?1:CAT.L[star(id)]}
 function own(id){return !!RV&&RV.st.own[kOf(id)].indexOf(id)>=0}
-function isEq(id){var k=kOf(id);return !!RV&&(k==='t'?RV.st.eq.t.indexOf(id)>=0:RV.st.eq[k]===id)}
+function isEq(id){var k=kOf(id);return !!RV&&(k==='s'?(RV.st.eq.s||{})[sOf(id).slot]===id:k==='t'?RV.st.eq.t.indexOf(id)>=0:RV.st.eq[k]===id)}
 function freeOk(id){var k=kOf(id);return !!RV&&k!=='t'&&star(id)===1&&!RV.st.free[k]&&!RV.st.own[k].length}
 function show(id){document.getElementById(id).hidden=false}function hide(id){document.getElementById(id).hidden=true}
 /* ── 舞台 ── */
-function drawStage(){var V=RV,e=V.st.eq,T=e.t,has=function(t){return T.indexOf(t)>=0},h='';
-  var st=document.getElementById('stage');st.className='stage'+(has('t08')?' bg8':'');
-  h+='<div class="team">';
-  if(e.h){var s=star(e.h);h+='<div class="hc r'+s+(has('t07')?' pose':'')+'" style="--rc:'+RC[s]+'">'+(s>=5?'<div class="rays"></div>':'')+(has('t02')?'<div class="cape"></div>':'')+(has('t01')?'<div class="halo"></div>':'')+
-    '<div class="stars">'+stars(s)+'</div><img src="'+img(e.h)+'" alt="我的英雄">'+(has('t06')?'<div class="emo">😎</div>':'')+(has('t03')?'<div class="feet"></div>':'')+(has('t04')?fwHTML():'')+'</div>'}
+function drawStage(){var V=RV,e=V.st.eq,T=e.t,ES=e.s||{},has=function(t){return T.indexOf(t)>=0},h='';
+  var st=document.getElementById('stage');st.className='stage'+(has('t08')?' bg8':'');st.setAttribute('style',rwBg('../',ES));
+  h+='<div class="team'+(ES.mt?' mt':'')+'">';
+  if(e.h){var s=star(e.h);h+='<div class="hc rw-host r'+s+(has('t07')?' pose':'')+'" style="--rc:'+RC[s]+'">'+(s>=5?'<div class="rays"></div>':'')+rwBack('../',ES)+(has('t02')?'<div class="cape"></div>':'')+(has('t01')?'<div class="halo"></div>':'')+
+    '<div class="stars">'+stars(s)+'</div><img src="'+img(e.h)+'" alt="我的英雄">'+(has('t06')?'<div class="emo">😎</div>':'')+(has('t03')?'<div class="feet"></div>':'')+(has('t04')?fwHTML():'')+rwFront('../',ES)+'</div>'}
   else h+='<div class="hc empty" style="width:min(62%,300px)">🦸<br>還沒有英雄<br>👇 下面 免費 選 1 個</div>';
-  h+='<div style="display:flex;flex-direction:column;gap:16px;width:min(30%,150px)">';
+  h+='<div style="position:relative;z-index:1;display:flex;flex-direction:column;gap:16px;width:min(30%,150px)">';
   h+=e.w?'<div class="wc r'+star(e.w)+(has('t10')?' wglow':'')+'" style="--rc:'+RC[star(e.w)]+';width:100%"><img src="'+img(e.w)+'" alt="我的武器"></div>':'<div class="empty">⚔<br>還沒有武器</div>';
-  h+=e.p?'<div class="pc s'+V.petStage+'" style="--rc:'+RC[star(e.p)]+';width:100%">'+(has('t09')?'<div class="hat">🎩</div>':'')+'<img src="'+img(e.p)+'" alt="我的寵物"><span class="pst">'+['🐣 寶寶','🐥 長大了','🐲 進化了'][V.petStage]+'</span></div>':'<div class="empty">🐾<br>還沒有寵物</div>';
+  h+=e.p?'<div class="pc rw-host s'+V.petStage+'" style="--rc:'+RC[star(e.p)]+';width:100%">'+(has('t09')?'<div class="hat">🎩</div>':'')+rwPo('../',ES)+'<img src="'+img(e.p)+'" alt="我的寵物"><span class="pst">'+['🐣 寶寶','🐥 長大了','🐲 進化了'][V.petStage]+'</span></div>':'<div class="empty">🐾<br>還沒有寵物</div>';
   h+='</div></div>';
   var pct=Math.max(0,Math.min(100,(V.xp-V.lvAt)/(V.lvNext-V.lvAt)*100));
-  h+='<div class="stat"><div><span class="idl'+(has('t05')?' gf':'')+'">🪪 '+SCID+'</span></div>'+
+  h+='<div class="stat"><div><span class="idl rw-host'+(has('t05')?' gf':'')+'">'+rwNf('../',ES)+'🪪 '+SCID+'</span>'+(ES.fx?' <button class="fxb" id="fxTry">💥 試放 必殺</button>':'')+'</div>'+
     '<div class="lv"><span>⭐ 等級</span><b>Lv '+V.lv+'</b></div><div class="bar"><i id="xpb" data-w="'+pct.toFixed(1)+'"></i></div><div class="note">經驗值 '+V.xp+'（再 '+(V.lvNext-V.xp)+' 升到 Lv '+(V.lv+1)+'）</div>'+
     '<div class="coin">🪙 金幣 <b>'+V.coins+'</b></div><div class="pow">⚔ 戰力 '+V.power+'（全班 打魔王 時 打得 比較痛）</div>'+
     (e.p?'<div class="note">🐾 寵物 陪你 練了 '+V.petDays+' 天：3 天 長大、7 天 進化（天天練 就會長大）</div>':'')+
@@ -145,16 +157,28 @@ function fwHTML(){var h='<div class="fw">',C=['#FFD54A','#FF6B6B','#7FD4FF','#7B
 /* ── 商店 ── */
 function itemHTML(id){var k=kOf(id),s=star(id),o=own(id),eq=isEq(id),fr=!o&&freeOk(id),lk=!o&&RV.lv<need(id),pr=price(id),poor=!o&&!fr&&RV.coins<pr;
   var tag=eq?'<div class="pr eq">✅ 裝備中</div>':o?'<div class="pr ok">👆 點一下 裝上</div>':fr?'<div class="pr fr">🎁 免費</div>':lk?'<div class="pr lock">🔒 要 Lv '+need(id)+'</div>':'<div class="pr'+(poor?' lock':'')+'">🪙 '+pr+'</div>';
+  if(k==='s'&&eq)tag='<div class="pr eq">✅ 裝備中<br><small>再點 ＝ 拿下來</small></div>';else if(k==='s'&&o)tag='<div class="pr ok">👆 點一下 裝備</div>';
   if(k==='t'){var t=tre(id);return '<button class="it'+(eq?' eqd':'')+'" data-id="'+id+'"><div class="tre">'+t[1].split(' ')[0]+'<small>'+t[1].split(' ').slice(1).join(' ')+'</small></div>'+tag+'</button>'}
   return '<button class="it'+(eq?' eqd':'')+(lk||poor?' dim':'')+'" data-id="'+id+'" style="--rc:'+RC[s]+'"><img loading="lazy" src="'+img(id)+'" alt="'+id+'"><div class="st">'+stars(s)+' '+RN[s]+'</div>'+tag+'</button>'}
 function ids(k){var a=Object.keys(CAT.R[k]).filter(function(id){return !CAT.HIDE[id]&&(k!=='h'||id.charAt(0)===SEX)});
-  return a.sort(function(x,y){return (CAT.R[k][x]-CAT.R[k][y])||(x<y?-1:1)})}
+  a=a.sort(function(x,y){return (CAT.R[k][x]-CAT.R[k][y])||(x<y?-1:1)});
+  return k==='h'?a:a.concat(RV.st.own[k].filter(function(id){return !!sOf(id)}))}   /* 🏪 商城買的魔法武器、新寵物 也放在這裡（換回來用） */
+/* 🏪 榮耀 商城：10 類、每類 4 排（價錢、等級照排） */
+function shopHTML(){var h='<div class="scat">'+CAT.S.map(function(x,i){var c=i+1,on=!!CAT.SON[c];return '<button data-scat="'+c+'" class="'+(c===SCAT?'on ':'')+(on?'':'soon')+'">'+x[1]+(on?'':' 🔜')+'</button>'}).join('')+'</div>';
+  var X=CAT.S[SCAT-1];
+  if(!CAT.SON[SCAT])return h+'<div class="soon1">'+X[1]+'<br>🔜 即將 上架<div class="note" style="margin-top:10px">老師 上傳 圖 以後，就 可以 用 🪙 金幣 換。</div></div>';
+  var tip={au:'戴在 英雄 後面 會 轉',cp:'穿在 英雄 後面',fx:'答對 現場任務、做完 一次 的 時候 放出來',nf:'圍住 你的 號碼',bg:'換掉 英雄 後面 的 背景',po:'穿在 寵物 身上',w:'換成 你的 武器',p:'換成 你的 寵物',wg:'裝在 英雄 背後',mt:'讓 英雄 騎上去'}[X[0]];
+  h+='<div class="note">'+X[1]+'：'+tip+'。只換 外觀（不加 分數）；同一類 身上 只 戴 1 個。</div>';
+  for(var r=0;r<4;r++){h+='<div class="srow">第 '+(r+1)+' 排　<b>🪙 '+CAT.SP[r].toLocaleString()+'</b>　'+(CAT.SL[r]>1?'要 Lv '+CAT.SL[r]:'Lv 1 就 可以')+(r===3?'　🎓 學霸 限定 神裝':'')+'</div><div class="sgrid">';
+    for(var n=r*5+1;n<=r*5+5;n++)h+=itemHTML('s'+(SCAT<10?'0':'')+SCAT+(n<10?'0':'')+n);h+='</div>'}
+  return h}
 function drawShop(){var S=document.getElementById('shop'),h='';
   if(TAB==='h'||TAB==='w'||TAB==='p'){var k=TAB,nm={h:'英雄',w:'武器',p:'寵物'}[k];
     if(!RV.st.own[k].length&&!RV.st.free[k])h+='<div class="free">🎁 第一個 '+nm+' 免費：選 1 個 ★ 普通 的 '+nm+'！之後 用 🪙 金幣 換 更酷 的。</div>';
     if(k==='h')h+='<div class="sub"><button data-sex="b" class="'+(SEX==='b'?'on':'')+'">👦 男生 英雄</button><button data-sex="g" class="'+(SEX==='g'?'on':'')+'">👧 女生 英雄</button></div>';
     h+='<div class="note" style="margin-bottom:8px">★ 普通 50　★★ 稀有 150　★★★ 史詩 400（Lv 5）　★★★★ 傳說 900（Lv 10）　★★★★★ 神話 2000（Lv 20）</div>';
     h+='<div class="grid">'+ids(k).map(itemHTML).join('')+'</div>'}
+  else if(TAB==='m')h+=shopHTML();
   else if(TAB==='t')h+='<div class="note" style="margin-bottom:8px">✨ 寶物 只換 外觀（不加分數）。買了 會 自動 戴上；再 點一下 ＝ 拿下來／戴上。</div><div class="grid">'+CAT.T.map(function(t){return itemHTML(t[0])}).join('')+'</div>';
   else if(TAB==='s'){var all=RV.st.own.h.concat(RV.st.own.w,RV.st.own.p);
     h+='<div class="note">📖 集滿 一套 ＝ 拿到 稱號（亮起來）：</div>'+CAT.SET.map(function(x){var ok=x[1].every(function(id){return all.indexOf(id)>=0});
@@ -164,6 +188,7 @@ function drawShop(){var S=document.getElementById('shop'),h='';
     '<tr><td>✅ 第一次 就 答對 1 題</td><td>🪙 金幣 ＋1</td></tr><tr><td>✗➜✓ 答錯 以後 改對 1 題</td><td>🪙 金幣 ＋'+CAT.C.fix+'（改錯 最多 金幣！）</td></tr><tr><td>⬆ 同一組 比 自己 上一次 進步</td><td>🪙 金幣 ＋'+CAT.C.prog+'</td></tr>'+
     '<tr><td>🎁 這一週 練了 '+CAT.C.chestDays+' 天 以上</td><td>保底 寶箱 🪙 ＋'+CAT.C.chest+'（每一個 肯練 的 人 都 拿得到）</td></tr>'+
     '<tr><td>⚠️ 太快 亂按</td><td>那一次 沒有 金幣</td></tr><tr><td>🪙 一天 最多</td><td>'+CAT.C.cap+' 金幣（練 太久 不會 一直 賺）</td></tr>'+
+    '<tr><td>🏪 榮耀 商城</td><td>第 1 排 🪙 500、第 2 排 1,200（Lv 5）、第 3 排 2,500（Lv 10）、第 4 排 5,000（Lv 20）</td></tr>'+
     '<tr><td>🚫 不可以</td><td>交易、搶 別人 的、抽獎；買到 的 東西 <b>不加 分數、不會 讓 題目 變簡單</b></td></tr></table>'+
     '<p class="note">⭐ 經驗值 只會 升，不會 被 花掉；等級 夠 才 換得到 ★★★ 以上。🐾 寵物 陪你 練 3 天 長大、7 天 進化。</p></div>';
   S.innerHTML=h}
@@ -183,17 +208,19 @@ function ask(id){var k=kOf(id),fr=freeOk(id),pr=fr?0:price(id),t=k==='t'?tre(id)
 function act(op,id){if(BUSY)return;BUSY=true;var me=SCID;
   scFetch('',{a:'rpg',id:me,op:op,item:id},12000).then(function(j){BUSY=false;if(me!==SCID)return;
     if(j&&j.v)RV=j.v;
-    if(j&&j.ok){draw();if(op==='buy')cele(id);else document.getElementById('rpm').className=''}
+    if(j&&j.ok){draw();if(op==='buy'){cele(id);if(sOf(id)&&sOf(id).slot==='fx')setTimeout(function(){rwFx('../',id)},700)}else document.getElementById('rpm').className=''}
     else msg(j&&j.err==='coin'?'🪙 金幣 不夠':j&&j.err==='lv'?'🔒 等級 不夠':'❌ 沒有 換成（'+((j&&j.err)||'')+'）')},
    function(){BUSY=false;msg('📶 現在 沒有 網路，沒有 換')})}
 function cele(id){var k=kOf(id),m=document.getElementById('rpm');m.className='on cele';
   document.getElementById('rpmb').innerHTML=fwHTML()+(k==='t'?'<div class="tre" style="font-size:90px">'+tre(id)[1].split(' ')[0]+'</div>':'<img src="'+img(id)+'" alt="'+id+'">')+
-    '<div style="font-size:1.2em;color:#FFE07A;margin-top:8px">🎉 換到了！已經 裝上</div><div class="bt"><button class="yes" data-m="x">👌 好</button></div>'}
+    '<div style="font-size:1.2em;color:#FFE07A;margin-top:8px">🎉 換到了！已經 裝上</div>'+(sOf(id)&&sOf(id).slot==='fx'?'<div class="note">💥 答對 現場任務、做完 一次 的 時候 會 放出來</div>':'')+'<div class="bt"><button class="yes" data-m="x">👌 好</button></div>'}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
   if(c('#rpIn')){scLogin(function(){SCH.close();scBar();load()});return}
   if((b=c('#tabs button'))){TAB=b.getAttribute('data-t');[].forEach.call(document.querySelectorAll('#tabs button'),function(x){x.classList.toggle('on',x===b)});drawShop();return}
   if((b=c('[data-sex]'))){SEX=b.getAttribute('data-sex');drawShop();return}
-  if((b=c('#shop [data-id]'))){var id=b.getAttribute('data-id');if(own(id)){if(kOf(id)==='t'||!isEq(id))act('eq',id)}else ask(id);return}
+  if((b=c('[data-scat]'))){SCAT=+b.getAttribute('data-scat');drawShop();return}
+  if(c('#fxTry')){rwFx('../',RV.st.eq.s.fx);return}
+  if((b=c('#shop [data-id]'))){var id=b.getAttribute('data-id');if(own(id)){if(kOf(id)==='t'||kOf(id)==='s'||!isEq(id))act('eq',id)}else ask(id);return}
   if((b=c('[data-m]'))){var w=b.getAttribute('data-m');if(w==='buy')act('buy',b.getAttribute('data-id'));else document.getElementById('rpm').className='';return}
   if(t.id==='rpm')document.getElementById('rpm').className='';
 });
@@ -203,4 +230,4 @@ setInterval(function(){var k=(SCID||'')+'|'+(SCID&&scAsked()?1:0);if(k!==LAST){L
 </body></html>
 `;
 fs.writeFileSync(path.join(__dirname, 'index.html'), html);
-console.log('rpg ok：英雄 ' + Object.keys(SC.RPR.h).filter(x => !SC.RPHIDE[x]).length + '、武器 ' + Object.keys(SC.RPR.w).length + '、寵物 ' + Object.keys(SC.RPR.p).length + '、寶物 ' + SC.RPT.length);
+console.log('rpg ok：英雄 ' + Object.keys(SC.RPR.h).filter(x => !SC.RPHIDE[x]).length + '、武器 ' + Object.keys(SC.RPR.w).length + '、寵物 ' + Object.keys(SC.RPR.p).length + '、寶物 ' + SC.RPT.length + '、商城上架 ' + Object.keys(SC.RPSON).length + ' 類');

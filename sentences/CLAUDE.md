@@ -5,6 +5,11 @@
 使用者是國小英語教師。**這份規格是使用者指定的結果，不要自行「優化」。**
 根目錄 `AGENTS.md` 第四節（品質與省額度的固定規則）同樣適用。
 
+
+## 2026-10-18 老師 C10 第 1 題 A：5 句 a 唸清楚的新語音換進網站
+Is your dad a teacher? ／ Is your dad a student? ／ Is my grandpa a cook? ／ Is my grandpa a student? ／ Is your grandpa a cook? ＝ `listen/2026-10-17_C10/au/s1e～s5e.mp3`（a 前面停一下＋重讀的 ə，`tts_gen.py` 的 `hf_raw`，電腦聽寫 5 句全對）
+蓋掉 `sentences/audio/` 同名檔（04595c44cc44、c1c56860d10c、f8c5a58b559f、4ed77dc02eeb、0146f8eae7ef）＋`aud.js` 秒數。⚠ 以後換模型（`audio_pack.js` 的 MODEL）全部重做時，這 5 句要再用同一個做法做一次。
+
 ## 這是什麼
 
 三年級英文句型教學網站，四個部分：**首頁 → 暖身題 → Unit 1（16 張）／Unit 2（21 張）句型卡

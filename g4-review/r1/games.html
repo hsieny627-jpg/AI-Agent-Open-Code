@@ -766,6 +766,24 @@ body.scq .url{display:none}
 @media (max-height:860px){.scn{min-height:0;gap:clamp(6px,1.1vh,10px)}
  .scpod .p1 .st{height:clamp(60px,9vh,80px)}.scpod .p2 .st{height:clamp(44px,6.6vh,60px)}.scpod .p3 .st{height:clamp(32px,4.8vh,44px)}
  .sctabs button,.scscope button{min-height:44px;padding:5px 14px}}
+/* rpg/_wear.css — 🏪 商城寶物穿在英雄身上（rpg/_wear_rt.js）。放在英雄卡（.rw-host）裡面；後面的用 z-index:-1（英雄卡要 isolation:isolate） */
+.rw-host{isolation:isolate}
+.rw-au,.rw-wg,.rw-cp,.rw-mt,.rw-po,.rw-nf{position:absolute;pointer-events:none;max-width:none}
+.rw-au{left:50%;top:46%;width:150%;transform:translate(-50%,-50%);z-index:-1;animation:rwSpin 16s linear infinite}
+.rw-wg{left:50%;top:40%;width:200%;transform:translate(-50%,-50%);z-index:-2;animation:rwFlap 3s ease-in-out infinite}
+.rw-cp{left:50%;top:62%;width:125%;transform:translate(-50%,-50%);z-index:-1;animation:rwCape 3.4s ease-in-out infinite}
+.rw-mt{left:50%;bottom:-22%;width:120%;transform:translateX(-50%);z-index:-1;animation:rwRide 2.6s ease-in-out infinite}
+.rw-po{right:-14%;top:-16%;width:58%;z-index:4;filter:drop-shadow(0 0 6px #000)}
+.rw-nf{left:50%;top:50%;width:150%;transform:translate(-50%,-50%);z-index:-1}
+@keyframes rwSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes rwFlap{50%{transform:translate(-50%,-50%) scale(1.06,.96)}}
+@keyframes rwCape{50%{transform:translate(-50%,-50%) skewX(-3deg)}}
+@keyframes rwRide{50%{transform:translate(-50%,-8px)}}
+.rw-fx{position:fixed;inset:0;z-index:99999;pointer-events:none;display:flex;align-items:center;justify-content:center;animation:rwFlash 1.4s ease-out forwards}
+.rw-fx img{width:min(76vw,76vh);animation:rwBoom 1.4s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes rwBoom{0%{transform:scale(.1) rotate(-120deg);opacity:0}30%{transform:scale(1.15) rotate(0);opacity:1}70%{transform:scale(1);opacity:1}100%{transform:scale(1.9);opacity:0}}
+@keyframes rwFlash{0%{background:rgba(255,255,255,0)}20%{background:rgba(255,240,200,.35)}100%{background:rgba(255,255,255,0)}}
+@media (prefers-reduced-motion:reduce){.rw-au,.rw-wg,.rw-cp,.rw-mt{animation:none}.rw-fx{animation-duration:.6s}.rw-fx img{animation-duration:.6s}}
 /* score/_honor.css — 榮譽動畫（2026-10-12 D 第 4 件）：學生平板做完的榮譽動畫、老師投影的榮譽榜共用。12 種風格 .hs1～.hs12 */
 .hon{position:relative;width:100%;height:var(--hh,clamp(420px,66vh,800px));border-radius:22px;overflow:hidden;background:#000;color:#fff;text-align:center;isolation:isolate;
   display:flex;flex-direction:column;align-items:center;justify-content:center;justify-content:safe center;gap:clamp(6px,1.4vh,16px);padding:2vh 2vw;box-sizing:border-box}
@@ -2739,6 +2757,18 @@ var HON=(function(){
   return {EFF:EFF,UP:UP,CLK:CLK,HRT:HRT,EYE:EYE,FIX:FIX,AWK:AWK,AWN:AWN,mn:mn,awl:awl,awc:awc,awi:awi,aws:aws,ST:ST,pick:pick,scene:scene,fx:fx,snd:snd,ac:ac,
     CST:CST,CN:CN,CT:CT,CTS:CTS,card:card,cpick:cpick,cscene:cscene,cstop:cstop,chelp:chelp,cweak:cweak,cdid:cdid};
 })();
+/* rpg/_wear_rt.js — 🏪 榮耀寶物商城：穿在英雄身上（2026-10-18 第九次；規則 score/_calc.js 的 RPS；樣子 rpg/_wear.css）
+   〔🦸 我的英雄〕舞台、平板最後一幕 🦸、⚡ 現場任務 都用這一份（score/_client.js 帶進每一頁）。s ＝ 身上戴的 {au 光環, cp 披風, fx 必殺, nf 名字框, bg 背景, po 寵物服裝, wg 翅膀, mt 坐騎}
+   rwSrc(圖)、rwBack(英雄卡後面：翅膀、披風、光環)、rwFront(腳下：坐騎)、rwPo(寵物服裝)、rwNf(名字框)、rwBg(背景的 style)、rwFx(必殺武功特效：蓋滿畫面 1.4 秒) */
+function rwSrc(b,id,ic){return b+'rpg/'+(/^s\d{4}$/.test(id)?'shop/'+id+(ic?'i.webp':'.jpg'):(/^[bg]/.test(id)?'chars':/^w/.test(id)?'weapons':'pets')+'/'+id+'.jpg')}
+function rwI(b,id,c){return id?'<img class="'+c+'" src="../../review1/'+rwSrc(b,id,1)+'" alt="" aria-hidden="true">':''}
+function rwBack(b,s){s=s||{};return rwI(b,s.wg,'rw-wg')+rwI(b,s.cp,'rw-cp')+rwI(b,s.au,'rw-au')}
+function rwFront(b,s){return rwI(b,(s||{}).mt,'rw-mt')}
+function rwPo(b,s){return rwI(b,(s||{}).po,'rw-po')}
+function rwNf(b,s){return rwI(b,(s||{}).nf,'rw-nf')}
+function rwBg(b,s){return s&&s.bg?"background-image:linear-gradient(rgba(5,7,13,.25),rgba(5,7,13,.6)),url('"+rwSrc(b,s.bg,1)+"');background-size:cover;background-position:center":''}
+function rwFx(b,id){if(!id||!document.body)return;var o=document.createElement('div');o.className='rw-fx';o.setAttribute('aria-hidden','true');
+  o.innerHTML='<img src="../../review1/'+rwSrc(b,id,1)+'" alt="">';document.body.appendChild(o);setTimeout(function(){if(o.parentNode)o.parentNode.removeChild(o)},1500)}
 /* score/_report_rt.js — 📅 練習報告（2026-10-17 老師看完 C9（第八次）一、1～3）。學生平板（score/_client.js）、老師看板（score/_teacher.js）共用。只寫 ES5，要先載入 _honor_rt.js（用 HON 的圖示、cscene、cweak、mn）。
    老師的決定（sentences/2026-10-16_C_需求與問題.md 第四節「第八次」）：
    ① 甲 打勾清單 ＝ 主要畫面：一行一件事＋真的數字＋目標，一行一行出來、蓋章 ✅ 做到了／🎯 還差…，最後兩行 ⭐ 你最棒、🎯 下一步
@@ -3271,9 +3301,9 @@ function scOut(){SCID=null;SCGUEST=false;['id_g3','id_g4','last'].forEach(functi
   SCTK=null;SCTKID=null;scIdleHide();scBar();if(SCSRC==='home')setTimeout(scLkRe,0);var m=document.getElementById('scme');if(m&&typeof scMeHTML==='function'&&m.innerHTML)m.innerHTML=scMeHTML()}
 /* 🦸 這一次拿到的經驗值、金幣（2026-10-17 第八次；規則 score/_calc.js rpEarn）：英雄＋寵物、經驗值條往上長、升級、金幣、〔🦸 我的 英雄〕 */
 var SCRPB=(function(){var s=document.querySelector('script[src$="score/url.js"]');return s?s.getAttribute('src').replace(/score\/url\.js$/,''):'../'})();
-function scHeroHTML(G){var D=function(id){return SCRPB+'rpg/'+(/^[bg]/.test(id)?'chars':/^w/.test(id)?'weapons':'pets')+'/'+id+'.jpg'};
+function scHeroHTML(G){var D=function(id){return rwSrc(SCRPB,id)},S=G.s||{};if(G.h&&S.fx)setTimeout(function(){rwFx(SCRPB,S.fx)},900);   /* 2026-10-18：🏪 商城寶物、💥 必殺武功特效（做完一次 演一次） */
   var a=Math.max(0,G.xp-G.gx),p0=G.lv>G.lv0?0:Math.max(0,(a-G.lvAt)/(G.lvNext-G.lvAt)*100),p1=Math.min(100,(G.xp-G.lvAt)/(G.lvNext-G.lvAt)*100);
-  return '<div class="sct">🦸 這一次 你拿到</div><div class="schero"><div class="shimg">'+(G.h?'<img src="../../review1/'+D(G.h)+'" alt="我的英雄">'+(G.p?'<img class="shp" src="../../review1/'+D(G.p)+'" alt="我的寵物">':''):'<div class="shno">🦸<br>還沒有 英雄</div>')+'</div>'+
+  return '<div class="sct">🦸 這一次 你拿到</div><div class="schero"><div class="shimg rw-host">'+(G.h?rwBack(SCRPB,S)+'<img src="../../review1/'+D(G.h)+'" alt="我的英雄">'+rwFront(SCRPB,S)+(G.p?'<img class="shp" src="../../review1/'+D(G.p)+'" alt="我的寵物">':''):'<div class="shno">🦸<br>還沒有 英雄</div>')+'</div>'+
     '<div class="shst"><div class="shx">⭐ 經驗值 <b>＋'+G.gx+'</b></div><div class="shbar"><i style="width:'+p0.toFixed(1)+'%" data-w="'+p1.toFixed(1)+'"></i></div>'+
     '<div class="shlv">'+(G.lv>G.lv0?'🎉 升級了！ Lv '+G.lv0+' ➜ <b>Lv '+G.lv+'</b>':'Lv '+G.lv+'（再 '+(G.lvNext-G.xp)+' 升級）')+'</div>'+
     '<div class="shc">🪙 金幣 <b>＋'+G.gc+'</b><small>（共 '+G.coins+'）</small></div>'+

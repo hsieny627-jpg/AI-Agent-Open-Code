@@ -225,6 +225,24 @@ body.scq .url{display:none}
 @media (max-height:860px){.scn{min-height:0;gap:clamp(6px,1.1vh,10px)}
  .scpod .p1 .st{height:clamp(60px,9vh,80px)}.scpod .p2 .st{height:clamp(44px,6.6vh,60px)}.scpod .p3 .st{height:clamp(32px,4.8vh,44px)}
  .sctabs button,.scscope button{min-height:44px;padding:5px 14px}}
+/* rpg/_wear.css — 🏪 商城寶物穿在英雄身上（rpg/_wear_rt.js）。放在英雄卡（.rw-host）裡面；後面的用 z-index:-1（英雄卡要 isolation:isolate） */
+.rw-host{isolation:isolate}
+.rw-au,.rw-wg,.rw-cp,.rw-mt,.rw-po,.rw-nf{position:absolute;pointer-events:none;max-width:none}
+.rw-au{left:50%;top:46%;width:150%;transform:translate(-50%,-50%);z-index:-1;animation:rwSpin 16s linear infinite}
+.rw-wg{left:50%;top:40%;width:200%;transform:translate(-50%,-50%);z-index:-2;animation:rwFlap 3s ease-in-out infinite}
+.rw-cp{left:50%;top:62%;width:125%;transform:translate(-50%,-50%);z-index:-1;animation:rwCape 3.4s ease-in-out infinite}
+.rw-mt{left:50%;bottom:-22%;width:120%;transform:translateX(-50%);z-index:-1;animation:rwRide 2.6s ease-in-out infinite}
+.rw-po{right:-14%;top:-16%;width:58%;z-index:4;filter:drop-shadow(0 0 6px #000)}
+.rw-nf{left:50%;top:50%;width:150%;transform:translate(-50%,-50%);z-index:-1}
+@keyframes rwSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes rwFlap{50%{transform:translate(-50%,-50%) scale(1.06,.96)}}
+@keyframes rwCape{50%{transform:translate(-50%,-50%) skewX(-3deg)}}
+@keyframes rwRide{50%{transform:translate(-50%,-8px)}}
+.rw-fx{position:fixed;inset:0;z-index:99999;pointer-events:none;display:flex;align-items:center;justify-content:center;animation:rwFlash 1.4s ease-out forwards}
+.rw-fx img{width:min(76vw,76vh);animation:rwBoom 1.4s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes rwBoom{0%{transform:scale(.1) rotate(-120deg);opacity:0}30%{transform:scale(1.15) rotate(0);opacity:1}70%{transform:scale(1);opacity:1}100%{transform:scale(1.9);opacity:0}}
+@keyframes rwFlash{0%{background:rgba(255,255,255,0)}20%{background:rgba(255,240,200,.35)}100%{background:rgba(255,255,255,0)}}
+@media (prefers-reduced-motion:reduce){.rw-au,.rw-wg,.rw-cp,.rw-mt{animation:none}.rw-fx{animation-duration:.6s}.rw-fx img{animation-duration:.6s}}
 /* score/_honor.css — 榮譽動畫（2026-10-12 D 第 4 件）：學生平板做完的榮譽動畫、老師投影的榮譽榜共用。12 種風格 .hs1～.hs12 */
 .hon{position:relative;width:100%;height:var(--hh,clamp(420px,66vh,800px));border-radius:22px;overflow:hidden;background:#000;color:#fff;text-align:center;isolation:isolate;
   display:flex;flex-direction:column;align-items:center;justify-content:center;justify-content:safe center;gap:clamp(6px,1.4vh,16px);padding:2vh 2vw;box-sizing:border-box}

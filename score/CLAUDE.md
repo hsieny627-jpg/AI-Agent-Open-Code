@@ -4,6 +4,21 @@
 > 設計、研究證據（21 條）、使用者的決定：`sentences/2026-10-07_C_設計與研究清單.md`（**Q1～Q18 使用者 2026-10-07 全部照建議**）。
 > 根目錄 `AGENTS.md` 第四節（最高原則、品質、省額度）同樣適用。
 
+## 2026-10-18 老師看完 C10（第九次）：C10 全部照建議、🏪 榮耀寶物商城、⚡ 現場任務算練習、女 29＋女 31、5 句語音換新（先讀這一節）
+
+需求檔：`sentences/2026-10-16_C_需求與問題.md` 第四節最下面「第九次」（4 題選擇題的回答）。
+
+| # | 決定 | 做法（在哪裡） |
+|---|---|---|
+| C10-1 A | 5 句 a 唸清楚的新語音 **換進網站** | `listen/2026-10-17_C10/au/s1e～s5e.mp3` 蓋掉 `sentences/audio/` 那 5 個檔、`aud.js` 的秒數改好（Is your dad a teacher? 等 5 句）。檔名不變，所以全部網站自動用新的 |
+| C10-2 A | 稀有度照現在 | 不改 |
+| C10-3 B | **⚡ 現場任務一場 ＝ 練習次數 ＋1、練了 1 天（正確率不算）** | `_calc.js`：新玩法 `lv`（「現場任務」，題組 `g年級lv_live`，`noQ`、`counts` ＝ true、`secOf` 0、`students` 的 `lvc`、`cat` ＝ ⚡ 現場任務）＋`lvRec()`；`clean()` 擋平板送 `lv`；`rpEarn` 不重複給 ＋10 經驗值。`_server.js` `{a:'rpgb'}` 每一個人 append 一筆（照編號不重複）。老師看板：類別〔⚡ 現場任務〕、細節表、要關心「⚡ 只玩現場任務」。規格 `live/CLAUDE.md` |
+| C10-4＋選擇題 | 女 29 ＝ 藍色、女 31 ＝ 粉紅 | 規格 `rpg/CLAUDE.md` |
+| 商城＋3 題選擇題 | 🏪 榮耀寶物商城（10 類 ✕ 20、4 排價錢等級、同一個位置換著戴、💥 必殺：現場任務答對＋做完一次） | 規則 `_calc.js` `RPS`…；畫 `rpg/_build.js`、`rpg/_wear_rt.js`；**`_client.js` 帶進 `_wear_rt.js`＋`_wear.css` ➜ 全部網站都重新 build 了**（`scHeroHTML` 最後一幕 🦸 戴商城寶物、演必殺）。規格 `rpg/CLAUDE.md` |
+
+**改了 `_calc.js`、`_server.js` ➜ 老師要重新部署一次** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html （第 1 步那一句寫了這一次新的東西）。
+量測：`node score/_test.js`（多：女 29／31、商城價錢等級、上架、換著戴、現場任務紀錄）、`node rpg/_verify.js`（多：商城）、`node live/_verify.js`、`node score/_verify.js`、`ONLY=teacher node score/_verify.js`。
+
 ## 2026-10-17 老師看完 C9（第八次）：✅ 練習報告、一鍵設定＋開放時間、排行榜開關拿掉、🦸 我的英雄、⚡ 現場任務、職業單字字卡記成績（先讀這一節）
 
 需求檔：`sentences/2026-10-16_C_需求與問題.md` 第四節最下面「第八次」（含 4 題選擇題的回答）。給老師看的確認頁 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-10-17_C10/ （`node listen/2026-10-17_C10/_build.js`、`_verify.js`）。

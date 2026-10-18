@@ -369,7 +369,7 @@ ${CERCSS}
   <select id="fc" aria-label="班級"></select><i>·</i>
   <span class="grp"><select id="fp" aria-label="期間"><option value="w">本週</option><option value="lw">上週</option><option value="all">這學期全部</option><option value="c">自訂日期</option></select>
    <input type="date" id="f1" hidden><input type="date" id="f2" hidden></span><i>·</i>
-  <select id="fk" aria-label="類別"><option value="">全部類別</option><option value="tq">📝 複習題</option><option value="game">🎮 遊戲</option><option value="r1">📘 Review 1</option><option value="l">🎧 聽完字卡</option><option value="v">👀 看字卡</option></select><i>·</i>
+  <select id="fk" aria-label="類別"><option value="">全部類別</option><option value="tq">📝 複習題</option><option value="game">🎮 遊戲</option><option value="r1">📘 Review 1</option><option value="l">🎧 聽完字卡</option><option value="lv">⚡ 現場任務</option><option value="v">👀 看字卡</option></select><i>·</i>
   <select id="fs" aria-label="來源"><option value="">在校＋在家</option><option value="school">🏫 在校</option><option value="home">🏠 在家</option></select>
  </div>
  <div class="tiles" id="tiles"></div>
@@ -623,7 +623,7 @@ var KST=[['🔴','要關心','no'],['🟡','要注意','md'],['🟢','很好','o
 /* 2026-10-15 D12 ⑥：〔🔲 照座號〕／〔📊 圖表分析〕（記在這台電腦）；格子多一行「❤獎牌 用心 87」 */
 var KHELP=0,KAC='';
 var KM=(function(){try{return localStorage.getItem('kmode')||'g'}catch(e){return 'g'}})();
-function kWhy(p,o,old){return !p?(old?'以前有做':'還沒做'):!p.all?'👀 只看字卡':o.acc==null?(p.lc>=p.all?'🎧 只聽字卡':'🃏 只玩記憶配對'):o.fast>30?'⚠️ 亂按 '+o.fast+'%':(o.acc>=60&&o.fast>10?'⚠️ 亂按 '+o.fast+'%':f1(o.acc)+' 分')}
+function kWhy(p,o,old){return !p?(old?'以前有做':'還沒做'):!p.all?'👀 只看字卡':o.acc==null?(p.lc>=p.all?'🎧 只聽字卡':(p.lvc||0)>=p.all?'⚡ 只玩現場任務':(p.lc||0)+(p.lvc||0)>=p.all?'🎧⚡ 只聽字卡、現場任務':'🃏 只玩記憶配對'):o.fast>30?'⚠️ 亂按 '+o.fast+'%':(o.acc>=60&&o.fast>10?'⚠️ 亂按 '+o.fast+'%':f1(o.acc)+' 分')}
 function kLt(p,o){return !p?3:(o.acc==null?2:o.lt)}
 function paneK(ps,S){
   var r=range(),before=SC.students(SC.pick(ALL,{g:F.g,to:r.from,src:F.src}).filter(function(x){return !F.cls||x.cls===F.cls}));
@@ -756,8 +756,8 @@ function pdetail(A){var h='',by={};A.forEach(function(x){(by[x.set]=by[x.set]||[
     /* 🃏 記憶配對：沒有正確率，只列配完幾對、用幾秒、翻錯幾次 */
     /* 👀 看字卡：只有時間 */
     /* 🎧 聽完字卡（2026-10-16 C4 第 6 題 A）：一站每一張都聽完 ＝ 一筆 */
-    if(L[0].m==='l'){h+='<h3>'+nm+'</h3><div class="tw"><table class="att"><tr><th>時間</th><th>🎧 這一站每一張都聽完</th><th>來源</th><th>平板</th><th></th></tr>'+
-      L.map(function(x){return '<tr'+(x.x?' class="void"':'')+'><td>'+dt(x.t)+'</td><td>✅ 練習次數 ＋1（同一站一天最多 3 次）</td><td>'+(x.src==='home'?'🏠 在家':'🏫 在校')+'</td><td>'+esc(x.dev)+'</td>'+
+    if(L[0].m==='l'||L[0].m==='lv'){var LV=L[0].m==='lv';h+='<h3>'+(LV?'⚡ 現場任務':nm)+'</h3><div class="tw"><table class="att"><tr><th>時間</th><th>'+(LV?'⚡ 參加 一場（老師〔🎁 發獎勵〕）':'🎧 這一站每一張都聽完')+'</th><th>來源</th><th>平板</th><th></th></tr>'+
+      L.map(function(x){return '<tr'+(x.x?' class="void"':'')+'><td>'+dt(x.t)+'</td><td>✅ 練習次數 ＋1（'+(LV?'正確率 不算；一天最多 3 場':'同一站一天最多 3 次')+'）</td><td>'+(x.src==='home'?'🏠 在家':'🏫 在校')+'</td><td>'+esc(x.dev)+'</td>'+
         '<td><button data-void="'+esc(x.u)+'" data-v="'+(x.x?0:1)+'">'+(x.x?'↩ 恢復':'🚫 作廢')+'</button></td></tr>'}).join('')+'</table></div>';return}
     if(L[0].m==='v'){h+='<h3>'+nm+'</h3><div class="tw"><table class="att"><tr><th>時間</th><th>看字卡、聽 幾分鐘</th><th>來源</th><th>平板</th><th></th></tr>'+
       L.map(function(x){return '<tr'+(x.x?' class="void"':'')+'><td>'+dt(x.t)+'</td><td>'+mins(x.sec)+'</td><td>'+(x.src==='home'?'🏠 在家':'🏫 在校')+'</td><td>'+esc(x.dev)+'</td>'+

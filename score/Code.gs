@@ -65,9 +65,9 @@ var SC = (function () {
   var CI = {}; for (var ci = 0; ci < COLS.length; ci++) CI[COLS[ci]] = ci;
   var SEAT = 30;                                                     /* 座號 01～30（使用者 2026-10-09） */
   var DAY = 864e5, TZ = 8 * 36e5, CAP = 3, TOP = 10, GMIN = 6;
-  var MT = { q: '題目', g: '遊戲', mem: '記憶配對', v: '看字卡', l: '聽完字卡' }, TM = { '題目': 'q', '遊戲': 'g', '記憶配對': 'mem', '看字卡': 'v', '聽完字卡': 'l' };
-  var SETRE = /^g([34])(u\d{1,2}|gm|r\d{1,2}|v|l)_[\w-]{1,16}$/;
-  function noQ(m) { return m === 'mem' || m === 'v' || m === 'l'; }   /* 沒有題目（沒有正確率、總分） */
+  var MT = { q: '題目', g: '遊戲', mem: '記憶配對', v: '看字卡', l: '聽完字卡', lv: '現場任務' }, TM = { '題目': 'q', '遊戲': 'g', '記憶配對': 'mem', '看字卡': 'v', '聽完字卡': 'l', '現場任務': 'lv' };
+  var SETRE = /^g([34])(u\d{1,2}|gm|r\d{1,2}|v|lv|l)_[\w-]{1,16}$/;
+  function noQ(m) { return m === 'mem' || m === 'v' || m === 'l' || m === 'lv'; }   /* 沒有題目（沒有正確率、總分） */
   /* 題組代號 ➜ 類別（老師看板的篩選）：u ＝ 📝 複習題、gm ＝ 🎮 遊戲、r1 ＝ 📘 Review 1 */
   function cat(set) {
     var m = SETRE.exec(String(set)); if (!m) return { k: '', t: '' };
@@ -76,6 +76,7 @@ var SC = (function () {
     if (x === 'gm') return { k: 'game', t: '🎮 遊戲' };
     if (x === 'v') return { k: 'v', t: '👀 看字卡' };
     if (x === 'l') return { k: 'l', t: '🎧 聽完字卡' };
+    if (x === 'lv') return { k: 'lv', t: '⚡ 現場任務' };
     return { k: x, t: '📘 Review ' + x.slice(1) };
   }
 
@@ -91,9 +92,9 @@ var SC = (function () {
     return { id: id, g: gg, cls: c, seat: s };
   }
   /* 練習次數 ＋1 嗎（2026-10-12 F4）：做完就算；太快亂按超過一半不算；遊戲還要第一次作答 ≧ GMIN 題；記憶配對 ＝ 玩完整場就算（ok 留著給舊的呼叫） */
-  function counts(ok, n, m, fast) { if (m === 'v') return false; if (m === 'mem' || m === 'l') return true; if (m === 'g' && n < GMIN) return false; return n > 0 && (+fast || 0) * 2 <= n; }
+  function counts(ok, n, m, fast) { if (m === 'v') return false; if (m === 'mem' || m === 'l' || m === 'lv') return true; if (m === 'g' && n < GMIN) return false; return n > 0 && (+fast || 0) * 2 <= n; }
   /* 一筆紀錄練了幾秒 */
-  function secOf(r) { if (r.m === 'l') return 0; if (r.m === 'mem' || r.m === 'v') return +r.sec || 0; if ((+r.fast || 0) * 2 > r.n) return 0;
+  function secOf(r) { if (r.m === 'l' || r.m === 'lv') return 0; if (r.m === 'mem' || r.m === 'v') return +r.sec || 0; if ((+r.fast || 0) * 2 > r.n) return 0;
     var s = 0; for (var i = 0; i < (r.qs || []).length; i++) if (!r.qs[i][3]) s += +r.qs[i][2] || 0; return s; }
   function need(n) { return Math.ceil(n * 2 / 3); }                     /* 至少要對幾題 */
   function day(t) { return Math.floor((t + TZ) / DAY); }
@@ -134,6 +135,7 @@ var SC = (function () {
   function clean(o, now) {
     var c = checkId(o.id); if (c.err) return null;
     var set = String(o.set), sm = SETRE.exec(set); if (!sm || +sm[1] !== c.g) return null;   /* 題組的年級 ＝ 登入的年級 */
+    if (sm[2] === 'lv' || o.m === 'lv') return null;   /* ⚡ 現場任務的紀錄只有伺服器（老師〔🎁 發獎勵〕）寫得進去，平板送不進來 */
     var m = o.m === 'g' || o.m === 'mem' || o.m === 'v' || o.m === 'l' ? o.m : 'q', qs = o.qs || [];
     if ((m === 'v') !== (sm[2] === 'v') || (m === 'l') !== (sm[2] === 'l')) return null;   /* 看字卡只能用 g年級v_、聽完字卡只能用 g年級l_ 的代號 */
     if (noQ(m)) qs = [];
@@ -163,11 +165,12 @@ var SC = (function () {
   function students(rs) {
     var by = {}, ids = [];
     rs.slice().sort(function (a, b) { return a.t - b.t; }).forEach(function (r) {
-      var p = by[r.id]; if (!p) { p = by[r.id] = { id: r.id, g: r.g, cls: r.cls, seat: r.seat, sets: {}, all: 0, last: 0, fastQ: 0, q: 0, fix: 0, sec: 0, vsec: 0, lc: 0, dd: {}, nd: 0, wk: {}, W: 0, F: 0 }; ids.push(r.id); }
+      var p = by[r.id]; if (!p) { p = by[r.id] = { id: r.id, g: r.g, cls: r.cls, seat: r.seat, sets: {}, all: 0, last: 0, fastQ: 0, q: 0, fix: 0, sec: 0, vsec: 0, lc: 0, lvc: 0, dd: {}, nd: 0, wk: {}, W: 0, F: 0 }; ids.push(r.id); }
       if (r.m === 'v') { p.sec += secOf(r); p.vsec += secOf(r); return; }   /* 👀 看字卡：只加練習時間 */
       (p.sets[r.set] = p.sets[r.set] || []).push(r); p.all++; p.last = r.t; p.fastQ += r.fast; p.q += r.n; p.fix += r.fix || 0; p.sec += secOf(r);
       var d0 = day(r.t); if (!p.dd[d0]) { p.dd[d0] = 1; p.nd++; }
       if (r.m === 'l') { p.lc++; return; }   /* 🎧 聽完字卡：算天數、練習次數（下面照題組一天最多 3 次） */
+      if (r.m === 'lv') { p.lvc++; return; }   /* ⚡ 現場任務（2026-10-18 C10 第 3 題 B）：一場 ＝ 練習次數 ＋1、那一天算練了 1 天；正確率不算 */
       /* 答錯的 改對了：題目 ＝ 同一題（題組＃第幾題）錯過、後來又答對；遊戲 ＝ 第一次答錯幾題、✨ 訂正成功幾題；太快亂按超過一半的那一次不算 */
       if (r.fast * 2 > r.n) return;
       if (r.m === 'g') { var bad = r.n - r.ok; p.W += bad; p.F += Math.min(bad, r.fix || 0); return; }
@@ -185,7 +188,7 @@ var SC = (function () {
       var acc = mean(A), s = mean(S), pr = mean(D);
       return { id: id, g: p.g, cls: p.cls, seat: p.seat, acc: acc == null ? null : r1(acc), s: s == null ? null : r1(s), count: cnt,
         prog: pr == null ? null : r1(pr), pf: pr == null ? null : Math.round(mean(PF)), pt: pr == null ? null : Math.round(mean(PT)), keep: keep && pr == null ? true : keep, sets: nsets, all: p.all, last: p.last, fastQ: p.fastQ, q: p.q, fix: p.fix,
-        sec: Math.round(p.sec), vsec: Math.round(p.vsec), days: p.nd, W: p.W, F: p.F, lc: p.lc };
+        sec: Math.round(p.sec), vsec: Math.round(p.vsec), days: p.nd, W: p.W, F: p.F, lc: p.lc, lvc: p.lvc };
     }).map(function (o) { o.care = care(o).tot; return o; });
   }
   /* 📅 練習分數（原本的 ❤ 用心程度，2026-10-16 C5 合併改名；使用者 2026-10-15 D10 第 8 題 A、D12 ①）：五項各 0～20 分 ➜ { it:[天, 次, 看完聽完, 改對, 分鐘], tot, raw }
@@ -396,7 +399,7 @@ var SC = (function () {
      等級 Lv ＝ ⌊√(經驗值 ÷ 16)⌋ ＋ 1（Lv 5 ＝ 256、Lv 10 ＝ 1296、Lv 20 ＝ 5776 經驗值；一週練 4 天約 200 經驗值） */
   var RPX = { rec: 10, day: 20 }, RPC = { fix: 3, prog: 10, cap: 100, chest: 60, chestDays: 3 };
   var RPP = [0, 50, 150, 400, 900, 2000], RPL = [0, 1, 1, 5, 10, 20];   /* 稀有度 ★1～★5 的價錢、要幾級 */
-  /* 稀有度（30 個：★1 8 個、★2 8 個、★3 7 個、★4 4 個、★5 3 個）；女 29 等老師換新圖（C9 第 5 題 A：上傳的「新女 29」跟女 17 是同一張） */
+  /* 稀有度（30 個：★1 8 個、★2 8 個、★3 7 個、★4 4 個、★5 3 個；老師 C10 第 2 題 A：照這樣） */
   function rpStars(a) { var o = {}; for (var i = 0; i < a.length; i++) for (var j = 0; j < a[i].length; j++) o[a[i][j]] = i + 1; return o; }
   function rpSeq(p, a, b) { var o = []; for (var i = a; i <= b; i++) o.push(p + (i < 10 ? '0' : '') + i); return o; }
   var RPR = {
@@ -404,24 +407,42 @@ var SC = (function () {
     w: rpStars([['w03', 'w05', 'w12', 'w13', 'w21', 'w27', 'w28', 'w30'], ['w01', 'w07', 'w09', 'w14', 'w15', 'w20', 'w24', 'w26'], ['w06', 'w10', 'w11', 'w16', 'w19', 'w22', 'w25'], ['w04', 'w08', 'w18', 'w23'], ['w02', 'w17', 'w29']]),
     p: rpStars([['p03', 'p06', 'p07', 'p08', 'p10', 'p13', 'p14', 'p15'], ['p01', 'p02', 'p04', 'p05', 'p09', 'p11', 'p12', 'p28'], ['p16', 'p22', 'p23', 'p24', 'p25', 'p27', 'p30'], ['p17', 'p19', 'p20', 'p29'], ['p18', 'p21', 'p26']])
   };
-  var RPHIDE = { g29: 1 };
+  RPR.h.g31 = 5;   /* 2026-10-18 第九次（老師：藍色 Celestial Aurora Princess ＝ 女 29、粉紅 Sakura Moonlight Princess ＝ 女 31）：女 31 跟 28～30 一樣 ★★★★★ */
+  var RPHIDE = {};   /* 先不放的（2026-10-18：女 29 換好新圖，沒有了） */
   /* 10 種外觀寶物（C9 第 7 題 A：只換外觀，公平） */
   var RPT = [['t01', '✨ 光環', 100], ['t02', '🦸 披風', 150], ['t03', '👣 閃亮腳印', 120], ['t04', '🎆 登場煙火', 200], ['t05', '🖼 金色名字框', 100],
     ['t06', '😎 英雄表情', 80], ['t07', '🙌 勝利姿勢', 150], ['t08', '🌌 星空背景', 250], ['t09', '🎩 寵物帽子', 80], ['t10', '💠 發光武器框', 120]];
   var RPTP = {}; RPT.forEach(function (t) { RPTP[t[0]] = t[2]; });
+  /* 🏪 榮耀寶物商城（2026-10-18 第九次，老師的「商城自動切圖與金幣兌換指令」；規格 rpg/CLAUDE.md）：10 類 ✕ 20 種，編號 s＋類＋號（s0101 ＝ 覺醒光環 01）
+     價錢、等級照「第幾排」：01～05 500（Lv 1）、06～10 1200（Lv 5）、11～15 2500（Lv 10）、16～20 5000（Lv 20 學霸限定）；看起來的星等 ＝ 第幾排 ＋1（★★～★★★★★）
+     位置（老師選「同一個位置換著戴」）：光環、披風、名字框、背景、寵物服裝 跟舊的寶物 t01、t02、t05、t08、t09 同一個位置（身上同時只戴 1 個）；
+     魔法武器 ＝ 武器（拿 1 把）、新寵物 ＝ 寵物（帶 1 隻）；翅膀、坐騎、必殺特效 各 1 個。RPSON ＝ 老師上傳了圖、可以買的類（其他顯示「🔜 即將上架」） */
+  var RPS = [['au', '✨ 覺醒光環', 'auras', 't01'], ['cp', '🦸 王者披風', 'capes', 't02'], ['fx', '💥 必殺武功特效', 'skills', ''], ['nf', '🖼 榮耀名字框', 'frames', 't05'],
+    ['bg', '🌌 史詩英雄背景', 'backgrounds', 't08'], ['po', '🎀 寵物專屬服裝', 'petwear', 't09'], ['w', '🪄 傳說魔法武器', 'weapons', ''], ['p', '🐾 神話新寵物', 'pets', ''],
+    ['wg', '🦅 神聖機甲翅膀', 'wings', ''], ['mt', '🐉 傳說飛行坐騎', 'mounts', '']];
+  var RPSON = { 1: 1 };   /* 2026-10-18：老師只傳到 1 張（覺醒光環）；傳了圖就在這裡加 */
+  var RPSP = [500, 1200, 2500, 5000], RPSL = [1, 5, 10, 20];
+  var RPSLOT = { t01: 'au', t02: 'cp', t05: 'nf', t08: 'bg', t09: 'po' };   /* 舊寶物 ➜ 跟哪一類同一個位置 */
+  function rpSC(id) { var m = /^s(\d\d)(\d\d)$/.exec(String(id)); return m && +m[1] >= 1 && +m[1] <= 10 && +m[2] >= 1 && +m[2] <= 20 ? { c: +m[1], n: +m[2], row: Math.floor((+m[2] - 1) / 5), slot: RPS[+m[1] - 1][0] } : null; }
   /* 📖 圖鑑：集滿一套 ＝ 稱號（只顯示） */
   var RPSET = [['🤖 機械軍團', ['p16', 'p19', 'p30']], ['🔥 火焰守護者', ['p05', 'p21', 'p24', 'w08']], ['🌌 星河旅人', ['p01', 'p18', 'w03', 'w15', 'w29']],
     ['⏳ 時間魔法師', ['w06', 'w18', 'w23']], ['⚡ 雷電之王', ['p03', 'p20', 'w04']], ['❄ 冰雪守護者', ['p13', 'p26', 'p29', 'w09']], ['🌙 夜之守護者', ['p08', 'p09', 'p22', 'p25']]];
-  function rpKind(id) { id = String(id); return /^[bg]\d\d$/.test(id) ? 'h' : /^w\d\d$/.test(id) ? 'w' : /^p\d\d$/.test(id) ? 'p' : /^t\d\d$/.test(id) ? 't' : ''; }
-  function rpStar(id) { var k = rpKind(id); return k === 't' ? 0 : ((RPR[k] || {})[id] || 0); }
-  function rpPrice(id) { var k = rpKind(id); return k === 't' ? (RPTP[id] || 0) : RPP[rpStar(id)]; }
-  function rpNeed(id) { return rpKind(id) === 't' ? 1 : RPL[rpStar(id)]; }
-  function rpOk(id) { var k = rpKind(id); return !!k && !RPHIDE[id] && (k === 't' ? !!RPTP[id] : !!rpStar(id)); }
+  function rpKind(id) { id = String(id); var S = rpSC(id); if (S) return S.slot === 'w' || S.slot === 'p' ? S.slot : 's';
+    return /^[bg]\d\d$/.test(id) ? 'h' : /^w\d\d$/.test(id) ? 'w' : /^p\d\d$/.test(id) ? 'p' : /^t\d\d$/.test(id) ? 't' : ''; }
+  function rpStar(id) { var S = rpSC(id); if (S) return S.row + 2; var k = rpKind(id); return k === 't' ? 0 : ((RPR[k] || {})[id] || 0); }
+  function rpPrice(id) { var S = rpSC(id); if (S) return RPSP[S.row]; var k = rpKind(id); return k === 't' ? (RPTP[id] || 0) : RPP[rpStar(id)]; }
+  function rpNeed(id) { var S = rpSC(id); if (S) return RPSL[S.row]; return rpKind(id) === 't' ? 1 : RPL[rpStar(id)]; }
+  function rpOk(id) { var S = rpSC(id); if (S) return !!RPSON[S.c]; var k = rpKind(id); return !!k && !RPHIDE[id] && (k === 't' ? !!RPTP[id] : !!rpStar(id)); }
+  /* 戴上一個 → 同一個位置的拿下來（商城 ↔ 舊寶物） */
+  function rpWear(st, id) { var S = rpSC(id);
+    if (S && S.slot !== 'w' && S.slot !== 'p') { st.eq.s[S.slot] = id; RPS[S.c - 1][3] && (st.eq.t = st.eq.t.filter(function (t) { return t !== RPS[S.c - 1][3]; })); }
+    else if (RPSLOT[id]) delete st.eq.s[RPSLOT[id]]; }
   function rpLv(xp) { return Math.floor(Math.sqrt((+xp || 0) / 16)) + 1; }
-  function rpClean(st) { st = st || {}; var o = { own: { h: [], w: [], p: [], t: [] }, eq: { h: '', w: '', p: '', t: [] }, spent: 0, pt: 0, free: {} }, own = st.own || {}, eq = st.eq || {};
-    ['h', 'w', 'p', 't'].forEach(function (k) { (own[k] || []).forEach(function (id) { id = String(id); if (rpKind(id) === k && (rpStar(id) || k === 't') && o.own[k].indexOf(id) < 0) o.own[k].push(id); }); });
+  function rpClean(st) { st = st || {}; var o = { own: { h: [], w: [], p: [], t: [], s: [] }, eq: { h: '', w: '', p: '', t: [], s: {} }, spent: 0, pt: 0, free: {} }, own = st.own || {}, eq = st.eq || {};
+    ['h', 'w', 'p', 't', 's'].forEach(function (k) { (own[k] || []).forEach(function (id) { id = String(id); if (rpKind(id) === k && (rpStar(id) || k === 't') && o.own[k].indexOf(id) < 0) o.own[k].push(id); }); });
     ['h', 'w', 'p'].forEach(function (k) { var v = String(eq[k] || ''); if (o.own[k].indexOf(v) >= 0) o.eq[k] = v; });
     (eq.t || []).forEach(function (id) { id = String(id); if (o.own.t.indexOf(id) >= 0 && o.eq.t.indexOf(id) < 0) o.eq.t.push(id); });
+    var es = eq.s || {}; RPS.forEach(function (x) { var v = String(es[x[0]] || ''), S = rpSC(v); if (S && S.slot === x[0] && o.own.s.indexOf(v) >= 0) rpWear(o, v); });
     o.spent = Math.max(0, Math.round(+st.spent || 0)); o.pt = Math.max(0, Math.round(+st.pt || 0));
     ['h', 'w', 'p'].forEach(function (k) { if (st.free && st.free[k]) o.free[k] = 1; });
     /* ⚡ 現場任務 老師發的獎勵（rpBonus）：bc 金幣、bx 經驗值、snack 寵物零食（陪伴天數 ＋1）、medal 勳章、lt 稱號 */
@@ -434,9 +455,9 @@ var SC = (function () {
     var xp = 0, days = {}, dayCoin = {}, cnt = {}, prev = {}, wk = {}, coin = 0, wkq = {};
     L.forEach(function (r) {
       var d = day(r.t), ck = d + '|' + r.set, fast = (+r.fast || 0) * 2 > r.n;
-      if (counts(r.ok, r.n, r.m, r.fast)) { cnt[ck] = (cnt[ck] || 0) + 1; if (cnt[ck] <= CAP) xp += RPX.rec; }
+      if (r.m !== 'lv' && counts(r.ok, r.n, r.m, r.fast)) { cnt[ck] = (cnt[ck] || 0) + 1; if (cnt[ck] <= CAP) xp += RPX.rec; }
       if (!days[d]) { days[d] = 1; xp += RPX.day; var w0 = weekStart(r.t); wk[w0] = (wk[w0] || 0) + 1; }
-      if (r.m === 'l' || r.m === 'mem' || fast) return;
+      if (r.m === 'l' || r.m === 'lv' || r.m === 'mem' || fast) return;
       var c = 0;
       if (r.m === 'g') c += (+r.ok || 0) + RPC.fix * (+r.fix || 0);
       else (r.qs || []).forEach(function (q, j) { var k = r.set + '#' + (q[5] == null ? j : q[5]); if (q[0]) { c += wkq[k] === 1 ? RPC.fix : 1; if (wkq[k] === 1) wkq[k] = 2; } else if (!wkq[k]) wkq[k] = 1; });
@@ -450,21 +471,26 @@ var SC = (function () {
   function rpView(rs, st) { st = rpClean(st); var E = rpEarn(rs), pd = 0; E.xp += st.bx; E.coin += st.bc; var lv = rpLv(E.xp);
     if (st.eq.p) { for (var d in E.dd) if (+d >= day(st.pt)) pd++; pd += st.snack; }
     var ps = pd >= 7 ? 2 : pd >= 3 ? 1 : 0, all = st.own.h.concat(st.own.w, st.own.p);
-    var pow = lv * 10 + ps * 50; ['h', 'w', 'p'].forEach(function (k) { if (st.eq[k]) pow += rpStar(st.eq[k]) * 100; }); pow += st.eq.t.length * 20;
+    var pow = lv * 10 + ps * 50; ['h', 'w', 'p'].forEach(function (k) { if (st.eq[k]) pow += rpStar(st.eq[k]) * 100; }); pow += st.eq.t.length * 20; for (var sk in st.eq.s) pow += rpStar(st.eq.s[sk]) * 20;
     var titles = RPSET.filter(function (x) { return x[1].every(function (id) { return all.indexOf(id) >= 0; }); }).map(function (x) { return x[0]; }).concat(st.lt);
     return { xp: E.xp, lv: lv, lvAt: 16 * (lv - 1) * (lv - 1), lvNext: 16 * lv * lv, earned: E.coin, coins: E.coin - st.spent, chests: E.chests, days: E.days,
       petDays: pd, petStage: ps, power: pow, titles: titles, medal: st.medal, st: st };
   }
   /* 這一次（編號 u）拿到多少：全部 − 沒有這一筆 */
   function rpGain(rs, st, u) { var a = rpView(rs, st), b = rpView((rs || []).filter(function (r) { return r.u !== u; }), st);
-    return { lv: a.lv, lv0: b.lv, xp: a.xp, gx: a.xp - b.xp, coins: a.coins, gc: a.earned - b.earned, lvAt: a.lvAt, lvNext: a.lvNext, h: a.st.eq.h, w: a.st.eq.w, p: a.st.eq.p, t: a.st.eq.t, ps: a.petStage, pow: a.power }; }
+    return { lv: a.lv, lv0: b.lv, xp: a.xp, gx: a.xp - b.xp, coins: a.coins, gc: a.earned - b.earned, lvAt: a.lvAt, lvNext: a.lvNext, h: a.st.eq.h, w: a.st.eq.w, p: a.st.eq.p, t: a.st.eq.t, s: a.st.eq.s, ps: a.petStage, pow: a.power }; }
   /* ⚡ 現場任務結束，老師大螢幕發的獎勵（要老師密碼）：b ＝ {c 金幣, x 經驗值, tre:[寶物], title, snack, medal}；寶物已經有了 ＝ 40 金幣 */
   function rpBonus(st, b) { st = rpClean(st); b = b || {};
     st.bc += Math.max(0, Math.min(500, Math.round(+b.c || 0))); st.bx += Math.max(0, Math.min(500, Math.round(+b.x || 0)));
     st.snack += Math.max(0, Math.min(5, Math.round(+b.snack || 0))); st.medal += Math.max(0, Math.min(5, Math.round(+b.medal || 0)));
-    (b.tre || []).forEach(function (t) { t = String(t); if (!RPTP[t]) return; if (st.own.t.indexOf(t) >= 0) st.bc += 40; else { st.own.t.push(t); st.eq.t.push(t); } });
+    (b.tre || []).forEach(function (t) { t = String(t); if (!RPTP[t]) return; if (st.own.t.indexOf(t) >= 0) st.bc += 40; else { st.own.t.push(t); st.eq.t.push(t); rpWear(st, t); } });
     if (b.title) { var tt = String(b.title).slice(0, 20); if (st.lt.indexOf(tt) < 0) st.lt.push(tt); }
     return st; }
+  /* ⚡ 現場任務 結束〔🎁 發獎勵〕：每一個參加的人 一筆紀錄（2026-10-18 C10 第 3 題 B）＝ 練習次數 ＋1、那一天算練了 1 天；沒有題目、正確率不算
+     編號 ＝ lv＋房間＋5碼＋開始時間（同一場按兩次也只記一次）；只有伺服器寫得進去（clean() 擋平板送的） */
+  function lvRec(id, room, t0, now) { var c = checkId(id); if (c.err) return null; room = String(room || '').replace(/\D/g, '').slice(0, 4);
+    return { t: now, id: c.id, g: c.g, cls: c.cls, seat: c.seat, set: 'g' + c.g + 'lv_live', name: '⚡ 現場任務', m: 'lv', n: 0, ok: 0, acc: null, s: null, fix: 0, mp: 0, mw: 0, sec: 0,
+      raw: 0, fast: 0, src: 'school', dev: 'live', u: 'lv' + room + '_' + c.id + '_' + Math.max(0, Math.round(+t0 || 0)).toString(36).slice(-8), qs: [], x: false }; }
   /* 合作打魔王的傷害（C9 第 6 題 B）：答對一題 10 ＋ 戰力 ÷ 100（最多 ＋20）；只用在全班一起的血條 */
   function rpDmg(power) { return 10 + Math.min(20, Math.floor((+power || 0) / 100)); }
   /* 買：第一個 ★1 英雄、★1 武器、★1 寵物 各送一個（免費選）；其他要金幣夠、等級夠 */
@@ -475,20 +501,21 @@ var SC = (function () {
     if (V.lv < rpNeed(id)) return { err: 'lv', need: rpNeed(id) };
     if (V.coins < pr) return { err: 'coin', need: pr - V.coins };
     st.own[k].push(id); st.spent += pr; if (free) st.free[k] = 1;
-    if (k === 't') st.eq.t.push(id); else { st.eq[k] = id; if (k === 'p') st.pt = now || 0; }
+    if (k === 's') rpWear(st, id); else if (k === 't') { st.eq.t.push(id); rpWear(st, id); } else { st.eq[k] = id; if (k === 'p') st.pt = now || 0; }
     return { st: st, paid: pr, free: free }; }
   /* 換裝（買過的才可以）；寶物 ＝ 開／關 */
   function rpEquip(st, id, now) { st = rpClean(st); id = String(id); var k = rpKind(id);
     if (!k || st.own[k].indexOf(id) < 0) return { err: 'own' };
-    if (k === 't') { var i = st.eq.t.indexOf(id); if (i >= 0) st.eq.t.splice(i, 1); else st.eq.t.push(id); }
+    if (k === 's') { var S = rpSC(id); if (st.eq.s[S.slot] === id) delete st.eq.s[S.slot]; else rpWear(st, id); }   /* 商城：再點 ＝ 拿下來 */
+    else if (k === 't') { var i = st.eq.t.indexOf(id); if (i >= 0) st.eq.t.splice(i, 1); else { st.eq.t.push(id); rpWear(st, id); } }
     else { if (k === 'p' && st.eq.p !== id) st.pt = now || 0; st.eq[k] = id; }
     return { st: st }; }
   return { CLASSES: CLASSES, AFTER: AFTER, cname: cname, SEAT: SEAT, COLS: COLS, CI: CI, CAP: CAP, TOP: TOP, GMIN: GMIN, MT: MT, checkId: checkId, cat: cat, counts: counts, need: need, day: day, weekStart: weekStart,
     AW: AW, care: care, CAREMAX: CAREMAX, s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, clsAwards: clsAwards, secOf: secOf, questions: questions, gtop: gtop, view: view,
     lkClean: lkClean, lkSet: lkSet, lkAny: lkAny, lkFor: lkFor, LKRE: LKRE, lktClean: lktClean, lktSet: lktSet, lkNow: lkNow,
     tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE,
-    RPR: RPR, RPP: RPP, RPL: RPL, RPT: RPT, RPSET: RPSET, RPHIDE: RPHIDE, RPX: RPX, RPC: RPC, rpKind: rpKind, rpStar: rpStar, rpPrice: rpPrice, rpNeed: rpNeed, rpOk: rpOk, rpLv: rpLv,
-    rpClean: rpClean, rpEarn: rpEarn, rpView: rpView, rpBuy: rpBuy, rpEquip: rpEquip, rpDmg: rpDmg, rpGain: rpGain, rpBonus: rpBonus };
+    RPR: RPR, RPP: RPP, RPL: RPL, RPT: RPT, RPS: RPS, RPSON: RPSON, RPSP: RPSP, RPSL: RPSL, RPSLOT: RPSLOT, rpSC: rpSC, RPSET: RPSET, RPHIDE: RPHIDE, RPX: RPX, RPC: RPC, rpKind: rpKind, rpStar: rpStar, rpPrice: rpPrice, rpNeed: rpNeed, rpOk: rpOk, rpLv: rpLv,
+    rpClean: rpClean, rpEarn: rpEarn, rpView: rpView, rpBuy: rpBuy, rpEquip: rpEquip, rpDmg: rpDmg, rpGain: rpGain, rpBonus: rpBonus, lvRec: lvRec };
 })();
 
 /* score/_server.js — Google Apps Script 那一半（score/_build.js 把 _calc.js 和這一份接成 score/Code.gs，老師整份貼進 Apps Script）
@@ -636,7 +663,12 @@ function doPost(e) {
       /* ⚡ 現場任務 結束：老師大螢幕一次發獎勵（list ＝ [{id, c, x, tre, title, snack, medal}]） */
       if (o.a === 'rpgb') {
         var lk6 = LockService.getScriptLock(), nb = 0; lk6.waitLock(20000);
-        try { (o.list || []).slice(0, 60).forEach(function (b) { var c6 = SC.checkId(b && b.id); if (c6.err) return; var R6 = rpRow(c6.id); rpSave(R6, c6.id, SC.rpBonus(R6.st, b)); nb++; }); } finally { lk6.releaseLock(); }
+        try { var now6 = Date.now(), s6 = sheet(SHEET), n6 = s6.getLastRow(), us6 = {};
+          if (n6 >= 2) s6.getRange(2, SC.CI['編號'] + 1, n6 - 1, 1).getValues().forEach(function (x) { us6[String(x[0])] = 1; });
+          (o.list || []).slice(0, 60).forEach(function (b) { var c6 = SC.checkId(b && b.id); if (c6.err) return; var R6 = rpRow(c6.id); rpSave(R6, c6.id, SC.rpBonus(R6.st, b)); nb++;
+            /* 2026-10-18 C10 第 3 題 B：現場任務 一場 ＝ 練習次數 ＋1、練了 1 天（正確率不算） */
+            var L6 = SC.lvRec(c6.id, o.room, o.t0, now6); if (L6 && !us6[L6.u]) { s6.appendRow(SC.toRow(L6)); us6[L6.u] = 1; } });
+        } finally { lk6.releaseLock(); }
         return out({ ok: true, n: nb });
       }
       if (o.a === 'void') {

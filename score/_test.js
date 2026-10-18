@@ -298,7 +298,20 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
   r = SC.rpBuy(R, r.st, 'b02', T0); ok(r.st && r.paid === 50, '第二個 ★1 英雄 50 金幣'); st = r.st;
   eq(SC.rpBuy(R, st, 'b03', T0).err, 'coin', '金幣不夠買不到（81 − 50 ＝ 31 ＜ 50）');
   eq(SC.rpBuy(R, st, 'b17', T0).err, 'lv', '等級不夠買不到（★3 要 Lv 5）');
-  eq(SC.rpBuy(R, st, 'g29', T0).err, 'item', '女 29（等老師換新圖）不可以買');
+  ok(SC.rpOk('g29') && SC.rpOk('g31') && SC.rpStar('g31') === 5, '女 29 換好新圖、女 31 ★★★★★（2026-10-18 第九次）');
+  /* 🏪 商城（2026-10-18 第九次）：價錢、等級照第幾排；只有上架的類買得到；同一個位置換著戴 */
+  eq([SC.rpPrice('s0101'), SC.rpPrice('s0106'), SC.rpPrice('s0111'), SC.rpPrice('s0120')], [500, 1200, 2500, 5000], '商城價錢：第 1～4 排 500／1200／2500／5000');
+  eq([SC.rpNeed('s0105'), SC.rpNeed('s0110'), SC.rpNeed('s0115'), SC.rpNeed('s0116')], [1, 5, 10, 20], '商城等級：Lv 1／5／10／20');
+  eq(SC.rpBuy(R, st, 's0201', T0).err, 'item', '還沒上架的類（王者披風）買不到');
+  eq(SC.rpBuy(R, st, 's0101', T0).err, 'coin', '金幣不夠買不到光環（31 ＜ 500）');
+  { let x = SC.rpClean({ own: { t: ['t01'], s: ['s0101'] }, eq: { t: ['t01'] } }); x.bc = 0;
+    const Rich = R.concat([]); const sr = SC.rpBuy(Rich, SC.rpBonus(x, { c: 500 }), 's0102', T0);
+    ok(sr.st && sr.paid === 500 && sr.st.eq.s.au === 's0102' && sr.st.eq.t.indexOf('t01') < 0, '買了新光環 ➜ 自動戴上、舊的 ✨ 光環 拿下來（同一個位置）');
+    let y = SC.rpEquip(sr.st, 't01', T0).st; ok(y.eq.t.indexOf('t01') >= 0 && !y.eq.s.au, '戴回舊的 ✨ 光環 ➜ 新光環拿下來');
+    y = SC.rpEquip(y, 's0101', T0).st; ok(y.eq.s.au === 's0101' && y.eq.t.indexOf('t01') < 0, '換戴另一個新光環');
+    y = SC.rpEquip(y, 's0101', T0).st; ok(!y.eq.s.au, '再點一下 ＝ 拿下來');
+    eq(SC.rpEquip(y, 's0103', T0).err, 'own', '沒買的光環不能戴');
+    ok(SC.rpKind('s0703') === 'w' && SC.rpKind('s0812') === 'p' && SC.rpStar('s0816') === 5, '魔法武器 ＝ 武器、新寵物 ＝ 寵物；第 4 排 ★★★★★'); }
   eq(SC.rpBuy(R, st, 'b02', T0).err, 'own', '買過的不能再買');
   r = SC.rpBuy(R, st, 'p03', T0 + 3 * D); ok(r.free && r.st.eq.p === 'p03', '第一隻 ★1 寵物免費，自動裝上'); st = r.st;
   eq(SC.rpEquip(st, 'b01', T0).st.eq.h, 'b01', '換回買過的英雄');
@@ -311,6 +324,16 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
   let pr = G.post({ a: 'rpg', id: '30405', op: 'buy', item: 'g01' }); ok(pr.ok && pr.free && pr.v.st.eq.h === 'g01', '伺服器：免費選第一個英雄、存進「角色」');
   ok(G.books['角色'] && G.books['角色'].d.length === 2 && /g01/.test(G.books['角色'].d[1][1]), '試算表「角色」有一列');
   eq(G.post({ a: 'rpg', id: '30405', op: 'buy', item: 'b30' }).err, 'lv', '伺服器：★5 等級不夠');
+  /* ⚡ 現場任務 算練習（2026-10-18 C10 第 3 題 B） */
+  { eq(SC.clean({ id: '30405', set: 'g3lv_live', m: 'lv', t: Date.now(), u: 'zz' }, Date.now()), null, '平板送不進現場任務的紀錄');
+    const n0 = G.books['紀錄'].d.length, t0 = Date.now() - 6e5;
+    eq(G.post({ a: 'rpgb', pw: 'wrong', room: '1234', t0: t0, list: [{ id: '30405', c: 3, x: 10 }] }).err, 'pw', '發獎勵要老師密碼');
+    ok(G.post({ a: 'rpgb', pw: 'pw-test', room: '1234', t0: t0, list: [{ id: '30405', c: 3, x: 10 }, { id: '30406', c: 0, x: 10 }] }).ok, '發獎勵');
+    G.post({ a: 'rpgb', pw: 'pw-test', room: '1234', t0: t0, list: [{ id: '30405', c: 3, x: 10 }] });
+    eq(G.books['紀錄'].d.length - n0, 2, '一場 ＝ 每一個人 1 筆（同一場按兩次 不重記）');
+    const all = G.post({ a: 'teacher', pw: 'pw-test' }), rs = all.rows.map(SC.fromRow).filter(r => r.m === 'lv');
+    ok(rs.length === 2 && rs.every(r => r.acc == null && r.n === 0 && SC.cat(r.set).k === 'lv'), '紀錄：⚡ 現場任務、沒有正確率');
+    const p6 = SC.students(rs.filter(r => r.id === '30406'))[0]; eq([p6.count, p6.days, p6.acc, p6.lvc], [1, 1, null, 1], '30406 只玩現場任務：練習次數 1、練了 1 天、正確率 沒有'); }
   const rv = G.post(body('30405', 'g3u1_2b', 5, { k: 'rpg' })); ok(rv.rpg && rv.rpg.gx >= 10 && rv.rpg.gc >= 5 && rv.rpg.h === 'g01', '做完一次：回傳這一次拿到的經驗值、金幣、我的英雄'); }
 console.log((bad ? '✗ ' : '✓ ') + '成績紀錄規則＋Apps Script 量了 ' + n + ' 項，失敗 ' + bad + ' 項');
 process.exit(bad ? 1 : 0);

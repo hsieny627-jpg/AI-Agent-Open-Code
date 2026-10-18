@@ -41,7 +41,7 @@ const host = head('現場任務 大螢幕') + `<body class="host">
  <div id="qq" class="qq"></div><div id="qo" class="qos"></div>
  <div class="qctl"><button id="hn">⏭ 下一步</button><button id="hp">⏸ 停在 這一題</button><button id="hint">😆 干擾：開</button></div></div><div class="qside" id="gv"></div></div></div>
 <div class="scr" id="hend" hidden><div class="in center"><h1>🏁 任務 完成！</h1><div id="eres" class="eres"></div><div id="epod" class="kpod epod"></div><div id="efw" class="efw"></div>
- <div id="erw" class="note big2"></div><button id="give" class="big">🎁 發獎勵 到 每一個人 的 英雄</button><div id="gm" class="note big2"></div><button id="close2" class="ghost" onclick="closeRoom()">✕ 關掉 房間，再開 一場</button></div></div>
+ <div id="erw" class="note big2"></div><button id="give" class="big">🎁 發獎勵 ＋ 記 練習次數</button><div id="gm" class="note big2"></div><button id="close2" class="ghost" onclick="closeRoom()">✕ 關掉 房間，再開 一場</button></div></div>
 <script>var BASE='../',BANK=${JSON.stringify(BANK)};
 ${RT}
 ${R('_host_rt.js')}

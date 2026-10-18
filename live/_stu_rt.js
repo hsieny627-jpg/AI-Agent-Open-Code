@@ -48,6 +48,7 @@ function answer(k){if(S.ans||!S.m||S.m.phase!=='q')return;var ms=Date.now()-S.t0
   $('#sqr').innerHTML='<div class="sr wait">✅ 送出了！看 大螢幕</div>'}
 function rev(m){clearTimeout(S.tm);var r=m.r||{},id=S.id,ok=r.ok&&r.ok[id],sc=(r.sc&&r.sc[id])||0,tot=(r.tot&&r.tot[id])||0,st=(r.st&&r.st[id])||0;
   $$('#sqo .so').forEach(function(b){var k=+b.getAttribute('data-k');b.disabled=true;b.classList.toggle('ok',k===m.rev.a);b.classList.toggle('no',k!==m.rev.a)});
+  if(ok&&typeof rwFx==='function'){var eq5=S.me&&S.me.st&&S.me.st.eq||{};if(eq5.s&&eq5.s.fx)rwFx(BASE,eq5.s.fx)}   /* 💥 必殺武功特效（2026-10-18：現場任務 答對 一題 演一次） */
   $('#sqr').innerHTML='<div class="sr '+(ok?'ok':'no')+'">'+(ok?'✅ 答對！ ＋'+sc:S.ans?'❌ 答錯了，沒關係':'⏰ 這一題 沒有 答')+'</div><div class="ss">🏆 總分 '+tot+(st>1?'　🔥 連對 '+st:'')+'</div>'+(!ok&&m.rev.h?'<div class="note">💡 '+m.rev.h+'</div>':'');
   var okc=(r.okc&&r.okc[id])||0;S.okc=okc;if(Math.floor(okc/5)>S.draws||S.drawLater){S.draws=Math.max(S.draws,Math.floor(okc/5));S.drawLater=0;setTimeout(draw,900)}}
 function endS(m){clearTimeout(S.tm);scr('send');var r=m.r||{},T=r.tot||{},L=Object.keys(T).sort(function(a,b){return T[b]-T[a]}),rk=L.indexOf(S.id)+1;
