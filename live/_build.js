@@ -57,7 +57,7 @@ ${CL.home(0, '../', 'school')}
 <div class="scr" id="swait" hidden><div class="in center"><div id="wt" class="big2"></div><div id="wh"></div></div></div>
 <div class="scr" id="sq" hidden><div class="sqw"><div class="qtop"><span id="sqn"></span><span class="qtm">⏱ <b id="sqt">15</b></span></div><div class="qbar"><i id="sqbar"></i></div>
  <div id="sqq" class="sqq"></div><div id="sqh" class="sqh" hidden></div><div id="sqm" class="note sqm"></div><div id="sqo" class="sos"></div><div id="sqr"></div><button id="kch" class="kch" hidden>📣 加油！</button></div></div>
-<div class="scr" id="send" hidden><div class="in center"><h1>🏁 任務 完成！</h1><div id="ew"></div><a class="big" style="text-decoration:none;display:inline-flex" href="../rpg/index.html">🦸 我的英雄</a></div></div>
+<div class="scr" id="send" hidden><div class="in center"><h1>🏁 任務 完成！</h1><div id="ew"></div><a class="big" style="text-decoration:none;display:inline-flex" href="../rpg/index.html"><img src="../rpg/cover_icon.webp" alt="" style="height:1.2em;width:2.4em;object-fit:cover;border-radius:.25em;border:2px solid #FFD54A;margin-right:.3em">戰神之路</a></div></div>
 <div id="gift"></div><div id="fxo"></div>
 <script>var BASE='../';
 ${RT}

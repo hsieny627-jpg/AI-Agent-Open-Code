@@ -85,7 +85,7 @@ async function run(br, vp) {
     else { w.e.forEach(x => e.push('這是您嗎：' + x)); if (!/請問 這是您嗎？ 30405 ✅ 是，繼續 👋 不是，登出/.test(w.t)) e.push('這是您嗎的字不對：' + w.t); }
     await p.click('#scWhoY'); await p.waitForTimeout(300);
     if (await full(p, 'scwho')) e.push('按 ✅ 以後沒有關掉');
-    const b = await bar(p); if (!b || b.t !== '👤 30405 🦸 我的英雄 👋 登出') e.push('按 ✅ 以後橫幅不對：' + (b && b.t));   /* 2026-10-17：年級首頁的橫幅多〔🦸 我的英雄〕（總首頁一行的小橫幅不放） */
+    const b = await bar(p); if (!b || b.t !== '👤 30405 戰神之路 👋 登出') e.push('按 ✅ 以後橫幅不對：' + (b && b.t));   /* 2026-10-17：年級首頁的橫幅多〔🦸 我的英雄〕（總首頁一行的小橫幅不放） */
     await p.goto(url('index.html')); await p.waitForTimeout(400);
     if (await full(p, 'scwho')) e.push('換頁又問了一次');
     const b4 = await bar(p); if (!b4 || b4.t !== '👤 30405 👋 登出') e.push('換到總首頁橫幅不對：' + (b4 && b4.t));
@@ -123,7 +123,7 @@ async function run(br, vp) {
   { const p = await ctx.newPage(), e = []; p.on('pageerror', x => e.push('JS 例外：' + x.message));
     await p.goto(url('index.html')); await p.evaluate(() => { localStorage.setItem('score_last', '"40205"'); localStorage.setItem('score_id_g4', '"40205"'); localStorage.setItem('score_act', JSON.stringify(Date.now())); sessionStorage.setItem('sc_ok', '40205'); });
     await p.goto(url('g4-review/index.html')); await p.waitForTimeout(500);
-    const b = await bar(p); if (!b || !/✅ 40205 已經登入：練習 都會 記下來 📊 練完 一定 按 👋 登出 🦸 我的英雄 👋 登出/.test(b.t)) e.push('在家複習首頁登入以後橫幅不對：' + (b && b.t)); if (b) b.e.forEach(x => e.push(x));
+    const b = await bar(p); if (!b || !/✅ 40205 已經登入：練習 都會 記下來 📊 練完 一定 按 👋 登出 戰神之路 👋 登出/.test(b.t)) e.push('在家複習首頁登入以後橫幅不對：' + (b && b.t)); if (b) b.e.forEach(x => e.push(x));
     await clk(p, '#scBarOut', e); await p.waitForTimeout(300); if (await ls(p, 'last') !== 'null') e.push('〔👋 登出〕號碼沒有清掉');
     n += 2; out('在家複習登入以後 ' + W, e); await p.close(); }
   /* ⑥〔🔒 開關〕（D 第 7 件）：老師鎖 304 班的「基礎句型 ①」「🧩 遊戲 g3」「數字：單字結構」 */

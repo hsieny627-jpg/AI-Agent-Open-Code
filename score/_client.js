@@ -88,6 +88,7 @@ const CSS = `
  font-size:clamp(18px,3vh,26px);padding:10px 28px;min-height:52px;cursor:pointer}
 .scnav .go{background:#0F3323;border-color:var(--ok)}
 .sct{font-size:clamp(26px,5vh,48px);font-weight:700;line-height:1.25}
+.scCov{height:1.3em;width:2.6em;object-fit:cover;border-radius:.28em;border:2px solid #FFD54A;vertical-align:middle;margin:0 .3em .12em 0;box-shadow:0 0 8px rgba(255,213,74,.45)}
 .scs{font-size:clamp(18px,3vh,28px);color:#CFCFCF;font-weight:700}
 .scring{position:relative;width:clamp(200px,34vh,320px);height:clamp(200px,34vh,320px)}
 .scring svg{width:100%;height:100%;transform:rotate(-90deg)}
@@ -651,13 +652,15 @@ function scOut(){SCID=null;SCGUEST=false;['id_g3','id_g4','last'].forEach(functi
   SCTK=null;SCTKID=null;scIdleHide();scBar();if(SCSRC==='home')setTimeout(scLkRe,0);var m=document.getElementById('scme');if(m&&typeof scMeHTML==='function'&&m.innerHTML)m.innerHTML=scMeHTML()}
 /* 🦸 這一次拿到的經驗值、金幣（2026-10-17 第八次；規則 score/_calc.js rpEarn）：英雄＋寵物、經驗值條往上長、升級、金幣、〔🦸 我的 英雄〕 */
 var SCRPB=(function(){var s=document.querySelector('script[src$="score/url.js"]');return s?s.getAttribute('src').replace(/score\\/url\\.js$/,''):'../'})();
+/* 2026-10-18 第十次（老師：🦸 圖示太幼稚 ➜ 換成老師的封面照片；「我的英雄」➜「戰神之路」）：小圖示 ＝ rpg/cover_icon.webp（兩張臉並排，rpg/_cover.py） */
+function scCovI(){return '<img class="scCov" src="'+SCRPB+'rpg/cover_icon.webp" alt="" aria-hidden="true">'}
 function scHeroHTML(G){var D=function(id){return rwSrc(SCRPB,id)},S=G.s||{};if(G.h&&S.fx)setTimeout(function(){rwFx(SCRPB,S.fx)},900);   /* 2026-10-18：🏪 商城寶物、💥 必殺武功特效（做完一次 演一次） */
   var a=Math.max(0,G.xp-G.gx),p0=G.lv>G.lv0?0:Math.max(0,(a-G.lvAt)/(G.lvNext-G.lvAt)*100),p1=Math.min(100,(G.xp-G.lvAt)/(G.lvNext-G.lvAt)*100);
-  return '<div class="sct">🦸 這一次 你拿到</div><div class="schero"><div class="shimg rw-host">'+(G.h?rwBack(SCRPB,S)+'<img src="'+D(G.h)+'" alt="我的英雄">'+rwFront(SCRPB,S)+(G.p?'<img class="shp" src="'+D(G.p)+'" alt="我的寵物">':''):'<div class="shno">🦸<br>還沒有 英雄</div>')+'</div>'+
+  return '<div class="sct">'+scCovI()+'這一次 你拿到</div><div class="schero"><div class="shimg rw-host">'+(G.h?rwBack(SCRPB,S)+'<img src="'+D(G.h)+'" alt="我的戰神">'+rwFront(SCRPB,S)+(G.p?'<img class="shp" src="'+D(G.p)+'" alt="我的寵物">':''):'<div class="shno">'+scCovI()+'<br>還沒有 英雄</div>')+'</div>'+
     '<div class="shst"><div class="shx">⭐ 經驗值 <b>＋'+G.gx+'</b></div><div class="shbar"><i style="width:'+p0.toFixed(1)+'%" data-w="'+p1.toFixed(1)+'"></i></div>'+
     '<div class="shlv">'+(G.lv>G.lv0?'🎉 升級了！ Lv '+G.lv0+' ➜ <b>Lv '+G.lv+'</b>':'Lv '+G.lv+'（再 '+(G.lvNext-G.xp)+' 升級）')+'</div>'+
     '<div class="shc">🪙 金幣 <b>＋'+G.gc+'</b><small>（共 '+G.coins+'）</small></div>'+
-    '<a class="shgo" role="button" tabindex="0" data-rpg="1">'+(G.h?'🦸 我的 英雄 ➜':'🎁 免費 選 1 個 英雄 ➜')+'</a></div></div>'}
+    '<a class="shgo" role="button" tabindex="0" data-rpg="1">'+(G.h?scCovI()+'戰神之路 ➜':'🎁 免費 選 1 個 英雄 ➜')+'</a></div></div>'}
 function scByeHTML(){return '<div class="scbye"><span>👋 做完了，記得登出<small>下一個人才不會用到您的號碼</small></span><button id="scBye">👋 登出</button></div>'}
 /* 蓋滿整頁的大字（這是您嗎、30 秒提醒、已經登出了） */
 function scFull(id,h){var o=document.getElementById(id);if(!o){o=document.createElement('div');o.id=id;o.className='scfull';document.body.appendChild(o)}o.innerHTML='<div class="scfb">'+h+'</div>';o.classList.add('on');return o}
@@ -713,7 +716,7 @@ function scBar(){var b=document.getElementById('scbar');if(!b)return;document.bo
     scAsked()?'<span>👤 <b>'+SCID+'</b></span>'+scHeroA()+'<button class="scN" id="scBarOut">👋 登出</button>':
     '<span>請問 這是您嗎？<b>'+SCID+'</b></span><button class="scY" id="scBarY">✅ 是</button><button class="scN" id="scBarOut">👋 不是，登出</button>'}
 /* 登入以後橫幅上〔🦸 我的英雄〕（2026-10-17 第八次）；在〔🦸 我的英雄〕那一頁、總首頁（一行的小橫幅，量過放了會多出捲軸）不放 */
-function scHeroA(){var b=document.getElementById('scbar');return location.pathname.indexOf('/rpg/')>=0||(b&&b.classList.contains('inl'))?'':'<a class="scH" role="button" tabindex="0" data-rpg="1">🦸 我的英雄</a>'}
+function scHeroA(){var b=document.getElementById('scbar');return location.pathname.indexOf('/rpg/')>=0||(b&&b.classList.contains('inl'))?'':'<a class="scH" role="button" tabindex="0" data-rpg="1">'+scCovI()+'戰神之路</a>'}
 /* 連結用點的（不寫 href：在家複習 r1/ 的複製程式會把 href 換路徑） */
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-rpg]');if(a){e.preventDefault();location.href=SCRPB+'rpg/index.html'}});
 function scHomeLogin(){if(!SCH)return;scFullOff('scbye2');scLogin(SCH.reopen)}

@@ -3,6 +3,14 @@
 > 2026-10-17 老師看完 C9（第八次）做的。需求：`sentences/2026-10-16_C_需求與問題.md` 第四節「第七次」C8-14～17、「第八次」C9 第 8 題 A（C9 問題頁 `listen/2026-10-17_C9/` 第三節的表）。
 > 根目錄 `AGENTS.md` 第四節同樣適用。
 
+## 2026-10-18 老師試用以後（第十次）（先讀這一節）
+
+| # | 決定 | 做法 |
+|---|---|---|
+| Firebase | **老師給了網址**：`https://english-live-4b775-default-rtdb.asia-southeast1.firebasedatabase.app`（照 setup.html 做到第 8 步、測試成功）➜ **現場任務開了** | `fb.js` 的 `LIVE_DB`（只有網址，沒有密碼、沒有姓名）。量測 `_verify.js` 照舊用自己的假 Firebase（`LIVE_DB` 被蓋掉）；**連到真的 Firebase／成績表 ＝ 擋下來＋算失敗** |
+| (3) 打得比較痛 ➜ 秒懂 | 打魔王答對：平板寫「⚔ 你的 英雄 出招 ➜ 魔王 －N」（N ＝ `SC.rpDmg`：基本 10 ＋ 戰力 ÷ 100，最多 30）；任務說明改「答對一題 ＝ 你的英雄 出招一擊（裝備愈強 ➜ 一擊愈猛）」 | `_stu_rt.js` `rev()`、`_common.js` `GAMES` boss 的 `d` |
+| 改名 | 〔🦸 我的英雄〕➜〔戰神之路〕（老師的封面照片小圖 `rpg/cover_icon.webp`）；沒有英雄的人 ＝ 👤 | `_build.js` 結束畫面、`_stu_rt.js`、`_host_rt.js`、`_common.js` 勳章那一句 |
+
 ## 2026-10-18 老師看完 C10（第九次）（先讀這一節）
 
 | # | 決定 | 做法 |
@@ -42,5 +50,5 @@
 |---|---|
 | `_build.js` | `node live/_build.js` ➜ `host.html`、`index.html`、`setup.html`；題目 ＝ 兩個句型網站 `_game_data.js` 的 G1 閃電四選一、G8 填空、G10 魔王（正解 o[0]，大螢幕每題重洗） |
 | `_common.js` `_db.js` `_host_rt.js` `_stu_rt.js` `_live.css` `_setup_page.js` | 共用定義、資料庫、大螢幕、學生、樣子、設定頁 |
-| `fb.js` | Firebase 網址（老師給了才貼） |
+| `fb.js` | Firebase 網址（2026-10-18 第十次 老師給了，已經貼好） |
 | `_verify.js` | `node live/_verify.js`：**自己開一台假的 Firebase**（同樣的 REST＋串流）＋假的成績系統，大螢幕（1920、1024）＋3 台學生（iPad 橫、直）＋別班真的玩一場 10 題；設定頁 8 步＋測試。`SHOT=資料夾` 拍照看樣子 |

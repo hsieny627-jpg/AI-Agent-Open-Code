@@ -4,6 +4,18 @@
 > 設計、研究證據（21 條）、使用者的決定：`sentences/2026-10-07_C_設計與研究清單.md`（**Q1～Q18 使用者 2026-10-07 全部照建議**）。
 > 根目錄 `AGENTS.md` 第四節（最高原則、品質、省額度）同樣適用。
 
+## 2026-10-18 老師試用以後（第十次）：🏪 商城多 4 類上架、「我的英雄」➜「戰神之路」＋封面照片（先讀這一節）
+
+需求檔：`sentences/2026-10-16_C_需求與問題.md` 第四節最下面「第十次」（4 題選擇題的回答）。規格 `rpg/CLAUDE.md`、`live/CLAUDE.md` 最上面「第十次」。
+
+| # | 決定 | 做法（在哪裡） |
+|---|---|---|
+| 商城 | 老師傳了 02 王者披風、03 必殺武功特效、04 榮耀名字框、05 史詩英雄背景 ➜ 上架 | `_calc.js` `RPSON = {1..5}`；`RPS` 披風 🦸 ➜ 👑、`RPT` t02 🦸 ➜ 🧥（不再用 🦸） |
+| (1)(2) | 🦸 ➜ 老師的封面照片小圖、「我的英雄」➜「戰神之路」 | `_client.js` 新 `scCovI()`（`rpg/cover_icon.webp`）：登入橫幅〔戰神之路〕（`scHeroA`）、做完一次最後一幕（`scHeroHTML`）；`_client.js` 改了 ➜ **全部網站重新 build**（`node sentences/_build.js`、`node "G3 - L1 + L2/_build.js"`、`node review1/_build.js`、`node words/_build_hub.js`、`node rpg/_build.js`、`node live/_build.js`） |
+
+**改了 `_calc.js` ➜ 老師要重新部署一次** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html （第 1 步那一句寫了這一次新的東西）。
+量測：`node score/_test.js`（上架的類改成 01～05、06 買不到）、`node score/_verify_login.js`（橫幅「戰神之路」）、`node score/_verify.js`、`ONLY=teacher node score/_verify.js`、`node rpg/_verify.js`、`node live/_verify.js`。
+
 ## 2026-10-18 老師看完 C10（第九次）：C10 全部照建議、🏪 榮耀寶物商城、⚡ 現場任務算練習、女 29＋女 31、5 句語音換新（先讀這一節）
 
 需求檔：`sentences/2026-10-16_C_需求與問題.md` 第四節最下面「第九次」（4 題選擇題的回答）。

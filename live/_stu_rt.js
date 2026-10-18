@@ -19,7 +19,7 @@ function join(){var c=TYPED,id=SCID;$('#cmsg').textContent='⏳ 找房間…';
     S.code=c;var put=function(v){S.me=v||null;var st=v&&v.st&&v.st.eq||{};return LDB.set(R('p/'+id),{h:st.h||'',pt:st.p||'',pw:v?v.power||0:0,at:Date.now()})};
     (typeof scFetch==='function'&&SCON?scFetch('a=rpg&id='+id,null,6000).then(function(j){return j&&j.ok?j.v:null},function(){return null}):Promise.resolve(null)).then(put).then(function(){
       if(S.unM)S.unM();S.unM=LDB.listen(R('m'),onM);if(S.unF)S.unF();S.unF=LDB.listen(R('fx/'+id),onFx);scr('swait');drawWait()})})}
-function heroImg(cls){var st=S.me&&S.me.st&&S.me.st.eq||{};return st.h?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,st.h)+'" alt="我的英雄">':'<span class="noh '+(cls||'')+'">🦸</span>'}
+function heroImg(cls){var st=S.me&&S.me.st&&S.me.st.eq||{};return st.h?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,st.h)+'" alt="我的英雄">':'<span class="noh '+(cls||'')+'">👤</span>'}
 function petImg(cls){var st=S.me&&S.me.st&&S.me.st.eq||{};return st.p?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,st.p)+'" alt="我的寵物">':'<span class="noh '+(cls||'')+'">🐾</span>'}
 function drawWait(){var g=S.m?LV.game(S.m.game):null;$('#wt').innerHTML='✅ 已經 加入 <b>'+S.code+'</b>'+(g?'<br>'+g.ic+' '+g.nm:'');$('#wh').innerHTML=heroImg('wimg')+'<div class="note">等 老師 按〔▶ 開始〕…</div>'+(g?'<div class="note">'+g.d+'</div>':'')}
 /* ── 房間的狀態一變就來 ── */
@@ -48,13 +48,13 @@ function answer(k){if(S.ans||!S.m||S.m.phase!=='q')return;var ms=Date.now()-S.t0
   $('#sqr').innerHTML='<div class="sr wait">✅ 送出了！看 大螢幕</div>'}
 function rev(m){clearTimeout(S.tm);var r=m.r||{},id=S.id,ok=r.ok&&r.ok[id],sc=(r.sc&&r.sc[id])||0,tot=(r.tot&&r.tot[id])||0,st=(r.st&&r.st[id])||0;
   $$('#sqo .so').forEach(function(b){var k=+b.getAttribute('data-k');b.disabled=true;b.classList.toggle('ok',k===m.rev.a);b.classList.toggle('no',k!==m.rev.a)});
-  if(ok&&typeof rwFx==='function'){var eq5=S.me&&S.me.st&&S.me.st.eq||{};if(eq5.s&&eq5.s.fx)rwFx(BASE,eq5.s.fx)}   /* 💥 必殺武功特效（2026-10-18：現場任務 答對 一題 演一次） */
-  $('#sqr').innerHTML='<div class="sr '+(ok?'ok':'no')+'">'+(ok?'✅ 答對！ ＋'+sc:S.ans?'❌ 答錯了，沒關係':'⏰ 這一題 沒有 答')+'</div><div class="ss">🏆 總分 '+tot+(st>1?'　🔥 連對 '+st:'')+'</div>'+(!ok&&m.rev.h?'<div class="note">💡 '+m.rev.h+'</div>':'');
+  if(ok&&typeof rwFx==='function'){var eq5=S.me&&S.me.st&&S.me.st.eq||{};if(eq5.s&&eq5.s.fx)rwFx(BASE,eq5.s.fx)}   /* 💥 必殺武功特效（2026-10-18：現場任務 答對 一題 演一次）；打魔王：平板寫「你的 英雄 出招 ➜ 魔王 －N」（2026-10-18 第十次，N ＝ SC.rpDmg：基本 10 ＋ 戰力 ÷ 100，最多 30） */
+  $('#sqr').innerHTML='<div class="sr '+(ok?'ok':'no')+'">'+(ok?'✅ 答對！ ＋'+sc:S.ans?'❌ 答錯了，沒關係':'⏰ 這一題 沒有 答')+'</div><div class="ss">🏆 總分 '+tot+(st>1?'　🔥 連對 '+st:'')+'</div>'+(ok&&m.game==='boss'?'<div class="ss sdmg">⚔ 你的 英雄 出招 ➜ 魔王 <b>－'+(10+Math.min(20,Math.floor(((S.me&&S.me.power)||0)/100)))+'</b></div>':'')+(!ok&&m.rev.h?'<div class="note">💡 '+m.rev.h+'</div>':'');
   var okc=(r.okc&&r.okc[id])||0;S.okc=okc;if(Math.floor(okc/5)>S.draws||S.drawLater){S.draws=Math.max(S.draws,Math.floor(okc/5));S.drawLater=0;setTimeout(draw,900)}}
 function endS(m){clearTimeout(S.tm);scr('send');var r=m.r||{},T=r.tot||{},L=Object.keys(T).sort(function(a,b){return T[b]-T[a]}),rk=L.indexOf(S.id)+1;
   $('#ew').innerHTML=heroImg('wimg')+'<div class="et">'+(rk>0&&rk<=3?['🥇','🥈','🥉'][rk-1]+' 第 '+rk+' 名！':'🎉 任務 完成！')+'</div><div class="ss">🏆 總分 '+(T[S.id]||0)+'　✅ 答對 '+((r.okc||{})[S.id]||0)+' 題</div>'+
     (S.rw.length?'<div class="note">🎁 你 抽到：'+S.rw.map(function(k){var x=LV.RW.filter(function(y){return y.k===k})[0];return x?x.ic+' '+x.nm:k}).join('、')+'</div>':'')+
-    '<div class="note">'+(m.given?'✅ 老師 發好 獎勵了 ➜ 打開〔🦸 我的英雄〕看看':'老師 發 獎勵 以後，打開〔🦸 我的英雄〕就 看得到（⭐ 經驗值、🪙 金幣）')+'</div>'}
+    '<div class="note">'+(m.given?'✅ 老師 發好 獎勵了 ➜ 打開〔戰神之路〕看看':'老師 發 獎勵 以後，打開〔戰神之路〕就 看得到（⭐ 經驗值、🪙 金幣）')+'</div>'}
 /* ── 🐾 寵物叼來禮物盒（每答對 5 題）── */
 function draw(){S.gp=null;var o=$('#gift');o.className='on';o.innerHTML='<div class="gb"><div class="gt">🎉 答對 '+(S.draws*5)+' 題！你的 寵物 叼來 禮物 了</div><div class="gpet">'+petImg('gpi')+'<span class="gbox">🎁</span></div>'+
   '<div class="gt2">要 抽 哪一種？</div><div class="grow"><button data-gk="f">🎮 遊戲 功能<small>這一場 馬上 用</small></button><button data-gk="r">🎁 獎勵<small>遊戲 結束 老師 發</small></button></div></div>'}

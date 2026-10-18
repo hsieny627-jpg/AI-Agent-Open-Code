@@ -169,7 +169,7 @@ var LDB=(function(){
    ④ 驚喜卡跟複習網站完全不一樣：**你的寵物叼來一個禮物盒** ➜ 盒子跳三下 ➜ 打開飛出你的英雄、擺姿勢、說一句話 ➜ 功能生效 */
 var LV={
   GAMES:[
-    {k:'boss',ic:'⚔️',nm:'全班打魔王',d:'全班一起：答對一題 ＝ 打魔王一下（英雄愈強打愈痛），血條打光 ＝ 全班贏',fx:{k:'sneeze',all:1,ic:'🤧',t:'魔王 打噴嚏！泡泡 飛滿 全班 的 畫面',ms:2000}},
+    {k:'boss',ic:'⚔️',nm:'全班打魔王',d:'全班一起：答對一題 ＝ 你的英雄 出招一擊（裝備愈強 ➜ 一擊愈猛），血條打光 ＝ 全班贏',fx:{k:'sneeze',all:1,ic:'🤧',t:'魔王 打噴嚏！泡泡 飛滿 全班 的 畫面',ms:2000}},
     {k:'race',ic:'🏎',nm:'賽車衝刺',d:'答對 ＝ 往前衝，答得愈快 衝愈遠',fx:{k:'banana',ic:'🍌',t:'壓到 香蕉皮！轉一圈',ms:1200}},
     {k:'space',ic:'🚀',nm:'太空接力',d:'單號隊 vs 雙號隊：答對 ＝ 幫自己的隊 加燃料，火箭先飛到月亮的隊贏',fx:{k:'meteor',ic:'☄️',t:'小隕石雨！點掉 隕石 ＝ 多拿 燃料',ms:3000}},
     {k:'map',ic:'🏰',nm:'搶地圖',d:'單號隊 vs 雙號隊：答對 ＝ 搶下一塊地，最後 地比較多 的隊贏',fx:{k:'fog',ic:'🌫',t:'起霧了！3 秒 就散',ms:2500}},
@@ -200,7 +200,7 @@ var LV={
     {k:'emo',ic:'😎',nm:'英雄表情',t:'送你 寶物「😎 英雄表情」（有了 ＝ 40 金幣）'},
     {k:'fx',ic:'✨',nm:'登場特效',t:'送你 寶物「🎆 登場煙火」（有了 ＝ 40 金幣）'},
     {k:'snack',ic:'🍖',nm:'寵物零食',t:'寵物 多陪你 1 天（長大 快一點）'},
-    {k:'medal',ic:'🏅',nm:'勳章',t:'我的英雄 多一個 🏅 勳章'},
+    {k:'medal',ic:'🏅',nm:'勳章',t:'戰神之路 多一個 🏅 勳章'},
     {k:'box',ic:'🎁',nm:'小寶箱',t:'打開 ＝ 30 金幣'},
     {k:'fw',ic:'🎇',nm:'大螢幕放煙火',t:'遊戲 結束 大螢幕 放你的 英雄 和 煙火（不放 名字）'}],
   /* 二～五選一的機率 */
@@ -250,7 +250,7 @@ function lobby(){scr('hlob');$('#code').textContent=H.code;$('#lgame').innerHTML
   LDB.listen('rooms/'+H.code+'/xt',function(v){H.xt=v||{}});LDB.listen('rooms/'+H.code+'/ch',function(v){H.ch=v||{};if(H.game==='king'&&H.qi>=0)drawGame()})}
 function ids(){return Object.keys(H.P||{}).filter(function(id){return /^\d{5}$/.test(id)}).sort()}
 function drawLobby(){var L=ids();$('#lcnt').textContent=L.length;
-  $('#lpl').innerHTML=L.map(function(id){var p=H.P[id];return '<div class="pl">'+(p.h?'<img src="'+LV.img(BASE,p.h)+'" alt="">':'<span class="noh">🦸</span>')+'<b>'+seatOf(id)+' 號</b></div>'}).join('')}
+  $('#lpl').innerHTML=L.map(function(id){var p=H.P[id];return '<div class="pl">'+(p.h?'<img src="'+LV.img(BASE,p.h)+'" alt="">':'<span class="noh">👤</span>')+'<b>'+seatOf(id)+' 號</b></div>'}).join('')}
 /* ── 一題 ── */
 function start(){if(!ids().length){$('#lmsg').textContent='還沒有 學生 加入';return}H.qi=-1;H.start=Date.now();ids().forEach(function(id){H.tot[id]=0;H.okc[id]=0;H.st[id]=0;H.fxc[id]=0});H.gs=gs0();scr('hq');next()}
 function next(){clearTimeout(H.tm);H.qi++;if(H.qi>=H.n){end();return}
@@ -287,7 +287,7 @@ function gsUp(ok1,dmg,cheer){var G=H.gs;G.hp=Math.max(0,G.hp-dmg-cheer*50);G.che
   ids().forEach(function(id){if(ok1[id]){G.fuel[team(id)]++;if(G.cells.length<30)G.cells.push(team(id))}});
   var tot=0,max=ids().length*H.n;ids().forEach(function(id){tot+=H.okc[id]});G.pet=Math.min(4,Math.floor((tot+G.cheer)/Math.max(1,max)*5));G.tr=Math.min(6,Math.floor((tot+G.cheer)/Math.max(1,max)*7))}
 function rank(){return ids().map(function(id){return {id:id,v:H.tot[id]||0}}).sort(function(a,b){return b.v-a.v||(a.id<b.id?-1:1)})}
-function heroI(id,cls){var p=H.P[id]||{};return p.h?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,p.h)+'" alt="">':'<span class="noh '+(cls||'')+'">🦸</span>'}
+function heroI(id,cls){var p=H.P[id]||{};return p.h?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,p.h)+'" alt="">':'<span class="noh '+(cls||'')+'">👤</span>'}
 function drawGame(){var el=$('#gv');if(!el)return;var G=H.gs,k=H.game,L=ids(),R=rank(),mx=Math.max(1,R.length?R[0].v:1),h='<div class="gvt">'+LV.game(k).ic+' '+LV.game(k).nm+'</div>';
   var fxi=function(id){return H.fxNow&&H.fxNow[id]?'<i class="fxb">'+LV.game(k).fx.ic+'</i>':''};
   if(k==='boss'){var p=G.hp/G.hp0*100;h+='<div class="boss'+(G.hp<=0?' dead':'')+'"><div class="bm">'+(G.hp<=0?'💥':'🐲')+'</div><div class="hpb"><i style="width:'+p+'%"></i><span>'+(G.hp<=0?'🎉 全班 打倒 魔王！':'❤ '+G.hp+' ／ '+G.hp0)+'</span></div></div>'}
@@ -317,7 +317,7 @@ function fwHTML(){var h='<div class="fwx">',C=['#FFD54A','#FF6B6B','#7FD4FF','#7
 function bonusList(){return ids().map(function(id){var rw=H.rw[id]||[],c=H.okc[id]||0,x=10,o={id:id,c:c,x:x,tre:[],title:'',snack:0,medal:0};
   rw.forEach(function(k){if(k==='c2')o.c+=c;else if(k==='x2')o.x+=x;else if(k==='frag')o.c+=20;else if(k==='title')o.title='⚡ 現場任務 勇者';else if(k==='emo')o.tre.push('t06');else if(k==='fx')o.tre.push('t04');else if(k==='snack')o.snack++;else if(k==='medal')o.medal++;else if(k==='box')o.c+=30});return o})}
 function give(){var b=$('#give'),m=$('#gm');if(H.done){m.textContent='✅ 已經 發過了';return}b.disabled=true;m.textContent='⏳ 發獎勵中…';
-  post({a:'rpgb',pw:H.pw,room:H.code,t0:H.start,list:bonusList()}).then(function(j){if(j&&j.ok){H.done=true;b.textContent='✅ 獎勵 發好了';m.textContent='✅ 發好了（'+j.n+' 人）：〔🦸 我的英雄〕拿到 獎勵、老師看板 練習次數 ＋1';LDB.patch('rooms/'+H.code+'/m',{given:1})}else{b.disabled=false;m.textContent='❌ 沒有 發成（'+((j&&j.err)||'')+'）'}},
+  post({a:'rpgb',pw:H.pw,room:H.code,t0:H.start,list:bonusList()}).then(function(j){if(j&&j.ok){H.done=true;b.textContent='✅ 獎勵 發好了';m.textContent='✅ 發好了（'+j.n+' 人）：〔戰神之路〕拿到 獎勵、老師看板 練習次數 ＋1';LDB.patch('rooms/'+H.code+'/m',{given:1})}else{b.disabled=false;m.textContent='❌ 沒有 發成（'+((j&&j.err)||'')+'）'}},
     function(){b.disabled=false;m.textContent='📶 連不到 成績系統'})}
 function closeRoom(){if(H.code)LDB.del('rooms/'+H.code);location.reload()}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;

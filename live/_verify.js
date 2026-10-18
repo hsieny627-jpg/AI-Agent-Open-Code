@@ -37,7 +37,7 @@ async function ctxOf(br, G, vp, id) {
   await ctx.route(URL0 + '**', async r => { const q = Object.fromEntries(new URL(r.request().url()).searchParams);
     const body = r.request().method() === 'POST' ? G.post(r.request().postData()) : G.get(q);
     await r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(body) }); });
-  await ctx.route(/script\.google\.com|firebaseio\.com|firebasedatabase\.app/, r => r.abort());
+  await ctx.route(/script\.google\.com|firebaseio\.com|firebasedatabase\.app/, r => { E.push('想連到真的伺服器（擋下來了）：' + r.request().url().slice(0, 60)); r.abort(); });   /* 2026-10-18 第十次：fb.js 有老師的真網址了 ➜ 連過去 ＝ 失敗 */
   return ctx;
 }
 const sizes = (p, min) => p.evaluate(min => { const sm = [].filter.call(document.querySelectorAll('body *'), x => { const r = x.getBoundingClientRect(); if (!r.width || x.closest('#scbar,.pls,.rk5,.lanes,.dt,.sfr,.tc,.fxb,.goth')) return false;
@@ -103,6 +103,8 @@ const sizes = (p, min) => p.evaluate(min => { const sm = [].filter.call(document
       const r0 = await S[0].p.textContent('#sqr'), r1 = await S[1].p.textContent('#sqr');
       if (!/答對/.test(r0)) E.push('第 ' + (qi + 1) + ' 題：答對的 沒有 ✅（' + r0.slice(0, 20) + '）');
       if (qi === 0 && !/答錯/.test(r1)) E.push('第 1 題：答錯的 沒有 ❌');
+      if (qi === 0) { const d0 = await S[0].p.evaluate(() => 10 + Math.min(20, Math.floor(((S.me && S.me.power) || 0) / 100)));   /* 2026-10-18 第十次：打魔王 答對 ＝「你的 英雄 出招 ➜ 魔王 －N」 */
+        if (r0.indexOf('出招 ➜ 魔王 －' + d0) < 0 || /出招/.test(r1)) E.push('第 1 題：打魔王 答對 沒有寫「出招 ➜ 魔王 －' + d0 + '」（' + r0.slice(0, 40) + '）'); }
       if (qi === 0) { await shot(h, 'hq_' + HV[0]); await shot(S[0].p, 'sq_' + HV[0]); await shot(S[1].p, 'sqv_' + HV[0]); }
       if (qi === 0) { const hp1 = await h.evaluate(() => H.gs.hp); if (!(hp1 < hp0)) E.push(tag + '：答對了 魔王 血條 沒有 變少'); }
       if (qi === 4 || qi === 9) { /* 01 答對 5、10 題 ➜ 🐾 禮物盒（老師先按 ⏸ 停在這一題，量完再繼續） */
@@ -163,6 +165,6 @@ const sizes = (p, min) => p.evaluate(min => { const sm = [].filter.call(document
     await c.close(); n += 12; }
   await br.close(); srv.close();
   E.forEach(x => console.log('✗ ' + x));
-  console.log('現場任務 量測 ' + n + ' 項，' + E.length + ' 個失敗');
+  console.log('現場任務 量測 ' + (n + 1) + ' 項，' + E.length + ' 個失敗');
   process.exit(E.length ? 1 : 0);
 })();
