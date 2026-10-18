@@ -39,7 +39,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     await p.reload(); await p.waitForTimeout(1800);
     const s0 = await p.evaluate(() => ({ in: !document.getElementById('rpin').hidden, t: document.getElementById('stage').textContent, free: !!document.querySelector('.free'),
       fr: document.querySelectorAll('#shop .pr.fr').length, it: document.querySelectorAll('#shop .it').length }));
-    if (!s0.in || !/還沒有英雄/.test(s0.t) || !/Lv \d/.test(s0.t) || !/金幣/.test(s0.t)) E.push(tag + '：登入以後舞台不對：' + s0.t.slice(0, 80));
+    if (!s0.in || !/還沒有戰士/.test(s0.t) || !/Lv \d/.test(s0.t) || !/金幣/.test(s0.t)) E.push(tag + '：登入以後舞台不對：' + s0.t.slice(0, 80));
     if (/普通/.test(await p.textContent('#rp'))) E.push(tag + '：還有「普通」（要改「基本」）');
     if (!s0.free || s0.fr !== 8 || s0.it !== 30) E.push(tag + '：英雄分頁要 30 個男生英雄、8 個寫「🎁 免費」（' + s0.it + '／' + s0.fr + '）');
     await p.click('[data-sex="g"]'); await p.waitForTimeout(150);
@@ -98,7 +98,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     await p.reload(); await p.waitForTimeout(1800); await p.click('#tabs [data-t="m"]'); await p.waitForTimeout(200);
     const m0 = await p.evaluate(() => ({ cat: document.querySelectorAll('.scat button').length, soon: document.querySelectorAll('.scat button.soon').length, it: document.querySelectorAll('#shop .it').length,
       rows: [].map.call(document.querySelectorAll('.srow'), x => x.textContent), halo: !!document.querySelector('#stage .halo') }));
-    if (m0.cat !== 10 || m0.soon !== 5 || m0.it !== 20 || m0.rows.length !== 4 || !/500/.test(m0.rows[0]) || !/1,200.*Lv 5/.test(m0.rows[1]) || !/2,500.*Lv 10/.test(m0.rows[2]) || !/5,000.*Lv 20.*學霸/.test(m0.rows[3]))
+    if (m0.cat !== 10 || m0.soon !== 0 || m0.it !== 20 || m0.rows.length !== 4 || !/500/.test(m0.rows[0]) || !/1,200.*Lv 5/.test(m0.rows[1]) || !/2,500.*Lv 10/.test(m0.rows[2]) || !/5,000.*Lv 20.*學霸/.test(m0.rows[3]))
       E.push(tag + '：商城不對（類 ' + m0.cat + '、🔜 ' + m0.soon + '、' + m0.it + ' 種、排：' + m0.rows.join('｜') + '）');
     if (!m0.halo) E.push(tag + '：發獎勵送的舊 ✨ 光環 沒有戴上');
     await p.click('#shop [data-id="s0116"]'); await p.waitForTimeout(150);
@@ -119,15 +119,20 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     await p.click('#shop [data-id="s0101"]'); await p.waitForTimeout(900);
     if (await p.$('#stage .rw-au')) E.push(tag + '：再點一下 沒有 拿下來');
     /* 2026-10-18 第十次：上架的 5 類 ✕ 20 種，商店卡、穿在身上的圖都載得到；買背景 ➜ 舞台換底圖、買名字框 ➜ 圍住號碼 */
-    const miss = await p.evaluate(async () => { const o = []; for (const c of [1, 2, 3, 4, 5]) for (let n = 1; n <= 20; n++) { const id = 's0' + c + (n < 10 ? '0' : '') + n;
+    const miss = await p.evaluate(async () => { const o = []; for (let c = 1; c <= 10; c++) for (let n = 1; n <= 20; n++) { const id = 's' + (c < 10 ? '0' : '') + c + (n < 10 ? '0' : '') + n;
       for (const x of ['.jpg', 'i.webp']) { const r = await fetch('shop/' + id + x); if (!r.ok) o.push(id + x); } } return o; });
     if (miss.length) E.push(tag + '：商城圖載不到 ' + miss.slice(0, 4).join('、'));
     for (const id of ['s0501', 's0401']) { await p.click('[data-scat="' + id[2] + '"]'); await p.waitForTimeout(150); await p.click('#shop [data-id="' + id + '"]'); await p.waitForTimeout(150);
       await p.click('#rpmb [data-m="buy"]'); await p.waitForTimeout(1000); await p.click('#rpmb [data-m="x"]'); await p.waitForTimeout(300); }
     const w2 = await p.evaluate(() => ({ bg: /s0501i\.webp/.test(document.getElementById('stage').getAttribute('style') || ''), nf: !!document.querySelector('#stage .idl .rw-nf[src*="s0401i"]') }));
     if (!w2.bg || !w2.nf) E.push(tag + '：買了背景／名字框 沒有穿上（背景 ' + w2.bg + '、名字框 ' + w2.nf + '）');
-    await p.click('[data-scat="6"]'); await p.waitForTimeout(150);
-    if (!/即將 上架/.test(await p.textContent('#shop'))) E.push(tag + '：寵物專屬服裝 沒有寫「🔜 即將 上架」');
+    /* 2026-10-18 第十二次：06～10 也上架了 ➜ 每一類 20 種、沒有「即將 上架」；學生看得到的字 沒有「英雄」（老師：一律 改成 戰士） */
+    for (let c = 6; c <= 10; c++) { await p.click('[data-scat="' + c + '"]'); await p.waitForTimeout(200);
+      const k = await p.evaluate(() => ({ n: document.querySelectorAll('#shop [data-id^="s"]').length, soon: /即將 上架/.test(document.getElementById('shop').textContent),
+        img: [].every.call(document.querySelectorAll('#shop [data-id^="s"] img'), i => i.complete && i.naturalWidth > 0) }));
+      if (k.n !== 20 || k.soon || !k.img) E.push(tag + '：商城第 ' + c + ' 類 不對（' + k.n + ' 種、即將上架 ' + k.soon + '、圖 ' + k.img + '）'); }
+    const hz = await p.evaluate(() => document.body.innerText.indexOf('英雄') >= 0 || /英雄/.test([].map.call(document.querySelectorAll('[alt],[title]'), e => (e.alt || '') + (e.title || '')).join('')));
+    if (hz) E.push(tag + '：畫面上 還有「英雄」（要 改成 戰士）');
     await p.evaluate(() => rwFx('../', 's0101')); await p.waitForTimeout(300);
     const fx = await p.evaluate(() => { const o = document.querySelector('.rw-fx img'); return !!o && o.complete && o.naturalWidth > 0; });
     await p.waitForTimeout(1500); if (!fx || await p.$('.rw-fx')) E.push(tag + '：💥 必殺特效 沒有出現或沒有消失');

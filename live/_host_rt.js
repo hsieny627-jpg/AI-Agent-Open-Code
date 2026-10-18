@@ -1,130 +1,170 @@
-/* live/_host_rt.js — ⚡ 現場任務 老師大螢幕（live/host.html）。只寫 ES5。要先載入 live/_db.js、live/_common.js、score/qr.js；網頁裡有 BANK（四選一）、CHAL（挑戰題）、BASE（到 repo 根目錄）。
-   2026-10-18 第十一次 重做（規格 live/CLAUDE.md 最上面）：
-   流程：🔑 老師密碼 ➜ 一頁 設定（① 班級 ② 遊戲〔🏆 經典搶答 預設〕③ 題目〔預設 全選〕④ 幾題 ⑤ 🔥 挑戰題／干擾）➜〔⚡ 建立 遊戲〕
-        ➜ 等人：大大的 QR Code ＋ 登入 3 步 動畫 ＋ 這一種 怎麼玩 動畫 ＋ 加入 的 英雄 一個一個 跳進來（**學生 不用 打 遊戲 號碼**：0＋班級）
-        ➜〔▶ 開始〕➜ 怎麼玩 ＋ 3、2、1 ➜ 一題 20 秒（挑戰題 30 秒；全部答完 就 提早）➜ 公布：長條圖＋正解（＋經典搶答：前 5 名）➜ 下一題 … ➜ 頒獎台 3 ➜ 2 ➜ 1 ＋〔🎁 發獎勵〕
-   答案只放在這一台（老師的電腦）：題目送出去的時候 **不送答案**，公布的時候才送。分數也是這一台算。 */
-var H={pw:'',g:4,cls:'',game:'classic',sets:{},n:10,int:1,ch:1,snd:1,code:'',Q:[],qi:-1,P:{},tot:{},okc:{},st:{},best:{},fxc:{},gs:{},pause:false,tm:null,unA:null,unP:null,A:{},xt:{},rw:{},done:false,log:[],prv:{},phase:''};
+/* live/_host_rt.js — ⚡ 現場任務 老師大螢幕（live/host.html）。只寫 ES5。要先載入 live/_db.js、live/_common.js、score/qr.js、score/_cer_rt.js；
+   網頁裡有 GR（每一組 題目）、LIST（三／四年級 有 哪幾組）、CHAL（挑戰題）、ICON、BASE（到 repo 根目錄）。
+   2026-10-18 第十二次 重做（老師 試玩：兩邊 不同步、不知道 怎麼 關 排行榜 開 下一題、音樂 難聽、頒獎 潦草、錯題 分析 要 比照 遊戲；規格 live/CLAUDE.md 最上面）：
+   流程（老師 一個 按鈕 一步，按鈕 永遠 在 右下角 同一個 位置、大大的）：
+     🔑 密碼 ➜ 設定（① 班級 ② 遊戲 ③ 題目〔三／四年級、句型遊戲＋Review 1〕④ 幾題〔預設 5〕⑤ 挑戰題／干擾）➜〔⚡ 建立 遊戲〕
+     ➜ 等人（QR Code、〔📋 複製 網址〕、① ② ③、座號 格子 一格一格 亮）➜〔▶ 開始〕➜ 怎麼玩 ＋ 3、2、1
+     ➜ 題目（座號 格子：答了 ＝ 變綠）➜ 時間到／全部 答完 ➜ 公布（長條圖＋✔＋📌 錯題 分析：逐字中文、整句翻譯、💡、自動 唸 3 次）
+     ➜〔🏆 看 排行榜〕➜ 前 5 名 ➜〔▶ 下一題〕… ➜〔🏆 頒獎 典禮〕（10 種 風格，沒有 聲音）➜〔📊 全班 錯題 分析〕➜〔🎁 發獎勵 ＋ 記 練習次數〕
+   沒有 音樂、沒有 音效（老師 8(5)）；只有 英文 發音（〔🗣 自動 唸：開／關〕）。
+   同步：live/_db.js 輪詢（大螢幕 每 寫 一次 m 就 v＋1）。答案 只放在 這一台：題目 送出去 不送 答案，公布 才 送。分數 也是 這一台 算。 */
+var H={pw:'',g:4,qg:4,cls:'',game:'classic',sets:{},n:5,int:1,ch:1,say:1,code:'',Q:[],qi:-1,P:{},seen:{},pl:{},tot:{},okc:{},st:{},best:{},fxc:{},okq:{},gs:{},tm:null,A:{},xt:{},rw:{},done:false,log:[],prv:{},phase:'',m:{},ver:0,stops:[]};
 function $(s){return document.querySelector(s)}function $$(s){return [].slice.call(document.querySelectorAll(s))}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function scr(id){$$('.scr').forEach(function(x){x.hidden=x.id!==id})}
+function scr(id){$$('.scr').forEach(function(x){x.hidden=x.id!==id});H.scr=id}
 function post(o){var u=String(window.SCORE_URL||'').trim();if(!u)return Promise.reject(new Error('nourl'));return fetch(u,{method:'POST',body:JSON.stringify(o)}).then(function(r){return r.json()})}
 function seatOf(id){return +String(id).slice(3)}
+function sp2(n){return (n<10?'0':'')+n}
 function R(p){return 'rooms/'+H.code+(p?'/'+p:'')}
-/* ── 聲音（網頁自己做，不用音檔）：倒數 最後 5 秒 滴答、公布、排行榜、頒獎 ── */
-var AC=null;function ac(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume()}catch(e){AC=null}return AC}
-function tone(f,t0,d,type,vol){if(!H.snd)return;var c=ac();if(!c)return;var o=c.createOscillator(),g=c.createGain();o.type=type||'triangle';o.frequency.value=f;
-  g.gain.setValueAtTime(0,c.currentTime+t0);g.gain.linearRampToValueAtTime(vol||.15,c.currentTime+t0+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t0+d);o.connect(g);g.connect(c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+d+.05)}
-var SND={tick:function(){tone(880,0,.08,'square',.06)},rev:function(){[523,659,784,1047].forEach(function(f,i){tone(f,i*.08,.35,'triangle',.14)})},
-  lb:function(){[392,494,587].forEach(function(f,i){tone(f,i*.12,.3,'sine',.12)})},go:function(){[262,330,392,523].forEach(function(f,i){tone(f,i*.15,.4,'sawtooth',.08)})},
-  drum:function(){for(var i=0;i<14;i++)tone(90+i*4,i*.07,.06,'square',.08)},win:function(){[523,659,784,1047,1319].forEach(function(f,i){tone(f,i*.1,.6,'triangle',.15)})}};
+LV.ICON=ICON;
+/* ── 寫 遊戲 狀態：整個 m ＋ 版本號 一起 寫（PATCH 班級 那一層）；寫 的 時候 又 改了 ＝ 寫完 再 寫 一次 最新 的 ── */
+var WB=0,WP=0;
+function putM(o){for(var k in o){if(o[k]===null)delete H.m[k];else H.m[k]=o[k]}H.ver++;if(WB){WP=1;return}WB=1;
+  var go=function(){WP=0;var body={m:H.m,v:H.ver};LDB.must('PATCH',R(),body,40).then(function(ok){if(WP){go();return}WB=0;if(!ok)net(true)})};go()}
+function net(b){var e=$('#net');if(e)e.hidden=!b}
+LDB.onBad(net);
 /* ── 🔑 密碼 ── */
 function pwGo(){var p=$('#pw').value.trim(),m=$('#pwm');if(!p){m.textContent='請打密碼';return}
   if(!LDB.on()){m.innerHTML='⚠ 現場任務 還沒有 設定 Firebase ➜ 請看 <a href="setup.html">大字版 設定頁</a>';return}
   m.textContent='⏳ 檢查中…';post({a:'pw',pw:p}).then(function(j){if(j&&j.ok){H.pw=p;try{sessionStorage.setItem('lvpw',p)}catch(e){}setDraw();scr('hset')}else m.textContent='❌ 密碼 不對'},function(){m.textContent='📶 連不到 成績系統'})}
-/* ── 一頁 設定（預設：經典搶答、題目 全選、10 題、🔥 挑戰題 開）── */
+/* ── 一頁 設定（預設：經典搶答、題目 全選、5 題、🔥 挑戰題 開）── */
 var CLS={3:['304','307','311'],4:['402','406','409','410','400']};
-function allSets(g){(BANK[g]||[]).forEach(function(b,i){if(H.sets[g+'_'+i]==null)H.sets[g+'_'+i]=true})}
-function setDraw(){allSets(H.g);var G=LV.game(H.game);
+function allSets(g){(LIST[g]||[]).forEach(function(k){if(H.sets[g+'_'+k]==null)H.sets[g+'_'+k]=true})}
+function mins(n){return Math.max(1,Math.round(n*36/60))}
+function setDraw(){allSets(H.qg);var G=LV.game(H.game),L=LIST[H.qg]||[],secs=[];L.forEach(function(k){var s=GR[k].sec;if(secs.indexOf(s)<0)secs.push(s)});
   var h='<div class="sett"><h1>⚡ 現場任務</h1><span class="note">選好 ➜ 按 最下面〔⚡ 建立 遊戲〕</span></div>'+
   '<h2><b class="sn">1</b> 哪一班</h2><div class="row">'+[3,4].map(function(g){return CLS[g].map(function(c){return '<button data-sc="'+c+'" class="clsb'+(H.cls===c?' on':'')+'">'+c+(c==='400'?' 課後班':'')+'</button>'}).join('')}).join('<span class="gsep"></span>')+'</div>'+
   '<h2><b class="sn">2</b> 哪一種 遊戲</h2><div class="ggrid">'+LV.GAMES.map(function(x,i){return '<button data-sk="'+x.k+'" class="gcd'+(H.game===x.k?' on':'')+(i===0?' first':'')+'">'+LV.badge(x.k)+'<span class="gtx"><b>'+x.nm+(i===0?' <em>推薦</em>':'')+'</b><small>'+x.d+'</small></span></button>'}).join('')+'</div>'+
-  '<h2><b class="sn">3</b> 題目 <span class="note">（'+(H.g===3?'三':'四')+'年級；可以 只選 幾組）</span></h2><div class="row">'+(BANK[H.g]||[]).map(function(b,i){var on=!!H.sets[H.g+'_'+i];return '<button data-sb="'+i+'" class="'+(on?'on':'')+'">'+(on?'☑ ':'☐ ')+esc(b.nm)+'（'+b.qs.length+'）</button>'}).join('')+'</div>'+
-  '<h2><b class="sn">4</b> 幾題</h2><div class="row">'+[5,10,15,20].map(function(n){return '<button data-sn="'+n+'" class="'+(H.n===n?'on':'')+'">'+n+' 題（約 '+Math.ceil(n*30/60)+' 分鐘）</button>'}).join('')+'</div>'+
+  '<h2><b class="sn">3</b> 題目</h2><div class="row"><button data-qg="3" class="'+(H.qg===3?'on':'')+'">三年級 的 題目</button><button data-qg="4" class="'+(H.qg===4?'on':'')+'">四年級 的 題目</button>'+
+    '<span class="gsep"></span><button data-sa="1">☑ 全選</button><button data-sa="0">☐ 全部 不選</button><span class="note">（每一行 後面 ＝ 那一組 有 幾題）</span></div>'+
+  secs.map(function(s){return '<div class="secn">'+s+'</div><div class="row sets">'+L.filter(function(k){return GR[k].sec===s}).map(function(k){var on=!!H.sets[H.qg+'_'+k];
+    return '<button data-sb="'+k+'" class="'+(on?'on':'')+'">'+(on?'☑ ':'☐ ')+esc(GR[k].nm)+'<em>'+GR[k].qs.length+' 題</em></button>'}).join('')+'</div>'}).join('')+
+  '<h2><b class="sn">4</b> 幾題</h2><div class="row">'+[5,10,15,20].map(function(n){return '<button data-sn="'+n+'" class="'+(H.n===n?'on':'')+'">'+n+' 題（約 '+mins(n)+' 分鐘）</button>'}).join('')+'</div>'+
   '<h2><b class="sn">5</b> 加點 刺激</h2><div class="row"><button data-ch="1" class="'+(H.ch?'on':'')+'">🔥 挑戰題 開（拼字、排句子，分數 ✖2）</button><button data-ch="0" class="'+(!H.ch?'on':'')+'">✖ 挑戰題 關</button></div>'+
   (G.fx?'<div class="row"><button data-si="1" class="'+(H.int?'on':'')+'">'+G.fx.ic+' 干擾 開（不扣分、≦ 3 秒）</button><button data-si="0" class="'+(!H.int?'on':'')+'">✖ 干擾 關</button><span class="note">'+esc(G.fx.t)+'</span></div>':'')+
   '<div class="row mkrow"><button id="mk" class="big">⚡ 建立 遊戲</button><span id="mkm" class="note"></span></div>';
   $('#hset .in').innerHTML=h}
-function selQs(){var a=[];(BANK[H.g]||[]).forEach(function(b,i){if(H.sets[H.g+'_'+i])a=a.concat(b.qs)});return a}
+function selQs(){var a=[];(LIST[H.qg]||[]).forEach(function(k){if(H.sets[H.qg+'_'+k])a=a.concat(GR[k].qs)});return a}
 /* 題目：每 3 題 的 第 3 題 ＝ 🔥 挑戰題（🔤 拼字、🧩 排句子 輪流）；四選一 每題 重洗 選項 */
-function mkQ(){var all=LV.shuf(selQs()),C=CHAL[H.g]||{sp:[],or:[]},sp=LV.shuf(C.sp),or=LV.shuf(C.or),Q=[],mi=0,ci=0;
+function mkQ(){var all=LV.shuf(selQs()),C=CHAL[H.qg]||{sp:[],or:[]},sp=LV.shuf(C.sp),or=LV.shuf(C.or),Q=[],mi=0,ci=0;
   for(var i=0;i<H.n;i++){
     if(H.ch&&i%3===2&&(sp.length||or.length)){var useSp=(ci%2===0&&sp.length)||!or.length;ci++;
       if(useSp){var w=sp.shift()||C.sp[0],ex=LV.shuf('bcdfghklmnprstvwy'.split('').filter(function(c){return w.en.toLowerCase().indexOf(c)<0})).slice(0,2);
-        Q.push({ty:'sp',t:'🔤 拼出 這個 英文 字',zh:w.zh,ic:w.ic,tiles:LV.shuf(w.en.toLowerCase().split('').concat(ex)),a:w.en,h:w.zh+' ＝ '+w.en})}
-      else{var s=or.shift()||C.or[0];Q.push({ty:'or',t:'🧩 排出 這一句 英文',zh:s.zh,tiles:LV.shuf(s.w),a:s.w.join('|'),p:s.p,h:s.h||''})}
+        Q.push({ty:'sp',ch:1,t:'🔤 拼出 這個 英文 字',zh:w.zh,ic:w.ic,tiles:LV.shuf(w.en.toLowerCase().split('').concat(ex)),a:w.en,ans:w.en,h:w.zh+' ＝ '+w.en,ae:w.en,ag:[[w.en,w.zh]],az:w.zh,au:w.au||''})}
+      else{var s=or.shift()||C.or[0];Q.push({ty:'or',ch:1,t:'🧩 排出 這一句 英文',zh:s.zh,tiles:LV.shuf(s.tiles),a:s.a,p:s.p,ans:sent(s),h:s.h||'',ae:s.ae,ag:s.ag,az:s.az,au:s.au})}
       continue}
     var q=all[mi++%Math.max(1,all.length)];if(!q)break;
-    var ord=LV.shuf([0,1,2,3]),o=ord.map(function(k){return q.o[k]}),a=ord.indexOf(0),x=LV.shuf([0,1,2,3].filter(function(k){return k!==a})).slice(0,2);Q.push({ty:'mc',t:q.q,o:o,a:a,h:q.h||'',x:x})}
+    if(q.ty==='or'){Q.push({ty:'or',t:q.t,zh:q.zh,tiles:LV.shuf(q.tiles),a:q.a,p:q.p,ans:sent(q),h:q.h,ae:q.ae,ag:q.ag,az:q.az,au:q.au});continue}
+    var n=q.o.length,ord=LV.shuf(Array.apply(null,{length:n}).map(function(_,k){return k})),a=ord.indexOf(0),x=n===4?LV.shuf(ord.map(function(_,k){return k}).filter(function(k){return k!==a})).slice(0,2):[];
+    Q.push({ty:'mc',t:LV.ic(q.t),o:ord.map(function(k){return LV.ic(q.o[k])}),ot:ord.map(function(k){return q.ot[k]}),a:a,x:x,ls:q.ls||0,al:q.al||'',ans:q.ot[0],h:q.h||'',ae:q.ae,ag:q.ag,az:q.az,au:q.au})}
   return Q}
+function sent(s){return String(s.a).split('|').join(' ').replace(/ (’|')/g,'$1')+(s.p||'')}
 function mkRoom(){var m=$('#mkm');if(!H.cls){m.textContent='① 請選 哪一班';return}if(!selQs().length){m.textContent='③ 請選 題目';return}
-  H.Q=mkQ();H.n=H.Q.length;H.code=LV.room(H.cls);m.textContent='⏳ 建立 遊戲 中…';
-  /* 每一班 固定 一個（0＋班級）：先 清掉 上一場，再 寫 新的 */
-  LDB.del(R()).then(function(){return LDB.set(R('m'),{v:2,g:H.g,cls:H.cls,game:H.game,n:H.n,int:H.int,phase:'lobby',made:Date.now()})}).then(function(ok){if(!ok){m.textContent='📶 連不到 Firebase';return}lobby()})}
-/* ── 等學生加入：QR Code ＋ 登入 3 步 ＋ 怎麼玩 ── */
+  H.Q=mkQ();H.n=H.Q.length;H.code=LV.room(H.cls);H.g=H.cls.charAt(0)==='3'?3:4;H.ver=Date.now();m.textContent='⏳ 建立 遊戲 中…';
+  /* 每一班 固定 一個（0＋班級）：清掉 上一場（答案、干擾、獎勵…），**留著 p**（已經 登入 等著 的 學生） */
+  H.m={v:3,g:H.qg,cls:H.cls,game:H.game,n:H.n,int:H.int,phase:'lobby',made:Date.now()};
+  LDB.must('PATCH',R(),{m:H.m,v:++H.ver,a:null,rw:null,xt:null,ch:null},6).then(function(ok){if(!ok){m.textContent='📶 連不到 Firebase，請 再 按 一次';return}lobby()})}
+/* ── 誰 在線上：p/5碼 的 at 一變 ＝ 還在（平板 每 20 秒 寫 一次）；第一次 看到 的 時間 差 5 分鐘 以內 才 算 ── */
+function seeP(v){var now=Date.now();H.P=v||{};for(var id in H.P){if(!/^\d{5}$/.test(id))continue;var at=+(H.P[id]||{}).at||0,s=H.seen[id];
+  if(!s)H.seen[id]={at:at,t:Math.abs(now-at)<3e5?now:0};else if(s.at!==at){s.at=at;s.t=now}}}
+function online(){var now=Date.now();return Object.keys(H.seen).filter(function(id){return now-H.seen[id].t<60000}).sort()}
+function ids(){return Object.keys(H.pl).sort()}
+function stopAll(){H.stops.forEach(function(f){f()});H.stops=[]}
+/* ── 等學生加入：QR Code ＋ 〔📋 複製 網址〕＋ ① ② ③ ＋ 座號 格子 ── */
 function stuURL(){return String(location.href).split('#')[0].split('?')[0].replace(/host\.html$/,'')}
 function qrSVG(u){try{var q=qrcode(0,'M');q.addData(u);q.make();return q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch(e){return ''}}
 function lobby(){scr('hlob');var G=LV.game(H.game);
   $('#lqr').innerHTML=qrSVG(stuURL());$('#lurl').textContent=stuURL().replace(/^https?:\/\//,'');
   $('#llog').innerHTML=LV.howHTML(LV.LOGIN,'v sm');
-  $('#lgame').innerHTML=LV.badge(H.game,'lg')+'<div><b>'+G.nm+'</b><span>'+H.cls+' 班　'+H.n+' 題'+(H.ch?'　🔥 挑戰題 ✖2':'')+'</span></div>';
-  $('#lhow').innerHTML=LV.howHTML(G.how);
-  if(H.unP)H.unP();H.unP=LDB.listen(R('p'),function(v){H.P=v||{};drawLobby();if(H.qi>=0)drawGame()});
-  LDB.listen(R('xt'),function(v){H.xt=v||{}});LDB.listen(R('ch'),function(v){H.ch2=v||{};if(H.game==='king'&&H.qi>=0)drawGame()})}
-function ids(){return Object.keys(H.P||{}).filter(function(id){return /^\d{5}$/.test(id)}).sort()}
-function heroI(id,cls){var p=H.P[id]||{};return p.h?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,p.h)+'" alt="">':'<span class="noh '+(cls||'')+'">👤</span>'}
-function drawLobby(){var L=ids();$('#lcnt').textContent=L.length;
-  $('#lpl').innerHTML=L.map(function(id){return '<div class="pl">'+heroI(id)+'<b>'+seatOf(id)+' 號</b></div>'}).join('')}
-/* ── ▶ 開始：怎麼玩 ＋ 3、2、1 ── */
-function start(){if(!ids().length){$('#lmsg').textContent='還沒有 學生 加入';return}H.qi=-1;H.start=Date.now();
-  ids().forEach(function(id){H.tot[id]=0;H.okc[id]=0;H.st[id]=0;H.best[id]=0;H.fxc[id]=0});H.gs=gs0();
+  $('#lgame').innerHTML=LV.badge(H.game,'lg')+'<div><b>'+G.nm+'</b><span>'+H.cls+' 班　'+H.n+' 題　'+(H.qg===3?'三':'四')+'年級 的 題目'+(H.ch?'　🔥 挑戰題 ✖2':'')+'</span></div>';
+  stopAll();H.stops.push(LDB.poll(R('p'),1500,function(v){seeP(v);drawLobby()}));
+  H.lt=setInterval(drawLobby,2000)}
+function seatGrid(on,cls,extra){var n=30,h='';for(var i=1;i<=n;i++){var id=H.cls+sp2(i),o=on.indexOf(id)>=0;h+='<span class="st'+(o?' on':'')+(extra&&extra(id)?' '+extra(id):'')+'">'+(o&&H.P[id]&&H.P[id].h?'<img src="'+LV.img(BASE,H.P[id].h)+'" alt="">':'')+'<b>'+sp2(i)+'</b></span>'}
+  return '<div class="seats '+(cls||'')+'">'+h+'</div>'}
+function drawLobby(){if(H.scr!=='hlob')return;var L=online();$('#lcnt').textContent=L.length;$('#lpl').innerHTML=seatGrid(L)}
+/* ── ▶ 開始：怎麼玩 ＋ 3、2、1（不動 的 ① ② ③）── */
+function start(){var L=online();if(!L.length){$('#lmsg').textContent='還沒有 學生 加入（學生 掃 QR Code、打 5 碼）';return}clearInterval(H.lt);
+  H.pl={};L.forEach(function(id){H.pl[id]=1;H.tot[id]=0;H.okc[id]=0;H.st[id]=0;H.best[id]=0;H.fxc[id]=0;H.okq[id]=''});H.qi=-1;H.start=Date.now();H.gs=gs0();H.sum=[];
   var G=LV.game(H.game);scr('hhow');$('#hhw').innerHTML=LV.badge(H.game,'xl')+'<h1>'+G.nm+'</h1>'+LV.howHTML(G.how,'big')+'<div id="cnt3" class="cnt3"></div>';
-  LDB.patch(R('m'),{phase:'how',t0:Date.now()});SND.go();
-  var k=0;(function c3(){var t=[6000,1000,1000,1000][k];H.tm=setTimeout(function(){k++;if(k<4){$('#cnt3').textContent=4-k;$('#cnt3').className='cnt3 on';tone(440+k*110,0,.2,'square',.1);c3()}else next()},t)})()}
-function next(){clearTimeout(H.tm);clearTimeout(H.tm2);H.qi++;if(H.qi>=H.n){end();return}
-  var q=H.Q[H.qi],ext=0;for(var id in H.xt)if(+H.xt[id]===H.qi)ext=5000;var dur=(q.ty==='mc'?LV.DUR:LV.DURCH)+ext;H.dur=dur;H.A={};H.fxNow={};H.t0=Date.now();H.lbOn=false;
-  var sq={ty:q.ty,t:q.t};if(q.ty==='mc'){sq.o=q.o;sq.h=q.h;sq.x=q.x}else{sq.zh=q.zh;sq.ic=q.ic||'';sq.tiles=q.tiles;sq.p=q.p||''}
-  LDB.patch(R('m'),{phase:'q',qi:H.qi,q:sq,t0:H.t0,dur:dur,rev:null});
-  if(H.unA)H.unA();H.unA=LDB.listen(R('a/'+H.qi),function(v){H.A=v||{};drawQ();if(Object.keys(H.A).length>=ids().length&&H.phase==='q')reveal()});
-  H.phase='q';scr('hq');$('#hq').className='scr '+(H.game==='classic'?'classic':'side');drawQ();drawGame();tick();
-  var F=LV.game(H.game).fx;if(H.int&&F&&F.ms)H.tm2=setTimeout(fxSend,3000+Math.random()*3000)}
+  putM({phase:'how',t0:Date.now(),pl:H.pl});
+  stopAll();H.stops.push(LDB.poll(R('p'),3000,function(v){seeP(v);online().forEach(join)}));
+  var k=0;(function c3(){var t=[5000,1000,1000,1000][k];H.tm=setTimeout(function(){k++;if(k<4){$('#cnt3').textContent=4-k;$('#cnt3').className='cnt3 on';c3()}else next()},t)})()}
+/* 開始 以後 才 進來 的：下一題 開始 算 */
+function join(id){if(H.pl[id])return;H.pl[id]=1;H.tot[id]=0;H.okc[id]=0;H.st[id]=0;H.best[id]=0;H.fxc[id]=0;H.okq[id]=Array(Math.max(0,H.qi)+1).join('-')}
+function next(){clearTimeout(H.tm);clearTimeout(H.tm2);clearTimeout(H.tm3);LV.stopSay();H.qi++;if(H.qi>=H.n){end();return}
+  var q=H.Q[H.qi];H.A={};H.fxNow={};H.lbOn=false;
+  LDB.get(R('xt')).then(function(v){return v},function(){return null}).then(function(xt){H.xt=xt||{};var ext=0;for(var id in H.xt)if(+H.xt[id]===H.qi)ext=5000;
+    var dur=(q.ty==='mc'?LV.DUR:LV.DURCH)+(q.ls?4000:0)+ext;H.dur=dur;H.t0=Date.now();
+    var sq={ty:q.ty,t:q.t,ch:q.ch||0};if(q.ty==='mc'){sq.o=q.o;sq.ot=q.ot;sq.x=q.x;sq.ls=q.ls}else{sq.zh=q.zh;sq.ic=q.ic||'';sq.tiles=q.tiles;sq.p=q.p||''}
+    H.phase='q';putM({phase:'q',qi:H.qi,q:sq,t0:H.t0,dur:dur,rev:null,fx:null,pl:H.pl});
+    H.stops.push(H.unA=LDB.poll(R('a/'+H.qi),600,function(v){H.A=v||{};for(var id in H.A)join(id);drawQ();if(H.phase==='q'&&ids().every(function(id){return H.A[id]}))reveal()}));
+    if(H.game==='king')H.stops.push(H.unC=LDB.poll(R('ch'),1500,function(v){H.ch2=v||{};if(H.phase==='q'||H.phase==='rev')drawGame()}));
+    scr('hq');$('#hq').className='scr '+(H.game==='classic'?'classic':'side');drawQ();drawGame();ctl();tick();
+    if(q.ls&&q.al)H.tm3=setTimeout(function(){LV.say(BASE+q.al.replace(/^\.\.\//,''),q.ae,2)},700);
+    var F=LV.game(H.game).fx;if(H.int&&F&&F.ms)H.tm2=setTimeout(fxSend,3000+Math.random()*3000)})}
 function tick(){clearTimeout(H.tm);if(H.phase!=='q')return;var left=Math.max(0,H.dur-(Date.now()-H.t0)),s=Math.ceil(left/1000);
-  if(s!==H.lastS){H.lastS=s;if(s<=5&&s>0)SND.tick()}
   $('#qt').textContent=s;$('#qring').style.setProperty('--p',(left/H.dur*100).toFixed(1));$('#qtm').classList.toggle('hurry',s<=5);
   if(left<=0){reveal();return}H.tm=setTimeout(tick,200)}
-/* 干擾（系統自動、不扣分）：全班一起的 ＝ 每一個人；其他 ＝ 隨機 1～2 個（每人每場最多 2 次、還沒答的） */
+/* 干擾（系統自動、不扣分）：寫在 m.fx（平板 跟著 m 一起 拿到）；全班一起的 ＝ 每一個人；其他 ＝ 隨機 1～2 個（每人每場最多 2 次、還沒答的） */
 function fxSend(){if(H.phase!=='q')return;var F=LV.game(H.game).fx;if(!F)return;var L=ids().filter(function(id){return (H.fxc[id]||0)<LV.MAXFX&&!H.A[id]});if(!L.length)return;
-  var who=F.all?L:LV.shuf(L).slice(0,Math.random()<.5?1:2),now=Date.now();
-  who.forEach(function(id){H.fxc[id]=(H.fxc[id]||0)+1;H.fxNow[id]=F.k;LDB.set(R('fx/'+id),{k:F.k,qi:H.qi,at:now})});
+  var who=F.all?L:LV.shuf(L).slice(0,Math.random()<.5?1:2),now=Date.now(),fx={};
+  who.forEach(function(id){H.fxc[id]=(H.fxc[id]||0)+1;H.fxNow[id]=F.k;fx[id]={k:F.k,qi:H.qi,at:now}});putM({fx:fx});
   H.log.push({qi:H.qi,k:F.k,n:who.length});drawGame()}
-function qTitle(q){return q.ty==='mc'?q.t:'<span class="chal">🔥 挑戰題 分數 ✖2</span><div class="cht">'+q.t+'</div><div class="chz">'+(q.ic?'<span class="chi">'+q.ic+'</span>':'')+esc(q.zh)+'</div>'}
+function qTitle(q){var c=q.ty==='mc'?'':'<span class="chal">'+(q.ch?'🔥 挑戰題 分數 ✖2':'🧩 排句子')+'</span>';
+  if(q.ty==='mc')return (q.ls?'<div class="lsn">🎧 仔細 聽 <button id="hear" class="ghost">🔊 再 聽 一次</button></div>':q.t);
+  return c+'<div class="cht">'+q.t+'</div><div class="chz">'+(q.ic?'<span class="chi">'+q.ic+'</span>':'')+LV.ic(q.zh)+'</div>'}
+/* 題目 畫面：上面 一行（第幾題、倒數、幾個人 答了）、題目、選項；下面 一排 座號（答了 ＝ 綠色 ✔：老師 一眼 看到 收到 誰 的 答案） */
 function drawQ(){var q=H.Q[H.qi];if(!q)return;$('#qn').textContent='第 '+(H.qi+1)+' ／ '+H.n+' 題';$('#qq').innerHTML=qTitle(q);
-  var rv=H.phase==='rev',D=H.dist||[0,0,0,0],mx=Math.max(1,Math.max.apply(null,D));
-  if(q.ty==='mc')$('#qo').innerHTML=q.o.map(function(t,i){return '<div class="qo c'+i+(rv&&i===q.a?' ok':'')+(rv&&i!==q.a?' no':'')+'"><span class="shp">'+LV.SHAPE[i]+'</span><span class="qt">'+t+'</span>'+
-    (rv?'<span class="qd"><i style="--h:'+(D[i]/mx*100).toFixed(0)+'%"></i><b>'+D[i]+'</b></span>':'')+(rv&&i===q.a?'<span class="qck">✔</span>':'')+'</div>'}).join('');
-  else $('#qo').innerHTML='<div class="chbox">'+(rv?'<div class="chans">✔ '+esc(q.ty==='sp'?q.a:q.a.split('|').join(' ').replace(/ (’|')/g,'$1')+(q.p||''))+'</div><div class="chok">✅ 答對 '+(H.nOk||0)+' 人</div>':
+  var rv=H.phase==='rev',D=H.dist||[0,0,0,0],mx=Math.max(1,Math.max.apply(null,D));$('#hq').classList.toggle('rv',rv);
+  if(q.ty==='mc')$('#qo').innerHTML='<div class="qos n'+q.o.length+'">'+q.o.map(function(t,i){return '<div class="qo c'+i+(rv&&i===q.a?' ok':'')+(rv&&i!==q.a?' no':'')+'"><span class="shp">'+LV.SHAPE[i]+'</span><span class="qt">'+t+'</span>'+
+    (rv?'<span class="qd"><i style="--h:'+(D[i]/mx*100).toFixed(0)+'%"></i><b>'+D[i]+' 人</b></span>':'')+(rv&&i===q.a?'<span class="qck">✔</span>':'')+'</div>'}).join('')+'</div>';
+  else $('#qo').innerHTML='<div class="chbox">'+(rv?'<div class="chans">✔ '+esc(q.ans)+'</div>':
     '<div class="chtiles">'+q.tiles.map(function(t){return '<span>'+esc(t)+'</span>'}).join('')+'</div><div class="note">👆 在 平板 上 照 順序 點</div>')+'</div>';
-  $('#qa').innerHTML='✋ <b>'+Object.keys(H.A).length+'</b> ／ '+ids().length+' 人 答了';
-  $('#qh').innerHTML=rv&&q.h?'💡 '+q.h:'';$('#qh').hidden=!(rv&&q.h)}
+  var na=ids().filter(function(id){return H.A[id]}).length;
+  $('#qa').innerHTML='✋ <b>'+na+'</b> ／ '+ids().length+' 人 答了';
+  $('#qs').innerHTML=rv?'':seatRow();
+  $('#qh').innerHTML=rv?anaHTML(q):'';$('#qh').hidden=!rv}
+function seatRow(){return '<div class="srow">'+ids().map(function(id){return '<span class="'+(H.A[id]?'ok':'')+'">'+(H.A[id]?'✔ ':'')+sp2(seatOf(id))+'</span>'}).join('')+'</div>'}
+/* 📌 錯題 分析（公布 的 時候）：答對 幾 人、答錯 幾 人、最多人 選錯 哪一個；正確 答案 逐字 中文、整句 翻譯、💡、〔🔊 再 唸〕 */
+function anaHTML(q){var n=ids().length,ok=H.nOk||0,bad=n-ok,top='';
+  if(q.ty==='mc'&&bad){var D=H.dist||[],wi=-1;D.forEach(function(v,i){if(i!==q.a&&v&&(wi<0||v>D[wi]))wi=i});if(wi>=0)top='<div class="anw">❌ 最多人 選錯：<span class="shp sm c'+wi+'">'+LV.SHAPE[wi]+'</span> '+esc(q.ot[wi])+'（'+D[wi]+' 人）</div>'}
+  return '<div class="ana"><div class="anh"><span class="aok">✅ 答對 '+ok+' 人</span><span class="abad">❌ 答錯 '+bad+' 人</span>'+top+'</div>'+
+    '<div class="ant">📌 正確 答案<button id="resay" class="ghost">🔊 再 唸 一次</button></div>'+LV.glHTML({ag:q.ag,az:q.az,ae:q.ae,ans:q.ans,h:q.h},true)+'</div>'}
+/* 控制 按鈕：永遠 在 右下角 同一個 位置（老師 8(3)(4)：不知道 怎麼 關 排行榜、開 下一題）*/
+function ctl(){var p=H.phase,b=$('#hgo'),last=H.qi>=H.n-1;
+  b.textContent=p==='q'?'⏭ 提早 公布':p==='rev'?'🏆 看 排行榜 ➜':p==='lb'?(last?'🏆 頒獎 典禮 ➜':'▶ 下一題（第 '+(H.qi+2)+' 題）'):'';
+  b.className='big '+(p==='q'?'ghost':'go');$('#hctl2').hidden=p!=='q'}
+function hgo(){if(H.phase==='q')reveal();else if(H.phase==='rev')lbShow();else if(H.phase==='lb')next()}
 /* ── 公布 ── */
-function okOf(q,a){if(!a)return false;if(q.ty==='mc')return Object.prototype.toString.call(a.k)==='[object Array]'?a.k.indexOf(q.a)>=0:a.k===q.a;
-  if(q.ty==='sp')return LV.norm(a.s)===LV.norm(q.a);return LV.norm(a.s)===LV.norm(q.a)}
-function reveal(){if(H.phase!=='q')return;H.phase='rev';clearTimeout(H.tm);clearTimeout(H.tm2);var q=H.Q[H.qi],sc={},ok1={},cheer=0,hits=[],D=[0,0,0,0],nOk=0;
+function okOf(q,a){if(!a)return false;if(q.ty==='mc')return Object.prototype.toString.call(a.k)==='[object Array]'?a.k.indexOf(q.a)>=0:a.k===q.a;return LV.norm(a.s)===LV.norm(q.a)}
+function reveal(){if(H.phase!=='q')return;H.phase='rev';clearTimeout(H.tm);clearTimeout(H.tm2);if(H.unA)H.unA();
+  LDB.get(R('a/'+H.qi)).then(function(v){return v},function(){return null}).then(function(v){if(v)for(var k in v){H.A[k]=v[k];join(k)}rev2()})}
+function rev2(){var q=H.Q[H.qi],sc={},ok1={},cheer=0,hits=[],D=[0,0,0,0],nOk=0;
   H.rk0=rank().map(function(x){return x.id});
   ids().forEach(function(id){var a=H.A[id],f=(a&&a.f)||{},ok=okOf(q,a);
     if(a&&q.ty==='mc'&&typeof a.k==='number')D[a.k]++;
     if(ok){H.st[id]++;H.okc[id]++;nOk++;if(H.st[id]>H.best[id])H.best[id]=H.st[id];hits.push({id:id,ms:a.ms,d:10+Math.min(20,Math.floor((+(H.P[id]||{}).pw||0)/100))})}else if(!f.sh)H.st[id]=0;
-    var ff={};for(var k in f)ff[k]=f[k];if(q.ty!=='mc')ff.chal=1;
+    var ff={};for(var k in f)ff[k]=f[k];if(q.ch)ff.chal=1;
     var s=LV.score(ok,a?a.ms:H.dur,H.dur,ff,H.st[id]);
     if(f.met)s+=30*Math.min(3,+f.met||0);
     if(ok&&(H.fxNow[id]==='lock'||H.fxNow[id]==='wave'))s+=50;
-    if(f.ch)cheer++;sc[id]=s;ok1[id]=ok?1:0;H.tot[id]+=s});
+    if(f.ch)cheer++;sc[id]=s;ok1[id]=ok?1:0;H.tot[id]+=s;H.okq[id]=(H.okq[id]||'')+(a?(ok?'1':'0'):'-')});
   hits.sort(function(a,b){return a.ms-b.ms});H.hits=hits;H.dist=D;H.nOk=nOk;H.sc=sc;
-  gsUp(ok1,hits,cheer);
-  var ra=q.ty==='mc'?q.a:q.a;
-  LDB.patch(R('m'),{phase:'rev',rev:{qi:H.qi,a:ra,ty:q.ty,h:q.h,d:D,n:nOk},r:{qi:H.qi,sc:sc,tot:H.tot,ok:ok1,st:H.st,okc:H.okc},gs:H.gs});
-  SND.rev();drawQ();drawGame();
-  /* 經典搶答：長條圖 3 秒 ➜ 前 5 名（名次 往上 往下 會 動）；其他：場景 自己 演 */
-  if(H.game==='classic')H.tm3=setTimeout(function(){if(H.phase==='rev'){H.lbOn=true;drawLB();SND.lb()}},3200);
-  if(!H.pause)H.tm=setTimeout(next,H.game==='classic'?9000:7000)}
+  H.sum.push({qi:H.qi,ok:nOk,n:ids().length});
+  if(H.game!=='classic')gsUp(ok1,hits,cheer);
+  putM({phase:'rev',rev:{qi:H.qi,a:q.a,ty:q.ty,ans:q.ans,h:q.h,ae:q.ae,ag:q.ag,az:q.az,au:q.au,d:D,n:nOk},r:{qi:H.qi,sc:sc,tot:H.tot,ok:ok1,st:H.st,okc:H.okc},gs:H.game==='classic'?null:H.gs,fx:null});
+  drawQ();drawGame();ctl();
+  if(H.say&&q.ae)H.tm3=setTimeout(function(){LV.say(q.au?BASE+q.au.replace(/^\.\.\//,''):'',q.ae,3)},900)}
 function rank(){return ids().map(function(id){return {id:id,v:H.tot[id]||0}}).sort(function(a,b){return b.v-a.v||(a.id<b.id?-1:1)})}
-/* 前 5 名：每一列 從「上一題 的 名次」滑到 現在 的 名次；🔥 連對 */
-function drawLB(){var el=$('#lb');if(!el)return;var R0=H.rk0||[],R1=rank().slice(0,5);
-  el.innerHTML='<div class="lbt">🏆 前 5 名</div>'+R1.map(function(x,i){var was=R0.indexOf(x.id),dy=(was<0?5:Math.min(5,was))-i;
+/* 🏆 前 5 名：每一列 從「上一題 的 名次」滑到 現在 的 名次；🔥 連對 */
+function lbShow(){H.phase='lb';LV.stopSay();if(H.unC)H.unC();putM({phase:'lb'});scr('hlb');drawLB();ctl2()}
+function ctl2(){var b=$('#hgo2'),last=H.qi>=H.n-1;b.textContent=last?'🏆 頒獎 典禮 ➜':'▶ 下一題（第 '+(H.qi+2)+' 題）'}
+function drawLB(){var el=$('#lb');var R0=H.rk0||[],R1=rank().slice(0,5);
+  el.innerHTML='<div class="lbt">🏆 前 5 名　<small>第 '+(H.qi+1)+' ／ '+H.n+' 題 以後</small></div>'+R1.map(function(x,i){var was=R0.indexOf(x.id),dy=(was<0?5:Math.min(5,was))-i;
     return '<div class="lbr'+(i===0?' top':'')+'" style="--dy:'+dy+'"><b class="lbn">'+(i+1)+'</b>'+heroI(x.id,'lbi')+'<span class="lbs">'+seatOf(x.id)+' 號</span>'+(dy>0?'<i class="up">▲ '+dy+'</i>':'')+
-      ((H.st[x.id]||0)>=2?'<i class="fire">🔥 '+H.st[x.id]+'</i>':'')+'<em>'+(x.v||0).toLocaleString()+'</em></div>'}).join('');
-  el.className='lb on'}
-/* ── 遊戲 場景（大螢幕 右邊）── */
+      ((H.st[x.id]||0)>=2?'<i class="fire">🔥 連對 '+H.st[x.id]+'</i>':'')+'<em>'+(x.v||0).toLocaleString()+'</em></div>'}).join('')}
+function heroI(id,cls){var p=H.P[id]||{};return p.h?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,p.h)+'" alt="">':'<span class="noh '+(cls||'')+'">👤</span>'}
+/* ── 遊戲 場景（大螢幕 右邊；經典搶答 沒有）── */
 var BOSS=['p30','p29','p28','p27','p26','p25','p24','p23'];
 function gs0(){var n=Math.max(1,ids().length),hp=n*Math.max(3,Math.round(H.n*.55))*15;
   var tre=[];for(var i=0;i<6;i++)tre.push('s0'+(1+Math.floor(Math.random()*5))+('0'+(1+Math.floor(Math.random()*20))).slice(-2));
@@ -147,7 +187,7 @@ function drawGame(){var el=$('#gv');if(!el||H.game==='classic')return;var G=H.gs
     h+='<div class="bs'+(G.hp<=0?' dead':'')+(rv&&H.hits&&H.hits.length?' hit':'')+'"><div class="bsau"></div><img class="bsi" src="'+LV.img(BASE,G.boss)+'" alt="魔王">'+(G.hp<=0?'<div class="ko">K.O.</div>':'')+'</div>'+
       '<div class="hpb"><i style="'+mv('hp',p.toFixed(1)+'%')+'"></i><span>'+(G.hp<=0?'🎉 全班 打倒 魔王！':'❤ '+G.hp.toLocaleString()+' ／ '+G.hp0.toLocaleString())+'</span></div>'+
       (rv&&H.hits?'<div class="hits">'+H.hits.slice(0,12).map(function(x,i){return '<span class="hit1" style="--i:'+i+'">'+heroI(x.id,'hti')+'<b>－'+Math.round(x.d*(G.combo?1.5:1))+'</b></span>'}).join('')+(H.hits.length>12?'<span class="more">＋'+(H.hits.length-12)+' 人</span>':'')+'</div>'+
-        (G.combo?'<div class="combo">🤝 全班 答對 8 成 ＝ 連擊 ✖1.5！</div>':'<div class="note c">全班 答對 8 成 ＝ 連擊 ✖1.5</div>'):'<div class="note c">✋ 答對 的 人 ＝ 英雄 飛過去 出招</div>')}
+        (G.combo?'<div class="combo">🤝 全班 答對 8 成 ＝ 連擊 ✖1.5！</div>':'<div class="note c">全班 答對 8 成 ＝ 連擊 ✖1.5</div>'):'<div class="note c">✋ 答對 的 人 ＝ 戰士 飛過去 出招</div>')}
   else if(k==='race'){var top=R.slice(0,8),len=Math.max(H.n*800,(R[0]?R[0].v:0)*1.08);
     h+='<div class="rc">'+top.map(function(x,i){var pc=Math.min(92,(x.v/len*92));return '<div class="rl"><b class="rp">'+(i+1)+'</b><span class="rtk"><span class="car'+((H.st[x.id]||0)>=3?' nitro':'')+'" style="'+mv('car'+x.id,pc.toFixed(1)+'%')+'">'+heroI(x.id,'cri')+'<i>'+seatOf(x.id)+'</i>'+fxi(x.id)+'</span></span><span class="fin"></span></div>'}).join('')+'</div>'+
       '<div class="note c">🔥 ＝ 連對 3 題 氮氣 加速　🏁 前 8 名</div>'}
@@ -185,43 +225,74 @@ function drawGame(){var el=$('#gv');if(!el||H.game==='classic')return;var G=H.gs
       (chg?'<div class="chg">👊 挑戰者：'+heroI(chg,'chgi')+seatOf(chg)+' 號（台下 答對 最快）</div>':'')+'<div class="kc">📣 台下 加油 <b>'+cc+'</b> 次</div></div>'}
   h+='<div class="rk5">'+R.slice(0,5).map(function(x,i){return '<span><b>'+(i+1)+'</b> '+seatOf(x.id)+' 號 '+(x.v||0).toLocaleString()+'</span>'}).join('')+'</div>';
   el.innerHTML=h}
-/* ── 結束：頒獎台 3 ➜ 2 ➜ 1 ＋ 發獎勵 ── */
-function end(){H.phase='end';clearTimeout(H.tm);clearTimeout(H.tm3);LDB.patch(R('m'),{phase:'end',r:{qi:H.qi,tot:H.tot,okc:H.okc,st:H.st},gs:H.gs});scr('hend');SND.drum();
-  var Rk=rank(),G=H.gs,k=H.game,cnt=[0,0];G.cells.forEach(function(t){if(t!=null)cnt[t]++});
-  var res=k==='boss'?(G.hp<=0?'🎉 全班 打倒 魔王！':'魔王 還剩 '+G.hp+' 血 —— 下次 一定 打得倒！'):k==='tug'?(G.tug===0?'🤝 兩隊 平手！':(G.tug>0?'🔵 單號隊':'🔴 雙號隊')+' 贏了 拔河！'):
-    k==='map'?(cnt[0]===cnt[1]?'🤝 兩隊 平手！':(cnt[0]>cnt[1]?'🔵 單號隊':'🔴 雙號隊')+' 搶到 比較 多 地！'):k==='pet'?['🥚 龍蛋 快 孵出來 了！','💥 龍蛋 裂開 了！','🐣 孵出 傳說 寵物！','🐲 寵物 長大 了！','🐉 傳說 進化！'][G.pet]:
-    k==='treasure'?'🗝 全班 打開 '+G.tr+' 個 寶箱':k==='tower'?'🚩 '+seatOf((Rk[0]||{}).id||'00000')+' 號 爬 最高！':'';
-  var bb=0,bi='';ids().forEach(function(id){if((H.best[id]||0)>bb){bb=H.best[id];bi=id}});
-  $('#eres').innerHTML=(res?'<div>'+res+'</div>':'')+(bb>=2?'<div class="note big2">🔥 這一場 最長 連勝：'+seatOf(bi)+' 號 '+bb+' 題</div>':'');
-  $('#epod').innerHTML=[1,0,2].map(function(n){var x=Rk[n];return '<div class="kp p'+(n+1)+'" style="--d:'+[2.6,1.3,0][n]+'s">'+(x?heroI(x.id,'kpi')+'<b>'+seatOf(x.id)+' 號</b><em>'+x.v.toLocaleString()+' 分</em>':'')+'<div class="kb">'+['🥇','🥈','🥉'][n]+'</div></div>'}).join('');
-  setTimeout(SND.win,2800);
-  LDB.get(R('rw')).then(function(rw){H.rw=rw||{};var fw=Object.keys(H.rw).filter(function(id){return (H.rw[id]||[]).indexOf('fw')>=0});
-    if(fw.length)$('#efw').innerHTML='<div class="fwt">🎇 煙火 送給：</div>'+fw.map(function(id){return heroI(id,'fwi')}).join('')+fwHTML();
-    $('#erw').textContent='🎁 這一場 抽到 的 獎勵：'+Object.keys(H.rw).reduce(function(s,id){return s+(H.rw[id]||[]).length},0)+' 個（按 下面 的 按鈕 發 到 每一個人 的 戰神之路）'})}
-function fwHTML(){var h='<div class="fwx">',C=['#FFD54A','#FF6B6B','#7FD4FF','#7BF0A8','#D9A8FF'];for(var n=0;n<5;n++){var x=10+n*20,y=20+(n%2)*25;for(var i=0;i<14;i++){var a=i/14*Math.PI*2;h+='<i style="left:'+x+'%;top:'+y+'%;--c:'+C[n]+';--x:'+Math.round(Math.cos(a)*90)+'px;--y:'+Math.round(Math.sin(a)*90)+'px;animation-delay:'+(n*.3)+'s"></i>'}}return h+'</div>'}
+/* ── 結束 ① 🏆 頒獎 典禮（老師 8(6)：潦草 ➜ 用 老師看板 的 10 種 風格〔每一次 不一樣〕、前 3 名 一個一個 上台；沒有 聲音）── */
+function end(){H.phase='end';clearTimeout(H.tm);clearTimeout(H.tm3);LV.stopSay();stopAll();
+  var Rk=rank(),top=[];for(var i=0;i<Rk.length&&top.length<3;i++)top.push(Rk[i]);
+  /* 全班 錯題：每一題 答對 率；最多人 錯 的 前 3 題（平板 的 個人 總分析 也 要 用） */
+  var S=H.sum.map(function(s){var q=H.Q[s.qi];return {qi:s.qi,ok:s.ok,n:s.n,r:s.n?Math.round(s.ok/s.n*100):0,ans:q.ans,ae:q.ae,ag:q.ag,az:q.az,au:q.au,h:q.h,t:q.ty==='mc'?(q.ls?'🎧 聽力題':q.t):q.t+'：'+LV.ic(q.zh||'')}});
+  var W=S.filter(function(s){return s.ok<s.n}).sort(function(a,b){return a.r-b.r||a.qi-b.qi}).slice(0,3).map(function(s){return s.qi});
+  H.S=S;H.W=W;
+  putM({phase:'end',r:{qi:H.qi,tot:H.tot,okc:H.okc,st:H.st,okq:H.okq},gs:H.game==='classic'?null:H.gs,sum:{w:W,s:S.map(function(s){return {qi:s.qi,r:s.r,ok:s.ok,n:s.n}}),
+    wq:W.map(function(k){var s=S[k];return {qi:k,r:s.r,ans:s.ans,ae:s.ae,ag:s.ag,az:s.az,au:s.au,h:s.h}})}});
+  cerShow()}
+function cerShow(){scr('hend');var Rk=rank(),G=H.gs,k=H.game,cnt=[0,0];(G.cells||[]).forEach(function(t){if(t!=null)cnt[t]++});
+  var res=k==='boss'?(G.hp<=0?'🎉 全班 打倒 魔王！':'魔王 還剩 '+G.hp+' 血'):k==='tug'?(G.tug===0?'🤝 兩隊 平手':(G.tug>0?'🔵 單號隊':'🔴 雙號隊')+' 贏了 拔河'):
+    k==='map'?(cnt[0]===cnt[1]?'🤝 兩隊 平手':(cnt[0]>cnt[1]?'🔵 單號隊':'🔴 雙號隊')+' 搶到 比較 多 地'):k==='pet'?['🥚 龍蛋 快 孵出來 了','💥 龍蛋 裂開 了','🐣 孵出 傳說 寵物','🐲 寵物 長大 了','🐉 傳說 進化'][G.pet||0]:k==='treasure'?'🗝 全班 打開 '+G.tr+' 個 寶箱':'';
+  var pod=[];for(var i=0;i<Rk.length&&i<3;i++){var x=Rk[i];pod.push({rk:i+1,w:'<span class="cph">'+heroI(x.id,'cpi')+'</span><span class="cpn">'+seatOf(x.id)+' 號</span><span class="cps">'+x.v.toLocaleString()+' 分</span>'})}
+  var one=Rk[0],G2=LV.game(H.game);
+  H.cerK=CERX.pick();
+  CERX.play($('#cerst'),H.cerK,{ribbon:'⚡ 現場任務 冠軍',sub:H.cls+' 班　'+G2.nm+'　'+H.n+' 題'+(res?'　'+res:''),cls:one?'👑 '+seatOf(one.id)+' 號':'',
+    say:one?'🌟 總分 '+one.v.toLocaleString()+' 分、答對 '+(H.okc[one.id]||0)+' ／ '+H.n+' 題':'',pod:pod},{snd:false});
+  $('#cstn').textContent='第 '+(H.cerK+1)+' 種 風格：'+CERX.ST[H.cerK].nm}
+/* ── 結束 ② 📊 全班 錯題 總分析：每一題 答對 率 長條（一條一條 長出來）＋ 最多人 錯 的 前 3 名（逐字 中文、翻譯、🔊）── */
+function anaShow(){CERX.stop($('#cerst'));scr('hana');var S=H.S||[],n=S.length,okA=0,nA=0;S.forEach(function(s){okA+=s.ok;nA+=s.n});var acc=nA?Math.round(okA/nA*100):0;
+  var RD=46,L=2*Math.PI*RD;
+  var h='<div class="anahd"><svg class="ring2" viewBox="0 0 110 110"><circle cx="55" cy="55" r="'+RD+'" fill="none" stroke="#24313F" stroke-width="12"/><circle class="rg" cx="55" cy="55" r="'+RD+'" fill="none" stroke="#3BD16F" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+L.toFixed(1)+'" stroke-dashoffset="'+L.toFixed(1)+'" style="--to:'+(L*(1-acc/100)).toFixed(1)+'" transform="rotate(-90 55 55)"/><text x="55" y="62" text-anchor="middle" font-size="26" fill="#fff" font-weight="700">'+acc+'%</text></svg>'+
+    '<div><h1>📊 全班 錯題 總分析</h1><div class="note big2">'+H.cls+' 班　全班 平均 答對 '+acc+'%</div></div></div>'+
+    '<div class="bars">'+S.map(function(s,i){var w=s.r;return '<div class="bar" style="--i:'+i+'"><b>第 '+(s.qi+1)+' 題</b><span class="bt"><i class="'+(w>=80?'g':w>=50?'y':'r')+'" style="--w:'+w+'%"></i></span><em>'+w+'%</em><small>'+s.ok+' ／ '+s.n+' 人</small></div>'}).join('')+'</div>'+
+    '<h2>❌ 最多人 錯 的 題目 排行</h2>'+((H.W||[]).length?'<div class="wrk">'+H.W.map(function(k,j){var s=S[k];return '<div class="wr" style="--i:'+j+'"><div class="wrh"><b class="wn">'+['🥇','🥈','🥉'][j]+' 第 '+(s.qi+1)+' 題</b><span class="note">答對 '+s.r+'%</span><button class="ghost" data-say="'+k+'">🔊 唸</button></div>'+
+      '<div class="wrq">'+s.t+'</div>'+LV.glHTML({ag:s.ag,az:s.az,ae:s.ae,ans:s.ans,h:s.h})+'</div>'}).join('')+'</div>':'<div class="note big2">🎉 每一題 全班 都 答對！</div>');
+  $('#hanab').innerHTML=h;
+  setTimeout(function(){$$('#hanab .bar,#hanab .wr').forEach(function(x){x.classList.add('go')});var g=$('#hanab .rg');if(g)g.classList.add('go')},60);
+  if(H.say&&H.W&&H.W.length){var s=S[H.W[0]];H.tm3=setTimeout(function(){LV.say(s.au?BASE+s.au.replace(/^\.\.\//,''):'',s.ae,3)},1500)}
+  LDB.get(R('rw')).then(function(rw){H.rw=rw||{};$('#erw').textContent='🎁 這一場 抽到 的 獎勵：'+Object.keys(H.rw).reduce(function(s,id){return s+(H.rw[id]||[]).length},0)+' 個'},function(){})}
 /* 每一個人：參加 ＋10 經驗值、答對 1 題 ＋1 金幣；抽到的獎勵照 LV.RW */
 function bonusList(){return ids().map(function(id){var rw=H.rw[id]||[],c=H.okc[id]||0,x=10,o={id:id,c:c,x:x,tre:[],title:'',snack:0,medal:0};
   rw.forEach(function(k){if(k==='c2')o.c+=c;else if(k==='x2')o.x+=x;else if(k==='frag')o.c+=20;else if(k==='title')o.title='⚡ 現場任務 勇者';else if(k==='emo')o.tre.push('t06');else if(k==='fx')o.tre.push('t04');else if(k==='snack')o.snack++;else if(k==='medal')o.medal++;else if(k==='box')o.c+=30});return o})}
 function give(){var b=$('#give'),m=$('#gm');if(H.done){m.textContent='✅ 已經 發過了';return}b.disabled=true;m.textContent='⏳ 發獎勵中…';
-  post({a:'rpgb',pw:H.pw,room:H.code,t0:H.start,list:bonusList()}).then(function(j){if(j&&j.ok){H.done=true;b.textContent='✅ 獎勵 發好了';m.textContent='✅ 發好了（'+j.n+' 人）：〔戰神之路〕拿到 獎勵、老師看板 練習次數 ＋1';LDB.patch(R('m'),{given:1})}else{b.disabled=false;m.textContent='❌ 沒有 發成（'+((j&&j.err)||'')+'）'}},
+  post({a:'rpgb',pw:H.pw,room:H.code,t0:H.start,list:bonusList()}).then(function(j){if(j&&j.ok){H.done=true;b.textContent='✅ 獎勵 發好了';m.textContent='✅ 發好了（'+j.n+' 人）：〔戰神之路〕拿到 獎勵、老師看板 練習次數 ＋1';putM({given:1})}else{b.disabled=false;m.textContent='❌ 沒有 發成（'+((j&&j.err)||'')+'）'}},
     function(){b.disabled=false;m.textContent='📶 連不到 成績系統'})}
-function closeGame(){if(H.code)LDB.del(R()).then(function(){location.reload()});else location.reload()}
-document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;ac();
+/* 結束 這一場：清掉 遊戲（留著 p：學生 還 登入 著，下一場 直接 進來）*/
+function closeGame(){LV.stopSay();stopAll();if(H.code)LDB.must('PATCH',R(),{m:null,v:Date.now(),a:null,rw:null,xt:null,ch:null},6).then(function(){location.reload()});else location.reload()}
+function copyURL(b){var u=stuURL(),ok=function(){b.textContent='✅ 複製 好了';setTimeout(function(){b.textContent='📋 複製 網址'},2000)};
+  try{navigator.clipboard.writeText(u).then(ok,function(){fb()})}catch(e){fb()}
+  function fb(){var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok()}catch(e){}t.remove()}}
+document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
   if(c('#pwgo')){pwGo();return}
-  if((b=c('[data-sc]'))){H.cls=b.getAttribute('data-sc');var g=H.cls.charAt(0)==='3'?3:4;H.g=g;setDraw();return}
+  if((b=c('[data-sc]'))){H.cls=b.getAttribute('data-sc');H.g=H.cls.charAt(0)==='3'?3:4;H.qg=H.g;setDraw();return}
   if((b=c('[data-sk]'))){H.game=b.getAttribute('data-sk');setDraw();return}
-  if((b=c('[data-sb]'))){var k=H.g+'_'+b.getAttribute('data-sb');H.sets[k]=!H.sets[k];setDraw();return}
+  if((b=c('[data-qg]'))){H.qg=+b.getAttribute('data-qg');setDraw();return}
+  if((b=c('[data-sa]'))){var on=b.getAttribute('data-sa')==='1';(LIST[H.qg]||[]).forEach(function(k){H.sets[H.qg+'_'+k]=on});setDraw();return}
+  if((b=c('[data-sb]'))){var k=H.qg+'_'+b.getAttribute('data-sb');H.sets[k]=!H.sets[k];setDraw();return}
   if((b=c('[data-sn]'))){H.n=+b.getAttribute('data-sn');setDraw();return}
   if((b=c('[data-ch]'))){H.ch=+b.getAttribute('data-ch');setDraw();return}
   if((b=c('[data-si]'))){H.int=+b.getAttribute('data-si');setDraw();return}
   if(c('#mk')){mkRoom();return}
+  if((b=c('#lcopy'))){copyURL(b);return}
   if(c('#go')){start();return}
-  if(c('#hp')){H.pause=!H.pause;$('#hp').textContent=H.pause?'▶ 繼續':'⏸ 停在 這一題';if(H.pause&&H.phase==='rev')clearTimeout(H.tm);if(!H.pause&&H.phase==='rev')next();return}
-  if(c('#hn')){if(H.phase==='q')reveal();else next();return}
-  if(c('#hint')){H.int=H.int?0:1;$('#hint').textContent=H.int?'😆 干擾：開':'✖ 干擾：關';LDB.patch(R('m'),{int:H.int});return}
-  if(c('#hsnd')){H.snd=H.snd?0:1;$('#hsnd').textContent=H.snd?'🔊 聲音：開':'🔇 聲音：關';return}
+  if(c('#hgo')){hgo();return}
+  if(c('#hgo2')){next();return}
+  if(c('#hear')){var q=H.Q[H.qi];LV.say(q.al?BASE+q.al.replace(/^\.\.\//,''):'',q.ae,1);return}
+  if(c('#resay')){var q2=H.Q[H.qi];LV.say(q2.au?BASE+q2.au.replace(/^\.\.\//,''):'',q2.ae,1);return}
+  if((b=c('[data-say]'))){var s=H.S[+b.getAttribute('data-say')];LV.say(s.au?BASE+s.au.replace(/^\.\.\//,''):'',s.ae,1);return}
+  if(c('#hpz')){H.pz=!H.pz;if(H.pz){clearTimeout(H.tm);H.left=H.dur-(Date.now()-H.t0);$('#hpz').textContent='▶ 繼續'}else{H.t0=Date.now()-(H.dur-H.left);$('#hpz').textContent='⏸ 暫停';tick()}return}
+  if(c('#hint')){H.int=H.int?0:1;$('#hint').textContent=H.int?'😆 干擾：開':'✖ 干擾：關';putM({int:H.int});return}
+  if(c('#hsay')){H.say=H.say?0:1;$$('.hsay').forEach(function(x){x.textContent=H.say?'🗣 自動 唸：開':'🗣 自動 唸：關'});if(!H.say)LV.stopSay();return}
+  if(c('#tana')){anaShow();return}
+  if(c('#tcer')){cerShow();return}
   if(c('#give')){give();return}
   if(c('#close')||c('#close2')){if(confirm('結束 這一場？（學生 會 回到 等待 畫面）'))closeGame();return}
 });
-document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement&&document.activeElement.id==='pw')pwGo()});
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement&&document.activeElement.id==='pw')pwGo();
+  if((e.key===' '||e.key==='ArrowRight')&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||'')){if(H.scr==='hq'){e.preventDefault();hgo()}else if(H.scr==='hlb'){e.preventDefault();next()}}});
 (function(){try{var p=sessionStorage.getItem('lvpw');if(p&&LDB.on()){H.pw=p;setDraw();scr('hset');return}}catch(e){}scr('hpw')})();

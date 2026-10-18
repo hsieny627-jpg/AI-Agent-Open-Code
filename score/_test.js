@@ -302,8 +302,8 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
   /* 🏪 商城（2026-10-18 第九次）：價錢、等級照第幾排；只有上架的類買得到；同一個位置換著戴 */
   eq([SC.rpPrice('s0101'), SC.rpPrice('s0106'), SC.rpPrice('s0111'), SC.rpPrice('s0120')], [500, 1200, 2500, 5000], '商城價錢：第 1～4 排 500／1200／2500／5000');
   eq([SC.rpNeed('s0105'), SC.rpNeed('s0110'), SC.rpNeed('s0115'), SC.rpNeed('s0116')], [1, 5, 10, 20], '商城等級：Lv 1／5／10／20');
-  eq(SC.rpBuy(R, st, 's0601', T0).err, 'item', '還沒上架的類（寵物專屬服裝）買不到');   /* 2026-10-18 第十次：01～05 上架了 */
-  eq([1, 2, 3, 4, 5, 6].map(c => SC.rpOk('s0' + c + '01') ? 1 : 0).join(''), '111110', '上架 ＝ 光環、披風、必殺特效、名字框、背景（第十次）');
+  eq(SC.rpOk('s1101') ? 1 : 0, 0, '沒有 第 11 類');   /* 2026-10-18 第十二次：10 類 全部 上架 */
+  eq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(c => SC.rpOk('s' + (c < 10 ? '0' : '') + c + '01') ? 1 : 0).join(''), '1111111111', '上架 ＝ 10 類 全部（第十二次）');
   eq(SC.rpBuy(R, st, 's0101', T0).err, 'coin', '金幣不夠買不到光環（31 ＜ 500）');
   { let x = SC.rpClean({ own: { t: ['t01'], s: ['s0101'] }, eq: { t: ['t01'] } }); x.bc = 0;
     const Rich = R.concat([]); const sr = SC.rpBuy(Rich, SC.rpBonus(x, { c: 500 }), 's0102', T0);

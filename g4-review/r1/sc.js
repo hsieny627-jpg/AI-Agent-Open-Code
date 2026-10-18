@@ -690,11 +690,11 @@ var SCRPB=(function(){var s=document.querySelector('script[src$="score/url.js"]'
 function scCovI(){return '<img class="scCov" src="'+SCRPB+'rpg/cover_icon.webp" alt="" aria-hidden="true">'}
 function scHeroHTML(G){var D=function(id){return rwSrc(SCRPB,id)},S=G.s||{};if(G.h&&S.fx)setTimeout(function(){rwFx(SCRPB,S.fx)},900);   /* 2026-10-18：🏪 商城寶物、💥 必殺武功特效（做完一次 演一次） */
   var a=Math.max(0,G.xp-G.gx),p0=G.lv>G.lv0?0:Math.max(0,(a-G.lvAt)/(G.lvNext-G.lvAt)*100),p1=Math.min(100,(G.xp-G.lvAt)/(G.lvNext-G.lvAt)*100);
-  return '<div class="sct">'+scCovI()+'這一次 你拿到</div><div class="schero"><div class="shimg rw-host">'+(G.h?rwBack(SCRPB,S)+'<img src="'+D(G.h)+'" alt="我的戰神">'+rwFront(SCRPB,S)+(G.p?'<img class="shp" src="'+D(G.p)+'" alt="我的寵物">':''):'<div class="shno">'+scCovI()+'<br>還沒有 英雄</div>')+'</div>'+
+  return '<div class="sct">'+scCovI()+'這一次 你拿到</div><div class="schero"><div class="shimg rw-host">'+(G.h?rwBack(SCRPB,S)+'<img src="'+D(G.h)+'" alt="我的戰神">'+rwFront(SCRPB,S)+(G.p?'<img class="shp" src="'+D(G.p)+'" alt="我的寵物">':''):'<div class="shno">'+scCovI()+'<br>還沒有 戰士</div>')+'</div>'+
     '<div class="shst"><div class="shx">⭐ 經驗值 <b>＋'+G.gx+'</b></div><div class="shbar"><i style="width:'+p0.toFixed(1)+'%" data-w="'+p1.toFixed(1)+'"></i></div>'+
     '<div class="shlv">'+(G.lv>G.lv0?'🎉 升級了！ Lv '+G.lv0+' ➜ <b>Lv '+G.lv+'</b>':'Lv '+G.lv+'（再 '+(G.lvNext-G.xp)+' 升級）')+'</div>'+
     '<div class="shc">🪙 金幣 <b>＋'+G.gc+'</b><small>（共 '+G.coins+'）</small></div>'+
-    '<a class="shgo" role="button" tabindex="0" data-rpg="1">'+(G.h?scCovI()+'戰神之路 ➜':'🎁 免費 選 1 個 英雄 ➜')+'</a></div></div>'}
+    '<a class="shgo" role="button" tabindex="0" data-rpg="1">'+(G.h?scCovI()+'戰神之路 ➜':'🎁 免費 選 1 個 戰士 ➜')+'</a></div></div>'}
 function scByeHTML(){return '<div class="scbye"><span>👋 做完了，記得登出<small>下一個人才不會用到您的號碼</small></span><button id="scBye">👋 登出</button></div>'}
 /* 蓋滿整頁的大字（這是您嗎、30 秒提醒、已經登出了） */
 function scFull(id,h){var o=document.getElementById(id);if(!o){o=document.createElement('div');o.id=id;o.className='scfull';document.body.appendChild(o)}o.innerHTML='<div class="scfb">'+h+'</div>';o.classList.add('on');return o}
@@ -737,7 +737,7 @@ function scHeard(st,k,n,nm){if(!SCON||!SCID||SCGUEST||SCSRC!=='home'||!(n>0)||!/
     u:SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6),t:Date.now()});scPut('q',QQ.slice(-200));scFlush()}
   scPut('hd',H)}
 /* 首頁的橫幅（只有首頁有 #scbar） */
-function scBar(){var b=document.getElementById('scbar');if(!b)return;document.body.classList.toggle('scq',!!(SCON&&SCID&&!scAsked()));
+function scBar(){var b=document.getElementById('scbar');if(!b)return;document.body.classList.toggle('scq',!!(SCON&&SCID&&!scAsked()));document.body.classList.toggle('scin',!!(SCON&&SCID));   /* scin ＝ 有 學生 登入（總首頁：不放 老師 的〔⚡ 開 現場任務 大螢幕〕，2026-10-18 第十二次） */
   if(!SCON){b.innerHTML='';b.hidden=true;return}b.hidden=false;
   /* 在家複習首頁：大大的兩個好習慣（2026-10-17 C8 另 6） */
   var hab=SCSRC==='home'&&!b.classList.contains('inl');b.classList.toggle('hab',hab);b.classList.toggle('in',hab&&!!SCID);

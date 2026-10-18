@@ -7,7 +7,7 @@
 .rw-host img.rw-wg{left:50%;top:40%;width:200%;transform:translate(-50%,-50%);z-index:-2;animation:rwFlap 3s ease-in-out infinite}
 .rw-host img.rw-cp{left:50%;top:62%;width:125%;transform:translate(-50%,-50%);z-index:-1;animation:rwCape 3.4s ease-in-out infinite}
 .rw-host img.rw-mt{left:50%;bottom:-22%;width:120%;transform:translateX(-50%);z-index:-1;animation:rwRide 2.6s ease-in-out infinite}
-.rw-host img.rw-po{right:-14%;top:-16%;width:58%;z-index:4;filter:drop-shadow(0 0 6px #000)}
+.rw-host img.rw-po{right:-14%;top:-16%;width:58%;z-index:4;filter:drop-shadow(0 0 6px #000);border-radius:16%;outline:2px solid rgba(255,213,74,.7)}   /* 2026-10-18 第十二次：寵物服裝 ＝ 不透明小方塊 */
 .rw-host img.rw-nf{left:50%;top:50%;width:150%;transform:translate(-50%,-50%);z-index:-1}
 @keyframes rwSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
 @keyframes rwFlap{50%{transform:translate(-50%,-50%) scale(1.06,.96)}}

@@ -25,9 +25,14 @@ function seed(G, g) {
   }
   G.post({ a: 'rec', r: { id: C[1] + '01', set, name: 's', raw: 2000, src: 'school', dev: 'x', u: 'seedB', t: Date.now() - 36e5, qs: [0, 1, 2, 3, 4].map(i => [i < 3 ? 1 : 0, i < 3 ? 0 : 1, 2, 0, .5]) } });
 }
-let OFF = false;   /* 沒有網路：假伺服器連不上（Playwright 的 setOffline 擋不住 route） */
+let OFF = false; const LIVEHIT = [];   /* 沒有網路：假伺服器連不上（Playwright 的 setOffline 擋不住 route） */
 async function route(ctx, G) {
-  await ctx.addInitScript(u => { Object.defineProperty(window, 'SCORE_URL', { get: () => u, set: () => {}, configurable: true }); }, URL0);
+  await ctx.addInitScript(u => { Object.defineProperty(window, 'SCORE_URL', { get: () => u, set: () => {}, configurable: true });
+    Object.defineProperty(window, 'LIVE_DB', { get: () => 'https://fdb.test', set: () => {}, configurable: true }); }, URL0);
+  /* 2026-10-18 第十二次：〔📱 現場 QR〕會 問 Firebase 誰 加入了 ➜ 假的（402 班 01、05 號 剛剛 在線上）；連 真的 Firebase ＝ 擋下來＋失敗 */
+  await ctx.route('https://fdb.test/**', r => { const u = r.request().url(), now = Date.now();
+    r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(/rooms\/0402\/p\.json/.test(u) ? { 40201: { at: now }, 40205: { at: now }, 40209: { at: now - 864e5 } } : null) }); });
+  await ctx.route(/firebasedatabase\.app|firebaseio\.com/, r => { LIVEHIT.push(r.request().url()); r.abort(); });
   await ctx.route(URL0 + '**', async r => {
     if (OFF) return r.abort('internetdisconnected');
     const q = Object.fromEntries(new URL(r.request().url()).searchParams);
@@ -373,6 +378,17 @@ async function teacher(br, vp) {
     const q = await p.evaluate(() => { const o = document.getElementById('lvov'), b = document.querySelector('#lvq svg'), r = b ? b.getBoundingClientRect() : { width: 0 }, bx = document.querySelector('.lvbx').getBoundingClientRect();
       return { on: !o.hidden, w: r.width, u: document.getElementById('lvu').textContent, fit: bx.bottom <= innerHeight + 1 && bx.right <= innerWidth + 1 }; });
     if (!q.on || q.w < 200 || !/live\/$/.test(q.u) || !q.fit) e.push('〔📱 現場 QR〕不對：' + JSON.stringify(q));
+    /* 2026-10-18 第十二次：① ② ③ 編號、〔📋 複製 網址〕、點 402 ➜ 01、05 號 亮（09 號 是 昨天 的 ➜ 不亮）、最上面〔⚡ 開 現場任務 大螢幕〕 */
+    await p.click('[data-lvc="402"]'); await p.waitForTimeout(700);
+    const q2 = await p.evaluate(() => ({ st: [].map.call(document.querySelectorAll('.lvst2 li'), x => x.textContent.replace(/\s+/g, '')), on: [].map.call(document.querySelectorAll('.lvs span.on'), x => x.textContent), cp: !!document.getElementById('lvcp'),
+      n: (document.querySelector('.lvn') || {}).textContent || '', top: !!document.querySelector('.bar1 a.lvgo[href="../live/host.html"]'), more: !!document.querySelector('#morep a[href*="live/host"]'),
+      fit: (() => { const b = document.querySelector('.lvbx'), r = b.getBoundingClientRect(); return r.bottom <= innerHeight + 1 && r.right <= innerWidth + 1 && b.scrollHeight <= b.clientHeight + 1; })() }));
+    if (q2.st.join('|') !== '1📱掃QRCode|2🔢打5碼（班級＋座號）|3✅自動進入自己班的遊戲' || !q2.cp) e.push('〔📱 現場 QR〕① ② ③ 或 〔📋 複製 網址〕不對：' + q2.st.join('|'));
+    if (q2.on.join(',') !== '01,05' || !/已經 加入 2 人/.test(q2.n)) e.push('〔📱 現場 QR〕402 班 座號 不對：' + q2.on.join(',') + ' ' + q2.n);
+    if (!q2.top || q2.more) e.push('老師看板 最上面 沒有 醒目 的〔⚡ 開 現場任務 大螢幕〕（或 ⚙ 更多 裡面 還有）');
+    if (!q2.fit) e.push('〔📱 現場 QR〕視窗 要 捲');
+    await p.click('#lvcp'); await p.waitForTimeout(200); if (!/複製/.test(await p.textContent('#lvcp'))) e.push('〔📋 複製 遊戲 網址〕沒有 反應');
+    if (LIVEHIT.length) e.push('老師看板 連到 真的 Firebase：' + LIVEHIT[0]);
     await p.click('#lvx'); }
   { /* 2026-10-18 第十一次：班級數字顏色（304、402 黃；同一年級每一班不一樣） */
     const cc = await p.evaluate(() => ({ a: ccol('304'), b: ccol('402'), c: [ccol('304'), ccol('307'), ccol('311')], d: [ccol('402'), ccol('406'), ccol('409'), ccol('410'), ccol('400')], sp: [].map.call(document.querySelectorAll('.cid'), x => x.textContent + '|' + getComputedStyle(x).color).slice(0, 40) }));

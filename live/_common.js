@@ -11,11 +11,11 @@ var LV={
   GAMES:[
     {k:'classic',ic:'🏆',c1:'#7B3FE4',c2:'#E0389A',nm:'經典 搶答',d:'跟 Kahoot 一樣：看 大螢幕，點 平板 上 同樣 顏色 的 按鈕；答得 愈快 分數 愈高；🔥 挑戰題 ✖2',
       how:[['📺','看 大螢幕 的 題目'],['<span class="k4"><i class="c0"></i><i class="c1"></i><i class="c2"></i><i class="c3"></i></span>','點 平板 上 同樣 顏色＋形狀 的 按鈕'],['⚡','答對 ＋ 答得 快 ＝ 分數 高；🔥 挑戰題 分數 ✖2']]},
-    {k:'boss',ic:'⚔️',c1:'#B71C1C',c2:'#FF6F00',nm:'全班 討伐 魔王',d:'全班 合作：答對 ＝ 你的 英雄 出招；全班 答對 8 成 ＝ 連擊 ✖1.5',
-      how:[['🦸','答對 ＝ 你的 英雄 飛過去 出招'],['💥','裝備 愈強 ➜ 一擊 愈猛（10～30）'],['🤝','全班 答對 8 成 ＝ 全班 連擊 ✖1.5']],
+    {k:'boss',ic:'⚔️',c1:'#B71C1C',c2:'#FF6F00',nm:'全班 討伐 魔王',d:'全班 合作：答對 ＝ 你的 戰士 出招；全班 答對 8 成 ＝ 連擊 ✖1.5',
+      how:[['🦸','答對 ＝ 你的 戰士 飛過去 出招'],['💥','裝備 愈強 ➜ 一擊 愈猛（10～30）'],['🤝','全班 答對 8 成 ＝ 全班 連擊 ✖1.5']],
       fx:{k:'roar',all:1,ic:'🐲',t:'魔王 怒吼！畫面 震動 一下',ms:1600}},
     {k:'race',ic:'🏎',c1:'#0D47A1',c2:'#00B8D4',nm:'極速 賽車',d:'個人 賽：答對 ＝ 往前 衝，愈快 衝 愈遠；連對 3 題 ＝ 🔥 氮氣 加速',
-      how:[['🏎','你的 英雄 開 一台 賽車'],['⚡','答對 ＋ 答得 快 ＝ 衝 愈遠'],['🔥','連對 3 題 ＝ 氮氣 加速，超車！']],
+      how:[['🏎','你的 戰士 開 一台 賽車'],['⚡','答對 ＋ 答得 快 ＝ 衝 愈遠'],['🔥','連對 3 題 ＝ 氮氣 加速，超車！']],
       fx:{k:'smoke',ic:'💨',t:'前面 的 車 噴出 煙霧！1.5 秒 就 散',ms:1500}},
     {k:'tug',ic:'🪢',c1:'#1565C0',c2:'#C62828',nm:'拔河 大對決',d:'單號隊 vs 雙號隊：每一題 看 哪一隊 答對 的 比例 高，繩子 就 往 那邊 拉',
       how:[['🔵🔴','單號 一隊、雙號 一隊'],['📊','看 答對 的「比例」：人少 的 隊 也 公平'],['🪢','答對 比例 高 ＝ 繩子 拉 過來！']],
@@ -24,7 +24,7 @@ var LV={
       how:[['🗺','40 塊 土地，一開始 沒有 人'],['✅','每一題 答對 的 比例 ＝ 搶到 幾塊（最多 4）'],['⚔️','搶光了 ➜ 搶 對方 的 地！']],
       fx:{k:'fog',ic:'🌫',t:'戰爭 迷霧！2 秒 就 散',ms:2000}},
     {k:'tower',ic:'🏔',c1:'#37474F',c2:'#4FC3F7',nm:'攻頂 挑戰',d:'個人 賽：答對 一題 ＝ 往上 爬 一段；經過 兩個 營地，看 誰 先 登頂',
-      how:[['🧗','你的 英雄 從 山腳 出發'],['⛺','答對 ＝ 往上 爬；經過 營地 1、營地 2'],['🚩','答對 最多 ＝ 插旗 登頂！']],
+      how:[['🧗','你的 戰士 從 山腳 出發'],['⛺','答對 ＝ 往上 爬；經過 營地 1、營地 2'],['🚩','答對 最多 ＝ 插旗 登頂！']],
       fx:{k:'snow',ic:'❄️',t:'暴風雪！2 秒 就 停',ms:2000}},
     {k:'pet',ic:'🥚',c1:'#4A148C',c2:'#FFD54A',nm:'全班 孵化 傳說寵物',d:'全班 合作：答對 愈多，龍蛋 裂 愈開 ➜ 孵出 傳說寵物 ➜ 再 長大 進化',
       how:[['🥚','全班 一顆 傳說 龍蛋'],['⚡','每一個人 答對 ＝ 灌 一點 能量'],['🐉','能量 滿 ➜ 孵出來、長大、進化！']],
@@ -36,13 +36,13 @@ var LV={
       how:[['🗺','全班 一起 走 尋寶 地圖'],['✅','全班 答對 愈多 ＝ 走 愈遠'],['🎁','走到 寶箱 ＝ 打開，看 裡面 是 什麼 寶物！']],
       fx:{k:'lock',ic:'🔐',t:'寶箱 機關！答對 這一題 ＝ 多 ＋50',ms:2000}},
     {k:'surf',ic:'🌊',c1:'#01579B',c2:'#26C6DA',nm:'連勝 衝浪',d:'個人 賽：連對 愈多，浪 衝 愈高；答錯 也 沒關係，從 浪底 再 衝 上來',
-      how:[['🏄','你的 英雄 站上 衝浪板'],['🔥','連對 愈多 ＝ 浪 愈高'],['🏆','看 誰 連勝 最長！']],
+      how:[['🏄','你的 戰士 站上 衝浪板'],['🔥','連對 愈多 ＝ 浪 愈高'],['🏆','看 誰 連勝 最長！']],
       fx:{k:'wave',all:1,ic:'🌊',t:'大浪 來了！全部 抓穩，答對 ＋50',ms:2000}},
     {k:'king',ic:'👑',c1:'#F57F17',c2:'#FFEB3B',nm:'王者 擂台',d:'前 3 名 站上 擂台；台下 答得 最快 的 ＝ 👊 挑戰者；台下 可以 按 📣 幫 台上 加油',
       how:[['👑','分數 前 3 名 ＝ 站上 擂台'],['👊','台下 答對 又 最快 ＝ 這一題 的 挑戰者'],['📣','台下 可以 幫 台上 加油（不扣分）']],
       fx:{k:'cheer',ic:'📣',t:'台下 可以 按 📣 幫 台上 加油！',ms:0}}],
   /* 學生 登入 方式（3 步動畫：大螢幕 等人 的 時候、學生 平板 第一頁） */
-  LOGIN:[['📱','掃 大螢幕 的 QR Code（或 首頁 按〔⚡ 現場任務〕）'],['🔢','打 你的 5 碼（班級 ＋ 座號）'],['✅','自動 進入 你們班 的 遊戲（不用 打 遊戲 號碼）']],
+  LOGIN:[['📱','掃 QR Code'],['🔢','打 5 碼（班級 ＋ 座號）'],['✅','自動 進入 自己 班 的 遊戲']],
   /* 四個 答案：顏色 ＋ 形狀（色弱 也 分得出來） */
   SHAPE:['<svg viewBox="0 0 40 40"><path d="M20 5L37 34H3Z" fill="#fff"/></svg>','<svg viewBox="0 0 40 40"><path d="M20 3L37 20L20 37L3 20Z" fill="#fff"/></svg>',
          '<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="#fff"/></svg>','<svg viewBox="0 0 40 40"><rect x="5" y="5" width="30" height="30" rx="3" fill="#fff"/></svg>'],
@@ -64,12 +64,12 @@ var LV={
     {k:'x2',ic:'⭐',nm:'經驗值 ✖2',t:'這一場 拿到的 經驗值 再多 一倍'},
     {k:'frag',ic:'💎',nm:'寶物碎片',t:'💎 一個 碎片 ＝ 20 金幣'},
     {k:'title',ic:'🏷',nm:'限定稱號',t:'拿到 稱號「⚡ 現場任務 勇者」'},
-    {k:'emo',ic:'😎',nm:'英雄表情',t:'送你 寶物「😎 英雄表情」（有了 ＝ 40 金幣）'},
+    {k:'emo',ic:'😎',nm:'戰士表情',t:'送你 寶物「😎 戰士表情」（有了 ＝ 40 金幣）'},
     {k:'fx',ic:'✨',nm:'登場特效',t:'送你 寶物「🎆 登場煙火」（有了 ＝ 40 金幣）'},
     {k:'snack',ic:'🍖',nm:'寵物零食',t:'寵物 多陪你 1 天（長大 快一點）'},
     {k:'medal',ic:'🏅',nm:'勳章',t:'戰神之路 多一個 🏅 勳章'},
     {k:'box',ic:'🎁',nm:'小寶箱',t:'打開 ＝ 30 金幣'},
-    {k:'fw',ic:'🎇',nm:'大螢幕放煙火',t:'遊戲 結束 大螢幕 放你的 英雄 和 煙火（不放 名字）'}],
+    {k:'fw',ic:'🎇',nm:'大螢幕放煙火',t:'遊戲 結束 大螢幕 放你的 戰士 和 煙火（不放 名字）'}],
   /* 二～五選一的機率 */
   pickN:function(){var r=Math.random();return r<.4?2:r<.7?3:r<.9?4:5},
   shuf:function(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a},
@@ -80,12 +80,38 @@ var LV={
   room:function(cls){return '0'+String(cls).slice(0,3)},
   /* 遊戲 圖示：漸層 圓角 徽章（不是 只有 一個 emoji） */
   badge:function(k,cls){var g=LV.game(k);return '<span class="badge '+(cls||'')+'" style="--c1:'+g.c1+';--c2:'+g.c2+'"><span>'+g.ic+'</span></span>'},
-  /* 「怎麼玩」3 步 動畫（steps ＝ [[圖示,一句話],…]）；一步一步 亮，最後 一起 亮，一直 重播 */
-  howHTML:function(steps,cls){return '<div class="how '+(cls||'')+'">'+steps.map(function(s,i){return '<div class="hw" style="--i:'+i+'"><b class="hn">'+(i+1)+'</b><span class="hi">'+s[0]+'</span><span class="ht">'+s[1]+'</span></div>'+(i<steps.length-1?'<i class="ha" style="--i:'+i+'">➜</i>':'')}).join('')+'</div>'},
+  /* 「怎麼玩」3 步（2026-10-18 第十二次 老師 5：眼花撩亂、箭頭 轉來轉去 ➜ 不動 的、大大 的 編號 ① ② ③，一步 一行） */
+  howHTML:function(steps,cls){return '<ol class="how '+(cls||'')+'">'+steps.map(function(s,i){return '<li class="hw"><b class="hn">'+(i+1)+'</b><span class="hi">'+s[0]+'</span><span class="ht">'+s[1]+'</span></li>'}).join('')+'</ol>'},
   /* 算分（老師大螢幕）：答對 100 ＋ 速度（最多 900）；連對 第 2 題起 ＋50、＋100…（最多 ＋250）；✖2、🔥 ✖1.5、🚀 ✖1.3；🔥 挑戰題 ✖2；🔁 再選一次答對 ＝ 一半 */
   score:function(ok,ms,dur,f,st){if(!ok)return 0;f=f||{};var s=100+Math.round(900*Math.max(0,1-ms/dur));if(st>1)s+=Math.min(250,50*(st-1));
     if(f.x2)s*=2;if(f.fire)s=Math.round(s*1.5);if(f.rocket)s=Math.round(s*1.3);if(f.chal)s*=2;if(f.rt)s=Math.round(s/2);return s},
   /* 拼字、排句子 對不對（不分大小寫、’ ＝ '、多的空白不算） */
   norm:function(s){return String(s||'').replace(/[’‘]/g,"'").replace(/\s+/g,' ').trim().toLowerCase()},
-  MAXFX:2, DUR:20000, DURCH:30000
+  MAXFX:2, DUR:20000, DURCH:30000,
+  /* ── 2026-10-18 第十二次：錯題分析（老師 8(7)：比照 遊戲 的 答錯頁，更 嚴謹 用心）── */
+  ICON:{},
+  ic:function(h){return String(h==null?'':h).replace(/§i:([^§]+)§/g,function(m,k){return LV.ICON[k]||''})},
+  esc:function(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')},
+  /* 正確答案：每一個 英文 字 正下方 ＝ 它的 中文（ag）、整句 翻譯（az）、💡 為什麼（h） */
+  glHTML:function(r,big){var ag=r.ag||[],h='';
+    if(ag.length)h='<div class="gls'+(big?' big':'')+'">'+ag.map(function(x,i){var p=/^[?.!,]$/.test(x[0]);return '<span class="gw'+(p?' gp':'')+'" data-gi="'+i+'"><b>'+LV.esc(x[0])+'</b><i>'+LV.esc(x[1]||'')+'</i></span>'}).join('')+'</div>';
+    else h='<div class="gls'+(big?' big':'')+'"><span class="gw"><b>'+LV.esc(r.ans||'')+'</b></span></div>';
+    var z=r.az&&LV.norm(r.az)!==LV.norm(r.ae)&&!(ag.length===1&&ag[0][1]===r.az)?'<div class="glz">📖 整句：'+LV.esc(r.az)+'</div>':'';
+    return h+z+(r.h?'<div class="glh">💡 '+r.h+'</div>':'')},
+  /* 你選的 vs 正確 答案：逐字 比對（最長 共同 子序列），沒 對上 的 字 紅框（跟 遊戲 答錯頁 mDiff 一樣 的 作法） */
+  diffHTML:function(you,ok){var A=String(you||'').split(/\s+/).filter(Boolean),B=String(ok||'').split(/\s+/).filter(Boolean),n=A.length,m=B.length,D=[],i,j;
+    for(i=0;i<=n;i++){D.push([]);for(j=0;j<=m;j++)D[i].push(0)}
+    for(i=n-1;i>=0;i--)for(j=m-1;j>=0;j--)D[i][j]=LV.norm(A[i])===LV.norm(B[j])?D[i+1][j+1]+1:Math.max(D[i+1][j],D[i][j+1]);
+    var keep={};i=0;j=0;while(i<n&&j<m){if(LV.norm(A[i])===LV.norm(B[j])){keep[i]=1;i++;j++}else if(D[i+1][j]>=D[i][j+1])i++;else j++}
+    return A.map(function(w,k){return keep[k]?LV.esc(w):'<s class="dx">'+LV.esc(w)+'</s>'}).join(' ')},
+  /* 發音：預錄 的 美式 語音檔（au）；沒有 ＝ 瀏覽器 英文 語音。n 次、中間 停 0.8 秒；hl(第幾個字) ＝ 唸到 哪 亮到 哪（照 時間 估） */
+  AE:null,
+  stopSay:function(){try{if(LV.AE){LV.AE.pause();LV.AE.onended=null}speechSynthesis&&speechSynthesis.cancel()}catch(e){}clearTimeout(LV.ST)},
+  say:function(src,text,n,done){LV.stopSay();n=n||1;var k=0;
+    function one(){if(k>=n){if(done)done();return}k++;
+      var next=function(){LV.ST=setTimeout(one,800)};
+      if(src){try{LV.AE=LV.AE||new Audio();LV.AE.src=src;LV.AE.onended=next;var pr=LV.AE.play();if(pr&&pr.catch)pr.catch(function(){tts(next)});return}catch(e){}}
+      tts(next)}
+    function tts(next){try{var u=new SpeechSynthesisUtterance(String(text||'').replace(/[＿_]+/g,' '));u.lang='en-US';u.rate=.9;u.onend=next;speechSynthesis.speak(u)}catch(e){next()}}
+    one()}
 };
