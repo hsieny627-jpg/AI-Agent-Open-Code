@@ -691,8 +691,8 @@ async function teacher(br, vp) {
   /* ⬇ 一鍵下載 Excel */
   const [dl] = await Promise.all([p.waitForEvent('download'), p.click('#dl')]);
   const f = path.join(require('os').tmpdir(), 'score_verify.xlsx'); await dl.saveAs(f);
-  try { const o = cp.execFileSync('python3', ['-W', 'error', '-c', 'import openpyxl,sys;wb=openpyxl.load_workbook(sys.argv[1]);print("|".join(wb.sheetnames));print(wb["個人"].max_row);print(wb["個人"]["B1"].value,wb["原始紀錄"]["C1"].value,wb["排行榜"]["E1"].value)', f]).toString().trim().split('\n');
-    if (o[0] !== '個人|排行榜|班際|錯題|原始紀錄') e.push('Excel 工作表不對：' + o[0]);
+  try { const o = cp.execFileSync('python3', ['-W', 'error', '-c', 'import openpyxl,sys;wb=openpyxl.load_workbook(sys.argv[1]);print("|".join(wb.sheetnames));print(wb["個人"].max_row);print(wb["個人"]["B1"].value,wb["原始紀錄"]["C1"].value,wb["個人排行榜"]["E1"].value)', f]).toString().trim().split('\n');
+    if (o[0] !== '個人|個人排行榜|班際|錯題|原始紀錄') e.push('Excel 工作表不對：' + o[0]);
     if (+o[1] < 2) e.push('Excel 個人表是空的');
     if (o[2] !== '姓名 姓名 姓名') e.push('Excel 個人、原始紀錄、排行榜沒有姓名欄（' + o[2] + '）');
     if (!/^score_G3_week_\d{4}-\d\d-\d\d\.xlsx$/.test(dl.suggestedFilename())) e.push('Excel 檔名不對：' + dl.suggestedFilename());
@@ -744,6 +744,11 @@ async function answer(p, right) {
     const o = document.querySelector('#arena .o[data-ok="' + r + '"]');
     if (o) { o.click(); return 'o'; }
     if (document.querySelector('#arena .dbtn')) { const v = g === 'g9' ? cur[1] : cur.a, b = [].filter.call(document.querySelectorAll('#arena .dbtn'), x => (x.getAttribute('data-v') === v) === r)[0]; if (b) { b.click(); return 'd'; } }
+    if (document.querySelector('#dg') && window.DG) {   /* 🪄 拖曳變身（2026-10-19）：照 順序 放 ＝ 對、倒過來 ＝ 錯 */
+      const used = [], n = DG.n; for (let k = 0; k < n; k++) { const t = DG.tgt[k].toLowerCase(); let i = -1;
+        for (let j = 0; j < n; j++) if (used.indexOf(j) < 0 && (/^[?.!,]$/.test(t) ? /^[?.!,]$/.test(DG.src[j]) : DG.src[j].toLowerCase() === t)) { i = j; break; }
+        used.push(i); }
+      const ord = r ? used : used.slice().reverse(); ord.forEach((i, k) => dgPut(i, k)); return 'dg'; }
     if (g === 'g3') { const k = r ? 0 : 1, b = document.querySelector('#pool .cw[data-n="' + k + '"]:not(.used)'); if (r) { for (let i = 0; i < cur.s.length; i++) { const x = document.querySelector('#pool .cw[data-n="' + i + '"]:not(.used)'); if (x) x.click(); } return 's'; } if (b) { b.click(); return 's'; } }
     return 'none';
   }, right);

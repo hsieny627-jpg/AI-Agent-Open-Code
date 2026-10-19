@@ -73,6 +73,7 @@ var SC = (function () {
     var m = SETRE.exec(String(set)); if (!m) return { k: '', t: '' };
     var x = m[2];
     if (x.charAt(0) === 'u') return { k: 'tq', t: '📝 複習題' };
+    if (x === 'gm' && /_mt-/.test(String(set))) return { k: 'mt', t: '📝 期中複習' };   /* 2026-10-19 第十三次 3(11) */
     if (x === 'gm') return { k: 'game', t: '🎮 遊戲' };
     if (x === 'v') return { k: 'v', t: '👀 看字卡' };
     if (x === 'l') return { k: 'l', t: '🎧 聽完字卡' };

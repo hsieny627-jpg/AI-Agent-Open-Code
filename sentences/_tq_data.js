@@ -828,14 +828,13 @@ module.exports = {
    {
     "k": "trap",
     "o": [
-     "He 和 is",
-     "is 和 a",
-     "a 和 doctor",
-     "He 和 doctor"
+     "He is a doctor.",
+     "Is he a doctor.",
+     "He a doctor is.",
+     "He is doctor."
     ],
-    "h": "He is ➜ Is he。",
-    "q": "直述句變問句，哪兩個字<b class=\"em\">交換位置</b>？",
-    "sp": ""
+    "h": "Is 回到 he 後面變成 is，問號 變成 句點。（2026-10-19 第十三次第 1 點：不寫「直述句」）",
+    "q": "Is he a doctor? 變回「他 是 一位 醫生。」，英文是？"
    }
   ],
   "2b": [

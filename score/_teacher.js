@@ -390,11 +390,11 @@ ${CERCSS}
   <select id="fc" aria-label="班級"></select><i>·</i>
   <span class="grp"><select id="fp" aria-label="期間"><option value="w">本週</option><option value="lw">上週</option><option value="all">這學期全部</option><option value="c">自訂日期</option></select>
    <input type="date" id="f1" hidden><input type="date" id="f2" hidden></span><i>·</i>
-  <select id="fk" aria-label="類別"><option value="">全部類別</option><option value="tq">📝 複習題</option><option value="game">🎮 遊戲</option><option value="r1">📘 Review 1</option><option value="l">🎧 聽完字卡</option><option value="lv">⚡ 現場任務</option><option value="v">👀 看字卡</option></select><i>·</i>
+  <select id="fk" aria-label="類別"><option value="">全部類別</option><option value="tq">📝 複習題</option><option value="game">🎮 遊戲</option><option value="mt">📝 期中複習</option><option value="r1">📘 Review 1</option><option value="l">🎧 聽完字卡</option><option value="lv">⚡ 現場任務</option><option value="v">👀 看字卡</option></select><i>·</i>
   <select id="fs" aria-label="來源"><option value="">在校＋在家</option><option value="school">🏫 在校</option><option value="home">🏠 在家</option></select>
  </div>
  <div class="tiles" id="tiles"></div>
- <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 排行榜</button><button data-t="c">🏫 班級排行榜</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心<em class="bdg" id="kbdg" hidden></em></button><button data-t="o">📅 一鍵設定</button><button data-t="t">📌 任務</button><button data-t="l">🔒 開關</button></div>
+ <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 個人排行榜</button><button data-t="c">🏫 班級排行榜</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心<em class="bdg" id="kbdg" hidden></em></button><button data-t="o">📅 一鍵設定</button><button data-t="t">📌 任務</button><button data-t="l">🔒 開關</button></div>
  <div class="pane" id="pane"></div>
 </div>
 <div id="modal"><div id="mbox"></div></div>
@@ -507,7 +507,7 @@ function paneP(ps,RK){
      if(c[0]==='id')return '<td class="idc">'+cidH(v)+'</td>';
      if(c[0]==='nm')return '<td class="nmc">'+esc(v||'')+'</td>';
      if(c[0]==='acc'||c[0]==='s')return '<td'+(v!=null&&v<60?' class="lo"':'')+'>'+f1(v)+'<span class="mb" style="width:'+(v||0)*.04+'em"></span></td>';
-     if(c[0]==='prog')return '<td>'+(v==null?(r.keep?'🔥 保持滿分':'—'):v>0?'<span style="color:var(--ok)">'+UA+' ＋'+f1(v)+'%</span>':f1(v)+'%')+'</td>';
+     if(c[0]==='prog')return '<td>'+(v==null?(r.keep&&r.acc===100?'🔥 保持滿分':'—'):v>0?'<span style="color:var(--ok)">'+UA+' ＋'+f1(v)+'%</span>':f1(v)+'%')+'</td>';
      if(c[0]==='cacc')return '<td>'+(v==null?'—':v<=3?['','🥇','🥈','🥉'][v]+' '+v:v)+'</td>';
      if(c[0]==='lt')return '<td class="lt" title="'+['要關心','要注意','很好','沒做'][v]+'">'+LTS[v]+'</td>';
      if(c[0]==='fast')return '<td'+(v>30?' class="lo"':'')+'>'+v+'%</td>';
@@ -729,7 +729,7 @@ function person(id){
   h+=HON.card(p,SC.care(p))+'<button id="pmb" class="pdb">📋 細節 ▾</button><div id="pmore" hidden>';
   /* ① 四個大圖 */
   var sq='',nq=Math.min(p.count,20);for(var i=0;i<nq;i++)sq+='<i style="animation-delay:'+(i*.08).toFixed(2)+'s"></i>';
-  var pg=p.prog==null?(p.keep?'<div class="pv">🔥</div><div class="pd">保持滿分</div>':'<div class="pv" style="color:#8A8A8A">—</div><div class="pd">同一組練 2 次以上才看得出來</div>')
+  var pg=p.prog==null?(p.keep&&p.acc===100?'<div class="pv">🔥</div><div class="pd">保持滿分</div>':'<div class="pv" style="color:#8A8A8A">—</div><div class="pd">同一組練 2 次以上才看得出來</div>')
     :p.prog>0?'<div class="pv up">'+UA+'</div><div class="pd"><b style="color:var(--ok)">＋'+f1(p.prog)+'%</b><br>正確率比上一次高</div>'
     :'<div class="pv">🌱</div><div class="pd">再加油</div>';
   h+='<div class="pc4"><div class="pg"><div class="pk">🎯 正確率</div>'+ring(p.acc,vc(p.acc))+'</div><div class="pg"><div class="pk">💯 總分</div>'+ring(p.s,vc(p.s))+'</div>'+
@@ -844,7 +844,7 @@ function show(k,st){
 function excel(){
   var S=sets(),psG=SC.students(S.G),ps=F.cls?psG.filter(function(p){return p.cls===F.cls}):psG,RK=ranks(psG);
   var P=[XCOL.map(function(c){return c[1]})].concat(ps.map(function(p){var r=rowOf(p,RK);return XCOL.map(function(c){var v=r[c[0]];
-    return c[0]==='last'?(v?dt(v):''):c[0]==='fast'?v/100:c[0]==='prog'&&v==null&&r.keep?'保持滿分':v==null?'':v})}));
+    return c[0]==='last'?(v?dt(v):''):c[0]==='fast'?v/100:c[0]==='prog'&&v==null&&r.keep&&r.acc===100?'保持滿分':v==null?'':v})}));
   var B=[['榜','範圍','名次','5碼','姓名','分數']];['sec','acc','prog','s','count'].forEach(function(k){
     SC.rank(psG,k).forEach(function(x){if(!F.cls||x.cls===F.cls)B.push([BNX[k],'全年級',x.rk,x.id,nm(x.id),x.v])});
     (F.cls?[F.cls]:SC.CLASSES[F.g]).forEach(function(c){SC.rank(psG.filter(function(p){return p.cls===c}),k).forEach(function(x){B.push([BNX[k],SC.cname(c),x.rk,x.id,nm(x.id),x.v])})})});
@@ -855,7 +855,7 @@ function excel(){
   var r=range(),RAW=[SC.COLS.slice(0,2).concat(['姓名'],SC.COLS.slice(2))].concat(ALL.filter(function(x){return x.g===F.g&&(!F.cls||x.cls===F.cls)&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)&&(!F.src||x.src===F.src)&&(!F.cat||SC.cat(x.set).k===F.cat)})
     .sort(function(a,b){return a.t-b.t}).map(function(x){var row=SC.toRow(x);row[0]=dt(x.t);row[SC.CI['題組名稱']]=(bankOf(x.set)||{}).name||x.name;
       row[SC.CI['來源']]=x.src==='home'?'在家':'在校';row[SC.CI['作廢']]=x.x?'作廢':'';row.splice(2,0,nm(x.id));return row}));
-  var b=XLSX.make([{name:'個人',rows:P},{name:'排行榜',rows:B},{name:'班際',rows:C},{name:'錯題',rows:W},{name:'原始紀錄',rows:RAW}]);
+  var b=XLSX.make([{name:'個人',rows:P},{name:'個人排行榜',rows:B},{name:'班際',rows:C},{name:'錯題',rows:W},{name:'原始紀錄',rows:RAW}]);
   /* 檔名只用英文和數字：有些瀏覽器（量測用的 Chromium）遇到中文檔名會改成 download */
   var pn={w:'week',lw:'lastweek',all:'all',c:'custom'}[F.p],d=new Date(DATA.now+288e5).toISOString().slice(0,10);
   var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([b],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));

@@ -20,6 +20,7 @@
 /* ── 成績紀錄（2026-10-07 對話 C） ── */
 .sclog{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.3vh,14px);width:100%}
 .sclog h2{font-size:clamp(28px,5vh,50px)!important;margin:0}
+.sclv{font-size:clamp(22px,3.6vh,36px);font-weight:700;color:#FFE082;text-align:center}
 /* 2026-10-09：① 打班級 ➜ ② 打座號 ➜ ③ 按 ✅，正在做的那一步會亮 */
 .scsteps{display:flex;align-items:center;justify-content:center;gap:clamp(4px,1vw,10px);flex-wrap:wrap}
 .scsteps span{display:flex;align-items:center;padding:clamp(4px,.8vh,8px) clamp(10px,1.6vw,20px);border-radius:999px;border:3px solid #333;color:#8A8A8A;

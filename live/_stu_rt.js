@@ -16,23 +16,41 @@ function audio(p){return p?BASE+String(p).replace(/^\.\.\//,''):''}
 function say1(o){LV.say(audio(o.au),o.ae||o.ans,1)}
 /* 一行 大字：現在 要 做 什麼 */
 function now(t,cls){var e=$('#now');e.innerHTML=t;e.className='now '+(cls||'')}
+/* 步驟條（2026-10-19 第十三次 3(9)）：① 🎮 小遊戲 ➜ ② ⚡ 答題 ➜ ③ 🏆 結果；k ＝ 現在 第幾步（-1 ＝ 不顯示） */
+var STEPS=[['🎮','小遊戲'],['⚡','答題'],['🏆','結果']];
+function stepS(k){var e=$('#stp');if(!e)return;if(k<0){e.innerHTML='';e.hidden=true;return}e.hidden=false;if(e.getAttribute('data-k')!==String(k)){e.setAttribute('data-k',k);e.innerHTML=LV.stepsHTML(STEPS,k)}}
+/* 右下角 QR Code（3(7)）：不小心 登出 的 同學 掃 隔壁 平板 這一個 就 回來 */
+function qrOn(on){var e=$('#sqrc');if(!e)return;if(on&&!e.getAttribute('data-ok')){e.querySelector('.qrb').innerHTML=LV.qr();e.setAttribute('data-ok',1)}e.hidden=!on}
+/* 登出 了（或 換人）：全部 歸零，下一次 登入 重新 進去（3(5)：原本 同一個 號碼 再 登入 會 卡在 登入 畫面） */
+function reset(){if(S.unW)S.unW();S.unW=null;clearInterval(S.hb);S.code='';S.id='';S.m=null;S.qi=-1;S.made=0;S.hist={};S.autoIn=0;S.introOK=0;S.ended=0;MINI.stop();qrOn(false)}
+function loginDone(){SCH.close();scBar();ready()}
 LDB.onBad(function(b){var e=$('#net');if(e)e.hidden=!b});
 /* ── 登入以後：自動 進入 自己 班 的 遊戲 ── */
-function ready(){if(!LDB.on()){scr('soff');return}if(!SCID||!scAsked()){scr('sout');now('🔑 先 登入：打 你的 5 碼');return}
+function ready(){if(!LDB.on()){scr('soff');return}
+  if(!SCID||!scAsked()){if(S.id)reset();if($('#sout').hidden)scr('sout');stepS(-1);now('');
+    if(!SCID&&!S.autoIn){S.autoIn=1;setTimeout(function(){if(!SCID&&!(SCH&&SCH.on()))scLogin(loginDone)},250)}return}   /* 一 打開 ＝ 直接 出現 數字 鍵盤 */
   if(S.code&&S.id===SCID)return;S.id=SCID;S.code=LV.room(SCID);S.made=0;S.m=null;S.hist={};
   if(typeof scFetch==='function'&&SCON)scFetch('a=rpg&id='+SCID,null,6000).then(function(j){if(j&&j.ok){S.me=j.v;putMe()}},function(){});
   putMe();clearInterval(S.hb);S.hb=setInterval(putMe,20000);
-  if(S.unW)S.unW();S.unW=LDB.watch(S.code,700,onM);
+  if(S.unW)S.unW();S.unW=LDB.watch(S.code,700,onM);qrOn(true);
+  try{S.introOK=sessionStorage.getItem('lv_intro')===SCID?1:0}catch(e){}
   wait()}
+/* 登入 以後 第一頁（3(4)）：先 用 動畫 說 現在 和 等一下 要 做 什麼；按〔我 懂了〕才 開始 小遊戲 */
+function intro(){if(!$('#sintro').hidden)return;scr('sintro');stepS(0);now('');
+  $('#sinb').innerHTML='<div class="itr"><div class="itc i1"><div class="itl">現在</div><div class="iti">🎮</div><div class="itt">玩 小遊戲</div><div class="its">✍️ 每一題 都 算 成績<br>請 用心 作答</div></div>'+
+    '<div class="itar">➜</div>'+
+    '<div class="itc i2"><div class="itl">等一下</div><div class="iti">📺</div><div class="itt">看 大螢幕 答題</div><div class="its">老師 按〔開始〕<br>平板 自動 換過去</div></div></div>'+
+    '<button id="sigo" class="big go itgo">✅ 我 懂了，開始</button>';
+  var b=$('#sigo');b.disabled=true;setTimeout(function(){b.disabled=false;b.classList.add('rdy')},2400)}
 /* 我 在 這裡（大螢幕、老師看板 的 座號 格子 會 亮）：每 20 秒 寫 一次 */
 function putMe(){if(!S.id)return;var st=S.me&&S.me.st&&S.me.st.eq||{};LDB.set(R('p/'+S.id),{h:st.h||'',pt:st.p||'',pw:S.me?S.me.power||0:0,at:Date.now()})}
 function heroImg(cls){var st=S.me&&S.me.st&&S.me.st.eq||{};return st.h?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,st.h)+'" alt="我的戰士">':'<span class="noh '+(cls||'')+'">👤</span>'}
 function petImg(cls){var st=S.me&&S.me.st&&S.me.st.eq||{};return st.p?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,st.p)+'" alt="我的寵物">':'<span class="noh '+(cls||'')+'">🐾</span>'}
 /* ── 等人：上面 一行 ＋ 小遊戲 ── */
 function wait(){var m=S.m,on=m&&m.phase==='lobby',cls=String(S.id).slice(0,3);
-  if($('#swait').hidden)scr('swait');
-  if(on)now('✅ 你 已經 進入 '+cls+' 班 的 遊戲<small>'+LV.game(m.game).nm+'　等 老師 按〔▶ 開始〕；先 玩 小遊戲</small>','ok');
-  else now('⏳ 等 老師 建立 '+cls+' 班 的 遊戲<small>老師 一 建立，你 就 自動 進去；先 玩 小遊戲</small>');
+  if(!S.introOK){intro();return}
+  if($('#swait').hidden)scr('swait');stepS(0);
+  now('🎮 先 玩 小遊戲<small>'+(on?'✅ 已經 進入 '+cls+' 班：老師 按〔開始〕就 換成 答題':'⏳ 等 老師 建立 '+cls+' 班 的 遊戲')+'</small>',on?'ok':'');
   if(!MINI.on())MINI.start($('#wbody'),MINIB[grade()]||{},grade())}
 /* ── 遊戲 的 狀態 一變 就 來 ── */
 function onM(m){S.m=m;
@@ -47,11 +65,11 @@ function onM(m){S.m=m;
   if(m.phase==='rev'&&m.rev&&S.revd!==m.qi){S.revd=m.qi;if(S.qi===m.qi)rev(m);else lateS(m);return}
   if(m.phase==='lb'&&S.lbd!==m.qi){S.lbd=m.qi;lbS(m);return}
   kingBtn()}
-function lateS(m){S.qi=m.qi;scr('sq');$('#sqq').innerHTML='';$('#sqo').innerHTML='';$('#sqr').innerHTML='';now('👀 看 大螢幕：下一題 就 輪到 你！','go')}
-function showHow(m){scr('show');var g=LV.game(m.game);$('#shw').innerHTML=LV.badge(m.game,'lg')+'<h1>'+g.nm+'</h1>'+LV.howHTML(g.how,'v');now('👀 看 大螢幕：馬上 開始！','go')}
+function lateS(m){S.introOK=1;S.qi=m.qi;scr('sq');stepS(1);$('#sqq').innerHTML='';$('#sqo').innerHTML='';$('#sqr').innerHTML='';now('👀 看 大螢幕：下一題 輪到 你','go')}
+function showHow(m){S.introOK=1;scr('show');stepS(1);var g=LV.game(m.game);$('#shw').innerHTML=LV.badge(m.game,'lg')+'<h1>'+g.nm+'</h1>'+LV.howHTML(g.how,'v');now('👀 看 大螢幕：馬上 開始','go')}
 /* 新的一題來了，禮物盒還沒打開 ➜ 先收起來（不擋答題） */
 function giftAway(){var g=$('#gift');if(g.className.indexOf('on')<0)return;if(!(S.gp&&S.gp.done))S.drawLater=1;g.className='';g.innerHTML=''}
-function newQ(m){giftAway();$('#res').className='';$('#res').innerHTML='';S.qi=m.qi;S.ans=null;S.t0=Date.now();S.dur=m.dur||LV.DUR;S.met=0;S.pick2=[];S.pk=[];scr('sq');var q=m.q,P=S.pend;
+function newQ(m){giftAway();$('#res').className='';$('#res').innerHTML='';S.introOK=1;S.qi=m.qi;S.ans=null;S.t0=Date.now();S.dur=m.dur||LV.DUR;S.met=0;S.pick2=[];S.pk=[];scr('sq');stepS(1);var q=m.q,P=S.pend;
   S.cur={cut:!!P.cut,hint:!!P.hint,two:!!P.retry&&q.ty==='mc'&&q.o.length===4};delete P.cut;delete P.hint;delete P.retry;delete P.pause;
   $('#sqn').textContent='第 '+(m.qi+1)+' ／ '+m.n+' 題';
   $('#sqq').innerHTML=q.ty==='mc'?(q.ls?'<div class="lsn">🎧 仔細 聽 大螢幕</div>':q.t):'<span class="chal">'+(q.ch?'🔥 挑戰題 分數 ✖2':'🧩 排句子')+'</span><div>'+q.t+'</div><div class="chz">'+(q.ic?'<span class="chi">'+q.ic+'</span>':'')+(q.zh||'')+'</div>';
@@ -60,7 +78,7 @@ function newQ(m){giftAway();$('#res').className='';$('#res').innerHTML='';S.qi=m
   if(q.ty==='mc')$('#sqo').innerHTML='<div class="sos n'+q.o.length+'">'+q.o.map(function(t,i){var cut=S.cur.cut&&(q.x||[]).indexOf(i)>=0;return '<button class="so c'+i+(cut?' cut':'')+'" data-k="'+i+'"'+(cut?' disabled':'')+'><span class="shp">'+LV.SHAPE[i]+'</span><span class="sot">'+t+'</span></button>'}).join('')+'</div>';
   else chDraw();
   $('#sqm').textContent=S.cur.two?'🔁 這一題 可以 選 2 個':'';$('#sqr').innerHTML='';
-  now(q.ty==='mc'?'👆 點 你的 答案（跟 大螢幕 同樣 的 顏色＋形狀）':'👆 照 順序 點 方塊，再 按〔✅ 送出〕','go');stTick();kingBtn()}
+  now(q.ty==='mc'?'👆 點 答案<small>跟 大螢幕 同樣 的 顏色 和 形狀</small>':'👆 照 順序 點 方塊 ➜〔✅ 送出〕','go');stTick();kingBtn()}
 /* 🔥 挑戰題／🧩 排句子：上面 空格、下面 打亂 的 方塊；點了 跳上去，〔⌫〕退一個，排滿 ＝〔✅ 送出〕 */
 function chDraw(){var q=S.m.q,sp=q.ty==='sp',need=sp?q.tiles.length-2:q.tiles.length,done=S.ans;
   $('#sqo').innerHTML='<div class="chw'+(sp?' sp':' or')+'"><div class="chs">'+Array.apply(null,{length:need}).map(function(_,i){var k=S.pk[i];return '<span class="slot'+(k!=null?' f':'')+(i===S.pk.length?' cur':'')+'">'+(k!=null?esc(q.tiles[k]):'')+'</span>'}).join('')+(q.p?'<span class="pun">'+esc(q.p)+'</span>':'')+'</div>'+
@@ -74,7 +92,7 @@ function flags(){var f={},c=S.cnt;if(c.x2>0)f.x2=1;if(c.fire>0)f.fire=1;if(c.roc
 function send(a,show){var f=flags();a.f=f;S.ans=a;S.ansT=show;['x2','fire','rocket'].forEach(function(x){if(S.cnt[x]>0)S.cnt[x]--});delete S.pend.shield;delete S.pend.cheer;
   var qi=S.qi;$('#sqr').innerHTML='<div class="sr wait">⏳ 送出 中…</div>';
   LDB.must('PUT',R('a/'+qi+'/'+S.id),a,15).then(function(ok){if(S.qi!==qi)return;$('#sqr').innerHTML=ok?'<div class="sr wait">✅ 送出了！你選：'+show+'</div>':'<div class="sr no">📶 沒有 送到（網路 斷了）</div>';
-    if(ok)now('✅ 送出了 ➜ 👀 看 大螢幕，等 老師 公布','ok')})}
+    if(ok)now('✅ 送出了 ➜ 👀 看 大螢幕','ok')})}
 function answer(k){if(S.ans||!S.m||S.m.phase!=='q')return;var ms=Date.now()-S.t0;if(ms>S.dur)return;var q=S.m.q;
   if(S.cur.two){if(S.pick2.indexOf(k)<0)S.pick2.push(k);$('#sqo [data-k="'+k+'"]').classList.add('pk');if(S.pick2.length<2){$('#sqm').textContent='🔁 再選 1 個';return}k=S.pick2.slice()}
   var show=(k.length?k:[k]).map(function(i){return '<span class="shp sm c'+i+'">'+LV.SHAPE[i]+'</span> '+esc((q.ot||[])[i]||'')}).join('、');
@@ -93,20 +111,20 @@ function rev(m){clearTimeout(S.tm);var r=m.r||{},id=S.id,ok=!!(r.ok&&r.ok[id]),s
   var o=$('#res');o.className='on '+(ok?'ok':S.ans?'no':'to');
   var ana=ok?'':'<div class="miss">'+(S.ans?'<div class="myou">❌ 你選的：<span>'+LV.diffHTML(you,V.ae&&q.ty!=='mc'?V.ae:okTxt)+'</span></div>':'')+
     '<div class="mok">✅ 正確 答案<button class="ghost say1" data-say1="1">🔊 聽</button></div>'+LV.glHTML({ag:V.ag,az:V.az,ae:V.ae,ans:okTxt,h:V.h},true)+'</div>';
-  o.innerHTML='<div class="rbx"><div class="rtop"><span class="rbig">'+(ok?'✔':S.ans?'✖':'⏰')+'</span><span class="rt">'+(ok?'答對！':S.ans?'答錯了，看 一下 正確 答案':'這一題 沒有 答')+'</span>'+(ok?'<span class="rsc">＋'+sc.toLocaleString()+'</span>':'')+'</div>'+
+  o.innerHTML='<div class="rbx"><div class="rtop"><span class="rbig">'+(ok?'✔':S.ans?'✖':'⏰')+'</span><span class="rt">'+(ok?'答對！':S.ans?'答錯了':'沒有 答')+'</span>'+(ok?'<span class="rsc">＋'+sc.toLocaleString()+'</span>':'')+'</div>'+
     (ok&&st>1?'<div class="rst">🔥 連對 '+st+' 題（連對 加分）</div>':'')+
     (ok&&m.game==='boss'?'<div class="rst">⚔ 你的 戰士 出招 ➜ 魔王 <b>－'+(10+Math.min(20,Math.floor(((S.me&&S.me.power)||0)/100)))+'</b></div>':'')+ana+
     '<div class="rrk">🏆 總分 '+tot.toLocaleString()+'　｜　第 <b>'+RK.rk+'</b> 名'+(RK.rk>1?'<small>再 '+RK.gap.toLocaleString()+' 分 就 追上 第 '+(RK.rk-1)+' 名！</small>':'<small>你 是 第一名！保持 下去！</small>')+'</div></div>';
   $('#sqr').innerHTML='';
-  now(ok?'✔ 答對！👀 看 大螢幕':'📌 看 正確 答案（可以 按〔🔊 聽〕）','ok');
+  now(ok?'✔ 答對了！👀 看 大螢幕':'📌 看 正確 答案','ok');
   var okc=(r.okc&&r.okc[id])||0;S.okc=okc;if(m.game!=='classic'&&(Math.floor(okc/5)>S.draws))S.drawLater=1}
 /* 排行榜：我 第幾名 */
 function lbS(m){var r=m.r||{},T=r.tot||{},RK=rankOf(T,S.id),o=$('#res');if(S.qi<0)scr('sq');o.className='on lb';
   o.innerHTML='<div class="rbx"><div class="rtop"><span class="rbig">🏆</span><span class="rt">你 是 第 <b>'+RK.rk+'</b> 名</span></div><div class="rrk">總分 '+(T[S.id]||0).toLocaleString()+(RK.rk>1?'<small>再 '+RK.gap.toLocaleString()+' 分 就 追上 第 '+(RK.rk-1)+' 名！</small>':'<small>保持 下去！</small>')+'</div></div>';
-  now('👀 看 大螢幕 的 排行榜；等 老師 出 下一題','');
+  now('🏆 看 大螢幕 的 排行榜','');
   if(m.game!=='classic'&&S.drawLater){S.drawLater=0;S.draws=Math.floor(S.okc/5);setTimeout(draw,1200)}}
 /* ── 結束：個人 錯題 總分析 ── */
-function endS(m){if(S.ended===m.made)return;S.ended=m.made;clearTimeout(S.tm);$('#res').className='';giftAway();scr('send');var r=m.r||{},T=r.tot||{},RK=rankOf(T,S.id),q=(r.okq||{})[S.id]||'',sum=m.sum||{};
+function endS(m){if(S.ended===m.made)return;S.ended=m.made;clearTimeout(S.tm);$('#res').className='';giftAway();scr('send');stepS(2);var r=m.r||{},T=r.tot||{},RK=rankOf(T,S.id),q=(r.okq||{})[S.id]||'',sum=m.sum||{};
   var n=q.length,ok=(q.match(/1/g)||[]).length,acc=n?Math.round(ok/n*100):0,RD=46,L=2*Math.PI*RD;
   var mine=Object.keys(S.hist).map(Number).sort(function(a,b){return a-b}).filter(function(k){return !S.hist[k].ok});
   var h='<div class="eh">'+heroImg('wimg')+'<div><div class="et">'+(RK.rk>0&&RK.rk<=3?['🥇','🥈','🥉'][RK.rk-1]+' 第 '+RK.rk+' 名！':'🎉 任務 完成！第 '+RK.rk+' 名')+'</div><div class="ss">🏆 總分 '+(T[S.id]||0).toLocaleString()+'</div></div>'+
@@ -116,8 +134,8 @@ function endS(m){if(S.ended===m.made)return;S.ended=m.made;clearTimeout(S.tm);$(
       (x.you?'<div class="myou">❌ 你選的：<span>'+LV.diffHTML(x.you,x.ans)+'</span></div>':'')+LV.glHTML({ag:x.ag,az:x.az,ae:x.ae,ans:x.ans,h:x.h})+'</div>'}).join(''):'<h2>🎉 這一場 全部 答對！</h2>')+
     ((sum.wq||[]).length?'<h2>❌ 全班 最多人 錯 的 題目</h2>'+sum.wq.map(function(x,j){return '<div class="wr go"><div class="wrh"><b>'+['🥇','🥈','🥉'][j]+' 第 '+(x.qi+1)+' 題</b><span class="note">全班 答對 '+x.r+'%</span><button class="ghost" data-say3="'+j+'">🔊 聽</button></div>'+LV.glHTML({ag:x.ag,az:x.az,ae:x.ae,ans:x.ans,h:x.h})+'</div>'}).join(''):'')+
     (S.rw.length?'<div class="note">🎁 你 抽到：'+S.rw.map(function(k){var x=LV.RW.filter(function(y){return y.k===k})[0];return x?x.ic+' '+x.nm:k}).join('、')+'</div>':'')+
-    '<div class="note big2">'+(m.given?'✅ 老師 發好 獎勵了 ➜ 打開〔戰神之路〕看看':'老師 發 獎勵 以後，打開〔戰神之路〕就 看得到（⭐ 經驗值、🪙 金幣）')+'</div>';
-  $('#ew').innerHTML=h;now('🏁 任務 完成！看 你的 錯題 分析','ok');
+    '<div class="note big2">'+(m.given?'✅ 老師 發好 獎勵 了（⭐ 經驗值、🪙 金幣）':'⏳ 等 老師 發 獎勵（⭐ 經驗值、🪙 金幣）')+'</div>';
+  $('#ew').innerHTML=h;now('🏁 完成！看 你的 錯題','ok');
   setTimeout(function(){var g=$('#ew .rg');if(g)g.classList.add('go');$$('#ew .qch span').forEach(function(x){x.classList.add('go')})},60)}
 /* ── 🐾 寵物叼來禮物盒（每答對 5 題；經典搶答 沒有；排行榜 的 時候 才 出來）── */
 function draw(){S.gp=null;var o=$('#gift');o.className='on';o.innerHTML='<div class="gb"><div class="gt">🎉 答對 '+(S.draws*5)+' 題！你的 寵物 叼來 禮物 了</div><div class="gpet">'+petImg('gpi')+'<span class="gbox">🎁</span></div>'+
@@ -148,7 +166,8 @@ function fxOff(){var q=$('#sq');['fog','float','shake'].forEach(function(c){q.cl
 function kingBtn(){var b=$('#kch');if(!b)return;var m=S.m,on=m&&m.game==='king'&&m.phase==='q';
   if(on){var T=(m.r&&m.r.tot)||{},L=Object.keys(T).sort(function(a,c){return T[c]-T[a]});on=L.slice(0,3).indexOf(S.id)<0}b.hidden=!on}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
-  if(c('#sIn')){scLogin(function(){SCH.close();scBar();ready()});return}
+  if(c('#sIn')){scLogin(loginDone);return}
+  if(c('#sigo')){if($('#sigo').disabled)return;S.introOK=1;try{sessionStorage.setItem('lv_intro',S.id)}catch(e){}scr('swait');wait();return}
   if(c('#howb')){var hw=$('#whow');hw.hidden=!hw.hidden;return}
   if((b=c('#sqo .so'))){answer(+b.getAttribute('data-k'));return}
   if((b=c('[data-tile]'))){chTap(+b.getAttribute('data-tile'));return}

@@ -11,7 +11,7 @@
 var H={pw:'',g:4,qg:4,cls:'',game:'classic',sets:{},n:5,int:1,ch:1,say:1,code:'',Q:[],qi:-1,P:{},seen:{},pl:{},tot:{},okc:{},st:{},best:{},fxc:{},okq:{},gs:{},tm:null,A:{},xt:{},rw:{},done:false,log:[],prv:{},phase:'',m:{},ver:0,stops:[]};
 function $(s){return document.querySelector(s)}function $$(s){return [].slice.call(document.querySelectorAll(s))}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function scr(id){$$('.scr').forEach(function(x){x.hidden=x.id!==id});H.scr=id}
+function scr(id){$$('.scr').forEach(function(x){x.hidden=x.id!==id});H.scr=id;var t=$('#hstp');if(t)t.hidden=id==='hpw'||id==='hset'||id==='hlob';if(id==='hpw'||id==='hset')hqr(false)}
 function post(o){var u=String(window.SCORE_URL||'').trim();if(!u)return Promise.reject(new Error('nourl'));return fetch(u,{method:'POST',body:JSON.stringify(o)}).then(function(r){return r.json()})}
 function seatOf(id){return +String(id).slice(3)}
 function sp2(n){return (n<10?'0':'')+n}
@@ -29,20 +29,27 @@ function pwGo(){var p=$('#pw').value.trim(),m=$('#pwm');if(!p){m.textContent='�
   m.textContent='⏳ 檢查中…';post({a:'pw',pw:p}).then(function(j){if(j&&j.ok){H.pw=p;try{sessionStorage.setItem('lvpw',p)}catch(e){}setDraw();scr('hset')}else m.textContent='❌ 密碼 不對'},function(){m.textContent='📶 連不到 成績系統'})}
 /* ── 一頁 設定（預設：經典搶答、題目 全選、5 題、🔥 挑戰題 開）── */
 var CLS={3:['304','307','311'],4:['402','406','409','410','400']};
+/* 2026-10-19 第十三次 3(1)(2)：同一類 的 遊戲 放 同一區 */
+var GRP=[['c','🏆','經典 搶答','全班 一起 搶答（像 Kahoot）',['classic']],['s','🙋','個人賽','每個人 自己 比 分數',['race','tower','shoot','surf','king']],
+  ['t','🤝','全班 合作','全班 一起 完成 一個 任務',['boss','pet','treasure']],['v','⚔️','兩隊 對抗','單號隊 vs 雙號隊',['tug','map']]];
+/* 老師 的 步驟條（3(9)）：① 設定 ➜ ② 等 學生 ➜ ③ 答題 ➜ ④ 頒獎 ➜ ⑤ 錯題 ➜ ⑥ 發獎勵 */
+var HSTEPS=[['⚙️','設定'],['📱','等 學生'],['⚡','答題'],['🏆','頒獎'],['📊','錯題'],['🎁','發獎勵']];
+function hstep(k){$$('.hstp').forEach(function(e){if(e.getAttribute('data-k')!==String(k)){e.setAttribute('data-k',k);e.innerHTML=LV.stepsHTML(HSTEPS,k)}})}
 function allSets(g){(LIST[g]||[]).forEach(function(k){if(H.sets[g+'_'+k]==null)H.sets[g+'_'+k]=true})}
 function mins(n){return Math.max(1,Math.round(n*36/60))}
 function setDraw(){allSets(H.qg);var G=LV.game(H.game),L=LIST[H.qg]||[],secs=[];L.forEach(function(k){var s=GR[k].sec;if(secs.indexOf(s)<0)secs.push(s)});
-  var h='<div class="sett"><h1>⚡ 現場任務</h1><span class="note">選好 ➜ 按 最下面〔⚡ 建立 遊戲〕</span></div>'+
-  '<h2><b class="sn">1</b> 哪一班</h2><div class="row">'+[3,4].map(function(g){return CLS[g].map(function(c){return '<button data-sc="'+c+'" class="clsb'+(H.cls===c?' on':'')+'">'+c+(c==='400'?' 課後班':'')+'</button>'}).join('')}).join('<span class="gsep"></span>')+'</div>'+
-  '<h2><b class="sn">2</b> 哪一種 遊戲</h2><div class="ggrid">'+LV.GAMES.map(function(x,i){return '<button data-sk="'+x.k+'" class="gcd'+(H.game===x.k?' on':'')+(i===0?' first':'')+'">'+LV.badge(x.k)+'<span class="gtx"><b>'+x.nm+(i===0?' <em>推薦</em>':'')+'</b><small>'+x.d+'</small></span></button>'}).join('')+'</div>'+
-  '<h2><b class="sn">3</b> 題目</h2><div class="row"><button data-qg="3" class="'+(H.qg===3?'on':'')+'">三年級 的 題目</button><button data-qg="4" class="'+(H.qg===4?'on':'')+'">四年級 的 題目</button>'+
+  var h='<div class="sett"><h1>⚡ 現場任務</h1>'+LV.stepsHTML(HSTEPS,0)+'</div>'+
+  '<div class="sbox"><h2><b class="sn">1</b> 哪一班</h2><div class="row">'+[3,4].map(function(g){return CLS[g].map(function(c){return '<button data-sc="'+c+'" class="clsb'+(H.cls===c?' on':'')+'">'+c+(c==='400'?' 課後班':'')+'</button>'}).join('')}).join('<span class="gsep"></span>')+'</div>'+
+  '</div><div class="sbox"><h2><b class="sn">2</b> 哪一種 遊戲</h2>'+GRP.map(function(g){return '<div class="sgrp"><div class="sgh"><span class="sgi">'+g[1]+'</span><b>'+g[2]+'</b><small>'+g[3]+'</small></div><div class="ggrid">'+
+    g[4].map(function(k){var x=LV.game(k);return '<button data-sk="'+k+'" class="gcd'+(H.game===k?' on':'')+'">'+LV.badge(k)+'<span class="gtx"><b>'+x.nm+(k==='classic'?' <em>推薦</em>':'')+'</b><small>'+x.d+'</small></span></button>'}).join('')+'</div></div>'}).join('')+
+  '</div><div class="sbox"><h2><b class="sn">3</b> 題目</h2><div class="row"><button data-qg="3" class="'+(H.qg===3?'on':'')+'">三年級 的 題目</button><button data-qg="4" class="'+(H.qg===4?'on':'')+'">四年級 的 題目</button>'+
     '<span class="gsep"></span><button data-sa="1">☑ 全選</button><button data-sa="0">☐ 全部 不選</button><span class="note">（每一行 後面 ＝ 那一組 有 幾題）</span></div>'+
   secs.map(function(s){return '<div class="secn">'+s+'</div><div class="row sets">'+L.filter(function(k){return GR[k].sec===s}).map(function(k){var on=!!H.sets[H.qg+'_'+k];
     return '<button data-sb="'+k+'" class="'+(on?'on':'')+'">'+(on?'☑ ':'☐ ')+esc(GR[k].nm)+'<em>'+GR[k].qs.length+' 題</em></button>'}).join('')+'</div>'}).join('')+
-  '<h2><b class="sn">4</b> 幾題</h2><div class="row">'+[5,10,15,20].map(function(n){return '<button data-sn="'+n+'" class="'+(H.n===n?'on':'')+'">'+n+' 題（約 '+mins(n)+' 分鐘）</button>'}).join('')+'</div>'+
-  '<h2><b class="sn">5</b> 加點 刺激</h2><div class="row"><button data-ch="1" class="'+(H.ch?'on':'')+'">🔥 挑戰題 開（拼字、排句子，分數 ✖2）</button><button data-ch="0" class="'+(!H.ch?'on':'')+'">✖ 挑戰題 關</button></div>'+
+  '</div><div class="sbox"><h2><b class="sn">4</b> 幾題</h2><div class="row">'+[5,10,15,20].map(function(n){return '<button data-sn="'+n+'" class="'+(H.n===n?'on':'')+'">'+n+' 題（約 '+mins(n)+' 分鐘）</button>'}).join('')+'</div>'+
+  '</div><div class="sbox"><h2><b class="sn">5</b> 加點 刺激</h2><div class="row"><button data-ch="1" class="'+(H.ch?'on':'')+'">🔥 挑戰題 開（拼字、排句子，分數 ✖2）</button><button data-ch="0" class="'+(!H.ch?'on':'')+'">✖ 挑戰題 關</button></div>'+
   (G.fx?'<div class="row"><button data-si="1" class="'+(H.int?'on':'')+'">'+G.fx.ic+' 干擾 開（不扣分、≦ 3 秒）</button><button data-si="0" class="'+(!H.int?'on':'')+'">✖ 干擾 關</button><span class="note">'+esc(G.fx.t)+'</span></div>':'')+
-  '<div class="row mkrow"><button id="mk" class="big">⚡ 建立 遊戲</button><span id="mkm" class="note"></span></div>';
+  '</div><div class="row mkrow"><button id="mk" class="big">⚡ 建立 遊戲</button><span id="mkm" class="note"></span></div>';
   $('#hset .in').innerHTML=h}
 function selQs(){var a=[];(LIST[H.qg]||[]).forEach(function(k){if(H.sets[H.qg+'_'+k])a=a.concat(GR[k].qs)});return a}
 /* 題目：每 3 題 的 第 3 題 ＝ 🔥 挑戰題（🔤 拼字、🧩 排句子 輪流）；四選一 每題 重洗 選項 */
@@ -71,9 +78,11 @@ function online(){var now=Date.now();return Object.keys(H.seen).filter(function(
 function ids(){return Object.keys(H.pl).sort()}
 function stopAll(){H.stops.forEach(function(f){f()});H.stops=[]}
 /* ── 等學生加入：QR Code ＋ 〔📋 複製 網址〕＋ ① ② ③ ＋ 座號 格子 ── */
-function stuURL(){return String(location.href).split('#')[0].split('?')[0].replace(/host\.html$/,'')}
-function qrSVG(u){try{var q=qrcode(0,'M');q.addData(u);q.make();return q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch(e){return ''}}
-function lobby(){scr('hlob');var G=LV.game(H.game);
+function stuURL(){return LV.stuURL()}
+function qrSVG(u){return LV.qr(u)}
+/* 右下角 QR Code（3(7)）：每一個 畫面 都 有，不小心 登出 的 學生 掃 這個 回來 */
+function hqr(on){var e=$('#hqrc');if(!e)return;if(on&&!e.getAttribute('data-ok')){e.querySelector('.qrb').innerHTML=qrSVG(stuURL());e.setAttribute('data-ok',1)}e.hidden=!on}
+function lobby(){scr('hlob');hstep(1);hqr(false);var G=LV.game(H.game);
   $('#lqr').innerHTML=qrSVG(stuURL());$('#lurl').textContent=stuURL().replace(/^https?:\/\//,'');
   $('#llog').innerHTML=LV.howHTML(LV.LOGIN,'v sm');
   $('#lgame').innerHTML=LV.badge(H.game,'lg')+'<div><b>'+G.nm+'</b><span>'+H.cls+' 班　'+H.n+' 題　'+(H.qg===3?'三':'四')+'年級 的 題目'+(H.ch?'　🔥 挑戰題 ✖2':'')+'</span></div>';
@@ -85,7 +94,7 @@ function drawLobby(){if(H.scr!=='hlob')return;var L=online();$('#lcnt').textCont
 /* ── ▶ 開始：怎麼玩 ＋ 3、2、1（不動 的 ① ② ③）── */
 function start(){var L=online();if(!L.length){$('#lmsg').textContent='還沒有 學生 加入（學生 掃 QR Code、打 5 碼）';return}clearInterval(H.lt);
   H.pl={};L.forEach(function(id){H.pl[id]=1;H.tot[id]=0;H.okc[id]=0;H.st[id]=0;H.best[id]=0;H.fxc[id]=0;H.okq[id]=''});H.qi=-1;H.start=Date.now();H.gs=gs0();H.sum=[];
-  var G=LV.game(H.game);scr('hhow');$('#hhw').innerHTML=LV.badge(H.game,'xl')+'<h1>'+G.nm+'</h1>'+LV.howHTML(G.how,'big')+'<div id="cnt3" class="cnt3"></div>';
+  var G=LV.game(H.game);scr('hhow');hstep(2);hqr(true);$('#hhw').innerHTML=LV.badge(H.game,'xl')+'<h1>'+G.nm+'</h1>'+LV.howHTML(G.how,'big')+'<div id="cnt3" class="cnt3"></div>';
   putM({phase:'how',t0:Date.now(),pl:H.pl});
   stopAll();H.stops.push(LDB.poll(R('p'),3000,function(v){seeP(v);online().forEach(join)}));
   var k=0;(function c3(){var t=[5000,1000,1000,1000][k];H.tm=setTimeout(function(){k++;if(k<4){$('#cnt3').textContent=4-k;$('#cnt3').className='cnt3 on';c3()}else next()},t)})()}
@@ -99,7 +108,7 @@ function next(){clearTimeout(H.tm);clearTimeout(H.tm2);clearTimeout(H.tm3);LV.st
     H.phase='q';putM({phase:'q',qi:H.qi,q:sq,t0:H.t0,dur:dur,rev:null,fx:null,pl:H.pl});
     H.stops.push(H.unA=LDB.poll(R('a/'+H.qi),600,function(v){H.A=v||{};for(var id in H.A)join(id);drawQ();if(H.phase==='q'&&ids().every(function(id){return H.A[id]}))reveal()}));
     if(H.game==='king')H.stops.push(H.unC=LDB.poll(R('ch'),1500,function(v){H.ch2=v||{};if(H.phase==='q'||H.phase==='rev')drawGame()}));
-    scr('hq');$('#hq').className='scr '+(H.game==='classic'?'classic':'side');drawQ();drawGame();ctl();tick();
+    scr('hq');hstep(2);hqr(true);$('#hq').className='scr '+(H.game==='classic'?'classic':'side');drawQ();drawGame();ctl();tick();
     if(q.ls&&q.al)H.tm3=setTimeout(function(){LV.say(BASE+q.al.replace(/^\.\.\//,''),q.ae,2)},700);
     var F=LV.game(H.game).fx;if(H.int&&F&&F.ms)H.tm2=setTimeout(fxSend,3000+Math.random()*3000)})}
 function tick(){clearTimeout(H.tm);if(H.phase!=='q')return;var left=Math.max(0,H.dur-(Date.now()-H.t0)),s=Math.ceil(left/1000);
@@ -235,7 +244,7 @@ function end(){H.phase='end';clearTimeout(H.tm);clearTimeout(H.tm3);LV.stopSay()
   putM({phase:'end',r:{qi:H.qi,tot:H.tot,okc:H.okc,st:H.st,okq:H.okq},gs:H.game==='classic'?null:H.gs,sum:{w:W,s:S.map(function(s){return {qi:s.qi,r:s.r,ok:s.ok,n:s.n}}),
     wq:W.map(function(k){var s=S[k];return {qi:k,r:s.r,ans:s.ans,ae:s.ae,ag:s.ag,az:s.az,au:s.au,h:s.h}})}});
   cerShow()}
-function cerShow(){scr('hend');var Rk=rank(),G=H.gs,k=H.game,cnt=[0,0];(G.cells||[]).forEach(function(t){if(t!=null)cnt[t]++});
+function cerShow(){scr('hend');hstep(3);hqr(true);var Rk=rank(),G=H.gs,k=H.game,cnt=[0,0];(G.cells||[]).forEach(function(t){if(t!=null)cnt[t]++});
   var res=k==='boss'?(G.hp<=0?'🎉 全班 打倒 魔王！':'魔王 還剩 '+G.hp+' 血'):k==='tug'?(G.tug===0?'🤝 兩隊 平手':(G.tug>0?'🔵 單號隊':'🔴 雙號隊')+' 贏了 拔河'):
     k==='map'?(cnt[0]===cnt[1]?'🤝 兩隊 平手':(cnt[0]>cnt[1]?'🔵 單號隊':'🔴 雙號隊')+' 搶到 比較 多 地'):k==='pet'?['🥚 龍蛋 快 孵出來 了','💥 龍蛋 裂開 了','🐣 孵出 傳說 寵物','🐲 寵物 長大 了','🐉 傳說 進化'][G.pet||0]:k==='treasure'?'🗝 全班 打開 '+G.tr+' 個 寶箱':'';
   var pod=[];for(var i=0;i<Rk.length&&i<3;i++){var x=Rk[i];pod.push({rk:i+1,w:'<span class="cph">'+heroI(x.id,'cpi')+'</span><span class="cpn">'+seatOf(x.id)+' 號</span><span class="cps">'+x.v.toLocaleString()+' 分</span>'})}
@@ -245,7 +254,7 @@ function cerShow(){scr('hend');var Rk=rank(),G=H.gs,k=H.game,cnt=[0,0];(G.cells|
     say:one?'🌟 總分 '+one.v.toLocaleString()+' 分、答對 '+(H.okc[one.id]||0)+' ／ '+H.n+' 題':'',pod:pod},{snd:false});
   $('#cstn').textContent='第 '+(H.cerK+1)+' 種 風格：'+CERX.ST[H.cerK].nm}
 /* ── 結束 ② 📊 全班 錯題 總分析：每一題 答對 率 長條（一條一條 長出來）＋ 最多人 錯 的 前 3 名（逐字 中文、翻譯、🔊）── */
-function anaShow(){CERX.stop($('#cerst'));scr('hana');var S=H.S||[],n=S.length,okA=0,nA=0;S.forEach(function(s){okA+=s.ok;nA+=s.n});var acc=nA?Math.round(okA/nA*100):0;
+function anaShow(){CERX.stop($('#cerst'));scr('hana');hstep(4);hqr(true);var S=H.S||[],n=S.length,okA=0,nA=0;S.forEach(function(s){okA+=s.ok;nA+=s.n});var acc=nA?Math.round(okA/nA*100):0;
   var RD=46,L=2*Math.PI*RD;
   var h='<div class="anahd"><svg class="ring2" viewBox="0 0 110 110"><circle cx="55" cy="55" r="'+RD+'" fill="none" stroke="#24313F" stroke-width="12"/><circle class="rg" cx="55" cy="55" r="'+RD+'" fill="none" stroke="#3BD16F" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+L.toFixed(1)+'" stroke-dashoffset="'+L.toFixed(1)+'" style="--to:'+(L*(1-acc/100)).toFixed(1)+'" transform="rotate(-90 55 55)"/><text x="55" y="62" text-anchor="middle" font-size="26" fill="#fff" font-weight="700">'+acc+'%</text></svg>'+
     '<div><h1>📊 全班 錯題 總分析</h1><div class="note big2">'+H.cls+' 班　全班 平均 答對 '+acc+'%</div></div></div>'+
@@ -254,13 +263,15 @@ function anaShow(){CERX.stop($('#cerst'));scr('hana');var S=H.S||[],n=S.length,o
       '<div class="wrq">'+s.t+'</div>'+LV.glHTML({ag:s.ag,az:s.az,ae:s.ae,ans:s.ans,h:s.h})+'</div>'}).join('')+'</div>':'<div class="note big2">🎉 每一題 全班 都 答對！</div>');
   $('#hanab').innerHTML=h;
   setTimeout(function(){$$('#hanab .bar,#hanab .wr').forEach(function(x){x.classList.add('go')});var g=$('#hanab .rg');if(g)g.classList.add('go')},60);
-  if(H.say&&H.W&&H.W.length){var s=S[H.W[0]];H.tm3=setTimeout(function(){LV.say(s.au?BASE+s.au.replace(/^\.\.\//,''):'',s.ae,3)},1500)}
+  /* 3(8)：最多人 錯 的 題目，一題一題 自動 唸 3 次（唸到 的 那一題 亮） */
+  if(H.say&&H.W&&H.W.length){var sw=function(j){$$('#hanab .wr').forEach(function(x,i){x.classList.toggle('spk',i===j)});if(j>=H.W.length||H.scr!=='hana')return;var s=S[H.W[j]];
+      LV.say(s.au?BASE+s.au.replace(/^\.\.\//,''):'',s.ae,3,function(){H.tm3=setTimeout(function(){sw(j+1)},700)})};H.tm3=setTimeout(function(){sw(0)},1500)}
   LDB.get(R('rw')).then(function(rw){H.rw=rw||{};$('#erw').textContent='🎁 這一場 抽到 的 獎勵：'+Object.keys(H.rw).reduce(function(s,id){return s+(H.rw[id]||[]).length},0)+' 個'},function(){})}
 /* 每一個人：參加 ＋10 經驗值、答對 1 題 ＋1 金幣；抽到的獎勵照 LV.RW */
 function bonusList(){return ids().map(function(id){var rw=H.rw[id]||[],c=H.okc[id]||0,x=10,o={id:id,c:c,x:x,tre:[],title:'',snack:0,medal:0};
   rw.forEach(function(k){if(k==='c2')o.c+=c;else if(k==='x2')o.x+=x;else if(k==='frag')o.c+=20;else if(k==='title')o.title='⚡ 現場任務 勇者';else if(k==='emo')o.tre.push('t06');else if(k==='fx')o.tre.push('t04');else if(k==='snack')o.snack++;else if(k==='medal')o.medal++;else if(k==='box')o.c+=30});return o})}
 function give(){var b=$('#give'),m=$('#gm');if(H.done){m.textContent='✅ 已經 發過了';return}b.disabled=true;m.textContent='⏳ 發獎勵中…';
-  post({a:'rpgb',pw:H.pw,room:H.code,t0:H.start,list:bonusList()}).then(function(j){if(j&&j.ok){H.done=true;b.textContent='✅ 獎勵 發好了';m.textContent='✅ 發好了（'+j.n+' 人）：〔戰神之路〕拿到 獎勵、老師看板 練習次數 ＋1';putM({given:1})}else{b.disabled=false;m.textContent='❌ 沒有 發成（'+((j&&j.err)||'')+'）'}},
+  post({a:'rpgb',pw:H.pw,room:H.code,t0:H.start,list:bonusList()}).then(function(j){if(j&&j.ok){H.done=true;hstep(5);b.textContent='✅ 獎勵 發好了';m.textContent='✅ 發好了（'+j.n+' 人）：〔戰神之路〕拿到 獎勵、老師看板 練習次數 ＋1';putM({given:1})}else{b.disabled=false;m.textContent='❌ 沒有 發成（'+((j&&j.err)||'')+'）'}},
     function(){b.disabled=false;m.textContent='📶 連不到 成績系統'})}
 /* 結束 這一場：清掉 遊戲（留著 p：學生 還 登入 著，下一場 直接 進來）*/
 function closeGame(){LV.stopSay();stopAll();if(H.code)LDB.must('PATCH',R(),{m:null,v:Date.now(),a:null,rw:null,xt:null,ch:null},6).then(function(){location.reload()});else location.reload()}

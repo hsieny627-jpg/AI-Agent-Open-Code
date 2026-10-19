@@ -180,6 +180,9 @@ h1{font-size:clamp(24px,3.6vh,40px)}
 /* 2026-10-18 第十二次（老師 3）：學生 的〔⚡ 現場任務〕拿掉（學生 一律 掃 QR Code）；換成 老師 的〔⚡ 開 現場任務 大螢幕〕：橘紅色、醒目，跟 老師看板（金色）分得出來 */
 .tbtn.lbtn{color:#fff;background:linear-gradient(#FF8A3D,#D9381E);box-shadow:0 0 0 3px #5A1A00,0 0 18px #FF6B3D99;animation:none}
 @media (max-width:1300px){h1 .url{display:none}}
+/* 2026-10-19 第十三次 3(11)：〔📝 四年級 期中複習〕只放 總首頁（老師 上課 用；在家複習 沒有） */
+.tbtn .hx{white-space:pre}@media (max-width:1100px){.tbtn .hx{display:none}}
+.tbtn.mbtn{white-space:nowrap;color:#fff;background:linear-gradient(#9C6BFF,#5A2BD6);box-shadow:0 0 0 3px #2A1070,0 0 18px #7C4DFF99;animation:none}
 body.scin .lbtn{display:none}   /* 學生 登入 了（平板）＝ 不放 老師 的 大螢幕 按鈕（一行 放得下） */   /* 按鈕 變長了：窄的 螢幕 不放 網址（一行 放得下，不 多出 捲軸） */
 /* 2026-10-12：四年級 Unit 2 那一列有 3 顆按鈕（含〔職業單字網站〕），標題被擠成三行、iPad 橫放多出 33px 捲軸 ➜ 只在總首頁：按鈕內距縮一點、標題兩行；矮的螢幕不放那一列的小字 */
 .gi.b3w .gb{gap:5px}
@@ -198,7 +201,7 @@ footer .sep{color:#2A2A2A;font-size:12px}
 <body>
 ${require('../score/_client.js').home(0, '', 'school', 1)}
 <header>
- <h1>首頁 <a class="tbtn" href="teacher/index.html">老師看板</a><span id="scbar" class="inl" hidden></span><a class="tbtn lbtn" href="live/host.html">⚡ 開 現場任務 大螢幕</a> <span class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></span></h1>
+ <h1>首頁 <a class="tbtn" href="teacher/index.html">老師看板</a><span id="scbar" class="inl" hidden></span><a class="tbtn lbtn" href="live/host.html">⚡ <span class="hx">開 </span>現場任務<span class="hx"> 大螢幕</span></a><a class="tbtn mbtn" href="midterm/index.html">📝 <span class="hx">四年級 </span>期中複習</a> <span class="url">🔗 <b>hsieny627-jpg.github.io/AI-Agent-Open-Code</b></span></h1>
 </header>
 
 <main id="hub">

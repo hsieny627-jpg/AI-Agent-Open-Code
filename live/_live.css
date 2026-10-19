@@ -399,3 +399,87 @@ s.dx{text-decoration:line-through;text-decoration-thickness:3px;outline:3px soli
 #hq.rv .qo{min-height:clamp(64px,10vh,110px)!important;font-size:clamp(20px,2.8vh,34px);padding:6px 12px;gap:8px}
 #hq.rv .qo .qck{width:1.4em;height:1.4em;font-size:.9em}
 #hq.rv .qh{margin-top:10px}
+/* ══ 2026-10-19 第十三次（老師：版面 粗糙 凌亂 ➜ 質感、簡潔、秒懂）══ */
+/* 步驟條：① 🎮 小遊戲 ➜ ② ⚡ 答題 ➜ ③ 🏆 結果（現在 那一步 金色 放大；做完 ✔ 綠色） */
+.stpw{position:sticky;top:0;z-index:31;display:flex;justify-content:center;padding:8px 10px 4px;background:linear-gradient(#060912 70%,transparent)}
+.stps{display:flex;align-items:center;justify-content:center;gap:clamp(6px,1.2vw,14px);flex-wrap:nowrap}
+.stp{display:inline-flex;align-items:center;gap:8px;padding:6px 16px 6px 8px;border-radius:999px;background:#121B27;border:2px solid #2B3B50;color:#7F93A8;font-size:clamp(18px,2.4vh,24px);white-space:nowrap;transition:all .3s}
+.stp i{font-style:normal;display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;border-radius:50%;background:#1C2836;font-size:.95em}
+.stp.now{background:linear-gradient(#3A2E08,#221A04);border-color:var(--gold);color:#FFE9A8;transform:scale(1.08);box-shadow:0 0 18px rgba(255,213,74,.35)}
+.stp.now i{background:var(--gold);color:#111;animation:stpP 1.6s ease-in-out infinite}
+.stp.done{border-color:#2E7A4C;color:#BFF5D2}.stp.done i{background:#2BD46A;color:#062}
+.sar{color:#4A5E75;font-size:clamp(16px,2vh,22px)}
+@keyframes stpP{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.host .stpw{position:static;background:none;padding:0}
+/* 平板 右下角 QR Code（3(7)） */
+.sqrc{position:fixed;right:max(8px,env(safe-area-inset-right));bottom:max(8px,env(safe-area-inset-bottom));z-index:36;display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:#0E1622;border:2px solid var(--gold);border-radius:14px;padding:6px 6px 4px;box-shadow:0 6px 18px rgba(0,0,0,.55)}
+.sqrc .qrb{width:clamp(74px,9vmin,104px);height:clamp(74px,9vmin,104px);background:#fff;border-radius:8px;overflow:hidden}
+.sqrc .qrb svg{width:100%;height:100%;display:block}
+.sqrc span{font-size:13px;line-height:1.15;color:#FFE9A8;text-align:center}
+body.stu .scr{padding-bottom:clamp(96px,12vmin,130px)}
+/* 登入 以後 第一頁：現在 ➜ 等一下（3(4)） */
+.itr{display:flex;align-items:stretch;justify-content:center;gap:clamp(10px,2vw,24px);margin:clamp(10px,4vh,40px) auto 10px;flex-wrap:nowrap}
+.itc{flex:1 1 0;max-width:380px;border-radius:26px;padding:clamp(14px,2.4vh,26px) 14px;background:linear-gradient(#18263A,#0D1522);border:3px solid #2B3B50;opacity:0;animation:itIn .6s ease-out forwards}
+.itc.i1{border-color:var(--gold);box-shadow:0 0 26px rgba(255,213,74,.25)}.itc.i2{animation-delay:1.1s}
+.itl{display:inline-block;padding:2px 16px;border-radius:999px;background:var(--gold);color:#111;font-size:clamp(20px,2.6vh,26px)}.itc.i2 .itl{background:#9FD8FF}
+.iti{font-size:clamp(64px,11vh,110px);line-height:1.2;margin:6px 0}.itc.i1 .iti{animation:itB 1.4s ease-in-out .6s infinite}
+.itt{font-size:clamp(28px,4.4vh,44px);color:#fff}.its{font-size:clamp(20px,2.7vh,28px);color:#BFD3E6;margin-top:8px;line-height:1.4}
+.itar{align-self:center;font-size:clamp(40px,7vh,70px);color:var(--gold);opacity:0;animation:itIn .4s ease-out .8s forwards,itA 1.2s ease-in-out 1.2s infinite}
+.itgo{opacity:.35;transition:opacity .4s}.itgo.rdy{opacity:1;animation:itG 1.4s ease-in-out infinite}
+@keyframes itIn{from{opacity:0;transform:translateY(24px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes itB{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-10px) rotate(-6deg)}60%{transform:translateY(0) rotate(5deg)}}
+@keyframes itA{0%,100%{transform:translateX(0)}50%{transform:translateX(10px)}}
+@keyframes itG{0%,100%{box-shadow:0 6px 0 #0B5A2B,0 0 0 0 rgba(43,212,106,.5)}50%{box-shadow:0 6px 0 #0B5A2B,0 0 0 14px rgba(43,212,106,0)}}
+/* 錯題 分析 動畫（3(6)）：正確 答案 一個 字 一個 字 跳出來，中文 跟著 亮；你選的 劃掉 */
+.gls.ani .gw{opacity:0;animation:gwIn .45s cubic-bezier(.2,1.6,.4,1) calc(var(--i)*.18s + .25s) forwards}
+.gls.ani .gw i{animation:gwZ .6s ease-out calc(var(--i)*.18s + .5s) both}
+@keyframes gwIn{from{opacity:0;transform:translateY(18px) scale(.6)}to{opacity:1;transform:none}}
+@keyframes gwZ{0%{color:#fff;text-shadow:0 0 14px #FFE07A}100%{color:#FFE07A;text-shadow:none}}
+.myou .dx{position:relative;text-decoration:none}.myou .dx::after{content:'';position:absolute;left:-4%;top:52%;height:4px;width:0;background:#FF5A5A;animation:dxL .5s ease-out .2s forwards}
+@keyframes dxL{to{width:108%}}
+@media (prefers-reduced-motion:reduce){.gls.ani .gw,.itc,.itar{animation:none;opacity:1}.myou .dx::after{animation:none;width:108%}}
+/* 等人小遊戲（3(4)）：線條 圖示、魔王 ＝ 寵物 大圖、🔄 拖曳 變身 */
+.mgic{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;border-radius:12px;background:linear-gradient(135deg,var(--mc),rgba(0,0,0,.35));box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 4px 10px rgba(0,0,0,.4);flex:0 0 auto}
+.mgic svg{width:68%;height:68%}
+.mgh small{line-height:1.35}
+img.mbi{width:clamp(70px,11vh,110px);height:clamp(70px,11vh,110px);object-fit:cover;border-radius:50%;border:3px solid #FF5A5A;box-shadow:0 0 22px rgba(255,90,90,.55);font-size:0}
+.mdg{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vh,16px);width:100%;--df:clamp(26px,5vh,48px)}
+.mdr{display:flex;flex-wrap:nowrap;gap:8px;justify-content:center;max-width:100%}
+.mdt{font-size:var(--df);line-height:1.1;padding:.12em .3em;border-radius:12px;background:#161616;border:2px solid #3A3A3A;touch-action:none;cursor:grab;white-space:nowrap;min-width:1.1em;text-align:center;user-select:none;-webkit-user-select:none}
+.mdt.b{background:#2563EB;border-color:#8FB0FF}.mdt.p{background:#E8467C;border-color:#FF9EBE}.mdt.y{background:#F5B301;border-color:#FFE27A;color:#111}.mdt.pn{color:#FFD54A;border-color:#FFD54A}
+.mdt.gone{opacity:.15;pointer-events:none}.mdt.mag{animation:mdMag .8s ease-out}
+@keyframes mdMag{40%{transform:scale(1.5) rotate(-8deg);box-shadow:0 0 26px #FFD54A}}
+.mds{min-width:calc(var(--df)*1.4);height:calc(var(--df)*1.6);border:3px dashed #3F6386;border-radius:14px;display:flex;align-items:center;justify-content:center;background:#0B1520}
+.mds.full{border-style:solid;border-color:#24384D;background:transparent}.mds.hov{border-color:#FFD54A;background:#2A2410}
+.mdz{font-size:clamp(20px,3vh,30px);color:#BFD3E6}.mdto{font-size:clamp(22px,3.4vh,34px);color:#FFD54A}
+#mdD.win .mdt{animation:mdMag .8s ease-out}#mdD.bad{animation:mgNo .45s}
+.mfly{position:fixed;left:0;top:0;z-index:60;pointer-events:none;box-shadow:0 12px 30px #000c}
+/* 老師 大螢幕：上面 一條 步驟條（現在 那一步 才 寫 字）、右下角 QR（3(7)(9)） */
+.hstp{position:fixed;top:6px;left:50%;transform:translateX(-50%);z-index:39;pointer-events:none}
+.hstp .stp:not(.now) em{display:none}.hstp .stp{padding:4px 8px;font-size:clamp(16px,2vh,22px)}.hstp .stp.now{padding-right:14px}
+body.host .scr{padding-top:clamp(40px,5.4vh,56px)}
+body.host .scr#hpw,body.host .scr#hset{padding-top:0}
+.sqrc.hq2{z-index:42}.sqrc.hq2 .qrb{width:clamp(96px,11vh,140px);height:clamp(96px,11vh,140px)}.sqrc.hq2 span{font-size:16px}
+body.host .hbar{padding-right:calc(clamp(96px,11vh,140px) + 34px)}
+.sett{align-items:center}.sett .stps{margin-left:auto}
+.sbox{background:linear-gradient(#111B2A,#0B121D);border:2px solid #22344A;border-radius:24px;padding:4px 18px 16px;margin:14px 0}
+.sbox h2{margin:12px 0 10px}
+.sgrp{margin:6px 0 14px}.sgh{display:flex;align-items:baseline;gap:12px;margin:4px 2px 8px;font-size:clamp(22px,2.8vh,30px);color:#FFE07A}
+.sgh .sgi{font-size:1.1em}.sgh small{font-size:clamp(17px,2vh,22px);color:#9FB3C8;font-weight:700}
+.gcd{align-items:flex-start;min-height:112px;transition:transform .15s,border-color .15s}.gcd:active{transform:scale(.98)}
+.gcd .gtx{display:flex;flex-direction:column;gap:6px}.gcd .gtx b{font-size:clamp(22px,2.7vh,28px)}
+.gcd .gtx small{font-size:clamp(16px,1.9vh,20px);color:#B7C8DA;line-height:1.45;font-weight:700}
+.gcd .gtx em{font-style:normal;font-size:.7em;background:var(--gold);color:#111;border-radius:999px;padding:1px 10px;margin-left:6px;vertical-align:middle}
+.gcd.on{position:relative}.gcd.on::after{content:'✔';position:absolute;top:8px;right:10px;width:30px;height:30px;border-radius:50%;background:var(--gold);color:#111;display:flex;align-items:center;justify-content:center;font-size:18px}
+.wr.spk{box-shadow:0 0 0 4px var(--gold),0 0 30px rgba(255,213,74,.4)}
+.sqrc[hidden],.stpw[hidden],.hstp[hidden]{display:none!important}
+.stp{font-size:clamp(22px,2.4vh,26px)}.sar{font-size:22px}.hstp .stp{font-size:22px}
+body.host .scr#hlob{padding-top:0}
+.stp i{font-size:1em!important}
+.sgh small,.gcd .gtx small{font-size:22px}.gcd .gtx em{font-size:22px}
+.hstp .stp,.hstp .sar{font-size:24px}
+/* 上面 多了 步驟條 ➜ 經典搶答 的 四個 答案 矮 一點，不壓到 右下角 的 QR 和 按鈕 */
+#hq.classic .qo{min-height:clamp(96px,20vh,240px)}
+.sqrc.hq2 .qrb{width:clamp(84px,9vh,112px);height:clamp(84px,9vh,112px)}
+body.host .hbar{padding-right:calc(clamp(84px,9vh,112px) + 34px)}

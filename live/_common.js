@@ -43,6 +43,11 @@ var LV={
       fx:{k:'cheer',ic:'📣',t:'台下 可以 按 📣 幫 台上 加油！',ms:0}}],
   /* 學生 登入 方式（3 步動畫：大螢幕 等人 的 時候、學生 平板 第一頁） */
   LOGIN:[['📱','掃 QR Code'],['🔢','打 5 碼（班級 ＋ 座號）'],['✅','自動 進入 自己 班 的 遊戲']],
+  /* QR Code（score/qr.js）：學生 平板 的 網址（大螢幕、老師看板、平板 右下角 都 用 這一個） */
+  stuURL:function(){var u=String(location.href).split('#')[0].split('?')[0];return u.replace(/(host|index)\.html$/,'')},
+  qr:function(u){try{var q=qrcode(0,'M');q.addData(u||LV.stuURL());q.make();return q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch(e){return ''}},
+  /* 步驟條（2026-10-19 第十三次 3(9)：秒懂 現在 做 什麼、等一下 做 什麼）：steps ＝ [[圖示, 字]…]，k ＝ 現在 第幾步 */
+  stepsHTML:function(steps,k){return '<div class="stps">'+steps.map(function(s,i){return (i?'<b class="sar">➜</b>':'')+'<span class="stp'+(i<k?' done':i===k?' now':'')+'"><i>'+(i<k?'✔':s[0])+'</i><em>'+s[1]+'</em></span>'}).join('')+'</div>'},
   /* 四個 答案：顏色 ＋ 形狀（色弱 也 分得出來） */
   SHAPE:['<svg viewBox="0 0 40 40"><path d="M20 5L37 34H3Z" fill="#fff"/></svg>','<svg viewBox="0 0 40 40"><path d="M20 3L37 20L20 37L3 20Z" fill="#fff"/></svg>',
          '<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="#fff"/></svg>','<svg viewBox="0 0 40 40"><rect x="5" y="5" width="30" height="30" rx="3" fill="#fff"/></svg>'],
@@ -92,12 +97,13 @@ var LV={
   ICON:{},
   ic:function(h){return String(h==null?'':h).replace(/§i:([^§]+)§/g,function(m,k){return LV.ICON[k]||''})},
   esc:function(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')},
-  /* 正確答案：每一個 英文 字 正下方 ＝ 它的 中文（ag）、整句 翻譯（az）、💡 為什麼（h） */
+  /* 正確答案：每一個 英文 字 正下方 ＝ 它的 中文（ag）、整句 翻譯（az）。
+     2026-10-19 第十三次 3(6)：最後 一行「💡 為什麼」刪掉（老師：看起來 像 廢話）；改成 動畫：字 一個一個 跳出來、中文 跟著 亮 */
   glHTML:function(r,big){var ag=r.ag||[],h='';
-    if(ag.length)h='<div class="gls'+(big?' big':'')+'">'+ag.map(function(x,i){var p=/^[?.!,]$/.test(x[0]);return '<span class="gw'+(p?' gp':'')+'" data-gi="'+i+'"><b>'+LV.esc(x[0])+'</b><i>'+LV.esc(x[1]||'')+'</i></span>'}).join('')+'</div>';
+    if(ag.length)h='<div class="gls ani'+(big?' big':'')+'">'+ag.map(function(x,i){var p=/^[?.!,]$/.test(x[0]);return '<span class="gw'+(p?' gp':'')+'" data-gi="'+i+'" style="--i:'+i+'"><b>'+LV.esc(x[0])+'</b><i>'+LV.esc(x[1]||'')+'</i></span>'}).join('')+'</div>';
     else h='<div class="gls'+(big?' big':'')+'"><span class="gw"><b>'+LV.esc(r.ans||'')+'</b></span></div>';
     var z=r.az&&LV.norm(r.az)!==LV.norm(r.ae)&&!(ag.length===1&&ag[0][1]===r.az)?'<div class="glz">📖 整句：'+LV.esc(r.az)+'</div>':'';
-    return h+z+(r.h?'<div class="glh">💡 '+r.h+'</div>':'')},
+    return h+z},
   /* 你選的 vs 正確 答案：逐字 比對（最長 共同 子序列），沒 對上 的 字 紅框（跟 遊戲 答錯頁 mDiff 一樣 的 作法） */
   diffHTML:function(you,ok){var A=String(you||'').split(/\s+/).filter(Boolean),B=String(ok||'').split(/\s+/).filter(Boolean),n=A.length,m=B.length,D=[],i,j;
     for(i=0;i<=n;i++){D.push([]);for(j=0;j<=m;j++)D[i].push(0)}

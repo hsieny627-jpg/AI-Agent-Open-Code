@@ -381,13 +381,13 @@ var RV2 = [
  ]},
  {t:'第 13～16 張', q:[
   {q:'Is she a teacher? 答「不是」要怎麼說？', o:['No, she isn’t.','No, he isn’t.','No, she is.','Not, she isn’t.'], h:'問 she 就答 she。'},
-  {q:'Is she a nurse? 變回直述句是？', o:['She is a nurse.','Is she a nurse.','She a nurse is.','Nurse is she.'], h:'Is 和 she 換回來，? 變成 。'},
-  {q:'She is a nurse. 變成問句，句子最前面放______？', o:['Is','She','a','nurse'], h:'be 動詞跑到最前面就變問句。'},
+  {q:'「她 是 一位 護理師。」的英文是？', o:['She is a nurse.','Is she a nurse.','She a nurse is.','Nurse is she.'], h:'She 放最前面，句尾是 句點。'},
+  {q:'「她 是 一位 護理師 嗎？」的英文是？', o:['Is she a nurse?','She is a nurse?','Is she nurse?','Is a nurse she?'], h:'Is 放最前面，句尾是 問號。'},
   {q:'Yes, she is. 的中文是？', o:['是的，她是。','不，她不是。','她是誰？','是的，他是。'], h:'she ＝ 她，Yes ＝ 是的。'}
  ]},
  {t:'第 17～21 張', q:[
   {q:'Is he a cook? 答「是」要怎麼說？', o:['Yes, he is.','Yes, he’s.','Yes, she is.','No, he isn’t.'], h:'問 he 就答 he，而且句尾 is 不縮寫。'},
-  {q:'直述句變問句，換位置的是哪兩個？', o:['主詞和 is','is 和 a','主詞和職業','句號和問號'], h:'🔵 主詞 和 🟡 is 換位置。'},
+  {q:'「他 是 一位 廚師 嗎？」的英文是？', o:['Is he a cook?','He is a cook?','Is he cook?','Is a cook he?'], h:'Is 放最前面，句尾是 問號。'},
   {q:'Is she a doctor? 答「不是」要怎麼說？', o:['No, she isn’t.','No, he isn’t.','No, she is.','Yes, she isn’t.'], h:'否定短答：No, she isn’t.。'},
   {q:'Is he a farmer? 的中文是？', o:['他是一位農夫嗎？','他是一位農夫。','她是一位農夫嗎？','他想當農夫。'], h:'句尾是 ?，中文要加「嗎？」。'},
   {q:'No, she isn’t. 後面接哪一句最順？', o:['She’s a cook.','He’s a cook.','Is she a cook?','Yes, she is.'], h:'先說不是，再說她真正的工作。'}
@@ -775,7 +775,7 @@ var SC2 = [
  sc({at:'❌ 猜錯了',bg:'🏥',l:'👧',b:'Is she a teacher?',r:'👦',b2:'No, she isn’t.',use:'猜錯了，就說 No。'}),
  SLOW1('is not','isn’t','說快一點，兩個字黏成一個字。'),
  sc({at:'🏥 猜錯以後',bg:'🏥',l:'👧',b:'Is she a teacher?',r:'👦',b2:'No, she isn’t. She’s a nurse.',use:'先說「不是」，再說她真正的工作。'}),
- sc({at:'🎨 用顏色記',bg:'🔄',l:'🙋',ln:'直述句',b:'He is a doctor.',r:'🤔',rn:'問句',b2:'Is he a doctor?',use:'換位置，句號變問號。'}),
+ sc({at:'🎨 用顏色記',bg:'🔄',l:'🙋',ln:'告訴你',b:'He is a doctor.',r:'🤔',rn:'問你',b2:'Is he a doctor?',use:'換位置，句號變問號。'}),
  sc({at:'🏥 醫院',bg:'🏥',l:'👧',b:'Is he a doctor?',r:'👦',b2:'Yes, he is.',use:'問一句，答一句。'}),
  sc({at:'🏥 醫院',bg:'🏥',l:'👦',b:'Is she a nurse?',r:'👧',b2:'No, she isn’t.',use:'問一句，答一句。'})
 ];

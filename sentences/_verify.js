@@ -1177,7 +1177,7 @@ async function gamesPage(p, f, vp, e) {
       cards: document.querySelectorAll('.gcard').length,
       arena: document.getElementById('arena').classList.contains('on'),
       inner: (document.getElementById('arena').innerText || '').length,
-      clickable: document.querySelectorAll('#arena .o,#arena .dbtn,#arena .cw,#arena .mc').length,
+      clickable: document.querySelectorAll('#arena .o,#arena .dbtn,#arena .cw,#arena .mc,#arena .dt').length,
       sec: parseInt(document.getElementById('gnum').textContent, 10),
       end: document.getElementById('gend').classList.contains('on')
     };
@@ -1313,9 +1313,20 @@ async function gamesPage(p, f, vp, e) {
     if (!(a2 < a1)) e.push('遊戲 ' + i + ' 倒數沒有在減少（' + a1 + '→' + a2 + '）');
     /* 點一個答案不可以壞掉 */
     try {
+      /* 🪄 拖曳變身（2026-10-19 第十三次）：用 真的 滑鼠 拖 第一個 字 到 第一格，再 把 其他 字 倒過來 放 ➜ 一定 答錯 */
+      if (await p.$('#dg')) {
+        const a = await (await p.$('#dgS .dt[data-i="0"]')).boundingBox(), b = await (await p.$('#dgD .ds[data-k="0"]')).boundingBox();
+        await p.mouse.move(a.x + a.width / 2, a.y + a.height / 2); await p.mouse.down(); await p.mouse.move(a.x + 40, a.y + 40, { steps: 3 }); await p.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 6 }); await p.mouse.up();
+        await p.waitForTimeout(200); acts++;
+        const dg = await p.evaluate(() => ({ s0: DG.slot[0], t: (document.querySelector('#dgD .ds[data-k="0"]') || {}).textContent || '', w: DG.src[0], n: DG.n }));
+        if (dg.s0 !== 0) e.push('遊戲 ' + i + '（' + id + '）拖不下去（第一格 沒有 字）');
+        else if (dg.t !== dg.w.charAt(0).toUpperCase() + dg.w.slice(1)) e.push('遊戲 ' + i + '（' + id + '）放到 第一格 沒有 變大寫：' + dg.t);
+        await p.evaluate(() => { for (let k = 1; k < DG.n; k++) dgPut(DG.n - k, k); });
+      } else {
       const wr = await p.$('#arena .o[data-ok="false"]');
       if (wr) await wr.click({ timeout: 8000 });
       else await p.locator('#arena .o,#arena .dbtn,#arena .cw,#arena .mc').first().click({ timeout: 8000 });
+      }
     } catch (err) {
       e.push('遊戲 ' + i + '（' + id + '）點不下去：' + String(err.message).split('\n')[0]);
       await quitG(p); await p.waitForTimeout(400); continue;

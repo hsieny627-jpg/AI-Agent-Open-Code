@@ -71,13 +71,13 @@ const Q = [
  o:['Is he a student?','He is a student?','Is a student he?','Does he a student?'], a:0, x2:true,
  why:'把 <b>he</b> 和 <b>is</b> <b>換位置</b>，句號換問號。後面 a student 完全不動。'},
 
-{t:'think', q:'"Is she a nurse?" 改成直述句，要怎麼寫？',
+{t:'see-zh', q:'「她 是 一位 護理師。」英文怎麼說？',
  o:['She is a nurse.','Is she a nurse.','She a nurse is.','Her is a nurse.'], a:0, x2:true,
- why:'把 <b>Is</b> 和 <b>she</b> 換回來：<b>She is</b> a nurse. 問號換句號。'},
+ why:'<b>She</b> 放最前面、<b>is</b> 跟在後面，句尾是 <b>句點</b>。'},
 
-{t:'think', q:'直述句變問句，是哪兩個字交換位置？',
- o:['he 和 is','he 和 a','is 和 a','a 和 doctor'], a:0,
- why:'只動<b>最前面兩個字</b>：藍色的 <b>he</b> 和黃色的 <b>is</b>。其他字一個都不動。'},
+{t:'see-zh', q:'「他 是 你的 叔叔 嗎？」英文怎麼說？',
+ o:['Is he your uncle?','He is your uncle?','Is your uncle he?','Is he uncle your?'], a:0,
+ why:'<b>Is</b> 放最前面，your uncle 跟在 he 後面，句尾是 <b>?</b>。'},
 
 {t:'see-zh', q:'「他是一位醫生。」英文怎麼說？',
  o:["He's a doctor.","He's doctor.","He a doctor.","Is he a doctor?"], a:0,
@@ -85,7 +85,7 @@ const Q = [
 
 {t:'hear-en', q:'聽一聽，你聽到的是哪一句？', say:"Is he a farmer?",
  o:['Is he a farmer?','He is a farmer.','Is she a farmer?','He is a father.'], a:0,
- why:'問句的第一個字是 <b>Is</b>，直述句的第一個字是 <b>He</b>。<b>聽第一個字就分得出來</b>。'},
+ why:'在問問題的句子，第一個字是 <b>Is</b>；在說一件事的句子，第一個字是 <b>He</b>。<b>聽第一個字就分得出來</b>。'},
 
 {t:'think', q:'"Is he a teacher?" 要回答「是的」，哪一句才對？',
  o:['Yes, he is.',"Yes, he's.","Yes, he isn't.",'Yes, she is.'], a:0, x2:true,

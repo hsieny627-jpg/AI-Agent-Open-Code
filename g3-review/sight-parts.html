@@ -1211,6 +1211,7 @@ document.getElementById("whome").addEventListener("click",function(){location.hr
 /* ── 成績紀錄（2026-10-07 對話 C） ── */
 .sclog{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.3vh,14px);width:100%}
 .sclog h2{font-size:clamp(28px,5vh,50px)!important;margin:0}
+.sclv{font-size:clamp(22px,3.6vh,36px);font-weight:700;color:#FFE082;text-align:center}
 /* 2026-10-09：① 打班級 ➜ ② 打座號 ➜ ③ 按 ✅，正在做的那一步會亮 */
 .scsteps{display:flex;align-items:center;justify-content:center;gap:clamp(4px,1vw,10px);flex-wrap:wrap}
 .scsteps span{display:flex;align-items:center;padding:clamp(4px,.8vh,8px) clamp(10px,1.6vw,20px);border-radius:999px;border:3px solid #333;color:#8A8A8A;
@@ -1986,7 +1987,7 @@ var HON=(function(){
      老師看板（下面接〔📋 細節 ▾〕）和學生平板（沒有細節、沒有姓名）同一張。p ＝ {acc, prog, keep}、c ＝ care() ══ */
   var CTS=['多練 1 天','再做完 1 次','聽完再選','答錯的再做一次','多練幾分鐘'];
   function card(p,c,o){p=p||{};o=o||{};var w=c?cweak(c):-1,r=(c&&c.raw)||{};
-    var pg=p.prog!=null&&p.prog>0?'<span class="gup">⬆ '+f1(p.prog)+'</span>':p.keep?'<span class="gup">🔥 滿分</span>':'';
+    var pg=p.prog!=null&&p.prog>0?'<span class="gup">⬆ '+f1(p.prog)+'</span>':p.keep&&p.acc===100?'<span class="gup">🔥 滿分</span>':'';
     return '<div class="gcard"><div class="gbx gac"><div class="gk">🎯 正確</div><div class="gv">'+(p.acc==null?'—':f1(p.acc))+pg+'</div></div>'+
       '<div class="gbx gpr"><div class="gk">📅 練習</div><div class="gv">'+(c?c.tot:0)+'<span class="gsm">'+(r.days||0)+'天 '+(r.count||0)+'次</span></div></div>'+
       (c&&!o.notip?'<div class="gnx">'+(w<0?'🎉 五項都滿分':'💡 '+CTS[w])+'</div>':'')+'</div>'}
@@ -2185,14 +2186,15 @@ function scLogin(after){
   SCH.open();
   SCTYPED='';SCLOGAFTER=after;
   var box=function(n,k){var s='';for(var i=0;i<n;i++)s+='<i class="'+k+'"></i>';return s};
-  SCH.box().innerHTML='<div class="sclog"><h2>🔢 先登入，成績才會記下來</h2>'+
-   '<div class="scsteps"><span id="scSt1">① 🏫 打班級</span><b>➜</b><span id="scSt2">② 🪑 打座號</span><b>➜</b><span id="scSt3">③ ✅ 按綠色勾勾</span></div>'+
+  var LV0=!!window.SCLIVE;   /* ⚡ 現場任務（2026-10-19 第十三次 3(3)(10)）：字 精簡、沒有〔⬅ 回首頁〕 */
+  SCH.box().innerHTML='<div class="sclog'+(LV0?' sclive':'')+'">'+(LV0?'<h2>🔑 登入</h2><div class="sclv">輸入：你的 班級號碼〔共 5 碼〕</div>':'<h2>🔢 先登入，成績才會記下來</h2>')+
+   (LV0?'':'<div class="scsteps"><span id="scSt1">① 🏫 打班級</span><b>➜</b><span id="scSt2">② 🪑 打座號</span><b>➜</b><span id="scSt3">③ ✅ 按綠色勾勾</span></div>')+
    '<div class="scl"><div class="scbox" id="scBox"><div class="scg c" id="scGc"><span class="lb">🏫 班級</span><div class="cells">'+box(3,'c')+'</div></div>'+
    '<div class="scg s" id="scGs"><span class="lb">🪑 座號</span><div class="cells">'+box(2,'s')+'</div></div></div>'+
    '<div class="scmsg" id="scMsg"></div></div>'+
    '<div class="sckey">'+[1,2,3,4,5,6,7,8,9].map(function(n){return '<button data-k="'+n+'">'+n+'</button>'}).join('')+
    '<button class="bs" data-k="b" aria-label="刪掉">⌫</button><button data-k="0">0</button><button class="okb" data-k="ok" aria-label="確定">✅</button></div>'+
-   (SCSRC==='home'?'<button id="scGuest">👀 先練習，不記成績</button>':'')+SCH.back+'</div>';
+   (SCSRC==='home'?'<button id="scGuest">👀 先練習，不記成績</button>':'')+(LV0?'':SCH.back)+'</div>';
   scPaint();
 }
 var SCLOGAFTER=null;
@@ -2201,13 +2203,13 @@ function scPaint(err){
   $$('#scBox i').forEach(function(c,n){var d=v.charAt(n);if(c.textContent!==d&&d){c.classList.remove('pop');void c.offsetWidth;c.classList.add('pop')}
     c.textContent=d;c.classList.toggle('f',!!d);c.classList.toggle('cur',n===v.length)});
   var st=v.length<3?1:v.length<5?2:3;
-  [1,2,3].forEach(function(k){var s=$('#scSt'+k);s.classList.toggle('now',k===st);s.classList.toggle('done',k<st)});
+  [1,2,3].forEach(function(k){var s=$('#scSt'+k);if(s){s.classList.toggle('now',k===st);s.classList.toggle('done',k<st)}});
   $('#scGc').classList.toggle('now',st===1);$('#scGs').classList.toggle('now',st===2);
   $('.sckey .okb').classList.toggle('ready',v.length===5);
   var m=$('#scMsg');
   if(err){m.className='scmsg err';m.innerHTML=err;return}
   m.className='scmsg';
-  m.innerHTML=v.length===0?'👆 先打你的<b class="kc">班級</b>（3 個數字）<small>例：304 班 5 號 ➜ 打 3 0 4 0 5</small>':
+  m.innerHTML=v.length===0?'👆 先打你的<b class="kc">班級</b>（3 個數字）'+(window.SCLIVE?'':'<small>例：304 班 5 號 ➜ 打 3 0 4 0 5</small>'):
    v.length<3?'🏫 班級還要打 '+(3-v.length)+' 個數字':
    v.length===3?'👍 '+scCn(v)+'！再打<b class="ks">座號</b><small>5 號 ➜ 打 0 5<br>班級打錯 ➜ 按 ⌫ 重打</small>':
    v.length===4?'🪑 座號還要打 1 個數字':
@@ -2560,7 +2562,7 @@ function scFullOff(id){var o=document.getElementById(id);if(o)o.classList.remove
 function scAskWho(){if(!SCON||!SCID||SCGUEST||scAsked())return;
   scFull('scwho','<div class="sf1">請問 這是您嗎？</div><div class="sfid">'+SCID+'</div><div class="sfbt"><button class="scY" id="scWhoY">✅ 是，繼續</button><button class="scN" id="scWhoN">👋 不是，登出</button></div>')}
 function scIdleHide(){scFullOff('scidle')}
-function scIdleTick(){if(!SCON||!SCID||SCGUEST){scIdleHide();return}
+function scIdleTick(){if(!SCON||!SCID||SCGUEST||window.SCLIVE){   /* ⚡ 現場任務：看 大螢幕 很久 不碰 平板，不可以 被 登出（2026-10-19 第十三次 3(5)） */scIdleHide();return}
   var a=scGet('act'),left=a?SCIDLE-(Date.now()-a):SCIDLE;if(!a){scAct();return}
   if(left<=0){scOut();scFull('scbye2','<div class="sfic">👋</div><div class="sf1">已經登出了</div><div class="sf3">3 分鐘沒有動作</div><div class="sfbt"><button class="scK" id="scByeIn">🔑 登入</button></div>');return}
   if(left<=SCWARN){var o=document.getElementById('scidle');if(!o||!o.classList.contains('on'))scFull('scidle','<div class="sfic">⏳</div><div class="sf2"><b id="scIdleN">30</b> 秒後自動登出</div><div class="sfbt"><button class="scY" id="scStay">👆 我還在</button></div>');
@@ -2608,12 +2610,12 @@ function scBar(){var b=document.getElementById('scbar');if(!b)return;document.bo
     scAsked()?'<span>👤 <b>'+SCID+'</b></span>'+scHeroA()+'<button class="scN" id="scBarOut">👋 登出</button>':
     '<span>請問 這是您嗎？<b>'+SCID+'</b></span><button class="scY" id="scBarY">✅ 是</button><button class="scN" id="scBarOut">👋 不是，登出</button>'}
 /* 登入以後橫幅上〔🦸 我的英雄〕（2026-10-17 第八次）；在〔🦸 我的英雄〕那一頁、總首頁（一行的小橫幅，量過放了會多出捲軸）不放 */
-function scHeroA(){var b=document.getElementById('scbar');return location.pathname.indexOf('/rpg/')>=0||(b&&b.classList.contains('inl'))?'':'<a class="scH" role="button" tabindex="0" data-rpg="1">'+scCovI()+'戰神之路</a>'}
+function scHeroA(){var b=document.getElementById('scbar');return window.SCLIVE||location.pathname.indexOf('/rpg/')>=0||(b&&b.classList.contains('inl'))?'':'<a class="scH" role="button" tabindex="0" data-rpg="1">'+scCovI()+'戰神之路</a>'}
 /* 連結用點的（不寫 href：在家複習 r1/ 的複製程式會把 href 換路徑） */
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-rpg]');if(a){e.preventDefault();location.href=SCRPB+'rpg/index.html'}});
 function scHomeLogin(){if(!SCH)return;scFullOff('scbye2');scLogin(SCH.reopen)}
 if(SCON){
-  (function(){var a=scGet('act');if(SCID&&a&&Date.now()-a>=SCIDLE)scOut()})();   /* 上一次動作已經超過 3 分鐘 ＝ 已經登出了 */
+  (function(){var a=scGet('act');if(SCID&&a&&!window.SCLIVE&&Date.now()-a>=SCIDLE)scOut()})();   /* 上一次動作已經超過 3 分鐘 ＝ 已經登出了 */
   ['pointerdown','keydown','touchstart','wheel'].forEach(function(k){document.addEventListener(k,function(e){
     if(SCID&&!SCGUEST&&!(e.target&&e.target.closest&&e.target.closest('#scbye2')))scAct()},true)});
   SCIT=setInterval(scIdleTick,1000);

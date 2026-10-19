@@ -26,7 +26,7 @@ function one(ty, c, b, m, B, r1, dir) {
   switch (ty) {
     case 'g1': case 'g10':
       q = { t: c.q, o: c.o.map(x => r1 ? r1opt(c, x) : esc(x)), ot: c.o.map(x => r1 ? r1ot(c, x) : x) }; break;
-    case 'g4': q = { t: esc(c.f) + '<br><small>' + esc(c.d) + '</small>', o: c.o.map(esc), ot: c.o }; break;
+    case 'g4': q = { t: esc(c.f) + '<br><small>' + esc(c.d) + '</small>', o: c.o.map(esc), ot: c.o }; if (c.t) q.dg = { f: c.f, t: c.t, fz: c.fz, tz: c.tz }; break;   /* 四年級：等人小遊戲 用 拖曳 變身（2026-10-19 第十三次 1-A） */
     case 'g5': q = { t: '🎧 聽 大螢幕，選 你 聽到 的', o: c.o.map(x => r1 ? '<span class="opic"><span class="oi">' + (R1.OIC[x] || '') + '</span><span class="oz">' + esc(x) + '</span></span>' : esc(x)), ot: c.o, ls: 1 }; break;
     case 'g8': q = { t: (c.b === '___' ? '' : esc(c.b) + ' ') + '<span class="blk">＿＿</span>' + (/^[.?!,]/.test(c.a) ? '' : ' ') + esc(c.a) + (c.zh ? '<br><small>' + c.zh + '</small>' : ''), o: c.o.map(esc), ot: c.o }; break;
     case 'g2': q = { t: esc(c.txt) + '<br><small>' + esc(c.zh) + '</small>', o: b.o.map(esc), ot: b.o }; break;

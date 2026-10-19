@@ -34,8 +34,8 @@ const G1 = [
  {q:'「阿姨、姑姑、舅媽」的英文都是？', o:['aunt','uncle','niece','sister'], h:'英文一個 aunt，管中文好幾個稱呼。'},
  {q:'「叔叔、伯伯、舅舅」的英文都是？', o:['uncle','aunt','nephew','cousin'], h:'英文一個 uncle，管中文好幾個稱呼。'},
  {q:'"He is a doctor." 改成問句是？', o:['Is he a doctor?','Is he doctor?','Does he a doctor?','Is a doctor he?'], h:'he 和 is 換位置，句號換問號。'},
- {q:'"Is she a teacher?" 改成直述句是？', o:['She is a teacher.','Is she a teacher.','Her is a teacher.','She a teacher is.'], h:'Is 和 she 換回來就變直述句。'},
- {q:'直述句變問句，動的是哪兩個字？', o:['主詞和 is','is 和 a','a 和職業','完全不用動'], h:'只動最前面兩個字，後面一個都不動。'},
+ {q:'「她 是 一位 老師。」英文是？', o:['She is a teacher.','Is she a teacher?','Her is a teacher.','She a teacher is.'], h:'She 放最前面，句尾是 句點。'},
+ {q:'「他 是 一位 護理師 嗎？」英文是？', o:['Is he a nurse?','He is a nurse?','Is he nurse?','He is a nurse.'], h:'Is 放最前面，句尾是 問號。'},
  {q:'"Is he a cook?" 回答「是的」要說？', o:['Yes, he is.','Yes, he’s.','Yes, she is.','Yes, he isn’t.'], h:'句尾的 is 不可以縮寫。'},
  {q:'"Is she a nurse?" 回答「不是」要說？', o:['No, she isn’t.','No, she is.','No, he isn’t.','No, she not.'], h:'問 she 就答 she；不是用 isn’t。'},
  {q:'「他是一位農夫。」英文是？', o:['He’s a farmer.','He’s farmer.','He a farmer.','Is he a farmer?'], h:'職業前面一定要有 a。'},
@@ -92,31 +92,33 @@ const G3 = [
  {s:['Is','your','sister','a','cook','?'], zh:'你的姊姊是一位廚師嗎？', h:'your sister 是一起的，放在 Is 後面。'}
 ];
 
-/* ── 🔄 G4 變身術（20 題）──────────────────────────────── */
+/* ── 🔄 G4 變身術（22 題）──────────────────────────────────
+ * 2026-10-19 老師第十三次第 1 點 A：換成「拖曳變身」——學生把每一個字和標點拖下去，施魔法變成另一句。
+ * f ＝ 原本的句子、t ＝ 變身以後、fz／tz ＝ 兩句的中文；d ＝ 題目第二行（不寫「直述句／問句」：國小學生看不懂，只寫要變成的中文）；
+ * o ＝ 四選一（o[0] ＝ t）：老師看板錯題、現場任務、答錯頁的加分題用。 */
 const G4 = [
- {f:'He is a doctor.', d:'→ 問句', o:['Is he a doctor?','Is he doctor?','Is a doctor he?','Does he a doctor?'], h:'he 和 is 換位置。'},
- {f:'She is a teacher.', d:'→ 問句', o:['Is she a teacher?','She is a teacher?','Is a teacher she?','Do she a teacher?'], h:'she 和 is 換位置。'},
- {f:'He is a student.', d:'→ 問句', o:['Is he a student?','He is student?','Is he student?','He a student is?'], h:'只換前兩個字，a 不能掉。'},
- {f:'She is a nurse.', d:'→ 問句', o:['Is she a nurse?','She is nurse?','Is a she nurse?','She nurse is?'], h:'Is 放最前面。'},
- {f:'He is a cook.', d:'→ 問句', o:['Is he a cook?','He is a cook!','Is cook he?','He is cook?'], h:'Is he a cook?'},
- {f:'She is a farmer.', d:'→ 問句', o:['Is she a farmer?','She is farmer?','Is farmer she?','She a farmer?'], h:'Is she a farmer?'},
- {f:'He is my father.', d:'→ 問句', o:['Is he my father?','He is my father?','Is my father he?','Does he my father?'], h:'一樣只換前兩個字。'},
- {f:'She is my mother.', d:'→ 問句', o:['Is she my mother?','She is my mother?','Is my mother she?','Do she my mother?'], h:'一樣只換前兩個字。'},
- {f:'Is he a doctor?', d:'→ 直述句', o:['He is a doctor.','Is he a doctor.','He a doctor is.','Him is a doctor.'], h:'Is 和 he 換回來。'},
- {f:'Is she a teacher?', d:'→ 直述句', o:['She is a teacher.','Is she a teacher.','Her is a teacher.','She a teacher is.'], h:'Is 和 she 換回來。'},
- {f:'Is he a farmer?', d:'→ 直述句', o:['He is a farmer.','He a farmer.','Is he a farmer.','He is farmer.'], h:'問號換句號。'},
- {f:'Is she a nurse?', d:'→ 直述句', o:['She is a nurse.','She a nurse.','Is she a nurse.','She is nurse.'], h:'問號換句號。'},
- {f:'Is he a student?', d:'→ 直述句', o:['He is a student.','He is student.','Is he student.','He student is.'], h:'a 不能掉。'},
- {f:'Is she a cook?', d:'→ 直述句', o:['She is a cook.','She is cook.','Is she cook.','She a cook is.'], h:'a 不能掉。'},
- {f:'Is he my uncle?', d:'→ 直述句', o:['He is my uncle.','Is he my uncle.','Him is my uncle.','He my uncle is.'], h:'Is 和 he 換回來。'},
- {f:'Is she my aunt?', d:'→ 直述句', o:['She is my aunt.','Is she my aunt.','Her is my aunt.','She my aunt is.'], h:'Is 和 she 換回來。'},
- {f:'He’s a doctor.', d:'→ 問句', o:['Is he a doctor?','Is he’s a doctor?','He’s a doctor?','Is a doctor he?'], h:'先把 He’s 拆回 He is，再換位置。'},
- {f:'She’s a teacher.', d:'→ 問句', o:['Is she a teacher?','Is she’s a teacher?','She’s a teacher?','Is a teacher she?'], h:'先把 She’s 拆回 She is。'},
- {f:'Is he a doctor?', d:'→ 回答「是的」', o:['Yes, he is.','Yes, he’s.','Yes, she is.','Yes, he isn’t.'], h:'句尾的 is 不縮寫。'},
- {f:'Is she a doctor?', d:'→ 回答「不是」', o:['No, she isn’t.','No, she is.','No, he isn’t.','No, she not.'], h:'isn’t ＝ is not。'},
- /* 2026-10-17 老師 C8 另 5：新加的字卡也進遊戲 */
- {f:'He is your father.', d:'→ 問句', o:['Is he your father?','He is your father?','Is your father he?','Is he father your?'], h:'he 和 is 換位置，your father 不動。'},
- {f:'Your brother is a nurse.', d:'→ 問句', o:['Is your brother a nurse?','Your is brother a nurse?','Is brother your a nurse?','Your brother is a nurse?'], h:'Is 搬到最前面；your brother 兩個字一起走。'}
+ {f:'He is a doctor.', t:'Is he a doctor?', fz:'他 是 一位 醫生。', tz:'他 是 一位 醫生 嗎？', d:'➜ 他 是 一位 醫生 嗎？', o:['Is he a doctor?', 'Is he doctor?', 'Is a doctor he?', 'He is a doctor?'], h:'is 跑到最前面變成 Is，句點 變成 問號。'},
+ {f:'She is a teacher.', t:'Is she a teacher?', fz:'她 是 一位 老師。', tz:'她 是 一位 老師 嗎？', d:'➜ 她 是 一位 老師 嗎？', o:['Is she a teacher?', 'She is a teacher?', 'Is a teacher she?', 'Is she teacher?'], h:'is 跑到最前面變成 Is，句點 變成 問號。'},
+ {f:'He is a student.', t:'Is he a student?', fz:'他 是 一位 學生。', tz:'他 是 一位 學生 嗎？', d:'➜ 他 是 一位 學生 嗎？', o:['Is he a student?', 'He is student?', 'Is he student?', 'He a student is?'], h:'is 跑到最前面變成 Is，句點 變成 問號。'},
+ {f:'She is a nurse.', t:'Is she a nurse?', fz:'她 是 一位 護理師。', tz:'她 是 一位 護理師 嗎？', d:'➜ 她 是 一位 護理師 嗎？', o:['Is she a nurse?', 'She is nurse?', 'Is a she nurse?', 'She nurse is?'], h:'is 跑到最前面變成 Is，句點 變成 問號。'},
+ {f:'He is a cook.', t:'Is he a cook?', fz:'他 是 一位 廚師。', tz:'他 是 一位 廚師 嗎？', d:'➜ 他 是 一位 廚師 嗎？', o:['Is he a cook?', 'He is a cook?', 'Is cook he?', 'He is cook?'], h:'is 跑到最前面變成 Is，句點 變成 問號。'},
+ {f:'She is a farmer.', t:'Is she a farmer?', fz:'她 是 一位 農夫。', tz:'她 是 一位 農夫 嗎？', d:'➜ 她 是 一位 農夫 嗎？', o:['Is she a farmer?', 'She is farmer?', 'Is farmer she?', 'She a farmer?'], h:'is 跑到最前面變成 Is，句點 變成 問號。'},
+ {f:'He is my father.', t:'Is he my father?', fz:'他 是 我的 爸爸。', tz:'他 是 我的 爸爸 嗎？', d:'➜ 他 是 我的 爸爸 嗎？', o:['Is he my father?', 'He is my father?', 'Is my father he?', 'Is he father my?'], h:'is 跑到最前面變成 Is，句點 變成 問號。'},
+ {f:'She is my mother.', t:'Is she my mother?', fz:'她 是 我的 媽媽。', tz:'她 是 我的 媽媽 嗎？', d:'➜ 她 是 我的 媽媽 嗎？', o:['Is she my mother?', 'She is my mother?', 'Is my mother she?', 'Is she mother my?'], h:'is 跑到最前面變成 Is，句點 變成 問號。'},
+ {f:'He is your father.', t:'Is he your father?', fz:'他 是 你的 爸爸。', tz:'他 是 你的 爸爸 嗎？', d:'➜ 他 是 你的 爸爸 嗎？', o:['Is he your father?', 'He is your father?', 'Is your father he?', 'Is he father your?'], h:'is 跑到最前面變成 Is，句點 變成 問號。'},
+ {f:'She is your mom.', t:'Is she your mom?', fz:'她 是 你的 媽媽。', tz:'她 是 你的 媽媽 嗎？', d:'➜ 她 是 你的 媽媽 嗎？', o:['Is she your mom?', 'She is your mom?', 'Is your mom she?', 'Is she mom your?'], h:'is 跑到最前面變成 Is，句點 變成 問號。'},
+ {f:'Your brother is a nurse.', t:'Is your brother a nurse?', fz:'你的 哥哥 是 一位 護理師。', tz:'你的 哥哥 是 一位 護理師 嗎？', d:'➜ 你的 哥哥 是 一位 護理師 嗎？', o:['Is your brother a nurse?', 'Your is brother a nurse?', 'Is brother your a nurse?', 'Your brother is a nurse?'], h:'is 跑到最前面變成 Is，your brother 一起往後，句點 變成 問號。'},
+ {f:'Your sister is a cook.', t:'Is your sister a cook?', fz:'你的 姊姊 是 一位 廚師。', tz:'你的 姊姊 是 一位 廚師 嗎？', d:'➜ 你的 姊姊 是 一位 廚師 嗎？', o:['Is your sister a cook?', 'Your sister is a cook?', 'Is sister your a cook?', 'Your is sister a cook?'], h:'is 跑到最前面變成 Is，your sister 一起往後，句點 變成 問號。'},
+ {f:'Is he a doctor?', t:'He is a doctor.', fz:'他 是 一位 醫生 嗎？', tz:'他 是 一位 醫生。', d:'➜ 他 是 一位 醫生。', o:['He is a doctor.', 'Is he a doctor.', 'He a doctor is.', 'He is doctor.'], h:'Is 回到 he／she 後面變成 is，問號 變成 句點。'},
+ {f:'Is she a teacher?', t:'She is a teacher.', fz:'她 是 一位 老師 嗎？', tz:'她 是 一位 老師。', d:'➜ 她 是 一位 老師。', o:['She is a teacher.', 'Is she a teacher.', 'She a teacher is.', 'She is teacher.'], h:'Is 回到 he／she 後面變成 is，問號 變成 句點。'},
+ {f:'Is he a farmer?', t:'He is a farmer.', fz:'他 是 一位 農夫 嗎？', tz:'他 是 一位 農夫。', d:'➜ 他 是 一位 農夫。', o:['He is a farmer.', 'He a farmer.', 'Is he a farmer.', 'He is farmer.'], h:'Is 回到 he／she 後面變成 is，問號 變成 句點。'},
+ {f:'Is she a nurse?', t:'She is a nurse.', fz:'她 是 一位 護理師 嗎？', tz:'她 是 一位 護理師。', d:'➜ 她 是 一位 護理師。', o:['She is a nurse.', 'She a nurse.', 'Is she a nurse.', 'She is nurse.'], h:'Is 回到 he／she 後面變成 is，問號 變成 句點。'},
+ {f:'Is he a student?', t:'He is a student.', fz:'他 是 一位 學生 嗎？', tz:'他 是 一位 學生。', d:'➜ 他 是 一位 學生。', o:['He is a student.', 'He is student.', 'Is he student.', 'He student is.'], h:'Is 回到 he／she 後面變成 is，問號 變成 句點。'},
+ {f:'Is she a cook?', t:'She is a cook.', fz:'她 是 一位 廚師 嗎？', tz:'她 是 一位 廚師。', d:'➜ 她 是 一位 廚師。', o:['She is a cook.', 'She is cook.', 'Is she cook.', 'She a cook is.'], h:'Is 回到 he／she 後面變成 is，問號 變成 句點。'},
+ {f:'Is he your uncle?', t:'He is your uncle.', fz:'他 是 你的 叔叔 嗎？', tz:'他 是 你的 叔叔。', d:'➜ 他 是 你的 叔叔。', o:['He is your uncle.', 'Is he your uncle.', 'He your uncle is.', 'He is uncle your.'], h:'Is 回到 he／she 後面變成 is，問號 變成 句點。'},
+ {f:'Is she your aunt?', t:'She is your aunt.', fz:'她 是 你的 阿姨 嗎？', tz:'她 是 你的 阿姨。', d:'➜ 她 是 你的 阿姨。', o:['She is your aunt.', 'Is she your aunt.', 'She your aunt is.', 'She is aunt your.'], h:'Is 回到 he／she 後面變成 is，問號 變成 句點。'},
+ {f:'Is your dad a teacher?', t:'Your dad is a teacher.', fz:'你的 爸爸 是 一位 老師 嗎？', tz:'你的 爸爸 是 一位 老師。', d:'➜ 你的 爸爸 是 一位 老師。', o:['Your dad is a teacher.', 'Is your dad a teacher.', 'Your is dad a teacher.', 'Dad your is a teacher.'], h:'Is 回到 your dad 後面變成 is，問號 變成 句點。'},
+ {f:'Is he your grandpa?', t:'He is your grandpa.', fz:'他 是 你的 爺爺 嗎？', tz:'他 是 你的 爺爺。', d:'➜ 他 是 你的 爺爺。', o:['He is your grandpa.', 'Is he your grandpa.', 'He your grandpa is.', 'He is grandpa your.'], h:'Is 回到 he／she 後面變成 is，問號 變成 句點。'}
 ];
 
 /* ── 🎧 G5 聽力狙擊（20 題）────────────────────────────── */
@@ -131,10 +133,10 @@ const G5 = [
  {s:"She's my grandmother.", o:["She's my grandmother.","She's my mother.","He's my grandfather.","She's my grandma."], h:'grandmother 奶奶，也可以是外婆。'},
  {s:"He's my uncle.", o:["He's my uncle.","She's my aunt.","He's my nephew.","He's my cousin."], h:'uncle 叔叔、伯伯、舅舅。'},
  {s:"She's my aunt.", o:["She's my aunt.","He's my uncle.","She's my niece.","She's my cousin."], h:'aunt 阿姨、姑姑、舅媽。'},
- {s:"He is a doctor.", o:['He is a doctor.','Is he a doctor?','She is a doctor.','He is a teacher.'], h:'第一個字是 He → 直述句。'},
- {s:"Is he a doctor?", o:['Is he a doctor?','He is a doctor.','Is she a doctor?','Is he a teacher?'], h:'第一個字是 Is → 問句。'},
- {s:"She is a teacher.", o:['She is a teacher.','Is she a teacher?','He is a teacher.','She is a student.'], h:'第一個字是 She → 直述句。'},
- {s:"Is she a teacher?", o:['Is she a teacher?','She is a teacher.','Is he a teacher?','Is she a student?'], h:'第一個字是 Is → 問句。'},
+ {s:"He is a doctor.", o:['He is a doctor.','Is he a doctor?','She is a doctor.','He is a teacher.'], h:'第一個字是 He → 在說一件事。'},
+ {s:"Is he a doctor?", o:['Is he a doctor?','He is a doctor.','Is she a doctor?','Is he a teacher?'], h:'第一個字是 Is → 在問問題。'},
+ {s:"She is a teacher.", o:['She is a teacher.','Is she a teacher?','He is a teacher.','She is a student.'], h:'第一個字是 She → 在說一件事。'},
+ {s:"Is she a teacher?", o:['Is she a teacher?','She is a teacher.','Is he a teacher?','Is she a student?'], h:'第一個字是 Is → 在問問題。'},
  {s:"Is he a farmer?", o:['Is he a farmer?','He is a farmer.','Is she a farmer?','Is he a father?'], h:'farmer 農夫，father 爸爸，尾巴不一樣。'},
  {s:"Is she a nurse?", o:['Is she a nurse?','She is a nurse.','Is he a nurse?','Is she a doctor?'], h:'nurse 護理師。'},
  {s:"Yes, he is.", o:['Yes, he is.','Yes, she is.','No, he isn’t.','Yes, he isn’t.'], h:'Yes 後面接 he is。'},
@@ -209,7 +211,7 @@ const G8 = [
  {b:'Is your mom a farmer? No, she', a:'.', zh:'不，她不是。', o:["isn't",'is',"aren't",'not'], h:'No 的短答：No, she isn’t.'}
 ];
 
-/* ── 🗂 G9 分類大師（24 題）問句 ❓ ／ 直述句 🙋 ──────────── */
+/* ── 🗂 G9 分類大師（28 題）句尾是 ? ❓ ／ 句尾是 . 🙋（2026-10-19 老師第十三次第 1 點 A：不寫「直述句」）── */
 const G9 = [
  ["Who's he?",'q'], ["Who's she?",'q'], ["He's my father.",'s'], ["She's my mother.",'s'],
  ['Is he a doctor?','q'], ['He is a doctor.','s'], ['Is she a teacher?','q'], ['She is a teacher.','s'],
@@ -227,7 +229,7 @@ const G10 = [
  {q:'"Who’s she?" 答句開頭？', o:['She','He','Her','Who'], h:'問 she 就答 She。'},
  {q:'He’s ＝ ?', o:['He is','His','He has','Him is'], h:'He’s ＝ He is。'},
  {q:'"He is a cook." 的問句？', o:['Is he a cook?','He is a cook?','Is a cook he?','Do he a cook?'], h:'he 和 is 換位置。'},
- {q:'"Is she a nurse?" 的直述句？', o:['She is a nurse.','Is she a nurse.','Her is a nurse.','She a nurse is.'], h:'Is 和 she 換回來。'},
+ {q:'「她 是 一位 護理師。」英文是？', o:['She is a nurse.','Is she a nurse.','Her is a nurse.','She a nurse is.'], h:'She 放最前面，句尾是 句點。'},
  {q:'"Is he a teacher?" 答「是的」？', o:['Yes, he is.','Yes, he’s.','Yes, she is.','Yes, he isn’t.'], h:'句尾的 is 不縮寫。'},
  {q:'"Is she a doctor?" 答「不是」？', o:['No, she isn’t.','No, she is.','No, he isn’t.','No, she not.'], h:'isn’t ＝ is not。'},
  {q:'「奶奶」的英文？', o:['grandmother','grandfather','aunt','mother'], h:'grandmother 奶奶，也可以是外婆。'},
@@ -238,7 +240,7 @@ const G10 = [
  {q:'哪一句是對的？', o:['She is a doctor.','She is doctor.','She are a doctor.','She a doctor.'], h:'is ＋ a 兩個都不能少。'},
  {q:'問「東西」用哪個字？', o:['What','Who','How','Where'], h:'What 問東西，Who 問人。'},
  {q:'isn’t ＝ ?', o:['is not','it not','in not','is now'], h:'’ 藏起來的是 not 的 o。'},
- {q:'直述句變問句要動幾個字？', o:['兩個（主詞和 is）','一個','三個','全部'], h:'只動最前面兩個字。'},
+ {q:'「她 是 你的 媽媽 嗎？」英文是？', o:['Is she your mom?','She is your mom?','Is your mom she?','Is she mom your?'], h:'Is 放最前面，句尾是 問號。'},
  {q:'"She’s a farmer." 的問句？', o:['Is she a farmer?','She’s a farmer?','Is she’s a farmer?','Is a farmer she?'], h:'先把 She’s 拆回 She is。'},
  {q:'a student 是什麼？', o:['一位學生','一位老師','一位醫生','一位廚師'], h:'student 學生。'},
  {q:'「他是一位農夫。」英文是？', o:['He’s a farmer.','He’s farmer.','He a farmer.','Is he a farmer?'], h:'職業前面要有 a。'},
@@ -287,12 +289,12 @@ const GAMES = [
  {id:'g1',  ic:'⚡', name:'閃電四選一', rule:'看題目選答案，答得快分數高。', st:'⚡ 電力', n:G1.length},
  {id:'g2',  ic:'🔵', name:'他還是她',   rule:'看到就按：左邊 He（藍）、右邊 She（粉）。', st:'👬 雙胞胎', n:G2.length},
  {id:'g3',  ic:'🧩', name:'語序大挑戰', rule:'照順序點英文字，把整句排出來。', st:'🧩 拼圖', n:G3.length},
- {id:'g4',  ic:'🔄', name:'變身術',     rule:'直述句 ⇄ 問句，選出變身後正確的句子。', st:'🪄 魔法', n:G4.length},
+ {id:'g4',  ic:'🔄', name:'變身術',     rule:'把每一個字和標點拖下去，施魔法變成另一句。', st:'🪄 魔法', n:G4.length, drag:1},
  {id:'g5',  ic:'🎧', name:'聽力狙擊',   rule:'聽一句英文，射下正確的那一張卡。', st:'🎯 狙擊', n:G5.length},
  {id:'g6',  ic:'🃏', name:'記憶配對',   rule:'翻開兩張，英文配中文，配對成功就消失。', st:'🃏 撲克牌', n:G6.length},
  {id:'g7',  ic:'🔍', name:'火眼金睛',   rule:'句子裡有一個字是錯的，點出來。全對的句子按「✅ 這句沒錯」。', st:'🕵 偵探', n:G7.length},
  {id:'g8',  ic:'✏️', name:'填空高手',   rule:'句子少了一個字，選出正確的那一個。', st:'✏️ 文具', n:G8.length},
- {id:'g9',  ic:'🗂', name:'分類大師',   rule:'問句丟右邊 ❓，直述句丟左邊 🙋。', st:'🗂 整理', n:G9.length},
+ {id:'g9',  ic:'🗂', name:'分類大師',   rule:'句尾是 ? 按右邊 ❓，句尾是 . 按左邊 🙋。', st:'🗂 整理', n:G9.length},
  {id:'g10', ic:'👑', name:'魔王挑戰',   rule:'打倒魔王！答對扣血，答錯魔王放技能。', st:'🗡 勇者', n:G10.length}
 ];
 

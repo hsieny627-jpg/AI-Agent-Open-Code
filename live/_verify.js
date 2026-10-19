@@ -47,14 +47,28 @@ async function ctxOf(br, G, vp, id) {
   await ctx.route(/script\.google\.com|firebaseio\.com|firebasedatabase\.app/, r => { E.push('想連到真的伺服器（擋下來了）：' + r.request().url().slice(0, 60)); r.abort(); });
   return ctx;
 }
-const sizes = (p, min) => p.evaluate(min => { const sm = [].filter.call(document.querySelectorAll('body *'), x => { const r = x.getBoundingClientRect(); if (!r.width || x.closest('#scbar,.rk5,.qside,.fxb,.goth,.lurl,.cx,.srow')) return false;
+const sizes = (p, min) => p.evaluate(min => { const sm = [].filter.call(document.querySelectorAll('body *'), x => { const r = x.getBoundingClientRect(); if (!r.width || x.closest('#scbar,.rk5,.qside,.fxb,.goth,.lurl,.cx,.srow,.sqrc')) return false;
     return [].some.call(x.childNodes, c => c.nodeType === 3 && c.textContent.trim()) && parseFloat(getComputedStyle(x).fontSize) < min; }).map(x => x.textContent.trim().slice(0, 12));
   const low = [].filter.call(document.querySelectorAll('button:not(#scbar button),a.ghost,a.big'), x => { const r = x.getBoundingClientRect(); return r.width && r.height < 48; }).map(x => x.textContent.trim().slice(0, 10));
   return { sm, low, ox: document.documentElement.scrollWidth - innerWidth }; }, min);
 const ckWords = (p, tag) => p.evaluate(() => document.body.innerText).then(t => { if (/房間/.test(t)) E.push(tag + '：畫面 上 還有「房間」'); if (/英雄/.test(t)) E.push(tag + '：畫面 上 還有「英雄」（要 改成 戰士）：' + t.match(/.{0,10}英雄.{0,10}/)[0]); });
 async function students(br, G, list) { const S = [];
   for (const [id, vp] of list) { const c = await ctxOf(br, G, vp, id), p = await c.newPage(); p.on('pageerror', x => E.push(id + ' JS 錯誤：' + x.message));
-    await p.goto(HTTP + '/live/index.html'); await p.waitForTimeout(800); S.push({ id, p, c, vp }); }
+    await p.goto(HTTP + '/live/index.html'); await p.waitForTimeout(800); S.push({ id, p, c, vp });
+    /* 2026-10-19 第十三次 3(4)：登入 以後 先 說明「現在 ／ 等一下」，2.4 秒 以後 才 按得下去〔我 懂了〕；3(10)：沒有〔首頁〕〔戰神之路〕；3(7)：右下角 QR */
+    const it = await p.evaluate(() => { const b = document.getElementById('sigo'), q = document.getElementById('sqrc').getBoundingClientRect();
+      return { on: !document.getElementById('sintro').hidden, t: document.getElementById('sinb').innerText, dis: !!(b && b.disabled), bad: (document.body.innerText.match(/戰神之路|回首頁|🏠/) || [''])[0], qr: q.width > 60 && q.right > innerWidth - 30 && q.bottom > innerHeight - 30, qs: !!document.querySelector('#sqrc svg') }; });
+    if (!it.on || !/現在/.test(it.t) || !/等一下/.test(it.t) || !/每一題 都 算 成績/.test(it.t) || !it.dis) E.push(id + '：登入 以後 沒有 先 說明「現在 ／ 等一下」：' + JSON.stringify(it).slice(0, 90));
+    if (it.bad) E.push(id + '：平板 還有〔' + it.bad + '〕'); if (!it.qr || !it.qs) E.push(id + '：右下角 沒有 QR Code');
+    await p.waitForTimeout(2500); await p.click('#sigo'); await p.waitForTimeout(400);
+    /* 3(5)：登出 以後 同一個 號碼 再 登入 ➜ 要 回到 遊戲（原本 卡在 登入 畫面）；3(3)：登入 字 精簡、沒有〔回首頁〕 */
+    if (id === '40203') { await p.evaluate(() => scOut()); await p.waitForTimeout(1500);
+      const lg = await p.evaluate(() => ({ k: !!document.querySelector('#scov.on .sckey'), t: (document.querySelector('#scov.on .sclog') || {}).innerText || '' }));
+      if (!lg.k) E.push(id + '：登出 以後 沒有 自動 出現 數字 鍵盤'); if (!/🔑 登入/.test(lg.t) || !/輸入：你的 班級號碼〔共 5 碼〕/.test(lg.t) || /回首頁|先登入，成績才會記下來|打座號/.test(lg.t)) E.push(id + '：登入 畫面 的 字 不對：' + lg.t.replace(/\s+/g, ' ').slice(0, 60));
+      for (const k of '40203'.split('').concat(['ok'])) await p.click('#scov [data-k="' + k + '"]');
+      await p.waitForTimeout(2000);
+      if (await p.evaluate(() => document.getElementById('swait').hidden)) E.push(id + '：登出 再 登入 回不去 現場任務'); }
+    n += 4; }
   return S; }
 async function hostIn(br, G, HV, tag) { const hc = await ctxOf(br, G, HV), h = await hc.newPage(); h.on('pageerror', x => E.push(tag + ' JS 錯誤：' + x.message));
   await h.goto(HTTP + '/live/host.html'); await h.waitForTimeout(300); return { hc, h }; }
@@ -83,7 +97,7 @@ const H_PH = ph => ph === 'q';
     const t = fs.readFileSync(path.join(ROOT, d, f), 'utf8'); if (/href="[^"]*live\//.test(t) || /data-live|⚡ 加入 現場/.test(t)) E.push(d + '/' + f + '：在家複習 有 現場遊戲 入口'); }
   for (const f of ['host.html', 'index.html']) { const t = fs.readFileSync(path.join(__dirname, f), 'utf8'); if (/開房間/.test(t)) E.push('live/' + f + '：還有「開房間」'); if (/new EventSource/.test(t)) E.push('live/' + f + '：還有 EventSource'); }
   if (/createOscillator/.test(fs.readFileSync(path.join(__dirname, '_stu_rt.js'), 'utf8') + fs.readFileSync(path.join(__dirname, '_mini.js'), 'utf8') + fs.readFileSync(path.join(__dirname, '_common.js'), 'utf8'))) E.push('學生 平板 的 程式 還有 音效');
-  { const hub = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'); if (/href="live\/index\.html"/.test(hub)) E.push('總首頁 還有 學生 的〔⚡ 現場任務〕'); if (!/href="live\/host\.html"[^>]*>[^<]*⚡ 開 現場任務 大螢幕/.test(hub)) E.push('總首頁 沒有〔⚡ 開 現場任務 大螢幕〕'); }
+  { const hub = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'); if (/href="live\/index\.html"/.test(hub)) E.push('總首頁 還有 學生 的〔⚡ 現場任務〕'); if (!/href="live\/host\.html"[^>]*>⚡ 開 現場任務 大螢幕</.test(hub.replace(/<\/?span[^>]*>/g, ''))) E.push('總首頁 沒有〔⚡ 開 現場任務 大螢幕〕'); }
   n += 6;
   /* ════ 第一場：🏆 經典搶答 5 題（第 3 題 🔥 挑戰題）、大螢幕 1920 ════ */
   { DB = {}; const G = make({ TEACHER_PW: PW }), HV = [1920, 1080], tag = '經典';

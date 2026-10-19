@@ -38,7 +38,127 @@ const metaOf = id => B0.GAMES.filter(m => (m.ty || m.id) === id)[0] || {};
 const duoBtns = d => d.map(x => `     '<button class="dbtn ${x.c}" data-v="${x.v}">${x.t}${x.d ? `<span class="ds">${x.d}</span>` : ''}</button>'+`).join('\n');
 const DUO2 = metaOf('g2').duo, DUO9 = metaOf('g9').duo;
 const LAB9 = DUO9 ? JSON.stringify(DUO9.reduce((o, x) => { o[x.v] = x.d ? x.t + ' ' + x.d.split('　')[0] : x.t; return o }, {})) : '';
+/* 🪄 拖曳變身（2026-10-19 老師第十三次第 1 點 A）：meta g4 寫 drag:1 才開（四年級；三年級的縮寫變身術照舊四選一） */
+const DRAG4 = metaOf('g4').drag;
 const OTHER2 = DUO2 ? JSON.stringify(DUO2.map(x => x.v)) : '["he","she"]';
+const DRAGCSS = `
+/* 🪄 拖曳變身（g4 drag） */
+.dg{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.8vh,22px);width:100%;margin-top:clamp(0px,2vh,30px);--dgf:clamp(28px,7vh,76px)}
+.dgq{font-size:clamp(18px,2.8vh,28px);color:var(--dim);font-weight:700}
+.dgrow{display:flex;flex-wrap:nowrap;gap:clamp(6px,.9vw,12px);justify-content:center;align-items:center;max-width:100%}
+.dgz{font-size:clamp(20px,3.4vh,34px);color:var(--dim)}
+.dgto{font-size:clamp(22px,3.9vh,40px);color:#FFD54A;font-weight:700;display:flex;align-items:center;gap:.35em;white-space:nowrap}
+.dgto .wd{display:inline-block;animation:dgwv 1.6s ease-in-out infinite}
+@keyframes dgwv{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(16deg) translateY(-3px)}}
+.dt{font-size:var(--dgf);font-weight:700;line-height:1.1;padding:.12em .34em;border-radius:14px;background:#161616;border:2px solid #3A3A3A;
+ color:#fff;touch-action:none;cursor:grab;min-width:1.25em;text-align:center;white-space:nowrap;transition:transform .2s,opacity .2s;user-select:none;-webkit-user-select:none}
+.dt.b{background:var(--he);border-color:#8FB0FF}.dt.p{background:var(--she);border-color:#FF9EBE}.dt.y{background:var(--be);border-color:#FFE27A;color:#111}
+.dt.pn{background:#262626;border-color:#FFD54A;color:#FFD54A;min-width:1em}
+.dt.gone{opacity:.16;transform:scale(.88);pointer-events:none}
+.dt:active{transform:scale(1.06)}
+.ds{min-width:calc(var(--dgf)*1.5);height:calc(var(--dgf)*1.62);border:3px dashed #3F6386;border-radius:16px;display:flex;align-items:center;justify-content:center;
+ background:#0B1520;transition:background .15s,border-color .15s}
+.ds.lastp{min-width:calc(var(--dgf)*1.05);border-color:#7A6A2A}
+.ds.hov{border-color:#FFD54A;background:#2A2410;transform:scale(1.05)}
+.ds.full{border-style:solid;border-color:#24384D;background:transparent}
+.ds .dt{cursor:pointer}
+.dt.cap{animation:dgcap .75s ease-out}
+@keyframes dgcap{0%{transform:scale(1)}35%{transform:scale(1.45);box-shadow:0 0 26px #FFD54A,0 0 6px #fff}100%{transform:scale(1)}}
+.dt.morph{animation:dgmor .9s ease-out}
+@keyframes dgmor{0%{transform:rotateY(0) scale(1)}45%{transform:rotateY(540deg) scale(1.9);box-shadow:0 0 34px #FFD54A}100%{transform:rotateY(720deg) scale(1)}}
+.dgfly{position:fixed;left:0;top:0;z-index:60;pointer-events:none;box-shadow:0 14px 34px #000c;transform:scale(1.12)}
+.dgp{position:fixed;z-index:61;pointer-events:none;font-size:clamp(18px,3vh,30px);animation:dgp .85s ease-out forwards}
+@keyframes dgp{0%{opacity:1;transform:translate(-50%,-50%) scale(.6)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.25)}}
+#dgD.win .dt{animation:dgwin .8s ease-out both}
+@keyframes dgwin{0%{transform:scale(1)}40%{transform:scale(1.28) translateY(-8px);box-shadow:0 0 30px #FFD54A,0 0 8px #fff;filter:brightness(1.35)}100%{transform:scale(1.06)}}
+#dgD.bad{animation:dgbad .5s}
+@keyframes dgbad{20%,60%{transform:translateX(-12px)}40%,80%{transform:translateX(12px)}}
+.dgwand{position:fixed;z-index:62;pointer-events:none;font-size:clamp(40px,8vh,80px);animation:dgwand 1s ease-in-out forwards}
+@keyframes dgwand{0%{opacity:0;transform:translate(-50%,-50%) rotate(-30deg)}15%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--w)),-50%) rotate(25deg)}}
+.dghand{position:fixed;z-index:63;pointer-events:none;font-size:clamp(40px,7vh,72px);filter:drop-shadow(0 4px 10px #000);animation:dghd 2.2s ease-in-out 2}
+@keyframes dghd{0%{opacity:0;transform:translate(var(--x0),var(--y0))}12%{opacity:1;transform:translate(var(--x0),var(--y0)) scale(.9)}70%{opacity:1;transform:translate(var(--x1),var(--y1))}85%,100%{opacity:0;transform:translate(var(--x1),var(--y1))}}
+@media (prefers-reduced-motion:reduce){.dghand{display:none}.dt.cap,.dt.morph,#dgD.win .dt,.dgto .wd{animation:none}}
+`;
+const DRAGJS = `/* ── 4 🪄 拖曳變身（四年級；meta g4 drag:1）：每一個字和標點拖到下面的格子；
+   放到第一格 ＝ 魔法變大寫、放到最後一格的標點 ＝ 魔法變成要的標點；全部放好自動檢查 ── */
+function dgTok(s){return String(s).replace(/([?.!,])/g,' $1').split(' ').filter(function(x){return x})}
+function dgCls(w){var x=String(w).toLowerCase();return x==='he'?'b':x==='she'?'p':x==='is'?'y':/^[?.!,]$/.test(w)?'pn':''}
+function dgShow(w,k,n,last){if(/^[?.!,]$/.test(w))return k===n-1?last:w;
+  return k===0?cap1(w):(w==='I'?w:w.charAt(0).toLowerCase()+w.slice(1))}
+var DG=null;
+function rDrag(){
+  var src=dgTok(cur.f),tgt=dgTok(cur.t),n=tgt.length;
+  DG={src:src,tgt:tgt,n:n,slot:[],lock:false};
+  $('#arena').innerHTML=tags()+'<div class="dg" id="dg"><div class="dgq">👆 拖 每一個 字 和 標點 到 下面</div>'+
+    '<div class="dgrow" id="dgS">'+src.map(function(w,i){return '<span class="dt '+dgCls(w)+'" data-i="'+i+'">'+ap(w)+'</span>'}).join('')+'</div>'+
+    '<div class="dgz">'+cur.fz+'</div>'+
+    '<div class="dgto"><span class="wd">🪄</span> 變成 ➜ '+cur.tz+'</div>'+
+    '<div class="dgrow" id="dgD">'+tgt.map(function(w,k){return '<span class="ds'+(k===n-1?' lastp':'')+'" data-k="'+k+'"></span>'}).join('')+'</div></div>'+fbBox();
+  say(cur.f);dgFit();if(!window.DGDEMO){window.DGDEMO=1;dgHand()}
+  var A=$('#dg');A.addEventListener('pointerdown',dgDown);
+}
+/* 第一題：一隻手 示範 一次（上面 第一個 字 ➜ 下面 第一格） */
+function dgHand(){var a=$('#dgS .dt'),b=$('#dgD .ds');if(!a||!b)return;var r=a.getBoundingClientRect(),q=b.getBoundingClientRect(),h=el('span','dghand','👆');
+  h.style.left='0';h.style.top='0';h.style.setProperty('--x0',(r.left+r.width/2-20)+'px');h.style.setProperty('--y0',(r.top+r.height/2)+'px');
+  h.style.setProperty('--x1',(q.left+q.width/2-20)+'px');h.style.setProperty('--y1',(q.top+q.height/2)+'px');document.body.appendChild(h);
+  setTimeout(function(){if(h.parentNode)h.parentNode.removeChild(h)},4500)}
+function dgFit(){var d=$('#dg'),a=$('#arena');if(!d)return;d.style.removeProperty('--dgf');
+  var f=parseFloat(getComputedStyle($('#dgS .dt')).fontSize)||40,W=a.clientWidth*.96;
+  for(var i=0;i<14;i++){var w=Math.max($('#dgS').scrollWidth,$('#dgD').scrollWidth);if(w<=W||f<=18)break;f=Math.max(18,f*W/w*.97);d.style.setProperty('--dgf',f+'px')}}
+function dgSpark(x,y,em,nn){for(var i=0;i<(nn||10);i++){var p=el('span','dgp',em[i%em.length]),a=Math.PI*2*i/(nn||10),r=60+Math.random()*60;
+  p.style.left=x+'px';p.style.top=y+'px';p.style.setProperty('--dx',Math.cos(a)*r+'px');p.style.setProperty('--dy',Math.sin(a)*r+'px');
+  document.body.appendChild(p);(function(q){setTimeout(function(){if(q.parentNode)q.parentNode.removeChild(q)},900)})(p)}}
+function dgPut(i,k){
+  if(!DG||DG.lock||busy)return;var D=DG,old=D.slot[k];
+  var k0=D.slot.indexOf(i);if(k0>=0){D.slot[k0]=null;dgPaintSlot(k0)}
+  if(old!=null&&old!==i){var t=$('#dgS .dt[data-i="'+old+'"]');if(t)t.classList.remove('gone')}
+  D.slot[k]=i;var st=$('#dgS .dt[data-i="'+i+'"]');if(st)st.classList.add('gone');
+  var w=D.src[i],sh=dgShow(w,k,D.n,D.tgt[D.n-1]),c=dgPaintSlot(k);sPop();
+  if(c&&sh!==w){c.classList.add(/^[?.!,]$/.test(w)?'morph':'cap');var r=c.getBoundingClientRect();dgSpark(r.left+r.width/2,r.top+r.height/2,['✨','⭐','💫'],10)}
+  if(/[A-Za-z]/.test(sh))say(sh);
+  var full=true;for(var q=0;q<D.n;q++)if(D.slot[q]==null)full=false;
+  if(full)dgCheck();
+}
+function dgPaintSlot(k){var D=DG,b=$('#dgD .ds[data-k="'+k+'"]');if(!b)return null;var i=D.slot[k];
+  if(i==null){b.innerHTML='';b.classList.remove('full');return null}
+  var w=D.src[i],sh=dgShow(w,k,D.n,D.tgt[D.n-1]);b.innerHTML='<span class="dt '+dgCls(w)+'" data-i="'+i+'" data-k="'+k+'">'+ap(sh)+'</span>';b.classList.add('full');return b.firstChild}
+function dgBack(k){if(!DG||DG.lock||busy)return;var i=DG.slot[k];if(i==null)return;DG.slot[k]=null;dgPaintSlot(k);
+  var t=$('#dgS .dt[data-i="'+i+'"]');if(t)t.classList.remove('gone');sPop()}
+function dgCheck(){
+  var D=DG,got=D.slot.map(function(i,k){return dgShow(D.src[i],k,D.n,D.tgt[D.n-1])}),s=joinS(got);
+  D.lock=true;
+  if(s===cur.t){PICK=cur.t;tstop();gPause++;$('#dgD').classList.add('win');
+    $$('#dgD .dt').forEach(function(x,j){x.style.animationDelay=(j*.09)+'s'});
+    var r=$('#dgD').getBoundingClientRect(),wd=el('span','dgwand','🪄');wd.style.left=r.left+'px';wd.style.top=(r.top+r.height/2)+'px';wd.style.setProperty('--w',r.width+'px');
+    document.body.appendChild(wd);setTimeout(function(){if(wd.parentNode)wd.parentNode.removeChild(wd)},1100);
+    dgSpark(r.left+r.width/2,r.top+r.height/2,['✨','🌟','⭐','💫','🎉'],18);
+    setTimeout(function(){say(cur.t)},350);
+    setTimeout(function(){gPause=Math.max(0,gPause-1);if(ended)return;gT0+=1100;judge(true,'')},1100);
+    return}
+  PICK=s;$('#dgD').classList.add('bad');judge(false,cur.h);
+}
+function dgDown(e){
+  if(!DG||DG.lock||busy)return;var t=e.target.closest?e.target.closest('.dt'):null;if(!t)return;
+  var i=+t.getAttribute('data-i'),fromK=t.hasAttribute('data-k')?+t.getAttribute('data-k'):-1;
+  if(fromK<0&&t.classList.contains('gone'))return;
+  e.preventDefault();var x0=e.clientX,y0=e.clientY,fly=null,hov=null,id=e.pointerId;
+  var mv=function(ev){if(ev.pointerId!==id)return;var dx=ev.clientX-x0,dy=ev.clientY-y0;
+    if(!fly&&dx*dx+dy*dy>64){var r=t.getBoundingClientRect();fly=t.cloneNode(true);fly.classList.add('dgfly');fly.classList.remove('gone','cap','morph');
+      fly.style.width=r.width+'px';fly.dataset.ox=(x0-r.left);fly.dataset.oy=(y0-r.top);document.body.appendChild(fly);t.style.opacity='.3'}
+    if(fly){fly.style.left=(ev.clientX-fly.dataset.ox)+'px';fly.style.top=(ev.clientY-fly.dataset.oy)+'px';
+      var u=document.elementFromPoint(ev.clientX,ev.clientY),s0=u&&u.closest?u.closest('#dgD .ds'):null;
+      if(s0!==hov){if(hov)hov.classList.remove('hov');hov=s0;if(hov)hov.classList.add('hov')}}};
+  var up=function(ev){if(ev.pointerId!==id)return;document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up);
+    t.style.opacity='';if(hov)hov.classList.remove('hov');
+    if(fly){if(fly.parentNode)fly.parentNode.removeChild(fly);
+      if(hov){dgPut(i,+hov.getAttribute('data-k'))}else if(fromK>=0){var u=document.elementFromPoint(ev.clientX,ev.clientY);if(!(u&&u.closest&&u.closest('#dgD')))dgBack(fromK)}
+      return}
+    /* 沒有拖 ＝ 點一下：上面的字 ➜ 第一個空格；下面的字 ➜ 回到上面 */
+    if(fromK>=0){dgBack(fromK);return}
+    for(var k=0;k<DG.n;k++)if(DG.slot[k]==null){dgPut(i,k);return}};
+  document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up);
+}
+`;
 const CSS = `
 #stage{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
  padding:calc(var(--safeT) + clamp(14px,2.6vh,26px)) clamp(14px,3vw,36px)
@@ -282,7 +402,7 @@ const CSS = `
 .o.bad{background:#3A1111;border-color:var(--no)}
 .o.dim{opacity:.3}
 
-/* 兩顆大按鈕（他／她、問句／直述句） */
+/* 兩顆大按鈕（他／她、句尾是 ?／句尾是 .） */
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,1.5vw,18px);width:100%}
 .dbtn{border-radius:20px;border:2px solid #2A2A2A;background:#0A0A0A;color:var(--fg);
  min-height:clamp(84px,15vh,150px);display:flex;flex-direction:column;align-items:center;
@@ -308,6 +428,7 @@ const CSS = `
  min-height:clamp(46px,7vh,72px);align-items:center;width:100%;
  border-bottom:2px dashed #272727;padding-bottom:clamp(6px,1.1vh,12px)}
 .slotline .cw{background:#1A2430;border-color:#39536E}
+${DRAG4 ? DRAGCSS : ''}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}
  50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
 
@@ -378,7 +499,7 @@ var SHAPE=['▲','◆','●','■'];
 var QT=15, GT=90;                     /* 每一題 15 秒；每一個遊戲（包括 🔍 火眼金睛）1 分 30 秒（使用者 2026-10-09 指定） */
 function gtOf(id){return GT}
 function gtTxt(s){var m=Math.floor(s/60),x=s%60;return x?(m?m+' 分 ':'')+x+' 秒':m+' 分鐘'}
-var OPTG={g1:1,g4:1,g5:1,g8:1,g10:1}; /* 有四個選項的遊戲（驚喜卡「刪掉錯的選項」只給它們） */
+var OPTG={g1:1,${DRAG4 ? '' : 'g4:1,'}g5:1,g8:1,g10:1};${DRAG4 ? '\nvar DQT=30;   /* 🪄 拖曳變身：一題 30 秒（要拖 4～6 個字） */' : ''} /* 有四個選項的遊戲（驚喜卡「刪掉錯的選項」只給它們） */
 var g=null,queue=[],cur=null,left=QT,qt=QT,tick=null,score=0,streak=0,best=0,right=0,wrong=0;
 var asked=0,speedSum=0,shield=0,timeAdd=0,opened=[],lastGain=0;
 var mult=1,multLeft=0,fastV=0,cutNext=0,hintNext=0,goldNext=0,freezeNext=0,frozenTo=0,combo=null;
@@ -660,7 +781,7 @@ function next(){
   if(cutNext&&OPTG[g]){gHelp=1;var bad=shuf($$('#arena .o[data-ok="false"]')).slice(0,cutNext);cutNext=0;
     bad.forEach(function(b){b.classList.add('cutting');setTimeout(function(){b.classList.remove('cutting');b.classList.add('cut')},700)})}
   fitO();
-  run(g==='g6'?QT*4:QT);     /* 記憶配對一局四對，時間比照四題 */
+  run(g==='g6'?QT*4:${DRAG4 ? "g==='g4'?DQT:" : ''}QT);     /* 記憶配對一局四對，時間比照四題 */
 }
 /* 選項一律一行（使用者 2026-09-28：字放大，但不可以折成兩行）：
    字先用大字，放不下的那一個選項才縮到剛好一行 */
@@ -710,7 +831,7 @@ function mInfo(){
     return {q:c.zh+'　'+bad,pick:PICK==null?null:bad,
       ans:ok.join(' ').replace(/ ([?.,])/g,'$1').replace(/ ([\u2019']s)/g,'$1')}}
   if(g==='g8')return {q:c.zh,pick:PICK==null?null:f8(c,PICK),ans:f8(c,c.o[0])};
-  if(g==='g9')return {q:c[0],pick:PICK,ans:${DUO9 ? 'LAB9[c[1]]' : "c[1]==='q'?'❓ 問句':'🙋 直述句'"}};
+  if(g==='g9')return {q:c[0],pick:PICK,ans:${DUO9 ? 'LAB9[c[1]]' : "c[1]==='q'?'❓ 句尾是 ?':'🙋 句尾是 .'"}};
   return {q:'',pick:PICK,ans:''};
 }
 
@@ -750,13 +871,13 @@ function toMcq(c){
     var fix=c.w.slice();fix[c.b]=c.fix;return {q:c.zh+'<br>哪一句完全正確？',o:[joinS(fix),bad],h:c.h}}
   if(g==='g9'&&!${DUO9 ? 1 : 0}){ /* 問句／直述句：四句裡找一句跟它同一種（一句對、三句是另一種） */
     var same=BANK.g9.filter(function(y){return y!==c&&y[1]===c[1]}),diff=shuf(BANK.g9.filter(function(y){return y[1]!==c[1]}));
-    if(same.length&&diff.length>=3)return {q:'「'+c[0]+'」是'+(c[1]==='q'?'❓ 問句':'🙋 直述句')+'。<br>哪一句跟它<b>同一種</b>？',
+    if(same.length&&diff.length>=3)return {q:'「'+c[0]+'」<br>哪一句 跟它一樣，句尾 也是 <b>'+(c[1]==='q'?'?':'.')+'</b>？',
       o:[pick(same)[0]].concat(diff.slice(0,3).map(function(y){return y[0]})),h:c[2]||'',nm:1}}
   if(g==='g9'&&${DUO9 ? 1 : 0}){ /* 在回答哪一題：四個問句選一個 */
     var qs=${DUO9 ? JSON.stringify(DUO9.map(x => x.d ? x.d.split('　')[1] || '' : x.t)) : '[]'},ks9=${DUO9 ? JSON.stringify(DUO9.map(x => x.v)) : '[]'};
     var qq=qs[ks9.indexOf(c[1])];
     if(qq)return {q:'「'+c[0]+'」<br>在回答哪一題？',say:c[0],o:[qq].concat(qs.filter(function(x){return x!==qq})),h:c[2]||''}}
-  if(g==='g9'){var lab=${DUO9 ? 'LAB9' : "{q:'❓ 問句',s:'🙋 直述句'}"},ks=Object.keys(lab);
+  if(g==='g9'){var lab=${DUO9 ? 'LAB9' : "{q:'❓ 句尾是 ?',s:'🙋 句尾是 .'}"},ks=Object.keys(lab);
     return {q:'「'+c[0]+'」<br>'+(${DUO9 ? "'在回答哪一題？'" : "'是哪一種句子？'"}),say:c[0],
       o:[lab[c[1]]].concat(ks.filter(function(k){return k!==c[1]}).map(function(k){return lab[k]})),h:c[2]||''}}
   return null;
@@ -883,7 +1004,7 @@ function rOrder(){
 }
 /* ── 4 🔄 變身術 ── */
 function rTrans(){
-  var o=shuf(cur.o.map(function(x,n){return{x:x,n:n}}));
+${DRAG4 ? '  if(cur.t)return rDrag();\n' : ''}  var o=shuf(cur.o.map(function(x,n){return{x:x,n:n}}));
   $('#arena').innerHTML=tags('🔄 變身術')+
     '<div class="qbig" data-say="'+cur.f.replace(/"/g,'&quot;')+'">'+ap(cur.f)+'</div>'+
     '<div class="qs">'+cur.d+'</div>'+
@@ -892,7 +1013,7 @@ function rTrans(){
         '</span><span>'+ap(t.x)+'</span></button>'}).join('')+'</div>'+fbBox();
   say(cur.f);bindO();
 }
-/* ── 5 🎧 聽力狙擊 ── */
+${DRAG4 ? DRAGJS : ''}/* ── 5 🎧 聽力狙擊 ── */
 function rHear(){
   var o=shuf(cur.o.map(function(x,n){return{x:x,n:n}}));
   $('#arena').innerHTML=tags('🎧 聽力狙擊')+
@@ -992,8 +1113,8 @@ function rSort(){
   $('#arena').innerHTML=tags('🗂 分類')+
     '<div class="qbig" data-say="'+cur[0].replace(/"/g,'&quot;')+'">'+ap(cur[0])+'</div>'+
     '<div class="duo">'+
-${DUO9 ? duoBtns(DUO9) : `     '<button class="dbtn st" data-v="s">🙋<span class="ds">直述句　在講一件事</span></button>'+
-     '<button class="dbtn qu" data-v="q">❓<span class="ds">問句　在問問題</span></button>'+`}
+${DUO9 ? duoBtns(DUO9) : `     '<button class="dbtn st" data-v="s">🙋<span class="ds">句尾是 .　在說一件事</span></button>'+
+     '<button class="dbtn qu" data-v="q">❓<span class="ds">句尾是 ?　在問問題</span></button>'+`}
     '</div>'+fbBox();
 ${DUO9 && metaOf('g9').duoShuf ? `  if(Math.random()<.5){var du=$('#arena .duo');du.appendChild(du.firstElementChild)}` : ''}
   say(cur[0]);
@@ -1001,9 +1122,9 @@ ${DUO9 && metaOf('g9').duoShuf ? `  if(Math.random()<.5){var du=$('#arena .duo')
     if(busy)return;var ok=b.getAttribute('data-v')===cur[1];
     b.classList.add(ok?'ok':'bad');
 ${DUO9 ? `    PICK=LAB9[b.getAttribute('data-v')];
-    judge(ok,cur[2]||'');` : `    PICK=b.getAttribute('data-v')==='q'?'❓ 問句':'🙋 直述句';
-    judge(ok,cur[1]==='q'?'句尾是 <b>?</b>，而且 <b>Is／Who</b> 放在最前面 → <b>問句</b>。':
-      '句尾是 <b>.</b>，主詞放最前面 → <b>直述句</b>。');`}
+    judge(ok,cur[2]||'');` : `    PICK=b.getAttribute('data-v')==='q'?'❓ 句尾是 ?':'🙋 句尾是 .';
+    judge(ok,cur[1]==='q'?'句尾是 <b>?</b>，<b>Is／Who</b> 放在最前面 → 在問問題。':
+      '句尾是 <b>.</b> → 在說一件事。');`}
   })});
 }
 /* ── 10 👑 魔王挑戰 ── */
@@ -1115,7 +1236,7 @@ function gScRec(ok,timeout){
   if(g==='g6'||!cur)return;
   if(gFirst&&!gHelp){var o=cur.o,pk=-1,sec=(Date.now()-gT0)/1000;
     if(!timeout){pk=ok?0:1;if(o&&PICK!=null){var i=o.indexOf(PICK);if(i>=0)pk=i}}
-    GQ.push([ok?1:0,pk,Math.round(sec*10)/10,!timeout&&sec<1?1:0,ok?Math.round(Math.max(0,Math.min(1,1-sec/QT))*1000)/1000:0,gQi]);gFirst=false}
+    GQ.push([ok?1:0,pk,Math.round(sec*10)/10,!timeout&&sec<1?1:0,ok?Math.round(Math.max(0,Math.min(1,1-sec/${DRAG4 ? "(g==='g4'?DQT:QT)" : 'QT'}))*1000)/1000:0,gQi]);gFirst=false}
   else if(ok)gFix++;
 }
 function gScOver(){if(!scLive())return;

@@ -31,7 +31,7 @@ function gameQ(ty, c, B, meta) {
     case 'g3': return { q: txt(c.zh) + '　排出順序', o: [joinS(c.s), '❌ 順序排錯'], h, sp: joinS(c.s) };
     case 'g7': { const fx = String(c.fix || '').replace(/^改成\s*/, ''), f = c.w.slice(); if (c.b >= 0) f[c.b] = fx;   /* 有的題庫 fix 自己寫了「改成」，不要變成「改成 改成」 */
       return { q: txt(c.zh) + '　' + joinS(c.w) + '（哪裡錯？）', o: [c.b < 0 ? '✅ 這句沒錯' : '錯在 ' + c.w[c.b] + ' ➜ 改成 ' + fx, '❌ 沒找對'], h, sp: /^[A-Z]/.test(fx) && c.w[c.b] === '?' ? fx : joinS(f) }; }
-    case 'g9': { const d = B.DUO9 || duo(M('g9')) || [{ v: 'q', t: '❓ 問句' }, { v: 's', t: '🙋 直述句' }], lab = v => (d.filter(x => x.v === v)[0] || {}).t || v;
+    case 'g9': { const d = B.DUO9 || duo(M('g9')) || [{ v: 'q', t: '❓ 句尾是 ?' }, { v: 's', t: '🙋 句尾是 .' }], lab = v => (d.filter(x => x.v === v)[0] || {}).t || v;
       return { q: '「' + txt(c[0]) + '」', o: [lab(c[1])].concat(d.filter(x => x.v !== c[1]).map(x => lab(x.v))), h, sp: txt(c[3] || c[0]) }; }
   }
   return null;
@@ -73,6 +73,9 @@ Object.keys(SITES).forEach(dir => {
     }));
   }
 });
+/* 📝 四年級 期中複習（2026-10-19 第十三次 3(11)）：g4gm_mt-遊戲（midterm/_data.js；o[0] ＝ 正解，跟 網頁 送 的「選了 第幾個」一樣） */
+{ const MT = require(path.join(__dirname, '..', 'midterm', '_data.js'));
+  MT.GAMES.forEach(g => put('g4gm_mt-' + g.id, { name: '四年級 📝 期中複習｜' + g.ic + ' ' + g.nm, qs: g.B.map(c => ({ k: 'g', kn: '📝 期中複習', q: txt(c.q), o: (c.oz || c.o).map(txt), h: txt(c.z || ''), ae: c.ae || '' })) })); }
 /* 💼 職業單字（English-Jobs-New，2026-10-09 E 使用者第 4 點）：三、四年級共用 ➜ g*gm_job-遊戲；題庫由 score/_jobs_bank.js 從那一頁讀出來 */
 if (fs.existsSync(path.join(__dirname, '_jobs_bank.json'))) {
   const JB = JSON.parse(fs.readFileSync(path.join(__dirname, '_jobs_bank.json'), 'utf8'));

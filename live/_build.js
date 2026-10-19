@@ -40,6 +40,7 @@ const J = o => JSON.stringify(o).replace(/</g, '\\u003c');
 const host = head('現場任務 大螢幕', CER) + `<body class="host">
 <script src="../score/url.js"></script><script src="fb.js"></script><script src="../score/qr.js"></script>
 <div id="net" class="net" hidden>📶 網路 不穩：重新 連線 中…（不用 按 任何 東西）</div>
+<div id="hstp" class="hstp" hidden></div><div id="hqrc" class="sqrc hq2" hidden><div class="qrb"></div><span>📱 掃 我 登入</span></div>
 <div class="scr" id="hpw" hidden><div class="in center"><h1>⚡ 現場任務</h1><div class="note">老師 密碼（跟 老師看板 一樣）</div>
  <input type="password" id="pw" autocomplete="current-password"><button id="pwgo" class="big">🔑 進去</button><div id="pwm" class="note"></div>
  <div class="note">還沒 設定 Firebase？➜ <a href="setup.html">大字版 設定頁</a></div></div></div>
@@ -63,16 +64,19 @@ ${R('_host_rt.js')}
 </script></body></html>`;
 /* ── 學生平板 ── 最上面 永遠 一行 大字：現在 要 做 什麼（#now）；沒有 任何 音效 */
 const stu = head('現場任務') + `<body class="stu">
+<script>window.SCLIVE=1;</script>
 ${CL.home(0, '../', 'school')}
-<script src="fb.js"></script>
-<div id="now" class="now"></div><div id="net" class="net" hidden>📶 網路 不穩：重新 連線 中…</div>
-<div class="scr" id="soff" hidden><div class="in center"><div class="big2">⚡ 現場任務 還沒有 開</div><div class="note">（老師 設定好 就 可以 玩）</div><a class="ghost" href="../index.html">🏠 回首頁</a></div></div>
-<div class="scr" id="sout" hidden><div class="in center"><h1>⚡ 現場任務</h1><div class="big2">打 你的 5 碼（班級 ＋ 座號）<br>➜ 自動 進入 自己 班 的 遊戲</div><button id="sIn" class="big go">🔑 登入</button></div></div>
+<script src="fb.js"></script><script src="../score/qr.js"></script>
+<div id="stp" class="stpw" hidden></div><div id="now" class="now"></div><div id="net" class="net" hidden>📶 網路 不穩：重新 連線 中…</div>
+<div class="scr" id="soff" hidden><div class="in center"><div class="big2">⚡ 現場任務 還沒有 開</div><div class="note">（老師 設定好 就 可以 玩）</div></div></div>
+<div class="scr" id="sout" hidden><div class="in center"><h1>🔑 登入</h1><div class="big2">輸入：你的 班級號碼〔共 5 碼〕</div><button id="sIn" class="big go">🔢 輸入</button></div></div>
+<div class="scr" id="sintro" hidden><div class="in center" id="sinb"></div></div>
 <div class="scr" id="swait" hidden><div class="sqw"><div id="wbody" class="wbody"></div></div></div>
 <div class="scr" id="show" hidden><div class="in center" id="shw"></div></div>
 <div class="scr" id="sq" hidden><div class="sqw"><div class="qtop"><span id="sqn"></span><span class="qtm"><span id="sqring" class="ring sm"><b id="sqt">20</b></span></span></div>
  <div id="sqq" class="sqq"></div><div id="sqh" class="sqh" hidden></div><div id="sqm" class="note sqm"></div><div id="sqo"></div><div id="sqr"></div><button id="kch" class="kch" hidden>📣 加油！</button></div></div>
-<div class="scr" id="send" hidden><div class="in"><h1>🏁 任務 完成！</h1><div id="ew"></div><a class="big" style="text-decoration:none;display:inline-flex" href="../rpg/index.html"><img src="../rpg/cover_icon.webp" alt="" style="height:1.2em;width:2.4em;object-fit:cover;border-radius:.25em;border:2px solid #FFD54A;margin-right:.3em">戰神之路</a></div></div>
+<div class="scr" id="send" hidden><div class="in"><h1>🏁 任務 完成！</h1><div id="ew"></div></div></div>
+<div id="sqrc" class="sqrc" hidden><div class="qrb"></div><span>📱 掃 我<br>登入</span></div>
 <div id="res"></div><div id="gift"></div><div id="fxo"></div>
 <script>var BASE='../',MINIB=${J(QB.MINI)};
 ${RT}
