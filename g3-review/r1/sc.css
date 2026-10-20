@@ -337,6 +337,12 @@ body.scq .url{display:none}
 @keyframes fxpr{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%)}}
 @media (prefers-reduced-motion:reduce){.fxname,.fxnum,.fxpure,.fxcard,.fxevo img,.fxst i,.fxtt,.fxsub,.fxok{animation-duration:.01s!important;animation-delay:0s!important}.fxmi{animation:none}}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* ⚔ 戰力階級 徽章（2026-10-20 第十五次）：小的 ＝ 跟字一樣高，放在號碼旁邊；big ＝ 盾牌＋名字 */
+.tbI{display:inline-flex;align-items:center;gap:.2em;vertical-align:-.2em;line-height:1}.tbI svg{width:.95em;height:1.1em;filter:drop-shadow(0 0 3px rgba(0,0,0,.6))}
+.tbI.t4 svg,.tbI.t5 svg{filter:drop-shadow(0 0 5px rgba(120,220,255,.8))}.tbI.t5 svg{filter:drop-shadow(0 0 6px rgba(200,120,255,.95))}
+.tbI.big svg{width:1.6em;height:1.85em}.tbI.big b{font-size:.9em;color:#FFE9A8;white-space:nowrap}
+.sndB{min-height:52px;padding:4px 16px;border-radius:999px;border:2px solid #7FD4FF;background:rgba(10,20,40,.78);color:#E8F6FF;font-size:clamp(18px,2.3vh,22px);font-weight:700;cursor:pointer}.sndB.off{border-color:#6A7A8C;color:#A8B6C9}
 /* score/_honor.css — 榮譽動畫（2026-10-12 D 第 4 件）：學生平板做完的榮譽動畫、老師投影的榮譽榜共用。12 種風格 .hs1～.hs12 */
 .hon{position:relative;width:100%;height:var(--hh,clamp(420px,66vh,800px));border-radius:22px;overflow:hidden;background:#000;color:#fff;text-align:center;isolation:isolate;
   display:flex;flex-direction:column;align-items:center;justify-content:center;justify-content:safe center;gap:clamp(6px,1.4vh,16px);padding:2vh 2vw;box-sizing:border-box}

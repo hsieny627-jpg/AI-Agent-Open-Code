@@ -125,6 +125,9 @@ var RPFX = (function () {
     /* 招式：武器本來的 ＋ 這一次隨機換（每一次不一樣）；個人招牌決定第二招 */
     var forms = ['slash', 'beam', 'arrow', 'smash', 'orb', 'nova', 'claw', 'pierce'], f2 = forms[Math.floor(sig() * forms.length)], use = R() < .62 ? f : (R() < .5 ? f2 : forms[Math.floor(R() * forms.length)]);
     var crit = o.crit != null ? o.crit : R() < .18 + tier * .03;
+    var ch0 = Math.round(380 * q), hit0 = ch0 + Math.round(420 * q);
+    /* 2026-10-20 第十五次：音效、戰士揮武器（rpg/_life_rt.js）跟著這一招的時間 */
+    if (o.hook) try { o.hook({ e: e, f: use, tier: tier, crit: crit, ch: ch0, hit: hit0, q: q }); } catch (x) { }
     /* 蓄力 */
     var ch = Math.round(380 * q);
     for (var i = 0; i < 14 + tier * 6; i++) { (function (i) { var a = R() * Math.PI * 2, r = 70 + R() * 70; S.add({ t: 'dot', x: F.x + Math.cos(a) * r, y: F.y + Math.sin(a) * r, vx: 0, vy: 0, home: F, hs: 1400 + R() * 900, l: .6, a: 0, s: 4 + R() * 5, c: C[i % 3], dr: 3 }); })(i); }
@@ -243,12 +246,12 @@ var RPFX = (function () {
     function strike(k) {
       if (k >= plan.length) { if (o.done) setTimeout(o.done, 400); return; }
       var ev = plan[k], a = attack(box, { from: pos(box, hero || box, .5, .45), to: pos(box, mon.querySelector('.fxmi'), .5, .5), w: o.w, id: o.id, p: k % 2 === 0 ? o.p : null, pImg: pet ? pet.getAttribute('src') : '', pFrom: pet ? pos(box, pet) : null,
-        dmg: ev.dmg, quick: true, name: k === 0, hero: hero, shk: box,
+        dmg: ev.dmg, quick: true, name: k === 0, hero: hero, shk: box, hook: o.hook,
         onHit: function () { mon.classList.remove('hit'); void mon.offsetWidth; mon.classList.add('hit');
           if (ev.kills.length) { var m = mx(cur.i); bar.style.width = '0%'; lab.textContent = '❤ 0 ／ ' + m; kill(ev.kills[ev.kills.length - 1], ev.end); } else { cur = ev.end; show(cur); } } });
       setTimeout(function () { strike(k + 1); }, Math.max(900, a.ms - 200) + (ev.kills.length ? 900 : 0));
     }
-    function kill(m0, end) { mon.classList.add('ko'); var S = Stage(box), c = pos(box, mon); burst(S, c.x, c.y, 'light', 60, 520, 1.6); S.stop(1600);
+    function kill(m0, end) { if (o.onKill) try { o.onKill(); } catch (x) { } mon.classList.add('ko'); var S = Stage(box), c = pos(box, mon); burst(S, c.x, c.y, 'light', 60, 520, 1.6); S.stop(1600);
       dom(box, 'fxpure', '<img src="' + monImg(base, m0) + '" alt=""><b>✨ 打倒了！<br>淨化 ➜ 收進 👾 怪物圖鑑</b>', 2600);
       setTimeout(function () { cur = end; mon.classList.remove('ko'); show(cur); }, 1300); }
     setTimeout(function () { strike(0); }, 500);
@@ -257,7 +260,16 @@ var RPFX = (function () {
   function spark(host, x, y, e, n) { if (!host || RM) return; var S = Stage(host); burst(S, x, y, e || 'light', n || 18, 220, .7); S.stop(300); }
   function beam(host, a, b, e) { if (!host || RM) return; var S = Stage(host), C = EL[e || 'light'].c; S.add({ t: 'beam', x: a.x, y: a.y, x2: b.x, y2: b.y, s: 7, c: C[1], c2: C[2], l: .5, a: 0 });
     S.at(250, function () { burst(S, b.x, b.y, e || 'light', 14, 200, .6); }); S.stop(600); }
-  return { attack: attack, spark: spark, beam: beam, summon: summon, evolve: evolve, chest: chest, coins: coins, fight: fight, wInfo: wInfo, pEl: pEl, EL: EL, hash: hash, pos: pos };
+  /* ⚔ 戰力階級 徽章（2026-10-20 第十五次 老師 C17 第 5 題 B）：自己畫的盾牌（不用 🥇🥈🥉：排行榜第 1、2、3 名已經用了，會搞混）
+     1 青銅 2 白銀 3 黃金 4 鑽石 5 傳說；tb(階, 'big') ＝ 大的、有名字 */
+  var TN = ['', '青銅', '白銀', '黃金', '鑽石', '傳說'], TC = ['', ['#F2B27A', '#A0582A', '#5A2A0C'], ['#FFFFFF', '#B8C4D4', '#5A6678'], ['#FFF3B0', '#FFC21A', '#8A5A00'], ['#E8FFFF', '#5AE8FF', '#1A5AB0'], ['#FFE9FF', '#C46BFF', '#4A0A8A']];
+  function tb(n, big) { n = Math.max(0, Math.min(5, +n || 0)); if (!n) return ''; var c = TC[n], id = 'tbg' + n;
+    var svg = '<svg viewBox="0 0 40 46" aria-hidden="true"><defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + c[0] + '"/><stop offset=".5" stop-color="' + c[1] + '"/><stop offset="1" stop-color="' + c[2] + '"/></linearGradient></defs>' +
+      '<path d="M20 2L37 8V22Q37 36 20 44Q3 36 3 22V8Z" fill="url(#' + id + ')" stroke="' + c[2] + '" stroke-width="2.4"/><path d="M20 7L32 11.5V22Q32 32 20 38.5Q8 32 8 22V11.5Z" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.4"/>' +
+      (n >= 5 ? '<path d="M11 13l4 4 5-7 5 7 4-4-2 10H13z" fill="#FFE07A" stroke="#6A3A00" stroke-width="1"/>' : '') +
+      '<path d="M20 ' + (n >= 5 ? 24 : 14) + 'l2.6 5.4 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z" fill="#fff" fill-opacity=".92"/>' + (n >= 4 ? '<circle cx="20" cy="' + (n >= 5 ? 31 : 21) + '" r="2" fill="' + c[1] + '"/>' : '') + '</svg>';
+    return '<span class="tbI t' + n + (big ? ' big' : '') + '" role="img" aria-label="' + TN[n] + ' 戰士">' + svg + (big ? '<b>' + TN[n] + '</b>' : '') + '</span>'; }
+  return { attack: attack, spark: spark, beam: beam, summon: summon, evolve: evolve, chest: chest, coins: coins, fight: fight, wInfo: wInfo, pEl: pEl, EL: EL, hash: hash, pos: pos, tb: tb, TN: TN };
 })();
 /* 🪙 金幣圖示：老師的電腦（舊的 Windows）沒有 🪙 這個字 ➜ 一律換成自己畫的金幣（2026-10-20 第十四次 2） */
 (function () {

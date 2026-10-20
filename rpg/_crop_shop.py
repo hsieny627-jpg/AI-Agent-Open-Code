@@ -113,3 +113,12 @@ for src in sorted(glob.glob(os.path.join(D, 'shop_[01][0-9]_*.jpg'))):
       n += 1
   done += 1
 print('shop ok：' + str(done) + ' 張圖鑑')
+# 2026-10-20 第十五次：舊的 10 種寶物（t01～t10）老師的圖：一張 5 欄 ✕ 2 列 ➜ rpg/tre/t01.jpg …（有 .jpg ＝ 戰神之路用老師的圖；沒有 ＝ 自己畫的 .svg）
+TS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tre_sheet.jpg')
+if os.path.exists(TS):
+  im = Image.open(TS).convert('RGB'); W, H = im.size; cw, ch = W / 5, H / 2; s = .03
+  for r in range(2):
+    for c in range(5):
+      cell = im.crop((int(cw * (c + s)), int(ch * (r + s)), int(cw * (c + 1 - s)), int(ch * (r + 1 - s))))
+      cell.resize((300, round(cell.height * 300 / cell.width)), Image.LANCZOS).save(os.path.join(os.path.dirname(TS), 'tre', 't%02d.jpg' % (r * 5 + c + 1)), quality=88)
+  print('tre ok：10 張')

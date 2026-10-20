@@ -450,6 +450,7 @@ var SC = (function () {
     o.ch = Math.max(0, Math.min(20, Math.round(+st.ch || 0)));
     o.chl = (st.chl || []).filter(function (x) { return x && (x.c > 0 || rpSC(x.s)); }).slice(-5).map(function (x) { return x.c > 0 ? { c: Math.round(+x.c) } : { s: String(x.s) }; });
     o.bk = (st.bk || []).map(String).filter(function (k) { return /^[\w|-]{1,40}$/.test(k); }).slice(-60);
+    o.tr = Math.max(0, Math.min(RPTIER.length, Math.round(+st.tr || 0)));   /* 2026-10-20 第十五次：⚔ 戰力階級 最高到過第幾階（升一階 🪙＋100 一次，拿下裝備也不會收回） */
     return o; }
   /* 這個人全部的紀錄 ➜ 經驗值、金幣（只算沒作廢的） */
   function rpEarn(rs) {
@@ -469,15 +470,21 @@ var SC = (function () {
     var chests = 0; for (var w in wk) if (wk[w] >= RPC.chestDays) chests++;
     return { xp: xp, coin: coin + chests * RPC.chest, chests: chests, days: Object.keys(days).length, dd: days };
   }
+  /* ⚔ 戰力階級（2026-10-20 第十五次 老師 C17 第 5 題 B）：300 青銅、600 白銀、1000 黃金、1500 鑽石、2200 傳說；每升一階 🪙＋100 一次；只是地位（不加分數、不改題目） */
+  var RPTIER = [[300, '青銅'], [600, '白銀'], [1000, '黃金'], [1500, '鑽石'], [2200, '傳說']], RPTIERC = 100;
+  function rpTier(pow) { var t = 0; for (var i = 0; i < RPTIER.length; i++) if ((+pow || 0) >= RPTIER[i][0]) t = i + 1; return t; }
+  /* 伺服器存檔以前：最高到過的階級記下來（rpView 的金幣照最高的算） */
+  function rpTierUp(rs, st) { st = rpClean(st); st.tr = Math.max(st.tr, rpTier(rpView(rs, st).power)); return st; }
   /* 平板看的：等級、經驗值條、金幣、寵物陪了幾天（裝上以後練了幾天：3 天長大、7 天進化）、戰力、稱號 */
   function rpView(rs, st) { st = rpClean(st); var E = rpEarn(rs), pd = 0; E.xp += st.bx; E.coin += st.bc; var lv = rpLv(E.xp);
     if (st.eq.p) { for (var d in E.dd) if (+d >= day(st.pt)) pd++; pd += st.snack; }
     var ps = pd >= 7 ? 2 : pd >= 3 ? 1 : 0, all = st.own.h.concat(st.own.w, st.own.p);
     var pow = lv * 10 + ps * 50; ['h', 'w', 'p'].forEach(function (k) { if (st.eq[k]) pow += rpStar(st.eq[k]) * 100; }); pow += st.eq.t.length * 20; for (var sk in st.eq.s) pow += rpStar(st.eq.s[sk]) * 20;
+    var tier = rpTier(pow), tm = Math.max(st.tr, tier); E.coin += tm * RPTIERC;
     var titles = RPSET.filter(function (x) { return x[1].every(function (id) { return all.indexOf(id) >= 0; }); }).map(function (x) { return x[0]; }).concat(st.lt);
     return { xp: E.xp, lv: lv, lvAt: 16 * (lv - 1) * (lv - 1), lvNext: 16 * lv * lv, earned: E.coin, coins: E.coin - st.spent, chests: E.chests, days: E.days,
       petDays: pd, petStage: ps, power: pow, titles: titles, medal: st.medal, st: st,
-      hit: rpDmg(pow), petHit: st.eq.p ? RPPET[ps] : 0, mon: rpMonAt(st.mon), ch: st.ch };
+      hit: rpDmg(pow), petHit: st.eq.p ? RPPET[ps] : 0, mon: rpMonAt(st.mon), ch: st.ch, tier: tier, tmax: tm };
   }
   /* 這一次（編號 u）拿到多少：全部 − 沒有這一筆 */
   function rpGain(rs, st, u) { var a = rpView(rs, st), b = rpView((rs || []).filter(function (r) { return r.u !== u; }), st);
@@ -513,7 +520,8 @@ var SC = (function () {
     f.to = rpMonAt(st.mon); return { st: st, f: f }; }
   /* 🏷 限量（老師：全部學生一共 5 個，先換先得）、⏳ 限時（10 月 31 號 下架 ＝ 台灣 11 月 1 日 0:00） */
   var RPLIM = { s0713: 5, s0812: 5, s0815: 5 };
-  var RPEND0 = Date.UTC(2026, 9, 31, 16, 0, 0), RPEND = { s0805: RPEND0, s0907: RPEND0, s0710: RPEND0, s1005: RPEND0 };
+  /* 2026-10-20 第十五次（老師 C17 第 7 題 A、第 8 題 甲、第 8 點）：s0805 金色獅鷲寶寶、s0907 噴射翅膀 變回一般商品；新的 10 月 31 號下架 ＝ s0301 金龍（必殺）、s0804 星空小龍、s0908 雷電翅膀 */
+  var RPEND0 = Date.UTC(2026, 9, 31, 16, 0, 0), RPEND = { s0301: RPEND0, s0804: RPEND0, s0710: RPEND0, s0908: RPEND0, s1005: RPEND0 };
   /* 👑 冠軍寶箱（老師的全班獎勵 ③：每週全年級「最認真練習」前 5 名）：一定是好東西 ➜ 55% 金幣 300／400／500、45% 商城第 2 排（1,200 的）還沒有的一樣（限量、限時的不會開到） */
   function rpOpen(st, rnd, rnd2) { st = rpClean(st); if (st.ch <= 0) return { err: 'none' }; st.ch--;
     var r = null; if (rnd >= .55) { var L = []; for (var c in RPSON) for (var n = 6; n <= 10; n++) { var id = 's' + (c < 10 ? '0' : '') + c + (n < 10 ? '0' : '') + n; if (!RPLIM[id] && !RPEND[id] && st.own[rpKind(id)].indexOf(id) < 0) L.push(id); }
@@ -546,7 +554,7 @@ var SC = (function () {
     lkClean: lkClean, lkSet: lkSet, lkAny: lkAny, lkFor: lkFor, LKRE: LKRE, lktClean: lktClean, lktSet: lktSet, lkNow: lkNow,
     tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE,
     RPR: RPR, RPP: RPP, RPL: RPL, RPT: RPT, RPS: RPS, RPSON: RPSON, RPSP: RPSP, RPSL: RPSL, RPSLOT: RPSLOT, rpSC: rpSC, RPSET: RPSET, RPHIDE: RPHIDE, RPX: RPX, RPC: RPC, rpKind: rpKind, rpStar: rpStar, rpPrice: rpPrice, rpNeed: rpNeed, rpOk: rpOk, rpLv: rpLv,
-    RPPET: RPPET, RPMON: RPMON, rpMonHp: rpMonHp, rpMonAt: rpMonAt, rpFight: rpFight, RPLIM: RPLIM, RPEND: RPEND, rpOpen: rpOpen,
+    RPPET: RPPET, RPMON: RPMON, rpMonHp: rpMonHp, rpMonAt: rpMonAt, rpFight: rpFight, RPLIM: RPLIM, RPEND: RPEND, rpOpen: rpOpen, RPTIER: RPTIER, RPTIERC: RPTIERC, rpTier: rpTier, rpTierUp: rpTierUp,
     rpClean: rpClean, rpEarn: rpEarn, rpView: rpView, rpBuy: rpBuy, rpEquip: rpEquip, rpDmg: rpDmg, rpGain: rpGain, rpBonus: rpBonus, lvRec: lvRec };
 })();
 if (typeof module !== 'undefined') module.exports = SC;

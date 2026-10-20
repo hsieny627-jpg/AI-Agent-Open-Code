@@ -125,7 +125,8 @@ v = G.get({ a: 'view', id: '30405', set: 'g3u1_1-1b' });
 ok(v.boards && v.top.acc.cls.length >= 10 && v.top.acc.cls.every(x => x.rk <= 10), '學生只看得到前 10 名');
 ok(v.top.acc.grade.every(x => x.id[0] === '3'), '全年級榜只有三年級');
 ok(v.rk.acc.cls === null || v.rk.acc.cls <= 10, '自己不在前 10 名 ➜ 沒有名次數字');
-eq(Object.keys(v).sort(), ['boards', 'caw', 'classes', 'cls', 'cls1', 'crk', 'cut', 'g', 'id', 'keep', 'me', 'mycls', 'rk', 'set', 'top', 'week'], '學生看得到的只有這些（沒有別人的名次；crk ＝ 自己班的名次）');
+eq(Object.keys(v).sort(), ['boards', 'caw', 'classes', 'cls', 'cls1', 'crk', 'cut', 'g', 'id', 'keep', 'me', 'mycls', 'rk', 'set', 'tiers', 'top', 'week'], '學生看得到的只有這些（沒有別人的名次；crk ＝ 自己班的名次；tiers ＝ 排行榜上的人的 ⚔ 戰力階級）');
+ok(Object.keys(v.tiers || {}).every(function (id) { return JSON.stringify(v.top || []).indexOf(id) >= 0 || id === v.id; }), 'tiers 只有 排行榜 上 出現 的 人');
 ok(v.set.others.length <= 10 && v.set.others.every(x => typeof x === 'number'), '作答中名次只拿到別人前 10 個分數（沒有 5 碼）');
 eq(v.classes.map(c => c.cls), ['304', '307', '311'], '班級長條 ＝ 同年級三班');
 eq(G.post({ a: 'teacher', pw: 'wrong' }).err, 'pw', '老師密碼錯 ➜ 拒絕');
@@ -323,7 +324,7 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
   eq(G.get({ a: 'rpg', id: '3x' }).err !== undefined, true, '5 碼不對 ➜ 拒絕');
   const g0 = G.get({ a: 'rpg', id: '30405' }); ok(g0.ok && g0.v.lv >= 1 && !g0.v.st.eq.h, '伺服器：還沒有英雄');
   let pr = G.post({ a: 'rpg', id: '30405', op: 'buy', item: 'g01' }); ok(pr.ok && pr.free && pr.v.st.eq.h === 'g01', '伺服器：免費選第一個英雄、存進「角色」');
-  ok(G.books['角色'] && G.books['角色'].d.length === 2 && /g01/.test(G.books['角色'].d[1][1]), '試算表「角色」有一列');
+  ok(G.books['角色'] && G.books['角色'].d.filter(function (x) { return String(x[0]) === '30405'; }).length === 1 && /g01/.test(G.books['角色'].d.filter(function (x) { return String(x[0]) === '30405'; })[0][1]), '試算表「角色」30405 只有一列');   /* 2026-10-20 第十五次：別人（打怪、自動冠軍寶箱）也可能有一列 */
   eq(G.post({ a: 'rpg', id: '30405', op: 'buy', item: 'b30' }).err, 'lv', '伺服器：★5 等級不夠');
   /* ⚡ 現場任務 算練習（2026-10-18 C10 第 3 題 B） */
   { eq(SC.clean({ id: '30405', set: 'g3lv_live', m: 'lv', t: Date.now(), u: 'zz' }, Date.now()), null, '平板送不進現場任務的紀錄');
@@ -336,5 +337,24 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
     ok(rs.length === 2 && rs.every(r => r.acc == null && r.n === 0 && SC.cat(r.set).k === 'lv'), '紀錄：⚡ 現場任務、沒有正確率');
     const p6 = SC.students(rs.filter(r => r.id === '30406'))[0]; eq([p6.count, p6.days, p6.acc, p6.lvc], [1, 1, null, 1], '30406 只玩現場任務：練習次數 1、練了 1 天、正確率 沒有'); }
   const rv = G.post(body('30405', 'g3u1_2b', 5, { k: 'rpg' })); ok(rv.rpg && rv.rpg.gx >= 10 && rv.rpg.gc >= 5 && rv.rpg.h === 'g01', '做完一次：回傳這一次拿到的經驗值、金幣、我的英雄'); }
+/* ══ 2026-10-20 第十五次：⚔ 戰力階級、10 月 31 號 下架 換品、👑 冠軍寶箱 自動 發 ══ */
+{ eq([SC.rpTier(299), SC.rpTier(300), SC.rpTier(600), SC.rpTier(1000), SC.rpTier(1500), SC.rpTier(2200), SC.rpTier(99999)], [0, 1, 2, 3, 4, 5, 5], '戰力階級：300 青銅 600 白銀 1000 黃金 1500 鑽石 2200 傳說');
+  const st0 = SC.rpClean({ own: { h: ['b30'], w: ['w29'], p: ['p26'], t: [], s: [] }, eq: { h: 'b30', w: 'w29', p: 'p26', t: [] } }), V0 = SC.rpView([], st0);
+  ok(V0.power >= 1500 && V0.tier === SC.rpTier(V0.power) && V0.tmax === V0.tier, '★5 戰士＋★5 武器＋寵物 ＝ 鑽石以上');
+  eq(V0.coins, V0.tier * 100, '每升一階 🪙＋100（沒練習也看得到）');
+  const up = SC.rpTierUp([], st0), down = SC.rpClean(JSON.parse(JSON.stringify(up))); down.eq.w = ''; down.eq.p = '';
+  const V1 = SC.rpView([], down); ok(V1.tier < V0.tier && V1.tmax === V0.tier && V1.coins === V0.tier * 100, '拿下裝備：階級變低，但 🪙 不會被收回（照最高到過的）');
+  eq(SC.rpClean({ tr: 9 }).tr, 5, '階級最多 5');
+  const E = SC.RPEND; ok(E.s0301 && E.s0804 && E.s0908 && !E.s0805 && !E.s0907, '10/31 下架：金龍 s0301、星空小龍 s0804、雷電翅膀 s0908；金色獅鷲 s0805、噴射翅膀 s0907 變回一般商品');
+  eq(SC.rpBuy([], SC.rpClean({}), 's0805', Date.UTC(2026, 10, 2)).err !== 'end', true, '11 月以後 s0805 還買得到（不是 下架）');
+  eq(SC.rpBuy([], SC.rpClean({}), 's0804', Date.UTC(2026, 10, 2)).err, 'end', '11 月以後 s0804 下架');
+  /* 冠軍寶箱：上一週 練習時間 前 5 名 ➜ 打開 戰神之路（GET a=rpg）自動 拿到 1 個；同一週 不會 拿兩個；第 6 名 沒有 */
+  const G2 = make({ TEACHER_PW: 'pw-test' }), wk = SC.weekStart(Date.now()) - 7 * 864e5 + 3 * 3600e3;
+  ['31101', '31102', '31103', '31104', '31105', '31106'].forEach(function (id, i) { for (let k = 0; k <= 6 - i; k++) G2.post(body(id, 'g3u1_1-1b', 5, { k: 'c' + i + k, t: wk + k * 60e3 })); });
+  const R1 = G2.get({ a: 'rpg', id: '31101' }), R1b = G2.get({ a: 'rpg', id: '31101' }), R6 = G2.get({ a: 'rpg', id: '31106' });
+  ok(R1.ok && R1.v.ch === 1 && R1b.v.ch === 1, '上週第 1 名：自動 1 個 👑 寶箱（再打開 也 只有 1 個）');
+  ok(R6.ok && R6.v.ch === 0, '上週第 6 名：沒有');
+  ok(G2.books['角色'].d.some(function (x) { return String(x[0]) === '31101' && /ch\|/.test(x[1]); }), '寶箱 編號 記在 角色（同一週 不會 再 發）');
+  const T = G2.post({ a: 'teacher', pw: 'pw-test' }); ok(T.tiers && typeof T.tiers === 'object', '老師看板 拿得到 tiers（排行榜 徽章）'); }
 console.log((bad ? '✗ ' : '✓ ') + '成績紀錄規則＋Apps Script 量了 ' + n + ' 項，失敗 ' + bad + ' 項');
 process.exit(bad ? 1 : 0);

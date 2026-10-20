@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="400" height="400">
+<defs>
+<radialGradient id="bg" cx="50%" cy="45%" r="70%"><stop offset="0" stop-color="#42F2FF" stop-opacity=".55"/><stop offset=".55" stop-color="#141B33" stop-opacity="1"/><stop offset="1" stop-color="#05070E"/></radialGradient>
+<linearGradient id="gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF6C8"/><stop offset=".35" stop-color="#FFD54A"/><stop offset=".65" stop-color="#C98A1A"/><stop offset="1" stop-color="#FFE58A"/></linearGradient>
+<filter id="gl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="gl2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7"/></filter>
+
+</defs>
+<rect x="2" y="2" width="196" height="196" rx="26" fill="url(#bg)"/>
+<rect x="6" y="6" width="188" height="188" rx="22" fill="none" stroke="url(#gd)" stroke-width="2.2" opacity=".85"/>
+<path d="M100 22L178 100L100 178L22 100Z" fill="#06223A" stroke="#42F2FF" stroke-width="14" opacity=".45" filter="url(#gl2)"/>
+<path d="M100 22L178 100L100 178L22 100Z" fill="none" stroke="#7FF6FF" stroke-width="6" filter="url(#gl)"/>
+<path d="M100 40L160 100L100 160L40 100Z" fill="none" stroke="#BFFBFF" stroke-width="1.6" opacity=".7"/>
+<g transform="rotate(45 100 100)" filter="url(#gl)"><path d="M96 42h8l2 78h-12z" fill="#E8FBFF" stroke="#5ACFFF" stroke-width="1.6"/><path d="M100 36l6 8h-12z" fill="#fff"/>
+<rect x="80" y="118" width="40" height="8" rx="3" fill="url(#gd)"/><rect x="96" y="126" width="8" height="24" rx="2" fill="#3A2A12"/><circle cx="100" cy="154" r="6" fill="url(#gd)"/></g>
+<path d="M28 22L30.25 29.75L38 32L30.25 34.25L28 42L25.75 34.25L18 32L25.75 29.75Z" fill="#FFF8D8" filter="url(#gl)" opacity=".9"/><path d="M172 32L173.8 38.2L180 40L173.8 41.8L172 48L170.2 41.8L164 40L170.2 38.2Z" fill="#FFF8D8" filter="url(#gl)" opacity=".9"/><path d="M166 158L168.25 165.75L176 168L168.25 170.25L166 178L163.75 170.25L156 168L163.75 165.75Z" fill="#FFF8D8" filter="url(#gl)" opacity=".9"/><path d="M34 155L35.575 160.425L41 162L35.575 163.575L34 169L32.425 163.575L27 162L32.425 160.425Z" fill="#FFF8D8" filter="url(#gl)" opacity=".9"/>
+</svg>

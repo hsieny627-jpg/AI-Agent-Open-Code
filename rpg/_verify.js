@@ -7,7 +7,7 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 const { make } = require('../score/_gas_stub.js');
 const ROOT = path.join(__dirname, '..'), URL0 = 'https://script.test/exec';
 const E = []; let n = 0, HTTP = '';
-function serve() { return new Promise(ok => { const T = { '.html': 'text/html', '.js': 'text/javascript', '.woff2': 'font/woff2', '.css': 'text/css', '.jpg': 'image/jpeg', '.mp3': 'audio/mpeg', '.webp': 'image/webp', '.png': 'image/png' };
+function serve() { return new Promise(ok => { const T = { '.html': 'text/html', '.js': 'text/javascript', '.woff2': 'font/woff2', '.css': 'text/css', '.jpg': 'image/jpeg', '.mp3': 'audio/mpeg', '.webp': 'image/webp', '.png': 'image/png', '.svg': 'image/svg+xml' };
   const s = require('http').createServer((q, r) => { const f = path.join(ROOT, decodeURIComponent(q.url.split('?')[0]));
     if (!f.startsWith(ROOT) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { r.writeHead(404); r.end(); return; }
     r.writeHead(200, { 'content-type': T[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r); });
@@ -28,6 +28,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     const p = await ctx.newPage(), bad = [];
     p.on('pageerror', x => E.push(tag + ' JS 錯誤：' + x.message));
     p.on('response', r => { if (r.status() >= 400 && r.url().startsWith(HTTP)) bad.push(r.url().slice(HTTP.length)); });
+    await p.addInitScript(() => { window.__NOCB = 1; });
     await p.goto(HTTP + '/rpg/index.html'); await p.waitForTimeout(1200);
     const o0 = await p.evaluate(() => { const b = document.getElementById('rpIn'); return { out: !document.getElementById('rpout').hidden, h: b ? b.getBoundingClientRect().height : 0 }; });
     if (!o0.out || o0.h < 64) E.push(tag + '：沒登入沒有大大的〔🔑 登入〕');
@@ -93,7 +94,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     const t0 = await p.evaluate(() => ({ n: document.querySelectorAll('#tst .tsc').length, on: [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')) }));
     await p.waitForTimeout(5000); const t1 = await p.evaluate(() => [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')));
     if (process.env.SHOT && tag === '1024✕768') for (let i = 0; i < 5; i++) { await p.click('.tnav [data-tut="' + i + '"]'); await p.waitForTimeout(3600); await (await p.$('.tut')).screenshot({ path: path.join(process.env.SHOT, 'tut' + i + '.png') }); }
-    await p.click('.tnav [data-tut="2"]'); await p.waitForTimeout(2600); const tc = await p.evaluate(() => (document.getElementById('tcn') || {}).textContent);
+    await p.click('.tnav [data-tut="2"]'); await p.waitForTimeout(2600); const tc = await p.evaluate(() => (document.querySelector('#tst .tsc.on .tcn') || {}).textContent);
     const tf = await p.evaluate(() => { const r = document.getElementById('tst').getBoundingClientRect(); return [].filter.call(document.querySelectorAll('#tst .tsc.on .cap,#tst .tsc.on .tchips span,#tst .tsc.on .tcoin'), x => { const b = x.getBoundingClientRect(); return b.left < r.left - 1 || b.right > r.right + 1 || b.bottom > r.bottom + 1; }).length; });
     if (t0.n !== 5 || t0.on !== 0 || t1 !== 1 || tc !== '14' || tf) E.push(tag + '：❓ 動畫不對（' + t0.n + ' 幕、一開始第 ' + t0.on + '、5 秒後第 ' + t1 + '、金幣 ' + tc + '、跑出框 ' + tf + '）');
     await p.click('#tabs [data-t="h"]');
@@ -160,12 +161,12 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     await p.click('#tabs [data-t="h"]');
     /* 4 魔幻方框：戰士、武器、寵物、光環、名字框、背景 都在 #mfr 裡面；👾 怪物；〔▶ 看 長大〕 */
     const mf = await p.evaluate(() => { const m = document.getElementById('mfr'); return { h: !!m.querySelector('#hcard img'), w: !!m.querySelector('#wcard img'), p: !!m.querySelector('#pcard img'), nf: !!m.querySelector('.rw-nf'), run: !!m.querySelector('.mfrun svg'), c: m.querySelectorAll('.mfc').length,
-      mon: /第 \d+ 隻 怪物/.test(document.getElementById('stage').textContent) }; });
+      mon: /怪物（第 \d+ 隻）/.test(document.getElementById('stage').textContent) }; });   /* 2026-10-20 第十五次：「👾 下一隻 怪物（第 1 隻）」 */
     if (!mf.h || !mf.w || !mf.p || !mf.nf || !mf.run || mf.c !== 4 || !mf.mon) E.push(tag + '：魔幻方框 不對 ' + JSON.stringify(mf));
-    /* 4 限量、限時：商城 最上面 一區 7 樣；剩幾個 ＝ 伺服器 數；5 個 都 換走 ➜「已 換完」、買不到 */
+    /* 4 限量、限時：商城 最上面 一區 8 樣（2026-10-20 第十五次：限時 5 樣 ＝ s0301 金龍、s0804、s0710、s0908、s1005）；剩幾個 ＝ 伺服器 數；5 個 都 換走 ➜「已 換完」、買不到 */
     await p.click('#tabs [data-t="m"]'); await p.waitForTimeout(200);
-    const lt = await p.evaluate(() => ({ n: document.querySelectorAll('.ltd .it').length, a: (document.querySelector('.ltd [data-id="s0713"]') || {}).textContent || '', b: (document.querySelector('.ltd [data-id="s0805"]') || {}).textContent || '' }));
-    if (lt.n !== 7 || !/限量 5 個．剩 5 個/.test(lt.a) || !/10 月 31 號 下架/.test(lt.b)) E.push(tag + '：限量、限時 不對（' + lt.n + '、' + lt.a + '、' + lt.b + '）');
+    const lt = await p.evaluate(() => ({ n: document.querySelectorAll('.ltd .it').length, a: (document.querySelector('.ltd [data-id="s0713"]') || {}).textContent || '', b: (document.querySelector('.ltd [data-id="s0804"]') || {}).textContent || '', c: !!document.querySelector('.ltd [data-id="s0301"]') && !!document.querySelector('.ltd [data-id="s0908"]') && !document.querySelector('.ltd [data-id="s0805"]') && !document.querySelector('.ltd [data-id="s0907"]') }));
+    if (lt.n !== 8 || !lt.c || !/限量 5 個．剩 5 個/.test(lt.a) || !/10 月 31 號 下架/.test(lt.b)) E.push(tag + '：限量、限時 不對（' + lt.n + '、' + lt.a + '、' + lt.b + '）');
     for (let i = 0; i < 5; i++) G.books['角色'].d.push(['4010' + i, JSON.stringify({ own: { s: ['s0713'] } }), new Date()]);
     const sold = G.post({ a: 'rpg', id: '40205', op: 'buy', item: 's0713' });
     await p.reload(); await p.waitForTimeout(1800); await p.click('#tabs [data-t="m"]'); await p.waitForTimeout(200);
@@ -173,7 +174,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     if (!/已 換完/.test(l2) || !(sold.err === 'sold' || sold.err === 'lv' || sold.err === 'coin')) E.push(tag + '：5 個 換完 不對（' + l2 + '、' + sold.err + '）');
     const sold2 = (() => { const s = G.books['角色'].d, r = s.find(x => x[0] === '40205'), st = JSON.parse(r[1]); return require('../score/_calc.js').rpBuy([], Object.assign(st, { bc: 99999, bx: 99999 }), 's0713', Date.now(), 5); })();
     if (sold2.err !== 'sold') E.push(tag + '：伺服器 規則：5 個 換完 還 買得到（' + sold2.err + '）');
-    if (require('../score/_calc.js').rpBuy([], { bc: 99999, bx: 99999 }, 's0805', Date.UTC(2026, 10, 1, 1), 0).err !== 'end') E.push(tag + '：伺服器 規則：11 月 1 日 還 買得到 限時');
+    if (require('../score/_calc.js').rpBuy([], { bc: 99999, bx: 99999 }, 's0804', Date.UTC(2026, 10, 1, 1), 0).err !== 'end') E.push(tag + '：伺服器 規則：11 月 1 日 還 買得到 限時');
     /* 全班獎勵＋👑 冠軍寶箱：同一個 編號 只發 一次；開 寶箱 ＝ 動畫＋金幣或寶物 */
     const g1 = G.post({ a: 'rpgw', pw: 'pw-verify', list: [{ id: '40205', c: 100, x: 50, chest: 1, k: 'wk|t|402' }] }), g2 = G.post({ a: 'rpgw', pw: 'pw-verify', list: [{ id: '40205', c: 100, x: 50, chest: 1, k: 'wk|t|402' }] });
     if (g1.n !== 1 || g2.skip !== 1) E.push(tag + '：全班獎勵 發兩次 沒有 擋（' + JSON.stringify([g1, g2]) + '）');
@@ -184,9 +185,9 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     const ev = await p.evaluate(() => ({ evo: !!document.querySelector('.fxov.evo'), coin: !!document.querySelector('.fxcoins .cnI'), ch: !!document.getElementById('chOpen') }));
     if (!ev.evo || !ev.coin || !ev.ch) E.push(tag + '：長大動畫 ' + ev.evo + '、金幣 飛 ' + ev.coin + '、寶箱 按鈕 ' + ev.ch);
     await p.evaluate(() => { document.querySelectorAll('.fxov').forEach(o => o.remove()); }); await p.waitForTimeout(1200);
-    await p.click('#chOpen'); await p.waitForTimeout(800);
+    const ch0 = await p.evaluate(() => RV.ch); await p.click('#chOpen'); await p.waitForTimeout(800);   /* 2026-10-20 第十五次：上週前 5 名 自動 多 1 個 ➜ 開一個 ＝ 少一個 */
     const co = await p.evaluate(() => ({ ov: !!document.querySelector('.fxov.chs'), pr: (document.querySelector('.fxprize') || {}).innerHTML || '', ch: RV.ch, chl: RV.st.chl.length }));
-    if (!co.ov || !co.pr || co.ch !== 0 || co.chl !== 1) E.push(tag + '：開 冠軍寶箱 不對 ' + JSON.stringify(co).slice(0, 90));
+    if (!co.ov || !co.pr || co.ch !== ch0 - 1 || co.chl !== 1) E.push(tag + '：開 冠軍寶箱 不對 ' + JSON.stringify(co).slice(0, 90));
     await p.evaluate(() => { document.querySelectorAll('.fxov').forEach(o => o.remove()); });
     /* 👾 做完練習 打怪（最後一幕；伺服器算好的 f）：怪物、血條掉、打倒 ＝ 淨化、金幣 數到 gc */
     const fg = await p.evaluate(async () => { const G = { h: 'b02', p: 'p03', w: 'w03', s: {}, gx: 10, gc: 7, coins: 120, xp: 300, lv: 5, lv0: 5, lvAt: 256, lvNext: 400,
@@ -199,6 +200,63 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* 👾 怪物圖鑑 */
     await p.click('#tabs [data-t="s"]'); await p.waitForTimeout(200);
     if ((await p.evaluate(() => document.querySelectorAll('.monset > div').length)) !== 15) E.push(tag + '：👾 怪物圖鑑 不是 15 隻');
+    /* ══ 2026-10-20 第十五次：舊寶物圖、活起來、音效開關、全部合體、三章秒懂動畫、戰力階級 ══ */
+    await p.click('#tabs [data-t="t"]'); await p.waitForTimeout(400);
+    const tr = await p.evaluate(() => [].map.call(document.querySelectorAll('#shop .it img'), i => (i.complete && i.naturalWidth > 0 ? 1 : 0) + '|' + /tre\/t\d\d\.(svg|jpg)$/.test(i.getAttribute('src'))));
+    if (tr.length !== 10 || tr.some(x => x !== '1|true')) E.push(tag + '：舊寶物 10 種 的 圖 不對 ' + tr.join(','));
+    await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(300);
+    const lf = await p.evaluate(() => ({ h: document.querySelectorAll('#hcard .lfo .lid').length, p: document.querySelectorAll('#pcard .lfo .lid').length, life: typeof RPLIFE, snd: typeof RPSND, sk: [].map.call(document.querySelectorAll('#hcard .lid'), x => x.style.getPropertyValue('--sk')).join() }));
+    if (lf.life !== 'object' || lf.snd !== 'object' || lf.h < 2 || lf.p < 1 || !/#/.test(lf.sk)) E.push(tag + '：活起來（眼皮）不對 ' + JSON.stringify(lf));
+    if (process.env.SHOT && tag === '1024✕768') { await p.evaluate(() => document.querySelectorAll('.lfo').forEach(o => o.classList.add('hp'))); await (await p.$('#mfr')).screenshot({ path: path.join(process.env.SHOT, 'lids.png') }); await p.evaluate(() => document.querySelectorAll('.lfo').forEach(o => o.classList.remove('hp'))); }
+    const bk = await p.evaluate(async () => { for (let i = 0; i < 40; i++) { if (document.querySelector('#hcard .lfo.bk')) return 1; await new Promise(r => setTimeout(r, 200)); } return 0; });
+    if (!bk) E.push(tag + '：戰士 8 秒 都 沒有 眨眼');
+    const sb = await p.evaluate(() => { const b = document.getElementById('sndB'), r = b.getBoundingClientRect(), t0 = b.textContent; b.click(); const t1 = b.textContent, v1 = localStorage.getItem('rp_snd'); b.click(); return { t0, t1, v1, t2: b.textContent, h: r.height, v2: localStorage.getItem('rp_snd') }; });
+    if (!/音效 開/.test(sb.t0) || !/音效 關/.test(sb.t1) || sb.v1 !== '0' || sb.v2 !== '1' || sb.h < 48) E.push(tag + '：〔🔊 音效 開／關〕不對 ' + JSON.stringify(sb));
+    await p.click('#pcard'); await p.waitForTimeout(800);
+    const nz = await p.evaluate(() => ({ nz: document.getElementById('pcard').classList.contains('lfnz'), hp: !!document.querySelector('#pcard .lfo.hp'), ht: document.querySelectorAll('.lfh').length }));
+    if (!nz.nz || !nz.hp || nz.ht < 3) E.push(tag + '：點 寵物 沒有 撒嬌（蹭過去、^^、愛心）' + JSON.stringify(nz));
+    await p.waitForTimeout(1800);
+    await p.click('#atkTry'); await p.waitForTimeout(700);
+    const sw = await p.evaluate(() => ({ w: document.getElementById('wcard').classList.contains('lfsw'), h: document.getElementById('hcard').classList.contains('lfatk') }));
+    if (!sw.w || !sw.h) E.push(tag + '：⚔ 出招 戰士 沒有 衝、武器 沒有 揮 ' + JSON.stringify(sw));
+    await p.waitForTimeout(2500);
+    const cbb = await p.evaluate(() => { const b = document.getElementById('cbGo'); if (!b) return null; const r = b.getBoundingClientRect(), m = document.getElementById('mfr').getBoundingClientRect(); return { h: r.height, below: r.top >= m.bottom - 2, t: b.textContent }; });
+    if (!cbb || cbb.h < 56 || !cbb.below || !/全部 合體 出招/.test(cbb.t)) E.push(tag + '：〔🌟 全部 合體 出招！〕不在 大方框 下面 ' + JSON.stringify(cbb));
+    if (process.env.SHOT && tag === '1024✕768') await p.exposeFunction('__SHOTCB', async () => { await p.screenshot({ path: path.join(process.env.SHOT, 'combo.png') }); });
+    await p.click('#cbGo');
+    const cb = await p.evaluate(async () => { const o = { ov: 0 }; for (let i = 0; i < 60; i++) { const x = document.querySelector('.lfcb'); if (x) { o.ov = 1; o.cv = Math.max(o.cv || 0, x.querySelectorAll('canvas').length); if (x.classList.contains('s-end')) { await new Promise(r => setTimeout(r, 1400)); o.n = (document.getElementById('cbn') || {}).textContent; o.pw = RV.power.toLocaleString(); o.h = !!x.querySelector('.cbh img'); o.w = !!x.querySelector('.cbw'); o.p = !!x.querySelector('.cbpet img'); o.ms = i * 200; break; } } await new Promise(r => setTimeout(r, 200)); }
+      if (window.__SHOTCB) await window.__SHOTCB();
+      const ok = document.querySelector('.lfcb .cbok'), r = ok ? ok.getBoundingClientRect() : null; o.ok = !!r && r.bottom <= innerHeight && r.right <= innerWidth && r.height >= 56; if (ok) ok.click(); await new Promise(r => setTimeout(r, 600)); o.gone = !document.querySelector('.lfcb'); return o; });
+    if (!cb.ov || cb.n !== cb.pw || !cb.h || !cb.w || !cb.p || cb.cv < 1 || !cb.ok || !cb.gone || cb.ms > 9000) E.push(tag + '：🌟 全部 合體 不對 ' + JSON.stringify(cb));
+    /* 戴上 新東西 ➜ 自動 演 一次（老師 C17 第 4 題 C） */
+    await p.evaluate(() => { window.__NOCB = 0; }); await p.click('#tabs [data-t="t"]'); await p.waitForTimeout(200);
+    const own1 = await p.evaluate(() => { const x = RV.st.own.t[0]; return x || ''; });
+    if (own1) { await p.click('#shop [data-id="' + own1 + '"]'); await p.waitForTimeout(1500); if (!(await p.evaluate(() => RV.st.eq.t.indexOf(RV.st.own.t[0]) >= 0))) { await p.click('#shop [data-id="' + own1 + '"]'); await p.waitForTimeout(1500); }
+      if (!(await p.$('.lfcb'))) E.push(tag + '：戴上 新寶物 沒有 自動 演〔全部 合體〕'); await p.evaluate(() => { document.querySelectorAll('.lfcb').forEach(o => o.remove()); window.__NOCB = 1; }); }
+    else E.push(tag + '：量測 沒有 買到 寶物（量不到 自動 合體）');
+    /* 🔊 每一種 音效 都 放得出來（沒有 錯誤）：14 種元素 ✕ 8 種招式、每一隻 寵物、登場、進化、金幣、寶箱、合體 */
+    const se = await p.evaluate(() => { const er = []; RPSND.ac(); const E = ['fire', 'ice', 'thunder', 'plasma', 'void', 'time', 'star', 'cosmic', 'gravity', 'wind', 'toxic', 'tech', 'shield', 'light'], F = ['slash', 'beam', 'arrow', 'smash', 'orb', 'nova', 'claw', 'pierce'];
+      E.forEach(function (e, i) { try { RPSND.atk({ e: e, f: F[i % 8], tier: 1 + i % 5, crit: i % 2, ch: 380, hit: 800 }); } catch (x) { er.push(e + ' ' + x.message); } });
+      Object.keys(window.RPPETSND).forEach(function (id) { try { RPSND.pet(id, ''); } catch (x) { er.push(id + ' ' + x.message); } });
+      ['summon', 'evolve', 'coin', 'chest', 'hit'].forEach(function (k) { try { RPSND[k](3); } catch (x) { er.push(k + ' ' + x.message); } }); try { RPSND.rise(1); RPSND.ding(2); } catch (x) { er.push('rise ' + x.message); }
+      return { er: er, n: Object.keys(window.RPPETSND).length, st: RPSND.ac() ? RPSND.ac().state : 'none' }; });
+    if (se.er.length || se.n !== 50) E.push(tag + '：音效 有 錯誤 ' + JSON.stringify(se).slice(0, 200));
+    /* ❓ 三章 秒懂 動畫（老師第 2、4、6、7 點） */
+    await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(200); await p.click('[data-go="qb"]'); await p.waitForTimeout(400);
+    const tu = await p.evaluate(() => ({ ch: document.querySelectorAll('.tch button').length, on: (document.querySelector('.tch button.on') || {}).textContent, sc: document.querySelectorAll('#tst .tsc').length, a: !!document.querySelector('#tst .tsc.on') }));
+    if (tu.ch !== 3 || !/戰力 是 什麼/.test(tu.on || '') || tu.sc !== 4 || !tu.a) E.push(tag + '：〔❓ 戰力〕沒有 打開 第 2 章 ' + JSON.stringify(tu));
+    for (const [k, nsc] of [['a', 5], ['b', 4], ['c', 5]]) { await p.click('[data-tch="' + k + '"]'); await p.waitForTimeout(300);
+      const c1 = await p.evaluate(() => ({ n: document.querySelectorAll('#tst .tsc').length, i: [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')) }));
+      await p.waitForTimeout(5200); const c2 = await p.evaluate(() => [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')));
+      if (process.env.SHOT && tag === '1024✕768') { await p.waitForTimeout(2600); await (await p.$('.tut')).screenshot({ path: path.join(process.env.SHOT, 'ch_' + k + '.png') }); }
+      if (c1.n !== nsc || c1.i !== 0 || c2 !== 1) E.push(tag + '：第 ' + k + ' 章 動畫 不對 ' + JSON.stringify([c1, c2]));
+      const ov = await p.evaluate(() => { const t = document.getElementById('tst'), r = t.getBoundingClientRect(); let o = 0; t.querySelectorAll('.tsc.on .cap, .tsc.on .vis > *').forEach(x => { const q = x.getBoundingClientRect(); if (q.width && (q.left < r.left - 2 || q.right > r.right + 2)) o++; }); return o; });
+      if (ov) E.push(tag + '：第 ' + k + ' 章 有東西 超出 畫面（' + ov + '）'); }
+    /* ⚔ 戰力階級：戰力 數字 下面 寫 下一階 */
+    await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(200);
+    const pw = await p.evaluate(() => ({ t: document.querySelector('.powT').textContent, tb: !!document.querySelector('.powT .tbI'), tier: RV.tier, v: RV.power }));
+    if (pw.tier ? !pw.tb : !/再 [\d,]+ ➜ 青銅/.test(pw.t)) E.push(tag + '：⚔ 戰力 那一格 沒有 階級／下一階 ' + JSON.stringify(pw));
+    n += 14;
     if (bad.length) E.push(tag + '：載不到 ' + bad.slice(0, 3).join('、'));
     n += 52; await ctx.close();
   }

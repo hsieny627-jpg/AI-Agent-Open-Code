@@ -211,6 +211,9 @@ const H_PH = ph => ph === 'q';
     await shot(S[1].p, 'c_send');
     await S[1].p.click('#ew [data-say2]'); await S[1].p.waitForTimeout(300); { const z = await snd(S[1].p); if (!(z.play + z.tts)) E.push('平板 按〔🔊 聽〕沒有 唸'); }
     await ckWords(S[0].p, '學生 結束頁');
+    /* 2026-10-20 第十五次：老師〔✖1.5〕：答對 的 🪙、一場 的 ⭐ 都 ✖1.5（四捨五入） */
+    { const x = await h.evaluate(() => { var a = bonusList(); H.x15 = 1; var b = bonusList(); H.x15 = 0; return { a: a, b: b, okc: H.okc, rw: H.rw }; });
+      x.a.forEach(function (o, j) { if ((x.rw[o.id] || []).length) return; var k = x.okc[o.id] || 0, q = x.b[j]; if (o.c !== k || o.x !== 10 || q.c !== Math.round(k * 1.5) || q.x !== 15) E.push(tag + '：✖1.5 不對 ' + o.id + ' ' + JSON.stringify([o.c, o.x, q.c, q.x, k])); }); n++; }
     await h.click('#give'); await h.waitForTimeout(900);
     if (!/發好了/.test(await h.textContent('#gm'))) E.push(tag + '：〔🎁 發獎勵〕沒有 成功：' + (await h.textContent('#gm')));
     const v1 = G.get({ a: 'rpg', id: '40201' }).v; if (!(v1.st.bx >= 10 && v1.st.bc >= 4)) E.push('發獎勵：「角色」沒有 加上 經驗值、金幣：' + JSON.stringify([v1.st.bc, v1.st.bx]));
@@ -224,6 +227,7 @@ const H_PH = ph => ph === 'q';
     await h.fill('#pw', PW); await h.click('#pwgo'); await h.waitForTimeout(300);
     await h.click('[data-sc="402"]');
     const st = await sizes(h, 19); if (st.sm.length || st.low.length || st.ox > 1) E.push(tag + ' 設定頁：字太小 ' + st.sm.slice(0, 3).join('、') + '／按鈕太矮 ' + st.low.slice(0, 3).join('、') + '／左右捲 ' + st.ox);
+    { const xb = await h.evaluate(() => { const b = document.querySelector('[data-x15="1"]'), c = document.querySelector('[data-x15="0"]'); return b && c ? Math.min(b.getBoundingClientRect().height, c.getBoundingClientRect().height) : 0; }); if (xb < 48) E.push(tag + '：開場 沒有〔⚡ 金幣、經驗值 ✖1.5 開／關〕（' + xb + '）'); n++; }
     await h.click('[data-sk="boss"]'); await h.click('[data-ch="0"]'); await h.click('[data-sa="0"]'); await h.click('[data-sb="4sg1"]'); await h.click('[data-sb="4sg10"]'); await h.click('[data-sn="10"]'); await h.click('#mk'); await h.waitForTimeout(600);
     const S = await students(br, G, [['40201', [1024, 768]], ['40202', [820, 1180]], ['40203', [1024, 768]]]);
     await h.waitForTimeout(2500);

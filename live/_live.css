@@ -493,3 +493,6 @@ body.host .hbar{padding-right:calc(clamp(84px,9vh,112px) + 34px)}
 .hpd{position:absolute;right:-10px;bottom:-6px;font-style:normal;font-size:18px;background:#0B1830;border:2px solid #7FD4FF;border-radius:999px;padding:0 6px;color:#BFF5FF;white-space:nowrap}
 .rps{font-size:clamp(22px,2.8vh,30px);color:#BFF5FF;text-align:center;margin:4px 0}
 .rbx{position:relative}
+/* ⚡ 金幣、經驗值 ✖1.5（2026-10-20 第十五次） */
+.x15b{display:inline-block;padding:0 .5em;border-radius:999px;background:linear-gradient(180deg,#FFD54A,#F2A33D);color:#2A1600;font-weight:700;box-shadow:0 0 12px rgba(255,213,74,.7)}
+.x15r{color:#FFE9A8}

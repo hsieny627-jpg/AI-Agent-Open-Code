@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="400" height="400">
+<defs>
+<radialGradient id="bg" cx="50%" cy="45%" r="70%"><stop offset="0" stop-color="#5AD8FF" stop-opacity=".55"/><stop offset=".55" stop-color="#141B33" stop-opacity="1"/><stop offset="1" stop-color="#05070E"/></radialGradient>
+<linearGradient id="gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF6C8"/><stop offset=".35" stop-color="#FFD54A"/><stop offset=".65" stop-color="#C98A1A"/><stop offset="1" stop-color="#FFE58A"/></linearGradient>
+<filter id="gl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="gl2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7"/></filter>
+
+</defs>
+<rect x="2" y="2" width="196" height="196" rx="26" fill="url(#bg)"/>
+<rect x="6" y="6" width="188" height="188" rx="22" fill="none" stroke="url(#gd)" stroke-width="2.2" opacity=".85"/>
+<path d="M40 46h120a18 18 0 0 1 18 18v62a18 18 0 0 1-18 18H96l-26 22 4-22H40a18 18 0 0 1-18-18V64a18 18 0 0 1 18-18z" fill="#F7FAFF" stroke="#BFE6FF" stroke-width="3" filter="url(#gl)"/>
+<circle cx="100" cy="95" r="36" fill="#FFCC33" stroke="#D9930A" stroke-width="3"/>
+<path d="M70 86h60l-4 14q-8 8-20 0l-3-8h-6l-3 8q-12 8-20 0z" fill="#121212"/><path d="M76 90l8 0M108 90l8 0" stroke="#fff" stroke-width="2.5" opacity=".7"/>
+<path d="M84 112q16 12 32 0" stroke="#7A3A00" stroke-width="4" fill="none" stroke-linecap="round"/>
+<path d="M28 22L30.25 29.75L38 32L30.25 34.25L28 42L25.75 34.25L18 32L25.75 29.75Z" fill="#FFF8D8" filter="url(#gl)" opacity=".9"/><path d="M172 32L173.8 38.2L180 40L173.8 41.8L172 48L170.2 41.8L164 40L170.2 38.2Z" fill="#FFF8D8" filter="url(#gl)" opacity=".9"/><path d="M166 158L168.25 165.75L176 168L168.25 170.25L166 178L163.75 170.25L156 168L163.75 165.75Z" fill="#FFF8D8" filter="url(#gl)" opacity=".9"/><path d="M34 155L35.575 160.425L41 162L35.575 163.575L34 169L32.425 163.575L27 162L32.425 160.425Z" fill="#FFF8D8" filter="url(#gl)" opacity=".9"/>
+</svg>

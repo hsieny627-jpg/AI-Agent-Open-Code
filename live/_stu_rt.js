@@ -43,7 +43,7 @@ function intro(){if(!$('#sintro').hidden)return;scr('sintro');stepS(0);now('');
     '<button id="sigo" class="big go itgo">✅ 我 懂了，開始</button>';
   var b=$('#sigo');b.disabled=true;setTimeout(function(){b.disabled=false;b.classList.add('rdy')},2400)}
 /* 我 在 這裡（大螢幕、老師看板 的 座號 格子 會 亮）：每 20 秒 寫 一次 */
-function putMe(){if(!S.id)return;var st=S.me&&S.me.st&&S.me.st.eq||{};LDB.set(R('p/'+S.id),{h:st.h||'',pt:st.p||'',w:st.w||'',pw:S.me?S.me.power||0:0,hit:S.me?S.me.hit||0:0,ph:S.me?S.me.petHit||0:0,at:Date.now()})}   /* hit ＝ 一擊、ph ＝ 寵物 跟著 打（2026-10-20 第十四次） */
+function putMe(){if(!S.id)return;var st=S.me&&S.me.st&&S.me.st.eq||{};LDB.set(R('p/'+S.id),{h:st.h||'',pt:st.p||'',w:st.w||'',pw:S.me?S.me.power||0:0,hit:S.me?S.me.hit||0:0,ph:S.me?S.me.petHit||0:0,tr:S.me?S.me.tmax||0:0,at:Date.now()})}   /* tr ＝ ⚔ 戰力階級（2026-10-20 第十五次） */   /* hit ＝ 一擊、ph ＝ 寵物 跟著 打（2026-10-20 第十四次） */
 function heroImg(cls){var st=S.me&&S.me.st&&S.me.st.eq||{};return st.h?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,st.h)+'" alt="我的戰士">':'<span class="noh '+(cls||'')+'">👤</span>'}
 function petImg(cls){var st=S.me&&S.me.st&&S.me.st.eq||{};return st.p?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,st.p)+'" alt="我的寵物">':'<span class="noh '+(cls||'')+'">🐾</span>'}
 /* ── 等人：上面 一行 ＋ 小遊戲 ── */
@@ -137,6 +137,8 @@ function endS(m){if(S.ended===m.made)return;S.ended=m.made;clearTimeout(S.tm);$(
       (x.you?'<div class="myou">❌ 你選的：<span>'+LV.diffHTML(x.you,x.ans)+'</span></div>':'')+LV.glHTML({ag:x.ag,az:x.az,ae:x.ae,ans:x.ans,h:x.h})+'</div>'}).join(''):'<h2>🎉 這一場 全部 答對！</h2>')+
     ((sum.wq||[]).length?'<h2>❌ 全班 最多人 錯 的 題目</h2>'+sum.wq.map(function(x,j){return '<div class="wr go"><div class="wrh"><b>'+['🥇','🥈','🥉'][j]+' 第 '+(x.qi+1)+' 題</b><span class="note">全班 答對 '+x.r+'%</span><button class="ghost" data-say3="'+j+'">🔊 聽</button></div>'+LV.glHTML({ag:x.ag,az:x.az,ae:x.ae,ans:x.ans,h:x.h})+'</div>'}).join(''):'')+
     (S.rw.length?'<div class="note">🎁 你 抽到：'+S.rw.map(function(k){var x=LV.RW.filter(function(y){return y.k===k})[0];return x?x.ic+' '+x.nm:k}).join('、')+'</div>':'')+
+    /* 2026-10-20 第十五次（老師 C17 第 6 題 C＋1.5 倍）：答對 1 題 🪙＋1、一場 ⭐＋10；老師 開〔✖1.5〕＝ 都 ✖1.5（四捨五入） */
+    '<div class="note big2 x15r">答對 '+ok+' 題 ➜ 🪙 '+(m.x15?Math.round(ok*1.5)+'（'+ok+' ✖1.5）':ok)+'、⭐ '+(m.x15?'15（10 ✖1.5）':'10')+(m.x15?'　<b class="x15b">⚡ ✖1.5</b>':'')+'</div>'+
     '<div class="note big2">'+(m.given?'✅ 老師 發好 獎勵 了（⭐ 經驗值、🪙 金幣）':'⏳ 等 老師 發 獎勵（⭐ 經驗值、🪙 金幣）')+'</div>';
   $('#ew').innerHTML=h;now('🏁 完成！看 你的 錯題','ok');
   setTimeout(function(){var g=$('#ew .rg');if(g)g.classList.add('go');$$('#ew .qch span').forEach(function(x){x.classList.add('go')})},60)}
