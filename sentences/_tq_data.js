@@ -118,7 +118,7 @@ module.exports = {
     ],
     "h": "He is ➜ He’s：is 的 i 被 ’ 換掉。",
     "q": "He’s 的 ’ 藏起來的是哪一個字母？",
-    "sp": ""
+    "sp": "He’s"
    }
   ],
   "1-1b": [
@@ -178,7 +178,7 @@ module.exports = {
     ],
     "h": "Who 唸 /huː/，W 不發音。",
     "q": "Who 的哪一個字母<b class=\"em\">不發音</b>？",
-    "sp": ""
+    "sp": "Who"
    }
   ],
   "1-1a": [
@@ -298,7 +298,7 @@ module.exports = {
     ],
     "h": "英文問句，問的字（Who）放最前面。",
     "q": "中文「誰」在句子最後，英文 Who 放在哪裡？",
-    "sp": ""
+    "sp": "Who’s he?"
    }
   ],
   "2b": [
@@ -476,7 +476,7 @@ module.exports = {
     ],
     "h": "Who is ➜ Who’s：is 的 i 被 ’ 換掉。",
     "q": "Who’s 的 ’ 藏起來的是哪一個字母？",
-    "sp": ""
+    "sp": "Who’s"
    }
   ]
  },
@@ -597,7 +597,7 @@ module.exports = {
     ],
     "h": "is not ➜ isn’t：not 的 o 被 ’ 換掉。",
     "q": "isn’t 的 ’ 藏起來的是哪一個字母？",
-    "sp": ""
+    "sp": "isn’t"
    }
   ],
   "1-1b": [
@@ -775,7 +775,7 @@ module.exports = {
     ],
     "h": "問句：Is 跑到最前面。",
     "q": "問「他是醫生嗎？」，Is 要放在哪裡？",
-    "sp": ""
+    "sp": "Is he a doctor?"
    }
   ],
   "1-3": [

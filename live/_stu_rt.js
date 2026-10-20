@@ -43,7 +43,7 @@ function intro(){if(!$('#sintro').hidden)return;scr('sintro');stepS(0);now('');
     '<button id="sigo" class="big go itgo">✅ 我 懂了，開始</button>';
   var b=$('#sigo');b.disabled=true;setTimeout(function(){b.disabled=false;b.classList.add('rdy')},2400)}
 /* 我 在 這裡（大螢幕、老師看板 的 座號 格子 會 亮）：每 20 秒 寫 一次 */
-function putMe(){if(!S.id)return;var st=S.me&&S.me.st&&S.me.st.eq||{};LDB.set(R('p/'+S.id),{h:st.h||'',pt:st.p||'',pw:S.me?S.me.power||0:0,at:Date.now()})}
+function putMe(){if(!S.id)return;var st=S.me&&S.me.st&&S.me.st.eq||{};LDB.set(R('p/'+S.id),{h:st.h||'',pt:st.p||'',w:st.w||'',pw:S.me?S.me.power||0:0,hit:S.me?S.me.hit||0:0,ph:S.me?S.me.petHit||0:0,at:Date.now()})}   /* hit ＝ 一擊、ph ＝ 寵物 跟著 打（2026-10-20 第十四次） */
 function heroImg(cls){var st=S.me&&S.me.st&&S.me.st.eq||{};return st.h?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,st.h)+'" alt="我的戰士">':'<span class="noh '+(cls||'')+'">👤</span>'}
 function petImg(cls){var st=S.me&&S.me.st&&S.me.st.eq||{};return st.p?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,st.p)+'" alt="我的寵物">':'<span class="noh '+(cls||'')+'">🐾</span>'}
 /* ── 等人：上面 一行 ＋ 小遊戲 ── */
@@ -113,9 +113,12 @@ function rev(m){clearTimeout(S.tm);var r=m.r||{},id=S.id,ok=!!(r.ok&&r.ok[id]),s
     '<div class="mok">✅ 正確 答案<button class="ghost say1" data-say1="1">🔊 聽</button></div>'+LV.glHTML({ag:V.ag,az:V.az,ae:V.ae,ans:okTxt,h:V.h},true)+'</div>';
   o.innerHTML='<div class="rbx"><div class="rtop"><span class="rbig">'+(ok?'✔':S.ans?'✖':'⏰')+'</span><span class="rt">'+(ok?'答對！':S.ans?'答錯了':'沒有 答')+'</span>'+(ok?'<span class="rsc">＋'+sc.toLocaleString()+'</span>':'')+'</div>'+
     (ok&&st>1?'<div class="rst">🔥 連對 '+st+' 題（連對 加分）</div>':'')+
-    (ok&&m.game==='boss'?'<div class="rst">⚔ 你的 戰士 出招 ➜ 魔王 <b>－'+(10+Math.min(20,Math.floor(((S.me&&S.me.power)||0)/100)))+'</b></div>':'')+ana+
+    (ok&&m.game==='boss'?'<div class="rst">⚔ 你的 戰士 出招 ➜ 魔王 <b>－'+((S.me&&S.me.hit)||(10+Math.min(20,Math.floor(((S.me&&S.me.power)||0)/100))))+'</b>'+((S.me&&S.me.petHit&&S.me.st.eq.p)?'　🐾 ＋'+S.me.petHit:'')+'</div>':'')+
+    (!ok&&r.ps&&r.ps[id]?'<div class="rps">🐾 寵物 護盾：連對 🔥 沒有 斷！（一場 一次）</div>':'')+ana+
     '<div class="rrk">🏆 總分 '+tot.toLocaleString()+'　｜　第 <b>'+RK.rk+'</b> 名'+(RK.rk>1?'<small>再 '+RK.gap.toLocaleString()+' 分 就 追上 第 '+(RK.rk-1)+' 名！</small>':'<small>你 是 第一名！保持 下去！</small>')+'</div></div>';
   $('#sqr').innerHTML='';
+  /* 2026-10-20 第十四次：答對 打魔王 ＝ 平板 上 演 你的 武器 特效（照 武器、寵物、5 碼，每一次 不一樣；沒有 聲音） */
+  if(ok&&m.game==='boss'&&typeof RPFX!=='undefined'&&S.me&&S.me.st&&S.me.st.eq.h){var bx=o.querySelector('.rbx');if(bx)setTimeout(function(){var R0=bx.getBoundingClientRect();RPFX.attack(bx,{from:{x:R0.width*.15,y:R0.height*.5},to:{x:R0.width*.85,y:R0.height*.35},w:S.me.st.eq.w,id:S.id,p:S.me.st.eq.p,quick:true,noNum:true})},150)}
   now(ok?'✔ 答對了！👀 看 大螢幕':'📌 看 正確 答案','ok');
   var okc=(r.okc&&r.okc[id])||0;S.okc=okc;if(m.game!=='classic'&&(Math.floor(okc/5)>S.draws))S.drawLater=1}
 /* 排行榜：我 第幾名 */

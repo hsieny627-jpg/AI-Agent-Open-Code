@@ -45,6 +45,11 @@ function rpRow(id) { var s = sheet(RPG), n = s.getLastRow(); if (n < 2) return {
   var v = s.getRange(2, 1, n - 1, 2).getValues();
   for (var i = 0; i < v.length; i++) if (String(v[i][0]).replace(/\D/g, '') === id) { var st = {}; try { st = JSON.parse(String(v[i][1] || '{}')); } catch (x) { st = {}; } return { s: s, r: i + 2, st: SC.rpClean(st) }; }
   return { s: s, r: 0, st: SC.rpClean({}) }; }
+/* 🏷 限量（2026-10-20 第十四次，老師：全部學生一共 5 個）：數「角色」每一列買了沒 ➜ {編號: 已經換走幾個} */
+function rpSold() { var s = sheet(RPG), n = s.getLastRow(), o = {}; for (var k in SC.RPLIM) o[k] = 0; if (n < 2) return o;
+  s.getRange(2, 2, n - 1, 1).getValues().forEach(function (v) { var st = {}; try { st = JSON.parse(String(v[0] || '{}')); } catch (x) { } var a = (st.own && st.own.s) || [];
+    for (var k in o) if (a.indexOf(k) >= 0) o[k]++; }); return o; }
+function rpStock() { var z = rpSold(), o = {}; for (var k in SC.RPLIM) o[k] = Math.max(0, SC.RPLIM[k] - (z[k] || 0)); return o; }
 function rpSave(o, id, st) { var row = [id, JSON.stringify(st), new Date()]; if (o.r) o.s.getRange(o.r, 1, 1, 3).setValues([row]); else o.s.appendRow(row); }
 function mine(id) { return records().filter(function (r) { return r.id === id; }); }
 function records() { return rows().map(SC.fromRow).filter(function (r) { return r.id && !isNaN(r.t); }); }
@@ -100,7 +105,7 @@ function doGet(e) {
       var rs = records(); return out({ ok: true, now: Date.now(), locks: SC.lkFor(locks(), c0.id, lockt(), Date.now()), tasks: SC.tkFor(tasks(), c0.id).map(function (t) { t.done = SC.tkDone(rs, t, c0.id); return t; }) }); }
     /* 〔🔒 開關〕沒登入的學生：這個年級有沒有任何一班鎖住（只給代號，不給哪幾班，D6 第 13 題） */
     /* 🦸 我的英雄：等級、經驗值、金幣、買了什麼（只有自己的；沒有姓名） */
-    if (q.a === 'rpg') { var c1 = SC.checkId(q.id); if (c1.err) return out({ err: c1.err }); return out({ ok: true, now: Date.now(), v: SC.rpView(mine(c1.id), rpRow(c1.id).st) }); }
+    if (q.a === 'rpg') { var c1 = SC.checkId(q.id); if (c1.err) return out({ err: c1.err }); return out({ ok: true, now: Date.now(), v: SC.rpView(mine(c1.id), rpRow(c1.id).st), stock: rpStock() }); }
     if (q.a === 'locks') return out({ ok: true, any: SC.lkAny(locks(), +q.g === 4 ? 4 : 3, lockt(), Date.now()) });
     if (q.a === 'view') return out(SC.view(records(), { id: q.id, set: q.set, gt: q.gt === '1' }, Date.now(), boardsOn(), clsSizes()));
     /* 學生端不給姓名（使用者 2026-10-09 Q4：不用密碼就查得到姓名太危險）；舊的平板還會問，一律回「沒有名單」 */
@@ -124,19 +129,22 @@ function doPost(e) {
       } finally { lock.releaseLock(); }
       if (R.m === 'v' || R.m === 'l') return out({ saved: true, dup: dup });   /* 👀 看字卡（2026-10-15 D 第 8 件）、🎧 聽完字卡（2026-10-16 C4 第 6 題）：只存，不用算排行 */
       var all5 = records(), v = SC.view(all5, { id: R.id, set: R.set, u: R.u, gt: R.m === 'g' }, now, boardsOn(), clsSizes()); v.saved = true; v.dup = dup;
-      try { v.rpg = SC.rpGain(all5.filter(function (r) { return r.id === R.id; }), rpRow(R.id).st, R.u); } catch (x) { }   /* 🦸 這一次拿到多少經驗值、金幣（平板最後一幕） */
+      try { var mineR = all5.filter(function (r) { return r.id === R.id; }), RR = rpRow(R.id), FF = dup ? { st: RR.st, f: null } : SC.rpFight(mineR, RR.st, R);
+        if (FF.f) { var lk7 = LockService.getScriptLock(); lk7.waitLock(20000); try { RR = rpRow(R.id); FF = SC.rpFight(mineR, RR.st, R); if (FF.f) rpSave(RR, R.id, FF.st); } finally { lk7.releaseLock(); } }
+        v.rpg = SC.rpGain(mineR, FF.st, R.u); v.rpg.f = FF.f; } catch (x) { }   /* 🦸 這一次拿到多少經驗值、金幣（平板最後一幕）＋ 👾 打怪（2026-10-20 第十四次） */
       return out(v);
     }
     /* 🦸 買、換裝（2026-10-17 第八次）：伺服器算金幣、等級，平板改不了 */
     if (o.a === 'rpg') {
       var c2 = SC.checkId(o.id); if (c2.err) return out({ err: c2.err });
       var lk5 = LockService.getScriptLock(); lk5.waitLock(20000);
-      try { var R5 = rpRow(c2.id), rs5 = mine(c2.id), r5 = o.op === 'buy' ? SC.rpBuy(rs5, R5.st, o.item, Date.now()) : o.op === 'eq' ? SC.rpEquip(R5.st, o.item, Date.now()) : { err: 'op' };
-        if (r5.err) return out({ err: r5.err, need: r5.need, v: SC.rpView(rs5, R5.st) });
-        rpSave(R5, c2.id, r5.st); return out({ ok: true, paid: r5.paid, free: r5.free, v: SC.rpView(rs5, r5.st) });
+      try { var R5 = rpRow(c2.id), rs5 = mine(c2.id), it5 = String(o.item || ''), sold5 = SC.RPLIM[it5] ? (rpSold()[it5] || 0) : 0;
+        var r5 = o.op === 'buy' ? SC.rpBuy(rs5, R5.st, it5, Date.now(), sold5) : o.op === 'eq' ? SC.rpEquip(R5.st, it5, Date.now()) : o.op === 'open' ? SC.rpOpen(R5.st, Math.random(), Math.random()) : { err: 'op' };
+        if (r5.err) return out({ err: r5.err, need: r5.need, v: SC.rpView(rs5, R5.st), stock: rpStock() });
+        rpSave(R5, c2.id, r5.st); return out({ ok: true, paid: r5.paid, free: r5.free, r: r5.r, v: SC.rpView(rs5, r5.st), stock: rpStock() });
       } finally { lk5.releaseLock(); }
     }
-    if (o.a === 'teacher' || o.a === 'void' || o.a === 'set' || o.a === 'task' || o.a === 'lock' || o.a === 'lockt' || o.a === 'delp' || o.a === 'pw' || o.a === 'rpgb') {
+    if (o.a === 'teacher' || o.a === 'void' || o.a === 'set' || o.a === 'task' || o.a === 'lock' || o.a === 'lockt' || o.a === 'delp' || o.a === 'pw' || o.a === 'rpgb' || o.a === 'rpgw') {
       if (!pwOk(o.pw)) return out({ err: 'pw' });
       /* ⚡ 現場任務 大螢幕：只檢查老師密碼（2026-10-17 第八次） */
       if (o.a === 'pw') return out({ ok: true });
@@ -150,6 +158,14 @@ function doPost(e) {
             var L6 = SC.lvRec(c6.id, o.room, o.t0, now6); if (L6 && !us6[L6.u]) { s6.appendRow(SC.toRow(L6)); us6[L6.u] = 1; } });
         } finally { lk6.releaseLock(); }
         return out({ ok: true, n: nb });
+      }
+      /* 🎁 老師的全班獎勵（2026-10-20 第十四次）：① 全班目標（全班每一個人這週都練 3 天）、③ 冠軍寶箱（全年級最認真練習前 5 名）。
+         list ＝ [{id, c, x, chest, k}]；k ＝ 編號（同一個人同一個編號只發一次）；不寫練習紀錄 */
+      if (o.a === 'rpgw') {
+        var lk8 = LockService.getScriptLock(), nw = 0, sk = 0; lk8.waitLock(20000);
+        try { (o.list || []).slice(0, 200).forEach(function (b) { var c8 = SC.checkId(b && b.id); if (c8.err || !b.k) return; var R8 = rpRow(c8.id); if (R8.st.bk.indexOf(String(b.k).slice(0, 40)) >= 0) { sk++; return; }
+            var n8 = SC.rpBonus(R8.st, b); rpSave(R8, c8.id, n8); nw++; }); } finally { lk8.releaseLock(); }
+        return out({ ok: true, n: nw, skip: sk });
       }
       if (o.a === 'void') {
         var s2 = sheet(SHEET), m = s2.getLastRow(), done = false;

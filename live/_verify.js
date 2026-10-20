@@ -12,7 +12,7 @@ const fs = require('fs'), path = require('path');
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 const { make } = require('../score/_gas_stub.js');
 const ROOT = path.join(__dirname, '..'), URL0 = 'https://script.test/exec', PW = 'pw-verify';
-const E = []; let n = 0, HTTP = '', REQ = 0;
+const E = []; let n = 0, HTTP = '', REQ = 0, BULB = 0;
 const SHOT = process.env.SHOT, shot = (p, f) => SHOT ? p.screenshot({ path: path.join(SHOT, f + '.png') }) : null;
 /* ── 假的 Firebase（只有這一支用；只有 GET／PUT／PATCH〔可以 寫 好幾個 路徑〕／DELETE，跟 真的 一樣）── */
 let DB = {};
@@ -183,8 +183,9 @@ const H_PH = ph => ph === 'q';
       const hs = await snd(h); if (rv.ae && !(hs.play + hs.tts >= 1)) E.push('第 ' + (qi + 1) + ' 題：大螢幕 沒有 自動 唸 正確 答案');
       const wrong = S.filter(s => okSet.indexOf(s.id) < 0)[0], right = S.filter(s => okSet.indexOf(s.id) >= 0)[0];
       const r0 = await right.p.evaluate(() => ({ c: document.getElementById('res').className, t: document.getElementById('res').textContent }));
-      const r2 = await wrong.p.evaluate(() => ({ c: document.getElementById('res').className, gl: document.querySelectorAll('#res .miss .gls .gw').length, you: !!document.querySelector('#res .myou'), say: !!document.querySelector('#res [data-say1]'), fit: (() => { const b = document.querySelector('#res .rbx').getBoundingClientRect(); return b.bottom <= innerHeight + 1 && b.right <= innerWidth + 1; })() }));
+      const r2 = await wrong.p.evaluate(() => ({ c: document.getElementById('res').className, gl: document.querySelectorAll('#res .miss .gls .gw').length, you: !!document.querySelector('#res .myou'), say: !!document.querySelector('#res [data-say1]'), bulb: !!document.querySelector('#res .glh .glb'), fit: (() => { const b = document.querySelector('#res .rbx').getBoundingClientRect(); return b.bottom <= innerHeight + 1 && b.right <= innerWidth + 1; })() }));
       if (!/on ok/.test(r0.c) || !/第 \d+ 名/.test(r0.t) || !/＋/.test(r0.t)) E.push('第 ' + (qi + 1) + ' 題：答對 的 平板 沒有 變綠＋分數＋名次 ' + r0.c);
+      if (r2.bulb) BULB = 1;
       if (!/on no/.test(r2.c) || !r2.gl || !r2.you || !r2.say || !r2.fit) E.push('第 ' + (qi + 1) + ' 題：答錯 的 平板 錯題 分析 不對 ' + JSON.stringify(r2) + '（' + wrong.id + '）');
       if (qi === 0) { await shot(right.p, 'c_res_ok'); await shot(wrong.p, 'c_res_no'); await shot(h, 'c_rev'); }
       for (const s of S) { const z = await snd(s.p); if (z.play || z.tts || z.ac) E.push(s.id + '：平板 自己 出聲 了（' + JSON.stringify(z) + '）'); }
@@ -218,6 +219,7 @@ const H_PH = ph => ph === 'q';
   /* ════ 第二場：⚔️ 討伐魔王 10 題（干擾、禮物盒、✂ 功能）、大螢幕 1024 ════ */
   { DB = {}; const G = make({ TEACHER_PW: PW }), HV = [1024, 768], tag = '魔王 1024';
     G.post({ a: 'rpg', id: '40201', op: 'buy', item: 'b01' }); G.post({ a: 'rpg', id: '40201', op: 'buy', item: 'p03' });
+    G.post({ a: 'rpg', id: '40203', op: 'buy', item: 'b02' }); G.post({ a: 'rpg', id: '40203', op: 'buy', item: 'p06' });   /* 2026-10-20 第十四次：🐾 寵物護盾（一場 一次） */
     const { hc, h } = await hostIn(br, G, HV, tag);
     await h.fill('#pw', PW); await h.click('#pwgo'); await h.waitForTimeout(300);
     await h.click('[data-sc="402"]');
@@ -248,7 +250,11 @@ const H_PH = ph => ph === 'q';
       await h.waitForFunction(() => H.phase === 'rev', null, { timeout: 6000 }).catch(() => E.push(tag + ' 第 ' + (qi + 1) + ' 題 沒有 公布')); await h.waitForTimeout(1600);
       const r0 = await S[0].p.textContent('#res'), r1 = await S[1].p.textContent('#res');
       if (!/答對/.test(r0)) E.push('魔王 第 ' + (qi + 1) + ' 題：答對的 沒有 ✅（' + r0.slice(0, 20) + '）');
-      if (qi === 0) { const d0 = await S[0].p.evaluate(() => 10 + Math.min(20, Math.floor(((S.me && S.me.power) || 0) / 100)));
+      if (qi === 3 || qi === 6) { const ps = await h.evaluate(() => ({ st: H.st['40203'], u: (H.psU || {})['40203'] })), t3 = await S[2].p.textContent('#res');
+        if (qi === 3 && (ps.st !== 2 || ps.u !== 1 || !/寵物 護盾/.test(t3))) E.push(tag + '：🐾 寵物護盾 第一次 答錯 沒有 保住 連對（' + JSON.stringify(ps) + '）');
+        if (qi === 6 && (ps.st !== 0 || /寵物 護盾/.test(t3))) E.push(tag + '：🐾 寵物護盾 一場 用了 第二次（' + JSON.stringify(ps) + '）'); }
+      if (qi === 0) { const d0 = await S[0].p.evaluate(() => (S.me && S.me.hit) || 10 + Math.min(20, Math.floor(((S.me && S.me.power) || 0) / 100)));
+        if (!(await h.$('#gv .hits .hpd'))) E.push(tag + '：答對 的 戰士 旁邊 沒有 🐾 寵物 一起 打');
         if (r0.indexOf('出招 ➜ 魔王 －' + d0) < 0 || /出招/.test(r1)) E.push('魔王 第 1 題：答對 沒有寫「你的 戰士 出招 ➜ 魔王 －' + d0 + '」');
         const hp1 = await h.evaluate(() => H.gs.hp); if (!(hp1 < hp0)) E.push(tag + '：答對了 魔王 血條 沒有 變少');
         if (!(await h.$('#gv .hits .hit1'))) E.push(tag + '：答對 的 戰士 沒有 飛過去 出招');
@@ -307,6 +313,7 @@ const H_PH = ph => ph === 'q';
     if (!/成功/.test(await p.textContent('#tm'))) E.push('設定頁：測試 沒有 成功：' + (await p.textContent('#tm')));
     await c.close(); n += 12; }
   await br.close(); srv.close();
+  if (!BULB) E.push('答錯 的 平板 錯題 分析 沒有 💡（2026-10-20 第十四次 加回來）');
   E.forEach(x => console.log('✗ ' + x));
   console.log('現場任務 量測 ' + (n + 1) + ' 項，' + E.length + ' 個失敗');
   process.exit(E.length ? 1 : 0);

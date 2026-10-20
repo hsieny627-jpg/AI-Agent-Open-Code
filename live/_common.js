@@ -103,7 +103,9 @@ var LV={
     if(ag.length)h='<div class="gls ani'+(big?' big':'')+'">'+ag.map(function(x,i){var p=/^[?.!,]$/.test(x[0]);return '<span class="gw'+(p?' gp':'')+'" data-gi="'+i+'" style="--i:'+i+'"><b>'+LV.esc(x[0])+'</b><i>'+LV.esc(x[1]||'')+'</i></span>'}).join('')+'</div>';
     else h='<div class="gls'+(big?' big':'')+'"><span class="gw"><b>'+LV.esc(r.ans||'')+'</b></span></div>';
     var z=r.az&&LV.norm(r.az)!==LV.norm(r.ae)&&!(ag.length===1&&ag[0][1]===r.az)?'<div class="glz">📖 整句：'+LV.esc(r.az)+'</div>':'';
-    return h+z},
+    /* 2026-10-20 第十四次 老師：💡 加回來，但 要 秒懂、精簡 ➜ 只留 第一句（最多 26 個字），燈泡 亮 一下 才 出現 */
+    var w=String(r.h||'').replace(/<[^>]+>/g,'').split(/[。！\n]/)[0].trim();if(w.length>26)w=w.slice(0,25)+'…';
+    return h+z+(w?'<div class="glh ani"><i class="glb">💡</i>'+LV.esc(w)+'</div>':'')},
   /* 你選的 vs 正確 答案：逐字 比對（最長 共同 子序列），沒 對上 的 字 紅框（跟 遊戲 答錯頁 mDiff 一樣 的 作法） */
   diffHTML:function(you,ok){var A=String(you||'').split(/\s+/).filter(Boolean),B=String(ok||'').split(/\s+/).filter(Boolean),n=A.length,m=B.length,D=[],i,j;
     for(i=0;i<=n;i++){D.push([]);for(j=0;j<=m;j++)D[i].push(0)}

@@ -169,6 +169,12 @@ body.scq .url{display:none}
 .shst{display:flex;flex-direction:column;gap:10px;min-width:min(100%,340px);font-size:clamp(24px,3.4vh,34px);text-align:left}
 .shx b,.shc b{font-size:1.5em;color:#FFE07A}.shc small{font-size:.7em;color:#CFE3F5;margin-left:6px}
 .shbar{height:26px;border-radius:999px;background:#1B2633;border:3px solid #34404C;overflow:hidden}.shbar i{display:block;height:100%;background:linear-gradient(90deg,#3B7BFF,#7FD4FF);transition:width 1.4s ease-out}
+.shar{position:relative;width:min(640px,60vw);min-width:min(100%,340px);min-height:clamp(210px,34vh,330px);display:flex;align-items:center;border-radius:22px;background:radial-gradient(ellipse at 70% 60%,rgba(120,40,200,.35),transparent 60%),linear-gradient(160deg,#101A2E,#060A14);border:2px solid rgba(255,213,74,.4);box-shadow:inset 0 0 40px rgba(0,0,0,.6)}
+.shar .shimg{width:clamp(120px,21vh,200px);margin-left:5%}
+.shar .fxp{position:absolute;left:calc(5% + clamp(120px,21vh,200px) - 26px);bottom:5%;width:clamp(56px,9.5vh,92px);border-radius:12px;border:3px solid #7FD4FF;box-shadow:0 0 14px rgba(127,212,255,.7);animation:shPet 2.2s ease-in-out infinite;z-index:3}
+@keyframes shPet{50%{transform:translateY(-8px) rotate(-3deg)}}
+.shar .fxmon{width:min(34%,200px)}
+.shfl{width:100%;text-align:center;font-size:clamp(20px,2.8vh,28px);color:#FFE9A8}.shfl b{color:#fff;text-shadow:0 0 10px #FF8A3D}
 .shlv b{color:#FFE07A}.shgo{cursor:pointer;display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:6px 22px;border-radius:16px;background:#3A2E08;border:3px solid #FFD54A;color:#FFE9A8;text-decoration:none;font-size:.85em;align-self:flex-start}
 .scbye{display:flex;align-items:center;justify-content:center;gap:12px 18px;flex-wrap:wrap;background:#1F1A08;border:3px solid #FFD54A;border-radius:18px;padding:6px 16px;
   font-size:clamp(20px,3vh,28px);font-weight:700;color:#fff}
@@ -241,7 +247,7 @@ body.scq .url{display:none}
  .sctabs button,.scscope button{min-height:44px;padding:5px 14px}}
 `;
 
-const JS = require('fs').readFileSync(require('path').join(__dirname, '_honor_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_wear_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report_rt.js'), 'utf8') + `
+const JS = require('fs').readFileSync(require('path').join(__dirname, '_honor_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_wear_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_fx_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report_rt.js'), 'utf8') + `
 /* ══════════ 成績紀錄（2026-10-07 對話 C；2026-10-08 對話 D：遊戲、Review 1 也記）══════════
    SCG ＝ 這一頁是幾年級（0 ＝ 三、四年級共用的 Review 1 遊戲：年級看登入的 5 碼）
    SCH ＝ 這一頁怎麼畫（下面那一段由 _tq.js／遊戲引擎／Review 1 複習各自給）：
@@ -495,7 +501,7 @@ function scScene(){
     if(!last)SCAUTO=setTimeout(scNext,9000);
   }else if(nm==='hero'){
     if(!(E.res&&E.res.rpg)){L.splice(k,1);E.k=Math.min(k,L.length-1);scScene();return}
-    h=scHeroHTML(E.res.rpg)+(last?SCH.btns(E):nav());if(!last)SCAUTO=setTimeout(scNext,5200);
+    h=scHeroHTML(E.res.rpg)+(last?SCH.btns(E):nav());if(!E.hgo){E.hgo=1;setTimeout(function(){if(SCEND===E&&document.querySelector('.schero'))scHeroGo(E.res.rpg)},120)}if(!last)SCAUTO=setTimeout(scNext,5200+scHeroMs(E.res.rpg));
   }else if(nm==='honor'){
     h='<div class="hon" id="scHon"></div>'+(last?SCH.btns(E):nav());
   }else if(nm==='gtop'){
@@ -658,11 +664,24 @@ var SCRPB=(function(){var s=document.querySelector('script[src$="score/url.js"]'
 function scCovI(){return '<img class="scCov" src="'+SCRPB+'rpg/cover_icon.webp" alt="" aria-hidden="true">'}
 function scHeroHTML(G){var D=function(id){return rwSrc(SCRPB,id)},S=G.s||{};if(G.h&&S.fx)setTimeout(function(){rwFx(SCRPB,S.fx)},900);   /* 2026-10-18：🏪 商城寶物、💥 必殺武功特效（做完一次 演一次） */
   var a=Math.max(0,G.xp-G.gx),p0=G.lv>G.lv0?0:Math.max(0,(a-G.lvAt)/(G.lvNext-G.lvAt)*100),p1=Math.min(100,(G.xp-G.lvAt)/(G.lvNext-G.lvAt)*100);
+  /* 2026-10-20 第十四次 老師：武器、寵物真的能打怪 ➜ 答對幾題 ＝ 打幾下（伺服器算好的 G.f，score/_calc.js rpFight）；賺到金幣 ➜ 金幣飛進去、數字一個一個加 */
+  var F=G.h&&G.f&&G.f.hits?G.f:null;
+  if(F)return '<div class="sct">'+scCovI()+'這一次 你拿到</div><div class="schero"><div class="shar" id="shFight"><div class="shimg rw-host fxh">'+rwBack(SCRPB,S)+'<img src="'+D(G.h)+'" alt="我的戰士">'+rwFront(SCRPB,S)+'</div>'+
+    (G.p?'<img class="fxp" src="'+D(G.p)+'" alt="我的寵物">':'')+'</div>'+
+    '<div class="shst"><div class="shfl">⚔ 答對 <b>'+F.hits+'</b> 題 ＝ 打 <b>'+F.hits+'</b> 下<br>一下 💥 <b>'+F.d+'</b>'+(F.pd?'（🐾 ＋'+F.pd+'）':'')+'</div>'+scHeroSt(G,p0,p1)+'</div></div>';
   return '<div class="sct">'+scCovI()+'這一次 你拿到</div><div class="schero"><div class="shimg rw-host">'+(G.h?rwBack(SCRPB,S)+'<img src="'+D(G.h)+'" alt="我的戰神">'+rwFront(SCRPB,S)+(G.p?'<img class="shp" src="'+D(G.p)+'" alt="我的寵物">':''):'<div class="shno">'+scCovI()+'<br>還沒有 戰士</div>')+'</div>'+
-    '<div class="shst"><div class="shx">⭐ 經驗值 <b>＋'+G.gx+'</b></div><div class="shbar"><i style="width:'+p0.toFixed(1)+'%" data-w="'+p1.toFixed(1)+'"></i></div>'+
+    '<div class="shst">'+scHeroSt(G,p0,p1)+'</div></div>'}
+function scHeroSt(G,p0,p1){return '<div class="shx">⭐ 經驗值 <b>＋'+G.gx+'</b></div><div class="shbar"><i style="width:'+p0.toFixed(1)+'%" data-w="'+p1.toFixed(1)+'"></i></div>'+
     '<div class="shlv">'+(G.lv>G.lv0?'🎉 升級了！ Lv '+G.lv0+' ➜ <b>Lv '+G.lv+'</b>':'Lv '+G.lv+'（再 '+(G.lvNext-G.xp)+' 升級）')+'</div>'+
-    '<div class="shc">🪙 金幣 <b>＋'+G.gc+'</b><small>（共 '+G.coins+'）</small></div>'+
-    '<a class="shgo" role="button" tabindex="0" data-rpg="1">'+(G.h?scCovI()+'戰神之路 ➜':'🎁 免費 選 1 個 戰士 ➜')+'</a></div></div>'}
+    '<div class="shc" id="shCoin">🪙 金幣 <b id="shGc">＋'+(G.gc>0?0:G.gc)+'</b><small>（共 <span id="shTot">'+(G.gc>0?G.coins-G.gc:G.coins)+'</span>）</small></div>'+
+    '<a class="shgo" role="button" tabindex="0" data-rpg="1">'+(G.h?scCovI()+'戰神之路 ➜':'🎁 免費 選 1 個 戰士 ➜')+'</a>'}
+/* 畫好以後才演：金幣飛進去（從 戰士／怪物 那邊）、打怪；回傳要演幾毫秒 */
+function scHeroMs(G){var F=G.h&&G.f&&G.f.hits?G.f:null;return F?600+Math.min(F.hits,6)*1350+(F.kill||[]).length*900+1800:0}
+function scHeroGo(G){var F=G.h&&G.f&&G.f.hits?G.f:null,box=document.getElementById('shFight'),w=G.w,id=SCID;
+  var coin=function(){var to=document.getElementById('shGc'),fr=box||document.querySelector('.schero .shimg');if(!to||!(G.gc>0))return;var tot=document.getElementById('shTot'),t0=G.coins-G.gc;
+    if(typeof RPFX==='undefined'){to.textContent='＋'+G.gc;if(tot)tot.textContent=G.coins;return}
+    RPFX.coins(fr,to,G.gc,function(v){to.textContent='＋'+v;if(tot)tot.textContent=t0+v},0)};
+  if(F&&box&&typeof RPFX!=='undefined')RPFX.fight(box,F,{base:SCRPB,w:w,p:G.p,id:id,done:coin});else setTimeout(coin,500)}
 function scByeHTML(){return '<div class="scbye"><span>👋 做完了，記得登出<small>下一個人才不會用到您的號碼</small></span><button id="scBye">👋 登出</button></div>'}
 /* 蓋滿整頁的大字（這是您嗎、30 秒提醒、已經登出了） */
 function scFull(id,h){var o=document.getElementById(id);if(!o){o=document.createElement('div');o.id=id;o.className='scfull';document.body.appendChild(o)}o.innerHTML='<div class="scfb">'+h+'</div>';o.classList.add('on');return o}
@@ -748,7 +767,7 @@ document.addEventListener('keydown',function(e){if(!$('#scBox'))return;
 /* 一頁要放的東西：S ＝ score/_sites.js 查到的這個資料夾、src ＝ school／home、g 覆寫年級（0 ＝ 看登入的 5 碼） */
 function js(S, src) { return JS.replace('__SCG__', S.g).replace('__SCSRC__', JSON.stringify(src === 'home' ? 'home' : 'school')).replace('__TKLOCK__', () => require('./_calc.js').tkLock.toString()); }
 
-const CSSALL = CSS + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_wear.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report.css'), 'utf8');
+const CSSALL = CSS + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_wear.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_fx.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report.css'), 'utf8');
 /* 首頁（總首頁、三年級、四年級、在家複習首頁）：最上面的登入橫幅＋「請問 這是您嗎？」＋3 分鐘登出（2026-10-12 D 第 6 件）
    g ＝ 年級（0 ＝ 總首頁：看最後登入的號碼）、rel ＝ 到 repo 根目錄的相對路徑（例 '../'）、src ＝ school／home。登入用遊戲那一種蓋滿整頁的 #scov */
 function home(g, rel, src, inl) {

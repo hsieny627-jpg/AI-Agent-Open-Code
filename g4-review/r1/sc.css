@@ -157,6 +157,12 @@ body.scq .url{display:none}
 .shst{display:flex;flex-direction:column;gap:10px;min-width:min(100%,340px);font-size:clamp(24px,3.4vh,34px);text-align:left}
 .shx b,.shc b{font-size:1.5em;color:#FFE07A}.shc small{font-size:.7em;color:#CFE3F5;margin-left:6px}
 .shbar{height:26px;border-radius:999px;background:#1B2633;border:3px solid #34404C;overflow:hidden}.shbar i{display:block;height:100%;background:linear-gradient(90deg,#3B7BFF,#7FD4FF);transition:width 1.4s ease-out}
+.shar{position:relative;width:min(640px,60vw);min-width:min(100%,340px);min-height:clamp(210px,34vh,330px);display:flex;align-items:center;border-radius:22px;background:radial-gradient(ellipse at 70% 60%,rgba(120,40,200,.35),transparent 60%),linear-gradient(160deg,#101A2E,#060A14);border:2px solid rgba(255,213,74,.4);box-shadow:inset 0 0 40px rgba(0,0,0,.6)}
+.shar .shimg{width:clamp(120px,21vh,200px);margin-left:5%}
+.shar .fxp{position:absolute;left:calc(5% + clamp(120px,21vh,200px) - 26px);bottom:5%;width:clamp(56px,9.5vh,92px);border-radius:12px;border:3px solid #7FD4FF;box-shadow:0 0 14px rgba(127,212,255,.7);animation:shPet 2.2s ease-in-out infinite;z-index:3}
+@keyframes shPet{50%{transform:translateY(-8px) rotate(-3deg)}}
+.shar .fxmon{width:min(34%,200px)}
+.shfl{width:100%;text-align:center;font-size:clamp(20px,2.8vh,28px);color:#FFE9A8}.shfl b{color:#fff;text-shadow:0 0 10px #FF8A3D}
 .shlv b{color:#FFE07A}.shgo{cursor:pointer;display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:6px 22px;border-radius:16px;background:#3A2E08;border:3px solid #FFD54A;color:#FFE9A8;text-decoration:none;font-size:.85em;align-self:flex-start}
 .scbye{display:flex;align-items:center;justify-content:center;gap:12px 18px;flex-wrap:wrap;background:#1F1A08;border:3px solid #FFD54A;border-radius:18px;padding:6px 16px;
   font-size:clamp(20px,3vh,28px);font-weight:700;color:#fff}
@@ -247,6 +253,90 @@ body.scq .url{display:none}
 @keyframes rwBoom{0%{transform:scale(.1) rotate(-120deg);opacity:0}30%{transform:scale(1.15) rotate(0);opacity:1}70%{transform:scale(1);opacity:1}100%{transform:scale(1.9);opacity:0}}
 @keyframes rwFlash{0%{background:rgba(255,255,255,0)}20%{background:rgba(255,240,200,.35)}100%{background:rgba(255,255,255,0)}}
 @media (prefers-reduced-motion:reduce){.rw-host img.rw-au,.rw-host img.rw-au2,.rw-host img.rw-wg,.rw-host img.rw-cp,.rw-host img.rw-mt{animation:none}.rw-fx{animation-duration:.6s}.rw-fx img{animation-duration:.6s}}
+/* rpg/_fx.css — 特效引擎的樣子（rpg/_fx_rt.js；2026-10-20 第十四次）。score/_client.js 帶進每一頁 */
+.cnI{display:inline-block;width:1.05em;height:1.05em;vertical-align:-.17em;font-style:normal;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g' cx='35%25' cy='30%25' r='75%25'%3E%3Cstop offset='0' stop-color='%23FFF8CF'/%3E%3Cstop offset='.45' stop-color='%23FFD54A'/%3E%3Cstop offset='1' stop-color='%23B8741A'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='33.5' r='29' fill='%237A4A08'/%3E%3Ccircle cx='32' cy='31' r='29' fill='url(%23g)' stroke='%239A6210' stroke-width='2'/%3E%3Ccircle cx='32' cy='31' r='21' fill='none' stroke='%23B8741A' stroke-width='3'/%3E%3Cpath d='M32 17.5l4 8.4 9.2 1.1-6.8 6.3 1.8 9.1L32 37.8l-8.2 4.6 1.8-9.1-6.8-6.3 9.2-1.1z' fill='%23FFF6C2' stroke='%23A8680E' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M14 22a20 20 0 0 1 12-10' stroke='%23fff' stroke-width='3' fill='none' stroke-linecap='round' opacity='.75'/%3E%3C/svg%3E") center/contain no-repeat}
+.fxcv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:40}
+.fxcv.full{position:fixed;z-index:0}
+.fxshk{animation:fxs1 .4s linear}.fxshk2{animation:fxs2 .5s linear}.fxshk3{animation:fxs3 .7s linear}
+@keyframes fxs1{25%{transform:translate(-4px,2px)}50%{transform:translate(4px,-2px)}75%{transform:translate(-2px,1px)}}
+@keyframes fxs2{15%{transform:translate(-9px,4px)}35%{transform:translate(9px,-4px)}55%{transform:translate(-6px,3px)}75%{transform:translate(4px,-2px)}}
+@keyframes fxs3{10%{transform:translate(-16px,7px) rotate(-.6deg)}25%{transform:translate(15px,-8px) rotate(.6deg)}40%{transform:translate(-12px,6px)}60%{transform:translate(9px,-4px)}80%{transform:translate(-4px,2px)}}
+.fxlunge{animation:fxlg .7s cubic-bezier(.3,1.5,.5,1)}@keyframes fxlg{30%{transform:translateX(-10px) scale(.97)}55%{transform:translateX(26px) scale(1.07) rotate(2deg);filter:brightness(1.35)}}
+.fxname{position:absolute;left:0;right:0;top:6%;z-index:45;text-align:center;pointer-events:none;animation:fxnm 1.7s ease-out forwards}
+.fxname b{display:inline-block;font-size:clamp(28px,4.6vh,48px);letter-spacing:.06em;color:#fff;padding:2px 20px;border-radius:12px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.65) 15%,rgba(0,0,0,.65) 85%,transparent);
+  text-shadow:0 0 10px var(--c1),0 0 26px var(--c1),0 3px 0 var(--c2)}
+.fxname small{display:block;font-size:clamp(18px,2.4vh,24px);color:#FFE9A8;text-shadow:0 2px 4px #000}
+@keyframes fxnm{0%{opacity:0;transform:scale(1.8);letter-spacing:.4em}15%{opacity:1;transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
+.fxnum{position:absolute;z-index:46;transform:translate(-50%,-50%);font-weight:900;color:#fff;-webkit-text-stroke:2px #7A2400;text-shadow:0 0 14px #FF8A3D,0 0 34px #FFD54A;white-space:nowrap;pointer-events:none;animation:fxnu 1.5s ease-out forwards;line-height:1;text-align:center}
+.fxnum small{display:block;font-size:.5em;color:#FFE14A;-webkit-text-stroke:1px #6A1A00}
+.fxnum.crit{color:#FFE14A;-webkit-text-stroke:2px #8A0000;text-shadow:0 0 18px #FF3D3D,0 0 44px #FFD54A}
+.fxnum.pet{color:#BFF5FF;-webkit-text-stroke:1.5px #004A6A;text-shadow:0 0 12px #5AD8FF;font-size:30px!important}
+@keyframes fxnu{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}20%{opacity:1;transform:translate(-50%,-60%) scale(1.3)}40%{transform:translate(-50%,-62%) scale(1)}100%{opacity:0;transform:translate(-50%,-150%) scale(1)}}
+.fxnuke{position:absolute;left:0;right:0;top:40%;z-index:47;text-align:center;pointer-events:none;animation:fxnk 1.4s ease-out forwards}
+.fxnuke b{font-size:clamp(34px,6vh,64px);color:#fff;letter-spacing:.08em;text-shadow:0 0 16px #FFD54A,0 0 40px #FF7A1A,0 0 80px #FF2A00}
+@keyframes fxnk{0%{opacity:0;transform:scale(3)}20%{opacity:1;transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:scale(1.1)}}
+.fxpet{position:absolute;z-index:44;width:clamp(56px,9vh,90px);transform:translate(-50%,-50%);pointer-events:none;animation:fxpt .9s cubic-bezier(.4,0,.3,1) forwards}
+.fxpet img{width:100%;border-radius:12px;box-shadow:0 0 16px #7FD4FF,0 0 30px #fff}
+@keyframes fxpt{0%{transform:translate(-50%,-50%) scale(.6)}45%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.2) rotate(-12deg)}60%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1) rotate(8deg)}100%{transform:translate(-50%,-50%) scale(.6);opacity:0}}
+/* 蓋滿整頁：登場、進化、寶箱 */
+.fxov{position:fixed;inset:0;z-index:9000;background:radial-gradient(ellipse at 50% 55%,#1A1140 0,#05060C 70%);display:flex;align-items:center;justify-content:center;animation:fxin .35s ease-out;overflow:hidden}
+.fxov.out{animation:fxout .38s ease-in forwards}@keyframes fxin{from{opacity:0}}@keyframes fxout{to{opacity:0}}
+.fxsc{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:16px}
+.fxcard,.fxevo{position:relative;width:min(56vw,300px);border-radius:22px;padding:5px;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 0 40px var(--c1),0 0 90px var(--c2);opacity:0;animation:fxcd 1s cubic-bezier(.2,1.4,.4,1) 1.25s forwards}
+.fxcard.w,.fxcard.p{width:min(44vw,230px)}
+.fxcard img,.fxevo img{display:block;width:100%;border-radius:18px;position:relative;z-index:1}
+@keyframes fxcd{0%{opacity:0;transform:translateY(80px) scale(.2) rotateY(90deg)}60%{opacity:1;transform:translateY(-8px) scale(1.08) rotateY(-8deg)}100%{opacity:1;transform:none}}
+.fxrays{position:absolute;inset:-60%;z-index:0;background:conic-gradient(from 0deg,transparent 0 8deg,rgba(255,240,180,.35) 8deg 16deg,transparent 16deg 30deg,rgba(255,240,180,.35) 30deg 38deg,transparent 38deg 60deg);border-radius:50%;animation:spin 7s linear infinite;-webkit-mask:radial-gradient(closest-side,#000 30%,transparent);mask:radial-gradient(closest-side,#000 30%,transparent)}
+.fxst{font-size:clamp(34px,5vh,52px);color:#FFE07A;letter-spacing:4px;text-shadow:0 0 14px #FFB52E;min-height:1.2em}
+.fxst i{font-style:normal;display:inline-block;opacity:0;animation:fxsi .4s cubic-bezier(.2,1.8,.4,1) forwards;animation-delay:calc(1.9s + var(--i) * .22s)}
+@keyframes fxsi{from{opacity:0;transform:scale(3) rotate(-40deg)}to{opacity:1;transform:none}}
+.fxtt{font-size:clamp(30px,4.6vh,48px);color:#fff;text-shadow:0 0 14px #FFD54A,0 3px 0 #000;opacity:0;animation:fxup .6s ease-out 2s forwards}
+.fxsub{font-size:clamp(20px,2.8vh,28px);color:#D8E4F2;opacity:0;animation:fxup .6s ease-out 2.3s forwards}
+.fxok{margin-top:6px;min-height:64px;padding:6px 40px;border-radius:999px;border:2px solid #FFD54A;background:linear-gradient(180deg,#4A3A0C,#2A2006);color:#FFE9A8;font:inherit;font-weight:700;font-size:clamp(24px,3vh,30px);opacity:0;animation:fxup .5s ease-out 2.6s forwards;cursor:pointer}
+@keyframes fxup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.fxov.sum.t5 .fxcard{animation-duration:1.3s;box-shadow:0 0 60px var(--c1),0 0 140px var(--c2),0 0 220px #fff}
+/* 進化：白色剪影一大一小，愈閃愈快 ➜ 白光 ➜ 變大 */
+.fxevo{opacity:1;animation:none;background:transparent;box-shadow:none}
+.fxevo img{animation:fxev 2.5s ease-in forwards}
+.fxevo .fxrays{opacity:0;animation:spin 7s linear infinite,fxfade .6s 2.5s forwards}
+@keyframes fxev{0%{filter:brightness(1)}8%{filter:brightness(0) invert(1) drop-shadow(0 0 20px #fff);transform:scale(.9)}20%{transform:scale(1.15)}32%{transform:scale(.9)}42%{transform:scale(1.18)}52%{transform:scale(.88)}60%{transform:scale(1.2)}67%{transform:scale(.88)}73%{transform:scale(1.22)}78%{transform:scale(.9)}82%{transform:scale(1.25)}86%{transform:scale(.92)}90%{transform:scale(1.28)}96%{filter:brightness(0) invert(1) drop-shadow(0 0 40px #fff);transform:scale(1.3)}100%{filter:drop-shadow(0 0 24px var(--c1));transform:scale(1.18)}}
+.fxov.evo .fxtt{animation-delay:2.7s}.fxov.evo .fxsub{animation-delay:3s}.fxov.evo .fxok{animation-delay:3.3s}
+@keyframes fxfade{to{opacity:1}}
+/* 冠軍寶箱：抖 ➜ 蓋子打開 ➜ 光 ➜ 獎品跳出來 */
+.fxchest{position:relative;width:min(46vw,220px);height:min(36vw,170px);animation:fxcs .18s linear 6 .2s}
+.fxchest i{position:absolute;left:0;right:0;display:block}
+.fxchest .box{bottom:0;height:62%;border-radius:10px 10px 16px 16px;background:linear-gradient(180deg,#7A3EC8,#3B1670);border:5px solid #FFD54A;box-shadow:inset 0 -10px 0 rgba(0,0,0,.25),0 10px 30px rgba(0,0,0,.6)}
+.fxchest .lid{top:6%;height:38%;border-radius:60px 60px 8px 8px;background:linear-gradient(180deg,#9C5AE8,#5A26A0);border:5px solid #FFD54A;transform-origin:50% 100%;transition:transform .5s cubic-bezier(.3,1.6,.5,1);z-index:2}
+.fxchest .lock{left:42%;right:42%;top:36%;height:26%;border-radius:8px;background:#FFD54A;border:3px solid #8A5A0E;z-index:3;transition:opacity .3s}
+@keyframes fxcs{25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+.fxov.open .lid{transform:translateY(-40%) rotate(-28deg)}.fxov.open .lock{opacity:0}
+.fxprize{font-size:clamp(26px,3.6vh,38px);color:#FFE9A8;opacity:0;transform:scale(.3);transition:all .6s cubic-bezier(.2,1.6,.4,1) .3s;text-shadow:0 0 10px #000}
+.fxprize img{display:block;width:min(40vw,190px);margin:0 auto 6px;border-radius:16px;box-shadow:0 0 40px #FFE680}
+.fxov.open .fxprize{opacity:1;transform:none}
+.fxov.chs .fxtt{animation-delay:.2s}.fxov.chs .fxok{animation-delay:2.2s}
+/* 金幣飛 */
+.fxcoins{position:fixed;inset:0;pointer-events:none;z-index:9500}
+.fxc{position:fixed;font-size:clamp(30px,4.4vh,44px);transform:translate(-50%,-50%);filter:drop-shadow(0 0 8px #FFD54A)}
+.fxpop{animation:fxpp .35s cubic-bezier(.2,1.8,.4,1)}@keyframes fxpp{50%{transform:scale(1.35);filter:brightness(1.6)}}
+/* 怪物（被黑暗附身的神獸）＋血條 */
+.fxmon{position:absolute;right:3%;top:50%;transform:translateY(-50%);z-index:30;width:min(36%,230px);text-align:center;transition:opacity .3s}
+.fxmi{position:relative;border-radius:18px;padding:4px;background:linear-gradient(135deg,#6A0DAD,#1A0030);box-shadow:0 0 26px #9B30FF,0 0 60px rgba(120,0,200,.6);animation:fxmb 2.4s ease-in-out infinite}
+.fxmi::after{content:'';position:absolute;inset:4px;border-radius:14px;background:radial-gradient(ellipse at 50% 120%,rgba(160,0,255,.55),transparent 60%);mix-blend-mode:screen;pointer-events:none}
+.fxmi img{display:block;width:100%;border-radius:14px;filter:grayscale(.55) brightness(.6) contrast(1.35) hue-rotate(250deg) saturate(1.6)}
+@keyframes fxmb{50%{transform:translateY(-6px) scale(1.02)}}
+.fxmon.hit .fxmi{animation:fxmh .35s linear}.fxmon.hit .fxmi img{filter:brightness(2.4)}
+@keyframes fxmh{25%{transform:translateX(10px) rotate(4deg)}60%{transform:translateX(-6px) rotate(-3deg)}}
+.fxmon.ko .fxmi{animation:fxko 1.2s ease-in forwards}@keyframes fxko{30%{filter:brightness(3)}100%{transform:scale(.2) rotate(30deg);opacity:0}}
+.fxhp{position:relative;height:22px;margin-top:8px;border-radius:999px;background:#2A0710;border:2px solid #FF5A6E;overflow:hidden}
+.fxhp i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#FF2A4A,#FF8A3D);transition:width .5s ease-out;box-shadow:0 0 10px #FF3D5A}
+.fxhp span{position:relative;display:block;font-size:17px;line-height:18px;color:#fff;text-shadow:0 1px 2px #000}
+.fxmn{font-size:clamp(18px,2.2vh,22px);color:#E8C8FF;margin-top:4px;white-space:nowrap}
+.fxpure{position:absolute;left:50%;top:50%;z-index:48;transform:translate(-50%,-50%);text-align:center;pointer-events:none;animation:fxpr 2.6s ease-out forwards;width:min(80%,360px)}
+.fxpure img{width:min(46%,160px);border-radius:16px;box-shadow:0 0 30px #FFF2A0,0 0 60px #7FD4FF}
+.fxpure b{display:block;margin-top:6px;font-size:clamp(22px,3vh,30px);color:#FFF2A0;text-shadow:0 0 12px #000,0 2px 0 #000}
+@keyframes fxpr{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%)}}
+@media (prefers-reduced-motion:reduce){.fxname,.fxnum,.fxpure,.fxcard,.fxevo img,.fxst i,.fxtt,.fxsub,.fxok{animation-duration:.01s!important;animation-delay:0s!important}.fxmi{animation:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
 /* score/_honor.css — 榮譽動畫（2026-10-12 D 第 4 件）：學生平板做完的榮譽動畫、老師投影的榮譽榜共用。12 種風格 .hs1～.hs12 */
 .hon{position:relative;width:100%;height:var(--hh,clamp(420px,66vh,800px));border-radius:22px;overflow:hidden;background:#000;color:#fff;text-align:center;isolation:isolate;
   display:flex;flex-direction:column;align-items:center;justify-content:center;justify-content:safe center;gap:clamp(6px,1.4vh,16px);padding:2vh 2vw;box-sizing:border-box}

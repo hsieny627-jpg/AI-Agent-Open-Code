@@ -93,7 +93,7 @@ function seatGrid(on,cls,extra){var n=30,h='';for(var i=1;i<=n;i++){var id=H.cls
 function drawLobby(){if(H.scr!=='hlob')return;var L=online();$('#lcnt').textContent=L.length;$('#lpl').innerHTML=seatGrid(L)}
 /* ── ▶ 開始：怎麼玩 ＋ 3、2、1（不動 的 ① ② ③）── */
 function start(){var L=online();if(!L.length){$('#lmsg').textContent='還沒有 學生 加入（學生 掃 QR Code、打 5 碼）';return}clearInterval(H.lt);
-  H.pl={};L.forEach(function(id){H.pl[id]=1;H.tot[id]=0;H.okc[id]=0;H.st[id]=0;H.best[id]=0;H.fxc[id]=0;H.okq[id]=''});H.qi=-1;H.start=Date.now();H.gs=gs0();H.sum=[];
+  H.psU={};H.pl={};L.forEach(function(id){H.pl[id]=1;H.tot[id]=0;H.okc[id]=0;H.st[id]=0;H.best[id]=0;H.fxc[id]=0;H.okq[id]=''});H.qi=-1;H.start=Date.now();H.gs=gs0();H.sum=[];
   var G=LV.game(H.game);scr('hhow');hstep(2);hqr(true);$('#hhw').innerHTML=LV.badge(H.game,'xl')+'<h1>'+G.nm+'</h1>'+LV.howHTML(G.how,'big')+'<div id="cnt3" class="cnt3"></div>';
   putM({phase:'how',t0:Date.now(),pl:H.pl});
   stopAll();H.stops.push(LDB.poll(R('p'),3000,function(v){seeP(v);online().forEach(join)}));
@@ -148,11 +148,14 @@ function hgo(){if(H.phase==='q')reveal();else if(H.phase==='rev')lbShow();else i
 function okOf(q,a){if(!a)return false;if(q.ty==='mc')return Object.prototype.toString.call(a.k)==='[object Array]'?a.k.indexOf(q.a)>=0:a.k===q.a;return LV.norm(a.s)===LV.norm(q.a)}
 function reveal(){if(H.phase!=='q')return;H.phase='rev';clearTimeout(H.tm);clearTimeout(H.tm2);if(H.unA)H.unA();
   LDB.get(R('a/'+H.qi)).then(function(v){return v},function(){return null}).then(function(v){if(v)for(var k in v){H.A[k]=v[k];join(k)}rev2()})}
-function rev2(){var q=H.Q[H.qi],sc={},ok1={},cheer=0,hits=[],D=[0,0,0,0],nOk=0;
+function rev2(){var q=H.Q[H.qi],sc={},ok1={},cheer=0,hits=[],D=[0,0,0,0],nOk=0,psNow={};if(!H.psU)H.psU={};
   H.rk0=rank().map(function(x){return x.id});
   ids().forEach(function(id){var a=H.A[id],f=(a&&a.f)||{},ok=okOf(q,a);
     if(a&&q.ty==='mc'&&typeof a.k==='number')D[a.k]++;
-    if(ok){H.st[id]++;H.okc[id]++;nOk++;if(H.st[id]>H.best[id])H.best[id]=H.st[id];hits.push({id:id,ms:a.ms,d:10+Math.min(20,Math.floor((+(H.P[id]||{}).pw||0)/100))})}else if(!f.sh)H.st[id]=0;
+    /* 2026-10-20 第十四次（老師：寵物 真的 幫忙；老師選「只在遊戲裡幫」）：一擊 ＝ 戰士（武器 愈強 愈痛）＋ 🐾 寵物 一起 打；🐾 寵物護盾 ＝ 一場 一次，答錯 連對 🔥 不會 斷 */
+    var PP=H.P[id]||{},dd=(+PP.hit||10+Math.min(20,Math.floor((+PP.pw||0)/100)))+(PP.pt?(+PP.ph||3):0);
+    if(ok){H.st[id]++;H.okc[id]++;nOk++;if(H.st[id]>H.best[id])H.best[id]=H.st[id];hits.push({id:id,ms:a.ms,d:dd,pd:PP.pt?(+PP.ph||3):0})}
+    else if(f.sh){}else if(PP.pt&&H.psU&&!H.psU[id]&&H.st[id]>0){H.psU[id]=1;psNow[id]=1}else H.st[id]=0;
     var ff={};for(var k in f)ff[k]=f[k];if(q.ch)ff.chal=1;
     var s=LV.score(ok,a?a.ms:H.dur,H.dur,ff,H.st[id]);
     if(f.met)s+=30*Math.min(3,+f.met||0);
@@ -161,7 +164,7 @@ function rev2(){var q=H.Q[H.qi],sc={},ok1={},cheer=0,hits=[],D=[0,0,0,0],nOk=0;
   hits.sort(function(a,b){return a.ms-b.ms});H.hits=hits;H.dist=D;H.nOk=nOk;H.sc=sc;
   H.sum.push({qi:H.qi,ok:nOk,n:ids().length});
   if(H.game!=='classic')gsUp(ok1,hits,cheer);
-  putM({phase:'rev',rev:{qi:H.qi,a:q.a,ty:q.ty,ans:q.ans,h:q.h,ae:q.ae,ag:q.ag,az:q.az,au:q.au,d:D,n:nOk},r:{qi:H.qi,sc:sc,tot:H.tot,ok:ok1,st:H.st,okc:H.okc},gs:H.game==='classic'?null:H.gs,fx:null});
+  putM({phase:'rev',rev:{qi:H.qi,a:q.a,ty:q.ty,ans:q.ans,h:q.h,ae:q.ae,ag:q.ag,az:q.az,au:q.au,d:D,n:nOk},r:{qi:H.qi,sc:sc,tot:H.tot,ok:ok1,st:H.st,okc:H.okc,ps:psNow,psU:H.psU},gs:H.game==='classic'?null:H.gs,fx:null});
   drawQ();drawGame();ctl();
   if(H.say&&q.ae)H.tm3=setTimeout(function(){LV.say(q.au?BASE+q.au.replace(/^\.\.\//,''):'',q.ae,3)},900)}
 function rank(){return ids().map(function(id){return {id:id,v:H.tot[id]||0}}).sort(function(a,b){return b.v-a.v||(a.id<b.id?-1:1)})}
@@ -195,7 +198,7 @@ function drawGame(){var el=$('#gv');if(!el||H.game==='classic')return;var G=H.gs
   if(k==='boss'){var p=G.hp/G.hp0*100;
     h+='<div class="bs'+(G.hp<=0?' dead':'')+(rv&&H.hits&&H.hits.length?' hit':'')+'"><div class="bsau"></div><img class="bsi" src="'+LV.img(BASE,G.boss)+'" alt="魔王">'+(G.hp<=0?'<div class="ko">K.O.</div>':'')+'</div>'+
       '<div class="hpb"><i style="'+mv('hp',p.toFixed(1)+'%')+'"></i><span>'+(G.hp<=0?'🎉 全班 打倒 魔王！':'❤ '+G.hp.toLocaleString()+' ／ '+G.hp0.toLocaleString())+'</span></div>'+
-      (rv&&H.hits?'<div class="hits">'+H.hits.slice(0,12).map(function(x,i){return '<span class="hit1" style="--i:'+i+'">'+heroI(x.id,'hti')+'<b>－'+Math.round(x.d*(G.combo?1.5:1))+'</b></span>'}).join('')+(H.hits.length>12?'<span class="more">＋'+(H.hits.length-12)+' 人</span>':'')+'</div>'+
+      (rv&&H.hits?'<div class="hits">'+H.hits.slice(0,12).map(function(x,i){return '<span class="hit1" style="--i:'+i+'">'+heroI(x.id,'hti')+'<b>－'+Math.round(x.d*(G.combo?1.5:1))+'</b>'+(x.pd?'<em class="hpd">🐾 ＋'+x.pd+'</em>':'')+'</span>'}).join('')+(H.hits.length>12?'<span class="more">＋'+(H.hits.length-12)+' 人</span>':'')+'</div>'+
         (G.combo?'<div class="combo">🤝 全班 答對 8 成 ＝ 連擊 ✖1.5！</div>':'<div class="note c">全班 答對 8 成 ＝ 連擊 ✖1.5</div>'):'<div class="note c">✋ 答對 的 人 ＝ 戰士 飛過去 出招</div>')}
   else if(k==='race'){var top=R.slice(0,8),len=Math.max(H.n*800,(R[0]?R[0].v:0)*1.08);
     h+='<div class="rc">'+top.map(function(x,i){var pc=Math.min(92,(x.v/len*92));return '<div class="rl"><b class="rp">'+(i+1)+'</b><span class="rtk"><span class="car'+((H.st[x.id]||0)>=3?' nitro':'')+'" style="'+mv('car'+x.id,pc.toFixed(1)+'%')+'">'+heroI(x.id,'cri')+'<i>'+seatOf(x.id)+'</i>'+fxi(x.id)+'</span></span><span class="fin"></span></div>'}).join('')+'</div>'+

@@ -13,6 +13,10 @@ const ROOT = path.join(__dirname, '..');
 const md = fs.readFileSync(path.join(ROOT, 'sentences/2026-10-04_B_複習題_題目清單.md'), 'utf8');
 const KIND = { '認讀': 'read', '聽力': 'listen', '看中文選英文': 'zh2en', '看英文選中文': 'en2zh', '易錯': 'trap' };
 const SP = { 'Yes, he is. 的 he is': 'Yes, he is.' };
+/* 2026-10-20 第十四次 老師：答錯那一頁一定唸正確的英文 3 次 ➜ 答案是字母、中文的題目，唸「那一題正確的英文」（照題目找；錯的英文不唸） */
+const SPQ = [[/^He’s 的 ’/, 'He’s'], [/^She’s 的 ’/, 'She’s'], [/^Who’s 的 ’/, 'Who’s'], [/^What’s 的 ’/, 'What’s'],
+  [/^I’m 的 ’/, 'I’m'], [/^You’re 的 ’/, 'You’re'], [/^eight 的/, 'eight'], [/^isn’t 的 ’/, 'isn’t'], [/^Who 的哪一個字母/, 'Who'], [/^What 的哪一個字母/, 'What'], [/Who 放在哪裡/, 'Who’s he?'],
+  [/What 放在哪裡/, 'What’s your name?'], [/How (old )?放在哪裡/, 'How old are you?'], [/Is 要放在哪裡/, 'Is he a doctor?']];
 const out = { g3: {}, g4: {} };
 let site = null, cur = null;
 const B = s => s.replace(/\*\*([^*]+)\*\*/g, '<b class="em">$1</b>');
@@ -44,7 +48,10 @@ md.split('\n').forEach(line => {
   } else if (k === 'zh2en') q.q = /[？?]$/.test(p) && !/」$/.test(p) ? B(p) : B(p) + '　英文是？';
   else if (k === 'en2zh') q.q = /[㐀-鿿]/.test(p) ? B(p) : '「' + p + '」　中文是？';
   else q.q = B(p);
+  const spq = SPQ.find(x => x[0].test(p.replace(/\*\*/g, '')));
   if (SP[ok] != null) q.sp = SP[ok];
+  else if (spq) q.sp = spq[1];
+  else if (k === 'listen' && /[㐀-鿿]/.test(ok)) q.sp = q.say;   /* 聽力題答案是中文 ➜ 唸聽到的那一句（正確的英文） */
   else if (/➜/.test(ok)) q.sp = ok.replace(/ ➜ /g, ' ').replace(/ ’/g, '’');   /* 語序題的正解（What’s ➜ your ➜ name?）照整句唸 */
   else if ((k !== 'en2zh' && /[㐀-鿿]/.test(ok)) || /字母/.test(p)) q.sp = '';
   cur.push(q);

@@ -14,7 +14,7 @@
  *   ➕ 派新任務（名稱、哪幾班＋〔全年級〕、項目＝遊戲／📝 複習題／📘 Review 1／💼 職業單字、從幾月幾日幾點 到 幾月幾日幾點）、
  *   ✏️ 隨時改時間、🗑 刪掉；每個任務一張卡：誰做完 ✅、誰還沒 ⏳（要名單才有名字，E6）。鎖的規則在 _calc.js 的 tkLock。
  */
-const CERCSS = require('fs').readFileSync(require('path').join(__dirname, '_cer.css'), 'utf8'), CERRT = require('fs').readFileSync(require('path').join(__dirname, '_cer_rt.js'), 'utf8');
+const CERCSS = require('fs').readFileSync(require('path').join(__dirname, '_cer.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_fx.css'), 'utf8'), CERRT = require('fs').readFileSync(require('path').join(__dirname, '_cer_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_fx_rt.js'), 'utf8');   /* 2026-10-20 第十四次：老師的電腦 沒有 🪙 ➜ 自己畫的 金幣（rpg/_fx_rt.js 最下面） */
 const HONCSS = require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report.css'), 'utf8'), HONRT = require('fs').readFileSync(require('path').join(__dirname, '_honor_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report_rt.js'), 'utf8');
 /* 〔🔒 開關〕（2026-10-12 D 第 7 件）：在家複習網站每一個主題（sentences/_review_sites.js） */
 const RVS = require('../sentences/_review_sites.js'), RVT = {};
@@ -79,6 +79,10 @@ h1{margin:0;font-size:clamp(28px,3vw,44px)}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .tabs button{font-size:clamp(19px,1.6vw,30px);padding:8px clamp(10px,1.2vw,24px);min-height:56px}
 .tabs button.on{background:#2A2208;border-color:var(--gold);color:#FFE9A8}
+.rwd{border:1px solid var(--ln);border-radius:16px;padding:12px 14px;margin:0 0 14px;background:rgba(255,255,255,.03)}.rwd h3{margin:0 0 8px;font-size:1.15em;color:#FFE9A8}
+.rwr{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 0;border-top:1px solid var(--ln);font-size:1.05em}.rwr:first-of-type{border-top:0}.rwr .cid{font-size:1.2em;min-width:2.6em}
+.rwr button{min-height:56px;padding:4px 18px;border-radius:999px;border:2px solid #FFD54A;background:#3A2E08;color:#FFE9A8;font-size:1em}.rwr button:disabled{opacity:.45;border-color:#555;background:#222;color:#aaa}
+.rwr small{color:#BFD0E2}.rwmsg{color:#7BF0A8;font-size:1.05em;min-height:1.4em}
 .pane{background:var(--pn);border:1px solid var(--ln);border-radius:18px;padding:14px}
 .note{color:#C8C8C8;font-size:clamp(18px,1.35vw,24px);margin:6px 0;line-height:1.5}
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -394,7 +398,7 @@ ${CERCSS}
   <select id="fs" aria-label="來源"><option value="">在校＋在家</option><option value="school">🏫 在校</option><option value="home">🏠 在家</option></select>
  </div>
  <div class="tiles" id="tiles"></div>
- <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 個人排行榜</button><button data-t="c">🏫 班級排行榜</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心<em class="bdg" id="kbdg" hidden></em></button><button data-t="o">📅 一鍵設定</button><button data-t="t">📌 任務</button><button data-t="l">🔒 開關</button></div>
+ <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 個人排行榜</button><button data-t="c">🏫 班級排行榜</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心<em class="bdg" id="kbdg" hidden></em></button><button data-t="o">📅 一鍵設定</button><button data-t="t">📌 任務</button><button data-t="l">🔒 開關</button><button data-t="r">🎁 全班 獎勵</button></div>
  <div class="pane" id="pane"></div>
 </div>
 <div id="modal"><div id="mbox"></div></div>
@@ -474,7 +478,7 @@ function draw(){
   /* 分頁上面的紅色數字：🔔 要關心 ＝ 🔴 幾個人（9 甲） */
   var red=ps.filter(function(p){return light(rowOf(p,{}))===0});$('#kbdg').hidden=!red.length;$('#kbdg').textContent=red.length;RED=red.map(function(p){return p.id}).sort();
   var h='';
-  if(TAB==='p')h=paneP(ps,RK);else if(TAB==='b')h=paneB(psG);else if(TAB==='c')h=paneC(psG);else if(TAB==='w')h=paneW(S.C);else if(TAB==='t')h=paneT();else if(TAB==='l')h=paneL();else if(TAB==='o')h=paneO();else h=paneK(ps,S);
+  if(TAB==='p')h=paneP(ps,RK);else if(TAB==='b')h=paneB(psG);else if(TAB==='c')h=paneC(psG);else if(TAB==='w')h=paneW(S.C);else if(TAB==='t')h=paneT();else if(TAB==='l')h=paneL();else if(TAB==='o')h=paneO();else if(TAB==='r')h=paneR();else h=paneK(ps,S);
   $('#pane').innerHTML=h;
 }
 /* 2026-10-12 D6-A：只留 7 欄（其他點那個人看；Excel 照樣全部都有）。燈號：🔴 正確率不到 60 或太快亂按超過 3 成；🟡 正確率不到 80 或太快亂按超過 1 成；🟢 其他 */
@@ -886,6 +890,26 @@ function wSt(w,now){return !w?'':now<w[0]?'⏳ 還沒開始':now>w[1]?'⛔ 結�
 function wRow(pre){var w=wGet();return '<div class="lkrow"><span>從</span><input type="datetime-local" id="'+pre+'1" value="'+tkV(w[0])+'"><span>到</span><input type="datetime-local" id="'+pre+'2" value="'+tkV(w[1])+'"></div>'+
   '<div class="lkrow"><button data-wpre="today">今天 放學前</button><button data-wpre="week">這一週</button><button data-wpre="next">下一週</button><span class="note" style="margin:0">（常用的 一按 就填好）</span></div>'}
 function wRead(pre){var a=Date.parse(($('#'+pre+'1')||{}).value),b=Date.parse(($('#'+pre+'2')||{}).value);if(a>0&&b>a){LKW=[a,b];return LKW}return null}
+/* 🎁 全班 獎勵（2026-10-20 第十四次，老師選 ① 全班目標＋③ 冠軍寶箱；規格 rpg/CLAUDE.md 最上面）：一律看「本週」
+   ① 全班目標：名單上 每一個人 這週 都 練 3 天 以上 ➜ 按一下 ➜ 全班 每人 🪙＋100、⭐＋50（編號 cw|週|班：同一班 同一週 只發一次）
+   ③ 冠軍寶箱：全年級「最認真練習」（練習時間）前 5 名 ➜ 按一下 ➜ 每人 一個 👑 冠軍寶箱（編號 ch|週|年級） */
+var RWMSG='',RWC=100,RWX=50,RWDAYS=3;
+function paneR(){var now=DATA.now,w=SC.weekStart(now),wk=new Date(w+288e5).toISOString().slice(0,10),G=SC.pick(ALL,{g:F.g,from:w,to:null}),ps=SC.students(G),by={};ps.forEach(function(p){by[p.id]=p});
+  var h='<div class="rwmsg" id="rwmsg">'+esc(RWMSG)+'</div><div class="rwd"><h3>① 全班 目標：全班 每一個人 這週 都 練 '+RWDAYS+' 天 ➜ 全班 每人 🪙 ＋'+RWC+'、⭐ ＋'+RWX+'</h3>';
+  SC.CLASSES[F.g].forEach(function(c){var L=RCLS[c]||[],ok=L.filter(function(id){return by[id]&&by[id].nd>=RWDAYS}),no=L.filter(function(id){return ok.indexOf(id)<0});
+    h+='<div class="rwr"><span class="cid" style="color:'+ccol(c)+'">'+esc(c)+'</span>'+(L.length?'<span>✅ '+ok.length+' ／ '+L.length+' 人</span>'+(no.length?'<small>還沒 達到：'+no.map(function(id){return esc(id.slice(3))+' 號'}).join('、')+'</small>':'<small>🎉 全班 都 達到 了！</small>'):'<small>要先 在 試算表 貼「名單」才 知道 全班 有 誰</small>')+
+      '<button data-rw="cw" data-c="'+c+'"'+(L.length&&!no.length?'':' disabled')+'>🎁 發 全班 獎勵</button></div>'});
+  var top=SC.rank(ps,'sec').filter(function(x){return x.rk<=5});
+  h+='</div><div class="rwd"><h3>③ 👑 冠軍寶箱：全年級「最認真練習」前 5 名（練習時間）</h3>'+(top.length?top.map(function(x){return '<div class="rwr"><b>第 '+x.rk+' 名</b>'+cidH(x.id)+'<span>'+esc(nm(x.id))+'</span><small>練了 '+Math.round(x.v/60)+' 分鐘</small></div>'}).join('')+
+    '<div class="rwr"><button data-rw="ch">👑 發 冠軍寶箱 給 這 '+top.length+' 個 人</button><small>寶箱 裡 一定 是 好東西（🪙 300～500 或 商城 寶物）；學生 在 戰神之路 自己 打開</small></div>':'<div class="rwr"><small>這週 還沒有 人 練習</small></div>')+'</div>'+
+    '<p class="note">同一班 同一週 只 發 一次（按 兩次 也 不會 多）。學生 下一次 打開 戰神之路 會 看到 金幣 飛進去、👑 寶箱。本週 從 '+wk+' 開始。</p>';
+  RWTOP=top;RWWK=wk;return h}
+var RWTOP=[],RWWK='';
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-rw]');if(!b||TAB!=='r'||b.disabled)return;var k=b.getAttribute('data-rw'),list;
+  if(k==='cw'){var c=b.getAttribute('data-c');list=(RCLS[c]||[]).map(function(id){return {id:id,c:RWC,x:RWX,k:'cw|'+RWWK+'|'+c}})}
+  else list=RWTOP.map(function(x){return {id:x.id,chest:1,k:'ch|'+RWWK+'|g'+F.g}});
+  if(!list.length)return;b.disabled=true;RWMSG='⏳ 發獎勵中…';$('#rwmsg').textContent=RWMSG;
+  post({a:'rpgw',pw:PW,list:list}).then(function(j){RWMSG=j&&j.ok?'✔ 發好了：'+j.n+' 人'+(j.skip?'（'+j.skip+' 人 這週 已經 發過）':''):'❌ 沒有 發成（'+((j&&j.err)||'')+'）';draw()},function(){RWMSG='📶 連不到伺服器，沒有 發';draw()})});
 function paneL(){var T=RVT[F.g]||[],cs=lkCls(),G={},h;
   T.forEach(function(x){(G[x.grp]=G[x.grp]||[]).push(x)});
   h='<div class="note">在家複習網站（'+(F.g===3?'三':'四')+'年級複習）：<b class="lkg">🔓 綠色 ＝ 開</b>、<b class="lkr">🔒 紅色 ＝ 鎖</b>。按一下就換、馬上存好。鎖住的主題連任務也打不開；學生只看到「🔒 請先登入」或「🔒 還沒開放」，看不到鎖了哪幾班。教學網站（老師上課用）不鎖。</div>'+

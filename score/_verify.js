@@ -179,6 +179,8 @@ async function student(br, P, vp) {
     (await fit(p)).forEach(x => e.push('新愛心' + x));
     if (hv.nm !== 'care') e.push('按了切換按鈕還自己換到下一幕');
     await p.click('#scNx'); await p.waitForTimeout(1800);
+    /* 2026-10-20 第十四次：金幣 飛進去、數字 一個一個 加 ➜ 等 加完 */
+    await p.waitForFunction(() => { const g = document.getElementById('shGc'); return !g || g.textContent === '＋' + SCEND.res.rpg.gc; }, null, { timeout: 6000 }).catch(() => {});
     /* 2026-10-17 第八次：🦸 這一次拿到的經驗值、金幣（伺服器從紀錄算） */
     const hr = await p.evaluate(() => { const r = SCEND.res.rpg || {}, sc = document.getElementById('scn'), b = sc && sc.querySelector('.shbar i');
       return { nm: SCEND.list[SCEND.k], t: sc ? sc.textContent : '', gx: r.gx, gc: r.gc, w: b ? parseFloat(b.style.width) : -1, go: !!(sc && sc.querySelector('[data-rpg]')),

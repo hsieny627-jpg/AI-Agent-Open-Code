@@ -118,7 +118,7 @@ module.exports = {
     ],
     "h": "What 的 h 不發音。",
     "q": "What 的哪一個字母<b class=\"em\">不發音</b>（淺灰色）？",
-    "sp": ""
+    "sp": "What"
    }
   ],
   "1-1b": [
@@ -178,7 +178,7 @@ module.exports = {
     ],
     "h": "What is ➜ What’s：is 的 i 被 ’ 換掉。",
     "q": "What’s 的 ’ 藏起來的是哪一個字母？",
-    "sp": ""
+    "sp": "What’s"
    }
   ],
   "1-1a": [
@@ -298,7 +298,7 @@ module.exports = {
     ],
     "h": "英文問句，問的字（What）放最前面。",
     "q": "中文「什麼」在句子最後，英文 What 放在哪裡？",
-    "sp": ""
+    "sp": "What’s your name?"
    }
   ],
   "2b": [
@@ -476,7 +476,7 @@ module.exports = {
     ],
     "h": "I am ➜ I’m：a 被 ’ 換掉。",
     "q": "I’m 的 ’ 藏起來的是哪一個字母？",
-    "sp": ""
+    "sp": "I’m"
    }
   ]
  },
@@ -597,7 +597,7 @@ module.exports = {
     ],
     "h": "eight 的 gh 不發音。",
     "q": "eight 的哪兩個字母<b class=\"em\">不發音</b>？",
-    "sp": ""
+    "sp": "eight"
    }
   ],
   "1-1b": [
@@ -683,7 +683,7 @@ module.exports = {
     "h": "How old ＝ 幾歲。",
     "say": "How old are you?",
     "q": "這一句在問什麼？",
-    "sp": ""
+    "sp": "How old are you?"
    },
    {
     "k": "zh2en",
@@ -777,7 +777,7 @@ module.exports = {
     ],
     "h": "英文問句，問的字（How old）放最前面。",
     "q": "中文「幾歲」在句子最後，英文 How old 放在哪裡？",
-    "sp": ""
+    "sp": "How old are you?"
    }
   ],
   "2b": [
@@ -955,7 +955,7 @@ module.exports = {
     ],
     "h": "You are ➜ You’re：a 被 ’ 換掉。",
     "q": "You’re 的 ’ 藏起來的是哪一個字母？",
-    "sp": ""
+    "sp": "You’re"
    }
   ]
  }
