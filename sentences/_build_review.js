@@ -77,7 +77,8 @@ ${S.more.map(x => btn(path.basename(x.from), x.ic, x.t, '')).join('')}${S.jobs ?
    ③ 換完以後還有任何連到別的頁面的地方 ➜ build 失敗 */
 function copyIn(file, dir) {
   const sd = path.dirname(file);
-  const re = u => /^(https?:|data:|#|mailto:|javascript:)/.test(u) || !u ? u :
+  /* 2026-10-20 第十四次：src="'+變數+'"（程式裡拼出來的網址，例 rwSrc、特效引擎）不是網址，不可以換 */
+  const re = u => /^(https?:|data:|#|mailto:|javascript:|')/.test(u) || !u ? u :
     encodeURI(path.relative(dir, path.resolve(sd, decodeURIComponent(u))).split(path.sep).join('/')) + (/\/$/.test(u) ? '/' : '');
   let h = fs.readFileSync(file, 'utf8');
   const nav = { '../index.html': 'index.html' };
@@ -131,7 +132,7 @@ function r1Home(S, dir) {
   const R1 = path.join(ROOT, 'review1'), out = path.join(dir, 'r1'), g = S.out === 'g3-review' ? 3 : 4, SC1 = require('../score/_client.js');
   fs.mkdirSync(out, { recursive: true });
   const rel = u => encodeURI(path.relative(out, u).split(path.sep).join('/'));
-  const re = u => { if (/^(https?:|data:|#|mailto:|javascript:)/.test(u) || !u || /^sc\.(css|js)$/.test(u)) return u;   /* sc.css／sc.js ＝ r1/ 自己的 */
+  const re = u => { if (/^(https?:|data:|#|mailto:|javascript:|')/.test(u) || !u || /^sc\.(css|js)$/.test(u)) return u;   /* sc.css／sc.js ＝ r1/ 自己的 */
     const a = path.resolve(R1, decodeURIComponent(u.replace(/[?#].*$/, '')));
     if (a === path.join(ROOT, 'index.html')) return '../index.html';
     if (path.dirname(a) === R1 && /\.html$/.test(a)) return u;

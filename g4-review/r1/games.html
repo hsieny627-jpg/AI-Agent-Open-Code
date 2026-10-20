@@ -2859,14 +2859,14 @@ var HON=(function(){
    〔🦸 我的英雄〕舞台、平板最後一幕 🦸、⚡ 現場任務 都用這一份（score/_client.js 帶進每一頁）。s ＝ 身上戴的 {au 光環, cp 披風, fx 必殺, nf 名字框, bg 背景, po 寵物服裝, wg 翅膀, mt 坐騎}
    rwSrc(圖)、rwBack(英雄卡後面：翅膀、披風、光環)、rwFront(腳下：坐騎)、rwPo(寵物服裝)、rwNf(名字框)、rwBg(背景的 style)、rwFx(必殺武功特效：蓋滿畫面 1.4 秒) */
 function rwSrc(b,id,ic){return b+'rpg/'+(/^s\d{4}$/.test(id)?'shop/'+id+(ic?'i.webp':'.jpg'):(/^[bg]/.test(id)?'chars':/^w/.test(id)?'weapons':'pets')+'/'+id+'.jpg')}
-function rwI(b,id,c){return id?'<img class="'+c+'" src="../../review1/'+rwSrc(b,id,1)+'" alt="" aria-hidden="true">':''}
+function rwI(b,id,c){return id?'<img class="'+c+'" src="'+rwSrc(b,id,1)+'" alt="" aria-hidden="true">':''}
 function rwBack(b,s){s=s||{};return rwI(b,s.wg,'rw-wg')+rwI(b,s.cp,'rw-cp')+rwI(b,s.au,'rw-au')}
 function rwFront(b,s){s=s||{};return rwI(b,s.au,'rw-au2')+rwI(b,s.mt,'rw-mt')}   /* 光環：後面一圈大的＋前面一層半透明發光（只放後面會被英雄卡擋住） */
 function rwPo(b,s){return rwI(b,(s||{}).po,'rw-po')}
 function rwNf(b,s){return rwI(b,(s||{}).nf,'rw-nf')}
 function rwBg(b,s){return s&&s.bg?"background-image:linear-gradient(rgba(5,7,13,.25),rgba(5,7,13,.6)),url('"+rwSrc(b,s.bg,1)+"');background-size:cover;background-position:center":''}
 function rwFx(b,id){if(!id||!document.body)return;var o=document.createElement('div');o.className='rw-fx';o.setAttribute('aria-hidden','true');
-  o.innerHTML='<img src="../../review1/'+rwSrc(b,id,1)+'" alt="">';document.body.appendChild(o);setTimeout(function(){if(o.parentNode)o.parentNode.removeChild(o)},1500)}
+  o.innerHTML='<img src="'+rwSrc(b,id,1)+'" alt="">';document.body.appendChild(o);setTimeout(function(){if(o.parentNode)o.parentNode.removeChild(o)},1500)}
 /* rpg/_fx_rt.js — ⚔ 戰神之路 特效引擎（2026-10-20 第十四次；規格 rpg/CLAUDE.md 最上面「第十四次」）。只寫 ES5。
    老師：戰士登場要震撼；武器要有跟圖相關的特效、真的能打怪（愈強愈猛）；寵物長大進化要逼真、真的幫忙打怪；每一個人、每一次出招都不一樣；賺到金幣要有秒懂的動畫。
    score/_client.js 帶進每一頁（跟 _wear_rt.js 一樣），〔戰神之路〕、做完一次的最後一幕、⚡ 現場任務 都用這一份。
@@ -3032,7 +3032,7 @@ var RPFX = (function () {
     /* 🐾 寵物 跟著 打 */
     var pT = hitT + 260;
     if (o.p) S.at(pT, function () { var pe = pEl(o.p), PF = o.pFrom || { x: F.x - 40, y: F.y + 40 };
-      if (o.pImg) { var pi = dom(host, 'fxpet', '<img src="../../review1/'%20+%20o.pImg%20+%20'" alt="">', 900 * q, 'left:' + PF.x + 'px;top:' + PF.y + 'px;--dx:' + (T.x - PF.x) + 'px;--dy:' + (T.y - PF.y) + 'px'); }
+      if (o.pImg) { var pi = dom(host, 'fxpet', '<img src="' + o.pImg + '" alt="">', 900 * q, 'left:' + PF.x + 'px;top:' + PF.y + 'px;--dx:' + (T.x - PF.x) + 'px;--dy:' + (T.y - PF.y) + 'px'); }
       S.at(pT + 300 * q, function () { burst(S, T.x + 16, T.y + 10, pe, 14, 260, .8); if (o.pd && !o.noNum) num(host, { x: T.x + 40, y: T.y + 30 }, o.pd, false, 1, '🐾 ＋'); }); });
     var ms = (o.p ? pT + 700 : hitT + 700) + (tier >= 5 ? 900 : 0); S.stop(ms); return { ms: ms, hit: hitT, crit: crit };
   }
@@ -3046,7 +3046,7 @@ var RPFX = (function () {
   function summon(o) {
     o = o || {}; var tier = Math.max(1, Math.min(5, o.star || 1)), e = o.kind === 'w' ? wInfo(o.w).e : o.kind === 'p' ? pEl(o.w) : ['light', 'tech', 'thunder', 'cosmic', 'fire', 'light'][tier], C = EL[e].c;
     var ov = overlay('sum t' + tier);
-    ov.innerHTML = '<div class="fxsc"><div class="fxcard ' + (o.kind || 'h') + '" style="--c1:' + C[1] + ';--c2:' + C[2] + '"><img src="../../review1/'%20+%20o.img%20+%20'" alt=""><div class="fxrays"></div></div>' +
+    ov.innerHTML = '<div class="fxsc"><div class="fxcard ' + (o.kind || 'h') + '" style="--c1:' + C[1] + ';--c2:' + C[2] + '"><img src="' + o.img + '" alt=""><div class="fxrays"></div></div>' +
       '<div class="fxst">' + stars(tier) + '</div><div class="fxtt">' + (o.title || '') + '</div><div class="fxsub">' + (o.sub || '') + '</div><button class="fxok">👌 好</button></div>';
     var S = Stage(ov, true), cx = S.w / 2, cy = S.h * .5, rad = Math.min(S.w, S.h) * .32;
     if (RM) { S.stop(100); close(ov, 3200, o.done); return; }
@@ -3068,7 +3068,7 @@ var RPFX = (function () {
   }
   /* ════ 🐾 長大／進化 ════ o ＝ {img, to:1|2, name} */
   function evolve(o) { o = o || {}; var e = pEl(o.w), C = EL[e].c, ov = overlay('evo s' + (o.to || 1));
-    ov.innerHTML = '<div class="fxsc"><div class="fxevo" style="--c1:' + C[1] + ';--c2:' + C[2] + '"><img src="../../review1/'%20+%20o.img%20+%20'" alt=""><div class="fxrays"></div></div><div class="fxtt">' + (o.to >= 2 ? '🐲 進化了！' : '🐥 長大了！') + '</div>' +
+    ov.innerHTML = '<div class="fxsc"><div class="fxevo" style="--c1:' + C[1] + ';--c2:' + C[2] + '"><img src="' + o.img + '" alt=""><div class="fxrays"></div></div><div class="fxtt">' + (o.to >= 2 ? '🐲 進化了！' : '🐥 長大了！') + '</div>' +
       '<div class="fxsub">' + (o.sub || (o.to >= 2 ? '陪你 練了 7 天 ➜ 變得 更強' : '陪你 練了 3 天 ➜ 長大 了')) + '</div><button class="fxok">👌 好</button></div>';
     var S = Stage(ov, true), cx = S.w / 2, cy = S.h * .44; if (RM) { S.stop(100); return close(ov, 3200, o.done); }
     for (var i = 0; i < 90; i++) (function (i) { S.at(i * 26, function () { var a = Math.random() * Math.PI * 2, r = 160 + Math.random() * 160; S.add({ t: 'dot', x: cx + Math.cos(a) * r, y: cy + Math.sin(a) * r, vx: -Math.sin(a) * 260, vy: Math.cos(a) * 260, home: { x: cx, y: cy }, hs: 900, dr: 1, l: 1.3, a: 0, s: 4 + Math.random() * 5, c: C[i % 3] }); }); })(i);
@@ -3097,7 +3097,7 @@ var RPFX = (function () {
   function monImg(base, m) { return base + 'rpg/pets/' + m + '.jpg'; }
   function fight(box, F, o) {
     o = o || {}; if (!box || !F) return; var base = o.base || '../', hero = box.querySelector('.fxh'), pet = box.querySelector('.fxp');
-    var mon = dom(box, 'fxmon', '<div class="fxmi"><img src="../../review1/'%20+%20monImg(base,%20F.from.m)%20+%20'" alt="怪物"></div><div class="fxhp"><i></i><span></span></div><div class="fxmn"></div>', 0);
+    var mon = dom(box, 'fxmon', '<div class="fxmi"><img src="' + monImg(base, F.from.m) + '" alt="怪物"></div><div class="fxhp"><i></i><span></span></div><div class="fxmn"></div>', 0);
     var img = mon.querySelector('img'), bar = mon.querySelector('.fxhp i'), lab = mon.querySelector('.fxhp span'), mn = mon.querySelector('.fxmn');
     var per = F.d + F.pd, vis = Math.min(F.hits, RM ? 1 : 6), KL = (F.kill || []).slice(), ML = ['p16', 'p22', 'p23', 'p24', 'p25', 'p27', 'p30', 'p17', 'p19', 'p20', 'p29', 'p28', 'p18', 'p21', 'p26'];
     var mx = function (i) { return 80 + 40 * i; }, cur = { i: F.from.i, hp: F.from.hp };
@@ -3118,7 +3118,7 @@ var RPFX = (function () {
       setTimeout(function () { strike(k + 1); }, Math.max(900, a.ms - 200) + (ev.kills.length ? 900 : 0));
     }
     function kill(m0, end) { mon.classList.add('ko'); var S = Stage(box), c = pos(box, mon); burst(S, c.x, c.y, 'light', 60, 520, 1.6); S.stop(1600);
-      dom(box, 'fxpure', '<img src="../../review1/'%20+%20monImg(base,%20m0)%20+%20'" alt=""><b>✨ 打倒了！<br>淨化 ➜ 收進 👾 怪物圖鑑</b>', 2600);
+      dom(box, 'fxpure', '<img src="' + monImg(base, m0) + '" alt=""><b>✨ 打倒了！<br>淨化 ➜ 收進 👾 怪物圖鑑</b>', 2600);
       setTimeout(function () { cur = end; mon.classList.remove('ko'); show(cur); }, 1300); }
     setTimeout(function () { strike(0); }, 500);
   }
@@ -3674,15 +3674,15 @@ function scOut(){SCID=null;SCGUEST=false;['id_g3','id_g4','last'].forEach(functi
 /* 🦸 這一次拿到的經驗值、金幣（2026-10-17 第八次；規則 score/_calc.js rpEarn）：英雄＋寵物、經驗值條往上長、升級、金幣、〔🦸 我的 英雄〕 */
 var SCRPB=(function(){var s=document.querySelector('script[src$="score/url.js"]');return s?s.getAttribute('src').replace(/score\/url\.js$/,''):'../'})();
 /* 2026-10-18 第十次（老師：🦸 圖示太幼稚 ➜ 換成老師的封面照片；「我的英雄」➜「戰神之路」）：小圖示 ＝ rpg/cover_icon.webp（兩張臉並排，rpg/_cover.py） */
-function scCovI(){return '<img class="scCov" src="../../review1/'+SCRPB+'rpg/cover_icon.webp" alt="" aria-hidden="true">'}
+function scCovI(){return '<img class="scCov" src="'+SCRPB+'rpg/cover_icon.webp" alt="" aria-hidden="true">'}
 function scHeroHTML(G){var D=function(id){return rwSrc(SCRPB,id)},S=G.s||{};if(G.h&&S.fx)setTimeout(function(){rwFx(SCRPB,S.fx)},900);   /* 2026-10-18：🏪 商城寶物、💥 必殺武功特效（做完一次 演一次） */
   var a=Math.max(0,G.xp-G.gx),p0=G.lv>G.lv0?0:Math.max(0,(a-G.lvAt)/(G.lvNext-G.lvAt)*100),p1=Math.min(100,(G.xp-G.lvAt)/(G.lvNext-G.lvAt)*100);
   /* 2026-10-20 第十四次 老師：武器、寵物真的能打怪 ➜ 答對幾題 ＝ 打幾下（伺服器算好的 G.f，score/_calc.js rpFight）；賺到金幣 ➜ 金幣飛進去、數字一個一個加 */
   var F=G.h&&G.f&&G.f.hits?G.f:null;
-  if(F)return '<div class="sct">'+scCovI()+'這一次 你拿到</div><div class="schero"><div class="shar" id="shFight"><div class="shimg rw-host fxh">'+rwBack(SCRPB,S)+'<img src="../../review1/'+D(G.h)+'" alt="我的戰士">'+rwFront(SCRPB,S)+'</div>'+
-    (G.p?'<img class="fxp" src="../../review1/'+D(G.p)+'" alt="我的寵物">':'')+'</div>'+
+  if(F)return '<div class="sct">'+scCovI()+'這一次 你拿到</div><div class="schero"><div class="shar" id="shFight"><div class="shimg rw-host fxh">'+rwBack(SCRPB,S)+'<img src="'+D(G.h)+'" alt="我的戰士">'+rwFront(SCRPB,S)+'</div>'+
+    (G.p?'<img class="fxp" src="'+D(G.p)+'" alt="我的寵物">':'')+'</div>'+
     '<div class="shst"><div class="shfl">⚔ 答對 <b>'+F.hits+'</b> 題 ＝ 打 <b>'+F.hits+'</b> 下<br>一下 💥 <b>'+F.d+'</b>'+(F.pd?'（🐾 ＋'+F.pd+'）':'')+'</div>'+scHeroSt(G,p0,p1)+'</div></div>';
-  return '<div class="sct">'+scCovI()+'這一次 你拿到</div><div class="schero"><div class="shimg rw-host">'+(G.h?rwBack(SCRPB,S)+'<img src="../../review1/'+D(G.h)+'" alt="我的戰神">'+rwFront(SCRPB,S)+(G.p?'<img class="shp" src="../../review1/'+D(G.p)+'" alt="我的寵物">':''):'<div class="shno">'+scCovI()+'<br>還沒有 戰士</div>')+'</div>'+
+  return '<div class="sct">'+scCovI()+'這一次 你拿到</div><div class="schero"><div class="shimg rw-host">'+(G.h?rwBack(SCRPB,S)+'<img src="'+D(G.h)+'" alt="我的戰神">'+rwFront(SCRPB,S)+(G.p?'<img class="shp" src="'+D(G.p)+'" alt="我的寵物">':''):'<div class="shno">'+scCovI()+'<br>還沒有 戰士</div>')+'</div>'+
     '<div class="shst">'+scHeroSt(G,p0,p1)+'</div></div>'}
 function scHeroSt(G,p0,p1){return '<div class="shx">⭐ 經驗值 <b>＋'+G.gx+'</b></div><div class="shbar"><i style="width:'+p0.toFixed(1)+'%" data-w="'+p1.toFixed(1)+'"></i></div>'+
     '<div class="shlv">'+(G.lv>G.lv0?'🎉 升級了！ Lv '+G.lv0+' ➜ <b>Lv '+G.lv+'</b>':'Lv '+G.lv+'（再 '+(G.lvNext-G.xp)+' 升級）')+'</div>'+
