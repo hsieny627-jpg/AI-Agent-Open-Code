@@ -4,6 +4,10 @@
 > 設計、研究證據（21 條）、使用者的決定：`sentences/2026-10-07_C_設計與研究清單.md`（**Q1～Q18 使用者 2026-10-07 全部照建議**）。
 > 根目錄 `AGENTS.md` 第四節（最高原則、品質、省額度）同樣適用。
 
+## 2026-10-20 老師試用以後（第十六次）：最後一幕 拿掉 音效、變 3D（先讀這一節）
+
+`_client.js`：做完一次最後一幕 拿掉〔🔊 音效〕（`#scSnd`、`scSndLab`、`RPSND`），在家複習 ＝ `RPLIFE.mini(#shFight)`（3D 轉＋反光）＋每一下 命中 `RPLIFE.burst`。`_calc.js`、`_server.js` **沒改 ➜ 不用重新部署**。改了 `_client.js` ➜ 全部網站重新 build（含 `node review1/_build_games.js`、`node midterm/_build.js`）。細節 `rpg/CLAUDE.md` 最上面「第十六次」。第 5、6 點（戰力能力、最認真練習 90%）下一個對話做。
+
 ## 2026-10-20 老師看完 C17（第十五次）：⚔ 戰力階級、👑 冠軍寶箱自動發、保持滿分圖示、10/31 換品（先讀這一節）
 
 需求：`sentences/2026-10-16_C_需求與問題.md` 第四節最下面「第十五次」。細節 `rpg/CLAUDE.md`、`live/CLAUDE.md` 最上面「第十五次」。**改了 `_calc.js`、`_server.js` ➜ 要重新部署** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html 。

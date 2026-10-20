@@ -198,6 +198,8 @@ var RPFX = (function () {
     if (tier >= 3) for (var b = 0; b < tier * 2; b++) (function (b) { S.at(500 + b * 140, function () { var x = cx + (Math.random() - .5) * rad * 1.6; bolt(S, x, 0, cx + (Math.random() - .5) * 40, cy + rad * .5, C[b % 2], 4, .25); }); })(b);
     S.at(1150, function () { S.add({ t: 'beam', x: cx, y: -20, x2: cx, y2: cy + rad * .6, s: 60 + tier * 16, c: C[1], c2: C[2], l: .9, a: 0 }); S.flash = .5 + tier * .08; S.fc = '#FFFFFF'; });
     S.at(1350, function () { burst(S, cx, cy, e, 50 + tier * 14, 520 + tier * 60, 1.6); for (var r = 0; r < 3; r++) S.add({ t: 'ring', x: cx, y: cy, r0: 20, r1: Math.max(S.w, S.h) * (.45 + r * .2), s: 10, c: C[r], l: .9 + r * .15, a: 0 }); shake(ov.querySelector('.fxsc'), tier); });
+    /* 2026-10-20 第十六次 老師第 3 點：立體 光點 漩渦 從 四面八方 收進 卡片 ➜ 卡片 出來 的 那一下 立體 爆開（rpg/life.js 有 載入 才 有） */
+    if (window.RPLIFE && RPLIFE.vortex) RPLIFE.vortex(ov, { x: cx, y: cy, c: C, e: e, tier: tier, ms: 1250 });
     S.stop(4200); return close(ov, tier >= 5 ? 6500 : 5400, o.done);
   }
   /* ════ 🐾 長大／進化 ════ o ＝ {img, to:1|2, name} */
@@ -207,6 +209,7 @@ var RPFX = (function () {
     var S = Stage(ov, true), cx = S.w / 2, cy = S.h * .44; if (RM) { S.stop(100); return close(ov, 3200, o.done); }
     for (var i = 0; i < 90; i++) (function (i) { S.at(i * 26, function () { var a = Math.random() * Math.PI * 2, r = 160 + Math.random() * 160; S.add({ t: 'dot', x: cx + Math.cos(a) * r, y: cy + Math.sin(a) * r, vx: -Math.sin(a) * 260, vy: Math.cos(a) * 260, home: { x: cx, y: cy }, hs: 900, dr: 1, l: 1.3, a: 0, s: 4 + Math.random() * 5, c: C[i % 3] }); }); })(i);
     S.at(2500, function () { S.flash = 1; S.fc = '#FFFFFF'; burst(S, cx, cy, e, 80, 640, 1.8); for (var r = 0; r < 3; r++) S.add({ t: 'ring', x: cx, y: cy, r0: 20, r1: 500 + r * 160, s: 10, c: C[r], l: 1 + r * .2, a: 0 }); });
+    if (window.RPLIFE && RPLIFE.vortex) RPLIFE.vortex(ov, { x: cx, y: cy, c: C, e: e, tier: o.to >= 2 ? 5 : 3, ms: 2450 });
     S.stop(4200); return close(ov, 6400, o.done); }
   /* ════ 👑 冠軍寶箱 ════ o ＝ {html:打開以後看到的, done} */
   function chest(o) { o = o || {}; var ov = overlay('chs');

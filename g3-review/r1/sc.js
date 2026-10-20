@@ -354,6 +354,8 @@ var RPFX = (function () {
     if (tier >= 3) for (var b = 0; b < tier * 2; b++) (function (b) { S.at(500 + b * 140, function () { var x = cx + (Math.random() - .5) * rad * 1.6; bolt(S, x, 0, cx + (Math.random() - .5) * 40, cy + rad * .5, C[b % 2], 4, .25); }); })(b);
     S.at(1150, function () { S.add({ t: 'beam', x: cx, y: -20, x2: cx, y2: cy + rad * .6, s: 60 + tier * 16, c: C[1], c2: C[2], l: .9, a: 0 }); S.flash = .5 + tier * .08; S.fc = '#FFFFFF'; });
     S.at(1350, function () { burst(S, cx, cy, e, 50 + tier * 14, 520 + tier * 60, 1.6); for (var r = 0; r < 3; r++) S.add({ t: 'ring', x: cx, y: cy, r0: 20, r1: Math.max(S.w, S.h) * (.45 + r * .2), s: 10, c: C[r], l: .9 + r * .15, a: 0 }); shake(ov.querySelector('.fxsc'), tier); });
+    /* 2026-10-20 第十六次 老師第 3 點：立體 光點 漩渦 從 四面八方 收進 卡片 ➜ 卡片 出來 的 那一下 立體 爆開（rpg/life.js 有 載入 才 有） */
+    if (window.RPLIFE && RPLIFE.vortex) RPLIFE.vortex(ov, { x: cx, y: cy, c: C, e: e, tier: tier, ms: 1250 });
     S.stop(4200); return close(ov, tier >= 5 ? 6500 : 5400, o.done);
   }
   /* ════ 🐾 長大／進化 ════ o ＝ {img, to:1|2, name} */
@@ -363,6 +365,7 @@ var RPFX = (function () {
     var S = Stage(ov, true), cx = S.w / 2, cy = S.h * .44; if (RM) { S.stop(100); return close(ov, 3200, o.done); }
     for (var i = 0; i < 90; i++) (function (i) { S.at(i * 26, function () { var a = Math.random() * Math.PI * 2, r = 160 + Math.random() * 160; S.add({ t: 'dot', x: cx + Math.cos(a) * r, y: cy + Math.sin(a) * r, vx: -Math.sin(a) * 260, vy: Math.cos(a) * 260, home: { x: cx, y: cy }, hs: 900, dr: 1, l: 1.3, a: 0, s: 4 + Math.random() * 5, c: C[i % 3] }); }); })(i);
     S.at(2500, function () { S.flash = 1; S.fc = '#FFFFFF'; burst(S, cx, cy, e, 80, 640, 1.8); for (var r = 0; r < 3; r++) S.add({ t: 'ring', x: cx, y: cy, r0: 20, r1: 500 + r * 160, s: 10, c: C[r], l: 1 + r * .2, a: 0 }); });
+    if (window.RPLIFE && RPLIFE.vortex) RPLIFE.vortex(ov, { x: cx, y: cy, c: C, e: e, tier: o.to >= 2 ? 5 : 3, ms: 2450 });
     S.stop(4200); return close(ov, 6400, o.done); }
   /* ════ 👑 冠軍寶箱 ════ o ＝ {html:打開以後看到的, done} */
   function chest(o) { o = o || {}; var ov = overlay('chs');
@@ -980,8 +983,7 @@ function scHeroHTML(G){var D=function(id){return rwSrc(SCRPB,id)},S=G.s||{};if(G
   var a=Math.max(0,G.xp-G.gx),p0=G.lv>G.lv0?0:Math.max(0,(a-G.lvAt)/(G.lvNext-G.lvAt)*100),p1=Math.min(100,(G.xp-G.lvAt)/(G.lvNext-G.lvAt)*100);
   /* 2026-10-20 第十四次 老師：武器、寵物真的能打怪 ➜ 答對幾題 ＝ 打幾下（伺服器算好的 G.f，score/_calc.js rpFight）；賺到金幣 ➜ 金幣飛進去、數字一個一個加 */
   var F=G.h&&G.f&&G.f.hits?G.f:null;
-  var SB=SCSRC==='home'&&!window.SCLIVE?'<button class="sndB" id="scSnd" style="float:right">🔊 音效 開</button>':'';setTimeout(scSndLab,0);
-  if(F)return '<div class="sct">'+SB+scCovI()+'這一次 你拿到</div><div class="schero"><div class="shar" id="shFight"><div class="shimg rw-host fxh">'+rwBack(SCRPB,S)+'<img src="'+D(G.h)+'" alt="我的戰士">'+rwFront(SCRPB,S)+'</div>'+
+  if(F)return '<div class="sct">'+scCovI()+'這一次 你拿到</div><div class="schero"><div class="shar" id="shFight"><div class="shimg rw-host fxh">'+rwBack(SCRPB,S)+'<img src="'+D(G.h)+'" alt="我的戰士">'+rwFront(SCRPB,S)+'</div>'+
     (G.p?'<img class="fxp" src="'+D(G.p)+'" alt="我的寵物">':'')+'</div>'+
     '<div class="shst"><div class="shfl">⚔ 答對 <b>'+F.hits+'</b> 題 ＝ 打 <b>'+F.hits+'</b> 下<br>一下 💥 <b>'+F.d+'</b>'+(F.pd?'（🐾 ＋'+F.pd+'）':'')+'</div>'+scHeroSt(G,p0,p1)+'</div></div>';
   return '<div class="sct">'+scCovI()+'這一次 你拿到</div><div class="schero"><div class="shimg rw-host">'+(G.h?rwBack(SCRPB,S)+'<img src="'+D(G.h)+'" alt="我的戰神">'+rwFront(SCRPB,S)+(G.p?'<img class="shp" src="'+D(G.p)+'" alt="我的寵物">':''):'<div class="shno">'+scCovI()+'<br>還沒有 戰士</div>')+'</div>'+
@@ -996,15 +998,13 @@ function scHeroGo(G){var F=G.h&&G.f&&G.f.hits?G.f:null,box=document.getElementBy
   var coin=function(){var to=document.getElementById('shGc'),fr=box||document.querySelector('.schero .shimg');if(!to||!(G.gc>0))return;var tot=document.getElementById('shTot'),t0=G.coins-G.gc;
     if(typeof RPFX==='undefined'){to.textContent='＋'+G.gc;if(tot)tot.textContent=G.coins;return}
     RPFX.coins(fr,to,G.gc,function(v){to.textContent='＋'+v;if(tot)tot.textContent=t0+v},0)};
-  /* 2026-10-20 第十五次（老師 C17 第 1、2 題）：在家 練習 做完 的 最後一幕 ＝ 戰士 眨眼、呼吸、揮武器＋音效（學校 的 教學網站、現場任務 不出聲）；rpg/life.js 要用 才 載入 */
-  var H=SCSRC==='home'&&!window.SCLIVE,go=function(){if(H&&window.RPLIFE){var im=document.querySelector('.schero .shimg>img');if(im&&!im.closest('.lfw')){var sp=document.createElement('span');im.parentNode.insertBefore(sp,im);sp.outerHTML=RPLIFE.wrap(im.outerHTML,G.h);im.parentNode.removeChild(im);RPLIFE.mount(document.querySelector('.schero'))}
-      if(G.p&&window.RPSND)RPSND.pet(G.p,SCRPB+'rpg/')}
-    if(F&&box&&typeof RPFX!=='undefined')RPFX.fight(box,F,{base:SCRPB,w:w,p:G.p,id:id,done:coin,hook:H?function(x){if(window.RPSND)RPSND.atk(x);var hc=box.querySelector('.fxh');if(window.RPLIFE&&hc)setTimeout(function(){RPLIFE.glint(RPLIFE.lfo(hc),RPFX.EL[x.e].c[1])},Math.max(0,x.ch-200))}:null,onKill:H?function(){if(window.RPSND)RPSND.chest()}:null});else setTimeout(coin,500)};
+  /* 2026-10-20 第十六次（老師第 1～3 點）：在家 練習 做完 的 最後一幕 ＝ 3D 打怪 場地（鏡頭 慢慢 轉、卡片 反光、命中 立體 爆炸）；眨眼、音效 拿掉；rpg/life.js 要用 才 載入 */
+  var H=SCSRC==='home'&&!window.SCLIVE,go=function(){if(H&&window.RPLIFE&&RPLIFE.mini&&box)RPLIFE.mini(box);
+    if(F&&box&&typeof RPFX!=='undefined')RPFX.fight(box,F,{base:SCRPB,w:w,p:G.p,id:id,done:coin,hook:H?function(x){if(!window.RPLIFE||!RPLIFE.burst)return;setTimeout(function(){var mo=box.querySelector('.fxmon .fxmi')||box.querySelector('.fxmon');if(mo)RPLIFE.burst(box,{at:mo,e:x.e,tier:x.tier,crit:x.crit})},x.hit)}:null});else setTimeout(coin,500)};
   if(H)scLifeLoad(go);else go()}
 function scLifeLoad(cb){if(window.RPLIFE){cb();return}var done=false,f=function(){if(done)return;done=true;cb()};
   if(!document.getElementById('scLifeCss')){var l=document.createElement('link');l.id='scLifeCss';l.rel='stylesheet';l.href=SCRPB+'rpg/life.css';document.head.appendChild(l)}
   var s=document.createElement('script');s.src=SCRPB+'rpg/life.js';s.onload=f;s.onerror=f;document.head.appendChild(s);setTimeout(f,2500)}
-function scSndLab(){var b=document.getElementById('scSnd');if(!b)return;var o=true;try{o=localStorage.getItem('rp_snd')!=='0'}catch(e){}b.textContent=o?'🔊 音效 開':'🔇 音效 關';b.classList.toggle('off',!o)}
 function scByeHTML(){return '<div class="scbye"><span>👋 做完了，記得登出<small>下一個人才不會用到您的號碼</small></span><button id="scBye">👋 登出</button></div>'}
 /* 蓋滿整頁的大字（這是您嗎、30 秒提醒、已經登出了） */
 function scFull(id,h){var o=document.getElementById(id);if(!o){o=document.createElement('div');o.id=id;o.className='scfull';document.body.appendChild(o)}o.innerHTML='<div class="scfb">'+h+'</div>';o.classList.add('on');return o}
@@ -1063,8 +1063,6 @@ function scBar(){var b=document.getElementById('scbar');if(!b)return;document.bo
 function scHeroA(){var b=document.getElementById('scbar');return window.SCLIVE||location.pathname.indexOf('/rpg/')>=0||(b&&b.classList.contains('inl'))?'':'<a class="scH" role="button" tabindex="0" data-rpg="1">'+scCovI()+'戰神之路</a>'}
 /* 連結用點的（不寫 href：在家複習 r1/ 的複製程式會把 href 換路徑） */
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-rpg]');if(a){e.preventDefault();location.href=SCRPB+'rpg/index.html'}});
-/* 🔊 最後一幕 的 音效 開／關（跟〔戰神之路〕同一個：rp_snd） */
-document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#scSnd');if(!b)return;var o=true;try{o=localStorage.getItem('rp_snd')!=='0'}catch(x){}if(window.RPSND)RPSND.set(!o);else try{localStorage.setItem('rp_snd',o?'0':'1')}catch(x){}scSndLab()});
 function scHomeLogin(){if(!SCH)return;scFullOff('scbye2');scLogin(SCH.reopen)}
 if(SCON){
   (function(){var a=scGet('act');if(SCID&&a&&!window.SCLIVE&&Date.now()-a>=SCIDLE)scOut()})();   /* 上一次動作已經超過 3 分鐘 ＝ 已經登出了 */

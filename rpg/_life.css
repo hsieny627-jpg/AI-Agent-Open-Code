@@ -1,21 +1,7 @@
-/* rpg/_life.css — 戰士、寵物 活起來＋全部合體（2026-10-20 第十五次；跟 rpg/_life_rt.js 一起） */
+/* rpg/_life.css — 戰士、寵物 立體 3D 舞台＋全部合體（2026-10-20 第十六次：眨眼、眼睛閃光、^^、音效 拿掉；跟 rpg/_life_rt.js 一起） */
 .lfw{position:relative;display:block;line-height:0}
 .lfw>img{display:block;width:100%;border-radius:inherit;transform-origin:50% 92%;animation:lfbr 3.8s ease-in-out infinite}
 @keyframes lfbr{0%,100%{transform:none}50%{transform:translateY(-.6%) scale(1.008,1.016)}}
-.lfo{position:absolute;inset:0;pointer-events:none;z-index:2}
-/* 眼皮：平常 縮起來 看不見；眨眼 ＝ 從上往下 蓋住 再 打開（0.17 秒）；下緣 一條 深色 ＝ 睫毛 */
-.lfo .lid{position:absolute;display:block;background:var(--sk);border-radius:48% 48% 50% 50%/62% 62% 38% 38%;transform:scaleY(0);transform-origin:50% 0;box-shadow:inset 0 -.13em 0 rgba(40,18,18,.9),0 0 2px var(--sk)}
-.lfo .lid.hu{box-shadow:inset 0 -.1em 0 rgba(30,14,14,.92),0 0 2px var(--sk)}
-.lfo.bk .lid{animation:lfbk .17s ease-in-out}
-@keyframes lfbk{0%{transform:scaleY(0)}45%,60%{transform:scaleY(1)}100%{transform:scaleY(0)}}
-/* 開心的 眼睛 ^^（寵物 撒嬌、看到 戰士）：蓋住 ＋ 一條 往上 彎的 線 */
-.lfo.hp .lid{transform:scaleY(1);transition:transform .12s}
-.lfo.hp .lid::after{content:'';position:absolute;left:14%;right:14%;top:30%;height:62%;border:.14em solid rgba(40,18,18,.9);border-bottom:0;border-radius:50% 50% 0 0/100% 100% 0 0}
-/* 眼睛 閃光：一顆 四角星 閃一下（出招 的 時候 ＝ 武器 的 顏色） */
-.lfo .gl{position:absolute;width:7%;aspect-ratio:1;margin:-3.5% 0 0 -3.5%;background:var(--gc,#fff);clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);opacity:0;filter:drop-shadow(0 0 4px var(--gc,#fff))}
-.lfo.gg .gl{animation:lfgl .7s ease-out}
-@keyframes lfgl{0%{opacity:0;transform:scale(.2) rotate(0)}35%{opacity:1;transform:scale(1.3) rotate(45deg)}100%{opacity:0;transform:scale(.6) rotate(90deg)}}
-.lfo.noeye .gl{display:none}
 /* 愛心 往上 飄 */
 .lfh{position:absolute;z-index:40;font-style:normal;font-size:clamp(22px,3.4vh,34px);pointer-events:none;animation:lfh 1.9s ease-out forwards;opacity:0}
 @keyframes lfh{0%{opacity:0;transform:translate(0,0) scale(.4)}20%{opacity:1;transform:translate(calc(var(--dx)*.3),-20px) scale(1.15)}100%{opacity:0;transform:translate(var(--dx),-110px) scale(.9)}}
@@ -30,9 +16,6 @@
 .lfsw{animation:lfsw .9s cubic-bezier(.2,.9,.3,1.2)!important;z-index:6;transform-origin:20% 90%}
 @keyframes lfsw{0%{transform:none}25%{transform:rotate(-38deg) translate(-6px,-10px);filter:brightness(1.3) drop-shadow(0 0 10px var(--wc))}55%{transform:rotate(78deg) translate(10px,-6px) scale(1.18);filter:brightness(2) drop-shadow(0 0 26px var(--wc)) drop-shadow(-30px 0 18px var(--wc))}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){.lfw>img{animation:none}.lfnz,.lfpat,.lfatk,.lfsw{animation:none!important}}
-/* 🔊 音效 開／關 */
-.sndB{min-height:52px;padding:4px 16px;border-radius:999px;border:2px solid #7FD4FF;background:rgba(10,20,40,.78);color:#E8F6FF;font-size:clamp(18px,2.3vh,22px);font-weight:700;cursor:pointer}
-.sndB.off{border-color:#6A7A8C;color:#A8B6C9}
 /* ══ 🌟 全部 合體 ══ */
 .lfcb{position:fixed;inset:0;z-index:120;overflow:hidden;background:#02030A;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;font-weight:700;animation:cbin .35s ease-out}
 .lfcb.out{opacity:0;transition:opacity .35s}
@@ -65,5 +48,42 @@
 .lfcb .cbpow b{display:block;font-size:clamp(60px,11vh,120px);line-height:1;color:#FFE07A;text-shadow:0 0 30px #FF9A2A,0 6px 0 #3A1600}
 .lfcb .cbpow .tbI{font-size:clamp(30px,5vh,50px)}
 .lfcb .cbok{position:absolute;right:max(16px,3vw);bottom:max(16px,3vh);z-index:10;min-height:64px;padding:6px 30px;border-radius:999px;border:2px solid #3BD16F;background:#0F3323;color:#fff;font-size:clamp(22px,3vh,30px);font-weight:700}
-.lfcb.s-go .cbst{animation:shake .45s linear .9s}
+
 @media (max-aspect-ratio:3/4){.lfcb .cbst{width:min(40vh,52vw)}.lfcb .cbpet{right:-30%}.lfcb .cbw{left:-30%}}
+
+/* ══ 立體 3D 舞台（第十六次 老師第 3 點）══ */
+.d3cv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.d3cv.bk{z-index:-1}.d3cv.ft{z-index:5}
+.mfr.d3{perspective:1000px;perspective-origin:50% 42%}
+.mfr.d3 .team{transform-style:preserve-3d;isolation:auto;will-change:transform}
+.mfr.d3 .team>div{transform-style:preserve-3d}
+.mfr.d3 .team>div:not(.hc){translate:0 0 80px}
+.mfr.d3 .hc{translate:0 0 10px}
+/* 卡片 有 厚度：鏡頭 往 哪邊 轉，側邊 就 露出來（--sx 由 _life_rt.js 每一格 算） */
+.mfr.d3 .d3c,.lfcb .cbh,.lfcb .cbpet,.d3m .shimg{box-shadow:calc(var(--sx,0)*1px) calc(var(--sy,1)*1px) 0 #6B4A12,calc(var(--sx,0)*2px) calc(var(--sy,1)*2px) 0 #4E360C,calc(var(--sx,0)*3px) calc(var(--sy,1)*3px) 0 #3A2808,calc(var(--sx,0)*4px) calc(var(--sy,1)*4px) 0 #281C06,calc(var(--sx,0)*5px) calc(var(--sy,1)*5px) 1px #1A1204,0 0 0 2px rgba(0,0,0,.8),calc(var(--sx,0)*4px) 26px 34px rgba(0,0,0,.7)}
+.mfr.d3 .hc.d3c{box-shadow:calc(var(--sx,0)*1px) calc(var(--sy,1)*1px) 0 #6B4A12,calc(var(--sx,0)*2px) calc(var(--sy,1)*2px) 0 #4E360C,calc(var(--sx,0)*3px) calc(var(--sy,1)*3px) 0 #3A2808,calc(var(--sx,0)*4px) calc(var(--sy,1)*4px) 0 #281C06,calc(var(--sx,0)*5px) calc(var(--sy,1)*5px) 0 #1E1505,calc(var(--sx,0)*6px) calc(var(--sy,1)*6px) 1px #140E03,0 0 0 2px rgba(0,0,0,.8),0 0 34px var(--rc,transparent),calc(var(--sx,0)*5px) 30px 40px rgba(0,0,0,.75)}
+/* 反光：卡片 轉 的 時候 一道 光 跟著 跑；★4、★5 ＝ 彩虹 閃卡 */
+.d3g{position:absolute;inset:0;z-index:8;border-radius:inherit;pointer-events:none;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.08) 40%,rgba(255,255,255,.55) 49%,rgba(255,255,255,.1) 56%,transparent 66%);background-size:300% 100%;background-position:calc(50% - var(--sx,0) * 14%) 0;mix-blend-mode:screen}
+.d3g.foil{background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.55) 49%,transparent 66%),linear-gradient(115deg,rgba(255,80,160,.22),rgba(255,220,80,.22),rgba(80,255,180,.22),rgba(80,160,255,.22),rgba(200,90,255,.22),rgba(255,80,160,.22));background-size:300% 100%,400% 400%;background-position:calc(50% - var(--sx,0) * 14%) 0,calc(50% + var(--sx,0) * 10%) calc(50% + var(--sx,0) * 6%);mix-blend-mode:screen}
+/* 戰士 後面 的 光：離 鏡頭 很遠（鏡頭 繞 的 時候 會 錯開 ＝ 深度） */
+.d3ray{position:absolute;left:50%;top:44%;width:150%;aspect-ratio:1;translate:-50% -50% -220px;border-radius:50%;pointer-events:none;background:conic-gradient(from 0deg,transparent 0 10deg,var(--c1) 10deg 14deg,transparent 14deg 40deg,var(--c2) 40deg 43deg,transparent 43deg 70deg,var(--c1) 70deg 73deg,transparent 73deg 100deg,var(--c2) 100deg 104deg,transparent 104deg);-webkit-mask:radial-gradient(closest-side,#000 10%,transparent);mask:radial-gradient(closest-side,#000 10%,transparent);opacity:.55;animation:spin 22s linear infinite;mix-blend-mode:screen}
+/* 武器：浮在 最前面、慢慢 左右 轉（看得到 厚度） */
+.mfr.d3 .wc.d3c{animation:d3wf 6s ease-in-out infinite}
+@keyframes d3wf{0%,100%{rotate:y -24deg;translate:0 0 30px}50%{rotate:y 24deg;translate:0 -10px 70px}}
+/* ⚔ 3D 出招：戰士 往 鏡頭 衝、武器 飛出去 轉兩圈、寵物 跳 */
+.mfr.d3 .hc.d3lg{animation:d3lg 1.2s cubic-bezier(.3,1.3,.5,1)}
+@keyframes d3lg{0%{translate:0 0 10px;rotate:y 0deg}28%{translate:-14px 4px -60px;rotate:y 14deg}52%{translate:34px -8px 190px;rotate:y -18deg;filter:brightness(1.5) drop-shadow(0 0 26px #fff)}100%{translate:0 0 10px;rotate:y 0deg}}
+.mfr.d3 .wc.d3ws{animation:d3ws 1.4s cubic-bezier(.3,1.1,.4,1)}
+@keyframes d3ws{0%{rotate:y 0deg;translate:0 0 30px}30%{rotate:y 200deg;translate:-50px -50px 200px;filter:brightness(2) drop-shadow(0 0 30px var(--wc))}60%{rotate:y 540deg;translate:-30px -20px 260px;filter:brightness(2.4) drop-shadow(0 0 40px var(--wc))}100%{rotate:y 720deg;translate:0 0 30px}}
+.mfr.d3 .pc.d3ph{animation:d3ph 1s cubic-bezier(.3,1.5,.5,1)!important}
+@keyframes d3ph{0%{translate:0 0 0}40%{translate:-20px -46px 140px;rotate:z -10deg}100%{translate:0 0 0;rotate:z 0deg}}
+/* 做完 一次 的 最後一幕：打怪 場地 也 是 3D */
+.d3m{perspective:900px}.d3m .shimg{transform-style:preserve-3d;transition:none}.d3m .d3g{border-radius:inherit}
+/* 🌟 合體：3D 舞台（卡片 從 很遠 的 地方 轉著 飛過來） */
+.lfcb .cb3{position:absolute;inset:0;perspective:1100px;perspective-origin:50% 45%}
+.lfcb .cbst{transform-style:preserve-3d;transform:translate(-50%,-50%) rotateY(var(--ry,0deg))}
+.lfcb.s-end .cbst{transform:translate(-50%,-34%) scale(.8) rotateY(var(--ry,0deg))}
+.lfcb .cbh{transform:translateZ(-1400px) rotateY(540deg) scale(.6)}
+.lfcb.s1 .cbh{transform:translateZ(0) rotateY(0)}
+.lfcb.s-shk .cb3{animation:shake .5s linear}
+@media (prefers-reduced-motion:reduce){.mfr.d3 .team{transform:none!important}.d3ray,.mfr.d3 .wc.d3c{animation:none}.d3cv{display:none}}
