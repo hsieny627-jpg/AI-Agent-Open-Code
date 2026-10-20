@@ -56,7 +56,7 @@ module.exports = function (CODE, kind) {
       <div class="win"><div class="url">sheets.google.com</div>
         <div class="row"><div class="tile ghost"></div><div class="tile" data-tap="1" data-say="上次做的那一個">📊<small>成績</small></div><div class="tile ghost"></div></div></div>
       <a class="big go" href="https://sheets.google.com" target="_blank" rel="noopener">🌐 打開 Google 試算表</a>`,
-      tip: '2026-10-20（第十四次）新的：打怪、限量、冠軍寶箱、全班獎勵。' },
+      tip: '' },   /* 2026-10-20：第 1 頁 1366✕768 要捲 ➜ 不放說明（這一次新的寫在 score/CLAUDE.md） */
     { t: '按最下面的「名單」分頁', m: `
       <div class="win"><div class="lines">　</div><div class="menu"><span>紀錄</span><span>班級人數</span><span class="hot" data-tap="1" data-say="最下面這一排">名單</span></div></div>`,
       tip: '名單已經貼好了：第 2、3 步直接按〔下一步〕' },   /* 2026-10-17：老師已經貼過名單，這一次只要換程式（第一次部署的說明在 deploy.html） */
