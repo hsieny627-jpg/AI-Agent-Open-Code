@@ -137,6 +137,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     if (!w2.bg || !w2.nf) E.push(tag + '：買了背景／名字框 沒有穿上（背景 ' + w2.bg + '、名字框 ' + w2.nf + '）');
     /* 2026-10-18 第十二次：06～10 也上架了 ➜ 每一類 20 種、沒有「即將 上架」；學生看得到的字 沒有「英雄」（老師：一律 改成 戰士） */
     for (let c = 6; c <= 10; c++) { await p.click('[data-scat="' + c + '"]'); await p.waitForTimeout(200);
+      await p.waitForFunction(() => [].every.call(document.querySelectorAll('#shop > .sgrid [data-id^="s"] img'), i => i.complete && i.naturalWidth > 0), null, { timeout: 5000 }).catch(() => {});
       const k = await p.evaluate(() => ({ n: document.querySelectorAll('#shop > .sgrid [data-id^="s"]').length, soon: /即將 上架/.test(document.getElementById('shop').textContent),
         img: [].every.call(document.querySelectorAll('#shop [data-id^="s"] img'), i => i.complete && i.naturalWidth > 0) }));
       if (k.n !== 20 || k.soon || !k.img) E.push(tag + '：商城第 ' + c + ' 類 不對（' + k.n + ' 種、即將上架 ' + k.soon + '、圖 ' + k.img + '）'); }
