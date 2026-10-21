@@ -95,3 +95,4 @@
 .tbI{display:inline-flex;align-items:center;gap:.2em;vertical-align:-.2em;line-height:1}.tbI svg{width:.95em;height:1.1em;filter:drop-shadow(0 0 3px rgba(0,0,0,.6))}
 .tbI.t4 svg,.tbI.t5 svg{filter:drop-shadow(0 0 5px rgba(120,220,255,.8))}.tbI.t5 svg{filter:drop-shadow(0 0 6px rgba(200,120,255,.95))}
 .tbI.big svg{width:1.6em;height:1.85em}.tbI.big b{font-size:1em;color:#FFE9A8;white-space:nowrap}
+.pgI{display:inline-flex;align-items:center;vertical-align:-.25em;line-height:1}.pgI svg{width:1.6em;height:1.05em;filter:drop-shadow(0 0 4px rgba(79,195,255,.6))}.pgI.p2 svg{filter:drop-shadow(0 0 5px rgba(255,194,26,.75))}.pgI.p0 svg{filter:none}

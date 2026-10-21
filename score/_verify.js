@@ -398,6 +398,17 @@ async function teacher(br, vp) {
     if (new Set(cc.c).size !== 3 || new Set(cc.d).size !== 5) e.push('同一年級有兩班一樣顏色');
     cc.sp.forEach(x => { if (/^(304|402)\|/.test(x) && !/rgb\(255, 212, 0\)/.test(x)) e.push('畫面上的班級數字顏色不對：' + x); }); }
   await p.click('[data-bt="sec"]'); await p.waitForTimeout(150);
+  /* 2026-10-21 第十七次 第 13、14 點：最認真練習 ＝ 大字 兩個好習慣（看不到 A、B、不會 被 切掉）＋〔❓ 怎麼算〕6 幕＋〔❓ 燈號怎麼算〕；成績卡 最上面 寫 為什麼 是 這個 燈 */
+  { const ab = await p.evaluate(() => { const b = document.querySelector('.abbox'); if (!b) return null; const o = { t: b.textContent, fs: parseFloat(getComputedStyle(b.querySelector('.abt')).fontSize), abv: document.querySelectorAll('.abv').length, hab: document.querySelectorAll('.bsec .hab em').length };
+      o.cut = [].filter.call(document.querySelectorAll('.bsec .l,.bsec .hab em'), x => x.scrollWidth > x.clientWidth + 2).length; return o; });
+    if (!ab || /\bA \d|\bB \d/.test(ab.t) || ab.abv || ab.fs < 24 || ab.cut || !/看完才按/.test(ab.t) || !/錯了會改/.test(ab.t)) e.push('最認真練習 說明 不對：' + JSON.stringify(ab).slice(0, 160));
+    await p.click('[data-txq="dili"]'); await p.waitForTimeout(500);
+    const tx = await p.evaluate(() => { const o = document.getElementById('txp'); if (!o || o.hidden) return null; return { n: o.querySelectorAll('.txn i').length, fs: parseFloat(getComputedStyle(o.querySelector('.txc')).fontSize), bh: Math.min.apply(null, [].map.call(o.querySelectorAll('.txctl button'), b => b.getBoundingClientRect().height)), ox: o.querySelector('.txb').scrollWidth - o.querySelector('.txb').clientWidth }; });
+    if (!tx || tx.n !== 6 || tx.fs < 26 || tx.bh < 56 || tx.ox > 2) e.push('〔❓ 怎麼算〕動畫 不對：' + JSON.stringify(tx));
+    for (let i = 0; i < 5; i++) { await p.click('[data-tx="n"]'); await p.waitForTimeout(150); }
+    const t6 = await p.evaluate(() => document.querySelector('#txp .txc').textContent + '|' + document.querySelectorAll('#txp .txtb svg').length);
+    if (!/盾牌/.test(t6) || !/\|5$/.test(t6)) e.push('〔❓〕最後一幕 沒有 說 盾牌：' + t6);
+    await p.click('[data-tx="x"]'); await p.waitForTimeout(150); }
   if (!await p.$('[data-hon="0"]')) e.push('排行榜沒有〔🏆 榮譽榜〕');
   else {
     await p.click('[data-hon="0"]'); await p.waitForTimeout(1200);
@@ -563,6 +574,9 @@ async function teacher(br, vp) {
   /* 2026-10-16 C3／C4 第 3 題 甲：最上面成績卡（🎯 正確、📅 練習、💡 下一步），其他收進〔📋 細節 ▾〕 */
   const gk = await p.evaluate(() => { const g = document.querySelector('#mbox .gcard'); return { b: g ? g.querySelectorAll('.gbx').length : 0, nx: !!(g && g.querySelector('.gnx')), hid: document.getElementById('pmore') && document.getElementById('pmore').hidden }; });
   if (gk.b !== 2 || !gk.nx || !gk.hid) e.push('成績卡最上面不是 🎯 正確、📅 練習 兩格＋💡，或細節沒有收起來：' + JSON.stringify(gk));
+  { const lw = await p.evaluate(() => { const x = document.querySelector('#modal .ltw'); return x ? { t: x.textContent, m: x.querySelectorAll('.txm').length, q: !!x.querySelector('[data-txq="lt"]'), fs: parseFloat(getComputedStyle(x.querySelector('.ltt')).fontSize) } : null; });
+    if (!lw || lw.m !== 2 || !lw.q || lw.fs < 24) e.push('成績卡 沒有「為什麼 是 這個 燈」：' + JSON.stringify(lw));
+    else { await p.click('#modal [data-txq="lt"]'); await p.waitForTimeout(400); const ln = await p.evaluate(() => document.querySelectorAll('#txp .txn i').length); if (ln !== 6) e.push('〔❓ 燈號怎麼算〕不是 6 幕：' + ln); await p.click('[data-tx="x"]'); await p.waitForTimeout(150); } }
   await p.click('#pmb');
   /* 2026-10-12 D 第 3 件：秒懂成績卡（四個大圖、最拿手／要加油、哪幾天有練、每一組的變化、最常錯的 3 題、明細收起來） */
   await p.waitForTimeout(1700);

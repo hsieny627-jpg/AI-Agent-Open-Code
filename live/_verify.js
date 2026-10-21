@@ -231,6 +231,9 @@ const H_PH = ph => ph === 'q';
     const st = await sizes(h, 19); if (st.sm.length || st.low.length || st.ox > 1) E.push(tag + ' 設定頁：字太小 ' + st.sm.slice(0, 3).join('、') + '／按鈕太矮 ' + st.low.slice(0, 3).join('、') + '／左右捲 ' + st.ox);
     { const xb = await h.evaluate(() => { const L = ['0', '1.5', '2'].map(k => document.querySelector('[data-x15="' + k + '"]')); return L.every(Boolean) ? Math.min.apply(null, L.map(b => b.getBoundingClientRect().height)) : 0; }); if (xb < 48) E.push(tag + '：開場 沒有〔關〕〔✖1.5〕〔✖2〕三顆（' + xb + '）'); n++; }
     /* 2026-10-21 老師再加第 3 點：👑 每班 上週 第 1 名 選 1 次 遊戲（老師 勾 哪幾種 ➜ 大螢幕 上 點 ➜ Firebase 記 用過 了） */
+    { const mi = await h.evaluate(() => ({ mini: !!document.querySelector('.chbox.mini #chOpen'), cg: document.querySelectorAll('[data-cg]').length, bh: (document.getElementById('chOpen') || { getBoundingClientRect: () => ({ height: 0 }) }).getBoundingClientRect().height }));
+      if (!mi.mini || mi.cg || mi.bh < 56) E.push(tag + '：冠軍 金框 沒有 先 收起來（第十七次 第 6 點）' + JSON.stringify(mi)); n++;
+      await h.click('#chOpen'); await h.waitForTimeout(200); }
     { const ch = await h.evaluate(() => ({ box: !!document.querySelector('.chbox:not(.done)'), t: (document.querySelector('.chbox') || {}).textContent || '', n: document.querySelectorAll('[data-cg]').length }));
       if (!ch.box || !/40205/.test(ch.t) || ch.n !== 11) E.push(tag + '：沒有 👑 冠軍 選 遊戲 那一塊 ' + JSON.stringify(ch).slice(0, 120)); n++;
       await h.click('[data-cg="race"]'); await h.click('#chGo'); await h.waitForTimeout(400);

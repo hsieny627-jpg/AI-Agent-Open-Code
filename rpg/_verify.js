@@ -42,13 +42,20 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* 2026-10-21 第十六次 第 6 點：第一次 打開 ＝ 先 看 📜 獎勵 規則（9 幕）➜ 5 題 小問題 都 答對 才 能 玩；答錯 ＝ 回去 看 那一幕 */
     const g0 = await p.evaluate(() => ({ lk: document.getElementById('rpin').classList.contains('rlock'), st: getComputedStyle(document.getElementById('stage')).display, tb: getComputedStyle(document.getElementById('tabs')).display,
       gate: !!document.querySelector('.rgate'), sc: document.querySelectorAll('#tst .tsc').length, qz: (document.getElementById('qzGo') || {}).hidden, ch: document.querySelectorAll('.tch button').length }));
-    if (!g0.lk || g0.st !== 'none' || g0.tb !== 'none' || !g0.gate || g0.sc !== 9 || g0.qz !== true || g0.ch !== 1) E.push(tag + '：第一次 打開 沒有 先 鎖住 看 規則：' + JSON.stringify(g0));
-    for (let i = 0; i < 9; i++) { await p.click('[data-tut="' + i + '"]'); await p.waitForTimeout(i === 8 ? 4200 : 3800);
+    if (!g0.lk || g0.st !== 'none' || g0.tb !== 'none' || !g0.gate || g0.sc !== 14 || g0.qz !== true || g0.ch !== 1) E.push(tag + '：第一次 打開 沒有 先 鎖住 看 規則：' + JSON.stringify(g0));
+    for (let i = 0; i < 14; i++) { await p.click('[data-tut="' + i + '"]'); await p.waitForTimeout(i === 13 ? 4200 : 3800);
       const f = await p.evaluate(() => { const c = document.querySelector('#tst .tsc.on'), t = document.getElementById('tst').getBoundingClientRect(), o = [];
         c.querySelectorAll('*').forEach(x => { const r = x.getBoundingClientRect(); if (r.width && (r.right > t.right + 2 || r.left < t.left - 2 || r.bottom > t.bottom + 2)) o.push(x.className || x.tagName); });
-        let mn = 99; c.querySelectorAll('.cap,.rnote,.rtb>div,.rab .ln,.rlist>div,.rmul>div,.rgm span,.rtl>div,.rwk>span,.tchips span').forEach(x => { if (x.textContent.trim()) mn = Math.min(mn, parseFloat(getComputedStyle(x).fontSize)); });
+        let mn = 99; c.querySelectorAll('.cap,.rnote,.rtb>div,.rab .ln,.rlist>div,.rmul>div,.rgm span,.rtl>div,.rwk>span,.tchips span,.iflow small,.rhb>div,.rsum span,.rdots i').forEach(x => { if (x.textContent.trim()) mn = Math.min(mn, parseFloat(getComputedStyle(x).fontSize)); });
         return { o: o.slice(0, 3), mn }; });
       if (f.o.length || f.mn < 17) E.push(tag + '：規則 第 ' + (i + 1) + ' 幕 超出 或 字 太小：' + JSON.stringify(f)); }
+    /* 2026-10-21 第十七次：先 3 幕 ⭐／🪙／⚔ 是什麼；學生 看不到 A、B、規則單；中文 中間 不空格（老師第 1～8 點） */
+    { const r7 = await p.evaluate(() => { const t = document.getElementById('tst').textContent, all = document.getElementById('rp').textContent; return { e: [0, 1, 2].map(i => document.querySelectorAll('#tst .tsc .cap')[i].textContent),
+        ab: /\bA\b|\bB\b|規則單|家長/.test(t) || !!document.querySelector('a[href="rules.html"]'), sp: (() => { const w = document.createTreeWalker(document.getElementById('rp'), 4), o = []; let x; while ((x = w.nextNode())) { const m = x.nodeValue.match(/[\u4e00-\u9fff] +[\u4e00-\u9fff]/g); if (m) o.push(...m); } return o.slice(0, 3); })(), gate: document.querySelector('.rgate').textContent }; });
+      if (!/經驗值/.test(r7.e[0]) || !/金幣/.test(r7.e[1]) || !/戰力/.test(r7.e[2])) E.push(tag + '：規則 前面 沒有 先 講 ⭐／🪙／⚔：' + r7.e.join('｜'));
+      if (r7.ab) E.push(tag + '：學生 的 規則 還有 A、B 或 家長 規則單');
+      if (r7.sp.length) E.push(tag + '：中文 中間 還有 空格：' + r7.sp.join('｜'));
+      if (!/再答 5 題問題，都答對，就可以開始玩！/.test(r7.gate)) E.push(tag + '：最上面 那一句 不對：' + r7.gate.slice(0, 60)); n += 4; }
     const qg = await p.evaluate(() => { const b = document.getElementById('qzGo'); return b && !b.hidden ? b.getBoundingClientRect().height : 0; });
     if (qg < 64) E.push(tag + '：看完 9 幕 沒有 大大的〔📝 5 題 小問題〕（' + qg + '）');
     await p.click('#qzGo'); await p.waitForTimeout(300);
@@ -56,7 +63,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     if (!q1.on || q1.n !== 3 || q1.h < 64 || q1.fs < 26) E.push(tag + '：小問題 畫面 不對：' + JSON.stringify(q1));
     await p.click('#rqz [data-qa="1"]'); await p.waitForTimeout(300); await p.click('#qzSee'); await p.waitForTimeout(500);
     const sb = await p.evaluate(() => ({ off: document.getElementById('rqz').className !== 'on', i: TUT.i, pz: TUT.pz, back: !!document.getElementById('qzBack') }));
-    if (!sb.off || sb.i !== 0 || !sb.pz || !sb.back) E.push(tag + '：答錯 沒有 回去 看 那一幕（停住）＋〔📝 回到 第 1 題〕：' + JSON.stringify(sb));
+    if (!sb.off || sb.i !== 3 || !sb.pz || !sb.back) E.push(tag + '：答錯 沒有 回去 看 那一幕（停住）＋〔📝 回到 第 1 題〕：' + JSON.stringify(sb));
     await p.click('#qzBack'); await p.waitForTimeout(300);
     for (let k = 0; k < 5; k++) { await p.click('#rqz [data-qa="0"]'); await p.waitForTimeout(1100); }
     await p.waitForTimeout(600);
@@ -79,7 +86,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     await p.click('#rpmb [data-m="buy"]'); await p.waitForTimeout(900);
     /* 2026-10-20 第十四次：選到戰士 ＝ 蓋滿整頁的登場動畫（魔法陣、光柱、卡片轉出來、星星） */
     const b1 = await p.evaluate(() => { const o = document.querySelector('.fxov.sum'); return { ov: !!o, t: o ? o.textContent : '', cv: o ? o.querySelectorAll('canvas').length : 0, img: !!(o && o.querySelector('.fxcard img')), hero: !!document.querySelector('#stage .hc img') }; });
-    if (!b1.ov || !/戰士 登場/.test(b1.t) || b1.cv < 2 || !b1.img || !b1.hero) E.push(tag + '：選到戰士沒有登場動畫、舞台沒有戰士：' + JSON.stringify(b1).slice(0, 80));
+    if (!b1.ov || !/戰士 ?登場/.test(b1.t) || b1.cv < 2 || !b1.img || !b1.hero) E.push(tag + '：選到戰士沒有登場動畫、舞台沒有戰士：' + JSON.stringify(b1).slice(0, 80));
     await p.evaluate(() => { const b = document.querySelector('.fxov .fxok'); if (b) b.click(); }); await p.waitForTimeout(1200);
     if (await p.$('.fxov')) E.push(tag + '：登場動畫按〔👌 好〕關不掉');
     if (!G.books['角色'] || !/b02/.test((G.books['角色'].d[1] || [])[1] || '')) E.push(tag + '：試算表「角色」沒有存到 b02');
@@ -95,7 +102,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* 寵物免費一隻 ➜ 舞台有寵物＋「寶寶」 */
     await p.click('#tabs [data-t="p"]'); await p.click('#shop [data-id="p03"]'); await p.click('#rpmb [data-m="buy"]'); await p.waitForTimeout(800); await p.evaluate(() => { const b = document.querySelector('.fxov .fxok'); if (b) b.click(); }); await p.waitForTimeout(450);
     await p.click('#tabs [data-t="w"]'); await p.click('#shop [data-id="w03"]'); await p.click('#rpmb [data-m="buy"]'); await p.waitForTimeout(800);
-    const wsm = await p.evaluate(() => { const o = document.querySelector('.fxov.sum'); return o ? o.textContent : ''; }); if (!/武器 登場/.test(wsm) || !/星光/.test(wsm)) E.push(tag + '：選到武器沒有登場動畫（' + wsm.slice(0, 30) + '）');
+    const wsm = await p.evaluate(() => { const o = document.querySelector('.fxov.sum'); return o ? o.textContent : ''; }); if (!/武器 ?登場/.test(wsm) || !/星光/.test(wsm)) E.push(tag + '：選到武器沒有登場動畫（' + wsm.slice(0, 30) + '）');
     await p.evaluate(() => { const b = document.querySelector('.fxov .fxok'); if (b) b.click(); }); await p.waitForTimeout(1600);
     if (!/寶寶/.test(await p.textContent('#stage'))) E.push(tag + '：選了寵物，舞台沒有寵物「🐣 寶寶」');
     /* 寶物：給一點金幣以後買一個（直接改伺服器的「花了多少」不行 ➜ 用夠便宜的 😎 80） */
@@ -167,7 +174,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* 2026-10-18 第十二次：06～10 也上架了 ➜ 每一類 20 種、沒有「即將 上架」；學生看得到的字 沒有「英雄」（老師：一律 改成 戰士） */
     for (let c = 6; c <= 10; c++) { await p.click('[data-scat="' + c + '"]'); await p.waitForTimeout(200);
       await p.waitForFunction(() => [].every.call(document.querySelectorAll('#shop > .sgrid [data-id^="s"] img'), i => i.complete && i.naturalWidth > 0), null, { timeout: 5000 }).catch(() => {});
-      const k = await p.evaluate(() => ({ n: document.querySelectorAll('#shop > .sgrid [data-id^="s"]').length, soon: /即將 上架/.test(document.getElementById('shop').textContent),
+      const k = await p.evaluate(() => ({ n: document.querySelectorAll('#shop > .sgrid [data-id^="s"]').length, soon: /即將 ?上架/.test(document.getElementById('shop').textContent),
         img: [].every.call(document.querySelectorAll('#shop [data-id^="s"] img'), i => i.complete && i.naturalWidth > 0) }));
       if (k.n !== 20 || k.soon || !k.img) E.push(tag + '：商城第 ' + c + ' 類 不對（' + k.n + ' 種、即將上架 ' + k.soon + '、圖 ' + k.img + '）'); }
     const hz = await p.evaluate(() => document.body.innerText.indexOf('英雄') >= 0 || /英雄/.test([].map.call(document.querySelectorAll('[alt],[title]'), e => (e.alt || '') + (e.title || '')).join('')));
@@ -194,12 +201,12 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* 4 限量、限時：商城 最上面 一區 8 樣（2026-10-20 第十五次：限時 5 樣 ＝ s0301 金龍、s0804、s0710、s0908、s1005）；剩幾個 ＝ 伺服器 數；5 個 都 換走 ➜「已 換完」、買不到 */
     await p.click('#tabs [data-t="m"]'); await p.waitForTimeout(200);
     const lt = await p.evaluate(() => ({ n: document.querySelectorAll('.ltd .it').length, a: (document.querySelector('.ltd [data-id="s0713"]') || {}).textContent || '', b: (document.querySelector('.ltd [data-id="s0804"]') || {}).textContent || '', c: !!document.querySelector('.ltd [data-id="s0301"]') && !!document.querySelector('.ltd [data-id="s0908"]') && !document.querySelector('.ltd [data-id="s0805"]') && !document.querySelector('.ltd [data-id="s0907"]') }));
-    if (lt.n !== 8 || !lt.c || !/限量 5 個．剩 5 個/.test(lt.a) || !/10 月 31 號 下架/.test(lt.b)) E.push(tag + '：限量、限時 不對（' + lt.n + '、' + lt.a + '、' + lt.b + '）');
+    if (lt.n !== 8 || !lt.c || !/限量 5 個．剩 5 個/.test(lt.a) || !/10 月 31 號 ?下架/.test(lt.b)) E.push(tag + '：限量、限時 不對（' + lt.n + '、' + lt.a + '、' + lt.b + '）');
     for (let i = 0; i < 5; i++) G.books['角色'].d.push(['4010' + i, JSON.stringify({ own: { s: ['s0713'] } }), new Date()]);
     const sold = G.post({ a: 'rpg', id: '40205', op: 'buy', item: 's0713' });
     await p.reload(); await p.waitForTimeout(1800); await p.click('#tabs [data-t="m"]'); await p.waitForTimeout(200);
     const l2 = await p.evaluate(() => (document.querySelector('.ltd [data-id="s0713"]') || {}).textContent || '');
-    if (!/已 換完/.test(l2) || !(sold.err === 'sold' || sold.err === 'lv' || sold.err === 'coin')) E.push(tag + '：5 個 換完 不對（' + l2 + '、' + sold.err + '）');
+    if (!/已 ?換完/.test(l2) || !(sold.err === 'sold' || sold.err === 'lv' || sold.err === 'coin')) E.push(tag + '：5 個 換完 不對（' + l2 + '、' + sold.err + '）');
     const sold2 = (() => { const s = G.books['角色'].d, r = s.find(x => x[0] === '40205'), st = JSON.parse(r[1]); return require('../score/_calc.js').rpBuy([], Object.assign(st, { bc: 99999, bx: 99999 }), 's0713', Date.now(), 5); })();
     if (sold2.err !== 'sold') E.push(tag + '：伺服器 規則：5 個 換完 還 買得到（' + sold2.err + '）');
     if (require('../score/_calc.js').rpBuy([], { bc: 99999, bx: 99999 }, 's0804', Date.UTC(2026, 10, 1, 1), 0).err !== 'end') E.push(tag + '：伺服器 規則：11 月 1 日 還 買得到 限時');
@@ -225,7 +232,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
         if (document.getElementById('shGc').textContent === '＋7') break; }
       o.hp = (d.querySelector('.fxhp span') || {}).textContent; o.gc = document.getElementById('shGc').textContent; o.tot = document.getElementById('shTot').textContent; o.t = d.querySelector('.shfl').textContent; d.remove(); SCSRC = s0; return o; });
     if (!fg.d3 || !fg.cv3 || fg.sb) E.push(tag + '：做完練習 最後一幕 不是 3D（或 還有 音效 按鈕）' + JSON.stringify(fg));
-    if (!fg.mon || !fg.pure || !fg.nm || fg.hp !== '❤ 78 ／ 120' || fg.gc !== '＋7' || fg.tot !== '120' || !/答對 6 題 ＝ 打 6 下/.test(fg.t)) E.push(tag + '：做完練習 打怪 不對 ' + JSON.stringify(fg));
+    if (!fg.mon || !fg.pure || !fg.nm || fg.hp !== '❤ 78 ／ 120' || fg.gc !== '＋7' || fg.tot !== '120' || !/答對 6 題 ?＝ ?打 6 下/.test(fg.t)) E.push(tag + '：做完練習 打怪 不對 ' + JSON.stringify(fg));
     /* 👾 怪物圖鑑 */
     await p.click('#tabs [data-t="s"]'); await p.waitForTimeout(200);
     if ((await p.evaluate(() => document.querySelectorAll('.monset > div').length)) !== 15) E.push(tag + '：👾 怪物圖鑑 不是 15 隻');
@@ -249,17 +256,27 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     await p.waitForTimeout(1800);
     await p.click('#atkTry'); await p.waitForTimeout(500);
     const sw = await p.evaluate(() => { const t = document.querySelector('#mfr .team'), z = /translate3d\([^,]+,[^,]+,\s*([\d.]+)px/.exec(t.style.transform); return { w: document.getElementById('wcard').classList.contains('d3ws'), h: document.getElementById('hcard').classList.contains('d3lg'), z: z ? +z[1] : 0 }; });
+    { await p.waitForTimeout(300); const sg = await p.evaluate(() => { const x = document.querySelector('#mfr .d3sig'); return x ? x.textContent : ''; }); if (!sg && await p.evaluate(() => !!RV.st.eq.w)) E.push(tag + '：⚔ 出招 沒有 武器 招牌 名字'); n++; }
     if (!sw.w || !sw.h || sw.z < 40) E.push(tag + '：⚔ 3D 出招 不對（戰士 往前 衝、武器 飛出去 轉、鏡頭 衝近）' + JSON.stringify(sw));
     if (process.env.SHOT && tag === '1024✕768') { await p.waitForTimeout(500); await (await p.$('#mfr')).screenshot({ path: path.join(process.env.SHOT, 'd3atk.png') }); }
     await p.waitForTimeout(2500);
     const cbb = await p.evaluate(() => { const b = document.getElementById('cbGo'); if (!b) return null; const r = b.getBoundingClientRect(), m = document.getElementById('mfr').getBoundingClientRect(); return { h: r.height, below: r.top >= m.bottom - 2, t: b.textContent }; });
-    if (!cbb || cbb.h < 56 || !cbb.below || !/全部 合體 出招/.test(cbb.t)) E.push(tag + '：〔🌟 全部 合體 出招！〕不在 大方框 下面 ' + JSON.stringify(cbb));
+    if (!cbb || cbb.h < 56 || !cbb.below || !/全部 ?合體 ?出招/.test(cbb.t)) E.push(tag + '：〔🌟 全部 合體 出招！〕不在 大方框 下面 ' + JSON.stringify(cbb));
     if (process.env.SHOT && tag === '1024✕768') await p.exposeFunction('__SHOTCB', async () => { await p.screenshot({ path: path.join(process.env.SHOT, 'combo.png') }); });
     await p.click('#cbGo');
     const cb = await p.evaluate(async () => { const o = { ov: 0 }; for (let i = 0; i < 60; i++) { const x = document.querySelector('.lfcb'); if (x) { o.ov = 1; o.cv = Math.max(o.cv || 0, x.querySelectorAll('canvas').length); if (x.classList.contains('s-end')) { await new Promise(r => setTimeout(r, 1400)); o.n = (document.getElementById('cbn') || {}).textContent; o.pw = RV.power.toLocaleString(); o.h = !!x.querySelector('.cbh img'); o.w = !!x.querySelector('.cbw'); o.p = !!x.querySelector('.cbpet img'); o.ms = i * 200; break; } } await new Promise(r => setTimeout(r, 200)); }
       if (window.__SHOTCB) await window.__SHOTCB();
       const ok = document.querySelector('.lfcb .cbok'), r = ok ? ok.getBoundingClientRect() : null; o.ok = !!r && r.bottom <= innerHeight && r.right <= innerWidth && r.height >= 56; if (ok) ok.click(); await new Promise(r => setTimeout(r, 600)); o.gone = !document.querySelector('.lfcb'); return o; });
     if (!cb.ov || cb.n !== cb.pw || !cb.h || !cb.w || !cb.p || cb.cv < 1 || !cb.ok || !cb.gone || cb.ms > 9000) E.push(tag + '：🌟 全部 合體 不對 ' + JSON.stringify(cb));
+    /* 2026-10-21 第十七次 第 10、12 點：合體 收尾 不轉圈（cbBr）、有 合體 等級＋主題 名字、下一次 換 主題；每一把 武器 招牌 不一樣；寵物 立體（影子、光環） */
+    { const cg = await p.evaluate(async () => { const out = { v: [] }; for (let k = 0; k < 2; k++) { comboGo(); await new Promise(r => setTimeout(r, 300)); const x = document.querySelector('.lfcb'); out.an = getComputedStyle(x.querySelector('.cbray')).animationName;
+          for (let i = 0; i < 60 && !x.classList.contains('s-end'); i++) await new Promise(r => setTimeout(r, 200)); await new Promise(r => setTimeout(r, 300)); out.v.push((x.querySelector('.cbg') || {}).textContent || ''); x.remove(); }
+        const ids = Object.keys(CAT.R.w).concat(Array.from({ length: 20 }, (_, i) => 's07' + String(i + 1).padStart(2, '0'))), seen = {}; out.dup = ids.filter(id => { const k = RPFX.wInfo(id).e + RPFX.wSig(id).k; if (seen[k]) return true; seen[k] = 1; return false; });
+        const pc = document.getElementById('pcard'); out.sh = !!(pc && pc.querySelector('.p3sh')); out.rg = RV.petStage ? !!pc.querySelector('.p3ring') : true; return out; });
+      if (cg.an !== 'cbBr') E.push(tag + '：合體 背景 光 還在 轉圈（' + cg.an + '）');
+      if (cg.v.length !== 2 || !cg.v.every(t => /合體 ?等級 ?★/.test(t)) || cg.v[0] === cg.v[1]) E.push(tag + '：合體 等級／主題 不對、或 兩次 一樣：' + cg.v.join('｜'));
+      if (cg.dup.length) E.push(tag + '：武器 招牌 特效 重複：' + cg.dup.join('、'));
+      if (!cg.sh || !cg.rg) E.push(tag + '：寵物 沒有 立體（影子、光環）'); n += 4; }
     /* 戴上 新東西 ➜ 自動 演 一次（老師 C17 第 4 題 C） */
     await p.evaluate(() => { window.__NOCB = 0; }); await p.click('#tabs [data-t="t"]'); await p.waitForTimeout(200);
     const own1 = await p.evaluate(() => { const x = RV.st.own.t[0]; return x || ''; });
@@ -270,8 +287,8 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* ❓ 三章 秒懂 動畫（老師第 2、4、6、7 點） */
     await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(200); await p.click('[data-go="qb"]'); await p.waitForTimeout(400);
     const tu = await p.evaluate(() => ({ ch: document.querySelectorAll('.tch button').length, on: (document.querySelector('.tch button.on') || {}).textContent, sc: document.querySelectorAll('#tst .tsc').length, a: !!document.querySelector('#tst .tsc.on') }));
-    if (tu.ch !== 4 || !/戰力 是 什麼/.test(tu.on || '') || tu.sc !== 4 || !tu.a) E.push(tag + '：〔❓ 戰力〕沒有 打開 第 2 章 ' + JSON.stringify(tu));
-    for (const [k, nsc] of [['a', 10], ['b', 4], ['c', 5], ['r', 9]]) { await p.click('[data-tch="' + k + '"]'); await p.waitForTimeout(300);
+    if (tu.ch !== 4 || !/戰力 ?是 ?什麼/.test(tu.on || '') || tu.sc !== 4 || !tu.a) E.push(tag + '：〔❓ 戰力〕沒有 打開 第 2 章 ' + JSON.stringify(tu));
+    for (const [k, nsc] of [['a', 10], ['b', 4], ['c', 6], ['r', 14]]) { await p.click('[data-tch="' + k + '"]'); await p.waitForTimeout(300);
       const c1 = await p.evaluate(() => ({ n: document.querySelectorAll('#tst .tsc').length, i: [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')) }));
       await p.waitForTimeout(7900); const c2 = await p.evaluate(() => [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')));
       if (process.env.SHOT && tag === '1024✕768') { await p.waitForTimeout(2600); await (await p.$('.tut')).screenshot({ path: path.join(process.env.SHOT, 'ch_' + k + '.png') }); }

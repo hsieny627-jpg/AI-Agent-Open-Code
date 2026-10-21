@@ -36,12 +36,14 @@ function chAll(){var a=[];GRP.forEach(function(g){a=a.concat(g[4])});return a}
 function chBox(){var x=chOf();if(!x)return '';var u=H.chU[H.cls];
   if(H.chSel&&H.chSel.cls===H.cls)return '<div class="chbox done">👑 '+esc(H.chSel.ids.join('、'))+' 選了：'+LV.badge(H.chSel.game)+' <b>'+esc(LV.game(H.chSel.game).nm)+'</b></div>';
   if(u&&u.w===x.w)return '<div class="chbox done">👑 這一週 冠軍 已經 選過：'+LV.badge(u.game)+' <b>'+esc(LV.game(u.game).nm)+'</b></div>';
+  /* 2026-10-21 第十七次 老師第 6 點（選擇題「金框先收起來」）：老師 決定 要不要 讓 冠軍 選；選了班 只 看到 一顆〔👑 讓 冠軍 選 遊戲〕，按了 才 打開 */
+  if(!H.chOpen||H.chOpen!==H.cls)return '<div class="chbox mini"><button id="chOpen" class="chop">👑 讓 冠軍 選 遊戲</button><span class="note">'+esc(H.cls)+' 班 上一週 有 冠軍；老師 同意，才 請 冠軍 上台 選（一週 1 次）</span></div>';
   var all=chAll();all.forEach(function(k){if(H.cOk[k]==null)H.cOk[k]=true});var n=all.filter(function(k){return H.cOk[k]}).length;
-  return '<div class="chbox"><div class="cht">👑 <b>'+esc(x.ids.join('、'))+'</b>：上一週 '+esc(H.cls)+' 班 最認真練習 第 1 名（A、B 都 做到）➜ 可以 選 1 次 遊戲</div>'+
+  return '<div class="chbox"><div class="cht">👑 <b>'+esc(x.ids.join('、'))+'</b>：上一週 '+esc(H.cls)+' 班 最認真練習 第 1 名 ➜ 可以 選 1 次 遊戲</div>'+
     '<div class="note">老師 勾 這次 可以 選 哪幾種（'+n+' 種）：</div><div class="row chg">'+all.map(function(k){return '<button data-cg="'+k+'" class="'+(H.cOk[k]?'on':'')+'">'+(H.cOk[k]?'☑ ':'☐ ')+esc(LV.game(k).nm)+'</button>'}).join('')+'</div>'+
     '<div class="row"><button id="chGo" class="big chgo"'+(n?'':' disabled')+'>👑 請 冠軍 上台 選</button><span class="note">冠軍 走 上來 點 大螢幕，全班 都 看得到；一週 1 次</span></div></div>'}
 function chPick(){var x=chOf();if(!x)return;var L=chAll().filter(function(k){return H.cOk[k]}),o=$('#chpk');if(!o){o=document.createElement('div');o.id='chpk';document.body.appendChild(o)}
-  o.hidden=false;o.innerHTML='<div class="chin"><h1>👑 '+esc(x.ids.join('、'))+' 請 上台 選 遊戲</h1><div class="note big2">上一週 '+esc(H.cls)+' 班 最認真練習 第 1 名（練習 時間 最多，A、B 都 ≧ 90%）</div>'+
+  o.hidden=false;o.innerHTML='<div class="chin"><h1>👑 '+esc(x.ids.join('、'))+' 請 上台 選 遊戲</h1><div class="note big2">上一週 '+esc(H.cls)+' 班 最認真練習 第 1 名（練 最久＋👀 看完 才 按＋✏️ 錯了 會 改）</div>'+
     '<div class="chgr">'+L.map(function(k){var G=LV.game(k);return '<button data-cpk="'+k+'">'+LV.badge(k,'lg')+'<b>'+esc(G.nm)+'</b><small>'+esc(G.d)+'</small></button>'}).join('')+'</div><button id="chNo" class="ghost">✕ 這次 先 不選</button></div>'}
 function chChose(k){var x=chOf();if(!x)return;var w={w:x.w,ids:x.ids,game:k,t:Date.now()};H.chSel={cls:H.cls,ids:x.ids,game:k};H.chU[H.cls]=w;H.game=k;
   if(LDB.on())LDB.must('PUT','rooms/'+LV.room(H.cls)+'/champ',w,6);
@@ -327,6 +329,7 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if((b=c('[data-ch]'))){H.ch=+b.getAttribute('data-ch');setDraw();return}
   if((b=c('[data-x15]'))){H.x15=+b.getAttribute('data-x15');setDraw();return}
   if((b=c('[data-cg]'))){var g0=b.getAttribute('data-cg');H.cOk[g0]=!H.cOk[g0];setDraw();return}
+  if(c('#chOpen')){H.chOpen=H.cls;setDraw();return}
   if(c('#chGo')){chPick();return}
   if((b=c('[data-cpk]'))){chChose(b.getAttribute('data-cpk'));return}
   if(c('#chNo')){$('#chpk').hidden=true;return}
