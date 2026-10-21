@@ -44,7 +44,7 @@ eq(SC.checkId('30430').seat, 30, '座號 30 可以'); eq(SC.checkId('30431').err
   ok(v2.top.sec && v2.rk.sec, '學生也有 ⏱ 練習時間榜');
   /* 第一次進榜或名次上升才演（rk0 ＝ 這一次以前的名次） */
   const v3 = SC.view(R, { id: '30401', u: 'b' }, NOW, true, { '304': 25 });
-  eq([v3.rk.sec.cls, v3.rk0.sec.cls, v3.rk.prog.cls, v3.rk0.prog.cls], [1, 1, 1, null], '小華這一次：最認真練習 名次沒變（1 ➜ 1，不演）、進步最多 第一次進榜（演）');
+  eq([v3.rk.sec.cls, v3.rk0.sec.cls, v3.rk.prog.cls, v3.rk0.prog.cls], [1, null, 1, null], '小華這一次：最認真練習 第一次進榜（這一次以前 答錯的 都 還沒 改對 ＝ B 0% 不上榜；這一次 改對了 ＝ 上榜，2026-10-21）、進步最多 第一次進榜');
   /* 上週的練習時間（比上週多 練習 N 分鐘） */
   const LW = R.concat([{ id: '30401', cls: '304', g: 3, set: 'g3u1_b', m: 'q', acc: 60, s: 50, n: 5, ok: 3, fast: 0, t: MON - 864e5, u: 'e', qs: [q(1, 4), q(1, 4), q(1, 4), q(0, 4), q(0, 4)] }]);
   eq(SC.view(LW, { id: '30401' }, NOW, true).me.secPrev, 20, '上週練了 20 秒（這週 70 秒 ➜ 比上週多）'); }
@@ -356,5 +356,51 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
   ok(R6.ok && R6.v.ch === 0, '上週第 6 名：沒有');
   ok(G2.books['角色'].d.some(function (x) { return String(x[0]) === '31101' && /ch\|/.test(x[1]); }), '寶箱 編號 記在 角色（同一週 不會 再 發）');
   const T = G2.post({ a: 'teacher', pw: 'pw-test' }); ok(T.tiers && typeof T.tiers === 'object', '老師看板 拿得到 tiers（排行榜 徽章）'); }
+/* ══ 2026-10-21 第十六次 第 5、6 點＋老師再加 4 點：最認真練習 A＋B、⚔ 戰神稱號＋金幣加成、專屬寶物、每班冠軍、理解小考 ══ */
+{ const D = SC.dili;
+  eq([D({ q: 200, fastQ: 15, W: 20, F: 18 }).ok, D({ q: 200, fastQ: 15, W: 20, F: 18 }).a, D({ q: 200, fastQ: 15, W: 20, F: 18 }).b], [true, 92, 90], '小華 200 題、太快 15 ＝ A 92%；答錯 20、改對 18 ＝ B 90% ➜ ✅（老師的例子）');
+  eq([D({ q: 200, fastQ: 30, W: 0, F: 0 }).ok, D({ q: 200, fastQ: 30 }).a], [false, 85], '小明 太快 30 ／ 200 ＝ 85% ➜ ❌');
+  eq([D({ q: 100, fastQ: 0, W: 0 }).b, D({ q: 100, fastQ: 0, W: 0 }).ok], [100, true], '一題都沒錯 ＝ B 100% ✅');
+  eq([D({ q: 100, fastQ: 0, W: 20, F: 17 }).ok, D({ q: 100, fastQ: 0, W: 20, F: 17 }).b], [false, 85], '答錯 20 改對 17 ＝ 85% ❌');
+  eq([D({ q: 1000, fastQ: 104, W: 0 }).okA, D({ q: 1000, fastQ: 104, W: 0 }).a], [false, 89], '89.6% 不算 90%（寫 89%，不會 寫 90% 卻 沒 上榜）');
+  eq(D({ q: 0, fastQ: 0 }).ok, false, '一題都沒作答（只看字卡、只玩現場任務）＝ 不上 最認真練習 榜');
+  const P = [{ id: '30401', cls: '304', sec: 900, q: 50, fastQ: 10, W: 0, F: 0 }, { id: '30402', cls: '304', sec: 600, q: 50, fastQ: 0, W: 0, F: 0 }];
+  eq(SC.rank(P, 'sec').map(x => x.id + ':' + x.rk), ['30402:1'], '最認真練習 榜：時間最多的 30401 太快 20% ➜ 不上榜，下一名 補上');
+  /* ⚔ 稱號、加成 */
+  eq(SC.RPTIER.map(x => x[1]), ['見習戰士', '精英戰士', '烈焰戰將', '雷霆戰神', '傳說戰神'], '五個階級 改名（老師 2026-10-20）');
+  eq(SC.RPTB, [[0, 100], [5, 120], [10, 140], [15, 160], [20, 180], [25, 200]], '金幣 多 5～25%、一天最多 120～200（老師 2026-10-21）');
+  const T0 = Date.UTC(2026, 9, 19, 2), d = 864e5, rq = (t, u) => ({ id: '30401', set: 'g3u1_a', m: 'q', n: 5, ok: 5, fast: 0, acc: 100, t: t, u: u, qs: [0, 1, 2, 3, 4].map(i => [1, 0, 4, 0, .5, i]) });
+  const rsA = [rq(T0, 'a'), rq(T0 + 2 * d, 'b')];
+  const stN = SC.rpClean({}), stT = SC.rpClean({ tr: 2, trt: [T0 + d, T0 + d] });
+  const eN = SC.rpEarn(rsA, stN).coin, eT = SC.rpEarn(rsA, stT).coin;
+  eq([eN, eT], [10, 11], '小華 星期一 5 題 🪙 5、星期二 升到 ★★、星期三 5 題 ➜ 5 ✖ 1.1 ＝ 5.5 ➜ 6（星期一 的 不補）');
+  const big = []; for (let i = 0; i < 40; i++) big.push(Object.assign(rq(T0 + 3 * d, 'x' + i), { set: 'g3u1_' + i, qs: [0, 1, 2, 3, 4].map(k => [1, 0, 4, 0, .5, k]) }));
+  eq([SC.rpEarn(big, stN).coin, SC.rpEarn(big, SC.rpClean({ tr: 5, trt: [1, 1, 1, 1, 1] })).coin], [100, 200], '一天最多：還沒有階級 100、★★★★★ 200');
+  const st5 = SC.rpClean({ own: { h: ['b30'], w: ['w29'], p: ['p26'], t: [], s: [] }, eq: { h: 'b30', w: 'w29', p: 'p26', t: [] } });
+  const up = SC.rpTierUp([], st5, 12345); ok(up.tr >= 4 && up.trt.length === up.tr && up.trt.every(x => x === 12345), '升階 ➜ 記下 時間（加成 從 這一刻 開始）');
+  const old = SC.rpTierUp([], SC.rpClean({ tr: 2 }), 777); eq(old.trt, [777, 777], '以前 就 有 階級 的人：加成 從 新規則 開始（不補）');
+  eq(SC.rpView([], SC.rpClean({ tr: 3, trt: [1, 1, 1] })).pct, 15, '★★★ 平板看得到「金幣多 15%」');
+  /* 專屬寶物 */
+  eq(Object.keys(SC.RPTX).length, 10, '每一階 2 樣 ＝ 10 樣專屬寶物');
+  ok(Object.keys(SC.RPTX).every(id => SC.rpOk(id) && !SC.RPLIM[id] && !SC.RPEND[id]), '專屬寶物 都 上架、不是 限量／限時');
+  const rich = SC.rpClean({ bc: 99999, bx: 99999 });
+  eq(SC.rpBuy([], rich, 's0420', 1).err, 'tier', '還沒 ★★★★★ ➜ 大師名字框 買不到');
+  ok(!SC.rpBuy([], SC.rpClean({ bc: 99999, bx: 99999, tr: 5 }), 's0420', 1).err, '★★★★★ 傳說戰神 ➜ 買得到');
+  ok(!SC.rpBuy([], SC.rpClean({ bc: 99999, bx: 99999, tr: 1 }), 's0213', 1).err, '★ 見習戰士 ➜ 太陽神披風 買得到');
+  /* 理解小考 */
+  eq([SC.rpQuiz({}, SC.RPQV, 5).qz, SC.rpQuiz({}, 0, 5).qz], [SC.RPQV, 0], '答對 5 題 ＝ 記下 看懂了 這一版 規則');
+  /* 每班 上週 冠軍、伺服器 */
+  const G4 = make({ TEACHER_PW: 'pw4' }), wk = SC.weekStart(Date.now()) - 7 * 864e5 + 3 * 3600e3;
+  for (let k = 0; k < 4; k++) G4.post(body('40201', 'g4u1_1-1b', 5, { k: 'm' + k, t: wk + k * 60e3 }));
+  for (let k = 0; k < 6; k++) G4.post(body('40202', 'g4u1_1-1b', 5, { k: 'n' + k, t: wk + k * 60e3, qs: [0, 1, 2, 3, 4].map(i => [1, 0, 0.5, 1, .9]) }));
+  for (let k = 0; k < 2; k++) G4.post(body('40601', 'g4u1_1-1b', 5, { k: 'o' + k, t: wk + k * 60e3 }));
+  const pw = G4.post({ a: 'pw', pw: 'pw4' });
+  ok(pw.ok && pw.champs['402'] && pw.champs['402'].ids.join() === '40201' && pw.champs['406'].ids.join() === '40601', '每班 上週 第 1 名：402 ＝ 40201（40202 時間多 但 全部 太快亂按 ➜ 不算）、406 ＝ 40601');
+  ok(!pw.champs['409'], '沒有人練的班 沒有 冠軍');
+  eq(G4.post({ a: 'pw', pw: 'x' }).err, 'pw', '冠軍名單 要 老師密碼');
+  const q1 = G4.post({ a: 'rpg', id: '40201', op: 'qz', v: SC.RPQV }); ok(q1.ok && q1.v.qz === SC.RPQV, '學生 5 題 都 答對 ➜ 伺服器 記下來');
+  const T4 = G4.post({ a: 'teacher', pw: 'pw4' }); ok(T4.quiz && T4.quiz['40201'] && !T4.quiz['40601'] && T4.rqv === SC.RPQV, '老師看板 看得到 誰 看懂了 規則');
+  const v4 = G4.post(body('40201', 'g4u1_1-1b', 3, { k: 'now' })); ok(v4.me && v4.me.dl && v4.me.dl.a === 100 && v4.me.dl.b === 0, '學生平板 拿得到 自己的 A 100%、B 0%（這週 答錯 2 題 還沒 改對）');
+}
 console.log((bad ? '✗ ' : '✓ ') + '成績紀錄規則＋Apps Script 量了 ' + n + ' 項，失敗 ' + bad + ' 項');
 process.exit(bad ? 1 : 0);

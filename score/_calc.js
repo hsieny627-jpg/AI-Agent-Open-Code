@@ -204,10 +204,24 @@ var SC = (function () {
     s: { v: function (p) { return p.s; }, cmp: function (a, b) { return b.s - a.s; }, eq: function (a, b) { return a.s === b.s; }, ok: function (p) { return p.s != null; } },
     count: { v: function (p) { return p.count; }, cmp: function (a, b) { return b.count - a.count; }, eq: function (a, b) { return a.count === b.count; }, ok: function (p) { return p.count > 0; } },
     prog: { v: function (p) { return p.prog; }, cmp: function (a, b) { return b.prog - a.prog; }, eq: function (a, b) { return a.prog === b.prog; }, ok: function (p) { return p.prog != null && p.prog > 0; } },
-    sec: { v: function (p) { return p.sec; }, cmp: function (a, b) { return b.sec - a.sec; }, eq: function (a, b) { return a.sec === b.sec; }, ok: function (p) { return p.sec > 0; } },
+    /* 2026-10-21 第十六次 第 6 點＋老師再加第 1 點：最認真練習 ＝ 練習時間最多，而且 A、B 都做到才上榜（diligent） */
+    sec: { v: function (p) { return p.sec; }, cmp: function (a, b) { return b.sec - a.sec; }, eq: function (a, b) { return a.sec === b.sec; }, ok: function (p) { return p.sec > 0 && dili(p).ok; } },
     /* 📅 練習分數，同分比練習時間（原本「❤ 最用心」的榜；2026-10-16 C5 第 3 題 A 不再是最高榮譽，只給老師看板排序） */
     care: { v: function (p) { return p.care; }, cmp: function (a, b) { return (b.care - a.care) || (b.sec - a.sec); }, eq: function (a, b) { return a.care === b.care && a.sec === b.sec; }, ok: function (p) { return p.care > 0; } }
   };
+  /* 🏆 最認真練習 的 條件（2026-10-21 老師：這段期間「到目前為止」全部題目合起來）：
+     A 👀 不是太快亂按 ≧ 90%（作答的題目裡，太快亂按的 ≦ 10%）；B ✗➜✓ 答錯，改對 ≧ 90%（題目 ＝ 同一題錯過、後來又答對；遊戲 ＝ ✨ 訂正成功；一題都沒錯 ＝ 100%）。
+     這段期間一題都沒作答（只看字卡、只聽字卡、只玩現場任務）＝ A 算不出來 ➜ 不上榜。a、b ＝ 給人看的 %（無條件捨去：89.6% 寫 89%，不會寫成 90% 卻沒上榜） */
+  var DILI = 90;
+  function dili(p) { p = p || {}; var q = +p.q || 0, fq = +p.fastQ || 0, W = +p.W || 0, F = Math.min(+p.F || 0, W);
+    var okA = q > 0 && (q - fq) * 100 >= DILI * q, okB = !W || F * 100 >= DILI * W;
+    return { a: q ? Math.floor((q - fq) / q * 100) : null, b: W ? Math.floor(F / W * 100) : 100, q: q, fq: fq, W: W, F: F, okA: okA, okB: okB, ok: okA && okB }; }
+  /* 👑 每一班 上一週 最認真練習 第 1 名（A、B 都做到；同分比正確率、再比總分；還是一樣 ＝ 一起）➜ 現場任務 選 1 次 遊戲（2026-10-21 老師再加第 3 點） */
+  function champs(rs, now) { var w = weekStart(now), w0 = w - 7 * DAY, o = {};
+    [3, 4].forEach(function (g) { var ps = students(pick(rs, { g: g, from: w0, to: w }));
+      CLASSES[g].forEach(function (c) { var L = ps.filter(function (p) { return p.cls === c && BOARDS.sec.ok(p); }).sort(function (a, b) { return (b.sec - a.sec) || ((b.acc || 0) - (a.acc || 0)) || ((b.s || 0) - (a.s || 0)); });
+        if (L.length) o[c] = { w: w, ids: L.filter(function (p) { return p.sec === L[0].sec && (p.acc || 0) === (L[0].acc || 0) && (p.s || 0) === (L[0].s || 0); }).map(function (p) { return p.id; }), sec: L[0].sec }; }); });
+    return o; }
   function rank(ps, key) {
     var B = BOARDS[key], L = ps.filter(B.ok).sort(function (a, b) { return B.cmp(a, b) || (a.id < b.id ? -1 : 1); });
     var out = [], rk = 0;
@@ -341,7 +355,7 @@ var SC = (function () {
     var ps = students(W), me = mine(ps, c.id) || { id: c.id, acc: null, s: null, count: 0, prog: null, keep: false };
     var lw = students(pick(all, { g: c.g, from: from - 7 * DAY, to: from }).filter(function (r) { return r.id === c.id; }))[0];
     var out = { id: c.id, cls: c.cls, g: c.g, week: from, boards: !!boardsOn,
-      me: { acc: me.acc, s: me.s, count: me.count, prog: me.prog, pf: me.pf, pt: me.pt, keep: !!me.keep, sec: me.sec || 0, days: me.days || 0, secPrev: lw ? lw.sec : 0, care: care(me) } };
+      me: { acc: me.acc, s: me.s, count: me.count, prog: me.prog, pf: me.pf, pt: me.pt, keep: !!me.keep, sec: me.sec || 0, days: me.days || 0, secPrev: lw ? lw.sec : 0, care: care(me), dl: dili(me) } };
     /* 這一組（作答中右上角的名次）：本班別人這週在這一組最好的原始分數，前 10 個 */
     if (o.set) {
       var best = {}; W.forEach(function (r) { if (r.set === o.set && r.cls === c.cls && r.id !== c.id) best[r.id] = Math.max(best[r.id] || 0, r.raw); });
@@ -434,6 +448,9 @@ var SC = (function () {
   function rpWear(st, id) { var S = rpSC(id);
     if (S && S.slot !== 'w' && S.slot !== 'p') { st.eq.s[S.slot] = id; RPS[S.c - 1][3] && (st.eq.t = st.eq.t.filter(function (t) { return t !== RPS[S.c - 1][3]; })); }
     else if (RPSLOT[id]) delete st.eq.s[RPSLOT[id]]; }
+  /* 📜 理解小考（2026-10-21）：規則的版本，規則改了 ＋1 ➜ 每個人要重看重答；學生答對 5 題 ＝ 伺服器記 qz ＝ RPQV */
+  var RPQV = 1;
+  function rpQuiz(st, v, now) { st = rpClean(st); if (+v === RPQV) { st.qz = RPQV; st.qzt = now || Date.now(); } return st; }
   function rpLv(xp) { return Math.floor(Math.sqrt((+xp || 0) / 16)) + 1; }
   function rpClean(st) { st = st || {}; var o = { own: { h: [], w: [], p: [], t: [], s: [] }, eq: { h: '', w: '', p: '', t: [], s: {} }, spent: 0, pt: 0, free: {} }, own = st.own || {}, eq = st.eq || {};
     ['h', 'w', 'p', 't', 's'].forEach(function (k) { (own[k] || []).forEach(function (id) { id = String(id); if (rpKind(id) === k && (rpStar(id) || k === 't') && o.own[k].indexOf(id) < 0) o.own[k].push(id); }); });
@@ -450,10 +467,16 @@ var SC = (function () {
     o.ch = Math.max(0, Math.min(20, Math.round(+st.ch || 0)));
     o.chl = (st.chl || []).filter(function (x) { return x && (x.c > 0 || rpSC(x.s)); }).slice(-5).map(function (x) { return x.c > 0 ? { c: Math.round(+x.c) } : { s: String(x.s) }; });
     o.bk = (st.bk || []).map(String).filter(function (k) { return /^[\w|-]{1,40}$/.test(k); }).slice(-60);
-    o.tr = Math.max(0, Math.min(RPTIER.length, Math.round(+st.tr || 0)));   /* 2026-10-20 第十五次：⚔ 戰力階級 最高到過第幾階（升一階 🪙＋100 一次，拿下裝備也不會收回） */
+    o.tr = Math.max(0, Math.min(RPTIER.length, Math.round(+st.tr || 0)));
+    /* 2026-10-21 第十六次 第 5 點：trt[i] ＝ 第一次到第 i＋1 階的時間（金幣加成「升階以後才多」；舊的階級沒有時間 ＝ 等 rpTierUp 填上「現在」） */
+    o.trt = []; for (var ti = 0; ti < o.tr; ti++) { var tv = Math.round(+((st.trt || [])[ti]) || 0); if (tv > 0) o.trt.push(tv); else break; }
+    /* 理解小考（2026-10-21）：qz ＝ 看懂了哪一版規則（RPQV）、qzt ＝ 什麼時候 */
+    o.qz = Math.max(0, Math.round(+st.qz || 0)); o.qzt = Math.max(0, Math.round(+st.qzt || 0));   /* 2026-10-20 第十五次：⚔ 戰力階級 最高到過第幾階（升一階 🪙＋100 一次，拿下裝備也不會收回） */
     return o; }
   /* 這個人全部的紀錄 ➜ 經驗值、金幣（只算沒作廢的） */
-  function rpEarn(rs) {
+  function rpEarn(rs, st) {
+    var trt = (st && st.trt) || [];   /* 那一筆的時候是第幾階（升階以後才多，老師 2026-10-21） */
+    var tierAt = function (t) { var k = 0; while (k < trt.length && trt[k] <= t) k++; return k; };
     var L = (rs || []).filter(function (r) { return !r.x && r.m !== 'v'; }).sort(function (a, b) { return a.t - b.t; });
     var xp = 0, days = {}, dayCoin = {}, cnt = {}, prev = {}, wk = {}, coin = 0, wkq = {};
     L.forEach(function (r) {
@@ -465,18 +488,23 @@ var SC = (function () {
       if (r.m === 'g') c += (+r.ok || 0) + RPC.fix * (+r.fix || 0);
       else (r.qs || []).forEach(function (q, j) { var k = r.set + '#' + (q[5] == null ? j : q[5]); if (q[0]) { c += wkq[k] === 1 ? RPC.fix : 1; if (wkq[k] === 1) wkq[k] = 2; } else if (!wkq[k]) wkq[k] = 1; });
       if (r.acc != null) { if (prev[r.set] != null && r.acc > prev[r.set]) c += RPC.prog; prev[r.set] = r.acc; }
-      var room = RPC.cap - (dayCoin[d] || 0), g = Math.max(0, Math.min(room, c)); dayCoin[d] = (dayCoin[d] || 0) + g; coin += g;
+      var tk = tierAt(r.t); if (tk) c = Math.round(c * (100 + RPTB[tk][0]) / 100);
+      var room = RPTB[tk][1] - (dayCoin[d] || 0), g = Math.max(0, Math.min(room, c)); dayCoin[d] = (dayCoin[d] || 0) + g; coin += g;
     });
     var chests = 0; for (var w in wk) if (wk[w] >= RPC.chestDays) chests++;
     return { xp: xp, coin: coin + chests * RPC.chest, chests: chests, days: Object.keys(days).length, dd: days };
   }
-  /* ⚔ 戰力階級（2026-10-20 第十五次 老師 C17 第 5 題 B）：300 青銅、600 白銀、1000 黃金、1500 鑽石、2200 傳說；每升一階 🪙＋100 一次；只是地位（不加分數、不改題目） */
-  var RPTIER = [[300, '青銅'], [600, '白銀'], [1000, '黃金'], [1500, '鑽石'], [2200, '傳說']], RPTIERC = 100;
+  /* ⚔ 戰力階級（2026-10-20 第十五次 老師 C17 第 5 題 B）：每升一階 🪙＋100 一次。2026-10-21 第十六次 第 5 點 改名＋真的能力（不加分數、不讓題目變簡單）：
+     ★ 見習戰士 300 ➜ ★★ 精英戰士 600 ➜ ★★★ 烈焰戰將 1000 ➜ ★★★★ 雷霆戰神 1500 ➜ ★★★★★ 傳說戰神 2200
+     RPTB[階] ＝ [練習賺的金幣多幾 %, 一天最多幾個金幣]（老師選 5% 一階、上限 120～200；0 ＝ 還沒有階級）；RPTX ＝ 這一階才買得到的寶物（價錢、等級照原本） */
+  var RPTIER = [[300, '見習戰士'], [600, '精英戰士'], [1000, '烈焰戰將'], [1500, '雷霆戰神'], [2200, '傳說戰神']], RPTIERC = 100;
+  var RPTB = [[0, 100], [5, 120], [10, 140], [15, 160], [20, 180], [25, 200]];
+  var RPTX = { s0213: 1, s0912: 1, s0118: 2, s0418: 2, s0813: 3, s0913: 3, s0318: 4, s0715: 4, s0220: 5, s0420: 5 };
   function rpTier(pow) { var t = 0; for (var i = 0; i < RPTIER.length; i++) if ((+pow || 0) >= RPTIER[i][0]) t = i + 1; return t; }
   /* 伺服器存檔以前：最高到過的階級記下來（rpView 的金幣照最高的算） */
-  function rpTierUp(rs, st) { st = rpClean(st); st.tr = Math.max(st.tr, rpTier(rpView(rs, st).power)); return st; }
+  function rpTierUp(rs, st, now) { st = rpClean(st); var t = now || Date.now(); st.tr = Math.max(st.tr, rpTier(rpView(rs, st).power)); while (st.trt.length < st.tr) st.trt.push(t); return st; }
   /* 平板看的：等級、經驗值條、金幣、寵物陪了幾天（裝上以後練了幾天：3 天長大、7 天進化）、戰力、稱號 */
-  function rpView(rs, st) { st = rpClean(st); var E = rpEarn(rs), pd = 0; E.xp += st.bx; E.coin += st.bc; var lv = rpLv(E.xp);
+  function rpView(rs, st) { st = rpClean(st); var E = rpEarn(rs, st), pd = 0; E.xp += st.bx; E.coin += st.bc; var lv = rpLv(E.xp);
     if (st.eq.p) { for (var d in E.dd) if (+d >= day(st.pt)) pd++; pd += st.snack; }
     var ps = pd >= 7 ? 2 : pd >= 3 ? 1 : 0, all = st.own.h.concat(st.own.w, st.own.p);
     var pow = lv * 10 + ps * 50; ['h', 'w', 'p'].forEach(function (k) { if (st.eq[k]) pow += rpStar(st.eq[k]) * 100; }); pow += st.eq.t.length * 20; for (var sk in st.eq.s) pow += rpStar(st.eq.s[sk]) * 20;
@@ -484,7 +512,8 @@ var SC = (function () {
     var titles = RPSET.filter(function (x) { return x[1].every(function (id) { return all.indexOf(id) >= 0; }); }).map(function (x) { return x[0]; }).concat(st.lt);
     return { xp: E.xp, lv: lv, lvAt: 16 * (lv - 1) * (lv - 1), lvNext: 16 * lv * lv, earned: E.coin, coins: E.coin - st.spent, chests: E.chests, days: E.days,
       petDays: pd, petStage: ps, power: pow, titles: titles, medal: st.medal, st: st,
-      hit: rpDmg(pow), petHit: st.eq.p ? RPPET[ps] : 0, mon: rpMonAt(st.mon), ch: st.ch, tier: tier, tmax: tm };
+      hit: rpDmg(pow), petHit: st.eq.p ? RPPET[ps] : 0, mon: rpMonAt(st.mon), ch: st.ch, tier: tier, tmax: tm,
+      tnow: st.trt.length, pct: RPTB[st.trt.length][0], cap: RPTB[st.trt.length][1], qz: st.qz };   /* 現在金幣多幾 %、一天最多（照已經記下時間的階） */
   }
   /* 這一次（編號 u）拿到多少：全部 − 沒有這一筆 */
   function rpGain(rs, st, u) { var a = rpView(rs, st), b = rpView((rs || []).filter(function (r) { return r.u !== u; }), st);
@@ -524,7 +553,7 @@ var SC = (function () {
   var RPEND0 = Date.UTC(2026, 9, 31, 16, 0, 0), RPEND = { s0301: RPEND0, s0804: RPEND0, s0710: RPEND0, s0908: RPEND0, s1005: RPEND0 };
   /* 👑 冠軍寶箱（老師的全班獎勵 ③：每週全年級「最認真練習」前 5 名）：一定是好東西 ➜ 55% 金幣 300／400／500、45% 商城第 2 排（1,200 的）還沒有的一樣（限量、限時的不會開到） */
   function rpOpen(st, rnd, rnd2) { st = rpClean(st); if (st.ch <= 0) return { err: 'none' }; st.ch--;
-    var r = null; if (rnd >= .55) { var L = []; for (var c in RPSON) for (var n = 6; n <= 10; n++) { var id = 's' + (c < 10 ? '0' : '') + c + (n < 10 ? '0' : '') + n; if (!RPLIM[id] && !RPEND[id] && st.own[rpKind(id)].indexOf(id) < 0) L.push(id); }
+    var r = null; if (rnd >= .55) { var L = []; for (var c in RPSON) for (var n = 6; n <= 10; n++) { var id = 's' + (c < 10 ? '0' : '') + c + (n < 10 ? '0' : '') + n; if (!RPLIM[id] && !RPEND[id] && !RPTX[id] && st.own[rpKind(id)].indexOf(id) < 0) L.push(id); }
       if (L.length) { var it = L[Math.floor(rnd2 * L.length) % L.length], k = rpKind(it); st.own[k].push(it); if (k === 's') rpWear(st, it); else st.eq[k] = st.eq[k] || it; r = { s: it }; } }
     if (!r) { r = { c: [300, 400, 500][Math.floor(rnd2 * 3) % 3] }; st.bc += r.c; }
     st.chl.push(r); st.chl = st.chl.slice(-5); return { st: st, r: r }; }
@@ -536,6 +565,7 @@ var SC = (function () {
     if (st.own[k].indexOf(id) >= 0) return { err: 'own' };
     if (RPEND[id] && (+now || 0) >= RPEND[id]) return { err: 'end' };              /* ⏳ 下架了 */
     if (RPLIM[id] && (+sold || 0) >= RPLIM[id]) return { err: 'sold' };            /* 🏷 換完了 */
+    if (RPTX[id] && Math.max(st.tr, rpTier(rpView(rs, st).power)) < RPTX[id]) return { err: 'tier', need: RPTX[id] };   /* ⚔ 這一階才買得到 */
     var V = rpView(rs, st), free = k !== 't' && rpStar(id) === 1 && !st.free[k] && !st.own[k].length, pr = free ? 0 : rpPrice(id);
     if (V.lv < rpNeed(id)) return { err: 'lv', need: rpNeed(id) };
     if (V.coins < pr) return { err: 'coin', need: pr - V.coins };
@@ -554,7 +584,7 @@ var SC = (function () {
     lkClean: lkClean, lkSet: lkSet, lkAny: lkAny, lkFor: lkFor, LKRE: LKRE, lktClean: lktClean, lktSet: lktSet, lkNow: lkNow,
     tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE,
     RPR: RPR, RPP: RPP, RPL: RPL, RPT: RPT, RPS: RPS, RPSON: RPSON, RPSP: RPSP, RPSL: RPSL, RPSLOT: RPSLOT, rpSC: rpSC, RPSET: RPSET, RPHIDE: RPHIDE, RPX: RPX, RPC: RPC, rpKind: rpKind, rpStar: rpStar, rpPrice: rpPrice, rpNeed: rpNeed, rpOk: rpOk, rpLv: rpLv,
-    RPPET: RPPET, RPMON: RPMON, rpMonHp: rpMonHp, rpMonAt: rpMonAt, rpFight: rpFight, RPLIM: RPLIM, RPEND: RPEND, rpOpen: rpOpen, RPTIER: RPTIER, RPTIERC: RPTIERC, rpTier: rpTier, rpTierUp: rpTierUp,
+    RPPET: RPPET, RPMON: RPMON, rpMonHp: rpMonHp, rpMonAt: rpMonAt, rpFight: rpFight, RPLIM: RPLIM, RPEND: RPEND, rpOpen: rpOpen, RPTIER: RPTIER, RPTIERC: RPTIERC, RPTB: RPTB, RPTX: RPTX, DILI: DILI, dili: dili, champs: champs, RPQV: RPQV, rpQuiz: rpQuiz, rpTier: rpTier, rpTierUp: rpTierUp,
     rpClean: rpClean, rpEarn: rpEarn, rpView: rpView, rpBuy: rpBuy, rpEquip: rpEquip, rpDmg: rpDmg, rpGain: rpGain, rpBonus: rpBonus, lvRec: lvRec };
 })();
 if (typeof module !== 'undefined') module.exports = SC;
