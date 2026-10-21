@@ -5,7 +5,7 @@
 const NAMETAG = require('./_nametag').TAG;
 const path = require('path');
 const SITES = [
-  { out: 'g3-review', src: 'G3 - L1 + L2', g: '三年級複習', games: ['g3', 'g5', 'g9', 'g2', 'g4', 'g1'],   /* 2026-10-16 C4 第 8 題：再放 I 還是 My、縮寫變身術、閃電四選一（接在後面，舊的〔🔒 開關〕代號不變） */
+  { out: 'g3-review', src: 'G3 - L1 + L2', g: '三年級複習', games: ['g3', 'g5', 'g9', 'g2', 'g4', 'g1', 'g6', 'g7', 'g8', 'g10'],   /* 2026-10-21 第十八次 第 11 點：總首頁剩下的 4 個（記憶配對、火眼金睛、填空高手、魔王挑戰）也放進來 */   /* 2026-10-16 C4 第 8 題：再放 I 還是 My、縮寫變身術、閃電四選一（接在後面，舊的〔🔒 開關〕代號不變） */
     r1: 'x3',
     units: [{ ic: NAMETAG, t: 'Unit 1　What’s your name?', f: 'u1.html', tabs: ['What’s your name?', 'My name is ___.'] },
             { ic: '🎂', t: 'Unit 2　How old are you?', f: 'u2.html', tabs: ['How old are you?', 'I’m ten years old.'] }],
@@ -14,7 +14,7 @@ const SITES = [
            { ic: '🔢', t: '數字：單字故事', from: 'G3 - L1 + L2/numbers/numbers-why.html' },
            { ic: '👀', t: 'Sight Words：單字結構', from: 'G3 - L1 + L2/sight/sight-parts.html' },
            { ic: '👀', t: 'Sight Words：單字故事', from: 'G3 - L1 + L2/sight/sight-why.html' }] },
-  { out: 'g4-review', src: 'sentences', g: '四年級複習', games: ['g3', 'g4', 'g5', 'g2', 'g9', 'g1'],   /* 2026-10-16 C4 第 8 題：再放 他還是她、分類大師、閃電四選一 */
+  { out: 'g4-review', src: 'sentences', g: '四年級複習', games: ['g3', 'g4', 'g5', 'g2', 'g9', 'g1', 'g6', 'g7', 'g8', 'g10'],   /* 2026-10-21 第十八次 第 11 點：同上 */   /* 2026-10-16 C4 第 8 題：再放 他還是她、分類大師、閃電四選一 */
     r1: 'x4', jobs: 'https://hsieny627-jpg.github.io/English-Jobs-New/index.html',   /* C4 第 7-2 題：四年級首頁〔💼 職業單字網站 ↗〕（那個網站不動） */
     units: [{ ic: '👪', t: 'Unit 1　Who’s he?', f: 'u1.html', tabs: ['Who’s he/she?', 'He’s/She’s my ___.'] },
             { ic: '💼', t: 'Unit 2　Is he a doctor?', f: 'u2.html', tabs: ['He/She is a ___.', 'Yes／No'] }],

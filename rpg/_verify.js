@@ -29,7 +29,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     p.on('request', r => { if (/\.(mp3|wav|ogg)(\?|$)/.test(r.url())) snd.push(r.url().slice(-30)); });
     p.on('pageerror', x => E.push(tag + ' JS 錯誤：' + x.message));
     p.on('response', r => { if (r.status() >= 400 && r.url().startsWith(HTTP)) bad.push(r.url().slice(HTTP.length)); });
-    await p.addInitScript(() => { window.__NOCB = 1; });
+    await p.addInitScript(() => { window.__NOCB = 1; window.__NOTU = 1; });   /* 升階 典禮 另外 量（第十八次） */
     await p.goto(HTTP + '/rpg/index.html'); await p.waitForTimeout(1200);
     const o0 = await p.evaluate(() => { const b = document.getElementById('rpIn'); return { out: !document.getElementById('rpout').hidden, h: b ? b.getBoundingClientRect().height : 0 }; });
     if (!o0.out || o0.h < 64) E.push(tag + '：沒登入沒有大大的〔🔑 登入〕');
@@ -68,8 +68,9 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     for (let k = 0; k < 5; k++) { await p.click('#rqz [data-qa="0"]'); await p.waitForTimeout(1100); }
     await p.waitForTimeout(600);
     const qd = await p.evaluate(() => ({ t: document.getElementById('rqzb').textContent, qz: RV && RV.qz }));
-    if (!/看懂/.test(qd.t) || qd.qz !== 1) E.push(tag + '：5 題 都 對 沒有 送 給 老師：' + JSON.stringify(qd).slice(0, 90));
-    if (!G.books['角色'] || !/"qz":1/.test((G.books['角色'].d[1] || [])[1] || '')) E.push(tag + '：試算表「角色」沒有 記 看懂 規則');
+    if (!/看懂/.test(qd.t) || qd.qz !== require('../score/_calc.js').RPQV) E.push(tag + '：5 題 都 對 沒有 送 給 老師：' + JSON.stringify(qd).slice(0, 90));
+    if (!G.books['角色'] || !new RegExp('"qz":' + require('../score/_calc.js').RPQV).test((G.books['角色'].d[1] || [])[1] || '')) E.push(tag + '：試算表「角色」沒有 記 看懂 規則');
+    /* 第十八次 第 1 點：答對過 第 1 版 的 人（qz ＝ 1）要 再看 再答 */ { const lk = await p.evaluate(() => { const o = RV.qz; RV.qz = 1; const a = rLocked(); RV.qz = o; return a; }); if (!lk) E.push(tag + '：答對過 舊 規則 的 人 沒有 再 鎖住 看 新 規則'); n++; }
     await p.click('#qzEnd'); await p.waitForTimeout(500);
     const gU = await p.evaluate(() => ({ lk: document.getElementById('rpin').classList.contains('rlock'), st: getComputedStyle(document.getElementById('stage')).display }));
     if (gU.lk || gU.st === 'none') E.push(tag + '：看懂 以後 還是 鎖著');
@@ -267,16 +268,33 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     const cb = await p.evaluate(async () => { const o = { ov: 0 }; for (let i = 0; i < 60; i++) { const x = document.querySelector('.lfcb'); if (x) { o.ov = 1; o.cv = Math.max(o.cv || 0, x.querySelectorAll('canvas').length); if (x.classList.contains('s-end')) { await new Promise(r => setTimeout(r, 1400)); o.n = (document.getElementById('cbn') || {}).textContent; o.pw = RV.power.toLocaleString(); o.h = !!x.querySelector('.cbh img'); o.w = !!x.querySelector('.cbw'); o.p = !!x.querySelector('.cbpet img'); o.ms = i * 200; break; } } await new Promise(r => setTimeout(r, 200)); }
       if (window.__SHOTCB) await window.__SHOTCB();
       const ok = document.querySelector('.lfcb .cbok'), r = ok ? ok.getBoundingClientRect() : null; o.ok = !!r && r.bottom <= innerHeight && r.right <= innerWidth && r.height >= 56; if (ok) ok.click(); await new Promise(r => setTimeout(r, 600)); o.gone = !document.querySelector('.lfcb'); return o; });
-    if (!cb.ov || cb.n !== cb.pw || !cb.h || !cb.w || !cb.p || cb.cv < 1 || !cb.ok || !cb.gone || cb.ms > 9000) E.push(tag + '：🌟 全部 合體 不對 ' + JSON.stringify(cb));
+    if (!cb.ov || cb.n !== cb.pw || !cb.h || !cb.w || !cb.p || cb.cv < 1 || !cb.ok || !cb.gone || cb.ms > 12000) E.push(tag + '：🌟 全部 合體 不對 ' + JSON.stringify(cb));
     /* 2026-10-21 第十七次 第 10、12 點：合體 收尾 不轉圈（cbBr）、有 合體 等級＋主題 名字、下一次 換 主題；每一把 武器 招牌 不一樣；寵物 立體（影子、光環） */
-    { const cg = await p.evaluate(async () => { const out = { v: [] }; for (let k = 0; k < 2; k++) { comboGo(); await new Promise(r => setTimeout(r, 300)); const x = document.querySelector('.lfcb'); out.an = getComputedStyle(x.querySelector('.cbray')).animationName;
-          for (let i = 0; i < 60 && !x.classList.contains('s-end'); i++) await new Promise(r => setTimeout(r, 200)); await new Promise(r => setTimeout(r, 300)); out.v.push((x.querySelector('.cbg') || {}).textContent || ''); x.remove(); }
+    { const cg = await p.evaluate(async () => { const out = { v: [] }; for (let k = 0; k < 2; k++) { comboGo(); await new Promise(r => setTimeout(r, 300)); const x = document.querySelector('.lfcb'); const bi = x.querySelectorAll('.cbray i'); out.bn = bi.length; out.an = [].map.call(bi, b => getComputedStyle(b).animationName).join(',');
+          out.tr0 = [].map.call(bi, b => getComputedStyle(b).transform).join('|'); await new Promise(r => setTimeout(r, 900)); out.tr1 = [].map.call(bi, b => getComputedStyle(b).transform).join('|');
+          for (let i = 0; i < 60 && !x.classList.contains('s-end'); i++) { await new Promise(r => setTimeout(r, 200)); if (x.querySelector('.fxname')) out.nm = 1; if (x.classList.contains('s-shk') && /shake/.test(getComputedStyle(x.querySelector('.cb3')).animationName)) out.shk = 1; if (x.classList.contains('s-go')) out.flare = getComputedStyle(bi[0]).animationName; } await new Promise(r => setTimeout(r, 300)); out.v.push((x.querySelector('.cbg') || {}).textContent || ''); x.remove(); }
         const ids = Object.keys(CAT.R.w).concat(Array.from({ length: 20 }, (_, i) => 's07' + String(i + 1).padStart(2, '0'))), seen = {}; out.dup = ids.filter(id => { const k = RPFX.wInfo(id).e + RPFX.wSig(id).k; if (seen[k]) return true; seen[k] = 1; return false; });
         const pc = document.getElementById('pcard'); out.sh = !!(pc && pc.querySelector('.p3sh')); out.rg = RV.petStage ? !!pc.querySelector('.p3ring') : true; return out; });
-      if (cg.an !== 'cbBr') E.push(tag + '：合體 背景 光 還在 轉圈（' + cg.an + '）');
+      /* 2026-10-21 第十八次 第 2、3 點：三條 直 的 光束（不 轉：transform 0.9 秒 前後 一樣）、上一版 的 2D 必殺（招式 名字）＋ 整個 畫面 震動（shake）回來、必殺 那一刻 光束 爆亮（cbFl） */
+      if (cg.bn !== 3 || !/^cbBm(,cbBm){2}$/.test(cg.an) || cg.tr0 !== cg.tr1) E.push(tag + '：三條 光束 不對（要 3 條、不轉）' + JSON.stringify([cg.bn, cg.an, cg.tr0 === cg.tr1]));
+      if (!cg.nm) E.push(tag + '：合體 必殺 沒有 上一版 的 2D 必殺（招式 名字）');
+      if (!cg.shk) E.push(tag + '：合體 必殺 沒有 上一版 的 整個 畫面 震動');
+      if (!/cbFl/.test(cg.flare || '')) E.push(tag + '：合體 必殺 那一刻 光束 沒有 爆亮');
       if (cg.v.length !== 2 || !cg.v.every(t => /合體 ?等級 ?★/.test(t)) || cg.v[0] === cg.v[1]) E.push(tag + '：合體 等級／主題 不對、或 兩次 一樣：' + cg.v.join('｜'));
       if (cg.dup.length) E.push(tag + '：武器 招牌 特效 重複：' + cg.dup.join('、'));
-      if (!cg.sh || !cg.rg) E.push(tag + '：寵物 沒有 立體（影子、光環）'); n += 4; }
+      if (!cg.sh || !cg.rg) E.push(tag + '：寵物 沒有 立體（影子、光環）'); n += 7; }
+    /* 第十八次 第 4-2 點：每一樣 寶物 自己的 必殺（同一類 20 樣 兩兩 不一樣）；第 5 點：階級 徽章 ＝ 劍＋翅膀＋皇冠（不是 盾牌）、愈 高階 動得 愈多；第 4-1(3) 點 B：升階 典禮 */
+    { const ti = await p.evaluate(async () => { const o = { dup: [] }; for (let c = 1; c <= 10; c++) { const seen = {}; for (let n = 1; n <= 20; n++) { const id = 's' + String(c).padStart(2, '0') + String(n).padStart(2, '0'), g = RPFX.iSig(id), k = g.e + g.k; if (seen[k]) o.dup.push(id); seen[k] = 1; } }
+        const d = document.createElement('div'); d.innerHTML = [1, 2, 3, 4, 5].map(n => RPFX.tb(n)).join(''); document.body.appendChild(d);
+        o.ic = [].map.call(d.querySelectorAll('.tbI'), x => ({ sw: x.querySelectorAll('rect').length, wg: x.querySelectorAll('.wl,.wr').length, cr: /M18\.5 13L20\.5 3/.test(x.innerHTML), an: [].filter.call(x.querySelectorAll('*'), y => getComputedStyle(y).animationName !== 'none').length + (getComputedStyle(x.querySelector('svg')).animationName !== 'none' ? 1 : 0) }));
+        o.shield = /M20 2L37 8V22/.test(d.innerHTML); d.remove();
+        RPLIFE.tierUp({ k: 3, pct: 15, cap: 160 }); await new Promise(r => setTimeout(r, 3400)); const u = document.querySelector('.lftu'); o.tu = u ? { s2: u.classList.contains('s2'), t: u.textContent, cv: u.querySelectorAll('canvas').length } : null; if (u) u.querySelector('.cbok').click(); await new Promise(r => setTimeout(r, 500)); o.tug = !document.querySelector('.lftu'); return o; });
+      if (ti.dup.length) E.push(tag + '：寶物 專屬 必殺 重複：' + ti.dup.slice(0, 5).join('、'));
+      if (ti.shield || ti.ic.length !== 5 || ti.ic[0].sw < 2 || ti.ic[1].sw < 4 || ti.ic[3].wg !== 2 || ti.ic[4].wg !== 2 || !ti.ic[4].cr || !ti.ic.every((x, i) => i === 0 || x.an >= ti.ic[i - 1].an)) E.push(tag + '：階級 徽章 不對（劍、交叉、翅膀、皇冠、愈高 動 愈多）' + JSON.stringify(ti.ic));
+      /* 平板 記的 階級 比 現在 低 ➜ 打開 就 自動 演 升階 典禮 */
+      const auto = await p.evaluate(async () => { window.__NOTU = 0; const K = 'rp_seen_' + SCID, o = JSON.parse(localStorage.getItem(K) || '{}'); o.tm = Math.max(0, tierMax() - 1); localStorage.setItem(K, JSON.stringify(o)); seen(); await new Promise(r => setTimeout(r, 1800)); const u = document.querySelector('.lftu'); window.__NOTU = 1; if (u) u.remove(); return { has: !!u, k: tierMax() }; });
+      if (auto.k && !auto.has) E.push(tag + '：升到 新 階級 沒有 自動 演 升階 典禮');
+      if (!ti.tu || !ti.tu.s2 || !/升階/.test(ti.tu.t) || !/烈焰戰將/.test(ti.tu.t) || ti.tu.cv < 1 || !ti.tug) E.push(tag + '：升階 典禮 不對 ' + JSON.stringify(ti.tu)); n += 3; }
     /* 戴上 新東西 ➜ 自動 演 一次（老師 C17 第 4 題 C） */
     await p.evaluate(() => { window.__NOCB = 0; }); await p.click('#tabs [data-t="t"]'); await p.waitForTimeout(200);
     const own1 = await p.evaluate(() => { const x = RV.st.own.t[0]; return x || ''; });
@@ -287,14 +305,20 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* ❓ 三章 秒懂 動畫（老師第 2、4、6、7 點） */
     await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(200); await p.click('[data-go="qb"]'); await p.waitForTimeout(400);
     const tu = await p.evaluate(() => ({ ch: document.querySelectorAll('.tch button').length, on: (document.querySelector('.tch button.on') || {}).textContent, sc: document.querySelectorAll('#tst .tsc').length, a: !!document.querySelector('#tst .tsc.on') }));
-    if (tu.ch !== 4 || !/戰力 ?是 ?什麼/.test(tu.on || '') || tu.sc !== 4 || !tu.a) E.push(tag + '：〔❓ 戰力〕沒有 打開 第 2 章 ' + JSON.stringify(tu));
-    for (const [k, nsc] of [['a', 10], ['b', 4], ['c', 6], ['r', 14]]) { await p.click('[data-tch="' + k + '"]'); await p.waitForTimeout(300);
+    if (tu.ch !== 5 || !/戰力 ?是 ?什麼/.test(tu.on || '') || tu.sc !== 4 || !tu.a) E.push(tag + '：〔❓ 戰力〕沒有 打開 第 2 章 ' + JSON.stringify(tu));
+    for (const [k, nsc] of [['a', 10], ['b', 4], ['c', 6], ['d', 10], ['r', 14]]) { await p.click('[data-tch="' + k + '"]'); await p.waitForTimeout(300);
       const c1 = await p.evaluate(() => ({ n: document.querySelectorAll('#tst .tsc').length, i: [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')) }));
       await p.waitForTimeout(7900); const c2 = await p.evaluate(() => [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')));
       if (process.env.SHOT && tag === '1024✕768') { await p.waitForTimeout(2600); await (await p.$('.tut')).screenshot({ path: path.join(process.env.SHOT, 'ch_' + k + '.png') }); }
       if (c1.n !== nsc || c1.i !== 0 || c2 !== 1) E.push(tag + '：第 ' + k + ' 章 動畫 不對 ' + JSON.stringify([c1, c2]));
       const ov = await p.evaluate(() => { const t = document.getElementById('tst'), r = t.getBoundingClientRect(); let o = 0; t.querySelectorAll('.tsc.on .cap, .tsc.on .vis > *').forEach(x => { const q = x.getBoundingClientRect(); if (q.width && (q.left < r.left - 2 || q.right > r.right + 2)) o++; }); return o; });
       if (ov) E.push(tag + '：第 ' + k + ' 章 有東西 超出 畫面（' + ov + '）'); }
+    /* 第十八次 第 4-1 點：〔❓ 階級 愈高 特效 愈強〕在 舞台 上、第 2～6 幕 真的 演（畫布 有 畫）、第 7、8 幕 合體 等級 ★ ➜ ★★★★★；第 6 點 怪物 白話；第 8 點 改名 */
+    { await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(200); const st8 = await p.evaluate(() => { const t = document.getElementById('stage').textContent; return { qd: !!document.querySelector('[data-go="qd"]'), col: /收集有什麼幫助/.test(t) && !/收集有什麼用/.test(t), mon: /還剩/.test(t) && /答對1題/.test(t.replace(/\s/g, '')) && /再答對大約\d+題/.test(t.replace(/\s/g, '')) && !/下一隻/.test(t) }; });
+      if (!st8.qd || !st8.col || !st8.mon) E.push(tag + '：舞台 按鈕／怪物 說明 不對 ' + JSON.stringify(st8));
+      await p.click('[data-go="qd"]'); await p.waitForTimeout(400); await p.click('#tPause'); await p.click('[data-tut="5"]'); await p.waitForTimeout(1800);
+      const dm = await p.evaluate(() => { const c = document.querySelectorAll('#tst .tsc.on .tdemo canvas'); let px = 0; c.forEach(cv => { const g = cv.getContext('2d'), d = g.getImageData(0, 0, cv.width, cv.height).data; for (let i = 3; i < d.length; i += 64) if (d[i]) px++; }); return { on: (document.querySelector('.tch button.on') || {}).textContent, cv: c.length, px, tb: !!document.querySelector('#tst .tsc.on .tbI.t5') }; });
+      if (!/階級 ?愈高/.test(dm.on || '') || dm.cv < 2 || dm.px < 20 || !dm.tb) E.push(tag + '：〔❓ 階級 愈高 特效 愈強〕第 6 幕 沒有 真的 演 ' + JSON.stringify(dm)); n += 2; }
     /* 第十六次 老師第 4 點：〔⏸ 暫停〕＝ 停在 這一幕；〔下一幕 ▶〕〔◀ 上一幕〕；按鈕 夠大 */
     await p.click('[data-tch="a"]'); await p.waitForTimeout(300);
     const cur = () => p.evaluate(() => [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')));

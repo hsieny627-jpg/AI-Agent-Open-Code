@@ -10,7 +10,7 @@ const NOGAS = p => p.route(/script\.google(usercontent)?\.com/, r => r.abort());
 const fs = require('fs'), path = require('path'), cp = require('child_process'), { pathToFileURL } = require('url');
 const ROOT = path.join(__dirname, '..');
 /* 2026-10-16 C4 第 8 題：遊戲 3 ➜ 6 種；第 7 題：📘 Review 1（r1.html、r1/）、四年級〔💼 職業單字網站 ↗〕 */
-const SITES = [{ d: 'g3-review', src: 'G3 - L1 + L2', games: 'g3,g5,g9,g2,g4,g1', adv: 'x3' }, { d: 'g4-review', src: 'sentences', games: 'g3,g4,g5,g2,g9,g1', adv: 'x4', jobs: 1 }];
+const SITES = [{ d: 'g3-review', src: 'G3 - L1 + L2', games: 'g3,g5,g9,g2,g4,g1,g6,g7,g8,g10', adv: 'x3' }, { d: 'g4-review', src: 'sentences', games: 'g3,g4,g5,g2,g9,g1,g6,g7,g8,g10', adv: 'x4', jobs: 1 }];
 (async () => {
   let fails = 0, n = 0;
   const br = await chromium.launch();
@@ -56,7 +56,7 @@ const SITES = [{ d: 'g3-review', src: 'G3 - L1 + L2', games: 'g3,g5,g9,g2,g4,g1'
         if (!hb || !R.width || R.height < 46 || parseFloat(getComputedStyle(hb).fontSize) < 18 || !/回首頁/.test(hb.textContent)) o.push('下面沒有金色大按鈕〔🏠 回首頁〕');
         else if (hb.getAttribute('href') !== 'index.html') o.push('〔🏠 回首頁〕沒有連回複習首頁');
         if (f === 'games.html') { const n = document.querySelectorAll('#grid .gcard,#grid > *').length, h1 = document.querySelector('#hub h1').textContent;
-          if (/10 種/.test(h1)) o.push('遊戲大廳標題還寫 10 種'); return o; }
+          const gc = document.querySelectorAll('#grid .gcard').length; if (h1.indexOf(gc + ' 種') < 0) o.push('遊戲大廳標題的種數跟遊戲卡片不一樣（' + gc + '）'); return o; }
         if (!window.TABM || TABM[TABM.length - 1].lb !== '一問一答') o.push('最後一站不是一問一答');
         const st = document.querySelectorAll('#tabs.route .st').length, want = TABM.reduce((a, t) => a + (t.sub ? t.sub.length : 1), 0);
         if (st !== want) o.push('闖關路線 ' + st + ' 站（應該 ' + want + '）');

@@ -93,9 +93,14 @@ h1{margin:0;font-size:clamp(28px,3vw,44px)}
 .txc{font-size:clamp(28px,3vw,46px);font-weight:700;color:#FFE07A;margin:10px 50px 18px;animation:txIn .5s ease-out}.txv{display:flex;flex-direction:column;align-items:center;gap:16px;min-height:220px;justify-content:center;font-size:clamp(24px,2.2vw,36px)}
 .txv>*{animation:txIn .6s ease-out both}.txv>*:nth-child(2){animation-delay:.6s}.txv>*:nth-child(3){animation-delay:1.2s}@keyframes txIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .txctl{display:flex;gap:12px;justify-content:center;margin-top:20px}.txctl button{min-height:60px;min-width:9em;font-size:clamp(22px,1.8vw,30px)!important}
-.txm{display:grid;grid-template-columns:7.5em 1fr 4.5em;align-items:center;gap:14px;width:min(100%,900px);font-size:clamp(22px,2vw,32px)}.txm .ml{text-align:left;white-space:nowrap}
-.txm .mt{position:relative;height:34px;border-radius:999px;background:#22304A}.txm .mt i{position:absolute;left:0;top:0;bottom:0;border-radius:999px;width:0;animation:txW 1.4s ease-out .5s forwards}@keyframes txW{to{width:var(--w)}}
-.txm .mt u{position:absolute;top:-10px;bottom:-10px;border-left:3px dashed #FFE07A;text-decoration:none;font-size:16px;color:#FFE07A;padding-left:3px;z-index:1}
+.txm{display:grid;gap:6px;width:min(100%,900px);font-size:clamp(22px,2vw,30px)}.txm .ml{text-align:left;line-height:1.35}.txm .ml b{color:#fff;font-size:1.25em}
+.txm .mv{display:inline-block;padding:0 12px;border-radius:999px;font-weight:800;white-space:nowrap}.txm .mv.r{background:#5A1A22;color:#FFB3B3}.txm .mv.y{background:#5A4808;color:#FFE58A}.txm .mv.g{background:#1E5A34;color:#A8F5C4}
+.txm .mt{position:relative;display:flex;margin-top:26px;border-radius:12px;overflow:visible}.txm .mt span{display:flex;align-items:center;justify-content:center;min-height:42px;padding:2px 4px;font-size:clamp(16px,1.4vw,22px);font-weight:700;color:#0B1220;text-align:center;line-height:1.1}
+.txm .mt span.r{background:#FF8A8A;border-radius:12px 0 0 12px}.txm .mt span.y{background:#FFD24A}.txm .mt span.g{background:#5DE89A;border-radius:0 12px 12px 0}.txm .mt span.g:first-child{border-radius:12px 0 0 12px}.txm .mt span.r:last-child{border-radius:0 12px 12px 0}
+.txm .mt i.pt{position:absolute;top:-30px;left:0;transform:translateX(-50%);font-style:normal;font-size:28px;color:#fff;text-shadow:0 0 6px #000;animation:txP 1.4s ease-out .3s forwards}@keyframes txP{to{left:var(--p)}}
+.txtl{display:inline-flex;gap:14px;padding:12px 18px;border-radius:40px;background:#0A0F18;border:4px solid #3A4A60;margin-bottom:6px}.txtl i{width:58px;height:58px;border-radius:50%;opacity:.18}.txtl i.r{background:#FF4A4A}.txtl i.y{background:#FFD24A}.txtl i.g{background:#3BD16F}
+.txtl i.on{opacity:1;box-shadow:0 0 22px currentColor,0 0 44px currentColor;animation:txOn .8s ease-out}.txtl i.r.on{color:#FF4A4A}.txtl i.y.on{color:#FFD24A}.txtl i.g.on{color:#3BD16F}@keyframes txOn{from{opacity:.18;transform:scale(.6)}}
+.txtl.cyc i{animation:txCy 3s steps(1) infinite}.txtl.cyc i.y{animation-delay:1s}.txtl.cyc i.g{animation-delay:2s}@keyframes txCy{0%{opacity:1;box-shadow:0 0 24px #fff}33%,100%{opacity:.18;box-shadow:none}}
 .txd{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.txd i{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;background:#1E5A34;border:3px solid #5DE89A;opacity:0;animation:txIn .3s ease-out forwards}
 .txd i.fa{background:#4A1A22;border-color:#FF6B6B}.txd i.ok{background:#1E5A34;border-color:#5DE89A}.txd i.r{background:#4A1A22;border-color:#FF6B6B}.txd i.g{background:#1E5A34;border-color:#5DE89A}
 .txs{color:#FFE9A8}.txbig{font-size:110px;line-height:1}.txsum{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center}.txsum span{padding:10px 18px;border:3px solid #3A5A8A;border-radius:16px;background:#121C30}.txsum span.gd{border-color:#FFD54A;font-size:1.4em}.txsum i{font-style:normal;color:#FFE07A}
@@ -104,7 +109,7 @@ h1{margin:0;font-size:clamp(28px,3vw,44px)}
 .txtb{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}.txtb span{display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;animation:txIn .5s ease-out forwards}.txtb svg{height:64px;width:auto}
 .ltw{border:3px solid #555;border-radius:16px;padding:12px 16px;margin:8px 0 12px;display:grid;gap:12px;background:#111}.ltw.l0{border-color:#FF6B6B;background:#2A1010}.ltw.l1{border-color:#FFD24A;background:#2A2208}.ltw.l2{border-color:#3BD16F}
 .ltw .ltt{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:clamp(24px,2vw,34px);font-weight:700}.ltw .ltt b{color:#FFE9A8}
-@media (max-width:700px){.txm{grid-template-columns:1fr 4em}.txm .ml{grid-column:1/-1}.txd i{width:40px;height:40px}}
+@media (max-width:700px){.txd i{width:40px;height:40px}.txtl i{width:44px;height:44px}}
 .abbox{border:2px solid #FFD54A;border-radius:14px;padding:10px 14px;margin:8px 0 12px;background:rgba(255,213,74,.08);line-height:1.5}.abno{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px 18px;color:#FFC9D2}.abv{margin-left:10px;color:#BFFFD8;font-size:.85em;white-space:nowrap}
 .rwr{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 0;border-top:1px solid var(--ln);font-size:1.05em}.rwr:first-of-type{border-top:0}.rwr .cid{font-size:1.2em;min-width:2.6em}
 .rwr button{min-height:56px;padding:4px 18px;border-radius:999px;border:2px solid #FFD54A;background:#3A2E08;color:#FFE9A8;font-size:1em}.rwr button:disabled{opacity:.45;border-color:#555;background:#222;color:#aaa}
@@ -477,8 +482,9 @@ function login(pw){
 function nm(id){return NM[id]||''}
 /* 班級顏色（老師 2026-10-17 C8 另 2(2)）：一班一個顏色，老師一眼看出是哪一班（三年級 304 藍、307 橘、311 綠；四年級 402 藍、406 橘、409 綠、410 紫、400 金） */
 /* 2026-10-18 第十一次 老師：班級數字用明顯不同的顏色，「304 黃、402 黃」＝ 同一個「第幾班」同一個顏色：第 1 班 黃、第 2 班 藍、第 3 班 綠、第 4 班 粉紅、第 5 班 橘 */
-var CCOL=['#FFD400','#4DA3FF','#3DDC84','#FF6FB5','#FF8A1F','#C9A0FF'];
-function ccol(c){var g=String(c).charAt(0)==='3'?3:4,i=(SC.CLASSES[g]||[]).indexOf(String(c));return CCOL[i<0?5:i]}
+/* 2026-10-21 第十八次 第 10 點：307 和 311 太像 ➜ 每一個年級自己一組（三年級 黃、粉紅、綠；四年級 黃、藍、粉紅、綠、橘） */
+var CCOL={3:['#FFD400','#FF6FB5','#3DDC84'],4:['#FFD400','#4DA3FF','#FF6FB5','#3DDC84','#FF8A1F']};
+function ccol(c){var g=String(c).charAt(0)==='3'?3:4,i=(SC.CLASSES[g]||[]).indexOf(String(c));return i<0?'#C9A0FF':CCOL[g][i]}
 function cidH(id){id=String(id);return '<span class="cid" style="color:'+ccol(id.slice(0,3))+'">'+esc(id.slice(0,3))+'</span><span style="color:#DDE6EE">'+esc(id.slice(3))+'</span>'}
 function who(id){var n=nm(id);return esc(id)+(n?' '+esc(n):'')}
 function load(j){DATA=j;NM={};RCLS={};(j.roster||[]).forEach(function(r){var id=r[0]+(r[1]<10?'0':'')+r[1];NM[id]=r[2];(RCLS[r[0]]=RCLS[r[0]]||[]).push(id)});
@@ -757,24 +763,34 @@ function kAna(c,R,cnt){
 /* ══ 2026-10-21 第十七次 老師第 13、14 點：秒懂動畫說明（〔❓〕）＋成績卡「為什麼是這個燈」══
    一幕一件事、自己往下演（7 秒）、〔◀ 上一幕〕〔⏸ 暫停〕〔下一幕 ▶〕；字 ≧ 24px。dili ＝ 🏆 最認真練習怎麼算＋盾牌；lt ＝ 燈號怎麼算 */
 var TX={i:0,tm:0,L:[],pz:false};
-function txMeter(lab,v,marks,bad,c){return '<div class="txm"><div class="ml">'+lab+'</div><div class="mt">'+marks.map(function(m){return '<u style="left:'+m+'%">'+m+'</u>'}).join('')+
-  '<i style="--w:'+Math.max(2,Math.min(100,v))+'%;background:'+c+'"></i></div><b style="color:'+c+'">'+v+(bad?' %':' 分')+'</b></div>'}
+/* 2026-10-21 第十八次 第 9(1) 點：看不懂「👆 太快亂按 1030 8 %」（兩個刻度 10、30 擠在一起）➜ 選擇題「一句話＋紅綠燈」：
+   一句話（👆 太快亂按（不到 1 秒就按）：每 100 題有 8 題 🟢 很好）＋ 一條 三色 尺（每一段 寫 清楚 範圍）＋ ▼ 指出 這個 學生 在 哪裡 */
+function txMeter(lab,v,marks,bad,c){var m0=marks[0],m1=marks[1],x=Math.max(0,Math.min(100,+v||0)),L=bad?(x>m1?0:x>m0?1:2):(x<m0?0:x<m1?1:2),W=['🔴 要關心','🟡 要注意','🟢 很好'][L],K=['r','y','g'][L];
+  var sg=bad?[[m0,'g','🟢 '+m0+' 題以內'],[m1-m0,'y','🟡 '+m0+'～'+m1+' 題'],[100-m1,'r','🔴 '+m1+' 題以上']]:[[m0,'r','🔴 不到 '+m0+' 分'],[m1-m0,'y','🟡 '+m0+'～'+(m1-1)+' 分'],[100-m0-(m1-m0),'g','🟢 '+m1+' 分以上']];
+  return '<div class="txm"><div class="ml">'+(bad?'👆 太快亂按（不到 1 秒就按）：每 100 題有 <b>'+Math.round(x)+'</b> 題':'🎯 正確率：<b>'+Math.round(x)+'</b> 分')+'　<span class="mv '+K+'">'+W+'</span></div>'+
+    '<div class="mt">'+sg.map(function(q){return '<span class="'+q[1]+'" style="flex:'+Math.max(14,q[0])+'">'+q[2]+'</span>'}).join('')+'<i class="pt" style="--p:'+(bad?txPos(x,sg):txPos(x,sg))+'%">▼</i></div></div>'}
+/* ▼ 的 位置：每一段 至少 14 寬（字 放得下），照 段 換算 */
+function txPos(x,sg){var tot=0,acc=0,lo=0,i;for(i=0;i<sg.length;i++)tot+=Math.max(14,sg[i][0]);for(i=0;i<sg.length;i++){var w=sg[i][0],ww=Math.max(14,w);if(x<=lo+w||i===sg.length-1){return ((acc+ww*Math.min(1,(x-lo)/(w||1)))/tot*100).toFixed(1)}acc+=ww;lo+=w}return 100}
+/* 🚦 紅綠燈：L ＝ 0 紅、1 黃、2 綠 亮；-1 ＝ 三顆 輪流 亮；-2 ＝ 全 暗（⚪） */
+function txLight(L){return '<div class="txtl'+(L===-1?' cyc':'')+'">'+['r','y','g'].map(function(c,i){return '<i class="'+c+(i===L?' on':'')+'"></i>'}).join('')+'</div>'}
 function txDots(n,k,cls){var h='<div class="txd">';for(var i=0;i<n;i++)h+='<i class="'+(i<k?cls:(cls==='ok'?'r':'g'))+'" style="animation-delay:'+(.3+i*.15).toFixed(2)+'s">'+(i<k?(cls==='ok'?'✓':'👆'):(cls==='ok'?'✗':'✓'))+'</i>';return h+'</div>'}
 function txScenes(k){var G='#3BD16F',Y='#FFD24A',R='#FF7A7A',D=SC.DILI;
+  /* 2026-10-21 第十八次 第 9(2) 點：看不懂〔❓ 燈號怎麼算〕➜ 紅綠燈 動畫：一幕 一件事，燈 亮 哪一顆 一看 就 懂 */
   if(k==='lt')return [
-   ['🟢 很好 ＝ 正確率 80 分以上，而且很少亂按',txMeter('🎯 正確率',88,[60,80],0,G)+txMeter('👆 太快亂按',5,[10,30],1,G)],
-   ['🟡 要注意 ＝ 正確率 60～79 分，或亂按超過 1 成',txMeter('🎯 正確率',72,[60,80],0,Y)+txMeter('👆 太快亂按',5,[10,30],1,G)],
-   ['🔴 要關心 ＝ 正確率不到 60 分，或亂按超過 3 成',txMeter('🎯 正確率',52,[60,80],0,R)+txMeter('👆 太快亂按',5,[10,30],1,G)],
-   ['👆 太快亂按 ＝ 不到 1 秒就按（還沒看完題目）',txDots(10,4,'fa')+'<div class="txs">10 題有 4 題亂按 ＝ 4 成 ➜ 🔴</div>'],
-   ['只要一樣沒做到，就亮那個燈',txMeter('🎯 正確率',85,[60,80],0,G)+txMeter('👆 太快亂按',40,[10,30],1,R)+'<div class="txs">正確率 85 分很好，但亂按 4 成 ➜ <b style="color:'+R+'">🔴 要關心</b></div>'],
-   ['⚪ 還沒做 ＝ 這段期間一次都沒做','<div class="txbig">⚪</div><div class="txs">上面可以換期間（這週、上週…）</div>']];
+   ['🚦 燈號 只看 兩件事',txLight(-1)+'<div class="txsum"><span>🎯 正確率（答對幾分）</span><span>👆 太快亂按（題目還沒看完就按）</span></div>'],
+   ['🟢 綠燈 ＝ 很好：正確率 80 分以上，很少亂按',txLight(2)+txMeter('',88,[60,80],0)+txMeter('',4,[10,30],1)],
+   ['🟡 黃燈 ＝ 要注意：正確率 60～79 分，或亂按 10～30 題',txLight(1)+txMeter('',72,[60,80],0)+txMeter('',4,[10,30],1)],
+   ['🔴 紅燈 ＝ 要關心：正確率不到 60 分，或亂按 30 題以上',txLight(0)+txMeter('',52,[60,80],0)+txMeter('',4,[10,30],1)],
+   ['👆 太快亂按 ＝ 不到 1 秒就按（還沒看完題目）',txDots(10,4,'fa')+'<div class="txs">10 題有 4 題亂按 ＝ 每 100 題有 40 題 ➜ 🔴</div>'],
+   ['兩件事，看「比較差」的那一件',txLight(0)+txMeter('',85,[60,80],0)+txMeter('',40,[10,30],1)+'<div class="txs">正確率 85 分很好，但亂按 40 題 ➜ <b style="color:'+R+'">🔴 要關心</b></div>'],
+   ['⚪ 還沒做 ＝ 這段期間一次都沒做',txLight(-2)+'<div class="txs">上面可以換期間（這週、上週…）</div>']];
   return [
    ['🏆 最認真練習 ＝ 練最久 ＋ 兩個好習慣','<div class="txsum"><span>練最久</span><i>＋</i><span>👀 看完才按</span><i>＋</i><span>✏️ 錯了會改</span><i>＝</i><span class="gd">🏆</span></div>'],
    ['👀 看完才按 ＝ 不是不到 1 秒就亂按','<div class="txrow ok">👀 看完題目 ➜ 再按 ✅</div><div class="txrow no">👆 不到 1 秒就按 ➜ 亂按 ❌</div><div class="txs">原本的「A」</div>'],
    ['✏️ 錯了會改 ＝ 答錯的題目，後來改對','<div class="txrow ok"><b style="color:'+R+'">✗</b> 答錯 ➜ 再做一次 ➜ <b style="color:'+G+'">✓</b> 改對 ✅</div><div class="txs">一題都沒錯 ＝ 也算做到（原本的「B」）</div>'],
    ['兩個好習慣都要 10 題至少 9 題（'+D+'%）',txDots(10,9,'ok')+'<div class="txs">這週到現在，全部題目合起來算</div>'],
    ['沒做到 ➜ 不上榜，下一名補上','<div class="txl"><div>1　40412　✅</div><div class="x">2　40205　👀 85% ❌</div><div>3　40903　✅</div><div class="in">➜ 40417 補上</div></div>'],
-   ['🛡 名字旁邊的盾牌 ＝ 戰神之路的戰士階級','<div class="txtb">'+[1,2,3,4,5].map(function(n){return '<span style="animation-delay:'+(.3+n*.35)+'s">'+(typeof RPFX!=='undefined'?RPFX.tb(n):'')+'<small>'+(typeof RPFX!=='undefined'?RPFX.TN[n]:'')+'</small></span>'}).join('')+'</div><div class="txs">戰力升上來就換盾牌；不加分數，只是榮譽</div>']]}
+   ['⚔ 名字旁邊的劍、翅膀、皇冠 ＝ 戰神之路的戰士階級','<div class="txtb">'+[1,2,3,4,5].map(function(n){return '<span style="animation-delay:'+(.3+n*.35)+'s">'+(typeof RPFX!=='undefined'?RPFX.tb(n):'')+'<small>'+(typeof RPFX!=='undefined'?RPFX.TN[n]:'')+'</small></span>'}).join('')+'</div><div class="txs">戰力升上來就換徽章（愈高階愈華麗）；不加分數，只是榮譽</div>']]}
 function txOpen(k){TX.L=txScenes(k);TX.pz=false;var o=$('#txp');if(!o){o=document.createElement('div');o.id='txp';document.body.appendChild(o)}o.hidden=false;txGo(0)}
 function txGo(i){clearTimeout(TX.tm);TX.i=i;var S=TX.L[i],o=$('#txp');if(!S||!o)return;
   o.innerHTML='<div class="txb"><button class="txx" data-tx="x">✕ 關閉</button><div class="txn">'+TX.L.map(function(x,k){return '<i class="'+(k===i?'on':k<i?'ok':'')+'"></i>'}).join('')+'</div>'+
@@ -786,10 +802,10 @@ document.addEventListener('click',function(e){var t=e.target,b=t.closest&&t.clos
 /* 成績卡最上面：為什麼是這個燈（兩條尺：正確率 60、80；太快亂按 10、30），學生自己的數字滑進去 */
 function ltWhy(p){var r=rowOf(p,{}),L=r.lt,C=['#FF7A7A','#FFD24A','#3BD16F','#8A8A8A'][L];if(L===3)return '';
   var why=[];if(r.acc<60)why.push('🎯 正確率 '+f1(r.acc)+' 分（不到 60）');else if(L===1&&r.acc<80)why.push('🎯 正確率 '+f1(r.acc)+' 分（不到 80）');
-  if(r.fast>30)why.push('👆 太快亂按 '+r.fast+'%（超過 3 成）');else if(L===1&&r.fast>10)why.push('👆 太快亂按 '+r.fast+'%（超過 1 成）');
+  if(r.fast>30)why.push('👆 太快亂按：每 100 題有 '+r.fast+' 題（30 題以上）');else if(L===1&&r.fast>10)why.push('👆 太快亂按：每 100 題有 '+r.fast+' 題（10 題以上）');
   var q=['🔴 為什麼是紅燈？','🟡 為什麼是黃燈？','🟢 很好：正確率 80 分以上，很少亂按'][L];
   return '<div class="ltw l'+L+'"><div class="ltt">'+q+(why.length?'　<b>'+why.join('、')+'</b>':'')+'<button class="txq" data-txq="lt">❓ 燈號怎麼算</button></div>'+
-    txMeter('🎯 正確率',Math.round(r.acc),[60,80],0,r.acc<60?'#FF7A7A':r.acc<80?'#FFD24A':'#3BD16F')+txMeter('👆 太快亂按',r.fast,[10,30],1,r.fast>30?'#FF7A7A':r.fast>10?'#FFD24A':'#3BD16F')+'</div>'}
+    txMeter('',Math.round(r.acc),[60,80],0)+txMeter('',r.fast,[10,30],1)+'</div>'}
 /* 2026-10-12 D 第 3 件（D7 ①～⑤⑦）：點一個人 ＝ 秒懂成績卡。
    ① 四個大圖（正確率、總分 ＝ 圓圈從 0 轉上去；練習次數 ＝ 大數字＋綠色小方格一格 ＝ 一次；進步 ＝ 綠色箭頭往上跳，退步不寫負數寫「再加油」）
    ② 👍 最拿手 3 組｜🌱 要加油 3 組（每一組最後一次的正確率）③ 📅 哪幾天有練（一週一排，最近 4 週）④ 每一組的變化（一次一組，◀ ▶ 換）

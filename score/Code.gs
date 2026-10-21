@@ -453,7 +453,7 @@ var SC = (function () {
     if (S && S.slot !== 'w' && S.slot !== 'p') { st.eq.s[S.slot] = id; RPS[S.c - 1][3] && (st.eq.t = st.eq.t.filter(function (t) { return t !== RPS[S.c - 1][3]; })); }
     else if (RPSLOT[id]) delete st.eq.s[RPSLOT[id]]; }
   /* 📜 理解小考（2026-10-21）：規則的版本，規則改了 ＋1 ➜ 每個人要重看重答；學生答對 5 題 ＝ 伺服器記 qz ＝ RPQV */
-  var RPQV = 1;
+  var RPQV = 2;   /* 2026-10-21 第十八次 第 1 點：已經答對 5 題的人 再看一次 新的 規則（第十七次 14 幕）＋再答 5 題 */
   function rpQuiz(st, v, now) { st = rpClean(st); if (+v === RPQV) { st.qz = RPQV; st.qzt = now || Date.now(); } return st; }
   function rpLv(xp) { return Math.floor(Math.sqrt((+xp || 0) / 16)) + 1; }
   function rpClean(st) { st = st || {}; var o = { own: { h: [], w: [], p: [], t: [], s: [] }, eq: { h: '', w: '', p: '', t: [], s: {} }, spent: 0, pt: 0, free: {} }, own = st.own || {}, eq = st.eq || {};

@@ -1717,9 +1717,20 @@ body.scq .url{display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ⚔ 戰力階級 徽章（2026-10-20 第十五次）：小的 ＝ 跟字一樣高，放在號碼旁邊；big ＝ 盾牌＋名字 */
-.tbI{display:inline-flex;align-items:center;gap:.2em;vertical-align:-.2em;line-height:1}.tbI svg{width:.95em;height:1.1em;filter:drop-shadow(0 0 3px rgba(0,0,0,.6))}
-.tbI.t4 svg,.tbI.t5 svg{filter:drop-shadow(0 0 5px rgba(120,220,255,.8))}.tbI.t5 svg{filter:drop-shadow(0 0 6px rgba(200,120,255,.95))}
-.tbI.big svg{width:1.6em;height:1.85em}.tbI.big b{font-size:1em;color:#FFE9A8;white-space:nowrap}
+.tbI{display:inline-flex;align-items:center;gap:.2em;vertical-align:-.28em;line-height:1}.tbI svg{width:1.3em;height:1.3em;overflow:visible;filter:drop-shadow(0 0 2px rgba(0,0,0,.7))}
+/* 2026-10-21 第十八次 第 5 點：階級 徽章 ＝ 劍＋翅膀＋皇冠，愈高階 愈亮、動得 愈多 */
+.tbI svg *{transform-box:fill-box}
+.tbI.t1 .sh{animation:tbSh 3.2s ease-in-out infinite}@keyframes tbSh{0%,70%,100%{opacity:.3}80%{opacity:1}}
+.tbI.t2 svg{filter:drop-shadow(0 0 3px rgba(90,184,255,.9))}.tbI.t2 .x2{animation:tbX2 2.4s ease-in-out infinite}@keyframes tbX2{0%,100%{filter:none}50%{filter:drop-shadow(0 0 3px #BFE6FF) brightness(1.25)}}
+.tbI.t3 svg{filter:drop-shadow(0 0 4px rgba(255,106,26,.95))}.tbI.t3 .fl{transform-origin:50% 100%;animation:tbFl .55s ease-in-out infinite alternate}.tbI.t3 .fl2{transform-origin:50% 100%;animation:tbFl .4s ease-in-out infinite alternate-reverse}
+@keyframes tbFl{from{transform:scale(.94,.88)}to{transform:scale(1.04,1.08)}}
+.tbI.t4 svg{filter:drop-shadow(0 0 5px rgba(138,107,255,.95)) drop-shadow(0 0 2px #FFE34A)}.tbI.t4 .bt{animation:tbBt 1.6s steps(1) infinite}@keyframes tbBt{0%,62%,70%,100%{opacity:1}64%,68%{opacity:.15}66%{opacity:1;filter:brightness(2)}}
+.tbI .wl{transform-origin:100% 80%;animation:tbWl 1.8s ease-in-out infinite}.tbI .wr{transform-origin:0 80%;animation:tbWr 1.8s ease-in-out infinite}
+@keyframes tbWl{50%{transform:rotate(-9deg)}}@keyframes tbWr{50%{transform:rotate(9deg)}}
+.tbI.t5 svg{filter:drop-shadow(0 0 6px rgba(255,194,26,1)) drop-shadow(0 0 12px rgba(255,138,224,.7));animation:tbGl 2.6s ease-in-out infinite}@keyframes tbGl{50%{filter:drop-shadow(0 0 9px #FFE07A) drop-shadow(0 0 18px rgba(255,138,224,.9))}}
+.tbI.t5 .hl{animation:tbHl 2.2s linear infinite}@keyframes tbHl{to{stroke-dashoffset:-22}}.tbI.t5 .ry{transform-origin:50% 50%;animation:tbRy 2.6s ease-in-out infinite}@keyframes tbRy{50%{opacity:.25;transform:scale(1.12)}}
+.tbI.big svg{width:2.1em;height:2.1em}.tbI.big b{font-size:1em;color:#FFE9A8;white-space:nowrap}
+@media (prefers-reduced-motion:reduce){.tbI svg,.tbI svg *{animation:none!important}}
 .pgI{display:inline-flex;align-items:center;vertical-align:-.25em;line-height:1}.pgI svg{width:1.6em;height:1.05em;filter:drop-shadow(0 0 4px rgba(79,195,255,.6))}.pgI.p2 svg{filter:drop-shadow(0 0 5px rgba(255,194,26,.75))}.pgI.p0 svg{filter:none}
 /* score/_honor.css — 榮譽動畫（2026-10-12 D 第 4 件）：學生平板做完的榮譽動畫、老師投影的榮譽榜共用。12 種風格 .hs1～.hs12 */
 .hon{position:relative;width:100%;height:var(--hh,clamp(420px,66vh,800px));border-radius:22px;overflow:hidden;background:#000;color:#fff;text-align:center;isolation:isolate;
@@ -2344,6 +2355,10 @@ var RPFX = (function () {
   var SIGP = { slash: [1, 5, 9], beam: [8, 11, 0], arrow: [2, 11, 7], smash: [3, 10, 8], orb: [4, 6, 0], nova: [10, 9, 6], claw: [5, 1, 3], pierce: [11, 7, 0] }, WSIG = {};
   (function () { var used = {}; Object.keys(W).forEach(function (id) { var e = W[id][0], L = SIGP[W[id][1]].concat([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
     for (var i = 0; i < L.length; i++) if (!used[e + L[i]]) { used[e + L[i]] = 1; WSIG[id] = L[i]; return; } WSIG[id] = L[0]; }); })();
+  /* 2026-10-21 第十八次 第 4-2 點：每一樣 寶物（商城 光環、披風、必殺、名字框、背景、寵物服裝、翅膀、坐騎、舊寶物 t01～t10）也有 自己 的 專屬 必殺：元素＋招牌（同一類 20 樣 兩兩 不一樣） */
+  var ELK = Object.keys(EL);
+  function iSig(id) { id = String(id || ''); var c = /^s\d{4}$/.test(id) ? +id.slice(1, 3) : 11, n = /^s\d{4}$/.test(id) ? +id.slice(3) : +(id.replace(/\D/g, '') || 1);
+    var e = ELK[(n * 5 + c * 3) % ELK.length], k = (n + c * 7) % SIGN.length; return { k: k, e: e, nm: EL[e].nm + '．' + SIGN[k] }; }
   function wSig(id) { var k = WSIG[id] != null ? WSIG[id] : 8; return { k: k, nm: SIGN[k] }; }
   function wInfo(id) { var x = W[id], m = /^s07(\d\d)$/.exec(id || ''); return x ? { e: x[0], f: x[1], s: x[2] || (m ? Math.floor((+m[1] - 1) / 5) + 2 : 1) } : { e: 'light', f: 'slash', s: 1 }; }
   function pEl(id) { return PE[id] || ['star', 'wind', 'light', 'plasma', 'ice'][(parseInt(String(id).replace(/\D/g, ''), 10) || 0) % 5]; }
@@ -2575,11 +2590,26 @@ var RPFX = (function () {
      2026-10-21 第十六次 第 5 點 改名：1 ★ 見習戰士（鋼）2 ★★ 精英戰士（藍）3 ★★★ 烈焰戰將（火）4 ★★★★ 雷霆戰神（雷）5 ★★★★★ 傳說戰神（金＋皇冠）；tb(階, 'big') ＝ 大的、有星星＋名字 */
   var TN = ['', '見習戰士', '精英戰士', '烈焰戰將', '雷霆戰神', '傳說戰神'], TC = ['', ['#FFFFFF', '#B8C4D4', '#5A6678'], ['#E8FFFF', '#5AB8FF', '#1A4AB0'], ['#FFE08A', '#FF6A1A', '#8A1A00'], ['#F0E8FF', '#8A6BFF', '#2A0A8A'], ['#FFF3B0', '#FFC21A', '#8A5A00']];
   function ts(n) { return new Array(Math.max(0, Math.min(5, +n || 0)) + 1).join('★'); }
-  function tb(n, big) { n = Math.max(0, Math.min(5, +n || 0)); if (!n) return ''; var c = TC[n], id = 'tbg' + n;
-    var svg = '<svg viewBox="0 0 40 46" aria-hidden="true"><defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + c[0] + '"/><stop offset=".5" stop-color="' + c[1] + '"/><stop offset="1" stop-color="' + c[2] + '"/></linearGradient></defs>' +
-      '<path d="M20 2L37 8V22Q37 36 20 44Q3 36 3 22V8Z" fill="url(#' + id + ')" stroke="' + c[2] + '" stroke-width="2.4"/><path d="M20 7L32 11.5V22Q32 32 20 38.5Q8 32 8 22V11.5Z" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.4"/>' +
-      (n >= 5 ? '<path d="M11 13l4 4 5-7 5 7 4-4-2 10H13z" fill="#FFE07A" stroke="#6A3A00" stroke-width="1"/>' : '') +
-      '<path d="M20 ' + (n >= 5 ? 24 : 14) + 'l2.6 5.4 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z" fill="#fff" fill-opacity=".92"/>' + (n >= 4 ? '<circle cx="20" cy="' + (n >= 5 ? 31 : 21) + '" r="2" fill="' + c[1] + '"/>' : '') + '</svg>';
+  /* 2026-10-21 第十八次 第 5 點（老師：盾牌 太普通、沒有 身分地位）➜ 選擇題「劍＋翅膀＋皇冠」，自己畫、會動、愈高階 愈亮 愈華麗：
+     1 ★ 見習戰士 ＝ 一把 鐵劍（劍身 一道 光 掃過）／2 ★★ 精英戰士 ＝ 兩把 銀劍 交叉（藍光 一閃一閃）／3 ★★★ 烈焰戰將 ＝ 燃燒 的 劍（火焰 跳動）／
+     4 ★★★★ 雷霆戰神 ＝ 雷電劍＋金色 小翅膀（閃電 一閃、翅膀 拍）／5 ★★★★★ 傳說戰神 ＝ 金皇冠＋金劍＋大光翼＋光環（光環 流動、光芒、翅膀 拍）。tb(階, 'big') ＝ 大的、有 星星＋名字 */
+  function sw(g, tr, hilt) { return '<g' + (tr ? ' transform="' + tr + '"' : '') + '><path d="M30 6L33.2 11.5V36H26.8V11.5Z" fill="url(#' + g + ')" stroke="#1A1206" stroke-width="1.1"/><path class="sh" d="M30 11.5V34" stroke="#fff" stroke-width="1.3" stroke-linecap="round" opacity=".75"/>' +
+    '<rect x="20.5" y="35.6" width="19" height="3.8" rx="1.8" fill="' + (hilt || '#C9A23A') + '" stroke="#1A1206" stroke-width="1"/><rect x="28.3" y="39.4" width="3.4" height="8.4" rx="1" fill="#5A3A1A" stroke="#1A1206" stroke-width=".8"/><circle cx="30" cy="50" r="2.8" fill="' + (hilt || '#C9A23A') + '" stroke="#1A1206" stroke-width=".9"/></g>'; }
+  function wg(id, big) { var L = big ? 'M25 37Q7 35 1 11Q8 17 12 16Q5 24 10 27Q3 30 9 33Q16 37 25 33Z' : 'M25 35Q13 31 7 19Q12 22 15 21Q10 26 13 28Q18 30 25 31Z';
+    var R = L.replace(/(-?\d+(?:\.\d+)?)(\s*|,)(-?\d+(?:\.\d+)?)/g, function (m, x, sp, y) { return (60 - +x) + sp + y; });
+    return '<path class="wl" d="' + L + '" fill="url(#' + id + ')" stroke="#6A4A00" stroke-width=".8"/><path class="wr" d="' + R + '" fill="url(#' + id + ')" stroke="#6A4A00" stroke-width=".8"/>'; }
+  function tb(n, big) { n = Math.max(0, Math.min(5, +n || 0)); if (!n) return ''; var c = TC[n], g = 'tbg' + n, gw = 'tbw' + n;
+    var df = '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + c[0] + '"/><stop offset=".55" stop-color="' + c[1] + '"/><stop offset="1" stop-color="' + c[2] + '"/></linearGradient>' +
+      '<linearGradient id="' + gw + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFBE0"/><stop offset=".5" stop-color="#FFD54A"/><stop offset="1" stop-color="#E08A00"/></linearGradient>' +
+      '<linearGradient id="tbf" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF2A00"/><stop offset=".55" stop-color="#FF8A1A"/><stop offset="1" stop-color="#FFF0A0"/></linearGradient></defs>', b = '';
+    if (n === 1) b = sw(g);
+    else if (n === 2) b = '<g class="x2">' + sw(g, 'rotate(-34 30 30)', '#9AB8D8') + sw(g, 'rotate(34 30 30)', '#9AB8D8') + '</g>';
+    else if (n === 3) b = '<path class="fl" d="M30 1C35 9 39 14 37 22C40 19 41 15 40 12C45 19 45 30 38 37H22C15 30 15 19 20 12C19 15 20 19 23 22C21 14 25 9 30 1Z" fill="url(#tbf)" opacity=".95"/>' + sw(g) + '<path class="fl2" d="M30 14C32 19 33 23 31 28H29C27 23 28 19 30 14Z" fill="#FFF6C8" opacity=".85"/>';
+    else if (n === 4) b = wg(gw) + sw(g) + '<path class="bt" d="M33.5 8L26 22H31L25 36L37 19H31.6L35.6 8Z" fill="#FFE34A" stroke="#7A5A00" stroke-width=".7"/>';
+    else b = '<g class="ry" stroke="#FFE07A" stroke-width="1.4" stroke-linecap="round" opacity=".8"><path d="M30 2V-3M12 8L8 4M48 8L52 4M4 26H-1M56 26H61"/></g><ellipse class="hl" cx="30" cy="16" rx="23" ry="6.5" fill="none" stroke="#FFE07A" stroke-width="2.2" stroke-dasharray="7 4"/>' +
+      wg(gw, 1) + '<g transform="translate(0 6) scale(1 .9)">' + sw(g, '', '#FFC21A') + '</g>' +
+      '<path d="M18.5 13L20.5 3L25.5 8.5L30 1L34.5 8.5L39.5 3L41.5 13Z" fill="url(#' + gw + ')" stroke="#6A3A00" stroke-width="1"/><circle cx="30" cy="9.5" r="1.8" fill="#FF3A6A"/><circle cx="23.5" cy="10.5" r="1.2" fill="#3AB8FF"/><circle cx="36.5" cy="10.5" r="1.2" fill="#3AB8FF"/>';
+    var svg = '<svg viewBox="-2 -4 64 64" aria-hidden="true">' + df + b + '</svg>';
     return '<span class="tbI t' + n + (big ? ' big' : '') + '" role="img" aria-label="' + ts(n) + ' ' + TN[n] + '">' + svg + (big ? '<b><i class="tbS">' + ts(n) + '</i>' + TN[n] + '</b>' : '') + '</span>'; }
   /* 🐾 寵物 長大／進化 徽章（2026-10-21 第十七次 老師第 11 點：🐥 🐲 太幼稚 ➜ 選擇題「光環徽章」）：0 寶寶 ＝ 一圈 灰色 虛線；1 長大 ＝ 一圈 藍色 光環；2 進化 ＝ 兩圈 金色 光環＋光翼 */
   function pg(n) { n = Math.max(0, Math.min(2, +n || 0)); var id = 'pgg' + n, c = [['#C8D0DA', '#6A7686'], ['#E8FBFF', '#4FC3FF'], ['#FFF6C8', '#FFC21A']][n];
@@ -2589,7 +2619,7 @@ var RPFX = (function () {
       (n >= 2 ? '<ellipse cx="28" cy="12" rx="11" ry="4" fill="none" stroke="url(#' + id + ')" stroke-width="2.6"/>' : '') +
       (n ? '<path d="M28 ' + (n >= 2 ? 13 : 9) + 'l1.6 3.6 3.6.4-2.7 2.5.8 3.7-3.3-1.9-3.3 1.9.8-3.7-2.7-2.5 3.6-.4z" fill="#fff"/>' : '<circle cx="28" cy="18" r="3" fill="' + c[1] + '"/>') + '</svg>';
     return '<span class="pgI p' + n + '" role="img" aria-label="' + ['寶寶', '長大', '進化'][n] + '">' + svg + '</span>'; }
-  return { attack: attack, spark: spark, beam: beam, summon: summon, evolve: evolve, chest: chest, coins: coins, fight: fight, wInfo: wInfo, pEl: pEl, EL: EL, hash: hash, pos: pos, tb: tb, TN: TN, ts: ts, pg: pg, wSig: wSig, SIGN: SIGN };
+  return { attack: attack, spark: spark, beam: beam, summon: summon, evolve: evolve, chest: chest, coins: coins, fight: fight, wInfo: wInfo, pEl: pEl, EL: EL, hash: hash, pos: pos, tb: tb, TN: TN, ts: ts, pg: pg, wSig: wSig, iSig: iSig, SIGN: SIGN, TC: TC };
 })();
 /* 🪙 金幣圖示：老師的電腦（舊的 Windows）沒有 🪙 這個字 ➜ 一律換成自己畫的金幣（2026-10-20 第十四次 2） */
 (function () {

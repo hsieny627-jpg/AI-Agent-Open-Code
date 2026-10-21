@@ -351,9 +351,20 @@ body.scq .url{display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ⚔ 戰力階級 徽章（2026-10-20 第十五次）：小的 ＝ 跟字一樣高，放在號碼旁邊；big ＝ 盾牌＋名字 */
-.tbI{display:inline-flex;align-items:center;gap:.2em;vertical-align:-.2em;line-height:1}.tbI svg{width:.95em;height:1.1em;filter:drop-shadow(0 0 3px rgba(0,0,0,.6))}
-.tbI.t4 svg,.tbI.t5 svg{filter:drop-shadow(0 0 5px rgba(120,220,255,.8))}.tbI.t5 svg{filter:drop-shadow(0 0 6px rgba(200,120,255,.95))}
-.tbI.big svg{width:1.6em;height:1.85em}.tbI.big b{font-size:1em;color:#FFE9A8;white-space:nowrap}
+.tbI{display:inline-flex;align-items:center;gap:.2em;vertical-align:-.28em;line-height:1}.tbI svg{width:1.3em;height:1.3em;overflow:visible;filter:drop-shadow(0 0 2px rgba(0,0,0,.7))}
+/* 2026-10-21 第十八次 第 5 點：階級 徽章 ＝ 劍＋翅膀＋皇冠，愈高階 愈亮、動得 愈多 */
+.tbI svg *{transform-box:fill-box}
+.tbI.t1 .sh{animation:tbSh 3.2s ease-in-out infinite}@keyframes tbSh{0%,70%,100%{opacity:.3}80%{opacity:1}}
+.tbI.t2 svg{filter:drop-shadow(0 0 3px rgba(90,184,255,.9))}.tbI.t2 .x2{animation:tbX2 2.4s ease-in-out infinite}@keyframes tbX2{0%,100%{filter:none}50%{filter:drop-shadow(0 0 3px #BFE6FF) brightness(1.25)}}
+.tbI.t3 svg{filter:drop-shadow(0 0 4px rgba(255,106,26,.95))}.tbI.t3 .fl{transform-origin:50% 100%;animation:tbFl .55s ease-in-out infinite alternate}.tbI.t3 .fl2{transform-origin:50% 100%;animation:tbFl .4s ease-in-out infinite alternate-reverse}
+@keyframes tbFl{from{transform:scale(.94,.88)}to{transform:scale(1.04,1.08)}}
+.tbI.t4 svg{filter:drop-shadow(0 0 5px rgba(138,107,255,.95)) drop-shadow(0 0 2px #FFE34A)}.tbI.t4 .bt{animation:tbBt 1.6s steps(1) infinite}@keyframes tbBt{0%,62%,70%,100%{opacity:1}64%,68%{opacity:.15}66%{opacity:1;filter:brightness(2)}}
+.tbI .wl{transform-origin:100% 80%;animation:tbWl 1.8s ease-in-out infinite}.tbI .wr{transform-origin:0 80%;animation:tbWr 1.8s ease-in-out infinite}
+@keyframes tbWl{50%{transform:rotate(-9deg)}}@keyframes tbWr{50%{transform:rotate(9deg)}}
+.tbI.t5 svg{filter:drop-shadow(0 0 6px rgba(255,194,26,1)) drop-shadow(0 0 12px rgba(255,138,224,.7));animation:tbGl 2.6s ease-in-out infinite}@keyframes tbGl{50%{filter:drop-shadow(0 0 9px #FFE07A) drop-shadow(0 0 18px rgba(255,138,224,.9))}}
+.tbI.t5 .hl{animation:tbHl 2.2s linear infinite}@keyframes tbHl{to{stroke-dashoffset:-22}}.tbI.t5 .ry{transform-origin:50% 50%;animation:tbRy 2.6s ease-in-out infinite}@keyframes tbRy{50%{opacity:.25;transform:scale(1.12)}}
+.tbI.big svg{width:2.1em;height:2.1em}.tbI.big b{font-size:1em;color:#FFE9A8;white-space:nowrap}
+@media (prefers-reduced-motion:reduce){.tbI svg,.tbI svg *{animation:none!important}}
 .pgI{display:inline-flex;align-items:center;vertical-align:-.25em;line-height:1}.pgI svg{width:1.6em;height:1.05em;filter:drop-shadow(0 0 4px rgba(79,195,255,.6))}.pgI.p2 svg{filter:drop-shadow(0 0 5px rgba(255,194,26,.75))}.pgI.p0 svg{filter:none}
 /* score/_honor.css — 榮譽動畫（2026-10-12 D 第 4 件）：學生平板做完的榮譽動畫、老師投影的榮譽榜共用。12 種風格 .hs1～.hs12 */
 .hon{position:relative;width:100%;height:var(--hh,clamp(420px,66vh,800px));border-radius:22px;overflow:hidden;background:#000;color:#fff;text-align:center;isolation:isolate;

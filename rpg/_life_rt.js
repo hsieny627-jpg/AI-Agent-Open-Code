@@ -186,6 +186,23 @@ var RPLIFE;
     else { /* 彗星：一顆 大 光球 拖著 長 尾巴 畫 一道 弧 */
       for (i = 0; i < 40; i++) (function (i) { at(i * 11, function () { var u = i / 39, ax = dx * u, ay = dy * u - Math.sin(u * Math.PI) * 120 * sc;
         dot(H.x, H.y, ax, ay, Math.sin(u * Math.PI) * 80, { l: .5, s: (10 + t * 2) * sc * (.5 + u * .5), c: i % 3 ? C[1] : '#FFFFFF' }); }); })(i); } }
+  /* ⚔ 戰士 階級 的 專屬 3D 特效（2026-10-21 第十八次 第 4-1 點：不一樣 的 階級 不一樣；愈 高階 愈 強大、愈 華麗）
+     k ＝ 階級 1～5（0 ＝ 還沒有）；X,Y ＝ 戰士 的 位置；sc ＝ 大小 倍數
+     1 見習戰士 ＝ 鋼鐵 火花 一圈／2 精英戰士 ＝ 藍色 雙環＋交叉 劍光／3 烈焰戰將 ＝ 火柱 沖天＋火星 往上 噴／
+     4 雷霆戰神 ＝ 天雷 劈下＋雷電 光翼／5 傳說戰神 ＝ 黃金 光柱＋巨大 光翼＋頭上 皇冠 光環＋三圈 衝擊波（核彈級） */
+  var TCOL = [null, ['#FFFFFF', '#C8D4E4', '#7A8698'], ['#E8FFFF', '#5AB8FF', '#1A6AFF'], ['#FFF4B8', '#FF8A1A', '#FF2A00'], ['#FFFFFF', '#FFE34A', '#8A6BFF'], ['#FFF6C8', '#FFC21A', '#FF8AE0']];
+  function wings(S, X, Y, C, W, ms) { for (var s = -1; s <= 1; s += 2) for (var f = 0; f < 7; f++) { var tx = s * W * (.55 + f * .08), ty = -W * (.75 - f * .2), n = 14;
+      for (var i = 0; i < n; i++) (function (s, f, i) { setTimeout(function () { var u = i / (n - 1); S.add({ k: 'd', ox: X, oy: Y, fx: 1, x: s * 18 + tx * u, y: -30 + (ty + 30) * u - Math.sin(u * Math.PI) * W * .12, z: -40 - f * 6, vx: 0, vy: 0, vz: 0, l: (ms || 1800) / 1000, s: 4.5 - f * .35 + (u > .85 ? 2 : 0), c: f % 3 ? C[1] : '#FFFFFF', fi: 1 }); }, f * 40 + i * 12); })(s, f, i); } }
+  function tierFx(S, k, X, Y, sc) { k = clamp(k || 0, 0, 5); if (!k) return; sc = sc || 1; var C = TCOL[k], i;
+    S.add({ k: 'rg', ox: X, oy: Y + 60 * sc, fx: 1, x: 0, y: 0, z: 0, r0: 10, r1: (120 + k * 40) * sc, l: .8, s: 4 + k, c: C[1], flat: 1 });
+    for (i = 0; i < 30 + k * 30; i++) { var th = Math.random() * 6.283, sp = rnd(160, 300 + k * 60) * sc; S.add({ k: 'st', ox: X, oy: Y, fx: 1, x: 0, y: 0, z: 0, vx: Math.cos(th) * sp, vy: Math.sin(th) * sp * .6, vz: Math.sin(th) * sp, dr: 2.6, l: rnd(.4, .8), s: rnd(2, 3.5) + k * .4, c: C[i % 3] }); }
+    if (k >= 2) { S.add({ k: 'rg', ox: X, oy: Y, fx: 1, x: 0, y: 0, z: 0, r0: 30, r1: 200 * sc, l: .9, s: 5, c: C[2] }); for (var j = 0; j < 2; j++) for (var a = 0; a < 30; a++) { var u = a / 29 - .5, sg = j ? 1 : -1; S.add({ k: 'd', ox: X, oy: Y, fx: 1, x: u * 260 * sc, y: u * 260 * sc * sg, z: 20, vx: 0, vy: 0, vz: 0, l: .7, s: (7 - Math.abs(u) * 8) * sc + 1, c: a % 3 ? C[1] : '#FFFFFF', fi: 1, grow: .6 }); } }
+    if (k >= 3) { S.add({ k: 'pl', ox: X, oy: Y + 40 * sc, fx: 1, x: 0, y: 0, z: 0, l: 1.2, s: (46 + k * 10) * sc, c: C[1] }); for (i = 0; i < 80 + k * 20; i++) S.add({ k: 'd', ox: X, oy: Y + 60 * sc, fx: 1, x: rnd(-70, 70) * sc, y: 0, z: rnd(-70, 70), vx: rnd(-30, 30), vy: -rnd(200, 520) * sc, vz: 0, gv: 120, dr: .6, l: rnd(.8, 1.6), s: rnd(3, 6), c: C[i % 3] }); }
+    if (k >= 4) { for (i = 0; i < 4 + k * 2; i++) (function (i) { setTimeout(function () { bolt(S, X + rnd(-120, 120) * sc, Y, C[i % 3]); }, i * 70); })(i); wings(S, X, Y, C, 170 * sc, 1600 + k * 200); }
+    if (k >= 5) { S.flash = Math.max(S.flash, .55); S.fc = C[0];
+      for (i = 0; i < 48; i++) S.add({ k: 'o', ox: X, oy: Y - 150 * sc, fx: 1, ang: i / 48 * 6.283, r: 60 * sc, w: 2.4, y: 0, vy: 0, x: 0, z: 0, l: 2.4, s: i % 6 ? 3.4 : 7, c: i % 6 ? C[1] : '#FFFFFF', tilt: .25, fi: 1 });
+      for (var r = 0; r < 3; r++) S.add({ k: 'rg', ox: X, oy: Y, fx: 1, x: 0, y: 0, z: 0, r0: 20, r1: Math.max(S.w, S.h) * (.5 + r * .2), l: 1 + r * .25, s: 7, c: r % 2 ? '#FFFFFF' : C[1], flat: r === 1 });
+      for (i = 0; i < 240; i++) { var t2 = Math.random() * 6.283, p2 = Math.acos(rnd(-1, 1)), s2 = rnd(380, 700) * sc; S.add({ k: i % 3 ? 'd' : 'st', ox: X, oy: Y, fx: 1, x: 0, y: 0, z: 0, vx: Math.sin(p2) * Math.cos(t2) * s2, vy: Math.cos(p2) * s2, vz: Math.sin(p2) * Math.sin(t2) * s2, dr: 2.4, gv: 50, l: rnd(1, 1.8), s: rnd(4, 9), c: i % 4 ? C[i % 3] : '#FFFFFF' }); } } }
   /* ⚔ 3D 出招（〔戰神之路〕大方框）：o ＝ {hero, w:武器卡, p:寵物卡, to:靶, e, tier, crit, ch:蓄力好 的 時間, hit:打中 的 時間} */
   function strike(m, o) { if (!m || RM) return; o = o || {}; var C = EC(o.e), t = clamp(o.tier || 1, 1, 5), S = ST && ST.m === m ? ST.S : Space(m, { ms: 2600 }), now = S.t;
     if (ST && ST.m === m) ST.kick = { t0: now, ms: (o.hit || 800) + 900, tz: 110 + t * 18, ry: -16, rx: -3, hit: now + (o.hit || 800), shk: 380 + t * 90, amp: 3 + t * 2.2 };
@@ -198,12 +215,15 @@ var RPLIFE;
     for (var i = 0; i < 40 + t * 12; i++) { var th = Math.random() * 6.28, r = rnd(110, 240); S.add({ k: 'd', ox: H.x, oy: H.y, fx: 1, x: Math.cos(th) * r, y: rnd(-120, 120), z: Math.sin(th) * r, home: 5.5, l: (o.ch || 380) / 1000 + .15, s: rnd(2.5, 5), c: C[i % 3], fo: 0 }); }
     S.add({ k: 'rg', ox: H.x, oy: H.y, fx: 1, x: 0, y: 0, z: 0, r0: 200, r1: 10, l: (o.ch || 380) / 1000, s: 4, c: C[1], flat: 1 });
     var T = o.to ? rel(m, o.to) : { x: S.w * .78, cy: S.h * .45 };
-    /* 2026-10-21 第十七次：每一把 武器 自己的 招牌 3D 特效（o.wid）＋ 招牌 名字；沒有 武器 ＝ 原本 的 光束 */
-    var G = o.wid && window.RPFX && RPFX.wSig ? RPFX.wSig(o.wid) : null;
-    if (G) { setTimeout(function () { sigFx(S, G.k, H, { x: T.x, y: T.cy }, C, t, 1); var nm = el('div', 'd3sig', '⚔ ' + G.nm); nm.style.left = T.x + 'px'; nm.style.top = Math.max(10, T.cy - 120) + 'px'; nm.style.setProperty('--c', C[1]); m.appendChild(nm); setTimeout(function () { if (nm.parentNode) nm.parentNode.removeChild(nm); }, 1900); }, o.ch || 380); }
-    else setTimeout(function () { for (var k = 0; k < 26 + t * 6; k++) (function (k) { setTimeout(function () { var dx = T.x - H.x, dy = T.cy - H.y, s = rnd(1.3, 1.9);
-      S.add({ k: 'st', ox: H.x, oy: H.y, fx: 1, x: rnd(-8, 8), y: rnd(-8, 8), z: rnd(-30, 60), vx: dx * s, vy: dy * s, vz: rnd(-60, 120), l: 1 / s, s: rnd(3, 6) + t * .4, c: C[k % 3], dr: 0 }); }, k * 9); })(k); }, o.ch || 380);
-    setTimeout(function () { boom(S, { x: T.x, y: T.cy, e: o.e, c: C, tier: t, crit: o.crit, big: 1 }); if (t >= 5) nuke(S, { x: T.x, y: T.cy, e: o.e, c: C }); else { S.flash = .12 + t * .06; S.fc = C[1]; } }, o.hit || 800); }
+    /* 2026-10-21 第十八次 第 2～4 點：上一版 的 光束 回來（一定 有）＋ 這一把 武器 自己的 招牌（疊 上去）＋ 戰士 階級 的 專屬 特效（o.cls）；
+       威力 ＝ 武器 星等 和 階級 取 大的（愈 高 愈 猛：★4／★★★★ 以上 天雷、★5／★★★★★ 核彈級） */
+    var G = o.wid && window.RPFX && RPFX.wSig ? RPFX.wSig(o.wid) : null, K = clamp(o.cls || 0, 0, 5), P = Math.max(t, K);
+    if (K) setTimeout(function () { tierFx(S, K, H.x, H.y, .8); }, 60);
+    if (G) { setTimeout(function () { sigFx(S, G.k, H, { x: T.x, y: T.cy }, C, P, 1 + K * .08); var nm = el('div', 'd3sig', '⚔ ' + G.nm); nm.style.left = T.x + 'px'; nm.style.top = Math.max(10, T.cy - 120) + 'px'; nm.style.setProperty('--c', C[1]); m.appendChild(nm); setTimeout(function () { if (nm.parentNode) nm.parentNode.removeChild(nm); }, 1900); }, o.ch || 380); }
+    setTimeout(function () { for (var k = 0; k < 26 + P * 8; k++) (function (k) { setTimeout(function () { var dx = T.x - H.x, dy = T.cy - H.y, s = rnd(1.3, 1.9);
+      S.add({ k: 'st', ox: H.x, oy: H.y, fx: 1, x: rnd(-8, 8), y: rnd(-8, 8), z: rnd(-30, 60), vx: dx * s, vy: dy * s, vz: rnd(-60, 120), l: 1 / s, s: rnd(3, 6) + P * .5, c: C[k % 3], dr: 0 }); }, k * 9); })(k); }, o.ch || 380);
+    setTimeout(function () { boom(S, { x: T.x, y: T.cy, e: o.e, c: C, tier: P, crit: o.crit, big: 1 + K * .1 }); if (P >= 5) nuke(S, { x: T.x, y: T.cy, e: o.e, c: C }); else { S.flash = .12 + P * .06; S.fc = C[1]; }
+      if (K >= 4) for (var b = 0; b < K * 2; b++) bolt(S, T.x + rnd(-60, 60), T.cy, TCOL[K][b % 3]); }, o.hit || 800); }
   /* 一次 立體 爆炸（別的 地方 用：做完 一次 的 最後一幕 打怪、登場、合體）：o ＝ {at 元素 或 x,y, e, tier, crit, big} */
   function burst(host, o) { if (!host || RM) return; o = o || {}; var S = Space(host, { ms: 2400 }), x = o.x, y = o.y; if (o.at) { var r = rel(host, o.at); x = r.x; y = r.cy; }
     if (x == null) { x = S.w / 2; y = S.h / 2; } var C = o.c || EC(o.e); boom(S, { x: x, y: y, e: o.e, c: C, tier: o.tier, crit: o.crit, big: o.big || 1 });
@@ -252,54 +272,96 @@ var RPLIFE;
 
   /* ══════════ 🌟 全部 合體 出招（全螢幕 約 8 秒，3D 鏡頭）══════════
      o ＝ {base:'../', h:戰士圖, w:武器圖, wid, p:寵物圖, pid, au/cp/wg/mt/bg: 商城 寶物 的 圖（穿在身上 的 i.webp）, power, tier, star, id:5碼, title} */
-  /* 🌟 合體 必殺 的 收尾（2026-10-21 第十七次 老師第 10-(1)(3) 點）：拿掉 轉圈圈 的 三條 雷射，改 低調、沉穩、慢 的 立體 光；
-     6 種 主題 每一次 換一種（v）；G ＝ 合體 等級 1～5（階級＋收集 愈強 愈高）➜ 一層一層 加上去 */
+  /* 🌟 合體 必殺 的 收尾 主題（2026-10-21 第十七次 10-(3)；第十八次 第 2～4 點：不再 低調 ➜ 跟 上一版 一樣 猛，再 照 合體 等級 G 一層一層 疊 更 大）
+     6 種 主題 每一次 換一種（v）；G ＝ 合體 等級 1～5（階級＋收集 愈強 愈高） */
   var FINN = ['天柱降臨', '星河漩渦', '雙龍升天', '流星審判', '極光帷幕', '太陽核心'];
-  function finale(S, v, G, X, Y, C, hh) { var i, n = 60 + G * 40, Hh = hh || 300;
-    if (v === 0) { S.add({ k: 'pl', ox: X, oy: Y, fx: 1, x: 0, y: 0, z: 0, l: 2.6, s: 50 + G * 14, c: C[1] });
-      for (i = 0; i < Math.min(4, G); i++) S.add({ k: 'rg', ox: X, oy: Y + Hh * .3, fx: 1, x: 0, y: 0, z: 0, r0: 20, r1: 180 + i * 90, l: 1.8 + i * .4, s: 5, c: C[i % 3], flat: 1 }); }
-    else if (v === 1) { for (i = 0; i < n * 2; i++) S.add({ k: 'o', ox: X, oy: Y, fx: 1, ang: Math.random() * 6.283, r: 30 + Math.pow(Math.random(), .7) * (160 + G * 40), w: 1.1 + Math.random() * .5, y: (Math.random() - .5) * 16, vy: 0, x: 0, z: 0, l: 2.8 + Math.random(), s: rnd(2, 4.5) + G * .3, c: C[i % 3], tilt: .32 }); }
-    else if (v === 2) { for (i = 0; i < n; i++) (function (i) { setTimeout(function () { for (var s = 0; s < 2; s++) { var u = i / n, ph = u * 9 + s * Math.PI; S.add({ k: 'd', ox: X, oy: Y + Hh * .45, fx: 1, x: Math.cos(ph) * (70 + G * 8), y: -u * Hh * 1.3, z: Math.sin(ph) * (90 + G * 10), vx: 0, vy: -20, vz: 0, l: 1.6, s: 4 + G * .5, c: C[s ? 2 : 1], fi: 1 }); } }, i * 14); })(i); }
-    else if (v === 3) { for (i = 0; i < 14 + G * 8; i++) (function (i) { setTimeout(function () { var x0 = (Math.random() - .5) * S.w * .8, sp = 520 + Math.random() * 160;
-        S.add({ k: 'st', ox: X, oy: Y, fx: 1, x: x0 + 160, y: -Y - 40, z: (Math.random() - .5) * 300, vx: -160 * sp / 700, vy: sp, vz: 0, l: (Y + 40) / sp, s: 5 + G, c: C[i % 3], dr: 0 }); }, i * 70); })(i); }
-    else if (v === 4) { for (var b = 0; b < 2 + Math.ceil(G / 2); b++) for (i = 0; i < 40; i++) S.add({ k: 'd', ox: 0, oy: Y - Hh * (.55 + b * .12), fx: 1, x: i / 39 * S.w, y: Math.sin(i / 39 * 6.283 + b) * 24, z: 0, vx: 8 + b * 4, vy: Math.cos(i / 6 + b) * 6, vz: 0, l: 3, s: 10 + G * 2, c: C[(b + 1) % 3], al: .55, fi: 1 }); }
-    else { for (i = 0; i < n * 1.5; i++) { var th = Math.random() * 6.283, ph = Math.acos(Math.random() * 2 - 1), sp = 70 + G * 12; S.add({ k: 'd', ox: X, oy: Y, fx: 1, x: 0, y: 0, z: 0, vx: Math.sin(ph) * Math.cos(th) * sp, vy: Math.cos(ph) * sp, vz: Math.sin(ph) * Math.sin(th) * sp, dr: .5, l: 2.4, s: 4 + G * .5, c: i % 4 ? C[i % 3] : '#FFFFFF', fi: 1 }); } }
-    /* 一層一層 加：G2 地上 一圈 慢慢 散開、G3 光點 慢慢 往上 飄、G4 頭上 金色 王冠 光環、G5 白光 輕輕 一下＋第二種 主題 */
-    if (G >= 2) S.add({ k: 'rg', ox: X, oy: Y + Hh * .42, fx: 1, x: 0, y: 0, z: 0, r0: 30, r1: 320, l: 2.4, s: 4, c: '#FFFFFF', flat: 1 });
-    if (G >= 3) for (i = 0; i < 70; i++) S.add({ k: 'd', ox: X, oy: Y + Hh * .4, fx: 1, x: (Math.random() - .5) * 260, y: 0, z: (Math.random() - .5) * 260, vx: 0, vy: -rnd(40, 90), vz: 0, l: rnd(2, 3.2), s: rnd(2, 4), c: C[i % 3], fi: 1 });
-    if (G >= 4) S.add({ k: 'rg', ox: X, oy: Y - Hh * .55, fx: 1, x: 0, y: 0, z: 0, r0: 40, r1: 90, l: 3, s: 5, c: '#FFD54A', flat: 1 });
-    if (G >= 5) { S.flash = .35; S.fc = C[0]; finale(S, (v + 3) % 6, 1, X, Y, C, hh); } }
+  function finale(S, v, G, X, Y, C, hh) { var i, n = 120 + G * 70, Hh = hh || 300;
+    if (v === 0) { S.add({ k: 'pl', ox: X, oy: Y, fx: 1, x: 0, y: 0, z: 0, l: 2.2, s: 70 + G * 22, c: C[1] });
+      for (i = 0; i < 2 + G; i++) S.add({ k: 'rg', ox: X, oy: Y + Hh * .3, fx: 1, x: 0, y: 0, z: 0, r0: 20, r1: 220 + i * 110, l: 1.2 + i * .3, s: 7, c: C[i % 3], flat: 1 }); }
+    else if (v === 1) { for (i = 0; i < n * 2; i++) S.add({ k: 'o', ox: X, oy: Y, fx: 1, ang: Math.random() * 6.283, r: 30 + Math.pow(Math.random(), .7) * (200 + G * 60), w: 2.4 + Math.random() * 1.6, y: (Math.random() - .5) * 20, vy: 0, x: 0, z: 0, l: 2.2 + Math.random(), s: rnd(3, 6) + G * .6, c: C[i % 3], tilt: .32 }); }
+    else if (v === 2) { for (i = 0; i < n; i++) (function (i) { setTimeout(function () { for (var s = 0; s < 2; s++) { var u = i / n, ph = u * 11 + s * Math.PI; S.add({ k: 'd', ox: X, oy: Y + Hh * .45, fx: 1, x: Math.cos(ph) * (90 + G * 14), y: -u * Hh * 1.6, z: Math.sin(ph) * (110 + G * 16), vx: 0, vy: -40, vz: 0, l: 1.4, s: 6 + G, c: C[s ? 2 : 1], fi: 1 }); } }, i * 8); })(i); }
+    else if (v === 3) { for (i = 0; i < 24 + G * 12; i++) (function (i) { setTimeout(function () { var x0 = (Math.random() - .5) * S.w * .8, sp = 900 + Math.random() * 300;
+        S.add({ k: 'st', ox: X, oy: Y, fx: 1, x: x0 + 160, y: -Y - 40, z: (Math.random() - .5) * 300, vx: -160 * sp / 700, vy: sp, vz: 0, l: (Y + 40) / sp, s: 7 + G * 1.5, c: C[i % 3], dr: 0 }); setTimeout(function () { boom(S, { x: X + x0 * .3, y: Y, c: C, tier: 2, big: .5 }); }, 200); }, i * 45); })(i); }
+    else if (v === 4) { for (var b = 0; b < 3 + G; b++) for (i = 0; i < 50; i++) S.add({ k: 'd', ox: 0, oy: Y - Hh * (.55 + b * .1), fx: 1, x: i / 49 * S.w, y: Math.sin(i / 49 * 6.283 + b) * 30, z: 0, vx: 30 + b * 8, vy: Math.cos(i / 6 + b) * 10, vz: 0, l: 2.4, s: 14 + G * 3, c: C[(b + 1) % 3], al: .7, fi: 1 }); }
+    else { S.flash = Math.max(S.flash, .6); S.fc = C[0]; for (i = 0; i < n * 2; i++) { var th = Math.random() * 6.283, ph = Math.acos(Math.random() * 2 - 1), sp = 260 + G * 60; S.add({ k: i % 3 ? 'd' : 'st', ox: X, oy: Y, fx: 1, x: 0, y: 0, z: 0, vx: Math.sin(ph) * Math.cos(th) * sp, vy: Math.cos(ph) * sp, vz: Math.sin(ph) * Math.sin(th) * sp, dr: 1.4, l: 1.8, s: 5 + G, c: i % 4 ? C[i % 3] : '#FFFFFF', fi: 1 }); } }
+    /* 一層一層 疊：G2 地上 衝擊波、G3 天雷＋光點 噴泉、G4 頭上 金色 王冠 光環＋第二顆 核彈、G5 全白 閃光＋第二種 主題＋巨大 光翼 */
+    if (G >= 2) for (i = 0; i < 2; i++) S.add({ k: 'rg', ox: X, oy: Y + Hh * .42, fx: 1, x: 0, y: 0, z: 0, r0: 30, r1: Math.max(S.w, S.h) * (.5 + i * .3), l: 1.4 + i * .3, s: 6, c: i ? '#FFFFFF' : C[1], flat: 1 });
+    if (G >= 3) { for (i = 0; i < 6 + G * 2; i++) (function (i) { setTimeout(function () { bolt(S, X + rnd(-200, 200), Y, C[i % 3]); }, i * 60); })(i);
+      for (i = 0; i < 140; i++) S.add({ k: 'd', ox: X, oy: Y + Hh * .4, fx: 1, x: (Math.random() - .5) * 200, y: 0, z: (Math.random() - .5) * 200, vx: rnd(-60, 60), vy: -rnd(300, 700), vz: rnd(-60, 60), gv: 260, l: rnd(1.4, 2.4), s: rnd(3, 6), c: C[i % 3] }); }
+    if (G >= 4) { for (i = 0; i < 60; i++) S.add({ k: 'o', ox: X, oy: Y - Hh * .62, fx: 1, ang: i / 60 * 6.283, r: 80, w: 2.2, y: 0, vy: 0, x: 0, z: 0, l: 3, s: i % 6 ? 4 : 8, c: i % 6 ? '#FFD54A' : '#FFFFFF', tilt: .25, fi: 1 });
+      setTimeout(function () { nuke(S, { x: X, y: Y - Hh * .1, c: [C[2], '#FFFFFF', C[1]] }); }, 900); }
+    if (G >= 5) { setTimeout(function () { S.flash = 1; S.fc = '#FFFFFF'; finale(S, (v + 3) % 6, 3, X, Y, C, hh); wings(S, X, Y - Hh * .1, TCOL[5], Math.min(S.w * .45, 420), 2600); }, 1500); } }
+
+  /* ══════════ 🌟 全部 合體 出招（全螢幕 約 9～11 秒，3D 鏡頭）══════════
+     o ＝ {base:'../', h:戰士圖, w:武器圖, wid, p:寵物圖, pid, au/cp/wg/mt/bg: 商城 寶物 的 圖, ids:{au,cp,wg,mt}: 寶物 編號, power, tier, cls: 階級, star, id:5碼, title, grade: 合體 等級, v: 主題}
+     2026-10-21 第十八次 第 2、3 點（老師：只請 調 三條 光束，沒有 請 降級）：上一版 全部 回來 ── 2D 必殺 RPFX.attack、立體 大爆炸（威力 5）、★5 核彈級、整個 畫面 震動；
+     再 疊上：三條 直 的 光束（不轉）、戰士 階級 專屬 特效、每一樣 寶物 自己的 專屬 必殺（上身 的 時候）、武器 招牌、6 種 主題、合體 等級 愈高 疊 愈多 層 */
   function combo(o) { o = o || {}; var ov = el('div', 'lfcb'); ov.setAttribute('role', 'dialog');
-    var W = o.wid && window.RPFX ? RPFX.wInfo(o.wid) : { e: 'light', f: 'nova', s: 1 }, C = EC(W.e);
+    var W = o.wid && window.RPFX ? RPFX.wInfo(o.wid) : { e: 'light', f: 'nova', s: 1 }, C = EC(W.e), K = clamp(o.cls || 0, 0, 5), ids = o.ids || {};
     var parts = [['au', '光環'], ['wg', '翅膀'], ['cp', '披風'], ['mt', '坐騎']].filter(function (x) { return o[x[0]]; });
-    ov.innerHTML = '<div class="cbbg"' + (o.bg ? ' style="background-image:url(' + o.bg + ')"' : '') + '></div><div class="cbray" style="--c1:' + C[1] + ';--c2:' + C[2] + '"></div><div class="cbtt">🌟 全部 合體！</div>' +
-      '<div class="cb3"><div class="cbst" id="cbst">' + parts.map(function (x) { return '<img class="cbp cb-' + x[0] + '" src="' + o[x[0]] + '" alt="">'; }).join('') +
+    ov.innerHTML = '<div class="cbbg"' + (o.bg ? ' style="background-image:url(' + o.bg + ')"' : '') + '></div><div class="cbray" style="--c1:' + C[1] + ';--c2:' + C[2] + '"><i></i><i></i><i></i></div><div class="cbtt">🌟 全部 合體！</div>' +
+      '<div class="cb3"><div class="cbst" id="cbst" style="--c1:' + C[1] + '">' + parts.map(function (x) { return '<img class="cbp cb-' + x[0] + '" src="' + o[x[0]] + '" alt="">'; }).join('') +
       (o.h ? '<div class="cbh">' + wrap('<img src="' + o.h + '" alt="">') + '<i class="d3g foil"></i></div>' : '') + (o.w ? '<img class="cbw" src="' + o.w + '" alt="">' : '') + (o.p ? '<div class="cbpet">' + wrap('<img src="' + o.p + '" alt="">') + '<i class="d3g"></i></div>' : '') + '</div></div>' +
       '<div class="cblab" id="cblab"></div><div class="cbpow" id="cbpow"></div><button class="cbok">👌 好</button>';
     document.body.appendChild(ov); var st = ov.querySelector('#cbst'), lab = ov.querySelector('#cblab'), T = [], S = RM ? null : Space(ov, { keep: 1 });
     if (S) { var sp = 0; S.tick = function (dt, t) { var ry = Math.sin(t / 7000 * 6.283) * 16, r = st.getBoundingClientRect(), orr = ov.getBoundingClientRect();
         st.style.setProperty('--ry', ry.toFixed(2) + 'deg'); ov.style.setProperty('--sx', (-ry / 4).toFixed(2)); S.cam.ry = ry * Math.PI / 180; S.ox = r.left - orr.left + r.width / 2; S.oy = r.top - orr.top + r.height * .5;
-        sp += dt * 30; while (sp > 1) { sp--; S.add({ k: 'o', ang: Math.random() * 6.28, r: rnd(r.width * .6, r.width * 1.2), w: rnd(.6, 1.3), y: rnd(r.height * .5, -r.height * .1), vy: -rnd(30, 70), x: 0, z: 0, l: rnd(3, 5), s: rnd(2.5, 5), c: C[Math.floor(Math.random() * 3)] }); } }; }
+        sp += dt * (30 + K * 10); while (sp > 1) { sp--; S.add({ k: 'o', ang: Math.random() * 6.28, r: rnd(r.width * .6, r.width * 1.2), w: rnd(.6, 1.3), y: rnd(r.height * .5, -r.height * .1), vy: -rnd(30, 70), x: 0, z: 0, l: rnd(3, 5), s: rnd(2.5, 5), c: C[Math.floor(Math.random() * 3)] }); } }; }
     function at(ms, f) { T.push(setTimeout(f, RM ? Math.min(ms, 300) : ms)); }
     function say(t) { lab.innerHTML = '<b>' + t + '</b>'; lab.classList.remove('go'); void lab.offsetWidth; lab.classList.add('go'); }
     function done() { T.forEach(clearTimeout); ov.classList.add('out'); setTimeout(function () { if (S) S.kill(); if (ov.parentNode) ov.parentNode.removeChild(ov); if (o.done) o.done(); }, 380); }
     ov.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.cbok')) done(); });
     at(60, function () { ov.classList.add('s1'); say('⚔ 你的 戰士'); });
-    var t = 1500; parts.forEach(function (x, i) { at(t, function () { ov.classList.add('p-' + x[0]); say({ au: '✨ 光環', wg: '🪽 翅膀', cp: '👑 披風', mt: '🐉 坐騎' }[x[0]] + ' 上身！'); if (S) { var r = rel(ov, st); boom(S, { x: r.x, y: r.cy, e: W.e, c: C, tier: 1, big: .6 }); } }); t += 650; });
+    /* 戰士 到了 ➜ 階級 專屬 特效（★ 鋼鐵 火花 ➜ ★★★★★ 黃金 光翼＋核彈） */
+    var t = 1300; if (K && window.RPFX) { at(t, function () { say(RPFX.tb(K) + ' ' + RPFX.ts(K) + ' ' + RPFX.TN[K] + ' 登場！'); var h = ov.querySelector('.cbh'); if (h) { h.classList.add('on2'); } if (S) { var r = rel(ov, st); tierFx(S, K, r.x, r.cy, 1); } }); t += 1000 + K * 120; }
+    parts.forEach(function (x, i) { at(t, function () { ov.classList.add('p-' + x[0]); var G0 = window.RPFX && RPFX.iSig ? RPFX.iSig(ids[x[0]] || x[0]) : null;
+      say({ au: '✨ 光環', wg: '🪽 翅膀', cp: '👑 披風', mt: '🐉 坐騎' }[x[0]] + ' 上身！' + (G0 ? '　' + G0.nm : ''));
+      var h = ov.querySelector('.cbh'); if (h) { h.classList.remove('on2'); void h.offsetWidth; h.classList.add('on2'); }
+      if (S) { var r = rel(ov, st), C0 = G0 ? EC(G0.e) : C; boom(S, { x: r.x, y: r.cy, e: G0 ? G0.e : W.e, c: C0, tier: 2 + Math.min(2, K >> 1), big: .8 });
+        if (G0) sigFx(S, G0.k, { x: r.x - r.w * .9, y: r.cy + r.h * .2 }, { x: r.x, y: r.cy }, C0, 3, 1); } }); t += 900; });
     if (o.p) { at(t, function () { ov.classList.add('s-pet'); say('🐾 寵物 來 幫忙！'); setTimeout(function () { var q = ov.querySelector('.cbpet'); if (q) { var r = rel(ov, q); hearts(ov, r.x, r.y, 5); } }, 400); }); t += 900; }
-    if (o.w) { at(t, function () { ov.classList.add('s-w'); say('⚔ ' + (window.RPFX ? RPFX.EL[W.e].nm : '') + ' 武器 覺醒！'); var wc = ov.querySelector('.cbw'); if (S && wc) { var r = rel(ov, wc); boom(S, { x: r.x, y: r.cy, e: W.e, c: C, tier: 2, big: .7 }); } }); t += 900; }
-    /* G ＝ 合體 等級（comboGo 算：階級＋全身 星等＋商城 裝備）；v ＝ 這一次 的 主題（每一次 換） */
+    if (o.w) { at(t, function () { ov.classList.add('s-w'); say('⚔ ' + (window.RPFX ? RPFX.EL[W.e].nm : '') + ' 武器 覺醒！'); var wc = ov.querySelector('.cbw'); if (S && wc) { var r = rel(ov, wc); boom(S, { x: r.x, y: r.cy, e: W.e, c: C, tier: 3, big: .8 }); } }); t += 900; }
     var G = clamp(o.grade || 1, 1, 5), v = o.v != null ? o.v % FINN.length : Math.floor(Math.random() * FINN.length);
     at(t, function () { ov.classList.add('s-go', 'g' + G); say('💥 合體 必殺：' + FINN[v]); var hc = ov.querySelector('.cbh'), wc = ov.querySelector('.cbw');
-      swing(hc, wc, C[1], 1100);
+      swing(hc, wc, C[1], 900);
+      /* 上一版 的 必殺（原封不動）：2D 必殺 ＋ 命中 的 時候 立體 大爆炸（威力 5）＋ 核彈級 ＋ 整個 畫面 震動 */
+      if (window.RPFX) { var tg = el('div', 'cbtg'); st.appendChild(tg);
+        RPFX.attack(ov, { from: RPFX.pos(ov, wc || hc || st, .5, .4), to: RPFX.pos(ov, tg, .5, .5), w: o.wid, id: o.id, star: Math.max(3, o.star || W.s), crit: true, p: o.pid, pImg: o.p, pFrom: o.p ? RPFX.pos(ov, ov.querySelector('.cbpet')) : null, dmg: null, noNum: true, name: true,
+          hook: function (x) { if (S) setTimeout(function () { var r = rel(ov, st); boom(S, { x: r.x, y: r.cy, e: x.e, c: C, tier: 5, crit: true, big: 1.4 + G * .1 }); nuke(S, { x: r.x, y: r.cy, e: x.e, c: C }); ov.classList.add('s-shk'); }, x.hit); } }); }
+      /* 再 疊上去：武器 招牌、階級 特效、這一次 的 主題（合體 等級 愈高 疊 愈多） */
       if (S) { var r = rel(ov, st), hr = hc ? rel(ov, hc) : r, Sg = o.wid && window.RPFX && RPFX.wSig ? RPFX.wSig(o.wid) : { k: 8 };
-        sigFx(S, Sg.k, { x: hr.x, y: hr.cy }, { x: r.x + r.w * .1, y: r.cy - r.h * .1 }, C, G, 1.3);
-        setTimeout(function () { finale(S, v, G, r.x, r.cy, C, r.h); boom(S, { x: r.x, y: r.cy, e: W.e, c: C, tier: G, big: .9 }); S.flash = Math.max(S.flash, .12 + G * .04); S.fc = C[0]; ov.classList.add('s-shk'); }, 700); } });
-    t += 2200; at(t, function () { var p = ov.querySelector('#cbpow'), n = +o.power || 0, k = 0, N = 24; ov.classList.add('s-end');
+        sigFx(S, Sg.k, { x: hr.x, y: hr.cy }, { x: r.x + r.w * .1, y: r.cy - r.h * .1 }, C, Math.max(G, K, 3), 1.3 + G * .1);
+        if (K) setTimeout(function () { tierFx(S, K, r.x, r.cy, 1.2); }, 300);
+        setTimeout(function () { finale(S, v, G, r.x, r.cy, C, r.h); }, 900); } });
+    t += 2600 + (G >= 4 ? 600 : 0) + (G >= 5 ? 900 : 0); at(t, function () { var p = ov.querySelector('#cbpow'), n = +o.power || 0, k = 0, N = 24; ov.classList.add('s-end');
       p.innerHTML = '<span>⚔ 合體 威力</span><b id="cbn">0</b>' + (o.tier && window.RPFX ? RPFX.tb(o.tier, 1) : '') + '<span class="cbg">合體 等級 ' + new Array(G + 1).join('★') + '<small>' + FINN[v] + '</small></span>';
       var iv = setInterval(function () { k++; var b = ov.querySelector('#cbn'); if (b) b.textContent = Math.round(n * k / N).toLocaleString(); if (k >= N) clearInterval(iv); }, 45); T.push(iv); say(o.title || '🎆 你 收集 的 全部 力量！'); });
     at(t + 4000, function () { ov.classList.add('s-ok'); });
     return done; }
 
-  RPLIFE = { wrap: wrap, mount: mount, stage: stage, strike: strike, burst: burst, vortex: vortex, charge: charge, hearts: hearts, nuzzle: nuzzle, swing: swing, mini: mini, combo: combo, Space: Space, sigFx: sigFx, FINN: FINN, cocoon: cocoon, d3: true };
+  /* ⏫ 升階 典禮（2026-10-21 第十八次 第 4-1(3) 點 B：升到 不一樣 的 階級，每一階 的 動畫 都 不一樣、愈高 愈 華麗）
+     o ＝ {k: 新 的 階級, pct: 金幣 ＋N%, cap, done} ：遠遠 飛來 的 新 徽章 ➜ 這一階 專屬 的 3D 特效 ➜ 星星 一顆一顆 亮 ➜「升階！」 */
+  function tierUp(o) { o = o || {}; var k = clamp(o.k || 1, 1, 5), C = TCOL[k], ov = el('div', 'lftu t' + k); ov.setAttribute('role', 'dialog');
+    ov.innerHTML = '<div class="tubg" style="--c1:' + C[1] + ';--c2:' + C[2] + '"></div><div class="tuic">' + (window.RPFX ? RPFX.tb(k) : '') + '</div><div class="tutt"><small>⏫ 升階！</small><b>' + (window.RPFX ? RPFX.ts(k) + ' ' + RPFX.TN[k] : '') + '</b></div>' +
+      '<div class="tusub">' + (o.pct ? '<span>🪙 練習 金幣 ＋' + o.pct + '%</span>' : '') + (o.cap ? '<span>一天 最多 ' + o.cap + '</span>' : '') + '<span>🛍 2 樣 專屬 寶物 解鎖</span></div><button class="cbok">👌 好</button>';
+    document.body.appendChild(ov); var S = RM ? null : Space(ov, { keep: 1 }), T = [];
+    function at(ms, f) { T.push(setTimeout(f, RM ? Math.min(ms, 200) : ms)); }
+    function done() { T.forEach(clearTimeout); ov.classList.add('out'); setTimeout(function () { if (S) S.kill(); if (ov.parentNode) ov.parentNode.removeChild(ov); if (o.done) o.done(); }, 380); }
+    ov.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.cbok')) done(); });
+    if (S) { S.tick = function (dt) { S.cam.ry += dt * .4; }; }
+    at(80, function () { ov.classList.add('s1'); if (S) vortexIn(S, S.w / 2, S.h * .42, C, 900 + k * 120); });
+    at(1100 + k * 120, function () { ov.classList.add('s2'); if (S) { tierFx(S, k, S.w / 2, S.h * .42, 1.2 + k * .08); boom(S, { x: S.w / 2, y: S.h * .42, c: C, tier: k, big: 1.2 }); } });
+    at(2300 + k * 200, function () { ov.classList.add('s3'); });
+    at(3400 + k * 200, function () { ov.classList.add('s-ok'); });
+    return done; }
+  function vortexIn(S, x, y, C, ms) { for (var i = 0; i < 160; i++) { var th = Math.random() * 6.283, r = rnd(200, Math.max(S.w, S.h) * .6); S.add({ k: 'd', ox: x, oy: y, fx: 1, x: Math.cos(th) * r, y: rnd(-200, 200), z: Math.sin(th) * r, home: 3.6, l: ms / 1000, s: rnd(2.5, 5), c: C[i % 3], fo: 0, fi: 1 }); } }
+  /* 📖 秒懂 動畫 用（〔❓ 階級 愈高 特效 愈強〕）：在 host 裡面 一直 演 那一階 的 特效（每 2.8 秒 一次），host 不在 畫面 上 就 停 */
+  function demo(host, k, o) { if (!host || RM) return null; o = o || {}; var S = Space(host, { keep: 1 }), run = true;
+    function go() { if (!run || !host.isConnected) { S.kill(); return; } var r = host.getBoundingClientRect(); if (r.width && host.offsetParent !== null) {
+        var X = S.w * (o.x || .5), Y = S.h * (o.y || .55); if (o.g) { finale(S, o.v || 0, o.g, X, Y, TCOL[Math.max(1, Math.min(5, o.g))], S.h * .5); boom(S, { x: X, y: Y, c: TCOL[Math.max(1, o.g)], tier: o.g, big: .8 }); }
+        else { tierFx(S, k, X, Y, .55 + k * .05); boom(S, { x: X, y: Y, c: TCOL[k], tier: k, big: .6 }); } }
+      setTimeout(go, o.g ? 3400 : 2800); }
+    setTimeout(go, 250); return { stop: function () { run = false; } }; }
+
+  RPLIFE = { wrap: wrap, mount: mount, stage: stage, strike: strike, burst: burst, vortex: vortex, charge: charge, hearts: hearts, nuzzle: nuzzle, swing: swing, mini: mini, combo: combo, Space: Space, sigFx: sigFx, FINN: FINN, cocoon: cocoon, tierFx: tierFx, tierUp: tierUp, demo: demo, TCOL: TCOL, d3: true };
 })();
