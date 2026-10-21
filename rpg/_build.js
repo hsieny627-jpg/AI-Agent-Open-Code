@@ -5,7 +5,7 @@
  * 登入用成績系統同一個（score/_client.js 的 home()）；買東西、換裝都送伺服器（{a:'rpg'}），平板改不了金幣。 */
 const fs = require('fs'), path = require('path');
 const SC = require('../score/_calc.js'), CL = require('../score/_client.js');
-const CAT = { R: SC.RPR, P: SC.RPP, L: SC.RPL, T: SC.RPT, SET: SC.RPSET, HIDE: SC.RPHIDE, X: SC.RPX, C: SC.RPC, S: SC.RPS, SON: SC.RPSON, SP: SC.RPSP, SL: SC.RPSL, LIM: SC.RPLIM, END: SC.RPEND, MON: SC.RPMON, TIER: SC.RPTIER, TIERC: SC.RPTIERC };
+const CAT = { R: SC.RPR, P: SC.RPP, L: SC.RPL, T: SC.RPT, SET: SC.RPSET, HIDE: SC.RPHIDE, X: SC.RPX, C: SC.RPC, S: SC.RPS, SON: SC.RPSON, SP: SC.RPSP, SL: SC.RPSL, LIM: SC.RPLIM, END: SC.RPEND, MON: SC.RPMON, TIER: SC.RPTIER, TIERC: SC.RPTIERC, TB: SC.RPTB, TX: SC.RPTX, QV: SC.RPQV, DILI: SC.DILI };
 /* 🏪 上架的類：20 張商店卡＋20 張穿在身上的圖都要有 */
 Object.keys(SC.RPSON).forEach(c => { for (let n = 1; n <= 20; n++) { const id = 's' + String(c).padStart(2, '0') + String(n).padStart(2, '0');
   ['.jpg', 'i.webp'].forEach(x => { if (!fs.existsSync(path.join(__dirname, 'shop', id + x))) throw new Error('rpg：商城少了圖 ' + id + x + '（python3 -I rpg/_crop_shop.py）'); }); } });
@@ -283,6 +283,37 @@ button:active{transform:scale(.97)}
 #rpm .bt{display:flex;gap:12px;justify-content:center;margin-top:16px;flex-wrap:wrap}#rpm .bt button{min-height:64px;padding:6px 28px;border-radius:999px;font-size:clamp(24px,3vh,30px);border:2px solid}
 #rpm .yes{background:#0F3323;border-color:var(--ok)}#rpm .no{background:#1B2633;border-color:#4A5A6C}
 #rpm.cele .box img{animation:pop2 .8s cubic-bezier(.2,1.6,.4,1)}@keyframes pop2{from{transform:scale(.2) rotate(-20deg);opacity:0}}
+/* 2026-10-21 第十六次 第 5、6 點：📜 獎勵 規則 一章＋5 題 小問題（第一次 打開 一定 要 看懂）＋ ⚔ 階級 能力 */
+#rpin.rlock #stage,#rpin.rlock #tabs{display:none}
+.rgate{background:linear-gradient(135deg,#3A2A06,#1A1030);border:3px solid #FFD54A;border-radius:18px;padding:14px 18px;margin:0 0 12px;font-size:clamp(22px,3vh,30px);line-height:1.45;text-align:center}
+.rgate b{color:#FFE07A}.rgate .rst{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:.85em}.rgate .rst span{background:#0A1220;border:2px solid #4A5A7A;border-radius:12px;padding:4px 12px}.rgate .rst span.on{border-color:#5DE89A;color:#BFFFD8}
+.qzgo{display:block;margin:14px auto 0;min-height:76px;padding:10px 34px;font-size:clamp(26px,3.6vh,36px);border-radius:20px;border:3px solid #FFD54A;background:linear-gradient(#FFD54A,#E8A800);color:#2A1A00;font-weight:900;cursor:pointer;animation:qzp 1.4s ease-in-out infinite}
+.qzgo[hidden]{display:none}@keyframes qzp{50%{box-shadow:0 0 0 12px rgba(255,213,74,.25)}}
+.rtb{width:min(100%,760px);display:grid;gap:6px}.rtb>div{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:12px;background:#121C30;border:2px solid #2A3A5A;border-radius:12px;padding:4px 12px;font-size:clamp(18px,2.5vh,26px);opacity:0;animation:capIn .45s ease-out forwards}
+.rtb>div.me{border-color:#FFD54A;box-shadow:0 0 14px rgba(255,213,74,.5)}.rtb .tbI{font-size:1.15em}.rtb em{font-style:normal;color:#FFE07A;white-space:nowrap}.rtb small{color:#BFD3FF;white-space:nowrap}
+.rwk{display:flex;gap:6px;align-items:flex-end}.rwk>span{display:flex;flex-direction:column;align-items:center;gap:4px;width:clamp(60px,9vw,96px);padding:8px 2px;border-radius:12px;background:#1A2A44;border:2px solid #3A5A8A;font-size:clamp(22px,3vh,32px);opacity:.25;animation:rwkOn .4s ease-out forwards}
+.rwk small{font-size:.62em;color:#FFE07A;white-space:nowrap}@keyframes rwkOn{to{opacity:1;background:#1E4A30;border-color:#5DE89A}}
+.rnote{font-size:clamp(20px,2.7vh,28px);text-align:center;color:#FFE9A8;opacity:0;animation:capIn .5s ease-out forwards}
+.rtl{display:flex;gap:clamp(8px,2vw,22px);align-items:stretch}.rtl>div{display:flex;flex-direction:column;align-items:center;gap:6px;background:#121C30;border:2px solid #2A3A5A;border-radius:14px;padding:10px 14px;font-size:clamp(20px,2.8vh,30px);opacity:0;animation:capIn .5s ease-out forwards;white-space:nowrap}
+.rtl b{font-size:1.25em;color:#FFE07A}.rtl .up{border-color:#FFD54A}.rtl s{opacity:.6}
+.rab{width:min(100%,720px);display:grid;gap:12px}.rab .ln{display:grid;grid-template-columns:7.5em 1fr 4.2em;align-items:center;gap:10px;font-size:clamp(19px,2.6vh,28px)}
+.rab .bar{position:relative;height:30px;border-radius:999px;background:#22304A;overflow:visible}.rab .bar i{display:block;height:100%;border-radius:999px;width:0;animation:rabG 1.4s ease-out forwards;background:linear-gradient(90deg,#3DBA6A,#7DFFB0)}
+.rab .bar i.bad{background:linear-gradient(90deg,#E84A5A,#FF9AA8)}.rab .bar::after{content:'90%';position:absolute;left:90%;top:-8px;bottom:-8px;border-left:4px dashed #FFD54A;font-size:15px;color:#FFD54A;padding-left:3px}
+@keyframes rabG{to{width:var(--w)}}.rab .ok{color:#7DFFB0}.rab .no{color:#FF9AA8}
+.rlist{display:grid;gap:5px;width:min(100%,560px)}.rlist>div{display:flex;align-items:center;gap:12px;background:#121C30;border:2px solid #2A3A5A;border-radius:12px;padding:3px 14px;font-size:clamp(19px,2.6vh,27px);opacity:0;animation:capIn .4s ease-out forwards}
+.rlist>div.x{animation:capIn .4s ease-out forwards,rx 1s ease-in 2.6s forwards;border-color:#E84A5A}.rlist>div.in{border-color:#5DE89A}@keyframes rx{to{opacity:.3;text-decoration:line-through}}
+.rmul{display:flex;gap:clamp(10px,2vw,26px)}.rmul>div{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 18px;border-radius:16px;background:#121C30;border:3px solid #2A3A5A;font-size:clamp(22px,3vh,32px);opacity:0;animation:capIn .5s ease-out forwards}
+.rmul b{font-size:1.5em;color:#FFE07A}.rmul .x2{border-color:#FFD54A;box-shadow:0 0 18px rgba(255,213,74,.5)}
+.rgm{display:grid;grid-template-columns:repeat(4,auto);gap:8px}.rgm span{padding:6px 12px;border-radius:12px;background:#1A2A44;border:2px solid #3A5A8A;font-size:clamp(18px,2.4vh,24px);opacity:0;animation:capIn .4s ease-out forwards}.rgm span.pk{border-color:#FFD54A;background:#3A2A06;animation:capIn .4s ease-out forwards,qzp 1.2s ease-in-out 2.4s infinite}
+.rex{display:grid;grid-template-columns:repeat(5,auto);gap:8px}.rex>div{position:relative;width:clamp(64px,9vh,92px);opacity:0;animation:capIn .4s ease-out forwards}.rex img{width:100%;border-radius:10px;display:block}.rex .tbI{position:absolute;left:-6px;top:-8px;font-size:22px}
+#rqz{position:fixed;inset:0;z-index:90;background:rgba(4,8,18,.96);display:none;align-items:center;justify-content:center;padding:16px}#rqz.on{display:flex}
+#rqz .qb{width:min(100%,900px);max-height:100%;overflow:auto;text-align:center}#rqz .qn{font-size:clamp(22px,3vh,30px);color:#BFD3FF}#rqz .qt{font-size:clamp(28px,4vh,44px);line-height:1.35;margin:10px 0 16px;font-weight:900}
+#rqz .qo{display:grid;gap:12px}#rqz .qo button{min-height:78px;font-size:clamp(22px,3vh,32px);border-radius:16px;border:3px solid #4A6A9A;background:#16243C;color:#fff;padding:10px 16px;line-height:1.3;cursor:pointer;text-align:left}
+#rqz .qo button.ok{border-color:#5DE89A;background:#164A2A}#rqz .qo button.bad{border-color:#E84A5A;background:#4A1620}
+#rqz .qr{font-size:clamp(24px,3.4vh,36px);margin-top:14px;line-height:1.4}#rqz .qr button,.qback{min-height:70px;font-size:clamp(22px,3vh,32px);border-radius:16px;border:3px solid #FFD54A;background:#3A2A06;color:#FFE9A8;padding:8px 26px;margin:10px 6px 0;cursor:pointer}
+#rqz .qdots{display:flex;justify-content:center;gap:10px;margin-top:6px}#rqz .qdots i{width:22px;height:22px;border-radius:50%;background:#2A3A5A}#rqz .qdots i.ok{background:#5DE89A}#rqz .qdots i.now{background:#FFD54A}
+.qback{display:block;margin:12px auto 0}
+.tabil{font-size:clamp(17px,2.2vh,22px);color:#BFFFD8;line-height:1.35}
 </style>
 <link rel="stylesheet" href="life.css">
 <script src="life.js"></script>
@@ -294,11 +325,12 @@ ${CL.home(0, '../', 'home')}
  <div id="rpwait" hidden>⏳ 正在拿 你的 戰士…</div>
  <div id="rpin" hidden>
   <section class="stage" id="stage"></section>
-  <nav class="tabs" id="tabs"><button data-t="h" class="on"><img class="tic" src="cover_icon.webp" alt="">戰士</button><button data-t="w">⚔ 武器</button><button data-t="p">🐾 寵物</button><button data-t="t">✨ 寶物</button><button data-t="m">🏪 榮耀 商城</button><button data-t="s">📖 圖鑑</button><button data-t="q">❓ 怎麼賺</button></nav>
+  <nav class="tabs" id="tabs"><button data-t="h" class="on"><img class="tic" src="cover_icon.webp" alt="">戰士</button><button data-t="w">⚔ 武器</button><button data-t="p">🐾 寵物</button><button data-t="t">✨ 寶物</button><button data-t="m">🏪 榮耀 商城</button><button data-t="s">📖 圖鑑</button><button data-t="q">❓ 怎麼賺、📜 規則</button></nav>
   <section id="shop"></section>
  </div>
 </main>
 <div id="rpm"><div class="box" id="rpmb"></div></div>
+<div id="rqz" role="dialog" aria-label="5 題 小問題"><div class="qb" id="rqzb"></div></div>
 <script>
 var CAT=${JSON.stringify(CAT)};
 var TREJPG=${JSON.stringify(TREJPG)};
@@ -345,11 +377,11 @@ function drawStage(){var V=RV,e=V.st.eq,T=e.t,ES=e.s||{},has=function(t){return 
   var pct=Math.max(0,Math.min(100,(V.xp-V.lvAt)/(V.lvNext-V.lvAt)*100)),d=V.hit||dmgOf(V.power),pd=V.petHit||0,M=V.mon||{i:0,m:'p16',hp:0,max:80};
   var pgo=e.p?(V.petStage>=2?'🐲 已經 進化':V.petStage===1?'再 練 '+Math.max(1,7-V.petDays)+' 天 ➜ 🐲 進化':'再 練 '+Math.max(1,3-V.petDays)+' 天 ➜ 🐥 長大'):'';
   /* 2026-10-20 第十五次 老師第 6、7 點（看不懂 戰力、一擊、怪物、寵物 那一塊）：一格 一件事、白話、每一格 都有〔❓〕秒懂動畫 */
-  var tn=window.RPFX&&V.tier<5?RPFX.TN[V.tier+1]:'',tnext=V.tier<5?CAT.TIER[V.tier][0]-V.power:0,pdots='';for(var di=0;di<7;di++)pdots+='<i class="'+(di<V.petDays?'on':'')+(di===2||di===6?' mk':'')+'"></i>';
+  var TM=Math.max(V.tier,V.tmax||0),tn=window.RPFX&&V.tier<5?RPFX.ts(V.tier+1)+' '+RPFX.TN[V.tier+1]:'',tnext=V.tier<5?CAT.TIER[V.tier][0]-V.power:0,pdots='';for(var di=0;di<7;di++)pdots+='<i class="'+(di<V.petDays?'on':'')+(di===2||di===6?' mk':'')+'"></i>';
   h+='<div class="stat"><div class="idr"><button class="how1" data-go="qa">❓ 經驗值、金幣怎麼來</button><button class="how1" data-go="qc">❓ 收集 有 什麼 用</button>'+(V.ch?'<button class="chB" id="chOpen">👑 開 冠軍寶箱 ✕ '+V.ch+'</button>':'')+'</div>'+
     '<div class="tile"><div class="lab">⭐ 等級</div><div class="lv"><b>Lv '+V.lv+'</b><span>經驗值 '+nf(V.xp)+'</span></div><div class="bar"><i id="xpb" data-w="'+pct.toFixed(1)+'"></i></div><div class="sub">再 '+nf(V.lvNext-V.xp)+' ⭐ 升到 Lv '+(V.lv+1)+'</div></div>'+
     '<div class="row2"><div class="tile coinT"><div class="lab">🪙 金幣</div><b class="big2" id="coinN">'+nf(V.coins)+'</b><div class="sub">＝ 錢：換 裝備</div></div>'+
-      '<div class="tile powT"><div class="lab">⚔ 戰力 <button class="q1" data-go="qb" aria-label="戰力 是 什麼">❓</button></div><b class="big2">'+nf(V.power)+'</b><div class="sub">'+(V.tier&&window.RPFX?RPFX.tb(V.tier,1)+'<br>':'')+(V.tier<5?'再 '+nf(tnext)+' ➜ '+tn:'🎉 最高 階級')+'</div></div></div>'+
+      '<div class="tile powT"><div class="lab">⚔ 戰力 <button class="q1" data-go="qb" aria-label="戰力 是 什麼">❓</button></div><b class="big2">'+nf(V.power)+'</b><div class="sub">'+(TM&&window.RPFX?RPFX.tb(TM,1)+'<br>':'')+(V.tnow?'<span class="tabil">🪙 練習 金幣 ＋'+V.pct+'%．一天 最多 '+V.cap+'</span><br>':'')+(V.tier<5?'再 '+nf(tnext)+' ➜ '+tn+'（🪙 ＋'+CAT.TB[V.tier+1][0]+'%）':'🎉 最高 階級')+'</div></div></div>'+
     '<div class="tile atk"><div class="lab">💥 一擊：打 怪物、打 魔王 一下 扣 幾 ❤</div><div class="atkr"><b class="big2">'+d+(pd?'<small style="font-size:.5em;color:#BFF5FF"> ＋🐾 '+pd+'</small>':'')+'</b><div class="meter"><div class="mbar"><i style="width:'+((d-10)/20*100).toFixed(0)+'%"></i></div><div class="mlab"><span>10</span><span>⚔ 戰力 多 100 ➜ ＋1</span><span>30</span></div></div>'+
       (e.h?'<button class="go" id="atkTry">⚔ 出招！</button>':'')+'</div>'+(W?'<div class="sub">⚔ 你的 招式：'+RPFX.EL[W.e].nm+'．'+FMN[W.f]+(pd?'　🐾 寵物 跟著 打 ＋'+pd:'')+'</div>':'')+'</div>'+
     '<div class="tile mon"><img src="pets/'+M.m+'.jpg" alt="怪物"><div style="flex:1"><div class="lab">👾 下一隻 怪物（第 '+(M.i+1)+' 隻）：還有 ❤ '+(M.max-M.hp)+'</div><div class="mbar"><i style="width:'+((M.max-M.hp)/M.max*100).toFixed(0)+'%"></i></div>'+
@@ -383,12 +415,15 @@ function comboGo(){if(!RV||!RV.st.eq.h||!window.RPLIFE)return;var e=RV.st.eq,ES=
     power:RV.power,tier:RV.tier,star:Math.max(star(e.h),e.w?star(e.w):1,e.p?star(e.p):1),id:SCID})}
 function fwHTML(){var h='<div class="fw">',C=['#FFD54A','#FF6B6B','#7FD4FF','#7BF0A8','#D9A8FF'];for(var i=0;i<24;i++){var a=i/24*Math.PI*2,r=90+Math.random()*60;h+='<i style="--c:'+C[i%5]+';--x:'+Math.round(Math.cos(a)*r)+'px;--y:'+Math.round(Math.sin(a)*r)+'px;animation-delay:'+(i%3*.15)+'s"></i>'}return h+'</div>'}
 /* ── 商店 ── */
+function tierMax(){return RV?Math.max(RV.tier||0,RV.tmax||0):0}
 function itemHTML(id){var k=kOf(id),s=star(id),o=own(id),eq=isEq(id),fr=!o&&freeOk(id),lk=!o&&RV.lv<need(id),pr=price(id),poor=!o&&!fr&&RV.coins<pr;
   var tag=eq?'<div class="pr eq">✅ 裝備中</div>':o?'<div class="pr ok">👆 點一下 裝上</div>':fr?'<div class="pr fr">🎁 免費</div>':lk?'<div class="pr lock">🔒 Lv '+need(id)+'</div>':'<div class="pr'+(poor?' lock':'')+'">🪙 '+pr+'</div>';
   if(k==='s'&&eq)tag='<div class="pr eq">✅ 裝備中<br><small>再點 ＝ 拿下來</small></div>';else if(k==='s'&&o)tag='<div class="pr ok">👆 點一下 裝備</div>';
   /* 🏷 限量（全部學生一共 5 個，剩幾個 ＝ 伺服器數的）、⏳ 限時（10 月 31 號 下架）（2026-10-20 第十四次） */
   var lt='',lc='';if(CAT.LIM[id]){var left=STOCK[id];lc=' lmt';if(!o&&left===0){lt='<span class="lim out">已 換完</span>';tag='';poor=true}else lt='<span class="lim">🏷 限量 5 個．剩 '+(left==null?'?':left)+' 個</span>'}
   if(CAT.END[id]){lc=' tmt';if(!o&&nowS()>=CAT.END[id]){lt='<span class="lim out">已 下架</span>';tag='';poor=true}else lt='<span class="lim tm">⏳ 10 月 31 號 下架</span>'}
+  /* ⚔ 這一階 才 買得到 的 專屬寶物（2026-10-21 第十六次 第 5 點） */
+  if(CAT.TX[id]){lc+=' txm';var tq=CAT.TX[id],th=typeof RPFX!=='undefined'?RPFX.tb(tq)+' '+RPFX.TN[tq]:'★'+tq;lt='<span class="lim tm">'+th+' 專屬</span>'+lt;if(!o&&tierMax()<tq){tag='<div class="pr lock">🔒 要 '+(typeof RPFX!=='undefined'?RPFX.TN[tq]:'')+'</div>';poor=true}}
   if(k==='w'&&typeof RPFX!=='undefined'){var wi=RPFX.wInfo(id);lt='<span class="wel">'+RPFX.EL[wi.e].nm+'．'+{slash:'連斬',beam:'光砲',arrow:'箭雨',smash:'重擊',orb:'法球',nova:'爆發',claw:'利爪',pierce:'突刺'}[wi.f]+'</span>'+lt}
   if(k==='t'){var t=tre(id);return '<button class="it'+(eq?' eqd':'')+'" data-id="'+id+'"><img src="'+treImg(id)+'" alt="'+t[1]+'"><div class="trn">'+t[1].split(' ').slice(1).join(' ')+'</div>'+tag+'</button>'}
   return '<button class="it'+(eq?' eqd':'')+(lk||poor?' dim':'')+lc+'" data-id="'+id+'" style="--rc:'+RC[s]+'"><img loading="lazy" src="'+img(id)+'" alt="'+id+'"><div class="st">'+stars(s)+' '+RN[s]+'</div>'+lt+tag+'</button>'}
@@ -421,17 +456,38 @@ function tutScenes(){var V=RV||{power:0,tier:0,hit:10,petHit:0,lv:1},e=V.st?V.st
      ['⬆ 同一組 比 上一次 進步 ➜ <b>🪙 ＋'+CAT.C.prog+'</b>',teq('<div class="tic tup"><div class="tcol"><i style="--h:55%"></i><small>上次</small></div><div class="tcol"><i class="n" style="--h:85%"></i><small>這次</small></div><span class="tua">⬆</span></div>','<span class="trw cn">🪙 ＋'+CAT.C.prog+'</span>','cn'),function(){tcount([[2300,CAT.C.prog]])}],
      ['📅 一週 練 '+CAT.C.chestDays+' 天 ➜ <b>🎁 🪙 ＋'+CAT.C.chest+'</b>',teq('<div class="tic twk">'+['一','二','三','四','五','六','日'].map(function(d,i){return '<span class="'+(i<CAT.C.chestDays?'on':'')+'" style="animation-delay:'+(.5+i*.25)+'s">'+d+'</span>'}).join('')+'</div>','<span class="trw cn">🎁 ＋'+CAT.C.chest+'</span>','cn'),function(){tcount([[2300,CAT.C.chest]])}],
      ['⚡ 太快 亂按（一半 以上）➜ 這一次 <b>沒有</b> ⭐、🪙','<div class="teq"><div class="tic tfast"><span class="tq">👆</span><small>不到 1 秒 就 按</small></div><span class="tarr">➜</span><span class="trw no"><s>⭐</s> <s>🪙</s></span></div><div class="tnote">👀 先 看完、🎧 聽完，再 選</div>',function(){}],
-     ['⚡ 現場任務：老師 開〔✖1.5〕➜ ⭐、🪙 ✖1.5',teq('<div class="tic"><span class="tq">⚡</span><small>答對 5 題</small></div>','<span class="trw cn">🪙 5 ➜ 8</span>','cn'),function(){tcount([[2300,8]])}]],
+     ['⚡ 現場任務：老師 開〔✖1.5〕或〔✖2〕➜ ⭐、🪙 變多',teq('<div class="tic"><span class="tq">⚡</span><small>答對 5 題</small></div>','<span class="trw cn">🪙 5 ➜ 8 ／ 10</span>','cn'),function(){tcount([[2300,8],[3600,10]])}],
+     ['⚔ 戰力 階級 愈高 ➜ 練習 的 🪙 多 5%～25%',teq('<div class="tic">'+tb(1)+tb(3)+tb(5)+'<small>升階 以後</small></div>','<span class="trw cn">🪙 20 ➜ 21～25</span>','cn'),function(){tcount([[2300,21],[3200,23],[4100,25]])}]],
   b:[['⚔ 戰力 ＝ 你 全身 的 裝備 加 起來','<div class="tcrd"><div style="animation-delay:.2s"><span class="pl">★ ✕ 100</span><img src="'+hi+'" alt=""><b>戰士 '+stars(hs)+'</b></div><div style="animation-delay:.6s"><span class="pl">★ ✕ 100</span><img src="'+wi+'" alt=""><b>武器 '+stars(ws)+'</b></div><div style="animation-delay:1s"><span class="pl">★ ✕ 100</span><img src="'+pi+'" alt=""><b>寵物 '+stars(ps)+'</b></div></div><div class="tbig">⚔ <b class="tcn">0</b><small>＋ 等級、寶物、寵物 長大</small></div>',function(){var n=pw||320;tcount([[1400,Math.round(n*.3)],[1700,Math.round(n*.6)],[2000,Math.round(n*.85)],[2300,n]]);tsp(.5,.7,'light')}],
      ['⚔ 戰力 愈高 ➜ 💥 一擊 愈痛','<div style="text-align:center"><div class="tbig" style="color:#fff">💥 <b class="tcn">10</b><small>戰力 每 多 100 ➜ 一擊 ＋1（最多 30）</small></div><div class="tbar" style="margin:10px auto 0"><div class="bar"><i style="--a:0%;--b:'+Math.min(100,(V.hit-10)/20*100).toFixed(0)+'%;--d:.6s;background:linear-gradient(90deg,#FF7A3D,#FFD54A)"></i></div><div class="lab">10 ➜ 30</div></div></div>',function(){tcount([[700,Math.round(10+(V.hit-10)*.4)],[1100,Math.round(10+(V.hit-10)*.8)],[1500,V.hit]]);tatk(1700)}],
      ['💥 一擊 愈痛 ➜ 👾 怪物 倒 得 愈快','<div style="width:100%;display:flex;flex-direction:column;align-items:center"><div class="trow"><span>💥 10</span><div class="mbar" style="--t:4s;--n:8"><i></i></div><span>8 下</span></div><div class="trow"><span>💥 27</span><div class="mbar" style="--t:1.5s;--n:3"><i></i></div><span>3 下 🎉</span></div><div class="cap" style="font-size:clamp(20px,2.8vh,28px);animation-delay:2s">怪物 ❤ 80：一擊 10 要 打 8 下、一擊 27 只要 3 下</div></div>',function(){}],
-     ['⚔ 戰力 到了 ➜ 🛡 升 階級 ＋ 🪙 100','<div style="text-align:center"><div class="ttier">'+[1,2,3,4,5].map(function(n){return '<span id="tt'+n+'">'+tb(n)+'<small>'+CAT.TIER[n-1][0]+'</small></span>'}).join('')+'</div><div class="cap" style="font-size:clamp(22px,3vh,30px);animation-delay:1.6s">'+(V.tier?'你 現在：'+tb(V.tier,1):'你 還沒有 階級')+(V.tier<5?'　再 '+nf(CAT.TIER[V.tier][0]-pw)+' ⚔ ➜ 下一階 🪙＋'+CAT.TIERC:'')+'</div><div class="note" style="margin-top:8px">每 升 一階 🪙＋'+CAT.TIERC+' 一次；徽章 排行榜、現場任務 全班 都 看得到</div></div>',function(){[1,2,3,4,5].forEach(function(n){TUT.cn.push(setTimeout(function(){var x=document.getElementById('tt'+n);if(x)x.classList.add('on');},300+n*260))})}]],
+     ['⚔ 戰力 到了 ➜ 升 階級 ＋ 🪙 100 ＋ 真的 能力','<div style="text-align:center"><div class="ttier">'+[1,2,3,4,5].map(function(n){return '<span id="tt'+n+'">'+tb(n)+'<small>'+(window.RPFX?RPFX.TN[n]:'')+'</small><small>⚔ '+nf(CAT.TIER[n-1][0])+'</small><small>🪙 ＋'+CAT.TB[n][0]+'%</small></span>'}).join('')+'</div><div class="cap" style="font-size:clamp(22px,3vh,30px);animation-delay:1.6s">'+(V.tier?'你 現在：'+tb(V.tier,1):'你 還沒有 階級')+(V.tier<5?'　再 '+nf(CAT.TIER[V.tier][0]-pw)+' ⚔ ➜ 下一階 🪙＋'+CAT.TIERC:'')+'</div><div class="note" style="margin-top:8px">每 升 一階：🪙＋'+CAT.TIERC+' 一次、練習 金幣 多 5%～25%、一天 最多 120～200、專屬 寶物、現場任務 登場 特效（詳細 ➜ 📜 獎勵 規則）</div></div>',function(){[1,2,3,4,5].forEach(function(n){TUT.cn.push(setTimeout(function(){var x=document.getElementById('tt'+n);if(x)x.classList.add('on');},300+n*260))})}]],
   c:[['👾 做完 練習 打怪：裝備 愈強 ➜ 打倒 愈快 ➜ 收進 📖 圖鑑','<div class="tcrd"><div style="animation-delay:.2s"><img src="'+hi+'" alt=""><b>⚔</b></div><div style="animation-delay:.8s;width:clamp(90px,14vh,140px)"><img src="pets/p24.jpg" alt="" style="filter:grayscale(.6) brightness(.6) hue-rotate(250deg)"><b>👾 ➜ ✨ 淨化</b></div></div>',function(){tatk(800);tsp(.7,.4,'light')}],
      ['⚡ 現場任務 全班 打 魔王：你的 一擊 愈痛 ➜ 全班 愈快 贏','<div class="tlb" style="max-width:520px"><div style="animation-delay:.3s">👑 魔王 ❤ <span class="mbar" style="flex:1;--t:3s;--n:10;display:block"><i style="animation:drain 3s steps(10) forwards .6s;width:100%"></i></span></div><div style="animation-delay:.8s;white-space:nowrap">💥 ＋12　💥 ＋27　💥 ＋15　💥 ＋20 …</div></div>',function(){}],
      ['🐾 寵物 跟著 打（＋3、＋5、＋8）＋ 🛡 寵物 護盾','<div class="tcrd"><div style="animation-delay:.2s;width:clamp(90px,14vh,140px)"><img src="'+pi+'" alt=""><b>🐾 ＋3 ➜ 🐥 ＋5 ➜ 🐲 ＋8</b></div></div><div class="tchips"><span>🛡 現場任務 一場 一次：答錯 1 題 🔥 連對 不會 斷</span></div>',function(){}],
      ['🛡 階級 徽章 ＝ 全班 都 看得到','<div class="tlb">'+[[1,'30412',5],[2,'30405',3],[3,'30401',1]].map(function(x,i){return '<div style="animation-delay:'+(.3+i*.4)+'s"><b>'+x[0]+'</b> '+x[1]+' '+tb(x[2],1)+'</div>'}).join('')+'</div>',function(){}],
-     ['🎯 分數 只 看 你的 答題：裝備 不加 分數（公平！）','<div class="tscale">⚖️</div><div class="tchips"><span>🎯 正確率、分數 ＝ 你 自己 答 的</span><span>⚔ 裝備 ＝ 打怪 更 帥、更 快</span></div>',function(){}]]
+     ['🎯 分數 只 看 你的 答題：裝備 不加 分數（公平！）','<div class="tscale">⚖️</div><div class="tchips"><span>🎯 正確率、分數 ＝ 你 自己 答 的</span><span>⚔ 裝備 ＝ 打怪 更 帥、更 快</span></div>',function(){}]],
+  /* 2026-10-21 第十六次 第 5、6 點＋老師再加 4 點：📜 獎勵 規則（第一次 打開 一定 要 看完、答對 5 題）。一幕 一件事；數字 全部 讀 CAT（跟 _calc.js 一樣） */
+  r:rulesScenes(tb,Math.max(V.tier||0,V.tmax||0))
   }}
+function rulesScenes(tb,me){var D=CAT.DILI,ex=Object.keys(CAT.TX),dl=function(i){return 'animation-delay:'+i+'s'};
+  return [
+  ['📅 一週 ＝ 星期一 0:00 ➜ 星期日 23:59','<div style="display:flex;flex-direction:column;align-items:center;gap:14px"><div class="rwk">'+['一','二','三','四','五','六','日'].map(function(d,i){return '<span style="'+dl(.3+i*.35)+'">'+d+(i===0?'<small>0:00 開始</small>':i===6?'<small>23:59 結束</small>':'<small>&nbsp;</small>')+'</span>'}).join('')+'</div><div class="rnote" style="'+dl(3)+'">🔄 下一個 星期一 0:00 重新 開始 算（台灣 時間）</div></div>',function(){}],
+  ['⚔ 五個 階級：⚔ 戰力 到了 就 升，不會 掉','<div class="rtb">'+[1,2,3,4,5].map(function(n){return '<div class="'+(n===me?'me':'')+'" style="'+dl(.3+n*.45)+'">'+tb(n,1)+'<small>⚔ '+nf(CAT.TIER[n-1][0])+'</small><em>🪙 ＋'+CAT.TB[n][0]+'%</em><small>一天 最多 🪙 '+CAT.TB[n][1]+'</small></div>'}).join('')+'</div>'+
+    '<div class="rnote" style="'+dl(3)+'">還沒有 階級：一天 最多 🪙 '+CAT.TB[0][1]+'</div>',function(){}],
+  ['⏫ 升階 以後 練習 的 🪙 才 多（以前 的 不補）','<div class="rtl"><div style="'+dl(.3)+'">星期一<span>練習</span><b>🪙 20</b></div><div class="up" style="'+dl(1.2)+'">星期二<span>升到</span>'+tb(2,1)+'</div><div style="'+dl(2.1)+'">星期三<span>練習</span><b>🪙 20 ➜ 22</b><small>（＋10%）</small></div></div><div class="rnote" style="'+dl(3.2)+'">星期一 的 🪙 20 還是 20（不會 補）</div>',function(){}],
+  ['🛍 每一階 2 樣 專屬 寶物：升到 這一階 才 買得到','<div class="rex">'+[1,2,3,4,5].map(function(n){return ex.filter(function(id){return CAT.TX[id]===n}).map(function(id,k){return '<div style="'+dl(.2+n*.35+k*.1)+'">'+tb(n)+'<img src="shop/'+id+'.jpg" alt=""></div>'}).join('')}).join('')+'</div><div class="rnote" style="'+dl(2.6)+'">💰 價錢、等級 跟 商城 一樣；只是 要 先 升到 那一階</div>',function(){}],
+  ['🏆 最認真練習 ＝ 練習 時間 最多 ＋ A、B 都 ≧ '+D+'%','<div class="rab"><div class="ln"><span>👀 A 不是 太快 亂按</span><div class="bar"><i style="--w:92%;'+dl(.4)+'"></i></div><b class="ok">92% ✅</b></div>'+
+    '<div class="ln"><span>✗➜✓ B 答錯，改對</span><div class="bar"><i style="--w:90%;'+dl(1)+'"></i></div><b class="ok">90% ✅</b></div>'+
+    '<div class="ln"><span>👀 A（小明）</span><div class="bar"><i class="bad" style="--w:85%;'+dl(1.6)+'"></i></div><b class="no">85% ❌</b></div></div>'+
+    '<div class="rnote" style="'+dl(2.6)+'">這一週 到 現在 全部 題目 合起來 算；一題 都 沒錯 ＝ B 100%</div>',function(){}],
+  ['👑 冠軍寶箱：這一週 全年級 最認真練習 前 5 名','<div class="rlist">'+[['1','30412','A 96%．B 100%',''],['2','40205','A 93%．B 92%',''],['3','30701','A 85% ❌','x'],['4','40903','A 98%．B 90%',''],['5','31108','A 91%．B 95%',''],['6','40417','A 94%．B 100% ➜ 補上','in']].map(function(x,i){return '<div class="'+x[3]+'" style="'+dl(.3+i*.35)+'"><b>'+x[0]+'</b> '+x[1]+' <small>'+x[2]+'</small></div>'}).join('')+'</div>'+
+    '<div class="rnote" style="'+dl(3.4)+'">A、B 沒做到 ➜ 不發，下一名 補上（一定 5 個 人）；下一個 星期一 0:00 自動 發</div>',function(){}],
+  ['⚡ 現場任務：老師 開〔✖1.5〕或〔✖2〕➜ 每一題 🪙⭐ 變多','<div class="rmul"><div style="'+dl(.3)+'">關<b>🪙 5</b><small>⭐ 10</small></div><div style="'+dl(1)+'">✖1.5<b>🪙 8</b><small>⭐ 15</small></div><div class="x2" style="'+dl(1.7)+'">✖2<b>🪙 10</b><small>⭐ 20</small></div></div><div class="rnote" style="'+dl(2.6)+'">例：答對 5 題；開 不開 由 老師 決定</div>',function(){}],
+  ['👑 每一班 上一週 最認真練習 第 1 名 ➜ 選 1 次 現場任務 的 遊戲','<div style="display:flex;flex-direction:column;align-items:center;gap:12px"><div class="rgm">'+['🏆 經典 搶答','🏎 極速 賽車','⚔️ 打 魔王','🪢 拔河','🎯 神射手','🗝 尋寶','🥚 孵 寵物','🌊 衝浪'].map(function(g,i){return '<span class="'+(i===2?'pk':'')+'" style="'+dl(.3+i*.15)+'">'+g+'</span>'}).join('')+'</div>'+
+    '<div class="rnote" style="'+dl(1.8)+'">老師 決定 可以 選 哪幾種 ➜ 冠軍 在 大螢幕 上 點，全班 都 看得到</div><div class="rnote" style="'+dl(3)+'">A、B 也 要 做到；同 時間 比 正確率；一週 用 1 次</div></div>',function(){}],
+  ['⚖️ 公平：每一個 人 規則 都 一樣','<div class="tchips"><span style="'+dl(.3)+'">🎯 分數 只 看 你 自己 答 的</span><span style="'+dl(.9)+'">⚔ 裝備、階級 不加 分數、題目 不會 變 簡單</span><span style="'+dl(1.5)+'">🖨 規則 單 帶 回家 給 家長 看</span></div>',function(){}]]}
+
 /* 一幕 的 樣子：大 圖示 ➜ 拿到 什麼；下面 ⭐／🪙 數字 數上去 */
 function teq(L,R,k){return '<div class="teq">'+L+'<span class="tarr">➜</span>'+R+'</div><div class="ttot '+k+'">'+(k==='xp'?'⭐ 經驗值':'🪙 金幣')+' <b class="tcn">0</b></div>'}
 function tsp(x,y,e){if(typeof RPFX==='undefined')return;var t=document.getElementById('tst');if(!t)return;TUT.cn.push(setTimeout(function(){var r=t.getBoundingClientRect();RPFX.spark(t,r.width*x,r.height*y,e,30)},1500))}
@@ -439,10 +495,11 @@ function tcount(L){L.forEach(function(x){TUT.cn.push(setTimeout(function(){var c
 function tatk(ms){if(typeof RPFX==='undefined')return;TUT.cn.push(setTimeout(function(){var t=document.getElementById('tst');if(!t)return;var r=t.getBoundingClientRect(),e=RV&&RV.st.eq;
   RPFX.attack(t,{from:{x:r.width*.3,y:r.height*.55},to:{x:r.width*.72,y:r.height*.5},w:e&&e.w,id:SCID,dmg:RV?RV.hit:10,quick:true,name:false})},ms))}
 function tutHTML(){var S=tutScenes()[TCH]||[];
-  return '<div class="tut"><div class="tch">'+[['a','⭐🪙 經驗值、金幣怎麼來'],['b','⚔ 戰力 是 什麼'],['c','🎁 收集 有 什麼 用']].map(function(x){return '<button data-tch="'+x[0]+'" class="'+(TCH===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div>'+
+  return '<div class="tut"><div class="tch">'+(rLocked()?[['r','📜 獎勵 規則']]:[['r','📜 獎勵 規則'],['a','⭐🪙 經驗值、金幣怎麼來'],['b','⚔ 戰力 是 什麼'],['c','🎁 收集 有 什麼 用']]).map(function(x){return '<button data-tch="'+x[0]+'" class="'+(TCH===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div>'+
     '<div class="tst c'+TCH+'" id="tst">'+S.map(function(x){return '<div class="tsc"><div class="cap">'+x[0]+'</div><div class="vis">'+x[1]+'</div></div>'}).join('')+'</div>'+
     '<div class="tprog"><i id="tpb"></i></div><div class="tctl"><button id="tPrev" aria-label="上一幕">◀ 上一幕</button><button id="tPause" class="tpz">⏸ 暫停</button><button id="tNext" aria-label="下一幕">下一幕 ▶</button></div>'+
-    '<div class="tnav">'+S.map(function(x,i){return '<button data-tut="'+i+'">'+(i+1)+'</button>'}).join('')+'<button class="re" data-tut="0">⟲ 從頭 再看</button></div></div>'}
+    '<div class="tnav">'+S.map(function(x,i){return '<button data-tut="'+i+'">'+(i+1)+'</button>'}).join('')+'<button class="re" data-tut="0">⟲ 從頭 再看</button></div>'+
+    (TCH==='r'?(QZ.back!=null?'<button class="qback" id="qzBack">📝 回到 第 '+(QZ.i+1)+' 題</button>':'<button class="qzgo" id="qzGo"'+(rLocked()&&!QZ.seenEnd?' hidden':'')+'>📝 '+(rLocked()?'5 題 小問題（都 答對 就 可以 開始 玩）':'再 考 一次 5 題 小問題')+'</button>')+'<div class="note" style="text-align:center;margin-top:8px"><a href="rules.html" target="_blank" style="color:#FFE07A">🖨 印 規則 單（給 家長 看）</a></div>':'')+'</div>'}
 /* 一幕 停 TDUR 毫秒 才 換（第十六次：從 4.8 秒 改 7.5 秒）；〔⏸ 暫停〕＝ 不 換 下一幕（這一幕 的 動畫 照樣 演完，字 留著 慢慢 看），進度條 也 停 */
 var TDUR=7500;
 function tutStop(){clearTimeout(TUT.tm);cancelAnimationFrame(TUT.raf||0);TUT.cn.forEach(clearTimeout);TUT.cn=[]}
@@ -455,8 +512,37 @@ function tutGo(i){tutStop();var L=document.querySelectorAll('#tst .tsc');if(!L[i
   [].forEach.call(L,function(x){x.classList.remove('on')});void L[i].offsetWidth;L[i].classList.add('on');
   [].forEach.call(document.querySelectorAll('.tnav [data-tut]'),function(b,k){b.classList.toggle('on',k===i)});
   var F=(tutScenes()[TCH]||[])[i];if(F&&F[2])F[2]();
-  TUT.i=i;TUT.left=TDUR;TUT.last=Date.now();tutPause(!!TUT.pz);TUT.raf=requestAnimationFrame(tutTick)}
+  TUT.i=i;TUT.left=TDUR;TUT.last=Date.now();tutPause(!!TUT.pz);TUT.raf=requestAnimationFrame(tutTick);
+  if(TCH==='r'&&i>=L.length-1){QZ.seenEnd=1;var qg=document.getElementById('qzGo');if(qg)qg.hidden=false}}
+/* 📝 5 題 小問題（2026-10-21：老師 選「5 題，一件 一題」）：答錯 ➜ 回去 看 那一幕（停住），再 回來 答 同一題；5 題 都 對 ➜ 伺服器 記下來（老師看板 看得到）。選項 每次 重洗 */
+var QZ={i:0,ok:[],back:null,seenEnd:0};
+function rLocked(){return !!RV&&RV.qz!==CAT.QV}
+function qzQs(){var D=CAT.DILI;return [
+  {q:'「一週」是 從 什麼 時候 到 什麼 時候？',o:['星期一 0:00 ➜ 星期日 23:59','星期一 早上 8:00 ➜ 星期五 下午 4:00','星期日 0:00 ➜ 星期六 23:59'],sc:0},
+  {q:'小華 星期二 升到 ★★ 精英戰士。哪一個 對？',o:['星期二 以後 練習 的 🪙 多 10%；星期一 的 不補','星期一 練習 的 🪙 也 全部 多 10%','題目 會 變 簡單'],sc:2},
+  {q:'👑 冠軍寶箱 發給 誰？',o:['這一週 最認真練習 前 5 名，而且 A 不是 太快 亂按、B 答錯 改對 都 ≧ '+D+'%','練習 時間 前 5 名 就 有（亂按 也 算）','正確率 最高 的 5 個 人'],sc:5},
+  {q:'現場任務 老師 開〔✖2〕，答對 5 題 拿到 幾個 🪙？',o:['🪙 10','🪙 5','🪙 7'],sc:6},
+  {q:'誰 可以 選 1 次 現場任務 的 遊戲？',o:['每一班 上一週 最認真練習 第 1 名（A、B 都 做到）','全班 投票','老師 隨便 抽 一個 人'],sc:7}]}
+function qzShuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function qzDraw(){var Q=qzQs()[QZ.i],ord=qzShuf([0,1,2]),b=document.getElementById('rqzb');
+  b.innerHTML='<div class="qn">📝 第 '+(QZ.i+1)+' 題 ／ 5 題</div><div class="qdots">'+[0,1,2,3,4].map(function(k){return '<i class="'+(k<QZ.i?'ok':k===QZ.i?'now':'')+'"></i>'}).join('')+'</div>'+
+    '<div class="qt">'+Q.q+'</div><div class="qo">'+ord.map(function(k){return '<button data-qa="'+k+'">'+'①②③'.charAt(ord.indexOf(k))+' '+Q.o[k]+'</button>'}).join('')+'</div><div class="qr" id="qzr"></div>';
+  document.getElementById('rqz').className='on'}
+function qzStart(){QZ.i=0;QZ.back=null;qzDraw()}
+function qzAns(k,btn){var Q=qzQs()[QZ.i],r=document.getElementById('qzr');[].forEach.call(document.querySelectorAll('#rqz .qo button'),function(x){x.disabled=true});
+  if(k===0){btn.classList.add('ok');r.innerHTML='✅ 答對 了！';setTimeout(function(){QZ.i++;if(QZ.i<5)qzDraw();else qzDone()},900)}
+  else{btn.classList.add('bad');r.innerHTML='❌ 還 沒 對：我們 再 看 一次 這一幕<br><button id="qzSee">▶ 再看 這一幕</button>'}}
+function qzSee(){var Q=qzQs()[QZ.i];document.getElementById('rqz').className='';QZ.back=QZ.i;TCH='r';TUT.pz=true;drawShop();tutGo(Q.sc);
+  setTimeout(function(){var u=document.querySelector('.tut');if(u)u.scrollIntoView({behavior:'smooth',block:'start'})},50)}
+function qzDone(){var b=document.getElementById('rqzb'),me=SCID;b.innerHTML='<div class="qt">⏳ 送 給 老師…</div>';
+  scFetch('',{a:'rpg',id:me,op:'qz',v:CAT.QV},12000).then(function(j){if(me!==SCID)return;if(j&&j.ok&&j.v){var dt=RV&&RV.dt||0;RV=j.v;RV.dt=dt;
+      b.innerHTML=fwHTML()+'<div class="qt">✅ 你 看懂 了 全部 獎勵 規則！</div><div class="qr">老師 也 看得到 ✔<br><button id="qzEnd">⚔ 開始 戰神之路</button></div>'}
+    else b.innerHTML='<div class="qt">📶 沒有 送到</div><div class="qr"><button id="qzRe">🔁 再 送 一次</button></div>'},
+    function(){b.innerHTML='<div class="qt">📶 現在 沒有 網路</div><div class="qr"><button id="qzRe">🔁 再 送 一次</button></div>'})}
+function gateHTML(){return rLocked()?'<div class="rgate">📜 第一次 打開 <b>戰神之路</b>：先 看完 <b>獎勵 規則</b>（9 幕），再 答 <b>5 題 小問題</b>，都 答對 就 可以 開始 玩！<div class="rst"><span class="'+(QZ.seenEnd?'on':'')+'">① 👀 看完 9 幕</span><span>② 📝 5 題 都 答對</span><span>③ ⚔ 開始 玩</span></div></div>':''}
 function drawShop(){var S=document.getElementById('shop'),h='';
+  var rin=document.getElementById('rpin');if(rin)rin.classList.toggle('rlock',rLocked());
+  if(rLocked()){TAB='q';if(TCH!=='r')TCH='r'}
   if(TAB==='h'||TAB==='w'||TAB==='p'){var k=TAB,nm={h:'戰士',w:'武器',p:'寵物'}[k];
     if(!RV.st.own[k].length&&!RV.st.free[k])h+='<div class="free">🎁 第一個 '+nm+' 免費：選 1 個 ★ 基本 的 '+nm+'！之後 用 🪙 金幣 換 更酷 的。</div>';
     if(k==='h')h+='<div class="sub2"><button data-sex="b" class="'+(SEX==='b'?'on':'')+'">👦 男生 戰士</button><button data-sex="g" class="'+(SEX==='g'?'on':'')+'">👧 女生 戰士</button></div>';
@@ -470,11 +556,13 @@ function drawShop(){var S=document.getElementById('shop'),h='';
       return '<div class="'+(ok?'ok':now?'now':'no')+'"><img src="pets/'+m+'.jpg" alt="">'+(ok?'✨ 淨化':now?'⚔ 現在':'？')+'</div>'}).join('')+'</div><br>';
     h+='<div class="note">📖 集滿 一套 ＝ 拿到 稱號（亮起來）：</div>'+CAT.SET.map(function(x){var ok=x[1].every(function(id){return all.indexOf(id)>=0});
       return '<div class="set'+(ok?' ok':'')+'"><b style="min-width:8em">'+(ok?'✅ ':'')+x[0]+'</b>'+x[1].map(function(id){return '<img src="'+img(id)+'" class="'+(all.indexOf(id)>=0?'':'no')+'" alt="'+id+'">'}).join('')+'</div>'}).join('')}
+  else if(rLocked())h+=gateHTML()+tutHTML();
   else h+=tutHTML()+'<div class="how"><table><tr><th style="width:34%">怎麼 拿</th><th>拿到 多少</th></tr>'+
     '<tr><td>📝 做完 一次 題目、遊戲（練習次數 ＋1）</td><td>⭐ 經驗值 ＋'+CAT.X.rec+'</td></tr><tr><td>🎧 聽完 一站 字卡</td><td>⭐ 經驗值 ＋'+CAT.X.rec+'</td></tr><tr><td>📅 那一天 第一次 練</td><td>⭐ 經驗值 ＋'+CAT.X.day+'（天天練 最划算）</td></tr>'+
     '<tr><td>✅ 第一次 就 答對 1 題</td><td>🪙 金幣 ＋1</td></tr><tr><td>✗➜✓ 答錯 以後 改對 1 題</td><td>🪙 金幣 ＋'+CAT.C.fix+'（改錯 最多 金幣！）</td></tr><tr><td>⬆ 同一組 比 自己 上一次 進步</td><td>🪙 金幣 ＋'+CAT.C.prog+'</td></tr>'+
     '<tr><td>🎁 這一週 練了 '+CAT.C.chestDays+' 天 以上</td><td>保底 寶箱 🪙 ＋'+CAT.C.chest+'（每一個 肯練 的 人 都 拿得到）</td></tr>'+
-    '<tr><td>⚠️ 太快 亂按</td><td>那一次 沒有 金幣</td></tr><tr><td>🪙 一天 最多</td><td>'+CAT.C.cap+' 金幣（練 太久 不會 一直 賺）</td></tr>'+
+    '<tr><td>⚠️ 太快 亂按</td><td>那一次 沒有 金幣</td></tr><tr><td>🪙 一天 最多</td><td>'+CAT.TB[0][1]+' 金幣；⚔ 階級 愈高 愈多（'+CAT.TB[1][1]+'～'+CAT.TB[5][1]+'）</td></tr>'+
+    '<tr><td>⚔ 戰力 階級</td><td>升階 以後 練習 的 🪙 多 '+CAT.TB[1][0]+'%～'+CAT.TB[5][0]+'%、每一階 2 樣 專屬 寶物、現場任務 登場 特效</td></tr>'+
     '<tr><td>🏪 榮耀 商城</td><td>第 1 排 🪙 500、第 2 排 1,200（Lv 5）、第 3 排 2,500（Lv 10）、第 4 排 5,000（Lv 20）</td></tr>'+
     '<tr><td>🚫 不可以</td><td>交易、搶 別人 的、抽獎；<b>買到的東西不加分數、不會讓題目變簡單</b></td></tr></table>'+
     '<p class="note">⭐ 經驗值 只會 升，不會 被 花掉；等級 夠 才 換得到 ★★★ 以上。🐾 寵物 陪你 練 3 天 長大、7 天 進化。</p></div>';
@@ -489,6 +577,7 @@ function msg(t,x){var m=document.getElementById('rpm');m.className='on';document
 function ask(id){var k=kOf(id),fr=freeOk(id),pr=fr?0:price(id),t=k==='t'?tre(id)[1]:'';
   if(CAT.LIM[id]&&STOCK[id]===0){msg('🏷 已經 換完 了<br><span class="note">全部 學生 一共 只有 5 個</span>');return}
   if(CAT.END[id]&&nowS()>=CAT.END[id]){msg('⏳ 已經 下架 了（10 月 31 號）');return}
+  if(CAT.TX[id]&&tierMax()<CAT.TX[id]){var tq=CAT.TX[id];msg('🔒 這是 <b>'+(typeof RPFX!=='undefined'?RPFX.tb(tq,1):'')+'</b> 專屬 寶物<br><span class="note">⚔ 戰力 到 '+nf(CAT.TIER[tq-1][0])+' 就 升到 這一階（現在 '+nf(RV.power)+'）</span>');return}
   if(RV.lv<need(id)){msg('🔒 要 <b>Lv '+need(id)+'</b> 才 換得到<br><span class="note">現在 Lv '+RV.lv+'：多 練習 就會 升級 ⭐</span>');return}
   if(!fr&&RV.coins<pr){msg('🪙 還差 <b>'+(pr-RV.coins)+'</b> 金幣<br><span class="note">答對、改對、進步 都會 拿到 金幣</span>');return}
   var m=document.getElementById('rpm');m.className='on';
@@ -500,7 +589,7 @@ function act(op,id){if(BUSY)return;BUSY=true;var me=SCID;
     if(j&&j.ok){draw();if(op==='open'){chestShow(j.r);return}var kk=kOf(id);CBP=!!(RV&&RV.st.eq.h)&&(op==='buy'||isEq(id));
       if((kk==='h'||kk==='w'||kk==='p')&&typeof RPFX!=='undefined'){document.getElementById('rpm').className='';summonOf(id,op==='buy')}
       else if(op==='buy'){cele(id);if(sOf(id)&&sOf(id).slot==='fx')setTimeout(function(){rwFx('../',id)},700)}else{document.getElementById('rpm').className='';if(CBP){CBP=false;cbAuto()}}}
-    else msg(j&&j.err==='coin'?'🪙 金幣 不夠':j&&j.err==='lv'?'🔒 等級 不夠':j&&j.err==='sold'?'🏷 已經 換完 了（全部 只有 5 個）':j&&j.err==='end'?'⏳ 已經 下架 了':j&&j.err==='none'?'👑 沒有 寶箱 了':'❌ 沒有 換成（'+((j&&j.err)||'')+'）')},
+    else msg(j&&j.err==='coin'?'🪙 金幣 不夠':j&&j.err==='lv'?'🔒 等級 不夠':j&&j.err==='tier'?'🔒 要 升到 這一階 才 買得到':j&&j.err==='sold'?'🏷 已經 換完 了（全部 只有 5 個）':j&&j.err==='end'?'⏳ 已經 下架 了':j&&j.err==='none'?'👑 沒有 寶箱 了':'❌ 沒有 換成（'+((j&&j.err)||'')+'）')},
    function(){BUSY=false;msg('📶 現在 沒有 網路，沒有 換')})}
 /* 戰士、武器、寵物 換到 或 裝上 ➜ 震撼 登場（魔法陣、光柱、閃電、卡片 轉出來、星星 一顆一顆 亮） */
 function summonOf(id,isNew){var k=kOf(id),s=star(id),nm={h:'戰士',w:'武器',p:'寵物'}[k],W=k==='w'?RPFX.wInfo(id):null;
@@ -530,6 +619,12 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if(c('#tPause')){var L0=document.querySelectorAll('#tst .tsc');if(TUT.pz&&TUT.i>=L0.length-1&&TUT.left<=0){TUT.pz=false;tutGo(0)}else tutPause(!TUT.pz);return}
   if(c('#tPrev')){tutGo(Math.max(0,(TUT.i||0)-1));return}
   if(c('#tNext')){var L1=document.querySelectorAll('#tst .tsc');tutGo(Math.min(L1.length-1,(TUT.i||0)+1));return}
+  if(c('#qzGo')){qzStart();return}
+  if(c('#qzBack')){QZ.back=null;TUT.pz=false;qzDraw();return}
+  if((b=c('[data-qa]'))){qzAns(+b.getAttribute('data-qa'),b);return}
+  if(c('#qzSee')){qzSee();return}
+  if(c('#qzRe')){qzDone();return}
+  if(c('#qzEnd')){document.getElementById('rqz').className='';TAB='h';TCH='a';[].forEach.call(document.querySelectorAll('#tabs button'),function(x){x.classList.toggle('on',x.getAttribute('data-t')==='h')});draw();return}
   if((b=c('[data-tch]'))){TCH=b.getAttribute('data-tch');TUT.pz=false;drawShop();return}
   if((b=c('[data-go^="q"]'))){TCH=(b.getAttribute('data-go').charAt(1)||'a');var q=document.querySelector('#tabs [data-t="q"]');if(q)q.click();setTimeout(function(){var u=document.querySelector('.tut');if(u)u.scrollIntoView({behavior:'smooth',block:'start'})},50);return}
   if((b=c('#shop [data-id]'))){var id=b.getAttribute('data-id');if(own(id)){if(kOf(id)==='t'||kOf(id)==='s'||!isEq(id))act('eq',id)}else ask(id);return}
@@ -552,3 +647,33 @@ setInterval(function(){var k=(SCID||'')+'|'+(SCID&&scAsked()?1:0);if(k!==LAST){L
 `;
 fs.writeFileSync(path.join(__dirname, 'index.html'), html);
 console.log('rpg ok：英雄 ' + Object.keys(SC.RPR.h).filter(x => !SC.RPHIDE[x]).length + '、武器 ' + Object.keys(SC.RPR.w).length + '、寵物 ' + Object.keys(SC.RPR.p).length + '、寶物 ' + SC.RPT.length + '、商城上架 ' + Object.keys(SC.RPSON).length + ' 類');
+/* 🖨 給 家長 的 規則 單（2026-10-21 第十六次 第 6 點：公平、公正、公開；A4 直式、大字；數字 全部 讀 _calc.js） */
+{ const TN = ['', '見習戰士', '精英戰士', '烈焰戰將', '雷霆戰神', '傳說戰神'], st = n => '★'.repeat(n), D = SC.DILI, X = SC.RPX, C = SC.RPC;
+  const SN = { s0213: '太陽神 披風', s0912: '冰晶 翅膀', s0118: '雙龍 帝王 光環', s0418: '戰神 名字框', s0813: '太陽 鳳凰 帝王（寵物）', s0913: '熔岩 翅膀', s0318: '雷虎 必殺 特效', s0715: '女武神 光之矛', s0220: '創世 至尊 披風', s0420: '大師 名字框' };
+  Object.keys(SC.RPTX).forEach(id => { if (!SN[id]) throw new Error('規則單 少了 專屬寶物 的 名字：' + id); });
+  const rows = [1, 2, 3, 4, 5].map(n => `<tr><td class="l">${st(n)} ${TN[n]}</td><td>${SC.RPTIER[n - 1][0].toLocaleString()}</td><td>多 ${SC.RPTB[n][0]}%</td><td>${SC.RPTB[n][1]}</td><td class="l">${Object.keys(SC.RPTX).filter(id => SC.RPTX[id] === n).map(id => SN[id]).join('、')}</td></tr>`).join('');
+  const page = `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>戰神之路 獎勵規則</title><style>
+:root{color-scheme:light}body{margin:0;background:#fff;color:#111;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;font-size:19px;line-height:1.55}
+.pg{max-width:820px;margin:0 auto;padding:18px 16px 40px}h1{font-size:32px;margin:0 0 4px;text-align:center}.sub{text-align:center;color:#444;margin:0 0 14px}
+h2{font-size:23px;margin:18px 0 6px;border-left:8px solid #E8A800;padding-left:10px}table{width:100%;border-collapse:collapse;font-size:18px}td,th{border:1.5px solid #555;padding:5px 7px;text-align:center}th{background:#FFF3C4}td.l{text-align:left}
+ul{margin:4px 0;padding-left:1.3em}li{margin:3px 0}.box{border:2px solid #333;border-radius:10px;padding:8px 12px;margin-top:10px}.pb{display:block;margin:0 auto 14px;font-size:22px;min-height:56px;padding:6px 26px;border-radius:12px;border:2px solid #8A5A00;background:#FFD54A;cursor:pointer}
+.sig{display:flex;justify-content:space-between;gap:20px;margin-top:22px;font-size:19px}.sig span{flex:1;border-bottom:1.5px solid #333;padding-bottom:22px}
+@media print{.pb{display:none}.pg{padding:0}body{font-size:15.5px}table{font-size:14.5px}h1{font-size:26px}h2{font-size:19px;margin-top:10px}@page{size:A4;margin:12mm}}
+</style></head><body><div class="pg"><button class="pb" onclick="window.print()">🖨 列印 這一張</button>
+<h1>⚔ 戰神之路 獎勵規則（給 家長 看）</h1><p class="sub">英語 在家複習 ‧ 全部 由 電腦 從 孩子 的 練習 紀錄 自動 計算，每一個 人 規則 都 一樣</p>
+<h2>📅 「一週」是 什麼 時候</h2><p>星期一 0:00 到 星期日 23:59（台灣 時間）。下一個 星期一 0:00 重新 開始 算。</p>
+<h2>⭐ 經驗值、🪙 金幣 怎麼 來</h2><ul><li>做完 一次 練習 ⭐ ＋${X.rec}；那一天 第一次 練 ⭐ ＋${X.day}</li><li>第一次 就 答對 1 題 🪙 ＋1；答錯 以後 改對 1 題 🪙 ＋${C.fix}；比 上一次 進步 🪙 ＋${C.prog}；一週 練 ${C.chestDays} 天 以上 🪙 ＋${C.chest}</li>
+<li>太快 亂按（一次 裡面 一半 以上 的 題目 不到 1 秒 就 按）＝ 那一次 沒有 ⭐、🪙</li><li>金幣 只能 在 遊戲 裡 換 裝備；<b>裝備、階級 不加 分數，題目 不會 變 簡單</b></li></ul>
+<h2>⚔ 戰力 階級（升了 不會 掉）</h2><table><tr><th>階級</th><th>戰力</th><th>練習 金幣</th><th>一天 最多 金幣</th><th>專屬 寶物（升到 才 買得到）</th></tr>
+<tr><td class="l">還沒有 階級</td><td>0～299</td><td>照 原本</td><td>${SC.RPTB[0][1]}</td><td class="l">—</td></tr>${rows}</table>
+<p>每 升 一階 另外 🪙 ＋${SC.RPTIERC} 一次。<b>升階 以後 練習 的 金幣 才 多</b>（以前 的 不補）。例：星期二 升到 ★★，星期三 練習 賺 🪙 20 ➜ 22。現場任務 大螢幕 有 這一階 的 登場 特效。</p>
+<h2>🏆 最認真練習（榮譽榜）</h2><p>這一週 <b>練習 時間 最多</b>，而且 這一週 到 現在 全部 題目 合起來 兩個 條件 都 做到：</p>
+<ul><li><b>A 👀 不是 太快 亂按 ≧ ${D}%</b>：看完、聽完 才 選</li><li><b>B ✗➜✓ 答錯，改對 ≧ ${D}%</b>：答錯 的 題目，後來 同一題 又 答對（遊戲 的 ✨ 訂正 成功 也 算）；一題 都 沒錯 ＝ 100%</li></ul>
+<p>例：200 題、太快 15 題 ＝ A 92% ✅；答錯 20 題、改對 18 題 ＝ B 90% ✅。沒有 做到 的 人 不上榜，下一名 補上。這一週 沒有 作答 題目（只 看 字卡）不上榜。</p>
+<h2>👑 冠軍寶箱</h2><p>這一週 <b>全年級 最認真練習 前 5 名</b>（A、B 都 要 做到）。不到 的 人 不發，名額 給 下一名（一定 5 個 人，同分 一起）。<b>下一個 星期一 0:00 自動 發</b>，打開 戰神之路 就 拿到。</p>
+<h2>⚡ 現場任務（上課）</h2><ul><li>老師 可以 開〔✖1.5〕或〔✖2〕：每一題 的 金幣、經驗值 變 1.5 倍 或 2 倍（例：答對 5 題 ➜ 🪙 5／8／10）</li>
+<li><b>每一班 上一週 最認真練習 第 1 名</b>（A、B 都 做到；同 時間 比 正確率）可以 選 1 次 這一週 現場任務 的 遊戲；老師 決定 可以 選 哪幾種，學生 在 大螢幕 上 點，全班 都 看得到</li></ul>
+<div class="box">✅ 孩子 第一次 打開 戰神之路，要 先 看完 規則 動畫、答對 5 題 小問題，老師 看得到 誰 已經 看懂。<br>有 任何 問題，請 直接 問 英語 老師。</div>
+<div class="sig"><span>學生 班級 座號：</span><span>家長 簽名：</span></div></div></body></html>`;
+  fs.writeFileSync(path.join(__dirname, 'rules.html'), page); console.log('rpg/rules.html ok'); }

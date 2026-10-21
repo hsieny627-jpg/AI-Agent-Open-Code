@@ -39,6 +39,33 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* 登入（跟成績系統同一個）：直接放 5 碼＋已經確認 */
     await p.evaluate(() => { localStorage.setItem('score_last', '"40205"'); localStorage.setItem('score_id_g4', '"40205"'); localStorage.setItem('score_act', JSON.stringify(Date.now())); sessionStorage.setItem('sc_ok', '40205'); });
     await p.reload(); await p.waitForTimeout(1800);
+    /* 2026-10-21 第十六次 第 6 點：第一次 打開 ＝ 先 看 📜 獎勵 規則（9 幕）➜ 5 題 小問題 都 答對 才 能 玩；答錯 ＝ 回去 看 那一幕 */
+    const g0 = await p.evaluate(() => ({ lk: document.getElementById('rpin').classList.contains('rlock'), st: getComputedStyle(document.getElementById('stage')).display, tb: getComputedStyle(document.getElementById('tabs')).display,
+      gate: !!document.querySelector('.rgate'), sc: document.querySelectorAll('#tst .tsc').length, qz: (document.getElementById('qzGo') || {}).hidden, ch: document.querySelectorAll('.tch button').length }));
+    if (!g0.lk || g0.st !== 'none' || g0.tb !== 'none' || !g0.gate || g0.sc !== 9 || g0.qz !== true || g0.ch !== 1) E.push(tag + '：第一次 打開 沒有 先 鎖住 看 規則：' + JSON.stringify(g0));
+    for (let i = 0; i < 9; i++) { await p.click('[data-tut="' + i + '"]'); await p.waitForTimeout(i === 8 ? 4200 : 3800);
+      const f = await p.evaluate(() => { const c = document.querySelector('#tst .tsc.on'), t = document.getElementById('tst').getBoundingClientRect(), o = [];
+        c.querySelectorAll('*').forEach(x => { const r = x.getBoundingClientRect(); if (r.width && (r.right > t.right + 2 || r.left < t.left - 2 || r.bottom > t.bottom + 2)) o.push(x.className || x.tagName); });
+        let mn = 99; c.querySelectorAll('.cap,.rnote,.rtb>div,.rab .ln,.rlist>div,.rmul>div,.rgm span,.rtl>div,.rwk>span,.tchips span').forEach(x => { if (x.textContent.trim()) mn = Math.min(mn, parseFloat(getComputedStyle(x).fontSize)); });
+        return { o: o.slice(0, 3), mn }; });
+      if (f.o.length || f.mn < 17) E.push(tag + '：規則 第 ' + (i + 1) + ' 幕 超出 或 字 太小：' + JSON.stringify(f)); }
+    const qg = await p.evaluate(() => { const b = document.getElementById('qzGo'); return b && !b.hidden ? b.getBoundingClientRect().height : 0; });
+    if (qg < 64) E.push(tag + '：看完 9 幕 沒有 大大的〔📝 5 題 小問題〕（' + qg + '）');
+    await p.click('#qzGo'); await p.waitForTimeout(300);
+    const q1 = await p.evaluate(() => ({ on: document.getElementById('rqz').className === 'on', n: document.querySelectorAll('#rqz [data-qa]').length, h: Math.min.apply(null, [].map.call(document.querySelectorAll('#rqz [data-qa]'), b => b.getBoundingClientRect().height)), fs: parseFloat(getComputedStyle(document.querySelector('#rqz .qt')).fontSize) }));
+    if (!q1.on || q1.n !== 3 || q1.h < 64 || q1.fs < 26) E.push(tag + '：小問題 畫面 不對：' + JSON.stringify(q1));
+    await p.click('#rqz [data-qa="1"]'); await p.waitForTimeout(300); await p.click('#qzSee'); await p.waitForTimeout(500);
+    const sb = await p.evaluate(() => ({ off: document.getElementById('rqz').className !== 'on', i: TUT.i, pz: TUT.pz, back: !!document.getElementById('qzBack') }));
+    if (!sb.off || sb.i !== 0 || !sb.pz || !sb.back) E.push(tag + '：答錯 沒有 回去 看 那一幕（停住）＋〔📝 回到 第 1 題〕：' + JSON.stringify(sb));
+    await p.click('#qzBack'); await p.waitForTimeout(300);
+    for (let k = 0; k < 5; k++) { await p.click('#rqz [data-qa="0"]'); await p.waitForTimeout(1100); }
+    await p.waitForTimeout(600);
+    const qd = await p.evaluate(() => ({ t: document.getElementById('rqzb').textContent, qz: RV && RV.qz }));
+    if (!/看懂/.test(qd.t) || qd.qz !== 1) E.push(tag + '：5 題 都 對 沒有 送 給 老師：' + JSON.stringify(qd).slice(0, 90));
+    if (!G.books['角色'] || !/"qz":1/.test((G.books['角色'].d[1] || [])[1] || '')) E.push(tag + '：試算表「角色」沒有 記 看懂 規則');
+    await p.click('#qzEnd'); await p.waitForTimeout(500);
+    const gU = await p.evaluate(() => ({ lk: document.getElementById('rpin').classList.contains('rlock'), st: getComputedStyle(document.getElementById('stage')).display }));
+    if (gU.lk || gU.st === 'none') E.push(tag + '：看懂 以後 還是 鎖著');
     const s0 = await p.evaluate(() => ({ in: !document.getElementById('rpin').hidden, t: document.getElementById('stage').textContent, free: !!document.querySelector('.free'),
       fr: document.querySelectorAll('#shop .pr.fr').length, it: document.querySelectorAll('#shop .it').length }));
     if (!s0.in || !/還沒有戰士/.test(s0.t) || !/Lv \d/.test(s0.t) || !/金幣/.test(s0.t)) E.push(tag + '：登入以後舞台不對：' + s0.t.slice(0, 80));

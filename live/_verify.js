@@ -212,8 +212,8 @@ const H_PH = ph => ph === 'q';
     await S[1].p.click('#ew [data-say2]'); await S[1].p.waitForTimeout(300); { const z = await snd(S[1].p); if (!(z.play + z.tts)) E.push('平板 按〔🔊 聽〕沒有 唸'); }
     await ckWords(S[0].p, '學生 結束頁');
     /* 2026-10-20 第十五次：老師〔✖1.5〕：答對 的 🪙、一場 的 ⭐ 都 ✖1.5（四捨五入） */
-    { const x = await h.evaluate(() => { var a = bonusList(); H.x15 = 1; var b = bonusList(); H.x15 = 0; return { a: a, b: b, okc: H.okc, rw: H.rw }; });
-      x.a.forEach(function (o, j) { if ((x.rw[o.id] || []).length) return; var k = x.okc[o.id] || 0, q = x.b[j]; if (o.c !== k || o.x !== 10 || q.c !== Math.round(k * 1.5) || q.x !== 15) E.push(tag + '：✖1.5 不對 ' + o.id + ' ' + JSON.stringify([o.c, o.x, q.c, q.x, k])); }); n++; }
+    { const x = await h.evaluate(() => { var a = bonusList(); H.x15 = 1.5; var b = bonusList(); H.x15 = 2; var d = bonusList(); H.x15 = 0; return { a: a, b: b, d: d, okc: H.okc, rw: H.rw }; });
+      x.a.forEach(function (o, j) { if ((x.rw[o.id] || []).length) return; var k = x.okc[o.id] || 0, q = x.b[j], r = x.d[j]; if (o.c !== k || o.x !== 10 || q.c !== Math.round(k * 1.5) || q.x !== 15 || r.c !== k * 2 || r.x !== 20) E.push(tag + '：✖1.5／✖2 不對 ' + o.id + ' ' + JSON.stringify([o.c, o.x, q.c, q.x, r.c, r.x, k])); }); n++; }
     await h.click('#give'); await h.waitForTimeout(900);
     if (!/發好了/.test(await h.textContent('#gm'))) E.push(tag + '：〔🎁 發獎勵〕沒有 成功：' + (await h.textContent('#gm')));
     const v1 = G.get({ a: 'rpg', id: '40201' }).v; if (!(v1.st.bx >= 10 && v1.st.bc >= 4)) E.push('發獎勵：「角色」沒有 加上 經驗值、金幣：' + JSON.stringify([v1.st.bc, v1.st.bx]));
@@ -223,12 +223,30 @@ const H_PH = ph => ph === 'q';
   { DB = {}; const G = make({ TEACHER_PW: PW }), HV = [1024, 768], tag = '魔王 1024';
     G.post({ a: 'rpg', id: '40201', op: 'buy', item: 'b01' }); G.post({ a: 'rpg', id: '40201', op: 'buy', item: 'p03' });
     G.post({ a: 'rpg', id: '40203', op: 'buy', item: 'b02' }); G.post({ a: 'rpg', id: '40203', op: 'buy', item: 'p06' });   /* 2026-10-20 第十四次：🐾 寵物護盾（一場 一次） */
+    { const t0 = require('../score/_calc.js').weekStart(Date.now()) - 7 * 864e5 + 5 * 3600e3;
+      for (let k = 0; k < 3; k++) G.post({ a: 'rec', r: { id: '40205', set: 'g4u1_1-1b', name: 'x', src: 'home', dev: 'v', u: 'lw' + k, t: t0 + k * 6e4, qs: [0, 1, 2, 3, 4].map(i => [1, 0, 6, 0, .6, i]) } }); }
     const { hc, h } = await hostIn(br, G, HV, tag);
     await h.fill('#pw', PW); await h.click('#pwgo'); await h.waitForTimeout(300);
     await h.click('[data-sc="402"]');
     const st = await sizes(h, 19); if (st.sm.length || st.low.length || st.ox > 1) E.push(tag + ' 設定頁：字太小 ' + st.sm.slice(0, 3).join('、') + '／按鈕太矮 ' + st.low.slice(0, 3).join('、') + '／左右捲 ' + st.ox);
-    { const xb = await h.evaluate(() => { const b = document.querySelector('[data-x15="1"]'), c = document.querySelector('[data-x15="0"]'); return b && c ? Math.min(b.getBoundingClientRect().height, c.getBoundingClientRect().height) : 0; }); if (xb < 48) E.push(tag + '：開場 沒有〔⚡ 金幣、經驗值 ✖1.5 開／關〕（' + xb + '）'); n++; }
-    await h.click('[data-sk="boss"]'); await h.click('[data-ch="0"]'); await h.click('[data-sa="0"]'); await h.click('[data-sb="4sg1"]'); await h.click('[data-sb="4sg10"]'); await h.click('[data-sn="10"]'); await h.click('#mk'); await h.waitForTimeout(600);
+    { const xb = await h.evaluate(() => { const L = ['0', '1.5', '2'].map(k => document.querySelector('[data-x15="' + k + '"]')); return L.every(Boolean) ? Math.min.apply(null, L.map(b => b.getBoundingClientRect().height)) : 0; }); if (xb < 48) E.push(tag + '：開場 沒有〔關〕〔✖1.5〕〔✖2〕三顆（' + xb + '）'); n++; }
+    /* 2026-10-21 老師再加第 3 點：👑 每班 上週 第 1 名 選 1 次 遊戲（老師 勾 哪幾種 ➜ 大螢幕 上 點 ➜ Firebase 記 用過 了） */
+    { const ch = await h.evaluate(() => ({ box: !!document.querySelector('.chbox:not(.done)'), t: (document.querySelector('.chbox') || {}).textContent || '', n: document.querySelectorAll('[data-cg]').length }));
+      if (!ch.box || !/40205/.test(ch.t) || ch.n !== 11) E.push(tag + '：沒有 👑 冠軍 選 遊戲 那一塊 ' + JSON.stringify(ch).slice(0, 120)); n++;
+      await h.click('[data-cg="race"]'); await h.click('#chGo'); await h.waitForTimeout(400);
+      const pk = await h.evaluate(() => { const o = document.getElementById('chpk'), b = [].slice.call(o.querySelectorAll('[data-cpk]')); return { on: !o.hidden, n: b.length, race: b.some(x => x.getAttribute('data-cpk') === 'race'), h: Math.min.apply(null, b.map(x => x.getBoundingClientRect().height)), ox: o.scrollHeight - o.clientHeight }; });
+      if (!pk.on || pk.n !== 10 || pk.race || pk.h < 100 || pk.ox > 1) E.push(tag + '：冠軍 選 遊戲 畫面 不對 ' + JSON.stringify(pk)); n++;
+      await shot(h, 'champ'); await h.click('[data-cpk="tug"]'); await h.waitForTimeout(3000);
+      const dn = await h.evaluate(() => ({ g: H.game, done: !!document.querySelector('.chbox.done'), hid: document.getElementById('chpk').hidden }));
+      if (dn.g !== 'tug' || !dn.done || !dn.hid) E.push(tag + '：冠軍 選好 以後 不對 ' + JSON.stringify(dn)); n++;
+      if (!DB.rooms || !DB.rooms['0402'] || !DB.rooms['0402'].champ || DB.rooms['0402'].champ.game !== 'tug') E.push(tag + '：Firebase 沒有 記 冠軍 用過 了'); n++; }
+    /* ⚔ 戰力 階級 登場 特效：★5 傳說戰神 */
+    { await h.evaluate(() => { H.P['40299'] = { tr: 5 }; entSee(['40299']); }); await h.waitForTimeout(700);
+      const te = await h.evaluate(() => { const o = document.querySelector('.tent.t5'); return o ? { tb: !!o.querySelector('.tbI'), t: o.textContent, pil: !!o.querySelector('.tpil') } : null; });
+      if (!te || !te.tb || !/傳說戰神/.test(te.t) || !/40299 登場/.test(te.t) || !te.pil) E.push(tag + '：★5 登場 特效 不對 ' + JSON.stringify(te)); n++;
+      await h.waitForTimeout(2800); if (await h.$('.tent')) E.push(tag + '：登場 特效 沒有 自己 收起來'); n++; }
+    await h.click('[data-sk="boss"]');
+    await h.click('[data-ch="0"]'); await h.click('[data-sa="0"]'); await h.click('[data-sb="4sg1"]'); await h.click('[data-sb="4sg10"]'); await h.click('[data-sn="10"]'); await h.click('#mk'); await h.waitForTimeout(600);
     const S = await students(br, G, [['40201', [1024, 768]], ['40202', [820, 1180]], ['40203', [1024, 768]]]);
     await h.waitForTimeout(2500);
     if ((await h.textContent('#lcnt')).trim() !== '3') E.push(tag + '：大螢幕 沒有 看到 3 個人加入（' + (await h.textContent('#lcnt')) + '）');

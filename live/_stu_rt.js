@@ -127,7 +127,7 @@ function lbS(m){var r=m.r||{},T=r.tot||{},RK=rankOf(T,S.id),o=$('#res');if(S.qi<
   now('🏆 看 大螢幕 的 排行榜','');
   if(m.game!=='classic'&&S.drawLater){S.drawLater=0;S.draws=Math.floor(S.okc/5);setTimeout(draw,1200)}}
 /* ── 結束：個人 錯題 總分析 ── */
-function endS(m){if(S.ended===m.made)return;S.ended=m.made;clearTimeout(S.tm);$('#res').className='';giftAway();scr('send');stepS(2);var r=m.r||{},T=r.tot||{},RK=rankOf(T,S.id),q=(r.okq||{})[S.id]||'',sum=m.sum||{};
+function endS(m){if(S.ended===m.made)return;S.ended=m.made;clearTimeout(S.tm);$('#res').className='';giftAway();scr('send');stepS(2);var r=m.r||{},T=r.tot||{},RK=rankOf(T,S.id),q=(r.okq||{})[S.id]||'',sum=m.sum||{};var XK=m.x15===1?1.5:(+m.x15||1);   /* 2026-10-21：倍數（1.5 或 2；舊的 1 ＝ 1.5） */
   var n=q.length,ok=(q.match(/1/g)||[]).length,acc=n?Math.round(ok/n*100):0,RD=46,L=2*Math.PI*RD;
   var mine=Object.keys(S.hist).map(Number).sort(function(a,b){return a-b}).filter(function(k){return !S.hist[k].ok});
   var h='<div class="eh">'+heroImg('wimg')+'<div><div class="et">'+(RK.rk>0&&RK.rk<=3?['🥇','🥈','🥉'][RK.rk-1]+' 第 '+RK.rk+' 名！':'🎉 任務 完成！第 '+RK.rk+' 名')+'</div><div class="ss">🏆 總分 '+(T[S.id]||0).toLocaleString()+'</div></div>'+
@@ -138,7 +138,7 @@ function endS(m){if(S.ended===m.made)return;S.ended=m.made;clearTimeout(S.tm);$(
     ((sum.wq||[]).length?'<h2>❌ 全班 最多人 錯 的 題目</h2>'+sum.wq.map(function(x,j){return '<div class="wr go"><div class="wrh"><b>'+['🥇','🥈','🥉'][j]+' 第 '+(x.qi+1)+' 題</b><span class="note">全班 答對 '+x.r+'%</span><button class="ghost" data-say3="'+j+'">🔊 聽</button></div>'+LV.glHTML({ag:x.ag,az:x.az,ae:x.ae,ans:x.ans,h:x.h})+'</div>'}).join(''):'')+
     (S.rw.length?'<div class="note">🎁 你 抽到：'+S.rw.map(function(k){var x=LV.RW.filter(function(y){return y.k===k})[0];return x?x.ic+' '+x.nm:k}).join('、')+'</div>':'')+
     /* 2026-10-20 第十五次（老師 C17 第 6 題 C＋1.5 倍）：答對 1 題 🪙＋1、一場 ⭐＋10；老師 開〔✖1.5〕＝ 都 ✖1.5（四捨五入） */
-    '<div class="note big2 x15r">答對 '+ok+' 題 ➜ 🪙 '+(m.x15?Math.round(ok*1.5)+'（'+ok+' ✖1.5）':ok)+'、⭐ '+(m.x15?'15（10 ✖1.5）':'10')+(m.x15?'　<b class="x15b">⚡ ✖1.5</b>':'')+'</div>'+
+    '<div class="note big2 x15r">答對 '+ok+' 題 ➜ 🪙 '+(XK>1?Math.round(ok*XK)+'（'+ok+' ✖'+XK+'）':ok)+'、⭐ '+(XK>1?Math.round(10*XK)+'（10 ✖'+XK+'）':'10')+(XK>1?'　<b class="x15b">⚡ ✖'+XK+'</b>':'')+'</div>'+
     '<div class="note big2">'+(m.given?'✅ 老師 發好 獎勵 了（⭐ 經驗值、🪙 金幣）':'⏳ 等 老師 發 獎勵（⭐ 經驗值、🪙 金幣）')+'</div>';
   $('#ew').innerHTML=h;now('🏁 完成！看 你的 錯題','ok');
   setTimeout(function(){var g=$('#ew .rg');if(g)g.classList.add('go');$$('#ew .qch span').forEach(function(x){x.classList.add('go')})},60)}

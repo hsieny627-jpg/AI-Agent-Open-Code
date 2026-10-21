@@ -420,15 +420,16 @@ var RPFX = (function () {
   function beam(host, a, b, e) { if (!host || RM) return; var S = Stage(host), C = EL[e || 'light'].c; S.add({ t: 'beam', x: a.x, y: a.y, x2: b.x, y2: b.y, s: 7, c: C[1], c2: C[2], l: .5, a: 0 });
     S.at(250, function () { burst(S, b.x, b.y, e || 'light', 14, 200, .6); }); S.stop(600); }
   /* ⚔ 戰力階級 徽章（2026-10-20 第十五次 老師 C17 第 5 題 B）：自己畫的盾牌（不用 🥇🥈🥉：排行榜第 1、2、3 名已經用了，會搞混）
-     1 青銅 2 白銀 3 黃金 4 鑽石 5 傳說；tb(階, 'big') ＝ 大的、有名字 */
-  var TN = ['', '青銅', '白銀', '黃金', '鑽石', '傳說'], TC = ['', ['#F2B27A', '#A0582A', '#5A2A0C'], ['#FFFFFF', '#B8C4D4', '#5A6678'], ['#FFF3B0', '#FFC21A', '#8A5A00'], ['#E8FFFF', '#5AE8FF', '#1A5AB0'], ['#FFE9FF', '#C46BFF', '#4A0A8A']];
+     2026-10-21 第十六次 第 5 點 改名：1 ★ 見習戰士（鋼）2 ★★ 精英戰士（藍）3 ★★★ 烈焰戰將（火）4 ★★★★ 雷霆戰神（雷）5 ★★★★★ 傳說戰神（金＋皇冠）；tb(階, 'big') ＝ 大的、有星星＋名字 */
+  var TN = ['', '見習戰士', '精英戰士', '烈焰戰將', '雷霆戰神', '傳說戰神'], TC = ['', ['#FFFFFF', '#B8C4D4', '#5A6678'], ['#E8FFFF', '#5AB8FF', '#1A4AB0'], ['#FFE08A', '#FF6A1A', '#8A1A00'], ['#F0E8FF', '#8A6BFF', '#2A0A8A'], ['#FFF3B0', '#FFC21A', '#8A5A00']];
+  function ts(n) { return new Array(Math.max(0, Math.min(5, +n || 0)) + 1).join('★'); }
   function tb(n, big) { n = Math.max(0, Math.min(5, +n || 0)); if (!n) return ''; var c = TC[n], id = 'tbg' + n;
     var svg = '<svg viewBox="0 0 40 46" aria-hidden="true"><defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + c[0] + '"/><stop offset=".5" stop-color="' + c[1] + '"/><stop offset="1" stop-color="' + c[2] + '"/></linearGradient></defs>' +
       '<path d="M20 2L37 8V22Q37 36 20 44Q3 36 3 22V8Z" fill="url(#' + id + ')" stroke="' + c[2] + '" stroke-width="2.4"/><path d="M20 7L32 11.5V22Q32 32 20 38.5Q8 32 8 22V11.5Z" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.4"/>' +
       (n >= 5 ? '<path d="M11 13l4 4 5-7 5 7 4-4-2 10H13z" fill="#FFE07A" stroke="#6A3A00" stroke-width="1"/>' : '') +
       '<path d="M20 ' + (n >= 5 ? 24 : 14) + 'l2.6 5.4 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z" fill="#fff" fill-opacity=".92"/>' + (n >= 4 ? '<circle cx="20" cy="' + (n >= 5 ? 31 : 21) + '" r="2" fill="' + c[1] + '"/>' : '') + '</svg>';
-    return '<span class="tbI t' + n + (big ? ' big' : '') + '" role="img" aria-label="' + TN[n] + ' 戰士">' + svg + (big ? '<b>' + TN[n] + '</b>' : '') + '</span>'; }
-  return { attack: attack, spark: spark, beam: beam, summon: summon, evolve: evolve, chest: chest, coins: coins, fight: fight, wInfo: wInfo, pEl: pEl, EL: EL, hash: hash, pos: pos, tb: tb, TN: TN };
+    return '<span class="tbI t' + n + (big ? ' big' : '') + '" role="img" aria-label="' + ts(n) + ' ' + TN[n] + '">' + svg + (big ? '<b><i class="tbS">' + ts(n) + '</i>' + TN[n] + '</b>' : '') + '</span>'; }
+  return { attack: attack, spark: spark, beam: beam, summon: summon, evolve: evolve, chest: chest, coins: coins, fight: fight, wInfo: wInfo, pEl: pEl, EL: EL, hash: hash, pos: pos, tb: tb, TN: TN, ts: ts };
 })();
 /* 🪙 金幣圖示：老師的電腦（舊的 Windows）沒有 🪙 這個字 ➜ 一律換成自己畫的金幣（2026-10-20 第十四次 2） */
 (function () {
@@ -760,6 +761,9 @@ function scUps(E){var V=E.res,U=[];if(!V||!V.boards||!V.rk||!V.rk0||scFast(E))re
   if(V.crk&&V.crk0&&!SCAFTER[my])HON.AWK.forEach(function(k){var a=V.crk[k],b=V.crk0[k];
     if(a&&a.rk<=3&&(!b||a.rk<b))U.push({k:k,rk:a.rk,c:1,w:G+'年級 第 '+a.rk+' 名',l:HON.awc(k,a.v)})});
   return U.slice(0,3)}
+/* 🏆 最認真練習 的 兩個 條件（2026-10-21 第十六次 第 6 點：貼心 提醒；這一週 到 現在 全部 題目 合起來）：A 👀 不是 太快 亂按、B ✗➜✓ 答錯 改對 都 ≧ 90% 才 上榜 */
+function scAbHTML(me){var d=me&&me.dl;if(!d||d.a==null)return '';var L=function(ic,t,v,ok){return '<span class="'+(ok?'ok':'no')+'">'+ic+' '+t+' <b>'+v+'%</b> '+(ok?'✅':'❌')+'<i style="--w:'+Math.min(100,v)+'%"></i></span>'};
+  return '<div class="scab"><div class="sab0">🏆 最認真練習 榜：兩個 都 要 ≧ 90%</div>'+L('👀','不是 太快 亂按',d.a,d.okA)+L('✗➜✓','答錯，改對',d.b,d.okB)+'</div>'}
 function scTimeHTML(E){var V=E.res,me=V&&V.me,up=scUps(E).length;
   if(scFast(E))return '<div class="sctime"><div class="stic">⚠️</div><div class="st1">太快亂按，不算時間</div><div class="st2">請 看完、聽完再選</div></div>';
   var more=me&&!up?Math.round((me.sec-(me.secPrev||0))/60):0;
@@ -768,6 +772,7 @@ function scTimeHTML(E){var V=E.res,me=V&&V.me,up=scUps(E).length;
     (me?'<div class="st1">這週你已經練習 '+scMin(me.sec)+'</div>':'')+
     '<div class="st3">這一次 練習 '+scMin(E.me1)+'。</div>'+
     (more>0?'<div class="st3">比上週多 練習 '+more+' 分鐘。</div>':'')+
+    scAbHTML(me)+
     (!V?'<div class="st4">'+(E.fail?'📶 現在沒有網路：成績先存在這台平板，連上網會自動送出 ✅':'<i class="scspin">⏳</i> 成績還在送出…')+'</div>':'')+'</div>'}
 function scHonGo(E){
   var el=$('#scHon');if(!el)return;if(E.hst==null)E.hst=HON.pick('s');

@@ -80,6 +80,7 @@ h1{margin:0;font-size:clamp(28px,3vw,44px)}
 .tabs button{font-size:clamp(19px,1.6vw,30px);padding:8px clamp(10px,1.2vw,24px);min-height:56px}
 .tabs button.on{background:#2A2208;border-color:var(--gold);color:#FFE9A8}
 .rwd{border:1px solid var(--ln);border-radius:16px;padding:12px 14px;margin:0 0 14px;background:rgba(255,255,255,.03)}.rwd h3{margin:0 0 8px;font-size:1.15em;color:#FFE9A8}
+.abbox{border:2px solid #FFD54A;border-radius:14px;padding:10px 14px;margin:8px 0 12px;background:rgba(255,213,74,.08);line-height:1.5}.abno{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px 18px;color:#FFC9D2}.abv{margin-left:10px;color:#BFFFD8;font-size:.85em;white-space:nowrap}
 .rwr{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 0;border-top:1px solid var(--ln);font-size:1.05em}.rwr:first-of-type{border-top:0}.rwr .cid{font-size:1.2em;min-width:2.6em}
 .rwr button{min-height:56px;padding:4px 18px;border-radius:999px;border:2px solid #FFD54A;background:#3A2E08;color:#FFE9A8;font-size:1em}.rwr button:disabled{opacity:.45;border-color:#555;background:#222;color:#aaa}
 .rwr small{color:#BFD0E2}.rwmsg{color:#7BF0A8;font-size:1.05em;min-height:1.4em}
@@ -535,8 +536,14 @@ function paneB(psG){
    '<div class="note">老師看得到全部學生的名次；學生只看得到前 10 名（自己不在前 10 名，只看到「再多幾分進前 10」）。</div>';
   var lists=BS==='grade'?[['全年級',SC.rank(psG,BT)]]:(F.cls?[F.cls]:SC.CLASSES[F.g]).map(function(c){return [SC.cname(c),SC.rank(psG.filter(function(p){return p.cls===c}),BT)]});
   HLISTS=lists.map(function(L,i){return {t:L[0],L:L[1],cls:BS==='grade'?'':(F.cls||SC.CLASSES[F.g][i])}});
+  /* 2026-10-21 第十六次 第 6 點＋老師再加第 1 點：最認真練習 ＝ 練習時間 ＋ A、B 都 ≧ 90%（這段期間 到 現在）；沒 做到 的 人 列出來（公開、說得出 為什麼） */
+  var byP={};psG.forEach(function(p){byP[p.id]=p});
+  var abT=function(id){var d=SC.dili(byP[id]);return '<small class="abv">A '+(d.a==null?'—':d.a+'%')+'．B '+d.b+'%</small>'};
+  if(BT==='sec'){var noL=psG.filter(function(p){return p.sec>0&&!SC.dili(p).ok&&(BS==='grade'||!F.cls||p.cls===F.cls)}).sort(function(a,b){return b.sec-a.sec});
+    h+='<div class="abbox">🏆 <b>最認真練習</b> ＝ 練習 時間 最多，而且 這段 期間 到 現在 全部 題目 合起來：<b>A 👀 不是 太快 亂按 ≧ '+SC.DILI+'%</b>、<b>B ✗➜✓ 答錯，改對 ≧ '+SC.DILI+'%</b>（一題 都 沒錯 ＝ 100%）都 做到 才 上榜'+
+      (noL.length?'<div class="abno">❌ 沒 上榜（A 或 B 不到 '+SC.DILI+'%）：'+noL.map(function(p){var d=SC.dili(p);return '<span>'+who(p.id)+' <small>'+(d.a==null?'沒有 作答 題目':'A '+d.a+'%'+(d.okA?'':' ❌'))+(d.a==null?'':'．B '+d.b+'%'+(d.okB?'':' ❌'))+'．'+Math.round(p.sec/60)+' 分鐘</small></span>'}).join('')+'</div>':'')+'</div>'}
   lists.forEach(function(L,i){var mx=0;L[1].forEach(function(x){mx=Math.max(mx,x.v)});
-    h+='<h3 class="hh">'+L[0]+(L[1].length&&HON.AWK.indexOf(BT)>=0?'<button class="hbtn" data-hon="'+i+'">🏆 榮譽榜</button>':'')+'</h3>'+(L[1].length?'<div class="bars">'+L[1].map(function(x){return '<div class="br'+(x.rk<=10?' hi':'')+'"><span class="l">第 '+x.rk+' 名　'+who(x.id)+tbT(x.id)+'</span><span class="t"><i style="width:'+(mx?x.v/mx*100:0)+'%"></i></span><span class="v">'+fmt(BT,x.v)+'</span></div>'}).join('')+'</div>':'<div class="note">還沒有人上榜。</div>')});
+    h+='<h3 class="hh">'+L[0]+(L[1].length&&HON.AWK.indexOf(BT)>=0?'<button class="hbtn" data-hon="'+i+'">🏆 榮譽榜</button>':'')+'</h3>'+(L[1].length?'<div class="bars">'+L[1].map(function(x){return '<div class="br'+(x.rk<=10?' hi':'')+'"><span class="l">第 '+x.rk+' 名　'+who(x.id)+tbT(x.id)+(BT==='sec'?abT(x.id):'')+'</span><span class="t"><i style="width:'+(mx?x.v/mx*100:0)+'%"></i></span><span class="v">'+fmt(BT,x.v)+'</span></div>'}).join('')+'</div>':'<div class="note">還沒有人上榜。</div>')});
   return h;
 }
 /* ══ 🏆 頒獎典禮（2026-10-16 老師 C2 第 13、14 題、C3 第 4 題、C4 第 4 題 A、甲；C5 第 3 題 A ＝ 3 個獎）══
@@ -906,12 +913,22 @@ function paneR(){var now=DATA.now,w=SC.weekStart(now),wk=new Date(w+288e5).toISO
       '<button data-rw="cw" data-c="'+c+'"'+(L.length&&!no.length?'':' disabled')+'>🎁 發 全班 獎勵</button></div>'});
   /* ③ 👑 冠軍寶箱（2026-10-20 第十五次 老師：「忘了按怎麼辦？」➜ 自動發）：每個星期一 0:00 以後，伺服器 自己 算「上一週」前 5 名 ➜ 學生 打開 戰神之路 就 拿到；這裡 只 給 老師 看 */
   var w0=w-7*864e5,wk0=new Date(w0+288e5).toISOString().slice(0,10),psL=SC.students(SC.pick(ALL,{g:F.g,from:w0,to:w})),topL=SC.rank(psL,'sec').filter(function(x){return x.rk<=5}),top=SC.rank(ps,'sec').filter(function(x){return x.rk<=5});
-  var rw=function(x){return '<div class="rwr"><b>第 '+x.rk+' 名</b>'+cidH(x.id)+'<span>'+esc(nm(x.id))+'</span><small>練了 '+Math.round(x.v/60)+' 分鐘</small></div>'};
-  h+='</div><div class="rwd"><h3>③ 👑 冠軍寶箱：全年級「最認真練習」前 5 名（練習時間）＝ 每個 星期一 自動 發</h3>'+
+  var byL={};psL.forEach(function(p){byL[p.id]=p});
+  var rw=function(x,M){var d=SC.dili(M[x.id]);return '<div class="rwr"><b>第 '+x.rk+' 名</b>'+cidH(x.id)+'<span>'+esc(nm(x.id))+'</span><small>練了 '+Math.round(x.v/60)+' 分鐘．A '+d.a+'%．B '+d.b+'%</small></div>'};
+  h+='</div><div class="rwd"><h3>③ 👑 冠軍寶箱：全年級「最認真練習」前 5 名（練習時間＋A 不是 太快 亂按 ≧ '+SC.DILI+'%＋B 答錯 改對 ≧ '+SC.DILI+'%）＝ 每個 星期一 自動 發；沒 做到 的 不發，名額 給 下一名</h3>'+
     '<div class="rwr"><small>✅ 不用 按：每個 星期一 0:00 以後，電腦 自己 算「上一週」的 前 5 名，學生 打開 戰神之路 就 拿到 👑 寶箱（寶箱 沒有 期限）</small></div>'+
-    '<h4 class="lkh">✅ 上週（'+wk0+' 那一週）已經 自動 發</h4>'+(topL.length?topL.map(rw).join(''):'<div class="rwr"><small>上週 沒有 人 練習</small></div>')+
-    '<h4 class="lkh">⏳ 這週 到 現在（下 星期一 自動 發）</h4>'+(top.length?top.map(rw).join(''):'<div class="rwr"><small>這週 還沒有 人 練習</small></div>')+'</div>'+
+    '<h4 class="lkh">✅ 上週（'+wk0+' 那一週）已經 自動 發</h4>'+(topL.length?topL.map(function(x){return rw(x,byL)}).join(''):'<div class="rwr"><small>上週 沒有 人 練習</small></div>')+
+    '<h4 class="lkh">⏳ 這週 到 現在（下 星期一 自動 發）</h4>'+(top.length?top.map(function(x){return rw(x,by)}).join(''):'<div class="rwr"><small>這週 還沒有 人 練習</small></div>')+'</div>'+
     '<p class="note">① 全班 獎勵：同一班 同一週 只 發 一次（按 兩次 也 不會 多）。學生 下一次 打開 戰神之路 會 看到 金幣 飛進去、👑 寶箱。本週 從 '+wk+' 開始。</p>';
+  /* ④ 👑 每一班 上一週 第 1 名 ➜ 這一週 選 1 次 現場任務 的 遊戲（2026-10-21 老師再加第 3 點；大螢幕 開場 自動 出現） */
+  var CH=SC.champs(ALL,now);
+  h+='<div class="rwd"><h3>④ 👑 每一班 上一週 最認真練習 第 1 名 ➜ 這一週 選 1 次 現場任務 的 遊戲</h3>'+SC.CLASSES[F.g].map(function(c){var x=CH[c];
+    return '<div class="rwr"><span class="cid" style="color:'+ccol(c)+'">'+esc(c)+'</span>'+(x?x.ids.map(function(id){return '<span>'+esc(id)+' '+esc(nm(id))+'</span>'}).join('、')+'<small>上週 練了 '+Math.round(x.sec/60)+' 分鐘</small>':'<small>上週 沒有 人 A、B 都 做到</small>')+'</div>'}).join('')+
+    '<div class="rwr"><small>⚡ 開 現場任務 大螢幕 ➜ 選 這一班 ➜ 勾「這次 可以 選 哪幾種」➜〔👑 請 冠軍 上台 選〕</small></div></div>';
+  /* ⑤ 📜 誰 看懂 了 獎勵 規則（學生 第一次 打開 戰神之路：看完 9 幕＋5 題 都 答對） */
+  var QZ=DATA.quiz||{};
+  h+='<div class="rwd"><h3>⑤ 📜 看懂 獎勵 規則 的 人（9 幕 動畫＋5 題 小問題 都 答對）　<a class="hbtn" href="../rpg/rules.html" target="_blank">🖨 印 規則 單（給 家長）</a></h3>'+SC.CLASSES[F.g].map(function(c){var L=RCLS[c]||[],ok=L.filter(function(id){return QZ[id]}),no=L.filter(function(id){return !QZ[id]}),ok2=Object.keys(QZ).filter(function(id){return id.slice(0,3)===c});
+    return '<div class="rwr"><span class="cid" style="color:'+ccol(c)+'">'+esc(c)+'</span>'+(L.length?'<span>✅ '+ok.length+' ／ '+L.length+' 人</span>'+(no.length?'<small>還沒：'+no.map(function(id){return esc(id.slice(3))+' 號'}).join('、')+'</small>':'<small>🎉 全班 都 看懂 了</small>'):'<span>✅ '+ok2.length+' 人</span><small>'+ok2.map(function(id){return esc(id.slice(3))+' 號'}).join('、')+'</small>')+'</div>'}).join('')+'</div>';
   RWTOP=top;RWWK=wk;return h}
 var RWTOP=[],RWWK='';
 document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-rw]');if(!b||TAB!=='r'||b.disabled)return;var k=b.getAttribute('data-rw'),list;

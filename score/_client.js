@@ -186,6 +186,10 @@ body.scq .url{display:none}
 .sctime .stic{font-size:clamp(80px,14vh,130px);line-height:1}.sctime .stic svg{height:clamp(90px,15vh,140px);width:auto}
 .sctime .st1{font-size:clamp(30px,5.4vh,52px);font-weight:700;color:#FFE07A;line-height:1.25}
 .sctime .st2{font-size:clamp(26px,4.6vh,44px);font-weight:700;line-height:1.3}
+.scab{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;margin-top:6px;font-size:clamp(20px,3vh,30px);line-height:1.3}.scab .sab0{width:100%;text-align:center;color:#FFE9A8}
+.scab>span{position:relative;padding:3px 12px 9px;border-radius:12px;border:2px solid #5DE89A;background:rgba(93,232,154,.12);white-space:nowrap}.scab>span.no{border-color:#FF7A8A;background:rgba(255,122,138,.12)}
+.scab>span i{position:absolute;left:10px;right:10px;bottom:3px;height:5px;border-radius:9px;background:rgba(255,255,255,.15)}.scab>span i::after{content:'';position:absolute;left:0;top:0;bottom:0;width:0;border-radius:9px;background:#5DE89A;animation:scabG 1.2s ease-out .5s forwards}.scab>span.no i::after{background:#FF7A8A}
+@keyframes scabG{to{width:var(--w)}}
 .sctime .st3{font-size:clamp(24px,4.2vh,40px);font-weight:700;color:#CFE3F5;line-height:1.3}
 .sctime .st4{font-size:clamp(20px,3.2vh,30px);font-weight:700;color:#CFCFCF}
 .sctime .hclkm{transform-origin:50px 50px;transform:rotate(0deg)}
@@ -458,6 +462,9 @@ function scUps(E){var V=E.res,U=[];if(!V||!V.boards||!V.rk||!V.rk0||scFast(E))re
   if(V.crk&&V.crk0&&!SCAFTER[my])HON.AWK.forEach(function(k){var a=V.crk[k],b=V.crk0[k];
     if(a&&a.rk<=3&&(!b||a.rk<b))U.push({k:k,rk:a.rk,c:1,w:G+'年級 第 '+a.rk+' 名',l:HON.awc(k,a.v)})});
   return U.slice(0,3)}
+/* 🏆 最認真練習 的 兩個 條件（2026-10-21 第十六次 第 6 點：貼心 提醒；這一週 到 現在 全部 題目 合起來）：A 👀 不是 太快 亂按、B ✗➜✓ 答錯 改對 都 ≧ 90% 才 上榜 */
+function scAbHTML(me){var d=me&&me.dl;if(!d||d.a==null)return '';var L=function(ic,t,v,ok){return '<span class="'+(ok?'ok':'no')+'">'+ic+' '+t+' <b>'+v+'%</b> '+(ok?'✅':'❌')+'<i style="--w:'+Math.min(100,v)+'%"></i></span>'};
+  return '<div class="scab"><div class="sab0">🏆 最認真練習 榜：兩個 都 要 ≧ 90%</div>'+L('👀','不是 太快 亂按',d.a,d.okA)+L('✗➜✓','答錯，改對',d.b,d.okB)+'</div>'}
 function scTimeHTML(E){var V=E.res,me=V&&V.me,up=scUps(E).length;
   if(scFast(E))return '<div class="sctime"><div class="stic">⚠️</div><div class="st1">太快亂按，不算時間</div><div class="st2">請 看完、聽完再選</div></div>';
   var more=me&&!up?Math.round((me.sec-(me.secPrev||0))/60):0;
@@ -466,6 +473,7 @@ function scTimeHTML(E){var V=E.res,me=V&&V.me,up=scUps(E).length;
     (me?'<div class="st1">這週你已經練習 '+scMin(me.sec)+'</div>':'')+
     '<div class="st3">這一次 練習 '+scMin(E.me1)+'。</div>'+
     (more>0?'<div class="st3">比上週多 練習 '+more+' 分鐘。</div>':'')+
+    scAbHTML(me)+
     (!V?'<div class="st4">'+(E.fail?'📶 現在沒有網路：成績先存在這台平板，連上網會自動送出 ✅':'<i class="scspin">⏳</i> 成績還在送出…')+'</div>':'')+'</div>'}
 function scHonGo(E){
   var el=$('#scHon');if(!el)return;if(E.hst==null)E.hst=HON.pick('s');
