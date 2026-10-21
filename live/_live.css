@@ -499,12 +499,12 @@ body.host .hbar{padding-right:calc(clamp(84px,9vh,112px) + 34px)}
 /* 2026-10-21 第十六次 第 5 點＋老師再加第 3 點：👑 冠軍 選 遊戲、⚔ 戰力 階級 登場 特效 */
 .chbox{border:3px solid #FFD54A;border-radius:18px;padding:12px 16px;margin:6px 0 14px;background:linear-gradient(135deg,rgba(255,213,74,.16),rgba(120,60,200,.12))}
 .chbox .cht{font-size:clamp(22px,2.4vw,32px);margin-bottom:6px}.chbox.done{font-size:clamp(22px,2.4vw,30px);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.chbox .chg button{font-size:clamp(17px,1.6vw,22px);min-height:48px}.chgo{background:linear-gradient(#FFD54A,#E8A800)!important;color:#2A1600!important;border-color:#FFE9A8!important}
+.chbox .chg button{font-size:clamp(19px,1.6vw,22px);min-height:48px}.chgo{background:linear-gradient(#FFD54A,#E8A800)!important;color:#2A1600!important;border-color:#FFE9A8!important}
 #chpk{position:fixed;inset:0;z-index:300;background:radial-gradient(ellipse at 50% 20%,#3A2A06,#06080F 70%);display:flex;align-items:center;justify-content:center;padding:20px}#chpk[hidden]{display:none}
 #chpk .chin{width:min(100%,1500px);text-align:center;color:#fff}#chpk h1{font-size:clamp(36px,4.6vw,72px);margin:0 0 8px;color:#FFE07A;text-shadow:0 0 24px rgba(255,213,74,.7)}
-#chpk .chgr{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:14px;margin:20px 0}
-#chpk .chgr button{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 10px;min-height:150px;border-radius:20px;border:3px solid #4A6A9A;background:#16243C;color:#fff;cursor:pointer;font-size:clamp(22px,2vw,30px)}
-#chpk .chgr button:hover{border-color:#FFD54A}#chpk .chgr small{font-size:.7em;color:#BFD3FF}
+#chpk .chgr{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px;margin:14px 0}
+#chpk .chgr button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px 8px;min-height:110px;border-radius:20px;border:3px solid #4A6A9A;background:#16243C;color:#fff;cursor:pointer;font-size:clamp(22px,2vw,30px)}
+#chpk .chgr button:hover{border-color:#FFD54A}@media (max-height:900px){#chpk .chgr small{display:none}#chpk h1{font-size:clamp(30px,4vw,52px)}}#chpk .chgr small{font-size:.7em;color:#BFD3FF}
 #chpk .chok .chcr{font-size:clamp(90px,14vw,200px);animation:chcr 1s ease-out both}#chpk .chsel{display:flex;align-items:center;justify-content:center;gap:20px;font-size:clamp(40px,5vw,80px);color:#FFE07A;animation:chcr .8s ease-out .4s both}
 @keyframes chcr{from{transform:scale(.2) rotate(-20deg);opacity:0}to{transform:none;opacity:1}}
 .tent{position:fixed;left:50%;top:8vh;transform:translateX(-50%);z-index:250;pointer-events:none;width:min(92vw,900px);height:min(60vh,520px);display:flex;align-items:center;justify-content:center;animation:tentIn .55s cubic-bezier(.2,1.4,.4,1) both}
