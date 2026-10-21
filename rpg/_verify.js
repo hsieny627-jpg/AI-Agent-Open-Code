@@ -124,7 +124,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     if (process.env.SHOT && tag === '1024✕768') { }
     await p.click('.tnav [data-tut="2"]'); await p.waitForTimeout(2600); const tc = await p.evaluate(() => (document.querySelector('#tst .tsc.on .tcn') || {}).textContent);
     const tf = await p.evaluate(() => { const r = document.getElementById('tst').getBoundingClientRect(); return [].filter.call(document.querySelectorAll('#tst .tsc.on .cap,#tst .tsc.on .tchips span,#tst .tsc.on .tcoin'), x => { const b = x.getBoundingClientRect(); return b.left < r.left - 1 || b.right > r.right + 1 || b.bottom > r.bottom + 1; }).length; });
-    if (t0.n !== 9 || t0.on !== 0 || t1 !== 1 || tc !== '20' || tf) E.push(tag + '：❓ 動畫不對（' + t0.n + ' 幕、一開始第 ' + t0.on + '、7.9 秒後第 ' + t1 + '、金幣 ' + tc + '、跑出框 ' + tf + '）');
+    if (t0.n !== 10 || t0.on !== 0 || t1 !== 1 || tc !== '20' || tf) E.push(tag + '：❓ 動畫不對（' + t0.n + ' 幕、一開始第 ' + t0.on + '、7.9 秒後第 ' + t1 + '、金幣 ' + tc + '、跑出框 ' + tf + '）');
     await p.click('#tabs [data-t="h"]');
     /* 🏪 商城：老師發 600 金幣（現場任務獎勵）➜ 買 ✨ 覺醒光環 01（500） */
     G.post({ a: 'rpgb', pw: 'pw-verify', room: '7777', t0: Date.now(), list: [{ id: '40205', c: 600, x: 0, tre: ['t01'] }] });
@@ -270,8 +270,8 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* ❓ 三章 秒懂 動畫（老師第 2、4、6、7 點） */
     await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(200); await p.click('[data-go="qb"]'); await p.waitForTimeout(400);
     const tu = await p.evaluate(() => ({ ch: document.querySelectorAll('.tch button').length, on: (document.querySelector('.tch button.on') || {}).textContent, sc: document.querySelectorAll('#tst .tsc').length, a: !!document.querySelector('#tst .tsc.on') }));
-    if (tu.ch !== 3 || !/戰力 是 什麼/.test(tu.on || '') || tu.sc !== 4 || !tu.a) E.push(tag + '：〔❓ 戰力〕沒有 打開 第 2 章 ' + JSON.stringify(tu));
-    for (const [k, nsc] of [['a', 9], ['b', 4], ['c', 5]]) { await p.click('[data-tch="' + k + '"]'); await p.waitForTimeout(300);
+    if (tu.ch !== 4 || !/戰力 是 什麼/.test(tu.on || '') || tu.sc !== 4 || !tu.a) E.push(tag + '：〔❓ 戰力〕沒有 打開 第 2 章 ' + JSON.stringify(tu));
+    for (const [k, nsc] of [['a', 10], ['b', 4], ['c', 5], ['r', 9]]) { await p.click('[data-tch="' + k + '"]'); await p.waitForTimeout(300);
       const c1 = await p.evaluate(() => ({ n: document.querySelectorAll('#tst .tsc').length, i: [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')) }));
       await p.waitForTimeout(7900); const c2 = await p.evaluate(() => [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')));
       if (process.env.SHOT && tag === '1024✕768') { await p.waitForTimeout(2600); await (await p.$('.tut')).screenshot({ path: path.join(process.env.SHOT, 'ch_' + k + '.png') }); }
@@ -290,7 +290,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     await p.waitForTimeout(3000); const pz4 = await cur();
     if (pz2 !== 1 || pz3 !== 1 || pz4 !== 1) E.push(tag + '：〔下一幕 ▶〕〔◀ 上一幕〕不對（暫停 中 要 停住）' + [pz2, pz3, pz4].join(','));
     await p.click('#tPause'); await p.waitForTimeout(7900); if ((await cur()) !== 2) E.push(tag + '：〔▶ 繼續〕以後 沒有 自己 換 下一幕');
-    for (let i = 0; i < 9; i++) { await p.click('[data-tut="' + i + '"]'); await p.waitForTimeout(2900);
+    for (let i = 0; i < 10; i++) { await p.click('[data-tut="' + i + '"]'); await p.waitForTimeout(2900);
       if (process.env.SHOT && tag === '1024✕768') await (await p.$('.tut')).screenshot({ path: path.join(process.env.SHOT, 'ch_a_' + (i + 1) + '.png') });
       const ovA = await p.evaluate(() => { const t = document.getElementById('tst'), r = t.getBoundingClientRect(); let o = []; t.querySelectorAll('.tsc.on .cap, .tsc.on .vis *').forEach(x => { const q = x.getBoundingClientRect(); if (q.width && (q.left < r.left - 2 || q.right > r.right + 2 || q.bottom > r.bottom + 2)) o.push(x.className || x.tagName); }); return o; });
       if (ovA.length) E.push(tag + '：第 a 章 第 ' + (i + 1) + ' 幕 超出 ' + ovA.slice(0, 3).join(',')); }
