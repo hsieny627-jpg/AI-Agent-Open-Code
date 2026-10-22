@@ -70,7 +70,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     const qd = await p.evaluate(() => ({ t: document.getElementById('rqzb').textContent, qz: RV && RV.qz }));
     if (!/看懂/.test(qd.t) || qd.qz !== require('../score/_calc.js').RPQV) E.push(tag + '：5 題 都 對 沒有 送 給 老師：' + JSON.stringify(qd).slice(0, 90));
     if (!G.books['角色'] || !new RegExp('"qz":' + require('../score/_calc.js').RPQV).test((G.books['角色'].d[1] || [])[1] || '')) E.push(tag + '：試算表「角色」沒有 記 看懂 規則');
-    /* 第十八次 第 1 點：答對過 第 1 版 的 人（qz ＝ 1）要 再看 再答 */ { const lk = await p.evaluate(() => { const o = RV.qz; RV.qz = 1; const a = rLocked(); RV.qz = o; return a; }); if (!lk) E.push(tag + '：答對過 舊 規則 的 人 沒有 再 鎖住 看 新 規則'); n++; }
+    /* 第十八次 第 1 點：答對過 第 1 版 的 人（qz ＝ 1）要 再看 再答 */ { const lk = await p.evaluate(() => { const o = RV.qz, K = 'rp_qz_' + SCID, L = localStorage.getItem(K); localStorage.removeItem(K); RV.qz = 1; const a = rLocked(); RV.qz = o; if (L != null) localStorage.setItem(K, L); return a; }); if (!lk) E.push(tag + '：答對過 舊 規則 的 人 沒有 再 鎖住 看 新 規則'); n++; }
     await p.click('#qzEnd'); await p.waitForTimeout(500);
     const gU = await p.evaluate(() => ({ lk: document.getElementById('rpin').classList.contains('rlock'), st: getComputedStyle(document.getElementById('stage')).display }));
     if (gU.lk || gU.st === 'none') E.push(tag + '：看懂 以後 還是 鎖著');
