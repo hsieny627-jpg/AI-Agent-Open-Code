@@ -70,12 +70,12 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     const qd = await p.evaluate(() => ({ t: document.getElementById('rqzb').textContent, qz: RV && RV.qz }));
     if (!/看懂/.test(qd.t) || qd.qz !== require('../score/_calc.js').RPQV) E.push(tag + '：5 題 都 對 沒有 送 給 老師：' + JSON.stringify(qd).slice(0, 90));
     if (!G.books['角色'] || !new RegExp('"qz":' + require('../score/_calc.js').RPQV).test((G.books['角色'].d[1] || [])[1] || '')) E.push(tag + '：試算表「角色」沒有 記 看懂 規則');
-    /* 第十八次 第 1 點：答對過 第 1 版 的 人（qz ＝ 1）要 再看 再答 */ { const lk = await p.evaluate(() => { const o = RV.qz, K = 'rp_qz_' + SCID, L = localStorage.getItem(K); localStorage.removeItem(K); RV.qz = 1; const a = rLocked(); RV.qz = o; if (L != null) localStorage.setItem(K, L); return a; }); if (!lk) E.push(tag + '：答對過 舊 規則 的 人 沒有 再 鎖住 看 新 規則'); n++; }
+    /* 第十八次 第 1 點：答對過 第 1 版 的 人（qz ＝ 1）要 再看 再答 */ { const lk = await p.evaluate(() => { const o = RV.qz, K = 'rp_qz_' + SCID, L = localStorage.getItem(K); localStorage.removeItem(K); const Z = QZOK; QZOK = ''; RV.qz = 1; const a = rLocked(); RV.qz = o; QZOK = Z; if (L != null) localStorage.setItem(K, L); return a; }); if (!lk) E.push(tag + '：答對過 舊 規則 的 人 沒有 再 鎖住 看 新 規則'); n++; }
     await p.click('#qzEnd'); await p.waitForTimeout(500);
     const gU = await p.evaluate(() => ({ lk: document.getElementById('rpin').classList.contains('rlock'), st: getComputedStyle(document.getElementById('stage')).display }));
     if (gU.lk || gU.st === 'none') E.push(tag + '：看懂 以後 還是 鎖著');
     /* 2026-10-22 第十九次：伺服器 還沒 重新部署（舊 規則 版本，答對 也 記成 舊 的）➜ 答對 5 題 一樣 進得去；伺服器 好了 再 偷偷 補送 */
-    { const ov = await p.evaluate(async () => { const f = window.scFetch; localStorage.removeItem('rp_qz_' + SCID); RV.qz = 1; const a = rLocked();
+    { const ov = await p.evaluate(async () => { const f = window.scFetch; localStorage.removeItem('rp_qz_' + SCID); QZOK = ''; RV.qz = 1; const a = rLocked();
         window.scFetch = (q, o) => o && o.op === 'qz' ? Promise.resolve({ ok: true, v: Object.assign({}, RV, { qz: 1 }) }) : f(q, o);
         document.getElementById('rqz').className = 'on'; qzDone(); await new Promise(r => setTimeout(r, 300)); window.scFetch = f;
         const e = document.getElementById('qzEnd'); if (e) e.click(); await new Promise(r => setTimeout(r, 400));
@@ -83,6 +83,18 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
         qzSync(); await new Promise(r => setTimeout(r, 1500)); return { a, b, e: !!e, lk, st, qz: RV.qz }; });
       if (!ov.a || ov.b || !ov.e || ov.lk || ov.st === 'none') E.push(tag + '：伺服器 舊 版本 時 答對 5 題 還是 進不去：' + JSON.stringify(ov));
       if (ov.qz !== require('../score/_calc.js').RPQV) E.push(tag + '：伺服器 好了 以後 沒有 補送 看懂 規則：' + JSON.stringify(ov)); n += 2; }
+    /* 2026-10-22 第二十次：上課 全班 一起 送，伺服器 排隊 很久／沒 回答／舊版 不認得 小考／平板 記不住 ➜ 答對 5 題 一樣 馬上 進得去 */
+    for (const kind of ['hang', 'fail', 'op', 'nols']) {
+      const r = await p.evaluate(async (kind) => { const f = window.scFetch, gs = Storage.prototype.getItem, ss = Storage.prototype.setItem;
+        localStorage.removeItem('rp_qz_' + SCID); QZOK = ''; RV.qz = 1; const a = rLocked();
+        if (kind === 'nols') { Storage.prototype.getItem = function () { throw new Error('x') }; Storage.prototype.setItem = function () { throw new Error('x') }; }
+        window.scFetch = (q, o) => o && o.op === 'qz' ? (kind === 'hang' ? new Promise(() => {}) : kind === 'fail' ? Promise.reject(new Error('timeout')) : kind === 'op' ? Promise.resolve({ err: 'op', v: Object.assign({}, RV) }) : new Promise(() => {})) : f(q, o);
+        document.getElementById('rqz').className = 'on'; qzDone(); await new Promise(r => setTimeout(r, 150));
+        const e = document.getElementById('qzEnd'), h = e ? e.getBoundingClientRect().height : 0; if (e) e.click(); await new Promise(r => setTimeout(r, 400));
+        const b = rLocked(), lk = document.getElementById('rpin').classList.contains('rlock'), st = getComputedStyle(document.getElementById('stage')).display;
+        window.scFetch = f; Storage.prototype.getItem = gs; Storage.prototype.setItem = ss; RV.qz = CAT.QV; return { a, e: !!e, h, b, lk, st }; }, kind);
+      if (!r.a || !r.e || r.h < 48 || r.b || r.lk || r.st === 'none') E.push(tag + '：伺服器 ' + kind + ' 時 答對 5 題 沒有 馬上 進得去：' + JSON.stringify(r)); n++;
+    }
     const s0 = await p.evaluate(() => ({ in: !document.getElementById('rpin').hidden, t: document.getElementById('stage').textContent, free: !!document.querySelector('.free'),
       fr: document.querySelectorAll('#shop .pr.fr').length, it: document.querySelectorAll('#shop .it').length }));
     if (!s0.in || !/還沒有戰士/.test(s0.t) || !/Lv \d/.test(s0.t) || !/金幣/.test(s0.t)) E.push(tag + '：登入以後舞台不對：' + s0.t.slice(0, 80));
