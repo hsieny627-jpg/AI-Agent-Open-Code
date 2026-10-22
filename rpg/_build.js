@@ -579,7 +579,11 @@ function tutGo(i){tutStop();var L=document.querySelectorAll('#tst .tsc');if(!L[i
   if(TCH==='r'&&i>=L.length-1){QZ.seenEnd=1;var qg=document.getElementById('qzGo');if(qg)qg.hidden=false}}
 /* 📝 5 題 小問題（2026-10-21：老師 選「5 題，一件 一題」）：答錯 ➜ 回去 看 那一幕（停住），再 回來 答 同一題；5 題 都 對 ➜ 伺服器 記下來（老師看板 看得到）。選項 每次 重洗 */
 var QZ={i:0,ok:[],back:null,seenEnd:0};
-function rLocked(){return !!RV&&RV.qz!==CAT.QV}
+/* 2026-10-22 第十九次：答對 5 題 ＝ 這台平板也記下來（rp_qz_座號）。伺服器還沒重新部署（還是舊的規則版本）也進得去；之後每次打開再偷偷送一次，部署好了老師看板就看得到 */
+function qzLocal(){try{return localStorage.getItem('rp_qz_'+SCID)===String(CAT.QV)}catch(x){return false}}
+function qzKeep(){try{localStorage.setItem('rp_qz_'+SCID,String(CAT.QV))}catch(x){}}
+function qzSync(){var me=SCID;if(!RV||RV.qz===CAT.QV||!qzLocal())return;scFetch('',{a:'rpg',id:me,op:'qz',v:CAT.QV},12000).then(function(j){if(me===SCID&&j&&j.ok&&j.v&&j.v.qz===CAT.QV){var dt=RV&&RV.dt||0;RV=j.v;RV.dt=dt}},function(){})}
+function rLocked(){return !!RV&&RV.qz!==CAT.QV&&!qzLocal()}
 function qzQs(){return [
   {q:'每個星期幾 0:00 重新開始算？',o:['星期一','星期五','星期日'],sc:3},
   {q:'小華星期二升到 ★★。哪一個對？',o:['星期二以後練習的 🪙 才變多','星期一的 🪙 也會補給他','題目會變簡單'],sc:5},
@@ -598,7 +602,7 @@ function qzAns(k,btn){var Q=qzQs()[QZ.i],r=document.getElementById('qzr');[].for
 function qzSee(){var Q=qzQs()[QZ.i];document.getElementById('rqz').className='';QZ.back=QZ.i;TCH='r';TUT.pz=true;drawShop();tutGo(Q.sc);
   setTimeout(function(){var u=document.querySelector('.tut');if(u)u.scrollIntoView({behavior:'smooth',block:'start'})},50)}
 function qzDone(){var b=document.getElementById('rqzb'),me=SCID;b.innerHTML='<div class="qt">⏳ 送 給 老師…</div>';
-  scFetch('',{a:'rpg',id:me,op:'qz',v:CAT.QV},12000).then(function(j){if(me!==SCID)return;if(j&&j.ok&&j.v){var dt=RV&&RV.dt||0;RV=j.v;RV.dt=dt;
+  scFetch('',{a:'rpg',id:me,op:'qz',v:CAT.QV},12000).then(function(j){if(me!==SCID)return;if(j&&j.ok&&j.v){qzKeep();var dt=RV&&RV.dt||0;RV=j.v;RV.dt=dt;
       b.innerHTML=fwHTML()+'<div class="qt">✅ 你 看懂 了 全部 獎勵 規則！</div><div class="qr">老師 也 看得到 ✔<br><button id="qzEnd">⚔ 開始 戰神之路</button></div>'}
     else b.innerHTML='<div class="qt">📶 沒有 送到</div><div class="qr"><button id="qzRe">🔁 再 送 一次</button></div>'},
     function(){b.innerHTML='<div class="qt">📶 現在 沒有 網路</div><div class="qr"><button id="qzRe">🔁 再 送 一次</button></div>'})}
@@ -635,7 +639,7 @@ function draw(){drawStage();drawShop()}
 function load(){if(!SCON){hide('rpin');hide('rpwait');show('rpout');return}
   if(!SCID||!scAsked()){RV=null;hide('rpin');hide('rpwait');show('rpout');return}
   hide('rpout');if(!RV)show('rpwait');var id=SCID;
-  scFetch('a=rpg&id='+id,null,9000).then(function(j){if(id!==SCID)return;hide('rpwait');if(j&&j.ok){RV=j.v;RV.dt=(j.now||Date.now())-Date.now();if(j.stock)STOCK=j.stock;show('rpin');draw();seen()}else msg('📶 拿不到 你的 戰士，等一下 再 試',1)},function(){hide('rpwait');msg('📶 現在 沒有 網路，等一下 再 試',1)})}
+  scFetch('a=rpg&id='+id,null,9000).then(function(j){if(id!==SCID)return;hide('rpwait');if(j&&j.ok){RV=j.v;RV.dt=(j.now||Date.now())-Date.now();if(j.stock)STOCK=j.stock;show('rpin');draw();seen();qzSync()}else msg('📶 拿不到 你的 戰士，等一下 再 試',1)},function(){hide('rpwait');msg('📶 現在 沒有 網路，等一下 再 試',1)})}
 function msg(t,x){var m=document.getElementById('rpm');m.className='on';document.getElementById('rpmb').innerHTML='<div>'+t+'</div><div class="bt"><button class="no" data-m="x">👌 知道了</button></div>'}
 function ask(id){var k=kOf(id),fr=freeOk(id),pr=fr?0:price(id),t=k==='t'?tre(id)[1]:'';
   if(CAT.LIM[id]&&STOCK[id]===0){msg('🏷 已經 換完 了<br><span class="note">全部 學生 一共 只有 5 個</span>');return}

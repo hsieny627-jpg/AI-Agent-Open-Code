@@ -74,6 +74,15 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     await p.click('#qzEnd'); await p.waitForTimeout(500);
     const gU = await p.evaluate(() => ({ lk: document.getElementById('rpin').classList.contains('rlock'), st: getComputedStyle(document.getElementById('stage')).display }));
     if (gU.lk || gU.st === 'none') E.push(tag + '：看懂 以後 還是 鎖著');
+    /* 2026-10-22 第十九次：伺服器 還沒 重新部署（舊 規則 版本，答對 也 記成 舊 的）➜ 答對 5 題 一樣 進得去；伺服器 好了 再 偷偷 補送 */
+    { const ov = await p.evaluate(async () => { const f = window.scFetch; localStorage.removeItem('rp_qz_' + SCID); RV.qz = 1; const a = rLocked();
+        window.scFetch = (q, o) => o && o.op === 'qz' ? Promise.resolve({ ok: true, v: Object.assign({}, RV, { qz: 1 }) }) : f(q, o);
+        document.getElementById('rqz').className = 'on'; qzDone(); await new Promise(r => setTimeout(r, 300)); window.scFetch = f;
+        const e = document.getElementById('qzEnd'); if (e) e.click(); await new Promise(r => setTimeout(r, 400));
+        const b = rLocked(), lk = document.getElementById('rpin').classList.contains('rlock'), st = getComputedStyle(document.getElementById('stage')).display;
+        qzSync(); await new Promise(r => setTimeout(r, 1500)); return { a, b, e: !!e, lk, st, qz: RV.qz }; });
+      if (!ov.a || ov.b || !ov.e || ov.lk || ov.st === 'none') E.push(tag + '：伺服器 舊 版本 時 答對 5 題 還是 進不去：' + JSON.stringify(ov));
+      if (ov.qz !== require('../score/_calc.js').RPQV) E.push(tag + '：伺服器 好了 以後 沒有 補送 看懂 規則：' + JSON.stringify(ov)); n += 2; }
     const s0 = await p.evaluate(() => ({ in: !document.getElementById('rpin').hidden, t: document.getElementById('stage').textContent, free: !!document.querySelector('.free'),
       fr: document.querySelectorAll('#shop .pr.fr').length, it: document.querySelectorAll('#shop .it').length }));
     if (!s0.in || !/還沒有戰士/.test(s0.t) || !/Lv \d/.test(s0.t) || !/金幣/.test(s0.t)) E.push(tag + '：登入以後舞台不對：' + s0.t.slice(0, 80));
