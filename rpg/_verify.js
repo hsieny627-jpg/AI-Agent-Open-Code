@@ -362,6 +362,20 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     if (pw.tier ? !pw.tb : !/再 [\d,]+ ➜ 青銅/.test(pw.t)) E.push(tag + '：⚔ 戰力 那一格 沒有 階級／下一階 ' + JSON.stringify(pw));
     n += 14;
     if (bad.length) E.push(tag + '：載不到 ' + bad.slice(0, 3).join('、'));
+    /* 2026-10-22 第二十一次：規則 第 2、11～14 幕、5 題 的 字；網頁 有 新版 ＝ 自己 換（平板 開著 舊的 網頁 是 進不去 的 真正 原因） */
+    { const r21 = await p.evaluate(() => { const L = rulesScenes(RPFX.tb, 1), q = qzQs(); return { n: L.length, s2: L[1][1], s11: L[10][1], t12: L[11][0], s12: L[11][1], t13: L[12][0], s13: L[12][1], t14: L[13][0], s14: L[13][1], q: q.map(x => x.q + '|' + x.o[0] + '|' + x.sc), ver: RPVER }; });
+      const vt = fs.readFileSync(path.join(__dirname, 'ver.txt'), 'utf8').trim();
+      if (r21.n !== 14 || /只換外表/.test(r21.s2)) E.push(tag + '：第 2 幕 還有「只換外表」或 幕數 不是 14：' + r21.n);
+      if (!/rchest/.test(r21.s11) || !/冠軍寶箱 ?有什麼幫助/.test(r21.s11)) E.push(tag + '：第 11 幕 沒有「冠軍寶箱 有什麼幫助」動畫');
+      if (!/^👑 各班上一週最認真練習第 1 名/.test(r21.t12) || !/老師同意之後，各班冠軍才能上台選遊戲；一週只能選一次。/.test(r21.s12) || !/老師決定：是否開啟「現場任務」/.test(r21.s12)) E.push(tag + '：第 12 幕 不對：' + r21.t12);
+      if (!/老師決定：是否〔✖2〕/.test(r21.t13) || !/最用心且規矩最好的班級，由老師決定：是否幫那一班開啟〔✖2〕。/.test(r21.s13)) E.push(tag + '：第 13 幕 不對：' + r21.t13);
+      if (!/全班每一個人這週都練 3 天/.test(r21.t14 + r21.s14) || !/老師決定<br>是否獎勵/.test(r21.s14) || !/＋100、⭐ ＋50/.test(r21.s14) || /大家的規則/.test(r21.t14)) E.push(tag + '：第 14 幕 不對：' + r21.t14);
+      if (!/<u class="pn">小華<\/u>/.test(r21.q[1]) || !/如果老師開啟〔✖2〕，答對 5 題/.test(r21.q[3]) || !/\|12$/.test(r21.q[3]) || !/各班上一週最認真練習第 1 名\|11$/.test(r21.q[4])) E.push(tag + '：5 題 問題 不對：' + r21.q.join(' ／ '));
+      if (r21.ver !== vt || !/^[0-9a-f]{10}$/.test(vt)) E.push(tag + '：網頁 版本 ' + r21.ver + ' ≠ ver.txt ' + vt);
+      await p.route(HTTP + '/rpg/ver.txt**', r => r.fulfill({ status: 200, contentType: 'text/plain', body: 'abcdef0123\n' }));
+      await p.evaluate(() => { document.getElementById('rqz').className = ''; BUSY = false; verChk(1); }); await p.waitForTimeout(1500);
+      if (!/\?v=abcdef0123/.test(p.url())) E.push(tag + '：有 新版 沒有 自己 換（' + p.url() + '）');
+      n += 7; }
     n += 52; await ctx.close();
   }
   await br.close(); srv.close();

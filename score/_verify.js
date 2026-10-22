@@ -418,6 +418,9 @@ async function teacher(br, vp) {
   else {
     await p.click('[data-hon="0"]'); await p.waitForTimeout(1200);
     const hn = () => p.evaluate(() => { const o = document.getElementById('honov'), h = document.getElementById('honst'), r = o.getBoundingClientRect(), e = [];
+      /* 2026-10-22 第二十一次 10(3)：個人榜 ＝ GLORY 引擎（.gl）；字、不超出畫面 */
+      [].forEach.call(h.querySelectorAll('.glkick,.glt,.gls,.glin,.glq,.glwk,.glwn,.glwv,.glwl,.gpn'), x => { const z = parseFloat(getComputedStyle(x).fontSize); if (z < (innerWidth >= 1900 ? 26 : 20)) e.push('字太小 ' + z + 'px：' + x.className);
+        const b = x.getBoundingClientRect(), H = h.getBoundingClientRect(); if (b.width && getComputedStyle(x).opacity !== '0' && (b.left < H.left - 2 || b.right > H.right + 2)) e.push('超出 畫面：' + x.className + ' ' + x.textContent.slice(0, 20)); });
       [].forEach.call(h.querySelectorAll('.hkick,.htit,.hsub,.hcard .hn,.hcard .hl,.hcard .hw,.hr,.hpod .nm'), x => { const z = parseFloat(getComputedStyle(x).fontSize); if (z < (innerWidth >= 1900 ? 26 : 20)) e.push('字太小 ' + z + 'px'); });
       [].forEach.call(document.querySelectorAll('#hctl button'), x => { if (x.getBoundingClientRect().height < 48) e.push('按鈕太小：' + x.textContent); });
       /* 2026-10-18 第十一次：最後一行（這學期 練習 30 分鐘）在卡片最下面、置中、一行、不超出卡片 */
@@ -427,16 +430,21 @@ async function teacher(br, vp) {
         if (Math.abs((t.left + t.right) / 2 - (c.left + c.right) / 2) > 6) e.push('最後一行沒有置中：' + x.textContent);
         if (c.bottom - b.bottom > 40) e.push('最後一行不在卡片最下面：' + x.textContent);
         if (t.left < c.left - 1 || t.right > c.right + 1) e.push('最後一行超出卡片：' + x.textContent); });
-      return { on: o.classList.contains('on'), full: r.width >= innerWidth - 2 && r.height >= innerHeight - 2, cls: h.className, t: h.textContent, pg: document.getElementById('hpg').textContent, e: e,
+      return { on: o.classList.contains('on'), full: r.width >= innerWidth - 2 && r.height >= innerHeight - 2, cls: h.className, t: h.textContent.replace(/\u00a0/g, ' '), pg: document.getElementById('hpg').textContent, e: e,
         over: document.getElementById('hctl').getBoundingClientRect().bottom > innerHeight + 1 }; });
     let h = await hn();
     if (!h.on || !h.full) e.push('〔🏆 榮譽榜〕沒有蓋滿整個螢幕');
-    if (!/\bhs\d+\b/.test(h.cls)) e.push('榮譽榜沒有風格');
+    if (!/\bgs\d+\b/.test(h.cls)) e.push('榮譽榜沒有風格（GLORY）');
+    /* 第二十一次 10(3) C：第 10～4 名 從下往上 一格一格 翻開 */
+    { await p.click('#hnx'); await p.waitForTimeout(1500); const bu = await p.evaluate(() => { const L = [].map.call(document.querySelectorAll('#honst .glr'), x => x.classList.contains('on')); return L; });
+      if (bu.length > 1 && !(bu[bu.length - 1] && !bu[0])) e.push('第 10～4 名 沒有 從下往上 翻開：' + JSON.stringify(bu));
+      await p.waitForTimeout(1250 * bu.length + 400); const al = await p.evaluate(() => [].every.call(document.querySelectorAll('#honst .glr'), x => x.classList.contains('on')));
+      if (!al) e.push('第 10～4 名 沒有 全部 翻開'); await p.click('#hpv'); await p.waitForTimeout(300); }
     if (!/榮譽榜/.test(h.t) || !/本週/.test(h.t)) e.push('榮譽榜開場不對：' + h.t.slice(0, 40));
     if (h.over) e.push('榮譽榜下面的按鈕超出螢幕');
     const seen = [h.t]; h.e.forEach(x => e.push('榮譽榜開場：' + x));
     const tot = +h.pg.split('／')[1];
-    for (let i = 1; i < tot; i++) { await p.click('#hnx'); await p.waitForTimeout(i === 2 ? 4800 : 1400); h = await hn(); seen.push(h.t); h.e.forEach(x => e.push('榮譽榜第 ' + (i + 1) + ' 幕：' + x)); }
+    for (let i = 1; i < tot; i++) { await p.click('#hnx'); await p.waitForTimeout(i >= 2 ? 5400 : 1400); h = await hn(); seen.push(h.t); h.e.forEach(x => e.push('榮譽榜第 ' + (i + 1) + ' 幕：' + x)); }
     const all = seen.join('|');
     if (!/第 1 名/.test(all) || !/最認真練習/.test(all) || !/這週 練習 \d+ (秒|分鐘)/.test(all) || !/🏆 本週 榮譽榜/.test(all)) e.push('榮譽榜沒有「🏆 本週 榮譽榜」「最認真練習」第 1 名「這週 練習 N 分鐘」（' + tot + ' 幕）');
     if (/一起練了|進步之星|努力獎|時間獎|每一題都看完/.test(all)) e.push('榮譽榜還有拿掉的東西（全班合照、進步之星、小獎）');
@@ -458,11 +466,11 @@ async function teacher(br, vp) {
     if (await p.$('#honov.on')) e.push('〔✕ 關閉〕沒有關掉榮譽榜');
     await p.click('#tabs button[data-t="c"]'); await p.waitForTimeout(200);
     if (!await p.$('[data-hon="c"]')) e.push('班際沒有〔🏆 班際榮譽榜〕');
-    else { await p.click('[data-hon="c"]'); await p.waitForTimeout(600); h = await hn(); const tc = +h.pg.split('／')[1], ct = [h.t];
-      for (let i = 1; i < tc; i++) { await p.click('#hnx'); await p.waitForTimeout(1200); ct.push((await hn()).t); }
+    else { await p.click('[data-hon="c"]'); await p.waitForTimeout(600); h = await hn(); const tc = +h.pg.split('／')[1], ct = [h.pg + h.t];
+      for (let i = 1; i < tc; i++) { await p.click('#hnx'); await p.waitForTimeout(1200); { const hh = await hn(); ct.push(hh.pg + hh.t); } }
       const cj = ct.join('|');
       if (/最用心|用心程度/.test(cj)) e.push('班際榮譽榜還有「最用心的班」（C5 第 3 題 A：拿掉）');
-      if (!/最認真練習的班/.test(cj) || !/成績最優的班/.test(cj) || !/平均每一個人 練習/.test(cj)) e.push('班際榮譽榜沒有三種（最認真練習的班、成績最優的班…）：' + cj.slice(0, 80));
+      if (!/最認真練習的班/.test(cj) || !/成績最優的班/.test(cj) || !/平均每一個人 練習/.test(cj)) e.push('班際榮譽榜沒有三種（最認真練習的班、成績最優的班…）：' + cj.slice(0, 120));
       if (/每一班都有自己最強的一項|最努力/.test(cj)) e.push('班際榮譽榜還有拿掉的「每一班都有自己最強的一項」或舊的「最努力」');
       await p.click('#hx'); }
     n += 14;
@@ -550,6 +558,19 @@ async function teacher(br, vp) {
   /* 2026-10-15 D 第 8 件：有做的格子多一行「❤獎牌 用心 N」；D12 ⑥〔📊 圖表分析〕：全班整體＋每一個人（要關心的排最前面） */
   if (s304 && s304.c.some(c => c.id !== '30430' && !/練習 \d+/.test(c.w + ''))) { const kh = await p.$$eval('.kcls .kc:not(.nd) .kh', a => a.length); if (!kh) e.push('要關心的格子沒有「📅 練習 N」'); }
   await p.click('[data-km="a"]'); await p.waitForTimeout(1500);
+  /* 2026-10-22 第二十一次 第 11 點：〔📊 圖表分析〕最上面 ＝ 秒懂 動畫 5 幕（每一幕：字夠大、不超出、會 自己 換、◀ ▶ ⏸） */
+  { const kv = () => p.evaluate(() => { const S = document.getElementById('kanst'); if (!S) return null; const R = S.getBoundingClientRect(), o = [], sm = [];
+      S.querySelectorAll('*').forEach(x => { const r = x.getBoundingClientRect(); if (r.width && (r.left < R.left - 2 || r.right > R.right + 2)) o.push(x.className || x.tagName); });
+      S.querySelectorAll('.kant,.klg2 span,.kredc button,.kz span,.kday,.k5r small,.ktip,.kdots i').forEach(x => { if (parseFloat(getComputedStyle(x).fontSize) < (innerWidth >= 1900 ? 22 : 18)) sm.push(x.className || x.tagName); });
+      return { pg: document.getElementById('kanpg').textContent, t: S.textContent, o: o.slice(0, 3), sm: sm.slice(0, 3), dots: S.querySelectorAll('.kdots i').length }; });
+    let k = await kv(); if (!k) e.push('〔📊 圖表分析〕沒有 秒懂 動畫');
+    else { if (!/^1／5$/.test(k.pg) || !k.dots || !/每一個圓圈 ＝ 一個人/.test(k.t)) e.push('〔📊 圖表分析〕動畫 第 1 幕 不對：' + JSON.stringify(k).slice(0, 120));
+      for (let i = 0; i < 5; i++) { if (i) { await p.click('[data-kan2="n"]'); await p.waitForTimeout(2200); k = await kv(); }
+        if (k.o.length || k.sm.length) e.push('〔📊 圖表分析〕動畫 第 ' + (i + 1) + ' 幕 超出 或 字 太小：' + JSON.stringify({ o: k.o, sm: k.sm })); }
+      if (!/全班 最少 的 一項/.test(k.t) || !/上課 提醒/.test(k.t)) e.push('〔📊 圖表分析〕動畫 最後一幕 沒有 全班最少＋上課提醒');
+      await p.click('[data-kan2="p"]'); await p.waitForTimeout(200); if ((await kv()).pg !== '4／5') e.push('〔◀ 上一幕〕沒有用');
+      await p.click('[data-kan2="z"]'); await p.waitForTimeout(7000); if ((await kv()).pg !== '4／5') e.push('〔⏸ 暫停〕以後 還是 自己 換幕');
+      await p.click('[data-kan2="z"]'); await p.waitForTimeout(7000); if ((await kv()).pg !== '5／5') e.push('〔▶ 繼續〕以後 沒有 自己 換幕'); n += 9; } }
   /* 2026-10-16 C2 第 2 題：圖表分析一次一班、🔴 那一組打開、其他按 ▾ 才打開 */
   const kg = await p.evaluate(() => ({ fc: F.cls, cls: document.querySelectorAll('.kcls').length, pick: document.querySelectorAll('.kac button').length, open: [].map.call(document.querySelectorAll('.kgrp'), g => g.classList.contains('open')) }));
   if (!kg.fc && (kg.cls !== 1 || kg.pick < 2)) e.push('〔📊 圖表分析〕沒有一次一班（' + kg.cls + ' 班、' + kg.pick + ' 顆班級按鈕）');

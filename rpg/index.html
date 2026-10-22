@@ -297,6 +297,20 @@ button:active{transform:scale(.97)}
 @keyframes rabG{to{width:var(--w)}}.rab .ok{color:#7DFFB0}.rab .no{color:#FF9AA8}
 .rlist{display:grid;gap:5px;width:min(100%,560px)}.rlist>div{display:flex;align-items:center;gap:12px;background:#121C30;border:2px solid #2A3A5A;border-radius:12px;padding:3px 14px;font-size:clamp(19px,2.6vh,27px);opacity:0;animation:capIn .4s ease-out forwards}
 .rlist>div.x{animation:capIn .4s ease-out forwards,rx 1s ease-in 2.6s forwards;border-color:#E84A5A}.rlist>div.in{border-color:#5DE89A}@keyframes rx{to{opacity:.3;text-decoration:line-through}}
+.rchest{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(circle at 50% 55%,#2A2140,#0B1020 75%);border-radius:14px;opacity:0;animation:capIn .5s ease-out 3.8s forwards;pointer-events:none}
+.rcq{font-size:clamp(26px,3.8vh,40px);color:#FFE07A;font-weight:900;text-align:center}
+.rcb{position:relative;width:min(92%,520px);height:clamp(130px,19vh,190px);display:flex;align-items:center;justify-content:center}
+.rcx{font-size:clamp(84px,13vh,130px);line-height:1;animation:rcSh .9s ease-in-out 4.3s 1,rcOp .5s ease-out 5.2s forwards;filter:drop-shadow(0 0 16px #FFD54A)}
+@keyframes rcSh{0%,100%{transform:none}20%{transform:rotate(-12deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-9deg)}80%{transform:rotate(9deg)}}
+@keyframes rcOp{to{transform:scale(1.25);opacity:.25}}
+.rcl{position:absolute;inset:-30% 20%;background:radial-gradient(circle,rgba(255,236,150,.95),rgba(255,213,74,.35) 40%,transparent 70%);opacity:0;animation:rcLt 1.4s ease-out 5.2s forwards}
+@keyframes rcLt{0%{opacity:0;transform:scale(.3)}40%{opacity:1;transform:scale(1.2)}100%{opacity:.55;transform:scale(1)}}
+.rco{position:absolute;top:50%;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:clamp(22px,3.2vh,32px);font-weight:900;color:#fff;background:#121C30;border:3px solid #FFD54A;border-radius:16px;padding:8px 14px;opacity:0;transform:translate(-50%,-50%) scale(.2);box-shadow:0 0 22px rgba(255,213,74,.6)}
+.rco img{width:clamp(54px,8vh,80px);height:clamp(54px,8vh,80px);object-fit:cover;border-radius:10px}
+.rco.a{left:50%;animation:rcFa .7s cubic-bezier(.2,1.4,.4,1) 5.5s forwards}.rco.b{left:50%;animation:rcFb .7s cubic-bezier(.2,1.4,.4,1) 5.8s forwards}
+@keyframes rcFa{to{opacity:1;left:22%;transform:translate(-50%,-50%) scale(1)}}@keyframes rcFb{to{opacity:1;left:78%;transform:translate(-50%,-50%) scale(1)}}
+.rcs{font-size:clamp(20px,2.8vh,28px);color:#BFF5D2;text-align:center;opacity:0;animation:capIn .5s ease-out 6.4s forwards}
+u.pn{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
 .rmul{display:flex;gap:clamp(10px,2vw,26px)}.rmul>div{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 18px;border-radius:16px;background:#121C30;border:3px solid #2A3A5A;font-size:clamp(22px,3vh,32px);opacity:0;animation:capIn .5s ease-out forwards}
 .rmul b{font-size:1.5em;color:#FFE07A}.rmul .x2{border-color:#FFD54A;box-shadow:0 0 18px rgba(255,213,74,.5)}
 .rgm{display:grid;grid-template-columns:repeat(4,auto);gap:8px}.rgm span{padding:6px 12px;border-radius:12px;background:#1A2A44;border:2px solid #3A5A8A;font-size:clamp(18px,2.4vh,24px);opacity:0;animation:capIn .4s ease-out forwards}.rgm span.pk{border-color:#FFD54A;background:#3A2A06;animation:capIn .4s ease-out forwards,qzp 1.2s ease-in-out 2.4s infinite}
@@ -325,8 +339,8 @@ button:active{transform:scale(.97)}
 @media (max-width:900px){.rtb>div{gap:6px;padding:3px 8px;font-size:18px}.rtb .tbI.big svg{width:1.2em;height:1.4em}.rtl>div{font-size:20px;padding:6px 8px}.rtl b{font-size:1.1em}
  .rlist>div{font-size:18px;padding:1px 10px}.rnote{font-size:19px}.rab .ln{grid-template-columns:6.4em 1fr 4em;font-size:18px}.rmul>div{font-size:20px;padding:8px 10px}.iflow>span{min-width:84px;padding:8px 6px}.iflow small{font-size:19px}.rhb>div{font-size:22px;padding:8px 12px;white-space:normal}.rsum{gap:6px}.rsum span{font-size:19px;padding:4px 10px}.rsum span.gd{font-size:30px}.rsum i{font-size:24px}.rdots{margin:8px 0 4px;gap:4px}.rdots i{width:28px;height:28px;font-size:17px}}
 </style>
-<link rel="stylesheet" href="life.css">
-<script src="life.js"></script>
+<link rel="stylesheet" href="life.css?v=98c69388d0">
+<script src="life.js?v=98c69388d0"></script>
 </head><body>
 <div id="scbar" hidden></div>
 <script src="../score/url.js"></script>
@@ -2434,7 +2448,7 @@ function rulesScenes(tb,me){var D=CAT.DILI,ex=Object.keys(CAT.TX),dl=function(i)
     dots=function(n,ok){var h='<div class="rdots">';for(var i=0;i<n;i++)h+='<i class="'+(i<ok?'ok':'no')+'" style="'+dl(.4+i*.18)+'">'+(i<ok?'✓':'✗')+'</i>';return h+'</div>'};
   return [
   ['⭐ 經驗值＝讓你升級',fl([['📝','做完練習'],['⭐','經驗值','xp'],['🔓','Lv 升高<br>開放更酷的']])+'<div class="rnote" style="'+dl(3.2)+'">⭐ 愈多 ➜ Lv 愈高</div>',function(){}],
-  ['🪙 金幣＝拿來換裝備',fl([['✅','答對、改對'],['🪙','金幣','cn'],['<img src="shop/s0106.jpg" alt="">','換戰士、武器、寵物']])+'<div class="rnote" style="'+dl(3.2)+'">🪙 只換外表，不會加分數</div>',function(){}],
+  ['🪙 金幣＝拿來換裝備',fl([['✅','答對、改對'],['🪙','金幣','cn'],['<img src="shop/s0106.jpg" alt="">','換戰士、武器、寵物']])+'',function(){}],
   ['⚔ 戰力＝你全身的裝備加起來','<div class="tcrd"><div style="animation-delay:.2s"><img src="'+hi+'" alt=""><b>戰士</b></div><div style="animation-delay:.6s"><img src="'+wi+'" alt=""><b>武器</b></div><div style="animation-delay:1s"><img src="'+pi+'" alt=""><b>寵物</b></div></div><div class="tbig">⚔ <b class="tcn">0</b><small>裝備愈強 ➜ 戰力愈高</small></div>',function(){var n=V.power||320;tcount([[1400,Math.round(n*.3)],[1800,Math.round(n*.6)],[2200,n]])}],
   ['📅 每個星期一 0:00 重新開始算','<div class="rwk">'+['一','二','三','四','五','六','日'].map(function(d,i){return '<span style="'+dl(.3+i*.35)+'">'+d+(i===0?'<small>0:00 開始</small>':'<small>&nbsp;</small>')+'</span>'}).join('')+'</div><div class="rnote" style="'+dl(3)+'">一週＝星期一到星期日</div>',function(){}],
   ['⚔ 戰力到了 ➜ 升階級（不會掉）','<div class="rtb s">'+[1,2,3,4,5].map(function(n){return '<div class="'+(n===me?'me':'')+'" style="'+dl(.3+n*.45)+'">'+tb(n,1)+'<small>⚔ '+nf(CAT.TIER[n-1][0])+'</small><em>🪙 ＋'+CAT.TB[n][0]+'%</em></div>'}).join('')+'</div>'+
@@ -2446,10 +2460,15 @@ function rulesScenes(tb,me){var D=CAT.DILI,ex=Object.keys(CAT.TX),dl=function(i)
   ['🏆 最認真練習＝練最久＋兩個好習慣','<div class="rsum"><span style="'+dl(.3)+'">練最久</span><i style="'+dl(.8)+'">＋</i><span style="'+dl(1.1)+'">👀 看完才按</span><i style="'+dl(1.6)+'">＋</i><span style="'+dl(1.9)+'">✏️ 錯了會改</span><i style="'+dl(2.4)+'">＝</i><span class="gd" style="'+dl(2.7)+'">🏆</span></div>'+
     dots(10,9)+'<div class="rnote" style="'+dl(2.6)+'">好習慣：10 題裡面，至少 9 題做到</div>',function(){}],
   ['👑 冠軍寶箱＝ '+GN+'最認真練習前 5 名','<div class="rlist">'+[['1',G+'0412',''],['2',G+'0205',''],['3',G+'0701','👀 沒做到 ➜ 換下一名','x'],['4',G+'0903',''],['5',G+'1108',''],['6',G+'0417','➜ 補上','in']].map(function(x,i){return '<div class="'+(x[3]||'')+'" style="'+dl(.3+i*.35)+'"><b>'+x[0]+'</b> '+x[1]+' <small>'+x[2]+'</small></div>'}).join('')+'</div>'+
-    '<div class="rnote" style="'+dl(3.4)+'">'+GN+'跟'+GN+'比；每個星期一 0:00 自動發</div>',function(){}],
-  ['⚡ 現場任務：老師開〔✖2〕➜ 🪙⭐ 變 2 倍','<div class="rmul"><div style="'+dl(.3)+'">平常<b>🪙 5</b><small>⭐ 10</small></div><div style="'+dl(1)+'">✖1.5<b>🪙 8</b><small>⭐ 15</small></div><div class="x2" style="'+dl(1.7)+'">✖2<b>🪙 10</b><small>⭐ 20</small></div></div><div class="rnote" style="'+dl(2.6)+'">例：答對 5 題；開不開，老師決定</div>',function(){}],
-  ['👑 班上上一週最認真練習第 1 名 ➜ 上台選遊戲',fl([['⚡','老師開<br>現場任務'],['✅','老師同意'],['👑','冠軍上台<br>點一個遊戲','gd']])+'<div class="rnote" style="'+dl(3.2)+'">老師沒同意，就不選；一週 1 次</div>',function(){}],
-  ['⚖️ 大家的規則都一樣','<div class="tchips"><span style="'+dl(.3)+'">🎯 分數＝你自己答的</span><span style="'+dl(.9)+'">⚔ 裝備只是變帥，不會加分</span><span style="'+dl(1.5)+'">📝 題目大家一樣難</span></div>',function(){}]]}
+    '<div class="rnote" style="'+dl(3)+'">'+GN+'跟'+GN+'比；每個星期一 0:00 自動發</div>'+
+    /* 2026-10-22 第二十一次第 5 點：👑 冠軍寶箱有什麼幫助（名單演完 ➜ 寶箱抖 ➜ 打開 ➜ 🪙 或商城寶物飛出來） */
+    '<div class="rchest"><div class="rcq">👑 冠軍寶箱有什麼幫助？</div><div class="rcb"><span class="rcx">🎁</span><span class="rcl"></span>'+
+    '<span class="rco a">🪙 300～500</span><span class="rco b"><img src="shop/s0206.jpg" alt="">商城寶物</span></div>'+
+    '<div class="rcs">打開 ➜ 拿到 🪙 金幣或商城寶物 ➜ 換更酷的裝備！</div></div>',function(){}],
+  ['👑 各班上一週最認真練習第 1 名 ➜ 上台選遊戲',fl([['⚡','老師開<br>現場任務'],['✅','老師同意'],['👑','冠軍上台<br>點一個遊戲','gd']])+'<div class="rnote" style="'+dl(3.2)+'">老師同意之後，各班冠軍才能上台選遊戲；一週只能選一次。<br>老師決定：是否開啟「現場任務」。</div>',function(){}],
+  ['⚡ 現場任務：老師決定：是否〔✖2〕➜ 🪙⭐ 變 2 倍','<div class="rmul"><div style="'+dl(.3)+'">平常<b>🪙 5</b><small>⭐ 10</small></div><div style="'+dl(1)+'">✖1.5<b>🪙 8</b><small>⭐ 15</small></div><div class="x2" style="'+dl(1.7)+'">✖2<b>🪙 10</b><small>⭐ 20</small></div></div><div class="rnote" style="'+dl(2.6)+'">例：答對 5 題；開不開，老師決定</div>'+
+    '<div class="rnote" style="'+dl(3.4)+'">最用心且規矩最好的班級，由老師決定：是否幫那一班開啟〔✖2〕。</div>',function(){}],
+  ['🎁 全班獎勵：全班每一個人這週都練 3 天',fl([['👫','全班每一個人<br>這週都練 3 天'],['✅','老師決定<br>是否獎勵'],['🎁','全班每人<br>🪙 ＋100、⭐ ＋50','gd']]),function(){}]]}
 
 /* 一幕的樣子：大圖示 ➜ 拿到什麼；下面 ⭐／🪙 數字數上去 */
 function teq(L,R,k){return '<div class="teq">'+L+'<span class="tarr">➜</span>'+R+'</div><div class="ttot '+k+'">'+(k==='xp'?'⭐ 經驗值':'🪙 金幣')+' <b class="tcn">0</b></div>'}
@@ -2490,10 +2509,10 @@ var QZOK='';
 function rLocked(){return !!RV&&RV.qz!==CAT.QV&&!qzLocal()&&QZOK!==SCID}
 function qzQs(){return [
   {q:'每個星期幾 0:00 重新開始算？',o:['星期一','星期五','星期日'],sc:3},
-  {q:'小華星期二升到 ★★。哪一個對？',o:['星期二以後練習的 🪙 才變多','星期一的 🪙 也會補給他','題目會變簡單'],sc:5},
+  {q:'<u class="pn">小華</u>星期二升到 ★★。哪一個對？',o:['星期二以後練習的 🪙 才變多','星期一的 🪙 也會補給他','題目會變簡單'],sc:5},
   {q:'👑 冠軍寶箱給誰？',o:['練最久，而且「👀 看完才按」「✏️ 錯了會改」都做到的前 5 名','練最久的前 5 名（亂按也可以）','正確率最高的 5 個人'],sc:10},
-  {q:'老師開〔✖2〕，答對 5 題，拿到幾個 🪙？',o:['🪙 10','🪙 5','🪙 7'],sc:11},
-  {q:'誰可以上台選現場任務的遊戲？',o:['老師同意以後，班上上一週最認真練習第 1 名','全班投票','自己想選就上台'],sc:12}]}
+  {q:'最用心且規矩最好的班級，由老師決定：是否幫那一班開啟〔✖2〕。如果老師開啟〔✖2〕，答對 5 題，拿到幾個 🪙？',o:['🪙 10','🪙 5','🪙 7'],sc:12},
+  {q:'誰可以上台選現場任務的遊戲？',o:['老師同意以後，各班上一週最認真練習第 1 名','全班投票','自己想選就上台'],sc:11}]}
 function qzShuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
 function qzDraw(){var Q=qzQs()[QZ.i],ord=qzShuf([0,1,2]),b=document.getElementById('rqzb');
   b.innerHTML='<div class="qn">📝 第 '+(QZ.i+1)+' 題／ 5 題</div><div class="qdots">'+[0,1,2,3,4].map(function(k){return '<i class="'+(k<QZ.i?'ok':k===QZ.i?'now':'')+'"></i>'}).join('')+'</div>'+
@@ -2512,7 +2531,7 @@ function qzDone(){var b=document.getElementById('rqzb'),me=SCID;qzKeep();QZOK=me
   b.innerHTML=fwHTML()+'<div class="qt">✅ 你看懂了全部獎勵規則！</div><div class="qr"><span id="qzSent">⏳ 正在告訴老師…</span><br><button id="qzEnd">⚔ 開始戰神之路</button></div>';
   qzSend(me,0)}
 function qzSend(me,k){scFetch('',{a:'rpg',id:me,op:'qz',v:CAT.QV},20000).then(function(j){if(me!==SCID)return;
-    if(j&&j.ok&&j.v&&j.v.qz===CAT.QV){var dt=RV&&RV.dt||0;RV=j.v;RV.dt=dt;var t=document.getElementById('qzSent');if(t)t.textContent='老師也看得到 ✔'}
+    if(j&&j.ok&&j.v&&j.v.qz===CAT.QV){var dt=RV&&RV.dt||0;RV=j.v;RV.dt=dt;var t=document.getElementById('qzSent');if(t)t.textContent='老師看得到：你的作答情形'}
     else qzSent2()},function(){if(me!==SCID)return;if(k<2)setTimeout(function(){qzSend(me,k+1)},4000);else qzSent2()})}
 function qzSent2(){var t=document.getElementById('qzSent');if(t)t.textContent='下次打開，會自動告訴老師'}
 function gateHTML(){var n=tutScenes().r.length;return rLocked()?'<div class="rgate">📜 第一次打開<b>戰神之路</b>：先看完<b>獎勵規則</b>（'+n+' 幕），再答 <b>5 題問題</b>，都答對，就可以開始玩！<div class="rst"><span class="'+(QZ.seenEnd?'on':'')+'">① 👀 看完 '+n+' 幕</span><span>② 📝 5 題都答對</span><span>③ ⚔ 開始玩</span></div></div>':''}
@@ -2548,7 +2567,7 @@ function draw(){drawStage();drawShop()}
 function load(){if(!SCON){hide('rpin');hide('rpwait');show('rpout');return}
   if(!SCID||!scAsked()){RV=null;hide('rpin');hide('rpwait');show('rpout');return}
   hide('rpout');if(!RV)show('rpwait');var id=SCID;
-  scFetch('a=rpg&id='+id,null,20000).then(function(j){if(id!==SCID)return;hide('rpwait');if(j&&j.ok){RV=j.v;RV.dt=(j.now||Date.now())-Date.now();if(j.stock)STOCK=j.stock;show('rpin');draw();seen();qzSync()}else msg('📶 拿不到你的戰士，等一下再試',1)},function(){hide('rpwait');msg('📶 現在沒有網路，等一下再試',1)})}
+  scFetch('a=rpg&id='+id+'&_='+Date.now(),null,20000).then(function(j){if(id!==SCID)return;hide('rpwait');if(j&&j.ok){RV=j.v;RV.dt=(j.now||Date.now())-Date.now();if(j.stock)STOCK=j.stock;show('rpin');draw();seen();qzSync()}else msg('📶 拿不到你的戰士，等一下再試',1)},function(){hide('rpwait');msg('📶 現在沒有網路，等一下再試',1)})}
 function msg(t,x){var m=document.getElementById('rpm');m.className='on';document.getElementById('rpmb').innerHTML='<div>'+t+'</div><div class="bt"><button class="no" data-m="x">👌 知道了</button></div>'}
 function ask(id){var k=kOf(id),fr=freeOk(id),pr=fr?0:price(id),t=k==='t'?tre(id)[1]:'';
   if(CAT.LIM[id]&&STOCK[id]===0){msg('🏷 已經換完了<br><span class="note">全部學生一共只有 5 個</span>');return}
@@ -2623,5 +2642,12 @@ try{new MutationObserver(function(L){L.forEach(function(m){if(m.type==='characte
 homeFix();
 /* 登入、登出、換人：每 0.8 秒看一次 */
 setInterval(function(){var k=(SCID||'')+'|'+(SCID&&scAsked()?1:0);if(k!==LAST){LAST=k;RV=null;homeFix();load()}},800);
+/* 2026-10-22 第二十一次第 1、2 點：學生平板一直開著舊的網頁（第十八次的版本：等伺服器說第 2 版才放行）➜ 答對 5 題又被鎖回規則。
+   現在：打開、回到這個分頁、每 5 分鐘問一次 ver.txt（不用快取），有新版＝自動換成新版（網址加 ?v＝新版，一定拿到新的）；正在答題不換 */
+var RPVER='a40dd1793e';
+function verChk(force){try{if(!force&&(document.getElementById('rqz').className==='on'||BUSY))return;
+  fetch('ver.txt?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=String(v||'').trim();if(!/^[0-9a-f]{10}$/.test(v)||v===RPVER)return;
+    var K='rp_rl_'+v;try{if(sessionStorage.getItem(K))return;sessionStorage.setItem(K,'1')}catch(e){}location.replace(location.pathname+'?v='+v+location.hash)},function(){})}catch(e){}}
+verChk(1);document.addEventListener('visibilitychange',function(){if(!document.hidden)verChk()});window.addEventListener('pageshow',function(e){if(e.persisted)verChk(1)});setInterval(verChk,300000);
 </script>
 </body></html>
