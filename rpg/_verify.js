@@ -395,7 +395,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
       if (!/rchest/.test(r21.s11) || !/冠軍寶箱 ?有什麼幫助/.test(r21.s11)) E.push(tag + '：第 11 幕 沒有「冠軍寶箱 有什麼幫助」動畫');
       if (!/^👑 各班上一週最認真練習第 1 名/.test(r21.t12) || !/老師同意之後，各班冠軍才能上台選遊戲；一週只能選一次。/.test(r21.s12) || !/老師決定：是否開啟「現場任務」/.test(r21.s12)) E.push(tag + '：第 12 幕 不對：' + r21.t12);
       if (!/老師決定：是否〔✖2〕/.test(r21.t13) || !/最用心且規矩最好的班級，由老師決定：是否幫那一班開啟〔✖2〕。/.test(r21.s13)) E.push(tag + '：第 13 幕 不對：' + r21.t13);
-      if (!/全班每一個人這週都練 3 天/.test(r21.t14 + r21.s14) || /老師決定/.test(r21.s14) || /👫/.test(r21.s14) || !/svg class="team"/.test(r21.s14) || !/下星期一<br>自動發/.test(r21.s14) || !/＋200、⭐ ＋100/.test(r21.s14) || /大家的規則/.test(r21.t14)) E.push(tag + '：第 14 幕 不對（第二十二次：全班一起的圖、沒有「老師決定」、自動發、🪙 ＋200 ⭐ ＋100）：' + r21.t14);
+      if (!/全班每一個人這週都練 3 天/.test(r21.t14 + r21.s14) || /老師決定/.test(r21.s14) || /👫/.test(r21.s14) || !/svg class="tmsv"/.test(r21.s14) || !/下星期一<br>自動發/.test(r21.s14) || !/＋200、⭐ ＋100/.test(r21.s14) || /大家的規則/.test(r21.t14)) E.push(tag + '：第 14 幕 不對（第二十二次：全班一起的圖、沒有「老師決定」、自動發、🪙 ＋200 ⭐ ＋100）：' + r21.t14);
       if (!/<u class="pn">小華<\/u>/.test(r21.q[1]) || !/如果老師開啟〔✖2〕，答對 5 題/.test(r21.q[3]) || !/\|12$/.test(r21.q[3]) || !/各班上一週最認真練習第 1 名\|11$/.test(r21.q[4])) E.push(tag + '：5 題 問題 不對：' + r21.q.join(' ／ '));
       if (r21.ver !== vt || !/^[0-9a-f]{10}$/.test(vt)) E.push(tag + '：網頁 版本 ' + r21.ver + ' ≠ ver.txt ' + vt);
       await p.route(HTTP + '/rpg/ver.txt**', r => r.fulfill({ status: 200, contentType: 'text/plain', body: 'abcdef0123\n' }));

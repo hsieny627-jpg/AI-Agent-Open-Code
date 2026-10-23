@@ -361,7 +361,7 @@ u.pn{text-decoration:underline;text-decoration-thickness:3px;text-underline-offs
 .tic .tbI{font-size:.55em}
 /* 2026-10-21 第十七次：規則前 3 幕（⭐／🪙／⚔ 是什麼）、兩個好習慣、10 顆點 */
 .iflow{display:flex;align-items:center;gap:clamp(8px,2vw,22px);flex-wrap:nowrap}.iflow>span{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:clamp(96px,14vw,170px);padding:12px 10px;border-radius:18px;background:#121C30;border:3px solid #2A3A5A;opacity:0;animation:capIn .5s ease-out forwards}
-.iflow b{font-size:clamp(48px,8vh,80px);line-height:1}.iflow b svg.team{width:clamp(84px,11vh,130px);height:auto;display:block}svg.team .tm{animation:tmJ 1.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}@keyframes tmJ{0%,100%{transform:none}50%{transform:translateY(-5px)}}.iflow b img{width:clamp(60px,9vh,90px);border-radius:12px;display:block}.iflow small{font-size:clamp(20px,2.8vh,28px);color:#E8F0FF;text-align:center;line-height:1.3}
+.iflow b{font-size:clamp(48px,8vh,80px);line-height:1}.iflow b svg.tmsv{width:clamp(84px,11vh,130px);height:auto;display:block}svg.tmsv .tm{animation:tmJ 1.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}@keyframes tmJ{0%,100%{transform:none}50%{transform:translateY(-5px)}}.iflow b img{width:clamp(60px,9vh,90px);border-radius:12px;display:block}.iflow small{font-size:clamp(20px,2.8vh,28px);color:#E8F0FF;text-align:center;line-height:1.3}
 .iflow .xp{border-color:#7FD4FF;box-shadow:0 0 18px rgba(127,212,255,.5)}.iflow .cn{border-color:#FFD54A;box-shadow:0 0 18px rgba(255,213,74,.5)}.iflow .gd{border-color:#FFD54A;background:#3A2A06}
 .iflow .ia{font-style:normal;font-size:clamp(30px,5vh,48px);color:#FFE07A;opacity:0;animation:capIn .4s ease-out forwards}
 .rhb{display:flex;flex-direction:column;gap:16px}.rhb>div{display:flex;align-items:center;gap:12px;padding:10px 20px;border-radius:18px;background:#121C30;border:3px solid #2A3A5A;font-size:clamp(24px,3.4vh,34px);opacity:0;animation:capIn .5s ease-out forwards;white-space:nowrap}
@@ -2523,7 +2523,7 @@ function rulesScenes(tb,me){var D=CAT.DILI,ex=Object.keys(CAT.TX),dl=function(i)
   /* 2026-10-23 第二十二次第 2 點：👫 ➜ 自己畫的「全班一起舉手歡呼」（5 個同學並排、手往上，沒有牽手）；「老師決定」刪掉 ➜ 每個星期一自動發；🪙 ＋200、⭐ ＋100（SC.RPCW） */
   ['🎁 全班獎勵：全班每一個人這週都練 3 天',fl([[TEAM,'全班每一個人<br>這週都練 3 天'],['📅','下星期一<br>自動發'],['🎁','全班每人<br>🪙 ＋'+CAT.CW.c+'、⭐ ＋'+CAT.CW.x,'gd']]),function(){}]]}
 /* 全班一起：5 個同學並排舉手歡呼（每一個人顏色不一樣，上面一顆大星星；跳一跳） */
-var TEAM='<svg class="team" viewBox="0 0 150 90" aria-label="全班一起"><path d="M75 4l4.6 9.4 10.4 1.5-7.5 7.3 1.8 10.3L75 27.6l-9.3 4.9 1.8-10.3-7.5-7.3 10.4-1.5z" fill="#FFD54A"/>'+
+var TEAM='<svg class="tmsv" viewBox="0 0 150 90" aria-label="全班一起"><path d="M75 4l4.6 9.4 10.4 1.5-7.5 7.3 1.8 10.3L75 27.6l-9.3 4.9 1.8-10.3-7.5-7.3 10.4-1.5z" fill="#FFD54A"/>'+
   [['#FF8A65',15],['#4FC3F7',45],['#FFD54A',75],['#81C784',105],['#BA68C8',135]].map(function(k,i){var x=k[1];return '<g class="tm" style="animation-delay:'+(i*.12)+'s"><circle cx="'+x+'" cy="52" r="8" fill="#FFE0C2"/><path d="M'+(x-10)+' 88v-16a10 10 0 0 1 20 0v16z" fill="'+k[0]+'"/><path d="M'+(x-8)+' 68l-6-20M'+(x+8)+' 68l6-20" stroke="'+k[0]+'" stroke-width="5" stroke-linecap="round"/></g>'}).join('')+'</svg>';
 
 /* 一幕的樣子：大圖示 ➜ 拿到什麼；下面 ⭐／🪙 數字數上去 */
@@ -2701,7 +2701,7 @@ homeFix();
 setInterval(function(){var k=(SCID||'')+'|'+(SCID&&scAsked()?1:0);if(k!==LAST){LAST=k;RV=null;homeFix();load()}},800);
 /* 2026-10-22 第二十一次第 1、2 點：學生平板一直開著舊的網頁（第十八次的版本：等伺服器說第 2 版才放行）➜ 答對 5 題又被鎖回規則。
    現在：打開、回到這個分頁、每 5 分鐘問一次 ver.txt（不用快取），有新版＝自動換成新版（網址加 ?v＝新版，一定拿到新的）；正在答題不換 */
-var RPVER='1a92fe648e';
+var RPVER='1f73ef8650';
 function verChk(force){try{if(!force&&(document.getElementById('rqz').className==='on'||BUSY))return;
   fetch('ver.txt?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=String(v||'').trim();if(!/^[0-9a-f]{10}$/.test(v)||v===RPVER)return;
     var K='rp_rl_'+v;try{if(sessionStorage.getItem(K))return;sessionStorage.setItem(K,'1')}catch(e){}location.replace(location.pathname+'?v='+v+location.hash)},function(){})}catch(e){}}
