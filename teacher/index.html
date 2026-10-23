@@ -2922,8 +2922,8 @@ function hpod(R,f){return [1,2,3].map(function(r){var a=R.filter(function(x){ret
    0 開場 ➜ 1 第 10～4 名（從最下面一格往上翻開）➜ 2 🥉 ➜ 3 🥈 ➜ 4 🥇（最長的鼓聲、全白閃光、皇冠、煙火）➜ 5 頒獎台 */
 function hwhoC(id){var n=nm(id);return cidH(id)+(HNM&&n?' '+esc(n):'')+hEq(id)}
 /* 2026-10-23 第二十二次 第 4 點：榮譽榜 呈現 學生 的 戰神 代表 人物、寵物、武器（伺服器 DATA.eqs ＝ {5碼:[戰士,武器,寵物]}）；〔⚔ 戰士 寵物 武器：顯示／隱藏〕 */
-function hEqI(id){return /^sd{4}$/.test(id)?'../rpg/shop/'+id+'.jpg':'../rpg/'+({b:'chars',g:'chars',w:'weapons',p:'pets'}[id.charAt(0)]||'chars')+'/'+id+'.jpg'}
-function hEq(id){var q=HEQ&&DATA.eqs&&DATA.eqs[id];if(!q)return '';var L=[[q[0],'戰士'],[q[2],'寵物'],[q[1],'武器']].filter(function(x){return /^[bgwps]d{2,4}$/.test(x[0]||'')});
+function hEqI(id){return /^s\d{4}$/.test(id)?'../rpg/shop/'+id+'.jpg':'../rpg/'+({b:'chars',g:'chars',w:'weapons',p:'pets'}[id.charAt(0)]||'chars')+'/'+id+'.jpg'}
+function hEq(id){var q=HEQ&&DATA.eqs&&DATA.eqs[id];if(!q)return '';var L=[[q[0],'戰士'],[q[2],'寵物'],[q[1],'武器']].filter(function(x){return /^[bgwps]\d{2,4}$/.test(x[0]||'')});
   return L.length?'<span class="gleq">'+L.map(function(x){return '<img class="ge'+x[0].charAt(0)+'" src="'+hEqI(x[0])+'" alt="'+x[1]+'">'}).join('')+'</span>':''}
 function hPlan(o){var P=[],k=o.k,top=o.L.filter(function(x){return x.rk<=10}),pm={};o.ps.forEach(function(p){pm[p.id]=p});top.forEach(function(x){x.vt=fmt(k,x.v)});
   var mid=top.filter(function(x){return x.rk>=4}),T={};[1,2,3].forEach(function(r){var a=top.filter(function(x){return x.rk===r});if(a.length)T[r]=a.map(function(x){return {w:hwhoC(x.id),v:x.vt,l:HON.awl(k,pm[x.id]||{},hper2())}})});
