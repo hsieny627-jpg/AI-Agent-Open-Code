@@ -456,8 +456,8 @@ async function teacher(br, vp) {
     /* 2026-10-23 第二十二次 第 4 點：姓名 旁邊 的 戰士、寵物、武器（預設 顯示）＋〔⚔ 戰士 寵物 武器〕切換 */
     { await p.evaluate(() => { DATA.eqs = {}; SC.students(ALL).forEach(x => { DATA.eqs[x.id] = ['g32', 'w03', 'p03']; }); });
       await p.click('#heqb'); await p.waitForTimeout(150); await p.click('#heqb'); await p.waitForTimeout(700);
-      const q1 = await p.evaluate(() => ({ n: document.querySelectorAll('#honst .gleq img').length, t: document.getElementById('heqb').textContent, h: Math.round(document.getElementById('heqb').getBoundingClientRect().height) }));
-      await p.click('#heqb'); await p.waitForTimeout(700); const q2 = await p.evaluate(() => document.querySelectorAll('#honst .gleq img').length); await p.click('#heqb'); await p.waitForTimeout(200);
+      const q1 = await p.evaluate(() => ({ n: document.querySelectorAll('#honst .gleq img').length + (JSON.stringify(HN.gd || {}).match(/class=\\"gleq\\"/g) || []).length, t: document.getElementById('heqb').textContent, h: Math.round(document.getElementById('heqb').getBoundingClientRect().height) }));
+      await p.click('#heqb'); await p.waitForTimeout(700); const q2 = await p.evaluate(() => document.querySelectorAll('#honst .gleq img').length + (JSON.stringify(HN.gd || {}).match(/class=\\"gleq\\"/g) || []).length); await p.click('#heqb'); await p.waitForTimeout(200);
       if (q1.n < 3 || !/顯示/.test(q1.t) || q2 !== 0 || q1.h < 48) e.push('榮譽榜 戰士 寵物 武器 不對 ' + JSON.stringify([q1, q2])); }
     const s0 = await p.evaluate(() => localStorage.getItem('hsnd')); await p.click('#hsd'); const s1 = await p.evaluate(() => localStorage.getItem('hsnd'));
     if (s0 === s1) e.push('〔🔊 聲音〕按了沒有切換'); await p.click('#hsd');
