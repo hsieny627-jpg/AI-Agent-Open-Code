@@ -276,7 +276,9 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     if (!d3.d3 || d3.per === 'none' || d3.pr !== 'preserve-3d' || d3.cv !== 2 || !d3.mv || !d3.wr || !d3.g || d3.lit < 20 || !d3.ray) E.push(tag + '：3D 舞台 不對 ' + JSON.stringify(d3));
     if (process.env.SHOT && tag === '1024✕768') await (await p.$('#mfr')).screenshot({ path: path.join(process.env.SHOT, 'd3.png') });
     await p.click('#pcard', { force: true }); await p.waitForTimeout(800);
-    const nz = await p.evaluate(() => ({ nz: document.getElementById('pcard').classList.contains('lfnz'), ht: document.querySelectorAll('.lfh').length }));
+    let nz = await p.evaluate(() => ({ nz: document.getElementById('pcard').classList.contains('lfnz'), ht: document.querySelectorAll('.lfh').length }));
+    /* 舞台 自己 每 6.5 秒 換 一種 互動（petIA），剛好 撞在 一起 ＝ 等 它 演完 再 點 一次 */
+    if (!nz.nz || nz.ht < 3) { await p.waitForTimeout(2600); await p.click('#pcard', { force: true }); await p.waitForTimeout(800); nz = await p.evaluate(() => ({ nz: document.getElementById('pcard').classList.contains('lfnz'), ht: document.querySelectorAll('.lfh').length })); }
     if (!nz.nz || nz.ht < 3) E.push(tag + '：點 寵物 沒有 撒嬌（蹭過去、愛心）' + JSON.stringify(nz));
     await p.waitForTimeout(1800);
     await p.click('#atkTry'); await p.waitForTimeout(500);
