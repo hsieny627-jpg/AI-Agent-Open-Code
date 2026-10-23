@@ -96,3 +96,11 @@
 .gl .p1 .gpb{height:32vh}.gl .p2 .gpb{height:16vh}.gl .p3 .gpb{height:8vh}
 @keyframes glRise{from{opacity:0;transform:translateY(40vh)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.gl *,.gl::before,.gl .glbg::before{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important}}
+
+/* 2026-10-23 第二十二次 第 4 點：名字 旁邊 的 戰士、寵物、武器（老師 可以 關掉） */
+.gl .gleq{display:inline-flex;align-items:flex-end;gap:.18em;margin-left:.35em;vertical-align:middle;-webkit-text-fill-color:initial}
+.gl .gleq img{height:1.5em;width:auto;max-width:1.4em;object-fit:cover;object-position:center 20%;border-radius:.18em;border:2px solid var(--gc,#FFD54A);box-shadow:0 0 12px var(--gc,#FFD54A);background:#000}
+.gl .gleq img.geb,.gl .gleq img.geg{height:1.9em;max-width:1.35em}
+.gl .glwn .gleq img{height:1.25em;max-width:1.1em}.gl .glwn .gleq img.geb,.gl .glwn .gleq img.geg{height:1.6em;max-width:1.15em}
+.gl .glwn .gleq{animation:glEq 2.4s ease-in-out 1.6s infinite}@keyframes glEq{0%,100%{transform:none}50%{transform:translateY(-.08em) scale(1.05)}}
+@media (prefers-reduced-motion:reduce){.gl .glwn .gleq{animation:none}}

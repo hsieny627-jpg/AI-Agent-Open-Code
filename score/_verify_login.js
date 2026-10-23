@@ -93,23 +93,24 @@ async function run(br, vp) {
     const b5 = await bar(p); if (!b5 || b5.t !== '👤 還沒登入 🔑 登入') e.push('三年級的號碼在四年級首頁應該是「還沒登入」：' + (b5 && b5.t));
     await p.goto(url('G3 - L1 + L2/index.html')); await p.waitForTimeout(400);
     n += 6;
-    /* ④ 3 分鐘沒動作：最後 30 秒大字「⏳ 30 秒後自動登出〔👆 我還在〕」（不寫「請問 您還在嗎？」）；按了就不登出 */
-    await p.evaluate(() => localStorage.setItem('score_act', JSON.stringify(Date.now() - 155000))); await p.waitForTimeout(1300);
+    /* ④ 10 分鐘沒動作（2026-10-23 第二十二次：3 ➜ 10）：最後 30 秒大字「⏳ 30 秒後自動登出〔👆 我還在〕」（不寫「請問 您還在嗎？」）；按了就不登出 */
+    await p.evaluate(() => localStorage.setItem('score_act', JSON.stringify(Date.now() - 575000))); await p.waitForTimeout(1300);
+    /* 2026-10-23 第二十二次：10 分鐘才登出 ➜ 9 分鐘還不可以提醒 */
     const i1 = await full(p, 'scidle');
-    if (!i1) e.push('2 分 30 秒沒動作沒有提醒');
+    if (!i1) e.push('9 分 35 秒沒動作沒有提醒');
     else { i1.e.forEach(x => e.push('30 秒提醒：' + x)); if (!/⏳ \d+ 秒後自動登出 👆 我還在/.test(i1.t)) e.push('30 秒提醒的字不對：' + i1.t); if (/您還在嗎/.test(i1.t)) e.push('提醒還寫「請問 您還在嗎？」'); }
     await clk(p, '#scStay', e); await p.waitForTimeout(1300);
     if (await full(p, 'scidle')) e.push('按〔👆 我還在〕提醒沒有關掉');
     if (!await ls(p, 'last')) e.push('按〔👆 我還在〕還是被登出了');
     /* 時間到 ＝ 登出＋「👋 已經登出了／3 分鐘沒有動作〔🔑 登入〕」 */
-    await p.evaluate(() => localStorage.setItem('score_act', JSON.stringify(Date.now() - 181000))); await p.waitForTimeout(1300);
+    await p.evaluate(() => localStorage.setItem('score_act', JSON.stringify(Date.now() - 601000))); await p.waitForTimeout(1300);
     const o = await full(p, 'scbye2');
-    if (!o || !/👋 已經登出了 3 分鐘沒有動作 🔑 登入/.test(o.t)) e.push('3 分鐘沒動作沒有寫「已經登出了」：' + (o && o.t));
-    if (await ls(p, 'last') !== 'null' || await ls(p, 'id_g3') !== 'null') e.push('3 分鐘沒動作號碼沒有清掉');
+    if (!o || !/👋 已經登出了 10 分鐘沒有動作 🔑 登入/.test(o.t)) e.push('10 分鐘沒動作沒有寫「已經登出了」：' + (o && o.t));
+    if (await ls(p, 'last') !== 'null' || await ls(p, 'id_g3') !== 'null') e.push('10 分鐘沒動作號碼沒有清掉');
     const b0 = await bar(p); if (!b0 || b0.t !== '👤 還沒登入 🔑 登入') e.push('登出以後橫幅不對：' + (b0 && b0.t));
     await clk(p, '#scByeIn', e); await p.waitForTimeout(300);
     if (!await p.$('#scBox')) e.push('〔🔑 登入〕沒有打開數字鍵盤');
-    n += 8; out('這是您嗎＋3 分鐘 ' + W, e); await p.close(); }
+    n += 8; out('這是您嗎＋10 分鐘 ' + W, e); await p.close(); }
   /* ⑤「👋 不是，登出」＝ 號碼清掉、原地馬上打開數字鍵盤 */
   { const p = await ctx.newPage(), e = []; p.on('pageerror', x => e.push('JS 例外：' + x.message));
     await p.goto(url('index.html')); await p.evaluate(() => { localStorage.setItem('score_last', '"40205"'); localStorage.setItem('score_id_g4', '"40205"'); localStorage.setItem('score_act', JSON.stringify(Date.now())); });

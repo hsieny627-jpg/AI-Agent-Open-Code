@@ -303,7 +303,15 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
   /* 🏪 商城（2026-10-18 第九次）：價錢、等級照第幾排；只有上架的類買得到；同一個位置換著戴 */
   eq([SC.rpPrice('s0101'), SC.rpPrice('s0106'), SC.rpPrice('s0111'), SC.rpPrice('s0120')], [500, 1200, 2500, 5000], '商城價錢：第 1～4 排 500／1200／2500／5000');
   eq([SC.rpNeed('s0105'), SC.rpNeed('s0110'), SC.rpNeed('s0115'), SC.rpNeed('s0116')], [1, 5, 10, 20], '商城等級：Lv 1／5／10／20');
-  eq(SC.rpOk('s1101') ? 1 : 0, 0, '沒有 第 11 類');   /* 2026-10-18 第十二次：10 類 全部 上架 */
+  eq(SC.rpOk('s1101') ? 1 : 0, 0, '沒有 第 11 類');
+  /* 2026-10-23 第二十二次：女 11～21、舊寶物 下架（買過 的 照 用）；女 32～56；全班 獎勵 🪙 200 ⭐ 100 */
+  ok(!SC.rpOk('g11') && !SC.rpOk('g21') && SC.rpOk('g10') && SC.rpOk('g22') && !SC.rpOk('t01') && !SC.rpOk('t10'), '下架：女 11～21、舊寶物 t01～t10');
+  ok(SC.rpStar('g32') === 2 && SC.rpStar('g41') === 2 && SC.rpStar('g42') === 3 && SC.rpStar('g51') === 3 && SC.rpStar('g52') === 4 && SC.rpStar('g56') === 4 && !SC.rpStar('g57'), '女 32～56 稀有度');
+  { const st0 = SC.rpClean({}); st0.own.h = ['g12']; st0.eq.h = 'b01'; ok(!SC.rpEquip(st0, 'g12').err, '買過 的 下架 女戰士 還 可以 裝'); }
+  eq(SC.RPCW.c + '/' + SC.RPCW.x + '/' + SC.RPCW.days, '200/100/3', '全班 獎勵 🪙 200 ⭐ 100 練 3 天');
+  { const t0 = Date.UTC(2026, 9, 12), mk = (id, d) => ({ t: t0 + d * 864e5 + 36e5, id, g: 4, cls: id.slice(0, 3), seat: +id.slice(3), set: 'g4u1_1-1b', m: '', n: 5, ok: 5, acc: 100, qs: [], fast: 0, sec: 60, x: false, u: id + d });
+    const rs = [0, 1, 2].map(d => mk('40201', d)).concat([0, 1].map(d => mk('40202', d)));
+    ok(!SC.cwOk(rs, ['40201', '40202'], t0, t0 + 7 * 864e5) && SC.cwOk(rs.concat([mk('40202', 3)]), ['40201', '40202'], t0, t0 + 7 * 864e5) && !SC.cwOk(rs, [], t0, t0 + 7 * 864e5), '全班 都 練 3 天 才 發（名單 空 ＝ 不發）'); }   /* 2026-10-18 第十二次：10 類 全部 上架 */
   eq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(c => SC.rpOk('s' + (c < 10 ? '0' : '') + c + '01') ? 1 : 0).join(''), '1111111111', '上架 ＝ 10 類 全部（第十二次）');
   eq(SC.rpBuy(R, st, 's0101', T0).err, 'coin', '金幣不夠買不到光環（31 ＜ 500）');
   { let x = SC.rpClean({ own: { t: ['t01'], s: ['s0101'] }, eq: { t: ['t01'] } }); x.bc = 0;

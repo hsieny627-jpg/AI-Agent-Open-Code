@@ -2554,6 +2554,8 @@ var RPFX = (function () {
       an.onfinish = done; })(i); }
   /* ════ 👾 做完練習打怪 ════
      box ＝ 容器（裡面有 .fxh 英雄、.fxp 寵物、會放怪物）；F ＝ 伺服器算好的 {hits, d, pd, from:{i,m,hp,max}, to:{…}, kill:[…]}；o ＝ {base:網址開頭, w, p, id, done} */
+  /* 2026-10-23 第二十二次 第 1(2) 點（老師：怪物的血用 ❤ 太正面 ➜ 選「紅色血條＋數字」）：滿 ＝ 綠、一半 ＝ 黃、快沒了 ＝ 紅；字寫「血 80」 */
+  function hpCol(r) { return r > .5 ? 'linear-gradient(90deg,#2ECC71,#9BE15D)' : r > .25 ? 'linear-gradient(90deg,#F5B700,#FFE066)' : 'linear-gradient(90deg,#E0182D,#FF5A4E)'; }
   function monImg(base, m) { return base + 'rpg/pets/' + m + '.jpg'; }
   function fight(box, F, o) {
     o = o || {}; if (!box || !F) return; var base = o.base || '../', hero = box.querySelector('.fxh'), pet = box.querySelector('.fxp');
@@ -2567,14 +2569,14 @@ var RPFX = (function () {
       while (dmg > 0) { var need = mx(st.i) - st.hp; if (dmg >= need && kl > 0) { dmg -= need; ev.kills.push(ML[st.i % 15]); st.i++; st.hp = 0; kl--; } else { st.hp = Math.min(mx(st.i) - 1, st.hp + dmg); dmg = 0; } }
       ev.end = { i: st.i, hp: st.hp }; plan.push(ev); }
     if (F.to) plan[plan.length - 1].end = { i: F.to.i, hp: F.to.hp };
-    function show(c) { var m = mx(c.i), r = Math.max(0, (m - c.hp) / m); bar.style.width = (r * 100).toFixed(1) + '%'; lab.textContent = '❤ ' + (m - c.hp) + ' ／ ' + m; mn.textContent = '👾 第 ' + (c.i + 1) + ' 隻　暗黑神獸'; img.src = monImg(base, ML[c.i % 15]); }
+    function show(c) { var m = mx(c.i), r = Math.max(0, (m - c.hp) / m); bar.style.width = (r * 100).toFixed(1) + '%'; bar.style.background = hpCol(r); lab.textContent = '血 ' + (m - c.hp) + ' ／ ' + m; mn.textContent = '👾 第 ' + (c.i + 1) + ' 隻　暗黑神獸'; img.src = monImg(base, ML[c.i % 15]); }
     show(cur);
     function strike(k) {
       if (k >= plan.length) { if (o.done) setTimeout(o.done, 400); return; }
       var ev = plan[k], a = attack(box, { from: pos(box, hero || box, .5, .45), to: pos(box, mon.querySelector('.fxmi'), .5, .5), w: o.w, id: o.id, p: k % 2 === 0 ? o.p : null, pImg: pet ? pet.getAttribute('src') : '', pFrom: pet ? pos(box, pet) : null,
         dmg: ev.dmg, quick: true, name: k === 0, hero: hero, shk: box, hook: o.hook,
         onHit: function () { mon.classList.remove('hit'); void mon.offsetWidth; mon.classList.add('hit');
-          if (ev.kills.length) { var m = mx(cur.i); bar.style.width = '0%'; lab.textContent = '❤ 0 ／ ' + m; kill(ev.kills[ev.kills.length - 1], ev.end); } else { cur = ev.end; show(cur); } } });
+          if (ev.kills.length) { var m = mx(cur.i); bar.style.width = '0%'; lab.textContent = '血 0 ／ ' + m; kill(ev.kills[ev.kills.length - 1], ev.end); } else { cur = ev.end; show(cur); } } });
       setTimeout(function () { strike(k + 1); }, Math.max(900, a.ms - 200) + (ev.kills.length ? 900 : 0));
     }
     function kill(m0, end) { if (o.onKill) try { o.onKill(); } catch (x) { } mon.classList.add('ko'); var S = Stage(box), c = pos(box, mon); burst(S, c.x, c.y, 'light', 60, 520, 1.6); S.stop(1600);
@@ -2619,7 +2621,7 @@ var RPFX = (function () {
       (n >= 2 ? '<ellipse cx="28" cy="12" rx="11" ry="4" fill="none" stroke="url(#' + id + ')" stroke-width="2.6"/>' : '') +
       (n ? '<path d="M28 ' + (n >= 2 ? 13 : 9) + 'l1.6 3.6 3.6.4-2.7 2.5.8 3.7-3.3-1.9-3.3 1.9.8-3.7-2.7-2.5 3.6-.4z" fill="#fff"/>' : '<circle cx="28" cy="18" r="3" fill="' + c[1] + '"/>') + '</svg>';
     return '<span class="pgI p' + n + '" role="img" aria-label="' + ['寶寶', '長大', '進化'][n] + '">' + svg + '</span>'; }
-  return { attack: attack, spark: spark, beam: beam, summon: summon, evolve: evolve, chest: chest, coins: coins, fight: fight, wInfo: wInfo, pEl: pEl, EL: EL, hash: hash, pos: pos, tb: tb, TN: TN, ts: ts, pg: pg, wSig: wSig, iSig: iSig, SIGN: SIGN, TC: TC };
+  return { hpCol: hpCol, attack: attack, spark: spark, beam: beam, summon: summon, evolve: evolve, chest: chest, coins: coins, fight: fight, wInfo: wInfo, pEl: pEl, EL: EL, hash: hash, pos: pos, tb: tb, TN: TN, ts: ts, pg: pg, wSig: wSig, iSig: iSig, SIGN: SIGN, TC: TC };
 })();
 /* 🪙 金幣圖示：老師的電腦（舊的 Windows）沒有 🪙 這個字 ➜ 一律換成自己畫的金幣（2026-10-20 第十四次 2） */
 (function () {
@@ -3160,11 +3162,11 @@ document.addEventListener('click',function(e){
 /* ══ 學生登入（2026-10-12 D 第 6 件；使用者 D6 第 10～12 題 A、D7、D8 定案：1A 2A 3A）══
    ① 打開網站的第一頁問一次（整頁大字）「請問 這是您嗎？30412〔✅ 是，繼續〕〔👋 不是，登出〕」（這個分頁記住，換頁不再問）
    ② 首頁最上面一條橫幅（不蓋住）：沒登入「👤 還沒登入〔🔑 登入〕」；登入了「請問 這是您嗎？30412〔✅ 是〕〔👋 不是，登出〕」，按 ✅ 以後「👤 30412〔👋 登出〕」
-   ③ 3 分鐘沒有動作（學校、在家都一樣，D15 A）就登出；最後 30 秒大字提醒「⏳ 30 秒後自動登出〔👆 我還在〕」（不寫「請問 您還在嗎？」）；
-      時間到「👋 已經登出了／3 分鐘沒有動作〔🔑 登入〕」。作答中、遊戲中一直在點 ＝ 有動作，不會被登出
+   ③ 10 分鐘沒有動作（2026-10-23 第二十二次老師：3 分鐘 ➜ 10 分鐘；學校、在家都一樣）就登出；最後 30 秒大字提醒「⏳ 30 秒後自動登出〔👆 我還在〕」（不寫「請問 您還在嗎？」）；
+      時間到「👋 已經登出了／10 分鐘沒有動作〔🔑 登入〕」。作答中、遊戲中一直在點 ＝ 有動作，不會被登出
    ④ 每一個題目、遊戲做完：「👋 做完了，記得登出／下一個人才不會用到您的號碼〔👋 登出〕」；登出一律 👋（不用 🚪）
    「最後一次動作」存在這台平板（score_act），每一頁都看同一個時間；登出 ＝ 三、四年級的號碼都清掉 */
-var SCIDLE=180000,SCWARN=30000,SCHOMEP=false,SCIT=null;
+var SCIDLE=600000,SCGAP=180000,SCWARN=30000,SCHOMEP=false,SCIT=null;
 function scOk(){try{sessionStorage.setItem('sc_ok',String(SCID||''))}catch(e){}}
 function scAsked(){try{return sessionStorage.getItem('sc_ok')===String(SCID||'')}catch(e){return true}}
 function scAct(){scPut('act',Date.now())}
@@ -3209,7 +3211,7 @@ function scAskWho(){if(!SCON||!SCID||SCGUEST||scAsked())return;
 function scIdleHide(){scFullOff('scidle')}
 function scIdleTick(){if(!SCON||!SCID||SCGUEST||window.SCLIVE){   /* ⚡ 現場任務：看 大螢幕 很久 不碰 平板，不可以 被 登出（2026-10-19 第十三次 3(5)） */scIdleHide();return}
   var a=scGet('act'),left=a?SCIDLE-(Date.now()-a):SCIDLE;if(!a){scAct();return}
-  if(left<=0){scOut();scFull('scbye2','<div class="sfic">👋</div><div class="sf1">已經登出了</div><div class="sf3">3 分鐘沒有動作</div><div class="sfbt"><button class="scK" id="scByeIn">🔑 登入</button></div>');return}
+  if(left<=0){scOut();scFull('scbye2','<div class="sfic">👋</div><div class="sf1">已經登出了</div><div class="sf3">10 分鐘沒有動作</div><div class="sfbt"><button class="scK" id="scByeIn">🔑 登入</button></div>');return}
   if(left<=SCWARN){var o=document.getElementById('scidle');if(!o||!o.classList.contains('on'))scFull('scidle','<div class="sfic">⏳</div><div class="sf2"><b id="scIdleN">30</b> 秒後自動登出</div><div class="sfbt"><button class="scY" id="scStay">👆 我還在</button></div>');
     var n=document.getElementById('scIdleN');if(n)n.textContent=Math.max(1,Math.ceil(left/1000))}
   else scIdleHide()}
@@ -3226,7 +3228,7 @@ function scViewOn(a,nm){if(!SCON||SCVW)return;SCVW={a:a,nm:nm||'👀 看字卡',
 function scVwAct(){var V=SCVW,n=Date.now();if(!V)return;
   var live=scLive()&&!document.hidden,busy=scOn()||!!document.querySelector('.scfull.on');
   if(V.id&&V.id!==SCID)scVwSave();
-  if(live&&V.last&&!V.busy&&!busy&&V.id===SCID){var g=n-V.last;if(g<=SCIDLE)V.acc+=Math.min(g,SCVMAX)}
+  if(live&&V.last&&!V.busy&&!busy&&V.id===SCID){var g=n-V.last;if(g<=SCGAP)V.acc+=Math.min(g,SCVMAX)}
   V.last=live?n:0;V.busy=busy;if(live)V.id=SCID}
 function scVwSave(){var V=SCVW;if(!V||!V.id)return;var sec=Math.round(V.acc/1000),id=V.id;V.acc=0;if(V.id!==SCID)V.id=null;if(sec<1)return;
   var QQ=scGet('q')||[];QQ.push({id:id,set:'g'+String(id).charAt(0)+'v_'+V.a,name:V.nm,m:'v',qs:[],sec:Math.min(3600,sec),src:SCSRC,dev:SCDEV,
@@ -3260,7 +3262,7 @@ function scHeroA(){var b=document.getElementById('scbar');return window.SCLIVE||
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-rpg]');if(a){e.preventDefault();location.href=SCRPB+'rpg/index.html'}});
 function scHomeLogin(){if(!SCH)return;scFullOff('scbye2');scLogin(SCH.reopen)}
 if(SCON){
-  (function(){var a=scGet('act');if(SCID&&a&&!window.SCLIVE&&Date.now()-a>=SCIDLE)scOut()})();   /* 上一次動作已經超過 3 分鐘 ＝ 已經登出了 */
+  (function(){var a=scGet('act');if(SCID&&a&&!window.SCLIVE&&Date.now()-a>=SCIDLE)scOut()})();   /* 上一次動作已經超過 10 分鐘 ＝ 已經登出了 */
   ['pointerdown','keydown','touchstart','wheel'].forEach(function(k){document.addEventListener(k,function(e){
     if(SCID&&!SCGUEST&&!(e.target&&e.target.closest&&e.target.closest('#scbye2')))scAct()},true)});
   SCIT=setInterval(scIdleTick,1000);

@@ -474,7 +474,7 @@ ${CERCSS}
 <div id="modal"><div id="mbox"></div></div>
 <div id="show"></div>
 <div id="honov"><div class="hon" id="honst"></div><div id="hctl"><button id="hre">⏮ 重來</button><button id="hpv">◀</button><span id="hpg"></span><button id="hnx">▶ 下一幕</button>
- <button id="hsd">🔊 聲音：開</button><button id="hnmb">👤 姓名：顯示</button><button id="hpr">🖨 印獎狀</button><button id="hx">✕ 關閉</button></div></div>
+ <button id="hsd">🔊 聲音：開</button><button id="hnmb">👤 姓名：顯示</button><button id="heqb">⚔ 戰士 寵物 武器：顯示</button><button id="hpr">🖨 印獎狀</button><button id="hx">✕ 關閉</button></div></div>
 <div id="prt"></div>
 <!-- 2026-10-18 第十一次 老師：教師首頁 一鍵 產生 QR Code，學生 掃了 ➜ 打 5 碼 ➜ 自動 進入 自己 班 的 遊戲（不用 打 遊戲 號碼） -->
 <div id="lvov" hidden><div class="lvbx"><h2>📱 現場任務：學生 加入</h2>
@@ -654,7 +654,7 @@ function paneC(psG){
    D8：三種最高榮譽的榜、班際各一顆〔🏆 榮譽榜〕｜D9：開場 ➜ 第 10～4 名一個一個上台 ➜ 頒獎台 3、2、1（第 1 名最後揭曉）➜ 第 1 名的話
    D10：〔👤 姓名 顯示／隱藏〕一開始顯示｜D11：12 種風格輪流（跟上一次一定不一樣）｜D12：號角、鼓聲、掌聲〔🔊 聲音 開／關〕一開始開
    D13：期間 ＝ 上面選的期間｜D14：〔🖨 印獎狀〕每一個上榜的人一張 A4 橫式｜G2・F5：班際 4 種排行（平均每一個人）＋每一班都有最強的一項 */
-var HLISTS=[],HN=null,HNM=lsg0('hnm',1),HSND=lsg0('hsnd',1);
+var HLISTS=[],HN=null,HNM=lsg0('hnm',1),HSND=lsg0('hsnd',1),HEQ=lsg0('heq',1);
 function lsg0(k,d){try{var v=localStorage.getItem(k);return v==null?d:+v}catch(e){return d}}
 function lss0(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 /* 第 4 件修正（使用者 2026-10-12 D6～D8 定案）：只有三種最高榮譽（HON.AWK：最認真練習、成績最優、進步最多），字全部用 HON.AWN／HON.awl／HON.awc
@@ -666,7 +666,11 @@ function hgr(){return (F.g===3?'三':'四')+'年級'}
 function hpod(R,f){return [1,2,3].map(function(r){var a=R.filter(function(x){return x.rk===r});return a.length?{w:a.map(f).join('<br>'),v:a[0].vt,d:[3.2,1.6,0][r-1]}:null})}
 /* 一個人的榜 ➜ 一幕一幕（2026-10-22 第二十一次 10(3)：換成 GLORY 引擎 score/_glory_rt.js：每一次不一樣的風格＋音樂）
    0 開場 ➜ 1 第 10～4 名（從最下面一格往上翻開）➜ 2 🥉 ➜ 3 🥈 ➜ 4 🥇（最長的鼓聲、全白閃光、皇冠、煙火）➜ 5 頒獎台 */
-function hwhoC(id){var n=nm(id);return cidH(id)+(HNM&&n?' '+esc(n):'')}
+function hwhoC(id){var n=nm(id);return cidH(id)+(HNM&&n?' '+esc(n):'')+hEq(id)}
+/* 2026-10-23 第二十二次 第 4 點：榮譽榜 呈現 學生 的 戰神 代表 人物、寵物、武器（伺服器 DATA.eqs ＝ {5碼:[戰士,武器,寵物]}）；〔⚔ 戰士 寵物 武器：顯示／隱藏〕 */
+function hEqI(id){return /^s\d{4}$/.test(id)?'../rpg/shop/'+id+'.jpg':'../rpg/'+({b:'chars',g:'chars',w:'weapons',p:'pets'}[id.charAt(0)]||'chars')+'/'+id+'.jpg'}
+function hEq(id){var q=HEQ&&DATA.eqs&&DATA.eqs[id];if(!q)return '';var L=[[q[0],'戰士'],[q[2],'寵物'],[q[1],'武器']].filter(function(x){return /^[bgwps]\d{2,4}$/.test(x[0]||'')});
+  return L.length?'<span class="gleq">'+L.map(function(x){return '<img class="ge'+x[0].charAt(0)+'" src="'+hEqI(x[0])+'" alt="'+x[1]+'">'}).join('')+'</span>':''}
 function hPlan(o){var P=[],k=o.k,top=o.L.filter(function(x){return x.rk<=10}),pm={};o.ps.forEach(function(p){pm[p.id]=p});top.forEach(function(x){x.vt=fmt(k,x.v)});
   var mid=top.filter(function(x){return x.rk>=4}),T={};[1,2,3].forEach(function(r){var a=top.filter(function(x){return x.rk===r});if(a.length)T[r]=a.map(function(x){return {w:hwhoC(x.id),v:x.vt,l:HON.awl(k,pm[x.id]||{},hper2())}})});
   HN.gd={kick:esc(o.t),aw:HON.AWN[k],per:hper(),ic:HON.awi(k),rows:mid.map(function(x){return {rk:x.rk,w:hwhoC(x.id),v:x.vt}}),top:T};
@@ -692,7 +696,7 @@ function hShow(){clearTimeout(HN.tm);var p=HN.P[HN.i];if(!p)return;GLORY.stop($(
   if(p.g!=null)GLORY.scene($('#honst'),HN.gst,p.g,HN.gd,HSND);else{HON.scene($('#honst'),HN.st,p.o);if(HSND&&p.snd)HON.snd[p.snd]()}
   $('#hpg').textContent=(HN.i+1)+'／'+HN.P.length;
   var me=HN;HN.tm=setTimeout(function(){if(HN&&HN===me&&HN.i<HN.P.length-1){HN.i++;hShow()}},p.t)}   /* 第二十一次：舊的 計時器 不可以 跑到 新的 榜 */
-function hCtl(){$('#hsd').textContent='🔊 聲音：'+(HSND?'開':'關');$('#hsd').classList.toggle('on',!!HSND);$('#hnmb').textContent='👤 姓名：'+(HNM?'顯示':'隱藏');$('#hnmb').classList.toggle('on',!!HNM)}
+function hCtl(){$('#hsd').textContent='🔊 聲音：'+(HSND?'開':'關');$('#hsd').classList.toggle('on',!!HSND);$('#hnmb').textContent='👤 姓名：'+(HNM?'顯示':'隱藏');$('#hnmb').classList.toggle('on',!!HNM);$('#heqb').textContent='⚔ 戰士 寵物 武器：'+(HEQ?'顯示':'隱藏');$('#heqb').classList.toggle('on',!!HEQ)}
 function hClose(){if(HN)clearTimeout(HN.tm);GLORY.stop($('#honst'));HN=null;$('#honov').classList.remove('on');$('#honst').innerHTML=''}
 /* 🖨 印獎狀：A4 橫式，一個人（一班）一張 */
 function hPrint(){var d=new Date(DATA.now+288e5),dt0=d.getUTCFullYear()+' 年 '+(d.getUTCMonth()+1)+' 月 '+d.getUTCDate()+' 日';
@@ -1047,12 +1051,12 @@ function wRead(pre){var a=Date.parse(($('#'+pre+'1')||{}).value),b=Date.parse(($
 /* 🎁 全班 獎勵（2026-10-20 第十四次，老師選 ① 全班目標＋③ 冠軍寶箱；規格 rpg/CLAUDE.md 最上面）：一律看「本週」
    ① 全班目標：名單上 每一個人 這週 都 練 3 天 以上 ➜ 按一下 ➜ 全班 每人 🪙＋100、⭐＋50（編號 cw|週|班：同一班 同一週 只發一次）
    ③ 冠軍寶箱：全年級「最認真練習」（練習時間）前 5 名 ➜ 按一下 ➜ 每人 一個 👑 冠軍寶箱（編號 ch|週|年級） */
-var RWMSG='',RWC=100,RWX=50,RWDAYS=3;
+var RWMSG='',RWC=SC.RPCW.c,RWX=SC.RPCW.x,RWDAYS=SC.RPCW.days;   /* 2026-10-23 第二十二次：🪙 ＋200、⭐ ＋100、每個星期一自動發（老師不用按） */
 function paneR(){var now=DATA.now,w=SC.weekStart(now),wk=new Date(w+288e5).toISOString().slice(0,10),G=SC.pick(ALL,{g:F.g,from:w,to:null}),ps=SC.students(G),by={};ps.forEach(function(p){by[p.id]=p});
-  var h='<div class="rwmsg" id="rwmsg">'+esc(RWMSG)+'</div><div class="rwd"><h3>① 全班 目標：全班 每一個人 這週 都 練 '+RWDAYS+' 天 ➜ 全班 每人 🪙 ＋'+RWC+'、⭐ ＋'+RWX+'</h3>';
-  SC.CLASSES[F.g].forEach(function(c){var L=RCLS[c]||[],ok=L.filter(function(id){return by[id]&&by[id].nd>=RWDAYS}),no=L.filter(function(id){return ok.indexOf(id)<0});
+  var h='<div class="rwmsg" id="rwmsg">'+esc(RWMSG)+'</div><div class="rwd"><h3>① 全班 目標：全班 每一個人 這週 都 練 '+RWDAYS+' 天 ➜ 下 星期一 自動 發：全班 每人 🪙 ＋'+RWC+'、⭐ ＋'+RWX+'</h3><div class="rwr"><small>✅ 不用 按：每個 星期一 0:00 以後，電腦 自己 算「上一週」，學生 打開 戰神之路 就 拿到</small></div>';
+  SC.CLASSES[F.g].forEach(function(c){var L=RCLS[c]||[],ok=L.filter(function(id){return by[id]&&by[id].days>=RWDAYS}),no=L.filter(function(id){return ok.indexOf(id)<0});
     h+='<div class="rwr"><span class="cid" style="color:'+ccol(c)+'">'+esc(c)+'</span>'+(L.length?'<span>✅ '+ok.length+' ／ '+L.length+' 人</span>'+(no.length?'<small>還沒 達到：'+no.map(function(id){return esc(id.slice(3))+' 號'}).join('、')+'</small>':'<small>🎉 全班 都 達到 了！</small>'):'<small>要先 在 試算表 貼「名單」才 知道 全班 有 誰</small>')+
-      '<button data-rw="cw" data-c="'+c+'"'+(L.length&&!no.length?'':' disabled')+'>🎁 發 全班 獎勵</button></div>'});
+      (L.length&&!no.length?'<b class="rwok">🎁 下 星期一 自動 發</b>':'')+'</div>'});
   /* ③ 👑 冠軍寶箱（2026-10-20 第十五次 老師：「忘了按怎麼辦？」➜ 自動發）：每個星期一 0:00 以後，伺服器 自己 算「上一週」前 5 名 ➜ 學生 打開 戰神之路 就 拿到；這裡 只 給 老師 看 */
   var w0=w-7*864e5,wk0=new Date(w0+288e5).toISOString().slice(0,10),psL=SC.students(SC.pick(ALL,{g:F.g,from:w0,to:w})),topL=SC.rank(psL,'sec').filter(function(x){return x.rk<=5}),top=SC.rank(ps,'sec').filter(function(x){return x.rk<=5});
   var byL={};psL.forEach(function(p){byL[p.id]=p});
@@ -1061,7 +1065,7 @@ function paneR(){var now=DATA.now,w=SC.weekStart(now),wk=new Date(w+288e5).toISO
     '<div class="rwr"><small>✅ 不用 按：每個 星期一 0:00 以後，電腦 自己 算「上一週」的 前 5 名，學生 打開 戰神之路 就 拿到 👑 寶箱（寶箱 沒有 期限）</small></div>'+
     '<h4 class="lkh">✅ 上週（'+wk0+' 那一週）已經 自動 發</h4>'+(topL.length?topL.map(function(x){return rw(x,byL)}).join(''):'<div class="rwr"><small>上週 沒有 人 練習</small></div>')+
     '<h4 class="lkh">⏳ 這週 到 現在（下 星期一 自動 發）</h4>'+(top.length?top.map(function(x){return rw(x,by)}).join(''):'<div class="rwr"><small>這週 還沒有 人 練習</small></div>')+'</div>'+
-    '<p class="note">① 全班 獎勵：同一班 同一週 只 發 一次（按 兩次 也 不會 多）。學生 下一次 打開 戰神之路 會 看到 金幣 飛進去、👑 寶箱。本週 從 '+wk+' 開始。</p>';
+    '<p class="note">① 全班 獎勵：同一班 同一週 只 發 一次。學生 下一次 打開 戰神之路 會 看到 金幣 飛進去、👑 寶箱。本週 從 '+wk+' 開始。</p>';
   /* ④ 👑 每一班 上一週 第 1 名 ➜ 這一週 選 1 次 現場任務 的 遊戲（2026-10-21 老師再加第 3 點；大螢幕 開場 自動 出現） */
   var CH=SC.champs(ALL,now);
   h+='<div class="rwd"><h3>④ 👑 每一班 上一週 最認真練習 第 1 名 ➜ 這一週 選 1 次 現場任務 的 遊戲</h3>'+SC.CLASSES[F.g].map(function(c){var x=CH[c];
@@ -1277,6 +1281,7 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if(c('#hre')){if(HN){HN.i=0;HN.st=HON.pick('t');HN.gst=GLORY.pick();hShow()}return}
   if(c('#hsd')){HSND=HSND?0:1;lss0('hsnd',HSND);if(HSND)HON.ac();hCtl();return}
   if(c('#hnmb')){HNM=HNM?0:1;lss0('hnm',HNM);hCtl();if(HN){var k=HN.key,i=HN.i,g0=HN.gst;hOpen(k);HN.i=i;HN.gst=g0;hShow()}return}
+  if(c('#heqb')){HEQ=HEQ?0:1;lss0('heq',HEQ);hCtl();if(HN){var k2=HN.key,i2=HN.i,g2=HN.gst;hOpen(k2);HN.i=i2;HN.gst=g2;hShow()}return}
   if(c('#hpr')){if(HN)hPrint();return}
   if(c('#cerGo')){cerOpen();$('#csd').textContent='🔊 聲音：'+(HSND?'開':'關');return}
   if(c('#cx')){cerClose();return}

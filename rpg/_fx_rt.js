@@ -245,6 +245,8 @@ var RPFX = (function () {
       an.onfinish = done; })(i); }
   /* ════ 👾 做完練習打怪 ════
      box ＝ 容器（裡面有 .fxh 英雄、.fxp 寵物、會放怪物）；F ＝ 伺服器算好的 {hits, d, pd, from:{i,m,hp,max}, to:{…}, kill:[…]}；o ＝ {base:網址開頭, w, p, id, done} */
+  /* 2026-10-23 第二十二次 第 1(2) 點（老師：怪物的血用 ❤ 太正面 ➜ 選「紅色血條＋數字」）：滿 ＝ 綠、一半 ＝ 黃、快沒了 ＝ 紅；字寫「血 80」 */
+  function hpCol(r) { return r > .5 ? 'linear-gradient(90deg,#2ECC71,#9BE15D)' : r > .25 ? 'linear-gradient(90deg,#F5B700,#FFE066)' : 'linear-gradient(90deg,#E0182D,#FF5A4E)'; }
   function monImg(base, m) { return base + 'rpg/pets/' + m + '.jpg'; }
   function fight(box, F, o) {
     o = o || {}; if (!box || !F) return; var base = o.base || '../', hero = box.querySelector('.fxh'), pet = box.querySelector('.fxp');
@@ -258,14 +260,14 @@ var RPFX = (function () {
       while (dmg > 0) { var need = mx(st.i) - st.hp; if (dmg >= need && kl > 0) { dmg -= need; ev.kills.push(ML[st.i % 15]); st.i++; st.hp = 0; kl--; } else { st.hp = Math.min(mx(st.i) - 1, st.hp + dmg); dmg = 0; } }
       ev.end = { i: st.i, hp: st.hp }; plan.push(ev); }
     if (F.to) plan[plan.length - 1].end = { i: F.to.i, hp: F.to.hp };
-    function show(c) { var m = mx(c.i), r = Math.max(0, (m - c.hp) / m); bar.style.width = (r * 100).toFixed(1) + '%'; lab.textContent = '❤ ' + (m - c.hp) + ' ／ ' + m; mn.textContent = '👾 第 ' + (c.i + 1) + ' 隻　暗黑神獸'; img.src = monImg(base, ML[c.i % 15]); }
+    function show(c) { var m = mx(c.i), r = Math.max(0, (m - c.hp) / m); bar.style.width = (r * 100).toFixed(1) + '%'; bar.style.background = hpCol(r); lab.textContent = '血 ' + (m - c.hp) + ' ／ ' + m; mn.textContent = '👾 第 ' + (c.i + 1) + ' 隻　暗黑神獸'; img.src = monImg(base, ML[c.i % 15]); }
     show(cur);
     function strike(k) {
       if (k >= plan.length) { if (o.done) setTimeout(o.done, 400); return; }
       var ev = plan[k], a = attack(box, { from: pos(box, hero || box, .5, .45), to: pos(box, mon.querySelector('.fxmi'), .5, .5), w: o.w, id: o.id, p: k % 2 === 0 ? o.p : null, pImg: pet ? pet.getAttribute('src') : '', pFrom: pet ? pos(box, pet) : null,
         dmg: ev.dmg, quick: true, name: k === 0, hero: hero, shk: box, hook: o.hook,
         onHit: function () { mon.classList.remove('hit'); void mon.offsetWidth; mon.classList.add('hit');
-          if (ev.kills.length) { var m = mx(cur.i); bar.style.width = '0%'; lab.textContent = '❤ 0 ／ ' + m; kill(ev.kills[ev.kills.length - 1], ev.end); } else { cur = ev.end; show(cur); } } });
+          if (ev.kills.length) { var m = mx(cur.i); bar.style.width = '0%'; lab.textContent = '血 0 ／ ' + m; kill(ev.kills[ev.kills.length - 1], ev.end); } else { cur = ev.end; show(cur); } } });
       setTimeout(function () { strike(k + 1); }, Math.max(900, a.ms - 200) + (ev.kills.length ? 900 : 0));
     }
     function kill(m0, end) { if (o.onKill) try { o.onKill(); } catch (x) { } mon.classList.add('ko'); var S = Stage(box), c = pos(box, mon); burst(S, c.x, c.y, 'light', 60, 520, 1.6); S.stop(1600);
@@ -310,7 +312,7 @@ var RPFX = (function () {
       (n >= 2 ? '<ellipse cx="28" cy="12" rx="11" ry="4" fill="none" stroke="url(#' + id + ')" stroke-width="2.6"/>' : '') +
       (n ? '<path d="M28 ' + (n >= 2 ? 13 : 9) + 'l1.6 3.6 3.6.4-2.7 2.5.8 3.7-3.3-1.9-3.3 1.9.8-3.7-2.7-2.5 3.6-.4z" fill="#fff"/>' : '<circle cx="28" cy="18" r="3" fill="' + c[1] + '"/>') + '</svg>';
     return '<span class="pgI p' + n + '" role="img" aria-label="' + ['寶寶', '長大', '進化'][n] + '">' + svg + '</span>'; }
-  return { attack: attack, spark: spark, beam: beam, summon: summon, evolve: evolve, chest: chest, coins: coins, fight: fight, wInfo: wInfo, pEl: pEl, EL: EL, hash: hash, pos: pos, tb: tb, TN: TN, ts: ts, pg: pg, wSig: wSig, iSig: iSig, SIGN: SIGN, TC: TC };
+  return { hpCol: hpCol, attack: attack, spark: spark, beam: beam, summon: summon, evolve: evolve, chest: chest, coins: coins, fight: fight, wInfo: wInfo, pEl: pEl, EL: EL, hash: hash, pos: pos, tb: tb, TN: TN, ts: ts, pg: pg, wSig: wSig, iSig: iSig, SIGN: SIGN, TC: TC };
 })();
 /* 🪙 金幣圖示：老師的電腦（舊的 Windows）沒有 🪙 這個字 ➜ 一律換成自己畫的金幣（2026-10-20 第十四次 2） */
 (function () {

@@ -17,3 +17,7 @@ for sh, k, cols, (y0, y1) in SHEETS:
     c = im.crop((x0, y0, x1, y1)); w = 300; h = round(c.height * w / c.width)
     c.resize((w, h), Image.LANCZOS).save(os.path.join(D, 'newg', '%s%d.jpg' % (k, i + 1)), quality=88)
 print('ok')
+# 老師 2026-10-23 同意的位置（listen/2026-10-23_C26/）：女 32～36 ＝ C、37～41 ＝ E（★★）、42～46 ＝ B、47～51 ＝ D（★★★）、52～56 ＝ A（★★★★）
+import shutil
+for n, k in enumerate([k + str(i) for k in 'CEBDA' for i in range(1, 6)]):
+  shutil.copy(os.path.join(D, 'newg', k + '.jpg'), os.path.join(D, 'chars', 'g%02d.jpg' % (32 + n)))

@@ -658,11 +658,11 @@ document.addEventListener('click',function(e){
 /* ══ 學生登入（2026-10-12 D 第 6 件；使用者 D6 第 10～12 題 A、D7、D8 定案：1A 2A 3A）══
    ① 打開網站的第一頁問一次（整頁大字）「請問 這是您嗎？30412〔✅ 是，繼續〕〔👋 不是，登出〕」（這個分頁記住，換頁不再問）
    ② 首頁最上面一條橫幅（不蓋住）：沒登入「👤 還沒登入〔🔑 登入〕」；登入了「請問 這是您嗎？30412〔✅ 是〕〔👋 不是，登出〕」，按 ✅ 以後「👤 30412〔👋 登出〕」
-   ③ 3 分鐘沒有動作（學校、在家都一樣，D15 A）就登出；最後 30 秒大字提醒「⏳ 30 秒後自動登出〔👆 我還在〕」（不寫「請問 您還在嗎？」）；
-      時間到「👋 已經登出了／3 分鐘沒有動作〔🔑 登入〕」。作答中、遊戲中一直在點 ＝ 有動作，不會被登出
+   ③ 10 分鐘沒有動作（2026-10-23 第二十二次老師：3 分鐘 ➜ 10 分鐘；學校、在家都一樣）就登出；最後 30 秒大字提醒「⏳ 30 秒後自動登出〔👆 我還在〕」（不寫「請問 您還在嗎？」）；
+      時間到「👋 已經登出了／10 分鐘沒有動作〔🔑 登入〕」。作答中、遊戲中一直在點 ＝ 有動作，不會被登出
    ④ 每一個題目、遊戲做完：「👋 做完了，記得登出／下一個人才不會用到您的號碼〔👋 登出〕」；登出一律 👋（不用 🚪）
    「最後一次動作」存在這台平板（score_act），每一頁都看同一個時間；登出 ＝ 三、四年級的號碼都清掉 */
-var SCIDLE=180000,SCWARN=30000,SCHOMEP=false,SCIT=null;
+var SCIDLE=600000,SCGAP=180000,SCWARN=30000,SCHOMEP=false,SCIT=null;
 function scOk(){try{sessionStorage.setItem('sc_ok',String(SCID||''))}catch(e){}}
 function scAsked(){try{return sessionStorage.getItem('sc_ok')===String(SCID||'')}catch(e){return true}}
 function scAct(){scPut('act',Date.now())}
@@ -707,7 +707,7 @@ function scAskWho(){if(!SCON||!SCID||SCGUEST||scAsked())return;
 function scIdleHide(){scFullOff('scidle')}
 function scIdleTick(){if(!SCON||!SCID||SCGUEST||window.SCLIVE){   /* ⚡ 現場任務：看 大螢幕 很久 不碰 平板，不可以 被 登出（2026-10-19 第十三次 3(5)） */scIdleHide();return}
   var a=scGet('act'),left=a?SCIDLE-(Date.now()-a):SCIDLE;if(!a){scAct();return}
-  if(left<=0){scOut();scFull('scbye2','<div class="sfic">👋</div><div class="sf1">已經登出了</div><div class="sf3">3 分鐘沒有動作</div><div class="sfbt"><button class="scK" id="scByeIn">🔑 登入</button></div>');return}
+  if(left<=0){scOut();scFull('scbye2','<div class="sfic">👋</div><div class="sf1">已經登出了</div><div class="sf3">10 分鐘沒有動作</div><div class="sfbt"><button class="scK" id="scByeIn">🔑 登入</button></div>');return}
   if(left<=SCWARN){var o=document.getElementById('scidle');if(!o||!o.classList.contains('on'))scFull('scidle','<div class="sfic">⏳</div><div class="sf2"><b id="scIdleN">30</b> 秒後自動登出</div><div class="sfbt"><button class="scY" id="scStay">👆 我還在</button></div>');
     var n=document.getElementById('scIdleN');if(n)n.textContent=Math.max(1,Math.ceil(left/1000))}
   else scIdleHide()}
@@ -724,7 +724,7 @@ function scViewOn(a,nm){if(!SCON||SCVW)return;SCVW={a:a,nm:nm||'👀 看字卡',
 function scVwAct(){var V=SCVW,n=Date.now();if(!V)return;
   var live=scLive()&&!document.hidden,busy=scOn()||!!document.querySelector('.scfull.on');
   if(V.id&&V.id!==SCID)scVwSave();
-  if(live&&V.last&&!V.busy&&!busy&&V.id===SCID){var g=n-V.last;if(g<=SCIDLE)V.acc+=Math.min(g,SCVMAX)}
+  if(live&&V.last&&!V.busy&&!busy&&V.id===SCID){var g=n-V.last;if(g<=SCGAP)V.acc+=Math.min(g,SCVMAX)}
   V.last=live?n:0;V.busy=busy;if(live)V.id=SCID}
 function scVwSave(){var V=SCVW;if(!V||!V.id)return;var sec=Math.round(V.acc/1000),id=V.id;V.acc=0;if(V.id!==SCID)V.id=null;if(sec<1)return;
   var QQ=scGet('q')||[];QQ.push({id:id,set:'g'+String(id).charAt(0)+'v_'+V.a,name:V.nm,m:'v',qs:[],sec:Math.min(3600,sec),src:SCSRC,dev:SCDEV,
@@ -758,7 +758,7 @@ function scHeroA(){var b=document.getElementById('scbar');return window.SCLIVE||
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-rpg]');if(a){e.preventDefault();location.href=SCRPB+'rpg/index.html'}});
 function scHomeLogin(){if(!SCH)return;scFullOff('scbye2');scLogin(SCH.reopen)}
 if(SCON){
-  (function(){var a=scGet('act');if(SCID&&a&&!window.SCLIVE&&Date.now()-a>=SCIDLE)scOut()})();   /* 上一次動作已經超過 3 分鐘 ＝ 已經登出了 */
+  (function(){var a=scGet('act');if(SCID&&a&&!window.SCLIVE&&Date.now()-a>=SCIDLE)scOut()})();   /* 上一次動作已經超過 10 分鐘 ＝ 已經登出了 */
   ['pointerdown','keydown','touchstart','wheel'].forEach(function(k){document.addEventListener(k,function(e){
     if(SCID&&!SCGUEST&&!(e.target&&e.target.closest&&e.target.closest('#scbye2')))scAct()},true)});
   SCIT=setInterval(scIdleTick,1000);
@@ -784,7 +784,7 @@ document.addEventListener('keydown',function(e){if(!$('#scBox'))return;
 function js(S, src) { return JS.replace('__SCG__', S.g).replace('__SCSRC__', JSON.stringify(src === 'home' ? 'home' : 'school')).replace('__TKLOCK__', () => require('./_calc.js').tkLock.toString()); }
 
 const CSSALL = CSS + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_wear.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_fx.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report.css'), 'utf8');
-/* 首頁（總首頁、三年級、四年級、在家複習首頁）：最上面的登入橫幅＋「請問 這是您嗎？」＋3 分鐘登出（2026-10-12 D 第 6 件）
+/* 首頁（總首頁、三年級、四年級、在家複習首頁）：最上面的登入橫幅＋「請問 這是您嗎？」＋10 分鐘登出（2026-10-12 D 第 6 件；2026-10-23 改 10 分鐘）
    g ＝ 年級（0 ＝ 總首頁：看最後登入的號碼）、rel ＝ 到 repo 根目錄的相對路徑（例 '../'）、src ＝ school／home。登入用遊戲那一種蓋滿整頁的 #scov */
 function home(g, rel, src, inl) {
   return (inl ? '' : '<div id="scbar" hidden></div>\n') + '<script src="' + rel + 'score/url.js"></script>\n<style>\n#scov{--btn:#1E1E1E;--line:#4A4A4A;--ok:#39D98A;--gold:#FFD24A;--acc:#9FB4C8}\n' + CSSALL + '</style>\n<script>\n' +
