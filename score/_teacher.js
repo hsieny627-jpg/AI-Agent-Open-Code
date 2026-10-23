@@ -1041,7 +1041,7 @@ function lkSt(k){var L=DATA.locks||{},T=DATA.lockt||{},cs=lkCls(),f=function(c){
 function wPre(k){var d=new Date(),a=Math.floor(Date.now()/6e4)*6e4,b=new Date();b.setHours(16,0,0,0);
   if(k==='today'){if(b.getTime()<=a)b.setDate(b.getDate()+1);return [a,b.getTime()]}
   var wd=(d.getDay()+6)%7,fri=new Date();fri.setHours(16,0,0,0);fri.setDate(fri.getDate()+(4-wd+(wd>4?7:0)));
-  if(k==='week')return [a,fri.getTime()];
+  if(k==='week'){if(fri.getTime()<=a){fri.setDate(fri.getDate()+2);fri.setHours(23,59,0,0)}return [a,fri.getTime()]}   /* 2026-10-23：星期五 16:00 以後按「這一週」＝ 開到 星期日 23:59（以前 會 變成 空的） */
   var mon=new Date();mon.setHours(8,0,0,0);mon.setDate(mon.getDate()+(7-wd));var nf=new Date(mon.getTime());nf.setDate(nf.getDate()+4);nf.setHours(16,0,0,0);return [mon.getTime(),nf.getTime()]}
 function wGet(){if(!LKW)LKW=wPre('today');return LKW}
 function wSt(w,now){return !w?'':now<w[0]?'⏳ 還沒開始':now>w[1]?'⛔ 結束了':'🟢 開放中'}
