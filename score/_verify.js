@@ -566,7 +566,7 @@ async function teacher(br, vp) {
   await p.click('[data-km="a"]'); await p.waitForTimeout(1500);
   /* 2026-10-24 第二十三次第 2 點：班級標題的燈號（要關心／要注意／很好／還沒做）一顆一行、不可以字直直排下來 */
   { const kp = await p.$$eval('.kct .kp', a => a.map(x => { const r = x.getBoundingClientRect(), f = parseFloat(getComputedStyle(x).fontSize); return { t: x.textContent, h: r.height, w: r.width, f }; }));
-    const bad = kp.filter(x => x.h > x.f * 2.2 || x.w < x.f * 3);
+    const bad = kp.filter(x => x.h > x.f * 2.7 || x.w < x.f * 3);   /* 一行 ≈ 字 2.2 倍（上下留白＋框）、兩行 ≈ 3.8 倍 */
     if (!kp.length || bad.length) e.push('要關心〔📊 圖表分析〕燈號擠在一起／字直直排：' + JSON.stringify(bad.slice(0, 2))); }
   /* 2026-10-22 第二十一次 第 11 點：〔📊 圖表分析〕最上面 ＝ 秒懂 動畫 5 幕（每一幕：字夠大、不超出、會 自己 換、◀ ▶ ⏸） */
   { const kv = () => p.evaluate(() => { const S = document.getElementById('kanst'); if (!S) return null; const R = S.getBoundingClientRect(), o = [], sm = [];
