@@ -564,6 +564,10 @@ async function teacher(br, vp) {
   /* 2026-10-15 D 第 8 件：有做的格子多一行「❤獎牌 用心 N」；D12 ⑥〔📊 圖表分析〕：全班整體＋每一個人（要關心的排最前面） */
   if (s304 && s304.c.some(c => c.id !== '30430' && !/練習 \d+/.test(c.w + ''))) { const kh = await p.$$eval('.kcls .kc:not(.nd) .kh', a => a.length); if (!kh) e.push('要關心的格子沒有「📅 練習 N」'); }
   await p.click('[data-km="a"]'); await p.waitForTimeout(1500);
+  /* 2026-10-24 第二十三次第 2 點：班級標題的燈號（要關心／要注意／很好／還沒做）一顆一行、不可以字直直排下來 */
+  { const kp = await p.$$eval('.kct .kp', a => a.map(x => { const r = x.getBoundingClientRect(), f = parseFloat(getComputedStyle(x).fontSize); return { t: x.textContent, h: r.height, w: r.width, f }; }));
+    const bad = kp.filter(x => x.h > x.f * 2.2 || x.w < x.f * 3);
+    if (!kp.length || bad.length) e.push('要關心〔📊 圖表分析〕燈號擠在一起／字直直排：' + JSON.stringify(bad.slice(0, 2))); }
   /* 2026-10-22 第二十一次 第 11 點：〔📊 圖表分析〕最上面 ＝ 秒懂 動畫 5 幕（每一幕：字夠大、不超出、會 自己 換、◀ ▶ ⏸） */
   { const kv = () => p.evaluate(() => { const S = document.getElementById('kanst'); if (!S) return null; const R = S.getBoundingClientRect(), o = [], sm = [];
       S.querySelectorAll('*').forEach(x => { const r = x.getBoundingClientRect(); if (r.width && (r.left < R.left - 2 || r.right > R.right + 2)) o.push(x.className || x.tagName); });

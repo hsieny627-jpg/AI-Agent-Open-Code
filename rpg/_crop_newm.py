@@ -13,7 +13,7 @@ for sh, k, boxes in SHEETS:
     c = im.crop(b); w = 300; h = round(c.height * w / c.width)
     c.resize((w, h), Image.LANCZOS).save(os.path.join(D, 'newm', '%s%d.jpg' % (k, i + 1)), quality=88)
 # 建議的位置（listen/2026-10-24_C27/）：男 31～36 ★ 基本 ＝ A1 A2 B1 B2 C1 C2
-APPROVED = False
+APPROVED = True   # 老師 2026-10-24 同意（對話裡選擇題）
 if APPROVED:
   for n, k in enumerate(['A1', 'A2', 'B1', 'B2', 'C1', 'C2']):
     shutil.copy(os.path.join(D, 'newm', k + '.jpg'), os.path.join(D, 'chars', 'b%02d.jpg' % (31 + n)))

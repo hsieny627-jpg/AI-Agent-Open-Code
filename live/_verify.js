@@ -101,7 +101,7 @@ const H_PH = ph => ph === 'q';
   n += 6;
   /* ════ 第一場：🏆 經典搶答 5 題（第 3 題 🔥 挑戰題）、大螢幕 1920 ════ */
   { DB = {}; const G = make({ TEACHER_PW: PW }), HV = [1920, 1080], tag = '經典';
-    G.post({ a: 'rpg', id: '40201', op: 'buy', item: 'b01' }); G.post({ a: 'rpg', id: '40201', op: 'buy', item: 'p03' });
+    G.post({ a: 'rpg', id: '40201', op: 'buy', item: 'b31' }); G.post({ a: 'rpg', id: '40201', op: 'buy', item: 'p03' });
     const { hc, h } = await hostIn(br, G, HV, tag);
     await h.fill('#pw', 'wrong'); await h.click('#pwgo'); await h.waitForTimeout(300);
     if (!/不對/.test(await h.textContent('#pwm'))) E.push(tag + '：密碼錯 沒有擋');
@@ -221,8 +221,8 @@ const H_PH = ph => ph === 'q';
     for (const s of S) await s.c.close(); await hc.close(); n += 90; }
   /* ════ 第二場：⚔️ 討伐魔王 10 題（干擾、禮物盒、✂ 功能）、大螢幕 1024 ════ */
   { DB = {}; const G = make({ TEACHER_PW: PW }), HV = [1024, 768], tag = '魔王 1024';
-    G.post({ a: 'rpg', id: '40201', op: 'buy', item: 'b01' }); G.post({ a: 'rpg', id: '40201', op: 'buy', item: 'p03' });
-    G.post({ a: 'rpg', id: '40203', op: 'buy', item: 'b02' }); G.post({ a: 'rpg', id: '40203', op: 'buy', item: 'p06' });   /* 2026-10-20 第十四次：🐾 寵物護盾（一場 一次） */
+    G.post({ a: 'rpg', id: '40201', op: 'buy', item: 'b31' }); G.post({ a: 'rpg', id: '40201', op: 'buy', item: 'p03' });
+    G.post({ a: 'rpg', id: '40203', op: 'buy', item: 'b32' }); G.post({ a: 'rpg', id: '40203', op: 'buy', item: 'p06' });   /* 2026-10-20 第十四次：🐾 寵物護盾（一場 一次） */
     { const t0 = require('../score/_calc.js').weekStart(Date.now()) - 7 * 864e5 + 5 * 3600e3;
       for (let k = 0; k < 3; k++) G.post({ a: 'rec', r: { id: '40205', set: 'g4u1_1-1b', name: 'x', src: 'home', dev: 'v', u: 'lw' + k, t: t0 + k * 6e4, qs: [0, 1, 2, 3, 4].map(i => [1, 0, 6, 0, .6, i]) } }); }
     const { hc, h } = await hostIn(br, G, HV, tag);

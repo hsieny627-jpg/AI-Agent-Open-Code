@@ -59,7 +59,12 @@ async function run(br, vp) {
       if (/review/.test(f)) { const h = await p.evaluate(() => { const b = document.getElementById('scBarIn'), r = b.getBoundingClientRect(), t = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
           return { h: r.height, f: parseFloat(getComputedStyle(b).fontSize), top: r.top, hit: b.contains(t), st: document.querySelectorAll('#scbar .hst').length }; });
         if (!/👋 開始練習 以前 🔑 先 登入/.test(b.t) || !/① 先 🔑 登入 ➜ 你的 練習 和 努力 .* 都會 記在 老師 的 成績 裡/.test(b.t) || !/② 練完 ➜ 一定 按 👋 登出 ➜ .* 保護 自己 和 同學 的 成績/.test(b.t)) e.push('在家複習首頁沒有兩個好習慣：' + b.t);
-        if (h.h < 70 || h.f < 32 || h.top > innerHeightOf(vp) * .5 || h.st !== 2) e.push('〔🔑 先 登入〕不夠醒目（要 ≧ 70px 高、字 ≧ 32px、在畫面上半部）：' + JSON.stringify(h)); }
+        if (h.h < 70 || h.f < 32 || h.top > innerHeightOf(vp) * .5 || h.st !== 2) e.push('〔🔑 先 登入〕不夠醒目（要 ≧ 70px 高、字 ≧ 32px、在畫面上半部）：' + JSON.stringify(h));
+        /* 2026-10-24 第二十三次第 3 點：👆 手指 不可以 蓋到〔🔑 先 登入〕（動畫 每一刻 都 量）、不可以 跑出 畫面 */
+        const hf = await p.evaluate(async () => { const b = document.getElementById('scBarIn'), f = document.querySelector('.hab .hf'); if (!f) return { no: 1 }; let g = 1e9, ov = 0;
+          for (let i = 0; i < 10; i++) { const a = b.getBoundingClientRect(), c = f.getBoundingClientRect(); g = Math.min(g, c.left - a.right); ov = Math.max(ov, c.right - innerWidth, document.documentElement.scrollWidth - innerWidth); await new Promise(r => setTimeout(r, 170)); }
+          return { g: Math.round(g), ov: Math.round(ov) }; });
+        if (hf.no || hf.g < 4 || hf.ov > 0) e.push('👆 手指 蓋到〔🔑 先 登入〕或 跑出 畫面：' + JSON.stringify(hf)); }
       else if (b.t !== '👤 還沒登入 🔑 登入') e.push('沒登入的橫幅不對：' + b.t); }
     if (await p.evaluate(() => /🚪/.test(document.body.innerText))) e.push('還有 🚪');
     out(f + ' 沒登入 ' + W, e); await p.close();

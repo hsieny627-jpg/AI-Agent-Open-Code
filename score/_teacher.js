@@ -360,7 +360,8 @@ b.lkg,b.lkr{padding:0 8px;border:2px solid;border-radius:10px}
 #tkmsg{color:var(--no);font-weight:700;min-height:1.3em;font-size:clamp(19px,1.5vw,26px)}
 /* 2026-10-12 D4：進步 ＝ 綠色粗箭頭（自己畫的 SVG，每一台電腦都一樣）；燈號 */
 .ua{width:.9em;height:1.05em;vertical-align:-.14em}
-.kp{width:1.7em;height:1.06em;vertical-align:-.22em}.pv .kp{width:1.6em;height:1em}
+/* 2026-10-24 第二十三次第 2 點：這一行原本寫 .kp，跟〔要關心〕燈號（span.kp）撞名 ➜ 燈號被壓成 1.7em 寬、字直直排下來；改成只管 svg */
+svg.kp{width:1.7em;height:1.06em;vertical-align:-.22em}.pv svg.kp{width:1.6em;height:1em}
 .lt{font-size:1.15em}
 td.nmc{text-align:left}
 /* 2026-10-12 D 第 3 件：點一個人 ＝ 秒懂成績卡 */

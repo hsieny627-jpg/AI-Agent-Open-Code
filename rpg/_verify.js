@@ -99,11 +99,15 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
       fr: document.querySelectorAll('#shop .pr.fr').length, it: document.querySelectorAll('#shop .it').length }));
     if (!s0.in || !/還沒有戰士/.test(s0.t) || !/Lv \d/.test(s0.t) || !/金幣/.test(s0.t)) E.push(tag + '：登入以後舞台不對：' + s0.t.slice(0, 80));
     if (/普通/.test(await p.textContent('#rp'))) E.push(tag + '：還有「普通」（要改「基本」）');
-    if (!s0.free || s0.fr !== 8 || s0.it !== 30) E.push(tag + '：英雄分頁要 30 個男生英雄、8 個寫「🎁 免費」（' + s0.it + '／' + s0.fr + '）');
+    if (!s0.free || s0.fr !== 6 || s0.it !== 28) E.push(tag + '：英雄分頁要 28 個男生英雄、6 個寫「🎁 免費」（第二十三次：男 01～08 下架、男 31～36 ★ 基本）（' + s0.it + '／' + s0.fr + '）');
+    { const bi = await p.evaluate(() => [].map.call(document.querySelectorAll('#shop .it'), x => x.getAttribute('data-id')));
+      if (['b31', 'b32', 'b33', 'b34', 'b35', 'b36'].some(x => bi.indexOf(x) < 0) || bi.some(x => +x.slice(1) <= 8)) E.push(tag + '：男生戰士要有 31～36、不可以有 01～08（' + bi.join(',') + '）');
+      const nb = await p.evaluate(() => [].filter.call(document.querySelectorAll('#shop .it img'), i => /b3[1-6]/.test(i.src) && !(i.complete && i.naturalWidth)).length);
+      if (nb) E.push(tag + '：男 31～36 的圖 ' + nb + ' 張載不到'); }
     await p.click('[data-sex="g"]'); await p.waitForTimeout(150);
     const gi = await p.evaluate(() => [].map.call(document.querySelectorAll('#shop .it'), x => x.getAttribute('data-id')));
     if (gi.length !== 45 || gi.indexOf('g29') < 0 || gi.indexOf('g31') < 0 || gi.indexOf('g56') < 0 || gi.indexOf('g12') >= 0) E.push(tag + '：女生戰士要 45 個（第二十二次：女 11～21 下架、加 32～56）（' + gi.length + '）');
-    await p.click('[data-sex="b"]'); await p.click('#shop [data-id="b02"]'); await p.waitForTimeout(150);
+    await p.click('[data-sex="b"]'); await p.click('#shop [data-id="b32"]'); await p.waitForTimeout(150);
     if (!/免費/.test(await p.textContent('#rpmb'))) E.push(tag + '：點 ★1 英雄沒有問「免費 選 這一個？」');
     await p.click('#rpmb [data-m="buy"]'); await p.waitForTimeout(900);
     /* 2026-10-20 第十四次：選到戰士 ＝ 蓋滿整頁的登場動畫（魔法陣、光柱、卡片轉出來、星星） */
@@ -111,7 +115,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     if (!b1.ov || !/戰士 ?登場/.test(b1.t) || b1.cv < 2 || !b1.img || !b1.hero) E.push(tag + '：選到戰士沒有登場動畫、舞台沒有戰士：' + JSON.stringify(b1).slice(0, 80));
     await p.evaluate(() => { const b = document.querySelector('.fxov .fxok'); if (b) b.click(); }); await p.waitForTimeout(1200);
     if (await p.$('.fxov')) E.push(tag + '：登場動畫按〔👌 好〕關不掉');
-    if (!G.books['角色'] || !/b02/.test((G.books['角色'].d[1] || [])[1] || '')) E.push(tag + '：試算表「角色」沒有存到 b02');
+    if (!G.books['角色'] || !/b32/.test((G.books['角色'].d[1] || [])[1] || '')) E.push(tag + '：試算表「角色」沒有存到 b32');
     /* ★2 稀有 150：金幣夠不夠照伺服器 */
     const coins = await p.evaluate(() => RV.coins);
     await p.click('#shop [data-id="b09"]'); await p.waitForTimeout(150);

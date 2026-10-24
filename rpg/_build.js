@@ -1,7 +1,7 @@
 /* rpg/_build.js — 戰神之路（舊名 🦸 我的英雄；2026-10-18 第十次老師改名）（rpg/index.html）：選英雄、武器、寵物、外觀寶物、經驗值、金幣、商店、圖鑑（2026-10-17 老師看完 C9（第八次）；規格 rpg/CLAUDE.md）
  *   node rpg/_build.js
  * 規則（價錢、稀有度、等級、經驗值、金幣）全部在 score/_calc.js 的 rp…（伺服器、這一頁、量測同一份）；這一頁只負責畫。
- * 圖：rpg/chars/（男 b01～b30、女 g01～g56；女 11～21 下架，第二十二次）、rpg/weapons/w01～w30、rpg/pets/p01～p30（切法 rpg/_crop.py）；🏪 商城 rpg/shop/s0101～（切法 rpg/_crop_shop.py；穿在身上 rpg/_wear_rt.js）。
+ * 圖：rpg/chars/（男 b01～b36（01～08 下架、31～36 ★ 基本，第二十三次）、女 g01～g56；女 11～21 下架，第二十二次）、rpg/weapons/w01～w30、rpg/pets/p01～p30（切法 rpg/_crop.py）；🏪 商城 rpg/shop/s0101～（切法 rpg/_crop_shop.py；穿在身上 rpg/_wear_rt.js）。
  * 登入用成績系統同一個（score/_client.js 的 home()）；買東西、換裝都送伺服器（{a:'rpg'}），平板改不了金幣。 */
 const fs = require('fs'), path = require('path');
 const SC = require('../score/_calc.js'), CL = require('../score/_client.js');
@@ -548,7 +548,7 @@ function shopHTML(){var LT=Object.keys(CAT.LIM).concat(Object.keys(CAT.END)),h='
 /* ❓ 經驗值、金幣 秒懂動畫（2026-10-18 第十次，老師：學生不懂經驗值和金幣的用處、怎麼賺）：5 幕自己往下演，一幕一句話 */
 var TUT={tm:0,cn:[]},TCH='a';
 /* 2026-10-20 第十五次 老師第 2、4、6、7 點：學生 看不懂 經驗值金幣 怎麼來、戰力 是什麼、收集 有 什麼 用 ➜ 三章 秒懂 動畫（一幕 一句話，自己 往下 演；可以 點 跳過去） */
-function tutScenes(){var V=RV||{power:0,tier:0,hit:10,petHit:0,lv:1},e=V.st?V.st.eq:{},hi=e.h?img(e.h):'chars/b01.jpg',wi=e.w?img(e.w):'weapons/w03.jpg',pi=e.p?img(e.p):'pets/p03.jpg',
+function tutScenes(){var V=RV||{power:0,tier:0,hit:10,petHit:0,lv:1},e=V.st?V.st.eq:{},hi=e.h?img(e.h):'chars/b31.jpg',wi=e.w?img(e.w):'weapons/w03.jpg',pi=e.p?img(e.p):'pets/p03.jpg',
     pw=V.power||0,tb=function(n,b){return window.RPFX?RPFX.tb(n,b):''},hs=e.h?star(e.h):1,ws=e.w?star(e.w):1,ps=e.p?star(e.p):1;
   return {
   /* 2026-10-20 第十六次 老師第 4 點（學生 還是 看不懂、太快）：一幕 只 講 一件事 ＝ 大 圖示 ➜ 拿到 什麼（大字），下面 數字 數上去；〔⏸ 暫停〕〔◀ 上一幕〕〔下一幕 ▶〕 */
@@ -590,7 +590,7 @@ function tutScenes(){var V=RV||{power:0,tier:0,hit:10,petHit:0,lv:1},e=V.st?V.st
 /* 2026-10-21 第十七次 老師第 2～7 點：先 3 幕講「⭐ 經驗值／🪙 金幣／⚔ 戰力 是什麼」，再講規則；學生看不到 A、B、%：A ➜ 👀 看完才按、B ➜ ✏️ 錯了會改、90% ➜ 10 題至少 9 題；
    冠軍寶箱的例子 ＝ 自己年級（三年級跟三年級比）；每班冠軍 ＝ 老師同意才上台；拿掉家長規則單。一幕一件事，數字全部讀 CAT（跟 _calc.js 一樣） */
 function rulesScenes(tb,me){var D=CAT.DILI,ex=Object.keys(CAT.TX),dl=function(i){return 'animation-delay:'+i+'s'},
-    V=RV||{},e=V.st?V.st.eq:{},hi=e.h?img(e.h):'chars/b01.jpg',wi=e.w?img(e.w):'weapons/w03.jpg',pi=e.p?img(e.p):'pets/p03.jpg',
+    V=RV||{},e=V.st?V.st.eq:{},hi=e.h?img(e.h):'chars/b31.jpg',wi=e.w?img(e.w):'weapons/w03.jpg',pi=e.p?img(e.p):'pets/p03.jpg',
     G=String(SCID||'3').charAt(0)==='4'?'4':'3',GN=G==='4'?'四年級':'三年級',
     fl=function(L){return '<div class="iflow">'+L.map(function(x,i){return (i?'<i class="ia" style="'+dl(.5+i*.9-.4)+'">➜</i>':'')+'<span class="'+(x[2]||'')+'" style="'+dl(.5+i*.9)+'"><b>'+x[0]+'</b><small>'+x[1]+'</small></span>'}).join('')+'</div>'},
     dots=function(n,ok){var h='<div class="rdots">';for(var i=0;i<n;i++)h+='<i class="'+(i<ok?'ok':'no')+'" style="'+dl(.4+i*.18)+'">'+(i<ok?'✓':'✗')+'</i>';return h+'</div>'};

@@ -294,10 +294,10 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
   const big = []; for (let i = 0; i < 40; i++) big.push(SC.clean({ id: '30412', set: 'g3gm_g1', m: 'g', n: 30, ok: 30, fix: 0, qs: Array.from({ length: 30 }, (_, j) => [1, 0, 3, 0, .5, j]), t: T0 + i * 6e4, u: 'g' + i }, T0 + 40 * 6e4));
   eq(SC.rpEarn(big).coin, 100, '一天最多 100 金幣');
   eq(SC.rpLv(0) + ',' + SC.rpLv(255) + ',' + SC.rpLv(256), '1,4,5', '等級：256 經驗值 ＝ Lv 5');
-  let st = SC.rpClean({}), r = SC.rpBuy(R, st, 'b01', T0);
+  let st = SC.rpClean({}), r = SC.rpBuy(R, st, 'b31', T0);
   ok(r.st && r.free && r.paid === 0, '第一個 ★1 英雄免費');
-  r = SC.rpBuy(R, r.st, 'b02', T0); ok(r.st && r.paid === 50, '第二個 ★1 英雄 50 金幣'); st = r.st;
-  eq(SC.rpBuy(R, st, 'b03', T0).err, 'coin', '金幣不夠買不到（81 − 50 ＝ 31 ＜ 50）');
+  r = SC.rpBuy(R, r.st, 'b32', T0); ok(r.st && r.paid === 50, '第二個 ★1 英雄 50 金幣'); st = r.st;
+  eq(SC.rpBuy(R, st, 'b33', T0).err, 'coin', '金幣不夠買不到（81 − 50 ＝ 31 ＜ 50）');
   eq(SC.rpBuy(R, st, 'b17', T0).err, 'lv', '等級不夠買不到（★3 要 Lv 5）');
   ok(SC.rpOk('g29') && SC.rpOk('g31') && SC.rpStar('g31') === 5, '女 29 換好新圖、女 31 ★★★★★（2026-10-18 第九次）');
   /* 🏪 商城（2026-10-18 第九次）：價錢、等級照第幾排；只有上架的類買得到；同一個位置換著戴 */
@@ -306,6 +306,9 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
   eq(SC.rpOk('s1101') ? 1 : 0, 0, '沒有 第 11 類');
   /* 2026-10-23 第二十二次：女 11～21、舊寶物 下架（買過 的 照 用）；女 32～56；全班 獎勵 🪙 200 ⭐ 100 */
   ok(!SC.rpOk('g11') && !SC.rpOk('g21') && SC.rpOk('g10') && SC.rpOk('g22') && !SC.rpOk('t01') && !SC.rpOk('t10'), '下架：女 11～21、舊寶物 t01～t10');
+  /* 2026-10-24 第二十三次：男 01～08 下架（選過 的 照 用）；男 31～36 ★ 基本 */
+  ok(!SC.rpOk('b01') && !SC.rpOk('b08') && SC.rpOk('b09') && SC.rpOk('b31') && SC.rpOk('b36') && SC.rpStar('b31') === 1 && SC.rpStar('b36') === 1 && !SC.rpStar('b37'), '男 01～08 下架、男 31～36 ★ 基本');
+  { const st0 = SC.rpClean({}); st0.own.h = ['b01']; st0.eq.h = 'b31'; ok(!SC.rpEquip(st0, 'b01').err, '選過 的 舊 基本 男戰士 還 可以 裝'); }
   ok(SC.rpStar('g32') === 2 && SC.rpStar('g41') === 2 && SC.rpStar('g42') === 3 && SC.rpStar('g51') === 3 && SC.rpStar('g52') === 4 && SC.rpStar('g56') === 4 && !SC.rpStar('g57'), '女 32～56 稀有度');
   { const st0 = SC.rpClean({}); st0.own.h = ['g12']; st0.eq.h = 'b01'; ok(!SC.rpEquip(st0, 'g12').err, '買過 的 下架 女戰士 還 可以 裝'); }
   eq(SC.RPCW.c + '/' + SC.RPCW.x + '/' + SC.RPCW.days, '200/100/3', '全班 獎勵 🪙 200 ⭐ 100 練 3 天');
@@ -322,9 +325,9 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
     y = SC.rpEquip(y, 's0101', T0).st; ok(!y.eq.s.au, '再點一下 ＝ 拿下來');
     eq(SC.rpEquip(y, 's0103', T0).err, 'own', '沒買的光環不能戴');
     ok(SC.rpKind('s0703') === 'w' && SC.rpKind('s0812') === 'p' && SC.rpStar('s0816') === 5, '魔法武器 ＝ 武器、新寵物 ＝ 寵物；第 4 排 ★★★★★'); }
-  eq(SC.rpBuy(R, st, 'b02', T0).err, 'own', '買過的不能再買');
+  eq(SC.rpBuy(R, st, 'b32', T0).err, 'own', '買過的不能再買');
   r = SC.rpBuy(R, st, 'p03', T0 + 3 * D); ok(r.free && r.st.eq.p === 'p03', '第一隻 ★1 寵物免費，自動裝上'); st = r.st;
-  eq(SC.rpEquip(st, 'b01', T0).st.eq.h, 'b01', '換回買過的英雄');
+  eq(SC.rpEquip(st, 'b31', T0).st.eq.h, 'b31', '換回買過的英雄');
   eq(SC.rpEquip(st, 'b09', T0).err, 'own', '沒買過的不能裝');
   const V = SC.rpView(R, st); eq([V.coins, V.lv, V.petDays], [31, 3, 1], '平板看到：剩 31 金幣、Lv 3、寵物陪了 1 天（裝上以後練的那一天）');
   ok(V.power > 0 && SC.rpDmg(V.power) >= 10 && SC.rpDmg(99999) === 30, '戰力、合作打魔王傷害（最多 30）');
