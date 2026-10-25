@@ -16,6 +16,8 @@ const A = rd('audio/aud.js'), W = rd('audio/w/aud.js');
 D.SAY.forEach(s0 => { n++; const s = typeof s0 === 'string' ? s0 : s0.k, k = akey(s.replace(/^m:/, '')), mk = /^m:/.test(s) ? 'm:' + k : k;
   const f = A[mk] ? 'audio/' + A[mk][0] : W[k] ? 'audio/w/' + W[k][0] : '';
   if (!f) E.push('沒有語音檔：' + s); else if (!fs.existsSync(path.join(__dirname, f))) E.push('語音檔不見了：' + s); });
+/* 2026-10-26 第 1-1 點：打地鼠 的 慢 男聲（m1）、更慢（m2）每個 字 都 有 */
+{ const M1 = rd('audio/m1/aud.js'), M2 = rd('audio/m2/aud.js'); D.SAYM.forEach(w => { n++; if (!M1[w] || !M2[w] || !fs.existsSync(path.join(__dirname, 'audio/m1', M1[w][0])) || !fs.existsSync(path.join(__dirname, 'audio/m2', M2[w][0]))) E.push('打地鼠 慢 的 語音檔 沒有：' + w); }); }
 D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.jpg'))) E.push('沒有照片：' + c.k); });
 /* 2. 總首頁有〔📝 三年級 複習〕；在家複習沒有；不接成績系統 */
 { n++; const hub = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').replace(/<\/?span[^>]*>/g, '');
@@ -49,6 +51,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
       if (g.id === 'q8') { n++; const wp = await p.evaluate(() => ({ on: document.getElementById('wp').classList.contains('on'), n: document.querySelectorAll('#wp [data-wr]').length, k: R.k }));
         if (!wp.on || wp.n < 10 || wp.k !== -1) E.push(tag + ' q8：第一次 玩 沒有 先 選 戰士：' + JSON.stringify(wp));
         if (wp.on) { await p.click('#wp [data-wr]'); await p.waitForTimeout(300); } }
+      if (g.id === 'q2') { n++; const hw = await p.$('#q2go'); if (!hw) E.push(tag + ' q2：第 1 題 沒有〔怎麼 玩〕說明'); else { const t0 = await p.evaluate(() => tLeft()); await p.waitForTimeout(500); const t1 = await p.evaluate(() => tLeft()); if (t1 < t0 - .05) E.push(tag + ' q2：看 說明 的 時候 倒數 在 走'); await hw.click(); } }
       await p.waitForTimeout(600);
       /* 版面 */
       const m = await p.evaluate(() => { const sm = [], low = [], out = [];
@@ -84,14 +87,17 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
           n++; if (Math.abs(f.t - t1) > .05) E.push(tag + ' ' + g.id + '：解說的時候倒數還在走');
           n++; if (f.big < 30) E.push(tag + ' ' + g.id + '：解說英文太小 ' + f.big);
           n++; if (f.ov > 2 && vp[0] !== 820) E.push(tag + ' ' + g.id + '：解說要捲動 ' + f.ov + 'px');
+          /* 2026-10-26 第 1-7 點：唸 的 時候 點〔🔊 再聽〕不可以 當機（還是 要 出現〔▶ 下一題〕）*/
+          if (!f.nx) await p.click('#fbs').catch(() => {});
           const s0 = await p.evaluate(() => window.__say.length);
           await p.waitForSelector('#fbn', { timeout: 12000 }).catch(() => {});
           const s1 = await p.evaluate(() => ({ n: window.__say.length, nx: !!document.querySelector('#fbn'), tts: window.__say.filter(x => /^tts:/.test(x)) }));
           n++; if (!s1.nx) E.push(tag + ' ' + g.id + '：唸完 3 次還是沒有〔▶ 下一題〕');
           if (g.id === 'q9') { n++; const r9 = await p.evaluate(() => ({ n3: document.querySelectorAll('#n3 span').length, say: window.__say.length }));
-            if (r9.n3 !== 1 || r9.say - s0 > 3) E.push(tag + ' q9：答錯頁 要 只唸 1 次（3 句）：' + JSON.stringify(r9) + ' 從 ' + s0); }
+            if (r9.n3 !== 1 || r9.say - s0 > 6) E.push(tag + ' q9：答錯頁 要 只唸 1 次（3 句）：' + JSON.stringify(r9) + ' 從 ' + s0); }
           if (g.id === 'q4' || g.id === 'q5') { n++; const lw = await p.evaluate(() => ({ dot: !!document.querySelector('#fb .lnh'), y: (document.querySelector('#fb .yp') || {}).textContent || '' }));
-            if (!lw.dot && !(g.id === 'q4' && vp[0] === 820)) E.push(tag + ' ' + g.id + '：答錯頁 沒有「頂天立地 ● 要 碰到 線」'); if (vp[0] === 1920 && !/沒有 碰到/.test(lw.y)) E.push(tag + ' ' + g.id + '：寫 浮 起來 的 字 沒有 說「沒有 碰到 …線」：' + lw.y.slice(0, 40)); }
+            if (!lw.dot && !(g.id === 'q4' && vp[0] === 820)) E.push(tag + ' ' + g.id + '：答錯頁 沒有「頂天立地 ● 要 碰到 線」');
+            n++; const nc = await p.evaluate(() => document.querySelectorAll('#fb .ltr canvas').length); if (nc < 2 && !(g.id === 'q4' && vp[0] === 820)) E.push(tag + ' ' + g.id + '：答錯頁 要 有 兩個 字母 都 畫 在 格線 上（題目／比一比 ＋ 正確答案）：' + nc); if (vp[0] === 1920 && !/沒有 碰到/.test(lw.y)) E.push(tag + ' ' + g.id + '：寫 浮 起來 的 字 沒有 說「沒有 碰到 …線」：' + lw.y.slice(0, 40)); }
           n++; if (s1.tts.length) E.push(tag + ' ' + g.id + '：沒有語音檔，用了瀏覽器語音 ' + s1.tts.slice(0, 2).join('、'));
           if (SHOT && vp[0] !== 1920) await p.screenshot({ path: path.join(SHOT, 'g3m_' + g.id + '_fb_' + vp[0] + '.png') });
           await p.click('#fbn'); await p.waitForTimeout(500);
@@ -131,15 +137,22 @@ async function answer(p, g, wrong) {
       await p.mouse.move(b.x + b.width / 2, b.y + 20); await p.mouse.down(); await p.mouse.move(gp.x + gp.width / 2, gp.y + gp.height / 2, { steps: 8 }); await p.mouse.up(); return; } return; }
   if (g.id === 'q6') { const W = q.want; if (wrong) { const b = await p.$$('.qb'); for (const e of b) if ((await e.textContent()) !== W[0]) return e.click({ force: true }); }
     for (let i = 0; i < W.length; i++) { const b = await p.$$('.qb:not(.used)'); for (const e of b) if ((await e.textContent()) === W[i]) { await e.click({ force: true }); break; } await p.waitForTimeout(60); } return; }
-  if (g.id === 'q9') { for (let i = 0; i < 3; i++) { await p.waitForFunction(() => !BUSY, null, { timeout: 5000 }).catch(() => {}); const w = await p.evaluate(() => R.q9());
-      const s0 = await p.evaluate(() => window.__say.length); await tap('.id[data-i="' + w + '"]'); await tap('.nb[data-n="' + (wrong && i === 1 ? (w + 1) % 3 : w) + '"]');
+  if (g.id === 'q9') { const sl = await p.$$eval('.sl9', x => x.map(e => +e.dataset.r)); let bad = false;
+    for (let i = 0; i < sl.length; i++) { await p.waitForFunction(() => !BUSY, null, { timeout: 5000 }).catch(() => {}); const r = sl[i], wantv = q.bl[r] === 'n' ? q.c[r].t : String(q.c[r].a);
+      const v = wrong && i === 1 ? q.tl.filter(x => x !== wantv && !(q.bl.some((b, j) => (b === 'n' ? q.c[j].t : String(q.c[j].a)) === x)))[0] : wantv;
+      const s0 = await p.evaluate(() => window.__say.length);
+      const t = await p.$('.tile9:not(.used)[data-v="' + v + '"]'); if (!t) { E.push('q9：找不到 方塊 ' + v); return; }
+      /* 真的 拖過去 */ const tb = await t.boundingBox(), sb = await (await p.$('.sl9[data-r="' + r + '"]')).boundingBox();
+      await p.mouse.move(tb.x + tb.width / 2, tb.y + tb.height / 2); await p.mouse.down(); await p.mouse.move(sb.x + sb.width / 2, sb.y + sb.height / 2, { steps: 8 }); await p.mouse.up();
       if (wrong && i === 1) return; await p.waitForTimeout(150);
-      /* 老師：連對 ＝ 馬上 唸 那一句 */ const s1 = await p.evaluate(() => window.__say.length); if (s1 <= s0) E.push('q9：連對 沒有 馬上 唸 那一句'); await p.waitForTimeout(250); } return; }
+      const s1 = await p.evaluate(() => window.__say.length); if (s1 <= s0) E.push('q9：放對 沒有 馬上 唸 那個人 的 那一句'); await p.waitForTimeout(250); } return; }
   if (g.id === 'q4' || g.id === 'q5') {
     /* 挖礦：先 點 對的 圖（老師：單字 跟 圖片 配對）；820 那一種 故意 點 錯的 圖 */
     if (g.id === 'q4') { const vw = await p.evaluate(() => innerWidth); if (wrong && vw === 820) return tap('.ore:not([data-ow="' + q.say + '"])'); await tap('.ore[data-ow="' + q.say + '"]'); await p.waitForTimeout(200); }
     /* 1920 那一種：答錯 ＝ 字 寫 對、但是 整個 往上 浮（沒有 碰到 底線）➜ 頂天立地 要 判 錯 */
     const fl = wrong && (await p.evaluate(() => innerWidth)) === 1920 ? -.3 : 0;
+    /* 2026-10-26：浮 起來 0.3 格 也 超出 整個 格子 ➜ 第一次 會「再 寫 一次」；這裡 量 的 是 第二次（R.retry ＝ 1）要 判 錯 */
+    if (fl) await p.evaluate(() => { R.retry = 1; });
     const ch = wrong && !fl ? (q.want === q.want.toUpperCase() ? q.want.toLowerCase() : q.want.toUpperCase()) : q.want;
     const c = await (await p.$('.pad canvas')).boundingBox(), u = c.height / 3.5, xs = [].concat(...HW.T[ch][0].map(s => s.map(pt => pt[0]))), x0 = Math.min(...xs);
     for (const s of HW.T[ch][0]) { await p.mouse.move(c.x + u * (.5 + s[0][0] - x0), c.y + u * (s[0][1] + .25 + fl)); await p.mouse.down();
@@ -162,7 +175,18 @@ async function special(p, g) { const e = [];
   if (g.id === 'q4') { const r = await p.evaluate(() => ({ o: document.querySelectorAll('.ore').length, lk: document.querySelector('.pad').classList.contains('lk') })); if (r.o !== 3 || !r.lk) e.push('挖礦 沒有 3 塊 圖 礦石、還沒 點 圖 寫字板 要 鎖住：' + JSON.stringify(r)); }
   if (g.id === 'q6') { const t = await p.evaluate(() => document.querySelector('.q6h').textContent + '|' + document.querySelector('.q6ex').textContent); if (!/一共 有 幾個/.test(t) || !/例：/.test(t)) e.push('金幣磚 沒有 說明「一共 有 幾個」＋例子：' + t.slice(0, 50));
     const c = await p.evaluate(() => { const s = document.querySelectorAll('.objs span'); s[0].click(); s[1].click(); return [s[0].dataset.c, s[1].dataset.c].join(); }); if (c !== '1,2') e.push('點 東西 沒有 數 1、2：' + c); }
-  if (g.id === 'q8') { const r = await p.evaluate(() => ({ t: document.getElementById('stage').textContent + document.getElementById('gnm').textContent + document.title, im: (document.querySelector('.fig.me img') || {}).src || '', dk: !!document.querySelector('.dksv'), sw: !document.getElementById('wsw').hidden }));
-    if (/寶可夢/.test(r.t)) e.push('還有「寶可夢」'); if (!/rpg\/chars\/[bg]\d+\.jpg/.test(r.im) || !r.dk || !r.sw || !/黑暗騎士/.test(r.t)) e.push('擂台 沒有 自己 選 的 戰士／黑暗騎士／〔🔄 換 戰士〕：' + JSON.stringify(r).slice(0, 120)); }
-  if (g.id === 'q9') { const r = await p.evaluate(() => ({ t: document.querySelector('.idc').textContent, h: document.querySelector('.q9h').textContent })); if (/Age|\b(one|two|three|four|five|six|seven|eight|nine|ten)\b/.test(r.t) || !/第 1 句/.test(r.h)) e.push('證件 要 只寫 名字、上面「第 1 句」：' + JSON.stringify(r)); }
+  if (g.id === 'q8') { const r = await p.evaluate(() => ({ t: document.getElementById('stage').textContent + document.getElementById('gnm').textContent + document.title, im: (document.querySelector('.fig.me img') || {}).src || '', foe: ((document.querySelector('.fcard.foe img') || {}).src || '').split('/').pop(), ok: (document.querySelector('.fcard.foe img') || {}).naturalWidth > 0, sw: !document.getElementById('wsw').hidden }));
+    if (/寶可夢/.test(r.t)) e.push('還有「寶可夢」'); if (!/rpg\/chars\/[bg]\d+\.jpg/.test(r.im) || r.foe !== 'foe1.webp' || !r.ok || !r.sw || !/DARK OVERLORD/.test(r.t)) e.push('擂台 沒有 自己 的 戰士／老師 給 的 反派 DARK OVERLORD／〔🔄 換 戰士〕：' + JSON.stringify(r).slice(0, 160));
+    /* 第 1 回合 打倒（4 題）➜ 第 2 回合 SHADOW SCHEMER */ const r2 = await p.evaluate(() => { var k0 = R.k; R.k = 4; HP8.e = 0; var st = document.getElementById('stage'), q = R.q; st.innerHTML = ''; REN.q8(q, st); return { f: (document.querySelector('.fcard.foe img') || {}).src || '', t: document.querySelector('.rnd8').textContent, nw: !!document.querySelector('.nw8'), k0 }; }); await p.evaluate(k => { R.k = k; }, r2.k0);
+    if (!/foe2\.webp/.test(r2.f) || !/ROUND 2/.test(r2.t) || !r2.nw) e.push('打倒 DARK OVERLORD 以後 沒有 換 SHADOW SCHEMER：' + JSON.stringify(r2));
+    await p.evaluate(() => { HP8 = { b: 0, e: 4, m: 8, ko: 0 }; var st = document.getElementById('stage'); st.innerHTML = ''; REN.q8(R.q, st); }); }
+  if (g.id === 'q9') { const r = await p.evaluate(() => ({ b: document.querySelectorAll('.bub9').length, sp: document.querySelectorAll('.sp9').length, sl: document.querySelectorAll('.sl9').length, tl: document.querySelectorAll('.tile9').length, t: document.querySelector('.ft9').textContent, th: [].map.call(document.querySelectorAll('.fm9 th'), x => x.textContent).join(',') }));
+    if (r.b !== 3 || r.sp !== 3 || r.sl !== 3 || r.tl !== 5 || !/New Friends/.test(r.t) || !/Name,Age/.test(r.th)) e.push('資料表 小幫手：3 個 對話框＋🔊、3 個 空格、5 個 方塊、Name／Age：' + JSON.stringify(r)); }
+  if (g.id === 'q1') { const r = await p.evaluate(() => ({ pic: !!document.querySelector('.q1pic'), sl: !!document.querySelector('.hear.slow'), m1: window.__say.filter(x => /^m1\//.test(x)).length }));
+    if (!r.pic || !r.sl || r.m1 < 2) e.push('打地鼠：要 有 圖、〔🐢 慢慢 唸〕、自動 用 慢 的 男聲 唸 2 次：' + JSON.stringify(r)); }
+  if (g.id === 'q3') { const t = await p.evaluate(() => document.querySelector('.claw').textContent + '|' + document.querySelector('.ctl3').textContent); ['CLAW MACHINE', 'PRIZE', 'PUSH', 'INSERT COIN', 'LEFT', 'DROP', 'RIGHT'].forEach(w => { if (t.indexOf(w) < 0) e.push('夾娃娃 沒有 英文「' + w + '」'); }); if (/[\u4e00-\u9fff]/.test(t)) e.push('夾娃娃 機台／按鈕 還有 中文：' + t.slice(0, 60)); }
+  if (g.id === 'q5') { /* 第 1-4 點：超出 格子 很多 ➜「再 寫 一次」（不算 錯、倒數 停住）*/ const q = await p.evaluate(() => R.q), c = await (await p.$('.pad canvas')).boundingBox(), u = c.height / 3.5, xs = [].concat(...HW.T[q.want][0].map(s => s.map(pt => pt[0]))), x0 = Math.min(...xs);
+    for (const s of HW.T[q.want][0]) { const yy = v => Math.min(c.y + c.height - 2, Math.max(c.y + 2, c.y + u * (v * 1.7 + .15))); await p.mouse.move(c.x + u * (.5 + s[0][0] - x0), yy(s[0][1])); await p.mouse.down(); for (const pt of s.slice(1)) await p.mouse.move(c.x + u * (.5 + pt[0] - x0), yy(pt[1])); await p.mouse.up(); }
+    await p.click('.wbtn .go'); await p.waitForTimeout(200); const r = await p.evaluate(() => ({ t: !!document.querySelector('.rtry'), res: R.res[R.k], fb: document.getElementById('fb').classList.contains('on') }));
+    if (!r.t || r.res !== undefined || r.fb) e.push('寫字 超出 很多 沒有「再 寫 一次」：' + JSON.stringify(r)); await p.waitForTimeout(2000); }
   return e; }

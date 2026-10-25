@@ -21,7 +21,8 @@ var GL = {
   lion: '獅子', monkey: '猴子', nose: '鼻子', ox: '公牛', pig: '豬', queen: '女王', rabbit: '兔子', vest: '背心', window: '窗戶',
   fox: '狐狸', 'yo-yo': '溜溜球', zebra: '斑馬'
 };
-var BOYS = ['Ken', 'Alan', 'Ben', 'Tom', 'Max', 'Leo', 'Cody', 'Jack', 'Tim', 'Dan'];
+/* 2026-10-26 第二十六次：考卷 H 大題 的 Ken、Alan 也是 考卷 人名 ➜ 換成 Eric、Ryan（老師：人名 不可以 跟 期中考卷 一樣） */
+var BOYS = ['Eric', 'Ryan', 'Ben', 'Tom', 'Max', 'Leo', 'Cody', 'Jack', 'Tim', 'Dan'];
 var GIRLS = ['Amy', 'Mia', 'Kate', 'Lucy', 'Ivy', 'Nina', 'Jane', 'Zoe'];
 var NAMES = BOYS.concat(GIRLS);
 var NUMW = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
@@ -72,7 +73,7 @@ var SC = {
 var G2 = [
   { say: [['m', "Hi, I'm Tom. I'm nine years old."]], o: [{ t: 'Tom', a: 9 }, { t: 'Tom', a: 5 }, { t: 'Ben', a: 9 }], zh: '嗨，我是 Tom。我九歲。' },
   { say: [['', "Hello, I'm Amy. I'm six."]], o: [{ t: 'Amy', a: 6 }, { t: 'Amy', a: 7 }, { t: 'Mia', a: 6 }], zh: '哈囉，我是 Amy。我六歲。' },
-  { say: [['m', "Hi, I'm Ben. I'm eight years old."]], o: [{ t: 'Ben', a: 8 }, { t: 'Ken', a: 8 }, { t: 'Ben', a: 6 }], zh: '嗨，我是 Ben。我八歲。' },
+  { say: [['m', "Hi, I'm Ben. I'm eight years old."]], o: [{ t: 'Ben', a: 8 }, { t: 'Eric', a: 8 }, { t: 'Ben', a: 6 }], zh: '嗨，我是 Ben。我八歲。' },
   { say: [['', "Hello, I'm Kate. I'm ten."]], o: [{ t: 'Kate', a: 10 }, { t: 'Kate', a: 2 }, { t: 'Mia', a: 10 }], zh: '哈囉，我是 Kate。我十歲。' },
   { say: [['m', "Hi, I'm Max. I'm seven years old."]], o: [{ t: 'Max', a: 7 }, { t: 'Max', a: 6 }, { t: 'Jack', a: 7 }], zh: '嗨，我是 Max。我七歲。' },
   { say: [['', "Hello, I'm Mia. I'm four."]], o: [{ t: 'Mia', a: 4 }, { t: 'Mia', a: 5 }, { t: 'Amy', a: 4 }], zh: '哈囉，我是 Mia。我四歲。' },
@@ -141,13 +142,13 @@ G7.forEach(function (q) { q.en = q.s.replace('___', q.o[0]); q.say = q.en; });
 /* ════ 8 ⚔ 英文 對決 擂台（考卷 H：選回應；2026-10-25 老師：「寶可夢」刪掉 ➜ 黑暗騎士 vs 學生 選 的 戰士）════ 對手說一句 ➜ 選出招（回答）；也有反過來：對手回答 ➜ 選他剛剛被問什麼 */
 var G8 = [
   { a: "What's your name?", o: ["I'm Amy.", "I'm nine.", "You're welcome.", 'Good morning.'] },
-  { a: 'How old are you?', o: ["I'm eight.", "I'm Ken.", 'Thank you.', 'Nice to meet you, too.'] },
+  { a: 'How old are you?', o: ["I'm eight.", "I'm Eric.", 'Thank you.', 'Nice to meet you, too.'] },
   { a: 'Thank you.', o: ["You're welcome.", 'Thank you.', 'Nice to meet you.', 'I can help you.'] },
   { a: 'Nice to meet you.', o: ['Nice to meet you, too.', "You're welcome.", "I'm ten.", 'I can help you.'] },
   { a: "I can't find my dog.", o: ['I can help you.', "You're welcome.", 'Good morning.', "I'm nine."] },
   { a: 'Good morning.', o: ['Good morning.', "You're welcome.", 'Nice to meet you, too.', "I'm six."] },
   { a: "Hi, I'm Ben. What's your name?", o: ["I'm Mia.", "I'm seven.", 'Nice to meet you, too.', "You're welcome."] },
-  { a: 'How old are you, Ken?', o: ["I'm ten.", "I'm Ken.", 'Good morning.', 'Thank you.'] },
+  { a: 'How old are you, Eric?', o: ["I'm ten.", "I'm Eric.", 'Good morning.', 'Thank you.'] },
   { a: 'I can help you.', o: ['Thank you.', "You're welcome.", 'Good morning.', "I'm six."] },
   { rev: 1, b: "I'm nine years old.", o: ['How old are you?', "What's your name?", 'Nice to meet you.', 'Good morning.'] },
   { rev: 1, b: 'My name is Max.', o: ["What's your name?", 'How old are you?', 'Thank you.', 'I can help you.'] },
@@ -157,26 +158,40 @@ var G8 = [
 ];
 var G8Z = {
   "What's your name?": '你叫什麼名字？', "I'm Amy.": '我是 Amy。', "I'm nine.": '我九歲。', "You're welcome.": '不客氣。', 'Good morning.': '早安。',
-  'How old are you?': '你幾歲？', "I'm eight.": '我八歲。', "I'm Ken.": '我是 Ken。', 'Thank you.': '謝謝你。', 'Nice to meet you, too.': '我也很高興認識你。',
+  'How old are you?': '你幾歲？', "I'm eight.": '我八歲。', "I'm Eric.": '我是 Eric。', 'Thank you.': '謝謝你。', 'Nice to meet you, too.': '我也很高興認識你。',
   'Nice to meet you.': '很高興認識你。', 'I can help you.': '我可以幫你。', "I'm ten.": '我十歲。', "I can't find my dog.": '我找不到我的狗。',
   "I'm six.": '我六歲。', "Hi, I'm Ben. What's your name?": '嗨，我是 Ben。你叫什麼名字？', "I'm Mia.": '我是 Mia。', "I'm seven.": '我七歲。',
-  'How old are you, Ken?': 'Ken，你幾歲？', "I'm nine years old.": '我九歲。', 'My name is Max.': '我的名字是 Max。'
+  'How old are you, Eric?': 'Eric，你幾歲？', "I'm nine years old.": '我九歲。', 'My name is Max.': '我的名字是 Max。'
 };
 G8.forEach(function (q) {
   var A = q.rev ? q.o[0] : q.a, B = q.rev ? q.b : q.o[0];
   q.en = A + ' ' + B; q.zh = G8Z[A] + G8Z[B]; q.say = q.rev ? q.b : q.a;
 });
 
-/* ════ 9 🪪 證件 連連看（考卷 I：讀證件填年齡）════ 2026-10-25 老師：改成 聽力題 ＝ 學生證 只寫 名字，一句一句 聽「I’m Ken. I’m ten.」➜ 把 Ken 的 證件 連到 10 */
+/* ════ 9 📋 資料表 小幫手（2026-10-26 第二十六次 第 1-6 點，老師選 A：照 老師 截圖 的 題目「讀 自我介紹 ➜ 填 資料表」出 類似 的 題目）════
+   3 個人 的 對話框（可以 點 🔊 聽）➜ 把 名字、歲數 的 方塊 拖進 資料表 的 空格。名字、歲數 全部 新的（考卷、課本 的 人名 都 不用；build 檢查）。
+   對話框 4 種 說法（跟 截圖 一樣 多樣）：A Hi. My name is X. I'm N years old.／B I'm X. I'm N years old. Nice to meet you.／C My name is X. I'm N.／D Hello. I'm X. I'm N years old, too.（too ＝ 跟 上一個人 一樣 歲數）
+   bl ＝ 每一列 空 哪一格（n ＝ 名字、a ＝ 歲數）；x ＝ 多 放 的 誘答 方塊（一個 名字、一個 數字） */
+var G9T = { A: function (n, a) { return 'Hi. My name is ' + n + ". I'm " + NUMW[a] + ' years old.'; }, B: function (n, a) { return "I'm " + n + ". I'm " + NUMW[a] + ' years old. Nice to meet you.'; },
+  C: function (n, a) { return 'My name is ' + n + ". I'm " + NUMW[a] + '.'; }, D: function (n, a) { return "Hello. I'm " + n + ". I'm " + NUMW[a] + ' years old, too.'; } };
+var G9Z = { A: function (n, a) { return '嗨。我的 名字 是 ' + n + '。我 ' + NUMZ[a] + ' 歲。'; }, B: function (n, a) { return '我是 ' + n + '。我 ' + NUMZ[a] + ' 歲。很高興 認識 你。'; },
+  C: function (n, a) { return '我的 名字 是 ' + n + '。我 ' + NUMZ[a] + ' 歲。'; }, D: function (n, a) { return '哈囉。我是 ' + n + '。我 也是 ' + NUMZ[a] + ' 歲。'; } };
 var G9 = [
-  [['Ben', 8], ['Kate', 3], ['Max', 5]], [['Amy', 6], ['Leo', 7], ['Ivy', 10]], [['Tom', 4], ['Mia', 5], ['Jack', 9]],
-  [['Lucy', 2], ['Dan', 3], ['Zoe', 10]], [['Tim', 6], ['Nina', 7], ['Ken', 8]], [['Jane', 9], ['Alan', 5], ['Cody', 4]],
-  [['Ivy', 8], ['Ben', 9], ['Kate', 6]], [['Max', 10], ['Amy', 2], ['Leo', 3]], [['Zoe', 7], ['Tom', 6], ['Lucy', 9]],
-  [['Jack', 5], ['Jane', 4], ['Tim', 8]]
-].map(function (set) {
-  var en = set.map(function (p) { return "I'm " + p[0] + ". I'm " + NUMW[p[1]] + '.'; });
-  return { c: set.map(function (p) { return { t: p[0], a: p[1], w: NUMW[p[1]] }; }), en: en.join(' '), lines: en,
-    zh: set.map(function (p) { return '我是 ' + p[0] + '。我' + NUMZ[p[1]] + '歲。'; }).join(''), say: en.join(' ') };
+  [[['Ben', 9, 'A'], ['Kate', 10, 'B'], ['Max', 9, 'D']], 'ana', ['Mia', 8]],
+  [[['Amy', 7, 'C'], ['Leo', 6, 'B'], ['Ivy', 6, 'D']], 'nan', ['Zoe', 9]],
+  [[['Tom', 8, 'A'], ['Mia', 5, 'C'], ['Jack', 8, 'D']], 'aan', ['Dan', 3]],
+  [[['Lucy', 10, 'B'], ['Dan', 4, 'A'], ['Zoe', 4, 'D']], 'naa', ['Nina', 7]],
+  [[['Tim', 3, 'C'], ['Nina', 9, 'A'], ['Eric', 9, 'D']], 'ana', ['Kate', 5]],
+  [[['Jane', 5, 'B'], ['Ryan', 7, 'C'], ['Cody', 7, 'D']], 'nna', ['Tim', 2]],
+  [[['Ivy', 2, 'A'], ['Ben', 8, 'B'], ['Kate', 8, 'D']], 'ana', ['Amy', 6]],
+  [[['Max', 6, 'C'], ['Amy', 10, 'A'], ['Leo', 10, 'D']], 'nan', ['Jack', 4]],
+  [[['Zoe', 4, 'B'], ['Tom', 3, 'C'], ['Lucy', 3, 'D']], 'aan', ['Ryan', 9]],
+  [[['Jack', 7, 'A'], ['Jane', 2, 'C'], ['Tim', 2, 'D']], 'naa', ['Eric', 5]]
+].map(function (f) {
+  var c = f[0].map(function (p) { return { t: p[0], a: p[1], w: NUMW[p[1]], s: p[2] }; }), lines = c.map(function (p) { return G9T[p.s](p.t, p.a); }),
+    bl = f[1].split(''), need = c.map(function (p, i) { return bl[i] === 'n' ? p.t : String(p.a); });
+  return { c: c, bl: bl, lines: lines, tl: need.concat([f[2][0], String(f[2][1])]), en: lines.join(' '),
+    zh: c.map(function (p) { return G9Z[p.s](p.t, p.a); }).join(''), say: lines.join(' ') };
 });
 
 /* ════ 10 🪂 空投 密碼箱（1ESSF 鑰匙、車牌、座位號碼：聽數字）════ 聽 3 個數字 ➜ 點對的空投箱 */
@@ -189,13 +204,13 @@ var G10 = [[7, 2, 9], [3, 8, 6], [5, 1, 4], [9, 6, 2], [4, 7, 1], [8, 3, 5], [6,
 var GAMES = [
   { id: 'q1', ic: '🔨', nm: '字母 打地鼠', how: '聽單字 ➜ 敲 第一個字母 的 地鼠', t: 15, B: G1, c1: '#7B4A12', c2: '#C98A3A' },
   { id: 'q2', ic: '🟡', nm: '小精靈 聽句', how: '聽一聽 ➜ 🕹 用 方向鍵（或 手指 滑）讓 小精靈 走到 對的 圖；👻 不要 被 抓到！', t: 15, B: G2, c1: '#1F2A8C', c2: '#3E5BFF' },
-  { id: 'q3', ic: '🧸', nm: '教室 夾娃娃', how: '聽 老師 說 ➜ ◀ ▶ 移動 夾子 ➜ ⬇ 夾！（也可以 直接 點 照片）', t: 15, B: G3, c1: '#B0306A', c2: '#FF6FAE' },
+  { id: 'q3', ic: '🧸', nm: '教室 夾娃娃', how: '聽 老師 說 ➜ ◀ LEFT／RIGHT ▶ 移動 夾子 ➜ ⬇ DROP 夾下去（也可以 直接 點 照片）', t: 15, B: G3, c1: '#B0306A', c2: '#FF6FAE' },
   { id: 'q4', ic: '⛏️', nm: '挖礦 寫字母', how: '聽單字 ➜ ① 點 對的 圖 ➜ ② 用手指 寫 第一個字母（小寫，頂天立地）', t: 20, B: G4, w: 1, c1: '#2E6B1F', c2: '#5FAE3B' },
   { id: 'q5', ic: '🪞', nm: '大小寫 魔鏡', how: '看 鏡子 裡 的 字母 ➜ 用手指 寫 它 的 另一半（頂天立地、不超線）', t: 20, B: G5, w: 1, c1: '#4A2C8C', c2: '#9C6BFF' },
   { id: 'q6', ic: '🧱', nm: '數字 金幣磚', how: '數一數 東西 一共 有 幾個 ➜ 照順序 敲 字母磚，用 英文 拼出 那個 數字', t: 20, B: G6, c1: '#A3420E', c2: '#F28C28' },
   { id: 'q7', ic: '🌱', nm: '皮克敏 搬字', how: '把 扛著 對的字 的 皮克敏 拖到 空格', t: 15, B: G7, c1: '#1D6B5A', c2: '#38C7A3' },
-  { id: 'q8', ic: '⚔️', nm: '英文 對決 擂台', how: '黑暗騎士 用 英文 出招 ➜ 你 選 對的 回答 ⚔ 反擊！', t: 15, B: G8, c1: '#3A1A5A', c2: '#B01030' },
-  { id: 'q9', ic: '🪪', nm: '證件 連連看', how: '聽 一句（I’m Ken. I’m ten.）➜ 把 那個人 的 證件 連到 他 的 歲數', t: 15, B: G9, c1: '#0E5C8A', c2: '#35A7E8' },
+  { id: 'q8', ic: '⚔️', nm: '英文 對決 擂台', how: '反派 用 英文 出招 ➜ 你 選 對的 回答 ⚔ 反擊！打倒 DARK OVERLORD，再 打倒 SHADOW SCHEMER', t: 15, B: G8, c1: '#3A1A5A', c2: '#B01030' },
+  { id: 'q9', ic: '📋', nm: '資料表 小幫手', how: '讀 3 個人 的 自我介紹（也可以 點 🔊 聽）➜ 把 名字、歲數 拖進 資料表 的 空格', t: 30, B: G9, c1: '#0E5C8A', c2: '#35A7E8' },
   { id: 'q10', ic: '🪂', nm: '空投 密碼箱', how: '聽 3 個 數字 ➜ 打開 對的 空投箱', t: 15, B: G10, c1: '#4D5B2A', c2: '#93A84A' }
 ];
 
@@ -213,8 +228,10 @@ Object.keys(LN).forEach(function (c) { SAY.push({ k: c + '.', ph: LN[c].split(''
 G6.forEach(function (q) { addS(q.say); });
 G7.forEach(function (q) { addS(q.say); });
 G8.forEach(function (q) { addS(q.a || q.b); addS(q.o[0]); addS(q.en); });
-G9.forEach(function (q) { addS(q.say); q.lines.forEach(function (l, i) { addS(l, BOYS.indexOf(q.c[i].t) >= 0 ? 'm' : ''); }); });
+G9.forEach(function (q) { q.lines.forEach(function (l, i) { addS(l, BOYS.indexOf(q.c[i].t) >= 0 ? 'm' : ''); }); });
 G10.forEach(function (q) { addS(q.say); });
 
-module.exports = { GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
+/* 2026-10-26 第二十六次 第 1-1 點（老師：打地鼠 單字 模糊、太快）：打地鼠 的 字 另外 做 慢的（audio/m1 語速 0.78）、更慢的（audio/m2 語速 0.62，〔🐢 慢慢 唸〕）*/
+var SAYM = G1.map(function (q) { return q.say; });
+module.exports = { SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
   EXAM_A: EXAM_A, EXAM_D: EXAM_D, EXAM_E: EXAM_E };

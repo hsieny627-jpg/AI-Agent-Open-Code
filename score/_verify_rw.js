@@ -21,6 +21,8 @@ function seed() {
   R.d.push(['30401', st('b37', 'w03', 'p03', 's0101', { qz: SC.RPQV, qzt: NOW - 6e5, cq: SC.RPCQV, cqt: NOW - 5e5 }), NOW]);
   R.d.push(['30402', st('b37', 'w05', 'p03', '', { qz: SC.RPQV, qzt: NOW - 6e5 }), NOW]);
   R.d.push(['30403', st('g32', 'w03', 'p08', '', {}), NOW]);
+  /* 2026-10-26 第 2-3 點：下架 的 男 05、舊寶物 t02 也 要 算 */
+  R.d.push(['30404', JSON.stringify({ own: { h: ['b05'], w: ['w07'], p: ['p03'], t: ['t02'], s: [] }, eq: { h: 'b05', w: 'w07', p: 'p03', t: ['t02'], s: {} }, spent: 0 }), NOW]);
   return G;
 }
 /* 伺服器：全班獎勵 自動發（1 號 練 5 天 ＝ 🪙 225 ⭐ 130；25 號 沒練 ＝ 沒有；同一週 只 發 一次）；冠軍寶箱 ＝ 🪙 250 ⭐ 150 */
@@ -30,9 +32,19 @@ function server() { const e = [], G = seed();
   const v1b = G.get({ a: 'rpg', id: '30401' }).v; if (v1b.st.bc !== v1.st.bc) e.push('全班獎勵 同一週 發了 兩次');
   const v25 = G.get({ a: 'rpg', id: '30425' }).v; if ((v25.st.bk || []).some(k => /^cw\|/.test(k)) || v25.st.bc) e.push('25 號 上週 沒練 也 拿到 全班獎勵');
   const v2 = G.get({ a: 'rpg', id: '30402' }).v, a2 = SC.cwAmt(1, 2); if (v2.st.bc < a2.c) e.push('2 號 練 2 天 沒有 拿到 🪙 ' + a2.c);
+  /* 2026-10-26 第 2-4 點：🎉 加倍 時段（全開 ✖2）➜ 答對 的 金幣 多、經驗值 多；全關 ➜ 跟 原本 一樣；平板 拿到 bo（金色 橫幅）*/
+  { const mk = () => { const g = seed(); rec(g, '30406', NOW - 6e4, 'B'); return g; }, A = mk(), B = mk();
+    const r0 = B.post({ a: 'boost', pw: 'wrong', b: { m: 'all', k: 2, x: 2, from: NOW - 36e5, to: NOW + 36e5 } }); if (!r0 || r0.err !== 'pw') e.push('加倍：密碼 錯 也 存 得 進去');
+    B.post({ a: 'boost', pw: PW, b: { m: 'all', k: 2, x: 2, from: NOW - 36e5, to: NOW + 36e5 } });
+    const va = A.get({ a: 'rpg', id: '30406' }), vb = B.get({ a: 'rpg', id: '30406' });
+    if (!(vb.v.coins > va.v.coins) || !(vb.v.xp > va.v.xp) || !vb.bo || vb.bo.k !== 2 || va.bo) e.push('加倍 ✖2 沒有 多 給 金幣／經驗值、或 沒有 橫幅：' + JSON.stringify({ a: [va.v.coins, va.v.xp, va.bo], b: [vb.v.coins, vb.v.xp, vb.bo] }));
+    B.post({ a: 'boost', pw: PW, b: { m: 'set', k: 2, x: 2, from: NOW - 36e5, to: NOW + 36e5, cls: ['305'], cats: [] } });
+    const vc = B.get({ a: 'rpg', id: '30406' }); if (vc.v.coins !== va.v.coins || vc.bo) e.push('加倍 只 勾 305 班，304 班 也 加倍 了：' + vc.v.coins + ' vs ' + va.v.coins);
+    B.post({ a: 'boost', pw: PW, b: { m: 'off' } }); const vd = B.get({ a: 'rpg', id: '30406' }); if (vd.v.coins !== va.v.coins) e.push('加倍 全關 以後 金幣 不對');
+    n += 4; }
   n += 4; out('伺服器 全班獎勵', e); return G; }
 let HTTP = '';
-function serve() { return new Promise(ok => { const T = { '.html': 'text/html', '.js': 'text/javascript', '.woff2': 'font/woff2', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.css': 'text/css' };
+function serve() { return new Promise(ok => { const T = { '.html': 'text/html', '.js': 'text/javascript', '.woff2': 'font/woff2', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.css': 'text/css', '.svg': 'image/svg+xml' };
   const s = http.createServer((q, r) => { const f = path.join(ROOT, decodeURIComponent(q.url.split('?')[0])); fs.readFile(f, (er, b) => { if (er) { r.writeHead(404); r.end(); return; } r.writeHead(200, { 'content-type': T[path.extname(f)] || 'application/octet-stream' }); r.end(b); }); });
   s.listen(0, '127.0.0.1', () => { HTTP = 'http://127.0.0.1:' + s.address().port; ok(s); }); }); }
 async function teacher(br, vp) {
@@ -51,6 +63,14 @@ async function teacher(br, vp) {
   if (c0.C.map(x => x.k).join() !== 'cw,ch,cp,qz,cq') e.push('全班獎勵 不是 5 張 大卡：' + c0.C.map(x => x.k).join());
   if (c0.C.some(x => x.h < 200)) e.push('大卡 太小');
   if (c0.sm.length) e.push('大卡 字 太小：' + c0.sm.slice(0, 3).join('｜')); if (c0.ox) e.push('大卡 橫向溢出'); n += 4;
+  /* 2026-10-26 第 2-4 點：🎉 加倍 時段：三顆 一鍵 按鈕、班級／時間／任務／✖；按〔🟢 全開〕＝ 存 到 伺服器、上面 寫「🟢 加倍 中」 */
+  { const b = await p.evaluate(fs0 => { const B = document.querySelector('.bo'); if (!B) return null; const sm = [], lo = [];
+      B.querySelectorAll('button').forEach(x => { if (x.getBoundingClientRect().height < 48) lo.push(x.textContent.slice(0, 8)); if (parseFloat(getComputedStyle(x).fontSize) < fs0) sm.push(x.textContent.slice(0, 8)); });
+      return { k: ['all', 'off', 'set'].every(m => B.querySelector('[data-bo="' + m + '"]')), c: B.querySelectorAll('[data-boc]').length, t: !!B.querySelector('#bo1'), cat: B.querySelectorAll('[data-bok]').length, x: B.querySelectorAll('[data-bk],[data-bx]').length, lo, sm }; }, big);
+    if (!b || !b.k || !b.c || !b.t || b.cat < 6 || b.x !== 4 || b.lo.length || b.sm.length) e.push('加倍 時段 面板 不對：' + JSON.stringify(b));
+    await p.click('[data-bo="all"]'); await p.waitForTimeout(500); const st = await p.evaluate(() => document.querySelector('.bost').textContent);
+    if (!/加倍 中/.test(st) || !/✖1\.5/.test(st)) e.push('按〔🟢 全開〕沒有 存好：' + st.slice(0, 40));
+    await p.click('[data-bo="off"]'); await p.waitForTimeout(500); if (!/沒有 加倍/.test(await p.evaluate(() => document.querySelector('.bost').textContent))) e.push('按〔⛔ 全關〕沒有 關'); n += 3; }
   for (const k of ['cw', 'ch', 'cp', 'qz', 'cq']) {
     await p.click('.rwcard[data-rwk="' + k + '"]'); await p.waitForTimeout(400);
     if (k === 'cw') { await p.click('[data-rww="last"]'); await p.waitForTimeout(300); }
@@ -60,6 +80,7 @@ async function teacher(br, vp) {
       const ok = [].map.call(P.querySelectorAll('.rwok .rwper'), x => x.textContent), no = [].map.call(P.querySelectorAll('.rwno .rwper'), x => x.textContent);
       return { on: P.classList.contains('on'), ok, no, sm, ov, ox: document.getElementById('rwpb').scrollWidth > document.getElementById('rwpb').clientWidth + 1, rule: P.querySelectorAll('.rwrule span').length, cer: !!document.getElementById('rwcer') }; }, big);
     if (!r.on) { e.push(k + '：點 大卡 沒有 開 整頁'); continue; }
+    if (k === 'ch') { n++; const rt = await p.evaluate(() => document.querySelector('#rwp .rwrule').textContent); if (/%|≧/.test(rt) || !/每 10 題 至少 9 題/.test(rt)) e.push('冠軍寶箱 規則 還是 百分比（學生 看不懂）：' + rt.slice(0, 60)); }
     if (r.sm.length) e.push(k + '：整頁 字 太小：' + r.sm.slice(0, 3).join('｜')); if (r.ov.length || r.ox) e.push(k + '：整頁 超出：' + r.ov.slice(0, 2).join('｜'));
     if (r.rule < 3) e.push(k + '：上面 沒有 一步一步 的 圖示 規則');
     if ([...r.ok, ...r.no].some(t => !/測試\d\d/.test(t) && !/名單 沒有/.test(t))) e.push(k + '：有人 沒有 中文 名字');
@@ -92,14 +113,17 @@ async function teacher(br, vp) {
   await p.click('#tabs button[data-t="f"]'); await p.waitForTimeout(800);
   const f1 = await p.evaluate(() => { const R = [].map.call(document.querySelectorAll('.fvr'), x => ({ v: +x.querySelector('.fvv').textContent.replace(/\D/g, ''), img: x.querySelector('img').src.split('/').pop() })); return { R, ox: document.documentElement.scrollWidth > innerWidth + 1 }; });
   const ids = f1.R.map(x => x.img.replace('.jpg', ''));
-  if (f1.R.length !== 28 || f1.R[0].img !== 'b37.jpg' || f1.R[0].v !== 2 || ids.some(x => /^b(0\d|1[0-6])$/.test(x))) e.push('最受歡迎 男戰士：要 28 個、第 1 名 男 37（2 人 買過）、沒有 下架 的：' + JSON.stringify(f1.R.slice(0, 2)) + ' ' + f1.R.length);
+  const NB = Object.keys(SC.RPR.h).filter(x => x.charAt(0) === 'b').length, off = await p.evaluate(() => [].filter.call(document.querySelectorAll('.fvr'), x => x.querySelector('.fvoff')).map(x => x.querySelector('img').src.split('/').pop().replace('.jpg', '')));
+  /* 2026-10-26 第 2-3 點：下架 的 也 要 列，旁邊 寫「已下架」 */
+  if (f1.R.length !== NB || f1.R[0].img !== 'b37.jpg' || f1.R[0].v !== 2 || ids.indexOf('b05') < 0 || off.indexOf('b05') < 0 || off.indexOf('b37') >= 0 || off.length !== Object.keys(SC.RPHIDE).filter(x => /^b/.test(x)).length) e.push('最受歡迎 男戰士：要 ' + NB + ' 個（下架 的 也 列、寫「已下架」）、第 1 名 男 37：' + JSON.stringify({ n: f1.R.length, top: f1.R[0], off }));
   if (f1.R.some((x, i) => i && x.v > f1.R[i - 1].v)) e.push('最受歡迎 沒有 從 多 排到 少'); if (f1.ox) e.push('最受歡迎 橫向溢出');
   await p.click('[data-fvk="w"]'); await p.click('[data-fvm="e"]'); await p.waitForTimeout(500);
   const f2 = await p.evaluate(() => [].map.call(document.querySelectorAll('.fvr'), x => [x.querySelector('img').src.split('/').pop(), +x.querySelector('.fvv').textContent.replace(/\D/g, '')]));
-  if (!f2.length || f2[0][0] !== 'w03.jpg' || f2[0][1] !== 2 || f2.length !== 30) e.push('最受歡迎 武器（正在用）：第 1 名 要 w03（2 人）、30 個：' + JSON.stringify(f2.slice(0, 2)));
+  if (!f2.length || f2[0][0] !== 'w03.jpg' || f2[0][1] !== 2 || f2.length !== Object.keys(SC.RPR.w).length) e.push('最受歡迎 武器（正在用）：第 1 名 要 w03（2 人）、30 個：' + JSON.stringify(f2.slice(0, 2)));
   await p.click('[data-fvk="s"]'); await p.waitForTimeout(500);
   const f3 = await p.evaluate(() => ({ n: document.querySelectorAll('.fvr').length, a: (document.querySelector('.fvr img') || {}).src || '', bad: [].filter.call(document.querySelectorAll('.fvr img'), i => i.complete && !i.naturalWidth).length }));
-  if (f3.n !== 200 || !/s0101/.test(f3.a)) e.push('最受歡迎 商城寶物：要 200 個、第 1 名 s0101：' + JSON.stringify(f3));
+  if (f3.n !== 200 + SC.RPT.length || !/s0101|t02/.test(f3.a) || f3.bad) e.push('最受歡迎 商城寶物：要 200 個＋舊寶物 ' + SC.RPT.length + ' 個、圖 都 載得到：' + JSON.stringify(f3));
+  { const t2 = await p.evaluate(() => { const r = [].filter.call(document.querySelectorAll('.fvr'), x => /t02/.test(x.querySelector('img').src))[0]; return r ? { v: r.querySelector('.fvv').textContent, off: !!r.querySelector('.fvoff') } : null; }); if (!t2 || !/1/.test(t2.v) || !t2.off) e.push('舊寶物 t02（已下架）沒有 算 進去：' + JSON.stringify(t2)); n++; }
   n += 5;
   out(W, e); await ctx.close();
 }

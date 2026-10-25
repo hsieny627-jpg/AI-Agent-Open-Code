@@ -496,6 +496,10 @@ em.ok{background:#0F3A20;border-color:#3BD16F;color:#C8FFD9}em.no{background:#3A
 .fvsw{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}.fvsw button{min-height:58px;font-size:clamp(22px,2.4vw,28px);border-radius:16px;border:3px solid #4A6A9A;background:#10161E;color:#fff;padding:4px 16px;cursor:pointer;font-weight:900}.fvsw button.on{background:#FFD54A;color:#000;border-color:#FFD54A}
 .fvl{display:grid;gap:8px;margin-top:10px}.fvr{display:grid;grid-template-columns:110px 84px minmax(150px,240px) 1fr 100px;align-items:center;gap:10px;padding:6px 10px;border-radius:16px;background:#10161E;border:2px solid #2A3A4A;opacity:0;animation:rwIn .4s forwards}
 .fvr.z{opacity:.55}.fvr.z{animation:none;opacity:.55}.fvr.t1{border-color:#FFD54A;background:linear-gradient(90deg,#3A2A06,#10161E)}.fvr.t2{border-color:#D0D8E0}.fvr.t3{border-color:#CD8A4A}
+.bo{border:4px solid #FFD54A;border-radius:20px;padding:12px 16px;margin:0 0 18px;background:rgba(255,213,74,.08)}.bo h3{margin:0 0 8px;font-size:clamp(26px,2.6vw,34px)}.bost{font-size:clamp(20px,2vw,26px);line-height:1.5;margin-bottom:8px}.bo1{color:#5DE89A}.bo0{color:#FF9A9A}
+.bo .lkrow button{min-height:56px;font-size:clamp(20px,1.9vw,24px)}.bo .bog{background:#1E7A45}.bo .bor{background:#8A1E2A}.bo .bob{background:#1E4A8A}.bo .bog small{display:block;font-size:.7em}
+.bor1{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0;font-size:clamp(20px,1.9vw,24px)}.bor1 button{min-height:52px;padding:0 14px;border-radius:12px;border:2px solid #4A4A4A;background:#1E1E1E;color:#fff;font-size:inherit}.bor1 button.on{background:#FFD54A;color:#111;border-color:#FFD54A}.bor1 button[data-boc]{border-color:var(--cc)}
+.fvoff{display:inline-block;margin-left:8px;font-style:normal;background:#555;color:#fff;border-radius:8px;padding:0 8px;font-size:.8em;vertical-align:middle}
 .fvr img{width:84px;height:84px;object-fit:contain;border-radius:10px;background:#000}.fvk{font-size:clamp(22px,2.4vw,30px)}.fvr.t1 .fvk,.fvr.t2 .fvk,.fvr.t3 .fvk{font-size:44px}.fvn{font-size:clamp(20px,2.2vw,26px);display:flex;flex-direction:column}.fvn small{color:#FFD54A;font-size:20px}
 .fvt{height:30px;border-radius:15px;background:#26303C;overflow:hidden}.fvt i{display:block;height:100%;border-radius:15px;background:linear-gradient(90deg,#4FC3F7,#FFD54A);animation:rwGrow 1.2s ease-out both}.fvv{font-size:clamp(24px,2.6vw,32px);text-align:right}
 @media (max-width:820px){.fvr{grid-template-columns:76px 64px 1fr 80px}.fvr .fvt{grid-column:1/-1}.fvr img{width:64px;height:64px}}
@@ -728,7 +732,7 @@ function hpod(R,f){return [1,2,3].map(function(r){var a=R.filter(function(x){ret
    0 開場 ➜ 1 第 10～4 名（從最下面一格往上翻開）➜ 2 🥉 ➜ 3 🥈 ➜ 4 🥇（最長的鼓聲、全白閃光、皇冠、煙火）➜ 5 頒獎台 */
 function hwhoC(id){var n=nm(id);return cidH(id)+(HNM&&n?' '+esc(n):'')+hEq(id)}
 /* 2026-10-23 第二十二次 第 4 點：榮譽榜 呈現 學生 的 戰神 代表 人物、寵物、武器（伺服器 DATA.eqs ＝ {5碼:[戰士,武器,寵物]}）；〔⚔ 戰士 寵物 武器：顯示／隱藏〕 */
-function hEqI(id){return /^s\\d{4}$/.test(id)?'../rpg/shop/'+id+'.jpg':'../rpg/'+({b:'chars',g:'chars',w:'weapons',p:'pets'}[id.charAt(0)]||'chars')+'/'+id+'.jpg'}
+function hEqI(id){if(/^t\\d{2}$/.test(id))return '../rpg/tre/'+id+'.svg';return /^s\\d{4}$/.test(id)?'../rpg/shop/'+id+'.jpg':'../rpg/'+({b:'chars',g:'chars',w:'weapons',p:'pets'}[id.charAt(0)]||'chars')+'/'+id+'.jpg'}
 function hEq(id){var q=HEQ&&DATA.eqs&&DATA.eqs[id];if(!q)return '';var L=[[q[0],'戰士'],[q[2],'寵物'],[q[1],'武器']].filter(function(x){return /^[bgwps]\\d{2,4}$/.test(x[0]||'')});
   return L.length?'<span class="gleq">'+L.map(function(x){return '<img class="ge'+x[0].charAt(0)+'" src="'+hEqI(x[0])+'" alt="'+x[1]+'">'}).join('')+'</span>':''}
 function hPlan(o){var P=[],k=o.k,top=o.L.filter(function(x){return x.rk<=10}),pm={};o.ps.forEach(function(p){pm[p.id]=p});top.forEach(function(x){x.vt=fmt(k,x.v)});
@@ -1136,7 +1140,7 @@ function rwData(k){var c=rwCls(),T=RWK.filter(function(x){return x[0]===k})[0],o
       else{L2.push(no('⏳ 還差 '+(CW.d1-d)+' 天'));L2.push('<em class="tip">練到 '+CW.d1+' 天 ➜ 🪙 '+CW.t1[CW.d1][0]+'　⭐ '+CW.t1[CW.d1][1]+'</em>');o.todo.push({id:id,L:L2})}});
     o.cer={rb:'🎁 全班獎勵',sb:'這週 練 '+CW.d1+' 天 以上',cl:SC.cname(c)}}
   else if(k==='ch'||k==='cp'){var wk=k==='cp'?'last':RWP.wk;o.wk=k==='ch';var R2=rwPs(wk),top,C={};
-    if(k==='ch'){o.cls=false;top=SC.rank(R2.ps,'sec').filter(function(x){return x.rk<=5});o.rule=[['⏰','練習 時間 最多'],['👀','看完 才按 ≧ '+SC.DILI+'%'],['✏️','錯了 會改 ≧ '+SC.DILI+'%'],['👑','全年級 前 5 名 ➜ 🪙 '+SC.RPCH.c+'　⭐ '+SC.RPCH.x]];
+    if(k==='ch'){o.cls=false;top=SC.rank(R2.ps,'sec').filter(function(x){return x.rk<=5});o.rule=[['⏰','練習 時間 最多'],['👀','看完 題目 才 按：每 10 題 至少 '+SC.DILI/10+' 題'],['✏️','答錯 的 題目 會 改對：每 10 題 至少 改對 '+SC.DILI/10+' 題'],['👑','全年級 前 5 名 ➜ 🪙 '+SC.RPCH.c+'　⭐ '+SC.RPCH.x]];
       o.sum='<div class="rwgo"><div class="ok"><b>'+(wk==='last'?'上週':'這週 到 現在')+'</b>'+(F.g===3?'三':'四')+'年級 前 5 名：<span class="big">'+top.length+'</span> 人</div><div class="rwnote">'+(wk==='last'?'📅 星期一 已經 自動 發 了':'📅 下 星期一 0:00 自動 發')+'</div></div>'}
     else{C=SC.champs(ALL,DATA.now);top=[];(SC.CLASSES[F.g]||[]).forEach(function(cc){var x=C[cc];if(x)x.ids.forEach(function(id){top.push({id:id,rk:1,v:x.sec,cls:cc})})});o.cls=true;
       o.rule=[['📅','上週'],['⏰','本班 練習 時間 最多'],['👀✏️','兩個 好習慣 ≧ '+SC.DILI+'%'],['🎮','這週 上台 選 1 次 現場任務 遊戲']];
@@ -1162,7 +1166,31 @@ function tutN(){return 14}
 function rwT(t){if(!(t>1))return '';var d=new Date(+t);return (d.getMonth()+1)+'/'+d.getDate()+' '+d.getHours()+':'+('0'+d.getMinutes()).slice(-2)}
 function rwBar(v,n,need){var p=n?Math.min(100,v/n*100):0,q=n?Math.min(100,need/n*100):0;return '<span class="rwbar"><i style="width:'+p.toFixed(1)+'%"></i><b style="left:'+q.toFixed(1)+'%" title="目標"></b></span>'}
 /* 分頁：5 張大卡（每一張：大圖示、名字、一句話、做到 幾 人） */
-function paneR(){var h='<div class="rwhd">👆 點 一張 卡 ➜ 整頁 看：✅ 誰 做到（班級、號碼、名字）、⏳ 誰 還沒、還差 什麼；做到 的 人 可以〔🏆 頒獎〕</div><div class="rwcards">';
+/* ══ 🎉 金幣／經驗值 加倍 時段（2026-10-26 第二十六次 第 2-4 點，老師選 B 簡單版）══ 〔🟢 全開〕全部 班級、全部 任務／〔⛔ 全關〕／〔⚙ 照 下面 的 設定〕勾 的 班級、勾 的 任務；都 只在 從～到 這段 時間 */
+var BOM=null,BOMSG='',BOCAT=[['game','🎮 遊戲'],['tq','📝 複習題'],['mt','📝 期中複習'],['r1','📘 Review 1'],['l','🎧 聽完字卡'],['lv','⚡ 現場任務'],['g3c','🏫 課堂 複習']];
+function boInit(){var b=DATA.boost||{};BOM={k:b.k>1?b.k:1.5,x:b.x>1?b.x:1.5,cls:(b.cls||[]).slice(),cats:(b.cats||[]).slice()}}
+function boSt(b){var now=Date.now();if(!b||b.m==='off'||!b.to)return '<b class="bo0">⛔ 現在 沒有 加倍</b>';
+  var w=now<b.from?'⏳ 還沒 開始':now>=b.to?'⛔ 已經 結束':'🟢 加倍 中';
+  return '<b class="'+(now>=b.from&&now<b.to?'bo1':'bo0')+'">'+w+'</b>　🪙 金幣 ✖'+b.k+'　⭐ 經驗值 ✖'+b.x+'<br>'+(b.m==='all'?'全部 班級、全部 任務':'班級：'+(b.cls.length?b.cls.map(function(c){return esc(SC.cname(c))}).join('、'):'（沒有 勾）')+'<br>任務：'+(b.cats.length?BOCAT.filter(function(x){return b.cats.indexOf(x[0])>=0}).map(function(x){return x[1]}).join('、'):'全部'))+'<br>'+rwT(b.from)+' ➜ '+rwT(b.to)}
+function boHTML(){if(!BOM)boInit();var B=DATA.boost;
+  return '<div class="bo"><h3>🎉 金幣、經驗值 加倍 時段</h3><div class="bost">'+boSt(B)+'</div>'+
+   '<div class="lkrow"><button data-bo="all" class="bog">🟢 全開<small>全部 班級、全部 任務</small></button><button data-bo="off" class="bor">⛔ 全關</button><button data-bo="set" class="bob">⚙ 照 下面 的 設定</button></div>'+
+   '<div class="bof"><div class="bor1"><b>① 班級</b>'+(SC.CLASSES[F.g]||[]).map(function(c){var on=BOM.cls.indexOf(c)>=0;return '<button data-boc="'+c+'" class="'+(on?'on':'')+'" style="--cc:'+ccol(c)+'">'+(on?'☑ ':'☐ ')+esc(SC.cname(c))+'</button>'}).join('')+'</div>'+
+   '<div class="bor1"><b>② 時間</b></div>'+wRow('bo')+
+   '<div class="bor1"><b>③ 任務</b>'+BOCAT.map(function(x){var on=BOM.cats.indexOf(x[0])>=0;return '<button data-bok="'+x[0]+'" class="'+(on?'on':'')+'">'+(on?'☑ ':'☐ ')+x[1]+'</button>'}).join('')+'<small>（都 不 勾 ＝ 全部 任務）</small></div>'+
+   '<div class="bor1"><b>④ 🪙 金幣</b>'+[1.5,2].map(function(k){return '<button data-bk="'+k+'" class="'+(BOM.k===k?'on':'')+'">✖ '+k+'</button>'}).join('')+'<b style="margin-left:18px">⭐ 經驗值</b>'+[1.5,2].map(function(k){return '<button data-bx="'+k+'" class="'+(BOM.x===k?'on':'')+'">✖ '+k+'</button>'}).join('')+'</div>'+
+   '<div class="note">只 多 給 金幣、經驗值（答對 賺 的）；正確率、分數、排行榜 不會 變。<span id="bomsg">'+BOMSG+'</span></div></div></div>'}
+function boSave(m){var w=wRead('bo')||wGet(),C=SC.CLASSES[F.g]||[],old=((DATA.boost||{}).cls||[]).filter(function(c){return C.indexOf(c)<0});
+  var b={m:m,k:BOM.k,x:BOM.x,from:w[0],to:w[1],cls:old.concat(BOM.cls.filter(function(c){return C.indexOf(c)>=0})),cats:BOM.cats};
+  if(m==='set'&&!b.cls.length){BOMSG='❌ 先 勾 班級';draw();return}BOMSG='⏳ 存起來 中…';draw();
+  post({a:'boost',pw:PW,b:b}).then(function(j){if(j&&j.ok){DATA.boost=j.boost;BOMSG='✔ 存好了'}else BOMSG='❌ 存不起來（'+((j&&j.err)||'伺服器 還沒 重新部署')+'）';draw()},function(){BOMSG='❌ 沒有 網路';draw()})}
+document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b,v;if(!BOM)return;
+  if((b=c('[data-bo]'))){boSave(b.getAttribute('data-bo'));return}
+  if((b=c('[data-boc]'))){v=b.getAttribute('data-boc');var i=BOM.cls.indexOf(v);if(i>=0)BOM.cls.splice(i,1);else BOM.cls.push(v);draw();return}
+  if((b=c('[data-bok]'))){v=b.getAttribute('data-bok');var j=BOM.cats.indexOf(v);if(j>=0)BOM.cats.splice(j,1);else BOM.cats.push(v);draw();return}
+  if((b=c('[data-bk]'))){BOM.k=+b.getAttribute('data-bk');draw();return}
+  if((b=c('[data-bx]'))){BOM.x=+b.getAttribute('data-bx');draw();return}});
+function paneR(){var h=boHTML()+'<div class="rwhd">👆 點 一張 卡 ➜ 整頁 看：✅ 誰 做到（班級、號碼、名字）、⏳ 誰 還沒、還差 什麼；做到 的 人 可以〔🏆 頒獎〕</div><div class="rwcards">';
   RWK.forEach(function(x,i){var o=rwData(x[0]);h+='<button class="rwcard" data-rwk="'+x[0]+'" style="animation-delay:'+(i*.08)+'s"><span class="rwi">'+x[1]+'</span><b>'+x[2]+'</b><span class="rws">'+o.rule.map(function(r){return r[0]}).join(' ➜ ')+'</span>'+
     '<span class="rwn2"><em class="ok">✅ '+o.done.length+' 人</em>'+(o.todo.length?'<em class="no">⏳ '+o.todo.length+' 人</em>':'')+'</span><small>'+(o.cls?esc(SC.cname(rwCls())):(F.g===3?'三':'四')+'年級')+(o.wk?'．'+(RWP.wk==='last'?'上週':'這週'):'')+'</small></button>'});
   return h+'</div>'+(RWP.k?'':'')}
@@ -1213,11 +1241,13 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(RWC)rwcC
    👦 男戰士、👧 女戰士、⚔ 武器、🐾 寵物、🏪 商城寶物：第 1 名 ➜ 最後一名（0 人的也列出來 ➜ 老師知道誰沒人要），長條一條一條長出來 */
 var FAVM='o',FAVK='b';
 var FAVG=[['b','👦 男 戰士'],['g','👧 女 戰士'],['w','⚔ 武器'],['p','🐾 寵物'],['s','🏪 商城 寶物']];
-function favIds(k){var o=[],R=SC.RPR||{},i;if(k==='b'||k==='g'){for(var id in R.h)if(id.charAt(0)===k&&!SC.RPHIDE[id])o.push(id)}
-  else if(k==='w'||k==='p'){for(var id2 in (R[k]||{}))if(!SC.RPHIDE[id2])o.push(id2)}
-  else for(var c=1;c<=10;c++)if(SC.RPSON[c])for(i=1;i<=20;i++)o.push('s'+(c<10?'0':'')+c+(i<10?'0':'')+i);
+/* 2026-10-26 第二十六次 第 2-3 點（老師：已下架 的 圖片 也要 算入，旁邊 註明「已下架」）：下架 的 戰士、武器、寵物、舊寶物（t01～t10）、限時 下架 的 商城 寶物 都 列進來 */
+function favIds(k){var o=[],R=SC.RPR||{},i;if(k==='b'||k==='g'){for(var id in R.h)if(id.charAt(0)===k)o.push(id)}
+  else if(k==='w'||k==='p'){for(var id2 in (R[k]||{}))o.push(id2)}
+  else{for(var c=1;c<=10;c++)if(SC.RPSON[c])for(i=1;i<=20;i++)o.push('s'+(c<10?'0':'')+c+(i<10?'0':'')+i);(SC.RPT||[]).forEach(function(t){o.push(t[0])})}
   return o}
-function favNm(id){var k=id.charAt(0),n=+id.slice(1);if(k==='s'){var S=SC.rpSC(id);return S?SC.RPS[S.c-1][1]+' '+S.n:id}return ({b:'男 ',g:'女 ',w:'武器 ',p:'寵物 '}[k]||'')+n}
+function favOff(id){return !!(SC.RPHIDE[id]||(SC.RPEND&&SC.RPEND[id]&&Date.now()>=SC.RPEND[id]))}
+function favNm(id){var k=id.charAt(0),n=+id.slice(1);if(k==='t'){var T=(SC.RPT||[]).filter(function(x){return x[0]===id})[0];return '舊寶物 '+(T?T[1]:n)}if(k==='s'){var S=SC.rpSC(id);return S?SC.RPS[S.c-1][1]+' '+S.n:id}return ({b:'男 ',g:'女 ',w:'武器 ',p:'寵物 '}[k]||'')+n}
 function paneF(){var D=(DATA.own||{})[F.g]||{o:{},e:{}},M=D[FAVM]||{},L=favIds(FAVK).map(function(id){return {id:id,v:M[id]||0}});
   L.sort(function(a,b){return b.v-a.v||(a.id<b.id?-1:1)});var mx=L.length?Math.max(1,L[0].v):1,tot=0;L.forEach(function(x){tot+=x.v});var rk=0;
   var h='<div class="fvhd">📊 '+(F.g===3?'三':'四')+'年級 學生 最喜歡 什麼？<small>（第 1 名 ➜ 最後一名；以後 上架 參考）</small></div>'+
@@ -1225,7 +1255,7 @@ function paneF(){var D=(DATA.own||{})[F.g]||{o:{},e:{}},M=D[FAVM]||{},L=favIds(F
     '<div class="fvsw">'+FAVG.map(function(x){return '<button data-fvk="'+x[0]+'" class="'+(FAVK===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div>'+
     (DATA.own?'':'<div class="note">伺服器 還沒有 重新部署（第二十五次）：部署 好了 才 看得到 排行榜。</div>')+'<div class="fvl">';
   L.forEach(function(x,i){if(!i||x.v!==L[i-1].v)rk=i+1;var st=SC.rpStar(x.id);
-    h+='<div class="fvr'+(rk<=3&&x.v?' t'+rk:'')+(x.v?'':' z')+'" style="animation-delay:'+Math.min(i*.04,2).toFixed(2)+'s"><b class="fvk">'+(rk<=3&&x.v?['','🥇','🥈','🥉'][rk]:'第 '+rk+' 名')+'</b><img src="'+hEqI(x.id)+'" alt="" loading="lazy"><span class="fvn">'+esc(favNm(x.id))+'<small>'+'★★★★★'.slice(0,st)+'</small></span>'+
+    h+='<div class="fvr'+(rk<=3&&x.v?' t'+rk:'')+(x.v?'':' z')+'" style="animation-delay:'+Math.min(i*.04,2).toFixed(2)+'s"><b class="fvk">'+(rk<=3&&x.v?['','🥇','🥈','🥉'][rk]:'第 '+rk+' 名')+'</b><img src="'+hEqI(x.id)+'" alt="" loading="lazy"><span class="fvn">'+esc(favNm(x.id))+(favOff(x.id)?'<em class="fvoff">已下架</em>':'')+'<small>'+'★★★★★'.slice(0,st)+'</small></span>'+
       '<span class="fvt"><i style="width:'+(x.v/mx*100).toFixed(1)+'%;animation-delay:'+Math.min(i*.04,2).toFixed(2)+'s"></i></span><b class="fvv">'+x.v+' 人</b></div>'});
   return h+'</div>'}
 document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-fvm],[data-fvk]');if(!b||TAB!=='f')return;if(b.hasAttribute('data-fvm'))FAVM=b.getAttribute('data-fvm');else FAVK=b.getAttribute('data-fvk');draw()});

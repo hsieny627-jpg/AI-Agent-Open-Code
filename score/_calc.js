@@ -501,6 +501,20 @@ var SC = (function () {
     /* 理解小考（2026-10-21）：qz ＝ 看懂了哪一版規則（RPQV）、qzt ＝ 什麼時候 */
     o.qz = Math.max(0, Math.round(+st.qz || 0)); o.qzt = Math.max(0, Math.round(+st.qzt || 0)); o.cq = Math.max(0, Math.round(+st.cq || 0)); o.cqt = Math.max(0, Math.round(+st.cqt || 0));   /* 2026-10-25：🎯 全班獎勵小測驗 */   /* 2026-10-20 第十五次：⚔ 戰力階級 最高到過第幾階（升一階 🪙＋100 一次，拿下裝備也不會收回） */
     return o; }
+  /* 🎉 加倍 時段（2026-10-26 第二十六次 第 2-4 點，老師選 B 簡單版：班級＋時間＋✖＋任務，不挑學生）：
+     老師看板〔🎁 全班 獎勵〕最上面：〔🟢 全開〕＝ 全部班級、全部任務；〔⛔ 全關〕；〔⚙ 照 我 的 設定〕＝ 勾 的 班級、勾 的 任務（類別）。都 只在 從～到 這段 時間。
+     答對 賺 的 練習 金幣 ✖ k（多出來 的 不算 進「一天 最多」）、做完 一次 的 經驗值 ✖ x。正確率、分數、排行榜 不變。伺服器 存 在 指令碼屬性 BOOST */
+  var BOOST = null, BOK = [1, 1.5, 2], BCAT = ['game', 'tq', 'mt', 'r1', 'l', 'lv', 'g3c'];
+  function bstClean(b) { b = b || {}; var m = b.m === 'all' || b.m === 'set' ? b.m : 'off', f = Math.round(+b.from || 0), t = Math.round(+b.to || 0);
+    return { m: m, k: BOK.indexOf(+b.k) >= 0 ? +b.k : 1, x: BOK.indexOf(+b.x) >= 0 ? +b.x : 1, from: f, to: t > f ? t : 0,
+      cls: (b.cls || []).map(String).filter(function (c) { return /^\d{3}$/.test(c); }).slice(0, 40), cats: (b.cats || []).map(String).filter(function (c) { return BCAT.indexOf(c) >= 0; }) }; }
+  function rpBoostSet(b) { BOOST = b ? bstClean(b) : null; }
+  /* 這一筆（或 這一班、這個 時間）有沒有 加倍：回傳 [金幣 倍數, 經驗值 倍數] */
+  function bstAt(cls, t, set, B) { B = B || BOOST; if (!B || B.m === 'off' || !B.to || t < B.from || t >= B.to) return [1, 1];
+    if (B.m === 'set') { if (B.cls.indexOf(String(cls)) < 0) return [1, 1]; if (set != null && B.cats.length && B.cats.indexOf(cat(set).k) < 0) return [1, 1]; }
+    return [B.k, B.x]; }
+  /* 平板 的 金色 橫幅：這一班 現在 有沒有 加倍 */
+  function bstFor(id, now, B) { B = B || BOOST; var c = String(id || '').slice(0, 3), a = bstAt(c, now || Date.now(), null, B); return a[0] > 1 || a[1] > 1 ? { k: a[0], x: a[1], to: B.to, cats: B.m === 'set' ? B.cats : [] } : null; }
   /* 這個人全部的紀錄 ➜ 經驗值、金幣（只算沒作廢的） */
   function rpEarn(rs, st) {
     var trt = (st && st.trt) || [];   /* 那一筆的時候是第幾階（升階以後才多，老師 2026-10-21） */
@@ -509,7 +523,8 @@ var SC = (function () {
     var xp = 0, days = {}, dayCoin = {}, cnt = {}, prev = {}, wk = {}, coin = 0, wkq = {};
     L.forEach(function (r) {
       var d = day(r.t), ck = d + '|' + r.set, fast = (+r.fast || 0) * 2 > r.n;
-      if (r.m !== 'lv' && counts(r.ok, r.n, r.m, r.fast)) { cnt[ck] = (cnt[ck] || 0) + 1; if (cnt[ck] <= CAP) xp += RPX.rec; }
+      var bo = bstAt(r.cls || String(r.id || '').slice(0, 3), r.t, r.set);   /* 🎉 加倍 時段 */
+      if (r.m !== 'lv' && counts(r.ok, r.n, r.m, r.fast)) { cnt[ck] = (cnt[ck] || 0) + 1; if (cnt[ck] <= CAP) xp += Math.round(RPX.rec * bo[1]); }
       if (!days[d]) { days[d] = 1; xp += RPX.day; var w0 = weekStart(r.t); wk[w0] = (wk[w0] || 0) + 1; }
       if (r.m === 'l' || r.m === 'lv' || r.m === 'mem' || fast) return;
       var c = 0;
@@ -518,6 +533,7 @@ var SC = (function () {
       if (r.acc != null) { if (prev[r.set] != null && r.acc > prev[r.set]) c += RPC.prog; prev[r.set] = r.acc; }
       var tk = tierAt(r.t); if (tk) c = Math.round(c * (100 + RPTB[tk][0]) / 100);
       var room = RPTB[tk][1] - (dayCoin[d] || 0), g = Math.max(0, Math.min(room, c)); dayCoin[d] = (dayCoin[d] || 0) + g; coin += g;
+      if (bo[0] > 1) coin += Math.round(g * (bo[0] - 1));   /* 🎉 加倍 多出來 的 不算 進 一天 最多 */
     });
     var chests = 0; for (var w in wk) if (wk[w] >= RPC.chestDays) chests++;
     return { xp: xp, coin: coin + chests * RPC.chest, chests: chests, days: Object.keys(days).length, dd: days };
@@ -610,7 +626,7 @@ var SC = (function () {
     lkClean: lkClean, lkSet: lkSet, lkAny: lkAny, lkFor: lkFor, LKRE: LKRE, lktClean: lktClean, lktSet: lktSet, lkNow: lkNow,
     tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE,
     RPCW: RPCW, cwOk: cwOk, cwDays: cwDays, cwLv: cwLv, cwAmt: cwAmt, RPCQV: RPCQV, rpCwq: rpCwq, RPCH: RPCH, RPR: RPR, RPP: RPP, RPL: RPL, RPT: RPT, RPS: RPS, RPSON: RPSON, RPSP: RPSP, RPSL: RPSL, RPSLOT: RPSLOT, rpSC: rpSC, RPSET: RPSET, RPHIDE: RPHIDE, RPX: RPX, RPC: RPC, rpKind: rpKind, rpStar: rpStar, rpPrice: rpPrice, rpNeed: rpNeed, rpOk: rpOk, rpLv: rpLv,
-    RPPET: RPPET, RPMON: RPMON, rpMonHp: rpMonHp, rpMonAt: rpMonAt, rpFight: rpFight, RPLIM: RPLIM, RPEND: RPEND, rpOpen: rpOpen, RPTIER: RPTIER, RPTIERC: RPTIERC, RPTB: RPTB, RPTX: RPTX, DILI: DILI, dili: dili, champs: champs, RPQV: RPQV, rpQuiz: rpQuiz, rpTier: rpTier, rpTierUp: rpTierUp,
+    RPPET: RPPET, RPMON: RPMON, rpMonHp: rpMonHp, rpMonAt: rpMonAt, rpFight: rpFight, RPLIM: RPLIM, RPEND: RPEND, rpOpen: rpOpen, RPTIER: RPTIER, RPTIERC: RPTIERC, rpBoostSet: rpBoostSet, bstClean: bstClean, bstAt: bstAt, bstFor: bstFor, BCAT: BCAT, RPTB: RPTB, RPTX: RPTX, DILI: DILI, dili: dili, champs: champs, RPQV: RPQV, rpQuiz: rpQuiz, rpTier: rpTier, rpTierUp: rpTierUp,
     rpClean: rpClean, rpEarn: rpEarn, rpView: rpView, rpBuy: rpBuy, rpEquip: rpEquip, rpDmg: rpDmg, rpGain: rpGain, rpBonus: rpBonus, lvRec: lvRec };
 })();
 if (typeof module !== 'undefined') module.exports = SC;

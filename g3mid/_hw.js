@@ -132,7 +132,8 @@ var HWSRC = function () {
      做法：從標準寫法（T）自動找出「碰到線」的點（曲線碰到線的最高／最低點、筆畫的頭尾剛好在線上；直直穿過去的不算），
      學生的字左右照比例對齊（左右寬窄、寫在格子的哪裡都沒關係），上下不動（看真的寫在哪一條線）：每一個碰線點附近，學生的筆畫要碰到同一條線（差 TOL 以內）；
      最高點、最低點不可以超過標準寫法外面的那兩條線。 */
-  var TOL = .13, LN = ['最上面的線', '中間的線', '紅線（底線）', '最下面的線'];
+  /* 2026-10-26 第二十六次 第 1-4 點（老師選 A＋B）：手指 寫 會 不小心 超出 ➜ 超出 外面 的 線 0.25 格 以內 不算 錯（OVT）；碰線 的 規定 照舊（TOL）。超出 更多 ＝ 網頁 給 一次「再 寫 一次」 */
+  var OVT = .25, TOL = .13, LN = ['最上面的線', '中間的線', '紅線（底線）', '最下面的線'];
   function contacts(st) { var o = [];
     st.forEach(function (s) { for (var i = 0; i < s.length; i++) { var p = s[i], a = s[i - 1], b = s[i + 1];
       for (var L = 0; L < 4; L++) if (Math.abs(p[1] - L) <= .06) { var ext = !a || !b || (p[1] <= a[1] + 1e-9 && p[1] <= b[1] + 1e-9) || (p[1] >= a[1] - 1e-9 && p[1] >= b[1] - 1e-9);
@@ -145,14 +146,14 @@ var HWSRC = function () {
     C.forEach(function (c) { var best = 9; P.forEach(function (q) { if (Math.abs(mx(q[0]) - c[0]) <= wx && Math.abs(q[1] - c[1]) <= .55) best = Math.min(best, Math.abs(q[1] - c[1])); });
       if (best > TOL) miss.push({ x: c[0], L: c[1], d: best }); });
     var top = Math.floor(tb.y0 + .06), bot = Math.ceil(tb.y1 - .06);
-    if (sb.y0 < top - TOL) over.push({ L: top, d: top - sb.y0 }); if (sb.y1 > bot + TOL) over.push({ L: bot, d: sb.y1 - bot });
+    if (sb.y0 < top - OVT) over.push({ L: top, d: top - sb.y0 }); if (sb.y1 > bot + OVT) over.push({ L: bot, d: sb.y1 - bot });
     return { ok: !miss.length && !over.length, miss: miss, over: over, C: C, map: { tx0: tb.x0, tw: tw, sx0: sb.x0, sw: sw } }; }
   /* 要寫 want：每一種標準寫法都試，挑問題最少的那一種。words ＝ 給小朋友看的一句話 */
   function lines(strokes, want) { strokes = (strokes || []).filter(function (s) { return s.length > 0; }); if (!strokes.length || !T[want]) return { ok: false, miss: [], over: [], words: '' };
     var best = null; T[want].forEach(function (st) { var r = lineOne(strokes, st), k = r.miss.length + r.over.length; if (!best || k < best.k) { best = r; best.k = k; } });
     var ms = [], os = []; best.miss.forEach(function (m) { if (ms.indexOf(LN[m.L]) < 0) ms.push(LN[m.L]); }); best.over.forEach(function (m) { if (os.indexOf(LN[m.L]) < 0) os.push(LN[m.L]); });
     best.words = (ms.length ? '沒有 碰到 ' + ms.join('、') : '') + (ms.length && os.length ? '；' : '') + (os.length ? '超出 ' + os.join('、') : ''); return best; }
-  return { T: T, rank: rank, judge: judge, body: body, lines: lines, contacts: contacts, TOL: TOL, LN: LN };
+  return { T: T, rank: rank, judge: judge, body: body, lines: lines, contacts: contacts, TOL: TOL, OVT: OVT, LN: LN };
 };
 var HW = HWSRC();
 module.exports = { HW: HW, js: 'var HW=(' + HWSRC.toString() + ')();' };
