@@ -409,12 +409,26 @@ var SC = (function () {
              每週保底寶箱：那一週練了 3 天以上 ＋60（跟成績好不好無關）
      等級 Lv ＝ ⌊√(經驗值 ÷ 16)⌋ ＋ 1（Lv 5 ＝ 256、Lv 10 ＝ 1296、Lv 20 ＝ 5776 經驗值；一週練 4 天約 200 經驗值） */
   var RPX = { rec: 10, day: 20 }, RPC = { fix: 3, prog: 10, cap: 100, chest: 60, chestDays: 3 };
-  /* 🎁 全班獎勵（2026-10-23 第二十二次，老師：「老師決定」刪掉 ➜ 每個星期一自動發；金額 🪙 ＋200、⭐ ＋100（老師選了 Claude 的建議））：
-     名單上這一班每一個人「上一週」都練 3 天以上 ➜ 全班每人一份；編號 cw|那一週星期一|班級（同一班同一週只發一次） */
-  var RPCW = { c: 200, x: 100, days: 3 };
-  function cwOk(rs, ids, from, to) { if (!ids || !ids.length) return false; var nd = {};
-    students(pick(rs, { from: from, to: to })).forEach(function (p) { nd[p.id] = +p.days || 0; });
-    return ids.every(function (id) { return (nd[id] || 0) >= RPCW.days; }); }
+  /* 🎁 全班獎勵（2026-10-25 第二十五次，老師：暫時規定＋「練得愈多天、拿愈多」，取代第二十二次的「全班每一個人都練 3 天 ➜ 每人 🪙200 ⭐100」）：
+     每個星期一自動發「上一週」：① 基本目標 ＝ 名單上 8 成的人（無條件進位：30 人 ➜ 24 人）練 2 天以上 ➜ 自己練 2 天以上的人照天數拿 t1；
+     ② 進階目標 ＝ 名單上每一位都練 3 天以上 ➜ 每一個人照天數拿 t2（比 t1 多）；完全沒練、只練 1 天的人拿不到。編號 cw|那一週星期一|班級（同一班同一週只發一次） */
+  var RPCW = { pct: 80, d1: 2, d2: 3,
+    t1: { 2: [150, 100], 3: [175, 110], 4: [200, 120], 5: [225, 130], 6: [250, 140], 7: [275, 150] },
+    t2: { 3: [200, 120], 4: [250, 140], 5: [300, 160], 6: [350, 180], 7: [400, 200] } };
+  /* {5碼: 那一段時間練了幾天} */
+  function cwDays(rs, from, to) { var nd = {}; students(pick(rs, { from: from, to: to })).forEach(function (p) { nd[p.id] = +p.days || 0; }); return nd; }
+  /* 這一班達到哪一個目標：0 沒有、1 基本、2 進階 */
+  function cwLv(nd, ids) { if (!ids || !ids.length) return 0; nd = nd || {};
+    if (ids.every(function (id) { return (nd[id] || 0) >= RPCW.d2; })) return 2;
+    var n = ids.filter(function (id) { return (nd[id] || 0) >= RPCW.d1; }).length; return n >= Math.ceil(ids.length * RPCW.pct / 100 - 1e-9) ? 1 : 0; }
+  /* 一個人拿多少：{c 金幣, x 經驗值} 或 null */
+  function cwAmt(lv, d) { d = Math.min(7, Math.floor(+d || 0)); var T = lv === 2 ? RPCW.t2 : lv === 1 ? RPCW.t1 : null; return T && T[d] ? { c: T[d][0], x: T[d][1] } : null; }
+  function cwOk(rs, ids, from, to) { return cwLv(cwDays(rs, from, to), ids); }
+  /* 🎯 全班獎勵 小測驗（2026-10-25 第二十五次：老師「獨立一個小測驗」）：版本，規則改了 ＋1；3 題都答對 ＝ 伺服器記 cq ＝ RPCQV */
+  var RPCQV = 1;
+  function rpCwq(st, v, now) { st = rpClean(st); if (+v === RPCQV) { st.cq = RPCQV; st.cqt = now || Date.now(); } return st; }
+  /* 👑 冠軍寶箱（2026-10-25 第二十五次，老師：只發金幣和經驗值；選 🪙 ＋250、⭐ ＋150，固定） */
+  var RPCH = { c: 250, x: 150 };
   var RPP = [0, 50, 150, 400, 900, 2000], RPL = [0, 1, 1, 5, 10, 20];   /* 稀有度 ★1～★5 的價錢、要幾級 */
   /* 稀有度（30 個：★1 8 個、★2 8 個、★3 7 個、★4 4 個、★5 3 個；老師 C10 第 2 題 A：照這樣） */
   function rpStars(a) { var o = {}; for (var i = 0; i < a.length; i++) for (var j = 0; j < a[i].length; j++) o[a[i][j]] = i + 1; return o; }
@@ -429,9 +443,11 @@ var SC = (function () {
   (function () { for (var i = 32; i <= 56; i++) RPR.h['g' + i] = i <= 41 ? 2 : i <= 51 ? 3 : 4; })();
   /* 2026-10-24 第二十三次（老師上傳 3 張、6 個男戰士，左上角 01 ＝ ★ 基本；老師同意的位置 listen/2026-10-24_C27/）：男 31～36 ★ 基本（圖 rpg/newm ➜ rpg/chars）；舊的男 01～08 下架 */
   (function () { for (var i = 31; i <= 36; i++) RPR.h['b' + i] = 1; })();
+  /* 2026-10-25 第二十五次（老師上傳 5 張、8 個男戰士＋2 個女戰士，左上角 02 ＝ ★★ 稀有；老師同意的位置 listen/2026-10-25_C28/）：男 37～44 ★★ 稀有（圖 rpg/newm2 ➜ rpg/chars）；舊的男 09～16 下架；2 個女戰士這次不用 */
+  (function () { for (var i = 37; i <= 44; i++) RPR.h['b' + i] = 2; })();
   /* 先不放的（商店不賣；老師 2026-10-23：已經買了的人還可以繼續用 ➜ 換裝 rpEquip 不看這裡）：
      女 11～21（機甲女戰士 11～20、Phoenix Dancer 21）、舊寶物 t01～t10（Claude 畫的）暫時下架 */
-  var RPHIDE = {}; (function () { for (var i = 11; i <= 21; i++) RPHIDE['g' + i] = 1; for (i = 1; i <= 10; i++) RPHIDE['t' + (i < 10 ? '0' : '') + i] = 1; for (i = 1; i <= 8; i++) RPHIDE['b0' + i] = 1; })();   /* 第二十三次：男 01～08（舊 ★ 基本）下架，已經選的照舊用 */
+  var RPHIDE = {}; (function () { for (var i = 11; i <= 21; i++) RPHIDE['g' + i] = 1; for (i = 1; i <= 10; i++) RPHIDE['t' + (i < 10 ? '0' : '') + i] = 1; for (i = 1; i <= 8; i++) RPHIDE['b0' + i] = 1; for (i = 9; i <= 16; i++) RPHIDE['b' + (i < 10 ? '0' : '') + i] = 1; })();   /* 第二十三次：男 01～08（舊 ★ 基本）下架，已經選的照舊用 */
   /* 10 種外觀寶物（C9 第 7 題 A：只換外觀，公平） */
   var RPT = [['t01', '✨ 光環', 100], ['t02', '🧥 披風', 150], ['t03', '👣 閃亮腳印', 120], ['t04', '🎆 登場煙火', 200], ['t05', '🖼 金色名字框', 100],
     ['t06', '😎 戰士表情', 80], ['t07', '🙌 勝利姿勢', 150], ['t08', '🌌 星空背景', 250], ['t09', '🎩 寵物帽子', 80], ['t10', '💠 發光武器框', 120]];
@@ -477,13 +493,13 @@ var SC = (function () {
     /* 2026-10-20 第十四次：👾 怪物（i ＝ 打倒幾隻、hp ＝ 現在這一隻已經被打掉多少）、👑 冠軍寶箱（ch ＝ 還沒開幾個、chl ＝ 開到什麼）、老師獎勵發過的（bk，同一個不會發兩次） */
     var mo = st.mon || {}; o.mon = { i: Math.max(0, Math.round(+mo.i || 0)), hp: Math.max(0, Math.round(+mo.hp || 0)) }; if (o.mon.hp >= rpMonHp(o.mon.i)) o.mon.hp = rpMonHp(o.mon.i) - 1;
     o.ch = Math.max(0, Math.min(20, Math.round(+st.ch || 0)));
-    o.chl = (st.chl || []).filter(function (x) { return x && (x.c > 0 || rpSC(x.s)); }).slice(-5).map(function (x) { return x.c > 0 ? { c: Math.round(+x.c) } : { s: String(x.s) }; });
+    o.chl = (st.chl || []).filter(function (x) { return x && (x.c > 0 || rpSC(x.s)); }).slice(-5).map(function (x) { return x.c > 0 ? (x.x > 0 ? { c: Math.round(+x.c), x: Math.round(+x.x) } : { c: Math.round(+x.c) }) : { s: String(x.s) }; });
     o.bk = (st.bk || []).map(String).filter(function (k) { return /^[\w|-]{1,40}$/.test(k); }).slice(-60);
     o.tr = Math.max(0, Math.min(RPTIER.length, Math.round(+st.tr || 0)));
     /* 2026-10-21 第十六次 第 5 點：trt[i] ＝ 第一次到第 i＋1 階的時間（金幣加成「升階以後才多」；舊的階級沒有時間 ＝ 等 rpTierUp 填上「現在」） */
     o.trt = []; for (var ti = 0; ti < o.tr; ti++) { var tv = Math.round(+((st.trt || [])[ti]) || 0); if (tv > 0) o.trt.push(tv); else break; }
     /* 理解小考（2026-10-21）：qz ＝ 看懂了哪一版規則（RPQV）、qzt ＝ 什麼時候 */
-    o.qz = Math.max(0, Math.round(+st.qz || 0)); o.qzt = Math.max(0, Math.round(+st.qzt || 0));   /* 2026-10-20 第十五次：⚔ 戰力階級 最高到過第幾階（升一階 🪙＋100 一次，拿下裝備也不會收回） */
+    o.qz = Math.max(0, Math.round(+st.qz || 0)); o.qzt = Math.max(0, Math.round(+st.qzt || 0)); o.cq = Math.max(0, Math.round(+st.cq || 0)); o.cqt = Math.max(0, Math.round(+st.cqt || 0));   /* 2026-10-25：🎯 全班獎勵小測驗 */   /* 2026-10-20 第十五次：⚔ 戰力階級 最高到過第幾階（升一階 🪙＋100 一次，拿下裝備也不會收回） */
     return o; }
   /* 這個人全部的紀錄 ➜ 經驗值、金幣（只算沒作廢的） */
   function rpEarn(rs, st) {
@@ -525,7 +541,7 @@ var SC = (function () {
     return { xp: E.xp, lv: lv, lvAt: 16 * (lv - 1) * (lv - 1), lvNext: 16 * lv * lv, earned: E.coin, coins: E.coin - st.spent, chests: E.chests, days: E.days,
       petDays: pd, petStage: ps, power: pow, titles: titles, medal: st.medal, st: st,
       hit: rpDmg(pow), petHit: st.eq.p ? RPPET[ps] : 0, mon: rpMonAt(st.mon), ch: st.ch, tier: tier, tmax: tm,
-      tnow: st.trt.length, pct: RPTB[st.trt.length][0], cap: RPTB[st.trt.length][1], qz: st.qz };   /* 現在金幣多幾 %、一天最多（照已經記下時間的階） */
+      tnow: st.trt.length, pct: RPTB[st.trt.length][0], cap: RPTB[st.trt.length][1], qz: st.qz, cq: st.cq };   /* 現在金幣多幾 %、一天最多（照已經記下時間的階） */
   }
   /* 這一次（編號 u）拿到多少：全部 − 沒有這一筆 */
   function rpGain(rs, st, u) { var a = rpView(rs, st), b = rpView((rs || []).filter(function (r) { return r.u !== u; }), st);
@@ -563,11 +579,9 @@ var SC = (function () {
   var RPLIM = { s0713: 5, s0812: 5, s0815: 5 };
   /* 2026-10-20 第十五次（老師 C17 第 7 題 A、第 8 題 甲、第 8 點）：s0805 金色獅鷲寶寶、s0907 噴射翅膀 變回一般商品；新的 10 月 31 號下架 ＝ s0301 金龍（必殺）、s0804 星空小龍、s0908 雷電翅膀 */
   var RPEND0 = Date.UTC(2026, 9, 31, 16, 0, 0), RPEND = { s0301: RPEND0, s0804: RPEND0, s0710: RPEND0, s0908: RPEND0, s1005: RPEND0 };
-  /* 👑 冠軍寶箱（老師的全班獎勵 ③：每週全年級「最認真練習」前 5 名）：一定是好東西 ➜ 55% 金幣 300／400／500、45% 商城第 2 排（1,200 的）還沒有的一樣（限量、限時的不會開到） */
+  /* 👑 冠軍寶箱（每週全年級「最認真練習」前 5 名）：2026-10-25 第二十五次 ➜ 只發金幣和經驗值：固定 🪙 ＋250、⭐ ＋150（RPCH；以前 ＝ 55% 金幣 300～500、45% 商城第 2 排） */
   function rpOpen(st, rnd, rnd2) { st = rpClean(st); if (st.ch <= 0) return { err: 'none' }; st.ch--;
-    var r = null; if (rnd >= .55) { var L = []; for (var c in RPSON) for (var n = 6; n <= 10; n++) { var id = 's' + (c < 10 ? '0' : '') + c + (n < 10 ? '0' : '') + n; if (!RPLIM[id] && !RPEND[id] && !RPTX[id] && st.own[rpKind(id)].indexOf(id) < 0) L.push(id); }
-      if (L.length) { var it = L[Math.floor(rnd2 * L.length) % L.length], k = rpKind(it); st.own[k].push(it); if (k === 's') rpWear(st, it); else st.eq[k] = st.eq[k] || it; r = { s: it }; } }
-    if (!r) { r = { c: [300, 400, 500][Math.floor(rnd2 * 3) % 3] }; st.bc += r.c; }
+    var r = { c: RPCH.c, x: RPCH.x }; st.bc += r.c; st.bx += r.x;
     st.chl.push(r); st.chl = st.chl.slice(-5); return { st: st, r: r }; }
   /* 合作打魔王的傷害（C9 第 6 題 B）：答對一題 10 ＋ 戰力 ÷ 100（最多 ＋20）；只用在全班一起的血條 */
   function rpDmg(power) { return 10 + Math.min(20, Math.floor((+power || 0) / 100)); }
@@ -595,7 +609,7 @@ var SC = (function () {
     AW: AW, care: care, CAREMAX: CAREMAX, s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, clsAwards: clsAwards, secOf: secOf, questions: questions, gtop: gtop, view: view,
     lkClean: lkClean, lkSet: lkSet, lkAny: lkAny, lkFor: lkFor, LKRE: LKRE, lktClean: lktClean, lktSet: lktSet, lkNow: lkNow,
     tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE,
-    RPCW: RPCW, cwOk: cwOk, RPR: RPR, RPP: RPP, RPL: RPL, RPT: RPT, RPS: RPS, RPSON: RPSON, RPSP: RPSP, RPSL: RPSL, RPSLOT: RPSLOT, rpSC: rpSC, RPSET: RPSET, RPHIDE: RPHIDE, RPX: RPX, RPC: RPC, rpKind: rpKind, rpStar: rpStar, rpPrice: rpPrice, rpNeed: rpNeed, rpOk: rpOk, rpLv: rpLv,
+    RPCW: RPCW, cwOk: cwOk, cwDays: cwDays, cwLv: cwLv, cwAmt: cwAmt, RPCQV: RPCQV, rpCwq: rpCwq, RPCH: RPCH, RPR: RPR, RPP: RPP, RPL: RPL, RPT: RPT, RPS: RPS, RPSON: RPSON, RPSP: RPSP, RPSL: RPSL, RPSLOT: RPSLOT, rpSC: rpSC, RPSET: RPSET, RPHIDE: RPHIDE, RPX: RPX, RPC: RPC, rpKind: rpKind, rpStar: rpStar, rpPrice: rpPrice, rpNeed: rpNeed, rpOk: rpOk, rpLv: rpLv,
     RPPET: RPPET, RPMON: RPMON, rpMonHp: rpMonHp, rpMonAt: rpMonAt, rpFight: rpFight, RPLIM: RPLIM, RPEND: RPEND, rpOpen: rpOpen, RPTIER: RPTIER, RPTIERC: RPTIERC, RPTB: RPTB, RPTX: RPTX, DILI: DILI, dili: dili, champs: champs, RPQV: RPQV, rpQuiz: rpQuiz, rpTier: rpTier, rpTierUp: rpTierUp,
     rpClean: rpClean, rpEarn: rpEarn, rpView: rpView, rpBuy: rpBuy, rpEquip: rpEquip, rpDmg: rpDmg, rpGain: rpGain, rpBonus: rpBonus, lvRec: lvRec };
 })();

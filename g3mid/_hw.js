@@ -103,14 +103,14 @@ var HWSRC = function () {
   var TP = [];
   Object.keys(T).forEach(function (ch) { T[ch].forEach(function (st) { var bb = body(st); TP.push({ ch: ch, p: norm(resample(flat(st))), t: bb.t, b: bb.b }); }); });
   /* strokes：[[x,y],…] 的陣列（四線格單位）。回傳 [{ch, d}] 由像到不像 */
-  function rank(strokes) {
+  function rank(strokes, noPos) {
     strokes = strokes.filter(function (s) { return s.length > 0; });
     if (!strokes.length) return [];
     var f = flat(strokes.map(function (s) { return s.length === 1 ? [s[0], [s[0][0], s[0][1] + .02]] : s; }));
     if (len(f) < .15) return [];
     var p = norm(resample(f)), bb = body(strokes), best = {};
     TP.forEach(function (t) {
-      var pos = Math.abs(bb.t - t.t) + Math.abs(bb.b - t.b);
+      var pos = noPos ? 0 : Math.abs(bb.t - t.t) + Math.abs(bb.b - t.b);
       var d = pdist(p, t.p) + 1.2 * pos;
       if (!(t.ch in best) || d < best[t.ch]) best[t.ch] = d;
     });
@@ -118,15 +118,41 @@ var HWSRC = function () {
   }
   /* 對不對：第一名 ＝ 要寫的字 ➜ 對；寫成另一個大小寫（g 寫成 G）一定錯；
      第一名是別的字但「要寫的字」幾乎一樣像（差不到 12%）➜ 也算對（小朋友寫得歪一點，不冤枉） */
-  function judge(strokes, want) {
-    var r = rank(strokes); if (!r.length) return { ok: false, got: '', r: r };
+  /* noPos ＝ 只看 形狀、不看 寫在 哪一條 線（2026-10-25：形狀 對 但是 沒有 頂天立地 ➜ 告訴 學生 是 線 的 問題）*/
+  function judge(strokes, want, noPos) {
+    var r = rank(strokes, noPos); if (!r.length) return { ok: false, got: '', r: r };
     var top = r[0], mine = null;
     r.forEach(function (x) { if (x.ch === want) mine = x; });
     var partner = want === want.toUpperCase() ? want.toLowerCase() : want.toUpperCase();
-    var ok = top.ch === want || (mine && top.ch !== partner && mine.d <= top.d * 1.12);
+    var ok = top.ch === want || (mine && (noPos || top.ch !== partner) && mine.d <= top.d * 1.12);
     return { ok: !!ok, got: ok ? want : top.ch, r: r.slice(0, 4) };
   }
-  return { T: T, rank: rank, judge: judge, body: body };
+  /* ══ 頂天立地、不超線（2026-10-25 第二十五次 老師第 4、5 點）══
+     字母的最高點、最低點、中間的部分（g 的圓圈上下、b d p q 的圓圈、h n m r 的拱、k 的手、t f 的橫線…）都要碰到線，而且不可以超出線。
+     做法：從標準寫法（T）自動找出「碰到線」的點（曲線碰到線的最高／最低點、筆畫的頭尾剛好在線上；直直穿過去的不算），
+     學生的字左右照比例對齊（左右寬窄、寫在格子的哪裡都沒關係），上下不動（看真的寫在哪一條線）：每一個碰線點附近，學生的筆畫要碰到同一條線（差 TOL 以內）；
+     最高點、最低點不可以超過標準寫法外面的那兩條線。 */
+  var TOL = .13, LN = ['最上面的線', '中間的線', '紅線（底線）', '最下面的線'];
+  function contacts(st) { var o = [];
+    st.forEach(function (s) { for (var i = 0; i < s.length; i++) { var p = s[i], a = s[i - 1], b = s[i + 1];
+      for (var L = 0; L < 4; L++) if (Math.abs(p[1] - L) <= .06) { var ext = !a || !b || (p[1] <= a[1] + 1e-9 && p[1] <= b[1] + 1e-9) || (p[1] >= a[1] - 1e-9 && p[1] >= b[1] - 1e-9);
+        if (ext && !o.some(function (q) { return q[1] === L && Math.abs(q[0] - p[0]) < .25; })) o.push([p[0], L]); } } });
+    return o; }
+  function xbox(strokes) { var x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; strokes.forEach(function (s) { s.forEach(function (q) { x0 = Math.min(x0, q[0]); x1 = Math.max(x1, q[0]); y0 = Math.min(y0, q[1]); y1 = Math.max(y1, q[1]); }); }); return { x0: x0, x1: x1, y0: y0, y1: y1 }; }
+  function lineOne(strokes, st) { var C = contacts(st), tb = xbox(st), sb = xbox(strokes), tw = Math.max(.05, tb.x1 - tb.x0), sw = sb.x1 - sb.x0, P = [], miss = [], over = [];
+    strokes.forEach(function (s) { for (var i = 0; i < s.length; i++) { P.push(s[i]); var n = s[i + 1]; if (n) { var d = Math.hypot(n[0] - s[i][0], n[1] - s[i][1]), k = Math.ceil(d / .04); for (var j = 1; j < k; j++) P.push([s[i][0] + (n[0] - s[i][0]) * j / k, s[i][1] + (n[1] - s[i][1]) * j / k]); } } });
+    var mx = function (x) { return sw < .05 ? (tb.x0 + tb.x1) / 2 : tb.x0 + (x - sb.x0) / sw * tw; }, wx = Math.max(.18, tw * .2);
+    C.forEach(function (c) { var best = 9; P.forEach(function (q) { if (Math.abs(mx(q[0]) - c[0]) <= wx && Math.abs(q[1] - c[1]) <= .55) best = Math.min(best, Math.abs(q[1] - c[1])); });
+      if (best > TOL) miss.push({ x: c[0], L: c[1], d: best }); });
+    var top = Math.floor(tb.y0 + .06), bot = Math.ceil(tb.y1 - .06);
+    if (sb.y0 < top - TOL) over.push({ L: top, d: top - sb.y0 }); if (sb.y1 > bot + TOL) over.push({ L: bot, d: sb.y1 - bot });
+    return { ok: !miss.length && !over.length, miss: miss, over: over, C: C, map: { tx0: tb.x0, tw: tw, sx0: sb.x0, sw: sw } }; }
+  /* 要寫 want：每一種標準寫法都試，挑問題最少的那一種。words ＝ 給小朋友看的一句話 */
+  function lines(strokes, want) { strokes = (strokes || []).filter(function (s) { return s.length > 0; }); if (!strokes.length || !T[want]) return { ok: false, miss: [], over: [], words: '' };
+    var best = null; T[want].forEach(function (st) { var r = lineOne(strokes, st), k = r.miss.length + r.over.length; if (!best || k < best.k) { best = r; best.k = k; } });
+    var ms = [], os = []; best.miss.forEach(function (m) { if (ms.indexOf(LN[m.L]) < 0) ms.push(LN[m.L]); }); best.over.forEach(function (m) { if (os.indexOf(LN[m.L]) < 0) os.push(LN[m.L]); });
+    best.words = (ms.length ? '沒有 碰到 ' + ms.join('、') : '') + (ms.length && os.length ? '；' : '') + (os.length ? '超出 ' + os.join('、') : ''); return best; }
+  return { T: T, rank: rank, judge: judge, body: body, lines: lines, contacts: contacts, TOL: TOL, LN: LN };
 };
 var HW = HWSRC();
 module.exports = { HW: HW, js: 'var HW=(' + HWSRC.toString() + ')();' };

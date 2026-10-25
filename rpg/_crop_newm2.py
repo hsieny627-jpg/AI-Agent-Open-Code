@@ -18,7 +18,7 @@ for sh, k, boxes in SHEETS:
     c.resize((w, h), Image.LANCZOS).save(os.path.join(D, 'newm2', '%s%d.jpg' % (k, i + 1)), quality=88)
 # 建議的位置（listen/2026-10-25_C28/）：男 37～44 ★★ 稀有 ＝ A1 A2 B1 B2 C1 C2 E1 E2
 ORDER = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'E1', 'E2']
-APPROVED = False   # 老師還沒同意
+APPROVED = True   # 老師 2026-10-25 同意（對話裡選擇題）
 if APPROVED:
   for n, k in enumerate(ORDER):
     shutil.copy(os.path.join(D, 'newm2', k + '.jpg'), os.path.join(D, 'chars', 'b%02d.jpg' % (37 + n)))

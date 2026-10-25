@@ -72,6 +72,28 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     if (!G.books['角色'] || !new RegExp('"qz":' + require('../score/_calc.js').RPQV).test((G.books['角色'].d[1] || [])[1] || '')) E.push(tag + '：試算表「角色」沒有 記 看懂 規則');
     /* 第十八次 第 1 點：答對過 第 1 版 的 人（qz ＝ 1）要 再看 再答 */ { const lk = await p.evaluate(() => { const o = RV.qz, K = 'rp_qz_' + SCID, L = localStorage.getItem(K); localStorage.removeItem(K); const Z = QZOK; QZOK = ''; RV.qz = 1; const a = rLocked(); RV.qz = o; QZOK = Z; if (L != null) localStorage.setItem(K, L); return a; }); if (!lk) E.push(tag + '：答對過 舊 規則 的 人 沒有 再 鎖住 看 新 規則'); n++; }
     await p.click('#qzEnd'); await p.waitForTimeout(500);
+    /* 2026-10-25 第二十五次：🎯 全班獎勵 小測驗（4 幕＋3 題）都答對 才 能 玩；老師看板 看得到 */
+    { const w0 = await p.evaluate(() => ({ lk: document.getElementById('rpin').classList.contains('rlock'), gate: (document.querySelector('.rgate') || {}).textContent || '', sc: document.querySelectorAll('#tst .tsc').length, ch: [].map.call(document.querySelectorAll('.tch button'), x => x.textContent).join('|'), qz: (document.getElementById('qzGo') || {}).hidden }));
+      if (!w0.lk || !/全班獎勵/.test(w0.gate) || w0.sc !== 4 || !/全班獎勵/.test(w0.ch) || w0.qz !== true) E.push(tag + '：看懂 規則 以後 沒有 先 鎖住 看 全班獎勵 4 幕：' + JSON.stringify(w0));
+      for (let i = 0; i < 4; i++) { await p.click('[data-tut="' + i + '"]'); await p.waitForTimeout(3600);
+        const f = await p.evaluate(() => { const c = document.querySelector('#tst .tsc.on'), t = document.getElementById('tst').getBoundingClientRect(), o = []; let mn = 99;
+          c.querySelectorAll('*').forEach(x => { const r = x.getBoundingClientRect(); if (r.width && (r.right > t.right + 2 || r.left < t.left - 2 || r.bottom > t.bottom + 2)) o.push(x.className || x.tagName); if (x.children.length === 0 && x.textContent.trim() && getComputedStyle(x).opacity > .5) mn = Math.min(mn, parseFloat(getComputedStyle(x).fontSize)); });
+          return { o: o.slice(0, 3), mn, t: c.textContent }; });
+        if (f.o.length || f.mn < 17) E.push(tag + '：全班獎勵 第 ' + (i + 1) + ' 幕 超出 或 字 太小：' + JSON.stringify(f).slice(0, 160));
+        if (i === 2 && !/150/.test(f.t)) E.push(tag + '：全班獎勵 第 3 幕 沒有 照 天數 的 金幣'); if (i === 3 && !/400/.test(f.t)) E.push(tag + '：全班獎勵 第 4 幕 沒有 目標② 的 金幣'); n += 2; }
+      await p.click('#qzGo'); await p.waitForTimeout(300);
+      const q3 = await p.evaluate(() => document.querySelector('#rqz .qn').textContent);
+      if (!/3 題/.test(q3)) E.push(tag + '：全班獎勵 小問題 不是 3 題：' + q3);
+      await p.click('#rqz [data-qa="2"]'); await p.waitForTimeout(300); await p.click('#qzSee'); await p.waitForTimeout(500);
+      const sb2 = await p.evaluate(() => ({ i: TUT.i, k: TCH }));
+      if (sb2.i !== 1 || sb2.k !== 'w') E.push(tag + '：全班獎勵 答錯 沒有 回去 看 那一幕：' + JSON.stringify(sb2));
+      await p.click('#qzBack'); await p.waitForTimeout(300);
+      for (let k = 0; k < 3; k++) { await p.click('#rqz [data-qa="0"]'); await p.waitForTimeout(1100); }
+      await p.waitForTimeout(800);
+      const wd = await p.evaluate(() => ({ t: document.getElementById('rqzb').textContent, cq: RV && RV.cq }));
+      if (!/全班獎勵/.test(wd.t) || wd.cq !== require('../score/_calc.js').RPCQV) E.push(tag + '：全班獎勵 3 題 都 對 沒有 送 給 老師：' + JSON.stringify(wd).slice(0, 90));
+      if (!G.books['角色'] || !new RegExp('"cq":' + require('../score/_calc.js').RPCQV).test((G.books['角色'].d[1] || [])[1] || '')) E.push(tag + '：試算表「角色」沒有 記 看懂 全班獎勵');
+      await p.click('#qzEnd'); await p.waitForTimeout(500); n += 4; }
     const gU = await p.evaluate(() => ({ lk: document.getElementById('rpin').classList.contains('rlock'), st: getComputedStyle(document.getElementById('stage')).display }));
     if (gU.lk || gU.st === 'none') E.push(tag + '：看懂 以後 還是 鎖著');
     /* 2026-10-22 第十九次：伺服器 還沒 重新部署（舊 規則 版本，答對 也 記成 舊 的）➜ 答對 5 題 一樣 進得去；伺服器 好了 再 偷偷 補送 */
@@ -101,7 +123,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     if (/普通/.test(await p.textContent('#rp'))) E.push(tag + '：還有「普通」（要改「基本」）');
     if (!s0.free || s0.fr !== 6 || s0.it !== 28) E.push(tag + '：英雄分頁要 28 個男生英雄、6 個寫「🎁 免費」（第二十三次：男 01～08 下架、男 31～36 ★ 基本）（' + s0.it + '／' + s0.fr + '）');
     { const bi = await p.evaluate(() => [].map.call(document.querySelectorAll('#shop .it'), x => x.getAttribute('data-id')));
-      if (['b31', 'b32', 'b33', 'b34', 'b35', 'b36'].some(x => bi.indexOf(x) < 0) || bi.some(x => +x.slice(1) <= 8)) E.push(tag + '：男生戰士要有 31～36、不可以有 01～08（' + bi.join(',') + '）');
+      if (['b31', 'b32', 'b33', 'b34', 'b35', 'b36', 'b37', 'b44'].some(x => bi.indexOf(x) < 0) || bi.some(x => +x.slice(1) <= 16)) E.push(tag + '：男生戰士要有 31～44、不可以有 01～16（第二十五次：09～16 下架）（' + bi.join(',') + '）');
       const nb = await p.evaluate(() => [].filter.call(document.querySelectorAll('#shop .it img'), i => /b3[1-6]/.test(i.src) && !(i.complete && i.naturalWidth)).length);
       if (nb) E.push(tag + '：男 31～36 的圖 ' + nb + ' 張載不到'); }
     await p.click('[data-sex="g"]'); await p.waitForTimeout(150);
@@ -118,7 +140,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     if (!G.books['角色'] || !/b32/.test((G.books['角色'].d[1] || [])[1] || '')) E.push(tag + '：試算表「角色」沒有存到 b32');
     /* ★2 稀有 150：金幣夠不夠照伺服器 */
     const coins = await p.evaluate(() => RV.coins);
-    await p.click('#shop [data-id="b09"]'); await p.waitForTimeout(150);
+    await p.click('#shop [data-id="b37"]'); await p.waitForTimeout(150);
     const t2 = await p.textContent('#rpmb');
     if (coins >= 150 ? !/150/.test(t2) : !/還差/.test(t2)) E.push(tag + '：★2 英雄（' + coins + ' 金幣）的對話框不對：' + t2.slice(0, 40));
     await p.click('#rpmb [data-m="x"]');
@@ -336,7 +358,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* ❓ 三章 秒懂 動畫（老師第 2、4、6、7 點） */
     await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(200); await p.click('[data-go="qb"]'); await p.waitForTimeout(400);
     const tu = await p.evaluate(() => ({ ch: document.querySelectorAll('.tch button').length, on: (document.querySelector('.tch button.on') || {}).textContent, sc: document.querySelectorAll('#tst .tsc').length, a: !!document.querySelector('#tst .tsc.on') }));
-    if (tu.ch !== 5 || !/戰力 ?是 ?什麼/.test(tu.on || '') || tu.sc !== 4 || !tu.a) E.push(tag + '：〔❓ 戰力〕沒有 打開 第 2 章 ' + JSON.stringify(tu));
+    if (tu.ch !== 6 || !/戰力 ?是 ?什麼/.test(tu.on || '') || tu.sc !== 4 || !tu.a) E.push(tag + '：〔❓ 戰力〕沒有 打開 第 2 章（第二十五次：6 個 分頁，最後 一個 ＝ 🎯 全班獎勵）' + JSON.stringify(tu));
     for (const [k, nsc] of [['a', 10], ['b', 4], ['c', 6], ['d', 9], ['r', 14]]) { await p.click('[data-tch="' + k + '"]'); await p.waitForTimeout(300);
       const c1 = await p.evaluate(() => ({ n: document.querySelectorAll('#tst .tsc').length, i: [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')) }));
       await p.waitForTimeout(7900); const c2 = await p.evaluate(() => [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')));
@@ -401,7 +423,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
       if (!/rchest/.test(r21.s11) || !/冠軍寶箱 ?有什麼幫助/.test(r21.s11)) E.push(tag + '：第 11 幕 沒有「冠軍寶箱 有什麼幫助」動畫');
       if (!/^👑 各班上一週最認真練習第 1 名/.test(r21.t12) || !/老師同意之後，各班冠軍才能上台選遊戲；一週只能選一次。/.test(r21.s12) || !/老師決定：是否開啟「現場任務」/.test(r21.s12)) E.push(tag + '：第 12 幕 不對：' + r21.t12);
       if (!/老師決定：是否〔✖2〕/.test(r21.t13) || !/最用心且規矩最好的班級，由老師決定：是否幫那一班開啟〔✖2〕。/.test(r21.s13)) E.push(tag + '：第 13 幕 不對：' + r21.t13);
-      if (!/全班每一個人這週都練 3 天/.test(r21.t14 + r21.s14) || /老師決定/.test(r21.s14) || /👫/.test(r21.s14) || !/svg class="tmsv"/.test(r21.s14) || !/下星期一<br>自動發/.test(r21.s14) || !/＋200、⭐ ＋100/.test(r21.s14) || /大家的規則/.test(r21.t14)) E.push(tag + '：第 14 幕 不對（第二十二次：全班一起的圖、沒有「老師決定」、自動發、🪙 ＋200 ⭐ ＋100）：' + r21.t14);
+      if (!/全班8成的人這週練2天/.test(r21.t14 + r21.s14) || !/練愈多天拿愈多/.test(r21.s14) || /老師決定/.test(r21.s14) || /👫/.test(r21.s14) || !/svg class="tmsv"/.test(r21.s14) || !/下星期一<br>自動發/.test(r21.s14) || /大家的規則/.test(r21.t14)) E.push(tag + '：第 14 幕 不對（第二十二次：全班一起的圖、沒有「老師決定」、自動發、🪙 ＋200 ⭐ ＋100）：' + r21.t14);
       if (!/<u class="pn">小華<\/u>/.test(r21.q[1]) || !/如果老師開啟〔✖2〕，答對 5 題/.test(r21.q[3]) || !/\|12$/.test(r21.q[3]) || !/各班上一週最認真練習第 1 名\|11$/.test(r21.q[4])) E.push(tag + '：5 題 問題 不對：' + r21.q.join(' ／ '));
       if (r21.ver !== vt || !/^[0-9a-f]{10}$/.test(vt)) E.push(tag + '：網頁 版本 ' + r21.ver + ' ≠ ver.txt ' + vt);
       await p.route(HTTP + '/rpg/ver.txt**', r => r.fulfill({ status: 200, contentType: 'text/plain', body: 'abcdef0123\n' }));

@@ -19,4 +19,11 @@ Object.keys(fails).forEach(k => console.log('✗ ' + k + ' 被看成 ' + fails[k
 if (f2.length) console.log('✗ 大小寫寫錯卻判對：' + f2.slice(0, 30).join(' ') + (f2.length > 30 ? ' …' : ''));
 if (bad3) console.log('✗ 寫成別的字母卻判對：' + Object.keys(f3).join(' '));
 console.log('改作業：寫對的 ' + (n - bad) + '／' + n + ' 判對（' + (100 * (n - bad) / n).toFixed(1) + '%）；大小寫寫錯 ' + (n2 - bad2) + '／' + n2 + ' 判錯；寫成別的字母 ' + (n3 - bad3) + '／' + n3 + ' 判錯');
-process.exit(bad / n > .03 || bad2 / n2 > .03 || bad3 / n3 > .01 ? 1 : 0);
+/* 2026-10-25 第二十五次（老師第 4、5 點）頂天立地、不超線：標準寫法＋左右寬窄不一樣＋抖一點 要 過；整個 浮起來／沉下去 0.25 格、上下 壓扁 7 成 要 不過 */
+let n4 = 0, bad4 = 0; const f4 = [];
+for (const ch of letters) HW.T[ch].forEach((v, vi) => {
+  for (let k = 0; k < 6; k++) { n4++; const sx = .8 + rnd() * .6, dx = rnd() * 2, j = v.map(s => s.map(([x, y]) => [x * sx + dx + (rnd() - .5) * .05, y + (rnd() - .5) * .1])); if (!HW.lines(j, ch).ok) { bad4++; f4.push(ch + vi + ' 對的 不過：' + HW.lines(j, ch).words); } }
+  for (const f of [s => s.map(([x, y]) => [x, y - .25]), s => s.map(([x, y]) => [x, y + .25]), s => s.map(([x, y]) => [x, 1.5 + (y - 1.5) * .7])]) { n4++; if (HW.lines(v.map(f), ch).ok) { bad4++; f4.push(ch + vi + ' 浮起來／沉下去／壓扁 還 過'); } } });
+if (f4.length) console.log('✗ 頂天立地：' + f4.slice(0, 20).join('｜'));
+console.log('頂天立地：' + (n4 - bad4) + '／' + n4 + ' 判對');
+process.exit(bad4 || bad / n > .03 || bad2 / n2 > .03 || bad3 / n3 > .01 ? 1 : 0);

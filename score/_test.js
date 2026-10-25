@@ -307,14 +307,20 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
   /* 2026-10-23 第二十二次：女 11～21、舊寶物 下架（買過 的 照 用）；女 32～56；全班 獎勵 🪙 200 ⭐ 100 */
   ok(!SC.rpOk('g11') && !SC.rpOk('g21') && SC.rpOk('g10') && SC.rpOk('g22') && !SC.rpOk('t01') && !SC.rpOk('t10'), '下架：女 11～21、舊寶物 t01～t10');
   /* 2026-10-24 第二十三次：男 01～08 下架（選過 的 照 用）；男 31～36 ★ 基本 */
-  ok(!SC.rpOk('b01') && !SC.rpOk('b08') && SC.rpOk('b09') && SC.rpOk('b31') && SC.rpOk('b36') && SC.rpStar('b31') === 1 && SC.rpStar('b36') === 1 && !SC.rpStar('b37'), '男 01～08 下架、男 31～36 ★ 基本');
+  ok(!SC.rpOk('b01') && !SC.rpOk('b08') && SC.rpOk('b31') && SC.rpOk('b36') && SC.rpStar('b31') === 1 && SC.rpStar('b36') === 1 && SC.rpStar('b37') === 2 && SC.rpStar('b44') === 2 && !SC.rpOk('b09') && !SC.rpOk('b16') && !SC.rpStar('b45'), '男 01～16 下架、男 31～36 ★ 基本、男 37～44 ★★ 稀有（第二十五次）');
   { const st0 = SC.rpClean({}); st0.own.h = ['b01']; st0.eq.h = 'b31'; ok(!SC.rpEquip(st0, 'b01').err, '選過 的 舊 基本 男戰士 還 可以 裝'); }
   ok(SC.rpStar('g32') === 2 && SC.rpStar('g41') === 2 && SC.rpStar('g42') === 3 && SC.rpStar('g51') === 3 && SC.rpStar('g52') === 4 && SC.rpStar('g56') === 4 && !SC.rpStar('g57'), '女 32～56 稀有度');
   { const st0 = SC.rpClean({}); st0.own.h = ['g12']; st0.eq.h = 'b01'; ok(!SC.rpEquip(st0, 'g12').err, '買過 的 下架 女戰士 還 可以 裝'); }
-  eq(SC.RPCW.c + '/' + SC.RPCW.x + '/' + SC.RPCW.days, '200/100/3', '全班 獎勵 🪙 200 ⭐ 100 練 3 天');
+  eq(SC.RPCW.pct + '/' + SC.RPCW.d1 + '/' + SC.RPCW.d2, '80/2/3', '全班 獎勵 8 成 練 2 天／全班 練 3 天（第二十五次）');
+  eq([2, 3, 7].map(d => JSON.stringify(SC.cwAmt(1, d))).join(' ') + ' | ' + [2, 3, 7].map(d => JSON.stringify(SC.cwAmt(2, d))).join(' ') + ' | ' + JSON.stringify(SC.cwAmt(1, 1)) + JSON.stringify(SC.cwAmt(0, 7)),
+    '{"c":150,"x":100} {"c":175,"x":110} {"c":275,"x":150} | null {"c":200,"x":120} {"c":400,"x":200} | nullnull', '全班 獎勵 照 天數 多給（基本 2 天 150～275、進階 3 天 200～400、練 1 天 ＝ 沒有）');
+  { const nd = {}; for (let i = 1; i <= 30; i++) nd['402' + (i < 10 ? '0' : '') + i] = i <= 24 ? 2 : 0; const ids = Object.keys(nd);
+    ok(SC.cwLv(nd, ids) === 1 && SC.cwLv(Object.assign({}, nd, { 40224: 1 }), ids) === 0 && SC.cwLv(Object.fromEntries(ids.map(k => [k, 3])), ids) === 2 && SC.cwLv({}, []) === 0, '30 人：24 人 練 2 天 ＝ 基本、23 人 ＝ 沒有、全班 3 天 ＝ 進階、名單 空 ＝ 沒有'); }
+  { let x = SC.rpClean({}); x.ch = 1; const o = SC.rpOpen(x, .99, .5); ok(!o.err && o.r.c === 250 && o.r.x === 150 && !o.r.s && o.st.bc === 250 && o.st.bx === 150, '👑 冠軍 寶箱 ＝ 只有 🪙 250 ⭐ 150（第二十五次）'); }
+  { let x = SC.rpCwq(SC.rpClean({}), SC.RPCQV, 5); ok(x.cq === SC.RPCQV && x.cqt === 5 && SC.rpClean(x).cq === SC.RPCQV && SC.rpCwq(SC.rpClean({}), 99).cq === 0, '🎯 全班獎勵 小測驗 記得住、版本 不對 不記'); }
   { const t0 = Date.UTC(2026, 9, 12), mk = (id, d) => ({ t: t0 + d * 864e5 + 36e5, id, g: 4, cls: id.slice(0, 3), seat: +id.slice(3), set: 'g4u1_1-1b', m: '', n: 5, ok: 5, acc: 100, qs: [], fast: 0, sec: 60, x: false, u: id + d });
     const rs = [0, 1, 2].map(d => mk('40201', d)).concat([0, 1].map(d => mk('40202', d)));
-    ok(!SC.cwOk(rs, ['40201', '40202'], t0, t0 + 7 * 864e5) && SC.cwOk(rs.concat([mk('40202', 3)]), ['40201', '40202'], t0, t0 + 7 * 864e5) && !SC.cwOk(rs, [], t0, t0 + 7 * 864e5), '全班 都 練 3 天 才 發（名單 空 ＝ 不發）'); }   /* 2026-10-18 第十二次：10 類 全部 上架 */
+    ok(SC.cwOk(rs, ['40201', '40202'], t0, t0 + 7 * 864e5) === 1 && SC.cwOk(rs.concat([mk('40202', 3)]), ['40201', '40202'], t0, t0 + 7 * 864e5) === 2 && SC.cwOk(rs.slice(0, 3), ['40201', '40202'], t0, t0 + 7 * 864e5) === 0 && SC.cwOk(rs, [], t0, t0 + 7 * 864e5) === 0, '紀錄 算 天數：2 人 都 練 2 天 ＝ 基本、都 3 天 ＝ 進階、1 人 沒練 ＝ 沒有（名單 空 ＝ 不發）'); }   /* 2026-10-18 第十二次：10 類 全部 上架 */
   eq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(c => SC.rpOk('s' + (c < 10 ? '0' : '') + c + '01') ? 1 : 0).join(''), '1111111111', '上架 ＝ 10 類 全部（第十二次）');
   eq(SC.rpBuy(R, st, 's0101', T0).err, 'coin', '金幣不夠買不到光環（31 ＜ 500）');
   { let x = SC.rpClean({ own: { t: ['t01'], s: ['s0101'] }, eq: { t: ['t01'] } }); x.bc = 0;
