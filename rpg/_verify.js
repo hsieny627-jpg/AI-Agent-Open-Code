@@ -7,6 +7,8 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 const { make } = require('../score/_gas_stub.js');
 const ROOT = path.join(__dirname, '..'), URL0 = 'https://script.test/exec';
 const E = []; let n = 0, HTTP = '';
+/* 2026-10-26 第二十七次 第 5 點：〔🎁 收集 有 什麼 幫助〕沒有 怪物 說明 */
+{ n++; const H = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8'), i = H.indexOf("c:[['🎁 收集"), j = H.indexOf("d:[['⚔ 戰士"); if (i < 0 || j < i || /怪物|打怪/.test(H.slice(i, j))) E.push('〔收集 有 什麼 幫助〕還有 怪物 說明'); }
 function serve() { return new Promise(ok => { const T = { '.html': 'text/html', '.js': 'text/javascript', '.woff2': 'font/woff2', '.css': 'text/css', '.jpg': 'image/jpeg', '.mp3': 'audio/mpeg', '.webp': 'image/webp', '.png': 'image/png', '.svg': 'image/svg+xml' };
   const s = require('http').createServer((q, r) => { const f = path.join(ROOT, decodeURIComponent(q.url.split('?')[0]));
     if (!f.startsWith(ROOT) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { r.writeHead(404); r.end(); return; }
@@ -360,7 +362,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(200); await p.click('[data-go="qb"]'); await p.waitForTimeout(400);
     const tu = await p.evaluate(() => ({ ch: document.querySelectorAll('.tch button').length, on: (document.querySelector('.tch button.on') || {}).textContent, sc: document.querySelectorAll('#tst .tsc').length, a: !!document.querySelector('#tst .tsc.on') }));
     if (tu.ch !== 6 || !/戰力 ?是 ?什麼/.test(tu.on || '') || tu.sc !== 4 || !tu.a) E.push(tag + '：〔❓ 戰力〕沒有 打開 第 2 章（第二十五次：6 個 分頁，最後 一個 ＝ 🎯 全班獎勵）' + JSON.stringify(tu));
-    for (const [k, nsc] of [['a', 10], ['b', 4], ['c', 6], ['d', 9], ['r', 14]]) { await p.click('[data-tch="' + k + '"]'); await p.waitForTimeout(300);
+    for (const [k, nsc] of [['a', 10], ['b', 4], ['c', 4], ['d', 9], ['r', 14]]) { await p.click('[data-tch="' + k + '"]'); await p.waitForTimeout(300);
       const c1 = await p.evaluate(() => ({ n: document.querySelectorAll('#tst .tsc').length, i: [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')) }));
       await p.waitForTimeout(7900); const c2 = await p.evaluate(() => [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')));
       if (process.env.SHOT && tag === '1024✕768') { await p.waitForTimeout(2600); await (await p.$('.tut')).screenshot({ path: path.join(process.env.SHOT, 'ch_' + k + '.png') }); }
@@ -370,6 +372,9 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* 第十八次 第 4-1 點：〔❓ 階級 愈高 特效 愈強〕在 舞台 上、第 2～6 幕 真的 演（畫布 有 畫）、第 7、8 幕 合體 等級 ★ ➜ ★★★★★；第 6 點 怪物 白話；第 8 點 改名 */
     { await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(200); const st8 = await p.evaluate(() => { const t = document.getElementById('stage').textContent; return { qd: !!document.querySelector('[data-go="qd"]'), col: /收集有什麼幫助/.test(t) && !/收集有什麼用/.test(t), mon: !/還剩/.test(t) && !/打牠/.test(t) && !document.getElementById('atkTry') && !/寵物陪你練/.test(t.replace(/\s/g, '')), ab: /階級愈高能力愈強/.test(t.replace(/\s/g, '')) && !/特效愈強/.test(t.replace(/\s/g, '')), now: /現在/.test((document.querySelector('.tabil') || {}).textContent || '') }; });   /* 2026-10-26：打怪物、一擊、出招、寵物 那一格 拿掉；按鈕 改「能力 愈強」；「現在」寫 清楚 */
       if (!st8.qd || !st8.col || !st8.mon || !st8.ab || !st8.now) E.push(tag + '：舞台 按鈕 不對（打怪物 要 拿掉、能力 愈強、「現在」）' + JSON.stringify(st8));
+    /* 2026-10-26 第二十七次：⚔ 階級 能力（現在／升階 以後 寫 真的 能力）、🏛 名人堂 */
+    { n++; const ab = await p.evaluate(() => { RV.hall = ['30403']; RV.tnow = Math.max(RV.tnow || 0, 3); draw(); const t = document.getElementById('stage').textContent; return { ab: typeof ABIL !== 'undefined' && ABIL.length === 6, c: /挑戰關/.test(t) && /出1題給全班/.test(t.replace(/\s/g, '')), h: !!document.querySelector('.hallB'), ht: (document.querySelector('.hallB') || {}).textContent || '' }; });
+      if (!ab.ab || !ab.c || !ab.h || !/304班3號/.test(ab.ht.replace(/\s/g, ''))) E.push(tag + '：階級 能力／名人堂 不對 ' + JSON.stringify(ab)); }
       await p.click('[data-go="qd"]'); await p.waitForTimeout(400); await p.click('#tPause'); await p.click('[data-tut="5"]'); await p.waitForTimeout(1800);
       const dm = await p.evaluate(() => { const c = document.querySelectorAll('#tst .tsc.on .tdemo canvas'); let px = 0; c.forEach(cv => { const g = cv.getContext('2d'), d = g.getImageData(0, 0, cv.width, cv.height).data; for (let i = 3; i < d.length; i += 64) if (d[i]) px++; }); return { on: (document.querySelector('.tch button.on') || {}).textContent, cv: c.length, px, tb: !!document.querySelector('#tst .tsc.on .tbI.t5') }; });
       if (!/階級 ?愈高/.test(dm.on || '') || dm.cv < 2 || dm.px < 20 || !dm.tb) E.push(tag + '：〔❓ 階級 愈高 特效 愈強〕第 6 幕 沒有 真的 演 ' + JSON.stringify(dm)); n += 2; }

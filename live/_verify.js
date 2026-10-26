@@ -97,7 +97,7 @@ const H_PH = ph => ph === 'q';
     const t = fs.readFileSync(path.join(ROOT, d, f), 'utf8'); if (/href="[^"]*live\//.test(t) || /data-live|⚡ 加入 現場/.test(t)) E.push(d + '/' + f + '：在家複習 有 現場遊戲 入口'); }
   for (const f of ['host.html', 'index.html']) { const t = fs.readFileSync(path.join(__dirname, f), 'utf8'); if (/開房間/.test(t)) E.push('live/' + f + '：還有「開房間」'); if (/new EventSource/.test(t)) E.push('live/' + f + '：還有 EventSource'); }
   if (/createOscillator/.test(fs.readFileSync(path.join(__dirname, '_stu_rt.js'), 'utf8') + fs.readFileSync(path.join(__dirname, '_mini.js'), 'utf8') + fs.readFileSync(path.join(__dirname, '_common.js'), 'utf8'))) E.push('學生 平板 的 程式 還有 音效');
-  { const hub = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'); if (/href="live\/index\.html"/.test(hub)) E.push('總首頁 還有 學生 的〔⚡ 現場任務〕'); if (!/href="live\/host\.html"[^>]*>⚡ 開 現場任務 大螢幕</.test(hub.replace(/<\/?span[^>]*>/g, ''))) E.push('總首頁 沒有〔⚡ 開 現場任務 大螢幕〕'); }
+  { const hub = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'); if (/href="live\/index\.html"/.test(hub)) E.push('總首頁 還有 學生 的〔⚡ 現場任務〕'); if (!/href="live\/host\.html"[^>]*>⚡ 現場任務</.test(hub.replace(/<\/?span[^>]*>/g, ''))) E.push('總首頁 沒有〔⚡ 現場任務〕'); }
   n += 6;
   /* ════ 第一場：🏆 經典搶答 5 題（第 3 題 🔥 挑戰題）、大螢幕 1920 ════ */
   { DB = {}; const G = make({ TEACHER_PW: PW }), HV = [1920, 1080], tag = '經典';

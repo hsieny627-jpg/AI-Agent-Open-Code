@@ -24,13 +24,18 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
   if (!/href="g3mid\/index\.html"[^>]*>📝 三年級 複習</.test(hub)) E.push('總首頁沒有〔📝 三年級 複習〕');
   for (const d of ['g3-review', 'g4-review']) for (const f of fs.readdirSync(path.join(ROOT, d)).filter(f => /\.html$/.test(f))) { n++; if (/g3mid\//.test(fs.readFileSync(path.join(ROOT, d, f), 'utf8'))) E.push(d + '/' + f + '：在家複習連到三年級複習'); }
   n++; const h = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
-  if (/score\/url\.js|<section id="gend">|id="tqGo"|id="rvBtn"|SCORE_URL/.test(h)) E.push('三年級複習接到成績系統了（老師：以後才接）'); }
+  /* 2026-10-26 第二十七次 第 1-(3) 點：三年級 複習 的 成績 也 進 老師看板 ➜ 一定 要 接 成績系統（登入、佇列）*/
+  if (!/score\/url\.js/.test(h) || !/id="scbar"/.test(h) || !/g3gm_g3m-/.test(h)) E.push('三年級複習 沒有 接 成績系統（老師 第二十七次：成績 要 進 老師看板）'); }
 
 (async () => {
   const br = await chromium.launch();
   for (const vp of [[1024, 768], [820, 1180], [1920, 1080]]) {
     const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] }, hasTouch: false }), tag = vp.join('×'), full = vp[0] === 1024;
     await ctx.route(/^https?:\/\//, r => r.abort());
+    /* 假 的 成績 伺服器（絕對 不送 真的 成績表）＋ 已經 登入 30401 */
+    await ctx.route(/script\.test/, r => r.fulfill({ contentType: 'application/json', body: '{"ok":true,"dup":[]}' }));
+    await ctx.addInitScript(() => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} });
+      localStorage.setItem('score_last', '"30401"'); localStorage.setItem('score_id_g3', '"30401"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', '30401'); });
     /* 聲音：不真的放，0.06 秒就算唸完（數唸了幾次） */
     await ctx.addInitScript(() => { window.__NOGO = 1; window.__G2CALM = 1; window.__say = []; HTMLMediaElement.prototype.play = function () { const a = this; window.__say.push(a.src.split('/').slice(-2).join('/')); setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); };
       try { speechSynthesis.speak = u => { window.__say.push('tts:' + u.text); setTimeout(() => u.onend && u.onend(), 60); }; } catch (e) {} });
@@ -110,6 +115,9 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
       }
       if (full) { n++; const e = await p.evaluate(() => ({ v: !document.querySelector('#endv').hidden, t: document.querySelector('#end').textContent }));
         if (!e.v || e.t.indexOf('答對 7 ／ 8') < 0) E.push(tag + ' ' + g.id + '：玩完沒有「答對 7 ／ 8」：' + e.t.slice(0, 40));
+        /* 第二十七次：記進 成績（題組 g3gm_g3m-遊戲、8 題、7 題 對、題庫 第幾題 對得上）*/
+        n++; const rq = await p.evaluate(id => { const Q = JSON.parse(localStorage.getItem('score_q') || '[]').concat(JSON.parse(localStorage.getItem('score_sent') || '[]')); const r = Q.filter(x => x.set === 'g3gm_g3m-' + id).pop(); return r ? { n: r.qs.length, ok: r.qs.filter(q => q[0]).length, bi: r.qs.every(q => q[5] >= 0), nm: r.name, src: r.src } : null; }, g.id);
+        if (!rq || rq.n !== 8 || rq.ok !== 7 || !rq.bi || !/三年級 複習/.test(rq.nm)) { const t2 = await p.evaluate(() => (document.querySelector('.rcn') || {}).textContent); E.push(tag + ' ' + g.id + '：沒有 記進 成績 ' + JSON.stringify(rq) + ' ' + t2); }
         if (SHOT) await p.screenshot({ path: path.join(SHOT, 'g3m_' + g.id + '_end.png') }); }
       await p.evaluate(() => lobby()); await p.waitForTimeout(200);
     }

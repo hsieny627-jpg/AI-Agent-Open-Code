@@ -104,3 +104,14 @@
 .gl .glwn .gleq img{height:1.25em;max-width:1.1em}.gl .glwn .gleq img.geb,.gl .glwn .gleq img.geg{height:1.6em;max-width:1.15em}
 .gl .glwn .gleq{animation:glEq 2.4s ease-in-out 1.6s infinite}@keyframes glEq{0%,100%{transform:none}50%{transform:translateY(-.08em) scale(1.05)}}
 @media (prefers-reduced-motion:reduce){.gl .glwn .gleq{animation:none}}
+/* 2026-10-26 第二十七次 第 4-(3) 點：頒獎台 第 1 名 ＝ 冠軍 寶座：一頂 會 浮起來、發光 的 皇冠（最高、最閃耀）*/
+.gl .gpcr{height:clamp(60px,10vh,120px);margin-bottom:-1vh;z-index:3;animation:gpcrIn 1s 1.6s both cubic-bezier(.2,1.5,.4,1),gpcrF 2.4s 2.6s ease-in-out infinite;filter:drop-shadow(0 0 18px var(--gc)) drop-shadow(0 0 40px #FFF3B0)}
+.gl .gpcr svg{height:100%;width:auto}
+.gl .gp.p1{filter:drop-shadow(0 0 30px color-mix(in srgb,var(--gc) 70%,transparent))}
+@keyframes gpcrIn{from{transform:translateY(-60vh) scale(1.6);opacity:0}}
+@keyframes gpcrF{50%{transform:translateY(-10px) scale(1.04)}}
+@media (prefers-reduced-motion:reduce){.gl .gpcr{animation:none}}
+/* 同一階 很多 人（全班獎勵）：名字 一塊 一塊 排、會 換行；戰士 圖 收起來（台子 放得下） */
+.gl .glmany{display:flex;flex-wrap:wrap;justify-content:center;gap:.3em .8em;font-size:clamp(20px,2.6vh,34px);line-height:1.25;max-width:100%}
+.gl .glmany>span{white-space:nowrap}.gl .glmany .gleq{display:none}
+.gl .gpn,.gl .glwn{max-width:100%;overflow-wrap:anywhere}

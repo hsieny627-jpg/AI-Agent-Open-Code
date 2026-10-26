@@ -26,7 +26,7 @@ LDB.onBad(net);
 /* ── 🔑 密碼 ── */
 function pwGo(){var p=$('#pw').value.trim(),m=$('#pwm');if(!p){m.textContent='請打密碼';return}
   if(!LDB.on()){m.innerHTML='⚠ 現場任務 還沒有 設定 Firebase ➜ 請看 <a href="setup.html">大字版 設定頁</a>';return}
-  m.textContent='⏳ 檢查中…';post({a:'pw',pw:p}).then(function(j){if(j&&j.ok){H.pw=p;H.champs=j.champs||{};try{sessionStorage.setItem('lvpw',p)}catch(e){}setDraw();scr('hset')}else m.textContent='❌ 密碼 不對'},function(){m.textContent='📶 連不到 成績系統'})}
+  m.textContent='⏳ 檢查中…';post({a:'pw',pw:p}).then(function(j){if(j&&j.ok){H.pw=p;H.champs=j.champs||{};H.tiers=j.tiers||{};H.sq=j.sq||[];sqAdd();try{sessionStorage.setItem('lvpw',p)}catch(e){}setDraw();scr('hset')}else m.textContent='❌ 密碼 不對'},function(){m.textContent='📶 連不到 成績系統'})}
 /* ── 👑 每一班 上一週 最認真練習 第 1 名 ➜ 這一週 選 1 次 遊戲（2026-10-21 老師再加第 3 點；選擇題：每班 上週 第 1 名、大螢幕 上 點）──
    名單 ＝ 伺服器（{a:'pw'} 的 champs，A、B 都 做到、同 時間 比 正確率）；用過 了 ＝ Firebase rooms/0班/champ {w 那一週, ids, game}（換 電腦 也 知道）；老師 勾 這次 可以 選 哪幾種（預設 全部） */
 H.champs={};H.chU={};H.cOk={};H.chSel=null;
@@ -72,7 +72,7 @@ function mins(n){return Math.max(1,Math.round(n*36/60))}
 function setDraw(){allSets(H.qg);var G=LV.game(H.game),L=LIST[H.qg]||[],secs=[];L.forEach(function(k){var s=GR[k].sec;if(secs.indexOf(s)<0)secs.push(s)});
   var h='<div class="sett"><h1>⚡ 現場任務</h1>'+LV.stepsHTML(HSTEPS,0)+'</div>'+
   '<div class="sbox"><h2><b class="sn">1</b> 哪一班</h2><div class="row">'+[3,4].map(function(g){return CLS[g].map(function(c){return '<button data-sc="'+c+'" class="clsb'+(H.cls===c?' on':'')+'">'+c+(c==='400'?' 課後班':'')+'</button>'}).join('')}).join('<span class="gsep"></span>')+'</div>'+
-  '</div><div class="sbox"><h2><b class="sn">2</b> 哪一種 遊戲</h2>'+chBox()+GRP.map(function(g){return '<div class="sgrp"><div class="sgh"><span class="sgi">'+g[1]+'</span><b>'+g[2]+'</b><small>'+g[3]+'</small></div><div class="ggrid">'+
+  '</div><div class="sbox"><h2><b class="sn">2</b> 哪一種 遊戲</h2>'+chBox()+legBox()+GRP.map(function(g){return '<div class="sgrp"><div class="sgh"><span class="sgi">'+g[1]+'</span><b>'+g[2]+'</b><small>'+g[3]+'</small></div><div class="ggrid">'+
     g[4].map(function(k){var x=LV.game(k);return '<button data-sk="'+k+'" class="gcd'+(H.game===k?' on':'')+'">'+LV.badge(k)+'<span class="gtx"><b>'+x.nm+(k==='classic'?' <em>推薦</em>':'')+'</b><small>'+x.d+'</small></span></button>'}).join('')+'</div></div>'}).join('')+
   '</div><div class="sbox"><h2><b class="sn">3</b> 題目</h2><div class="row"><button data-qg="3" class="'+(H.qg===3?'on':'')+'">三年級 的 題目</button><button data-qg="4" class="'+(H.qg===4?'on':'')+'">四年級 的 題目</button>'+
     '<span class="gsep"></span><button data-sa="1">☑ 全選</button><button data-sa="0">☐ 全部 不選</button><span class="note">（每一行 後面 ＝ 那一組 有 幾題）</span></div>'+
@@ -177,7 +177,7 @@ function anaHTML(q){var n=ids().length,ok=H.nOk||0,bad=n-ok,top='';
 /* 控制 按鈕：永遠 在 右下角 同一個 位置（老師 8(3)(4)：不知道 怎麼 關 排行榜、開 下一題）*/
 function ctl(){var p=H.phase,b=$('#hgo'),last=H.qi>=H.n-1;
   b.textContent=p==='q'?'⏭ 提早 公布':p==='rev'?'🏆 看 排行榜 ➜':p==='lb'?(last?'🏆 頒獎 典禮 ➜':'▶ 下一題（第 '+(H.qi+2)+' 題）'):'';
-  b.className='big '+(p==='q'?'ghost':'go');$('#hctl2').hidden=p!=='q'}
+  b.className='big '+(p==='q'?'ghost':'go');$('#hctl2').hidden=p!=='q';var tb=$('#htut');if(tb)tb.hidden=!(p==='rev'&&tutL().length)}
 function hgo(){if(H.phase==='q')reveal();else if(H.phase==='rev')lbShow();else if(H.phase==='lb')next()}
 /* ── 公布 ── */
 function okOf(q,a){if(!a)return false;if(q.ty==='mc')return Object.prototype.toString.call(a.k)==='[object Array]'?a.k.indexOf(q.a)>=0:a.k===q.a;return LV.norm(a.s)===LV.norm(q.a)}
@@ -333,6 +333,11 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if(c('#chGo')){chPick();return}
   if((b=c('[data-cpk]'))){chChose(b.getAttribute('data-cpk'));return}
   if(c('#chNo')){$('#chpk').hidden=true;return}
+  if(c('#lgGo')){legPick();return}
+  if((b=c('[data-lpk]'))){legChose(b.getAttribute('data-lpk'));return}
+  if(c('#htut')){tutOpen();return}
+  if((b=c('[data-tut]'))){tutShow(b.getAttribute('data-tut'));return}
+  if(c('#tutx')){$('#tutov').hidden=true;return}
   if((b=c('[data-si]'))){H.int=+b.getAttribute('data-si');setDraw();return}
   if(c('#mk')){mkRoom();return}
   if((b=c('#lcopy'))){copyURL(b);return}
@@ -353,3 +358,32 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement&&document.activeElement.id==='pw')pwGo();
   if((e.key===' '||e.key==='ArrowRight')&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||'')){if(H.scr==='hq'){e.preventDefault();hgo()}else if(H.scr==='hlb'){e.preventDefault();next()}}});
 (function(){try{var p=sessionStorage.getItem('lvpw');if(p&&LDB.on()){H.pw=p;setDraw();scr('hset');post({a:'pw',pw:p}).then(function(j){if(j&&j.ok){H.champs=j.champs||{};if(H.scr==='hset')setDraw()}},function(){});return}}catch(e){}scr('hpw')})();
+
+/* ══ 2026-10-26 第二十七次 第 2 點（老師 選 C30 第 4 題「照 表 做」）：⚔ 階級 愈高 能力 愈強 ══
+   伺服器 {a:'pw'} 多 給：sq ＝ 老師 說 可以 的 ✍ 學生 出題、tiers ＝ 每一個 人 的 階級（只有 5 碼）。
+   ✍ ★★★ 出 的 題 ＝ 題目 第 3 步 多 一組「✍ 同學 出 的 題」（大螢幕 寫「✍ 出題人：304 班 12 號」）；
+   🧑‍🏫 ★★★★ 小老師 ＝ 公布 答案 的 時候〔🧑‍🏫 請 小老師〕➜ 點 一位 ➜ 全螢幕「請 上台 說 一次 為什麼」；
+   ⭐ ★★★★★ 傳說戰神 ＝ 一個月 1 次 幫 全班 選 遊戲（用過 了 ＝ Firebase rooms/0班/leg {m 月份, ids, game}） */
+H.tiers={};H.sq=[];H.lgU={};
+function sqAdd(){[3,4].forEach(function(g){var L=H.sq.filter(function(x){return String(x.id).charAt(0)===String(g)}),k=g+'sq';if(!L.length)return;
+  GR[k]={sec:'✍ 同學 出 的 題',nm:'✍ 同學 出 的 題',qs:L.map(function(x){return {ty:'mc',t:'「'+esc(x.zh)+'」的 英文 是？<br><small class="sqby">✍ 出題人：'+esc(String(x.id).slice(0,3))+' 班 '+(+String(x.id).slice(3))+' 號</small>',o:x.o.map(esc),ot:x.o,h:'',ae:x.o[0],ag:[],az:x.zh,au:''}})};
+  LIST[g]=LIST[g]||[];if(LIST[g].indexOf(k)<0)LIST[g].push(k)})}
+function tierOf(id){return Math.max(+H.tiers[id]||0,+((H.P||{})[id]||{}).tr||0)}
+function tutL(){return ids().filter(function(id){return tierOf(id)>=4})}
+function tutOpen(){var o=$('#tutov');if(!o){o=document.createElement('div');o.id='tutov';o.className='tutov';document.body.appendChild(o)}o.hidden=false;var L=tutL();
+  o.innerHTML='<div class="tutin"><h1>🧑‍🏫 請 小老師</h1><div class="note big2">★★★★ 雷霆戰神 以上 才 能 當 小老師：點 一位 請 上台</div><div class="tutg">'+L.map(function(id){return '<button data-tut="'+id+'">'+heroI(id,'tuth')+'<b>'+esc(id.slice(0,3))+' 班 '+(+id.slice(3))+' 號</b>'+tbI(id)+'</button>'}).join('')+'</div><button id="tutx" class="ghost">✕ 關閉</button></div>'}
+function tutShow(id){var o=$('#tutov');o.innerHTML='<div class="tutin tutok"><div class="tutic">🧑‍🏫</div><h1>小老師：'+esc(id.slice(0,3))+' 班 '+(+id.slice(3))+' 號</h1>'+heroI(id,'tutbig')+'<div class="big2">請 上台，說 一次「為什麼 這一題 選 這個」</div><button id="tutx" class="ghost">✕ 關閉</button></div>';
+  if(typeof RPFX!=='undefined'){var r=o.getBoundingClientRect();RPFX.spark(o,r.width*.5,r.height*.4,'thunder',60)}}
+function mon(){var d=new Date(Date.now()+288e5);return d.getUTCFullYear()+'-'+(d.getUTCMonth()+1)}
+function legOf(){var c=H.cls;if(!c)return null;var L=Object.keys(H.tiers).filter(function(id){return H.tiers[id]>=5&&id.slice(0,3)===c}).sort();return L.length?L:null}
+function legLoad(){var c=H.cls;if(!c||H.lgU[c]!==undefined||!LDB.on())return;H.lgU[c]=null;LDB.get('rooms/'+LV.room(c)+'/leg').then(function(v){H.lgU[c]=v||0;if(H.cls===c&&H.scr==='hset')setDraw()},function(){})}
+function legBox(){var L=legOf();if(!L)return '';legLoad();var u=H.lgU[H.cls];
+  if(u&&u.m===mon())return '<div class="chbox done">⭐ 這個 月 傳說戰神 已經 選過：'+LV.badge(u.game)+' <b>'+esc(LV.game(u.game).nm)+'</b></div>';
+  return '<div class="chbox mini"><button id="lgGo" class="chop">⭐ 讓 傳說戰神 選 遊戲</button><span class="note">'+esc(L.map(function(id){return +id.slice(3)+' 號'}).join('、'))+'：★★★★★ 傳說戰神，一個月 1 次 幫 全班 選</span></div>'}
+function legPick(){var L=legOf();if(!L)return;var o=$('#chpk');if(!o){o=document.createElement('div');o.id='chpk';document.body.appendChild(o)}o.hidden=false;
+  o.innerHTML='<div class="chin"><h1>⭐ 傳說戰神 '+esc(L.map(function(id){return +id.slice(3)+' 號'}).join('、'))+' 請 上台 選 遊戲</h1><div class="note big2">★★★★★ 傳說戰神 的 能力：一個月 1 次 幫 全班 選 現場任務 遊戲</div>'+
+    '<div class="chgr">'+chAll().map(function(k){var G=LV.game(k);return '<button data-lpk="'+k+'">'+LV.badge(k,'lg')+'<b>'+esc(G.nm)+'</b><small>'+esc(G.d)+'</small></button>'}).join('')+'</div><button id="chNo" class="ghost">✕ 這次 先 不選</button></div>'}
+function legChose(k){var L=legOf();if(!L)return;var w={m:mon(),ids:L,game:k,t:Date.now()};H.lgU[H.cls]=w;H.game=k;if(LDB.on())LDB.must('PUT','rooms/'+LV.room(H.cls)+'/leg',w,6);
+  var o=$('#chpk');o.innerHTML='<div class="chin chok"><div class="chcr">⭐</div><h1>傳說戰神 選了</h1><div class="chsel">'+LV.badge(k,'xl')+'<b>'+esc(LV.game(k).nm)+'</b></div></div>';
+  if(typeof RPFX!=='undefined'){var r=o.getBoundingClientRect();RPFX.spark(o,r.width*.5,r.height*.5,'star',70)}
+  setTimeout(function(){o.hidden=true;setDraw()},2600)}

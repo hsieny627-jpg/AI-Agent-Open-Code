@@ -48,6 +48,12 @@ function rpRow(id) { var s = sheet(RPG), n = s.getLastRow(); if (n < 2) return {
 /* ⚔ 戰力階級（2026-10-20 第十五次）：{5碼: 最高到過第幾階}（老師看板 排行榜 名字旁邊的徽章；學生平板 本班前 10 名也用） */
 /* 排行榜上出現的 5 碼 ➜ 那個人的 ⚔ 戰力階級（只給有出現的） */
 function tierOf(v) { try { var T = rpTiers(), j = JSON.stringify(v), o = {}; for (var id in T) if (j.indexOf('"' + id + '"') >= 0) o[id] = T[id]; v.tiers = o; } catch (e) { } return v; }
+/* ✍ ★★★ 烈焰戰將 出 1 題 給 全班（2026-10-26 第二十七次 第 2 點，老師 選 C30 第 4 題＋選擇題 A 點選）：指令碼屬性 QSUB ＝ [{k, id, t, zh, o:[正解, 錯, 錯, 錯], st: 0 等老師／1 可以／-1 不要}]
+   學生：一週 1 題（老師 還沒 看 ＝ 可以 換）；老師〔✔ 可以〕才 進 現場任務（大螢幕 寫「出題人：304 班 12 號」）；沒有 姓名 */
+function qsGet() { try { return JSON.parse(PropertiesService.getScriptProperties().getProperty('QSUB') || '[]') || []; } catch (x) { return []; } }
+function qsPut(a) { PropertiesService.getScriptProperties().setProperty('QSUB', JSON.stringify(a.slice(-300))); }
+function qsClean(o) { var zh = String((o && o.zh) || '').replace(/[<>]/g, '').trim().slice(0, 60), L = ((o && o.o) || []).slice(0, 4).map(function (x) { return String(x || '').replace(/[<>]/g, '').trim().slice(0, 80); });
+  if (!zh || L.length !== 4 || L.some(function (x) { return !x; }) || L.filter(function (x, i) { return L.indexOf(x) === i; }).length !== 4) return null; return { zh: zh, o: L }; }
 function rpTiers() { var s = sheet(RPG), n = s.getLastRow(), o = {}; if (n < 2) return o;
   s.getRange(2, 1, n - 1, 2).getValues().forEach(function (v) { var id = String(v[0]).replace(/\D/g, ''), t = 0; try { t = +(JSON.parse(String(v[1] || '{}')).tr) || 0; } catch (x) { } if (t > 0 && /^\d{5}$/.test(id)) o[id] = Math.min(5, t); }); return o; }
 /* 🏆 榮譽榜的戰士、寵物、武器（2026-10-23 第二十二次 第 4 點）：{5碼: [戰士, 武器, 寵物]}（只給老師；只有編號，不會有姓名） */
@@ -150,7 +156,10 @@ function doGet(e) {
     if (q.a === 'rpg') { var c1 = SC.checkId(q.id); if (c1.err) return out({ err: c1.err }); var rs1 = mine(c1.id), R1 = rpRow(c1.id);
       /* 2026-10-20 第十五次：⚔ 戰力階級 第一次到 ➜ 記下來（🪙＋100 不會因為拿下裝備被收回）；👑 冠軍寶箱 上一週的前 5 名 自動發（老師忘了按也拿得到） */
       var T1 = SC.rpTierUp(rs1, R1.st), ch1 = chestAuto(c1.id, T1), cw1 = cwAuto(c1.id, JSON.parse(JSON.stringify(T1)), rs1); if (T1.tr !== R1.st.tr || T1.trt.length !== R1.st.trt.length || ch1 || cw1) { var lk1 = LockService.getScriptLock(); lk1.waitLock(20000); try { R1 = rpRow(c1.id); T1 = SC.rpTierUp(rs1, R1.st); T1 = chestAuto(c1.id, T1) || T1; T1 = cwAuto(c1.id, T1, rs1) || T1; rpSave(R1, c1.id, T1); } finally { lk1.releaseLock(); } }
-      return out({ ok: true, now: Date.now(), v: SC.rpView(rs1, T1), stock: rpStock(), bo: SC.bstFor(c1.id, Date.now()) }); }
+      var TT = rpTiers(), hall = Object.keys(TT).filter(function (k) { return TT[k] >= 5 && k.charAt(0) === c1.id.charAt(0); }).sort();   /* 🏛 名人堂（★★★★★ 傳說戰神，同一個 年級；只有 5 碼） */
+      return out({ ok: true, now: Date.now(), v: SC.rpView(rs1, T1), stock: rpStock(), bo: SC.bstFor(c1.id, Date.now()), hall: hall }); }
+    /* 📅 今日任務、📈 我的 進步（2026-10-26 第二十七次）：只 有 自己 的（沒有 姓名）*/
+    if (q.a === 'me') { var c9 = SC.checkId(q.id); if (c9.err) return out({ err: c9.err }); var st9 = {}; try { st9 = rpRow(c9.id).st || {}; } catch (x) { } return out({ ok: true, me: SC.me(mine(c9.id), Date.now()), tr: +st9.tr || 0 }); }
     if (q.a === 'locks') return out({ ok: true, any: SC.lkAny(locks(), +q.g === 4 ? 4 : 3, lockt(), Date.now()) });
     if (q.a === 'view') return out(tierOf(SC.view(records(), { id: q.id, set: q.set, gt: q.gt === '1' }, Date.now(), boardsOn(), clsSizes())));
     /* 學生端不給姓名（使用者 2026-10-09 Q4：不用密碼就查得到姓名太危險）；舊的平板還會問，一律回「沒有名單」 */
@@ -193,13 +202,23 @@ function doPost(e) {
         r5.st = SC.rpTierUp(rs5, r5.st); rpSave(R5, c2.id, r5.st); return out({ ok: true, paid: r5.paid, free: r5.free, r: r5.r, v: SC.rpView(rs5, r5.st), stock: rpStock() });
       } finally { lk5.releaseLock(); }
     }
-    if (o.a === 'teacher' || o.a === 'void' || o.a === 'set' || o.a === 'task' || o.a === 'lock' || o.a === 'lockt' || o.a === 'delp' || o.a === 'pw' || o.a === 'rpgb' || o.a === 'rpgw' || o.a === 'boost') {
+    if (o.a === 'qsub') { var cq = SC.checkId(o.id); if (cq.err) return out({ err: cq.err }); var qq = qsClean(o); if (!qq) return out({ err: 'bad' });
+      if ((+(rpRow(cq.id).st || {}).tr || 0) < 3) return out({ err: 'tier' });
+      var lkQ = LockService.getScriptLock(); lkQ.waitLock(20000);
+      try { var A = qsGet(), nq = Date.now(), w0 = SC.weekStart(nq), mineQ = A.filter(function (x) { return x.id === cq.id && x.t >= w0; });
+        if (mineQ.some(function (x) { return x.st === 1; })) return out({ err: 'week' });
+        A = A.filter(function (x) { return !(x.id === cq.id && x.t >= w0); }); A.push({ k: cq.id + nq.toString(36), id: cq.id, t: nq, zh: qq.zh, o: qq.o, st: 0 }); qsPut(A); } finally { lkQ.releaseLock(); }
+      return out({ ok: true }); }
+    if (o.a === 'teacher' || o.a === 'qok' || o.a === 'void' || o.a === 'set' || o.a === 'task' || o.a === 'lock' || o.a === 'lockt' || o.a === 'delp' || o.a === 'pw' || o.a === 'rpgb' || o.a === 'rpgw' || o.a === 'boost') {
       if (!pwOk(o.pw)) return out({ err: 'pw' });
       /* 🎉 加倍 時段：{m: off／all／set, k, x, from, to, cls, cats}（2026-10-26） */
       if (o.a === 'boost') { var lkB = LockService.getScriptLock(); lkB.waitLock(20000); try { PropertiesService.getScriptProperties().setProperty('BOOST', JSON.stringify(SC.bstClean(o.b))); } finally { lkB.releaseLock(); } return out({ ok: true, boost: boost() }); }
       /* ⚡ 現場任務 大螢幕：只檢查老師密碼（2026-10-17 第八次） */
       /* 2026-10-21：每一班 上一週 最認真練習 第 1 名（👑 選 1 次 現場任務 的 遊戲） */
-      if (o.a === 'pw') { var cp = {}; try { cp = SC.champs(records(), Date.now()); } catch (x) { } return out({ ok: true, champs: cp }); }
+      if (o.a === 'pw') { var cp = {}; try { cp = SC.champs(records(), Date.now()); } catch (x) { }
+        /* 2026-10-26 第二十七次：✍ 老師 說 可以 的 學生 出題、每一個 人 的 階級（★★★★ 小老師、★★★★★ 傳說戰神 一個月 選 1 次 遊戲）——只有 5 碼，沒有 姓名 */
+        return out({ ok: true, champs: cp, sq: qsGet().filter(function (x) { return x.st === 1; }).slice(-80).map(function (x) { return { k: x.k, id: x.id, zh: x.zh, o: x.o }; }), tiers: rpTiers() }); }
+      if (o.a === 'qok') { var lkO = LockService.getScriptLock(); lkO.waitLock(20000); try { var A2 = qsGet(); A2.forEach(function (x) { if (x.k === o.k) x.st = +o.v === 1 ? 1 : +o.v === 0 ? 0 : -1; }); qsPut(A2); } finally { lkO.releaseLock(); } return out({ ok: true, qsub: qsGet() }); }
       /* ⚡ 現場任務 結束：老師大螢幕一次發獎勵（list ＝ [{id, c, x, tre, title, snack, medal}]） */
       if (o.a === 'rpgb') {
         var lk6 = LockService.getScriptLock(), nb = 0; lk6.waitLock(20000);
@@ -269,7 +288,7 @@ function doPost(e) {
         return out({ ok: true, locks: locks(), lockt: lockt() });
       }
       if (o.a === 'set') return out({ ok: true, boards: true });   /* 排行榜開關刪掉了（C9 第 9 題 B）；舊的老師看板按了也不會關 */
-      return out({ ok: true, now: Date.now(), cols: SC.COLS, rows: rows().map(function (r) { return r.map(function (x) { return x instanceof Date ? x.getTime() : x; }); }), sizes: sizes(), roster: roster(), boards: boardsOn(), tasks: tasks(), locks: locks(), lockt: lockt(), tiers: rpTiers(), quiz: rpQz(), rqv: SC.RPQV, eqs: rpEqs(), cwq: rpCq(), own: rpOwn(), boost: boost() });
+      return out({ ok: true, now: Date.now(), cols: SC.COLS, rows: rows().map(function (r) { return r.map(function (x) { return x instanceof Date ? x.getTime() : x; }); }), sizes: sizes(), roster: roster(), boards: boardsOn(), tasks: tasks(), locks: locks(), lockt: lockt(), tiers: rpTiers(), quiz: rpQz(), rqv: SC.RPQV, eqs: rpEqs(), cwq: rpCq(), own: rpOwn(), boost: boost(), qsub: qsGet() });
     }
     return out({ err: 'a' });
   } catch (x) { return out({ err: 'server', msg: String(x) }); }

@@ -1,0 +1,67 @@
+/* score/_verify_g3c.js — 2026-10-26 第二十七次 第 1 點：老師看板〔🏫 課堂複習〕大表（三年級 複習、課堂複習 1～3 的 10 種 遊戲 平均 正確率）。只印失敗項和一行總結。
+ *   node score/_verify_g3c.js
+ * 假伺服器：score/_gas_stub.js 跑「真的」score/Code.gs；名單 是 假的（測試NN）；不連真的成績表。三種尺寸。 */
+const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+const path = require('path'), fs = require('fs'), http = require('http');
+const { make } = require('./_gas_stub.js'), SC = require('./_calc.js');
+const ROOT = path.join(__dirname, '..'), URL0 = 'https://script.test/exec', PW = 'pw-verify';
+let fails = 0, n = 0;
+const out = (w, e) => { if (e.length) { fails += e.length; console.log('✗ ' + w); e.forEach(x => console.log('   ' + x)); } };
+const NOW = Date.now();
+const Q = (ok, all) => Array.from({ length: all }, (_, i) => [i < ok ? 1 : 0, i < ok ? 0 : 1, 3, 0, i < ok ? .5 : 0, i]);
+/* 304：01 號 打地鼠 8 題 對 6、02 號 打地鼠 8 題 對 4＋小精靈 中途 離開 3 題 全對；01 號 課堂複習 1 打地鼠 8 題 對 8；307 班 03 號 打地鼠 8 題 對 2（不在 304） */
+function seed() { const G = make({ TEACHER_PW: PW });
+  for (let s = 1; s <= 30; s++) G.books['名單'].d.push(['304', s, '測試' + String(s).padStart(2, '0')]);
+  const rec = (id, set, qs, k) => G.post({ a: 'rec', r: { id, set, name: 'x', m: 'g', qs, raw: 1, src: 'school', dev: 'x', u: 'g3c' + id + k, t: NOW - 6e4 } });
+  G.books['角色'].d.push(['30401', JSON.stringify({ tr: 3, trt: [1, 2, 3] }), new Date()], ['30402', JSON.stringify({ tr: 5, trt: [1, 2, 3, 4, 5] }), new Date()]);
+  G.post({ a: 'qsub', id: '30401', zh: '我 是 Amy。', o: ["I'm Amy.", "I'm nine.", "You're Amy.", 'My Amy.'] });
+  rec('30401', 'g3gm_g3m-q1', Q(6, 8), 'a'); rec('30402', 'g3gm_g3m-q1', Q(4, 8), 'b'); rec('30402', 'g3gm_g3m-q2', Q(3, 3), 'c'); rec('30401', 'g3gm_c1-q1', Q(8, 8), 'd'); rec('30703', 'g3gm_g3m-q1', Q(2, 8), 'e');
+  return G; }
+let HTTP = '';
+function serve() { return new Promise(ok => { const T = { '.html': 'text/html', '.js': 'text/javascript', '.woff2': 'font/woff2', '.css': 'text/css' };
+  const s = http.createServer((q, r) => { const f = path.join(ROOT, decodeURIComponent(q.url.split('?')[0])); fs.readFile(f, (er, b) => { if (er) { r.writeHead(404); r.end(); return; } r.writeHead(200, { 'content-type': T[path.extname(f)] || 'application/octet-stream' }); r.end(b); }); });
+  s.listen(0, '127.0.0.1', () => { HTTP = 'http://127.0.0.1:' + s.address().port; ok(s); }); }); }
+async function teacher(br, vp) {
+  const G = seed(), e = [], big = vp[0] >= 1900 ? 22 : 18;
+  const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] }, permissions: ['clipboard-read', 'clipboard-write'] });
+  await ctx.addInitScript(u => { Object.defineProperty(window, 'SCORE_URL', { get: () => u, set: () => {}, configurable: true }); }, URL0);
+  await ctx.route(/firebasedatabase\.app|firebaseio\.com/, r => r.abort());
+  await ctx.route(URL0 + '**', async r => { const q = Object.fromEntries(new URL(r.request().url()).searchParams); const body = r.request().method() === 'POST' ? G.post(r.request().postData()) : G.get(q);
+    await r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(body) }); });
+  const p = await ctx.newPage(); p.on('pageerror', x => e.push('JS 例外：' + x.message));
+  await p.goto(HTTP + '/teacher/index.html'); await p.waitForTimeout(300); await p.fill('#pw', PW); await p.click('#go'); await p.waitForTimeout(600);
+  await p.click('#tabs button[data-t="g"]'); await p.waitForTimeout(400);
+  const cellOf = () => p.evaluate(() => { const rows = [].map.call(document.querySelectorAll('.g3t tr'), tr => [].map.call(tr.children, td => td.childNodes[0] ? td.childNodes[0].textContent.trim() : ''));
+    const sm = [].filter.call(document.querySelectorAll('#pane *'), x => [].some.call(x.childNodes, c => c.nodeType === 3 && c.textContent.trim()) && x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < 17).map(x => x.textContent.trim().slice(0, 8));
+    const lo = [].filter.call(document.querySelectorAll('.g3sw button'), b => b.getBoundingClientRect().height < 48).length;
+    return { rows, sm, lo, ox: document.documentElement.scrollWidth - innerWidth, hd: (document.querySelector('.g3t tr') || {}).textContent || '' }; });
+  let c = await cellOf(); n++;
+  const r1 = c.rows.find(r => r[0] === '01'), r2 = c.rows.find(r => r[0] === '02'), all = c.rows[c.rows.length - 1];
+  /* 全部：01 號 打地鼠 (6＋8)/16 ＝ 88；02 號 打地鼠 50、小精靈 100、平均 (4＋3)/11 ＝ 64；全班 打地鼠 (6＋8＋4)/24 ＝ 75 */
+  if (!r1 || r1[1] !== '測試01' || r1[2] !== '88' || r1[12] !== '88') e.push('01 號 不對 ' + JSON.stringify(r1));
+  if (!r2 || r2[2] !== '50' || r2[3] !== '100' || r2[12] !== '64') e.push('02 號 不對（只 算 已作答：中途 離開 3 題）' + JSON.stringify(r2));
+  if (!all || !/全班/.test(all[0]) || all[1] !== '75') e.push('全班 平均 不對 ' + JSON.stringify(all));
+  if (c.rows.length !== 32) e.push('304 班 不是 30 位 學生（' + (c.rows.length - 2) + '）');
+  if (!/打地鼠/.test(c.hd) || !/平均/.test(c.hd)) e.push('表頭 沒有 10 種 遊戲＋平均 ' + c.hd.slice(0, 60));
+  if (c.sm.length || c.lo || c.ox > 1) e.push('字 太小／按鈕 太小／左右 捲：' + JSON.stringify({ sm: c.sm.slice(0, 4), lo: c.lo, ox: c.ox }));
+  n++; await p.click('[data-g3s="g3m"]'); await p.waitForTimeout(200); c = await cellOf(); const a1 = c.rows.find(r => r[0] === '01'); if (!a1 || a1[2] !== '75') e.push('〔三年級 複習〕只 算 g3m：01 號 要 75 ' + JSON.stringify(a1));
+  n++; await p.click('[data-g3s="c1"]'); await p.waitForTimeout(200); c = await cellOf(); const b1 = c.rows.find(r => r[0] === '01'), b2 = c.rows.find(r => r[0] === '02'); if (!b1 || b1[2] !== '100' || !b2 || b2[2] !== '—') e.push('〔課堂複習 1〕不對 ' + JSON.stringify([b1, b2]));
+  n++; await p.click('[data-g3s="all"]'); await p.click('[data-g3c="307"]'); await p.waitForTimeout(200); c = await cellOf(); const d3 = c.rows.find(r => r[0] === '03'); if (!d3 || d3[2] !== '25') e.push('307 班 03 號 要 25 ' + JSON.stringify(d3));
+  n++; if (SC.cat('g3gm_g3m-q1').k !== 'g3c' || SC.cat('g3gm_c2-q10').k !== 'g3c' || SC.cat('g4gm_mt-m1').k !== 'mt') e.push('類別 不對');
+  if (process.env.SHOT) await p.screenshot({ path: path.join(process.env.SHOT, 'g3c_' + vp[0] + '.png'), fullPage: true });
+  /* ⚔ 階級 能力（第二十七次）：學生 出 的 題 ➜〔✔ 可以〕存好；小老師、名人堂 有 名字 */
+  await p.click('#tabs button[data-t="a"]'); await p.waitForTimeout(300);
+  n++; const a0 = await p.evaluate(() => ({ q: document.querySelectorAll('.qsc [data-qv="1"]').length, t: document.getElementById('pane').textContent, sm: [].filter.call(document.querySelectorAll('.qsc, .abl div'), x => parseFloat(getComputedStyle(x).fontSize) < 20).length }));
+  if (a0.q !== 1 || !/我 是 Amy/.test(a0.t) || !/測試02/.test(a0.t) || !/名人堂/.test(a0.t) || a0.sm) e.push('階級 能力 分頁 ' + JSON.stringify(a0).slice(0, 200));
+  await p.click('.qsc [data-qv="1"]'); await p.waitForTimeout(500);
+  n++; const q1 = await p.evaluate(() => document.getElementById('pane').textContent); if (!/已經 放進 現場任務/.test(q1) || !/存好了/.test(q1)) e.push('〔✔ 可以〕沒有 存好');
+  /* 📱 給家長（第二十七次 第 2 點）：一人 一則、有 練 ＝ 天數 次數＋請 稱讚；沒 練 ＝ 請 鼓勵；字 夠大；〔📋 複製〕 */
+  await p.click('#tabs button[data-t="m"]'); await p.waitForTimeout(300); await p.click('[data-pmc="304"]'); await p.waitForTimeout(200);
+  n++; const pm = await p.evaluate(() => ({ n: document.querySelectorAll('.pmsg').length, t1: (document.getElementById('pm30401') || {}).textContent || '', t5: (document.getElementById('pm30405') || {}).textContent || '',
+    sm: [].filter.call(document.querySelectorAll('.pmsg .pt,.pmsg button'), x => parseFloat(getComputedStyle(x).fontSize) < 20).length, ox: document.documentElement.scrollWidth - innerWidth }));
+  if (pm.n !== 30 || !/^【英語練習本週週報】測試01本週練了 1 天、做完 \d+ 次/.test(pm.t1) || !/請您稱讚孩子：/.test(pm.t1) || !/測試05本週還沒有/.test(pm.t5) || / [他她]/.test(pm.t1) || pm.sm || pm.ox > 1) e.push('給家長 不對 ' + JSON.stringify(pm).slice(0, 300));
+  n++; await p.click('[data-pmid="30401"]'); await p.waitForTimeout(300); if (!/複製 好了/.test(await p.textContent('[data-pmid="30401"]'))) e.push('〔📋 複製〕沒有 反應');
+  await ctx.close(); out('老師看板〔🏫 課堂複習〕@' + vp.join('x'), e); }
+(async () => { const s = await serve(), br = await chromium.launch();
+  for (const vp of [[1024, 768], [820, 1180], [1920, 1080]]) await teacher(br, vp);
+  await br.close(); s.close(); console.log((fails ? '✗' : '✓') + ' 課堂複習 大表 量了 ' + n + ' 項，失敗 ' + fails + ' 項'); process.exit(fails ? 1 : 0); })();

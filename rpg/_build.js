@@ -265,6 +265,7 @@ button:active{transform:scale(.97)}
 .atb{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:10px}
 .helpB .idr{justify-content:center}.helpB .chips{margin-top:10px;justify-content:center}
 .nums .chB{align-self:center}
+.hallB{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:10px 0;padding:10px 16px;border-radius:18px;border:3px solid #FFD54A;background:linear-gradient(135deg,#3A2A06,#120C02);font-size:clamp(20px,2.6vh,26px)}.hallB b{color:#FFE07A;width:100%}.hallB span{background:#2A1F05;border-radius:12px;padding:4px 12px}
 @media (max-width:900px){.stage>.nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.nums .bh,.nums .chB{grid-column:1/-1}.nums .lv{flex-direction:column;gap:2px}.nums .big2{font-size:clamp(34px,5vh,50px)}}
 @media (prefers-reduced-motion:reduce){.hf,.ha,.hf.m .hpb>i,.hf.m .mm{animation:none;opacity:1}}
 .cbgo{grid-column:1;grid-row:2;align-self:start;justify-self:center;min-height:64px;padding:6px 34px;border-radius:999px;border:3px solid #FFD54A;background:linear-gradient(180deg,#7A3AB0,#2A0E50);color:#FFF3C4;font-size:clamp(22px,3vh,30px);box-shadow:0 0 22px rgba(255,213,74,.55),0 0 40px rgba(181,123,255,.5);animation:glow5 2.2s ease-in-out infinite}
@@ -425,6 +426,8 @@ ${CL.home(0, '../', 'home')}
 <script>
 var CAT=${JSON.stringify(CAT)};
 var TREJPG=${JSON.stringify(TREJPG)};
+/* ⚔ 階級 的 真的 能力（2026-10-26 第二十七次 第 2 點，老師 選 C30 第 4 題「照 表 做」）：不加 分數、不讓 題目 變 簡單 */
+var ABIL=['','','🔥 挑戰關：在家〔📅 今日任務〕，答對 🪙 ✖1.5','✍ 出 1 題 給 全班（老師 說 OK 就 上 現場任務）','🧑‍🏫 現場任務 當 小老師','⭐ 一個月 1 次 幫 全班 選 現場任務 遊戲＋🏛 名人堂'];
 var RV=null,TAB='h',SEX='b',LAST='',BUSY=false,SCAT=1;
 var FMN={slash:'連斬',beam:'光砲',arrow:'箭雨',smash:'重擊',orb:'法球',nova:'爆發',claw:'利爪',pierce:'突刺'},CBP=false;
 var DIR={h:'chars',w:'weapons',p:'pets'},RC=['#34475C','#8A9AAA','#3BD16F','#5AB0FF','#B57BFF','#FFD54A'],RN=['','基本','稀有','史詩','傳說','神話'];
@@ -478,8 +481,10 @@ function drawStage(){var V=RV,e=V.st.eq;try{if(e.h)localStorage.setItem('rp_hero
     '<div class="tile lvT"><div class="lab">⭐ 等級</div><div class="lv"><b>Lv '+V.lv+'</b><span>經驗值 '+nf(V.xp)+'</span></div><div class="bar"><i id="xpb" data-w="'+pct.toFixed(1)+'"></i></div><div class="sub">再 '+nf(V.lvNext-V.xp)+' ⭐ ➜ Lv '+(V.lv+1)+'</div></div>'+
     '<div class="tile coinT"><div class="lab">🪙 金幣</div><b class="big2" id="coinN">'+nf(V.coins)+'</b><div class="sub">＝ 錢：換 裝備</div></div>'+
     '<div class="tile powT"><div class="lab">⚔ 戰力 <button class="q1" data-go="qb" aria-label="戰力 是 什麼">❓</button></div><div class="pwr"><b class="big2">'+nf(V.power)+'</b>'+(TM&&window.RPFX?'<span class="pwt">'+RPFX.tb(TM,1)+'</span>':'')+'</div>'+
-      '<div class="sub tabil">✅ <b>現在</b>：'+(V.tnow&&window.RPFX?RPFX.ts(V.tnow)+' '+RPFX.TN[V.tnow]:'還沒有 階級')+'<br>練習 金幣 多 '+V.pct+'%、一天 最多 拿 '+V.cap+' 🪙</div>'+(V.tier<5?'<div class="sub">⏫ <b>再 '+nf(tnext)+' ⚔</b> ➜ 升到 '+tn+'<br>以後：練習 金幣 多 '+CAT.TB[V.tier+1][0]+'%、一天 最多 拿 '+CAT.TB[V.tier+1][1]+' 🪙</div>':'<div class="sub">🎉 最高 階級</div>')+'</div>'+
-    (V.ch?'<button class="chB" id="chOpen">👑 開 冠軍寶箱 ✕ '+V.ch+'</button>':'')+'</div>';
+      '<div class="sub tabil">✅ <b>現在</b>：'+(V.tnow&&window.RPFX?RPFX.ts(V.tnow)+' '+RPFX.TN[V.tnow]:'還沒有 階級')+'<br>練習 金幣 多 '+V.pct+'%、一天 最多 拿 '+V.cap+' 🪙'+ABIL.slice(2,(V.tnow||0)+1).filter(Boolean).map(function(a){return '<br>'+a}).join('')+'</div>'+(V.tier<5?'<div class="sub">⏫ <b>再 '+nf(tnext)+' ⚔</b> ➜ 升到 '+tn+'<br>以後：練習 金幣 多 '+CAT.TB[V.tier+1][0]+'%、一天 最多 拿 '+CAT.TB[V.tier+1][1]+' 🪙'+(ABIL[V.tier+1]?'<br>＋ '+ABIL[V.tier+1]:'')+'</div>':'<div class="sub">🎉 最高 階級</div>')+'</div>'+
+    (V.ch?'<button class="chB" id="chOpen">👑 開 冠軍寶箱 ✕ '+V.ch+'</button>':'')+'</div>'+
+    /* 2026-10-26 第二十七次：🏛 名人堂（★★★★★ 傳說戰神，同一個 年級；只 寫 班級＋號碼，不寫 名字） */
+    ((V.hall||[]).length?'<div class="hallB"><b>🏛 名人堂：★★★★★ 傳說戰神</b>'+V.hall.map(function(id){return '<span>'+id.slice(0,3)+' 班 '+(+id.slice(3))+' 號</span>'}).join('')+'</div>':'');
   /* 2026-10-25 第二十六次 第 3-2 點（老師選 A：暫時 刪除）：👾 打 怪物、💥 一擊 算式、〔⚔ 出招！〕、🐾 我的 寵物 那一格 拿掉（資料 照 留著，要 加回來 ＝ 從 git 第二十五次 版本 拿回 這兩段） */
   h+='<div class="blkw helpB"><h3 class="bh">❓ 看不懂？點 這裡</h3><div class="idr"><button class="how1" data-go="qa">⭐🪙 經驗值、金幣 怎麼來</button><button class="how1" data-go="qc">🎁 收集 有 什麼 幫助</button><button class="how1" data-go="qd">⚔ 階級 愈高 能力 愈強</button></div>'+
     (V.medal||V.titles.length||V.chests?'<div class="chips">'+(V.medal?'<span>🏅 勳章 ✕ '+V.medal+'</span>':'')+V.titles.map(function(t){return '<span>🏷 '+t+'</span>'}).join('')+(V.chests?'<span>🎁 保底 寶箱 ✕ '+V.chests+'</span>':'')+'</div>':'')+'</div>';
@@ -566,12 +571,11 @@ function tutScenes(){var V=RV||{power:0,tier:0,hit:10,petHit:0,lv:1},e=V.st?V.st
      ['💥 一擊 愈痛 ➜ 👾 怪物 倒 得 愈快','<div style="width:100%;display:flex;flex-direction:column;align-items:center"><div class="trow"><span>💥 10</span><div class="mbar" style="--t:4s;--n:8"><i></i></div><span>8 下</span></div><div class="trow"><span>💥 27</span><div class="mbar" style="--t:1.5s;--n:3"><i></i></div><span>3 下 🎉</span></div><div class="cap" style="font-size:clamp(20px,2.8vh,28px);animation-delay:2s">怪物 血 80：一擊 10 要 打 8 下、一擊 27 只要 3 下</div></div>',function(){}],
      ['⚔ 戰力 到了 ➜ 升 階級 ＋ 🪙 100 ＋ 真的 能力','<div style="text-align:center"><div class="ttier">'+[1,2,3,4,5].map(function(n){return '<span id="tt'+n+'">'+tb(n)+'<small>'+(window.RPFX?RPFX.TN[n]:'')+'</small><small>⚔ '+nf(CAT.TIER[n-1][0])+'</small><small>🪙 ＋'+CAT.TB[n][0]+'%</small></span>'}).join('')+'</div><div class="cap" style="font-size:clamp(22px,3vh,30px);animation-delay:1.6s">'+(V.tier?'你 現在：'+tb(V.tier,1):'你 還沒有 階級')+(V.tier<5?'　再 '+nf(CAT.TIER[V.tier][0]-pw)+' ⚔ ➜ 下一階 🪙＋'+CAT.TIERC:'')+'</div><div class="note" style="margin-top:8px">每 升 一階：🪙＋'+CAT.TIERC+' 一次、練習 金幣 多 5%～25%、一天 最多 120～200、專屬 寶物、現場任務 登場 特效（詳細 ➜ 📜 獎勵 規則）</div></div>',function(){[1,2,3,4,5].forEach(function(n){TUT.cn.push(setTimeout(function(){var x=document.getElementById('tt'+n);if(x)x.classList.add('on');},300+n*260))})}]],
   /* 2026-10-21 第十七次 老師第 9 點：學生 看不懂「收集 有 什麼 用」➜ 一幕 一件事、一條 因果 鏈：收集 ➜ 戰力 ➜ 打怪 快 ➜ 圖鑑；寵物 幫 打；集滿 一套 ＝ 稱號；不加 分數 */
+  /* 2026-10-26 第二十七次 第 5 點（老師：收集 有 什麼 幫助 那一段 的 怪物 說明 也 一起 刪掉）：刪「⚔ 戰力 愈高 ➜ 👾 怪物 倒 得 愈快」「👾 打倒 怪物 ➜ 收進 📖 圖鑑」兩幕；最後一幕 拿掉「打怪 更 快」 */
   c:[['🎁 收集 愈多、愈強 ➜ ⚔ 戰力 愈高','<div class="tcrd"><div style="animation-delay:.2s"><img src="'+hi+'" alt=""><b>'+stars(hs)+'</b></div><div style="animation-delay:.6s"><img src="'+wi+'" alt=""><b>'+stars(ws)+'</b></div><div style="animation-delay:1s"><img src="'+pi+'" alt=""><b>'+stars(ps)+'</b></div></div><div class="tbig">⚔ <b class="tcn">0</b><small>★ 愈多 ➜ 戰力 愈高</small></div>',function(){var n=pw||320;tcount([[1400,Math.round(n*.4)],[1800,Math.round(n*.75)],[2200,n]])}],
-     ['⚔ 戰力 愈高 ➜ 👾 怪物 倒 得 愈快','<div style="width:100%;display:flex;flex-direction:column;align-items:center"><div class="trow"><span>⚔ 低</span><div class="mbar" style="--t:4s;--n:8"><i></i></div><span>8 下</span></div><div class="trow"><span>⚔ 高</span><div class="mbar" style="--t:1.5s;--n:3"><i></i></div><span>3 下 🎉</span></div></div>',function(){tatk(900)}],
-     ['👾 打倒 怪物 ➜ 收進 📖 圖鑑','<div class="tcrd"><div style="animation-delay:.2s;width:clamp(100px,16vh,150px)"><img src="pets/p24.jpg" alt="" class="tgray"><b>👾 怪物</b></div><div style="animation-delay:1.2s;width:clamp(100px,16vh,150px)"><img src="pets/p24.jpg" alt=""><b>✨ 收進 📖</b></div></div>',function(){tsp(.7,.4,'light')}],
      ['🐾 寵物 會 幫 你 打，長大 愈 有力','<div class="tcrd"><div style="animation-delay:.2s;width:clamp(100px,16vh,150px)"><img src="'+pi+'" alt=""></div></div><div class="tchips"><span>'+PG(0)+' 寶寶 💥 ＋3</span><span>'+PG(1)+' 長大 💥 ＋5</span><span>'+PG(2)+' 進化 💥 ＋8</span></div>',function(){}],
      ['📖 集滿 一套 ➜ 拿到 稱號','<div class="tcrd">'+CAT.SET[0][1].slice(0,3).map(function(id,i){return '<div style="animation-delay:'+(.2+i*.4)+'s;width:clamp(80px,12vh,120px)"><img src="'+img(id)+'" alt=""><b>✔</b></div>'}).join('')+'</div><div class="tbig" style="animation-delay:1.8s">🏅 <small>'+CAT.SET[0][0]+'</small></div>',function(){tsp(.5,.5,'star')}],
-     ['🎯 收集 只 讓 你 更 帥、打怪 更 快，不會 加 分數','<div class="tchips"><span>🎯 分數 ＝ 你 自己 答 的</span><span>⚔ 裝備 ＝ 打怪 更 帥、更 快</span></div>',function(){}]],
+     ['🎯 收集 只 讓 你 更 帥，不會 加 分數','<div class="tchips"><span>🎯 分數 ＝ 你 自己 答 的</span><span>⚔ 裝備 ＝ 戰士 更 帥</span></div>',function(){}]],
   /* 2026-10-21 第十八次 第 4-1 點：學生 事先 秒懂 ── 不一樣 的 階級 不一樣 的 特效、愈 高階 愈 強大；買到 新的、升階 ➜ 合體 愈來愈 華麗、每一次 不一樣。
      第 1～5 幕、第 6、7 幕 在 畫面 裡 真的 演（RPLIFE.demo） */
   /* 2026-10-23 第二十二次 第 3(1)～(4) 點：第 1、10 幕 整個 暗 ➜ 亮的 大卡片（.ttier.big）；第 7、8 幕 畫面 太 窄 ➜ .tdemo.wide 撐滿；第 9 幕 刪掉 */
@@ -741,7 +745,7 @@ function draw(){drawStage();drawShop()}
 function load(){if(!SCON){hide('rpin');hide('rpwait');show('rpout');return}
   if(!SCID||!scAsked()){RV=null;hide('rpin');hide('rpwait');show('rpout');return}
   hide('rpout');if(!RV)show('rpwait');var id=SCID;
-  scFetch('a=rpg&id='+id+'&_='+Date.now(),null,20000).then(function(j){if(id!==SCID)return;hide('rpwait');if(j&&j.ok){RV=j.v;RV.dt=(j.now||Date.now())-Date.now();RV.bo=j.bo||null;if(j.stock)STOCK=j.stock;show('rpin');draw();seen();qzSync();cwSync()}else msg('📶 拿不到 你的 戰士，等一下 再 試',1)},function(){hide('rpwait');msg('📶 現在 沒有 網路，等一下 再 試',1)})}
+  scFetch('a=rpg&id='+id+'&_='+Date.now(),null,20000).then(function(j){if(id!==SCID)return;hide('rpwait');if(j&&j.ok){RV=j.v;RV.dt=(j.now||Date.now())-Date.now();RV.bo=j.bo||null;RV.hall=j.hall||[];if(j.stock)STOCK=j.stock;show('rpin');draw();seen();qzSync();cwSync()}else msg('📶 拿不到 你的 戰士，等一下 再 試',1)},function(){hide('rpwait');msg('📶 現在 沒有 網路，等一下 再 試',1)})}
 function msg(t,x){var m=document.getElementById('rpm');m.className='on';document.getElementById('rpmb').innerHTML='<div>'+t+'</div><div class="bt"><button class="no" data-m="x">👌 知道了</button></div>'}
 function ask(id){var k=kOf(id),fr=freeOk(id),pr=fr?0:price(id),t=k==='t'?tre(id)[1]:'';
   if(CAT.LIM[id]&&STOCK[id]===0){msg('🏷 已經 換完 了<br><span class="note">全部 學生 一共 只有 5 個</span>');return}

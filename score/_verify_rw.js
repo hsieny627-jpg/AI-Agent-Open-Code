@@ -93,7 +93,26 @@ async function teacher(br, vp) {
     if (r.ok.length && !r.cer) e.push(k + '：有人 做到 卻 沒有〔🏆 頒獎〕');
     n += 6;
     /* 🏆 頒獎典禮：開場 ➜ 第 1 個 人（名字 大、做到 的 事 一樣一樣 亮）➜ … ➜ 榮譽牆 */
-    if (r.cer && (k === 'cw' || k === 'qz')) {
+    /* 2026-10-26 第二十七次 第 4-(3) 點：🎁 全班獎勵、👑 冠軍寶箱 ＝ 🏆 榮譽榜 同一套（GLORY）：開場 ➜ 少 的 先 從下 往上 翻開 ➜ 🥉 ➜ 🥈 ➜ 🥇 ➜ 頒獎台（第 1 名 最高 ＋ 皇冠）；每一次 風格 不一樣 */
+    if (r.cer && (k === 'cw' || k === 'ch')) {
+      const st0 = await p.evaluate(() => { try { return JSON.parse(localStorage.getItem('gl_t') || 'null'); } catch (x) { return null; } });
+      await p.click('#rwcer'); await p.waitForTimeout(1500);
+      const g0 = await p.evaluate(() => ({ on: document.getElementById('honov').classList.contains('on'), t: document.getElementById('honst').textContent, cls: document.getElementById('honst').className, P: HN.P.map(x => x.g), gd: HN.gd }));
+      if (!g0.on || !/頒獎典禮/.test(g0.t) || !/\bgs\d+/.test(g0.cls)) e.push(k + '：頒獎典禮 開場 不對：' + g0.t.slice(0, 60));
+      if (g0.P[0] !== 0 || g0.P[g0.P.length - 1] !== 5 || g0.P.indexOf(4) < 0) e.push(k + '：頒獎典禮 幕 不對 ' + JSON.stringify(g0.P));
+      /* 名次 從 低 到 高：全班獎勵 ＝ 第 1 名 那一階 的 天數 最多；翻開 的 那幾排（從 下面 先 翻）天數 一排 比 一排 少 */
+      if (k === 'cw') { const L = g0.gd.lab || {}, dv = x => +((/練 (\d+) 天/.exec(x || '') || [0, 0])[1]); const rv = (g0.gd.rows || []).map(r => dv(r.lab));
+        if (!(dv(L[1]) > (dv(L[2]) || 0)) || rv.some((v, i) => i && v > rv[i - 1]) || (rv.length && rv[0] >= (dv(L[3]) || dv(L[2]) || dv(L[1])))) e.push('cw：名次 沒有 照 天數 少 ➜ 多：' + JSON.stringify({ L, rv })); }
+      else { const t1 = (g0.gd.top || {})[1] || []; if (!t1.length) e.push('ch：沒有 第 1 名'); }
+      await p.evaluate(() => { HN.i = HN.P.length - 1; hShow(); }); await p.waitForTimeout(2600);
+      const g5 = await p.evaluate(() => { const b = q => { const x = document.querySelector('#honst ' + q); return x ? x.getBoundingClientRect() : null; }, p1 = b('.gp.p1 .gpb'), p2 = b('.gp.p2 .gpb'), cr = b('.gp.p1 .gpcr'), S = document.getElementById('honst').getBoundingClientRect();
+        return { p1: p1 && p1.height, p2: p2 && p2.height, cr: !!cr, top: cr && p1 ? cr.top < p1.top : false, out: [].filter.call(document.querySelectorAll('#honst .gp *'), x => { const r = x.getBoundingClientRect(); return r.width && (r.right > S.right + 2 || r.left < S.left - 2); }).length }; });
+      if (!g5.p1 || !(g5.p1 > (g5.p2 || 0)) || !g5.cr || !g5.top || g5.out) e.push(k + '：頒獎台 第 1 名 不是 最高＋皇冠 ' + JSON.stringify(g5));
+      await p.click('#hx'); await p.waitForTimeout(200);
+      const st1 = await p.evaluate(() => { try { return JSON.parse(localStorage.getItem('gl_t') || 'null'); } catch (x) { return null; } });
+      if (st0 && st1 && st0.last === st1.last) e.push(k + '：兩次 頒獎 風格 一樣');
+      n += 5; }
+    if (r.cer && k === 'qz') {
       await p.click('#rwcer'); await p.waitForTimeout(3600);
       const s0 = await p.evaluate(() => ({ on: document.getElementById('rwc').classList.contains('on'), t: document.getElementById('rwcs').textContent }));
       if (!s0.on || !/頒獎典禮/.test(s0.t) || !/位 同學 做到/.test(s0.t)) e.push(k + '：頒獎典禮 開場 不對：' + s0.t.slice(0, 60));

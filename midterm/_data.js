@@ -136,6 +136,11 @@ const M11 = [
   return { yn: 1, pic, line: qq, q: '✅ 看圖：' + qq, o: [a].concat(all.filter(x => x !== a)), z: qq + ' ➜ ' + a + '（圖：' + picZh(pic) + '）', ae: a }; });
 
 /* 🪤 m12 陷阱 偵測器：最容易錯的地方，三個裡面兩個是陷阱 */
+/* 2026-10-26 第二十七次 6-(5)：答錯頁 ＝ 整句 翻譯（fz）＋ 💡 為什麼（tip）分開 寫 */
+const M12Z = [['看！他 是 一位 廚師。', 'He’s ＝ He is（他 是）；His ＝ 他的'], ['他 是 誰？他 是 我的 哥哥。', '問「誰」用 Who’s；What’s ＝ 什麼 是'], ['你的 爸爸 是 護理師 嗎？', '一個 人 ➜ 用 Is'],
+  ['她 是 老師 嗎？是的，她 是。', '句子 最後 的 she is 不可以 縮寫 成 she’s'], ['你的 爺爺 是 農夫 嗎？不，他 不是。', '爺爺 是 男生 ➜ he；No ➜ isn’t'], ['我的 姊姊 是 一位 學生。', 'student 第一個 音 不是 母音 ➜ a student'],
+  ['他 是 你的 哥哥 嗎？', '哥哥 是 男生 ➜ he'], ['她 是 誰？她 是 我的 奶奶。', '奶奶 是 女生 ➜ She’s'], ['twelve ＝ 12', 'twelve ＝ 12；twenty ＝ 20'],
+  ['seventeen ＝ 17', '-teen ＝ 十幾：seventeen ＝ 17；seventy ＝ 70'], ['你的 媽媽 是 廚師 嗎？是的，她 是。', '媽媽 ➜ she；Yes ➜ is'], ['他 是 誰？他 是 我的 叔叔。', 'He’s ＝ He is（他 是）']];
 const M12 = [
   ['Look! ___ a cook.', ['He’s', 'His', 'He'], '看！他 是 廚師。He’s ＝ He is；His ＝ 他的。'],
   ['___ he? He’s my brother.', ['Who’s', 'What’s', 'Who'], '他 是 誰？問 人 用 Who’s。'],
@@ -149,7 +154,7 @@ const M12 = [
   ['seventeen ＝ ?', ['17', '70', '7'], '-teen ＝ 十幾。'],
   ['Is your mom a cook? Yes, ___.', ['she is', 'he is', 'she isn’t'], '媽媽 ➜ she；Yes ➜ is。'],
   ['Who’s he? ___ my uncle. ', ['He’s', 'His', 'He'], '他 是 我的 叔叔。He’s ＝ He is。']
-].map(([s, o, h]) => ({ blank: s.trim(), q: '🪤 ' + s.trim(), o, z: h, h, ae: /[A-Za-z]/.test(o[0]) && /___/.test(s) ? s.trim().replace('___', o[0]) : '' }));
+].map(([s, o, h], i) => ({ blank: s.trim(), q: '🪤 ' + s.trim(), o, z: h, h, ae: /[A-Za-z]/.test(o[0]) && /___/.test(s) ? s.trim().replace('___', o[0]) : '', fz: M12Z[i][0], tip: M12Z[i][1] }));
 
 /* 遊戲：id、圖示、名字、一句話怎麼玩、哪一區、每一題幾秒、題庫 */
 const GAMES = [
@@ -169,10 +174,50 @@ const GAMES = [
 const SEC = { lis: ['🎧', '聽力'], read: ['📖', '閱讀'], write: ['✍️', '寫寫看'] };
 const PHOTO = {}; CE.forEach(x => { PHOTO[x[1]] = x[0]; });
 /* 要唸的英文（node midterm/_audio.js 做成語音檔） */
+
+/* ══ 2026-10-26 第二十七次 6-(5)：答錯頁 100% 照「三年級 複習」（g3mid）──
+   綠底 一整頁：❌ 你的答案 ➜ ✅ 正確答案（每一個 英文字 正下方 ＝ 中文）➜ 整句：翻譯 ➜ 自動 唸 3 次（① ② ③）➜〔▶ 下一題 3〕。
+   每一題 算好：fe ＝ 要 逐字 對照 的 英文、fz ＝ 整句 翻譯、fs ＝ 要 唸 的（[聲音, 英文]：'' 女聲 0.85、'm' 男聲 0.85、'M1' 單字 男聲 慢 0.8）。 */
+const GL = {
+  a: '一位', bag: '包包', ball: '球', bell: '鈴', box: '盒子', brother: '哥哥', come: '來', cook: '廚師', dad: '爸爸', desk: '書桌', doctor: '醫生', dog: '狗', doll: '娃娃',
+  "don't": '不要', door: '門', eighteen: '十八', eleven: '十一', farmer: '農夫', father: '爸爸', fifteen: '十五', fourteen: '十四', go: '走', grandfather: '爺爺', grandma: '奶奶',
+  grandmother: '奶奶', grandpa: '爺爺', have: '有', he: '他', his: '他的', homework: '作業', hurry: '趕快', i: '我', "'m": '是', "'s": '是', in: '進', is: '是', "isn't": '不是',
+  late: '遲到的', "let's": '我們…吧', light: '燈', look: '看', me: '我', meet: '認識', mom: '媽媽', mother: '媽媽', my: '我的', name: '名字', nice: '很高興', nineteen: '十九',
+  no: '不', nurse: '護理師', off: '關', on: '開', panda: '貓熊', pen: '筆', pig: '豬', please: '請', pot: '鍋子', run: '跑', seat: '座位', seventeen: '十七', she: '她',
+  show: '給…看', sister: '姊姊', sixteen: '十六', sorry: '對不起', student: '學生', talk: '說話', teacher: '老師', ten: '十', tent: '帳篷', thank: '謝謝', the: '', thirteen: '十三',
+  this: '這', tiger: '老虎', time: '時間', to: '', too: '也', toy: '玩具', turn: '轉', twelve: '十二', twenty: '二十', uncle: '叔叔', up: '起來', who: '誰', yes: '是的', you: '你', your: '你的',
+  seventy: '七十', what: '什麼', are: '是', am: '是', be: '是', an: '一個', her: '她的'
+};
+/* 一句話 裡 同一個 字 意思 不一樣 ➜ 這一題 自己 的 對照（gx） */
+const GX = { 'Have a seat, please.': { have: '坐', a: '一個', seat: '位子' }, 'Hurry up.': { hurry: '快', up: '一點' }, 'Time’s up.': { up: '到 了' }, 'Come in, please.': { in: '進來' },
+  'Show me your homework.': { show: '給…看' } };
+const noLab = t => String(t).replace(/(^|\s)[AB]:\s*/g, '$1').trim();
+const gxOf = t => { const o = {}; Object.keys(GX).forEach(k => { if (t.indexOf(k) >= 0) Object.assign(o, GX[k]); }); return o; };
+const zhClean = z => String(z).replace(/\s*➜\s*/g, '').trim();
+M1.forEach(q => { q.fe = q.w; q.fz = q.z.replace('（', ' ＝ ').replace('）', '') + '；第一個 字母 ＝ ' + q.w[0]; q.fs = [['M1', q.w]]; });
+M2.forEach(q => { q.fe = q.pair.join(' '); q.fz = q.z; q.fs = [['M1', q.pair[0]], ['M1', q.pair[1]]]; });
+M3.forEach(q => { q.fe = q.say; q.fz = q.z; q.fs = [['', q.say]]; });
+M4.forEach(q => { q.fe = q.say; q.fz = q.z.replace(q.say, '').trim(); q.fs = [['', q.say]]; });
+M5.forEach(q => { q.fe = q.say; q.fz = q.z; q.fs = [['M1', q.say]]; });
+M6.forEach(q => { const L = q.chat === 'A' ? [q.line, q.o[0]] : [q.o[0], q.line]; q.fe = L.join(' '); q.fz = zhClean(q.z); q.fs = [['', L[0]], ['m', L[1]]]; });
+M7.forEach(q => { q.fe = q.spell; q.fz = q.spell + ' ＝ ' + q.zhw; q.fs = [['M1', q.spell]]; });
+M8.forEach(q => { q.fe = q.ae; q.fz = PAS[q.pas].z[q.ev]; q.fs = [['', q.ae]]; });
+M9.forEach(q => { q.fe = q.line; q.fz = q.z.replace(q.line, '').trim(); q.fs = [['', q.line]]; });
+M10.forEach(q => { q.fe = noLab(q.ae); q.fz = q.z; q.fs = [['', q.fe]]; });
+M11.forEach(q => { const he = /\bhe\b/i.test(q.line), yes = /^Yes/.test(q.o[0]), j = /a (\w+)\?$/.exec(q.line)[1];   /* 問句 裡 的 職業（不是 圖 上 的） */
+  q.fe = q.line + ' ' + q.o[0]; q.fz = (he ? '他' : '她') + ' 是 ' + JOB[j][1] + ' 嗎？' + (yes ? '是的，' : '不，') + (he ? '他' : '她') + (yes ? ' 是。' : ' 不是。'); q.fs = [['', q.line], ['m', q.o[0]]]; });
+M12.forEach(q => { q.fe = q.ae || ({ '12': 'twelve', '17': 'seventeen' })[q.o[0]]; q.fs = [[q.ae ? '' : 'M1', q.fe]]; });
+GAMES.forEach(g => g.B.forEach(q => { q.gx = gxOf(q.fe); }));
+
 const SAY = [];
 GAMES.forEach(g => g.B.forEach(c => { [c.say, c.ae, c.line].forEach(x => { if (x) SAY.push(x); });
   if (c.pair) c.pair.forEach(x => SAY.push(x)); if (c.spell) SAY.push(c.spell); if (c.w) SAY.push(c.w); if (c.chat) c.o.forEach(x => SAY.push(x)); }));
 Object.keys(PAS).forEach(k => PAS[k].t.forEach(x => SAY.push(x)));
+/* 慢 一點 的 語音（0.85）：答錯頁、短文 偵探；單字 男聲 慢（M1）另外 做 */
+const SAYS = [], SAYM = [];
+GAMES.forEach(g => g.B.forEach(c => (c.fs || []).forEach(([v, t]) => { if (v === 'M1') SAYM.push(t); else SAYS.push((v === 'm' ? 'm:' : '') + t); })));
+M2.forEach(c => c.pair.forEach(x => SAYM.push(x))); M1.forEach(c => SAYM.push(c.w)); M5.forEach(c => SAYM.push(c.say));
+Object.keys(PAS).forEach(k => PAS[k].t.forEach(x => SAYS.push(x)));
 /* 檢查：每一題 o[0] 是正解、選項不重複、題數 ≧ 10 */
 GAMES.forEach(g => { if (g.B.length < 10) throw new Error(g.id + ' 題目 太少'); g.B.forEach((c, i) => { if (new Set(c.o).size !== c.o.length) throw new Error(g.id + ' 第 ' + (i + 1) + ' 題 選項 重複：' + c.o.join('／')); }); });
-module.exports = { GAMES, SEC, WHO, JOB, PAS, PHOTO, TREE, SAY, picZh };
+module.exports = { GAMES, SEC, WHO, JOB, PAS, PHOTO, TREE, SAY, SAYS: [...new Set(SAYS)], SAYM: [...new Set(SAYM)], GL, picZh };

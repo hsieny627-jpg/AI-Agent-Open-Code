@@ -4,7 +4,9 @@
  * 10 種風格（ST）：背景、粒子、翻開名次的方法、音樂（調性、樂器、節奏）全部不一樣；pick() 洗牌輪流、跟上一次一定不一樣；
  * 同一種風格每一次再隨機移調、換旋律、粒子位置 ➜ 每一次聽起來、看起來都不一樣。
  * 用法：GLORY.pick() ➜ 第幾種；GLORY.scene(舞台, 第幾種, 第幾幕, 資料, 有沒有聲音)；GLORY.stop(舞台)
- * 資料 ＝ {kick:'304 班', aw:'最認真練習', per:'本週', ic:'圖示 html', rows:[{rk,w,v}](第 10～4 名), top:{1:[{w,v,l}],2:[…],3:[…]}} */
+ * 資料 ＝ {kick:'304 班', aw:'最認真練習', per:'本週', ic:'圖示 html', rows:[{rk,w,v}](第 10～4 名), top:{1:[{w,v,l}],2:[…],3:[…]}}
+ * 2026-10-26 第二十七次 第 4-(3) 點（全班獎勵、冠軍寶箱 頒獎典禮 也 用 這一套）：可以 多給 title（開場 大標題）、lab:{1:'練 7 天',…}（取代「第 1 名」）、rows 的 lab（取代「第 N 名」）；
+ *   沒給 ＝ 跟 原本 一樣（榮譽榜 不變）。頒獎台 第 1 名 多 一頂 會 發光 的 皇冠（冠軍 寶座）。 */
 var GLORY=(function(){
   var RD=function(){return !!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)};
   /* ── 10 種風格 ── c ＝ 主色、c2 ＝ 第二色、pt ＝ 粒子、rv ＝ 翻開名次的方法、mu ＝ 音樂 */
@@ -151,18 +153,19 @@ var GLORY=(function(){
     el.className='gl gs'+(CUR+1)+' gk'+k;el.style.setProperty('--gc',S0.c);el.style.setProperty('--gc2',S0.c2);
     el.innerHTML='<div class="glbg"></div><div class="glsty">'+S0.nm+'</div>';var S=RD()?null:Cv(el);el._gs=S;if(S)ambient(S);
     var c=document.createElement('div');c.className='glc';el.appendChild(c);
-    if(k===0){c.innerHTML='<div class="glic">'+(D.ic||'🏆')+'</div><div class="glt">'+('🏆 '+D.per+' 榮譽榜').match(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[\s\S]/g).map(function(ch,i){return '<i style="animation-delay:'+(1+i*.09).toFixed(2)+'s">'+(ch===' '?'\u00a0':ch)+'</i>'}).join('')+'</div>'+
+    if(k===0){c.innerHTML='<div class="glic">'+(D.ic||'🏆')+'</div><div class="glt">'+(D.title||'🏆 '+D.per+' 榮譽榜').match(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[\s\S]/g).map(function(ch,i){return '<i style="animation-delay:'+(1+i*.09).toFixed(2)+'s">'+(ch===' '?'\u00a0':ch)+'</i>'}).join('')+'</div>'+
         '<div class="gls">'+D.kick+'<b>'+D.aw+'</b></div>';
       if(SND)MSC.open();at(el,250,function(){var p=ctr(el,'.glic');ring(S,p.x,p.y,el.clientWidth*.6,S0.c,1.4,18);rays(S,p.x,p.y,16,el.clientWidth*.7,5,null);burst(S,p.x,p.y,120,520,1);shake(el)});
       at(el,2300,function(){var p=ctr(el,'.glt');burst(S,p.x-el.clientWidth*.25,p.y,60,380);burst(S,p.x+el.clientWidth*.25,p.y,60,380)});return}
     if(k===1){var R=D.rows||[];   /* 第 10～4 名：第 10 名 在 最下面，從下往上 一格一格 翻開 */
-      c.innerHTML=head(D)+'<div class="glrows" style="--n:'+R.length+'">'+R.map(function(r){return '<div class="glr"><div class="glin"><b class="glrk">第 '+r.rk+' 名</b><span class="glw">'+r.w+'</span><em class="glv">'+r.v+'</em></div><div class="glcov"><span>第 '+r.rk+' 名</span><i>？</i></div></div>'}).join('')+'</div>';
+      c.innerHTML=head(D)+'<div class="glrows" style="--n:'+R.length+'">'+R.map(function(r){return '<div class="glr"><div class="glin"><b class="glrk">'+(r.lab||'第 '+r.rk+' 名')+'</b><span class="glw">'+r.w+'</span><em class="glv">'+r.v+'</em></div><div class="glcov"><span>'+(r.lab||'第 '+r.rk+' 名')+'</span><i>？</i></div></div>'}).join('')+'</div>';
       var L=[].slice.call(c.querySelectorAll('.glr'));L.reverse();   /* DOM 由上 到下 ＝ 第 4 名 ➜ 第 10 名；翻開 的 順序 ＝ 最下面 先 */
       L.forEach(function(row,i){at(el,900+i*1250,function(){row.classList.add('on');var p=ctr(el,row);if(SND)MSC.tick(i);
         burst(S,p.x,p.y,46,330);ring(S,p.x,p.y,row.clientWidth*.55,S0.c,.8,8);if(S0.pt==='bolt')bolt(S,p.x+rnd(-100,100),0,p.x,p.y);if(S0.rv==='zap'||S0.rv==='glitch')shake(el)})});return}
     if(k===2||k===3||k===4){var n=k===2?3:k===3?2:1,P=(D.top||{})[n]||[],dr=n===1?3400:n===2?2200:1800;   /* 🥉 ➜ 🥈 ➜ 🥇 */
-      c.innerHTML='<div class="glwait"><div class="glq">'+['','🥇','🥈','🥉'][n]+' 第 '+n+' 名 是……</div><div class="gldots"><i></i><i></i><i></i></div></div>'+
-        '<div class="glwin w'+n+'">'+(n===1?'<div class="glcrw">'+CROWN+'</div>':'')+medal(n)+'<div class="glwk">'+D.kick+'　'+D.aw+'　第 '+n+' 名</div>'+
+      var LB=D.lab&&D.lab[n]?D.lab[n]:'第 '+n+' 名';
+      c.innerHTML='<div class="glwait"><div class="glq">'+['','🥇','🥈','🥉'][n]+' '+LB+' 是……</div><div class="gldots"><i></i><i></i><i></i></div></div>'+
+        '<div class="glwin w'+n+'">'+(n===1?'<div class="glcrw">'+CROWN+'</div>':'')+medal(n)+'<div class="glwk">'+D.kick+'　'+D.aw+'　'+LB+'</div>'+
         P.map(function(p){return '<div class="glwn">'+p.w+'</div>'}).join('')+'<div class="glwv">'+(P[0]?P[0].v:'')+'</div>'+(n===1&&P[0]&&P[0].l?'<div class="glwl">'+P[0].l+'</div>':'')+'</div>';
       el.classList.add('gldim');if(SND)MSC.roll(dr/1000);
       if(n===1)at(el,dr*.5,function(){el.classList.add('glbeat')});
@@ -174,7 +177,7 @@ var GLORY=(function(){
           at(el,500,function(){if(S0.pt==='bolt')for(var b=0;b<4;b++)bolt(S,rnd(0,W),0,p.x,p.y)})}
         else for(var g=0;g<3;g++)(function(g){at(el,500+g*600,function(){rocket(S,rnd(W*.15,W*.85),rnd(el.clientHeight*.15,el.clientHeight*.4))})})(g)});return}
     /* 5 頒獎台：台子 第 1 名 ＝ 第 2 名 2 倍、第 3 名 4 倍 */
-    var T=D.top||{};c.innerHTML=head(D)+'<div class="glpod">'+[2,1,3].map(function(n,i){var P=T[n]||[];return '<div class="gp p'+n+'" style="animation-delay:'+(.3+[.6,1.2,0][i])+'s">'+medal(n)+
+    var T=D.top||{};c.innerHTML=head(D)+'<div class="glpod">'+[2,1,3].map(function(n,i){var P=T[n]||[];return '<div class="gp p'+n+'" style="animation-delay:'+(.3+[.6,1.2,0][i])+'s">'+(n===1?'<div class="gpcr">'+CROWN+'</div>':'')+medal(n)+
       '<div class="gpn">'+(P.map(function(p){return p.w}).join('<br>')||'—')+'</div><div class="gpv">'+(P[0]?P[0].v:'')+'</div><div class="gpb">'+n+'</div></div>'}).join('')+'</div>';
     if(SND)MSC.fin();at(el,1600,function(){var p=ctr(el,'.gp.p1 .glmd');burst(S,p.x,p.y,150,520,1);ring(S,p.x,p.y,el.clientWidth*.5,S0.c,1.2,14)});
     for(var f2=0;f2<6;f2++)(function(f2){at(el,1800+f2*700,function(){rocket(S,rnd(el.clientWidth*.1,el.clientWidth*.9),rnd(el.clientHeight*.1,el.clientHeight*.35))})})(f2)}

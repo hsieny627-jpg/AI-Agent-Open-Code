@@ -48,11 +48,16 @@ h2 span{display:inline-flex;align-items:center;justify-content:center;width:1.5e
 .b .x{display:flex;flex-direction:column;gap:2px;min-width:0}
 .b b{font-size:clamp(17px,2.5vh,22px)}
 .b em{font-style:normal;color:#9E9E9E;font-size:clamp(13px,1.8vh,16px)}
+.td2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 14px}.tdb{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;border-radius:20px;padding:12px 16px;min-height:84px;background:linear-gradient(135deg,#1E7A45,#0B4A28);border:3px solid #5DE89A}
+.tdb.st{background:linear-gradient(135deg,#7A5A06,#3A2A04);border-color:#FFD54A}.tdb .i{font-size:clamp(34px,5vh,46px)}.tdb b{display:block;font-size:clamp(22px,3vh,30px)}.tdb em{font-style:normal;font-size:clamp(17px,2.2vh,20px);color:#E0F5E8}
+@media (max-width:520px){.td2{grid-template-columns:1fr}}
 #bar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;padding:10px;background:linear-gradient(180deg,transparent,#000 40%)}
 #bar a{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;text-decoration:none;font-size:16px;padding:11px 20px}
 </style></head><body>
 ${require('../score/_client.js').home(S.out === 'g3-review' ? 3 : 4, '../', 'home')}
 <h1>🏠 ${S.g}</h1>
+<!-- 2026-10-26 第二十七次 第 2 點（老師 選 C30 第 2 題 1、2）：📅 今日任務（每天 5 題）、📈 我的 進步（⭐ 星星）：score/_today_build.js -->
+<div class="td2"><a class="tdb" href="today.html"><span class="i">📅</span><span class="x"><b>今日 任務</b><em>每天 5 題、大約 5 分鐘</em></span></a><a class="tdb st" href="stars.html"><span class="i">📈</span><span class="x"><b>我的 進步</b><em>每一個 主題 ⭐⭐⭐</em></span></a></div>
 <section><h2><span>1</span>📖 句型</h2>
 ${S.units.map(u => '<div class="u"><h3>' + u.ic + ' ' + u.t + '</h3><div class="g">' +
     /* 2026-10-07 對話 C（使用者需求第 5 題、Q15-A）：加基礎句型；分頁 1、2 都有〔基礎｜進階〕 */
@@ -214,3 +219,5 @@ SITES.forEach(S => {
   const r1n = S.r1 ? r1Home(S, dir) : 0;
   console.log(S.g + '：' + S.out + '/index.html、u1.html、u2.html、games.html（' + S.games.join('、') + '）' + (r1n ? '、r1.html、r1/（' + r1n + ' 頁＋遊戲）' : ''));
 });
+/* 2026-10-26 第二十七次：📅 今日任務、📈 我的 進步 */
+require('../score/_today_build.js').build();

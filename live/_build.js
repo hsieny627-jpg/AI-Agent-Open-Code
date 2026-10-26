@@ -53,7 +53,7 @@ const host = head('現場任務 大螢幕', CER) + `<body class="host">
 <div class="scr" id="hhow" hidden><div class="in center" id="hhw"></div></div>
 <div class="scr" id="hq" hidden><div class="qwrap"><div class="qmain"><div class="qtop"><span id="qn"></span><span id="qtm" class="qtm"><span id="qring" class="ring"><b id="qt">20</b></span></span><span id="qa"></span></div>
  <div id="qq" class="qq"></div><div id="qo"></div><div id="qh" class="qh" hidden></div><div id="qs"></div></div><div class="qside" id="gv"></div></div>
- <div class="hbar"><span id="hctl2"><button id="hpz" class="ghost">⏸ 暫停</button><button id="hint" class="ghost">😆 干擾：開</button></span><button id="hsay" class="ghost hsay">🗣 自動 唸：開</button><button id="hgo" class="big go"></button></div></div>
+ <div class="hbar"><span id="hctl2"><button id="hpz" class="ghost">⏸ 暫停</button><button id="hint" class="ghost">😆 干擾：開</button></span><button id="htut" class="ghost" hidden>🧑‍🏫 請 小老師</button><button id="hsay" class="ghost hsay">🗣 自動 唸：開</button><button id="hgo" class="big go"></button></div></div>
 <div class="scr" id="hlb" hidden><div id="lb" class="lb on"></div><div class="hbar"><button id="hgo2" class="big go"></button></div></div>
 <div class="scr" id="hend" hidden><div id="cerw"><div class="cx" id="cerst"></div></div><div class="hbar"><span id="cstn" class="note"></span><button id="tana" class="big go">📊 全班 錯題 分析 ➜</button></div></div>
 <div class="scr" id="hana" hidden><div class="in" id="hanab"></div><div class="hbar"><span id="erw" class="note"></span><span id="gm" class="note"></span><button id="tcer" class="ghost">🏆 再看 頒獎</button><button id="close2" class="ghost">✕ 結束 這一場</button><button id="give" class="big go">🎁 發獎勵 ＋ 記 練習次數</button></div></div>
