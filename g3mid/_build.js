@@ -322,13 +322,26 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
  background:#FFE07A;clip-path:polygon(50% 0,61% 32%,98% 22%,70% 50%,98% 78%,61% 68%,50% 100%,39% 68%,2% 78%,30% 50%,2% 22%,39% 32%);animation:pow .7s forwards}
 .pow b{font-size:clamp(28px,4.6vh,46px);color:#C62828;font-weight:900;transform:rotate(-10deg)}@keyframes pow{0%{transform:translate(-50%,-50%) scale(.2) rotate(-20deg)}30%{transform:translate(-50%,-50%) scale(1.15)}80%{opacity:1}100%{transform:translate(-50%,-50%) scale(1) rotate(8deg);opacity:0}}
 .lawn.quake{animation:quake .35s}@keyframes quake{25%{transform:translate(-6px,4px)}50%{transform:translate(6px,-3px)}75%{transform:translate(-3px,2px)}}
-/* 2 小精靈：迷宮＋方向鍵 */
-.pmrow{display:flex;align-items:center;justify-content:center;gap:clamp(10px,2vw,26px);width:100%}
-.pm{width:min(900px,calc(100vw - 280px),calc((100vh - 330px) * 11 / 7));display:flex;flex-direction:column;gap:8px}
-.pmside{display:flex;flex-direction:column;align-items:center;gap:18px}
-/* 2026-10-26：直的螢幕（iPad 直放）方向鍵、再聽 搬到 迷宮 下面，迷宮 用 滿 寬度 */
-@media (orientation:portrait){.pmrow{flex-direction:column}.pm{width:min(900px,calc(100vw - 32px),calc((100vh - 560px) * 11 / 7))}.pmside{flex-direction:row;flex-wrap:wrap;justify-content:center}}
-.pmc .pc{overflow:hidden}.pmc .pc .tag{width:96%}.pmc .pc .tag .tt{font-size:clamp(18px,2.2vh,22px);line-height:1.05}.pmc .pc .tag .tt b{font-size:clamp(19px,2.4vh,24px);display:inline;margin-right:.25em}.pmc .pc .cake{display:flex;align-items:center;gap:4px;font-size:clamp(30px,4.6vh,46px)}.pmc .pc .cake .cn{position:static;transform:none;font-size:.85em}
+/* 2 小精靈（2026-10-26 第二十八次 第 5 點：照 老師 給 的 Wordwall「迷宮 追逐」影片 重做）
+   先 看 整張 迷宮（3 張 圖 在 3 個 房間）➜ 3、2、1、GO ➜ 鏡頭 放大 2 倍 跟著 小精靈；右邊 ＝ 🔊、小 地圖、方向鍵 */
+.pmrow{display:flex;align-items:stretch;justify-content:center;gap:clamp(10px,1.6vw,22px);width:100%}
+.pmv{position:relative;flex:1 1 auto;min-width:0;height:calc(100vh - 235px);min-height:300px;border-radius:20px;background:#03051E;box-shadow:0 0 0 5px #1F2A8C,0 0 30px #3E5BFF66;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+.pmv canvas{position:absolute;left:0;top:0}
+.pmside{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;flex:0 0 auto}
+.pmside .hear{min-height:64px;padding:6px 18px;font-size:clamp(22px,3vh,30px)}
+.mmap{display:block;border-radius:12px;background:#03051E;box-shadow:0 0 0 3px #3E5BFF;cursor:pointer;touch-action:none}
+@media (orientation:portrait){.pmrow{flex-direction:column}.pmv{flex:0 0 auto;width:100%;height:calc(100vh - 470px)}.pmside{flex-direction:row;flex-wrap:wrap}}
+.rmc{position:absolute;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2cqh;container-type:size;border-radius:14px;background:#FFFBEF;color:#111;box-shadow:0 0 0 4px #FFD23F,0 0 18px #FFD23F99;overflow:hidden;cursor:pointer}
+.rmc .tag{width:92%;border-width:2px;border-radius:8px}.rmc .tag .tt{font-size:max(18px,12cqh);line-height:1.1;padding:1px 0;white-space:nowrap}.rmc .tag .tt b{display:inline;font-size:1em;margin-right:.25em}.rmc .tag .tn{font-size:max(18px,26cqh);line-height:1.1;padding:0}
+.pmv.ov .rmc .tag .tt{display:none}   /* 看 整張 迷宮 的 時候 卡片 很小：只 留 名字 和 歲數 */
+.rmc .cake{display:flex;align-items:center;gap:4px;font-size:max(18px,30cqh)}.rmc .cake .cn{position:static;transform:none;font-size:max(18px,.85em)}
+.rmc .q2sc{font-size:min(40cqh,22cqw)}
+.rmc.aim{box-shadow:0 0 0 6px #3EC5FF,0 0 26px #3EC5FF}.rmc.eat{animation:rmeat .6s forwards;z-index:7}@keyframes rmeat{40%{transform:scale(1.25)}100%{transform:scale(1.12)}}
+.rmc.ok{box-shadow:0 0 0 7px #2BD46A,0 0 34px #2BD46A}.rmc.no{box-shadow:0 0 0 7px #FF5A5A,0 0 34px #FF5A5A}
+.pmgo{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;pointer-events:none;font-size:clamp(90px,18vh,190px);font-weight:900;color:#FFD23F;text-shadow:0 0 30px #FFB300,0 8px 0 #7A4A00}
+.pmgo:empty{display:none}.pmgo.pp{animation:gpop .5s both}
+.pmtip{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:6;background:rgba(3,5,30,.86);border:3px solid #FFD23F;border-radius:14px;padding:4px 16px;font-size:clamp(20px,2.8vh,28px);white-space:nowrap;pointer-events:none}
+.pmtip:empty{display:none}
 .q2how{position:fixed;inset:0;z-index:30;background:rgba(3,5,30,.92);display:flex;align-items:center;justify-content:center;padding:16px}
 .q2hb{width:min(860px,100%);background:#0B1250;border:5px solid #FFD23F;border-radius:26px;padding:clamp(14px,2.4vh,28px);display:flex;flex-direction:column;gap:clamp(10px,1.8vh,18px)}
 .q2hb h2{margin:0;text-align:center;font-size:clamp(32px,5vh,52px);color:#FFD23F}
@@ -336,11 +349,6 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 .q2s .tx{flex:1;min-width:0}.q2demo{position:relative;width:2.4em;height:1.4em;display:inline-block}.q2demo i{position:absolute;font-style:normal;font-size:.7em}.q2demo .dc{right:0;top:0}.q2demo .dp{left:0;bottom:0;animation:q2p 2.4s infinite}.q2demo .dh{right:-.1em;top:.6em;animation:q2h 2.4s infinite}
 @keyframes q2p{0%,30%{transform:none}80%,100%{transform:translate(1.9em,-.6em)}}@keyframes q2h{0%{transform:translateY(.5em);opacity:0}15%,30%{transform:none;opacity:1}40%,100%{opacity:0}}
 .q2go{align-self:center;min-height:76px;padding:0 44px;border:0;border-radius:999px;background:linear-gradient(#FFE07A,#FFB300);color:#111;font-size:clamp(28px,4vh,40px);font-weight:900;box-shadow:0 7px 0 #9A6A00;animation:hr 1.2s ease-in-out infinite}
-.pmc{position:relative;height:clamp(130px,20vh,210px);container-type:inline-size}
-.pmc .pc{position:absolute;top:0;bottom:0;width:30%;margin-left:-15%;min-height:0;padding:6px 4px;gap:4px}.pmc .pc .tag .tn{font-size:clamp(26px,4vh,40px)}.pmc .pc .cake{font-size:clamp(36px,6vh,60px)}.pmc .pc .q2sc{font-size:min(clamp(30px,6vh,60px),6.3cqw)}
-.pmc .pc.aim{box-shadow:0 0 0 7px #3EC5FF,0 0 26px #3EC5FF}.pmc .pc.eat{animation:eatc .45s forwards}@keyframes eatc{50%{transform:scale(.85)}100%{transform:scale(1)}}
-.pmz{position:relative;width:100%;border-radius:18px;background:#03051E;box-shadow:0 0 0 5px #1F2A8C,0 0 30px #3E5BFF66;overflow:hidden;touch-action:none}
-.pmz canvas{position:absolute;left:0;top:0}
 .pac2{position:absolute;z-index:4;transition:none}.pac2 i{position:absolute;inset:0;border-radius:50%;background:#FFD23F;box-shadow:0 0 16px #FFD23F;animation:chomp .22s linear infinite alternate}
 .pac2.dl i{transform:scaleX(-1)}.pac2.du i{transform:rotate(-90deg)}.pac2.dd i{transform:rotate(90deg)}.pac2.inv{animation:blink .2s infinite}.pac2.hurt i{animation:none;background:#FF5A5A}@keyframes blink{50%{opacity:.25}}
 .pac2.gulp{animation:gulp .45s}@keyframes gulp{50%{transform:scale(1.5)}}
@@ -412,7 +420,7 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
  .wrow{flex-direction:column}.wleft{flex-direction:row;flex-wrap:wrap;justify-content:center}.mc{width:120px;height:120px;margin:10px 24px}.mc .fc{font-size:56px}.mc .f1,.mc .f2,.mc .f3{--h:60px}
  .mirror{width:170px;height:220px}.wbtn button{white-space:nowrap}}
 @media (orientation:portrait){.mc .f1{transform:translateZ(60px)}.mc .f2{transform:rotateY(90deg) translateZ(60px)}.mc .f3{transform:rotateX(90deg) translateZ(60px)}}
-@media (orientation:portrait){.dpad{grid-template-columns:repeat(3,64px);grid-template-rows:repeat(3,64px)}}
+@media (orientation:portrait){.dpad{grid-template-columns:repeat(3,68px);grid-template-rows:repeat(3,68px)}}
 @media (max-width:760px){.moves{grid-template-columns:1fr}.bub{left:4%;right:4%;top:auto;bottom:4%}.bub::after{display:none}}
 .wbtn button{white-space:nowrap}
 /* 第二十七次：記成績 的 那一行 */
@@ -530,10 +538,10 @@ function rec1(){try{if(!R||R.sent||!R.Q.length||typeof scLive!=='function'||!scL
   var u=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
   var Rr={id:SCID,set:'g3gm_g3m-'+G.id,name:'📝 三年級 複習｜'+G.ic+' '+G.nm,m:'g',qs:R.Q,raw:R.score,fix:0,mp:0,mw:0,sec:Math.round((Date.now()-R.t0)/1000),src:'school',dev:SCDEV,u:u,t:Date.now()};
   var QQ=scGet('q')||[];QQ.push(Rr);scPut('q',QQ.slice(-200));scFlush();return true}catch(e){return false}}
-function good(el){if(BUSY)return;qRec(1);BUSY=true;tPause();var l=tLeft(),sp=Math.round(900*l/TM.T),cb=Math.min(250,R.streak*50),p=100+sp+cb;
+function good(el,hold){if(BUSY)return;qRec(1);BUSY=true;tPause();var l=tLeft(),sp=Math.round(900*l/TM.T),cb=Math.min(250,R.streak*50),p=100+sp+cb;
  R.streak++;R.score+=p;R.res[R.k]=1;dots();$('#sc').textContent=R.score;var cm=$('#cmb');if(R.streak>=2){cm.textContent='🔥 連對 '+R.streak;cm.className='cmb on'+(R.streak>=4?' hot':'');void cm.offsetWidth}
  var g=$('#gain');g.innerHTML='<b>＋'+p+'</b><span>✅ 100 ＋ ⚡ 快 '+sp+(cb?' ＋ 🔥 連對 '+cb:'')+'</span>';g.classList.remove('on');void g.offsetWidth;g.classList.add('on');
- boom(el);setTimeout(next,1500)}
+ boom(el);if(!hold)setTimeout(next,1500)}   /* hold ＝ 這個 遊戲 自己 決定 什麼 時候 下一題（夾娃娃 唸完 那一句 才 走）*/
 function boom(el){var r=el&&el.getBoundingClientRect?el.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0},E=['⭐','✨','🎉','💥','🪙'];
  for(var i=0;i<12;i++){var b=document.createElement('div');b.className='boom';b.textContent=E[i%E.length];b.style.left=(r.left+r.width/2)+'px';b.style.top=(r.top+r.height/2)+'px';
   b.style.setProperty('--dx',(Math.cos(i/12*6.28)*160)+'px');b.style.setProperty('--dy',(Math.sin(i/12*6.28)*160)+'px');b.style.setProperty('--r',(i*40)+'deg');document.body.appendChild(b);setTimeout(function(x){x.remove()}.bind(null,b),1100)}}
@@ -619,56 +627,99 @@ REN.q1=function(q,st){var lw=H('div','lawn','<div class="gr"></div><div class="h
      else{h.classList.add('miss');R.pick=c;later(function(){miss(c)},1000)}},200)};hs.appendChild(h)});
   setTimeout(function(){if(R.q!==q)return;tPause();say2(0,function(){if(R.q===q&&!BUSY)tGo()})},350)};
 FB.q1=function(q,p){var w=PHM[q.say];return {you:p?'<b style="font-size:1.5em">'+esc(p)+'</b>':'',body:'<div style="font-size:clamp(60px,10vh,100px)">'+w[2]+'</div>'+gloss(q.say).replace('<b>'+q.say,'<b><u style="color:#FFE07A">'+q.say[0]+'</u>'+q.say.slice(1)),sl:[['M1',q.say]]}};
-/* 2 🟡 小精靈 聽句：學生 自己 操作 小精靈（方向鍵 ⬆⬇⬅➡、手指 滑、鍵盤），在 迷宮 裡 閃躲 👻，走到 對的 圖 下面 的 出口 ＝ 吃掉 那一張；
-   被 👻 抓到 ＝ 回到 起點、少 2 秒（不算 答錯）；直接 點 圖 ＝ 小精靈 自己 走過去（還是 要 小心 👻） */
+/* 2 🟡 小精靈 聽句（2026-10-26 第二十八次 重做，下面 REN.q2）*/
 function card2(c){if(c.sc){var s=SC[c.sc];return '<div class="q2sc">'+s.ic.map(function(x){return '<span>'+x+'</span>'}).join('')+(s.fx?'<span class="fx">'+s.fx+'</span>':'')+'</div>'}
   return '<div class="tag"><div class="tt"><b>HELLO</b>my name is</div><div class="tn">'+esc(c.t)+'</div></div><div class="cake">🎂<span class="cn">'+c.a+'</span></div>'}
-var MZ=['#.###.###.#','#.........#','#.##.#.##.#','#....#....#','#.##...##.#','#....P....#','###########'],MZX=[1,5,9],MZW=11,MZH=7,P2=null,DIRS={u:[0,-1],d:[0,1],l:[-1,0],r:[1,0]};
-function mzOk(x,y,gh){if(y===-1)return !gh&&MZX.indexOf(x)>=0;if(x<0||x>=MZW||y<0||y>=MZH)return false;return MZ[y].charAt(x)!=='#'}
-function mzPath(sx,sy,ex){var Q=[[sx,sy]],pr={},k=function(x,y){return x+','+y};pr[k(sx,sy)]=null;
-  while(Q.length){var c=Q.shift();if(c[1]===-1&&c[0]===ex){var o=[],n=k(c[0],c[1]);while(pr[n]){o.unshift(pr[n][1]);n=pr[n][0]}return o}
+/* 2026-10-26 第二十八次 第 5 點（老師：介面 太小、不好 操控、很快 被 抓到、影響 作答 權益 ➜ 照 Wordwall「迷宮 追逐」影片）：
+   ① 先 看 整張 迷宮（3 張 圖 在 3 個 大 房間）＋ 唸 句子 ＋ 3、2、1、GO（鬼 不 動、時間 停）➜ ② GO 以後 鏡頭 放大 2 倍 跟著 小精靈；
+   ③ 按 一下 方向 就 一直 走（轉彎 可以 先 按，走到 路口 自己 轉）；走進 房間 ＝ 選 那 一張；④ 👻 走得 比 小精靈 慢，被 抓到 ＝ 回 起點、
+   鬼 退回 角落 等 2 秒，不 扣 時間、不 算 錯；⑤ 一題 25 秒（GO 才 開始 算；〔🔊 再聽一次〕的 時候 時間 停）。
+   點 畫面 上 的 圖、或 點 右邊 小 地圖 的 房間 ＝ 小精靈 自己 走過去（還是 要 小心 👻）。 */
+var MZ=['###############','#AAA#.....#BBB#','#AAA#.###.#BBB#','#.............#','#.##.##.##.##.#','#.#....P....#.#','#.#.##.#.##.#.#','#......#......#','###.#.###.#.###','#...#.....#...#','#.#.##.#.##.#.#','#.#...CCC...#.#','#...#.CCC.#...#','###############'],
+  MZW=15,MZH=14,MZR={A:[1,1],B:[11,1],C:[6,11]},MZP=[7,5],MZG=[[1,12],[13,12]],P2=null,DIRS={u:[0,-1],d:[0,1],l:[-1,0],r:[1,0]},OPP={u:'d',d:'u',l:'r',r:'l'};
+function mzCh(x,y){return y>=0&&y<MZH&&x>=0&&x<MZW?MZ[y].charAt(x):'#'}
+function mzOk(x,y,gh){var c=mzCh(x,y);return c!=='#'&&!(gh&&/[ABC]/.test(c))}   /* 鬼 不 進 房間 */
+function mzPath(sx,sy,rm){var Q=[[sx,sy]],pr={},k=function(x,y){return x+','+y};pr[k(sx,sy)]=null;
+  while(Q.length){var c=Q.shift();if(mzCh(c[0],c[1])===rm){var o=[],n=k(c[0],c[1]);while(pr[n]){o.unshift(pr[n][1]);n=pr[n][0]}return o}
+   if(/[ABC]/.test(mzCh(c[0],c[1])))continue;
    for(var d in DIRS){var nx=c[0]+DIRS[d][0],ny=c[1]+DIRS[d][1];if(mzOk(nx,ny)&&!(k(nx,ny) in pr)){pr[k(nx,ny)]=[k(c[0],c[1]),d];Q.push([nx,ny])}}}return null}
-REN.q2=function(q,st){var wrap=H('div','pm'),top=H('div','pmc'),box=H('div','pmz'),cv=document.createElement('canvas'),pac=H('div','pac2','<i></i>'),toast=H('div','pmt',''),
-   gh=[H('div','gst','👻'),H('div','gst g2','👻')],pad=H('div','dpad','<button data-d="u" aria-label="上">⬆</button><button data-d="l" aria-label="左">⬅</button><button data-d="d" aria-label="下">⬇</button><button data-d="r" aria-label="右">➡</button>');
-  var side=H('div','pmside');side.appendChild(hearBtn(function(){sayList(q.say)}));box.appendChild(cv);box.appendChild(pac);gh.forEach(function(g){box.appendChild(g)});box.appendChild(toast);
-  wrap.appendChild(top);wrap.appendChild(box);var row=H('div','pmrow');side.appendChild(pad);row.appendChild(wrap);row.appendChild(side);st.appendChild(row);
-  var S=P2={q:q,p:{cx:5,cy:5,tx:5,ty:5,f:0,d:'u'},nd:null,auto:null,goal:-1,inv:0,eat:{},g:[{cx:1,cy:3,tx:1,ty:3,f:0,d:'d'},{cx:9,cy:3,tx:9,ty:3,f:0,d:'u'}],last:0,cs:30};
-  shuf(q.o.map(function(c,k){return {c:c,k:k}})).forEach(function(o,i){var b=H('button','pc',card2(o.c));b.dataset.k=o.k;b.dataset.x=MZX[i];b.style.left=((MZX[i]+.5)/MZW*100)+'%';
-   b.onclick=function(){if(BUSY)return;S.goal=MZX[i];S.nd=null;S.auto=mzPath(S.p.tx,S.p.ty,MZX[i]);b.classList.add('aim')};top.appendChild(b)});
-  function setD(d){if(BUSY)return;S.auto=null;S.goal=-1;S.nd=d;[].forEach.call(top.children,function(c){c.classList.remove('aim')})}
+REN.q2=function(q,st){var row=H('div','pmrow'),vw=H('div','pmv'),cv=document.createElement('canvas'),pac=H('div','pac2','<i></i>'),toast=H('div','pmt',''),gol=H('div','pmgo',''),tip=H('div','pmtip',''),
+   gh=[H('div','gst','👻'),H('div','gst g2','👻')],side=H('div','pmside'),mm=document.createElement('canvas'),
+   pad=H('div','dpad','<button data-d="u" aria-label="上">⬆</button><button data-d="l" aria-label="左">⬅</button><button data-d="d" aria-label="下">⬇</button><button data-d="r" aria-label="右">➡</button>');
+  mm.className='mmap';vw.appendChild(cv);vw.appendChild(pac);gh.forEach(function(g){vw.appendChild(g)});vw.appendChild(toast);vw.appendChild(gol);vw.appendChild(tip);
+  var S=P2={q:q,p:{cx:MZP[0],cy:MZP[1],tx:MZP[0],ty:MZP[1],f:0,d:''},nd:null,auto:null,goal:'',eat:{},g:[],gw:0,last:0,ph:'ov',hold:0,cs:30,cs0:30,csZ:60,cam:[MZW/2,MZH/2],vw:0,vh:0,z:0,cards:{}};
+  function gReset(){S.g=MZG.map(function(p,i){return {cx:p[0],cy:p[1],tx:p[0],ty:p[1],f:0,d:i?'l':'r'}})}gReset();
+  /* 3 張 圖 ➜ 3 個 房間（洗牌）*/
+  shuf(q.o.map(function(c,k){return {c:c,k:k}})).forEach(function(o,i){var rm='ABC'.charAt(i),b=H('div','rmc',card2(o.c));b.dataset.k=o.k;b.dataset.rm=rm;b.setAttribute('role','button');
+   b.onclick=function(){goRoom(rm)};S.cards[rm]=b;vw.appendChild(b)});
+  side.appendChild(hearBtn(function(){S.hold=1;tPause();sayList(q.say,function(){S.hold=0;if(S.ph==='go'&&!BUSY)tGo()})}));side.appendChild(mm);side.appendChild(pad);
+  row.appendChild(vw);row.appendChild(side);st.appendChild(row);
+  function goRoom(rm){if(BUSY||S.ph==='end')return;S.goal=rm;S.nd=null;S.auto=mzPath(S.p.tx,S.p.ty,rm);for(var r in S.cards)S.cards[r].classList.toggle('aim',r===rm)}
+  S.goK=function(k){for(var r in S.cards)if(+S.cards[r].dataset.k===k)goRoom(r)};
+  function setD(d){if(BUSY)return;S.auto=null;S.goal='';S.nd=d;for(var r in S.cards)S.cards[r].classList.remove('aim');if(S.p.tx===S.p.cx&&S.p.ty===S.p.cy&&mzOk(S.p.cx+DIRS[d][0],S.p.cy+DIRS[d][1]))S.p.d=d}
   pad.addEventListener('pointerdown',function(e){var b=e.target.closest&&e.target.closest('[data-d]');if(!b)return;e.preventDefault();setD(b.dataset.d);b.classList.add('on');setTimeout(function(){b.classList.remove('on')},180)});
-  var sw=null;box.addEventListener('pointerdown',function(e){sw=[e.clientX,e.clientY]});box.addEventListener('pointerup',function(e){if(!sw)return;var dx=e.clientX-sw[0],dy=e.clientY-sw[1];sw=null;if(Math.max(Math.abs(dx),Math.abs(dy))<24)return;setD(Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'d':'u'))});
+  var sw=null;vw.addEventListener('pointerdown',function(e){sw=[e.clientX,e.clientY]});
+  vw.addEventListener('pointerup',function(e){if(!sw)return;var dx=e.clientX-sw[0],dy=e.clientY-sw[1];sw=null;if(Math.max(Math.abs(dx),Math.abs(dy))<24)return;setD(Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'d':'u'))});
+  mm.addEventListener('click',function(e){var r=mm.getBoundingClientRect(),x=Math.floor((e.clientX-r.left)/r.width*MZW),y=Math.floor((e.clientY-r.top)/r.height*MZH);
+   for(var k in MZR){var o=MZR[k];if(x>=o[0]-1&&x<=o[0]+3&&y>=o[1]-1&&y<=o[1]+2){goRoom(k);return}}});
   S.key=function(e){var m={ArrowUp:'u',ArrowDown:'d',ArrowLeft:'l',ArrowRight:'r'}[e.key];if(m&&P2===S&&R.q===q){e.preventDefault();setD(m)}};
-  function size(){var W=box.clientWidth;S.cs=W/MZW;box.style.height=(S.cs*MZH)+'px';var d=Math.min(2,window.devicePixelRatio||1);cv.width=W*d;cv.height=S.cs*MZH*d;cv.style.width=W+'px';cv.style.height=(S.cs*MZH)+'px';draw()}
-  function draw(){var c=cv.getContext('2d'),d=cv.width/box.clientWidth,cs=S.cs;c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,cv.width,cv.height);
-   for(var y=0;y<MZH;y++)for(var x=0;x<MZW;x++){var ch=MZ[y].charAt(x);if(ch==='#'){c.fillStyle='#0B1250';c.strokeStyle='#3E5BFF';c.lineWidth=Math.max(2,cs*.08);c.shadowColor='#3E5BFF';c.shadowBlur=8;rr(c,x*cs+cs*.12,y*cs+cs*.12,cs*.76,cs*.76,cs*.22);c.fill();c.stroke();c.shadowBlur=0}
-    else if(!S.eat[x+','+y]){c.fillStyle='#FFE6A8';c.beginPath();c.arc((x+.5)*cs,(y+.5)*cs,Math.max(3,cs*.09),0,7);c.fill()}}
-   MZX.forEach(function(x){c.fillStyle='rgba(255,213,74,.9)';c.font='bold '+Math.round(cs*.62)+'px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('⬆',(x+.5)*cs,.5*cs)})}
-  function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+  /* 大小：整張 迷宮 剛好 放進 畫面（cs0）；玩 的 時候 放大 2 倍（csZ，最大 130px 一格）*/
+  function size(){var d=Math.min(2,window.devicePixelRatio||1),mw=Math.round(Math.min(230,Math.max(150,innerWidth*.16)));if(innerHeight>innerWidth)mw=150;   /* 小 地圖 先 定 大小，再 量 迷宮 有 多大 */
+   mm.width=mw*d;mm.height=Math.round(mw*MZH/MZW)*d;mm.style.width=mw+'px';mm.style.height=Math.round(mw*MZH/MZW)+'px';
+   var w=vw.clientWidth,h=vw.clientHeight;S.vw=w;S.vh=h;cv.width=w*d;cv.height=h*d;cv.style.width=w+'px';cv.style.height=h+'px';
+   S.cs0=Math.min(w/MZW,h/MZH);S.csZ=Math.min(130,Math.max(S.cs0*2,Math.min(w,h)/7))}
   function pos(e){return [e.cx+(e.tx-e.cx)*e.f,e.cy+(e.ty-e.cy)*e.f]}
-  function place(el,e,sc){var p=pos(e),cs=S.cs;el.style.width=el.style.height=(cs*sc)+'px';el.style.left=((p[0]+.5)*cs-cs*sc/2)+'px';el.style.top=((p[1]+.5)*cs-cs*sc/2)+'px'}
+  function sx(x){return (x-S.cam[0])*S.cs+S.vw/2}function sy(y){return (y-S.cam[1])*S.cs+S.vh/2}
+  function camT(){var pp=pos(S.p),cs=S.cs,hx=S.vw/2/cs,hy=S.vh/2/cs,x=pp[0]+.5,y=pp[1]+.5;
+   x=MZW<=2*hx?MZW/2:Math.max(hx,Math.min(MZW-hx,x));y=MZH<=2*hy?MZH/2:Math.max(hy,Math.min(MZH-hy,y));return [x,y]}
+  function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+  function draw(){var c=cv.getContext('2d'),d=cv.width/(S.vw||1),cs=S.cs;c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,S.vw,S.vh);
+   var x0=Math.max(0,Math.floor(S.cam[0]-S.vw/2/cs)-1),x1=Math.min(MZW-1,Math.ceil(S.cam[0]+S.vw/2/cs)+1),y0=Math.max(0,Math.floor(S.cam[1]-S.vh/2/cs)-1),y1=Math.min(MZH-1,Math.ceil(S.cam[1]+S.vh/2/cs)+1);
+   for(var y=y0;y<=y1;y++)for(var x=x0;x<=x1;x++){var ch=MZ[y].charAt(x),X=sx(x),Y=sy(y);
+    if(ch==='#'){c.fillStyle='#0B1250';c.strokeStyle='#3E5BFF';c.lineWidth=Math.max(2,cs*.07);rr(c,X+cs*.1,Y+cs*.1,cs*.8,cs*.8,cs*.2);c.fill();c.stroke()}
+    else if(/[.P]/.test(ch)&&!S.eat[x+','+y]){c.fillStyle='#FFE6A8';c.beginPath();c.arc(X+cs/2,Y+cs/2,Math.max(3,cs*.08),0,7);c.fill()}}
+   for(var k in MZR){var o=MZR[k];c.fillStyle='#FFD23F33';c.strokeStyle='#FFD23F';c.lineWidth=Math.max(3,cs*.08);rr(c,sx(o[0])+2,sy(o[1])+2,cs*3-4,cs*2-4,cs*.3);c.fill();c.stroke()}}
+  function drawMM(){var c=mm.getContext('2d'),u=mm.width/MZW;c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,mm.width,mm.height);
+   for(var y=0;y<MZH;y++)for(var x=0;x<MZW;x++){var ch=MZ[y].charAt(x);if(ch==='#'){c.fillStyle='#2C3FBF';c.fillRect(x*u+u*.08,y*u+u*.08,u*.84,u*.84)}}
+   for(var k in MZR){var o=MZR[k],b=S.cards[k];c.fillStyle=b.classList.contains('aim')?'#3EC5FF':'#FFD23F';c.fillRect(o[0]*u,o[1]*u,3*u,2*u);c.fillStyle='#111';c.font='bold '+Math.round(u*1.3)+'px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('ABC'.indexOf(k)+1,(o[0]+1.5)*u,(o[1]+1)*u)}
+   if(S.ph!=='ov'){var vx=(S.cam[0]-S.vw/2/S.cs)*u,vy=(S.cam[1]-S.vh/2/S.cs)*u;c.strokeStyle='#fff';c.lineWidth=Math.max(2,u*.18);c.strokeRect(vx,vy,S.vw/S.cs*u,S.vh/S.cs*u)}
+   S.g.forEach(function(g){var p=pos(g);c.fillStyle='#E9B8FF';c.beginPath();c.arc((p[0]+.5)*u,(p[1]+.5)*u,u*.45,0,7);c.fill()});
+   var pp=pos(S.p);c.fillStyle='#FFD23F';c.beginPath();c.arc((pp[0]+.5)*u,(pp[1]+.5)*u,u*.6,0,7);c.fill()}
+  function place(el,e,sc){var p=pos(e),cs=S.cs;el.style.width=el.style.height=(cs*sc)+'px';el.style.left=(sx(p[0]+.5)-cs*sc/2)+'px';el.style.top=(sy(p[1]+.5)-cs*sc/2)+'px'}
   function move(e,sp,dt,choose,gh){var rem=sp*dt;while(rem>0){if(e.tx===e.cx&&e.ty===e.cy){var d=choose(e);if(!d)return;var n=[e.cx+DIRS[d][0],e.cy+DIRS[d][1]];if(!mzOk(n[0],n[1],gh))return;e.d=d;e.tx=n[0];e.ty=n[1];e.f=0}
-    var need=1-e.f;if(rem<need){e.f+=rem;rem=0}else{rem-=need;e.cx=e.tx;e.cy=e.ty;e.f=0;if(!gh)arrive()}}}
-  var OPP={u:'d',d:'u',l:'r',r:'l'};
-  function pChoose(e){if(S.auto&&S.auto.length)return S.auto.shift();if(S.nd&&mzOk(e.cx+DIRS[S.nd][0],e.cy+DIRS[S.nd][1])){var d=S.nd;S.nd=null;return d}if(mzOk(e.cx+DIRS[e.d][0],e.cy+DIRS[e.d][1]))return e.d;return null}
+    var need=1-e.f;if(rem<need){e.f+=rem;rem=0}else{rem-=need;e.cx=e.tx;e.cy=e.ty;e.f=0;if(!gh&&arrive())return}}}
+  /* 小精靈：先 照 自動 路線；按了 方向 ＝ 到 路口 能 轉 就 轉（先 按 先 記著）；不然 一直 往前 走，撞牆 停 */
+  function pChoose(e){if(S.auto&&S.auto.length)return S.auto.shift();if(S.nd&&mzOk(e.cx+DIRS[S.nd][0],e.cy+DIRS[S.nd][1])){var d=S.nd;S.nd=null;return d}if(e.d&&mzOk(e.cx+DIRS[e.d][0],e.cy+DIRS[e.d][1]))return e.d;return null}   /* 一開始 不 動，按了 方向 才 走 */
   function gChoose(e){var o=[];for(var d in DIRS)if(mzOk(e.cx+DIRS[d][0],e.cy+DIRS[d][1],1)&&d!==OPP[e.d])o.push(d);if(!o.length)o=[OPP[e.d]];
-   if(Math.random()<.4){var pp=pos(S.p);o.sort(function(a,b){return Math.hypot(e.cx+DIRS[a][0]-pp[0],e.cy+DIRS[a][1]-pp[1])-Math.hypot(e.cx+DIRS[b][0]-pp[0],e.cy+DIRS[b][1]-pp[1])});return o[0]}return o[Math.floor(Math.random()*o.length)]}
-  function arrive(){var p=S.p;S.eat[p.cx+','+p.cy]=1;draw();if(p.cy===-1){var b=top.querySelector('[data-x="'+p.cx+'"]');if(!b)return;BUSY=true;tPause();pac.classList.add('gulp');b.classList.add('eat');
-    later(function(){var k=+b.dataset.k;if(k===0){b.classList.add('ok');BUSY=false;good(b)}else{b.classList.add('no');var o=q.o[k];R.pick=o;miss(o)}},450)}}
-  function caught(){S.inv=1.6;if(TM.run)TM.used+=2;toast.textContent='👻 被抓到了！回到起點，少 2 秒';toast.classList.remove('on');void toast.offsetWidth;toast.classList.add('on');pac.classList.add('hurt');setTimeout(function(){pac.classList.remove('hurt')},500);
-   S.p={cx:5,cy:5,tx:5,ty:5,f:0,d:'u'};S.g[0]={cx:1,cy:3,tx:1,ty:3,f:0,d:'d'};S.g[1]={cx:9,cy:3,tx:9,ty:3,f:0,d:'u'};S.nd=null;S.auto=S.goal>=0?mzPath(5,5,S.goal):null}
-  function loop(t){if(P2!==S||R.q!==q||!document.body.contains(box))return;var dt=S.last?Math.min(.05,(t-S.last)/1000):0;S.last=t;
-   if(!BUSY&&TM.run){move(S.p,5.5,dt,pChoose,0);if(!window.__G2CALM&&S.gGo){S.g.forEach(function(g){move(g,2.1,dt,gChoose,1)})}S.inv=Math.max(0,S.inv-dt);
-    var pp=pos(S.p);if(!S.inv&&S.g.some(function(g){var gp=pos(g);return Math.hypot(gp[0]-pp[0],gp[1]-pp[1])<.6}))caught()}
-   place(pac,S.p,.86);pac.className='pac2 d'+S.p.d+(S.inv?' inv':'')+(pac.classList.contains('gulp')?' gulp':'')+(pac.classList.contains('hurt')?' hurt':'');S.g.forEach(function(g,i){place(gh[i],g,.82)});requestAnimationFrame(loop)}
-  S.caught=caught;setTimeout(function(){size();requestAnimationFrame(loop)},0);S.rs=function(){if(P2===S)size()};
-  /* 2026-10-26 第二十六次 第 1-2 點（老師：學生 完全 不知道 怎麼 玩、介面 太小）：版面 放大（🔊 和 方向鍵 放 右邊，迷宮 變大）；
-     每一場 第 1 題 先 演〔怎麼 玩〕（3 步 ＋ 小 動畫，按〔▶ 我 懂了，開始！〕才 開始 倒數）；👻 等 第一次 聽完 才 開始 走、走 慢一點 */
-  var go=function(){sayList(q.say,function(){S.gGo=1})};
-  if(R.k===0&&!R.q2how){R.q2how=1;var hw=H('div','q2how','<div class="q2hb"><h2>🟡 怎麼 玩？</h2><div class="q2s"><span>1</span><b>🔊</b><span class="tx">聽 一句 英文</span></div>'+
-     '<div class="q2s"><span>2</span><b class="q2demo"><i class="dp">🟡</i><i class="dc">🖼</i><i class="dh">👆</i></b><span class="tx">點 <u>對的 圖</u> ➜ 小精靈 自己 走過去 吃掉 它<br><small>（也可以 按 ⬆⬇⬅➡ 自己 走）</small></span></div>'+
-     '<div class="q2s"><span>3</span><b>👻</b><span class="tx">不要 碰到 鬼！碰到 ＝ 回 起點、少 2 秒</span></div><button class="q2go" id="q2go">▶ 我 懂了，開始！</button></div>');st.appendChild(hw);
-   setTimeout(function(){tPause()},0);hw.querySelector('#q2go').onclick=function(){hw.remove();tGo();go()}}
+   if(Math.random()<.3){var pp=pos(S.p);o.sort(function(a,b){return Math.hypot(e.cx+DIRS[a][0]-pp[0],e.cy+DIRS[a][1]-pp[1])-Math.hypot(e.cx+DIRS[b][0]-pp[0],e.cy+DIRS[b][1]-pp[1])});return o[0]}return o[Math.floor(Math.random()*o.length)]}
+  function arrive(){var p=S.p,rm=mzCh(p.cx,p.cy);S.eat[p.cx+','+p.cy]=1;if(!/[ABC]/.test(rm))return false;
+   var b=S.cards[rm];BUSY=true;S.ph='end';tPause();pac.classList.add('gulp');b.classList.add('eat');
+   later(function(){var k=+b.dataset.k;if(k===0){b.classList.add('ok');BUSY=false;good(b)}else{b.classList.add('no');var o=q.o[k];R.pick=o;miss(o)}},650);return true}
+  function say2(t){toast.textContent=t;toast.classList.remove('on');void toast.offsetWidth;toast.classList.add('on')}
+  /* 被 抓到：回 起點、鬼 退回 角落 等 2 秒；不 扣 時間（停 1.2 秒）、不 算 錯 */
+  function caught(){say2('👻 被抓到了！回到 起點（不算 錯）');pac.classList.add('hurt');setTimeout(function(){pac.classList.remove('hurt')},500);
+   S.p={cx:MZP[0],cy:MZP[1],tx:MZP[0],ty:MZP[1],f:0,d:''};gReset();S.gw=2;S.nd=null;S.auto=S.goal?mzPath(MZP[0],MZP[1],S.goal):null;
+   S.hold=1;tPause();setTimeout(function(){if(P2===S&&S.ph==='go'){S.hold=0;if(!BUSY)tGo()}},1200)}
+  function loop(t){if(P2!==S||R.q!==q||!document.body.contains(vw))return;var dt=S.last?Math.min(.05,(t-S.last)/1000):0;S.last=t;
+   if(S.ph==='go'&&!BUSY&&TM.run&&!S.hold){move(S.p,4.6,dt,pChoose,0);S.gw=Math.max(0,S.gw-dt);if(!window.__G2CALM&&!S.gw){S.g.forEach(function(g){move(g,2,dt,gChoose,1)})}
+    var pp=pos(S.p);if(S.ph==='go'&&S.g.some(function(g){var gp=pos(g);return Math.hypot(gp[0]-pp[0],gp[1]-pp[1])<.6}))caught()}
+   /* 鏡頭：整張 ➜ 放大（0.8 秒）➜ 跟著 小精靈 */
+   vw.classList.toggle('ov',S.ph==='ov'&&S.cs0<60);if(S.ph==='ov'){S.cs=S.cs0;S.cam=[MZW/2,MZH/2]}
+   else{S.z=Math.min(1,S.z+dt/.8);var e=S.z*S.z*(3-2*S.z);S.cs=S.cs0+(S.csZ-S.cs0)*e;var tg=camT(),a=S.z<1?e:Math.min(1,dt*9);
+    if(S.z<1)S.cam=[MZW/2+(tg[0]-MZW/2)*a,MZH/2+(tg[1]-MZH/2)*a];else S.cam=[S.cam[0]+(tg[0]-S.cam[0])*a,S.cam[1]+(tg[1]-S.cam[1])*a]}
+   draw();drawMM();for(var k in S.cards){var o=MZR[k],b=S.cards[k];b.style.left=(sx(o[0])+5)+'px';b.style.top=(sy(o[1])+5)+'px';b.style.width=(S.cs*3-10)+'px';b.style.height=(S.cs*2-10)+'px'}
+   place(pac,S.p,.86);pac.className='pac2 d'+S.p.d+(pac.classList.contains('gulp')?' gulp':'')+(pac.classList.contains('hurt')?' hurt':'');S.g.forEach(function(g,i){place(gh[i],g,.82)});requestAnimationFrame(loop)}
+  S.caught=caught;S.rs=function(){if(P2===S)size()};setTimeout(function(){size();requestAnimationFrame(loop)},0);try{new ResizeObserver(function(){if(P2===S)size()}).observe(vw)}catch(e){}
+  /* 開始：時間 停 ➜ 看 整張 迷宮、唸 句子 ➜ 3、2、1、GO（鬼 不 動）➜ 放大 ➜ 時間 才 開始 走 */
+  function cd(){if(window.__NOGO){play();return}var n=3;gol.textContent=n;gol.classList.add('pp');var tm=setInterval(function(){if(P2!==S||R.q!==q){clearInterval(tm);return}n--;
+    gol.classList.remove('pp');void gol.offsetWidth;gol.classList.add('pp');if(n>0)gol.textContent=n;else if(n===0)gol.textContent='GO!';else{clearInterval(tm);gol.textContent='';play()}},650)}
+  function play(){if(P2!==S||R.q!==q)return;S.ph='go';S.z=0;tip.textContent='';tGo()}
+  function go(){tip.textContent='👀 先 看：3 張 圖 在 3 個 房間';sayList(q.say,function(){cd()})}
+  setTimeout(function(){tPause()},0);
+  if((R.gk!=null?R.gk:R.k)===0&&!R.q2how){R.q2how=1;var hw=H('div','q2how','<div class="q2hb"><h2>🟡 怎麼 玩？</h2><div class="q2s"><span>1</span><b>🔊</b><span class="tx">聽 一句 英文，看 整張 迷宮：<u>3 張 圖 在 3 個 房間</u></span></div>'+
+     '<div class="q2s"><span>2</span><b>🕹</b><span class="tx">按 ⬆⬇⬅➡（或 手指 滑）<u>按 一下 就 一直 走</u>，走進 <u>對的 房間</u><br><small>（也可以 點 圖、點 小 地圖 的 房間 ➜ 小精靈 自己 走過去）</small></span></div>'+
+     '<div class="q2s"><span>3</span><b>👻</b><span class="tx">碰到 鬼 ＝ 回 起點，<u>不算 錯、不扣 時間</u></span></div><button class="q2go" id="q2go">▶ 我 懂了，開始！</button></div>');st.appendChild(hw);
+   hw.querySelector('#q2go').onclick=function(){hw.remove();go()}}
   else setTimeout(go,350)};
 addEventListener('keydown',function(e){if(P2&&P2.key)P2.key(e)});addEventListener('resize',function(){if(P2&&P2.rs)P2.rs()});
 FB.q2=function(q,p){return {you:p?'<span class="pc" style="display:inline-flex;min-height:0;animation:none;transform:scale(.62);margin:-30px -20px;position:static">'+card2(p)+'</span>':'',
@@ -702,8 +753,10 @@ REN.q3=function(q,st){var bl='';for(var i=0;i<14;i++)bl+='<i style="animation-de
   /* 扭蛋 從 出貨門 滾出來 ➜ 飛到 畫面 中間 ➜ 上下 兩半 打開 ➜ 照片 ＋ YOU WIN! ＋ 金幣 */
   function prize(k,d){var z=H('div','przz','<div class="prz"><span class="ph1"></span><span class="ph2"></span><div class="pin"><img src="img/'+k+'.jpg" alt=""><b>YOU WIN!</b></div></div>');document.body.appendChild(z);var p=z.firstChild;
    p.style.left=(d.left+d.width/2)+'px';p.style.top=(d.top+d.height/2)+'px';requestAnimationFrame(function(){requestAnimationFrame(function(){p.classList.add('fly')})});
-   later(function(){p.classList.add('pop');boom(p.querySelector('.pin'))},900);
-   later(function(){BUSY=false;good(p.querySelector('.pin'))},1500);setTimeout(function(){z.remove()},3000)}
+   later(function(){p.classList.add('pop');boom(p.querySelector('.pin'));
+    /* 2026-10-26 第二十八次 第 6 點：夾到 對的 照片 ➜ 再 唸 一次 那一句（唸完 才 下一題）*/
+    sayT(q.say,function(){later(function(){z.remove();next()},600)})},900);
+   later(function(){BUSY=false;good(p.querySelector('.pin'),1)},1500);setTimeout(function(){z.remove()},12000)}
   shuf(q.o).forEach(function(k,i){var b=H('button','cap','<img src="img/'+k+'.jpg" alt="">');b.dataset.k=k;b.onclick=function(){if(BUSY)return;aim(i);setTimeout(function(){grab(b)},850)};caps.appendChild(b)});
   ct.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-c]');if(!b||BUSY)return;var c=b.dataset.c,n=caps.children.length;
    if(c==='g'){if(ix<0)aim(0);setTimeout(function(){grab(caps.children[ix])},ix<0?850:0);return}aim(ix<0?(c==='l'?0:n-1):(ix+(c==='l'?-1:1)+n)%n)});

@@ -74,7 +74,10 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
       const qn = full ? 8 : 2;
       for (let k = 0; k < qn; k++) {
         const wrong = k === 0, sc0 = await p.evaluate(() => R.score);
+        const f3 = g.id === 'q3' && k === 1 ? await p.evaluate(() => { window.__say = []; return aud(R.q.say).split('/').slice(-2).join('/'); }) : '';
         await answer(p, g, wrong);
+        if (f3) { await p.waitForFunction(kk => R.k > kk, k, { timeout: 15000 }).catch(() => {}); n++; const sy = await p.evaluate(() => window.__say.slice());
+          if (sy[0] !== f3) E.push(tag + ' q3：夾到 對的 照片 以後 沒有 再 唸 一次 那一句（第二十八次 第 6 點）：' + JSON.stringify(sy.slice(0, 3)) + ' 要 ' + f3); }
         if (wrong) {
           await p.waitForSelector('#fb.on', { timeout: 7000 }).catch(() => {});
           const t1 = await p.evaluate(() => tLeft()); await p.waitForTimeout(1200);
@@ -136,7 +139,7 @@ async function answer(p, g, wrong) {
   const tap = async sel => { const el = await p.$(sel); if (!el) { E.push(g.id + '：找不到 ' + sel); return; } await el.click({ force: true }); };
   if (g.id === 'q1') return tap('.hole[data-v="' + (wrong ? q.o[1] : q.o[0]) + '"]');
   if (g.id === 'q8') return tap('.mv[data-o="' + (wrong ? q.o[1] : q.o[0]).replace(/"/g, '\\"') + '"]');
-  if (g.id === 'q2') return tap('.pc[data-k="' + (wrong ? 1 : 0) + '"]');
+  if (g.id === 'q2') return p.evaluate(k => P2.goK(k), wrong ? 1 : 0);   /* ＝ 點 小 地圖／畫面 上 的 房間：小精靈 自己 走過去 */
   if (g.id === 'q3') return tap('.cap[data-k="' + (wrong ? q.o[1] : q.o[0]) + '"]');
   if (g.id === 'q10') { const want = wrong ? q.o[1] : q.o[0];
     const els = await p.$$('.crt'); for (const e of els) if ((await e.evaluate((x, id) => id === 'q8' ? x.textContent : x.dataset.c, g.id)) === want) return e.click({ force: true }); E.push(g.id + '：找不到選項 ' + want); return; }
@@ -172,19 +175,26 @@ async function answer(p, g, wrong) {
 
 /* 2026-10-25 第二十五次：每一種 遊戲 新 的 東西 真的 有 */
 async function special(p, g) { const e = [];
-  if (g.id === 'q2') { const r = await p.evaluate(async () => { const S = P2, a = [S.p.cx, S.p.cy]; document.querySelector('.dpad [data-d="l"]').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
-      await new Promise(r => setTimeout(r, 450)); const b = [S.p.cx + (S.p.tx - S.p.cx) * S.p.f, S.p.cy]; const t0 = tLeft(); S.caught(); const c = { x: S.p.cx, y: S.p.cy, dt: t0 - tLeft(), toast: document.querySelector('.pmt').textContent };
-      return { a, b, c, d: document.querySelectorAll('.dpad button').length, gh: document.querySelectorAll('.gst').length, cards: document.querySelectorAll('.pmc .pc').length }; });
-    if (r.d !== 4 || r.gh !== 2 || r.cards !== 3) e.push('迷宮 沒有 方向鍵 4 顆／👻 2 隻／3 張 圖：' + JSON.stringify(r));
-    if (!(r.b[0] < r.a[0])) e.push('按 ⬅ 小精靈 沒有 往 左 走：' + JSON.stringify(r.a) + '→' + JSON.stringify(r.b));
-    if (r.c.x !== 5 || r.c.y !== 5 || r.c.dt < 1.9 || !/被抓到/.test(r.c.toast)) e.push('被 👻 抓到 沒有 回 起點、少 2 秒：' + JSON.stringify(r.c)); }
-  if (g.id === 'q2') { /* 2026-10-26：卡片 對準 出口、不 互相 疊住；卡片 裡 的 名字、圖 不 被 切掉 */
-    const r = await p.evaluate(() => { const o = [], cs = [...document.querySelectorAll('.pmc .pc')].map(c => c.getBoundingClientRect());
-      for (let i = 1; i < cs.length; i++) if (cs[i].left < cs[i - 1].right - 1) o.push('卡片 ' + i + ' 跟 ' + (i + 1) + ' 疊住');
-      document.querySelectorAll('.pmc .pc').forEach(c => { const cr = c.getBoundingClientRect(); c.querySelectorAll('*').forEach(x => { const b = x.getBoundingClientRect(); if (b.width && (b.right > cr.right + 1 || b.left < cr.left - 1 || b.bottom > cr.bottom + 1 || b.top < cr.top - 1)) o.push('切掉 ' + (x.className || x.tagName)); }); });
-      const sd = document.querySelector('.pmside').getBoundingClientRect(); if (cs.some(c => c.right > sd.left + 1 && c.bottom > sd.top + 1 && c.top < sd.bottom - 1 && c.left < sd.right - 1)) o.push('卡片 蓋到 再聽／方向鍵');
-      return [...new Set(o)]; });
-    if (r.length) e.push('小精靈 卡片：' + r.join('、')); }
+  if (g.id === 'q2') { /* 2026-10-26 第二十八次：照 Wordwall 迷宮 追逐 ➜ 3 個 房間、鏡頭 放大 跟著 走、按 一下 一直 走、被 抓 不 扣 時間 */
+    const r = await p.evaluate(async () => { const S = P2, a = [S.p.cx, S.p.cy, S.ph, S.cs, S.cs0];
+      document.querySelector('.dpad [data-d="l"]').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+      await new Promise(r => setTimeout(r, 900)); const b = [S.p.cx + (S.p.tx - S.p.cx) * S.p.f, S.p.cy, S.p.d];
+      const t0 = tLeft(); S.caught(); await new Promise(r => setTimeout(r, 300)); const c = { x: S.p.cx, y: S.p.cy, dt: t0 - tLeft(), toast: document.querySelector('.pmt').textContent, gw: S.gw };
+      const pc = document.querySelector('.pac2').getBoundingClientRect(), v = document.querySelector('.pmv').getBoundingClientRect(), sd = document.querySelector('.pmside').getBoundingClientRect();
+      const rm = [...document.querySelectorAll('.rmc')].map(x => x.dataset.rm).sort().join('');
+      return { a, b, c, d: document.querySelectorAll('.dpad button').length, gh: document.querySelectorAll('.gst').length, rm, mm: !!document.querySelector('.mmap'), pac: Math.round(pc.width),
+        ovl: v.right > sd.left + 1 && v.bottom > sd.top + 1 && sd.bottom > v.top + 1 && sd.right > v.left + 1, vh: Math.round(v.height), cs: Math.round(S.cs) }; });
+    if (r.d !== 4 || r.gh !== 2 || r.rm !== 'ABC' || !r.mm) e.push('迷宮 沒有 方向鍵 4 顆／👻 2 隻／3 個 房間／小 地圖：' + JSON.stringify(r));
+    if (r.a[2] !== 'go' || !(r.cs >= 1.6 * r.a[4]) || r.pac < 50) e.push('GO 以後 鏡頭 沒有 放大（一格 ' + r.cs + 'px、整張 ' + Math.round(r.a[4]) + 'px、小精靈 ' + r.pac + 'px）');
+    if (!(r.b[0] < r.a[0] - 1.5)) e.push('按 ⬅ 一下 小精靈 沒有 一直 往 左 走：' + JSON.stringify(r.a) + '→' + JSON.stringify(r.b));
+    if (r.c.x !== 7 || r.c.y !== 5 || r.c.dt > .05 || !/被抓到/.test(r.c.toast) || !/不算 錯/.test(r.c.toast) || !(r.c.gw > 1.5)) e.push('被 👻 抓到 要 回 起點、不 扣 時間、鬼 等 2 秒：' + JSON.stringify(r.c));
+    if (r.ovl || r.vh < 300) e.push('迷宮 蓋到 右邊 按鈕／太 矮：' + JSON.stringify(r));
+    /* 房間 裡 的 卡片：放大 以後 名字、蛋糕 不 被 切掉 */
+    const o = await p.evaluate(() => { const o = []; document.querySelectorAll('.rmc').forEach(c => { const cr = c.getBoundingClientRect(); c.querySelectorAll('.tn,.cake,.q2sc').forEach(x => { const b = x.getBoundingClientRect(); if (b.width && (b.right > cr.right + 1 || b.left < cr.left - 1 || b.bottom > cr.bottom + 1 || b.top < cr.top - 1)) o.push('切掉 ' + x.className); }); }); return [...new Set(o)]; });
+    if (o.length) e.push('房間 卡片：' + o.join('、'));
+    /* 新 的 一題：先 看 整張（時間 停）*/
+    const t = await p.evaluate(async () => { const S = P2; S.ph = 'ov'; const t0 = tLeft(); tPause(); await new Promise(r => setTimeout(r, 400)); const x = { t: t0 - tLeft(), cs: Math.round(S.cs), cs0: Math.round(S.cs0) }; S.ph = 'go'; tGo(); return x; });
+    if (t.t > .05 || t.cs !== t.cs0) e.push('看 整張 迷宮 的 時候 時間 要 停、要 看到 整張：' + JSON.stringify(t)); }
   if (g.id === 'q3') { const r = await p.evaluate(() => ({ c: document.querySelectorAll('.ctl3 button').length, ey: !!document.querySelector('.hd3 .ey') })); if (r.c !== 3 || !r.ey) e.push('夾娃娃 沒有 ◀ ⬇ ▶ 或 夾子 眼睛');
     await p.click('.ctl3 [data-c="r"]'); await p.waitForTimeout(150); if (!(await p.$('.cap.aim'))) e.push('按 ▶ 夾子 沒有 移到 照片 上面'); }
   if (g.id === 'q4') { const r = await p.evaluate(() => ({ o: document.querySelectorAll('.ore').length, lk: document.querySelector('.pad').classList.contains('lk') })); if (r.o !== 3 || !r.lk) e.push('挖礦 沒有 3 塊 圖 礦石、還沒 點 圖 寫字板 要 鎖住：' + JSON.stringify(r)); }
