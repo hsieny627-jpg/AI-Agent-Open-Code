@@ -178,6 +178,13 @@ async function special(p, g) { const e = [];
     if (r.d !== 4 || r.gh !== 2 || r.cards !== 3) e.push('迷宮 沒有 方向鍵 4 顆／👻 2 隻／3 張 圖：' + JSON.stringify(r));
     if (!(r.b[0] < r.a[0])) e.push('按 ⬅ 小精靈 沒有 往 左 走：' + JSON.stringify(r.a) + '→' + JSON.stringify(r.b));
     if (r.c.x !== 5 || r.c.y !== 5 || r.c.dt < 1.9 || !/被抓到/.test(r.c.toast)) e.push('被 👻 抓到 沒有 回 起點、少 2 秒：' + JSON.stringify(r.c)); }
+  if (g.id === 'q2') { /* 2026-10-26：卡片 對準 出口、不 互相 疊住；卡片 裡 的 名字、圖 不 被 切掉 */
+    const r = await p.evaluate(() => { const o = [], cs = [...document.querySelectorAll('.pmc .pc')].map(c => c.getBoundingClientRect());
+      for (let i = 1; i < cs.length; i++) if (cs[i].left < cs[i - 1].right - 1) o.push('卡片 ' + i + ' 跟 ' + (i + 1) + ' 疊住');
+      document.querySelectorAll('.pmc .pc').forEach(c => { const cr = c.getBoundingClientRect(); c.querySelectorAll('*').forEach(x => { const b = x.getBoundingClientRect(); if (b.width && (b.right > cr.right + 1 || b.left < cr.left - 1 || b.bottom > cr.bottom + 1 || b.top < cr.top - 1)) o.push('切掉 ' + (x.className || x.tagName)); }); });
+      const sd = document.querySelector('.pmside').getBoundingClientRect(); if (cs.some(c => c.right > sd.left + 1 && c.bottom > sd.top + 1 && c.top < sd.bottom - 1 && c.left < sd.right - 1)) o.push('卡片 蓋到 再聽／方向鍵');
+      return [...new Set(o)]; });
+    if (r.length) e.push('小精靈 卡片：' + r.join('、')); }
   if (g.id === 'q3') { const r = await p.evaluate(() => ({ c: document.querySelectorAll('.ctl3 button').length, ey: !!document.querySelector('.hd3 .ey') })); if (r.c !== 3 || !r.ey) e.push('夾娃娃 沒有 ◀ ⬇ ▶ 或 夾子 眼睛');
     await p.click('.ctl3 [data-c="r"]'); await p.waitForTimeout(150); if (!(await p.$('.cap.aim'))) e.push('按 ▶ 夾子 沒有 移到 照片 上面'); }
   if (g.id === 'q4') { const r = await p.evaluate(() => ({ o: document.querySelectorAll('.ore').length, lk: document.querySelector('.pad').classList.contains('lk') })); if (r.o !== 3 || !r.lk) e.push('挖礦 沒有 3 塊 圖 礦石、還沒 點 圖 寫字板 要 鎖住：' + JSON.stringify(r)); }
