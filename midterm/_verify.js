@@ -71,7 +71,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
         if (k === 0) {
           /* 答錯 ＝ 綠底 一整頁（照 三年級 複習）：逐字 中文、整句、唸 3 次（短文 偵探：原文 那一句 綠底 ➜ 唸 1 次 ➜ 獨立 頁 唸 1 次）才 有〔▶ 下一題〕，倒數 停住 */
           if (g.id === 'm8') { n++; const e8 = await p.evaluate(() => ({ g: !!document.querySelector('#pas span.evg'), wf: document.getElementById('wf').classList.contains('on') }));
-            if (!e8.g || e8.wf) E.push(tag + ' m8 答錯：原文 那一句 沒有 綠底（或 還沒 唸 就 跳 頁）' + JSON.stringify(e8)); await p.waitForTimeout(1300); }
+            if (!e8.g || e8.wf) E.push(tag + ' m8 答錯：原文 那一句 沒有 綠底（或 還沒 唸 就 跳 頁）' + JSON.stringify(e8)); await p.waitForFunction(() => document.getElementById('wf').classList.contains('on'), null, { timeout: 6000 }).catch(() => {}); await p.waitForTimeout(150); }   /* 第二十九次：證據 一句一句 唸 ➜ 等 唸完 才 跳 */
           n++; const f = await p.evaluate(() => { const w = document.getElementById('wf'), gw = [].map.call(w.querySelectorAll('.gw'), x => [x.querySelector('b').textContent, x.querySelector('i').textContent]);
             return { on: w.classList.contains('on'), bg: getComputedStyle(w.querySelector('.box')).backgroundImage, gw, tr: (w.querySelector('.tr') || {}).textContent || '', n3: w.querySelectorAll('#n3 span').length, nx: !!document.getElementById('wfn'), run: TM.run,
               big: parseFloat(getComputedStyle(w.querySelector('.gw b') || w).fontSize), out: w.querySelector('.box').scrollHeight > w.querySelector('.box').clientHeight + 2 }; });
