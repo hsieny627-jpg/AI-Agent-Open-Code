@@ -51,7 +51,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
         await new Promise(r => setTimeout(r, 2800)); a.k2 = R.k; a.off = !document.getElementById('go').classList.contains('on'); window.__NOGO = 1; lobby(); return a; });
       if (!s.on || !/3/.test(s.t) || s.k !== -1 || s.k2 !== 0 || !s.off) E.push(tag + ' 開場 3 2 1 GO 不對：' + JSON.stringify(s)); }
     for (let gi = 0; gi < D.GAMES.length; gi++) {
-      const g = D.GAMES[gi]; if (process.env.ONLY && process.env.ONLY.split(',').indexOf(g.id) < 0) continue;
+      const g = D.GAMES.filter(x => x.id === D.ORD[gi])[0]; if (process.env.ONLY && process.env.ONLY.split(',').indexOf(g.id) < 0) continue;
       await p.evaluate(i => { window.__say = []; start(i); }, gi); await p.waitForTimeout(300);
       if (g.id === 'q8') { n++; const wp = await p.evaluate(() => ({ on: document.getElementById('wp').classList.contains('on'), n: document.querySelectorAll('#wp [data-wr]').length, k: R.k }));
         if (!wp.on || wp.n < 10 || wp.k !== -1) E.push(tag + ' q8：第一次 玩 沒有 先 選 戰士：' + JSON.stringify(wp));
@@ -79,6 +79,10 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
         if (f3) { await p.waitForFunction(kk => R.k > kk, k, { timeout: 15000 }).catch(() => {}); n++; const sy = await p.evaluate(() => window.__say.slice());
           if (sy[0] !== f3) E.push(tag + ' q3：夾到 對的 照片 以後 沒有 再 唸 一次 那一句（第二十八次 第 6 點）：' + JSON.stringify(sy.slice(0, 3)) + ' 要 ' + f3); }
         if (wrong) {
+          /* 2026-10-26 第二十九次 第 8 點：資料表 答錯 ＝ 先 停 在 題目 畫面：三個 人 各 一種 顏色 的 方框（答錯 的 那一位 紅色）＋ 箭頭，演完 才 綠底 頁 */
+          if (g.id === 'q9') { await p.waitForTimeout(2600); n++; const k = await p.evaluate(() => ({ fb: document.querySelector('#fb').classList.contains('on'), k9: document.querySelectorAll('.k9').length, ar: !!document.querySelector('.ar9 path'),
+              red: [].filter.call(document.querySelectorAll('.k9'), x => /255, 107, 107|#FF6B6B/i.test(x.getAttribute('style') || '')).length, cols: new Set([].map.call(document.querySelectorAll('.k9'), x => x.style.getPropertyValue('--k'))).size, anim: [].filter.call(document.querySelectorAll('.k9'), x => getComputedStyle(x).animationIterationCount === 'infinite').length }));
+            if (k.fb || k.k9 < 9 || !k.ar || k.red < 3 || k.cols !== 3 || k.anim) E.push(tag + ' q9：答錯 沒有 先 在 題目 畫面 框 關鍵字＋箭頭（或 一直 閃）' + JSON.stringify(k)); }
           await p.waitForSelector('#fb.on', { timeout: 7000 }).catch(() => {});
           const t1 = await p.evaluate(() => tLeft()); await p.waitForTimeout(1200);
           const f = await p.evaluate(() => { const gw = [].slice.call(document.querySelectorAll('#fb .gw'));
@@ -231,7 +235,7 @@ async function special(p, g) { const e = [];
   if (g.id === 'q3') { const r = await p.evaluate(() => ({ c: document.querySelectorAll('.ctl3 button').length, ey: !!document.querySelector('.hd3 .ey') })); if (r.c !== 3 || !r.ey) e.push('夾娃娃 沒有 ◀ ⬇ ▶ 或 夾子 眼睛');
     await p.click('.ctl3 [data-c="r"]'); await p.waitForTimeout(150); if (!(await p.$('.cap.aim'))) e.push('按 ▶ 夾子 沒有 移到 照片 上面'); }
   if (g.id === 'q4') { const r = await p.evaluate(() => ({ o: document.querySelectorAll('.ore').length, lk: document.querySelector('.pad').classList.contains('lk') })); if (r.o !== 3 || !r.lk) e.push('挖礦 沒有 3 塊 圖 礦石、還沒 點 圖 寫字板 要 鎖住：' + JSON.stringify(r)); }
-  if (g.id === 'q6') { const t = await p.evaluate(() => document.querySelector('.q6h').textContent + '|' + document.querySelector('.q6ex').textContent); if (!/一共 有 幾個/.test(t) || !/例：/.test(t)) e.push('金幣磚 沒有 說明「一共 有 幾個」＋例子：' + t.slice(0, 50));
+  if (g.id === 'q6') { const t = await p.evaluate(() => document.querySelector('.q6h').textContent + '|' + document.querySelector('.q6ex').textContent); if (!/How many/.test(t) || !/例：/.test(t)) e.push('金幣磚 沒有 英文 問句「How many …?」＋例子：' + t.slice(0, 50));   /* 2026-10-26 第二十九次：題目 全 英文 */
     const c = await p.evaluate(() => { const s = [].slice.call(document.querySelectorAll('.objs span'), 0, 2); s.forEach(x => x.click()); return s.map(x => x.dataset.c).join(); }); if (c !== '1,2' && c !== '1')   /* 題目 是 one ＝ 只有 1 個 */ e.push('點 東西 沒有 數 1、2：' + c); }
   if (g.id === 'q8') { const r = await p.evaluate(() => ({ t: document.getElementById('stage').textContent + document.getElementById('gnm').textContent + document.title, im: (document.querySelector('.fig.me img') || {}).src || '', foe: ((document.querySelector('.fcard.foe img') || {}).src || '').split('/').pop(), ok: (document.querySelector('.fcard.foe img') || {}).naturalWidth > 0, sw: !document.getElementById('wsw').hidden }));
     if (/寶可夢/.test(r.t)) e.push('還有「寶可夢」'); if (!/rpg\/chars\/[bg]\d+\.jpg/.test(r.im) || r.foe !== 'foe1.webp' || !r.ok || !r.sw || !/DARK OVERLORD/.test(r.t)) e.push('擂台 沒有 自己 的 戰士／老師 給 的 反派 DARK OVERLORD／〔🔄 換 戰士〕：' + JSON.stringify(r).slice(0, 160));
@@ -239,9 +243,14 @@ async function special(p, g) { const e = [];
     if (!/foe2\.webp/.test(r2.f) || !/ROUND 2/.test(r2.t) || !r2.nw) e.push('打倒 DARK OVERLORD 以後 沒有 換 SHADOW SCHEMER：' + JSON.stringify(r2));
     await p.evaluate(() => { HP8 = { b: 0, e: 4, m: 8, ko: 0 }; var st = document.getElementById('stage'); st.innerHTML = ''; REN.q8(R.q, st); }); }
   if (g.id === 'q9') { const r = await p.evaluate(() => ({ b: document.querySelectorAll('.bub9').length, sp: document.querySelectorAll('.sp9').length, sl: document.querySelectorAll('.sl9').length, tl: document.querySelectorAll('.tile9').length, t: document.querySelector('.ft9').textContent, th: [].map.call(document.querySelectorAll('.fm9 th'), x => x.textContent).join(',') }));
-    if (r.b !== 3 || r.sp !== 3 || r.sl !== 3 || r.tl !== 5 || !/New Friends/.test(r.t) || !/Name,Age/.test(r.th)) e.push('資料表 小幫手：3 個 對話框＋🔊、3 個 空格、5 個 方塊、Name／Age：' + JSON.stringify(r)); }
+    if (r.b !== 3 || r.sp !== 3 || r.sl !== 3 || r.tl !== 5 || !/New Friends/.test(r.t) || !/Name,Age/.test(r.th)) e.push('資料表 小幫手：3 個 對話框＋🔊、3 個 空格、5 個 方塊、Name／Age：' + JSON.stringify(r));
+    /* 第二十九次 第 8 點：30 秒；方塊 在 資料表 正上方；先 點 空格 再 點 方塊 也 可以 */
+    const r2 = await p.evaluate(() => { const tw = document.querySelector('.tw9').getBoundingClientRect(), fm = document.querySelector('.fm9').getBoundingClientRect(), bb = document.querySelector('.bb9').getBoundingClientRect();
+      const sl = document.querySelector('.sl9'); sl.click(); const s1 = sl.classList.contains('sel'); return { t: TM.T, above: tw.bottom <= fm.top + 2 && tw.top >= bb.bottom - 2, s1, bot: fm.bottom <= innerHeight + 1 }; });
+    if (r2.t !== 30 || !r2.above || !r2.s1 || !r2.bot) e.push('資料表：30 秒／方塊 在 資料表 上面／先 點 空格 會 亮／資料表 不 超出 畫面 ' + JSON.stringify(r2));
+    await p.evaluate(() => { const sl = document.querySelector('.sl9.sel'); if (sl) sl.click(); }); }
   if (g.id === 'q1') { const r = await p.evaluate(() => ({ pic: !!document.querySelector('.q1pic'), sl: !!document.querySelector('.hear.slow'), m1: window.__say.filter(x => /^m1\//.test(x)).length }));
-    if (!r.pic || !r.sl || r.m1 < 2) e.push('打地鼠：要 有 圖、〔🐢 慢慢 唸〕、自動 用 慢 的 男聲 唸 2 次：' + JSON.stringify(r)); }
+    if (r.pic || !r.sl || r.m1 < 2) e.push('打地鼠：不可以 有 圖（第二十九次 第 6 點：只 用 聽 的）、要〔🐢 慢慢 唸〕、自動 用 慢 的 男聲 唸 2 次：' + JSON.stringify(r)); }
   if (g.id === 'q3') { const t = await p.evaluate(() => document.querySelector('.claw').textContent + '|' + document.querySelector('.ctl3').textContent); ['CLAW MACHINE', 'PRIZE', 'PUSH', 'INSERT COIN', 'LEFT', 'DROP', 'RIGHT'].forEach(w => { if (t.indexOf(w) < 0) e.push('夾娃娃 沒有 英文「' + w + '」'); }); if (/[\u4e00-\u9fff]/.test(t)) e.push('夾娃娃 機台／按鈕 還有 中文：' + t.slice(0, 60)); }
   if (g.id === 'q5') { /* 第 1-4 點：超出 格子 很多 ➜「再 寫 一次」（不算 錯、倒數 停住）*/ const q = await p.evaluate(() => R.q), c = await (await p.$('.pad canvas')).boundingBox(), u = c.height / 3.5, xs = [].concat(...HW.T[q.want][0].map(s => s.map(pt => pt[0]))), x0 = Math.min(...xs);
     for (const s of HW.T[q.want][0]) { const yy = v => Math.min(c.y + c.height - 2, Math.max(c.y + 2, c.y + u * (v * 1.7 + .15))); await p.mouse.move(c.x + u * (.5 + s[0][0] - x0), yy(s[0][1])); await p.mouse.down(); for (const pt of s.slice(1)) await p.mouse.move(c.x + u * (.5 + pt[0] - x0), yy(pt[1])); await p.mouse.up(); }

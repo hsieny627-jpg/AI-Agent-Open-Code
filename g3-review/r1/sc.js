@@ -709,7 +709,7 @@ function scKeyPress(k){
 /* 登入好了（2026-10-09 Q4：學生端不顯示姓名，不再問伺服器「你是 ○○○ 嗎？」） */
 function scWho(r){
   var go=function(){SCID=r.id;scPut('id_g'+r.g,SCID);scPut('last',SCID);SCGUEST=false;scOk();scAct();scBar();var a=SCLOGAFTER;SCLOGAFTER=null;
-    scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk();if(a)a()})};   /* 登入好了先拿老師的任務（2026-10-09 E），再做要做的事 */
+    scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk();if(a)a();scChamp(1)})};   /* 登入好了先拿老師的任務（2026-10-09 E），再做要做的事 */
   var m=$('#scMsg');m.className='scmsg ok';m.textContent='✅ '+scCn(r.cls)+' '+r.seat+' 號';
   setTimeout(go,500);
 }
@@ -1131,6 +1131,35 @@ document.addEventListener('click',function(e){
 });
 document.addEventListener('keydown',function(e){if(!$('#scBox'))return;
   if(/^\d$/.test(e.key))scKeyPress(e.key);else if(e.key==='Backspace')scKeyPress('b');else if(e.key==='Enter')scKeyPress('ok')});
+
+/* ══ 👑 冠軍寶箱 登入 動畫（2026-10-26 第二十九次 第 11 點，老師 選 A：學生 在 任何 一個 網站 登入 就 演）══
+   伺服器 GET rpg 會 先 自動 發 上週 的 寶箱（每週一 0:00 以後、每個 年級 最認真練習 前 5 名），回 chi＝{k 編號, rk 名次, sec 秒數, g 年級}、v.ch＝還沒 開 幾個。
+   ① 黑幕＋聚光燈、皇冠 從 天上 掉下來、金字「冠軍 寶箱」② 為什麼：上週 三年級 最認真練習 第 2 名、練習 48 分鐘 ③ 寶箱 發光 搖一搖 ➜〔👆 點 寶箱 打開〕＝ 伺服器 真的 開（POST rpg open）
+   ➜ 蓋子 打開、金光 往上、🪙 ⭐ 一顆一顆 飛進 下面 的「🎒 我的 收藏庫」、數字 數上去 ④「下週 繼續 認真 練習」〔✅ 收下〕。同一個 寶箱 只 演 一次（這台 平板 chs_5碼）。 */
+var SCCH=null;
+function scChamp(force){if(!SCON||!SCID||SCGUEST)return;try{if(!force&&sessionStorage.getItem('sc_chk')===SCID)return;sessionStorage.setItem('sc_chk',SCID)}catch(e){}
+  var id=SCID;scFetch('a=rpg&id='+id).then(function(j){if(!j||!j.ok||!j.chi||!j.v||!(j.v.ch>0)||SCID!==id)return;if(scGet('chs_'+id)===j.chi.k)return;scChampShow(j,id)}).catch(function(){})}
+function scChMin(s){s=Math.round(+s||0);return s<60?s+' 秒':Math.round(s/60)+' 分鐘'}
+function scChampShow(j,id){var c=j.chi,o=document.getElementById('scch');if(!o){o=document.createElement('div');o.id='scch';document.body.appendChild(o)}
+  var rk=c.rk||'',gn=(c.g===3?'三':'四')+'年級',st=j.v;SCCH={id:id,k:c.k,c0:+st.coins||0,x0:+st.xp||0,busy:false};
+  var rays='';for(var i=0;i<12;i++)rays+='<i style="transform:rotate('+(i*30)+'deg)"></i>';
+  o.innerHTML='<div class="chw"><div class="chray">'+rays+'</div><div class="chcr">👑</div><div class="cht">冠軍 寶箱</div>'+
+   '<div class="chwhy"><div>🏆 上週 '+gn+' <b>最認真練習</b>'+(rk?' 第 <span class="chrk">'+rk+'</span> 名':' 前 5 名')+'</div>'+(c.sec?'<div class="chs">⏱ 你 練習 了 <b>'+scChMin(c.sec)+'</b></div>':'')+'<div class="chsm">每週一 0 點，每個 年級 最認真練習 前 5 名 自動 得到</div></div>'+
+   '<button class="chbox" id="chBox" aria-label="打開 寶箱"><span class="chlid"></span><span class="chbd"><i class="chlk">🔒</i></span><span class="chgl"></span></button><div class="chtap" id="chTap">👆 點 寶箱 打開！</div>'+
+   '<div class="chbag" id="chBag"><span class="chbi">🎒</span><span>我的 收藏庫</span><span class="chn">🪙 <b id="chC">'+SCCH.c0+'</b></span><span class="chn">⭐ <b id="chX">'+SCCH.x0+'</b></span></div>'+
+   '<div class="chend" id="chEnd" hidden><div>🔥 下週 繼續 認真 練習，再 拿 冠軍 寶箱！</div><button id="chOk">✅ 收下</button></div><div class="chmsg" id="chMsg"></div></div>';
+  o.classList.add('on');document.getElementById('chBox').onclick=scChampOpen}
+function scChCount(el,a,b,ms){var t0=Date.now();(function f(){var k=Math.min(1,(Date.now()-t0)/ms);el.textContent=Math.round(a+(b-a)*k);if(k<1)requestAnimationFrame(f)})()}
+function scChampOpen(){var S=SCCH;if(!S||S.busy)return;S.busy=true;var bx=document.getElementById('chBox'),m=document.getElementById('chMsg');bx.classList.add('shake');m.textContent='';
+  scFetch('',{a:'rpg',op:'open',id:S.id},12000).then(function(r){if(!r||!r.ok||!r.r){S.busy=false;bx.classList.remove('shake');m.textContent='📶 等一下 再 點 一次（戰神之路 也 可以 打開）';return}
+    scPut('chs_'+S.id,S.k);var gc=+r.r.c||0,gx=+r.r.x||0;bx.classList.remove('shake');bx.classList.add('open');document.getElementById('chTap').innerHTML='🎉 <b>🪙 ＋'+gc+'</b>　<b>⭐ ＋'+gx+'</b>';
+    var w=document.querySelector('#scch .chw'),br=bx.getBoundingClientRect(),bg=document.getElementById('chBag').getBoundingClientRect(),N=18;
+    for(var i=0;i<N;i++)(function(i){setTimeout(function(){var f=document.createElement('span');f.className='chfly';f.textContent=i%3===2?'⭐':'🪙';var sx=br.left+br.width/2,sy=br.top+br.height*.3,dx=(Math.random()-.5)*260,tx=bg.left+bg.width*(i%3===2?.86:.66),ty=bg.top+bg.height/2;
+      f.style.left=sx+'px';f.style.top=sy+'px';f.style.setProperty('--ux',dx+'px');f.style.setProperty('--tx',(tx-sx)+'px');f.style.setProperty('--ty',(ty-sy)+'px');document.getElementById('scch').appendChild(f);setTimeout(function(){f.remove()},1700)},500+i*70)})(i);
+    setTimeout(function(){var bag=document.getElementById('chBag');bag.classList.add('pulse');scChCount(document.getElementById('chC'),S.c0,S.c0+gc,1300);scChCount(document.getElementById('chX'),S.x0,S.x0+gx,1300)},1500);
+    setTimeout(function(){w.classList.add('done');document.getElementById('chEnd').hidden=false;var b=document.getElementById('chOk');b.onclick=function(){document.getElementById('scch').classList.remove('on');SCCH=null}},3400)},
+   function(){S.busy=false;bx.classList.remove('shake');m.textContent='📶 沒有 網路，等一下 再 點 一次'})}
+setTimeout(function(){if(SCID)scChamp(0)},1600);
 
 SCHOMEP=true;
 function hOv(){var o=document.getElementById('scov');if(!o){o=document.createElement('div');o.id='scov';o.innerHTML='<div id="scovb"></div>';document.body.appendChild(o)}return o}

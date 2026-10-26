@@ -77,6 +77,13 @@ function chestTop(g, now) { var w = SC.weekStart(now), w0 = w - 7 * 864e5, k = '
   if (c) { try { return { k: k, ids: JSON.parse(c) }; } catch (e) { } }
   var ps = SC.students(SC.pick(records(), { g: g, from: w0, to: w })), ids = SC.rank(ps, 'sec').filter(function (x) { return x.rk <= 5; }).map(function (x) { return x.id; });
   try { P.setProperty('CHW_' + k, JSON.stringify(ids)); } catch (e) { } return { k: k, ids: ids }; }
+/* 2026-10-26 第二十九次 第 11 點（老師 選 A：一 登入 就 演）：拿到 冠軍寶箱 的 學生 ➜ 告訴 平板「上週 第幾名、練了 幾秒」（只有 自己 的；沒有 姓名）
+   {k 寶箱 編號, rk 名次, sec 練習 秒數, g 年級}；不在 前 5 名 ＝ null。名次 第一次 算好 存在 指令碼 屬性 CHR_編號 */
+function chestInfo(id) { var c = SC.checkId(id); if (c.err) return null; var T = chestTop(c.g, Date.now()); if (T.ids.indexOf(c.id) < 0) return null;
+  var P = PropertiesService.getScriptProperties(), M = null; try { M = JSON.parse(P.getProperty('CHR_' + T.k) || 'null'); } catch (e) { }
+  if (!M) { var w = SC.weekStart(Date.now()), w0 = w - 7 * 864e5; M = {}; SC.rank(SC.students(SC.pick(records(), { g: c.g, from: w0, to: w })), 'sec').filter(function (x) { return x.rk <= 5; }).forEach(function (x) { M[x.id] = [x.rk, Math.round(+x.v || 0)]; });
+    try { P.setProperty('CHR_' + T.k, JSON.stringify(M)); } catch (e) { } }
+  var m = M[c.id]; return m ? { k: T.k, rk: m[0], sec: m[1], g: c.g } : { k: T.k, rk: 0, sec: 0, g: c.g }; }
 function chestAuto(id, st) { var c = SC.checkId(id); if (c.err) return null; var T = chestTop(c.g, Date.now());
   if (T.ids.indexOf(c.id) < 0 || (st.bk || []).indexOf(T.k) >= 0) return null; return SC.rpBonus(st, { chest: 1, k: T.k }); }
 /* 🎁 全班獎勵 自動發（2026-10-23 第二十二次；2026-10-25 第二十五次 改成兩個目標＋照天數多給）：學生打開戰神之路 ➜ 這一班「上一週」
@@ -157,7 +164,8 @@ function doGet(e) {
       /* 2026-10-20 第十五次：⚔ 戰力階級 第一次到 ➜ 記下來（🪙＋100 不會因為拿下裝備被收回）；👑 冠軍寶箱 上一週的前 5 名 自動發（老師忘了按也拿得到） */
       var T1 = SC.rpTierUp(rs1, R1.st), ch1 = chestAuto(c1.id, T1), cw1 = cwAuto(c1.id, JSON.parse(JSON.stringify(T1)), rs1); if (T1.tr !== R1.st.tr || T1.trt.length !== R1.st.trt.length || ch1 || cw1) { var lk1 = LockService.getScriptLock(); lk1.waitLock(20000); try { R1 = rpRow(c1.id); T1 = SC.rpTierUp(rs1, R1.st); T1 = chestAuto(c1.id, T1) || T1; T1 = cwAuto(c1.id, T1, rs1) || T1; rpSave(R1, c1.id, T1); } finally { lk1.releaseLock(); } }
       var TT = rpTiers(), hall = Object.keys(TT).filter(function (k) { return TT[k] >= 5 && k.charAt(0) === c1.id.charAt(0); }).sort();   /* 🏛 名人堂（★★★★★ 傳說戰神，同一個 年級；只有 5 碼） */
-      return out({ ok: true, now: Date.now(), v: SC.rpView(rs1, T1), stock: rpStock(), bo: SC.bstFor(c1.id, Date.now()), hall: hall }); }
+      var chi1 = null; try { chi1 = chestInfo(c1.id); } catch (x) { }
+      return out({ ok: true, now: Date.now(), v: SC.rpView(rs1, T1), stock: rpStock(), bo: SC.bstFor(c1.id, Date.now()), hall: hall, chi: chi1 }); }
     /* 📅 今日任務、📈 我的 進步（2026-10-26 第二十七次）：只 有 自己 的（沒有 姓名）*/
     if (q.a === 'me') { var c9 = SC.checkId(q.id); if (c9.err) return out({ err: c9.err }); var st9 = {}; try { st9 = rpRow(c9.id).st || {}; } catch (x) { } return out({ ok: true, me: SC.me(mine(c9.id), Date.now()), tr: +st9.tr || 0 }); }
     if (q.a === 'locks') return out({ ok: true, any: SC.lkAny(locks(), +q.g === 4 ? 4 : 3, lockt(), Date.now()) });

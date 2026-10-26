@@ -29,7 +29,7 @@ const W1M = {}; W1.forEach(x => { W1M[x[0]] = x; });
 const PAIRS = [['bell', 'ball'], ['dog', 'desk'], ['pig', 'pen'], ['tent', 'toy'], ['panda', 'pot'], ['box', 'bag'], ['door', 'doll'],
   ['bag', 'dog'], ['door', 'tiger'], ['pot', 'box'], ['ten', 'desk'], ['doll', 'ball'], ['pig', 'tent'], ['bell', 'pen']];
 const M2 = PAIRS.map(([a, b]) => { const same = a[0] === b[0];
-  return { say: a + '. ' + b + '.', pair: [a, b], q: '🔊 聽：' + a + '、' + b + '　第一個音？', o: same ? ['⭕ 一樣', '❌ 不一樣'] : ['❌ 不一樣', '⭕ 一樣'],
+  return { say: a + '. ' + b + '.', pair: [a, b], q: '🔊 聽：' + a + '、' + b + '　第一個音？', o: same ? ['⭕ Same', '❌ Different'] : ['❌ Different', '⭕ Same'],   /* 2026-10-26 第二十九次：選項 全 英文 */
     z: a + ' 是 ' + a[0] + '，' + b + ' 是 ' + b[0] + ' ➜ ' + (same ? '一樣' : '不一樣'), h: a[0] + ' ／ ' + b[0] }; });
 
 /* 📸 m3 聽句 找照片：聽一段對話，點對的那一張（三張圖，不寫字）。考卷的 6 句一句都不用 */
@@ -85,21 +85,31 @@ const M7 = [['brother', '👦', '哥哥'], ['mother', '👩', '媽媽'], ['docto
   ['grandpa', '👴', '爺爺'], ['twelve', '12', '十二'], ['fifteen', '15', '十五'], ['eighteen', '18', '十八'], ['eleven', '11', '十一'], ['dad', '👨', '爸爸']]
   .map(([w, ic, zh]) => ({ spell: w, ic, zhw: zh, q: '✍️ 拼字：' + zh + '（' + w[0] + '＿' + w.slice(-1) + '）', o: [w, '（拼錯）'], z: w + ' ＝ ' + zh, ae: w }));
 
-/* 🕵️ m8 短文 偵探：讀一段短文，回答；答完那一句「證據」會亮起來（考卷的 Amy 短文不用，人、歲數、職業都換掉） */
+/* 🕵️ m8 短文 偵探：讀 對話，回答；答完 那一句「證據」會 亮起來
+   2026-10-26 第二十九次（老師：C31 兩篇 新 對話「對」＋「題目 和 選項 不可以 出現 中文」）：換成 _pas_draft.js 的 兩篇 對話（Frank／Lisa 看 全家福、Peter／Grace 認識 新 朋友），
+   10 題 題目、選項 全 英文（年齡 ＝「… is ___ years old.」、職業 ＝「… is ___.」、家人 ＝「Who’s she? She’s Lisa’s ___.」、Yes／No ＝「Frank: Is she your mom?　Lisa: ___」）。
+   t ＝ 每一行、sp ＝ 誰 說 的、z ＝ 每一行 的 中文（答錯頁 用）；ev ＝ 證據 在 第幾行（可以 多行） */
 const PAS = {
-  ken: { t: ['Hi, I’m Ken. I’m eleven.', 'This is my grandma. She’s a cook.', 'This is my dad. He’s a nurse.', 'This is my sister. She’s fifteen. She’s a student.'],
-    z: ['嗨，我 是 Ken。我 十一 歲。', '這 是 我的 奶奶。她 是 廚師。', '這 是 我的 爸爸。他 是 護理師。', '這 是 我的 姊姊。她 十五 歲。她 是 學生。'] },
-  mia: { t: ['Hello, I’m Mia. I’m twelve.', 'This is my father. He’s a farmer.', 'This is my grandma. She’s a doctor.', 'This is my brother. He’s nineteen. He’s a cook.'],
-    z: ['哈囉，我 是 Mia。我 十二 歲。', '這 是 我的 爸爸。他 是 農夫。', '這 是 我的 奶奶。她 是 醫生。', '這 是 我的 哥哥。他 十九 歲。他 是 廚師。'] }
+  lisa: { title: 'Family Photo', sp: ['Frank', 'Lisa', 'Frank', 'Lisa', 'Frank', 'Lisa'],
+    t: ['Who’s he, Lisa?', 'He’s my brother. He’s thirteen.', 'Is he a student?', 'Yes, he is.', 'Who’s she? Is she your mom?', 'No, she isn’t. She’s my grandma. She’s a doctor.'],
+    z: ['Lisa，他 是 誰？', '他 是 我的 哥哥。他 十三 歲。', '他 是 學生 嗎？', '是的，他 是。', '她 是 誰？她 是 你的 媽媽 嗎？', '不，她 不是。她 是 我的 奶奶。她 是 醫生。'] },
+  grace: { title: 'A New Friend', sp: ['Peter', 'Grace', 'Peter', 'Grace', 'Peter', 'Grace'],
+    t: ['Hi, I’m Peter. I’m eleven.', 'Hello, Peter. I’m Grace. I’m twelve. Nice to meet you.', 'Nice to meet you, too. Is your dad a farmer?', 'No, he isn’t. He’s a cook.', 'Who’s she?', 'She’s my sister. She’s nineteen. She’s a nurse.'],
+    z: ['嗨，我 是 Peter。我 十一 歲。', '哈囉，Peter。我 是 Grace。我 十二 歲。很高興 認識 你。', '我 也 很高興 認識 你。你的 爸爸 是 農夫 嗎？', '不，他 不是。他 是 廚師。', '她 是 誰？', '她 是 我的 姊姊。她 十九 歲。她 是 護理師。'] }
 };
+const evT = (p, ev) => [].concat(ev).map(i => PAS[p].t[i]).join(' '), evZ = (p, ev) => [].concat(ev).map(i => PAS[p].z[i]).join('');
 const M8 = [
-  ['ken', 'Ken 幾 歲？', ['eleven', 'fifteen', 'twelve'], 0], ['ken', 'Ken 的 奶奶 是 ___。', ['a cook', 'a nurse', 'a student'], 1],
-  ['ken', 'Ken 的 爸爸 是 ___。', ['a nurse', 'a cook', 'a doctor'], 2], ['ken', 'Ken 的 姊姊 幾 歲？', ['fifteen', 'eleven', 'fifty'], 3],
-  ['ken', '誰 是 學生？', ['Ken 的 姊姊', 'Ken 的 爸爸', 'Ken 的 奶奶'], 3],
-  ['mia', 'Mia 幾 歲？', ['twelve', 'twenty', 'nineteen'], 0], ['mia', 'Mia 的 爸爸 是 ___。', ['a farmer', 'a doctor', 'a cook'], 1],
-  ['mia', '誰 是 醫生？', ['Mia 的 奶奶', 'Mia 的 爸爸', 'Mia 的 哥哥'], 2], ['mia', 'Mia 的 哥哥 幾 歲？', ['nineteen', 'nine', 'ninety'], 3],
-  ['mia', 'Mia 的 哥哥 是 ___。', ['a cook', 'a farmer', 'a student'], 3]
-].map(([p, q, o, ev]) => ({ pas: p, ev, q: '📖 ' + q, o, z: PAS[p].t[ev] + '　' + PAS[p].z[ev], ae: PAS[p].t[ev] }));
+  ['lisa', 'Lisa’s brother is ___ years old.', ['thirteen', 'thirty', 'fourteen'], 1],
+  ['lisa', 'Lisa’s brother is ___.', ['a student', 'a teacher', 'a doctor'], [2, 3]],
+  ['lisa', 'Who’s she? She’s Lisa’s ___.', ['grandma', 'mom', 'sister'], 5],
+  ['lisa', 'Lisa’s grandma is ___.', ['a doctor', 'a nurse', 'a student'], 5],
+  ['lisa', 'Frank: Is she your mom?　Lisa: ___', ['No, she isn’t.', 'Yes, she is.', 'No, he isn’t.'], 5],
+  ['grace', 'Grace is ___ years old.', ['twelve', 'twenty', 'eleven'], 1],
+  ['grace', 'Peter is ___ years old.', ['eleven', 'seven', 'twelve'], 0],
+  ['grace', 'Grace’s dad is ___.', ['a cook', 'a farmer', 'a nurse'], 3],
+  ['grace', 'Grace’s sister is ___ years old.', ['nineteen', 'nine', 'ninety'], 5],
+  ['grace', 'Who’s a nurse?', ['Grace’s sister', 'Grace’s dad', 'Grace'], 5]
+].map(([p, q, o, ev]) => ({ pas: p, ev, q: '📖 ' + q, o, z: evT(p, ev) + '　' + evZ(p, ev), ae: evT(p, ev) }));
 
 /* 🌳 m9 家族樹 尋人：讀一句，點家族樹上對的那一個人（考卷是看人選字，這裡反過來：看字點人） */
 const TREE = ['grandpa', 'grandma', 'dad', 'mom', 'brother', 'sister'];
@@ -201,7 +211,9 @@ M4.forEach(q => { q.fe = q.say; q.fz = q.z.replace(q.say, '').trim(); q.fs = [['
 M5.forEach(q => { q.fe = q.say; q.fz = q.z; q.fs = [['M1', q.say]]; });
 M6.forEach(q => { const L = q.chat === 'A' ? [q.line, q.o[0]] : [q.o[0], q.line]; q.fe = L.join(' '); q.fz = zhClean(q.z); q.fs = [['', L[0]], ['m', L[1]]]; });
 M7.forEach(q => { q.fe = q.spell; q.fz = q.spell + ' ＝ ' + q.zhw; q.fs = [['M1', q.spell]]; });
-M8.forEach(q => { q.fe = q.ae; q.fz = PAS[q.pas].z[q.ev]; q.fs = [['', q.ae]]; });
+/* 第二十九次：證據 一句一句 唸（長 的 一行 一起 唸，She’s 聽起來 像 He’s）*/
+const evS = t => (String(t).match(/[^.?!]+[.?!]/g) || [t]).map(x => ['', x.trim()]);
+M8.forEach(q => { q.fe = q.ae; q.fz = evZ(q.pas, q.ev); q.fs = evS(q.ae); });
 M9.forEach(q => { q.fe = q.line; q.fz = q.z.replace(q.line, '').trim(); q.fs = [['', q.line]]; });
 M10.forEach(q => { q.fe = noLab(q.ae); q.fz = q.z; q.fs = [['', q.fe]]; });
 M11.forEach(q => { const he = /\bhe\b/i.test(q.line), yes = /^Yes/.test(q.o[0]), j = /a (\w+)\?$/.exec(q.line)[1];   /* 問句 裡 的 職業（不是 圖 上 的） */
@@ -217,7 +229,7 @@ Object.keys(XD.PAS).forEach(k => { PAS[k] = XD.PAS[k]; });
 const XB = {};
 XB.m1 = XD.X1.map(([sm, w, ic, zh]) => ({ sim: sm, say: w, ic, w, q: '🔊 聽：' + w + '　第一個字母是？', o: [w[0]].concat(LET.filter(x => x !== w[0])), z: w + '（' + zh + '）', h: '第一個 音 ＝ ' + w[0] }));
 XB.m2 = XD.X2.map(([sm, a, b]) => { const same = a[0] === b[0];
-  return { sim: sm, say: a + '. ' + b + '.', pair: [a, b], q: '🔊 聽：' + a + '、' + b + '　第一個音？', o: same ? ['⭕ 一樣', '❌ 不一樣'] : ['❌ 不一樣', '⭕ 一樣'],
+  return { sim: sm, say: a + '. ' + b + '.', pair: [a, b], q: '🔊 聽：' + a + '、' + b + '　第一個音？', o: same ? ['⭕ Same', '❌ Different'] : ['❌ Different', '⭕ Same'],   /* 2026-10-26 第二十九次：選項 全 英文 */
     z: a + ' 是 ' + a[0] + '，' + b + ' 是 ' + b[0] + ' ➜ ' + (same ? '一樣' : '不一樣'), h: a[0] + ' ／ ' + b[0] }; });
 XB.m3 = XD.X3.map(([sm, t, a, b, zh]) => ({ sim: sm, say: t, pic: 1, q: '🔊 聽：' + t, o: [a].concat(b), oz: [a].concat(b).map(picZh), z: zh, ae: t }));
 XB.m4 = XD.X4.map(([sm, t, im, d, zh]) => ({ sim: sm, say: t, photo: 1, q: '🔊 聽：' + t, o: [im].concat(d), oz: [im].concat(d).map(x => CE.filter(y => y[1] === x)[0][0]), z: t + '　' + zh, ae: t }));
@@ -241,7 +253,7 @@ XB.m4.forEach(q => { q.fe = q.say; q.fz = q.z.replace(q.say, '').trim(); q.fs = 
 XB.m5.forEach(q => { q.fe = q.say; q.fz = q.z; q.fs = [['M1', q.say]]; });
 XB.m6.forEach(q => { const L = q.chat === 'A' ? [q.line, q.o[0]] : [q.o[0], q.line]; q.fe = L.join(' '); q.fz = zhClean(q.z); q.fs = [['', L[0]], ['m', L[1]]]; });
 XB.m7.forEach(q => { q.fe = q.spell; q.fz = q.spell + ' ＝ ' + q.zhw; q.fs = [['M1', q.spell]]; });
-XB.m8.forEach(q => { q.fe = q.ae; q.fz = PAS[q.pas].z[q.ev]; q.fs = [['', q.ae]]; });
+XB.m8.forEach(q => { q.fe = q.ae; q.fz = evZ(q.pas, q.ev); q.fs = evS(q.ae); });
 XB.m9.forEach(q => { q.fe = q.line; q.fz = X9Z[q.line]; q.fs = [['', q.line]]; });
 XB.m10.forEach(q => { q.fe = noLab(q.ae); q.fz = q.z; q.fs = [['', q.fe]]; });
 XB.m11.forEach(q => { q.fe = q.line + ' ' + q.o[0]; q.fz = q.zz; delete q.zz; q.fs = [['', q.line], ['m', q.o[0]]]; });

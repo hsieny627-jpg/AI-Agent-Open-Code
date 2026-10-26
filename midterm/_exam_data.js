@@ -63,23 +63,24 @@ const X7 = [[1, 'sister', '👧', '姊姊'], [1, 'teacher', '📚', '老師'],
 /* 🕵️ m8 短文 偵探：兩篇 新 的 對話（老師 第二十七次 6-(4)：對話式、兩篇 完全 不同、測得出 期中考 短文 的 目標：幾 歲、家裡 的 誰、做 什麼 工作、Yes／No）
    [s, 哪一篇, 問題, [正解, 誘答 2], 證據 在 第幾行] */
 const PAS = {
-  xjason: { title: '看 家人 的 照片', sp: ['Nora', 'Jason', 'Nora', 'Jason', 'Nora', 'Jason'],
+  xjason: { title: 'Family Members', sp: ['Nora', 'Jason', 'Nora', 'Jason', 'Nora', 'Jason'],
     t: ['Jason, who’s she?', 'She’s my grandma. She’s a farmer.', 'Who’s he? Is he your grandpa?', 'No, he isn’t. He’s my uncle. He’s a doctor.', 'Is he twenty?', 'No, he isn’t. He’s nineteen.'],
     z: ['Jason，她 是 誰？', '她 是 我的 奶奶。她 是 農夫。', '他 是 誰？他 是 你的 爺爺 嗎？', '不，他 不是。他 是 我的 叔叔。他 是 醫生。', '他 二十 歲 嗎？', '不，他 不是。他 十九 歲。'] },
-  xemily: { title: '在 公園 遇到 朋友', sp: ['Owen', 'Emily', 'Owen', 'Emily', 'Owen', 'Emily'],
+  xemily: { title: 'Good Morning', sp: ['Owen', 'Emily', 'Owen', 'Emily', 'Owen', 'Emily'],
     t: ['Good morning, Emily. Who’s she?', 'Good morning, Owen. She’s my sister.', 'Is she a student?', 'Yes, she is. She’s fourteen.', 'Who’s he? Is he your dad?', 'Yes, he is. He’s a nurse.'],
     z: ['早安，Emily。她 是 誰？', '早安，Owen。她 是 我的 姊姊。', '她 是 學生 嗎？', '是的，她 是。她 十四 歲。', '他 是 誰？他 是 你的 爸爸 嗎？', '是的，他 是。他 是 護理師。'] }
 };
-const X8 = [[1, 'xjason', 'Jason 的 奶奶 做 什麼 工作？', ['a farmer', 'a doctor', 'a cook'], 1],
-  [0, 'xjason', '照片 上 的 男生 是 Jason 的 誰？', ['叔叔', '爺爺', '爸爸'], 3],
-  [0, 'xjason', 'Jason 的 叔叔 做 什麼 工作？', ['a doctor', 'a farmer', 'a nurse'], 3],
-  [0, 'xjason', 'Nora 問「Is he twenty?」，Jason 怎麼 回答？', ['No, he isn’t.', 'Yes, he is.', 'No, she isn’t.'], 5],
-  [1, 'xjason', 'Jason 的 叔叔 幾 歲？', ['nineteen', 'twenty', 'ninety'], 5],
-  [1, 'xemily', 'Emily 的 姊姊 幾 歲？', ['fourteen', 'forty', 'four'], 3],
-  [0, 'xemily', '跟 Emily 在 一起 的 女生 是 誰？', ['Emily 的 姊姊', 'Emily 的 媽媽', 'Emily 的 奶奶'], 1],
-  [0, 'xemily', 'Emily 的 姊姊 是 ___。', ['a student', 'a teacher', 'a nurse'], 3],
-  [0, 'xemily', 'Emily 的 爸爸 做 什麼 工作？', ['a nurse', 'a doctor', 'a cook'], 5],
-  [0, 'xemily', 'Owen 問「Is he your dad?」，Emily 怎麼 回答？', ['Yes, he is.', 'No, he isn’t.', 'Yes, she is.'], 5]];
+/* 2026-10-26 第二十九次（老師：題目 和 選項 不可以 出現 中文）：10 題 全 英文 */
+const X8 = [[1, 'xjason', 'Jason’s grandma is ___.', ['a farmer', 'a doctor', 'a cook'], 1],
+  [0, 'xjason', 'Who’s he? He’s Jason’s ___.', ['uncle', 'grandpa', 'dad'], 3],
+  [0, 'xjason', 'Jason’s uncle is ___.', ['a doctor', 'a farmer', 'a nurse'], 3],
+  [0, 'xjason', 'Nora: Is he twenty?　Jason: ___', ['No, he isn’t.', 'Yes, he is.', 'No, she isn’t.'], 5],
+  [1, 'xjason', 'Jason’s uncle is ___ years old.', ['nineteen', 'twenty', 'ninety'], 5],
+  [1, 'xemily', 'Emily’s sister is ___ years old.', ['fourteen', 'forty', 'four'], 3],
+  [0, 'xemily', 'Who’s she? She’s Emily’s ___.', ['sister', 'mom', 'grandma'], 1],
+  [0, 'xemily', 'Emily’s sister is ___.', ['a student', 'a teacher', 'a nurse'], 3],
+  [0, 'xemily', 'Emily’s dad is ___.', ['a nurse', 'a doctor', 'a cook'], 5],
+  [0, 'xemily', 'Owen: Is he your dad?　Emily: ___', ['Yes, he is.', 'No, he isn’t.', 'Yes, she is.'], 5]];
 
 /* 🌳 m9 家族樹 尋人 [s, 英文, 正解 的 人]
    🔁 ＝ This is my …（考卷 看 家庭樹 選 字 的 重點，這裡 反過來 點 人）；🆕 ＝ 兩句 話、Look!、Who’s he? */

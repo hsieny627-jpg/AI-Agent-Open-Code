@@ -163,3 +163,24 @@
 .lftu.t5 .tureg span.on{animation-duration:1.6s}
 .lfreg{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}.lfreg span{display:flex;flex-direction:column;align-items:center;font-size:clamp(14px,1.8vh,18px)}.lfreg svg{width:clamp(34px,5vh,52px);height:clamp(34px,5vh,52px);filter:drop-shadow(0 0 6px rgba(255,224,122,.7))}
 @media (prefers-reduced-motion:reduce){.lftu .tureg span{transition:none}.lftu .tureg span.on{animation:none}}
+
+/* ══ 2026-10-26 第二十九次 第 9(a) 點：升階 典禮 疊上去 的 層（紅地毯、旗幟、紙花、光環、光柱、星空、晉階 證書）；亮度 柔和、不 閃爍 ══ */
+.lftu .tucar{position:absolute;left:50%;bottom:0;width:min(34vw,360px);height:58%;transform:translateX(-50%) perspective(600px) rotateX(58deg);transform-origin:50% 100%;background:linear-gradient(#7A0E1C,#B5172C 60%,#D8303F);box-shadow:0 0 40px rgba(181,23,44,.4);opacity:0;animation:tuCar 1.2s .3s ease-out forwards;pointer-events:none;z-index:0}
+.lftu .tucar i{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 12%,rgba(255,213,74,.5) 12% 13%,transparent 13% 87%,rgba(255,213,74,.5) 87% 88%,transparent 88%)}
+.lftu .tuban{position:absolute;top:0;width:clamp(70px,9vw,120px);height:44%;background:linear-gradient(var(--tb1,#5A1020),var(--tb2,#2A0610));clip-path:polygon(0 0,100% 0,100% 88%,50% 100%,0 88%);transform:translateY(-110%);animation:tuBan 1s .6s cubic-bezier(.3,1.4,.5,1) forwards;display:flex;justify-content:center;padding-top:30%;pointer-events:none;z-index:1;box-shadow:inset 0 0 0 4px rgba(255,213,74,.55)}
+.lftu .tuban.l{left:6%}.lftu .tuban.r{right:6%}.lftu .tuban span svg{width:clamp(44px,6vw,80px);height:auto}
+.lftu .tucf{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}.lftu .tucf i{position:absolute;top:-4%;width:9px;height:14px;border-radius:2px;opacity:.75;animation:tuCf linear infinite}
+.lftu .turing{position:absolute;left:50%;top:30%;width:0;height:0;pointer-events:none;z-index:0}.lftu .turing i{position:absolute;left:calc(-80px * var(--r));top:calc(-80px * var(--r));width:calc(160px * var(--r));height:calc(160px * var(--r));border-radius:50%;border:3px dashed;opacity:.38;animation:tuRot linear infinite}
+.lftu .tupil{position:absolute;left:50%;top:0;width:min(30vw,320px);height:100%;transform:translateX(-50%);background:linear-gradient(rgba(255,240,180,.22),rgba(255,213,74,0) 75%);opacity:0;animation:tuIn 2s 1.4s forwards;pointer-events:none;z-index:0}
+.lftu .tusky{position:absolute;inset:0;pointer-events:none;z-index:0}.lftu .tusky i{position:absolute;width:4px;height:4px;border-radius:50%;background:#FFF3C0;box-shadow:0 0 6px #FFE07A;opacity:0;animation:tuTw 3.4s ease-in-out infinite}
+.lftu .tucert{position:absolute;left:50%;top:50%;width:min(88vw,620px);transform:translate(-50%,-40%) scale(.9);opacity:0;pointer-events:none;z-index:6;border-radius:22px;padding:10px;background:linear-gradient(135deg,var(--c1),#FFF3C0 40%,var(--c2));box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 30px rgba(255,213,74,.3);transition:opacity .9s,transform .9s}
+.lftu.s-cert .tucert{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}.lftu.s-cert .tureg,.lftu.s-cert .tusay{opacity:.15}
+.lftu .tcin{background:linear-gradient(#FFFBEA,#FFF1C8);border-radius:14px;padding:clamp(14px,2.6vh,28px) 18px;text-align:center;color:#3A2A00;border:3px double #B8860B}
+.lftu .tchd{font-size:clamp(26px,4vh,40px);font-weight:700;letter-spacing:.16em;color:#8A5A00}.lftu .tcwho{font-size:clamp(24px,3.4vh,34px);font-weight:700;margin-top:6px}
+.lftu .tcsub{font-size:clamp(20px,2.8vh,28px);margin-top:6px}.lftu .tcname{font-size:clamp(34px,5.6vh,58px);font-weight:700;margin:4px 0;background:linear-gradient(#C98A00,#7A4A00);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lftu .tcdt{font-size:clamp(18px,2.4vh,24px);color:#6A5020}.lftu .tcft{font-size:clamp(20px,2.8vh,28px);margin-top:6px;font-weight:700;color:#8A2A10}
+.lftu .tucert.c3{padding:14px}.lftu .tucert.c4{padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(255,213,74,.4)}.lftu .tucert.c5{padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 50px rgba(255,213,74,.5),inset 0 0 0 3px rgba(255,255,255,.6)}
+.lftu .tucert.c5 .tcin{border-width:5px}
+@keyframes tuCar{to{opacity:.9}}@keyframes tuBan{to{transform:none}}@keyframes tuCf{from{transform:translateY(0) rotate(0)}to{transform:translateY(110vh) rotate(540deg)}}
+@keyframes tuRot{to{transform:rotate(360deg)}}@keyframes tuIn{to{opacity:1}}@keyframes tuTw{50%{opacity:.85}}
+@media (prefers-reduced-motion:reduce){.lftu .tucf,.lftu .tusky,.lftu .turing{display:none}}

@@ -3,6 +3,19 @@
 > 2026-10-19 老師第十三次 3(11) 做的。需求原文、老師的決定：`sentences/2026-10-16_C_需求與問題.md` 第四節最下面「第十三次」。
 > 根目錄 `AGENTS.md` 第四節（最高原則、品質、省額度）同樣適用。
 
+## 2026-10-26 第二十九次：短文偵探 兩篇 新 對話＋題目 選項 全 英文（先讀這一節）
+
+老師（需求檔 第四節「第二十九次」）：C31 兩篇 對話 對；**四年級 複習 所有 題目 和 選項 不可以 出現 中文**（🔒 永久原則 見 `g3mid/CLAUDE.md` 最上面）；時間 到 沒有 選 ＝ 答錯。
+
+| 改了 什麼 | 做法 |
+|---|---|
+| 短文偵探 | `_data.js` 的 `PAS` ＝ `_pas_draft.js` 的 lisa（Family Photo）、grace（A New Friend）；10 題 全 英文：年齡「Lisa’s brother is ___ years old.」、職業「Lisa’s grandma is ___.」、家人「Who’s she? She’s Lisa’s ___.」、Yes／No「Frank: Is she your mom?　Lisa: ___」、「Who’s a nurse?」；證據 可以 多行（`ev` 陣列，`evT`／`evZ`）；答錯頁 證據 **一句一句 唸**（`evS`：長 的 一行 一起 唸，女聲 She’s 會 聽成 He’s）。25／50 題 的 xjason、xemily 題目 也 改 英文、標題 Family Members／Good Morning |
+| 聲音 雙胞胎 | 選項 ⭕ Same／❌ Different（`_build.js` `opts()` 照 英文 找） |
+| 拼字 救援 | 上面 只 放 圖（拿掉 中文 意思）；圖＋第一、最後 字母 就 知道 是 哪個 字 |
+| 家族樹 尋人 | 人 下面 不寫 中文（只有 人 的 圖；中間「🙋 me」） |
+| 對話 工廠 | 「字 庫」➜「Word Bank」 |
+| 對話 換行 | 說話 的 人 一欄、句子 一欄（`.spl` grid，第二行 不會 跑到 名字 下面）；`.fb.ok` 不 擋 按鈕 |
+
 ## 2026-10-26 第二十八次：📝 25 題／50 題 挑戰（先讀這一節）
 
 老師原文、選擇題：`sentences/2026-10-16_C_需求與問題.md` 第四節最下面「第二十八次」。**12 種都玩**（老師選擇題）。題目清單：https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-10-26_C33/ 。

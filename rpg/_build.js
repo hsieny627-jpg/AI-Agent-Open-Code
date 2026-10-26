@@ -342,6 +342,13 @@ button:active{transform:scale(.97)}
 #rpin.rlock #stage,#rpin.rlock #tabs{display:none}
 .rgate{background:linear-gradient(135deg,#3A2A06,#1A1030);border:3px solid #FFD54A;border-radius:18px;padding:14px 18px;margin:0 0 12px;font-size:clamp(22px,3vh,30px);line-height:1.45;text-align:center}
 /* 2026-10-25 🎯 全班獎勵 4 幕 */
+.cwclk{display:flex;align-items:center;justify-content:center;gap:14px;font-size:clamp(26px,3.6vh,40px);font-weight:700;color:#FFE07A;animation:fadeUp .6s both}.cwclk svg{width:clamp(56px,8vh,90px);height:auto}
+.cwt{display:grid;grid-template-columns:clamp(110px,14vw,170px) 1fr;align-items:center;gap:12px;width:min(100%,900px);margin:10px auto 0;animation:fadeUp .5s both}.cwd{font-size:clamp(20px,2.6vh,28px);text-align:right}
+.cwbar{display:flex;height:clamp(48px,7vh,70px);border-radius:14px;overflow:hidden;box-shadow:0 0 0 3px rgba(255,255,255,.25)}.cwbar span{display:flex;align-items:center;justify-content:center;font-size:clamp(18px,2.2vh,24px);font-weight:700;white-space:nowrap;overflow:hidden;animation:cwFill .7s both;transform-origin:left}
+.cwbar .ok{background:linear-gradient(#FFD54A,#E0A800);color:#3A2A00}.cwbar .sch{background:repeating-linear-gradient(45deg,#3A4656 0 12px,#2B3644 12px 24px);color:#B8C4D2}
+.cwtick{display:grid;grid-template-columns:clamp(110px,14vw,170px) 1fr;gap:12px;width:min(100%,900px);margin:2px auto 0;font-size:18px;color:#B8C4D2;animation:fadeUp .5s both}.cwtick div{position:relative;height:26px}.cwtick span{position:absolute;transform:translateX(-50%);white-space:nowrap}.cwtick span:first-child{transform:none}.cwtick span:last-child{transform:translateX(-100%)}
+.rnote.sm{font-size:clamp(18px,2.2vh,22px);opacity:.85}
+@keyframes cwFill{from{transform:scaleX(0)}to{transform:none}}
 .cwp{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;width:min(100%,720px);margin:0 auto}.cwp span{display:flex;flex-direction:column;align-items:center;border-radius:12px;padding:6px 0;opacity:0;animation:fadeUp .5s forwards}
 .cwp span.ok{background:#164A2A;border:2px solid #5DE89A}.cwp span.no{background:#1A2230;border:2px solid #3A4A5A;filter:grayscale(1)}.cwp b{font-size:clamp(26px,4vh,40px)}.cwp small{font-size:17px;color:#BFFFD8;min-height:1.2em}
 .cwy{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:min(100%,760px);margin:0 auto}.cwy>div{border-radius:18px;padding:14px;text-align:center;opacity:0;animation:fadeUp .6s forwards;display:flex;flex-direction:column;gap:8px}
@@ -627,8 +634,16 @@ function rulesScenes(tb,me){var D=CAT.DILI,ex=Object.keys(CAT.TX),dl=function(i)
 function cwScenes(){var W=CAT.CW,dl=function(i){return 'animation-delay:'+i+'s'},
     ppl=function(n,ok,lab){var h='<div class="cwp">';for(var i=0;i<n;i++)h+='<span class="'+(i<ok?'ok':'no')+'" style="'+dl(.3+i*.15)+'"><b>'+(i<ok?'🙋':'🧍')+'</b><small>'+(i<ok?lab:'')+'</small></span>';return h+'</div>'},
     bars=function(T,top){var ks=Object.keys(T).map(Number),mx=T[ks[ks.length-1]][0];return '<div class="cwb">'+ks.map(function(d,i){var v=T[d];return '<div style="'+dl(.3+i*.35)+'"><em>🪙'+v[0]+'<br><small>⭐'+v[1]+'</small></em><i style="height:'+Math.round(v[0]/mx*100)+'%"></i><b>'+(d===7?'👑':'')+d+'天</b></div>'}).join('')+'</div>'};
+  /* 2026-10-26 第二十九次 第 10 點（老師）：秒懂「非上課時間」＝ 每天 下午 4 點 以後、星期六 日 整天（老師 選 B：早上 上學 前 也 算）；課後班 400 ＝ 5:30 以後 */
+  var tl=function(lab,seg,d){return '<div class="cwt" style="'+dl(d)+'"><b class="cwd">'+lab+'</b><div class="cwbar">'+seg.map(function(x){return '<span class="'+x[0]+'" style="flex:'+x[1]+';'+dl(d+.4)+'">'+x[2]+'</span>'}).join('')+'</div></div>'};
   return [
-  ['🎯 目標①：全班'+W.pct/10+'成的人練'+W.d1+'天',ppl(10,W.pct/10,W.d1+'天')+'<div class="rnote" style="'+dl(2.2)+'">10個人裡'+W.pct/10+'個（30人 ➜ 24人）這週練'+W.d1+'天以上</div><div class="rnote" style="'+dl(3.2)+'">📅 下星期一自動發</div>',function(){}],
+  ['🕓 在「非上課時間」練，才算',
+   '<div class="cwclk" style="'+dl(.2)+'"><b>🕓</b><span>下午 4 點 以後</span></div>'+
+   tl('星期一～五',[['ok',7.7,'🌅 上學前 ✅'],['sch',8.3,'🏫 上課 ✗'],['ok',8,'🏠 4 點 以後 ✅']],.8)+
+   tl('星期六、日',[['ok',24,'🏠 整天 都 算 ✅']],1.8)+
+   '<div class="cwtick" style="'+dl(.8)+'"><i></i><div><span style="left:0">0 點</span><span style="left:32%">7:40</span><span style="left:66.7%">16:00</span><span style="left:100%">24 點</span></div></div>'+
+   '<div class="rnote" style="'+dl(2.8)+'">🏫 在 學校 上課 的 時候 練，不算 天數</div><div class="rnote sm" style="'+dl(3.6)+'">課後班 400：下午 5:30 以後 才 算</div>',function(){}],
+  ['🎯 目標①：全班'+W.pct/10+'成的人練'+W.d1+'天',ppl(10,W.pct/10,W.d1+'天')+'<div class="rnote" style="'+dl(2.2)+'">10個人裡'+W.pct/10+'個（30人 ➜ 24人）這週在 非上課時間 練'+W.d1+'天以上</div><div class="rnote" style="'+dl(3.2)+'">📅 下星期一自動發</div>',function(){}],
   ['🎁 自己練'+W.d1+'天以上，才拿得到','<div class="cwy"><div class="no" style="'+dl(.3)+'"><b>練0天、1天</b><span>❌ 拿不到</span></div><div class="ok" style="'+dl(1.3)+'"><b>練'+W.d1+'天</b><span>🎁 🪙'+W.t1[W.d1][0]+'　⭐'+W.t1[W.d1][1]+'</span></div></div><div class="rnote" style="'+dl(2.4)+'">沒練的人，全班達到也拿不到</div>',function(){}],
   ['📈 練愈多天 ➜ 拿愈多',bars(W.t1)+'<div class="rnote" style="'+dl(2.6)+'">每一天都練 ＝ 拿最多 👑</div>',function(){}],
   ['🚀 目標②：全班每一位都練'+W.d2+'天 ➜ 每個人拿更多','<div class="rnote" style="'+dl(.2)+'">🙋🙋🙋🙋🙋 全班每一位 都練'+W.d2+'天以上</div>'+bars(W.t2)+'<div class="rnote" style="'+dl(2.8)+'">全班一起努力，每個人都拿更多！</div>',function(){}]]}

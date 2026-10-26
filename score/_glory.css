@@ -115,3 +115,15 @@
 .gl .glmany{display:flex;flex-wrap:wrap;justify-content:center;gap:.3em .8em;font-size:clamp(20px,2.6vh,34px);line-height:1.25;max-width:100%}
 .gl .glmany>span{white-space:nowrap}.gl .glmany .gleq{display:none}
 .gl .gpn,.gl .glwn{max-width:100%;overflow-wrap:anywhere}
+
+/* ══ 2026-10-26 第二十九次 第 9(b)(c) 點：榮譽榜 每一位 學生 下面 ＝ 戰神 稱號＋階級 徽章（愈 高階 愈 尊榮 華麗，柔和 不 刺眼）══ */
+.gl .gltr{display:flex;align-items:center;justify-content:center;gap:.3em;margin:.18em auto 0;width:max-content;max-width:100%;padding:.08em .7em .08em .3em;border-radius:999px;font-size:.62em;line-height:1.15;-webkit-text-fill-color:initial;white-space:nowrap}
+.gl .gltr .gltb svg{width:1.7em;height:1.7em;display:block}.gl .gltr b{font-weight:700}
+.gl .gltr.t1{background:linear-gradient(#6B4A2A,#3E2914);color:#F2D2A8;box-shadow:0 0 0 2px #B07A45}
+.gl .gltr.t2{background:linear-gradient(#5E6B7A,#2E3843);color:#EEF4FA;box-shadow:0 0 0 2px #C8D4E0}
+.gl .gltr.t3{background:linear-gradient(#8A6400,#4A3400);color:#FFF1B8;box-shadow:0 0 0 2px #FFD54A,0 0 10px rgba(255,213,74,.35)}
+.gl .gltr.t4{background:linear-gradient(#5A2A8A,#2A0E4A);color:#FFE9A8;box-shadow:0 0 0 2px #E7C25A,0 0 14px rgba(190,140,255,.45)}
+.gl .gltr.t5{position:relative;background:linear-gradient(110deg,#7A5200,#C9930F 30%,#FFF0B0 50%,#C9930F 70%,#7A5200);background-size:220% 100%;color:#3A2400;box-shadow:0 0 0 3px #FFF3C0,0 0 18px rgba(255,213,74,.55);animation:gltrS 6s linear infinite;font-size:.7em}
+.gl .gltr.t5 b{text-shadow:0 1px 0 rgba(255,255,255,.5)}
+@keyframes gltrS{from{background-position:110% 0}to{background-position:-110% 0}}
+@media (prefers-reduced-motion:reduce){.gl .gltr.t5{animation:none}}

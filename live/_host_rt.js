@@ -62,8 +62,8 @@ function entNext(){if(H.entOn||!H.entQ.length)return;var x=H.entQ.shift();H.entO
 /* ── 一頁 設定（預設：經典搶答、題目 全選、5 題、🔥 挑戰題 開）── */
 var CLS={3:['304','307','311'],4:['402','406','409','410','400']};
 /* 2026-10-19 第十三次 3(1)(2)：同一類 的 遊戲 放 同一區 */
-var GRP=[['c','🏆','經典 搶答','全班 一起 搶答（像 Kahoot）',['classic']],['s','🙋','個人賽','每個人 自己 比 分數',['race','tower','shoot','surf','king']],
-  ['t','🤝','全班 合作','全班 一起 完成 一個 任務',['boss','pet','treasure']],['v','⚔️','兩隊 對抗','單號隊 vs 雙號隊',['tug','map']]];
+var GRP=[['c','🏆','經典 搶答','全班 一起 搶答（像 Kahoot）',['classic']],['s','🙋','個人賽','每個人 自己 比 分數',['race','tower','shoot','surf','king','fish']],
+  ['t','🤝','全班 合作','全班 一起 完成 一個 任務',['boss','pet','treasure','castle']],['v','⚔️','兩隊 對抗','單號隊 vs 雙號隊',['tug','map']]];
 /* 老師 的 步驟條（3(9)）：① 設定 ➜ ② 等 學生 ➜ ③ 答題 ➜ ④ 頒獎 ➜ ⑤ 錯題 ➜ ⑥ 發獎勵 */
 var HSTEPS=[['⚙️','設定'],['📱','等 學生'],['⚡','答題'],['🏆','頒獎'],['📊','錯題'],['🎁','發獎勵']];
 function hstep(k){$$('.hstp').forEach(function(e){if(e.getAttribute('data-k')!==String(k)){e.setAttribute('data-k',k);e.innerHTML=LV.stepsHTML(HSTEPS,k)}})}
@@ -72,7 +72,7 @@ function mins(n){return Math.max(1,Math.round(n*36/60))}
 function setDraw(){allSets(H.qg);var G=LV.game(H.game),L=LIST[H.qg]||[],secs=[];L.forEach(function(k){var s=GR[k].sec;if(secs.indexOf(s)<0)secs.push(s)});
   var h='<div class="sett"><h1>⚡ 現場任務</h1>'+LV.stepsHTML(HSTEPS,0)+'</div>'+
   '<div class="sbox"><h2><b class="sn">1</b> 哪一班</h2><div class="row">'+[3,4].map(function(g){return CLS[g].map(function(c){return '<button data-sc="'+c+'" class="clsb'+(H.cls===c?' on':'')+'">'+c+(c==='400'?' 課後班':'')+'</button>'}).join('')}).join('<span class="gsep"></span>')+'</div>'+
-  '</div><div class="sbox"><h2><b class="sn">2</b> 哪一種 遊戲</h2>'+chBox()+legBox()+GRP.map(function(g){return '<div class="sgrp"><div class="sgh"><span class="sgi">'+g[1]+'</span><b>'+g[2]+'</b><small>'+g[3]+'</small></div><div class="ggrid">'+
+  '</div><div class="sbox"><h2><b class="sn">2</b> 哪一種 遊戲</h2>'+chBox()+legBox()+(typeof crBox==='function'?crBox():'')+GRP.map(function(g){return '<div class="sgrp"><div class="sgh"><span class="sgi">'+g[1]+'</span><b>'+g[2]+'</b><small>'+g[3]+'</small></div><div class="ggrid">'+
     g[4].map(function(k){var x=LV.game(k);return '<button data-sk="'+k+'" class="gcd'+(H.game===k?' on':'')+'">'+LV.badge(k)+'<span class="gtx"><b>'+x.nm+(k==='classic'?' <em>推薦</em>':'')+'</b><small>'+x.d+'</small></span></button>'}).join('')+'</div></div>'}).join('')+
   '</div><div class="sbox"><h2><b class="sn">3</b> 題目</h2><div class="row"><button data-qg="3" class="'+(H.qg===3?'on':'')+'">三年級 的 題目</button><button data-qg="4" class="'+(H.qg===4?'on':'')+'">四年級 的 題目</button>'+
     '<span class="gsep"></span><button data-sa="1">☑ 全選</button><button data-sa="0">☐ 全部 不選</button><span class="note">（每一行 後面 ＝ 那一組 有 幾題）</span></div>'+
@@ -217,7 +217,7 @@ function heroI(id,cls){var p=H.P[id]||{};return p.h?'<img class="'+(cls||'')+'" 
 var BOSS=['p30','p29','p28','p27','p26','p25','p24','p23'];
 function gs0(){var n=Math.max(1,ids().length),hp=n*Math.max(3,Math.round(H.n*.55))*15;
   var tre=[];for(var i=0;i<6;i++)tre.push('s0'+(1+Math.floor(Math.random()*5))+('0'+(1+Math.floor(Math.random()*20))).slice(-2));
-  return {hp:hp,hp0:hp,tug:0,rt:[0,0],cells:[],nw:[],pet:0,tr:0,cheer:0,boss:BOSS[Math.floor(Math.random()*BOSS.length)],tre:tre,arr:[],bull:{},combo:0,chal:''}}
+  return {br:0,mx:8,hole:0,tw:[],fish:{},nf:[],hp:hp,hp0:hp,tug:0,rt:[0,0],cells:[],nw:[],pet:0,tr:0,cheer:0,boss:BOSS[Math.floor(Math.random()*BOSS.length)],tre:tre,arr:[],bull:{},combo:0,chal:''}}
 function team(id){return seatOf(id)%2?0:1}
 function gsUp(ok1,hits,cheer){var G=H.gs,L=ids(),tn=[0,0],to=[0,0];G.cheer+=cheer;
   L.forEach(function(id){tn[team(id)]++;if(ok1[id])to[team(id)]++});
@@ -227,6 +227,11 @@ function gsUp(ok1,hits,cheer){var G=H.gs,L=ids(),tn=[0,0],to=[0,0];G.cheer+=chee
   G.nw=[];[0,1].forEach(function(t){var k=Math.round(G.rt[t]*4);for(var i=0;i<k;i++){var e=[],o=[];for(var c=0;c<40;c++){if(G.cells[c]==null)e.push(c);else if(G.cells[c]!==t)o.push(c)}var p=e.length?e:o;if(!p.length)break;var c2=p[Math.floor(Math.random()*p.length)];G.cells[c2]=t;G.nw.push(c2)}});
   /* 神射手：這一題 答對 的 箭（愈快 愈 靠近 紅心）；紅心 次數 */
   G.arr=hits.map(function(x){var ring=Math.min(4,Math.floor(x.ms/H.dur*5));if(ring===0)G.bull[x.id]=(G.bull[x.id]||0)+1;return {id:x.id,r:ring}});
+  /* 🏰 全班 守城：答對 一個 ＝ 一塊 磚；怪物 往前 走 18 ✕ 答錯 比例，大砲 打退 22 ✕ 答對 比例；走到 100 ＝ 城牆 破 一個 洞（退回 40）；連對 3 題 ＝ 砲台（號碼）*/
+  G.br+=hits.length;G.mx=Math.max(0,G.mx+6+18*(1-rate)-22*rate);if(G.mx>=100){G.hole++;G.mx=40}
+  hits.forEach(function(x){if((H.st[x.id]||0)>=3&&G.tw.indexOf(x.id)<0&&G.tw.length<8)G.tw.push(x.id)});
+  /* 🎣 英文 釣魚：答對 ＝ 一條 魚；用 的 時間 ＜ 30% ＝ 👑 傳說、＜ 60% ＝ 🌟 稀有 */
+  G.nf=[];hits.forEach(function(x){var r=x.ms/H.dur,t=r<.3?'l':r<.6?'r':'n';(G.fish[x.id]=G.fish[x.id]||[]).push(t);G.nf.push(x.id)});
   var tot=0,max=L.length*H.n;L.forEach(function(id){tot+=H.okc[id]||0});var en=Math.min(1,(tot+G.cheer)/Math.max(1,max*.8));G.en=en;G.pet=en>=1?4:en>=.75?3:en>=.5?2:en>=.25?1:0;G.tr=Math.min(6,Math.floor(en*6.99))}
 /* 從 上一次 的 位置 滑到 這一次（每一次 重畫 都 看得到 移動） */
 function mv(k,v){var a=H.prv[k];H.prv[k]=v;return '--a:'+(a==null?v:a)+';--b:'+v}
@@ -265,6 +270,14 @@ function drawGame(){var el=$('#gv');if(!el||H.game==='classic')return;var G=H.gs
   else if(k==='treasure'){h+='<div class="ts"><svg viewBox="0 0 100 60" preserveAspectRatio="none"><path d="M4 50C20 50 18 12 34 14S46 50 60 46S76 10 96 12" fill="none" stroke="#FFCC80" stroke-width="1.6" stroke-dasharray="2 1.6"/></svg>'+
       [[10,46],[26,16],[40,34],[56,46],[72,20],[92,12]].map(function(p,i){var op=i<G.tr;return '<span class="chest'+(op?' op':'')+(rv&&op&&i===G.tr-1?' new':'')+'" style="left:'+p[0]+'%;top:'+(p[1]/60*100).toFixed(0)+'%">'+(op?'<img src="'+BASE+'rpg/shop/'+G.tre[i]+'.jpg" alt="">':'<b>🔒</b>')+'</span>'}).join('')+
       '<span class="exp" style="'+mv('ex',(G.tr===0?2:[10,26,40,56,72,92][G.tr-1]-4)+'%')+'">🧭</span></div><div class="note c">🗝 全班 打開 '+G.tr+' ／ 6 個 寶箱（裡面 是 商城 的 寶物）</div>'}
+  else if(k==='castle'){var wv=Math.min(3,Math.floor(Math.max(0,H.qi)/Math.max(1,H.n/4))),MON=['🟢','👺','👹','🐲'];
+    h+='<div class="cs"><div class="csg"></div><div class="csc">🏰</div><div class="csw" style="--h:'+Math.min(100,G.br*4)+'%"><i></i><b>🧱 '+G.br+'</b></div>'+
+      '<span class="csm'+(wv===3?' boss':'')+'" style="'+mv('cm',(G.mx*.62).toFixed(1)+'%')+'">'+MON[wv]+'</span>'+
+      G.tw.map(function(id,i){return '<span class="cst" style="left:'+(70-i*5)+'%">🏹<b>'+seatOf(id)+'</b></span>'}).join('')+'</div>'+
+      '<div class="note c">'+(wv===3?'⚠ 魔王 來了！':'👾 第 '+(wv+1)+' 波')+'　🧱 城牆 '+G.br+' 塊'+(G.hole?'　💥 破了 '+G.hole+' 個 洞':'　🛡 城門 沒破')+'</div>'}
+  else if(k==='fish'){var FI={n:'🐟',r:'🦈',l:'🐋'},sc=function(id){var f=G.fish[id]||[],s=0;f.forEach(function(t){s+=t==='l'?3:t==='r'?2:1});return s},tp2=L.slice().sort(function(a,b){return sc(b)-sc(a)}).slice(0,8);
+    h+='<div class="fs">'+tp2.map(function(id){var f=G.fish[id]||[];return '<div class="fsr'+(rv&&G.nf.indexOf(id)>=0?' new':'')+'"><b>'+seatOf(id)+' 號</b><span>'+f.slice(-10).map(function(t){return '<i class="'+t+'">'+FI[t]+'</i>'}).join('')+'</span><em>'+sc(id)+'</em></div>'}).join('')+'</div>'+
+      '<div class="note c">🐟 普通 1 分　🦈 稀有 2 分　🐋 傳說 3 分（答得 愈快 愈 稀有）</div>'}
   else if(k==='surf'){var tp=L.map(function(id){return {id:id,s:H.st[id]||0}}).sort(function(a,c){return c.s-a.s}).slice(0,8),bb=0,bi='';L.forEach(function(id){if((H.best[id]||0)>bb){bb=H.best[id];bi=id}});
     h+='<div class="sf"><svg class="w1" viewBox="0 0 200 40" preserveAspectRatio="none"><path d="M0 20Q25 0 50 20T100 20T150 20T200 20V40H0Z" fill="#0277BD"/></svg><svg class="w2" viewBox="0 0 200 40" preserveAspectRatio="none"><path d="M0 22Q25 8 50 22T100 22T150 22T200 22V40H0Z" fill="#4FC3F7"/></svg>'+
       tp.map(function(x,i){return '<span class="sfr" style="left:'+(4+i*11.5)+'%;'+mv('sf'+x.id,(12+Math.min(9,x.s)*6)+'%').replace(/--a/,'--ay').replace(/--b/,'--by')+'">'+heroI(x.id,'sfi')+'<b>'+(x.s?'🔥'+x.s:seatOf(x.id)+' 號')+'</b>'+fxi(x.id)+'</span>'}).join('')+'</div>'+
@@ -286,7 +299,7 @@ function end(){H.phase='end';clearTimeout(H.tm);clearTimeout(H.tm3);LV.stopSay()
   cerShow()}
 function cerShow(){scr('hend');hstep(3);hqr(true);var Rk=rank(),G=H.gs,k=H.game,cnt=[0,0];(G.cells||[]).forEach(function(t){if(t!=null)cnt[t]++});
   var res=k==='boss'?(G.hp<=0?'🎉 全班 打倒 魔王！':'魔王 還剩 '+G.hp+' 血'):k==='tug'?(G.tug===0?'🤝 兩隊 平手':(G.tug>0?'🔵 單號隊':'🔴 雙號隊')+' 贏了 拔河'):
-    k==='map'?(cnt[0]===cnt[1]?'🤝 兩隊 平手':(cnt[0]>cnt[1]?'🔵 單號隊':'🔴 雙號隊')+' 搶到 比較 多 地'):k==='pet'?['🥚 龍蛋 快 孵出來 了','💥 龍蛋 裂開 了','🐣 孵出 傳說 寵物','🐲 寵物 長大 了','🐉 傳說 進化'][G.pet||0]:k==='treasure'?'🗝 全班 打開 '+G.tr+' 個 寶箱':'';
+    k==='map'?(cnt[0]===cnt[1]?'🤝 兩隊 平手':(cnt[0]>cnt[1]?'🔵 單號隊':'🔴 雙號隊')+' 搶到 比較 多 地'):k==='pet'?['🥚 龍蛋 快 孵出來 了','💥 龍蛋 裂開 了','🐣 孵出 傳說 寵物','🐲 寵物 長大 了','🐉 傳說 進化'][G.pet||0]:k==='treasure'?'🗝 全班 打開 '+G.tr+' 個 寶箱':k==='castle'?(G.hole?'🏰 城門 破了 '+G.hole+' 次，蓋了 '+G.br+' 塊 磚':'🏰 全班 守住 城堡！蓋了 '+G.br+' 塊 磚'):k==='fish'?'🎣 全班 一共 釣到 '+Object.keys(G.fish).reduce(function(a,id){return a+G.fish[id].length},0)+' 條 魚':'';
   var pod=[];for(var i=0;i<Rk.length&&i<3;i++){var x=Rk[i];pod.push({rk:i+1,w:'<span class="cph">'+heroI(x.id,'cpi')+'</span><span class="cpn">'+seatOf(x.id)+' 號</span><span class="cps">'+x.v.toLocaleString()+' 分</span>'})}
   var one=Rk[0],G2=LV.game(H.game);
   H.cerK=CERX.pick();

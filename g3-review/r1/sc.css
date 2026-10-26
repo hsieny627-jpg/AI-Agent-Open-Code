@@ -1,5 +1,33 @@
 #scov{--btn:#1E1E1E;--line:#4A4A4A;--ok:#39D98A;--gold:#FFD24A;--acc:#9FB4C8}
 
+
+/* ── 👑 冠軍寶箱 登入 動畫（2026-10-26 第二十九次 第 11 點）── */
+#scch{position:fixed;inset:0;z-index:120;display:none;background:radial-gradient(circle at 50% 38%,#3A2A08 0,#120C02 45%,#000 80%);overflow:hidden;color:#fff;font-family:inherit}
+#scch.on{display:block}.chw{position:relative;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,1.8vh,18px);padding:16px;text-align:center}
+.chray{position:absolute;left:50%;top:44%;width:0;height:0;animation:chSpin 18s linear infinite}.chray i{position:absolute;left:-30px;top:-80vh;width:60px;height:80vh;background:linear-gradient(rgba(255,213,74,0),rgba(255,213,74,.16));transform-origin:30px 80vh}
+.chcr{line-height:1;font-size:clamp(70px,11vh,120px);transition:font-size .6s;animation:chDrop 1s cubic-bezier(.3,1.5,.5,1) both;filter:drop-shadow(0 0 18px rgba(255,213,74,.7))}
+.cht{font-size:clamp(46px,8vh,92px);font-weight:700;letter-spacing:.12em;background:linear-gradient(#FFF6C8,#FFD54A 45%,#C98A00);-webkit-background-clip:text;background-clip:text;color:transparent;animation:chIn .8s .7s both;text-shadow:0 0 30px rgba(255,213,74,.35)}
+.chwhy{font-size:clamp(24px,3.8vh,40px);font-weight:700;line-height:1.45;animation:chIn .7s 1.5s both}.chwhy b{color:#FFE07A}.chrk{display:inline-block;font-size:1.5em;color:#FFD54A;animation:chPop .6s 2.1s both}.chs{font-size:.9em}.chsm{font-size:max(18px,.55em);color:#D8C9A0;font-weight:400}
+.chbox{position:relative;flex-shrink:0;width:clamp(150px,22vh,260px);height:clamp(110px,17vh,210px);border:0;background:none;cursor:pointer;animation:chIn .6s 2.6s both,chBob 1.8s 3.2s ease-in-out infinite;touch-action:manipulation}
+.chbd{position:absolute;left:0;right:0;bottom:0;height:62%;border-radius:12px;background:linear-gradient(#B0641A,#6E3A0C);box-shadow:inset 0 0 0 6px #FFD54A,0 10px 30px rgba(0,0,0,.6);display:flex;align-items:flex-start;justify-content:center}
+.chlk{font-style:normal;font-size:clamp(28px,4vh,40px);margin-top:-6%}
+.chlid{position:absolute;left:-3%;right:-3%;top:4%;height:38%;border-radius:40% 40% 10px 10px;background:linear-gradient(#D8892A,#8A4A10);box-shadow:inset 0 0 0 6px #FFD54A;transform-origin:50% 100%;transition:transform .6s cubic-bezier(.3,1.6,.5,1)}
+.chgl{position:absolute;left:10%;right:10%;bottom:40%;height:0;background:radial-gradient(ellipse at 50% 100%,rgba(255,240,170,.95),rgba(255,213,74,0) 70%);transition:height .7s}
+.chbox.shake{animation:chShake .35s infinite}.chbox.open{animation:none}.chbox.open .chlid{transform:translateY(-40%) rotateX(70deg) rotate(-14deg)}.chbox.open .chgl{height:160%}.chbox.open .chlk{opacity:0}
+.chtap{font-size:clamp(26px,4vh,40px);font-weight:700;color:#FFE07A;animation:chIn .5s 3s both}.chtap b{font-size:1.15em}
+.chbag{display:flex;align-items:center;gap:clamp(10px,2vw,22px);background:rgba(255,255,255,.08);border:3px solid rgba(255,213,74,.6);border-radius:22px;padding:10px 22px;font-size:clamp(22px,3.2vh,32px);font-weight:700;animation:chIn .5s 3.2s both}
+.chbag .chbi{font-size:1.5em}.chbag.pulse{animation:chBag .5s 3}.chn b{color:#FFE07A}
+.chfly{position:fixed;z-index:121;font-size:clamp(34px,5vh,52px);pointer-events:none;animation:chFly 1.5s cubic-bezier(.4,0,.6,1) forwards;filter:drop-shadow(0 0 10px rgba(255,213,74,.8))}
+.chend{display:flex;flex-direction:column;align-items:center;gap:12px;font-size:clamp(24px,3.6vh,36px);font-weight:700;animation:chIn .6s both}.chend[hidden]{display:none}
+.chend button{font-family:inherit;font-weight:700;font-size:clamp(24px,3.8vh,36px);min-height:64px;padding:0 40px;border-radius:999px;border:3px solid #39D98A;background:#0F3323;color:#fff;cursor:pointer}
+.chmsg{position:absolute;left:0;right:0;bottom:10px;font-size:22px;color:#FFB4B4}.chw.done .chcr{font-size:clamp(44px,6vh,70px)}.chw.done .cht{font-size:clamp(36px,5.5vh,60px);transition:font-size .6s}.chw.done .chsm{display:none}
+@keyframes chSpin{to{transform:rotate(360deg)}}@keyframes chDrop{from{transform:translateY(-60vh) scale(1.6);opacity:0}to{transform:none;opacity:1}}
+@keyframes chIn{from{opacity:0;transform:translateY(24px) scale(.94)}to{opacity:1;transform:none}}@keyframes chPop{0%{transform:scale(0)}70%{transform:scale(1.35)}to{transform:scale(1)}}
+@keyframes chBob{50%{transform:translateY(-10px) rotate(-2deg)}}@keyframes chShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+@keyframes chBag{50%{transform:scale(1.08);box-shadow:0 0 24px rgba(255,213,74,.7)}}
+@keyframes chFly{0%{transform:translate(0,0) scale(.4);opacity:0}25%{transform:translate(var(--ux),-140px) scale(1.25);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(.5);opacity:.9}}
+@media (max-height:820px){.chcr{font-size:64px}.cht{font-size:50px}.chw{gap:8px}}
+@media (prefers-reduced-motion:reduce){.chray{animation:none}.chcr,.cht,.chwhy,.chbox,.chtap,.chbag{animation:none}}
 /* ── 老師派任務（2026-10-09 E）：大廳上面的任務條、遊戲卡的 🔒／⏰、鎖住時的一整頁 ── */
 .sctask{display:flex;flex-direction:column;gap:6px;margin:0 auto clamp(6px,1.2vh,12px);max-width:1100px;width:100%}
 .sctkl{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;background:#2A2208;border:3px solid var(--gold);border-radius:18px;

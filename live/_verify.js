@@ -111,7 +111,7 @@ const H_PH = ph => ph === 'q';
     const set = await h.evaluate(() => ({ n: document.querySelectorAll('[data-sk]').length, f: document.querySelector('[data-sk]').getAttribute('data-sk'), on: document.querySelector('[data-sk].on').getAttribute('data-sk'),
       sets: document.querySelectorAll('[data-sb].on').length, all: document.querySelectorAll('[data-sb]').length, g4: document.querySelector('[data-qg="4"]').classList.contains('on'), n5: document.querySelector('[data-sn="5"]').classList.contains('on'),
       t26: /⚡ 閃電四選一26 題/.test(document.querySelector('[data-sb]').textContent), r1: /Review 1/.test(document.body.innerText), m5: /5 題（約 3 分鐘）/.test(document.body.innerText) }));
-    if (set.n !== 11 || set.f !== 'classic' || set.on !== 'classic') E.push(tag + '：遊戲 不是「經典搶答 第一個、預設、11 種」');
+    if (set.n !== 13 || set.f !== 'classic' || set.on !== 'classic') E.push(tag + '：遊戲 不是「經典搶答 第一個、預設、13 種（第二十九次 多 守城、釣魚）」');
     if (set.sets !== set.all || set.all < 30) E.push(tag + '：題目 沒有 預設 全選、或 沒有 句型遊戲＋Review 1（' + set.sets + '／' + set.all + '）');
     if (!set.g4 || !set.n5 || !set.t26 || !set.r1 || !set.m5) E.push(tag + '：設定頁 不對（402 ➜ 四年級 題目、預設 5 題 約 3 分鐘、「26 題」、Review 1）' + JSON.stringify(set));
     await h.click('[data-qg="3"]'); if (!/I 還是 My/.test(await h.textContent('#hset'))) E.push(tag + '：402 班 選 三年級 題目 沒有 換'); await h.click('[data-qg="4"]');
@@ -235,10 +235,10 @@ const H_PH = ph => ph === 'q';
       if (!mi.mini || mi.cg || mi.bh < 56) E.push(tag + '：冠軍 金框 沒有 先 收起來（第十七次 第 6 點）' + JSON.stringify(mi)); n++;
       await h.click('#chOpen'); await h.waitForTimeout(200); }
     { const ch = await h.evaluate(() => ({ box: !!document.querySelector('.chbox:not(.done)'), t: (document.querySelector('.chbox') || {}).textContent || '', n: document.querySelectorAll('[data-cg]').length }));
-      if (!ch.box || !/40205/.test(ch.t) || ch.n !== 11) E.push(tag + '：沒有 👑 冠軍 選 遊戲 那一塊 ' + JSON.stringify(ch).slice(0, 120)); n++;
+      if (!ch.box || !/40205/.test(ch.t) || ch.n !== 13) E.push(tag + '：沒有 👑 冠軍 選 遊戲 那一塊 ' + JSON.stringify(ch).slice(0, 120)); n++;
       await h.click('[data-cg="race"]'); await h.click('#chGo'); await h.waitForTimeout(400);
       const pk = await h.evaluate(() => { const o = document.getElementById('chpk'), b = [].slice.call(o.querySelectorAll('[data-cpk]')); return { on: !o.hidden, n: b.length, race: b.some(x => x.getAttribute('data-cpk') === 'race'), h: Math.min.apply(null, b.map(x => x.getBoundingClientRect().height)), ox: o.scrollHeight - o.clientHeight }; });
-      if (!pk.on || pk.n !== 10 || pk.race || pk.h < 100 || pk.ox > 1) E.push(tag + '：冠軍 選 遊戲 畫面 不對 ' + JSON.stringify(pk)); n++;
+      if (!pk.on || pk.n !== 12 || pk.race || pk.h < 100 || pk.ox > 1) E.push(tag + '：冠軍 選 遊戲 畫面 不對 ' + JSON.stringify(pk)); n++;
       await shot(h, 'champ'); await h.click('[data-cpk="tug"]'); await h.waitForTimeout(3000);
       const dn = await h.evaluate(() => ({ g: H.game, done: !!document.querySelector('.chbox.done'), hid: document.getElementById('chpk').hidden }));
       if (dn.g !== 'tug' || !dn.done || !dn.hid) E.push(tag + '：冠軍 選好 以後 不對 ' + JSON.stringify(dn)); n++;

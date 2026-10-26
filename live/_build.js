@@ -23,6 +23,11 @@ const DIR = { 3: 'G3 - L1 + L2', 4: 'sentences' };
 const CHAL = { 3: { sp: WORDS[3], or: QB.GR['3sg3'].qs }, 4: { sp: WORDS[4], or: QB.GR['4sg3'].qs } };
 [3, 4].forEach(g => { if (CHAL[g].sp.length < 10 || CHAL[g].or.length < 8) throw new Error('挑戰題 太少：' + g); });
 const CSS = R('_live.css');
+/* 🏫 三年級 課堂複習（2026-10-26 第二十九次 第 1 點）：遊戲 名字（關卡 順序）、哪幾套、每一題 的 英文＋中文（公布 答案 用）＝ g3mid/_data.js */
+const G3M = require(path.join(ROOT, 'g3mid', '_data.js'));
+const CRD = { gs: G3M.ORD.map(id => { const g = G3M.GAMES.filter(x => x.id === id)[0]; return [id, g.ic, g.nm]; }), sets: [['g3m', '📝 三年級 複習']].concat(G3M.CSETS.map(x => [x[0], '🏫 ' + x[1].replace('三年級 ', '')])), B: {} };
+CRD.B.g3m = {}; G3M.GAMES.forEach(g => { CRD.B.g3m[g.id] = g.B.map(q => [String(q.en || ''), String(q.zh || '')]); });
+G3M.CSETS.forEach(x => { CRD.B[x[0]] = {}; G3M.GAMES.forEach(g => { CRD.B[x[0]][g.id] = G3M.CB[x[0]][g.id].map(q => [String(q.en || ''), String(q.zh || '')]); }); });
 const head = (t, extra) => `<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -57,10 +62,12 @@ const host = head('現場任務 大螢幕', CER) + `<body class="host">
 <div class="scr" id="hlb" hidden><div id="lb" class="lb on"></div><div class="hbar"><button id="hgo2" class="big go"></button></div></div>
 <div class="scr" id="hend" hidden><div id="cerw"><div class="cx" id="cerst"></div></div><div class="hbar"><span id="cstn" class="note"></span><button id="tana" class="big go">📊 全班 錯題 分析 ➜</button></div></div>
 <div class="scr" id="hana" hidden><div class="in" id="hanab"></div><div class="hbar"><span id="erw" class="note"></span><span id="gm" class="note"></span><button id="tcer" class="ghost">🏆 再看 頒獎</button><button id="close2" class="ghost">✕ 結束 這一場</button><button id="give" class="big go">🎁 發獎勵 ＋ 記 練習次數</button></div></div>
-<script>var BASE='../',GR=${J(QB.GR)},LIST=${J(QB.LIST)},CHAL=${J(CHAL)},ICON=${J(QB.ICON)};
+<div class="scr" id="hcr" hidden><div class="in"></div></div><div class="scr" id="hcrr" hidden><div class="in"></div></div>
+<script>var BASE='../',GR=${J(QB.GR)},LIST=${J(QB.LIST)},CHAL=${J(CHAL)},ICON=${J(QB.ICON)},CRD=${J(CRD)};
 ${RT}
 ${CERRT}
 ${R('_host_rt.js')}
+${R('_cr_host.js')}
 </script></body></html>`;
 /* ── 學生平板 ── 最上面 永遠 一行 大字：現在 要 做 什麼（#now）；沒有 任何 音效 */
 const stu = head('現場任務') + `<body class="stu">

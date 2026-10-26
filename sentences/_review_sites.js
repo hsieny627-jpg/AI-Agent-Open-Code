@@ -31,6 +31,8 @@ function topics(S) {
     [['#t0-0', '🌱 基礎句型 ①'], ['#t0-1', '⭐ 進階句型 ①'], ['#t1-0', '🌱 基礎句型 ②'], ['#t1-1', '⭐ 進階句型 ②'], ['#t2', '🔀 中英語序動畫'], ['#t3', '✂️ 縮寫動畫'], ['#t4', '💬 一問一答']]   /* 2026-10-16 C 組：加一問一答（接在最後，舊的〔🔒 開關〕代號不變） */
       .forEach(x => out.push({ k: P + un + '-' + x[0].slice(1), href: u.f + x[0], grp, t: x[1] })); });
   S.games.forEach(id => { const m = G.GAMES.filter(x => x.id === id)[0]; out.push({ k: P + 'gm-' + id, href: 'games.html#' + id, grp: '🎮 遊戲', t: m.ic + ' ' + m.name }); });
+  /* 2026-10-26 第二十九次 第 3 點：🏰 守城、🎣 釣魚（fun/_build.js；代號 接 在 遊戲 後面，舊 的 代號 不變）*/
+  [['fun-castle', 'castle.html', '🏰 守城 大作戰'], ['fun-fish', 'fish.html', '🎣 英文 釣魚 大賽']].forEach(x => out.push({ k: P + x[0], href: x[1], grp: '🎮 遊戲', t: x[2] }));
   /* 2026-10-16 C4 第 7 題：📘 Review 1（字卡、句型卡、遊戲各一個代號；遊戲 ＝ 20 種＋自己年級的進階，S.r1 ＝ 進階的代號） */
   if (S.r1) [['r1-w', 'r1/index.html', '🃏 Review 1 字卡'], ['r1-s', 'r1.html', '📖 Review 1 句型卡'], ['r1-g', 'r1/games.html', '🎮 Review 1 遊戲']]
     .forEach(x => out.push({ k: P + x[0], href: x[1], grp: '📘 Review 1', t: x[2] }));

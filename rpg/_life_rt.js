@@ -369,7 +369,7 @@ var RPLIFE;
     ov.innerHTML = '<div class="tubg" style="--c1:' + C[1] + ';--c2:' + C[2] + '"></div><div class="tuic">' + (window.RPFX ? RPFX.tb(k) : '') + '</div><div class="tutt"><small>⏫ 升階！</small><b>' + (window.RPFX ? RPFX.ts(k) + ' ' + RPFX.TN[k] : '') + '</b></div>' +
       '<div class="tusub">' + (o.pct ? '<span>🪙 練習 金幣 ＋' + o.pct + '%</span>' : '') + (o.cap ? '<span>一天 最多 ' + o.cap + '</span>' : '') + '<span>🛍 2 樣 專屬 寶物 解鎖</span></div><button class="cbok">👌 好</button>' +
       /* 第二十二次 第 3(7) 點：授予 這一階 的 專屬 裝備（★ 2 樣 ➜ ★★★★★ 8 樣：盔甲、武器、盾牌、披風、光環、光翼、皇冠、寶座），左右 兩邊 一樣一樣 飛來 */
-      '<div class="tureg">' + REG[k].map(function (x, i) { var L = i % 2 === 0, row = Math.floor(i / 2), n2 = Math.ceil(REG[k].length / 2); return '<span class="' + (L ? 'l' : 'r') + '" style="--y:' + (20 + row * (n2 > 1 ? 46 / (n2 - 1) : 0)).toFixed(1) + '%">' + regSvg(x[0], C) + '<small>' + x[1] + '</small></span>'; }).join('') + '</div><div class="tusay"></div>';
+      '<div class="tureg">' + REG[k].map(function (x, i) { var L = i % 2 === 0, row = Math.floor(i / 2), n2 = Math.ceil(REG[k].length / 2); return '<span class="' + (L ? 'l' : 'r') + '" style="--y:' + (20 + row * (n2 > 1 ? 46 / (n2 - 1) : 0)).toFixed(1) + '%">' + regSvg(x[0], C) + '<small>' + x[1] + '</small></span>'; }).join('') + '</div><div class="tusay"></div>' + tuMore(k, C);
     document.body.appendChild(ov); var S = RM ? null : Space(ov, { keep: 1 }), T = [];
     function at(ms, f) { T.push(setTimeout(f, RM ? Math.min(ms, 200) : ms)); }
     function done() { T.forEach(clearTimeout); ov.classList.add('out'); setTimeout(function () { if (S) S.kill(); if (ov.parentNode) ov.parentNode.removeChild(ov); if (o.done) o.done(); }, 380); }
@@ -387,7 +387,22 @@ var RPLIFE;
     if (S && k >= 5) at(R1 + 300, function () { nuke(S, { x: S.w / 2, y: S.h * .42, c: C }); wings(S, S.w / 2, S.h * .4, C, Math.min(S.w * .46, 480), 2600); });
     at(R1, function () { ov.classList.add('s3'); sayE.classList.remove('go'); });
     at(R1 + 1000 + k * 180, function () { ov.classList.add('s-ok'); });
+    /* 第二十九次：最後 ＝ 正式 的「晉階 證書」慢慢 浮上來（愈 高階 邊框 愈 華麗） */
+    at(R1 + 1700 + k * 220, function () { ov.classList.add('s-cert'); });
     return done; }
+  /* 2026-10-26 第二十九次 第 9(a) 點（老師：最尊榮、最閃耀、最正式、最震撼；愈 高階 愈 隆重，但 柔和 不 刺眼）＝ 只 疊上去，原本 的 特效 一個 都 不動：
+     ★ 紅地毯＋兩排 金色 燈 ｜ ★★ ＋ 兩邊 掛 旗幟、金色 紙花 慢慢 飄 ｜ ★★★ ＋ 徽章 後面 兩圈 光環 慢慢 轉 ｜ ★★★★ ＋ 三圈 光環、天上 柔和 光柱 ｜ ★★★★★ ＋ 星空 皇冠 星座、四圈 光環、金色 光雨
+     最後 ＝ 晉階 證書（班級 號碼、新 的 稱號、日期；★ 越多 邊框 越 華麗）；動畫 用 opacity／transform，亮度 柔和（不 閃爍） */
+  function tuMore(k, C) { var h = '<div class="tucar"><i></i></div>', i;
+    if (k >= 2) { h += '<div class="tuban l"><span>' + (window.RPFX ? RPFX.tb(k) : '') + '</span></div><div class="tuban r"><span>' + (window.RPFX ? RPFX.tb(k) : '') + '</span></div><div class="tucf">'; for (i = 0; i < 10 + k * 8; i++) h += '<i style="left:' + (Math.random() * 100).toFixed(1) + '%;animation-delay:' + (Math.random() * 4).toFixed(2) + 's;animation-duration:' + (4 + Math.random() * 3).toFixed(2) + 's;background:' + C[i % 3] + '"></i>'; h += '</div>'; }
+    if (k >= 3) { h += '<div class="turing">'; for (i = 0; i < k - 1; i++) h += '<i style="--r:' + (1 + i * .32) + ';animation-duration:' + (14 + i * 6) + 's;border-color:' + C[i % 3] + '"></i>'; h += '</div>'; }
+    if (k >= 4) h += '<div class="tupil"></div>';
+    if (k >= 5) { h += '<div class="tusky">'; for (i = 0; i < 40; i++) h += '<i style="left:' + (Math.random() * 100).toFixed(1) + '%;top:' + (Math.random() * 55).toFixed(1) + '%;animation-delay:' + (Math.random() * 3).toFixed(2) + 's"></i>'; h += '</div>'; }
+    var id = window.SCID ? String(window.SCID) : '', who = id.length === 5 ? id.slice(0, 3) + ' 班 ' + (+id.slice(3)) + ' 號' : '', d = new Date();
+    h += '<div class="tucert c' + k + '" style="--c1:' + C[0] + ';--c2:' + C[1] + '"><div class="tcin"><div class="tchd">⚔ 晉 階 證 書 ⚔</div>' + (who ? '<div class="tcwho">' + who + '</div>' : '') +
+      '<div class="tcsub">恭喜 你 晉升 為</div><div class="tcname">' + (window.RPFX ? RPFX.ts(k) + ' ' + RPFX.TN[k] : '') + '</div><div class="tcdt">' + d.getFullYear() + ' 年 ' + (d.getMonth() + 1) + ' 月 ' + d.getDate() + ' 日</div>' +
+      '<div class="tcft">' + ['', '認真 練習，踏出 第一步', '每天 練習，愈來愈 強', '堅持 練習，大家 的 榜樣', '努力 不懈，光榮 的 英雄', '最高 榮耀，全校 的 傳說'][k] + '</div></div></div>';
+    return h; }
   function vortexIn(S, x, y, C, ms) { for (var i = 0; i < 160; i++) { var th = Math.random() * 6.283, r = rnd(200, Math.max(S.w, S.h) * .6); S.add({ k: 'd', ox: x, oy: y, fx: 1, x: Math.cos(th) * r, y: rnd(-200, 200), z: Math.sin(th) * r, home: 3.6, l: ms / 1000, s: rnd(2.5, 5), c: C[i % 3], fo: 0, fi: 1 }); } }
   /* 📖 秒懂 動畫 用（〔❓ 階級 愈高 特效 愈強〕）：在 host 裡面 一直 演 那一階 的 特效（每 2.8 秒 一次），host 不在 畫面 上 就 停 */
   function demo(host, k, o) { if (!host || RM) return null; o = o || {}; var S = Space(host, { keep: 1 }), run = true;

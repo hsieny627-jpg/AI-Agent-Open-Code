@@ -85,8 +85,13 @@ Object.keys(SITES).forEach(dir => {
     id === 'q5' ? (c.lis ? '🔊 聽 字母 ' + c.say + '：寫 ' + (c.want === c.want.toUpperCase() ? '大寫' : '小寫') : '🪞 ' + c.show + '：寫 另一半') : id === 'q6' ? '數一數 ' + c.n + ' 個：拼 英文' : id === 'q7' ? c.s : id === 'q8' ? (c.rev ? '↩ ' + c.b : c.a) : '📋 ' + c.lines.join(' ');
   const oOf = (id, c) => id === 'q2' ? c.o.map(x => x.sc ? SCZ[x.sc] : x.t + ' ' + x.a + ' 歲') : id === 'q3' ? c.o.map(k => CEZ[k] || (/^w:/.test(k) ? k.slice(2) + ' 的 圖' : k)) : id === 'q4' || id === 'q5' ? [c.want, '❌ 寫錯 了'] : id === 'q6' ? [c.want, '❌ 拼錯 了'] : id === 'q9' ? [c.c.map(x => x.t + ' ' + x.a + ' 歲').join('、'), '❌ 放錯 了'] : c.o;   /* 沒有 四個 選項 的 玩法：[正解, 錯的 那一邊]（跟 網頁 記 的「1 ＝ 錯」對得起來） */
   G3.GAMES.forEach(g => put('g3gm_g3m-' + g.id, { name: '🏫 三年級 複習｜' + g.ic + ' ' + g.nm, qs: g.B.map(c => ({ k: 'g', kn: '🏫 三年級 複習', q: txt(qOf(g.id, c)), o: oOf(g.id, c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) }));
+  /* 2026-10-26 第二十九次 第 1 點：🏫 課堂複習 1、2、3（g3gm_c1-q1…；只在 ⚡ 現場任務 開）*/
+  G3.CSETS.forEach(x => G3.GAMES.forEach(g => put('g3gm_' + x[0] + '-' + g.id, { name: '🏫 ' + x[1].replace('三年級 ', '') + '｜' + g.ic + ' ' + g.nm, qs: G3.CB[x[0]][g.id].map(c => ({ k: 'g', kn: '🏫 三年級 複習', q: txt(qOf(g.id, c)), o: oOf(g.id, c).map(y => txt(String(y))), h: txt(c.zh || ''), ae: c.en || '' })) })));
   /* 2026-10-26 第二十八次：📝 25／50 題 挑戰（g3gm_g3m-x25／x50）：題庫 ＝ 10 種 遊戲 的 挑戰 題庫 照 順序 接起來（跟 網頁 的 XALL 一樣）*/
   [25, 50].forEach(N => put('g3gm_g3m-x' + N, { name: '🏫 三年級 複習｜📝 ' + N + ' 題 挑戰', qs: [].concat(...G3.GAMES.map(g => G3.XB[g.id].map(c => ({ k: 'g', kn: '🏫 三年級 複習', q: txt(g.ic + ' ' + qOf(g.id, c)), o: oOf(g.id, c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })))) })); }
+/* 🏰 守城、🎣 釣魚（2026-10-26 第二十九次 第 3 點；在家複習 版）：題目 ＝ fun/_pool.json（fun/_build.js 做 的，第幾題 跟 網頁 一樣）*/
+if (fs.existsSync(path.join(__dirname, '..', 'fun', '_pool.json'))) { const FP = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'fun', '_pool.json'), 'utf8'));
+  [3, 4].forEach(g => [['fun-castle', '🏰 守城 大作戰（在家）'], ['fun-fish', '🎣 英文 釣魚 大賽（在家）']].forEach(x => put('g' + g + 'gm_' + x[0], { name: x[1], qs: (FP[g] || []).map(q => ({ k: 'g', kn: '🎮 遊戲', q: txt(q.q), o: q.o.map(y => txt(String(y))), h: '', ae: q.ae || '', ag: q.ag || [], az: q.az || '', au: q.au || '' })) }))); }
 /* 💼 職業單字（English-Jobs-New，2026-10-09 E 使用者第 4 點）：三、四年級共用 ➜ g*gm_job-遊戲；題庫由 score/_jobs_bank.js 從那一頁讀出來 */
 if (fs.existsSync(path.join(__dirname, '_jobs_bank.json'))) {
   const JB = JSON.parse(fs.readFileSync(path.join(__dirname, '_jobs_bank.json'), 'utf8'));
@@ -145,7 +150,7 @@ Object.keys(BANK).forEach(k => { const dir = SITEOF(k); BANK[k].qs.forEach(q => 
   const tk = e => { const r = [], re = /([A-Za-z][A-Za-z\-]*)(’|')(s|m|re)\b|[A-Za-z][A-Za-z\-’']*|\d+|[.,?!]/g; let m; while ((m = re.exec(e))) { if (m[2]) r.push(m[1], "'" + m[3]); else r.push(m[0]); } return r; };
   const zh = w => { const k = w.replace(/’/g, "'").toLowerCase(); return G3.GL[k] !== undefined ? G3.GL[k] : /^[.,?!]$/.test(w) ? '' : /^[A-Z][a-z]+$/.test(w) ? '（名字）' : ''; };
   const XC = [].concat(...G3.GAMES.map(g => G3.XB[g.id]));
-  G3.GAMES.map(g => [g.id, g.B]).concat([['x25', XC], ['x50', XC]]).forEach(([id, B]) => (BANK['g3gm_g3m-' + id] || { qs: [] }).qs.forEach((q, i) => { const c = B[i], e = String(c.en || ''); if (!e) return;
+  G3.GAMES.map(g => ['g3m-' + g.id, g.B]).concat([['g3m-x25', XC], ['g3m-x50', XC]]).concat([].concat(...G3.CSETS.map(x => G3.GAMES.map(g => [x[0] + '-' + g.id, G3.CB[x[0]][g.id]])))).forEach(([id, B]) => (BANK['g3gm_' + id] || { qs: [] }).qs.forEach((q, i) => { const c = B[i], e = String(c.en || ''); if (!e) return;
     q.ae = e; q.ag = tk(e).map(t => [t.replace(/'/g, '’'), zh(t)]); q.az = c.zh || ''; const say = typeof c.say === 'string' ? c.say : e, k3 = A3[akey(say)] ? akey(say) : A3['m:' + akey(say)] ? 'm:' + akey(say) : '', f = k3 ? A3[k3] : W3[akey(say)];
     q.au = f ? '../g3mid/audio/' + (k3 ? '' : 'w/') + f[0] : ''; })); }
 /* 代號一定要是 _calc.js 認得的（以後新的教材登記錯了 build 就失敗） */

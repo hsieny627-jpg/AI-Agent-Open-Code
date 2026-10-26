@@ -319,6 +319,13 @@ button:active{transform:scale(.97)}
 #rpin.rlock #stage,#rpin.rlock #tabs{display:none}
 .rgate{background:linear-gradient(135deg,#3A2A06,#1A1030);border:3px solid #FFD54A;border-radius:18px;padding:14px 18px;margin:0 0 12px;font-size:clamp(22px,3vh,30px);line-height:1.45;text-align:center}
 /* 2026-10-25 🎯 全班獎勵 4 幕 */
+.cwclk{display:flex;align-items:center;justify-content:center;gap:14px;font-size:clamp(26px,3.6vh,40px);font-weight:700;color:#FFE07A;animation:fadeUp .6s both}.cwclk svg{width:clamp(56px,8vh,90px);height:auto}
+.cwt{display:grid;grid-template-columns:clamp(110px,14vw,170px) 1fr;align-items:center;gap:12px;width:min(100%,900px);margin:10px auto 0;animation:fadeUp .5s both}.cwd{font-size:clamp(20px,2.6vh,28px);text-align:right}
+.cwbar{display:flex;height:clamp(48px,7vh,70px);border-radius:14px;overflow:hidden;box-shadow:0 0 0 3px rgba(255,255,255,.25)}.cwbar span{display:flex;align-items:center;justify-content:center;font-size:clamp(18px,2.2vh,24px);font-weight:700;white-space:nowrap;overflow:hidden;animation:cwFill .7s both;transform-origin:left}
+.cwbar .ok{background:linear-gradient(#FFD54A,#E0A800);color:#3A2A00}.cwbar .sch{background:repeating-linear-gradient(45deg,#3A4656 0 12px,#2B3644 12px 24px);color:#B8C4D2}
+.cwtick{display:grid;grid-template-columns:clamp(110px,14vw,170px) 1fr;gap:12px;width:min(100%,900px);margin:2px auto 0;font-size:18px;color:#B8C4D2;animation:fadeUp .5s both}.cwtick div{position:relative;height:26px}.cwtick span{position:absolute;transform:translateX(-50%);white-space:nowrap}.cwtick span:first-child{transform:none}.cwtick span:last-child{transform:translateX(-100%)}
+.rnote.sm{font-size:clamp(18px,2.2vh,22px);opacity:.85}
+@keyframes cwFill{from{transform:scaleX(0)}to{transform:none}}
 .cwp{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;width:min(100%,720px);margin:0 auto}.cwp span{display:flex;flex-direction:column;align-items:center;border-radius:12px;padding:6px 0;opacity:0;animation:fadeUp .5s forwards}
 .cwp span.ok{background:#164A2A;border:2px solid #5DE89A}.cwp span.no{background:#1A2230;border:2px solid #3A4A5A;filter:grayscale(1)}.cwp b{font-size:clamp(26px,4vh,40px)}.cwp small{font-size:17px;color:#BFFFD8;min-height:1.2em}
 .cwy{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:min(100%,760px);margin:0 auto}.cwy>div{border-radius:18px;padding:14px;text-align:center;opacity:0;animation:fadeUp .6s forwards;display:flex;flex-direction:column;gap:8px}
@@ -384,14 +391,42 @@ u.pn{text-decoration:underline;text-decoration-thickness:3px;text-underline-offs
 @media (max-width:900px){.rtb>div{gap:6px;padding:3px 8px;font-size:18px}.rtb .tbI.big svg{width:1.2em;height:1.4em}.rtl>div{font-size:20px;padding:6px 8px}.rtl b{font-size:1.1em}
  .rlist>div{font-size:18px;padding:1px 10px}.rnote{font-size:19px}.rab .ln{grid-template-columns:6.4em 1fr 4em;font-size:18px}.rmul>div{font-size:20px;padding:8px 10px}.iflow>span{min-width:84px;padding:8px 6px}.iflow small{font-size:19px}.rhb>div{font-size:22px;padding:8px 12px;white-space:normal}.rsum{gap:6px}.rsum span{font-size:19px;padding:4px 10px}.rsum span.gd{font-size:30px}.rsum i{font-size:24px}.rdots{margin:8px 0 4px;gap:4px}.rdots i{width:28px;height:28px;font-size:17px}}
 </style>
-<link rel="stylesheet" href="life.css?v=6456db875e">
-<script src="life.js?v=6456db875e"></script>
+<link rel="stylesheet" href="life.css?v=60625ed17b">
+<script src="life.js?v=60625ed17b"></script>
 </head><body>
 <div id="scbar" hidden></div>
 <script src="../score/url.js"></script>
 <style>
 #scov{--btn:#1E1E1E;--line:#4A4A4A;--ok:#39D98A;--gold:#FFD24A;--acc:#9FB4C8}
 
+
+/* ── 👑 冠軍寶箱登入動畫（2026-10-26 第二十九次第 11 點）── */
+#scch{position:fixed;inset:0;z-index:120;display:none;background:radial-gradient(circle at 50% 38%,#3A2A08 0,#120C02 45%,#000 80%);overflow:hidden;color:#fff;font-family:inherit}
+#scch.on{display:block}.chw{position:relative;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,1.8vh,18px);padding:16px;text-align:center}
+.chray{position:absolute;left:50%;top:44%;width:0;height:0;animation:chSpin 18s linear infinite}.chray i{position:absolute;left:-30px;top:-80vh;width:60px;height:80vh;background:linear-gradient(rgba(255,213,74,0),rgba(255,213,74,.16));transform-origin:30px 80vh}
+.chcr{line-height:1;font-size:clamp(70px,11vh,120px);transition:font-size .6s;animation:chDrop 1s cubic-bezier(.3,1.5,.5,1) both;filter:drop-shadow(0 0 18px rgba(255,213,74,.7))}
+.cht{font-size:clamp(46px,8vh,92px);font-weight:700;letter-spacing:.12em;background:linear-gradient(#FFF6C8,#FFD54A 45%,#C98A00);-webkit-background-clip:text;background-clip:text;color:transparent;animation:chIn .8s .7s both;text-shadow:0 0 30px rgba(255,213,74,.35)}
+.chwhy{font-size:clamp(24px,3.8vh,40px);font-weight:700;line-height:1.45;animation:chIn .7s 1.5s both}.chwhy b{color:#FFE07A}.chrk{display:inline-block;font-size:1.5em;color:#FFD54A;animation:chPop .6s 2.1s both}.chs{font-size:.9em}.chsm{font-size:max(18px,.55em);color:#D8C9A0;font-weight:400}
+.chbox{position:relative;flex-shrink:0;width:clamp(150px,22vh,260px);height:clamp(110px,17vh,210px);border:0;background:none;cursor:pointer;animation:chIn .6s 2.6s both,chBob 1.8s 3.2s ease-in-out infinite;touch-action:manipulation}
+.chbd{position:absolute;left:0;right:0;bottom:0;height:62%;border-radius:12px;background:linear-gradient(#B0641A,#6E3A0C);box-shadow:inset 0 0 0 6px #FFD54A,0 10px 30px rgba(0,0,0,.6);display:flex;align-items:flex-start;justify-content:center}
+.chlk{font-style:normal;font-size:clamp(28px,4vh,40px);margin-top:-6%}
+.chlid{position:absolute;left:-3%;right:-3%;top:4%;height:38%;border-radius:40% 40% 10px 10px;background:linear-gradient(#D8892A,#8A4A10);box-shadow:inset 0 0 0 6px #FFD54A;transform-origin:50% 100%;transition:transform .6s cubic-bezier(.3,1.6,.5,1)}
+.chgl{position:absolute;left:10%;right:10%;bottom:40%;height:0;background:radial-gradient(ellipse at 50% 100%,rgba(255,240,170,.95),rgba(255,213,74,0) 70%);transition:height .7s}
+.chbox.shake{animation:chShake .35s infinite}.chbox.open{animation:none}.chbox.open .chlid{transform:translateY(-40%) rotateX(70deg) rotate(-14deg)}.chbox.open .chgl{height:160%}.chbox.open .chlk{opacity:0}
+.chtap{font-size:clamp(26px,4vh,40px);font-weight:700;color:#FFE07A;animation:chIn .5s 3s both}.chtap b{font-size:1.15em}
+.chbag{display:flex;align-items:center;gap:clamp(10px,2vw,22px);background:rgba(255,255,255,.08);border:3px solid rgba(255,213,74,.6);border-radius:22px;padding:10px 22px;font-size:clamp(22px,3.2vh,32px);font-weight:700;animation:chIn .5s 3.2s both}
+.chbag .chbi{font-size:1.5em}.chbag.pulse{animation:chBag .5s 3}.chn b{color:#FFE07A}
+.chfly{position:fixed;z-index:121;font-size:clamp(34px,5vh,52px);pointer-events:none;animation:chFly 1.5s cubic-bezier(.4,0,.6,1) forwards;filter:drop-shadow(0 0 10px rgba(255,213,74,.8))}
+.chend{display:flex;flex-direction:column;align-items:center;gap:12px;font-size:clamp(24px,3.6vh,36px);font-weight:700;animation:chIn .6s both}.chend[hidden]{display:none}
+.chend button{font-family:inherit;font-weight:700;font-size:clamp(24px,3.8vh,36px);min-height:64px;padding:0 40px;border-radius:999px;border:3px solid #39D98A;background:#0F3323;color:#fff;cursor:pointer}
+.chmsg{position:absolute;left:0;right:0;bottom:10px;font-size:22px;color:#FFB4B4}.chw.done .chcr{font-size:clamp(44px,6vh,70px)}.chw.done .cht{font-size:clamp(36px,5.5vh,60px);transition:font-size .6s}.chw.done .chsm{display:none}
+@keyframes chSpin{to{transform:rotate(360deg)}}@keyframes chDrop{from{transform:translateY(-60vh) scale(1.6);opacity:0}to{transform:none;opacity:1}}
+@keyframes chIn{from{opacity:0;transform:translateY(24px) scale(.94)}to{opacity:1;transform:none}}@keyframes chPop{0%{transform:scale(0)}70%{transform:scale(1.35)}to{transform:scale(1)}}
+@keyframes chBob{50%{transform:translateY(-10px) rotate(-2deg)}}@keyframes chShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+@keyframes chBag{50%{transform:scale(1.08);box-shadow:0 0 24px rgba(255,213,74,.7)}}
+@keyframes chFly{0%{transform:translate(0,0) scale(.4);opacity:0}25%{transform:translate(var(--ux),-140px) scale(1.25);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(.5);opacity:.9}}
+@media (max-height:820px){.chcr{font-size:64px}.cht{font-size:50px}.chw{gap:8px}}
+@media (prefers-reduced-motion:reduce){.chray{animation:none}.chcr,.cht,.chwhy,.chbox,.chtap,.chbag{animation:none}}
 /* ── 老師派任務（2026-10-09 E）：大廳上面的任務條、遊戲卡的 🔒／⏰、鎖住時的一整頁 ── */
 .sctask{display:flex;flex-direction:column;gap:6px;margin:0 auto clamp(6px,1.2vh,12px);max-width:1100px;width:100%}
 .sctkl{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;background:#2A2208;border:3px solid var(--gold);border-radius:18px;
@@ -1890,7 +1925,7 @@ function scKeyPress(k){
 /* 登入好了（2026-10-09 Q4：學生端不顯示姓名，不再問伺服器「你是 ○○○ 嗎？」） */
 function scWho(r){
   var go=function(){SCID=r.id;scPut('id_g'+r.g,SCID);scPut('last',SCID);SCGUEST=false;scOk();scAct();scBar();var a=SCLOGAFTER;SCLOGAFTER=null;
-    scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk();if(a)a()})};   /* 登入好了先拿老師的任務（2026-10-09 E），再做要做的事 */
+    scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk();if(a)a();scChamp(1)})};   /* 登入好了先拿老師的任務（2026-10-09 E），再做要做的事 */
   var m=$('#scMsg');m.className='scmsg ok';m.textContent='✅ '+scCn(r.cls)+' '+r.seat+' 號';
   setTimeout(go,500);
 }
@@ -2313,6 +2348,35 @@ document.addEventListener('click',function(e){
 document.addEventListener('keydown',function(e){if(!$('#scBox'))return;
   if(/^\d$/.test(e.key))scKeyPress(e.key);else if(e.key==='Backspace')scKeyPress('b');else if(e.key==='Enter')scKeyPress('ok')});
 
+/* ══ 👑 冠軍寶箱登入動畫（2026-10-26 第二十九次第 11 點，老師選 A：學生在任何一個網站登入就演）══
+   伺服器 GET rpg 會先自動發上週的寶箱（每週一 0:00 以後、每個年級最認真練習前 5 名），回 chi＝{k 編號, rk 名次, sec 秒數, g 年級}、v.ch＝還沒開幾個。
+   ① 黑幕＋聚光燈、皇冠從天上掉下來、金字「冠軍寶箱」② 為什麼：上週三年級最認真練習第 2 名、練習 48 分鐘 ③ 寶箱發光搖一搖 ➜〔👆 點寶箱打開〕＝伺服器真的開（POST rpg open）
+   ➜ 蓋子打開、金光往上、🪙 ⭐ 一顆一顆飛進下面的「🎒 我的收藏庫」、數字數上去 ④「下週繼續認真練習」〔✅ 收下〕。同一個寶箱只演一次（這台平板 chs_5碼）。 */
+var SCCH=null;
+function scChamp(force){if(!SCON||!SCID||SCGUEST)return;try{if(!force&&sessionStorage.getItem('sc_chk')===SCID)return;sessionStorage.setItem('sc_chk',SCID)}catch(e){}
+  var id=SCID;scFetch('a=rpg&id='+id).then(function(j){if(!j||!j.ok||!j.chi||!j.v||!(j.v.ch>0)||SCID!==id)return;if(scGet('chs_'+id)===j.chi.k)return;scChampShow(j,id)}).catch(function(){})}
+function scChMin(s){s=Math.round(+s||0);return s<60?s+' 秒':Math.round(s/60)+' 分鐘'}
+function scChampShow(j,id){var c=j.chi,o=document.getElementById('scch');if(!o){o=document.createElement('div');o.id='scch';document.body.appendChild(o)}
+  var rk=c.rk||'',gn=(c.g===3?'三':'四')+'年級',st=j.v;SCCH={id:id,k:c.k,c0:+st.coins||0,x0:+st.xp||0,busy:false};
+  var rays='';for(var i=0;i<12;i++)rays+='<i style="transform:rotate('+(i*30)+'deg)"></i>';
+  o.innerHTML='<div class="chw"><div class="chray">'+rays+'</div><div class="chcr">👑</div><div class="cht">冠軍寶箱</div>'+
+   '<div class="chwhy"><div>🏆 上週 '+gn+' <b>最認真練習</b>'+(rk?' 第 <span class="chrk">'+rk+'</span> 名':' 前 5 名')+'</div>'+(c.sec?'<div class="chs">⏱ 你練習了 <b>'+scChMin(c.sec)+'</b></div>':'')+'<div class="chsm">每週一 0 點，每個年級最認真練習前 5 名自動得到</div></div>'+
+   '<button class="chbox" id="chBox" aria-label="打開寶箱"><span class="chlid"></span><span class="chbd"><i class="chlk">🔒</i></span><span class="chgl"></span></button><div class="chtap" id="chTap">👆 點寶箱打開！</div>'+
+   '<div class="chbag" id="chBag"><span class="chbi">🎒</span><span>我的收藏庫</span><span class="chn">🪙 <b id="chC">'+SCCH.c0+'</b></span><span class="chn">⭐ <b id="chX">'+SCCH.x0+'</b></span></div>'+
+   '<div class="chend" id="chEnd" hidden><div>🔥 下週繼續認真練習，再拿冠軍寶箱！</div><button id="chOk">✅ 收下</button></div><div class="chmsg" id="chMsg"></div></div>';
+  o.classList.add('on');document.getElementById('chBox').onclick=scChampOpen}
+function scChCount(el,a,b,ms){var t0=Date.now();(function f(){var k=Math.min(1,(Date.now()-t0)/ms);el.textContent=Math.round(a+(b-a)*k);if(k<1)requestAnimationFrame(f)})()}
+function scChampOpen(){var S=SCCH;if(!S||S.busy)return;S.busy=true;var bx=document.getElementById('chBox'),m=document.getElementById('chMsg');bx.classList.add('shake');m.textContent='';
+  scFetch('',{a:'rpg',op:'open',id:S.id},12000).then(function(r){if(!r||!r.ok||!r.r){S.busy=false;bx.classList.remove('shake');m.textContent='📶 等一下再點一次（戰神之路也可以打開）';return}
+    scPut('chs_'+S.id,S.k);var gc=+r.r.c||0,gx=+r.r.x||0;bx.classList.remove('shake');bx.classList.add('open');document.getElementById('chTap').innerHTML='🎉 <b>🪙 ＋'+gc+'</b>　<b>⭐ ＋'+gx+'</b>';
+    var w=document.querySelector('#scch .chw'),br=bx.getBoundingClientRect(),bg=document.getElementById('chBag').getBoundingClientRect(),N=18;
+    for(var i=0;i<N;i++)(function(i){setTimeout(function(){var f=document.createElement('span');f.className='chfly';f.textContent=i%3===2?'⭐':'🪙';var sx=br.left+br.width/2,sy=br.top+br.height*.3,dx=(Math.random()-.5)*260,tx=bg.left+bg.width*(i%3===2?.86:.66),ty=bg.top+bg.height/2;
+      f.style.left=sx+'px';f.style.top=sy+'px';f.style.setProperty('--ux',dx+'px');f.style.setProperty('--tx',(tx-sx)+'px');f.style.setProperty('--ty',(ty-sy)+'px');document.getElementById('scch').appendChild(f);setTimeout(function(){f.remove()},1700)},500+i*70)})(i);
+    setTimeout(function(){var bag=document.getElementById('chBag');bag.classList.add('pulse');scChCount(document.getElementById('chC'),S.c0,S.c0+gc,1300);scChCount(document.getElementById('chX'),S.x0,S.x0+gx,1300)},1500);
+    setTimeout(function(){w.classList.add('done');document.getElementById('chEnd').hidden=false;var b=document.getElementById('chOk');b.onclick=function(){document.getElementById('scch').classList.remove('on');SCCH=null}},3400)},
+   function(){S.busy=false;bx.classList.remove('shake');m.textContent='📶 沒有網路，等一下再點一次'})}
+setTimeout(function(){if(SCID)scChamp(0)},1600);
+
 SCHOMEP=true;
 function hOv(){var o=document.getElementById('scov');if(!o){o=document.createElement('div');o.id='scov';o.innerHTML='<div id="scovb"></div>';document.body.appendChild(o)}return o}
 SCH={on:function(){return hOv().classList.contains('on')},open:function(){hOv().classList.add('on')},close:function(){hOv().classList.remove('on')},box:function(){return document.getElementById('scovb')},
@@ -2535,8 +2599,16 @@ function rulesScenes(tb,me){var D=CAT.DILI,ex=Object.keys(CAT.TX),dl=function(i)
 function cwScenes(){var W=CAT.CW,dl=function(i){return 'animation-delay:'+i+'s'},
     ppl=function(n,ok,lab){var h='<div class="cwp">';for(var i=0;i<n;i++)h+='<span class="'+(i<ok?'ok':'no')+'" style="'+dl(.3+i*.15)+'"><b>'+(i<ok?'🙋':'🧍')+'</b><small>'+(i<ok?lab:'')+'</small></span>';return h+'</div>'},
     bars=function(T,top){var ks=Object.keys(T).map(Number),mx=T[ks[ks.length-1]][0];return '<div class="cwb">'+ks.map(function(d,i){var v=T[d];return '<div style="'+dl(.3+i*.35)+'"><em>🪙'+v[0]+'<br><small>⭐'+v[1]+'</small></em><i style="height:'+Math.round(v[0]/mx*100)+'%"></i><b>'+(d===7?'👑':'')+d+'天</b></div>'}).join('')+'</div>'};
+  /* 2026-10-26 第二十九次第 10 點（老師）：秒懂「非上課時間」＝每天下午 4 點以後、星期六日整天（老師選 B：早上上學前也算）；課後班 400 ＝ 5:30 以後 */
+  var tl=function(lab,seg,d){return '<div class="cwt" style="'+dl(d)+'"><b class="cwd">'+lab+'</b><div class="cwbar">'+seg.map(function(x){return '<span class="'+x[0]+'" style="flex:'+x[1]+';'+dl(d+.4)+'">'+x[2]+'</span>'}).join('')+'</div></div>'};
   return [
-  ['🎯 目標①：全班'+W.pct/10+'成的人練'+W.d1+'天',ppl(10,W.pct/10,W.d1+'天')+'<div class="rnote" style="'+dl(2.2)+'">10個人裡'+W.pct/10+'個（30人 ➜ 24人）這週練'+W.d1+'天以上</div><div class="rnote" style="'+dl(3.2)+'">📅 下星期一自動發</div>',function(){}],
+  ['🕓 在「非上課時間」練，才算',
+   '<div class="cwclk" style="'+dl(.2)+'"><b>🕓</b><span>下午 4 點以後</span></div>'+
+   tl('星期一～五',[['ok',7.7,'🌅 上學前 ✅'],['sch',8.3,'🏫 上課 ✗'],['ok',8,'🏠 4 點以後 ✅']],.8)+
+   tl('星期六、日',[['ok',24,'🏠 整天都算 ✅']],1.8)+
+   '<div class="cwtick" style="'+dl(.8)+'"><i></i><div><span style="left:0">0 點</span><span style="left:32%">7:40</span><span style="left:66.7%">16:00</span><span style="left:100%">24 點</span></div></div>'+
+   '<div class="rnote" style="'+dl(2.8)+'">🏫 在學校上課的時候練，不算天數</div><div class="rnote sm" style="'+dl(3.6)+'">課後班 400：下午 5:30 以後才算</div>',function(){}],
+  ['🎯 目標①：全班'+W.pct/10+'成的人練'+W.d1+'天',ppl(10,W.pct/10,W.d1+'天')+'<div class="rnote" style="'+dl(2.2)+'">10個人裡'+W.pct/10+'個（30人 ➜ 24人）這週在非上課時間練'+W.d1+'天以上</div><div class="rnote" style="'+dl(3.2)+'">📅 下星期一自動發</div>',function(){}],
   ['🎁 自己練'+W.d1+'天以上，才拿得到','<div class="cwy"><div class="no" style="'+dl(.3)+'"><b>練0天、1天</b><span>❌ 拿不到</span></div><div class="ok" style="'+dl(1.3)+'"><b>練'+W.d1+'天</b><span>🎁 🪙'+W.t1[W.d1][0]+'　⭐'+W.t1[W.d1][1]+'</span></div></div><div class="rnote" style="'+dl(2.4)+'">沒練的人，全班達到也拿不到</div>',function(){}],
   ['📈 練愈多天 ➜ 拿愈多',bars(W.t1)+'<div class="rnote" style="'+dl(2.6)+'">每一天都練＝拿最多 👑</div>',function(){}],
   ['🚀 目標②：全班每一位都練'+W.d2+'天 ➜ 每個人拿更多','<div class="rnote" style="'+dl(.2)+'">🙋🙋🙋🙋🙋 全班每一位都練'+W.d2+'天以上</div>'+bars(W.t2)+'<div class="rnote" style="'+dl(2.8)+'">全班一起努力，每個人都拿更多！</div>',function(){}]]}
@@ -2730,7 +2802,7 @@ homeFix();
 setInterval(function(){var k=(SCID||'')+'|'+(SCID&&scAsked()?1:0);if(k!==LAST){LAST=k;RV=null;homeFix();load()}},800);
 /* 2026-10-22 第二十一次第 1、2 點：學生平板一直開著舊的網頁（第十八次的版本：等伺服器說第 2 版才放行）➜ 答對 5 題又被鎖回規則。
    現在：打開、回到這個分頁、每 5 分鐘問一次 ver.txt（不用快取），有新版＝自動換成新版（網址加 ?v＝新版，一定拿到新的）；正在答題不換 */
-var RPVER='4238462abb';
+var RPVER='830858c144';
 function verChk(force){try{if(!force&&(document.getElementById('rqz').className==='on'||BUSY))return;
   fetch('ver.txt?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=String(v||'').trim();if(!/^[0-9a-f]{10}$/.test(v)||v===RPVER)return;
     var K='rp_rl_'+v;try{if(sessionStorage.getItem(K))return;sessionStorage.setItem(K,'1')}catch(e){}location.replace(location.pathname+'?v='+v+location.hash)},function(){})}catch(e){}}

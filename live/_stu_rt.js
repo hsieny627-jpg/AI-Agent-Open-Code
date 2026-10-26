@@ -33,6 +33,10 @@ function ready(){if(!LDB.on()){scr('soff');return}
   if(typeof scFetch==='function'&&SCON)scFetch('a=rpg&id='+SCID,null,6000).then(function(j){if(j&&j.ok){S.me=j.v;putMe()}},function(){});
   putMe();clearInterval(S.hb);S.hb=setInterval(putMe,20000);
   if(S.unW)S.unW();S.unW=LDB.watch(S.code,700,onM);qrOn(true);
+  /* 2026-10-26 第二十九次 第 1 點：老師 開了 🏫 三年級 課堂複習 ➜ 三年級 的 平板 自己 跳到 那 10 種 遊戲（g3mid/index.html?live=0304）*/
+  if(S.unC)S.unC();if(String(SCID).charAt(0)==='3')S.unC=LDB.poll('rooms/'+S.code+'/cr',1500,function(v){if(!v||!v.on||Date.now()-(+v.t||0)>4*36e5)return;
+    var o=document.getElementById('crgo');if(!o){o=document.createElement('div');o.id='crgo';document.body.appendChild(o)}o.innerHTML='<div class="crgob"><div style="font-size:clamp(70px,12vh,120px)">🏫</div><div class="crgot">老師 開了 課堂複習！</div><div class="note big2">⏳ 馬上 進去…</div></div>';o.className='on';
+    setTimeout(function(){location.href='../g3mid/index.html?live='+S.code},1600)});
   try{S.introOK=sessionStorage.getItem('lv_intro')===SCID?1:0}catch(e){}
   wait()}
 /* 登入 以後 第一頁（3(4)）：先 用 動畫 說 現在 和 等一下 要 做 什麼；按〔我 懂了〕才 開始 小遊戲 */

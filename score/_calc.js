@@ -437,8 +437,10 @@ var SC = (function () {
   var RPCW = { pct: 80, d1: 2, d2: 3,
     t1: { 2: [150, 100], 3: [175, 110], 4: [200, 120], 5: [225, 130], 6: [250, 140], 7: [275, 150] },
     t2: { 3: [200, 120], 4: [250, 140], 5: [300, 160], 6: [350, 180], 7: [400, 200] } };
-  /* {5碼: 那一段時間練了幾天} */
-  function cwDays(rs, from, to) { var nd = {}; students(pick(rs, { from: from, to: to })).forEach(function (p) { nd[p.id] = +p.days || 0; }); return nd; }
+  /* {5碼: 那一段時間「非上課時間」練了幾天}
+     2026-10-26 第二十九次 第 10 點（老師：全班獎勵 ＝ 在 非上課時間 登入 練習 才 算；選擇題 B：早上 上學 前 也 算）：
+     只 算 when(r) ＝ 'out' 的 紀錄（星期一～五 7:40～16:00 以外、課後班 400 到 17:30、週末 整天）；上課時間 練 的 不算 天數 */
+  function cwDays(rs, from, to) { var nd = {}; students(pick(rs, { from: from, to: to, src: 'out' })).forEach(function (p) { nd[p.id] = +p.days || 0; }); return nd; }
   /* 這一班達到哪一個目標：0 沒有、1 基本、2 進階 */
   function cwLv(nd, ids) { if (!ids || !ids.length) return 0; nd = nd || {};
     if (ids.every(function (id) { return (nd[id] || 0) >= RPCW.d2; })) return 2;

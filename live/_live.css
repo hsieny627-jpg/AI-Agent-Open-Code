@@ -504,7 +504,7 @@ body.host .hbar{padding-right:calc(clamp(84px,9vh,112px) + 34px)}
 #chpk .chin{width:min(100%,1500px);text-align:center;color:#fff}#chpk h1{font-size:clamp(36px,4.6vw,72px);margin:0 0 8px;color:#FFE07A;text-shadow:0 0 24px rgba(255,213,74,.7)}
 #chpk .chgr{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px;margin:14px 0}
 #chpk .chgr button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px 8px;min-height:110px;border-radius:20px;border:3px solid #4A6A9A;background:#16243C;color:#fff;cursor:pointer;font-size:clamp(22px,2vw,30px)}
-#chpk .chgr button:hover{border-color:#FFD54A}@media (max-height:900px){#chpk .chgr small{display:none}#chpk h1{font-size:clamp(30px,4vw,52px)}}#chpk .chgr small{font-size:.7em;color:#BFD3FF}
+#chpk .chgr button:hover{border-color:#FFD54A}@media (max-height:900px){#chpk .chgr small{display:none}#chpk h1{font-size:clamp(30px,4vw,52px)}#chpk .chgr{grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px;margin:8px 0}#chpk .chgr button{min-height:102px;padding:6px}}#chpk .chgr small{font-size:.7em;color:#BFD3FF}
 #chpk .chok .chcr{font-size:clamp(90px,14vw,200px);animation:chcr 1s ease-out both}#chpk .chsel{display:flex;align-items:center;justify-content:center;gap:20px;font-size:clamp(40px,5vw,80px);color:#FFE07A;animation:chcr .8s ease-out .4s both}
 @keyframes chcr{from{transform:scale(.2) rotate(-20deg);opacity:0}to{transform:none;opacity:1}}
 .tent{position:fixed;left:50%;top:8vh;transform:translateX(-50%);z-index:250;pointer-events:none;width:min(92vw,900px);height:min(60vh,520px);display:flex;align-items:center;justify-content:center;animation:tentIn .55s cubic-bezier(.2,1.4,.4,1) both}
@@ -532,3 +532,25 @@ body.tshk{animation:tshk .45s linear 2}@keyframes tshk{25%{transform:translate(4
 .tutg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:14px;margin:16px 0}.tutg button{min-height:120px;border-radius:20px;border:3px solid #4A7FB0;background:#0F2A40;color:#fff;font-size:clamp(24px,2.4vw,36px);display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px}
 .tutg .tuth{width:90px;height:90px;object-fit:cover;border-radius:14px}.tutbig{width:min(40vh,320px);height:min(40vh,320px);object-fit:cover;border-radius:24px;border:5px solid #9FD8FF;box-shadow:0 0 40px #4FB3FF}
 .tutic{font-size:clamp(70px,12vh,140px)}.tutok .big2{font-size:clamp(28px,3vw,48px);margin:14px 0}
+/* ══ 🏫 三年級 課堂複習（2026-10-26 第二十九次 第 1 點）══ */
+.crgo .crgi{font-size:52px}.crgo.off{opacity:.55}
+.crgs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.crgb{display:flex;flex-direction:column;align-items:center;gap:4px;min-height:132px;padding:10px 6px;border-radius:18px;background:#141F30;border:3px solid #33465E;font-size:clamp(18px,1.6vw,22px)}
+.crgb .crn{font-size:18px;color:#9FB4C8}.crgb .cric{font-size:42px}.crgb em{font-style:normal;font-size:26px}.crgb.on{border-color:#FFD54A;background:#2A2208}
+.crmb{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:96px;padding:12px 20px;border-radius:18px;text-align:left;font-size:clamp(22px,2vw,28px)}.crmb small{font-size:18px;color:#B8C4D2;font-weight:400}.crmb.on{border-color:#FFD54A;background:#2A2208}
+.crsum{display:flex;gap:24px;flex-wrap:wrap;font-size:clamp(24px,2.6vw,34px);margin:10px 0}.crsum b{color:#FFE07A;font-size:1.3em}
+.crseat{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding-bottom:110px}.crs{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px;border-radius:16px;background:#141F30;border:3px solid #33465E;font-size:24px}.crs span{font-size:34px}.crs small{font-size:18px;color:#D8E2EC}
+.crs.p2,.crr.p2{background:#1F7A45;border-color:#7BF0A8}.crs.p1,.crr.p1{background:#8A6A0C;border-color:#FFE07A}.crs.p0,.crr.p0{background:#7A1E2C;border-color:#FF9A9A}
+.crq{text-align:center;display:flex;flex-direction:column;gap:18px;align-items:center;padding-bottom:120px}.crqn{font-size:clamp(30px,4vh,46px)}.crqn b{color:#FFE07A;font-size:1.4em}.crqg{font-size:clamp(40px,6vh,72px);font-weight:700}.crqg span{margin-right:14px}
+.crqa{display:flex;gap:30px;flex-wrap:wrap;justify-content:center;font-size:clamp(26px,3.4vh,40px)}.crqa b{color:#FFE07A;font-size:1.3em}
+.crans{background:#0F3323;border:4px solid #39D98A;border-radius:22px;padding:16px 28px}.cre{font-size:clamp(34px,5vh,60px);font-weight:700}.crz{font-size:clamp(24px,3vh,34px);color:#CFF5DD}
+.crres{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding-bottom:110px}.crr{display:flex;flex-direction:column;align-items:center;padding:12px;border-radius:18px;background:#141F30;border:3px solid #33465E;font-size:22px}.crr span{font-size:44px}.crr em{font-style:normal;font-size:34px;font-weight:700}
+@media (max-width:1100px){.crgs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+#crgo{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(6,10,24,.95)}#crgo.on{display:flex}.crgob{text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}.crgot{font-size:clamp(34px,6vh,60px);font-weight:700;color:#FFE07A}
+/* ══ 🏰 全班 守城、🎣 英文 釣魚（2026-10-26 第二十九次 第 3 點）══ */
+.cs{position:relative;height:clamp(240px,46vh,520px);border-radius:22px;overflow:hidden;background:linear-gradient(#0E1A33,#1C2E14 75%)}.csg{position:absolute;left:0;right:0;bottom:0;height:16%;background:linear-gradient(#3E7A2A,#22441A)}
+.csc{position:absolute;right:2%;bottom:12%;font-size:clamp(90px,16vh,170px)}.csw{position:absolute;right:calc(2% + clamp(90px,16vh,170px));bottom:16%;width:38px;height:60%;display:flex;flex-direction:column;justify-content:flex-end}
+.csw i{display:block;height:var(--h);background:repeating-linear-gradient(#B08A5A 0 18px,#5A4020 18px 21px);border-radius:4px;transition:height .8s}.csw b{position:absolute;top:-34px;left:50%;transform:translateX(-50%);font-size:22px;white-space:nowrap}
+.csm{position:absolute;bottom:16%;left:var(--b);font-size:clamp(60px,10vh,110px);animation:csmv 1s ease-out;--a:0;--b:0}.csm.boss{font-size:clamp(90px,15vh,160px)}@keyframes csmv{from{left:var(--a)}to{left:var(--b)}}
+.cst{position:absolute;bottom:52%;font-size:42px;text-align:center}.cst b{display:block;font-size:20px;color:#FFE07A}
+.fs{display:flex;flex-direction:column;gap:8px;border-radius:22px;padding:12px;background:linear-gradient(#1E88E5,#0B3D6B)}.fsr{display:grid;grid-template-columns:90px 1fr 60px;align-items:center;font-size:26px;background:rgba(0,0,0,.2);border-radius:14px;padding:4px 12px}
+.fsr span{font-size:34px;white-space:nowrap;overflow:hidden}.fsr i{font-style:normal}.fsr i.r{filter:drop-shadow(0 0 6px #7FD4FF)}.fsr i.l{filter:drop-shadow(0 0 8px #FFD54A)}.fsr em{font-style:normal;color:#FFE07A;text-align:right}.fsr.new{box-shadow:0 0 0 3px #FFE07A}

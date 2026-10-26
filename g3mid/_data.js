@@ -63,12 +63,15 @@ var G1 = PH.filter(function (w) { return w[0] !== 'yo-yo'; }).map(function (w) {
 
 /* ════ 2 🟡 小精靈 聽句（考卷 B：聽句子 ➜ 找圖）════
    卡片：{t:名字, a:歲數}（名牌＋生日蛋糕）或 {sc:情境} */
+/* 2026-10-26 第二十九次 第 3 點（老師：學生 看不懂 Good morning、Nice to meet you、Thank you、You're welcome 的 圖示，要 想 半天）➜ 每一張 一看 就 懂 的 小 場景：
+   ic ＝ 一排 最多 3 個 大 圖（左 ➜ 右 一件 事）、b ＝ 右上角 小 泡泡
+   thank 禮物 ➜ 收到 的 人 好開心（謝謝／不客氣）；meet 第一次 見面 握手（🆕 新 朋友）；morn 太陽 剛 出來＋揮手（🕖 早上 7 點）；help 哭、狗、❓ 找不到（🔍 找）；come 男生 舉手 叫、狗 跑過來 */
 var SC = {
-  thank: { ic: ['👦', '🎁', '👧'], fx: '💖' },
-  meet: { ic: ['👦', '🤝', '👧'], fx: '✨' },
-  help: { ic: ['👧', '🔍', '🐶❓'], fx: '' },
-  come: { ic: ['👦', '👋', '🐕'], fx: '💨' },
-  morn: { ic: ['🌅', '👋', '👋'], fx: '' }
+  thank: { ic: ['🎁', '➡️', '🥰'], b: '💖', fx: '' },
+  meet: { ic: ['🧒', '🤝', '👧'], b: '🆕', fx: '' },
+  help: { ic: ['😢', '🐶', '❓'], b: '🔍', fx: '' },
+  come: { ic: ['🙋‍♂️', '⬅️', '🐕'], b: '', fx: '' },
+  morn: { ic: ['🌅', '👋'], b: '🕖', fx: '' }
 };
 var G2 = [
   { say: [['m', "Hi, I'm Tom. I'm nine years old."]], o: [{ t: 'Tom', a: 9 }, { t: 'Tom', a: 5 }, { t: 'Ben', a: 9 }], zh: '嗨，我是 Tom。我九歲。' },
@@ -214,6 +217,10 @@ var GAMES = [
   { id: 'q10', ic: '🪂', nm: '空投 密碼箱', how: '聽 3 個 數字 ➜ 打開 對的 空投箱', t: 15, B: G10, c1: '#4D5B2A', c2: '#93A84A' }
 ];
 
+/* 2026-10-26 第二十九次 第 7-(1) 點（老師）：關卡 順序 ＝ 第 9 關 夾娃娃、第 10 關 小精靈（其他 照 原本 的 順序）。
+   GAMES 照 q1～q10 不動（題庫 第幾題、成績 代號、挑戰 題庫 XALL 都 照 這個）；大廳、25／50 題 挑戰、老師看板 大表 照 ORD 排 */
+var ORD = ['q1', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q3', 'q2'];
+
 /* 會唸的英文（語音檔）：'m:' ＝ 男聲 */
 var SAY = [];
 function addS(t, v) { SAY.push((v === 'm' ? 'm:' : '') + t); }
@@ -277,7 +284,45 @@ XB.q9.forEach(function (q) { q.lines.forEach(function (l, i) { addS(l, BOYS.inde
 XB.q10.forEach(function (q) { addS(q.say); });
 XB.q4.forEach(function (q) { addS(q.say); });
 
+/* ══ 2026-10-26 第二十九次 第 1 點：🏫 三年級 課堂複習 1、2、3（_class_data.js，老師 C31 說「對」）➜ 跟 G1～G10 一樣 的 樣子（CB.c1.q1…）══
+   只能 在〔⚡ 現場任務〕開（g3mid/index.html?cr=…，老師 大螢幕 選），在家複習 沒有；成績 g3gm_c1-q1…（老師看板〔🏫 課堂複習〕大表）。
+   整句 翻譯（答錯頁 用）：CZH 一句 一句 翻（名字、數字 自動 換）；翻 不出來 ＝ build 失敗（_build.js 檢查） */
+var CD = require('./_class_data.js'), CB = {};
+CD.SETS.forEach(function (x) { var nm = CD.NAMES[x[0]]; nm.b.forEach(function (n) { if (BOYS.indexOf(n) < 0) BOYS.push(n); }); });
+var CZT = [[/^Hi, I'm (\w+)\.$/, '嗨，我是 $1。'], [/^Hello, I'm (\w+)\.$/, '哈囉，我是 $1。'], [/^Hello\.$/, '哈囉。'], [/^Hi\.$/, '嗨。'],
+  [/^I'm (\w+)\.$/, function (m, a) { var n = NUMW.indexOf(a); return n > 0 ? '我 ' + NUMZ[n] + ' 歲。' : '我是 ' + a + '。'; }], [/^I'm (\w+) years old\.$/, function (m, a) { return '我 ' + NUMZ[NUMW.indexOf(a)] + ' 歲。'; }],
+  [/^What's your name\?$/, '你叫什麼名字？'], [/^What's your name, please\?$/, '請問 你叫什麼名字？'], [/^My name is (\w+)\.$/, '我的 名字 是 $1。'], [/^How old are you\?$/, '你 幾 歲？'], [/^How old are you, (\w+)\?$/, '$1，你 幾 歲？'],
+  [/^Thank you\.$/, '謝謝 你。'], [/^Thank you, (\w+)\.$/, '謝謝 你，$1。'], [/^You're welcome\.$/, '不客氣。'], [/^You're welcome, (\w+)\.$/, '不客氣，$1。'],
+  [/^Good morning\.$/, '早安。'], [/^Good morning, (\w+)\.$/, '早安，$1。'], [/^Come here, please\.$/, '請 過來 這裡。'], [/^Come here, (\w+)\.$/, '$1，過來 這裡。'], [/^Hey, (\w+)\.$/, '嘿，$1。'], [/^Come here\.$/, '過來 這裡。'],
+  [/^I can't find my dog\.$/, '我 找不到 我的 狗。'], [/^Hi, (\w+)\.$/, '嗨，$1。'], [/^We can help, too\.$/, '我們 也 可以 幫忙。'], [/^We can help you\.$/, '我們 可以 幫 你。'], [/^I can help you\.$/, '我 可以 幫 你。'], [/^I can help you, (\w+)\.$/, '$1，我 可以 幫 你。'],
+  [/^Nice to meet you\.$/, '很高興 認識 你。'], [/^Nice to meet you, too\.$/, '我 也 很高興 認識 你。'], [/^Nice to meet you, (\w+)\.$/, '很高興 認識 你，$1。']];
+function CZH(t) { var L = String(t).match(/[^.?!]+[.?!]/g) || [t]; return L.map(function (c) { c = c.trim(); for (var i = 0; i < CZT.length; i++) if (CZT[i][0].test(c)) return c.replace(CZT[i][0], CZT[i][1]); throw new Error('課堂複習 翻不出來：' + c); }).join(''); }
+var CEZ = {}; CE.forEach(function (c) { CEZ[c.k] = c.zh; });
+CD.SETS.forEach(function (x) { var k = x[0], B = CB[k] = {};
+  B.q1 = CD.Q1[k].map(function (r) { var w = PHM[r[1]], up = r[4] === 'U';
+    return { sim: r[0], say: r[1], up: up ? 1 : 0, how: up ? '聽單字 ➜ 敲 第一個字母（大寫）的 地鼠' : undefined, o: [r[2]].concat(r[3].split('')), en: r[1], zh: r[1] + ' ＝ ' + w[1] + '，第一個字母' + (up ? ' 的 大寫' : '') + ' 是 ' + r[2] + '。', ic: w[2], hl: 0 }; });
+  B.q2 = CD.Q2[k].map(function (r) { return { sim: r[0], say: r[1], o: [r[2], r[3], r[4]].map(CARD), en: r[1].map(function (y) { return y[1]; }).join(' '), zh: r[1].map(function (y) { return CZH(y[1]); }).join('') }; });
+  B.q3 = CD.Q3[k].map(function (r) { var w = /^w:/.test(r[2]) ? PHM[r[2].slice(2)] : null; return { sim: r[0], say: r[1], o: [r[2]].concat(r[3]), en: r[1], zh: CEZ[r[2]] || r[1] + ' ＝ ' + w[1] + '。' }; });
+  B.q4 = CD.Q4[k].map(function (r) { var w = PHM[r[1]], up = r[2] !== r[2].toLowerCase();
+    return { sim: r[0], say: r[1], want: r[2], ic: w[2], en: r[1], how: up ? '聽單字 ➜ ① 點 對的 圖 ➜ ② 用手指 寫 第一個字母 的 大寫（頂天立地）' : undefined, zh: r[1] + ' ＝ ' + w[1] + '，第一個字母' + (up ? ' 的 大寫' : '（小寫）') + ' 是 ' + r[2] + '。', hl: 0 }; });
+  B.q5 = CD.Q5[k].map(function (r) { var lo = r[1].toLowerCase(), U = r[1].toUpperCase(); return { sim: r[0], show: r[1], want: r[2], say: lo, en: r[2], zh: (r[2] === U ? '小寫 ' + lo + ' 的大寫是 ' + U : '大寫 ' + U + ' 的小寫是 ' + lo) + '。' }; });
+  B.q6 = CD.Q6[k].map(function (r) { var n = r[1], w = NUMW[n], cx = r[3] === 'hand' ? '' : r[3];
+    return { sim: r[0], n: n, obj: r[2], ctx: cx, want: w, extra: EXTRA[w].split(''), say: w, en: cx === 'cake' ? "I'm " + w + ' years old.' : w, zh: cx === 'cake' ? '我 ' + NUMZ[n] + ' 歲。（' + n + ' ＝ ' + w + '）' : n + ' ＝ ' + w + '（' + NUMZ[n] + '）。' }; });
+  B.q7 = CD.Q7[k].map(function (r) { var q = { sim: r[0], s: r[1], o: [r[2], r[3], r[4]], zh: r[5] }; q.en = r[1].replace('___', r[2]).replace(' — ', ' '); q.say = q.en; return q; });
+  B.q8 = CD.Q8[k].map(function (r) { var q = r[1] ? { rev: 1, b: r[2], o: [r[3]].concat(r[4]) } : { a: r[2], o: [r[3]].concat(r[4]) }, A = q.rev ? q.o[0] : q.a, Bq = q.rev ? q.b : q.o[0];
+    q.sim = r[0]; q.en = A + ' ' + Bq; q.zh = CZH(A) + CZH(Bq); q.say = q.rev ? q.b : q.a; return q; });
+  B.q9 = CD.Q9[k].map(function (f) { var c = f[1].map(function (p) { return { t: p[0], a: p[1], w: NUMW[p[1]], s: p[2] }; }), lines = c.map(function (p) { return G9T[p.s](p.t, p.a); }),
+      bl = f[2].split(''), need = c.map(function (p, i) { return bl[i] === 'n' ? p.t : String(p.a); });
+    return { sim: f[0], c: c, bl: bl, lines: lines, tl: need.concat([f[3][0], String(f[3][1])]), en: lines.join(' '), zh: c.map(function (p) { return G9Z[p.s](p.t, p.a); }).join(''), say: lines.join(' ') }; });
+  B.q10 = CD.Q10[k].map(function (r) { var d = r[1].split('').map(Number), c = r[1], L = d.length, sw = L === 3 ? [d[0] + '' + d[2] + d[1], d[1] + '' + d[0] + d[2]] : [d[1] + '' + d[0] + d[2] + d[3], d[0] + '' + d[1] + d[3] + d[2]];
+    return { sim: r[0], code: c, o: [c].concat(sw), say: d.map(function (x) { return NUMW[x]; }).join(', ') + '.', en: d.map(function (x) { return NUMW[x]; }).join(' '), zh: c + ' ＝ ' + d.map(function (x) { return NUMZ[x]; }).join(' ') + '。' }; });
+  B.q1.concat(B.q4).forEach(function (q) { if (q.how === undefined) delete q.how; });
+  /* 要唸 的 */
+  B.q1.forEach(function (q) { addS(q.say); }); B.q2.forEach(function (q) { q.say.forEach(function (y) { addS(y[1], y[0]); }); }); B.q3.forEach(function (q) { addS(q.say); }); B.q4.forEach(function (q) { addS(q.say); });
+  B.q6.forEach(function (q) { addS(q.say); if (q.ctx === 'cake') addS(q.en); }); B.q7.forEach(function (q) { addS(q.say); }); B.q8.forEach(function (q) { addS(q.a || q.b); addS(q.o[0]); addS(q.en); });
+  B.q9.forEach(function (q) { q.lines.forEach(function (l, i) { addS(l, BOYS.indexOf(q.c[i].t) >= 0 ? 'm' : ''); }); }); B.q10.forEach(function (q) { addS(q.say); }); });
+
 /* 2026-10-26 第二十六次 第 1-1 點（老師：打地鼠 單字 模糊、太快）：打地鼠 的 字 另外 做 慢的（audio/m1 語速 0.78）、更慢的（audio/m2 語速 0.62，〔🐢 慢慢 唸〕）*/
-var SAYM = G1.map(function (q) { return q.say; }).concat(XB.q1.map(function (q) { return q.say; })).filter(function (x, i, a) { return a.indexOf(x) === i; });
-module.exports = { XB: XB, SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
+var SAYM = G1.map(function (q) { return q.say; }).concat(XB.q1.map(function (q) { return q.say; })).concat([].concat.apply([], Object.keys(CB).map(function (k) { return CB[k].q1.map(function (q) { return q.say; }); }))).filter(function (x, i, a) { return a.indexOf(x) === i; });
+module.exports = { CB: CB, CSETS: CD.SETS, CZH: CZH, ORD: ORD, XB: XB, SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
   EXAM_A: EXAM_A, EXAM_D: EXAM_D, EXAM_E: EXAM_E };

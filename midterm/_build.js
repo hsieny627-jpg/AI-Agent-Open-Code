@@ -17,7 +17,7 @@ const GM = D.GAMES.map(g => ({ id: g.id, ic: g.ic, nm: g.nm, how: g.how, sec: g.
     if (new Set(X.map(KEY)).size !== X.length && g.id !== 'm8') L.push(g.nm + ' 自己 有 一樣 的 題目');
     const sm = X.filter(q => q.sim).length; if (sm < 2 || sm > X.length * .45) L.push(g.nm + ' 類似 題 ' + sm + '／' + X.length); });
   Object.keys(D.PAS).filter(k => /^x/.test(k)).forEach(k => { const t = D.PAS[k].t.join(' '); if (BAN.test(t)) L.push('短文 ' + k + ' 用了 用過 的 名字');
-    Object.keys(PD.PAS).concat(['ken', 'mia']).forEach(o => { const T = (PD.PAS[o] || D.PAS[o]).t; T.forEach(x => { if (D.PAS[k].t.indexOf(x) >= 0 && x.length > 22) L.push('短文 ' + k + ' 跟 ' + o + ' 有 一樣 的 句子：' + x); }); }); });
+    Object.keys(PD.PAS).forEach(o => { const T = PD.PAS[o].t; T.forEach(x => { if (D.PAS[k].t.indexOf(x) >= 0 && x.length > 22) L.push('短文 ' + k + ' 跟 ' + o + ' 有 一樣 的 句子：' + x); }); }); });
   if (L.length) { console.error('✗ ' + L.join('\n✗ ')); process.exit(1); } }
 const AUDX = ['s', 'm1', 'm2'].filter(d => fs.existsSync(path.join(__dirname, 'audio', d, 'aud.js')));
 
@@ -135,7 +135,7 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 /* 回饋 */
 .fb{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:40;width:min(96vw,900px);border-radius:24px;padding:12px 18px;text-align:center;display:none;box-shadow:0 10px 30px rgba(0,0,0,.6)}
 .fb.on{display:block;animation:fbIn .35s ease-out}
-@keyframes fbIn{from{transform:translate(-50%,80px);opacity:0}to{transform:translate(-50%,0);opacity:1}}.fb.ok{background:linear-gradient(#1E9E4F,#0B5A2B)}.fb.no{background:linear-gradient(#5A1420,#2A0810);border:3px solid #FF7A7A}
+@keyframes fbIn{from{transform:translate(-50%,80px);opacity:0}to{transform:translate(-50%,0);opacity:1}}.fb.ok{background:linear-gradient(#1E9E4F,#0B5A2B);pointer-events:none}.pas span.spl{display:grid;grid-template-columns:auto 1fr;column-gap:.5em}.pas span.spl i{font-style:normal}.fb.no{background:linear-gradient(#5A1420,#2A0810);border:3px solid #FF7A7A}
 .fb .t{font-size:clamp(30px,4.6vh,48px)}.fb .you{font-size:clamp(22px,3vh,30px);color:#FFC9C9}.fb .you s{text-decoration-thickness:4px;text-decoration-color:#FF5A5A}
 .fb .ans{font-size:clamp(30px,4.6vh,50px);color:#fff;margin:4px 0}.fb .z{font-size:clamp(22px,3vh,30px);color:#FFE07A}
 .fb .row{display:flex;gap:12px;justify-content:center;margin-top:8px}.fb button{min-height:60px;padding:4px 26px;border-radius:18px;border:0;font-size:24px;background:#24364D}
@@ -278,25 +278,25 @@ function show(){if(R.x){R.g=R.gs[R.k];var lv=R.lvOf[R.k];if(lv!==R.lv){R.lv=lv;l
     '<div class="rep">'+R.ord.map(function(i){return '<button data-o="'+i+'">'+esc(q.o[i])+'</button>'}).join('')+'</div>';
   else if(id==='m8')h=pasHTML(q.pas)+'<div class="pq">'+esc(q.q.replace(/^📖 /,''))+'</div>'+opts(R.ord,'n3')+'<div id="nx8w"></div>';
   else if(id==='m9')h='<div class="qline">'+esc(q.line)+'</div><div class="tree" id="tree">'+tbtn('grandpa','r1')+tbtn('grandma','r1b')+'<div class="ln"></div>'+tbtn('dad','r2')+tbtn('mom','r2b')+'<div class="ln"></div>'+
-    tbtn('brother','')+'<div class="me">🙋<small>我</small></div>'+tbtn('sister','')+'</div>';
+    tbtn('brother','')+'<div class="me">🙋<small>me</small></div>'+tbtn('sister','')+'</div>';
   else if(id==='m11')h='<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center">'+pic(q.pic,'')+'<div class="bub a" style="max-width:none">'+esc(q.line)+'</div></div>'+opts(R.ord,'');
   else if(id==='m7'){R.pk=[];var w=q.spell,mid=w.slice(1,-1).split(''),ex=shuf('bcdfghklmnprstvwy'.split('').filter(function(c){return w.indexOf(c)<0})).slice(0,2);R.tiles=shuf(mid.concat(ex));
-    h='<div class="sp1"><span class="ic">'+q.ic+'</span><span class="zh">'+q.zhw+'</span></div><div class="slots" id="slots"></div><div class="tiles">'+R.tiles.map(function(c,i){return '<button data-t="'+i+'">'+c+'</button>'}).join('')+'</div><button class="bk" data-x="bk">⌫ 退 一個</button>'}
-  else if(id==='m10'||id==='m12')h=(q.pic?pic(q.pic,''):'')+'<div class="qline">'+blank(q.blank)+'</div>'+(id==='m10'?'<div class="bankt">字 庫</div><div class="bank">'+R.ord.map(function(i){return '<button data-o="'+i+'">'+esc(q.o[i])+'</button>'}).join('')+'</div>':opts(R.ord,'n3'));
+    h='<div class="sp1"><span class="ic">'+q.ic+'</span></div><div class="slots" id="slots"></div><div class="tiles">'+R.tiles.map(function(c,i){return '<button data-t="'+i+'">'+c+'</button>'}).join('')+'</div><button class="bk" data-x="bk">⌫ 退 一個</button>'}
+  else if(id==='m10'||id==='m12')h=(q.pic?pic(q.pic,''):'')+'<div class="qline">'+blank(q.blank)+'</div>'+(id==='m10'?'<div class="bankt">Word Bank</div><div class="bank">'+R.ord.map(function(i){return '<button data-o="'+i+'">'+esc(q.o[i])+'</button>'}).join('')+'</div>':opts(R.ord,'n3'));
   frame(h);if(id==='m7')drawSp();
   tStart(g.t);if(q.say){tPause();later(function(){sayQ(0,id==='m1'||id==='m2'||id==='m5')},450)}}
 /* 短文：一行 一句（對話 ＝ 前面 寫 誰 說 的） */
-function pasHTML(k){var P=PAS[k];return '<div class="pas" id="pas">'+P.t.map(function(t,i){return '<span data-ev="'+i+'">'+(P.sp?'<b class="sp">'+esc(P.sp[i])+':</b> ':'')+esc(t)+'</span>'}).join('')+'</div>'}
+function pasHTML(k){var P=PAS[k];return '<div class="pas" id="pas">'+P.t.map(function(t,i){return '<span data-ev="'+i+'"'+(P.sp?' class="spl"':'')+'>'+(P.sp?'<b class="sp">'+esc(P.sp[i])+':</b><i>'+esc(t)+'</i>':esc(t))+'</span>'}).join('')+'</div>'}
 /* 第一幕：只 有 短文，20 秒 先 讀；讀完 才 解鎖〔▶ 開始 回答〕（不算 在 每題 30 秒 裡） */
 function readScene(q){var n=Object.keys(R.rd).length+1,c=window.__RD||20,k=R.k;   /* window.__RD ＝ 量測 用（縮短）*/
   frame('<div class="rd"><div class="rt">📖 第 '+n+' 篇：先 仔細 讀 '+c+' 秒</div>'+pasHTML(q.pas)+'<div class="rc" id="rc">'+c+'</div><button class="go" id="rdgo" data-x="rdgo" disabled>🔒 讀完 才 能 開始</button></div>');
   var b=$('#bar');if(b)b.style.width='100%';
   (function cd(){if(!R||R.k!==k||R.rd[q.pas])return;if(c<=0){var g=$('#rdgo');g.disabled=false;g.textContent='▶ 開始 回答（第 '+(R.k+1)+' 題）';$('#rc').textContent='✔';return}
     $('#rc').textContent=c;if(b)b.style.width=(c/(window.__RD||20)*100)+'%';c--;later(cd,1000)})()}
-function opts(ord,cls){var q=R.q,isM2=R.g.id==='m2';var o=isM2?[0,1].map(function(_,j){return q.o.indexOf(j===0?'⭕ 一樣':'❌ 不一樣')}):ord;
+function opts(ord,cls){var q=R.q,isM2=R.g.id==='m2';var o=isM2?[0,1].map(function(_,j){return q.o.indexOf(j===0?'⭕ Same':'❌ Different')}):ord;
   return '<div class="opts '+(cls||'')+(o.length===2?'':'')+'">'+o.map(function(i,j){return '<button class="o c'+(isM2?(j?0:3):j)+'" data-o="'+i+'">'+esc(q.o[i])+'</button>'}).join('')+'</div>'}
 function pic(p,attr){var a=String(p).split('|'),w=WHO[a[0]],j=a[1]?JOB[a[1]]:null;return '<button class="pc" '+attr+' aria-label="'+esc(w[1]+(j?' '+j[1]:''))+'"><span class="pw">'+w[0]+'</span>'+(j?'<span class="pj">'+j[0]+'</span>':'')+'</button>'}
-function tbtn(w,c){var i=R.q.o.indexOf(w);return '<button class="'+c+'" data-o="'+(i<0?3:i)+'" data-w="'+w+'">'+WHO[w][0]+'<span class="nm">'+WHO[w][1]+'</span></button>'}
+function tbtn(w,c){var i=R.q.o.indexOf(w);return '<button class="'+c+'" data-o="'+(i<0?3:i)+'" data-w="'+w+'">'+WHO[w][0]+'</button>'}   /* 2026-10-26 第二十九次：選項 不 寫 中文（家族樹 只 有 人 的 圖）*/
 function blank(s){return esc(s).replace('___','<span class="bl" id="bl">&nbsp;</span>')}
 function drawSp(){var w=R.q.spell,n=w.length,h='';for(var i=0;i<n;i++){var f=i===0||i===n-1,k=i-1,v=f?w[i]:(R.pk[k]!=null?R.tiles[R.pk[k]]:'');
     h+='<span class="'+(f?'fix':v?'f':'')+(!f&&k===R.pk.length?' cur':'')+'">'+v+'</span>'}$('#slots').innerHTML=h;
