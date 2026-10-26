@@ -318,7 +318,7 @@ ol.lvst2 li b{flex:0 0 auto;width:54px;height:54px;border-radius:50%;background:
 @media (prefers-reduced-motion:reduce){.cbr,.cbs,.cbh{animation:none;opacity:1}.cbt i{animation:none;width:var(--w)}}
 a.thome{display:inline-flex;align-items:center;gap:4px;min-height:52px;padding:6px 16px;border-radius:999px;background:linear-gradient(#FFE07A,#E0A800);color:#3A2A00;font-size:20px;font-weight:700;text-decoration:none;white-space:nowrap;box-shadow:0 3px 0 #8A6400}/* 2026-10-26 第二十九次 第 12 點：回 教師 總首頁 */
 a.lvgo{display:inline-block;line-height:40px;font-size:20px;min-height:52px;padding:6px 18px;border-radius:999px;background:linear-gradient(#FF8A3D,#D9381E);color:#fff;border:0;text-decoration:none;font-weight:700;box-shadow:0 0 0 3px #5A1A00,0 0 16px #FF6B3D88;white-space:nowrap}
-@media (max-width:1200px){.lvlg{display:none}}@media (max-width:900px){.lvsm,.lvsm2{display:none}a.lvgo{padding:6px 8px;font-size:.9em}#lvqr{padding-left:10px;padding-right:10px;min-width:0}}
+@media (max-width:1200px){.lvlg{display:none}.bar1 .lvsm{display:none}a.thome{padding:6px 12px}}/* 第二十九次：多了〔🏠 總首頁〕，1024 寬 也要 一條 */@media (max-width:900px){.lvsm,.lvsm2{display:none}.bar1 h1{display:none}a.lvgo{padding:6px 8px;font-size:.9em}#lvqr{padding-left:10px;padding-right:10px;min-width:0}}
 button.lkt,b.lkt{background:#0E2240!important;border-color:#5AB0FF!important;color:#D6EBFF!important}
 .lkb .lkt0{flex:1;min-width:0}.lkb em.lktm{color:#BFE0FF}
 .lkw{border:3px dashed #5AB0FF;border-radius:16px;padding:8px 12px;margin:6px 0}
@@ -2929,6 +2929,8 @@ function f1(v){return v==null?'—':(Math.round(v*10)/10)}
 function post(o){return fetch(URL0,{method:'POST',body:JSON.stringify(o)}).then(function(r){return r.json()})}
 /* 2026-10-12 D3-A：勾「這台電腦記住我（7 天）」才存在這台電腦（localStorage，7 天後自動失效）；沒勾 ＝ 分頁關掉就要重打（sessionStorage）。〔🚪 登出〕兩個都清掉 */
 /* 2026-10-12 D5：〔A－〕〔A＋〕整個看板放大縮小（0.8～1.6 倍，記在這台電腦） */
+/* 第二十九次：字放大（A＋）以後〔⚙ 更多〕可能 換到 第二行 最左邊，選單 不可以 跑出 畫面左邊 */
+function mpFit(){var mp=$('#morep');if(!mp||mp.hidden)return;mp.style.left='';mp.style.right='';if(mp.getBoundingClientRect().left<8){mp.style.left='0';mp.style.right='auto'}}
 function zoom(d){var z=1;try{z=+localStorage.getItem('tzoom')||1}catch(e){}z=Math.max(.8,Math.min(1.6,Math.round((z+d)*10)/10));try{localStorage.setItem('tzoom',z)}catch(e){}$('#app').style.zoom=z}
 function forget(){try{sessionStorage.removeItem('tpw');localStorage.removeItem('tpw7')}catch(e){}}
 function remembered(){try{var r=JSON.parse(localStorage.getItem('tpw7')||'null');if(r&&r.p&&r.x>Date.now())return r.p;localStorage.removeItem('tpw7')}catch(e){}return ''}
@@ -3907,14 +3909,14 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if(c('#lvcp')){lvCopy();return}
   if((b=c('[data-lvc]'))){LVQ.cls=b.getAttribute('data-lvc');LVQ.seen={};lvCls();lvPoll();return}
   if(c('#lvx')||e.target.id==='lvov'){$('#lvov').hidden=true;clearTimeout(LVQ.t);return}
-  if(c('#more')){var mp=$('#morep');mp.hidden=!mp.hidden;$('#more').classList.toggle('on',!mp.hidden);$('#more').setAttribute('aria-expanded',String(!mp.hidden));return}
+  if(c('#more')){var mp=$('#morep');mp.hidden=!mp.hidden;$('#more').classList.toggle('on',!mp.hidden);$('#more').setAttribute('aria-expanded',String(!mp.hidden));mpFit();return}
   if(!c('#morep')&&$('#morep')&&!$('#morep').hidden){$('#morep').hidden=true;$('#more').classList.remove('on')}
   if(c('#khelp')){KHELP=KHELP?0:1;draw();return}
   if((b=c('[data-kac]'))){KAC=b.getAttribute('data-kac');draw();return}
   if((b=c('[data-kgo]'))){var sec=b.closest('.kgrp');if(sec)sec.classList.toggle('open');return}
   if(c('#thelp')){THELP=THELP?0:1;draw();return}
   if(c('.alert1')){TAB='k';$$('#tabs button').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-t')==='k')});draw();return}
-  if(c('#zi')||c('#zo')){zoom(c('#zi')?.1:-.1);return}
+  if(c('#zi')||c('#zo')){zoom(c('#zi')?.1:-.1);mpFit();return}
   if(c('#go')){login($('#pw').value.trim());return}
   if(c('#out')){forget();PW='';DATA=null;$('#pw').value='';$('#lmsg').textContent='👋 已經登出';$('#app').hidden=true;$('#login').hidden=false;return}
   if((b=c('#fg button'))){F.g=+b.getAttribute('data-g');F.cls='';$$('#fg button').forEach(function(x){x.classList.toggle('on',x===b)});clsSel();draw();return}

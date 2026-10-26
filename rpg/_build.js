@@ -341,7 +341,7 @@ button:active{transform:scale(.97)}
 /* 2026-10-21 第十六次 第 5、6 點：📜 獎勵 規則 一章＋5 題 小問題（第一次 打開 一定 要 看懂）＋ ⚔ 階級 能力 */
 #rpin.rlock #stage,#rpin.rlock #tabs{display:none}
 .rgate{background:linear-gradient(135deg,#3A2A06,#1A1030);border:3px solid #FFD54A;border-radius:18px;padding:14px 18px;margin:0 0 12px;font-size:clamp(22px,3vh,30px);line-height:1.45;text-align:center}
-/* 2026-10-25 🎯 全班獎勵 4 幕 */
+/* 2026-10-25 🎯 全班獎勵 4 幕（2026-10-26 第二十九次 第 10 點：最前面 多 一幕「非上課時間 才算」＝ 5 幕） */
 .cwclk{display:flex;align-items:center;justify-content:center;gap:14px;font-size:clamp(26px,3.6vh,40px);font-weight:700;color:#FFE07A;animation:fadeUp .6s both}.cwclk svg{width:clamp(56px,8vh,90px);height:auto}
 .cwt{display:grid;grid-template-columns:clamp(110px,14vw,170px) 1fr;align-items:center;gap:12px;width:min(100%,900px);margin:10px auto 0;animation:fadeUp .5s both}.cwd{font-size:clamp(20px,2.6vh,28px);text-align:right}
 .cwbar{display:flex;height:clamp(48px,7vh,70px);border-radius:14px;overflow:hidden;box-shadow:0 0 0 3px rgba(255,255,255,.25)}.cwbar span{display:flex;align-items:center;justify-content:center;font-size:clamp(18px,2.2vh,24px);font-weight:700;white-space:nowrap;overflow:hidden;animation:cwFill .7s both;transform-origin:left}
@@ -726,7 +726,7 @@ function qzSend(me,k,W){scFetch('',{a:'rpg',id:me,op:W?'cq':'qz',v:W?CAT.CQV:CAT
     if(j&&j.ok&&j.v&&(W?j.v.cq===CAT.CQV:j.v.qz===CAT.QV)){var dt=RV&&RV.dt||0;RV=j.v;RV.dt=dt;var t=document.getElementById('qzSent');if(t)t.textContent='老師看得到：你的作答情形'}
     else qzSent2()},function(){if(me!==SCID)return;if(k<2)setTimeout(function(){qzSend(me,k+1,W)},4000);else qzSent2()})}
 function qzSent2(){var t=document.getElementById('qzSent');if(t)t.textContent='下次 打開，會 自動 告訴 老師'}
-function gateHTML(){var n=tutScenes().r.length;if(wLocked())return '<div class="rgate">🎯 <b>全班獎勵</b>有新規則：先看完<b>4幕</b>，再答<b>3題</b>，都答對，就可以開始玩！<div class="rst"><span class="'+(QZ.seenW?'on':'')+'">① 👀 看完4幕</span><span>② 📝 3題都答對</span><span>③ ⚔ 開始玩</span></div></div>';return rLocked()?'<div class="rgate">📜 第一次打開<b>戰神之路</b>：先看完<b>獎勵規則</b>（'+n+' 幕），再答 <b>5 題問題</b>，都答對，就可以開始玩！<div class="rst"><span class="'+(QZ.seenEnd?'on':'')+'">① 👀 看完 '+n+' 幕</span><span>② 📝 5 題都答對</span><span>③ ⚔ 開始玩</span></div></div>':''}
+function gateHTML(){var T=tutScenes(),n=T.r.length,m=T.w.length;if(wLocked())return '<div class="rgate">🎯 <b>全班獎勵</b>有新規則：先看完<b>'+m+'幕</b>，再答<b>3題</b>，都答對，就可以開始玩！<div class="rst"><span class="'+(QZ.seenW?'on':'')+'">① 👀 看完'+m+'幕</span><span>② 📝 3題都答對</span><span>③ ⚔ 開始玩</span></div></div>';return rLocked()?'<div class="rgate">📜 第一次打開<b>戰神之路</b>：先看完<b>獎勵規則</b>（'+n+' 幕），再答 <b>5 題問題</b>，都答對，就可以開始玩！<div class="rst"><span class="'+(QZ.seenEnd?'on':'')+'">① 👀 看完 '+n+' 幕</span><span>② 📝 5 題都答對</span><span>③ ⚔ 開始玩</span></div></div>':''}
 function drawShop(){var S=document.getElementById('shop'),h='';
   var rin=document.getElementById('rpin');if(rin)rin.classList.toggle('rlock',anyLocked());
   if(rLocked()){TAB='q';if(TCH!=='r')TCH='r'}else if(wLocked()){TAB='q';if(TCH!=='w')TCH='w'}

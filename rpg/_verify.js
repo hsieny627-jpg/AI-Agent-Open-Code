@@ -31,7 +31,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     p.on('request', r => { if (/\.(mp3|wav|ogg)(\?|$)/.test(r.url())) snd.push(r.url().slice(-30)); });
     p.on('pageerror', x => E.push(tag + ' JS 錯誤：' + x.message));
     p.on('response', r => { if (r.status() >= 400 && r.url().startsWith(HTTP)) bad.push(r.url().slice(HTTP.length)); });
-    await p.addInitScript(() => { window.__NOCB = 1; window.__NOTU = 1; });   /* 升階 典禮 另外 量（第十八次） */
+    await p.addInitScript(() => { window.__NOCB = 1; window.__NOTU = 1; document.addEventListener('DOMContentLoaded', () => { const st = document.createElement('style'); st.textContent = '#scch{display:none!important}'; document.head.appendChild(st); }); });   /* 冠軍寶箱 登入 動畫 另外 量（score/_verify_champ.js，第二十九次） */   /* 升階 典禮 另外 量（第十八次） */
     await p.goto(HTTP + '/rpg/index.html'); await p.waitForTimeout(1200);
     const o0 = await p.evaluate(() => { const b = document.getElementById('rpIn'); return { out: !document.getElementById('rpout').hidden, h: b ? b.getBoundingClientRect().height : 0 }; });
     if (!o0.out || o0.h < 64) E.push(tag + '：沒登入沒有大大的〔🔑 登入〕');
@@ -76,13 +76,13 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     await p.click('#qzEnd'); await p.waitForTimeout(500);
     /* 2026-10-25 第二十五次：🎯 全班獎勵 小測驗（4 幕＋3 題）都答對 才 能 玩；老師看板 看得到 */
     { const w0 = await p.evaluate(() => ({ lk: document.getElementById('rpin').classList.contains('rlock'), gate: (document.querySelector('.rgate') || {}).textContent || '', sc: document.querySelectorAll('#tst .tsc').length, ch: [].map.call(document.querySelectorAll('.tch button'), x => x.textContent).join('|'), qz: (document.getElementById('qzGo') || {}).hidden }));
-      if (!w0.lk || !/全班獎勵/.test(w0.gate) || w0.sc !== 4 || !/全班獎勵/.test(w0.ch) || w0.qz !== true) E.push(tag + '：看懂 規則 以後 沒有 先 鎖住 看 全班獎勵 4 幕：' + JSON.stringify(w0));
-      for (let i = 0; i < 4; i++) { await p.click('[data-tut="' + i + '"]'); await p.waitForTimeout(3600);
+      if (!w0.lk || !/全班獎勵/.test(w0.gate) || w0.sc !== 5 || !/全班獎勵/.test(w0.ch) || w0.qz !== true) E.push(tag + '：看懂 規則 以後 沒有 先 鎖住 看 全班獎勵 5 幕（第二十九次：第 1 幕 ＝ 非上課時間）：' + JSON.stringify(w0));
+      for (let i = 0; i < 5; i++) { await p.click('[data-tut="' + i + '"]'); await p.waitForTimeout(3600);
         const f = await p.evaluate(() => { const c = document.querySelector('#tst .tsc.on'), t = document.getElementById('tst').getBoundingClientRect(), o = []; let mn = 99;
           c.querySelectorAll('*').forEach(x => { const r = x.getBoundingClientRect(); if (r.width && (r.right > t.right + 2 || r.left < t.left - 2 || r.bottom > t.bottom + 2)) o.push(x.className || x.tagName); if (x.children.length === 0 && x.textContent.trim() && getComputedStyle(x).opacity > .5) mn = Math.min(mn, parseFloat(getComputedStyle(x).fontSize)); });
           return { o: o.slice(0, 3), mn, t: c.textContent }; });
         if (f.o.length || f.mn < 17) E.push(tag + '：全班獎勵 第 ' + (i + 1) + ' 幕 超出 或 字 太小：' + JSON.stringify(f).slice(0, 160));
-        if (i === 2 && !/150/.test(f.t)) E.push(tag + '：全班獎勵 第 3 幕 沒有 照 天數 的 金幣'); if (i === 3 && !/400/.test(f.t)) E.push(tag + '：全班獎勵 第 4 幕 沒有 目標② 的 金幣'); n += 2; }
+        if (i === 0 && !/非上課時間/.test(f.t)) E.push(tag + '：全班獎勵 第 1 幕 沒有 非上課時間'); if (i === 3 && !/150/.test(f.t)) E.push(tag + '：全班獎勵 第 4 幕 沒有 照 天數 的 金幣'); if (i === 4 && !/400/.test(f.t)) E.push(tag + '：全班獎勵 第 5 幕 沒有 目標② 的 金幣'); n += 2; }
       await p.click('#qzGo'); await p.waitForTimeout(300);
       const q3 = await p.evaluate(() => document.querySelector('#rqz .qn').textContent);
       if (!/3 題/.test(q3)) E.push(tag + '：全班獎勵 小問題 不是 3 題：' + q3);
