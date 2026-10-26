@@ -10,17 +10,19 @@ const { pack } = require('../tools/audio_pack');
 const D = require('./_data');
 const r = pack({ texts: D.SAY, dir: path.join(__dirname, 'audio'), varName: 'ENAUD' });
 const s = pack({ texts: D.SAYS, dir: path.join(__dirname, 'audio/s'), varName: 'ENAUDF', speed: 0.85 });
+/* 2026-10-26 第二十八次：句子（I’m seventeen.）也 用 男聲 慢 ➜ 鑰匙 要 跟 網頁 的 akey 一樣（’ ➜ '、小寫）*/
+const AK = w => String(w).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…＿_　]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
 function slowM(dir, varName, base, alt) {
   const out = path.join(__dirname, 'audio', dir), man = {}, need = {};
   fs.mkdirSync(out, { recursive: true });
   /* alt 的 值：數字 ＝ 男聲 換 速度；'f0.9' ＝ 換 女聲 0.9（twelve、twenty 的 tw 男聲 慢 唸 電腦 一直 聽成 wealth、wenty） */
   D.SAYM.forEach(w => { const sp = String(alt[w] || base), nm = crypto.createHash('sha1').update('hfc_m|' + sp + '|' + w).digest('hex').slice(0, 12) + '.mp3';
-    man[w] = [nm, +sp.replace(/^f/, '')]; if (!fs.existsSync(path.join(out, nm))) (need[sp] = need[sp] || []).push(w); });
+    man[AK(w)] = [nm, +sp.replace(/^f/, '')]; if (!fs.existsSync(path.join(out, nm))) (need[sp] = need[sp] || []).push(w); });
   Object.keys(need).forEach(sp => { const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'mt-'));
     const fv = /^f/.test(sp), pf = fv ? '' : 'm:';
     pack({ texts: need[sp].map(w => pf + w), dir: tmp, varName: 'X', speed: +sp.replace(/^f/, '') });
     const M = JSON.parse(/=\s*(\{[\s\S]*\});/.exec(fs.readFileSync(path.join(tmp, 'aud.js'), 'utf8'))[1]);
-    need[sp].forEach(w => { fs.copyFileSync(path.join(tmp, M[pf + w][0]), path.join(out, man[w][0])); man[w][1] = M[pf + w][1]; }); });
+    need[sp].forEach(w => { const k = pf + AK(w); fs.copyFileSync(path.join(tmp, M[k][0]), path.join(out, man[AK(w)][0])); man[AK(w)][1] = M[k][1]; }); });
   fs.readdirSync(out).forEach(f => { if (/\.mp3$/.test(f) && !Object.values(man).some(x => x[0] === f)) fs.unlinkSync(path.join(out, f)); });
   const old = fs.existsSync(path.join(out, 'aud.js')) ? JSON.parse(/=\s*(\{[\s\S]*\});/.exec(fs.readFileSync(path.join(out, 'aud.js'), 'utf8'))[1]) : {};
   Object.keys(man).forEach(w => { if (!need[man[w][1]] && old[w] && old[w][0] === man[w][0]) man[w][1] = old[w][1]; });

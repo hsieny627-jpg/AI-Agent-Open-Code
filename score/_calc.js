@@ -102,6 +102,7 @@ var SC = (function () {
   function mean(a) { if (!a.length) return null; var s = 0; for (var i = 0; i < a.length; i++) s += a[i]; return s / a.length; }
 
   /* 一題的紀錄：[答對 1/0, 選了第幾個（0 ＝ 正解，-1 ＝ 時間到）, 用了幾秒, 秒按 1/0, 剩下秒數 ÷ 總秒數] */
+  function xN(set) { var m = /_(g3m|mt)-x(25|50)$/.exec(String(set)); return m ? +m[2] : 0; }   /* 📝 25／50 題 挑戰 的 題數 */
   function s100(qs) {
     var n = qs.length, s = 0;
     for (var i = 0; i < n; i++) if (qs[i][0]) s += 60 / n + 40 / n * Math.max(0, Math.min(1, +qs[i][4] || 0));
@@ -148,7 +149,7 @@ var SC = (function () {
     var ok = 0, f = 0; for (i = 0; i < Q.length; i++) { ok += Q[i][0]; f += Q[i][3]; }
     var t = +o.t; if (!(t > now - 30 * DAY && t < now + 5 * 6e4)) t = now;   /* 平板時間不對就用伺服器時間；沒網路補送的照當時 */
     return { t: t, id: c.id, g: c.g, cls: c.cls, seat: c.seat, set: set, name: String(o.name || '').slice(0, 60), m: m, n: Q.length, ok: ok,
-      acc: noQ(m) ? null : Math.round(ok / Q.length * 100), s: noQ(m) ? null : s100(Q), fix: lim(o.fix, 0, 999),
+      acc: noQ(m) ? null : Math.round(ok / Q.length * 100), s: noQ(m) ? null : xN(set) ? Math.min(100, Math.round(ok * 1000 / xN(set)) / 10) : s100(Q),   /* 2026-10-26 第二十八次：📝 25／50 題 挑戰 ＝ 答對 一題 4／2 分（沒 做完 的 算 0 分）*/ fix: lim(o.fix, 0, 999),
       mp: m === 'mem' ? lim(o.mp, 0, 999) : 0, mw: m === 'mem' ? lim(o.mw, 0, 9999) : 0, sec: m === 'l' ? 0 : lim(o.sec, 0, 3600),
       raw: lim(o.raw, 0, 1e8), fast: f,
       src: o.src === 'home' ? 'home' : 'school', dev: String(o.dev || '').replace(/[^\w]/g, '').slice(0, 12), u: String(o.u || '').replace(/[^\w]/g, '').slice(0, 24), qs: Q, x: false };
@@ -644,7 +645,7 @@ var SC = (function () {
     else { if (k === 'p' && st.eq.p !== id) st.pt = now || 0; st.eq[k] = id; }
     return { st: st }; }
   return { CLASSES: CLASSES, AFTER: AFTER, cname: cname, SEAT: SEAT, COLS: COLS, CI: CI, CAP: CAP, TOP: TOP, GMIN: GMIN, MT: MT, checkId: checkId, cat: cat, when: when, me: me, STAR: STAR, RPCHAL: RPCHAL, counts: counts, need: need, day: day, weekStart: weekStart,
-    AW: AW, care: care, CAREMAX: CAREMAX, s100: s100, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, clsAwards: clsAwards, secOf: secOf, questions: questions, gtop: gtop, view: view,
+    AW: AW, care: care, CAREMAX: CAREMAX, s100: s100, xN: xN, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, clsAwards: clsAwards, secOf: secOf, questions: questions, gtop: gtop, view: view,
     lkClean: lkClean, lkSet: lkSet, lkAny: lkAny, lkFor: lkFor, LKRE: LKRE, lktClean: lktClean, lktSet: lktSet, lkNow: lkNow,
     tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE,
     RPCW: RPCW, cwOk: cwOk, cwDays: cwDays, cwLv: cwLv, cwAmt: cwAmt, RPCQV: RPCQV, rpCwq: rpCwq, RPCH: RPCH, RPR: RPR, RPP: RPP, RPL: RPL, RPT: RPT, RPS: RPS, RPSON: RPSON, RPSP: RPSP, RPSL: RPSL, RPSLOT: RPSLOT, rpSC: rpSC, RPSET: RPSET, RPHIDE: RPHIDE, RPX: RPX, RPC: RPC, rpKind: rpKind, rpStar: rpStar, rpPrice: rpPrice, rpNeed: rpNeed, rpOk: rpOk, rpLv: rpLv,

@@ -93,6 +93,41 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
       if (!/記進 成績/.test(end.t)) E.push(tag + ' ' + g.id + '：沒有 記 成績');
       await p.evaluate(() => hub());
     }
+    /* 2026-10-26 第二十八次 第 3、4 點：📝 25 題／50 題 挑戰（12 關 連著 玩、每題 4／2 分、30% 類似、記 成績）*/
+    for (const N of (process.env.G && !/x/.test(process.env.G) ? [] : vp[0] === 1024 ? [25, 50] : vp[0] === 820 ? [25] : [])) {
+      await p.evaluate(() => { hub(); window.__NOGO = 1; }); await p.waitForTimeout(200);
+      n++; const xb = await p.evaluate(() => [...document.querySelectorAll('.xrow .xb')].map(b => b.getAttribute('data-xn') + ':' + Math.round(b.getBoundingClientRect().height)).join());
+      if (!/^25:\d+,50:\d+$/.test(xb) || xb.split(',').some(x => +x.split(':')[1] < 60)) E.push(tag + ' 大廳 沒有〔📝 25 題〕〔📝 50 題〕：' + xb);
+      await p.evaluate(() => { document.querySelectorAll('.scfull').forEach(x => x.remove()); }); await p.click('.xrow .xb[data-xn="' + N + '"]'); await p.waitForTimeout(300);   /* 做完 提醒 登出 的 那一頁 先 關掉 */
+      n++; const pl = await p.evaluate(() => ({ c: R.cnt, sim: R.gs.filter((g, k) => g.B[R.idx[k]].sim).length, n: R.idx.length, ord: R.lvOf.every((l, i) => !i || l >= R.lvOf[i - 1]), p8: [...new Set(R.gs.map((g, k) => g.id === 'm8' ? g.B[R.idx[k]].pas : '').filter(x => x))].length }));
+      const want = N === 25 ? [2, 3] : [4, 5];
+      if (pl.n !== N || pl.c.some(x => x < want[0] || x > want[1]) || pl.sim !== Math.round(N * .3) || !pl.ord || pl.p8 !== 1) E.push(tag + ' ' + N + ' 題：抽題 不 平均／類似 不是 30%／短文 不是 一篇：' + JSON.stringify(pl));
+      const lvs = new Set(); let guard = 0;
+      while (guard++ < N + 5) {
+        if (await p.evaluate(() => !!document.querySelector('.end'))) break;
+        if (await p.evaluate(() => !!document.getElementById('rdgo'))) { await p.waitForTimeout(2600); await p.click('#rdgo'); await p.waitForTimeout(300); }
+        const st = await p.evaluate(() => ({ k: R.k, lv: R.lv, id: R.g.id, sc: R.sc, nm: document.querySelector('.hud .nm').textContent }));
+        lvs.add(st.lv); if (!/第 \d+ 關/.test(st.nm)) E.push(tag + ' ' + N + ' 題：上面 沒有 寫「第 幾 關」');
+        await p.waitForTimeout(1100); const wrong = st.k === 0;
+        await p.evaluate(k => { const q = R.q; if (R.g.id === 'm7') { const w = q.spell, mid = w.slice(1, -1).split(''); const order = k === 0 ? mid.slice().reverse() : mid, used = [];
+              if (k === 0 && mid.join('') === order.join('')) order[0] = R.tiles.filter(c => mid.indexOf(c) < 0)[0];
+              order.forEach(c => { for (let i = 0; i < R.tiles.length; i++) if (used.indexOf(i) < 0 && R.tiles[i] === c) { used.push(i); document.querySelector('[data-t="' + i + '"]').click(); return; } }); }
+            else document.querySelector('#stage [data-o="' + (k === 0 ? 1 : 0) + '"]').click(); }, st.k);
+        if (wrong) { await p.waitForFunction(() => !!document.getElementById('wfn'), null, { timeout: 15000 }).catch(() => E.push(tag + ' ' + N + ' 題：答錯 沒有〔▶ 下一題〕')); await p.click('#wfn').catch(() => {}); }
+        else { const s1 = await p.evaluate(() => R.sc); if (s1 - st.sc !== 100 / N) E.push(tag + ' ' + N + ' 題：答對 一題 要 ＋' + (100 / N) + ' 分，現在 ＋' + (s1 - st.sc));
+          if (st.id === 'm8') { await p.waitForSelector('#nx8w .nx8', { timeout: 5000 }).catch(() => {}); await p.waitForTimeout(300); await p.click('#nx8w .nx8').catch(() => {}); } }
+        await p.waitForFunction(kk => !R || R.k > kk || !!document.querySelector('.end'), st.k, { timeout: 15000 }).catch(() => E.push(tag + ' ' + N + ' 題 第 ' + (st.k + 1) + ' 題（' + st.id + '）沒有 到 下一題'));
+        await p.waitForTimeout(100);
+      }
+      n++; if (lvs.size !== 12) E.push(tag + ' ' + N + ' 題：沒有 12 關 連著 玩：' + [...lvs].join());
+      n++; const e = await p.evaluate(() => ({ t: document.getElementById('app').innerText, rows: document.querySelectorAll('.xtb tr').length }));
+      const w2 = (N - 1) * 100 / N; if (e.t.indexOf(w2 + ' 分 ／ 100') < 0 || e.rows !== 13 || e.t.indexOf('答對 ' + (N - 1) + ' ／ ' + N) < 0 || !/記進 成績/.test(e.t)) E.push(tag + ' ' + N + ' 題：結束 頁 不對：' + e.t.slice(0, 90));
+      n++; const rq = await p.evaluate(N => { const Q = JSON.parse(localStorage.getItem('score_q') || '[]').concat(JSON.parse(localStorage.getItem('score_sent') || '[]')); const r = Q.filter(x => x.set === 'g4gm_mt-x' + N).pop();
+          return r ? { n: r.qs.length, ok: r.qs.filter(q => q[0]).length, bi: r.qs.every(q => q[5] >= 0 && q[5] < XN), nm: r.name } : null; }, N);
+      if (!rq || rq.n !== N || rq.ok !== N - 1 || !rq.bi || !/期中複習｜📝 /.test(rq.nm)) E.push(tag + ' ' + N + ' 題：沒有 記進 成績：' + JSON.stringify(rq));
+      if (SHOT) await p.screenshot({ path: path.join(SHOT, 'mt_x' + N + '_' + vp[0] + '.png'), fullPage: true });
+      await p.evaluate(() => { window.__NOGO = 0; hub(); });
+    }
     n++; if (errs.length) E.push(tag + ' JS 錯誤：' + errs.slice(0, 3).join('｜'));
     await ctx.close();
   }

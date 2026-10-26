@@ -231,7 +231,53 @@ G8.forEach(function (q) { addS(q.a || q.b); addS(q.o[0]); addS(q.en); });
 G9.forEach(function (q) { q.lines.forEach(function (l, i) { addS(l, BOYS.indexOf(q.c[i].t) >= 0 ? 'm' : ''); }); });
 G10.forEach(function (q) { addS(q.say); });
 
+/* ══ 2026-10-26 第二十八次 第 1、2 點：📝 25 題／50 題 挑戰 的 題庫（_exam_data.js）➜ 跟 上面 一樣 的 樣子（每一題 多 s：1 🔁 類似／0 🆕 全新）══ */
+var XD = require('./_exam_data.js'), XB = {};
+XD.XBOYS.forEach(function (n) { BOYS.push(n); });
+var NUMZ2 = NUMZ;
+XB.q1 = XD.X1.map(function (r) { var w = PHM[r[1]];
+  return { s: r[0], say: r[1], up: 1, how: '聽單字 ➜ 敲 第一個字母（大寫）的 地鼠', o: [r[2]].concat(r[3].split('')), en: r[1], zh: r[1] + ' ＝ ' + w[1] + '，第一個字母 的 大寫 是 ' + r[2] + '。', ic: w[2], hl: 0 }; });
+var CARD = function (c) { var m = /^(\w+):(\d+)$/.exec(c); return m ? { t: m[1], a: +m[2] } : { sc: c }; };
+var X2Z = { "Hello, I'm Bill. I'm six years old.": '哈囉，我是 Bill。我六歲。', "Hi, I'm Helen. I'm nine.": '嗨，我是 Helen。我九歲。', "My name is Luke. I'm four years old.": '我的名字是 Luke。我四歲。',
+  'Thank you, Mark.': '謝謝你，Mark。', "You're welcome, Sally.": '不客氣，Sally。', 'Hello, Ruby. Nice to meet you.': '哈囉，Ruby。很高興認識你。', 'Nice to meet you, too.': '我也很高興認識你。',
+  'Good morning, Adam.': '早安，Adam。', 'Good morning, Molly.': '早安，Molly。', 'Ruby! Come here, please.': 'Ruby！請過來這裡。', "I can't find my dog.": '我找不到我的狗。', 'We can help you, Luke.': 'Luke，我們可以幫你。' };
+XB.q2 = XD.X2.map(function (r) { return { s: r[0], say: r[1], o: [r[2], r[3], r[4]].map(CARD), en: r[1].map(function (x) { return x[1]; }).join(' '), zh: r[1].map(function (x) { return X2Z[x[1]]; }).join('') }; });
+XB.q3 = XD.X3.map(function (r) { var ce = CE.filter(function (c) { return c.k === r[2]; })[0], w = /^w:/.test(r[2]) ? PHM[r[2].slice(2)] : null;
+  return { s: r[0], say: r[1], o: [r[2]].concat(r[3]), en: r[1], zh: ce ? ce.zh : r[1] + ' ＝ ' + w[1] + '。' }; });
+XB.q4 = XD.X4.map(function (r) { var w = PHM[r[1]]; return { s: r[0], say: r[1], want: r[2], ic: w[2], en: r[1], how: '聽單字 ➜ ① 點 對的 圖 ➜ ② 用手指 寫 第一個字母 的 大寫（頂天立地）', zh: r[1] + ' ＝ ' + w[1] + '，第一個字母 的 大寫 是 ' + r[2] + '。', hl: 0 }; });
+XB.q5 = XD.X5.map(function (r) { var c = r[1], lo = c.toLowerCase(), U = c.toUpperCase(), up = c === U;
+  return { s: r[0], lis: 1, how: '🔊 聽 一個 字母 ➜ 用手指 寫 它（大寫 還是 小寫 看 下面；頂天立地、不超線）', show: up ? lo : U, want: c, say: lo, en: c, zh: '聽到 字母 ' + lo + ' ➜ 寫 ' + (up ? '大寫 ' + U : '小寫 ' + lo) + '。' }; });
+XB.q6 = XD.X6.map(function (r) { var n = r[1], w = NUMW[n];
+  return { s: r[0], n: n, obj: r[2], ctx: r[3], want: w, extra: r[4].split(''), say: w, en: r[3] === 'cake' ? "I'm " + w + ' years old.' : w,
+    zh: r[3] === 'cake' ? '我 ' + NUMZ2[n] + ' 歲。（' + n + ' ＝ ' + w + '）' : n + ' ＝ ' + w + '（' + NUMZ2[n] + '）。' }; });
+XB.q7 = XD.X7.map(function (r) { var q = { s: r[0], s0: r[1], o: [r[2], r[3], r[4]], zh: r[5] }; q.en = r[1].replace('___', r[2]).replace(' — ', ' '); q.say = q.en; q.s = r[1]; q.sim = r[0]; return q; });
+var X8Z = { "Hello! What's your name?": '哈囉！你叫什麼名字？', "I'm Ruby.": '我是 Ruby。', 'How old are you, Adam?': 'Adam，你幾歲？', "I'm ten years old.": '我十歲。',
+  'Nice to meet you, Mark.': '很高興認識你，Mark。', 'Nice to meet you, too.': '我也很高興認識你。', 'Good morning, Sally.': '早安，Sally。', 'Good morning, Luke.': '早安，Luke。',
+  "I'm nine.": '我九歲。', 'How old are you?': '你幾歲？', 'My name is Molly.': '我的名字是 Molly。', "What's your name?": '你叫什麼名字？',
+  'Good morning, Mark.': '早安，Mark。', 'Good morning, Ruby.': '早安，Ruby。', "Hello, I'm Mark.": '哈囉，我是 Mark。', "Hi, Mark. I'm Ruby.": '嗨，Mark。我是 Ruby。' };
+XB.q8 = XD.X8.map(function (r) { var q = r[1] ? { rev: 1, b: r[2], o: [r[3]].concat(r[4]) } : { a: r[2], o: [r[3]].concat(r[4]) }, A = q.rev ? q.o[0] : q.a, B = q.rev ? q.b : q.o[0];
+  q.sim = r[0]; q.en = A + ' ' + B; q.zh = X8Z[A] + X8Z[B]; q.say = q.rev ? q.b : q.a; return q; });
+XB.q9 = XD.X9.map(function (f) { var c = f[1].map(function (p) { return { t: p[0], a: p[1], w: NUMW[p[1]], s: p[2] }; }), lines = c.map(function (p) { return G9T[p.s](p.t, p.a); }),
+    bl = f[2].split(''), need = c.map(function (p, i) { return bl[i] === 'n' ? p.t : String(p.a); });
+  return { s: f[0], c: c, bl: bl, lines: lines, tl: need.concat([f[3][0], String(f[3][1])]), en: lines.join(' '), zh: c.map(function (p) { return G9Z[p.s](p.t, p.a); }).join(''), say: lines.join(' ') }; });
+XB.q10 = XD.X10.map(function (r) { var d = r[1].split('').map(Number), c = r[1], L = d.length,
+    sw = L === 3 ? [d[0] + '' + d[2] + d[1], d[1] + '' + d[0] + d[2]] : [d[1] + '' + d[0] + d[2] + d[3], d[0] + '' + d[1] + d[3] + d[2]];
+  return { s: r[0], code: c, o: [c].concat(sw), say: d.map(function (x) { return NUMW[x]; }).join(', ') + '.', en: d.map(function (x) { return NUMW[x]; }).join(' '),
+    zh: c + ' ＝ ' + d.map(function (x) { return NUMZ2[x]; }).join(' ') + '。' }; });
+/* q7、q8 的 s 是 句子／反派 那一句，類似 標記 用 sim */
+['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q9', 'q10'].forEach(function (id) { XB[id].forEach(function (q) { q.sim = q.s; }); });
+['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q9', 'q10'].forEach(function (id) { XB[id].forEach(function (q) { if (id !== 'q9') delete q.s; else delete q.s; }); });
+/* 要唸 的 */
+XB.q2.forEach(function (q) { q.say.forEach(function (x) { addS(x[1], x[0]); }); });
+XB.q3.forEach(function (q) { addS(q.say); });
+XB.q6.forEach(function (q) { addS(q.say); if (q.ctx === 'cake') addS(q.en); });
+XB.q7.forEach(function (q) { addS(q.say); });
+XB.q8.forEach(function (q) { addS(q.a || q.b); addS(q.o[0]); addS(q.en); });
+XB.q9.forEach(function (q) { q.lines.forEach(function (l, i) { addS(l, BOYS.indexOf(q.c[i].t) >= 0 ? 'm' : ''); }); });
+XB.q10.forEach(function (q) { addS(q.say); });
+XB.q4.forEach(function (q) { addS(q.say); });
+
 /* 2026-10-26 第二十六次 第 1-1 點（老師：打地鼠 單字 模糊、太快）：打地鼠 的 字 另外 做 慢的（audio/m1 語速 0.78）、更慢的（audio/m2 語速 0.62，〔🐢 慢慢 唸〕）*/
-var SAYM = G1.map(function (q) { return q.say; });
-module.exports = { SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
+var SAYM = G1.map(function (q) { return q.say; }).concat(XB.q1.map(function (q) { return q.say; })).filter(function (x, i, a) { return a.indexOf(x) === i; });
+module.exports = { XB: XB, SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
   EXAM_A: EXAM_A, EXAM_D: EXAM_D, EXAM_E: EXAM_E };

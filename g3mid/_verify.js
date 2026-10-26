@@ -124,6 +124,38 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
         if (SHOT) await p.screenshot({ path: path.join(SHOT, 'g3m_' + g.id + '_end.png') }); }
       await p.evaluate(() => lobby()); await p.waitForTimeout(200);
     }
+    /* 2026-10-26 第二十八次 第 1、2 點：📝 25 題／50 題 挑戰（10 關 連著 玩、每題 4／2 分、30% 類似、記 成績）*/
+    for (const N of (process.env.ONLY && !/x/.test(process.env.ONLY) ? [] : full ? [25, 50] : vp[0] === 820 ? [25] : [])) {
+      n++; const lb2 = await p.evaluate(() => [...document.querySelectorAll('#xrow .xb')].map(b => b.dataset.x + ':' + Math.round(b.getBoundingClientRect().height)).join());
+      if (!/^25:\d+,50:\d+$/.test(lb2) || lb2.split(',').some(x => +x.split(':')[1] < 60)) E.push(tag + ' 大廳 沒有〔📝 25 題〕〔📝 50 題〕大按鈕：' + lb2);
+      await p.click('#xrow .xb[data-x="' + N + '"]'); await p.waitForTimeout(400);
+      const pl = await p.evaluate(() => ({ c: R.cnt, s: R.nsim, sim: R.qs.filter(q => q.sim).length, n: R.qs.length, ord: R.lvOf.every((l, i) => !i || l >= R.lvOf[i - 1]) }));
+      n++; const want = N === 25 ? [2, 3] : [5, 5];
+      if (pl.n !== N || pl.c.some(x => x < want[0] || x > want[1]) || pl.sim !== Math.round(N * .3) || !pl.ord) E.push(tag + ' ' + N + ' 題：抽題 不 平均／類似 不是 30%：' + JSON.stringify(pl));
+      let lvSeen = new Set(), guard = 0, sc0 = 0;
+      while (guard++ < N + 5) {
+        const st = await p.evaluate(() => ({ end: !document.querySelector('#endv').hidden, k: R.k, id: G && G.id, lv: R.lv, sc: R.score, gnm: document.getElementById('gnm').textContent }));
+        if (st.end) break; lvSeen.add(st.lv);
+        if (st.k === 0 && !/第 1 關/.test(st.gnm)) E.push(tag + ' ' + N + ' 題：上面 沒有 寫「第 1 關」：' + st.gnm);
+        const hw = await p.$('#q2go'); if (hw) { await hw.click(); await p.waitForTimeout(150); }
+        const wp = await p.$('#wp.on [data-wr]'); if (wp) { await wp.click(); await p.waitForTimeout(250); }
+        await p.waitForTimeout(st.id === 'q2' ? 300 : 120);
+        const wrong = st.k === 0; await answer(p, { id: st.id }, wrong);
+        if (wrong) { await p.waitForSelector('#fbn', { timeout: 15000 }).catch(() => E.push(tag + ' ' + N + ' 題：答錯 沒有〔▶ 下一題〕')); await p.click('#fbn').catch(() => {}); }
+        await p.waitForFunction(kk => R.k > kk || !document.querySelector('#endv').hidden, st.k, { timeout: 15000 }).catch(() => E.push(tag + ' ' + N + ' 題 第 ' + (st.k + 1) + ' 題（' + st.id + '）沒有 到 下一題'));
+        if (!wrong) { const s1 = await p.evaluate(() => R.score); if (s1 - st.sc !== 100 / N) { E.push(tag + ' ' + N + ' 題：答對 一題 要 ＋' + (100 / N) + ' 分，現在 ＋' + (s1 - st.sc)); } }
+        await p.waitForTimeout(150);
+      }
+      n++; if (lvSeen.size !== 10) E.push(tag + ' ' + N + ' 題：沒有 10 關 連著 玩：' + [...lvSeen].join());
+      n++; const e = await p.evaluate(() => ({ t: document.querySelector('#end').textContent, rows: document.querySelectorAll('#end .xtb tr').length }));
+      const want2 = (N - 1) * (100 / N);
+      if (e.t.indexOf(want2 + ' 分 ／ 100') < 0 || e.rows !== 11 || e.t.indexOf('答對 ' + (N - 1) + ' ／ ' + N) < 0) E.push(tag + ' ' + N + ' 題：結束 頁 不對（要 ' + want2 + ' 分、10 關 表）：' + e.t.slice(0, 80));
+      n++; const rq = await p.evaluate(N => { const Q = JSON.parse(localStorage.getItem('score_q') || '[]').concat(JSON.parse(localStorage.getItem('score_sent') || '[]')); const r = Q.filter(x => x.set === 'g3gm_g3m-x' + N).pop();
+          return r ? { n: r.qs.length, ok: r.qs.filter(q => q[0]).length, bi: r.qs.every(q => q[5] >= 0 && XALL[q[5]]), nm: r.name } : null; }, N);
+      if (!rq || rq.n !== N || rq.ok !== N - 1 || !rq.bi || !/三年級 複習｜📝 /.test(rq.nm)) E.push(tag + ' ' + N + ' 題：沒有 記進 成績：' + JSON.stringify(rq));
+      if (SHOT) await p.screenshot({ path: path.join(SHOT, 'g3m_x' + N + '_end_' + vp[0] + '.png'), fullPage: true });
+      await p.evaluate(() => lobby()); await p.waitForTimeout(200);
+    }
     n++; if (errs.length) E.push(tag + ' 程式錯誤：' + errs.slice(0, 3).join(' ｜ '));
     await ctx.close();
   }
@@ -176,6 +208,7 @@ async function answer(p, g, wrong) {
 /* 2026-10-25 第二十五次：每一種 遊戲 新 的 東西 真的 有 */
 async function special(p, g) { const e = [];
   if (g.id === 'q2') { /* 2026-10-26 第二十八次：照 Wordwall 迷宮 追逐 ➜ 3 個 房間、鏡頭 放大 跟著 走、按 一下 一直 走、被 抓 不 扣 時間 */
+    await p.waitForFunction(() => P2 && P2.ph === 'go' && P2.z >= 1, null, { timeout: 8000 }).catch(() => {});
     const r = await p.evaluate(async () => { const S = P2, a = [S.p.cx, S.p.cy, S.ph, S.cs, S.cs0];
       document.querySelector('.dpad [data-d="l"]').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
       await new Promise(r => setTimeout(r, 900)); const b = [S.p.cx + (S.p.tx - S.p.cx) * S.p.f, S.p.cy, S.p.d];

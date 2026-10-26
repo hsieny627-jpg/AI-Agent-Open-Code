@@ -209,15 +209,54 @@ M11.forEach(q => { const he = /\bhe\b/i.test(q.line), yes = /^Yes/.test(q.o[0]),
 M12.forEach(q => { q.fe = q.ae || ({ '12': 'twelve', '17': 'seventeen' })[q.o[0]]; q.fs = [[q.ae ? '' : 'M1', q.fe]]; });
 GAMES.forEach(g => g.B.forEach(q => { q.gx = gxOf(q.fe); }));
 
-const SAY = [];
-GAMES.forEach(g => g.B.forEach(c => { [c.say, c.ae, c.line].forEach(x => { if (x) SAY.push(x); });
+/* ══ 2026-10-26 第二十八次 第 3、4 點：📝 25 題／50 題 挑戰 的 題庫（_exam_data.js）➜ 跟 上面 一樣 的 樣子（多 sim：1 🔁 類似／0 🆕 全新）══ */
+const XD = require('./_exam_data.js');
+Object.assign(GL, { bat: '蝙蝠', tub: '浴缸', bird: '鳥', duck: '鴨子', pizza: '披薩', turtle: '烏龜', dinosaur: '恐龍', pin: '大頭針', shh: '噓', stop: '停',
+  class: '同學們', grandmother: '奶奶', fourteen: '十四', thirteen: '十三', twenty: '二十', forty: '四十', ninety: '九十' });
+Object.keys(XD.PAS).forEach(k => { PAS[k] = XD.PAS[k]; });
+const XB = {};
+XB.m1 = XD.X1.map(([sm, w, ic, zh]) => ({ sim: sm, say: w, ic, w, q: '🔊 聽：' + w + '　第一個字母是？', o: [w[0]].concat(LET.filter(x => x !== w[0])), z: w + '（' + zh + '）', h: '第一個 音 ＝ ' + w[0] }));
+XB.m2 = XD.X2.map(([sm, a, b]) => { const same = a[0] === b[0];
+  return { sim: sm, say: a + '. ' + b + '.', pair: [a, b], q: '🔊 聽：' + a + '、' + b + '　第一個音？', o: same ? ['⭕ 一樣', '❌ 不一樣'] : ['❌ 不一樣', '⭕ 一樣'],
+    z: a + ' 是 ' + a[0] + '，' + b + ' 是 ' + b[0] + ' ➜ ' + (same ? '一樣' : '不一樣'), h: a[0] + ' ／ ' + b[0] }; });
+XB.m3 = XD.X3.map(([sm, t, a, b, zh]) => ({ sim: sm, say: t, pic: 1, q: '🔊 聽：' + t, o: [a].concat(b), oz: [a].concat(b).map(picZh), z: zh, ae: t }));
+XB.m4 = XD.X4.map(([sm, t, im, d, zh]) => ({ sim: sm, say: t, photo: 1, q: '🔊 聽：' + t, o: [im].concat(d), oz: [im].concat(d).map(x => CE.filter(y => y[1] === x)[0][0]), z: t + '　' + zh, ae: t }));
+XB.m5 = XD.X5.map(([sm, t, n, d, zh]) => ({ sim: sm, say: t, num: 1, q: '🔊 聽：' + t, o: [n].concat(d), z: zh, ae: t }));
+XB.m6 = XD.X6.map(([sm, who, line, o, zh]) => ({ sim: sm, chat: who, line, q: who === 'A' ? 'A：' + line + '　B 要 回答？' : 'B 回答：' + line + '　A 問了 什麼？', o, z: zh, ae: o[0] }));
+XB.m7 = XD.X7.map(([sm, w, ic, zh]) => ({ sim: sm, spell: w, ic, zhw: zh, q: '✍️ 拼字：' + zh + '（' + w[0] + '＿' + w.slice(-1) + '）', o: [w, '（拼錯）'], z: w + ' ＝ ' + zh, ae: w }));
+XB.m8 = XD.X8.map(([sm, p, q, o, ev]) => ({ sim: sm, pas: p, ev, q: '📖 ' + q, o, z: PAS[p].t[ev] + '　' + PAS[p].z[ev], ae: PAS[p].t[ev] }));
+XB.m9 = XD.X9.map(([sm, line, who]) => { const M = { grandpa: 1, dad: 1, brother: 1 }, gen = { grandpa: 0, grandma: 0, dad: 1, mom: 1, brother: 2, sister: 2 };
+  const o = [who].concat(TREE.filter(x => x !== who && !!M[x] === !!M[who]), TREE.filter(x => gen[x] === gen[who] && x !== who));
+  return { sim: sm, tree: 1, line, q: '🌳 ' + line + '　點 這一個 人', o, oz: o.map(x => WHO[x][1]), z: line + '　' + ({ grandpa: '他 是 我的 爺爺。', grandma: '她 是 我的 奶奶。', dad: '他 是 我的 爸爸。', mom: '她 是 我的 媽媽。', brother: '他 是 我的 哥哥。', sister: '她 是 我的 姊姊。' })[who], ae: line }; });
+const X9Z = { 'This is my grandmother.': '這 是 我的 奶奶。', 'This is my father.': '這 是 我的 爸爸。', 'She’s my mother. She’s a cook.': '她 是 我的 媽媽。她 是 廚師。',
+  'He’s my brother. He’s a student.': '他 是 我的 哥哥。他 是 學生。', 'Look! This is my sister.': '看！這 是 我的 姊姊。', 'Who’s he? He’s my grandfather.': '他 是 誰？他 是 我的 爺爺。', 'He’s my dad. He’s a farmer.': '他 是 我的 爸爸。他 是 農夫。' };
+XB.m10 = XD.X10.map(([sm, t, o, pic, zh]) => ({ sim: sm, blank: t, pic: pic || '', q: '🧩 ' + t, o, z: zh, ae: t.replace('___', o[0]) }));
+XB.m11 = XD.X11.map(([sm, pic, line, o, zh]) => ({ sim: sm, yn: 1, pic, line, q: '✅ 看圖：' + line, o, z: line + ' ➜ ' + o[0] + '（圖：' + picZh(pic) + '）', ae: o[0], zz: zh }));
+XB.m12 = XD.X12.map(([sm, t, o, fz, tip]) => ({ sim: sm, blank: t, q: '🪤 ' + t, o, z: tip, h: tip, ae: /___/.test(t) ? t.replace('___', o[0]) : '', fz, tip }));
+const NUMW2 = { 12: 'twelve', 20: 'twenty', 14: 'fourteen', 13: 'thirteen' };
+XB.m1.forEach(q => { q.fe = q.w; q.fz = q.z.replace('（', ' ＝ ').replace('）', '') + '；第一個 字母 ＝ ' + q.w[0]; q.fs = [['M1', q.w]]; });
+XB.m2.forEach(q => { q.fe = q.pair.join(' '); q.fz = q.z; q.fs = [['M1', q.pair[0]], ['M1', q.pair[1]]]; });
+XB.m3.forEach(q => { q.fe = q.say; q.fz = q.z; q.fs = [['', q.say]]; });
+XB.m4.forEach(q => { q.fe = q.say; q.fz = q.z.replace(q.say, '').trim(); q.fs = [['', q.say]]; });
+XB.m5.forEach(q => { q.fe = q.say; q.fz = q.z; q.fs = [['M1', q.say]]; });
+XB.m6.forEach(q => { const L = q.chat === 'A' ? [q.line, q.o[0]] : [q.o[0], q.line]; q.fe = L.join(' '); q.fz = zhClean(q.z); q.fs = [['', L[0]], ['m', L[1]]]; });
+XB.m7.forEach(q => { q.fe = q.spell; q.fz = q.spell + ' ＝ ' + q.zhw; q.fs = [['M1', q.spell]]; });
+XB.m8.forEach(q => { q.fe = q.ae; q.fz = PAS[q.pas].z[q.ev]; q.fs = [['', q.ae]]; });
+XB.m9.forEach(q => { q.fe = q.line; q.fz = X9Z[q.line]; q.fs = [['', q.line]]; });
+XB.m10.forEach(q => { q.fe = noLab(q.ae); q.fz = q.z; q.fs = [['', q.fe]]; });
+XB.m11.forEach(q => { q.fe = q.line + ' ' + q.o[0]; q.fz = q.zz; delete q.zz; q.fs = [['', q.line], ['m', q.o[0]]]; });
+XB.m12.forEach(q => { q.fe = q.ae || NUMW2[q.o[0]]; q.fs = [[q.ae ? '' : 'M1', q.fe]]; });
+Object.keys(XB).forEach(id => XB[id].forEach(q => { q.gx = gxOf(q.fe); }));
+
+const SAY = [], ALLG = GAMES.map(g => ({ B: g.B.concat(XB[g.id]) }));
+ALLG.forEach(g => g.B.forEach(c => { [c.say, c.ae, c.line].forEach(x => { if (x) SAY.push(x); });
   if (c.pair) c.pair.forEach(x => SAY.push(x)); if (c.spell) SAY.push(c.spell); if (c.w) SAY.push(c.w); if (c.chat) c.o.forEach(x => SAY.push(x)); }));
 Object.keys(PAS).forEach(k => PAS[k].t.forEach(x => SAY.push(x)));
 /* 慢 一點 的 語音（0.85）：答錯頁、短文 偵探；單字 男聲 慢（M1）另外 做 */
 const SAYS = [], SAYM = [];
-GAMES.forEach(g => g.B.forEach(c => (c.fs || []).forEach(([v, t]) => { if (v === 'M1') SAYM.push(t); else SAYS.push((v === 'm' ? 'm:' : '') + t); })));
-M2.forEach(c => c.pair.forEach(x => SAYM.push(x))); M1.forEach(c => SAYM.push(c.w)); M5.forEach(c => SAYM.push(c.say));
+ALLG.forEach(g => g.B.forEach(c => (c.fs || []).forEach(([v, t]) => { if (v === 'M1') SAYM.push(t); else SAYS.push((v === 'm' ? 'm:' : '') + t); })));
+M2.concat(XB.m2).forEach(c => c.pair.forEach(x => SAYM.push(x))); M1.concat(XB.m1).forEach(c => SAYM.push(c.w)); M5.concat(XB.m5).forEach(c => SAYM.push(c.say));
 Object.keys(PAS).forEach(k => PAS[k].t.forEach(x => SAYS.push(x)));
 /* 檢查：每一題 o[0] 是正解、選項不重複、題數 ≧ 10 */
 GAMES.forEach(g => { if (g.B.length < 10) throw new Error(g.id + ' 題目 太少'); g.B.forEach((c, i) => { if (new Set(c.o).size !== c.o.length) throw new Error(g.id + ' 第 ' + (i + 1) + ' 題 選項 重複：' + c.o.join('／')); }); });
-module.exports = { GAMES, SEC, WHO, JOB, PAS, PHOTO, TREE, SAY, SAYS: [...new Set(SAYS)], SAYM: [...new Set(SAYM)], GL, picZh };
+module.exports = { XB, GAMES, SEC, WHO, JOB, PAS, PHOTO, TREE, SAY, SAYS: [...new Set(SAYS)], SAYM: [...new Set(SAYM)], GL, picZh };
