@@ -360,7 +360,7 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 .rmc .tag{width:92%;border-width:2px;border-radius:8px}.rmc .tag .tt{font-size:max(18px,12cqh);line-height:1.1;padding:1px 0;white-space:nowrap}.rmc .tag .tt b{display:inline;font-size:1em;margin-right:.25em}.rmc .tag .tn{font-size:max(18px,26cqh);line-height:1.1;padding:0}
 .pmv.ov .rmc .tag .tt{display:none}   /* 看 整張 迷宮 的 時候 卡片 很小：只 留 名字 和 歲數 */
 .rmc .cake{display:flex;align-items:center;gap:4px;font-size:max(18px,30cqh)}.rmc .cake .cn{position:static;transform:none;font-size:max(18px,.85em)}
-.rmc .q2sc{font-size:min(36cqh,17cqw)}.rmc .q2sc .fx{font-size:max(18px,.5em)}
+.rmc .q2sc{font-size:max(20px,min(36cqh,17cqw))}.rmc .q2sc .fx{font-size:max(18px,.5em)}
 .rmc.aim{box-shadow:0 0 0 6px #3EC5FF,0 0 26px #3EC5FF}.rmc.eat{animation:rmeat .6s forwards;z-index:7}@keyframes rmeat{40%{transform:scale(1.25)}100%{transform:scale(1.12)}}
 .rmc.ok{box-shadow:0 0 0 7px #2BD46A,0 0 34px #2BD46A}.rmc.no{box-shadow:0 0 0 7px #FF5A5A,0 0 34px #FF5A5A}
 .pmgo{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;pointer-events:none;font-size:clamp(90px,18vh,190px);font-weight:900;color:#FFD23F;text-shadow:0 0 30px #FFB300,0 8px 0 #7A4A00}

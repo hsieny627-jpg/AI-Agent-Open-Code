@@ -95,6 +95,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
     }
     /* 2026-10-26 第二十八次 第 3、4 點：📝 25 題／50 題 挑戰（12 關 連著 玩、每題 4／2 分、30% 類似、記 成績）*/
     for (const N of (process.env.G && !/x/.test(process.env.G) ? [] : vp[0] === 1024 ? [25, 50] : vp[0] === 820 ? [25] : [])) {
+      await p.goto('file://' + path.join(__dirname, 'index.html')); await p.waitForTimeout(400);   /* 每一次 重新 打開（做完 會 提醒 登出）*/
       await p.evaluate(() => { hub(); window.__NOGO = 1; }); await p.waitForTimeout(200);
       n++; const xb = await p.evaluate(() => [...document.querySelectorAll('.xrow .xb')].map(b => b.getAttribute('data-xn') + ':' + Math.round(b.getBoundingClientRect().height)).join());
       if (!/^25:\d+,50:\d+$/.test(xb) || xb.split(',').some(x => +x.split(':')[1] < 60)) E.push(tag + ' 大廳 沒有〔📝 25 題〕〔📝 50 題〕：' + xb);
