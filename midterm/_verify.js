@@ -94,7 +94,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
       await p.evaluate(() => hub());
     }
     /* 2026-10-26 第二十八次 第 3、4 點：📝 25 題／50 題 挑戰（12 關 連著 玩、每題 4／2 分、30% 類似、記 成績）*/
-    for (const N of (process.env.G && !/x/.test(process.env.G) ? [] : vp[0] === 1024 ? [25, 50] : vp[0] === 820 ? [25] : [])) {
+    for (const N of (process.env.G && !/x/.test(process.env.G) ? [] : vp[0] === 1024 ? [25, 50] : vp[0] === 820 ? [25] : []).filter(x => !process.env.XN || +process.env.XN === x)) {
       await p.goto('file://' + path.join(__dirname, 'index.html')); await p.waitForTimeout(400);   /* 每一次 重新 打開（做完 會 提醒 登出）*/
       await p.evaluate(() => { hub(); window.__NOGO = 1; }); await p.waitForTimeout(200);
       n++; const xb = await p.evaluate(() => [...document.querySelectorAll('.xrow .xb')].map(b => b.getAttribute('data-xn') + ':' + Math.round(b.getBoundingClientRect().height)).join());
@@ -108,6 +108,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
         if (await p.evaluate(() => !!document.querySelector('.end'))) break;
         if (await p.evaluate(() => !!document.getElementById('rdgo'))) { await p.waitForTimeout(2600); await p.click('#rdgo'); await p.waitForTimeout(300); }
         const st = await p.evaluate(() => ({ k: R.k, lv: R.lv, id: R.g.id, sc: R.sc, nm: document.querySelector('.hud .nm').textContent }));
+        if (process.env.DBG) console.log('… ' + N + ' 第 ' + (st.k + 1) + ' 題 ' + st.id + ' ' + new Date().toISOString().slice(11, 19));
         lvs.add(st.lv); if (!/第 \d+ 關/.test(st.nm)) E.push(tag + ' ' + N + ' 題：上面 沒有 寫「第 幾 關」');
         await p.waitForTimeout(1100); const wrong = st.k === 0;
         await p.evaluate(k => { const q = R.q; if (R.g.id === 'm7') { const w = q.spell, mid = w.slice(1, -1).split(''); const order = k === 0 ? mid.slice().reverse() : mid, used = [];
@@ -116,7 +117,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
             else document.querySelector('#stage [data-o="' + (k === 0 ? 1 : 0) + '"]').click(); }, st.k);
         if (wrong) { await p.waitForFunction(() => !!document.getElementById('wfn'), null, { timeout: 15000 }).catch(() => E.push(tag + ' ' + N + ' 題：答錯 沒有〔▶ 下一題〕')); await p.click('#wfn').catch(() => {}); }
         else { const s1 = await p.evaluate(() => R.sc); if (s1 - st.sc !== 100 / N) E.push(tag + ' ' + N + ' 題：答對 一題 要 ＋' + (100 / N) + ' 分，現在 ＋' + (s1 - st.sc));
-          if (st.id === 'm8') { await p.waitForSelector('#nx8w .nx8', { timeout: 5000 }).catch(() => {}); await p.waitForTimeout(300); await p.click('#nx8w .nx8').catch(() => {}); } }
+          if (st.id === 'm8') { await p.waitForSelector('#nx8w .nx8', { timeout: 5000 }).catch(() => {}); await p.waitForTimeout(300); await p.evaluate(() => { const b = document.querySelector('#nx8w .nx8'); if (b) b.click(); }); } }   /* 答對 的 提示 會 蓋住 一下 ➜ 直接 按 */
         await p.waitForFunction(kk => !R || R.k > kk || !!document.querySelector('.end'), st.k, { timeout: 15000 }).catch(() => E.push(tag + ' ' + N + ' 題 第 ' + (st.k + 1) + ' 題（' + st.id + '）沒有 到 下一題'));
         await p.waitForTimeout(100);
       }
