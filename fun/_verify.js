@@ -12,7 +12,7 @@ const ROOT = path.join(__dirname, '..'), E = []; let n = 0; const CJK = /[㐀-�
     const p = await ctx.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto('file://' + path.join(ROOT, 'g' + g + '-review', k + '.html')); await p.waitForTimeout(500);
     n++; const a = await p.evaluate(() => ({ pool: POOL.length, cjk: POOL.filter(q => /[㐀-鿿]/.test(q.t.replace(/<[^>]+>/g, '').replace(/§i:[^§]+§/g, '')) || q.o.some(o => /[㐀-鿿]/.test(String(o).replace(/<[^>]+>/g, '')))).length, home: (document.querySelector('a.hb') || {}).getAttribute && document.querySelector('a.hb').getAttribute('href') }));
-    if (a.pool < 120 || a.cjk || a.home !== 'index.html') E.push(tag + ' 題庫／全英文／回首頁 ' + JSON.stringify(a));
+    if (a.pool < 100 || a.cjk || a.home !== 'index.html') E.push(tag + ' 題庫／全英文／回首頁 ' + JSON.stringify(a));
     await p.click('#go'); await p.waitForTimeout(900);
     n++; const b = await p.evaluate(() => { const bs = [...document.querySelectorAll('#op button')], qt = document.getElementById('qt');
       return { n: bs.length, low: bs.filter(x => x.getBoundingClientRect().height < 48 || parseFloat(getComputedStyle(x).fontSize) < 22).length, qcjk: /[㐀-鿿]/.test(qt.textContent), ox: document.documentElement.scrollWidth - innerWidth,

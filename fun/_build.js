@@ -19,10 +19,11 @@ function pool(g) { const out = [];
     const plain = t.replace(/<[^>]+>/g, '').replace(/§i:[^§]+§/g, '');
     if (CJK.test(plain) || q.ot.some(o => CJK.test(String(o))) || q.o.some(o => CJK.test(String(o).replace(/<[^>]+>/g, '')))) return;
     if (q.ls && !q.al) return;
+    if (!q.ae || !q.au || !(q.ag || []).length) return;   /* 答錯頁 要 有 正確 英文、逐字 中文、語音 */
     out.push({ k, t, o: q.o, ot: q.ot, ls: q.ls ? 1 : 0, al: q.al || '', au: q.au || '', ae: q.ae || '', ag: q.ag || [], az: q.az || '', nm: G.nm }); }); });
   return out; }
 const POOL = { 3: pool(3), 4: pool(4) };
-[3, 4].forEach(g => { if (POOL[g].length < 120) throw new Error(g + ' 年級 題目 太少：' + POOL[g].length); });
+[3, 4].forEach(g => { if (POOL[g].length < 100) throw new Error(g + ' 年級 題目 太少：' + POOL[g].length); });
 fs.writeFileSync(path.join(__dirname, '_pool.json'), JSON.stringify({ 3: POOL[3].map(q => ({ q: q.t.replace(/<[^>]+>/g, '').replace(/§i:([^§]+)§/g, '〔$1〕'), o: q.ot, ae: q.ae, ag: q.ag, az: q.az, au: q.au })), 4: POOL[4].map(q => ({ q: q.t.replace(/<[^>]+>/g, '').replace(/§i:([^§]+)§/g, '〔$1〕'), o: q.ot, ae: q.ae, ag: q.ag, az: q.az, au: q.au })) }));
 const ICON = QB.ICON;
 

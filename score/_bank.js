@@ -144,7 +144,8 @@ function enrich(dir, q) {
     if (q.k === 'read') q.ao = q.o.map(au);
   return q;
 }
-Object.keys(BANK).forEach(k => { const dir = SITEOF(k); BANK[k].qs.forEach(q => enrich(dir, q)); });
+Object.keys(BANK).forEach(k => { if (/_fun-/.test(k)) return;   /* 🏰 守城、🎣 釣魚：題庫 本來 就 有 正確 英文、逐字 中文、語音（fun/_pool.json），不要 再 用 一個 網站 的 字典 蓋掉 */
+  const dir = SITEOF(k); BANK[k].qs.forEach(q => enrich(dir, q)); });
 /* 🏫 三年級 複習（第二十七次）：錯題 分析 的 英文、逐字 中文、整句、語音 ＝ g3mid 自己 的（跟 學生 答錯頁 同一份） */
 { const G3 = require(path.join(ROOT, 'g3mid', '_data.js')), A3 = audOf('g3mid'), W3 = (() => { const f = path.join(ROOT, 'g3mid', 'audio', 'w', 'aud.js'); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8').replace(/^[\s\S]*?window\.\w*=/, '').replace(/;\s*$/, '')) : {}; })();
   const tk = e => { const r = [], re = /([A-Za-z][A-Za-z\-]*)(’|')(s|m|re)\b|[A-Za-z][A-Za-z\-’']*|\d+|[.,?!]/g; let m; while ((m = re.exec(e))) { if (m[2]) r.push(m[1], "'" + m[3]); else r.push(m[0]); } return r; };
