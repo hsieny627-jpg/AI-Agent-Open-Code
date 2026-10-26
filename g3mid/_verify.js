@@ -29,7 +29,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
 
 (async () => {
   const br = await chromium.launch();
-  for (const vp of [[1024, 768], [820, 1180], [1920, 1080]]) {
+  for (const vp of [[1024, 768], [820, 1180], [1920, 1080]].filter(v => !process.env.VP || +process.env.VP === v[0])) {
     const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] }, hasTouch: false }), tag = vp.join('×'), full = vp[0] === 1024;
     await ctx.route(/^https?:\/\//, r => r.abort());
     /* 假 的 成績 伺服器（絕對 不送 真的 成績表）＋ 已經 登入 30401 */
@@ -102,7 +102,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
             if (r9.n3 !== 1 || r9.say - s0 > 6) E.push(tag + ' q9：答錯頁 要 只唸 1 次（3 句）：' + JSON.stringify(r9) + ' 從 ' + s0); }
           if (g.id === 'q4' || g.id === 'q5') { n++; const lw = await p.evaluate(() => ({ dot: !!document.querySelector('#fb .lnh'), y: (document.querySelector('#fb .yp') || {}).textContent || '' }));
             if (!lw.dot && !(g.id === 'q4' && vp[0] === 820)) E.push(tag + ' ' + g.id + '：答錯頁 沒有「頂天立地 ● 要 碰到 線」');
-            n++; const nc = await p.evaluate(() => document.querySelectorAll('#fb .ltr canvas').length); if (nc < 2 && !(g.id === 'q4' && vp[0] === 820)) E.push(tag + ' ' + g.id + '：答錯頁 要 有 兩個 字母 都 畫 在 格線 上（題目／比一比 ＋ 正確答案）：' + nc); if (vp[0] === 1920 && !/沒有 碰到/.test(lw.y)) E.push(tag + ' ' + g.id + '：寫 浮 起來 的 字 沒有 說「沒有 碰到 …線」：' + lw.y.slice(0, 40)); }
+            n++; const nc = await p.evaluate(() => document.querySelectorAll('#fb .ltr canvas').length); if (nc < 2 && !(g.id === 'q4' && vp[0] === 820)) E.push(tag + ' ' + g.id + '：答錯頁 要 有 兩個 字母 都 畫 在 格線 上（題目／比一比 ＋ 正確答案）：' + nc); if (vp[0] === 1920 && !/^[cosvwxz]$/i.test(await p.evaluate(() => R.q.want || ''))   /* 大小寫 形狀 一樣 的 字 浮 起來 ＝ 會 被 看成 另一個 大小寫（不是 頂天立地 的 錯）*/ && !/沒有 碰到/.test(lw.y)) E.push(tag + ' ' + g.id + '：寫 浮 起來 的 字 沒有 說「沒有 碰到 …線」：' + lw.y.slice(0, 40)); }
           n++; if (s1.tts.length) E.push(tag + ' ' + g.id + '：沒有語音檔，用了瀏覽器語音 ' + s1.tts.slice(0, 2).join('、'));
           if (SHOT && vp[0] !== 1920) await p.screenshot({ path: path.join(SHOT, 'g3m_' + g.id + '_fb_' + vp[0] + '.png') });
           await p.click('#fbn'); await p.waitForTimeout(500);
@@ -158,8 +158,8 @@ async function answer(p, g, wrong) {
     /* 挖礦：先 點 對的 圖（老師：單字 跟 圖片 配對）；820 那一種 故意 點 錯的 圖 */
     if (g.id === 'q4') { const vw = await p.evaluate(() => innerWidth); if (wrong && vw === 820) return tap('.ore:not([data-ow="' + q.say + '"])'); await tap('.ore[data-ow="' + q.say + '"]'); await p.waitForTimeout(200); }
     /* 1920 那一種：答錯 ＝ 字 寫 對、但是 整個 往上 浮（沒有 碰到 底線）➜ 頂天立地 要 判 錯 */
-    const fl = wrong && (await p.evaluate(() => innerWidth)) === 1920 ? -.3 : 0;
-    /* 2026-10-26：浮 起來 0.3 格 也 超出 整個 格子 ➜ 第一次 會「再 寫 一次」；這裡 量 的 是 第二次（R.retry ＝ 1）要 判 錯 */
+    const fl = wrong && (await p.evaluate(() => innerWidth)) === 1920 ? -.2 : 0;   /* 0.3 ＝ 大寫 的 第一筆 會 落在 寫字板 外面（寫不上去）*/
+    /* 2026-10-26：浮 起來 0.2 格 也 超出 整個 格子（＜ −0.15） ➜ 第一次 會「再 寫 一次」；這裡 量 的 是 第二次（R.retry ＝ 1）要 判 錯 */
     if (fl) await p.evaluate(() => { R.retry = 1; });
     const ch = wrong && !fl ? (q.want === q.want.toUpperCase() ? q.want.toLowerCase() : q.want.toUpperCase()) : q.want;
     const c = await (await p.$('.pad canvas')).boundingBox(), u = c.height / 3.5, xs = [].concat(...HW.T[ch][0].map(s => s.map(pt => pt[0]))), x0 = Math.min(...xs);

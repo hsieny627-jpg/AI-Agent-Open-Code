@@ -414,6 +414,7 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 @media (max-width:760px){.moves{grid-template-columns:1fr}.bub{left:4%;right:4%;top:auto;bottom:4%}.bub::after{display:none}}
 .wbtn button{white-space:nowrap}
 /* 第二十七次：記成績 的 那一行 */
+body.ing #scbar{display:none!important}
 .rcn{font-size:clamp(20px,2.6vh,26px);color:#BFD3E6;text-align:center;margin:4px 0}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}}
 
@@ -496,10 +497,11 @@ function sayList(L,done){var pv=PD;stopSay();var cb=pv||done?function(){if(pv)pv
 function sayT(t,done){var v=/^(Hi|Hello), I'm (\\w+)/.exec(t);sayList([[v&&BOYS.indexOf(v[2])>=0?'m':'',t]],done)}
 /* ── 狀態 ── */
 var G=null,R=null,TM={t0:0,used:0,run:false,T:15,raf:0},BUSY=false;
-function lobby(){if(R&&!R.sent&&R.Q&&R.Q.length)rec1();QID++;stopSay();cancelAnimationFrame(TM.raf);TM.run=false;$('#stage').innerHTML='';$('#go').classList.remove('on');$('#wp').classList.remove('on');$('#game').hidden=true;$('#endv').hidden=true;$('#lobby').hidden=false;$('#fb').classList.remove('on');
+function lobby(){if(R&&!R.sent&&R.Q&&R.Q.length)rec1();document.body.classList.remove('ing');QID++;stopSay();cancelAnimationFrame(TM.raf);TM.run=false;$('#stage').innerHTML='';$('#go').classList.remove('on');$('#wp').classList.remove('on');$('#game').hidden=true;$('#endv').hidden=true;$('#lobby').hidden=false;$('#fb').classList.remove('on');
  $('#grid').innerHTML=GM.map(function(g,i){var b=ls('g3m_best_'+g.id);return '<button class="gc" data-g="'+i+'" style="--c1:'+g.c1+';--c2:'+g.c2+'"><span class="bd">'+g.ic+'</span><span><b>'+(i+1)+'　'+g.nm+'</b><small>'+g.how+'</small>'+(b?'<span class="best">🏆 最高 '+b+' 分</span>':'')+'</span></button>'}).join('');
  window.scrollTo(0,0)}
 function start(i){if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();start(i)});return}
+ document.body.classList.add('ing');   /* 玩 的 時候 登入 那一條 收起來（畫面 不 被 往下 推）*/
  G=GM[i];var qs=shuf(G.B).slice(0,8);R={i:i,qs:qs,k:-1,score:0,streak:0,res:[],wrong:[],Q:[],t0:Date.now()};
  $('#lobby').hidden=true;$('#endv').hidden=true;$('#game').hidden=false;$('#gnm').textContent=G.ic+' '+G.nm;$('#how').textContent=G.how;$('#sc').textContent='0';$('#cmb').className='cmb';$('#cmb').textContent='';$('#stage').innerHTML='';
  $('#wsw').hidden=G.id!=='q8';$('#tmb').style.transform='scaleX(1)';$('#tsec').textContent=G.t;var go=function(){goSplash(next)};if(G.id==='q8'&&!ls('g3m_war')&&!rpHero())warPick(go);else go()}
@@ -520,7 +522,7 @@ function tick(){cancelAnimationFrame(TM.raf);var l=tLeft();$('#tmb').style.trans
 /* ── 對了：100 ＋ 速度 900 ＋ 連對（最多 ＋250）── */
 /* 成績（第二十七次）：一題 一筆 [答對, 選了 第幾個（0 ＝ 正解、-1 ＝ 時間到、1 ＝ 其他 錯的）, 秒數, 1 秒 內 就 按, 剩下, 題庫 第幾題] */
 function qRec(ok,pick){if(!R||R.Q.length>R.k)return;var ms=Date.now()-(R.ts||Date.now()),o=R.q.o,ci=ok?0:pick==null?-1:1;
-  if(!ok&&o&&pick!=null){var pj=JSON.stringify(pick);for(var i=1;i<o.length;i++)if(JSON.stringify(o[i])===pj||o[i]===pick){ci=Math.min(3,i);break}}
+  if(!ok&&o&&pick!=null){try{var pj=JSON.stringify(pick);for(var i=1;i<o.length;i++)if(JSON.stringify(o[i])===pj||o[i]===pick){ci=Math.min(3,i);break}}catch(e){}}   /* 寫字題 的 pick 有 畫布（不能 轉 文字）➜ 算 1 */
   R.Q.push([ok?1:0,ci,Math.round(ms/100)/10,pick!=null&&ms<1000?1:0,ok?Math.round(tLeft()/TM.T*1000)/1000:0,G.B.indexOf(R.q)])}
 function rec1(){try{if(!R||R.sent||!R.Q.length||typeof scLive!=='function'||!scLive())return false;var fast=0;R.Q.forEach(function(x){fast+=x[3]});if(fast*2>R.Q.length)return false;R.sent=1;
   var u=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
