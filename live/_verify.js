@@ -235,10 +235,10 @@ const H_PH = ph => ph === 'q';
       if (!mi.mini || mi.cg || mi.bh < 56) E.push(tag + '：冠軍 金框 沒有 先 收起來（第十七次 第 6 點）' + JSON.stringify(mi)); n++;
       await h.click('#chOpen'); await h.waitForTimeout(200); }
     { const ch = await h.evaluate(() => ({ box: !!document.querySelector('.chbox:not(.done)'), t: (document.querySelector('.chbox') || {}).textContent || '', n: document.querySelectorAll('[data-cg]').length }));
-      if (!ch.box || !/40205/.test(ch.t) || ch.n !== 13) E.push(tag + '：沒有 👑 冠軍 選 遊戲 那一塊 ' + JSON.stringify(ch).slice(0, 120)); n++;
+      if (!ch.box || !/40205/.test(ch.t) || ch.n !== 11) E.push(tag + '：沒有 👑 冠軍 選 遊戲 那一塊 ' + JSON.stringify(ch).slice(0, 120)); n++;
       await h.click('[data-cg="race"]'); await h.click('#chGo'); await h.waitForTimeout(400);
       const pk = await h.evaluate(() => { const o = document.getElementById('chpk'), b = [].slice.call(o.querySelectorAll('[data-cpk]')); return { on: !o.hidden, n: b.length, race: b.some(x => x.getAttribute('data-cpk') === 'race'), h: Math.min.apply(null, b.map(x => x.getBoundingClientRect().height)), ox: o.scrollHeight - o.clientHeight }; });
-      if (!pk.on || pk.n !== 12 || pk.race || pk.h < 100 || pk.ox > 1) E.push(tag + '：冠軍 選 遊戲 畫面 不對 ' + JSON.stringify(pk)); n++;
+      if (!pk.on || pk.n !== 10 || pk.race || pk.h < 100 || pk.ox > 1) E.push(tag + '：冠軍 選 遊戲 畫面 不對 ' + JSON.stringify(pk)); n++;
       await shot(h, 'champ'); await h.click('[data-cpk="tug"]'); await h.waitForTimeout(3000);
       const dn = await h.evaluate(() => ({ g: H.game, done: !!document.querySelector('.chbox.done'), hid: document.getElementById('chpk').hidden }));
       if (dn.g !== 'tug' || !dn.done || !dn.hid) E.push(tag + '：冠軍 選好 以後 不對 ' + JSON.stringify(dn)); n++;
