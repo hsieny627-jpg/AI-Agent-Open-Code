@@ -58,6 +58,8 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 .home{margin-left:auto;display:inline-flex;align-items:center;min-height:52px;padding:4px 20px;border-radius:16px;background:#1B2633;border:3px solid #4A5A6C;color:#fff;text-decoration:none;font-size:22px}
 .xrow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
 /* 第三十二次 3-(1)：離開 先 問、繼續 上次 的 */
+#crgo{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;background:rgba(5,10,25,.9)}.crgob{text-align:center;color:#fff;border:4px solid #FFD54A;border-radius:28px;padding:28px 40px;background:linear-gradient(#24364D,#13203A)}.crgot{font-size:clamp(34px,5vh,54px);font-weight:900;color:#FFE07A;margin:8px 0}
+.xoff{grid-column:1/-1;text-align:center;font-size:clamp(18px,2.4vh,24px);color:#9FB3C8;padding:6px;border:2px dashed #3F6386;border-radius:16px}
 #xq{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;background:rgba(5,10,25,.82)}#xq.on{display:flex}
 .xqb{width:min(92vw,720px);border-radius:28px;border:4px solid #FFD54A;background:linear-gradient(#24364D,#13203A);padding:22px 20px;text-align:center;box-shadow:0 20px 60px #000a}
 .xqi{font-size:64px}.xqh{font-size:clamp(32px,4.6vh,46px);font-weight:900;color:#FFE07A}.xqt{font-size:clamp(22px,3vh,30px);line-height:1.5;margin:10px 0 16px}.xqt b{color:#7BF0A8}
@@ -505,7 +507,7 @@ body.ing #scbar{display:none!important}
 .fb9{display:flex;flex-direction:column;gap:6px}
 @media (orientation:portrait){.bb9{grid-template-columns:1fr}}
 #crw{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(6,10,24,.94)}#crw.on{display:flex}.crb{text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px}.cri{font-size:clamp(70px,12vh,120px)}.crt{font-size:clamp(30px,5vh,52px);font-weight:900;line-height:1.35}.crt small{font-size:.6em;color:#B8C4D2;font-weight:700}.crbk{display:inline-flex;align-items:center;min-height:64px;padding:0 30px;border-radius:999px;background:linear-gradient(#FFE07A,#E0A800);color:#3A2A00;font-size:clamp(22px,3vh,30px);font-weight:900;text-decoration:none}
-body.crm #lobby .home,body.crm #xrow{display:none}
+body.crm #lobby .home{display:none}
 `;
 
 const BODY = `
@@ -999,7 +1001,14 @@ var CR=null;GM.forEach(function(g){g.B0=g.B});
 function crSet(){return CR&&CR.cfg?CR.cfg.set:'g3m'}
 function crName(){var s=crSet();if(s==='g3m')return '📝 三年級 複習';for(var i=0;i<CSETS.length;i++)if(CSETS[i][0]===s)return '🏫 '+CSETS[i][1].replace('三年級 ','');return s}
 function crWait(t,extra){var o=$('#crw');if(!t){o.classList.remove('on');return}o.innerHTML='<div class="crb"><div class="cri">🏫</div><div class="crt">'+t+'</div>'+(extra||'')+'</div>';o.classList.add('on')}
-function crInit(){var m=/[?&]live=(\\d{4})/.exec(location.search);if(!m)return;CR={room:m[1],t:0,cfg:null,acc:{},n:0,ok:0,q:-9};document.body.classList.add('crm');
+/* 2026-10-27 第三十二次（老師：現場任務 試過 完全 失敗，學生 看不到 任務）：學生 如果 已經 在 這一頁（不是 從 ⚡ 現場任務 進來 的），
+   登入 以後 每 2 秒 看 一次 自己 班 的 rooms/0班/cr：老師 一 開 ＝ 蓋 一整頁「老師 開了 …！馬上 進去」➜ 自己 換到 ?live=0班（不用 再 掃 QR）*/
+function crAuto(){if(/[?&]live=/.test(location.search)||typeof LDB==='undefined'||!LDB.on())return;var room='',stop=null,go=0;
+  setInterval(function(){var id=typeof SCID!=='undefined'?String(SCID||''):'';var r=/^\\d{5}$/.test(id)?'0'+id.slice(0,3):'';if(r===room)return;room=r;if(stop){stop();stop=null}if(!r)return;
+    stop=LDB.poll('rooms/'+r+'/cr',2000,function(v){if(go||!v||!v.on||Date.now()-(+v.t||0)>4*36e5)return;go=1;var o=document.createElement('div');o.id='crgo';
+      o.innerHTML='<div class="crgob"><div style="font-size:clamp(70px,12vh,120px)">📢</div><div class="crgot">老師 開了 三年級 複習！</div><div style="font-size:28px">⏳ 馬上 進去…</div></div>';document.body.appendChild(o);
+      setTimeout(function(){location.replace(location.pathname+'?live='+r)},1400)})},2000)}
+function crInit(){var m=/[?&]live=(\\d{4})/.exec(location.search);if(!m){crAuto();return}CR={room:m[1],t:0,cfg:null,acc:{},n:0,ok:0,q:-9};document.body.classList.add('crm');
   if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();crInit2()});return}crInit2()}
 function crInit2(){crWait('⏳ 等 老師 開始 課堂複習…');if(typeof LDB==='undefined'||!LDB.on()){crWait('📶 現場任務 還沒 開（老師 要 先 設定 Firebase）');return}LDB.poll('rooms/'+CR.room+'/cr',900,crOn)}
 function crBanks(set){GM.forEach(function(g){g.B=set==='g3m'||!CB[set]?g.B0:CB[set][g.id]})}
@@ -1029,8 +1038,13 @@ function crFlush(){if(!CR||!CR.cfg)return;if(R&&R.crs){if(R.Q.length<=R.k&&R.k<R
 /* 自己 答：進度 給 老師 看（答了 幾題、對 幾題、現在 玩 哪一種）*/
 function crProg(ok){if(!CR||!CR.cfg||CR.cfg.m!=='self'||typeof LDB==='undefined'||!SCID)return;CR.n++;if(ok)CR.ok++;LDB.set('rooms/'+CR.room+'/crp/'+SCID,{n:CR.n,ok:CR.ok,g:G.id,t:CR.t})}
 /* 自己 答 的 大廳：只 剩 老師 選 的 遊戲 */
-var lobby0=lobby;lobby=function(){lobby0();if(!CR||!CR.cfg)return;$('#xrow').innerHTML='';var gs=CR.cfg.gs||[];
+/* 2026-10-27 第三十二次 3-(3)（老師 A）：📝 25／50 題 挑戰 只 在 英文課〔⚡ 現場任務〕開：平常 打開 這一頁 沒有 那 兩顆；老師 開了 x25／x50 ＝ 只 有 那一顆（可以 繼續 上次 的）、沒有 遊戲 格子 */
+var lobby0=lobby;lobby=function(){lobby0();if(!CR||!CR.cfg){$('#xrow').innerHTML='<div class="xoff">📝 25 題／50 題 挑戰：英文課 老師 在〔⚡ 現場任務〕開</div>';return}
+  var xm=/^x(\\d+)$/.exec(CR.cfg.set||'');if(xm){[].forEach.call(document.querySelectorAll('#xrow [data-x],#xrow [data-xr]'),function(b){var n=b.getAttribute('data-x')||b.getAttribute('data-xr');var w=b.closest('.xbw')||b;if(n!==xm[1])w.style.display='none'});
+    [].forEach.call(document.querySelectorAll('#grid .gc'),function(b){b.style.display='none'});return}
+  $('#xrow').innerHTML='';var gs=CR.cfg.gs||[];
   [].forEach.call(document.querySelectorAll('#grid .gc'),function(b){var g=GM[+b.dataset.g];if(gs.indexOf(g.id)<0)b.style.display='none'})};
+if(!/[?&]live=/.test(location.search))lobby();   /* 第三十二次：一 打開 就 照 新 的 大廳（沒有 25／50 題） */
 crInit();
 
 `;

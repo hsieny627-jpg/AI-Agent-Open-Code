@@ -116,6 +116,8 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 .bank button.ok{background:linear-gradient(#2BD46A,#128A43);box-shadow:0 5px 0 #0B5A2B}.bank button.no{opacity:.3}.bank button.bad{animation:shk .4s;background:#7A1F2A}
 .bankt{font-size:20px;color:#BFD3E6;letter-spacing:.2em}
 /* 回饋 */
+#crgo{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;background:rgba(5,10,25,.9)}.crgob{text-align:center;color:#fff;border:4px solid #FFD54A;border-radius:28px;padding:28px 40px;background:linear-gradient(#24364D,#13203A)}.crgot{font-size:clamp(34px,5vh,54px);font-weight:900;color:#FFE07A;margin:8px 0}
+.xoff{text-align:center;font-size:clamp(18px,2.4vh,24px);color:#9FB3C8;padding:6px;margin:6px 0;border:2px dashed #3F6386;border-radius:16px}
 #xq{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;background:rgba(5,10,25,.82)}#xq.on{display:flex}
 .xqb{width:min(92vw,720px);border-radius:28px;border:4px solid #FFD54A;background:linear-gradient(#24364D,#13203A);padding:22px 20px;text-align:center;box-shadow:0 20px 60px #000a}
 .xqi{font-size:64px}.xqh{font-size:clamp(32px,4.6vh,46px);font-weight:900;color:#FFE07A}.xqt{font-size:clamp(22px,3vh,30px);line-height:1.5;margin:10px 0 16px}.xqt b{color:#7BF0A8}
@@ -2267,7 +2269,10 @@ function hub(){if(CR&&CR.cfg&&CR.cfg.m==='sync')return;if(R&&!R.crs&&!R.x&&!R.se
   var h='<div class="top"><h1>'+(CR&&CR.cfg?crName():'📝 四年級 複習')+'</h1><span class="sub">'+GM.length+' 種 遊戲'+(CR?'':'：聽力、閱讀、寫寫看')+'</span><a class="home" href="../index.html">🏠 總首頁</a></div>';
   ['lis','read','write'].forEach(function(s){h+='<div class="sec">'+SEC[s][0]+' '+SEC[s][1]+'<small>'+GM.filter(function(g){return g.sec===s}).length+' 種</small></div><div class="grid">'+
     GM.filter(function(g){return g.sec===s}).map(function(g){var c=COL[g.id],b=best(g.id);return '<button class="gc" data-g="'+g.id+'"><span class="bd" style="--c1:'+c[0]+';--c2:'+c[1]+'">'+g.ic+'</span><span><b>'+g.nm+'</b><small>'+g.how+'</small>'+(b?'<span class="best">🏆 最高 '+b.toLocaleString()+' 分</span>':'')+'</span></button>'}).join('')+'</div>'});
-  $('#app').innerHTML=CR?h:h.replace('</div>','</div>'+xrow())}
+  /* 2026-10-27 第三十二次 3-(3)（老師 A）：📝 25／50 題 只 在 英文課〔⚡ 現場任務〕開（平常 ＝ 一行 說明；老師 開了 x25／x50 ＝ 只 有 那一顆、沒有 遊戲 格子）*/
+  var xm=CR&&CR.cfg&&/^x(\d+)$/.exec(CR.cfg.set||'');
+  if(xm){$('#app').innerHTML='<div class="top"><h1>'+crName()+'</h1></div>'+xrow().replace(/<div class="xbw">[\s\S]*?<\/div>|<button class="xb"[\s\S]*?<\/button>/g,function(b){return b.indexOf('"'+xm[1]+'"')>=0?b:''});return}
+  $('#app').innerHTML=CR?h:h.replace('</div>','</div><div class="xoff">📝 25 題／50 題 挑戰：英文課 老師 在〔⚡ 現場任務〕開</div>')}
 /* 2026-10-26 第二十八次 第 3、4 點：大廳 最上面〔📝 25 題〕〔📝 50 題〕＝ 12 關 連著 玩（每題 4／2 分）*/
 function xrow(){return '<div class="xrow">'+[25,50].map(function(n){var b=best('x'+n),v=xLoad(n);if(v)return '<div class="xbw"><button class="xb xr" data-xr="'+n+'"><b>▶ 繼續 '+n+' 題 挑戰</b><small>已經 做到 第 '+v.Q.length+' ／ '+n+' 題 · 從 第 '+(v.Q.length+1)+' 題 接著 做</small></button><button class="xb2" data-xn="'+n+'">🔄 重新 開始</button></div>';return '<button class="xb" data-xn="'+n+'"><b>📝 '+n+' 題 挑戰</b><small>'+LOB.length+' 關 連著 玩 · 每題 '+(100/n)+' 分 · 滿分 100</small>'+(b?'<span class="best">🏆 最高 '+b+' 分</span>':'')+'</button>'}).join('')+'</div>'}
 var XOFF={},XN=0;GM.forEach(function(g){XOFF[g.id]=XN;XN+=XB[g.id].length});
@@ -2442,9 +2447,16 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
    〔👥 全班 同步〕＝ 老師 按〔▶ 下一題〕全班 一起 做 同一題；答完 ＝「等 老師」；答案 寫 cra/編號/5碼
    成績：g4gm_mt-遊戲（跟 平常 一樣；m12 ＝「🪤 四年級 複習 0」）➜ 老師看板〔🏫 課堂複習〕大表 */
 var CR=null;
-function crName(){return '📝 四年級 複習'}   /* 2026-10-27 第三十一次：不再 有「🪤 四年級 複習 0」 */
+function crName(){var m=CR&&CR.cfg&&/^x(\d+)$/.exec(CR.cfg.set||'');return '📝 四年級 複習'+(m?'｜📝 '+m[1]+' 題 挑戰':'')}   /* 2026-10-27 第三十一次：不再 有「🪤 四年級 複習 0」；第三十二次：25／50 題 */
 function crWait(t,extra){var o=$('#crw');if(!t){o.classList.remove('on');return}o.innerHTML='<div class="crb"><div class="cri">⚡</div><div class="crt">'+t+'</div>'+(extra||'')+'</div>';o.classList.add('on')}
-function crInit(){var m=/[?&]live=(\d{4})/.exec(location.search);if(!m)return;CR={room:m[1],t:0,cfg:null,acc:{},n:0,ok:0,q:-9,rd:{}};document.body.classList.add('crm');
+/* 2026-10-27 第三十二次（老師：現場任務 試過 完全 失敗，學生 看不到 任務）：學生 如果 已經 在 這一頁（不是 從 ⚡ 現場任務 進來 的），
+   登入 以後 每 2 秒 看 一次 自己 班 的 rooms/0班/cr：老師 一 開 ＝ 蓋 一整頁「老師 開了 …！馬上 進去」➜ 自己 換到 ?live=0班（不用 再 掃 QR）*/
+function crAuto(){if(/[?&]live=/.test(location.search)||typeof LDB==='undefined'||!LDB.on())return;var room='',stop=null,go=0;
+  setInterval(function(){var id=typeof SCID!=='undefined'?String(SCID||''):'';var r=/^\d{5}$/.test(id)?'0'+id.slice(0,3):'';if(r===room)return;room=r;if(stop){stop();stop=null}if(!r)return;
+    stop=LDB.poll('rooms/'+r+'/cr',2000,function(v){if(go||!v||!v.on||Date.now()-(+v.t||0)>4*36e5)return;go=1;var o=document.createElement('div');o.id='crgo';
+      o.innerHTML='<div class="crgob"><div style="font-size:clamp(70px,12vh,120px)">📢</div><div class="crgot">老師 開了 四年級 複習！</div><div style="font-size:28px">⏳ 馬上 進去…</div></div>';document.body.appendChild(o);
+      setTimeout(function(){location.replace(location.pathname+'?live='+r)},1400)})},2000)}
+function crInit(){var m=/[?&]live=(\d{4})/.exec(location.search);if(!m){crAuto();return}CR={room:m[1],t:0,cfg:null,acc:{},n:0,ok:0,q:-9,rd:{}};document.body.classList.add('crm');
   if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();crInit2()});return}crInit2()}
 function crInit2(){crWait('⏳ 等 老師 開始…');if(typeof LDB==='undefined'||!LDB.on()){crWait('📶 現場任務 還沒 開（老師 要 先 設定 Firebase）');return}LDB.poll('rooms/'+CR.room+'/cr',900,crOn)}
 function crStop(){clr();stopSay();FBN++;$('#wf').classList.remove('on')}

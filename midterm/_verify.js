@@ -116,7 +116,12 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
     }
     /* 第三十二次 3-(1)(2)：25 題 做 3 題 ➜〔✕ 離開〕先 問 ➜ 繼續 作答 ➜ 再 離開 ➜ 大廳〔▶ 繼續〕從 第 4 題、分數 接著；離開 不送 成績；做過 的 題目 下一次 先 不出 */
     if (vp[0] === 1024 && (!process.env.G || /xr/.test(process.env.G))) {
-      await p.evaluate(() => { hub(); window.__NOGO = 1; localStorage.removeItem('mt_seen_40201'); document.querySelectorAll('.scfull').forEach(x => x.remove()); }); await p.click('.xrow .xb[data-xn="25"]'); await p.waitForTimeout(300);
+      /* 第三十二次 3-(3)：平常 打開 沒有 25／50 題（只 有 一行 說明）；⚡ 現場任務 開了 x25 ＝ 只 有 那一顆、沒有 遊戲 格子（假 的 現場任務 設定，Firebase 換成 假 的，絕對 不 連 真的） */
+      { await p.evaluate(() => { CR = null; hub(); }); n += 2; const z0 = await p.evaluate(() => ({ xb: document.querySelectorAll('.xrow .xb').length, off: !!document.querySelector('.xoff') }));
+        if (z0.xb || !z0.off) E.push(tag + ' 平常 打開 還 看得到 25／50 題（要 只 在 現場任務 開）' + JSON.stringify(z0));
+        await p.evaluate(N => { LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0402', t: 1, cfg: { on: 1, t: 1, set: 'x' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9, rd: {} }; hub(); }, 25); const z1 = await p.evaluate(() => ({ xb: [...document.querySelectorAll('.xrow [data-xn],.xrow [data-xr]')].map(b => b.getAttribute('data-xn') || b.getAttribute('data-xr')).join(), gc: document.querySelectorAll('.gc').length }));
+        if (z1.xb !== '25' || z1.gc) E.push(tag + ' 現場任務 開了 25 題：要 只 有 25 那一顆、沒有 遊戲 格子 ' + JSON.stringify(z1)); }
+      await p.evaluate(N => { LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0402', t: 1, cfg: { on: 1, t: 1, set: 'x' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9, rd: {} }; hub(); window.__NOGO = 1; localStorage.removeItem('mt_seen_40201'); document.querySelectorAll('.scfull').forEach(x => x.remove()); }, 25); await p.click('.xrow .xb[data-xn="25"]'); await p.waitForTimeout(300);
       for (let k = 0; k < 3; k++) { if (await p.evaluate(() => !!document.getElementById('rdgo'))) { await p.waitForTimeout(2600); await p.click('#rdgo'); await p.waitForTimeout(300); }
         await p.waitForTimeout(1100); await p.evaluate(() => { const q = R.q; if (R.g.id === 'm7') { const w = q.spell, mid = w.slice(1, -1).split(''), used = []; mid.forEach(c => { for (let i = 0; i < R.tiles.length; i++) if (used.indexOf(i) < 0 && R.tiles[i] === c) { used.push(i); document.querySelector('[data-t="' + i + '"]').click(); return; } }); } else document.querySelector('#stage [data-o="0"]').click(); });
         await p.waitForTimeout(400); await p.evaluate(() => { const b = document.querySelector('#nx8w .nx8'); if (b) b.click(); });
@@ -133,15 +138,15 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
       await p.click('[data-xr="25"]'); await p.waitForTimeout(500); if (await p.evaluate(() => !!document.getElementById('rdgo'))) { await p.waitForTimeout(2600); await p.click('#rdgo'); await p.waitForTimeout(300); }
       const rs = await p.evaluate(() => ({ k: R.k, sc: R.sc, q: R.Q.length, n: R.idx.length }));
       if (rs.k !== 3 || rs.sc !== 12 || rs.q !== 3 || rs.n !== 25) E.push(tag + ' 繼續 以後 不是 從 第 4 題、12 分 接著：' + JSON.stringify(rs));
-      const sn = await p.evaluate(() => { const S = JSON.parse(localStorage.getItem('mt_seen_40201') || '[]'); hub(); startX(25); const now = R.gs.map((g, k) => XOFF[g.id] + R.idx[k]); const hit = now.filter(i => S.indexOf(i) >= 0).length; hub(); return { s: S.length, hit }; });
+      const sn = await p.evaluate(() => { const S = JSON.parse(localStorage.getItem('mt_seen_40201') || '[]'); startX(25); const now = R.gs.map((g, k) => XOFF[g.id] + R.idx[k]); const hit = now.filter(i => S.indexOf(i) >= 0).length; hub(); return { s: S.length, hit }; });
       if (sn.s !== 3 || sn.hit) E.push(tag + ' 做過 的 題目 下一次 又 出現（要 先 不出）' + JSON.stringify(sn));
       await p.evaluate(() => { localStorage.removeItem('mt_xs25_40201'); localStorage.removeItem('mt_seen_40201'); hub(); }); }
     /* 2026-10-26 第二十八次 第 3、4 點：📝 25 題／50 題 挑戰（12 關 連著 玩、每題 4／2 分、30% 類似、記 成績）*/
     for (const N of (process.env.G && !/x/.test(process.env.G) ? [] : vp[0] === 1024 ? [25, 50] : vp[0] === 820 ? [25] : []).filter(x => !process.env.XN || +process.env.XN === x)) {
       await p.goto('file://' + path.join(__dirname, 'index.html')); await p.waitForTimeout(400);   /* 每一次 重新 打開（做完 會 提醒 登出）*/
-      await p.evaluate(() => { hub(); window.__NOGO = 1; }); await p.waitForTimeout(200);
+      await p.evaluate(N => { LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0402', t: 1, cfg: { on: 1, t: 1, set: 'x' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9, rd: {} }; hub(); window.__NOGO = 1; }, N); await p.waitForTimeout(200);
       n++; const xb = await p.evaluate(() => [...document.querySelectorAll('.xrow .xb')].map(b => b.getAttribute('data-xn') + ':' + Math.round(b.getBoundingClientRect().height)).join());
-      if (!/^25:\d+,50:\d+$/.test(xb) || xb.split(',').some(x => +x.split(':')[1] < 60)) E.push(tag + ' 大廳 沒有〔📝 25 題〕〔📝 50 題〕：' + xb);
+      if (xb !== N + ':' + xb.split(':')[1] || +xb.split(':')[1] < 60) E.push(tag + ' 現場任務 大廳 沒有〔📝 ' + N + ' 題〕大按鈕：' + xb);
       await p.evaluate(() => { document.querySelectorAll('.scfull').forEach(x => x.remove()); }); await p.click('.xrow .xb[data-xn="' + N + '"]'); await p.waitForTimeout(300);   /* 做完 提醒 登出 的 那一頁 先 關掉 */
       n++; const pl = await p.evaluate(() => ({ c: R.cnt, sim: R.gs.filter((g, k) => g.B[R.idx[k]].sim).length, n: R.idx.length, ord: R.lvOf.every((l, i) => !i || l >= R.lvOf[i - 1]), p8: [...new Set(R.gs.map((g, k) => g.id === 'm8' ? g.B[R.idx[k]].pas : '').filter(x => x))].length }));
       const want = N === 25 ? [2, 3] : [4, 5];

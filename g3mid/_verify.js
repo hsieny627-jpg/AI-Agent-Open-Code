@@ -130,7 +130,12 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
     }
     /* 第三十二次 3-(1)(2)：25 題 做 3 題 ➜〔✕ 離開〕先 問 ➜ 繼續 ➜ 離開 ➜〔▶ 繼續 25 題〕從 第 4 題、12 分；中途 不送；做過 的 先 不出 */
     if (full && (!process.env.ONLY || /xr/.test(process.env.ONLY))) {
-      const ID = await p.evaluate(() => SCID); await p.evaluate(id => { localStorage.removeItem('g3m_seen_' + id); localStorage.removeItem('g3m_xs25_' + id); lobby(); }, ID);
+      /* 第三十二次 3-(3)：平常 打開 沒有 25／50 題；⚡ 現場任務 開了 x25 ＝ 只 有 那一顆、沒有 遊戲 格子（Firebase 換 假 的） */
+      { await p.evaluate(() => { CR = null; lobby(); }); n += 2; const z0 = await p.evaluate(() => ({ xb: document.querySelectorAll('#xrow .xb').length, off: !!document.querySelector('.xoff') }));
+        if (z0.xb || !z0.off) E.push(tag + ' 平常 打開 還 看得到 25／50 題 ' + JSON.stringify(z0));
+        await p.evaluate(N => { LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0304', t: 1, cfg: { on: 1, t: 1, set: 'x' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9 }; lobby(); }, 25); const z1 = await p.evaluate(() => ({ xb: [...document.querySelectorAll('#xrow [data-x],#xrow [data-xr]')].filter(b => (b.closest('.xbw') || b).style.display !== 'none').map(b => b.dataset.x || b.dataset.xr).join(), gc: [...document.querySelectorAll('#grid .gc')].filter(b => b.style.display !== 'none').length }));
+        if (z1.xb !== '25' || z1.gc) E.push(tag + ' 現場任務 開了 25 題：要 只 有 25 那一顆 ' + JSON.stringify(z1)); }
+      const ID = await p.evaluate(() => SCID); await p.evaluate(id => { const N = 25; LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0304', t: 1, cfg: { on: 1, t: 1, set: 'x' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9 }; localStorage.removeItem('g3m_seen_' + id); localStorage.removeItem('g3m_xs25_' + id); lobby(); }, ID);
       await p.click('#xrow .xb[data-x="25"]'); await p.waitForTimeout(400);
       for (let k = 0; k < 3; k++) { const hw = await p.$('#q2go'); if (hw) { await hw.click(); await p.waitForTimeout(150); } const wp = await p.$('#wp.on [data-wr]'); if (wp) { await wp.click(); await p.waitForTimeout(250); }
         const id = await p.evaluate(() => G.id); await p.waitForTimeout(id === 'q2' ? 300 : 120); await answer(p, { id }, false);
@@ -152,8 +157,9 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
       await p.evaluate(id => { localStorage.removeItem('g3m_xs25_' + id); localStorage.removeItem('g3m_seen_' + id); lobby(); }, ID); }
     /* 2026-10-26 第二十八次 第 1、2 點：📝 25 題／50 題 挑戰（10 關 連著 玩、每題 4／2 分、30% 類似、記 成績）*/
     for (const N of (process.env.ONLY && !/x/.test(process.env.ONLY) ? [] : full ? [25, 50] : vp[0] === 820 ? [25] : [])) {
-      n++; const lb2 = await p.evaluate(() => [...document.querySelectorAll('#xrow .xb')].map(b => b.dataset.x + ':' + Math.round(b.getBoundingClientRect().height)).join());
-      if (!/^25:\d+,50:\d+$/.test(lb2) || lb2.split(',').some(x => +x.split(':')[1] < 60)) E.push(tag + ' 大廳 沒有〔📝 25 題〕〔📝 50 題〕大按鈕：' + lb2);
+      await p.evaluate(N => { LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0304', t: 1, cfg: { on: 1, t: 1, set: 'x' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9 }; lobby(); }, N); await p.waitForTimeout(200);
+      n++; const lb2 = await p.evaluate(() => [...document.querySelectorAll('#xrow .xb')].filter(b => b.style.display !== 'none').map(b => b.dataset.x + ':' + Math.round(b.getBoundingClientRect().height)).join());
+      if (lb2.split(':')[0] !== String(N) || +lb2.split(':')[1] < 60) E.push(tag + ' 現場任務 大廳 沒有〔📝 ' + N + ' 題〕大按鈕：' + lb2);
       await p.click('#xrow .xb[data-x="' + N + '"]'); await p.waitForTimeout(400);
       const pl = await p.evaluate(() => ({ c: R.cnt, s: R.nsim, sim: R.qs.filter(q => q.sim).length, n: R.qs.length, ord: R.lvOf.every((l, i) => !i || l >= R.lvOf[i - 1]) }));
       n++; const want = N === 25 ? [2, 3] : [5, 5];
