@@ -21,10 +21,11 @@ const NOW = Date.now(), D9 = NOW - 9 * 864e5;
         if ([].some.call(x.childNodes, c => c.nodeType === 3 && c.textContent.trim()) && parseFloat(getComputedStyle(x).fontSize) < 17) sm.push(x.textContent.trim().slice(0, 10));
         if ((x.tagName === 'BUTTON' || x.classList.contains('go')) && r.height < 48) lo.push(x.textContent.trim().slice(0, 8)); });
       return { sm, lo, ox: document.documentElement.scrollWidth - innerWidth }; });
-    /* 在家複習 首頁 兩張 大卡 */
+    /* 在家複習 首頁：兩張 大卡 暫時 下架 */
     await p.goto('file://' + path.join(ROOT, 'g' + g + '-review', 'index.html')); await p.waitForTimeout(300);
     n++; const hm = await p.evaluate(() => [].map.call(document.querySelectorAll('.tdb'), a => [a.getAttribute('href'), a.getBoundingClientRect().height]));
-    if (hm.length !== 2 || hm[0][0] !== 'today.html' || hm[1][0] !== 'stars.html' || hm.some(x => x[1] < 60)) E.push(tag + ' 首頁 沒有〔📅 今日任務〕〔📈 我的進步〕' + JSON.stringify(hm));
+    /* 2026-10-27 第三十次 2-(1)：老師「暫時 下架」➜ 首頁 不可以 有 這 兩張 卡（頁面 照樣 量，以後 放回來 用）*/
+    if (hm.length || /today\.html|stars\.html/.test(await p.content())) E.push(tag + ' 首頁 還 有〔📅 今日任務〕〔📈 我的進步〕（老師 說 暫時 下架）' + JSON.stringify(hm));
     /* 今日任務 */
     await p.goto('file://' + path.join(ROOT, 'g' + g + '-review', 'today.html')); await p.waitForTimeout(600);
     n++; const lb = await p.evaluate(() => ({ st: !!document.getElementById('st'), ch: !!document.getElementById('ch') })); if (!lb.st || !lb.ch) E.push(tag + ' 今日任務 大廳 沒有〔▶ 開始〕或〔🔥 挑戰關〕（★★）' + JSON.stringify(lb));

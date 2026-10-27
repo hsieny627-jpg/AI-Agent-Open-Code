@@ -19,6 +19,8 @@ const fs = require('fs'), path = require('path'), cp = require('child_process');
 const ROOT = path.join(__dirname, '..');
 const NAMETAG = require('./_nametag').TAG;
 const { SITES, topics } = require('./_review_sites.js');
+/* 2026-10-27 第三十次 2-(1)：📅 今日任務、📈 我的 進步 暫時 下架（老師）；檔案 照樣 產生，要 放回來 改成 true */
+const TODAY_ON = false;
 function indexHTML(S, META) {
   const T = topics(S), lk = href => { const x = T.filter(o => o.href === href)[0]; if (!x) throw new Error('在家複習首頁的 ' + href + ' 沒有〔🔒 開關〕代號'); return x.k; };
   const btn = (href, ic, t, d) => '<a class="b" data-lk="' + lk(href) + '" href="' + href + '"><span class="i">' + ic + '</span><span class="x"><b>' + t + '</b>' + (d ? '<em>' + d + '</em>' : '') + '</span></a>';
@@ -56,8 +58,9 @@ h2 span{display:inline-flex;align-items:center;justify-content:center;width:1.5e
 </style></head><body>
 ${require('../score/_client.js').home(S.out === 'g3-review' ? 3 : 4, '../', 'home')}
 <h1>🏠 ${S.g}</h1>
+<!-- 2026-10-27 第三十次 2-(1)：老師「暫時下架」➜ TODAY_ON ＝ false（要放回來改成 true）-->
 <!-- 2026-10-26 第二十七次 第 2 點（老師 選 C30 第 2 題 1、2）：📅 今日任務（每天 5 題）、📈 我的 進步（⭐ 星星）：score/_today_build.js -->
-<div class="td2"><a class="tdb" href="today.html"><span class="i">📅</span><span class="x"><b>今日 任務</b><em>每天 5 題、大約 5 分鐘</em></span></a><a class="tdb st" href="stars.html"><span class="i">📈</span><span class="x"><b>我的 進步</b><em>每一個 主題 ⭐⭐⭐</em></span></a></div>
+${TODAY_ON ? `<div class="td2"><a class="tdb" href="today.html"><span class="i">📅</span><span class="x"><b>今日 任務</b><em>每天 5 題、大約 5 分鐘</em></span></a><a class="tdb st" href="stars.html"><span class="i">📈</span><span class="x"><b>我的 進步</b><em>每一個 主題 ⭐⭐⭐</em></span></a></div>` : ''}
 <section><h2><span>1</span>📖 句型</h2>
 ${S.units.map(u => '<div class="u"><h3>' + u.ic + ' ' + u.t + '</h3><div class="g">' +
     /* 2026-10-07 對話 C（使用者需求第 5 題、Q15-A）：加基礎句型；分頁 1、2 都有〔基礎｜進階〕 */

@@ -24,8 +24,8 @@ async function ctxOf(br, vp, G) { const ctx = await br.newContext({ viewport: { 
   await ctx.route(URL0 + '**', async r => { const q = Object.fromEntries(new URL(r.request().url()).searchParams); if (r.request().method() === 'POST') POSTS.push(r.request().postData());
     const body = r.request().method() === 'POST' ? G.post(r.request().postData()) : G.get(q); await r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(body) }); });
   return ctx; }
-async function stuPage(ctx, url) { const p = await ctx.newPage(); p.on('pageerror', e => E.push('平板 JS：' + e.message));
-  await p.addInitScript(() => { localStorage.setItem('score_last', '"30401"'); localStorage.setItem('score_id_g3', '"30401"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', '30401'); try { sessionStorage.setItem('lv_intro', '30401'); } catch (e) { } });
+async function stuPage(ctx, url, id) { id = id || '30401'; const p = await ctx.newPage(); p.on('pageerror', e => E.push('平板 JS：' + e.message));
+  await p.addInitScript(id => { localStorage.setItem('score_last', '"' + id + '"'); localStorage.setItem('score_id_g' + id.charAt(0), '"' + id + '"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', id); try { sessionStorage.setItem('lv_intro', id); } catch (e) { } }, id);
   await p.goto(url); return p; }
 const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') { [].find.call(document.querySelectorAll('.hole'), h => h.dataset.v === q.o[0]).click(); return 1; }
   if (id === 'q10') { const c = [].find.call(document.querySelectorAll('[data-v],[data-c],.crate'), x => (x.dataset.v || x.dataset.c || x.textContent).indexOf(q.code) >= 0); if (c) { c.click(); return 1; } } return 0; });
@@ -34,7 +34,13 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
     const G = make({ TEACHER_PW: PW }), ctx = await ctxOf(br, vp, G);
     const h = await ctx.newPage(); const errs = []; h.on('pageerror', e => errs.push(e.message));
     await h.goto(HTTP + '/live/host.html'); await h.waitForTimeout(400); await h.fill('#pw', PW); await h.click('#pwgo'); await h.waitForTimeout(500);
-    await h.click('[data-sc="402"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); n++; if (await h.evaluate(() => H.scr) === 'hcr') E.push(tag + ' 四年級 的 班 也 開得了 課堂複習');
+    /* 2026-10-27 第三十次：四年級 的 班 ＝〔📝 四年級 複習〕（兩套：四年級 複習 11 種、🪤 四年級 複習 0 ＝ 陷阱 偵測器）*/
+    await h.click('[data-sc="402"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.waitForTimeout(200);
+    n++; const s4 = await h.evaluate(() => ({ scr: H.scr, h1: document.querySelector('#hcr h1').textContent, sets: [].map.call(document.querySelectorAll('[data-crs]'), b => b.textContent), gs: [].map.call(document.querySelectorAll('[data-crg]'), b => b.textContent) }));
+    if (s4.scr !== 'hcr' || !/四年級 複習/.test(s4.h1) || s4.sets.join('|') !== '📝 四年級 複習|🪤 四年級 複習 0' || s4.gs.length !== 11 || s4.gs.some(t => /陷阱/.test(t)) || !/字首音/.test(s4.gs[0])) E.push(tag + ' 四年級 複習 設定 畫面 ' + JSON.stringify(s4).slice(0, 300));
+    await h.click('[data-crs="mt0"]'); await h.waitForTimeout(150); n++; const g0 = await h.evaluate(() => [].map.call(document.querySelectorAll('[data-crg]'), b => b.textContent));
+    if (g0.length !== 1 || !/陷阱/.test(g0[0]) || !/☑/.test(g0[0])) E.push(tag + ' 🪤 四年級 複習 0 不是 只有 陷阱 偵測器 ' + JSON.stringify(g0));
+    await h.click('#crback'); await h.waitForTimeout(150);
     await h.click('[data-sc="304"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.waitForTimeout(200);
     n++; const s0 = await h.evaluate(() => ({ scr: H.scr, sets: [].map.call(document.querySelectorAll('[data-crs]'), b => b.textContent), gs: [].map.call(document.querySelectorAll('[data-crg]'), b => b.textContent), sm: [].filter.call(document.querySelectorAll('#hcr button'), b => b.getBoundingClientRect().height < 48 || parseFloat(getComputedStyle(b).fontSize) < 18).length }));
     if (s0.scr !== 'hcr' || s0.sets.length !== 4 || !/課堂複習 1/.test(s0.sets.join()) || s0.gs.length !== 10 || !/第 9 關.*夾娃娃/.test(s0.gs[8]) || !/第 10 關.*小精靈/.test(s0.gs[9]) || s0.sm) E.push(tag + ' 課堂複習 設定 畫面 ' + JSON.stringify(s0).slice(0, 300));
@@ -67,6 +73,34 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
     await s.evaluate(() => start(GM.findIndex(g => g.id === 'q10'))); await s.waitForTimeout(1500); await ans(s); await s.waitForTimeout(1800);
     n++; const p1 = dget('rooms/0304/crp/30401'); if (!p1 || p1.n !== 1 || p1.ok !== 1 || p1.g !== 'q10') E.push(tag + ' 自己 答 的 進度 沒有 寫 crp ' + JSON.stringify(p1));
     await h.waitForTimeout(1600); n++; const hs = await h.evaluate(() => document.getElementById('hcrr').textContent); if (!/已經 開始 1 人/.test(hs) || !/1 號/.test(hs)) E.push(tag + ' 大螢幕 沒有 看到 誰 在 做 ' + hs.slice(0, 120));
+    await h.click('#crend'); await h.waitForTimeout(400);
+    /* ══ 2026-10-27 第三十次：四年級（402）〔👥 全班 同步〕🪤 四年級 複習 0 ➜ 平板 跳到 midterm ➜ 答 ➜ 下一題 ➜ 結束 送 g4gm_mt-m12 ══ */
+    await h.click('#crhome').catch(() => {}); await h.waitForTimeout(200); await h.click('[data-sc="402"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.click('[data-crs="mt0"]'); await h.click('[data-crm="sync"]'); await h.click('#crstart'); await h.waitForTimeout(500);
+    n++; const c4 = dget('rooms/0402/cr'); if (!c4 || c4.on !== 1 || c4.set !== 'mt0' || c4.deck.length !== 8 || c4.deck.some(d => d[0] !== 'm12')) E.push(tag + ' 四年級 同步 Firebase 不對 ' + JSON.stringify(c4).slice(0, 200));
+    const s4p = await stuPage(ctx, HTTP + '/live/index.html', '40201'); await s4p.waitForURL(/midterm\/index\.html\?live=0402/, { timeout: 12000 }).catch(() => {});
+    n++; if (!/midterm\/index\.html\?live=0402/.test(s4p.url())) E.push(tag + ' 四年級 平板 沒有 自己 跳到 四年級 複習 ' + s4p.url());
+    await s4p.waitForTimeout(2500);
+    n++; const m0 = await s4p.evaluate(() => ({ id: R && R.g.id, crs: R && R.crs, o: document.querySelectorAll('#stage [data-o]').length, qx: getComputedStyle(document.querySelector('.hud .qx')).display }));
+    if (m0.id !== 'm12' || !m0.crs || m0.o !== 3 || m0.qx !== 'none') E.push(tag + ' 四年級 平板 沒有 出現 第 1 題（陷阱 偵測器）' + JSON.stringify(m0));
+    await s4p.click('#stage [data-o="0"]'); await s4p.waitForTimeout(3500);
+    n++; const w4 = await s4p.evaluate(() => ({ on: document.getElementById('crw').classList.contains('on'), t: document.getElementById('crw').textContent })); if (!w4.on || !/答對/.test(w4.t) || !/等 老師/.test(w4.t)) E.push(tag + ' 四年級 答完 沒有「答對 了，等 老師」' + JSON.stringify(w4));
+    n++; const a4 = dget('rooms/0402/cra/' + c4.t + '_0'); if (!a4 || a4['40201'] !== 1) E.push(tag + ' 四年級 答案 沒有 寫到 cra ' + JSON.stringify(a4));
+    await h.waitForTimeout(1600); n++; const hv4 = await h.evaluate(() => document.getElementById('hcrr').textContent); if (!/已經 答 1 人/.test(hv4)) E.push(tag + ' 四年級 大螢幕 沒有 看到 幾個 人 答 ' + hv4.slice(0, 120));
+    await h.click('#crrv'); n++; const rv4 = await h.evaluate(() => (document.querySelector('.crans') || {}).textContent || ''); if (!/✅ \S/.test(rv4)) E.push(tag + ' 四年級〔👀 公布 答案〕沒有 英文 答案 ' + rv4);
+    await h.click('#crnx'); await h.waitForTimeout(2200);
+    n++; const m1 = await s4p.evaluate(() => ({ id: R && R.g.id, o: document.querySelectorAll('#stage [data-o]').length, w: document.getElementById('crw').classList.contains('on') })); if (m1.id !== 'm12' || m1.o !== 3 || m1.w) E.push(tag + ' 四年級 老師 按 下一題 平板 沒有 換 ' + JSON.stringify(m1));
+    await h.click('#crend'); await h.waitForTimeout(2500);
+    n++; const e4 = await s4p.evaluate(() => ({ t: document.getElementById('crw').textContent, q: JSON.parse(localStorage.getItem('score_q') || '[]') }));
+    const sent4 = POSTS.map(x => { try { return JSON.parse(x); } catch (e) { return {}; } }).filter(x => x.r && x.r.set === 'g4gm_mt-m12' || x.recs && x.recs.some(r => r.set === 'g4gm_mt-m12'));
+    const r4 = [].concat(...sent4.map(x => x.recs || [x.r])).concat(e4.q).filter(r => r && r.set === 'g4gm_mt-m12').pop();
+    if (!/結束/.test(e4.t) || !r4 || r4.qs.length !== 2 || r4.qs[0][0] !== 1 || r4.qs[1][0] !== 0 || !/^🪤 四年級 複習 0｜/.test(r4.name)) E.push(tag + ' 四年級 結束 沒有 送 成績 g4gm_mt-m12（2 題：對、沒答 ＝ 錯）' + JSON.stringify(r4 || null).slice(0, 160));
+    /* 〔🙋 學生 自己 答〕📝 四年級 複習：只 有 數字 神射手 */
+    await h.click('#crhome'); await h.click('[data-crgo]'); await h.click('[data-crs="mt"]'); await h.click('[data-cra="0"]'); await h.click('[data-crg="m5"]'); await h.click('[data-crm="self"]'); await h.click('#crstart'); await h.waitForTimeout(2600);
+    n++; const lb4 = await s4p.evaluate(() => ({ cards: [].map.call(document.querySelectorAll('[data-g]'), b => b.getAttribute('data-g')), x: !!document.querySelector('.xrow'), h1: document.querySelector('.top h1').textContent, home: getComputedStyle(document.querySelector('.top .home')).display }));
+    if (lb4.cards.join() !== 'm5' || lb4.x || !/四年級 複習/.test(lb4.h1) || lb4.home !== 'none') E.push(tag + ' 四年級 自己 答 的 大廳 不是 只有 老師 選 的 遊戲 ' + JSON.stringify(lb4));
+    await s4p.click('[data-g="m5"]'); await s4p.waitForTimeout(2500); await s4p.click('#stage [data-o="0"]'); await s4p.waitForTimeout(800);
+    n++; const p4 = dget('rooms/0402/crp/40201'); if (!p4 || p4.n !== 1 || p4.ok !== 1 || p4.g !== 'm5') E.push(tag + ' 四年級 自己 答 的 進度 沒有 寫 crp ' + JSON.stringify(p4));
+    await h.waitForTimeout(1600); n++; const hs4 = await h.evaluate(() => document.getElementById('hcrr').textContent); if (!/已經 開始 1 人/.test(hs4)) E.push(tag + ' 四年級 大螢幕 沒有 看到 誰 在 做 ' + hs4.slice(0, 120));
     await h.click('#crend'); await h.waitForTimeout(400);
     n++; if (errs.length) E.push(tag + ' 大螢幕 JS：' + errs.slice(0, 2).join('｜'));
     await ctx.close(); }

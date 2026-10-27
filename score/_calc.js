@@ -69,7 +69,7 @@ var SC = (function () {
     var m = SETRE.exec(String(set)); if (!m) return { k: '', t: '' };
     var x = m[2];
     if (x.charAt(0) === 'u') return { k: 'tq', t: '📝 複習題' };
-    if (x === 'gm' && /_mt-/.test(String(set))) return { k: 'mt', t: '📝 期中複習' };   /* 2026-10-19 第十三次 3(11) */
+    if (x === 'gm' && /_mt-/.test(String(set))) return { k: 'mt', t: '📝 四年級 複習' };   /* 2026-10-27 第三十次 2-(2)：改名 */   /* 2026-10-19 第十三次 3(11) */
     if (x === 'gm' && /_(g3m|c[123])-/.test(String(set))) return { k: 'g3c', t: '🏫 三年級 複習' };   /* 2026-10-26 第二十七次 第 1 點：三年級 複習（g3m）、課堂複習 1～3（c1～c3） */
     if (x === 'gm') return { k: 'game', t: '🎮 遊戲' };
     if (x === 'v') return { k: 'v', t: '👀 看字卡' };

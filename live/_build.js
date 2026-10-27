@@ -28,6 +28,13 @@ const G3M = require(path.join(ROOT, 'g3mid', '_data.js'));
 const CRD = { gs: G3M.ORD.map(id => { const g = G3M.GAMES.filter(x => x.id === id)[0]; return [id, g.ic, g.nm]; }), sets: [['g3m', '📝 三年級 複習']].concat(G3M.CSETS.map(x => [x[0], '🏫 ' + x[1].replace('三年級 ', '')])), B: {} };
 CRD.B.g3m = {}; G3M.GAMES.forEach(g => { CRD.B.g3m[g.id] = g.B.map(q => [String(q.en || ''), String(q.zh || '')]); });
 G3M.CSETS.forEach(x => { CRD.B[x[0]] = {}; G3M.GAMES.forEach(g => { CRD.B[x[0]][g.id] = G3M.CB[x[0]][g.id].map(q => [String(q.en || ''), String(q.zh || '')]); }); });
+/* 📝 四年級 複習（2026-10-27 第三十次 2-(2)(4)，老師 選 A「跟 三年級 一樣」）＝ midterm/_data.js：大廳 順序 11 種＋🪤 四年級 複習 0（m12）；公布 答案 ＝ 答錯頁 的 英文 fe＋中文 fz */
+const MT = require(path.join(ROOT, 'midterm', '_data.js'));
+const MTORD = ['lis', 'read', 'write'].map(k => MT.GAMES.filter(g => g.sec === k)).flat();
+const CRD4 = { gs: MTORD.map(g => [g.id, g.ic, g.nm]), sets: [['mt', '📝 四年級 複習'], ['mt0', '🪤 四年級 複習 0']],
+  only: { mt: MTORD.filter(g => !g.solo).map(g => g.id), mt0: MTORD.filter(g => g.solo === 'mt0').map(g => g.id) }, B: { mt: {}, mt0: {} } };
+MT.GAMES.forEach(g => { CRD4.B[g.solo || 'mt'][g.id] = g.B.map(q => [String(q.fe || ''), String(q.fz || '')]); });
+if (CRD4.only.mt.length !== 11 || CRD4.only.mt0.join() !== 'm12') throw new Error('四年級 複習 套數 不對');
 const head = (t, extra) => `<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -63,7 +70,7 @@ const host = head('現場任務 大螢幕', CER) + `<body class="host">
 <div class="scr" id="hend" hidden><div id="cerw"><div class="cx" id="cerst"></div></div><div class="hbar"><span id="cstn" class="note"></span><button id="tana" class="big go">📊 全班 錯題 分析 ➜</button></div></div>
 <div class="scr" id="hana" hidden><div class="in" id="hanab"></div><div class="hbar"><span id="erw" class="note"></span><span id="gm" class="note"></span><button id="tcer" class="ghost">🏆 再看 頒獎</button><button id="close2" class="ghost">✕ 結束 這一場</button><button id="give" class="big go">🎁 發獎勵 ＋ 記 練習次數</button></div></div>
 <div class="scr" id="hcr" hidden><div class="in"></div></div><div class="scr" id="hcrr" hidden><div class="in"></div></div>
-<script>var BASE='../',GR=${J(QB.GR)},LIST=${J(QB.LIST)},CHAL=${J(CHAL)},ICON=${J(QB.ICON)},CRD=${J(CRD)};
+<script>var BASE='../',GR=${J(QB.GR)},LIST=${J(QB.LIST)},CHAL=${J(CHAL)},ICON=${J(QB.ICON)},CRDS=${J({ 3: CRD, 4: CRD4 })};
 ${RT}
 ${CERRT}
 ${R('_host_rt.js')}

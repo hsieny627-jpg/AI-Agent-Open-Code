@@ -51,7 +51,10 @@ async function teacher(br, vp) {
   if (!/第 9 關/.test(cl.t9) || !/夾娃娃/.test(cl.t9) || !/第 10 關/.test(cl.t10) || !/小精靈/.test(cl.t10)) e.push('關卡 順序 不對 ' + JSON.stringify(cl));
   if (cl.c1[0] !== 'p2' || cl.c1[1] !== 'p0' || cl.cAll !== 'p1') e.push('底色 不對（88 綠、50 紅、75 黃）' + JSON.stringify(cl));
   n++; await p.click('[data-g3s="mt"]'); await p.waitForTimeout(200); const mt = await p.evaluate(() => ({ th: document.querySelectorAll('.g3t tr:first-child th').length, c: [].map.call(document.querySelectorAll('[data-g3c]'), x => x.dataset.g3c).join(',') }));
-  if (mt.th !== 15 || !/402/.test(mt.c) || /304/.test(mt.c)) e.push('〔📝 四年級 複習〕不是 12 種 遊戲／四年級 的 班 ' + JSON.stringify(mt));
+  if (mt.th !== 14 || !/402/.test(mt.c) || /304/.test(mt.c)) e.push('〔📝 四年級 複習〕不是 11 種 遊戲／四年級 的 班 ' + JSON.stringify(mt));
+  /* 2026-10-27 第三十次 2-(4)：〔🪤 四年級 複習 0〕＝ 只 有 陷阱 偵測器 一欄 */
+  n++; await p.click('[data-g3s="mt0"]'); await p.waitForTimeout(200); const m0 = await p.evaluate(() => ({ th: [].map.call(document.querySelectorAll('.g3t tr:first-child th'), x => x.textContent), h: document.querySelector('.g3h').textContent }));
+  if (m0.th.length !== 4 || !/陷阱/.test(m0.th[2]) || !/四年級 複習 0/.test(m0.h)) e.push('〔🪤 四年級 複習 0〕不是 只有 陷阱 偵測器 ' + JSON.stringify(m0));
   n++; const hm = await p.evaluate(() => { const a = document.querySelector('a.thome'); return a ? { h: a.getAttribute('href'), y: a.getBoundingClientRect().height, f: parseFloat(getComputedStyle(a).fontSize) } : null; });
   if (!hm || hm.h !== '../index.html' || hm.y < 48 || hm.f < 18) e.push('沒有〔🏠 回 總首頁〕按鈕 ' + JSON.stringify(hm));
   n++; await p.click('#tabs button[data-t="c"]'); await p.waitForTimeout(300); await p.click('.cbgo.big'); await p.waitForTimeout(3200);

@@ -551,7 +551,7 @@ ${CERCSS}
   <select id="fc" aria-label="班級"></select><i>·</i>
   <span class="grp"><select id="fp" aria-label="期間"><option value="w">本週</option><option value="lw">上週</option><option value="all">這學期全部</option><option value="c">自訂日期</option></select>
    <input type="date" id="f1" hidden><input type="date" id="f2" hidden></span><i>·</i>
-  <select id="fk" aria-label="類別"><option value="">全部類別</option><option value="tq">📝 複習題</option><option value="game">🎮 遊戲</option><option value="mt">📝 期中複習</option><option value="g3c">🏫 三年級 複習</option><option value="r1">📘 Review 1</option><option value="l">🎧 聽完字卡</option><option value="lv">⚡ 現場任務</option><option value="v">👀 看字卡</option></select><i>·</i>
+  <select id="fk" aria-label="類別"><option value="">全部類別</option><option value="tq">📝 複習題</option><option value="game">🎮 遊戲</option><option value="mt">📝 四年級 複習</option><option value="g3c">🏫 三年級 複習</option><option value="r1">📘 Review 1</option><option value="l">🎧 聽完字卡</option><option value="lv">⚡ 現場任務</option><option value="v">👀 看字卡</option></select><i>·</i>
   <select id="fs" aria-label="什麼時候做的"><option value="">上課＋課後</option><option value="in">🕘 上課 時間</option><option value="out">🌙 課後 時間</option></select>
  </div>
  <div class="tiles" id="tiles"></div>
@@ -1217,7 +1217,7 @@ function rwBar(v,n,need){var p=n?Math.min(100,v/n*100):0,q=n?Math.min(100,need/n
 /* 分頁：5 張大卡（每一張：大圖示、名字、一句話、做到 幾 人） */
 /* 2026-10-26 第二十七次 第 4-(1)(2)：選到 的 按鈕 發光（.bsel、.on 金色 光暈）；2026-10-26 第二十九次 第 5 點（老師：一直 閃 看了 不舒服）➜ 不 閃、光 減小（金框＋淡淡 的 光，停住 不動）；老師 看不懂〔⚙ 照 下面 的 設定〕➜〔🎯 只 加倍 我 勾 的〕＋小字「照 下面 ① 班級 ② 時間 ③ 任務 ④ 幾倍」 */
 /* ══ 🎉 金幣／經驗值 加倍 時段（2026-10-26 第二十六次 第 2-4 點，老師選 B 簡單版）══ 〔🟢 全開〕全部 班級、全部 任務／〔⛔ 全關〕／〔⚙ 照 下面 的 設定〕勾 的 班級、勾 的 任務；都 只在 從～到 這段 時間 */
-var BOM=null,BOMSG='',BOCAT=[['game','🎮 遊戲'],['tq','📝 複習題'],['mt','📝 期中複習'],['r1','📘 Review 1'],['l','🎧 聽完字卡'],['lv','⚡ 現場任務'],['g3c','🏫 三年級 複習／課堂複習']];
+var BOM=null,BOMSG='',BOCAT=[['game','🎮 遊戲'],['tq','📝 複習題'],['mt','📝 四年級 複習'],['r1','📘 Review 1'],['l','🎧 聽完字卡'],['lv','⚡ 現場任務'],['g3c','🏫 三年級 複習／課堂複習']];
 function boInit(){var b=DATA.boost||{};BOM={k:b.k>1?b.k:1.5,x:b.x>1?b.x:1.5,cls:(b.cls||[]).slice(),cats:(b.cats||[]).slice()}}
 function boSt(b){var now=Date.now();if(!b||b.m==='off'||!b.to)return '<b class="bo0">⛔ 現在 沒有 加倍</b>';
   var w=now<b.from?'⏳ 還沒 開始':now>=b.to?'⛔ 已經 結束':'🟢 加倍 中';
@@ -1323,20 +1323,22 @@ function favNm(id){var k=id.charAt(0),n=+id.slice(1);if(k==='t'){var T=(SC.RPT||
    三年級 複習（g3m）、課堂複習 1～3（c1～c3）的 10 種 遊戲：一列 一位 學生（號碼＋姓名），10 欄 ＝ 每一種 遊戲 的 正確率（百分制），最後 一欄 ＝ 這位 學生 的 平均；
    最下面 一列 ＝ 全班 每一種 遊戲 的 平均。**只 算 已經 作答 的 題目**（答 了 幾題 就 算 幾題；時間 到 ＝ 答錯）＝ 答對 題數 ÷ 作答 題數 ✕ 100。時間 ＝ 上面 選 的 時間。 */
 var G3S='all',G3C='';
-var G3SETS=[['g3m','📝 三年級 複習'],['c1','🏫 課堂複習 1'],['c2','🏫 課堂複習 2'],['c3','🏫 課堂複習 3'],['all','三年級 全部'],['mt','📝 四年級 複習']];
+var G3SETS=[['g3m','📝 三年級 複習'],['c1','🏫 課堂複習 1'],['c2','🏫 課堂複習 2'],['c3','🏫 課堂複習 3'],['all','三年級 全部'],['mt','📝 四年級 複習'],['mt0','🪤 四年級 複習 0']];
 /* 2026-10-26 第二十九次 第 7 點（老師）：(1) 欄 的 順序 ＝ 關卡 順序（第 9 關 夾娃娃、第 10 關 小精靈）(2) 每一個 遊戲 的 平均 正確率 放 最上面 一格（每班 1 號 的 正上方）
    (3) 底色：59 以下 紅、60～80 黃、81～100 綠；多〔📝 四年級 複習〕（12 種 遊戲，四年級 的 班） */
 var G3ORD=['q1','q4','q5','q6','q7','q8','q9','q10','q3','q2'];
-function g3Games(){if(G3S==='mt'){var m=[];for(var j=1;j<=12;j++){var c=BANK['g4gm_mt-m'+j];m.push(['m'+j,c?String(c.name).replace(/^.*｜/,''):'遊戲 '+j])}return m}
+/* 2026-10-27 第三十次 2-(4)（老師 選 A）：🪤 陷阱 偵測器（m12）拿出來 ＝「🪤 四年級 複習 0」；四年級 複習 ＝ 11 種（關卡 順序 ＝ 大廳 順序）*/
+var MTORD=['m1','m2','m3','m4','m5','m6','m8','m9','m11','m7','m10'];
+function g3Games(){if(G3S==='mt'||G3S==='mt0'){return (G3S==='mt0'?['m12']:MTORD).map(function(id){var c=BANK['g4gm_mt-'+id];return [id,c?String(c.name).replace(/^.*｜/,''):id]})}
   return G3ORD.map(function(id){var b=BANK['g3gm_g3m-'+id];return [id,b?String(b.name).replace(/^.*｜/,''):id]})}
 function g3Col(v){return v<=59?'p0':v<=80?'p1':'p2'}
-function paneG(){var g4=G3S==='mt',CC=SC.CLASSES[g4?4:3]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===(g4?4:3)&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),GM=g3Games();
+function paneG(){var g4=G3S==='mt'||G3S==='mt0',CC=SC.CLASSES[g4?4:3]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===(g4?4:3)&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),GM=g3Games();
   var RS=ALL.filter(function(x){var m=g4?/^g4gm_(mt)-(m\\d+)$/.exec(x.set):/^g3gm_(g3m|c[123])-(q\\d+)$/.exec(x.set);return m&&!x.x&&x.cls===c&&(g4||G3S==='all'||m[1]===G3S)&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)});
   var P={},T={};RS.forEach(function(x){var g=/-([qm]\\d+)$/.exec(x.set)[1],p=P[x.id]=P[x.id]||{};(x.qs||[]).forEach(function(q){var a=p[g]=p[g]||[0,0],b=T[g]=T[g]||[0,0];a[0]+=q[0]?1:0;a[1]++;b[0]+=q[0]?1:0;b[1]++})});
   var ids=(RCLS[c]||[]).slice();Object.keys(P).forEach(function(id){if(ids.indexOf(id)<0)ids.push(id)});ids.sort();
   var cell=function(a,av){var x=av?' av':'';if(!a||!a[1])return '<td class="'+x+'">—</td>';var v=Math.round(a[0]/a[1]*100);return '<td class="'+g3Col(v)+x+'">'+v+'<small>'+a[1]+' 題</small></td>'};
   var sum=function(o){var a=[0,0];GM.forEach(function(g){var x=o[g[0]];if(x){a[0]+=x[0];a[1]+=x[1]}});return a};
-  var h='<div class="fvhd g3h">'+(g4?'📝 四年級 複習：12 種':'🏫 三年級 課堂 複習：10 種')+' 遊戲 的 平均 正確率<small>（百分制；只 算 已經 作答 的 題目；時間 到 沒有 選 ＝ 答錯；時間 ＝ 上面 選 的）</small></div>'+
+  var h='<div class="fvhd g3h">'+(g4?(G3S==='mt0'?'🪤 四年級 複習 0：1 種':'📝 四年級 複習：11 種'):'🏫 三年級 課堂 複習：10 種')+' 遊戲 的 平均 正確率<small>（百分制；只 算 已經 作答 的 題目；時間 到 沒有 選 ＝ 答錯；時間 ＝ 上面 選 的）</small></div>'+
     '<div class="g3sw">'+G3SETS.map(function(x){return '<button data-g3s="'+x[0]+'" class="'+(G3S===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div>'+
     '<div class="g3sw">'+CC.map(function(x){return '<button data-g3c="'+x+'" class="'+(x===c?'on':'')+'" style="border-color:'+ccol(x)+'">'+esc(SC.cname(x))+'</button>'}).join('')+'</div>'+
     '<div class="note"><span class="g3k p2">🟢 81～100</span> <span class="g3k p1">🟡 60～80</span> <span class="g3k p0">🔴 59 以下</span>　—　還沒 做；小字 ＝ 作答 幾題。</div><div class="g3w"><table class="g3t"><tr><th>號碼</th><th>姓名</th>'+
@@ -1353,7 +1355,7 @@ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.c
    給 家長 看 的 是 一般 中文（不 空格）；不寫 他／她（用「孩子」）；姓名 只有 老師 看得到（名單 只在 試算表） */
 var PMC='';
 function pmText(id,p,per){var n=nm(id)||(id.slice(3)+' 號'),d=p?p.days||0:0,c=p?p.count||0:0,mi=p?Math.round((p.sec||0)/60):0,dl=p?SC.dili(p):null,acc=p&&p.acc!=null?Math.round(p.acc):null,pr;
-  if(!p||(!c&&!d))return '【英語練習'+per+'】'+n+per.replace('週報','')+'還沒有在英語網站練習。請鼓勵孩子每天練 5 分鐘：打開「在家複習」➜「📅 今日任務」，5 題就完成 😊';
+  if(!p||(!c&&!d))return '【英語練習'+per+'】'+n+per.replace('週報','')+'還沒有在英語網站練習。請鼓勵孩子每天練 5 分鐘：打開「在家複習」➜ 選 1 個 遊戲 玩 一次 😊';
   if(dl&&dl.W&&dl.F)pr='答錯的題目會再改對（改對了 '+dl.F+' 題）';else if(d>=3)pr='練了好幾天，很有恆心';else if(acc!=null&&acc>=80)pr='答題很專心，正確率 '+acc+' 分';else pr='願意開始練習';
   return '【英語練習'+per+'】'+n+per.replace('週報','')+'練了 '+d+' 天、做完 '+c+' 次'+(mi?'、練習 '+mi+' 分鐘':'')+(acc!=null?'，正確率 '+acc+' 分':'')+'。請您稱讚孩子：'+pr+'！每天 5 分鐘，分開好幾天練，記得最久 👍'}
 function paneM(psG){var C=SC.CLASSES[F.g]||[],c=PMC&&C.indexOf(PMC)>=0?PMC:(F.cls||C[0]);PMC=c;var per=F.p==='lw'?'上週週報':F.p==='w'?'本週週報':'週報',P={};psG.forEach(function(p){P[p.id]=p});
