@@ -123,7 +123,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
       }
       n++; if (lvs.size !== 12) E.push(tag + ' ' + N + ' 題：沒有 12 關 連著 玩：' + [...lvs].join());
       n++; const e = await p.evaluate(() => ({ t: document.getElementById('app').innerText, rows: document.querySelectorAll('.xtb tr').length }));
-      const w2 = (N - 1) * 100 / N; if (e.t.indexOf(w2 + ' 分 ／ 100') < 0 || e.rows !== 12 || e.t.indexOf('答對 ' + (N - 1) + ' ／ ' + N) < 0 || !/記進 成績/.test(e.t)) E.push(tag + ' ' + N + ' 題：結束 頁 不對：' + e.t.slice(0, 90));
+      const w2 = (N - 1) * 100 / N; if (e.t.indexOf(w2 + ' 分 ／ 100') < 0 || e.rows !== 13 || e.t.indexOf('答對 ' + (N - 1) + ' ／ ' + N) < 0 || !/記進 成績/.test(e.t)) E.push(tag + ' ' + N + ' 題：結束 頁 不對：' + e.t.slice(0, 90));
       n++; const rq = await p.evaluate(N => { const Q = JSON.parse(localStorage.getItem('score_q') || '[]').concat(JSON.parse(localStorage.getItem('score_sent') || '[]')); const r = Q.filter(x => x.set === 'g4gm_mt-x' + N).pop();
           return r ? { n: r.qs.length, ok: r.qs.filter(q => q[0]).length, bi: r.qs.every(q => q[5] >= 0 && q[5] < XN), nm: r.name } : null; }, N);
       if (!rq || rq.n !== N || rq.ok !== N - 1 || !rq.bi || !/^📝 四年級 複習｜📝 /.test(rq.nm)) E.push(tag + ' ' + N + ' 題：沒有 記進 成績：' + JSON.stringify(rq));
