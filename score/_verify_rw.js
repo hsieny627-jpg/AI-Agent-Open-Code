@@ -14,7 +14,7 @@ function rec(G, id, t, k) { G.post({ a: 'rec', r: { id, set: 'g3u1_1-1b', name: 
 function seed() {
   const G = make({ TEACHER_PW: PW });
   for (let s = 1; s <= 30; s++) G.books['名單'].d.push(['304', s, '測試' + String(s).padStart(2, '0')]);
-  for (let s = 1; s <= 24; s++) { const id = '304' + String(s).padStart(2, '0'), d = s === 1 ? 5 : 2; for (let k = 0; k < d; k++) rec(G, id, LW + k * 864e5 + 10 * 36e5, 'L' + k); }
+  for (let s = 1; s <= 24; s++) { const id = '304' + String(s).padStart(2, '0'), d = s === 1 ? 5 : 2; for (let k = 0; k < d; k++) rec(G, id, LW + k * 864e5 + 19 * 36e5, 'L' + k); }   /* 第三十二次：晚上 7 點 練（第二十九次 起 全班獎勵 只 算 非上課時間；以前 寫 早上 10 點 ＝ 上課 時間，量測 一直 失敗）*/
   for (let s = 1; s <= 3; s++) rec(G, '304' + String(s).padStart(2, '0'), W0 + TODAY * 864e5 + 60e3, 'N');
   const R = G.books['角色'];
   const st = (h, w, p, s, q) => JSON.stringify(Object.assign({ own: { h: [h], w: [w], p: [p], t: [], s: s ? [s] : [] }, eq: { h, w, p, t: [], s: s ? { au: s } : {} }, spent: 0 }, q || {}));
