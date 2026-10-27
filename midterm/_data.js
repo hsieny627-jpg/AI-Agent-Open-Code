@@ -22,12 +22,19 @@ const picZh = p => { const [w, j] = p.split('|'); return WHO[w][1] + (j ? '・' 
 const W1 = [['bag', '👜', '包包'], ['bell', '🔔', '鈴'], ['box', '📦', '盒子'], ['ball', '⚽', '球'], ['dog', '🐶', '狗'], ['doll', '🪆', '娃娃'], ['door', '🚪', '門'], ['desk', '🗄️', '書桌'],
   ['pen', '🖊️', '筆'], ['pig', '🐷', '豬'], ['panda', '🐼', '貓熊'], ['pot', '🍲', '鍋子'], ['ten', '🔟', '十'], ['tiger', '🐯', '老虎'], ['tent', '⛺', '帳篷'], ['toy', '🧸', '玩具']];
 const LET = ['b', 'd', 'p', 't'];
-const M1 = W1.map(([w, ic, zh]) => ({ say: w, ic, w, q: '🔊 聽：' + w + '　第一個字母是？', o: [w[0]].concat(LET.filter(x => x !== w[0])), z: w + '（' + zh + '）', h: '第一個 音 ＝ ' + w[0] }));
+/* 2026-10-27 第三十二次 第 2-(2) 點（老師：b／p、d／t 很難 聽辨 ➜ 60%（例 pizza ➜ p 或 b）、40%（例 pizza ➜ p 或 d））：
+   每一題 只 有 2 個 氣球；題庫 裡 平均 分 60% ＝ 難（HARD：b↔p、d↔t）、40% ＝ 容易（EASY：不 容易 聽錯 的 那一個） */
+const HARD = { b: 'p', p: 'b', d: 't', t: 'd' }, EASY = { b: 't', p: 'd', d: 'p', t: 'b' };
+const hard60 = i => Math.floor((i + 1) * 0.6) > Math.floor(i * 0.6);
+const two = (w, i) => [w[0], (hard60(i) ? HARD : EASY)[w[0]]];
+const M1 = W1.map(([w, ic, zh], i) => ({ say: w, ic, w, q: '🔊 聽：' + w + '　第一個字母是？', o: two(w, i), z: w + '（' + zh + '）', h: '第一個 音 ＝ ' + w[0] }));
 
 /* 👯 m2 聲音 雙胞胎：聽兩個字，第一個音一樣 ⭕、不一樣 ❌（考卷的 bus／bod、pit／big… 不用） */
 const W1M = {}; W1.forEach(x => { W1M[x[0]] = x; });
-const PAIRS = [['bell', 'ball'], ['dog', 'desk'], ['pig', 'pen'], ['tent', 'toy'], ['panda', 'pot'], ['box', 'bag'], ['door', 'doll'],
-  ['bag', 'dog'], ['door', 'tiger'], ['pot', 'box'], ['ten', 'desk'], ['doll', 'ball'], ['pig', 'tent'], ['bell', 'pen']];
+/* 2026-10-27 第三十二次 第 2-(2) 點：60% 難（兩個 字 的 第一個 音 都 在 b／p 或 d／t 裡：一樣、或 b-p、d-t）、40% 容易（b-d、b-t、p-d、p-t）
+   ＝ 15 題：難 9（一樣 6、b-p／d-t 3）、容易 6；第 5、7、11 題 換成 容易 的（原本 panda-pot、door-doll、ten-desk） */
+const PAIRS = [['bell', 'ball'], ['dog', 'desk'], ['pig', 'pen'], ['tent', 'toy'], ['panda', 'desk'], ['box', 'bag'], ['door', 'bell'],
+  ['bag', 'dog'], ['door', 'tiger'], ['pot', 'box'], ['ten', 'pen'], ['doll', 'ball'], ['pig', 'tent'], ['bell', 'pen'], ['toy', 'ten']];
 const M2 = PAIRS.map(([a, b]) => { const same = a[0] === b[0];
   return { say: a + '. ' + b + '.', pair: [a, b], q: '🔊 聽：' + a + '、' + b + '　第一個音？', o: same ? ['⭕ Same', '❌ Different'] : ['❌ Different', '⭕ Same'],   /* 2026-10-26 第二十九次：選項 全 英文 */
     z: a + ' 是 ' + a[0] + '，' + b + ' 是 ' + b[0] + ' ➜ ' + (same ? '一樣' : '不一樣'), h: a[0] + ' ／ ' + b[0] }; });
@@ -220,6 +227,11 @@ M11.forEach(q => { const he = /\bhe\b/i.test(q.line), yes = /^Yes/.test(q.o[0]),
   q.fe = q.line + ' ' + q.o[0]; q.fz = (he ? '他' : '她') + ' 是 ' + JOB[j][1] + ' 嗎？' + (yes ? '是的，' : '不，') + (he ? '他' : '她') + (yes ? ' 是。' : ' 不是。'); q.fs = [['', q.line], ['m', q.o[0]]]; });
 M12.forEach(q => { q.fe = q.ae || ({ '12': 'twelve', '17': 'seventeen' })[q.o[0]]; q.fs = [[q.ae ? '' : 'M1', q.fe]]; });
 GAMES.forEach(g => g.B.forEach(q => { q.gx = gxOf(q.fe); }));
+/* 2026-10-27 第三十二次 第 4 點（老師）：拼字 題目 母音 字母（a e i o u）紅色、不發音 的 字母 灰色 ➜ q.lc 一個 字母 一個 記號（v 母音、s 不發音、- 其他）；
+   哪一個 不發音 ＝ 全站 同一份 words/_phonics.js（沒有 這個 字 ＝ build 失敗）*/
+const PH = require('../words/_phonics.js');
+const lcOf = w => { if (!PH.RAW[w]) throw new Error('拼字 救援：words/_phonics.js 沒有 ' + w + '（要 先 加 才 知道 哪一個 字母 不發音）');
+  return [].concat.apply([], PH.parse(w, PH.RAW[w])).map(u => u.L.split('').map(c => u.s ? 's' : /[aeiou]/.test(c) ? 'v' : '-').join('')).join(''); };
 
 /* ══ 2026-10-26 第二十八次 第 3、4 點：📝 25 題／50 題 挑戰 的 題庫（_exam_data.js）➜ 跟 上面 一樣 的 樣子（多 sim：1 🔁 類似／0 🆕 全新）══ */
 const XD = require('./_exam_data.js');
@@ -227,7 +239,7 @@ Object.assign(GL, { bat: '蝙蝠', tub: '浴缸', bird: '鳥', duck: '鴨子', p
   class: '同學們', grandmother: '奶奶', fourteen: '十四', thirteen: '十三', twenty: '二十', forty: '四十', ninety: '九十' });
 Object.keys(XD.PAS).forEach(k => { PAS[k] = XD.PAS[k]; });
 const XB = {};
-XB.m1 = XD.X1.map(([sm, w, ic, zh]) => ({ sim: sm, say: w, ic, w, q: '🔊 聽：' + w + '　第一個字母是？', o: [w[0]].concat(LET.filter(x => x !== w[0])), z: w + '（' + zh + '）', h: '第一個 音 ＝ ' + w[0] }));
+XB.m1 = XD.X1.map(([sm, w, ic, zh], i) => ({ sim: sm, say: w, ic, w, q: '🔊 聽：' + w + '　第一個字母是？', o: two(w, i), z: w + '（' + zh + '）', h: '第一個 音 ＝ ' + w[0] }));
 XB.m2 = XD.X2.map(([sm, a, b]) => { const same = a[0] === b[0];
   return { sim: sm, say: a + '. ' + b + '.', pair: [a, b], q: '🔊 聽：' + a + '、' + b + '　第一個音？', o: same ? ['⭕ Same', '❌ Different'] : ['❌ Different', '⭕ Same'],   /* 2026-10-26 第二十九次：選項 全 英文 */
     z: a + ' 是 ' + a[0] + '，' + b + ' 是 ' + b[0] + ' ➜ ' + (same ? '一樣' : '不一樣'), h: a[0] + ' ／ ' + b[0] }; });
@@ -259,14 +271,19 @@ XB.m10.forEach(q => { q.fe = noLab(q.ae); q.fz = q.z; q.fs = [['', q.fe]]; });
 XB.m11.forEach(q => { q.fe = q.line + ' ' + q.o[0]; q.fz = q.zz; delete q.zz; q.fs = [['', q.line], ['m', q.o[0]]]; });
 XB.m12.forEach(q => { q.fe = q.ae || NUMW2[q.o[0]]; q.fs = [[q.ae ? '' : 'M1', q.fe]]; });
 Object.keys(XB).forEach(id => XB[id].forEach(q => { q.gx = gxOf(q.fe); }));
+M7.concat(XB.m7).forEach(q => { q.lc = lcOf(q.spell); });
 
+/* 2026-10-27 第三十二次 第 2-(3) 點（老師）：「A: …」的 A 要 唸 ㄝ一（字母 A），不是 ㄜ ➜ 有 A:／B: 的 句子 拆開 唸：
+   字母 A（audio/lab/A.mp3，直接 用 音標 ˈeɪ 做）➜ A 的 句子（女聲）➜ 字母 B ➜ B 的 句子（男聲）；整句 一起 的 不再 做 */
+const LABRE = /^A:\s*(.+?)\s+B:\s*(.+)$/;
+GAMES.concat(Object.keys(XB).map(k => ({ B: XB[k] }))).forEach(g => g.B.forEach(c => { const m = LABRE.exec(c.ae || ''); if (m) c.lab = [['L', 'A'], ['', m[1]], ['L', 'B'], ['m', m[2]]]; }));
 const SAY = [], ALLG = GAMES.map(g => ({ B: g.B.concat(XB[g.id]) }));
-ALLG.forEach(g => g.B.forEach(c => { [c.say, c.ae, c.line].forEach(x => { if (x) SAY.push(x); });
+ALLG.forEach(g => g.B.forEach(c => { [c.say, c.lab ? '' : c.ae, c.line].forEach(x => { if (x) SAY.push(x); });
   if (c.pair) c.pair.forEach(x => SAY.push(x)); if (c.spell) SAY.push(c.spell); if (c.w) SAY.push(c.w); if (c.chat) c.o.forEach(x => SAY.push(x)); }));
 Object.keys(PAS).forEach(k => PAS[k].t.forEach(x => SAY.push(x)));
 /* 慢 一點 的 語音（0.85）：答錯頁、短文 偵探；單字 男聲 慢（M1）另外 做 */
 const SAYS = [], SAYM = [];
-ALLG.forEach(g => g.B.forEach(c => (c.fs || []).forEach(([v, t]) => { if (v === 'M1') SAYM.push(t); else SAYS.push((v === 'm' ? 'm:' : '') + t); })));
+ALLG.forEach(g => g.B.forEach(c => (c.fs || []).concat((c.lab || []).filter(x => x[0] !== 'L')).forEach(([v, t]) => { if (v === 'M1') SAYM.push(t); else SAYS.push((v === 'm' ? 'm:' : '') + t); })));
 M2.concat(XB.m2).forEach(c => c.pair.forEach(x => SAYM.push(x))); M1.concat(XB.m1).forEach(c => SAYM.push(c.w)); M5.concat(XB.m5).forEach(c => SAYM.push(c.say));
 Object.keys(PAS).forEach(k => PAS[k].t.forEach(x => SAYS.push(x)));
 /* 檢查：每一題 o[0] 是正解、選項不重複、題數 ≧ 10 */

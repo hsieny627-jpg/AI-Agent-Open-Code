@@ -93,18 +93,21 @@ var GLORY=(function(){
     fin:function(){var M=mus(),b=60/M.bpm;chord(M.ch,0,[0,2,4,7],b*6,.06,-1);[0,4,7,11,14,18,21].forEach(function(d,i){play('harp',i*.12,d,.8,.07,0)});clap(.2,3.2)}};
 
   /* ══ 畫布粒子 ══ */
-  function Cv(el){var cv=document.createElement('canvas');cv.className='glcv';el.appendChild(cv);var x=cv.getContext('2d'),P=[],W=0,H=0,dpr=Math.min(2,window.devicePixelRatio||1),alive=true,bg=null;
+  /* 2026-10-27 第三十二次 第 7 點（老師：冠軍寶箱 頒獎 播到 第二名 就 卡住）：教室 電腦 比較 慢 ➜ 粒子 太多，畫面 卡住、下一幕 一直 等不到。
+     量 每一格 畫 多久：連續 20 格 超過 34 毫秒 ＝ 輕量 模式（LITE：粒子 最多 350、不 畫 光暈、解析度 1 倍），這一次 打開 網頁 一直 保持 */
+  var LITE=0,SLOW=0;
+  function Cv(el){var cv=document.createElement('canvas');cv.className='glcv';el.appendChild(cv);var x=cv.getContext('2d'),P=[],W=0,H=0,dpr=LITE?1:Math.min(2,window.devicePixelRatio||1),alive=true,bg=null;
     function rs(){var r=el.getBoundingClientRect();W=r.width;H=r.height;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);x.setTransform(dpr,0,0,dpr,0,0)}rs();
-    var S={P:P,W:function(){return W},H:function(){return H},bg:function(f){bg=f},stop:function(){alive=false},add:function(p){if(P.length<1600)P.push(p)}};
+    var S={P:P,W:function(){return W},H:function(){return H},bg:function(f){bg=f},stop:function(){alive=false},add:function(p){if(P.length<(LITE?350:1600))P.push(p)}};
     var last=performance.now();
-    function fr(now){if(!alive||!cv.isConnected)return;var dt=Math.min(.05,(now-last)/1000);last=now;if(Math.abs(cv.clientWidth-W)>2)rs();x.clearRect(0,0,W,H);if(bg)bg(x,W,H,now/1000,dt);
+    function fr(now){if(!alive||!cv.isConnected)return;var raw=now-last,dt=Math.min(.05,raw/1000);last=now;if(!LITE){SLOW=raw>34?SLOW+1:Math.max(0,SLOW-1);if(SLOW>=20){LITE=1;dpr=1;rs();if(P.length>350)P.splice(0,P.length-350)}}if(Math.abs(cv.clientWidth-W)>2)rs();x.clearRect(0,0,W,H);if(bg)bg(x,W,H,now/1000,dt);
       x.globalCompositeOperation='lighter';
       for(var i=P.length-1;i>=0;i--){var p=P[i];p.t+=dt;if(p.t>=p.l){P.splice(i,1);continue}var k=p.t/p.l;
         p.vy+=(p.g||0)*dt;p.vx*=(1-(p.dr||0)*dt);p.vy*=(1-(p.dr||0)*dt);p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.sw)p.x+=Math.sin(p.t*p.sw+p.ph)*p.sa*dt;
         var a=(p.fi?Math.min(1,p.t/p.fi):1)*(1-Math.pow(k,p.fo||1.6));x.globalAlpha=Math.max(0,a);
         if(p.k==='ring'){x.strokeStyle=p.c;x.lineWidth=p.w*(1-k)+1;x.beginPath();x.arc(p.x,p.y,p.r0+(p.r1-p.r0)*(1-Math.pow(1-k,2.4)),0,7);x.stroke()}
         else if(p.k==='ray'){var ln=p.len*(.6+.4*Math.sin(p.t*3+p.ph));x.save();x.translate(p.x,p.y);x.rotate(p.a+p.t*p.rv);var gr=x.createLinearGradient(0,0,ln,0);gr.addColorStop(0,p.c);gr.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=gr;x.beginPath();x.moveTo(0,0);x.lineTo(ln,-p.w);x.lineTo(ln,p.w);x.closePath();x.fill();x.restore()}
-        else if(p.k==='bolt'){x.strokeStyle=p.c;x.lineWidth=p.w*(1-k)+1;x.shadowColor=p.c;x.shadowBlur=18;x.beginPath();x.moveTo(p.pts[0][0],p.pts[0][1]);for(var j=1;j<p.pts.length;j++)x.lineTo(p.pts[j][0],p.pts[j][1]);x.stroke();x.shadowBlur=0}
+        else if(p.k==='bolt'){x.strokeStyle=p.c;x.lineWidth=p.w*(1-k)+1;x.shadowColor=p.c;x.shadowBlur=LITE?0:18;x.beginPath();x.moveTo(p.pts[0][0],p.pts[0][1]);for(var j=1;j<p.pts.length;j++)x.lineTo(p.pts[j][0],p.pts[j][1]);x.stroke();x.shadowBlur=0}
         else if(p.k==='conf'||p.k==='petal'||p.k==='shard'){x.globalCompositeOperation='source-over';x.save();x.translate(p.x,p.y);x.rotate(p.ro+=p.vr*dt);x.scale(1,Math.abs(Math.cos(p.t*p.fl))+.15);x.fillStyle=p.c;
           if(p.k==='petal'){x.beginPath();x.ellipse(0,0,p.s,p.s*.55,0,0,7);x.fill()}else if(p.k==='shard'){x.beginPath();x.moveTo(0,-p.s);x.lineTo(p.s*.5,p.s*.6);x.lineTo(-p.s*.5,p.s*.4);x.closePath();x.fill()}else x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore();x.globalCompositeOperation='lighter'}
         else if(p.k==='trail'){x.strokeStyle=p.c;x.lineWidth=p.s;x.lineCap='round';x.beginPath();x.moveTo(p.x,p.y);x.lineTo(p.x-p.vx*.06,p.y-p.vy*.06);x.stroke()}
@@ -181,4 +184,4 @@ var GLORY=(function(){
       '<div class="gpn">'+(P.map(function(p){return p.w}).join('<br>')||'—')+'</div><div class="gpv">'+(P[0]?P[0].v:'')+'</div><div class="gpb">'+n+'</div></div>'}).join('')+'</div>';
     if(SND)MSC.fin();at(el,1600,function(){var p=ctr(el,'.gp.p1 .glmd');burst(S,p.x,p.y,150,520,1);ring(S,p.x,p.y,el.clientWidth*.5,S0.c,1.2,14)});
     for(var f2=0;f2<6;f2++)(function(f2){at(el,1800+f2*700,function(){rocket(S,rnd(el.clientWidth*.1,el.clientWidth*.9),rnd(el.clientHeight*.1,el.clientHeight*.35))})})(f2)}
-  return {ST:ST,pick:pick,scene:scene,stop:stop}})();
+  return {ST:ST,pick:pick,scene:scene,stop:stop,lite:function(v){if(v!=null)LITE=v?1:0;return LITE}}})();

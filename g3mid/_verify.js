@@ -128,6 +128,28 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
         if (SHOT) await p.screenshot({ path: path.join(SHOT, 'g3m_' + g.id + '_end.png') }); }
       await p.evaluate(() => lobby()); await p.waitForTimeout(200);
     }
+    /* 第三十二次 3-(1)(2)：25 題 做 3 題 ➜〔✕ 離開〕先 問 ➜ 繼續 ➜ 離開 ➜〔▶ 繼續 25 題〕從 第 4 題、12 分；中途 不送；做過 的 先 不出 */
+    if (full && (!process.env.ONLY || /xr/.test(process.env.ONLY))) {
+      const ID = await p.evaluate(() => SCID); await p.evaluate(id => { localStorage.removeItem('g3m_seen_' + id); localStorage.removeItem('g3m_xs25_' + id); lobby(); }, ID);
+      await p.click('#xrow .xb[data-x="25"]'); await p.waitForTimeout(400);
+      for (let k = 0; k < 3; k++) { const hw = await p.$('#q2go'); if (hw) { await hw.click(); await p.waitForTimeout(150); } const wp = await p.$('#wp.on [data-wr]'); if (wp) { await wp.click(); await p.waitForTimeout(250); }
+        const id = await p.evaluate(() => G.id); await p.waitForTimeout(id === 'q2' ? 300 : 120); await answer(p, { id }, false);
+        await p.waitForFunction(kk => R.k > kk, k, { timeout: 15000 }).catch(() => E.push(tag + ' 離開 測試：第 ' + (k + 1) + ' 題 沒有 到 下一題')); await p.waitForTimeout(150); }
+      const sent0 = await p.evaluate(() => JSON.parse(localStorage.getItem('score_q') || '[]').filter(x => x.set === 'g3gm_g3m-x25').length);
+      await p.click('#qx'); await p.waitForTimeout(300); n += 6;
+      const q1 = await p.evaluate(() => ({ on: document.getElementById('xq').classList.contains('on'), t: document.getElementById('xq').innerText, run: TM.run, h: Math.round(document.getElementById('xstay').getBoundingClientRect().height) }));
+      if (!q1.on || !/真的 要 離開 嗎/.test(q1.t) || !/存好/.test(q1.t) || !/第 4 題/.test(q1.t) || q1.run || q1.h < 64) E.push(tag + ' 按〔✕ 離開〕沒有 先 問（存好、從 第 4 題、倒數 停住）' + JSON.stringify(q1));
+      await p.click('#xstay'); await p.waitForTimeout(300); if (await p.evaluate(() => document.getElementById('xq').classList.contains('on') || document.getElementById('game').hidden)) E.push(tag + '〔▶ 繼續 作答〕沒有 回到 題目');
+      await p.click('#qx'); await p.waitForTimeout(300); await p.click('#xleave'); await p.waitForTimeout(400);
+      const lb = await p.evaluate(() => ({ r: (document.querySelector('[data-xr="25"]') || {}).innerText || '', nw: !!document.querySelector('.xb2[data-x="25"]'), sent: JSON.parse(localStorage.getItem('score_q') || '[]').filter(x => x.set === 'g3gm_g3m-x25').length }));
+      if (!/繼續 25 題/.test(lb.r) || !/第 3 ／ 25/.test(lb.r) || !lb.nw) E.push(tag + ' 大廳 沒有〔▶ 繼續 25 題〕〔🔄 重新 開始〕' + JSON.stringify(lb));
+      if (lb.sent !== sent0) E.push(tag + ' 中途 離開 不可以 送 成績');
+      await p.click('[data-xr="25"]'); await p.waitForTimeout(500);
+      const rs = await p.evaluate(() => ({ k: R.k, sc: R.score, q: R.Q.length, n: R.qs.length }));
+      if (rs.k !== 3 || rs.sc !== 12 || rs.q !== 3 || rs.n !== 25) E.push(tag + ' 繼續 以後 不是 從 第 4 題、12 分：' + JSON.stringify(rs));
+      const sn = await p.evaluate(id => { const S = JSON.parse(localStorage.getItem('g3m_seen_' + id) || '[]'); lobby(); startX(25); const hit = R.qs.filter(q => S.indexOf(XALL.indexOf(q)) >= 0).length; lobby(); return { s: S.length, hit }; }, ID);
+      if (sn.s !== 3 || sn.hit) E.push(tag + ' 做過 的 題目 下一次 又 出現 ' + JSON.stringify(sn));
+      await p.evaluate(id => { localStorage.removeItem('g3m_xs25_' + id); localStorage.removeItem('g3m_seen_' + id); lobby(); }, ID); }
     /* 2026-10-26 第二十八次 第 1、2 點：📝 25 題／50 題 挑戰（10 關 連著 玩、每題 4／2 分、30% 類似、記 成績）*/
     for (const N of (process.env.ONLY && !/x/.test(process.env.ONLY) ? [] : full ? [25, 50] : vp[0] === 820 ? [25] : [])) {
       n++; const lb2 = await p.evaluate(() => [...document.querySelectorAll('#xrow .xb')].map(b => b.dataset.x + ':' + Math.round(b.getBoundingClientRect().height)).join());

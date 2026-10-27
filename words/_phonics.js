@@ -113,6 +113,14 @@ const RAW = {
  ten:         't|t|t e|e|ɛ n|n|n',
  eleven:      'e|ɪ|ɪ / l|l|l e|e|ɛ / v|v|v e|ə|ə n|n|n',
  twelve:      't|t|t w|w|w e|e|ɛ l|l|l v|v|v e|-|-',
+/* 2026-10-27 第三十二次 第 4 點（四年級 複習 拼字 救援：母音 紅、不發音 灰）：13～19（美式，Cambridge：fifteen /ˌfɪfˈtiːn/、eighteen /ˌeɪˈtiːn/）；
+   不發音 照 上面 的 數字：four 的 u、eight 的 gh、nine 的 e */
+ thirteen:    'th|θ|θ ir|ɝː|ɝ / t|t|t ee|iː|i n|n|n',
+ fourteen:    'f|f|f o|ɔː|ɔ u|-|- r|r|r / t|t|t ee|iː|i n|n|n',
+ fifteen:     'f|f|f i|ɪ|ɪ f|f|f / t|t|t ee|iː|i n|n|n',
+ sixteen:     's|s|s i|ɪ|ɪ x|ks|ks / t|t|t ee|iː|i n|n|n',
+ eighteen:    'ei|eɪ|e gh|-|- / t|t|t ee|iː|i n|n|n',
+ nineteen:    'n|n|n i|aɪ|aɪ n|n|n e|-|- / t|t|t ee|iː|i n|n|n',
 
 /* ── G3 Sight Words 常見字（使用者 2026-09-25 指定；不發音的字母照使用者列的：
       You 的 o、Your 的 o、are 的 e、name 的 e、What 的 h、year 的 a）── */

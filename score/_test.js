@@ -323,6 +323,8 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
     ok(SC.cwLv(nd, ids) === 1 && SC.cwLv(Object.assign({}, nd, { 40224: 1 }), ids) === 0 && SC.cwLv(Object.fromEntries(ids.map(k => [k, 3])), ids) === 2 && SC.cwLv({}, []) === 0, '30 人：24 人 練 2 天 ＝ 基本、23 人 ＝ 沒有、全班 3 天 ＝ 進階、名單 空 ＝ 沒有'); }
   { let x = SC.rpClean({}); x.ch = 1; const o = SC.rpOpen(x, .99, .5); ok(!o.err && o.r.c === 250 && o.r.x === 150 && !o.r.s && o.st.bc === 250 && o.st.bx === 150, '👑 冠軍 寶箱 ＝ 只有 🪙 250 ⭐ 150（第二十五次）'); }
   { let x = SC.rpCwq(SC.rpClean({}), SC.RPCQV, 5); ok(x.cq === SC.RPCQV && x.cqt === 5 && SC.rpClean(x).cq === SC.RPCQV && SC.rpCwq(SC.rpClean({}), 99).cq === 0, '🎯 全班獎勵 小測驗 記得住、版本 不對 不記'); }
+  { const a = SC.rpView([], SC.rpClean({})), b = SC.rpView([], SC.rpCwq(SC.rpClean({}), SC.RPCQV, 5)), c = SC.rpView([], SC.rpCwq(SC.rpCwq(SC.rpClean({}), SC.RPCQV, 5), SC.RPCQV, 9));
+    ok(b.coins - a.coins === 50 && b.xp - a.xp === 25 && c.coins === b.coins && c.xp === b.xp, '🎯 全班獎勵 3 題 答對 ＝ 🪙＋50 ⭐＋25、再答 一次 不會 再 給（第三十二次）'); }
   /* 2026-10-26 第二十九次 第 10 點：全班獎勵 只 算 非上課時間（台灣 19:00 ＝ UTC 11:00）；上課時間（台灣 9:00）不算；早上 上學 前（台灣 6:30）算 */
   { const t0 = Date.UTC(2026, 9, 12), mi = (id, d, h) => ({ t: t0 + d * 864e5 + h * 36e5, id, g: 4, cls: id.slice(0, 3), seat: +id.slice(3), set: 'g4u1_1-1b', m: '', n: 5, ok: 5, acc: 100, qs: [], fast: 0, sec: 60, x: false, u: id + d + 'h' + h });
     const nd = SC.cwDays([mi('40201', 0, 1), mi('40201', 1, 1), mi('40202', 0, 11), mi('40202', 1, -1.5), mi('40203', 5, 1), mi('40203', 6, 2)], t0 - 864e5, t0 + 7 * 864e5);

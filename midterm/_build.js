@@ -112,7 +112,8 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 .slots span.fix{border-style:solid;border-color:#FFD54A;color:#FFD54A}.slots span.f{border-style:solid;border-color:#5C82A8;animation:pop .3s}.slots span.cur{border-color:#FFD54A;box-shadow:0 0 12px #FFD54A}
 .slots.win span{border-color:var(--ok);color:#7BF0A8}.slots.bad{animation:shk .45s}
 .tiles{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.tiles button{width:clamp(64px,8.5vw,90px);height:clamp(64px,8.5vw,90px);border-radius:18px;border:0;background:linear-gradient(#FFE07A,#F2B600);color:#3A2600;font-size:clamp(36px,5.6vh,56px);box-shadow:0 5px 0 #A07600}
-.tiles button:disabled{opacity:.2}.tiles button:active{transform:translateY(3px)}
+.tiles button:disabled{opacity:.2}
+/* 第三十二次 第 4 點：母音 紅、不發音 灰 */.slots span.lv,.slots.win span.lv{color:#FF6B6B}.slots span.ls,.slots.win span.ls{color:#8A94A6}.tiles button.lv{color:#C62828}.gls b .lv{color:#FF6B6B}.gls b .ls{color:#8A94A6}.tiles button:active{transform:translateY(3px)}
 .bk{min-height:58px;padding:4px 22px;border-radius:16px;background:#1B2633;border:3px solid #4A5A6C;font-size:22px}
 /* 🕵️ 短文 */
 .pas{width:min(100%,980px);background:#FFF8E6;color:#2A2010;border-radius:22px;padding:12px 20px;font-size:clamp(24px,3.4vh,36px);line-height:1.5;box-shadow:0 8px 20px rgba(0,0,0,.4)}
@@ -133,8 +134,16 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 .bank button.ok{background:linear-gradient(#2BD46A,#128A43);box-shadow:0 5px 0 #0B5A2B}.bank button.no{opacity:.3}.bank button.bad{animation:shk .4s;background:#7A1F2A}
 .bankt{font-size:20px;color:#BFD3E6;letter-spacing:.2em}
 /* 回饋 */
+#xq{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;background:rgba(5,10,25,.82)}#xq.on{display:flex}
+.xqb{width:min(92vw,720px);border-radius:28px;border:4px solid #FFD54A;background:linear-gradient(#24364D,#13203A);padding:22px 20px;text-align:center;box-shadow:0 20px 60px #000a}
+.xqi{font-size:64px}.xqh{font-size:clamp(32px,4.6vh,46px);font-weight:900;color:#FFE07A}.xqt{font-size:clamp(22px,3vh,30px);line-height:1.5;margin:10px 0 16px}.xqt b{color:#7BF0A8}
+.xqbtn{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}.xqbtn button{min-height:72px;min-width:240px;border-radius:20px;border:0;font-size:clamp(24px,3vh,30px);font-weight:900;color:#fff}
+#xstay{background:linear-gradient(#22C766,#128A43)}#xleave{background:#3A4A66}
+.xbw{display:flex;flex-direction:column;gap:8px}.xbw .xb{border-color:#2BD46A;background:linear-gradient(#0E5A2E,#06301A)}
+.xb2{min-height:52px;border-radius:16px;border:2px solid #FFD54A88;background:#2A2A3A;color:#FFE07A;font-size:22px;font-weight:800}
 .fb{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:40;width:min(96vw,900px);border-radius:24px;padding:12px 18px;text-align:center;display:none;box-shadow:0 10px 30px rgba(0,0,0,.6)}
 .fb.on{display:block;animation:fbIn .35s ease-out}
+.fb.sm{top:10px;bottom:auto;width:auto;max-width:min(92vw,560px);padding:6px 22px;border-radius:999px;animation:none}.fb.sm .t{font-size:clamp(20px,2.8vh,28px)}
 @keyframes fbIn{from{transform:translate(-50%,80px);opacity:0}to{transform:translate(-50%,0);opacity:1}}.fb.ok{background:linear-gradient(#1E9E4F,#0B5A2B);pointer-events:none}.pas span.spl{display:grid;grid-template-columns:auto 1fr;column-gap:.5em}.pas span.spl i{font-style:normal}.fb.no{background:linear-gradient(#5A1420,#2A0810);border:3px solid #FF7A7A}
 .fb .t{font-size:clamp(30px,4.6vh,48px)}.fb .you{font-size:clamp(22px,3vh,30px);color:#FFC9C9}.fb .you s{text-decoration-thickness:4px;text-decoration-color:#FF5A5A}
 .fb .ans{font-size:clamp(30px,4.6vh,50px);color:#fff;margin:4px 0}.fb .z{font-size:clamp(22px,3vh,30px);color:#FFE07A}
@@ -184,7 +193,7 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 /* ⚡ 現場任務（2026-10-27 第三十次）：等 老師 的 畫面 */
 #crw{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(6,10,24,.94)}#crw.on{display:flex}.crb{text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px}.cri{font-size:clamp(70px,12vh,120px)}.crt{font-size:clamp(30px,5vh,52px);font-weight:900;line-height:1.35}.crt small{font-size:.6em;color:#B8C4D2;font-weight:700}.crbk{display:inline-flex;align-items:center;min-height:64px;padding:0 30px;border-radius:999px;background:linear-gradient(#FFE07A,#E0A800);color:#3A2A00;font-size:clamp(22px,3vh,30px);font-weight:900;text-decoration:none}
 body.crm .top .home{display:none}body.crs .hud .qx{display:none}
-/* 🕵️ 短文 偵探：第一幕 只 讀 20 秒 ➜ 第二幕 上面 短文、下面 題目 30 秒；答錯 ＝ 原文 那一句 綠底 */
+/* 🕵️ 短文 偵探：第一幕 只 讀 15 秒 ➜ 第二幕 上面 短文、下面 題目 30 秒；答錯 ＝ 原文 那一句 綠底 */
 .pas .sp{display:inline-block;min-width:3.6em;color:#8A5A00;font-size:.8em}
 .pas span.evg{background:#2BD46A;color:#062;animation:pop .5s}.pas span.evy{background:#FFD54A}
 .rd{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
@@ -211,7 +220,7 @@ var COL={m1:['#FF7043','#E91E63'],m2:['#AB47BC','#5E35B1'],m3:['#29B6F6','#1565C
 var AU=null,ST=null,SID=0,PD=null;
 function akey(s){return String(s).replace(/[’]/g,"'").replace(/[=＝≠➜→⇒…＿_　]+/g,' ').replace(/\\s+/g,' ').trim().toLowerCase()}
 function stopSay(){PD=null;SID++;clearTimeout(ST);if(AU){try{AU.pause()}catch(e){}AU=null}try{speechSynthesis.cancel()}catch(e){}}
-function aud(t,v){var k=akey(t),X,f;if(v==='M1'||v==='M2'){X=window[v==='M1'?'ENAUDM':'ENAUDSL']||{};f=X[k];if(f)return 'audio/'+(v==='M1'?'m1/':'m2/')+f[0]}
+function aud(t,v){var k=akey(t),X,f;if(v==='L')return 'audio/lab/'+t+'.mp3';if(v==='M1'||v==='M2'){X=window[v==='M1'?'ENAUDM':'ENAUDSL']||{};f=X[k];if(f)return 'audio/'+(v==='M1'?'m1/':'m2/')+f[0]}
   X=window.ENAUDF||{};f=X[(v==='m'?'m:':'')+k]||X[k];if(f)return 'audio/s/'+f[0];X=window.ENAUD||{};f=X[k];return f?'audio/'+f[0]:''}
 function say1(t,v,done){var my=SID,f=aud(t,v),fin=function(){if(my===SID&&done)done()};
   if(f){AU=new Audio(f);AU.onended=fin;AU.onerror=function(){tts(t,fin)};var p=AU.play();if(p&&p.catch)p.catch(function(){tts(t,fin)});return}tts(t,fin)}
@@ -243,9 +252,9 @@ function hub(){if(CR&&CR.cfg&&CR.cfg.m==='sync')return;if(R&&!R.crs&&!R.x&&!R.se
     GM.filter(function(g){return g.sec===s}).map(function(g){var c=COL[g.id],b=best(g.id);return '<button class="gc" data-g="'+g.id+'"><span class="bd" style="--c1:'+c[0]+';--c2:'+c[1]+'">'+g.ic+'</span><span><b>'+g.nm+'</b><small>'+g.how+'</small>'+(b?'<span class="best">🏆 最高 '+b.toLocaleString()+' 分</span>':'')+'</span></button>'}).join('')+'</div>'});
   $('#app').innerHTML=CR?h:h.replace('</div>','</div>'+xrow())}
 /* 2026-10-26 第二十八次 第 3、4 點：大廳 最上面〔📝 25 題〕〔📝 50 題〕＝ 12 關 連著 玩（每題 4／2 分）*/
-function xrow(){return '<div class="xrow">'+[25,50].map(function(n){var b=best('x'+n);return '<button class="xb" data-xn="'+n+'"><b>📝 '+n+' 題 挑戰</b><small>'+LOB.length+' 關 連著 玩 · 每題 '+(100/n)+' 分 · 滿分 100</small>'+(b?'<span class="best">🏆 最高 '+b+' 分</span>':'')+'</button>'}).join('')+'</div>'}
+function xrow(){return '<div class="xrow">'+[25,50].map(function(n){var b=best('x'+n),v=xLoad(n);if(v)return '<div class="xbw"><button class="xb xr" data-xr="'+n+'"><b>▶ 繼續 '+n+' 題 挑戰</b><small>已經 做到 第 '+v.Q.length+' ／ '+n+' 題 · 從 第 '+(v.Q.length+1)+' 題 接著 做</small></button><button class="xb2" data-xn="'+n+'">🔄 重新 開始</button></div>';return '<button class="xb" data-xn="'+n+'"><b>📝 '+n+' 題 挑戰</b><small>'+LOB.length+' 關 連著 玩 · 每題 '+(100/n)+' 分 · 滿分 100</small>'+(b?'<span class="best">🏆 最高 '+b+' 分</span>':'')+'</button>'}).join('')+'</div>'}
 var XOFF={},XN=0;GM.forEach(function(g){XOFF[g.id]=XN;XN+=XB[g.id].length});
-/* 抽題：25 ＝ 1 關 3 題、11 關 2 題；50 ＝ 2 關 5 題、10 關 4 題；🔁 類似 ＝ 30%（25 題 8、50 題 15），平均 分 在 各 關；短文 偵探 只 抽 一篇（先 讀 20 秒）*/
+/* 抽題：25 ＝ 1 關 3 題、11 關 2 題；50 ＝ 2 關 5 題、10 關 4 題；🔁 類似 ＝ 30%（25 題 8、50 題 15），平均 分 在 各 關；短文 偵探 只 抽 一篇（先 讀 15 秒）*/
 function startX(N){var GM=LOB;if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();startX(N)});return}
   clr();var n=GM.length,c=GM.map(function(){return Math.floor(N/n)}),s=c.map(function(){return 0}),pick=GM.map(function(){return null}),I=GM.map(function(g,i){return i});
   shuf(I).slice(0,N-c[0]*n).forEach(function(i){c[i]++});var left=Math.round(N*.3);
@@ -253,15 +262,28 @@ function startX(N){var GM=LOB;if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin
     pick[i]=shuf(L).slice(0,c[i]);s[i]=pick[i].filter(function(j){return XB.m8[j].sim}).length;left-=s[i]});
   var SIM=GM.map(function(g){return XB[g.id].map(function(q,j){return q.sim?j:-1}).filter(function(j){return j>=0})}),NEW=GM.map(function(g){return XB[g.id].map(function(q,j){return q.sim?-1:j}).filter(function(j){return j>=0})}),ord=shuf(I);
   while(left>0){var mv=0;ord.forEach(function(i){if(left>0&&!pick[i]&&s[i]<c[i]&&s[i]<SIM[i].length){s[i]++;left--;mv=1}});if(!mv)break}
-  var gs=[],idx=[],lvOf=[];GM.forEach(function(g,i){var X=Object.assign({},g,{B:XB[g.id]}),L=pick[i]||shuf(shuf(SIM[i]).slice(0,s[i]).concat(shuf(NEW[i]).slice(0,c[i]-s[i])));L.forEach(function(j){gs.push(X);idx.push(j);lvOf.push(i)})});
-  R={x:N,pt:100/N,g:gs[0],gs:gs,idx:idx,lvOf:lvOf,cnt:c,lv:-1,k:0,sc:0,st:0,Q:[],W:[],t0:Date.now(),rd:{}};show()}
+  var SEEN=xSeen(),un=function(L,i){L=shuf(L);var o=XOFF[GM[i].id];return L.filter(function(j){return !SEEN[o+j]}).concat(L.filter(function(j){return SEEN[o+j]}))};   /* 第三十二次 3-(2)：做過 的 先 不出 */
+  var gs=[],idx=[],lvOf=[];GM.forEach(function(g,i){var X=Object.assign({},g,{B:XB[g.id]}),L=pick[i]||shuf(un(SIM[i],i).slice(0,s[i]).concat(un(NEW[i],i).slice(0,c[i]-s[i])));L.forEach(function(j){gs.push(X);idx.push(j);lvOf.push(i)})});
+  R={x:N,pt:100/N,g:gs[0],gs:gs,idx:idx,lvOf:lvOf,cnt:c,lv:-1,k:0,sc:0,st:0,Q:[],W:[],t0:Date.now(),rd:{}};xDel(N);xSave();show()}
+/* ══ 2026-10-27 第三十二次 第 3-(1)(2) 點（老師：點〔離開〕就 前功盡棄；每一次 重做 題目 不可以 相同）══
+   每 答 一題 自動 存（mt_xs25_5碼）；〔✕ 離開〕先 問；大廳〔▶ 繼續〕從 下一題 接著 做；做完 才 送 成績；做過 的 題目（mt_seen_5碼）先 不出 */
+function xKey(n){return 'mt_xs'+n+'_'+((typeof SCID!=='undefined'&&SCID)||'0')}
+function xSave(){if(!R||!R.x||R.crs)return;try{localStorage.setItem(xKey(R.x),JSON.stringify({x:R.x,g:R.gs.map(function(g){return g.id}),idx:R.idx,lvOf:R.lvOf,cnt:R.cnt,sc:R.sc,W:R.W,Q:R.Q,t0:R.t0,t:Date.now()}))}catch(e){}}
+function xLoad(n){try{var v=JSON.parse(localStorage.getItem(xKey(n))||'null');if(!v||v.x!==n||!v.Q||v.Q.length>=v.idx.length||Date.now()-v.t>14*864e5||v.g.some(function(id,k){return !XB[id]||!XB[id][v.idx[k]]}))return null;return v}catch(e){return null}}
+function xDel(n){try{localStorage.removeItem(xKey(n))}catch(e){}}
+function xSeen(){try{var a=JSON.parse(localStorage.getItem('mt_seen_'+((typeof SCID!=='undefined'&&SCID)||'0'))||'[]'),o={};if(a.length>=XN)a=[];a.forEach(function(i){o[i]=1});return o}catch(e){return {}}}
+function xSeenAdd(i){try{var k='mt_seen_'+((typeof SCID!=='undefined'&&SCID)||'0'),a=JSON.parse(localStorage.getItem(k)||'[]');if(a.length>=XN)a=[];if(a.indexOf(i)<0)a.push(i);localStorage.setItem(k,JSON.stringify(a))}catch(e){}}
+function resumeX(n){if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();resumeX(n)});return}var v=xLoad(n);if(!v){startX(n);return}clr();
+  var by={};LOB.forEach(function(g){by[g.id]=Object.assign({},g,{B:XB[g.id]})});var gs=v.g.map(function(id){return by[id]});
+  R={x:v.x,pt:100/v.x,g:gs[v.Q.length],gs:gs,idx:v.idx,lvOf:v.lvOf,cnt:v.cnt,lv:-1,k:v.Q.length,sc:v.sc,st:0,Q:v.Q,W:v.W||[],t0:v.t0,rd:{}};show()}
+function xAsk(){xSave();tPause();stopSay();var n=R.Q.length,o=$('#xq');o.querySelector('.xqt').innerHTML='已經 做 了 <b>'+n+'</b> 題，都 <b>存好 了</b>。<br>下次 按〔▶ 繼續 '+R.x+' 題 挑戰〕，從 第 '+(n+1)+' 題 接著 做。';o.classList.add('on')}
 /* 換 關：第 N 關 的 開場（遊戲 名字、怎麼玩）*/
 function lvSplash(done){var g=R.g;$('#app').innerHTML='<div class="lvs"><div class="glv">第 '+(R.lv+1)+' 關 ／ '+LOB.length+'</div><div class="gi">'+g.ic+'</div><div class="gn">'+esc(g.nm)+'</div><div class="gh">'+esc(g.how)+'</div></div>';
   if(window.__NOGO){done();return}later(done,1900)}
 /* ── 一回 10 題 ── */
 function start(id){if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();start(id)});return}
   clr();var g=GM.filter(function(x){return x.id===id})[0];var idx=shuf(g.B.map(function(_,i){return i})).slice(0,N);
-  /* 🕵️ 短文 偵探（2026-10-26 第二十七次 6-(4)）：一篇 一篇 來：第 1 篇 先 讀 20 秒 ➜ 它 的 題目 ➜ 第 2 篇 先 讀 20 秒 ➜ 它 的 題目 */
+  /* 🕵️ 短文 偵探（2026-10-26 第二十七次 6-(4)）：一篇 一篇 來：第 1 篇 先 讀 15 秒 ➜ 它 的 題目 ➜ 第 2 篇 先 讀 15 秒 ➜ 它 的 題目 */
   if(id==='m8'){var ks=shuf(Object.keys(PAS));idx=[];ks.forEach(function(k){idx=idx.concat(shuf(g.B.map(function(q,i){return q.pas===k?i:-1}).filter(function(i){return i>=0})))})}
   R={g:g,idx:idx,k:0,sc:0,st:0,Q:[],W:[],t0:Date.now(),rd:{}};show()}
 function frame(body){var g=R.g,c=COL[g.id];
@@ -287,30 +309,33 @@ function show(){if(R.x){R.g=R.gs[R.k];var lv=R.lvOf[R.k];if(lv!==R.lv){R.lv=lv;l
     tbtn('brother','')+'<div class="me">🙋<small>me</small></div>'+tbtn('sister','')+'</div>';
   else if(id==='m11')h='<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center">'+pic(q.pic,'')+'<div class="bub a" style="max-width:none">'+esc(q.line)+'</div></div>'+opts(R.ord,'');
   else if(id==='m7'){R.pk=[];var w=q.spell,mid=w.slice(1,-1).split(''),ex=shuf('bcdfghklmnprstvwy'.split('').filter(function(c){return w.indexOf(c)<0})).slice(0,2);R.tiles=shuf(mid.concat(ex));
-    h='<div class="sp1"><span class="ic">'+q.ic+'</span></div><div class="slots" id="slots"></div><div class="tiles">'+R.tiles.map(function(c,i){return '<button data-t="'+i+'">'+c+'</button>'}).join('')+'</div><button class="bk" data-x="bk">⌫ 退 一個</button>'}
+    h='<div class="sp1"><span class="ic">'+q.ic+'</span></div><div class="slots" id="slots"></div><div class="tiles">'+R.tiles.map(function(c,i){return '<button data-t="'+i+'"'+(/[aeiou]/.test(c)?' class="lv"':'')+'>'+c+'</button>'}).join('')+'</div><button class="bk" data-x="bk">⌫ 退 一個</button>'}
   else if(id==='m10'||id==='m12')h=(q.pic?pic(q.pic,''):'')+'<div class="qline">'+blank(q.blank)+'</div>'+(id==='m10'?'<div class="bankt">Word Bank</div><div class="bank">'+R.ord.map(function(i){return '<button data-o="'+i+'">'+esc(q.o[i])+'</button>'}).join('')+'</div>':opts(R.ord,'n3'));
   frame(h);if(id==='m7')drawSp();
   tStart(g.t);if(q.say){tPause();later(function(){sayQ(0,id==='m1'||id==='m2'||id==='m5')},450)}}
 /* 短文：一行 一句（對話 ＝ 前面 寫 誰 說 的） */
 function pasHTML(k){var P=PAS[k];return '<div class="pas" id="pas">'+P.t.map(function(t,i){return '<span data-ev="'+i+'"'+(P.sp?' class="spl"':'')+'>'+(P.sp?'<b class="sp">'+esc(P.sp[i])+':</b><i>'+esc(t)+'</i>':esc(t))+'</span>'}).join('')+'</div>'}
-/* 第一幕：只 有 短文，20 秒 先 讀；讀完 才 解鎖〔▶ 開始 回答〕（不算 在 每題 30 秒 裡） */
-function readScene(q){var n=Object.keys(R.rd).length+1,c=window.__RD||20,k=R.k;   /* window.__RD ＝ 量測 用（縮短）*/
+/* 第一幕：只 有 短文，15 秒 先 讀（2026-10-27 第三十二次 2-(1)A 老師：20 ➜ 15 秒）；讀完 才 解鎖〔▶ 開始 回答〕（不算 在 每題 30 秒 裡） */
+function readScene(q){var n=Object.keys(R.rd).length+1,c=window.__RD||15,k=R.k;   /* window.__RD ＝ 量測 用（縮短）*/
   frame('<div class="rd"><div class="rt">📖 第 '+n+' 篇：先 仔細 讀 '+c+' 秒</div>'+pasHTML(q.pas)+'<div class="rc" id="rc">'+c+'</div><button class="go" id="rdgo" data-x="rdgo" disabled>🔒 讀完 才 能 開始</button></div>');
   var b=$('#bar');if(b)b.style.width='100%';
   (function cd(){if(!R||R.k!==k||R.rd[q.pas])return;if(c<=0){var g=$('#rdgo');g.disabled=false;g.textContent='▶ 開始 回答（第 '+(R.k+1)+' 題）';$('#rc').textContent='✔';return}
-    $('#rc').textContent=c;if(b)b.style.width=(c/(window.__RD||20)*100)+'%';c--;later(cd,1000)})()}
+    $('#rc').textContent=c;if(b)b.style.width=(c/(window.__RD||15)*100)+'%';c--;later(cd,1000)})()}
 function opts(ord,cls){var q=R.q,isM2=R.g.id==='m2';var o=isM2?[0,1].map(function(_,j){return q.o.indexOf(j===0?'⭕ Same':'❌ Different')}):ord;
   return '<div class="opts '+(cls||'')+(o.length===2?'':'')+'">'+o.map(function(i,j){return '<button class="o c'+(isM2?(j?0:3):j)+'" data-o="'+i+'">'+esc(q.o[i])+'</button>'}).join('')+'</div>'}
 function pic(p,attr){var a=String(p).split('|'),w=WHO[a[0]],j=a[1]?JOB[a[1]]:null;return '<button class="pc" '+attr+' aria-label="'+esc(w[1]+(j?' '+j[1]:''))+'"><span class="pw">'+w[0]+'</span>'+(j?'<span class="pj">'+j[0]+'</span>':'')+'</button>'}
 function tbtn(w,c){var i=R.q.o.indexOf(w);return '<button class="'+c+'" data-o="'+(i<0?3:i)+'" data-w="'+w+'">'+WHO[w][0]+'</button>'}   /* 2026-10-26 第二十九次：選項 不 寫 中文（家族樹 只 有 人 的 圖）*/
 function blank(s){return esc(s).replace('___','<span class="bl" id="bl">&nbsp;</span>')}
+/* 這一個 位置 的 字母 顏色：放對 ＝ 照 q.lc（母音 紅、不發音 灰）；放錯 ＝ 母音 紅 */
+function lcC(v,i){var q=R.q,c=v&&v===q.spell[i]&&q.lc?q.lc[i]:/[aeiou]/.test(v||'')?'v':'-';return c==='v'?' lv':c==='s'?' ls':''}
+function lcW(w,lc){return w.split('').map(function(c,i){var k=lc?lc[i]:/[aeiou]/.test(c)?'v':'-';return k==='-'?esc(c):'<span class="'+(k==='v'?'lv':'ls')+'">'+esc(c)+'</span>'}).join('')}
 function drawSp(){var w=R.q.spell,n=w.length,h='';for(var i=0;i<n;i++){var f=i===0||i===n-1,k=i-1,v=f?w[i]:(R.pk[k]!=null?R.tiles[R.pk[k]]:'');
-    h+='<span class="'+(f?'fix':v?'f':'')+(!f&&k===R.pk.length?' cur':'')+'">'+v+'</span>'}$('#slots').innerHTML=h;
+    h+='<span class="'+(f?'fix':v?'f':'')+(!f&&k===R.pk.length?' cur':'')+lcC(v,i)+'">'+v+'</span>'}$('#slots').innerHTML=h;
   $$('.tiles button').forEach(function(b){b.disabled=R.pk.indexOf(+b.getAttribute('data-t'))>=0||R.lock})}
 
 /* 答 一題：i ＝ 選了 原本 的 第幾個（0 ＝ 正解；-1 ＝ 時間 到） */
 function pick(i,you){if(!R||R.lock)return;R.lock=true;var q=R.q,ms=Date.now()-R.ts,ok=i===0,left=i<0?0:tLeft()/TM.T;   /* 剩下 ＝ 倒數 的（唸 題目 的 時間 不算） */
-  R.Q.push([ok?1:0,i,Math.round(ms/100)/10,i>=0&&ms<1000?1:0,ok?Math.round(left*1000)/1000:0,R.x?XOFF[R.g.id]+R.qi:R.qi]);crProg(ok);   /* 25／50 題：題庫 ＝ 挑戰 題庫（12 種 接起來）；crProg ＝ ⚡ 現場任務 自己 答 的 進度 */
+  R.Q.push([ok?1:0,i,Math.round(ms/100)/10,i>=0&&ms<1000?1:0,ok?Math.round(left*1000)/1000:0,R.x?XOFF[R.g.id]+R.qi:R.qi]);crProg(ok);if(R.x&&!R.crs){xSeenAdd(XOFF[R.g.id]+R.qi);setTimeout(xSave,0)}   /* 25／50 題：題庫 ＝ 挑戰 題庫（12 種 接起來）；crProg ＝ ⚡ 現場任務 自己 答 的 進度 */
   tPause();stopSay();
   var id=R.g.id;
   $$('#stage [data-o]').forEach(function(b){var k=+b.getAttribute('data-o'),w=b.getAttribute('data-w');if(w)k=w===q.o[0]?0:w===R.clickW?i:-9;b.disabled=true;if(k===0)b.classList.add('ok');else if(k===i){b.classList.add('bad');if(id==='m1')b.classList.add('pop')}else b.classList.add('no')});
@@ -319,10 +344,10 @@ function pick(i,you){if(!R||R.lock)return;R.lock=true;var q=R.q,ms=Date.now()-R.
   if(id==='m9'){var t=$('#tree');if(t)t.classList.add('show')}
   if((id==='m10'||id==='m12')&&$('#bl'))$('#bl').innerHTML=esc(q.o[0]);
   if(id==='m6'){var qb=$('#chat .q');if(qb){qb.classList.remove('q');qb.classList.add('fly');qb.innerHTML='<span class="who">'+(q.chat==='A'?'B':'A')+'</span>'+esc(q.o[0])}}
-  if(id==='m7'){$('#slots').classList.add(ok?'win':'bad');if(!ok)$('#slots').innerHTML=q.spell.split('').map(function(c){return '<span class="f" style="border-color:#2BD46A;color:#7BF0A8">'+c+'</span>'}).join('')}
+  if(id==='m7'){$('#slots').classList.add(ok?'win':'bad');if(!ok)$('#slots').innerHTML=q.spell.split('').map(function(c,i){return '<span class="f'+lcC(c,i)+'" style="border-color:#2BD46A'+(lcC(c,i)?'':';color:#7BF0A8')+'">'+c+'</span>'}).join('')}
   if(ok){R.st++;var s=R.x?R.pt:100+Math.round(900*left)+Math.min(250,50*(R.st-1));R.sc+=s;fb(true,'⭐ 答對！ ＋'+s+(R.x?' 分':'')+(R.st>1?'　🔥 連對 '+R.st:''));
     /* 短文 偵探 答對：不 自己 走，解鎖〔▶ 下一題〕（老師 6-(4)） */
-    if(id==='m8'){$('#nx8w').innerHTML='<button class="nx8" data-x="next">▶ 下一題</button>';sayList(q.fs)}else{if(q.ae)sayList([['',q.ae]]);later(next,1500)}}
+    if(id==='m8'){$('#nx8w').innerHTML='<button class="nx8" data-x="next">▶ 下一題</button>';sayList(q.fs)}else if(q.lab){var kk=R.k,nx=function(){if(R&&R.k===kk)next()};sayList(q.lab,function(){later(nx,500)});later(nx,6000)}else{if(q.ae)sayList([['',q.ae]]);later(next,1500)}}   /* 第三十二次：A／B 拆開 唸 ＝ 唸完 才 下一題 */
   else{R.st=0;R.W.push(R.qi);var yt=i<0?'':you||(q.oz?q.oz[i]:q.o[i]);
     /* 短文 偵探 答錯：原文 那一句 綠底 ➜ 唸 一次 ➜ 獨立 的 秒懂 頁（逐字 中文＋整句 翻譯）再 唸 一次 ➜ 才 解鎖〔下一題〕 */
     if(id==='m8'){var my=FBN;sayList(q.fs,function(){if(my===FBN&&R&&R.q===q)later(function(){miss(i,yt,1)},500)})}else miss(i,yt,3)}}
@@ -344,6 +369,7 @@ function miss(i,you,REP){var q=R.q,id=R.g.id,my=++FBN,ex=exHTML(q);tPause();
   var x=$('#wbox');x.className='box';x.innerHTML='<div class="hd">'+(i<0?'⏰ 時間到':'❌ 答錯了')+'</div>'+(i>=0&&you?'<div class="yp">你的答案：<s>'+esc(you)+'</s></div>':'')+
     '<div class="ca">✅ 正確答案</div>'+(ex?'<div class="ex">'+ex+'</div>':'')+gloss(q.fe,q.gx,id==='m1'||id==='m2')+'<div><span class="tr">整句：'+esc(q.fz)+'</span></div>'+(q.tip?'<div class="tip">💡 '+esc(q.tip)+'</div>':'')+
     '<div class="ft"><span class="n3" id="n3">'+(REP===1?'<span>1</span>':'<span>1</span><span>2</span><span>3</span>')+'</span><button class="say" id="wfs">🔊 再聽</button><span id="nxw"></span></div>';
+  if(id==='m7'){var gb=$('#gls b');if(gb)gb.innerHTML=lcW(q.spell,q.lc)}   /* 第三十二次 第 4 點 */
   $('#wf').classList.add('on');wFit();var c=0;
   function one(){if(my!==FBN)return;if(c>=REP){var w=$('#nxw');w.innerHTML='<button class="nx" id="wfn">▶ 下一題</button>';
       var n=3,b=$('#wfn');b.textContent='▶ 下一題 '+n;var t=setInterval(function(){if(my!==FBN){clearInterval(t);return}n--;if(n<=0){clearInterval(t);wGo()}else b.textContent='▶ 下一題 '+n},1000);return}
@@ -353,7 +379,8 @@ function miss(i,you,REP){var q=R.q,id=R.g.id,my=++FBN,ex=exHTML(q);tPause();
 function wFit(){var b=$('#wbox');b.classList.remove('f1','f2');['f1','f2'].forEach(function(c){if(b.scrollHeight>b.clientHeight+2)b.classList.add(c)})}
 addEventListener('resize',function(){if($('#wf').classList.contains('on'))wFit()});
 function wGo(){FBN++;stopSay();$('#wf').classList.remove('on');next()}
-function fb(ok,t,you,ans,z){var e=$('#fb');e.className='fb on '+(ok?'ok':'no');
+/* 2026-10-27 第三十二次 2-(1)B 老師：短文 偵探 答對 的 綠色 橫幅 太大、蓋住〔▶ 下一題〕➜ 短文 偵探 ＝ 小 一條、放 最上面、1.6 秒 自己 收起來 */
+function fb(ok,t,you,ans,z){var e=$('#fb'),sm=ok&&R&&R.g&&R.g.id==='m8';e.className='fb on '+(ok?'ok':'no')+(sm?' sm':'');if(sm)later(function(){if(e.classList.contains('sm'))e.classList.remove('on')},1600);
   e.innerHTML=ok?'<div class="t">'+t+'</div>':'<div class="you">'+you+'</div><div class="ans">✅ '+esc(ans)+'</div>'+(z?'<div class="z">'+esc(z)+'</div>':'')+
     '<div class="row">'+(R.q.ae?'<button data-x="say">🔊 聽</button>':'')+'<button class="go" data-x="next" id="nx" disabled>▶ 下一題</button></div>';
   if(!ok)later(function(){var b=$('#nx');if(b)b.disabled=false},1800)}
@@ -367,7 +394,7 @@ function fin(){if(R.crs){crDone();return}if(R.x){finX();return}var n=R.Q.length,
   h+='<div class="nav"><button class="go" data-x="again">🔁 再 玩 一次</button><button data-x="hub">🎮 換 一個 遊戲</button></div>'+(typeof scByeHTML==='function'&&typeof SCID!=='undefined'&&SCID?scByeHTML():'')+'</div>';
   $('#app').innerHTML=h;window.scrollTo(0,0)}
 /* 25／50 題 結束：得分 ／ 100、每一關 答對 幾題、答錯 的 題目 */
-function finX(){var GM=LOB,n=R.Q.length,ok=0,fast=0;R.Q.forEach(function(x){ok+=x[0];fast+=x[3]});var sc=Math.round(ok*R.pt),st=sc>=90?3:sc>=70?2:1,rec=n>=6&&fast*2<=n&&rec1();
+function finX(){xDel(R.x);var GM=LOB,n=R.Q.length,ok=0,fast=0;R.Q.forEach(function(x){ok+=x[0];fast+=x[3]});var sc=Math.round(ok*R.pt),st=sc>=90?3:sc>=70?2:1,rec=n>=6&&fast*2<=n&&rec1();
   try{if(sc>best('x'+R.x))localStorage.setItem('mt_best_x'+R.x,sc)}catch(e){}
   var h='<div class="end"><div class="st">'+Array(st+1).join('⭐')+'<span class="dim">'+Array(4-st).join('⭐')+'</span></div><div class="big xsc">📝 '+R.x+' 題 挑戰：<b>'+sc+'</b> 分 ／ 100</div><div class="big">答對 '+ok+' ／ '+R.x+'（每題 '+R.pt+' 分）</div>'+
     '<div class="note">'+(rec?'📝 記進 成績 了':fast*2>n?'⚠️ 太快 亂按 超過 一半：這一回 不算 成績':(typeof SCID!=='undefined'&&SCID?'📶 沒有 網路：先 存 在 平板':'（沒有 登入：沒有 記 成績）'))+'</div>'+
@@ -382,7 +409,8 @@ function rec1(){try{if(typeof scLive!=='function'||!scLive()||R.sent)return fals
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
   if((b=c('[data-g]'))){start(b.getAttribute('data-g'));return}
   if((b=c('[data-xn]'))){startX(+b.getAttribute('data-xn'));return}
-  if((b=c('[data-x]'))){var a=b.getAttribute('data-x');if(a==='hub')hub();else if(a==='hear')sayQ(0);else if(a==='say')say(R.q.ae);else if(a==='next'){if(!b.disabled)next()}
+  if((b=c('[data-xr]'))){resumeX(+b.getAttribute('data-xr'));return}
+  if((b=c('[data-x]'))){var a=b.getAttribute('data-x');if(a==='hub'){if(R&&R.x&&!R.crs&&R.k<R.idx.length&&b.classList.contains('qx'))xAsk();else hub()}else if(a==='xstay'){$('#xq').classList.remove('on');if(R&&!R.lock)tGo()}else if(a==='xleave'){$('#xq').classList.remove('on');hub()}else if(a==='hear')sayQ(0);else if(a==='say')sayList(R.q.lab||[['',R.q.ae]]);else if(a==='next'){if(!b.disabled)next()}
     else if(a==='slow')sayQ(1);else if(a==='rdgo'){if(!b.disabled){R.rd[R.q.pas]=1;show()}}
     else if(a==='again')start(R.g.id);else if(a==='bk'&&R&&!R.lock){R.pk.pop();drawSp()}return}
   if((b=c('[data-say]'))){say(b.getAttribute('data-say'));return}
@@ -439,7 +467,7 @@ ${CL.home(4, '../', 'school')}
 <script src="../live/fb.js"></script><script>${fs.readFileSync(path.join(__dirname, '..', 'live', '_db.js'), 'utf8')}</script>
 ${AUD ? '<script src="audio/aud.js"></script>' : ''}
 ${AUDX.map(d => '<script src="audio/' + d + '/aud.js"></script>').join('')}
-<div id="wf"><div class="box" id="wbox"></div></div>
+<div id="wf"><div class="box" id="wbox"></div></div><div id="xq"><div class="xqb"><div class="xqi">🛑</div><div class="xqh">真的 要 離開 嗎？</div><div class="xqt"></div><div class="xqbtn"><button data-x="xstay" id="xstay">▶ 繼續 作答</button><button data-x="xleave" id="xleave">🚪 先 離開</button></div></div></div>
 <div id="app" class="scr"></div><div id="crw"></div>
 <script>${JS}</script>
 </body></html>`;

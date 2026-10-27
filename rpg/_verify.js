@@ -74,28 +74,35 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     if (!G.books['角色'] || !new RegExp('"qz":' + require('../score/_calc.js').RPQV).test((G.books['角色'].d[1] || [])[1] || '')) E.push(tag + '：試算表「角色」沒有 記 看懂 規則');
     /* 第十八次 第 1 點：答對過 第 1 版 的 人（qz ＝ 1）要 再看 再答 */ { const lk = await p.evaluate(() => { const o = RV.qz, K = 'rp_qz_' + SCID, L = localStorage.getItem(K); localStorage.removeItem(K); const Z = QZOK; QZOK = ''; RV.qz = 1; const a = rLocked(); RV.qz = o; QZOK = Z; if (L != null) localStorage.setItem(K, L); return a; }); if (!lk) E.push(tag + '：答對過 舊 規則 的 人 沒有 再 鎖住 看 新 規則'); n++; }
     await p.click('#qzEnd'); await p.waitForTimeout(500);
-    /* 2026-10-25 第二十五次：🎯 全班獎勵 小測驗（4 幕＋3 題）都答對 才 能 玩；老師看板 看得到 */
-    { const w0 = await p.evaluate(() => ({ lk: document.getElementById('rpin').classList.contains('rlock'), gate: (document.querySelector('.rgate') || {}).textContent || '', sc: document.querySelectorAll('#tst .tsc').length, ch: [].map.call(document.querySelectorAll('.tch button'), x => x.textContent).join('|'), qz: (document.getElementById('qzGo') || {}).hidden }));
-      if (!w0.lk || !/全班獎勵/.test(w0.gate) || w0.sc !== 5 || !/全班獎勵/.test(w0.ch) || w0.qz !== true) E.push(tag + '：看懂 規則 以後 沒有 先 鎖住 看 全班獎勵 5 幕（第二十九次：第 1 幕 ＝ 非上課時間）：' + JSON.stringify(w0));
+    /* 2026-10-27 第三十二次 第 9 點：🎯 全班獎勵 3 題 不強制（不鎖），鼓勵：最上面 金色 按鈕〔答對 3 題 ➜ 🪙＋50 ⭐＋25〕 */
+    { const w0 = await p.evaluate(() => ({ lk: document.getElementById('rpin').classList.contains('rlock'), bn: (document.getElementById('cwBn') || {}).textContent || '', h: (document.getElementById('cwBn') || { getBoundingClientRect: () => ({ height: 0 }) }).getBoundingClientRect().height }));
+      if (w0.lk || !/50/.test(w0.bn) || !/25/.test(w0.bn) || w0.h < 48) E.push(tag + '：看懂 規則 以後 不可以 鎖住；要 有 金色 按鈕〔答對 3 題 ➜ 🪙＋50 ⭐＋25〕：' + JSON.stringify(w0)); n += 2;
+      await p.click('#cwBn'); await p.waitForTimeout(500);
+      const w1 = await p.evaluate(() => ({ sc: document.querySelectorAll('#tst .tsc').length, k: TCH, qz: (document.getElementById('qzGo') || {}).hidden, t: (document.getElementById('qzGo') || {}).textContent || '' }));
+      if (w1.sc !== 5 || w1.k !== 'w' || w1.qz !== false || !/50/.test(w1.t)) E.push(tag + '：按 金色 按鈕 沒有 打開 全班獎勵 5 幕＋〔📝 答對 3 題〕（不用 先 看完）：' + JSON.stringify(w1)); n++;
       for (let i = 0; i < 5; i++) { await p.click('[data-tut="' + i + '"]'); await p.waitForTimeout(3600);
         const f = await p.evaluate(() => { const c = document.querySelector('#tst .tsc.on'), t = document.getElementById('tst').getBoundingClientRect(), o = []; let mn = 99;
           c.querySelectorAll('*').forEach(x => { const r = x.getBoundingClientRect(); if (r.width && (r.right > t.right + 2 || r.left < t.left - 2 || r.bottom > t.bottom + 2)) o.push(x.className || x.tagName); if (x.children.length === 0 && x.textContent.trim() && getComputedStyle(x).opacity > .5) mn = Math.min(mn, parseFloat(getComputedStyle(x).fontSize)); });
           return { o: o.slice(0, 3), mn, t: c.textContent }; });
         if (f.o.length || f.mn < 17) E.push(tag + '：全班獎勵 第 ' + (i + 1) + ' 幕 超出 或 字 太小：' + JSON.stringify(f).slice(0, 160));
-        if (i === 0 && !/非上課時間/.test(f.t)) E.push(tag + '：全班獎勵 第 1 幕 沒有 非上課時間'); if (i === 3 && !/150/.test(f.t)) E.push(tag + '：全班獎勵 第 4 幕 沒有 照 天數 的 金幣'); if (i === 4 && !/400/.test(f.t)) E.push(tag + '：全班獎勵 第 5 幕 沒有 目標② 的 金幣'); n += 2; }
+        if (i === 0 && !(/上課時間/.test(f.t) && /不算/.test(f.t) && /放學後、週末/.test(f.t) && f.t.length < 60)) E.push(tag + '：全班獎勵 第 1 幕 要 簡單（上課時間 不算／放學後、週末 算，字 少）：' + f.t); if (i === 3 && !/150/.test(f.t)) E.push(tag + '：全班獎勵 第 4 幕 沒有 照 天數 的 金幣'); if (i === 4 && !/400/.test(f.t)) E.push(tag + '：全班獎勵 第 5 幕 沒有 目標② 的 金幣'); n += 2; }
       await p.click('#qzGo'); await p.waitForTimeout(300);
       const q3 = await p.evaluate(() => document.querySelector('#rqz .qn').textContent);
       if (!/3 題/.test(q3)) E.push(tag + '：全班獎勵 小問題 不是 3 題：' + q3);
-      await p.click('#rqz [data-qa="2"]'); await p.waitForTimeout(300); await p.click('#qzSee'); await p.waitForTimeout(500);
+      const ql = await p.evaluate(() => [].map.call(document.querySelectorAll('#rqz [data-qa]'), b => b.textContent.length).concat([document.querySelector('#rqz .qt').textContent.length]));
+      if (Math.max.apply(null, ql) > 26) E.push(tag + '：全班獎勵 題目／選項 太長：' + JSON.stringify(ql)); n++;
+      await p.click('#rqz [data-qa="1"]'); await p.waitForTimeout(300); await p.click('#qzSee'); await p.waitForTimeout(500);
       const sb2 = await p.evaluate(() => ({ i: TUT.i, k: TCH }));
-      if (sb2.i !== 1 || sb2.k !== 'w') E.push(tag + '：全班獎勵 答錯 沒有 回去 看 那一幕：' + JSON.stringify(sb2));
+      if (sb2.i !== 0 || sb2.k !== 'w') E.push(tag + '：全班獎勵 答錯 沒有 回去 看 那一幕：' + JSON.stringify(sb2));
       await p.click('#qzBack'); await p.waitForTimeout(300);
       for (let k = 0; k < 3; k++) { await p.click('#rqz [data-qa="0"]'); await p.waitForTimeout(1100); }
       await p.waitForTimeout(800);
       const wd = await p.evaluate(() => ({ t: document.getElementById('rqzb').textContent, cq: RV && RV.cq }));
+      if (!/50/.test(wd.t) || !/25/.test(wd.t)) E.push(tag + '：答對 3 題 沒有 寫 🪙＋50 ⭐＋25：' + wd.t.slice(0, 80));
       if (!/全班獎勵/.test(wd.t) || wd.cq !== require('../score/_calc.js').RPCQV) E.push(tag + '：全班獎勵 3 題 都 對 沒有 送 給 老師：' + JSON.stringify(wd).slice(0, 90));
       if (!G.books['角色'] || !new RegExp('"cq":' + require('../score/_calc.js').RPCQV).test((G.books['角色'].d[1] || [])[1] || '')) E.push(tag + '：試算表「角色」沒有 記 看懂 全班獎勵');
-      await p.click('#qzEnd'); await p.waitForTimeout(500); n += 4; }
+      await p.click('#qzEnd'); await p.waitForTimeout(500); n += 4;
+      if (await p.evaluate(() => !!document.getElementById('cwBn'))) E.push(tag + '：答對 以後 金色 按鈕 還在'); n++; }
     const gU = await p.evaluate(() => ({ lk: document.getElementById('rpin').classList.contains('rlock'), st: getComputedStyle(document.getElementById('stage')).display }));
     if (gU.lk || gU.st === 'none') E.push(tag + '：看懂 以後 還是 鎖著');
     /* 2026-10-22 第十九次：伺服器 還沒 重新部署（舊 規則 版本，答對 也 記成 舊 的）➜ 答對 5 題 一樣 進得去；伺服器 好了 再 偷偷 補送 */
@@ -361,8 +368,8 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* ❓ 三章 秒懂 動畫（老師第 2、4、6、7 點） */
     await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(200); await p.click('[data-go="qb"]'); await p.waitForTimeout(400);
     const tu = await p.evaluate(() => ({ ch: document.querySelectorAll('.tch button').length, on: (document.querySelector('.tch button.on') || {}).textContent, sc: document.querySelectorAll('#tst .tsc').length, a: !!document.querySelector('#tst .tsc.on') }));
-    if (tu.ch !== 6 || !/戰力 ?是 ?什麼/.test(tu.on || '') || tu.sc !== 4 || !tu.a) E.push(tag + '：〔❓ 戰力〕沒有 打開 第 2 章（第二十五次：6 個 分頁，最後 一個 ＝ 🎯 全班獎勵）' + JSON.stringify(tu));
-    for (const [k, nsc] of [['a', 10], ['b', 4], ['c', 4], ['d', 9], ['r', 14]]) { await p.click('[data-tch="' + k + '"]'); await p.waitForTimeout(300);
+    if (tu.ch !== 5 || !/戰力 ?是 ?什麼/.test(tu.on || '') || tu.sc !== 4 || !tu.a) E.push(tag + '：〔❓ 戰力〕沒有 打開 第 2 章（第二十五次：6 個 分頁，最後 一個 ＝ 🎯 全班獎勵）' + JSON.stringify(tu));
+    for (const [k, nsc] of [['a', 10], ['b', 4], ['c', 4], ['r', 14]])   /* 第三十二次：第 4 章〔⚔ 階級 愈高 能力 愈強〕暫時 拿掉 */ { await p.click('[data-tch="' + k + '"]'); await p.waitForTimeout(300);
       const c1 = await p.evaluate(() => ({ n: document.querySelectorAll('#tst .tsc').length, i: [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')) }));
       await p.waitForTimeout(7900); const c2 = await p.evaluate(() => [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')));
       if (process.env.SHOT && tag === '1024✕768') { await p.waitForTimeout(2600); await (await p.$('.tut')).screenshot({ path: path.join(process.env.SHOT, 'ch_' + k + '.png') }); }
@@ -371,14 +378,13 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
       if (ov) E.push(tag + '：第 ' + k + ' 章 有東西 超出 畫面（' + ov + '）'); }
     /* 第十八次 第 4-1 點：〔❓ 階級 愈高 特效 愈強〕在 舞台 上、第 2～6 幕 真的 演（畫布 有 畫）、第 7、8 幕 合體 等級 ★ ➜ ★★★★★；第 6 點 怪物 白話；第 8 點 改名 */
     { await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(200); const st8 = await p.evaluate(() => { const t = document.getElementById('stage').textContent; return { qd: !!document.querySelector('[data-go="qd"]'), col: /收集有什麼幫助/.test(t) && !/收集有什麼用/.test(t), mon: !/還剩/.test(t) && !/打牠/.test(t) && !document.getElementById('atkTry') && !/寵物陪你練/.test(t.replace(/\s/g, '')), ab: /階級愈高能力愈強/.test(t.replace(/\s/g, '')) && !/特效愈強/.test(t.replace(/\s/g, '')), now: /現在/.test((document.querySelector('.tabil') || {}).textContent || '') }; });   /* 2026-10-26：打怪物、一擊、出招、寵物 那一格 拿掉；按鈕 改「能力 愈強」；「現在」寫 清楚 */
-      if (!st8.qd || !st8.col || !st8.mon || !st8.ab || !st8.now) E.push(tag + '：舞台 按鈕 不對（打怪物 要 拿掉、能力 愈強、「現在」）' + JSON.stringify(st8));
+      if (st8.qd || !st8.col || !st8.mon || st8.ab || !st8.now) E.push(tag + '：舞台 按鈕 不對（打怪物 要 拿掉、能力 愈強、「現在」）' + JSON.stringify(st8));
     /* 2026-10-26 第二十七次：⚔ 階級 能力（現在／升階 以後 寫 真的 能力）、🏛 名人堂 */
     { n++; const ab = await p.evaluate(() => { RV.hall = ['30403']; RV.tnow = Math.max(RV.tnow || 0, 3); draw(); const t = document.getElementById('stage').textContent; return { ab: typeof ABIL !== 'undefined' && ABIL.length === 6, c: /挑戰關/.test(t) && /出1題給全班/.test(t.replace(/\s/g, '')), h: !!document.querySelector('.hallB'), ht: (document.querySelector('.hallB') || {}).textContent || '' }; });
-      if (!ab.ab || !ab.c || !ab.h || !/304班3號/.test(ab.ht.replace(/\s/g, ''))) E.push(tag + '：階級 能力／名人堂 不對 ' + JSON.stringify(ab)); }
-      await p.click('[data-go="qd"]'); await p.waitForTimeout(400); await p.click('#tPause'); await p.click('[data-tut="5"]'); await p.waitForTimeout(1800);
-      const dm = await p.evaluate(() => { const c = document.querySelectorAll('#tst .tsc.on .tdemo canvas'); let px = 0; c.forEach(cv => { const g = cv.getContext('2d'), d = g.getImageData(0, 0, cv.width, cv.height).data; for (let i = 3; i < d.length; i += 64) if (d[i]) px++; }); return { on: (document.querySelector('.tch button.on') || {}).textContent, cv: c.length, px, tb: !!document.querySelector('#tst .tsc.on .tbI.t5') }; });
-      if (!/階級 ?愈高/.test(dm.on || '') || dm.cv < 2 || dm.px < 20 || !dm.tb) E.push(tag + '：〔❓ 階級 愈高 特效 愈強〕第 6 幕 沒有 真的 演 ' + JSON.stringify(dm)); n += 2; }
+      if (!ab.ab || ab.c || !ab.h || !/304班3號/.test(ab.ht.replace(/\s/g, ''))) E.push(tag + '：階級 能力 說明 要 拿掉（第三十二次）／名人堂 不對 ' + JSON.stringify(ab)); }
+      n += 2; }
     /* 第十六次 老師第 4 點：〔⏸ 暫停〕＝ 停在 這一幕；〔下一幕 ▶〕〔◀ 上一幕〕；按鈕 夠大 */
+    await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(200); await p.click('[data-go="qa"]'); await p.waitForTimeout(400);   /* 第三十二次：第 4 章 拿掉 ➜ 從 舞台〔❓ 經驗值、金幣〕進來 */
     await p.click('[data-tch="a"]'); await p.waitForTimeout(300);
     const cur = () => p.evaluate(() => [].indexOf.call(document.querySelectorAll('#tst .tsc'), document.querySelector('#tst .tsc.on')));
     const bz = await p.evaluate(() => ['tPause', 'tPrev', 'tNext'].map(i => { const r = document.getElementById(i).getBoundingClientRect(); return Math.round(Math.min(r.height, r.width)); }));
@@ -410,12 +416,8 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
       if (gq.n !== 45 || !gq.has || gq.hid.length || gq.r !== '2344') E.push(tag + '：女戰士 新圖 不對 ' + JSON.stringify(gq));
       const gb = G.post({ a: 'rpg', id: '40205', op: 'buy', item: 'g12' }); if (!gb || gb.err !== 'item') E.push(tag + '：伺服器 還 賣 下架 的 女 12');
       n += 5; }
-    { await p.click('[data-go="qd"]'); await p.waitForTimeout(400); await p.click('#tPause');
-      const d4 = await p.evaluate(() => ({ n: document.querySelectorAll('#tst .tsc').length, every: /每一次合體都不一樣/.test(document.getElementById('tst').textContent.replace(/\s/g, '')), big: document.querySelectorAll('#tst .tsc .ttier.big').length, reg: document.querySelectorAll('#tst .tsc:last-child .lfreg span').length, wide: document.querySelectorAll('#tst .tdemo.wide').length }));
-      if (d4.n !== 9 || d4.every || d4.big !== 2 || d4.reg !== 2 + 3 + 4 + 6 + 8 || d4.wide !== 2) E.push(tag + '：第 4 章 不對（9 幕、刪 第 9 幕、第 1、9 幕 亮、升階 授予 裝備、第 7、8 幕 大）' + JSON.stringify(d4));
-      for (const k of [6, 7]) { await p.click('[data-tut="' + k + '"]'); await p.waitForTimeout(600); const h = await p.evaluate(() => { const d = document.querySelector('#tst .tsc.on .tdemo'); return d ? Math.round(d.getBoundingClientRect().height) : 0; }); if (h < 240) E.push(tag + '：第 ' + (k + 1) + ' 幕 畫面 太 小（' + h + 'px）'); }
-      await p.evaluate(() => tutGo(0)); await p.waitForTimeout(3200); const lum = await p.evaluate(() => [].map.call(document.querySelectorAll('#tst .tsc.on .ttier.big > span'), s => parseFloat(getComputedStyle(s).opacity))); if (lum.length !== 5 || lum.some(x => x < 1)) E.push(tag + '：第 1 幕 還是 暗的 ' + lum); n += 4;
-      await p.click('#tabs [data-t="h"]'); await p.waitForTimeout(200); }
+    /* 第三十二次：第 4 章 暫時 拿掉 ➜ 不量 */
+    if (await p.$('[data-go="qd"]')) E.push(tag + '：〔⚔ 階級 愈高 能力 愈強〕還在');
     { const tu = await p.evaluate(async () => { const o = {}; for (const k of [1, 5]) { const done = RPLIFE.tierUp({ k }); await new Promise(r => setTimeout(r, 2200 + k * 150 + RPLIFE.REG[k].length * 480 + 300)); const ov = document.querySelector('.lftu'); o['k' + k] = { all: ov.querySelectorAll('.tureg span').length, on: ov.querySelectorAll('.tureg span.on').length, say: ov.querySelector('.tusay').textContent }; done(); await new Promise(r => setTimeout(r, 500)); } return o; });
       if (tu.k1.all !== 2 || tu.k1.on !== 2 || tu.k5.all !== 8 || tu.k5.on !== 8 || !/授予：/.test(tu.k5.say)) E.push(tag + '：升階 典禮 授予 裝備 不對 ' + JSON.stringify(tu));
       await p.evaluate(() => atk()); await p.waitForTimeout(300); const ob = await p.evaluate(() => document.querySelectorAll('#mfr .lfob').length); await p.waitForTimeout(900);

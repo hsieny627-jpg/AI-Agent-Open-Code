@@ -555,7 +555,7 @@ ${CERCSS}
   <select id="fs" aria-label="什麼時候做的"><option value="">上課＋課後</option><option value="in">🕘 上課 時間</option><option value="out">🌙 課後 時間</option></select>
  </div>
  <div class="tiles" id="tiles"></div>
- <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 個人排行榜</button><button data-t="c">🏫 班級排行榜</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心<em class="bdg" id="kbdg" hidden></em></button><button data-t="o">📅 一鍵設定</button><button data-t="t">📌 任務</button><button data-t="l">🔒 開關</button><button data-t="r">🎁 全班 獎勵</button><button data-t="f">📊 最受歡迎</button><button data-t="g">🏫 課堂複習</button><button data-t="m">📱 給家長</button><button data-t="a">⚔ 階級 能力</button></div>
+ <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 個人排行榜</button><button data-t="c">🏫 班級排行榜</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心<em class="bdg" id="kbdg" hidden></em></button><button data-t="o">📅 一鍵設定</button><button data-t="t">📌 任務</button><button data-t="l">🔒 開關</button><button data-t="r">🎁 全班 獎勵</button><button data-t="f">📊 最受歡迎</button><button data-t="g">🏫 課堂複習</button><button data-t="m">📱 給家長</button><!-- 2026-10-27 第三十二次 第 1 點：〔⚔ 階級 能力〕暫時 拿掉（paneA 留著）--></div>
  <div class="pane" id="pane"></div>
 </div>
 <div id="modal"><div id="mbox"></div></div>
@@ -806,7 +806,8 @@ function hOpen(key){var S=sets(),psG=SC.students(S.G);if(HN)clearTimeout(HN.tm);
     HN.cert=o.L.filter(function(x){return x.rk<=10}).map(function(x){return {id:x.id,aw:(o.cls?SC.cname(o.cls):hgr())+' '+HON.AWN[BT]+' 第 '+x.rk+' 名',l:HON.aws(BT,pm[x.id]||{},hper2())}})}
   $('#honov').classList.add('on');hCtl();hShow()}
 function hShow(){clearTimeout(HN.tm);var p=HN.P[HN.i];if(!p)return;GLORY.stop($('#honst'));
-  if(p.g!=null)GLORY.scene($('#honst'),HN.gst,p.g,HN.gd,HSND);else{HON.scene($('#honst'),HN.st,p.o);if(HSND&&p.snd)HON.snd[p.snd]()}
+  /* 第三十二次 第 7 點：一幕 出 錯 也 一定 接 下一幕（不會 停 在 第 2 名）*/
+  try{if(p.g!=null)GLORY.scene($('#honst'),HN.gst,p.g,HN.gd,HSND);else{HON.scene($('#honst'),HN.st,p.o);if(HSND&&p.snd)HON.snd[p.snd]()}}catch(e){}
   $('#hpg').textContent=(HN.i+1)+'／'+HN.P.length;
   var me=HN;HN.tm=setTimeout(function(){if(HN&&HN===me&&HN.i<HN.P.length-1){HN.i++;hShow()}},p.t)}   /* 第二十一次：舊的 計時器 不可以 跑到 新的 榜 */
 function hCtl(){$('#hsd').textContent='🔊 聲音：'+(HSND?'開':'關');$('#hsd').classList.toggle('on',!!HSND);$('#hnmb').textContent='👤 姓名：'+(HNM?'顯示':'隱藏');$('#hnmb').classList.toggle('on',!!HNM);$('#heqb').textContent='⚔ 戰士 寵物 武器：'+(HEQ?'顯示':'隱藏');$('#heqb').classList.toggle('on',!!HEQ)}

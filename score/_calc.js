@@ -449,7 +449,7 @@ var SC = (function () {
   function cwAmt(lv, d) { d = Math.min(7, Math.floor(+d || 0)); var T = lv === 2 ? RPCW.t2 : lv === 1 ? RPCW.t1 : null; return T && T[d] ? { c: T[d][0], x: T[d][1] } : null; }
   function cwOk(rs, ids, from, to) { return cwLv(cwDays(rs, from, to), ids); }
   /* 🎯 全班獎勵 小測驗（2026-10-25 第二十五次：老師「獨立一個小測驗」）：版本，規則改了 ＋1；3 題都答對 ＝ 伺服器記 cq ＝ RPCQV */
-  var RPCQV = 1;
+  var RPCQV = 1; var RPCQB = [50, 25];
   function rpCwq(st, v, now) { st = rpClean(st); if (+v === RPCQV) { st.cq = RPCQV; st.cqt = now || Date.now(); } return st; }
   /* 👑 冠軍寶箱（2026-10-25 第二十五次，老師：只發金幣和經驗值；選 🪙 ＋250、⭐ ＋150，固定） */
   var RPCH = { c: 250, x: 150 };
@@ -573,7 +573,7 @@ var SC = (function () {
   /* 伺服器存檔以前：最高到過的階級記下來（rpView 的金幣照最高的算） */
   function rpTierUp(rs, st, now) { st = rpClean(st); var t = now || Date.now(); st.tr = Math.max(st.tr, rpTier(rpView(rs, st).power)); while (st.trt.length < st.tr) st.trt.push(t); return st; }
   /* 平板看的：等級、經驗值條、金幣、寵物陪了幾天（裝上以後練了幾天：3 天長大、7 天進化）、戰力、稱號 */
-  function rpView(rs, st) { st = rpClean(st); var E = rpEarn(rs, st), pd = 0; E.xp += st.bx; E.coin += st.bc; var lv = rpLv(E.xp);
+  function rpView(rs, st) { st = rpClean(st); var E = rpEarn(rs, st), pd = 0; E.xp += st.bx; E.coin += st.bc; if (+st.cq >= 1) { E.coin += RPCQB[0]; E.xp += RPCQB[1]; }   /* 2026-10-27 第三十二次 第 9-(3) 點：🎯 全班獎勵 3 題 答對 ＝ 🪙＋50 ⭐＋25（只有一次；以前 答對 的 也 算） */ var lv = rpLv(E.xp);
     if (st.eq.p) { for (var d in E.dd) if (+d >= day(st.pt)) pd++; pd += st.snack; }
     var ps = pd >= 7 ? 2 : pd >= 3 ? 1 : 0, all = st.own.h.concat(st.own.w, st.own.p);
     var pow = lv * 10 + ps * 50; ['h', 'w', 'p'].forEach(function (k) { if (st.eq[k]) pow += rpStar(st.eq[k]) * 100; }); pow += st.eq.t.length * 20; for (var sk in st.eq.s) pow += rpStar(st.eq.s[sk]) * 20;
@@ -650,7 +650,7 @@ var SC = (function () {
     AW: AW, care: care, CAREMAX: CAREMAX, s100: s100, xN: xN, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, clsAwards: clsAwards, secOf: secOf, questions: questions, gtop: gtop, view: view,
     lkClean: lkClean, lkSet: lkSet, lkAny: lkAny, lkFor: lkFor, LKRE: LKRE, lktClean: lktClean, lktSet: lktSet, lkNow: lkNow,
     tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE,
-    RPCW: RPCW, cwOk: cwOk, cwDays: cwDays, cwLv: cwLv, cwAmt: cwAmt, RPCQV: RPCQV, rpCwq: rpCwq, RPCH: RPCH, RPR: RPR, RPP: RPP, RPL: RPL, RPT: RPT, RPS: RPS, RPSON: RPSON, RPSP: RPSP, RPSL: RPSL, RPSLOT: RPSLOT, rpSC: rpSC, RPSET: RPSET, RPHIDE: RPHIDE, RPX: RPX, RPC: RPC, rpKind: rpKind, rpStar: rpStar, rpPrice: rpPrice, rpNeed: rpNeed, rpOk: rpOk, rpLv: rpLv,
+    RPCW: RPCW, cwOk: cwOk, cwDays: cwDays, cwLv: cwLv, cwAmt: cwAmt, RPCQV: RPCQV, RPCQB: RPCQB, rpCwq: rpCwq, RPCH: RPCH, RPR: RPR, RPP: RPP, RPL: RPL, RPT: RPT, RPS: RPS, RPSON: RPSON, RPSP: RPSP, RPSL: RPSL, RPSLOT: RPSLOT, rpSC: rpSC, RPSET: RPSET, RPHIDE: RPHIDE, RPX: RPX, RPC: RPC, rpKind: rpKind, rpStar: rpStar, rpPrice: rpPrice, rpNeed: rpNeed, rpOk: rpOk, rpLv: rpLv,
     RPPET: RPPET, RPMON: RPMON, rpMonHp: rpMonHp, rpMonAt: rpMonAt, rpFight: rpFight, RPLIM: RPLIM, RPEND: RPEND, rpOpen: rpOpen, RPTIER: RPTIER, RPTIERC: RPTIERC, rpBoostSet: rpBoostSet, bstClean: bstClean, bstAt: bstAt, bstFor: bstFor, BCAT: BCAT, RPTB: RPTB, RPTX: RPTX, DILI: DILI, dili: dili, champs: champs, RPQV: RPQV, rpQuiz: rpQuiz, rpTier: rpTier, rpTierUp: rpTierUp,
     rpClean: rpClean, rpEarn: rpEarn, rpView: rpView, rpBuy: rpBuy, rpEquip: rpEquip, rpDmg: rpDmg, rpGain: rpGain, rpBonus: rpBonus, lvRec: lvRec };
 })();
