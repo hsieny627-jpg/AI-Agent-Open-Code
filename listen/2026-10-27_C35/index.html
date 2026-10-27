@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>第三十二次 問題頁 C35</title>
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#05070A;color:#fff;font-family:"PingFang TC","Microsoft JhengHei",sans-serif;padding:0 16px 140px;font-size:26px;line-height:1.6;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:42px;color:#FFD54A;margin:22px 0 6px}
+h2{font-size:36px;color:#FFD54A;margin:56px 0 10px;border-top:4px solid #24303C;padding-top:22px}
+h3{font-size:30px;color:#7FD4FF;margin:26px 0 6px}
+.box{background:#0B0F14;border:3px solid #24303C;border-radius:22px;padding:16px 20px;margin:18px 0}
+.ask{background:#0B1630;border-color:#7FD4FF}.ok{background:#0D1B12;border-color:#3BD16F}.warn{background:#1B1406;border-color:#FFB300}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;margin:10px 0}
+.g>div{background:#0F1720;border:2px solid #2A3540;border-radius:16px;padding:12px 16px}
+.g b.t{display:block;color:#FFE07A;font-size:28px}
+.n{display:inline-flex;width:46px;height:46px;border-radius:50%;background:#FFD54A;color:#05070A;align-items:center;justify-content:center;font-size:28px;margin-right:8px}
+.src{font-size:20px;color:#BFD3E6;font-weight:400;line-height:1.5}
+.src a{color:#7FD4FF;word-break:break-all}
+table{border-collapse:collapse;width:100%;margin:8px 0}td,th{border:2px solid #24303C;padding:8px 10px;vertical-align:top;text-align:left}th{background:#101820;color:#FFE07A}
+.k{display:inline-block;background:#FFD54A;color:#05070A;border-radius:12px;padding:0 12px;margin:2px 6px 2px 0}
+/* 拖曳 題 樣品 */
+.dg{background:#13203A;border:3px solid #3F6386;border-radius:22px;padding:18px;margin:12px 0}
+.dgs{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+.dgw{display:flex;flex-direction:column;align-items:center;gap:8px}
+.dgw b{font-size:44px;color:#fff;font-family:Arial,sans-serif}
+.dgw b u{color:#FF6B6B;text-decoration:none}
+.slot{min-width:96px;height:64px;border:3px dashed #5C82A8;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:30px;color:#FFE07A;background:#0B1520}
+.slot.fix{border-style:solid;border-color:#3F6386;color:#9FB3C8;font-size:22px}
+.slot.okk{border-color:#2BD46A;border-style:solid;background:#0E3A22}.slot.no{border-color:#FF6B6B;border-style:solid;background:#3A0E14}
+.tiles{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:18px}
+.tile{min-width:96px;height:64px;padding:0 16px;border-radius:16px;background:linear-gradient(#FFE07A,#F2B600);color:#3A2600;font-size:30px;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;box-shadow:0 5px 0 #A07600}
+.tile.used{opacity:.25;pointer-events:none}.tile.drag{position:fixed;z-index:99;pointer-events:none;transform:scale(1.08)}
+.dgr{text-align:center;font-size:28px;margin-top:12px;min-height:44px}
+.btn{min-height:60px;padding:6px 22px;border-radius:16px;border:0;font-size:26px;font-weight:900;background:#24364D;color:#fff;margin:6px}
+/* 現場 任務 新 樣子 樣品 */
+.mock{border-radius:22px;overflow:hidden;border:3px solid #3F6386;margin:12px 0}
+.mk1{background:radial-gradient(circle at 20% 10%,#5B2BD6,#2A0F6E 60%,#16073F);padding:22px;min-height:360px;position:relative}
+.mkh{display:flex;align-items:center;gap:14px}.mkh .lg{font-size:46px;font-weight:900;background:linear-gradient(90deg,#FFE07A,#FF8A65);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mkp{margin-left:auto;background:#fff;color:#2A0F6E;border-radius:18px;padding:6px 20px;font-size:28px;font-weight:900}
+.mkjoin{display:grid;grid-template-columns:260px 1fr;gap:20px;margin-top:18px}.mkqr{background:#fff;border-radius:20px;height:240px;display:flex;align-items:center;justify-content:center;color:#2A0F6E;font-size:26px}
+.mkpl{display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start}.mkpl span{background:#fff;color:#2A0F6E;border-radius:999px;padding:6px 18px;font-size:26px;font-weight:900;animation:pop .5s backwards}
+.mkpl span:nth-child(2){animation-delay:.2s}.mkpl span:nth-child(3){animation-delay:.4s}.mkpl span:nth-child(4){animation-delay:.6s}.mkpl span:nth-child(5){animation-delay:.8s}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.mkq{background:#fff;color:#1A1A2E;border-radius:18px;text-align:center;font-size:40px;padding:18px;margin:16px 0}
+.mka{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mka div{border-radius:16px;padding:20px;font-size:34px;font-weight:900;display:flex;align-items:center;gap:14px;box-shadow:0 6px 0 #0006}
+.mka .a1{background:#E21B3C}.mka .a2{background:#1368CE}.mka .a3{background:#D89E00}.mka .a4{background:#26890C}
+.mkt{position:absolute;top:22px;right:22px;width:84px;height:84px;border-radius:50%;background:#fff;color:#2A0F6E;font-size:40px;font-weight:900;display:flex;align-items:center;justify-content:center;border:8px solid #FFE07A}
+@media (max-width:700px){body{font-size:22px}h1{font-size:32px}h2{font-size:28px}.mkjoin{grid-template-columns:1fr}.dgw b{font-size:34px}}
+</style></head><body><div class="wrap">
+<h1>📝 第三十二次 問題頁（C35）</h1>
+<div class="box">老師，這一次 9 點 裡 已經 做好 的，回報 在 對話 裡。這一頁 只 放 <b>要 老師 決定 的 5 件 事</b>：每一件 寫 號碼 或 「對」就 可以。</div>
+
+<h2>1 第 5 點：四年級 複習 加 什麼 遊戲 元素？（請 選 號碼，可以 選 好幾個）</h2>
+<div class="box">老師 說「先 經過 我 同意 才 動手」。下面 10 個 點子 都 <b>不加 分數、不讓 題目 變 簡單</b>（只 讓 練習 更 好玩）。研究：遊戲化 對 學習 有 小～中 等 的 正面 效果，<b>「挑戰＋即時 回饋＋目標」</b>最 有用（Sailer & Homner 元分析）；Kahoot 這類 即時 搶答 能 提高 專注 和 動機（Wang & Tahir 文獻 回顧）。</div>
+<div class="g">
+<div><b class="t"><span class="n">1</span>🗺 闖關 地圖</b>12 關 ＝ 地圖 上 12 站，打完 一站 亮 一顆 星、開 下一站；一眼 看到「我 到 哪裡 了」。</div>
+<div><b class="t"><span class="n">2</span>⭐ 每關 三星</b>答對 率 決定 ★ 幾顆；不到 三星 可以 再 挑戰（只 跟 自己 比）。</div>
+<div><b class="t"><span class="n">3</span>🔥 連對 火焰</b>連對 愈多 火 愈大（3、5、8 連對 換 顏色＋音效 動畫）；答錯 火 變小 不會 歸零 太 兇。</div>
+<div><b class="t"><span class="n">4</span>👾 每 4 關 一個 魔王</b>第 4、8、12 關 結束 ＝ 魔王 戰：用 剛剛 答對 的 題數 打 魔王 血條（像 寶可夢 對戰）。</div>
+<div><b class="t"><span class="n">5</span>👻 打敗 上一次 的 自己</b>畫面 上 有 一個「上一次 的 你」影子 一起 跑，超過 它 ＝ 進步！（只 跟 自己 比，不 比 別人）</div>
+<div><b class="t"><span class="n">6</span>🧰 道具 卡</b>連對 3 題 送 一張：〔🔊 再 聽 一次〕〔⏸ 時間 停 5 秒〕〔✂ 刪 一個 錯的〕。（刪 錯的 那一題 不算 正確率，跟 現在 驚喜卡 一樣）</div>
+<div><b class="t"><span class="n">7</span>🕵️ 偵探 故事 主線</b>12 關 串成 一個 故事：「找出 誰 是 新 的 護理師？」每 過 一關 拿到 一條 線索，最後 破案。</div>
+<div><b class="t"><span class="n">8</span>🆚 兩人 一台 對決</b>英文課 兩個 人 共用 一台（老師 選 A）＝ 正好！一人 一題 輪流，題目 不一樣，最後 看 誰 答對 多（成績 各記 各的）。</div>
+<div><b class="t"><span class="n">9</span>🏫 全班 合作 進度 條</b>大螢幕 上 一條：全班 一共 答對 幾題 ➜ 到 目標 全班 一起 拿 🎁（大家 幫 大家）。</div>
+<div><b class="t"><span class="n">10</span>🎬 每關 開場 小 動畫</b>每一關 先 3 秒 酷炫 開場（遊戲 名字 飛進來、3 2 1 GO 加 速度 線），像 真的 遊戲 換關。</div>
+</div>
+<div class="box ask">❓ 請 回答：<b>要 哪幾 號？</b>（例：1、3、4、8）　我 的 建議：<b>1＋3＋4＋8</b>（一看 就 懂、最 刺激、而且 8 號 正好 配合「兩人 一台」）。</div>
+<div class="src">出處：Sailer, M., &amp; Homner, L. (2020). The Gamification of Learning: a Meta-analysis. <i>Educational Psychology Review</i>. <a href="https://doi.org/10.1007/s10648-019-09498-w">https://doi.org/10.1007/s10648-019-09498-w</a>　｜　Wang, A. I., &amp; Tahir, R. (2020). The effect of using Kahoot! for learning – A literature review. <i>Computers &amp; Education</i>. <a href="https://doi.org/10.1016/j.compedu.2020.103818">https://doi.org/10.1016/j.compedu.2020.103818</a></div>
+
+<h2>2 現場任務 新 樣子（像 Kahoot、Gimkit 的 質感）</h2>
+<div class="box">老師 說 現在 的 畫面 像 Word 隨便 打字。新 的 方向（樣品，不是 真的）：<span class="k">深紫 漸層 舞台</span><span class="k">白色 大 圓角 卡片</span><span class="k">四個 顏色＋形狀 答案</span><span class="k">學生 名牌 一個一個 跳 進來</span><span class="k">右上角 圓形 倒數</span><span class="k">字 只 留 最 重要 的</span></div>
+<div class="mock"><div class="mk1"><div class="mkh"><span class="lg">⚡ 現場任務</span><span class="mkp">304 班</span></div>
+<div class="mkjoin"><div class="mkqr">📱 QR Code<br>掃 我 加入</div><div><div style="font-size:30px;margin-bottom:10px">✅ 已經 加入 <b style="font-size:46px;color:#FFE07A">5</b> 人</div><div class="mkpl"><span>1 號</span><span>4 號</span><span>7 號</span><span>12 號</span><span>18 號</span></div></div></div></div></div>
+<div class="mock"><div class="mk1"><div class="mkt">17</div><div class="mkh"><span class="lg">第 3 題 ／ 10</span></div>
+<div class="mkq">Who’s she? &nbsp;___ my sister.</div><div class="mka"><div class="a1">▲ She’s</div><div class="a2">◆ Her</div><div class="a3">● He’s</div><div class="a4">■ She</div></div></div></div>
+<div class="box ask">❓ 請 回答：<b>「對，照 這個 方向 做」</b>還是 要 改 哪裡？（例：顏色 換 藍色、字 再 大）。老師 說「對」以後，下一個 對話 把 大螢幕、平板、說明 頁 全部 換成 這個 質感。</div>
+
+<h2>3 新 題型：把 中文 拖 到 英文 下面（請 先 試試看）</h2>
+<div class="box">老師 決定：佔 30%（25 題 裡 8 題、50 題 裡 15 題），<b>放對 幾個 字 就 拿 幾成 分數</b>；名字、數字、家人、職業 每次 換（不用 Ken）。下面 是 樣品，請 用 手指 拖 拖看：</div>
+<div class="dg" id="dg"></div>
+<div style="text-align:center"><button class="btn" id="dgn">➡ 換 下一句</button><button class="btn" id="dgr">🔄 重來</button></div>
+<h3>10 句 的 對照表（照 全站 同一份 中文 字典）</h3>
+<table><tr><th>句子（例子）</th><th>每一個 格子 放 什麼</th></tr>
+<tr><td>What’s your name?</td><td>What＝什麼｜’s＝是｜your＝你的｜name＝名字</td></tr>
+<tr><td>My name is <u>Bill</u>.</td><td>My＝我的｜name＝名字｜is＝是｜Bill＝（名字，不用 拖）</td></tr>
+<tr><td>I’m <u>Bill</u>.</td><td>I＝我｜’m＝是｜Bill＝（名字）</td></tr>
+<tr><td>How old are you?</td><td>How old＝幾歲｜are＝是｜you＝你</td></tr>
+<tr><td>I’m <u>nine</u> years old.</td><td>I＝我｜’m＝是｜nine＝九｜years old＝歲</td></tr>
+<tr><td>I’m <u>nine</u>.</td><td>I＝我｜’m＝是｜nine＝九</td></tr>
+<tr><td>Who’s he? He’s my <u>brother</u>.</td><td>Who＝誰｜’s＝是｜he＝他｜He＝他｜’s＝是｜my＝我的｜brother＝哥哥</td></tr>
+<tr><td>Who’s she? She’s my <u>sister</u>.</td><td>…｜sister＝姊姊</td></tr>
+<tr><td>Is he a <u>doctor</u>? Yes, he is.</td><td>Is＝是｜he＝他｜a＝一位｜doctor＝醫生｜Yes＝是的｜he＝他｜is＝是</td></tr>
+<tr><td>Is she a <u>nurse</u>? No, she isn’t. She’s a <u>teacher</u>.</td><td>Is＝是｜she＝她｜a＝一位｜nurse＝護理師｜No＝不｜she＝她｜isn’t＝不是｜She＝她｜’s＝是｜a＝一位｜teacher＝老師</td></tr>
+</table>
+<div class="box ask">❓ 有 兩種 意思，請 選：<br>
+<b>3-1 名字</b>：<b>A</b> 名字 不用 拖（格子 寫「（名字）」）／ <b>B</b> 名字 也 要 拖（中文 格子 寫 英文 名字 Bill）<br>
+<b>3-2 brother、sister</b>：<b>A</b> 哥哥、姊姊（全站 字典 一樣）／ <b>B</b> 哥哥／弟弟、姊姊／妹妹（一個 格子 寫 兩個）<br>
+<b>3-3 isn’t</b>：<b>A</b> 一個 格子「不是」／ <b>B</b> 拆 兩格：is＝是、n’t＝不（像 ’s 一樣）<br>
+<b>3-4 多 給 幾個 不對 的 中文 方塊</b>（增加 難度）：<b>A</b> 多 2 個 ／ <b>B</b> 不 多（剛好）<br>
+我 的 建議：<b>3-1 A、3-2 A、3-3 B、3-4 A</b>。</div>
+
+<h2>4 第 6 點：期中考題 要 再 給 一次 嗎？ ➜ <span style="color:#7BF0A8">要，請 再 上傳</span></h2>
+<div class="box warn">原因：網站 裡 只 記 了 <b>「哪些 題 不可以 一樣」的 一小部分</b>（例：考卷 的 5 個 字首音 字、8 組 大小寫）。要 做「新 25／新 50 題：<b>50% 跟 考題 類似、但 不可以 100% 一樣</b>」，每一題 都 要 跟 <b>完整 的 考卷</b>一題一題 比對 才 安全。<br>
+請 在 下一個 對話 上傳（照片 或 PDF 都 可以）：<span class="k">三年級 題目卷</span><span class="k">三年級 聽力稿</span><span class="k">四年級 題目卷</span><span class="k">四年級 聽力稿</span><span class="k">答案</span><span class="k">考試 範圍（課本 頁數）</span></div>
+
+<h2>5 老師 怎麼做，學生、家長 才 不會 覺得 是 洩題？（建議）</h2>
+<table><tr><th>做法</th><th>為什麼</th></tr>
+<tr><td>① <b>只 考 一樣 的「學習 目標」，題目 全部 換</b>（換 字、換 人名、換 情境、換 題型 包裝，例：考卷 圈 字首音 ➜ 遊戲 裡 打地鼠）</td><td>這 叫「平行 題本／題目 改寫」，考試 機構 常用（同一個 能力、不同 題目）。網站 的 build 一直 在 檢查：跟 考卷 一模一樣 ＝ 做 不出來</td></tr>
+<tr><td>② <b>題庫 很大、每次 重新 抽</b>（每一套 200 題，做過 的 先 不出）</td><td>學生 不可能「背 答案」，只能 真的 會</td></tr>
+<tr><td>③ <b>只 在 英文課 開</b>（⚡ 現場任務 開 才 有；在家複習、總首頁 都 沒有）</td><td>家長 看不到 也 拿不到 題目，老師 全程 在 旁邊</td></tr>
+<tr><td>④ 給 家長 看 的 是「<b>範圍 和 題型 對照表</b>」，不是 題目</td><td>透明：家長 知道 練 什麼 能力；但 不 給 考題</td></tr>
+<tr><td>⑤ 老師看板 留 紀錄（誰、哪一天、練 了 哪些 題）</td><td>萬一 有人 問，拿得出 證據：練習 題 跟 考題 不一樣</td></tr>
+<tr><td>⑥ 練習 本身 就 是 好方法</td><td>研究：「考考 自己（提取 練習）」是 效果 最 好 的 讀書 方法 之一，比 重讀 課本 記得 更 久</td></tr>
+</table>
+<div class="src">出處：Gierl, M. J., Lai, H., &amp; Turner, S. R. (2012). Using automatic item generation to create multiple-choice test items. <i>Medical Education</i>. <a href="https://doi.org/10.1111/j.1365-2923.2012.04289.x">https://doi.org/10.1111/j.1365-2923.2012.04289.x</a>　｜　Roediger, H. L., &amp; Karpicke, J. D. (2006). Test-Enhanced Learning. <i>Psychological Science</i>. <a href="https://doi.org/10.1111/j.1467-9280.2006.01693.x">https://doi.org/10.1111/j.1467-9280.2006.01693.x</a>　｜　Dunlosky, J., et al. (2013). Improving Students’ Learning With Effective Learning Techniques. <i>Psychological Science in the Public Interest</i>. <a href="https://doi.org/10.1177/1529100612453266">https://doi.org/10.1177/1529100612453266</a></div>
+<div class="box ask">❓ 請 回答：這 6 個 做法 <b>「好」</b>還是 要 改？</div>
+</div>
+<script>
+/* 拖曳 題 樣品：每一個 英文 字 下面 一格；黃色 方塊 拖 進 格子（也 可以 先 點 方塊、再 點 格子）；全部 放好 ＝ 一格 一格 對答案、放對 幾格 ＝ 幾成 分數 */
+var S=[[['What','什麼'],['’s','是'],['your','你的'],['name?','名字']],[['How old','幾歲'],['are','是'],['you?','你']],[['I','我'],['’m','是'],['nine','九'],['years old.','歲']],
+  [['Is','是'],['he','他'],['a','一位'],['doctor?','醫生']],[['My','我的'],['name','名字'],['is','是'],['Bill.',null]]],EX=['老師','他的','不'],K=0,PK=null,T0=0;
+function $(s){return document.querySelector(s)}
+function sh(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function red(w){return w.replace(/[aeiou]/g,function(c){return '<u>'+c+'</u>'})}
+function draw(){var s=S[K],z=s.filter(function(x){return x[1]}).map(function(x){return x[1]}),tl=sh(z.concat(EX.filter(function(e){return z.indexOf(e)<0}).slice(0,2)));T0=Date.now();
+  $('#dg').innerHTML='<div class="dgs">'+s.map(function(x,i){return '<div class="dgw"><b>'+red(x[0])+'</b><div class="slot'+(x[1]?'':' fix')+'" data-s="'+i+'">'+(x[1]?'':'（名字）')+'</div></div>'}).join('')+'</div><div class="tiles">'+tl.map(function(t,i){return '<div class="tile" data-t="'+i+'">'+t+'</div>'}).join('')+'</div><div class="dgr" id="dgres">👆 把 黃色 方塊 拖 到 英文 字 下面</div>'}
+function put(slot,tile){if(!slot||slot.classList.contains('fix')||slot.getAttribute('data-v'))return;slot.textContent=tile.textContent;slot.setAttribute('data-v',tile.textContent);slot.setAttribute('data-ti',tile.getAttribute('data-t'));tile.classList.add('used');check()}
+function check(){var s=S[K],L=document.querySelectorAll('.slot:not(.fix)');if([].some.call(L,function(x){return !x.getAttribute('data-v')}))return;var ok=0;
+  [].forEach.call(L,function(x){var i=+x.getAttribute('data-s'),g=x.getAttribute('data-v')===s[i][1];if(g)ok++;x.classList.add(g?'okk':'no');if(!g)x.innerHTML=x.getAttribute('data-v')+'<br><small style="font-size:18px;color:#7BF0A8">✅ '+s[i][1]+'</small>'});
+  var sec=Math.round((Date.now()-T0)/100)/10;$('#dgres').innerHTML='放對 <b style="color:#7BF0A8">'+ok+'</b> ／ '+L.length+' 格 ＝ <b>'+Math.round(ok/L.length*100)+'%</b>　·　用 了 '+sec+' 秒（遊戲 分數：愈快 愈高；老師看板 只 記 正確率）'}
+document.addEventListener('click',function(e){var t=e.target;if(t.id==='dgn'){K=(K+1)%S.length;draw();return}if(t.id==='dgr'){draw();return}
+  var tl=t.closest&&t.closest('.tile');if(tl&&!tl.classList.contains('used')){[].forEach.call(document.querySelectorAll('.tile'),function(x){x.style.outline=''});PK=tl;tl.style.outline='4px solid #7FD4FF';return}
+  var sl=t.closest&&t.closest('.slot');if(sl&&PK){put(sl,PK);PK.style.outline='';PK=null}});
+var DR=null;
+document.addEventListener('pointerdown',function(e){var tl=e.target.closest&&e.target.closest('.tile');if(!tl||tl.classList.contains('used'))return;var r=tl.getBoundingClientRect(),c=tl.cloneNode(true);c.classList.add('drag');c.style.left=r.left+'px';c.style.top=r.top+'px';c.style.width=r.width+'px';document.body.appendChild(c);DR={tl:tl,c:c,dx:e.clientX-r.left,dy:e.clientY-r.top,mv:0}});
+document.addEventListener('pointermove',function(e){if(!DR)return;DR.mv=1;DR.c.style.left=(e.clientX-DR.dx)+'px';DR.c.style.top=(e.clientY-DR.dy)+'px'});
+document.addEventListener('pointerup',function(e){if(!DR)return;var d=DR;DR=null;d.c.remove();if(!d.mv)return;var el=document.elementFromPoint(e.clientX,e.clientY),sl=el&&el.closest&&el.closest('.slot');if(sl)put(sl,d.tl)});
+draw();
+</script>
+</body></html>
