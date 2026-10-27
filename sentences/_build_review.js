@@ -18,7 +18,7 @@
 const fs = require('fs'), path = require('path'), cp = require('child_process');
 const ROOT = path.join(__dirname, '..');
 const NAMETAG = require('./_nametag').TAG;
-const { SITES, topics } = require('./_review_sites.js');
+const { SITES, topics, FUN_ON } = require('./_review_sites.js');
 /* 2026-10-27 第三十次 2-(1)：📅 今日任務、📈 我的 進步 暫時 下架（老師）；檔案 照樣 產生，要 放回來 改成 true */
 const TODAY_ON = false;
 function indexHTML(S, META) {
@@ -70,7 +70,7 @@ ${S.units.map(u => '<div class="u"><h3>' + u.ic + ' ' + u.t + '</h3><div class="
 </section>
 <section><h2><span>2</span>🎮 遊戲</h2><div class="g">
 ${META.map(m => btn('games.html#' + m.id, m.ic, m.name, m.rule)).join('')}
-${/* 2026-10-26 第二十九次 第 3 點：🏰 守城、🎣 釣魚（fun/_build.js 做 的 castle.html、fish.html）*/ btn('castle.html', '🏰', '守城 大作戰', '答對 ＝ 大砲 打 怪物，守住 城堡') + btn('fish.html', '🎣', '英文 釣魚 大賽', '答對 ＝ 魚餌，釣 稀有 魚')}
+${/* 2026-10-26 第二十九次 第 3 點：🏰 守城、🎣 釣魚（fun/_build.js 做 的 castle.html、fish.html）；2026-10-27 第三十一次 暫時 下架（FUN_ON）*/ !FUN_ON ? '' : btn('castle.html', '🏰', '守城 大作戰', '答對 ＝ 大砲 打 怪物，守住 城堡') + btn('fish.html', '🎣', '英文 釣魚 大賽', '答對 ＝ 魚餌，釣 稀有 魚')}
 </div></section>
 ${S.r1 ? `<section><h2><span>3</span>📘 Review 1</h2><div class="g">
 ${btn('r1/index.html', '🃏', 'Review 1 字卡', '物品、活動單字 98 張')}${btn('r1.html', '📖', 'Review 1 句型卡', '全部的句子＋📝 複習')}${btn('r1/games.html', '🎮', 'Review 1 遊戲', '20 種＋' + (S.r1 === 'x3' ? '三' : '四') + '年級進階')}

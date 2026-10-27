@@ -24,6 +24,7 @@ const SITES = [
            { ic: '💼', t: '職業：單字故事', from: 'words/jobs-why.html' }] }
 ];
 /* 每一個主題：k ＝〔🔒 開關〕代號、href ＝ 首頁的連結、grp ＝ 老師看板的分組、t ＝ 名字 */
+const FUN_ON = false;   /* 🏰 守城、🎣 釣魚 暫時 下架（2026-10-27 第三十一次） */
 function topics(S) {
   const g = S.out === 'g3-review' ? 3 : 4, P = 'g' + g + 'rv_', out = [];
   const G = require(path.join(__dirname, '..', S.src, '_game_data'));
@@ -32,11 +33,12 @@ function topics(S) {
       .forEach(x => out.push({ k: P + un + '-' + x[0].slice(1), href: u.f + x[0], grp, t: x[1] })); });
   S.games.forEach(id => { const m = G.GAMES.filter(x => x.id === id)[0]; out.push({ k: P + 'gm-' + id, href: 'games.html#' + id, grp: '🎮 遊戲', t: m.ic + ' ' + m.name }); });
   /* 2026-10-26 第二十九次 第 3 點：🏰 守城、🎣 釣魚（fun/_build.js；代號 接 在 遊戲 後面，舊 的 代號 不變）*/
-  [['fun-castle', 'castle.html', '🏰 守城 大作戰'], ['fun-fish', 'fish.html', '🎣 英文 釣魚 大賽']].forEach(x => out.push({ k: P + x[0], href: x[1], grp: '🎮 遊戲', t: x[2] }));
+  /* 2026-10-27 第三十一次（老師）：暫時 下架 ➜ FUN_ON ＝ false（首頁 不放、老師看板〔🔒 開關〕不列；網頁 檔案 留著；要 放回來 改 true）*/
+  if (FUN_ON) [['fun-castle', 'castle.html', '🏰 守城 大作戰'], ['fun-fish', 'fish.html', '🎣 英文 釣魚 大賽']].forEach(x => out.push({ k: P + x[0], href: x[1], grp: '🎮 遊戲', t: x[2] }));
   /* 2026-10-16 C4 第 7 題：📘 Review 1（字卡、句型卡、遊戲各一個代號；遊戲 ＝ 20 種＋自己年級的進階，S.r1 ＝ 進階的代號） */
   if (S.r1) [['r1-w', 'r1/index.html', '🃏 Review 1 字卡'], ['r1-s', 'r1.html', '📖 Review 1 句型卡'], ['r1-g', 'r1/games.html', '🎮 Review 1 遊戲']]
     .forEach(x => out.push({ k: P + x[0], href: x[1], grp: '📘 Review 1', t: x[2] }));
   S.more.forEach(x => { const f = path.basename(x.from); out.push({ k: P + 'mo-' + f.replace(/\.html$/, ''), href: f, grp: '📚 補充', t: x.ic + ' ' + x.t }); });
   return out;
 }
-module.exports = { SITES, topics };
+module.exports = { SITES, topics, FUN_ON };

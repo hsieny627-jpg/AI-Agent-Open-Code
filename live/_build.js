@@ -31,10 +31,10 @@ G3M.CSETS.forEach(x => { CRD.B[x[0]] = {}; G3M.GAMES.forEach(g => { CRD.B[x[0]][
 /* 📝 四年級 複習（2026-10-27 第三十次 2-(2)(4)，老師 選 A「跟 三年級 一樣」）＝ midterm/_data.js：大廳 順序 11 種＋🪤 四年級 複習 0（m12）；公布 答案 ＝ 答錯頁 的 英文 fe＋中文 fz */
 const MT = require(path.join(ROOT, 'midterm', '_data.js'));
 const MTORD = ['lis', 'read', 'write'].map(k => MT.GAMES.filter(g => g.sec === k)).flat();
-const CRD4 = { gs: MTORD.map(g => [g.id, g.ic, g.nm]), sets: [['mt', '📝 四年級 複習'], ['mt0', '🪤 四年級 複習 0']],
-  only: { mt: MTORD.filter(g => !g.solo).map(g => g.id), mt0: MTORD.filter(g => g.solo === 'mt0').map(g => g.id) }, B: { mt: {}, mt0: {} } };
-MT.GAMES.forEach(g => { CRD4.B[g.solo || 'mt'][g.id] = g.B.map(q => [String(q.fe || ''), String(q.fz || '')]); });
-if (CRD4.only.mt.length !== 11 || CRD4.only.mt0.join() !== 'm12') throw new Error('四年級 複習 套數 不對');
+/* 2026-10-27 第三十一次（老師 選 D 回到以前）：沒有「🪤 四年級 複習 0」了，只有 一套 📝 四年級 複習 ＝ 12 種（陷阱 偵測器 在 最後）*/
+const CRD4 = { gs: MTORD.map(g => [g.id, g.ic, g.nm]), sets: [['mt', '📝 四年級 複習']], only: { mt: MTORD.map(g => g.id) }, B: { mt: {} } };
+MT.GAMES.forEach(g => { CRD4.B.mt[g.id] = g.B.map(q => [String(q.fe || ''), String(q.fz || '')]); });
+if (CRD4.only.mt.length !== 12 || MT.GAMES.some(g => g.solo)) throw new Error('四年級 複習 套數 不對');
 const head = (t, extra) => `<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">

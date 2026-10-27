@@ -235,7 +235,7 @@ function tick(){cancelAnimationFrame(TM.raf);if(!R)return;var l=tLeft(),b=$('#ba
   if(TM.run&&l<=0){TM.run=false;if(!R.lock)pick(-1);return}if(TM.run)TM.raf=requestAnimationFrame(tick)}
 /* ── 大廳 ── */
 function best(id){try{return +localStorage.getItem('mt_best_'+id)||0}catch(e){return 0}}
-/* 2026-10-27 第三十次 2-(4)（老師 選 A）：🪤 陷阱 偵測器（solo）拿出 大廳 ＝「🪤 四年級 複習 0」，只在 ⚡ 現場任務 開；大廳、25／50 題 ＝ 11 種（LOB）*/
+/* 2026-10-27 第三十一次（老師 選 D）：m12 的 solo 拿掉 ➜ LOB ＝ 12 種（大廳、25／50 題 都 抽 陷阱 偵測器）。原 第三十次 2-(4)（老師 選 A）：🪤 陷阱 偵測器（solo）拿出 大廳 ＝「🪤 四年級 複習 0」，只在 ⚡ 現場任務 開；大廳、25／50 題 ＝ 11 種（LOB）*/
 var GMA=GM,LOB=GM.filter(function(g){return !g.solo});
 function hub(){if(CR&&CR.cfg&&CR.cfg.m==='sync')return;if(R&&!R.crs&&!R.x&&!R.sent&&R.Q&&R.Q.length>=6)rec1();clr();stopSay();R=null;window.scrollTo(0,0);var GM=CR&&CR.cfg?GMA.filter(function(g){return (CR.cfg.gs||[]).indexOf(g.id)>=0}):LOB;
   var h='<div class="top"><h1>'+(CR&&CR.cfg?crName():'📝 四年級 複習')+'</h1><span class="sub">'+GM.length+' 種 遊戲'+(CR?'':'：聽力、閱讀、寫寫看')+'</span><a class="home" href="../index.html">🏠 總首頁</a></div>';
@@ -377,7 +377,7 @@ function finX(){var GM=LOB,n=R.Q.length,ok=0,fast=0;R.Q.forEach(function(x){ok+=
   h+='<div class="nav"><button class="go" data-xn="'+R.x+'">🔁 再 挑戰 一次</button><button data-x="hub">🎮 回 大廳</button></div>'+(typeof scByeHTML==='function'&&typeof SCID!=='undefined'&&SCID?scByeHTML():'')+'</div>';
   $('#app').innerHTML=h;window.scrollTo(0,0)}
 function rec1(){try{if(typeof scLive!=='function'||!scLive()||R.sent)return false;R.sent=1;var u=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-  var Rr={id:SCID,set:R.x?'g4gm_mt-x'+R.x:'g4gm_mt-'+R.g.id,name:R.x?'📝 四年級 複習｜📝 '+R.x+' 題 挑戰':(R.g.solo?'🪤 四年級 複習 0｜':'📝 四年級 複習｜')+R.g.ic+' '+R.g.nm,m:'g',qs:R.Q,raw:R.sc,fix:0,mp:0,mw:0,sec:Math.round((Date.now()-R.t0)/1000),src:'school',dev:SCDEV,u:u,t:Date.now()};
+  var Rr={id:SCID,set:R.x?'g4gm_mt-x'+R.x:'g4gm_mt-'+R.g.id,name:R.x?'📝 四年級 複習｜📝 '+R.x+' 題 挑戰':'📝 四年級 複習｜'+R.g.ic+' '+R.g.nm,m:'g',qs:R.Q,raw:R.sc,fix:0,mp:0,mw:0,sec:Math.round((Date.now()-R.t0)/1000),src:'school',dev:SCDEV,u:u,t:Date.now()};
   var QQ=scGet('q')||[];QQ.push(Rr);scPut('q',QQ.slice(-200));scFlush();return true}catch(e){return false}}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
   if((b=c('[data-g]'))){start(b.getAttribute('data-g'));return}
@@ -397,7 +397,7 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
    〔👥 全班 同步〕＝ 老師 按〔▶ 下一題〕全班 一起 做 同一題；答完 ＝「等 老師」；答案 寫 cra/編號/5碼
    成績：g4gm_mt-遊戲（跟 平常 一樣；m12 ＝「🪤 四年級 複習 0」）➜ 老師看板〔🏫 課堂複習〕大表 */
 var CR=null;
-function crName(){return CR&&CR.cfg&&CR.cfg.set==='mt0'?'🪤 四年級 複習 0':'📝 四年級 複習'}
+function crName(){return '📝 四年級 複習'}   /* 2026-10-27 第三十一次：不再 有「🪤 四年級 複習 0」 */
 function crWait(t,extra){var o=$('#crw');if(!t){o.classList.remove('on');return}o.innerHTML='<div class="crb"><div class="cri">⚡</div><div class="crt">'+t+'</div>'+(extra||'')+'</div>';o.classList.add('on')}
 function crInit(){var m=/[?&]live=(\\d{4})/.exec(location.search);if(!m)return;CR={room:m[1],t:0,cfg:null,acc:{},n:0,ok:0,q:-9,rd:{}};document.body.classList.add('crm');
   if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();crInit2()});return}crInit2()}
@@ -421,7 +421,7 @@ function crDone(){CR.sc=R.sc;CR.st=R.st;var ok=R.Q.length?R.Q[0][0]:0;crKeep();R
 function crFlush(){if(!CR||!CR.cfg)return;if(R&&R.crs){if(!R.done&&!R.Q.length)R.Q.push([0,-1,0,0,0,R.qi]);crKeep()}
   if(R&&!R.crs&&!R.sent&&R.Q&&R.Q.length)rec1();
   Object.keys(CR.acc).forEach(function(id){var Q=CR.acc[id];if(!Q.length||typeof scLive!=='function'||!scLive())return;var g=GMA.filter(function(x){return x.id===id})[0],u=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-    var QQ=scGet('q')||[];QQ.push({id:SCID,set:'g4gm_mt-'+id,name:(g.solo?'🪤 四年級 複習 0｜':'📝 四年級 複習｜')+g.ic+' '+g.nm,m:'g',qs:Q,raw:0,fix:0,mp:0,mw:0,sec:0,src:'school',dev:SCDEV,u:u,t:Date.now()});scPut('q',QQ.slice(-200))});
+    var QQ=scGet('q')||[];QQ.push({id:SCID,set:'g4gm_mt-'+id,name:'📝 四年級 複習｜'+g.ic+' '+g.nm,m:'g',qs:Q,raw:0,fix:0,mp:0,mw:0,sec:0,src:'school',dev:SCDEV,u:u,t:Date.now()});scPut('q',QQ.slice(-200))});
   CR.acc={};try{scFlush()}catch(e){}}
 /* 自己 答：進度 給 老師 看 */
 function crProg(ok){if(!CR||!CR.cfg||CR.cfg.m!=='self'||typeof LDB==='undefined'||!SCID)return;CR.n++;if(ok)CR.ok++;LDB.set('rooms/'+CR.room+'/crp/'+SCID,{n:CR.n,ok:CR.ok,g:R.g.id,t:CR.t})}

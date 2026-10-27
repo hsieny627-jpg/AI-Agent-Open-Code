@@ -1,7 +1,8 @@
 # 🏰 守城、🎣 釣魚（fun/）— 規格（接手的 Claude 先讀完再動手）
 
 > 2026-10-26 老師第二十九次 第 3 點：C32 遊戲點子「先做 1 🏰 全班 守城、2 🎣 英文 釣魚；放在哪裡 C 兩個都要」。需求檔 `sentences/2026-10-16_C_需求與問題.md` 第四節最下面「第二十九次」。
-> 現場任務 版 在 `live/`（`live/CLAUDE.md` 最上面）。根目錄 `AGENTS.md` 第四節 同樣 適用。
+> 現場任務 版 在 `live/`（`live/CLAUDE.md` 最上面）。
+> **⏸ 2026-10-27 第三十一次 老師：兩個 遊戲 暫時 下架**：在家複習 首頁 不放、〔🔒 開關〕不列（`sentences/_review_sites.js` 的 `FUN_ON ＝ false`）、現場任務 大螢幕 不列（`live/_host_rt.js` `GRP`）。網頁 檔案 照樣 build（`node fun/_build.js`），放回來 只 改 那 兩個 地方；`fun/_verify.js` 量「首頁 沒有 連結」（跟著 `FUN_ON`）。根目錄 `AGENTS.md` 第四節 同樣 適用。
 
 | 項目 | 做法 |
 |---|---|

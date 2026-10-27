@@ -34,5 +34,5 @@ const ROOT = path.join(__dirname, '..'), E = []; let n = 0; const CJK = /[㐀-�
     n++; if (errs.length) E.push(tag + ' JS：' + errs.slice(0, 2).join('｜'));
     await ctx.close(); }
   /* 在家複習 首頁 有 兩個 新 遊戲 */
-  for (const d of ['g3-review', 'g4-review']) { n++; const h = fs.readFileSync(path.join(ROOT, d, 'index.html'), 'utf8'); if (!/href="castle\.html"/.test(h) || !/href="fish\.html"/.test(h)) E.push(d + ' 首頁 沒有 守城／釣魚'); }
+  for (const d of ['g3-review', 'g4-review']) { n++; const h = fs.readFileSync(path.join(ROOT, d, 'index.html'), 'utf8'); const on = require('../sentences/_review_sites.js').FUN_ON; if (on !== /href="castle\.html"/.test(h) || on !== /href="fish\.html"/.test(h)) E.push(d + (on ? ' 首頁 沒有 守城／釣魚' : ' 首頁 還有 守城／釣魚（2026-10-27 第三十一次 暫時 下架）')); }   /* FUN_ON ＝ false ➜ 首頁 不可以 有 */
   await br.close(); E.forEach(x => console.log('✗ ' + x)); console.log((E.length ? '✗' : '✓') + ' 守城、釣魚（在家複習）量了 ' + n + ' 項，失敗 ' + E.length + ' 項'); process.exit(E.length ? 1 : 0); })();

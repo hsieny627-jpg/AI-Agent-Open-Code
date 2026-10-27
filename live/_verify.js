@@ -111,7 +111,7 @@ const H_PH = ph => ph === 'q';
     const set = await h.evaluate(() => ({ n: document.querySelectorAll('[data-sk]').length, f: document.querySelector('[data-sk]').getAttribute('data-sk'), on: document.querySelector('[data-sk].on').getAttribute('data-sk'),
       sets: document.querySelectorAll('[data-sb].on').length, all: document.querySelectorAll('[data-sb]').length, g4: document.querySelector('[data-qg="4"]').classList.contains('on'), n5: document.querySelector('[data-sn="5"]').classList.contains('on'),
       t26: /⚡ 閃電四選一26 題/.test(document.querySelector('[data-sb]').textContent), r1: /Review 1/.test(document.body.innerText), m5: /5 題（約 3 分鐘）/.test(document.body.innerText) }));
-    if (set.n !== 13 || set.f !== 'classic' || set.on !== 'classic') E.push(tag + '：遊戲 不是「經典搶答 第一個、預設、13 種（第二十九次 多 守城、釣魚）」');
+    if (set.n !== 11 || set.f !== 'classic' || set.on !== 'classic') E.push(tag + '：遊戲 不是「經典搶答 第一個、預設、11 種（第三十一次 守城、釣魚 暫時 下架）」');
     if (set.sets !== set.all || set.all < 30) E.push(tag + '：題目 沒有 預設 全選、或 沒有 句型遊戲＋Review 1（' + set.sets + '／' + set.all + '）');
     if (!set.g4 || !set.n5 || !set.t26 || !set.r1 || !set.m5) E.push(tag + '：設定頁 不對（402 ➜ 四年級 題目、預設 5 題 約 3 分鐘、「26 題」、Review 1）' + JSON.stringify(set));
     await h.click('[data-qg="3"]'); if (!/I 還是 My/.test(await h.textContent('#hset'))) E.push(tag + '：402 班 選 三年級 題目 沒有 換'); await h.click('[data-qg="4"]');

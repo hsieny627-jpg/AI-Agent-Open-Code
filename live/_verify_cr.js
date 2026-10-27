@@ -34,12 +34,11 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
     const G = make({ TEACHER_PW: PW }), ctx = await ctxOf(br, vp, G);
     const h = await ctx.newPage(); const errs = []; h.on('pageerror', e => errs.push(e.message));
     await h.goto(HTTP + '/live/host.html'); await h.waitForTimeout(400); await h.fill('#pw', PW); await h.click('#pwgo'); await h.waitForTimeout(500);
-    /* 2026-10-27 第三十次：四年級 的 班 ＝〔📝 四年級 複習〕（兩套：四年級 複習 11 種、🪤 四年級 複習 0 ＝ 陷阱 偵測器）*/
+    /* 2026-10-27 第三十一次：四年級 的 班 ＝〔📝 四年級 複習〕一套 12 種（陷阱 偵測器 放回 最後；沒有「四年級 複習 0」）*/
     await h.click('[data-sc="402"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.waitForTimeout(200);
     n++; const s4 = await h.evaluate(() => ({ scr: H.scr, h1: document.querySelector('#hcr h1').textContent, sets: [].map.call(document.querySelectorAll('[data-crs]'), b => b.textContent), gs: [].map.call(document.querySelectorAll('[data-crg]'), b => b.textContent) }));
-    if (s4.scr !== 'hcr' || !/四年級 複習/.test(s4.h1) || s4.sets.join('|') !== '📝 四年級 複習|🪤 四年級 複習 0' || s4.gs.length !== 11 || s4.gs.some(t => /陷阱/.test(t)) || !/字首音/.test(s4.gs[0])) E.push(tag + ' 四年級 複習 設定 畫面 ' + JSON.stringify(s4).slice(0, 300));
-    await h.click('[data-crs="mt0"]'); await h.waitForTimeout(150); n++; const g0 = await h.evaluate(() => [].map.call(document.querySelectorAll('[data-crg]'), b => b.textContent));
-    if (g0.length !== 1 || !/陷阱/.test(g0[0]) || !/☑/.test(g0[0])) E.push(tag + ' 🪤 四年級 複習 0 不是 只有 陷阱 偵測器 ' + JSON.stringify(g0));
+    if (s4.scr !== 'hcr' || !/四年級 複習/.test(s4.h1) || s4.sets.join('|') !== '📝 四年級 複習' || s4.gs.length !== 12 || !/陷阱/.test(s4.gs[11]) || !/字首音/.test(s4.gs[0])) E.push(tag + ' 四年級 複習 設定 畫面 ' + JSON.stringify(s4).slice(0, 300));
+    n++; if (!s4.gs.every(t => /☑/.test(t))) E.push(tag + ' 四年級 複習 12 種 沒有 預設 全選 ' + JSON.stringify(s4.gs));
     await h.click('#crback'); await h.waitForTimeout(150);
     await h.click('[data-sc="304"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.waitForTimeout(200);
     n++; const s0 = await h.evaluate(() => ({ scr: H.scr, sets: [].map.call(document.querySelectorAll('[data-crs]'), b => b.textContent), gs: [].map.call(document.querySelectorAll('[data-crg]'), b => b.textContent), sm: [].filter.call(document.querySelectorAll('#hcr button'), b => b.getBoundingClientRect().height < 48 || parseFloat(getComputedStyle(b).fontSize) < 18).length }));
@@ -74,9 +73,9 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
     n++; const p1 = dget('rooms/0304/crp/30401'); if (!p1 || p1.n !== 1 || p1.ok !== 1 || p1.g !== 'q10') E.push(tag + ' 自己 答 的 進度 沒有 寫 crp ' + JSON.stringify(p1));
     await h.waitForTimeout(1600); n++; const hs = await h.evaluate(() => document.getElementById('hcrr').textContent); if (!/已經 開始 1 人/.test(hs) || !/1 號/.test(hs)) E.push(tag + ' 大螢幕 沒有 看到 誰 在 做 ' + hs.slice(0, 120));
     await h.click('#crend'); await h.waitForTimeout(400);
-    /* ══ 2026-10-27 第三十次：四年級（402）〔👥 全班 同步〕🪤 四年級 複習 0 ➜ 平板 跳到 midterm ➜ 答 ➜ 下一題 ➜ 結束 送 g4gm_mt-m12 ══ */
-    await h.click('#crhome').catch(() => {}); await h.waitForTimeout(200); await h.click('[data-sc="402"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.click('[data-crs="mt0"]'); await h.click('[data-crm="sync"]'); await h.click('#crstart'); await h.waitForTimeout(500);
-    n++; const c4 = dget('rooms/0402/cr'); if (!c4 || c4.on !== 1 || c4.set !== 'mt0' || c4.deck.length !== 8 || c4.deck.some(d => d[0] !== 'm12')) E.push(tag + ' 四年級 同步 Firebase 不對 ' + JSON.stringify(c4).slice(0, 200));
+    /* ══ 2026-10-27 第三十次（第三十一次：選 📝 四年級 複習 裡 的 🪤 陷阱 偵測器）：四年級（402）〔👥 全班 同步〕➜ 平板 跳到 midterm ➜ 答 ➜ 下一題 ➜ 結束 送 g4gm_mt-m12 ══ */
+    await h.click('#crhome').catch(() => {}); await h.waitForTimeout(200); await h.click('[data-sc="402"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.click('[data-cra="0"]'); await h.click('[data-crg="m12"]'); await h.click('[data-crm="sync"]'); await h.click('#crstart'); await h.waitForTimeout(500);
+    n++; const c4 = dget('rooms/0402/cr'); if (!c4 || c4.on !== 1 || c4.set !== 'mt' || c4.deck.length !== 8 || c4.deck.some(d => d[0] !== 'm12')) E.push(tag + ' 四年級 同步 Firebase 不對 ' + JSON.stringify(c4).slice(0, 200));
     const s4p = await stuPage(ctx, HTTP + '/live/index.html', '40201'); await s4p.waitForURL(/midterm\/index\.html\?live=0402/, { timeout: 12000 }).catch(() => {});
     n++; if (!/midterm\/index\.html\?live=0402/.test(s4p.url())) E.push(tag + ' 四年級 平板 沒有 自己 跳到 四年級 複習 ' + s4p.url());
     await s4p.waitForTimeout(2500);
@@ -93,7 +92,7 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
     n++; const e4 = await s4p.evaluate(() => ({ t: document.getElementById('crw').textContent, q: JSON.parse(localStorage.getItem('score_q') || '[]') }));
     const sent4 = POSTS.map(x => { try { return JSON.parse(x); } catch (e) { return {}; } }).filter(x => x.r && x.r.set === 'g4gm_mt-m12' || x.recs && x.recs.some(r => r.set === 'g4gm_mt-m12'));
     const r4 = [].concat(...sent4.map(x => x.recs || [x.r])).concat(e4.q).filter(r => r && r.set === 'g4gm_mt-m12').pop();
-    if (!/結束/.test(e4.t) || !r4 || r4.qs.length !== 2 || r4.qs[0][0] !== 1 || r4.qs[1][0] !== 0 || !/^🪤 四年級 複習 0｜/.test(r4.name)) E.push(tag + ' 四年級 結束 沒有 送 成績 g4gm_mt-m12（2 題：對、沒答 ＝ 錯）' + JSON.stringify(r4 || null).slice(0, 160));
+    if (!/結束/.test(e4.t) || !r4 || r4.qs.length !== 2 || r4.qs[0][0] !== 1 || r4.qs[1][0] !== 0 || !/^📝 四年級 複習｜🪤/.test(r4.name)) E.push(tag + ' 四年級 結束 沒有 送 成績 g4gm_mt-m12（2 題：對、沒答 ＝ 錯）' + JSON.stringify(r4 || null).slice(0, 160));
     /* 〔🙋 學生 自己 答〕📝 四年級 複習：只 有 數字 神射手 */
     await h.click('#crhome'); await h.click('[data-crgo]'); await h.click('[data-crs="mt"]'); await h.click('[data-cra="0"]'); await h.click('[data-crg="m5"]'); await h.click('[data-crm="self"]'); await h.click('#crstart'); await h.waitForTimeout(2600);
     n++; const lb4 = await s4p.evaluate(() => ({ cards: [].map.call(document.querySelectorAll('[data-g]'), b => b.getAttribute('data-g')), x: !!document.querySelector('.xrow'), h1: document.querySelector('.top h1').textContent, home: getComputedStyle(document.querySelector('.top .home')).display }));

@@ -10,8 +10,8 @@ function crGr(){return H.cls&&/^[34]/.test(H.cls)?H.cls.charAt(0):''}
 function CD(){return CRDS[crGr()||'3']}
 function crGs(){var d=CD();return d.gs.filter(function(g){return !d.only||(d.only[CRS.set]||[]).indexOf(g[0])>=0})}
 function crTitle(){return crGr()==='4'?'📝 四年級 複習':'🏫 三年級 課堂複習'}
-function crBox(){var g=crGr();if(g==='4')return '<div class="sgrp crg"><div class="sgh"><span class="sgi">📝</span><b>四年級 複習</b><small>11 種 遊戲（字首音 氣球、短文 偵探…）＋🪤 四年級 複習 0；學生 自己 答 或 全班 同步</small></div>'+
-  '<div class="ggrid"><button data-crgo="1" class="gcd crgo"><span class="crgi">📝</span><span class="gtx"><b>📝 四年級 複習</b><small>四年級 複習／🪤 四年級 複習 0</small></span></button></div></div>';
+function crBox(){var g=crGr();if(g==='4')return '<div class="sgrp crg"><div class="sgh"><span class="sgi">📝</span><b>四年級 複習</b><small>12 種 遊戲（字首音 氣球、短文 偵探、陷阱 偵測器…）；學生 自己 答 或 全班 同步</small></div>'+
+  '<div class="ggrid"><button data-crgo="1" class="gcd crgo"><span class="crgi">📝</span><span class="gtx"><b>📝 四年級 複習</b><small>12 種 遊戲</small></span></button></div></div>';
   var ok=g==='3';return '<div class="sgrp crg"><div class="sgh"><span class="sgi">🏫</span><b>三年級 課堂複習</b><small>10 種 遊戲（打地鼠、夾娃娃、小精靈…）；學生 自己 答 或 全班 同步</small></div>'+
   '<div class="ggrid"><button data-crgo="1" class="gcd crgo'+(ok?'':' off')+'"><span class="crgi">🏫</span><span class="gtx"><b>🏫 三年級 課堂複習</b><small>'+(ok?'課堂複習 1、2、3／三年級 複習':'① 先 選 三年級 或 四年級 的 班')+'</small></span></button></div></div>'}
 function crDraw(){var c=H.cls||'';if(!CD().sets.some(function(x){return x[0]===CRS.set})){CRS.set=CD().sets[0][0];CRS.gs=null}if(!CRS.gs)CRS.gs=crGs().map(function(g){return g[0]});

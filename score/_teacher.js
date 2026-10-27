@@ -1323,22 +1323,22 @@ function favNm(id){var k=id.charAt(0),n=+id.slice(1);if(k==='t'){var T=(SC.RPT||
    三年級 複習（g3m）、課堂複習 1～3（c1～c3）的 10 種 遊戲：一列 一位 學生（號碼＋姓名），10 欄 ＝ 每一種 遊戲 的 正確率（百分制），最後 一欄 ＝ 這位 學生 的 平均；
    最下面 一列 ＝ 全班 每一種 遊戲 的 平均。**只 算 已經 作答 的 題目**（答 了 幾題 就 算 幾題；時間 到 ＝ 答錯）＝ 答對 題數 ÷ 作答 題數 ✕ 100。時間 ＝ 上面 選 的 時間。 */
 var G3S='all',G3C='';
-var G3SETS=[['g3m','📝 三年級 複習'],['c1','🏫 課堂複習 1'],['c2','🏫 課堂複習 2'],['c3','🏫 課堂複習 3'],['all','三年級 全部'],['mt','📝 四年級 複習'],['mt0','🪤 四年級 複習 0']];
+var G3SETS=[['g3m','📝 三年級 複習'],['c1','🏫 課堂複習 1'],['c2','🏫 課堂複習 2'],['c3','🏫 課堂複習 3'],['all','三年級 全部'],['mt','📝 四年級 複習']];
 /* 2026-10-26 第二十九次 第 7 點（老師）：(1) 欄 的 順序 ＝ 關卡 順序（第 9 關 夾娃娃、第 10 關 小精靈）(2) 每一個 遊戲 的 平均 正確率 放 最上面 一格（每班 1 號 的 正上方）
    (3) 底色：59 以下 紅、60～80 黃、81～100 綠；多〔📝 四年級 複習〕（12 種 遊戲，四年級 的 班） */
 var G3ORD=['q1','q4','q5','q6','q7','q8','q9','q10','q3','q2'];
-/* 2026-10-27 第三十次 2-(4)（老師 選 A）：🪤 陷阱 偵測器（m12）拿出來 ＝「🪤 四年級 複習 0」；四年級 複習 ＝ 11 種（關卡 順序 ＝ 大廳 順序）*/
-var MTORD=['m1','m2','m3','m4','m5','m6','m8','m9','m11','m7','m10'];
-function g3Games(){if(G3S==='mt'||G3S==='mt0'){return (G3S==='mt0'?['m12']:MTORD).map(function(id){var c=BANK['g4gm_mt-'+id];return [id,c?String(c.name).replace(/^.*｜/,''):id]})}
+/* 2026-10-27 第三十一次（老師 選 D 回到以前）：🪤 陷阱 偵測器（m12）放回 四年級 複習 ＝ 12 種（關卡 順序 ＝ 大廳 順序）；不再 有「四年級 複習 0」*/
+var MTORD=['m1','m2','m3','m4','m5','m6','m8','m9','m11','m7','m10','m12'];
+function g3Games(){if(G3S==='mt'){return MTORD.map(function(id){var c=BANK['g4gm_mt-'+id];return [id,c?String(c.name).replace(/^.*｜/,''):id]})}
   return G3ORD.map(function(id){var b=BANK['g3gm_g3m-'+id];return [id,b?String(b.name).replace(/^.*｜/,''):id]})}
 function g3Col(v){return v<=59?'p0':v<=80?'p1':'p2'}
-function paneG(){var g4=G3S==='mt'||G3S==='mt0',CC=SC.CLASSES[g4?4:3]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===(g4?4:3)&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),GM=g3Games();
+function paneG(){var g4=G3S==='mt',CC=SC.CLASSES[g4?4:3]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===(g4?4:3)&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),GM=g3Games();
   var RS=ALL.filter(function(x){var m=g4?/^g4gm_(mt)-(m\\d+)$/.exec(x.set):/^g3gm_(g3m|c[123])-(q\\d+)$/.exec(x.set);return m&&!x.x&&x.cls===c&&(g4||G3S==='all'||m[1]===G3S)&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)});
   var P={},T={};RS.forEach(function(x){var g=/-([qm]\\d+)$/.exec(x.set)[1],p=P[x.id]=P[x.id]||{};(x.qs||[]).forEach(function(q){var a=p[g]=p[g]||[0,0],b=T[g]=T[g]||[0,0];a[0]+=q[0]?1:0;a[1]++;b[0]+=q[0]?1:0;b[1]++})});
   var ids=(RCLS[c]||[]).slice();Object.keys(P).forEach(function(id){if(ids.indexOf(id)<0)ids.push(id)});ids.sort();
   var cell=function(a,av){var x=av?' av':'';if(!a||!a[1])return '<td class="'+x+'">—</td>';var v=Math.round(a[0]/a[1]*100);return '<td class="'+g3Col(v)+x+'">'+v+'<small>'+a[1]+' 題</small></td>'};
   var sum=function(o){var a=[0,0];GM.forEach(function(g){var x=o[g[0]];if(x){a[0]+=x[0];a[1]+=x[1]}});return a};
-  var h='<div class="fvhd g3h">'+(g4?(G3S==='mt0'?'🪤 四年級 複習 0：1 種':'📝 四年級 複習：11 種'):'🏫 三年級 課堂 複習：10 種')+' 遊戲 的 平均 正確率<small>（百分制；只 算 已經 作答 的 題目；時間 到 沒有 選 ＝ 答錯；時間 ＝ 上面 選 的）</small></div>'+
+  var h='<div class="fvhd g3h">'+(g4?'📝 四年級 複習：12 種':'🏫 三年級 課堂 複習：10 種')+' 遊戲 的 平均 正確率<small>（百分制；只 算 已經 作答 的 題目；時間 到 沒有 選 ＝ 答錯；時間 ＝ 上面 選 的）</small></div>'+
     '<div class="g3sw">'+G3SETS.map(function(x){return '<button data-g3s="'+x[0]+'" class="'+(G3S===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div>'+
     '<div class="g3sw">'+CC.map(function(x){return '<button data-g3c="'+x+'" class="'+(x===c?'on':'')+'" style="border-color:'+ccol(x)+'">'+esc(SC.cname(x))+'</button>'}).join('')+'</div>'+
     '<div class="note"><span class="g3k p2">🟢 81～100</span> <span class="g3k p1">🟡 60～80</span> <span class="g3k p0">🔴 59 以下</span>　—　還沒 做；小字 ＝ 作答 幾題。</div><div class="g3w"><table class="g3t"><tr><th>號碼</th><th>姓名</th>'+
@@ -1372,12 +1372,12 @@ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.c
   if(b.hasAttribute('data-pmid')){pmCopy($('#pm'+b.getAttribute('data-pmid')).textContent,b);return}
   pmCopy([].map.call(document.querySelectorAll('.pmsg .pt'),function(x){return x.textContent}).join('\\n\\n'),b)});
 /* ══ ⚔ 階級 能力（2026-10-26 第二十七次 第 2 點，老師 選 C30 第 4 題「照 表 做」）══
-   ★★ 精英戰士 🔥 挑戰關（在家複習〔📅 今日任務〕；答對 金幣 ✖1.5）｜★★★ 烈焰戰將 ✍ 出 1 題 給 全班（老師 這裡 按〔✔ 可以〕才 進 現場任務）｜
+   ★★ 精英戰士 🔥 挑戰關（在家複習〔📅 今日任務〕；答對 金幣 ✖1.5；2026-10-27 第三十一次：暫時 下架）｜★★★ 烈焰戰將 ✍ 出 1 題 給 全班（老師 這裡 按〔✔ 可以〕才 進 現場任務）｜
    ★★★★ 雷霆戰神 🧑‍🏫 小老師（現場任務 公布 答案 的 時候〔🧑‍🏫 請 小老師〕）｜★★★★★ 傳說戰神 ⭐ 一個月 1 次 幫 全班 選 現場任務 遊戲＋🏛 名人堂 */
 var QSMSG='';
 function paneA(){var T=DATA.tiers||{},Q=(DATA.qsub||[]).filter(function(x){return String(x.id).charAt(0)===String(F.g)}).slice().sort(function(a,b){return (a.st===0?0:1)-(b.st===0?0:1)||b.t-a.t});
   var h='<div class="fvhd g3h">⚔ 階級 愈高 能力 愈強<small>（不加 分數、不讓 題目 變 簡單）</small></div><div class="abl">'+
-    [['★ 見習戰士','練習 金幣 多 5%'],['★★ 精英戰士','🔥 挑戰關：在家〔📅 今日任務〕，更難、10 秒，答對 金幣 ✖1.5'],['★★★ 烈焰戰將','✍ 出 1 題 給 全班（一週 1 題；老師 下面 按〔✔ 可以〕才 進 現場任務）'],['★★★★ 雷霆戰神','🧑‍🏫 小老師：現場任務 公布 答案 時，老師 可以 請 上台 說 一次 為什麼'],['★★★★★ 傳說戰神','⭐ 一個月 1 次 幫 全班 選 現場任務 遊戲＋🏛 名人堂']]
+    [['★ 見習戰士','練習 金幣 多 5%'],['★★ 精英戰士','🔥 挑戰關：在家〔📅 今日任務〕，更難、10 秒，答對 金幣 ✖1.5（暫時 下架）'],['★★★ 烈焰戰將','✍ 出 1 題 給 全班（一週 1 題；老師 下面 按〔✔ 可以〕才 進 現場任務）'],['★★★★ 雷霆戰神','🧑‍🏫 小老師：現場任務 公布 答案 時，老師 可以 請 上台 說 一次 為什麼'],['★★★★★ 傳說戰神','⭐ 一個月 1 次 幫 全班 選 現場任務 遊戲＋🏛 名人堂']]
     .map(function(x){return '<div><b>'+x[0]+'</b><span>'+x[1]+'</span></div>'}).join('')+'</div>';
   h+='<h3>✍ 學生 出 的 題（'+(F.g===3?'三':'四')+'年級）<span id="qsmsg" class="note">'+QSMSG+'</span></h3>';
   if(!DATA.qsub)h+='<div class="note">伺服器 還沒有 重新部署（第二十七次）：部署 好了 才 收得到 學生 出 的 題。</div>';

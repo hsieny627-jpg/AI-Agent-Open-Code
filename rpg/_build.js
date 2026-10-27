@@ -434,7 +434,8 @@ ${CL.home(0, '../', 'home')}
 var CAT=${JSON.stringify(CAT)};
 var TREJPG=${JSON.stringify(TREJPG)};
 /* ⚔ 階級 的 真的 能力（2026-10-26 第二十七次 第 2 點，老師 選 C30 第 4 題「照 表 做」）：不加 分數、不讓 題目 變 簡單 */
-var ABIL=['','','🔥 挑戰關：在家〔📅 今日任務〕，答對 🪙 ✖1.5','✍ 出 1 題 給 全班（老師 說 OK 就 上 現場任務）','🧑‍🏫 現場任務 當 小老師','⭐ 一個月 1 次 幫 全班 選 現場任務 遊戲＋🏛 名人堂'];
+/* 2026-10-27 第三十一次（老師）：📅 今日任務 下架（sentences/_build_review.js TODAY_ON），🔥 挑戰關 用不到 ➜ 說明 加「暫時 下架」（放回來 時 拿掉）*/
+var ABIL=['','','🔥 挑戰關：在家〔📅 今日任務〕，答對 🪙 ✖1.5（暫時 下架）','✍ 出 1 題 給 全班（老師 說 OK 就 上 現場任務）','🧑‍🏫 現場任務 當 小老師','⭐ 一個月 1 次 幫 全班 選 現場任務 遊戲＋🏛 名人堂'];
 var RV=null,TAB='h',SEX='b',LAST='',BUSY=false,SCAT=1;
 var FMN={slash:'連斬',beam:'光砲',arrow:'箭雨',smash:'重擊',orb:'法球',nova:'爆發',claw:'利爪',pierce:'突刺'},CBP=false;
 var DIR={h:'chars',w:'weapons',p:'pets'},RC=['#34475C','#8A9AAA','#3BD16F','#5AB0FF','#B57BFF','#FFD54A'],RN=['','基本','稀有','史詩','傳說','神話'];

@@ -73,10 +73,10 @@ Object.keys(SITES).forEach(dir => {
     }));
   }
 });
-/* 📝 四年級 複習（2026-10-19 第十三次 3(11)；2026-10-27 第三十次 改名，🪤 m12 ＝「四年級 複習 0」） */
+/* 📝 四年級 複習（2026-10-19 第十三次 3(11)；2026-10-27 第三十次 改名；第三十一次 🪤 m12 放回，不再 有「四年級 複習 0」） */
 /* 原：四年級 期中複習（2026-10-19 第十三次 3(11)）：g4gm_mt-遊戲（midterm/_data.js；o[0] ＝ 正解，跟 網頁 送 的「選了 第幾個」一樣） */
 { const MT = require(path.join(__dirname, '..', 'midterm', '_data.js'));
-  MT.GAMES.forEach(g => put('g4gm_mt-' + g.id, { name: (g.solo ? '🪤 四年級 複習 0｜' : '📝 四年級 複習｜') + g.ic + ' ' + g.nm, qs: g.B.map(c => ({ k: 'g', kn: g.solo ? '🪤 四年級 複習 0' : '📝 四年級 複習', q: txt(c.q), o: (c.oz || c.o).map(txt), h: txt(c.z || ''), ae: c.ae || '' })) }));
+  MT.GAMES.forEach(g => put('g4gm_mt-' + g.id, { name: '📝 四年級 複習｜' + g.ic + ' ' + g.nm, qs: g.B.map(c => ({ k: 'g', kn: '📝 四年級 複習', q: txt(c.q), o: (c.oz || c.o).map(txt), h: txt(c.z || ''), ae: c.ae || '' })) }));
   /* 2026-10-26 第二十八次：📝 25／50 題 挑戰（g4gm_mt-x25／x50）：題庫 ＝ 12 種 遊戲 的 挑戰 題庫 照 順序 接起來（跟 網頁 的 XOFF 一樣）*/
   [25, 50].forEach(N => put('g4gm_mt-x' + N, { name: '📝 四年級 複習｜📝 ' + N + ' 題 挑戰', qs: [].concat(...MT.GAMES.map(g => MT.XB[g.id].map(c => ({ k: 'g', kn: '📝 四年級 複習', q: txt(g.ic + ' ' + c.q), o: (c.oz || c.o).map(txt), h: txt(c.z || ''), ae: c.ae || '' })))) })); }
 /* 🏫 三年級 複習（2026-10-26 第二十七次 第 1-(3) 點：成績 進 老師看板）：g3gm_g3m-遊戲（g3mid/_data.js；o[0] ＝ 正解；寫字題 o ＝ [要寫 的 字母]） */

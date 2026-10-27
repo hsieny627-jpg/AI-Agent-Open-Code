@@ -1,6 +1,6 @@
 /* midterm/_verify.js — 📝 四年級 複習 量測（只印失敗項和一行總結；SHOT=資料夾 拍照）
  *   node midterm/_verify.js
- * 三種螢幕（iPad 橫、iPad 直、教室觸控螢幕 1920）：大廳 11 種（🪤 m12 ＝ 四年級 複習 0，只在 現場任務）、三區；每一種遊戲：第一題 畫面 不超出、字 ≧ 20px、按鈕 ≧ 48px、聽力題 有 語音檔、
+ * 三種螢幕（iPad 橫、iPad 直、教室觸控螢幕 1920）：大廳 12 種（2026-10-27 第三十一次 🪤 m12 陷阱 偵測器 放回）、三區；每一種遊戲：第一題 畫面 不超出、字 ≧ 20px、按鈕 ≧ 48px、聽力題 有 語音檔、
  * 照片 載得到；答對 ＋分、答錯 有 正確答案＋中文、〔▶ 下一題〕；玩完 一回 10 題 ➜ 成績 佇列 多 一筆 g4gm_mt-遊戲（假 伺服器，**絕對 不送 真的 成績表**）。 */
 const fs = require('fs'), path = require('path');
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
@@ -33,7 +33,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto('file://' + path.join(__dirname, 'index.html')); await p.waitForTimeout(500);
     n++; const hb = await p.evaluate(() => ({ m12: !!document.querySelector('[data-g="m12"]'), g: document.querySelectorAll('[data-g]').length, s: document.querySelectorAll('.sec').length, ox: document.documentElement.scrollWidth - innerWidth }));
-    if (hb.g !== 11 || hb.m12 || hb.s !== 3 || hb.ox > 1) E.push(tag + ' 大廳：' + JSON.stringify(hb));
+    if (hb.g !== 12 || !hb.m12 || hb.s !== 3 || hb.ox > 1) E.push(tag + ' 大廳：' + JSON.stringify(hb));
     if (SHOT) await p.screenshot({ path: path.join(SHOT, 'mt_hub_' + vp[0] + '.png'), fullPage: true });
     for (const g of D.GAMES.filter(g => !process.env.G || process.env.G.split(',').indexOf(g.id) >= 0)) {   /* G＝m1,m8 只 量 這幾 種 */
       if (process.env.DBG) console.log('… ' + tag + ' ' + g.id);
@@ -121,7 +121,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
         await p.waitForFunction(kk => !R || R.k > kk || !!document.querySelector('.end'), st.k, { timeout: 15000 }).catch(() => E.push(tag + ' ' + N + ' 題 第 ' + (st.k + 1) + ' 題（' + st.id + '）沒有 到 下一題'));
         await p.waitForTimeout(100);
       }
-      n++; if (lvs.size !== 11) E.push(tag + ' ' + N + ' 題：沒有 11 關 連著 玩：' + [...lvs].join());
+      n++; if (lvs.size !== 12) E.push(tag + ' ' + N + ' 題：沒有 12 關 連著 玩：' + [...lvs].join());
       n++; const e = await p.evaluate(() => ({ t: document.getElementById('app').innerText, rows: document.querySelectorAll('.xtb tr').length }));
       const w2 = (N - 1) * 100 / N; if (e.t.indexOf(w2 + ' 分 ／ 100') < 0 || e.rows !== 12 || e.t.indexOf('答對 ' + (N - 1) + ' ／ ' + N) < 0 || !/記進 成績/.test(e.t)) E.push(tag + ' ' + N + ' 題：結束 頁 不對：' + e.t.slice(0, 90));
       n++; const rq = await p.evaluate(N => { const Q = JSON.parse(localStorage.getItem('score_q') || '[]').concat(JSON.parse(localStorage.getItem('score_sent') || '[]')); const r = Q.filter(x => x.set === 'g4gm_mt-x' + N).pop();

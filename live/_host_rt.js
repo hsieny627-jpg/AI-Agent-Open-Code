@@ -62,8 +62,9 @@ function entNext(){if(H.entOn||!H.entQ.length)return;var x=H.entQ.shift();H.entO
 /* ── 一頁 設定（預設：經典搶答、題目 全選、5 題、🔥 挑戰題 開）── */
 var CLS={3:['304','307','311'],4:['402','406','409','410','400']};
 /* 2026-10-19 第十三次 3(1)(2)：同一類 的 遊戲 放 同一區 */
-var GRP=[['c','🏆','經典 搶答','全班 一起 搶答（像 Kahoot）',['classic']],['s','🙋','個人賽','每個人 自己 比 分數',['race','tower','shoot','surf','king','fish']],
-  ['t','🤝','全班 合作','全班 一起 完成 一個 任務',['boss','pet','treasure','castle']],['v','⚔️','兩隊 對抗','單號隊 vs 雙號隊',['tug','map']]];
+/* 2026-10-27 第三十一次（老師）：🏰 守城（castle）、🎣 釣魚（fish）暫時 下架 ➜ 從 GRP 拿掉（LV.GAMES 和 畫法 留著，要 放回來 把 'fish'、'castle' 加回 這兩組 最後面）*/
+var GRP=[['c','🏆','經典 搶答','全班 一起 搶答（像 Kahoot）',['classic']],['s','🙋','個人賽','每個人 自己 比 分數',['race','tower','shoot','surf','king']],
+  ['t','🤝','全班 合作','全班 一起 完成 一個 任務',['boss','pet','treasure']],['v','⚔️','兩隊 對抗','單號隊 vs 雙號隊',['tug','map']]];
 /* 老師 的 步驟條（3(9)）：① 設定 ➜ ② 等 學生 ➜ ③ 答題 ➜ ④ 頒獎 ➜ ⑤ 錯題 ➜ ⑥ 發獎勵 */
 var HSTEPS=[['⚙️','設定'],['📱','等 學生'],['⚡','答題'],['🏆','頒獎'],['📊','錯題'],['🎁','發獎勵']];
 function hstep(k){$$('.hstp').forEach(function(e){if(e.getAttribute('data-k')!==String(k)){e.setAttribute('data-k',k);e.innerHTML=LV.stepsHTML(HSTEPS,k)}})}
