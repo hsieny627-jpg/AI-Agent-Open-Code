@@ -257,6 +257,11 @@ body.scq .url{display:none}
 .scbye button{background:#FF8A80;min-height:48px}
 .sclkb{display:inline-block;margin-left:auto;background:#3A0E0E;border:2px solid #FF8A80;color:#FFD6D2;border-radius:999px;padding:2px 12px;font-size:clamp(16px,2.4vh,22px);font-weight:700;white-space:nowrap}
 .sclocked{opacity:.75}.gcard .sclkb{position:absolute;top:8px;right:8px}
+/* 2026-10-27 第三十二次 第 8 點（老師：學生 要 一眼 看到 按鈕 上方 的 上鎖 圖示）：大 標籤 貼在 按鈕 上方（左上角 突出 來），🔒 紅、✅ 綠；鎖住 的 變灰 */
+[data-lk].sclk1{position:relative;margin-top:22px!important;overflow:visible!important}
+[data-lk].sclk1>.sclkb{position:absolute;top:-20px;left:14px;margin:0;z-index:3;font-size:clamp(20px,2.8vh,26px);font-weight:900;padding:3px 16px;box-shadow:0 3px 10px #0008}
+[data-lk].sclk1.sclocked{opacity:1;filter:grayscale(.75) brightness(.8)}[data-lk].sclk1.sclocked>.sclkb{filter:none;background:#B71C1C;border-color:#FFCDD2;color:#fff}
+[data-lk].sclk1>.sclkb.ok{background:#1B7A3D;border-color:#B9F6CA;color:#fff}
 .sctime{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.4vh,14px);padding:clamp(8px,2vh,20px) 0}
 .sctime .stic{font-size:clamp(80px,14vh,130px);line-height:1}.sctime .stic svg{height:clamp(90px,15vh,140px);width:auto}
 .sctime .st1{font-size:clamp(30px,5.4vh,52px);font-weight:700;color:#FFE07A;line-height:1.25}
@@ -1837,8 +1842,10 @@ function scLkLogin(){var o=SCH,ov=function(){var x=document.getElementById('scov
   scLogin(function(){fin(1)})}
 /* 首頁的主題、遊戲大廳的遊戲卡：鎖住的貼上 🔒；現在這一頁（句型卡分頁、補充頁）鎖住了 ＝ 蓋上一整頁 */
 function scLkRe(){if(!SCON||SCSRC!=='home')return;
-  $$('[data-lk]').forEach(function(a){var k=a.getAttribute('data-lk').replace(/^g\drv_/,''),st=scLkOf(k),x=a.querySelector('.sclkb');if(x)x.parentNode.removeChild(x);
-    a.classList.toggle('sclocked',!!st);if(st){x=document.createElement('span');x.className='sclkb';x.textContent=st==='login'?'🔒 請先登入':'🔒 還沒開放';a.appendChild(x)}});
+  var LKA=[].slice.call(document.querySelectorAll('[data-lk]')),any=LKA.some(function(a){return !!scLkOf(a.getAttribute('data-lk').replace(/^g\drv_/,''))});   /* 這一班 有 鎖 ＝ 開放 的 也 貼〔✅ 開放〕（老師、學生 一眼 分得出來）*/
+  LKA.forEach(function(a){var k=a.getAttribute('data-lk').replace(/^g\drv_/,''),st=scLkOf(k),x=a.querySelector('.sclkb');if(x)x.parentNode.removeChild(x);
+    a.classList.toggle('sclocked',!!st);a.classList.toggle('sclk1',!!st||(any&&scLive()));if(st){x=document.createElement('span');x.className='sclkb';x.textContent=st==='login'?'🔒 請先登入':'🔒 還沒開放';a.appendChild(x)}
+    else if(any&&scLive()){x=document.createElement('span');x.className='sclkb ok';x.textContent='✅ 開放';a.appendChild(x)}});
   $$('#grid .gcard[data-g]').forEach(function(c){var st=scLkOf('gm-'+c.getAttribute('data-g')),x=c.querySelector('.sclkb');if(x)x.parentNode.removeChild(x);
     c.classList.toggle('sclocked',!!st);if(st){x=document.createElement('span');x.className='sclkb';x.textContent=st==='login'?'🔒 請先登入':'🔒 還沒開放';c.appendChild(x)}});
   if(SCLKPAGE){scLkGate(SCLKPAGE,null);return}

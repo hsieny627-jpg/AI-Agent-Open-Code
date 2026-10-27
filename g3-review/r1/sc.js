@@ -963,8 +963,10 @@ function scLkLogin(){var o=SCH,ov=function(){var x=document.getElementById('scov
   scLogin(function(){fin(1)})}
 /* 首頁的主題、遊戲大廳的遊戲卡：鎖住的貼上 🔒；現在這一頁（句型卡分頁、補充頁）鎖住了 ＝ 蓋上一整頁 */
 function scLkRe(){if(!SCON||SCSRC!=='home')return;
-  $$('[data-lk]').forEach(function(a){var k=a.getAttribute('data-lk').replace(/^g\drv_/,''),st=scLkOf(k),x=a.querySelector('.sclkb');if(x)x.parentNode.removeChild(x);
-    a.classList.toggle('sclocked',!!st);if(st){x=document.createElement('span');x.className='sclkb';x.textContent=st==='login'?'🔒 請先登入':'🔒 還沒開放';a.appendChild(x)}});
+  var LKA=[].slice.call(document.querySelectorAll('[data-lk]')),any=LKA.some(function(a){return !!scLkOf(a.getAttribute('data-lk').replace(/^g\drv_/,''))});   /* 這一班 有 鎖 ＝ 開放 的 也 貼〔✅ 開放〕（老師、學生 一眼 分得出來）*/
+  LKA.forEach(function(a){var k=a.getAttribute('data-lk').replace(/^g\drv_/,''),st=scLkOf(k),x=a.querySelector('.sclkb');if(x)x.parentNode.removeChild(x);
+    a.classList.toggle('sclocked',!!st);a.classList.toggle('sclk1',!!st||(any&&scLive()));if(st){x=document.createElement('span');x.className='sclkb';x.textContent=st==='login'?'🔒 請先登入':'🔒 還沒開放';a.appendChild(x)}
+    else if(any&&scLive()){x=document.createElement('span');x.className='sclkb ok';x.textContent='✅ 開放';a.appendChild(x)}});
   $$('#grid .gcard[data-g]').forEach(function(c){var st=scLkOf('gm-'+c.getAttribute('data-g')),x=c.querySelector('.sclkb');if(x)x.parentNode.removeChild(x);
     c.classList.toggle('sclocked',!!st);if(st){x=document.createElement('span');x.className='sclkb';x.textContent=st==='login'?'🔒 請先登入':'🔒 還沒開放';c.appendChild(x)}});
   if(SCLKPAGE){scLkGate(SCLKPAGE,null);return}

@@ -155,7 +155,11 @@ async function run(br, vp) {
       const f2 = await full(p, 'sclk'); if (!f2 || f2.t !== '🔒 還沒開放 ⬅ 回首頁') e.push(w + '：304 班登入了應該是「🔒 還沒開放」：' + (f2 && f2.t)); else f2.e.forEach(x => e.push(w + '：' + x)); }
     await clk(p, '#scLkHome', e); await p.waitForTimeout(600);
     if (!/g3-review\/index\.html$/.test(p.url())) e.push('〔⬅ 回首頁〕沒有回到複習首頁：' + p.url());
-    const bd = await p.evaluate(() => [].map.call(document.querySelectorAll('a[data-lk] .sclkb'), x => x.textContent)); if (bd.join() !== '🔒 還沒開放,🔒 還沒開放,🔒 還沒開放') e.push('304 班的首頁不對：' + bd.join());
+    const bd = await p.evaluate(() => [].map.call(document.querySelectorAll('a[data-lk] .sclkb'), x => x.textContent)); if (bd.filter(x => x === '🔒 還沒開放').length !== 3 || bd.some(x => x !== '🔒 還沒開放' && x !== '✅ 開放')) e.push('304 班的首頁不對：' + bd.join());
+    /* 第三十二次 第 8 點：標籤 在 按鈕 上方（突出 來）、字 ≧ 20px、不 被 切掉、不 蓋到 別的 按鈕 的 字 */
+    const bp = await p.evaluate(() => [].map.call(document.querySelectorAll('a[data-lk]'), a => { const b = a.querySelector('.sclkb'), r = b.getBoundingClientRect(), q = a.getBoundingClientRect(), x = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return { up: r.top < q.top, fs: parseFloat(getComputedStyle(b).fontSize), in: r.left >= 0 && r.right <= innerWidth, top: r.bottom > innerHeight || r.top < 0 || (!!x && (x === b || b.contains(x))) }; }));
+    n++; if (bp.some(x => !x.up || x.fs < 20 || !x.in || !x.top)) e.push('🔒／✅ 標籤 不在 按鈕 上方、太小、被 切掉 或 被 蓋住：' + JSON.stringify(bp.filter(x => !x.up || x.fs < 20 || !x.in || !x.top).slice(0, 2)));
     /* 換到沒鎖的分頁（基礎句型 ②）照樣打得開 */
     await p.goto(url('g3-review/u1.html') + '#t1-0'); await p.waitForTimeout(1200); if (await full(p, 'sclk')) e.push('沒鎖的分頁也被鎖');
     n += 6; out('🔒 還沒開放 ' + W, e); await p.close(); }

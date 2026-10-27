@@ -306,67 +306,48 @@ async function teacher(br, vp) {
   /* l〔🔒 開關〕：遊戲本來的名字有 ⚡（⚡ 閃電四選一，2026-10-16 C4 在家複習加的），不是舊圖示 */
   for (const t of ['p', 'b', 'c', 'w', 'k', 'l']) {
     await p.click('#tabs button[data-t="' + t + '"]'); await p.waitForTimeout(150);
-    const r = await p.evaluate(() => ({ t: document.getElementById('pane').textContent, small: [].filter.call(document.querySelectorAll('#pane td,#pane .br,#pane button,#pane .kc span,#pane .kp,#pane .note,#pane h3,.tile .k,.tile .d,#tabs button'), x => x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < (innerWidth >= 1900 ? 22 : 16)).length, old: /⚡|🔁|🚀|秒按/.test(document.getElementById('pane').textContent + document.getElementById('tiles').textContent) }));
+    const r = await p.evaluate(() => ({ t: document.getElementById('pane').textContent, small: [].filter.call(document.querySelectorAll('#pane td,#pane .br,#pane button,#pane .kc span,#pane .kp,#pane .note,#pane h3,.tile .k,.tile .d,#tabs button'), x => x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < (innerWidth >= 1900 ? 22 : 16)).length, sm: [].filter.call(document.querySelectorAll('#pane td,#pane .br,#pane button,#pane .kc span,#pane .kp,#pane .note,#pane h3,.tile .k,.tile .d,#tabs button'), x => x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < (innerWidth >= 1900 ? 22 : 16)).map(x => x.className + ':' + x.textContent.slice(0, 10) + ':' + getComputedStyle(x).fontSize).slice(0, 4).join('｜'), old: /⚡|🔁|🚀|秒按/.test(document.getElementById('pane').textContent + document.getElementById('tiles').textContent) }));
     if ((await ox()) > 0) e.push('分頁 ' + t + ' 橫向溢出');
-    if (r.small) e.push('分頁 ' + t + ' 有 ' + r.small + ' 個字太小（觸控螢幕要 ≧ 22px、iPad ≧ 16px）');
+    if (r.small) e.push('分頁 ' + t + ' 有 ' + r.small + ' 個字太小（觸控螢幕要 ≧ 22px、iPad ≧ 16px）' + r.sm);
     if (r.old && t !== 't' && t !== 'w' && t !== 'l') e.push('分頁 ' + t + ' 還有看不懂的舊圖示（⚡🔁🚀／秒按）');
     if (r.t.length < 20) e.push('分頁 ' + t + ' 是空的');
     n += 3;
   }
-  /* 2026-10-12 D 第 7 件：〔🔒 開關〕在家複習每一個主題（三年級 19 個）；按一下 ＝ 鎖、存到伺服器；只選 304 再開 ＝ 黃色「只有 307、311 鎖」 */
+  /* 2026-10-27 第三十二次 第 8 點：〔📅 一鍵設定〕〔📌 任務〕〔🔒 開關〕合併 ＝〔🔒 開放／上鎖〕一張 大表（上面 班級、左邊 主題；✅／🔒／📅）＋ 學生 看到 的 樣子 */
+  { const tabs = await p.evaluate(() => [].map.call(document.querySelectorAll('#tabs button'), b => b.getAttribute('data-t')).join());
+    if (/(^|,)(o|t|a)(,|$)/.test(tabs) || !/(^|,)l(,|$)/.test(tabs)) e.push('分頁 還有〔📅 一鍵設定〕〔📌 任務〕〔⚔ 階級 能力〕或 沒有〔🔒 開放／上鎖〕：' + tabs); n++; }
   await p.click('#tabs button[data-t="l"]'); await p.waitForTimeout(200);
-  const lk0 = await p.evaluate(() => ({ n: document.querySelectorAll('#pane .lkb').length, g: document.querySelectorAll('#pane .lkb.lkg').length }));
-  /* 2026-10-16 C4：主題數照 sentences/_review_sites.js 算（加了三種遊戲、📘 Review 1 三個） */
   const LKN = require('../sentences/_review_sites.js').topics(require('../sentences/_review_sites.js').SITES[0]).length;
-  if (lk0.n !== LKN || lk0.g !== LKN) e.push('〔🔒 開關〕三年級應該 ' + LKN + ' 個主題、一開始全部綠色（' + lk0.n + '／' + lk0.g + '）');
-  if (!(await p.$('#pane [data-lk="g3rv_r1-w"]')) || !(await p.$('#pane [data-lk="g3rv_r1-g"]'))) e.push('〔🔒 開關〕沒有 📘 Review 1');
-  await p.click('#pane [data-lk="g3rv_gm-g3"]'); await p.waitForTimeout(500);
-  const lk1 = await p.evaluate(() => ({ r: !!document.querySelector('#pane [data-lk="g3rv_gm-g3"].lkr'), m: document.getElementById('lkmsg').textContent }));
-  const sv = JSON.parse(G.P.LOCKS || '{}');
-  if (!lk1.r || !/存好了/.test(lk1.m)) e.push('按了沒有變紅色、沒有「✔ 存好了」（' + lk1.m + '）');
-  if (['304', '307', '311'].some(c => (sv[c] || []).indexOf('g3rv_gm-g3') < 0)) e.push('伺服器沒有存到三班都鎖：' + JSON.stringify(sv));
-  await p.click('#pane [data-lkc="307"]'); await p.click('#pane [data-lkc="311"]'); await p.click('#pane [data-lk="g3rv_gm-g3"]'); await p.waitForTimeout(500);
-  const lk2 = await p.evaluate(() => (document.querySelector('#pane [data-lk="g3rv_gm-g3"]') || {}).textContent || '');
-  if (!/只有 307、311 鎖/.test(lk2)) e.push('只開 304 班以後應該寫「只有 307、311 鎖」：' + lk2);
-  await p.click('#pane [data-lkc="*"]'); await p.click('#pane [data-lka="0"]'); await p.waitForTimeout(500);
-  if (Object.keys(JSON.parse(G.P.LOCKS || '{}')).length) e.push('〔🔓 全部開〕沒有全部打開');
-  if ((await ox()) > 0) e.push('〔🔒 開關〕橫向溢出');
-  n += 6;
-  /* 2026-10-17 第八次 第 10 題：〔🔒 開關〕加開放時間（📅 按一下 ＝ 設定開放時間；再按一次 ＝ 拿掉） */
+  const g0 = await p.evaluate(() => ({ cl: [].map.call(document.querySelectorAll('#pane [data-lk2c]'), b => b.getAttribute('data-lk2c')).join(), rows: document.querySelectorAll('#pane [data-lk2r]').length, cells: document.querySelectorAll('#pane .lk2 .ce').length, g: document.querySelectorAll('#pane .lk2 .ce.g').length,
+    small: [].filter.call(document.querySelectorAll('#pane .lk2 button,#pane .lk2bar button'), x => x.getBoundingClientRect().width && (x.getBoundingClientRect().height < 48 || parseFloat(getComputedStyle(x).fontSize) < 17)).length, pv: document.querySelectorAll('#pane .lk2pc').length }));
+  if (g0.cl !== '304,307,311' || g0.rows !== LKN || g0.cells !== LKN * 3 || g0.g !== LKN * 3 || g0.pv !== LKN) e.push('〔🔒 開放／上鎖〕大表 不對（3 班 ✕ ' + LKN + ' 個 主題、一開始 全部 ✅、學生 樣子 ' + LKN + ' 個）' + JSON.stringify(g0));
+  if (g0.small) e.push('〔🔒 開放／上鎖〕有 ' + g0.small + ' 個 按鈕 太小（< 48px 或 字 < 17px）');
+  await p.click('#pane [data-lk2="307|g3rv_gm-g3"]'); await p.waitForTimeout(500);
+  const sv1 = JSON.parse(G.P.LOCKS || '{}'), m1 = await p.evaluate(() => ({ r: !!document.querySelector('#pane [data-lk2="307|g3rv_gm-g3"].r'), m: document.getElementById('lkmsg').textContent }));
+  if (!m1.r || !/存好了/.test(m1.m) || (sv1['307'] || []).indexOf('g3rv_gm-g3') < 0 || (sv1['304'] || []).length) e.push('點 一格 沒有 只 鎖 307 那一格（紅 🔒、存好了）' + JSON.stringify(sv1) + m1.m);
+  await p.click('#pane [data-lk2v="307"]'); await p.waitForTimeout(200);
+  const pv = await p.evaluate(() => [].filter.call(document.querySelectorAll('#pane .lk2pc.no'), x => /還沒開放/.test(x.textContent)).map(x => x.textContent));
+  if (pv.length !== 1) e.push('〔👀 學生 看到 的 樣子〕307 沒有 剛好 1 個「🔒 還沒開放」：' + pv.join('｜'));
+  await p.click('#pane [data-lk2c="304"]'); await p.waitForTimeout(500);
+  if ((JSON.parse(G.P.LOCKS || '{}')['304'] || []).length !== LKN) e.push('點 班級 304 沒有 整班 鎖住');
+  await p.click('#pane [data-lk2r="g3rv_u1-t0-0"]'); await p.waitForTimeout(500);
+  { const L = JSON.parse(G.P.LOCKS || '{}'); if (['304', '307', '311'].some(c => (L[c] || []).indexOf('g3rv_u1-t0-0') < 0)) e.push('點 主題 那一列（有 開 的）沒有 三班 一起 鎖' + JSON.stringify(L)); }
+  await p.click('#pane [data-lk2r="g3rv_u1-t0-0"]'); await p.waitForTimeout(500);
+  { const L = JSON.parse(G.P.LOCKS || '{}'); if (['304', '307', '311'].some(c => (L[c] || []).indexOf('g3rv_u1-t0-0') >= 0)) e.push('再 點 主題 那一列（全部 鎖）沒有 三班 一起 開' + JSON.stringify(L)); }
+  await p.click('#pane [data-lk2a="1"]'); await p.waitForTimeout(500);
+  { const L = JSON.parse(G.P.LOCKS || '{}'); if (['304', '307', '311'].some(c => (L[c] || []).length !== LKN) || await p.evaluate(() => document.querySelectorAll('#pane .lk2 .ce.g').length)) e.push('〔⬜ 全部 清空〕沒有 全部 🔒'); }
+  await p.click('#pane [data-lk2="311|g3rv_u2-t0-0"]'); await p.waitForTimeout(500);
+  if ((JSON.parse(G.P.LOCKS || '{}')['311'] || []).indexOf('g3rv_u2-t0-0') >= 0) e.push('清空 以後 勾 一格 沒有 打開');
+  /* 📅 定時 */
   await p.click('#pane [data-lkm="d"]'); await p.waitForTimeout(150);
-  if (!(await p.$('#lkw1')) || !(await p.$('#pane [data-wpre="week"]'))) e.push('〔🔒 開關〕📅 模式沒有時間格子、常用的按鈕');
-  await p.click('#pane [data-wpre="week"]'); await p.click('#pane [data-lk="g3rv_gm-g3"]'); await p.waitForTimeout(500);
-  const lt1 = JSON.parse(G.P.LOCKT || '{}'), lb1 = await p.evaluate(() => { const b = document.querySelector('#pane [data-lk="g3rv_gm-g3"]'); return { c: b.className, t: b.textContent }; });
-  if (['304', '307', '311'].some(c => !(lt1[c] || {})['g3rv_gm-g3'])) e.push('〔🔒 開關〕開放時間沒有存到三班：' + JSON.stringify(lt1));
-  if (!/lkt/.test(lb1.c) || !/📅/.test(lb1.t) || !/(開放中|還沒開始)/.test(lb1.t)) e.push('設定開放時間以後主題沒有變藍色 📅＋時間＋開放中：' + lb1.t);
-  await p.click('#pane [data-lk="g3rv_gm-g3"]'); await p.waitForTimeout(500);
-  if (Object.keys(JSON.parse(G.P.LOCKT || '{}')).length) e.push('同一個主題再按一次沒有拿掉開放時間');
-  await p.click('#pane [data-lkm="t"]');
-  n += 4;
-  /* 2026-10-17 第八次 第 10 題 甲：〔📅 一鍵設定〕選班 ➜ 選項目 ➜ 選時間 ➜ ✅ */
-  await p.click('#tabs button[data-t="o"]'); await p.waitForTimeout(200);
-  const o0 = await p.evaluate(() => ({ g: document.querySelectorAll('#pane details.okg').length, it: document.querySelectorAll('#pane .oki').length, go: !!document.getElementById('okgo'),
-    small: [].filter.call(document.querySelectorAll('#pane button,#pane summary,#pane input'), x => x.getBoundingClientRect().width && (parseFloat(getComputedStyle(x).fontSize) < 17 || x.getBoundingClientRect().height < 44)).map(x => x.textContent.slice(0, 12) + ' ' + Math.round(x.getBoundingClientRect().height) + 'px/' + getComputedStyle(x).fontSize).join('、') }));
-  if (o0.g < 3 || o0.it < LKN + 10 || !o0.go) e.push('〔📅 一鍵設定〕沒有分組、項目或〔✅ 一鍵設定〕（' + JSON.stringify(o0) + '）');
-  if (o0.small) e.push('〔📅 一鍵設定〕有按鈕太小（字 < 17px 或高 < 44px）：' + o0.small);
-  await p.click('#okgo'); await p.waitForTimeout(150);
-  if (!/請選至少一個/.test(await p.textContent('#okmsg'))) e.push('沒選項目按〔✅ 一鍵設定〕沒有提醒');
-  await p.evaluate(() => { document.querySelectorAll('#pane details.okg').forEach(d => { d.open = true; }); });
-  await p.click('#pane [data-okc="307"]'); await p.click('#pane [data-okc="311"]');
-  await p.click('#pane [data-oki="g3rv_u1-t0-0"]'); await p.click('#pane [data-oki="g3gm_g1"]');
-  await p.click('#pane [data-wpre="today"]'); await p.click('#okgo'); await p.waitForTimeout(900);
-  const lt2 = JSON.parse(G.P.LOCKT || '{}'), T2 = G.books['任務'].d.slice(1), om = await p.textContent('#okmsg'), ol = await p.textContent('#pane .oklst');
-  if (!(lt2['304'] || {})['g3rv_u1-t0-0'] || lt2['307']) e.push('一鍵設定：在家複習主題沒有變成 304 的開放時間：' + JSON.stringify(lt2));
-  if (!T2.some(r => r[1] === '📅 一鍵設定' && String(r[3]) === '304' && /g3gm_g1/.test(r[6]))) e.push('一鍵設定：遊戲沒有變成 304 的任務：' + JSON.stringify(T2));
-  if (!/設定好了/.test(om) || !/一鍵設定/.test(ol) || !/開放時間/.test(ol)) e.push('一鍵設定以後下面「現在的設定」沒有列出來：' + om + '｜' + ol.slice(0, 80));
-  await p.click('#pane [data-oki="g3gm_g1"]'); await p.click('#pane [data-okw="open"]'); await p.click('#okgo'); await p.waitForTimeout(900);
-  if (G.books['任務'].d.slice(1).some(r => r[1] === '📅 一鍵設定' && /g3gm_g1/.test(r[6]))) e.push('一鍵設定 🔓 現在開：遊戲沒有從任務拿掉');
-  await p.click('#pane [data-oki="g3rv_u1-t0-0"]'); await p.click('#pane [data-okw="close"]'); await p.click('#okgo'); await p.waitForTimeout(700);
-  if (((JSON.parse(G.P.LOCKS || '{}'))['304'] || []).indexOf('g3rv_u1-t0-0') < 0 || ((JSON.parse(G.P.LOCKT || '{}'))['304'] || {})['g3rv_u1-t0-0']) e.push('一鍵設定 🔒 現在關：主題沒有鎖住（或時間沒拿掉）');
-  if ((await ox()) > 0) e.push('〔📅 一鍵設定〕橫向溢出');
-  await p.click('#pane [data-okc="*"]'); await p.click('#pane [data-oki="g3rv_u1-t0-0"]'); await p.click('#pane [data-okw="open"]'); await p.click('#okgo'); await p.waitForTimeout(700);
-  if (Object.keys(JSON.parse(G.P.LOCKS || '{}')).length) e.push('一鍵設定 🔓 全年級 沒有全部打開');
-  n += 8;
+  if (!(await p.$('#lkw1')) || !(await p.$('#pane [data-wpre="week"]'))) e.push('📅 定時 模式 沒有 時間 格子、常用 按鈕');
+  await p.click('#pane [data-wpre="week"]'); await p.click('#pane [data-lk2="304|g3rv_gm-g3"]'); await p.waitForTimeout(500);
+  { const lt = JSON.parse(G.P.LOCKT || '{}'), b = await p.evaluate(() => { const x = document.querySelector('#pane [data-lk2="304|g3rv_gm-g3"]'); return { c: x.className, t: x.textContent }; });
+    if (!(lt['304'] || {})['g3rv_gm-g3'] || lt['307'] || !/\bb\b/.test(b.c) || !/📅/.test(b.t)) e.push('📅 定時：304 那一格 沒有 變 藍色 📅＋時間 ' + JSON.stringify(lt) + b.t); }
+  await p.click('#pane [data-lkm="t"]'); await p.click('#pane [data-lk2a="0"]'); await p.waitForTimeout(500);
+  if (Object.keys(JSON.parse(G.P.LOCKS || '{}')).length || Object.keys(JSON.parse(G.P.LOCKT || '{}')).length) e.push('〔✅ 全部 開放〕沒有 全部 打開（連 定時 也 拿掉）');
+  if ((await ox()) > 0) e.push('〔🔒 開放／上鎖〕橫向溢出');
+  n += 12;
   await p.click('#tabs button[data-t="b"]'); await p.click('[data-bs="grade"]'); await p.click('[data-bt="acc"]');
   const rkT = await p.textContent('#pane'); if (!/第 15 名/.test(rkT)) e.push('老師的排行榜沒有列出全部學生（看不到第 15 名）');
   if (!/測試\d\d/.test(rkT)) e.push('排行榜沒有姓名');
@@ -956,7 +937,7 @@ async function task(br, vp) {
   p.on('dialog', d => d.accept());
   await p.goto(HTTP + '/teacher/index.html'); await p.waitForTimeout(300);
   await p.fill('#pw', PW); await p.click('#go'); await p.waitForTimeout(500);
-  await p.click('#fg button[data-g="4"]'); await p.click('#tabs button[data-t="t"]'); await p.waitForTimeout(150);
+  await p.click('#fg button[data-g="4"]'); await p.evaluate(() => { TAB = 't'; draw(); }); await p.waitForTimeout(150);   /* 第三十二次：〔📌 任務〕分頁 拿掉（程式 留著）➜ 直接 打開 */
   if (!/還沒有任務/.test(await p.textContent('#pane'))) e.push('老師看板〔📌 任務〕沒有任務時沒有說「全部開放」');
   await p.click('#tkNew'); await p.waitForTimeout(200);
   const f = await p.evaluate(() => ({ ox: document.documentElement.scrollWidth - innerWidth, cls: document.querySelectorAll('input[name=tkc]').length,
@@ -1021,7 +1002,7 @@ async function task(br, vp) {
   const E = await s.evaluate(() => ({ lock: [].map.call(document.querySelectorAll('#grid .gcard.tklock'), c => c.getAttribute('data-g')), t: (document.querySelector('#grid .gcard[data-g="g1"] .sctkc') || {}).textContent || '' }));
   if (E.lock.join() !== 'g1' || !/截止/.test(E.t)) e.push('截止以後：任務裡的要 🔒 已經截止、其他全部開放（' + E.lock + '）');
   /* 老師刪掉 ➜ 又開 */
-  if (await p.isHidden('#rf')) await p.click('#more'); await p.click('#rf'); await p.waitForTimeout(300); await p.click('#tabs button[data-t="t"]'); await p.waitForTimeout(150);
+  if (await p.isHidden('#rf')) await p.click('#more'); await p.click('#rf'); await p.waitForTimeout(300); await p.evaluate(() => { TAB = 't'; draw(); }); await p.waitForTimeout(150);
   if (!/已經截止/.test(await p.textContent('#pane'))) e.push('老師看板沒有寫「⛔ 已經截止」');
   await p.click('[data-tkd]'); await p.waitForTimeout(300);
   if (G.books['任務'].d.length !== 1) e.push('老師看板刪不掉任務');
