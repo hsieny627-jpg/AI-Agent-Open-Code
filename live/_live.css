@@ -481,8 +481,14 @@ body.host .scr#hlob{padding-top:0}
 .hstp .stp,.hstp .sar{font-size:24px}
 /* 上面 多了 步驟條 ➜ 經典搶答 的 四個 答案 矮 一點，不壓到 右下角 的 QR 和 按鈕 */
 #hq.classic .qo{min-height:clamp(96px,20vh,240px)}
-.sqrc.hq2 .qrb{width:clamp(84px,9vh,112px);height:clamp(84px,9vh,112px)}
-body.host .hbar{padding-right:calc(clamp(84px,9vh,112px) + 34px)}
+/* 2026-10-28 第三十三次：右下角 QR 放大（教室 後面 也 掃得到）；出題 的 時候 小 一點（不 壓 答案）；點 ＝ 全螢幕 */
+.sqrc.hq2 .qrb{width:clamp(180px,26vh,300px);height:clamp(180px,26vh,300px);padding:6px}.sqrc.hq2 span{font-size:clamp(18px,2.4vh,26px)}
+body.host .hbar{padding-right:calc(clamp(180px,26vh,300px) + 34px)}
+body[data-scr=hq] .sqrc.hq2 .qrb{width:clamp(120px,15vh,170px);height:clamp(120px,15vh,170px)}body[data-scr=hq] .hbar{padding-right:calc(clamp(120px,15vh,170px) + 34px)}
+.sqrc.hq2::after{content:'👆 點 我 放大';font-size:clamp(16px,2vh,22px);color:#FFE9A8}
+.qrbig{position:fixed;inset:0;z-index:99;background:rgba(5,7,10,.94);display:flex;align-items:center;justify-content:center}.qrbig[hidden]{display:none!important}
+.qrbw{display:flex;flex-direction:column;align-items:center;gap:14px}.qrbb{width:min(78vh,86vw);height:min(78vh,86vw);background:#fff;border-radius:24px;padding:14px}.qrbb svg{width:100%;height:100%;display:block}
+.qrbt{font-size:clamp(28px,4vh,48px);color:#FFD54A}
 
 /* 2026-10-20 第十四次：💡 加回來（一句、燈泡 亮 一下） */
 .glh.ani{opacity:0;animation:capIn2 .5s ease-out 1.1s forwards;display:flex;align-items:center;justify-content:center;gap:10px}

@@ -11,7 +11,7 @@
 var H={pw:'',g:4,qg:4,cls:'',game:'classic',sets:{},n:5,int:1,ch:1,x15:0,say:1,code:'',Q:[],qi:-1,P:{},seen:{},pl:{},tot:{},okc:{},st:{},best:{},fxc:{},okq:{},gs:{},tm:null,A:{},xt:{},rw:{},done:false,log:[],prv:{},phase:'',m:{},ver:0,stops:[]};
 function $(s){return document.querySelector(s)}function $$(s){return [].slice.call(document.querySelectorAll(s))}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function scr(id){$$('.scr').forEach(function(x){x.hidden=x.id!==id});H.scr=id;var t=$('#hstp');if(t)t.hidden=id==='hpw'||id==='hset'||id==='hlob';if(id==='hpw'||id==='hset')hqr(false)}
+function scr(id){$$('.scr').forEach(function(x){x.hidden=x.id!==id});H.scr=id;document.body.setAttribute('data-scr',id);var t=$('#hstp');if(t)t.hidden=id==='hpw'||id==='hset'||id==='hlob';if(id==='hpw'||id==='hset')hqr(false)}
 function post(o){var u=String(window.SCORE_URL||'').trim();if(!u)return Promise.reject(new Error('nourl'));return fetch(u,{method:'POST',body:JSON.stringify(o)}).then(function(r){return r.json()})}
 function seatOf(id){return +String(id).slice(3)}
 function sp2(n){return (n<10?'0':'')+n}
@@ -117,7 +117,10 @@ function stopAll(){H.stops.forEach(function(f){f()});H.stops=[]}
 function stuURL(){return LV.stuURL()}
 function qrSVG(u){return LV.qr(u)}
 /* 右下角 QR Code（3(7)）：每一個 畫面 都 有，不小心 登出 的 學生 掃 這個 回來 */
-function hqr(on){var e=$('#hqrc');if(!e)return;if(on&&!e.getAttribute('data-ok')){e.querySelector('.qrb').innerHTML=qrSVG(stuURL());e.setAttribute('data-ok',1)}e.hidden=!on}
+/* 2026-10-28 第三十三次 C35-2（老師：右下角 QR 太小 學生 掃不到）：右下角 放大；點 一下 ＝ 全螢幕 大 QR（#qrbig），再 點 一下 收起來 */
+function qrBig(on){var o=$('#qrbig');if(!o){o=document.createElement('div');o.id='qrbig';o.className='qrbig';o.innerHTML='<div class="qrbw"><div class="qrbb"></div><div class="qrbt">📱 掃 我 加入</div><button class="big qrbx">✕ 收起來</button></div>';document.body.appendChild(o);o.onclick=function(){qrBig(false)}}
+  if(on){o.querySelector('.qrbb').innerHTML=qrSVG(stuURL())}o.hidden=!on}
+function hqr(on){var e=$('#hqrc');if(!e)return;if(!e.getAttribute('data-ck')){e.setAttribute('data-ck',1);e.style.cursor='pointer';e.onclick=function(){qrBig(true)}}if(on&&!e.getAttribute('data-ok')){e.querySelector('.qrb').innerHTML=qrSVG(stuURL());e.setAttribute('data-ok',1)}e.hidden=!on}
 function lobby(){scr('hlob');hstep(1);hqr(false);var G=LV.game(H.game);
   $('#lqr').innerHTML=qrSVG(stuURL());$('#lurl').textContent=stuURL().replace(/^https?:\/\//,'');
   $('#llog').innerHTML=LV.howHTML(LV.LOGIN,'v sm');
