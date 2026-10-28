@@ -1,0 +1,57 @@
+﻿"Blooket
+Import Template",,,,,,,
+Question #,Question Text,Answer 1,Answer 2,"Answer 3
+(Optional)","Answer 4
+(Optional)","Time Limit (sec)
+(Max: 300 seconds)","Correct Answer(s)
+(Only include Answer #)"
+1,Which word starts with f?,fox,vest,ox,six,20,1
+2,Which word starts with q?,girl,pig,queen,dog,20,3
+3,Which word starts with v?,window,vest,fox,bag,20,2
+4,Which word starts with n?,monkey,hat,window,nose,20,4
+5,Which word starts with y?,jet,insect,yo-yo,egg,20,3
+6,What is the big letter of r?,R,P,B,K,20,1
+7,What is the small letter of D?,b,p,q,d,20,4
+8,🐶  ___og,b,d,p,g,20,2
+9,🐱  ___at,c,k,s,e,20,1
+10,🦓  = ?,zibra,zebar,zebra,sebra,20,3
+11,🪟  = ?,windo,window,wimdow,vindow,20,2
+12,🐞  = ?,inseck,insekt,imsect,insect,20,4
+13,🐂  = ?,fox,box,ox,six,20,3
+14,🍎🍎🍎🍎🍎🍎🍎  How many?,seven,six,eight,nine,20,1
+15,2 + 3 = ?,four,six,nine,five,20,4
+16,10 - 1 = ?,five,nine,ten,eight,20,2
+17,3 = ?,three,tree,free,there,20,1
+18,8 = ?,eigth,aight,eight,eihgt,20,3
+19,"four, five, ___, seven",ten,six,three,nine,20,2
+20,"ten, nine, eight, ___",six,nine,two,seven,20,4
+21,🖐️ + ✌️ = ?,five,two,seven,ten,20,3
+22,1 = ?,one,on,own,ten,20,1
+23,"Jake: Hi, I'm Jake.   Bella: ___","Hi, I'm Jake.","Hi, my Bella.",You're welcome.,"Hi, I'm Bella.",20,4
+24,"Fred: Thank you, Daisy.   Daisy: ___","Thank you, too.",You're welcome.,Nice to meet you.,Good morning.,20,2
+25,Nate: Nice to meet you.   Penny: ___,"Nice to meet you, too.",You're welcome.,"Thank you, too.","Nice to meet me, too.",20,1
+26,"Rick: Good morning, Holly.   Holly: ___","Good morning, Holly.","Thank you, Rick.","Good morning, Rick.","You're welcome, Rick.",20,3
+27,Bella: What's your name?   Jake: ___,Your name is Jake.,My name is Jake.,I'm eight.,My name Jake.,20,2
+28,Daisy: How old are you?   Fred: ___,I'm Fred.,I nine.,My name is nine.,I'm nine.,20,4
+29,Fred: ___   Holly: I'm seven years old.,What's your name?,How old you are?,How old are you?,How old am I?,20,3
+30,Penny: ___   Nate: My name is Nate.,What's your name?,How old are you?,What your name?,What's my name?,20,1
+31,Holly: I can't find my dog.   Rick: ___,You can help you.,I can help me.,I can helps you.,I can help you.,20,4
+32,Which one is right?,I'm eight year old.,I'm eight years old.,I eight years old.,I'm eight years olds.,20,2
+33,Which one is right?,What's your name?,What's you name?,What your name?,What's your name.,20,1
+34,Which one is right?,Nice to meet your.,Nice meet you.,Nice to meet you.,Nice to meets you.,20,3
+35,I'm = ?,I is,I am,I are,I my,20,2
+36,What's = ?,What are,What am,Who is,What is,20,4
+37,You're = ?,You is,Your,You are,You am,20,3
+38,My name ___ Fred.,is,are,am,be,20,1
+39,I ___ Penny.,is,are,my,am,20,4
+40,I'm ten ___ old.,year,years,yeas,yes,20,2
+41,🧍⬆️  = ?,Stand up.,Sit down.,"Line up, please.",Put down your hand.,20,1
+42,📖  = ?,Close your book.,Open you book.,Open your book.,Raise your hand.,20,3
+43,🤫  = ?,"Line up, please.","Be quiet, please.","Be quite, please.",Sit down.,20,2
+44,✋⬆️  = ?,Put down your hand.,Raise you hand.,Open your hand.,Raise your hand.,20,4
+45,⬆️ Stand up.   ⬇️ ___,Line up.,Stand down.,Sit down.,Sit up.,20,3
+46,📖 Open your book.   📕 ___ your book.,Close,Open,Clos,Raise,20,1
+47,🚶🚶🚶  = ?,"Be quiet, please.",Line please up.,"Lion up, please.","Line up, please.",20,4
+48,✋⬇️  Put ___ your hand.,up,down,your,dawn,20,2
+49,"___ quiet, please.",Be,Is,Are,Am,20,1
+50,Raise ___ hand.,you,you're,your,yours,20,3

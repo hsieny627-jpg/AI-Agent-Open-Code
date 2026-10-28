@@ -1,0 +1,57 @@
+﻿"Blooket
+Import Template",,,,,,,
+Question #,Question Text,Answer 1,Answer 2,"Answer 3
+(Optional)","Answer 4
+(Optional)","Time Limit (sec)
+(Max: 300 seconds)","Correct Answer(s)
+(Only include Answer #)"
+1,👩  Who's she?,She's my mom.,He's my mom.,She's my dad.,She my mom.,20,1
+2,👵  Who's she?,She's my grandfather.,He's my grandmother.,She's my grandmother.,She's my mother.,20,3
+3,👦  Who's he?,He's my sister.,He's my brother.,She's my brother.,His my brother.,20,2
+4,👨  Who's he?,He's my mom.,He's my grandpa.,He my dad.,He's my dad.,20,4
+5,___ she? She's my sister.,Whose,Who,Who's,What's,20,3
+6,Who's he? ___ my grandfather.,He's,She's,His,He,20,1
+7,She's = ?,Her,She are,He is,She is,20,4
+8,Which one is right?,Who's her?,Who's she?,Whose she?,Who she's?,20,2
+9,Which one is right?,He's my brother.,He my brother.,His my brother.,He's my sister.,20,1
+10,👴 grandpa = ?,grandmother,father,grandfather,grandma,20,3
+11,👩 mom = ?,grandmother,mother,father,sister,20,2
+12,Which one is a boy?,mother,sister,grandmother,father,20,4
+13,👦  Is he your brother? ✅,"Yes, she is.","Yes, he's.","Yes, he is.","No, he isn't.",20,3
+14,🧑‍⚕️  She's a ___.,nurse,nures,nurses,purse,20,1
+15,🍳  He's a ___.,cooker,cookie,book,cook,20,4
+16,🌾🚜  She's a ___.,father,farmer,teacher,famer,20,2
+17,🎒📚  He's a ___.,student,studnet,studant,students,20,1
+18,👨‍🏫  Is he a teacher?,"Yes, she is.","Yes, he isn't.","Yes, he is.","Yes, he's.",20,3
+19,👨‍🍳  Is he a farmer?,"Yes, he is. He's a cook.","No, he isn't. He's a cook.","No, he isn't. He's a farmer.","No, she isn't. She's a cook.",20,2
+20,Is your dad a doctor? ✅,"Yes, he's.","Yes, she is.","No, he isn't.","Yes, he is.",20,4
+21,Is your sister a student? ❌,"No, he isn't.","No, she is.","No, she isn't.","Yes, she isn't.",20,3
+22,"___ your grandpa a cook? No, he isn't.",Is,Are,Am,Who's,20,1
+23,"Is your mom a doctor? No, she isn't. She's a ___. 👩‍⚕️",doctor,nurses,an nurse,nurse,20,4
+24,Which one is right?,Is she farmer?,Is she a farmer?,She is a farmer?,Are she a farmer?,20,2
+25,Which one is right?,Is your dad a teacher?,Is your dad teacher?,Is you dad a teacher?,Are your dad a teacher?,20,1
+26,Is she a doctor? ➜ .,She a doctor is.,She is doctor.,She is a doctor.,Is she doctor.,20,3
+27,Which one is right?,She's an nurse.,She's a nurse.,Her's a nurse.,She a nurse.,20,2
+28,11 = ?,seven,twelve,elven,eleven,20,4
+29,17 = ?,seventy,seven,seventeen,sevenseen,20,3
+30,16 = ?,sixteen,sixty,six,sixtean,20,1
+31,19 = ?,ninety,nine,nineten,nineteen,20,4
+32,10 + 4 = ?,forty,fourteen,four,fourteenth,20,2
+33,"sixteen, seventeen, ___, nineteen",eighteen,eighty,eight,twenty,20,1
+34,20 - 5 = ?,fifty,five,fifteen,sixteen,20,3
+35,My brother is 13. ➜ He's ___.,thirty,thirteen,three,twelve,20,2
+36,Which one is right?,twelfe,tweleve,twelv,twelve,20,4
+37,⏰  = ?,Times up.,Turn up.,Time's up.,Hurry up.,20,3
+38,📒👀  = ?,Show me your homework.,Show me you homework.,Show your me homework.,Turn on the light.,20,1
+39,👉🚶🚶  = ?,Lets' go.,Hurry up.,Don't run.,Let's go.,20,4
+40,🏃💨  = ?,Hurri up.,Hurry up.,Time's up.,Hurry down.,20,2
+41,🏃❌  ___ run.,Don't,Do,Doesn't,Let's,20,1
+42,🤐  Don't ___.,walk,run,talk,tall,20,3
+43,💡➡️🌑  Turn ___ the light.,of,off,on,up,20,2
+44,🌑➡️💡  Turn ___ the light.,off,in,no,on,20,4
+45,Let's = ?,Let is,Lets us,Let us,Let we,20,3
+46,📌  Which letter? ___in,p,b,d,t,20,1
+47,🔝  Which letter? ___op,d,p,b,t,20,4
+48,🍩  Which letter? ___onut,b,d,t,p,20,2
+49,Which word starts with d?,dip,tip,big,pin,20,1
+50,Which word starts with p?,top,dad,pot,bat,20,3

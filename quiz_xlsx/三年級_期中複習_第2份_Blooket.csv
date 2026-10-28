@@ -1,0 +1,57 @@
+﻿"Blooket
+Import Template",,,,,,,
+Question #,Question Text,Answer 1,Answer 2,"Answer 3
+(Optional)","Answer 4
+(Optional)","Time Limit (sec)
+(Max: 300 seconds)","Correct Answer(s)
+(Only include Answer #)"
+1,Which word starts with z?,zebra,six,jet,nose,20,1
+2,Which word starts with w?,monkey,vest,window,yo-yo,20,3
+3,Which word starts with j?,girl,jet,yo-yo,insect,20,2
+4,Which word starts with r?,lion,window,nose,rabbit,20,4
+5,Which word starts with a?,egg,up,ant,ox,20,3
+6,What is the big letter of b?,B,D,P,R,20,1
+7,What is the small letter of N?,m,h,u,n,20,4
+8,🐷  ___ig,b,p,q,d,20,2
+9,🦊  ___ox,f,v,b,s,20,1
+10,🐰  = ?,rabit,rebbit,rabbit,labbit,20,3
+11,👸  = ?,qeen,queen,queem,gueen,20,2
+12,🪀  = ?,yo-you,jo-jo,yo-ya,yo-yo,20,4
+13,👃  = ?,noes,mose,nose,nouse,20,3
+14,🎈🎈🎈🎈  How many?,four,five,fourteen,for,20,1
+15,4 + 4 = ?,four,nine,six,eight,20,4
+16,9 - 3 = ?,seven,six,three,nine,20,2
+17,10 = ?,ten,then,tin,tan,20,1
+18,2 = ?,too,tow,two,twe,20,3
+19,"one, two, ___, four",five,three,free,ten,20,2
+20,"six, seven, ___, nine",ten,five,eat,eight,20,4
+21,🖐️ + 🖐️ = ?,five,nine,ten,two,20,3
+22,5 = ?,five,fife,fiv,vive,20,1
+23,"Kyle: Hello, I'm Kyle.   Rosa: ___","Hello, I'm Kyle.","Hello, Rosa is.","Thank you, Kyle.","Hello, I'm Rosa.",20,4
+24,Lena: Thank you.   Sean: ___,You welcome.,You're welcome.,Your welcome.,Thank you.,20,2
+25,"Victor: Nice to meet you, Gina.   Gina: ___","Nice to meet you, too.","Nice to meet you, two.","Good morning, too.","You're welcome, too.",20,1
+26,Simon: Good morning.   Fiona: ___,Good night.,You're welcome.,Good morning.,"Nice to meet you, too.",20,3
+27,Rosa: What's your name?   Kyle: ___,I'm ten.,I'm Kyle.,You're Kyle.,I Kyle.,20,2
+28,Sean: How old are you?   Lena: ___,I'm Lena.,I'm six year old.,My name is six.,I'm six years old.,20,4
+29,Gina: ___   Victor: I'm ten.,What's your name?,How old is you?,How old are you?,Who are you?,20,3
+30,Fiona: ___   Simon: I'm Simon.,What's your name?,How old are you?,What's you name?,What's her name?,20,1
+31,"🙋‍♂️⬅️  Hey, Rosa. ___ here.",Comes,Came,Some,Come,20,4
+32,Which one is right?,My name Gina.,My name is Gina.,My name are Gina.,I name is Gina.,20,2
+33,Which one is right?,How old are you?,How old is you?,How old you?,How are old you?,20,1
+34,Which one is right?,Your welcome.,You welcome.,You're welcome.,You're welcome?,20,3
+35,I am = ?,Im',I'm,I's,I'am,20,2
+36,What is = ?,Whats',What're,What'm,What's,20,4
+37,You are = ?,Your,You's,You're,You'are,20,3
+38,___ your name?,What's,What,How old,Who's,20,1
+39,How ___ are you?,name,is,years,old,20,4
+40,I'm seven ___.,year old,years old,old years,years,20,2
+41,🪑⬇️  = ?,Sit down.,Stand up.,Sit dawn.,"Line up, please.",20,1
+42,📕  = ?,Open your book.,Close you book.,Close your book.,Put down your hand.,20,3
+43,✋⬇️  = ?,Raise your hand.,Put down your hand.,Put up your hand.,Put down your book.,20,2
+44,"🚶🚶🚶  ___ up, please.",Lion,Stand,Sit,Line,20,4
+45,⬇️ Sit down.   ⬆️ ___,Sit up.,Stand down.,Stand up.,Line up.,20,3
+46,✋⬆️ Raise your hand.   ✋⬇️ ___ your hand.,Put down,Put up,Raise,Close,20,1
+47,"🤫  Be ___, please.",quite,quick,queen,quiet,20,4
+48,___ your book. 📖,Close,Open,Up,Raise,20,2
+49,Stand ___. 🧍⬆️,up,down,on,your,20,1
+50,"Line up, ___.",pleas,place,please,plaese,20,3
