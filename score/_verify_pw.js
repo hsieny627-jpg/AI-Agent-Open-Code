@@ -76,5 +76,6 @@ const pwState = p => p.evaluate(() => { const c = document.getElementById('scPwC
       await r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(body) }); });
     const p = await ctx.newPage(); await p.goto(HTTP + '/g3-review/index.html'); await p.waitForTimeout(500); await p.click('#scBarIn');
     for (const k of '30415') await p.click('.sckey button[data-k="' + k + '"]'); await p.click('.sckey button[data-k="ok"]'); await p.waitForTimeout(1600);
-    ck('舊 伺服器（還沒 部署）＝ 照 以前 登入', await p.evaluate(() => SCID === '30415' && !document.getElementById('scPwC'))); await ctx.close(); }
+    const oo = await p.evaluate(() => ({ id: SCID, pw: !!(document.getElementById('scPwC') && document.getElementById('scPwC').offsetParent), m: window.SCPW && SCPW.mode, t: (document.getElementById('scPwT') || {}).textContent }));
+    ck('舊 伺服器（還沒 部署）＝ 照 以前 登入 ' + JSON.stringify(oo), oo.id === '30415' && !oo.pw); await ctx.close(); }
   await br.close(); sv.close(); E.forEach(e => console.log('✗ ' + e)); console.log((E.length ? '✗' : '✓') + ' 🔑 密碼 登入 量了 ' + n + ' 項，失敗 ' + E.length + ' 項'); })();
