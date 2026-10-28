@@ -1,5 +1,5 @@
 /* node tools/c36_preview.js — 第三十三次 題目 清單 頁 listen/2026-10-28_C36/（給 老師 看，老師 說「對」才 放 上 網站）
- * 內容：三年級、四年級 每一套 200 題（題庫 A ＝ 25／50 題、題庫 B ＝ 新 25／新 50 題）、🧩 中文 拖拖樂、四年級 6 種 新 遊戲 設計。
+ * 內容：三年級、四年級 每一套 200 題（題庫 A ＝ 25／50 題、題庫 B ＝ 新 25／新 50 題）、🔓 句子 解碼 任務、四年級 6 種 新 遊戲 設計。
  * 同時 檢查（不過 ＝ 失敗、不 產生 頁面）：跟 考卷、舊 題庫 一模一樣、名字 用過、題庫 自己 重複、題數、類似 比例。 */
 const fs = require('fs'), path = require('path');
 const D3 = require('../g3mid/_data.js'), X3 = require('../g3mid/_exam_data.js'), C3 = require('../g3mid/_class_data.js'), P3 = require('../g3mid/_pool.js');
@@ -30,8 +30,8 @@ IDS.forEach((id, gi) => { const g = D3.GAMES[gi], n = id.slice(1), old = new Set
   A.concat(B).forEach(r => { if (r[3] && Array.isArray(r[3]) && new Set([r[2]].concat(r[3])).size !== r[3].length + 1) ERR.push(g.nm + ' 選項 重複'); });
   simA += ex.concat(A).filter(r => r[0]).length; simB += B.filter(r => r[0]).length; });
 if (simA !== 60) ERR.push('三年級 A 類似 ' + simA + '（要 60）'); if (simB !== 100) ERR.push('三年級 B 類似 ' + simB + '（要 100）');
-[['A', P3.DA], ['B', P3.DB]].forEach(([w, L]) => { if (L.length !== 60) ERR.push('三年級 拖拖樂 ' + w + ' ' + L.length); if (new Set(L.map(q => q.en)).size !== L.length) ERR.push('三年級 拖拖樂 ' + w + ' 重複');
-  if (L.filter(q => q.x).length !== L.length / 2) ERR.push('三年級 拖拖樂 ' + w + ' 多 2 個 方塊 不是 一半'); L.forEach(q => { if (/one years/.test(q.en)) ERR.push('one years'); if (/[A-Za-z]{3}/.test(q.z.replace(/\b[A-Z][a-z]+\b/g, ''))) ERR.push('翻譯 有 英文 ' + q.z); }); });
+[['A', P3.DA], ['B', P3.DB]].forEach(([w, L]) => { if (L.length !== 60) ERR.push('三年級 解碼 任務 ' + w + ' ' + L.length); if (new Set(L.map(q => q.en)).size !== L.length) ERR.push('三年級 解碼 任務 ' + w + ' 重複');
+  if (L.filter(q => q.x).length !== L.length / 2) ERR.push('三年級 解碼 任務 ' + w + ' 多 2 個 方塊 不是 一半'); L.forEach(q => { if (/one years/.test(q.en)) ERR.push('one years'); if (/[A-Za-z]{3}/.test(q.z.replace(/\b[A-Z][a-z]+\b/g, ''))) ERR.push('翻譯 有 英文 ' + q.z); }); });
 /* ══ 四年級 檢查 ══ */
 const row4 = r => JSON.stringify(r.slice(1));
 const EXAM4 = P4.EXAMC.concat(['Who’s he?|He’s my dad.', 'Who’s she?|She’s my mom.', 'Is she a doctor?|No, she isn’t.', 'Good morning.|This is my grandma.', 'Nice to meet you.|Nice to meet you, too.', 'Is your brother a student?|Yes, he is.']);
@@ -50,7 +50,7 @@ P4.NB.N4.forEach(r => { const k = r[2] + '|' + r[3][0]; if (EXAM4.indexOf(k) >= 
 P4.NB.N5.forEach(r => { if (F4.indexOf(r[1]) >= 0) ERR.push('泡泡龍 考卷 F 的 字 ' + r[1]); });
 const A4 = 7 * 12 + 5 * 12;   /* 遊戲 題數 */
 if (sim4A !== 60) ERR.push('四年級 A 類似 ' + sim4A + '（要 60）'); if (sim4B < 100) ERR.push('四年級 B 類似 ' + sim4B);
-[['A', P4.DA], ['B', P4.DB]].forEach(([w, L]) => { if (L.length !== 56) ERR.push('四年級 拖拖樂 ' + w + ' ' + L.length); if (new Set(L.map(q => q.en)).size !== 56) ERR.push('四年級 拖拖樂 ' + w + ' 重複'); });
+[['A', P4.DA], ['B', P4.DB]].forEach(([w, L]) => { if (L.length !== 56) ERR.push('四年級 解碼 任務 ' + w + ' ' + L.length); if (new Set(L.map(q => q.en)).size !== 56) ERR.push('四年級 解碼 任務 ' + w + ' 重複'); });
 if (ERR.length) { console.error('✗ ' + ERR.join('\n✗ ')); process.exit(1); }
 
 /* ══ 頁面 ══ */
@@ -128,17 +128,17 @@ th{background:#14202B;color:#CFE6FF}td small{color:#BFD3E6;font-size:21px}td b{c
 要 改 的 題目：請 寫「幾 年級、哪一套、哪一個 遊戲、第 幾 題、改 成 什麼」。</div>
 <div class="box ok"><b>✔ 電腦 檢查 過：</b>跟 期中考卷 <b>沒有 一題 一模一樣</b>；跟「三年級／四年級 複習」、課堂複習、舊 的 25／50 題 也 不 一樣；人名 都 沒 用過。<br>
 <span class="s1">🔁 類似</span> ＝ 考 的 <b>重點</b> 跟 期中考 一樣，但 字、句子、選項、問法 不一樣。<span class="s0">🆕 全新</span> ＝ 考卷 沒有 考 的。<br>
-🧩 <b>中文 拖拖樂</b>（考卷 沒有 這種 題型）＝ 算 🆕。每一次 玩 都 重新 抽，做過 的 先 不出。</div>
-<table><tr><th>年級</th><th>哪一套</th><th>遊戲 題</th><th>🧩 拖拖樂</th><th>合計</th><th>🔁 類似</th></tr>
+🔓 <b>句子 解碼 任務</b>（考卷 沒有 這種 題型）＝ 算 🆕。每一次 玩 都 重新 抽，做過 的 先 不出。</div>
+<table><tr><th>年級</th><th>哪一套</th><th>遊戲 題</th><th>🔓 解碼 任務</th><th>合計</th><th>🔁 類似</th></tr>
 <tr><td>三年級</td><td>A：25／50 題</td><td>10 種 ✕ 14 ＝ 140（舊 80＋<b>新 60</b>）</td><td>60</td><td>200</td><td>60（30%）</td></tr>
 <tr><td>三年級</td><td>B：新 25／新 50</td><td>10 種 ✕ 14 ＝ <b>140</b></td><td>60</td><td>200</td><td>100（50%）</td></tr>
 <tr><td>四年級</td><td>A：25／50 題</td><td>12 種 ✕ 12 ＝ 144（舊 84＋<b>新 60</b>）</td><td>56</td><td>200</td><td>60（30%）</td></tr>
 <tr><td>四年級</td><td>B：新 25／新 50</td><td><b>6 種 新 遊戲</b> ✕ 24 ＝ 144</td><td>56</td><td>200</td><td>${sim4B}（${Math.round(sim4B / 2)}%）</td></tr></table>
-<div class="nav"><a href="#how">❓ 怎麼 玩、登入</a><a href="#g3a">三年級 A</a><a href="#g3b">三年級 B</a><a href="#g3d">三年級 🧩</a><a href="#g4a">四年級 A</a><a href="#g4n">四年級 6 種 新 遊戲</a><a href="#g4b">四年級 B</a><a href="#g4d">四年級 🧩</a></div>
+<div class="nav"><a href="#how">❓ 怎麼 玩、登入</a><a href="#g3a">三年級 A</a><a href="#g3b">三年級 B</a><a href="#g3d">三年級 🔓</a><a href="#g4a">四年級 A</a><a href="#g4n">四年級 6 種 新 遊戲</a><a href="#g4b">四年級 B</a><a href="#g4d">四年級 🔓</a></div>
 
 <h2 id="how">❓ 一次 25 題／50 題 怎麼 走（老師 已經 選 的）</h2>
-<div class="flow"><span>⚡ 老師 開 現場任務</span><em>➜</em><span>📱 學生 掃 QR</span><em>➜</em><span>🔑 5 碼＋8 碼 密碼</span><em>➜</em><span>🎮 一關 一關 玩</span><em>➜</em><span>🧩 中文 拖拖樂 一關</span><em>➜</em><span>🏆 分數／100</span></div>
-<div class="box">🧩 <b>中文 拖拖樂</b>（25 題 裡 8 題、50 題 裡 15 題）：<br>
+<div class="flow"><span>⚡ 老師 開 現場任務</span><em>➜</em><span>📱 學生 掃 QR</span><em>➜</em><span>🔑 5 碼＋8 碼 密碼</span><em>➜</em><span>🎮 一關 一關 玩</span><em>➜</em><span>🔓 句子 解碼 任務 一關</span><em>➜</em><span>🏆 分數／100</span></div>
+<div class="box">🔓 <b>句子 解碼 任務</b>（25 題 裡 8 題、50 題 裡 15 題）：<br>
 ① <b>Unit 1 秒懂 動畫</b>（≧ 20 秒：每一句 一個 字 一個 字 出來，英文 正下方 中文，唸 到 哪 亮 到 哪，最後 整句 中文）➜ ② Unit 1 拖曳 題 ➜ ③ Unit 2 秒懂 動畫 ➜ ④ Unit 2 拖曳 題。<br>
 第一次 一定 看 完，第二次 以後 有〔⏭ 跳過〕。拖 對 ＝ 唸 一次 整句（唸 到 哪 亮 到 哪）＋ 最 下面 整句 中文。放 對 幾 格 就 拿 幾 成 分數。不發音 的 字母 灰色（What 的 h、name 的 e、are 的 e…）。</div>
 <div class="box">👥 <b>兩 人 一台</b>：平板 上 按〔👥 兩 個 人〕➜ 兩 個 人 各 打 自己 的 5 碼＋密碼 ➜ 大字「輪到 304 12 號」一人 一題 輪流、題目 不一樣 ➜ 成績、錯題 各 記 各 的。<br>
@@ -149,7 +149,7 @@ h += '<h2 id="g3a">📝 三年級　A：25／50 題 新加 的 60 題</h2><div c
 IDS.forEach((id, gi) => { h += '<h3>' + G3N[gi] + '</h3>' + tbl(P3.PA['X' + (gi + 1)], R3[id], 8); });
 h += '<h2 id="g3b">📝 三年級　B：新 25／新 50 題（140 題，人名 Jake Fred Nate Rick Bella Daisy Penny Holly）</h2>';
 IDS.forEach((id, gi) => { h += '<h3>' + G3N[gi] + '</h3>' + tbl(P3.PB['X' + (gi + 1)], R3[id], 0); });
-h += '<h2 id="g3d">🧩 三年級　中文 拖拖樂</h2><div class="box">黃色 ＝ 學生 要 拖 到 英文 正下方 的 中文 方塊。名字 方塊 ＝ 英文 名字（3-1 B）。一半 的 題目 多 2 個 錯 的 方塊（3-4）。</div><h3>A：25／50 題（60 句）</h3>' + drag(P3.DA) + '<h3>B：新 25／新 50（60 句）</h3>' + drag(P3.DB);
+h += '<h2 id="g3d">🔓 三年級　句子 解碼 任務</h2><div class="box">黃色 ＝ 學生 要 拖 到 英文 正下方 的 中文 方塊。名字 方塊 ＝ 英文 名字（3-1 B）。一半 的 題目 多 2 個 錯 的 方塊（3-4），錯 的 方塊 ＝ 跟 答案 只 差 一點（My 我的 ➜ 你的、我）。</div><h3>A：25／50 題（60 句）</h3>' + drag(P3.DA) + '<h3>B：新 25／新 50（60 句）</h3>' + drag(P3.DB);
 h += '<h2 id="g4a">📝 四年級　A：25／50 題 新加 的 60 題</h2><div class="box">原本 84 題 在 C33 頁；下面 是 12 種 每 種 再 加 5 題。短文 偵探 多 一篇（三篇 一次 抽 一篇）：</div>' + pas(P4.PASA.xowen);
 for (let n = 1; n <= 12; n++) h += '<h3>' + M4N[n - 1] + '</h3>' + tbl(P4.PA['X' + n], R4['X' + n], 7);
 h += '<h2 id="g4n">🎮 四年級　新 25／新 50：6 種 全新 遊戲（設計，老師 同意 才 做）</h2><div class="box">比 三年級 的 夾娃娃、小精靈 更 好玩：每一種 都 是 學生 熟悉 的 經典 手遊 玩法（太空 射擊、賽車、貪食蛇、Doodle Jump、泡泡龍、密室 逃脫），<b>每一種 對應 期中考卷 一個 大題</b>。<br>老師 選 的 元素 全部 都 有：🗺 闖關 地圖、🔥 連對 火焰（<b>沒有 音效</b>）、👾 每 4 關 魔王、🆚 兩人 一台 對決、🏫 全班 合作 進度 條、🎬 每關 開場 小 動畫。</div><div class="gm">' +
@@ -157,7 +157,7 @@ h += '<h2 id="g4n">🎮 四年級　新 25／新 50：6 種 全新 遊戲（設�
 h += '<h2 id="g4b">📝 四年級　B：新 25／新 50 題（144 題，人名 Ethan Lucas Chloe Olivia）</h2>';
 P4.NGAME.forEach((g, i) => { const k = 'N' + (i + 1); if (k === 'N6') h += pas(P4.PASB.xethan) + pas(P4.PASB.xolivia) + '<div class="box">家族樹（每 個 人 有 職業 小圖）：👴 爺爺 🌾 農夫、👵 奶奶 🍳 廚師、👨 爸爸 🩺 醫生、👩 媽媽 📚 老師、👦 哥哥 🎒 學生、👧 姊姊 🎒 學生</div>';
   h += '<h3>' + g.ic + ' ' + g.nm + '</h3>' + tbl(P4.NB[k], RN[k], 0); });
-h += '<h2 id="g4d">🧩 四年級　中文 拖拖樂</h2><h3>A：25／50 題（56 句）</h3>' + drag(P4.DA) + '<h3>B：新 25／新 50（56 句）</h3>' + drag(P4.DB);
+h += '<h2 id="g4d">🔓 四年級　句子 解碼 任務</h2><h3>A：25／50 題（56 句）</h3>' + drag(P4.DA) + '<h3>B：新 25／新 50（56 句）</h3>' + drag(P4.DB);
 h += '<div class="box q" style="margin-top:50px">❓ 老師 看完：<b>「對」</b>就 開始 做進 網站（順序：登入 密碼 ➜ 三年級 ➜ 四年級 6 種 新 遊戲 ➜ 老師看板 錯題）。要 改 的 請 寫 號碼。</div></div></body></html>';
 const out = path.join(__dirname, '..', 'listen', '2026-10-28_C36'); fs.mkdirSync(out, { recursive: true }); fs.writeFileSync(path.join(out, 'index.html'), h);
 console.log('✓ C36 題目 清單 ok：三年級 A 新 60＋B 140＋🧩 120、四年級 A 新 60＋B 144＋🧩 112；類似 三 A ' + simA + '、三 B ' + simB + '、四 A ' + sim4A + '、四 B ' + sim4B);

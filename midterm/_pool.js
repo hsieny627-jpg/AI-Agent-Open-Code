@@ -1,9 +1,9 @@
 /* midterm/_pool.js — 📝 四年級 複習 第三十三次 新 題庫（2026-10-28 老師：每一套 200 題）
  *
  * 老師 的 決定（需求檔 第四節 最下面「第三十三次」）：
- *   ① 25／50 題 ＝ 題庫 A 200 題：12 種 遊戲 ✕ 12 題（原本 _exam_data.js 7 題 ＋ 這裡 PA 5 題）＋ 🧩 中文 拖拖樂 56 題；🔁 類似 60 題（30%）。
+ *   ① 25／50 題 ＝ 題庫 A 200 題：12 種 遊戲 ✕ 12 題（原本 _exam_data.js 7 題 ＋ 這裡 PA 5 題）＋ 🔓 句子 解碼 任務 56 題；🔁 類似 60 題（30%）。
  *   ② 新 25／新 50 題 ＝ 題庫 B 200 題：**6 種 全新 遊戲** ✕ 24 題（這裡 NB；設計 先 給 老師 看，同意 才 做）＋ 🧩 56 題；🔁 類似 102 題（51%）。
- *   🧩 中文 拖拖樂 算 🆕（考卷 沒有 這種 題型）；名字 不在 四年級 句子 裡；isn’t ＝ 不是（3-3 A）；brother ＝ 哥哥、sister ＝ 姊姊（3-2 A）。
+ *   🔓 句子 解碼 任務 算 🆕（考卷 沒有 這種 題型）；名字 不在 四年級 句子 裡；isn’t ＝ 不是（3-3 A）；brother ＝ 哥哥、sister ＝ 姊姊（3-2 A）。
  * 題目、選項 全 英文（🔒 永久 原則）。人名：題庫 A ＝ Owen Jason Emily Nora（第二十八次）；題庫 B ＝ Ethan Lucas Chloe Olivia（新）。
  * 考卷 原題（C 大題 4 句、E 大題 6 題、F 大題 6 個 字、G 短文、H 家庭樹、D 大題 數字 12 20 18 17）一題 都 不 一樣（_pool_preview.js 會 檢查）。 */
 const P = (who, job) => who + (job ? '|' + job : '');
@@ -177,15 +177,26 @@ const NGAME = [
   { id: 'n6', ic: '🚪', nm: '密室 逃脫', ex: 'G 讀 短文＋H 家庭樹', how: '一間 一間 上鎖 的 房間；讀 牆上 的 對話（或 看 家族樹）➜ 回答 一題 ＝ 拿到 一把 鑰匙 🗝，門 打開 走 到 下一間。答錯 ＝ 警報 燈 閃、答錯頁 指出 證據 在 第 幾 行。', fun: '6 道 門 打開 ＝ 逃出 密室、寶箱 打開' }
 ];
 
-/* ════ 🧩 中文 拖拖樂（四年級）════ */
+/* ════ 🔓 句子 解碼 任務（四年級）════ */
 const GL4 = { Who: '誰', he: '他', she: '她', He: '他', She: '她', my: '我的', your: '你的', Is: '是', is: '是', a: '一位', Yes: '是的', No: '不', 'isn’t': '不是' };
 Object.keys(FAMS).forEach(f => { GL4[f] = FAMS[f][1]; }); Object.keys(JOBS).forEach(j => { GL4[j] = JOBS[j]; });
-const WRONG4 = ['他的', '她的', '什麼', '我', '你', '是的', '不', '一位', '誰', '爸爸', '老師', '哥哥'];
+/* 2026-10-28 第三十三次 老師 第 1 點（🔒 永久）：多 的 錯 方塊 ＝ 跟 某一個 正確 方塊 只 差 一點，不 放 一看 就 知道 錯 的 */
+const NEAR4 = { 他: ['她', '他的'], 她: ['他', '她的'], 誰: ['誰的', '什麼'], 是: ['不是', '是的'], 我的: ['你的', '我'], 你的: ['我的', '你'], 一位: ['兩位', '這位'],
+  是的: ['不是', '不'], 不: ['是的', '不是'], 不是: ['是', '不'], 爸爸: ['爺爺', '哥哥'], 媽媽: ['奶奶', '姊姊'], 哥哥: ['姊姊', '爸爸'], 姊姊: ['哥哥', '媽媽'],
+  爺爺: ['奶奶', '爸爸'], 奶奶: ['爺爺', '媽媽'], 醫生: ['護理師', '老師'], 護理師: ['醫生', '廚師'], 老師: ['學生', '醫生'], 學生: ['老師', '農夫'], 廚師: ['農夫', '護理師'], 農夫: ['廚師', '爸爸'] };
+const NPRI4 = ['他', '她', '我的', '你的', '爸爸', '媽媽', '哥哥', '姊姊', '爺爺', '奶奶', '醫生', '護理師', '老師', '學生', '廚師', '農夫', '誰', '是的', '不', '不是', '一位', '是'];
+function near4(ans, k) {   /* 先 挑 最 重要 的 那一個 字 的 兩個 相近 字（他 ➜ 她、他的；家人、職業 輪流） */
+  let has = NPRI4.filter(z => ans.includes(z)); const top = has.filter(z => NPRI4.indexOf(z) < 16), out = [];
+  if (top.length > 1) { const t = top[k % top.length]; has = [t].concat(has.filter(z => z !== t)); }
+  has.forEach(z => NEAR4[z].forEach(w => { if (out.length < 2 && !ans.includes(w) && !out.includes(w)) out.push(w); }));
+  if (out.length < 2) throw new Error('解碼 任務 找不到 相近 的 錯 方塊：' + ans.join(' '));
+  return out;
+}
 function sent4(s) {
   const out = [];
   s.split(' ').forEach(x => { const m = /^([A-Za-z’]+)([.,?!]*)$/.exec(x), c = m[1], p = m[2];
     if (/’s$/.test(c)) { out.push([c.slice(0, -2), GL4[c.slice(0, -2)]], ['’s' + p, '是']); return; }
-    if (!GL4[c]) throw new Error('拖拖樂 沒有 中文：' + c);
+    if (!GL4[c]) throw new Error('解碼 任務 沒有 中文：' + c);
     out.push([c + p, GL4[c]]); });
   return out;
 }
@@ -199,7 +210,7 @@ const zh4 = s => s.split(/(?<=[.?!]) /).map(t => {
   if ((m = /^Is your (\w+) a (\w+)\?$/.exec(t))) return '你的 ' + GL4[m[1]] + ' 是 一位 ' + GL4[m[2]] + ' 嗎？';
   if ((m = /^Yes, (he|she) is\.$/.exec(t))) return '是的，' + (m[1] === 'he' ? '他' : '她') + ' 是。';
   if ((m = /^No, (he|she) isn’t\.$/.exec(t))) return '不，' + (m[1] === 'he' ? '他' : '她') + ' 不是。';
-  throw new Error('拖拖樂 沒有 整句 翻譯：' + t);
+  throw new Error('解碼 任務 沒有 整句 翻譯：' + t);
 }).join(' ');
 const MALE = ['father', 'dad', 'brother', 'grandpa', 'grandfather'], FEM = ['mother', 'mom', 'sister', 'grandma', 'grandmother'], JL = Object.keys(JOBS);
 const EXAMS = EXAMC.concat(['Who’s he? He’s my dad.', 'Who’s she? She’s my mom.', 'Is she a doctor? No, she isn’t. She’s a farmer.']);
@@ -207,7 +218,7 @@ function dragList(lines, seed) {
   let k = seed; const L = [];
   const seen = {};
   lines.forEach((s, i) => { if (EXAMS.indexOf(s) >= 0 || seen[s]) return; seen[s] = 1; const t = sent4(s), q = { u: /^Is |Yes|No/.test(s) && !/your (father|dad|brother|grandpa|grandfather|mother|mom|sister|grandma|grandmother)\?/.test(s) ? 2 : 1, en: s, t, z: zh4(s) };
-    if (L.length % 2 === 0) { const ans = t.map(p => p[1]), c = WRONG4.filter(w => ans.indexOf(w) < 0); q.x = [c[k % c.length], c[(k * 5 + 2) % c.length]]; if (q.x[0] === q.x[1]) q.x[1] = c[(k + 1) % c.length]; k++; }
+    if (L.length % 2 === 0) { q.x = near4(t.map(p => p[1]), k); k++; }
     L.push(q); });
   return L;
 }

@@ -1,10 +1,10 @@
 /* g3mid/_pool.js — 📝 三年級 複習 第三十三次 新 題庫（2026-10-28 老師：每一套 200 題）
  *
  * 老師 的 決定（需求檔 第四節 最下面「第三十三次」）：
- *   ① 25／50 題 ＝ 題庫 A 200 題：10 種 遊戲 ✕ 14 題（原本 _exam_data.js 的 8 題 ＋ 這裡 PA 的 6 題）＋ 🧩 中文 拖拖樂 60 題；🔁 類似 60 題（30%）。
+ *   ① 25／50 題 ＝ 題庫 A 200 題：10 種 遊戲 ✕ 14 題（原本 _exam_data.js 的 8 題 ＋ 這裡 PA 的 6 題）＋ 🔓 句子 解碼 任務 60 題；🔁 類似 60 題（30%）。
  *   ② 新 25／新 50 題 ＝ 題庫 B 200 題：10 種 遊戲 ✕ 14 題（這裡 PB）＋ 🧩 60 題；🔁 類似 100 題（50%）。
  *   🔁 類似 ＝ 考 的 重點 跟 期中考 某一題 一樣，但 字、句子、選項、問法 不一樣（嚴禁 100% 一樣）；🆕 全新 ＝ 考卷 沒有 考 的 字、句子、問法。
- *   🧩 中文 拖拖樂（考卷 沒有 這種 題型 ➜ 算 🆕）：一句 英文，把 中文 方塊 拖到 每一個 英文 字 正下方；一半 多 2 個 錯 的 方塊（3-4 A 50%＋B 50%）。
+ *   🔓 句子 解碼 任務（考卷 沒有 這種 題型 ➜ 算 🆕）：一句 英文，把 中文 方塊 拖到 每一個 英文 字 正下方；一半 多 2 個 錯 的 方塊（3-4 A 50%＋B 50%）。
  *   名字 也 要 拖（3-1 B：中文 格子 ＝ 英文 名字）；isn’t ＝ 不是（3-3 A）；brother ＝ 哥哥、sister ＝ 姊姊（3-2 A）。
  * 格式 跟 _exam_data.js 的 X1～X10 一模一樣（_data.js 照樣 轉）。題目、選項 全 英文（🔒 永久 原則 1）。
  * 人名：題庫 A ＝ Bill Mark Luke Adam Sally Helen Molly Ruby（第二十八次 那一組）；題庫 B ＝ 新 的 一組 Jake Fred Nate Rick Bella Daisy Penny Holly（考卷、課本、舊 題庫 都 沒用過，build 的 LEAK 會 檢查）。 */
@@ -132,14 +132,13 @@ var PB = {
     [0, '7483'], [0, '2965'], [0, '6138'], [0, '4719']]
 };
 
-/* ════ 🧩 中文 拖拖樂 ════
+/* ════ 🔓 句子 解碼 任務 ════
    一題 ＝ 一句（或 一問一答 兩句）：t ＝ [[英文, 中文 方塊]…]（標點 黏 在 前一個 字、不 拖；名字 方塊 ＝ 英文 名字）；
    x ＝ 多 的 2 個 錯 方塊（一半 的 題目 有，3-4 A 50%＋B 50%）；u ＝ 1／2 哪一課；z ＝ 整句 中文。 */
 var TOK = {
   "What's": [['What', '什麼'], ["'s", '是']], your: [['your', '你的']], name: [['name', '名字']], My: [['My', '我的']], my: [['my', '我的']], is: [['is', '是']],
   "I'm": [['I', '我'], ["'m", '是']], How: [['How old', '幾歲']], are: [['are', '是']], you: [['you', '你']], years: [['years old', '歲']], Hi: [['Hi', '嗨']], Hello: [['Hello', '哈囉']]
 };
-var WRONG = ['他', '她', '誰', '不是', '我們', '幾', '名字', '你的', '我的', '是', '十'];
 function sent(str) {   /* "What's your name?" ➜ [[What,什麼],['s,是],[your,你的],[name?,名字]] */
   var out = [], w = str.split(' ');
   for (var i = 0; i < w.length; i++) { var x = w[i], m = /^([A-Za-z'’]+)([.,?!]*)$/.exec(x), core = m[1], p = m[2];
@@ -158,9 +157,21 @@ var ZH = function (s) {
     .replace(/I'm (\w+)\./g, function (a, n) { var k = NUMW.indexOf(n); return k > 0 ? '我 ' + NUMZ[k] + ' 歲。' : '我是 ' + n + '。'; })
     .replace(/Hi, I'm (\w+)\./g, '嗨，我是 $1。').replace(/Hello, I'm (\w+)\./g, '哈囉，我是 $1。').replace(/我 二 歲/g, '我 兩 歲').replace(/ (?=[^ ]*$)/, ' ').trim();
 };
+/* 2026-10-28 第三十三次 老師 第 1 點（🔒 永久）：多 的 錯 方塊 ＝ 跟 某一個 正確 方塊 只 差 一點（My 我的 ➜ 你的、我），不 放 一看 就 知道 錯 的 */
+var NEAR = { '我的': ['你的', '我'], '你的': ['我的', '你'], '我': ['你', '我的'], '你': ['我', '你的'], '是': ['不是', '有'], '名字': ['年齡', '你的'],
+  '什麼': ['誰', '幾'], '幾歲': ['什麼', '幾'], '歲': ['年', '老的'], '嗨': ['再見', '謝謝'], '哈囉': ['再見', '謝謝'] };
+NUMZ.forEach(function (z, n) { if (n) NEAR[z] = [NUMZ[n === 10 ? 9 : n + 1], NUMZ[n === 1 ? 2 : n - 1]]; });
+var NPRI = ['我的', '你的', '我', '你', '幾歲', '什麼', '歲', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '名字', '是', '嗨', '哈囉'];
+function nearOf(ans, k) {   /* 老師 的 例子：My name is Bill ➜ 你的、我（先 挑 最 重要 的 那一個 字 的 兩個 相近 字；同 一級 的 輪流） */
+  var has = NPRI.filter(function (z) { return ans.indexOf(z) >= 0; }), top = has.filter(function (z) { return NPRI.indexOf(z) < 4; }), out = [];
+  if (top.length > 1) has = [top[k % top.length]].concat(has.filter(function (z) { return z !== top[k % top.length]; }));
+  has.forEach(function (z) { NEAR[z].forEach(function (w) { if (out.length < 2 && ans.indexOf(w) < 0 && out.indexOf(w) < 0) out.push(w); }); });
+  if (out.length < 2) throw new Error('解碼 任務 找不到 相近 的 錯 方塊：' + ans.join(' '));
+  return out;
+}
 function dragSet(names, ages, seed) {
   var L = [], k = seed;
-  var pick2 = function (ans) { var c = WRONG.filter(function (w) { return ans.indexOf(w) < 0; }); var a = c[k % c.length], b = c[(k * 7 + 3) % c.length]; if (a === b) b = c[(k + 1) % c.length]; k++; return [a, b]; };
+  var pick2 = function (ans) { var c = nearOf(ans, k); k++; return c.slice(0, 2); };
   var add = function (u, s) { var t = sent(s), q = { u: u, en: s, t: t, z: ZH(s) }; if (L.length % 2 === 0) q.x = pick2(t.map(function (p) { return p[1]; })); L.push(q); };
   /* Unit 1：What's your name? ／ My name is ___. ／ I'm ___. */
   names.forEach(function (n, i) { add(1, 'My name is ' + n + '.'); add(1, "I'm " + n + '.');
