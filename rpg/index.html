@@ -446,6 +446,23 @@ u.pn{text-decoration:underline;text-decoration-thickness:3px;text-underline-offs
 .sctks{font-size:clamp(22px,3.6vh,34px);font-weight:700;color:#CFCFCF}
 #sctkOk{font-family:inherit;font-weight:700;font-size:clamp(24px,4.2vh,40px);border-radius:999px;border:3px solid var(--ok);background:#0F3323;color:#fff;
  padding:clamp(10px,1.8vh,18px) clamp(30px,4vw,56px);min-height:64px;cursor:pointer}
+/* ── 🔑 8 碼密碼（2026-10-28 第三十三次第 4 點）── */
+.scpw .pwani{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 10px;font-size:clamp(20px,3.2vh,30px);font-weight:700;color:#DDE6EE;background:#0E141A;border:2px solid #2E3A46;border-radius:18px;padding:8px 14px}
+.scpw .pwani b{color:var(--gold)}.scpw .pwani .ar{color:#8FA3B5}
+.scpw .pwex{display:inline-flex;gap:4px}.scpw .pwex i{font-style:normal;display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.6em;border-radius:8px;opacity:0;animation:scPwEx 6s infinite}
+.scpw .pwex i.l{background:#5A2340;color:#FFC2DD;border:2px solid #FF7AB6}.scpw .pwex i.d{background:#173452;color:#BFE2FF;border:2px solid #4FA8FF}
+.scpw .pwlab{display:flex;gap:10px;font-size:clamp(17px,2.6vh,24px)}.scpw .pwlab .l{color:#FF9BC9}.scpw .pwlab .d{color:#8CCBFF}
+@keyframes scPwEx{0%{opacity:0;transform:scale(.4)}8%,80%{opacity:1;transform:scale(1)}100%{opacity:0}}
+.scpw .pwt{font-size:clamp(24px,4vh,38px);font-weight:700;color:#fff;text-align:center}
+.scpw .pwc{display:flex;gap:clamp(4px,.8vw,10px)}.scpw .pwc i{font-style:normal;width:clamp(42px,6.4vh,64px);height:clamp(54px,8vh,80px);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:clamp(28px,5vh,46px);font-weight:700;color:#fff}
+.scpw .pwc i.l{background:#2A1220;border:3px solid #FF7AB6}.scpw .pwc i.d{background:#0E1E30;border:3px solid #4FA8FF}.scpw .pwc i.cur{box-shadow:0 0 0 4px var(--gold);animation:scStep 1.2s ease-in-out infinite}
+.scpw .pwc i.sp{margin-left:clamp(6px,1.4vw,18px)}
+.scpw .pwm{min-height:1.4em;font-size:clamp(20px,3.2vh,30px);font-weight:700;color:#FFE07A;text-align:center}.scpw .pwm.err{color:#FF8A8A}.scpw .pwm.ok{color:var(--ok)}
+.scpw .sckey.pwk{grid-template-columns:repeat(7,clamp(54px,8.4vh,84px))}.scpw .sckey.pwk button{min-height:clamp(52px,7.4vh,76px);font-size:clamp(24px,4vh,38px)}
+.scpw .sckey.pwk.dg{grid-template-columns:repeat(6,clamp(64px,10vh,100px))}
+.scpw .pwrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+.scpw .pwrem{display:flex;align-items:center;gap:10px;font-size:clamp(18px,2.8vh,26px);font-weight:700;color:#DDE6EE;background:#141A20;border:2px solid #3A4A58;border-radius:16px;padding:8px 14px;min-height:52px;cursor:pointer}
+.scpw .pwrem input{width:30px;height:30px}.scpw .pweye{min-height:52px;border-radius:16px;background:#141A20;border:2px solid #3A4A58;color:#fff;font:inherit;font-weight:700;font-size:clamp(18px,2.8vh,26px);padding:6px 14px;cursor:pointer}
 /* ── 成績紀錄（2026-10-07 對話 C） ── */
 .sclog{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.3vh,14px);width:100%}
 .sclog h2{font-size:clamp(28px,5vh,50px)!important;margin:0}
@@ -473,7 +490,7 @@ u.pn{text-decoration:underline;text-decoration-thickness:3px;text-underline-offs
 @keyframes scBlink{50%{opacity:0}}
 .scbox i.pop{animation:scPop .3s ease-out}
 @keyframes scPop{50%{transform:scale(1.18)}}
-.scbox.shake .scg.c{animation:scShake .45s}
+.scbox.shake .scg.c{animation:scShake .45s}.scpw .pwc.shake{animation:scShake .45s}
 @keyframes scShake{20%,60%{transform:translateX(-14px)}40%,80%{transform:translateX(14px)}}
 .scmsg{min-height:2.6em;font-size:clamp(21px,3.6vh,34px);font-weight:700;color:#fff;text-align:center;line-height:1.3}
 .scmsg b.kc{color:var(--acc)}.scmsg b.ks{color:var(--ok)}
@@ -1847,6 +1864,7 @@ function scFetch(q,body,ms){
   return new Promise(function(ok,no){
     var done=false,t=setTimeout(function(){if(!done){done=true;no(new Error('timeout'))}},ms||9000);
     var u=SCURL+(q?(SCURL.indexOf('?')<0?'?':'&')+q:'');
+    if(body&&!body.k&&body.a!=='sp'){var bid=body.id||(body.r&&body.r.id),bk=(body.r&&body.r.k)||(bid?scPk(bid):'');if(bk)body.k=bk}   /* 2026-10-28：🔑 通行證 */
     fetch(u,body?{method:'POST',body:JSON.stringify(body)}:{}).then(function(r){return r.json()})
      .then(function(j){if(!done){done=true;clearTimeout(t);ok(j)}},function(e){if(!done){done=true;clearTimeout(t);no(e)}});
   });
@@ -1858,9 +1876,9 @@ function scFlush(){
   var Q=scGet('q')||[];if(!Q.length)return Promise.resolve(null);
   SCBUSY=true;var last=null;
   var step=function(){Q=scGet('q')||[];if(!Q.length){SCBUSY=false;if(last)scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk()});return last}   /* 送出去了 ➜ 任務的 ✅ 重拿 */
-    var r=Q[0];
+    var r=Q[0];if(!r.k){var kk=scPk(r.id);if(kk){r.k=kk;Q[0]=r;scPut('q',Q)}}
     return scFetch('',{a:'rec',r:r}).then(function(j){
-      if(j&&(j.saved||j.err==='bad')){Q=scGet('q')||[];Q=Q.filter(function(x){return x.u!==r.u});scPut('q',Q);if(j.saved){SCRES[r.u]=j;last=j}return step()}
+      if(j&&(j.saved||j.err==='bad'||j.err==='spk')){Q=scGet('q')||[];Q=Q.filter(function(x){return x.u!==r.u});scPut('q',Q);if(j.saved){SCRES[r.u]=j;last=j}return step()}
       SCBUSY=false;return last},function(){SCBUSY=false;return last});
   };
   return step();
@@ -1934,8 +1952,52 @@ function scWho(r){
   var go=function(){SCID=r.id;scPut('id_g'+r.g,SCID);scPut('last',SCID);SCGUEST=false;scOk();scAct();scBar();var a=SCLOGAFTER;SCLOGAFTER=null;
     scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk();if(a)a();scChamp(1)})};   /* 登入好了先拿老師的任務（2026-10-09 E），再做要做的事 */
   var m=$('#scMsg');m.className='scmsg ok';m.textContent='✅ '+scCn(r.cls)+' '+r.seat+' 號';
-  setTimeout(go,500);
+  setTimeout(function(){scPwStep(r.id,go)},500);   /* 2026-10-28 第三十三次第 4 點：5 碼對了 ➜ 🔑 8 碼密碼 */
 }
+/* ══ 🔑 8 碼密碼（2026-10-28 第三十三次第 4 點，老師選 A：5 碼 ➜ 密碼；第一次自己設；全部登入都要；忘記＝老師看板〔🔑 清除密碼〕）══
+   密碼＝ 2 個小寫英文字母（粉紅格）＋ 6 個數字（藍格），例 ab123456；平板只存伺服器給的通行證（這個分頁 sessionStorage；勾〔記住〕＝ localStorage） */
+var SCPW=null;
+function scPk(id){var v='';try{v=sessionStorage.getItem('score_pks_'+id)||''}catch(e){}return v||scGet('pk_'+id)||''}
+function scPkSave(id,k,rem){try{sessionStorage.setItem('score_pks_'+id,k)}catch(e){}scPut('pk_'+id,rem?k:null)}
+function scPwStep(id,done){if(/script\.test/.test(SCURL)&&!window.__SCORE_PW){done();return}   /* 量測的假伺服器：別的量測不打密碼（密碼本身在 score/_verify_pw.js 量，它設 __SCORE_PW） */
+  SCPW={id:id,done:done,v:'',first:'',mode:'?',eye:false,rem:!!scGet('pk_'+id)};if(!SCH.on||!SCH.on())SCH.open();
+  var ex='<span class="pwex">'+'ab123456'.split('').map(function(c,i){return '<i class="'+(i<2?'l':'d')+'" style="animation-delay:'+(i*.35).toFixed(2)+'s">'+c+'</i>'}).join('')+'</span>';
+  SCH.box().innerHTML='<div class="sclog scpw"><h2>🔑 密碼</h2>'+
+   '<div class="pwani"><span>① 🏫 <b>'+id+'</b> ✅</span><span class="ar">➜</span><span>② 🔑</span>'+ex+'</div>'+
+   '<div class="pwlab"><span class="l">🩷 2 個小寫英文字母</span><span>＋</span><span class="d">🩵 6 個數字</span></div>'+
+   '<div class="pwt" id="scPwT">⏳ 連線中…</div><div class="pwc" id="scPwC"></div><div class="pwm" id="scPwM"></div><div id="scPwK"></div>'+
+   '<div class="pwrow"><label class="pwrem"><input type="checkbox" id="scRem"'+(SCPW.rem?' checked':'')+'>📱 我自己的平板：記住密碼（我會負責）</label><button class="pweye" id="scEye">👁 看密碼</button></div>'+SCH.back+'</div>';
+  scPwPaint();
+  scFetch('',{a:'sp',id:id},12000).then(function(j){if(!SCPW||SCPW.id!==id)return;if(j&&j.err==='a'){var d0=SCPW.done;SCPW=null;d0();return}   /* 老師還沒重新部署（舊伺服器不認得 sp）＝照以前不用密碼 */
+    if(!j||!j.ok){scPwOff(j);return}SCPW.mode=j.has?'in':'set';scPwPaint()},function(){if(!SCPW||SCPW.id!==id)return;scPwOff(null)})}
+function scPwOff(j){var P=SCPW;if(scPk(P.id)){var d=P.done;SCPW=null;d();return}   /* 連不上但是這台平板記得＝照樣登入 */
+  P.mode='off';scPwPaint(j&&j.err==='seat'?'🪑 沒有這個座號':'📶 連不上網路，等一下再按 ✅ 試一次')}
+function scPwPaint(msg,cls){var P=SCPW;if(!P||!$('#scPwC'))return;var v=P.v,T={'?':'⏳ 連線中…',set:'🆕 第一次：自己設一個密碼',set2:'🔁 再打一次一樣的密碼',in:'🔑 打你的密碼',off:'📶 連不上網路',busy:'⏳ 檢查中…'};
+  $('#scPwT').textContent=T[P.mode]||'';
+  var h='';for(var i=0;i<8;i++){var c=v.charAt(i);h+='<i class="'+(i<2?'l':'d')+(i===v.length?' cur':'')+(i===2?' sp':'')+'">'+(c?(P.eye||i===v.length-1?c:'●'):'')+'</i>'}$('#scPwC').innerHTML=h;
+  var lt=v.length<2,keys=lt?'abcdefghijklmnopqrstuvwxyz'.split(''):'1234567890'.split('');
+  var k='<div class="sckey pwk'+(lt?'':' dg')+'">'+keys.map(function(c){return '<button data-p="'+c+'">'+c+'</button>'}).join('')+''+
+    '<button class="bs" data-p="del" aria-label="刪掉">⌫</button><button class="okb'+(v.length===8||P.mode==='off'?' ready':'')+'" data-p="ok" aria-label="確定">✅</button></div>';
+  $('#scPwK').innerHTML=k;
+  var m=$('#scPwM');m.className='pwm'+(cls?' '+cls:msg?' err':'');
+  m.innerHTML=msg||(P.mode==='set'||P.mode==='in'||P.mode==='set2'?(lt?'👆 先打 <b>'+(2-v.length)+'</b> 個小寫英文字母':v.length<8?'👆 再打 <b>'+(8-v.length)+'</b> 個數字':'👍 打好了 ➜ 按綠色 ✅'):'')}
+function scPwKey(k){var P=SCPW;if(!P)return;if(P.mode==='?'||P.mode==='busy')return;
+  if(P.mode==='off'){if(k==='ok')scPwStep(P.id,P.done);return}
+  if(k==='del'){P.v=P.v.slice(0,-1);scPwPaint();return}   /* ⌫ ＝ del（b 是字母） */
+  if(k==='ok'){if(P.v.length<8){scShakePw();scPwPaint(P.v.length<2?'🩷 先打 2 個小寫英文字母':'🩵 數字還差 '+(8-P.v.length)+' 個');return}
+    if(P.mode==='set'){P.first=P.v;P.v='';P.mode='set2';scPwPaint('👍 記住這個密碼！再打一次','ok');return}
+    if(P.mode==='set2'&&P.v!==P.first){P.v='';P.first='';P.mode='set';scShakePw();scPwPaint('❌ 兩次不一樣，重新設一次');return}
+    var set=P.mode==='set2',pv=P.v;P.mode='busy';scPwPaint();
+    scFetch('',{a:'sp',id:P.id,p:pv,set:set?1:0},12000).then(function(j){if(SCPW!==P)return;
+      if(j&&j.ok&&j.tk){scPkSave(P.id,j.tk,$('#scRem')&&$('#scRem').checked);P.mode='done';scPwPaint(set?'🎉 密碼設好了！':'✅ 密碼對了','ok');var d=P.done;setTimeout(function(){if(SCPW===P){SCPW=null;d()}},700);return}
+      if(j&&j.ok&&!j.tk){P.v='';P.mode=j.has?'in':'set';scPwPaint();return}
+      P.v='';P.mode=set?'set':'in';scShakePw();
+      scPwPaint(j&&j.err==='lock'?'🔒 打錯太多次，10 分鐘後再試（或請老師幫忙）':j&&j.err==='wrong'?'❌ 密碼不對，再試一次<br><small>忘記了 ➜ 請老師按〔🔑 清除密碼〕，再自己重設</small>':'📶 連不上網路，等一下再試')},
+     function(){if(SCPW!==P)return;P.v='';P.mode=set?'set':'in';scPwPaint('📶 連不上網路，等一下再試')});return}
+  if(P.v.length>=8||k.length!==1)return;if(P.v.length<2&&!/[a-z]/.test(k))return;if(P.v.length>=2&&!/[0-9]/.test(k))return;P.v+=k;scPwPaint()}
+function scShakePw(){var b=$('#scPwC');if(!b)return;b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
+/* 「請問這是您嗎？」按 ✅：這個分頁已經打過密碼、或這台平板記住了＝直接過；不然＝打密碼 */
+function scSure(fn){if(!SCID||scPk(SCID)||!SCH||!SCH.box){fn();return}scPwStep(SCID,function(){if(SCH.close)SCH.close();fn()})}
 function scMeHTML(){
   if(!SCON)return '';
   if(SCGUEST)return '<div class="scme">👀 練習模式（不記成績）<button id="scSwap">🔑 登入</button></div>';
@@ -2222,6 +2284,8 @@ document.addEventListener('click',function(e){
   if(c('#sctkOk')){document.getElementById('sctk').classList.remove('on');return}
   if(c('#scSwap')||c('#scBye')){if(!SCH)return;scOut();scLogin(SCH.reopen);return}   /* 一鍵登出、原地馬上登入（D 第 6 件 ④） */
   if(!scOn())return;
+  if((b=c('.sckey button[data-p]'))){scPwKey(b.getAttribute('data-p'));return}
+  if(c('#scEye')&&SCPW){SCPW.eye=!SCPW.eye;scPwPaint();return}
   if((b=c('.sckey button'))){scKeyPress(b.getAttribute('data-k'));return}
   if(c('#scGc')){scKeyPress('c');return}if(c('#scGs')&&SCTYPED.length>3){scKeyPress('s');return}
   if(c('#scGuest')){SCGUEST=true;var a=SCLOGAFTER;SCLOGAFTER=null;if(a)a();return}
@@ -2346,15 +2410,16 @@ if(SCON){
 }
 document.addEventListener('click',function(e){
   var t=e.target,c=function(s){return t.closest?t.closest(s):null};
-  if(c('#scWhoY')){scOk();scAct();scFullOff('scwho');scBar();return}
+  if(c('#scWhoY')){scFullOff('scwho');scSure(function(){scOk();scAct();scBar()});return}
   if(c('#scWhoN')){scOut();scFullOff('scwho');if(SCHOMEP)scHomeLogin();return}
   if(c('#scStay')){scAct();scIdleHide();return}
   if(c('#scByeIn')){scFullOff('scbye2');if(SCHOMEP)scHomeLogin();return}
   if(c('#scBarIn')){scHomeLogin();return}
-  if(c('#scBarY')){scOk();scAct();scBar();return}
+  if(c('#scBarY')){scSure(function(){scOk();scAct();scBar()});return}
   if(c('#scBarOut')){scOut();return}
 });
 document.addEventListener('keydown',function(e){if(!$('#scBox'))return;
+  if(SCPW&&$('#scPwC')){if(/^[a-z0-9]$/.test(e.key))scPwKey(e.key);else if(e.key==='Backspace')scPwKey('del');else if(e.key==='Enter')scPwKey('ok');return}
   if(/^\d$/.test(e.key))scKeyPress(e.key);else if(e.key==='Backspace')scKeyPress('b');else if(e.key==='Enter')scKeyPress('ok')});
 
 /* ══ 👑 冠軍寶箱登入動畫（2026-10-26 第二十九次第 11 點，老師選 A：學生在任何一個網站登入就演）══
@@ -2816,7 +2881,7 @@ homeFix();
 setInterval(function(){var k=(SCID||'')+'|'+(SCID&&scAsked()?1:0);if(k!==LAST){LAST=k;RV=null;homeFix();load()}},800);
 /* 2026-10-22 第二十一次第 1、2 點：學生平板一直開著舊的網頁（第十八次的版本：等伺服器說第 2 版才放行）➜ 答對 5 題又被鎖回規則。
    現在：打開、回到這個分頁、每 5 分鐘問一次 ver.txt（不用快取），有新版＝自動換成新版（網址加 ?v＝新版，一定拿到新的）；正在答題不換 */
-var RPVER='380d9690e3';
+var RPVER='99ed2eb7e9';
 function verChk(force){try{if(!force&&(document.getElementById('rqz').className==='on'||BUSY))return;
   fetch('ver.txt?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=String(v||'').trim();if(!/^[0-9a-f]{10}$/.test(v)||v===RPVER)return;
     var K='rp_rl_'+v;try{if(sessionStorage.getItem(K))return;sessionStorage.setItem(K,'1')}catch(e){}location.replace(location.pathname+'?v='+v+location.hash)},function(){})}catch(e){}}

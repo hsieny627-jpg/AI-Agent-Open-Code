@@ -6,6 +6,7 @@
  *   任務       老師看板派的任務（2026-10-09 E）：編號｜名稱｜年級｜班級｜開始｜截止｜項目。**請用老師看板改**，不要在這裡手改
  *   已刪除     老師看板〔🗑 刪除這個人全部的成績〕刪掉的列先搬到這裡（2026-10-17 C8 另 4；刪錯可以從這裡抄回「紀錄」）
  *   角色       🦸 學生的英雄、武器、寵物、寶物（2026-10-17 第八次）：5碼｜狀態（JSON：買了什麼、裝了什麼、花了多少金幣）｜更新時間。經驗值、金幣不存：每一次從「紀錄」算
+ *   密碼       5碼｜密碼｜設定時間（2026-10-28 第三十三次 第 4 點：學生 第一次 登入 自己 設 8 碼 密碼 ＝ 2 個 小寫 字母＋6 個 數字；**只給 老師看板**（要 老師 密碼）；老師〔🔑 清除 密碼〕＝ 刪掉 那一列）
  *   名單       班級｜座號｜姓名（使用者 2026-10-09：只留這三欄，不要性別）。**只給老師看板**（要密碼）；學生端永遠拿不到姓名（Q4）
  * 指令碼屬性（專案設定 ➜ 指令碼屬性）：
  *   TEACHER_PW  老師看板的密碼（只放在這裡，網頁和 GitHub 上都沒有）
@@ -14,7 +15,7 @@
  *   LOCKS       〔🔒 開關〕（2026-10-12 D 第 7 件）：每一班鎖住的在家複習主題（JSON）。**請用老師看板改**
  *   LOCKT       〔🔒 開關〕的開放時間（2026-10-17 第八次）：每一班每一個主題 [從, 到]（JSON）。**請用老師看板改**
  */
-var RPG = '角色', DELETED = '已刪除', SHEET = '紀錄', SIZES = '班級人數', ROSTER = '名單', TASKS = '任務', TKCOLS = ['編號', '名稱', '年級', '班級', '開始', '截止', '項目'];
+var SPW = '密碼', RPG = '角色', DELETED = '已刪除', SHEET = '紀錄', SIZES = '班級人數', ROSTER = '名單', TASKS = '任務', TKCOLS = ['編號', '名稱', '年級', '班級', '開始', '截止', '項目'];
 function setup() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var a = ss.getSheetByName(SHEET) || ss.insertSheet(SHEET);
@@ -27,6 +28,8 @@ function setup() {
   if (d.getLastRow() < 1) { d.appendRow(TKCOLS); d.setFrozenRows(1); }
   var e = ss.getSheetByName(RPG) || ss.insertSheet(RPG);
   if (e.getLastRow() < 1) { e.appendRow(['5碼', '狀態', '更新時間']); e.setFrozenRows(1); }
+  var f = ss.getSheetByName(SPW) || ss.insertSheet(SPW);
+  if (f.getLastRow() < 1) { f.appendRow(['5碼', '密碼', '設定時間']); f.setFrozenRows(1); }
   var P = PropertiesService.getScriptProperties();
 
   if (!P.getProperty('ROSTER')) P.setProperty('ROSTER', 'off');
@@ -40,6 +43,13 @@ function rows() {
   if (n < 2) return [];
   return s.getRange(2, 1, n - 1, SC.COLS.length).getValues();
 }
+/* 🔑 學生 密碼（2026-10-28 第三十三次 第 4 點，老師 選 A：5 碼 ➜ 8 碼 密碼、學生 第一次 自己 設、全部 登入 都 要、忘記 ＝ 老師 一鍵 清除）
+   平板 不存 密碼 本身，只存 伺服器 給 的 通行證 tk（＝ 5 碼＋密碼＋只有 伺服器 知道 的 SPSEC 算出來 的 雜湊）；送 成績、買 東西 都 要 帶 tk */
+function spMap() { var s = sheet(SPW), n = s.getLastRow(), o = {}; if (n < 2) return o;
+  s.getRange(2, 1, n - 1, 2).getValues().forEach(function (v, i) { var id = String(v[0]).replace(/\D/g, ''); if (/^\d{5}$/.test(id) && v[1] !== '') o[id] = { p: String(v[1]), r: i + 2 }; }); return o; }
+function spSec() { var P = PropertiesService.getScriptProperties(), k = P.getProperty('SPSEC'); if (!k) { k = Utilities.getUuid() + Utilities.getUuid(); P.setProperty('SPSEC', k); } return k; }
+function spTok(id, pw) { return Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, id + '|' + pw + '|' + spSec())).slice(0, 24); }
+function spOk(id, k) { var m = spMap()[id]; return !m || (!!k && k === spTok(id, m.p)); }   /* 還沒 設 密碼 的 人（舊 的 平板、舊 的 紀錄）照樣 收 */
 /* 🦸 角色（2026-10-17 第八次）：一個人一列；找不到 ＝ 還沒有英雄 */
 function rpRow(id) { var s = sheet(RPG), n = s.getLastRow(); if (n < 2) return { s: s, r: 0, st: SC.rpClean({}) };
   var v = s.getRange(2, 1, n - 1, 2).getValues();
@@ -181,9 +191,20 @@ function doPost(e) {
   try { o = JSON.parse(e.postData.contents); } catch (x) { return out({ err: 'json' }); }
   try { SC.rpBoostSet(boost()); } catch (x) { }
   try {
+    /* 🔑 學生 密碼：{a:'sp', id} ＝ 有沒有 設 過；{a:'sp', id, p} ＝ 登入；{a:'sp', id, p, set:1} ＝ 第一次 設。打錯 8 次 ＝ 鎖 10 分鐘 */
+    if (o.a === 'sp') { var cs = SC.checkId(o.id); if (cs.err) return out({ err: cs.err }); var M = spMap(), me = M[cs.id], p = String(o.p || '');
+      if (!o.p) return out({ ok: true, has: !!me });
+      if (!/^[a-z]{2}[0-9]{6}$/.test(p)) return out({ err: 'fmt' });
+      var C = CacheService.getScriptCache(), fk = 'spf_' + cs.id, nf = +(C.get(fk) || 0); if (nf >= 8) return out({ err: 'lock' });
+      if (!me) { if (!o.set) return out({ ok: true, has: false });
+        var lkS = LockService.getScriptLock(); lkS.waitLock(20000); try { if (!spMap()[cs.id]) sheet(SPW).appendRow([cs.id, p, new Date()]); } finally { lkS.releaseLock(); }
+        me = spMap()[cs.id]; return out(me && me.p === p ? { ok: true, tk: spTok(cs.id, p), nw: 1 } : { err: 'wrong' }); }
+      if (me.p !== p) { C.put(fk, String(nf + 1), 600); return out({ err: 'wrong', left: 7 - nf }); }
+      C.remove(fk); return out({ ok: true, tk: spTok(cs.id, p) }); }
     if (o.a === 'rec') {
       var now = Date.now(), R = SC.clean(o.r || {}, now);
       if (!R) return out({ err: 'bad' });
+      if (!/_job/.test(String(R.set || '')) && !spOk(R.id, (o.r && o.r.k) || o.k)) return out({ err: 'spk' });   /* 2026-10-28：有 設 密碼 的 人 ＝ 要 帶 對 的 通行證（職業 單字 網站 English-Jobs-New 是 另一個 網站，還 沒有 密碼，先 照收） */
       var lock = LockService.getScriptLock(); lock.waitLock(20000);
       try {
         var s = sheet(SHEET), n = s.getLastRow(), dup = false;
@@ -202,6 +223,7 @@ function doPost(e) {
     /* 🦸 買、換裝（2026-10-17 第八次）：伺服器算金幣、等級，平板改不了 */
     if (o.a === 'rpg') {
       var c2 = SC.checkId(o.id); if (c2.err) return out({ err: c2.err });
+      if (!spOk(c2.id, o.k)) return out({ err: 'spk' });
       var lk5 = LockService.getScriptLock(); lk5.waitLock(20000);
       try { var R5 = rpRow(c2.id), rs5 = mine(c2.id), it5 = String(o.item || ''), sold5 = SC.RPLIM[it5] ? (rpSold()[it5] || 0) : 0;
         var r5 = o.op === 'buy' ? SC.rpBuy(rs5, R5.st, it5, Date.now(), sold5) : o.op === 'eq' ? SC.rpEquip(R5.st, it5, Date.now()) : o.op === 'open' ? SC.rpOpen(R5.st, Math.random(), Math.random()) :
@@ -210,14 +232,14 @@ function doPost(e) {
         r5.st = SC.rpTierUp(rs5, r5.st); rpSave(R5, c2.id, r5.st); return out({ ok: true, paid: r5.paid, free: r5.free, r: r5.r, v: SC.rpView(rs5, r5.st), stock: rpStock() });
       } finally { lk5.releaseLock(); }
     }
-    if (o.a === 'qsub') { var cq = SC.checkId(o.id); if (cq.err) return out({ err: cq.err }); var qq = qsClean(o); if (!qq) return out({ err: 'bad' });
+    if (o.a === 'qsub') { var cq = SC.checkId(o.id); if (cq.err) return out({ err: cq.err }); if (!spOk(cq.id, o.k)) return out({ err: 'spk' }); var qq = qsClean(o); if (!qq) return out({ err: 'bad' });
       if ((+(rpRow(cq.id).st || {}).tr || 0) < 3) return out({ err: 'tier' });
       var lkQ = LockService.getScriptLock(); lkQ.waitLock(20000);
       try { var A = qsGet(), nq = Date.now(), w0 = SC.weekStart(nq), mineQ = A.filter(function (x) { return x.id === cq.id && x.t >= w0; });
         if (mineQ.some(function (x) { return x.st === 1; })) return out({ err: 'week' });
         A = A.filter(function (x) { return !(x.id === cq.id && x.t >= w0); }); A.push({ k: cq.id + nq.toString(36), id: cq.id, t: nq, zh: qq.zh, o: qq.o, st: 0 }); qsPut(A); } finally { lkQ.releaseLock(); }
       return out({ ok: true }); }
-    if (o.a === 'teacher' || o.a === 'qok' || o.a === 'void' || o.a === 'set' || o.a === 'task' || o.a === 'lock' || o.a === 'lockt' || o.a === 'delp' || o.a === 'pw' || o.a === 'rpgb' || o.a === 'rpgw' || o.a === 'boost') {
+    if (o.a === 'teacher' || o.a === 'qok' || o.a === 'void' || o.a === 'set' || o.a === 'task' || o.a === 'lock' || o.a === 'lockt' || o.a === 'delp' || o.a === 'pw' || o.a === 'rpgb' || o.a === 'rpgw' || o.a === 'boost' || o.a === 'spl' || o.a === 'spr') {
       if (!pwOk(o.pw)) return out({ err: 'pw' });
       /* 🎉 加倍 時段：{m: off／all／set, k, x, from, to, cls, cats}（2026-10-26） */
       if (o.a === 'boost') { var lkB = LockService.getScriptLock(); lkB.waitLock(20000); try { PropertiesService.getScriptProperties().setProperty('BOOST', JSON.stringify(SC.bstClean(o.b))); } finally { lkB.releaseLock(); } return out({ ok: true, boost: boost() }); }
@@ -253,6 +275,10 @@ function doPost(e) {
         return out({ ok: done });
       }
       /* 刪除一個人全部的成績（老師 2026-10-17 C8 另 4：例 30430 是老師自己測試）：先整列搬到「已刪除」工作表（萬一刪錯，老師可以從那裡抄回來），再從「紀錄」刪掉 */
+      /* 🔑 老師看板：看 一個 學生 的 密碼（spl）、〔🔑 清除 密碼〕（spr ＝ 刪掉 那一列，學生 下次 登入 自己 重設） */
+      if (o.a === 'spl') { var cl = SC.checkId(o.id); if (cl.err) return out({ err: cl.err }); var ml = spMap()[cl.id]; return out({ ok: true, has: !!ml, p: ml ? ml.p : '' }); }
+      if (o.a === 'spr') { var cr = SC.checkId(o.id); if (cr.err) return out({ err: cr.err }); var lkR = LockService.getScriptLock(); lkR.waitLock(20000);
+        try { var mr = spMap()[cr.id]; if (mr) sheet(SPW).deleteRow(mr.r); CacheService.getScriptCache().remove('spf_' + cr.id); } finally { lkR.releaseLock(); } return out({ ok: true }); }
       if (o.a === 'delp') {
         var cd = SC.checkId(o.id); if (cd.err) return out({ err: cd.err });
         var lk3 = LockService.getScriptLock(), nd = 0; lk3.waitLock(20000);

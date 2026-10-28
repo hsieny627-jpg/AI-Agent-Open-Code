@@ -9,6 +9,7 @@ function make(props) {
     appendRow(r) { this.d.push(r.slice()); },
     setFrozenRows() {},
     deleteRows(r, n) { this.d.splice(r - 1, n); },
+    deleteRow(r) { this.d.splice(r - 1, 1); },
     getRange(r, c, nr, nc) { const S = this; nr = nr || 1; nc = nc || 1;
       return { getValues() { const o = []; for (let i = 0; i < nr; i++) { const row = S.d[r - 1 + i] || []; const x = []; for (let j = 0; j < nc; j++) x.push(row[c - 1 + j] === undefined ? '' : row[c - 1 + j]); o.push(x); } return o; },
         setValue(v) { (S.d[r - 1] = S.d[r - 1] || [])[c - 1] = v; },
@@ -18,12 +19,15 @@ function make(props) {
           while (S.d.length && S.d[S.d.length - 1].every(v => v === '' || v == null)) S.d.pop(); } }; }
   };
   const ss = { getSheetByName: n => books[n] || null, insertSheet: n => (books[n] = new Sheet(n)) };
-  const P = Object.assign({}, props || {});
+  const P = Object.assign({}, props || {}), CA = {};
   const ctx = {
     SpreadsheetApp: { getActiveSpreadsheet: () => ss },
     PropertiesService: { getScriptProperties: () => ({ getProperty: k => (k in P ? P[k] : null), setProperty: (k, v) => { P[k] = String(v); } }) },
     LockService: { getScriptLock: () => ({ waitLock() {}, releaseLock() {} }) },
     ContentService: { MimeType: { JSON: 'json' }, createTextOutput: s => ({ s, setMimeType() { return this; }, getContent() { return this.s; } }) },
+    CacheService: { getScriptCache: () => ({ get: k => (k in CA ? CA[k] : null), put: (k, v) => { CA[k] = String(v); }, remove: k => { delete CA[k]; } }) },   /* 2026-10-28 🔑 打錯 幾次 */
+    Utilities: { DigestAlgorithm: { SHA_256: 'sha256' }, computeDigest: (a, t) => [...require('crypto').createHash('sha256').update(String(t)).digest()].map(b => b > 127 ? b - 256 : b),
+      base64EncodeWebSafe: b => Buffer.from(b.map(x => x & 255)).toString('base64').replace(/\+/g, '-').replace(/\//g, '_'), getUuid: () => require('crypto').randomUUID() },
     Date, JSON, Math, String, Number, Object, Array, isNaN, console
   };
   vm.createContext(ctx);

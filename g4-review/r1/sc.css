@@ -45,6 +45,23 @@
 .sctks{font-size:clamp(22px,3.6vh,34px);font-weight:700;color:#CFCFCF}
 #sctkOk{font-family:inherit;font-weight:700;font-size:clamp(24px,4.2vh,40px);border-radius:999px;border:3px solid var(--ok);background:#0F3323;color:#fff;
  padding:clamp(10px,1.8vh,18px) clamp(30px,4vw,56px);min-height:64px;cursor:pointer}
+/* ── 🔑 8 碼 密碼（2026-10-28 第三十三次 第 4 點）── */
+.scpw .pwani{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 10px;font-size:clamp(20px,3.2vh,30px);font-weight:700;color:#DDE6EE;background:#0E141A;border:2px solid #2E3A46;border-radius:18px;padding:8px 14px}
+.scpw .pwani b{color:var(--gold)}.scpw .pwani .ar{color:#8FA3B5}
+.scpw .pwex{display:inline-flex;gap:4px}.scpw .pwex i{font-style:normal;display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.6em;border-radius:8px;opacity:0;animation:scPwEx 6s infinite}
+.scpw .pwex i.l{background:#5A2340;color:#FFC2DD;border:2px solid #FF7AB6}.scpw .pwex i.d{background:#173452;color:#BFE2FF;border:2px solid #4FA8FF}
+.scpw .pwlab{display:flex;gap:10px;font-size:clamp(17px,2.6vh,24px)}.scpw .pwlab .l{color:#FF9BC9}.scpw .pwlab .d{color:#8CCBFF}
+@keyframes scPwEx{0%{opacity:0;transform:scale(.4)}8%,80%{opacity:1;transform:scale(1)}100%{opacity:0}}
+.scpw .pwt{font-size:clamp(24px,4vh,38px);font-weight:700;color:#fff;text-align:center}
+.scpw .pwc{display:flex;gap:clamp(4px,.8vw,10px)}.scpw .pwc i{font-style:normal;width:clamp(42px,6.4vh,64px);height:clamp(54px,8vh,80px);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:clamp(28px,5vh,46px);font-weight:700;color:#fff}
+.scpw .pwc i.l{background:#2A1220;border:3px solid #FF7AB6}.scpw .pwc i.d{background:#0E1E30;border:3px solid #4FA8FF}.scpw .pwc i.cur{box-shadow:0 0 0 4px var(--gold);animation:scStep 1.2s ease-in-out infinite}
+.scpw .pwc i.sp{margin-left:clamp(6px,1.4vw,18px)}
+.scpw .pwm{min-height:1.4em;font-size:clamp(20px,3.2vh,30px);font-weight:700;color:#FFE07A;text-align:center}.scpw .pwm.err{color:#FF8A8A}.scpw .pwm.ok{color:var(--ok)}
+.scpw .sckey.pwk{grid-template-columns:repeat(7,clamp(54px,8.4vh,84px))}.scpw .sckey.pwk button{min-height:clamp(52px,7.4vh,76px);font-size:clamp(24px,4vh,38px)}
+.scpw .sckey.pwk.dg{grid-template-columns:repeat(6,clamp(64px,10vh,100px))}
+.scpw .pwrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+.scpw .pwrem{display:flex;align-items:center;gap:10px;font-size:clamp(18px,2.8vh,26px);font-weight:700;color:#DDE6EE;background:#141A20;border:2px solid #3A4A58;border-radius:16px;padding:8px 14px;min-height:52px;cursor:pointer}
+.scpw .pwrem input{width:30px;height:30px}.scpw .pweye{min-height:52px;border-radius:16px;background:#141A20;border:2px solid #3A4A58;color:#fff;font:inherit;font-weight:700;font-size:clamp(18px,2.8vh,26px);padding:6px 14px;cursor:pointer}
 /* ── 成績紀錄（2026-10-07 對話 C） ── */
 .sclog{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.3vh,14px);width:100%}
 .sclog h2{font-size:clamp(28px,5vh,50px)!important;margin:0}
@@ -72,7 +89,7 @@
 @keyframes scBlink{50%{opacity:0}}
 .scbox i.pop{animation:scPop .3s ease-out}
 @keyframes scPop{50%{transform:scale(1.18)}}
-.scbox.shake .scg.c{animation:scShake .45s}
+.scbox.shake .scg.c{animation:scShake .45s}.scpw .pwc.shake{animation:scShake .45s}
 @keyframes scShake{20%,60%{transform:translateX(-14px)}40%,80%{transform:translateX(14px)}}
 .scmsg{min-height:2.6em;font-size:clamp(21px,3.6vh,34px);font-weight:700;color:#fff;text-align:center;line-height:1.3}
 .scmsg b.kc{color:var(--acc)}.scmsg b.ks{color:var(--ok)}

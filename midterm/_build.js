@@ -359,12 +359,15 @@ function pick(i,you){if(!R||R.lock)return;R.lock=true;var q=R.q,ms=Date.now()-R.
 /* ══ 答錯 ＝ 綠底 詳細 解說（2026-10-26 第二十七次 6-(5)：100% 照「三年級 複習」）：
    ❌ 你的 答案 ➜ ✅ 正確 答案（每一個 英文字 正下方 ＝ 中文）➜ 整句：翻譯 ➜ 自動 唸 3 次（① ② ③，短文 偵探 1 次）➜〔▶ 下一題 3〕3 秒 自己 走 ══ */
 var FBN=0;
-function toks(s){var r=[],re=/([A-Za-z][A-Za-z\-]*)(’|')(s|m|re)\b|[A-Za-z][A-Za-z\-’']*|\d+|[.,?!]/g,m;
+function toks(s){var r=[],re=/years old|([A-Za-z][A-Za-z\\-]*)(’|')(s|m|re)\\b|[A-Za-z][A-Za-z\\-’']*|\\d+|[.,?!]/g,m;   /* 2026-10-28 第三十三次：原本 單 斜線 的 b、d 在 樣板 字串 裡 被 吃掉（Who’s、She’s 下面 一直 空白、數字 不見）➜ 兩條 斜線 */
   while((m=re.exec(s))){if(m[2]&&m[1].toLowerCase()!=='let')r.push(m[1],"'"+m[3]);else r.push(m[0])}return r}
 function zhOf(w,gx){var k=w.replace(/’/g,"'").toLowerCase();if(gx&&gx[k]!==undefined)return gx[k];if(GL[k]!==undefined)return GL[k];if(/^[A-Z][a-z]+$/.test(w))return '（名字）';return ''}
 function gloss(s,gx,red1){var T=toks(s),h='';for(var i=0;i<T.length;i++){var w=T[i];if(/^[.,?!]$/.test(w))continue;var p='';while(/^[.,?!]$/.test(T[i+1]||'')){p+=T[++i]}
     var W=esc(w.replace(/'/g,'’'));if(red1)W='<u>'+W.charAt(0)+'</u>'+W.slice(1);
     h+='<span class="gw'+(/^'/.test(w)?' ct':'')+'"><b>'+W+esc(p)+'</b><i>'+esc(zhOf(w,gx))+'</i></span>'}return '<div class="gls" id="gls">'+h+'</div>'}
+/* 2026-10-28 第三十三次 第 7 點（老師：短文 偵探 答錯 的 講解 每一個 英文 單字 正下方 中文）：題目 填好 正確 答案 也 逐字 中文；名字 後面 的 ’s ＝ 的（Jason’s ＝ Jason 的） */
+function glossQ(s){return gloss(s,null,0).replace('id="gls"','id="glq"').replace(/(<b>(?!He<|She<|Who<|What<|That<|It<|Let<)([A-Z][a-z]+)<\\/b><i>（名字）<\\/i><\\/span><span class="gw ct"><b>’s([^<]*)<\\/b><i>)是(<\\/i>)/g,'$1的$4')}
+function m8Q(q){var o=q.o[0],t=q.q.replace(/^📖 /,'');return /___/.test(t)?t.replace('___',o):t+' '+o}
 function picDiv(p){var a=String(p).split('|'),w=WHO[a[0]],j=a[1]?JOB[a[1]]:null;return '<div class="pc"><span class="pw">'+w[0]+'</span>'+(j?'<span class="pj">'+j[0]+'</span>':'')+'</div>'}
 function exHTML(q){var id=R.g.id;
   if(id==='m1'||id==='m7')return '<span class="ic">'+q.ic+'</span>';if(id==='m5'||(id==='m12'&&!q.ae))return '<span class="num">'+esc(q.o[0])+'</span>';
@@ -372,7 +375,7 @@ function exHTML(q){var id=R.g.id;
   if(id==='m9')return picDiv(q.o[0]);return ''}
 function miss(i,you,REP){var q=R.q,id=R.g.id,my=++FBN,ex=exHTML(q);tPause();
   var x=$('#wbox');x.className='box';x.innerHTML='<div class="hd">'+(i<0?'⏰ 時間到':'❌ 答錯了')+'</div>'+(i>=0&&you?'<div class="yp">你的答案：<s>'+esc(you)+'</s></div>':'')+
-    '<div class="ca">✅ 正確答案</div>'+(ex?'<div class="ex">'+ex+'</div>':'')+gloss(q.fe,q.gx,id==='m1'||id==='m2')+'<div><span class="tr">整句：'+esc(q.fz)+'</span></div>'+(q.tip?'<div class="tip">💡 '+esc(q.tip)+'</div>':'')+
+    (id==='m8'?'<div class="ca">📝 題目</div>'+glossQ(m8Q(q)):'')+'<div class="ca">✅ 正確答案'+(id==='m8'?'（短文 裡 的 證據）':'')+'</div>'+(ex?'<div class="ex">'+ex+'</div>':'')+gloss(q.fe,q.gx,id==='m1'||id==='m2')+'<div><span class="tr">整句：'+esc(q.fz)+'</span></div>'+(q.tip?'<div class="tip">💡 '+esc(q.tip)+'</div>':'')+
     '<div class="ft"><span class="n3" id="n3">'+(REP===1?'<span>1</span>':'<span>1</span><span>2</span><span>3</span>')+'</span><button class="say" id="wfs">🔊 再聽</button><span id="nxw"></span></div>';
   if(id==='m7'){var gb=$('#gls b');if(gb)gb.innerHTML=lcW(q.spell,q.lc)}   /* 第三十二次 第 4 點 */
   $('#wf').classList.add('on');wFit();var c=0;

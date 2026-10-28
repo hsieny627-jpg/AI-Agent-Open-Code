@@ -414,6 +414,7 @@ td.nmc{text-align:left}
 .pa{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}.pa span{border-radius:12px;padding:4px 14px;font-weight:700}
 .pa .no{background:#2A1414;color:#FFB0B0}.pa .ok{background:#0F3323;color:var(--ok)}
 .pdb{margin-top:18px;width:100%;background:#141A20;border-color:#2A3A4A}
+.spw{margin-top:22px;display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;font-size:24px;font-weight:700;background:#0E141A;border:2px solid #2E3A46;border-radius:16px;padding:10px 16px}.spw b{color:#FFE07A;font-size:28px;letter-spacing:.06em}.spr{min-height:52px;font-size:22px;background:#1E1606;border-color:#FFB300;color:#FFE07A}.spm{font-size:20px;color:#7BF0A8}
 .delw{margin-top:26px;border-top:2px dashed #3A2A2A;padding-top:16px}.delb{background:#2A1010;border-color:#B04040;color:#FFB0B0}.delb:disabled{opacity:.4}
 #delc{background:#1A0A0A;border:2px solid #B04040;border-radius:18px;padding:14px 16px}.delq{font-size:clamp(20px,1.6vw,28px);line-height:1.5}.delq small{color:#CFA8A8;font-size:.8em}
 .delr{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px;font-size:clamp(19px,1.5vw,26px)}#deli{width:6.5em;font-size:1.3em;text-align:center;letter-spacing:.15em}#delm{margin-top:8px;color:#FFB0B0;font-weight:700}
@@ -3350,6 +3351,8 @@ function pRecs(id){var r=range();return ALL.filter(function(x){return x.id===id&
 function setNm(k,L){return (bankOf(k)||{}).name||(L&&L.length?L[L.length-1].name:'')||k}
 function ring(v,c){var o=(314-(v||0)*3.14).toFixed(1);return '<svg class="ring" viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" cx="60" cy="60" r="50" style="stroke:'+c+';--o:'+o+'"/><text x="60" y="62">'+f1(v)+'</text></svg>'}
 function vc(v){return v==null?'#555':v>=80?'#3BD16F':v>=60?'#FFD24A':'#FF7A7A'}
+function spLoad(id){post({a:'spl',pw:PW,id:id}).then(function(j){var w=$('#spw');if(!w||w.getAttribute('data-id')!==id)return;
+  if(j&&j.ok){$('#spv').textContent=j.has?j.p:'（還沒 設）';$('#spr').hidden=!j.has}else $('#spv').textContent='（伺服器 要 重新 部署 才 看得到）'},function(){var v=$('#spv');if(v)v.textContent='📶 連不上'})}
 function person(id){
   PID=id;var A=pRecs(id),V=A.filter(function(x){return !x.x}),p=SC.students(V)[0]||{acc:null,s:null,count:0,prog:null,keep:false};
   var h='<button class="x" id="mx">✕ 關閉</button><h3 class="ph">'+who(id)+'</h3>';
@@ -3391,6 +3394,8 @@ function person(id){
   h+='<button id="pdb" class="pdb">📋 看全部明細（作廢在這裡）</button><div id="pdet" hidden><div class="note">每一組：正確率的變化（綠點 ＝ 練習次數 ＋1；灰色刪除線 ＝ 作廢）。遊戲的正確率只算每一題第一次作答。</div>'+pdetail(A)+'</div>';
   if(V.length)h+='</div>';   /* #pmore */
   /* 🗑 刪除這個人全部的成績（老師 2026-10-17 C8 另 4）：要打一次 5 碼才刪得掉；伺服器先搬到「已刪除」工作表 */
+  /* 🔑 學生 密碼（2026-10-28 第三十三次 第 4 點，老師 選 甲）：看得到 密碼；〔🔑 清除 密碼〕一下 ＝ 學生 下次 登入 自己 重設 */
+  h+='<div class="spw" id="spw" data-id="'+esc(id)+'">🔑 密碼：<b id="spv">⏳</b><button id="spr" class="spr" hidden>🔑 清除 密碼</button><span id="spm" class="spm"></span></div>';setTimeout(function(){spLoad(id)},0);
   h+='<div class="delw"><button id="delp" class="delb" data-id="'+esc(id)+'">🗑 刪除 '+esc(id)+' 全部的成績</button><div id="delc" hidden>'+
     '<div class="delq">⚠ 要刪除 <b>'+who(id)+'</b> <b>全部</b>的成績嗎？<br><small>每一週、每一個遊戲、每一次都刪；排行榜、要關心、Excel 都不再有這個人（試算表「已刪除」分頁留一份備份）。</small></div>'+
     '<div class="delr"><span>請打這個人的 5 碼：</span><input id="deli" inputmode="numeric" maxlength="5" autocomplete="off"><button id="delgo" class="delb" disabled>🗑 確定刪除</button><button id="delno">取消</button></div><div id="delm"></div></div></div>';
@@ -4002,6 +4007,8 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if(c('#cnx')){if(CER){CER.i=CER.i<CER.D.length?CER.i+1:0;cerShow()}return}
   if(c('#cps')){if(CER){CER.pause=!CER.pause;$('#cps').textContent=CER.pause?'▶ 繼續':'⏸ 停';if(CER.pause)clearTimeout(CER.tm);else CER.tm=setTimeout(function(){if(CER){CER.i++;cerShow()}},2500)}return}
   if(c('#csd')){HSND=HSND?0:1;lss0('hsnd',HSND);if(HSND)HON.ac();$('#csd').textContent='🔊 聲音：'+(HSND?'開':'關');return}
+  if(c('#spr')){var sid=$('#spw').getAttribute('data-id');$('#spr').disabled=true;$('#spm').textContent='⏳ 清除 中…';
+    post({a:'spr',pw:PW,id:sid}).then(function(j){if(j&&j.ok){$('#spv').textContent='（還沒 設）';$('#spr').hidden=true;$('#spm').textContent='✅ 清除 了：'+sid+' 下次 登入 自己 重設';toast('🔑 '+sid+' 的 密碼 清除 了')}else{$('#spr').disabled=false;$('#spm').textContent='📶 沒有 成功，再 按 一次'}},function(){$('#spr').disabled=false;$('#spm').textContent='📶 沒有 成功，再 按 一次'});return}
   if(c('#delp')){$('#delc').hidden=false;$('#delp').hidden=true;$('#deli').value='';$('#deli').focus();return}
   if(c('#delno')){$('#delc').hidden=true;$('#delp').hidden=false;return}
   if(c('#delgo')){var did=$('#delp').getAttribute('data-id');if($('#deli').value.trim()!==did)return;$('#delgo').disabled=true;$('#delm').textContent='⏳ 刪除中…';

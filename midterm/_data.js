@@ -203,7 +203,7 @@ const GL = {
   no: '不', nurse: '護理師', off: '關', on: '開', panda: '貓熊', pen: '筆', pig: '豬', please: '請', pot: '鍋子', run: '跑', seat: '座位', seventeen: '十七', she: '她',
   show: '給…看', sister: '姊姊', sixteen: '十六', sorry: '對不起', student: '學生', talk: '說話', teacher: '老師', ten: '十', tent: '帳篷', thank: '謝謝', the: '', thirteen: '十三',
   this: '這', tiger: '老虎', time: '時間', to: '', too: '也', toy: '玩具', turn: '轉', twelve: '十二', twenty: '二十', uncle: '叔叔', up: '起來', who: '誰', yes: '是的', you: '你', your: '你的',
-  seventy: '七十', what: '什麼', are: '是', am: '是', be: '是', an: '一個', her: '她的'
+  seventy: '七十', what: '什麼', are: '是', am: '是', be: '是', an: '一個', her: '她的', good: '好', morning: '早上', 'years old': '歲'
 };
 /* 一句話 裡 同一個 字 意思 不一樣 ➜ 這一題 自己 的 對照（gx） */
 const GX = { 'Have a seat, please.': { have: '坐', a: '一個', seat: '位子' }, 'Hurry up.': { hurry: '快', up: '一點' }, 'Time’s up.': { up: '到 了' }, 'Come in, please.': { in: '進來' },

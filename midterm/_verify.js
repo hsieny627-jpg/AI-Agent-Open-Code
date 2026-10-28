@@ -47,6 +47,11 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto('file://' + path.join(__dirname, 'index.html')); await p.waitForTimeout(500);
     n++; const hb = await p.evaluate(() => ({ m12: !!document.querySelector('[data-g="m12"]'), g: document.querySelectorAll('[data-g]').length, s: document.querySelectorAll('.sec').length, ox: document.documentElement.scrollWidth - innerWidth }));
+    /* 2026-10-28 第三十三次 第 7 點：答錯頁 每一個 英文 字 正下方 都 有 中文（Who’s、She’s 的 ’s、數字；the／to 本來 就 空白）；短文 偵探 題目 也 逐字、名字 的 ’s ＝ 的 */
+    if (vp[0] === 1024) { n++; const gz = await p.evaluate(() => { const bad = []; GM.concat([{ id: 'x', B: [].concat.apply([], Object.keys(XB).map(k => XB[k])) }]).forEach(g => g.B.forEach(q => { if (!q.fe) return;
+        const d = document.createElement('div'); d.innerHTML = gloss(q.fe, q.gx, 0) + (q.pas ? glossQ(m8Q(q)) : ''); [].forEach.call(d.querySelectorAll('.gw'), w => { const e = w.querySelector('b').textContent.replace(/[.,?!]/g, ''); if (!w.querySelector('i').textContent && !/^(the|to)$/i.test(e)) bad.push(e); }); }));
+        return { bad: [...new Set(bad)], pos: /Emily.*的/.test(glossQ('She’s Emily’s sister.').replace(/<[^>]+>/g, '')) }; });
+      if (gz.bad.length || !gz.pos) E.push(tag + ' 答錯頁 逐字 中文 空白：' + gz.bad.join(' ') + (gz.pos ? '' : '｜名字 的 ’s 不是 的')); }
     if (hb.g !== 12 || !hb.m12 || hb.s !== 3 || hb.ox > 1) E.push(tag + ' 大廳：' + JSON.stringify(hb));
     if (SHOT) await p.screenshot({ path: path.join(SHOT, 'mt_hub_' + vp[0] + '.png'), fullPage: true });
     for (const g of D.GAMES.filter(g => !process.env.G || process.env.G.split(',').indexOf(g.id) >= 0)) {   /* G＝m1,m8 只 量 這幾 種 */
