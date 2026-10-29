@@ -129,7 +129,8 @@ function lobby(){scr('hlob');hstep(1);hqr(false);var G=LV.game(H.game);
   H.lt=setInterval(drawLobby,2000)}
 function seatGrid(on,cls,extra){var n=30,h='';for(var i=1;i<=n;i++){var id=H.cls+sp2(i),o=on.indexOf(id)>=0;h+='<span class="st'+(o?' on':'')+(extra&&extra(id)?' '+extra(id):'')+'">'+(o&&H.P[id]&&H.P[id].h?'<img src="'+LV.img(BASE,H.P[id].h)+'" alt="">':'')+'<b>'+sp2(i)+'</b></span>'}
   return '<div class="seats '+(cls||'')+'">'+h+'</div>'}
-function drawLobby(){if(H.scr!=='hlob')return;var L=online();entSee(L);$('#lcnt').textContent=L.length;$('#lpl').innerHTML=seatGrid(L)}
+/* 2026-10-29 第三十三次 第 8 件（老師 C35 第 2 題）：剛 加入 的 名牌 ＝ 從 上面 跳 進來（只有 新 的 那幾個 跳）*/
+function drawLobby(){if(H.scr!=='hlob')return;var L=online(),now=Date.now();H.jt=H.jt||{};L.forEach(function(id){if(!H.jt[id])H.jt[id]=now});entSee(L);$('#lcnt').textContent=L.length;$('#lpl').innerHTML=seatGrid(L,'',function(id){return H.jt[id]&&now-H.jt[id]<1500?'nw':''})}
 /* ── ▶ 開始：怎麼玩 ＋ 3、2、1（不動 的 ① ② ③）── */
 function start(){var L=online();if(!L.length){$('#lmsg').textContent='還沒有 學生 加入（學生 掃 QR Code、打 5 碼）';return}clearInterval(H.lt);
   H.psU={};H.pl={};L.forEach(function(id){H.pl[id]=1;H.tot[id]=0;H.okc[id]=0;H.st[id]=0;H.best[id]=0;H.fxc[id]=0;H.okq[id]=''});H.qi=-1;H.start=Date.now();H.gs=gs0();H.sum=[];

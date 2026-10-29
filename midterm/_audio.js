@@ -28,7 +28,9 @@ function slowM(dir, varName, base, alt) {
   Object.keys(man).forEach(w => { if (!need[man[w][1]] && old[w] && old[w][0] === man[w][0]) man[w][1] = old[w][1]; });
   fs.writeFileSync(path.join(out, 'aud.js'), '/* midterm/_audio.js 產生：單字（男聲 慢）*/\nwindow.' + varName + '=' + JSON.stringify(man) + ';\n');
   return Object.keys(man).length; }
-const ALT1 = { 'He’s twelve.': 'f0.72', twelve: 'f0.9', twenty: 'f0.9', pot: 0.75, pen: 0.8, mom: 'f0.72' }, ALT2 = { uncle: 0.72, twelve: 'f0.9', twenty: 'f0.9', brother: 0.75, dad: 0.75, pen: 0.65, pot: 0.56, ten: 0.64, tent: 0.65, eleven: 0.56 };   /* 2026-10-27 第三十二次：放慢 以後 聽寫 聽錯 的 再 換（tools/asr_check.py 全對 才 算） */   /* 電腦 聽寫 聽錯 的 字 ➜ 換 速度（量過 再 填） */
+/* 2026-10-29 第 5 件：新 25／新 50 字首音 太空 射擊 的 字：男聲 慢 電腦 聽寫 一直 聽錯 第一個 音（pat ➜ hat、pin ➜ bin、tip ➜ chip、big ➜ egg、den ➜ Dan）➜ 女聲 0.6 全部 聽對 */
+const NGF = { pat: 'f0.6', pin: 'f0.6', tip: 'f0.6', big: 'f0.6', den: 'f0.6', dip: 'f0.6', late: 'f0.6', 'My grandpa is eighty.': 'f0.6' };
+const ALT1 = { ...NGF, 'He’s twelve.': 'f0.72', twelve: 'f0.9', twenty: 'f0.9', pot: 0.75, pen: 0.8, mom: 'f0.72' }, ALT2 = { ...NGF, uncle: 0.72, twelve: 'f0.9', twenty: 'f0.9', brother: 0.75, dad: 0.75, pen: 0.65, pot: 0.56, ten: 0.64, tent: 0.65, eleven: 0.56 };   /* 2026-10-27 第三十二次：放慢 以後 聽寫 聽錯 的 再 換（tools/asr_check.py 全對 才 算） */   /* 電腦 聽寫 聽錯 的 字 ➜ 換 速度（量過 再 填） */
 /* 2026-10-27 第三十二次 第 2-(2) 點（老師：b／p、d／t 聽不清楚）：再 放慢（0.8 ➜ 0.72、0.65 ➜ 0.6），第一個 音 比較 清楚；電腦 聽寫 每一個 都 要 對 */
 console.log('單字 慢 ' + slowM('m1', 'ENAUDM', 0.72, ALT1) + ' 個、更慢 ' + slowM('m2', 'ENAUDSL', 0.6, ALT2) + ' 個（男聲）');
 console.log('midterm 語音檔：' + r.total + ' 個（新做 ' + r.made + '）、慢句子 ' + s.total + ' 個（新做 ' + s.made + '）');

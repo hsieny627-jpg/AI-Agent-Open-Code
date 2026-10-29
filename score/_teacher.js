@@ -529,6 +529,7 @@ em.ok{background:#0F3A20;border-color:#3BD16F;color:#C8FFD9}em.no{background:#3A
 .qsc{background:#0B1520;border:3px solid #22344A;border-radius:18px;padding:12px 16px;margin:10px 0;font-size:clamp(20px,1.7vw,26px)}.qsc.ok{border-color:#3BD16F}.qsc.no{opacity:.55}
 .qsc .qz{font-size:1.2em;color:#FFE07A;margin:6px 0}.qsc .qo{display:flex;flex-wrap:wrap;gap:8px}.qsc .qo span{background:#1B2633;border-radius:12px;padding:4px 12px}.qsc .qo span.a{background:#0F3323;color:#7BF0A8}
 .qsc button{min-height:56px;font-size:clamp(20px,1.7vw,26px);margin:8px 8px 0 0}.qsc .y{background:#1E7A45}.qsc .n{background:#7A1F2A}
+.xh{font-size:clamp(22px,1.9vw,30px);color:var(--gold);margin:18px 0 8px}.xan>div{display:grid;grid-template-columns:3.2em 1fr 9em;gap:10px;align-items:center;font-size:clamp(20px,1.7vw,26px);margin:6px 0}.xan b{font-size:1.4em}.xan small{color:#9FB4C8;font-size:max(18px,.75em)}.xan .t{height:22px;border-radius:11px;background:#1A2230;overflow:hidden}.xan .t i{display:block;height:100%}.xan .t i.p0{background:#C62828}.xan .t i.p1{background:#C9A227}.xan .t i.p2{background:#2E9E5B}
 .g3t{border-collapse:collapse;width:100%;font-size:clamp(20px,1.7vw,28px)}.g3t th,.g3t td{border:2px solid #2A3A4A;padding:6px 8px;text-align:center}.g3t th{background:#14202B;font-size:clamp(18px,1.3vw,22px);line-height:1.25}.g3t th b{display:block;font-size:1.6em}
 .g3t td.nm{text-align:left;white-space:nowrap}.g3t td small{display:block;font-size:max(18px,.62em);color:#9FB4C8}.g3h small{font-size:max(20px,.6em)!important}.g3t .p2{background:#1F7A45;color:#fff}.g3t .p1{background:#B08A10;color:#fff}.g3t .p0{background:#A3263A;color:#fff}.g3t td.p0 small,.g3t td.p1 small,.g3t td.p2 small{color:rgba(255,255,255,.85)}.g3t .av{font-size:1.15em;border-left:5px solid var(--gold)}
 .g3t tr.all td{border-bottom:5px solid var(--gold);font-size:1.1em;font-weight:700}.g3t th small.g3n{display:block;font-size:18px;color:#9FB4C8;font-weight:400}.g3k{display:inline-block;padding:2px 10px;border-radius:8px;margin-right:6px}.g3k.p2{background:#1F7A45;color:#fff}.g3k.p1{background:#B08A10;color:#fff}.g3k.p0{background:#A3263A;color:#fff}.g3w{overflow-x:auto}.g3sw{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.g3sw button{min-height:56px;font-size:clamp(20px,1.7vw,26px)}.g3sw button.on{background:#2A2208;border-color:var(--gold);color:#FFE9A8}
@@ -1095,7 +1096,7 @@ function pdetail(A){var h='',by={};A.forEach(function(x){(by[x.set]=by[x.set]||[
      L.map(function(x){return '<tr'+(x.x?' class="void"':'')+'><td>'+dt(x.t)+'</td><td>'+x.acc+'</td><td>'+f1(x.s)+'</td><td>'+x.ok+'／'+x.n+'</td><td>'+(x.fix||0)+'</td><td>'+x.fast+'／'+x.n+'</td><td>'+(SC.when(x)==='out'?'🌙 課後 時間':'🕘 上課 時間')+'</td><td>'+esc(x.dev)+'</td>'+
        '<td><button data-void="'+esc(x.u)+'" data-v="'+(x.x?0:1)+'">'+(x.x?'↩ 恢復':'🚫 作廢')+'</button></td></tr>'}).join('')+'</table></div>'});
   return h}
-function stats(k){var R=sets()[F.cls?'C':'G'],x=SC.questions(R).filter(function(z){return z.k===k})[0];var mis=-9,mv=0;[1,2,3].forEach(function(i){if((x.p[i]||0)>mv){mv=x.p[i];mis=i}});return {x:x,mis:mis}}
+function stats(k){var R=QDS&&QDR?QDR:sets()[F.cls?'C':'G'],x=SC.questions(R).filter(function(z){return z.k===k})[0];var mis=-9,mv=0;[1,2,3].forEach(function(i){if((x.p[i]||0)>mv){mv=x.p[i];mis=i}});return {x:x,mis:mis}}
 function optTxt(q,i){return q.k==='read'?'🔊 '+'①②③④'.charAt(i):q.o[i]}
 function qDetail(k){
   var S=stats(k),x=S.x,mis=S.mis,o=qOf(k),q=o.q;
@@ -1343,7 +1344,7 @@ function favNm(id){var k=id.charAt(0),n=+id.slice(1);if(k==='t'){var T=(SC.RPT||
    三年級 複習（g3m）、課堂複習 1～3（c1～c3）的 10 種 遊戲：一列 一位 學生（號碼＋姓名），10 欄 ＝ 每一種 遊戲 的 正確率（百分制），最後 一欄 ＝ 這位 學生 的 平均；
    最下面 一列 ＝ 全班 每一種 遊戲 的 平均。**只 算 已經 作答 的 題目**（答 了 幾題 就 算 幾題；時間 到 ＝ 答錯）＝ 答對 題數 ÷ 作答 題數 ✕ 100。時間 ＝ 上面 選 的 時間。 */
 var G3S='all',G3C='';
-var G3SETS=[['g3m','📝 三年級 複習'],['c1','🏫 課堂複習 1'],['c2','🏫 課堂複習 2'],['c3','🏫 課堂複習 3'],['all','三年級 全部'],['mt','📝 四年級 複習']];
+var G3SETS=[['g3m','📝 三年級 複習'],['c1','🏫 課堂複習 1'],['c2','🏫 課堂複習 2'],['c3','🏫 課堂複習 3'],['all','三年級 全部'],['mt','📝 四年級 複習'],['x3','📝 三年級 期中 挑戰'],['x4','📝 四年級 期中 挑戰']];
 /* 2026-10-26 第二十九次 第 7 點（老師）：(1) 欄 的 順序 ＝ 關卡 順序（第 9 關 夾娃娃、第 10 關 小精靈）(2) 每一個 遊戲 的 平均 正確率 放 最上面 一格（每班 1 號 的 正上方）
    (3) 底色：59 以下 紅、60～80 黃、81～100 綠；多〔📝 四年級 複習〕（12 種 遊戲，四年級 的 班） */
 var G3ORD=['q1','q4','q5','q6','q7','q8','q9','q10','q3','q2'];
@@ -1352,7 +1353,33 @@ var MTORD=['m1','m2','m3','m4','m5','m6','m8','m9','m11','m7','m10','m12'];
 function g3Games(){if(G3S==='mt'){return MTORD.map(function(id){var c=BANK['g4gm_mt-'+id];return [id,c?String(c.name).replace(/^.*｜/,''):id]})}
   return G3ORD.map(function(id){var b=BANK['g3gm_g3m-'+id];return [id,b?String(b.name).replace(/^.*｜/,''):id]})}
 function g3Col(v){return v<=59?'p0':v<=80?'p1':'p2'}
-function paneG(){var g4=G3S==='mt',CC=SC.CLASSES[g4?4:3]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===(g4?4:3)&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),GM=g3Games();
+/* ══ 2026-10-29 第三十三次 第 6 件：📝 期中 挑戰（25／50、新 25／新 50）＝ 學生 成績 ＋ 錯題 排行榜 ＋ 錯題 分析 ＋ 錯題 詳解（美式 發音）══
+   ① 學生 成績：一列 一位，四欄 ＝ 25／50／新 25／新 50 最近 一次 的 分數（小字 ＝ 做 了 幾次）
+   ② 錯題 分析：每一關（遊戲）全班 的 正確率 長條（最 難 的 排 前面）
+   ③ 錯題 排行榜：答錯率 最高 的 15 題 ➜ 點 一題 ＝ 詳解（每個 選項 幾 %、最多人 選 的 錯 答案、💡 為什麼、📺 全班 訂正：逐字 中文、整句 中文、唸 3 次 美式 發音）*/
+var QDR=null,QDS=false;
+function paneX(g){var CC=SC.CLASSES[g]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===g&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),re=g===3?/^g3gm_g3m-([xn])(25|50)$/:/^g4gm_mt-([xn])(25|50)$/;
+  var RS=ALL.filter(function(x){return re.test(x.set)&&!x.x&&x.cls===c&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)});QDR=RS;
+  var COLS=[['x25','📝 25 題'],['x50','📝 50 題'],['n25','📝 新 25 題'],['n50','📝 新 50 題']],P={};
+  RS.slice().sort(function(a,b){return a.t-b.t}).forEach(function(x){var m=re.exec(x.set),k=m[1]+m[2],p=P[x.id]=P[x.id]||{};p[k]=p[k]||{n:0};p[k].n++;p[k].s=x.s});
+  var ids=(RCLS[c]||[]).slice();Object.keys(P).forEach(function(id){if(ids.indexOf(id)<0)ids.push(id)});ids.sort();
+  var h='<div class="fvhd g3h">📝 '+(g===3?'三':'四')+'年級 期中 挑戰：學生 成績、錯題 排行榜、錯題 分析<small>（時間 ＝ 上面 選 的；分數 ＝ 最近 一次）</small></div>'+
+    '<div class="g3sw">'+G3SETS.map(function(x){return '<button data-g3s="'+x[0]+'" class="'+(G3S===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div>'+
+    '<div class="g3sw">'+CC.map(function(x){return '<button data-g3c="'+x+'" class="'+(x===c?'on':'')+'" style="border-color:'+ccol(x)+'">'+esc(SC.cname(x))+'</button>'}).join('')+'</div>';
+  if(!RS.length)return h+'<div class="note">這個 時間、這一班 還沒有 人 做 期中 挑戰（英文課 在〔⚡ 現場任務〕開）。</div>';
+  /* ① 學生 成績 */
+  h+='<h3 class="xh">① 👤 學生 成績</h3><div class="g3w"><table class="g3t"><tr><th>號碼</th><th>姓名</th>'+COLS.map(function(x){return '<th>'+x[1]+'</th>'}).join('')+'</tr>'+
+    ids.map(function(id){var p=P[id]||{};return '<tr><td>'+id.slice(3)+'</td><td class="nm">'+esc(nm(id)||'')+'</td>'+COLS.map(function(x){var v=p[x[0]];return v?'<td class="'+g3Col(v.s)+'">'+v.s+'<small>'+v.n+' 次</small></td>':'<td>—</td>'}).join('')+'</tr>'}).join('')+'</table></div>';
+  /* ② 錯題 分析：每一關 的 正確率（照 題目 前面 的 遊戲 圖示 分）*/
+  var Q=SC.questions(RS),A={};Q.forEach(function(x){var o=qOf(x.k);if(!o)return;var ic=String(o.q.q||'').split(' ')[0]||'?',a=A[ic]=A[ic]||{n:0,bad:0};a.n+=x.n;a.bad+=x.bad});
+  var L=Object.keys(A).map(function(k){var a=A[k];return [k,Math.round((a.n-a.bad)/a.n*100),a.n]}).sort(function(a,b){return a[1]-b[1]});
+  h+='<h3 class="xh">② 📊 錯題 分析：哪一關 最 難？（全班 正確率，低 的 在 前面）</h3><div class="xan">'+L.map(function(x){return '<div><b>'+esc(x[0])+'</b><span class="t"><i class="'+g3Col(x[1])+'" style="width:'+x[1]+'%"></i></span><span>'+x[1]+' 分<small>（'+x[2]+' 題次）</small></span></div>'}).join('')+'</div>';
+  /* ③ 錯題 排行榜 ＋ 詳解 */
+  var W=Q.filter(function(x){return x.bad>0&&qOf(x.k)}).slice(0,15);
+  h+='<h3 class="xh">③ ❌ 錯題 排行榜（答錯率 最高 的 15 題）：點 一題 ＝ 詳解＋📺 全班 訂正（逐字 中文、唸 3 次 美式 發音）</h3>'+(W.length?W.map(function(x,n){var o=qOf(x.k);
+    return '<div class="wq" data-q="'+x.k+'" data-qx="1"><span class="n">'+(n+1)+'</span><span class="q"><b>'+esc(qText(o.q))+'</b><em>'+esc(o.set.name)+'・✅ '+esc(String(o.q.o[0]))+'</em></span><span class="r"><span>答錯 '+x.rate+'%（'+x.bad+'／'+x.n+'）</span><span class="t"><i style="width:'+x.rate+'%"></i></span></span></div>'}).join(''):'<div class="note">沒有 答錯 的 題目 🎉</div>');
+  return h}
+function paneG(){if(G3S==='x3'||G3S==='x4')return paneX(G3S==='x4'?4:3);var g4=G3S==='mt',CC=SC.CLASSES[g4?4:3]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===(g4?4:3)&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),GM=g3Games();
   var RS=ALL.filter(function(x){var m=g4?/^g4gm_(mt)-(m\\d+)$/.exec(x.set):/^g3gm_(g3m|c[123])-(q\\d+)$/.exec(x.set);return m&&!x.x&&x.cls===c&&(g4||G3S==='all'||m[1]===G3S)&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)});
   var P={},T={};RS.forEach(function(x){var g=/-([qm]\\d+)$/.exec(x.set)[1],p=P[x.id]=P[x.id]||{};(x.qs||[]).forEach(function(q){var a=p[g]=p[g]||[0,0],b=T[g]=T[g]||[0,0];a[0]+=q[0]?1:0;a[1]++;b[0]+=q[0]?1:0;b[1]++})});
   var ids=(RCLS[c]||[]).slice();Object.keys(P).forEach(function(id){if(ids.indexOf(id)<0)ids.push(id)});ids.sort();
@@ -1677,7 +1704,7 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if(c('#pmb')){pMore($('#pmore').hidden);return}
   if(c('#pdb')){var d=$('#pdet');d.hidden=!d.hidden;$('#pdb').classList.toggle('on',!d.hidden);return}
   if(c('#pcp')||c('#pcx')){PCH.i=(PCH.i+(c('#pcx')?1:-1)+PCH.L.length)%PCH.L.length;pChart();return}
-  if((b=c('.wq'))){qDetail(b.getAttribute('data-q'));return}
+  if((b=c('.wq'))){QDS=b.hasAttribute('data-qx');qDetail(b.getAttribute('data-q'));return}
   if(c('#mx')||t.id==='modal'){$('#modal').classList.remove('on');return}
   if((b=c('#sh'))){$('#modal').classList.remove('on');SH=null;show(b.getAttribute('data-q'),0);return}
   if(c('#sn')){show(SH.k,SH.st+1);return}

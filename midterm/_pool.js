@@ -153,14 +153,14 @@ const N5 = [[1, 'brother', '👦', '哥哥'], [1, 'mother', '👩', '媽媽'], [
    P ＝ [s, 哪一篇, 問題, [正解, 誘答 2], 證據 在 第幾行]；T ＝ [s, 英文, 正解 的 人]（家族樹：爺爺 農夫、奶奶 廚師、爸爸 醫生、媽媽 老師、哥哥 學生、姊姊 學生） */
 const PASB = {
   xethan: { title: 'Who’s He?', sp: ['Chloe', 'Ethan', 'Chloe', 'Ethan', 'Chloe', 'Ethan'],
-    t: ['Ethan, who’s he?', 'He’s my grandpa. He’s a doctor.', 'Who’s she? Is she your mom?', 'No, she isn’t. She’s my sister. She’s sixteen.', 'Is she a student?', 'Yes, she is.'],
-    z: ['Ethan，他 是 誰？', '他 是 我的 爺爺。他 是 醫生。', '她 是 誰？她 是 你的 媽媽 嗎？', '不，她 不是。她 是 我的 姊姊。她 十六 歲。', '她 是 學生 嗎？', '是的，她 是。'] },
+    t: ['Ethan, who’s he?', 'He’s my grandpa. He’s a doctor.', 'Who’s she? Is she your grandma?', 'No, she isn’t. She’s my sister. She’s sixteen.', 'Is she a student?', 'Yes, she is.'],
+    z: ['Ethan，他 是 誰？', '他 是 我的 爺爺。他 是 醫生。', '她 是 誰？她 是 你的 奶奶 嗎？', '不，她 不是。她 是 我的 姊姊。她 十六 歲。', '她 是 學生 嗎？', '是的，她 是。'] },
   xolivia: { title: 'Good Morning, Olivia', sp: ['Lucas', 'Olivia', 'Lucas', 'Olivia', 'Lucas', 'Olivia'],
     t: ['Good morning, Olivia. Who’s she?', 'Good morning, Lucas. She’s my mom. She’s a cook.', 'Who’s he? Is he your brother?', 'No, he isn’t. He’s my dad.', 'Is he a farmer?', 'Yes, he is.'],
     z: ['早安，Olivia。她 是 誰？', '早安，Lucas。她 是 我的 媽媽。她 是 廚師。', '他 是 誰？他 是 你的 哥哥 嗎？', '不，他 不是。他 是 我的 爸爸。', '他 是 農夫 嗎？', '是的，他 是。'] }
 };
 const N6 = [[1, 'P', 'xethan', 'Ethan’s grandpa is ___.', ['a doctor', 'a cook', 'a nurse'], 1], [1, 'P', 'xethan', 'Who’s he? He’s Ethan’s ___.', ['grandpa', 'dad', 'brother'], 1],
-  [1, 'P', 'xethan', 'Chloe: Is she your mom?　Ethan: ___', ['No, she isn’t.', 'Yes, she is.', 'No, he isn’t.'], 3], [1, 'P', 'xethan', 'Ethan’s sister is ___ years old.', ['sixteen', 'sixty', 'six'], 3],
+  [1, 'P', 'xethan', 'Chloe: Is she your grandma?　Ethan: ___', ['No, she isn’t.', 'Yes, she is.', 'No, he isn’t.'], 3], [1, 'P', 'xethan', 'Ethan’s sister is ___ years old.', ['sixteen', 'sixty', 'six'], 3],
   [1, 'P', 'xethan', 'Ethan’s sister is ___.', ['a student', 'a teacher', 'a farmer'], 5], [1, 'P', 'xethan', 'Who’s she? She’s Ethan’s ___.', ['sister', 'mom', 'grandma'], 3],
   [1, 'P', 'xolivia', 'Olivia’s mom is ___.', ['a cook', 'a nurse', 'a farmer'], 1], [1, 'P', 'xolivia', 'Who’s she? She’s Olivia’s ___.', ['mom', 'sister', 'grandma'], 1],
   [1, 'P', 'xolivia', 'Lucas: Is he your brother?　Olivia: ___', ['No, he isn’t.', 'Yes, he is.', 'No, she isn’t.'], 3], [1, 'P', 'xolivia', 'Who’s he? He’s Olivia’s ___.', ['dad', 'brother', 'grandpa'], 3],
@@ -236,4 +236,4 @@ const DA = dragList(U1A.concat(U2A), 1).slice(0, 56);
 const DB = dragList(U1B.concat(U2B), 2).slice(0, 56);
 /* 「Who’s he? Is he your brother?」的 整句 翻譯 */
 
-module.exports = { PA, PASA, NB, PASB, NGAME, DA, DB, EXAMC, P };
+module.exports = { PA, PASA, NB, PASB, NGAME, DA, DB, EXAMC, P, sent4, zh4 };

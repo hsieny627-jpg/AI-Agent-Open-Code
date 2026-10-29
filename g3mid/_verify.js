@@ -8,7 +8,7 @@
 const fs = require('fs'), path = require('path');
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 const ROOT = path.join(__dirname, '..'), D = require('./_data.js'), { HW } = require('./_hw.js'), SHOT = process.env.SHOT;
-const E = []; let n = 0;
+const E = []; let n = 0, DCL1 = 0;
 const akey = s => String(s).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…＿_　]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
 const rd = f => { const t = fs.readFileSync(path.join(__dirname, f), 'utf8'); return JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1)); };
 const A = rd('audio/aud.js'), W = rd('audio/w/aud.js');
@@ -37,7 +37,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
     await ctx.addInitScript(() => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} });
       localStorage.setItem('score_last', '"30401"'); localStorage.setItem('score_id_g3', '"30401"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', '30401'); });
     /* 聲音：不真的放，0.06 秒就算唸完（數唸了幾次） */
-    await ctx.addInitScript(() => { window.__NOGO = 1; window.__G2CALM = 1; window.__say = []; HTMLMediaElement.prototype.play = function () { const a = this; window.__say.push(a.src.split('/').slice(-2).join('/')); setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); };
+    await ctx.addInitScript(() => { window.__NOGO = 1; window.__G2CALM = 1; window.__DCLK = 0.05; window.__say = []; HTMLMediaElement.prototype.play = function () { const a = this; window.__say.push(a.src.split('/').slice(-2).join('/')); setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); };
       try { speechSynthesis.speak = u => { window.__say.push('tts:' + u.text); setTimeout(() => u.onend && u.onend(), 60); }; } catch (e) {} });
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto('file://' + path.join(__dirname, 'index.html')); await p.waitForTimeout(400);
@@ -137,7 +137,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
         if (z1.xb !== '25' || z1.gc) E.push(tag + ' 現場任務 開了 25 題：要 只 有 25 那一顆 ' + JSON.stringify(z1)); }
       const ID = await p.evaluate(() => SCID); await p.evaluate(id => { const N = 25; LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0304', t: 1, cfg: { on: 1, t: 1, set: 'x' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9 }; localStorage.removeItem('g3m_seen_' + id); localStorage.removeItem('g3m_xs25_' + id); lobby(); }, ID);
       await p.click('#xrow .xb[data-x="25"]'); await p.waitForTimeout(400);
-      for (let k = 0; k < 3; k++) { const hw = await p.$('#q2go'); if (hw) { await hw.click(); await p.waitForTimeout(150); } const wp = await p.$('#wp.on [data-wr]'); if (wp) { await wp.click(); await p.waitForTimeout(250); }
+      for (let k = 0; k < 3; k++) { await passL(p); const hw = await p.$('#q2go'); if (hw) { await hw.click(); await p.waitForTimeout(150); } const wp = await p.$('#wp.on [data-wr]'); if (wp) { await wp.click(); await p.waitForTimeout(250); }
         const id = await p.evaluate(() => G.id); await p.waitForTimeout(id === 'q2' ? 300 : 120); await answer(p, { id }, false);
         await p.waitForFunction(kk => R.k > kk, k, { timeout: 15000 }).catch(() => E.push(tag + ' 離開 測試：第 ' + (k + 1) + ' 題 沒有 到 下一題')); await p.waitForTimeout(150); }
       const sent0 = await p.evaluate(() => JSON.parse(localStorage.getItem('score_q') || '[]').filter(x => x.set === 'g3gm_g3m-x25').length);
@@ -149,7 +149,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
       const lb = await p.evaluate(() => ({ r: (document.querySelector('[data-xr="25"]') || {}).innerText || '', nw: !!document.querySelector('.xb2[data-x="25"]'), sent: JSON.parse(localStorage.getItem('score_q') || '[]').filter(x => x.set === 'g3gm_g3m-x25').length }));
       if (!/繼續 25 題/.test(lb.r) || !/第 3 ／ 25/.test(lb.r) || !lb.nw) E.push(tag + ' 大廳 沒有〔▶ 繼續 25 題〕〔🔄 重新 開始〕' + JSON.stringify(lb));
       if (lb.sent !== sent0) E.push(tag + ' 中途 離開 不可以 送 成績');
-      await p.click('[data-xr="25"]'); await p.waitForTimeout(500);
+      await p.click('[data-xr="25"]'); await p.waitForTimeout(500); await passL(p);
       const rs = await p.evaluate(() => ({ k: R.k, sc: R.score, q: R.Q.length, n: R.qs.length }));
       if (rs.k !== 3 || rs.sc !== 12 || rs.q !== 3 || rs.n !== 25) E.push(tag + ' 繼續 以後 不是 從 第 4 題、12 分：' + JSON.stringify(rs));
       const sn = await p.evaluate(id => { const S = JSON.parse(localStorage.getItem('g3m_seen_' + id) || '[]'); lobby(); startX(25); const hit = R.qs.filter(q => S.indexOf(XALL.indexOf(q)) >= 0).length; lobby(); return { s: S.length, hit }; }, ID);
@@ -160,33 +160,63 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
       await p.evaluate(N => { LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0304', t: 1, cfg: { on: 1, t: 1, set: 'x' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9 }; lobby(); }, N); await p.waitForTimeout(200);
       n++; const lb2 = await p.evaluate(() => [...document.querySelectorAll('#xrow .xb')].filter(b => b.style.display !== 'none').map(b => b.dataset.x + ':' + Math.round(b.getBoundingClientRect().height)).join());
       if (lb2.split(':')[0] !== String(N) || +lb2.split(':')[1] < 60) E.push(tag + ' 現場任務 大廳 沒有〔📝 ' + N + ' 題〕大按鈕：' + lb2);
+await p.evaluate(d1 => { if (!d1) Object.keys(localStorage).filter(k => /^dcl_seen_/.test(k)).forEach(k => localStorage.removeItem(k)); window.__DCLMIN = d1 ? 0 : undefined; }, DCL1);   /* 第一次 量 ＝ 沒 看過 動畫（不能 跳過、≧ 20 秒）*/
       await p.click('#xrow .xb[data-x="' + N + '"]'); await p.waitForTimeout(400);
       const pl = await p.evaluate(() => ({ c: R.cnt, s: R.nsim, sim: R.qs.filter(q => q.sim).length, n: R.qs.length, ord: R.lvOf.every((l, i) => !i || l >= R.lvOf[i - 1]) }));
-      n++; const want = N === 25 ? [2, 3] : [5, 5];
-      if (pl.n !== N || pl.c.some(x => x < want[0] || x > want[1]) || pl.sim !== Math.round(N * .3) || !pl.ord) E.push(tag + ' ' + N + ' 題：抽題 不 平均／類似 不是 30%：' + JSON.stringify(pl));
+      n++; const want = N === 25 ? [1, 2] : [3, 4], dN = N === 25 ? 8 : 15;   /* 2026-10-29：第 1 關 ＝ 🔓 解碼 任務 8／15 題，其他 10 關 平均 */
+      if (pl.c[0] !== dN || pl.n !== N || pl.c.slice(1).some(x => x < want[0] || x > want[1]) || pl.sim !== Math.round(N * .3) || !pl.ord) E.push(tag + ' ' + N + ' 題：抽題 不 平均／類似 不是 30%：' + JSON.stringify(pl));
       let lvSeen = new Set(), guard = 0, sc0 = 0;
       while (guard++ < N + 5) {
         const st = await p.evaluate(() => ({ end: !document.querySelector('#endv').hidden, k: R.k, id: G && G.id, lv: R.lv, sc: R.score, gnm: document.getElementById('gnm').textContent }));
         if (st.end) break; lvSeen.add(st.lv);
         if (st.k === 0 && !/第 1 關/.test(st.gnm)) E.push(tag + ' ' + N + ' 題：上面 沒有 寫「第 1 關」：' + st.gnm);
+        /* 🔓 解碼 任務：每一課 第一題 前 先 有 秒懂 動畫（≧ 20 秒、第一次 不能 跳過）*/
+        if (st.id === 'dc') { const L = await p.evaluate(() => document.getElementById('dcl').classList.contains('on'));
+          if (L) { n++; if (!DCL1) { DCL1 = 1; const a = await p.evaluate(async () => { await new Promise(r => setTimeout(r, 3000)); return { go: !!document.getElementById('dlgo'), sk: !!document.getElementById('dlsk'), c: document.querySelectorAll('#dcl .dlc').length, zh: [...document.querySelectorAll('#dcl .dlc .zh')].every(x => x.textContent.trim()), t: TM.run }; });
+              if (a.go || a.sk || !a.c || !a.zh || a.t) E.push(tag + ' 解碼 動畫：3 秒 就 可以 開始／跳過、沒有 字、或 倒數 在 走：' + JSON.stringify(a));
+              const t0 = Date.now(); await p.waitForSelector('#dlgo', { timeout: 30000 }).catch(() => E.push(tag + ' 解碼 動畫 沒有〔▶ 開始 解碼〕')); if (Date.now() - t0 + 3000 < 19000) E.push(tag + ' 解碼 動畫 不到 20 秒'); await p.evaluate(() => { window.__DCLMIN = 0; }); }
+            else await p.waitForSelector('#dlgo,#dlsk', { timeout: 30000 }).catch(() => E.push(tag + ' 解碼 動畫 沒有〔▶ 開始〕'));
+            await p.click('#dlgo,#dlsk').catch(() => {}); await p.waitForTimeout(250); } }
         const hw = await p.$('#q2go'); if (hw) { await hw.click(); await p.waitForTimeout(150); }
         const wp = await p.$('#wp.on [data-wr]'); if (wp) { await wp.click(); await p.waitForTimeout(250); }
         await p.waitForTimeout(st.id === 'q2' ? 300 : 120);
         const wrong = st.k === 0; await answer(p, { id: st.id }, wrong);
         if (wrong) { await p.waitForSelector('#fbn', { timeout: 15000 }).catch(() => E.push(tag + ' ' + N + ' 題：答錯 沒有〔▶ 下一題〕')); await p.click('#fbn').catch(() => {}); }
         await p.waitForFunction(kk => R.k > kk || !document.querySelector('#endv').hidden, st.k, { timeout: 15000 }).catch(() => E.push(tag + ' ' + N + ' 題 第 ' + (st.k + 1) + ' 題（' + st.id + '）沒有 到 下一題'));
-        if (!wrong) { const s1 = await p.evaluate(() => R.score); if (s1 - st.sc !== 100 / N) { E.push(tag + ' ' + N + ' 題：答對 一題 要 ＋' + (100 / N) + ' 分，現在 ＋' + (s1 - st.sc)); } }
+        if (!wrong) { const s1 = await p.evaluate(() => R.score); if (Math.abs(s1 - st.sc - 100 / N) > .01) { E.push(tag + ' ' + N + ' 題：答對 一題 要 ＋' + (100 / N) + ' 分，現在 ＋' + (s1 - st.sc)); } }
         await p.waitForTimeout(150);
       }
-      n++; if (lvSeen.size !== 10) E.push(tag + ' ' + N + ' 題：沒有 10 關 連著 玩：' + [...lvSeen].join());
+      n++; if (lvSeen.size !== 11) E.push(tag + ' ' + N + ' 題：沒有 11 關 連著 玩：' + [...lvSeen].join());
       n++; const e = await p.evaluate(() => ({ t: document.querySelector('#end').textContent, rows: document.querySelectorAll('#end .xtb tr').length }));
-      const want2 = (N - 1) * (100 / N);
-      if (e.t.indexOf(want2 + ' 分 ／ 100') < 0 || e.rows !== 11 || e.t.indexOf('答對 ' + (N - 1) + ' ／ ' + N) < 0) E.push(tag + ' ' + N + ' 題：結束 頁 不對（要 ' + want2 + ' 分、10 關 表）：' + e.t.slice(0, 80));
+      const want2 = await p.evaluate(() => Math.min(100, Math.round(R.score * 10) / 10));   /* 第 1 題（解碼）故意 錯：放對 幾成 拿 幾成 */
+      if (want2 <= (N - 1) * (100 / N) - .01 || want2 >= 100 || e.t.indexOf(want2 + ' 分 ／ 100') < 0 || e.rows !== 12 || e.t.indexOf('答對 ' + (N - 1) + ' ／ ' + N) < 0) E.push(tag + ' ' + N + ' 題：結束 頁 不對（要 ' + want2 + ' 分、10 關 表）：' + e.t.slice(0, 80));
       n++; const rq = await p.evaluate(N => { const Q = JSON.parse(localStorage.getItem('score_q') || '[]').concat(JSON.parse(localStorage.getItem('score_sent') || '[]')); const r = Q.filter(x => x.set === 'g3gm_g3m-x' + N).pop();
           return r ? { n: r.qs.length, ok: r.qs.filter(q => q[0]).length, bi: r.qs.every(q => q[5] >= 0 && XALL[q[5]]), nm: r.name } : null; }, N);
       if (!rq || rq.n !== N || rq.ok !== N - 1 || !rq.bi || !/三年級 複習｜📝 /.test(rq.nm)) E.push(tag + ' ' + N + ' 題：沒有 記進 成績：' + JSON.stringify(rq));
       if (SHOT) await p.screenshot({ path: path.join(SHOT, 'g3m_x' + N + '_end_' + vp[0] + '.png'), fullPage: true });
       await p.evaluate(() => lobby()); await p.waitForTimeout(200);
+    }
+    /* 2026-10-29 第 3 件：📝 新 25／新 50（題庫 B，50% 類似）*/
+    for (const N of (process.env.ONLY && !/n/.test(process.env.ONLY) ? [] : full ? [25] : [])) {
+      await p.evaluate(N => { window.__DCLMIN = 0; LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0304', t: 1, cfg: { on: 1, t: 1, set: 'n' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9 }; lobby(); }, N); await p.waitForTimeout(200);
+      n++; const lb = await p.evaluate(() => [...document.querySelectorAll('#xrow [data-x],#xrow [data-xr]')].filter(b => (b.closest('.xbw') || b).style.display !== 'none').map(b => (b.dataset.x || b.dataset.xr) + (b.dataset.bk || '')).join());
+      if (lb !== N + 'B') E.push(tag + ' 現場任務 開 新 ' + N + '：大廳 要 只 有〔📝 新 ' + N + '〕' + lb);
+      await p.click('#xrow .xb[data-x="' + N + '"][data-bk="B"]'); await p.waitForTimeout(400);
+      n++; const pl = await p.evaluate(() => ({ c: R.cnt, sim: R.qs.filter(q => q.sim).length, n: R.qs.length, bk: R.bk, inB: R.qs.every(q => XALL2.indexOf(q) >= 0) }));
+      if (pl.n !== N || pl.c[0] !== 8 || pl.sim !== Math.round(N * .5) || pl.bk !== 'B' || !pl.inB) E.push(tag + ' 新 ' + N + ' 題：抽題 不對 ' + JSON.stringify(pl));
+      let guard = 0;
+      while (guard++ < N + 5) {
+        const st = await p.evaluate(() => ({ end: !document.querySelector('#endv').hidden, k: R.k, id: G && G.id }));
+        if (st.end) break; await passL(p);
+        const hw = await p.$('#q2go'); if (hw) { await hw.click(); await p.waitForTimeout(150); }
+        const wp = await p.$('#wp.on [data-wr]'); if (wp) { await wp.click(); await p.waitForTimeout(250); }
+        const id = await p.evaluate(() => G.id); await p.waitForTimeout(id === 'q2' ? 300 : 120); await answer(p, { id }, false);
+        await p.waitForFunction(kk => R.k > kk || !document.querySelector('#endv').hidden, st.k, { timeout: 15000 }).catch(() => E.push(tag + ' 新 ' + N + ' 第 ' + (st.k + 1) + ' 題（' + id + '）沒有 到 下一題')); await p.waitForTimeout(150);
+      }
+      n++; const t = await p.evaluate(() => document.querySelector('#end').textContent); if (!/新 25 題 挑戰：100 分/.test(t)) E.push(tag + ' 新 ' + N + '：結束 頁 不對 ' + t.slice(0, 80));
+      n++; const rq = await p.evaluate(N => { const Q = JSON.parse(localStorage.getItem('score_q') || '[]').concat(JSON.parse(localStorage.getItem('score_sent') || '[]')); const r = Q.filter(x => x.set === 'g3gm_g3m-n' + N).pop(); return r ? { n: r.qs.length, ok: r.qs.filter(q => q[0]).length, bi: r.qs.every(q => q[5] >= 0 && XALL2[q[5]]) } : null; }, N);
+      if (!rq || rq.n !== N || rq.ok !== N || !rq.bi) E.push(tag + ' 新 ' + N + '：沒有 記進 成績 g3gm_g3m-n' + N + ' ' + JSON.stringify(rq));
+      await p.evaluate(() => { window.__DCLMIN = undefined; lobby(); }); await p.waitForTimeout(200);
     }
     n++; if (errs.length) E.push(tag + ' 程式錯誤：' + errs.slice(0, 3).join(' ｜ '));
     await ctx.close();
@@ -197,10 +227,16 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
   process.exit(E.length ? 1 : 0);
 })();
 
+/* 🔓 解碼 動畫 開著 ＝ 快轉 過去（離開／繼續 的 測試 用）*/
+async function passL(p) { if (await p.evaluate(() => document.getElementById('dcl').classList.contains('on'))) { await p.evaluate(() => { window.__DCLMIN = 0; }); await p.waitForSelector('#dlgo,#dlsk', { timeout: 30000 }).catch(() => {}); await p.click('#dlgo,#dlsk').catch(() => {}); await p.waitForTimeout(250); } }
 /* 照真的學生的操作答題：wrong ＝ 故意答錯 */
 async function answer(p, g, wrong) {
   const q = await p.evaluate(() => R.q);
   const tap = async sel => { const el = await p.$(sel); if (!el) { E.push(g.id + '：找不到 ' + sel); return; } await el.click({ force: true }); };
+  if (g.id === 'dc') { await p.waitForSelector('.dctl', { timeout: 5000 }).catch(() => {}); for (let i = 0; i < q.t.length; i++) { const want = q.t[i][1], tl = await p.$$('.dctl:not(.used)'); let pick = null;
+      for (const e of tl) { const t = await e.textContent(); if (wrong && i === 0 ? t !== want : t === want) { pick = e; break; } } if (!pick && wrong) pick = tl[0]; if (!pick) { E.push('解碼：找不到 方塊 ' + want + '｜' + q.en + '｜' + (await p.$$eval('.dctl', x => x.map(e => e.textContent + (e.classList.contains('used') ? '*' : '')).join(' '))) + '｜' + (await p.evaluate(() => R.q.en))); return; }
+      const sl = (await p.$$('.dcs'))[i]; if (i === 0) { const b = await pick.boundingBox(), s = await sl.boundingBox(); await p.mouse.move(b.x + b.width / 2, b.y + b.height / 2); await p.mouse.down(); await p.mouse.move(s.x + s.width / 2, s.y + s.height / 2, { steps: 8 }); await p.mouse.up(); }
+      else { await pick.click(); await sl.click(); } await p.waitForTimeout(40); } return; }
   if (g.id === 'q1') return tap('.hole[data-v="' + (wrong ? q.o[1] : q.o[0]) + '"]');
   if (g.id === 'q8') return tap('.mv[data-o="' + (wrong ? q.o[1] : q.o[0]).replace(/"/g, '\\"') + '"]');
   if (g.id === 'q2') return p.evaluate(k => P2.goK(k), wrong ? 1 : 0);   /* ＝ 點 小 地圖／畫面 上 的 房間：小精靈 自己 走過去 */

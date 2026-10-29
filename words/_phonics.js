@@ -141,6 +141,10 @@ const RAW = {
  years:       'y|j|j e|ɪ|ɪ a|-|- r|r|r s|z|z',
  /* 2026-09-26 使用者指定：Sight Words 進階 Who, Where, When, Why（Who 的 W、其他三個的 h 不發音，淺灰） */
  who:         'w|-|- h|h|h o|uː|u',
+/* 2026-10-29 第三十三次 四年級 新 25／新 50 拼字 泡泡龍：seat 的 a、light 的 gh、late 的 e 不發音 */
+ seat:        's|s|s e|iː|i a|-|- t|t|t',
+ light:       'l|l|l i|aɪ|aɪ gh|-|- t|t|t',
+ late:        'l|l|l a|eɪ|e t|t|t e|-|-',
  where:       'w|w|w h|-|- e|e|ɛ r|r|r e|-|-',
  when:        'w|w|w h|-|- e|e|ɛ n|n|n',
  why:         'w|w|w h|-|- y|aɪ|aɪ',

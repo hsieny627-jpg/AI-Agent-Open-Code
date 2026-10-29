@@ -310,12 +310,27 @@ XB.q4.forEach(function (q) { addS(q.say); });
 var XDA = { XBOYS: XD0.XBOYS }, XN0 = {};
 for (var xn = 1; xn <= 10; xn++) { XN0['q' + xn] = XD0['X' + xn].length; XDA['X' + xn] = XD0['X' + xn].concat(PL.PA['X' + xn]); }
 var XB = mkXB(XDA), XB2 = mkXB(PL.PB);
+/* ══ 2026-10-29 第 2 件：🔓 句子 解碼 任務（_pool.js 的 DA／DB；引擎 _decode.js）══
+   一題 ＝ {en 英文, t [[英文, 中文 方塊]…], x 多 的 錯 方塊, z 整句 中文, u 第幾 課, v 聲音（有 男生 名字 ＝ 男聲）} */
+var DCV = function (en) { return BOYS.some(function (n) { return new RegExp('\\b' + n + '\\b').test(en); }) ? 'm' : ''; };
+function mkDC(L) { return L.map(function (q) { var o = { sim: 0, dc: 1, u: q.u, en: q.en, t: q.t, x: q.x || [], z: q.z, zh: q.z, v: DCV(q.en), say: q.en }; addS(q.en, o.v); return o; }); }
+XB.dc = mkDC(PL.DA); XB2.dc = mkDC(PL.DB);
+/* 每一課 開始 前 的 秒懂 動畫（老師 3(3)：≧ 20 秒；每一個 字 的 中文＋圖示、整句 中文、美式 發音）*/
+var DIC = { What: '❓', "'s": '＝', your: '👉', name: '🏷️', My: '🙋', my: '🙋', is: '＝', I: '🙋', "'m": '＝', 'How old': '🎂❓', are: '＝', you: '👉', 'years old': '🎂', Hi: '👋', Hello: '👋' };
+function lesT(en) { return PL.sent(en).map(function (p) { var w = p[0].replace(/[.,?!]+$/, ''), n = NUMW.indexOf(w.toLowerCase()), ic = DIC[w] || (n > 0 ? ['', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'][n] : BOYS.indexOf(w) >= 0 ? '🧒' : '👧'); return [p[0], p[1], ic]; }); }
+function lesS(en) { var v = DCV(en); addS(en, v); return { en: en, v: v, t: lesT(en), z: PL.ZH(en) }; }
+var LES = {
+  A: { 1: { key: 'g3A1', title: 'Unit 1 解碼 秘笈', sub: 'What’s your name?　問 名字', s: ["What's your name?", 'My name is Bill.', "I'm Sally.", "Hi, I'm Mark."].map(lesS) },
+    2: { key: 'g3A2', title: 'Unit 2 解碼 秘笈', sub: 'How old are you?　問 幾歲', s: ['How old are you?', "I'm eight years old.", "I'm ten.", "Hello, I'm Ruby. I'm seven."].map(lesS) } },
+  B: { 1: { key: 'g3B1', title: 'Unit 1 解碼 秘笈', sub: 'What’s your name?　問 名字', s: ["What's your name?", 'My name is Jake.', "I'm Bella.", "Hi, I'm Fred."].map(lesS) },
+    2: { key: 'g3B2', title: 'Unit 2 解碼 秘笈', sub: 'How old are you?　問 幾歲', s: ['How old are you?', "I'm nine years old.", "I'm six.", "Hello, I'm Daisy. I'm four."].map(lesS) } } };
 /* 挑戰 題庫 的「第幾題」（成績 用）：原本 80 題 的 順序 不變（舊 成績 對得上），新 的 60 題 接在 後面 ＝ [遊戲, 那一種 的 第幾題] */
 var XORD = [];
 ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'].forEach(function (id) { for (var j = 0; j < XN0[id]; j++) XORD.push([id, j]); });
 ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'].forEach(function (id) { for (var j = XN0[id]; j < XB[id].length; j++) XORD.push([id, j]); });
+for (var dj = 0; dj < XB.dc.length; dj++) XORD.push(['dc', dj]);   /* 🔓 解碼 任務 60 題 接 在 最後 */
 var XORD2 = [];
-['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'].forEach(function (id) { for (var j = 0; j < XB2[id].length; j++) XORD2.push([id, j]); });
+['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'dc'].forEach(function (id) { for (var j = 0; j < XB2[id].length; j++) XORD2.push([id, j]); });
 
 /* ══ 2026-10-26 第二十九次 第 1 點：🏫 三年級 課堂複習 1、2、3（_class_data.js，老師 C31 說「對」）➜ 跟 G1～G10 一樣 的 樣子（CB.c1.q1…）══
    只能 在〔⚡ 現場任務〕開（g3mid/index.html?cr=…，老師 大螢幕 選），在家複習 沒有；成績 g3gm_c1-q1…（老師看板〔🏫 課堂複習〕大表）。
@@ -357,5 +372,5 @@ CD.SETS.forEach(function (x) { var k = x[0], B = CB[k] = {};
 
 /* 2026-10-26 第二十六次 第 1-1 點（老師：打地鼠 單字 模糊、太快）：打地鼠 的 字 另外 做 慢的（audio/m1 語速 0.78）、更慢的（audio/m2 語速 0.62，〔🐢 慢慢 唸〕）*/
 var SAYM = G1.map(function (q) { return q.say; }).concat(XB.q1.concat(XB2.q1).map(function (q) { return q.say; })).concat([].concat.apply([], Object.keys(CB).map(function (k) { return CB[k].q1.map(function (q) { return q.say; }); }))).filter(function (x, i, a) { return a.indexOf(x) === i; });
-module.exports = { XB2: XB2, XORD: XORD, XORD2: XORD2, XN0: XN0, CB: CB, CSETS: CD.SETS, CZH: CZH, ORD: ORD, XB: XB, SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
+module.exports = { LES: LES, SIL: require('../G3 - L1 + L2/_data.js').SIL, XB2: XB2, XORD: XORD, XORD2: XORD2, XN0: XN0, CB: CB, CSETS: CD.SETS, CZH: CZH, ORD: ORD, XB: XB, SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
   EXAM_A: EXAM_A, EXAM_D: EXAM_D, EXAM_E: EXAM_E };

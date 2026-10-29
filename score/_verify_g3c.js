@@ -16,6 +16,7 @@ function seed() { const G = make({ TEACHER_PW: PW });
   G.books['角色'].d.push(['30401', JSON.stringify({ tr: 3, trt: [1, 2, 3] }), new Date()], ['30402', JSON.stringify({ tr: 5, trt: [1, 2, 3, 4, 5] }), new Date()]);
   G.post({ a: 'qsub', id: '30401', zh: '我 是 Amy。', o: ["I'm Amy.", "I'm nine.", "You're Amy.", 'My Amy.'] });
   rec('30401', 'g3gm_g3m-q1', Q(6, 8), 'a'); rec('30402', 'g3gm_g3m-q1', Q(4, 8), 'b'); rec('30402', 'g3gm_g3m-q2', Q(3, 3), 'c'); rec('30401', 'g3gm_c1-q1', Q(8, 8), 'd'); rec('30703', 'g3gm_g3m-q1', Q(2, 8), 'e');
+  /* 2026-10-29 第 6 件：期中 挑戰：01 號 25 題 對 24（96 分）、02 號 新 25 題 對 20（80 分）*/ rec('30401', 'g3gm_g3m-x25', Q(24, 25), 'f'); rec('30402', 'g3gm_g3m-n25', Q(20, 25), 'g');
   return G; }
 let HTTP = '';
 function serve() { return new Promise(ok => { const T = { '.html': 'text/html', '.js': 'text/javascript', '.woff2': 'font/woff2', '.css': 'text/css' };
@@ -66,14 +67,26 @@ async function teacher(br, vp) {
   n++; await p.click('[data-g3s="g3m"]'); await p.waitForTimeout(200); c = await cellOf(); const a1 = c.rows.find(r => r[0] === '01'); if (!a1 || a1[2] !== '75') e.push('〔三年級 複習〕只 算 g3m：01 號 要 75 ' + JSON.stringify(a1));
   n++; await p.click('[data-g3s="c1"]'); await p.waitForTimeout(200); c = await cellOf(); const b1 = c.rows.find(r => r[0] === '01'), b2 = c.rows.find(r => r[0] === '02'); if (!b1 || b1[2] !== '100' || !b2 || b2[2] !== '—') e.push('〔課堂複習 1〕不對 ' + JSON.stringify([b1, b2]));
   n++; await p.click('[data-g3s="all"]'); await p.click('[data-g3c="307"]'); await p.waitForTimeout(200); c = await cellOf(); const d3 = c.rows.find(r => r[0] === '03'); if (!d3 || d3[2] !== '25') e.push('307 班 03 號 要 25 ' + JSON.stringify(d3));
+  /* 2026-10-29 第 6 件：〔📝 三年級 期中 挑戰〕＝ 學生 成績＋錯題 分析＋錯題 排行榜（點 ＝ 詳解＋全班 訂正）*/
+  n++; await p.click('[data-g3s="x3"]'); await p.click('[data-g3c="304"]'); await p.waitForTimeout(250);
+  const x3 = await p.evaluate(() => { const rows = [].map.call(document.querySelectorAll('.g3t tr'), tr => [].map.call(tr.children, td => td.childNodes[0] ? td.childNodes[0].textContent.trim() : ''));
+    return { r1: rows.find(r => r[0] === '01'), r2: rows.find(r => r[0] === '02'), an: document.querySelectorAll('.xan>div').length, wq: document.querySelectorAll('.wq[data-qx]').length, h: [].map.call(document.querySelectorAll('.xh'), x => x.textContent).join('|'),
+      sm: [].filter.call(document.querySelectorAll('#pane .xan *, #pane .xh, #pane .wq b'), x => x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < 17).length, ox: document.documentElement.scrollWidth - innerWidth }; });
+  if (!x3.r1 || x3.r1[2] !== '96' || !x3.r2 || x3.r2[4] !== '80' || !x3.an || x3.wq < 5 || !/學生 成績/.test(x3.h) || !/錯題 分析/.test(x3.h) || !/錯題 排行榜/.test(x3.h) || x3.sm || x3.ox > 1) e.push('〔期中 挑戰〕不對 ' + JSON.stringify(x3).slice(0, 300));
+  n++; await p.click('.wq[data-qx]'); await p.waitForTimeout(300); const md = await p.evaluate(() => ({ on: document.getElementById('modal').classList.contains('on'), o: document.querySelectorAll('#mbox .opt').length, sh: !!document.getElementById('sh') }));
+  if (!md.on || md.o < 2 || !md.sh) e.push('〔期中 挑戰〕錯題 詳解 打不開 ' + JSON.stringify(md));
+  await p.click('#mx').catch(() => {}); await p.waitForTimeout(150);
   n++; if (SC.cat('g3gm_g3m-q1').k !== 'g3c' || SC.cat('g3gm_c2-q10').k !== 'g3c' || SC.cat('g4gm_mt-m1').k !== 'mt') e.push('類別 不對');
   if (process.env.SHOT) await p.screenshot({ path: path.join(process.env.SHOT, 'g3c_' + vp[0] + '.png'), fullPage: true });
   /* ⚔ 階級 能力（第二十七次）：學生 出 的 題 ➜〔✔ 可以〕存好；小老師、名人堂 有 名字 */
+  /* 2026-10-27 第三十二次 第 1 點：〔⚔ 階級 能力〕暫時 拿掉 ➜ 分頁 在 才 量 */
+  if (await p.$('#tabs button[data-t="a"]')) {
   await p.click('#tabs button[data-t="a"]'); await p.waitForTimeout(300);
   n++; const a0 = await p.evaluate(() => ({ q: document.querySelectorAll('.qsc [data-qv="1"]').length, t: document.getElementById('pane').textContent, sm: [].filter.call(document.querySelectorAll('.qsc, .abl div'), x => parseFloat(getComputedStyle(x).fontSize) < 20).length }));
   if (a0.q !== 1 || !/我 是 Amy/.test(a0.t) || !/測試02/.test(a0.t) || !/名人堂/.test(a0.t) || a0.sm) e.push('階級 能力 分頁 ' + JSON.stringify(a0).slice(0, 200));
   await p.click('.qsc [data-qv="1"]'); await p.waitForTimeout(500);
   n++; const q1 = await p.evaluate(() => document.getElementById('pane').textContent); if (!/已經 放進 現場任務/.test(q1) || !/存好了/.test(q1)) e.push('〔✔ 可以〕沒有 存好');
+  }
   /* 📱 給家長（第二十七次 第 2 點）：一人 一則、有 練 ＝ 天數 次數＋請 稱讚；沒 練 ＝ 請 鼓勵；字 夠大；〔📋 複製〕 */
   await p.click('#tabs button[data-t="m"]'); await p.waitForTimeout(300); await p.click('[data-pmc="304"]'); await p.waitForTimeout(200);
   n++; const pm = await p.evaluate(() => ({ n: document.querySelectorAll('.pmsg').length, t1: (document.getElementById('pm30401') || {}).textContent || '', t5: (document.getElementById('pm30405') || {}).textContent || '',

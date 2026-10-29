@@ -566,3 +566,10 @@ body.tshk{animation:tshk .45s linear 2}@keyframes tshk{25%{transform:translate(4
 .crj{display:inline-flex;align-items:center;justify-content:center;min-width:56px;height:44px;padding:0 10px;border-radius:12px;background:#1E3A2A;border:2px solid #2BD46A;font-size:clamp(20px,1.8vw,26px);font-weight:900}.crj.ok{background:#2BD46A;color:#06301A}
 .crjh{font-size:clamp(22px,2.2vw,30px);font-weight:900;color:#FFE07A}
 .crxb{border-color:#FFD54A!important}
+
+/* ══ 2026-10-29 第三十三次 第 8 件（老師 C35 第 2 題「對」）：現場任務 新 樣子 ＝ 深紫 舞台、白色 大 圓角 卡、四色＋形狀 答案、名牌 跳 進來、圓形 倒數 ══ */
+body.host[data-scr=hlob],body.host[data-scr=hq],body.host[data-scr=hlb],body.host[data-scr=hgo]{background-color:#2A0E5C;background-image:radial-gradient(1100px 700px at 50% -10%,#5B2AAE 0,transparent 62%),radial-gradient(900px 600px at 50% 120%,#3B137D 0,transparent 60%)}
+body.host[data-scr=hq] .qq{border-radius:28px;box-shadow:0 10px 0 rgba(0,0,0,.25),0 14px 40px rgba(0,0,0,.45)}
+.seats .st.on{animation:none}.seats .st.on.nw{animation:stJump .8s cubic-bezier(.3,1.7,.5,1)}
+@keyframes stJump{0%{transform:translateY(-60px) scale(.4);opacity:0}60%{transform:translateY(6px) scale(1.12);opacity:1}100%{transform:none}}
+body.host[data-scr=hq] .ring{box-shadow:0 0 0 6px rgba(255,255,255,.15)}

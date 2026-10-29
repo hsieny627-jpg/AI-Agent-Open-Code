@@ -292,8 +292,58 @@ M2.concat(XB.m2).forEach(c => c.pair.forEach(x => SAYM.push(x))); M1.concat(XB.m
 Object.keys(PAS).forEach(k => PAS[k].t.forEach(x => SAYS.push(x)));
 /* 檢查：每一題 o[0] 是正解、選項不重複、題數 ≧ 10 */
 GAMES.forEach(g => { if (g.B.length < 10) throw new Error(g.id + ' 題目 太少'); g.B.forEach((c, i) => { if (new Set(c.o).size !== c.o.length) throw new Error(g.id + ' 第 ' + (i + 1) + ' 題 選項 重複：' + c.o.join('／')); }); });
+/* ══ 2026-10-29 第 2 件：🔓 句子 解碼 任務（_pool.js 的 DA／DB；引擎 g3mid/_decode.js，三、四年級 共用）══ */
+const dcKey = w => w.replace(/[.,?!]+$/, '').replace(/’/g, "'").toLowerCase();
+const mkDC = L => L.map(q => { const gx = {}; q.t.forEach(p => { gx[dcKey(p[0])] = p[1]; });
+  return { sim: 0, dc: 1, u: q.u, en: q.en, t: q.t, x: q.x || [], z: q.z, q: '🔓 ' + q.z, o: [q.en, '❌ 放錯 了'], ae: q.en, fe: q.en, fz: q.z, fs: [['', q.en]], gx }; });
+XB.dc = mkDC(PL.DA);
+const XB2 = { dc: mkDC(PL.DB) };
+/* ══ 2026-10-29 第 5 件：題庫 B ＝ 四年級 6 種 全新 遊戲（_pool.js 的 NB／NGAME，老師 C36「對」）➜ 跟 XB 一樣 的 樣子（答錯頁 的 fe／fz／fs 算好）══ */
+Object.keys(PL.PASB).forEach(k => { PAS[k] = PL.PASB[k]; });
+const NUMW4 = { 11: 'eleven', 12: 'twelve', 13: 'thirteen', 14: 'fourteen', 15: 'fifteen', 16: 'sixteen', 17: 'seventeen', 18: 'eighteen', 19: 'nineteen', 20: 'twenty', 80: 'eighty' };
+Object.assign(GL, { peach: '桃子', dip: '浸泡', tip: '尖端', top: '頂端', den: '洞穴', big: '大的', dolphin: '海豚', donut: '甜甜圈', potato: '馬鈴薯', tiger: '老虎', table: '桌子', panda: '貓熊', banana: '香蕉', bird: '鳥', eighty: '八十', seat: '座位', light: '燈', late: '遲到的', who: '誰', have: '有', come: '來', in: '進來', sorry: '抱歉', that: '那', look: '看' });
+XB2.n1 = PL.NB.N1.map(r => { if (r[1] === 'L') { const w = r[2], o = [w[0]].concat(['b', 'd', 'p', 't'].filter(c => c !== w[0]));
+    return { sim: r[0], kind: 'L', say: w, w, ic: r[3], q: '🔊 聽：' + w + '　第一個字母是？', o, z: w + '（' + r[4] + '）', fe: w, fz: w + ' ＝ ' + r[4] + '；第一個 字母 ＝ ' + w[0], fs: [['M1', w]] }; }
+  const a = r[2], b = r[3], same = a[0] === b[0];
+  return { sim: r[0], kind: 'S', say: a + '. ' + b + '.', pair: [a, b], q: '🔊 聽：' + a + '、' + b + '　第一個音？', o: same ? ['⭕ Same', '❌ Different'] : ['❌ Different', '⭕ Same'],
+    z: a + ' 是 ' + a[0] + '，' + b + ' 是 ' + b[0] + ' ➜ ' + (same ? '一樣' : '不一樣'), fe: a + ' ' + b, fz: a + ' 是 ' + a[0] + '，' + b + ' 是 ' + b[0] + ' ➜ ' + (same ? '一樣' : '不一樣'), fs: [['M1', a], ['M1', b]] }; });
+XB2.n2 = PL.NB.N2.map(([sm, t, a, b, zh]) => ({ sim: sm, say: t, pic: 1, q: '🔊 聽：' + t, o: [a].concat(b), oz: [a].concat(b).map(picZh), z: zh, ae: t, fe: t, fz: zh, fs: [['', t]] }));
+XB2.n3 = PL.NB.N3.map(([sm, t, a, d, zh]) => { const num = /^\d+$/.test(a), one = !/\s/.test(t);
+  return { sim: sm, say: t, num: num ? 1 : 0, photo: num ? 0 : 1, q: '🔊 聽：' + t, o: [a].concat(d), oz: num ? null : [a].concat(d).map(x => CE.filter(y => y[1] === x)[0][0]), z: zh, ae: t, fe: t, fz: zh.replace(t + ' ＝ ', '') === zh ? zh : t + ' ＝ ' + a, fs: [[one ? 'M1' : '', t]] }; });
+XB2.n4 = PL.NB.N4.map(([sm, who, line, o, zh]) => { const L = who === 'A' ? [line, o[0]] : [o[0], line], blank = /___/.test(line);
+  const fe = blank ? line.replace('___', o[0]).replace(' — ', ' ') : L.join(' ');
+  return { sim: sm, chat: who, line, blank: blank ? 1 : 0, q: who === 'A' ? 'A：' + line + '　B 要 回答？' : 'B 回答：' + line + '　A 問了 什麼？', o, z: zh, ae: blank ? fe : o[0], fe, fz: zhClean(zh), fs: blank ? [['', line.split(' — ')[0].replace('___', o[0])], ['m', line.split(' — ')[1]]] : [['', L[0]], ['m', L[1]]] }; });
+XB2.n5 = PL.NB.N5.map(([sm, w, ic, zh]) => ({ sim: sm, spell: w, ic, zhw: zh, q: '🫧 拼字：（' + w[0] + '＿' + w.slice(-1) + '）', o: [w, '（拼錯）'], z: w + ' ＝ ' + zh, ae: w, fe: w, fz: w + ' ＝ ' + zh, fs: [['M1', w]], lc: lcOf(w.toLowerCase()) }));
+const N6JOB = { grandpa: 'farmer', grandma: 'cook', dad: 'doctor', mom: 'teacher', brother: 'student', sister: 'student' };
+const N6Z = { 'Look! She’s my grandmother.': '看！她 是 我的 奶奶。', 'This is my dad.': '這 是 我的 爸爸。', 'He’s my brother. He’s eleven.': '他 是 我的 哥哥。他 十一 歲。', 'She’s my mom.': '她 是 我的 媽媽。',
+  'This is my sister.': '這 是 我的 姊姊。', 'He’s a farmer. Who’s he?': '他 是 農夫。他 是 誰？', 'She’s a teacher. Who’s she?': '她 是 老師。她 是 誰？', 'He’s a doctor. Who’s he?': '他 是 醫生。他 是 誰？',
+  'She’s a cook. Who’s she?': '她 是 廚師。她 是 誰？', 'He’s a student. Who’s he?': '他 是 學生。他 是 誰？', 'She’s my sister. Is she a student? Yes, she is.': '她 是 我的 姊姊。她 是 學生 嗎？是的，她 是。',
+  'He’s my grandpa. Is he a farmer? Yes, he is.': '他 是 我的 爺爺。他 是 農夫 嗎？是的，他 是。' };
+XB2.n6 = PL.NB.N6.map(r => { if (r[1] === 'P') { const [sm, , p, qq, o, ev] = r, ae = PAS[p].t[ev];
+    return { sim: sm, room: 'P', pas: p, ev, q: '📖 ' + qq, o, z: ae + '　' + PAS[p].z[ev], ae, fe: ae, fz: PAS[p].z[ev], fs: [['', ae]] }; }
+  const [sm, , line, who] = r, M = { grandpa: 1, dad: 1, brother: 1 }, gen = { grandpa: 0, grandma: 0, dad: 1, mom: 1, brother: 2, sister: 2 };
+  const o = [who].concat(TREE.filter(x => x !== who && !!M[x] === !!M[who]), TREE.filter(x => gen[x] === gen[who] && x !== who));
+  if (!N6Z[line]) throw new Error('密室 逃脫 沒有 翻譯：' + line);
+  return { sim: sm, room: 'T', tree: 1, line, q: '🌳 ' + line + '　點 這一個 人', o: [...new Set(o)], oz: [...new Set(o)].map(x => WHO[x][1]), z: line + '　' + N6Z[line], ae: line, fe: line, fz: N6Z[line], fs: [['', line]], jobs: N6JOB }; });
+const NGAME = PL.NGAME.map((g, i) => ({ id: g.id, ic: g.ic, nm: g.nm, how: g.how.split('；')[0].split('。')[0], t: [20, 20, 25, 20, 30, 30][i] }));
+Object.keys(XB2).forEach(id => XB2[id].forEach(q => { if (q.fe) q.gx = q.gx || gxOf(q.fe); }));
+
+/* 每一課 開始 前 的 秒懂 動畫（≧ 20 秒）：考卷 的 句子 不用 */
+const DIC4 = { Who: '❓', '’s': '＝', he: '👦', she: '👧', He: '👦', She: '👧', my: '🙋', your: '👉', Is: '❓', is: '＝', a: '1️⃣', Yes: '✅', No: '❌', 'isn’t': '🚫' };
+const icOf = w => { const c = w.replace(/[.,?!]+$/, ''); if (DIC4[c]) return DIC4[c]; const f = { father: 'dad', mother: 'mom', grandfather: 'grandpa', grandmother: 'grandma' }[c] || c; return WHO[f] ? WHO[f][0] : JOB[c] ? JOB[c][0] : ''; };
+const lesS = en => ({ en, v: '', t: PL.sent4(en).map(p => [p[0], p[1], icOf(p[0])]), z: PL.zh4(en) });
+const LES = {
+  A: { 1: { key: 'g4A1', title: 'Unit 1 解碼 秘笈', sub: 'Who’s he?　他 是 誰？', s: ['Who’s he?', 'He’s my grandpa.', 'Who’s she?', 'She’s my sister.'].map(lesS) },
+    2: { key: 'g4A2', title: 'Unit 2 解碼 秘笈', sub: 'Is he a doctor?　他 是 醫生 嗎？', s: ['Is he a doctor?', 'Yes, he is.', 'Is she a cook?', 'No, she isn’t. She’s a teacher.'].map(lesS) } },
+  B: { 1: { key: 'g4B1', title: 'Unit 1 解碼 秘笈', sub: 'Is he your brother?　他 是 你的 哥哥 嗎？', s: ['Who’s he?', 'Is he your brother?', 'Yes, he is.', 'Is she your mom? No, she isn’t.'].map(lesS) },
+    2: { key: 'g4B2', title: 'Unit 2 解碼 秘笈', sub: 'Is your dad a farmer?　你的 爸爸 是 農夫 嗎？', s: ['Is your dad a farmer?', 'Yes, he is.', 'Is your sister a student?', 'No, she isn’t.'].map(lesS) } } };
+XB.dc.concat(XB2.dc).forEach(q => SAYS.push(q.en));
+Object.keys(XB2).filter(k => k !== 'dc').forEach(k => XB2[k].forEach(c => { [c.say, c.ae, c.line].forEach(x => { if (x && !/^[⭕❌]/.test(x)) SAY.push(x); }); if (c.chat) c.o.forEach(x => SAY.push(x)); (c.fs || []).forEach(([v, t]) => { if (v === 'M1') SAYM.push(t); else SAYS.push((v === 'm' ? 'm:' : '') + t); }); if (c.pair) c.pair.forEach(x => SAYM.push(x)); if (c.w) SAYM.push(c.w); if (c.kind === 'L' || c.num) SAYM.push(c.say); })); ['A', 'B'].forEach(b => [1, 2].forEach(u => LES[b][u].s.forEach(x => SAYS.push(x.en))));   /* 🔓 解碼 任務、秒懂 動畫 */
 /* 挑戰 題庫 的「第幾題」（成績 用）：原本 84 題 照 原來 順序，新 的 60 題 接 在 後面 */
 const XORD = [];
 GAMES.forEach(g => { for (let j = 0; j < XN0[g.id]; j++) XORD.push([g.id, j]); });
 GAMES.forEach(g => { for (let j = XN0[g.id]; j < XB[g.id].length; j++) XORD.push([g.id, j]); });
-module.exports = { XORD, XN0, XB, GAMES, SEC, WHO, JOB, PAS, PHOTO, TREE, SAY, SAYS: [...new Set(SAYS)], SAYM: [...new Set(SAYM)], GL, picZh };
+for (let j = 0; j < XB.dc.length; j++) XORD.push(['dc', j]);   /* 🔓 解碼 任務 56 題 接 在 最後 */
+const XORD2 = [];   /* 新 25／新 50 的「第幾題」＝ n1～n6 照 順序，🔓 解碼 任務 在 最後 */
+['n1', 'n2', 'n3', 'n4', 'n5', 'n6', 'dc'].forEach(id => { for (let j = 0; j < XB2[id].length; j++) XORD2.push([id, j]); });
+module.exports = { XORD2, NGAME, LES, XB2, XORD, XN0, XB, GAMES, SEC, WHO, JOB, PAS, PHOTO, TREE, SAY, SAYS: [...new Set(SAYS)], SAYM: [...new Set(SAYM)], GL, picZh };

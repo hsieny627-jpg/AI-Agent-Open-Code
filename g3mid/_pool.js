@@ -190,4 +190,4 @@ var DA = dragSet(BA.concat(GA), [2, 3, 4, 5, 6, 7, 8, 9, 10], 1);
 var DB = dragSet(BB.concat(GB), [10, 9, 8, 7, 6, 5, 4, 3, 2], 2);
 /* ZH 的 Hi, I'm ＋ What's 一起 的 句子 補 翻譯 */
 
-module.exports = { BA: BA, GA: GA, BB: BB, GB: GB, PA: PA, PB: PB, DA: DA, DB: DB };
+module.exports = { BA: BA, GA: GA, BB: BB, GB: GB, PA: PA, PB: PB, DA: DA, DB: DB, sent: sent, ZH: ZH };

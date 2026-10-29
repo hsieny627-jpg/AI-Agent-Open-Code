@@ -106,7 +106,9 @@ var SC = (function () {
   function mean(a) { if (!a.length) return null; var s = 0; for (var i = 0; i < a.length; i++) s += a[i]; return s / a.length; }
 
   /* 一題的紀錄：[答對 1/0, 選了第幾個（0 ＝ 正解，-1 ＝ 時間到）, 用了幾秒, 秒按 1/0, 剩下秒數 ÷ 總秒數] */
-  function xN(set) { var m = /_(g3m|mt)-x(25|50)$/.exec(String(set)); return m ? +m[2] : 0; }   /* 📝 25／50 題 挑戰 的 題數 */
+  function xN(set) { var m = /_(g3m|mt)-[xn](25|50)$/.exec(String(set)); return m ? +m[2] : 0; }   /* 📝 25／50 題 挑戰 的 題數（2026-10-29：n25／n50 ＝ 新 25／新 50）*/
+  /* 2026-10-29 第三十三次：🔓 句子 解碼 任務「一個 字 一個 字 算」：答錯 的 題目 第 5 格 ＝ 放對 幾成（其他 答錯 ＝ 0）➜ 答對 題數 ＋ 放對 幾成 */
+  function xOk(Q) { var k = 0; for (var i = 0; i < Q.length; i++) k += Q[i][0] ? 1 : Q[i][4]; return k; }
   function s100(qs) {
     var n = qs.length, s = 0;
     for (var i = 0; i < n; i++) if (qs[i][0]) s += 60 / n + 40 / n * Math.max(0, Math.min(1, +qs[i][4] || 0));
@@ -153,7 +155,7 @@ var SC = (function () {
     var ok = 0, f = 0; for (i = 0; i < Q.length; i++) { ok += Q[i][0]; f += Q[i][3]; }
     var t = +o.t; if (!(t > now - 30 * DAY && t < now + 5 * 6e4)) t = now;   /* 平板時間不對就用伺服器時間；沒網路補送的照當時 */
     return { t: t, id: c.id, g: c.g, cls: c.cls, seat: c.seat, set: set, name: String(o.name || '').slice(0, 60), m: m, n: Q.length, ok: ok,
-      acc: noQ(m) ? null : Math.round(ok / Q.length * 100), s: noQ(m) ? null : xN(set) ? Math.min(100, Math.round(ok * 1000 / xN(set)) / 10) : s100(Q),   /* 2026-10-26 第二十八次：📝 25／50 題 挑戰 ＝ 答對 一題 4／2 分（沒 做完 的 算 0 分）*/ fix: lim(o.fix, 0, 999),
+      acc: noQ(m) ? null : Math.round(ok / Q.length * 100), s: noQ(m) ? null : xN(set) ? Math.min(100, Math.round(xOk(Q) * 1000 / xN(set)) / 10) : s100(Q),   /* 2026-10-26 第二十八次：📝 25／50 題 挑戰 ＝ 答對 一題 4／2 分（沒 做完 的 算 0 分）*/ fix: lim(o.fix, 0, 999),
       mp: m === 'mem' ? lim(o.mp, 0, 999) : 0, mw: m === 'mem' ? lim(o.mw, 0, 9999) : 0, sec: m === 'l' ? 0 : lim(o.sec, 0, 3600),
       raw: lim(o.raw, 0, 1e8), fast: f,
       src: o.src === 'home' ? 'home' : 'school', dev: String(o.dev || '').replace(/[^\w]/g, '').slice(0, 12), u: String(o.u || '').replace(/[^\w]/g, '').slice(0, 24), qs: Q, x: false };
