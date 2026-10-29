@@ -77,8 +77,8 @@ Object.keys(SITES).forEach(dir => {
 /* 原：四年級 期中複習（2026-10-19 第十三次 3(11)）：g4gm_mt-遊戲（midterm/_data.js；o[0] ＝ 正解，跟 網頁 送 的「選了 第幾個」一樣） */
 { const MT = require(path.join(__dirname, '..', 'midterm', '_data.js'));
   MT.GAMES.forEach(g => put('g4gm_mt-' + g.id, { name: '📝 四年級 複習｜' + g.ic + ' ' + g.nm, qs: g.B.map(c => ({ k: 'g', kn: '📝 四年級 複習', q: txt(c.q), o: (c.oz || c.o).map(txt), h: txt(c.z || ''), ae: c.ae || '' })) }));
-  /* 2026-10-26 第二十八次：📝 25／50 題 挑戰（g4gm_mt-x25／x50）：題庫 ＝ 12 種 遊戲 的 挑戰 題庫 照 順序 接起來（跟 網頁 的 XOFF 一樣）*/
-  [25, 50].forEach(N => put('g4gm_mt-x' + N, { name: '📝 四年級 複習｜📝 ' + N + ' 題 挑戰', qs: [].concat(...MT.GAMES.map(g => MT.XB[g.id].map(c => ({ k: 'g', kn: '📝 四年級 複習', q: txt(g.ic + ' ' + c.q), o: (c.oz || c.o).map(txt), h: txt(c.z || ''), ae: c.ae || '' })))) })); }
+  /* 2026-10-26 第二十八次：📝 25／50 題 挑戰（g4gm_mt-x25／x50）：題庫 ＝ 12 種 遊戲 的 挑戰 題庫 照 順序 接起來（2026-10-28 起 照 MT.XORD（跟 網頁 的 XG 一樣））*/
+  [25, 50].forEach(N => put('g4gm_mt-x' + N, { name: '📝 四年級 複習｜📝 ' + N + ' 題 挑戰', qs: MT.XORD.map(([id, j]) => { const g = MT.GAMES.filter(x => x.id === id)[0], c = MT.XB[id][j]; return { k: 'g', kn: '📝 四年級 複習', q: txt(g.ic + ' ' + c.q), o: (c.oz || c.o).map(txt), h: txt(c.z || ''), ae: c.ae || '' }; }) })); }   /* 2026-10-28：照 XORD */
 /* 🏫 三年級 複習（2026-10-26 第二十七次 第 1-(3) 點：成績 進 老師看板）：g3gm_g3m-遊戲（g3mid/_data.js；o[0] ＝ 正解；寫字題 o ＝ [要寫 的 字母]） */
 { const G3 = require(path.join(__dirname, '..', 'g3mid', '_data.js')), NW = G3.NUMW;
   const SCZ = { thank: '謝謝／不客氣', meet: '很高興認識你', help: '找不到狗／幫忙', come: '過來這裡', morn: '早安' }, CEZ = {}; G3.CE.forEach(c => { CEZ[c.k] = c.zh; });
@@ -89,7 +89,7 @@ Object.keys(SITES).forEach(dir => {
   /* 2026-10-26 第二十九次 第 1 點：🏫 課堂複習 1、2、3（g3gm_c1-q1…；只在 ⚡ 現場任務 開）*/
   G3.CSETS.forEach(x => G3.GAMES.forEach(g => put('g3gm_' + x[0] + '-' + g.id, { name: '🏫 ' + x[1].replace('三年級 ', '') + '｜' + g.ic + ' ' + g.nm, qs: G3.CB[x[0]][g.id].map(c => ({ k: 'g', kn: '🏫 三年級 複習', q: txt(qOf(g.id, c)), o: oOf(g.id, c).map(y => txt(String(y))), h: txt(c.zh || ''), ae: c.en || '' })) })));
   /* 2026-10-26 第二十八次：📝 25／50 題 挑戰（g3gm_g3m-x25／x50）：題庫 ＝ 10 種 遊戲 的 挑戰 題庫 照 順序 接起來（跟 網頁 的 XALL 一樣）*/
-  [25, 50].forEach(N => put('g3gm_g3m-x' + N, { name: '🏫 三年級 複習｜📝 ' + N + ' 題 挑戰', qs: [].concat(...G3.GAMES.map(g => G3.XB[g.id].map(c => ({ k: 'g', kn: '🏫 三年級 複習', q: txt(g.ic + ' ' + qOf(g.id, c)), o: oOf(g.id, c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })))) })); }
+  [25, 50].forEach(N => put('g3gm_g3m-x' + N, { name: '🏫 三年級 複習｜📝 ' + N + ' 題 挑戰', qs: G3.XORD.map(([id, j]) => { const g = G3.GAMES.filter(x => x.id === id)[0], c = G3.XB[id][j]; return { k: 'g', kn: '🏫 三年級 複習', q: txt(g.ic + ' ' + qOf(id, c)), o: oOf(id, c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' }; }) })); }   /* 2026-10-28：照 XORD */
 /* 🏰 守城、🎣 釣魚（2026-10-26 第二十九次 第 3 點；在家複習 版）：題目 ＝ fun/_pool.json（fun/_build.js 做 的，第幾題 跟 網頁 一樣）*/
 if (fs.existsSync(path.join(__dirname, '..', 'fun', '_pool.json'))) { const FP = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'fun', '_pool.json'), 'utf8'));
   [3, 4].forEach(g => [['fun-castle', '🏰 守城 大作戰（在家）'], ['fun-fish', '🎣 英文 釣魚 大賽（在家）']].forEach(x => put('g' + g + 'gm_' + x[0], { name: x[1], qs: (FP[g] || []).map(q => ({ k: 'g', kn: '🎮 遊戲', q: txt(q.q), o: q.o.map(y => txt(String(y))), h: '', ae: q.ae || '', ag: q.ag || [], az: q.az || '', au: q.au || '' })) }))); }
@@ -151,7 +151,7 @@ Object.keys(BANK).forEach(k => { if (/_fun-/.test(k)) return;   /* 🏰 守城�
 { const G3 = require(path.join(ROOT, 'g3mid', '_data.js')), A3 = audOf('g3mid'), W3 = (() => { const f = path.join(ROOT, 'g3mid', 'audio', 'w', 'aud.js'); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8').replace(/^[\s\S]*?window\.\w*=/, '').replace(/;\s*$/, '')) : {}; })();
   const tk = e => { const r = [], re = /([A-Za-z][A-Za-z\-]*)(’|')(s|m|re)\b|[A-Za-z][A-Za-z\-’']*|\d+|[.,?!]/g; let m; while ((m = re.exec(e))) { if (m[2]) r.push(m[1], "'" + m[3]); else r.push(m[0]); } return r; };
   const zh = w => { const k = w.replace(/’/g, "'").toLowerCase(); return G3.GL[k] !== undefined ? G3.GL[k] : /^[.,?!]$/.test(w) ? '' : /^[A-Z][a-z]+$/.test(w) ? '（名字）' : ''; };
-  const XC = [].concat(...G3.GAMES.map(g => G3.XB[g.id]));
+  const XC = G3.XORD.map(([id, j]) => G3.XB[id][j]);   /* 2026-10-28：挑戰 題庫 照 XORD（舊 80 題 順序 不變，新 的 接 在 後面）*/
   G3.GAMES.map(g => ['g3m-' + g.id, g.B]).concat([['g3m-x25', XC], ['g3m-x50', XC]]).concat([].concat(...G3.CSETS.map(x => G3.GAMES.map(g => [x[0] + '-' + g.id, G3.CB[x[0]][g.id]])))).forEach(([id, B]) => (BANK['g3gm_' + id] || { qs: [] }).qs.forEach((q, i) => { const c = B[i], e = String(c.en || ''); if (!e) return;
     q.ae = e; q.ag = tk(e).map(t => [t.replace(/'/g, '’'), zh(t)]); q.az = c.zh || ''; const say = typeof c.say === 'string' ? c.say : e, k3 = A3[akey(say)] ? akey(say) : A3['m:' + akey(say)] ? 'm:' + akey(say) : '', f = k3 ? A3[k3] : W3[akey(say)];
     q.au = f ? '../g3mid/audio/' + (k3 ? '' : 'w/') + f[0] : ''; })); }

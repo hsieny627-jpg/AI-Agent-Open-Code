@@ -258,7 +258,7 @@ function hub(){if(CR&&CR.cfg&&CR.cfg.m==='sync')return;if(R&&!R.crs&&!R.x&&!R.se
   $('#app').innerHTML=CR?h:h.replace('</div>','</div><div class="xoff">📝 25 題／50 題 挑戰：英文課 老師 在〔⚡ 現場任務〕開</div>')}
 /* 2026-10-26 第二十八次 第 3、4 點：大廳 最上面〔📝 25 題〕〔📝 50 題〕＝ 12 關 連著 玩（每題 4／2 分）*/
 function xrow(){return '<div class="xrow">'+[25,50].map(function(n){var b=best('x'+n),v=xLoad(n);if(v)return '<div class="xbw"><button class="xb xr" data-xr="'+n+'"><b>▶ 繼續 '+n+' 題 挑戰</b><small>已經 做到 第 '+v.Q.length+' ／ '+n+' 題 · 從 第 '+(v.Q.length+1)+' 題 接著 做</small></button><button class="xb2" data-xn="'+n+'">🔄 重新 開始</button></div>';return '<button class="xb" data-xn="'+n+'"><b>📝 '+n+' 題 挑戰</b><small>'+LOB.length+' 關 連著 玩 · 每題 '+(100/n)+' 分 · 滿分 100</small>'+(b?'<span class="best">🏆 最高 '+b+' 分</span>':'')+'</button>'}).join('')+'</div>'}
-var XOFF={},XN=0;GM.forEach(function(g){XOFF[g.id]=XN;XN+=XB[g.id].length});
+var XGI={};${J(D.XORD)}.forEach(function(x,k){XGI[x[0]+':'+x[1]]=k});function XG(id,j){return XGI[id+':'+j]}var XN=${D.XORD.length};   /* 2026-10-28：挑戰 題庫 的 第幾題 ＝ D.XORD（舊 84 題 順序 不變）*/
 /* 抽題：25 ＝ 1 關 3 題、11 關 2 題；50 ＝ 2 關 5 題、10 關 4 題；🔁 類似 ＝ 30%（25 題 8、50 題 15），平均 分 在 各 關；短文 偵探 只 抽 一篇（先 讀 15 秒）*/
 function startX(N){var GM=LOB;if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();startX(N)});return}
   clr();var n=GM.length,c=GM.map(function(){return Math.floor(N/n)}),s=c.map(function(){return 0}),pick=GM.map(function(){return null}),I=GM.map(function(g,i){return i});
@@ -267,7 +267,7 @@ function startX(N){var GM=LOB;if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin
     pick[i]=shuf(L).slice(0,c[i]);s[i]=pick[i].filter(function(j){return XB.m8[j].sim}).length;left-=s[i]});
   var SIM=GM.map(function(g){return XB[g.id].map(function(q,j){return q.sim?j:-1}).filter(function(j){return j>=0})}),NEW=GM.map(function(g){return XB[g.id].map(function(q,j){return q.sim?-1:j}).filter(function(j){return j>=0})}),ord=shuf(I);
   while(left>0){var mv=0;ord.forEach(function(i){if(left>0&&!pick[i]&&s[i]<c[i]&&s[i]<SIM[i].length){s[i]++;left--;mv=1}});if(!mv)break}
-  var SEEN=xSeen(),un=function(L,i){L=shuf(L);var o=XOFF[GM[i].id];return L.filter(function(j){return !SEEN[o+j]}).concat(L.filter(function(j){return SEEN[o+j]}))};   /* 第三十二次 3-(2)：做過 的 先 不出 */
+  var SEEN=xSeen(),un=function(L,i){L=shuf(L);var id=GM[i].id;return L.filter(function(j){return !SEEN[XG(id,j)]}).concat(L.filter(function(j){return SEEN[XG(id,j)]}))};   /* 第三十二次 3-(2)：做過 的 先 不出 */
   var gs=[],idx=[],lvOf=[];GM.forEach(function(g,i){var X=Object.assign({},g,{B:XB[g.id]}),L=pick[i]||shuf(un(SIM[i],i).slice(0,s[i]).concat(un(NEW[i],i).slice(0,c[i]-s[i])));L.forEach(function(j){gs.push(X);idx.push(j);lvOf.push(i)})});
   R={x:N,pt:100/N,g:gs[0],gs:gs,idx:idx,lvOf:lvOf,cnt:c,lv:-1,k:0,sc:0,st:0,Q:[],W:[],t0:Date.now(),rd:{}};xDel(N);xSave();show()}
 /* ══ 2026-10-27 第三十二次 第 3-(1)(2) 點（老師：點〔離開〕就 前功盡棄；每一次 重做 題目 不可以 相同）══
@@ -340,7 +340,7 @@ function drawSp(){var w=R.q.spell,n=w.length,h='';for(var i=0;i<n;i++){var f=i==
 
 /* 答 一題：i ＝ 選了 原本 的 第幾個（0 ＝ 正解；-1 ＝ 時間 到） */
 function pick(i,you){if(!R||R.lock)return;R.lock=true;var q=R.q,ms=Date.now()-R.ts,ok=i===0,left=i<0?0:tLeft()/TM.T;   /* 剩下 ＝ 倒數 的（唸 題目 的 時間 不算） */
-  R.Q.push([ok?1:0,i,Math.round(ms/100)/10,i>=0&&ms<1000?1:0,ok?Math.round(left*1000)/1000:0,R.x?XOFF[R.g.id]+R.qi:R.qi]);crProg(ok);if(R.x&&!R.crs){xSeenAdd(XOFF[R.g.id]+R.qi);setTimeout(xSave,0)}   /* 25／50 題：題庫 ＝ 挑戰 題庫（12 種 接起來）；crProg ＝ ⚡ 現場任務 自己 答 的 進度 */
+  R.Q.push([ok?1:0,i,Math.round(ms/100)/10,i>=0&&ms<1000?1:0,ok?Math.round(left*1000)/1000:0,R.x?XG(R.g.id,R.qi):R.qi]);crProg(ok);if(R.x&&!R.crs){xSeenAdd(XG(R.g.id,R.qi));setTimeout(xSave,0)}   /* 25／50 題：題庫 ＝ 挑戰 題庫（12 種 接起來）；crProg ＝ ⚡ 現場任務 自己 答 的 進度 */
   tPause();stopSay();
   var id=R.g.id;
   $$('#stage [data-o]').forEach(function(b){var k=+b.getAttribute('data-o'),w=b.getAttribute('data-w');if(w)k=w===q.o[0]?0:w===R.clickW?i:-9;b.disabled=true;if(k===0)b.classList.add('ok');else if(k===i){b.classList.add('bad');if(id==='m1')b.classList.add('pop')}else b.classList.add('no')});

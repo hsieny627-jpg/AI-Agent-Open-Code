@@ -26,13 +26,15 @@ D.GAMES.forEach(g => { if (g.B.length < 8) LEAK.push(g.nm + ' 題庫不到 8 題
     CK = { q1: r => r[1] + '|' + r[2], q2: r => JSON.stringify(r[1].map(x => x[1])), q3: r => r[1] + '|' + [r[2]].concat(r[3]).sort().join(), q4: r => r[1] + '|' + r[2], q5: r => r[1] + '>' + r[2],
       q6: r => r[1] + '|' + r[2] + '|' + r[3], q7: r => r[1], q8: r => r[2] + '|' + r[3], q9: r => JSON.stringify(r[1].map(x => [x[0], x[1]])), q10: r => r[1] },
     XBAN = new RegExp('\\b(' + C.BAN.concat(['Mike', 'Emma', 'Wendy', 'Roy', 'Sam', 'Ann', 'Lily'], C.NAMES.c1.b, C.NAMES.c1.g, C.NAMES.c2.b, C.NAMES.c2.g, C.NAMES.c3.b, C.NAMES.c3.g).join('|') + ')\\b');
+  /* 2026-10-28 第三十三次：題庫 A（XB）、題庫 B（XB2，新 25／新 50）都 檢查；題庫 B 不用 題庫 A 的 名字（跟 題庫 A 同 一個 考點 可以：老師 C36「對」）；類似 A ≦ 45%、B ≦ 75% */
+  [['', XB, .45, XBAN], ['新 ', D.XB2, .75, new RegExp('\\b(' + XBAN.source.slice(3, -3) + '|Bill|Mark|Luke|Adam|Sally|Helen|Molly|Ruby)\\b')]].forEach(([pre, XB, mx, XBAN]) =>
   D.GAMES.forEach(g => { const L = XB[g.id], k = KEY[g.id], old = new Set(g.B.map(k).concat(cls(g.id).map(CK[g.id])));
-    if (!L || L.length < 5) LEAK.push('25／50 題 ' + g.nm + ' 題庫 不到 5 題');
-    L.forEach(q => { if (old.has(k(q))) LEAK.push('25／50 題 ' + g.nm + ' 跟 三年級複習／課堂複習 一樣：' + k(q)); const j = JSON.stringify(q); if (XBAN.test(j)) LEAK.push('25／50 題 ' + g.nm + ' 用了 用過 的 名字 ' + j.match(XBAN)[0]);
-      if (q.o && new Set(q.o.map(x => JSON.stringify(x))).size !== q.o.length) LEAK.push('25／50 題 ' + g.nm + ' 選項重複');
+    if (!L || L.length < 5) LEAK.push(pre + '25／50 題 ' + g.nm + ' 題庫 不到 5 題');
+    L.forEach(q => { if (old.has(k(q))) LEAK.push(pre + '25／50 題 ' + g.nm + ' 跟 三年級複習／課堂複習 一樣：' + k(q)); const j = JSON.stringify(q); if (XBAN.test(j)) LEAK.push(pre + '25／50 題 ' + g.nm + ' 用了 用過 的 名字 ' + j.match(XBAN)[0]);
+      if (q.o && new Set(q.o.map(x => JSON.stringify(x))).size !== q.o.length) LEAK.push(pre + '25／50 題 ' + g.nm + ' 選項重複');
       if (g.id === 'q1' && D.EXAM_A[q.say] && q.o.indexOf(D.EXAM_A[q.say].toUpperCase()) >= 0) LEAK.push('25／50 題 打地鼠 ' + q.say + ' 配 考卷 的 ' + D.EXAM_A[q.say]); });
-    if (new Set(L.map(k)).size !== L.length) LEAK.push('25／50 題 ' + g.nm + ' 自己 有 一樣 的 題目');
-    const sm = L.filter(q => q.sim).length; if (sm < 2 || sm > L.length * .45) LEAK.push('25／50 題 ' + g.nm + ' 類似 題 ' + sm + '／' + L.length); }); }
+    if (new Set(L.map(k)).size !== L.length) LEAK.push(pre + '25／50 題 ' + g.nm + ' 自己 有 一樣 的 題目');
+    const sm = L.filter(q => q.sim).length; if (sm < 2 || sm > L.length * mx) LEAK.push(pre + '25／50 題 ' + g.nm + ' 類似 題 ' + sm + '／' + L.length); })); }
 if (LEAK.length) { console.error('✗ ' + LEAK.join('\n✗ ')); process.exit(1); }
 
 const SCC = require('../score/_calc.js');
@@ -529,7 +531,7 @@ const BODY = `
 <div id="go"></div><div id="wp"></div><div id="cfz"></div><div id="crw"></div><div id="xq"><div class="xqb"><div class="xqi">🛑</div><div class="xqh">真的 要 離開 嗎？</div><div class="xqt" id="xqt"></div><div class="xqbtn"><button id="xstay">▶ 繼續 作答</button><button id="xleave">🚪 先 離開</button></div></div></div>`;
 
 const JS = `
-var CB=${J(D.CB)},CSETS=${J(D.CSETS)},XB=${J(D.XB)},XALL=[].concat.apply([],${J(D.GAMES.map(g => g.id))}.map(function(id){return XB[id]})),GM=${J(GM)}, WAR=${J(WAR)}, WARALL=${J(WARALL)}, GL=${J(D.GL)}, PHM=${J(D.PHM)}, CE=${J(D.CE)}, SC=${J(D.SC)}, BOYS=${J(D.BOYS)}, NUMW=${J(D.NUMW)};
+var CB=${J(D.CB)},CSETS=${J(D.CSETS)},XB=${J(D.XB)},XALL=${J(D.XORD)}.map(function(x){return XB[x[0]][x[1]]}),GM=${J(GM)}, WAR=${J(WAR)}, WARALL=${J(WARALL)}, GL=${J(D.GL)}, PHM=${J(D.PHM)}, CE=${J(D.CE)}, SC=${J(D.SC)}, BOYS=${J(D.BOYS)}, NUMW=${J(D.NUMW)};
 ${HW.js}
 function $(s){return document.querySelector(s)}
 function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}

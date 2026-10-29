@@ -6,6 +6,16 @@
 
 ## 🔒 永久原則（老師 2026-10-28 第三十三次）：跟 `g3mid/CLAUDE.md` 最上面 🔒 1～4 一樣（全 英文、照 25／50 題 挑戰、錯 的 選項 相近 有 鑑別度、Andika）
 
+## 2026-10-29 第三十三次 第三個 對話：① 新 題庫 A 放上 網站（老師 C36「對」）
+
+| 做 了 什麼 | 做法 |
+|---|---|
+| 題庫 A（25／50 題）＝ 每種 12 題 | `_data.js`：`XD` ＝ `_exam_data.js` 7 題 ＋ `_pool.js` 的 `PA` 5 題；短文 多 第 3 篇 `xowen`（`PASA`） |
+| 舊 成績 對得上 | **`XORD`**（原本 84 題 照 原來 順序，新 的 60 題 接在 後面）：網頁 `XG(遊戲, 第幾題)`（取代 `XOFF`）、`XN` ＝ 全部 題數；`score/_bank.js` 的 `g4gm_mt-x25／x50` 照 `XORD` |
+| 放上 網站 時 換掉 的（build 的 檢查：跟「四年級 複習」一模一樣 不行；電腦 聽寫 一直 聽錯） | 拼字 brother doctor farmer eighteen ➜ **uncle grandfather grandmother family**；對話 工廠 Is she a cook?…nurse ➜ **Is she a teacher? … She’s a doctor.**；快問快答 grandpa 廚師 ➜ **dad 農夫**；陷阱 seventeen ➜ **sixteen**；聊天室 Who’s he? ➜ **He’s my brother.**；短文 xowen「Is she your mom?」➜「**Is she your mother?**」（跟 lisa 那篇 一樣）；字首音 **pin ➜ pencil、pat ➜ bus**（pin 聽成 thin、pat 聽成 hat） |
+| 語音 | `_audio.js` `ALT1`：「He’s twelve.」女聲 0.72（男聲 聽成 piece twelve）、`ALT2` uncle 0.72；`words/_phonics.js` 多 seventeen。「Who’s she?」女聲 聽寫 8 次 都 對不上（跟 舊 的 一樣，Hoosie） |
+| 第 3 件 題庫 B | 6 種 新 遊戲（`NB`）＋ 解碼 任務 ＝ 第 5 件 一起 做 |
+
 ## 2026-10-28 第三十三次：短文 偵探 答錯頁 逐字 中文、新 題庫 草稿（先讀這一節）
 
 | 老師 | 做法 |

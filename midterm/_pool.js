@@ -10,8 +10,9 @@ const P = (who, job) => who + (job ? '|' + job : '');
 
 /* ════ 題庫 A：12 種 遊戲 各 再 加 5 題（🔁 3＋🆕 2），格式 跟 _exam_data.js 一樣 ════ */
 const PA = {
-  X1: [[1, 'pin', '📌', '大頭針'], [1, 'dad', '👨', '爸爸'], [1, 'pat', '🤚', '輕拍'], [0, 'banana', '🍌', '香蕉'], [0, 'tomato', '🍅', '番茄']],
-  X2: [[1, 'pin', 'pot'], [1, 'dad', 'tub'], [1, 'bat', 'pin'], [0, 'banana', 'bird'], [0, 'tomato', 'dinosaur']],
+  X1: [[1, 'pencil', '✏️', '鉛筆'], [1, 'dad', '👨', '爸爸'], [1, 'bus', '🚌', '公車'],   /* 2026-10-28：pin、pat 電腦 聽寫 一直 聽錯（thin、hat）➜ pencil、bus */
+    [0, 'banana', '🍌', '香蕉'], [0, 'tomato', '🍅', '番茄']],
+  X2: [[1, 'pencil', 'pot'], [1, 'dad', 'tub'], [1, 'bus', 'pencil'], [0, 'banana', 'bird'], [0, 'tomato', 'dinosaur']],
   X3: [[1, 'Is your mom a doctor? Yes, she is.', P('mom', 'doctor'), [P('dad', 'doctor'), P('mom', 'farmer')], '你的 媽媽 是 醫生 嗎？是的，她 是。'],
     [1, 'Is your grandpa a teacher? No, he isn’t. He’s a cook.', P('grandpa', 'cook'), [P('grandpa', 'teacher'), P('dad', 'cook')], '你的 爺爺 是 老師 嗎？不，他 不是。他 是 廚師。'],
     [1, 'Is your sister a farmer? No, she isn’t. She’s a student.', P('sister', 'student'), [P('sister', 'farmer'), P('brother', 'student')], '你的 姊姊 是 農夫 嗎？不，她 不是。她 是 學生。'],
@@ -22,37 +23,37 @@ const PA = {
     [0, 'Come on! Let’s go.', 'letsgo', ['hurryup', 'donttalk', 'lighton'], '快 來！我們 走 吧。'], [0, 'It’s dark. Turn on the light, please.', 'lighton', ['lightoff', 'timesup', 'letsgo'], '好 暗。請 打開 燈。']],
   X5: [[1, 'sixteen', '16', ['60', '6', '17'], 'sixteen ＝ 16'], [1, 'thirteen', '13', ['30', '3', '14'], 'thirteen ＝ 13'], [1, 'nineteen', '19', ['90', '9', '20'], 'nineteen ＝ 19'],
     [0, 'My sister is sixteen.', '16', ['60', '6', '15'], '我的 姊姊 十六 歲。'], [0, 'He’s twelve.', '12', ['20', '2', '11'], '他 十二 歲。']],
-  X6: [[1, 'A', 'Who’s he?', ['He’s my grandpa.', 'She’s my grandma.', 'Yes, he is.'], '他 是 誰？➜ 他 是 我的 爺爺。'],
+  X6: [[1, 'A', 'Who’s he?', ['He’s my brother.', 'She’s my sister.', 'Yes, he is.'], '他 是 誰？➜ 他 是 我的 哥哥。'],
     [1, 'A', 'Is she your mom?', ['Yes, she is.', 'Yes, he is.', 'She’s a nurse.'], '她 是 你的 媽媽 嗎？➜ 是的，她 是。'],
     [1, 'A', 'Is your sister a doctor?', ['No, she isn’t. She’s a cook.', 'No, he isn’t. He’s a cook.', 'Yes, she isn’t.'], '你的 姊姊 是 醫生 嗎？➜ 不，她 不是。她 是 廚師。'],
     [0, 'A', 'Sorry, I’m late.', ['That’s OK. Come in, please.', 'Nice to meet you.', 'Yes, he is.'], '抱歉，我 遲到 了。➜ 沒關係。請 進。'],
     [0, 'B', 'Yes, she is.', ['Is she your grandma?', 'Who’s she?', 'Is he your grandpa?'], '她 是 你的 奶奶 嗎？➜ 是的，她 是。']],
-  X7: [[1, 'brother', '👦', '哥哥'], [1, 'doctor', '🩺', '醫生'], [1, 'farmer', '🌾', '農夫'], [0, 'eighteen', '18', '十八'], [0, 'seventeen', '17', '十七']],
+  X7: [[1, 'uncle', '🧔', '叔叔'], [1, 'grandfather', '👴', '爺爺'], [1, 'grandmother', '👵', '奶奶'], [0, 'family', '👨‍👩‍👧‍👦', '家人'], [0, 'seventeen', '17', '十七']],   /* 2026-10-28 放上 網站：brother doctor farmer eighteen 跟「四年級 複習」拼字 一樣 ➜ 換 */
   X8: [[1, 'xowen', 'Owen’s grandpa is ___.', ['a cook', 'a farmer', 'a doctor'], 1], [1, 'xowen', 'Owen’s sister is ___ years old.', ['thirteen', 'thirty', 'three'], 3],
     [0, 'xowen', 'Who’s she? She’s Owen’s ___.', ['sister', 'mom', 'grandma'], 3], [0, 'xowen', 'Emily: Is she a student?　Owen: ___', ['Yes, she is.', 'No, she isn’t.', 'Yes, he is.'], 5],
     [0, 'xowen', 'Who’s he? He’s Owen’s ___.', ['grandpa', 'dad', 'brother'], 1]],
   X9: [[1, 'This is my mother.', 'mom'], [1, 'This is my brother.', 'brother'], [1, 'This is my grandpa.', 'grandpa'],
     [0, 'Who’s she? She’s my grandma. She’s a farmer.', 'grandma'], [0, 'Look! He’s my brother.', 'brother']],
   X10: [[1, 'A: Who’s he? B: ___ my grandpa.', ['He’s', 'His', 'She’s', 'He'], '', '他 是 誰？他 是 我的 爺爺。'],
-    [1, 'A: Is she a cook? B: No, she ___. She’s a nurse.', ['isn’t', 'is', 'not', 'he'], '', '她 是 廚師 嗎？不，她 不是。她 是 護理師。'],
+    [1, 'A: Is she a teacher? B: No, she ___. She’s a doctor.', ['isn’t', 'is', 'not', 'he'], '', '她 是 老師 嗎？不，她 不是。她 是 醫生。'],
     [1, 'A: Is your dad a farmer? B: Yes, ___ is.', ['he', 'she', 'his', 'him'], '', '你的 爸爸 是 農夫 嗎？是的，他 是。'],
     [0, 'A: ___ she? B: She’s my mom.', ['Who’s', 'What’s', 'Is', 'How'], '', '她 是 誰？她 是 我的 媽媽。'],
     [0, 'This is my brother. ___ a student.', ['He’s', 'His', 'She’s', 'He'], '', '這 是 我的 哥哥。他 是 學生。']],
   X11: [[1, P('mom', 'nurse'), 'Is she a nurse?', ['Yes, she is.', 'No, she isn’t.', 'Yes, he is.', 'No, he isn’t.'], '她 是 護理師 嗎？是的，她 是。'],
     [1, P('brother', 'student'), 'Is he a teacher?', ['No, he isn’t.', 'Yes, he is.', 'Yes, she is.', 'No, she isn’t.'], '他 是 老師 嗎？不，他 不是。'],
-    [1, P('grandpa', 'cook'), 'Is he a cook?', ['Yes, he is.', 'No, he isn’t.', 'Yes, she is.', 'No, she isn’t.'], '他 是 廚師 嗎？是的，他 是。'],
+    [1, P('dad', 'farmer'), 'Is he a farmer?', ['Yes, he is.', 'No, he isn’t.', 'Yes, she is.', 'No, she isn’t.'], '他 是 農夫 嗎？是的，他 是。'],
     [0, P('dad'), 'Who’s he?', ['He’s my dad.', 'He’s my brother.', 'She’s my mom.'], '他 是 誰？他 是 我的 爸爸。'],
     [0, P('sister'), 'Is she your mom?', ['No, she isn’t.', 'Yes, she is.', 'No, he isn’t.', 'Yes, he is.'], '她 是 你的 媽媽 嗎？不，她 不是。']],
   X12: [[1, 'Who’s he? ___ my brother.', ['He’s', 'His', 'Her'], '他 是 誰？他 是 我的 哥哥。', 'He’s ＝ He is（他 是）；His ＝ 他的'],
     [1, 'eighteen ＝ ?', ['18', '80', '8'], 'eighteen ＝ 18', '-teen ＝ 十幾：eighteen ＝ 18；eighty ＝ 80'],
-    [1, 'seventeen ＝ ?', ['17', '70', '7'], 'seventeen ＝ 17', '-teen ＝ 十幾：seventeen ＝ 17；seventy ＝ 70'],
+    [1, 'sixteen ＝ ?', ['16', '60', '6'], 'sixteen ＝ 16', '-teen ＝ 十幾：sixteen ＝ 16；sixty ＝ 60'],
     [0, 'Is your mom a nurse? Yes, ___ is.', ['she', 'he', 'her'], '你的 媽媽 是 護理師 嗎？是的，她 是。', '媽媽 是 女生 ➜ she；her ＝ 她的'],
     [0, 'Is she ___ teacher?', ['a', 'an', 'is'], '她 是 一位 老師 嗎？', 'teacher 第一個 音 不是 母音 ➜ a teacher']]
 };
 /* 題庫 A 第 3 篇 短文（對話）：一次 只 抽 一篇 */
 const PASA = {
   xowen: { title: 'My Family', sp: ['Emily', 'Owen', 'Emily', 'Owen', 'Emily', 'Owen'],
-    t: ['Owen, who’s he?', 'He’s my grandpa. He’s a cook.', 'Who’s she? Is she your mom?', 'No, she isn’t. She’s my sister. She’s thirteen.', 'Is she a student?', 'Yes, she is.'],
+    t: ['Owen, who’s he?', 'He’s my grandpa. He’s a cook.', 'Who’s she? Is she your mother?', 'No, she isn’t. She’s my sister. She’s thirteen.', 'Is she a student?', 'Yes, she is.'],
     z: ['Owen，他 是 誰？', '他 是 我的 爺爺。他 是 廚師。', '她 是 誰？她 是 你的 媽媽 嗎？', '不，她 不是。她 是 我的 姊姊。她 十三 歲。', '她 是 學生 嗎？', '是的，她 是。'] }
 };
 
@@ -118,7 +119,7 @@ const N3 = [[1, 'Don’t talk.', 'donttalk', ['dontrun', 'timesup', 'hurryup'], 
 
 /* N4 🦘 對話 跳跳樂（考卷 E）：讀 A 說 的 ➜ 跳 到 B 對 的 回答（rev ＝ 讀 B 的 回答 ➜ 跳 到 A 問 的 那一句）[s, A／B, 那一句, [正解, 誘答 2], 中文] */
 const N4 = [[1, 'A', '___ she? — She’s my sister.', ['Who’s', 'What’s', 'Is'], '她 是 誰？她 是 我的 姊姊。'],
-  [1, 'A', 'Who’s he?', ['He’s my grandpa.', 'She’s my grandma.', 'Yes, he is.'], '他 是 誰？➜ 他 是 我的 爺爺。'],
+  [1, 'A', 'Who’s he?', ['He’s my brother.', 'She’s my sister.', 'Yes, he is.'], '他 是 誰？➜ 他 是 我的 哥哥。'],
   [1, 'A', 'Who’s she?', ['She’s my grandma.', 'He’s my grandpa.', 'No, she isn’t.'], '她 是 誰？➜ 她 是 我的 奶奶。'],
   [1, 'A', 'Is he a farmer?', ['No, he isn’t. He’s a cook.', 'No, she isn’t. She’s a cook.', 'Yes, he isn’t.'], '他 是 農夫 嗎？➜ 不，他 不是。他 是 廚師。'],
   [1, 'A', 'Is she a teacher?', ['Yes, she is.', 'Yes, he is.', 'She’s my mom.'], '她 是 老師 嗎？➜ 是的，她 是。'],

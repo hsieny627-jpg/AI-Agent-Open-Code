@@ -234,8 +234,11 @@ const lcOf = w => { if (!PH.RAW[w]) throw new Error('拼字 救援：words/_phon
   return [].concat.apply([], PH.parse(w, PH.RAW[w])).map(u => u.L.split('').map(c => u.s ? 's' : /[aeiou]/.test(c) ? 'v' : '-').join('')).join(''); };
 
 /* ══ 2026-10-26 第二十八次 第 3、4 點：📝 25 題／50 題 挑戰 的 題庫（_exam_data.js）➜ 跟 上面 一樣 的 樣子（多 sim：1 🔁 類似／0 🆕 全新）══ */
-const XD = require('./_exam_data.js');
-Object.assign(GL, { bat: '蝙蝠', tub: '浴缸', bird: '鳥', duck: '鴨子', pizza: '披薩', turtle: '烏龜', dinosaur: '恐龍', pin: '大頭針', shh: '噓', stop: '停',
+const XD0 = require('./_exam_data.js'), PL = require('./_pool.js');
+/* 2026-10-28 第三十三次（老師 C36「對」）：題庫 A（25／50 題）＝ 原本 _exam_data.js 7 題 ＋ _pool.js PA 5 題（短文 多 第 3 篇 xowen）；舊 的 題號 不變（XORD） */
+const XD = Object.assign({}, XD0, { PAS: Object.assign({}, XD0.PAS, PL.PASA) }), XN0 = {};
+for (let n = 1; n <= 12; n++) { XN0['m' + n] = XD0['X' + n].length; XD['X' + n] = XD0['X' + n].concat(PL.PA['X' + n]); }
+Object.assign(GL, { pencil: '鉛筆', bus: '公車', family: '家人', pat: '輕拍', banana: '香蕉', tomato: '番茄', dark: '暗的', ok: '好的', bat: '蝙蝠', tub: '浴缸', bird: '鳥', duck: '鴨子', pizza: '披薩', turtle: '烏龜', dinosaur: '恐龍', pin: '大頭針', shh: '噓', stop: '停',
   class: '同學們', grandmother: '奶奶', fourteen: '十四', thirteen: '十三', twenty: '二十', forty: '四十', ninety: '九十' });
 Object.keys(XD.PAS).forEach(k => { PAS[k] = XD.PAS[k]; });
 const XB = {};
@@ -253,11 +256,12 @@ XB.m9 = XD.X9.map(([sm, line, who]) => { const M = { grandpa: 1, dad: 1, brother
   const o = [who].concat(TREE.filter(x => x !== who && !!M[x] === !!M[who]), TREE.filter(x => gen[x] === gen[who] && x !== who));
   return { sim: sm, tree: 1, line, q: '🌳 ' + line + '　點 這一個 人', o, oz: o.map(x => WHO[x][1]), z: line + '　' + ({ grandpa: '他 是 我的 爺爺。', grandma: '她 是 我的 奶奶。', dad: '他 是 我的 爸爸。', mom: '她 是 我的 媽媽。', brother: '他 是 我的 哥哥。', sister: '她 是 我的 姊姊。' })[who], ae: line }; });
 const X9Z = { 'This is my grandmother.': '這 是 我的 奶奶。', 'This is my father.': '這 是 我的 爸爸。', 'She’s my mother. She’s a cook.': '她 是 我的 媽媽。她 是 廚師。',
-  'He’s my brother. He’s a student.': '他 是 我的 哥哥。他 是 學生。', 'Look! This is my sister.': '看！這 是 我的 姊姊。', 'Who’s he? He’s my grandfather.': '他 是 誰？他 是 我的 爺爺。', 'He’s my dad. He’s a farmer.': '他 是 我的 爸爸。他 是 農夫。' };
+  'He’s my brother. He’s a student.': '他 是 我的 哥哥。他 是 學生。', 'Look! This is my sister.': '看！這 是 我的 姊姊。', 'Who’s he? He’s my grandfather.': '他 是 誰？他 是 我的 爺爺。', 'He’s my dad. He’s a farmer.': '他 是 我的 爸爸。他 是 農夫。',
+  'This is my mother.': '這 是 我的 媽媽。', 'This is my brother.': '這 是 我的 哥哥。', 'This is my grandpa.': '這 是 我的 爺爺。', 'Who’s she? She’s my grandma. She’s a farmer.': '她 是 誰？她 是 我的 奶奶。她 是 農夫。', 'Look! He’s my brother.': '看！他 是 我的 哥哥。' };
 XB.m10 = XD.X10.map(([sm, t, o, pic, zh]) => ({ sim: sm, blank: t, pic: pic || '', q: '🧩 ' + t, o, z: zh, ae: t.replace('___', o[0]) }));
 XB.m11 = XD.X11.map(([sm, pic, line, o, zh]) => ({ sim: sm, yn: 1, pic, line, q: '✅ 看圖：' + line, o, z: line + ' ➜ ' + o[0] + '（圖：' + picZh(pic) + '）', ae: o[0], zz: zh }));
 XB.m12 = XD.X12.map(([sm, t, o, fz, tip]) => ({ sim: sm, blank: t, q: '🪤 ' + t, o, z: tip, h: tip, ae: /___/.test(t) ? t.replace('___', o[0]) : '', fz, tip }));
-const NUMW2 = { 12: 'twelve', 20: 'twenty', 14: 'fourteen', 13: 'thirteen' };
+const NUMW2 = { 12: 'twelve', 20: 'twenty', 14: 'fourteen', 13: 'thirteen', 16: 'sixteen', 17: 'seventeen', 18: 'eighteen' };
 XB.m1.forEach(q => { q.fe = q.w; q.fz = q.z.replace('（', ' ＝ ').replace('）', '') + '；第一個 字母 ＝ ' + q.w[0]; q.fs = [['M1', q.w]]; });
 XB.m2.forEach(q => { q.fe = q.pair.join(' '); q.fz = q.z; q.fs = [['M1', q.pair[0]], ['M1', q.pair[1]]]; });
 XB.m3.forEach(q => { q.fe = q.say; q.fz = q.z; q.fs = [['', q.say]]; });
@@ -288,4 +292,8 @@ M2.concat(XB.m2).forEach(c => c.pair.forEach(x => SAYM.push(x))); M1.concat(XB.m
 Object.keys(PAS).forEach(k => PAS[k].t.forEach(x => SAYS.push(x)));
 /* 檢查：每一題 o[0] 是正解、選項不重複、題數 ≧ 10 */
 GAMES.forEach(g => { if (g.B.length < 10) throw new Error(g.id + ' 題目 太少'); g.B.forEach((c, i) => { if (new Set(c.o).size !== c.o.length) throw new Error(g.id + ' 第 ' + (i + 1) + ' 題 選項 重複：' + c.o.join('／')); }); });
-module.exports = { XB, GAMES, SEC, WHO, JOB, PAS, PHOTO, TREE, SAY, SAYS: [...new Set(SAYS)], SAYM: [...new Set(SAYM)], GL, picZh };
+/* 挑戰 題庫 的「第幾題」（成績 用）：原本 84 題 照 原來 順序，新 的 60 題 接 在 後面 */
+const XORD = [];
+GAMES.forEach(g => { for (let j = 0; j < XN0[g.id]; j++) XORD.push([g.id, j]); });
+GAMES.forEach(g => { for (let j = XN0[g.id]; j < XB[g.id].length; j++) XORD.push([g.id, j]); });
+module.exports = { XORD, XN0, XB, GAMES, SEC, WHO, JOB, PAS, PHOTO, TREE, SAY, SAYS: [...new Set(SAYS)], SAYM: [...new Set(SAYM)], GL, picZh };

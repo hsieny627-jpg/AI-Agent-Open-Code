@@ -119,6 +119,7 @@ const RAW = {
  fourteen:    'f|f|f o|ɔː|ɔ u|-|- r|r|r / t|t|t ee|iː|i n|n|n',
  fifteen:     'f|f|f i|ɪ|ɪ f|f|f / t|t|t ee|iː|i n|n|n',
  sixteen:     's|s|s i|ɪ|ɪ x|ks|ks / t|t|t ee|iː|i n|n|n',
+ seventeen:   's|s|s e|e|ɛ / v|v|v e|ə|ə n|n|n / t|t|t ee|iː|i n|n|n',   /* 2026-10-28 第三十三次 四年級 題庫 A 拼字 */
  eighteen:    'ei|eɪ|e gh|-|- / t|t|t ee|iː|i n|n|n',
  nineteen:    'n|n|n i|aɪ|aɪ n|n|n e|-|- / t|t|t ee|iː|i n|n|n',
 

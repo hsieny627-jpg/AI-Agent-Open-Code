@@ -143,7 +143,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
       await p.click('[data-xr="25"]'); await p.waitForTimeout(500); if (await p.evaluate(() => !!document.getElementById('rdgo'))) { await p.waitForTimeout(2600); await p.click('#rdgo'); await p.waitForTimeout(300); }
       const rs = await p.evaluate(() => ({ k: R.k, sc: R.sc, q: R.Q.length, n: R.idx.length }));
       if (rs.k !== 3 || rs.sc !== 12 || rs.q !== 3 || rs.n !== 25) E.push(tag + ' 繼續 以後 不是 從 第 4 題、12 分 接著：' + JSON.stringify(rs));
-      const sn = await p.evaluate(() => { const S = JSON.parse(localStorage.getItem('mt_seen_40201') || '[]'); startX(25); const now = R.gs.map((g, k) => XOFF[g.id] + R.idx[k]); const hit = now.filter(i => S.indexOf(i) >= 0).length; hub(); return { s: S.length, hit }; });
+      const sn = await p.evaluate(() => { const S = JSON.parse(localStorage.getItem('mt_seen_40201') || '[]'); startX(25); const now = R.gs.map((g, k) => XG(g.id, R.idx[k])); const hit = now.filter(i => S.indexOf(i) >= 0).length; hub(); return { s: S.length, hit }; });
       if (sn.s !== 3 || sn.hit) E.push(tag + ' 做過 的 題目 下一次 又 出現（要 先 不出）' + JSON.stringify(sn));
       await p.evaluate(() => { localStorage.removeItem('mt_xs25_40201'); localStorage.removeItem('mt_seen_40201'); hub(); }); }
     /* 2026-10-26 第二十八次 第 3、4 點：📝 25 題／50 題 挑戰（12 關 連著 玩、每題 4／2 分、30% 類似、記 成績）*/
