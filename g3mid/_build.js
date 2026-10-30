@@ -379,7 +379,7 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 .pmside{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;flex:0 0 auto}
 .pmside .hear{min-height:64px;padding:6px 18px;font-size:clamp(22px,3vh,30px)}
 .mmap{display:block;border-radius:12px;background:#03051E;box-shadow:0 0 0 3px #3E5BFF;cursor:pointer;touch-action:none}
-@media (orientation:portrait){.pmrow{flex-direction:column}.pmv{flex:0 0 auto;width:100%;height:calc(100vh - 470px)}.pmside{flex-direction:row;flex-wrap:wrap}}
+@media (orientation:portrait){.pmrow{flex-direction:column}.pmv{flex:0 0 auto;width:100%;height:calc(100vh - 560px)}.pmside{flex-direction:row;flex-wrap:wrap}}
 .rmc{position:absolute;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2cqh;container-type:size;border-radius:14px;background:#FFFBEF;color:#111;box-shadow:0 0 0 4px #FFD23F,0 0 18px #FFD23F99;overflow:hidden;cursor:pointer}
 .rmc .tag{width:92%;border-width:2px;border-radius:8px}.rmc .tag .tt{font-size:max(18px,12cqh);line-height:1.1;padding:1px 0;white-space:nowrap}.rmc .tag .tt b{display:inline;font-size:1em;margin-right:.25em}.rmc .tag .tn{font-size:max(18px,26cqh);line-height:1.1;padding:0}
 .pmv.ov .rmc .tag .tt{display:none}   /* 看 整張 迷宮 的 時候 卡片 很小：只 留 名字 和 歲數 */
@@ -469,7 +469,7 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
  .wrow{flex-direction:column}.wleft{flex-direction:row;flex-wrap:wrap;justify-content:center}.mc{width:120px;height:120px;margin:10px 24px}.mc .fc{font-size:56px}.mc .f1,.mc .f2,.mc .f3{--h:60px}
  .mirror{width:170px;height:220px}.wbtn button{white-space:nowrap}}
 @media (orientation:portrait){.mc .f1{transform:translateZ(60px)}.mc .f2{transform:rotateY(90deg) translateZ(60px)}.mc .f3{transform:rotateX(90deg) translateZ(60px)}}
-@media (orientation:portrait){.dpad{grid-template-columns:repeat(3,96px);grid-template-rows:repeat(3,96px)}}
+@media (orientation:portrait){.dpad{grid-template-columns:repeat(3,88px);grid-template-rows:repeat(3,88px)}}
 @media (max-width:760px){.moves{grid-template-columns:1fr}.bub{left:4%;right:4%;top:auto;bottom:4%}.bub::after{display:none}}
 .wbtn button{white-space:nowrap}
 /* 第二十七次：記成績 的 那一行 */
@@ -792,7 +792,7 @@ REN.q2=function(q,st){var row=H('div','pmrow'),vw=H('div','pmv'),cv=document.cre
    if(d===OPP[p.d]){var x0=p.cx,y0=p.cy;p.cx=p.tx;p.cy=p.ty;p.tx=x0;p.ty=y0;p.f=1-p.f;p.d=d;S.nd=null}else if(d!==p.d&&p.f<.4&&mzOk(p.cx+DIRS[d][0],p.cy+DIRS[d][1])){p.tx=p.cx;p.ty=p.cy;p.f=0}}
   /* 2026-10-30 第三十四次 第 5 點（老師：上下左右 不好 操作、很 容易 被 抓）：整塊 方向鍵 ＝ 一個 搖桿（按 哪一邊 就 往 哪一邊，手指 不用 放開 滑過去 就 換）；
      往 回 走 ＝ 馬上 掉頭；剛 離開 路口 一點點 就 按 轉彎 ＝ 退回 路口 馬上 轉（不會 錯過 路口） */
-  var pdn=0,pd='';function padDir(e){var r=pad.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);if(Math.max(Math.abs(dx),Math.abs(dy))<r.width*.1)return '';return Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'d':'u')}
+  var pdn=0,pd='';function padDir(e){var bt=e.type==='pointerdown'&&e.target.closest&&e.target.closest('[data-d]');if(bt)return bt.dataset.d;var r=pad.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);if(Math.max(Math.abs(dx),Math.abs(dy))<r.width*.1)return '';return Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'d':'u')}
   function padHi(d){[].forEach.call(pad.children,function(b){b.classList.toggle('on',b.dataset.d===d)})}
   pad.addEventListener('pointerdown',function(e){e.preventDefault();pdn=1;try{pad.setPointerCapture(e.pointerId)}catch(x){}pd=padDir(e);if(pd)setD(pd);padHi(pd)});
   pad.addEventListener('pointermove',function(e){if(!pdn)return;var d=padDir(e);if(d&&d!==pd){pd=d;setD(d);padHi(d)}});
