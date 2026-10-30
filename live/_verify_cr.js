@@ -37,7 +37,7 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
     /* 2026-10-27 第三十一次：四年級 的 班 ＝〔📝 四年級 複習〕一套 12 種（陷阱 偵測器 放回 最後；沒有「四年級 複習 0」）*/
     await h.click('[data-sc="402"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.waitForTimeout(200);
     n++; const s4 = await h.evaluate(() => ({ scr: H.scr, h1: document.querySelector('#hcr h1').textContent, sets: [].map.call(document.querySelectorAll('[data-crs]'), b => b.textContent), gs: [].map.call(document.querySelectorAll('[data-crg]'), b => b.textContent) }));
-    if (s4.scr !== 'hcr' || !/四年級 複習/.test(s4.h1) || s4.sets.join('|') !== '📝 四年級 複習|📝 25 題 挑戰|📝 50 題 挑戰|📝 新 25 題 挑戰|📝 新 50 題 挑戰' || s4.gs.length !== 12 || !/陷阱/.test(s4.gs[11]) || !/字首音/.test(s4.gs[0])) E.push(tag + ' 四年級 複習 設定 畫面 ' + JSON.stringify(s4).slice(0, 300));
+    if (s4.scr !== 'hcr' || !/四年級 期中複習/.test(s4.h1) || s4.sets.join('|') !== '📝 四年級 複習|📝 25 題 挑戰|📝 50 題 挑戰|📝 新 25 題 挑戰|📝 新 50 題 挑戰' || s4.gs.length !== 12 || !/陷阱/.test(s4.gs[11]) || !/字首音/.test(s4.gs[0])) E.push(tag + ' 四年級 複習 設定 畫面 ' + JSON.stringify(s4).slice(0, 300));
     n++; if (!s4.gs.every(t => /☑/.test(t))) E.push(tag + ' 四年級 複習 12 種 沒有 預設 全選 ' + JSON.stringify(s4.gs));
     await h.click('#crback'); await h.waitForTimeout(150);
     await h.click('[data-sc="304"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.waitForTimeout(200);
@@ -85,10 +85,29 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
       await s5.waitForTimeout(2600); const xl = await s5.evaluate(() => ({ b: [...document.querySelectorAll('#xrow [data-x],#xrow [data-xr]')].filter(b => (b.closest('.xbw') || b).style.display !== 'none').map(b => b.dataset.x || b.dataset.xr).join(), gc: [...document.querySelectorAll('#grid .gc')].filter(b => b.style.display !== 'none').length }));
       if (xl.b !== '25' || xl.gc) E.push(tag + ' 平板 25 題 挑戰 大廳 要 只 有 25 那一顆 ' + JSON.stringify(xl));
       { const ob = await s5.evaluate(() => { const b = document.querySelector('#xrow [data-x="25"]'); if (!b) return 'none'; const r = b.getBoundingClientRect(), x = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return x === b || b.contains(x) ? '' : (x ? (x.id || x.className || x.tagName) : 'null') + ' ' + JSON.stringify([r.left, r.top, r.width, r.height]); }); if (ob) E.push(tag + ' 平板〔📝 25 題 挑戰〕被 蓋住：' + ob); }
+      const du = await s5.evaluate(() => { const d = document.querySelector('.duo'), x = [...document.querySelectorAll('#xrow .xb')].find(b => b.offsetParent); return d && x ? d.getBoundingClientRect().top < x.getBoundingClientRect().top : 'none'; }).catch(() => 'err');
       await s5.click('#xrow [data-x="25"]').catch(() => E.push(tag + ' 平板 按不到〔📝 25 題 挑戰〕')); await s5.waitForTimeout(800);
       const xr = await s5.evaluate(() => ({ x: R && R.x, n: R && R.qs.length })); if (xr.x !== 25 || xr.n !== 25) E.push(tag + ' 平板 25 題 挑戰 沒有 開始 ' + JSON.stringify(xr));
       await h.waitForTimeout(1600); const hj = await h.evaluate(() => (document.querySelector('#hcrr .crjn') || {}).textContent || ''); if (!/已經 連上/.test(hj)) E.push(tag + ' 大螢幕 沒有「📱 已經 連上 N 人」' + hj);
-      await h.click('#crend'); await h.waitForTimeout(400); await s5.close(); }
+      /* ══ 2026-10-30 第三十四次 第 10、12 點：限時、即時 排行榜、兩人 一台 兩個 號碼、時間 到 送 成績、前 10 名＋頒獎 ══ */
+      n += 9; const cd = dget('rooms/0304/cr'); if (!cd || cd.d !== 300000) E.push(tag + ' 25 題 預設 不是 5 分鐘 ' + (cd && cd.d));
+      const tl = await s5.evaluate(() => { const t = document.getElementById('xlvT'); return t && t.classList.contains('on') ? t.textContent : ''; }); if (!/⏱ [45]:\d\d/.test(tl)) E.push(tag + ' 平板 上面 沒有 ⏱ 倒數 ' + tl);
+      dset('rooms/0304/crp/30403', { n: 3, ok: 2, s: 8, p: '30404', g: 'q1', t: cd.t }); dset('rooms/0304/crp/30405', { n: 2, ok: 2, s: 8.5, g: 'q1', t: cd.t });
+      await s5.evaluate(() => { R.Q.push([1, 0, 3, 0, .5, 0]); R.score = 4; xPub(); }); await h.waitForTimeout(1800);
+      const lb = await h.evaluate(() => ({ r: [...document.querySelectorAll('#crlbw .crlr')].map(r => r.dataset.id), j: (document.getElementById('crjb') || {}).textContent || '', clk: (document.getElementById('crclk') || {}).textContent || '' }));
+      if (lb.r.join() !== '30405,30403,30402') E.push(tag + ' 大螢幕 即時 排行榜 名次 不對 ' + lb.r.join());
+      if (!/3 👥 4/.test(lb.j)) E.push(tag + ' 兩人 一台 大螢幕 要 寫 兩個 號碼「3 👥 4」：' + lb.j);
+      if (!/⏱ [45]:\d\d/.test(lb.clk)) E.push(tag + ' 大螢幕 沒有 大 倒數 ' + lb.clk);
+      const np = POSTS.length; await h.click('#crend'); await h.waitForTimeout(1500);
+      const cf = dget('rooms/0304/cr'); if (!cf || cf.fin !== 1 || cf.on !== 1) E.push(tag + ' 時間 到 要 寫 fin:1（還 開著）' + JSON.stringify(cf).slice(0, 120));
+      const fz = await s5.evaluate(() => ({ f: (document.getElementById('xlvF') || {}).className || '', t: (document.getElementById('xlvF') || {}).textContent || '' }));
+      if (!/on/.test(fz.f) || !/送 出 去/.test(fz.t)) E.push(tag + ' 平板 時間 到 沒有「⏰ 時間 到＋成績 送 出 去」' + JSON.stringify(fz).slice(0, 120));
+      await h.waitForTimeout(800); if (!POSTS.slice(np).some(x => /g3gm_g3m-x25/.test(x))) E.push(tag + ' 時間 到：答了 1 題 也 要 送 成績 g3gm_g3m-x25');
+      await h.waitForTimeout(6500); const gl = await h.evaluate(() => ({ on: (document.getElementById('crgl') || {}).className || '', h: (document.getElementById('crgls') || {}).innerHTML.length || 0 }));
+      if (!/on/.test(gl.on) || gl.h < 50) E.push(tag + ' 時間 到 以後 沒有 前 10 名＋頒獎 典禮 ' + JSON.stringify(gl));
+      await h.click('#crxe'); await h.waitForTimeout(600); if ((dget('rooms/0304/cr') || {}).on !== 0) E.push(tag + ' 按〔⏹ 結束〕要 寫 on:0');
+      if (du !== true) E.push(tag + ' 平板 大廳：〔🙋 一個人｜👥 兩個人〕要 在〔📝 25 題〕上面 ' + du);
+      await s5.close(); }
     /* ══ 2026-10-27 第三十次（第三十一次：選 📝 四年級 複習 裡 的 🪤 陷阱 偵測器）：四年級（402）〔👥 全班 同步〕➜ 平板 跳到 midterm ➜ 答 ➜ 下一題 ➜ 結束 送 g4gm_mt-m12 ══ */
     await h.click('#crhome').catch(() => {}); await h.waitForTimeout(200); await h.click('[data-sc="402"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.click('[data-cra="0"]'); await h.click('[data-crg="m12"]'); await h.click('[data-crm="sync"]'); await h.click('#crstart'); await h.waitForTimeout(500);
     n++; const c4 = dget('rooms/0402/cr'); if (!c4 || c4.on !== 1 || c4.set !== 'mt' || c4.deck.length !== 8 || c4.deck.some(d => d[0] !== 'm12')) E.push(tag + ' 四年級 同步 Firebase 不對 ' + JSON.stringify(c4).slice(0, 200));

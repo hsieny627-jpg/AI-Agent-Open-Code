@@ -580,6 +580,35 @@ body.host[data-scr=hq] .qq{border-radius:28px;box-shadow:0 10px 0 rgba(0,0,0,.25
 .seats .st.on{animation:none}.seats .st.on.nw{animation:stJump .8s cubic-bezier(.3,1.7,.5,1)}
 @keyframes stJump{0%{transform:translateY(-60px) scale(.4);opacity:0}60%{transform:translateY(6px) scale(1.12);opacity:1}100%{transform:none}}
 body.host[data-scr=hq] .ring{box-shadow:0 0 0 6px rgba(255,255,255,.15)}
+/* ══ 2026-10-30 第三十四次 第 12 點：📝 期中 挑戰 大螢幕（限時、即時 排行榜、時間 到、前 5 名 決戰）══ */
+.crmin{min-height:60px;min-width:120px;font-size:26px}
+.crxh{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.crxh h1{margin:0;font-size:clamp(30px,4.4vh,48px)}.crxs{font-size:clamp(20px,2.6vh,28px);color:#C9CFFF}
+.crclk{font:800 clamp(56px,9vh,110px)/1 system-ui,sans-serif;color:#FFE38A;padding:8px 28px;border-radius:28px;background:#1B1440;border:4px solid #7C5CFF;box-shadow:0 0 30px rgba(124,92,255,.5)}
+.crclk.lo{color:#fff;background:#5A1010;border-color:#FF5A5A;animation:crPl 1s infinite}@keyframes crPl{50%{transform:scale(1.07)}}
+.crdu{display:block;font-size:.6em;color:#80D8FF;font-weight:600}
+.crlead{height:0;overflow:visible;text-align:center;font-size:clamp(34px,5.6vh,64px);font-weight:900;color:#FFD54A;opacity:0;pointer-events:none;position:relative;z-index:5;text-shadow:0 4px 24px rgba(0,0,0,.6)}
+.crlead.on{animation:crLd 2.6s}@keyframes crLd{0%{opacity:0;transform:scale(.3)}15%{opacity:1;transform:scale(1.25)}25%{transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:translateY(-30px)}}
+.crlbw{position:relative;height:min(62vh,760px);margin:10px 0}.crlbe{font-size:clamp(26px,3.6vh,40px);text-align:center;padding-top:16vh;color:#C9CFFF}
+.crlr{position:absolute;left:0;right:0;height:9.2%;display:flex;align-items:center;gap:14px;padding:0 18px;border-radius:18px;background:#1E2550;border:3px solid #3A4590;color:#fff;font-size:clamp(20px,2.8vh,32px);transition:top .8s cubic-bezier(.3,1.4,.5,1),background .4s}
+.crlr.nw{animation:crIn .7s}@keyframes crIn{from{opacity:0;transform:translateX(-60px) scale(.9)}}
+.crlr.g1{background:linear-gradient(90deg,#6B4A00,#2A2050);border-color:#FFD54A;box-shadow:0 0 26px rgba(255,213,74,.55)}.crlr.g2{border-color:#D8E2EE}.crlr.g3{border-color:#E39A5B}
+.crlr.up{animation:crUp .9s}@keyframes crUp{0%{box-shadow:0 0 0 0 rgba(59,209,111,.9);background:#1E5A3A}100%{box-shadow:0 0 0 18px rgba(59,209,111,0)}}
+.crrk{flex:none;width:2.2em;text-align:center;font-weight:900;font-size:1.25em}.crhi{flex:none;width:2.4em;height:2.4em;display:flex;align-items:center;justify-content:center}.crhim{max-width:100%;max-height:100%;border-radius:10px}
+.crnm{flex:none;width:7.2em;line-height:1.1}.crbar{flex:1;height:.9em;border-radius:99px;background:#121735;overflow:hidden}.crbar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#7C5CFF,#3BD1FF);transition:width .8s}
+.crlr.g1 .crbar i{background:linear-gradient(90deg,#FFB300,#FFE38A)}.crsc{flex:none;width:4.2em;text-align:right;font-weight:900;font-size:1.2em;color:#FFE38A}.crsc small{font-size:.55em}.crok{flex:none;width:6em;text-align:right;color:#BFE9C9;font-size:.85em}
+.crup{position:absolute;right:-6px;top:-14px;font-style:normal;background:#2BB673;color:#fff;border-radius:12px;padding:0 10px;font-size:.8em;animation:crIn .5s}
+.crrest{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:clamp(18px,2.3vh,24px);color:#C9CFFF}.crrt{color:#FFE38A}
+.crup0{text-align:center;padding-top:10vh}.cru1{font-size:clamp(110px,20vh,220px);animation:xlvB2 1s}.cru2{font-size:clamp(60px,11vh,130px);font-weight:900;color:#FFD54A}.cru3{font-size:clamp(30px,4.6vh,52px)}
+@keyframes xlvB2{0%{transform:scale(.2) rotate(-40deg)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+#crgl{position:fixed;inset:0;z-index:80;background:#000;display:none;flex-direction:column;gap:8px;padding:8px}#crgl.on{display:flex}
+#crgls{--hh:calc(100vh - 100px);flex:1;border-radius:18px;position:relative;overflow:hidden}.crglb{display:flex;gap:12px;justify-content:flex-end}.crglb button{min-height:64px;font-size:24px}
+.crgw{display:inline-flex;align-items:center;gap:.3em}.crghi{height:1.6em;border-radius:8px}.crnone{color:#fff;font-size:48px;text-align:center;padding-top:30vh}
+#crgls.crf5{background:radial-gradient(circle at 50% 40%,#3A1A6A,#07051A);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3vh}
+.f5t{font-size:clamp(50px,9vh,110px);font-weight:900;color:#FFD54A;animation:xlvB2 .9s}.f5r{display:flex;gap:2vw;justify-content:center;flex-wrap:wrap}
+.f5c{width:min(17vw,250px);padding:2vh 1vw;border-radius:24px;background:#1E2550;border:4px solid #7C5CFF;display:flex;flex-direction:column;align-items:center;gap:1vh;font-size:clamp(26px,4vh,46px);transition:.8s;animation:crIn .6s}
+.f5h{height:clamp(80px,14vh,170px);border-radius:14px}.f5s{font-weight:900;color:#FFE38A;font-size:1.3em}.f5c em{font-style:normal;color:#C9CFFF;min-height:1.2em}
+.f5c.out{opacity:.35;transform:scale(.85) translateY(30px);filter:grayscale(1)}.f5c.win{transform:scale(1.12);border-color:#FFD54A;box-shadow:0 0 50px rgba(255,213,74,.8)}
+.f5b{font-size:clamp(40px,7vh,84px);font-weight:900;color:#FF7A3D;min-height:1.2em;text-shadow:0 0 30px rgba(255,122,61,.7)}
 
 </style></head><body class="stu">
 <script>window.SCLIVE=1;</script>

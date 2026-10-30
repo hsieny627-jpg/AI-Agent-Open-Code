@@ -46,7 +46,7 @@ ${CSS}${extra || ''}
 </style></head>`;
 const RT = R('_db.js') + '\n' + R('_common.js');
 /* ── 老師大螢幕 ── */
-const CER = fs.readFileSync(path.join(ROOT, 'score/_cer.css'), 'utf8') + fs.readFileSync(path.join(ROOT, 'rpg/_fx.css'), 'utf8'), CERRT = fs.readFileSync(path.join(ROOT, 'score/_cer_rt.js'), 'utf8') + fs.readFileSync(path.join(ROOT, 'rpg/_fx_rt.js'), 'utf8');   /* 2026-10-20 第十四次：特效引擎＋自己畫的 金幣（大螢幕） */
+const CER = fs.readFileSync(path.join(ROOT, 'score/_cer.css'), 'utf8') + fs.readFileSync(path.join(ROOT, 'rpg/_fx.css'), 'utf8') + fs.readFileSync(path.join(ROOT, 'score/_honor.css'), 'utf8') + fs.readFileSync(path.join(ROOT, 'score/_glory.css'), 'utf8'), CERRT = fs.readFileSync(path.join(ROOT, 'score/_cer_rt.js'), 'utf8') + fs.readFileSync(path.join(ROOT, 'rpg/_fx_rt.js'), 'utf8') + fs.readFileSync(path.join(ROOT, 'score/_glory_rt.js'), 'utf8');   /* 2026-10-30 第三十四次 第 12-(4) 點：期中 挑戰 時間 到 ＝ 🏆 前 10 名（榮譽榜 那一套 GLORY，沒有 聲音）   /* 2026-10-20 第十四次：特效引擎＋自己畫的 金幣（大螢幕） */
 const J = o => JSON.stringify(o).replace(/</g, '\\u003c');
 /* ── 老師大螢幕 ── 按鈕 永遠 在 右下角 同一個 位置（#hgo）；沒有 音樂、音效 */
 const host = head('現場任務 大螢幕', CER) + `<body class="host">
