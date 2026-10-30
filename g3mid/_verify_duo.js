@@ -15,14 +15,14 @@ const id2=SITE==='g3mid'?'30402':'40202';for(const k of id2.split('').concat(['o
 await p.waitForTimeout(2500);
 let st=await p.evaluate(()=>({duo:!!DUO,ids:DUO&&DUO.id,cur:DUO&&DUO.cur,scid:SCID}));n++;if(!st.duo||st.ids.join()!==(SITE==='g3mid'?'30401,30402':'40201,40202'))E.push(SITE+' 第 2 個 人 登入 失敗 '+JSON.stringify(st));
 const turns=[];let guard=0;
-while(guard++<70){const s=await p.evaluate(()=>({duo:!!DUO,cur:DUO?DUO.cur:-1,k:R&&R.k,id:(typeof G!=='undefined'&&G&&R.x&&!R.g?G.id:R&&R.g?R.g.id:G&&G.id),dcl:document.getElementById('dcl').classList.contains('on'),db:document.getElementById('duob').classList.contains('on'),scid:SCID}));
+while(guard++<400){const s=await p.evaluate(()=>({duo:!!DUO,cur:DUO?DUO.cur:-1,k:R&&R.k,id:(typeof G!=='undefined'&&G&&R.x&&!R.g?G.id:R&&R.g?R.g.id:G&&G.id),dcl:document.getElementById('dcl').classList.contains('on'),db:document.getElementById('duob').classList.contains('on'),scid:SCID}));
  if(!s.duo)break; if(s.db){await p.waitForTimeout(200);continue} if(s.dcl){await p.waitForSelector('#dlgo,#dlsk',{timeout:20000}).catch(()=>{});await p.click('#dlgo,#dlsk').catch(()=>{});await p.waitForTimeout(300);continue}
  const wp=await p.$('#wp.on [data-wr]');if(wp){await wp.click();await p.waitForTimeout(300);continue}   /* 擂台 第一次 先 選 戰士 */
  turns.push(s.cur+':'+s.scid.slice(-1));
  await p.waitForTimeout(700);
  // cheat-answer correctly via internal state
  const did=await p.evaluate(()=>{try{if(typeof good==='function'){if(BUSY)return 'busy';good(document.body);return 'g'}else{if(R.lock)return 'busy';pick(0);return 'p'}}catch(e){return 'err '+e.message}});
- await p.waitForTimeout(1800);
+ await p.waitForTimeout(600);await p.waitForFunction(()=>!DUO||document.getElementById('duob').classList.contains('on')||(typeof good==='function'?!BUSY:!(R&&R.lock)),null,{timeout:12000}).catch(()=>{});   /* 2026-10-30 第三十四次：答對 先 唸完 正確 答案 才 下一題 ➜ 等 下一題 出現 */
 }
 n++;if(turns.length!==50||turns.some((t,i)=>+t[0]!==i%2))E.push(SITE+' 沒有 一人 一題 輪流：'+turns.join(' '));
 const end=await p.evaluate(()=>document.body.innerText.match(/👥 兩個人 輪流[\s\S]{0,200}/));n++;if(!end||(end[0].match(/記進 成績 了/g)||[]).length!==2)E.push(SITE+' 結束 頁 沒有 兩個 人：'+(end&&end[0].slice(0,80)));
