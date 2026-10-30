@@ -52,6 +52,7 @@ const J = o => JSON.stringify(o).replace(/</g, '\\u003c');
 const host = head('現場任務 大螢幕', CER) + `<body class="host">
 <script src="../score/url.js"></script><script src="fb.js"></script><script src="../score/qr.js"></script>
 <div id="net" class="net" hidden>📶 網路 不穩：重新 連線 中…（不用 按 任何 東西）</div>
+<div id="hnav" class="hnav"><a href="../index.html">🏠 總首頁</a><a class="t" href="../teacher/index.html">老師看板</a></div>
 <div id="hstp" class="hstp" hidden></div><div id="hqrc" class="sqrc hq2" hidden><div class="qrb"></div><span>📱 掃 我 登入</span></div>
 <div class="scr" id="hpw" hidden><div class="in center"><h1>⚡ 現場任務</h1><div class="note">老師 密碼（跟 老師看板 一樣）</div>
  <input type="password" id="pw" autocomplete="current-password"><button id="pwgo" class="big">🔑 進去</button><div id="pwm" class="note"></div>
@@ -75,6 +76,8 @@ ${RT}
 ${CERRT}
 ${R('_host_rt.js')}
 ${R('_cr_host.js')}
+/* 2026-10-30 第三十四次：〔🏠 總首頁〕〔老師看板〕只 在 密碼、設定、等人（大廳）、全班 錯題 分析 畫面 出現；出題、排行榜、頒獎、課堂複習 進行中 收起來 */
+(function(){var nv=document.getElementById('hnav'),ok={hpw:1,hset:1,hlob:1,hana:1},f=function(){var on=[].filter.call(document.querySelectorAll('body>.scr'),function(x){return !x.hidden}).map(function(x){return x.id});var h=!on.length||on.some(function(id){return !ok[id]});if(nv.hidden!==h)nv.hidden=h};new MutationObserver(f).observe(document.body,{subtree:true,attributes:true,attributeFilter:['hidden']});f()})();
 </script></body></html>`;
 /* ── 學生平板 ── 最上面 永遠 一行 大字：現在 要 做 什麼（#now）；沒有 任何 音效 */
 const stu = head('現場任務') + `<body class="stu">

@@ -6,6 +6,15 @@
 
 ## 🔒 永久原則（老師 2026-10-28 第三十三次）：跟 `g3mid/CLAUDE.md` 最上面 🔒 1～4 一樣（全 英文、照 25／50 題 挑戰、錯 的 選項 相近 有 鑑別度、Andika）
 
+## 2026-10-30 第三十四次 第二批（先讀這一節）
+
+| 老師 | 做法 |
+|---|---|
+| 9 句子 解碼 | 引擎 `g3mid/_decode.js`（規格 `g3mid/CLAUDE.md`「第三十四次 第二批」）：一個 播放器＋解鎖（沒 聲音 修好）、格子 變大 對齊、`decTut` 教學（他 是 誰？➜ 誰 是 他；小 測驗 Who’s she?、Is she your mom?，錯 方塊 他）。資料 `_data.js` 的 `DTUT`。縮寫／省略 動畫 這次 只 做 三年級（老師 寫 的 是 What is、I am、years old）；四年級 要不要 加 Who is ＝ Who’s、He is ＝ He’s、is not ＝ isn’t ➜ 下一次 先 問 |
+| 1～4 🏠 四年級 25 題 闖關 | `home.html`（`HOME25`）：題庫 A 的 12 種 遊戲＋解碼 的 **全新 題**（`XBK 'H'`，m8 短文 也 只 用 全新 的 那幾題；新 25／新 50 的 6 種 新 遊戲 不 放），成績 `g4gm_mt-h25`；其他 跟 三年級 一樣 |
+
+量測 `node g3mid/_verify_dct.js`、`node g3mid/_verify_home.js`（兩個 年級 一起 量）、`node midterm/_verify.js`。
+
 ## 2026-10-30 第三十四次 第一批（先讀這一節）
 
 | 老師 | 做法 |

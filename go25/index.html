@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>25 題 闖關 QR</title>
+<!-- 2026-10-30 第三十四次 第 1～4 點：🏠 三年級／四年級 25 題 闖關（回家 練習）的 專屬 網址＋QR。總首頁、老師看板 都 連 這一頁（?g=3、?g=4 ＝ 只 放 一個 年級，大 QR 投影 或 列印） -->
+<style>
+@font-face{font-family:Andika;src:url(../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:#070A16;color:#fff;font-family:Andika,"PingFang TC","Microsoft JhengHei",sans-serif;font-weight:700}
+body{min-height:100vh;background:#070A16 radial-gradient(1000px 600px at 50% -10%,#24427A 0,transparent 70%) no-repeat;padding:16px}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;margin-bottom:10px}
+.top h1{margin:0 10px 0 0;font-size:clamp(30px,4.4vh,46px);color:#FFE07A}
+a.bt,button{font:inherit;font-weight:700;display:inline-flex;align-items:center;min-height:56px;padding:4px 20px;border-radius:16px;border:3px solid #6F86A6;background:#1B2633;color:#fff;font-size:clamp(20px,2.6vh,26px);text-decoration:none;cursor:pointer}
+a.bt.hub{border-color:#FFD54A;color:#FFE07A}
+.say{text-align:center;font-size:clamp(26px,4vh,40px);margin:4px auto 16px;max-width:900px;border:4px solid #FFE07A;border-radius:22px;padding:8px 18px;background:rgba(255,255,255,.06)}
+.cards{display:flex;flex-wrap:wrap;gap:22px;justify-content:center}
+.c{background:#fff;color:#0B2A44;border-radius:26px;padding:16px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;width:min(460px,100%);box-shadow:0 10px 0 #2A3A55}
+.c h2{margin:0;font-size:clamp(32px,4.6vh,48px)}.c.g3 h2{color:#0E6B3A}.c.g4 h2{color:#1D4FA0}
+.qr{width:min(340px,80vw);aspect-ratio:1}.qr svg{width:100%;height:100%;display:block}
+.u{font-size:clamp(18px,2.2vh,22px);word-break:break-all;text-align:center;color:#2A3A55;max-width:100%}
+.c .b{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.c button,.c a.bt{background:#0E5C8A;border-color:#0E5C8A}.c a.bt.go{background:#1E9E55;border-color:#1E9E55}
+.how{text-align:center;font-size:clamp(20px,2.6vh,26px);color:#CFE3F5;margin-top:16px}
+body.one .c{width:min(720px,100%)}body.one .qr{width:min(560px,80vw)}
+@media print{body{background:#fff;color:#000}.top,.how,.c .b{display:none}.say{color:#000;border-color:#000}.c{box-shadow:none;border:4px solid #000}}
+</style></head>
+<body>
+<div class="top"><h1>🏠 25 題 闖關（回家 練習）</h1><a class="bt hub" href="../index.html">🏠 回 總首頁</a><a class="bt" href="../teacher/index.html">回 老師看板</a><button onclick="print()">🖨 列印</button></div>
+<div class="say">老師依課本、習作自己設計的練習題。</div>
+<div class="cards" id="cards"></div>
+<div class="how">📱 掃 QR ➜ 打 班級號碼＋密碼 ➜ 馬上 開始 第 1 題　·　成績 自動 進 老師看板</div>
+<script src="../score/qr.js"></script>
+<script>
+var G=[[3,'三年級','g3mid/home.html','g3'],[4,'四年級','midterm/home.html','g4']],m=/[?&]g=([34])/.exec(location.search);if(m){G=G.filter(function(g){return String(g[0])===m[1]});document.body.classList.add('one')}
+function abs(p){return new URL('../'+p,location.href).href}
+document.getElementById('cards').innerHTML=G.map(function(g){var u=abs(g[2]),q='';try{var c=qrcode(0,'M');c.addData(u);c.make();q=c.createSvgTag({cellSize:8,margin:2,scalable:true})}catch(e){q='QR Code 做不出來'}
+ return '<div class="c '+g[3]+'"><h2>📝 '+g[1]+' 25 題 闖關</h2><div class="qr">'+q+'</div><div class="u">'+u+'</div><div class="b"><button data-u="'+u+'">📋 複製 網址</button><a class="bt go" href="'+u+'">▶ 打開</a><a class="bt" href="?g='+g[0]+'">🔍 放大</a></div></div>'}).join('');
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-u]');if(!b)return;var t=b.getAttribute('data-u'),ok=function(){var o=b.textContent;b.textContent='✅ 複製 好了';setTimeout(function(){b.textContent=o},1600)};
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,fb);else fb();function fb(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(x){}a.remove();ok()}});
+</script>
+</body></html>

@@ -37,7 +37,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
     await ctx.addInitScript(() => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} });
       localStorage.setItem('score_last', '"30401"'); localStorage.setItem('score_id_g3', '"30401"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', '30401'); });
     /* 聲音：不真的放，0.06 秒就算唸完（數唸了幾次） */
-    await ctx.addInitScript(() => { window.__NOGO = 1; window.__G2CALM = 1; window.__DCLK = 0.05; window.__say = []; HTMLMediaElement.prototype.play = function () { const a = this; window.__say.push(a.src.split('/').slice(-2).join('/')); setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); };
+    await ctx.addInitScript(() => { window.__NOGO = 1; window.__NOWB = 1; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__G2CALM = 1; window.__DCLK = 0.05; window.__say = []; HTMLMediaElement.prototype.play = function () { const a = this; window.__say.push(a.src.split('/').slice(-2).join('/')); setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); };
       try { speechSynthesis.speak = u => { window.__say.push('tts:' + u.text); setTimeout(() => u.onend && u.onend(), 60); }; } catch (e) {} });
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto('file://' + path.join(__dirname, 'index.html')); await p.waitForTimeout(400);
@@ -53,6 +53,13 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
     for (let gi = 0; gi < D.GAMES.length; gi++) {
       const g = D.GAMES.filter(x => x.id === D.ORD[gi])[0]; if (process.env.ONLY && process.env.ONLY.split(',').indexOf(g.id) < 0) continue;
       await p.evaluate(i => { window.__say = []; start(i); }, gi); await p.waitForTimeout(300);
+      /* 2026-10-30 第三十四次 第 6 點：資料表 小幫手 一開始 ＝ 習作 21 頁 獨立 頁（圖、那一句、2.6 秒 才 有〔▶ 開始〕、倒數 還沒 走）*/
+      if (g.id === 'q9') { await p.evaluate(i => { lobby(); window.__NOWB = 0; start(i); }, gi); await p.waitForTimeout(900); n++;
+        const w = await p.evaluate(() => { const o = document.getElementById('wb9'), im = o.querySelector('img'), r = im ? im.getBoundingClientRect() : {};
+          return { on: o.classList.contains('on'), img: !!(im && im.complete && im.naturalWidth), t: o.textContent.replace(/\s+/g, ''), go: !!document.querySelector('.wbgo'), run: TM.run, ins: r.bottom <= innerHeight && r.top >= 0 }; });
+        if (!w.on || !w.img || !/這一關的題目是根據習作21頁改編/.test(w.t) || w.go || w.run || !w.ins) E.push(tag + ' 資料表 一開始 沒有 習作 21 頁 獨立 頁：' + JSON.stringify(w));
+        await p.waitForSelector('.wbgo', { timeout: 4000 }).catch(() => E.push(tag + ' 習作 21 頁 沒有〔▶ 開始〕')); await p.click('.wbgo').catch(() => {}); await p.waitForTimeout(300);
+        if (await p.evaluate(() => document.getElementById('wb9').classList.contains('on'))) E.push(tag + ' 按〔▶ 開始〕習作 頁 沒有 關'); await p.evaluate(() => { window.__NOWB = 1; }); }
       if (g.id === 'q8') { n++; const wp = await p.evaluate(() => ({ on: document.getElementById('wp').classList.contains('on'), n: document.querySelectorAll('#wp [data-wr]').length, k: R.k }));
         if (!wp.on || wp.n < 10 || wp.k !== -1) E.push(tag + ' q8：第一次 玩 沒有 先 選 戰士：' + JSON.stringify(wp));
         if (wp.on) { await p.click('#wp [data-wr]'); await p.waitForTimeout(300); } }
@@ -80,9 +87,9 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
           if (sy[0] !== f3) E.push(tag + ' q3：夾到 對的 照片 以後 沒有 再 唸 一次 那一句（第二十八次 第 6 點）：' + JSON.stringify(sy.slice(0, 3)) + ' 要 ' + f3); }
         if (wrong) {
           /* 2026-10-26 第二十九次 第 8 點：資料表 答錯 ＝ 先 停 在 題目 畫面：三個 人 各 一種 顏色 的 方框（答錯 的 那一位 紅色）＋ 箭頭，演完 才 綠底 頁 */
-          if (g.id === 'q9') { await p.waitForTimeout(2600); n++; const k = await p.evaluate(() => ({ fb: document.querySelector('#fb').classList.contains('on'), k9: document.querySelectorAll('.k9').length, ar: !!document.querySelector('.ar9 path'),
+          if (g.id === 'q9') { await p.waitForTimeout(2600); n++; const k = await p.evaluate(() => ({ kk: !!R.q.k, fb: document.querySelector('#fb').classList.contains('on'), k9: document.querySelectorAll('.k9').length, ar: !!document.querySelector('.ar9 path'),
               red: [].filter.call(document.querySelectorAll('.k9'), x => /255, 107, 107|#FF6B6B/i.test(x.getAttribute('style') || '')).length, cols: new Set([].map.call(document.querySelectorAll('.k9'), x => x.style.getPropertyValue('--k'))).size, anim: [].filter.call(document.querySelectorAll('.k9'), x => getComputedStyle(x).animationIterationCount === 'infinite').length }));
-            if (k.fb || k.k9 < 9 || !k.ar || k.red < 3 || k.cols !== 3 || k.anim) E.push(tag + ' q9：答錯 沒有 先 在 題目 畫面 框 關鍵字＋箭頭（或 一直 閃）' + JSON.stringify(k)); }
+            if (k.fb || k.k9 < (k.kk ? 7 : 9) || !k.ar || k.red < 3 || k.cols !== 3 || k.anim) E.push(tag + ' q9：答錯 沒有 先 在 題目 畫面 框 關鍵字＋箭頭（或 一直 閃）' + JSON.stringify(k)); }
           await p.waitForSelector('#fb.on', { timeout: 7000 }).catch(() => {});
           const t1 = await p.evaluate(() => tLeft()); await p.waitForTimeout(1200);
           const f = await p.evaluate(() => { const gw = [].slice.call(document.querySelectorAll('#fb .gw'));
@@ -248,6 +255,7 @@ async function answer(p, g, wrong) {
       await p.mouse.move(b.x + b.width / 2, b.y + 20); await p.mouse.down(); await p.mouse.move(gp.x + gp.width / 2, gp.y + gp.height / 2, { steps: 8 }); await p.mouse.up(); return; } return; }
   if (g.id === 'q6') { const W = q.want; if (wrong) { const b = await p.$$('.qb'); for (const e of b) if ((await e.textContent()) !== W[0]) return e.click({ force: true }); }
     for (let i = 0; i < W.length; i++) { const b = await p.$$('.qb:not(.used)'); for (const e of b) if ((await e.textContent()) === W[i]) { await e.click({ force: true }); break; } await p.waitForTimeout(60); } return; }
+  if (g.id === 'q9' && q.k) { const want = wrong ? q.o[1] : q.o[0]; return p.evaluate(w => { const b = [...document.querySelectorAll('.o9')].filter(x => x.textContent === w)[0]; if (b) b.click(); }, want); }   /* 2026-10-30 新題型 */
   if (g.id === 'q9') { const sl = await p.$$eval('.sl9', x => x.map(e => +e.dataset.r)); let bad = false;
     for (let i = 0; i < sl.length; i++) { await p.waitForFunction(() => !BUSY, null, { timeout: 5000 }).catch(() => {}); const r = sl[i], wantv = q.bl[r] === 'n' ? q.c[r].t : String(q.c[r].a);
       const v = wrong && i === 1 ? q.tl.filter(x => x !== wantv && !(q.bl.some((b, j) => (b === 'n' ? q.c[j].t : String(q.c[j].a)) === x)))[0] : wantv;
@@ -306,7 +314,9 @@ async function special(p, g) { const e = [];
     /* 第 1 回合 打倒（4 題）➜ 第 2 回合 SHADOW SCHEMER */ const r2 = await p.evaluate(() => { var k0 = R.k; R.k = 4; HP8.e = 0; var st = document.getElementById('stage'), q = R.q; st.innerHTML = ''; REN.q8(q, st); return { f: (document.querySelector('.fcard.foe img') || {}).src || '', t: document.querySelector('.rnd8').textContent, nw: !!document.querySelector('.nw8'), k0 }; }); await p.evaluate(k => { R.k = k; }, r2.k0);
     if (!/foe2\.webp/.test(r2.f) || !/ROUND 2/.test(r2.t) || !r2.nw) e.push('打倒 DARK OVERLORD 以後 沒有 換 SHADOW SCHEMER：' + JSON.stringify(r2));
     await p.evaluate(() => { HP8 = { b: 0, e: 4, m: 8, ko: 0 }; var st = document.getElementById('stage'); st.innerHTML = ''; REN.q8(R.q, st); }); }
-  if (g.id === 'q9') { const r = await p.evaluate(() => ({ b: document.querySelectorAll('.bub9').length, sp: document.querySelectorAll('.sp9').length, sl: document.querySelectorAll('.sl9').length, tl: document.querySelectorAll('.tile9').length, t: document.querySelector('.ft9').textContent, th: [].map.call(document.querySelectorAll('.fm9 th'), x => x.textContent).join(',') }));
+  if (g.id === 'q9' && await p.evaluate(() => !!R.q.k)) { const r = await p.evaluate(() => ({ b: document.querySelectorAll('.bub9').length, o: document.querySelectorAll('.o9').length, sl: document.querySelectorAll('.sl9').length, th: [].map.call(document.querySelectorAll('.fm9 th'), x => x.textContent).join(','), k: R.q.k }));
+    if (r.b !== 3 || r.o !== 4 || r.sl !== 1 || r.th !== 'Name,Age') e.push('資料表 新題型（' + r.k + '）：3 個 對話框、一列 資料表、4 個 選項：' + JSON.stringify(r)); }
+  else if (g.id === 'q9') { const r = await p.evaluate(() => ({ b: document.querySelectorAll('.bub9').length, sp: document.querySelectorAll('.sp9').length, sl: document.querySelectorAll('.sl9').length, tl: document.querySelectorAll('.tile9').length, t: document.querySelector('.ft9').textContent, th: [].map.call(document.querySelectorAll('.fm9 th'), x => x.textContent).join(',') }));
     if (r.b !== 3 || r.sp !== 3 || r.sl !== 3 || r.tl !== 5 || !/New Friends/.test(r.t) || !/Name,Age/.test(r.th)) e.push('資料表 小幫手：3 個 對話框＋🔊、3 個 空格、5 個 方塊、Name／Age：' + JSON.stringify(r));
     /* 第二十九次 第 8 點：30 秒；方塊 在 資料表 正上方；先 點 空格 再 點 方塊 也 可以 */
     const r2 = await p.evaluate(() => { const tw = document.querySelector('.tw9').getBoundingClientRect(), fm = document.querySelector('.fm9').getBoundingClientRect(), bb = document.querySelector('.bb9').getBoundingClientRect();

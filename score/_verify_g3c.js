@@ -17,6 +17,7 @@ function seed() { const G = make({ TEACHER_PW: PW });
   G.post({ a: 'qsub', id: '30401', zh: '我 是 Amy。', o: ["I'm Amy.", "I'm nine.", "You're Amy.", 'My Amy.'] });
   rec('30401', 'g3gm_g3m-q1', Q(6, 8), 'a'); rec('30402', 'g3gm_g3m-q1', Q(4, 8), 'b'); rec('30402', 'g3gm_g3m-q2', Q(3, 3), 'c'); rec('30401', 'g3gm_c1-q1', Q(8, 8), 'd'); rec('30703', 'g3gm_g3m-q1', Q(2, 8), 'e');
   /* 2026-10-29 第 6 件：期中 挑戰：01 號 25 題 對 24（96 分）、02 號 新 25 題 對 20（80 分）*/ rec('30401', 'g3gm_g3m-x25', Q(24, 25), 'f'); rec('30402', 'g3gm_g3m-n25', Q(20, 25), 'g');
+  /* 2026-10-30 第三十四次：🏠 25 題 闖關（h25）：01 號 對 20（80 分）、再 一次 對 23（92 分）*/ rec('30401', 'g3gm_g3m-h25', Q(20, 25), 'h'); rec('30401', 'g3gm_g3m-h25', Q(23, 25), 'i');
   return G; }
 let HTTP = '';
 function serve() { return new Promise(ok => { const T = { '.html': 'text/html', '.js': 'text/javascript', '.woff2': 'font/woff2', '.css': 'text/css' };
@@ -32,6 +33,13 @@ async function teacher(br, vp) {
   const p = await ctx.newPage(); p.on('pageerror', x => e.push('JS 例外：' + x.message));
   await p.goto(HTTP + '/teacher/index.html'); await p.waitForTimeout(300); await p.fill('#pw', PW); await p.click('#go'); await p.waitForTimeout(600);
   await p.click('#tabs button[data-t="g"]'); await p.waitForTimeout(400);
+  /* 2026-10-30 第三十四次 第 11 點：先 選 年級 ➜ 三張 大卡（有 新 成績 的 亮）➜ 點 一張 才 出 表 */
+  n++; const cr0 = await p.evaluate(() => ({ g: [].map.call(document.querySelectorAll('[data-crg]'), b => b.textContent + (b.classList.contains('on') ? '*' : '')).join(), k: [].map.call(document.querySelectorAll('[data-crk]'), b => b.getAttribute('data-crk') + (b.classList.contains('new') ? '!' : '') + ':' + Math.round(b.getBoundingClientRect().height)).join(), t: document.querySelectorAll('.g3t').length,
+    sm: [].filter.call(document.querySelectorAll('.crnav *,.crcards *'), x => [].some.call(x.childNodes, c => c.nodeType === 3 && c.textContent.trim()) && parseFloat(getComputedStyle(x).fontSize) < 18).length }));
+  if (!/三年級\*/.test(cr0.g) || !/四年級/.test(cr0.g) || !/^x!:\d+,h!:\d+,g!:\d+$/.test(cr0.k) || cr0.t || cr0.sm || cr0.k.split(',').some(x => +x.split(':')[1] < 100)) e.push('〔課堂複習〕先 選 年級＋三張 大卡（有 新 成績 亮）不對 ' + JSON.stringify(cr0));
+  await p.click('[data-crk="g"]'); await p.waitForTimeout(250);
+  n++; const cr1 = await p.evaluate(() => [].map.call(document.querySelectorAll('[data-crk]'), b => b.getAttribute('data-crk') + (b.classList.contains('new') ? '!' : '') + (b.classList.contains('on') ? '*' : '')).join());
+  if (cr1 !== 'x!,h!,g*') e.push('點 遊戲 卡：那一張 不再 亮、其他 兩張 還 亮 ' + cr1);
   const cellOf = () => p.evaluate(() => { const rows = [].map.call(document.querySelectorAll('.g3t tr'), tr => [].map.call(tr.children, td => td.childNodes[0] ? td.childNodes[0].textContent.trim() : ''));
     const sm = [].filter.call(document.querySelectorAll('#pane *'), x => [].some.call(x.childNodes, c => c.nodeType === 3 && c.textContent.trim()) && x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < 17).map(x => x.textContent.trim().slice(0, 8));
     const lo = [].filter.call(document.querySelectorAll('.g3sw button'), b => b.getBoundingClientRect().height < 48).length;
@@ -51,7 +59,7 @@ async function teacher(br, vp) {
       return { t9: th[10], t10: th[11], c1: tr.map(x => x.children[2].className), cAll: document.querySelector('.g3t tr.all').children[1].className }; });
   if (!/第 9 關/.test(cl.t9) || !/夾娃娃/.test(cl.t9) || !/第 10 關/.test(cl.t10) || !/小精靈/.test(cl.t10)) e.push('關卡 順序 不對 ' + JSON.stringify(cl));
   if (cl.c1[0] !== 'p2' || cl.c1[1] !== 'p0' || cl.cAll !== 'p1') e.push('底色 不對（88 綠、50 紅、75 黃）' + JSON.stringify(cl));
-  n++; await p.click('[data-g3s="mt"]'); await p.waitForTimeout(200); const mt = await p.evaluate(() => ({ th: document.querySelectorAll('.g3t tr:first-child th').length, last: [].slice.call(document.querySelectorAll('.g3t tr:first-child th')).slice(-2).map(x => x.textContent).join('|'), sw: [].map.call(document.querySelectorAll('[data-g3s]'), b => b.dataset.g3s).join(','), h: document.querySelector('.g3h').textContent, c: [].map.call(document.querySelectorAll('[data-g3c]'), x => x.dataset.g3c).join(',') }));
+  n++; await p.click('[data-crg="4"]'); await p.waitForTimeout(150); await p.click('[data-crk="g"]'); await p.waitForTimeout(200); const mt = await p.evaluate(() => ({ th: document.querySelectorAll('.g3t tr:first-child th').length, last: [].slice.call(document.querySelectorAll('.g3t tr:first-child th')).slice(-2).map(x => x.textContent).join('|'), sw: [].map.call(document.querySelectorAll('[data-g3s]'), b => b.dataset.g3s).join(','), h: document.querySelector('.g3h').textContent, c: [].map.call(document.querySelectorAll('[data-g3c]'), x => x.dataset.g3c).join(',') }));
   if (mt.th !== 15 || !/陷阱/.test(mt.last) || /mt0/.test(mt.sw) || !/12 種/.test(mt.h) || !/402/.test(mt.c) || /304/.test(mt.c)) e.push('〔📝 四年級 複習〕不是 12 種 遊戲（陷阱 偵測器 在 最後、沒有〔四年級 複習 0〕）／四年級 的 班 ' + JSON.stringify(mt));
   n++; const hm = await p.evaluate(() => { const a = document.querySelector('a.thome'); return a ? { h: a.getAttribute('href'), y: a.getBoundingClientRect().height, f: parseFloat(getComputedStyle(a).fontSize) } : null; });
   if (!hm || hm.h !== '../index.html' || hm.y < 48 || hm.f < 18) e.push('沒有〔🏠 回 總首頁〕按鈕 ' + JSON.stringify(hm));
@@ -62,13 +70,12 @@ async function teacher(br, vp) {
   if (!cb.on || cb.n !== 3 || cb.top !== 1 || !(cb.w[0] > 0) || !/最好/.test(cb.s) || cb.sm || cb.oy > 4) e.push('班級 排行榜 動畫 頁 ' + JSON.stringify(cb));
   n++; await p.click('[data-cbn="1"]'); await p.waitForTimeout(300); const t2 = await p.textContent('#cbx .cbh'); if (!/2 ／ 7/.test(t2)) e.push('〔下一項 ▶〕沒有 換 ' + t2); await p.click('[data-cbn="x"]');
   n++; await p.click('#tabs button[data-t="r"]').catch(() => {}); await p.waitForTimeout(200);
-  await p.click('[data-g3s="all"]').catch(() => {});
-  await p.click('#tabs button[data-t="g"]'); await p.waitForTimeout(200); await p.click('[data-g3s="all"]'); await p.waitForTimeout(150);
+  await p.click('#tabs button[data-t="g"]'); await p.waitForTimeout(200); await p.click('[data-crg="3"]'); await p.waitForTimeout(150); await p.click('[data-crk="g"]'); await p.waitForTimeout(150); await p.click('[data-g3s="all"]'); await p.waitForTimeout(150);
   n++; await p.click('[data-g3s="g3m"]'); await p.waitForTimeout(200); c = await cellOf(); const a1 = c.rows.find(r => r[0] === '01'); if (!a1 || a1[2] !== '75') e.push('〔三年級 複習〕只 算 g3m：01 號 要 75 ' + JSON.stringify(a1));
   n++; await p.click('[data-g3s="c1"]'); await p.waitForTimeout(200); c = await cellOf(); const b1 = c.rows.find(r => r[0] === '01'), b2 = c.rows.find(r => r[0] === '02'); if (!b1 || b1[2] !== '100' || !b2 || b2[2] !== '—') e.push('〔課堂複習 1〕不對 ' + JSON.stringify([b1, b2]));
   n++; await p.click('[data-g3s="all"]'); await p.click('[data-g3c="307"]'); await p.waitForTimeout(200); c = await cellOf(); const d3 = c.rows.find(r => r[0] === '03'); if (!d3 || d3[2] !== '25') e.push('307 班 03 號 要 25 ' + JSON.stringify(d3));
   /* 2026-10-29 第 6 件：〔📝 三年級 期中 挑戰〕＝ 學生 成績＋錯題 分析＋錯題 排行榜（點 ＝ 詳解＋全班 訂正）*/
-  n++; await p.click('[data-g3s="x3"]'); await p.click('[data-g3c="304"]'); await p.waitForTimeout(250);
+  n++; await p.click('[data-crk="x"]'); await p.click('[data-g3c="304"]'); await p.waitForTimeout(250);
   const x3 = await p.evaluate(() => { const rows = [].map.call(document.querySelectorAll('.g3t tr'), tr => [].map.call(tr.children, td => td.childNodes[0] ? td.childNodes[0].textContent.trim() : ''));
     return { r1: rows.find(r => r[0] === '01'), r2: rows.find(r => r[0] === '02'), an: document.querySelectorAll('.xan>div').length, wq: document.querySelectorAll('.wq[data-qx]').length, h: [].map.call(document.querySelectorAll('.xh'), x => x.textContent).join('|'),
       sm: [].filter.call(document.querySelectorAll('#pane .xan *, #pane .xh, #pane .wq b'), x => x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < 17).length, ox: document.documentElement.scrollWidth - innerWidth }; });
@@ -76,6 +83,12 @@ async function teacher(br, vp) {
   n++; await p.click('.wq[data-qx]'); await p.waitForTimeout(300); const md = await p.evaluate(() => ({ on: document.getElementById('modal').classList.contains('on'), o: document.querySelectorAll('#mbox .opt').length, sh: !!document.getElementById('sh') }));
   if (!md.on || md.o < 2 || !md.sh) e.push('〔期中 挑戰〕錯題 詳解 打不開 ' + JSON.stringify(md));
   await p.click('#mx').catch(() => {}); await p.waitForTimeout(150);
+  /* 🏠 25 題 闖關（h25）：01 號 最近 92、最高 92、做 了 2 次；有〔📱 QR〕、〔⬇ 下載 Excel〕*/
+  n++; await p.click('[data-crk="h"]'); await p.waitForTimeout(250);
+  const h25 = await p.evaluate(() => { const rows = [].map.call(document.querySelectorAll('.g3t tr'), tr => [].map.call(tr.children, td => td.childNodes[0] ? td.childNodes[0].textContent.trim() : '')), r = rows.find(x => x[0] === '01');
+    return { r, n: (document.querySelector('.g3t tr:nth-child(2) td:nth-child(4) small') || {}).textContent, qr: (document.querySelector('a.crqr') || {}).getAttribute && document.querySelector('a.crqr').getAttribute('href'), dl: !!document.querySelector('[data-crdl]'), wq: document.querySelectorAll('.wq[data-qx]').length }; });
+  if (!h25.r || h25.r[2] !== '92' || h25.r[3] !== '92' || h25.qr !== '../go25/index.html?g=3' || !h25.dl || !h25.wq) e.push('〔🏠 25 題 闖關〕表 不對 ' + JSON.stringify(h25));
+  n++; await p.evaluate(() => { window.LASTXLSX = null; }); await p.click('[data-crdl]'); await p.waitForTimeout(400); if (!(await p.evaluate(() => window.LASTXLSX && window.LASTXLSX.length > 200))) e.push('〔⬇ 下載 Excel〕沒有 下載');
   n++; if (SC.cat('g3gm_g3m-q1').k !== 'g3c' || SC.cat('g3gm_c2-q10').k !== 'g3c' || SC.cat('g4gm_mt-m1').k !== 'mt') e.push('類別 不對');
   if (process.env.SHOT) await p.screenshot({ path: path.join(process.env.SHOT, 'g3c_' + vp[0] + '.png'), fullPage: true });
   /* ⚔ 階級 能力（第二十七次）：學生 出 的 題 ➜〔✔ 可以〕存好；小老師、名人堂 有 名字 */

@@ -337,6 +337,11 @@ const LES = {
     2: { key: 'g4A2', title: 'Unit 2 解碼 秘笈', sub: 'Is he a doctor?　他 是 醫生 嗎？', s: ['Is he a doctor?', 'Yes, he is.', 'Is she a cook?', 'No, she isn’t. She’s a teacher.'].map(lesS) } },
   B: { 1: { key: 'g4B1', title: 'Unit 1 解碼 秘笈', sub: 'Is he your brother?　他 是 你的 哥哥 嗎？', s: ['Who’s he?', 'Is he your brother?', 'Yes, he is.', 'Is she your mom? No, she isn’t.'].map(lesS) },
     2: { key: 'g4B2', title: 'Unit 2 解碼 秘笈', sub: 'Is your dad a farmer?　你的 爸爸 是 農夫 嗎？', s: ['Is your dad a farmer?', 'Yes, he is.', 'Is your sister a student?', 'No, she isn’t.'].map(lesS) } } };
+/* 2026-10-30 第三十四次 第 9-(5A)(5B) 點：解碼 開始 前 的 教學（g3mid/_decode.js 的 decTut）：① 怎麼 拖 ② 中英 順序 不 一樣（他 是 誰？➜ 誰 是 他）③ 小 測驗 2 題 */
+const tutQ = (en, x) => ({ en, v: '', t: PL.sent4(en), x: x || [], z: PL.zh4(en) });
+const DTUT = { key: 'g4', demo: tutQ('She’s my mom.'), quiz: [tutQ('Who’s she?', ['他']), tutQ('Is she your mom?', ['他'])],
+  ord: Object.assign(tutQ('Who’s he?'), { nat: [['他', 2], ['是', 1], ['誰', 0]], c1: '中文 這樣 說：<b>他 是 誰？</b>', c2: '英文 把 <b>Who（誰）</b> 放 在 <b>最 前面</b>！每個 中文 飛到 自己 的 英文 字 下面', c3: '所以 解碼 唸起來：<b>誰 是 他</b>（每個 英文 字 正下方 ＝ 它 自己 的 中文）' }) };
+[DTUT.demo, DTUT.ord].concat(DTUT.quiz).forEach(q => SAYS.push(q.en));
 XB.dc.concat(XB2.dc).forEach(q => SAYS.push(q.en));
 Object.keys(XB2).filter(k => k !== 'dc').forEach(k => XB2[k].forEach(c => { [c.say, c.ae, c.line].forEach(x => { if (x && !/^[⭕❌]/.test(x)) SAY.push(x); }); if (c.chat) c.o.forEach(x => SAY.push(x)); (c.fs || []).forEach(([v, t]) => { if (v === 'M1') SAYM.push(t); else SAYS.push((v === 'm' ? 'm:' : '') + t); }); if (c.pair) c.pair.forEach(x => SAYM.push(x)); if (c.w) SAYM.push(c.w); if (c.kind === 'L' || c.num) SAYM.push(c.say); })); ['A', 'B'].forEach(b => [1, 2].forEach(u => LES[b][u].s.forEach(x => SAYS.push(x.en))));   /* 🔓 解碼 任務、秒懂 動畫 */
 /* 挑戰 題庫 的「第幾題」（成績 用）：原本 84 題 照 原來 順序，新 的 60 題 接 在 後面 */
@@ -346,4 +351,4 @@ GAMES.forEach(g => { for (let j = XN0[g.id]; j < XB[g.id].length; j++) XORD.push
 for (let j = 0; j < XB.dc.length; j++) XORD.push(['dc', j]);   /* 🔓 解碼 任務 56 題 接 在 最後 */
 const XORD2 = [];   /* 新 25／新 50 的「第幾題」＝ n1～n6 照 順序，🔓 解碼 任務 在 最後 */
 ['n1', 'n2', 'n3', 'n4', 'n5', 'n6', 'dc'].forEach(id => { for (let j = 0; j < XB2[id].length; j++) XORD2.push([id, j]); });
-module.exports = { XORD2, NGAME, LES, XB2, XORD, XN0, XB, GAMES, SEC, WHO, JOB, PAS, PHOTO, TREE, SAY, SAYS: [...new Set(SAYS)], SAYM: [...new Set(SAYM)], GL, picZh };
+module.exports = { DTUT, XORD2, NGAME, LES, XB2, XORD, XN0, XB, GAMES, SEC, WHO, JOB, PAS, PHOTO, TREE, SAY, SAYS: [...new Set(SAYS)], SAYM: [...new Set(SAYM)], GL, picZh };

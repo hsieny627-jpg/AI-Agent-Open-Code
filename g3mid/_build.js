@@ -26,7 +26,7 @@ D.GAMES.forEach(g => { if (g.B.length < 8) LEAK.push(g.nm + ' 題庫不到 8 題
 /* 2026-10-26 第二十八次：📝 25／50 題 挑戰 的 題庫（D.XB）：跟 考卷、「三年級 複習」、課堂複習 1～3 草稿 一題 都 不 一樣；30% 類似；人名 沒 用過 */
 { const C = require('./_class_data.js'), XB = D.XB, cls = id => [].concat(...C.SETS.map(st => C['Q' + id.slice(1)][st[0]])),
     KEY = { q1: q => q.say + '|' + q.o[0], q2: q => JSON.stringify(q.say.map(x => x[1])), q3: q => q.say + '|' + q.o.slice().sort().join(), q4: q => q.say + '|' + q.want, q5: q => (q.lis ? 'lis' : q.show + '>') + q.want,
-      q6: q => q.n + '|' + q.obj + '|' + (q.ctx || ''), q7: q => q.s, q8: q => (q.a || q.b) + '|' + q.o[0], q9: q => JSON.stringify(q.c.map(c => [c.t, c.a])), q10: q => q.code },
+      q6: q => q.n + '|' + q.obj + '|' + (q.ctx || ''), q7: q => q.s, q8: q => (q.a || q.b) + '|' + q.o[0], q9: q => JSON.stringify(q.c.map(c => [c.t, c.a])) + (q.k ? q.k + q.r : ''), q10: q => q.code },
     CK = { q1: r => r[1] + '|' + r[2], q2: r => JSON.stringify(r[1].map(x => x[1])), q3: r => r[1] + '|' + [r[2]].concat(r[3]).sort().join(), q4: r => r[1] + '|' + r[2], q5: r => r[1] + '>' + r[2],
       q6: r => r[1] + '|' + r[2] + '|' + r[3], q7: r => r[1], q8: r => r[2] + '|' + r[3], q9: r => JSON.stringify(r[1].map(x => [x[0], x[1]])), q10: r => r[1] },
     XBAN = new RegExp('\\b(' + C.BAN.concat(['Mike', 'Emma', 'Wendy', 'Roy', 'Sam', 'Ann', 'Lily'], C.NAMES.c1.b, C.NAMES.c1.g, C.NAMES.c2.b, C.NAMES.c2.g, C.NAMES.c3.b, C.NAMES.c3.g).join('|') + ')\\b');
@@ -317,6 +317,18 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 .mv:nth-child(1){background:#E64A3C}.mv:nth-child(2){background:#2F7BFF}.mv:nth-child(3){background:#2AA84A}.mv:nth-child(4){background:#B0731A}
 .mv.ok{box-shadow:0 0 0 6px #fff,0 0 30px #7BF0A8}.mv.no{opacity:.35}
 .ask8{font-size:clamp(22px,3vh,30px);color:#fff}
+.flow8{display:flex;align-items:center;justify-content:center;gap:clamp(6px,1vw,14px);width:min(980px,100%);margin:0 auto}
+.f8c{display:flex;align-items:center;gap:8px;padding:6px 14px 6px 6px;border-radius:999px;background:rgba(255,255,255,.08);border:3px solid #5A6A8A;min-width:0;animation:f8in .5s both}
+.f8foe{border-color:#FF6B6B;background:rgba(176,16,48,.28)}.f8you{border-color:#5EC8FF;background:rgba(30,110,200,.28)}.flow8 .f8c:last-child{animation-delay:.9s}
+.f8p{position:relative;flex:none}.f8p img{width:clamp(44px,6vh,60px);height:clamp(44px,6vh,60px);border-radius:50%;object-fit:cover;object-position:50% 15%;border:3px solid #fff;display:block}
+.f8p em{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);font-style:normal;font-size:18px;line-height:1.1;background:#000;border-radius:6px;padding:0 4px;white-space:nowrap;color:#FFD6D6}.f8p.me em{color:#CFEFFF}
+.f8r{font-size:clamp(26px,3.8vh,38px);white-space:nowrap}.f8foe .f8r{color:#FFB0B0}.f8you .f8r{color:#9EDCFF}
+.f8l{font-size:clamp(26px,3.8vh,36px);color:#fff;white-space:nowrap;animation:f8q 1s ease-in-out infinite alternate}
+.f8q{font-size:clamp(26px,3.8vh,36px);color:#FFE07A;animation:f8q 1s ease-in-out infinite alternate;max-width:none}
+.f8a{position:relative;flex:none;width:clamp(40px,6vw,80px);height:8px;border-radius:4px;background:repeating-linear-gradient(90deg,#FFE07A 0 10px,transparent 10px 16px)}.f8a:after{content:'';position:absolute;right:-12px;top:-8px;border:12px solid transparent;border-left:16px solid #FFE07A;border-right:0}
+.f8a i{position:absolute;top:-6px;left:0;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 0 14px #FFE07A;animation:f8run 1.4s .5s ease-in-out infinite}
+@keyframes f8in{0%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:none}}@keyframes f8run{0%{left:0;opacity:0}15%{opacity:1}100%{left:calc(100% - 10px);opacity:0}}@keyframes f8q{to{transform:scale(1.18)}}
+@media (prefers-reduced-motion:reduce){.f8c,.f8a i,.f8q{animation:none}}
 /* ══ 9 🪪 連連看 ══ */
 .cn9{position:relative;display:grid;grid-template-columns:1fr minmax(60px,18vw) auto;align-items:center;width:min(1000px,100%)}
 .cn9 svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
@@ -517,6 +529,35 @@ body.ing #scbar{display:none!important}
 .k9{border-radius:9px;padding:0 4px;box-shadow:0 0 0 3px var(--k),0 0 9px var(--k);transition:box-shadow .5s,transform .5s}.k9on .k9{animation:k9in .6s ease-out both}@keyframes k9in{from{box-shadow:0 0 0 0 transparent}}
 .k9.k9go{transform:scale(1.12);box-shadow:0 0 0 4px var(--k),0 0 16px var(--k)}.k9.k9ans{background:rgba(255,107,107,.18)}
 .ar9{position:fixed;inset:0;pointer-events:none;z-index:30}.ar9 path:first-of-type{}.ar9 svg>path{stroke-dasharray:1400;stroke-dashoffset:1400;animation:ar9 1s ease-out forwards;filter:drop-shadow(0 0 5px rgba(255,107,107,.7))}@keyframes ar9{to{stroke-dashoffset:0}}
+.fm9k table{max-width:520px;margin:0 auto}.fm9k .sl9{min-width:3em}.k9g{display:inline-block;padding:0 6px}
+.ob9{display:flex;gap:clamp(12px,2vw,22px);justify-content:center;flex-wrap:wrap;margin-top:clamp(8px,1.6vh,16px)}
+.o9{min-width:clamp(110px,13vw,170px);min-height:clamp(64px,8.4vh,84px);padding:0 22px;border-radius:18px;border:4px solid #C9A227;background:linear-gradient(#FFE07A,#FFB300);color:#3A2A00;font-size:clamp(30px,4.4vh,44px);box-shadow:0 6px 0 #9A6A00}
+.o9.ok{background:linear-gradient(#7BF0A8,#2BD46A);border-color:#BFFFD0}.o9.no{background:linear-gradient(#FF9A9A,#FF5A5A);border-color:#FFC2C2;animation:dcsh .45s}
+#wb9{position:fixed;inset:0;z-index:96;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 30%,#0E5C8A,#04121F 72%);padding:12px}#wb9.on{display:flex}
+.wbw{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.4vh,14px);text-align:center;max-width:100%}
+.wbh{font-size:clamp(30px,4.6vh,48px);color:#FFE07A}
+.wbp{position:relative;animation:wbin .9s cubic-bezier(.3,1.5,.5,1) both}.wbp img{display:block;height:clamp(220px,46vh,520px);max-width:92vw;object-fit:contain;border-radius:14px;box-shadow:0 0 0 6px #fff,0 18px 40px rgba(0,0,0,.6)}
+.wbt{position:absolute;top:-14px;right:-14px;background:#FF5A5A;color:#fff;font-size:clamp(20px,2.8vh,28px);padding:4px 14px;border-radius:999px;transform:rotate(6deg);box-shadow:0 4px 0 #A01818;animation:wbtg 1.2s .9s ease-in-out infinite alternate}
+@keyframes wbin{0%{opacity:0;transform:translateY(60px) rotate(-8deg) scale(.6)}100%{opacity:1;transform:none}}@keyframes wbtg{to{transform:rotate(-4deg) scale(1.08)}}
+.wbs{font-size:clamp(28px,4.4vh,46px);color:#fff;display:flex;flex-wrap:wrap;justify-content:center;gap:0 .3em}.wbs span{opacity:0;animation:wbw .45s both}.wbs b{color:#FFE07A}
+@keyframes wbw{0%{opacity:0;transform:translateY(16px) scale(.8)}100%{opacity:1;transform:none}}
+.wbk{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;opacity:0;animation:wbw .5s 2.8s both}.wbk span{font-size:clamp(22px,3vh,30px);background:#fff;color:#0B2A44;border-radius:14px;padding:4px 16px;box-shadow:0 4px 0 #7A4610}.wbk b{color:#C2185B}
+.wbb{min-height:72px}.wbgo{min-height:72px;padding:0 44px;border-radius:20px;border:4px solid #7BF0A8;background:linear-gradient(#36D27A,#1E9E55);color:#06210F;font-size:clamp(26px,3.6vh,36px);animation:wbw .4s both}
+@media (prefers-reduced-motion:reduce){.wbp,.wbt,.wbs span,.wbk,.wbgo{animation:none;opacity:1}}
+
+/* ── 🏠 25 題 闖關（回家；home.html，2026-10-30 第三十四次 第 1～4 點）── */
+#hm25{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at 50% 20%,#24427A,#070A16 70%);overflow:auto}
+#hm25[hidden]{display:none}
+.hmw{display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2.2vh,22px);text-align:center;max-width:900px}
+.hmt{font-size:clamp(34px,5.4vh,56px);color:#FFE07A;text-shadow:0 4px 0 #6B4A00}
+.hms{font-size:clamp(30px,5vh,52px);color:#fff;background:rgba(255,255,255,.08);border:4px solid #FFE07A;border-radius:24px;padding:clamp(10px,2vh,20px) clamp(16px,3vw,32px);line-height:1.35}
+.hmk{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.hmk span{font-size:clamp(20px,2.8vh,28px);background:#14243E;border:3px solid #3E5C88;border-radius:999px;padding:4px 16px;color:#DDEBFF}
+.hmb{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.hmb button{min-height:clamp(76px,11vh,104px);padding:6px clamp(26px,4vw,48px);border-radius:24px;font-size:clamp(30px,4.6vh,46px);border:4px solid #7BF0A8;background:linear-gradient(#36D27A,#1E9E55);color:#06210F;box-shadow:0 8px 0 #0E5A2E;animation:hmgo 1.6s ease-in-out infinite alternate}
+.hmb button.b2{background:linear-gradient(#3A4A66,#243048);border-color:#6F86A6;color:#fff;box-shadow:0 8px 0 #121A28;animation:none;font-size:clamp(24px,3.4vh,34px)}
+.hmb small{display:block;font-size:.55em;color:#0A3A1C}
+.hmbest{font-size:clamp(22px,3vh,30px);color:#FFE07A}
+@keyframes hmgo{to{transform:scale(1.05)}}@media (prefers-reduced-motion:reduce){.hmb button{animation:none}}
 .tile9.sel{box-shadow:0 0 0 6px #3EC5FF,0 6px 0 #9A6A00}.tile9.drag{z-index:20;position:relative}.tile9.used{visibility:hidden}
 .fb9{display:flex;flex-direction:column;gap:6px}
 @media (orientation:portrait){.bb9{grid-template-columns:1fr}}
@@ -540,13 +581,13 @@ const BODY = `
 <div class="scr" id="endv" hidden><div class="end" id="end"></div></div>
 <div id="gain"></div>
 <div id="fb"><div class="box" id="fbx"></div></div>
-<div id="go"></div><div id="duob"></div><div id="dcl"></div><div id="wp"></div><div id="cfz"></div><div id="crw"></div><div id="xq"><div class="xqb"><div class="xqi">🛑</div><div class="xqh">真的 要 離開 嗎？</div><div class="xqt" id="xqt"></div><div class="xqbtn"><button id="xstay">▶ 繼續 作答</button><button id="xleave">🚪 先 離開</button></div></div></div>`;
+<div id="go"></div><div id="wb9"></div><div id="duob"></div><div id="dcl"></div><div id="wp"></div><div id="cfz"></div><div id="crw"></div><div id="xq"><div class="xqb"><div class="xqi">🛑</div><div class="xqh">真的 要 離開 嗎？</div><div class="xqt" id="xqt"></div><div class="xqbtn"><button id="xstay">▶ 繼續 作答</button><button id="xleave">🚪 先 離開</button></div></div></div>`;
 
 const JS = `
 ${DECX.JS}
-var LES=${J(D.LES)},DCG={id:'dc',ic:'🔓',nm:'句子 解碼 任務',how:'👇 把 中文 方塊 拖到 英文 字 的 正下方（也 可以 先 點 方塊、再 點 格子）· 放對 幾個 ＝ 拿 幾成 分數',t:45,B:[],c1:'#5A2A8C',c2:'#E0A030'};DEC.SIL=${J(D.SIL)};
+var LES=${J(D.LES)},DTUT=${J(D.DTUT)},DCG={id:'dc',ic:'🔓',nm:'句子 解碼 任務',how:'👇 把 中文 方塊 拖到 英文 字 的 正下方（也 可以 先 點 方塊、再 點 格子）· 放對 幾個 ＝ 拿 幾成 分數',t:45,B:[],c1:'#5A2A8C',c2:'#E0A030'};DEC.SIL=${J(D.SIL)};
 var CB=${J(D.CB)},CSETS=${J(D.CSETS)},XB=${J(D.XB)},XALL=${J(D.XORD)}.map(function(x){return XB[x[0]][x[1]]}),LVS=null,XB2=${J(D.XB2)},XALL2=${J(D.XORD2)}.map(function(x){return XB2[x[0]][x[1]]}),XBK='A',   /* 2026-10-29 第 3 件：題庫 B ＝ 新 25／新 50（XBK ＝ 'B'）；存 進度、做過 的、最高分、成績 代號 都 分開 */
-XA=function(){return XBK==='B'?XALL2:XALL},XBX=function(){return XBK==='B'?XB2:XB},XS=function(){return XBK==='B'?'n':''},XNM=function(n){return (XBK==='B'?'新 ':'')+n+' 題 挑戰'},GM=${J(GM)}, WAR=${J(WAR)}, WARALL=${J(WARALL)}, GL=${J(D.GL)}, PHM=${J(D.PHM)}, CE=${J(D.CE)}, SC=${J(D.SC)}, BOYS=${J(D.BOYS)}, NUMW=${J(D.NUMW)};
+XA=function(){return XBK==='B'?XALL2:XALL},XBX=function(){return XBK==='B'?XB2:XB},XS=function(){return XBK==='B'?'n':XBK==='H'?'h':''},XNM=function(n){return XBK==='H'?n+' 題 闖關':(XBK==='B'?'新 ':'')+n+' 題 挑戰'},GM=${J(GM)}, WAR=${J(WAR)}, WARALL=${J(WARALL)}, GL=${J(D.GL)}, PHM=${J(D.PHM)}, CE=${J(D.CE)}, SC=${J(D.SC)}, BOYS=${J(D.BOYS)}, NUMW=${J(D.NUMW)};
 ${HW.js}
 function $(s){return document.querySelector(s)}
 function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
@@ -603,7 +644,13 @@ function duoEnd1(){var c=DUO.cur;DUO.done[c]=1;DUO.rc=DUO.rc||[];DUO.rc[c]=rec1(
    return '<div class="'+(k?'p2':'p1')+'"><b>👤 '+duoNm(D.id[k])+'</b><span class="big">'+Math.min(100,Math.round(r.score*10)/10)+' 分 ／ 100</span><span>答對 '+ok+' ／ '+r.x+'</span><small>'+(D.rc[k]?'📝 記進 成績 了':'⚠️ 沒有 記 成績')+'</small></div>'}).join('')+'</div>'+
   '<div class="btns"><button class="b2" id="tolob">🎮 回 大廳</button></div>';window.scrollTo(0,0);confetti()}
 /* 開場：遊戲 圖示＋名字＋怎麼玩 ➜ 3、2、1、GO!（2026-10-25 第二十五次：比較 刺激；window.__NOGO ＝ 量測 跳過）*/
-function goSplash(done){if(window.__NOGO){done();return}var o=$('#go'),my=R;o.innerHTML='<div class="gw0">'+(R.x?'<div class="glv">第 '+(R.lv+1)+' 關 ／ '+(LVS||GM).length+'</div>':'')+'<div class="gi">'+G.ic+'</div><div class="gn">'+esc(G.nm)+'</div><div class="gh">'+esc(G.how)+'</div><div class="g3" id="g3">3</div></div>';o.classList.add('on');var n=3;
+/* 2026-10-30 第三十四次 第 6 點（老師：資料表 小幫手 一開始 獨立 頁「這一關 的 題目 是 根據 習作 21 頁 改編」＋習作 21 頁 截圖）：
+   每一次 進 這一關（大廳 玩、25／50 題 第 N 關、現場任務）都 先 這一頁；倒數 還 沒 開始；圖 飛進來 ➜ 字 一個 詞 一個 詞 亮 ➜ 2.6 秒 才 有〔▶ 開始〕。window.__NOWB ＝ 量測 跳過 */
+function wb9(done){if(window.__NOWB){done();return}var o=$('#wb9'),my=R;o.innerHTML='<div class="wbw"><div class="wbh">📋 資料表 小幫手</div><div class="wbp"><img src="img/workbook_p21.webp" alt="習作 21 頁"><span class="wbt">📖 習作 第 21 頁</span></div>'+
+  '<div class="wbs">'+['這一關','的','題目','是','根據','<b>習作 21 頁</b>','改編'].map(function(w,i){return '<span style="animation-delay:'+(1.1+i*.22)+'s">'+w+'</span>'}).join('')+'</div>'+
+  '<div class="wbk"><span>Name ➜ <b>Age</b></span><span>Age ➜ <b>Name</b></span></div><div class="wbb" id="wbb"></div></div>';o.classList.add('on');
+ setTimeout(function(){if(R!==my||!o.classList.contains('on'))return;var b=H('button','wbgo','▶ 開始');b.onclick=function(){o.classList.remove('on');o.innerHTML='';done()};$('#wbb').appendChild(b)},window.__WBK!=null?window.__WBK:2600)}
+function goSplash(done){if(G&&G.id==='q9'&&!R.wbDone){R.wbDone=1;wb9(function(){goSplash(done)});return}if(window.__NOGO){done();return}var o=$('#go'),my=R;o.innerHTML='<div class="gw0">'+(R.x?'<div class="glv">第 '+(R.lv+1)+' 關 ／ '+(LVS||GM).length+'</div>':'')+'<div class="gi">'+G.ic+'</div><div class="gn">'+esc(G.nm)+'</div><div class="gh">'+esc(G.how)+'</div><div class="g3" id="g3">3</div></div>';o.classList.add('on');var n=3;
  var t=setInterval(function(){var c=$('#g3');if(R!==my||!c||$('#game').hidden){clearInterval(t);o.classList.remove('on');return}n--;if(n>0){c.textContent=n;c.classList.remove('pp');void c.offsetWidth;c.classList.add('pp')}else if(n===0){c.textContent='GO!';c.classList.add('gogo')}else{clearInterval(t);o.classList.remove('on');done()}},650)}
 function RK(){return R.gk!=null?R.gk:R.k}   /* 這一關 的 第幾題（25／50 題 挑戰 一關 一關 算）*/
 function dots(){$('#dots').innerHTML=(R.x?'<span class="xpg">📝 '+(R.k+1)+' ／ '+R.x+'</span>':'')+R.qs.map(function(q,k){if(R.x&&R.lvOf[k]!==R.lv)return '';return '<i class="'+(R.res[k]===1?'ok':R.res[k]===0?'no':k===R.k?'cur':'')+'"></i>'}).join('')}
@@ -614,7 +661,8 @@ function next(){if(DUO&&duoSw())return;QID++;PD=null;R.retry=0;R.k++;BUSY=false;
  if(R.x){var lv=R.lvOf[R.k];if(lv!==R.lv){R.lv=lv;R.gk=0;for(var j=0;j<R.k;j++)if(R.lvOf[j]===lv)R.gk++;R.q2how=0;G=(R.x&&LVS?LVS:GM)[lv];$('#stage').innerHTML='';hudX();var go=function(){goSplash(nextR)};
    if(G.id==='q8'){FHP=Math.max(1,Math.ceil(R.cnt[lv]/2));if(!ls('g3m_war')&&!rpHero()){warPick(go);return}}go();return}R.gk++}
  nextR()}
-function nextR(){if(G.id==='dc'&&R.q.u!==R.dcu){R.dcu=R.q.u;$('#stage').innerHTML='';decLesson(LES[R.bk||'A'][R.q.u],nextR);return}R.ts=Date.now();R.pre=null;R.frac=0;dots();$('#stage').innerHTML='';$('#how').textContent=R.q.how||G.how;REN[G.id](R.q,$('#stage'));tStart(G.t)}   /* q.how ＝ 這一題 問法 不一樣（大寫、用 聽 的）*/
+function nextR(){if(G.id==='dc'&&R.q.u!==R.dcu){var tut=R.dcu==null;R.dcu=R.q.u;$('#stage').innerHTML='';var les=function(){decLesson(LES[R.bk==='B'?'B':'A'][R.q.u],nextR)};if(tut&&!window.__NOTUT)decTut(DTUT,les);else les();return}   /* 2026-10-30 第 9-(5) 點：這一場 第一題 解碼 前 ＝ 先 教 怎麼 拖、中英 順序（decTut）*/
+R.ts=Date.now();R.pre=null;R.frac=0;dots();$('#stage').innerHTML='';$('#how').textContent=R.q.how||G.how;REN[G.id](R.q,$('#stage'));tStart(G.t)}   /* q.how ＝ 這一題 問法 不一樣（大寫、用 聽 的）*/
 function hudX(){$('#gnm').textContent='第 '+(R.lv+1)+' 關 · '+G.ic+' '+G.nm;$('#how').textContent=G.how;$('#wsw').hidden=G.id!=='q8';$('#tmb').style.transform='scaleX(1)';$('#tsec').textContent=G.t}
 /* ══ 2026-10-27 第三十二次 第 3-(1) 點（老師：點〔離開〕就 前功盡棄）══
    25／50 題：每 答 一題 自動 存 在 這台 平板（g3m_xs25_5碼）；按〔✕ 離開〕先 問「真的 要 離開 嗎？」；
@@ -635,7 +683,7 @@ function startX(N){if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function()
  /* 2026-10-29 第 2 件：第 1 關 ＝ 🔓 句子 解碼 任務（25 題 裡 8 題、50 題 裡 15 題；Unit 1 一半 ➜ Unit 2 一半），其他 10 關 平均 分 剩下 的 */
  var XB=XBX();DCG.B=XB.dc;LVS=[DCG].concat(GM);var DN=N===25?8:N===50?15:Math.round(N*.3),M=N-DN;
  document.body.classList.add('ing');var n=GM.length,c=GM.map(function(){return Math.floor(M/n)}),s=c.map(function(){return 0});shuf(GM.map(function(g,i){return i})).slice(0,M-c[0]*n).forEach(function(i){c[i]++});
- var SIM=GM.map(function(g){return XB[g.id].filter(function(q){return q.sim})}),NEW=GM.map(function(g){return XB[g.id].filter(function(q){return !q.sim})}),left=Math.round(N*(XBK==='B'?.5:.3)),ord=shuf(GM.map(function(g,i){return i}));   /* 新 25／新 50 ＝ 50% 類似（老師 第三十三次）*/
+ var SIM=GM.map(function(g){return XB[g.id].filter(function(q){return q.sim})}),NEW=GM.map(function(g){return XB[g.id].filter(function(q){return !q.sim})}),left=XBK==='H'?0:Math.round(N*(XBK==='B'?.5:.3)),ord=shuf(GM.map(function(g,i){return i}));   /* 新 25／新 50 ＝ 50% 類似（老師 第三十三次）*/
  while(left>0){var mv=0;ord.forEach(function(i){if(left>0&&s[i]<c[i]&&s[i]<SIM[i].length){s[i]++;left--;mv=1}});if(!mv)break}
  ord.forEach(function(i){while(c[i]-s[i]>NEW[i].length)s[i]++});
  var SEEN=xSeen(),un=function(L){L=shuf(L);return L.filter(function(q){return !SEEN[XA().indexOf(q)]}).concat(L.filter(function(q){return SEEN[XA().indexOf(q)]}))};   /* 第三十二次 3-(2)：做過 的 題目 先 不出（全部 做過 才 重新 洗）*/
@@ -657,7 +705,7 @@ function qRec(ok,pick){if(!R||R.Q.length>R.k)return;var ms=Date.now()-(R.ts||Dat
   R.Q.push([ok?1:0,ci,Math.round(ms/100)/10,pick!=null&&ms<1000?1:0,ok?Math.round(tLeft()/TM.T*1000)/1000:R.x&&G.id==='dc'?Math.round((R.frac||0)*1000)/1000:0,R.x?XA().indexOf(R.q):G.B.indexOf(R.q)]);   /* 🔓 解碼 任務 答錯 ＝ 第 5 格 放 放對 幾成（伺服器 照 這個 算 分）*/crProg(ok);if(R.x&&!R.crs){xSeenAdd(XA().indexOf(R.q));setTimeout(xSave,0)}}   /* 25／50 題：題庫 ＝ 挑戰 題庫（10 種 接起來）*/
 function rec1(){try{if(!R||R.sent||!R.Q.length||typeof scLive!=='function'||!scLive())return false;var fast=0;R.Q.forEach(function(x){fast+=x[3]});if(fast*2>R.Q.length)return false;R.sent=1;
   var u=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-  var Rr={id:SCID,set:R.x?'g3gm_g3m-'+(R.bk==='B'?'n':'x')+R.x:'g3gm_'+crSet()+'-'+G.id,name:R.x?'📝 三年級 複習｜📝 '+XNM(R.x):crName()+'｜'+G.ic+' '+G.nm,m:'g',qs:R.Q,raw:R.score,fix:0,mp:0,mw:0,sec:Math.round((Date.now()-R.t0)/1000),src:'school',dev:SCDEV,u:u,t:Date.now()};
+  var Rr={id:SCID,set:R.x?'g3gm_g3m-'+(R.bk==='B'?'n':R.bk==='H'?'h':'x')+R.x:'g3gm_'+crSet()+'-'+G.id,name:R.x?'📝 三年級 複習｜📝 '+XNM(R.x):crName()+'｜'+G.ic+' '+G.nm,m:'g',qs:R.Q,raw:R.score,fix:0,mp:0,mw:0,sec:Math.round((Date.now()-R.t0)/1000),src:'school',dev:SCDEV,u:u,t:Date.now()};
   var QQ=scGet('q')||[];QQ.push(Rr);scPut('q',QQ.slice(-200));scFlush();return true}catch(e){return false}}
 function good(el,hold){if(BUSY)return;qRec(1);BUSY=true;tPause();var l=tLeft(),sp=Math.round(900*l/TM.T),cb=Math.min(250,R.streak*50),p=R.x?R.pt:100+sp+cb;   /* 25／50 題：答對 一題 ＝ 4／2 分 */
  R.streak++;R.score=Math.round((R.score+p)*10)/10;R.res[R.k]=1;dots();$('#sc').textContent=R.score;var cm=$('#cmb');if(R.streak>=2){cm.textContent='🔥 連對 '+R.streak;cm.className='cmb on'+(R.streak>=4?' hot':'');void cm.offsetWidth}
@@ -986,7 +1034,12 @@ REN.q8=function(q,st){if(RK()===0)HP8={b:0,e:FHP,m:8,ko:0};if(HP8.e<=0&&HP8.b===
   var ar=H('div','duel','<div class="dbg"><i></i><i></i></div><div class="fig me"><div class="fcard"><img src="'+warImg()+'" alt="你的戰士"></div><div class="hpb"><b>🛡 YOU</b><span class="bar"><i style="width:'+(HP8.m/8*100)+'%"></i></span></div></div><div class="vs">VS</div>'+
    '<div class="fig dk"><div class="fcard foe"><img src="'+F.img+'" alt="'+F.en+'"></div><div class="hpb"><b>💀 '+F.en+'</b><span class="bar"><i style="width:'+(HP8.e/FHP*100)+'%"></i></span></div></div><div class="bub8"><small>'+F.en+(q.rev?' answers:':' says:')+'</small>'+esc(line)+' <button id="b8" aria-label="再聽">🔊</button></div>'+
    '<div class="rnd8">ROUND '+(HP8.b+1)+' ／ 2</div>'+(HP8.nw?'<div class="nw8"><b>⚠ '+F.en+'</b><span>is coming!</span></div>':''));HP8.nw=0;
-  st.appendChild(ar);st.appendChild(H('div','ask8',q.rev?'🛡 '+F.zh+' <b>回答</b> 了 這一句 ➜ 他 剛剛 被 <b>問 什麼</b>？選 對的 ⚔ 反擊！':'🗡 '+F.zh+' 用 英文 <b>出招</b> ➜ 你 選 <b>對的 回答</b> ⚔ 反擊！'));var mv=H('div','moves');st.appendChild(mv);
+  st.appendChild(ar);/* 2026-10-30 第三十四次 第 8 點（老師：「誰 問、誰 被 問」看不懂）➜ 秒懂 對話 條：頭像＋大字「❓ 問」「💬 答」＋箭頭 一顆 光點 跑過去；已經 說了 的 ＝ 👆（上面 那一句），要 你 選 的 ＝ 會 閃 的「？ 👇」 */
+  $('#how').textContent=q.rev?'你 先 ❓ 問、反派 💬 答 了 👆 ➜ 你 剛剛 問 了 什麼？選 對的 問句 ⚔':'反派 ❓ 問 👆 ➜ 你 💬 答：選 對的 回答 ⚔';
+  var fA='<span class="f8p"><img src="'+F.img+'" alt=""><em>'+F.en.split(' ')[1]+'</em></span>',fY='<span class="f8p me"><img src="'+warImg()+'" alt=""><em>YOU</em></span>',
+   said='<span class="f8l">👆</span>',pk='<span class="f8l f8q">？ 👇</span>';
+  st.appendChild(H('div','ask8 flow8'+(q.rev?' rev':''),q.rev?'<div class="f8c f8you">'+fY+'<b class="f8r">❓ 問</b>'+pk+'</div><div class="f8a"><i></i></div><div class="f8c f8foe">'+fA+'<b class="f8r">💬 答</b>'+said+'</div>':
+   '<div class="f8c f8foe">'+fA+'<b class="f8r">❓ 問</b>'+said+'</div><div class="f8a"><i></i></div><div class="f8c f8you">'+fY+'<b class="f8r">💬 答</b>'+pk+'</div>'));var mv=H('div','moves');st.appendChild(mv);
   var play=function(){sayT(line)};ar.querySelector('#b8').onclick=play;
   shuf(q.o).forEach(function(o,i){var b=H('button','mv','<span class="mi">'+['⚔️','🔥','⚡','❄️'][i]+'</span>'+esc(o));b.dataset.o=o;b.onclick=function(){if(BUSY)return;var me=ar.querySelector('.fig.me'),dk=ar.querySelector('.fig.dk');
    if(o===q.o[0]){b.classList.add('ok');me.classList.add('dash');var sl=H('div','slash');ar.appendChild(sl);var dm=H('div','dmg','−1 💥');ar.appendChild(dm);setTimeout(function(){dk.classList.add('hurt')},180);
@@ -1009,7 +1062,24 @@ function warPick(done){var o=$('#wp'),sex=(ls('g3m_war')||'b').charAt(0)==='g'?'
 var K9C=['#FF6B6B','#5AA9FF','#C08BFF'];
 function k9line(q,i,col){var c=q.c[i],t=esc(q.lines[i]);
   t=t.replace(c.t,'<span class="k9 k9n" data-k="n'+i+'" style="--k:'+col+'">'+esc(c.t)+'</span>');var j=t.lastIndexOf(' '+c.w);if(j>=0)t=t.slice(0,j+1)+'<span class="k9 k9a" data-k="a'+i+'" style="--k:'+col+'">'+c.w+'</span>'+t.slice(j+1+c.w.length);return t}
-REN.q9=function(q,st){var bb=H('div','bb9'),fm=H('div','fm9'),tw=H('div','tw9'),tl=H('div','tl9'),sel=null,ssl=null,done=0,need=q.bl.length;R.q9=null;
+/* 2026-10-30 第三十四次 第 6 點：新題型（q.k）＝ 同樣 3 個人 的 自我介紹 ➜ 一列 資料表（na：Name 給了 ➜ 選 Age；an：Age 給了 ➜ 選 Name）➜ 四選一 */
+function ren9k(q,st){var bb=H('div','bb9'),fm=H('div','fm9 fm9k'),ob=H('div','ob9'),c=q.c[q.r],na=q.k==='na';R.q9=null;
+  q.c.forEach(function(x,i){var b=H('div','bub9','<span class="av9">'+(BOYS.indexOf(x.t)>=0?'👦':'👧')+'</span><div class="tx9">'+esc(q.lines[i])+'</div><button class="sp9" aria-label="聽">🔊</button>');
+   b.querySelector('.sp9').onclick=function(){sayList([[BOYS.indexOf(x.t)>=0?'m':'',q.lines[i]]])};bb.appendChild(b)});
+  fm.innerHTML='<div class="clip9"></div><div class="ft9">✏️ New Friends</div><table><tr><th>Name</th><th>Age</th></tr><tr>'+(na?'<td class="g9v"><span class="k9g">'+esc(c.t)+'</span></td><td><span class="sl9 k9q">?</span></td>':'<td><span class="sl9 k9q">?</span></td><td class="g9v"><span class="k9g">'+c.a+'</span></td>')+'</tr></table>';
+  st.appendChild(bb);st.appendChild(fm);st.appendChild(ob);
+  shuf(q.o).forEach(function(v){var b=H('button','o9',esc(v));b.onclick=function(){if(BUSY)return;var sl=fm.querySelector('.k9q');sl.textContent=v;
+   if(v===q.o[0]){sl.classList.add('ok');b.classList.add('ok');BUSY=true;tPause();bb.children[q.r].classList.add('hl');sayList([[BOYS.indexOf(c.t)>=0?'m':'',q.lines[q.r]]],function(){if(R.q!==q)return;bb.children[q.r].classList.remove('hl');BUSY=false;good(fm)})}
+   else{sl.classList.add('no');b.classList.add('no');BUSY=true;tPause();R.pick={r:q.r,v:v};later(function(){miss(v)},700)}};ob.appendChild(b)});
+  /* 答錯／時間到：框 資料表 給 的 那個 字 ➜ 紅 箭頭 指到 對話框 同一個 字 ➜ 框出 答案（跟 原本 的 資料表 題 一樣）*/
+  R.pre=function(pick,go){var r=q.r,col=[0,1,2].map(function(i){return i===r?K9C[0]:K9C[i===(r+1)%3?1:2]});
+   q.c.forEach(function(x,i){bb.children[i].querySelector('.tx9').innerHTML=k9line(q,i,col[i])});
+   var gv=fm.querySelector('.k9g');gv.classList.add('k9');gv.style.setProperty('--k',K9C[0]);
+   var dk=bb.children[r].querySelector(na?'.k9n':'.k9a'),ans=bb.children[r].querySelector(na?'.k9a':'.k9n'),sl=fm.querySelector('.k9q');st.classList.add('k9on');gv.classList.add('k9go');
+   later(function(){if(!dk){go();return}var a=gv.getBoundingClientRect(),b=dk.getBoundingClientRect(),x1=a.left+a.width/2,y1=a.top,x2=b.left+b.width/2,y2=b.bottom+4,mx=(x1+x2)/2+(x1<x2?-60:60),my=(y1+y2)/2;
+    st.appendChild(H('div','ar9','<svg width="100%" height="100%"><defs><marker id="ah9" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="#FF6B6B"/></marker></defs><path d="M'+x1+','+y1+' Q'+mx+','+my+' '+x2+','+y2+'" fill="none" stroke="#FF6B6B" stroke-width="7" stroke-linecap="round" marker-end="url(#ah9)"/></svg>'));
+    later(function(){dk.classList.add('k9go');later(function(){if(ans)ans.classList.add('k9go','k9ans');sl.classList.remove('no');sl.classList.add('k9want');sl.textContent=q.o[0];later(go,1900)},900)},1100)},1000)}}
+REN.q9=function(q,st){if(q.k){ren9k(q,st);return}var bb=H('div','bb9'),fm=H('div','fm9'),tw=H('div','tw9'),tl=H('div','tl9'),sel=null,ssl=null,done=0,need=q.bl.length;R.q9=null;
   q.c.forEach(function(c,i){var b=H('div','bub9','<span class="av9">'+(BOYS.indexOf(c.t)>=0?'👦':'👧')+'</span><div class="tx9">'+esc(q.lines[i])+'</div><button class="sp9" aria-label="聽">🔊</button>');
    b.querySelector('.sp9').onclick=function(){sayList([[BOYS.indexOf(c.t)>=0?'m':'',q.lines[i]]])};bb.appendChild(b)});
   var h='<div class="clip9"></div><div class="ft9">✏️ New Friends</div><table><tr><th></th><th>Name</th><th>Age</th></tr>';
@@ -1041,7 +1111,7 @@ REN.q9=function(q,st){var bb=H('div','bb9'),fm=H('div','fm9'),tw=H('div','tw9'),
     var sv=H('div','ar9','<svg width="100%" height="100%"><defs><marker id="ah9" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="#FF6B6B"/></marker></defs><path d="M'+x1+','+y1+' Q'+mx+','+my+' '+x2+','+y2+'" fill="none" stroke="#FF6B6B" stroke-width="7" stroke-linecap="round" marker-end="url(#ah9)"/></svg>');st.appendChild(sv);
     later(function(){dk.classList.add('k9go');later(function(){if(ans)ans.classList.add('k9go','k9ans');if(sl){sl.classList.add('k9want');sl.textContent=want(r)}later(go,1900)},900)},1100)},1000)};
 };
-FB.q9=function(q,p){var bad=p&&p.r!=null?p.r:-1;return {you:p&&p.r!=null?'<span>第 '+(p.r+1)+' 列 放了 <s style="font-size:1.3em">'+esc(p.v)+'</s></span>':'',rep:1,
+FB.q9=function(q,p){if(q.k){var pv=typeof p==='string'?p:'';p={r:q.r,v:pv}}var bad=p&&p.r!=null?p.r:-1;return {you:q.k?(p.v?'<span>'+(q.k==='na'?esc(q.c[q.r].t)+' 的 Age：':'Age '+q.c[q.r].a+' 的 Name：')+'<s style="font-size:1.3em">'+esc(p.v)+'</s></span>':''):p&&p.r!=null?'<span>第 '+(p.r+1)+' 列 放了 <s style="font-size:1.3em">'+esc(p.v)+'</s></span>':'',rep:1,
   /* 答錯 的 那一列 ＝ 每個 字 下面 中文；另外 兩列 ＝ 一行 英文（畫面 不用 捲）*/
   body:'<div class="fb9">'+q.c.map(function(c,i){var hot=i===(bad<0?0:bad);return '<div class="q9f'+(hot?' hot':'')+'"><div style="font-size:clamp(22px,3vh,30px)">'+(i+1)+'. '+(BOYS.indexOf(c.t)>=0?'👦':'👧')+' Name: <b style="color:#FFE07A">'+esc(c.t)+'</b>　Age: <b style="color:#FFE07A;font-size:1.3em">'+c.a+'</b>'+(hot?'':'　<span style="color:#E8FFF0">'+esc(q.lines[i].replace(/'/g,'’'))+'</span>')+'</div>'+(hot?gloss(q.lines[i]):'')+'</div>'}).join('')+'</div>',
   sl:[0,1,2].map(function(i){return [BOYS.indexOf(q.c[i].t)>=0?'m':'',q.lines[i]]})}};
@@ -1111,11 +1181,40 @@ var lobby0=lobby;lobby=function(){lobby0();if(!CR||!CR.cfg){$('#xrow').innerHTML
     [].forEach.call(document.querySelectorAll('#grid .gc'),function(b){b.style.display='none'});$('#xrow').insertAdjacentHTML('afterbegin',duoRow());return}
   $('#xrow').innerHTML='';var gs=CR.cfg.gs||[];
   [].forEach.call(document.querySelectorAll('#grid .gc'),function(b){var g=GM[+b.dataset.g];if(gs.indexOf(g.id)<0)b.style.display='none'})};
+
+/* ══ 2026-10-30 第三十四次 第 1～4 點：🏠 三年級 25 題 闖關（回家 練習；只有 home.html 才 開：window.HOME25）══
+   老師 的 決定：每個 年級 一個 專屬 網址＋QR（放 總首頁、老師看板）➜ 掃了 ➜ 打 班級號碼＋密碼 ➜ 馬上 第 1 題；
+   題目 ＝ 25 題 挑戰 的 題庫 A 裡「全新 題」（跟 兩個 年級 期中考卷 100% 不一樣、不用 類似 題）、每次 先 出 沒 做過 的（XBK 'H'：存 進度、做過 的、最高分 都 分開，成績 g?gm_…-h25）；
+   第一頁 大字「老師依課本、習作自己設計的練習題。」（可以 給 家長 看）；不限 總 時間（每一題 自己 的 倒數 照舊）；答對 唸完 正確 答案 才 下一題（第一批 規則）；不 自動 跳進 現場任務 */
+if(window.HOME25){XBK='H';document.title='三年級 25 題 闖關';crAuto=function(){};
+ var HMS='老師依課本、習作自己設計的練習題。';
+ var hmEl=function(){var o=document.getElementById('hm25');if(!o){o=document.createElement('div');o.id='hm25';document.body.appendChild(o)}return o};
+ var hmBanner=function(){try{var h=SCH.box().querySelector('h2');if(h)h.innerHTML='📝 三年級 25 題 闖關<br><span style="color:#FFE07A">'+HMS+'</span>'}catch(e){}};
+ var hmGo=function(){if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();hmGo()});hmBanner();return}XBK='H';hmEl().hidden=true;if(xLoad(25))resumeX(25);else startX(25)};
+ var hmCover=function(){XBK='H';$('#lobby').hidden=true;var o=hmEl(),v=xLoad(25),b=ls('g3m_bxh25');
+   o.innerHTML='<div class="hmw"><div class="hmt">📝 三年級 25 題 闖關</div><div class="hms">'+HMS+'</div>'+
+    '<div class="hmk"><span>🔓 句子 解碼 8 題</span><span>🎮 10 種 遊戲 17 題</span><span>⏳ 不限 時間</span><span>🔁 每次 題目 不一樣</span></div>'+
+    '<div class="hmb">'+(v?'<button id="hmgo">▶ 繼續 第 '+(v.Q.length+1)+' 題<small>已經 做 了 '+v.Q.length+' ／ 25 題</small></button><button class="b2" id="hmnew">🔄 重新 開始</button>':'<button id="hmgo">▶ 開始 第 1 題</button>')+'</div>'+
+    (b?'<div class="hmbest">🏆 我的 最高 '+b+' 分</div>':'')+'</div>';o.hidden=false;
+   $('#hmgo').onclick=hmGo;var nw=$('#hmnew');if(nw)nw.onclick=function(){xDel(25);hmGo()}};
+ var lobbyH=lobby;lobby=function(){lobbyH.apply(this,arguments);hmCover()};
+ setTimeout(function(){if(typeof SCON!=='undefined'&&SCON&&!SCID)hmGo()},50)}
 if(!/[?&]live=/.test(location.search))lobby();   /* 第三十二次：一 打開 就 照 新 的 大廳（沒有 25／50 題） */
 crInit();
 
 `;
 
+/* 2026-10-30 第三十四次 第 9 點：解碼 縮寫 動畫 要 唸 的「What is」「What’s」「I am」「I’m」＝ 三年級 教學 網站（G3 - L1 + L2）同一個 聲音 已經 做好 的 檔 ➜ 複製 到 audio/x/（這裡 沒有 語音 模型；以後 重做 語音 也 照 這張 表）。
+   教學、縮寫 動畫 要 唸 的 句子 一句 都 不可以 沒有 語音檔 ➜ build 失敗 */
+const BORROW = ['what is', "what's", 'i am', "i'm"], AK = t => String(t).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…＿_　]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+const rdAud = f => { const c = { window: {} }; require('vm').runInNewContext(fs.readFileSync(f, 'utf8'), c); return Object.assign({}, ...Object.values(c.window).filter(x => x && typeof x === 'object')); };
+const MYA = AUD ? rdAud(path.join(__dirname, 'audio', 'aud.js')) : {}, G3A = rdAud(path.join(__dirname, '..', 'G3 - L1 + L2', 'audio', 'aud.js')), BX = {};
+BORROW.forEach(k => { const f = G3A[k]; if (!f) { console.error('✗ 三年級 教學 網站 沒有 語音檔：' + k); process.exit(1); } fs.mkdirSync(path.join(__dirname, 'audio', 'x'), { recursive: true });
+  fs.copyFileSync(path.join(__dirname, '..', 'G3 - L1 + L2', 'audio', f[0]), path.join(__dirname, 'audio', 'x', f[0])); BX[k] = ['x/' + f[0], f[1]]; });
+const BORROWJS = 'window.ENAUD=window.ENAUD||{};(function(X){for(var k in X)if(!ENAUD[k])ENAUD[k]=X[k]})(' + JSON.stringify(BX) + ');';
+{ const need = []; ['A', 'B'].forEach(b => [1, 2].forEach(u => D.LES[b][u].s.forEach(S => { if (S.eq) need.push([S.eq.a.say], [S.eq.b.say]); else need.push([S.en, S.v]); })));
+  [D.DTUT.demo, D.DTUT.ord].concat(D.DTUT.quiz).forEach(q => need.push([q.en, q.v]));
+  const miss = need.filter(([t, v]) => AUD && !MYA[(v === 'm' ? 'm:' : '') + AK(t)] && !MYA[AK(t)] && !BX[AK(t)]).map(x => x[0]); if (miss.length) { console.error('✗ 解碼 動畫 沒有 語音檔：' + miss.join('、')); process.exit(1); } }
 const html = `<!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1126,7 +1225,10 @@ ${CL.home(3, '../', 'school')}
 ${BODY}
 <script src="../live/fb.js"></script><script>${fs.readFileSync(path.join(__dirname, '..', 'live', '_db.js'), 'utf8')}</script><script>${fs.readFileSync(path.join(__dirname, '..', 'live', '_xlive_rt.js'), 'utf8')}</script>
 ${AUD ? '<script src="audio/aud.js"></script><script src="audio/w/aud.js"></script>' : ''}${['m1', 'm2'].filter(d => fs.existsSync(path.join(__dirname, 'audio', d, 'aud.js'))).map(d => '<script src="audio/' + d + '/aud.js"></script>').join('')}
+<script>${BORROWJS}</script>
 <script>${JS}</script>
 </body></html>`;
 fs.writeFileSync(path.join(__dirname, 'index.html'), html);
+/* 2026-10-30 第三十四次 第 1～4 點：🏠 三年級 25 題 闖關 的 專屬 網址（同一個 網頁，多 一個 HOME25）*/
+fs.writeFileSync(path.join(__dirname, 'home.html'), html.replace('<title>三年級 複習</title>', '<title>三年級 25 題 闖關</title>').replace('<script>' + JS + '</script>', '<script>window.HOME25=1</script><script>' + JS + '</script>'));
 console.log('g3mid/index.html：10 種遊戲、題庫 ' + D.GAMES.map(g => g.B.length).reduce((a, b) => a + b) + ' 題' + (AUD ? '' : '（還沒有語音檔，先用瀏覽器語音）'));

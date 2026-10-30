@@ -102,7 +102,7 @@ var SC = (function () {
   function mean(a) { if (!a.length) return null; var s = 0; for (var i = 0; i < a.length; i++) s += a[i]; return s / a.length; }
 
   /* 一題的紀錄：[答對 1/0, 選了第幾個（0 ＝ 正解，-1 ＝ 時間到）, 用了幾秒, 秒按 1/0, 剩下秒數 ÷ 總秒數] */
-  function xN(set) { var m = /_(g3m|mt)-[xn](25|50)$/.exec(String(set)); return m ? +m[2] : 0; }   /* 📝 25／50 題 挑戰 的 題數（2026-10-29：n25／n50 ＝ 新 25／新 50）*/
+  function xN(set) { var m = /_(g3m|mt)-[xnh](25|50)$/.exec(String(set)); return m ? +m[2] : 0; }   /* 2026-10-30 第三十四次：h25 ＝ 🏠 25 題 闖關（回家）*/   /* 📝 25／50 題 挑戰 的 題數（2026-10-29：n25／n50 ＝ 新 25／新 50）*/
   /* 2026-10-29 第三十三次：🔓 句子 解碼 任務「一個 字 一個 字 算」：答錯 的 題目 第 5 格 ＝ 放對 幾成（其他 答錯 ＝ 0）➜ 答對 題數 ＋ 放對 幾成 */
   function xOk(Q) { var k = 0; for (var i = 0; i < Q.length; i++) k += Q[i][0] ? 1 : Q[i][4]; return k; }
   function s100(qs) {

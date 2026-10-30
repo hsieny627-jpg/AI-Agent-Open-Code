@@ -602,3 +602,34 @@ body.host[data-scr=hq] .ring{box-shadow:0 0 0 6px rgba(255,255,255,.15)}
 .f5h{height:clamp(80px,14vh,170px);border-radius:14px}.f5s{font-weight:900;color:#FFE38A;font-size:1.3em}.f5c em{font-style:normal;color:#C9CFFF;min-height:1.2em}
 .f5c.out{opacity:.35;transform:scale(.85) translateY(30px);filter:grayscale(1)}.f5c.win{transform:scale(1.12);border-color:#FFD54A;box-shadow:0 0 50px rgba(255,213,74,.8)}
 .f5b{font-size:clamp(40px,7vh,84px);font-weight:900;color:#FF7A3D;min-height:1.2em;text-shadow:0 0 30px rgba(255,122,61,.7)}
+
+/* ══ 2026-10-30 第三十四次（老師：現場任務 頁面 簡陋、無聊 ➜ 像 Kahoot／Gimkit／Blooket 一樣 吸引人）══
+   只 疊 上去（不改 大小、位置、按鈕 尺寸 ➜ 原本 的 量測 照舊）：① 舞台 背景（紫藍 漸層＋四種 形狀 ▲◆●■ 淡淡 的 花紋）
+   （會 一直 動 的 不放：等人 頁 不可以 一直 動，老師 之前 的 規定；背景 是 靜的、形狀 不動）② 白色 題目 卡 有 彩色 光邊 ③ 答案 四色 立體（下緣 厚邊、上面 一條 亮光、一個 一個 彈 進來、按 下去 會 陷下去）④ 大 按鈕 金色 光暈 ⑤ 名牌、排行榜 一列 一列 有 光澤
+   ⑥ 最上面 一行（現在 要 做 什麼）漸層＋一 打開 一道 光 掃過去 一次。prefers-reduced-motion ＝ 全部 不動 */
+body.host,body.stu{background-color:#1A0B3D;background-image:linear-gradient(125deg,#2B0F6B 0%,#4A1A9C 28%,#1D2C8F 55%,#3A0E6E 80%,#2B0F6B 100%);background-attachment:fixed}
+body.host::before,body.stu::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.16;
+ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='360' height='360'><g fill='white'><path d='M40 70 L70 20 L100 70Z'/><rect x='230' y='40' width='44' height='44' rx='6' transform='rotate(18 252 62)'/><circle cx='300' cy='250' r='24'/><path d='M90 230 L118 258 L90 286 L62 258Z'/><circle cx='180' cy='150' r='10'/><path d='M200 310 L222 280 L244 310Z'/></g></svg>");
+ background-size:360px 360px}
+.qq,.sqq{box-shadow:0 0 0 5px rgba(255,255,255,.18),0 0 0 9px rgba(124,92,255,.55),0 14px 36px rgba(0,0,0,.55)}
+.qo,.so,.mo{box-shadow:inset 0 -9px 0 rgba(0,0,0,.28),inset 0 4px 0 rgba(255,255,255,.28),0 8px 0 rgba(0,0,0,.35),0 12px 26px rgba(0,0,0,.45);text-shadow:0 3px 0 rgba(0,0,0,.28)}
+.qo::after,.so::after{content:'';position:absolute;left:8%;right:8%;top:8px;height:22%;border-radius:999px;background:linear-gradient(rgba(255,255,255,.22),rgba(255,255,255,0));pointer-events:none}
+.so{position:relative;overflow:hidden}
+.qos>.qo,#sqo .so{animation:kpop .45s cubic-bezier(.2,1.6,.4,1) both}.qos>.qo:nth-child(2),#sqo .so:nth-child(2){animation-delay:.08s}.qos>.qo:nth-child(3),#sqo .so:nth-child(3){animation-delay:.16s}.qos>.qo:nth-child(4),#sqo .so:nth-child(4){animation-delay:.24s}
+@keyframes kpop{0%{opacity:0;transform:scale(.6) translateY(20px)}100%{opacity:1;transform:none}}
+.so:active{transform:translateY(6px);box-shadow:inset 0 -3px 0 rgba(0,0,0,.28),0 2px 0 rgba(0,0,0,.35)}
+.qo .shp,.so .shp,.mo .shp{filter:drop-shadow(0 3px 0 rgba(0,0,0,.3))}
+button.big.go,button.go{box-shadow:0 0 0 4px #5A4300,0 7px 0 #8A5A00,0 0 30px rgba(255,213,74,.65)}
+button.ghost,a.ghost{background:linear-gradient(#2A3150,#1A1F38);border-color:#6A5ACD;box-shadow:0 5px 0 #0E1024}
+.now{background:linear-gradient(90deg,#3A1F8A,#5A2BD6,#3A1F8A);border-color:#9C7BFF;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.now::after{content:'';position:absolute;top:0;bottom:0;width:30%;left:-40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);animation:ksw 1.6s ease-in-out 1 both;pointer-events:none}
+@keyframes ksw{0%{left:-40%}100%{left:120%}}
+.pl img{box-shadow:0 0 0 3px #fff,0 0 18px rgba(255,213,74,.6)}
+.lgame{text-shadow:0 4px 0 rgba(0,0,0,.35)}
+h1{text-shadow:0 5px 0 rgba(0,0,0,.35),0 0 24px rgba(255,213,74,.35)}
+@media (prefers-reduced-motion:reduce){.qos>.qo,#sqo .so,.now::after{animation:none}}
+/* 〔🏠 總首頁〕〔老師看板〕（老師：現場任務 頁面 加 回 這兩個 的 按鈕）：大螢幕 右上角；出題、排行榜、頒獎 的 時候 收起來（不 擋 畫面）*/
+.hnav{position:fixed;right:10px;top:10px;z-index:60;display:flex;gap:8px}.hnav[hidden]{display:none}
+.hnav a{display:inline-flex;align-items:center;min-height:56px;padding:4px 18px;border-radius:14px;font-size:24px;text-decoration:none;color:#2A1A00;background:linear-gradient(#FFE07A,#E8A900);box-shadow:0 4px 0 #8A5A00}
+.hnav a.t{color:#fff;background:linear-gradient(#7C5CFF,#4A2BB0);box-shadow:0 4px 0 #2A1470}
+body.host #hlob .lobr{padding-top:62px}   /* 右上角〔🏠 總首頁〕〔老師看板〕不 壓到 大廳 右邊 的 字 */

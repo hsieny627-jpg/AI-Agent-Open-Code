@@ -315,7 +315,7 @@ const H_PH = ph => ph === 'q';
           scr('hq'); document.getElementById('hq').className = 'scr side'; drawGame(); }, [g, ph]);
         await h.waitForTimeout(1500);
         const r = await h.evaluate(() => { const el = document.getElementById('gv'), b = el.getBoundingClientRect();
-          return { t: el.textContent.length, img: el.querySelectorAll('img').length, out: [].filter.call(el.querySelectorAll('*'), x => { if (x.closest('.sf svg')) return false; const q = x.getBoundingClientRect(); return q.width && q.height && (q.left < b.left - 2 || q.right > b.right + 2 || q.top < b.top - 2 || q.bottom > b.bottom + 2); }).map(x => x.className).slice(0, 3) }; });
+          return { t: el.textContent.length, img: el.querySelectorAll('img').length, out: [].filter.call(el.querySelectorAll('*'), x => { if (x.closest('.sf svg') || x.classList.contains('bsau')) return false;   /* 2026-10-30：魔王 後面 的 模糊 光環（轉圈，轉到 斜 的 時候 外框 會 大一點）是 裝飾，不算 */ const q = x.getBoundingClientRect(); return q.width && q.height && (q.left < b.left - 2 || q.right > b.right + 2 || q.top < b.top - 2 || q.bottom > b.bottom + 2); }).map(x => x.className).slice(0, 3) }; });
         if (r.t < 6 || r.out.length) E.push('場景 ' + g + '（' + ph + '，' + VW[0] + '）：沒有 內容 或 超出 框 ' + JSON.stringify(r.out));
         if (['boss', 'race', 'tug', 'pet', 'surf', 'king'].indexOf(g) >= 0 && ph === 'rev' && !r.img) E.push('場景 ' + g + '：沒有 用 學生 的 戰士／寵物 圖'); }
       n += 20; }

@@ -40,7 +40,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
   for (const vp of [[1024, 768], [820, 1180], [1920, 1080]].filter(v => !process.env.VP || process.env.VP === String(v[0]))) {   /* VP＝1024 只 量 一種 螢幕 */
     const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } }), tag = vp.join('×');
     await ctx.route(/^https?:\/\/(?!127\.)/, r => /script\.test/.test(r.request().url()) ? r.fulfill({ contentType: 'application/json', body: '{"ok":true,"dup":[]}' }) : r.abort());
-    await ctx.addInitScript(() => { window.__DCLK = 0.05; Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} });
+    await ctx.addInitScript(() => { window.__DCLK = 0.05; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__NOWB = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} });
       localStorage.setItem('score_last', '"40201"'); localStorage.setItem('score_id_g4', '"40201"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', '40201');
       window.__say = 0; window.__pl = []; window.__RD = 2; window.speechSynthesis && (window.speechSynthesis.speak = u => setTimeout(() => u.onend && u.onend(), 100));
       HTMLMediaElement.prototype.play = function () { window.__say++; window.__pl.push(this.src.replace(/^.*\/midterm\//, '')); const a = this; setTimeout(() => { a.onended && a.onended(); }, 120); return Promise.resolve(); }; });

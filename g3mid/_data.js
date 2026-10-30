@@ -199,6 +199,22 @@ var G9 = [
     zh: c.map(function (p) { return G9Z[p.s](p.t, p.a); }).join(''), say: lines.join(' ') };
 });
 
+/* ══ 2026-10-30 第三十四次 第 6 點（老師：題目 增加「提示 人名 ➜ 選 年齡」「提示 年齡 ➜ 選 人名」）══
+   同一組 3 個人 的 自我介紹 ➜ 下面 一列 小 資料表：k 'na' ＝ Name 給了、Age ？（四選一 數字）；k 'an' ＝ Age 給了、Name ？（四選一 名字，那個 歲數 只有 一個 人）。
+   錯 的 選項 ＝ 另外 兩個 人 的 歲數／名字＋多 的 那一個（跟 答案 相近，🔒 3）。o[0] ＝ 正解 */
+function q9k(L, n) { var out = [];
+  L.forEach(function (q, i) { if (out.length >= n) return; var k = out.length % 2 ? 'an' : 'na', ex = q.tl.slice(-2), r = -1, ages = q.c.map(function (c) { return c.a; });
+    if (k === 'an') { for (var j = 0; j < 3; j++) if (ages.filter(function (a) { return a === ages[j]; }).length === 1) { r = j; break; } if (r < 0) { k = 'na'; } }
+    if (k === 'na') r = i % 3;
+    var c = q.c[r], o;
+    if (k === 'na') { o = [String(c.a)]; ages.concat([+ex[1], c.a + 1, c.a - 1, c.a + 2, c.a - 2, c.a - 3]).forEach(function (a) { if (o.length < 4 && a >= 1 && a <= 10 && o.indexOf(String(a)) < 0) o.push(String(a)); }); }
+    else { o = [c.t]; q.c.map(function (x) { return x.t; }).concat([ex[0]]).forEach(function (t) { if (o.length < 4 && o.indexOf(t) < 0) o.push(t); }); }
+    if (o.length !== 4) throw new Error('資料表 新題型 選項 不夠 4 個：' + JSON.stringify(q.c));
+    out.push({ k: k, r: r, c: q.c, bl: q.bl, lines: q.lines, tl: q.tl, o: o, sim: 0, how: k === 'na' ? '讀 3 個人 的 自我介紹 ➜ 資料表 的 這個 人 幾 歲？點 對的 數字' : '讀 3 個人 的 自我介紹 ➜ 資料表 的 這個 歲數 是 誰？點 對的 名字',
+      en: q.lines[r], zh: G9Z[c.s](c.t, c.a), say: q.lines[r] }); });
+  return out; }
+G9.push.apply(G9, q9k(G9.slice(0), 8));
+
 /* ════ 10 🪂 空投 密碼箱（1ESSF 鑰匙、車牌、座位號碼：聽數字）════ 聽 3 個數字 ➜ 點對的空投箱 */
 var G10 = [[7, 2, 9], [3, 8, 6], [5, 1, 4], [9, 6, 2], [4, 7, 1], [8, 3, 5], [6, 9, 3], [2, 5, 8], [1, 4, 7], [9, 5, 7], [3, 6, 1], [8, 2, 4]].map(function (d) {
   var c = d.join(''), sw = [d[0] + '' + d[2] + d[1], d[1] + '' + d[0] + d[2], d[2] + '' + d[1] + d[0]];
@@ -315,22 +331,41 @@ var XB = mkXB(XDA), XB2 = mkXB(PL.PB);
 var DCV = function (en) { return BOYS.some(function (n) { return new RegExp('\\b' + n + '\\b').test(en); }) ? 'm' : ''; };
 function mkDC(L) { return L.map(function (q) { var o = { sim: 0, dc: 1, u: q.u, en: q.en, t: q.t, x: q.x || [], z: q.z, zh: q.z, v: DCV(q.en), say: q.en }; addS(q.en, o.v); return o; }); }
 XB.dc = mkDC(PL.DA); XB2.dc = mkDC(PL.DB);
+/* 2026-10-30 第三十四次 第 6 點：資料表 新題型（題庫 A、B 各 8 題，只用 不是 類似 的 那幾組；第幾題 接 在 XORD／XORD2 最 後面，舊 成績 對得上）*/
+var XL = {}, XL2 = {}; Object.keys(XB).forEach(function (k) { XL[k] = XB[k].length; }); Object.keys(XB2).forEach(function (k) { XL2[k] = XB2[k].length; });
+XB.q9 = XB.q9.concat(q9k(XB.q9.filter(function (q) { return !q.sim; }), 8)); XB2.q9 = XB2.q9.concat(q9k(XB2.q9.filter(function (q) { return !q.sim; }), 8));
 /* 每一課 開始 前 的 秒懂 動畫（老師 3(3)：≧ 20 秒；每一個 字 的 中文＋圖示、整句 中文、美式 發音）*/
 var DIC = { What: '❓', "'s": '＝', your: '👉', name: '🏷️', My: '🙋', my: '🙋', is: '＝', I: '🙋', "'m": '＝', 'How old': '🎂❓', are: '＝', you: '👉', 'years old': '🎂', Hi: '👋', Hello: '👋' };
 function lesT(en) { return PL.sent(en).map(function (p) { var w = p[0].replace(/[.,?!]+$/, ''), n = NUMW.indexOf(w.toLowerCase()), ic = DIC[w] || (n > 0 ? ['', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'][n] : BOYS.indexOf(w) >= 0 ? '🧒' : '👧'); return [p[0], p[1], ic]; }); }
 function lesS(en) { var v = DCV(en); addS(en, v); return { en: en, v: v, t: lesT(en), z: PL.ZH(en) }; }
+/* 2026-10-30 第三十四次 第 9-(2)(3)(6) 點（老師）：秒懂 動畫 加 縮寫 What is ___? ＝ What’s ___?、I am ___. ＝ I’m ___.（每一個 英文 字 正下方 中文；「什麼」和「是」分開 兩格）
+   和 省略 I’m ten years old. ＝ I’m ten.（years old 可以 省略）。上下 兩行、第一個 字母 對齊、＝ 在 下面 那一行 左邊（引擎 _decode.js 的 decEq）。
+   第 4 格 ＝ 會 飛走 的 紅色 字母 是 第幾個（is 的 i、am 的 a）。語音 ＝ 三年級 教學 網站 同一個 聲音 的 檔（_build.js 的 BORROW 複製 過來）*/
+var EQ_WHAT = { eq: { tag: '✂️ 縮寫', a: { t: [['What', '什麼', '❓'], ['is', '是', '＝', 0], ['______?', '', '']], say: 'What is' }, b: { t: [['What', '什麼', '❓'], ['’s', '是', '＝'], ['______?', '', '']], say: 'What’s' }, z: 'What is ＝ What’s（i 不見了，換成 ’）' } };
+var EQ_IAM = { eq: { tag: '✂️ 縮寫', a: { t: [['I', '我', '🙋'], ['am', '是', '＝', 0], ['______.', '', '']], say: 'I am' }, b: { t: [['I', '我', '🙋'], ['’m', '是', '＝'], ['______.', '', '']], say: 'I’m' }, z: 'I am ＝ I’m（a 不見了，換成 ’）' } };
+var EQ_TEN = { eq: { tag: '✂️ 可以 省略', a: { t: [['I', '我', '🙋'], ['’m', '是', '＝'], ['ten', '十', '🔟'], ['years old.', '歲', '🎂']], say: "I'm ten years old." }, b: { t: [['I', '我', '🙋'], ['’m', '是', '＝'], ['ten.', '十', '🔟']], say: "I'm ten." }, om: [3], z: '我 十 歲。（years old 可以 省略）' } };
+function lesU1(L) { return [L[0], EQ_WHAT, L[1], L[2], EQ_IAM, L[3]]; }
+function lesU2(L) { return [L[0], L[1], EQ_TEN, L[2], L[3]]; }
 var LES = {
-  A: { 1: { key: 'g3A1', title: 'Unit 1 解碼 秘笈', sub: 'What’s your name?　問 名字', s: ["What's your name?", 'My name is Bill.', "I'm Sally.", "Hi, I'm Mark."].map(lesS) },
-    2: { key: 'g3A2', title: 'Unit 2 解碼 秘笈', sub: 'How old are you?　問 幾歲', s: ['How old are you?', "I'm eight years old.", "I'm ten.", "Hello, I'm Ruby. I'm seven."].map(lesS) } },
-  B: { 1: { key: 'g3B1', title: 'Unit 1 解碼 秘笈', sub: 'What’s your name?　問 名字', s: ["What's your name?", 'My name is Jake.', "I'm Bella.", "Hi, I'm Fred."].map(lesS) },
-    2: { key: 'g3B2', title: 'Unit 2 解碼 秘笈', sub: 'How old are you?　問 幾歲', s: ['How old are you?', "I'm nine years old.", "I'm six.", "Hello, I'm Daisy. I'm four."].map(lesS) } } };
+  A: { 1: { key: 'g3A1', title: 'Unit 1 解碼 秘笈', sub: 'What’s your name?　問 名字', s: lesU1(["What's your name?", 'My name is Bill.', "I'm Sally.", "Hi, I'm Mark."].map(lesS)) },
+    2: { key: 'g3A2', title: 'Unit 2 解碼 秘笈', sub: 'How old are you?　問 幾歲', s: lesU2(['How old are you?', "I'm eight years old.", "I'm ten.", "Hello, I'm Ruby. I'm seven."].map(lesS)) } },
+  B: { 1: { key: 'g3B1', title: 'Unit 1 解碼 秘笈', sub: 'What’s your name?　問 名字', s: lesU1(["What's your name?", 'My name is Jake.', "I'm Bella.", "Hi, I'm Fred."].map(lesS)) },
+    2: { key: 'g3B2', title: 'Unit 2 解碼 秘笈', sub: 'How old are you?　問 幾歲', s: lesU2(['How old are you?', "I'm nine years old.", "I'm six.", "Hello, I'm Daisy. I'm four."].map(lesS)) } } };
+/* 2026-10-30 第三十四次 第 9-(5A)(5B) 點：解碼 開始 前 的 教學（_decode.js 的 decTut）：① 怎麼 拖 ② 中英 順序 不 一樣（你的 名字 是 什麼？➜ 什麼 是 你的 名字）③ 小 測驗 2 題 */
+function tutQ(en, x) { return { en: en, v: DCV(en), t: PL.sent(en), x: x || [], z: PL.ZH(en) }; }
+var DTUT = { key: 'g3', demo: tutQ("What's your name?"), quiz: [tutQ('How old are you?', ['你的']), tutQ("What's your name?", ['我的'])],
+  ord: (function () { var q = tutQ("What's your name?"); q.nat = [['你的', 2], ['名字', 3], ['是', 1], ['什麼', 0]];
+    q.c1 = '中文 這樣 說：<b>你的 名字 是 什麼？</b>'; q.c2 = '英文 把 <b>What（什麼）</b> 放 在 <b>最 前面</b>！每個 中文 飛到 自己 的 英文 字 下面'; q.c3 = '所以 解碼 唸起來：<b>什麼 是 你的 名字</b>（每個 英文 字 正下方 ＝ 它 自己 的 中文）'; return q; })() };
+[DTUT.demo].concat(DTUT.quiz).forEach(function (q) { addS(q.en, q.v); });
 /* 挑戰 題庫 的「第幾題」（成績 用）：原本 80 題 的 順序 不變（舊 成績 對得上），新 的 60 題 接在 後面 ＝ [遊戲, 那一種 的 第幾題] */
 var XORD = [];
 ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'].forEach(function (id) { for (var j = 0; j < XN0[id]; j++) XORD.push([id, j]); });
-['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'].forEach(function (id) { for (var j = XN0[id]; j < XB[id].length; j++) XORD.push([id, j]); });
+['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'].forEach(function (id) { for (var j = XN0[id]; j < XL[id]; j++) XORD.push([id, j]); });
 for (var dj = 0; dj < XB.dc.length; dj++) XORD.push(['dc', dj]);   /* 🔓 解碼 任務 60 題 接 在 最後 */
+for (var dk = XL.q9; dk < XB.q9.length; dk++) XORD.push(['q9', dk]);   /* 2026-10-30 資料表 新題型 */
 var XORD2 = [];
-['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'dc'].forEach(function (id) { for (var j = 0; j < XB2[id].length; j++) XORD2.push([id, j]); });
+['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'dc'].forEach(function (id) { for (var j = 0; j < XL2[id]; j++) XORD2.push([id, j]); });
+for (var dk2 = XL2.q9; dk2 < XB2.q9.length; dk2++) XORD2.push(['q9', dk2]);
 
 /* ══ 2026-10-26 第二十九次 第 1 點：🏫 三年級 課堂複習 1、2、3（_class_data.js，老師 C31 說「對」）➜ 跟 G1～G10 一樣 的 樣子（CB.c1.q1…）══
    只能 在〔⚡ 現場任務〕開（g3mid/index.html?cr=…，老師 大螢幕 選），在家複習 沒有；成績 g3gm_c1-q1…（老師看板〔🏫 課堂複習〕大表）。
@@ -373,5 +408,5 @@ CD.SETS.forEach(function (x) { var k = x[0], B = CB[k] = {};
 /* 2026-10-26 第二十六次 第 1-1 點（老師：打地鼠 單字 模糊、太快）：打地鼠 的 字 另外 做 慢的（audio/m1 語速 0.78）、更慢的（audio/m2 語速 0.62，〔🐢 慢慢 唸〕）*/
 var SAYM = G1.map(function (q) { return q.say; }).concat(XB.q1.concat(XB2.q1).map(function (q) { return q.say; })).concat([].concat.apply([], Object.keys(CB).map(function (k) { return CB[k].q1.map(function (q) { return q.say; }); }))).concat(NUMW.slice(1, 11))   /* 2026-10-30 第三十四次 第 7 點：數字 金幣磚 答對 ＝ 男聲 慢 唸 one～ten */
   .filter(function (x, i, a) { return a.indexOf(x) === i; });
-module.exports = { LES: LES, SIL: require('../G3 - L1 + L2/_data.js').SIL, XB2: XB2, XORD: XORD, XORD2: XORD2, XN0: XN0, CB: CB, CSETS: CD.SETS, CZH: CZH, ORD: ORD, XB: XB, SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
+module.exports = { DTUT: DTUT, LES: LES, SIL: require('../G3 - L1 + L2/_data.js').SIL, XB2: XB2, XORD: XORD, XORD2: XORD2, XN0: XN0, CB: CB, CSETS: CD.SETS, CZH: CZH, ORD: ORD, XB: XB, SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
   EXAM_A: EXAM_A, EXAM_D: EXAM_D, EXAM_E: EXAM_E };
