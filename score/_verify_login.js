@@ -33,7 +33,7 @@ const bar = p => p.evaluate(() => { const b = document.getElementById('scbar'); 
   [].forEach.call(b.querySelectorAll('span,button'), x => { const z = parseFloat(getComputedStyle(x).fontSize); if (z < 22) e.push('橫幅字太小 ' + z + 'px：' + x.textContent); });
   [].forEach.call(b.querySelectorAll('button'), x => { if (x.getBoundingClientRect().height < 48) e.push('橫幅按鈕太矮：' + x.textContent); });
   /* 不蓋住：橫幅下面第一個看得到的東西在橫幅下面 */
-  const nx = b.nextElementSibling && [].filter.call(b.parentNode.children, x => x !== b && x.tagName !== 'SCRIPT' && x.tagName !== 'STYLE' && x.getBoundingClientRect().height > 0)[0];
+  const K = [].slice.call(b.parentNode.children), nx = K.slice(K.indexOf(b) + 1).filter(x => x.tagName !== 'SCRIPT' && x.tagName !== 'STYLE' && x.getBoundingClientRect().height > 0)[0];   /* 2026-10-31 第三十七次：橫幅 不一定 是 第一個（在家複習 首頁 加倍 提示 在 上面）➜ 量 真的 下一個 */
   if (!b.classList.contains('inl') && nx && nx.getBoundingClientRect().top < r.bottom - 1) e.push('橫幅蓋住下面的東西（' + nx.tagName + '）');
   const top = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); if (!b.contains(top)) e.push('橫幅被別的東西蓋住');   /* 量橫幅自己的正中間（總首頁的橫幅在標題那一行，不一定在螢幕正中間） */
   if (/index\.html$|\/$/.test(location.pathname) && !/review|sentences|L1/.test(decodeURIComponent(location.pathname)) && document.documentElement.scrollHeight > innerHeight + 1 && innerWidth > innerHeight) e.push('總首頁有捲軸 ' + (document.documentElement.scrollHeight - innerHeight) + 'px（投影會被切掉）');
@@ -57,9 +57,11 @@ async function run(br, vp) {
     else { b.e.forEach(x => e.push(x)); if (b.ox > 0) e.push('橫向溢出 ' + b.ox + 'px');
       /* 2026-10-17 C8 另 6：在家複習首頁 ＝ 大大的〔🔑 先 登入〕＋兩個好習慣（① 先登入 練習才會記下來 ② 練完 一定 登出） */
       if (/review/.test(f)) { const h = await p.evaluate(() => { const b = document.getElementById('scBarIn'), r = b.getBoundingClientRect(), t = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-          return { h: r.height, f: parseFloat(getComputedStyle(b).fontSize), top: r.top, hit: b.contains(t), st: document.querySelectorAll('#scbar .hst').length }; });
+          const o = document.getElementById('bo25'), g = document.getElementById('go25'), sb = document.getElementById('scbar');
+          return { h: r.height, f: parseFloat(getComputedStyle(b).fontSize), top: r.top, hit: b.contains(t), st: document.querySelectorAll('#scbar .hst').length, bo: !!o && !o.hidden && o.nextElementSibling === sb, ord: !!(g && o && sb && (g.compareDocumentPosition(o) & 4) && (o.compareDocumentPosition(sb) & 4)) }; });
+        n++; if (!h.ord) e.push('第三十七次 第 1 點：順序 不是 〔🏠 25題闖關〕➜ 加倍 提示 ➜ 先登入');
         if (!/👋 開始練習 以前 🔑 先 登入/.test(b.t) || !/① 先 🔑 登入 ➜ 你的 練習 和 努力 .* 都會 記在 老師 的 成績 裡/.test(b.t) || !/② 練完 ➜ 一定 按 👋 登出 ➜ .* 保護 自己 和 同學 的 成績/.test(b.t)) e.push('在家複習首頁沒有兩個好習慣：' + b.t);
-        if (h.h < 70 || h.f < 32 || h.top > innerHeightOf(vp) * .5 || h.st !== 2) e.push('〔🔑 先 登入〕不夠醒目（要 ≧ 70px 高、字 ≧ 32px、在畫面上半部）：' + JSON.stringify(h));
+        if (h.h < 70 || h.f < 32 || (h.top > innerHeightOf(vp) * .5 && !(h.bo && h.top + h.h <= innerHeightOf(vp))) || h.st !== 2)   /* 第三十七次 第 1 點：加倍 提示 在 正上方 ＝ 第一個 畫面 看得到 就 好 */ e.push('〔🔑 先 登入〕不夠醒目（要 ≧ 70px 高、字 ≧ 32px、在畫面上半部）：' + JSON.stringify(h));
         /* 2026-10-24 第二十三次第 3 點：👆 手指 不可以 蓋到〔🔑 先 登入〕（動畫 每一刻 都 量）、不可以 跑出 畫面 */
         const hf = await p.evaluate(async () => { const b = document.getElementById('scBarIn'), f = document.querySelector('.hab .hf'); if (!f) return { no: 1 }; let g = 1e9, ov = 0;
           for (let i = 0; i < 10; i++) { const a = b.getBoundingClientRect(), c = f.getBoundingClientRect(); g = Math.min(g, c.left - a.right); ov = Math.max(ov, c.right - innerWidth, document.documentElement.scrollWidth - innerWidth); await new Promise(r => setTimeout(r, 170)); }

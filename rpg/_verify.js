@@ -235,7 +235,8 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
       await p.waitForFunction(() => [].every.call(document.querySelectorAll('#shop > .sgrid [data-id^="s"] img'), i => i.complete && i.naturalWidth > 0), null, { timeout: 5000 }).catch(() => {});
       const k = await p.evaluate(() => ({ n: document.querySelectorAll('#shop > .sgrid [data-id^="s"]').length, soon: /即將 ?上架/.test(document.getElementById('shop').textContent),
         img: [].every.call(document.querySelectorAll('#shop [data-id^="s"] img'), i => i.complete && i.naturalWidth > 0) }));
-      if (k.n !== 20 || k.soon || !k.img) E.push(tag + '：商城第 ' + c + ' 類 不對（' + k.n + ' 種、即將上架 ' + k.soon + '、圖 ' + k.img + '）'); }
+      const gone = Object.keys(require('../score/_calc.js').RPEND).filter(id => id.slice(1, 3) === String(c).padStart(2, '0') && Date.now() >= require('../score/_calc.js').RPEND[id]).length;   /* 第三十七次 第 2 點：限時 下架 ＝ 沒買 的 人 看不到 */
+      if (k.n !== 20 - gone || k.soon || !k.img) E.push(tag + '：商城第 ' + c + ' 類 不對（' + k.n + ' 種、即將上架 ' + k.soon + '、圖 ' + k.img + '）'); }
     const hz = await p.evaluate(() => document.body.innerText.indexOf('英雄') >= 0 || /英雄/.test([].map.call(document.querySelectorAll('[alt],[title]'), e => (e.alt || '') + (e.title || '')).join('')));
     if (hz) E.push(tag + '：畫面上 還有「英雄」（要 改成 戰士）');
     await p.evaluate(() => rwFx('../', 's0101')); await p.waitForTimeout(300);

@@ -48,8 +48,8 @@ var WREV=(function(){var S={my:0,it:[],k:-1,heard:[],host:null};
    try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t),V=speechSynthesis.getVoices()||[],v=V.filter(function(x){return /zh[-_]TW/i.test(x.lang)})[0]||V.filter(function(x){return /^zh/i.test(x.lang)})[0];
      u.lang='zh-TW';if(v)u.voice=v;u.rate=.9;u.onend=f;u.onerror=f;speechSynthesis.speak(u)}catch(e){setTimeout(f,est)}}
  function card(k){return S.host.querySelector('.wrc[data-k="'+k+'"]')}
- function bar(){var n=S.heard.filter(Boolean).length,N=S.it.length,L=S.host.querySelector('.wrlk');if(!L)return;L.querySelector('.wrbar i').style.width=(N?n/N*100:100)+'%';
-   var open=n>=N;L.classList.toggle('open',open);L.querySelector('.wrm').textContent=open?'✅ 全部 聽完 了！可以 按 下面 的 按鈕':'🔒 聽完 全部 錯題 的 英文 和 中文，下面 的 按鈕 才 會 打開（'+n+' ／ '+N+'）';
+ function bar(){var n=S.heard.filter(Boolean).length,N=S.it.length,L=S.host.querySelector('.wrlk');if(!L)return;var bi=L.querySelector('.wrbar i');if(bi)bi.style.width=(N?n/N*100:100)+'%';
+   var open=n>=N;L.classList.toggle('open',open);L.querySelector('.wrm').textContent=!N?'🎉 全部 答對！':open?'✅ 全部 聽完 了！可以 按 下面 的 按鈕':'🔒 聽完 全部 錯題 的 英文 和 中文，下面 的 按鈕 才 會 打開（'+n+' ／ '+N+'）';
    [].forEach.call(L.querySelectorAll('button'),function(b){b.disabled=!open})}
  function play(k,my,cb){var c=card(k),it=S.it[k];if(!c||my!==S.my)return;[].forEach.call(S.host.querySelectorAll('.wrc.on'),function(x){x.classList.remove('on')});c.classList.add('on');
    try{c.scrollIntoView({behavior:fast()?'auto':'smooth',block:'center'})}catch(e){}
