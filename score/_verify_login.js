@@ -58,7 +58,7 @@ async function run(br, vp) {
       /* 2026-10-17 C8 另 6：在家複習首頁 ＝ 大大的〔🔑 先 登入〕＋兩個好習慣（① 先登入 練習才會記下來 ② 練完 一定 登出） */
       if (/review/.test(f)) { const h = await p.evaluate(() => { const b = document.getElementById('scBarIn'), r = b.getBoundingClientRect(), t = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
           const o = document.getElementById('bo25'), g = document.getElementById('go25'), sb = document.getElementById('scbar');
-          return { h: r.height, f: parseFloat(getComputedStyle(b).fontSize), top: r.top, hit: b.contains(t), st: document.querySelectorAll('#scbar .hst').length, bo: !!o && !o.hidden && o.nextElementSibling === sb, ord: !!(g && o && sb && (g.compareDocumentPosition(o) & 4) && (o.compareDocumentPosition(sb) & 4)) }; });
+          return { h: r.height, f: parseFloat(getComputedStyle(b).fontSize), top: r.top, hit: b.contains(t), st: document.querySelectorAll('#scbar .hst').length, bo: !!o && !o.hidden && !!(o.compareDocumentPosition(sb) & 4) && sb.getBoundingClientRect().top - o.getBoundingClientRect().bottom < 40, ord: !!(g && o && sb && (g.compareDocumentPosition(o) & 4) && (o.compareDocumentPosition(sb) & 4)) }; });
         n++; if (!h.ord) e.push('第三十七次 第 1 點：順序 不是 〔🏠 25題闖關〕➜ 加倍 提示 ➜ 先登入');
         if (!/👋 開始練習 以前 🔑 先 登入/.test(b.t) || !/① 先 🔑 登入 ➜ 你的 練習 和 努力 .* 都會 記在 老師 的 成績 裡/.test(b.t) || !/② 練完 ➜ 一定 按 👋 登出 ➜ .* 保護 自己 和 同學 的 成績/.test(b.t)) e.push('在家複習首頁沒有兩個好習慣：' + b.t);
         if (h.h < 70 || h.f < 32 || (h.top > innerHeightOf(vp) * .5 && !(h.bo && h.top + h.h <= innerHeightOf(vp))) || h.st !== 2)   /* 第三十七次 第 1 點：加倍 提示 在 正上方 ＝ 第一個 畫面 看得到 就 好 */ e.push('〔🔑 先 登入〕不夠醒目（要 ≧ 70px 高、字 ≧ 32px、在畫面上半部）：' + JSON.stringify(h));
