@@ -2547,6 +2547,14 @@ var XLV=(function(){
 <script src="audio/s/aud.js"></script><script src="audio/m1/aud.js"></script><script src="audio/m2/aud.js"></script>
 <div id="duob"></div><div id="bossfx"></div><div id="coop"></div><div id="dcl"></div><div id="wf"><div class="box" id="wbox"></div></div><div id="xq"><div class="xqb"><div class="xqi">🛑</div><div class="xqh">真的 要 離開 嗎？</div><div class="xqt"></div><div class="xqbtn"><button data-x="xstay" id="xstay">▶ 繼續 作答</button><button data-x="xleave" id="xleave">🚪 先 離開</button></div></div></div>
 <div id="app" class="scr"></div><div id="crw"></div>
+<script>(function(){if(window.__NODSP||(navigator.webdriver&&!window.__DSPTEST))return;var R=new RegExp("([\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])[ \\u00a0]+(?=[\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])",'g'),SEL="";
+function skip(n){var e=n.parentElement;while(e){var t=e.tagName;if(t==='SCRIPT'||t==='STYLE'||t==='TEXTAREA'||t==='INPUT'||(e.classList&&e.classList.contains('keepsp')))return true;e=e.parentElement}return false}
+function inSel(n){if(!SEL)return true;var e=n.nodeType===1?n:n.parentElement;return !!(e&&e.closest&&e.closest(SEL))}
+function one(n){var v=n.nodeValue;if(!v||v.indexOf(' ')<0&&v.indexOf('\u00a0')<0)return;if(skip(n)||!inSel(n))return;var u=v.replace(R,'$1');if(u!==v)n.nodeValue=u}
+function walk(r){if(!r)return;if(r.nodeType===3){one(r);return}if(r.nodeType!==1)return;var w=document.createTreeWalker(r,4),n;while((n=w.nextNode()))one(n)}
+function go(){walk(document.body);try{new MutationObserver(function(L){L.forEach(function(m){if(m.type==='characterData')one(m.target);else [].forEach.call(m.addedNodes,walk)})}).observe(document.body,{childList:true,subtree:true,characterData:true})}catch(x){}}
+if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
+})();</script>
 <script>
 
 /* ══ 🔓 句子 解碼 任務（g3mid/_decode.js）══ */
@@ -3111,12 +3119,4 @@ if(window.HOME25){XBK='H';document.title='四年級 25 題 闖關';crAuto=functi
  setTimeout(function(){if(typeof SCON!=='undefined'&&SCON&&!SCID)hmGo()},50)}
 hub();crInit();
 </script>
-<script>(function(){if(window.__NODSP||(navigator.webdriver&&!window.__DSPTEST))return;var R=new RegExp("([\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])[ \\u00a0]+(?=[\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])",'g'),SEL="";
-function skip(n){var e=n.parentElement;while(e){var t=e.tagName;if(t==='SCRIPT'||t==='STYLE'||t==='TEXTAREA'||t==='INPUT'||(e.classList&&e.classList.contains('keepsp')))return true;e=e.parentElement}return false}
-function inSel(n){if(!SEL)return true;var e=n.nodeType===1?n:n.parentElement;return !!(e&&e.closest&&e.closest(SEL))}
-function one(n){var v=n.nodeValue;if(!v||v.indexOf(' ')<0&&v.indexOf('\u00a0')<0)return;if(skip(n)||!inSel(n))return;var u=v.replace(R,'$1');if(u!==v)n.nodeValue=u}
-function walk(r){if(!r)return;if(r.nodeType===3){one(r);return}if(r.nodeType!==1)return;var w=document.createTreeWalker(r,4),n;while((n=w.nextNode()))one(n)}
-function go(){walk(document.body);try{new MutationObserver(function(L){L.forEach(function(m){if(m.type==='characterData')one(m.target);else [].forEach.call(m.addedNodes,walk)})}).observe(document.body,{childList:true,subtree:true,characterData:true})}catch(x){}}
-if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
-})();</script>
 </body></html>

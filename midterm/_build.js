@@ -571,9 +571,9 @@ ${AUD ? '<script src="audio/aud.js"></script>' : ''}
 ${AUDX.map(d => '<script src="audio/' + d + '/aud.js"></script>').join('')}
 <div id="duob"></div><div id="bossfx"></div><div id="coop"></div><div id="dcl"></div><div id="wf"><div class="box" id="wbox"></div></div><div id="xq"><div class="xqb"><div class="xqi">🛑</div><div class="xqh">真的 要 離開 嗎？</div><div class="xqt"></div><div class="xqbtn"><button data-x="xstay" id="xstay">▶ 繼續 作答</button><button data-x="xleave" id="xleave">🚪 先 離開</button></div></div></div>
 <div id="app" class="scr"></div><div id="crw"></div>
-<script>${JS}</script>
 <script>${require('../score/_dsp.js').js()}</script>
-</body></html>`;
+<script>${JS}</script>
+</body></html>`;   /* 2026-10-31：不 空格 的 script 放 在 JS 前面（home.html 的 HOME25 插在 最後 一個 <script> 前面）*/
 /* 2026-10-30 第三十四次 第 9-(1) 點：解碼 教學、秒懂 動畫 要 唸 的 句子 一句 都 不可以 沒有 語音檔 ➜ build 失敗 */
 { const AK = t => String(t).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…＿_　]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase(),
     rd = f => { if (!fs.existsSync(f)) return {}; const c = { window: {} }; require('vm').runInNewContext(fs.readFileSync(f, 'utf8'), c); return Object.assign({}, ...Object.values(c.window).filter(x => x && typeof x === 'object')); },
