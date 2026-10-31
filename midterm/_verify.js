@@ -34,7 +34,7 @@ const rdA = d => { const t = fs.readFileSync(path.join(__dirname, 'audio', d, 'a
 Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname, 'img', k + '.jpg'))) E.push('沒有 照片：' + k); });
 /* 2. 總首頁 有〔📝 四年級 期中複習〕，在家複習 沒有 */
 { n++; const hub = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'); if (!/href="midterm\/index\.html"[^>]*>📝 四年級 複習</.test(hub.replace(/<\/?span[^>]*>/g, ''))) E.push('總首頁 沒有〔四年級 期中複習〕');
-  for (const d of ['g3-review', 'g4-review']) for (const f of fs.readdirSync(path.join(ROOT, d)).filter(f => /\.html$/.test(f))) if (/midterm\//.test(fs.readFileSync(path.join(ROOT, d, f), 'utf8'))) E.push(d + '/' + f + '：在家複習 連到 期中複習'); }
+  for (const d of ['g3-review', 'g4-review']) for (const f of fs.readdirSync(path.join(ROOT, d)).filter(f => /\.html$/.test(f))) if (/midterm\/(?!home\.html)/.test(fs.readFileSync(path.join(ROOT, d, f), 'utf8'))) E.push(d + '/' + f + '：在家複習 連到 期中複習（只 可以 連 25 題 闖關 home.html，第三十五次 第 9 點）'); }
 (async () => {
   const br = await chromium.launch();
   for (const vp of [[1024, 768], [820, 1180], [1920, 1080]].filter(v => !process.env.VP || process.env.VP === String(v[0]))) {   /* VP＝1024 只 量 一種 螢幕 */
@@ -162,7 +162,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
         if (await p.evaluate(() => !!document.getElementById('rdgo'))) { await p.waitForTimeout(2600); await p.click('#rdgo'); await p.waitForTimeout(300); }
         /* 🔓 解碼 任務：每一課 第一題 前 秒懂 動畫（≧ 20 秒、第一次 不能 跳過）*/
         if (await p.evaluate(() => document.getElementById('dcl').classList.contains('on'))) { n++;
-          if (!DCL1) { DCL1 = 1; const a = await p.evaluate(async () => { await new Promise(r => setTimeout(r, 3000)); return { go: !!document.getElementById('dlgo'), sk: !!document.getElementById('dlsk'), c: document.querySelectorAll('#dcl .dlc').length, zh: [...document.querySelectorAll('#dcl .dlc .zh')].every(x => x.textContent.trim()) }; });
+          if (!DCL1) { DCL1 = 1; const a = await p.evaluate(async () => { await new Promise(r => setTimeout(r, 3000)); return { go: !!document.getElementById('dlgo'), sk: !!document.getElementById('dlsk'), c: document.querySelectorAll('#dcl .dlc').length, zh: [...document.querySelectorAll('#dcl .dlc')].filter(c => c.getAttribute('data-w')).every(c => c.querySelector('.zh').textContent.trim())   /* 第三十五次：縮寫 動畫 的 ______ 空格 下面 本來 就 沒有 中文 */ }; });
             if (a.go || a.sk || !a.c || !a.zh) E.push(tag + ' 解碼 動畫：3 秒 就 可以 開始／跳過 或 沒有 字：' + JSON.stringify(a));
             const t0 = Date.now(); await p.waitForSelector('#dlgo', { timeout: 30000 }).catch(() => E.push(tag + ' 解碼 動畫 沒有〔▶ 開始 解碼〕')); if (Date.now() - t0 + 3000 < 19000) E.push(tag + ' 解碼 動畫 不到 20 秒'); await p.evaluate(() => { window.__DCLMIN = 0; }); }
           else await p.waitForSelector('#dlgo,#dlsk', { timeout: 30000 }).catch(() => E.push(tag + ' 解碼 動畫 沒有〔▶ 開始〕'));
