@@ -17,7 +17,7 @@ const POSTS = [];
 async function ctxOf(br, vp, G) { const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } });
   await ctx.route(/firebaseio\.com|firebasedatabase\.app|script\.google\.com/, r => { E.push('想 連 真的：' + r.request().url().slice(0, 50)); r.abort(); });
   await ctx.addInitScript(u => { window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__NOWB = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => u, set: () => {}, configurable: true }); Object.defineProperty(window, 'LIVE_DB', { get: () => 'https://fake.test', set: () => {}, configurable: true });
-    window.__NOGO = 1; HTMLMediaElement.prototype.play = function () { const a = this; setTimeout(() => a.onended && a.onended(), 40); return Promise.resolve(); }; }, URL0);
+    window.__NOGO = 1; window.__NORVA = 1; HTMLMediaElement.prototype.play = function () { const a = this; setTimeout(() => a.onended && a.onended(), 40); return Promise.resolve(); }; }, URL0);
   await ctx.route(/fake\.test/, async r => { const u = new URL(r.request().url()), m = r.request().method(); let b = null;
     if (m === 'GET') b = dget(u.pathname); else { const v = m === 'DELETE' ? null : JSON.parse(r.request().postData() || 'null'); dset(u.pathname, v, m === 'PATCH'); b = v; }
     await r.fulfill({ contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(b) }); });
@@ -90,14 +90,14 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
       const xr = await s5.evaluate(() => ({ x: R && R.x, n: R && R.qs.length })); if (xr.x !== 25 || xr.n !== 25) E.push(tag + ' 平板 25 題 挑戰 沒有 開始 ' + JSON.stringify(xr));
       await h.waitForTimeout(1600); const hj = await h.evaluate(() => (document.querySelector('#hcrr .crjn') || {}).textContent || ''); if (!/已經 連上/.test(hj)) E.push(tag + ' 大螢幕 沒有「📱 已經 連上 N 人」' + hj);
       /* ══ 2026-10-30 第三十四次 第 10、12 點：限時、即時 排行榜、兩人 一台 兩個 號碼、時間 到 送 成績、前 10 名＋頒獎 ══ */
-      n += 9; const cd = dget('rooms/0304/cr'); if (!cd || cd.d !== 300000) E.push(tag + ' 25 題 預設 不是 5 分鐘 ' + (cd && cd.d));
-      const tl = await s5.evaluate(() => { const t = document.getElementById('xlvT'); return t && t.classList.contains('on') ? t.textContent : ''; }); if (!/⏱ [45]:\d\d/.test(tl)) E.push(tag + ' 平板 上面 沒有 ⏱ 倒數 ' + tl);
+      n += 9; const cd = dget('rooms/0304/cr'); if (!cd || cd.d !== 1200000) E.push(tag + ' 三年級 25 題 預設 不是 20 分鐘（第三十六次：加上 秒懂 動畫 的 時間）' + (cd && cd.d));
+      const tl = await s5.evaluate(() => { const t = document.getElementById('xlvT'); return t && t.classList.contains('on') ? t.textContent : ''; }); if (!/⏱ (19|20):\d\d/.test(tl)) E.push(tag + ' 平板 上面 沒有 ⏱ 倒數 ' + tl);
       dset('rooms/0304/crp/30403', { n: 3, ok: 2, s: 8, p: '30404', g: 'q1', t: cd.t }); dset('rooms/0304/crp/30405', { n: 2, ok: 2, s: 8.5, g: 'q1', t: cd.t });
       await s5.evaluate(() => { R.Q.push([1, 0, 3, 0, .5, 0]); R.score = 4; xPub(); }); await h.waitForTimeout(1800);
       const lb = await h.evaluate(() => ({ r: [...document.querySelectorAll('#crlbw .crlr')].map(r => r.dataset.id), j: (document.getElementById('crjb') || {}).textContent || '', clk: (document.getElementById('crclk') || {}).textContent || '' }));
       if (lb.r.join() !== '30405,30403,30402') E.push(tag + ' 大螢幕 即時 排行榜 名次 不對 ' + lb.r.join());
       if (!/3 👥 4/.test(lb.j)) E.push(tag + ' 兩人 一台 大螢幕 要 寫 兩個 號碼「3 👥 4」：' + lb.j);
-      if (!/⏱ [45]:\d\d/.test(lb.clk)) E.push(tag + ' 大螢幕 沒有 大 倒數 ' + lb.clk);
+      if (!/⏱ (19|20):\d\d/.test(lb.clk)) E.push(tag + ' 大螢幕 沒有 大 倒數 ' + lb.clk);
       const np = POSTS.length; await h.click('#crend'); await h.waitForTimeout(1500);
       const cf = dget('rooms/0304/cr'); if (!cf || cf.fin !== 1 || cf.on !== 1) E.push(tag + ' 時間 到 要 寫 fin:1（還 開著）' + JSON.stringify(cf).slice(0, 120));
       const fz = await s5.evaluate(() => ({ f: (document.getElementById('xlvF') || {}).className || '', t: (document.getElementById('xlvF') || {}).textContent || '' }));

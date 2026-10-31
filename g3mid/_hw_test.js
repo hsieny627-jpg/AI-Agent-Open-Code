@@ -26,12 +26,20 @@ for (const ch of letters) HW.T[ch].forEach((v, vi) => {
   for (const f of [s => s.map(([x, y]) => [x, y - .6]), s => s.map(([x, y]) => [x, y + .6]), s => s.map(([x, y]) => [x, 1.5 + (y - 1.5) * .3])])   /* 2026-10-31 第三十五次 第 4 點：放寬 以後 ＝ 0.6 格、壓扁 3 成 才 一定 錯 */ { n4++; if (HW.lines(v.map(f), ch).ok) { bad4++; f4.push(ch + vi + ' 浮起來／沉下去／壓扁 還 過'); } } });
 /* 2026-10-31 第三十五次 第 4 點：像 真的 小朋友 用 手指 寫（整個 偏 上下 0.2 格、大一點 小一點 2 成、抖 0.25 格）➜ 至少 9 成 要 判 對（線 和 形狀 都 過）*/
 let n5 = 0, ok5 = 0; const f5 = {};
-for (const ch of letters) HW.T[ch].forEach(v => { for (let k = 0; k < 8; k++) { n5++; const dy = (rnd() - .5) * .4, sy = .85 + rnd() * .3, sx = .8 + rnd() * .5, dx = rnd() * 2, cy = (HW.body(v).t + HW.body(v).b) / 2;
+/* 2026-10-31 第三十六次 第 6 點：頂天立地 改 嚴（頭、腳 0.17 格）➜ 這裡 量「有 碰到 線 的 手指 寫」（偏 ±0.07、大小 ±6%、形狀 歪、抖）至少 9 成 判 對 */
+for (const ch of letters) HW.T[ch].forEach(v => { for (let k = 0; k < 8; k++) { n5++; const dy = (rnd() - .5) * .14, sy = .94 + rnd() * .12, sx = .8 + rnd() * .5, dx = rnd() * 2, cy = (HW.body(v).t + HW.body(v).b) / 2;
   const j = v.map(s => s.map(([x, y]) => [x * sx + dx + (rnd() - .5) * .12, cy + (y - cy) * sy + dy + (rnd() - .5) * .12]));
   const a = HW.judge(j, ch), b = HW.judge(j, ch, 1), l = HW.lines(j, ch), P = ch === ch.toUpperCase() ? ch.toLowerCase() : ch.toUpperCase();
   if ((a.ok || (b.ok && l.ok && a.got !== P)) && l.ok) ok5++; else f5[ch] = (f5[ch] || 0) + 1; } });
 console.log('像 真的 手指 寫：' + ok5 + '／' + n5 + ' 判對（' + (100 * ok5 / n5).toFixed(1) + '%）' + (Object.keys(f5).length ? '　錯 最多：' + Object.entries(f5).sort((a, b) => b[1] - a[1]).slice(0, 8).map(x => x.join('×')).join(' ') : ''));
 if (ok5 / n5 < .9) bad4++;
+/* 2026-10-31 第三十六次 第 6 點：頭 和 腳 完全 沒 碰到 線（整個 字 縮小 到 7 成、縮 在 中間）、超出 線 太多（拉長 0.4 格）＝ 一定 要 判 錯，而且 要 說 出 頭／腳 */
+let n6 = 0, ok6 = 0; const f6 = [];
+for (const ch of letters) HW.T[ch].forEach(v => { const b = HW.body(v), cy = (b.t + b.b) / 2, hh = (b.b - b.t) / 2 || 1;
+  [s => s.map(([x, y]) => [x, cy + (y - cy) * .7]), s => s.map(([x, y]) => [x, cy + (y - cy) * (1 + .4 / hh)])].forEach((f, fi) => { n6++; const l = HW.lines(v.map(f), ch);
+    if (!l.ok && /頭|腳/.test(l.words)) ok6++; else f6.push(ch + (fi ? ' 超出' : ' 沒碰到') + '：' + (l.ok ? '判 對' : l.words)); }); });
+console.log('沒 碰到／超出 太多：' + ok6 + '／' + n6 + ' 判錯 並 說出 頭／腳' + (f6.length ? '　✗ ' + f6.slice(0, 12).join('｜') : ''));
+if (ok6 / n6 < .97) bad4++;
 if (f4.length) console.log('✗ 頂天立地：' + f4.slice(0, 20).join('｜'));
 console.log('頂天立地：' + (n4 - bad4) + '／' + n4 + ' 判對');
 process.exit(bad4 || bad / n > .03 || bad2 / n2 > .03 || bad3 / n3 > .01 ? 1 : 0);

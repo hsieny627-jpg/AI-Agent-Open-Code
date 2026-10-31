@@ -37,7 +37,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
     await ctx.addInitScript(() => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} });
       localStorage.setItem('score_last', '"30401"'); localStorage.setItem('score_id_g3', '"30401"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', '30401'); });
     /* 聲音：不真的放，0.06 秒就算唸完（數唸了幾次） */
-    await ctx.addInitScript(() => { window.__NOGO = 1; window.__NOWB = 1; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__G2CALM = 1; window.__DCLK = 0.05; window.__say = []; HTMLMediaElement.prototype.play = function () { const a = this; window.__say.push(a.src.split('/').slice(-2).join('/')); setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); };
+    await ctx.addInitScript(() => { window.__NOGO = 1; window.__NORVA = 1; window.__NOWB = 1; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__G2CALM = 1; window.__DCLK = 0.05; window.__say = []; HTMLMediaElement.prototype.play = function () { const a = this; window.__say.push(a.src.split('/').slice(-2).join('/')); setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); };
       try { speechSynthesis.speak = u => { window.__say.push('tts:' + u.text); setTimeout(() => u.onend && u.onend(), 60); }; } catch (e) {} });
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto('file://' + path.join(__dirname, 'index.html')); await p.waitForTimeout(400);
@@ -48,7 +48,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
     if (SHOT) await p.screenshot({ path: path.join(SHOT, 'g3m_lobby_' + vp[0] + '.png'), fullPage: true });
     /* 2026-10-25 第二十五次：開場 3、2、1、GO! 才 出 第 1 題 */
     { n++; const s = await p.evaluate(async () => { window.__NOGO = 0; start(0); await new Promise(r => setTimeout(r, 300)); const a = { on: document.getElementById('go').classList.contains('on'), t: document.getElementById('go').textContent, k: R.k };
-        await new Promise(r => setTimeout(r, 2800)); a.k2 = R.k; a.off = !document.getElementById('go').classList.contains('on'); window.__NOGO = 1; lobby(); return a; });
+        await new Promise(r => setTimeout(r, 2800)); a.k2 = R.k; a.off = !document.getElementById('go').classList.contains('on'); window.__NOGO = 1; window.__NORVA = 1; lobby(); return a; });
       if (!s.on || !/3/.test(s.t) || s.k !== -1 || s.k2 !== 0 || !s.off) E.push(tag + ' 開場 3 2 1 GO 不對：' + JSON.stringify(s)); }
     for (let gi = 0; gi < D.GAMES.length; gi++) {
       const g = D.GAMES.filter(x => x.id === D.ORD[gi])[0]; if (process.env.ONLY && process.env.ONLY.split(',').indexOf(g.id) < 0) continue;

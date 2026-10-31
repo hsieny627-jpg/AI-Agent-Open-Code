@@ -10,7 +10,7 @@ const ROOT = path.join(__dirname, '..'), E = []; let n = 0;
       const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } });
       await ctx.route(/^https?:\/\//, r => r.abort());
       await ctx.route(/script\.test/, r => { const b = r.request().postData() || ''; if (b) sent.push(b); r.fulfill({ contentType: 'application/json', body: '{"ok":true,"dup":[]}' }); });
-      await ctx.addInitScript(([id, login]) => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} }); window.__NOUNLOCK = 1; window.__NOGO = 1; window.__NOWB = 1; window.__DCLK = .05;
+      await ctx.addInitScript(([id, login]) => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} }); window.__NOUNLOCK = 1; window.__NOGO = 1; window.__NORVA = 1; window.__NOWB = 1; window.__DCLK = .05;
         HTMLMediaElement.prototype.play = function () { const a = this; setTimeout(() => a.onended && a.onended(), 40); return Promise.resolve(); };
         if (login) { localStorage.setItem('score_last', '"' + id + '"'); localStorage.setItem('score_id_g' + id[0], '"' + id + '"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', id); } }, [id, login]);
       const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));

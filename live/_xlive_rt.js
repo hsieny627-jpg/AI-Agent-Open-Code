@@ -38,9 +38,11 @@ var XLV=(function(){
       ['🔁','一人 一題 輪流：<span class="tw"><i class="a">👉 第 1 個 人</i><i class="b">👉 第 2 個 人</i></span>'],
       ['⏰','時間 到 <b>自動 結束</b>，成績 自動 送 出 ➜ 👀 看 大螢幕']];
     var o=el('xlvI','<h2>📝 等一下 這樣 做</h2><ol>'+S.map(function(s,i){return '<li><span class="n">'+(i+1)+'</span><span class="ic">'+s[0]+'</span><span>'+s[1]+'</span></li>'}).join('')+'</ol><button disabled>✅ 我 懂了</button>');o.classList.add('on');
-    var L=o.querySelectorAll('li'),b=o.querySelector('button'),i=0;
-    (function nx(){if(i>0)L[i-1].classList.remove('cur');if(i>=L.length){b.disabled=false;return}L[i].classList.add('on','cur');i++;setTimeout(nx,1500)})();
-    b.onclick=function(){if(b.disabled)return;try{sessionStorage.setItem('xlv_in_'+k,'1')}catch(e){}o.classList.remove('on');done()}}
+    var L=o.querySelectorAll('li'),b=o.querySelector('button'),i=0,AC=typeof ACTL!=='undefined'?ACTL:null,TT=AC?AC.T:setTimeout;
+    /* 2026-10-31 C42 Q2 乙：〔⏸️ 暫停〕〔🔁 再播一次〕〔🐢 慢速〕（score/_actl.js）*/
+    if(AC)AC.on(o,function(){[].forEach.call(L,function(x){x.classList.remove('on','cur')});b.disabled=true;i=0;nx()});
+    function nx(){if(i>0)L[i-1].classList.remove('cur');if(i>=L.length){b.disabled=false;return}L[i].classList.add('on','cur');i++;TT(nx,1500)}nx();
+    b.onclick=function(){if(b.disabled)return;if(AC)AC.off();try{sessionStorage.setItem('xlv_in_'+k,'1')}catch(e){}o.classList.remove('on');done()}}
   function prog(room,t,id,o){if(typeof LDB==='undefined'||!id)return;o.t=t;LDB.set('rooms/'+room+'/crp/'+id,o)}
   return {cfg:cfg,intro:intro,prog:prog,on:function(){return !!dl&&!fin}};
 })();

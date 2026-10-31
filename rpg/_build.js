@@ -676,22 +676,25 @@ function tdemo(n,o){if(!window.RPLIFE||!RPLIFE.demo)return;var h=document.queryS
 function tutHTML(){var S=tutScenes()[TCH]||[];
   return '<div class="tut"><div class="tch">'+(rLocked()?[['r','📜 獎勵 規則']]:wLocked()?[['w','🎯 全班獎勵']]:[['r','📜 獎勵 規則'],['a','⭐🪙 經驗值、金幣怎麼來'],['b','⚔ 戰力 是 什麼'],['c','🎁 收集 有 什麼 幫助'],['d','⚔ 階級 愈高 能力 愈強'],['w','🎯 全班獎勵']].filter(function(x){return ABIL_ON||x[0]!=='d'})).map(function(x){return '<button data-tch="'+x[0]+'" class="'+(TCH===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div>'+
     '<div class="tst c'+TCH+'" id="tst">'+S.map(function(x){return '<div class="tsc"><div class="cap">'+x[0]+'</div><div class="vis">'+x[1]+'</div></div>'}).join('')+'</div>'+
-    '<div class="tprog"><i id="tpb"></i></div><div class="tctl"><button id="tPrev" aria-label="上一幕">◀ 上一幕</button><button id="tPause" class="tpz">⏸ 暫停</button><button id="tNext" aria-label="下一幕">下一幕 ▶</button></div>'+
+    '<div class="tprog"><i id="tpb"></i></div><div class="tctl"><button id="tPrev" aria-label="上一幕">◀ 上一幕</button><button id="tPause" class="tpz">⏸ 暫停</button><button id="tNext" aria-label="下一幕">下一幕 ▶</button><button id="tAgain">🔁 再播一次</button><button id="tSlow" class="'+(TUT.slow?'on':'')+'">'+(TUT.slow?'🐇 正常':'🐢 慢速')+'</button></div>'+
     '<div class="tnav">'+S.map(function(x,i){return '<button data-tut="'+i+'">'+(i+1)+'</button>'}).join('')+'<button class="re" data-tut="0">⟲ 從頭 再看</button></div>'+
     (TCH==='r'||TCH==='w'?(QZ.back!=null?'<button class="qback" id="qzBack">📝 回到 第 '+(QZ.i+1)+' 題</button>':(TCH==='w'?'<button class="qzgo" id="qzGo"'+(wLocked()&&!QZ.seenW?' hidden':'')+'>📝 '+(cwDone()?'再答一次3題（已經領過）':'答對3題 ➜ 🪙＋50 ⭐＋25（只有一次）')+'</button>':'<button class="qzgo" id="qzGo"'+(rLocked()&&!QZ.seenEnd?' hidden':'')+'>📝 '+(rLocked()?'5 題問題（都答對，就可以開始玩）':'再考一次 5 題問題')+'</button>')):'')+'</div>'}
 /* 一幕 停 TDUR 毫秒 才 換（第十六次：從 4.8 秒 改 7.5 秒）；〔⏸ 暫停〕＝ 不 換 下一幕（這一幕 的 動畫 照樣 演完，字 留著 慢慢 看），進度條 也 停 */
 var TDUR=7500;
+/* 2026-10-31 C42 Q2 乙：多〔🔁 再播一次〕（這一幕 重演）〔🐢 慢速〕（每一幕 停 ✕1.6、動畫 0.6 倍 速）*/
+function tDur(){return TDUR*(TUT.slow?1.6:1)}
+function tRate(){var t=document.getElementById('tst');if(!t||!t.getAnimations)return;try{t.getAnimations({subtree:true}).forEach(function(a){a.playbackRate=TUT.slow?.6:1})}catch(e){}}
 function tutStop(){if(TUT.dm){TUT.dm.stop();TUT.dm=null}clearTimeout(TUT.tm);cancelAnimationFrame(TUT.raf||0);TUT.cn.forEach(clearTimeout);TUT.cn=[]}
 function tutTick(){var b=document.getElementById('tpb'),L=document.querySelectorAll('#tst .tsc');if(!b||!L.length)return;var now=Date.now();
   if(!TUT.pz){TUT.left-=now-TUT.last;if(TUT.left<=0){if(TUT.i<L.length-1){tutGo(TUT.i+1);return}TUT.left=0;tutPause(true)}}TUT.last=now;
-  b.style.width=(100-Math.max(0,TUT.left)/TDUR*100).toFixed(1)+'%';TUT.raf=requestAnimationFrame(tutTick)}
+  b.style.width=(100-Math.max(0,TUT.left)/tDur()*100).toFixed(1)+'%';if(TUT.slow)tRate();TUT.raf=requestAnimationFrame(tutTick)}
 function tutPause(v){TUT.pz=v;var b=document.getElementById('tPause'),L=document.querySelectorAll('#tst .tsc'),end=TUT.i>=L.length-1&&TUT.left<=0;
   if(b){b.textContent=v?(end?'⟲ 從頭 再看':'▶ 繼續'):'⏸ 暫停';b.classList.toggle('on',v)}var t=document.getElementById('tst');if(t)t.classList.toggle('pz',v&&!end)}
 function tutGo(i){tutStop();var L=document.querySelectorAll('#tst .tsc');if(!L[i])return;
   [].forEach.call(L,function(x){x.classList.remove('on')});void L[i].offsetWidth;L[i].classList.add('on');
   [].forEach.call(document.querySelectorAll('.tnav [data-tut]'),function(b,k){b.classList.toggle('on',k===i)});
   var F=(tutScenes()[TCH]||[])[i];if(F&&F[2])F[2]();
-  TUT.i=i;TUT.left=TDUR;TUT.last=Date.now();tutPause(!!TUT.pz);TUT.raf=requestAnimationFrame(tutTick);
+  TUT.i=i;TUT.left=tDur();TUT.last=Date.now();tRate();tutPause(!!TUT.pz);TUT.raf=requestAnimationFrame(tutTick);
   if((TCH==='r'||TCH==='w')&&i>=L.length-1){if(TCH==='w')QZ.seenW=1;else QZ.seenEnd=1;var qg=document.getElementById('qzGo');if(qg)qg.hidden=false}}
 /* 📝 5 題 小問題（2026-10-21：老師 選「5 題，一件 一題」）：答錯 ➜ 回去 看 那一幕（停住），再 回來 答 同一題；5 題 都 對 ➜ 伺服器 記下來（老師看板 看得到）。選項 每次 重洗 */
 var QZ={i:0,ok:[],back:null,seenEnd:0,seenW:0,k:'r'};
@@ -826,6 +829,8 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if((b=c('[data-tut]'))){if(b.classList.contains('re'))TUT.pz=false;tutGo(+b.getAttribute('data-tut'));return}
   if(c('#tPause')){var L0=document.querySelectorAll('#tst .tsc');if(TUT.pz&&TUT.i>=L0.length-1&&TUT.left<=0){TUT.pz=false;tutGo(0)}else tutPause(!TUT.pz);return}
   if(c('#tPrev')){tutGo(Math.max(0,(TUT.i||0)-1));return}
+  if(c('#tAgain')){tutGo(TUT.i||0);return}
+  if(c('#tSlow')){TUT.slow=!TUT.slow;var sb=document.getElementById('tSlow');sb.textContent=TUT.slow?'🐇 正常':'🐢 慢速';sb.classList.toggle('on',TUT.slow);TUT.left=TUT.left*(TUT.slow?1.6:1/1.6);tRate();return}
   if(c('#tNext')){var L1=document.querySelectorAll('#tst .tsc');tutGo(Math.min(L1.length-1,(TUT.i||0)+1));return}
   if(c('#qzGo')){qzStart();return}
   if(c('#cwBn')){TAB='q';TCH='w';TUT.pz=false;[].forEach.call(document.querySelectorAll('#tabs button'),function(x){x.classList.toggle('on',x.getAttribute('data-t')==='q')});drawShop();return}

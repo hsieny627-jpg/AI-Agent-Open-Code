@@ -64,6 +64,9 @@ const pwState = p => p.evaluate(() => { const c = document.getElementById('scPwC
       if (yb) { await yb.click(); await p2.waitForTimeout(900); s = await pwState(p2); ck(tag + ' ✅ 是 ＝ 打 密碼：' + (s && s.t), s && /打 你 的 密碼/.test(s.t));
         await typeP(p2, 'ab999999'); await p2.click('#scPwK button[data-p="ok"]'); await p2.waitForTimeout(500); s = await pwState(p2); ck(tag + ' 打錯 ＝ 不對：' + s.m, /不對/.test(s.m));
         await p2.click('#scRem'); await typeP(p2, 'ab123456'); await p2.click('#scPwK button[data-p="ok"]'); await p2.waitForTimeout(1400);
+        /* 2026-10-31 C42 Q1 乙：每一次 登入（打對 密碼）也 要 勾「我為自己的密碼：記憶和負責。」*/
+        { const v2 = await p2.evaluate(() => { const b = document.getElementById('scVowB'), h = document.querySelector('.scvow h2'); return b ? { dis: b.disabled, h: h ? h.textContent : '' } : null; });
+          ck(tag + ' 打對 密碼 以後 也 要 勾 那一句（每次 登入）' + JSON.stringify(v2), v2 && v2.dis && /密碼對了/.test(v2.h)); if (v2) { await p2.click('#scVowL'); await p2.click('#scVowB'); await p2.waitForTimeout(500); } }
         const L2 = await p2.evaluate(() => ({ ok: sessionStorage.getItem('sc_ok'), rem: localStorage.getItem('score_pk_30412') })); ck(tag + ' 打對 ＝ 登入＋記住 ' + JSON.stringify(L2).slice(0, 60), L2.ok === '30412' && /^"/.test(L2.rem || ''));
         const p3 = await ctx.newPage(); await p3.goto(HTTP + '/g3-review/index.html'); await p3.waitForTimeout(600); const y3 = await p3.$('#scWhoY') || await p3.$('#scBarY');
         if (y3) { await y3.click(); await p3.waitForTimeout(700); } ck(tag + ' 記住 了 ＝ 不用 再 打', !(await pwState(p3)) && await p3.evaluate(() => sessionStorage.getItem('sc_ok') === '30412')); await p3.close(); }

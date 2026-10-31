@@ -1,6 +1,6 @@
 /* midterm/_newgames.js — 📝 四年級 複習 新 25／新 50 的 6 種 全新 遊戲（2026-10-29 第三十三次 第 5 件；老師 C36「對」＋第 6 點「比 三年級 更 好玩」）
  *   n1 🚀 字首音 太空 射擊（考卷 A＋B）   n2 🏎️ 聽力 賽車（C）   n3 🐍 英文 貪食蛇（D）
- *   n4 🦘 對話 跳跳樂（E）                n5 🫧 拼字 泡泡龍（F）  n6 🚪 密室 逃脫（G＋H）
+ *   n4 🥷 對話 忍者跑酷（E）                n5 🫧 拼字 泡泡龍（F）  n6 🚪 密室 逃脫（G＋H）
  * 題目 ＝ midterm/_data.js 的 XB2（_pool.js 的 NB）。每一種 都 是「選 一個」：學生 操作（射擊、開車、蛇 去 吃、跳、射 泡泡、拿 鑰匙）
  * ➜ 動畫 演完 ➜ 呼叫 原本 的 pick(第幾個)（成績、答錯頁、25／50 題 的 分數 都 照舊）。
  * 這裡 是 網頁 端 的 程式 字串（樣板 裡 的 正規 表示式 一律 兩條 斜線）。 */
@@ -83,7 +83,7 @@ exports.CSS = `
 .n3b{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap}
 .dpad3{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(2,64px);gap:6px}.dpad3 button{border-radius:16px;border:3px solid #4A5A6C;background:#1B2633;font-size:30px}
 .dpad3 [data-d="u"]{grid-column:2}.dpad3 [data-d="l"]{grid-column:1;grid-row:2}.dpad3 [data-d="d"]{grid-column:2;grid-row:2}.dpad3 [data-d="r"]{grid-column:3;grid-row:2}
-/* ── 🦘 n4 跳跳樂 ── */
+/* ── 🥷 n4 忍者跑酷（原 跳跳樂）── */
 .n4{position:relative;width:min(100%,960px);display:flex;flex-direction:column;align-items:center;gap:10px}
 .n4 .cl{display:flex;gap:clamp(8px,1.4vw,16px);justify-content:center;width:100%}
 .cld{flex:1;max-width:320px;min-height:clamp(96px,14vh,130px);border:0;border-radius:60px;background:radial-gradient(circle at 30% 30%,#fff,#DDEBFA);color:#123;font-size:clamp(22px,3vh,30px);padding:10px 16px;box-shadow:0 8px 0 #9FB8D4;line-height:1.25;transition:transform .2s}
@@ -120,7 +120,7 @@ function ngShow(id,q){var h='';NGS={id:id};
     '<div class="car" id="car" style="left:50%">🏎️</div></div><div class="ngc"><button data-x="ngl" aria-label="左">◀</button><button data-x="ngf" class="fire">⬆ 衝！</button><button data-x="ngr" aria-label="右">▶</button></div>'}
   else if(id==='n3')h=ngHear(!q.photo)+'<div class="n3b"><div class="n3w" id="n3w"></div><div class="dpad3"><button data-d="u" aria-label="上">⬆</button><button data-d="l" aria-label="左">⬅</button><button data-d="d" aria-label="下">⬇</button><button data-d="r" aria-label="右">➡</button></div></div>';
   else if(id==='n4'){R.jh=R.jh||0;h='<div class="n4"><div class="chat" id="chat">'+(q.chat==='A'?'<div class="bub a"><span class="who">A</span>'+esc(q.line)+'</div><div class="bub b q"><span class="who">B</span>？</div>':'<div class="bub a q"><span class="who">A</span>？</div><div class="bub b"><span class="who">B</span>'+esc(q.line)+'</div>')+'</div>'+
-    '<div class="cl">'+R.ord.map(function(i){return '<button class="cld" data-o="'+i+'">'+esc(q.o[i])+'</button>'}).join('')+'</div><div class="gr"><div class="roo" id="roo">🦘</div><div class="hm" id="hm">🏔 '+R.jh+' m</div></div></div>'}
+    '<div class="cl">'+R.ord.map(function(i){return '<button class="cld" data-o="'+i+'">'+esc(q.o[i])+'</button>'}).join('')+'</div><div class="gr"><div class="roo" id="roo">🥷</div><div class="hm" id="hm">🏔 '+R.jh+' m</div></div></div>'}
   else if(id==='n5'){R.pk=[];var w=q.spell,mid=w.slice(1,-1).split(''),ex=[];mid.forEach(function(c){(NEARL[c]||[]).forEach(function(x){if(ex.length<2&&mid.indexOf(x)<0&&ex.indexOf(x)<0)ex.push(x)})});
     'bcdfghklmnprstvwy'.split('').forEach(function(c){if(ex.length<2&&mid.indexOf(c)<0&&ex.indexOf(c)<0)ex.push(c)});R.tiles=shuf(mid.concat(ex));
     h='<div class="n5"><div class="sp1"><span class="ic">'+q.ic+'</span></div><div class="slots" id="slots"></div><div class="tiles">'+R.tiles.map(function(c,i){return '<button data-t="'+i+'"'+(/[aeiou]/.test(c)?' class="lv"':'')+'>'+c+'</button>'}).join('')+'</div><button class="bk" data-x="bk">⌫ 退 一個</button></div>'}

@@ -9,7 +9,9 @@ var CRS={set:'c1',gs:null,m:'sync',on:false,cfg:null,stop:null,rv:false,ans:{},c
 function crGr(){return H.cls&&/^[34]/.test(H.cls)?H.cls.charAt(0):''}
 function CD(){return CRDS[crGr()||'3']}
 function crX(){return /^[xn]\d+$/.test(CRS.set)}   /* 2026-10-29：n25／n50 ＝ 新 25／新 50 */   /* 2026-10-27 第三十二次 3-(3)：📝 25／50 題 挑戰 ＝ 只 能 學生 自己 答、全部 關卡 連著 玩（不用 選 遊戲）*/
-function crMin(){var n=+(/\d+/.exec(CRS.set)||[25])[0];if(!CRS.min||CRS.minSet!==CRS.set){CRS.minSet=CRS.set;CRS.min=n>=50?10:5}return CRS.min}   /* 第三十四次 第 12-(4) 點：25 題 5 分鐘、50 題 10 分鐘（老師 可以 換）*/
+/* 2026-10-31 第三十六次 第 1-(5) 點：每 一關 前面 多 了 🎬 秒懂 複習 動畫（一部 約 1 分 10 秒，含 3 題 突擊 測驗）➜ 預設 限時 加上 動畫 的 時間：
+   三年級 11 關 ≈ 13 分鐘 動畫 ➜ 25 題 20 分鐘、50 題 25 分鐘；四年級 13 關 ≈ 16 分鐘 ➜ 25 題 25 分鐘、50 題 30 分鐘（老師 可以 換）*/
+function crMin(){var n=+(/\d+/.exec(CRS.set)||[25])[0],g4=String((typeof H!=='undefined'&&H&&H.cls)||'').charAt(0)==='4',k=CRS.set+'|'+g4;if(!CRS.min||CRS.minSet!==k){CRS.minSet=k;CRS.min=g4?(n>=50?30:25):(n>=50?25:20)}return CRS.min}   /* 第三十四次 第 12-(4) 點：25 題 5 分鐘、50 題 10 分鐘（老師 可以 換）*/
 function crGs(){var d=CD();if(crX())return [];return d.gs.filter(function(g){return !d.only||(d.only[CRS.set]||[]).indexOf(g[0])>=0})}
 function crTitle(){return crGr()==='4'?'📝 四年級 期中複習':'📝 三年級 期中複習'}   /* 2026-10-30 第三十四次 第 1-(1)、2-(1) 點：主題 改名（成績 的 名字 不變）*/
 function crBox(){var g=crGr();if(g==='4')return '<div class="sgrp crg"><div class="sgh"><span class="sgi">📝</span><b>四年級 期中複習</b><small>12 種 遊戲（字首音 氣球、短文 偵探、陷阱 偵測器…）；學生 自己 答 或 全班 同步</small></div>'+
@@ -21,7 +23,7 @@ function crDraw(){var c=H.cls||'';if(CRS.cls!==c){CRS.cls=c;CRS.set=CD().sets[0]
   var h='<div class="sett"><h1>'+crTitle()+'　<small>'+esc(c)+' 班</small></h1></div>'+
   '<div class="sbox"><h2><b class="sn">1</b> 哪一套 題目</h2><div class="row">'+CD().sets.map(function(x){return '<button data-crs="'+x[0]+'" class="'+(CRS.set===x[0]?'on':'')+'">'+esc(x[1])+'</button>'}).join('')+'</div></div>'+
   (crX()?'<div class="sbox crxb"><h2><b class="sn">2</b> '+esc(CD().sets.filter(function(x){return x[0]===CRS.set})[0][1])+'</h2><div class="note big2">全部 關卡 連著 玩、每一次 重新 抽（做過 的 題目 先 不出）；學生 自己 答（一個人 或 兩個人 輪流）。<b>時間 到 準時 結束</b>，答了 幾題 就 送 幾題 ➜ 前 10 名 排行榜 ➜ 頒獎 典禮。</div></div>'+
-  '<div class="sbox"><h2><b class="sn">3</b> ⏱ 限時 幾 分鐘</h2><div class="row">'+[3,5,8,10,15].map(function(m){return '<button data-crmin="'+m+'" class="crmin'+(crMin()===m?' on':'')+'">'+m+' 分鐘</button>'}).join('')+'</div></div>':'')+
+  '<div class="sbox"><h2><b class="sn">3</b> ⏱ 限時 幾 分鐘</h2><div class="row">'+[5,10,15,20,25,30,40].map(function(m){return '<button data-crmin="'+m+'" class="crmin'+(crMin()===m?' on':'')+'">'+m+' 分鐘</button>'}).join('')+'</div></div>':'')+
   (crX()?'':'<div class="sbox"><h2><b class="sn">2</b> 哪 幾種 遊戲 <button data-cra="1" class="ghost">☑ 全選</button><button data-cra="0" class="ghost">☐ 全部 不選</button></h2><div class="crgs">'+crGs().map(function(g,i){var on=CRS.gs.indexOf(g[0])>=0;
     return '<button data-crg="'+g[0]+'" class="crgb'+(on?' on':'')+'"><span class="crn">第 '+(i+1)+' 關</span><span class="cric">'+g[1]+'</span><b>'+esc(g[2])+'</b><em>'+(on?'☑':'☐')+'</em></button>'}).join('')+'</div></div>'+
   '<div class="sbox"><h2><b class="sn">3</b> 怎麼 玩</h2><div class="row"><button data-crm="self" class="crmb'+(CRS.m==='self'?' on':'')+'"><b>🙋 學生 自己 答</b><small>每個人 照 自己 的 速度 玩 老師 選 的 遊戲（一種 '+(crGr()==='4'?10:8)+' 題）</small></button>'+

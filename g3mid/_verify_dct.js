@@ -13,7 +13,7 @@ const E = []; let n = 0;
     const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } });
     await ctx.route(/^https?:\/\//, r => r.abort()); await ctx.route(/script\.test/, r => r.fulfill({ contentType: 'application/json', body: '{"ok":true,"dup":[]}' }));
     await ctx.addInitScript(id => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} }); localStorage.setItem('score_last', '"' + id + '"'); localStorage.setItem('score_id_g' + id[0], '"' + id + '"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', id);
-      window.__NOGO = 1; window.__NOWB = 1; window.__DCLK = 0.15; window.__DCLMIN = 0; window.__els = new Set(); window.__src = [];
+      window.__NOGO = 1; window.__NORVA = 1; window.__NOWB = 1; window.__DCLK = 0.15; window.__DCLMIN = 0; window.__els = new Set(); window.__src = [];
       HTMLMediaElement.prototype.play = function () { const a = this; window.__els.add(a); window.__src.push(a.src.slice(0, 30)); setTimeout(() => a.onended && a.onended(), 150); return Promise.resolve(); }; HTMLMediaElement.prototype.pause = function () {};
       Object.defineProperty(HTMLMediaElement.prototype, 'duration', { get() { return 0.15; } }); }, id);
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));

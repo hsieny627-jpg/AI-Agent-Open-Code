@@ -2591,7 +2591,8 @@ function dgSpark(x,y,em,nn){for(var i=0;i<(nn||10);i++){var p=el('span','dgp',em
   document.body.appendChild(p);(function(q){setTimeout(function(){if(q.parentNode)q.parentNode.removeChild(q)},900)})(p)}}
 function dgPut(i,k){
   if(!DG||DG.lock||busy)return;var D=DG,old=D.slot[k];
-  var k0=D.slot.indexOf(i);if(k0>=0){D.slot[k0]=null;dgPaintSlot(k0)}
+  /* 2026-10-31 第三十六次 第 3 點：格子 裡 的 字 拖到 另一個 有 字 的 格子 ＝ 兩個 互相 交換（不再 把 那一個 退回 上面）*/
+  var k0=D.slot.indexOf(i);if(k0>=0){D.slot[k0]=(old!=null&&old!==i)?old:null;dgPaintSlot(k0);if(D.slot[k0]!=null)old=null}
   if(old!=null&&old!==i){var t=$('#dgS .dt[data-i="'+old+'"]');if(t)t.classList.remove('gone')}
   D.slot[k]=i;var st=$('#dgS .dt[data-i="'+i+'"]');if(st)st.classList.add('gone');
   var w=D.src[i],sh=dgShow(w,k,D.n,D.tgt[D.n-1]),c=dgPaintSlot(k);sPop();
@@ -3626,15 +3627,16 @@ function scPwKey(k){var P=SCPW;if(!P)return;if(P.mode==='?'||P.mode==='busy')ret
     if(P.mode==='set2'&&P.v!==P.first){P.v='';P.first='';P.mode='set';scShakePw();scPwPaint('❌ 兩次 不一樣，重新 設 一次');return}
     var set=P.mode==='set2',pv=P.v;P.mode='busy';scPwPaint();
     scFetch('',{a:'sp',id:P.id,p:pv,set:set?1:0},12000).then(function(j){if(SCPW!==P)return;
-      if(j&&j.ok&&j.tk){scPkSave(P.id,j.tk,$('#scRem')&&$('#scRem').checked);P.mode='done';scPwPaint(set?'🎉 密碼 設好 了！':'✅ 密碼 對了','ok');var d=P.done;setTimeout(function(){if(SCPW===P){if(set){scPwVow(P,d);return}SCPW=null;d()}},700);return}
+      if(j&&j.ok&&j.tk){scPkSave(P.id,j.tk,$('#scRem')&&$('#scRem').checked);P.mode='done';scPwPaint(set?'🎉 密碼 設好 了！':'✅ 密碼 對了','ok');var d=P.done;setTimeout(function(){if(SCPW===P){scPwVow(P,d,set);return}},700);return}
       if(j&&j.ok&&!j.tk){P.v='';P.mode=j.has?'in':'set';scPwPaint();return}
       P.v='';P.mode=set?'set':'in';scShakePw();
       scPwPaint(j&&j.err==='lock'?'🔒 打錯 太多 次，10 分鐘 後 再 試（或 請 老師 幫忙）':j&&j.err==='wrong'?'❌ 密碼 不對，再 試 一次<br><small>忘記 了 ➜ 請 老師 按〔🔑 清除 密碼〕，再 自己 重設</small>':'📶 連不上 網路，等一下 再 試')},
      function(){if(SCPW!==P)return;P.v='';P.mode=set?'set':'in';scPwPaint('📶 連不上 網路，等一下 再 試')});return}
   if(P.v.length>=8||k.length!==1)return;if(P.v.length<2&&!/[a-z]/.test(k))return;if(P.v.length>=2&&!/[0-9]/.test(k))return;P.v+=k;scPwPaint()}
 /* 2026-10-31 第三十五次 第 12 點：設好 密碼 以後 一定 勾「我為自己的密碼：記憶和負責。」才 進得去 */
-function scPwVow(P,d){var b=SCH.box();if(!b){SCPW=null;d();return}
-  b.innerHTML='<div class="sclog scpw scvow"><h2>🔑 密碼設好了！</h2><div class="vwi">🧠 ＋ 🤝</div>'+
+/* 2026-10-31 C42 Q1 乙：每一次 登入（打對 密碼、第一次 設好）都 要 勾 */
+function scPwVow(P,d,set){var b=SCH.box();if(!b){SCPW=null;d();return}
+  b.innerHTML='<div class="sclog scpw scvow"><h2>'+(set?'🔑 密碼設好了！':'✅ 密碼對了！')+'</h2><div class="vwi">🧠 ＋ 🤝</div>'+
    '<label class="vwl" id="scVowL"><input type="checkbox" id="scVow"><span>我為自己的密碼：記憶和負責。</span></label>'+
    '<div class="vwh" id="scVowH">👆 先勾上面的方框</div><button class="vwb" id="scVowB" disabled>✅ 進入在家複習</button></div>';
   var c=$('#scVow'),k=$('#scVowB'),h=$('#scVowH');

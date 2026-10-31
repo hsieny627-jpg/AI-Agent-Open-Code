@@ -780,7 +780,7 @@ var CBK=[['acc','🎯 平均正確率',100,function(v){return f1(v)+' 分'}],['s
 function cbVals(C,K){return C.map(function(c){return K[0]==='rate'?(c.size?c.n/c.size*100:null):c[K[0]]})}
 /* 2026-10-31 第三十五次 第 8-(2) 點（老師：📊 動畫 看 這一項 太 陽春、太 簡陋）➜ 每次 換 一種 主題（CLSX 的 10 種 背景、探照燈）；
    從 最後 一名 往上 一條 一條 長出來、數字 從 0 跳上去（懸疑）➜ 小鼓 停一下 ➜ 第 1 名 最後 出來：白光、金框、皇冠 落下、光芒、煙火、號角（🔊 開 的 時候）；
-   最後 一名 ＝ 溫和 的 一句：「💪 ○○ 班：每天 多 練 一點點，下次 一定 往前 衝！（離 前一名 只差 …）」，不寫「最差」 */
+   最後 一名 ＝ 溫和 的 一句：只有「每天多練一點點，下次一定往前衝！」（2026-10-31 第三十六次 第 5 點：不寫 班級、💪、差距），不寫「最差」 */
 var CBST=-1;
 function cbShow(){var K=CBK[CBI],C=CBC,vs=cbVals(C,K),L=C.map(function(c,i){return {c:c,v:vs[i]}}),ok=L.filter(function(x){return x.v!=null}).sort(function(a,b){return b.v-a.v}),no=L.filter(function(x){return x.v==null});
   var mx=K[2]||Math.max.apply(null,ok.map(function(x){return Math.abs(x.v)}).concat([1])),R=ok.concat(no),best=ok.length?ok[0]:null,low=ok.length>1?ok[ok.length-1]:null,o=$('#cbx');
@@ -791,8 +791,8 @@ function cbShow(){var K=CBK[CBI],C=CBC,vs=cbVals(C,K),L=C.map(function(c,i){retu
   o.style.background=T.bg;o.style.setProperty('--la',T.a);o.style.setProperty('--lb',T.b);o.style.setProperty('--lc',T.c);
   o.innerHTML='<div class="cx lx cbbg"><div class="lxbg">'+'</div><i class="lxsp s1"></i><i class="lxsp s2"></i><i class="lxsp s3"></i></div><div class="cbw"><div class="cbh"><span class="cbi">'+ic+'</span><b>'+esc(tt)+'</b><small>'+hgr()+'　'+hper()+'　第 '+(CBI+1)+' ／ '+CBK.length+' 項</small></div>'+
    '<div class="cbl">'+R.map(function(x,i){var top=best&&x===best,lw=low&&x===low&&x.v!==best.v,w=x.v==null?0:Math.max(2,Math.max(0,x.v)/mx*100);
-     return '<div class="cbr'+(top?' top':'')+(lw?' low':'')+'" style="--d:'+dl(i).toFixed(2)+'s;--cc:'+ccol(x.c.cls)+'"><span class="cbk">'+(x.v==null?'—':top?'👑':(i+1))+'</span><span class="cbn">'+esc(x.c.cls)+' 班</span><span class="cbt"><i style="--w:'+w+'%"></i></span><span class="cbv" data-v="'+(x.v==null?'':x.v)+'">'+K[3](x.v==null?null:0)+'</span>'+(top?'<span class="cbtag g">🏆 第 1 名</span>':lw?'<span class="cbtag y">💪 加油</span>':'')+'</div>'}).join('')+'</div>'+
-   (best?'<div class="cbs" style="--d:'+(tTop+1.1).toFixed(2)+'s">🏆 <b style="color:'+ccol(best.c.cls)+'">'+esc(best.c.cls)+' 班</b> 最好：'+K[3](best.v)+(low&&low.v!==best.v?'<span class="cbenc">💪 <b style="color:'+ccol(low.c.cls)+'">'+esc(low.c.cls)+' 班</b>：每天多練一點點，下次一定往前衝！'+(gap?'（離前一名只差 '+String(K[3](gap)).replace('＋','')+'）':'')+'</span>':'')+'</div>':'<div class="cbs">這段 期間 還 沒有 資料。</div>')+
+     return '<div class="cbr'+(top?' top':'')+(lw?' low':'')+'" style="--d:'+dl(i).toFixed(2)+'s;--cc:'+ccol(x.c.cls)+'"><span class="cbk">'+(x.v==null?'—':top?'👑':(i+1))+'</span><span class="cbn">'+esc(x.c.cls)+' 班</span><span class="cbt"><i style="--w:'+w+'%"></i></span><span class="cbv" data-v="'+(x.v==null?'':x.v)+'">'+K[3](x.v==null?null:0)+'</span>'+(top?'<span class="cbtag g">🏆 第 1 名</span>':'')+'</div>'}).join('')+'</div>'+
+   (best?'<div class="cbs" style="--d:'+(tTop+1.1).toFixed(2)+'s">🏆 <b style="color:'+ccol(best.c.cls)+'">'+esc(best.c.cls)+' 班</b> 最好：'+K[3](best.v)+(low&&low.v!==best.v?'<span class="cbenc keepsp">每天多練一點點，下次一定往前衝！</span>':'')+'</div>':'<div class="cbs">這段 期間 還 沒有 資料。</div>')+
    '<div class="cbnv"><button data-cbn="-1">◀ 上一項</button><button data-cbn="r">🔁 再 演 一次</button><button data-cbn="1">下一項 ▶</button><button data-cbn="x">✕ 關閉</button></div></div><i class="cbflash"></i>';
   o.classList.add('on');
   /* 數字 從 0 跳上去（跟著 長條 一起）*/

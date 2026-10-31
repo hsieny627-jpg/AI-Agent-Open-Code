@@ -83,6 +83,11 @@ Object.keys(SITES).forEach(dir => {
   [25, 50].forEach(N => put('g4gm_mt-x' + N, { name: '📝 四年級 複習｜📝 ' + N + ' 題 挑戰', qs: MT.XORD.map(([id, j]) => { const g = MT.GAMES.filter(x => x.id === id)[0] || { ic: '' }, c = MT.XB[id][j]; return { k: 'g', kn: '📝 四年級 複習', q: txt(g.ic + ' ' + c.q), o: (c.oz || c.o).map(txt), h: txt(c.z || ''), ae: c.ae || '' }; }) }));   /* 2026-10-28：照 XORD */
   /* 2026-10-29 第 3、5 件：📝 新 25／新 50（g4gm_mt-n25／n50）＝ 題庫 B（6 種 新 遊戲＋🔓，照 XORD2）*/
   [25, 50].forEach(N => put('g4gm_mt-n' + N, { name: '📝 四年級 複習｜📝 新 ' + N + ' 題 挑戰', qs: MT.XORD2.map(([id, j]) => { const g = (MT.GAMES.concat(MT.NGAME)).filter(x => x.id === id)[0] || { ic: '' }, c = MT.XB2[id][j]; return { k: 'g', kn: '📝 四年級 複習', q: txt(g.ic + ' ' + c.q), o: (c.oz || c.o).map(txt), h: txt(c.z || ''), ae: c.ae || '' }; }) })); }
+/* 🎬 秒懂 複習 動畫 的 ⚡ 突擊 測驗（2026-10-31 第三十六次 第 1 點）：g3gm_g3m-rv、g4gm_mt-rv；第幾題 ＝ 每 一部 動畫 照 順序 接起來（g3mid/_rva.js 的 RVOFF）*/
+[['g3gm_g3m-rv', '🏫 三年級 複習', '../g3mid/_rva_data.js'], ['g4gm_mt-rv', '📝 四年級 複習', '../midterm/_rva_data.js']].forEach(([k, kn, f]) => { const RV = require(path.join(__dirname, f)), qs = [];
+  RV.list.forEach(a => a.qz.forEach(q => { const o = q.ty === 'tf' ? (q.ok ? ['⭕ True', '❌ False'] : ['❌ False', '⭕ True']) : q.o ? q.o : q.ty === 'spot' ? [q.fix + '（' + q.w[q.bad] + ' 錯 了）', '❌ 點錯 了'] : [q.a.en, '❌ 放錯 了'];
+    qs.push({ k: 'g', kn: kn, q: txt(a.ic + ' ' + a.nm + '｜⚡ ' + (q.q || q.s || q.a.en)), o: o.map(x => txt(String(x))), h: txt(q.a.why || ''), ae: q.a.en, az: q.a.z }); }));
+  put(k, { name: kn + '｜🎬 秒懂 動畫 突擊 測驗', qs: qs }); });
 /* 🏫 三年級 複習（2026-10-26 第二十七次 第 1-(3) 點：成績 進 老師看板）：g3gm_g3m-遊戲（g3mid/_data.js；o[0] ＝ 正解；寫字題 o ＝ [要寫 的 字母]） */
 { const G3 = require(path.join(__dirname, '..', 'g3mid', '_data.js')), NW = G3.NUMW;
   const SCZ = { thank: '謝謝／不客氣', meet: '很高興認識你', help: '找不到狗／幫忙', come: '過來這裡', morn: '早安' }, CEZ = {}; G3.CE.forEach(c => { CEZ[c.k] = c.zh; });

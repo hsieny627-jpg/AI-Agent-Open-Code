@@ -4,6 +4,8 @@
  * 成績：跟 平常 的 遊戲 一樣（score/_client.js 的 佇列）：題組 g4gm_mt-遊戲（老師看板 類別「📝 期中複習」），一回 10 題，≧ 6 題 才 送。
  * 只放 在 老師 的 教學 總首頁（words/_build_hub.js 的〔📝 四年級 期中複習〕）；在家複習 沒有。 */
 const fs = require('fs'), path = require('path');
+const RVX = require('../g3mid/_rva.js'), RVR = require('./_rva_data.js');   /* 2026-10-31 第三十六次 第 1 點：🎬 秒懂 複習 動畫＋⚡ 突擊 測驗 */
+if (RVR.err.length) { console.error('✗ ' + RVR.err.join('\n✗ ')); process.exit(1); }
 const DECX = require('../g3mid/_decode.js'), NGX = require('./_newgames.js'), D = require('./_data.js'), CL = require('../score/_client.js');
 const J = o => JSON.stringify(o).replace(/</g, '\\u003c');
 const AUD = fs.existsSync(path.join(__dirname, 'audio/aud.js'));
@@ -19,7 +21,7 @@ const GM = D.GAMES.map(g => ({ id: g.id, ic: g.ic, nm: g.nm, how: g.how, sec: g.
   Object.keys(D.PAS).filter(k => /^x/.test(k)).forEach(k => { const t = D.PAS[k].t.join(' '); if (BAN.test(t)) L.push('短文 ' + k + ' 用了 用過 的 名字');
     Object.keys(PD.PAS).forEach(o => { const T = PD.PAS[o].t; T.forEach(x => { if (D.PAS[k].t.indexOf(x) >= 0 && x.length > 22) L.push('短文 ' + k + ' 跟 ' + o + ' 有 一樣 的 句子：' + x); }); }); });
   if (L.length) { console.error('✗ ' + L.join('\n✗ ')); process.exit(1); } }
-const AUDX = ['s', 'm1', 'm2'].filter(d => fs.existsSync(path.join(__dirname, 'audio', d, 'aud.js')));
+const AUDX = ['s', 'm1', 'm2', 'rv', 'rvw'].filter(d => fs.existsSync(path.join(__dirname, 'audio', d, 'aud.js')));
 
 const CSS = `
 @font-face{font-family:Andika;src:url(../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
@@ -223,6 +225,9 @@ body.crm .top .home{display:none}body.crs .hud .qx{display:none}
 
 const JS = `
 ${DECX.JS}
+${RVX.js}
+${require('../score/_actl.js').js}
+${RVX.page({ gr: 'g4', set: 'g4gm_mt-rv', name: '📝 四年級 複習｜🎬 秒懂 動畫 突擊 測驗', R: RVR })}
 ${NGX.JS}
 var NGM=${J(D.NGAME.map(g => ({ id: g.id, ic: g.ic, nm: g.nm, how: NGX.HOW[g.id], t: NGX.T[g.id], sec: 'b' })))},XB2=${J(D.XB2)},XGI2={},XBK='A';${J(D.XORD2)}.forEach(function(x,k){XGI2[x[0]+':'+x[1]]=k});
 /* 2026-10-29 第 3、5 件：題庫 B ＝ 新 25／新 50（XBK ＝ 'B'）：6 種 全新 遊戲＋🔓；存 進度、做過 的、最高分、成績 代號 都 分開 */
@@ -350,7 +355,7 @@ function frame(body){var g=R.g,c=COL[g.id];
   $('#app').innerHTML='<div class="hud"><span class="nm"><span class="bd" style="display:inline-flex;width:46px;height:46px;border-radius:14px;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,'+c[0]+','+c[1]+')">'+g.ic+'</span>'+(R.x?'第 '+(R.lv+1)+' 關 · ':'')+g.nm+(DUO?'<span class="duot '+(DUO.cur?'p2':'p1')+'">👤 '+duoNm(DUO.id[DUO.cur])+'</span>':'')+'</span>'+
     '<span class="dots">'+(R.x?'<span class="xpg">📝 '+(R.k+1)+' ／ '+R.x+'</span>':'')+R.idx.map(function(_,i){if(R.x&&R.lvOf[i]!==R.lv)return '';var x=R.Q[i];return '<i class="'+(x?(x[0]?'ok':'no'):i===R.k?'cur':'')+'"></i>'}).join('')+'</span>'+(R.st>=2?'<span class="flm'+(R.st>=5?' hot':'')+'">🔥 '+R.st+'</span>':'')+(R.bmax?'<span class="bhp">👾 '+'❤'.repeat(Math.max(0,R.bhp))+'<s>'+'🖤'.repeat(Math.max(0,R.bmax-R.bhp))+'</s></span>':'')+'<span class="sc">⭐ '+R.sc.toLocaleString()+'</span>'+(DUO?'<span class="vs"><b class="p1">'+Math.round(DUO.R[0].sc*10)/10+'</b> 🆚 <b class="p2">'+Math.round(DUO.R[1].sc*10)/10+'</b></span>':'')+'<button class="qx" data-x="hub">✕ 離開</button></div>'+
     '<div class="tm"><i id="bar"></i></div><div class="how">'+g.how+'</div><div class="stage" id="stage">'+body+'</div><div id="fb" class="fb"></div>'}
-function show(){if(R.x){R.g=R.gs[R.k];var lv=R.lvOf[R.k];if(lv!==R.lv){R.lv=lv;lvSplash(show);return}}R.shownK=R.k;var g=R.g,q=g.B[R.idx[R.k]];R.q=q;R.clickW=null;R.qi=R.idx[R.k];R.lock=false;R.ts=Date.now();
+function show(){if(R.x){R.g=R.gs[R.k];var lv=R.lvOf[R.k];if(lv!==R.lv){R.lv=lv;rvaGo(R.g.id,function(){lvSplash(show)});return}   /* 2026-10-31 第三十六次 第 1 點：每 換 一關 先 演 秒懂 複習 動畫 */}R.shownK=R.k;var g=R.g,q=g.B[R.idx[R.k]];R.q=q;R.clickW=null;R.qi=R.idx[R.k];R.lock=false;R.ts=Date.now();
   R.ord=shuf(q.o.map(function(_,i){return i}));var id=g.id,h='';
   if(id==='m8'&&!R.rd[q.pas]){readScene(q);return}
   if(id==='dc'&&q.u!==R.dcu){var tut=R.dcu==null;R.dcu=q.u;$('#app').innerHTML='';var les=function(){decLesson(LES[R.bk==='B'?'B':'A'][q.u],show)};if(tut&&!window.__NOTUT)decTut(DTUT,les);else les();return}   /* 2026-10-30 第 9-(5)：這一場 第一題 解碼 前 ＝ 先 教 怎麼 拖、中英 順序 */   /* 🔓 每一課 第一題 前 ＝ 秒懂 動畫 */
@@ -563,7 +568,7 @@ const html = `<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>四年級 複習</title>
-<style>${CSS}${DECX.CSS}${NGX.CSS}</style></head>
+<style>${CSS}${DECX.CSS}${NGX.CSS}${RVX.css}${require('../score/_actl.js').css}</style></head>
 <body>
 ${CL.home(4, '../', 'school')}
 <script src="../live/fb.js"></script><script>${fs.readFileSync(path.join(__dirname, '..', 'live', '_db.js'), 'utf8')}</script><script>${fs.readFileSync(path.join(__dirname, '..', 'live', '_xlive_rt.js'), 'utf8')}</script>

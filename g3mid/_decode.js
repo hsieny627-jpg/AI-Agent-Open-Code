@@ -22,6 +22,7 @@ exports.CSS = `
 .dcs{min-width:clamp(88px,10.5vw,150px);min-height:clamp(58px,8.2vh,80px);border:4px dashed #6F86A6;border-radius:16px;background:#0E1A2C;display:flex;align-items:center;justify-content:center;
   font-size:clamp(26px,4.4vh,40px);color:#FFE38A;padding:2px 10px;cursor:pointer;transition:border-color .15s,background .15s,transform .15s}
 .dcs.hot,.dcs.sel{border-color:#5EC8FF;border-style:solid;background:#123049;transform:scale(1.05)}
+.dcs.fill{touch-action:none;cursor:grab}
 .dcs.fill{border-style:solid;border-color:#FFD54A;background:#2A2410}
 .dcs.ok{border-color:#2BD46A;background:#0F3A1F;color:#BFFFD0}.dcs.no{border-color:#FF5A5A;background:#3A1010;color:#FFC2C2;animation:dcsh .45s}
 @keyframes dcsh{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
@@ -31,6 +32,7 @@ exports.CSS = `
   font-size:clamp(26px,4.4vh,40px);display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab;box-shadow:0 6px 0 #9A6B00;transition:transform .15s}
 .dctl.sel{transform:translateY(-6px) scale(1.06);border-color:#5EC8FF;box-shadow:0 0 0 5px rgba(94,200,255,.45),0 6px 0 #9A6B00}
 .dctl.drag{z-index:60;position:relative;transition:none;box-shadow:0 14px 24px rgba(0,0,0,.5)}
+.dcs.lift{opacity:.35}.dcs.swp{animation:dcSwp .45s}@keyframes dcSwp{40%{transform:scale(1.14);box-shadow:0 0 0 4px #FFE07A}}
 .dctl.used{visibility:hidden}
 .dcbox.dz1 .dce{font-size:clamp(32px,5.8vh,64px)}.dcbox.dz1 .dcs,.dcbox.dz1 .dctl{min-height:clamp(52px,7.2vh,72px);font-size:clamp(24px,3.8vh,36px)}.dcbox.dz1 .dct{margin-top:clamp(8px,2vh,22px)}
 .dcbox.dz2 .dce{font-size:clamp(28px,5vh,56px)}.dcbox.dz2 .dcs,.dcbox.dz2 .dctl{min-height:clamp(48px,6.4vh,64px);min-width:clamp(74px,9vw,120px);font-size:clamp(22px,3.4vh,32px)}.dcbox.dz2 .dcw{row-gap:6px}.dcbox.dz2 .dcz{margin-top:6px}
@@ -130,7 +132,8 @@ function decStop(){DEC.rid++;if(DEC.au){try{DEC.au.onended=null;DEC.au.pause()}c
 /* 一題：q ＝ {en, t:[[英文, 中文]…], x:[錯 方塊…], z 整句 中文, v 聲音} */
 function decRender(q,st0){var A=DEC.A,st=H('div','dcbox');st0.appendChild(st);var row=H('div','dcw'),tray=H('div','dct'),zh=H('div','dcz',esc(q.z)),sel=null,selS=null;
   var cells=q.t.map(function(p,i){var c=H('div','dcc'+(/^['\u2019]/.test(p[0])?' ct':'')+(q.t[i+1]&&/^['\u2019]/.test(q.t[i+1][0])?' pre':''),'<div class="dce">'+decEN(p[0])+'</div>');c.setAttribute('data-w',p[0]);var s=H('div','dcs','');s.setAttribute('data-i',i);c.appendChild(s);row.appendChild(c);
-   s.addEventListener('click',function(){if(A.busy()||DEC.lock)return;if(s._t){back(s);return}if(sel){put(sel,s);return}row.querySelectorAll('.dcs.sel').forEach(function(x){x.classList.remove('sel')});selS=s;s.classList.add('sel')});return c});
+   slotDrag(s);
+   s.addEventListener('click',function(){if(s._nc){s._nc=0;return}if(A.busy()||DEC.lock)return;if(s._t){back(s);return}if(sel){put(sel,s);return}row.querySelectorAll('.dcs.sel').forEach(function(x){x.classList.remove('sel')});selS=s;s.classList.add('sel')});return c});
  st.appendChild(row);st.appendChild(tray);st.appendChild(zh);
  var tiles=shuf(q.t.map(function(p){return p[1]}).concat(q.x||[]));
  tiles.forEach(function(z){var b=H('div','dctl',esc(z));b._z=z;tray.appendChild(b);var sx,sy,mv,dn=false;
@@ -144,6 +147,16 @@ function decRender(q,st0){var A=DEC.A,st=H('div','dcbox');st0.appendChild(st);va
  decTW(st,tray);
  function over(e){var best=null;row.querySelectorAll('.dcs').forEach(function(s){var r=s.getBoundingClientRect();if(e.clientX>r.left-24&&e.clientX<r.right+24&&e.clientY>r.top-40&&e.clientY<r.bottom+40)best=s});return best}
  function put(b,s){if(s._t)back(s);s._t=b;s.textContent=b._z;s.classList.add('fill');s.classList.remove('sel','hot');b.classList.add('used');b.classList.remove('sel');sel=null;selS=null;
+  decFit(st);if([].every.call(row.querySelectorAll('.dcs'),function(x){return x._t}))setTimeout(check,350)}
+ /* 2026-10-31 第三十六次 第 3 點：格子 裡 的 方塊 可以 拖到 別的 格子 ＝ 互相 交換（空 的 格子 ＝ 搬 過去）；拖回 下面 ＝ 拿 回去。點 一下 照舊 ＝ 拿 回去 */
+ function slotDrag(s){var sx,sy,mv,dn=false,gh=null;
+  s.addEventListener('pointerdown',function(e){if(!s._t||A.busy()||DEC.lock)return;e.preventDefault();dn=true;mv=false;sx=e.clientX;sy=e.clientY;try{s.setPointerCapture(e.pointerId)}catch(x){}});
+  s.addEventListener('pointermove',function(e){if(!dn)return;var dx=e.clientX-sx,dy=e.clientY-sy;if(!mv&&Math.abs(dx)+Math.abs(dy)>10){mv=true;var r=s.getBoundingClientRect();gh=H('div','dctl drag dcgh',esc(s._t._z));gh.style.cssText='position:fixed;left:'+r.left+'px;top:'+r.top+'px;width:'+r.width+'px;pointer-events:none;z-index:99';document.body.appendChild(gh);s.classList.add('lift')}
+   if(mv){gh.style.transform='translate('+dx+'px,'+dy+'px) scale(1.08)';var o=over(e);row.querySelectorAll('.dcs').forEach(function(x){x.classList.toggle('hot',x===o&&x!==s)})}});
+  function end(e){if(!dn)return;dn=false;s.classList.remove('lift');row.querySelectorAll('.dcs.hot').forEach(function(x){x.classList.remove('hot')});if(gh&&gh.parentNode)gh.parentNode.removeChild(gh);gh=null;if(!mv)return;s._nc=1;setTimeout(function(){s._nc=0},400);
+   var o=e?over(e):null;if(o&&o!==s){swap(s,o);return}if(!o){var r=tray.getBoundingClientRect();if(e&&e.clientY>r.top-30)back(s)}}
+  s.addEventListener('pointerup',end);s.addEventListener('pointercancel',function(){end(null)})}
+ function swap(a,b){var ta=a._t,tb=b._t;a._t=tb||null;b._t=ta;a.textContent=tb?tb._z:'';a.classList.toggle('fill',!!tb);b.textContent=ta._z;b.classList.add('fill');[a,b].forEach(function(x){x.classList.remove('sel');x.classList.remove('swp');void x.offsetWidth;x.classList.add('swp')});
   decFit(st);if([].every.call(row.querySelectorAll('.dcs'),function(x){return x._t}))setTimeout(check,350)}
  function back(s){if(!s._t)return;s._t.classList.remove('used');s._t=null;s.textContent='';s.classList.remove('fill')}
  function check(){if(A.busy()||DEC.lock)return;var ss=[].slice.call(row.querySelectorAll('.dcs')),got=ss.map(function(s){return s._t?s._t._z:''}),okN=0;

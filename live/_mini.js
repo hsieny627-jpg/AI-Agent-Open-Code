@@ -61,7 +61,8 @@ var MINI=(function(){
     frame('<div class="mdg"><div class="mdr">'+G2.src.map(function(w,i){return '<span class="mdt '+dcls(w)+(G2.slot.indexOf(i)>=0?' gone':'')+'" data-dt="'+i+'">'+esc(w)+'</span>'}).join('')+'</div>'+
       '<div class="mdz">'+esc(d.fz)+'</div><div class="mdto">🪄 變成 ➜ '+esc(d.tz)+'</div>'+
       '<div class="mdr" id="mdD">'+G2.tgt.map(function(_,k){var i=G2.slot[k];return '<span class="mds'+(i!=null?' full':'')+'" data-ds="'+k+'">'+(i!=null?'<span class="mdt '+dcls(G2.src[i])+(R.mag===k?' mag':'')+'" data-dk="'+k+'">'+esc(dshow(G2.src[i],k,n,last))+'</span>':'')+'</span>'}).join('')+'</div></div><div id="mfb" class="mfb"></div>');R.mag=-1}
-  function dPut(i,k){var G2=R.dg;if(R.lock)return;var k0=G2.slot.indexOf(i);if(k0>=0)G2.slot[k0]=null;G2.slot[k]=i;
+  function dPut(i,k){var G2=R.dg;if(R.lock)return;var k0=G2.slot.indexOf(i),o2=G2.slot[k];if(k0>=0)G2.slot[k0]=(o2!=null&&o2!==i)?o2:null;G2.slot[k]=i;   /* 2026-10-31 第三十六次 第 3 點：格子 ↔ 格子 互相 交換 */
+    
     var n=G2.tgt.length,w=G2.src[i];if(dshow(w,k,n,G2.tgt[n-1])!==w)R.mag=k;
     var full=true;for(var q=0;q<n;q++)if(G2.slot[q]==null)full=false;drawDg();
     if(full){var s=G2.slot.map(function(j,kk){return dshow(G2.src[j],kk,n,G2.tgt[n-1])}).join(' ').replace(/ ([?.!,])/g,'$1');var ok=s===R.q.dg.t;

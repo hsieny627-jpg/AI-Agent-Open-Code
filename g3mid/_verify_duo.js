@@ -6,7 +6,7 @@ async function one(SITE,SET){const br=await chromium.launch();const ctx=await br
 await ctx.route(/script\.test/,r=>r.fulfill({contentType:'application/json',body:'{"ok":true,"dup":[]}'}));
 const ID=SITE==='g3mid'?'30401':'40201';
 await ctx.addInitScript(ID=>{window.__NOTUT=1;window.__NOUNLOCK=1;window.__NOWB=1;Object.defineProperty(window,'SCORE_URL',{get:()=>'https://script.test/exec',set:()=>{}});localStorage.setItem('score_last','"'+ID+'"');localStorage.setItem('score_id_g'+ID[0],'"'+ID+'"');localStorage.setItem('score_act',String(Date.now()));sessionStorage.setItem('sc_ok',ID);
- window.__DCLK=0.05;window.__DCLMIN=0;window.__NOGO=1;window.__G2CALM=1;HTMLMediaElement.prototype.play=function(){const a=this;setTimeout(()=>a.onended&&a.onended(),60);return Promise.resolve()}},ID);
+ window.__DCLK=0.05;window.__DCLMIN=0;window.__NOGO = 1; window.__NORVA = 1;window.__G2CALM=1;HTMLMediaElement.prototype.play=function(){const a=this;setTimeout(()=>a.onended&&a.onended(),60);return Promise.resolve()}},ID);
 const p=await ctx.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message+' @ '+(e.stack||'').split('\n').slice(1,3).join(' ')));await p.goto('file://'+path.join(ROOT,SITE,'index.html'));await p.waitForTimeout(500);
 await p.evaluate((SET)=>{LDB.set=LDB.must=LDB.patch=()=>Promise.resolve(true);CR={room:SET[0]==='x'&&false?'':'0'+(location.pathname.indexOf('g3mid')>=0?'304':'402'),t:1,cfg:{on:1,t:1,set:SET,gs:[],m:'self'},acc:{},n:0,ok:0,q:-9,rd:{}};typeof hub==='function'?hub():lobby()},SET);
 await p.waitForTimeout(300);await p.click('[data-duo="1"]');await p.waitForTimeout(100);

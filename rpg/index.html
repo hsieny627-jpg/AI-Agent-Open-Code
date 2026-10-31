@@ -2005,15 +2005,16 @@ function scPwKey(k){var P=SCPW;if(!P)return;if(P.mode==='?'||P.mode==='busy')ret
     if(P.mode==='set2'&&P.v!==P.first){P.v='';P.first='';P.mode='set';scShakePw();scPwPaint('❌ 兩次不一樣，重新設一次');return}
     var set=P.mode==='set2',pv=P.v;P.mode='busy';scPwPaint();
     scFetch('',{a:'sp',id:P.id,p:pv,set:set?1:0},12000).then(function(j){if(SCPW!==P)return;
-      if(j&&j.ok&&j.tk){scPkSave(P.id,j.tk,$('#scRem')&&$('#scRem').checked);P.mode='done';scPwPaint(set?'🎉 密碼設好了！':'✅ 密碼對了','ok');var d=P.done;setTimeout(function(){if(SCPW===P){if(set){scPwVow(P,d);return}SCPW=null;d()}},700);return}
+      if(j&&j.ok&&j.tk){scPkSave(P.id,j.tk,$('#scRem')&&$('#scRem').checked);P.mode='done';scPwPaint(set?'🎉 密碼設好了！':'✅ 密碼對了','ok');var d=P.done;setTimeout(function(){if(SCPW===P){scPwVow(P,d,set);return}},700);return}
       if(j&&j.ok&&!j.tk){P.v='';P.mode=j.has?'in':'set';scPwPaint();return}
       P.v='';P.mode=set?'set':'in';scShakePw();
       scPwPaint(j&&j.err==='lock'?'🔒 打錯太多次，10 分鐘後再試（或請老師幫忙）':j&&j.err==='wrong'?'❌ 密碼不對，再試一次<br><small>忘記了 ➜ 請老師按〔🔑 清除密碼〕，再自己重設</small>':'📶 連不上網路，等一下再試')},
      function(){if(SCPW!==P)return;P.v='';P.mode=set?'set':'in';scPwPaint('📶 連不上網路，等一下再試')});return}
   if(P.v.length>=8||k.length!==1)return;if(P.v.length<2&&!/[a-z]/.test(k))return;if(P.v.length>=2&&!/[0-9]/.test(k))return;P.v+=k;scPwPaint()}
 /* 2026-10-31 第三十五次第 12 點：設好密碼以後一定勾「我為自己的密碼：記憶和負責。」才進得去 */
-function scPwVow(P,d){var b=SCH.box();if(!b){SCPW=null;d();return}
-  b.innerHTML='<div class="sclog scpw scvow"><h2>🔑 密碼設好了！</h2><div class="vwi">🧠 ＋ 🤝</div>'+
+/* 2026-10-31 C42 Q1 乙：每一次登入（打對密碼、第一次設好）都要勾 */
+function scPwVow(P,d,set){var b=SCH.box();if(!b){SCPW=null;d();return}
+  b.innerHTML='<div class="sclog scpw scvow"><h2>'+(set?'🔑 密碼設好了！':'✅ 密碼對了！')+'</h2><div class="vwi">🧠 ＋ 🤝</div>'+
    '<label class="vwl" id="scVowL"><input type="checkbox" id="scVow"><span>我為自己的密碼：記憶和負責。</span></label>'+
    '<div class="vwh" id="scVowH">👆 先勾上面的方框</div><button class="vwb" id="scVowB" disabled>✅ 進入在家複習</button></div>';
   var c=$('#scVow'),k=$('#scVowB'),h=$('#scVowH');
@@ -2475,6 +2476,15 @@ function scChampOpen(){var S=SCCH;if(!S||S.busy)return;S.busy=true;var bx=docume
    function(){S.busy=false;bx.classList.remove('shake');m.textContent='📶 沒有網路，等一下再點一次'})}
 setTimeout(function(){if(SCID)scChamp(0)},1600);
 
+;(function(){if(window.__NODSP||(navigator.webdriver&&!window.__DSPTEST))return;var R=new RegExp("([\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])[ \\u00a0]+(?=[\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])",'g'),SEL="#scov,#scbar,.scme,.scbanner,#scHomeBar";
+function skip(n){var e=n.parentElement;while(e){var t=e.tagName;if(t==='SCRIPT'||t==='STYLE'||t==='TEXTAREA'||t==='INPUT'||(e.classList&&e.classList.contains('keepsp')))return true;e=e.parentElement}return false}
+function inSel(n){if(!SEL)return true;var e=n.nodeType===1?n:n.parentElement;return !!(e&&e.closest&&e.closest(SEL))}
+function one(n){var v=n.nodeValue;if(!v||v.indexOf(' ')<0&&v.indexOf('\u00a0')<0)return;if(skip(n)||!inSel(n))return;var u=v.replace(R,'$1');if(u!==v)n.nodeValue=u}
+function walk(r){if(!r)return;if(r.nodeType===3){one(r);return}if(r.nodeType!==1)return;var w=document.createTreeWalker(r,4),n;while((n=w.nextNode()))one(n)}
+function go(){walk(document.body);try{new MutationObserver(function(L){L.forEach(function(m){if(m.type==='characterData')one(m.target);else [].forEach.call(m.addedNodes,walk)})}).observe(document.body,{childList:true,subtree:true,characterData:true})}catch(x){}}
+if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
+})();
+
 SCHOMEP=true;
 function hOv(){var o=document.getElementById('scov');if(!o){o=document.createElement('div');o.id='scov';o.innerHTML='<div id="scovb"></div>';document.body.appendChild(o)}return o}
 SCH={on:function(){return hOv().classList.contains('on')},open:function(){hOv().classList.add('on')},close:function(){hOv().classList.remove('on')},box:function(){return document.getElementById('scovb')},
@@ -2728,22 +2738,25 @@ function tdemo(n,o){if(!window.RPLIFE||!RPLIFE.demo)return;var h=document.queryS
 function tutHTML(){var S=tutScenes()[TCH]||[];
   return '<div class="tut"><div class="tch">'+(rLocked()?[['r','📜 獎勵規則']]:wLocked()?[['w','🎯 全班獎勵']]:[['r','📜 獎勵規則'],['a','⭐🪙 經驗值、金幣怎麼來'],['b','⚔ 戰力是什麼'],['c','🎁 收集有什麼幫助'],['d','⚔ 階級愈高能力愈強'],['w','🎯 全班獎勵']].filter(function(x){return ABIL_ON||x[0]!=='d'})).map(function(x){return '<button data-tch="'+x[0]+'" class="'+(TCH===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div>'+
     '<div class="tst c'+TCH+'" id="tst">'+S.map(function(x){return '<div class="tsc"><div class="cap">'+x[0]+'</div><div class="vis">'+x[1]+'</div></div>'}).join('')+'</div>'+
-    '<div class="tprog"><i id="tpb"></i></div><div class="tctl"><button id="tPrev" aria-label="上一幕">◀ 上一幕</button><button id="tPause" class="tpz">⏸ 暫停</button><button id="tNext" aria-label="下一幕">下一幕 ▶</button></div>'+
+    '<div class="tprog"><i id="tpb"></i></div><div class="tctl"><button id="tPrev" aria-label="上一幕">◀ 上一幕</button><button id="tPause" class="tpz">⏸ 暫停</button><button id="tNext" aria-label="下一幕">下一幕 ▶</button><button id="tAgain">🔁 再播一次</button><button id="tSlow" class="'+(TUT.slow?'on':'')+'">'+(TUT.slow?'🐇 正常':'🐢 慢速')+'</button></div>'+
     '<div class="tnav">'+S.map(function(x,i){return '<button data-tut="'+i+'">'+(i+1)+'</button>'}).join('')+'<button class="re" data-tut="0">⟲ 從頭再看</button></div>'+
     (TCH==='r'||TCH==='w'?(QZ.back!=null?'<button class="qback" id="qzBack">📝 回到第 '+(QZ.i+1)+' 題</button>':(TCH==='w'?'<button class="qzgo" id="qzGo"'+(wLocked()&&!QZ.seenW?' hidden':'')+'>📝 '+(cwDone()?'再答一次3題（已經領過）':'答對3題 ➜ 🪙＋50 ⭐＋25（只有一次）')+'</button>':'<button class="qzgo" id="qzGo"'+(rLocked()&&!QZ.seenEnd?' hidden':'')+'>📝 '+(rLocked()?'5 題問題（都答對，就可以開始玩）':'再考一次 5 題問題')+'</button>')):'')+'</div>'}
 /* 一幕停 TDUR 毫秒才換（第十六次：從 4.8 秒改 7.5 秒）；〔⏸ 暫停〕＝不換下一幕（這一幕的動畫照樣演完，字留著慢慢看），進度條也停 */
 var TDUR=7500;
+/* 2026-10-31 C42 Q2 乙：多〔🔁 再播一次〕（這一幕重演）〔🐢 慢速〕（每一幕停 ✕1.6、動畫 0.6 倍速）*/
+function tDur(){return TDUR*(TUT.slow?1.6:1)}
+function tRate(){var t=document.getElementById('tst');if(!t||!t.getAnimations)return;try{t.getAnimations({subtree:true}).forEach(function(a){a.playbackRate=TUT.slow?.6:1})}catch(e){}}
 function tutStop(){if(TUT.dm){TUT.dm.stop();TUT.dm=null}clearTimeout(TUT.tm);cancelAnimationFrame(TUT.raf||0);TUT.cn.forEach(clearTimeout);TUT.cn=[]}
 function tutTick(){var b=document.getElementById('tpb'),L=document.querySelectorAll('#tst .tsc');if(!b||!L.length)return;var now=Date.now();
   if(!TUT.pz){TUT.left-=now-TUT.last;if(TUT.left<=0){if(TUT.i<L.length-1){tutGo(TUT.i+1);return}TUT.left=0;tutPause(true)}}TUT.last=now;
-  b.style.width=(100-Math.max(0,TUT.left)/TDUR*100).toFixed(1)+'%';TUT.raf=requestAnimationFrame(tutTick)}
+  b.style.width=(100-Math.max(0,TUT.left)/tDur()*100).toFixed(1)+'%';if(TUT.slow)tRate();TUT.raf=requestAnimationFrame(tutTick)}
 function tutPause(v){TUT.pz=v;var b=document.getElementById('tPause'),L=document.querySelectorAll('#tst .tsc'),end=TUT.i>=L.length-1&&TUT.left<=0;
   if(b){b.textContent=v?(end?'⟲ 從頭再看':'▶ 繼續'):'⏸ 暫停';b.classList.toggle('on',v)}var t=document.getElementById('tst');if(t)t.classList.toggle('pz',v&&!end)}
 function tutGo(i){tutStop();var L=document.querySelectorAll('#tst .tsc');if(!L[i])return;
   [].forEach.call(L,function(x){x.classList.remove('on')});void L[i].offsetWidth;L[i].classList.add('on');
   [].forEach.call(document.querySelectorAll('.tnav [data-tut]'),function(b,k){b.classList.toggle('on',k===i)});
   var F=(tutScenes()[TCH]||[])[i];if(F&&F[2])F[2]();
-  TUT.i=i;TUT.left=TDUR;TUT.last=Date.now();tutPause(!!TUT.pz);TUT.raf=requestAnimationFrame(tutTick);
+  TUT.i=i;TUT.left=tDur();TUT.last=Date.now();tRate();tutPause(!!TUT.pz);TUT.raf=requestAnimationFrame(tutTick);
   if((TCH==='r'||TCH==='w')&&i>=L.length-1){if(TCH==='w')QZ.seenW=1;else QZ.seenEnd=1;var qg=document.getElementById('qzGo');if(qg)qg.hidden=false}}
 /* 📝 5 題小問題（2026-10-21：老師選「5 題，一件一題」）：答錯 ➜ 回去看那一幕（停住），再回來答同一題；5 題都對 ➜ 伺服器記下來（老師看板看得到）。選項每次重洗 */
 var QZ={i:0,ok:[],back:null,seenEnd:0,seenW:0,k:'r'};
@@ -2878,6 +2891,8 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if((b=c('[data-tut]'))){if(b.classList.contains('re'))TUT.pz=false;tutGo(+b.getAttribute('data-tut'));return}
   if(c('#tPause')){var L0=document.querySelectorAll('#tst .tsc');if(TUT.pz&&TUT.i>=L0.length-1&&TUT.left<=0){TUT.pz=false;tutGo(0)}else tutPause(!TUT.pz);return}
   if(c('#tPrev')){tutGo(Math.max(0,(TUT.i||0)-1));return}
+  if(c('#tAgain')){tutGo(TUT.i||0);return}
+  if(c('#tSlow')){TUT.slow=!TUT.slow;var sb=document.getElementById('tSlow');sb.textContent=TUT.slow?'🐇 正常':'🐢 慢速';sb.classList.toggle('on',TUT.slow);TUT.left=TUT.left*(TUT.slow?1.6:1/1.6);tRate();return}
   if(c('#tNext')){var L1=document.querySelectorAll('#tst .tsc');tutGo(Math.min(L1.length-1,(TUT.i||0)+1));return}
   if(c('#qzGo')){qzStart();return}
   if(c('#cwBn')){TAB='q';TCH='w';TUT.pz=false;[].forEach.call(document.querySelectorAll('#tabs button'),function(x){x.classList.toggle('on',x.getAttribute('data-t')==='q')});drawShop();return}
@@ -2908,7 +2923,7 @@ homeFix();
 setInterval(function(){var k=(SCID||'')+'|'+(SCID&&scAsked()?1:0);if(k!==LAST){LAST=k;RV=null;homeFix();load()}},800);
 /* 2026-10-22 第二十一次第 1、2 點：學生平板一直開著舊的網頁（第十八次的版本：等伺服器說第 2 版才放行）➜ 答對 5 題又被鎖回規則。
    現在：打開、回到這個分頁、每 5 分鐘問一次 ver.txt（不用快取），有新版＝自動換成新版（網址加 ?v＝新版，一定拿到新的）；正在答題不換 */
-var RPVER='48049391f1';
+var RPVER='6fe5ef39b9';
 function verChk(force){try{if(!force&&(document.getElementById('rqz').className==='on'||BUSY))return;
   fetch('ver.txt?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=String(v||'').trim();if(!/^[0-9a-f]{10}$/.test(v)||v===RPVER)return;
     var K='rp_rl_'+v;try{if(sessionStorage.getItem(K))return;sessionStorage.setItem(K,'1')}catch(e){}location.replace(location.pathname+'?v='+v+location.hash)},function(){})}catch(e){}}

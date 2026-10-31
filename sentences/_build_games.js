@@ -110,7 +110,8 @@ function dgSpark(x,y,em,nn){for(var i=0;i<(nn||10);i++){var p=el('span','dgp',em
   document.body.appendChild(p);(function(q){setTimeout(function(){if(q.parentNode)q.parentNode.removeChild(q)},900)})(p)}}
 function dgPut(i,k){
   if(!DG||DG.lock||busy)return;var D=DG,old=D.slot[k];
-  var k0=D.slot.indexOf(i);if(k0>=0){D.slot[k0]=null;dgPaintSlot(k0)}
+  /* 2026-10-31 第三十六次 第 3 點：格子 裡 的 字 拖到 另一個 有 字 的 格子 ＝ 兩個 互相 交換（不再 把 那一個 退回 上面）*/
+  var k0=D.slot.indexOf(i);if(k0>=0){D.slot[k0]=(old!=null&&old!==i)?old:null;dgPaintSlot(k0);if(D.slot[k0]!=null)old=null}
   if(old!=null&&old!==i){var t=$('#dgS .dt[data-i="'+old+'"]');if(t)t.classList.remove('gone')}
   D.slot[k]=i;var st=$('#dgS .dt[data-i="'+i+'"]');if(st)st.classList.add('gone');
   var w=D.src[i],sh=dgShow(w,k,D.n,D.tgt[D.n-1]),c=dgPaintSlot(k);sPop();
