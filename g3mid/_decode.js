@@ -191,7 +191,7 @@ function decLesson(L,done){var A=DEC.A,o=$('#dcl'),k='dcl_seen_'+L.key+'_'+(A.si
    S.eq ＝ {a:{t:[[英文, 中文, 圖示, 紅 字母 位置]…], say}, b:{t, say}, om:[a 裡 可以 省略 的 格], tag, z}
    上面 一行 一個 字 一個 字 跳出來（每個 字 正下方 中文）➜ 唸 ➜ 紅色 字母 飛走（縮寫）／ years old 劃掉＋「可以 省略」➜ 下面 一行「＝ …」跳出來 ➜ 唸 ➜ 兩行 一起 亮、＝ 放大 ➜ 再 唸 一次 上、下 */
 function decEqCell(p,cls){var en=p[3]!=null?String(p[0]).split('').map(function(c,i){return i===p[3]?'<b class="dri">'+esc(c)+'</b>':c==='’'?'<b class="dap">’</b>':esc(c)}).join(''):decEN(p[0]);
- var c=H('div','dlc'+(/^['’]/.test(p[0])?' ct':'')+(cls||''),'<div class="ic">'+(p[2]||'')+'</div><div class="en">'+en+'</div><div class="zh">'+(p[1]?esc(p[1]):'&nbsp;')+'</div>');c.setAttribute('data-w',/^_+$/.test(p[0])?'':p[0]);return c}
+ var c=H('div','dlc'+(/^['’]/.test(p[0])?' ct':'')+(cls||''),'<div class="ic">'+(p[2]||'')+'</div><div class="en">'+en+'</div><div class="zh">'+(p[1]?esc(p[1]):'&nbsp;')+'</div>');c.setAttribute('data-w',/^_+[?.!]?$/.test(p[0])?'':p[0]);return c}   /* 2026-10-31：______? ______. 也 是 空格（不 亮、下面 沒有 中文）*/
 function decEq(S,w,z,K,alive,next){var E=S.eq,g=H('div','dleq'),m1=H('div','dqm',''),r1=H('div','dqr'),m2=H('div','dqm','＝'),r2=H('div','dqr');
  w.classList.add('eqm');if(E.tag)g.appendChild(H('div','dltag',esc(E.tag)));g.appendChild(m1);g.appendChild(r1);g.appendChild(m2);g.appendChild(r2);w.appendChild(g);z.textContent=E.z||'';
  var c1=E.a.t.map(function(p,i){var c=decEqCell(p,(E.om||[]).indexOf(i)>=0?' om':'');r1.appendChild(c);return c}),c2=E.b.t.map(function(p){var c=decEqCell(p);r2.appendChild(c);return c});
