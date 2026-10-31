@@ -53,11 +53,30 @@ h2 span{display:inline-flex;align-items:center;justify-content:center;width:1.5e
 .td2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 14px}.tdb{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;border-radius:20px;padding:12px 16px;min-height:84px;background:linear-gradient(135deg,#1E7A45,#0B4A28);border:3px solid #5DE89A}
 .tdb.st{background:linear-gradient(135deg,#7A5A06,#3A2A04);border-color:#FFD54A}.tdb .i{font-size:clamp(34px,5vh,46px)}.tdb b{display:block;font-size:clamp(22px,3vh,30px)}.tdb em{font-style:normal;font-size:clamp(17px,2.2vh,20px);color:#E0F5E8}
 @media (max-width:520px){.td2{grid-template-columns:1fr}}
+#go25{position:relative;display:flex;align-items:center;gap:14px;width:100%;max-width:1000px;margin:6px 0 10px;padding:14px 20px;min-height:96px;border-radius:24px;text-decoration:none;color:#2A1A00;
+ background:linear-gradient(135deg,#FFE58A,#FFC23A 55%,#F59E0B);border:4px solid #FFF3C4;box-shadow:0 0 0 0 #FFD54A88,0 10px 28px #0009;animation:g5glow 2.2s ease-in-out infinite;overflow:hidden}
+#go25::after{content:"";position:absolute;top:0;bottom:0;width:30%;left:-40%;background:linear-gradient(100deg,transparent,#FFFFFFAA,transparent);animation:g5sh 3.2s ease-in-out infinite}
+#go25 .g5i{font-size:clamp(40px,6vh,56px)}#go25 .g5x{display:flex;flex-direction:column;gap:4px;min-width:0}#go25 b{font-size:clamp(28px,4.2vh,40px)}#go25 em{font-style:normal;font-weight:700;font-size:clamp(20px,2.8vh,26px);color:#7A1F00}
+#go25 .g5go{margin-left:auto;font-size:clamp(34px,5vh,48px);color:#7A1F00}#go25 .g5f{font-size:clamp(34px,5vh,48px);animation:g5f 1s ease-in-out infinite}
+#go25:active{transform:scale(.98)}
+@keyframes g5glow{0%,100%{box-shadow:0 0 0 0 #FFD54A88,0 10px 28px #0009}50%{box-shadow:0 0 0 12px #FFD54A00,0 10px 28px #0009}}
+@keyframes g5sh{0%{left:-40%}60%,100%{left:120%}}@keyframes g5f{0%,100%{transform:translateX(0)}50%{transform:translateX(10px)}}
+#bo25{width:100%;max-width:1000px;margin:0 0 14px;padding:12px 14px;border-radius:20px;background:#1A1404;border:3px solid #FFD54A}
+#bo25 .b5t{font-size:clamp(20px,2.8vh,26px);font-weight:700;color:#FFE38A;text-align:center;margin-bottom:8px}
+#bo25 .b5r{display:grid;grid-template-columns:1fr 1fr;gap:10px}#bo25 .b5c{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px;border-radius:16px;background:#2A2208;border:2px solid #6B5410;font-size:clamp(19px,2.6vh,24px);color:#fff;text-align:center}
+#bo25 .b5a{border-color:#FFD54A;background:#3A2E06}#bo25 .b5k{font-size:clamp(34px,5vh,48px);font-weight:700;color:#FFD54A;line-height:1;animation:b5k 1.6s ease-in-out infinite}#bo25 .b5c em{font-style:normal;font-size:clamp(16px,2.2vh,20px);color:#FFE9A8}
+@keyframes b5k{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@media (max-width:520px){#bo25 .b5r{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){#go25,#go25::after,#go25 .g5f,#bo25 .b5k{animation:none}}
 #bar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;padding:10px;background:linear-gradient(180deg,transparent,#000 40%)}
 #bar a{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;text-decoration:none;font-size:16px;padding:11px 20px}
 </style></head><body>
 ${require('../score/_client.js').home(S.out === 'g3-review' ? 3 : 4, '../', 'home')}
 <h1>🏠 ${S.g}</h1>
+<!-- 2026-10-31 第三十五次 第 9 點：最上面 一顆 大按鈕〔🏠 25題闖關〕＋請優先完成＋11/1 23:59 以前 加倍（過了 自己 收起來，按鈕 留著）-->
+<a id="go25" href="../${S.out === 'g3-review' ? 'g3mid' : 'midterm'}/home.html"><span class="g5f">👉</span><span class="g5i">🏠</span><span class="g5x"><b>${S.out === 'g3-review' ? '三' : '四'}年級　25題闖關</b><em>請優先完成這一個任務！</em></span><span class="g5go">▶</span></a>
+<div id="bo25"><div class="b5t">⏰ 11月1日（星期日）晚上11:59以前</div><div class="b5r"><div class="b5c b5a"><span class="b5k">✖2</span><span>🏠 25題闖關</span><em>🪙金幣　⭐經驗值　兩倍</em></div><div class="b5c"><span class="b5k">✖1.5</span><span>🎮 其他主題和遊戲</span><em>🪙金幣　⭐經驗值　1.5倍</em></div></div></div>
+<script>(function(){if(Date.now()>=Date.parse('2026-11-01T23:59:59+08:00')){var b=document.getElementById('bo25');if(b)b.hidden=true}})()</script>
 <!-- 2026-10-27 第三十次 2-(1)：老師「暫時下架」➜ TODAY_ON ＝ false（要放回來改成 true）-->
 <!-- 2026-10-26 第二十七次 第 2 點（老師 選 C30 第 2 題 1、2）：📅 今日任務（每天 5 題）、📈 我的 進步（⭐ 星星）：score/_today_build.js -->
 ${TODAY_ON ? `<div class="td2"><a class="tdb" href="today.html"><span class="i">📅</span><span class="x"><b>今日 任務</b><em>每天 5 題、大約 5 分鐘</em></span></a><a class="tdb st" href="stars.html"><span class="i">📈</span><span class="x"><b>我的 進步</b><em>每一個 主題 ⭐⭐⭐</em></span></a></div>` : ''}
@@ -78,6 +97,7 @@ ${btn('r1/index.html', '🃏', 'Review 1 字卡', '物品、活動單字 98 張'
 <section><h2><span>${S.r1 ? 4 : 3}</span>📚 補充</h2><div class="g">
 ${S.more.map(x => btn(path.basename(x.from), x.ic, x.t, '')).join('')}${S.jobs ? '<a class="b" href="' + S.jobs + '"><span class="i">💼</span><span class="x"><b>職業單字網站 ↗</b><em>回來按瀏覽器〔◀ 上一頁〕</em></span></a>' : ''}
 </div></section>
+<script>${require('../score/_dsp.js').js()}</script>
 </body></html>`;
 }
 /* 2026-10-07 使用者第 12 點：學生在家複習的網站要獨立，不可以連到老師教學用的頁面 ➜ 補充的單字結構、單字故事複製一份進來。

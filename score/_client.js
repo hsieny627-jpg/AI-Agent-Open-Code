@@ -73,7 +73,14 @@ const CSS = `
 .scpw .sckey.pwk.dg{grid-template-columns:repeat(6,clamp(64px,10vh,100px))}
 .scpw .pwrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
 .scpw .pwrem{display:flex;align-items:center;gap:10px;font-size:clamp(18px,2.8vh,26px);font-weight:700;color:#DDE6EE;background:#141A20;border:2px solid #3A4A58;border-radius:16px;padding:8px 14px;min-height:52px;cursor:pointer}
-.scpw .pwrem input{width:30px;height:30px}.scpw .pweye{min-height:52px;border-radius:16px;background:#141A20;border:2px solid #3A4A58;color:#fff;font:inherit;font-weight:700;font-size:clamp(18px,2.8vh,26px);padding:6px 14px;cursor:pointer}
+.scpw .pwrem input{width:30px;height:30px}
+.scvow{text-align:center}.scvow .vwi{font-size:clamp(46px,8vh,72px);margin:6px 0}
+.scvow .vwl{display:flex;align-items:center;justify-content:center;gap:14px;margin:10px auto;max-width:640px;padding:16px 18px;border-radius:20px;border:4px solid #FFD54A;background:#221B05;color:#FFE9A8;font-size:clamp(24px,3.6vh,34px);font-weight:700;cursor:pointer;animation:vwp 1.4s ease-in-out infinite}
+.scvow .vwl.on{border-color:#39D98A;background:#0C2A18;color:#CFF7DF;animation:none}.scvow .vwl input{width:44px;height:44px;flex:none;accent-color:#39D98A}
+.scvow .vwh{font-size:clamp(20px,2.8vh,26px);color:#DDE6EE;margin:8px 0}
+.scvow .vwb{min-height:72px;padding:6px 34px;border-radius:22px;border:4px solid #7BF0A8;background:linear-gradient(#36D27A,#1E9E55);color:#06210F;font:inherit;font-weight:700;font-size:clamp(26px,4vh,38px);cursor:pointer}
+.scvow .vwb:disabled{opacity:.35;filter:grayscale(1);cursor:default}
+@keyframes vwp{0%,100%{box-shadow:0 0 0 0 #FFD54A66}50%{box-shadow:0 0 0 10px #FFD54A00}}@media (prefers-reduced-motion:reduce){.scvow .vwl{animation:none}}.scpw .pweye{min-height:52px;border-radius:16px;background:#141A20;border:2px solid #3A4A58;color:#fff;font:inherit;font-weight:700;font-size:clamp(18px,2.8vh,26px);padding:6px 14px;cursor:pointer}
 /* ── 成績紀錄（2026-10-07 對話 C） ── */
 .sclog{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.3vh,14px);width:100%}
 .sclog h2{font-size:clamp(28px,5vh,50px)!important;margin:0}
@@ -463,12 +470,20 @@ function scPwKey(k){var P=SCPW;if(!P)return;if(P.mode==='?'||P.mode==='busy')ret
     if(P.mode==='set2'&&P.v!==P.first){P.v='';P.first='';P.mode='set';scShakePw();scPwPaint('❌ 兩次 不一樣，重新 設 一次');return}
     var set=P.mode==='set2',pv=P.v;P.mode='busy';scPwPaint();
     scFetch('',{a:'sp',id:P.id,p:pv,set:set?1:0},12000).then(function(j){if(SCPW!==P)return;
-      if(j&&j.ok&&j.tk){scPkSave(P.id,j.tk,$('#scRem')&&$('#scRem').checked);P.mode='done';scPwPaint(set?'🎉 密碼 設好 了！':'✅ 密碼 對了','ok');var d=P.done;setTimeout(function(){if(SCPW===P){SCPW=null;d()}},700);return}
+      if(j&&j.ok&&j.tk){scPkSave(P.id,j.tk,$('#scRem')&&$('#scRem').checked);P.mode='done';scPwPaint(set?'🎉 密碼 設好 了！':'✅ 密碼 對了','ok');var d=P.done;setTimeout(function(){if(SCPW===P){if(set){scPwVow(P,d);return}SCPW=null;d()}},700);return}
       if(j&&j.ok&&!j.tk){P.v='';P.mode=j.has?'in':'set';scPwPaint();return}
       P.v='';P.mode=set?'set':'in';scShakePw();
       scPwPaint(j&&j.err==='lock'?'🔒 打錯 太多 次，10 分鐘 後 再 試（或 請 老師 幫忙）':j&&j.err==='wrong'?'❌ 密碼 不對，再 試 一次<br><small>忘記 了 ➜ 請 老師 按〔🔑 清除 密碼〕，再 自己 重設</small>':'📶 連不上 網路，等一下 再 試')},
      function(){if(SCPW!==P)return;P.v='';P.mode=set?'set':'in';scPwPaint('📶 連不上 網路，等一下 再 試')});return}
   if(P.v.length>=8||k.length!==1)return;if(P.v.length<2&&!/[a-z]/.test(k))return;if(P.v.length>=2&&!/[0-9]/.test(k))return;P.v+=k;scPwPaint()}
+/* 2026-10-31 第三十五次 第 12 點：設好 密碼 以後 一定 勾「我為自己的密碼：記憶和負責。」才 進得去 */
+function scPwVow(P,d){var b=SCH.box();if(!b){SCPW=null;d();return}
+  b.innerHTML='<div class="sclog scpw scvow"><h2>🔑 密碼設好了！</h2><div class="vwi">🧠 ＋ 🤝</div>'+
+   '<label class="vwl" id="scVowL"><input type="checkbox" id="scVow"><span>我為自己的密碼：記憶和負責。</span></label>'+
+   '<div class="vwh" id="scVowH">👆 先勾上面的方框</div><button class="vwb" id="scVowB" disabled>✅ 進入在家複習</button></div>';
+  var c=$('#scVow'),k=$('#scVowB'),h=$('#scVowH');
+  c.onchange=function(){k.disabled=!c.checked;$('#scVowL').classList.toggle('on',c.checked);h.textContent=c.checked?'👍 謝謝你！按綠色按鈕進去':'👆 先勾上面的方框'};
+  k.onclick=function(){if(!c.checked)return;if(SCPW===P)SCPW=null;d()}}
 function scShakePw(){var b=$('#scPwC');if(!b)return;b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
 /* 「請問 這是您嗎？」按 ✅：這個 分頁 已經 打過 密碼、或 這台 平板 記住 了 ＝ 直接 過；不然 ＝ 打 密碼 */
 function scSure(fn){if(!SCID||scPk(SCID)||!SCH||!SCH.box){fn();return}scPwStep(SCID,function(){if(SCH.close)SCH.close();fn()})}
@@ -914,7 +929,8 @@ setTimeout(function(){if(SCID)scChamp(0)},1600);
 `;
 
 /* 一頁要放的東西：S ＝ score/_sites.js 查到的這個資料夾、src ＝ school／home、g 覆寫年級（0 ＝ 看登入的 5 碼） */
-function js(S, src) { return JS.replace('__SCG__', S.g).replace('__SCSRC__', JSON.stringify(src === 'home' ? 'home' : 'school')).replace('__TKLOCK__', () => require('./_calc.js').tkLock.toString()); }
+function js(S, src) { return JS.replace('__SCG__', S.g).replace('__SCSRC__', JSON.stringify(src === 'home' ? 'home' : 'school')).replace('__TKLOCK__', () => require('./_calc.js').tkLock.toString()) +
+  '\n;' + require('./_dsp.js').js('#scov,#scbar,.scme,.scbanner,#scHomeBar') + '\n'; }   /* 2026-10-31 第三十五次 第 11 點：登入 框、成績 畫面 的 中文 不 空格（整頁 的 另外 在 各 網頁 加）*/
 
 const CSSALL = CSS + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_wear.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_fx.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report.css'), 'utf8');
 /* 首頁（總首頁、三年級、四年級、在家複習首頁）：最上面的登入橫幅＋「請問 這是您嗎？」＋10 分鐘登出（2026-10-12 D 第 6 件；2026-10-23 改 10 分鐘）

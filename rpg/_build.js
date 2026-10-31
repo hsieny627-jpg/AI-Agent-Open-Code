@@ -40,6 +40,15 @@ button:active{transform:scale(.97)}
 .cov>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 32%}
 .cov::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,15,.15) 0,rgba(6,8,15,.05) 40%,rgba(6,8,15,.85) 100%)}
 .cov .home{position:absolute;z-index:2;left:14px;top:14px}
+#rpBack{position:relative;z-index:3;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:6px 0 4px;padding:10px 12px;border-radius:22px;background:rgba(8,10,18,.92);border:2px solid rgba(255,213,74,.55);backdrop-filter:blur(6px)}
+#rpBack .rbk{display:inline-flex;align-items:center;gap:10px;min-height:72px;padding:6px 26px;border-radius:20px;text-decoration:none;color:#2A1A00;font-size:clamp(26px,4vh,38px);background:linear-gradient(135deg,#FFE58A,#FFC23A 55%,#F59E0B);border:4px solid #FFF3C4;box-shadow:0 6px 0 #8A5A00;animation:rbg 2s ease-in-out infinite}
+#rpBack .rbk:active{transform:translateY(3px);box-shadow:0 3px 0 #8A5A00}#rpBack .rbi{font-size:1.25em}#rpBack .rba{font-size:.9em;animation:rba 1s ease-in-out infinite}
+#rpBack .rbf{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:clamp(19px,2.7vh,26px);font-weight:700;color:#DDE6EE}
+#rpBack .rbf span{padding:4px 12px;border-radius:14px;background:#141A26;border:2px solid #2E3A50;animation:rbs 4.5s infinite}#rpBack .rbf .s2{animation-delay:1.5s}#rpBack .rbf .s3{animation-delay:3s}#rpBack .rbf i{font-style:normal;color:#FFD54A}
+@keyframes rbg{0%,100%{box-shadow:0 6px 0 #8A5A00,0 0 0 0 #FFD54A88}50%{box-shadow:0 6px 0 #8A5A00,0 0 0 12px #FFD54A00}}
+@keyframes rba{0%,100%{transform:translateX(0)}50%{transform:translateX(-8px)}}
+@keyframes rbs{0%,30%{background:#3A2E06;border-color:#FFD54A;color:#FFE9A8;transform:scale(1.08)}36%,100%{background:#141A26;border-color:#2E3A50;color:#DDE6EE;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){#rpBack .rbk,#rpBack .rba,#rpBack .rbf span{animation:none}}
 .cov h1{position:absolute;z-index:2;left:0;right:0;bottom:10px;margin:0;text-align:center;line-height:1;font-weight:400}
 /* 2026-10-18 第十一次 老師：「戰神之路」字體放大、豪邁書法字體、質感提升、氣勢強大 ➜ 毛筆字 Yuji Boku（SIL OFL，只取這 4 個字 rpg/fonts/zs.woff2，3 KB）
    金屬金漸層＋深色描邊＋橘紅光暈，一道光每 6 秒掃過去一次 */
@@ -421,7 +430,10 @@ u.pn{text-decoration:underline;text-decoration-thickness:3px;text-underline-offs
 </head><body>
 ${CL.home(0, '../', 'home')}
 <main id="rp">
- <header class="cov"><img src="cover.webp" alt="戰神之路"><a class="home" id="rpHome" href="../index.html">🏠 回首頁</a><h1><span class="zs">戰神之路</span><small>練習 ➜ 升級 ➜ 變強</small></h1></header>
+ <!-- 2026-10-31 第三十五次 第 13 點：〔🏠 回到學習網站〕放大、放 整頁 最上面（不 浮 在 畫面 上，不會 蓋住 戰士、寵物）＋秒懂 提醒 動畫：用心學習作答 ➜ 賺金幣 ➜ 買想要的 -->
+ <div id="rpBack"><a class="rbk" id="rpHome" href="../index.html"><span class="rbi">🏠</span><b>回到學習網站</b><span class="rba">◀</span></a>
+  <div class="rbf" aria-label="回到在家複習用心學習與作答，才能賺取想要的物品"><span class="s1">📖✏️ 用心學習、作答</span><i>➜</i><span class="s2">🪙 賺金幣</span><i>➜</i><span class="s3">🛍️ 換想要的物品</span></div></div>
+ <header class="cov"><img src="cover.webp" alt="戰神之路"><h1><span class="zs">戰神之路</span><small>練習 ➜ 升級 ➜ 變強</small></h1></header>
  <div id="rpout" hidden><div>🔑 先 登入 ➜ 才看得到 你的 戰士</div><button class="big" id="rpIn">🔑 登入</button><div class="note" style="margin-top:20px">⭐ 經驗值、🪙 金幣 都是 從 你的 練習 算出來的：練得 愈多、改對 愈多，戰士 就 愈強！</div></div>
  <div id="rpwait" hidden>⚔ 召喚你的戰士…</div>
  <div id="rpin" hidden>
@@ -500,7 +512,7 @@ function drawStage(){var V=RV,e=V.st.eq;try{if(e.h)localStorage.setItem('rp_hero
   h+='<div class="blkw helpB"><h3 class="bh">❓ 看不懂？點 這裡</h3><div class="idr"><button class="how1" data-go="qa">⭐🪙 經驗值、金幣 怎麼來</button><button class="how1" data-go="qc">🎁 收集 有 什麼 幫助</button>'+(ABIL_ON?'<button class="how1" data-go="qd">⚔ 階級 愈高 能力 愈強</button>':'')+'</div>'+
     (V.medal||V.titles.length||V.chests?'<div class="chips">'+(V.medal?'<span>🏅 勳章 ✕ '+V.medal+'</span>':'')+V.titles.map(function(t){return '<span>🏷 '+t+'</span>'}).join('')+(V.chests?'<span>🎁 保底 寶箱 ✕ '+V.chests+'</span>':'')+'</div>':'')+'</div>';
   /* 🎉 加倍 時段（2026-10-26 第二十六次 第 2-4 點）：老師 開了 ＝ 最上面 金色 橫幅 */
-  if(V.bo){var bt=new Date(V.bo.to);h='<div class="boban">🎉 你們 班 加倍 中！答對 賺 的 🪙 金幣 ✖'+V.bo.k+'、⭐ 經驗值 ✖'+V.bo.x+'<small>（到 '+(bt.getMonth()+1)+'/'+bt.getDate()+' '+bt.getHours()+':'+('0'+bt.getMinutes()).slice(-2)+'）</small></div>'+h}
+  if(V.bo){var bt=new Date(V.bo.to);h='<div class="boban">🎉 你們班加倍中！答對賺的🪙金幣 ✖'+V.bo.k+'、⭐經驗值 ✖'+V.bo.x+(V.bo.h>1?'；🏠 25題闖關 ✖'+V.bo.h:'')+'<small>（到'+(bt.getMonth()+1)+'/'+bt.getDate()+' '+bt.getHours()+':'+('0'+bt.getMinutes()).slice(-2)+'）</small></div>'+h}
   st.innerHTML=h;if(window.RPLIFE)RPLIFE.stage(document.getElementById('mfr'),{c:EC,tier:hs});setTimeout(function(){var b=document.getElementById('xpb');if(b)b.style.width=b.getAttribute('data-w')+'%'},60)}
 function lw(h,id){return window.RPLIFE?RPLIFE.wrap(h,id):h}
 /* 🐾 戰士 和 寵物 的 互動（一直換：寵物 跳過去、寵物 幫 武器 充能、戰士 蓄力） */

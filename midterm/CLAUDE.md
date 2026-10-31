@@ -6,6 +6,16 @@
 
 ## 🔒 永久原則（老師 2026-10-28 第三十三次）：跟 `g3mid/CLAUDE.md` 最上面 🔒 1～4 一樣（全 英文、照 25／50 題 挑戰、錯 的 選項 相近 有 鑑別度、Andika）
 
+## 2026-10-31 第三十五次（先讀這一節）
+
+| 老師 | 做法 |
+|---|---|
+| 1 25 題 闖關「不限時」＝ A | 只 拿掉 總 時間（現在 就是 這樣，不用 改）|
+| 2-(1) 四年級 解碼 加 縮寫 動畫 | `_data.js`：`EQ4()` ＝ `EQ_WHO4`（Who is ______? ＝ Who’s ______?）、`EQ_HE4`、`EQ_SHE4`、`EQ_ISNT4`（is not ＝ isn’t，o 飛走）；Unit 1 ＝ `les4U1`（Who’s ➜ He’s ➜ She’s）、Unit 2 ＝ `les4U2`（isn’t ➜ 職業 例句）|
+| 2-(2) 生活例句 | `exEq()`：Who is he? ＝ Who’s he?、He is my father.、She is my mother.、He is a teacher.（老師 的 例子）、She is a nurse.、No, she is not. ＝ No, she isn’t.＋整句 中文；新 語音 16 句（`midterm/_audio.js`，SAYS；**這次 雲端 沒有 電腦 聽寫，老師 試聽**）。暫停／再播／慢速 ＝ 共用 `g3mid/_decode.js` |
+| 3 新 25 的 6 種 遊戲 放進 25 題 闖關？ | **先 問**（老師 要 先 看 說明＋研究）➜ https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-10-31_C42/ ①；建議 A 不放 |
+| 9 | 封面〔🏠 回在家複習〕＋11/1 以前「✖2」|
+
 ## 2026-10-30 第三十四次 第二批（先讀這一節）
 
 | 老師 | 做法 |

@@ -14,7 +14,7 @@
  *   ➕ 派新任務（名稱、哪幾班＋〔全年級〕、項目＝遊戲／📝 複習題／📘 Review 1／💼 職業單字、從幾月幾日幾點 到 幾月幾日幾點）、
  *   ✏️ 隨時改時間、🗑 刪掉；每個任務一張卡：誰做完 ✅、誰還沒 ⏳（要名單才有名字，E6）。鎖的規則在 _calc.js 的 tkLock。
  */
-const CERCSS = require('fs').readFileSync(require('path').join(__dirname, '_cer.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_fx.css'), 'utf8'), CERRT = require('fs').readFileSync(require('path').join(__dirname, '_cer_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_fx_rt.js'), 'utf8');   /* 2026-10-20 第十四次：老師的電腦 沒有 🪙 ➜ 自己畫的 金幣（rpg/_fx_rt.js 最下面） */
+const CERCSS = require('fs').readFileSync(require('path').join(__dirname, '_cer.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_clsx.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_fx.css'), 'utf8'), CERRT = require('fs').readFileSync(require('path').join(__dirname, '_cer_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_clsx_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '..', 'rpg', '_fx_rt.js'), 'utf8');   /* 2026-10-20 第十四次：老師的電腦 沒有 🪙 ➜ 自己畫的 金幣（rpg/_fx_rt.js 最下面） */
 const HONCSS = require('fs').readFileSync(require('path').join(__dirname, '_honor.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_glory.css'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report.css'), 'utf8'), HONRT = require('fs').readFileSync(require('path').join(__dirname, '_honor_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_glory_rt.js'), 'utf8') + require('fs').readFileSync(require('path').join(__dirname, '_report_rt.js'), 'utf8');
 /* 〔🔒 開關〕（2026-10-12 D 第 7 件）：在家複習網站每一個主題（sentences/_review_sites.js） */
 const RVS = require('../sentences/_review_sites.js'), RVT = {};
@@ -352,6 +352,22 @@ ol.lvst2 li b{flex:0 0 auto;width:54px;height:54px;border-radius:50%;background:
 .cbgo{margin-left:12px;min-height:48px;font-size:clamp(18px,1.4vw,22px);vertical-align:middle}.cbgo.big{min-height:56px}
 @keyframes cbGrow{to{width:var(--w)}}@keyframes cbIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.cbr,.cbs,.cbh{animation:none;opacity:1}.cbt i{animation:none;width:var(--w)}}
+/* 2026-10-31 第三十五次 第 8-(2) 點：📊 動畫 看 ＝ 主題 背景＋探照燈＋第 1 名 大 揭曉 */
+#cbx .cbbg{position:fixed;inset:0;z-index:0;pointer-events:none;background:none;padding:0}#cbx .cbw{position:relative;z-index:2}
+#cbx .cbh b{background:linear-gradient(180deg,#fff,var(--lb,#fff) 50%,var(--la,#FFD54A));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
+#cbx .cbr{transform-origin:0 50%}#cbx .cbr .cbt{box-shadow:inset 0 0 0 2px rgba(255,255,255,.12)}#cbx .cbt i{position:relative;overflow:hidden}
+#cbx .cbt i:after{content:'';position:absolute;top:0;bottom:0;width:30%;left:-40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent);animation:lxsh 2.6s calc(var(--d) + 1.1s) ease-in-out infinite}
+#cbx .cbr.top{opacity:0;animation:cbTop .9s var(--d) cubic-bezier(.2,1.5,.4,1) both}#cbx .cbr.top .cbk{display:inline-block}
+#cbx .cbr.top.go .cbk{animation:cbCrown .9s cubic-bezier(.3,1.5,.5,1) both}#cbx .cbr.top.go .cbt{box-shadow:0 0 0 4px var(--la,#FFD54A),0 0 30px var(--la,#FFD54A)}
+#cbx .cbr.top.go .cbn,#cbx .cbr.top.go .cbv{text-shadow:0 0 14px var(--la,#FFD54A),0 0 30px var(--la,#FFD54A)}
+#cbx .cbr.top.go .cbtag.g{animation:cbPop .7s .3s cubic-bezier(.2,1.6,.4,1) both}
+#cbx .cbr.low .cbtag.y{background:linear-gradient(#3A7BD5,#2B5AA0)}
+#cbx .cbs{background:rgba(0,0,0,.35);border:2px solid var(--la,#FFD54A);box-shadow:0 0 30px rgba(0,0,0,.4)}
+#cbx .cbenc{display:block;margin-top:6px;font-size:.8em;color:#DDE6EE}
+#cbx .cbflash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:8}#cbx.cbwin .cbflash{animation:lxfl .8s ease-out}
+#cbx.cbwin .cbbg .lxsp{animation:none;transition:transform .8s;transform:rotate(0)}
+@keyframes cbTop{0%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:none}}@keyframes cbCrown{0%{transform:translateY(-60vh) scale(2)}100%{transform:none}}@keyframes cbPop{0%{transform:scale(0)}100%{transform:none}}
+@media (prefers-reduced-motion:reduce){#cbx .cbr.top{animation:none;opacity:1}}
 a.thome{display:inline-flex;align-items:center;gap:4px;min-height:52px;padding:6px 16px;border-radius:999px;background:linear-gradient(#FFE07A,#E0A800);color:#3A2A00;font-size:20px;font-weight:700;text-decoration:none;white-space:nowrap;box-shadow:0 3px 0 #8A6400}/* 2026-10-26 第二十九次 第 12 點：回 教師 總首頁 */
 a.lvgo{display:inline-block;line-height:40px;font-size:20px;min-height:52px;padding:6px 18px;border-radius:999px;background:linear-gradient(#FF8A3D,#D9381E);color:#fff;border:0;text-decoration:none;font-weight:700;box-shadow:0 0 0 3px #5A1A00,0 0 16px #FF6B3D88;white-space:nowrap}
 @media (max-width:1200px){.lvlg{display:none}.bar1 .lvsm{display:none}a.thome{padding:6px 12px}}/* 第二十九次：多了〔🏠 總首頁〕，1024 寬 也要 一條 */@media (max-width:900px){.lvsm,.lvsm2{display:none}.bar1 h1{display:none}a.lvgo{padding:6px 8px;font-size:.9em}#lvqr{padding-left:10px;padding-right:10px;min-width:0}}
@@ -744,31 +760,47 @@ function cerSum(D){return '<div class="cawd">'+D.map(function(d){var one=d.R.fil
   return '<div class="caw"><div class="ccn">'+CERN[d.k]+'</div><div class="ccs">'+CERS[d.k]+'</div><div class="cwn">👑 '+one.map(function(x){return esc(SC.cname(x.cls))}).join('、')+'</div>'+
    '<div class="ccl">'+d.R.map(function(x){return '<span>'+(x.rk<=3?['','🥇','🥈','🥉'][x.rk]:'')+' 第 '+x.rk+' 名 '+esc(SC.cname(x.cls))+'</span>'}).join('')+'</div></div>'}).join('')+'</div>'}
 var CER=null;
-function cerOpen(){var S=sets(),D=cerData(SC.students(S.G));if(!D.length)return;CER={D:D,i:0,tm:null,pause:false,st:CERX.pick()};$('#cer').classList.add('on');if(HSND)HON.ac();cerShow()}
-function cerShow(){clearTimeout(CER.tm);var st=$('#cerst'),i=CER.i,D=CER.D;CERX.stop(st);
-  $('#cpg').textContent=(i+1)+'／'+(D.length+1);$('#cnx').textContent=i<D.length?'⏭ 下一個':'⏮ 從頭再演';$('#cstn').textContent='🎨 '+(CER.st+1)+'. '+CERX.ST[CER.st].nm+'　🎵 '+CERX.SND[CER.st].nm;
+/* 2026-10-31 第三十五次 第 8-(1) 點（老師：太 陽春、配樂 幼稚 難聽）➜ 新 的 引擎 CLSX（score/_clsx_rt.js）：探照燈、金屬 緞帶、其他 班 一張 一張 亮、第 3 ➜ 第 2 ➜ 小鼓 滾奏 ➜ 第 1 名 白光＋衝擊波＋皇冠＋煙火＋光芒；
+   10 種 主題 × 10 首 管弦樂 號角（合成，不用 外面 的 檔），每按一次 換 下一種。舊 的 CERX 留著（全班 獎勵 頒獎 還 在 用）*/
+function cerVt(k,v){return k==='sec'?HON.mn(v):k==='acc'?f1(v)+' 分':'＋'+f1(v)+' 分'}
+function cerOpen(){var S=sets(),D=cerData(SC.students(S.G));if(!D.length)return;CER={D:D,i:0,tm:null,pause:false,st:CLSX.pick()};$('#cer').classList.add('on');if(HSND)HON.ac();cerShow()}
+function cerShow(){clearTimeout(CER.tm);var st=$('#cerst'),i=CER.i,D=CER.D;CLSX.stop(st);
+  $('#cpg').textContent=(i+1)+'／'+(D.length+1);$('#cnx').textContent=i<D.length?'⏭ 下一個':'⏮ 從頭再演';$('#cstn').textContent='🎨 '+(CER.st+1)+'. '+CLSX.TH[CER.st].nm+'　🎵 '+CLSX.MUS[CER.st].nm;
   if(i>=D.length){st.className='cx fin';st.style.background='';st.innerHTML='<div class="ctl">🏆 '+hper()+' '+hgr()+' 頒獎典禮</div>'+cerSum(D);return}
   var d=D[i],one=d.R.filter(function(x){return x.rk===1});
-  var ms=CERX.play(st,CER.st,{ribbon:CERN[d.k],sub:CERS[d.k],cls:'👑 '+one.map(function(x){return esc(SC.cname(x.cls))}).join('、'),say:'🌟 '+esc(cerSay(d.k,one[0].v)),
-    pod:d.R.filter(function(x){return x.rk<=3}).map(function(x){return {rk:x.rk,w:esc(SC.cname(x.cls))}})},{snd:HSND});
+  var ms=CLSX.play(st,CER.st,{ribbon:CERN[d.k],sub:CERS[d.k],cls:'👑 '+one.map(function(x){return '<span style="color:'+ccol(x.cls)+'">'+esc(SC.cname(x.cls))+'</span>'}).join('、'),say:'🌟 '+esc(cerSay(d.k,one[0].v)),
+    rank:d.R.map(function(x){return {rk:x.rk,cls:esc(SC.cname(x.cls)),col:ccol(x.cls),vt:esc(cerVt(d.k,x.v))}})},{snd:HSND});
   if(!CER.pause)CER.tm=setTimeout(function(){if(CER){CER.i++;cerShow()}},ms+2600)}
-function cerClose(){if(CER)clearTimeout(CER.tm);CERX.stop($('#cerst'));CER=null;$('#cer').classList.remove('on');$('#cerst').innerHTML=''}
+function cerClose(){if(CER)clearTimeout(CER.tm);CLSX.stop($('#cerst'));CER=null;$('#cer').classList.remove('on');$('#cerst').innerHTML=''}
 /* ══ 2026-10-26 第二十九次 第 4 點（老師）：班級 排行榜 ＝ 每一個 項目 一個 獨立 的 動畫 頁（一眼 看出 哪一班 最好、哪一班 要 加油）══
    〔📊 一項 一項 看（動畫）〕或 每一項 的〔📊 動畫 看 這一項〕➜ 全螢幕：大 標題 ➜ 每一班 一條 長條（班級 顏色）從 0 長上去、照 名次 排（第 1 名 在 最上面）➜
    第 1 名 👑 金框＋「🏆 第 1 名」、最後 一名「💪 加油」（不 寫 最差）➜ 下面 一句 話：「🏆 402 班 最好：87 分」；〔◀〕〔▶ 下一項〕〔✕〕、鍵盤 ← → Esc */
 var CBK=[['acc','🎯 平均正確率',100,function(v){return f1(v)+' 分'}],['s','💯 平均總分',100,function(v){return f1(v)+' 分'}],['cntP',CNTIC+'練習次數（平均每一個人）',0,function(v){return v==null?'—':f1(v)+' 次'}],['secP','⏱ 練習時間（平均每一個人）',0,function(v){return v==null?'—':mins(v)}],['careP','📅 練習分數（平均每一個人）',100,function(v){return v==null?'—':v+' 分'}],
    ['rate','👥 參與率',100,function(v){return v==null?'（沒填人數）':Math.round(v)+'%'}],['prog',UA+' 平均進步',0,function(v){return v==null?'—':(v>0?'＋':'')+f1(v)+'%'}]],CBC=[],CBI=0;
 function cbVals(C,K){return C.map(function(c){return K[0]==='rate'?(c.size?c.n/c.size*100:null):c[K[0]]})}
+/* 2026-10-31 第三十五次 第 8-(2) 點（老師：📊 動畫 看 這一項 太 陽春、太 簡陋）➜ 每次 換 一種 主題（CLSX 的 10 種 背景、探照燈）；
+   從 最後 一名 往上 一條 一條 長出來、數字 從 0 跳上去（懸疑）➜ 小鼓 停一下 ➜ 第 1 名 最後 出來：白光、金框、皇冠 落下、光芒、煙火、號角（🔊 開 的 時候）；
+   最後 一名 ＝ 溫和 的 一句：「💪 ○○ 班：每天 多 練 一點點，下次 一定 往前 衝！（離 前一名 只差 …）」，不寫「最差」 */
+var CBST=-1;
 function cbShow(){var K=CBK[CBI],C=CBC,vs=cbVals(C,K),L=C.map(function(c,i){return {c:c,v:vs[i]}}),ok=L.filter(function(x){return x.v!=null}).sort(function(a,b){return b.v-a.v}),no=L.filter(function(x){return x.v==null});
   var mx=K[2]||Math.max.apply(null,ok.map(function(x){return Math.abs(x.v)}).concat([1])),R=ok.concat(no),best=ok.length?ok[0]:null,low=ok.length>1?ok[ok.length-1]:null,o=$('#cbx');
   var mm=/^(<svg[\\s\\S]*?<\\/svg>|\\S+)\\s*([\\s\\S]*)$/.exec(K[1])||['',K[1],''],ic=mm[1],tt=mm[2];
-  o.innerHTML='<div class="cbw"><div class="cbh"><span class="cbi">'+ic+'</span><b>'+esc(tt)+'</b><small>'+hgr()+'　'+hper()+'　第 '+(CBI+1)+' ／ '+CBK.length+' 項</small></div>'+
+  if(CBST<0)CBST=CLSX.pick();var T=CLSX.TH[CBST],n=R.length,step=.55,tTop=(n-1)*step+1.3;
+  var dl=function(i){return i===0&&best?tTop:(n-1-i)*step+.35};
+  var gap=low&&ok.length>1?Math.abs(ok[ok.length-2].v-low.v):0;
+  o.style.background=T.bg;o.style.setProperty('--la',T.a);o.style.setProperty('--lb',T.b);o.style.setProperty('--lc',T.c);
+  o.innerHTML='<div class="cx lx cbbg"><div class="lxbg">'+'</div><i class="lxsp s1"></i><i class="lxsp s2"></i><i class="lxsp s3"></i></div><div class="cbw"><div class="cbh"><span class="cbi">'+ic+'</span><b>'+esc(tt)+'</b><small>'+hgr()+'　'+hper()+'　第 '+(CBI+1)+' ／ '+CBK.length+' 項</small></div>'+
    '<div class="cbl">'+R.map(function(x,i){var top=best&&x===best,lw=low&&x===low&&x.v!==best.v,w=x.v==null?0:Math.max(2,Math.max(0,x.v)/mx*100);
-     return '<div class="cbr'+(top?' top':'')+(lw?' low':'')+'" style="--d:'+(i*.35+.3)+'s;--cc:'+ccol(x.c.cls)+'"><span class="cbk">'+(x.v==null?'—':top?'👑':(i+1))+'</span><span class="cbn">'+esc(x.c.cls)+' 班</span><span class="cbt"><i style="--w:'+w+'%"></i></span><span class="cbv">'+K[3](x.v)+'</span>'+(top?'<span class="cbtag g">🏆 第 1 名</span>':lw?'<span class="cbtag y">💪 加油</span>':'')+'</div>'}).join('')+'</div>'+
-   (best?'<div class="cbs" style="--d:'+(R.length*.35+.6)+'s">🏆 <b style="color:'+ccol(best.c.cls)+'">'+esc(best.c.cls)+' 班</b> 最好：'+K[3](best.v)+(low&&low.v!==best.v?'　·　💪 '+esc(low.c.cls)+' 班 加油：'+K[3](low.v):'')+'</div>':'<div class="cbs">這段 期間 還 沒有 資料。</div>')+
-   '<div class="cbnv"><button data-cbn="-1">◀ 上一項</button><button data-cbn="r">🔁 再 演 一次</button><button data-cbn="1">下一項 ▶</button><button data-cbn="x">✕ 關閉</button></div></div>';
-  o.classList.add('on')}
-function cbOpen(i){CBI=Math.max(0,Math.min(CBK.length-1,i||0));if(!$('#cbx')){var d=document.createElement('div');d.id='cbx';document.body.appendChild(d)}cbShow()}
+     return '<div class="cbr'+(top?' top':'')+(lw?' low':'')+'" style="--d:'+dl(i).toFixed(2)+'s;--cc:'+ccol(x.c.cls)+'"><span class="cbk">'+(x.v==null?'—':top?'👑':(i+1))+'</span><span class="cbn">'+esc(x.c.cls)+' 班</span><span class="cbt"><i style="--w:'+w+'%"></i></span><span class="cbv" data-v="'+(x.v==null?'':x.v)+'">'+K[3](x.v==null?null:0)+'</span>'+(top?'<span class="cbtag g">🏆 第 1 名</span>':lw?'<span class="cbtag y">💪 加油</span>':'')+'</div>'}).join('')+'</div>'+
+   (best?'<div class="cbs" style="--d:'+(tTop+1.1).toFixed(2)+'s">🏆 <b style="color:'+ccol(best.c.cls)+'">'+esc(best.c.cls)+' 班</b> 最好：'+K[3](best.v)+(low&&low.v!==best.v?'<span class="cbenc">💪 <b style="color:'+ccol(low.c.cls)+'">'+esc(low.c.cls)+' 班</b>：每天多練一點點，下次一定往前衝！'+(gap?'（離前一名只差 '+String(K[3](gap)).replace('＋','')+'）':'')+'</span>':'')+'</div>':'<div class="cbs">這段 期間 還 沒有 資料。</div>')+
+   '<div class="cbnv"><button data-cbn="-1">◀ 上一項</button><button data-cbn="r">🔁 再 演 一次</button><button data-cbn="1">下一項 ▶</button><button data-cbn="x">✕ 關閉</button></div></div><i class="cbflash"></i>';
+  o.classList.add('on');
+  /* 數字 從 0 跳上去（跟著 長條 一起）*/
+  var my=(o._run=(o._run||0)+1);
+  [].forEach.call(o.querySelectorAll('.cbr'),function(r,i){var el=r.querySelector('.cbv'),v=el.getAttribute('data-v');if(v==='')return;v=+v;var d0=dl(i)*1000;
+    setTimeout(function(){if(o._run!==my)return;var t0=performance.now();(function f(){if(o._run!==my)return;var k=Math.min(1,(performance.now()-t0)/1100),e=1-Math.pow(1-k,3);el.textContent=K[3](Math.round(v*e*10)/10);if(k<1)requestAnimationFrame(f);else el.textContent=K[3](v)})()},d0)});
+  if(best){var tb=o.querySelector('.cbr.top');setTimeout(function(){if(o._run!==my)return;o.classList.add('cbwin');if(tb)tb.classList.add('go');CLSX.boom(o,CBST);if(HSND)CLSX.fan(CBST)},tTop*1000)}}
+function cbOpen(i){CBST=CLSX.pick();CBI=Math.max(0,Math.min(CBK.length-1,i||0));if(!$('#cbx')){var d=document.createElement('div');d.id='cbx';document.body.appendChild(d)}cbShow()}
 document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-cb],[data-cbn]');if(!b)return;
   if(b.hasAttribute('data-cb')){cbOpen(+b.getAttribute('data-cb'));return}var v=b.getAttribute('data-cbn');
   if(v==='x'){$('#cbx').classList.remove('on');return}if(v==='r'){cbShow();return}CBI=(CBI+(+v)+CBK.length)%CBK.length;cbShow()});
@@ -1246,10 +1278,10 @@ function rwBar(v,n,need){var p=n?Math.min(100,v/n*100):0,q=n?Math.min(100,need/n
 /* 2026-10-26 第二十七次 第 4-(1)(2)：選到 的 按鈕 發光（.bsel、.on 金色 光暈）；2026-10-26 第二十九次 第 5 點（老師：一直 閃 看了 不舒服）➜ 不 閃、光 減小（金框＋淡淡 的 光，停住 不動）；老師 看不懂〔⚙ 照 下面 的 設定〕➜〔🎯 只 加倍 我 勾 的〕＋小字「照 下面 ① 班級 ② 時間 ③ 任務 ④ 幾倍」 */
 /* ══ 🎉 金幣／經驗值 加倍 時段（2026-10-26 第二十六次 第 2-4 點，老師選 B 簡單版）══ 〔🟢 全開〕全部 班級、全部 任務／〔⛔ 全關〕／〔⚙ 照 下面 的 設定〕勾 的 班級、勾 的 任務；都 只在 從～到 這段 時間 */
 var BOM=null,BOMSG='',BOCAT=[['game','🎮 遊戲'],['tq','📝 複習題'],['mt','📝 四年級 複習'],['r1','📘 Review 1'],['l','🎧 聽完字卡'],['lv','⚡ 現場任務'],['g3c','🏫 三年級 複習／課堂複習']];
-function boInit(){var b=DATA.boost||{};BOM={k:b.k>1?b.k:1.5,x:b.x>1?b.x:1.5,cls:(b.cls||[]).slice(),cats:(b.cats||[]).slice()}}
+function boInit(){var b=DATA.boost||{};BOM={k:b.k>1?b.k:1.5,x:b.x>1?b.x:1.5,h:b.h>1?b.h:1,cls:(b.cls||[]).slice(),cats:(b.cats||[]).slice()}}
 function boSt(b){var now=Date.now();if(!b||b.m==='off'||!b.to)return '<b class="bo0">⛔ 現在 沒有 加倍</b>';
   var w=now<b.from?'⏳ 還沒 開始':now>=b.to?'⛔ 已經 結束':'🟢 加倍 中';
-  return '<b class="'+(now>=b.from&&now<b.to?'bo1':'bo0')+'">'+w+'</b>　🪙 金幣 ✖'+b.k+'　⭐ 經驗值 ✖'+b.x+'<br>'+(b.m==='all'?'全部 班級、全部 任務':'班級：'+(b.cls.length?b.cls.map(function(c){return esc(SC.cname(c))}).join('、'):'（沒有 勾）')+'<br>任務：'+(b.cats.length?BOCAT.filter(function(x){return b.cats.indexOf(x[0])>=0}).map(function(x){return x[1]}).join('、'):'全部'))+'<br>'+rwT(b.from)+' ➜ '+rwT(b.to)}
+  return '<b class="'+(now>=b.from&&now<b.to?'bo1':'bo0')+'">'+w+'</b>　🪙 金幣 ✖'+b.k+'　⭐ 經驗值 ✖'+b.x+(b.h>1?'　🏠 25 題 闖關 ✖'+b.h:'')+'<br>'+(b.m==='all'?'全部 班級、全部 任務':'班級：'+(b.cls.length?b.cls.map(function(c){return esc(SC.cname(c))}).join('、'):'（沒有 勾）')+'<br>任務：'+(b.cats.length?BOCAT.filter(function(x){return b.cats.indexOf(x[0])>=0}).map(function(x){return x[1]}).join('、'):'全部'))+'<br>'+rwT(b.from)+' ➜ '+rwT(b.to)}
 function boHTML(){if(!BOM)boInit();var B=DATA.boost;
   return '<div class="bo"><h3>🎉 金幣、經驗值 加倍 時段</h3><div class="bost">'+boSt(B)+'</div>'+
    '<div class="lkrow">'+[['all','bog','🟢 全開','全部 班級、全部 任務'],['off','bor','⛔ 全關','都 不 加倍'],['set','bob','🎯 只 加倍 我 勾 的','照 下面 ① 班級 ② 時間 ③ 任務 ④ 幾倍']].map(function(x){var on=(B&&B.m||'off')===x[0];return '<button data-bo="'+x[0]+'" class="'+x[1]+(on?' bsel':'')+'">'+(on?'✔ ':'')+x[2]+'<small>'+x[3]+'</small></button>'}).join('')+'</div>'+
@@ -1257,9 +1289,10 @@ function boHTML(){if(!BOM)boInit();var B=DATA.boost;
    '<div class="bor1"><b>② 時間</b></div>'+wRow('bo')+
    '<div class="bor1"><b>③ 任務</b>'+BOCAT.map(function(x){var on=BOM.cats.indexOf(x[0])>=0;return '<button data-bok="'+x[0]+'" class="'+(on?'on':'')+'">'+(on?'☑ ':'☐ ')+x[1]+'</button>'}).join('')+'<small>（都 不 勾 ＝ 全部 任務）</small></div>'+
    '<div class="bor1"><b>④ 🪙 金幣</b>'+[1.5,2].map(function(k){return '<button data-bk="'+k+'" class="'+(BOM.k===k?'on':'')+'">✖ '+k+'</button>'}).join('')+'<b style="margin-left:18px">⭐ 經驗值</b>'+[1.5,2].map(function(k){return '<button data-bx="'+k+'" class="'+(BOM.x===k?'on':'')+'">✖ '+k+'</button>'}).join('')+'</div>'+
+   '<div class="bor1"><b>⑤ 🏠 25 題 闖關</b>'+[[1,'跟 ④ 一樣'],[1.5,'✖ 1.5'],[2,'✖ 2']].map(function(k){return '<button data-bh="'+k[0]+'" class="'+(BOM.h===k[0]?'on':'')+'">'+k[1]+'</button>'}).join('')+'<small>（金幣、經驗值 都 這個 倍數）</small></div>'+
    '<div class="note">只 多 給 金幣、經驗值（答對 賺 的）；正確率、分數、排行榜 不會 變。<span id="bomsg">'+BOMSG+'</span></div></div></div>'}
 function boSave(m){var w=wRead('bo')||wGet(),C=SC.CLASSES[F.g]||[],old=((DATA.boost||{}).cls||[]).filter(function(c){return C.indexOf(c)<0});
-  var b={m:m,k:BOM.k,x:BOM.x,from:w[0],to:w[1],cls:old.concat(BOM.cls.filter(function(c){return C.indexOf(c)>=0})),cats:BOM.cats};
+  var b={m:m,k:BOM.k,x:BOM.x,h:BOM.h,from:w[0],to:w[1],cls:old.concat(BOM.cls.filter(function(c){return C.indexOf(c)>=0})),cats:BOM.cats};
   if(m==='set'&&!b.cls.length){BOMSG='❌ 先 勾 班級';draw();return}BOMSG='⏳ 存起來 中…';draw();
   post({a:'boost',pw:PW,b:b}).then(function(j){if(j&&j.ok){DATA.boost=j.boost;BOMSG='✔ 存好了'}else BOMSG='❌ 存不起來（'+((j&&j.err)||'伺服器 還沒 重新部署')+'）';draw()},function(){BOMSG='❌ 沒有 網路';draw()})}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b,v;if(!BOM)return;
@@ -1268,6 +1301,7 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if((b=c('[data-bok]'))){v=b.getAttribute('data-bok');var j=BOM.cats.indexOf(v);if(j>=0)BOM.cats.splice(j,1);else BOM.cats.push(v);draw();return}
   if((b=c('[data-bk]'))){BOM.k=+b.getAttribute('data-bk');draw();return}
   if((b=c('[data-bx]'))){BOM.x=+b.getAttribute('data-bx');draw();return}});
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-bh]');if(b&&BOM){BOM.h=+b.getAttribute('data-bh');draw()}});   /* 2026-10-31 第三十五次 第 9 點 */
 function paneR(){var h=boHTML()+'<div class="rwhd">👆 點 一張 卡 ➜ 整頁 看：✅ 誰 做到（班級、號碼、名字）、⏳ 誰 還沒、還差 什麼；做到 的 人 可以〔🏆 頒獎〕</div><div class="rwcards">';
   RWK.forEach(function(x,i){var o=rwData(x[0]);h+='<button class="rwcard" data-rwk="'+x[0]+'" style="animation-delay:'+(i*.08)+'s"><span class="rwi">'+x[1]+'</span><b>'+x[2]+'</b><span class="rws">'+o.rule.map(function(r){return r[0]}).join(' ➜ ')+'</span>'+
     '<span class="rwn2"><em class="ok">✅ '+o.done.length+' 人</em>'+(o.todo.length?'<em class="no">⏳ '+o.todo.length+' 人</em>':'')+'</span><small>'+(o.cls?esc(SC.cname(rwCls())):(F.g===3?'三':'四')+'年級')+(o.wk?'．'+(RWP.wk==='last'?'上週':'這週'):'')+'</small></button>'});

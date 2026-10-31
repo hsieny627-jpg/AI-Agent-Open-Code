@@ -51,6 +51,11 @@ const pwState = p => p.evaluate(() => { const c = document.getElementById('scPwC
       await typeP(p, '123456'); await p.click('#scPwK button[data-p="ok"]'); await p.waitForTimeout(200); s = await pwState(p); ck(tag + ' 再 打 一次：' + s.t, /再 打 一次/.test(s.t));
       await typeP(p, 'ab123457'); await p.click('#scPwK button[data-p="ok"]'); await p.waitForTimeout(200); s = await pwState(p); ck(tag + ' 兩次 不一樣 ＝ 重設：' + s.m, /不一樣/.test(s.m) && /第一次/.test(s.t));
       await typeP(p, 'ab123456'); await p.click('#scPwK button[data-p="ok"]'); await typeP(p, 'ab123456'); await p.click('#scPwK button[data-p="ok"]'); await p.waitForTimeout(1400);
+      /* 2026-10-31 第三十五次 第 12 點：設好 ＝ 一定 先 勾「我為自己的密碼：記憶和負責。」 */
+      { const v = await p.evaluate(() => { const b = document.getElementById('scVowB'), l = document.getElementById('scVowL'); return b && l ? { dis: b.disabled, t: l.textContent, id: window.SCID || '', fs: parseFloat(getComputedStyle(l).fontSize), bh: b.getBoundingClientRect().height, ov: document.getElementById('scovb').scrollHeight - document.getElementById('scovb').clientHeight } : null; });
+        ck(tag + ' 設好 密碼 ＝ 先 勾 才 進得去 ' + JSON.stringify(v), v && v.dis && v.t === '我為自己的密碼：記憶和負責。' && !v.id && v.fs >= 24 && v.bh >= 56);
+        await p.click('#scVowB', { force: true }).catch(() => {}); await p.waitForTimeout(200); ck(tag + ' 沒 勾 按 也 進不去', !(await p.evaluate(() => window.SCID)));
+        await p.click('#scVowL'); await p.click('#scVowB'); await p.waitForTimeout(500); }
       const L = await p.evaluate(() => ({ id: SCID, pk: !!sessionStorage.getItem('score_pks_30412'), rem: !!localStorage.getItem('score_pk_30412') && localStorage.getItem('score_pk_30412') !== 'null' }));
       ck(tag + ' 設好 ＝ 登入 了 ' + JSON.stringify(L), L.id === '30412' && L.pk && !L.rem); ck(tag + ' 伺服器 存 了 密碼', G.post({ a: 'spl', pw: 't', id: '30412' }).p === 'ab123456');
       /* 新 分頁（沒有 這個 分頁 的 通行證）：「這是您嗎 ✅」＝ 要 打 密碼 */

@@ -2570,4 +2570,11 @@ var crEnd0=crEnd;crEnd=function(){var g=$('#crgl');if(g){g.classList.remove('on'
 
 /* 2026-10-30 第三十四次：〔🏠 總首頁〕〔老師看板〕只 在 密碼、設定、等人（大廳）、全班 錯題 分析 畫面 出現；出題、排行榜、頒獎、課堂複習 進行中 收起來 */
 (function(){var nv=document.getElementById('hnav'),ok={hpw:1,hset:1,hlob:1,hana:1},f=function(){var on=[].filter.call(document.querySelectorAll('body>.scr'),function(x){return !x.hidden}).map(function(x){return x.id});var h=!on.length||on.some(function(id){return !ok[id]});if(nv.hidden!==h)nv.hidden=h};new MutationObserver(f).observe(document.body,{subtree:true,attributes:true,attributeFilter:['hidden']});f()})();
-</script></body></html>
+</script><script>(function(){if(window.__NODSP||(navigator.webdriver&&!window.__DSPTEST))return;var R=new RegExp("([\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])[ \\u00a0]+(?=[\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])",'g'),SEL="";
+function skip(n){var e=n.parentElement;while(e){var t=e.tagName;if(t==='SCRIPT'||t==='STYLE'||t==='TEXTAREA'||t==='INPUT'||(e.classList&&e.classList.contains('keepsp')))return true;e=e.parentElement}return false}
+function inSel(n){if(!SEL)return true;var e=n.nodeType===1?n:n.parentElement;return !!(e&&e.closest&&e.closest(SEL))}
+function one(n){var v=n.nodeValue;if(!v||v.indexOf(' ')<0&&v.indexOf('\u00a0')<0)return;if(skip(n)||!inSel(n))return;var u=v.replace(R,'$1');if(u!==v)n.nodeValue=u}
+function walk(r){if(!r)return;if(r.nodeType===3){one(r);return}if(r.nodeType!==1)return;var w=document.createTreeWalker(r,4),n;while((n=w.nextNode()))one(n)}
+function go(){walk(document.body);try{new MutationObserver(function(L){L.forEach(function(m){if(m.type==='characterData')one(m.target);else [].forEach.call(m.addedNodes,walk)})}).observe(document.body,{childList:true,subtree:true,characterData:true})}catch(x){}}
+if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
+})();</script></body></html>

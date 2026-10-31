@@ -749,12 +749,20 @@ function scPwKey(k){var P=SCPW;if(!P)return;if(P.mode==='?'||P.mode==='busy')ret
     if(P.mode==='set2'&&P.v!==P.first){P.v='';P.first='';P.mode='set';scShakePw();scPwPaint('❌ 兩次 不一樣，重新 設 一次');return}
     var set=P.mode==='set2',pv=P.v;P.mode='busy';scPwPaint();
     scFetch('',{a:'sp',id:P.id,p:pv,set:set?1:0},12000).then(function(j){if(SCPW!==P)return;
-      if(j&&j.ok&&j.tk){scPkSave(P.id,j.tk,$('#scRem')&&$('#scRem').checked);P.mode='done';scPwPaint(set?'🎉 密碼 設好 了！':'✅ 密碼 對了','ok');var d=P.done;setTimeout(function(){if(SCPW===P){SCPW=null;d()}},700);return}
+      if(j&&j.ok&&j.tk){scPkSave(P.id,j.tk,$('#scRem')&&$('#scRem').checked);P.mode='done';scPwPaint(set?'🎉 密碼 設好 了！':'✅ 密碼 對了','ok');var d=P.done;setTimeout(function(){if(SCPW===P){if(set){scPwVow(P,d);return}SCPW=null;d()}},700);return}
       if(j&&j.ok&&!j.tk){P.v='';P.mode=j.has?'in':'set';scPwPaint();return}
       P.v='';P.mode=set?'set':'in';scShakePw();
       scPwPaint(j&&j.err==='lock'?'🔒 打錯 太多 次，10 分鐘 後 再 試（或 請 老師 幫忙）':j&&j.err==='wrong'?'❌ 密碼 不對，再 試 一次<br><small>忘記 了 ➜ 請 老師 按〔🔑 清除 密碼〕，再 自己 重設</small>':'📶 連不上 網路，等一下 再 試')},
      function(){if(SCPW!==P)return;P.v='';P.mode=set?'set':'in';scPwPaint('📶 連不上 網路，等一下 再 試')});return}
   if(P.v.length>=8||k.length!==1)return;if(P.v.length<2&&!/[a-z]/.test(k))return;if(P.v.length>=2&&!/[0-9]/.test(k))return;P.v+=k;scPwPaint()}
+/* 2026-10-31 第三十五次 第 12 點：設好 密碼 以後 一定 勾「我為自己的密碼：記憶和負責。」才 進得去 */
+function scPwVow(P,d){var b=SCH.box();if(!b){SCPW=null;d();return}
+  b.innerHTML='<div class="sclog scpw scvow"><h2>🔑 密碼設好了！</h2><div class="vwi">🧠 ＋ 🤝</div>'+
+   '<label class="vwl" id="scVowL"><input type="checkbox" id="scVow"><span>我為自己的密碼：記憶和負責。</span></label>'+
+   '<div class="vwh" id="scVowH">👆 先勾上面的方框</div><button class="vwb" id="scVowB" disabled>✅ 進入在家複習</button></div>';
+  var c=$('#scVow'),k=$('#scVowB'),h=$('#scVowH');
+  c.onchange=function(){k.disabled=!c.checked;$('#scVowL').classList.toggle('on',c.checked);h.textContent=c.checked?'👍 謝謝你！按綠色按鈕進去':'👆 先勾上面的方框'};
+  k.onclick=function(){if(!c.checked)return;if(SCPW===P)SCPW=null;d()}}
 function scShakePw(){var b=$('#scPwC');if(!b)return;b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
 /* 「請問 這是您嗎？」按 ✅：這個 分頁 已經 打過 密碼、或 這台 平板 記住 了 ＝ 直接 過；不然 ＝ 打 密碼 */
 function scSure(fn){if(!SCID||scPk(SCID)||!SCH||!SCH.box){fn();return}scPwStep(SCID,function(){if(SCH.close)SCH.close();fn()})}
@@ -1210,6 +1218,15 @@ function scChampOpen(){var S=SCCH;if(!S||S.busy)return;S.busy=true;var bx=docume
     setTimeout(function(){w.classList.add('done');document.getElementById('chEnd').hidden=false;var b=document.getElementById('chOk');b.onclick=function(){document.getElementById('scch').classList.remove('on');SCCH=null}},3400)},
    function(){S.busy=false;bx.classList.remove('shake');m.textContent='📶 沒有 網路，等一下 再 點 一次'})}
 setTimeout(function(){if(SCID)scChamp(0)},1600);
+
+;(function(){if(window.__NODSP||(navigator.webdriver&&!window.__DSPTEST))return;var R=new RegExp("([\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])[ \\u00a0]+(?=[\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])",'g'),SEL="#scov,#scbar,.scme,.scbanner,#scHomeBar";
+function skip(n){var e=n.parentElement;while(e){var t=e.tagName;if(t==='SCRIPT'||t==='STYLE'||t==='TEXTAREA'||t==='INPUT'||(e.classList&&e.classList.contains('keepsp')))return true;e=e.parentElement}return false}
+function inSel(n){if(!SEL)return true;var e=n.nodeType===1?n:n.parentElement;return !!(e&&e.closest&&e.closest(SEL))}
+function one(n){var v=n.nodeValue;if(!v||v.indexOf(' ')<0&&v.indexOf('\u00a0')<0)return;if(skip(n)||!inSel(n))return;var u=v.replace(R,'$1');if(u!==v)n.nodeValue=u}
+function walk(r){if(!r)return;if(r.nodeType===3){one(r);return}if(r.nodeType!==1)return;var w=document.createTreeWalker(r,4),n;while((n=w.nextNode()))one(n)}
+function go(){walk(document.body);try{new MutationObserver(function(L){L.forEach(function(m){if(m.type==='characterData')one(m.target);else [].forEach.call(m.addedNodes,walk)})}).observe(document.body,{childList:true,subtree:true,characterData:true})}catch(x){}}
+if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
+})();
 
 SCHOMEP=true;
 function hOv(){var o=document.getElementById('scov');if(!o){o=document.createElement('div');o.id='scov';o.innerHTML='<div id="scovb"></div>';document.body.appendChild(o)}return o}

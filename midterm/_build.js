@@ -169,6 +169,8 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 .hmb button.b2{background:linear-gradient(#3A4A66,#243048);border-color:#6F86A6;color:#fff;box-shadow:0 8px 0 #121A28;animation:none;font-size:clamp(24px,3.4vh,34px)}
 .hmb small{display:block;font-size:.55em;color:#0A3A1C}
 .hmbest{font-size:clamp(22px,3vh,30px);color:#FFE07A}
+.hmbo{margin-top:6px;font-size:clamp(20px,2.8vh,26px);color:#FFE9A8}.hmbo b{color:#FFD54A;font-size:1.3em}
+.hmrv{display:inline-flex;align-items:center;min-height:56px;margin-top:14px;padding:4px 26px;border-radius:18px;border:3px solid #FFD54A;background:#221B05;color:#FFE9A8;font-size:clamp(20px,2.8vh,26px);font-weight:700;text-decoration:none}
 @keyframes hmgo{to{transform:scale(1.05)}}@media (prefers-reduced-motion:reduce){.hmb button{animation:none}}
 .nav button.go{background:linear-gradient(#22C766,#128A43);box-shadow:0 6px 0 #0B5A2B}
 
@@ -549,7 +551,7 @@ if(window.HOME25){XBK='H';document.title='四年級 25 題 闖關';crAuto=functi
    o.innerHTML='<div class="hmw"><div class="hmt">📝 四年級 25 題 闖關</div><div class="hms">'+HMS+'</div>'+
     '<div class="hmk"><span>🔓 句子 解碼 8 題</span><span>🎮 12 種 遊戲 17 題</span><span>⏳ 不限 時間</span><span>🔁 每次 題目 不一樣</span></div>'+
     '<div class="hmb">'+(v?'<button id="hmgo">▶ 繼續 第 '+(v.Q.length+1)+' 題<small>已經 做 了 '+v.Q.length+' ／ 25 題</small></button><button class="b2" id="hmnew">🔄 重新 開始</button>':'<button id="hmgo">▶ 開始 第 1 題</button>')+'</div>'+
-    (b?'<div class="hmbest">🏆 我的 最高 '+b+' 分</div>':'')+'</div>';o.hidden=false;
+    (b?'<div class="hmbest">🏆 我的 最高 '+b+' 分</div>':'')+(Date.now()<Date.parse('2026-11-01T23:59:59+08:00')?'<div class="hmbo">⏰ 11月1日（星期日）晚上11:59以前：🪙金幣、⭐經驗值 <b>✖2</b></div>':'')+'<a class="hmrv" href="../g4-review/index.html">🏠 回在家複習</a></div>';o.hidden=false;   /* 2026-10-31 第三十五次 第 9 點 */
    $('#hmgo').onclick=hmGo;var nw=$('#hmnew');if(nw)nw.onclick=function(){xDel(25);hmGo()}};
  var lobbyH=hub;hub=function(){lobbyH.apply(this,arguments);hmCover()};
  setTimeout(function(){if(typeof SCON!=='undefined'&&SCON&&!SCID)hmGo()},50)}
@@ -570,12 +572,13 @@ ${AUDX.map(d => '<script src="audio/' + d + '/aud.js"></script>').join('')}
 <div id="duob"></div><div id="bossfx"></div><div id="coop"></div><div id="dcl"></div><div id="wf"><div class="box" id="wbox"></div></div><div id="xq"><div class="xqb"><div class="xqi">🛑</div><div class="xqh">真的 要 離開 嗎？</div><div class="xqt"></div><div class="xqbtn"><button data-x="xstay" id="xstay">▶ 繼續 作答</button><button data-x="xleave" id="xleave">🚪 先 離開</button></div></div></div>
 <div id="app" class="scr"></div><div id="crw"></div>
 <script>${JS}</script>
+<script>${require('../score/_dsp.js').js()}</script>
 </body></html>`;
 /* 2026-10-30 第三十四次 第 9-(1) 點：解碼 教學、秒懂 動畫 要 唸 的 句子 一句 都 不可以 沒有 語音檔 ➜ build 失敗 */
 { const AK = t => String(t).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…＿_　]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase(),
     rd = f => { if (!fs.existsSync(f)) return {}; const c = { window: {} }; require('vm').runInNewContext(fs.readFileSync(f, 'utf8'), c); return Object.assign({}, ...Object.values(c.window).filter(x => x && typeof x === 'object')); },
     M = Object.assign(rd(path.join(__dirname, 'audio', 'aud.js')), rd(path.join(__dirname, 'audio', 's', 'aud.js'))), need = [];
-  ['A', 'B'].forEach(b => [1, 2].forEach(u => D.LES[b][u].s.forEach(S => need.push(S.en)))); [D.DTUT.demo, D.DTUT.ord].concat(D.DTUT.quiz).forEach(q => need.push(q.en));
+  ['A', 'B'].forEach(b => [1, 2].forEach(u => D.LES[b][u].s.forEach(S => { if (S.eq) need.push(S.eq.a.say, S.eq.b.say); else need.push(S.en); }))); [D.DTUT.demo, D.DTUT.ord].concat(D.DTUT.quiz).forEach(q => need.push(q.en));
   const miss = AUD ? need.filter(t => !M[AK(t)]) : []; if (miss.length) { console.error('✗ 解碼 動畫 沒有 語音檔：' + miss.join('、')); process.exit(1); } }
 fs.writeFileSync(path.join(__dirname, 'index.html'), html);
 /* 2026-10-30 第三十四次 第 1～4 點：🏠 四年級 25 題 闖關 的 專屬 網址（同一個 網頁，多 一個 HOME25）*/

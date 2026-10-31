@@ -22,7 +22,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
 /* 2. 總首頁有〔📝 三年級 複習〕；在家複習沒有；不接成績系統 */
 { n++; const hub = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').replace(/<\/?span[^>]*>/g, '');
   if (!/href="g3mid\/index\.html"[^>]*>📝 三年級 複習</.test(hub)) E.push('總首頁沒有〔📝 三年級 複習〕');
-  for (const d of ['g3-review', 'g4-review']) for (const f of fs.readdirSync(path.join(ROOT, d)).filter(f => /\.html$/.test(f))) { n++; if (/g3mid\//.test(fs.readFileSync(path.join(ROOT, d, f), 'utf8'))) E.push(d + '/' + f + '：在家複習連到三年級複習'); }
+  for (const d of ['g3-review', 'g4-review']) for (const f of fs.readdirSync(path.join(ROOT, d)).filter(f => /\.html$/.test(f))) { n++; if (/g3mid\/(?!home\.html)/.test(fs.readFileSync(path.join(ROOT, d, f), 'utf8').replace(/g3mid\/audio\//g, ''))) E.push(d + '/' + f + '：在家複習連到三年級複習（只 可以 連 25 題 闖關 home.html，2026-10-31 第三十五次 第 9 點）'); }
   n++; const h = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
   /* 2026-10-26 第二十七次 第 1-(3) 點：三年級 複習 的 成績 也 進 老師看板 ➜ 一定 要 接 成績系統（登入、佇列）*/
   if (!/score\/url\.js/.test(h) || !/id="scbar"/.test(h) || !/g3gm_g3m-/.test(h)) E.push('三年級複習 沒有 接 成績系統（老師 第二十七次：成績 要 進 老師看板）'); }
@@ -269,7 +269,7 @@ async function answer(p, g, wrong) {
     /* 挖礦：先 點 對的 圖（老師：單字 跟 圖片 配對）；820 那一種 故意 點 錯的 圖 */
     if (g.id === 'q4') { const vw = await p.evaluate(() => innerWidth); if (wrong && vw === 820) return tap('.ore:not([data-ow="' + q.say + '"])'); await tap('.ore[data-ow="' + q.say + '"]'); await p.waitForTimeout(200); }
     /* 1920 那一種：答錯 ＝ 字 寫 對、但是 整個 往上 浮（沒有 碰到 底線）➜ 頂天立地 要 判 錯 */
-    const fl = wrong && (await p.evaluate(() => innerWidth)) === 1920 ? -.2 : 0;   /* 0.3 ＝ 大寫 的 第一筆 會 落在 寫字板 外面（寫不上去）*/
+    const fl = wrong && (await p.evaluate(() => innerWidth)) === 1920 ? (/[gjpqy]/.test(q.want) ? -.6 : .6) : 0;   /* 2026-10-31 第三十五次 第 4 點：放寬 以後 偏 0.3 格 以內 算 對 ➜ 量「偏 0.6 格」要 判 錯（有 長 下來 的 往上、其他 往下，不 超出 寫字板）*/   /* 0.3 ＝ 大寫 的 第一筆 會 落在 寫字板 外面（寫不上去）*/
     /* 2026-10-26：浮 起來 0.2 格 也 超出 整個 格子（＜ −0.15） ➜ 第一次 會「再 寫 一次」；這裡 量 的 是 第二次（R.retry ＝ 1）要 判 錯 */
     if (fl) await p.evaluate(() => { R.retry = 1; });
     const ch = wrong && !fl ? (q.want === q.want.toUpperCase() ? q.want.toLowerCase() : q.want.toUpperCase()) : q.want;
@@ -327,7 +327,7 @@ async function special(p, g) { const e = [];
     if (r.pic || !r.sl || r.m1 < 2) e.push('打地鼠：不可以 有 圖（第二十九次 第 6 點：只 用 聽 的）、要〔🐢 慢慢 唸〕、自動 用 慢 的 男聲 唸 2 次：' + JSON.stringify(r)); }
   if (g.id === 'q3') { const t = await p.evaluate(() => document.querySelector('.claw').textContent + '|' + document.querySelector('.ctl3').textContent); ['CLAW MACHINE', 'PRIZE', 'PUSH', 'INSERT COIN', 'LEFT', 'DROP', 'RIGHT'].forEach(w => { if (t.indexOf(w) < 0) e.push('夾娃娃 沒有 英文「' + w + '」'); }); if (/[\u4e00-\u9fff]/.test(t)) e.push('夾娃娃 機台／按鈕 還有 中文：' + t.slice(0, 60)); }
   if (g.id === 'q5') { /* 第 1-4 點：超出 格子 很多 ➜「再 寫 一次」（不算 錯、倒數 停住）*/ const q = await p.evaluate(() => R.q), c = await (await p.$('.pad canvas')).boundingBox(), u = c.height / 3.5, xs = [].concat(...HW.T[q.want][0].map(s => s.map(pt => pt[0]))), x0 = Math.min(...xs);
-    for (const s of HW.T[q.want][0]) { const yy = v => Math.min(c.y + c.height - 2, Math.max(c.y + 2, c.y + u * (v * 1.7 + .15))); await p.mouse.move(c.x + u * (.5 + s[0][0] - x0), yy(s[0][1])); await p.mouse.down(); for (const pt of s.slice(1)) await p.mouse.move(c.x + u * (.5 + pt[0] - x0), yy(pt[1])); await p.mouse.up(); }
+    for (const s of HW.T[q.want][0]) { const yy = v => Math.min(c.y + c.height - 2, Math.max(c.y + 2, c.y + u * (v * 1.9 - .1)));   /* 2026-10-31：碰到 寫字板 的 邊 ＝ 超出 很多 */ await p.mouse.move(c.x + u * (.5 + s[0][0] - x0), yy(s[0][1])); await p.mouse.down(); for (const pt of s.slice(1)) await p.mouse.move(c.x + u * (.5 + pt[0] - x0), yy(pt[1])); await p.mouse.up(); }
     await p.click('.wbtn .go'); await p.waitForTimeout(200); const r = await p.evaluate(() => ({ t: !!document.querySelector('.rtry'), res: R.res[R.k], fb: document.getElementById('fb').classList.contains('on') }));
     if (!r.t || r.res !== undefined || r.fb) e.push('寫字 超出 很多 沒有「再 寫 一次」：' + JSON.stringify(r)); await p.waitForTimeout(2000); }
   return e; }

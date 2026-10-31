@@ -532,15 +532,17 @@ var SC = (function () {
      答對 賺 的 練習 金幣 ✖ k（多出來 的 不算 進「一天 最多」）、做完 一次 的 經驗值 ✖ x。正確率、分數、排行榜 不變。伺服器 存 在 指令碼屬性 BOOST */
   var BOOST = null, BOK = [1, 1.5, 2], BCAT = ['game', 'tq', 'mt', 'r1', 'l', 'lv', 'g3c'];
   function bstClean(b) { b = b || {}; var m = b.m === 'all' || b.m === 'set' ? b.m : 'off', f = Math.round(+b.from || 0), t = Math.round(+b.to || 0);
-    return { m: m, k: BOK.indexOf(+b.k) >= 0 ? +b.k : 1, x: BOK.indexOf(+b.x) >= 0 ? +b.x : 1, from: f, to: t > f ? t : 0,
+    return { m: m, k: BOK.indexOf(+b.k) >= 0 ? +b.k : 1, x: BOK.indexOf(+b.x) >= 0 ? +b.x : 1, h: BOK.indexOf(+b.h) >= 0 ? +b.h : 1, from: f, to: t > f ? t : 0,
       cls: (b.cls || []).map(String).filter(function (c) { return /^\d{3}$/.test(c); }).slice(0, 40), cats: (b.cats || []).map(String).filter(function (c) { return BCAT.indexOf(c) >= 0; }) }; }
   function rpBoostSet(b) { BOOST = b ? bstClean(b) : null; }
   /* 這一筆（或 這一班、這個 時間）有沒有 加倍：回傳 [金幣 倍數, 經驗值 倍數] */
   function bstAt(cls, t, set, B) { B = B || BOOST; if (!B || B.m === 'off' || !B.to || t < B.from || t >= B.to) return [1, 1];
-    if (B.m === 'set') { if (B.cls.indexOf(String(cls)) < 0) return [1, 1]; if (set != null && B.cats.length && B.cats.indexOf(cat(set).k) < 0) return [1, 1]; }
-    return [B.k, B.x]; }
+    /* 2026-10-31 第三十五次 第 9 點：🏠 25 題 闖關（…-h25）自己 的 倍數 h（金幣、經驗值 一樣；有 設 ＝ 不管 ③ 任務 勾 了 什麼）*/
+    var h25 = set != null && B.h > 1 && /-h25$/.test(String(set));
+    if (B.m === 'set') { if (B.cls.indexOf(String(cls)) < 0) return [1, 1]; if (!h25 && set != null && B.cats.length && B.cats.indexOf(cat(set).k) < 0) return [1, 1]; }
+    return h25 ? [B.h, B.h] : [B.k, B.x]; }
   /* 平板 的 金色 橫幅：這一班 現在 有沒有 加倍 */
-  function bstFor(id, now, B) { B = B || BOOST; var c = String(id || '').slice(0, 3), a = bstAt(c, now || Date.now(), null, B); return a[0] > 1 || a[1] > 1 ? { k: a[0], x: a[1], to: B.to, cats: B.m === 'set' ? B.cats : [] } : null; }
+  function bstFor(id, now, B) { B = B || BOOST; var c = String(id || '').slice(0, 3), a = bstAt(c, now || Date.now(), null, B); return a[0] > 1 || a[1] > 1 ? { k: a[0], x: a[1], h: B.h > 1 ? B.h : 0, to: B.to, cats: B.m === 'set' ? B.cats : [] } : null; }
   /* 這個人全部的紀錄 ➜ 經驗值、金幣（只算沒作廢的） */
   function rpEarn(rs, st) {
     var trt = (st && st.trt) || [];   /* 那一筆的時候是第幾階（升階以後才多，老師 2026-10-21） */

@@ -332,11 +332,27 @@ Object.keys(XB2).forEach(id => XB2[id].forEach(q => { if (q.fe) q.gx = q.gx || g
 const DIC4 = { Who: '❓', '’s': '＝', he: '👦', she: '👧', He: '👦', She: '👧', my: '🙋', your: '👉', Is: '❓', is: '＝', a: '1️⃣', Yes: '✅', No: '❌', 'isn’t': '🚫' };
 const icOf = w => { const c = w.replace(/[.,?!]+$/, ''); if (DIC4[c]) return DIC4[c]; const f = { father: 'dad', mother: 'mom', grandfather: 'grandpa', grandmother: 'grandma' }[c] || c; return WHO[f] ? WHO[f][0] : JOB[c] ? JOB[c][0] : ''; };
 const lesS = en => ({ en, v: '', t: PL.sent4(en).map(p => [p[0], p[1], icOf(p[0])]), z: PL.zh4(en) });
+/* 2026-10-31 第三十五次 第 2 點（老師）：四年級 解碼 秒懂 動畫 也 加 縮寫 Who is ＝ Who’s、He is ＝ He’s、She is ＝ She’s、is not ＝ isn’t（上下 兩行、第一個 字母 對齊、＝ 在 下面 那一行 左邊；引擎 g3mid/_decode.js 的 decEq）；
+   而且 每一個 縮寫 後面 都 接 一個「💬 生活例句」（真的 會 說 的 整句＋每個 字 正下方 中文＋整句 中文；老師：只有 Who is ______? 太 抽象，低成就 學生 看不懂）。
+   第 4 格 ＝ 會 飛走 的 紅色 字母（is 的 i、not 的 o）。語音 ＝ 全站 同一個 聲音（midterm/_audio.js 做；SAYS）*/
+const EQ4 = (w, zh, ic, end) => ({ eq: { tag: '✂️ 縮寫', a: { t: [[w, zh, ic], ['is', '是', '＝', 0], ['______' + end, '', '']], say: w + ' is' }, b: { t: [[w, zh, ic], ['’s', '是', '＝'], ['______' + end, '', '']], say: w + '’s' }, z: w + ' is ＝ ' + w + '’s（i 不見了，換成 ’）' } });
+const EQ_WHO4 = EQ4('Who', '誰', '❓', '?'), EQ_HE4 = EQ4('He', '他', '👦', '.'), EQ_SHE4 = EQ4('She', '她', '👧', '.'),
+  EQ_ISNT4 = { eq: { tag: '✂️ 縮寫', a: { t: [['is', '是', '＝'], ['not', '不', '🚫', 1]], say: 'is not' }, b: { t: [['isn’t', '不是', '🚫']], say: 'isn’t' }, z: 'is not ＝ isn’t（o 不見了，換成 ’）' } };
+const exEq = (short, full, z) => { const b = PL.sent4(short).map(p => [p[0], p[1], icOf(p[0])]), a = [];
+  b.forEach(p => { if (p[0] === '’s') a.push(['is', '是', '＝', 0]); else if (/^isn’t/.test(p[0])) { a.push(['is', '是', '＝']); a.push(['not' + p[0].slice(5), '不', '🚫', 1]); } else a.push(p); });
+  if (a.map(p => p[0]).join(' ').replace(/ ’/g, '’') !== full.replace(/[’']/g, '’') && a.map(p => p[0]).join(' ') !== full) throw new Error('生活例句 對不上：' + full);
+  SAYS.push(full, short); return { eq: { tag: '💬 生活例句', a: { t: a, say: full }, b: { t: b, say: short }, z } }; };
+const EX_WHO = exEq('Who’s he?', 'Who is he?', '他是誰？'), EX_HE1 = exEq('He’s my father.', 'He is my father.', '他是我的爸爸。'), EX_SHE1 = exEq('She’s my mother.', 'She is my mother.', '她是我的媽媽。'),
+  EX_HE2 = exEq('He’s a teacher.', 'He is a teacher.', '他是一位老師。'), EX_SHE2 = exEq('She’s a nurse.', 'She is a nurse.', '她是一位護理師。'), EX_ISNT = exEq('No, she isn’t.', 'No, she is not.', '不，她不是。');
+['Who is', 'Who’s', 'He is', 'He’s', 'She is', 'She’s', 'is not', 'isn’t'].forEach(t => SAYS.push(t));
+/* Unit 1：Who’s ➜ He’s ➜ She’s；Unit 2：isn’t ➜ He’s／She’s 的 職業 例句 */
+const les4U1 = L => [L[0], EQ_WHO4, EX_WHO, L[1], EQ_HE4, EX_HE1, L[2], L[3], EQ_SHE4, EX_SHE1];
+const les4U2 = L => [L[0], L[1], L[2], EQ_ISNT4, EX_ISNT, L[3], EX_HE2, EX_SHE2];
 const LES = {
-  A: { 1: { key: 'g4A1', title: 'Unit 1 解碼 秘笈', sub: 'Who’s he?　他 是 誰？', s: ['Who’s he?', 'He’s my grandpa.', 'Who’s she?', 'She’s my sister.'].map(lesS) },
-    2: { key: 'g4A2', title: 'Unit 2 解碼 秘笈', sub: 'Is he a doctor?　他 是 醫生 嗎？', s: ['Is he a doctor?', 'Yes, he is.', 'Is she a cook?', 'No, she isn’t. She’s a teacher.'].map(lesS) } },
-  B: { 1: { key: 'g4B1', title: 'Unit 1 解碼 秘笈', sub: 'Is he your brother?　他 是 你的 哥哥 嗎？', s: ['Who’s he?', 'Is he your brother?', 'Yes, he is.', 'Is she your mom? No, she isn’t.'].map(lesS) },
-    2: { key: 'g4B2', title: 'Unit 2 解碼 秘笈', sub: 'Is your dad a farmer?　你的 爸爸 是 農夫 嗎？', s: ['Is your dad a farmer?', 'Yes, he is.', 'Is your sister a student?', 'No, she isn’t.'].map(lesS) } } };
+  A: { 1: { key: 'g4A1', title: 'Unit 1 解碼 秘笈', sub: 'Who’s he?　他 是 誰？', s: les4U1(['Who’s he?', 'He’s my grandpa.', 'Who’s she?', 'She’s my sister.'].map(lesS)) },
+    2: { key: 'g4A2', title: 'Unit 2 解碼 秘笈', sub: 'Is he a doctor?　他 是 醫生 嗎？', s: les4U2(['Is he a doctor?', 'Yes, he is.', 'Is she a cook?', 'No, she isn’t. She’s a teacher.'].map(lesS)) } },
+  B: { 1: { key: 'g4B1', title: 'Unit 1 解碼 秘笈', sub: 'Is he your brother?　他 是 你的 哥哥 嗎？', s: les4U1(['Who’s he?', 'Is he your brother?', 'Yes, he is.', 'Is she your mom? No, she isn’t.'].map(lesS)) },
+    2: { key: 'g4B2', title: 'Unit 2 解碼 秘笈', sub: 'Is your dad a farmer?　你的 爸爸 是 農夫 嗎？', s: les4U2(['Is your dad a farmer?', 'Yes, he is.', 'Is your sister a student?', 'No, she isn’t.'].map(lesS)) } } };
 /* 2026-10-30 第三十四次 第 9-(5A)(5B) 點：解碼 開始 前 的 教學（g3mid/_decode.js 的 decTut）：① 怎麼 拖 ② 中英 順序 不 一樣（他 是 誰？➜ 誰 是 他）③ 小 測驗 2 題 */
 const tutQ = (en, x) => ({ en, v: '', t: PL.sent4(en), x: x || [], z: PL.zh4(en) });
 const DTUT = { key: 'g4', demo: tutQ('She’s my mom.'), quiz: [tutQ('Who’s she?', ['他']), tutQ('Is she your mom?', ['他'])],

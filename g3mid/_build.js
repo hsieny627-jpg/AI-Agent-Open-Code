@@ -6,7 +6,7 @@
  *   題組 g3gm_g3m-遊戲（老師看板 類別「🏫 三年級 複習」、〔🏫 課堂複習〕大表），每題 [答對, 選了 第幾個, 秒數, 秒按, 剩下, 題庫 第幾題]；
  *   中途 離開 也 送（老師：平均 正確率 只 算 已經 作答 的 題目）。 */
 const fs = require('fs'), path = require('path');
-const DECX = require('./_decode.js'), D = require('./_data.js'), HW = require('./_hw.js'), CL = require('../score/_client.js');
+const SCN = require('./_scenes.js'), DECX = require('./_decode.js'), D = require('./_data.js'), HW = require('./_hw.js'), CL = require('../score/_client.js');
 /* 2026-10-30 第三十四次 第 7 點：數字 金幣磚 母音 字母 紅、不發音 字母 灰（照 words/_phonics.js 的 音標：s ＝ 不發音、n ＝ 有 母音 的 聲音）*/
 const PHX = require('../words/_phonics.js'), NUMC = {};
 [].concat(...[D.GAMES.find(g => g.id === 'q6').B, (D.XB || {}).q6 || [], (D.XB2 || {}).q6 || []]).forEach(q => { const w = q.want, d = PHX.DATA[w]; if (!d) throw new Error('數字 金幣磚：' + w + ' 沒有 音標（words/_phonics.js）');
@@ -317,6 +317,17 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 .mv:nth-child(1){background:#E64A3C}.mv:nth-child(2){background:#2F7BFF}.mv:nth-child(3){background:#2AA84A}.mv:nth-child(4){background:#B0731A}
 .mv.ok{box-shadow:0 0 0 6px #fff,0 0 30px #7BF0A8}.mv.no{opacity:.35}
 .ask8{font-size:clamp(22px,3vh,30px);color:#fff}
+.ch8{display:flex;flex-direction:column;gap:clamp(4px,.8vh,10px);width:min(980px,100%);margin:0 auto}
+.c8r{display:flex;align-items:center;gap:12px;animation:f8in .5s both}.c8r+.c8r{animation-delay:.6s}.c8r.you{flex-direction:row-reverse}
+.c8w{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}.c8r.you .c8w{align-items:flex-end}
+.c8t{font-size:clamp(19px,2.4vh,24px);font-weight:700}.foe .c8t{color:#FFB0B0}.you .c8t{color:#9EDCFF}
+.c8b{position:relative;display:inline-block;max-width:100%;padding:2px 14px;border-radius:20px;background:#fff;color:#111;font-size:clamp(24px,3.6vh,38px);line-height:1.25;border:4px solid #B01030}
+.foe .c8b{align-self:flex-start}.you .c8b{border-color:#1E6FD0}
+.c8b button{border:0;background:#1452C4;color:#fff;border-radius:10px;font-size:22px;min-height:52px;min-width:56px;vertical-align:middle;margin-left:6px}
+.c8q{background:rgba(255,255,255,.12);color:#FFE07A;border:4px dashed #FFE07A;animation:f8q 1s ease-in-out infinite alternate}.c8q.fill{background:#fff;color:#0A6A30;border:4px solid #2BD46A;animation:none}
+.mv.mv8{border-radius:22px 22px 22px 6px}
+.ch8 .f8p em{display:none}
+@media (min-aspect-ratio:1/1){.ch8{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:end}.c8r{animation-delay:0s}.c8r+.c8r{animation-delay:.6s}}
 .flow8{display:flex;align-items:center;justify-content:center;gap:clamp(6px,1vw,14px);width:min(980px,100%);margin:0 auto}
 .f8c{display:flex;align-items:center;gap:8px;padding:6px 14px 6px 6px;border-radius:999px;background:rgba(255,255,255,.08);border:3px solid #5A6A8A;min-width:0;animation:f8in .5s both}
 .f8foe{border-color:#FF6B6B;background:rgba(176,16,48,.28)}.f8you{border-color:#5EC8FF;background:rgba(30,110,200,.28)}.flow8 .f8c:last-child{animation-delay:.9s}
@@ -448,10 +459,10 @@ button{font:inherit;font-weight:700;color:#fff;cursor:pointer;touch-action:manip
 .pk .ow{position:absolute;top:-34px;left:50%;transform:translateX(-50%) scale(0);background:#fff;color:#C62828;border:3px solid #C62828;border-radius:12px;padding:0 10px;font-size:clamp(20px,2.8vh,28px);white-space:nowrap;transition:transform .2s}.pk.trip .ow{transform:translateX(-50%) scale(1) rotate(-80deg)}
 .sent .gap{position:relative}.bloom{position:absolute;left:50%;top:50%;font-size:clamp(26px,4vh,40px);animation:bloom .9s forwards;pointer-events:none}@keyframes bloom{from{transform:translate(-50%,-50%) rotate(var(--a)) translateY(0) scale(.2)}to{transform:translate(-50%,-50%) rotate(var(--a)) translateY(-70px) scale(1);opacity:0}}
 /* 8 ⚔ 英文 對決 擂台 */
-.duel{position:relative;width:min(1000px,100%);height:clamp(270px,40vh,390px);border-radius:26px;overflow:hidden;background:linear-gradient(#1A1030 0,#2A1A3A 55%,#3A2A2A 55%,#1A1212);box-shadow:0 10px 0 rgba(0,0,0,.45),inset 0 0 60px #000}
+.duel{position:relative;width:min(1000px,100%);height:clamp(200px,30vh,330px);border-radius:26px;overflow:hidden;background:linear-gradient(#1A1030 0,#2A1A3A 55%,#3A2A2A 55%,#1A1212);box-shadow:0 10px 0 rgba(0,0,0,.45),inset 0 0 60px #000}
 .duel .dbg i{position:absolute;bottom:45%;width:10px;height:60px;background:#5A4A3A}.duel .dbg i::after{content:'🔥';position:absolute;left:50%;top:-34px;transform:translateX(-50%);font-size:30px;animation:fl .4s infinite alternate}.duel .dbg i:nth-child(1){left:6%}.duel .dbg i:nth-child(2){right:6%}@keyframes fl{to{transform:translateX(-50%) scale(1.15)}}
 .fig{position:absolute;bottom:6%;display:flex;flex-direction:column;align-items:center;gap:6px;transition:transform .25s}.fig.me{left:6%}.fig.dk{right:6%}
-.fcard{width:clamp(110px,17vh,170px);aspect-ratio:3/4.2;border-radius:16px;overflow:hidden;border:4px solid #FFD54A;box-shadow:0 0 24px #FFD54A88;background:#000}.fcard img{width:100%;height:100%;object-fit:cover}
+.fcard{width:clamp(84px,13vh,150px);aspect-ratio:3/4.2;border-radius:16px;overflow:hidden;border:4px solid #FFD54A;box-shadow:0 0 24px #FFD54A88;background:#000}.fcard img{width:100%;height:100%;object-fit:cover}
 .dksv{width:clamp(120px,19vh,190px);height:auto;filter:drop-shadow(0 0 14px #B01030)}.dkey{animation:dkey 1.4s infinite alternate}@keyframes dkey{to{opacity:.45}}
 .hpb{background:rgba(0,0,0,.65);border-radius:12px;padding:2px 10px;min-width:clamp(130px,19vh,190px);font-size:clamp(18px,2.4vh,23px);text-align:center}.hpb .bar{display:block;height:14px;border-radius:7px;background:#333;overflow:hidden;margin-top:3px}.hpb .bar i{display:block;height:100%;background:linear-gradient(90deg,#FF3B3B,#FFB300,#2BD46A);transition:width .5s}
 .vs{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);font-size:clamp(44px,8vh,80px);color:#FFE07A;text-shadow:0 0 20px #FF7A2A;font-weight:900;animation:vs 1.2s ease-in-out infinite alternate}@keyframes vs{to{transform:translate(-50%,-50%) scale(1.15)}}
@@ -557,6 +568,8 @@ body.ing #scbar{display:none!important}
 .hmb button.b2{background:linear-gradient(#3A4A66,#243048);border-color:#6F86A6;color:#fff;box-shadow:0 8px 0 #121A28;animation:none;font-size:clamp(24px,3.4vh,34px)}
 .hmb small{display:block;font-size:.55em;color:#0A3A1C}
 .hmbest{font-size:clamp(22px,3vh,30px);color:#FFE07A}
+.hmbo{margin-top:6px;font-size:clamp(20px,2.8vh,26px);color:#FFE9A8}.hmbo b{color:#FFD54A;font-size:1.3em}
+.hmrv{display:inline-flex;align-items:center;min-height:56px;margin-top:14px;padding:4px 26px;border-radius:18px;border:3px solid #FFD54A;background:#221B05;color:#FFE9A8;font-size:clamp(20px,2.8vh,26px);font-weight:700;text-decoration:none}
 @keyframes hmgo{to{transform:scale(1.05)}}@media (prefers-reduced-motion:reduce){.hmb button{animation:none}}
 .tile9.sel{box-shadow:0 0 0 6px #3EC5FF,0 6px 0 #9A6A00}.tile9.drag{z-index:20;position:relative}.tile9.used{visibility:hidden}
 .fb9{display:flex;flex-direction:column;gap:6px}
@@ -585,6 +598,7 @@ const BODY = `
 
 const JS = `
 ${DECX.JS}
+var SCSVG={${SCN.KEYS.map(k => J(k) + ':' + J(SCN.svg(k))).join(',')}};
 var LES=${J(D.LES)},DTUT=${J(D.DTUT)},DCG={id:'dc',ic:'🔓',nm:'句子 解碼 任務',how:'👇 把 中文 方塊 拖到 英文 字 的 正下方（也 可以 先 點 方塊、再 點 格子）· 放對 幾個 ＝ 拿 幾成 分數',t:45,B:[],c1:'#5A2A8C',c2:'#E0A030'};DEC.SIL=${J(D.SIL)};
 var CB=${J(D.CB)},CSETS=${J(D.CSETS)},XB=${J(D.XB)},XALL=${J(D.XORD)}.map(function(x){return XB[x[0]][x[1]]}),LVS=null,XB2=${J(D.XB2)},XALL2=${J(D.XORD2)}.map(function(x){return XB2[x[0]][x[1]]}),XBK='A',   /* 2026-10-29 第 3 件：題庫 B ＝ 新 25／新 50（XBK ＝ 'B'）；存 進度、做過 的、最高分、成績 代號 都 分開 */
 XA=function(){return XBK==='B'?XALL2:XALL},XBX=function(){return XBK==='B'?XB2:XB},XS=function(){return XBK==='B'?'n':XBK==='H'?'h':''},XNM=function(n){return XBK==='H'?n+' 題 闖關':(XBK==='B'?'新 ':'')+n+' 題 挑戰'},GM=${J(GM)}, WAR=${J(WAR)}, WARALL=${J(WARALL)}, GL=${J(D.GL)}, PHM=${J(D.PHM)}, CE=${J(D.CE)}, SC=${J(D.SC)}, BOYS=${J(D.BOYS)}, NUMW=${J(D.NUMW)};
@@ -790,8 +804,10 @@ function writeUI(stage,q,left,lk){var row=H('div','wrow'),L=H('div','wleft'),Rt=
  var pad=new Pad(Rt,{lock:function(){return BUSY||(lk&&lk())}}),bt=H('div','wbtn','<button class="er">🧽 擦掉</button><button class="go">✅ 寫好了</button>');Rt.appendChild(bt);
  bt.querySelector('.er').onclick=function(){if(!BUSY)pad.clear()};
  bt.querySelector('.go').onclick=function(){if(BUSY||pad.empty()||(lk&&lk()))return;var sk=pad.strokes(),j=HW.judge(sk,q.want);R.lastImg=pad.img();R.lastGot=j.got;R.lastSk=JSON.parse(JSON.stringify(sk));R.lastLn=null;
-   var ln=HW.lines(sk,q.want),yy=[];sk.forEach(function(t){t.forEach(function(p){yy.push(p[1])})});var outG=Math.min.apply(0,yy)<-.15||Math.max.apply(0,yy)>3.15;   /* 超出 整個 四線格（最上面、最下面 的 線 外面）＝ 超出 格子 */
+   var ln=HW.lines(sk,q.want),yy=[];sk.forEach(function(t){t.forEach(function(p){yy.push(p[1])})});var outG=Math.min.apply(0,yy)<-.2||Math.max.apply(0,yy)>3.2;   /* 2026-10-31 第三十五次 第 4 點：-.15 ➜ -.2（寫字板 的 邊 ＝ -.25，碰到 邊 才 叫 學生 再 寫 一次）*/   /* 超出 整個 四線格（最上面、最下面 的 線 外面）＝ 超出 格子 */
    if(outG&&!R.retry){R.retry=1;BUSY=true;tPause();var tt=H('div','rtry','✋ 超出 格子 了！<br>再 寫 一次<small>（不扣 時間，一題 一次）</small>');Rt.appendChild(tt);later(function(){tt.remove();pad.clear();BUSY=false;tGo()},1800);return}
+   /* 2026-10-31 第三十五次 第 4 點：形狀 對（不看 位置）＋線 也 對（照 要寫 的 那一個 字母 的 線）＋不是 寫成 另一個 大小寫 ＝ 對（原本 位置 有一點 偏 就 判 錯）*/
+   if(!j.ok){var j2=HW.judge(sk,q.want,1),pt=q.want===q.want.toUpperCase()?q.want.toLowerCase():q.want.toUpperCase();if(j2.ok&&ln.ok&&j.got!==pt){j.ok=true;R.lastGot=q.want}}
    if(!j.ok){var j2=HW.judge(sk,q.want,1);if(j2.ok&&!ln.ok){R.lastLn=ln;miss('line');return}miss('draw');return}R.lastLn=ln;if(!ln.ok){miss('line');return}WOK(q,L)};return pad}
 
 /* ═══════ 10 種 遊戲 的 畫面（2026-10-25 第二十五次 老師第 3 點：每一個遊戲 更好玩、更刺激、更有 回饋；規格 g3mid/CLAUDE.md 最上面）═══════ */
@@ -808,7 +824,8 @@ REN.q1=function(q,st){var lw=H('div','lawn','<div class="gr"></div><div class="h
   setTimeout(function(){if(R.q!==q)return;tPause();say2(0,function(){if(R.q===q&&!BUSY)tGo()})},350)};
 FB.q1=function(q,p){var w=PHM[q.say];return {you:p?'<b style="font-size:1.5em">'+esc(p)+'</b>':'',body:'<div style="font-size:clamp(60px,10vh,100px)">'+w[2]+(q.up?'<span style="font-size:.7em;color:#FFE07A;margin-left:.4em">➜ 大寫 '+esc(q.o[0])+'</span>':'')+'</div>'+gloss(q.say).replace('<b>'+q.say,'<b><u style="color:#FFE07A">'+q.say[0]+'</u>'+q.say.slice(1)),sl:[['M1',q.say]]}};
 /* 2 🟡 小精靈 聽句（2026-10-26 第二十八次 重做，下面 REN.q2）*/
-function card2(c){if(c.sc){var s=SC[c.sc];return '<div class="q2sc">'+s.ic.map(function(x){return '<span>'+x+'</span>'}).join('')+(s.fx?'<span class="fx">'+s.fx+'</span>':'')+(s.b?'<span class="q2b">'+s.b+'</span>':'')+'</div>'}
+function card2(c){if(c.sc&&SCSVG[c.sc])return '<div class="q2sc q2svg">'+SCSVG[c.sc]+'</div>';   /* 2026-10-31 第三十五次 第 5 點：一格 漫畫（g3mid/_scenes.js）*/
+ if(c.sc){var s=SC[c.sc];return '<div class="q2sc">'+s.ic.map(function(x){return '<span>'+x+'</span>'}).join('')+(s.fx?'<span class="fx">'+s.fx+'</span>':'')+(s.b?'<span class="q2b">'+s.b+'</span>':'')+'</div>'}
   return '<div class="tag"><div class="tt"><b>HELLO</b>my name is</div><div class="tn">'+esc(c.t)+'</div></div><div class="cake">🎂<span class="cn">'+c.a+'</span></div>'}
 /* 2026-10-26 第二十八次 第 5 點（老師：介面 太小、不好 操控、很快 被 抓到、影響 作答 權益 ➜ 照 Wordwall「迷宮 追逐」影片）：
    ① 先 看 整張 迷宮（3 張 圖 在 3 個 大 房間）＋ 唸 句子 ＋ 3、2、1、GO（鬼 不 動、時間 停）➜ ② GO 以後 鏡頭 放大 2 倍 跟著 小精靈；
@@ -1032,17 +1049,22 @@ function warImg(){var h=rpHero();if(h&&!ls('g3m_war'))return '../rpg/chars/'+h+'
 var FOE=[{img:'img/foe1.webp',en:'DARK OVERLORD',zh:'反派領袖'},{img:'img/foe2.webp',en:'SHADOW SCHEMER',zh:'影之謀士'}],FHP=4;
 REN.q8=function(q,st){if(RK()===0)HP8={b:0,e:FHP,m:8,ko:0};if(HP8.e<=0&&HP8.b===0){HP8.b=1;HP8.e=FHP;HP8.nw=1}var F=FOE[HP8.b],line=q.rev?q.b:q.a;
   var ar=H('div','duel','<div class="dbg"><i></i><i></i></div><div class="fig me"><div class="fcard"><img src="'+warImg()+'" alt="你的戰士"></div><div class="hpb"><b>🛡 YOU</b><span class="bar"><i style="width:'+(HP8.m/8*100)+'%"></i></span></div></div><div class="vs">VS</div>'+
-   '<div class="fig dk"><div class="fcard foe"><img src="'+F.img+'" alt="'+F.en+'"></div><div class="hpb"><b>💀 '+F.en+'</b><span class="bar"><i style="width:'+(HP8.e/FHP*100)+'%"></i></span></div></div><div class="bub8"><small>'+F.en+(q.rev?' answers:':' says:')+'</small>'+esc(line)+' <button id="b8" aria-label="再聽">🔊</button></div>'+
+   '<div class="fig dk"><div class="fcard foe"><img src="'+F.img+'" alt="'+F.en+'"></div><div class="hpb"><b>💀 '+F.en+'</b><span class="bar"><i style="width:'+(HP8.e/FHP*100)+'%"></i></span></div></div>'+
    '<div class="rnd8">ROUND '+(HP8.b+1)+' ／ 2</div>'+(HP8.nw?'<div class="nw8"><b>⚠ '+F.en+'</b><span>is coming!</span></div>':''));HP8.nw=0;
   st.appendChild(ar);/* 2026-10-30 第三十四次 第 8 點（老師：「誰 問、誰 被 問」看不懂）➜ 秒懂 對話 條：頭像＋大字「❓ 問」「💬 答」＋箭頭 一顆 光點 跑過去；已經 說了 的 ＝ 👆（上面 那一句），要 你 選 的 ＝ 會 閃 的「？ 👇」 */
-  $('#how').textContent=q.rev?'你 先 ❓ 問、反派 💬 答 了 👆 ➜ 你 剛剛 問 了 什麼？選 對的 問句 ⚔':'反派 ❓ 問 👆 ➜ 你 💬 答：選 對的 回答 ⚔';
+  /* 2026-10-31 第三十五次 第 7 點（老師：學生 還是 看不懂「題目 要 問 的 意思」、圖示、手指 圖案）➜ 拿掉 ❓ 💬 👆 👇 ⚔️🔥⚡❄️ 和 光點 箭頭；
+     改成 像 聊天 一樣 由 上 往 下 兩個 對話框：頭像＋一句 中文「反派 問 你：」「你 要 回答：」＋英文 句子（🔊 再聽）／空白 的 對話框「？ 從下面選一句」；
+     選 對 ＝ 那一句 飛進 空白 的 對話框。選項 ＝ 對話框 樣子、只有 英文（沒有 圖示） */
+  $('#how').textContent=q.rev?'你先問了反派一句話，反派回答你 ➜ 你剛剛問了什麼？從下面選一句':'反派問你一句話 ➜ 你要怎麼回答？從下面選一句';
   var fA='<span class="f8p"><img src="'+F.img+'" alt=""><em>'+F.en.split(' ')[1]+'</em></span>',fY='<span class="f8p me"><img src="'+warImg()+'" alt=""><em>YOU</em></span>',
-   said='<span class="f8l">👆</span>',pk='<span class="f8l f8q">？ 👇</span>';
-  st.appendChild(H('div','ask8 flow8'+(q.rev?' rev':''),q.rev?'<div class="f8c f8you">'+fY+'<b class="f8r">❓ 問</b>'+pk+'</div><div class="f8a"><i></i></div><div class="f8c f8foe">'+fA+'<b class="f8r">💬 答</b>'+said+'</div>':
-   '<div class="f8c f8foe">'+fA+'<b class="f8r">❓ 問</b>'+said+'</div><div class="f8a"><i></i></div><div class="f8c f8you">'+fY+'<b class="f8r">💬 答</b>'+pk+'</div>'));var mv=H('div','moves');st.appendChild(mv);
-  var play=function(){sayT(line)};ar.querySelector('#b8').onclick=play;
-  shuf(q.o).forEach(function(o,i){var b=H('button','mv','<span class="mi">'+['⚔️','🔥','⚡','❄️'][i]+'</span>'+esc(o));b.dataset.o=o;b.onclick=function(){if(BUSY)return;var me=ar.querySelector('.fig.me'),dk=ar.querySelector('.fig.dk');
-   if(o===q.o[0]){b.classList.add('ok');me.classList.add('dash');var sl=H('div','slash');ar.appendChild(sl);var dm=H('div','dmg','−1 💥');ar.appendChild(dm);setTimeout(function(){dk.classList.add('hurt')},180);
+   said=function(t){return '<div class="c8b">'+esc(line)+' <button id="b8" aria-label="再聽">🔊</button></div>'},blank='<div class="c8b c8q" id="c8q">？　從下面選一句</div>',
+   foe=q.rev?['反派回答你：',said()]:['反派問你：',said()],you=q.rev?['你先問了：',blank]:['你要回答：',blank],
+   row=function(c,p,x){return '<div class="c8r '+c+'">'+p+'<div class="c8w"><span class="c8t">'+x[0]+'</span>'+x[1]+'</div></div>'};
+  st.appendChild(H('div','ask8 ch8',q.rev?row('you',fY,you)+row('foe',fA,foe):row('foe',fA,foe)+row('you',fY,you)));
+  var mv=H('div','moves');st.appendChild(mv);
+  var play=function(){sayT(line)};st.querySelector('#b8').onclick=play;
+  shuf(q.o).forEach(function(o,i){var b=H('button','mv mv8',esc(o));b.dataset.o=o;b.onclick=function(){if(BUSY)return;var me=ar.querySelector('.fig.me'),dk=ar.querySelector('.fig.dk');
+   if(o===q.o[0]){b.classList.add('ok');var cq=st.querySelector('#c8q');if(cq){cq.textContent=o;cq.classList.add('fill')}me.classList.add('dash');var sl=H('div','slash');ar.appendChild(sl);var dm=H('div','dmg','−1 💥');ar.appendChild(dm);setTimeout(function(){dk.classList.add('hurt')},180);
     HP8.e=Math.max(0,HP8.e-1);ar.querySelector('.fig.dk .bar i').style.width=(HP8.e/FHP*100)+'%';if(!HP8.e){HP8.ko++;setTimeout(function(){dk.classList.add('ko');ar.appendChild(H('div','ko8','K.O.!'))},400)}good(b)}
    else{b.classList.add('no');dk.classList.add('lunge');var sl=H('div','slash dark');ar.appendChild(sl);setTimeout(function(){me.classList.add('hurt')},200);HP8.m=Math.max(0,HP8.m-1);ar.querySelector('.fig.me .bar i').style.width=(HP8.m/8*100)+'%';R.pick=o;BUSY=true;tPause();later(function(){miss(o)},900)}};mv.appendChild(b)});
   setTimeout(play,HP8.b&&RK()&&ar.querySelector('.nw8')?1600:350)};
@@ -1195,7 +1217,7 @@ if(window.HOME25){XBK='H';document.title='三年級 25 題 闖關';crAuto=functi
    o.innerHTML='<div class="hmw"><div class="hmt">📝 三年級 25 題 闖關</div><div class="hms">'+HMS+'</div>'+
     '<div class="hmk"><span>🔓 句子 解碼 8 題</span><span>🎮 10 種 遊戲 17 題</span><span>⏳ 不限 時間</span><span>🔁 每次 題目 不一樣</span></div>'+
     '<div class="hmb">'+(v?'<button id="hmgo">▶ 繼續 第 '+(v.Q.length+1)+' 題<small>已經 做 了 '+v.Q.length+' ／ 25 題</small></button><button class="b2" id="hmnew">🔄 重新 開始</button>':'<button id="hmgo">▶ 開始 第 1 題</button>')+'</div>'+
-    (b?'<div class="hmbest">🏆 我的 最高 '+b+' 分</div>':'')+'</div>';o.hidden=false;
+    (b?'<div class="hmbest">🏆 我的 最高 '+b+' 分</div>':'')+(Date.now()<Date.parse('2026-11-01T23:59:59+08:00')?'<div class="hmbo">⏰ 11月1日（星期日）晚上11:59以前：🪙金幣、⭐經驗值 <b>✖2</b></div>':'')+'<a class="hmrv" href="../g3-review/index.html">🏠 回在家複習</a></div>';o.hidden=false;   /* 2026-10-31 第三十五次 第 9 點 */
    $('#hmgo').onclick=hmGo;var nw=$('#hmnew');if(nw)nw.onclick=function(){xDel(25);hmGo()}};
  var lobbyH=lobby;lobby=function(){lobbyH.apply(this,arguments);hmCover()};
  setTimeout(function(){if(typeof SCON!=='undefined'&&SCON&&!SCID)hmGo()},50)}
@@ -1219,7 +1241,8 @@ const html = `<!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>三年級 複習</title>
-<style>${CSS}${DECX.CSS}</style></head>
+<style>${CSS}${DECX.CSS}${SCN.CSS}
+.q2sc.q2svg{display:block;padding-top:0;width:4.6em;max-width:100%}.rmc .q2sc.q2svg{width:100%;font-size:inherit}</style></head>
 <body>
 ${CL.home(3, '../', 'school')}
 ${BODY}
@@ -1227,6 +1250,7 @@ ${BODY}
 ${AUD ? '<script src="audio/aud.js"></script><script src="audio/w/aud.js"></script>' : ''}${['m1', 'm2'].filter(d => fs.existsSync(path.join(__dirname, 'audio', d, 'aud.js'))).map(d => '<script src="audio/' + d + '/aud.js"></script>').join('')}
 <script>${BORROWJS}</script>
 <script>${JS}</script>
+<script>${require('../score/_dsp.js').js()}</script>
 </body></html>`;
 fs.writeFileSync(path.join(__dirname, 'index.html'), html);
 /* 2026-10-30 第三十四次 第 1～4 點：🏠 三年級 25 題 闖關 的 專屬 網址（同一個 網頁，多 一個 HOME25）*/

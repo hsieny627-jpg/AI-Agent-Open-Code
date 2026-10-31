@@ -45,6 +45,11 @@ exports.CSS = `
 /* ── 每一課 開始 前 的 秒懂 動畫（≧ 20 秒）── */
 #dcl{position:fixed;inset:0;z-index:95;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 30%,#18275A,#05070F 70%);padding:16px;text-align:center}
 #dcl.on{display:flex}
+#dcl .dlctl{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:clamp(6px,1.4vh,14px)}
+#dcl .dlctl button{min-height:56px;padding:4px 20px;border-radius:16px;font-size:clamp(20px,2.6vh,26px);border:3px solid #6F86A6;background:#22324A;color:#fff}
+#dcl .dlctl button.on{border-color:#FFD54A;background:#3A3010;color:#FFE38A}
+#dcl.pz *{animation-play-state:paused!important}
+#dcl.pz:before{content:'⏸️ 暫停中';position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:2;padding:4px 18px;border-radius:999px;background:#FFD54A;color:#2A1A00;font-size:clamp(20px,2.6vh,26px);font-weight:700}
 #dcl .dlt{font-size:clamp(30px,5vh,52px);color:#FFD54A;margin:0 0 4px}
 #dcl .dls{font-size:clamp(20px,2.8vh,28px);color:#BFD3E6;margin-bottom:clamp(8px,2vh,22px)}
 #dcl .dlp{display:flex;gap:10px;justify-content:center;margin-bottom:clamp(8px,2vh,20px)}#dcl .dlp i{width:16px;height:16px;border-radius:50%;background:#2E4058}#dcl .dlp i.on{background:#FFD54A}#dcl .dlp i.ok{background:#2BD46A}
@@ -113,14 +118,14 @@ function decUnlock(){var a=decEl();if(a._ok||a._try||DEC.au||window.__NOUNLOCK)r
 function decRead(text,v,cells,done){var A=DEC.A;A.stop();var my=++DEC.rid,f=A.aud(text,v),w=cells.map(function(c){return Math.max(1,(c.getAttribute('data-w')||'').replace(/[^A-Za-z]/g,'').length)+1}),tot=w.reduce(function(a,b){return a+b},0);
  function hl(r){var acc=0,k=-1;for(var i=0;i<w.length;i++){acc+=w[i];if(r*tot<acc){k=i;break}}cells.forEach(function(c,i){c.classList.toggle('spk',i===k)})}
  function fin(){if(my!==DEC.rid)return;cells.forEach(function(c){c.classList.remove('spk')});if(done)done()}
- if(f){var au=decEl();au.onended=null;au.onerror=null;try{au.pause()}catch(e){}au.src=f;DEC.au=au;var raf=0,t0=0;au.onended=function(){if(DEC.au===au)DEC.au=null;cancelAnimationFrame(raf);fin()};au.onerror=function(){cancelAnimationFrame(raf);est()};
+ if(f){var au=decEl();au.onended=null;au.onerror=null;try{au.pause()}catch(e){}au.src=f;try{au.defaultPlaybackRate=au.playbackRate=DEC.slow?.75:1}catch(e){}DEC.au=au;var raf=0,t0=0;au.onended=function(){if(DEC.au===au)DEC.au=null;cancelAnimationFrame(raf);fin()};au.onerror=function(){cancelAnimationFrame(raf);est()};
   (function lp(){if(my!==DEC.rid){try{au.pause()}catch(e){}return}if(au.duration>0&&!au.paused)hl(Math.min(.999,au.currentTime/au.duration));raf=requestAnimationFrame(lp)})();
   var p=au.play();if(p&&p.catch)p.catch(function(e){if(my!==DEC.rid||(e&&e.name==='AbortError'))return;cancelAnimationFrame(raf);est()});return}
  est();
- function est(){var T=Math.max(1.2,tot*.085)*1000,s=performance.now();try{var u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.8;speechSynthesis.speak(u)}catch(e){}
+ function est(){var T=Math.max(1.2,tot*.085)*1000*(DEC.slow?1.35:1),s=performance.now();try{var u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=DEC.slow?.6:.8;speechSynthesis.speak(u)}catch(e){}
   (function lp(){if(my!==DEC.rid)return;var r=(performance.now()-s)/T;if(r>=1){fin();return}hl(r);requestAnimationFrame(lp)})()}}
 DEC.rid=0;
-function decClose(){DEC.lid++;decStop();var o=document.getElementById('dcl');if(o){o.classList.remove('on');o.innerHTML=''}}   /* 回 大廳、老師 結束 ＝ 動畫 收起來 */
+function decClose(){DEC.lid++;decStop();decPause(false);var o=document.getElementById('dcl');if(o){o.classList.remove('on');o.innerHTML=''}}   /* 回 大廳、老師 結束 ＝ 動畫 收起來 */
 function decStop(){DEC.rid++;if(DEC.au){try{DEC.au.onended=null;DEC.au.pause()}catch(e){}DEC.au=null}}
 /* 一題：q ＝ {en, t:[[英文, 中文]…], x:[錯 方塊…], z 整句 中文, v 聲音} */
 function decRender(q,st0){var A=DEC.A,st=H('div','dcbox');st0.appendChild(st);var row=H('div','dcw'),tray=H('div','dct'),zh=H('div','dcz',esc(q.z)),sel=null,selS=null;
@@ -153,20 +158,33 @@ addEventListener('resize',function(){var b=document.querySelector('.dcbox');if(b
 /* 答錯頁 的「你 放的」：每一格 英文 下面 你 放 的 中文（錯 的 劃掉） */
 function decYou(q,got){if(!got||!got.length)return '';return '<div class="dcy">'+q.t.map(function(p,i){var y=got[i]===p[1];return '<span>'+esc(p[0].replace(/'/g,'\\u2019'))+'<i class="'+(y?'':'no')+'">'+esc(got[i]||'　')+'</i></span>'}).join('')+'</div>'}
 /* ── 每一課 開始 前 的 秒懂 動畫（老師 3(3)：≧ 20 秒；第一次 一定 看完）── */
+/* 2026-10-31 第三十五次 第 2 點（老師：題目 開始 之前，所有 秒懂 動畫 都 要 有〔暫停〕〔再撥一次〕〔慢速〕）：
+   ⏸ 暫停 ＝ 聲音 停、動畫 停、下一步 等著（DEC.pq），▶ 繼續 ＝ 接著 演；🔁 再播一次 ＝ 這一段 從頭；🐢 慢速 ＝ 每一步 慢 1.6 倍、聲音 0.75 倍（再按 ＝ 🐇 正常速度） */
+DEC.pz=false;DEC.pq=[];DEC.slow=false;
+function decK(){return (window.__DCLK||1)*(DEC.slow?1.6:1)}
+function decT(f,ms){return setTimeout(function(){if(DEC.pz)DEC.pq.push(f);else f()},ms)}
+function decPause(on){var o=document.getElementById('dcl'),b=document.getElementById('dcP');DEC.pz=!!on;if(o)o.classList.toggle('pz',!!on);if(b){b.textContent=on?'▶️ 繼續':'⏸️ 暫停';b.classList.toggle('on',!!on)}
+ if(on){if(DEC.au)try{DEC.au.pause()}catch(e){}try{speechSynthesis.pause()}catch(e){}return}
+ if(DEC.au&&DEC.au.paused)try{var pp=DEC.au.play();if(pp&&pp.catch)pp.catch(function(){})}catch(e){}try{speechSynthesis.resume()}catch(e){}var q=DEC.pq;DEC.pq=[];q.forEach(function(f){f()})}
+function decCtl(o,replay){decPause(false);var c=document.createElement('div');c.className='dlctl';
+ c.innerHTML='<button id="dcP">⏸️ 暫停</button><button id="dcR">🔁 再播一次</button><button id="dcS" class="'+(DEC.slow?'on':'')+'">'+(DEC.slow?'🐇 正常速度':'🐢 慢速')+'</button>';o.appendChild(c);
+ c.querySelector('#dcP').onclick=function(){decPause(!DEC.pz)};
+ c.querySelector('#dcR').onclick=function(){DEC.pq=[];decStop();replay()};
+ c.querySelector('#dcS').onclick=function(){DEC.slow=!DEC.slow;this.textContent=DEC.slow?'🐇 正常速度':'🐢 慢速';this.classList.toggle('on',DEC.slow);if(DEC.au)try{DEC.au.playbackRate=DEC.slow?.75:1}catch(e){}}}
 function decLesson(L,done){var A=DEC.A,o=$('#dcl'),k='dcl_seen_'+L.key+'_'+(A.sid()||'0'),seen=false;try{seen=!!localStorage.getItem(k)}catch(e){}
  var my=++DEC.lid,t0=Date.now(),MIN=window.__DCLMIN!=null?window.__DCLMIN:20000,K=window.__DCLK||1;A.pause();   /* __DCLK、__DCLMIN ＝ 量測 用（快轉） */
- o.innerHTML='<div class="dlt">🔓 '+esc(L.title)+'</div><div class="dls">'+esc(L.sub)+'</div><div class="dlp">'+L.s.map(function(){return '<i></i>'}).join('')+'</div><div class="dlw" id="dlw"></div><div class="dlz" id="dlz"></div><div class="dlsec" id="dlsec"></div><div class="dlb" id="dlb">'+(seen?'<button class="sk" id="dlsk">⏭ 跳過</button>':'')+'</div>';o.classList.add('on');
+ o.innerHTML='<div class="dlt">🔓 '+esc(L.title)+'</div><div class="dls">'+esc(L.sub)+'</div><div class="dlp">'+L.s.map(function(){return '<i></i>'}).join('')+'</div><div class="dlw" id="dlw"></div><div class="dlz" id="dlz"></div><div class="dlsec" id="dlsec"></div><div class="dlb" id="dlb">'+(seen?'<button class="sk" id="dlsk">⏭ 跳過</button>':'')+'</div>';o.classList.add('on');decCtl(o,function(){decLesson(L,done)});
  var sk=$('#dlsk');if(sk)sk.onclick=fin;
  var i=0;function one(){if(my!==DEC.lid)return;if(i>=L.s.length){wait();return}var S=L.s[i],dots=o.querySelectorAll('.dlp i');[].forEach.call(dots,function(d,j){d.className=j<i?'ok':j===i?'on':''});
   var w=$('#dlw'),z=$('#dlz');w.innerHTML='';z.classList.remove('on');z.textContent=S.z;
-  w.classList.remove('eqm');if(S.eq){decEq(S,w,z,K,function(){return my===DEC.lid},function(){setTimeout(function(){i++;one()},900*K)});return}
+  w.classList.remove('eqm');if(S.eq){decEq(S,w,z,K,function(){return my===DEC.lid},function(){decT(function(){i++;one()},900*decK())});return}
   var cs=S.t.map(function(p){var c=H('div','dlc'+(/^['\u2019]/.test(p[0])?' ct':''),'<div class="ic">'+(p[2]||'')+'</div><div class="en">'+decEN(p[0])+'</div><div class="zh">'+esc(p[1])+'</div>');c.setAttribute('data-w',p[0]);w.appendChild(c);return c});
-  var j=0;(function pop(){if(my!==DEC.lid)return;if(j<cs.length){cs[j].classList.add('in');j++;setTimeout(pop,420*K);return}
-   setTimeout(function(){if(my!==DEC.lid)return;decRead(S.en,S.v||'',cs,function(){if(my!==DEC.lid)return;z.classList.add('on');
-     setTimeout(function(){if(my!==DEC.lid)return;decRead(S.en,S.v||'',cs,function(){setTimeout(function(){i++;one()},900*K)})},1100*K)})},300*K)})()}
+  var j=0;(function pop(){if(my!==DEC.lid)return;if(j<cs.length){cs[j].classList.add('in');j++;decT(pop,420*decK());return}
+   decT(function(){if(my!==DEC.lid)return;decRead(S.en,S.v||'',cs,function(){if(my!==DEC.lid)return;z.classList.add('on');
+     decT(function(){if(my!==DEC.lid)return;decRead(S.en,S.v||'',cs,function(){decT(function(){i++;one()},900*decK())})},1100*decK())})},300*decK())})()}
  function wait(){if(my!==DEC.lid)return;[].forEach.call(o.querySelectorAll('.dlp i'),function(d){d.className='ok'});var left=MIN-(Date.now()-t0);if(left>0){$('#dlsec').textContent='';setTimeout(wait,Math.min(left,500));return}
   try{localStorage.setItem(k,'1')}catch(e){}$('#dlb').innerHTML='<button class="go" id="dlgo">▶ 開始 解碼！</button>';$('#dlgo').onclick=fin}
- function fin(){if(my!==DEC.lid)return;DEC.lid++;decStop();o.classList.remove('on');o.innerHTML='';done()}
+ function fin(){if(my!==DEC.lid)return;DEC.lid++;decStop();decPause(false);o.classList.remove('on');o.innerHTML='';done()}
  one()}
 
 /* ── (2)(3)(6) 縮寫／省略 等式（2026-10-30 第三十四次 第 9 點）──
@@ -177,15 +195,17 @@ function decEqCell(p,cls){var en=p[3]!=null?String(p[0]).split('').map(function(
 function decEq(S,w,z,K,alive,next){var E=S.eq,g=H('div','dleq'),m1=H('div','dqm',''),r1=H('div','dqr'),m2=H('div','dqm','＝'),r2=H('div','dqr');
  w.classList.add('eqm');if(E.tag)g.appendChild(H('div','dltag',esc(E.tag)));g.appendChild(m1);g.appendChild(r1);g.appendChild(m2);g.appendChild(r2);w.appendChild(g);z.textContent=E.z||'';
  var c1=E.a.t.map(function(p,i){var c=decEqCell(p,(E.om||[]).indexOf(i)>=0?' om':'');r1.appendChild(c);return c}),c2=E.b.t.map(function(p){var c=decEqCell(p);r2.appendChild(c);return c});
- function pop(cs,k,cb){if(!alive())return;if(k<cs.length){cs[k].classList.add('in');setTimeout(function(){pop(cs,k+1,cb)},420*K);return}setTimeout(cb,300*K)}
+ /* 2026-10-31 第三十五次 第 2 點：生活例句 比較 長（She is my mother.）➜ 放不下 就 整塊 等比 縮小（不 折行、不 超出 畫面）*/
+ [].forEach.call(r1.children,function(c){c.classList.add('in')});[].forEach.call(r2.children,function(c){c.classList.add('in')});m2.classList.add('in');var gw=g.scrollWidth,ww=Math.min(innerWidth-24,w.clientWidth||innerWidth);[].forEach.call(r1.children,function(c){c.classList.remove('in')});[].forEach.call(r2.children,function(c){c.classList.remove('in')});m2.classList.remove('in');if(gw>ww){g.style.transform='scale('+(ww/gw).toFixed(3)+')';g.style.transformOrigin='50% 0'}
+ function pop(cs,k,cb){if(!alive())return;if(k<cs.length){cs[k].classList.add('in');decT(function(){pop(cs,k+1,cb)},420*decK());return}decT(cb,300*decK())}
  function rd(t,cs,cb){decRead(t,'',cs.filter(function(c){return c.getAttribute('data-w')}),function(){if(alive())cb()})}
  pop(c1,0,function(){rd(E.a.say,c1,function(){
    var red=g.querySelectorAll('.dri');   /* 紅色 字母 的 分身 飛走（上面 那一行 還是 完整 的 What is）*/
-   [].forEach.call(red,function(x){var r=x.getBoundingClientRect(),c=x.cloneNode(true),cs=getComputedStyle(x);c.style.cssText='position:fixed;left:'+r.left+'px;top:'+r.top+'px;font-size:'+cs.fontSize+';line-height:'+cs.lineHeight+';z-index:99;margin:0';document.getElementById('dcl').appendChild(c);void c.offsetWidth;c.classList.add('fly');setTimeout(function(){c.remove()},900)});
+   [].forEach.call(red,function(x){var r=x.getBoundingClientRect(),c=x.cloneNode(true),cs=getComputedStyle(x);c.style.cssText='position:fixed;left:'+r.left+'px;top:'+r.top+'px;font-size:'+cs.fontSize+';line-height:'+cs.lineHeight+';z-index:99;margin:0';document.getElementById('dcl').appendChild(c);void c.offsetWidth;c.classList.add('fly');decT(function(){c.remove()},900)});
    (E.om||[]).forEach(function(i){c1[i].classList.add('x');c1[i].appendChild(H('span','omt','✂️ 可以 省略'))});
-   setTimeout(function(){if(!alive())return;m2.classList.add('in');pop(c2,0,function(){rd(E.b.say,c2,function(){
+   decT(function(){if(!alive())return;m2.classList.add('in');pop(c2,0,function(){rd(E.b.say,c2,function(){
      g.classList.add('go');m2.classList.add('go');z.classList.add('on');
-     setTimeout(function(){if(!alive())return;rd(E.a.say,c1,function(){setTimeout(function(){if(!alive())return;rd(E.b.say,c2,function(){m2.classList.remove('go');next()})},500*K)})},900*K)})})},(red.length||(E.om||[]).length?1300:300)*K)})})}
+     decT(function(){if(!alive())return;rd(E.a.say,c1,function(){decT(function(){if(!alive())return;rd(E.b.say,c2,function(){m2.classList.remove('go');next()})},500*decK())})},900*decK())})})},(red.length||(E.om||[]).length?1300:300)*decK())})})}
 
 /* ── (5A)(5B) 解碼 開始 前 的 教學（2026-10-30 第三十四次 第 9 點）──
    ① 怎麼 拖：手指 示範 把 黃色 中文 方塊 拖到 英文 字 正下方 的 空格（也 可以 先 點 方塊、再 點 空格）
@@ -194,11 +214,11 @@ function decEq(S,w,z,K,alive,next){var E=S.eq,g=H('div','dleq'),m1=H('div','dqm'
    T ＝ {key, demo:{en,t,x,z}, ord:{en,t,nat:[[中文, 第幾格]…],z,c1,c2}, quiz:[{en,t,x,z}…]} */
 function decTut(T,done){var A0=DEC.A,o=$('#dcl'),k='dct_seen_'+T.key+'_'+(A0.sid()||'0'),seen=false;try{seen=!!localStorage.getItem(k)}catch(e){}
  var my=++DEC.lid,K=window.__DCLK||1,alive=function(){return my===DEC.lid};A0.pause();
- o.innerHTML='<div class="dlt">🔓 解碼 怎麼 玩？</div><div class="dlp"><i></i><i></i><i></i></div><div class="dtcap" id="dtcap"></div><div id="dtw"></div><div class="dtz" id="dtz"></div><div class="dlb" id="dlb">'+(seen?'<button class="sk" id="dlsk">⏭ 跳過</button>':'')+'</div><div class="dthand" id="dthand">👆</div>';o.classList.add('on');
+ o.innerHTML='<div class="dlt">🔓 解碼 怎麼 玩？</div><div class="dlp"><i></i><i></i><i></i></div><div class="dtcap" id="dtcap"></div><div id="dtw"></div><div class="dtz" id="dtz"></div><div class="dlb" id="dlb">'+(seen?'<button class="sk" id="dlsk">⏭ 跳過</button>':'')+'</div><div class="dthand" id="dthand">👆</div>';o.classList.add('on');decCtl(o,function(){decTut(T,done)});
  var sk=$('#dlsk');if(sk)sk.onclick=fin;
  function dot(n){[].forEach.call(o.querySelectorAll('.dlp i'),function(d,j){d.className=j<n?'ok':j===n?'on':''})}
  function cap(h){$('#dtcap').innerHTML=h}
- function after(ms,f){setTimeout(function(){if(alive())f()},ms*K)}
+ function after(ms,f){decT(function(){if(alive())f()},ms*decK())}
  /* 一題 的 樣子（不 自己 檢查）*/
  function board(q,noTiles){var W=$('#dtw');W.innerHTML='';var st=H('div','dcbox'),row=H('div','dcw'),tray=H('div','dct');st.appendChild(row);st.appendChild(tray);W.appendChild(st);
   var cells=q.t.map(function(p,i){var c=H('div','dcc'+(/^['’]/.test(p[0])?' ct':'')+(q.t[i+1]&&/^['’]/.test(q.t[i+1][0])?' pre':''),'<div class="dce">'+decEN(p[0])+'</div>');c.setAttribute('data-w',p[0]);c.appendChild(H('div','dcs',''));row.appendChild(c);return c});

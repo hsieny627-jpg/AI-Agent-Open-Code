@@ -78,7 +78,7 @@ ${R('_host_rt.js')}
 ${R('_cr_host.js')}
 /* 2026-10-30 第三十四次：〔🏠 總首頁〕〔老師看板〕只 在 密碼、設定、等人（大廳）、全班 錯題 分析 畫面 出現；出題、排行榜、頒獎、課堂複習 進行中 收起來 */
 (function(){var nv=document.getElementById('hnav'),ok={hpw:1,hset:1,hlob:1,hana:1},f=function(){var on=[].filter.call(document.querySelectorAll('body>.scr'),function(x){return !x.hidden}).map(function(x){return x.id});var h=!on.length||on.some(function(id){return !ok[id]});if(nv.hidden!==h)nv.hidden=h};new MutationObserver(f).observe(document.body,{subtree:true,attributes:true,attributeFilter:['hidden']});f()})();
-</script></body></html>`;
+</script><script>${require('../score/_dsp.js').js()}</script></body></html>`;
 /* ── 學生平板 ── 最上面 永遠 一行 大字：現在 要 做 什麼（#now）；沒有 任何 音效 */
 const stu = head('現場任務') + `<body class="stu">
 <script>window.SCLIVE=1;</script>
@@ -99,7 +99,7 @@ ${CL.home(0, '../', 'school')}
 ${RT}
 ${R('_mini.js')}
 ${R('_stu_rt.js')}
-</script></body></html>`;
+</script><script>${require('../score/_dsp.js').js()}</script></body></html>`;
 fs.writeFileSync(path.join(__dirname, 'host.html'), host);
 fs.writeFileSync(path.join(__dirname, 'index.html'), stu);
 if (!fs.existsSync(path.join(__dirname, 'fb.js'))) fs.writeFileSync(path.join(__dirname, 'fb.js'), "/* live/fb.js — ⚡ 現場任務的 Firebase Realtime Database 網址（老師照大字版 live/setup.html 做好，把網址交給 Claude 貼在兩個引號中間）\n * 空白 ＝ 現場任務關著。這裡只放網址，沒有密碼、沒有姓名。 */\nwindow.LIVE_DB = '';\n");

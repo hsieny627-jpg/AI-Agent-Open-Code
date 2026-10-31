@@ -27,6 +27,21 @@ h2 span{display:inline-flex;align-items:center;justify-content:center;width:1.5e
 .td2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 14px}.tdb{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;border-radius:20px;padding:12px 16px;min-height:84px;background:linear-gradient(135deg,#1E7A45,#0B4A28);border:3px solid #5DE89A}
 .tdb.st{background:linear-gradient(135deg,#7A5A06,#3A2A04);border-color:#FFD54A}.tdb .i{font-size:clamp(34px,5vh,46px)}.tdb b{display:block;font-size:clamp(22px,3vh,30px)}.tdb em{font-style:normal;font-size:clamp(17px,2.2vh,20px);color:#E0F5E8}
 @media (max-width:520px){.td2{grid-template-columns:1fr}}
+#go25{position:relative;display:flex;align-items:center;gap:14px;width:100%;max-width:1000px;margin:6px 0 10px;padding:14px 20px;min-height:96px;border-radius:24px;text-decoration:none;color:#2A1A00;
+ background:linear-gradient(135deg,#FFE58A,#FFC23A 55%,#F59E0B);border:4px solid #FFF3C4;box-shadow:0 0 0 0 #FFD54A88,0 10px 28px #0009;animation:g5glow 2.2s ease-in-out infinite;overflow:hidden}
+#go25::after{content:"";position:absolute;top:0;bottom:0;width:30%;left:-40%;background:linear-gradient(100deg,transparent,#FFFFFFAA,transparent);animation:g5sh 3.2s ease-in-out infinite}
+#go25 .g5i{font-size:clamp(40px,6vh,56px)}#go25 .g5x{display:flex;flex-direction:column;gap:4px;min-width:0}#go25 b{font-size:clamp(28px,4.2vh,40px)}#go25 em{font-style:normal;font-weight:700;font-size:clamp(20px,2.8vh,26px);color:#7A1F00}
+#go25 .g5go{margin-left:auto;font-size:clamp(34px,5vh,48px);color:#7A1F00}#go25 .g5f{font-size:clamp(34px,5vh,48px);animation:g5f 1s ease-in-out infinite}
+#go25:active{transform:scale(.98)}
+@keyframes g5glow{0%,100%{box-shadow:0 0 0 0 #FFD54A88,0 10px 28px #0009}50%{box-shadow:0 0 0 12px #FFD54A00,0 10px 28px #0009}}
+@keyframes g5sh{0%{left:-40%}60%,100%{left:120%}}@keyframes g5f{0%,100%{transform:translateX(0)}50%{transform:translateX(10px)}}
+#bo25{width:100%;max-width:1000px;margin:0 0 14px;padding:12px 14px;border-radius:20px;background:#1A1404;border:3px solid #FFD54A}
+#bo25 .b5t{font-size:clamp(20px,2.8vh,26px);font-weight:700;color:#FFE38A;text-align:center;margin-bottom:8px}
+#bo25 .b5r{display:grid;grid-template-columns:1fr 1fr;gap:10px}#bo25 .b5c{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px;border-radius:16px;background:#2A2208;border:2px solid #6B5410;font-size:clamp(19px,2.6vh,24px);color:#fff;text-align:center}
+#bo25 .b5a{border-color:#FFD54A;background:#3A2E06}#bo25 .b5k{font-size:clamp(34px,5vh,48px);font-weight:700;color:#FFD54A;line-height:1;animation:b5k 1.6s ease-in-out infinite}#bo25 .b5c em{font-style:normal;font-size:clamp(16px,2.2vh,20px);color:#FFE9A8}
+@keyframes b5k{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@media (max-width:520px){#bo25 .b5r{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){#go25,#go25::after,#go25 .g5f,#bo25 .b5k{animation:none}}
 #bar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;padding:10px;background:linear-gradient(180deg,transparent,#000 40%)}
 #bar a{background:#1E1E1E;border:1px solid #4A4A4A;color:#F2F2F2;border-radius:99px;text-decoration:none;font-size:16px;padding:11px 20px}
 </style></head><body>
@@ -96,7 +111,14 @@ h2 span{display:inline-flex;align-items:center;justify-content:center;width:1.5e
 .scpw .sckey.pwk.dg{grid-template-columns:repeat(6,clamp(64px,10vh,100px))}
 .scpw .pwrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
 .scpw .pwrem{display:flex;align-items:center;gap:10px;font-size:clamp(18px,2.8vh,26px);font-weight:700;color:#DDE6EE;background:#141A20;border:2px solid #3A4A58;border-radius:16px;padding:8px 14px;min-height:52px;cursor:pointer}
-.scpw .pwrem input{width:30px;height:30px}.scpw .pweye{min-height:52px;border-radius:16px;background:#141A20;border:2px solid #3A4A58;color:#fff;font:inherit;font-weight:700;font-size:clamp(18px,2.8vh,26px);padding:6px 14px;cursor:pointer}
+.scpw .pwrem input{width:30px;height:30px}
+.scvow{text-align:center}.scvow .vwi{font-size:clamp(46px,8vh,72px);margin:6px 0}
+.scvow .vwl{display:flex;align-items:center;justify-content:center;gap:14px;margin:10px auto;max-width:640px;padding:16px 18px;border-radius:20px;border:4px solid #FFD54A;background:#221B05;color:#FFE9A8;font-size:clamp(24px,3.6vh,34px);font-weight:700;cursor:pointer;animation:vwp 1.4s ease-in-out infinite}
+.scvow .vwl.on{border-color:#39D98A;background:#0C2A18;color:#CFF7DF;animation:none}.scvow .vwl input{width:44px;height:44px;flex:none;accent-color:#39D98A}
+.scvow .vwh{font-size:clamp(20px,2.8vh,26px);color:#DDE6EE;margin:8px 0}
+.scvow .vwb{min-height:72px;padding:6px 34px;border-radius:22px;border:4px solid #7BF0A8;background:linear-gradient(#36D27A,#1E9E55);color:#06210F;font:inherit;font-weight:700;font-size:clamp(26px,4vh,38px);cursor:pointer}
+.scvow .vwb:disabled{opacity:.35;filter:grayscale(1);cursor:default}
+@keyframes vwp{0%,100%{box-shadow:0 0 0 0 #FFD54A66}50%{box-shadow:0 0 0 10px #FFD54A00}}@media (prefers-reduced-motion:reduce){.scvow .vwl{animation:none}}.scpw .pweye{min-height:52px;border-radius:16px;background:#141A20;border:2px solid #3A4A58;color:#fff;font:inherit;font-weight:700;font-size:clamp(18px,2.8vh,26px);padding:6px 14px;cursor:pointer}
 /* ── 成績紀錄（2026-10-07 對話 C） ── */
 .sclog{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.3vh,14px);width:100%}
 .sclog h2{font-size:clamp(28px,5vh,50px)!important;margin:0}
@@ -1623,12 +1645,20 @@ function scPwKey(k){var P=SCPW;if(!P)return;if(P.mode==='?'||P.mode==='busy')ret
     if(P.mode==='set2'&&P.v!==P.first){P.v='';P.first='';P.mode='set';scShakePw();scPwPaint('❌ 兩次 不一樣，重新 設 一次');return}
     var set=P.mode==='set2',pv=P.v;P.mode='busy';scPwPaint();
     scFetch('',{a:'sp',id:P.id,p:pv,set:set?1:0},12000).then(function(j){if(SCPW!==P)return;
-      if(j&&j.ok&&j.tk){scPkSave(P.id,j.tk,$('#scRem')&&$('#scRem').checked);P.mode='done';scPwPaint(set?'🎉 密碼 設好 了！':'✅ 密碼 對了','ok');var d=P.done;setTimeout(function(){if(SCPW===P){SCPW=null;d()}},700);return}
+      if(j&&j.ok&&j.tk){scPkSave(P.id,j.tk,$('#scRem')&&$('#scRem').checked);P.mode='done';scPwPaint(set?'🎉 密碼 設好 了！':'✅ 密碼 對了','ok');var d=P.done;setTimeout(function(){if(SCPW===P){if(set){scPwVow(P,d);return}SCPW=null;d()}},700);return}
       if(j&&j.ok&&!j.tk){P.v='';P.mode=j.has?'in':'set';scPwPaint();return}
       P.v='';P.mode=set?'set':'in';scShakePw();
       scPwPaint(j&&j.err==='lock'?'🔒 打錯 太多 次，10 分鐘 後 再 試（或 請 老師 幫忙）':j&&j.err==='wrong'?'❌ 密碼 不對，再 試 一次<br><small>忘記 了 ➜ 請 老師 按〔🔑 清除 密碼〕，再 自己 重設</small>':'📶 連不上 網路，等一下 再 試')},
      function(){if(SCPW!==P)return;P.v='';P.mode=set?'set':'in';scPwPaint('📶 連不上 網路，等一下 再 試')});return}
   if(P.v.length>=8||k.length!==1)return;if(P.v.length<2&&!/[a-z]/.test(k))return;if(P.v.length>=2&&!/[0-9]/.test(k))return;P.v+=k;scPwPaint()}
+/* 2026-10-31 第三十五次 第 12 點：設好 密碼 以後 一定 勾「我為自己的密碼：記憶和負責。」才 進得去 */
+function scPwVow(P,d){var b=SCH.box();if(!b){SCPW=null;d();return}
+  b.innerHTML='<div class="sclog scpw scvow"><h2>🔑 密碼設好了！</h2><div class="vwi">🧠 ＋ 🤝</div>'+
+   '<label class="vwl" id="scVowL"><input type="checkbox" id="scVow"><span>我為自己的密碼：記憶和負責。</span></label>'+
+   '<div class="vwh" id="scVowH">👆 先勾上面的方框</div><button class="vwb" id="scVowB" disabled>✅ 進入在家複習</button></div>';
+  var c=$('#scVow'),k=$('#scVowB'),h=$('#scVowH');
+  c.onchange=function(){k.disabled=!c.checked;$('#scVowL').classList.toggle('on',c.checked);h.textContent=c.checked?'👍 謝謝你！按綠色按鈕進去':'👆 先勾上面的方框'};
+  k.onclick=function(){if(!c.checked)return;if(SCPW===P)SCPW=null;d()}}
 function scShakePw(){var b=$('#scPwC');if(!b)return;b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
 /* 「請問 這是您嗎？」按 ✅：這個 分頁 已經 打過 密碼、或 這台 平板 記住 了 ＝ 直接 過；不然 ＝ 打 密碼 */
 function scSure(fn){if(!SCID||scPk(SCID)||!SCH||!SCH.box){fn();return}scPwStep(SCID,function(){if(SCH.close)SCH.close();fn()})}
@@ -2085,6 +2115,15 @@ function scChampOpen(){var S=SCCH;if(!S||S.busy)return;S.busy=true;var bx=docume
    function(){S.busy=false;bx.classList.remove('shake');m.textContent='📶 沒有 網路，等一下 再 點 一次'})}
 setTimeout(function(){if(SCID)scChamp(0)},1600);
 
+;(function(){if(window.__NODSP||(navigator.webdriver&&!window.__DSPTEST))return;var R=new RegExp("([\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])[ \\u00a0]+(?=[\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])",'g'),SEL="#scov,#scbar,.scme,.scbanner,#scHomeBar";
+function skip(n){var e=n.parentElement;while(e){var t=e.tagName;if(t==='SCRIPT'||t==='STYLE'||t==='TEXTAREA'||t==='INPUT'||(e.classList&&e.classList.contains('keepsp')))return true;e=e.parentElement}return false}
+function inSel(n){if(!SEL)return true;var e=n.nodeType===1?n:n.parentElement;return !!(e&&e.closest&&e.closest(SEL))}
+function one(n){var v=n.nodeValue;if(!v||v.indexOf(' ')<0&&v.indexOf('\u00a0')<0)return;if(skip(n)||!inSel(n))return;var u=v.replace(R,'$1');if(u!==v)n.nodeValue=u}
+function walk(r){if(!r)return;if(r.nodeType===3){one(r);return}if(r.nodeType!==1)return;var w=document.createTreeWalker(r,4),n;while((n=w.nextNode()))one(n)}
+function go(){walk(document.body);try{new MutationObserver(function(L){L.forEach(function(m){if(m.type==='characterData')one(m.target);else [].forEach.call(m.addedNodes,walk)})}).observe(document.body,{childList:true,subtree:true,characterData:true})}catch(x){}}
+if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
+})();
+
 SCHOMEP=true;
 function hOv(){var o=document.getElementById('scov');if(!o){o=document.createElement('div');o.id='scov';o.innerHTML='<div id="scovb"></div>';document.body.appendChild(o)}return o}
 SCH={on:function(){return hOv().classList.contains('on')},open:function(){hOv().classList.add('on')},close:function(){hOv().classList.remove('on')},box:function(){return document.getElementById('scovb')},
@@ -2092,6 +2131,10 @@ SCH={on:function(){return hOv().classList.contains('on')},open:function(){hOv().
 </script>
 
 <h1>🏠 三年級複習</h1>
+<!-- 2026-10-31 第三十五次 第 9 點：最上面 一顆 大按鈕〔🏠 25題闖關〕＋請優先完成＋11/1 23:59 以前 加倍（過了 自己 收起來，按鈕 留著）-->
+<a id="go25" href="../g3mid/home.html"><span class="g5f">👉</span><span class="g5i">🏠</span><span class="g5x"><b>三年級　25題闖關</b><em>請優先完成這一個任務！</em></span><span class="g5go">▶</span></a>
+<div id="bo25"><div class="b5t">⏰ 11月1日（星期日）晚上11:59以前</div><div class="b5r"><div class="b5c b5a"><span class="b5k">✖2</span><span>🏠 25題闖關</span><em>🪙金幣　⭐經驗值　兩倍</em></div><div class="b5c"><span class="b5k">✖1.5</span><span>🎮 其他主題和遊戲</span><em>🪙金幣　⭐經驗值　1.5倍</em></div></div></div>
+<script>(function(){if(Date.now()>=Date.parse('2026-11-01T23:59:59+08:00')){var b=document.getElementById('bo25');if(b)b.hidden=true}})()</script>
 <!-- 2026-10-27 第三十次 2-(1)：老師「暫時下架」➜ TODAY_ON ＝ false（要放回來改成 true）-->
 <!-- 2026-10-26 第二十七次 第 2 點（老師 選 C30 第 2 題 1、2）：📅 今日任務（每天 5 題）、📈 我的 進步（⭐ 星星）：score/_today_build.js -->
 
@@ -2108,4 +2151,12 @@ SCH={on:function(){return hOv().classList.contains('on')},open:function(){hOv().
 <section><h2><span>4</span>📚 補充</h2><div class="g">
 <a class="b" data-lk="g3rv_mo-numbers-parts" href="numbers-parts.html"><span class="i">🔢</span><span class="x"><b>數字：單字結構</b></span></a><a class="b" data-lk="g3rv_mo-numbers-why" href="numbers-why.html"><span class="i">🔢</span><span class="x"><b>數字：單字故事</b></span></a><a class="b" data-lk="g3rv_mo-sight-parts" href="sight-parts.html"><span class="i">👀</span><span class="x"><b>Sight Words：單字結構</b></span></a><a class="b" data-lk="g3rv_mo-sight-why" href="sight-why.html"><span class="i">👀</span><span class="x"><b>Sight Words：單字故事</b></span></a>
 </div></section>
+<script>(function(){if(window.__NODSP||(navigator.webdriver&&!window.__DSPTEST))return;var R=new RegExp("([\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])[ \\u00a0]+(?=[\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])",'g'),SEL="";
+function skip(n){var e=n.parentElement;while(e){var t=e.tagName;if(t==='SCRIPT'||t==='STYLE'||t==='TEXTAREA'||t==='INPUT'||(e.classList&&e.classList.contains('keepsp')))return true;e=e.parentElement}return false}
+function inSel(n){if(!SEL)return true;var e=n.nodeType===1?n:n.parentElement;return !!(e&&e.closest&&e.closest(SEL))}
+function one(n){var v=n.nodeValue;if(!v||v.indexOf(' ')<0&&v.indexOf('\u00a0')<0)return;if(skip(n)||!inSel(n))return;var u=v.replace(R,'$1');if(u!==v)n.nodeValue=u}
+function walk(r){if(!r)return;if(r.nodeType===3){one(r);return}if(r.nodeType!==1)return;var w=document.createTreeWalker(r,4),n;while((n=w.nextNode()))one(n)}
+function go(){walk(document.body);try{new MutationObserver(function(L){L.forEach(function(m){if(m.type==='characterData')one(m.target);else [].forEach.call(m.addedNodes,walk)})}).observe(document.body,{childList:true,subtree:true,characterData:true})}catch(x){}}
+if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
+})();</script>
 </body></html>

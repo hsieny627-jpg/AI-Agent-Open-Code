@@ -41,7 +41,12 @@ function server() { const e = [], G = seed();
     B.post({ a: 'boost', pw: PW, b: { m: 'set', k: 2, x: 2, from: NOW - 36e5, to: NOW + 36e5, cls: ['305'], cats: [] } });
     const vc = B.get({ a: 'rpg', id: '30406' }); if (vc.v.coins !== va.v.coins || vc.bo) e.push('加倍 只 勾 305 班，304 班 也 加倍 了：' + vc.v.coins + ' vs ' + va.v.coins);
     B.post({ a: 'boost', pw: PW, b: { m: 'off' } }); const vd = B.get({ a: 'rpg', id: '30406' }); if (vd.v.coins !== va.v.coins) e.push('加倍 全關 以後 金幣 不對');
-    n += 4; }
+    /* 2026-10-31 第三十五次 第 9 點：🏠 25 題 闖關 自己 的 倍數 h */
+    { const H = SC.bstClean({ m: 'all', k: 1.5, x: 1.5, h: 2, from: NOW - 1e3, to: NOW + 1e6 }), H2 = SC.bstClean({ m: 'set', k: 1.5, x: 1.5, h: 2, from: NOW - 1e3, to: NOW + 1e6, cls: ['304'], cats: ['game'] });
+      if (SC.bstAt('304', NOW, 'g3gm_g3m-h25', H)[0] !== 2 || SC.bstAt('402', NOW, 'g4gm_mt-h25', H)[1] !== 2) e.push('25 題 闖關 沒有 ✖2');
+      if (SC.bstAt('304', NOW, 'g3gm_g3m-x25', H)[0] !== 1.5) e.push('其他 不是 ✖1.5');
+      if (SC.bstAt('304', NOW, 'g3gm_g3m-h25', H2)[0] !== 2 || SC.bstAt('305', NOW, 'g3gm_g3m-h25', H2)[0] !== 1) e.push('只 勾 304：25 題 闖關 倍數 不對'); }
+    n += 7; }
   n += 4; out('伺服器 全班獎勵', e); return G; }
 let HTTP = '';
 function serve() { return new Promise(ok => { const T = { '.html': 'text/html', '.js': 'text/javascript', '.woff2': 'font/woff2', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.css': 'text/css', '.svg': 'image/svg+xml' };

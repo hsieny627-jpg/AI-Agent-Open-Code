@@ -344,7 +344,12 @@ function lesS(en) { var v = DCV(en); addS(en, v); return { en: en, v: v, t: lesT
 var EQ_WHAT = { eq: { tag: '✂️ 縮寫', a: { t: [['What', '什麼', '❓'], ['is', '是', '＝', 0], ['______?', '', '']], say: 'What is' }, b: { t: [['What', '什麼', '❓'], ['’s', '是', '＝'], ['______?', '', '']], say: 'What’s' }, z: 'What is ＝ What’s（i 不見了，換成 ’）' } };
 var EQ_IAM = { eq: { tag: '✂️ 縮寫', a: { t: [['I', '我', '🙋'], ['am', '是', '＝', 0], ['______.', '', '']], say: 'I am' }, b: { t: [['I', '我', '🙋'], ['’m', '是', '＝'], ['______.', '', '']], say: 'I’m' }, z: 'I am ＝ I’m（a 不見了，換成 ’）' } };
 var EQ_TEN = { eq: { tag: '✂️ 可以 省略', a: { t: [['I', '我', '🙋'], ['’m', '是', '＝'], ['ten', '十', '🔟'], ['years old.', '歲', '🎂']], say: "I'm ten years old." }, b: { t: [['I', '我', '🙋'], ['’m', '是', '＝'], ['ten.', '十', '🔟']], say: "I'm ten." }, om: [3], z: '我 十 歲。（years old 可以 省略）' } };
-function lesU1(L) { return [L[0], EQ_WHAT, L[1], L[2], EQ_IAM, L[3]]; }
+/* 2026-10-31 第三十五次 第 2 點（老師：只有 What is ______? ＝ What’s ______? 太 抽象，低成就 學生 看不懂）➜ 每一個 縮寫 後面 接 一個「💬 生活例句」：
+   真的 會 說 的 整句（上 完整、下 縮寫）＋每個 字 正下方 中文＋整句 中文。人名 不用 考卷 的（BAN）；語音 ＝ g3mid/_audio.js 做（addS）*/
+function exEq3(full, short, a, b, z) { addS(full, ''); addS(short, ''); return { eq: { tag: '💬 生活例句', a: { t: a, say: full }, b: { t: b, say: short }, z: z } }; }
+var EX_WHAT = exEq3('What is your name?', "What's your name?", [['What', '什麼', '❓'], ['is', '是', '＝', 0], ['your', '你的', '👉'], ['name?', '名字', '🏷️']], [['What', '什麼', '❓'], ['’s', '是', '＝'], ['your', '你的', '👉'], ['name?', '名字', '🏷️']], '你叫什麼名字？');
+var EX_IAM = exEq3('I am Amy.', "I'm Amy.", [['I', '我', '🙋'], ['am', '是', '＝', 0], ['Amy.', 'Amy', '👧']], [['I', '我', '🙋'], ['’m', '是', '＝'], ['Amy.', 'Amy', '👧']], '我是 Amy。');
+function lesU1(L) { return [L[0], EQ_WHAT, EX_WHAT, L[1], L[2], EQ_IAM, EX_IAM, L[3]]; }
 function lesU2(L) { return [L[0], L[1], EQ_TEN, L[2], L[3]]; }
 var LES = {
   A: { 1: { key: 'g3A1', title: 'Unit 1 解碼 秘笈', sub: 'What’s your name?　問 名字', s: lesU1(["What's your name?", 'My name is Bill.', "I'm Sally.", "Hi, I'm Mark."].map(lesS)) },

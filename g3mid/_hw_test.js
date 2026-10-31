@@ -23,7 +23,15 @@ console.log('改作業：寫對的 ' + (n - bad) + '／' + n + ' 判對（' + (1
 let n4 = 0, bad4 = 0; const f4 = [];
 for (const ch of letters) HW.T[ch].forEach((v, vi) => {
   for (let k = 0; k < 6; k++) { n4++; const sx = .8 + rnd() * .6, dx = rnd() * 2, j = v.map(s => s.map(([x, y]) => [x * sx + dx + (rnd() - .5) * .05, y + (rnd() - .5) * .1])); if (!HW.lines(j, ch).ok) { bad4++; f4.push(ch + vi + ' 對的 不過：' + HW.lines(j, ch).words); } }
-  for (const f of [s => s.map(([x, y]) => [x, y - .25]), s => s.map(([x, y]) => [x, y + .25]), s => s.map(([x, y]) => [x, 1.5 + (y - 1.5) * .7])]) { n4++; if (HW.lines(v.map(f), ch).ok) { bad4++; f4.push(ch + vi + ' 浮起來／沉下去／壓扁 還 過'); } } });
+  for (const f of [s => s.map(([x, y]) => [x, y - .6]), s => s.map(([x, y]) => [x, y + .6]), s => s.map(([x, y]) => [x, 1.5 + (y - 1.5) * .3])])   /* 2026-10-31 第三十五次 第 4 點：放寬 以後 ＝ 0.6 格、壓扁 3 成 才 一定 錯 */ { n4++; if (HW.lines(v.map(f), ch).ok) { bad4++; f4.push(ch + vi + ' 浮起來／沉下去／壓扁 還 過'); } } });
+/* 2026-10-31 第三十五次 第 4 點：像 真的 小朋友 用 手指 寫（整個 偏 上下 0.2 格、大一點 小一點 2 成、抖 0.25 格）➜ 至少 9 成 要 判 對（線 和 形狀 都 過）*/
+let n5 = 0, ok5 = 0; const f5 = {};
+for (const ch of letters) HW.T[ch].forEach(v => { for (let k = 0; k < 8; k++) { n5++; const dy = (rnd() - .5) * .4, sy = .85 + rnd() * .3, sx = .8 + rnd() * .5, dx = rnd() * 2, cy = (HW.body(v).t + HW.body(v).b) / 2;
+  const j = v.map(s => s.map(([x, y]) => [x * sx + dx + (rnd() - .5) * .12, cy + (y - cy) * sy + dy + (rnd() - .5) * .12]));
+  const a = HW.judge(j, ch), b = HW.judge(j, ch, 1), l = HW.lines(j, ch), P = ch === ch.toUpperCase() ? ch.toLowerCase() : ch.toUpperCase();
+  if ((a.ok || (b.ok && l.ok && a.got !== P)) && l.ok) ok5++; else f5[ch] = (f5[ch] || 0) + 1; } });
+console.log('像 真的 手指 寫：' + ok5 + '／' + n5 + ' 判對（' + (100 * ok5 / n5).toFixed(1) + '%）' + (Object.keys(f5).length ? '　錯 最多：' + Object.entries(f5).sort((a, b) => b[1] - a[1]).slice(0, 8).map(x => x.join('×')).join(' ') : ''));
+if (ok5 / n5 < .9) bad4++;
 if (f4.length) console.log('✗ 頂天立地：' + f4.slice(0, 20).join('｜'));
 console.log('頂天立地：' + (n4 - bad4) + '／' + n4 + ' 判對');
 process.exit(bad4 || bad / n > .03 || bad2 / n2 > .03 || bad3 / n3 > .01 ? 1 : 0);

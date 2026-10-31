@@ -30,6 +30,7 @@ const SITES = [{ d: 'g3-review', src: 'G3 - L1 + L2', games: 'g3,g5,g9,g2,g4,g1,
     if (r.small) e.push(r.small + ' 個按鈕的字小於 16px');
     r.links.forEach(h => { if (/^https?:/.test(h)) return; const q = path.resolve(path.dirname(f), decodeURIComponent(h.split('#')[0])); if (!fs.existsSync(q)) e.push('連不到 ' + h);
       /* 2026-10-07 使用者第 12 點：在家複習的網站獨立，不可以連到老師教學用的頁面 */
+      if (/^\.\.\/(g3mid|midterm)\/home\.html$/.test(h)) { if (h !== '../' + (S.d === 'g3-review' ? 'g3mid' : 'midterm') + '/home.html') e.push('25題闖關 連到 別的 年級'); return; }   /* 2026-10-31 第三十五次 第 9 點：老師 指定 的 學生 頁 */
       if (path.dirname(q) !== path.join(ROOT, S.d) && path.dirname(q) !== path.join(ROOT, S.d, 'r1')) e.push('連到複習網站外面：' + h); });
     n += 5 + r.links.length;
     /* 🏰 守城、🎣 釣魚 是 遊戲，另外 量（fun/_verify.js，第二十九次）。補充（複製進來的單字結構、單字故事）：沒有 JS 錯誤、字體和語音檔載得到、🏠 回複習首頁、老師網站的按鈕藏起來 */

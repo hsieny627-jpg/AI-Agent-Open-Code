@@ -469,7 +469,7 @@ async function teacher(br, vp) {
     if (!/班級排行榜/.test(cb.tab) || cb.aw !== cb.nd || cb.aw < 2 || !cb.go || cb.first !== 'cerb') e.push('班級排行榜最上面沒有頒獎典禮 3 個獎＋〔🏆 開始頒獎典禮〕：' + JSON.stringify(cb));
     if (cb.go) { await p.click('#cerGo'); await p.waitForTimeout(300);
       /* 2026-10-17 C6 第三題：10 種風格每一種都演完量一次（第 1 名的台子明顯最高、字不壓到台子、不超出畫面） */
-      const pk = await p.evaluate(() => { localStorage.removeItem('cer_st'); const a = []; for (let i = 0; i < 10; i++) a.push(CERX.pick()); return a; });
+      const pk = await p.evaluate(() => { localStorage.removeItem('clsx_st'); const a = []; for (let i = 0; i < 10; i++) a.push(CLSX.pick()); return a; });   /* 2026-10-31 第三十五次 第 8-(1) 點：新 引擎 CLSX */
       if (new Set(pk).size !== 10) e.push('頒獎典禮 10 種風格沒有輪流：' + pk.join(','));
       let ce;
       for (let k = 0; k < 10; k++) {
@@ -481,8 +481,9 @@ async function teacher(br, vp) {
           const ov = [].filter.call(st.querySelectorAll('.ribbon,.sub,.cls,.say,.cp:not(.nop) .ct,.cp:not(.nop) .cb'), x => { const r = x.getBoundingClientRect(); return r.left < SR.left - 1 || r.right > SR.right + 1 || r.bottom > SR.bottom + 1 || r.top < SR.top - 1; }).map(x => x.className).join(',');
           const H = r => { const b = q('.cp.p' + r + ' .cb'); return b ? b.getBoundingClientRect().height : 0; };
           const ra = q('.say').getBoundingClientRect(), tops = [].map.call(st.querySelectorAll('.cp:not(.nop) .ct'), x => x.getBoundingClientRect().top);
-          return { nm: CERX.ST[CER.st].nm, rb: q('.ribbon').textContent, cl: q('.cls').textContent, pod: st.querySelectorAll('.cp:not(.nop)').length, o, sm, ov, h: [H(1), H(2), H(3)].map(Math.round),
+          return { nm: CLSX.TH[CER.st].nm, mus: CLSX.MUS[CER.st].nm, won: st.classList.contains('lxwon'), rest: st.querySelectorAll('.lxr').length, fx: !!st.querySelector('canvas.lxfx'), rb: q('.ribbon').textContent, cl: q('.cls').textContent, pod: st.querySelectorAll('.cp:not(.nop)').length, o, sm, ov, h: [H(1), H(2), H(3)].map(Math.round),
             hit: ra.bottom > Math.min.apply(null, tops) + 2, pg: document.getElementById('cpg').textContent }; });
+        if (!ce.won || !ce.fx || !ce.mus) e.push('頒獎典禮 ' + ce.nm + ' 第 1 名 沒有 揭曉（白光、煙火）／沒有 配樂 名字：' + JSON.stringify([ce.won, ce.fx, ce.mus]));
         if (!/最認真練習|成績最優|進步最多/.test(ce.rb) || !/班/.test(ce.cl) || ce.pod < 1 || ce.o.length) e.push('頒獎典禮 ' + ce.nm + ' 沒有演出來：' + JSON.stringify(ce));
         if (ce.sm || ce.ov || ce.hit) e.push('頒獎典禮 ' + ce.nm + ' 字太小 ' + ce.sm + '、超出畫面 ' + ce.ov + '、一句話壓到班級名字 ' + ce.hit);
         if (ce.h[1] && ce.h[0] < ce.h[1] * 1.8 || ce.h[2] && ce.h[0] < ce.h[2] * 3) e.push('頒獎典禮 ' + ce.nm + ' 第 1 名的台子不夠高：' + ce.h.join('／'));
