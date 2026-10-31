@@ -91,7 +91,7 @@ RW = {
  ('G4B', 36): ("___ up. Stop, please.", "Time's", ["Times", "Time", "Turn"]),
  ('G4B', 37): ("Show me your ___.", "homework", ["home work", "homeworks", "homwork"]),
  ('G4B', 38): ("Let us go. = ?", "Let's go.", ["Lets' go.", "Let go.", "Let's us go."]),
- ('G4B', 39): ("___ up! We're late.", "Hurry", ["Hurri", "Harry", "Happy"]),
+ ('G4B', 39): ("___ up! We're late.", "Hurry", ["Hurri", "Hurrey", "Happy"]),   # 第三十七次：Harry 是 考卷 人名 ➜ 換
  ('G4B', 40): ("___ run. = Do not run.", "Don't", ["Do", "Doesn't", "Let's"]),
  ('G4B', 41): ("Don't ___. Be quiet, please.", "talk", ["tall", "run", "take"]),
  ('G4B', 42): ("Turn on ⇄ Turn ___", "off", ["of", "in", "up"]),
@@ -104,3 +104,10 @@ RW = {
 }
 RW[('G3B', 43)] = ("Please line ___.", "up", ["down", "in", "on"])
 # G3B 43 改了 以後 跟 G3B 49「Line up, ___.」考 不一樣 的 字（up／please）➜ 不 重複
+
+# ══ 2026-10-31 第三十七次 第 7 點（老師：「f ➜ ? fox vest ox six」一眼 就 選得 對、鑑別度 0）══
+# 原因：題目 已經 寫出 字母、錯 的 選項 都 不是 那個 字母 開頭 ➜ 看 字形 對 一下 就 對，測不到「聽到／看到 東西 ➜ 第一個 字母」。
+# 改成：圖（emoji 是 文字，不是 圖片 檔）＋ 缺 第一個 字母 ＋ 4 個 **容易 搞混 的 字母**（f／v、b／d／p／q、m／n、r／l、w／v、j／g、s／z／c、k／c）；
+#   錯 的 字母 拼 出來 常常 是 另一個 真的 字（🦊 _ox ＋ b ＝ box、👃 _ose ＋ h ＝ hose、🐷 _ig ＋ b ＝ big）＝ 沒 看 圖、沒 學會 就 會 選錯。
+#   G4B 22「…She's a ___.」題目 裡 就 有 答案 ➜ 改 考 a／an（She's ___ nurse.）
+RW.update({('G3A', 0): ('🦊 _ox', 'f', ['v', 'b', 'p']), ('G3A', 1): ('🦺 _est', 'v', ['f', 'w', 'b']), ('G3A', 2): ('👸 _ueen', 'q', ['g', 'p', 'd']), ('G3A', 3): ('👃 _ose', 'n', ['m', 'h', 'r']), ('G3A', 4): ('🪀 _o-yo', 'y', ['j', 'g', 'u']), ('G3A', 7): ('🐶 _og', 'd', ['b', 'p', 'g']), ('G3A', 8): ('🐱 _at', 'c', ['k', 's', 'h']), ('G3A', 12): ('🐂 _x', 'o', ['a', 'e', 'u']), ('G3B', 0): ('🦓 _ebra', 'z', ['s', 'c', 'j']), ('G3B', 1): ('🪟 _indow', 'w', ['v', 'u', 'y']), ('G3B', 2): ('✈️ _et', 'j', ['g', 'y', 'z']), ('G3B', 3): ('🐰 _abbit', 'r', ['l', 'w', 'h']), ('G3B', 4): ('🐜 _nt', 'a', ['e', 'u', 'o']), ('G3B', 7): ('🐷 _ig', 'p', ['b', 'd', 'q']), ('G3B', 8): ('🖐️ _ive', 'f', ['v', 'h', 'l']), ('G4A', 45): ('📌 _in', 'p', ['b', 't', 'd']), ('G4A', 46): ('🔟 _en', 't', ['d', 'p', 'b']), ('G4A', 47): ('👨 _ad', 'd', ['b', 'p', 't']), ('G4A', 48): ('🦇 _at', 'b', ['p', 'd', 't']), ('G4A', 49): ('⛺ _ent', 't', ['d', 'p', 'b']), ('G4B', 22): ("She's ___ nurse.", 'a', ['an', 'is', 'are']), ('G4B', 45): ('🐷 _ig', 'p', ['b', 'd', 'q']), ('G4B', 46): ('🖊️ _en', 'p', ['b', 't', 'd']), ('G4B', 47): ('🍩 _onut', 'd', ['b', 'p', 't']), ('G4B', 48): ('🍲 _ot', 'p', ['b', 't', 'd']), ('G4B', 49): ('🐶 _og', 'd', ['b', 'p', 't'])})

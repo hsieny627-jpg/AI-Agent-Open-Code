@@ -97,6 +97,19 @@ exports.CSS = `
 #dcl .dtok{font-size:clamp(34px,6vh,60px);color:#7BF0A8;animation:dtok .5s both}@keyframes dtok{0%{transform:scale(.4);opacity:0}100%{transform:none;opacity:1}}
 #dcl .dtz{font-size:clamp(28px,4.4vh,44px);color:#BFFFD0;margin-top:clamp(8px,2vh,20px);min-height:1.3em}
 @media (prefers-reduced-motion:reduce){#dcl .dri,#dcl .dctl.fly,#dcl .dthand{transition:none}}
+/* 2026-10-31 第三十七次 第 12-(1) 點：⚡ 解碼 積分（正確＋平均 每一格 幾秒；連對 3 題 ✖2）*/
+.dcbox{position:relative}
+.dcpt{position:absolute;left:50%;top:38%;z-index:20;transform:translate(-50%,-50%);min-width:min(92vw,620px);padding:14px 22px;border-radius:24px;background:radial-gradient(ellipse at 50% 0,#3A2E06,#120C02 85%);border:4px solid #FFD54A;box-shadow:0 0 0 4px rgba(255,213,74,.25),0 14px 40px #000c;text-align:center;pointer-events:none;animation:dcptIn .45s cubic-bezier(.2,1.5,.4,1) both,dcptOut .4s 2.3s ease-in forwards}
+.dcpt .p1{font-size:clamp(22px,3vh,30px);color:#FFE9A8;font-weight:700}
+.dcpt .p2{font-size:clamp(56px,10vh,104px);font-weight:900;color:#FFD54A;line-height:1.05;text-shadow:0 0 18px rgba(255,213,74,.7)}
+.dcpt .p3{font-size:clamp(20px,2.8vh,28px);color:#fff;font-weight:700}
+.dcpt .bar{height:16px;border-radius:99px;background:#2A2208;margin:8px auto 4px;max-width:420px;overflow:hidden}.dcpt .bar i{display:block;height:100%;background:linear-gradient(90deg,#FF8A3D,#FFD54A,#7BF0A8);animation:dcptBar .7s .15s ease-out both}
+.dcpt.x2{border-color:#FF6B3D;background:radial-gradient(ellipse at 50% 0,#4A1A06,#160602 85%)}.dcpt.x2 .p2{color:#FFB347}
+.dcpt .cb{display:inline-block;margin-top:4px;padding:2px 14px;border-radius:99px;background:#FF5A2A;color:#fff;font-size:clamp(24px,3.4vh,34px);font-weight:900;animation:dcptCb .6s .35s ease-out both}
+@keyframes dcptIn{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@keyframes dcptOut{to{transform:translate(-50%,-90%) scale(.8);opacity:0}}
+@keyframes dcptBar{from{width:0}}@keyframes dcptCb{0%{transform:scale(0) rotate(-10deg)}70%{transform:scale(1.3)}100%{transform:none}}
+@media (prefers-reduced-motion:reduce){.dcpt,.dcpt .bar i,.dcpt .cb{animation:none}}
 `;
 exports.JS = `
 /* ══ 🔓 句子 解碼 任務（g3mid/_decode.js）══ */
@@ -130,7 +143,13 @@ DEC.rid=0;
 function decClose(){DEC.lid++;decStop();decPause(false);var o=document.getElementById('dcl');if(o){o.classList.remove('on');o.innerHTML=''}}   /* 回 大廳、老師 結束 ＝ 動畫 收起來 */
 function decStop(){DEC.rid++;if(DEC.au){try{DEC.au.onended=null;DEC.au.pause()}catch(e){}DEC.au=null}}
 /* 一題：q ＝ {en, t:[[英文, 中文]…], x:[錯 方塊…], z 整句 中文, v 聲音} */
-function decRender(q,st0){var A=DEC.A,st=H('div','dcbox');st0.appendChild(st);var row=H('div','dcw'),tray=H('div','dct'),zh=H('div','dcz',esc(q.z)),sel=null,selS=null;
+/* ⚡ 解碼 積分（第三十七次 第 12-(1) 點）：只 有 全部 放對 才 有；✅ 100 ＋ ⚡ 速度 0～900（平均 每一格 1.2 秒 以內 ＝ 900、6 秒 以上 ＝ 0，中間 照 比例）；
+   連續 全對 3 題 以上 ＝ 這一題 ✖2。只是 遊戲 裡 的 積分（讓 學生 有感），**老師看板 的 100 分 照舊 只 看 對 幾 個**（公平，第 9 點） */
+var DECPT={S:1.2,E:6,B:100,V:900,N:3};
+function decPts(avg,cb){var sp=Math.max(0,Math.min(1,(DECPT.E-avg)/(DECPT.E-DECPT.S))),v=Math.round(DECPT.V*sp/10)*10,b=DECPT.B+v;return {sp:sp,v:v,b:b,x:cb>=DECPT.N?2:1,p:b*(cb>=DECPT.N?2:1)}}
+function decScR(){var r=window.R;if(DEC.rr!==r){DEC.rr=r;DEC.sc=0;DEC.cb=0}}
+function decPop(st,o,avg,cb){var e=H('div','dcpt'+(o.x>1?' x2':''),'<div class="p1">✅ 全部 放對！⚡ 平均 每一格 '+avg.toFixed(1)+' 秒</div><div class="bar"><i style="width:'+Math.max(4,Math.round(o.sp*100))+'%"></i></div><div class="p2">＋'+o.p+'</div><div class="p3">✅ '+DECPT.B+' ＋ ⚡ 速度 '+o.v+(o.x>1?'　🔥 連對 '+cb+' 題 ✖2':'')+'</div>'+(o.x>1?'<div class="cb">🔥 ✖2</div>':cb===DECPT.N-1?'<div class="p3">🔥 再 全對 1 題 ＝ ✖2！</div>':'')+'<div class="p3">🔓 解碼 積分 '+DEC.sc+'</div>');st.appendChild(e);setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e)},2800)}
+function decRender(q,st0){var A=DEC.A,st=H('div','dcbox');decScR();var t0=Date.now();st0.appendChild(st);var row=H('div','dcw'),tray=H('div','dct'),zh=H('div','dcz',esc(q.z)),sel=null,selS=null;
   var cells=q.t.map(function(p,i){var c=H('div','dcc'+(/^['\u2019]/.test(p[0])?' ct':'')+(q.t[i+1]&&/^['\u2019]/.test(q.t[i+1][0])?' pre':''),'<div class="dce">'+decEN(p[0])+'</div>');c.setAttribute('data-w',p[0]);var s=H('div','dcs','');s.setAttribute('data-i',i);c.appendChild(s);row.appendChild(c);
    slotDrag(s);
    s.addEventListener('click',function(){if(s._nc){s._nc=0;return}if(A.busy()||DEC.lock)return;if(s._t){back(s);return}if(sel){put(sel,s);return}row.querySelectorAll('.dcs.sel').forEach(function(x){x.classList.remove('sel')});selS=s;s.classList.add('sel')});return c});
@@ -161,8 +180,9 @@ function decRender(q,st0){var A=DEC.A,st=H('div','dcbox');st0.appendChild(st);va
  function back(s){if(!s._t)return;s._t.classList.remove('used');s._t=null;s.textContent='';s.classList.remove('fill')}
  function check(){if(A.busy()||DEC.lock)return;var ss=[].slice.call(row.querySelectorAll('.dcs')),got=ss.map(function(s){return s._t?s._t._z:''}),okN=0;
   ss.forEach(function(s,i){var y=got[i]===q.t[i][1];if(y)okN++;s.classList.add(y?'ok':'no')});DEC.lock=true;A.pause();
-  if(okN===ss.length){var cs=[].slice.call(row.querySelectorAll('.dcc'));zh.classList.add('on');decRead(q.en,q.v||'',cs,function(){DEC.lock=false;A.ok(row)});return}
-  setTimeout(function(){DEC.lock=false;A.bad(got,okN/ss.length)},900)}
+  if(okN===ss.length){var cs=[].slice.call(row.querySelectorAll('.dcc'));zh.classList.add('on');
+    if(!st0.closest||!st0.closest('#dcl')){decScR();DEC.cb++;var avg=(Date.now()-t0)/1000/ss.length,po=decPts(avg,DEC.cb);DEC.sc+=po.p;DEC.last=po;decPop(st,po,avg,DEC.cb)}   /* 教學（#dcl）不 算 */decRead(q.en,q.v||'',cs,function(){DEC.lock=false;A.ok(row)});return}
+  decScR();DEC.cb=0;setTimeout(function(){DEC.lock=false;A.bad(got,okN/ss.length)},900)}
  DEC.lock=false;decFit(st)}
 function decTW(st,tray){st.style.removeProperty('--tw');var m=0;[].forEach.call(tray.children,function(b){m=Math.max(m,b.scrollWidth)});if(m)st.style.setProperty('--tw',Math.ceil(m+8)+'px')}
 /* 畫面 放不下（四年級 句子 長、方塊 多）＝ 一級 一級 縮小，不用 捲動 */

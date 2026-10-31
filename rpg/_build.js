@@ -552,18 +552,21 @@ function itemHTML(id){var k=kOf(id),s=star(id),o=own(id),eq=isEq(id),fr=!o&&free
   if(k==='s'&&eq)tag='<div class="pr eq">✅ 裝備中<br><small>再點 ＝ 拿下來</small></div>';else if(k==='s'&&o)tag='<div class="pr ok">👆 點一下 裝備</div>';
   /* 🏷 限量（全部學生一共 5 個，剩幾個 ＝ 伺服器數的）、⏳ 限時（10 月 31 號 下架）（2026-10-20 第十四次） */
   var lt='',lc='';if(CAT.LIM[id]){var left=STOCK[id];lc=' lmt';if(!o&&left===0){lt='<span class="lim out">已 換完</span>';tag='';poor=true}else lt='<span class="lim">🏷 限量 5 個．剩 '+(left==null?'?':left)+' 個</span>'}
-  if(CAT.END[id]){lc=' tmt';if(!o&&nowS()>=CAT.END[id]){lt='<span class="lim out">已 下架</span>';tag='';poor=true}else lt='<span class="lim tm">⏳ 10 月 31 號 下架</span>'}
+  /* 2026-10-31 第三十七次 第 2 點：說到做到 ➜ 時間 到（伺服器 時間）沒 買 的 人 ＝ 完全 看不到（商城 每一區 都 拿掉）；買過 的 照舊 可以 用 */
+  if(CAT.END[id]){lc=' tmt';if(!o&&nowS()>=CAT.END[id])return '';lt='<span class="lim tm">⏳ '+endTxt(CAT.END[id])+' 下架</span>'}
   /* ⚔ 這一階 才 買得到 的 專屬寶物（2026-10-21 第十六次 第 5 點） */
   if(CAT.TX[id]){lc+=' txm';var tq=CAT.TX[id],th=typeof RPFX!=='undefined'?RPFX.tb(tq)+' '+RPFX.TN[tq]:'★'+tq;lt='<span class="lim tm">'+th+' 專屬</span>'+lt;if(!o&&tierMax()<tq){tag='<div class="pr lock">🔒 要 '+(typeof RPFX!=='undefined'?RPFX.TN[tq]:'')+'</div>';poor=true}}
   if(k==='w'&&typeof RPFX!=='undefined'){var wi=RPFX.wInfo(id);lt='<span class="wel">'+RPFX.EL[wi.e].nm+'．'+{slash:'連斬',beam:'光砲',arrow:'箭雨',smash:'重擊',orb:'法球',nova:'爆發',claw:'利爪',pierce:'突刺'}[wi.f]+'</span>'+lt}
   if(k==='t'){var t=tre(id);return '<button class="it'+(eq?' eqd':'')+'" data-id="'+id+'"><img src="'+treImg(id)+'" alt="'+t[1]+'"><div class="trn">'+t[1].split(' ').slice(1).join(' ')+'</div>'+tag+'</button>'}
   return '<button class="it'+(eq?' eqd':'')+(lk||poor?' dim':'')+lc+'" data-id="'+id+'" style="--rc:'+RC[s]+'"><img loading="lazy" src="'+img(id)+'" alt="'+id+'"><div class="st">'+stars(s)+' '+RN[s]+'</div>'+lt+tag+'</button>'}
 function nowS(){return Date.now()+(RV&&RV.dt||0)}
+/* ⏳ 下架 時間 的 字（台灣 時間；0:00 ＝ 前一天 晚上 11:59）*/
+function endTxt(t){var d=new Date(t+288e5-6e4);return (d.getUTCMonth()+1)+' 月 '+d.getUTCDate()+' 號 晚上 11:59'}
 function ids(k){var a=Object.keys(CAT.R[k]).filter(function(id){return (!CAT.HIDE[id]||RV.st.own[k].indexOf(id)>=0)&&(k!=='h'||id.charAt(0)===SEX)});   /* 下架的（第二十二次）：買過的人還看得到、還可以換回來 */
   a=a.sort(function(x,y){return (CAT.R[k][x]-CAT.R[k][y])||(x<y?-1:1)});
   return k==='h'?a:a.concat(RV.st.own[k].filter(function(id){return !!sOf(id)}))}   /* 🏪 商城買的魔法武器、新寵物 也放在這裡（換回來用） */
 /* 🏪 榮耀 商城：10 類（上架的 ＝ 第 1 種的小圖）、每類 4 排（價錢、等級照排） */
-function shopHTML(){var LT=Object.keys(CAT.LIM).concat(Object.keys(CAT.END)),h='<div class="ltd"><h3>🔥 限量、限時（換完、過了 就 沒有 了）</h3><div class="sgrid">'+LT.map(itemHTML).join('')+'</div></div><div class="scat">'+CAT.S.map(function(x,i){var c=i+1,on=!!CAT.SON[c],cc=(c<10?'0':'')+c,ic=x[1].split(' ')[0],nm=x[1].split(' ').slice(1).join(' ');
+function shopHTML(){var LT=Object.keys(CAT.LIM).concat(Object.keys(CAT.END)),LH=LT.map(itemHTML).join(''),h=(LH?'<div class="ltd"><h3>🔥 限量、限時（換完、過了 就 沒有 了）</h3><div class="sgrid">'+LH+'</div></div>':'')+'<div class="scat">'+CAT.S.map(function(x,i){var c=i+1,on=!!CAT.SON[c],cc=(c<10?'0':'')+c,ic=x[1].split(' ')[0],nm=x[1].split(' ').slice(1).join(' ');
     return '<button data-scat="'+c+'" class="'+(c===SCAT?'on ':'')+(on?'':'soon')+'">'+(on?'<img src="shop/s'+cc+'01.jpg" alt="">':'<span class="sic">'+ic+'</span>')+'<span>'+nm+(on?'':'<em>即將 上架</em>')+'</span></button>'}).join('')+'</div>';
   var X=CAT.S[SCAT-1];
   if(!CAT.SON[SCAT])return h+'<div class="soon1">'+X[1]+'<br>🔜 即將 上架<div class="note" style="margin-top:10px">老師 上傳 圖 以後，就 可以 用 🪙 金幣 換。</div></div>';

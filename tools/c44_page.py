@@ -1,0 +1,117 @@
+# tools/c44_page.py ➜ listen/2026-10-31_C44/index.html（第三十七次：給 老師 看、請 老師 回答）
+# python3 tools/c44_page.py
+import sys, html, os
+R = os.path.join(os.path.dirname(__file__), '..')
+sys.path.insert(0, os.path.join(R, 'quiz_xlsx')); import _data as D, _rewrite_c43 as W
+e = html.escape
+T = open(os.path.join(R, 'listen', '2026-10-31_C42', 'index.html'), encoding='utf8').read()
+css = T[T.index('<style>'):T.index('</style>') + 8].replace('</style>', '''
+.shop{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.shop div{background:#0B0F14;border:3px solid #24303C;border-radius:16px;padding:8px;text-align:center;font-size:22px}
+.shop div.rec{border-color:#FFD54A;box-shadow:0 0 14px rgba(255,213,74,.45)}.shop img{width:100%;border-radius:10px;display:block}.shop b{color:#FFE07A}
+.ok2{color:#5BE38A}.no2{color:#FF9A9A}.box,.src,p{overflow-wrap:anywhere}@media (max-width:700px){table{display:block;overflow-x:auto}}</style>''')
+# ── ② 新 的 限時 寶物（11/30 23:59 下架）：5 類，每類 4 個 候選；金框 ＝ 建議 ──
+CAT = [('01', '✨ 覺醒光環', '07'), ('02', '👑 王者披風', '07'), ('04', '🖼 榮耀名字框', '03'), ('05', '🌌 史詩戰士背景', '07'), ('06', '🎀 寵物專屬服裝', '03')]
+PR = lambda n: (500, 1) if n <= 5 else (1200, 5) if n <= 10 else (2500, 10) if n <= 15 else (5000, 20)
+shop = ''
+for c, nm, rec in CAT:
+    shop += '<h3>' + nm + '（建議：' + c + '-' + rec + '）</h3><div class="shop">'
+    for n in ['03', '05', '07', '09']:
+        p, lv = PR(int(n))
+        shop += '<div class="' + ('rec' if n == rec else '') + '"><img src="../../rpg/shop/s' + c + n + '.jpg" alt="s' + c + n + '"><b>' + c + '-' + n + '</b>' + ('　⭐ 建議' if n == rec else '') + '<br>🪙 ' + str(p) + '　Lv ' + str(lv) + '</div>'
+    shop += '</div>'
+# ── Excel：這一次 再 改 的 26 題 ──
+NEW = [('G3A', i) for i in [0, 1, 2, 3, 4, 7, 8, 12]] + [('G3B', i) for i in [0, 1, 2, 3, 4, 7, 8]] + [('G4A', i) for i in [45, 46, 47, 48, 49]] + [('G4B', i) for i in [22, 45, 46, 47, 48, 49]]
+NM = {'G3A': '三年級 第 1 份', 'G3B': '三年級 第 2 份', 'G4A': '四年級 第 1 份', 'G4B': '四年級 第 2 份'}
+ex = '<table><tr><th>哪一份</th><th>第幾題</th><th>❌ C43 那一版（鑑別度 低）</th><th>✅ 這一次 改成（綠色 ＝ 正解）</th></tr>'
+OLD = {('G3A',0):('f ➜ ?','fox',['vest','ox','six']),('G3A',1):('q ➜ ?','queen',['girl','pig','dog']),('G3A',2):('v ➜ ?','vest',['window','fox','bag']),('G3A',3):('n ➜ ?','nose',['monkey','hat','window']),('G3A',4):('y ➜ ?','yo-yo',['jet','insect','egg']),('G3A',7):('d ➜ ?','dog',['bag','pig','cat']),('G3A',8):('c ➜ ?','cat',['kite','hat','bag']),('G3A',12):('_ x','o',['a','e','u']),
+ ('G3B',0):('z ➜ ?','zebra',['six','jet','nose']),('G3B',1):('w ➜ ?','window',['monkey','vest','yo-yo']),('G3B',2):('j ➜ ?','jet',['girl','yo-yo','insect']),('G3B',3):('r ➜ ?','rabbit',['lion','window','nose']),('G3B',4):('a ➜ ?','ant',['egg','up','ox']),('G3B',7):('p ➜ ?','pig',['bag','dog','egg']),('G3B',8):('f ➜ ?','five',['vest','nine','six']),
+ ('G4A',45):('p ➜ ?','pig',['big','dip','tip']),('G4A',46):('t ➜ ?','ten',['den','pen','bat']),('G4A',47):('d ➜ ?','dad',['bat','pat','tip']),('G4A',48):('b ➜ ?','bat',['pat','dad','top']),('G4A',49):('t ➜ ?','top',['dip','pot','big']),
+ ('G4B',22):("Is your mom a nurse? Yes, she is. She's a ___.",'nurse',['doctor','nurses','an nurse']),('G4B',45):('p ➜ ?','pin',['tip','den','bat']),('G4B',46):('t ➜ ?','tent',['pen','den','bat']),('G4B',47):('d ➜ ?','donut',['tomato','potato','banana']),('G4B',48):('d ➜ ?','dip',['tip','big','pin']),('G4B',49):('p ➜ ?','pot',['top','dad','bat'])}
+op = lambda a, w: '<b class="ok2">' + e(a) + '</b>　' + '　'.join(e(x) for x in w)
+for k in NEW:
+    o, n = OLD[k], W.RW[k]
+    ex += '<tr><td>' + NM[k[0]] + '</td><td>' + str(k[1] + 1) + '</td><td>' + e(o[0]) + '<div class="src">' + op(o[1], o[2]) + '</div></td><td><span class="big">' + e(n[0]) + '</span><div class="src">' + op(n[1], n[2]) + '</div></td></tr>'
+ex += '</table>'
+body = '''<div class="wrap"><h1>💡 第三十七次：請老師看、請老師回答（C44）</h1>
+<div class="box">這一頁：① 25 題闖關按鈕 ② 新的限時寶物（要老師同意）③ 第 5 點 研究數字 白話說明 ④ 第 6 點 快下課的現場任務 ⑤ 第 9 點 突擊測驗和公平 ⑥ 第 12 點 解碼積分、好玩的元素 ⑦ 第 7 點 Excel 改好的題目。<b>每一個建議都附研究出處和網址</b>（打開原文核對過的寫「核對過」）。</div>
+
+<h2>① 加倍時段結束以後，〔🏠 25題闖關〕大按鈕要留著嗎？</h2>
+<div class="box ask"><p>現在：11 月 1 日晚上 11:59 一過，<b>「⏰ … ✖2 ✖1.5」那一整塊 自動消失</b>（已經做好）。上面那顆〔👉 🏠 三年級 25題闖關　請優先完成這一個任務！▶〕是「進去練習的門」，不是加倍的字。</p>
+<table><tr><th>選</th><th>11/1 晚上 11:59 以後 學生 首頁 看到</th></tr>
+<tr><td><span class="k">甲（建議）</span></td><td>大按鈕 <b>留著</b>，只拿掉「請優先完成這一個任務！」這一句（學生還可以回家練 25 題）</td></tr>
+<tr><td><span class="k">乙</span></td><td>大按鈕 <b>整個也消失</b>（只剩下面的主題和遊戲）</td></tr>
+<tr><td><span class="k">丙</span></td><td>全部 照現在（按鈕和那一句都留著）</td></tr></table></div>
+
+<h2>② 新的限時寶物（11 月 30 日晚上 11:59 下架）：請老師同意</h2>
+<div class="box ok"><p class="big">✅ 10 月 31 日的限時寶物：說到做到</p>
+<p>伺服器的規則：台灣時間 <b>11 月 1 日 0:00 起買不到</b>（＝ 10/31 晚上 11:59:59 是最後一秒）。這一次再改：時間一到，<b>沒買的學生在商城完全看不到</b>（以前會看到灰色「已下架」）；已經買的學生照樣可以用。上面的字也改成「⏳ 10 月 31 號 晚上 11:59 下架」。</p></div>
+<div class="box warn"><p>老師寫「11/31」：<b>11 月只有 30 天</b>，所以我用 <b>11 月 30 日（星期一）晚上 11:59</b>。如果老師要的是別的日期，請告訴我。</p></div>
+<p>建議：5 類各 1 樣（以前限時的是 必殺特效、寵物、武器、翅膀、坐騎 ➜ 這一次換 <b>光環、披風、名字框、背景、寵物服裝</b>，學生有新鮮感）；價錢 500～1,200（低成就的學生努力 1～2 週也買得到）。<b>金框 ＝ 我建議的</b>；老師也可以換成同一類的另一個號碼。</p>
+''' + shop + '''
+<div class="box src">為什麼要「說到做到」：大人說話算話，孩子才願意為以後的獎勵努力。隨機實驗：大人先守信的那一組，3～5 歲孩子等待獎勵的時間明顯比大人沒守信的那一組久。出處：Kidd, Palmeri & Aslin（2013）Rational snacking. <i>Cognition</i> 126(1), 109–114，https://doi.org/10.1016/j.cognition.2012.08.004 （這一次沒有打開原文核對數字，所以不寫數字）</div>
+
+<h2>③ 第 5 點：「19%、39%～41%、24% 對 7%～9%、90% 對 76%、68%」白話說明</h2>
+<div class="box"><p>這是一個<b>隨機分組的實驗</b>（Szpunar, Khan & Schacter 2013，美國哈佛大學 48 位大學生）：大家看同一部 <b>21 分鐘</b>的線上統計學課（切成 4 段，每段大約 5 分半）。</p>
+<table><tr><th>組</th><th>每一段看完以後做什麼</th></tr>
+<tr><td>📝 小測驗組</td><td>做 6 題小測驗（就像我們的「隨時突擊測驗」）</td></tr>
+<tr><td>📖 再讀一次組</td><td>看題目和答案（不用自己想）</td></tr>
+<tr><td>➕ 沒測驗組</td><td>做算術題（跟課無關）</td></tr></table>
+<table><tr><th>量什麼</th><th>📝 小測驗組</th><th>📖 再讀一次</th><th>➕ 沒測驗</th><th>白話</th></tr>
+<tr><td>上課中 突然問「你剛剛在發呆嗎？」說「有」的比例</td><td class="ok2"><b>19%</b></td><td>39%</td><td>41%</td><td>有小測驗，<b>發呆少一半</b></td></tr>
+<tr><td>自己在投影片上多寫筆記的比例</td><td class="ok2"><b>24%</b></td><td>9%</td><td>7%</td><td>有小測驗，<b>主動寫筆記多 3 倍</b></td></tr>
+<tr><td>最後總測驗 答對</td><td class="ok2"><b>90%</b></td><td>76%</td><td>68%</td><td>有小測驗，<b>記得最多</b></td></tr>
+<tr><td>對最後考試 的 緊張（1～5，愈大愈緊張）</td><td class="ok2"><b>2</b></td><td>4</td><td>3.5</td><td>有小測驗，<b>比較不緊張</b></td></tr></table>
+<p>⚠ 照實說：前 3 列和緊張 ＝ 實驗 2（48 人）；「90%、76%、68%」那一列是<b>論文把兩個實驗合起來</b>算的（我上一次寫「實驗 2」寫錯了，對不起）。</p>
+<div class="src">出處：Szpunar, Khan & Schacter（2013）PNAS 110(16), 6313–6317，全文 https://pmc.ncbi.nlm.nih.gov/articles/PMC3631699/ （2026-10-31 打開原文核對）</div></div>
+
+<h2>④ 第 6 點：快下課（只剩 5 分鐘、10 分鐘）怎麼開現場任務？</h2>
+<div class="box"><p><b>已經有的</b>：時間一到，<b>答了幾題就送幾題</b>，每一位學生都有成績；老師開的時候可以選 5、10 分鐘。<b>問題</b>：一關的秒懂動畫大約 1 分 10 秒，5 分鐘只看得完 3～4 關的動畫，題目做不到幾題。</p>
+<table><tr><th>選</th><th>做法</th><th>剩 10 分鐘</th><th>剩 5 分鐘</th></tr>
+<tr><td><span class="k">A（建議）</span></td><td>老師選 5／10 分鐘 ＝ 自動「⚡ 快速複習」：<b>秒懂動畫只演第 1 關</b>，其他關直接做題目；每一題答錯一樣有綠底講解</td><td>大約 15～20 題</td><td>大約 8～10 題</td></tr>
+<tr><td><span class="k">B</span></td><td>A ＋ 只抽<b>全班最常錯的關</b>（老師看板錯題分析的前 3 關）</td><td>同上，題目更準</td><td>同上</td></tr>
+<tr><td><span class="k">C</span></td><td>照現在（動畫照演，時間到就送）</td><td>大約 6～8 題</td><td>大約 0～3 題</td></tr></table>
+<p>理由：短時間<b>自己想答案（提取練習）</b>比再看一次記得久；而且<b>分好幾天練</b>比一次練很久好 ➜ 下課前 5 分鐘做 8 題，比看動畫有用；動畫留給回家的 25 題闖關。</p>
+<div class="src">出處：Roediger & Karpicke（2006）Psychological Science 17(3), 249–255，https://doi.org/10.1111/j.1467-9280.2006.01693.x ；Adesope, Trevisan & Sundararajan（2017）Review of Educational Research 87(3), 659–701（練習測驗 的 後設分析），https://doi.org/10.3102/0034654316689306 ；Cepeda 等（2006）Psychological Bulletin 132(3), 354–380（分散練習 後設分析），https://doi.org/10.1037/0033-2909.132.3.354 （這一次沒有打開原文核對數字，所以不寫數字）</div></div>
+
+<h2>⑤ 第 9 點：突擊測驗會不會影響 25 題的分數？公平嗎？</h2>
+<div class="box ok"><table><tr><th>問題</th><th>答案</th></tr>
+<tr><td>25 題闖關每一題幾分？</td><td>每一題 <b>4 分</b>，25 題 ＝ 100 分；50 題 每一題 2 分。<b>突擊測驗的題目不算在這 25 題裡</b></td></tr>
+<tr><td>突擊測驗記在哪裡？</td><td>另外一筆成績「🎬 秒懂複習 突擊測驗」（三年級 g3m-rv、四年級 mt-rv），老師看板看得到每一題對錯，<b>不加分、不扣 25 題的分</b></td></tr>
+<tr><td>每個人題目不一樣，公平嗎？</td><td>每一關的題數一樣、每一題分數一樣（4 分）；題目從同一個題庫抽、同一種難度的題型。學生如果問，老師可以說：「<b>25 題闖關只看 25 題，突擊測驗是另外的練習紀錄</b>。」</td></tr>
+<tr><td>🔓 解碼 的 新「解碼積分」呢？</td><td>只是遊戲裡的積分（讓學生有感），<b>不算進 100 分</b>（見下面 ⑥）</td></tr></table>
+<p>建議：25 題闖關的封面加一行大字「🎬 突擊測驗 另外記，不影響 25 題的分數」（老師說「對」我才加）。</p></div>
+
+<h2>⑥ 第 12 點：🔓 句子解碼</h2>
+<div class="box ok"><p class="big">(1) ✅ 已經做好：⚡ 解碼積分（正確＋速度＋連對）</p>
+<table><tr><th>這一題</th><th>得到</th></tr>
+<tr><td>全部放對</td><td>✅ 100 ＋ ⚡ 速度 0～900（看<b>平均每一格</b>花幾秒，所以 3 格和 10 格的題目公平）</td></tr>
+<tr><td>平均每一格 1.2 秒以內</td><td>＋900 ➜ 一題 <b>1,000</b></td></tr>
+<tr><td>平均每一格 3.6 秒</td><td>＋450 ➜ 一題 <b>550</b></td></tr>
+<tr><td>平均每一格 6 秒以上</td><td>＋0 ➜ 一題 <b>100</b></td></tr>
+<tr><td>🔥 連續全對 3 題以上</td><td>這一題 <b>✖2</b>（最多一題 2,000）；放錯 ＝ 連對重來</td></tr></table>
+<p>每一題放對 ➜ 大大的金色「＋880」、速度長條、「✅ 100 ＋ ⚡ 速度 780」、🔥 ✖2；結束頁「🔓 解碼積分」。<b>老師看板的 100 分照舊只看對幾個</b>（公平，見 ⑤）。</p></div>
+<div class="box ask"><p class="big">(2) 讓拖曳題不無聊：請老師選號碼（可以選好幾個）</p>
+<table><tr><th>#</th><th>元素</th><th>學生看到的</th></tr>
+<tr><td>1</td><td>🎁 神秘方塊</td><td>每一題隨機有 1 個方塊是金色寶箱：放對 ＝ 打開（🪙、這一題 ✖2、或 1 秒「透視」哪一格），每一題都有期待</td></tr>
+<tr><td>2</td><td>📖 解碼故事</td><td>每解開 1 句 ＝ 一格漫畫亮起來；8 句解完 ＝ 一個完整的小故事（主角用學生自己的戰士）</td></tr>
+<tr><td>3</td><td>👾 解碼魔王</td><td>每解開 1 句 ＝ 雷射打魔王一下；愈快放對，打得愈痛（用上面的解碼積分）</td></tr>
+<tr><td>4</td><td>👻 跟自己的影子賽跑</td><td>畫面上一條「上一次的你」速度線，這一次比上一次快就超過影子（只跟自己比，不跟同學比）</td></tr>
+<tr><td>5</td><td>🔦 記憶解碼</td><td>每隔幾題一次：英文先亮 3 秒再變暗，要憑記憶放中文（比較難、記得比較久）</td></tr>
+<tr><td>6</td><td>🧩 每一題換一種樣子</td><td>格子輪流變成：火車車廂、太空艙、寶石、鍵盤…（同樣拖曳，外觀每題不一樣）</td></tr>
+<tr><td>7</td><td>🎰 幸運轉盤</td><td>連對 3 題 ＝ 轉一次：✖2、＋300、🛡 錯一格不斷連對…</td></tr></table>
+<p><b>我建議 1、2、4、5</b>：1 給驚喜、2 給故事（研究：加故事情境的遊戲化效果比較好）、4 只跟自己比（不傷低成就學生）、5 是「必要的困難」（記得更久）。3、6、7 也可以，但比較像裝飾。</p>
+<div class="src">出處：Sailer & Homner（2020）遊戲化 對 學習 的 後設分析，Educational Psychology Review 32, 77–112，https://doi.org/10.1007/s10648-019-09498-w （認知 g＝.49、動機 g＝.36、行為 g＝.25；競爭加合作、加故事情境比較有效；2026-10-12 打開核對）；Bjork & Bjork（2011）「必要的困難」，https://bjorklab.psych.ucla.edu/wp-content/uploads/sites/13/2016/04/EBjork_RBjork_2011.pdf （這一次沒有打開核對）</div></div>
+
+<h2>⑦ 第 7 點：Excel 改好的題目（26 題）</h2>
+<div class="box warn"><p>老師說得對：「f ➜ ? fox vest ox six」題目已經寫出 f，錯的選項都不是 f 開頭 ➜ <b>看字形對一下就對，測不到真正的能力</b>（看到／聽到東西 ➜ 知道第一個字母）。對不起。</p>
+<p><b>改法</b>：圖 ＋ 缺第一個字母 ＋ <b>4 個容易搞混的字母</b>（f／v、b／d／p／q、m／n、r／l、w／v、j／g、s／z／c、k／c）。錯的字母拼出來常常是<b>另一個真的字</b>（🦊 _ox 選 b ＝ box、👃 _ose 選 h ＝ hose、🐷 _ig 選 b ＝ big）➜ 沒看圖、沒學會就會選錯。</p>
+<p>⚠ 這一次<b>要用圖</b>：沒有圖（或聲音）就沒辦法考「東西 ➜ 第一個字母」。圖是 emoji（是文字，不是圖片檔），Kahoot、Blooket、Gimkit 題目欄都打得進去；我在雲端不能登入 Kahoot 試，<b>請老師匯入以後先看第 1 題的 🦊 有沒有出來</b>。沒有出來請告訴我，我改成別的題型。</p></div>
+''' + ex + '''
+<p>其他 72 題我再一題一題檢查過（錯的選項都跟答案只差一點）。四年級第 2 份第 40 題的錯選項 Harry（考卷人名）換成 Hurrey。全部題目：https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-10-28_X/ ；檔案在 quiz_xlsx/。</p>
+
+<h2>📋 回答範例（照著打）</h2>
+<div class="box big">C44：① 甲　② 同意（或 寫 號碼，例：光環 01-05）　④ A　⑤ 加　⑥ 1 2 4 5</div>
+</div>'''
+os.makedirs(os.path.join(R, 'listen', '2026-10-31_C44'), exist_ok=True)
+open(os.path.join(R, 'listen', '2026-10-31_C44', 'index.html'), 'w', encoding='utf8').write('<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>第三十七次 請老師選 C44</title>' + css + '</head><body>' + body + '</body></html>')
+print('listen/2026-10-31_C44/index.html ok')

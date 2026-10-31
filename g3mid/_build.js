@@ -604,6 +604,7 @@ const JS = `
 ${DECX.JS}
 ${RVX.js}
 ${require('../score/_actl.js').js}
+${require('../score/_wrev.js').js}
 ${RVX.page({ gr: 'g3', set: 'g3gm_g3m-rv', name: '🏫 三年級 複習｜🎬 秒懂 動畫 突擊 測驗', R: RVR })}
 var SCSVG={${SCN.KEYS.map(k => J(k) + ':' + J(SCN.svg(k))).join(',')}};
 var LES=${J(D.LES)},DTUT=${J(D.DTUT)},DCG={id:'dc',ic:'🔓',nm:'句子 解碼 任務',how:'👇 把 中文 方塊 拖到 英文 字 的 正下方（也 可以 先 點 方塊、再 點 格子）· 放對 幾個 ＝ 拿 幾成 分數',t:45,B:[],c1:'#5A2A8C',c2:'#E0A030'};DEC.SIL=${J(D.SIL)};
@@ -758,7 +759,7 @@ function toks(s){var r=[],re=/([A-Za-z][A-Za-z\\-]*)(’|')(s|m|re)\\b|[A-Za-z][
 function zhOf(w){var k=w.replace(/’/g,"'").toLowerCase();if(GL[k]!==undefined)return GL[k];if(/^[A-Z][a-z]+$/.test(w))return '（名字）';return ''}
 function gloss(s){var T=toks(s),h='';for(var i=0;i<T.length;i++){var w=T[i];if(/^[.,?!]$/.test(w))continue;var p='';while(/^[.,?!]$/.test(T[i+1]||'')){p+=T[++i]}
   h+='<span class="gw'+(/^'/.test(w)?' ct':'')+'"><b>'+esc(w.replace(/'/g,'’'))+esc(p)+'</b><i>'+esc(zhOf(w))+'</i></span>'}return '<div class="gls" id="gls">'+h+'</div>'}
-function miss(pick){if(R.pre){var pf=R.pre;R.pre=null;BUSY=true;tPause();pf(pick,function(){miss(pick)});return}qRec(0,pick);if(R.x&&G.id==='dc'&&R.frac>0){R.score=Math.round((R.score+R.pt*R.frac)*10)/10;$('#sc').textContent=R.score}BUSY=true;tPause();if(R.streak>=2){var cm0=$('#cmb');cm0.textContent='🔥 最高 連對 '+R.best+' 題，已經 記住 了！';cm0.className='cmb on mem'}else $('#cmb').className='cmb';R.streak=0;   /* C42 6B：答錯 不 寫「火 熄了」*/R.res[R.k]=0;dots();var q=R.q,o=FB[G.id](q,pick);R.wrong.push({en:o.say||q.en,show:o.show||q.en});
+function miss(pick){if(R.pre){var pf=R.pre;R.pre=null;BUSY=true;tPause();pf(pick,function(){miss(pick)});return}qRec(0,pick);if(R.x&&G.id==='dc'&&R.frac>0){R.score=Math.round((R.score+R.pt*R.frac)*10)/10;$('#sc').textContent=R.score}BUSY=true;tPause();if(R.streak>=2){var cm0=$('#cmb');cm0.textContent='🔥 最高 連對 '+R.best+' 題，已經 記住 了！';cm0.className='cmb on mem'}else $('#cmb').className='cmb';R.streak=0;   /* C42 6B：答錯 不 寫「火 熄了」*/R.res[R.k]=0;dots();var q=R.q,o=FB[G.id](q,pick);R.wrong.push({en:o.say||q.en,show:o.show||q.en,body:o.body,after:o.after,zh:q.zh,sl:o.sl||[['',o.say||q.en]],gi:(G.ic||'')+' '+(G.nm||'')});   /* 第三十七次 第 10 點：錯題 總複習 用 */
  var x=$('#fbx');x.innerHTML='<div class="hd">'+(pick==null?'⏰ 時間到':'❌ 答錯了')+'</div>'+(o.you?'<div class="yp">你的答案：'+o.you+'</div>':'')+
   (R.x&&R.bmax&&R.bhp>0?'<div class="bsr">👾 魔王 還在：答錯 不扣分 ➜ 💪 下一題 再試一次！</div>':'')+'<div class="ca">✅ 正確答案</div>'+o.body+'<div><span class="tr">整句：'+esc(q.zh)+'</span></div>'+
   '<div class="ft"><span class="n3" id="n3">'+(o.rep===1?'<span>1</span>':'<span>1</span><span>2</span><span>3</span>')+'</span><button class="say" id="fbs">🔊 再聽</button><span id="nxw"></span></div>';
@@ -785,11 +786,14 @@ function endX(){coopStop();xDel(R.x);stopSay();cancelAnimationFrame(TM.raf);$('#
  var b=+(ls('g3m_bx'+XS()+R.x)||0),nb=sc>b;if(nb)ls('g3m_bx'+XS()+R.x,sc);var rc=rec1(),fq=0;R.Q.forEach(function(x){fq+=x[3]});
  var rn='<div class="rcn">'+(rc?'📝 記進 成績 了':fq*2>R.Q.length?'⚠️ 太快 亂按 超過 一半：這一回 不算 成績':(typeof SCID!=='undefined'&&SCID?'📶 沒有 網路：先 存 在 平板':'（沒有 登入：沒有 記 成績）'))+'</div>';
  var tb='<table class="xtb"><tr><th>關</th><th>遊戲</th><th>答對</th></tr>'+(LVS||GM).map(function(g,i){var a=0,n=0;R.lvOf.forEach(function(l,k){if(l===i){n++;if(R.res[k]===1)a++}});return '<tr><td>'+(i+1)+'</td><td>'+g.ic+' '+esc(g.nm)+'</td><td class="'+(a===n?'ok':'')+'">'+a+' ／ '+n+'</td></tr>'}).join('')+'</table>';
- $('#end').innerHTML=rn+'<div class="st">'+[0,1,2].map(function(k){return '<i>'+(k<st?'⭐':'☆')+'</i>'}).join('')+'</div><div class="big xsc">📝 '+XNM(R.x)+'：<b>'+sc+'</b> 分 ／ 100'+(nb?'　🏆 新紀錄':'')+'</div><div class="big">答對 '+ok+' ／ '+R.x+'（每題 '+R.pt+' 分）</div>'+tb+
-  (R.wrong.length?'<div class="wl">'+R.wrong.map(function(w,k){return '<div>📌 '+esc(w.show)+'<button data-w="'+k+'">🔊</button></div>'}).join('')+'</div>':'<div class="big">🎉 全部答對！</div>')+
-  '<div class="btns"><button class="b1" id="again">🔁 再 挑戰 一次</button><button class="b2" id="tolob">🎮 回 大廳</button></div>';window.scrollTo(0,0);if(st>=2)confetti()}
+ $('#end').innerHTML=rn+'<div class="st">'+[0,1,2].map(function(k){return '<i>'+(k<st?'⭐':'☆')+'</i>'}).join('')+'</div><div class="big xsc">📝 '+XNM(R.x)+'：<b>'+sc+'</b> 分 ／ 100'+(nb?'　🏆 新紀錄':'')+'</div><div class="big">答對 '+ok+' ／ '+R.x+'（每題 '+R.pt+' 分）</div>'+(DEC.rr===R&&DEC.sc?'<div class="big">🔓 解碼 積分 <b style="color:#FFD54A">'+DEC.sc+'</b>（速度 ＋ 🔥 連對 ✖2；只 是 遊戲 積分，不 算進 100 分）</div>':'')+tb+
+  (R.wrong.length?'':'<div class="big">🎉 全部答對！</div>');window.scrollTo(0,0);if(st>=2)confetti();
+ /* 2026-10-31 第三十七次 第 10 點：最後 一頁 ＝ 📒 錯題 總複習（大字、自動 唸 英文＋中文、每題〔🔊〕、聽完 才 解鎖 下面 兩顆；score/_wrev.js）*/
+ WREV.run($('#end'),R.wrong.map(function(w,k){return {head:'❌ 第 '+(k+1)+' 題｜'+esc(w.gi),body:w.body||'<div class="gls"><span class="gw"><b>'+esc(w.show)+'</b><i></i></span></div>',zh:w.zh,post:w.after?function(){w.after()}:null,en:function(d){sayList(w.sl,d)}}}),
+  '<div class="btns"><button class="b1" id="again" disabled>🔁 再 挑戰 一次</button><button class="b2" id="tolob" disabled>🎮 回 大廳</button></div>')}
 function confetti(){var c=$('#cfz');c.innerHTML='';for(var i=0;i<60;i++){var e=document.createElement('i');e.style.left=(Math.random()*100)+'%';e.style.background=['#FFD54A','#FF6B6B','#7FD4FF','#2BD46A','#FF9FD2'][i%5];e.style.animationDelay=(Math.random()*1.2)+'s';e.style.animationDuration=(2.2+Math.random()*1.6)+'s';c.appendChild(e)}setTimeout(function(){c.innerHTML=''},4500)}
 document.addEventListener('click',function(e){var t=e.target.closest?e.target.closest('button'):null;if(!t)return;
+ if((t.id==='again'||t.id==='tolob')&&typeof WREV!=='undefined')WREV.stop();
  if(t.dataset.g!=null)start(+t.dataset.g);else if(t.dataset.x!=null){XBK=t.dataset.bk||'A';if(DUOM)duoStart(+t.dataset.x);else startX(+t.dataset.x)}else if(t.dataset.duo!=null){DUOM=+t.dataset.duo;[].forEach.call(document.querySelectorAll('[data-duo]'),function(b){b.classList.toggle('on',+b.dataset.duo===DUOM)})}else if(t.dataset.xr!=null){XBK=t.dataset.bk||'A';resumeX(+t.dataset.xr)}else if(t.id==='again'){if(R.x)startX(R.x);else start(R.i)}else if(t.id==='qx')xAsk();else if(t.id==='xstay'){$('#xq').classList.remove('on');if(!BUSY)tGo()}else if(t.id==='xleave'||t.id==='tolob')lobby();else if(t.id==='wsw')warPick();else if(t.dataset.w!=null)sayT(R.wrong[+t.dataset.w].en)});
 function hearBtn(fn){var b=document.createElement('button');b.className='hear';b.id='hear';b.textContent='🔊 再聽一次';b.onclick=function(){b.classList.add('on');fn();setTimeout(function(){b.classList.remove('on')},1500)};return b}
 function H(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
@@ -1262,7 +1266,7 @@ const html = `<!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>三年級 複習</title>
-<style>${CSS}${DECX.CSS}${SCN.CSS}${RVX.css}${C35CSS}${require('../score/_actl.js').css}
+<style>${CSS}${DECX.CSS}${SCN.CSS}${RVX.css}${C35CSS}${require('../score/_actl.js').css}${require('../score/_wrev.js').css}${require('../score/_wrev.js').cssFrom(CSS,'#fb')}
 .q2sc.q2svg{display:block;padding-top:0;width:4.6em;max-width:100%}.rmc .q2sc.q2svg{width:100%;font-size:inherit}</style></head>
 <body>
 ${CL.home(3, '../', 'school')}

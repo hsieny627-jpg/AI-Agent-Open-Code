@@ -5,10 +5,10 @@ Question #,Question Text,Answer 1,Answer 2,"Answer 3
 (Optional)","Time Limit (sec)
 (Max: 300 seconds)","Correct Answer(s)
 (Only include Answer #)"
-1,👨  Who's he?,He's my father.,She's my father.,His my father.,He's my mother.,20,1
-2,👩  Who's she?,He's my mother.,She's my father.,She's my mother.,Her my mother.,20,3
-3,👴  Who's he?,He's my grandma.,He's my grandpa.,He's my dad.,She's my grandpa.,20,2
-4,👧  Who's she?,She's my brother.,He's my sister.,She my sister.,She's my sister.,20,4
+1,He is my father. = ?,He's my father.,His my father.,She's my father.,He my father.,20,1
+2,She is my mother. = ?,Her my mother.,He's my mother.,She's my mother.,She my mother.,20,3
+3,grandma = ?,grandfather,grandmother,mother,grandpa,20,2
+4,Who's she? ___ my sister.,He's,Her,His,She's,20,4
 5,___ he? He's my brother.,Whose,What's,Who's,Is,20,3
 6,Who's she? ___ my grandma.,She's,He's,Her,She,20,1
 7,He's = ?,His,He are,She is,He is,20,4
@@ -18,14 +18,14 @@ Question #,Question Text,Answer 1,Answer 2,"Answer 3
 11,Which one is right?,She my grandma.,She's my grandma.,Her's my grandma.,She's my grandpa.,20,2
 12,Which one is a boy?,sister,mother,grandma,brother,20,4
 13,Which one is a girl?,grandfather,father,grandmother,brother,20,3
-14,🩺  He's a ___.,doctor,docter,doctors,cooker,20,1
-15,👩‍🍳  She's a ___.,cooker,farmer,nurse,cook,20,4
-16,👨‍🌾  He's a ___.,father,farmer,teacher,former,20,2
-17,👩‍🏫  She's a ___.,teacher,student,teach,techer,20,1
-18,🧑‍🎓  Is he a student?,"Yes, he isn't.","Yes, she is.","Yes, he is.","Yes, he's.",20,3
-19,Is she a doctor? ❌,"Yes, she is.","No, she isn't.","No, he isn't.","No, she is.",20,2
-20,Is he a cook? ✅,"Yes, he's.","Yes, it is.","No, he isn't.","Yes, he is.",20,4
-21,Is your mom a nurse? ❌,"No, he isn't.","Yes, she is.","No, she isn't.","No, she not.",20,3
+14,d _ c t o r,o,e,a,u,20,1
+15,c _ _ k,ou,uo,ee,oo,20,4
+16,f a r m _ r,o,e,a,u,20,2
+17,t e a c h _ r,e,o,a,i,20,1
+18,He's a student. ➜ Is he a student?,"Yes, he isn't.","Yes, she is.","Yes, he is.","Yes, he's.",20,3
+19,She's a nurse. ➜ Is she a doctor?,"Yes, she is.","No, she isn't.","No, he isn't.","No, she is.",20,2
+20,He's a cook. ➜ Is he a cook?,"Yes, he's.","Yes, it is.","No, he isn't.","Yes, he is.",20,4
+21,My mom is a teacher. ➜ Is your mom a nurse?,"No, he isn't.","Yes, she is.","No, she isn't.","No, she not.",20,3
 22,"___ your dad a farmer? Yes, he is.",Is,Are,Does,Who's,20,1
 23,"Is your grandma a teacher? No, she isn't. ___ a cook.",He's,She,Her,She's,20,4
 24,Which one is right?,Is he nurse?,Is he a nurse?,He is a nurse?,Are he a nurse?,20,2
@@ -41,17 +41,17 @@ Question #,Question Text,Answer 1,Answer 2,"Answer 3
 34,20 - 4 = ?,sixty,six,sixteen,seventeen,20,3
 35,My brother is 18. ➜ He's ___.,eighty,eighteen,eight,eighteenth,20,2
 36,Which one is right?,forteen,fourten,fourtean,fourteen,20,4
-37,🏃❌  = ?,Don't talk.,Hurry up.,Don't run.,Don't ran.,20,3
-38,🤐  = ?,Don't talk.,Don't run.,Don't walk.,Let's talk.,20,1
-39,🌑➡️💡  = ?,Turn off the light.,Turn on the right.,Time's up.,Turn on the light.,20,4
-40,💡➡️🌑  = ?,Turn on the light.,Turn off the light.,Turn of the light.,Let's go.,20,2
-41,⏰  ___ up.,Time's,Time,Times',Turn,20,1
-42,📒  Show me your ___.,home,work,homework,homeworks,20,3
-43,🏃💨  ___ up.,Hurri,Hurry,Hurrey,Hury,20,2
-44,👉🚶  ___ go.,Lets',Let,Let'us,Let's,20,4
+37,Do not run. = ?,Dont run.,Do'nt run.,Don't run.,Don't ran.,20,3
+38,Don't ___. Be quiet.,talk,tall,take,talks,20,1
+39,It's dark. Turn ___ the light.,off,of,in,on,20,4
+40,on ⇄ ___,of,off,in,up,20,2
+41,Time is up. = ?,Time's up.,Times up.,Time up.,Time's is up.,20,1
+42,Show ___ your homework.,my,I,me,mine,20,3
+43,___ up! Let's go.,Hurri,Hurry,Hurrey,Hury,20,2
+44,___ go. = Let us go.,Lets',Let,Let'us,Let's,20,4
 45,Don't = ?,Does not,Did not,Do not,Don not,20,3
-46,🐷  Which letter? ___ig,p,b,d,t,20,1
-47,🔟  Which letter? ___en,d,p,b,t,20,4
-48,👨  Which letter? ___ad,b,d,t,p,20,2
-49,Which word starts with b?,bat,pat,dad,top,20,1
-50,Which word starts with t?,dip,pot,top,big,20,3
+46,📌 _in,p,b,t,d,20,1
+47,🔟 _en,d,p,b,t,20,4
+48,👨 _ad,b,d,p,t,20,2
+49,🦇 _at,b,p,d,t,20,1
+50,⛺ _ent,d,p,t,b,20,3

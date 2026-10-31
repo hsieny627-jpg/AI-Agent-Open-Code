@@ -5,27 +5,27 @@ Question #,Question Text,Answer 1,Answer 2,"Answer 3
 (Optional)","Time Limit (sec)
 (Max: 300 seconds)","Correct Answer(s)
 (Only include Answer #)"
-1,Which word starts with f?,fox,vest,ox,six,20,1
-2,Which word starts with q?,girl,pig,queen,dog,20,3
-3,Which word starts with v?,window,vest,fox,bag,20,2
-4,Which word starts with n?,monkey,hat,window,nose,20,4
-5,Which word starts with y?,jet,insect,yo-yo,egg,20,3
+1,🦊 _ox,f,v,b,p,20,1
+2,🦺 _est,f,w,v,b,20,3
+3,👸 _ueen,g,q,p,d,20,2
+4,👃 _ose,m,h,r,n,20,4
+5,🪀 _o-yo,j,g,y,u,20,3
 6,What is the big letter of r?,R,P,B,K,20,1
 7,What is the small letter of D?,b,p,q,d,20,4
-8,🐶  ___og,b,d,p,g,20,2
-9,🐱  ___at,c,k,s,e,20,1
-10,🦓  = ?,zibra,zebar,zebra,sebra,20,3
-11,🪟  = ?,windo,window,wimdow,vindow,20,2
-12,🐞  = ?,inseck,insekt,imsect,insect,20,4
-13,🐂  = ?,fox,box,ox,six,20,3
-14,🍎🍎🍎🍎🍎🍎🍎  How many?,seven,six,eight,nine,20,1
+8,🐶 _og,b,d,p,g,20,2
+9,🐱 _at,c,k,s,h,20,1
+10,z _ b r a,i,a,e,o,20,3
+11,w i n d _ w,a,o,u,e,20,2
+12,i n s _ c t,i,a,u,e,20,4
+13,🐂 _x,a,e,o,u,20,3
+14,3 + 4 = ?,seven,six,eight,nine,20,1
 15,2 + 3 = ?,four,six,nine,five,20,4
 16,10 - 1 = ?,five,nine,ten,eight,20,2
 17,3 = ?,three,tree,free,there,20,1
 18,8 = ?,eigth,aight,eight,eihgt,20,3
 19,"four, five, ___, seven",ten,six,three,nine,20,2
 20,"ten, nine, eight, ___",six,nine,two,seven,20,4
-21,🖐️ + ✌️ = ?,five,two,seven,ten,20,3
+21,5 + 2 = ?,five,two,seven,ten,20,3
 22,1 = ?,one,on,own,ten,20,1
 23,"Jake: Hi, I'm Jake.   Bella: ___","Hi, I'm Jake.","Hi, my Bella.",You're welcome.,"Hi, I'm Bella.",20,4
 24,"Fred: Thank you, Daisy.   Daisy: ___","Thank you, too.",You're welcome.,Nice to meet you.,Good morning.,20,2
@@ -45,13 +45,13 @@ Question #,Question Text,Answer 1,Answer 2,"Answer 3
 38,My name ___ Fred.,is,are,am,be,20,1
 39,I ___ Penny.,is,are,my,am,20,4
 40,I'm ten ___ old.,year,years,yeas,yes,20,2
-41,🧍⬆️  = ?,Stand up.,Sit down.,"Line up, please.",Put down your hand.,20,1
-42,📖  = ?,Close your book.,Open you book.,Open your book.,Raise your hand.,20,3
-43,🤫  = ?,"Line up, please.","Be quiet, please.","Be quite, please.",Sit down.,20,2
-44,✋⬆️  = ?,Put down your hand.,Raise you hand.,Open your hand.,Raise your hand.,20,4
-45,⬆️ Stand up.   ⬇️ ___,Line up.,Stand down.,Sit down.,Sit up.,20,3
-46,📖 Open your book.   📕 ___ your book.,Close,Open,Clos,Raise,20,1
-47,🚶🚶🚶  = ?,"Be quiet, please.",Line please up.,"Lion up, please.","Line up, please.",20,4
-48,✋⬇️  Put ___ your hand.,up,down,your,dawn,20,2
+41,Stand ___.,up,down,on,in,20,1
+42,Open ___ book.,you,you're,your,I,20,3
+43,"Be ___, please.",quite,quiet,quit,quick,20,2
+44,Raise your ___.,hat,band,land,hand,20,4
+45,Stand up. ⇄ ___,Line up.,Stand down.,Sit down.,Sit up.,20,3
+46,Open your book. ⇄ ___ your book.,Close,Open,Clos,Raise,20,1
+47,"Line ___, please.",down,in,on,up,20,4
+48,Raise your hand. ⇄ Put ___ your hand.,up,down,your,dawn,20,2
 49,"___ quiet, please.",Be,Is,Are,Am,20,1
 50,Raise ___ hand.,you,you're,your,yours,20,3

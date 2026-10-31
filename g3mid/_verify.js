@@ -197,6 +197,19 @@ await p.evaluate(d1 => { if (!d1) Object.keys(localStorage).filter(k => /^dcl_se
       n++; const e = await p.evaluate(() => ({ t: document.querySelector('#end').textContent, rows: document.querySelectorAll('#end .xtb tr').length }));
       const want2 = await p.evaluate(() => Math.min(100, Math.round(R.score * 10) / 10));   /* 第 1 題（解碼）故意 錯：放對 幾成 拿 幾成 */
       if (want2 <= (N - 1) * (100 / N) - .01 || want2 >= 100 || e.t.indexOf(want2 + ' 分 ／ 100') < 0 || e.rows !== 12 || e.t.indexOf('答對 ' + (N - 1) + ' ／ ' + N) < 0) E.push(tag + ' ' + N + ' 題：結束 頁 不對（要 ' + want2 + ' 分、10 關 表）：' + e.t.slice(0, 80));
+      /* 2026-10-31 第三十七次 第 12-(1) 點：⚡ 解碼 積分（第 1 題 故意 錯 ➜ 連對 從 第 2 題 開始；全對 3 題 以上 ✖2）*/
+      { n += 2; const dp = await p.evaluate(() => ({ sc: DEC.sc, cb: DEC.cb, t: (document.querySelector('#end,#app') || document.body).innerText, p1: decPts(1, 1).p, p6: decPts(6, 1).p, p3x: decPts(1, 3).p }));
+        if (!(dp.sc > 0) || dp.t.indexOf('解碼 積分') < 0) E.push(tag + ' ' + N + ' 題：結束 頁 沒有 🔓 解碼 積分：' + JSON.stringify({ sc: dp.sc, cb: dp.cb }));
+        if (dp.p1 !== 1000 || dp.p6 !== 100 || dp.p3x !== 2000) E.push(tag + ' 解碼 積分 算法 不對：' + JSON.stringify(dp).slice(0, 120)); }
+      /* 2026-10-31 第三十七次 第 10 點：最後 一頁 ＝ 📒 錯題 總複習（大字、逐字 中文、整句 中文、🔊、聽完 才 解鎖 兩顆 按鈕）*/
+      { n += 3; const w0 = await p.evaluate(() => { const C = [...document.querySelectorAll('#end .wrc')], b = [...document.querySelectorAll('#end .wrlk button')];
+          const fz = x => x ? parseFloat(getComputedStyle(x).fontSize) : 0;
+          return { c: C.length, dis: b.length === 2 && b.every(x => x.disabled), en: fz(document.querySelector('#end .wrc .gw b')), zi: fz(document.querySelector('#end .wrc .gw i')), zh: fz(document.querySelector('#end .wrc .wrz')), zt: (document.querySelector('#end .wrc .wrz') || {}).textContent || '', sp: !!document.querySelector('#end .wrc .wrp'), ow: document.documentElement.scrollWidth > innerWidth + 1 }; });
+        if (w0.c !== 1 || !w0.dis || !w0.sp || w0.ow) E.push(tag + ' ' + N + ' 題：錯題 總複習 不對（要 1 張 卡、兩顆 按鈕 先 鎖住、🔊）：' + JSON.stringify(w0));
+        if (w0.en < 30 || w0.zi < 20 || w0.zh < 26 || !/[\u4e00-\u9fff]/.test(w0.zt)) E.push(tag + ' ' + N + ' 題：錯題 總複習 字 不夠 大／沒有 整句 中文：' + JSON.stringify(w0));
+        await p.waitForFunction(() => [...document.querySelectorAll('#end .wrlk button')].every(x => !x.disabled), null, { timeout: 40000 }).catch(() => E.push(tag + ' ' + N + ' 題：英文、中文 唸完 了 按鈕 還是 鎖著'));
+        const w1 = await p.evaluate(() => ({ d: document.querySelectorAll('#end .wrc.done').length, m: (document.querySelector('#end .wrm') || {}).textContent || '' }));
+        if (w1.d !== 1 || !/全部 聽完/.test(w1.m)) E.push(tag + ' ' + N + ' 題：聽完 以後 沒有 寫「全部 聽完 了」：' + JSON.stringify(w1)); }
       n++; const rq = await p.evaluate(N => { const Q = JSON.parse(localStorage.getItem('score_q') || '[]').concat(JSON.parse(localStorage.getItem('score_sent') || '[]')); const r = Q.filter(x => x.set === 'g3gm_g3m-x' + N).pop();
           return r ? { n: r.qs.length, ok: r.qs.filter(q => q[0]).length, bi: r.qs.every(q => q[5] >= 0 && XALL[q[5]]), nm: r.name } : null; }, N);
       if (!rq || rq.n !== N || rq.ok !== N - 1 || !rq.bi || !/三年級 複習｜📝 /.test(rq.nm)) E.push(tag + ' ' + N + ' 題：沒有 記進 成績：' + JSON.stringify(rq));

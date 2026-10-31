@@ -227,6 +227,7 @@ const JS = `
 ${DECX.JS}
 ${RVX.js}
 ${require('../score/_actl.js').js}
+${require('../score/_wrev.js').js}
 ${RVX.page({ gr: 'g4', set: 'g4gm_mt-rv', name: '📝 四年級 複習｜🎬 秒懂 動畫 突擊 測驗', R: RVR })}
 ${NGX.JS}
 var NGM=${J(D.NGAME.map(g => ({ id: g.id, ic: g.ic, nm: g.nm, how: NGX.HOW[g.id], t: NGX.T[g.id], sec: 'b' })))},XB2=${J(D.XB2)},XGI2={},XBK='A';${J(D.XORD2)}.forEach(function(x,k){XGI2[x[0]+':'+x[1]]=k});
@@ -470,17 +471,22 @@ function fin(){if(DUO){duoEnd1();return}if(R.crs){crDone();return}if(R.x){finX()
 /* 25／50 題 結束：得分 ／ 100、每一關 答對 幾題、答錯 的 題目 */
 function finX(){xDel(R.x);var GM=LOB,n=R.Q.length,ok=0,fast=0;R.Q.forEach(function(x){ok+=x[0];fast+=x[3]});var sc=Math.min(100,Math.round(R.sc*10)/10),st=sc>=90?3:sc>=70?2:1,rec=n>=6&&fast*2<=n&&rec1();   /* 🔓 解碼 任務 放對 幾成 拿 幾成 ➜ 分數 ＝ R.sc */
   try{if(sc>best('x'+XS()+R.x))localStorage.setItem('mt_best_x'+XS()+R.x,sc)}catch(e){}
-  var h='<div class="end"><div class="st">'+Array(st+1).join('⭐')+'<span class="dim">'+Array(4-st).join('⭐')+'</span></div><div class="big xsc">📝 '+XNM(R.x)+'：<b>'+sc+'</b> 分 ／ 100</div><div class="big">答對 '+ok+' ／ '+R.x+'（每題 '+R.pt+' 分）</div>'+
+  var h='<div class="end"><div class="st">'+Array(st+1).join('⭐')+'<span class="dim">'+Array(4-st).join('⭐')+'</span></div><div class="big xsc">📝 '+XNM(R.x)+'：<b>'+sc+'</b> 分 ／ 100</div><div class="big">答對 '+ok+' ／ '+R.x+'（每題 '+R.pt+' 分）</div>'+(DEC.rr===R&&DEC.sc?'<div class="big">🔓 解碼 積分 <b style="color:#FFD54A">'+DEC.sc+'</b>（速度 ＋ 🔥 連對 ✖2；只 是 遊戲 積分，不 算進 100 分）</div>':'')+
     '<div class="note">'+(rec?'📝 記進 成績 了':fast*2>n?'⚠️ 太快 亂按 超過 一半：這一回 不算 成績':(typeof SCID!=='undefined'&&SCID?'📶 沒有 網路：先 存 在 平板':'（沒有 登入：沒有 記 成績）'))+'</div>'+
     '<table class="xtb"><tr><th>關</th><th>遊戲</th><th>答對</th></tr>'+(LVS||GM).map(function(g,i){var a=0,m=0;R.lvOf.forEach(function(l,k){if(l===i){m++;if(R.Q[k]&&R.Q[k][0])a++}});return '<tr><td>'+(i+1)+'</td><td>'+g.ic+' '+esc(g.nm)+'</td><td class="'+(a===m?'ok':'')+'">'+a+' ／ '+m+'</td></tr>'}).join('')+'</table>';
-  var W=[];R.Q.forEach(function(x,k){if(!x[0])W.push(R.gs[k].B[R.idx[k]])});
-  if(W.length)h+='<div class="wl"><div class="note">📌 答錯 的 題目（按〔🔊〕聽）</div>'+W.map(function(q){return '<div class="w">'+(q.ae?'<button data-say="'+esc(q.ae)+'">🔊</button>':'')+esc(q.q)+'<br>✅ <b>'+esc(q.oz?q.oz[0]:q.o[0])+'</b>　'+esc(q.z||'')+'</div>'}).join('')+'</div>';
-  h+='<div class="nav"><button class="go" data-xn="'+R.x+'" data-bk="'+(R.bk||'A')+'">🔁 再 挑戰 一次</button><button data-x="hub">🎮 回 大廳</button></div>'+(typeof scByeHTML==='function'&&typeof SCID!=='undefined'&&SCID?scByeHTML():'')+'</div>';
-  $('#app').innerHTML=h;window.scrollTo(0,0)}
+  /* 2026-10-31 第三十七次 第 10 點：最後 一頁 ＝ 📒 錯題 總複習（score/_wrev.js）：每一題 ＝ 題目＋圖＋正確 答案 逐字 中文＋整句 中文；自動 唸 英文、中文 各 一次；〔🔊〕再聽；全部 聽完 才 解鎖 下面 兩顆 */
+  var g0=R.g,W=[];R.Q.forEach(function(x,k){if(x[0])return;var g=R.gs[k],q=g.B[R.idx[k]];R.g=g;var ex=exHTML(q);
+    W.push({head:'❌ 第 '+(k+1)+' 題｜'+g.ic+' '+esc(g.nm),
+      body:(g.id==='m8'?'<div class="ca">📝 題目</div>'+glossQ(m8Q(q)):q.q&&g.id!=='dc'?'<div class="ca">📝 題目：'+esc(q.q)+'</div>':'')+(ex?'<div class="ex">'+ex+'</div>':'')+'<div class="ca">✅ 正確答案</div>'+gloss(q.fe,q.gx,g.id==='m1'||g.id==='m2')+(q.tip?'<div class="tip">💡 '+esc(q.tip)+'</div>':''),
+      zh:q.fz,post:g.id==='m7'||g.id==='n5'?function(c){var gb=c.querySelector('.gls b');if(gb)gb.innerHTML=lcW(q.spell,q.lc)}:null,en:function(d){sayList(q.fs,d)}})});R.g=g0;
+  if(!W.length)h+='<div class="big">🎉 全部答對！</div>';
+  h+='<div id="wrvh"></div></div>';$('#app').innerHTML=h;window.scrollTo(0,0);
+  WREV.run($('#wrvh'),W,'<div class="nav"><button class="go" data-xn="'+R.x+'" data-bk="'+(R.bk||'A')+'" disabled>🔁 再 挑戰 一次</button><button data-x="hub" disabled>🎮 回 大廳</button></div>'+(typeof scByeHTML==='function'&&typeof SCID!=='undefined'&&SCID?scByeHTML():''))}
 function rec1(){try{if(typeof scLive!=='function'||!scLive()||R.sent)return false;R.sent=1;var u=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
   var Rr={id:SCID,set:R.x?'g4gm_mt-'+(R.bk==='B'?'n':R.bk==='H'?'h':'x')+R.x:'g4gm_mt-'+R.g.id,name:R.x?'📝 四年級 複習｜📝 '+XNM(R.x):'📝 四年級 複習｜'+R.g.ic+' '+R.g.nm,m:'g',qs:R.Q,raw:R.sc,fix:0,mp:0,mw:0,sec:Math.round((Date.now()-R.t0)/1000),src:'school',dev:SCDEV,u:u,t:Date.now()};
   var QQ=scGet('q')||[];QQ.push(Rr);scPut('q',QQ.slice(-200));scFlush();return true}catch(e){return false}}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
+  if(typeof WREV!=='undefined'&&(c('[data-xn]')||c('[data-x="hub"]')))WREV.stop();   /* 錯題 總複習 還在 唸 ➜ 停 */
   if((b=c('[data-g]'))){start(b.getAttribute('data-g'));return}
   if((b=c('[data-xn]'))){XBK=b.getAttribute('data-bk')||XBK;if(DUOM&&CR)duoStart(+b.getAttribute('data-xn'));else startX(+b.getAttribute('data-xn'));return}
   if((b=c('[data-duo]'))){DUOM=+b.getAttribute('data-duo');$$('[data-duo]').forEach(function(x){x.classList.toggle('on',+x.getAttribute('data-duo')===DUOM)});return}
@@ -568,7 +574,7 @@ const html = `<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>四年級 複習</title>
-<style>${CSS}${DECX.CSS}${NGX.CSS}${RVX.css}${require('../score/_actl.js').css}</style></head>
+<style>${CSS}${DECX.CSS}${NGX.CSS}${RVX.css}${require('../score/_actl.js').css}${require('../score/_wrev.js').css}${require('../score/_wrev.js').cssFrom(CSS,'#wf')}</style></head>
 <body>
 ${CL.home(4, '../', 'school')}
 <script src="../live/fb.js"></script><script>${fs.readFileSync(path.join(__dirname, '..', 'live', '_db.js'), 'utf8')}</script><script>${fs.readFileSync(path.join(__dirname, '..', 'live', '_xlive_rt.js'), 'utf8')}</script>

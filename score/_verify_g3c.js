@@ -88,6 +88,14 @@ async function teacher(br, vp) {
   const h25 = await p.evaluate(() => { const rows = [].map.call(document.querySelectorAll('.g3t tr'), tr => [].map.call(tr.children, td => td.childNodes[0] ? td.childNodes[0].textContent.trim() : '')), r = rows.find(x => x[0] === '01');
     return { r, n: (document.querySelector('.g3t tr:nth-child(2) td:nth-child(4) small') || {}).textContent, qr: (document.querySelector('a.crqr') || {}).getAttribute && document.querySelector('a.crqr').getAttribute('href'), dl: !!document.querySelector('[data-crdl]'), wq: document.querySelectorAll('.wq[data-qx]').length }; });
   if (!h25.r || h25.r[2] !== '92' || h25.r[3] !== '92' || h25.qr !== '../go25/index.html?g=3' || !h25.dl || !h25.wq) e.push('〔🏠 25 題 闖關〕表 不對 ' + JSON.stringify(h25));
+  /* 2026-10-31 第三十七次 第 11 點：⓪ 誰 完成 了（304：01 完成、其他 29 人 還沒）＋〔🔍 看 每一題〕＝ 每一關 長條、25 題 ✅／❌（2 題 錯）、點 一題 ＝ 詳解 */
+  { n += 3; const d0 = await p.evaluate(() => { const c = [...document.querySelectorAll('.h5c')].find(x => /304/.test(x.textContent)); return { c: document.querySelectorAll('.h5c').length, t: c ? c.querySelector('.h5n').textContent : '', ok: c ? c.querySelectorAll('.h5ppl .ok').length : -1, no: c ? c.querySelectorAll('.h5ppl .no').length : -1, nm: c ? /測試01/.test(c.textContent) : false, fz: c ? parseFloat(getComputedStyle(c.querySelector('.h5ppl span')).fontSize) : 0 }; });
+    if (d0.c !== 3 || !/✅ 1 ／ 30 人/.test(d0.t) || d0.ok !== 1 || d0.no !== 29 || !d0.nm || d0.fz < 18) e.push('⓪ 誰 完成 了 不對：' + JSON.stringify(d0));
+    await p.click('[data-h5p="30401"]'); await p.waitForTimeout(400);
+    const d1 = await p.evaluate(() => ({ lv: document.querySelectorAll('.h5lv>div').length, q: document.querySelectorAll('.h5q').length, no: document.querySelectorAll('.h5q.no').length, ow: document.documentElement.scrollWidth > innerWidth + 1 }));
+    if (!d1.lv || d1.q !== 25 || d1.no !== 2 || d1.ow) e.push('〔🔍 看 每一題〕不對：' + JSON.stringify(d1));
+    await p.click('.h5q.no'); await p.waitForTimeout(400); if (!(await p.evaluate(() => !!document.querySelector('#modal.on')))) e.push('點 一題 沒有 詳解');
+    await p.evaluate(() => { const m = document.getElementById('modal'); const x = m && m.querySelector('#mx,.x'); if (x) x.click(); if (m) m.classList.remove('on'); }); await p.waitForTimeout(200); }
   n++; await p.evaluate(() => { window.LASTXLSX = null; }); await p.click('[data-crdl]'); await p.waitForTimeout(400); if (!(await p.evaluate(() => window.LASTXLSX && window.LASTXLSX.length > 200))) e.push('〔⬇ 下載 Excel〕沒有 下載');
   n++; if (SC.cat('g3gm_g3m-q1').k !== 'g3c' || SC.cat('g3gm_c2-q10').k !== 'g3c' || SC.cat('g4gm_mt-m1').k !== 'mt') e.push('類別 不對');
   if (process.env.SHOT) await p.screenshot({ path: path.join(process.env.SHOT, 'g3c_' + vp[0] + '.png'), fullPage: true });

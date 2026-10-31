@@ -5,6 +5,12 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, PatternFill
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _data import SETS
+# 2026-10-31 老師 C43 ⑤「對」＋第三十七次 第 7 點：學生 看不懂 的 題目 換成 _rewrite_c43.py 的 改寫（鑑別度 低 的 那幾題 再 改過）
+from _rewrite_c43 import RW
+_K = {"三年級_期中複習_第1份": "G3A", "三年級_期中複習_第2份": "G3B", "四年級_期中複習_第1份": "G4A", "四年級_期中複習_第2份": "G4B"}
+for _n, _L in SETS:
+    for (_k, _i), _v in RW.items():
+        if _k == _K[_n]: _L[_i] = _v
 
 D = os.path.dirname(os.path.abspath(__file__))
 TIME = 20

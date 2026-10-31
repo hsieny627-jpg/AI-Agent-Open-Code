@@ -260,7 +260,10 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* 4 限量、限時：商城 最上面 一區 8 樣（2026-10-20 第十五次：限時 5 樣 ＝ s0301 金龍、s0804、s0710、s0908、s1005）；剩幾個 ＝ 伺服器 數；5 個 都 換走 ➜「已 換完」、買不到 */
     await p.click('#tabs [data-t="m"]'); await p.waitForTimeout(200);
     const lt = await p.evaluate(() => ({ n: document.querySelectorAll('.ltd .it').length, a: (document.querySelector('.ltd [data-id="s0713"]') || {}).textContent || '', b: (document.querySelector('.ltd [data-id="s0804"]') || {}).textContent || '', c: !!document.querySelector('.ltd [data-id="s0301"]') && !!document.querySelector('.ltd [data-id="s0908"]') && !document.querySelector('.ltd [data-id="s0805"]') && !document.querySelector('.ltd [data-id="s0907"]') }));
-    if (lt.n !== 8 || !lt.c || !/限量 5 個．剩 5 個/.test(lt.a) || !/10 月 31 號 ?下架/.test(lt.b)) E.push(tag + '：限量、限時 不對（' + lt.n + '、' + lt.a + '、' + lt.b + '）');
+    /* 2026-10-31 第三十七次 第 2 點：過了 下架 時間 ＝ 沒 買 的 人 完全 看不到（限時 5 樣 不見、只 剩 限量 3 樣）*/
+    const END0 = require('../score/_calc.js').RPEND.s0804, aft = Date.now() >= END0;
+    if (aft) lt.c = !(await p.evaluate(() => !!document.querySelector('[data-id="s0804"],[data-id="s0301"],[data-id="s0908"]')));
+    if (lt.n !== (aft ? 3 : 8) || !lt.c || !/限量 5 個．剩 5 個/.test(lt.a) || (aft ? lt.b !== '' : !/10 月 31 號 晚上 11:59 下架/.test(lt.b))) E.push(tag + '：限量、限時 不對（' + lt.n + '、' + lt.a + '、' + lt.b + '）');
     for (let i = 0; i < 5; i++) G.books['角色'].d.push(['4010' + i, JSON.stringify({ own: { s: ['s0713'] } }), new Date()]);
     const sold = G.post({ a: 'rpg', id: '40205', op: 'buy', item: 's0713' });
     await p.reload(); await p.waitForTimeout(1800); await p.click('#tabs [data-t="m"]'); await p.waitForTimeout(200);

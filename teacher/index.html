@@ -430,7 +430,7 @@ td.nmc{text-align:left}
 .pa{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}.pa span{border-radius:12px;padding:4px 14px;font-weight:700}
 .pa .no{background:#2A1414;color:#FFB0B0}.pa .ok{background:#0F3323;color:var(--ok)}
 .pdb{margin-top:18px;width:100%;background:#141A20;border-color:#2A3A4A}
-.spw{margin-top:22px;display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;font-size:24px;font-weight:700;background:#0E141A;border:2px solid #2E3A46;border-radius:16px;padding:10px 16px}.spw b{color:#FFE07A;font-size:28px;letter-spacing:.06em}.spr{min-height:52px;font-size:22px;background:#1E1606;border-color:#FFB300;color:#FFE07A}.spm{font-size:20px;color:#7BF0A8}
+.spw{margin-top:22px;display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;font-size:24px;font-weight:700;background:#0E141A;border:2px solid #2E3A46;border-radius:16px;padding:10px 16px}.spw b{color:#FFE07A;font-size:28px;letter-spacing:.06em}.spr{min-height:52px;font-size:22px;background:#1E1606;border-color:#FFB300;color:#FFE07A}.spm{font-size:20px;color:#7BF0A8}.spo{background:#0E2238;border-color:#7FD4FF;color:#CFE6FF}#spv.open{background:#3A2E06;border-radius:10px;padding:0 10px}
 .delw{margin-top:26px;border-top:2px dashed #3A2A2A;padding-top:16px}.delb{background:#2A1010;border-color:#B04040;color:#FFB0B0}.delb:disabled{opacity:.4}
 #delc{background:#1A0A0A;border:2px solid #B04040;border-radius:18px;padding:14px 16px}.delq{font-size:clamp(20px,1.6vw,28px);line-height:1.5}.delq small{color:#CFA8A8;font-size:.8em}
 .delr{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px;font-size:clamp(19px,1.5vw,26px)}#deli{width:6.5em;font-size:1.3em;text-align:center;letter-spacing:.15em}#delm{margin-top:8px;color:#FFB0B0;font-weight:700}
@@ -523,6 +523,17 @@ em.ok{background:#0F3A20;border-color:#3BD16F;color:#C8FFD9}em.no{background:#3A
 .qsc{background:#0B1520;border:3px solid #22344A;border-radius:18px;padding:12px 16px;margin:10px 0;font-size:clamp(20px,1.7vw,26px)}.qsc.ok{border-color:#3BD16F}.qsc.no{opacity:.55}
 .qsc .qz{font-size:1.2em;color:#FFE07A;margin:6px 0}.qsc .qo{display:flex;flex-wrap:wrap;gap:8px}.qsc .qo span{background:#1B2633;border-radius:12px;padding:4px 12px}.qsc .qo span.a{background:#0F3323;color:#7BF0A8}
 .qsc button{min-height:56px;font-size:clamp(20px,1.7vw,26px);margin:8px 8px 0 0}.qsc .y{background:#1E7A45}.qsc .n{background:#7A1F2A}
+.h5cls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:14px}.h5c{border:4px solid var(--cc);border-radius:20px;padding:12px 14px;background:#0E141A;animation:h5in .5s both}
+.h5t{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:clamp(24px,2.2vw,32px)}.h5n{font-weight:800;color:#7BF0A8}
+.h5bar{position:relative;height:30px;border-radius:99px;background:#1E2A33;margin:8px 0;overflow:hidden}.h5bar i{display:block;height:100%;background:linear-gradient(90deg,#1F7A45,#3BD16F);animation:h5grow 1.2s both}.h5bar span{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:20px;font-weight:800}
+.h5ppl{display:flex;flex-wrap:wrap;gap:6px}.h5ppl span{font-size:clamp(18px,1.5vw,22px);padding:3px 10px;border-radius:10px}.h5ppl .ok{background:#123A22;color:#C8F7DA}.h5ppl .ok b{color:#FFE07A}.h5ppl .no{background:#20262C;color:#9FB0BF}
+.h5sum{margin:12px 0;font-size:clamp(24px,2.2vw,32px);font-weight:800;color:#FFE07A}
+.h5b{min-height:52px;font-size:20px;border-radius:12px;border:2px solid #7FD4FF;background:#0E2238;color:#fff;padding:0 12px}.g3t tr.h5on td{outline:3px solid #7FD4FF}
+.h5det td{background:#0B1118;text-align:left!important}.h5p{padding:6px}.h5ph{font-size:clamp(22px,2vw,30px);font-weight:800;margin-bottom:8px}.h5ph b{padding:0 10px;border-radius:8px}
+.h5lv>div{display:grid;grid-template-columns:2.6em 1fr 5.5em;gap:10px;align-items:center;font-size:clamp(20px,1.7vw,26px);margin:5px 0}.h5lv b{font-size:1.4em}.h5lv .t{height:24px;border-radius:99px;background:#1E2A33;overflow:hidden}.h5lv .t i{display:block;height:100%;animation:h5grow 1s both}
+.h5q{display:grid;grid-template-columns:2.2em 2em 1fr 5em;gap:8px;align-items:center;padding:8px 10px;margin:6px 0;border-radius:12px;font-size:clamp(20px,1.6vw,24px);cursor:pointer;animation:h5in .4s both}.h5q.ok{background:#0F2A1B}.h5q.no{background:#2A1016;border:2px solid #A3263A}
+.h5q .q b{display:block}.h5q .q em{display:block;font-style:normal;font-size:max(18px,.85em);color:#C8D6E2}.h5q .q s{color:#FF9A9A}.h5q .sec{color:#9FB4C8;text-align:right}
+@keyframes h5grow{from{width:0}}@keyframes h5in{from{opacity:0;transform:translateY(10px)}}@media (prefers-reduced-motion:reduce){.h5c,.h5bar i,.h5lv .t i,.h5q{animation:none}}
 .xh{font-size:clamp(22px,1.9vw,30px);color:var(--gold);margin:18px 0 8px}.xan>div{display:grid;grid-template-columns:3.2em 1fr 9em;gap:10px;align-items:center;font-size:clamp(20px,1.7vw,26px);margin:6px 0}.xan b{font-size:1.4em}.xan small{color:#9FB4C8;font-size:max(18px,.75em)}.xan .t{height:22px;border-radius:11px;background:#1A2230;overflow:hidden}.xan .t i{display:block;height:100%}.xan .t i.p0{background:#C62828}.xan .t i.p1{background:#C9A227}.xan .t i.p2{background:#2E9E5B}
 .g3t{border-collapse:collapse;width:100%;font-size:clamp(20px,1.7vw,28px)}.g3t th,.g3t td{border:2px solid #2A3A4A;padding:6px 8px;text-align:center}.g3t th{background:#14202B;font-size:clamp(18px,1.3vw,22px);line-height:1.25}.g3t th b{display:block;font-size:1.6em}
 .g3t td.nm{text-align:left;white-space:nowrap}.g3t td small{display:block;font-size:max(18px,.62em);color:#9FB4C8}.g3h small{font-size:max(20px,.6em)!important}.g3t .p2{background:#1F7A45;color:#fff}.g3t .p1{background:#B08A10;color:#fff}.g3t .p0{background:#A3263A;color:#fff}.g3t td.p0 small,.g3t td.p1 small,.g3t td.p2 small{color:rgba(255,255,255,.85)}.g3t .av{font-size:1.15em;border-left:5px solid var(--gold)}
@@ -540,6 +551,11 @@ em.ok{background:#0F3A20;border-color:#3BD16F;color:#C8FFD9}em.no{background:#3A
 .fvr.z{opacity:.55}.fvr.z{animation:none;opacity:.55}.fvr.t1{border-color:#FFD54A;background:linear-gradient(90deg,#3A2A06,#10161E)}.fvr.t2{border-color:#D0D8E0}.fvr.t3{border-color:#CD8A4A}
 .bo{border:4px solid #FFD54A;border-radius:20px;padding:12px 16px;margin:0 0 18px;background:rgba(255,213,74,.08)}.bo h3{margin:0 0 8px;font-size:clamp(26px,2.6vw,34px)}.bost{font-size:clamp(20px,2vw,26px);line-height:1.5;margin-bottom:8px}.bo1{color:#5DE89A}.bo0{color:#FF9A9A}
 .bo .lkrow button{min-height:56px;font-size:clamp(20px,1.9vw,24px)}.bo .bog{background:#1E7A45}.bo .bor{background:#8A1E2A}.bo .bob{background:#1E4A8A}.bo .lkrow button small{display:block;font-size:.7em;font-weight:400}.bo .lkrow button.bsel,.bor1 button.on{box-shadow:0 0 0 3px #FFF3B0,0 0 8px 2px rgba(255,213,74,.4)}.bo .lkrow button.bsel{border:3px solid #FFF3B0;transform:scale(1.04)}.bo .lkrow button:not(.bsel){opacity:.72}@keyframes boGlow{50%{box-shadow:0 0 0 4px #FFF3B0,0 0 34px 14px rgba(255,213,74,1)}}@media (prefers-reduced-motion:reduce){.bo .lkrow button.bsel,.bor1 button.on{animation:none}}
+.bo .vok,.bor1 button.vok{border-color:#5DE89A!important;box-shadow:0 0 0 3px #5DE89A,0 0 18px 6px rgba(93,232,154,.55)!important}.bor1 button.on.vok{background:#C8F7DA;color:#0A3A1E}
+.bovk{display:flex;align-items:center;gap:14px;margin:4px 0 12px;padding:10px 18px;border-radius:18px;background:#0D2A18;border:4px solid #5DE89A;box-shadow:0 0 16px 4px rgba(93,232,154,.45);font-size:clamp(22px,2.2vw,28px)}.bovk b{display:block;font-size:clamp(32px,3.4vw,46px);color:#7BF0A8}.bovk small{font-size:.85em;color:#DFFBE9}.bovi{font-size:clamp(52px,5vw,72px);line-height:1}
+.bovk.big{animation:bovIn .7s cubic-bezier(.2,1.4,.4,1) both}.bovk.big .bovi{animation:bovCk .9s .3s ease-out both}.bovk.no{background:#2A0A10;border-color:#FF6B6B;box-shadow:none}.bovk.no b{color:#FF9A9A}
+@keyframes bovIn{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}@keyframes bovCk{0%{transform:scale(0) rotate(-30deg)}70%{transform:scale(1.3)}100%{transform:none}}
+@media (prefers-reduced-motion:reduce){.bovk.big,.bovk.big .bovi{animation:none}}
 .bor1{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0;font-size:clamp(20px,1.9vw,24px)}.bor1 button{min-height:52px;padding:0 14px;border-radius:12px;border:2px solid #4A4A4A;background:#1E1E1E;color:#fff;font-size:inherit}.bor1 button.on{background:#FFD54A;color:#111;border-color:#FFD54A}.bor1 button[data-boc]{border-color:var(--cc)}
 .fvoff{display:inline-block;margin-left:8px;font-style:normal;background:#555;color:#fff;border-radius:8px;padding:0 8px;font-size:.8em;vertical-align:middle}
 /* 2026-10-26 第二十七次 4-(4)：圖示 太小 ➜ 84 ➜ 168px（兩倍）；手機 寬度 64 ➜ 120 */.fvr img{width:168px;height:168px;object-fit:contain;border-radius:10px;background:#000}.fvk{font-size:clamp(22px,2.4vw,30px)}.fvr.t1 .fvk,.fvr.t2 .fvk,.fvr.t3 .fvk{font-size:44px}.fvn{font-size:clamp(20px,2.2vw,26px);display:flex;flex-direction:column}.fvn small{color:#FFD54A;font-size:20px}
@@ -3599,8 +3615,15 @@ function pRecs(id){var r=range();return ALL.filter(function(x){return x.id===id&
 function setNm(k,L){return (bankOf(k)||{}).name||(L&&L.length?L[L.length-1].name:'')||k}
 function ring(v,c){var o=(314-(v||0)*3.14).toFixed(1);return '<svg class="ring" viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" cx="60" cy="60" r="50" style="stroke:'+c+';--o:'+o+'"/><text x="60" y="62">'+f1(v)+'</text></svg>'}
 function vc(v){return v==null?'#555':v>=80?'#3BD16F':v>=60?'#FFD24A':'#FF7A7A'}
-function spLoad(id){post({a:'spl',pw:PW,id:id}).then(function(j){var w=$('#spw');if(!w||w.getAttribute('data-id')!==id)return;
-  if(j&&j.ok){$('#spv').textContent=j.has?j.p:'（還沒 設）';$('#spr').hidden=!j.has}else $('#spv').textContent='（伺服器 要 重新 部署 才 看得到）'},function(){var v=$('#spv');if(v)v.textContent='📶 連不上'})}
+/* 2026-10-31 第三十七次 第 8 點：密碼 先 藏起來（●●●●●●●●），老師 按〔👁 開啟 密碼〕才 看得到；15 秒 自己 再 藏起來（學生 在 旁邊 也 看不到）*/
+var SPV='',SPT=null;
+function spShow(on){clearTimeout(SPT);var v=$('#spv'),b=$('#spo');if(!v)return;
+  if(!SPV){v.textContent='（還沒 設）';if(b)b.hidden=true;return}
+  v.textContent=on?SPV:'●●●●●●●●';v.classList.toggle('open',!!on);if(b){b.hidden=false;b.textContent=on?'🙈 藏起來':'👁 開啟 密碼'}
+  if(on)SPT=setTimeout(function(){spShow(false)},15000)}
+document.addEventListener('click',function(e){if(e.target&&e.target.id==='spo')spShow(e.target.textContent.indexOf('開啟')>=0)});
+function spLoad(id){SPV='';post({a:'spl',pw:PW,id:id}).then(function(j){var w=$('#spw');if(!w||w.getAttribute('data-id')!==id)return;
+  if(j&&j.ok){SPV=j.has?String(j.p):'';spShow(false);$('#spr').hidden=!j.has}else $('#spv').textContent='（伺服器 要 重新 部署 才 看得到）'},function(){var v=$('#spv');if(v)v.textContent='📶 連不上'})}
 function person(id){
   PID=id;var A=pRecs(id),V=A.filter(function(x){return !x.x}),p=SC.students(V)[0]||{acc:null,s:null,count:0,prog:null,keep:false};
   var h='<button class="x" id="mx">✕ 關閉</button><h3 class="ph">'+who(id)+'</h3>';
@@ -3643,7 +3666,7 @@ function person(id){
   if(V.length)h+='</div>';   /* #pmore */
   /* 🗑 刪除這個人全部的成績（老師 2026-10-17 C8 另 4）：要打一次 5 碼才刪得掉；伺服器先搬到「已刪除」工作表 */
   /* 🔑 學生 密碼（2026-10-28 第三十三次 第 4 點，老師 選 甲）：看得到 密碼；〔🔑 清除 密碼〕一下 ＝ 學生 下次 登入 自己 重設 */
-  h+='<div class="spw" id="spw" data-id="'+esc(id)+'">🔑 密碼：<b id="spv">⏳</b><button id="spr" class="spr" hidden>🔑 清除 密碼</button><span id="spm" class="spm"></span></div>';setTimeout(function(){spLoad(id)},0);
+  h+='<div class="spw" id="spw" data-id="'+esc(id)+'">🔑 密碼：<b id="spv">⏳</b><button id="spo" class="spr spo" hidden>👁 開啟 密碼</button><button id="spr" class="spr" hidden>🔑 清除 密碼</button><span id="spm" class="spm"></span></div>';setTimeout(function(){spLoad(id)},0);
   h+='<div class="delw"><button id="delp" class="delb" data-id="'+esc(id)+'">🗑 刪除 '+esc(id)+' 全部的成績</button><div id="delc" hidden>'+
     '<div class="delq">⚠ 要刪除 <b>'+who(id)+'</b> <b>全部</b>的成績嗎？<br><small>每一週、每一個遊戲、每一次都刪；排行榜、要關心、Excel 都不再有這個人（試算表「已刪除」分頁留一份備份）。</small></div>'+
     '<div class="delr"><span>請打這個人的 5 碼：</span><input id="deli" inputmode="numeric" maxlength="5" autocomplete="off"><button id="delgo" class="delb" disabled>🗑 確定刪除</button><button id="delno">取消</button></div><div id="delm"></div></div></div>';
@@ -3826,23 +3849,35 @@ function rwBar(v,n,need){var p=n?Math.min(100,v/n*100):0,q=n?Math.min(100,need/n
 /* 2026-10-26 第二十七次 第 4-(1)(2)：選到 的 按鈕 發光（.bsel、.on 金色 光暈）；2026-10-26 第二十九次 第 5 點（老師：一直 閃 看了 不舒服）➜ 不 閃、光 減小（金框＋淡淡 的 光，停住 不動）；老師 看不懂〔⚙ 照 下面 的 設定〕➜〔🎯 只 加倍 我 勾 的〕＋小字「照 下面 ① 班級 ② 時間 ③ 任務 ④ 幾倍」 */
 /* ══ 🎉 金幣／經驗值 加倍 時段（2026-10-26 第二十六次 第 2-4 點，老師選 B 簡單版）══ 〔🟢 全開〕全部 班級、全部 任務／〔⛔ 全關〕／〔⚙ 照 下面 的 設定〕勾 的 班級、勾 的 任務；都 只在 從～到 這段 時間 */
 var BOM=null,BOMSG='',BOCAT=[['game','🎮 遊戲'],['tq','📝 複習題'],['mt','📝 四年級 複習'],['r1','📘 Review 1'],['l','🎧 聽完字卡'],['lv','⚡ 現場任務'],['g3c','🏫 三年級 複習／課堂複習']];
-function boInit(){var b=DATA.boost||{};BOM={k:b.k>1?b.k:1.5,x:b.x>1?b.x:1.5,h:b.h>1?b.h:1,cls:(b.cls||[]).slice(),cats:(b.cats||[]).slice()}}
+function boInit(){var b=DATA.boost||{};BOM={k:b.k>1?b.k:1.5,x:b.x>1?b.x:1.5,h:b.h>1?b.h:1,cls:(b.cls||[]).slice(),cats:(b.cats||[]).slice()};
+  if(b.m==='all'){BOM.cls=boAllC();BOM.cats=BOCAT.map(function(x){return x[0]})}BOV=boCheck(b,b);BOBIG=false}
+/* 2026-10-31 第三十七次 第 4 點：〔🟢 全開〕➜ 下面 全部 自動 打勾；存好 以後 再 跟 伺服器 要 一次（學生 讀 的 就是 這一份），
+   每一班 用 學生 那邊 一樣 的 算法（SC.bstFor）算 一次 ➜ 每一班、每一個 任務 都 對 ＝ 那個 選項 穩定 發光（不 閃）＋大字「✅ 全部 設定 成功！」 */
+var BOV=null,BOBIG=false;
+function boAllC(){return (SC.CLASSES[3]||[]).concat(SC.CLASSES[4]||[])}
+function boCheck(sent,got){if(!got||got.m==='off'||!got.to||got.to<=Date.now())return null;var g=SC.bstClean(got),t=Math.max(Date.now(),g.from)+1000,ok={},bad=[];
+  ['m','k','x','h','from','to'].forEach(function(f){if(sent&&String(SC.bstClean(sent)[f])!==String(g[f]))bad.push(f)});
+  (g.m==='all'?boAllC():g.cls).forEach(function(c){var r=SC.bstFor(c+'01',t,g);if(r&&r.k===g.k&&r.x===g.x)ok[c]=1;else bad.push(c)});
+  return {ok:ok,cats:g.m==='all'||!g.cats.length?BOCAT.map(function(x){return x[0]}):g.cats.slice(),bad:bad,g:g}}
 function boSt(b){var now=Date.now();if(!b||b.m==='off'||!b.to)return '<b class="bo0">⛔ 現在 沒有 加倍</b>';
   var w=now<b.from?'⏳ 還沒 開始':now>=b.to?'⛔ 已經 結束':'🟢 加倍 中';
   return '<b class="'+(now>=b.from&&now<b.to?'bo1':'bo0')+'">'+w+'</b>　🪙 金幣 ✖'+b.k+'　⭐ 經驗值 ✖'+b.x+(b.h>1?'　🏠 25 題 闖關 ✖'+b.h:'')+'<br>'+(b.m==='all'?'全部 班級、全部 任務':'班級：'+(b.cls.length?b.cls.map(function(c){return esc(SC.cname(c))}).join('、'):'（沒有 勾）')+'<br>任務：'+(b.cats.length?BOCAT.filter(function(x){return b.cats.indexOf(x[0])>=0}).map(function(x){return x[1]}).join('、'):'全部'))+'<br>'+rwT(b.from)+' ➜ '+rwT(b.to)}
-function boHTML(){if(!BOM)boInit();var B=DATA.boost;
-  return '<div class="bo"><h3>🎉 金幣、經驗值 加倍 時段</h3><div class="bost">'+boSt(B)+'</div>'+
-   '<div class="lkrow">'+[['all','bog','🟢 全開','全部 班級、全部 任務'],['off','bor','⛔ 全關','都 不 加倍'],['set','bob','🎯 只 加倍 我 勾 的','照 下面 ① 班級 ② 時間 ③ 任務 ④ 幾倍']].map(function(x){var on=(B&&B.m||'off')===x[0];return '<button data-bo="'+x[0]+'" class="'+x[1]+(on?' bsel':'')+'">'+(on?'✔ ':'')+x[2]+'<small>'+x[3]+'</small></button>'}).join('')+'</div>'+
-   '<div class="bof"><div class="bor1"><b>① 班級</b>'+(SC.CLASSES[F.g]||[]).map(function(c){var on=BOM.cls.indexOf(c)>=0;return '<button data-boc="'+c+'" class="'+(on?'on':'')+'" style="--cc:'+ccol(c)+'">'+(on?'☑ ':'☐ ')+esc(SC.cname(c))+'</button>'}).join('')+'</div>'+
+function boHTML(){if(!BOM)boInit();var B=DATA.boost,V=BOV&&!BOV.bad.length?BOV:null;
+  return '<div class="bo"><h3>🎉 金幣、經驗值 加倍 時段</h3>'+(V?'<div class="bovk'+(BOBIG?' big':'')+'"><span class="bovi">✅</span><span><b>全部 設定 成功！</b><small>學生 那邊 已經 收到：'+Object.keys(V.ok).length+' 班 ✔　🪙 ✖'+V.g.k+'　⭐ ✖'+V.g.x+(V.g.h>1?'　🏠 25 題 闖關 ✖'+V.g.h:'')+'</small></span></div>':BOV&&BOV.bad.length?'<div class="bovk no"><span class="bovi">❌</span><span><b>學生 那邊 還沒 收到</b><small>請 再 按 一次；還是 不行 ＝ 伺服器 要 重新 部署</small></span></div>':'')+'<div class="bost">'+boSt(B)+'</div>'+
+   '<div class="lkrow">'+[['all','bog','🟢 全開','全部 班級、全部 任務'],['off','bor','⛔ 全關','都 不 加倍'],['set','bob','🎯 只 加倍 我 勾 的','照 下面 ① 班級 ② 時間 ③ 任務 ④ 幾倍']].map(function(x){var on=(B&&B.m||'off')===x[0];return '<button data-bo="'+x[0]+'" class="'+x[1]+(on?' bsel':'')+(on&&V&&x[0]!=='off'?' vok':'')+'">'+(on?'✔ ':'')+x[2]+'<small>'+x[3]+'</small></button>'}).join('')+'</div>'+
+   '<div class="bof"><div class="bor1"><b>① 班級</b>'+(SC.CLASSES[F.g]||[]).map(function(c){var on=BOM.cls.indexOf(c)>=0;return '<button data-boc="'+c+'" class="'+(on?'on':'')+(on&&V&&V.ok[c]?' vok':'')+'" style="--cc:'+ccol(c)+'">'+(on?'☑ ':'☐ ')+esc(SC.cname(c))+'</button>'}).join('')+'</div>'+
    '<div class="bor1"><b>② 時間</b></div>'+wRow('bo')+
-   '<div class="bor1"><b>③ 任務</b>'+BOCAT.map(function(x){var on=BOM.cats.indexOf(x[0])>=0;return '<button data-bok="'+x[0]+'" class="'+(on?'on':'')+'">'+(on?'☑ ':'☐ ')+x[1]+'</button>'}).join('')+'<small>（都 不 勾 ＝ 全部 任務）</small></div>'+
+   '<div class="bor1"><b>③ 任務</b>'+BOCAT.map(function(x){var on=BOM.cats.indexOf(x[0])>=0;return '<button data-bok="'+x[0]+'" class="'+(on?'on':'')+(on&&V&&V.cats.indexOf(x[0])>=0?' vok':'')+'">'+(on?'☑ ':'☐ ')+x[1]+'</button>'}).join('')+'<small>（都 不 勾 ＝ 全部 任務）</small></div>'+
    '<div class="bor1"><b>④ 🪙 金幣</b>'+[1.5,2].map(function(k){return '<button data-bk="'+k+'" class="'+(BOM.k===k?'on':'')+'">✖ '+k+'</button>'}).join('')+'<b style="margin-left:18px">⭐ 經驗值</b>'+[1.5,2].map(function(k){return '<button data-bx="'+k+'" class="'+(BOM.x===k?'on':'')+'">✖ '+k+'</button>'}).join('')+'</div>'+
    '<div class="bor1"><b>⑤ 🏠 25 題 闖關</b>'+[[1,'跟 ④ 一樣'],[1.5,'✖ 1.5'],[2,'✖ 2']].map(function(k){return '<button data-bh="'+k[0]+'" class="'+(BOM.h===k[0]?'on':'')+'">'+k[1]+'</button>'}).join('')+'<small>（金幣、經驗值 都 這個 倍數）</small></div>'+
    '<div class="note">只 多 給 金幣、經驗值（答對 賺 的）；正確率、分數、排行榜 不會 變。<span id="bomsg">'+BOMSG+'</span></div></div></div>'}
 function boSave(m){var w=wRead('bo')||wGet(),C=SC.CLASSES[F.g]||[],old=((DATA.boost||{}).cls||[]).filter(function(c){return C.indexOf(c)<0});
   var b={m:m,k:BOM.k,x:BOM.x,h:BOM.h,from:w[0],to:w[1],cls:old.concat(BOM.cls.filter(function(c){return C.indexOf(c)>=0})),cats:BOM.cats};
-  if(m==='set'&&!b.cls.length){BOMSG='❌ 先 勾 班級';draw();return}BOMSG='⏳ 存起來 中…';draw();
-  post({a:'boost',pw:PW,b:b}).then(function(j){if(j&&j.ok){DATA.boost=j.boost;BOMSG='✔ 存好了'}else BOMSG='❌ 存不起來（'+((j&&j.err)||'伺服器 還沒 重新部署')+'）';draw()},function(){BOMSG='❌ 沒有 網路';draw()})}
+  if(m==='all'){BOM.cls=boAllC();BOM.cats=BOCAT.map(function(x){return x[0]});b.cls=BOM.cls.slice();b.cats=[]}   /* 全開 ＝ 下面 全部 自動 打勾 */
+  if(m==='set'&&!b.cls.length){BOMSG='❌ 先 勾 班級';draw();return}BOMSG='⏳ 存起來 中…';BOV=null;draw();
+  post({a:'boost',pw:PW,b:b}).then(function(j){if(j&&j.ok){DATA.boost=j.boost;BOMSG='⏳ 確認 學生 那邊 收到 了 沒…';draw();
+      post({a:'teacher',pw:PW}).then(function(k){var g=k&&k.boost||j.boost;DATA.boost=g;BOV=boCheck(b,g);BOBIG=!!BOV&&!BOV.bad.length;setTimeout(function(){BOBIG=false},1500);BOMSG=m==='off'?'✔ 已經 全部 關掉':BOV?'':'✔ 存好了（時間 已經 過了 或 還沒 設 時間）';draw()},
+        function(){BOV=boCheck(b,j.boost);BOBIG=!!BOV&&!BOV.bad.length;BOMSG='';draw()});return}else BOMSG='❌ 存不起來（'+((j&&j.err)||'伺服器 還沒 重新部署')+'）';draw()},function(){BOMSG='❌ 沒有 網路';draw()})}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b,v;if(!BOM)return;
   if((b=c('[data-bo]'))){boSave(b.getAttribute('data-bo'));return}
   if((b=c('[data-boc]'))){v=b.getAttribute('data-boc');var i=BOM.cls.indexOf(v);if(i>=0)BOM.cls.splice(i,1);else BOM.cls.push(v);draw();return}
@@ -3955,10 +3990,11 @@ function paneX(g,hm){var CC=SC.CLASSES[g]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g
   XROWS.ids=ids;var h='<div class="fvhd g3h">'+(hm?'🏠 '+(g===3?'三':'四')+'年級 25 題 闖關（回家）：學生 成績、錯題 排行榜、錯題 分析<small>（時間 ＝ 上面 選 的）</small>':'📝 '+(g===3?'三':'四')+'年級 期中 挑戰：學生 成績、錯題 排行榜、錯題 分析<small>（時間 ＝ 上面 選 的；分數 ＝ 最近 一次）</small>')+'</div>'+
     (hm?'<div class="g3sw"><a class="crqr" href="../go25/index.html?g='+g+'" target="_blank">📱 '+(g===3?'三':'四')+'年級 25 題 闖關 QR／網址</a><button data-crdl="1">⬇ 下載 Excel（這一班）</button></div>':'')+
     '<div class="g3sw">'+CC.map(function(x){return '<button data-g3c="'+x+'" class="'+(x===c?'on':'')+'" style="border-color:'+ccol(x)+'">'+esc(SC.cname(x))+'</button>'}).join('')+'</div>';
+  if(hm)h+=h25Done(g,re);
   if(!RS.length)return h+'<div class="note">'+(hm?'這個 時間、這一班 還沒有 人 做 25 題 闖關（學生 回家 掃 QR）。':'這個 時間、這一班 還沒有 人 做 期中 挑戰（英文課 在〔⚡ 現場任務〕開）。')+'</div>';
   /* ① 學生 成績 */
-  h+='<h3 class="xh">① 👤 學生 成績</h3><div class="g3w"><table class="g3t"><tr><th>號碼</th><th>姓名</th>'+COLS.map(function(x){return '<th>'+x[1]+'</th>'}).join('')+'</tr>'+
-    ids.map(function(id){var p=P[id]||{};return '<tr><td>'+id.slice(3)+'</td><td class="nm">'+esc(nm(id)||'')+'</td>'+COLS.map(function(x){var v=p[x[0]];return !v?'<td>—</td>':v.d?'<td>'+v.d+'</td>':'<td class="'+g3Col(v.s)+'">'+v.s+'<small>'+v.n+' 次</small></td>'}).join('')+'</tr>'}).join('')+'</table></div>';
+  h+='<h3 class="xh">① 👤 學生 成績'+(hm?'：👆 點〔🔍 看 每一題〕＝ 這個 學生 最近 一次 每一關、每一題 的 作答':'')+'</h3><div class="g3w"><table class="g3t"><tr><th>號碼</th><th>姓名</th>'+COLS.map(function(x){return '<th>'+x[1]+'</th>'}).join('')+(hm?'<th>🔍</th>':'')+'</tr>'+
+    ids.map(function(id){var p=P[id]||{};return '<tr'+(hm&&H25P===id?' class="h5on"':'')+'><td>'+id.slice(3)+'</td><td class="nm">'+esc(nm(id)||'')+'</td>'+COLS.map(function(x){var v=p[x[0]];return !v?'<td>—</td>':v.d?'<td>'+v.d+'</td>':'<td class="'+g3Col(v.s)+'">'+v.s+'<small>'+v.n+' 次</small></td>'}).join('')+(hm?'<td>'+(p.h25?'<button class="h5b" data-h5p="'+id+'">🔍 看 每一題</button>':'—')+'</td>':'')+'</tr>'+(hm&&H25P===id&&p.h25?'<tr class="h5det"><td colspan="'+(COLS.length+3)+'">'+h25Per(id,RS)+'</td></tr>':'')}).join('')+'</table></div>';
   /* ② 錯題 分析：每一關 的 正確率（照 題目 前面 的 遊戲 圖示 分）*/
   var Q=SC.questions(RS),A={};Q.forEach(function(x){var o=qOf(x.k);if(!o)return;var ic=String(o.q.q||'').split(' ')[0]||'?',a=A[ic]=A[ic]||{n:0,bad:0};a.n+=x.n;a.bad+=x.bad});
   var L=Object.keys(A).map(function(k){var a=A[k];return [k,Math.round((a.n-a.bad)/a.n*100),a.n]}).sort(function(a,b){return a[1]-b[1]});
@@ -4002,6 +4038,29 @@ function paneG(){var g=CRG||(F.g===4?4:3);CRG=g;
   if(CRK==='x')return h+paneX(g);if(CRK==='h')return h+paneX(g,1);
   if(g===4)G3S='mt';else if(!/^(g3m|c[123]|all)$/.test(G3S))G3S='all';return h+paneGT()}
 var XROWS=null;
+/* ══ 2026-10-31 第三十七次 第 11 點：🏠 25 題 闖關 ＝ ⓪ 加倍 時段 誰 完成 了（這個 年級 每一班）＋ 每一個 學生 每一關、每一題 的 作答（秒懂 長條 動畫）══
+   ⓪ 時間 ＝ 老師 設 的〔🎉 加倍 時段〕從～到（沒有 設 ＝ 上面 選 的 時間）；有 一筆 25 題 闖關 成績 ＝ 完成（中途 離開 不送，所以 有 成績 ＝ 做完 25 題）
+   🔍 一個 學生：最近 一次 ＝ 每一關 答對 幾 ／ 幾 題（長條 長 出來）＋ 每一題 ✅／❌、題目、他 選 的、正確 答案、秒數；點 一題 ＝ 詳解＋📺 全班 訂正 */
+var H25P='';
+function h25Win(){var b=DATA.boost||{};if(b.from&&b.to&&b.m!=='off')return {from:b.from,to:b.to,bo:1};var r=range();return {from:r.from,to:r.to,bo:0}}
+function h25Done(g,re){var w=h25Win(),CC=SC.CLASSES[g]||[],D={};
+  ALL.forEach(function(x){if(x.x||!re.test(x.set)||(w.from!=null&&x.t<w.from)||(w.to!=null&&x.t>=w.to))return;var o=D[x.id]=D[x.id]||{n:0,s:-1};o.n++;if(x.s>o.s)o.s=x.s});
+  var tot=0,dn=0,h='<h3 class="xh">⓪ 🎉 '+(w.bo?'加倍 時段（'+rwT(w.from)+' ➜ '+rwT(w.to)+'）':'上面 選 的 時間')+'：誰 完成 了 25 題 闖關？</h3><div class="h5cls">';
+  CC.forEach(function(c,i){var ids=(RCLS[c]||[]).slice();Object.keys(D).forEach(function(id){if(id.slice(0,3)===c&&ids.indexOf(id)<0)ids.push(id)});ids.sort();
+    var ok=ids.filter(function(id){return D[id]}),pc=ids.length?Math.round(ok.length/ids.length*100):0;tot+=ids.length;dn+=ok.length;
+    h+='<div class="h5c" style="--cc:'+ccol(c)+';animation-delay:'+(i*.12)+'s"><div class="h5t"><b style="color:'+ccol(c)+'">'+esc(SC.cname(c))+'</b><span class="h5n">✅ '+ok.length+' ／ '+ids.length+' 人</span></div>'+
+      '<div class="h5bar"><i style="width:'+pc+'%;animation-delay:'+(.3+i*.12)+'s"></i><span>'+pc+'%</span></div><div class="h5ppl">'+
+      ids.map(function(id){var d=D[id];return '<span class="'+(d?'ok':'no')+'">'+(d?'✅':'⏳')+' '+id.slice(3)+' '+esc(nm(id)||'')+(d?' <b>'+d.s+'</b>':'')+'</span>'}).join('')+'</div></div>'});
+  return h+'</div><div class="h5sum">🏫 '+(g===3?'三':'四')+'年級 一共：✅ '+dn+' ／ '+tot+' 人 做完（<b>'+(tot?Math.round(dn/tot*100):0)+'%</b>）</div>'}
+function h25Per(id,RS){var L=null;RS.forEach(function(x){if(x.id===id&&(!L||x.t>=L.t))L=x});   /* 一樣 時間 ＝ 後面 那一筆（跟 ① 表 一樣）*/if(!L)return '';var G={},GO=[],rows='';
+  (L.qs||[]).forEach(function(q,j){var k=L.set+'#'+(q[5]==null?j:q[5]),o=qOf(k),ic=o?String(o.q.q||'').split(' ')[0]||'?':'?',a=G[ic];if(!a){a=G[ic]={ok:0,n:0};GO.push(ic)}a.n++;if(q[0])a.ok++;
+    var you=!o?'':q[1]<0?'⏰ 時間 到':q[0]?'':o.q.o[q[1]]!=null?String(o.q.o[q[1]]):'❌';
+    rows+='<div class="h5q '+(q[0]?'ok':'no')+(o?'" data-q="'+k+'" data-qx="1':'')+'" style="animation-delay:'+Math.min(j*.04,1.2)+'s"><span class="n">'+(j+1)+'</span><span class="r">'+(q[0]?'✅':'❌')+'</span><span class="q"><b>'+esc(o?qText(o.q):'（題目 找不到）')+'</b>'+(o?'<em>✅ '+esc(String(o.q.o[0]))+(you?'　｜　他 選：<s>'+esc(you)+'</s>':'')+'</em>':'')+'</span><span class="sec">'+(q[2]!=null?q[2]+' 秒':'')+'</span></div>'});
+  var ok=(L.qs||[]).filter(function(q){return q[0]}).length;
+  return '<div class="h5p"><div class="h5ph">🔍 '+esc(id)+' '+esc(nm(id)||'')+'：最近 一次 '+dt(L.t)+'　<b class="'+g3Col(L.s)+'">'+L.s+' 分</b>　答對 '+ok+' ／ '+(L.qs||[]).length+' 題</div>'+
+    '<div class="h5lv">'+GO.map(function(ic,i){var a=G[ic],v=Math.round(a.ok/a.n*100);return '<div><b>'+esc(ic)+'</b><span class="t"><i class="'+g3Col(v)+'" style="width:'+v+'%;animation-delay:'+(i*.1)+'s"></i></span><span>'+a.ok+' ／ '+a.n+'</span></div>'}).join('')+'</div>'+
+    '<div class="note">👆 點 一題 ＝ 詳解＋📺 全班 訂正（逐字 中文、唸 3 次）</div>'+rows+'</div>'}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-h5p]');if(!b||TAB!=='g')return;var id=b.getAttribute('data-h5p');H25P=H25P===id?'':id;draw()});
 document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-crg],[data-crk],[data-crdl]');if(!b||TAB!=='g')return;
   if(b.hasAttribute('data-crg')){CRG=+b.getAttribute('data-crg');G3C='';}else if(b.hasAttribute('data-crk'))CRK=b.getAttribute('data-crk');
   else{crXlsx();return}draw()});
@@ -4310,7 +4369,7 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if(c('#cps')){if(CER){CER.pause=!CER.pause;$('#cps').textContent=CER.pause?'▶ 繼續':'⏸ 停';if(CER.pause)clearTimeout(CER.tm);else CER.tm=setTimeout(function(){if(CER){CER.i++;cerShow()}},2500)}return}
   if(c('#csd')){HSND=HSND?0:1;lss0('hsnd',HSND);if(HSND)HON.ac();$('#csd').textContent='🔊 聲音：'+(HSND?'開':'關');return}
   if(c('#spr')){var sid=$('#spw').getAttribute('data-id');$('#spr').disabled=true;$('#spm').textContent='⏳ 清除 中…';
-    post({a:'spr',pw:PW,id:sid}).then(function(j){if(j&&j.ok){$('#spv').textContent='（還沒 設）';$('#spr').hidden=true;$('#spm').textContent='✅ 清除 了：'+sid+' 下次 登入 自己 重設';toast('🔑 '+sid+' 的 密碼 清除 了')}else{$('#spr').disabled=false;$('#spm').textContent='📶 沒有 成功，再 按 一次'}},function(){$('#spr').disabled=false;$('#spm').textContent='📶 沒有 成功，再 按 一次'});return}
+    post({a:'spr',pw:PW,id:sid}).then(function(j){if(j&&j.ok){SPV='';spShow(false);$('#spr').hidden=true;$('#spm').textContent='✅ 清除 了：'+sid+' 下次 登入 自己 重設';toast('🔑 '+sid+' 的 密碼 清除 了')}else{$('#spr').disabled=false;$('#spm').textContent='📶 沒有 成功，再 按 一次'}},function(){$('#spr').disabled=false;$('#spm').textContent='📶 沒有 成功，再 按 一次'});return}
   if(c('#delp')){$('#delc').hidden=false;$('#delp').hidden=true;$('#deli').value='';$('#deli').focus();return}
   if(c('#delno')){$('#delc').hidden=true;$('#delp').hidden=false;return}
   if(c('#delgo')){var did=$('#delp').getAttribute('data-id');if($('#deli').value.trim()!==did)return;$('#delgo').disabled=true;$('#delm').textContent='⏳ 刪除中…';
@@ -4320,6 +4379,7 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
   if(c('#pdb')){var d=$('#pdet');d.hidden=!d.hidden;$('#pdb').classList.toggle('on',!d.hidden);return}
   if(c('#pcp')||c('#pcx')){PCH.i=(PCH.i+(c('#pcx')?1:-1)+PCH.L.length)%PCH.L.length;pChart();return}
   if((b=c('.wq'))){QDS=b.hasAttribute('data-qx');qDetail(b.getAttribute('data-q'));return}
+  if((b=c('.h5q[data-q]'))){QDS=true;qDetail(b.getAttribute('data-q'));return}   /* 第三十七次 第 11 點 */
   if(c('#mx')||t.id==='modal'){$('#modal').classList.remove('on');return}
   if((b=c('#sh'))){$('#modal').classList.remove('on');SH=null;show(b.getAttribute('data-q'),0);return}
   if(c('#sn')){show(SH.k,SH.st+1);return}

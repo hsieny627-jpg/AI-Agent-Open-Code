@@ -75,7 +75,23 @@ async function teacher(br, vp) {
     if (!b || !b.k || !b.c || !b.t || b.cat < 6 || b.x !== 4 || b.lo.length || b.sm.length) e.push('加倍 時段 面板 不對：' + JSON.stringify(b));
     await p.click('[data-bo="all"]'); await p.waitForTimeout(500); const st = await p.evaluate(() => document.querySelector('.bost').textContent);
     if (!/加倍 中/.test(st) || !/✖1\.5/.test(st)) e.push('按〔🟢 全開〕沒有 存好：' + st.slice(0, 40));
+    /* 2026-10-31 第三十七次 第 4 點：全開 ➜ 下面 班級、任務 全部 自動 打勾；跟 伺服器 再 確認 ➜ 每一個 打勾 的 選項 穩定 發光（不 閃）＋大字「✅ 全部 設定 成功！」*/
+    { const v = await p.evaluate(() => { const B = document.querySelector('.bo'), q = s => [].slice.call(B.querySelectorAll(s));
+        const glow = x => { const c = getComputedStyle(x); return /rgba?\(93, 232, 154/.test(c.boxShadow) && c.animationName === 'none'; };
+        return { allOn: q('[data-boc]').every(x => x.classList.contains('on')) && q('[data-bok]').every(x => x.classList.contains('on')),
+          glow: q('[data-boc],[data-bok],[data-bo="all"]').every(glow), ok: (B.querySelector('.bovk b') || {}).textContent || '', big: parseFloat(getComputedStyle(B.querySelector('.bovk b') || B).fontSize) }; });
+      if (!v.allOn) e.push('全開 以後 下面 沒有 全部 打勾');
+      if (!v.glow) e.push('打勾 而且 設定 成功 的 選項 沒有 穩定 發光（或 在 閃）');
+      if (!/全部 設定 成功/.test(v.ok) || v.big < 30) e.push('沒有 大字「✅ 全部 設定 成功！」：' + v.ok + ' ' + v.big); n += 3; }
     await p.click('[data-bo="off"]'); await p.waitForTimeout(500); if (!/沒有 加倍/.test(await p.evaluate(() => document.querySelector('.bost').textContent))) e.push('按〔⛔ 全關〕沒有 關'); n += 3; }
+  /* 2026-10-31 第三十七次 第 8 點：學生 密碼 先 藏起來，按〔👁 開啟 密碼〕才 看得到，再 按 ＝ 藏起來 */
+  { G.post({ a: 'sp', id: '30401', p: 'ab123456', set: 1 });
+    await p.evaluate(() => person('30401')); await p.waitForTimeout(700);
+    const t0 = await p.evaluate(() => [($('#spv') || {}).textContent, !!$('#spo') && !$('#spo').hidden, document.body.innerText.indexOf('ab123456') >= 0]);
+    if (t0[0] !== '●●●●●●●●' || !t0[1] || t0[2]) e.push('密碼 一開始 沒有 藏起來：' + JSON.stringify(t0));
+    await p.click('#spo'); const t1 = await p.evaluate(() => $('#spv').textContent); if (t1 !== 'ab123456') e.push('按〔👁 開啟 密碼〕沒有 看到：' + t1);
+    await p.click('#spo'); const t2 = await p.evaluate(() => $('#spv').textContent); if (t2 !== '●●●●●●●●') e.push('再 按 沒有 藏起來');
+    await p.evaluate(() => { const x = $('#mx'); if (x) x.click(); }); await p.waitForTimeout(300); n += 3; }
   for (const k of ['cw', 'ch', 'cp', 'qz', 'cq']) {
     await p.click('.rwcard[data-rwk="' + k + '"]'); await p.waitForTimeout(400);
     if (k === 'cw') { await p.click('[data-rww="last"]'); await p.waitForTimeout(300); }
