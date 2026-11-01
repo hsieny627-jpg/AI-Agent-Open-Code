@@ -77,7 +77,7 @@ const E = []; let n = 0;
     /* 第二次 ＝ 有〔⏭ 跳過〕*/
     await p.evaluate(() => { window.__NOTUT = 0; decClose(); }); await clr(); await p.evaluate(() => { (typeof lobby === 'function' ? lobby : hub)(); }); await clr(); await p.waitForTimeout(200);
     await p.click(site === 'midterm' ? '.xrow .xb[data-xn="25"]' : '[data-x="25"]').catch(() => {}); await p.waitForTimeout(500); n++;
-    if (!(await p.evaluate(() => /怎麼 玩/.test(document.getElementById('dcl').textContent) && !!document.getElementById('dlsk')))) E.push(tag + ' 第二次 教學 沒有〔⏭ 跳過〕');
+    if (!(await p.evaluate(() => /怎麼 玩/.test(document.getElementById('dcl').textContent) && !document.getElementById('dlsk')))) E.push(tag + ' 第二次 教學 不可以 有〔⏭ 跳過〕（第三十八次 11-(1)）');
     n++; if (errs.length) E.push(tag + ' JS 錯誤：' + errs.slice(0, 3).join(' | '));
     await ctx.close();
   }

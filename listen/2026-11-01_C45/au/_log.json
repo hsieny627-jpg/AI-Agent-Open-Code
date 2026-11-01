@@ -1,0 +1,874 @@
+[
+{
+"d": "midterm/audio",
+"k": "good morning, lucas. she's my mom. she's a cook.",
+"t": "Good morning, Lucas. She's my mom. She's a cook.",
+"f": "8f280ba0ee99.mp3",
+"ok": true,
+"heard": "good morning lucas shes my mom shes a cook"
+},
+{
+"d": "midterm/audio",
+"k": "good morning, owen. she's my sister.",
+"t": "Good morning, Owen. She's my sister.",
+"f": "f8de450de20d.mp3",
+"ok": true,
+"heard": "good morning owen shes my sister"
+},
+{
+"d": "midterm/audio",
+"k": "good morning. this is my mom. she's a farmer.",
+"t": "Good morning. This is my mom. She's a farmer.",
+"f": "aa831c90432c.mp3",
+"ok": true,
+"heard": "good morning this is my mom shes a farmer"
+},
+{
+"d": "midterm/audio",
+"k": "is your grandma a doctor? no, she isn't. she's a farmer.",
+"t": "Is your grandma a doctor? No, she isn't. She's a farmer.",
+"f": "2ceb3cfedbe2.mp3",
+"ok": true,
+"heard": "is your grandma a doctor no she isnt shes a farmer"
+},
+{
+"d": "midterm/audio",
+"k": "is your mom a nurse? no, she isn't. she's a farmer.",
+"t": "Is your mom a nurse? No, she isn't. She's a farmer.",
+"f": "2e040cf9c66c.mp3",
+"ok": true,
+"heard": "is your mom a nurse no she isnt shes a farmer"
+},
+{
+"d": "midterm/audio",
+"k": "is your mom a teacher? no, she isn't. she's a doctor.",
+"t": "Is your mom a teacher? No, she isn't. She's a doctor.",
+"f": "382a2e054617.mp3",
+"ok": true,
+"heard": "is your mom a teacher no she isnt shes a doctor"
+},
+{
+"d": "midterm/audio",
+"k": "is your mother a farmer? no, she isn't. she's a nurse.",
+"t": "Is your mother a farmer? No, she isn't. She's a nurse.",
+"f": "429f2280ff71.mp3",
+"ok": true,
+"heard": "is your mother a farmer no she isnt shes a nurse"
+},
+{
+"d": "midterm/audio",
+"k": "is your sister a cook? no, she isn't. she's a nurse.",
+"t": "Is your sister a cook? No, she isn't. She's a nurse.",
+"f": "9adec201eb2f.mp3",
+"ok": true,
+"heard": "is your sister a cook no she isnt shes a nurse"
+},
+{
+"d": "midterm/audio",
+"k": "is your sister a farmer? no, she isn't. she's a student.",
+"t": "Is your sister a farmer? No, she isn't. She's a student.",
+"f": "a114f69973b7.mp3",
+"ok": true,
+"heard": "is your sister a farmer no she isnt shes a student"
+},
+{
+"d": "midterm/audio",
+"k": "look! she's my grandmother.",
+"t": "Look! She's my grandmother.",
+"f": "0a578162feae.mp3",
+"ok": true,
+"heard": "look shes my grandmother"
+},
+{
+"d": "midterm/audio",
+"k": "look! she's my sister. she's a cook.",
+"t": "Look! She's my sister. She's a cook.",
+"f": "1a8b5c34f79f.mp3",
+"ok": true,
+"heard": "look shes my sister shes a cook"
+},
+{
+"d": "midterm/audio",
+"k": "look! she's my sister. she's a teacher.",
+"t": "Look! She's my sister. She's a teacher.",
+"f": "5c72c8b9202d.mp3",
+"ok": true,
+"heard": "look shes my sister shes a teacher"
+},
+{
+"d": "midterm/audio",
+"k": "no, she isn't. she's a cook.",
+"t": "No, she isn't. She's a cook.",
+"f": "c46421c91afe.mp3",
+"ok": true,
+"heard": "no she isnt shes a cook"
+},
+{
+"d": "midterm/audio",
+"k": "no, she isn't. she's a doctor.",
+"t": "No, she isn't. She's a doctor.",
+"f": "c09b949c310f.mp3",
+"ok": true,
+"heard": "no she isnt shes a doctor"
+},
+{
+"d": "midterm/audio",
+"k": "no, she isn't. she's a farmer.",
+"t": "No, she isn't. She's a farmer.",
+"f": "89dbfef28a93.mp3",
+"ok": true,
+"heard": "no she isnt shes a farmer"
+},
+{
+"d": "midterm/audio",
+"k": "no, she isn't. she's a nurse.",
+"t": "No, she isn't. She's a nurse.",
+"f": "0fc45f194216.mp3",
+"ok": true,
+"heard": "no she isnt shes a nurse"
+},
+{
+"d": "midterm/audio",
+"k": "no, she isn't. she's a teacher.",
+"t": "No, she isn't. She's a teacher.",
+"f": "9e34e0270cff.mp3",
+"ok": true,
+"heard": "no she isnt shes a teacher"
+},
+{
+"d": "midterm/audio",
+"k": "no, she isn't. she's my grandma. she's a doctor.",
+"t": "No, she isn't. She's my grandma. She's a doctor.",
+"f": "e1d2cf33ebdd.mp3",
+"ok": true,
+"heard": "no she isnt shes my grandma shes a doctor"
+},
+{
+"d": "midterm/audio",
+"k": "no, she isn't. she's my mom.",
+"t": "No, she isn't. She's my mom.",
+"f": "7fec9d56097f.mp3",
+"ok": true,
+"heard": "no she isnt shes my mom"
+},
+{
+"d": "midterm/audio",
+"k": "no, she isn't. she's my sister.",
+"t": "No, she isn't. She's my sister.",
+"f": "5ba0915f3861.mp3",
+"ok": true,
+"heard": "no she isnt shes my sister"
+},
+{
+"d": "midterm/audio",
+"k": "no, she isn't. she's my sister. she's sixteen.",
+"t": "No, she isn't. She's my sister. She's sixteen.",
+"f": "727a18d983c4.mp3",
+"ok": true,
+"heard": "no she isnt shes my sister shes sixteen"
+},
+{
+"d": "midterm/audio",
+"k": "no, she isn't. she's my sister. she's thirteen.",
+"t": "No, she isn't. She's my sister. She's thirteen.",
+"f": "11d7876b35ad.mp3",
+"ok": true,
+"heard": "no she isnt shes my sister shes thirteen"
+},
+{
+"d": "midterm/audio",
+"k": "she's my grandma. she's a farmer.",
+"t": "She's my grandma. She's a farmer.",
+"f": "853880d73801.mp3",
+"ok": true,
+"heard": "shes my grandma shes a farmer"
+},
+{
+"d": "midterm/audio",
+"k": "she's my mother. she's a cook.",
+"t": "She's my mother. She's a cook.",
+"f": "8533f910be49.mp3",
+"ok": true,
+"heard": "shes my mother shes a cook"
+},
+{
+"d": "midterm/audio",
+"k": "she's my sister. she's nineteen. she's a nurse.",
+"t": "She's my sister. She's nineteen. She's a nurse.",
+"f": "28b3aa7a7ac9.mp3",
+"ok": true,
+"heard": "shes my sister shes nineteen shes a nurse"
+},
+{
+"d": "midterm/audio",
+"k": "this is my grandma. she's a doctor.",
+"t": "This is my grandma. She's a doctor.",
+"f": "e28963eebe9b.mp3",
+"ok": true,
+"heard": "this is my grandma shes a doctor"
+},
+{
+"d": "midterm/audio",
+"k": "this is my mom. she's a teacher.",
+"t": "This is my mom. She's a teacher.",
+"f": "c2246dbbb159.mp3",
+"ok": true,
+"heard": "this is my mom shes a teacher"
+},
+{
+"d": "midterm/audio",
+"k": "this is my sister. she's a farmer.",
+"t": "This is my sister. She's a farmer.",
+"f": "746cfb4e7950.mp3",
+"ok": true,
+"heard": "this is my sister shes a farmer"
+},
+{
+"d": "midterm/audio",
+"k": "this is my sister. she's a nurse.",
+"t": "This is my sister. She's a nurse.",
+"f": "ddc5998a087c.mp3",
+"ok": true,
+"heard": "this is my sister shes a nurse"
+},
+{
+"d": "midterm/audio",
+"k": "who's she? she's my grandma.",
+"t": "Who's she? She's my grandma.",
+"f": "53a5cd544df8.mp3",
+"ok": true,
+"heard": "whos she shes my grandma"
+},
+{
+"d": "midterm/audio",
+"k": "who's she? she's my grandma. she's a farmer.",
+"t": "Who's she? She's my grandma. She's a farmer.",
+"f": "ae616fcb7734.mp3",
+"ok": true,
+"heard": "whos she shes my grandma shes a farmer"
+},
+{
+"d": "midterm/audio",
+"k": "who's she? she's my grandmother. she's a nurse.",
+"t": "Who's she? She's my grandmother. She's a nurse.",
+"f": "1868ead2d290.mp3",
+"ok": true,
+"heard": "whos she shes my grandmother shes a nurse"
+},
+{
+"d": "midterm/audio",
+"k": "who's she? she's my mom.",
+"t": "Who's she? She's my mom.",
+"f": "9d87ee624d84.mp3",
+"ok": true,
+"heard": "whos she shes my mom"
+},
+{
+"d": "midterm/audio",
+"k": "who's she? she's my mother.",
+"t": "Who's she? She's my mother.",
+"f": "58c160c45a39.mp3",
+"ok": true,
+"heard": "whos she shes my mother"
+},
+{
+"d": "midterm/audio",
+"k": "who's she? she's my sister.",
+"t": "Who's she? She's my sister.",
+"f": "281e5774ffd5.mp3",
+"ok": true,
+"heard": "whos she shes my sister"
+},
+{
+"d": "midterm/audio",
+"k": "yes, he is.",
+"t": "Yes, he is.",
+"f": "206e6bced01b.mp3",
+"ok": true,
+"heard": "yes he is"
+},
+{
+"d": "midterm/audio",
+"k": "yes, he is. he's a nurse.",
+"t": "Yes, he is. He's a nurse.",
+"f": "67d1fae1f1a2.mp3",
+"ok": true,
+"heard": "yes he is hes a nurse"
+},
+{
+"d": "midterm/audio",
+"k": "yes, he is. he's a teacher.",
+"t": "Yes, he is. He's a teacher.",
+"f": "57e0b1ab4e77.mp3",
+"ok": true,
+"heard": "yes he is hes a teacher"
+},
+{
+"d": "midterm/audio",
+"k": "yes, he isn't.",
+"t": "Yes, he isn't.",
+"f": "8746183a2790.mp3",
+"ok": true,
+"heard": "yes he isnt"
+},
+{
+"d": "midterm/audio",
+"k": "yes, she is.",
+"t": "Yes, she is.",
+"f": "e3bfbf3d1937.mp3",
+"ok": true,
+"heard": "yes she is"
+},
+{
+"d": "midterm/audio",
+"k": "yes, she is. she's a doctor.",
+"t": "Yes, she is. She's a doctor.",
+"f": "f33c8b2f17af.mp3",
+"ok": true,
+"heard": "yes she is shes a doctor"
+},
+{
+"d": "midterm/audio",
+"k": "yes, she is. she's fourteen.",
+"t": "Yes, she is. She's fourteen.",
+"f": "d93b381b5a78.mp3",
+"ok": true,
+"heard": "yes she is shes fourteen"
+},
+{
+"d": "midterm/audio",
+"k": "yes, she isn't.",
+"t": "Yes, she isn't.",
+"f": "134d4428206f.mp3",
+"ok": true,
+"heard": "yes she isnt"
+},
+{
+"d": "midterm/audio/s",
+"k": "good morning, lucas. she's my mom. she's a cook.",
+"t": "Good morning, Lucas. She's my mom. She's a cook.",
+"f": "ef2297854f3d.mp3",
+"ok": true,
+"heard": "good morning lucas shes my mom shes a cook"
+},
+{
+"d": "midterm/audio/s",
+"k": "good morning, owen. she's my sister.",
+"t": "Good morning, Owen. She's my sister.",
+"f": "a0aec1c0a59e.mp3",
+"ok": true,
+"heard": "good morning owen shes my sister"
+},
+{
+"d": "midterm/audio/s",
+"k": "good morning. this is my mom. she's a farmer.",
+"t": "Good morning. This is my mom. She's a farmer.",
+"f": "65e3666ba4fc.mp3",
+"ok": true,
+"heard": "good morning this is my mom shes a farmer"
+},
+{
+"d": "midterm/audio/s",
+"k": "is she a cook? no, she isn't. she's a nurse.",
+"t": "Is she a cook? No, she isn't. She's a nurse.",
+"f": "e43bd1138d89.mp3",
+"ok": true,
+"heard": "is she a cook no she isnt shes a nurse"
+},
+{
+"d": "midterm/audio/s",
+"k": "is she a cook? no, she isn't. she's a student.",
+"t": "Is she a cook? No, she isn't. She's a student.",
+"f": "ae6d25397afb.mp3",
+"ok": true,
+"heard": "is she a cook no she isnt shes a student"
+},
+{
+"d": "midterm/audio/s",
+"k": "is she a doctor? no, she isn't. she's a teacher.",
+"t": "Is she a doctor? No, she isn't. She's a teacher.",
+"f": "e7ec6fa8a291.mp3",
+"ok": true,
+"heard": "is she a doctor no she isnt shes a teacher"
+},
+{
+"d": "midterm/audio/s",
+"k": "is she a farmer? no, she isn't. she's a cook.",
+"t": "Is she a farmer? No, she isn't. She's a cook.",
+"f": "6681b9f3ebb0.mp3",
+"ok": true,
+"heard": "is she a farmer no she isnt shes a cook"
+},
+{
+"d": "midterm/audio/s",
+"k": "is she a farmer? no, she isn't. she's a doctor.",
+"t": "Is she a farmer? No, she isn't. She's a doctor.",
+"f": "68cda6b717ee.mp3",
+"ok": true,
+"heard": "is she a farmer no she isnt shes a doctor"
+},
+{
+"d": "midterm/audio/s",
+"k": "is she a farmer? no, she isn't. she's a teacher.",
+"t": "Is she a farmer? No, she isn't. She's a teacher.",
+"f": "8669dcdecacb.mp3",
+"ok": true,
+"heard": "is she a farmer no she isnt shes a teacher"
+},
+{
+"d": "midterm/audio/s",
+"k": "is she a nurse? no, she isn't. she's a cook.",
+"t": "Is she a nurse? No, she isn't. She's a cook.",
+"f": "2497a6e50760.mp3",
+"ok": true,
+"heard": "is she a nurse no she isnt shes a cook"
+},
+{
+"d": "midterm/audio/s",
+"k": "is she a nurse? no, she isn't. she's a student.",
+"t": "Is she a nurse? No, she isn't. She's a student.",
+"f": "b350a4df213c.mp3",
+"ok": true,
+"heard": "is she a nurse no she isnt shes a student"
+},
+{
+"d": "midterm/audio/s",
+"k": "is she a student? no, she isn't. she's a cook.",
+"t": "Is she a student? No, she isn't. She's a cook.",
+"f": "a4d51675a470.mp3",
+"ok": true,
+"heard": "is she a student no she isnt shes a cook"
+},
+{
+"d": "midterm/audio/s",
+"k": "is she a student? no, she isn't. she's a nurse.",
+"t": "Is she a student? No, she isn't. She's a nurse.",
+"f": "1b35c621f2a2.mp3",
+"ok": true,
+"heard": "is she a student no she isnt shes a nurse"
+},
+{
+"d": "midterm/audio/s",
+"k": "is she a teacher? no, she isn't. she's a doctor.",
+"t": "Is she a teacher? No, she isn't. She's a doctor.",
+"f": "05ffcf616874.mp3",
+"ok": true,
+"heard": "is she a teacher no she isnt shes a doctor"
+},
+{
+"d": "midterm/audio/s",
+"k": "is she a teacher? no, she isn't. she's a farmer.",
+"t": "Is she a teacher? No, she isn't. She's a farmer.",
+"f": "9b35f7d25e1c.mp3",
+"ok": true,
+"heard": "is she a teacher no she isnt shes a farmer"
+},
+{
+"d": "midterm/audio/s",
+"k": "is your grandma a doctor? no, she isn't. she's a farmer.",
+"t": "Is your grandma a doctor? No, she isn't. She's a farmer.",
+"f": "3967c111002c.mp3",
+"ok": true,
+"heard": "is your grandma a doctor no she isnt shes a farmer"
+},
+{
+"d": "midterm/audio/s",
+"k": "is your grandma a teacher? no, she isn't. she's a farmer.",
+"t": "Is your grandma a teacher? No, she isn't. She's a farmer.",
+"f": "598ec48acca5.mp3",
+"ok": true,
+"heard": "is your grandma a teacher no she isnt shes a farmer"
+},
+{
+"d": "midterm/audio/s",
+"k": "is your grandmother a cook? no, she isn't. she's a doctor.",
+"t": "Is your grandmother a cook? No, she isn't. She's a doctor.",
+"f": "4c8e3c8c946f.mp3",
+"ok": true,
+"heard": "is your grandmother a cook no she isnt shes a doctor"
+},
+{
+"d": "midterm/audio/s",
+"k": "is your mom a doctor? no, she isn't. she's a teacher.",
+"t": "Is your mom a doctor? No, she isn't. She's a teacher.",
+"f": "23bf9e442dd6.mp3",
+"ok": true,
+"heard": "is your mom a doctor no she isnt shes a teacher"
+},
+{
+"d": "midterm/audio/s",
+"k": "is your mom a nurse? no, she isn't. she's a farmer.",
+"t": "Is your mom a nurse? No, she isn't. She's a farmer.",
+"f": "7edb10b5b10e.mp3",
+"ok": true,
+"heard": "is your mom a nurse no she isnt shes a farmer"
+},
+{
+"d": "midterm/audio/s",
+"k": "is your mom a teacher? no, she isn't. she's a doctor.",
+"t": "Is your mom a teacher? No, she isn't. She's a doctor.",
+"f": "ff6906126e0d.mp3",
+"ok": true,
+"heard": "is your mom a teacher no she isnt shes a doctor"
+},
+{
+"d": "midterm/audio/s",
+"k": "is your mother a cook? no, she isn't. she's a nurse.",
+"t": "Is your mother a cook? No, she isn't. She's a nurse.",
+"f": "c5093ba98775.mp3",
+"ok": true,
+"heard": "is your mother a cook no she isnt shes a nurse"
+},
+{
+"d": "midterm/audio/s",
+"k": "is your mother a farmer? no, she isn't. she's a nurse.",
+"t": "Is your mother a farmer? No, she isn't. She's a nurse.",
+"f": "daf5c93285de.mp3",
+"ok": true,
+"heard": "is your mother a farmer no she isnt shes a nurse"
+},
+{
+"d": "midterm/audio/s",
+"k": "is your sister a cook? no, she isn't. she's a nurse.",
+"t": "Is your sister a cook? No, she isn't. She's a nurse.",
+"f": "f1755ff17f80.mp3",
+"ok": true,
+"heard": "is your sister a cook no she isnt shes a nurse"
+},
+{
+"d": "midterm/audio/s",
+"k": "is your sister a farmer? no, she isn't. she's a student.",
+"t": "Is your sister a farmer? No, she isn't. She's a student.",
+"f": "748a94f0e496.mp3",
+"ok": true,
+"heard": "is your sister a farmer no she isnt shes a student"
+},
+{
+"d": "midterm/audio/s",
+"k": "is your sister a student? no, she isn't. she's a teacher.",
+"t": "Is your sister a student? No, she isn't. She's a teacher.",
+"f": "46fca1cbfb62.mp3",
+"ok": true,
+"heard": "is your sister a student no she isnt shes a teacher"
+},
+{
+"d": "midterm/audio/s",
+"k": "look! she's my grandmother.",
+"t": "Look! She's my grandmother.",
+"f": "e81a071c8948.mp3",
+"ok": true,
+"heard": "look shes my grandmother"
+},
+{
+"d": "midterm/audio/s",
+"k": "look! she's my sister. she's a cook.",
+"t": "Look! She's my sister. She's a cook.",
+"f": "309b9aec7318.mp3",
+"ok": true,
+"heard": "look shes my sister shes a cook"
+},
+{
+"d": "midterm/audio/s",
+"k": "look! she's my sister. she's a teacher.",
+"t": "Look! She's my sister. She's a teacher.",
+"f": "6dd929dd15d1.mp3",
+"ok": true,
+"heard": "look shes my sister shes a teacher"
+},
+{
+"d": "midterm/audio/s",
+"k": "m:no, she isn't. she's a cook.",
+"t": "No, she isn't. She's a cook.",
+"f": "8791e0039ddd.mp3",
+"ok": true,
+"heard": "no she isnt shes a cook"
+},
+{
+"d": "midterm/audio/s",
+"k": "m:no, she isn't. she's a doctor.",
+"t": "No, she isn't. She's a doctor.",
+"f": "c84e81ef52bf.mp3",
+"ok": true,
+"heard": "no she isnt shes a doctor"
+},
+{
+"d": "midterm/audio/s",
+"k": "m:no, she isn't. she's a farmer.",
+"t": "No, she isn't. She's a farmer.",
+"f": "e725049fe8f0.mp3",
+"ok": true,
+"heard": "no she isnt shes a farmer"
+},
+{
+"d": "midterm/audio/s",
+"k": "m:no, she isn't. she's a nurse.",
+"t": "No, she isn't. She's a nurse.",
+"f": "a1b5e4937144.mp3",
+"ok": true,
+"heard": "no she isnt shes a nurse"
+},
+{
+"d": "midterm/audio/s",
+"k": "m:no, she isn't. she's my mom.",
+"t": "No, she isn't. She's my mom.",
+"f": "2b073abd7029.mp3",
+"ok": true,
+"heard": "no she isnt shes my mom"
+},
+{
+"d": "midterm/audio/s",
+"k": "m:no, she isn't. she's my sister.",
+"t": "No, she isn't. She's my sister.",
+"f": "eaf126db601c.mp3",
+"ok": true,
+"heard": "no she isnt shes my sister"
+},
+{
+"d": "midterm/audio/s",
+"k": "m:yes, he is.",
+"t": "Yes, he is.",
+"f": "061e7fb34c95.mp3",
+"ok": true,
+"heard": "yes he is"
+},
+{
+"d": "midterm/audio/s",
+"k": "m:yes, he is. he's a teacher.",
+"t": "Yes, he is. He's a teacher.",
+"f": "8eed76f7d418.mp3",
+"ok": true,
+"heard": "yes he is hes a teacher"
+},
+{
+"d": "midterm/audio/s",
+"k": "m:yes, she is.",
+"t": "Yes, she is.",
+"f": "48fdd45a6cf2.mp3",
+"ok": true,
+"heard": "yes she is"
+},
+{
+"d": "midterm/audio/s",
+"k": "no, she isn't. she's a teacher.",
+"t": "No, she isn't. She's a teacher.",
+"f": "b3308eb6e83f.mp3",
+"ok": true,
+"heard": "no she isnt shes a teacher"
+},
+{
+"d": "midterm/audio/s",
+"k": "no, she isn't. she's my grandma. she's a doctor.",
+"t": "No, she isn't. She's my grandma. She's a doctor.",
+"f": "ea72e0f63d01.mp3",
+"ok": true,
+"heard": "no she isnt shes my grandma shes a doctor"
+},
+{
+"d": "midterm/audio/s",
+"k": "no, she isn't. she's my sister. she's sixteen.",
+"t": "No, she isn't. She's my sister. She's sixteen.",
+"f": "01e8910815d2.mp3",
+"ok": true,
+"heard": "no she isnt shes my sister shes sixteen"
+},
+{
+"d": "midterm/audio/s",
+"k": "no, she isn't. she's my sister. she's thirteen.",
+"t": "No, she isn't. She's my sister. She's thirteen.",
+"f": "2fcf96f8a835.mp3",
+"ok": true,
+"heard": "no she isnt shes my sister shes thirteen"
+},
+{
+"d": "midterm/audio/s",
+"k": "she's my grandma. she's a farmer.",
+"t": "She's my grandma. She's a farmer.",
+"f": "c592445897e6.mp3",
+"ok": true,
+"heard": "shes my grandma shes a farmer"
+},
+{
+"d": "midterm/audio/s",
+"k": "she's my mother. she's a cook.",
+"t": "She's my mother. She's a cook.",
+"f": "fb962a64c8dc.mp3",
+"ok": true,
+"heard": "shes my mother shes a cook"
+},
+{
+"d": "midterm/audio/s",
+"k": "she's my sister. she's nineteen. she's a nurse.",
+"t": "She's my sister. She's nineteen. She's a nurse.",
+"f": "5fb27928b646.mp3",
+"ok": true,
+"heard": "shes my sister shes nineteen shes a nurse"
+},
+{
+"d": "midterm/audio/s",
+"k": "this is my grandma. she's a doctor.",
+"t": "This is my grandma. She's a doctor.",
+"f": "fa72eec52445.mp3",
+"ok": true,
+"heard": "this is my grandma shes a doctor"
+},
+{
+"d": "midterm/audio/s",
+"k": "this is my mom. she's a teacher.",
+"t": "This is my mom. She's a teacher.",
+"f": "08b73f320a89.mp3",
+"ok": true,
+"heard": "this is my mom shes a teacher"
+},
+{
+"d": "midterm/audio/s",
+"k": "this is my sister. she's a farmer.",
+"t": "This is my sister. She's a farmer.",
+"f": "5e879a62f983.mp3",
+"ok": true,
+"heard": "this is my sister shes a farmer"
+},
+{
+"d": "midterm/audio/s",
+"k": "this is my sister. she's a nurse.",
+"t": "This is my sister. She's a nurse.",
+"f": "f1a26967c34d.mp3",
+"ok": true,
+"heard": "this is my sister shes a nurse"
+},
+{
+"d": "midterm/audio/s",
+"k": "who's she? she's my grandma.",
+"t": "Who's she? She's my grandma.",
+"f": "f2971d1446a0.mp3",
+"ok": true,
+"heard": "whos she shes my grandma"
+},
+{
+"d": "midterm/audio/s",
+"k": "who's she? she's my grandma. she's a farmer.",
+"t": "Who's she? She's my grandma. She's a farmer.",
+"f": "c3c047758791.mp3",
+"ok": true,
+"heard": "whos she shes my grandma shes a farmer"
+},
+{
+"d": "midterm/audio/s",
+"k": "who's she? she's my grandmother.",
+"t": "Who's she? She's my grandmother.",
+"f": "e656da9bfcf7.mp3",
+"ok": true,
+"heard": "whos she shes my grandmother"
+},
+{
+"d": "midterm/audio/s",
+"k": "who's she? she's my grandmother. she's a nurse.",
+"t": "Who's she? She's my grandmother. She's a nurse.",
+"f": "8b056d70518a.mp3",
+"ok": true,
+"heard": "whos she shes my grandmother shes a nurse"
+},
+{
+"d": "midterm/audio/s",
+"k": "who's she? she's my mom.",
+"t": "Who's she? She's my mom.",
+"f": "ce5102624258.mp3",
+"ok": true,
+"heard": "whos she shes my mom"
+},
+{
+"d": "midterm/audio/s",
+"k": "who's she? she's my mother.",
+"t": "Who's she? She's my mother.",
+"f": "80a62082f5e5.mp3",
+"ok": true,
+"heard": "whos she shes my mother"
+},
+{
+"d": "midterm/audio/s",
+"k": "who's she? she's my sister.",
+"t": "Who's she? She's my sister.",
+"f": "3517de68e19a.mp3",
+"ok": true,
+"heard": "whos she shes my sister"
+},
+{
+"d": "midterm/audio/s",
+"k": "yes, he is.",
+"t": "Yes, he is.",
+"f": "e92c91cdf487.mp3",
+"ok": true,
+"heard": "yes he is"
+},
+{
+"d": "midterm/audio/s",
+"k": "yes, he is. he's a nurse.",
+"t": "Yes, he is. He's a nurse.",
+"f": "1a3bbec4d9af.mp3",
+"ok": true,
+"heard": "yes he is hes a nurse"
+},
+{
+"d": "midterm/audio/s",
+"k": "yes, she is.",
+"t": "Yes, she is.",
+"f": "053a60fcd874.mp3",
+"ok": true,
+"heard": "yes she is"
+},
+{
+"d": "midterm/audio/s",
+"k": "yes, she is. she's fourteen.",
+"t": "Yes, she is. She's fourteen.",
+"f": "4ec418771488.mp3",
+"ok": true,
+"heard": "yes she is shes fourteen"
+},
+{
+"d": "midterm/audio/rv",
+"k": "is she a teacher? no, she isn't. she's a nurse.",
+"t": "Is she a teacher? No, she isn't. She's a nurse.",
+"f": "de5b4672067a.mp3",
+"ok": true,
+"heard": "is she a teacher no she isnt shes a nurse"
+},
+{
+"d": "midterm/audio/rv",
+"k": "m:yes, he is.",
+"t": "Yes, he is.",
+"f": "061e7fb34c95.mp3",
+"ok": true,
+"heard": "yes he is"
+},
+{
+"d": "midterm/audio/rv",
+"k": "no, she isn't. she's a nurse.",
+"t": "No, she isn't. She's a nurse.",
+"f": "22c415710670.mp3",
+"ok": true,
+"heard": "no she isnt shes a nurse"
+},
+{
+"d": "midterm/audio/rv",
+"k": "who's she? she's my mom.",
+"t": "Who's she? She's my mom.",
+"f": "ce5102624258.mp3",
+"ok": true,
+"heard": "whos she shes my mom"
+},
+{
+"d": "midterm/audio/rv",
+"k": "who's she? she's my sister.",
+"t": "Who's she? She's my sister.",
+"f": "3517de68e19a.mp3",
+"ok": true,
+"heard": "whos she shes my sister"
+},
+{
+"d": "midterm/audio/rv",
+"k": "yes, she is.",
+"t": "Yes, she is.",
+"f": "053a60fcd874.mp3",
+"ok": true,
+"heard": "yes she is"
+}
+]
