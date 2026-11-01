@@ -47,15 +47,17 @@ const pwState = p => p.evaluate(() => { const c = document.getElementById('scPwC
     if (s) { ck(tag + ' 第一次 ＝ 設 密碼：' + s.t, /第一次/.test(s.t)); ck(tag + ' 粉紅 2 格＋藍 6 格 ' + s.cells, s.cells === 'llddddddd'.slice(0, 2) + 'dddddd');
       ck(tag + ' 動畫 範例 8 個 字', s.ex === 8); ck(tag + ' 先 字母 鍵盤', s.letters && s.nk >= 26); ck(tag + ' 按鈕 ≧ 48px（' + s.small + ' 個 太小）', !s.small);
       ck(tag + ' 密碼 頁 放得下', !s.out); ck(tag + ' 不 左右 捲', s.ox <= 1);
-      await typeP(p, 'ab'); s = await pwState(p); ck(tag + ' 2 個 字母 以後 ＝ 數字 鍵盤', !s.letters && s.nk >= 12); ck(tag + ' 數字 鍵盤 按鈕 ≧ 48px', !s.small); ck(tag + ' 數字 鍵盤 放得下', !s.out);
+      await typeP(p, 'ab'); s = await pwState(p); ck(tag + ' 第三十八次 4-(1)：打 的 時候 看不到 字（●●）', await p.evaluate(() => document.getElementById('scPwC').textContent === '●●')); ck(tag + ' 2 個 字母 以後 ＝ 數字 鍵盤', !s.letters && s.nk >= 12); ck(tag + ' 數字 鍵盤 按鈕 ≧ 48px', !s.small); ck(tag + ' 數字 鍵盤 放得下', !s.out);
       await typeP(p, '123456'); await p.click('#scPwK button[data-p="ok"]'); await p.waitForTimeout(200); s = await pwState(p); ck(tag + ' 再 打 一次：' + s.t, /再 打 一次/.test(s.t));
       await typeP(p, 'ab123457'); await p.click('#scPwK button[data-p="ok"]'); await p.waitForTimeout(200); s = await pwState(p); ck(tag + ' 兩次 不一樣 ＝ 重設：' + s.m, /不一樣/.test(s.m) && /第一次/.test(s.t));
       await typeP(p, 'ab123456'); await p.click('#scPwK button[data-p="ok"]'); await typeP(p, 'ab123456'); await p.click('#scPwK button[data-p="ok"]'); await p.waitForTimeout(1400);
       /* 2026-10-31 第三十五次 第 12 點：設好 ＝ 一定 先 勾「我為自己的密碼：記憶和負責。」 */
       { const v = await p.evaluate(() => { const b = document.getElementById('scVowB'), l = document.getElementById('scVowL'); return b && l ? { dis: b.disabled, t: l.textContent, id: window.SCID || '', fs: parseFloat(getComputedStyle(l).fontSize), bh: b.getBoundingClientRect().height, ov: document.getElementById('scovb').scrollHeight - document.getElementById('scovb').clientHeight } : null; });
-        ck(tag + ' 設好 密碼 ＝ 先 勾 才 進得去 ' + JSON.stringify(v), v && v.dis && v.t === '我為自己的密碼：記憶和負責。' && !v.id && v.fs >= 24 && v.bh >= 56);
+        ck(tag + ' 設好 密碼 ＝ 先 勾 才 進得去 ' + JSON.stringify(v), v && v.dis && v.t === '我會為自己的密碼記憶和負責。' && !v.id && v.fs >= 24 && v.bh >= 56);
         await p.click('#scVowB', { force: true }).catch(() => {}); await p.waitForTimeout(200); ck(tag + ' 沒 勾 按 也 進不去', !(await p.evaluate(() => window.SCID)));
-        await p.click('#scVowL'); await p.click('#scVowB'); await p.waitForTimeout(500); }
+        await p.click('#scVowL'); await p.click('#scVowB'); await p.waitForTimeout(300);
+        /* 2026-11-01 第三十八次 第 4-(3) 點：勾了 按 ➜ 獨立 一頁「你很棒！」*/ ck(tag + ' 勾了 按 ＝「你很棒！」那一頁', await p.evaluate(() => /你很棒！/.test((document.querySelector('.vgood') || {}).textContent || '') && !/謝謝你/.test(document.body.innerText)));
+        await p.waitForTimeout(2200); }
       const L = await p.evaluate(() => ({ id: SCID, pk: !!sessionStorage.getItem('score_pks_30412'), rem: !!localStorage.getItem('score_pk_30412') && localStorage.getItem('score_pk_30412') !== 'null' }));
       ck(tag + ' 設好 ＝ 登入 了 ' + JSON.stringify(L), L.id === '30412' && L.pk && !L.rem); ck(tag + ' 伺服器 存 了 密碼', G.post({ a: 'spl', pw: 't', id: '30412' }).p === 'ab123456');
       /* 新 分頁（沒有 這個 分頁 的 通行證）：「這是您嗎 ✅」＝ 要 打 密碼 */
@@ -63,10 +65,10 @@ const pwState = p => p.evaluate(() => { const c = document.getElementById('scPwC
       const yb = await p2.$('#scWhoY') || await p2.$('#scBarY'); ck(tag + ' 新 分頁 問「這是您嗎」', !!yb);
       if (yb) { await yb.click(); await p2.waitForTimeout(900); s = await pwState(p2); ck(tag + ' ✅ 是 ＝ 打 密碼：' + (s && s.t), s && /打 你 的 密碼/.test(s.t));
         await typeP(p2, 'ab999999'); await p2.click('#scPwK button[data-p="ok"]'); await p2.waitForTimeout(500); s = await pwState(p2); ck(tag + ' 打錯 ＝ 不對：' + s.m, /不對/.test(s.m));
-        await p2.click('#scRem'); await typeP(p2, 'ab123456'); await p2.click('#scPwK button[data-p="ok"]'); await p2.waitForTimeout(1400);
+        await p2.click('#scRem'); await p2.keyboard.type('AB123456'); await p2.keyboard.press('Enter'); await p2.waitForTimeout(1400);   /* 第三十八次 4-(2)：實體 鍵盤 打 也 可以 */
         /* 2026-10-31 C42 Q1 乙：每一次 登入（打對 密碼）也 要 勾「我為自己的密碼：記憶和負責。」*/
         { const v2 = await p2.evaluate(() => { const b = document.getElementById('scVowB'), h = document.querySelector('.scvow h2'); return b ? { dis: b.disabled, h: h ? h.textContent : '' } : null; });
-          ck(tag + ' 打對 密碼 以後 也 要 勾 那一句（每次 登入）' + JSON.stringify(v2), v2 && v2.dis && /密碼對了/.test(v2.h)); if (v2) { await p2.click('#scVowL'); await p2.click('#scVowB'); await p2.waitForTimeout(500); } }
+          ck(tag + ' 打對 密碼 以後 也 要 勾 那一句（每次 登入）' + JSON.stringify(v2), v2 && v2.dis && /密碼對了/.test(v2.h)); if (v2) { await p2.click('#scVowL'); await p2.click('#scVowB'); await p2.waitForTimeout(2300); } }
         const L2 = await p2.evaluate(() => ({ ok: sessionStorage.getItem('sc_ok'), rem: localStorage.getItem('score_pk_30412') })); ck(tag + ' 打對 ＝ 登入＋記住 ' + JSON.stringify(L2).slice(0, 60), L2.ok === '30412' && /^"/.test(L2.rem || ''));
         const p3 = await ctx.newPage(); await p3.goto(HTTP + '/g3-review/index.html'); await p3.waitForTimeout(600); const y3 = await p3.$('#scWhoY') || await p3.$('#scBarY');
         if (y3) { await y3.click(); await p3.waitForTimeout(700); } ck(tag + ' 記住 了 ＝ 不用 再 打', !(await pwState(p3)) && await p3.evaluate(() => sessionStorage.getItem('sc_ok') === '30412')); await p3.close(); }

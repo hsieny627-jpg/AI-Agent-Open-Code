@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>英語複習任務 已經 結束</title>
+<!-- 2026-11-01 第三十八次 ①：🏠 25 題 闖關 11/5（四）00:00 下架 以後，學生、家長 點 原來 的 網址 只 看到 這一頁（?t=1 ＝ 老師 專用 網址 但是 這台 電腦 沒有 登入過 老師看板） -->
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+html,body{margin:0;background:#070A16;color:#fff;font-family:"PingFang TC","Microsoft JhengHei",sans-serif;font-weight:700}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:#070A16 radial-gradient(900px 600px at 50% -10%,#24427A 0,transparent 70%) no-repeat}
+.w{max-width:860px;width:100%;text-align:center;background:#0E1A2E;border:4px solid #FFD54A;border-radius:28px;padding:28px 20px}
+.i{font-size:96px;line-height:1}
+h1{font-size:clamp(32px,5vw,50px);color:#FFE07A;margin:10px 0}
+p{font-size:clamp(24px,3.4vw,32px);line-height:1.6;margin:10px 0}
+a{display:inline-flex;align-items:center;min-height:64px;padding:6px 26px;margin:8px;border-radius:18px;border:3px solid #FFD54A;background:#2A2410;color:#FFE07A;font-size:clamp(24px,3vw,30px);text-decoration:none}
+</style></head>
+<body><div class="w" id="w"></div>
+<script>
+var q=location.search,g=/[?&]g=4/.test(q)?4:3,t=/[?&]t=1/.test(q);
+document.getElementById('w').innerHTML=t?
+ '<div class="i">🔒</div><h1>老師 專用</h1><p>這一頁 只有 <b style="color:#FFE07A">在 這台 電腦 登入過 老師看板</b> 才 打得開。</p><p>請 老師 先 登入 老師看板，再 按 老師看板 的〔🏠 25 題 闖關（老師 專用）〕。</p><a href="../teacher/index.html">打開 老師看板</a>':
+ '<div class="i">✅</div><h1>英語複習任務 已經 結束</h1><p>'+(g===3?'三':'四')+'年級 25 題 闖關 在 <b style="color:#FFE07A">11 月 4 日（星期三）晚上 11:59</b> 結束 了。</p><p>謝謝 你 的 努力！其他 主題 和 遊戲 一樣 可以 練習 喔。</p><a href="../'+(g===3?'g3':'g4')+'-review/index.html">🏠 回 在家複習</a>';
+</script>
+</body></html>

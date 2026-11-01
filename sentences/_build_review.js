@@ -59,6 +59,7 @@ h2 span{display:inline-flex;align-items:center;justify-content:center;width:1.5e
 #go25 .g5i{font-size:clamp(40px,6vh,56px)}#go25 .g5x{display:flex;flex-direction:column;gap:4px;min-width:0}#go25 b{font-size:clamp(28px,4.2vh,40px)}#go25 em{font-style:normal;font-weight:700;font-size:clamp(20px,2.8vh,26px);color:#7A1F00}
 #go25 .g5go{margin-left:auto;font-size:clamp(34px,5vh,48px);color:#7A1F00}#go25 .g5f{font-size:clamp(34px,5vh,48px);animation:g5f 1s ease-in-out infinite}
 #go25:active{transform:scale(.98)}
+#due25{width:100%;max-width:1000px;margin:6px 0 0;padding:8px 16px;border-radius:18px;background:#3A1420;border:4px solid #FF8A8A;color:#fff;font-size:clamp(24px,3.4vh,34px);font-weight:700;text-align:center}#due25 b{color:#FFE07A}
 @keyframes g5glow{0%,100%{box-shadow:0 0 0 0 #FFD54A88,0 10px 28px #0009}50%{box-shadow:0 0 0 12px #FFD54A00,0 10px 28px #0009}}
 @keyframes g5sh{0%{left:-40%}60%,100%{left:120%}}@keyframes g5f{0%,100%{transform:translateX(0)}50%{transform:translateX(10px)}}
 #bo25{width:100%;max-width:1000px;margin:0 0 14px;padding:12px 14px;border-radius:20px;background:#1A1404;border:3px solid #FFD54A}
@@ -74,7 +75,10 @@ h2 span{display:inline-flex;align-items:center;justify-content:center;width:1.5e
 ${require('../score/_client.js').home(S.out === 'g3-review' ? 3 : 4, '../', 'home', true)}
 <h1>🏠 ${S.g}</h1>
 <!-- 2026-10-31 第三十五次 第 9 點：最上面 一顆 大按鈕〔🏠 25題闖關〕＋請優先完成＋11/1 23:59 以前 加倍（過了 自己 收起來，按鈕 留著）-->
-<a id="go25" href="../${S.out === 'g3-review' ? 'g3mid' : 'midterm'}/home.html"><span class="g5f">👉</span><span class="g5i">🏠</span><span class="g5x"><b>${S.out === 'g3-review' ? '三' : '四'}年級　25題闖關</b><em>請優先完成這一個任務！</em></span><span class="g5go">▶</span></a>
+<!-- 2026-11-01 第三十八次 ①：大按鈕＋「請優先完成這一個任務！」留著，加 大字 期限；11/5（四）00:00 起 按鈕、期限 都 收起來（class c25，score/_c25.js 用 網頁 伺服器 時間）-->
+${require('../score/_c25.js').hideLinks()}
+<div id="due25" class="c25">📅 英語複習任務：<b>11 月 4 日 週三 晚上 11:59 前</b> 完成</div>
+<a id="go25" class="c25" href="../${S.out === 'g3-review' ? 'g3mid' : 'midterm'}/home.html"><span class="g5f">👉</span><span class="g5i">🏠</span><span class="g5x"><b>${S.out === 'g3-review' ? '三' : '四'}年級　25題闖關</b><em>請優先完成這一個任務！</em></span><span class="g5go">▶</span></a>
 <div id="bo25"><div class="b5t">⏰ 11月1日（星期日）晚上11:59以前</div><div class="b5r"><div class="b5c b5a"><span class="b5k">✖2</span><span>🏠 25題闖關</span><em>🪙金幣　⭐經驗值　兩倍</em></div><div class="b5c"><span class="b5k">✖1.5</span><span>🎮 其他主題和遊戲</span><em>🪙金幣　⭐經驗值　1.5倍</em></div></div></div>
 <script>(function(){if(Date.now()>=Date.parse('2026-11-01T23:59:59+08:00')){var b=document.getElementById('bo25');if(b)b.hidden=true}})()</script>
 <!-- 2026-10-31 第三十七次 第 1 點：加倍 提示 放在〔開始練習以前，先登入〕正上方 ➜ 登入 橫幅 放 這裡（home(…, true) 不 自己 放）-->

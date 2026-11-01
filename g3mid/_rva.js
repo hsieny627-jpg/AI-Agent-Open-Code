@@ -103,9 +103,10 @@ function RVASRC() {
 
   /* ③ ⚡ 突擊 測驗 */
   function quiz(qi, go) { var S = RVA.S, q = S.spec.qz[qi], st = $id('rvs'); stopAu(); $id('rvc').classList.add('hid'); S.qn = (S.qn || 0) + 1; S.qgo = go; S.q = q; S.qi = qi; S.ans = false;
+    S.qwho = RVA.A.turn ? RVA.A.turn(S.qn - 1) : '';   /* 2026-11-01 第三十八次 第 5 點：兩人 輪流 ＝ 一人 一題 */
     var w = h('div', 'rvqz'), PR = { mc: 'Choose!', hear: 'Listen and choose!', tf: 'True or false?', dec: 'Match!', ord: 'Put in order!', spot: 'Find the mistake!' },
       HOW = { mc: '👆 點 一個 答案', hear: '🔊 聽 ➜ 👆 點 一個 答案', tf: '👆 對 ⭕ 還是 錯 ❌', dec: '👆 把 中文 方塊 放到 英文 字 下面（可以 拖、可以 互相 交換）', ord: '👆 照 順序 點 字（放好 的 字 可以 拖 來 交換）', spot: '👆 點 那一個 錯 的 字' };
-    w.innerHTML = '<div class="rvqh"><span class="rvqf">⚡ 突擊 測驗！</span><span>第 ' + S.qn + ' ／ ' + S.nq + ' 題 · 列入 成績</span></div><div class="rvqb"><i id="rvqt"></i></div>' +
+    w.innerHTML = '<div class="rvqh"><span class="rvqf">⚡ 突擊 測驗！</span><span>第 ' + S.qn + ' ／ ' + S.nq + ' 題 · 列入 成績</span>' + (S.qwho ? '<span class="rvwho">👤 請 ' + String(S.qwho).slice(0, 3) + ' 班 ' + (+String(S.qwho).slice(3)) + ' 號 作答</span>' : '') + '</div><div class="rvqb"><i id="rvqt"></i></div>' +
       '<div class="rvqp">' + esc(PR[q.ty] || 'Choose!') + '</div><div class="rvqhow">' + HOW[q.ty] + '</div><div class="rvqa" id="rvqa"></div>';
     st.innerHTML = ''; st.appendChild(w); var A = $id('rvqa');
     if (q.pic) A.appendChild(h('div', 'rvqpic', q.pic));
@@ -155,7 +156,7 @@ function RVASRC() {
 
   /* 對 不 對 */
   function judge(ok, ci, pick) { var S = RVA.S; if (!S || S.ans) return; S.ans = true; var q = S.q, sec = (Date.now() - S.qt0) / 1000;
-    S.rows.push([ok ? 1 : 0, ci, Math.round(sec * 10) / 10, pick != null && sec < 1 ? 1 : 0, 0, S.qi]);
+    S.rows.push([ok ? 1 : 0, ci, Math.round(sec * 10) / 10, pick != null && sec < 1 ? 1 : 0, 0, S.qi]); (S.own = S.own || []).push(S.qwho || '');
     var n = $id('rvn'); if (n) n.textContent = S.rows.filter(function (x) { return x[0]; }).length + ' ✅ ／ ' + S.nq;
     if (ok) { var st = $id('rvs'), g = h('div', 'rvok', '<b>✅ 答對了！</b>' + (q.a.t ? '' : '')); st.appendChild(g);
       var gr = row(q.a.t, 'okr'); g.appendChild(gr); T(function () { read(q.a.en, q.a.v, [].slice.call(gr.children), function () { T(back2, 600); }); }, 400); return; }
@@ -183,7 +184,8 @@ function RVASRC() {
   /* ⑤ 看完 */
   function finish() { var S = RVA.S, ok = S.rows.filter(function (x) { return x[0]; }).length, st = $id('rvs'); $id('rvc').classList.add('hid'); $id('rvp').textContent = '';
     try { ls(S.key, JSON.stringify(S.seen.slice(-60))); } catch (e) { }
-    try { if (S.rows.length && RVA.A.send) RVA.A.send(S.rows, S.spec, Math.round((Date.now() - S.t0) / 1000)); } catch (e) { }
+    RVA.odd = S.rows.length % 2;   /* 兩人 輪流：各 送 各 的 */
+    try { if (S.rows.length && RVA.A.send) { var own = S.own || [], who = {}; own.forEach(function (w) { who[w] = 1; }); Object.keys(who).forEach(function (w) { var rr = S.rows.filter(function (r, i) { return (own[i] || '') === w; }); RVA.A.send(rr, S.spec, Math.round((Date.now() - S.t0) / 1000), w); }); } } catch (e) { }
     st.innerHTML = '<div class="rvend"><div class="rve0">🎉</div><div class="rve1">看完 了！</div><div class="rve2">⚡ 突擊 測驗：答對 <b>' + ok + '</b> ／ ' + S.rows.length + '</div><div class="rve3">' + (ok === S.rows.length ? '👀 全部 答對：你 真的 很 專心！' : '📌 答錯 的 重點，等一下 的 題目 會 用到！') + '</div><button class="rvgo rdy" id="rvend">▶ 開始 這一關</button></div>';
     var go = function () { var d = S.done; RVA.close(); d && d(); }; $id('rvend').onclick = go; }
 
@@ -280,10 +282,13 @@ function page(o) { const map = {}, off = {}; let k = 0; o.R.list.forEach(a => { 
   return 'var RVD=' + J(map) + ',RVOFF=' + J(off) + ',RVMAP=' + J(o.R.NMAP || {}) + ';' +
     'RVA.A={gr:' + J(o.gr) + ',sid:function(){return (typeof SCID!=="undefined"&&SCID)||""},stop:function(){try{stopSay()}catch(e){}},' +
     'aud:function(t,v){var k=akey(t),X=window.ENAUDR||{},W=window.ENAUDRW||{},p=(v==="m"?"m:":""),f=X[p+k]||X[k];if(f)return "audio/rv/"+f[0];f=W[p+k]||W[k];if(f)return "audio/rvw/"+f[0];var a=aud(t,v);return a||null},' +
-    'send:function(rows,spec,secs){try{if(typeof scLive!=="function"||!scLive()||!SCID)return;var o=RVOFF[spec.id]||0,u=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);' +
-    'var Rr={id:SCID,set:' + J(o.set) + ',name:' + J(o.name) + ',m:"g",qs:rows.map(function(r){return [r[0],r[1],r[2],r[3],r[4],o+r[5]]}),raw:rows.filter(function(r){return r[0]}).length,fix:0,mp:0,mw:0,sec:secs,src:"school",dev:SCDEV,u:u,t:Date.now()};' +
+    'turn:function(k){return typeof DUO!=="undefined"&&DUO&&window.DUOI?DUOI.turn(DUO,k):""},' +   /* 2026-11-01 第三十八次 第 5 點：兩人 輪流 ＝ 突擊 測驗 也 一人 一題 */
+    'send:function(rows,spec,secs,who){try{var ID=who||SCID;if(typeof scLive!=="function"||!scLive()||!ID)return;var o=RVOFF[spec.id]||0,u=ID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);' +
+    'var Rr={id:ID,set:' + J(o.set) + ',name:' + J(o.name) + ',m:"g",qs:rows.map(function(r){return [r[0],r[1],r[2],r[3],r[4],o+r[5]]}),raw:rows.filter(function(r){return r[0]}).length,fix:0,mp:0,mw:0,sec:secs,src:"school",dev:SCDEV,u:u,t:Date.now()};' +
     'var QQ=scGet("q")||[];QQ.push(Rr);scPut("q",QQ.slice(-200));scFlush()}catch(e){}}};' +
     /* 每 換 一關（一個 題型）先 演；量測 設 window.__NORVA 跳過 */
-    'function rvaGo(id,done){var s=RVD[id]||RVD[RVMAP[id]];if(!s||window.__NORVA){done();return}RVA.play(s,done)}' +
+    'function rvaGo(id,done){var s=RVD[id]||RVD[RVMAP[id]];if(!s||window.__NORVA){done();return}if(typeof R!=="undefined"&&R&&R.qk){if(R.qkd){done();return}R.qkd=1}' +
+    'var DU=typeof DUO!=="undefined"&&DUO;if(DU){DU.rv=DU.rv||{};if(DU.rv[s.id]){done();return}DU.rv[s.id]=1}' +   /* 兩人 輪流：同一部 動畫 只 演 一次；突擊 測驗 答了 單數 題 ＝ 下一題 換人 */
+    'RVA.play(s,function(){if(DU&&RVA.odd&&typeof duoAfterRv==="function"&&duoAfterRv())return;done()})}' +
     'var _rvDc=decClose;decClose=function(){if(window.RVA)RVA.close();_rvDc()};'; }
 module.exports = { page: page, css: CSS, js: 'var RVA=(function(){' + RVASRC.toString() + ';RVASRC();return window.RVA})();', SRC: RVASRC };

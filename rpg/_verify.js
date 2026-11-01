@@ -264,7 +264,11 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     /* 2026-10-31 第三十七次 第 2 點：過了 下架 時間 ＝ 沒 買 的 人 完全 看不到（限時 5 樣 不見、只 剩 限量 3 樣）*/
     const END0 = require('../score/_calc.js').RPEND.s0804, aft = Date.now() >= END0;
     if (aft) lt.c = !(await p.evaluate(() => !!document.querySelector('[data-id="s0804"],[data-id="s0301"],[data-id="s0908"]')));
-    if (lt.n !== (aft ? 3 : 8) || !lt.c || !/限量 5 個．剩 5 個/.test(lt.a) || (aft ? lt.b !== '' : !/10 月 31 號 晚上 11:59 下架/.test(lt.b))) E.push(tag + '：限量、限時 不對（' + lt.n + '、' + lt.a + '、' + lt.b + '）');
+    /* 2026-11-01 第三十八次 C44 ②：新 的 限時 5 樣（s0107 s0207 s0407 s0507 s0603）11 月 30 號 晚上 11:59 下架 */
+    const END1 = require('../score/_calc.js').RPEND.s0107, aft1 = Date.now() >= END1;
+    const n1 = await p.evaluate(() => ['s0107', 's0207', 's0407', 's0507', 's0603'].map(k => (document.querySelector('.ltd [data-id="' + k + '"]') || {}).textContent || ''));
+    if (!aft1 && n1.some(t => !/11 月 30 號 晚上 11:59 下架/.test(t))) E.push(tag + '：新 限時 5 樣 沒有「11 月 30 號 晚上 11:59 下架」' + JSON.stringify(n1).slice(0, 200));
+    if (lt.n !== (aft ? 3 : 8) + (aft1 ? 0 : 5) || !lt.c || !/限量 5 個．剩 5 個/.test(lt.a) || (aft ? lt.b !== '' : !/10 月 31 號 晚上 11:59 下架/.test(lt.b))) E.push(tag + '：限量、限時 不對（' + lt.n + '、' + lt.a + '、' + lt.b + '）');
     for (let i = 0; i < 5; i++) G.books['角色'].d.push(['4010' + i, JSON.stringify({ own: { s: ['s0713'] } }), new Date()]);
     const sold = G.post({ a: 'rpg', id: '40205', op: 'buy', item: 's0713' });
     await p.reload(); await p.waitForTimeout(1800); await p.click('#tabs [data-t="m"]'); await p.waitForTimeout(200);

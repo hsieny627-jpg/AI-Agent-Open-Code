@@ -726,7 +726,7 @@ function scPwStep(id,done){if(/script\.test/.test(SCURL)&&!window.__SCORE_PW){do
    '<div class="pwani"><span>① 🏫 <b>'+id+'</b> ✅</span><span class="ar">➜</span><span>② 🔑</span>'+ex+'</div>'+
    '<div class="pwlab"><span class="l">🩷 2 個 小寫 英文 字母</span><span>＋</span><span class="d">🩵 6 個 數字</span></div>'+
    '<div class="pwt" id="scPwT">⏳ 連線 中…</div><div class="pwc" id="scPwC"></div><div class="pwm" id="scPwM"></div><div id="scPwK"></div>'+
-   '<div class="pwrow"><label class="pwrem"><input type="checkbox" id="scRem"'+(SCPW.rem?' checked':'')+'>📱 我 自己 的 平板：記住 密碼（我 會 負責）</label><button class="pweye" id="scEye">👁 看 密碼</button></div>'+SCH.back+'</div>';
+   '<div class="pwrow"><label class="pwrem"><input type="checkbox" id="scRem"'+(SCPW.rem?' checked':'')+'>📱 我 自己 的 平板：記住 密碼（我 會 負責）</label><button class="pweye" id="scEye">👁 顯示 密碼</button></div>'+SCH.back+'</div>';
   scPwPaint();
   scFetch('',{a:'sp',id:id},12000).then(function(j){if(!SCPW||SCPW.id!==id)return;if(j&&j.err==='a'){var d0=SCPW.done;SCPW=null;d0();return}   /* 老師 還沒 重新 部署（舊 伺服器 不認得 sp）＝ 照 以前 不用 密碼 */
     if(!j||!j.ok){scPwOff(j);return}SCPW.mode=j.has?'in':'set';scPwPaint()},function(){if(!SCPW||SCPW.id!==id)return;scPwOff(null)})}
@@ -734,7 +734,7 @@ function scPwOff(j){var P=SCPW;if(scPk(P.id)){var d=P.done;SCPW=null;d();return}
   P.mode='off';scPwPaint(j&&j.err==='seat'?'🪑 沒有 這個 座號':'📶 連不上 網路，等一下 再 按 ✅ 試 一次')}
 function scPwPaint(msg,cls){var P=SCPW;if(!P||!$('#scPwC'))return;var v=P.v,T={'?':'⏳ 連線 中…',set:'🆕 第一次：自己 設 一個 密碼',set2:'🔁 再 打 一次 一樣 的 密碼',in:'🔑 打 你 的 密碼',off:'📶 連不上 網路',busy:'⏳ 檢查 中…'};
   $('#scPwT').textContent=T[P.mode]||'';
-  var h='';for(var i=0;i<8;i++){var c=v.charAt(i);h+='<i class="'+(i<2?'l':'d')+(i===v.length?' cur':'')+(i===2?' sp':'')+'">'+(c?(P.eye||i===v.length-1?c:'●'):'')+'</i>'}$('#scPwC').innerHTML=h;
+  var h='';for(var i=0;i<8;i++){var c=v.charAt(i);h+='<i class="'+(i<2?'l':'d')+(i===v.length?' cur':'')+(i===2?' sp':'')+'">'+(c?(P.eye?c:'●'):'')+'</i>'}$('#scPwC').innerHTML=h;
   var lt=v.length<2,keys=lt?'abcdefghijklmnopqrstuvwxyz'.split(''):'1234567890'.split('');
   var k='<div class="sckey pwk'+(lt?'':' dg')+'">'+keys.map(function(c){return '<button data-p="'+c+'">'+c+'</button>'}).join('')+''+
     '<button class="bs" data-p="del" aria-label="刪掉">⌫</button><button class="okb'+(v.length===8||P.mode==='off'?' ready':'')+'" data-p="ok" aria-label="確定">✅</button></div>';
@@ -759,11 +759,16 @@ function scPwKey(k){var P=SCPW;if(!P)return;if(P.mode==='?'||P.mode==='busy')ret
 /* 2026-10-31 C42 Q1 乙：每一次 登入（打對 密碼、第一次 設好）都 要 勾 */
 function scPwVow(P,d,set){var b=SCH.box();if(!b){SCPW=null;d();return}
   b.innerHTML='<div class="sclog scpw scvow"><h2>'+(set?'🔑 密碼設好了！':'✅ 密碼對了！')+'</h2><div class="vwi">🧠 ＋ 🤝</div>'+
-   '<label class="vwl" id="scVowL"><input type="checkbox" id="scVow"><span>我為自己的密碼：記憶和負責。</span></label>'+
+   '<label class="vwl" id="scVowL"><input type="checkbox" id="scVow"><span>我會為自己的密碼記憶和負責。</span></label>'+
    '<div class="vwh" id="scVowH">👆 先勾上面的方框</div><button class="vwb" id="scVowB" disabled>✅ 進入在家複習</button></div>';
   var c=$('#scVow'),k=$('#scVowB'),h=$('#scVowH');
-  c.onchange=function(){k.disabled=!c.checked;$('#scVowL').classList.toggle('on',c.checked);h.textContent=c.checked?'👍 謝謝你！按綠色按鈕進去':'👆 先勾上面的方框'};
-  k.onclick=function(){if(!c.checked)return;if(SCPW===P)SCPW=null;d()}}
+  c.onchange=function(){k.disabled=!c.checked;$('#scVowL').classList.toggle('on',c.checked);h.textContent=c.checked?'👍 按綠色按鈕進去':'👆 先勾上面的方框'};
+  /* 2026-11-01 第三十八次 第 4-(3) 點：勾了 ➜ 按鈕 解鎖 ➜ 獨立 一頁「你很棒！」（以前 寫 謝謝你）*/
+  k.onclick=function(){if(!c.checked)return;b.innerHTML='<div class="sclog scpw scvow vgood"><div class="vg0">🌟</div><h2 class="vg1">你很棒！</h2><div class="vg2">🧠 記住 自己 的 密碼　🤝 自己 負責</div></div>';
+    setTimeout(function(){if(SCPW===P)SCPW=null;d()},window.__NOGO?60:1800)}}
+document.addEventListener('keydown',function(e){if(!SCPW||!$('#scPwC')||e.ctrlKey||e.metaKey||e.altKey)return;var k=e.key;
+  if(k==='Backspace'){e.preventDefault();scPwKey('del');return}if(k==='Enter'){e.preventDefault();scPwKey('ok');return}
+  if(k&&k.length===1&&/[a-zA-Z0-9]/.test(k)){e.preventDefault();scPwKey(k.toLowerCase())}});
 function scShakePw(){var b=$('#scPwC');if(!b)return;b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
 /* 「請問 這是您嗎？」按 ✅：這個 分頁 已經 打過 密碼、或 這台 平板 記住 了 ＝ 直接 過；不然 ＝ 打 密碼 */
 function scSure(fn){if(!SCID||scPk(SCID)||!SCH||!SCH.box){fn();return}scPwStep(SCID,function(){if(SCH.close)SCH.close();fn()})}
@@ -1054,7 +1059,7 @@ document.addEventListener('click',function(e){
   if(c('#scSwap')||c('#scBye')){if(!SCH)return;scOut();scLogin(SCH.reopen);return}   /* 一鍵登出、原地馬上登入（D 第 6 件 ④） */
   if(!scOn())return;
   if((b=c('.sckey button[data-p]'))){scPwKey(b.getAttribute('data-p'));return}
-  if(c('#scEye')&&SCPW){SCPW.eye=!SCPW.eye;scPwPaint();return}
+  if(c('#scEye')&&SCPW){SCPW.eye=!SCPW.eye;var eb=$('#scEye');if(eb)eb.textContent=SCPW.eye?'🙈 藏起來':'👁 顯示 密碼';scPwPaint();return}
   if((b=c('.sckey button'))){scKeyPress(b.getAttribute('data-k'));return}
   if(c('#scGc')){scKeyPress('c');return}if(c('#scGs')&&SCTYPED.length>3){scKeyPress('s');return}
   if(c('#scGuest')){SCGUEST=true;var a=SCLOGAFTER;SCLOGAFTER=null;if(a)a();return}

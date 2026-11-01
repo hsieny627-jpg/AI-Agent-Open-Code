@@ -204,7 +204,7 @@ footer a{color:#7E7E7E;text-decoration:none;font-size:clamp(12px,1.7vh,14.5px);
 footer a:hover{color:#9FB4C8;border-bottom-color:#9FB4C8}
 footer .sep{color:#2A2A2A;font-size:12px}
 </style>
-</head>
+${require('../score/_c25.js').hideLinks()}</head>
 <body>
 ${require('../score/_client.js').home(0, '', 'school', 1)}
 <header>
@@ -212,7 +212,7 @@ ${require('../score/_client.js').home(0, '', 'school', 1)}
 </header>
 
 <main id="hub">
-${require('./_grades').GRADES.map(G => require('./_grades').rows(G, '').replace('年級首頁 ➜</a>', '年級首頁 ➜</a> <a class="h25" href="go25/index.html?g=' + (/三/.test(G.g) ? 3 : 4) + '">📱 25 題 闖關 QR ➜</a>')).join('\n')}
+${require('./_grades').GRADES.map(G => require('./_grades').rows(G, '').replace('年級首頁 ➜</a>', '年級首頁 ➜</a> <a class="h25 c25" href="go25/index.html?g=' + (/三/.test(G.g) ? 3 : 4) + '">📱 25 題 闖關 QR ➜</a>')).join('\n')}
 </main>
 
 <footer>

@@ -63,7 +63,15 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
       if (g.id === 'q8') { n++; const wp = await p.evaluate(() => ({ on: document.getElementById('wp').classList.contains('on'), n: document.querySelectorAll('#wp [data-wr]').length, k: R.k }));
         if (!wp.on || wp.n < 10 || wp.k !== -1) E.push(tag + ' q8：第一次 玩 沒有 先 選 戰士：' + JSON.stringify(wp));
         if (wp.on) { await p.click('#wp [data-wr]'); await p.waitForTimeout(300); } }
-      if (g.id === 'q2') { n++; const hw = await p.$('#q2go'); if (!hw) E.push(tag + ' q2：第 1 題 沒有〔怎麼 玩〕說明'); else { const t0 = await p.evaluate(() => tLeft()); await p.waitForTimeout(500); const t1 = await p.evaluate(() => tLeft()); if (t1 < t0 - .05) E.push(tag + ' q2：看 說明 的 時候 倒數 在 走'); await hw.click(); } }
+      if (g.id === 'q2') { n++; const hw = await p.$('#q2go'); if (!hw) E.push(tag + ' q2：第 1 題 沒有〔怎麼 玩〕說明'); else { const t0 = await p.evaluate(() => tLeft()); await p.waitForTimeout(500); const t1 = await p.evaluate(() => tLeft()); if (t1 < t0 - .05) E.push(tag + ' q2：看 說明 的 時候 倒數 在 走');
+          /* 2026-11-01 第三十八次 第 2 點：說明 ＝ 秒懂 動畫（迷你 迷宮＋一句 話＋⏸ 🔁 🐢）；提示 在 上面、不 遮 圖；先 看 整張 的 時候 圖 放大 */
+          n++; const hv = await p.evaluate(() => ({ mz: !!document.querySelector('.q2how .q2mz'), cap: (document.getElementById('q2cap') || {}).textContent || '', ct: document.querySelectorAll('.q2how .actl button').length, q2s: document.querySelectorAll('.q2how .q2s').length }));
+          if (!hv.mz || !hv.cap || hv.ct !== 3 || hv.q2s) E.push(tag + ' q2：說明 不是 秒懂 動畫 ' + JSON.stringify(hv));
+          await p.waitForTimeout(700); n++; /* 先 看 整張 迷宮（ov）的 時候 量：圖 放大、沒有 提示 遮住 */
+          const ov = await p.evaluate(() => { const t = document.querySelector('.pmtip'), v = document.querySelector('.pmv').getBoundingClientRect(), tr = t.getBoundingClientRect(), C = [].map.call(document.querySelectorAll('.rmc'), b => b.getBoundingClientRect());
+            return { top: tr.top - v.top, hit: !!t.textContent && C.some(c => !(c.right < tr.left || c.left > tr.right || c.bottom < tr.top || c.top > tr.bottom)), minH: Math.min(...C.map(c => c.height)), vh: v.height }; });
+          if (ov.hit || ov.minH < ov.vh * .2) E.push(tag + ' q2：提示 遮到 圖、或 圖 太 小 ' + JSON.stringify(ov));
+          await p.waitForSelector('#q2go:not([disabled])', { timeout: 15000 }).catch(() => E.push(tag + ' q2：〔我 懂了〕一直 不能 按')); await hw.click(); } }
       await p.waitForTimeout(600);
       /* 版面 */
       const m = await p.evaluate(() => { const sm = [], low = [], out = [];
@@ -144,7 +152,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
         if (z1.xb !== '25' || z1.gc) E.push(tag + ' 現場任務 開了 25 題：要 只 有 25 那一顆 ' + JSON.stringify(z1)); }
       const ID = await p.evaluate(() => SCID); await p.evaluate(id => { const N = 25; LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0304', t: 1, cfg: { on: 1, t: 1, set: 'x' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9 }; localStorage.removeItem('g3m_seen_' + id); localStorage.removeItem('g3m_xs25_' + id); lobby(); }, ID);
       await p.click('#xrow .xb[data-x="25"]'); await p.waitForTimeout(400);
-      for (let k = 0; k < 3; k++) { await passL(p); const hw = await p.$('#q2go'); if (hw) { await hw.click(); await p.waitForTimeout(150); } const wp = await p.$('#wp.on [data-wr]'); if (wp) { await wp.click(); await p.waitForTimeout(250); }
+      for (let k = 0; k < 3; k++) { await passL(p); const hw = await p.$('#q2go'); if (hw) { await p.waitForSelector('#q2go:not([disabled])', { timeout: 15000 }).catch(() => {}); await hw.click(); await p.waitForTimeout(150); } const wp = await p.$('#wp.on [data-wr]'); if (wp) { await wp.click(); await p.waitForTimeout(250); }
         const id = await p.evaluate(() => G.id); await p.waitForTimeout(id === 'q2' ? 300 : 120); await answer(p, { id }, false);
         await p.waitForFunction(kk => R.k > kk, k, { timeout: 15000 }).catch(() => E.push(tag + ' 離開 測試：第 ' + (k + 1) + ' 題 沒有 到 下一題')); await p.waitForTimeout(150); }
       const sent0 = await p.evaluate(() => JSON.parse(localStorage.getItem('score_q') || '[]').filter(x => x.set === 'g3gm_g3m-x25').length);
@@ -184,7 +192,7 @@ await p.evaluate(d1 => { if (!d1) Object.keys(localStorage).filter(k => /^dcl_se
               const t0 = Date.now(); await p.waitForSelector('#dlgo', { timeout: 30000 }).catch(() => E.push(tag + ' 解碼 動畫 沒有〔▶ 開始 解碼〕')); if (Date.now() - t0 + 3000 < 19000) E.push(tag + ' 解碼 動畫 不到 20 秒'); await p.evaluate(() => { window.__DCLMIN = 0; }); }
             else await p.waitForSelector('#dlgo,#dlsk', { timeout: 30000 }).catch(() => E.push(tag + ' 解碼 動畫 沒有〔▶ 開始〕'));
             await p.click('#dlgo,#dlsk').catch(() => {}); await p.waitForTimeout(250); } }
-        const hw = await p.$('#q2go'); if (hw) { await hw.click(); await p.waitForTimeout(150); }
+        const hw = await p.$('#q2go'); if (hw) { await p.waitForSelector('#q2go:not([disabled])', { timeout: 15000 }).catch(() => {}); await hw.click(); await p.waitForTimeout(150); }
         const wp = await p.$('#wp.on [data-wr]'); if (wp) { await wp.click(); await p.waitForTimeout(250); }
         await p.waitForTimeout(st.id === 'q2' ? 300 : 120);
         const wrong = st.k === 0; await answer(p, { id: st.id }, wrong);
@@ -228,7 +236,7 @@ await p.evaluate(d1 => { if (!d1) Object.keys(localStorage).filter(k => /^dcl_se
       while (guard++ < N + 5) {
         const st = await p.evaluate(() => ({ end: !document.querySelector('#endv').hidden, k: R.k, id: G && G.id }));
         if (st.end) break; await passL(p);
-        const hw = await p.$('#q2go'); if (hw) { await hw.click(); await p.waitForTimeout(150); }
+        const hw = await p.$('#q2go'); if (hw) { await p.waitForSelector('#q2go:not([disabled])', { timeout: 15000 }).catch(() => {}); await hw.click(); await p.waitForTimeout(150); }
         const wp = await p.$('#wp.on [data-wr]'); if (wp) { await wp.click(); await p.waitForTimeout(250); }
         const id = await p.evaluate(() => G.id); await p.waitForTimeout(id === 'q2' ? 300 : 120); await answer(p, { id }, false);
         await p.waitForFunction(kk => R.k > kk || !document.querySelector('#endv').hidden, st.k, { timeout: 15000 }).catch(() => E.push(tag + ' 新 ' + N + ' 第 ' + (st.k + 1) + ' 題（' + id + '）沒有 到 下一題')); await p.waitForTimeout(150);

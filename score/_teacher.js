@@ -116,6 +116,13 @@ h1{margin:0;font-size:clamp(28px,3vw,44px)}
 .rwr small{color:#BFD0E2}.rwmsg{color:#7BF0A8;font-size:1.05em;min-height:1.4em}
 .pane{background:var(--pn);border:1px solid var(--ln);border-radius:18px;padding:14px}
 .note{color:#C8C8C8;font-size:clamp(18px,1.35vw,24px);margin:6px 0;line-height:1.5}
+/* 2026-11-01 第三十八次 第 3 點：排列 說明＋最後 作答 時間（每一天 一個 顏色）*/
+.sortw{font-size:clamp(20px,1.5vw,26px);color:#fff;background:#14243E;border:3px solid #4A6A95;border-radius:14px;padding:6px 14px;margin:6px 0}.sortw b{color:#FFE07A}
+.lastk{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:clamp(18px,1.3vw,22px);color:#CFE3F5;margin:4px 0 8px}.lastk span{padding:2px 12px;border-radius:999px;font-weight:700}
+.ld0{background:#1E9E55;color:#fff}.ld1{background:#1D6FD6;color:#fff}.ld2{background:#C77700;color:#fff}.ld3{background:#7A4FB5;color:#fff}.ld4{background:#4A4F57;color:#E0E0E0}
+td.lastc{white-space:nowrap}td.lastc b{display:inline-block;padding:2px 10px;border-radius:999px;margin-right:6px}td.lastc span{font-size:.92em}
+td.lastc.ld0,td.lastc.ld1,td.lastc.ld2,td.lastc.ld3,td.lastc.ld4{background:transparent;color:inherit}td.lastc.ld0 b{background:#1E9E55;color:#fff}td.lastc.ld1 b{background:#1D6FD6;color:#fff}td.lastc.ld2 b{background:#C77700;color:#fff}td.lastc.ld3 b{background:#7A4FB5;color:#fff}td.lastc.ld4 b{background:#4A4F57;color:#E0E0E0}
+td.lastc.ld0 span{color:#7CFFB0}td.lastc.ld1 span{color:#9CC8FF}td.lastc.ld2 span{color:#FFC870}td.lastc.ld3 span{color:#D7B8FF}td.lastc.ld4 span{color:#B0B0B0}
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{border-collapse:collapse;width:100%;font-size:clamp(19px,1.5vw,28px)}
 th,td{padding:10px 12px;border-bottom:1px solid #262626;text-align:right;white-space:nowrap}
@@ -640,7 +647,7 @@ var RVT=${JSON.stringify(RVT)};
 var KP='<svg class="kp" viewBox="0 0 64 40" aria-hidden="true"><g font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="11" text-anchor="middle"><circle cx="17" cy="20" r="15" fill="#FFE07A" stroke="#B8741A" stroke-width="2.4"/><text x="17" y="24" fill="#6A3A00">100</text><circle cx="41" cy="20" r="15" fill="#FFD54A" stroke="#B8741A" stroke-width="2.4"/><text x="41" y="24" fill="#6A3A00">100</text></g><circle cx="54" cy="30" r="9" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2"/><path d="M49.5 30l3.2 3.2 6-6.4" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var UA='<svg class="ua" viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg>',CNTIC='';
 var THELP=0,RED=[];
-var URL0=String(window.SCORE_URL||'').trim(),PW='',DATA=null,ALL=[],SIZES={},NM={},RCLS={},F={g:3,cls:'',p:'w',src:'',cat:''},TAB='p',SORT={k:'acc',d:1},BT='sec',BS='grade';
+var URL0=String(window.SCORE_URL||'').trim(),PW='',DATA=null,ALL=[],SIZES={},NM={},RCLS={},F={g:3,cls:'',p:'w',src:'',cat:''},TAB='p',SORT={k:'last',d:1},BT='sec',BS='grade';
 function $(s){return document.querySelector(s)}function $$(s){return [].slice.call(document.querySelectorAll(s))}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function f1(v){return v==null?'—':(Math.round(v*10)/10)}
@@ -650,7 +657,7 @@ function post(o){return fetch(URL0,{method:'POST',body:JSON.stringify(o)}).then(
 /* 第二十九次：字放大（A＋）以後〔⚙ 更多〕可能 換到 第二行 最左邊，選單 不可以 跑出 畫面左邊 */
 function mpFit(){var mp=$('#morep');if(!mp||mp.hidden)return;mp.style.left='';mp.style.right='';if(mp.getBoundingClientRect().left<8){mp.style.left='0';mp.style.right='auto'}}
 function zoom(d){var z=1;try{z=+localStorage.getItem('tzoom')||1}catch(e){}z=Math.max(.8,Math.min(1.6,Math.round((z+d)*10)/10));try{localStorage.setItem('tzoom',z)}catch(e){}$('#app').style.zoom=z}
-function forget(){try{sessionStorage.removeItem('tpw');localStorage.removeItem('tpw7')}catch(e){}}
+function forget(){try{sessionStorage.removeItem('tpw');localStorage.removeItem('tpw7');localStorage.removeItem('t25ok')}catch(e){}}   /* 2026-11-01 第三十八次 ①：登出 ＝ 老師 專用 25 題 闖關 也 打不開 */
 function remembered(){try{var r=JSON.parse(localStorage.getItem('tpw7')||'null');if(r&&r.p&&r.x>Date.now())return r.p;localStorage.removeItem('tpw7')}catch(e){}return ''}
 function login(pw){
   $('#lmsg').textContent='⏳ 讀取中…';
@@ -658,7 +665,7 @@ function login(pw){
   post({a:'teacher',pw:pw}).then(function(j){
     if(j.err==='pw'){$('#lmsg').textContent='❌ 密碼不對';forget();return}
     if(j.err){$('#lmsg').textContent='❌ 伺服器：'+(j.msg||j.err);return}
-    PW=pw;try{sessionStorage.setItem('tpw',pw);if($('#rm').checked)localStorage.setItem('tpw7',JSON.stringify({p:pw,x:Date.now()+7*864e5}))}catch(e){}
+    PW=pw;try{localStorage.setItem('t25ok',String(Date.now()+30*864e5));sessionStorage.setItem('tpw',pw);if($('#rm').checked)localStorage.setItem('tpw7',JSON.stringify({p:pw,x:Date.now()+7*864e5}))}catch(e){}
     load(j);$('#login').hidden=true;$('#app').hidden=false;
   },function(){$('#lmsg').textContent='📶 連不到伺服器，請檢查網路'});
 }
@@ -705,19 +712,23 @@ function draw(){
 /* 2026-10-12 D6-A：只留 7 欄（其他點那個人看；Excel 照樣全部都有）。燈號：🔴 正確率不到 60 或太快亂按超過 3 成；🟡 正確率不到 80 或太快亂按超過 1 成；🟢 其他 */
 /* 老師 2026-10-15 D12 ⑥：「本班名次」改成「全年級名次」（正確率，同分比總分） */
 /* 老師 2026-10-17 C8 另 2(1)：〔姓名〕自己一欄，標題正下方就是姓名（靠左對齊）；(2) 班級數字每一班一個顏色（cidH） */
-var PCOL=[['id','座號'],['nm','姓名'],['acc','🎯 正確率'],['s','💯 總分'],['count',CNTIC+'練習次數'],['prog',UA+' 進步'],['gacc','🥇 全年級名次'],['lt','燈號']];
+/* 2026-11-01 第三十八次 第 3 點（老師：排列 根據 什麼 要 說清楚；加「最後 作答 時間」，最近 的 排 最上面；不同 日期 不同 顏色）➜ 預設 排序 ＝ last */
+var PCOL=[['last','最後 作答 時間'],['id','座號'],['nm','姓名'],['acc','🎯 正確率'],['s','💯 總分'],['count',CNTIC+'練習次數'],['prog',UA+' 進步'],['gacc','🥇 全年級名次'],['lt','燈號']];
 /* Excel 照樣全部欄位（文字，不放圖示） */
 var XCOL=[['id','5碼'],['nm','姓名'],['acc','正確率'],['s','總分'],['count','練習次數'],['prog','進步'],['cacc','本班名次（正確率）'],['cs','本班名次（總分）'],['ccount','本班名次（練習次數）'],['cprog','本班名次（進步）'],
   ['gacc','全年級名次（正確率）'],['gs','全年級名次（總分）'],['gcount','全年級名次（練習次數）'],['gprog','全年級名次（進步）'],['sets','做了幾組'],['all','作答幾次'],['fix','訂正成功'],['fast','太快亂按'],['last','最後作答'],
   ['sec','練習時間（分鐘）'],['care','練習分數'],['c0','練習分數：這週 練了 幾天（分）'],['c1','練習分數：做完 幾次（分）'],['c2','練習分數：看完、聽完 才選（分）'],['c3','練習分數：答錯的 改對了（分）'],['c4','練習分數：練習 幾分鐘（分）'],['lc','聽完字卡（站）']];
 var BNX={sec:'最認真練習（練習秒數）',acc:'成績最優（正確率）',prog:'進步最多（正確率進步）',care:'練習分數',s:'總分',count:'練習次數'};
-var SDIR={id:'小的在上面',nm:'照筆畫',cacc:'第 1 名在上面',gacc:'第 1 名在上面',lt:'🔴 在上面'};
+var SDIR={last:'最近 的 在 最上面',id:'小的在上面',nm:'照筆畫',cacc:'第 1 名在上面',gacc:'第 1 名在上面',lt:'🔴 在上面'};
 function light(r){return r.acc==null?3:(r.acc<60||r.fast>30)?0:(r.acc<80||r.fast>10)?1:2}
 var LTS=['🔴','🟡','🟢','⚪'];
 function rowOf(p,RK){var r=RK[p.id]||{},o={id:p.id,nm:nm(p.id),acc:p.acc,s:p.s,count:p.count,prog:p.prog,keep:p.keep,cacc:r.cacc,cs:r.cs,ccount:r.ccount,cprog:r.cprog,
   gacc:r.gacc,gs:r.gs,gcount:r.gcount,gprog:r.gprog,sets:p.sets,all:p.all,fix:p.fix,fast:p.q?Math.round(p.fastQ/p.q*100):0,last:p.last,
   sec:Math.round((p.sec||0)/6)/10,care:p.care,lc:p.lc||0,vonly:!p.all};var C=SC.care(p);C.it.forEach(function(v,i){o['c'+i]=v});o.lt=light(o);return o}
 function dt(t){var d=new Date(t+288e5);return (d.getUTCMonth()+1)+'/'+d.getUTCDate()+' '+('0'+d.getUTCHours()).slice(-2)+':'+('0'+d.getUTCMinutes()).slice(-2)}
+/* 最後 作答 時間：幾月幾日（星期）幾點幾分＋今天／昨天／前天…，每一天 一個 顏色（台灣 時間）*/
+function lastTd(t){if(!t)return '<td>—</td>';var day=function(x){return Math.floor((x+288e5)/864e5)},n=day(Date.now())-day(t),k=n<=0?0:n===1?1:n===2?2:n<=6?3:4,d=new Date(t+288e5);
+  return '<td class="lastc ld'+k+'"><b>'+(k===0?'今天':k===1?'昨天':k===2?'前天':n+' 天 前')+'</b><span>'+(d.getUTCMonth()+1)+'月'+d.getUTCDate()+'日（'+'日一二三四五六'.charAt(d.getUTCDay())+'）'+('0'+d.getUTCHours()).slice(-2)+':'+('0'+d.getUTCMinutes()).slice(-2)+'</span></td>'}
 function paneP(ps,RK){
   if(!ps.length)return '<div class="note">這段期間還沒有人作答。</div>';
   var L=ps.map(function(p){return rowOf(p,RK)}),k=SORT.k,low=/^[cg]/.test(k)&&k!=='count';
@@ -726,7 +737,8 @@ function paneP(ps,RK){
     var asc=k==='id'||k==='lt'||/^[cg](acc|s|count|prog)$/.test(k);return (asc?(x>y?1:x<y?-1:0):(y>x?1:y<x?-1:0))*SORT.d});
   var red=L.filter(function(r){return r.lt===0}).map(function(r){return r.id}).sort();
   return (red.length?'<div class="alert1">🔴 '+red.length+' 人要關心：'+red.slice(0,6).map(esc).join('、')+(red.length>6?' …':'')+'<small>（點這裡看 🔔 要關心）</small></div>':'')+
-   '<div class="note">點一個人 ＝ 成績卡　點標題 ＝ 排序</div><div class="tw"><table><thead><tr>'+
+   '<div class="sortw">📋 現在 的 排列：<b>'+((PCOL.filter(function(c){return c[0]===k})[0]||XCOL.filter(function(c){return c[0]===k})[0]||['',k])[1])+'</b>（'+(SORT.d>0?(SDIR[k]||'高的在上面'):'反過來排')+'）　·　點 標題 ＝ 換 排列　·　點 一個人 ＝ 成績卡</div>'+
+   '<div class="lastk">最後 作答：<span class="ld0">今天</span><span class="ld1">昨天</span><span class="ld2">前天</span><span class="ld3">3～6 天 前</span><span class="ld4">更 早</span></div><div class="tw"><table><thead><tr>'+
    PCOL.map(function(c){return '<th data-k="'+c[0]+'"'+(c[0]===k?' class="s"':'')+'>'+c[1]+(c[0]===k?'<small>⬇ '+(SORT.d>0?(SDIR[k]||'高的在上面'):'反過來排')+'</small>':'')+'</th>'}).join('')+'</tr></thead><tbody>'+
    L.map(function(r){return '<tr class="row" data-id="'+r.id+'">'+PCOL.map(function(c){var v=r[c[0]];
      if(c[0]==='id')return '<td class="idc">'+cidH(v)+'</td>';
@@ -736,7 +748,7 @@ function paneP(ps,RK){
      if(c[0]==='cacc')return '<td>'+(v==null?'—':v<=3?['','🥇','🥈','🥉'][v]+' '+v:v)+'</td>';
      if(c[0]==='lt')return '<td class="lt" title="'+['要關心','要注意','很好','沒做'][v]+'">'+LTS[v]+'</td>';
      if(c[0]==='fast')return '<td'+(v>30?' class="lo"':'')+'>'+v+'%</td>';
-     if(c[0]==='last')return '<td>'+dt(v)+'</td>';
+     if(c[0]==='last')return lastTd(v);
      return '<td>'+(v==null?'—':esc(v))+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div>';
 }
 var BN={acc:'🎯 成績最優',s:'💯 總分',count:CNTIC+'練習次數',prog:UA+' 進步最多',sec:'最認真練習',care:'📅 練習分數'};
@@ -1440,7 +1452,7 @@ function paneX(g,hm){var CC=SC.CLASSES[g]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g
   RS.slice().sort(function(a,b){return a.t-b.t}).forEach(function(x){var m=re.exec(x.set),k=m[1]+m[2],p=P[x.id]=P[x.id]||{};p[k]=p[k]||{n:0};p[k].n++;p[k].s=x.s;if(hm){p.hb=p.hb||{n:0,s:-1};p.hb.n++;if(x.s>p.hb.s)p.hb.s=x.s;p.hd={n:0,d:dt(x.t).split(' ')[0]}}});XROWS={g:g,hm:hm,c:c,cols:COLS,ids:null,P:P};
   var ids=(RCLS[c]||[]).slice();Object.keys(P).forEach(function(id){if(ids.indexOf(id)<0)ids.push(id)});ids.sort();
   XROWS.ids=ids;var h='<div class="fvhd g3h">'+(hm?'🏠 '+(g===3?'三':'四')+'年級 25 題 闖關（回家）：學生 成績、錯題 排行榜、錯題 分析<small>（時間 ＝ 上面 選 的）</small>':'📝 '+(g===3?'三':'四')+'年級 期中 挑戰：學生 成績、錯題 排行榜、錯題 分析<small>（時間 ＝ 上面 選 的；分數 ＝ 最近 一次）</small>')+'</div>'+
-    (hm?'<div class="g3sw"><a class="crqr" href="../go25/index.html?g='+g+'" target="_blank">📱 '+(g===3?'三':'四')+'年級 25 題 闖關 QR／網址</a><button data-crdl="1">⬇ 下載 Excel（這一班）</button></div>':'')+
+    (hm?'<div class="g3sw"><a class="crqr" href="../go25/index.html?g='+g+'" target="_blank">📱 '+(g===3?'三':'四')+'年級 25 題 闖關 QR／網址</a><a class="crqr t25" href="../'+(g===3?'g3mid':'midterm')+'/t25.html" target="_blank">🏠 '+(g===3?'三':'四')+'年級 25 題 闖關（老師 專用）</a><button data-crdl="1">⬇ 下載 Excel（這一班）</button></div>':'')+
     '<div class="g3sw">'+CC.map(function(x){return '<button data-g3c="'+x+'" class="'+(x===c?'on':'')+'" style="border-color:'+ccol(x)+'">'+esc(SC.cname(x))+'</button>'}).join('')+'</div>';
   if(hm)h+=h25Done(g,re);
   if(!RS.length)return h+'<div class="note">'+(hm?'這個 時間、這一班 還沒有 人 做 25 題 闖關（學生 回家 掃 QR）。':'這個 時間、這一班 還沒有 人 做 期中 挑戰（英文課 在〔⚡ 現場任務〕開）。')+'</div>';

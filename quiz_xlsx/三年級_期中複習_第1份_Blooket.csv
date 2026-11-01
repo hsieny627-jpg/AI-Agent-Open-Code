@@ -5,53 +5,53 @@ Question #,Question Text,Answer 1,Answer 2,"Answer 3
 (Optional)","Time Limit (sec)
 (Max: 300 seconds)","Correct Answer(s)
 (Only include Answer #)"
-1,🦊 _ox,f,v,b,p,20,1
-2,🦺 _est,f,w,v,b,20,3
-3,👸 _ueen,g,q,p,d,20,2
-4,👃 _ose,m,h,r,n,20,4
-5,🪀 _o-yo,j,g,y,u,20,3
-6,What is the big letter of r?,R,P,B,K,20,1
-7,What is the small letter of D?,b,p,q,d,20,4
-8,🐶 _og,b,d,p,g,20,2
-9,🐱 _at,c,k,s,h,20,1
-10,z _ b r a,i,a,e,o,20,3
-11,w i n d _ w,a,o,u,e,20,2
-12,i n s _ c t,i,a,u,e,20,4
-13,🐂 _x,a,e,o,u,20,3
-14,3 + 4 = ?,seven,six,eight,nine,20,1
-15,2 + 3 = ?,four,six,nine,five,20,4
-16,10 - 1 = ?,five,nine,ten,eight,20,2
-17,3 = ?,three,tree,free,there,20,1
-18,8 = ?,eigth,aight,eight,eihgt,20,3
-19,"four, five, ___, seven",ten,six,three,nine,20,2
-20,"ten, nine, eight, ___",six,nine,two,seven,20,4
-21,5 + 2 = ?,five,two,seven,ten,20,3
-22,1 = ?,one,on,own,ten,20,1
-23,"Jake: Hi, I'm Jake.   Bella: ___","Hi, I'm Jake.","Hi, my Bella.",You're welcome.,"Hi, I'm Bella.",20,4
-24,"Fred: Thank you, Daisy.   Daisy: ___","Thank you, too.",You're welcome.,Nice to meet you.,Good morning.,20,2
-25,Nate: Nice to meet you.   Penny: ___,"Nice to meet you, too.",You're welcome.,"Thank you, too.","Nice to meet me, too.",20,1
-26,"Rick: Good morning, Holly.   Holly: ___","Good morning, Holly.","Thank you, Rick.","Good morning, Rick.","You're welcome, Rick.",20,3
-27,Bella: What's your name?   Jake: ___,Your name is Jake.,My name is Jake.,I'm eight.,My name Jake.,20,2
-28,Daisy: How old are you?   Fred: ___,I'm Fred.,I nine.,My name is nine.,I'm nine.,20,4
-29,Fred: ___   Holly: I'm seven years old.,What's your name?,How old you are?,How old are you?,How old am I?,20,3
-30,Penny: ___   Nate: My name is Nate.,What's your name?,How old are you?,What your name?,What's my name?,20,1
-31,Holly: I can't find my dog.   Rick: ___,You can help you.,I can help me.,I can helps you.,I can help you.,20,4
-32,Which one is right?,I'm eight year old.,I'm eight years old.,I eight years old.,I'm eight years olds.,20,2
-33,Which one is right?,What's your name?,What's you name?,What your name?,What's your name.,20,1
-34,Which one is right?,Nice to meet your.,Nice meet you.,Nice to meet you.,Nice to meets you.,20,3
-35,I'm = ?,I is,I am,I are,I my,20,2
-36,What's = ?,What are,What am,Who is,What is,20,4
-37,You're = ?,You is,Your,You are,You am,20,3
-38,My name ___ Fred.,is,are,am,be,20,1
-39,I ___ Penny.,is,are,my,am,20,4
-40,I'm ten ___ old.,year,years,yeas,yes,20,2
-41,Stand ___.,up,down,on,in,20,1
-42,Open ___ book.,you,you're,your,I,20,3
-43,"Be ___, please.",quite,quiet,quit,quick,20,2
-44,Raise your ___.,hat,band,land,hand,20,4
-45,Stand up. ⇄ ___,Line up.,Stand down.,Sit down.,Sit up.,20,3
-46,Open your book. ⇄ ___ your book.,Close,Open,Clos,Raise,20,1
-47,"Line ___, please.",down,in,on,up,20,4
-48,Raise your hand. ⇄ Put ___ your hand.,up,down,your,dawn,20,2
-49,"___ quiet, please.",Be,Is,Are,Am,20,1
-50,Raise ___ hand.,you,you're,your,yours,20,3
+1,👜  _ag,b,d,p,q,20,1
+2,🐶  _og,b,p,d,g,20,3
+3,📕  _ook,d,b,p,l,20,2
+4,🎩  _at,f,k,n,h,20,4
+5,🐟  _ish,h,v,f,t,20,3
+6,"🌅 7:00 at school.   Teacher: ___, class!",Good morning,Good night,Goodbye,Good mornings,20,1
+7,"Luke: Good morning, Holly.   Holly: ___","Good morning, Holly.","Thank you, Luke.","Nice to meet you, Holly.","Good morning, Luke.",20,4
+8,"😢 I can't find my dog.   Bella and Jake: We can ___, too.",find,help,hello,held,20,2
+9,"🧒🤝👧 New friends!   Luke: Hi, I'm Luke. Nice to meet you.   Daisy: ___","Nice to meet you, too.","Nice to meet me, too.","Nice to meet you, two.","Thank you, too.",20,1
+10,🎂 🕯️ × 10   Rick: I'm ___ years old.,two,one,ten,nine,20,3
+11,🎁 Bella gives Jake a gift.   Jake: ___,"You're welcome, Bella.","Thank you, Bella.","Thank you, Jake.","Good morning, Bella.",20,2
+12,🎂 🕯️🕯️🕯️🕯️🕯️   Penny: ___,I'm fine.,I five.,My five.,I'm five.,20,4
+13,📖👐 Teacher: ___ your book.,Close,Opens,Open,Over,20,3
+14,Teacher: Open ___ book.,your,you,you're,my,20,1
+15,"🚶🚶🚶 in a line   Teacher: Line ___, please.",on,down,in,up,20,4
+16,"🧍🧍🧍 ➡️ door   Teacher: ___, please.",Sit down,Line up,Stand up,Line down,20,2
+17,🐜  _nt,a,e,u,o,20,1
+18,🐜 = ?,aunt,and,ant,an,20,3
+19,🐱  _at,k,c,s,h,20,2
+20,🐱 = ?,cap,cut,kat,cat,20,4
+21,✈️  _et,g,y,j,z,20,3
+22,✈️ = ?,jet,get,yet,jat,20,1
+23,What is the small letter of G?,q,j,y,g,20,4
+24,What is the big letter of g?,Q,G,C,J,20,2
+25,What is the small letter of P?,p,q,b,d,20,1
+26,What is the big letter of p?,R,B,P,D,20,3
+27,What is the small letter of J?,i,j,g,y,20,2
+28,What is the big letter of j?,I,L,G,J,20,4
+29,What is the big letter of h?,N,K,H,A,20,3
+30,What is the small letter of H?,h,n,k,b,20,1
+31,5 = ?,fife,vive,fiv,five,20,4
+32,🖐️ How many fingers?,four,five,fine,nine,20,2
+33,9 = ?,nine,nein,nime,mine,20,1
+34,🍓🍓🍓🍓🍓🍓🍓🍓🍓 How many?,five,eight,nine,mine,20,3
+35,2 = ?,too,two,tow,twe,20,2
+36,👀 How many eyes?,ten,three,to,two,20,4
+37,Fred: I'm eight ___ old.,year,ears,years,yes,20,3
+38,Holly: I'm six years ___.,old,olds,age,year,20,1
+39,Nate: Hi. ___ name is Nate.,I,Me,I'm,My,20,4
+40,Daisy: Hello. ___ name is Daisy. I'm seven.,Hi,My,I,Me,20,2
+41,"Rick: Hi, I'm Rick. ___   Penny: I'm Penny.",What's your name?,How old are you?,What's my name?,Who's your name?,20,1
+42,Bella: ___   Jake: My name is Jake.,What your name?,How are you?,What's your name?,What's my name?,20,3
+43,Luke: What's your ___?   Daisy: My name is Daisy.,nine,name,game,names,20,2
+44,😢 Holly: I can't find my cat.   Fred: ___,I can't help you.,Thank you.,You can help me.,I can help you.,20,4
+45,Nate: I can't find my kite.   Bella: I can ___ you.,find,hello,help,held,20,3
+46,"Jake: Thank you, Penny.   Penny: ___",You're welcome.,Thank you.,Your welcome.,Good morning.,20,1
+47,Holly: Thank you.   Rick: You're ___.,well,welcomes,come,welcome,20,4
+48,🪪 Name: Bella | Age: 6   Bella: I'm ___ years old.,sixty,six,seven,sixteen,20,2
+49,🪪 Name: Jake | Age: 8   Jake: I'm ___.,eight,eighty,ate,nine,20,1
+50,🪪 Name: Daisy | Age: 3   Daisy: I'm ___ years old.,tree,free,three,thirty,20,3

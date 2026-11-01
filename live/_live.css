@@ -633,3 +633,11 @@ h1{text-shadow:0 5px 0 rgba(0,0,0,.35),0 0 24px rgba(255,213,74,.35)}
 .hnav a{display:inline-flex;align-items:center;min-height:56px;padding:4px 18px;border-radius:14px;font-size:24px;text-decoration:none;color:#2A1A00;background:linear-gradient(#FFE07A,#E8A900);box-shadow:0 4px 0 #8A5A00}
 .hnav a.t{color:#fff;background:linear-gradient(#7C5CFF,#4A2BB0);box-shadow:0 4px 0 #2A1470}
 body.host #hlob .lobr{padding-top:62px}   /* 右上角〔🏠 總首頁〕〔老師看板〕不 壓到 大廳 右邊 的 字 */
+/* 2026-11-01 第三十八次：⚡ 快下課（5／8／10 分鐘 作答）＋ 完整 */
+.crqk{border:3px solid #FFD54A;border-radius:18px;padding:10px 14px;margin:8px 0;background:#241C06}.crqk.full{border-color:#4A6A95;background:#0E1A2E}
+.crqk>b{display:block;font-size:28px;color:#FFE07A}.crqk.full>b{color:#BFDFFF}.crqk>small{display:block;font-size:22px;color:#FFE9A8;margin:2px 0 6px}
+.crmin.qk{border-color:#FFD54A}.crmin.qk.on{background:#FFD54A;color:#241C06}
+.hbar .crlf{font-size:24px;color:#FFE07A;align-self:center}
+/* 2026-11-01 第三十八次 第 9 點：QR 旁邊〔📋 複製 網址〕 */
+.hq2 .qrcp{display:block;margin:6px auto 0;min-height:52px;padding:4px 14px;font:inherit;font-size:20px;font-weight:700;border-radius:14px;border:3px solid #FFD54A;background:#2A2410;color:#FFE07A;cursor:pointer}
+.qrbig .qrcp{background:#2A2410;border-color:#FFD54A;color:#FFE07A;margin:8px}.qrbig .qrbu{font-size:22px;color:#CFE3F5;word-break:break-all;max-width:90vw;margin:6px auto}

@@ -12,7 +12,12 @@ await p.evaluate((SET)=>{LDB.set=LDB.must=LDB.patch=()=>Promise.resolve(true);CR
 await p.waitForTimeout(300);await p.click('[data-duo="1"]');await p.waitForTimeout(100);
 await p.click(SITE==='g3mid'?'#xrow .xb[data-x]:not([style*="none"])':'.xrow .xb');await p.waitForTimeout(2000);
 const id2=SITE==='g3mid'?'30402':'40202';for(const k of id2.split('').concat(['ok'])){await p.click('[data-k="'+k+'"]').catch(()=>{});await p.waitForTimeout(120)}
-await p.waitForTimeout(2500);
+await p.waitForTimeout(1500);
+/* 2026-11-01 第三十八次 第 5 點：秒懂 說明 ➜ ☑ 我懂了 ➜〔▶ 開始〕；第 1 次 號碼 小 的 先 */
+const intro=async(want)=>{n++;const v=await p.evaluate(()=>{const o=document.getElementById('duoi');return {on:o&&o.classList.contains('on'),t:o?o.innerText:'',dis:o&&o.querySelector('#duigo')?o.querySelector('#duigo').disabled:null}});
+  if(!v.on||!/我懂了/.test(v.t)||!/一人 一題/.test(v.t)||v.dis!==true||v.t.indexOf(want)<0)E.push(SITE+' 兩人 輪流 秒懂 說明 不對（要 '+want+' 先）：'+JSON.stringify(v).slice(0,200));
+  await p.waitForTimeout(300);await p.check('#duic').catch(()=>{});await p.click('#duigo').catch(()=>{});await p.waitForTimeout(1500)};
+await intro(SITE==='g3mid'?'304 班 1 號 先':'402 班 1 號 先');
 let st=await p.evaluate(()=>({duo:!!DUO,ids:DUO&&DUO.id,cur:DUO&&DUO.cur,scid:SCID}));n++;if(!st.duo||st.ids.join()!==(SITE==='g3mid'?'30401,30402':'40201,40202'))E.push(SITE+' 第 2 個 人 登入 失敗 '+JSON.stringify(st));
 const turns=[];let guard=0;
 while(guard++<400){const s=await p.evaluate(()=>({duo:!!DUO,cur:DUO?DUO.cur:-1,k:R&&R.k,id:(typeof G!=='undefined'&&G&&R.x&&!R.g?G.id:R&&R.g?R.g.id:G&&G.id),dcl:document.getElementById('dcl').classList.contains('on'),db:document.getElementById('duob').classList.contains('on'),scid:SCID}));
@@ -26,6 +31,9 @@ while(guard++<400){const s=await p.evaluate(()=>({duo:!!DUO,cur:DUO?DUO.cur:-1,k
 }
 n++;if(turns.length!==50||turns.some((t,i)=>+t[0]!==i%2))E.push(SITE+' 沒有 一人 一題 輪流：'+turns.join(' '));
 const end=await p.evaluate(()=>document.body.innerText.match(/👥 兩個人 輪流[\s\S]{0,200}/));n++;if(!end||(end[0].match(/記進 成績 了/g)||[]).length!==2)E.push(SITE+' 結束 頁 沒有 兩個 人：'+(end&&end[0].slice(0,80)));
+/* 〔🔁 再 挑戰 一次〕＝ 第 2 次：號碼 大 的 先 */
+await p.click('#duore').catch(()=>E.push(SITE+' 結束 頁 沒有〔🔁 再 挑戰 一次〕'));await p.waitForTimeout(500);await intro(SITE==='g3mid'?'304 班 2 號 先':'402 班 2 號 先');
+n++;const st2=await p.evaluate(()=>({cur:DUO&&DUO.cur,scid:SCID}));if(st2.cur!==1||st2.scid!==(SITE==='g3mid'?'30402':'40202'))E.push(SITE+' 第 2 次 不是 號碼 大 的 先 '+JSON.stringify(st2));
 const rq=await p.evaluate(()=>JSON.parse(localStorage.getItem('score_q')||'[]').concat(JSON.parse(localStorage.getItem('score_sent')||'[]')).map(x=>x.id+':'+x.set+':'+x.qs.length));n++;const want=SITE==='g3mid'?['30401','30402']:['40201','40202'];if(want.some(id=>!rq.some(x=>x.indexOf(id+':')===0&&/:25$/.test(x))))E.push(SITE+' 兩個 人 沒有 各 記 一筆：'+rq.join(' '));
  n++;if(errs.length)E.push(SITE+' 程式 錯誤 '+errs.slice(0,2).join('｜'));await br.close()}
 (async()=>{await one('g3mid','x25');await one('midterm','n25');E.forEach(e=>console.log('✗ '+e));console.log((E.length?'❌':'✅')+' 兩人 一台：'+n+' 項，'+E.length+' 個 失敗');process.exit(E.length?1:0)})();

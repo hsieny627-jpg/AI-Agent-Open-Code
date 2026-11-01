@@ -24,7 +24,7 @@ var XLV=(function(){
   function el(id,h){var o=document.getElementById(id);if(!o){o=document.createElement('div');o.id=id;document.body.appendChild(o)}if(h!=null)o.innerHTML=h;return o}
   function mm(ms){var s=Math.max(0,Math.ceil(ms/1000));return Math.floor(s/60)+':'+('0'+s%60).slice(-2)}
   function draw(){var o=el('xlvT');if(!dl||fin){o.classList.remove('on');return}var l=dl-Date.now();o.innerHTML='⏱ '+mm(l)+'<small>時間 到 自動 結束</small>';o.classList.add('on');o.classList.toggle('lo',l<60000)}
-  function cfg(v){if(!v||!v.on||!v.d){dl=0;fin=0;lastLeft=null;draw();return}
+  function cfg(v){if(!v||!v.on||!v.d){dl=0;fin=0;lastLeft=null;draw();return}if(v.qk&&window.R&&R.x&&!R.qk){R.qk=1;R.qkd=1}   /* 第三十八次：老師 作答 中 按〔5／8／10 分鐘〕＝ 不 再 演 動畫 */
     if(v.t!==T){T=v.t;fin=0;lastLeft=null}
     if(v.left!=null&&v.left!==lastLeft){lastLeft=v.left;dl=Date.now()+(+v.left)}
     if(!tick)tick=setInterval(draw,500);draw();

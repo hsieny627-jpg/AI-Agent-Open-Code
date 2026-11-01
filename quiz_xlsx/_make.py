@@ -4,13 +4,11 @@ import csv, os, re, sys, html
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, PatternFill
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from _data import SETS
-# 2026-10-31 老師 C43 ⑤「對」＋第三十七次 第 7 點：學生 看不懂 的 題目 換成 _rewrite_c43.py 的 改寫（鑑別度 低 的 那幾題 再 改過）
-from _rewrite_c43 import RW
-_K = {"三年級_期中複習_第1份": "G3A", "三年級_期中複習_第2份": "G3B", "四年級_期中複習_第1份": "G4A", "四年級_期中複習_第2份": "G4B"}
-for _n, _L in SETS:
-    for (_k, _i), _v in RW.items():
-        if _k == _K[_n]: _L[_i] = _v
+# 2026-11-01 第三十八次 C44 ⑦：題目 換成 _data38.py（第 1 份 ＝ 考卷 一半 的 相似題、第 2 份 ＝ 另一半；每一題 標 對應 的 考卷 題號）
+#   舊 的 _data.py＋_rewrite_c43.py 留著 當 紀錄，不再 用。
+from _data38 import SETS, HALF
+SETS = [(n, [x[:3] for x in L]) for n, L in SETS]
+TAGS = {n: [x[3] for x in L] for n, L in __import__("_data38").SETS}
 
 D = os.path.dirname(os.path.abspath(__file__))
 TIME = 20
@@ -44,6 +42,16 @@ for name, L in SETS:
 for g in ("三年級", "四年級"):
     a, b = [set((r[0], r[2][r[3]-1]) for r in ALL[n]) for n in ALL if n.startswith(g)]
     if a & b: BAD.append(f"{g} 兩份 有 一樣 的 題目：{a & b}")
+for n, tg in TAGS.items():
+    half, items = HALF[n]
+    for t in tg:
+        if t not in half: BAD.append(f"{n}：{t} 不是 這一份 的 那一半")
+    for h in half:
+        if tg.count(h) < 2: BAD.append(f"{n}：考卷 {h} 只有 {tg.count(h)} 題 相似題")
+for g in ("三年級", "四年級"):
+    h1, h2 = [set(HALF[n][0]) for n in TAGS if n.startswith(g)]
+    if h1 & h2: BAD.append(f"{g} 兩份 涵蓋 的 考卷 題目 重疊：{h1 & h2}")
+    if (h1 | h2) != set(HALF[[n for n in TAGS if n.startswith(g)][0]][1]): BAD.append(f"{g} 兩份 合起來 沒有 涵蓋 整張 考卷")
 if BAD: print("✗ " + "\n✗ ".join(BAD)); sys.exit(1)
 
 for name, rows in ALL.items():
@@ -96,9 +104,11 @@ R = os.path.join(D, "..", "listen", "2026-10-28_X"); os.makedirs(R, exist_ok=Tru
 e = html.escape
 sec = []
 for name, rows in ALL.items():
-    li = "".join(f'<li><div class="q">{e(q).replace(chr(10), "<br>")}</div><div class="o">' + "".join(f'<span class="{"ok" if k == p - 1 else ""}">{"①②③④"[k]} {e(x)}</span>' for k, x in enumerate(o)) + "</div></li>" for _, q, o, p in rows)
+    IT = HALF[name][1]
+    li = "".join(f'<li><div class="q">{e(q).replace(chr(10), "<br>")}</div><div class="o">' + "".join(f'<span class="{"ok" if k == p - 1 else ""}">{"①②③④"[k]} {e(x)}</span>' for k, x in enumerate(o)) + f'</div><div class="tg">📄 相似 考卷 {e(TAGS[name][i])}：{e(IT[TAGS[name][i]])}</div></li>' for i, (_, q, o, p) in enumerate(rows))
+    cov = "、".join(HALF[name][0])
     dl = " ".join(f'<a href="../../quiz_xlsx/{e(name)}_{t}">⬇ {t.split(".")[0]}</a>' for t in ("Kahoot.xlsx", "Blooket.csv", "Gimkit.csv"))
-    sec.append(f'<section><h2>{e(name.replace("_", " "))}</h2><p class="dl">{dl}</p><ol>{li}</ol></section>')
+    sec.append(f'<section><h2>{e(name.replace("_", " "))}</h2><p class="cv">📄 涵蓋 考卷：{e(cov)}（每一題 至少 2 題 相似題）</p><p class="dl">{dl}</p><ol>{li}</ol></section>')
 page = f'''<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>期中複習 50題</title><style>
 @font-face{{font-family:Andika;src:url(../../words/fonts/andika-400.woff2) format("woff2");font-weight:400}}
@@ -109,9 +119,9 @@ page = f'''<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta
 body{{margin:0;padding:16px;background:var(--bg);color:var(--fg);font:22px/1.5 Andika,"Microsoft JhengHei",sans-serif}}
 h1{{font-size:34px;margin:8px 0}} h2{{font-size:30px;margin:28px 0 8px}} .dl a{{display:inline-block;margin:6px 10px 6px 0;padding:10px 18px;border-radius:12px;background:#2f6fde;color:#fff;text-decoration:none;font-weight:700}}
 .all a{{background:#c47a00}} ol{{padding-left:2.2em}} li{{margin:0 0 14px;padding:10px 12px;background:var(--card);border:1px solid var(--line);border-radius:12px}}
-.q{{font-weight:700}} .o span{{display:inline-block;margin:4px 14px 0 0}} .o .ok{{color:var(--ok);background:var(--okb);font-weight:700;padding:0 8px;border-radius:8px}}
+.q{{font-weight:700}} .tg{{font-size:18px;color:#8a6d00;margin-top:4px}} .cv{{font-size:20px;background:var(--okb);padding:8px 12px;border-radius:10px}} .o span{{display:inline-block;margin:4px 14px 0 0}} .o .ok{{color:var(--ok);background:var(--okb);font-weight:700;padding:0 8px;border-radius:8px}}
 </style></head><body><h1>📝 期中複習 50 題（四選一）</h1>
-<p>三年級 2 份、四年級 2 份；每一份 50 題、題目 完全 不同；綠色 ＝ 正確 答案。聽力 題 這次 不放。</p>
+<p>2026-11-01 第三十八次：每個 年級 兩份。<b>第 1 份 ＝ 期中考卷 一半 題目 的 相似題、第 2 份 ＝ 另外 一半</b>（兩份 涵蓋 的 考卷 題目 完全 不同，兩份 做完 ＝ 複習 到 整張 考卷）。相似 ＝ 不是 一模一樣：換 問法、換 人名、換 數字；聽力 題 改成 看 圖。綠色 ＝ 正確 答案；每一題 下面 寫 對應 考卷 第幾題（只有 老師 看 這一頁）。</p>
 <p class="dl all"><a href="../../quiz_xlsx/期中複習_50題_全部_總表.xlsx">⬇ 全部 總表（含 Wordwall）</a></p>
 {"".join(sec)}</body></html>'''
 open(os.path.join(R, "index.html"), "w", encoding="utf-8").write(page)

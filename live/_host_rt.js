@@ -118,9 +118,10 @@ function stuURL(){return LV.stuURL()}
 function qrSVG(u){return LV.qr(u)}
 /* 右下角 QR Code（3(7)）：每一個 畫面 都 有，不小心 登出 的 學生 掃 這個 回來 */
 /* 2026-10-28 第三十三次 C35-2（老師：右下角 QR 太小 學生 掃不到）：右下角 放大；點 一下 ＝ 全螢幕 大 QR（#qrbig），再 點 一下 收起來 */
-function qrBig(on){var o=$('#qrbig');if(!o){o=document.createElement('div');o.id='qrbig';o.className='qrbig';o.innerHTML='<div class="qrbw"><div class="qrbb"></div><div class="qrbt">📱 掃 我 加入</div><button class="big qrbx">✕ 收起來</button></div>';document.body.appendChild(o);o.onclick=function(){qrBig(false)}}
+function qrBig(on){var o=$('#qrbig');if(!o){o=document.createElement('div');o.id='qrbig';o.className='qrbig';o.innerHTML='<div class="qrbw"><div class="qrbb"></div><div class="qrbt">📱 掃 我 加入</div><div class="qrbu"></div><button class="big qrcp">📋 一鍵 複製 網址</button><button class="big qrbx">✕ 收起來</button></div>';document.body.appendChild(o);o.onclick=function(e){if(e.target.closest&&e.target.closest('.qrcp')){copyURL(e.target.closest('.qrcp'));return}qrBig(false)}}
+  if(on){var uu=o.querySelector('.qrbu');if(uu)uu.textContent=taskURL()}
   if(on){o.querySelector('.qrbb').innerHTML=qrSVG(stuURL())}o.hidden=!on}
-function hqr(on){var e=$('#hqrc');if(!e)return;if(!e.getAttribute('data-ck')){e.setAttribute('data-ck',1);e.style.cursor='pointer';e.onclick=function(){qrBig(true)}}if(on&&!e.getAttribute('data-ok')){e.querySelector('.qrb').innerHTML=qrSVG(stuURL());e.setAttribute('data-ok',1)}e.hidden=!on}
+function hqr(on){var e=$('#hqrc');if(!e)return;if(!e.getAttribute('data-ck')){e.setAttribute('data-ck',1);e.style.cursor='pointer';e.onclick=function(ev){if(ev.target.closest&&ev.target.closest('.qrcp')){ev.stopPropagation();copyURL(ev.target.closest('.qrcp'));return}qrBig(true)};e.insertAdjacentHTML('beforeend','<button class="qrcp">📋 複製 網址</button>')}if(on&&!e.getAttribute('data-ok')){e.querySelector('.qrb').innerHTML=qrSVG(stuURL());e.setAttribute('data-ok',1)}e.hidden=!on}
 function lobby(){scr('hlob');hstep(1);hqr(false);var G=LV.game(H.game);
   $('#lqr').innerHTML=qrSVG(stuURL());$('#lurl').textContent=stuURL().replace(/^https?:\/\//,'');
   $('#llog').innerHTML=LV.howHTML(LV.LOGIN,'v sm');
@@ -333,7 +334,9 @@ function give(){var b=$('#give'),m=$('#gm');if(H.done){m.textContent='✅ 已經
     function(){b.disabled=false;m.textContent='📶 連不到 成績系統'})}
 /* 結束 這一場：清掉 遊戲（留著 p：學生 還 登入 著，下一場 直接 進來）*/
 function closeGame(){LV.stopSay();stopAll();if(H.code)LDB.must('PATCH',R(),{m:null,v:Date.now(),a:null,rw:null,xt:null,ch:null},6).then(function(){location.reload()});else location.reload()}
-function copyURL(b){var u=stuURL(),ok=function(){b.textContent='✅ 複製 好了';setTimeout(function(){b.textContent='📋 複製 網址'},2000)};
+/* 2026-11-01 第三十八次 第 9 點：老師 一鍵 複製 學生 作答 任務 的 網址（期中複習 進行 中 ＝ 直接 到 那個 任務：g3mid／midterm ?live=0班；其他 ＝ 現場任務 頁）*/
+function taskURL(){try{if(typeof CRS!=='undefined'&&CRS.cfg&&H.code){return new URL('../'+(String(H.cls).charAt(0)==='4'?'midterm':'g3mid')+'/index.html?live='+H.code,location.href).href}}catch(e){}return stuURL()}
+function copyURL(b){var u=taskURL(),t0=b.textContent,ok=function(){b.textContent='✅ 複製 好了';setTimeout(function(){b.textContent=t0},2000)};
   try{navigator.clipboard.writeText(u).then(ok,function(){fb()})}catch(e){fb()}
   function fb(){var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok()}catch(e){}t.remove()}}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;

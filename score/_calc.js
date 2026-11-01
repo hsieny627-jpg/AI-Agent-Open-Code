@@ -151,7 +151,7 @@ var SC = (function () {
     var ok = 0, f = 0; for (i = 0; i < Q.length; i++) { ok += Q[i][0]; f += Q[i][3]; }
     var t = +o.t; if (!(t > now - 30 * DAY && t < now + 5 * 6e4)) t = now;   /* 平板時間不對就用伺服器時間；沒網路補送的照當時 */
     return { t: t, id: c.id, g: c.g, cls: c.cls, seat: c.seat, set: set, name: String(o.name || '').slice(0, 60), m: m, n: Q.length, ok: ok,
-      acc: noQ(m) ? null : Math.round(ok / Q.length * 100), s: noQ(m) ? null : xN(set) ? Math.min(100, Math.round(xOk(Q) * 1000 / xN(set)) / 10) : s100(Q),   /* 2026-10-26 第二十八次：📝 25／50 題 挑戰 ＝ 答對 一題 4／2 分（沒 做完 的 算 0 分）*/ fix: lim(o.fix, 0, 999),
+      acc: noQ(m) ? null : Math.round(ok / Q.length * 100), s: noQ(m) ? null : xN(set) ? Math.min(100, Math.round(xOk(Q) * 1000 / (o.lc === 1 && !/-h25$/.test(set) ? Q.length : xN(set))) / 10) : s100(Q),   /* 2026-11-01 第三十八次 第 7 點：⚡ 現場任務（lc:1）＝ 一律 正確率（答了 幾題 就 算 那幾題；提早 結束 也 公平）*/   /* 2026-10-26 第二十八次：📝 25／50 題 挑戰 ＝ 答對 一題 4／2 分（沒 做完 的 算 0 分）*/ fix: lim(o.fix, 0, 999),
       mp: m === 'mem' ? lim(o.mp, 0, 999) : 0, mw: m === 'mem' ? lim(o.mw, 0, 9999) : 0, sec: m === 'l' ? 0 : lim(o.sec, 0, 3600),
       raw: lim(o.raw, 0, 1e8), fast: f,
       src: o.src === 'home' ? 'home' : 'school', dev: String(o.dev || '').replace(/[^\w]/g, '').slice(0, 12), u: String(o.u || '').replace(/[^\w]/g, '').slice(0, 24), qs: Q, x: false };
@@ -624,6 +624,8 @@ var SC = (function () {
   var RPLIM = { s0713: 5, s0812: 5, s0815: 5 };
   /* 2026-10-20 第十五次（老師 C17 第 7 題 A、第 8 題 甲、第 8 點）：s0805 金色獅鷲寶寶、s0907 噴射翅膀 變回一般商品；新的 10 月 31 號下架 ＝ s0301 金龍（必殺）、s0804 星空小龍、s0908 雷電翅膀 */
   var RPEND0 = Date.UTC(2026, 9, 31, 16, 0, 0), RPEND = { s0301: RPEND0, s0804: RPEND0, s0710: RPEND0, s0908: RPEND0, s1005: RPEND0 };
+  /* 2026-11-01 第三十八次 C44 ②（老師 同意）：新 的 限時 ＝ 光環 01-07、披風 02-07、名字框 04-07、背景 05-07、寵物服裝 06-03；11 月 30 日 晚上 11:59 下架（台灣 12 月 1 日 0:00）*/
+  var RPEND1 = Date.UTC(2026, 10, 30, 16, 0, 0); ['s0107', 's0207', 's0407', 's0507', 's0603'].forEach(function (k) { RPEND[k] = RPEND1; });
   /* 👑 冠軍寶箱（每週全年級「最認真練習」前 5 名）：2026-10-25 第二十五次 ➜ 只發金幣和經驗值：固定 🪙 ＋250、⭐ ＋150（RPCH；以前 ＝ 55% 金幣 300～500、45% 商城第 2 排） */
   function rpOpen(st, rnd, rnd2) { st = rpClean(st); if (st.ch <= 0) return { err: 'none' }; st.ch--;
     var r = { c: RPCH.c, x: RPCH.x }; st.bc += r.c; st.bx += r.x;
