@@ -37,7 +37,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
     await ctx.addInitScript(() => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} });
       localStorage.setItem('score_last', '"30401"'); localStorage.setItem('score_id_g3', '"30401"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', '30401'); });
     /* 聲音：不真的放，0.06 秒就算唸完（數唸了幾次） */
-    await ctx.addInitScript(() => { window.__NOGO = 1; window.__NORVA = 1; window.__NOWB = 1; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__G2CALM = 1; window.__DCLK = 0.05; window.__say = []; HTMLMediaElement.prototype.play = function () { const a = this; window.__say.push(a.src.split('/').slice(-2).join('/')); setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); };
+    await ctx.addInitScript(() => { window.__NOGO = 1; window.__NOMEM = 1; window.__NOWHEEL = 1; window.__NOLIFE = 1; window.__NORVA = 1; window.__NOWB = 1; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__G2CALM = 1; window.__DCLK = 0.05; window.__say = []; HTMLMediaElement.prototype.play = function () { const a = this; window.__say.push(a.src.split('/').slice(-2).join('/')); setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); };
       try { speechSynthesis.speak = u => { window.__say.push('tts:' + u.text); setTimeout(() => u.onend && u.onend(), 60); }; } catch (e) {} });
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto('file://' + path.join(__dirname, 'index.html')); await p.waitForTimeout(400);
