@@ -162,7 +162,7 @@ function decStop(){DEC.rid++;if(DEC.au){try{DEC.au.onended=null;DEC.au.pause()}c
 var DECPT={S:1.2,E:6,B:100,V:900,N:3};
 function decPts(avg,cb){var sp=Math.max(0,Math.min(1,(DECPT.E-avg)/(DECPT.E-DECPT.S))),v=Math.round(DECPT.V*sp/10)*10,b=DECPT.B+v;return {sp:sp,v:v,b:b,x:cb>=DECPT.N?2:1,p:b*(cb>=DECPT.N?2:1)}}
 function decScR(){var r=window.R;if(DEC.rr!==r){DEC.rr=r;DEC.sc=0;DEC.cb=0;DEC.n=0;DEC.shield=0}}
-function decPop(st,o,avg,cb){var e=H('div','dcpt'+(o.x>1?' x2':''),'<div class="p1">✅ 全部 放對！⚡ 平均 每一格 '+avg.toFixed(1)+' 秒</div><div class="bar"><i style="width:'+Math.max(4,Math.round(o.sp*100))+'%"></i></div><div class="p2">＋'+o.p+'</div><div class="p3">✅ '+DECPT.B+' ＋ ⚡ 速度 '+o.v+(o.x>1?'　🔥 連對 '+cb+' 題 ✖2':'')+'</div>'+(o.x>1?'<div class="cb">🔥 ✖2</div>':cb===DECPT.N-1?'<div class="p3">🔥 再 全對 1 題 ＝ ✖2！</div>':'')+'<div class="p3">🔓 解碼 積分 '+DEC.sc+'</div>');st.appendChild(e);setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e)},2800)}
+function decPop(st,o,avg,cb){var e=H('div','dcpt'+(o.x>1?' x2':''),'<div class="p1">✅ 全部 放對！⚡ 平均 每一格 '+avg.toFixed(1)+' 秒</div><div class="bar"><i style="width:'+Math.max(4,Math.round(o.sp*100))+'%"></i></div><div class="p2">＋'+o.p+'</div><div class="p3">✅ '+DECPT.B+' ＋ ⚡ 速度 '+o.v+(o.x>1?'　🔥 連對 '+cb+' 題 ✖2':'')+'</div>'+(o.x>1?'<div class="cb">🔥 ✖2</div>':cb===DECPT.N-1?'<div class="p3">🔥 再 全對 1 題 ＝ ✖2！</div>':'')+(o.qx?'<div class="p3">🎁 寶箱：這一題 ✖'+o.qx+'</div>':'')+(o.gh?'<div class="p3">👻 超越 影子（上次 每格 '+o.gh.toFixed(1)+' 秒）＋200</div>':'')+'<div class="p3">🔓 解碼 積分 '+DEC.sc+'</div>');st.appendChild(e);setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e)},2800)}
 /* ══ 2026-11-01 第三十八次 C44 ⑥-(1) 🎰 幸運轉盤：連續 全對 3、6、9… 題 ＝ 轉 一次（只 是 遊戲 積分，老師看板 100 分 照舊）══
    ＋300、＋500、🔥 這一題 再 ✖2、🛡 盾牌（下一次 放錯 連對 不 中斷）；轉 2.4 秒、指針 停 在 結果、大字 說 拿到 什麼 */
 var DWH=[['＋300','#FFB300',function(){DEC.sc+=300}],['🛡 盾牌','#5EC8FF',function(){DEC.shield=1}],['＋500','#FF6B9A',function(){DEC.sc+=500}],['🔥 ✖2','#7CFFB0',function(){var p=DEC.last?DEC.last.p:0;DEC.sc+=p}]];
@@ -181,12 +181,14 @@ function decMemIntro(done){var o=H('div','dcmi','<div class="mb"><div class="mt"
 function decMemGo(st,row){DEC.memPeek=0;var pk=H('button','dcpk','👀 再看 一次');pk.hidden=true;st.insertBefore(pk,row);var A=DEC.A;
  setTimeout(function(){row.classList.add('mem');pk.hidden=false},window.__NOGO?20:3000);pk.onclick=function(){DEC.memPeek=1;row.classList.remove('mem');pk.hidden=true}}
 function decRender(q,st0){var A=DEC.A,st=H('div','dcbox');decScR();var t0=Date.now();st0.appendChild(st);var row=H('div','dcw'),tray=H('div','dct'),zh=H('div','dcz',esc(q.z)),sel=null,selS=null;
+ /* 2026-11-01 第三十九次 第 1 點：🧩 這一題 的 樣子、🎁 神秘 寶箱（一個 正確 的 方塊）、👻 影子（g3mid/_dragfx.js）。教學（#dcl）不 加 */
+ DEC.qx=1;var fx=typeof DFX!=='undefined'&&DFX.on(st0),chI=-1,chT=0,chEl=null;if(fx){DFX.skin(st);chI=Math.floor((window.__DFXR!=null?+window.__DFXR:Math.random())*q.t.length)%q.t.length;chT=DFX.pickTier();var gh=DFX.ghost();DFX.chip(st,(gh?'👻 影子 每格 <b>'+gh.toFixed(1)+'</b> 秒':'👻 第一次：做 2 題 就 有 影子')+(DFX.open?'　🎁 <b>'+DFX.open+'</b>':''))}
   var cells=q.t.map(function(p,i){var c=H('div','dcc'+(/^['\u2019]/.test(p[0])?' ct':'')+(q.t[i+1]&&/^['\u2019]/.test(q.t[i+1][0])?' pre':''),'<div class="dce">'+decEN(p[0])+'</div>');c.setAttribute('data-w',p[0]);var s=H('div','dcs','');s.setAttribute('data-i',i);c.appendChild(s);row.appendChild(c);
    slotDrag(s);
    s.addEventListener('click',function(){if(s._nc){s._nc=0;return}if(A.busy()||DEC.lock)return;if(s._t){back(s);return}if(sel){put(sel,s);return}row.querySelectorAll('.dcs.sel').forEach(function(x){x.classList.remove('sel')});selS=s;s.classList.add('sel')});return c});
  st.appendChild(row);st.appendChild(tray);st.appendChild(zh);
  var tiles=shuf(q.t.map(function(p){return p[1]}).concat(q.x||[]));
- tiles.forEach(function(z){var b=H('div','dctl',esc(z));b._z=z;tray.appendChild(b);var sx,sy,mv,dn=false;
+ tiles.forEach(function(z){var b=H('div','dctl',esc(z));b._z=z;tray.appendChild(b);if(fx&&!chEl&&z===q.t[chI][1]){chEl=b;DFX.mark(b,chT)}var sx,sy,mv,dn=false;
   b.addEventListener('pointerdown',function(e){if(A.busy()||DEC.lock||b.classList.contains('used'))return;e.preventDefault();dn=true;sx=e.clientX;sy=e.clientY;mv=false;try{b.setPointerCapture(e.pointerId)}catch(x){}});
   b.addEventListener('pointermove',function(e){if(!dn)return;var dx=e.clientX-sx,dy=e.clientY-sy;if(!mv&&Math.abs(dx)+Math.abs(dy)>10){mv=true;b.classList.add('drag')}if(mv){b.style.transform='translate('+dx+'px,'+dy+'px) scale(1.08)';var o=over(e);row.querySelectorAll('.dcs').forEach(function(s){s.classList.toggle('hot',s===o)})}});
   function up(e){if(!dn)return;dn=false;b.classList.remove('drag');b.style.transform='';row.querySelectorAll('.dcs.hot').forEach(function(s){s.classList.remove('hot')});
@@ -197,7 +199,14 @@ function decRender(q,st0){var A=DEC.A,st=H('div','dcbox');decScR();var t0=Date.n
  decTW(st,tray);
  function over(e){var best=null;row.querySelectorAll('.dcs').forEach(function(s){var r=s.getBoundingClientRect();if(e.clientX>r.left-24&&e.clientX<r.right+24&&e.clientY>r.top-40&&e.clientY<r.bottom+40)best=s});return best}
  function put(b,s){if(s._t)back(s);s._t=b;s.textContent=b._z;s.classList.add('fill');s.classList.remove('sel','hot');b.classList.add('used');b.classList.remove('sel');sel=null;selS=null;
-  decFit(st);if([].every.call(row.querySelectorAll('.dcs'),function(x){return x._t}))setTimeout(check,350)}
+  chOpen(s);decFit(st);if([].every.call(row.querySelectorAll('.dcs'),function(x){return x._t}))setTimeout(check,DEC.dfxB?1650:350)}
+ /* 🎁 寶箱 方塊 放在 對 的 格子 ＝ 打開（演 的 時候 倒數 停住；獎品 只 進 遊戲 積分）*/
+ function chHold(){row.querySelectorAll('.dcs').forEach(function(x){x.classList.toggle('dfxhold',!!(x._t&&x._t===chEl&&!chEl._op))})}
+ function chOpen(s){if(chEl&&!chEl._op&&s._t===chEl&&chEl._z===q.t[+s.getAttribute('data-i')][1]){chEl._op=1;DEC.dfxB=1;
+   DFX.openAt(s,chT,1,{pause:A.pause,go:function(){if(!DEC.lock)A.go()},canSee:function(){return [].some.call(row.querySelectorAll('.dcs'),function(x,i){return !x._t||x._t._z!==q.t[i][1]})},
+    done:function(pz){DEC.dfxB=0;decScR();if(pz[0]==='pts')DEC.sc+=pz[1];else if(pz[0]==='x')DEC.qx=pz[1];else if(pz[0]==='shield')DEC.shield=1;
+     else if(pz[0]==='see'){var L=[].filter.call(row.querySelectorAll('.dcs'),function(x,i){return !x._t||x._t._z!==q.t[i][1]});if(L.length){var x=L[Math.floor(Math.random()*L.length)],e=H('span','dfxsee',esc(q.t[+x.getAttribute('data-i')][1]));x.appendChild(e);setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e)},1250)}}
+     DFX.chip(st,'🎁 <b>'+DFX.open+'</b>　'+pz[2]+(DEC.qx>1?'　這一題 ✖'+DEC.qx:''))}})}chHold()}
  /* 2026-10-31 第三十六次 第 3 點：格子 裡 的 方塊 可以 拖到 別的 格子 ＝ 互相 交換（空 的 格子 ＝ 搬 過去）；拖回 下面 ＝ 拿 回去。點 一下 照舊 ＝ 拿 回去 */
  function slotDrag(s){var sx,sy,mv,dn=false,gh=null;
   s.addEventListener('pointerdown',function(e){if(!s._t||A.busy()||DEC.lock)return;e.preventDefault();dn=true;mv=false;sx=e.clientX;sy=e.clientY;try{s.setPointerCapture(e.pointerId)}catch(x){}});
@@ -207,14 +216,14 @@ function decRender(q,st0){var A=DEC.A,st=H('div','dcbox');decScR();var t0=Date.n
    var o=e?over(e):null;if(o&&o!==s){swap(s,o);return}if(!o){var r=tray.getBoundingClientRect();if(e&&e.clientY>r.top-30)back(s)}}
   s.addEventListener('pointerup',end);s.addEventListener('pointercancel',function(){end(null)})}
  function swap(a,b){var ta=a._t,tb=b._t;a._t=tb||null;b._t=ta;a.textContent=tb?tb._z:'';a.classList.toggle('fill',!!tb);b.textContent=ta._z;b.classList.add('fill');[a,b].forEach(function(x){x.classList.remove('sel');x.classList.remove('swp');void x.offsetWidth;x.classList.add('swp')});
-  decFit(st);if([].every.call(row.querySelectorAll('.dcs'),function(x){return x._t}))setTimeout(check,350)}
- function back(s){if(!s._t)return;s._t.classList.remove('used');s._t=null;s.textContent='';s.classList.remove('fill')}
- function check(){if(A.busy()||DEC.lock)return;var ss=[].slice.call(row.querySelectorAll('.dcs')),got=ss.map(function(s){return s._t?s._t._z:''}),okN=0;
+  chOpen(a);chOpen(b);chHold();decFit(st);if([].every.call(row.querySelectorAll('.dcs'),function(x){return x._t}))setTimeout(check,DEC.dfxB?1650:350)}
+ function back(s){if(!s._t)return;s._t.classList.remove('used');s._t=null;s.textContent='';s.classList.remove('fill','dfxhold')}
+ function check(){if(A.busy()||DEC.lock)return;if(DEC.dfxB){setTimeout(check,300);return}var ss=[].slice.call(row.querySelectorAll('.dcs')),got=ss.map(function(s){return s._t?s._t._z:''}),okN=0;
   ss.forEach(function(s,i){var y=got[i]===q.t[i][1];if(y)okN++;s.classList.add(y?'ok':'no')});DEC.lock=true;A.pause();
   if(okN===ss.length){var cs=[].slice.call(row.querySelectorAll('.dcc'));zh.classList.add('on');var real=!st0.closest||!st0.closest('#dcl');
     /* 2026-11-01 第三十八次 C44 ⑥-(2)：積分 橫幅 不可以 遮住 再聽 一次、再看 一次 正確 英文 和 中文 ➜ 先 唸（唸到 哪 亮到 哪）＋整句 中文，唸完 才 出 積分；
        再 ➜ 🎰 幸運轉盤（連對 3 題）➜ 🌟 生活 裡 怎麼 用（獨立 一頁）➜ 下一題。教學（#dcl）不 算 */
-    var po=null,avg=0;if(real){decScR();DEC.cb++;avg=(Date.now()-t0)/1000/ss.length;po=decPts(avg,DEC.cb);if(DEC.mem&&!DEC.memPeek){po.p*=2;po.mem=1}DEC.sc+=po.p;DEC.last=po}
+    var po=null,avg=0;if(real){decScR();DEC.cb++;avg=(Date.now()-t0)/1000/ss.length;po=decPts(avg,DEC.cb);if(DEC.mem&&!DEC.memPeek){po.p*=2;po.mem=1}if(fx&&DEC.qx>1){po.p*=DEC.qx;po.qx=DEC.qx}if(fx){var g0=DFX.ghost();DFX.ghostAdd(avg);if(g0&&avg<g0){po.gh=g0;po.p+=200}DFX.win(st)}DEC.sc+=po.p;DEC.last=po}
     decRead(q.en,q.v||'',cs,function(){if(!real){DEC.lock=false;A.ok(row);return}decPop(st,po,avg,DEC.cb);
       setTimeout(function(){decWheel(st,function(){if(window.LIFE)LIFE.go(q,function(){DEC.lock=false;A.ok(row)});else{DEC.lock=false;A.ok(row)}})},window.__NOGO?40:2400)});return}
   decScR();if(DEC.shield&&(!st0.closest||!st0.closest('#dcl'))){DEC.shield=0;decToast(st,'🛡 盾牌 擋住 了：連對 不 中斷！')}else DEC.cb=0;setTimeout(function(){DEC.lock=false;A.bad(got,okN/ss.length)},900)}
@@ -327,3 +336,5 @@ function decTut(T,done){var A0=DEC.A,o=$('#dcl'),k='dct_seen_'+T.key+'_'+(A0.sid
  s1()}
 DEC.lid=0;
 `;
+/* 2026-11-01 第三十九次 第 1 點：🎁 神秘 寶箱、🧩 每一題 換 樣子、👻 影子（g3mid/_dragfx.js）跟 解碼 一起 進 網頁 */
+{ const DFXM = require('./_dragfx.js'); exports.CSS += DFXM.CSS; exports.JS += DFXM.JS; }

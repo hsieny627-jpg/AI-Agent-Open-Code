@@ -3,13 +3,14 @@
  * 嚴禁 洩題：考卷 的 名字（BAN）、考卷 的 打地鼠／挖礦／魔鏡 那幾個 字 不 用 在 測驗（build 檢查）；重點 可以 教，但是 句子、字、形式 都 換。
  * 題目、選項 一律 全 英文（中文 只 出現 在 dec 的 中文 方塊 ＝ 跟 🔓 句子 解碼 一樣 的 做法、和 答錯頁）。中文 不 空格（學生 頁面）。 */
 const D = require('./_data.js');
+const NB = require('../sentences/_nametag.js').BADGE;   /* 第三十九次 第 3 點：name 圖示 ＝ 掛繩 名牌 */
 const GL = Object.assign({}, D.GL, { bus: '公車', pen: '筆', van: '廂型車', duck: '鴨子', panda: '貓熊', dog: '狗', sit: '坐', fox: '狐狸', queen: '女王', ox: '公牛', hat: '帽子', rabbit: '兔子', window: '窗戶', 'yo-yo': '溜溜球', nose: '鼻子', zebra: '斑馬', one: '一', won: '贏了' });
 const PH = { 'how old': '幾歲', 'years old': '歲', "you're welcome": '不客氣', 'good morning': '早安' };
 const L = (a, b) => [[a, '大寫'], [b, '小寫']];
 const ANI = [
 /* 🔓 句子 解碼：What’s your name?／How old are you?／中英 順序／縮寫 */
 { id: 'dc', ic: '🔓', nm: '句子 解碼', sc: [
-  { h: '問名字', pic: '📛', en: "What's your name?", z: '你叫什麼名字？', n: '英文先說 What（什麼）；中文「什麼」在後面' },
+  { h: '問名字', pic: NB('?'), en: "What's your name?", z: '你叫什麼名字？', n: '英文先說 What（什麼）；中文「什麼」在後面' },
   { h: '縮寫', pic: '✂️', en: 'What is', en2: "What's", z: 'What is ＝ What’s（什麼是）', n: '’s ＝ is（是）' },
   { h: '問幾歲', pic: '🎂', en: 'How old are you?', z: '你幾歲？', n: 'How old ＝ 幾歲（兩個字一起看）' },
   { h: '說幾歲', pic: '🙋', en: "I'm nine years old.", z: '我九歲。', n: 'years old ＝ 歲；可以省略：I’m nine.' }],
@@ -140,7 +141,7 @@ const ANI = [
 { id: 'q7', ic: '🌱', nm: '皮克敏 搬字', sc: [
   { h: 'I 配 am', pic: '🙋', en: 'I am Oscar.', v: 'm', z: '我是 Oscar。', n: 'I 一定配 am（I am ＝ I’m）' },
   { h: 'you 配 are', pic: '👉', en: 'How old are you?', z: '你幾歲？', n: 'you 一定配 are' },
-  { h: 'my 和 your', pic: '📛', en: 'My name is Chloe.', z: '我的名字是 Chloe。', n: 'my ＝ 我的、your ＝ 你的；name 配 is' },
+  { h: 'my 和 your', pic: NB('Chloe'), en: 'My name is Chloe.', z: '我的名字是 Chloe。', n: 'my ＝ 我的、your ＝ 你的；name 配 is' },
   { h: 'too ＝ 也', pic: '🤝', en: 'Nice to meet you, too.', z: '我也很高興認識你。', n: 'too ＝ 也（two ＝ 二）' }],
  qz: [
   { at: 0, ty: 'mc', q: 'I ___ ten.', o: ['am', 'is', 'are', 'be'], en: 'I am ten.', z: '我十歲。', why: 'I 配 am' },
@@ -156,7 +157,7 @@ const ANI = [
   { at: 1, ty: 'hear', s: "I'm eight years old.", o: ["I'm eight years old.", "I'm eight year old.", 'I eight years old.', "I'm eight years."], en: "I'm eight years old.", z: '我八歲。', why: 'years old 要有 s；I’m 不可以少' }] },
 /* ⚔️ 英文 對決 擂台：問 ➜ 答 */
 { id: 'q8', ic: '⚔️', nm: '英文 對決 擂台', sc: [
-  { h: '問名字 ➜ 說名字', pic: '📛', en: "What's your name?", en2: "I'm Felix.", vs: 1, v2: 'm', z: '你叫什麼名字？我是 Felix。', n: '回答：I’m ＋ 名字' },
+  { h: '問名字 ➜ 說名字', pic: NB('Felix'), en: "What's your name?", en2: "I'm Felix.", vs: 1, v2: 'm', z: '你叫什麼名字？我是 Felix。', n: '回答：I’m ＋ 名字' },
   { h: '問幾歲 ➜ 說數字', pic: '🎂', en: 'How old are you?', en2: "I'm seven.", vs: 1, v2: 'm', z: '你幾歲？我七歲。', n: 'How old ➜ 回答數字（不是名字）' },
   { h: '謝謝 ➜ 不客氣', pic: '🎁', en: 'Thank you.', en2: "You're welcome.", vs: 1, v2: 'm', z: '謝謝你。不客氣。', n: 'You’re welcome. ＝ 不客氣' },
   { h: '很高興認識你', pic: '🤝', en: 'Nice to meet you.', en2: 'Nice to meet you, too.', vs: 1, v2: 'm', z: '很高興認識你。我也很高興認識你。', n: '回答要加 too（也）' },

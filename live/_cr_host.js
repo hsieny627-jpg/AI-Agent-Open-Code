@@ -92,7 +92,9 @@ function crTick(){clearInterval(CRS.tk);var last=0;CRS.tk=setInterval(function()
   if(k){k.textContent='⏱ '+crMM(l);k.classList.toggle('lo',l<60000)}
   if(Date.now()-last>5000){last=Date.now();LDB.must('PATCH','rooms/'+H.code+'/cr',{left:l},3)}if(l<=0)crUp()},500)}
 function crRows(){var c=CRS.cfg,L=[];Object.keys(CRS.crp).forEach(function(id){var p=CRS.crp[id];if(p&&p.t===c.t)L.push({id:id,s:+p.s||0,ok:+p.ok||0,n:+p.n||0,p:p.p||''})});
-  L.sort(function(a,b){return b.s-a.s||b.ok-a.ok||a.n-b.n||(a.id<b.id?-1:1)});var rk=0,pv=null;L.forEach(function(x,i){if(!pv||x.s!==pv.s||x.ok!==pv.ok)rk=i+1;x.rk=rk;pv=x});return L}
+  /* 2026-11-01 第三十九次（老師 C45 ③ 甲）：正確率 計分，答 1～2 題 也 可能 100 分 ➜ 答不到 CRMIN（5）題 的 不 排 名次、不上 前 10 名（分數 照樣 記），排在 最 後面、寫「答 N 題」 */
+  L.forEach(function(x){x.few=x.n<CRMIN});L.sort(function(a,b){return (a.few-b.few)||b.s-a.s||b.ok-a.ok||a.n-b.n||(a.id<b.id?-1:1)});var rk=0,pv=null;L.forEach(function(x,i){if(x.few){x.rk=0;return}if(!pv||x.s!==pv.s||x.ok!==pv.ok)rk=i+1;x.rk=rk;pv=x});return L}
+var CRMIN=5;
 function crWho(x){return '<b>'+(+x.id.slice(3))+' 號</b>'+(x.p?'<small class="crdu">👥 和 '+(+String(x.p).slice(3))+' 號 一台</small>':'')}
 function crLB(){var c=CRS.cfg,o=$('#hcrr .in');if(!c)return;
   if(CRS.built!==c.t||!$('#crlbw')){CRS.built=c.t;CRS.lbp={};CRS.lead='';
@@ -103,19 +105,21 @@ function crLB(){var c=CRS.cfg,o=$('#hcrr .in');if(!c)return;
   var pair={};L.forEach(function(x){if(x.p)pair[x.id]=x.p});var sh={},chips=Object.keys(ids).sort().filter(function(id){if(sh[id])return false;sh[id]=1;if(pair[id])sh[pair[id]]=1;return true}).map(function(id){var st=L.some(function(x){return x.id===id||x.id===pair[id]});
     return '<span class="crj'+(st?' ok':'')+'">'+(+id.slice(3))+(pair[id]?' 👥 '+(+String(pair[id]).slice(3)):'')+(st?' ✍️':'')+'</span>'});
   $('#crjb').innerHTML='<span class="crjt">📱 已經 連上 <b>'+Object.keys(ids).length+'</b> 人</span>'+(chips.length?chips.join(''):'<span class="crjh">👉 請 學生 掃 右下角 QR Code ➜ 登入 ➜ 自動 進來</span>');
-  var W=$('#crlbw'),top=L.slice(0,10);if(top.length){var e=W.querySelector('.crlbe');if(e)e.remove()}
+  var W=$('#crlbw'),top=L.filter(function(x){return !x.few}).slice(0,10);if(top.length){var e=W.querySelector('.crlbe');if(e)e.remove()}
   var have={};[].forEach.call(W.querySelectorAll('.crlr'),function(r){have[r.getAttribute('data-id')]=r});
   top.forEach(function(x,i){var r=have[x.id],pr=CRS.lbp[x.id];delete have[x.id];if(!r){r=document.createElement('div');r.className='crlr nw';r.setAttribute('data-id',x.id);W.appendChild(r)}
     var up=pr!=null&&pr>i?pr-i:0;r.style.top=(i*10)+'%';r.className='crlr'+(i===0?' g1':i===1?' g2':i===2?' g3':'')+(up?' up':'')+(pr==null?' nw':'');
-    r.innerHTML='<span class="crrk">'+(x.rk<=3?['🥇','🥈','🥉'][x.rk-1]:x.rk)+'</span><span class="crhi">'+heroI(x.id,'crhim')+'</span><span class="crnm">'+crWho(x)+'</span><span class="crbar"><i style="width:'+Math.max(2,x.s)+'%"></i></span><span class="crsc">'+x.s+'<small> 分</small></span><span class="crok">✅ '+x.ok+' ／ '+x.n+'</span>'+(up?'<em class="crup">▲ '+up+'</em>':'');
+    r.innerHTML='<span class="crrk">'+(x.rk<=3?['🥇','🥈','🥉'][x.rk-1]:x.rk)+'</span><span class="crhi">'+heroI(x.id,'crhim')+'</span><span class="crnm">'+crWho(x)+'</span><span class="crbar"><i style="width:'+Math.max(2,x.s)+'%"></i></span><span class="crsc">'+x.s+'<small> 分</small></span><span class="crok">答 '+x.n+' 題 · ✅ '+x.ok+'</span>'+(up?'<em class="crup">▲ '+up+'</em>':'');
     CRS.lbp[x.id]=i});
   Object.keys(have).forEach(function(id){have[id].remove();delete CRS.lbp[id]});
   if(top[0]&&top[0].s>0&&top[0].id!==CRS.lead){var was=CRS.lead;CRS.lead=top[0].id;if(was){var b=$('#crlead');b.innerHTML='👑 新 的 第 1 名：'+(+top[0].id.slice(3))+' 號！';b.classList.remove('on');void b.offsetWidth;b.classList.add('on')}}
-  $('#crrest').innerHTML=L.length>10?'<span class="crrt">第 11 名 以後：</span>'+L.slice(10).map(function(x){return '<span>'+x.rk+'. '+(+x.id.slice(3))+' 號 '+x.s+' 分</span>'}).join(''):''}
+  var R2=L.filter(function(x){return !x.few}).slice(10),F=L.filter(function(x){return x.few});
+  $('#crrest').innerHTML=(R2.length?'<span class="crrt">第 11 名 以後：</span>'+R2.map(function(x){return '<span>'+x.rk+'. '+(+x.id.slice(3))+' 號 '+x.s+' 分（答 '+x.n+' 題）</span>'}).join(''):'')+
+   (F.length?'<span class="crrt">✍️ 答 滿 '+CRMIN+' 題 才 排 名次：</span>'+F.map(function(x){return '<span>'+(+x.id.slice(3))+' 號 答 '+x.n+' 題</span>'}).join(''):'')}
 function crUp(){var c=CRS.cfg;if(!c||c.fin)return;c.fin=1;clearInterval(CRS.tk);LDB.must('PATCH','rooms/'+H.code+'/cr',{fin:1,left:0},6);
   var o=$('#hcrr .in'),n=6;o.innerHTML='<div class="crup0"><div class="cru1">⏰</div><div class="cru2">時間 到！</div><div class="cru3">📝 收 成績 中… <b id="crun">'+n+'</b></div></div>';
   var tm=setInterval(function(){n--;var e=$('#crun');if(e)e.textContent=n;if(n<=0){clearInterval(tm);crShowX()}},1000)}
-function crShowX(){var c=CRS.cfg||CRS.lastX;if(!c)return;CRS.lastX=c;if(CRS.stop){CRS.stop();CRS.stop=null}var L=crRows().filter(function(x){return x.n>0}),gst=GLORY.pick(),st=$('#crgl');
+function crShowX(){var c=CRS.cfg||CRS.lastX;if(!c)return;CRS.lastX=c;if(CRS.stop){CRS.stop();CRS.stop=null}var L=crRows().filter(function(x){return x.n>0&&!x.few}),gst=GLORY.pick(),st=$('#crgl');
   if(!st){st=document.createElement('div');st.id='crgl';st.innerHTML='<div id="crgls"></div><div class="crglb"><button id="crxs" class="ghost">⏭ 跳過</button><button id="crxa" class="ghost">🔁 再 看 一次</button><button id="crxe" class="big go">⏹ 結束（學生 回 現場任務）</button></div>';document.body.appendChild(st)}
   st.classList.add('on');var S=$('#crgls'),w=function(x){return '<span class="crgw">'+heroI(x.id,'crghi')+'<span>'+esc(H.cls)+' 班 '+(+x.id.slice(3))+' 號</span></span>'},v=function(x){return x.s+' 分'};
   var T={};[1,2,3].forEach(function(r){var a=L.filter(function(x){return x.rk===r});if(a.length)T[r]=a.map(function(x){return {w:w(x),v:v(x),l:'答對 '+x.ok+' 題'}})});

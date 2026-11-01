@@ -13,7 +13,9 @@
  * 頁面 要 先 給 RVA.A = { aud(text, v) ➜ 語音檔 網址｜null, sid() ➜ 5 碼, gr ➜ 'g3'｜'g4', send(rows, spec, secs), stop() }
  * 只寫 ES5（用 toString 放進 網頁）。 */
 function RVASRC() {
-  var RVA = { A: null, S: null, N: 3, QT: 20 };
+  /* 2026-11-01 第三十九次 第 2 點（老師：突擊 題 讓 答題 冗長、沉悶，學生 失去 耐心 ➜ 先 暫時 移除 全部 突擊 題）：QON ＝ false ➜ 動畫 照 演，一題 都 不 插、不 送 成績。
+     要 加 回來：QON 改 true（量測 用 window.__RVQ ＝ 1 強制 打開 量 引擎）。 */
+  var RVA = { A: null, S: null, N: 3, QT: 20, QON: false };
   function $id(i) { return document.getElementById(i); }
   function h(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
   function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
@@ -65,6 +67,7 @@ function RVASRC() {
     un.forEach(function (i) { if (pick.length < RVA.N && !ats[A(i)] && !ty[spec.qz[i].ty]) { pick.push(i); ty[spec.qz[i].ty] = 1; ats[A(i)] = 1; } });
     un.forEach(function (i) { if (pick.length < RVA.N && pick.indexOf(i) < 0 && !ats[A(i)]) { pick.push(i); ats[A(i)] = 1; } });
     un.forEach(function (i) { if (pick.length < RVA.N && pick.indexOf(i) < 0) pick.push(i); });
+    if (!(RVA.QON || window.__RVQ)) pick = [];   /* 第三十九次：突擊 題 暫時 移除 */
     S.key = key; S.seen = seen.concat(pick);
     /* 插 在 哪裡：第 i 頁 唸完 第 1 次（2i）或 第 2 次（2i＋1），而且 ≧ 題目 的 at */
     var nS = spec.sc.length, used = {};
@@ -74,7 +77,7 @@ function RVASRC() {
       while (a < nS - 1 && used[2 * a + 1]) a++; if (used[2 * a + 1]) for (a = nS - 1; a >= 0 && used[2 * a + 1]; a--); if (a < 0) a = nS - 1;
       used[2 * a + 1] = 1; S.plan[2 * a + 1] = qi; });
     S.nq = pick.length;
-    o.innerHTML = '<div class="rvw"><div class="rvtop"><span class="rvt">🎬 秒懂 複習：' + esc(spec.ic + ' ' + spec.nm) + '</span><span class="rvp" id="rvp"></span><span class="rvr">⚡ 突擊 測驗 <b id="rvn">0 ／ ' + S.nq + '</b></span></div>' +
+    o.innerHTML = '<div class="rvw"><div class="rvtop"><span class="rvt">🎬 秒懂 複習：' + esc(spec.ic + ' ' + spec.nm) + '</span><span class="rvp" id="rvp"></span>' + (S.nq ? '<span class="rvr">⚡ 突擊 測驗 <b id="rvn">0 ／ ' + S.nq + '</b></span>' : '') + '</div>' +
       '<div class="rvst" id="rvs"></div><div class="rvc" id="rvc"><button data-rv="pause">⏸️ 暫停</button><button data-rv="slow">🐢 放慢</button><button data-rv="again">🔁 再一次</button></div></div>';
     o.classList.add('on'); document.body.classList.add('rvon'); intro(); };
 
@@ -83,7 +86,8 @@ function RVASRC() {
   /* ① 開場：一句 一句 跳出來，2.6 秒 才 能 按 */
   function intro() { var S = RVA.S, st = $id('rvs'); $id('rvc').classList.add('hid');
     st.innerHTML = '<div class="rvin"><div class="rvi0">🎬</div><div class="rvi1">秒懂 複習 動畫：' + esc(S.spec.ic + ' ' + S.spec.nm) + '</div>' +
-      '<div class="rvl"><span style="--d:.3s">👀 專心 看、專心 聽</span><span style="--d:1s">⚡ 動畫 會 <b>隨時</b> 跳出 突擊 測驗（' + S.nq + ' 題）</span><span style="--d:1.7s">✅ 答對、答錯 都 <b>列入 成績</b></span></div>' +
+      (S.nq ? '<div class="rvl"><span style="--d:.3s">👀 專心 看、專心 聽</span><span style="--d:1s">⚡ 動畫 會 <b>隨時</b> 跳出 突擊 測驗（' + S.nq + ' 題）</span><span style="--d:1.7s">✅ 答對、答錯 都 <b>列入 成績</b></span></div>'
+        : '<div class="rvl"><span style="--d:.3s">👀 專心 看、專心 聽</span><span style="--d:1s">💡 看懂 重點，等一下 的 題目 會 用到</span></div>') +
       '<button class="rvgo" id="rvgo" disabled>▶ 開始 看</button></div>';
     T(function () { var b = $id('rvgo'); if (b) { b.disabled = false; b.classList.add('rdy'); } }, 2600); }
 
@@ -235,7 +239,7 @@ function RVASRC() {
     try { ls(S.key, JSON.stringify(S.seen.slice(-60))); } catch (e) { }
     RVA.odd = S.rows.length % 2;   /* 兩人 輪流：各 送 各 的 */
     try { if (S.rows.length && RVA.A.send) { var own = S.own || [], who = {}; own.forEach(function (w) { who[w] = 1; }); Object.keys(who).forEach(function (w) { var rr = S.rows.filter(function (r, i) { return (own[i] || '') === w; }); RVA.A.send(rr, S.spec, Math.round((Date.now() - S.t0) / 1000), w); }); } } catch (e) { }
-    st.innerHTML = '<div class="rvend"><div class="rve0">🎉</div><div class="rve1">看完 了！</div><div class="rve2">⚡ 突擊 測驗：答對 <b>' + ok + '</b> ／ ' + S.rows.length + '</div><div class="rve3">' + (ok === S.rows.length ? '👀 全部 答對：你 真的 很 專心！' : '📌 答錯 的 重點，等一下 的 題目 會 用到！') + '</div><button class="rvgo rdy" id="rvend">▶ 開始 這一關</button></div>';
+    st.innerHTML = '<div class="rvend"><div class="rve0">🎉</div><div class="rve1">看完 了！</div>' + (S.nq ? '<div class="rve2">⚡ 突擊 測驗：答對 <b>' + ok + '</b> ／ ' + S.rows.length + '</div><div class="rve3">' + (ok === S.rows.length ? '👀 全部 答對：你 真的 很 專心！' : '📌 答錯 的 重點，等一下 的 題目 會 用到！') + '</div>' : '<div class="rve3">📌 剛剛 的 重點，等一下 的 題目 會 用到！</div>') + '<button class="rvgo rdy" id="rvend">▶ 開始 這一關</button></div>';
     var go = function () { var d = S.done; RVA.close(); d && d(); }; $id('rvend').onclick = go; }
 
   /* 按鈕 */

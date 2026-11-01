@@ -319,7 +319,8 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
   /* 2026-10-24 第二十三次：男 01～08 下架（選過 的 照 用）；男 31～36 ★ 基本 */
   ok(!SC.rpOk('b01') && !SC.rpOk('b08') && SC.rpOk('b31') && SC.rpOk('b36') && SC.rpStar('b31') === 1 && SC.rpStar('b36') === 1 && SC.rpStar('b37') === 2 && SC.rpStar('b44') === 2 && !SC.rpOk('b09') && !SC.rpOk('b16') && !SC.rpStar('b45'), '男 01～16 下架、男 31～36 ★ 基本、男 37～44 ★★ 稀有（第二十五次）');
   { const st0 = SC.rpClean({}); st0.own.h = ['b01']; st0.eq.h = 'b31'; ok(!SC.rpEquip(st0, 'b01').err, '選過 的 舊 基本 男戰士 還 可以 裝'); }
-  ok(SC.rpStar('g32') === 2 && SC.rpStar('g41') === 2 && SC.rpStar('g42') === 3 && SC.rpStar('g51') === 3 && SC.rpStar('g52') === 4 && SC.rpStar('g56') === 4 && !SC.rpStar('g57'), '女 32～56 稀有度');
+  ok(SC.rpStar('g32') === 2 && SC.rpStar('g41') === 2 && SC.rpStar('g42') === 3 && SC.rpStar('g51') === 3 && SC.rpStar('g52') === 4 && SC.rpStar('g56') === 4 && SC.rpStar('g57') === 1 && SC.rpStar('g66') === 1 && SC.rpOk('g57') && SC.rpOk('g66') && !SC.rpStar('g67') && !SC.rpOk('g01') && !SC.rpOk('g08') && SC.rpOk('g09'), '女 32～56 稀有度；女 57～66 ★ 基本、女 01～08 下架（第三十九次）');
+  { const st0 = SC.rpClean({}); st0.own.h = ['g03']; st0.eq.h = 'g57'; ok(!SC.rpEquip(st0, 'g03').err, '選過 的 舊 基本 女戰士 還 可以 裝（第三十九次）'); }
   { const st0 = SC.rpClean({}); st0.own.h = ['g12']; st0.eq.h = 'b01'; ok(!SC.rpEquip(st0, 'g12').err, '買過 的 下架 女戰士 還 可以 裝'); }
   eq(SC.RPCW.pct + '/' + SC.RPCW.d1 + '/' + SC.RPCW.d2, '80/2/3', '全班 獎勵 8 成 練 2 天／全班 練 3 天（第二十五次）');
   eq([2, 3, 7].map(d => JSON.stringify(SC.cwAmt(1, d))).join(' ') + ' | ' + [2, 3, 7].map(d => JSON.stringify(SC.cwAmt(2, d))).join(' ') + ' | ' + JSON.stringify(SC.cwAmt(1, 1)) + JSON.stringify(SC.cwAmt(0, 7)),

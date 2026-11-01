@@ -21,7 +21,7 @@ function LIFESRC() {
     if (job) return ['💼 職業 日：介紹 家人 的 工作', '<span class="lf job">' + (/\bshe\b|her\b|mom|mother|grandma|aunt|sister/.test(t) && job === 'nurse' ? '👩‍⚕️' : F[job]) + '</span><span class="lf badge">🏷️</span>', 'job'];
     if (/who|this is/.test(t) || fam) return ['📸 拿 全家福 照片 給 朋友 看', '<span class="lf photo">🖼️<i>' + (fam ? F[fam] : (/\bshe\b/.test(t) ? '👩' : '👨')) + '</i></span><span class="lf point">👉</span>', 'fam'];
     if (n || /how old|years old/.test(t)) return ['🎂 生日 派對：朋友 問 你 幾歲', '<span class="lf cake">🎂<i>' + (n ? n : '?') + '</i></span><span class="lf bal">🎈</span>', 'age'];
-    return ['📛 開學 第一天：認識 新 同學', '<span class="lf tag">📛</span><span class="lf hand">👋</span>', 'name']; }
+    return ['📛 開學 第一天：認識 新 同學', '<span class="lf tag">__NBADGE__</span><span class="lf hand">👋</span>', 'name']; }
   var L = {};
   L.go = function (q, done) {
     if (window.__NOLIFE || !q || !q.en) { done(); return; }
@@ -55,4 +55,5 @@ const CSS = '#lifev{position:fixed;inset:0;z-index:9300;display:none;align-items
   '.lw{display:inline-block;transition:transform .15s,color .15s,text-shadow .15s}.lw.spk{transform:scale(1.14);color:#C2410C;text-shadow:0 0 12px rgba(255,190,90,.9)}' +
   '.lfz{font-size:clamp(26px,4vh,40px);font-weight:700;color:#FFF4C2}.lfgo{min-height:64px;padding:0 34px;font:inherit;font-size:clamp(24px,3.4vh,34px);font-weight:700;border-radius:18px;border:4px solid #B6FFCB;background:linear-gradient(#5BE38A,#22A84F);color:#022;cursor:pointer}' +
   '@media (prefers-reduced-motion:reduce){.kid,.lf,.lb,.lfw{animation:none!important}}';
-module.exports = { css: CSS, js: 'var LIFE=(' + LIFESRC.toString() + ')();' };
+/* 第三十九次 第 3 點：name 圖示 ＝ 掛繩 名牌（sentences/_nametag.js BADGE） */
+module.exports = { css: CSS, js: 'var LIFE=(' + LIFESRC.toString().replace('__NBADGE__', require('../sentences/_nametag.js').BADGE('?').replace(/'/g, "\\'")) + ')();' };

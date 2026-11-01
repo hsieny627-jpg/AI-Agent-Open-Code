@@ -20,7 +20,7 @@ const AK = t => String(t).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…�
     const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } });
     await ctx.route(/^https?:\/\//, r => r.abort());
     await ctx.route(/script\.test/, r => { const b = r.request().postData() || ''; if (b) sent.push(b); r.fulfill({ contentType: 'application/json', body: '{"ok":true,"dup":[]}' }); });
-    await ctx.addInitScript(([id]) => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} }); window.__NOUNLOCK = 1; window.__NOGO = 1; window.__NOWB = 1; window.__NOTUT = 1; window.__DCLK = .05;
+    await ctx.addInitScript(([id]) => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} }); window.__NOUNLOCK = 1; window.__RVQ = 1; /* 第三十九次：突擊 題 暫時 關掉 ➜ 量 引擎 時 強制 打開 */ window.__NOGO = 1; window.__NOWB = 1; window.__NOTUT = 1; window.__DCLK = .05;
       window.__PLAYED = []; HTMLMediaElement.prototype.play = function () { const a = this; window.__PLAYED.push(a.src); setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); };
       HTMLMediaElement.prototype.pause = function () {};
       localStorage.setItem('score_last', '"' + id + '"'); localStorage.setItem('score_id_g' + id[0], '"' + id + '"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', id); sessionStorage.setItem('score_pks_' + id, 'tk'); }, [id]);
@@ -119,6 +119,9 @@ const AK = t => String(t).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…�
     /* ⑨ 再 看 一次 ＝ 3 題 都 不一樣（同 一個 學生、同 一部）*/
     const diff = await p.evaluate(() => { const sp = RVD[Object.keys(RVD)[1]], took = []; for (let r = 0; r < 3; r++) { RVA.play(sp, function () {}); took.push(Object.keys(RVA.S.plan).map(k => RVA.S.plan[k]).sort((a, b) => a - b)); try { localStorage.setItem(RVA.S.key, JSON.stringify(RVA.S.seen)); } catch (e) { } RVA.close(); } return took; });
     const fl = [].concat(...diff); ok(new Set(fl).size === fl.length, tag + ' 再 看 一次 測驗 有 重複 ' + JSON.stringify(diff));
+    /* 第三十九次 第 2 點：平常（沒有 __RVQ）＝ 動畫 照 演、一題 突擊 題 都 沒有、開場／結束 不 寫 突擊 */
+    { const z = await p.evaluate(() => { window.__RVQ = 0; const sp = RVD[Object.keys(RVD)[0]]; RVA.play(sp, function () {}); const o = { nq: RVA.S.nq, plan: Object.keys(RVA.S.plan).length, t: document.getElementById('rva').textContent }; RVA.close(); window.__RVQ = 1; return o; });
+      ok(z.nq === 0 && z.plan === 0 && !/突擊/.test(z.t) && /專心/.test(z.t), tag + ' 突擊 題 沒有 關掉 ' + JSON.stringify(z).slice(0, 120)); n++; }
     ok(!errs.length, tag + ' JS 錯誤 ' + errs.slice(0, 2).join('｜'));
     await ctx.close();
   }

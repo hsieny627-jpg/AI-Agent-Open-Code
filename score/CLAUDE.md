@@ -4,6 +4,15 @@
 > 設計、研究證據（21 條）、使用者的決定：`sentences/2026-10-07_C_設計與研究清單.md`（**Q1～Q18 使用者 2026-10-07 全部照建議**）。
 > 根目錄 `AGENTS.md` 第四節（最高原則、品質、省額度）同樣適用。
 
+## 2026-11-01 第三十九次（先讀這一節）
+
+老師 原文：`sentences/2026-10-16_C_需求與問題.md` 第四節 最下面「第三十九次」。**改了 `_calc.js`（女戰士 57～66 ★ 基本、01～08 下架）➜ 要 重新 部署** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html 。
+| 點 | 做法 |
+|---|---|
+| 女戰士 | `RPR.h.g57～g66 = 1`、`RPHIDE.g01～g08`（`rpg/CLAUDE.md` 第三十九次）|
+| C45 ③ 甲 | 老師看板〔🏫 課堂複習〕期中 挑戰／25 題 闖關 ① 學生 成績：分數 下面 寫「答 N 題 · M 次」（最近 一次 的 `qs.length`）；答不到 5 題 ＝ ⚠（`_teacher.js` `paneX`）|
+| 突擊 題 | 暫時 不 送 `g3gm_g3m-rv`／`g4gm_mt-rv`（`g3mid/_rva.js` `QON`）；老師看板 舊 的 紀錄 照樣 看得到 |
+
 ## 2026-11-01 第三十八次（先讀這一節）
 
 **改了 `_calc.js` ➜ 要 重新 部署** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html （網址 不變）。

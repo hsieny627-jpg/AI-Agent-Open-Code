@@ -1,0 +1,194 @@
+{
+"bag": {
+"asr0": "bag",
+"asrA": "bag",
+"asrB": "ban",
+"spdB": 0.8,
+"votB": 50,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": false
+},
+"bell": {
+"asr0": "bell",
+"asrA": "bell",
+"asrB": "bell",
+"spdB": 0.6,
+"votB": 55,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": true
+},
+"box": {
+"asr0": "box",
+"asrA": "box",
+"asrB": "box",
+"spdB": 0.6,
+"votB": 15,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": true
+},
+"ball": {
+"asr0": "ball",
+"asrA": "ball",
+"asrB": "ball",
+"spdB": 0.6,
+"votB": 60,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": true
+},
+"dog": {
+"asr0": "dog",
+"asrA": "dog",
+"asrB": "dog",
+"spdB": 0.58,
+"votB": 20,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": true
+},
+"doll": {
+"asr0": "doll",
+"asrA": "doll",
+"asrB": "doll",
+"spdB": 0.6,
+"votB": 45,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": true
+},
+"door": {
+"asr0": "door",
+"asrA": "door",
+"asrB": "door",
+"spdB": 0.6,
+"votB": 10,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": true
+},
+"desk": {
+"asr0": "desk",
+"asrA": "desk",
+"asrB": "desk",
+"spdB": 0.6,
+"votB": 25,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": true
+},
+"pen": {
+"votA": [
+25,
+85
+],
+"asr0": "n",
+"asrA": "pen",
+"asrB": "pen",
+"spdB": 0.58,
+"votB": 115,
+"asr0ok": false,
+"asrAok": true,
+"asrBok": true
+},
+"pig": {
+"votA": [
+40,
+85
+],
+"asr0": "pig",
+"asrA": "pig",
+"asrB": "pay",
+"spdB": 0.8,
+"votB": 120,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": false
+},
+"panda": {
+"votA": [
+90,
+90
+],
+"asr0": "panda",
+"asrA": "panda",
+"asrB": "panda",
+"spdB": 0.6,
+"votB": 95,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": true
+},
+"pot": {
+"votA": [
+75,
+75
+],
+"asr0": "pot",
+"asrA": "pot",
+"asrB": "pot",
+"spdB": 0.55,
+"votB": 125,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": true
+},
+"ten": {
+"votA": [
+50,
+85
+],
+"asr0": "10",
+"asrA": "10",
+"asrB": "10",
+"spdB": 0.7,
+"votB": 60,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": true
+},
+"tiger": {
+"votA": [
+35,
+85
+],
+"asr0": "Tiger",
+"asrA": "tiger",
+"asrB": "Heiger",
+"spdB": 0.8,
+"votB": 80,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": false
+},
+"tent": {
+"votA": [
+75,
+75
+],
+"asr0": "tent, tent, tent, tent, tent, tent",
+"asrA": "tent, tent, tent, tent, tent, tent",
+"asrB": "n, [buzzing noise]",
+"spdB": 0.8,
+"votB": 60,
+"asr0ok": false,
+"asrAok": false,
+"asrBok": false
+},
+"toy": {
+"votA": [
+75,
+75
+],
+"asr0": "toy",
+"asrA": "toy",
+"asrB": "\"poy\"",
+"spdB": 0.8,
+"votB": 75,
+"asr0ok": true,
+"asrAok": true,
+"asrBok": false
+}
+}

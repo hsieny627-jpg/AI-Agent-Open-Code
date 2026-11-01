@@ -20,10 +20,10 @@ function DUOSRC() {
     var S = [
       ['🔑', '兩個 人 都 <b>登入 好了</b>', '<span class="dup p1">' + nm(A) + ' ✅</span><span class="dup p2">' + nm(B) + ' ✅</span>'],
       ['🔁', '<b>一人 一題</b>，輪流 答', '<span class="dup p1">' + nm(first) + '</span><span class="dua">➜</span><span class="dup p2">' + nm(sec) + '</span><span class="dua">➜</span><span class="dup p1">' + nm(first) + '</span><span class="dua">…</span>'],
-      ['⚡', '動畫 裡 的 <b>突擊 測驗</b> 也 一人 一題', '<span class="dub">畫面 寫「請 ○○ 號 作答」＝ 輪到 那個 人</span>'],
+      (typeof RVA !== 'undefined' && RVA && (RVA.QON || window.__RVQ)) ? ['⚡', '動畫 裡 的 <b>突擊 測驗</b> 也 一人 一題', '<span class="dub">畫面 寫「請 ○○ 號 作答」＝ 輪到 那個 人</span>'] : null,   /* 第三十九次：突擊 題 暫時 移除 ➜ 這一句 不 演 */
       ['💯', '<b>各 算 各 的 分數</b>（自己 的 正確率），成績 各 記 各 的', '<span class="dup p1">' + nm(A) + '：自己 的 分數</span><span class="dup p2">' + nm(B) + '：自己 的 分數</span>'],
       ['👉', '這是 第 <b>' + n + '</b> 次：<b>' + nm(first) + ' 先</b>', '<span class="dub">' + (n % 2 ? '第 1、3、5 … 次 ＝ 號碼 小 的 先' : '第 2、4、6 … 次 ＝ 號碼 大 的 先') + '</span>']
-    ];
+    ].filter(Boolean);
     var box = document.getElementById('duis'), T = (window.ACTL && ACTL.T) || function (f, ms) { return setTimeout(f, ms); };
     function play() { box.innerHTML = ''; S.forEach(function (s, i) { T(function () { var d = document.createElement('div'); d.className = 'dur'; d.innerHTML = '<span class="dui0">' + s[0] + '</span><div><div class="dur1">' + s[1] + '</div><div class="dur2">' + s[2] + '</div></div>'; box.appendChild(d); }, window.__NOGO ? 5 : 300 + i * 1700); });
       T(function () { document.getElementById('duik').classList.add('rdy'); }, window.__NOGO ? 10 : 300 + S.length * 1700); }

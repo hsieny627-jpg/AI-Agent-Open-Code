@@ -137,7 +137,11 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
       if (nb) E.push(tag + '：男 31～36 的圖 ' + nb + ' 張載不到'); }
     await p.click('[data-sex="g"]'); await p.waitForTimeout(150);
     const gi = await p.evaluate(() => [].map.call(document.querySelectorAll('#shop .it'), x => x.getAttribute('data-id')));
-    if (gi.length !== 45 || gi.indexOf('g29') < 0 || gi.indexOf('g31') < 0 || gi.indexOf('g56') < 0 || gi.indexOf('g12') >= 0) E.push(tag + '：女生戰士要 45 個（第二十二次：女 11～21 下架、加 32～56）（' + gi.length + '）');
+    if (gi.length !== 47 || gi.indexOf('g29') < 0 || gi.indexOf('g31') < 0 || gi.indexOf('g56') < 0 || gi.indexOf('g57') < 0 || gi.indexOf('g66') < 0 || gi.indexOf('g12') >= 0 || gi.indexOf('g01') >= 0 || gi.indexOf('g08') >= 0) E.push(tag + '：女生戰士要 47 個（第二十二次：女 11～21 下架、加 32～56；第三十九次：女 01～08 下架、加 57～66 ★ 基本）（' + gi.length + '）');
+    { const ng = await p.evaluate(() => [].filter.call(document.querySelectorAll('#shop .it img'), i => /g(5[7-9]|6[0-6])/.test(i.src) && !(i.complete && i.naturalWidth)).length);
+      const fr = await p.evaluate(() => document.querySelectorAll('#shop .pr.fr').length);
+      if (ng) E.push(tag + '：女 57～66 的圖 ' + ng + ' 張載不到');
+      if (fr !== 10) E.push(tag + '：女生 要 10 個「🎁 免費」（女 57～66 ★ 基本）（' + fr + '）'); }
     await p.click('[data-sex="b"]'); await p.click('#shop [data-id="b32"]'); await p.waitForTimeout(150);
     if (!/免費/.test(await p.textContent('#rpmb'))) E.push(tag + '：點 ★1 英雄沒有問「免費 選 這一個？」');
     await p.click('#rpmb [data-m="buy"]'); await p.waitForTimeout(900);
@@ -420,8 +424,8 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
         return { bh: [].map.call(st.querySelectorAll('.bh'), x => x.textContent.replace(/\s/g, '')), heart: /❤/.test(t),  pwup: /戰力每多100➜💥一擊＋1/.test(t.replace(/\s/g, '')) }; });
       if (z.bh.join('|') !== '📊我的數字|❓看不懂？點這裡' || z.heart) E.push(tag + '：第二十二次 版面／一擊 動畫／血條 不對 ' + JSON.stringify(z));
       await p.click('[data-sex="g"]').catch(() => {}); await p.waitForTimeout(300);
-      const gq = await p.evaluate(() => { const L = ids('h').filter(x => x.charAt(0) === 'g'); return { n: L.length, has: ['g09', 'g10', 'g32', 'g41', 'g42', 'g56'].every(x => L.indexOf(x) >= 0), hid: L.filter(x => +x.slice(1) >= 11 && +x.slice(1) <= 21), r: [CAT.R.h.g32, CAT.R.h.g42, CAT.R.h.g52, CAT.R.h.g56].join('') }; });
-      if (gq.n !== 45 || !gq.has || gq.hid.length || gq.r !== '2344') E.push(tag + '：女戰士 新圖 不對 ' + JSON.stringify(gq));
+      const gq = await p.evaluate(() => { const L = ids('h').filter(x => x.charAt(0) === 'g'); return { n: L.length, has: ['g09', 'g10', 'g32', 'g41', 'g42', 'g56', 'g57', 'g66'].every(x => L.indexOf(x) >= 0), hid: L.filter(x => +x.slice(1) >= 11 && +x.slice(1) <= 21), r: [CAT.R.h.g32, CAT.R.h.g42, CAT.R.h.g52, CAT.R.h.g56].join('') }; });
+      if (gq.n !== 47 || !gq.has || gq.hid.length || gq.r !== '2344') E.push(tag + '：女戰士 新圖 不對 ' + JSON.stringify(gq));
       const gb = G.post({ a: 'rpg', id: '40205', op: 'buy', item: 'g12' }); if (!gb || gb.err !== 'item') E.push(tag + '：伺服器 還 賣 下架 的 女 12');
       n += 5; }
     /* 第三十二次：第 4 章 暫時 拿掉 ➜ 不量 */

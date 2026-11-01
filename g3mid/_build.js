@@ -724,7 +724,7 @@ function next(){if(DUO&&duoSw())return;QID++;PD=null;R.retry=0;R.k++;BUSY=false;
    if(G.id==='q8'){FHP=Math.max(1,Math.ceil(R.cnt[lv]/2));if(!ls('g3m_war')&&!rpHero()){warPick(go);return}}go();return}R.gk++}
  nextR()}
 function nextR(){if(G.id==='dc'&&R.q.u!==R.dcu){var tut=R.dcu==null;R.dcu=R.q.u;$('#stage').innerHTML='';var les=function(){decLesson(LES[R.bk==='B'?'B':'A'][R.q.u],nextR)};if(tut&&!window.__NOTUT)decTut(DTUT,les);else les();return}   /* 2026-10-30 第 9-(5) 點：這一場 第一題 解碼 前 ＝ 先 教 怎麼 拖、中英 順序（decTut）*/
-R.ts=Date.now();R.pre=null;R.frac=0;dots();$('#stage').innerHTML='';$('#how').textContent=R.q.how||G.how;REN[G.id](R.q,$('#stage'));tStart(G.t)}   /* q.how ＝ 這一題 問法 不一樣（大寫、用 聽 的）*/
+R.ts=Date.now();R.pre=null;R.frac=0;dots();$('#stage').innerHTML='';if(typeof DFX!=='undefined')DFX.clean($('#stage'));$('#how').textContent=R.q.how||G.how;REN[G.id](R.q,$('#stage'));tStart(G.t)}   /* q.how ＝ 這一題 問法 不一樣（大寫、用 聽 的）*/
 function hudX(){$('#gnm').textContent='第 '+(R.lv+1)+' 關 · '+G.ic+' '+G.nm;setTimeout(bossHud,0);$('#how').textContent=G.how;$('#wsw').hidden=G.id!=='q8';$('#tmb').style.transform='scaleX(1)';$('#tsec').textContent=G.t}
 /* ══ 2026-10-27 第三十二次 第 3-(1) 點（老師：點〔離開〕就 前功盡棄）══
    25／50 題：每 答 一題 自動 存 在 這台 平板（g3m_xs25_5碼）；按〔✕ 離開〕先 問「真的 要 離開 嗎？」；
@@ -819,7 +819,7 @@ function endX(){coopStop();xDel(R.x);stopSay();cancelAnimationFrame(TM.raf);$('#
  var b=+(ls('g3m_bx'+XS()+R.x)||0),nb=sc>b;if(nb)ls('g3m_bx'+XS()+R.x,sc);var rc=rec1(),fq=0;R.Q.forEach(function(x){fq+=x[3]});
  var rn='<div class="rcn">'+(rc?'📝 記進 成績 了':fq*2>R.Q.length?'⚠️ 太快 亂按 超過 一半：這一回 不算 成績':(typeof SCID!=='undefined'&&SCID?'📶 沒有 網路：先 存 在 平板':'（沒有 登入：沒有 記 成績）'))+'</div>';
  var tb='<table class="xtb"><tr><th>關</th><th>遊戲</th><th>答對</th></tr>'+(LVS||GM).map(function(g,i){var a=0,n=0;R.lvOf.forEach(function(l,k){if(l===i){n++;if(R.res[k]===1)a++}});return '<tr><td>'+(i+1)+'</td><td>'+g.ic+' '+esc(g.nm)+'</td><td class="'+(a===n?'ok':'')+'">'+a+' ／ '+n+'</td></tr>'}).join('')+'</table>';
- $('#end').innerHTML=rn+'<div class="st">'+[0,1,2].map(function(k){return '<i>'+(k<st?'⭐':'☆')+'</i>'}).join('')+'</div><div class="big xsc">📝 '+XNM(R.x)+'：<b>'+sc+'</b> 分 ／ 100'+(nb?'　🏆 新紀錄':'')+'</div><div class="big">答對 '+ok+' ／ '+R.x+'（每題 '+R.pt+' 分）</div>'+(DEC.rr===R&&DEC.sc?'<div class="big">🔓 解碼 積分 <b style="color:#FFD54A">'+DEC.sc+'</b>（速度 ＋ 🔥 連對 ✖2；只 是 遊戲 積分，不 算進 100 分）</div>':'')+tb+
+ $('#end').innerHTML=rn+'<div class="st">'+[0,1,2].map(function(k){return '<i>'+(k<st?'⭐':'☆')+'</i>'}).join('')+'</div><div class="big xsc">📝 '+XNM(R.x)+'：<b>'+sc+'</b> 分 ／ 100'+(nb?'　🏆 新紀錄':'')+'</div><div class="big">答對 '+ok+' ／ '+R.x+'（每題 '+R.pt+' 分）</div>'+(DEC.rr===R&&DEC.sc?'<div class="big">🔓 解碼 積分 <b style="color:#FFD54A">'+DEC.sc+'</b>（速度 ＋ 🔥 連對 ✖2；只 是 遊戲 積分，不 算進 100 分）</div>':'')+(typeof DFX!=='undefined'&&DFX.gold?'<div class="big">🎁 寶箱 金幣 <b style="color:#FFD54A">🪙 '+DFX.gold+'</b>（只 是 遊戲 積分，不 算進 100 分）</div>':'')+tb+
   (R.wrong.length?'':'<div class="big">🎉 全部答對！</div>');window.scrollTo(0,0);if(st>=2)confetti();
  /* 2026-10-31 第三十七次 第 10 點：最後 一頁 ＝ 📒 錯題 總複習（大字、自動 唸 英文＋中文、每題〔🔊〕、聽完 才 解鎖 下面 兩顆；score/_wrev.js）*/
  WREV.run($('#end'),R.wrong.map(function(w,k){return {head:'❌ 第 '+(k+1)+' 題｜'+esc(w.gi),body:w.body||'<div class="gls"><span class="gw"><b>'+esc(w.show)+'</b><i></i></span></div>',zh:w.zh,post:w.after?function(){w.after()}:null,en:function(d){sayList(w.sl,d)}}}),
@@ -1085,14 +1085,16 @@ REN.dc=function(q,st){st.appendChild(H('div','dcu','📘 Unit '+q.u));decRender(
 FB.dc=function(q,p){return {you:decYou(q,p)+(R.x&&R.frac>0?'<div class="yp">✅ 放對 '+Math.round(R.frac*q.t.length)+' ／ '+q.t.length+' 個 ➜ 拿 '+(Math.round(R.pt*R.frac*10)/10)+' 分</div>':''),
   body:'<div class="gls" id="gls">'+q.t.map(function(t){return '<span class="gw'+(/^'/.test(t[0])?' ct':'')+'"><b>'+decEN(t[0])+'</b><i>'+esc(t[1])+'</i></span>'}).join('')+'</div>',say:q.en,sl:[[q.v||'',q.en]]}};
 REN.q7=function(q,st){var parts=q.s.split('___'),se=H('div','sent',esc(parts[0])+'<span class="gap" id="gap">　</span>'+esc(parts[1])),fd=H('div','field');st.appendChild(se);st.appendChild(fd);st.appendChild(H('div','ask','👆 拖 一隻 皮克敏 到 空格'));
-  var C=['#E53935','#1E88E5','#FDD835'];shuf(q.o).forEach(function(w,i){var p=H('div','pk','<span class="wd">'+esc(w)+'</span><span class="bdy" style="--pc:'+C[i]+'"><span class="lf">🌱</span><span class="hd"></span><span class="tr"></span></span><span class="ow">Oops!</span>');fd.appendChild(p);
+  /* 2026-11-01 第三十九次 第 1 點：🧩 樣子＋🎁 神秘 寶箱（隨機 一隻 皮克敏 背 寶箱；放對 ＝ 打開，🪙 只 是 遊戲 積分）*/
+  var fx=typeof DFX!=='undefined'&&DFX.on(st),chI=fx?Math.floor((window.__DFXR!=null?+window.__DFXR:Math.random())*q.o.length)%q.o.length:-1,chT=fx?DFX.pickTier():0,chW=null;if(fx){DFX.skin(st);st.classList.add('dfxq')}
+  var C=['#E53935','#1E88E5','#FDD835'];shuf(q.o).forEach(function(w,i){var p=H('div','pk','<span class="wd">'+esc(w)+'</span><span class="bdy" style="--pc:'+C[i]+'"><span class="lf">🌱</span><span class="hd"></span><span class="tr"></span></span><span class="ow">Oops!</span>');fd.appendChild(p);if(i===chI){chW=w;DFX.mark(p.querySelector('.wd'),chT)}
    var sx,sy,mv=false;p.addEventListener('pointerdown',function(e){if(BUSY)return;e.preventDefault();sx=e.clientX;sy=e.clientY;mv=false;p.classList.add('drag');p.classList.remove('back');try{p.setPointerCapture(e.pointerId)}catch(x){}});
    p.addEventListener('pointermove',function(e){if(!p.classList.contains('drag'))return;var dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)+Math.abs(dy)>8)mv=true;p.style.transform='translate('+dx+'px,'+dy+'px) scale(1.08)';$('#gap').classList.toggle('hot',over(e))});
    function over(e){var g=$('#gap').getBoundingClientRect();return e.clientX>g.left-40&&e.clientX<g.right+40&&e.clientY>g.top-60&&e.clientY<g.bottom+80}
    function drop(e){if(!p.classList.contains('drag'))return;p.classList.remove('drag');$('#gap').classList.remove('hot');if(!mv||over(e))put();else{p.classList.add('back');p.style.transform=''}}
    p.addEventListener('pointerup',drop);p.addEventListener('pointercancel',function(){p.classList.remove('drag');p.classList.add('back');p.style.transform=''});
    function put(){if(BUSY)return;var g=$('#gap');if(w===q.o[0]){g.textContent=w;p.style.visibility='hidden';g.classList.add('fill');[].forEach.call(fd.querySelectorAll('.pk'),function(x){x.classList.add('cheer')});
-     for(var f=0;f<6;f++){var fl=H('span','bloom',['🌸','🌼','🌷'][f%3]);fl.style.setProperty('--a',(f*60)+'deg');g.appendChild(fl)}sayT(q.say);good(g)}
+     for(var f=0;f<6;f++){var fl=H('span','bloom',['🌸','🌼','🌷'][f%3]);fl.style.setProperty('--a',(f*60)+'deg');g.appendChild(fl)}if(fx){DFX.win(st);if(w===chW)DFX.openAt(g,chT,0,{done:function(pz){DFX.gold+=pz[1];DFX.chip(st,'🎁 <b>'+DFX.open+'</b>　🪙 <b>'+DFX.gold+'</b>')}})}sayT(q.say);good(g)}
     else{R.pick=w;BUSY=true;tPause();p.style.transform='';p.classList.add('trip');later(function(){miss(w)},800)}}})};
 FB.q7=function(q,p){return {you:p?'<s>'+esc(q.s.replace('___',p))+'</s>':'',body:gloss(q.en),say:q.en}};
 /* 8 ⚔ 英文 對決 擂台（老師：「寶可夢」刪掉；你 ＝ 自己 選 的 戰士（戰神之路 的 圖）、對手 ＝ 黑暗騎士）：
@@ -1165,6 +1167,8 @@ function ren9k(q,st){var bb=H('div','bb9'),fm=H('div','fm9 fm9k'),ob=H('div','ob
     st.appendChild(H('div','ar9','<svg width="100%" height="100%"><defs><marker id="ah9" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="#FF6B6B"/></marker></defs><path d="M'+x1+','+y1+' Q'+mx+','+my+' '+x2+','+y2+'" fill="none" stroke="#FF6B6B" stroke-width="7" stroke-linecap="round" marker-end="url(#ah9)"/></svg>'));
     later(function(){dk.classList.add('k9go');later(function(){if(ans)ans.classList.add('k9go','k9ans');sl.classList.remove('no');sl.classList.add('k9want');sl.textContent=q.o[0];later(go,1900)},900)},1100)},1000)}}
 REN.q9=function(q,st){if(q.k){ren9k(q,st);return}var bb=H('div','bb9'),fm=H('div','fm9'),tw=H('div','tw9'),tl=H('div','tl9'),sel=null,ssl=null,done=0,need=q.bl.length;R.q9=null;
+  /* 2026-11-01 第三十九次 第 1 點：🧩 樣子＋🎁 神秘 寶箱（隨機 一個 要 填 的 方塊；放對 ＝ 打開，🪙 只 是 遊戲 積分）*/
+  var fx=typeof DFX!=='undefined'&&DFX.on(st),chT=fx?DFX.pickTier():0,chR=fx?Math.floor((window.__DFXR!=null?+window.__DFXR:Math.random())*q.bl.length)%q.bl.length:-1,chE=null;if(fx){DFX.skin(st);st.classList.add('dfxq')}
   q.c.forEach(function(c,i){var b=H('div','bub9','<span class="av9">'+(BOYS.indexOf(c.t)>=0?'👦':'👧')+'</span><div class="tx9">'+q.lines[i].split(' ').map(function(w){return '<span class="w9">'+esc(w)+'</span>'}).join(' ')+'</div><button class="sp9" aria-label="聽">🔊</button>');
    b.querySelector('.sp9').onclick=function(){sayList([[BOYS.indexOf(c.t)>=0?'m':'',q.lines[i]]])};bb.appendChild(b)});
   var h='<div class="clip9"></div><div class="ft9">✏️ New Friends</div><table><tr><th></th><th>Name</th><th>Age</th></tr>';
@@ -1173,10 +1177,10 @@ REN.q9=function(q,st){if(q.k){ren9k(q,st);return}var bb=H('div','bb9'),fm=H('div
   function want(r){return q.bl[r]==='n'?q.c[r].t:String(q.c[r].a)}
   function clr(){sel=null;ssl=null;[].forEach.call(tl.children,function(x){x.classList.remove('sel')});[].forEach.call(fm.querySelectorAll('.sl9'),function(x){x.classList.remove('sel')})}
   function put(t,sl){if(BUSY||!sl||sl.classList.contains('ok')||t.classList.contains('used'))return;var r=+sl.dataset.r,v=t.dataset.v;clr();
-   if(v===want(r)){sl.textContent=v;sl.classList.add('ok');t.classList.add('used');done++;BUSY=true;tPause();var c=q.c[r];bb.children[r].classList.add('hl');
+   if(v===want(r)){sl.textContent=v;sl.classList.add('ok');t.classList.add('used');done++;BUSY=true;tPause();var c=q.c[r];bb.children[r].classList.add('hl');if(fx&&t===chE&&!chE._op){chE._op=1;DFX.openAt(sl,chT,0,{done:function(pz){DFX.gold+=pz[1];DFX.chip(st,'🎁 <b>'+DFX.open+'</b>　🪙 <b>'+DFX.gold+'</b>')}})}if(fx&&done>=need)DFX.win(st);
     OKV.say(bb.children[r],[[BOYS.indexOf(c.t)>=0?'m':'',q.lines[r]]],function(){if(R.q!==q)return;bb.children[r].classList.remove('hl');BUSY=false;if(done>=need)good(fm);else tGo()},0,'.w9')}   /* 第三十八次 11-(10)-3-(2)：那一句 框 加粗 放大 發亮（不閃）＋唸到 的 字 放大 發亮 */
    else{sl.textContent=v;sl.classList.add('no');BUSY=true;tPause();R.pick={r:r,v:v};later(function(){miss(R.pick)},700)}}
-  shuf(q.tl).forEach(function(v){var t=H('div','tile9',esc(v));t.dataset.v=v;tl.appendChild(t);var sx,sy,mv=false;
+  shuf(q.tl).forEach(function(v){var t=H('div','tile9',esc(v));t.dataset.v=v;tl.appendChild(t);if(fx&&!chE&&v===want(chR)){chE=t;DFX.mark(t,chT)}var sx,sy,mv=false;
    t.addEventListener('pointerdown',function(e){if(BUSY||t.classList.contains('used'))return;e.preventDefault();sx=e.clientX;sy=e.clientY;mv=false;t.classList.add('drag');try{t.setPointerCapture(e.pointerId)}catch(x){}});
    t.addEventListener('pointermove',function(e){if(!t.classList.contains('drag'))return;var dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)+Math.abs(dy)>8)mv=true;t.style.transform='translate('+dx+'px,'+dy+'px) scale(1.08)'});
    t.addEventListener('pointerup',function(e){if(!t.classList.contains('drag'))return;t.classList.remove('drag');t.style.transform='';
