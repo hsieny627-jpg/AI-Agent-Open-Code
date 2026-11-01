@@ -92,10 +92,11 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
       /* ══ 2026-10-30 第三十四次 第 10、12 點：限時、即時 排行榜、兩人 一台 兩個 號碼、時間 到 送 成績、前 10 名＋頒獎 ══ */
       n += 9; const cd = dget('rooms/0304/cr'); if (!cd || cd.d !== 1200000) E.push(tag + ' 三年級 25 題 預設 不是 20 分鐘（第三十六次：加上 秒懂 動畫 的 時間）' + (cd && cd.d));
       const tl = await s5.evaluate(() => { const t = document.getElementById('xlvT'); return t && t.classList.contains('on') ? t.textContent : ''; }); if (!/⏱ (19|20):\d\d/.test(tl)) E.push(tag + ' 平板 上面 沒有 ⏱ 倒數 ' + tl);
-      dset('rooms/0304/crp/30403', { n: 3, ok: 2, s: 8, p: '30404', g: 'q1', t: cd.t }); dset('rooms/0304/crp/30405', { n: 2, ok: 2, s: 8.5, g: 'q1', t: cd.t });
+      dset('rooms/0304/crp/30403', { n: 3, ok: 2, s: 66.7, p: '30404', g: 'q1', t: cd.t }); dset('rooms/0304/crp/30405', { n: 2, ok: 2, s: 100, g: 'q1', t: cd.t });   /* 第三十八次 第 7 點：分數 ＝ 正確率 */
       await s5.evaluate(() => { R.Q.push([1, 0, 3, 0, .5, 0]); R.score = 4; xPub(); }); await h.waitForTimeout(1800);
+      n++; if (await s5.evaluate(() => xAcc()) !== 100) E.push(tag + ' 平板 分數 不是 正確率（答對 1 ／ 1 ＝ 100）');
       const lb = await h.evaluate(() => ({ r: [...document.querySelectorAll('#crlbw .crlr')].map(r => r.dataset.id), j: (document.getElementById('crjb') || {}).textContent || '', clk: (document.getElementById('crclk') || {}).textContent || '' }));
-      if (lb.r.join() !== '30405,30403,30402') E.push(tag + ' 大螢幕 即時 排行榜 名次 不對 ' + lb.r.join());
+      if (lb.r.join() !== '30405,30402,30403')   /* 同 正確率 ＝ 答對 多 的 在 前面 */ E.push(tag + ' 大螢幕 即時 排行榜 名次 不對 ' + lb.r.join());
       if (!/3 👥 4/.test(lb.j)) E.push(tag + ' 兩人 一台 大螢幕 要 寫 兩個 號碼「3 👥 4」：' + lb.j);
       if (!/⏱ (19|20):\d\d/.test(lb.clk)) E.push(tag + ' 大螢幕 沒有 大 倒數 ' + lb.clk);
       const np = POSTS.length; await h.click('#crend'); await h.waitForTimeout(1500);

@@ -17,6 +17,9 @@ function RVASRC() {
   function $id(i) { return document.getElementById(i); }
   function h(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
   function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  /* 選項 前面 的 圖（emoji）放大 一倍（第三十八次 第 11-(3) 點：👴 太 小 看不清楚）*/
+  function opi(t) { var m = /^((?:[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF])(?:\uFE0F|\u200D(?:[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF])|[\uD83C][\uDFFB-\uDFFF])*)\s*/.exec(String(t)); return m ? '<span class="rvoi">' + m[1] + '</span>' + ap(String(t).slice(m[0].length)) : ap(t); }
+  function ZS(s) { return window.ZSP ? ZSP(s) : s; }   /* 2026-11-01 第三十八次 第 11-(6) 點：整句 中文 詞 和 詞 空 一格（score/_zsp.js；keepsp ＝ _dsp.js 不 拿掉）*/
   function ap(s) { return esc(String(s).replace(/'/g, '’')).replace(/’/g, '<span class="rvap">’</span>'); }
   function shuf(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
   function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
@@ -46,7 +49,7 @@ function RVASRC() {
 
   /* ── 一排 英文 字（每個 字 正下方 中文）── */
   function row(t, cls) { var r = h('div', 'rvrow' + (cls ? ' ' + cls : '')); t.forEach(function (p) { var c = h('span', 'rvk' + (/^'/.test(p[0]) ? ' ct' : ''), '<b>' + ap(p[0]) + '</b><i>' + esc(p[1] || '　') + '</i>'); c.setAttribute('data-w', p[0]); r.appendChild(c); }); return r; }
-  function fit(box) { if (!box) return; box.style.removeProperty('--rz'); var z = 1; for (var i = 0; i < 8 && (box.scrollHeight > box.clientHeight + 2 || box.scrollWidth > box.clientWidth + 2); i++) { z *= .9; box.style.setProperty('--rz', z.toFixed(3)); } }
+  function fit(box) { if (!box) return; box.style.removeProperty('--rz'); var z = 1; for (var i = 0; i < 14 && (box.scrollHeight > box.clientHeight + 2 || box.scrollWidth > box.clientWidth + 2); i++) { z *= .9; box.style.setProperty('--rz', z.toFixed(3)); } }
 
   /* ══ 開始 ══ spec ＝ {id, ic, nm, sc:[…], qz:[…]}；done() ＝ 看完（或 跳過） */
   RVA.play = function (spec, done) {
@@ -57,13 +60,19 @@ function RVASRC() {
     var key = 'rva_' + RVA.A.gr + '_' + spec.id + '_' + (RVA.A.sid() || '0'), seen = []; try { seen = JSON.parse(ls(key) || '[]'); } catch (e) { }
     var all = spec.qz.map(function (q, i) { return i; }), un = shuf(all.filter(function (i) { return seen.indexOf(i) < 0; }));
     if (un.length < RVA.N) { var last = seen.slice(-RVA.N); seen = []; un = un.concat(shuf(all.filter(function (i) { return un.indexOf(i) < 0 && last.indexOf(i) < 0; }))).concat(shuf(last)); }
-    var pick = [], ty = {}; un.forEach(function (i) { if (pick.length < RVA.N && !ty[spec.qz[i].ty]) { pick.push(i); ty[spec.qz[i].ty] = 1; } }); un.forEach(function (i) { if (pick.length < RVA.N && pick.indexOf(i) < 0) pick.push(i); });
+    /* 2026-11-01 第三十八次 第 11-(2) 點：考 的 一定 是 那一頁 的 重點 ➜ 3 題 盡量 是 不同 頁（at 不一樣），再 盡量 不同 題型 */
+    var pick = [], ty = {}, ats = {}, A = function (i) { return Math.min(spec.sc.length - 1, spec.qz[i].at || 0); };
+    un.forEach(function (i) { if (pick.length < RVA.N && !ats[A(i)] && !ty[spec.qz[i].ty]) { pick.push(i); ty[spec.qz[i].ty] = 1; ats[A(i)] = 1; } });
+    un.forEach(function (i) { if (pick.length < RVA.N && pick.indexOf(i) < 0 && !ats[A(i)]) { pick.push(i); ats[A(i)] = 1; } });
+    un.forEach(function (i) { if (pick.length < RVA.N && pick.indexOf(i) < 0) pick.push(i); });
     S.key = key; S.seen = seen.concat(pick);
     /* 插 在 哪裡：第 i 頁 唸完 第 1 次（2i）或 第 2 次（2i＋1），而且 ≧ 題目 的 at */
     var nS = spec.sc.length, used = {};
-    pick.sort(function (a, b) { return (spec.qz[b].at || 0) - (spec.qz[a].at || 0); }).forEach(function (qi) { var a = Math.min(nS - 1, spec.qz[qi].at || 0), c = [];
-      for (var s = 2 * a; s < 2 * nS; s++) if (!used[s]) c.push(s); if (!c.length) for (s = 2 * nS - 1; s >= 0; s--) if (!used[s]) { c.push(s); break; }
-      var sl = c[Math.floor(Math.random() * c.length)]; used[sl] = 1; S.plan[sl] = qi; });
+    /* 2026-11-01 第三十八次 第 11-(2) 點（老師：還沒 看完、看清楚 這一頁 就 插 題目，打斷 專注；有的 題目 跟 這一頁 沒 關係）➜
+       只 插 在「那一頁 唸完 第 2 次」以後（2a＋1），a ＝ 題目 考 的 那一頁；同一頁 已經 有 ＝ 下一頁（考 的 都 是 已經 看過 的） */
+    pick.sort(function (a, b) { return (spec.qz[a].at || 0) - (spec.qz[b].at || 0); }).forEach(function (qi) { var a = Math.min(nS - 1, spec.qz[qi].at || 0);
+      while (a < nS - 1 && used[2 * a + 1]) a++; if (used[2 * a + 1]) for (a = nS - 1; a >= 0 && used[2 * a + 1]; a--); if (a < 0) a = nS - 1;
+      used[2 * a + 1] = 1; S.plan[2 * a + 1] = qi; });
     S.nq = pick.length;
     o.innerHTML = '<div class="rvw"><div class="rvtop"><span class="rvt">🎬 秒懂 複習：' + esc(spec.ic + ' ' + spec.nm) + '</span><span class="rvp" id="rvp"></span><span class="rvr">⚡ 突擊 測驗 <b id="rvn">0 ／ ' + S.nq + '</b></span></div>' +
       '<div class="rvst" id="rvs"></div><div class="rvc" id="rvc"><button data-rv="pause">⏸️ 暫停</button><button data-rv="slow">🐢 放慢</button><button data-rv="again">🔁 再一次</button></div></div>';
@@ -84,43 +93,52 @@ function RVASRC() {
     var st = $id('rvs'); st.innerHTML = ''; var card = h('div', 'rvcard' + (c.t2 ? ' eq' : ''), '');
     card.appendChild(h('div', 'rvh', '<span>重點 ' + (i + 1) + '</span>' + esc(c.h)));
     if (c.pic) card.appendChild(h('div', 'rvpic', c.pic));
-    if (c.big) card.appendChild(h('div', 'rvbig', ap(c.big)));
+    if (c.g4 && window.HW) card.appendChild(grid4(c)); else if (c.big) card.appendChild(h('div', 'rvbig', ap(c.big)));
     var r1 = row(c.t), r2 = c.t2 ? row(c.t2, 'r2') : null; card.appendChild(r1); if (r2) { var w2 = h('div', 'rveq'); w2.appendChild(h('span', 'rveqs', c.sym || (c.vs ? '⇄' : '＝'))); w2.appendChild(r2); card.appendChild(w2); }
-    card.appendChild(h('div', 'rvz', esc(c.z)));
+    card.appendChild(h('div', 'rvz keepsp', esc(ZS(c.z))));
     if (c.n) card.appendChild(h('div', 'rvn', '💡 ' + c.n));
     card.appendChild(h('div', 'rvcnt', '🔊 <i>1</i><i>2</i>'));
-    st.appendChild(card); fit(card);
+    flMark(card, c); st.appendChild(card); fit(card);
     var ks = [].slice.call(card.querySelectorAll('.rvk')), k = 0;
     (function pop() { if (k < ks.length) { ks[k].classList.add('in'); k++; T(pop, 330); return; } T(function () { readS(i, 0); }, 350); })(); }
   /* 唸 第 n 次（等句 ＝ 上面 一行 再 下面 一行）*/
   function readS(i, n) { var S = RVA.S, c = S.spec.sc[i], card = $id('rvs').querySelector('.rvcard'); if (!card) return;
     var cnt = card.querySelectorAll('.rvcnt i'); cnt[n] && cnt[n].classList.add('on');
-    var rows = card.querySelectorAll('.rvrow'), c1 = [].slice.call(rows[0].children), fin = function () { if (n === 0) { card.classList.add('z'); } T(function () { slot(2 * i + n, function () { if (n === 0) T(function () { readS(i, 1); }, 650); else T(function () { nextS(); }, 1100); }); }, n === 0 ? 900 : 500); };
+    var rows = card.querySelectorAll('.rvrow'), c1 = [].slice.call(rows[0].children), fin = function () { if (n === 0) { card.classList.add('z'); T(function () { order(card, c); }, 500); } T(function () { slot(2 * i + n, function () { if (n === 0) T(function () { readS(i, 1); }, 650); else T(function () { nextS(); }, 1100); }); }, n === 0 ? 900 : 500); };
     read(c.en, c.v, c1, function () { if (rows[1]) T(function () { read(c.en2, c.v2 != null ? c.v2 : c.v, [].slice.call(rows[1].children), fin); }, 450); else fin(); }); }
   function nextS() { var S = RVA.S; if (S.i + 1 < S.spec.sc.length) scene(S.i + 1); else finish(); }
   /* 這個 位置 有 排 突擊 測驗 嗎？ */
-  function slot(s, go) { var S = RVA.S; if (S.plan[s] == null) { go(); return; } var qi = S.plan[s]; delete S.plan[s]; quiz(qi, go); }
+  function slot(s, go) { var S = RVA.S; if (S.plan[s] == null) { go(); return; } var qi = S.plan[s]; delete S.plan[s]; S.qpg = (s - 1) / 2 + 1;
+    T(function () { quiz(qi, go); }, 1200); }   /* 第三十八次 第 11-(2) 點：這一頁 唸完 兩次、再 停 1.2 秒 才 考 */
 
   /* ③ ⚡ 突擊 測驗 */
   function quiz(qi, go) { var S = RVA.S, q = S.spec.qz[qi], st = $id('rvs'); stopAu(); $id('rvc').classList.add('hid'); S.qn = (S.qn || 0) + 1; S.qgo = go; S.q = q; S.qi = qi; S.ans = false;
     S.qwho = RVA.A.turn ? RVA.A.turn(S.qn - 1) : '';   /* 2026-11-01 第三十八次 第 5 點：兩人 輪流 ＝ 一人 一題 */
-    var w = h('div', 'rvqz'), PR = { mc: 'Choose!', hear: 'Listen and choose!', tf: 'True or false?', dec: 'Match!', ord: 'Put in order!', spot: 'Find the mistake!' },
-      HOW = { mc: '👆 點 一個 答案', hear: '🔊 聽 ➜ 👆 點 一個 答案', tf: '👆 對 ⭕ 還是 錯 ❌', dec: '👆 把 中文 方塊 放到 英文 字 下面（可以 拖、可以 互相 交換）', ord: '👆 照 順序 點 字（放好 的 字 可以 拖 來 交換）', spot: '👆 點 那一個 錯 的 字' };
-    w.innerHTML = '<div class="rvqh"><span class="rvqf">⚡ 突擊 測驗！</span><span>第 ' + S.qn + ' ／ ' + S.nq + ' 題 · 列入 成績</span>' + (S.qwho ? '<span class="rvwho">👤 請 ' + String(S.qwho).slice(0, 3) + ' 班 ' + (+String(S.qwho).slice(3)) + ' 號 作答</span>' : '') + '</div><div class="rvqb"><i id="rvqt"></i></div>' +
+    var w = h('div', 'rvqz'), PR = { mc: 'Choose!', hear: 'Listen and choose!', hear2: 'Listen and choose!', tf: 'True or false?', dec: 'Match!', ord: 'Put in order!', spot: 'Find the mistake!' },
+      HOW = { mc: '👆 點 一個 答案', hear: '🔊 聽 ➜ 👆 點 一個 答案', hear2: '🔊 先 聽 ➜ ① 點 第一個 字母 ➜ ② 點 對 的 圖', tf: '👆 對 ⭕ 還是 錯 ❌', dec: '👆 把 中文 方塊 放到 英文 字 下面（可以 拖、可以 互相 交換）', ord: '👆 照 順序 點 字（放好 的 字 可以 拖 來 交換）', spot: '👆 點 那一個 錯 的 字' };
+    w.innerHTML = '<div class="rvqh"><span class="rvqf">⚡ 突擊 測驗！</span><span>第 ' + S.qn + ' ／ ' + S.nq + ' 題 · 列入 成績</span>' + (S.qpg ? '<span class="rvqpg">📍 考 剛剛 第 ' + S.qpg + ' 頁 的 重點</span>' : '') + (S.qwho ? '<span class="rvwho">👤 請 ' + String(S.qwho).slice(0, 3) + ' 班 ' + (+String(S.qwho).slice(3)) + ' 號 作答</span>' : '') + '</div><div class="rvqb"><i id="rvqt"></i></div>' +
       '<div class="rvqp">' + esc(PR[q.ty] || 'Choose!') + '</div><div class="rvqhow">' + HOW[q.ty] + '</div><div class="rvqa" id="rvqa"></div>';
     st.innerHTML = ''; st.appendChild(w); var A = $id('rvqa');
     if (q.pic) A.appendChild(h('div', 'rvqpic', q.pic));
     if (q.q) A.appendChild(h('div', 'rvqq', ap(q.q).replace(/___/g, '<u>　　　</u>')));
     if (q.s) { var hb = h('button', 'rvhear', '🔊 再聽一次'); hb.onclick = function () { read(q.s, q.v, [], null); }; A.appendChild(hb); T(function () { read(q.s, q.v, [], null); }, 500); }
-    if (q.ty === 'mc' || q.ty === 'hear') { var ob = h('div', 'rvopts'); shuf(q.o.map(function (x, i) { return i; })).forEach(function (i) { var b = h('button', 'rvo', ap(q.o[i])); b.onclick = function () { judge(i === 0, i, q.o[i]); }; ob.appendChild(b); }); A.appendChild(ob); }
+    if (q.ty === 'mc' || q.ty === 'hear') { var ob = h('div', 'rvopts'); shuf(q.o.map(function (x, i) { return i; })).forEach(function (i) { var b = h('button', 'rvo', opi(q.o[i])); b.onclick = function () { judge(i === 0, i, q.o[i]); }; ob.appendChild(b); }); A.appendChild(ob); }
     if (q.ty === 'tf') { var tb = h('div', 'rvopts tf'); [[true, '⭕ True'], [false, '❌ False']].forEach(function (x) { var b = h('button', 'rvo', x[1]); b.onclick = function () { judge(x[0] === q.ok, x[0] === q.ok ? 0 : 1, x[1]); }; tb.appendChild(b); }); A.appendChild(tb); }
     if (q.ty === 'spot') { var sb = h('div', 'rvspot'); q.w.forEach(function (x, i) { var b = h('button', 'rvsw', ap(x)); b.onclick = function () { judge(i === q.bad, i === q.bad ? 0 : 1, x); }; sb.appendChild(b); }); A.appendChild(sb); }
+    if (q.ty === 'hear2') h2Q(q, A);
     if (q.ty === 'dec') decQ(q, A);
     if (q.ty === 'ord') ordQ(q, A);
     fit(w);
     /* 每題 20 秒（放慢 ＝ 30 秒）；暫停 鈕 收起來，時間 不停 */
     var qt = RVA.QT * (S.slow ? 1.5 : 1) * 1000, t0 = Date.now(), my = S.gen, qn = S.qn; S.qt0 = t0;
     (function tk() { if (!RVA.S || RVA.S.gen !== my || S.ans || S.qn !== qn) return; var l = 1 - (Date.now() - t0) / qt, b = $id('rvqt'); if (b) b.style.transform = 'scaleX(' + Math.max(0, l) + ')'; if (l <= 0) { judge(false, -1, null); return; } requestAnimationFrame(tk); })(); }
+  /* hear2（2026-11-01 第三十八次 第 11-(10)-1 點）：字首音 一律 先 聽 ➜ ① 選 第一個 字母（q.o，第 0 個 對）➜ ② 再 選 這個 字 的 圖（q.p，第 0 個 對）；兩步 都 對 才 算 答對 */
+  function h2Q(q, A) { var ob = h('div', 'rvopts h2'), st1 = h('div', 'rvh2s', '<b>①</b> 第一個 字母'); A.appendChild(st1);
+    shuf(q.o.map(function (x, i) { return i; })).forEach(function (i) { var b = h('button', 'rvo rvol', ap(q.o[i])); b.onclick = function () { if (RVA.S.ans) return;
+      if (i !== 0) { judge(false, i, q.o[i]); return; } b.classList.add('ok1'); [].forEach.call(ob.children, function (x) { x.disabled = true; });
+      T(function () { st1.innerHTML = '<b>②</b> ' + esc(q.o[0]) + ' ✅ ➜ 這個 字 是 哪一個 圖？'; ob.innerHTML = ''; ob.className = 'rvopts h2p';
+        shuf(q.p.map(function (x, j) { return j; })).forEach(function (j) { var c = h('button', 'rvo rvop', q.p[j]); c.onclick = function () { judge(j === 0, j === 0 ? 0 : j, q.p[j]); }; ob.appendChild(c); }); fit($id('rvs').querySelector('.rvqz')); }, 700); }; ob.appendChild(b); });
+    A.appendChild(ob); }
   /* dec：中文 方塊 ➜ 英文 字 下面 的 空格（點 方塊 ＝ 放到 第一個 空格；點 格子 ＝ 拿 回去；拖 ＝ 放到 那一格；格子 ↔ 格子 互相 交換）*/
   function decQ(q, A) { var r = h('div', 'rvdrow'), tr = h('div', 'rvtray'), sl = [];
     q.t.forEach(function (p, i) { var c = h('div', 'rvdc' + (/^'/.test(p[0]) ? ' ct' : ''), '<b>' + ap(p[0]) + '</b>'), s = h('div', 'rvds', ''); s._i = i; c.appendChild(s); r.appendChild(c); sl.push(s); });
@@ -164,15 +182,46 @@ function RVASRC() {
   function back2() { var S = RVA.S; if (!S) return; var go = S.qgo; S.qgo = null; $id('rvc').classList.remove('hid'); if (S.i >= 0 && S.i < S.spec.sc.length) redraw(); go && go(); }
   /* 回到 動畫：這一頁 重新 畫（字 都 已經 出來）*/
   function redraw() { var S = RVA.S, i = S.i, c = S.spec.sc[i], st = $id('rvs'); st.innerHTML = ''; var card = h('div', 'rvcard z' + (c.t2 ? ' eq' : ''), '');
-    card.appendChild(h('div', 'rvh', '<span>重點 ' + (i + 1) + '</span>' + esc(c.h))); if (c.pic) card.appendChild(h('div', 'rvpic', c.pic)); if (c.big) card.appendChild(h('div', 'rvbig', ap(c.big)));
+    card.appendChild(h('div', 'rvh', '<span>重點 ' + (i + 1) + '</span>' + esc(c.h))); if (c.pic) card.appendChild(h('div', 'rvpic', c.pic)); if (c.g4 && window.HW) card.appendChild(grid4(c, 1)); else if (c.big) card.appendChild(h('div', 'rvbig', ap(c.big)));
     card.appendChild(row(c.t)); if (c.t2) { var w2 = h('div', 'rveq'); w2.appendChild(h('span', 'rveqs', c.sym || (c.vs ? '⇄' : '＝'))); w2.appendChild(row(c.t2, 'r2')); card.appendChild(w2); }
-    card.appendChild(h('div', 'rvz', esc(c.z))); if (c.n) card.appendChild(h('div', 'rvn', '💡 ' + c.n)); card.appendChild(h('div', 'rvcnt', '🔊 <i class="on">1</i><i>2</i>'));
-    [].forEach.call(card.querySelectorAll('.rvk'), function (k) { k.classList.add('in'); }); st.appendChild(card); fit(card); }
+    card.appendChild(h('div', 'rvz keepsp', esc(ZS(c.z)))); if (c.n) card.appendChild(h('div', 'rvn', '💡 ' + c.n)); card.appendChild(h('div', 'rvcnt', '🔊 <i class="on">1</i><i>2</i>'));
+    [].forEach.call(card.querySelectorAll('.rvk'), function (k) { k.classList.add('in'); }); flMark(card, c); st.appendChild(card); fit(card); T(function () { order(card, c); }, 200); }
+  /* 2026-11-01 第三十八次 第 11-(10)-2 點 中英 語序：英文 What／Who／Is 在 最 前面，中文「什麼」「誰」「嗎」在 後面 ➜
+     英文 那個 字 框 起來、整句 中文 的 那個 詞 框 起來、從 英文 拉 一條 箭頭 到 中文（What’s your name?、Who’s he?、Who’s she?、Is he a doctor?、Is she a nurse? 都 會）*/
+  var ORD = { What: '什麼', Who: '誰', Is: '嗎' };
+  function order(card, c) { var t0 = c.t && c.t[0] && c.t[0][0], zh = ORD[t0]; if (!zh || !card.parentNode) return; var zEl = card.querySelector('.rvz'), k0 = card.querySelector('.rvrow .rvk b');
+    if (!zEl || !k0 || zEl.textContent.indexOf(zh) < 0 || card.querySelector('.rvarw')) return;
+    var first = zh === '嗎' ? zEl.innerHTML.indexOf(zh) : zEl.innerHTML.indexOf(zh); zEl.innerHTML = zEl.innerHTML.slice(0, first) + '<span class="rvzb">' + zh + '</span>' + zEl.innerHTML.slice(first + zh.length);
+    k0.classList.add('rvbx'); var zb = zEl.querySelector('.rvzb'), cr = card.getBoundingClientRect(), a = k0.getBoundingClientRect(), b = zb.getBoundingClientRect();
+    var x1 = a.left - cr.left - 4, y1 = a.top + a.height * .5 - cr.top, x2 = b.left + b.width / 2 - cr.left, y2 = b.bottom - cr.top + 4, mx = Math.max(8, Math.min(x1, x2) - 110), my = y2 + 46;   /* 從 左邊 繞 下來、從 下面 指 上去，不 壓到 字 */
+    var sv = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); sv.setAttribute('class', 'rvarw'); sv.setAttribute('width', cr.width); sv.setAttribute('height', cr.height);
+    sv.innerHTML = '<defs><marker id="rvah" markerUnits="userSpaceOnUse" markerWidth="22" markerHeight="22" refX="18" refY="11" orient="auto"><path d="M0,0 L22,11 L0,22 z" fill="#FFD54A"/></marker></defs><path d="M' + x1 + ',' + y1 + ' Q' + mx + ',' + my + ' ' + x2 + ',' + y2 + '" stroke="#FFD54A" stroke-width="5" fill="none" stroke-linecap="round" marker-end="url(#rvah)"/>';
+    card.appendChild(sv); var p = sv.querySelector('path'), L = p.getTotalLength ? p.getTotalLength() : 600; p.style.strokeDasharray = L; p.style.strokeDashoffset = L; requestAnimationFrame(function () { p.style.transition = 'stroke-dashoffset 1.1s ease'; p.style.strokeDashoffset = 0; }); }
+  /* 2026-11-01 第三十八次 第 11-(7) 點：字首音 的 頁（大 字母 c.big、聲音 雙胞胎 m2）＝ 每一個 英文 字 的 第一個 字母 稍微 放大、放亮、框 起來 */
+  /* 2026-11-01 第三十八次 第 11-(10)-6 點：標準 四線格（底線 紅線）＋ 一筆 一筆 畫 出來 的 字母（筆畫 ＝ 手寫 改 字 同 一份 HW.T）
+     c.g4 ＝ 要 畫 的 字母、c.g4f ＝ 左邊 標 2F／1F／B1（大寫 住 一樓 二樓；g j p q y 腳 住 地下一樓）、c.g4t ＝ 字母 下面 的 字（拒 絕 屁 股 歪）、c.g4x ＝ 超線 的 錯 示範 */
+  function grid4(c, now) { var NS = 'http://www.w3.org/2000/svg', L = String(c.g4).split(''), xs = [], X = 0;
+    L.forEach(function (ch) { var st = (HW.T[ch] || [[]])[0], mn = 9, mx = -9; st.forEach(function (s) { s.forEach(function (p) { mn = Math.min(mn, p[0]); mx = Math.max(mx, p[0]); }); }); if (mn > mx) { mn = 0; mx = .6; } xs.push([X - mn, ch, st]); X += (mx - mn) + .55; });
+    var lw = c.g4f ? .9 : .3, W = lw + X + .2, Hh = 3.6, sv = document.createElementNS(NS, 'svg'); sv.setAttribute('viewBox', '0 -0.3 ' + W + ' ' + Hh); sv.setAttribute('class', 'rv4l');
+    var g = '';[0, 1, 2, 3].forEach(function (y) { g += '<line x1="' + (lw - .1) + '" x2="' + (W - .05) + '" y1="' + y + '" y2="' + y + '" stroke="' + (y === 2 ? '#FF5A5A' : '#9FB4C8') + '" stroke-width="' + (y === 2 ? .07 : .04) + '"/>'; });
+    if (c.g4f) [['2F', .5], ['1F', 1.5], ['B1', 2.5]].forEach(function (f) { g += '<text x="' + (lw / 2 - .05) + '" y="' + (f[1] + .14) + '" font-size=".42" text-anchor="middle" fill="' + (f[0] === 'B1' ? '#FFB347' : '#BFE8FF') + '" font-weight="700">' + f[0] + '</text>'; });
+    var d = 0; xs.forEach(function (x, k) { var ox = lw + x[0], bad = c.g4x === k, dy = bad ? .45 : 0;
+      x[2].forEach(function (s) { var p = s.map(function (q) { return (ox + q[0]).toFixed(3) + ',' + (q[1] + dy).toFixed(3); }).join(' ');
+        g += '<polyline class="rv4s" style="--d:' + (d * .35).toFixed(2) + 's" points="' + p + '" fill="none" stroke="' + (bad ? '#FF5A5A' : '#FFFFFF') + '" stroke-width=".13" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/>'; d++; });
+      if (bad) g += '<text x="' + (ox + .3) + '" y="3.25" font-size=".4" fill="#FF5A5A" font-weight="700">❌ 超線</text>';
+      if (c.g4t && c.g4t[k]) g += '<text x="' + (ox + .3) + '" y="3.32" font-size=".42" text-anchor="middle" fill="#FFE07A" font-weight="700">' + c.g4t[k] + '</text>'; });
+    sv.innerHTML = g; if (now) [].forEach.call(sv.querySelectorAll('.rv4s'), function (p) { p.style.animation = 'none'; p.style.strokeDashoffset = 0; }); return sv; }
+  /* 第三十八次 第 10-(1) 點：縮寫 頁（What is ＝ What’s、Who is ＝ Who’s …）is 的 i 紅色 */
+  function isRed(card, c) { if (!c.en2 || !/’s|'s/.test(c.en2) || !/\bis\b/.test(c.en)) return; [].forEach.call(card.querySelectorAll('.rvrow:not(.r2) .rvk'), function (k) { if (k.getAttribute('data-w') === 'is') { var b = k.querySelector('b'); b.innerHTML = '<span class="rvri">i</span>s'; } }); }
+  /* 第三十八次 第 11-(10)-3 點：📋 資料表 的 關鍵字 框 起來，不同 重點 不同 顏色（c.kw ＝ {字: 1 名字 藍、2 年齡 橘、3 also 綠}）*/
+  function kwMark(card, c) { if (!c.kw) return; [].forEach.call(card.querySelectorAll('.rvk'), function (k) { var n = c.kw[k.getAttribute('data-w')]; if (n) k.classList.add('rvkw', 'kw' + n); }); }
+  function flMark(card, c) { isRed(card, c); kwMark(card, c); var S = RVA.S; if (!S || !((c.big && /^[a-z]$/i.test(c.big)) || S.spec.id === 'm2')) return;
+    [].forEach.call(card.querySelectorAll('.rvk b'), function (b) { b.innerHTML = b.innerHTML.replace(/^([A-Za-z])/, '<span class="rvfl">$1</span>'); }); }
 
   /* 答錯頁（照 正式 題目 的 答錯頁：綠底、你 的 答案、正確 答案 逐字 中文、整句、💡、唸 3 次 唸到 哪 亮到 哪、〔🔊 再聽一次〕）*/
   function fb(q, ci, pick) { var S = RVA.S, o = h('div', 'rvfb', ''), you = pick == null ? '' : Array.isArray(pick) ? pick.join('　') : String(pick);
     o.innerHTML = '<div class="rvfx"><div class="hd">' + (ci === -1 ? '⏰ 時間到' : '❌ 答錯了') + '</div>' + (you ? '<div class="yp">你的答案：<s>' + ap(you) + '</s></div>' : '') +
-      '<div class="ca">✅ 正確答案</div><div class="gl" id="rvgl"></div><div class="tr">整句：' + esc(q.a.z) + '</div>' + (q.a.why ? '<div class="why">💡 ' + esc(q.a.why) + '</div>' : '') +
+      '<div class="ca">✅ 正確答案</div><div class="gl" id="rvgl"></div><div class="tr keepsp">整句：' + esc(ZS(q.a.z)) + '</div>' + (q.a.why ? '<div class="why">💡 ' + esc(q.a.why) + '</div>' : '') +
       '<div class="ft"><span class="n3"><i>1</i><i>2</i><i>3</i></span><button class="say" id="rvfs">🔊 再聽一次</button><span id="rvnx"></span></div></div>';
     $id('rva').appendChild(o); var gl = $id('rvgl'), r = row(q.a.t, 'fbr'); gl.appendChild(r); [].forEach.call(r.children, function (k) { k.classList.add('in'); });
     var cells = [].slice.call(r.children), c = 0, gen = S.gen;
@@ -223,11 +272,12 @@ body.rvpz .rvcard *{animation-play-state:paused!important}
 .rvk.in{opacity:1;transform:none}
 .rvk b{font-family:Andika,sans-serif;font-size:calc(var(--rz) * clamp(40px,7.4vh,78px));font-weight:700;line-height:1.15;white-space:nowrap;transition:transform .15s,color .15s,text-shadow .15s}
 .rvk i{font-style:normal;font-size:calc(var(--rz) * clamp(22px,3.5vh,36px));color:#FFE9A8;font-weight:700;white-space:nowrap;min-height:1.2em}
+.rvfl{display:inline-block;padding:0 .06em;margin-right:.03em;border:.07em solid #FFD54A;border-radius:.16em;color:#FFE07A;font-size:1.16em;line-height:1;text-shadow:0 0 .25em rgba(255,214,90,.8);background:rgba(255,213,74,.12)}
 .rvk.ct{margin-left:calc(var(--rz) * -1 * clamp(8px,1.4vw,20px))}
 .rvk.spk b{transform:scale(1.14);color:#FFF6C8;text-shadow:0 0 18px rgba(255,236,150,.9)}.rvk.spk i{color:#fff}
 .rvap{color:#FF5252}
 .rveq{display:flex;align-items:flex-start;gap:calc(var(--rz) * 12px)}.rveqs{font-size:calc(var(--rz) * clamp(40px,7vh,72px));color:#FFB300;font-weight:700;line-height:1.15}
-.rvz,.rvn{opacity:0;transition:opacity .5s}.rvcard.z .rvz,.rvcard.z .rvn{opacity:1}
+.rvz,.rvn{opacity:0;transition:opacity .5s}.rvcard{position:relative}.rvarw{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;z-index:3}.rvri{color:#FF5A5A}.rv4l{display:block;width:min(96%,calc(var(--rz) * 640px));height:auto;max-height:calc(var(--rz) * clamp(140px,26vh,260px));background:#0B1424;border-radius:14px}.rv4s{stroke-dasharray:1;stroke-dashoffset:1;animation:rv4d .5s ease forwards;animation-delay:var(--d)}@keyframes rv4d{to{stroke-dashoffset:0}}.rvk.rvkw b{border-radius:.16em;padding:0 .08em;outline:.08em solid;outline-offset:.04em}.rvk.kw1 b{outline-color:#5EC8FF;color:#BFE8FF}.rvk.kw2 b{outline-color:#FFB347;color:#FFE0B8}.rvk.kw3 b{outline-color:#5BE38A;color:#C9FFD9}.rvk b.rvbx{outline:.07em solid #FFD54A;outline-offset:.06em;border-radius:.12em}.rvzb{display:inline-block;padding:0 .12em;border:.08em solid #FFD54A;border-radius:.2em;color:#FFE07A}.rvcard.z .rvz,.rvcard.z .rvn{opacity:1}
 .rvz{font-size:calc(var(--rz) * clamp(24px,3.8vh,40px));font-weight:700;color:#9FF0B5}
 .rvn{font-size:calc(var(--rz) * clamp(20px,3vh,30px));font-weight:700;color:#FFD6A0;background:#2A1A08;border:2px solid #A8661C;border-radius:14px;padding:4px 14px;text-align:center}
 .rvcnt{font-size:clamp(17px,2.2vh,22px);color:#9AB}.rvcnt i{font-style:normal;display:inline-block;width:1.6em;height:1.6em;line-height:1.6em;text-align:center;border-radius:50%;border:2px solid #456;margin-left:6px}.rvcnt i.on{background:#3BD16F;border-color:#3BD16F;color:#002}
@@ -238,7 +288,7 @@ body.rvpz .rvcard *{animation-play-state:paused!important}
 .rve2{font-size:clamp(26px,4vh,42px);font-weight:700}.rve2 b{color:#3BD16F;font-size:1.3em}.rve3{font-size:clamp(20px,3vh,30px);color:#FFD6A0;font-weight:700}
 .rvgo{min-height:70px;min-width:260px;font:inherit;font-size:clamp(24px,3.6vh,36px);font-weight:700;border-radius:20px;border:4px solid #7A8A9A;background:#2A3542;color:#9AB;cursor:pointer}
 .rvgo.rdy{background:linear-gradient(#5BE38A,#22A84F);border-color:#B6FFCB;color:#022;animation:rvGlow 1.6s infinite}@keyframes rvGlow{50%{box-shadow:0 0 0 10px rgba(91,227,138,.25)}}
-.rvqz{--rz:1;width:min(100%,1180px);max-height:100%;overflow:hidden;background:linear-gradient(180deg,#2A0F44,#16082A);border:4px solid #C08BFF;border-radius:26px;padding:clamp(10px,1.8vh,20px) clamp(12px,2.2vw,28px);display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.2vh,12px);animation:rvZap .6s}
+.rvqz{--rz:1;width:min(100%,1180px);max-height:100%;overflow-y:auto;background:linear-gradient(180deg,#2A0F44,#16082A);border:4px solid #C08BFF;border-radius:26px;padding:clamp(10px,1.8vh,20px) clamp(12px,2.2vw,28px);display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.2vh,12px);animation:rvZap .6s}
 @keyframes rvZap{0%{transform:scale(1.25);opacity:0;filter:brightness(3)}40%{transform:scale(.96);opacity:1}60%{transform:translateX(-8px)}80%{transform:translateX(6px)}}
 .rvqh{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center;font-size:clamp(17px,2.4vh,24px);font-weight:700;color:#E6D2FF}
 .rvqf{font-size:clamp(26px,4.2vh,44px);color:#FFE07A;text-shadow:0 0 16px rgba(255,200,0,.7);animation:rvFl .5s 3}@keyframes rvFl{50%{opacity:.35}}
@@ -246,11 +296,11 @@ body.rvpz .rvcard *{animation-play-state:paused!important}
 .rvqp{font-family:Andika,sans-serif;font-size:calc(var(--rz) * clamp(30px,5vh,52px));font-weight:700;color:#fff}
 .rvqhow{font-size:clamp(18px,2.4vh,24px);color:#D6C2F2;font-weight:700}
 .rvqa{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vh,16px);width:100%}
-.rvqpic{font-size:calc(var(--rz) * clamp(54px,9vh,96px));line-height:1.1}.rvqpic svg{height:1.2em;width:auto}
+.rvqpic{font-size:calc(var(--rz) * clamp(80px,13vh,140px));line-height:1.1}.rvqpic svg{height:1.2em;width:auto}
 .rvqq{font-family:Andika,sans-serif;font-size:calc(var(--rz) * clamp(34px,6vh,64px));font-weight:700;text-align:center;line-height:1.25}.rvqq u{text-decoration:none;border-bottom:4px solid #FFE07A;display:inline-block;min-width:2.4em}
 .rvopts{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,1.4vh,14px);width:min(100%,960px)}.rvopts.tf{width:min(100%,640px)}
 .rvo{min-height:clamp(64px,10vh,96px);font-family:Andika,sans-serif;font-size:calc(var(--rz) * clamp(26px,4.4vh,44px));font-weight:700;border-radius:18px;border:4px solid #8A6BC8;background:#24123E;color:#fff;cursor:pointer;padding:4px 12px}
-.rvo:active{transform:scale(.97)}
+.rvo:active{transform:scale(.97)}.rvh2s{font-size:calc(var(--rz) * clamp(24px,3.6vh,36px));font-weight:700;color:#FFE07A}.rvh2s b{display:inline-block;width:1.5em;height:1.5em;line-height:1.5em;border-radius:50%;background:#FFD54A;color:#2A1A00;text-align:center}.rvol{font-size:calc(var(--rz) * clamp(40px,7vh,70px))}.rvop{font-size:calc(var(--rz) * clamp(56px,10vh,100px));line-height:1.1}.rvo.ok1{background:#1E9E55;border-color:#7CFFB0}.rvoi{display:inline-block;font-size:2em;line-height:1;vertical-align:middle;margin-right:.15em}.rvqpg{display:inline-block;margin-left:10px;padding:2px 12px;border-radius:999px;background:#0E2A44;border:2px solid #5EC8FF;color:#CFEFFF}
 .rvhear,.rvfb .say{min-height:56px;font:inherit;font-size:clamp(20px,2.8vh,26px);font-weight:700;border-radius:16px;border:3px solid #5EC8FF;background:#0E2A44;color:#fff;padding:4px 20px;cursor:pointer}
 .rvspot{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}.rvsw{min-height:clamp(70px,11vh,104px);min-width:90px;font-family:Andika,sans-serif;font-size:calc(var(--rz) * clamp(34px,6vh,62px));font-weight:700;border-radius:18px;border:4px dashed #FF8A80;background:#2A1020;color:#fff;cursor:pointer;padding:0 18px}
 .rvdrow,.rvans{display:flex;flex-wrap:nowrap;justify-content:center;gap:clamp(8px,1.4vw,16px)}
@@ -263,13 +313,15 @@ body.rvpz .rvcard *{animation-play-state:paused!important}
 .rvtl{min-width:clamp(84px,9vw,130px);min-height:clamp(58px,8.5vh,80px);padding:4px 16px;border-radius:16px;border:4px solid #C9A227;background:linear-gradient(#FFE58A,#F5B829);color:#3A2600;display:flex;align-items:center;justify-content:center;font-size:clamp(24px,3.8vh,38px);font-weight:700;cursor:grab;touch-action:none;user-select:none}
 .rvtl.en{font-family:Andika,sans-serif;font-size:calc(var(--rz) * clamp(28px,4.8vh,48px))}
 .rvtl.used{visibility:hidden}.rvtl.lift{opacity:.35}.rvgh{position:fixed;z-index:9600;pointer-events:none;box-shadow:0 14px 24px rgba(0,0,0,.5);transform:scale(1.08)}
-.rvok{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:rgba(6,40,20,.94);border-radius:26px;animation:rvIn .4s}
+.rvok{--rz:1;position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:rgba(6,40,20,.94);border-radius:26px;animation:rvIn .4s}
 .rvok>b{font-size:clamp(40px,7vh,72px);color:#5BE38A}
-.rvfb{position:absolute;inset:0;z-index:9500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);padding:12px}
+.rvok .rvrow,.rvfx .rvrow{flex-wrap:wrap;gap:4px clamp(18px,2.4vw,34px)}.rvok .rvk b{font-size:clamp(44px,7.4vh,80px)}.rvok .rvk i{font-size:clamp(24px,3.8vh,40px)}.rvok .rvk.ct,.rvfx .rvk.ct{margin-left:calc(-1 * clamp(18px,2.4vw,34px))}
+.rvfb{--rz:1;position:absolute;inset:0;z-index:9500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);padding:12px}
 .rvfx{width:min(100%,1180px);max-height:100%;overflow:auto;background:#0B3D1E;border:4px solid #3BD16F;border-radius:26px;padding:clamp(12px,2vh,24px) clamp(14px,2.4vw,30px);display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.4vh,14px);text-align:center}
 .rvfx .hd{font-size:clamp(30px,5vh,52px);font-weight:700;color:#FFD0D0;animation:rvShk .5s}@keyframes rvShk{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
 .rvfx .yp{font-size:clamp(22px,3.2vh,32px);font-weight:700}.rvfx .yp s{color:#FF8A80;font-family:Andika,sans-serif}
 .rvfx .ca{font-size:clamp(24px,3.6vh,36px);font-weight:700;color:#9FF0B5}.rvfx .tr{font-size:clamp(24px,3.6vh,38px);font-weight:700;color:#FFF4C2}.rvfx .why{font-size:clamp(20px,3vh,30px);font-weight:700;color:#FFD6A0}
+.rvfx .rvrow{flex-wrap:wrap;gap:4px clamp(18px,2.4vw,34px)}.rvfx .rvk b{font-size:clamp(44px,7.4vh,80px)}.rvfx .rvk i{font-size:clamp(24px,3.8vh,40px)}   /* 2026-11-01 第三十八次 第 11-(8) 點：答錯頁 英文 字 放大、字 和 字 中間 空開 */
 .rvfx .ft{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center}
 .rvfx .n3 i{font-style:normal;display:inline-block;width:1.8em;height:1.8em;line-height:1.8em;border-radius:50%;border:3px solid #3BD16F;margin:0 4px;font-size:clamp(17px,2.4vh,22px)}.rvfx .n3 i.on{background:#3BD16F;color:#002}
 .rvfx .nx{min-height:64px;min-width:240px;font:inherit;font-size:clamp(22px,3.2vh,32px);font-weight:700;border-radius:18px;border:4px solid #B6FFCB;background:linear-gradient(#5BE38A,#22A84F);color:#022;cursor:pointer}

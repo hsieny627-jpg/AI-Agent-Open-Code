@@ -229,6 +229,10 @@ ${DECX.JS}
 ${RVX.js}
 ${require('../score/_actl.js').js}
 ${require('../g3mid/_duo.js').js}
+${require('../g3mid/_okv.js').js}
+${require('../g3mid/_life.js').js}
+${require('../score/_zsp.js').js}
+function ZS(s){return window.ZSP?ZSP(s):s}
 ${require('../score/_wrev.js').js}
 ${RVX.page({ gr: 'g4', set: 'g4gm_mt-rv', name: '📝 四年級 複習｜🎬 秒懂 動畫 突擊 測驗', R: RVR })}
 ${NGX.JS}
@@ -429,7 +433,8 @@ function pick(i,you){if(!R||R.lock)return;R.lock=true;var id0=R.g.id,q=R.q,ms=Da
   if(ok&&NG[id])ngOk(id);if(id==='n3')snStop();
   if(ok){R.st++;var s=R.x?R.pt:100+Math.round(900*left)+Math.min(250,50*(R.st-1));R.sc=Math.round((R.sc+s)*10)/10;fb(true,'⭐ 答對！ ＋'+s+(R.x?' 分':'')+(R.st>1?'　🔥 連對 '+R.st:''));
     /* 短文 偵探 答對：不 自己 走，解鎖〔▶ 下一題〕（老師 6-(4)） */
-    if(id==='m8'){$('#nx8w').innerHTML='<button class="nx8" data-x="next">▶ 下一題</button>';sayList(q.fs)}else if(q.lab){var kk=R.k,nx=function(){if(R&&R.k===kk)next()};sayList(q.lab,function(){later(nx,500)});later(nx,6000)}else if(R.x&&id!=='dc'&&(q.ae||q.fe)){var k5=R.k;sayList([['',q.ae||q.fe]],function(){if(R&&R.k===k5)later(next,450)})}else{if(q.ae&&id!=='dc')sayList([['',q.ae]]);later(next,1500)}}   /* 2026-10-30 第三十四次 第 5 點：挑戰 答對 ＝ 唸完 正確 答案 才 下一題 */   /* 第三十二次：A／B 拆開 唸 ＝ 唸完 才 下一題 */
+    if(id==='m8'){$('#nx8w').innerHTML='<button class="nx8" data-x="next">▶ 下一題</button>';sayList(q.fs)}else if(id!=='dc'&&q.fe){var k5=R.k;later(function(){if(!R||R.k!==k5)return;var ex=exHTML(q);   /* 2026-11-01 第三十八次 第 8 點：答對 ＝ 獨立 一頁 正確 答案（逐字 中文）＋整句＋唸 一次（唸到 哪 亮到 哪）*/
+      OKV.ok((ex?'<div class="ex">'+ex+'</div>':'')+gloss(q.fe,q.gx,id==='m1'||id==='m2')+'<div><span class="tr keepsp">整句：'+esc(ZS(q.fz))+'</span></div>',q.lab||q.fs||[['',q.ae||q.fe]],function(){if(R&&R.k===k5)next()},function(){if(id==='m7'||id==='n5'){var gb=$('#okv .gls b');if(gb)gb.innerHTML=lcW(q.spell,q.lc)}})},900)}else later(next,1500)}   /* 2026-10-30 第三十四次 第 5 點：挑戰 答對 ＝ 唸完 正確 答案 才 下一題 */   /* 第三十二次：A／B 拆開 唸 ＝ 唸完 才 下一題 */
   else{R.st=0;R.W.push(R.qi);if(R.x&&id==='dc'&&R.frac>0)R.sc=Math.round((R.sc+R.pt*R.frac)*10)/10;var yt=i<0?'':you||(q.oz?q.oz[i]:q.o[i]);
     /* 短文 偵探 答錯：原文 那一句 綠底 ➜ 唸 一次 ➜ 獨立 的 秒懂 頁（逐字 中文＋整句 翻譯）再 唸 一次 ➜ 才 解鎖〔下一題〕 */
     if(id==='m8'){var my=FBN;sayList(q.fs,function(){if(my===FBN&&R&&R.q===q)later(function(){miss(i,yt,1)},500)})}else miss(i,yt,3)}}
@@ -454,14 +459,14 @@ function exHTML(q){var id=R.g.id;
   if(id==='m9')return picDiv(q.o[0]);return ''}
 function miss(i,you,REP){var q=R.q,id=R.g.id,my=++FBN,ex=exHTML(q);tPause();
   var x=$('#wbox');x.className='box';x.innerHTML='<div class="hd">'+(i<0?'⏰ 時間到':'❌ 答錯了')+'</div>'+(i>=0&&you?'<div class="yp">你的答案：<s>'+esc(you)+'</s></div>':'')+(id==='dc'&&R.x&&R.frac>0?'<div class="yp">✅ 放對 '+Math.round(R.frac*q.t.length)+' ／ '+q.t.length+' 個 ➜ 拿 '+(Math.round(R.pt*R.frac*10)/10)+' 分</div>':'')+
-    (id==='m8'?'<div class="ca">📝 題目</div>'+glossQ(m8Q(q)):'')+'<div class="ca">✅ 正確答案'+(id==='m8'?'（短文 裡 的 證據）':'')+'</div>'+(ex?'<div class="ex">'+ex+'</div>':'')+gloss(q.fe,q.gx,id==='m1'||id==='m2')+'<div><span class="tr">整句：'+esc(q.fz)+'</span></div>'+(q.tip?'<div class="tip">💡 '+esc(q.tip)+'</div>':'')+
+    (id==='m8'?'<div class="ca">📝 題目</div>'+glossQ(m8Q(q)):'')+'<div class="ca">✅ 正確答案'+(id==='m8'?'（短文 裡 的 證據）':'')+'</div>'+(ex?'<div class="ex">'+ex+'</div>':'')+gloss(q.fe,q.gx,id==='m1'||id==='m2')+'<div><span class="tr keepsp">整句：'+esc(ZS(q.fz))+'</span></div>'+(q.tip?'<div class="tip">💡 '+esc(q.tip)+'</div>':'')+
     '<div class="ft"><span class="n3" id="n3">'+(REP===1?'<span>1</span>':'<span>1</span><span>2</span><span>3</span>')+'</span><button class="say" id="wfs">🔊 再聽</button><span id="nxw"></span></div>';
   if(id==='m7'||id==='n5'){var gb=$('#gls b');if(gb)gb.innerHTML=lcW(q.spell,q.lc)}   /* 第三十二次 第 4 點 */
   $('#wf').classList.add('on');wFit();var c=0;
   function one(){if(my!==FBN)return;if(c>=REP){var w=$('#nxw');w.innerHTML='<button class="nx" id="wfn">▶ 下一題</button>';
       var n=3,b=$('#wfn');b.textContent='▶ 下一題 '+n;var t=setInterval(function(){if(my!==FBN){clearInterval(t);return}n--;if(n<=0){clearInterval(t);wGo()}else b.textContent='▶ 下一題 '+n},1000);return}
     c++;var s=$('#n3').children[c-1];s.classList.add('on');var g=$('#gls');if(g){g.classList.remove('spk');void g.offsetWidth;g.classList.add('spk')}
-    sayList(q.fs,function(){setTimeout(one,700)},id==='m2'?500:450)}
+    OKV.say($('#wbox'),q.fs,function(){setTimeout(one,700)},id==='m2'?500:450)}   /* 第三十八次：唸到 哪 個 字 那個 字 亮 */
   setTimeout(one,500)}
 function wFit(){var b=$('#wbox');b.classList.remove('f1','f2');['f1','f2'].forEach(function(c){if(b.scrollHeight>b.clientHeight+2)b.classList.add(c)})}
 addEventListener('resize',function(){if($('#wf').classList.contains('on'))wFit()});
@@ -588,7 +593,7 @@ const html = `<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>四年級 複習</title>
-<style>${CSS}${DECX.CSS}${NGX.CSS}${RVX.css}${require('../score/_actl.js').css}${require('../g3mid/_duo.js').css}${require('../score/_wrev.js').css}${require('../score/_wrev.js').cssFrom(CSS,'#wf')}</style></head>
+<style>${CSS}${DECX.CSS}${NGX.CSS}${RVX.css}${require('../score/_actl.js').css}${require('../g3mid/_duo.js').css}${require('../g3mid/_okv.js').css}${require('../g3mid/_life.js').css}${require('../score/_wrev.js').css}${require('../score/_wrev.js').cssFrom(CSS,'#wf')}</style></head>
 <body>
 ${CL.home(4, '../', 'school')}
 <script src="../live/fb.js"></script><script>${fs.readFileSync(path.join(__dirname, '..', 'live', '_db.js'), 'utf8')}</script><script>${fs.readFileSync(path.join(__dirname, '..', 'live', '_xlive_rt.js'), 'utf8')}</script>

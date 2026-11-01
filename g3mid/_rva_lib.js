@@ -41,6 +41,7 @@ function mk(GL, PH, BAN, EXAM) {
         if (q.at == null || q.at >= sc.length) err.push(w + '：at 不對');
         [q.q, q.s, q.en].concat(q.o || [], q.w || [], q.x && q.ty === 'ord' ? q.x : []).forEach(s => s && chkBan(String(s), w));
         if ((q.ty === 'mc' || q.ty === 'hear') && (!q.o || q.o.length < 3 || new Set(q.o).size !== q.o.length)) err.push(w + '：四選一 選項 不夠 或 重複');
+        if (q.ty === 'hear2' && (!q.s || !q.o || q.o.length !== 4 || new Set(q.o).size !== 4 || !q.p || q.p.length !== 4 || new Set(q.p).size !== 4)) err.push(w + '：hear2 要 s、4 個 字母、4 個 圖');   /* 第三十八次 11-(10)-1 */
         if (q.ty === 'hear' && !q.s) err.push(w + '：聽 的 句子 s'); if (q.s) sayAdd(q.s, q.v);
         if (q.ty === 'spot' && (q.bad == null || !q.fix)) err.push(w + '：spot 要 bad、fix');
         if (q.ty === 'ord' && !q.w) err.push(w + '：ord 要 w');

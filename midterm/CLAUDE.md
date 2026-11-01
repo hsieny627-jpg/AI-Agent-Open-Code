@@ -4,6 +4,20 @@
 > 根目錄 `AGENTS.md` 第四節（最高原則、品質、省額度）同樣適用。
 
 
+## 2026-11-01 第三十八次（先讀這一節）
+
+規格 全部 在 `g3mid/CLAUDE.md` 最上面「🔒 永久原則 10」「第三十八次」（三、四年級 共用 `_rva.js`、`_decode.js`、`_okv.js`、`_life.js`、`_duo.js`、`score/_zsp.js`、`score/_c25.js`）。四年級 自己 的：
+
+| 老師 | 做法 |
+|---|---|
+| 答對 頁 | `pick()` 答對（不是 解碼、短文 偵探）＝ `OKV.ok(exHTML＋gloss＋整句, q.lab／q.fs)`；拼字 遊戲 母音 紅 照舊 |
+| 答錯頁 唸到 哪 亮到 哪 | `miss()` 的 唸 3 次 ＝ `OKV.say($('#wbox'), q.fs)` |
+| 字首音 先 聽 | `_rva_data.js` m1：`hear2` 4 題（dolphin、tomato、dog、peach）、`tf` 先 聽、新 `ord` desk |
+| He’s my grandma.／He’s my sister. 挑錯 | 加 👵／👧 圖 |
+| Sorry, I’m late. | m4 第 2 頁 ＝ That’s OK. Come in, please.；聽力 題 正解 一樣 |
+| She’s（第二句 開頭）、Yes, he is. | `tools/c45_audio.py` 重做（淡入 0.09 ➜ 0.025 秒、電腦 聽寫 一定 要 對）；舊 檔 在 `listen/2026-11-01_C45/au/` |
+| b／p、d／t | **沒有 換**（試過 音標 加 送氣 記號，時好時壞）➜ C45 ⑤ 請 老師 選 |
+
 ## 2026-10-31 第三十七次（先讀這一節）
 
 | 老師 | 做法 |

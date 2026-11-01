@@ -287,6 +287,7 @@ h3{margin:18px 0 8px;font-size:clamp(22px,1.8vw,32px)}
 #show .sans b{font-size:clamp(44px,min(9vh,7vw),110px);line-height:1.1;color:#E8FFF0}
 #show .sans i{font-style:normal;font-size:clamp(22px,min(3.8vh,3.2vw),46px);color:#FFE07A;min-height:1.2em}
 #show .sans.big{transform:scale(1.12);filter:brightness(1.5) drop-shadow(0 0 22px rgba(120,255,170,.9))}
+#show .sans span{transition:transform .15s,filter .15s}#show .sans span.hl{transform:scale(1.15);filter:brightness(1.35) drop-shadow(0 0 16px rgba(255,236,150,.95))}
 #show .saz{font-size:clamp(24px,min(4.2vh,3.4vw),50px);color:#CFE3F5}
 #show .sw .ck{display:inline-block;animation:sstp .6s}
 #show.on{display:flex}
@@ -924,8 +925,13 @@ function lsn(q){play(q.al,q.say)}
 function ansHTML(q){if(!q.ae)return '';return '<div class="sans" id="sans">'+q.ag.map(function(x){return '<span><b>'+esc(x[0])+'</b><i>'+(x[1]?esc(x[1]):'&nbsp;')+'</i></span>'}).join('')+'</div>'+(q.az?'<div class="saz">'+esc(q.az)+'</div>':'')}
 /* 唸 3 次：每唸一次，英文放大＋變亮一次（第三批 四-3 (2)） */
 var SAYN=0;
-function say3(q){var my=++SAYN,n=0;(function one(){if(my!==SAYN||n>=3)return;n++;var el=$('#sans');if(el)el.classList.add('big');
-  play(q.au,q.ae,function(){var e2=$('#sans');if(e2)e2.classList.remove('big');setTimeout(one,700)})})()}
+/* 2026-11-01 第三十八次 第 11-(9) 點：投影 的 錯題 分析 唸 3 次 ＝ 唸到 哪 一個 字，那個 字 稍微 放大、稍微 發亮（不閃；照 語音檔 播到 哪，沒有 語音檔 ＝ 照 字數 估）*/
+function say3(q){var my=++SAYN,n=0;(function one(){if(my!==SAYN||n>=3){wHL(null);return}n++;
+  play(q.au,q.ae,function(){wHL(null);setTimeout(one,700)});wHL(q)})()}
+var WHLT=0;function wHL(q){clearInterval(WHLT);[].forEach.call(document.querySelectorAll('#sans span.hl'),function(x){x.classList.remove('hl')});if(!q)return;
+  var cs=[].slice.call(document.querySelectorAll('#sans span')),w=cs.map(function(c){var b=c.querySelector('b');return Math.max(1,(b?b.textContent:'').replace(/[^A-Za-z0-9]/g,'').length)+1}),tot=w.reduce(function(a,b){return a+b},0),t0=Date.now(),est=Math.max(1.2,cs.length*.5)*1000,last=-1;
+  WHLT=setInterval(function(){var a=AEL,f=a&&a.duration&&isFinite(a.duration)&&!a.paused?a.currentTime/a.duration:(Date.now()-t0)/est;f=Math.max(0,Math.min(.999,f));var acc=0,k=0;for(;k<w.length;k++){acc+=w[k];if(acc/tot>f)break}
+    if(k!==last){if(cs[last])cs[last].classList.remove('hl');if(cs[k])cs[k].classList.add('hl');last=k}},70)}
 function paneW(R){
   var Q=SC.questions(R).filter(function(x){return x.bad>0&&qOf(x.k)}).slice(0,10);
   if(!Q.length)return '<div class="note">這段期間沒有答錯的題目 🎉</div>';

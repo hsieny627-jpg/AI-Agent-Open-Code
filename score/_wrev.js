@@ -62,7 +62,7 @@ var WREV=(function(){var S={my:0,it:[],k:-1,heard:[],host:null};
    if(S.host)[].forEach.call(S.host.querySelectorAll('.spk'),function(x){x.classList.remove('spk')})}
  function run(host,items,btns){stopAll();S.host=host;S.it=items||[];S.heard=S.it.map(function(){return 0});var N=S.it.length;
    var h=N?'<div class="wrv"><div class="wrt">📒 錯題 總複習：這一次 答錯 的 '+N+' 題</div><div class="wrs">👂 聽 英文 ➜ 聽 中文 ➜ 看 圖 ➜ 記住 它！（每一題 都 可以 按〔🔊〕再 聽）</div>'+
-     S.it.map(function(it,k){return '<div class="wrc" data-k="'+k+'"><div class="wrh"><span>'+it.head+'</span><span class="wrok">✔ 聽完</span><button class="wrp" data-wrp="'+k+'" aria-label="再聽">🔊</button></div><div class="wrb">'+it.body+'</div><div class="wrz">'+esc0(String(it.zh||'').replace(/^整句：/,''))+'</div></div>'}).join('')+'</div>':'';
+     S.it.map(function(it,k){return '<div class="wrc" data-k="'+k+'"><div class="wrh"><span>'+it.head+'</span><span class="wrok">✔ 聽完</span><button class="wrp" data-wrp="'+k+'" aria-label="再聽">🔊</button></div><div class="wrb">'+it.body+'</div><div class="wrz keepsp">'+esc0((window.ZSP?ZSP:String)(String(it.zh||'').replace(/^整句：/,'')))+'</div></div>'}).join('')+'</div>':'';
    var box=document.createElement('div');box.innerHTML=h+'<div class="wrlk"><div class="wrm"></div>'+(N?'<div class="wrbar"><i></i></div>':'')+btns+'</div>';host.appendChild(box);
    /* 卡片 裡 原本 答錯頁 的 id（#gls、#ltr…）會 重複 ➜ 先 只 留 這一張 的，畫完（post）就 拿掉 */
    S.it.forEach(function(it,k){var c=card(k);if(it.post)try{it.post(c)}catch(e){}[].forEach.call(c.querySelectorAll('[id]'),function(x){x.removeAttribute('id')})});

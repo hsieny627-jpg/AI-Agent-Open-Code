@@ -85,6 +85,7 @@ const AK = t => String(t).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…�
       /* 答錯 ＝ 答錯頁 */
       await p.evaluate(() => { const S = RVA.S, q = S.q; S.ans = false; /* 直接 用 引擎 的 判斷 */ });
       const wrong = await p.evaluate(ty => { const q = document.querySelector('.rvqz'); if (ty === 'mc' || ty === 'hear') { const S = RVA.S, b = [].filter.call(q.querySelectorAll('.rvo'), x => x.textContent !== S.q.o[0].replace(/'/g, '’'))[0]; b.click(); return 1; }
+        if (ty === 'hear2') { const S = RVA.S, b = [].filter.call(q.querySelectorAll('.rvo'), x => x.textContent !== S.q.o[0])[0]; b.click(); return 1; }   /* 第三十八次：先 聽 ➜ 字母 ➜ 圖 */
         if (ty === 'tf') { const b = [].filter.call(q.querySelectorAll('.rvo'), x => /True/.test(x.textContent) !== RVA.S.q.ok)[0]; b.click(); return 1; }
         if (ty === 'spot') { const S = RVA.S, b = q.querySelectorAll('.rvsw')[S.q.bad === 0 ? 1 : 0]; b.click(); return 1; }
         return 2; }, ty);

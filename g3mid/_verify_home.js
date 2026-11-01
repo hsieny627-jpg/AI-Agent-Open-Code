@@ -46,7 +46,7 @@ const ROOT = path.join(__dirname, '..'), E = []; let n = 0;
   const ctx = await br.newContext({ viewport: { width: 1024, height: 768 } }), p = await ctx.newPage();
   for (const q of ['', '?g=3', '?g=4']) { await p.goto('file://' + path.join(ROOT, 'go25', 'index.html') + q); await p.waitForTimeout(300); n++;
     const r = await p.evaluate(() => ({ c: document.querySelectorAll('.c').length, svg: document.querySelectorAll('.qr svg').length, u: [...document.querySelectorAll('.u')].map(x => x.textContent), say: document.querySelector('.say').textContent, hub: !!document.querySelector('a[href="../index.html"]'), t: !!document.querySelector('a[href="../teacher/index.html"]') }));
-    const want = q ? 1 : 2; if (r.c !== want || r.svg !== want || !r.u.every(u => /(g3mid|midterm)\/home\.html$/.test(u)) || r.say !== '老師依課本、習作自己設計的練習題。' || !r.hub || !r.t) E.push('go25' + q + ' 不對 ' + JSON.stringify(r)); }
+    const want = q ? 1 : 2; if (r.c !== want || r.svg !== want || !r.u.every(u => /(g3mid|midterm)\/home\.html$/.test(u)) || !/^老師依課本、習作自己設計的練習題。(📅 英語複習任務：11 月 4 日 週三 晚上 11:59 前 完成)?$/.test(r.say) || !r.hub || !r.t) E.push('go25' + q + ' 不對 ' + JSON.stringify(r)); }
   n++; const hub = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'); if (!/go25\/index\.html\?g=3/.test(hub) || !/go25\/index\.html\?g=4/.test(hub)) E.push('總首頁 沒有 兩個 年級 的〔📱 25 題 闖關 QR〕');
   n++; const tch = fs.readFileSync(path.join(ROOT, 'teacher', 'index.html'), 'utf8'); if (!/go25\/index\.html\?g=/.test(tch)) E.push('老師看板 沒有〔📱 25 題 闖關 QR〕');
   await br.close();

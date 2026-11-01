@@ -620,6 +620,10 @@ ${DECX.JS}
 ${RVX.js}
 ${require('../score/_actl.js').js}
 ${require('./_duo.js').js}
+${require('./_okv.js').js}
+${require('./_life.js').js}
+${require('../score/_zsp.js').js}
+function ZS(s){return window.ZSP?ZSP(s):s}
 ${require('../score/_wrev.js').js}
 ${RVX.page({ gr: 'g3', set: 'g3gm_g3m-rv', name: '🏫 三年級 複習｜🎬 秒懂 動畫 突擊 測驗', R: RVR })}
 var SCSVG={${SCN.KEYS.map(k => J(k) + ':' + J(SCN.svg(k))).join(',')}};
@@ -774,8 +778,11 @@ function good(el,hold){if(BUSY)return;qRec(1);BUSY=true;tPause();var l=tLeft(),s
  var g=$('#gain');g.innerHTML=R.x?'<b>＋'+p+' 分</b><span>✅ 答對 一題 ＝ '+p+' 分</span>':'<b>＋'+p+'</b><span>✅ 100 ＋ ⚡ 快 '+sp+(cb?' ＋ 🔥 連對 '+cb:'')+'</span>';g.classList.remove('on');void g.offsetWidth;g.classList.add('on');
  boom(el);if(hold)return;
  /* 2026-10-30 第三十四次 第 5 點：挑戰（25／50、新 25／新 50、25 題 闖關）答對 ＝ 先 慢慢 唸 一次 正確 答案（跟 答錯頁 同一句），唸完 才 下一題 */
- if(R.x&&G.id!=='dc'){var o0=null;try{o0=FB[G.id](R.q,null)}catch(e){}if(o0){var my=QID;setTimeout(function(){if(my!==QID)return;sayList(o0.sl||[['',o0.say||R.q.en]],function(){if(my===QID)setTimeout(next,450)})},400);return}}
- setTimeout(next,1500)}   /* hold ＝ 這個 遊戲 自己 決定 什麼 時候 下一題（夾娃娃 唸完 那一句 才 走）*/
+ /* 2026-11-01 第三十八次 第 8 點（老師：有的 學生 是 猜對 的）：全部 遊戲 答對 ＝ 「✅ 答對了！」獨立 一頁＋正確 答案（逐字 中文）＋整句＋唸 一次（唸到 哪 亮到 哪）才 下一題 */
+ if(G.id!=='dc'&&okPage(next))return;
+ setTimeout(next,1500)}
+function okPage(go){var q=R.q,o0=null;try{o0=FB[G.id](q,null)}catch(e){}if(!o0)return false;var my=QID;
+ setTimeout(function(){if(my!==QID)return;OKV.ok(o0.body+'<div><span class="tr keepsp">整句：'+esc(ZS(q.zh))+'</span></div>',o0.sl||[['',o0.say||q.en]],function(){if(my===QID)go()},o0.after)},window.__NOGO?30:700);return true}   /* hold ＝ 這個 遊戲 自己 決定 什麼 時候 下一題（夾娃娃 唸完 那一句 才 走）*/
 function boom(el){var r=el&&el.getBoundingClientRect?el.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0},E=['⭐','✨','🎉','💥','🪙'];
  for(var i=0;i<12;i++){var b=document.createElement('div');b.className='boom';b.textContent=E[i%E.length];b.style.left=(r.left+r.width/2)+'px';b.style.top=(r.top+r.height/2)+'px';
   b.style.setProperty('--dx',(Math.cos(i/12*6.28)*160)+'px');b.style.setProperty('--dy',(Math.sin(i/12*6.28)*160)+'px');b.style.setProperty('--r',(i*40)+'deg');document.body.appendChild(b);setTimeout(function(x){x.remove()}.bind(null,b),1100)}}
@@ -787,13 +794,13 @@ function gloss(s){var T=toks(s),h='';for(var i=0;i<T.length;i++){var w=T[i];if(/
   h+='<span class="gw'+(/^'/.test(w)?' ct':'')+'"><b>'+esc(w.replace(/'/g,'’'))+esc(p)+'</b><i>'+esc(zhOf(w))+'</i></span>'}return '<div class="gls" id="gls">'+h+'</div>'}
 function miss(pick){if(R.pre){var pf=R.pre;R.pre=null;BUSY=true;tPause();pf(pick,function(){miss(pick)});return}qRec(0,pick);if(R.x&&G.id==='dc'&&R.frac>0){R.score=Math.round((R.score+R.pt*R.frac)*10)/10;$('#sc').textContent=R.score}BUSY=true;tPause();if(R.streak>=2){var cm0=$('#cmb');cm0.textContent='🔥 最高 連對 '+R.best+' 題，已經 記住 了！';cm0.className='cmb on mem'}else $('#cmb').className='cmb';R.streak=0;   /* C42 6B：答錯 不 寫「火 熄了」*/R.res[R.k]=0;dots();var q=R.q,o=FB[G.id](q,pick);R.wrong.push({en:o.say||q.en,show:o.show||q.en,body:o.body,after:o.after,zh:q.zh,sl:o.sl||[['',o.say||q.en]],gi:(G.ic||'')+' '+(G.nm||'')});   /* 第三十七次 第 10 點：錯題 總複習 用 */
  var x=$('#fbx');x.innerHTML='<div class="hd">'+(pick==null?'⏰ 時間到':'❌ 答錯了')+'</div>'+(o.you?'<div class="yp">你的答案：'+o.you+'</div>':'')+
-  (R.x&&R.bmax&&R.bhp>0?'<div class="bsr">👾 魔王 還在：答錯 不扣分 ➜ 💪 下一題 再試一次！</div>':'')+'<div class="ca">✅ 正確答案</div>'+o.body+'<div><span class="tr">整句：'+esc(q.zh)+'</span></div>'+
+  (R.x&&R.bmax&&R.bhp>0?'<div class="bsr">👾 魔王 還在：答錯 不扣分 ➜ 💪 下一題 再試一次！</div>':'')+'<div class="ca">✅ 正確答案</div>'+o.body+'<div><span class="tr keepsp">整句：'+esc(ZS(q.zh))+'</span></div>'+
   '<div class="ft"><span class="n3" id="n3">'+(o.rep===1?'<span>1</span>':'<span>1</span><span>2</span><span>3</span>')+'</span><button class="say" id="fbs">🔊 再聽</button><span id="nxw"></span></div>';
  $('#fb').classList.add('on');if(o.after)o.after();fbFit();
  var c=0,my=++FBN,REP=o.rep||3;function one(){if(my!==FBN)return;if(c>=REP){var w=$('#nxw');w.innerHTML='<button class="nx" id="fbn">▶ 下一題</button>';
    var n=3,b=$('#fbn');b.textContent='▶ 下一題 '+n;var t=setInterval(function(){if(my!==FBN){clearInterval(t);return}n--;if(n<=0){clearInterval(t);fbGo()}else b.textContent='▶ 下一題 '+n},1000);return}
   c++;var s=$('#n3').children[c-1];s.classList.add('on');var g=$('#gls');if(g){g.classList.remove('spk');void g.offsetWidth;g.classList.add('spk')}
-  sayList(o.sl||[['',o.say||q.en]],function(){setTimeout(one,700)})}
+  OKV.say($('#fbx'),o.sl||[['',o.say||q.en]],function(){setTimeout(one,700)})}   /* 第三十八次：唸到 哪 個 字 那個 字 亮 */
  setTimeout(one,500)}
 var FBN=0;
 function fbFit(){var b=$('#fbx');b.classList.remove('f1','f2');['f1','f2'].forEach(function(c){if(b.scrollHeight>b.clientHeight+2)b.classList.add(c)})}
@@ -1015,7 +1022,7 @@ REN.q3=function(q,st){var bl='';for(var i=0;i<14;i++)bl+='<i style="animation-de
    p.style.left=(d.left+d.width/2)+'px';p.style.top=(d.top+d.height/2)+'px';requestAnimationFrame(function(){requestAnimationFrame(function(){p.classList.add('fly')})});
    later(function(){p.classList.add('pop');boom(p.querySelector('.pin'));
     /* 2026-10-26 第二十八次 第 6 點：夾到 對的 照片 ➜ 再 唸 一次 那一句（唸完 才 下一題）*/
-    sayT(q.say,function(){later(function(){z.remove();next()},600)})},900);
+    later(function(){z.remove();if(!okPage(next))next()},1400)},900);   /* 第三十八次 第 8 點 */
    later(function(){BUSY=false;good(p.querySelector('.pin'),1)},1500);setTimeout(function(){z.remove()},12000)}
   shuf(q.o).forEach(function(k,i){var b=H('button','cap',capH(k));b.dataset.k=k;b.onclick=function(){if(BUSY)return;aim(i);setTimeout(function(){grab(b)},850)};caps.appendChild(b)});
   ct.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-c]');if(!b||BUSY)return;var c=b.dataset.c,n=caps.children.length;
@@ -1142,7 +1149,7 @@ function k9line(q,i,col){var c=q.c[i],t=esc(q.lines[i]);
   t=t.replace(c.t,'<span class="k9 k9n" data-k="n'+i+'" style="--k:'+col+'">'+esc(c.t)+'</span>');var j=t.lastIndexOf(' '+c.w);if(j>=0)t=t.slice(0,j+1)+'<span class="k9 k9a" data-k="a'+i+'" style="--k:'+col+'">'+c.w+'</span>'+t.slice(j+1+c.w.length);return t}
 /* 2026-10-30 第三十四次 第 6 點：新題型（q.k）＝ 同樣 3 個人 的 自我介紹 ➜ 一列 資料表（na：Name 給了 ➜ 選 Age；an：Age 給了 ➜ 選 Name）➜ 四選一 */
 function ren9k(q,st){var bb=H('div','bb9'),fm=H('div','fm9 fm9k'),ob=H('div','ob9'),c=q.c[q.r],na=q.k==='na';R.q9=null;
-  q.c.forEach(function(x,i){var b=H('div','bub9','<span class="av9">'+(BOYS.indexOf(x.t)>=0?'👦':'👧')+'</span><div class="tx9">'+esc(q.lines[i])+'</div><button class="sp9" aria-label="聽">🔊</button>');
+  q.c.forEach(function(x,i){var b=H('div','bub9','<span class="av9">'+(BOYS.indexOf(x.t)>=0?'👦':'👧')+'</span><div class="tx9">'+q.lines[i].split(' ').map(function(w){return '<span class="w9">'+esc(w)+'</span>'}).join(' ')+'</div><button class="sp9" aria-label="聽">🔊</button>');
    b.querySelector('.sp9').onclick=function(){sayList([[BOYS.indexOf(x.t)>=0?'m':'',q.lines[i]]])};bb.appendChild(b)});
   fm.innerHTML='<div class="clip9"></div><div class="ft9">✏️ New Friends</div><table><tr><th>Name</th><th>Age</th></tr><tr>'+(na?'<td class="g9v"><span class="k9g">'+esc(c.t)+'</span></td><td><span class="sl9 k9q">?</span></td>':'<td><span class="sl9 k9q">?</span></td><td class="g9v"><span class="k9g">'+c.a+'</span></td>')+'</tr></table>';
   st.appendChild(bb);st.appendChild(fm);st.appendChild(ob);
@@ -1158,7 +1165,7 @@ function ren9k(q,st){var bb=H('div','bb9'),fm=H('div','fm9 fm9k'),ob=H('div','ob
     st.appendChild(H('div','ar9','<svg width="100%" height="100%"><defs><marker id="ah9" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="#FF6B6B"/></marker></defs><path d="M'+x1+','+y1+' Q'+mx+','+my+' '+x2+','+y2+'" fill="none" stroke="#FF6B6B" stroke-width="7" stroke-linecap="round" marker-end="url(#ah9)"/></svg>'));
     later(function(){dk.classList.add('k9go');later(function(){if(ans)ans.classList.add('k9go','k9ans');sl.classList.remove('no');sl.classList.add('k9want');sl.textContent=q.o[0];later(go,1900)},900)},1100)},1000)}}
 REN.q9=function(q,st){if(q.k){ren9k(q,st);return}var bb=H('div','bb9'),fm=H('div','fm9'),tw=H('div','tw9'),tl=H('div','tl9'),sel=null,ssl=null,done=0,need=q.bl.length;R.q9=null;
-  q.c.forEach(function(c,i){var b=H('div','bub9','<span class="av9">'+(BOYS.indexOf(c.t)>=0?'👦':'👧')+'</span><div class="tx9">'+esc(q.lines[i])+'</div><button class="sp9" aria-label="聽">🔊</button>');
+  q.c.forEach(function(c,i){var b=H('div','bub9','<span class="av9">'+(BOYS.indexOf(c.t)>=0?'👦':'👧')+'</span><div class="tx9">'+q.lines[i].split(' ').map(function(w){return '<span class="w9">'+esc(w)+'</span>'}).join(' ')+'</div><button class="sp9" aria-label="聽">🔊</button>');
    b.querySelector('.sp9').onclick=function(){sayList([[BOYS.indexOf(c.t)>=0?'m':'',q.lines[i]]])};bb.appendChild(b)});
   var h='<div class="clip9"></div><div class="ft9">✏️ New Friends</div><table><tr><th></th><th>Name</th><th>Age</th></tr>';
   q.c.forEach(function(c,i){h+='<tr><td class="n9">'+(i+1)+'</td>'+(q.bl[i]==='n'?'<td><span class="sl9" data-r="'+i+'"></span></td><td class="g9v" data-r="'+i+'">'+c.a+'</td>':'<td class="g9v" data-r="'+i+'">'+esc(c.t)+'</td><td><span class="sl9" data-r="'+i+'"></span></td>')+'</tr>'});
@@ -1167,7 +1174,7 @@ REN.q9=function(q,st){if(q.k){ren9k(q,st);return}var bb=H('div','bb9'),fm=H('div
   function clr(){sel=null;ssl=null;[].forEach.call(tl.children,function(x){x.classList.remove('sel')});[].forEach.call(fm.querySelectorAll('.sl9'),function(x){x.classList.remove('sel')})}
   function put(t,sl){if(BUSY||!sl||sl.classList.contains('ok')||t.classList.contains('used'))return;var r=+sl.dataset.r,v=t.dataset.v;clr();
    if(v===want(r)){sl.textContent=v;sl.classList.add('ok');t.classList.add('used');done++;BUSY=true;tPause();var c=q.c[r];bb.children[r].classList.add('hl');
-    sayList([[BOYS.indexOf(c.t)>=0?'m':'',q.lines[r]]],function(){if(R.q!==q)return;bb.children[r].classList.remove('hl');BUSY=false;if(done>=need)good(fm);else tGo()})}
+    OKV.say(bb.children[r],[[BOYS.indexOf(c.t)>=0?'m':'',q.lines[r]]],function(){if(R.q!==q)return;bb.children[r].classList.remove('hl');BUSY=false;if(done>=need)good(fm);else tGo()},0,'.w9')}   /* 第三十八次 11-(10)-3-(2)：那一句 框 加粗 放大 發亮（不閃）＋唸到 的 字 放大 發亮 */
    else{sl.textContent=v;sl.classList.add('no');BUSY=true;tPause();R.pick={r:r,v:v};later(function(){miss(R.pick)},700)}}
   shuf(q.tl).forEach(function(v){var t=H('div','tile9',esc(v));t.dataset.v=v;tl.appendChild(t);var sx,sy,mv=false;
    t.addEventListener('pointerdown',function(e){if(BUSY||t.classList.contains('used'))return;e.preventDefault();sx=e.clientX;sy=e.clientY;mv=false;t.classList.add('drag');try{t.setPointerCapture(e.pointerId)}catch(x){}});
@@ -1299,7 +1306,7 @@ const html = `<!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>三年級 複習</title>
-<style>${CSS}${DECX.CSS}${SCN.CSS}${RVX.css}${C35CSS}${require('../score/_actl.js').css}${require('./_duo.js').css}${require('../score/_wrev.js').css}${require('../score/_wrev.js').cssFrom(CSS,'#fb')}
+<style>${CSS}${DECX.CSS}${SCN.CSS}${RVX.css}${C35CSS}${require('../score/_actl.js').css}${require('./_duo.js').css}${require('./_okv.js').css}${require('./_life.js').css}${require('../score/_wrev.js').css}${require('../score/_wrev.js').cssFrom(CSS,'#fb')}
 .q2sc.q2svg{display:block;padding-top:0;width:4.6em;max-width:100%}.rmc .q2sc.q2svg{width:100%;font-size:inherit}</style></head>
 <body>
 ${CL.home(3, '../', 'school')}
