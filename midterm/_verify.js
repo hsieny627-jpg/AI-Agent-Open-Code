@@ -40,7 +40,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
   for (const vp of [[1024, 768], [820, 1180], [1920, 1080]].filter(v => !process.env.VP || process.env.VP === String(v[0]))) {   /* VP＝1024 只 量 一種 螢幕 */
     const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } }), tag = vp.join('×');
     await ctx.route(/^https?:\/\/(?!127\.)/, r => /script\.test/.test(r.request().url()) ? r.fulfill({ contentType: 'application/json', body: '{"ok":true,"dup":[]}' }) : r.abort());
-    await ctx.addInitScript(() => { window.__DCLK = 0.05; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__NOWB = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} });
+    await ctx.addInitScript(() => { window.__NOMEM = 1; window.__NOWHEEL = 1; window.__NOLIFE = 1;   /* 第三十八次 的 記憶 解碼、轉盤、生活 頁：g3mid/_verify_38.js 專門 量 */ window.__DCLK = 0.05; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__NOWB = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} });
       localStorage.setItem('score_last', '"40201"'); localStorage.setItem('score_id_g4', '"40201"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', '40201');
       window.__say = 0; window.__pl = []; window.__RD = 2; window.speechSynthesis && (window.speechSynthesis.speak = u => setTimeout(() => u.onend && u.onend(), 100));
       HTMLMediaElement.prototype.play = function () { window.__say++; window.__pl.push(this.src.replace(/^.*\/midterm\//, '')); const a = this; setTimeout(() => { a.onended && a.onended(); }, 120); return Promise.resolve(); }; });
@@ -132,11 +132,11 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
         await p.waitForTimeout(400); await p.evaluate(() => { const b = document.querySelector('#nx8w .nx8'); if (b) b.click(); });
         await p.waitForFunction(kk => R.k > kk, k, { timeout: 9000 }).catch(() => E.push(tag + ' 離開 測試：第 ' + (k + 1) + ' 題 沒有 到 下一題')); }
       const sent0 = await p.evaluate(() => JSON.parse(localStorage.getItem('score_q') || '[]').filter(x => x.set === 'g4gm_mt-x25').length);
-      await p.waitForTimeout(400); await p.click('.hud .qx'); await p.waitForTimeout(300); n += 6;
+      await p.waitForTimeout(400); await p.waitForFunction(() => !document.querySelector('#okv.on'), null, { timeout: 15000 }).catch(() => {}); await p.click('.hud .qx');   /* 第三十八次：答對 頁 唸完 才 按 */ await p.waitForTimeout(300); n += 6;
       const q1 = await p.evaluate(() => ({ on: document.getElementById('xq').classList.contains('on'), t: document.getElementById('xq').innerText, run: TM.run, h: Math.round(document.getElementById('xstay').getBoundingClientRect().height) }));
       if (!q1.on || !/真的 要 離開 嗎/.test(q1.t) || !/存好/.test(q1.t) || !/第 4 題/.test(q1.t) || q1.run || q1.h < 64) E.push(tag + ' 按〔✕ 離開〕沒有 先 問（存好 了、從 第 4 題、倒數 停住）' + JSON.stringify(q1));
       await p.click('#xstay'); await p.waitForTimeout(300); if (await p.evaluate(() => document.getElementById('xq').classList.contains('on') || !R || R.k !== 3)) E.push(tag + '〔▶ 繼續 作答〕沒有 回到 題目');
-      await p.click('.hud .qx'); await p.waitForTimeout(300); await p.click('#xleave'); await p.waitForTimeout(400);
+      await p.waitForFunction(() => !document.querySelector('#okv.on'), null, { timeout: 15000 }).catch(() => {}); await p.click('.hud .qx'); await p.waitForTimeout(300); await p.click('#xleave'); await p.waitForTimeout(400);
       const lb = await p.evaluate(() => ({ r: (document.querySelector('[data-xr="25"]') || {}).innerText || '', nw: !!document.querySelector('.xb2[data-xn="25"]'), sent: JSON.parse(localStorage.getItem('score_q') || '[]').filter(x => x.set === 'g4gm_mt-x25').length }));
       if (!/繼續 25 題/.test(lb.r) || !/第 3 ／ 25/.test(lb.r) || !lb.nw) E.push(tag + ' 大廳 沒有〔▶ 繼續 25 題〕〔🔄 重新 開始〕' + JSON.stringify(lb));
       if (lb.sent !== sent0) E.push(tag + ' 中途 離開 不可以 送 成績（要 做完 才 送）');

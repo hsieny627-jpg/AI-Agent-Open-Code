@@ -47,6 +47,12 @@ const ok = (c, m) => { n++; if (!c) E.push(m); };
     ok(lf.on && lf.b === 2 && /開學/.test(lf.c) && / /.test(lf.z) && lf.in, tag + ' 生活 頁 不對 ' + JSON.stringify(lf));
     for (let i = 0; i < 60 && !(await p.evaluate(() => window.__lf)); i++) await p.waitForTimeout(150); ok(await p.evaluate(() => window.__lf === 1), tag + ' 生活 頁 唸完 沒有 自己 走');
     await p.evaluate(() => { window.__NOGO = 1; });
+    /* 🔦 記憶 解碼：第 4 題 先 秒懂 說明 ➜ 我 準備好 了 ➜ 3 秒 後 英文 變暗＋〔👀 再看 一次〕*/
+    const mm = await p.evaluate(() => { const L = (window.XBX ? XBX() : XB).dc, st = document.createElement('div'); document.body.appendChild(st); DEC.rr = window.R; DEC.n = 3; decRender(L[0], st); return { mi: !!document.querySelector('.dcmi') }; });
+    ok(mm.mi, tag + ' 記憶 解碼 沒有 先 秒懂 說明');
+    if (mm.mi) { await p.waitForSelector('#dcmg:not([disabled])', { timeout: 8000 }).catch(() => {}); await p.click('#dcmg'); await p.waitForTimeout(400);
+      const m2 = await p.evaluate(() => ({ dim: !!document.querySelector('.dcw.mem'), pk: !!document.querySelector('.dcpk:not([hidden])') })); ok(m2.dim && m2.pk, tag + ' 記憶 解碼 英文 沒有 變暗 或 沒有〔👀 再看 一次〕' + JSON.stringify(m2));
+      await p.click('.dcpk'); ok(await p.evaluate(() => !document.querySelector('.dcw.mem') && DEC.memPeek === 1), tag + ' 〔👀 再看 一次〕英文 沒有 回來'); }
     /* 答對 頁（OKV）*/
     await p.evaluate(() => OKV.ok('<div class="gls"><span class="gw"><b>Hi.</b><i>嗨</i></span></div><div><span class="tr keepsp">整句：嗨。</span></div>', [['', 'Hi.']], () => { window.__ok = 1; })); await p.waitForTimeout(150);
     ok(await p.evaluate(() => /答對了/.test(document.getElementById('okv').textContent)), tag + ' 答對 頁 沒有 出現');

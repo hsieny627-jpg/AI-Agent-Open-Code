@@ -3212,8 +3212,8 @@ var OKV=(function OKVSRC() {
     tk = setInterval(function () { var a = window.AU, f; if (a && a.duration && isFinite(a.duration) && !a.paused) f = a.currentTime / a.duration; else f = (Date.now() - t0) / est;
       f = Math.max(0, Math.min(.999, f)); var acc = 0, k = 0; for (; k < w.length; k++) { acc += w[k]; if (acc / tot > f) break; }
       if (k !== last) { if (last >= 0 && cells[last]) cells[last].classList.remove('hl'); if (cells[k]) cells[k].classList.add('hl'); last = k; } }, 70); }
-  O.say = function (box, L, done, gap, sel) { var cells = box ? [].slice.call(box.querySelectorAll(sel || '.gls .gw')) : [], i = 0, at = 0; stopSay(); var my = SID;
-    (function nx() { if (my !== SID) { clear(box); return; } if (i >= L.length) { clear(box); if (done) done(); return; } var x = L[i++], n = words(x[1]);
+  O.say = function (box, L, done, gap, sel) { var cells = box ? [].slice.call(box.querySelectorAll(sel || '.gls .gw')) : [], i = 0, at = 0; var pv = window.PD || null; stopSay(); var cb = pv || done ? function () { if (pv) pv(); if (done) done(); } : null; try { PD = cb; } catch (x) { } var my = SID;   /* 跟 sayList 一樣：被 別的 聲音 打斷 也 一定 接 下去（PD）*/
+    (function nx() { if (my !== SID) { clear(box); return; } if (i >= L.length) { clear(box); try { PD = null; } catch (x) { } if (cb) cb(); return; } var x = L[i++], n = words(x[1]);
       var part = cells.length ? (L.length === 1 ? cells : cells.slice(at, at + n)) : []; at += n; if (!part.length && cells.length) part = cells;
       run(part, x[1]); say1(x[1], x[0], function () { clear(box); ST = setTimeout(nx, x[2] || gap || 450); }); })(); };
   O.ok = function (html, L, done, after) { var o = document.getElementById('okv'); if (!o) { o = document.createElement('div'); o.id = 'okv'; document.body.appendChild(o); }
