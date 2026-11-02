@@ -34,7 +34,8 @@ var XLV=(function(){
   function intro(min,done){var k=String(T||'0');if(seen(k)||window.__NOGO){done();return}
     var S=[['📺','老師 開 了 <b>'+(min?'⏱ '+min+' 分鐘':'')+' 期中 挑戰</b>'],
       ['🙋','<b>一個人 一台</b> ➜ 按〔🙋 一個人〕➜ 按〔📝 開始〕'],
-      ['👥','<b>兩個人 一台</b> ➜ 按〔👥 兩個人〕➜ 按〔📝 開始〕➜ <b>第 2 個 人</b> 打 自己 的 班級號碼＋密碼'],
+      ['👥','<b>兩個人 一台</b> ➜ 先 猜拳 ✊✌️✋ 決定 <b>第 1 個 人</b> ➜ <b>第 1 個 人</b> 先 登入、按〔👥 兩個人〕➜〔📝 開始〕'],
+      ['🤝','平板 <b>交給 第 2 個 人</b> ➜ 打 <b>自己 的</b> 班級號碼＋密碼（第 1 個 人 不 偷看 🙈）'],   /* 第四十次 4-(2) */
       ['🔁','一人 一題 輪流：<span class="tw"><i class="a">👉 第 1 個 人</i><i class="b">👉 第 2 個 人</i></span>'],
       ['⏰','時間 到 <b>自動 結束</b>，成績 自動 送 出 ➜ 👀 看 大螢幕']];
     var o=el('xlvI','<h2>📝 等一下 這樣 做</h2><ol>'+S.map(function(s,i){return '<li><span class="n">'+(i+1)+'</span><span class="ic">'+s[0]+'</span><span>'+s[1]+'</span></li>'}).join('')+'</ol><button disabled>✅ 我 懂了</button>');o.classList.add('on');

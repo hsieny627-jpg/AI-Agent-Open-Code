@@ -413,5 +413,11 @@ CD.SETS.forEach(function (x) { var k = x[0], B = CB[k] = {};
 /* 2026-10-26 第二十六次 第 1-1 點（老師：打地鼠 單字 模糊、太快）：打地鼠 的 字 另外 做 慢的（audio/m1 語速 0.78）、更慢的（audio/m2 語速 0.62，〔🐢 慢慢 唸〕）*/
 var SAYM = G1.map(function (q) { return q.say; }).concat(XB.q1.concat(XB2.q1).map(function (q) { return q.say; })).concat([].concat.apply([], Object.keys(CB).map(function (k) { return CB[k].q1.map(function (q) { return q.say; }); }))).concat(NUMW.slice(1, 11))   /* 2026-10-30 第三十四次 第 7 點：數字 金幣磚 答對 ＝ 男聲 慢 唸 one～ten */
   .filter(function (x, i, a) { return a.indexOf(x) === i; });
-module.exports = { DTUT: DTUT, LES: LES, SIL: require('../G3 - L1 + L2/_data.js').SIL, XB2: XB2, XORD: XORD, XORD2: XORD2, XN0: XN0, CB: CB, CSETS: CD.SETS, CZH: CZH, ORD: ORD, XB: XB, SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
+/* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（三年級 現場任務，獨立 一個 任務）：一回 10 題 ＝ 5 題 跟 期中考 相似（考卷 的 8 個 字母，方向 反過來：考卷 G ➜ g，這裡 g ➜ G）＋ 5 題 其他 字母（大寫 ➜ 小寫、小寫 ➜ 大寫 都 有）。
+   嚴禁 洩題：考卷 的 原題（EXAM_E 一模一樣 的 方向）一題 都 不 出（build 檢查）。格式 跟 🪞 大小寫 魔鏡（q5）一樣：show 看到 的、want 要 寫 的 */
+var LW = (function () { var L = [], ex = {}; EXAM_E.forEach(function (p) { var a = p.split('>'); ex[a[0]] = 1; ex[a[1]] = 1; L.push({ show: a[1], want: a[0], say: a[0].toLowerCase(), en: a[0], zh: a[1] + ' 的 ' + (a[0] === a[0].toUpperCase() ? '大寫' : '小寫') + ' 是 ' + a[0] + '。', sim: 1 }); });
+  'abcdefghijklmnopqrstuvwxyz'.split('').forEach(function (c) { var C = c.toUpperCase(); if (ex[c] || ex[C]) return;
+    L.push({ show: C, want: c, say: c, en: c, zh: C + ' 的 小寫 是 ' + c + '。', sim: 0 }); L.push({ show: c, want: C, say: c, en: C, zh: c + ' 的 大寫 是 ' + C + '。', sim: 0 }); });
+  L.forEach(function (q) { if (EXAM_E.indexOf(q.show + '>' + q.want) >= 0) throw new Error('✍️ 字母 書寫 洩題：' + q.show + '>' + q.want); }); return L; })();
+module.exports = { LW: LW, DTUT: DTUT, LES: LES, SIL: require('../G3 - L1 + L2/_data.js').SIL, XB2: XB2, XORD: XORD, XORD2: XORD2, XN0: XN0, CB: CB, CSETS: CD.SETS, CZH: CZH, ORD: ORD, XB: XB, SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
   EXAM_A: EXAM_A, EXAM_D: EXAM_D, EXAM_E: EXAM_E };

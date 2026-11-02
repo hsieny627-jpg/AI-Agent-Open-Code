@@ -9,11 +9,11 @@ const ok = (c, m) => { n++; if (!c) E.push(m); };
     await ctx.addInitScript(() => { window.__NOGO = 1; HTMLMediaElement.prototype.play = function () { const a = this; setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); }; try { speechSynthesis.speak = u => setTimeout(() => u.onend && u.onend(), 60); } catch (e) { } });
     const p = await ctx.newPage(), er = []; p.on('pageerror', e => er.push(e.message)); await p.goto('file://' + path.join(ROOT, site, 'index.html')); await p.waitForTimeout(400);
     /* 中文 斷詞 */
-    ok(await p.evaluate(() => ZSP('他是我的爺爺。') === '他 是 我的 爺爺。' && ZSP('你叫什麼名字？') === '你 叫 什麼 名字？'), tag + ' ZSP 斷詞 不對');
-    /* 中英 語序 箭頭：解碼 那一部 第 1 頁 */
-    await p.evaluate(() => { RVA.play(RVD.dc, function () { }); RVA.S.plan = {}; }); await p.waitForTimeout(2800); await p.click('#rvgo'); await p.waitForTimeout(3600);
-    const o = await p.evaluate(() => ({ a: !!document.querySelector('.rvarw path'), bx: !!document.querySelector('.rvk b.rvbx'), zb: (document.querySelector('.rvzb') || {}).textContent || '', z: (document.querySelector('.rvz') || {}).textContent || '' }));
-    ok(o.a && o.bx && /什麼|誰/.test(o.zb), tag + ' 中英 語序 箭頭 沒有 ' + JSON.stringify(o)); ok(/ /.test(o.z), tag + ' 整句 中文 沒有 空格 ' + o.z);
+    ok(await p.evaluate(() => ZSP('他是我的爺爺。') === '他 是 我的 爺爺。' && ZSP('你叫什麼名字？') === '你的 名字 是 什麼？（你 叫 什麼 名字？）'), tag + ' ZSP 斷詞 不對');
+    /* 中英 語序：2026-11-02 第四十次 箭頭 拿掉 ➜ 彩色 語序 卡（.rvso）；解碼 那一部 第 1 頁 */
+    await p.evaluate(() => { RVA.play(RVD.dc, function () { }); RVA.S.plan = {}; }); await p.waitForTimeout(2800); await p.click('#rvgo'); await p.waitForFunction(() => document.querySelector('.rvso'), null, { timeout: 20000 }).catch(() => {});
+    const o = await p.evaluate(() => ({ a: !document.querySelector('.rvarw'), bx: !document.querySelector('.rvbx'), zb: [].map.call(document.querySelectorAll('.rvso .rvsr:nth-child(2) b'), b => b.textContent).join(' '), z: (document.querySelector('.rvz') || {}).textContent || '' }));
+    ok(o.a && o.bx && /什麼|誰/.test(o.zb), tag + ' 中英 語序 卡 沒有（或 還有 箭頭）' + JSON.stringify(o)); ok(/ /.test(o.z), tag + ' 整句 中文 沒有 空格 ' + o.z);
     await p.evaluate(() => RVA.close());
     /* hear2：字首音 那一部 */
     const gid = site === 'g3mid' ? 'q1' : 'm1';

@@ -32,6 +32,34 @@ function DUOSRC() {
     c.onchange = function () { g.disabled = !c.checked; g.classList.toggle('rdy', c.checked); };
     g.onclick = function () { if (g.disabled) return; if (window.ACTL) ACTL.off(); o.classList.remove('on'); o.innerHTML = ''; D.bump(A, B); done(); };
   };
+  /* 2026-11-02 第四十次 第 4-(2) 點（老師：學生 第一次 兩人 輪流，一直 問「現在 要 做 什麼？誰 要 先 輸入 密碼？」）
+     ➜ 第 2 個 人 登入 以前，先 一步 一步 演：誰 是 第 1 個 人（兩個 人 商量／猜拳）➜ 第 1 個 人 已經 登入 ➜ 平板 交給 第 2 個 人 ➜ 第 2 個 人 打 自己 的 班級、座號、密碼（第 1 個 人 不 偷看）➜ 下一頁 才 說 誰 先 答。
+     每 一步：左邊 大 號碼、中間 會 動 的 小 劇場（🧒 第 1 個 人 藍、👧 第 2 個 人 粉紅、📱 平板 在 誰 手上）、一句 話。⏸️ 🔁 🐢（score/_actl.js）＋☑ 我懂了 ➜〔▶ 換 第 2 個 人 登入〕 */
+  D.login = function (A, done) {
+    var o = document.getElementById('duoi');
+    if (!o) { o = document.createElement('div'); o.id = 'duoi'; document.body.appendChild(o); }
+    o.innerHTML = '<div class="dui"><div class="duit">👥 兩個 人 一台 平板：一步 一步 來</div><div class="duis" id="duis"></div>' +
+      '<label class="duik" id="duik"><input type="checkbox" id="duic"> <span>☑ 我懂了</span></label><button class="duigo" id="duigo" disabled>▶ 換 第 2 個 人 登入</button></div>';
+    o.classList.add('on');
+    var P1 = '<span class="dkid k1">🧒<i>第 1 個 人</i></span>', P2 = '<span class="dkid k2">👧<i>第 2 個 人</i></span>', TAB = '<span class="dtab">📱</span>';
+    var S = [
+      ['1', '兩個 人 先 <b>商量</b>：誰 是 <b class="c1">第 1 個 人</b>？', P1 + '<span class="drps">✊ ✌️ ✋</span>' + P2, '猜拳 ✊✌️✋ 贏 的 ＝ 第 1 個 人（也 可以 說好：號碼 小 的）'],
+      ['2', '<b class="c1">第 1 個 人</b> 先 拿 平板，打 <b>自己 的</b> 班級＋座號＋密碼', '<span class="dhold">' + P1 + TAB + '</span><span class="dpw">🔑 ●●●●●●●●</span>', A ? '✅ 已經 做好 了：' + nm(A) + ' 登入 了' : '打好 ＝ 按〔✅〕'],
+      ['3', '<b class="c1">第 1 個 人</b> 按〔👥 兩個人 輪流〕➜〔📝 開始〕', '<span class="dbtn">👥 兩個人 輪流</span><span class="dua">➜</span><span class="dbtn">📝 開始</span>', '✅ 已經 做好 了'],
+      ['4', '把 平板 <b>交給</b> <b class="c2">第 2 個 人</b> 🤝', P1 + '<span class="dpass">' + TAB + '</span>' + P2, '平板 從 第 1 個 人 ➜ 第 2 個 人'],
+      ['5', '<b class="c2">第 2 個 人</b> 打 <b>自己 的</b> 班級＋座號＋密碼', '<span class="dhold">' + P2 + TAB + '</span><span class="dpw p2">🔑 ●●●●●●●●</span><span class="dno">' + '🧒🙈' + '</span>', '第 1 個 人 不 偷看 密碼 🙈'],
+      ['6', '兩個 人 都 登入 好 ➜ <b>下一頁</b> 告訴 你們 <b>誰 先 答</b>', P1 + '<span class="dok">✅</span>' + P2 + '<span class="dok">✅</span>', '一人 一題 輪流，各 算 各 的 分數']
+    ];
+    var box = document.getElementById('duis'), T = (window.ACTL && ACTL.T) || function (f, ms) { return setTimeout(f, ms); };
+    function play() { box.innerHTML = ''; S.forEach(function (s, i) { T(function () { [].forEach.call(box.querySelectorAll('.dur'), function (x) { x.classList.remove('cur'); });
+        var d = document.createElement('div'); d.className = 'dur dls cur'; d.innerHTML = '<span class="dun">' + s[0] + '</span><div><div class="dur1">' + s[1] + '</div><div class="dur2 dst">' + s[2] + '</div><div class="dub">' + s[3] + '</div></div>'; box.appendChild(d);
+        try { d.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) { } }, window.__NOGO ? 5 : 300 + i * 2600); });
+      T(function () { [].forEach.call(box.querySelectorAll('.dur'), function (x) { x.classList.remove('cur'); }); document.getElementById('duik').classList.add('rdy'); }, window.__NOGO ? 10 : 300 + S.length * 2600); }
+    if (window.ACTL) ACTL.on(o.querySelector('.dui'), play); play();
+    var c = document.getElementById('duic'), g = document.getElementById('duigo');
+    c.onchange = function () { g.disabled = !c.checked; g.classList.toggle('rdy', c.checked); };
+    g.onclick = function () { if (g.disabled) return; if (window.ACTL) ACTL.off(); o.classList.remove('on'); o.innerHTML = ''; done(); };
+  };
   /* 突擊 測驗 第 k 題 ＝ 誰（從 現在 輪到 的 人 開始，一人 一題；另一個 人 已經 做完 ＝ 都 是 現在 這個 人）*/
   D.turn = function (DUO, k) { if (!DUO) return ''; var o = (DUO.cur + k) % 2; if (DUO.done[o]) o = DUO.cur; return DUO.id[o]; };
   return D;
@@ -48,5 +76,17 @@ const CSS = '#duoi{position:fixed;inset:0;z-index:120;display:none;align-items:c
   '.duik.rdy{opacity:1;pointer-events:auto;border-color:#FFE07A}.duik input{width:36px;height:36px}' +
   '.duigo{display:block;margin:8px auto 0;min-height:72px;padding:6px 30px;font:inherit;font-size:clamp(26px,3.6vh,36px);font-weight:700;border-radius:20px;border:4px solid #5E7FA8;background:#1B2633;color:#8796A8}' +
   '.duigo.rdy{background:#1E9E55;border-color:#7CFFB0;color:#fff}' +
-  '.rvwho{display:inline-block;margin-left:10px;padding:2px 14px;border-radius:999px;background:#5A1E4A;border:3px solid #FF8AD0;color:#fff}';
+  '.rvwho{display:inline-block;margin-left:10px;padding:2px 14px;border-radius:999px;background:#5A1E4A;border:3px solid #FF8AD0;color:#fff}' +
+  /* 第四十次 4-(2)：一步 一步 小 劇場 */
+  '.dur.dls{opacity:.55}.dur.dls.cur{opacity:1;border-color:#FFE07A;box-shadow:0 0 0 4px rgba(255,224,122,.25)}' +
+  '.dun{flex:none;width:1.6em;height:1.6em;border-radius:50%;background:#7C5CFF;color:#fff;display:flex;align-items:center;justify-content:center;font-size:clamp(30px,4.4vh,44px);font-weight:800}' +
+  '.dst{gap:14px;font-size:clamp(34px,5vh,52px);min-height:1.6em}.dkid{display:inline-flex;flex-direction:column;align-items:center;line-height:1}.dkid i{font-style:normal;font-size:clamp(16px,2.2vh,22px);padding:2px 8px;border-radius:999px;margin-top:4px}' +
+  '.dkid.k1 i{background:#0E3A6E;border:2px solid #5BB8FF}.dkid.k2 i{background:#5A1E4A;border:2px solid #FF8AD0}.c1{color:#7FC8FF!important}.c2{color:#FF9AD8!important}' +
+  '.drps{animation:dRps .5s steps(1) infinite}@keyframes dRps{0%{opacity:1}50%{opacity:.4}}' +
+  '.dhold{display:inline-flex;align-items:center;gap:4px}.dtab{display:inline-block;animation:dTab 1s ease-in-out infinite}@keyframes dTab{50%{transform:translateY(-6px) rotate(-6deg)}}' +
+  '.dpw{font-size:clamp(22px,3vh,30px);padding:4px 14px;border-radius:14px;background:#0E3A6E;border:3px solid #5BB8FF;letter-spacing:2px}.dpw.p2{background:#5A1E4A;border-color:#FF8AD0}' +
+  '.dbtn{font-size:clamp(20px,2.8vh,28px);padding:6px 14px;border-radius:14px;background:#2B3D6E;border:3px solid #9FB4FF;animation:dBt 1.4s infinite}@keyframes dBt{50%{transform:scale(1.08)}}' +
+  '.dpass{display:inline-block;animation:dPass 2s ease-in-out infinite}@keyframes dPass{0%,15%{transform:translateX(-60px)}55%,100%{transform:translateX(60px)}}' +
+  '.dno{font-size:.8em}.dok{font-size:.8em;margin-right:10px}' +
+  '@media (prefers-reduced-motion:reduce){.drps,.dtab,.dbtn,.dpass{animation:none}}';
 module.exports = { css: CSS, js: 'var DUOI=(' + DUOSRC.toString() + ')();' };

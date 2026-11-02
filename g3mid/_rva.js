@@ -15,7 +15,10 @@
 function RVASRC() {
   /* 2026-11-01 第三十九次 第 2 點（老師：突擊 題 讓 答題 冗長、沉悶，學生 失去 耐心 ➜ 先 暫時 移除 全部 突擊 題）：QON ＝ false ➜ 動畫 照 演，一題 都 不 插、不 送 成績。
      要 加 回來：QON 改 true（量測 用 window.__RVQ ＝ 1 強制 打開 量 引擎）。 */
-  var RVA = { A: null, S: null, N: 3, QT: 20, QON: false };
+  var RVA = { A: null, S: null, N: 3, QT: 20, QON: false,
+    /* 2026-11-02 第四十次 第 4-(4) 點（老師：暫時 刪除 字母 大小寫、字首音 的 動畫，讓 作答 更 流暢）＝ 這幾關 不 演；要 加 回來 ＝ 從 SKIP 拿掉。
+       第 4-(5) 點：⚡ 現場任務（網址 ?live=）一律 不 演（rvaGo 看 CR.cfg）。 */
+    SKIP: { q1: 1, q4: 1, q5: 1, m1: 1, m2: 1 } };
   function $id(i) { return document.getElementById(i); }
   function h(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
   function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
@@ -50,7 +53,7 @@ function RVASRC() {
     var p = a.play(); if (p && p.catch) p.catch(function (e) { if (!RVA.S || my !== RVA.S.rid || (e && e.name === 'AbortError')) return; est(); }); }
 
   /* ── 一排 英文 字（每個 字 正下方 中文）── */
-  function row(t, cls) { var r = h('div', 'rvrow' + (cls ? ' ' + cls : '')); t.forEach(function (p) { var c = h('span', 'rvk' + (/^'/.test(p[0]) ? ' ct' : ''), '<b>' + ap(p[0]) + '</b><i>' + esc(p[1] || '　') + '</i>'); c.setAttribute('data-w', p[0]); r.appendChild(c); }); return r; }
+  function row(t, cls) { var r = h('div', 'rvrow' + (cls ? ' ' + cls : '')); t.forEach(function (p) { var c = h('span', 'rvk' + (/^'/.test(p[0]) ? ' ct' : '') + (/\S\s+\S/.test(p[0]) ? ' ph' : ''), '<b>' + ap(p[0]) + '</b><i>' + esc(p[1] || '　') + '</i>'); c.setAttribute('data-w', p[0]); r.appendChild(c); }); return r; }
   function fit(box) { if (!box) return; box.style.removeProperty('--rz'); var z = 1; for (var i = 0; i < 14 && (box.scrollHeight > box.clientHeight + 2 || box.scrollWidth > box.clientWidth + 2); i++) { z *= .9; box.style.setProperty('--rz', z.toFixed(3)); } }
 
   /* ══ 開始 ══ spec ＝ {id, ic, nm, sc:[…], qz:[…]}；done() ＝ 看完（或 跳過） */
@@ -69,6 +72,8 @@ function RVASRC() {
     un.forEach(function (i) { if (pick.length < RVA.N && pick.indexOf(i) < 0) pick.push(i); });
     if (!(RVA.QON || window.__RVQ)) pick = [];   /* 第三十九次：突擊 題 暫時 移除 */
     S.key = key; S.seen = seen.concat(pick);
+    /* 2026-11-02 第四十次（老師 C46 ② 甲＋丙）：同一位 學生 第一次 看 ＝ 每一頁 唸 兩遍；看過 了 ＝ 每一頁 只 唸 一遍（短 一半，重點 一樣 全部 看到）*/
+    S.vk = 'rvv_' + RVA.A.gr + '_' + spec.id + '_' + (RVA.A.sid() || '0'); try { S.once = !!ls(S.vk); } catch (e) { S.once = false; }
     /* 插 在 哪裡：第 i 頁 唸完 第 1 次（2i）或 第 2 次（2i＋1），而且 ≧ 題目 的 at */
     var nS = spec.sc.length, used = {};
     /* 2026-11-01 第三十八次 第 11-(2) 點（老師：還沒 看完、看清楚 這一頁 就 插 題目，打斷 專注；有的 題目 跟 這一頁 沒 關係）➜
@@ -89,26 +94,30 @@ function RVASRC() {
       (S.nq ? '<div class="rvl"><span style="--d:.3s">👀 專心 看、專心 聽</span><span style="--d:1s">⚡ 動畫 會 <b>隨時</b> 跳出 突擊 測驗（' + S.nq + ' 題）</span><span style="--d:1.7s">✅ 答對、答錯 都 <b>列入 成績</b></span></div>'
         : '<div class="rvl"><span style="--d:.3s">👀 專心 看、專心 聽</span><span style="--d:1s">💡 看懂 重點，等一下 的 題目 會 用到</span></div>') +
       '<button class="rvgo" id="rvgo" disabled>▶ 開始 看</button></div>';
-    T(function () { var b = $id('rvgo'); if (b) { b.disabled = false; b.classList.add('rdy'); } }, 2600); }
+    T(function () { var b = $id('rvgo'); if (b) { b.disabled = false; b.classList.add('rdy'); } }, S.once ? 900 : 2600); }
 
   /* ② 一頁 一個 重點 */
-  function scene(i) { var S = RVA.S, sp = S.spec, c = sp.sc[i]; S.i = i; S.part = 0; $id('rvc').classList.remove('hid');
+  function scene(i) { var S = RVA.S, sp = S.spec, c = sp.sc[i]; S.i = i; S.part = 0; S.misd = 0; $id('rvc').classList.remove('hid');
     $id('rvp').textContent = '📍 ' + (i + 1) + ' ／ ' + sp.sc.length;
     var st = $id('rvs'); st.innerHTML = ''; var card = h('div', 'rvcard' + (c.t2 ? ' eq' : ''), '');
     card.appendChild(h('div', 'rvh', '<span>重點 ' + (i + 1) + '</span>' + esc(c.h)));
     if (c.pic) card.appendChild(h('div', 'rvpic', c.pic));
     if (c.g4 && window.HW) card.appendChild(grid4(c)); else if (c.big) card.appendChild(h('div', 'rvbig', ap(c.big)));
-    var r1 = row(c.t), r2 = c.t2 ? row(c.t2, 'r2') : null; card.appendChild(r1); if (r2) { var w2 = h('div', 'rveq'); w2.appendChild(h('span', 'rveqs', c.sym || (c.vs ? '⇄' : '＝'))); w2.appendChild(r2); card.appendChild(w2); }
+    var r1 = row(c.t), r2 = c.t2 ? row(c.t2, 'r2') : null, w2 = null; card.appendChild(r1);
+    if (c.mis) card.appendChild(h('div', 'rvmis', '<span class="rvmx">❌</span><span class="rvmb"><s>' + ap(c.mis) + '</s><i class="keepsp">' + esc(ZS(c.misz || '')) + '</i></span><span class="rvmw">' + esc(c.misw || '') + '</span>'));
+    if (r2) { w2 = h('div', 'rveq' + (c.mis ? ' rvok' : '')); w2.appendChild(h('span', 'rveqs', c.mis ? '✅' : (c.sym || (c.vs ? '⇄' : '＝')))); w2.appendChild(r2); card.appendChild(w2); }
     card.appendChild(h('div', 'rvz keepsp', esc(ZS(c.z))));
     if (c.n) card.appendChild(h('div', 'rvn', '💡 ' + c.n));
-    card.appendChild(h('div', 'rvcnt', '🔊 <i>1</i><i>2</i>'));
+    card.appendChild(h('div', 'rvcnt', S.once ? '🔊 <i>1</i>' : '🔊 <i>1</i><i>2</i>'));
     flMark(card, c); st.appendChild(card); fit(card);
-    var ks = [].slice.call(card.querySelectorAll('.rvk')), k = 0;
-    (function pop() { if (k < ks.length) { ks[k].classList.add('in'); k++; T(pop, 330); return; } T(function () { readS(i, 0); }, 350); })(); }
+    var ks = [].slice.call(card.querySelectorAll('.rvk')), k = 0, k1 = r1.children.length;
+    if (c.mis && w2) w2.classList.add('rvwait');
+    (function pop() { if (c.mis && k === k1 && !S.misd) { S.misd = 1; T(function () { misShow(card, c); T(function () { w2.classList.remove('rvwait'); pop(); }, 2600); }, 400); return; }
+      if (k < ks.length) { ks[k].classList.add('in'); k++; T(pop, 330); return; } S.misd = 0; T(function () { readS(i, 0); }, 350); })(); }
   /* 唸 第 n 次（等句 ＝ 上面 一行 再 下面 一行）*/
   function readS(i, n) { var S = RVA.S, c = S.spec.sc[i], card = $id('rvs').querySelector('.rvcard'); if (!card) return;
     var cnt = card.querySelectorAll('.rvcnt i'); cnt[n] && cnt[n].classList.add('on');
-    var rows = card.querySelectorAll('.rvrow'), c1 = [].slice.call(rows[0].children), fin = function () { if (n === 0) { card.classList.add('z'); T(function () { order(card, c); }, 500); } T(function () { slot(2 * i + n, function () { if (n === 0) T(function () { readS(i, 1); }, 650); else T(function () { nextS(); }, 1100); }); }, n === 0 ? 900 : 500); };
+    var rows = card.querySelectorAll('.rvrow'), c1 = [].slice.call(rows[0].children), fin = function () { if (n === 0) { card.classList.add('z'); T(function () { order(card, c); }, 500); } T(function () { slot(2 * i + n, function () { if (n === 0 && !S.once) T(function () { readS(i, 1); }, 650); else T(function () { nextS(); }, 1100); }); }, n === 0 ? 900 : 500); };
     read(c.en, c.v, c1, function () { if (rows[1]) T(function () { read(c.en2, c.v2 != null ? c.v2 : c.v, [].slice.call(rows[1].children), fin); }, 450); else fin(); }); }
   function nextS() { var S = RVA.S; if (S.i + 1 < S.spec.sc.length) scene(S.i + 1); else finish(); }
   /* 這個 位置 有 排 突擊 測驗 嗎？ */
@@ -187,20 +196,38 @@ function RVASRC() {
   /* 回到 動畫：這一頁 重新 畫（字 都 已經 出來）*/
   function redraw() { var S = RVA.S, i = S.i, c = S.spec.sc[i], st = $id('rvs'); st.innerHTML = ''; var card = h('div', 'rvcard z' + (c.t2 ? ' eq' : ''), '');
     card.appendChild(h('div', 'rvh', '<span>重點 ' + (i + 1) + '</span>' + esc(c.h))); if (c.pic) card.appendChild(h('div', 'rvpic', c.pic)); if (c.g4 && window.HW) card.appendChild(grid4(c, 1)); else if (c.big) card.appendChild(h('div', 'rvbig', ap(c.big)));
-    card.appendChild(row(c.t)); if (c.t2) { var w2 = h('div', 'rveq'); w2.appendChild(h('span', 'rveqs', c.sym || (c.vs ? '⇄' : '＝'))); w2.appendChild(row(c.t2, 'r2')); card.appendChild(w2); }
+    card.appendChild(row(c.t)); if (c.mis) card.appendChild(h('div', 'rvmis on', '<span class="rvmx">❌</span><span class="rvmb"><s>' + ap(c.mis) + '</s><i class="keepsp">' + esc(ZS(c.misz || '')) + '</i></span><span class="rvmw">' + esc(c.misw || '') + '</span>'));
+    if (c.t2) { var w2 = h('div', 'rveq' + (c.mis ? ' rvok' : '')); w2.appendChild(h('span', 'rveqs', c.mis ? '✅' : (c.sym || (c.vs ? '⇄' : '＝')))); w2.appendChild(row(c.t2, 'r2')); card.appendChild(w2); }
     card.appendChild(h('div', 'rvz keepsp', esc(ZS(c.z)))); if (c.n) card.appendChild(h('div', 'rvn', '💡 ' + c.n)); card.appendChild(h('div', 'rvcnt', '🔊 <i class="on">1</i><i>2</i>'));
     [].forEach.call(card.querySelectorAll('.rvk'), function (k) { k.classList.add('in'); }); flMark(card, c); st.appendChild(card); fit(card); T(function () { order(card, c); }, 200); }
   /* 2026-11-01 第三十八次 第 11-(10)-2 點 中英 語序：英文 What／Who／Is 在 最 前面，中文「什麼」「誰」「嗎」在 後面 ➜
      英文 那個 字 框 起來、整句 中文 的 那個 詞 框 起來、從 英文 拉 一條 箭頭 到 中文（What’s your name?、Who’s he?、Who’s she?、Is he a doctor?、Is she a nurse? 都 會）*/
-  var ORD = { What: '什麼', Who: '誰', Is: '嗎' };
-  function order(card, c) { var t0 = c.t && c.t[0] && c.t[0][0], zh = ORD[t0]; if (!zh || !card.parentNode) return; var zEl = card.querySelector('.rvz'), k0 = card.querySelector('.rvrow .rvk b');
-    if (!zEl || !k0 || zEl.textContent.indexOf(zh) < 0 || card.querySelector('.rvarw')) return;
-    var first = zh === '嗎' ? zEl.innerHTML.indexOf(zh) : zEl.innerHTML.indexOf(zh); zEl.innerHTML = zEl.innerHTML.slice(0, first) + '<span class="rvzb">' + zh + '</span>' + zEl.innerHTML.slice(first + zh.length);
-    k0.classList.add('rvbx'); var zb = zEl.querySelector('.rvzb'), cr = card.getBoundingClientRect(), a = k0.getBoundingClientRect(), b = zb.getBoundingClientRect();
-    var x1 = a.left - cr.left - 4, y1 = a.top + a.height * .5 - cr.top, x2 = b.left + b.width / 2 - cr.left, y2 = b.bottom - cr.top + 4, mx = Math.max(8, Math.min(x1, x2) - 110), my = y2 + 46;   /* 從 左邊 繞 下來、從 下面 指 上去，不 壓到 字 */
-    var sv = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); sv.setAttribute('class', 'rvarw'); sv.setAttribute('width', cr.width); sv.setAttribute('height', cr.height);
-    sv.innerHTML = '<defs><marker id="rvah" markerUnits="userSpaceOnUse" markerWidth="22" markerHeight="22" refX="18" refY="11" orient="auto"><path d="M0,0 L22,11 L0,22 z" fill="#FFD54A"/></marker></defs><path d="M' + x1 + ',' + y1 + ' Q' + mx + ',' + my + ' ' + x2 + ',' + y2 + '" stroke="#FFD54A" stroke-width="5" fill="none" stroke-linecap="round" marker-end="url(#rvah)"/>';
-    card.appendChild(sv); var p = sv.querySelector('path'), L = p.getTotalLength ? p.getTotalLength() : 600; p.style.strokeDasharray = L; p.style.strokeDashoffset = L; requestAnimationFrame(function () { p.style.transition = 'stroke-dashoffset 1.1s ease'; p.style.strokeDashoffset = 0; }); }
+  /* 2026-11-02 第四十次 第 3-(1) 點（老師：What／什麼 的 方框＋箭頭 沒有 學習 意義、干擾 視覺）➜ 拿掉 箭頭；
+     換成 跟 三、四年級「中英 語序」卡 一樣 的 做法：英文 一個 字 一張 彩色 卡，中文 同 一個 意思 ＝ 同 一個 顏色；
+     中文 卡 先 排 在 自己 的 英文 字 正下方 ➜ 再 滑 到 中文 的 順序（What’s your name? ➜ 你的 名字 是 什麼？；Who’s he? ➜ 他 是 誰？；Is he a doctor? ➜ 他 是 一位 醫生 嗎？）
+     只 演 英文 和 中文 順序 不一樣 的 句子（第一個 字 What／Who／Is）。 */
+  var SOC = ['#C62828', '#C98A00', '#1565C0', '#1E8A4C', '#7B3FB8', '#00838F', '#AD5A00'];
+  var POSS = { your: 1, my: 1, his: 1, her: 1 };
+  function zhOrder(t) { var w0 = String(t[0][0]).replace(/[?.!]/g, ''), n = t.length, ix = t.map(function (p, i) { return i; });
+    if ((w0 === 'What' || w0 === 'Who') && n >= 3 && /^’s/.test(t[1][0])) return { o: ix.slice(2).concat([1, 0]), ma: 0 };
+    if (w0 === 'Is' && n >= 3) { var e = POSS[String(t[1][0]).toLowerCase()] && n >= 4 ? 3 : 2, o = ix.slice(1, e).concat([0]).concat(ix.slice(e)); return { o: o, ma: 1 }; }
+    return null; }
+  function order(card, c) { if (!card.parentNode || card.querySelector('.rvso') || !c.t || c.mis) return; var Z = zhOrder(c.t); if (!Z) return;
+    var t = c.t, so = h('div', 'rvso', ''), en = h('div', 'rvsr', '<span class="rvsl">英文</span>'), zh = h('div', 'rvsr', '<span class="rvsl">中文</span>'), qm = /\?$/.test(t[t.length - 1][0]);
+    var ec = t.map(function (p, i) { var b = h('span', 'rvsc', '<b>' + ap(String(p[0]).replace(/[?.!]$/, '')) + '</b>'); b.style.background = SOC[i % SOC.length]; en.appendChild(b); return b; });
+    if (qm) en.appendChild(h('span', 'rvsc q', '<b>?</b>'));
+    var zc = Z.o.map(function (i) { var b = h('span', 'rvsc', '<b>' + esc(t[i][1]) + '</b>'); b.style.background = SOC[i % SOC.length]; b._i = i; zh.appendChild(b); return b; });
+    var ma = Z.ma ? h('span', 'rvsc ma', '<b>嗎</b>') : null; if (ma) zh.appendChild(ma); if (qm) zh.appendChild(h('span', 'rvsc q', '<b>？</b>'));
+    so.appendChild(en); so.appendChild(zh); so.appendChild(h('div', 'rvst2', '👀 中文 的 順序 不一樣！'));
+    var zEl = card.querySelector('.rvz'); card.insertBefore(so, zEl); fit(card);
+    /* 中文 卡 先 移到 自己 的 英文 字 正下方 ➜ 1 秒 後 滑 到 中文 順序 */
+    zc.forEach(function (b) { var a = ec[b._i].getBoundingClientRect(), r = b.getBoundingClientRect(); b.style.transition = 'none'; b.style.transform = 'translateX(' + ((a.left + a.width / 2) - (r.left + r.width / 2)).toFixed(1) + 'px)'; });
+    if (ma) { ma.style.opacity = '0'; ma.style.transform = 'scale(.3)'; }
+    void so.offsetWidth; so.classList.add('in');
+    T(function () { zc.forEach(function (b, k) { b.style.transition = 'transform .9s cubic-bezier(.5,1.4,.5,1) ' + (k * .12).toFixed(2) + 's'; b.style.transform = 'none'; });
+      T(function () { if (ma) { ma.style.transition = 'opacity .3s,transform .5s cubic-bezier(.3,1.8,.5,1)'; ma.style.opacity = '1'; ma.style.transform = 'none'; } so.classList.add('done'); }, 1100); }, 1000); }
+  /* 2026-11-02 第四十次 第 4-(3) 點：迷思 概念 頁（c.mis）＝ 問句 ➜ ❌ 常見 的 錯 回答（劃掉、抖、說 為什麼）➜ ✅ 對 的 回答 */
+  function misShow(card, c) { var m = card.querySelector('.rvmis'); if (m) m.classList.add('on'); }
   /* 2026-11-01 第三十八次 第 11-(7) 點：字首音 的 頁（大 字母 c.big、聲音 雙胞胎 m2）＝ 每一個 英文 字 的 第一個 字母 稍微 放大、放亮、框 起來 */
   /* 2026-11-01 第三十八次 第 11-(10)-6 點：標準 四線格（底線 紅線）＋ 一筆 一筆 畫 出來 的 字母（筆畫 ＝ 手寫 改 字 同 一份 HW.T）
      c.g4 ＝ 要 畫 的 字母、c.g4f ＝ 左邊 標 2F／1F／B1（大寫 住 一樓 二樓；g j p q y 腳 住 地下一樓）、c.g4t ＝ 字母 下面 的 字（拒 絕 屁 股 歪）、c.g4x ＝ 超線 的 錯 示範 */
@@ -236,7 +263,7 @@ function RVASRC() {
 
   /* ⑤ 看完 */
   function finish() { var S = RVA.S, ok = S.rows.filter(function (x) { return x[0]; }).length, st = $id('rvs'); $id('rvc').classList.add('hid'); $id('rvp').textContent = '';
-    try { ls(S.key, JSON.stringify(S.seen.slice(-60))); } catch (e) { }
+    try { ls(S.key, JSON.stringify(S.seen.slice(-60))); ls(S.vk, '1'); } catch (e) { }
     RVA.odd = S.rows.length % 2;   /* 兩人 輪流：各 送 各 的 */
     try { if (S.rows.length && RVA.A.send) { var own = S.own || [], who = {}; own.forEach(function (w) { who[w] = 1; }); Object.keys(who).forEach(function (w) { var rr = S.rows.filter(function (r, i) { return (own[i] || '') === w; }); RVA.A.send(rr, S.spec, Math.round((Date.now() - S.t0) / 1000), w); }); } } catch (e) { }
     st.innerHTML = '<div class="rvend"><div class="rve0">🎉</div><div class="rve1">看完 了！</div>' + (S.nq ? '<div class="rve2">⚡ 突擊 測驗：答對 <b>' + ok + '</b> ／ ' + S.rows.length + '</div><div class="rve3">' + (ok === S.rows.length ? '👀 全部 答對：你 真的 很 專心！' : '📌 答錯 的 重點，等一下 的 題目 會 用到！') + '</div>' : '<div class="rve3">📌 剛剛 的 重點，等一下 的 題目 會 用到！</div>') + '<button class="rvgo rdy" id="rvend">▶ 開始 這一關</button></div>';
@@ -330,6 +357,22 @@ body.rvpz .rvcard *{animation-play-state:paused!important}
 .rvfx .n3 i{font-style:normal;display:inline-block;width:1.8em;height:1.8em;line-height:1.8em;border-radius:50%;border:3px solid #3BD16F;margin:0 4px;font-size:clamp(17px,2.4vh,22px)}.rvfx .n3 i.on{background:#3BD16F;color:#002}
 .rvfx .nx{min-height:64px;min-width:240px;font:inherit;font-size:clamp(22px,3.2vh,32px);font-weight:700;border-radius:18px;border:4px solid #B6FFCB;background:linear-gradient(#5BE38A,#22A84F);color:#022;cursor:pointer}
 @media (max-aspect-ratio:1/1){.rvopts{grid-template-columns:1fr}.rvk b{font-size:calc(var(--rz) * clamp(34px,5.4vh,64px))}}
+/* 第四十次 3-(2)：How old ＝ 幾歲、years old ＝ 歲：英文 一個 方框、正下方 中文 一個 方框 */
+.rvk.ph b{outline:4px solid #FFD54A;outline-offset:2px;border-radius:12px;padding:0 8px}.rvk.ph i{outline:3px solid #FFD54A;outline-offset:2px;border-radius:10px;padding:0 8px;margin-top:8px;color:#FFE07A}
+/* 第四十次 3-(1)：中英 語序 彩色 卡 */
+.rvso{margin:10px auto 4px;padding:10px 14px;border-radius:20px;background:rgba(255,255,255,.05);border:2px solid #2C3A55;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s;max-width:100%}
+.rvso.in{opacity:1;transform:none}.rvsr{display:flex;align-items:center;justify-content:center;gap:calc(var(--rz,1) * 10px);margin:6px 0;flex-wrap:nowrap}
+.rvsl{flex:none;width:2.6em;font-size:calc(var(--rz,1) * clamp(16px,2.2vh,22px));color:#BFD3E6;text-align:right;margin-right:6px}
+.rvsc{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:2.2em;padding:calc(var(--rz,1) * 6px) calc(var(--rz,1) * 14px);border-radius:16px;box-shadow:0 5px 0 rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.25);font-size:calc(var(--rz,1) * clamp(24px,3.6vh,40px));color:#fff;font-family:Andika,"Microsoft JhengHei",sans-serif;will-change:transform}
+.rvsc.q{background:#3A3F48;color:#E8E8E8}.rvsc.ma{background:#455A64;outline:3px dashed #FFD54A}
+.rvst2{text-align:center;font-size:calc(var(--rz,1) * clamp(18px,2.6vh,26px));color:#FFE07A;opacity:0;transition:opacity .4s}.rvso.done .rvst2{opacity:1}
+/* 第四十次 4-(3)：迷思 概念 頁 */
+.rvmis{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:10px auto;padding:8px 16px;border-radius:18px;background:#3A1010;border:3px solid #FF5A5A;opacity:0;transform:scale(.6);transition:opacity .3s,transform .4s cubic-bezier(.3,1.6,.6,1);max-width:100%}
+.rvmis.on{opacity:1;transform:none;animation:rvmS .5s .35s 2}@keyframes rvmS{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+.rvmx{font-size:calc(var(--rz,1) * clamp(40px,6vh,64px))}.rvmb{display:flex;flex-direction:column;align-items:center}.rvmb s{font-family:Andika,sans-serif;font-size:calc(var(--rz,1) * clamp(30px,4.6vh,52px));color:#FFB4B4;text-decoration-thickness:4px;text-decoration-color:#FF5A5A}.rvmb i{font-style:normal;font-size:calc(var(--rz,1) * clamp(18px,2.6vh,26px));color:#FFC9C9}
+.rvmw{font-size:calc(var(--rz,1) * clamp(20px,3vh,30px));color:#FFE07A;font-weight:700}
+.rveq.rvwait{opacity:0}.rveq.rvok{transition:opacity .4s}.rveq.rvok .rveqs{font-size:calc(var(--rz,1) * clamp(34px,5vh,56px))}
+@media (prefers-reduced-motion:reduce){.rvmis.on{animation:none}.rvsc{transition:none!important}}
 @media (prefers-reduced-motion:reduce){.rvcard,.rvqz,.rvpic,.rvi0,.rve0,.rvr,.rvgo.rdy{animation:none!important}}
 `;
 /* 網頁 的 轉接：gr 'g3'／'g4'、set 成績 題組、name 名稱、R ＝ _rva_data.js 的 結果（list、NMAP）*/
@@ -343,7 +386,7 @@ function page(o) { const map = {}, off = {}; let k = 0; o.R.list.forEach(a => { 
     'var Rr={id:ID,set:' + J(o.set) + ',name:' + J(o.name) + ',m:"g",qs:rows.map(function(r){return [r[0],r[1],r[2],r[3],r[4],o+r[5]]}),raw:rows.filter(function(r){return r[0]}).length,fix:0,mp:0,mw:0,sec:secs,src:"school",dev:SCDEV,u:u,t:Date.now()};' +
     'var QQ=scGet("q")||[];QQ.push(Rr);scPut("q",QQ.slice(-200));scFlush()}catch(e){}}};' +
     /* 每 換 一關（一個 題型）先 演；量測 設 window.__NORVA 跳過 */
-    'function rvaGo(id,done){var s=RVD[id]||RVD[RVMAP[id]];if(!s||window.__NORVA){done();return}if(typeof R!=="undefined"&&R&&R.qk){if(R.qkd){done();return}R.qkd=1}' +
+    'function rvaGo(id,done){var s=RVD[id]||RVD[RVMAP[id]];if(!s||window.__NORVA||RVA.SKIP[s.id]||RVA.SKIP[id]||(typeof CR!=="undefined"&&CR&&CR.cfg&&!window.__RVLIVE)){done();return}if(typeof R!=="undefined"&&R&&R.qk){if(R.qkd){done();return}R.qkd=1}' +
     'var DU=typeof DUO!=="undefined"&&DUO;if(DU){DU.rv=DU.rv||{};if(DU.rv[s.id]){done();return}DU.rv[s.id]=1}' +   /* 兩人 輪流：同一部 動畫 只 演 一次；突擊 測驗 答了 單數 題 ＝ 下一題 換人 */
     'RVA.play(s,function(){if(DU&&RVA.odd&&typeof duoAfterRv==="function"&&duoAfterRv())return;done()})}' +
     'var _rvDc=decClose;decClose=function(){if(window.RVA)RVA.close();_rvDc()};'; }

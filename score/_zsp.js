@@ -17,8 +17,9 @@ const CJK = '\\u3400-\\u9fff';
 function SRC(W, CJK) {
   var D = {}, MX = 1; W.forEach(function (w) { D[w] = 1; if (w.length > MX) MX = w.length; });
   function seg(run) { var out = [], i = 0; while (i < run.length) { var k = Math.min(MX, run.length - i), hit = 1; for (; k > 1; k--) if (D[run.substr(i, k)]) { hit = k; break; } out.push(run.substr(i, hit)); i += hit; } return out.join(' '); }
-  return function (s) { s = String(s == null ? '' : s); return s.replace(new RegExp('([' + CJK + '])[ \\u00a0]+(?=[' + CJK + '])', 'g'), '$1').replace(new RegExp('[' + CJK + ']+', 'g'), seg); };
+  return function (s) { s = String(s == null ? '' : s); if (s.indexOf('名字是什麼') < 0 && s.replace(/\s/g, '').indexOf('名字是什麼') < 0) s = s.replace(/你[ \u00a0]*叫[ \u00a0]*什[ \u00a0]*麼[ \u00a0]*名[ \u00a0]*字[ \u00a0]*([？?])/g, '你的名字是什麼$1（你叫什麼名字？）'); return s.replace(new RegExp('([' + CJK + '])[ \\u00a0]+(?=[' + CJK + '])', 'g'), '$1').replace(new RegExp('[' + CJK + ']+', 'g'), seg); };
 }
+/* 2026-11-02 第四十次 第 2 點（老師）：What’s your name? 的 整句 中文 ＝「你的 名字 是 什麼？（你 叫 什麼 名字？）」＝ 先 照 英文 順序、括號 裡 是 平常 的 說法 */
 const fix = SRC(W, CJK);
 /* 網頁 用：window.ZSP(字串) */
 const js = 'window.ZSP=(' + SRC.toString() + ')(' + JSON.stringify(W) + ',' + JSON.stringify(CJK) + ');';

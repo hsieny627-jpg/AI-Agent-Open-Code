@@ -13,7 +13,10 @@ const ANI = [
   { h: '問名字', pic: NB('?'), en: "What's your name?", z: '你叫什麼名字？', n: '英文先說 What（什麼）；中文「什麼」在後面' },
   { h: '縮寫', pic: '✂️', en: 'What is', en2: "What's", z: 'What is ＝ What’s（什麼是）', n: '’s ＝ is（是）' },
   { h: '問幾歲', pic: '🎂', en: 'How old are you?', z: '你幾歲？', n: 'How old ＝ 幾歲（兩個字一起看）' },
-  { h: '說幾歲', pic: '🙋', en: "I'm nine years old.", z: '我九歲。', n: 'years old ＝ 歲；可以省略：I’m nine.' }],
+  { h: '說幾歲', pic: '🙋', en: "I'm nine years old.", z: '我九歲。', n: 'years old ＝ 歲；可以省略：I’m nine.'  },
+  /* 2026-11-02 第四十次 第 4-(3) 點：迷思 概念（問 名字 卻 回答 幾歲、問 幾歲 卻 回答 名字）*/
+  { h: '問名字 ➜ 回答名字', pic: NB('Oscar'), en: "What's your name?", en2: "I'm Oscar.", v2: 'm', mis: 'I’m ten.', misz: '我十歲。', misw: '🎂 這是 幾歲，不是 名字！', z: '你叫什麼名字？我是 Oscar。', n: 'name ＝ 名字 🏷️ ➜ 回答 名字（I’m ＋ 名字）' },
+  { h: '問幾歲 ➜ 回答數字', pic: '🎂', en: 'How old are you?', en2: "I'm ten.", v2: 'm', mis: 'I’m Oscar.', misz: '我是 Oscar。', misw: '🏷️ 這是 名字，不是 幾歲！', z: '你幾歲？我十歲。', n: 'How old ＝ 幾歲 🎂 ➜ 回答 數字（I’m ＋ 數字）'}],
  qz: [
   { at: 2, ty: 'dec', en: 'How old are you?', x: ['歲', '老的'], z: '你幾歲？', why: 'How old ＝ 幾歲（問別人）；years old 才是「歲」' },
   { at: 3, ty: 'dec', en: "I'm ten years old.", x: ['幾歲', '年'], z: '我十歲。', why: 'years old ＝ 歲（說自己）；How old ＝ 幾歲（問別人）' },
@@ -161,7 +164,9 @@ const ANI = [
   { h: '問幾歲 ➜ 說數字', pic: '🎂', en: 'How old are you?', en2: "I'm seven.", vs: 1, v2: 'm', z: '你幾歲？我七歲。', n: 'How old ➜ 回答數字（不是名字）' },
   { h: '謝謝 ➜ 不客氣', pic: '🎁', en: 'Thank you.', en2: "You're welcome.", vs: 1, v2: 'm', z: '謝謝你。不客氣。', n: 'You’re welcome. ＝ 不客氣' },
   { h: '很高興認識你', pic: '🤝', en: 'Nice to meet you.', en2: 'Nice to meet you, too.', vs: 1, v2: 'm', z: '很高興認識你。我也很高興認識你。', n: '回答要加 too（也）' },
-  { h: '我可以幫你', pic: '🐶 ❓', en: "I can't find my dog.", en2: 'I can help you.', vs: 1, v2: 'm', z: '我找不到我的狗。我可以幫你。', n: 'can’t ＝ 不能；can ＝ 可以' }],
+  { h: '我可以幫你', pic: '🐶 ❓', en: "I can't find my dog.", en2: 'I can help you.', vs: 1, v2: 'm', z: '我找不到我的狗。我可以幫你。', n: 'can’t ＝ 不能；can ＝ 可以'  },
+  { h: '別答錯：問名字', pic: NB('Ruby'), en: "What's your name?", en2: "I'm Ruby.", mis: 'I’m eight.', misz: '我八歲。', misw: '🎂 這是 幾歲，不是 名字！', z: '你叫什麼名字？我是 Ruby。', n: '聽到 name 🏷️ ➜ 說 名字' },
+  { h: '別答錯：問幾歲', pic: '🎂', en: 'How old are you?', en2: "I'm eight.", mis: 'I’m Ruby.', misz: '我是 Ruby。', misw: '🏷️ 這是 名字，不是 幾歲！', z: '你幾歲？我八歲。', n: '聽到 How old 🎂 ➜ 說 數字'}],
  qz: [
   { at: 2, ty: 'mc', q: 'Thank you.', o: ["You're welcome.", 'Thank you, too.', 'Good morning.', "I'm welcome."], en: "You're welcome.", v: 'm', z: '不客氣。', why: '別人說謝謝 ➜ You’re welcome.' },
   { at: 1, ty: 'mc', q: 'How old are you?', o: ["I'm eight.", "I'm Oscar.", "You're eight.", 'Good morning.'], en: "I'm eight.", v: 'm', z: '我八歲。', why: '問幾歲 ➜ 回答數字' },

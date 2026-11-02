@@ -296,9 +296,9 @@ var DUO=null,DUOM=0,XQUIET=0;
 function duoRow(){return '<div class="duo"><span>這台 平板：</span><button data-duo="0" class="'+(DUOM?'':'on')+'">🙋 一個人</button><button data-duo="1" class="'+(DUOM?'on':'')+'">👥 兩個人 輪流</button></div>'}
 function duoNm(id){id=String(id||'');return id.slice(0,3)+' 班 '+(+id.slice(3))+' 號'}
 function duoMsg(h,ms,done){var b=$('#duob');b.innerHTML=h;b.classList.add('on');setTimeout(function(){b.classList.remove('on');if(done)done()},window.__NOGO?50:ms)}
-function duoStart(N){var go=function(){var A=SCID;duoMsg('<b>👥 第 2 個 人</b>請 登入（打 自己 的 5 碼＋密碼）',1500,function(){scLogin(function(){SCH.close();var B=SCID;SCID=A;scPut('id_g4',A);scPut('last',A);scBar();
+function duoStart(N){var go=function(){var A=SCID;DUOI.login(A,function(){duoMsg('<b>👥 第 2 個 人</b>請 登入（打 自己 的 5 碼＋密碼）',1500,function(){scLogin(function(){SCH.close();var B=SCID;SCID=A;scPut('id_g4',A);scPut('last',A);scBar();
      if(!B||B===A){duoMsg('<b>⚠️ 兩個 人 要 不一樣</b>第 2 個 人 請 打 自己 的 號碼',2200);return}
-     duoRun(A,B,N)})})};
+     duoRun(A,B,N)})})})};   /* 第四十次 4-(2)：先 演 DUOI.login（誰 先 登入、平板 交給 第 2 個 人）*/
  if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();go()});return}go()}
 /* 2026-11-01 第三十八次 第 5 點：先 秒懂 說明（g3mid/_duo.js）➜ ☑ 我懂了 ➜ 第 1 次 號碼 小 的 先、第 2 次 號碼 大 的 先 …；〔🔁 再 挑戰 一次〕不用 再 登入 */
 function duoRun(A,B,N){var F=DUOI.first(A,B);DUOI.intro(A,B,F,function(){XQUIET=1;SCID=A;startX(N);var RA=R;SCID=B;startX(N);var RB=R;XQUIET=0;var c=F===A?0:1;SCID=[A,B][c];R=[RA,RB][c];
@@ -375,6 +375,7 @@ function frame(body){var g=R.g,c=COL[g.id];
 function show(){if(R.x){R.g=R.gs[R.k];var lv=R.lvOf[R.k];if(lv!==R.lv){R.lv=lv;rvaGo(R.g.id,function(){lvSplash(show)});return}   /* 2026-10-31 第三十六次 第 1 點：每 換 一關 先 演 秒懂 複習 動畫 */}R.shownK=R.k;var g=R.g,q=g.B[R.idx[R.k]];R.q=q;R.clickW=null;R.qi=R.idx[R.k];R.lock=false;R.ts=Date.now();
   R.ord=shuf(q.o.map(function(_,i){return i}));var id=g.id,h='';
   if(id==='m8'&&!R.rd[q.pas]){readScene(q);return}
+  if(id==='dc'&&q.u!==R.dcu&&CR&&CR.cfg&&!window.__RVLIVE)R.dcu=q.u;   /* 2026-11-02 第四十次 第 4-(5) 點：⚡ 現場任務 不 演 解碼 教學、解碼 秘笈 */
   if(id==='dc'&&q.u!==R.dcu){var tut=R.dcu==null;R.dcu=q.u;$('#app').innerHTML='';var les=function(){decLesson(LES[R.bk==='B'?'B':'A'][q.u],show)};if(tut&&!window.__NOTUT)decTut(DTUT,les);else les();return}   /* 2026-10-30 第 9-(5)：這一場 第一題 解碼 前 ＝ 先 教 怎麼 拖、中英 順序 */   /* 🔓 每一課 第一題 前 ＝ 秒懂 動畫 */
   var HEAR='<button class="hear" id="hear" data-x="hear">🔊 再 聽 一次</button>';
   /* 字首音 氣球、聲音 雙胞胎（老師 6-(1)(2)：聽不清楚）：〔🔊 再 聽 一次〕＋〔🐢 慢慢 唸〕

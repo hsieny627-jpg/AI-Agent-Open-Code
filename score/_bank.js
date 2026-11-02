@@ -97,6 +97,8 @@ Object.keys(SITES).forEach(dir => {
   G3.GAMES.forEach(g => put('g3gm_g3m-' + g.id, { name: '🏫 三年級 複習｜' + g.ic + ' ' + g.nm, qs: g.B.map(c => ({ k: 'g', kn: '🏫 三年級 複習', q: txt(qOf(g.id, c)), o: oOf(g.id, c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) }));
   /* 2026-10-26 第二十九次 第 1 點：🏫 課堂複習 1、2、3（g3gm_c1-q1…；只在 ⚡ 現場任務 開）*/
   G3.CSETS.forEach(x => G3.GAMES.forEach(g => put('g3gm_' + x[0] + '-' + g.id, { name: '🏫 ' + x[1].replace('三年級 ', '') + '｜' + g.ic + ' ' + g.nm, qs: G3.CB[x[0]][g.id].map(c => ({ k: 'g', kn: '🏫 三年級 複習', q: txt(qOf(g.id, c)), o: oOf(g.id, c).map(y => txt(String(y))), h: txt(c.zh || ''), ae: c.en || '' })) })));
+  /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（g3gm_lw-q5；題庫 ＝ g3mid/_data.js LW）*/
+  put('g3gm_lw-q5', { name: '✍️ 字母 書寫｜✍️ 字母 書寫', qs: G3.LW.map(c => ({ k: 'g', kn: '✍️ 字母 書寫', q: txt(qOf('q5', c)), o: oOf('q5', c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) });
   /* 2026-10-26 第二十八次：📝 25／50 題 挑戰（g3gm_g3m-x25／x50）：題庫 ＝ 10 種 遊戲 的 挑戰 題庫 照 順序 接起來（跟 網頁 的 XALL 一樣）*/
   /* 2026-10-30 第三十四次 第 1～4 點：🏠 25 題 闖關（回家，g3gm_g3m-h25）＝ 題庫 A 的 全新 題（第幾題 ＝ 跟 25 題 挑戰 一樣 照 XORD）*/
   put('g3gm_g3m-h25', { name: '🏫 三年級 複習｜🏠 25 題 闖關', qs: G3.XORD.map(([id, j]) => { const g = G3.GAMES.filter(x => x.id === id)[0] || { ic: '🔓' }, c = G3.XB[id][j]; return { k: 'g', kn: '🏫 三年級 複習', q: txt(g.ic + ' ' + qOf(id, c)), o: oOf(id, c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' }; }) });

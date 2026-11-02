@@ -109,7 +109,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
           n++; if (!f.on || !/gradient/.test(f.bg)) E.push(tag + ' ' + g.id + '：答錯沒有綠底解說');
           n++; if (!f.gw && !f.ltr) E.push(tag + ' ' + g.id + '：解說沒有逐字中文');
           n++; if (f.emp.length) E.push(tag + ' ' + g.id + '：這些字下面沒有中文 ' + f.emp.join(' '));
-          n++; if (f.tr.replace(/\s/g, '').indexOf(String(f.zh).replace(/\s/g, '')) < 0)   /* 第三十八次：整句 中文 詞 和 詞 空 一格 */ E.push(tag + ' ' + g.id + '：沒有整句翻譯');
+          n++; if (f.tr.replace(/\s/g, '').replace('你的名字是什麼？（', '').replace('）', '').indexOf(String(f.zh).replace(/\s/g, '')) < 0)   /* 第三十八次：整句 中文 詞 和 詞 空 一格 */ E.push(tag + ' ' + g.id + '：沒有整句翻譯');
           n++; if (f.nx && g.id !== 'q9') E.push(tag + ' ' + g.id + '：還沒唸完 3 次就有〔▶ 下一題〕');
           n++; if (Math.abs(f.t - t1) > .05) E.push(tag + ' ' + g.id + '：解說的時候倒數還在走');
           n++; if (f.big < 30) E.push(tag + ' ' + g.id + '：解說英文太小 ' + f.big);

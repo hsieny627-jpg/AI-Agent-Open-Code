@@ -12,7 +12,10 @@ const ANI = [
   { h: '問是誰', pic: '❓👦', en: "Who's he?", z: '他是誰？', n: '英文 Who（誰）在最前面；中文「誰」在最後面' },
   { h: '縮寫', pic: '✂️', en: 'Who is', en2: "Who's", z: 'Who is ＝ Who’s（誰是）', n: '’s ＝ is（是）' },
   { h: '說是誰', pic: '👨', en: "He's my father.", v: 'm', z: '他是我的爸爸。', n: 'He’s ＝ He is（他是）' },
-  { h: '不是', pic: '🙅‍♀️', en: "No, she isn't.", z: '不，她不是。', n: 'isn’t ＝ is not（不是）' }],
+  { h: '不是', pic: '🙅‍♀️', en: "No, she isn't.", z: '不，她不是。', n: 'isn’t ＝ is not（不是）'  },
+  /* 2026-11-02 第四十次 第 4-(3) 點：迷思 概念 */
+  { h: '問是誰 ➜ 回答家人', pic: '❓👦', en: "Who's he?", en2: "He's my uncle.", v2: 'm', mis: 'He’s a cook.', misz: '他是一位廚師。', misw: '👨‍🍳 這是 職業，Who 問 他 是 誰（家人）！', z: '他是誰？他是我的叔叔。', n: 'Who ＝ 誰 ➜ 回答 他 是 誰（my ＋ 家人）' },
+  { h: '問是不是 ➜ 回答 Yes／No', pic: '👩‍⚕️ ❓', en: 'Is she a nurse?', en2: 'Yes, she is.', mis: 'She’s my aunt.', misz: '她是我的阿姨。', misw: '❓ Is 問「是不是」➜ 先 說 Yes 或 No！', z: '她是一位護理師嗎？是的，她是。', n: 'Is…? ➜ Yes, she is.／No, she isn’t.'}],
  qz: [
   { at: 0, ty: 'dec', en: "Who's he?", x: ['她', '什麼'], z: '他是誰？', why: '中文說「他是誰」；英文先說 Who（誰）' },
   { at: 2, ty: 'dec', en: "She's my mother.", x: ['他', '你的'], z: '她是我的媽媽。', why: 'She ＝ 她、my ＝ 我的' },

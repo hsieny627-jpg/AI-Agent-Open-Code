@@ -16,6 +16,7 @@ const E = []; let n = 0;
       window.__NOGO = 1; window.__NORVA = 1; window.__NOWB = 1; window.__DCLK = 0.15; window.__DCLMIN = 0; window.__els = new Set(); window.__src = [];
       HTMLMediaElement.prototype.play = function () { const a = this; window.__els.add(a); window.__src.push(a.src.slice(0, 30)); setTimeout(() => a.onended && a.onended(), 150); return Promise.resolve(); }; HTMLMediaElement.prototype.pause = function () {};
       Object.defineProperty(HTMLMediaElement.prototype, 'duration', { get() { return 0.15; } }); }, id);
+    await ctx.addInitScript(() => { window.__RVLIVE = 1; });   /* 第四十次：現場任務 不 演 動畫 ➜ 量測 用 __RVLIVE 照樣 演 教學 */
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto('file://' + path.join(__dirname, '..', site, 'index.html')); await p.waitForTimeout(500);
     /* (1) 第一次 手指 碰 畫面 ＝ 解鎖（放 一段 沒 聲音 的 wav）*/
@@ -26,7 +27,7 @@ const E = []; let n = 0;
     await p.click(site === 'midterm' ? '.xrow .xb[data-xn="25"]' : '[data-x="25"]'); await p.waitForTimeout(400);
     /* (5) 教學 */
     n++; const t0 = await p.evaluate(() => ({ on: document.getElementById('dcl').classList.contains('on'), t: document.querySelector('#dcl .dlt') && document.querySelector('#dcl .dlt').textContent, sk: !!document.getElementById('dlsk'), dots: document.querySelectorAll('#dcl .dlp i').length, run: typeof TM !== 'undefined' ? TM.run : 0 }));
-    if (!t0.on || !/怎麼 玩/.test(t0.t) || t0.sk || t0.dots !== 3) E.push(tag + ' 第一次 沒有 先 教學（或 可以 跳過）：' + JSON.stringify(t0));
+    if (!t0.on || !/怎麼 玩/.test(t0.t) || t0.sk || t0.dots !== 2) E.push(tag + ' 第一次 沒有 先 教學（或 可以 跳過）：' + JSON.stringify(t0));
     /* ① 手 示範 拖 */
     await p.waitForFunction(() => /拖 到/.test((document.getElementById('dtcap') || {}).textContent || ''), null, { timeout: 8000 }).catch(() => E.push(tag + ' 教學 ① 沒有「拖 到 英文 字 正下方」'));
     n++; await p.waitForFunction(() => document.querySelector('#dthand.on'), null, { timeout: 8000 }).catch(() => E.push(tag + ' 教學 ① 沒有 手指 示範'));
@@ -36,18 +37,10 @@ const E = []; let n = 0;
     n++; const o2 = await p.evaluate(() => [...document.querySelectorAll('#dcl .dcs')].map(x => x.textContent).join(' '));
     const D_ORD = D.DTUT.ord.t.map(x => x[1]).join(' ');
     if (o2 !== D_ORD) E.push(tag + ' 教學 ② 中文 沒有 飛到 自己 的 英文 字 下面：' + o2);
-    /* ③ 小 測驗：第一題 故意 錯 ➜ 看 正確 答案 再 做；之後 真的 用 滑鼠 拖 */
-    await p.waitForFunction(() => /小 測驗 1/.test(document.getElementById('dtcap').textContent), null, { timeout: 20000 }).catch(() => E.push(tag + ' 沒有 小 測驗'));
-    const drag = async (want) => { const bx = await p.$$('#dcl .dcs'); for (let i = 0; i < bx.length; i++) { const t = await p.evaluateHandle(w => [...document.querySelectorAll('#dcl .dctl:not(.used)')].find(b => b.textContent === w), want[i]);
-        const a = await t.asElement().boundingBox(), b = await bx[i].boundingBox(); await p.mouse.move(a.x + a.width / 2, a.y + a.height / 2); await p.mouse.down(); await p.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 6 }); await p.mouse.up(); await p.waitForTimeout(80); } };
-    const Q = D.DTUT.quiz;
-    await drag(Q[0].t.map(x => x[1]).reverse()); await p.waitForTimeout(1300); n++;
-    const w1 = await p.evaluate(() => ({ cap: document.getElementById('dtcap').textContent, ok: document.querySelectorAll('#dcl .dcs.ok').length }));
-    if (!/再 做 一次/.test(w1.cap) || w1.ok !== Q[0].t.length) E.push(tag + ' 小 測驗 答錯 沒有 看 正確 答案＋再 做 一次：' + JSON.stringify(w1));
-    for (let k = 0; k < Q.length; k++) { await p.waitForFunction(k => new RegExp('小 測驗 ' + (k + 1)).test(document.getElementById('dtcap').textContent) && document.querySelectorAll('#dcl .dcs:not(.fill)').length, k, { timeout: 15000 }).catch(() => {});
-      await drag(Q[k].t.map(x => x[1])); await p.waitForTimeout(400); }
-    n++; await p.waitForFunction(() => /學會/.test(document.getElementById('dcl').textContent), null, { timeout: 15000 }).catch(() => E.push(tag + ' 小 測驗 做對 沒有「✅ 你 學會 了」'));
-    n++; await p.waitForFunction(() => /解碼 秘笈/.test(document.getElementById('dcl').textContent), null, { timeout: 15000 }).catch(() => E.push(tag + ' 教學 完 沒有 接 秒懂 動畫'));
+    /* ③ 小 測驗：2026-11-02 第四十次 第 1 點 刪掉 ➜ 教學 只 有 2 步（2 個 點）、沒有「小 測驗」，接著 就是 秒懂 動畫 */
+    n++; { const nd = await p.evaluate(() => document.querySelectorAll('#dcl .dlp i').length); if (nd !== 2 && !(await p.evaluate(() => /解碼 秘笈/.test(document.getElementById('dcl').textContent)))) E.push(tag + ' 教學 不是 2 步：' + nd); }
+    n++; await p.waitForFunction(() => /解碼 秘笈/.test(document.getElementById('dcl').textContent), null, { timeout: 30000 }).catch(() => E.push(tag + ' 教學 完 沒有 接 秒懂 動畫'));
+    n++; if (await p.evaluate(() => /小 測驗/.test(document.getElementById('dcl').textContent))) E.push(tag + ' 還有 小 測驗');
     /* (2)(3)(6) 三年級：縮寫／省略 等式 */
     if (site === 'g3mid') for (const u of [1, 2]) { n++;
       /* 直接 畫 一次 再 量（不等 動畫）*/

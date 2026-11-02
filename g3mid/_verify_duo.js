@@ -11,6 +11,9 @@ const p=await ctx.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.messag
 await p.evaluate((SET)=>{LDB.set=LDB.must=LDB.patch=()=>Promise.resolve(true);CR={room:SET[0]==='x'&&false?'':'0'+(location.pathname.indexOf('g3mid')>=0?'304':'402'),t:1,cfg:{on:1,t:1,set:SET,gs:[],m:'self'},acc:{},n:0,ok:0,q:-9,rd:{}};typeof hub==='function'?hub():lobby()},SET);
 await p.waitForTimeout(300);await p.click('[data-duo="1"]');await p.waitForTimeout(100);
 await p.click(SITE==='g3mid'?'#xrow .xb[data-x]:not([style*="none"])':'.xrow .xb');await p.waitForTimeout(2000);
+/* 2026-11-02 第四十次 4-(2)：先 演 DUOI.login（誰 先 登入、平板 交給 第 2 個 人）6 步 ➜ ☑ 我懂了 ➜〔▶ 換 第 2 個 人 登入〕*/
+n++;{const lg=await p.evaluate(()=>{const o=document.getElementById('duoi');return {on:o&&o.classList.contains('on'),n:o?o.querySelectorAll('.dur').length:0,t:o?o.innerText:''}});if(!lg.on||lg.n!==6||!/猜拳/.test(lg.t))E.push(SITE+' 第 2 個 人 登入 前 沒有 6 步 說明 '+JSON.stringify(lg).slice(0,160))}
+await p.check('#duic').catch(()=>{});await p.click('#duigo').catch(()=>{});await p.waitForTimeout(2000);
 const id2=SITE==='g3mid'?'30402':'40202';for(const k of id2.split('').concat(['ok'])){await p.click('[data-k="'+k+'"]').catch(()=>{});await p.waitForTimeout(120)}
 await p.waitForTimeout(1500);
 /* 2026-11-01 第三十八次 第 5 點：秒懂 說明 ➜ ☑ 我懂了 ➜〔▶ 開始〕；第 1 次 號碼 小 的 先 */

@@ -12,12 +12,14 @@ const r = pack({ texts: D.SAY, dir: path.join(__dirname, 'audio'), varName: 'ENA
 const s = pack({ texts: D.SAYS, dir: path.join(__dirname, 'audio/s'), varName: 'ENAUDF', speed: 0.85 });
 /* 2026-10-26 第二十八次：句子（I’m seventeen.）也 用 男聲 慢 ➜ 鑰匙 要 跟 網頁 的 akey 一樣（’ ➜ '、小寫）*/
 const AK = w => String(w).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…＿_　]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+/* 2026-11-02 第四十次（老師 C46 ① A）：p、t 補 吹氣 的 字首音 單字（tools/bpdt_ab.py 做 的 A 版，試聽頁 listen/2026-11-01_C46/）＝ 固定 用 這個 檔，重跑 不 蓋掉 */
+const ASPA = { pen: '60293d77ab69.mp3', pig: '835082d3ca29.mp3', ten: '8d130b363879.mp3', tiger: 'b5506ef96bea.mp3' };
 function slowM(dir, varName, base, alt) {
   const out = path.join(__dirname, 'audio', dir), man = {}, need = {};
   fs.mkdirSync(out, { recursive: true });
   /* alt 的 值：數字 ＝ 男聲 換 速度；'f0.9' ＝ 換 女聲 0.9（twelve、twenty 的 tw 男聲 慢 唸 電腦 一直 聽成 wealth、wenty） */
   D.SAYM.forEach(w => { const sp = String(alt[w] || base), nm = crypto.createHash('sha1').update('hfc_m|' + sp + '|' + w).digest('hex').slice(0, 12) + '.mp3';
-    man[AK(w)] = [nm, +sp.replace(/^f/, '')]; if (!fs.existsSync(path.join(out, nm))) (need[sp] = need[sp] || []).push(w); });
+    man[AK(w)] = [nm, +sp.replace(/^f/, '')]; if (dir === 'm1' && ASPA[w]) { man[AK(w)][0] = ASPA[w]; return; } if (!fs.existsSync(path.join(out, nm))) (need[sp] = need[sp] || []).push(w); });
   Object.keys(need).forEach(sp => { const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'mt-'));
     const fv = /^f/.test(sp), pf = fv ? '' : 'm:';
     pack({ texts: need[sp].map(w => pf + w), dir: tmp, varName: 'X', speed: +sp.replace(/^f/, '') });
