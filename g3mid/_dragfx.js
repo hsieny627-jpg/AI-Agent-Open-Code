@@ -98,6 +98,7 @@ const CSS = `
 .dfxrc i{font-style:normal;font-size:clamp(11px,1.5vh,14px);color:#fff;background:rgba(0,0,0,.5);border-radius:8px;padding:0 4px;white-space:nowrap}
 .dfxrc .me.hop .f{animation:dfxHop .4s}@keyframes dfxHop{40%{transform:scaleX(-1) translateY(-10px)}}
 .dfxrc .fl{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:clamp(26px,3.6vh,36px)}
+.dcbox.dz1 .dfxrc .trk{height:44px}.dcbox.dz2 .dfxrc .lab,.dcbox.dz3 .dfxrc .lab,.dcbox.dz4 .dfxrc .lab{font-size:15px}.dcbox.dz2 .dfxrc .trk,.dcbox.dz3 .dfxrc .trk,.dcbox.dz4 .dfxrc .trk{height:36px;margin-top:2px}.dcbox.dz2 .dfxrc i,.dcbox.dz3 .dfxrc i,.dcbox.dz4 .dfxrc i{display:none}.dcbox.dz3 .dfxban,.dcbox.dz4 .dfxban{font-size:17px;margin:0}.dcbox.dz4 .dfxban .i{font-size:1.2em}.dcbox.dz4 .dfxrc .lab{display:none}
 .dfxrc.won .trk{box-shadow:0 0 0 4px #FFD54A,0 0 24px #FFD54A}.dfxrc.won .lab{color:#FFD54A;font-size:clamp(20px,2.8vh,28px)}.dfxrc.ghw .gh .f{animation:dfxBob .8s infinite}
 /* 🎁 難題 寶箱（全對 以後 才 掉）*/
 .dfxch2{position:fixed;inset:0;z-index:9300;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;font-family:inherit}
