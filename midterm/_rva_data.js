@@ -222,6 +222,10 @@ const BAN = /\b(Amy|Ken|Mia|Tom|Frank|Lisa|Peter|Grace|Owen|Jason|Emily|Nora|Chl
 const R = require('../g3mid/_rva_lib.js').mk(GL, PH, BAN, null)(ANI);
 const EXW = ['bed', 'tod', 'pit', 'dan', 'sister', 'father', 'teacher', 'nurse', 'cook', 'twenty'];
 R.list.forEach(a => a.qz.forEach((q, i) => { if ((a.id === 'm1' || a.id === 'm7') && EXW.indexOf(q.en) >= 0) R.err.push(a.nm + ' 測驗 ' + (i + 1) + '：用了 考卷 的 字 ' + q.en); }));
+/* 2026-11-03 第四十一次（老師 回答 建議 1 第 2 點）：從 第二次 看 開始，每 一部 只 留「最 重要、最 關鍵、最 容易 錯」的 頁（key ＝ 第幾頁，0 開始）
+   挑法：迷思 頁（❌）、容易 搞混 的 一對（b／d、He’s／His、13／30…）、規則 最 常 錯 的 那一條 */
+const KEY = { dc: [1, 4, 5], m1: [0, 2], m2: [2, 3], m3: [1, 2], m4: [1, 2], m5: [1, 2], m6: [1, 3], m8: [1, 2], m9: [2, 3], m11: [2, 3], m7: [0, 1], m10: [2, 3], m12: [0, 1] };
+R.list.forEach(a => { const k = KEY[a.id]; if (!k) R.err.push('第二次 看 的 重點 頁 沒有 設：' + a.id); else { if (k.some(i => i < 0 || i >= a.sc.length)) R.err.push('重點 頁 超出：' + a.id); a.key = k; } });
 /* 新 25／新 50 的 6 種 新 遊戲 ➜ 一樣 重點 的 那一部 */
 R.NMAP = { n1: 'm1', n2: 'm3', n3: 'm3', n4: 'm6', n5: 'm7', n6: 'm8' };
 module.exports = R;

@@ -419,5 +419,21 @@ var LW = (function () { var L = [], ex = {}; EXAM_E.forEach(function (p) { var a
   'abcdefghijklmnopqrstuvwxyz'.split('').forEach(function (c) { var C = c.toUpperCase(); if (ex[c] || ex[C]) return;
     L.push({ show: C, want: c, say: c, en: c, zh: C + ' 的 小寫 是 ' + c + '。', sim: 0 }); L.push({ show: c, want: C, say: c, en: C, zh: c + ' 的 大寫 是 ' + C + '。', sim: 0 }); });
   L.forEach(function (q) { if (EXAM_E.indexOf(q.show + '>' + q.want) >= 0) throw new Error('✍️ 字母 書寫 洩題：' + q.show + '>' + q.want); }); return L; })();
-module.exports = { LW: LW, DTUT: DTUT, LES: LES, SIL: require('../G3 - L1 + L2/_data.js').SIL, XB2: XB2, XORD: XORD, XORD2: XORD2, XN0: XN0, CB: CB, CSETS: CD.SETS, CZH: CZH, ORD: ORD, XB: XB, SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
+/* 2026-11-03 第四十一次（老師 回答 第四十次「我的 判斷」4）：
+   ① ⚡ 現場任務 ✍️ 字母 書寫（set lw）＝「50% 可以 跟 期中考 相同」➜ LW0：5 題 ＝ 考卷 原題 方向（G ➜ g、看 e ➜ 寫 E…，EXAM_E 一模一樣）＋ 5 題 其他 字母
+   ② 在家複習 的 ✍️ 字母 書寫（g3mid/lw.html，set lwh）＝「50% 跟 期中考 相似」➜ 照舊 用 LW（方向 反過來）
+   ③ 第 7-B 點 🔊 聽 字母 寫（set la）：聽 字母 名字 ➜ 寫 大寫 或 小寫（52 題：26 個 字母 ✕ 大／小）
+   ④ 第 7-C 點 🔊 聽 字首音 寫（set lf）：聽 單字 ➜ 寫 第一個 字母 的 大寫 或 小寫。字 ＝ 課本 字母 單字（PH），拿掉 考卷 D 大題 的 5 個 字（嚴禁 洩題）、
+      拿掉 第一個 聲音 會 有 兩種 寫法 的（c／k／q、x、母音 開頭）＝ 聽 到 聲音 只 有 一個 答案 */
+var LW0 = (function () { var L = []; EXAM_E.forEach(function (p) { var a = p.split('>'); L.push({ show: a[0], want: a[1], say: a[1].toLowerCase(), en: a[1], zh: a[0] + ' 的 ' + (a[1] === a[1].toUpperCase() ? '大寫' : '小寫') + ' 是 ' + a[1] + '。', sim: 2 }); });
+  return LW.concat(L); })();   /* 接 在 LW 後面（昨天 的 成績 題號 照樣 對得上）；sim 2 ＝ 考卷 原題 方向 */
+var LA = []; 'abcdefghijklmnopqrstuvwxyz'.split('').forEach(function (c) { var C = c.toUpperCase();
+  LA.push({ show: C, want: C, say: c, en: C, lis: 1, zh: '聽到 ' + C + '，大寫 是 ' + C + '。' }); LA.push({ show: c, want: c, say: c, en: c, lis: 1, zh: '聽到 ' + C + '，小寫 是 ' + c + '。' }); });
+var LFW = PH.filter(function (w) { return EXAM_D.indexOf(w[0]) < 0 && !/^[ckqxaeiou]/.test(w[0]); });
+var LF = []; LFW.forEach(function (w) { var c = w[0][0], C = c.toUpperCase();
+  LF.push({ show: c, want: C, say: w[0], en: w[0], ic: w[2], wz: w[1], lis: 1, lisw: 1, zh: w[0] + ' ＝ ' + w[1] + '，第一個 字母 的 大寫 是 ' + C + '。' });
+  LF.push({ show: c, want: c, say: w[0], en: w[0], ic: w[2], wz: w[1], lis: 1, lisw: 1, zh: w[0] + ' ＝ ' + w[1] + '，第一個 字母 的 小寫 是 ' + c + '。' }); });
+if (LF.length < 20) throw new Error('🔊 聽 字首音 寫：字 太 少 ' + LF.length);
+var LWP = { lw: LW0, lwh: LW, la: LA, lf: LF };
+module.exports = { LWP: LWP, LW: LW, DTUT: DTUT, LES: LES, SIL: require('../G3 - L1 + L2/_data.js').SIL, XB2: XB2, XORD: XORD, XORD2: XORD2, XN0: XN0, CB: CB, CSETS: CD.SETS, CZH: CZH, ORD: ORD, XB: XB, SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
   EXAM_A: EXAM_A, EXAM_D: EXAM_D, EXAM_E: EXAM_E };

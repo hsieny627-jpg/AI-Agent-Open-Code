@@ -20,7 +20,7 @@ const AK = t => String(t).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…�
     const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } });
     await ctx.route(/^https?:\/\//, r => r.abort());
     await ctx.route(/script\.test/, r => { const b = r.request().postData() || ''; if (b) sent.push(b); r.fulfill({ contentType: 'application/json', body: '{"ok":true,"dup":[]}' }); });
-    await ctx.addInitScript(([id]) => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} }); window.__NOUNLOCK = 1; window.__RVQ = 1; /* 第三十九次：突擊 題 暫時 關掉 ➜ 量 引擎 時 強制 打開 */ window.__NOGO = 1; window.__NOWB = 1; window.__NOTUT = 1; window.__DCLK = .05;
+    await ctx.addInitScript(([id]) => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} }); window.__NOUNLOCK = 1; window.__RVAUTO = 1; /* 第四十一次：〔▶ 進入 下一頁〕在 _verify_41.js 量；這裡 自動 換頁 量 其他 */ window.__RVQ = 1; /* 第三十九次：突擊 題 暫時 關掉 ➜ 量 引擎 時 強制 打開 */ window.__NOGO = 1; window.__NOWB = 1; window.__NOTUT = 1; window.__DCLK = .05;
       window.__PLAYED = []; HTMLMediaElement.prototype.play = function () { const a = this; window.__PLAYED.push(a.src); setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); };
       HTMLMediaElement.prototype.pause = function () {};
       localStorage.setItem('score_last', '"' + id + '"'); localStorage.setItem('score_id_g' + id[0], '"' + id + '"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', id); sessionStorage.setItem('score_pks_' + id, 'tk'); }, [id]);
@@ -53,7 +53,7 @@ const AK = t => String(t).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…�
     await p.click('[data-rv="pause"]'); await p.click('[data-rv="slow"]'); ok(await p.evaluate(() => RVA.S.slow), tag + '〔🐢 放慢〕沒 作用'); await p.click('[data-rv="slow"]');
     /* 按鈕 夠 大、在 畫面 裡 */
     const bt = await p.evaluate(() => [].map.call(document.querySelectorAll('#rvc button'), b => { const r = b.getBoundingClientRect(); return [r.height, r.bottom <= innerHeight + 1, parseFloat(getComputedStyle(b).fontSize)]; }));
-    ok(bt.length === 3 && bt.every(x => x[0] >= 52 && x[1] && x[2] >= 18), tag + ' 暫停／放慢／再一次 按鈕 不夠 大 或 跑出 畫面 ' + JSON.stringify(bt));
+    ok(bt.length === 4 && bt.every(x => x[0] >= 52 && x[1] && x[2] >= 18), tag + ' 暫停／放慢／再一次 按鈕 不夠 大 或 跑出 畫面 ' + JSON.stringify(bt));
     /* 唸 2 次 ＋ 唸到 的 格子 亮：等 第一頁 唸完 */
     let saw = 0; for (let i = 0; i < 40; i++) { await p.waitForTimeout(150); const s = await p.evaluate(() => ({ spk: !!document.querySelector('#rvs .rvk.spk'), c: document.querySelectorAll('#rvs .rvcnt i.on').length, q: !!document.querySelector('.rvqz') })); if (s.spk) saw |= 1; if (s.c >= 1) saw |= 2; if (s.c >= 2) saw |= 4; if (s.q) break; }
     ok(saw & 1, tag + ' 唸 的 時候 沒有 一格 放大 變亮'); ok(saw & 2, tag + ' 沒有 唸 第 1 次 的 標記');

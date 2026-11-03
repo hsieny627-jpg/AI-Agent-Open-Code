@@ -53,7 +53,7 @@ const pwState = p => p.evaluate(() => { const c = document.getElementById('scPwC
       await typeP(p, 'ab123456'); await p.click('#scPwK button[data-p="ok"]'); await typeP(p, 'ab123456'); await p.click('#scPwK button[data-p="ok"]'); await p.waitForTimeout(1400);
       /* 2026-10-31 第三十五次 第 12 點：設好 ＝ 一定 先 勾「我為自己的密碼：記憶和負責。」 */
       { const v = await p.evaluate(() => { const b = document.getElementById('scVowB'), l = document.getElementById('scVowL'); return b && l ? { dis: b.disabled, t: l.textContent, id: window.SCID || '', fs: parseFloat(getComputedStyle(l).fontSize), bh: b.getBoundingClientRect().height, ov: document.getElementById('scovb').scrollHeight - document.getElementById('scovb').clientHeight } : null; });
-        ck(tag + ' 設好 密碼 ＝ 先 勾 才 進得去 ' + JSON.stringify(v), v && v.dis && v.t === '我會為自己的密碼記憶和負責。' && !v.id && v.fs >= 24 && v.bh >= 56);
+        ck(tag + ' 設好 密碼 ＝ 先 勾 才 進得去 ' + JSON.stringify(v), v && v.dis && v.t.replace(/^👉/, '') === '我會為自己的密碼記憶和負責。' && !v.id && v.fs >= 24 && v.bh >= 56);
         await p.click('#scVowB', { force: true }).catch(() => {}); await p.waitForTimeout(200); ck(tag + ' 沒 勾 按 也 進不去', !(await p.evaluate(() => window.SCID)));
         await p.click('#scVowL'); await p.click('#scVowB'); await p.waitForTimeout(300);
         /* 2026-11-01 第三十八次 第 4-(3) 點：勾了 按 ➜ 獨立 一頁「你很棒！」*/ ck(tag + ' 勾了 按 ＝「你很棒！」那一頁', await p.evaluate(() => /你很棒！/.test((document.querySelector('.vgood') || {}).textContent || '') && !/謝謝你/.test(document.body.innerText)));

@@ -257,9 +257,14 @@ function akey(s){return String(s).replace(/[’]/g,"'").replace(/[=＝≠➜→�
 function stopSay(){if(typeof decStop==='function')decStop();PD=null;SID++;clearTimeout(ST);if(AU){try{AU.pause()}catch(e){}AU=null}try{speechSynthesis.cancel()}catch(e){}}
 function aud(t,v){var k=akey(t),X,f;if(v==='L')return 'audio/lab/'+t+'.mp3';if(v==='M1'||v==='M2'){X=window[v==='M1'?'ENAUDM':'ENAUDSL']||{};f=X[k];if(f)return 'audio/'+(v==='M1'?'m1/':'m2/')+f[0]}
   X=window.ENAUDF||{};f=X[(v==='m'?'m:':'')+k]||X[k];if(f)return 'audio/s/'+f[0];X=window.ENAUD||{};f=X[k];return f?'audio/'+f[0]:''}
-function say1(t,v,done){var my=SID,f=aud(t,v),fin=function(){if(my===SID&&done)done()};
-  if(f){AU=new Audio(f);AU.onended=fin;AU.onerror=function(){tts(t,fin)};var p=AU.play();if(p&&p.catch)p.catch(function(){tts(t,fin)});return}tts(t,fin)}
-function tts(t,fin){try{var u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.8;u.onend=fin;u.onerror=fin;speechSynthesis.speak(u)}catch(e){setTimeout(fin,800)}}
+/* 2026-11-03 第四十一次 第 4 點（31124、40204 回家 25 題 做到 一半 當掉）：平板 擋掉 聲音（play() 被拒、語音 引擎 不出聲 也 不 回 onend、網路 慢 檔案 卡住）
+   ＝ 以前 一直 等「唸完」➜ 下一題 永遠 不來。現在 每一次 唸 都 有 看門狗：檔案 長度＋2.5 秒、沒有 長度 ＝ 照 字數 估，時間 到 一定 往下 走 */
+function say1(t,v,done){var my=SID,f=aud(t,v),ok=false,wd=0,fin=function(){if(ok)return;ok=true;clearTimeout(wd);if(my===SID&&done)done()},
+  dog=function(ms){clearTimeout(wd);wd=setTimeout(function(){if(my===SID&&AU===a){try{a.pause()}catch(e){}}fin()},ms)},a=null,est=Math.max(2500,String(t).length*110+1800),bk=function(){if(my!==SID||ok)return;tts(t,fin,dog)};
+ if(f){a=AU=new Audio(f);a.onended=fin;a.onerror=bk;a.onloadedmetadata=function(){if(a.duration>0&&isFinite(a.duration))dog(a.duration*1000/(a.playbackRate||1)+2500)};dog(est+4000);
+  var p=a.play();if(p&&p.catch)p.catch(function(e){if(e&&e.name==='AbortError')return;bk()});return}
+ tts(t,fin,dog)}
+function tts(t,fin,dog){if(dog)dog(Math.max(2500,String(t).length*110+1800));try{var u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.8;u.onend=fin;u.onerror=fin;speechSynthesis.speak(u)}catch(e){setTimeout(fin,800)}}
 /* L ＝ [[聲音, 英文], …]；gap ＝ 兩個 之間 停 幾毫秒（聲音 雙胞胎 ＝ 500：老師「唸完 第一個 字 停 0.5 秒」） */
 function sayList(L,done,gap){var pv=PD;stopSay();var cb=pv||done?function(){if(pv)pv();if(done)done()}:null;PD=cb;var i=0,my=SID;
   (function nx(){if(my!==SID)return;if(i>=L.length){PD=null;if(cb)cb();return}var x=L[i++];say1(x[1],x[0],function(){ST=setTimeout(nx,x[2]||gap||450)})})()}

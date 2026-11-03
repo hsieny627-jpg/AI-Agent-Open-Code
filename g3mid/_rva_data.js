@@ -219,4 +219,8 @@ const R = require('./_rva_lib.js').mk(GL, PH, BAN, null)(ANI);
 R.list.forEach(a => a.qz.forEach((q, i) => { const w = a.nm + ' 測驗 ' + (i + 1);
   if ((a.id === 'q1' || a.id === 'q4') && (D.EXAM_A[q.en] || D.EXAM_D.indexOf(q.en) >= 0)) R.err.push(w + '：用了 考卷 的 字 ' + q.en);
   if (a.id === 'q5') D.EXAM_E.forEach(p => { const [x, y] = p.split('>'); if ((q.q || '').indexOf(x + ' ➜') === 0 && q.o[0] === y) R.err.push(w + '：考卷 的 魔鏡 ' + p); }); }));
+/* 2026-11-03 第四十一次（老師 回答 建議 1 第 2 點）：從 第二次 看 開始，每 一部 只 留「最 重要、最 關鍵、最 容易 錯」的 頁（key ＝ 第幾頁，0 開始）
+   挑法：迷思 頁（❌）、容易 搞混 的 一對（b／d、He’s／His、13／30…）、規則 最 常 錯 的 那一條 */
+const KEY = { dc: [1, 4, 5], q1: [1, 2], q2: [2, 3], q3: [1, 2], q4: [1, 3], q5: [1, 3, 5, 9], q6: [1, 3], q7: [1, 2], q8: [5, 6], q9: [2, 3], q10: [1, 2, 3] };
+R.list.forEach(a => { const k = KEY[a.id]; if (!k) R.err.push('第二次 看 的 重點 頁 沒有 設：' + a.id); else { if (k.some(i => i < 0 || i >= a.sc.length)) R.err.push('重點 頁 超出：' + a.id); a.key = k; } });
 module.exports = R;

@@ -16,7 +16,7 @@ function dset(p, v, patch) { const S = seg(p); let o = DB; for (let i = 0; i < S
 const POSTS = [];
 async function ctxOf(br, vp, G) { const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } });
   await ctx.route(/firebaseio\.com|firebasedatabase\.app|script\.google\.com/, r => { E.push('想 連 真的：' + r.request().url().slice(0, 50)); r.abort(); });
-  await ctx.addInitScript(u => { window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__NOWB = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => u, set: () => {}, configurable: true }); Object.defineProperty(window, 'LIVE_DB', { get: () => 'https://fake.test', set: () => {}, configurable: true });
+  await ctx.addInitScript(u => { window.__SCNOJIT = 1; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__NOWB = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => u, set: () => {}, configurable: true }); Object.defineProperty(window, 'LIVE_DB', { get: () => 'https://fake.test', set: () => {}, configurable: true });
     window.__NOGO = 1; window.__NORVA = 1; HTMLMediaElement.prototype.play = function () { const a = this; setTimeout(() => a.onended && a.onended(), 40); return Promise.resolve(); }; }, URL0);
   await ctx.route(/fake\.test/, async r => { const u = new URL(r.request().url()), m = r.request().method(); let b = null;
     if (m === 'GET') b = dget(u.pathname); else { const v = m === 'DELETE' ? null : JSON.parse(r.request().postData() || 'null'); dset(u.pathname, v, m === 'PATCH'); b = v; }
@@ -42,7 +42,7 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
     await h.click('#crback'); await h.waitForTimeout(150);
     await h.click('[data-sc="304"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.waitForTimeout(200);
     n++; const s0 = await h.evaluate(() => ({ scr: H.scr, sets: [].map.call(document.querySelectorAll('[data-crs]'), b => b.textContent), gs: [].map.call(document.querySelectorAll('[data-crg]'), b => b.textContent), sm: [].filter.call(document.querySelectorAll('#hcr button'), b => b.getBoundingClientRect().height < 48 || parseFloat(getComputedStyle(b).fontSize) < 18).length }));
-    if (s0.scr !== 'hcr' || s0.sets.length !== 9 || !/25 題 挑戰\|📝 50 題 挑戰\|📝 新 25 題 挑戰\|📝 新 50 題 挑戰\|✍️ 字母 書寫$/.test(s0.sets.join('|')) || !/課堂複習 1/.test(s0.sets.join()) || s0.gs.length !== 10 || !/第 9 關.*夾娃娃/.test(s0.gs[8]) || !/第 10 關.*小精靈/.test(s0.gs[9]) || s0.sm) E.push(tag + ' 課堂複習 設定 畫面 ' + JSON.stringify(s0).slice(0, 300));
+    if (s0.scr !== 'hcr' || s0.sets.length !== 11 || !/25 題 挑戰\|📝 50 題 挑戰\|📝 新 25 題 挑戰\|📝 新 50 題 挑戰\|✍️ 字母 書寫\|🔤 聽 字母 寫\|🐷 聽 字首音 寫$/.test(s0.sets.join('|')) || !/課堂複習 1/.test(s0.sets.join()) || s0.gs.length !== 10 || !/第 9 關.*夾娃娃/.test(s0.gs[8]) || !/第 10 關.*小精靈/.test(s0.gs[9]) || s0.sm) E.push(tag + ' 課堂複習 設定 畫面 ' + JSON.stringify(s0).slice(0, 300));
     /* 〔👥 全班 同步〕課堂複習 1：打地鼠、空投 */
     await h.click('[data-crs="c1"]'); await h.click('[data-cra="0"]'); await h.click('[data-crg="q1"]'); await h.click('[data-crg="q10"]'); await h.click('[data-crm="sync"]'); await h.click('#crstart'); await h.waitForTimeout(500);
     n++; const cr = dget('rooms/0304/cr'); if (!cr || cr.on !== 1 || cr.set !== 'c1' || cr.m !== 'sync' || cr.deck.length !== 16 || cr.q !== 0 || cr.deck[0][0] !== 'q1' || cr.deck[15][0] !== 'q10') E.push(tag + ' 同步 開始 寫 的 Firebase 不對 ' + JSON.stringify(cr).slice(0, 200));

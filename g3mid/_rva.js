@@ -49,7 +49,7 @@ function RVASRC() {
     if (!f) { est(); return; }
     var a = el(); try { a.pause(); } catch (e) { } a.onended = null; a.onerror = null; a.src = f; try { a.defaultPlaybackRate = a.playbackRate = rate || (S.slow ? .75 : 1); } catch (e) { }
     a.onended = function () { fin(); }; a.onerror = function () { est(); };
-    (function lp() { if (!RVA.S || my !== RVA.S.rid) return; if (a.duration > 0 && !a.paused) hl(Math.min(.999, a.currentTime / a.duration)); requestAnimationFrame(lp); })();
+    var lt = -1, lw = performance.now(); (function lp() { if (!RVA.S || my !== RVA.S.rid) return; if (a.duration > 0 && !a.paused) hl(Math.min(.999, a.currentTime / a.duration)); var nw = performance.now(); if (S.pause || a.currentTime !== lt || a.ended) { lt = a.currentTime; lw = nw; if (a.ended) return; } else if (nw - lw > 4500) { a.onended = null; a.onerror = null; try { a.pause(); } catch (e) { } fin(); return; } requestAnimationFrame(lp); })();   /* 第四十一次 第 4 點：聲音 卡住 4.5 秒 ＝ 往下 走 */
     var p = a.play(); if (p && p.catch) p.catch(function (e) { if (!RVA.S || my !== RVA.S.rid || (e && e.name === 'AbortError')) return; est(); }); }
 
   /* ── 一排 英文 字（每個 字 正下方 中文）── */
@@ -59,6 +59,9 @@ function RVASRC() {
   /* ══ 開始 ══ spec ＝ {id, ic, nm, sc:[…], qz:[…]}；done() ＝ 看完（或 跳過） */
   RVA.play = function (spec, done) {
     if (RVA.S) RVA.close();
+    /* 2026-11-03 第四十一次（老師 建議 1 第 2 點）：看過 一次 ＝ 只 留 重點 頁（spec.key）；突擊 題 的 at 換成 新 的 頁碼 */
+    try { if (spec.key && spec.key.length && ls('rvv_' + RVA.A.gr + '_' + spec.id + '_' + (RVA.A.sid() || '0'))) { var K = spec.key, sp2 = {}; for (var kk in spec) sp2[kk] = spec[kk];
+      sp2.sc = K.map(function (i) { return spec.sc[i]; }); sp2.qz = spec.qz.map(function (q) { var c = {}, a = q.at || 0, j = 0; for (var x in q) c[x] = q[x]; K.forEach(function (i, n) { if (i <= a) j = n; }); c.at = j; return c; }); sp2.short = 1; spec = sp2; } } catch (e) { }
     var o = $id('rva'); if (!o) { o = h('div', '', ''); o.id = 'rva'; document.body.appendChild(o); }
     var S = RVA.S = { spec: spec, done: done, i: -1, tm: [], gen: 1, rid: 0, pause: false, slow: false, rows: [], t0: Date.now(), plan: {}, nq: 0 };
     /* 這一次 要 考 的 3 題：先 出 這個 學生 還沒 考過 的（每 一次 都 不一樣）；題型 盡量 不 重複 */
@@ -83,7 +86,7 @@ function RVASRC() {
       used[2 * a + 1] = 1; S.plan[2 * a + 1] = qi; });
     S.nq = pick.length;
     o.innerHTML = '<div class="rvw"><div class="rvtop"><span class="rvt">🎬 秒懂 複習：' + esc(spec.ic + ' ' + spec.nm) + '</span><span class="rvp" id="rvp"></span>' + (S.nq ? '<span class="rvr">⚡ 突擊 測驗 <b id="rvn">0 ／ ' + S.nq + '</b></span>' : '') + '</div>' +
-      '<div class="rvst" id="rvs"></div><div class="rvc" id="rvc"><button data-rv="pause">⏸️ 暫停</button><button data-rv="slow">🐢 放慢</button><button data-rv="again">🔁 再一次</button></div></div>';
+      '<div class="rvst" id="rvs"></div><div class="rvc" id="rvc"><button data-rv="pause">⏸️ 暫停</button><button data-rv="slow">🐢 放慢</button><button data-rv="again">🔁 再一次</button><button data-rv="next" id="rvnext" class="rvnx" disabled>🔒 看完 才 能 按</button></div></div>';
     o.classList.add('on'); document.body.classList.add('rvon'); intro(); };
 
   RVA.close = function () { var S = RVA.S; if (!S) return; S.gen++; S.tm.forEach(function (it) { clearTimeout(it.id); }); stopAu(); RVA.S = null; var o = $id('rva'); if (o) { o.classList.remove('on'); o.innerHTML = ''; } document.body.classList.remove('rvon'); };
@@ -97,7 +100,7 @@ function RVASRC() {
     T(function () { var b = $id('rvgo'); if (b) { b.disabled = false; b.classList.add('rdy'); } }, S.once ? 900 : 2600); }
 
   /* ② 一頁 一個 重點 */
-  function scene(i) { var S = RVA.S, sp = S.spec, c = sp.sc[i]; S.i = i; S.part = 0; S.misd = 0; $id('rvc').classList.remove('hid');
+  function scene(i) { var S = RVA.S, sp = S.spec, c = sp.sc[i]; S.i = i; S.part = 0; S.misd = 0; $id('rvc').classList.remove('hid'); nxLock();
     $id('rvp').textContent = '📍 ' + (i + 1) + ' ／ ' + sp.sc.length;
     var st = $id('rvs'); st.innerHTML = ''; var card = h('div', 'rvcard' + (c.t2 ? ' eq' : ''), '');
     card.appendChild(h('div', 'rvh', '<span>重點 ' + (i + 1) + '</span>' + esc(c.h)));
@@ -117,8 +120,11 @@ function RVASRC() {
   /* 唸 第 n 次（等句 ＝ 上面 一行 再 下面 一行）*/
   function readS(i, n) { var S = RVA.S, c = S.spec.sc[i], card = $id('rvs').querySelector('.rvcard'); if (!card) return;
     var cnt = card.querySelectorAll('.rvcnt i'); cnt[n] && cnt[n].classList.add('on');
-    var rows = card.querySelectorAll('.rvrow'), c1 = [].slice.call(rows[0].children), fin = function () { if (n === 0) { card.classList.add('z'); T(function () { order(card, c); }, 500); } T(function () { slot(2 * i + n, function () { if (n === 0 && !S.once) T(function () { readS(i, 1); }, 650); else T(function () { nextS(); }, 1100); }); }, n === 0 ? 900 : 500); };
+    var rows = card.querySelectorAll('.rvrow'), c1 = [].slice.call(rows[0].children), fin = function () { if (n === 0) { card.classList.add('z'); T(function () { order(card, c); }, 500); } T(function () { slot(2 * i + n, function () { if (n === 0 && !S.once) T(function () { readS(i, 1); }, 650); else T(function () { nxOpen(); }, 400); }); }, n === 0 ? 900 : 500); };
     read(c.en, c.v, c1, function () { if (rows[1]) T(function () { read(c.en2, c.v2 != null ? c.v2 : c.v, [].slice.call(rows[1].children), fin); }, 450); else fin(); }); }
+  /* 2026-11-03 第四十一次（老師 建議 1 乙）：學生 自己 按〔▶ 進入 下一頁〕；這一頁 全部 演完、唸完 才 解鎖（不會 看 到 睡著，也 不能 跳過）*/
+  function nxLock() { var b = $id('rvnext'); if (!b) return; b.disabled = true; b.classList.remove('rdy'); b.innerHTML = '🔒 看完 才 能 按'; }
+  function nxOpen() { var S = RVA.S, b = $id('rvnext'); if (!S || !b) return; if (window.__RVAUTO) { nextS(); return; } b.disabled = false; b.classList.add('rdy'); b.innerHTML = S.i + 1 < S.spec.sc.length ? '▶ 進入 下一頁' : '✅ 看完 了'; }
   function nextS() { var S = RVA.S; if (S.i + 1 < S.spec.sc.length) scene(S.i + 1); else finish(); }
   /* 這個 位置 有 排 突擊 測驗 嗎？ */
   function slot(s, go) { var S = RVA.S; if (S.plan[s] == null) { go(); return; } var qi = S.plan[s]; delete S.plan[s]; S.qpg = (s - 1) / 2 + 1;
@@ -276,6 +282,7 @@ function RVASRC() {
     if (k === 'pause') { S.pause = !S.pause; t.textContent = S.pause ? '▶ 繼續' : '⏸️ 暫停'; t.classList.toggle('on', S.pause); document.body.classList.toggle('rvpz', S.pause);
       if (S.pause) { pauseAll(); try { el().pause(); } catch (x) { } try { speechSynthesis.pause(); } catch (x) { } } else { resumeAll(); try { var a = el(); if (a.src && a.currentTime > 0 && !a.ended) a.play(); } catch (x) { } try { speechSynthesis.resume(); } catch (x) { } } }
     if (k === 'slow') { S.slow = !S.slow; t.textContent = S.slow ? '🐇 正常' : '🐢 放慢'; t.classList.toggle('on', S.slow); try { el().playbackRate = S.slow ? .75 : 1; } catch (x) { } }
+    if (k === 'next') { if (t.disabled) return; nxLock(); S.tm.forEach(function (it) { clearTimeout(it.id); }); S.tm = []; nextS(); return; }
     if (k === 'again') { if (S.pause) { S.pause = false; document.body.classList.remove('rvpz'); var pb = document.querySelector('[data-rv="pause"]'); if (pb) { pb.textContent = '⏸️ 暫停'; pb.classList.remove('on'); } }
       S.tm.forEach(function (it) { clearTimeout(it.id); }); S.tm = []; S.gen++; stopAu(); /* 這一頁 還沒 出 的 測驗 照舊 會 出 */ scene(Math.max(0, S.i)); } });
   window.RVA = RVA;
@@ -291,6 +298,8 @@ const CSS = `
 .rvc{display:flex;justify-content:center;gap:clamp(10px,2vw,22px);padding-top:8px}.rvc.hid{visibility:hidden}
 .rvc button{min-height:58px;min-width:150px;font:inherit;font-size:clamp(19px,2.5vh,25px);font-weight:700;border-radius:16px;border:3px solid #5E7FA8;background:#14263F;color:#fff;cursor:pointer}
 .rvc button.on{background:#FFB300;color:#2A1A00;border-color:#FFE07A}
+.rvc button.rvnx{min-width:220px;border-color:#4A5A6E;background:#1A2230;color:#8C9AAE}
+.rvc button.rvnx.rdy{border-color:#7BF0A8;background:linear-gradient(#36D27A,#1E9E55);color:#06210F;font-size:clamp(22px,3vh,30px);box-shadow:0 0 0 4px rgba(123,240,168,.35),0 0 22px rgba(57,217,138,.75)}
 body.rvpz .rvcard *{animation-play-state:paused!important}
 .rvcard{--rz:1;width:min(100%,1180px);max-height:100%;overflow:hidden;background:linear-gradient(180deg,#0E1E36,#0A1628);border:3px solid #2F4E78;border-radius:26px;padding:clamp(10px,2vh,22px) clamp(12px,2.4vw,30px);display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.4vh,14px);font-size:calc(var(--rz) * 1px * 1);animation:rvIn .5s cubic-bezier(.3,1.4,.6,1)}
 @keyframes rvIn{from{transform:scale(.85) translateY(20px);opacity:0}}

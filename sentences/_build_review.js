@@ -94,7 +94,7 @@ ${S.units.map(u => '<div class="u"><h3>' + u.ic + ' ' + u.t + '</h3><div class="
     btn(u.f + '#t2', '🔀', '中英語序動畫', '中文和英文的順序不一樣') + btn(u.f + '#t3', '✂️', '縮寫動畫', '兩個字黏成一個字') + btn(u.f + '#t4', '💬', '一問一答', '一個人問、一個人答') + '</div></div>').join('')}
 </section>
 <section><h2><span>2</span>🎮 遊戲</h2><div class="g">
-${META.map(m => btn('games.html#' + m.id, m.ic, m.name, m.rule)).join('')}
+${META.map(m => btn('games.html#' + m.id, m.ic, m.name, m.rule)).join('')}${S.out === 'g3-review' ? '<a class="b" href="../g3mid/lw.html"><span class="i">✍️</span><span class="x"><b>字母 書寫</b><em>看 字母 ➜ 寫 大寫 或 小寫（一半 跟 期中考 相似）</em></span></a>' : ''}
 ${/* 2026-10-26 第二十九次 第 3 點：🏰 守城、🎣 釣魚（fun/_build.js 做 的 castle.html、fish.html）；2026-10-27 第三十一次 暫時 下架（FUN_ON）*/ !FUN_ON ? '' : btn('castle.html', '🏰', '守城 大作戰', '答對 ＝ 大砲 打 怪物，守住 城堡') + btn('fish.html', '🎣', '英文 釣魚 大賽', '答對 ＝ 魚餌，釣 稀有 魚')}
 </div></section>
 ${S.r1 ? `<section><h2><span>3</span>📘 Review 1</h2><div class="g">

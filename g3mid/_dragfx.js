@@ -37,20 +37,7 @@ function DFXSRC() {
 
   /* ── 🏁 跟 上次 的 自己 賽跑 ── */
   D.gk = function () { var A = window.DEC && DEC.A; return 'dfx_gh_' + (location.pathname.indexOf('midterm') >= 0 ? 'g4' : 'g3') + '_' + ((A && A.sid && A.sid()) || '0'); };
-  D.ghost = function () { try { var a = JSON.parse(localStorage.getItem(D.gk()) || '[]'); if (a.length < 2) return 0; return a.reduce(function (x, y) { return x + y; }, 0) / a.length; } catch (e) { return 0; } };
-  D.ghostAdd = function (v) { try { var a = JSON.parse(localStorage.getItem(D.gk()) || '[]'); a.push(Math.round(v * 10) / 10); localStorage.setItem(D.gk(), JSON.stringify(a.slice(-5))); } catch (e) { } };
-  D.race = function (box, n) { var g = D.ghost(), o = H('div', 'dfxrc' + (g ? '' : ' none'), g ?
-      '<div class="lab">🏁 跟 <b>上次 的 自己</b> 賽跑：🏃 比 👻 先 到 🏁 ＝ 贏！</div><div class="trk"><span class="ln"></span><span class="gh"><span class="f">👻</span><i>上次 的 你</i></span><span class="me"><span class="f">🏃</span><i>你</i></span><span class="fl">🏁</span></div>'
-      : '<div class="lab">🏁 做 2 題 以後，<b>👻 上次 的 你</b> 會 出來 跟 你 賽跑</div>');
-    var b = box.querySelector('.dfxban'); if (b && b.nextSibling) box.insertBefore(o, b.nextSibling); else box.insertBefore(o, box.firstChild);
-    box._rc = { n: n, g: g, el: o, t0: 0, done: 0 }; return o; };
-  D.raceGo = function (box) { var R0 = box && box._rc; if (!R0 || !R0.g || R0.t0) return; R0.t0 = Date.now(); var gh = R0.el.querySelector('.gh');
-    gh.style.transition = 'left ' + (R0.g * R0.n).toFixed(1) + 's linear'; void gh.offsetWidth; gh.style.left = 'calc(100% - 3.4em)';
-    R0.tm = setTimeout(function () { if (!R0.done) R0.el.classList.add('ghw'); }, R0.g * R0.n * 1000); };
-  D.raceSet = function (box, k) { var R0 = box && box._rc; if (!R0 || !R0.g) return; var me = R0.el.querySelector('.me'); me.style.left = 'calc((100% - 3.4em) * ' + (k / R0.n).toFixed(3) + ')'; me.classList.remove('hop'); void me.offsetWidth; me.classList.add('hop'); };
-  /* 全對 才 叫：回傳 true ＝ 贏 了 上次 的 自己 */
-  D.raceEnd = function (box, avg) { var R0 = box && box._rc; D.ghostAdd(avg); if (!R0 || !R0.g) return false; R0.done = 1; clearTimeout(R0.tm); var gh = R0.el.querySelector('.gh'), cs = getComputedStyle(gh).left; gh.style.transition = 'none'; gh.style.left = cs;
-    var won = avg < R0.g; R0.el.classList.add(won ? 'won' : 'lost'); var lab = R0.el.querySelector('.lab'); lab.innerHTML = won ? '🏆 你 贏了 上次 的 自己！<b>＋200</b>' : '👻 這次 上次 的 你 比較 快，下一題 追 回來！'; return won; };
+  /* 2026-11-03 第四十一次 第 1 點：🏁 跟 上次 的 自己 賽跑（👻）整個 刪除 */
 
   /* ── 🎁 難題 寶箱（全對 以後 才 掉）── */
   D.TIER = [['wood', '木頭 寶箱'], ['silver', '銀 寶箱'], ['gold', '金 寶箱'], ['rainbow', '💎 彩虹 寶箱']];
@@ -88,18 +75,6 @@ const CSS = `
 @keyframes dfxBan{from{opacity:0;transform:translateY(-14px) scale(.7)}to{opacity:1;transform:none}}@keyframes dfxBob{50%{transform:translateY(-4px) rotate(-6deg)}}
 .dcbox.dfx{position:relative;border-radius:26px;padding:6px 8px 10px;overflow:hidden}
 /* 🏁 跑道 */
-.dfxrc{width:min(860px,100%);margin:0 auto 6px;text-align:center}.dfxrc .lab{font-size:clamp(17px,2.3vh,23px);color:#FFE9A8;font-weight:700}.dfxrc .lab b{color:#fff}
-.dfxrc.none .lab{color:#BFD3E6;font-weight:400}
-.dfxrc .trk{position:relative;height:clamp(52px,7vh,70px);margin-top:4px;border-radius:999px;background:linear-gradient(#3E2A1A,#2A1C10);box-shadow:inset 0 4px 10px rgba(0,0,0,.6),0 2px 0 rgba(255,255,255,.08)}
-.dfxrc .ln{position:absolute;left:14px;right:14px;top:50%;border-top:3px dashed rgba(255,255,255,.35)}
-.dfxrc .gh,.dfxrc .me{position:absolute;left:0;display:flex;flex-direction:column;align-items:center;line-height:1;width:3.4em}
-.dfxrc .gh{top:0;opacity:.75}.dfxrc .me{bottom:0;transition:left .45s cubic-bezier(.3,1.5,.5,1)}
-.dfxrc .f{font-size:clamp(24px,3.4vh,34px)}.dfxrc .gh .f{filter:drop-shadow(0 0 6px #BFE8FF)}.dfxrc .me .f{transform:scaleX(-1)}
-.dfxrc i{font-style:normal;font-size:clamp(11px,1.5vh,14px);color:#fff;background:rgba(0,0,0,.5);border-radius:8px;padding:0 4px;white-space:nowrap}
-.dfxrc .me.hop .f{animation:dfxHop .4s}@keyframes dfxHop{40%{transform:scaleX(-1) translateY(-10px)}}
-.dfxrc .fl{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:clamp(26px,3.6vh,36px)}
-.dcbox.dz1 .dfxrc .trk{height:44px}.dcbox.dz2 .dfxrc .lab,.dcbox.dz3 .dfxrc .lab,.dcbox.dz4 .dfxrc .lab{font-size:15px}.dcbox.dz2 .dfxrc .trk,.dcbox.dz3 .dfxrc .trk,.dcbox.dz4 .dfxrc .trk{height:36px;margin-top:2px}.dcbox.dz2 .dfxrc i,.dcbox.dz3 .dfxrc i,.dcbox.dz4 .dfxrc i{display:none}.dcbox.dz3 .dfxban,.dcbox.dz4 .dfxban{font-size:17px;margin:0}.dcbox.dz4 .dfxban .i{font-size:1.2em}.dcbox.dz4 .dfxrc .lab{display:none}
-.dfxrc.won .trk{box-shadow:0 0 0 4px #FFD54A,0 0 24px #FFD54A}.dfxrc.won .lab{color:#FFD54A;font-size:clamp(20px,2.8vh,28px)}.dfxrc.ghw .gh .f{animation:dfxBob .8s infinite}
 /* 🎁 難題 寶箱（全對 以後 才 掉）*/
 .dfxch2{position:fixed;inset:0;z-index:9300;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;font-family:inherit}
 .dfxch2 .dim{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(40,20,80,.55),rgba(0,0,0,.82));animation:dfxFade .3s both}

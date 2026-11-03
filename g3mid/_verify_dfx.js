@@ -1,6 +1,6 @@
 /* g3mid/_verify_dfx.js — 拖曳題 量測（2026-11-02 第四十次 第 ③ 點 重做；三年級 g3mid、四年級 midterm；3 種 螢幕）。只 印 失敗 項。
  * ① 8 題 連著 做：每一題 樣子 都 不一樣（8 種 輪 一圈）、最上面 有 樣子 的 名字、**題目 上 看不到 任何 寶箱**、不 超出 畫面、格子 ≧ 40px 高、字 ≧ 20px
- * ② 🏁 跑道：還沒 紀錄 ＝ 寫「做 2 題 以後」；做 2 題 以後 ＝ 👻 和 🏃 都 在 跑道 上；放 一格 🏃 往前
+ * ② 第四十一次：🏁👻 跑道 整個 刪除 ＝ 量「沒有 跑道」
  * ③ 難度 規則（DFX.drop）：難度 ≦ 4 ＝ 一定 不 掉；難度 愈 高 ＝ 掉 的 機會、寶箱、獎勵 都 不 會 變 少
  * ④ 簡單 題（3 格＋2 錯 方塊 ＝ 難度 5，__DFXR ＝ 0.9）全對 ＝ 不 掉 寶箱；難 題（10 格＋2 ＝ 12，__DFXR ＝ 0.1）全對 ＝ 寶箱 從 天上 掉 下來 ➜ 點 3 下 打開 ➜ 解碼 積分 增加
  * ⑤ 放錯（不是 全對）＝ 一定 不 掉；教學（#dcl）不 加；三年級 🌱 皮克敏、📋 資料表 沒有 樣子、沒有 寶箱（改回 單純 拖曳）
@@ -34,7 +34,7 @@ const Q = [{ en: "What's your name?", t: [['What', '什麼'], ["'s", '是'], ['y
       seen.push(r.sk);
       ok(r.sk && r.ban.length > 2, tag + ' 第 ' + (i + 1) + ' 題 沒有 樣子／名字 ' + JSON.stringify(r));
       ok(r.ch === 0, tag + ' 第 ' + (i + 1) + ' 題 題目 上 看得到 寶箱（應該 不 可以）');
-      ok(r.rc, tag + ' 第 ' + (i + 1) + ' 題 沒有 🏁 跑道');
+      ok(!r.rc, tag + ' 第 ' + (i + 1) + ' 題 還有 🏁 跑道（第四十一次 刪除）');
       ok(!r.out, tag + ' 第 ' + (i + 1) + ' 題（' + r.sk + '）有 ' + r.out + ' 個 東西 超出 畫面');
       ok(r.hs >= 40 && r.fs >= 20, tag + ' 第 ' + (i + 1) + ' 題（' + r.sk + '）格子 太 小 或 字 太 小 ' + JSON.stringify(r));
     }
@@ -44,10 +44,9 @@ const Q = [{ en: "What's your name?", t: [['What', '什麼'], ["'s", '是'], ['y
     ok([3, 4].every(d => !dr['0.01_' + d]), tag + ' 難度 ≦ 4 也 掉 寶箱 ' + JSON.stringify(dr));
     let mono = true; for (let d = 6; d <= 12; d++) { const a = dr['0.01_' + (d - 1)], b = dr['0.01_' + d]; if (a && (!b || b[1] < a[1])) mono = false; }
     ok(mono, tag + ' 難度 高 獎勵 反而 少 ' + JSON.stringify(dr));
-    /* ② 跑道：做 了 2 題（上面 已經 沒有 全對；直接 寫 紀錄）*/
-    const rc = await p.evaluate(q => { DFX.ghostAdd(2); DFX.ghostAdd(2); const d = mk(q), t = d.querySelector('.dfxrc'); const S = d.querySelectorAll('.dcs'), b = [].filter.call(d.querySelectorAll('.dctl'), x => x._z === q.t[0][1])[0];
-      const me0 = d.querySelector('.dfxrc .me').style.left; tap(b); S[0].click(); return { none: t.classList.contains('none'), gh: !!t.querySelector('.gh'), me: !!t.querySelector('.me'), mv: d.querySelector('.dfxrc .me').style.left !== me0 }; }, Q[0]);
-    ok(!rc.none && rc.gh && rc.me && rc.mv, tag + ' 🏁 跑道 不對 ' + JSON.stringify(rc));
+    /* ② 第四十一次 第 1 點：🏁👻 跑道 整個 刪除 */
+    const rc = await p.evaluate(q => { const d = mk(q); return { rc: d.querySelectorAll('.dfxrc').length, g: typeof DFX.race + typeof DFX.ghost, t: /👻|上次 的 你|上次 的 自己/.test(d.textContent) }; }, Q[0]);
+    ok(!rc.rc && rc.g === 'undefinedundefined' && !rc.t, tag + ' 🏁👻 跑道 還在 ' + JSON.stringify(rc));
     /* ④ 簡單 題 全對 不 掉；難 題 全對 掉、點 3 下 打開、積分 增加 */
     const ez = await p.evaluate(async q => { window.__DFXR = 0.9; mk(q); fill(q); await new Promise(r => setTimeout(r, 900)); const c = !!document.querySelector('.dfxch2'); window.__DFXR = null; return { c, ok: window.__OK }; }, Q[0]);
     ok(!ez.c, tag + ' 簡單 題 也 掉 寶箱');

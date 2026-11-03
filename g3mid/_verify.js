@@ -22,7 +22,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
 /* 2. 總首頁有〔📝 三年級 複習〕；在家複習沒有；不接成績系統 */
 { n++; const hub = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').replace(/<\/?span[^>]*>/g, '');
   if (!/href="g3mid\/index\.html"[^>]*>📝 三年級 複習</.test(hub)) E.push('總首頁沒有〔📝 三年級 複習〕');
-  for (const d of ['g3-review', 'g4-review']) for (const f of fs.readdirSync(path.join(ROOT, d)).filter(f => /\.html$/.test(f))) { n++; if (/g3mid\/(?!home\.html)/.test(fs.readFileSync(path.join(ROOT, d, f), 'utf8').replace(/g3mid\/audio\//g, ''))) E.push(d + '/' + f + '：在家複習連到三年級複習（只 可以 連 25 題 闖關 home.html，2026-10-31 第三十五次 第 9 點）'); }
+  for (const d of ['g3-review', 'g4-review']) for (const f of fs.readdirSync(path.join(ROOT, d)).filter(f => /\.html$/.test(f))) { n++; if (/g3mid\/(?!home\.html|lw\.html)/.test(fs.readFileSync(path.join(ROOT, d, f), 'utf8').replace(/g3mid\/audio\//g, ''))) E.push(d + '/' + f + '：在家複習連到三年級複習（只 可以 連 25 題 闖關 home.html，2026-10-31 第三十五次 第 9 點）'); }
   n++; const h = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
   /* 2026-10-26 第二十七次 第 1-(3) 點：三年級 複習 的 成績 也 進 老師看板 ➜ 一定 要 接 成績系統（登入、佇列）*/
   if (!/score\/url\.js/.test(h) || !/id="scbar"/.test(h) || !/g3gm_g3m-/.test(h)) E.push('三年級複習 沒有 接 成績系統（老師 第二十七次：成績 要 進 老師看板）'); }

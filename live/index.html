@@ -721,7 +721,18 @@ body.host #hlob .lobr{padding-top:62px}   /* 右上角〔🏠 總首頁〕〔老
 .scpw .pwrem input{width:30px;height:30px}
 .scvow{text-align:center}.scvow .vwi{font-size:clamp(46px,8vh,72px);margin:6px 0}
 .scvow .vwl{display:flex;align-items:center;justify-content:center;gap:14px;margin:10px auto;max-width:640px;padding:16px 18px;border-radius:20px;border:4px solid #FFD54A;background:#221B05;color:#FFE9A8;font-size:clamp(24px,3.6vh,34px);font-weight:700;cursor:pointer;animation:vwp 1.4s ease-in-out infinite}
-.scvow .vwl.on{border-color:#39D98A;background:#0C2A18;color:#CFF7DF;animation:none}.scvow .vwl input{width:44px;height:44px;flex:none;accent-color:#39D98A}
+.scvow .vwl.on{border-color:#39D98A;background:#0C2A18;color:#CFF7DF;animation:none}.scvow .vwl input{width:56px;height:56px;flex:none;margin:0;accent-color:#39D98A;cursor:pointer}
+/* 2026-11-03 第四十一次 第 6 點：學生 不知道 勾 哪一個 ➜ 方框 稍微 放大（56px）、穩定 發亮（不閃、不跳）、👉 手指 指著、上面 ① ② 步驟 */
+.scvow .vwbx{display:inline-flex;flex:none;border-radius:12px;padding:6px;background:#FFF6D0;box-shadow:0 0 0 5px #FFD54A,0 0 26px 8px rgba(255,213,74,.75)}
+.scvow .vwl.on .vwbx{background:#DFFBEA;box-shadow:0 0 0 5px #39D98A,0 0 18px 4px rgba(57,217,138,.6)}
+.scvow .vwf{flex:none;font-size:clamp(34px,5vh,46px);animation:vwfP 1.3s ease-in-out infinite}.scvow .vwl.on .vwf{visibility:hidden;animation:none}
+@keyframes vwfP{0%,100%{transform:translateX(-10px)}50%{transform:translateX(4px)}}
+.scvow .vws{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:4px auto 2px;font-size:clamp(19px,2.7vh,25px)}
+.scvow .vws span{padding:6px 14px;border-radius:999px;border:3px solid #4A4A4A;color:#9AA4AE}.scvow .vws b{color:#9AA4AE}
+.scvow .vws span.on{border-color:#FFD54A;color:#FFE9A8;background:#2A2208;box-shadow:0 0 14px rgba(255,213,74,.55)}.scvow .vws span.ok{border-color:#39D98A;color:#CFF7DF}
+.scvow .vws .vbx{display:inline-block;width:1.15em;height:1.15em;line-height:1.1em;border:3px solid currentColor;border-radius:5px;font-style:normal;font-size:.85em;text-align:center;color:#39D98A}
+.scvow .vwh b{color:#FFD54A}
+@media (prefers-reduced-motion:reduce){.scvow .vwf{animation:none}}
 .scvow .vwh{font-size:clamp(20px,2.8vh,26px);color:#DDE6EE;margin:8px 0}
 .scvow .vwb{min-height:72px;padding:6px 34px;border-radius:22px;border:4px solid #7BF0A8;background:linear-gradient(#36D27A,#1E9E55);color:#06210F;font:inherit;font-weight:700;font-size:clamp(26px,4vh,38px);cursor:pointer}
 .scvow .vwb:disabled{opacity:.35;filter:grayscale(1);cursor:default}
@@ -2103,7 +2114,7 @@ var SCURL=String(window.SCORE_URL||'').replace(/^\s+|\s+$/g,''),SCON=!!SCURL&&!w
 var SCCLS={3:['304','307','311'],4:['402','406','409','410','400']},SCSEAT=30,SCAFTER={'400':'課後班'};   /* 400 ＝ 四年級課後班（2026-10-09 E9～E11）；跟 _calc.js 的 CLASSES／AFTER 一樣 */
 function scCn(c){return SCAFTER[c]?c+' '+SCAFTER[c]:c+' 班'}
 function scGet(k){try{return JSON.parse(localStorage.getItem('score_'+k)||'null')}catch(e){return null}}
-function scPut(k,v){try{localStorage.setItem('score_'+k,JSON.stringify(v))}catch(e){}}
+function scPut(k,v){if(k==='q'&&v&&v.length&&typeof scPk==='function')v.forEach(function(r){if(r&&!r.k&&r.id){var kk=scPk(r.id);if(kk)r.k=kk}});try{localStorage.setItem('score_'+k,JSON.stringify(v))}catch(e){}}   /* 2026-11-03 第四十一次 第 3 點：排進 佇列 的 那一刻 就 帶 🔑 通行證（分頁 關掉 也 送得 進去）*/
 var SCID=scGet(SCG?'id_g'+SCG:'last'),SCGUEST=false,SCDEV=scGet('dev'),SCV=null,SCQ=[],SCT0=0,SCREF=0,SCQI=0,SCIN='',SCEND=null,SCH=null;
 if(!SCDEV){SCDEV=Math.random().toString(36).slice(2,8);scPut('dev',SCDEV)}
 function scGr(){return SCG||(SCID?+String(SCID).charAt(0):0)}
@@ -2134,19 +2145,24 @@ function scFetch(q,body,ms){
 }
 /* 沒網路先存平板，連上網補送（同一筆有編號，伺服器不會重複存） */
 var SCBUSY=false,SCRES={};
-function scFlush(){
+var SCJIT=0;function scFlush(){
   if(!SCON||SCBUSY)return Promise.resolve(null);
+  if((window.SCLIVE||/[?&]live=/.test(location.search))&&!window.__SCNOJIT&&SCJIT!==2){if(!SCJIT){SCJIT=1;setTimeout(function(){SCJIT=2;scFlush()},Math.random()*4000)}return Promise.resolve(null)}   /* ⚡ 現場任務：全班 同時 送 ➜ 錯開 0～4 秒 */
   var Q=scGet('q')||[];if(!Q.length)return Promise.resolve(null);
   SCBUSY=true;var last=null;
   var step=function(){Q=scGet('q')||[];if(!Q.length){SCBUSY=false;if(last)scTkLoad(function(){if(SCH&&SCH.tk)SCH.tk()});return last}   /* 送出去了 ➜ 任務的 ✅ 重拿 */
     var r=Q[0];if(!r.k){var kk=scPk(r.id);if(kk){r.k=kk;Q[0]=r;scPut('q',Q)}}
-    return scFetch('',{a:'rec',r:r}).then(function(j){
-      if(j&&(j.saved||j.err==='bad'||j.err==='spk')){Q=scGet('q')||[];Q=Q.filter(function(x){return x.u!==r.u});scPut('q',Q);if(j.saved){SCRES[r.u]=j;last=j}return step()}
-      SCBUSY=false;return last},function(){SCBUSY=false;return last});
+    return scFetch('',{a:'rec',r:r},25000).then(function(j){
+      if(j&&(j.saved||j.err==='bad'||j.err==='spk')){Q=scGet('q')||[];Q=Q.filter(function(x){return x.u!==r.u});scPut('q',Q);if(j.err==='spk'){delete r.k;var H=scGet('qk')||[];H.push(r);scPut('qk',H.slice(-200))}if(j.saved){SCRES[r.u]=j;last=j}return step()}
+      SCBUSY=false;scRetry();return last},function(){SCBUSY=false;scRetry();return last});
   };
   return step();
 }
-if(SCON){setTimeout(scFlush,1500);window.addEventListener('online',function(){scFlush()})}
+/* 2026-11-03 第四十一次 第 3 點（409 現場任務 新 25 題 老師看板 看不到）：
+   ① 一次 全班 一起 送、伺服器 排隊 ＝ 等 25 秒（以前 9 秒 就 放棄）② 沒 送到 ＝ 每 20 秒 自己 再 送（以前 要 等 下次 打開 網頁）
+   ③ 🔑 通行證 不對（spk）＝ 收 起來（qk），那個 號碼 下次 打對 密碼 就 補 送（以前 直接 丟掉）④ 現場任務 時間 到 全班 同時 送 ＝ 錯開 0～4 秒 */
+var SCRT=0;function scRetry(){clearTimeout(SCRT);if((scGet('q')||[]).length)SCRT=setTimeout(scFlush,20000)}
+if(SCON){setTimeout(scFlush,1500);window.addEventListener('online',function(){scFlush()});document.addEventListener('visibilitychange',function(){if(!document.hidden)scFlush()})}
 /* 要記成績的地方先過這一關：還沒登入 ➜ 先登入（在家可以〔👀 先練習，不記成績〕）；登入好了 ➜ 直接做 fn */
 function scGate(fn){if(SCON&&!SCID&&!SCGUEST){scLogin(fn);return}fn()}
 /* ── 登入（2026-10-09 改版，照 English-Jobs-New 的 jobdex 新登入）：① 🏫 打班級 ➜ ② 🪑 打座號 ➜ ③ ✅ 按綠色勾勾
@@ -2221,7 +2237,7 @@ function scWho(r){
    密碼 ＝ 2 個 小寫 英文 字母（粉紅 格）＋ 6 個 數字（藍 格），例 ab123456；平板 只 存 伺服器 給 的 通行證（這個 分頁 sessionStorage；勾〔記住〕＝ localStorage） */
 var SCPW=null;
 function scPk(id){var v='';try{v=sessionStorage.getItem('score_pks_'+id)||''}catch(e){}return v||scGet('pk_'+id)||''}
-function scPkSave(id,k,rem){try{sessionStorage.setItem('score_pks_'+id,k)}catch(e){}scPut('pk_'+id,rem?k:null)}
+function scPkSave(id,k,rem){try{sessionStorage.setItem('score_pks_'+id,k)}catch(e){}scPut('pk_'+id,rem?k:null);var H=scGet('qk')||[],B=H.filter(function(r){return r.id===id});if(B.length){scPut('qk',H.filter(function(r){return r.id!==id}));B.forEach(function(r){r.k=k});scPut('q',(scGet('q')||[]).concat(B).slice(-200));setTimeout(scFlush,300)}}   /* 第四十一次 第 3 點：密碼 對了 ➜ 之前 沒 送 進去 的 紀錄 補 送 */
 function scPwStep(id,done){if(/script\.test/.test(SCURL)&&!window.__SCORE_PW){done();return}   /* 量測 的 假 伺服器：別的 量測 不打 密碼（密碼 本身 在 score/_verify_pw.js 量，它 設 __SCORE_PW） */
   SCPW={id:id,done:done,v:'',first:'',mode:'?',eye:false,rem:!!scGet('pk_'+id)};if(!SCH.on||!SCH.on())SCH.open();
   var ex='<span class="pwex">'+'ab123456'.split('').map(function(c,i){return '<i class="'+(i<2?'l':'d')+'" style="animation-delay:'+(i*.35).toFixed(2)+'s">'+c+'</i>'}).join('')+'</span>';
@@ -2262,10 +2278,11 @@ function scPwKey(k){var P=SCPW;if(!P)return;if(P.mode==='?'||P.mode==='busy')ret
 /* 2026-10-31 C42 Q1 乙：每一次 登入（打對 密碼、第一次 設好）都 要 勾 */
 function scPwVow(P,d,set){var b=SCH.box();if(!b){SCPW=null;d();return}
   b.innerHTML='<div class="sclog scpw scvow"><h2>'+(set?'🔑 密碼設好了！':'✅ 密碼對了！')+'</h2><div class="vwi">🧠 ＋ 🤝</div>'+
-   '<label class="vwl" id="scVowL"><input type="checkbox" id="scVow"><span>我會為自己的密碼記憶和負責。</span></label>'+
-   '<div class="vwh" id="scVowH">👆 先勾上面的方框</div><button class="vwb" id="scVowB" disabled>✅ 進入在家複習</button></div>';
+   '<div class="vws" id="scVowS"><span class="v1 on">① 👆 勾 <i class="vbx">✔</i> 方框</span><b>➜</b><span class="v2">② 🟩 按 綠色 按鈕</span></div>'+
+   '<label class="vwl" id="scVowL"><span class="vwf">👉</span><span class="vwbx"><input type="checkbox" id="scVow"></span><span>我會為自己的密碼記憶和負責。</span></label>'+
+   '<div class="vwh" id="scVowH">👆 先勾 <b>發亮 的 方框</b></div><button class="vwb" id="scVowB" disabled>✅ 進入在家複習</button></div>';
   var c=$('#scVow'),k=$('#scVowB'),h=$('#scVowH');
-  c.onchange=function(){k.disabled=!c.checked;$('#scVowL').classList.toggle('on',c.checked);h.textContent=c.checked?'👍 按綠色按鈕進去':'👆 先勾上面的方框'};
+  c.onchange=function(){k.disabled=!c.checked;$('#scVowL').classList.toggle('on',c.checked);h.innerHTML=c.checked?'👍 按 <b>綠色 按鈕</b> 進去':'👆 先勾 <b>發亮 的 方框</b>';var S=$('#scVowS');if(S){S.querySelector('.v1').classList.toggle('on',!c.checked);S.querySelector('.v1').classList.toggle('ok',c.checked);S.querySelector('.v2').classList.toggle('on',c.checked)}};
   /* 2026-11-01 第三十八次 第 4-(3) 點：勾了 ➜ 按鈕 解鎖 ➜ 獨立 一頁「你很棒！」（以前 寫 謝謝你）*/
   k.onclick=function(){if(!c.checked)return;b.innerHTML='<div class="sclog scpw scvow vgood"><div class="vg0">🌟</div><h2 class="vg1">你很棒！</h2><div class="vg2">🧠 記住 自己 的 密碼　🤝 自己 負責</div></div>';
     setTimeout(function(){if(SCPW===P)SCPW=null;d()},window.__NOGO?60:1800)}}

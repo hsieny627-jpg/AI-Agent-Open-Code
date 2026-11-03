@@ -130,6 +130,28 @@ button:active{transform:scale(.97)}
 .go{min-height:56px;padding:4px 20px;border-radius:999px;border:2px solid #FF9A5A;background:linear-gradient(180deg,#7A2A0C,#3A1406);font-size:clamp(20px,2.6vh,26px);box-shadow:0 0 16px rgba(255,122,61,.35)}
 .how1{min-height:56px;padding:4px 20px;border-radius:999px;border:2px solid #5AB0FF;background:rgba(20,40,70,.8);font-size:clamp(20px,2.6vh,24px)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}.chips span{display:inline-block;background:rgba(255,213,74,.1);border:1px solid rgba(255,213,74,.5);border-radius:999px;padding:2px 14px;font-size:clamp(18px,2.2vh,22px)}
+/* 2026-11-03 第四十一次 第 5 點（30412：保底 寶箱 點了 沒 反應）：變成 按鈕 ➜ 一 點 ＝ 寶箱 打開 動畫＋說明（金幣 本來 就 自動 加 好 了）*/
+.chips .bch{font:inherit;font-size:clamp(18px,2.2vh,22px);color:#FFE9A8;background:linear-gradient(180deg,rgba(255,213,74,.28),rgba(255,160,0,.18));border:2px solid #FFD54A;border-radius:999px;padding:6px 16px;min-height:48px;cursor:pointer;box-shadow:0 0 14px rgba(255,213,74,.45)}
+.chips .bch b{color:#FFD54A;margin-left:6px}.chips .bch .bchi{display:inline-block;font-style:normal;animation:bchW 1.6s ease-in-out infinite}
+@keyframes bchW{0%,70%,100%{transform:rotate(0)}76%{transform:rotate(-12deg)}84%{transform:rotate(12deg)}92%{transform:rotate(-6deg)}}
+#bchO{position:fixed;inset:0;z-index:9000;background:rgba(5,8,25,.9);display:none;align-items:center;justify-content:center;padding:16px}#bchO.on{display:flex}
+#bchO .bw{max-width:min(640px,94vw);text-align:center;color:#fff}
+#bchO .bbx{position:relative;width:min(220px,40vw);height:min(190px,34vw);margin:0 auto 10px}
+#bchO .bbd,#bchO .blid{position:absolute;left:0;right:0;border-radius:14px;background:linear-gradient(180deg,#C77B2C,#7A4214);border:5px solid #FFD54A;box-shadow:inset 0 0 0 6px rgba(0,0,0,.18)}
+#bchO .bbd{bottom:0;height:62%}#bchO .blid{top:8%;height:34%;transform-origin:50% 100%;z-index:2}
+#bchO .bbd:after,#bchO .blid:after{content:'';position:absolute;left:44%;width:12%;top:-5px;bottom:-5px;background:#FFD54A}
+#bchO .bgl{position:absolute;left:50%;top:40%;width:10px;height:10px;border-radius:50%;background:#FFF6C8;box-shadow:0 0 60px 40px rgba(255,220,90,.9);opacity:0;transform:translate(-50%,-50%)}
+#bchO.go .bbx{animation:bchS .7s ease-in-out}#bchO.go .blid{animation:bchL .6s .7s cubic-bezier(.3,1.6,.5,1) forwards}#bchO.go .bgl{animation:bchG .5s .9s forwards}
+@keyframes bchS{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-6deg)}80%{transform:rotate(6deg)}}
+@keyframes bchL{to{transform:translateY(-36%) rotate(-28deg)}}@keyframes bchG{to{opacity:1}}
+#bchO .bcn{position:absolute;left:50%;top:40%;font-size:34px;opacity:0;z-index:3}#bchO.go .bcn{animation:bchC 1.2s var(--d) ease-out forwards}
+@keyframes bchC{0%{opacity:0;transform:translate(-50%,0) scale(.4)}20%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--x)),-150px) scale(1.2)}}
+#bchO .bt1{font-size:clamp(26px,4.4vh,40px);font-weight:700;color:#FFD54A;opacity:0}#bchO.go .bt1{animation:bchT .4s 1.3s forwards}
+#bchO .bt2{font-size:clamp(20px,3vh,28px);margin:10px 0;line-height:1.5;opacity:0}#bchO.go .bt2{animation:bchT .4s 1.7s forwards}
+#bchO .beq{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;font-size:clamp(22px,3.4vh,32px);background:rgba(255,213,74,.14);border:2px solid rgba(255,213,74,.6);border-radius:16px;padding:8px 16px}
+#bchO .bok{margin-top:14px;font:inherit;font-size:clamp(20px,3vh,26px);min-height:56px;padding:6px 32px;border-radius:999px;border:0;background:#39D98A;color:#08210F;font-weight:700;opacity:0}#bchO.go .bok{animation:bchT .4s 2.2s forwards}
+@keyframes bchT{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#bchO.go *{animation-duration:.01s!important;animation-delay:0s!important}}
 .note{color:var(--mut);font-size:clamp(18px,2.2vh,22px)}
 /* 分頁 */
 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0 12px;padding:6px;background:var(--pn);border:1px solid var(--bd);border-radius:22px}
@@ -510,7 +532,7 @@ function drawStage(){var V=RV,e=V.st.eq;try{if(e.h)localStorage.setItem('rp_hero
     ((V.hall||[]).length?'<div class="hallB"><b>🏛 名人堂：★★★★★ 傳說戰神</b>'+V.hall.map(function(id){return '<span>'+id.slice(0,3)+' 班 '+(+id.slice(3))+' 號</span>'}).join('')+'</div>':'');
   /* 2026-10-25 第二十六次 第 3-2 點（老師選 A：暫時 刪除）：👾 打 怪物、💥 一擊 算式、〔⚔ 出招！〕、🐾 我的 寵物 那一格 拿掉（資料 照 留著，要 加回來 ＝ 從 git 第二十五次 版本 拿回 這兩段） */
   h+='<div class="blkw helpB"><h3 class="bh">❓ 看不懂？點 這裡</h3><div class="idr"><button class="how1" data-go="qa">⭐🪙 經驗值、金幣 怎麼來</button><button class="how1" data-go="qc">🎁 收集 有 什麼 幫助</button>'+(ABIL_ON?'<button class="how1" data-go="qd">⚔ 階級 愈高 能力 愈強</button>':'')+'</div>'+
-    (V.medal||V.titles.length||V.chests?'<div class="chips">'+(V.medal?'<span>🏅 勳章 ✕ '+V.medal+'</span>':'')+V.titles.map(function(t){return '<span>🏷 '+t+'</span>'}).join('')+(V.chests?'<span>🎁 保底 寶箱 ✕ '+V.chests+'</span>':'')+'</div>':'')+'</div>';
+    (V.medal||V.titles.length||V.chests?'<div class="chips">'+(V.medal?'<span>🏅 勳章 ✕ '+V.medal+'</span>':'')+V.titles.map(function(t){return '<span>🏷 '+t+'</span>'}).join('')+(V.chests?'<button class="bch" data-bch="'+V.chests+'"><i class="bchi">🎁</i> 保底 寶箱 ✕ '+V.chests+' <b>👆 點 我 打開</b></button>':'')+'</div>':'')+'</div>';
   /* 🎉 加倍 時段（2026-10-26 第二十六次 第 2-4 點）：老師 開了 ＝ 最上面 金色 橫幅 */
   if(V.bo){var bt=new Date(V.bo.to);h='<div class="boban">🎉 你們班加倍中！答對賺的🪙金幣 ✖'+V.bo.k+'、⭐經驗值 ✖'+V.bo.x+(V.bo.h>1?'；🏠 25題闖關 ✖'+V.bo.h:'')+'<small>（到'+(bt.getMonth()+1)+'/'+bt.getDate()+' '+bt.getHours()+':'+('0'+bt.getMinutes()).slice(-2)+'）</small></div>'+h}
   st.innerHTML=h;if(window.RPLIFE)RPLIFE.stage(document.getElementById('mfr'),{c:EC,tier:hs});setTimeout(function(){var b=document.getElementById('xpb');if(b)b.style.width=b.getAttribute('data-w')+'%'},60)}
@@ -821,8 +843,18 @@ function chestShow(r){var h=r&&r.s?'<img src="'+img(r.s)+'" alt="">🎉 '+CAT.S[
 function cele(id){var k=kOf(id),m=document.getElementById('rpm');m.className='on cele';
   document.getElementById('rpmb').innerHTML=fwHTML()+(k==='t'?'<img src="'+treImg(id)+'" alt="">':'<img src="'+img(id)+'" alt="'+id+'">')+
     '<div style="font-size:1.2em;color:#FFE07A;margin-top:8px">🎉 換到了！已經 裝上</div>'+(sOf(id)&&sOf(id).slot==='fx'?'<div class="note">💥 答對 現場任務、做完 一次 的 時候 會 放出來</div>':'')+'<div class="bt"><button class="yes" data-m="x">👌 好</button></div>'}
+/* 第四十一次 第 5 點：🎁 保底 寶箱 打開（金幣 伺服器 已經 自動 加 了，這裡 只 演＋說明）*/
+function bchOpen(n){var o=document.getElementById('bchO');if(!o){o=document.createElement('div');o.id='bchO';document.body.appendChild(o)}
+  var cs='';for(var i=0;i<10;i++)cs+='<i class="bcn" style="--d:'+(0.95+i*0.07).toFixed(2)+'s;--x:'+((i-4.5)*26)+'px">🪙</i>';
+  o.innerHTML='<div class="bw"><div class="bbx"><div class="bgl"></div><div class="blid"></div><div class="bbd"></div>'+cs+'</div>'+
+    '<div class="bt1">🎉 保底 寶箱 打開 了！</div>'+
+    '<div class="bt2">📅 一週 練習 '+CAT.C.chestDays+' 天 以上 ＝ 🎁 1 個<br><span class="beq">🎁 ✕ '+n+' ➜ 🪙 ＋'+CAT.C.chest+' ✕ '+n+' ＝ <b>🪙 ＋'+(CAT.C.chest*n)+'</b></span><br>✅ 金幣 已經 自動 放進 你的 🪙 裡 了</div>'+
+    '<button class="bok" id="bchOk">👌 好</button></div>';
+  o.classList.remove('go');o.classList.add('on');void o.offsetWidth;o.classList.add('go')}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
   if(c('#rpIn')){scLogin(function(){SCH.close();scBar();load()});return}
+  if((b=c('[data-bch]'))){bchOpen(+b.getAttribute('data-bch'));return}
+  if(c('#bchOk')){var bo=document.getElementById('bchO');bo.classList.remove('on','go');return}
   if((b=c('#tabs button'))){TAB=b.getAttribute('data-t');[].forEach.call(document.querySelectorAll('#tabs button'),function(x){x.classList.toggle('on',x===b)});drawShop();return}
   if((b=c('[data-sex]'))){SEX=b.getAttribute('data-sex');drawShop();return}
   if((b=c('[data-scat]'))){SCAT=+b.getAttribute('data-scat');drawShop();return}
