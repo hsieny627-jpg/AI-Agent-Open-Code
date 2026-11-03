@@ -4779,6 +4779,7 @@ if(window.HOME25){XBK='H';document.title='三年級 25 題 闖關';crAuto=functi
 /* ══ 2026-11-03 第四十一次（老師 回答 第四十次「我的 判斷」4-2）：三年級 在家複習 的 一個 遊戲 ＝ ✍️ 字母 書寫（g3mid/lw.html，window.HOMELW）
    題目 ＝ LW（5 題 跟 期中考 相似：考卷 的 字母、方向 反過來 ＋ 5 題 其他 字母）；要 登入、記 成績 g3gm_lwh-q5（src home）；上面〔🏠 回 在家複習〕*/
 if(window.HOMELW){LWM='lwh';document.title='✍️ 字母 書寫';crAuto=function(){};
+ (function(){var a=document.createElement('a');a.id='home';a.href='../g3-review/index.html';a.textContent='🏠 回首頁';a.style.cssText='position:fixed;left:max(10px,env(safe-area-inset-left));bottom:max(10px,env(safe-area-inset-bottom));z-index:99999;display:inline-flex;align-items:center;min-height:52px;padding:4px 20px;border-radius:999px;font:700 clamp(18px,2.4vh,24px) Andika,sans-serif;background:linear-gradient(#FFE07A,#F5B829);color:#3A2600;text-decoration:none;border:3px solid #8A6400';document.body.appendChild(a);var st=document.createElement('style');st.textContent='body.ing #home{display:none!important}';document.head.appendChild(st)})();   /* 每一頁 都 有 金色〔🏠 回首頁〕（在家複習 規則；寫字 的 時候 收起來，不 擋 按鈕）*/
  var lwEl=function(){var o=document.getElementById('hm25');if(!o){o=document.createElement('div');o.id='hm25';document.body.appendChild(o)}return o};
  var lwGo=function(){if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();lwGo()});return}lwEl().hidden=true;startLW('lwh')};
  var lwCover=function(){$('#lobby').hidden=true;$('#game').hidden=true;var o=lwEl();o.hidden=false;
