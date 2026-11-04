@@ -8,8 +8,11 @@ const END = require('../score/_c25.js').END;
     const p = await ctx.newPage(); await p.goto('file://' + path.join(ROOT, file)); await p.waitForTimeout(700); return [p, ctx]; };
   const before = END - 60000, after = END + 1000;
   for (const [site, g] of [['g3mid', 3], ['midterm', 4]]) {
-    let [p, c] = await open(site + '/home.html', before); n++; if (/closed/.test(p.url())) E.push(site + ' 截止 前 home.html 不可以 下架'); 
-    n++; if (!/11 月 4 日 週三 晚上 11:59 前/.test(await p.content())) E.push(site + ' 截止 前 沒有 大字 期限'); await c.close();
+    let p, c;
+    /* 2026-11-05 真正 下架 以後：home.html 只剩 下架頁，「截止 前」這兩項 不再 量（改量 沒有 題目 內容）*/
+    if (require('fs').statSync(path.join(ROOT, site, 'home.html')).size < 2000) { n++; if (/RVD|decLesson|_exam/.test(require('fs').readFileSync(path.join(ROOT, site, 'home.html'), 'utf8'))) E.push(site + ' 下架 以後 home.html 還有 題目 內容'); } else {
+    [p, c] = await open(site + '/home.html', before); n++; if (/closed/.test(p.url())) E.push(site + ' 截止 前 home.html 不可以 下架'); 
+    n++; if (!/11 月 4 日 週三 晚上 11:59 前/.test(await p.content())) E.push(site + ' 截止 前 沒有 大字 期限'); await c.close(); }
     [p, c] = await open(site + '/home.html', after); n++; if (!/go25\/closed\.html\?g=/.test(p.url()) || !/英語複習任務 已經 結束/.test(await p.textContent('body'))) E.push(site + ' 11/5 00:00 以後 home.html 沒有 下架：' + p.url()); await c.close();
     [p, c] = await open(site + '/t25.html', after, 0); n++; if (!/closed\.html\?t=1/.test(p.url())) E.push(site + ' 沒 登入過 老師看板 也 打得開 t25.html'); await c.close();
     [p, c] = await open(site + '/t25.html', after, 1); n++; if (/closed/.test(p.url()) || !(await p.evaluate(() => window.T25 && window.HOME25))) E.push(site + ' 老師 打不開 t25.html'); 
