@@ -155,7 +155,9 @@ var SC = (function () {
       Q.push([q[0] ? 1 : 0, Math.max(-1, Math.min(3, Math.round(+q[1] || 0))), Math.max(0, Math.min(60, r1(+q[2] || 0))), q[3] ? 1 : 0,
         Math.max(0, Math.min(1, Math.round((+q[4] || 0) * 1000) / 1000)), lim(q[5] == null ? i : q[5], 0, 999)]);
       /* 📅 今日任務：每一題 從 哪一個 題組 來（第 7 格；錯題 分析、「答錯 改對」用）*/
-      if (sm[2] === 'td' && typeof q[6] === 'string' && SETRE.test(q[6].replace(/^g\*/, 'g' + c.g)) && !/td_/.test(q[6])) Q[Q.length - 1].push(q[6].slice(0, 40)); }
+      if (sm[2] === 'td' && typeof q[6] === 'string' && SETRE.test(q[6].replace(/^g\*/, 'g' + c.g)) && !/td_/.test(q[6])) Q[Q.length - 1].push(q[6].slice(0, 40));
+      /* 2026-11-04 第四十四次 第 1-(2) 點：🔓 拖曳 題 放錯 的 是 哪幾格（第 7 格 ＝ "~1.4" 第 1、4 個 英文 字；老師看板「最多 人 放錯 的 英文 字」排行）*/
+      else if (!q[0] && typeof q[6] === 'string' && /^~\d{1,2}(\.\d{1,2}){0,11}$/.test(q[6])) Q[Q.length - 1].push(q[6]); }
     var ok = 0, f = 0; for (i = 0; i < Q.length; i++) { ok += Q[i][0]; f += Q[i][3]; }
     var t = +o.t; if (!(t > now - 30 * DAY && t < now + 5 * 6e4)) t = now;   /* 平板時間不對就用伺服器時間；沒網路補送的照當時 */
     return { t: t, id: c.id, g: c.g, cls: c.cls, seat: c.seat, set: set, name: String(o.name || '').slice(0, 60), m: m, n: Q.length, ok: ok,
@@ -354,9 +356,10 @@ var SC = (function () {
   function questions(rs) {
     var Q = {};
     rs.forEach(function (r) { r.qs.forEach(function (q, j) {
-      var st = q[6] || r.set; if (/^g[34]td_/.test(st)) return;   /* 📅 今日任務：算回 原本 的 題組 */
+      var st = (typeof q[6] === 'string' && q[6].charAt(0) !== '~' ? q[6] : '') || r.set; if (/^g[34]td_/.test(st)) return;   /* 📅 今日任務：算回 原本 的 題組 */
       var i = q[5] == null ? j : +q[5], k = st + '#' + i, o = Q[k] = Q[k] || { k: k, set: st, i: i, n: 0, bad: 0, p: { '-1': 0, 0: 0, 1: 0, 2: 0, 3: 0 }, fast: 0 };
-      o.n++; if (!q[0]) o.bad++; o.p[q[1]] = (o.p[q[1]] || 0) + 1; o.fast += q[3]; }); });
+      o.n++; if (!q[0]) o.bad++; o.p[q[1]] = (o.p[q[1]] || 0) + 1; o.fast += q[3];
+      if (!q[0] && typeof q[6] === 'string' && q[6].charAt(0) === '~') { o.sl = o.sl || {}; q[6].slice(1).split('.').forEach(function (x) { o.sl[x] = (o.sl[x] || 0) + 1; }); } }); });   /* 第四十四次：拖曳 題 每一格 被 放錯 幾次 */
     var L = []; for (var k in Q) { Q[k].rate = Math.round(Q[k].bad / Q[k].n * 100); L.push(Q[k]); }
     return L.sort(function (a, b) { return (b.rate - a.rate) || (b.bad - a.bad); });
   }
@@ -439,7 +442,7 @@ var SC = (function () {
     (rs || []).filter(function (r) { return !r.x && !noQ(r.m); }).sort(function (a, b) { return a.t - b.t; }).forEach(function (r) {
       var td = /^g[34]td_/.test(r.set);
       if (!td && r.acc != null) { var x = S[r.set] = S[r.set] || [r.t, 0, 0, 0, 0]; x[1] = Math.max(x[1], r.acc); x[3]++; x[4] = r.t; if (r.t - x[0] >= 7 * DAY && r.acc >= STAR) x[2] = 1; }
-      (r.qs || []).forEach(function (q, j) { var st = q[6] || (td ? '' : r.set); if (!st) return; W[st + '#' + (q[5] == null ? j : q[5])] = [st, q[5] == null ? j : q[5], r.t, q[0] ? 1 : 0]; }); });
+      (r.qs || []).forEach(function (q, j) { var st = (typeof q[6] === 'string' && q[6].charAt(0) !== '~' ? q[6] : '') || (td ? '' : r.set); if (!st) return; W[st + '#' + (q[5] == null ? j : q[5])] = [st, q[5] == null ? j : q[5], r.t, q[0] ? 1 : 0]; }); });
     var w = Object.keys(W).map(function (k) { return W[k]; }).filter(function (x) { return !x[3] && x[2] > now - WDAYS * DAY; }).sort(function (a, b) { return b[2] - a[2]; }).slice(0, 60).map(function (x) { return [x[0], x[1], x[2]]; });
     return { s: S, w: w, now: now }; }
   /* 🎁 全班獎勵（2026-10-25 第二十五次，老師：暫時規定＋「練得愈多天、拿愈多」，取代第二十二次的「全班每一個人都練 3 天 ➜ 每人 🪙200 ⭐100」）：
@@ -568,7 +571,7 @@ var SC = (function () {
       if (r.m === 'l' || r.m === 'lv' || r.m === 'mem' || fast) return;
       var c = 0;
       if (r.m === 'g') c += (+r.ok || 0) + RPC.fix * (+r.fix || 0);
-      else (r.qs || []).forEach(function (q, j) { var k = (q[6] || r.set) + '#' + (q[5] == null ? j : q[5]); if (q[0]) { c += wkq[k] === 1 ? RPC.fix : 1; if (wkq[k] === 1) wkq[k] = 2; } else if (!wkq[k]) wkq[k] = 1; });
+      else (r.qs || []).forEach(function (q, j) { var k = ((typeof q[6] === 'string' && q[6].charAt(0) !== '~' ? q[6] : '') || r.set) + '#' + (q[5] == null ? j : q[5]); if (q[0]) { c += wkq[k] === 1 ? RPC.fix : 1; if (wkq[k] === 1) wkq[k] = 2; } else if (!wkq[k]) wkq[k] = 1; });
       if (r.acc != null) { if (prev[r.set] != null && r.acc > prev[r.set]) c += RPC.prog; prev[r.set] = r.acc; }
       var tk = tierAt(r.t); if (tk >= 2 && /td_ch$/.test(r.set)) c = Math.round(c * RPCHAL);   /* 🔥 挑戰關（★★ 精英戰士 以上）：金幣 ✖1.5 */
       if (tk) c = Math.round(c * (100 + RPTB[tk][0]) / 100);

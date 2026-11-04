@@ -99,7 +99,7 @@ const AK = t => String(t).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…�
       ok(/再聽一次/.test(F.t), tag + ' 答錯頁 沒有〔🔊 再聽一次〕'); ok(F.b && F.fs >= 22, tag + ' 題型 ' + ty + ' 答錯頁 跑出 畫面 或 字 太小');
       /* 唸 3 次 才 有〔▶ 繼續〕*/
       let nx = false; for (let i = 0; i < 40; i++) { await p.waitForTimeout(150); if (await p.evaluate(() => !!document.querySelector('.rvfx .nx'))) { nx = true; break; } }
-      ok(nx && (await p.evaluate(() => document.querySelectorAll('.rvfx .n3 i.on').length)) === 3, tag + ' 題型 ' + ty + ' 答錯頁 沒有 唸 3 次 ➜ 繼續');
+      ok(nx && (await p.evaluate(() => document.querySelectorAll('.rvfx .n3 i.on').length)) === 2, tag + ' 題型 ' + ty + ' 答錯頁 沒有 唸 2 次（第四十四次）➜ 繼續');
       if (nx) { await p.click('.rvfx .nx'); await p.waitForTimeout(200); ok(!(await p.evaluate(() => !!document.querySelector('.rvfb'))), tag + ' 按〔▶ 繼續〕沒有 回 動畫'); }
     }
     /* 答對：mc ＝ 點 正解 */

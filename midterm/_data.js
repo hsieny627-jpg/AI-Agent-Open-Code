@@ -359,6 +359,8 @@ const DTUT = { key: 'g4', demo: tutQ('She’s my mom.'), quiz: [tutQ('Who’s sh
   ord: Object.assign(tutQ('Who’s he?'), { nat: [['他', 2], ['是', 1], ['誰', 0]], c1: '中文 這樣 說：<b>他 是 誰？</b>', c2: '英文 把 <b>Who（誰）</b> 放 在 <b>最 前面</b>！每個 中文 飛到 自己 的 英文 字 下面', c3: '所以 解碼 唸起來：<b>誰 是 他</b>（每個 英文 字 正下方 ＝ 它 自己 的 中文）' }) };
 [DTUT.demo, DTUT.ord].concat(DTUT.quiz).forEach(q => SAYS.push(q.en));
 XB.dc.concat(XB2.dc).forEach(q => SAYS.push(q.en));
+/* 2026-11-04 第四十四次 第 3 點：答錯頁 先 唸 放錯 的 那一個 字 ➜ 每一個 解碼 的 字 也 做 語音檔（’s ＝ 跟 前一個 字 一起：He’s）*/
+XB.dc.concat(XB2.dc).forEach(q => q.t.forEach((p, i) => { let w = p[0].replace(/[.?!,]+$/, ''); if (/^['’]/.test(w) && i > 0) w = q.t[i - 1][0].replace(/[.?!,]+$/, '') + w; if (/[A-Za-z]/.test(w)) SAYS.push(w); }));
 Object.keys(XB2).filter(k => k !== 'dc').forEach(k => XB2[k].forEach(c => { [c.say, c.ae, c.line].forEach(x => { if (x && !/^[⭕❌]/.test(x)) SAY.push(x); }); if (c.chat) c.o.forEach(x => SAY.push(x)); (c.fs || []).forEach(([v, t]) => { if (v === 'M1') SAYM.push(t); else SAYS.push((v === 'm' ? 'm:' : '') + t); }); if (c.pair) c.pair.forEach(x => SAYM.push(x)); if (c.w) SAYM.push(c.w); if (c.kind === 'L' || c.num) SAYM.push(c.say); })); ['A', 'B'].forEach(b => [1, 2].forEach(u => LES[b][u].s.forEach(x => SAYS.push(x.en))));   /* 🔓 解碼 任務、秒懂 動畫 */
 /* 挑戰 題庫 的「第幾題」（成績 用）：原本 84 題 照 原來 順序，新 的 60 題 接 在 後面 */
 const XORD = [];

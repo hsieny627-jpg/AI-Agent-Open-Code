@@ -331,6 +331,8 @@ var XB = mkXB(XDA), XB2 = mkXB(PL.PB);
 var DCV = function (en) { return BOYS.some(function (n) { return new RegExp('\\b' + n + '\\b').test(en); }) ? 'm' : ''; };
 function mkDC(L) { return L.map(function (q) { var o = { sim: 0, dc: 1, u: q.u, en: q.en, t: q.t, x: q.x || [], z: q.z, zh: q.z, v: DCV(q.en), say: q.en }; addS(q.en, o.v); return o; }); }
 XB.dc = mkDC(PL.DA); XB2.dc = mkDC(PL.DB);
+/* 2026-11-04 第四十四次 第 3 點：答錯頁 先 唸 放錯 的 那一個 字 ➜ 每一個 解碼 的 字 都 做 單字 語音檔（audio/w，0.92；’s ＝ 跟 前一個 字 一起：He’s）*/
+XB.dc.concat(XB2.dc).forEach(function (q) { q.t.forEach(function (p, i) { var w = p[0].replace(/[.?!,]+$/, ''); if (/^['’]/.test(w) && i > 0) w = q.t[i - 1][0].replace(/[.?!,]+$/, '') + w; if (/[A-Za-z]/.test(w)) addS(w); }); });
 /* 2026-10-30 第三十四次 第 6 點：資料表 新題型（題庫 A、B 各 8 題，只用 不是 類似 的 那幾組；第幾題 接 在 XORD／XORD2 最 後面，舊 成績 對得上）*/
 var XL = {}, XL2 = {}; Object.keys(XB).forEach(function (k) { XL[k] = XB[k].length; }); Object.keys(XB2).forEach(function (k) { XL2[k] = XB2[k].length; });
 XB.q9 = XB.q9.concat(q9k(XB.q9.filter(function (q) { return !q.sim; }), 8)); XB2.q9 = XB2.q9.concat(q9k(XB2.q9.filter(function (q) { return !q.sim; }), 8));

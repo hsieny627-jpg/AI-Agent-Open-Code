@@ -20,7 +20,18 @@ function OKVSRC() {
     o.innerHTML = '<div class="okb"><div class="okh">✅ 答對了！</div><div class="okc">🔊 再 聽 一次：正確 答案</div><div class="okw" id="okw">' + html + '</div></div>';
     o.classList.add('on'); if (after) try { after(); } catch (e) { }
     var b = o.querySelector('.okb'); for (var z = 1, k = 0; k < 10 && b.scrollHeight > b.clientHeight + 2; k++) { z *= .9; b.style.setProperty('--okz', z.toFixed(3)); }
-    setTimeout(function () { O.say(document.getElementById('okw'), L, function () { setTimeout(function () { o.classList.remove('on'); o.innerHTML = ''; if (done) done(); }, window.__NOGO ? 30 : 700); }); }, window.__NOGO ? 30 : 500); };
+    var fin = false, end = function () { if (fin) return; fin = true; clearTimeout(sg); setTimeout(function () { o.classList.remove('on'); o.innerHTML = ''; if (done) done(); }, window.__NOGO ? 30 : 700); };
+    /* 第四十四次 第 2-(2) 點：保險 ＝ 唸 太 久（平板 擋 聲音、被 打斷）也 一定 會 下一題 */
+    var sg = setTimeout(function () { if (!fin) { try { stopSay(); } catch (e) { } end(); } }, window.__NOGO ? 8000 : 9000 + L.length * 7000);
+    setTimeout(function () { O.say(document.getElementById('okw'), L, end); }, window.__NOGO ? 30 : 500); };
+  /* 2026-11-04 第四十四次 第 3 點：唸 中文（瀏覽器 zh-TW；iPad 內建 美佳）＝ 拖曳 題 答錯頁「放錯 的 字 的 中文」「整句 中文」。
+     第 2-(2) 點（iPad 唸到 一半 卡住）：一定 有 看門狗 ＝ 照 字數 估 時間＋2.5 秒，時間 到 一定 往下 走；被 別的 聲音 打斷（SID 變了）＝ 不 接。量測 window.__ZHFAST ＝ 0.1 秒 */
+  O.zh = function (t, done) { var my = SID, ok = false, w = 0, f = function () { if (ok) return; ok = true; clearTimeout(w); if (my === SID && done) done(); };
+    t = String(t || '').replace(/^整句：/, '').replace(/[\s　]+/g, ''); var est = Math.max(1500, 500 + t.length * 320);
+    if (window.__ZHFAST || !t || !window.speechSynthesis || !window.SpeechSynthesisUtterance) { w = setTimeout(f, window.__ZHFAST ? 100 : t ? est : 200); return; }
+    w = setTimeout(f, est + 2500);
+    try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(t), V = speechSynthesis.getVoices() || [], v = V.filter(function (x) { return /zh[-_]TW/i.test(x.lang); })[0] || V.filter(function (x) { return /^zh/i.test(x.lang); })[0];
+      u.lang = 'zh-TW'; if (v) u.voice = v; u.rate = .9; u.onend = f; u.onerror = f; setTimeout(function () { if (my === SID && !ok) try { speechSynthesis.speak(u); } catch (e) { } }, 90); } catch (e) { } };
   O.hide = function () { var o = document.getElementById('okv'); if (o) { o.classList.remove('on'); o.innerHTML = ''; } clear(); };
   return O;
 }

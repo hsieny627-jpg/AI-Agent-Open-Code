@@ -118,12 +118,17 @@ function AWDSRC() {
     S.ranks = ranks;
     /* 頒獎台（一開始 在 地板 下面，輪到 才 升 起來）*/
     ranks.forEach(function (rk) { var p = H('div', 'awpod r' + rk, '<div class="pf"><b>' + MED[rk] + '</b></div><div class="pt"></div><div class="ps"></div>'); p.style.left = SLOT[rk] + '%'; p.style.setProperty('--ph', PODH[rk] + '%'); ar.appendChild(p);
-      var gp = H('div', 'awgrp r' + rk + ' n' + Math.min(3, G[rk].length), '<div class="awmd">' + (rk <= 3 ? MED[rk] : '第 ' + rk + ' 名') + '</div><div class="awps">' + G[rk].map(person).join('') + '</div>'); gp.style.setProperty('--sx', SLOT[rk] + '%'); gp.style.setProperty('--ph', PODH[rk] + '%'); gp.setAttribute('data-rk', rk); ar.appendChild(gp); });
+      var gp = H('div', 'awgrp r' + rk + ' n' + Math.min(3, G[rk].length), (rk === 1 ? '<div class="awrays"></div><div class="awcrown">👑</div><div class="awchamp">👑 冠軍</div>' : '') + '<div class="awmd">' + (rk <= 3 ? MED[rk] : '第 ' + rk + ' 名') + '</div><div class="awps">' + G[rk].map(person).join('') + '</div>'); gp.style.setProperty('--sx', SLOT[rk] + '%'); gp.style.setProperty('--ph', PODH[rk] + '%'); gp.setAttribute('data-rk', rk); ar.appendChild(gp); });
     fitAll(host); S.tm.push(setTimeout(function () { fitAll(host); }, 600));   /* 圖 載 好 以後 再 算 一次 */
     /* ① 開場 */
     host.classList.add('st0'); A.M.pad(6); A.M.roll(3.6, true); S.pt.conf(30);
     T(function () { A.M.hit(0); host.classList.add('st1'); S.pt.burst(.5, .3, 90); }, 3600);
-    if (rest.length) { T(function () { say('<div class="awrest">' + rest.slice().sort(function (a, b) { return b.rk - a.rk; }).map(function (x, i) { return '<span style="animation-delay:' + (i * .45 * K) + 's"><b>' + x.rk + '</b>' + esc(x.code) + ' ' + esc(x.nm || '') + '<em>' + esc(x.sc || '') + '</em></span>'; }).join('') + '</div><div class="awrt">👏 第 10～6 名，恭喜！</div>', 'rest'); }, 1800); T(function () { }, 1200 + rest.length * 450); }
+    /* 2026-11-04 第四十四次 第 4-(3)(a) 點（老師）：第 10～6 名 ＝ 階梯，由下 往上 一階 一階 出現（最 下面 一階 第 10 名 ➜ 上面 第 9 名 … ➜ 最 上面 第 6 名；名次 愈 高 愈 亮、愈 尊榮）*/
+    if (rest.length) { var RD = rest.slice().sort(function (a, b) { return b.rk - a.rk; }), stp = 1.05;
+      T(function () { say('<div class="awst">' + RD.slice().reverse().map(function (x) { var i = RD.indexOf(x); return '<div class="aws" style="--i:' + i + ';--n:' + RD.length + ';animation-delay:' + (i * stp * K).toFixed(2) + 's"><b>第 ' + x.rk + ' 名</b><span class="awsc2">' + esc(x.code) + ' ' + esc(x.nm || '') + '</span><em>' + esc(x.sc || '') + '</em></div>'; }).join('') +
+        '</div><div class="awrt" style="animation-delay:' + (RD.length * stp * K).toFixed(2) + 's">👏 第 10～6 名，恭喜！</div>', 'rest');
+        RD.forEach(function (x, i) { S.tm.push(setTimeout(function () { if (host._aw === S && A.M) A.M.hit(i % 3); }, i * stp * 1000 * K)); }); }, 1800);
+      T(function () { }, 1600 + RD.length * stp * 1000); }
     /* ② 第 5 ➜ 2 名：一層 一層 揭開 */
     ranks.forEach(function (rk, i) { if (rk === 1) return; var f = fx[i % fx.length], grp = ar.querySelector('.awgrp.r' + rk), pod = ar.querySelector('.awpod.r' + rk), pre = rk <= 3 ? 2600 : 1900;
       T(function () { say('<span class="awnum">第 ' + rk + ' 名</span><small>是……</small>', 'pre r' + rk); A.M.roll(pre / 1000 * K, true); host.classList.add('dim'); }, 2200);
@@ -132,7 +137,7 @@ function AWDSRC() {
     /* ③ 懸疑：第 1 名 是…… 心跳＋燈光 掃 ＋ 3 2 1 */
     if (G[1]) { T(function () { host.classList.add('sus'); say('<span class="awnum">第 1 名</span><small>是……</small>', 'pre r1'); A.M.beat(4); }, 2400);
       [3, 2, 1].forEach(function (n) { T(function () { say('<span class="awcd">' + n + '</span>', 'cd'); A.M.hit(n % 3); }, n === 3 ? 3400 : 1000); });
-      T(function () { host.classList.remove('sus'); host.classList.add('boom'); cap.classList.remove('in'); var gp = ar.querySelector('.awgrp.r1'), pd = ar.querySelector('.awpod.r1'); pd.classList.add('up'); gp.classList.add('show', 'fx-king');
+      T(function () { host.classList.remove('sus'); host.classList.add('boom'); cap.classList.remove('in'); var gp = ar.querySelector('.awgrp.r1'), pd = ar.querySelector('.awpod.r1'); pd.classList.add('up'); gp.classList.add('show', 'fx-king'); host.classList.add('king');   /* 第四十四次 4-(3)(a)：第 1 名 ＝ 最 尊榮 的 加冕：金色 光芒 轉、皇冠 從 天上 落下 戴 上、「👑 冠軍」金字 */
         A.M.fanfare(); for (var b = 0; b < 6; b++) (function (b) { S.tm.push(setTimeout(function () { if (host._aw === S) S.pt.burst(.15 + .14 * b, .2 + (b % 2) * .15, 110); }, b * 380 * K)); })(b); S.pt.conf(120); }, 1000);
       T(function () { ar.querySelector('.awgrp.r1').classList.add('seat'); host.classList.remove('boom'); }, 4200); }
     /* ④ 終曲：全部 站 在 頒獎台 上 */
@@ -168,7 +173,7 @@ const CSS = `
 .awd .awpod{position:absolute;bottom:0;width:17%;height:var(--ph);transform:translate(-50%,105%);opacity:0;transform-style:preserve-3d;transition:transform 1.3s cubic-bezier(.3,1.4,.5,1),opacity .4s}
 .awd .awpod.up{transform:translate(-50%,0);opacity:1}
 .awd .awpod .pf{position:absolute;inset:0;border-radius:6px 6px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:6px;font-size:clamp(28px,5vh,54px);font-weight:900;background:linear-gradient(180deg,#5A6A86,#24304A);box-shadow:inset 0 3px 0 rgba(255,255,255,.4),0 0 30px rgba(0,0,0,.6)}
-.awd .awpod .pt{position:absolute;left:0;right:0;top:0;height:46px;transform-origin:50% 0;transform:rotateX(90deg);background:linear-gradient(#8A9AB6,#5A6A86)}
+.awd .awpod .pt{position:absolute;left:-4%;right:-4%;top:-18px;height:18px;clip-path:polygon(6% 0,94% 0,100% 100%,0 100%);background:linear-gradient(#8A9AB6,#5A6A86)}
 .awd .awpod.r1 .pf{background:linear-gradient(180deg,#FFE58A,#C98A00 60%,#7A5200);box-shadow:inset 0 3px 0 #FFF6C0,0 0 60px rgba(255,213,74,.8)}.awd .awpod.r1 .pt{background:linear-gradient(#FFF3B0,#FFD54A)}
 .awd .awpod.r2 .pf{background:linear-gradient(180deg,#F4F7FB,#9AA6B8 60%,#566275)}.awd .awpod.r2 .pt{background:#FFFFFF}
 .awd .awpod.r3 .pf{background:linear-gradient(180deg,#F2B27A,#B5652A 60%,#6E3A12)}.awd .awpod.r3 .pt{background:#FFD0A6}
@@ -177,7 +182,7 @@ const CSS = `
 .awd .awgrp.seat{left:var(--sx);top:calc(100% - var(--ph));transform:translate(-50%,-100%) scale(var(--ss,.62));transform-origin:50% 100%}
 .awd .awmd{font-size:clamp(34px,6vh,70px);font-weight:900;color:var(--aw1);text-shadow:0 0 22px var(--aw1),0 4px 0 rgba(0,0,0,.5)}
 .awd .awps{display:flex;gap:14px;justify-content:center}
-.awd .awp{min-width:clamp(180px,20vw,280px);padding:12px 16px 14px;border-radius:24px;background:linear-gradient(160deg,rgba(255,255,255,.2),rgba(255,255,255,.04));border:3px solid var(--aw1);box-shadow:0 0 30px color-mix(in srgb,var(--aw1) 70%,transparent),inset 0 0 30px rgba(255,255,255,.12);backdrop-filter:blur(4px)}
+.awd .awp{min-width:clamp(180px,20vw,280px);padding:12px 16px 14px;border-radius:24px;background:linear-gradient(160deg,rgba(40,50,80,.86),rgba(10,14,30,.8));border:3px solid var(--aw1);box-shadow:0 0 30px color-mix(in srgb,var(--aw1) 70%,transparent),inset 0 0 30px rgba(255,255,255,.12);}
 .awd .awgrp.r1 .awp{border-width:5px;box-shadow:0 0 60px var(--aw1),0 0 120px color-mix(in srgb,var(--aw1) 60%,transparent),inset 0 0 40px rgba(255,255,255,.2)}
 .awd .awav{position:relative;height:clamp(120px,19vh,210px);display:flex;align-items:flex-end;justify-content:center}
 .awd .aw-h{height:100%;max-width:100%;object-fit:contain;filter:drop-shadow(0 8px 14px rgba(0,0,0,.6))}.awd .aw-h.noi{font-size:clamp(80px,13vh,140px);line-height:1}
@@ -202,19 +207,33 @@ const CSS = `
 .awd.boom{animation:awQk .6s}@keyframes awQk{20%{transform:translate(-10px,6px)}40%{transform:translate(10px,-6px)}60%{transform:translate(-6px,4px)}80%{transform:translate(6px,-2px)}}
 /* 8 種 揭曉 */
 .awd .awgrp.fx-flip.show{animation:fxFlip 1.4s cubic-bezier(.3,1.3,.5,1) backwards}@keyframes fxFlip{0%{transform:translate(-50%,-50%) rotateY(-540deg) scale(.2)}100%{transform:translate(-50%,-50%) rotateY(0) scale(var(--sc,1.25))}}
-.awd .awgrp.fx-drop.show{animation:fxDrop 1.2s cubic-bezier(.5,0,.6,1.6) backwards}@keyframes fxDrop{0%{transform:translate(-50%,-260%) scale(.6) rotate(-25deg);filter:brightness(3) blur(4px)}80%{transform:translate(-50%,-44%) scale(1.3)}100%{transform:translate(-50%,-50%) scale(var(--sc,1.25))}}
+.awd .awgrp.fx-drop.show{animation:fxDrop 1.2s cubic-bezier(.5,0,.6,1.6) backwards}@keyframes fxDrop{0%{transform:translate(-50%,-160%) scale(.6) rotate(-25deg);opacity:0}80%{transform:translate(-50%,-44%) scale(1.3)}100%{transform:translate(-50%,-50%) scale(var(--sc,1.25))}}
 .awd .awgrp.fx-door.show{animation:fxDoor 1.5s ease backwards}@keyframes fxDoor{0%{clip-path:inset(0 50% 0 50%);transform:translate(-50%,-50%) scale(var(--sc,1.25))}100%{clip-path:inset(0 0 0 0);transform:translate(-50%,-50%) scale(var(--sc,1.25))}}
 .awd .awgrp.fx-cube.show{animation:fxCube 1.5s cubic-bezier(.3,1.3,.5,1) backwards}@keyframes fxCube{0%{transform:translate(-50%,-50%) rotateX(270deg) rotateY(90deg) scale(.3)}100%{transform:translate(-50%,-50%) scale(var(--sc,1.25))}}
 .awd .awgrp.fx-rise.show{animation:fxRise 1.4s cubic-bezier(.3,1.4,.5,1) backwards}@keyframes fxRise{0%{transform:translate(-50%,120%) scale(var(--sc,1.25));opacity:0}100%{transform:translate(-50%,-50%) scale(var(--sc,1.25));opacity:1}}
-.awd .awgrp.fx-beam.show{animation:fxBeam 1.6s ease backwards}@keyframes fxBeam{0%{transform:translate(-50%,-50%) scaleX(.02) scaleY(3);filter:brightness(4)}60%{transform:translate(-50%,-50%) scaleX(1.4) scaleY(1.1);filter:brightness(2)}100%{transform:translate(-50%,-50%) scale(var(--sc,1.25));filter:none}}
-.awd .awgrp.fx-shatter.show{animation:fxSh 1.3s ease backwards}@keyframes fxSh{0%{transform:translate(-50%,-50%) scale(var(--sc,1.25));filter:blur(14px) brightness(3);opacity:0}40%{opacity:1}100%{filter:none;transform:translate(-50%,-50%) scale(var(--sc,1.25))}}
+.awd .awgrp.fx-beam.show{animation:fxBeam 1.6s ease backwards}@keyframes fxBeam{0%{transform:translate(-50%,-50%) scaleX(.02) scaleY(1.5);filter:brightness(2.2)}60%{transform:translate(-50%,-50%) scaleX(1.4) scaleY(1.1);filter:brightness(2)}100%{transform:translate(-50%,-50%) scale(var(--sc,1.25));filter:none}}
+.awd .awgrp.fx-shatter.show{animation:fxSh 1.3s ease backwards}@keyframes fxSh{0%{transform:translate(-50%,-50%) scale(calc(var(--sc,1.25) * 1.4));filter:brightness(2.2);opacity:0}40%{opacity:1}100%{filter:none;transform:translate(-50%,-50%) scale(var(--sc,1.25))}}
 .awd .awgrp.fx-coin.show{animation:fxCoin 1.5s cubic-bezier(.3,1.3,.5,1) backwards}@keyframes fxCoin{0%{transform:translate(-50%,-50%) rotateY(0) scale(.2)}100%{transform:translate(-50%,-50%) rotateY(1080deg) scale(var(--sc,1.25))}}
-.awd .awgrp.fx-king.show{animation:fxKing 2.2s cubic-bezier(.2,1.3,.4,1) backwards}@keyframes fxKing{0%{transform:translate(-50%,-50%) translateZ(-900px) scale(.1) rotateY(720deg);filter:brightness(5)}60%{transform:translate(-50%,-50%) scale(calc(var(--sc,1.25) * 1.2));filter:brightness(1.6)}100%{transform:translate(-50%,-50%) scale(calc(var(--sc,1.25) * 1.08));filter:none}}
+.awd .awgrp.fx-king.show{animation:fxKing 2.2s cubic-bezier(.2,1.3,.4,1) backwards}@keyframes fxKing{0%{transform:translate(-50%,-50%) scale(.1) rotateY(720deg);filter:brightness(2.5)}60%{transform:translate(-50%,-50%) scale(calc(var(--sc,1.25) * 1.2));filter:brightness(1.6)}100%{transform:translate(-50%,-50%) scale(calc(var(--sc,1.25) * 1.08));filter:none}}
 .awd .awgrp.r1:before{content:'👑';position:absolute;left:50%;top:-1.2em;font-size:clamp(50px,9vh,100px);transform:translateX(-50%);opacity:0}
 .awd .awgrp.r1.show:before{animation:awCr 1.6s 1.1s cubic-bezier(.3,1.6,.5,1) both,awCw 2s 2.8s ease-in-out infinite alternate}@keyframes awCr{0%{opacity:0;transform:translate(-50%,-300%) rotate(-30deg)}100%{opacity:1;transform:translateX(-50%)}}@keyframes awCw{to{transform:translateX(-50%) translateY(-8px) rotate(6deg)}}
 .awd.fin .awgrp.r1 .awp{animation:awGl 1.4s ease-in-out infinite alternate}@keyframes awGl{to{box-shadow:0 0 90px var(--aw1),0 0 160px color-mix(in srgb,var(--aw1) 60%,transparent)}}
 .awbar{display:inline-flex;flex-wrap:wrap;gap:8px}.awbar .awt{min-height:52px;min-width:120px;border-radius:14px;border:3px solid #556;background:#1A1F33;color:#9AA3B8;font:inherit;font-size:clamp(17px,2.2vh,22px);font-weight:700;cursor:pointer}
 .awbar .awt.on{border-color:#7BF0A8;background:#173A28;color:#fff}
+.awd .awcap.rest{top:50%}.awd .awst{display:flex;flex-direction:column;align-items:center;gap:6px}
+.awd .aws{display:grid;grid-template-columns:auto auto auto;align-items:center;gap:14px;min-width:min(78vw,720px);transform:translateX(calc((var(--i) - (var(--n) - 1) / 2) * -26px));padding:6px 22px;border-radius:12px 12px 4px 4px;font-size:clamp(22px,3.4vh,36px);font-weight:900;color:#fff;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--aw1) calc(20% + var(--i) * 12%),#1A2238),color-mix(in srgb,var(--aw1) calc(8% + var(--i) * 8%),#0A0E1E));border:2px solid color-mix(in srgb,var(--aw1) calc(45% + var(--i) * 11%),transparent);
+  box-shadow:0 8px 0 rgba(0,0,0,.45),0 0 calc(6px + var(--i) * 7px) color-mix(in srgb,var(--aw1) 70%,transparent);opacity:0;animation:awStp .8s cubic-bezier(.2,1.5,.4,1) both}
+.awd .aws b{color:var(--aw1);text-shadow:0 0 12px var(--aw1)}.awd .aws em{font-style:normal;color:#FFE58A}
+@keyframes awStp{0%{opacity:0;transform:translateX(calc((var(--i) - (var(--n) - 1) / 2) * -26px)) translateY(60px) scaleY(.2)}100%{opacity:1}}
+.awd .awrt{opacity:0;animation:awRs .6s both}
+.awd .awrays{position:absolute;left:50%;top:45%;width:min(120vw,1500px);height:min(120vw,1500px);transform:translate(-50%,-50%);z-index:-1;pointer-events:none;opacity:0;background:repeating-conic-gradient(from 0deg,color-mix(in srgb,var(--aw1) 55%,transparent) 0 6deg,transparent 6deg 18deg);-webkit-mask:radial-gradient(circle,#000 0,transparent 62%);mask:radial-gradient(circle,#000 0,transparent 62%)}
+.awd.king .awgrp.r1 .awrays{animation:awRay 1s .3s both,awRot 18s linear infinite}@keyframes awRay{from{opacity:0}to{opacity:.9}}@keyframes awRot{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.awd .awcrown{position:absolute;left:50%;top:-6%;font-size:clamp(70px,12vh,140px);transform:translate(-50%,-140vh);z-index:3;filter:drop-shadow(0 0 30px #FFD54A);opacity:0}
+.awd.king .awgrp.r1 .awcrown{animation:awCrown 1.6s 1s cubic-bezier(.4,0,.6,1.4) forwards}@keyframes awCrown{0%{opacity:1;transform:translate(-50%,-140vh) rotate(-30deg)}75%{opacity:1;transform:translate(-50%,0) rotate(8deg) scale(1.25)}100%{opacity:1;transform:translate(-50%,0) rotate(0) scale(1)}}
+.awd .awchamp{position:absolute;left:50%;top:-24%;transform:translateX(-50%);white-space:nowrap;font-size:clamp(40px,7vh,84px);font-weight:900;opacity:0;background:linear-gradient(90deg,#FFE58A,#fff,#FFD54A,#fff,#FFE58A);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 22px #FFD54A)}
+.awd.king .awgrp.r1 .awchamp{animation:awCh .8s 2.4s cubic-bezier(.2,1.6,.4,1) forwards,awSh 3s 3.2s linear infinite}@keyframes awCh{from{opacity:0;transform:translateX(-50%) scale(.2)}to{opacity:1;transform:translateX(-50%) scale(1)}}
+.awd .awgrp.seat .awchamp{top:-42%}.awd.fin .awgrp.r1 .awrays{opacity:.5}
 @media (prefers-reduced-motion:reduce){.awd *{animation-duration:.01s!important;transition-duration:.01s!important}}
 `;
 module.exports = { CSS, JS: '\n/* ══ 🏆 頒獎 典禮（score/_awd.js）══ */\nvar AWD=(' + AWDSRC.toString() + ')();\n', AWDSRC };

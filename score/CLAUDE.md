@@ -4,6 +4,19 @@
 > 設計、研究證據（21 條）、使用者的決定：`sentences/2026-10-07_C_設計與研究清單.md`（**Q1～Q18 使用者 2026-10-07 全部照建議**）。
 > 根目錄 `AGENTS.md` 第四節（最高原則、品質、省額度）同樣適用。
 
+## 2026-11-04 第四十四次（先讀這一節）
+
+需求檔 第四節 最下面「第四十四次」。**改了 `_calc.js` ➜ 要 重新 部署** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html （網址 不變）。量測 `node g3mid/_verify_44.js`、`node score/_test.js`。
+
+| 老師 | 做法 |
+|---|---|
+| 1-(2) 拖曳 題 放錯 的 字 | `_calc.js` `clean`：答錯 的 題 第 7 格 ＝ `"~1.4"`（`/^~\d{1,2}(\.\d{1,2}){0,11}$/`）才 收；`questions()` 多 `sl`（每一格 被 放錯 幾次）；`me()`、`rpEarn`、`questions` 的 q[6] 是 `~` 開頭 ＝ 不是 題組（今日任務 照舊）。**部署 以前 ＝ 第 7 格 被 丟掉（舊 規則），部署 以後 新 做 的 才 有** |
+| 1-(1) 圖示 看不懂 | `_bank.js` 期中 挑戰（x25／x50／h25／n25／n50）每一題 `gid`、`gn`（🔓 句子 解碼 任務、🐍 英文 貪食蛇…）；老師看板 ② 哪一關 最 難 ＝ `gn`（`.xan.xgn`）|
+| 1-(2) 🧩 最多 人 放錯 的 英文 字 前 5 名 | `_bank.js` 解碼 題 `dt` ＝ [[英文, 中文, 語音檔]]（三年級 `audio/w`、四年級 `audio/s`）；`_teacher.js` `dwrHTML`（同 一個 字 不分 大小寫 加 起來）、`dwrPlay`（第 5 ➜ 第 1 名 一名 一名 翻開、長條 長 出來、英文 語音檔 ➜ 中文 zh-TW，唸到 的 那一列 放大 發亮）、`dwrZh` |
+| 1-(3) 正確 答案 圖＋難點 | `_bank.js`：`pimg`（照片 `midterm/img/…jpg`、`g3mid/img/…jpg`）、`pe`（圖示：WHO＋JOB、`c.ic`）；四年級 逐字 中文 改 用 midterm 自己 的 `GL`＋`gx`（Show ＝ 給…看、homework ＝ 作業、please ＝ 請、Let’s ＝ 讓 我們），`ae`／`az` ＝ `fe`／`fz`。`_teacher.js` `show()`：第 ③ 步 `difHTML`（最多 人 選 的 錯 答案 ↔ 正確 答案 LCS 一個 字 一個 字 比：錯 的 紅 劃掉、關鍵 字 綠 底線＋中文、跳 兩下；「🎯 難點：聽到 homework（作業）就 是 這一個！」）；第 ④ 步 `spicHTML`（圖 彈 出來）＋逐字 中文＋唸 3 次 |
+| 2-(2) 錯題 總複習 卡住 | `_wrev.js` 英文 20 秒 保險 |
+| 4-(3) 頒獎 典禮 | `_awd.js`（見 `live/CLAUDE.md` 第四十四次）|
+
 ## 2026-11-03 第四十二次（先讀這一節）
 
 老師 原文：`sentences/2026-10-16_C_需求與問題.md` 第四節 最下面「第四十二次」。**改了 `_calc.js`、`_server.js` ➜ 要 重新 部署** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html （網址 不變）。

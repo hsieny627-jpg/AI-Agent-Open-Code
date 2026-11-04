@@ -19,7 +19,9 @@ exports.CSS = `
 mark.dzm{background:#D32F2F;color:#fff;border-radius:8px;padding:0 .18em;box-shadow:0 0 0 4px #FF8A80,0 0 16px rgba(255,80,80,.9);animation:dzIn .55s cubic-bezier(.3,1.8,.5,1) 1.65s both,dzPl 1.1s ease-in-out 2.4s 2}
 @keyframes dzIn{0%{transform:scale(.3);opacity:0}100%{transform:none;opacity:1}}@keyframes dzPl{50%{transform:scale(1.14)}}
 .dzwhy{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:center;align-items:center;font-size:clamp(20px,2.8vh,28px);font-weight:700;color:#fff;background:#5A1010;border:3px solid #FF6B6B;border-radius:14px;padding:6px 14px;margin:4px auto}
-.dzwhy span{white-space:nowrap}.dzwhy b{color:#FFB4B4}.dzwhy em{font-style:normal;color:#9FF0B5}.dzwhy small{font-size:.8em;color:#FFD0D0;margin-left:4px}
+.dzwhy span{white-space:nowrap;display:inline-block;transition:transform .2s,box-shadow .2s;border-radius:10px;padding:0 4px}.dzwhy span.dmr{transform:scale(1.12);box-shadow:0 0 0 3px #FFE07A,0 0 18px rgba(255,224,122,.8);background:rgba(255,224,122,.18)}
+.gls .gw.dmr b,.gls .gw.dmr i{display:inline-block;transform:scale(1.18);color:#FFF6C8;text-shadow:0 0 14px rgba(255,236,150,.95)}.gls .gw.dmr{filter:brightness(1.2)}.tr.dmr{display:inline-block;transform:scale(1.06);text-shadow:0 0 12px rgba(255,236,150,.8);transition:transform .2s}
+.dzwhy b{color:#FFB4B4}.dzwhy em{font-style:normal;color:#9FF0B5}.dzwhy small{font-size:.8em;color:#FFD0D0;margin-left:4px}
 /* 2026-11-01 第三十八次：🎰 幸運轉盤、🔦 記憶 解碼、小提示 */
 .dcwh{position:absolute;left:50%;top:50%;z-index:22;transform:translate(-50%,-50%);width:min(92vw,520px);padding:14px;border-radius:26px;background:#1A1030;border:4px solid #FFD54A;text-align:center;box-shadow:0 14px 40px #000c}
 .dcwh .wt{font-size:clamp(26px,3.8vh,36px);font-weight:700;color:#FFE07A}.dcwh .wd{position:relative;width:clamp(220px,34vh,320px);aspect-ratio:1;margin:10px auto}
@@ -362,6 +364,16 @@ DEC.lid=0;
 function decBad(q,got){var b=[];if(!got||!got.length)return b;q.t.forEach(function(p,i){if(got[i]!==p[1])b.push(i)});return b}
 function decGls(q,got){var bad=decBad(q,got);return (bad.length?'<div class="dzwhy">🟥 剛才 放錯 的 地方：'+bad.map(function(i){return '<span><b>'+decEN(q.t[i][0].replace(/[.?!,]+$/,''))+'</b> ＝ <em>'+esc(q.t[i][1])+'</em>'+(got[i]?'<small>（你 放 了「'+esc(got[i])+'」）</small>':'')+'</span>'}).join('')+'</div>':'')+
  '<div class="gls" id="gls">'+q.t.map(function(t,i){return '<span class="gw'+(/^['’]/.test(t[0])?' ct':'')+(bad.indexOf(i)>=0?' wbad':'')+'"><b>'+decEN(t[0])+'</b><i>'+esc(t[1])+'</i></span>'}).join('')+'</div>'}
+/* 2026-11-04 第四十四次 第 3 點（老師）：拖曳 題 答錯頁 的 唸 法 ＝ ① 先 唸 放錯 的 每一個 英文 字 ➜ 它 的 中文（例 Is ➜ 是、isn’t ➜ 不是；唸到 的 那一格 英文＋正下方 中文、上面 那一條 的 那一個，
+   一起 稍微 放大、稍微 發亮）② 再 唸 整句 英文（唸到 哪 亮到 哪）③ 再 唸 整句 中文（那一行 亮）。第 2 點：答錯頁 一共 只 唸 兩次 ＝ 這一套 是 第 1 次，第 2 次 只 唸 整句 英文。
+   alive() ＝ 這一頁 還 在（換頁 ＝ 不 接）；每一步 都 有 看門狗（say1／OKV.zh），不會 卡住 */
+function decWordOf(q,i){var w=q.t[i][0].replace(/[.?!,]+$/,'');if(/^['’]/.test(w)&&i>0)w=q.t[i-1][0].replace(/[.?!,]+$/,'')+w;return w}
+function decMissRead(box,q,got,L,zh,alive,done){var bad=decBad(q,got),cells=[].slice.call(box.querySelectorAll('.gls .gw')),chips=[].slice.call(box.querySelectorAll('.dzwhy span')),k=0;
+ var off=function(){cells.concat(chips).forEach(function(c){c.classList.remove('dmr')})};
+ (function nx(){if(!alive()){off();return}if(k>=bad.length){off();OKV.say(box,L,function(){if(!alive())return;var tr=box.querySelector('.tr');if(tr)tr.classList.add('dmr');
+     setTimeout(function(){if(!alive())return;OKV.zh(zh,function(){if(tr)tr.classList.remove('dmr');if(alive())setTimeout(done,500)})},350)});return}
+   var i=bad[k],ch=chips[k++];off();if(cells[i])cells[i].classList.add('dmr');if(ch)ch.classList.add('dmr');var z=q.t[i][1];
+   say1(decWordOf(q,i),'',function(){if(!alive())return;setTimeout(function(){if(!alive())return;if(!z||/^[A-Za-z]/.test(z)){setTimeout(nx,350);return}OKV.zh(z,function(){setTimeout(nx,450)})},300)})})()}
 function decZhM(q,got,z){z=String(z==null?'':z);var bad=decBad(q,got),R=[];
  bad.forEach(function(i){var w=q.t[i][1];if(!w||/^[A-Z]/.test(w))w=w||'';if(!w)return;var occ=0;for(var j=0;j<i;j++)if(q.t[j][1]===w)occ++;var at=-1,from=0;for(var k=0;k<=occ;k++){var f=z.indexOf(w,from);if(f<0)break;at=f;from=f+w.length}if(at<0)at=z.indexOf(w);if(at<0)return;
   if(!R.some(function(r){return at<r[1]&&at+w.length>r[0]}))R.push([at,at+w.length])});

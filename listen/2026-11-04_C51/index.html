@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>p t 吹氣 試聽</title>
+<style>
+:root{--bg:#0B1220;--fg:#fff;--card:#16233A;--gold:#FFE07A;--ok:#7BF0A8}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:"Andika","Noto Sans TC","Microsoft JhengHei",sans-serif}
+.w{max-width:960px;margin:0 auto;padding:16px}
+h1{font-size:clamp(30px,5vw,48px);color:var(--gold);margin:8px 0}
+p{font-size:clamp(22px,3.2vw,30px);line-height:1.5}
+.c{background:var(--card);border-radius:22px;padding:14px 18px;margin:14px 0;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center}
+.c h2{grid-column:1/-1;margin:0;font-size:clamp(40px,7vw,64px)}
+.c h2 u{color:var(--gold)}
+button{min-height:72px;font:inherit;font-size:clamp(24px,3.4vw,32px);border-radius:18px;border:3px solid #5E7FA8;background:#1B2B48;color:#fff;cursor:pointer}
+button.n{border-color:var(--ok);background:#0F3323}
+small{display:block;font-size:.7em;color:#CFE3F5}
+</style></head><body><div class="w">
+<h1>🎧 三年級「聽 字首音 寫」：p、t 吹氣 試聽</h1>
+<p>網站 已經 換成 <b style="color:var(--ok)">新的</b>（p、t 後面 多 一口 清楚 的 氣）。請 用 耳朵 比一比；覺得 舊的 比較 好，告訴 我 就 換 回去。</p>
+<div class="c"><h2><u>p</u>ig</h2><button data-a="au/pig_old.mp3">🔊 舊的<small>以前 網站 的</small></button><button class="n" data-a="au/pig_new.mp3">🔊 新的<small>p 吹氣 清楚</small></button></div>
+<div class="c"><h2><u>t</u>en</h2><button data-a="au/ten_old.mp3">🔊 舊的<small>以前 網站 的</small></button><button class="n" data-a="au/ten_new.mp3">🔊 新的<small>t 吹氣 清楚</small></button></div>
+<p>💡 b、d 開頭 的 字（bag、dog）沒有 吹氣，所以 不 改。研究：英文 字首 p、t 的 送氣 比 b、d 長 很多（Lisker &amp; Abramson 1964，<a style="color:var(--gold)" href="https://doi.org/10.1080/00437956.1964.11659830">https://doi.org/10.1080/00437956.1964.11659830</a>；沒有 打開 原文 核對 數字）。</p>
+</div>
+<script>var A=null;document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-a]');if(!b)return;try{if(A)A.pause()}catch(x){}A=new Audio(b.getAttribute('data-a'));A.play()})</script>
+</body></html>

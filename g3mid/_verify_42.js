@@ -90,7 +90,7 @@ if (require.main === module) (async () => {
       p.on('pageerror', e => errs.push(e.message));
       await p.goto('file://' + path.join(ROOT, 'midterm', 'index.html')); await p.waitForTimeout(600);
       await p.evaluate(() => { window.__DCLMIN = 0; LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0402', t: 1, cfg: { on: 1, t: 1, set: 'n25', gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9, rd: {} }; hub(); window.__NORVA = 1; window.__SNFAST = 1; window.__NODFXI = 1; document.querySelectorAll('.scfull,#scov').forEach(x => x.remove()); });
-      await p.waitForTimeout(200); await p.click('.xrow .xb'); await p.waitForTimeout(500);
+      await p.waitForTimeout(200); await p.click('[data-duo="0"]'); await p.click('.xrow .xb'); await p.waitForTimeout(500);
       await p.evaluate(() => { const k = R.gs.findIndex(g => g.id === 'n3'); R.k = k; R.lv = R.lvOf[k]; window.__NOGO = 0; show(); });
       await p.waitForTimeout(1500);
       const h0 = await p.evaluate(() => { const o = document.querySelector('.snhow'); if (!o) return null; const b = o.querySelector('.shb').getBoundingClientRect(); return { d: o.querySelector('.shgo').disabled, li: o.querySelectorAll('.shs li').length, c: o.querySelectorAll('.actl button').length, ov: b.bottom > innerHeight + 1 || b.right > innerWidth + 1, run: TM.run }; });

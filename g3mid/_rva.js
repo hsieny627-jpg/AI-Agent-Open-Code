@@ -300,11 +300,11 @@ function RVASRC() {
   function fb(q, ci, pick) { var S = RVA.S, o = h('div', 'rvfb', ''), you = pick == null ? '' : Array.isArray(pick) ? pick.join('　') : String(pick);
     o.innerHTML = '<div class="rvfx"><div class="hd">' + (ci === -1 ? '⏰ 時間到' : '❌ 答錯了') + '</div>' + (you ? '<div class="yp">你的答案：<s>' + ap(you) + '</s></div>' : '') +
       '<div class="ca">✅ 正確答案</div><div class="gl" id="rvgl"></div><div class="tr keepsp">整句：' + esc(ZS(q.a.z)) + '</div>' + (q.a.why ? '<div class="why">💡 ' + esc(q.a.why) + '</div>' : '') +
-      '<div class="ft"><span class="n3"><i>1</i><i>2</i><i>3</i></span><button class="say" id="rvfs">🔊 再聽一次</button><span id="rvnx"></span></div></div>';
+      '<div class="ft"><span class="n3"><i>1</i><i>2</i></span><button class="say" id="rvfs">🔊 再聽一次</button><span id="rvnx"></span></div></div>';
     $id('rva').appendChild(o); var gl = $id('rvgl'), r = row(q.a.t, 'fbr'); gl.appendChild(r); [].forEach.call(r.children, function (k) { k.classList.add('in'); });
     var cells = [].slice.call(r.children), c = 0, gen = S.gen;
     o.querySelector('#rvfs').onclick = function () { read(q.a.en, q.a.v, cells, null); };
-    function one() { if (!RVA.S || RVA.S.gen !== gen) return; if (c >= 3) { var b = h('button', 'nx', '▶ 繼續 看 動畫'); $id('rvnx').appendChild(b); b.onclick = function () { o.remove(); back2(); }; return; }
+    function one() { if (!RVA.S || RVA.S.gen !== gen) return; if (c >= 2) { var b = h('button', 'nx', '▶ 繼續 看 動畫');   /* 第四十四次 第 2-(1) 點：答錯頁 只 唸 兩次 */ $id('rvnx').appendChild(b); b.onclick = function () { o.remove(); back2(); }; return; }
       o.querySelectorAll('.n3 i')[c].classList.add('on'); c++; read(q.a.en, q.a.v, cells, function () { T(one, 650); }); }
     T(one, 500); }
 

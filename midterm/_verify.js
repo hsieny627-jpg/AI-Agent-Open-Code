@@ -40,7 +40,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
   for (const vp of [[1024, 768], [820, 1180], [1920, 1080]].filter(v => !process.env.VP || process.env.VP === String(v[0]))) {   /* VP＝1024 只 量 一種 螢幕 */
     const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } }), tag = vp.join('×');
     await ctx.route(/^https?:\/\/(?!127\.)/, r => /script\.test/.test(r.request().url()) ? r.fulfill({ contentType: 'application/json', body: '{"ok":true,"dup":[]}' }) : r.abort());
-    await ctx.addInitScript(() => { window.__NOMEM = 1; window.__NOWHEEL = 1; window.__NOLIFE = 1;   /* 第三十八次 的 記憶 解碼、轉盤、生活 頁：g3mid/_verify_38.js 專門 量 */ window.__DCLK = 0.05; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__NODFXI = 1; window.__NOSNH = 1;   /* 第四十二次：寶箱 說明、貪吃蛇 怎麼玩 在 _verify_42.js 量 */ window.__NOWB = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} });
+    await ctx.addInitScript(() => { window.__DUOPICK = 1; window.__NOMEM = 1; window.__NOWHEEL = 1; window.__NOLIFE = 1;   /* 第三十八次 的 記憶 解碼、轉盤、生活 頁：g3mid/_verify_38.js 專門 量 */ window.__DCLK = 0.05; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__NODFXI = 1; window.__NOSNH = 1;   /* 第四十二次：寶箱 說明、貪吃蛇 怎麼玩 在 _verify_42.js 量 */ window.__NOWB = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} });
       localStorage.setItem('score_last', '"40201"'); localStorage.setItem('score_id_g4', '"40201"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', '40201');
       window.__say = 0; window.__pl = []; window.__RD = 2; window.speechSynthesis && (window.speechSynthesis.speak = u => setTimeout(() => u.onend && u.onend(), 100));
       HTMLMediaElement.prototype.play = function () { window.__say++; window.__pl.push(this.src.replace(/^.*\/midterm\//, '')); const a = this; setTimeout(() => { a.onended && a.onended(); }, 120); return Promise.resolve(); }; });
@@ -102,7 +102,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
             return { on: w.classList.contains('on'), bg: getComputedStyle(w.querySelector('.box')).backgroundImage, gw, tr: (w.querySelector('.tr') || {}).textContent || '', n3: w.querySelectorAll('#n3 span').length, nx: !!document.getElementById('wfn'), run: TM.run,
               big: parseFloat(getComputedStyle(w.querySelector('.gw b') || w).fontSize), out: w.querySelector('.box').scrollHeight > w.querySelector('.box').clientHeight + 2 }; });
           const zhN = f.gw.filter(x => x[1]).length;
-          if (!f.on || !/14, 122, 58|0E7A3A/i.test(f.bg) || !f.gw.length || zhN < Math.min(1, f.gw.length) || !/^整句：\S/.test(f.tr) || f.n3 !== (g.id === 'm8' ? 1 : 3) || f.nx || f.run || f.big < 28 || f.out)
+          if (!f.on || !/14, 122, 58|0E7A3A/i.test(f.bg) || !f.gw.length || zhN < Math.min(1, f.gw.length) || !/^整句：\S/.test(f.tr) || f.n3 !== (g.id === 'm8' ? 1 : 2) || f.nx || f.run || f.big < 28 || f.out)
             E.push(tag + ' ' + g.id + '：答錯頁 不對 ' + JSON.stringify(f).slice(0, 220));
           if (SHOT && vp[0] === 820) await p.screenshot({ path: path.join(SHOT, 'mt_' + g.id + '_no.png') });
           /* 唸 的 時候 點〔🔊 再聽〕不會 卡住 */
@@ -212,7 +212,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
       await p.evaluate(N => { window.__DCLMIN = 0; LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0402', t: 1, cfg: { on: 1, t: 1, set: 'n' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9, rd: {} }; hub(); window.__NOGO = 1; window.__NORVA = 1; window.__NOSNH = 1; document.querySelectorAll('.scfull').forEach(x => x.remove()); }, N); await p.waitForTimeout(200);
       n++; const xb = await p.evaluate(() => [...document.querySelectorAll('.xrow .xb')].map(b => b.getAttribute('data-xn') + b.getAttribute('data-bk') + ':' + /新 /.test(b.innerText)).join());
       if (xb !== N + 'B:true') E.push(tag + ' 現場任務 開 新 ' + N + '：大廳 要 只 有〔📝 新 ' + N + ' 題 挑戰〕' + xb);
-      await p.click('.xrow .xb'); await p.waitForTimeout(300);
+      if (await p.$('[data-duo="0"]')) await p.click('[data-duo="0"]'); await p.click('.xrow .xb'); await p.waitForTimeout(300);   /* 第四十四次：現場任務 先 選 ① 幾個 人 */
       n++; const pl = await p.evaluate(() => ({ c: R.cnt, n: R.idx.length, ids: [...new Set(R.gs.map(g => g.id))].join(), sim: R.gs.filter((g, k) => g.B[R.idx[k]].sim).length }));
       if (pl.n !== N || pl.c[0] !== (N === 25 ? 8 : 15) || pl.ids !== 'dc,n1,n2,n3,n4,n5,n6' || pl.sim !== Math.round(N * .5)) E.push(tag + ' 新 ' + N + ' 題：抽題 不對（第 1 關 解碼、6 種 新 遊戲、類似 50%）' + JSON.stringify(pl));
       const wr = {}; let guard = 0;

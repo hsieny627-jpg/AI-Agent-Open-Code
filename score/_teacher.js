@@ -565,6 +565,22 @@ em.ok{background:#0F3A20;border-color:#3BD16F;color:#C8FFD9}em.no{background:#3A
 .h5q .q b{display:block}.h5q .q em{display:block;font-style:normal;font-size:max(18px,.85em);color:#C8D6E2}.h5q .q s{color:#FF9A9A}.h5q .sec{color:#9FB4C8;text-align:right}
 @keyframes h5grow{from{width:0}}@keyframes h5in{from{opacity:0;transform:translateY(10px)}}@media (prefers-reduced-motion:reduce){.h5c,.h5bar i,.h5lv .t i,.h5q{animation:none}}
 .xh{font-size:clamp(22px,1.9vw,30px);color:var(--gold);margin:18px 0 8px}.xan>div{display:grid;grid-template-columns:3.2em 1fr 9em;gap:10px;align-items:center;font-size:clamp(20px,1.7vw,26px);margin:6px 0}.xan b{font-size:1.4em}.xan small{color:#9FB4C8;font-size:max(18px,.75em)}.xan .t{height:22px;border-radius:11px;background:#1A2230;overflow:hidden}.xan .t i{display:block;height:100%}.xan .t i.p0{background:#C62828}.xan .t i.p1{background:#C9A227}.xan .t i.p2{background:#2E9E5B}
+.xan.xgn>div{grid-template-columns:minmax(9em,15em) 1fr 9em}.xan.xgn b{font-size:1.05em;white-space:nowrap}
+.dwrb{margin:6px 0}.dwrgo{min-height:56px;padding:6px 22px;border-radius:999px;border:3px solid var(--gold);background:#2A2208;color:#FFE07A;font-size:clamp(20px,1.8vw,26px);font-weight:700}
+.dwr .dwrr{display:grid;grid-template-columns:2.4em minmax(8em,14em) 1fr 7em;gap:12px;align-items:center;margin:8px 0;padding:6px 10px;border-radius:14px;background:#141C28;font-size:clamp(20px,1.8vw,28px);transition:transform .3s,box-shadow .3s,opacity .4s}
+.dwr .rk{font-size:1.4em;text-align:center}.dwr .ww{display:inline-flex;flex-direction:column;align-items:center;line-height:1.15}.dwr .ww b{font-size:1.35em;color:#fff}.dwr .ww i{font-style:normal;color:#9FF0B5}
+.dwr .t{height:24px;border-radius:12px;background:#1A2230;overflow:hidden}.dwr .t i{display:block;height:100%;background:linear-gradient(90deg,#E5484D,#FF9A5A);transition:width 1s}.dwr .nn{color:#FFB4B4;font-weight:700}
+.dwr.play .dwrr{opacity:.15}.dwr.play .dwrr .t i{width:0!important}.dwr.play .dwrr.show{opacity:1}.dwr.play .dwrr.show .t i{width:var(--w,100%)!important}
+.dwr .dwrr.spk{transform:scale(1.04);box-shadow:0 0 0 3px #FFE07A,0 0 22px rgba(255,224,122,.55)}.dwr .dwrr.spk .ww b,.dwr .dwrr.spk .ww i{transform:scale(1.15);text-shadow:0 0 14px rgba(255,236,150,.9)}.dwr .ww b,.dwr .ww i{display:inline-block;transition:transform .25s}
+#show .spic{display:flex;justify-content:center;align-items:center;gap:16px;margin:6px 0}#show .spic img{height:clamp(110px,18vh,220px);border-radius:16px;border:5px solid var(--ok);box-shadow:0 0 22px rgba(46,158,91,.55);animation:spicIn .7s cubic-bezier(.2,1.6,.4,1)}#show .spic .pe{font-size:clamp(80px,13vh,160px);animation:spicIn .7s cubic-bezier(.2,1.6,.4,1)}@keyframes spicIn{from{transform:scale(.3) rotate(-12deg);opacity:0}}
+#show .sdif{display:flex;flex-direction:column;gap:10px;align-items:center;margin:8px auto;max-width:96%}#show .sdif .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:clamp(26px,3.2vw,48px)}
+#show .sdif .lab{font-size:.6em;font-weight:700;padding:2px 10px;border-radius:10px}#show .sdif .bad .lab{background:#5A1010;color:#FFB4B4}#show .sdif .ok .lab{background:#0F3323;color:#9FF0B5}
+#show .sdif .w{display:inline-flex;flex-direction:column;align-items:center;line-height:1.1}#show .sdif .w i{font-style:normal;font-size:.55em;color:#CFE6FF;min-height:1.1em}
+#show .sdif .w.x b{color:#FF8A8A;text-decoration:line-through;animation:sdx 1s .6s 2}#show .sdif .w.k b{color:#7BF0A8;animation:sdk 1.2s 1.4s 2}#show .sdif .w.k{border-bottom:4px solid #7BF0A8}
+@keyframes sdx{50%{transform:scale(1.18)}}@keyframes sdk{50%{transform:scale(1.22);text-shadow:0 0 18px #7BF0A8}}
+#show .skey{font-size:clamp(24px,2.8vw,40px);font-weight:700;color:#FFE07A;background:rgba(255,224,122,.1);border:3px solid rgba(255,224,122,.5);border-radius:16px;padding:6px 18px;animation:spicIn .6s 2s both}
+#show .soi{height:1.6em;vertical-align:middle;border-radius:8px;margin-right:6px}
+@media (prefers-reduced-motion:reduce){.dwr .dwrr,#show .spic img,#show .spic .pe,#show .sdif .w b,#show .skey{animation:none;transition:none}}
 .ptg{display:block;margin-top:4px;padding:2px 8px;border-radius:10px;background:#5A3A00;border:2px solid #FFB300;color:#FFE58A;font-size:max(17px,.6em);font-weight:700;white-space:nowrap}
 .g3t{border-collapse:collapse;width:100%;font-size:clamp(20px,1.7vw,28px)}.g3t th,.g3t td{border:2px solid #2A3A4A;padding:6px 8px;text-align:center}.g3t th{background:#14202B;font-size:clamp(18px,1.3vw,22px);line-height:1.25}.g3t th b{display:block;font-size:1.6em}
 .g3t td.nm{text-align:left;white-space:nowrap}.g3t td small{display:block;font-size:max(18px,.62em);color:#9FB4C8}.g3h small{font-size:max(20px,.6em)!important}.g3t .p2{background:#1F7A45;color:#fff}.g3t .p1{background:#B08A10;color:#fff}.g3t .p0{background:#A3263A;color:#fff}.g3t td.p0 small,.g3t td.p1 small,.g3t td.p2 small{color:rgba(255,255,255,.85)}.g3t .av{font-size:1.15em;border-left:5px solid var(--gold)}
@@ -1211,14 +1227,27 @@ function show(k,st){
       (st===2&&i===mis&&nmis?'<span class="lb">👥 最多人選的錯答案</span>':'')+(st>=3&&i===0?'<span class="lb">✅ 正確答案</span>':'')+'</div>'}).join('')+'</div>';
   if(st===0)h+='<div class="sth"><span class="em">🤔</span> 先想一想：你會選哪一個？</div><div class="stm"><i></i></div>';
   else if(st===1)h+='<div class="sth">👥 大家選什麼？哪一個最多人選？</div>';
-  else if(st===2)h+='<div class="sth">'+(nmis?'🔍 最多人選的錯答案：它哪裡不對？':'🔍 每一個選項：哪裡不一樣？')+'</div>';
-  else h+=ansHTML(q)+'<div class="sw"><span class="ck">✅</span> 💡 '+esc(q.h)+'</div>';
+  else if(st===2)h+='<div class="sth">'+(nmis?'🔍 最多人選的錯答案：它哪裡不對？':'🔍 每一個選項：哪裡不一樣？')+'</div>'+(nmis?difHTML(q,mis):'');
+  else h+=spicHTML(q)+ansHTML(q)+'<div class="sw"><span class="ck">✅</span> 💡 '+esc(q.h)+'</div>';
   h+='<div class="sb">'+(st>0?'<button id="sp">◀ 上一步</button>':'')+(st<3?'<button id="sn" style="background:#0F3323;border-color:var(--ok)">▶ 下一步：'+STN[st+1]+'</button>':(q.ae?'<button id="ss">🔊 再唸 3 次</button>':''))+'<button id="sc">✕ 結束</button></div>';
   $('#show').innerHTML=h;$('#show').classList.add('on');
   setTimeout(function(){$$('#show .pb i').forEach(function(b){b.style.width=b.getAttribute('data-w')+'%'})},60);
   if(st===0&&isLsn(q))setTimeout(function(){lsn(q)},500);
   if(st===3&&q.ae)setTimeout(function(){say3(q)},900);
 }
+/* 2026-11-04 第四十四次 第 1-(3) 點（老師：錯題 分析 要 有 正確 答案 的 英文 句子＋圖片，加深 句子 和 圖 的 連結；其他 錯題：秒懂 動畫 分析 真正 的 難點、痛點）：
+   ③ 🔍 錯在哪裡 ＝ 最多 人 選 的 錯 答案 ↔ 正確 答案 一個 字 一個 字 比：錯 的 那幾個 字 紅色 劃掉、正確 的 關鍵 字 綠色 底線＋正下方 中文，兩個 都 會 放大 跳 兩下 ➜「🎯 難點：聽到 homework（作業）」
+   ④ ✅ 正確 答案 ＝ 圖（照片 或 圖示，彈 出來）＋英文 每一個 字 正下方 中文＋整句 中文＋唸 3 次 */
+function spicHTML(q){return q.pimg?'<div class="spic"><img src="'+esc(q.pimg)+'" alt=""></div>':q.pe?'<div class="spic"><span class="pe">'+esc(q.pe)+'</span></div>':''}
+function difTok(t){return String(t||'').match(/[A-Za-z][A-Za-z’']*|[0-9]+/g)||[]}
+function difHTML(q,mis){var a=difTok(q.o[mis]),b=difTok(q.o[0]);if(!a.length||!b.length)return '';var lc=function(x){return x.toLowerCase().replace(/’/g,"'")},A=a.map(lc),B=b.map(lc),n=A.length,m=B.length,L=[],i,j;
+  for(i=0;i<=n;i++){L.push([]);for(j=0;j<=m;j++)L[i][j]=0}for(i=n-1;i>=0;i--)for(j=m-1;j>=0;j--)L[i][j]=A[i]===B[j]?L[i+1][j+1]+1:Math.max(L[i+1][j],L[i][j+1]);
+  var sa={},sb={};i=0;j=0;while(i<n&&j<m){if(A[i]===B[j]){sa[i]=sb[j]=1;i++;j++}else if(L[i+1][j]>=L[i][j+1])i++;else j++}
+  var Z={};(q.ag||[]).forEach(function(x){Z[lc(x[0])]=x[1]});var keys=[];
+  var row=function(T,S,cl,lab){return '<div class="row '+cl+'"><span class="lab">'+lab+'</span>'+T.map(function(w,k){var on=!S[k];if(on&&cl==='ok'&&Z[lc(w)])keys.push(w);return '<span class="w'+(on?(cl==='ok'?' k':' x'):'')+'"><b>'+esc(w)+'</b><i>'+(cl==='ok'&&Z[lc(w)]?esc(Z[lc(w)]):'')+'</i></span>'}).join('')+'</div>'};
+  var h='<div class="sdif">'+row(a,sa,'bad','👥 最多人選 ❌')+row(b,sb,'ok','✅ 正確')+'</div>';
+  if(keys.length)h+='<div class="skey">🎯 難點：'+(isLsn(q)?'聽到':'看到')+' '+keys.slice(0,3).map(function(w){return '<b>'+esc(w)+'</b>（'+esc(Z[lc(w)])+'）'}).join('、')+(isLsn(q)?' 就 是 這一個！':' 才 對！')+'</div>';
+  return h}
 /* ⬇ 一鍵下載 Excel：五張工作表 */
 function excel(){
   var S=sets(),psG=SC.students(S.G),ps=F.cls?psG.filter(function(p){return p.cls===F.cls}):psG,RK=ranks(psG);
@@ -1441,7 +1470,7 @@ function favNm(id){var k=id.charAt(0),n=+id.slice(1);if(k==='t'){var T=(SC.RPT||
    三年級 複習（g3m）、課堂複習 1～3（c1～c3）的 10 種 遊戲：一列 一位 學生（號碼＋姓名），10 欄 ＝ 每一種 遊戲 的 正確率（百分制），最後 一欄 ＝ 這位 學生 的 平均；
    最下面 一列 ＝ 全班 每一種 遊戲 的 平均。**只 算 已經 作答 的 題目**（答 了 幾題 就 算 幾題；時間 到 ＝ 答錯）＝ 答對 題數 ÷ 作答 題數 ✕ 100。時間 ＝ 上面 選 的 時間。 */
 var G3S='all',G3C='';
-var G3SETS=[['g3m','📝 三年級 複習'],['c1','🏫 課堂複習 1'],['c2','🏫 課堂複習 2'],['c3','🏫 課堂複習 3'],['lw','✍️ 字母 書寫'],['la','🔤 聽 字母 寫'],['lf','🐷 聽 字首音 寫'],['lwh','✍️ 字母 書寫（在家）'],['all','三年級 全部'],['mt','📝 四年級 複習'],['x3','📝 三年級 期中 挑戰'],['x4','📝 四年級 期中 挑戰']];
+var G3SETS=[['g3m','📝 三年級 複習'],['c1','🏫 課堂複習 1'],['c2','🏫 課堂複習 2'],['c3','🏫 課堂複習 3'],['lw','✍️ 字母 書寫'],['la','🔤 聽 字母 寫'],['lf','🎧 聽 字首音 寫'],['lwh','✍️ 字母 書寫（在家）'],['all','三年級 全部'],['mt','📝 四年級 複習'],['x3','📝 三年級 期中 挑戰'],['x4','📝 四年級 期中 挑戰']];
 /* 2026-10-26 第二十九次 第 7 點（老師）：(1) 欄 的 順序 ＝ 關卡 順序（第 9 關 夾娃娃、第 10 關 小精靈）(2) 每一個 遊戲 的 平均 正確率 放 最上面 一格（每班 1 號 的 正上方）
    (3) 底色：59 以下 紅、60～80 黃、81～100 綠；多〔📝 四年級 複習〕（12 種 遊戲，四年級 的 班） */
 var G3ORD=['q1','q4','q5','q6','q7','q8','q9','q10','q3','q2'];
@@ -1470,14 +1499,31 @@ function paneX(g,hm){var CC=SC.CLASSES[g]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g
   h+='<h3 class="xh">① 👤 學生 成績'+(hm?'：👆 點〔🔍 看 每一題〕＝ 這個 學生 最近 一次 每一關、每一題 的 作答':'')+'</h3><div class="note">分數 ＝ 正確率；旁邊 寫 最近 一次「答 幾 題」。⚠ ＝ 答不到 5 題（⚡ 現場任務 大螢幕 不上 前 10 名，分數 照樣 記）</div><div class="g3w"><table class="g3t"><tr><th>號碼</th><th>姓名</th>'+COLS.map(function(x){return '<th>'+x[1]+'</th>'}).join('')+(hm?'<th>🔍</th>':'')+'</tr>'+
     ids.map(function(id){var p=P[id]||{};return '<tr'+(hm&&H25P===id?' class="h5on"':'')+'><td>'+id.slice(3)+'</td><td class="nm">'+esc(nm(id)||'')+'</td>'+COLS.map(function(x){var v=p[x[0]];return !v?'<td>—</td>':v.d?'<td>'+v.d+'</td>':'<td class="'+g3Col(v.s)+'">'+v.s+'<small>答 '+v.q+' 題'+(v.q<5?' ⚠':'')+' · '+v.n+' 次</small>'+(v.pt?ptTag(v.pt,v.pto):'')+'</td>'}).join('')+(hm?'<td>'+(p.h25?'<button class="h5b" data-h5p="'+id+'">🔍 看 每一題</button>':'—')+'</td>':'')+'</tr>'+(hm&&H25P===id&&p.h25?'<tr class="h5det"><td colspan="'+(COLS.length+3)+'">'+h25Per(id,RS)+'</td></tr>':'')}).join('')+'</table></div>';
   /* ② 錯題 分析：每一關 的 正確率（照 題目 前面 的 遊戲 圖示 分）*/
-  var Q=SC.questions(RS),A={};Q.forEach(function(x){var o=qOf(x.k);if(!o)return;var ic=String(o.q.q||'').split(' ')[0]||'?',a=A[ic]=A[ic]||{n:0,bad:0};a.n+=x.n;a.bad+=x.bad});
+  /* 2026-11-04 第四十四次 第 1-(1) 點（老師：看不懂 🔓🫧… 這些 圖示 是 哪些 題目）：每一關 ＝ 圖示＋名字（🔓 句子 解碼 任務、🫧 拼字 泡泡龍…，score/_bank.js 的 gn）*/
+  var Q=SC.questions(RS),A={};Q.forEach(function(x){var o=qOf(x.k);if(!o)return;var ic=o.q.gn||String(o.q.q||'').split(' ')[0]||'?',a=A[ic]=A[ic]||{n:0,bad:0};a.n+=x.n;a.bad+=x.bad});
   var L=Object.keys(A).map(function(k){var a=A[k];return [k,Math.round((a.n-a.bad)/a.n*100),a.n]}).sort(function(a,b){return a[1]-b[1]});
-  h+='<h3 class="xh">② 📊 錯題 分析：哪一關 最 難？（全班 正確率，低 的 在 前面）</h3><div class="xan">'+L.map(function(x){return '<div><b>'+esc(x[0])+'</b><span class="t"><i class="'+g3Col(x[1])+'" style="width:'+x[1]+'%"></i></span><span>'+x[1]+' 分<small>（'+x[2]+' 題次）</small></span></div>'}).join('')+'</div>';
+  h+='<h3 class="xh">② 📊 錯題 分析：哪一關 最 難？（全班 正確率，低 的 在 前面）</h3><div class="xan xgn">'+L.map(function(x){return '<div><b>'+esc(x[0])+'</b><span class="t"><i class="'+g3Col(x[1])+'" style="width:'+x[1]+'%"></i></span><span>'+x[1]+' 分<small>（'+x[2]+' 題次）</small></span></div>'}).join('')+'</div>';
+  h+=dwrHTML(Q);
   /* ③ 錯題 排行榜 ＋ 詳解 */
   var W=Q.filter(function(x){return x.bad>0&&qOf(x.k)}).slice(0,15);
   h+='<h3 class="xh">③ ❌ 錯題 排行榜（答錯率 最高 的 15 題）：點 一題 ＝ 詳解＋📺 全班 訂正（逐字 中文、唸 3 次 美式 發音）</h3>'+(W.length?W.map(function(x,n){var o=qOf(x.k);
     return '<div class="wq" data-q="'+x.k+'" data-qx="1"><span class="n">'+(n+1)+'</span><span class="q"><b>'+esc(qText(o.q))+'</b><em>'+esc(o.set.name)+'・✅ '+esc(String(o.q.o[0]))+'</em></span><span class="r"><span>答錯 '+x.rate+'%（'+x.bad+'／'+x.n+'）</span><span class="t"><i style="width:'+x.rate+'%"></i></span></span></div>'}).join(''):'<div class="note">沒有 答錯 的 題目 🎉</div>');
   return h}
+/* ══ 2026-11-04 第四十四次 第 1-(2) 點（老師：學生 和 老師 不知道 哪一個 英文 單字 最多 同學 拖 錯）：🧩 拖曳 題「最多 人 放錯 的 英文 字」前 5 名 ══
+   資料 ＝ 每一題 第 7 格 "~1.4"（放錯 的 是 第幾個 英文 字；score/_calc.js questions() 的 sl）；同一個 英文 字（不分 大小寫）在 不同 題目 加 起來。
+   〔▶ 秒懂 動畫＋唸〕＝ 從 第 5 名 往上 一名 一名 翻開（長條 長 出來、數字 跳）➜ 每 翻開 一名 ＝ 那一個 英文 字 唸 一次（美式 語音檔）➜ 它 的 中文 唸 一次（zh-TW）；唸到 的 英文＋正下方 中文 一起 稍微 放大、發亮 */
+var DWR=[],DWN=0;
+function dwrHTML(Q){var M={};Q.forEach(function(x){var o=qOf(x.k);if(!o||!o.q.dt||!x.sl)return;for(var i in x.sl){var d=o.q.dt[+i];if(!d||!d[0])continue;var k=d[0].toLowerCase(),m=M[k]=M[k]||{en:d[0],zh:{},n:0,au:d[2]};m.n+=x.sl[i];m.zh[d[1]]=(m.zh[d[1]]||0)+x.sl[i];if(!m.au&&d[2])m.au=d[2]}});
+  DWR=Object.keys(M).map(function(k){var m=M[k],z=Object.keys(m.zh).sort(function(a,b){return m.zh[b]-m.zh[a]});return {en:m.en,zh:z.join('／'),z1:z[0],n:m.n,au:m.au}}).sort(function(a,b){return b.n-a.n}).slice(0,5);
+  var h='<h3 class="xh">🧩 拖曳 題（🔓 句子 解碼）：最多 人 放錯 的 英文 字 前 5 名</h3>';
+  if(!DWR.length)return h+'<div class="note">還 沒有 資料：老師 重新 部署（score/update.html）以後，學生 新 做 的 拖曳 題 才 會 記下「放錯 的 是 哪一個 英文 字」。</div>';
+  var mx=DWR[0].n;return h+'<div class="note">👆 按〔▶ 秒懂 動畫＋唸〕：從 第 5 名 翻 到 第 1 名，每一個 英文 字 和 它 的 中文 各 唸 一次（可以 投影 給 全班 看）</div><div class="dwrb"><button class="dwrgo" data-dwr="1">▶ 秒懂 動畫＋唸</button></div><div class="dwr" id="dwr">'+
+    DWR.map(function(x,i){return '<div class="dwrr" data-r="'+i+'"><span class="rk">'+['🥇','🥈','🥉','4','5'][i]+'</span><span class="ww"><b>'+esc(x.en)+'</b><i>'+esc(x.zh)+'</i></span><span class="t"><i style="--w:'+Math.round(x.n/mx*100)+'%;width:'+Math.round(x.n/mx*100)+'%"></i></span><span class="nn">放錯 '+x.n+' 次</span></div>'}).join('')+'</div>'}
+function dwrPlay(){var my=++DWN,box=$('#dwr');if(!box)return;var R=[].slice.call(box.querySelectorAll('.dwrr'));box.classList.add('play');R.forEach(function(r){r.classList.remove('show','spk')});stopSnd();
+  var k=R.length-1;(function nx(){if(my!==DWN||k<0){R.forEach(function(r){r.classList.remove('spk')});return}var r=R[k],x=DWR[k];k--;r.classList.add('show','spk');
+    setTimeout(function(){if(my!==DWN)return;play(x.au,x.en,function(){if(my!==DWN)return;setTimeout(function(){dwrZh(x.z1,function(){if(my!==DWN)return;r.classList.remove('spk');setTimeout(nx,500)})},300)})},700)})()}
+function dwrZh(t,cb){var done=false,f=function(){if(!done){done=true;cb()}};setTimeout(f,Math.max(1800,600+String(t).length*450)+2500);try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(String(t)),V=speechSynthesis.getVoices()||[],v=V.filter(function(x){return /zh[-_]TW/i.test(x.lang)})[0];u.lang='zh-TW';if(v)u.voice=v;u.rate=.9;u.onend=f;u.onerror=f;setTimeout(function(){try{speechSynthesis.speak(u)}catch(e){}},90)}catch(e){f()}}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-dwr]');if(b)dwrPlay()});
 function paneGT(){var g4=G3S==='mt',CC=SC.CLASSES[g4?4:3]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===(g4?4:3)&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),GM=g3Games();
   var RS=ALL.filter(function(x){var m=g4?/^g4gm_(mt)-(m\\d+)$/.exec(x.set):/^g3gm_(g3m|c[123]|lw|lwh|la|lf)-(q\\d+)$/.exec(x.set);return m&&!x.x&&x.cls===c&&(g4||G3S==='all'||m[1]===G3S)&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)});
   var P={},T={};RS.forEach(function(x){var g=/-([qm]\\d+)$/.exec(x.set)[1],p=P[x.id]=P[x.id]||{};(x.qs||[]).forEach(function(q){var a=p[g]=p[g]||[0,0],b=T[g]=T[g]||[0,0];a[0]+=q[0]?1:0;a[1]++;b[0]+=q[0]?1:0;b[1]++})});

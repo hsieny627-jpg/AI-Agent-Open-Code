@@ -2,7 +2,7 @@
  * 假 的 成績 伺服器（script.test，不 送 真的 成績表）、不 連 Firebase。
  * ① 第 4 點 不會 當掉：聲音 被 擋（play 一直 不 回、語音 不 出聲）＝ 看門狗 時間 到 一定 往下 走（三、四年級）
  * ② 第 1 點 👻 跑道 沒有 了；第 2 點 🔦 記憶 解碼 錯 方塊 ≧ 4、相近、不 重複
- * ③ 第 7-A 點 大／小 動畫；7-B 🔤 聽 字母 寫、7-C 🐷 聽 字首音 寫、lw 現場 5 題 考卷 原題、lwh 在家 5 題 相似；lw.html
+ * ③ 第 7-A 點 大／小 動畫；7-B 🔤 聽 字母 寫、7-C 🎧 聽 字首音 寫、lw 現場 5 題 考卷 原題、lwh 在家 5 題 相似；lw.html
  * ④ 建議 1 乙：〔▶ 進入 下一頁〕唸完 才 解鎖、按了 才 下一頁；看過 一次 ＝ 只 剩 重點 頁
  * ⑤ 第 3 點：spk 不 丟（收 起來，打對 密碼 補 送）、排 進 佇列 就 帶 通行證
  * ⑥ 第 6 點：密碼 勾選 方框 56px、發亮、👉、① ② 步驟
@@ -56,12 +56,12 @@ const D = require('./_data.js');
       if (m === 'lw') ok(s.sim2 === 5, 'lw 現場：5 題 要 跟 期中考 相同 ' + s.sim2);
       if (m === 'lwh') ok(s.sim1 === 5 && s.sim2 === 0, 'lwh 在家：5 題 相似（方向 反過來）、不可以 有 原題 ' + s.sim1 + '/' + s.sim2);
       if (m === 'la') ok(s.lis === 10 && new Set(s.says).size === 10, '🔤 聽 字母 寫：10 題 都 聽、字母 不 重複');
-      if (m === 'lf') { ok(s.lisw === 10 && new Set(s.says).size === 10, '🐷 聽 字首音 寫：10 題 都 聽 單字、字 不 重複');
+      if (m === 'lf') { ok(s.lisw === 10 && new Set(s.says).size === 10, '🎧 聽 字首音 寫：10 題 都 聽 單字、字 不 重複');
         ok(s.says.every(w => D.EXAM_D.indexOf(w) < 0 && !/^[ckqxaeiou]/.test(w)), '🐷 用了 考卷 的 字 或 第一個 聲音 有 兩種 寫法 的 字 ' + s.says.join(',')); }
       await p.waitForTimeout(1200);
       const v = await p.evaluate(() => { const a = document.querySelector('#stage .ask'), c = a && a.querySelector('.cz'); return { t: a ? a.textContent : '', cz: !!c, pic: !!document.querySelector('#stage .mlw'), ox: document.documentElement.scrollWidth - innerWidth }; });
       ok(v.cz && v.ox <= 1, m + '：題目 上 沒有 大／小 標籤 或 超出 ' + JSON.stringify(v));
-      if (m === 'lf') ok(v.pic && /第一個 字母/.test(v.t), '🐷 題目 要 有 圖＋「寫 第一個 字母」' + JSON.stringify(v));
+      if (m === 'lf') ok(!v.pic && /第一個 字母/.test(v.t), '🎧 題目 不可以 有 單字 的 圖（第四十四次）＋「寫 第一個 字母」' + JSON.stringify(v));
       if (m === 'la') ok(/聽 一個 字母/.test(v.t), '🔤 題目 要 寫「聽 一個 字母」');
       await p.evaluate(() => { try { clr(); } catch (e) { } BUSY = false; });
     }

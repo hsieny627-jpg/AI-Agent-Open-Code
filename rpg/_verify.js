@@ -31,7 +31,7 @@ function serve() { return new Promise(ok => { const T = { '.html': 'text/html', 
     p.on('request', r => { if (/\.(mp3|wav|ogg)(\?|$)/.test(r.url())) snd.push(r.url().slice(-30)); });
     p.on('pageerror', x => E.push(tag + ' JS 錯誤：' + x.message));
     p.on('response', r => { if (r.status() >= 400 && r.url().startsWith(HTTP)) bad.push(r.url().slice(HTTP.length)); });
-    await p.addInitScript(() => { window.__NOCB = 1; window.__NOTU = 1; document.addEventListener('DOMContentLoaded', () => { const st = document.createElement('style'); st.textContent = '#scch{display:none!important}'; document.head.appendChild(st); }); });   /* 冠軍寶箱 登入 動畫 另外 量（score/_verify_champ.js，第二十九次） */   /* 升階 典禮 另外 量（第十八次） */
+    await p.addInitScript(() => { window.__NOCB = 1; window.__NOTU = 1; window.__NOBCH = 1;   /* 第四十四次：保底 寶箱 自己 跳出來 在 g3mid/_verify_44.js 量 */  document.addEventListener('DOMContentLoaded', () => { const st = document.createElement('style'); st.textContent = '#scch{display:none!important}'; document.head.appendChild(st); }); });   /* 冠軍寶箱 登入 動畫 另外 量（score/_verify_champ.js，第二十九次） */   /* 升階 典禮 另外 量（第十八次） */
     await p.goto(HTTP + '/rpg/index.html'); await p.waitForTimeout(1200);
     const o0 = await p.evaluate(() => { const b = document.getElementById('rpIn'); return { out: !document.getElementById('rpout').hidden, h: b ? b.getBoundingClientRect().height : 0 }; });
     if (!o0.out || o0.h < 64) E.push(tag + '：沒登入沒有大大的〔🔑 登入〕');

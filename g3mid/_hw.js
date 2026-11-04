@@ -150,11 +150,11 @@ var HWSRC = function () {
   function lineOne(strokes, st) { var C = contacts(st), tb = xbox(st), sb = xbox(strokes), tw = Math.max(.05, tb.x1 - tb.x0), sw = sb.x1 - sb.x0, P = [], miss = [], over = [];
     strokes.forEach(function (s) { for (var i = 0; i < s.length; i++) { P.push(s[i]); var n = s[i + 1]; if (n) { var d = Math.hypot(n[0] - s[i][0], n[1] - s[i][1]), k = Math.ceil(d / .04); for (var j = 1; j < k; j++) P.push([s[i][0] + (n[0] - s[i][0]) * j / k, s[i][1] + (n[1] - s[i][1]) * j / k]); } } });
     var mx = function (x) { return sw < .05 ? (tb.x0 + tb.x1) / 2 : tb.x0 + (x - sb.x0) / sw * tw; }, wx = Math.max(.18, tw * .2);
-    var top = Math.floor(tb.y0 + .06), bot = Math.ceil(tb.y1 - .06);
+    var top = Math.floor(tb.y0 + .06), bot = Math.ceil(tb.y1 - .06), dmx = 0;   /* 2026-11-04 第四十四次 第 6-(3) 點：dmx ＝ 離 線 最 遠 的 那一個 碰線 點（愈 小 ＝ 愈 整齊；魔法 獎勵 用）*/
     C.forEach(function (c) { var hf = c[1] === top ? 'h' : c[1] === bot ? 'f' : 'm', best = 9; P.forEach(function (q) { if (Math.abs(mx(q[0]) - c[0]) <= wx && Math.abs(q[1] - c[1]) <= .55) best = Math.min(best, Math.abs(q[1] - c[1])); });
-      if (best > (hf === 'm' ? TOL : THF)) miss.push({ x: c[0], L: c[1], d: best, hf: hf }); });
+      if (best > (hf === 'm' ? TOL : THF)) miss.push({ x: c[0], L: c[1], d: best, hf: hf }); dmx = Math.max(dmx, best); });
     if (sb.y0 < top - OVT) over.push({ L: top, d: top - sb.y0, hf: 'h' }); if (sb.y1 > bot + OVT) over.push({ L: bot, d: sb.y1 - bot, hf: 'f' });
-    return { ok: !miss.length && !over.length, miss: miss, over: over, C: C, map: { tx0: tb.x0, tw: tw, sx0: sb.x0, sw: sw } }; }
+    return { ok: !miss.length && !over.length, miss: miss, over: over, C: C, dmx: dmx, map: { tx0: tb.x0, tw: tw, sx0: sb.x0, sw: sw } }; }
   /* 要寫 want：每一種標準寫法都試，挑問題最少的那一種。words ＝ 給小朋友看的一句話 */
   function lines(strokes, want) { strokes = (strokes || []).filter(function (s) { return s.length > 0; }); if (!strokes.length || !T[want]) return { ok: false, miss: [], over: [], words: '' };
     var best = null; T[want].forEach(function (st) { var r = lineOne(strokes, st), k = r.miss.length + r.over.length; if (!best || k < best.k) { best = r; best.k = k; } });

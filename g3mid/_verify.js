@@ -151,6 +151,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
         await p.evaluate(N => { LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0304', t: 1, cfg: { on: 1, t: 1, set: 'x' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9 }; lobby(); }, 25); const z1 = await p.evaluate(() => ({ xb: [...document.querySelectorAll('#xrow [data-x],#xrow [data-xr]')].filter(b => (b.closest('.xbw') || b).style.display !== 'none').map(b => b.dataset.x || b.dataset.xr).join(), gc: [...document.querySelectorAll('#grid .gc')].filter(b => b.style.display !== 'none').length }));
         if (z1.xb !== '25' || z1.gc) E.push(tag + ' 現場任務 開了 25 題：要 只 有 25 那一顆 ' + JSON.stringify(z1)); }
       const ID = await p.evaluate(() => SCID); await p.evaluate(id => { const N = 25; LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0304', t: 1, cfg: { on: 1, t: 1, set: 'x' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9 }; localStorage.removeItem('g3m_seen_' + id); localStorage.removeItem('g3m_xs25_' + id); lobby(); }, ID);
+      if (await p.$('[data-duo="0"]')) await p.click('[data-duo="0"]');   /* 第四十四次：現場任務 先 選 ① 幾個 人 */
       await p.click('#xrow .xb[data-x="25"]'); await p.waitForTimeout(400);
       for (let k = 0; k < 3; k++) { await passL(p); const hw = await p.$('#q2go'); if (hw) { await p.waitForSelector('#q2go:not([disabled])', { timeout: 15000 }).catch(() => {}); await hw.click(); await p.waitForTimeout(150); } const wp = await p.$('#wp.on [data-wr]'); if (wp) { await wp.click(); await p.waitForTimeout(250); }
         const id = await p.evaluate(() => G.id); await p.waitForTimeout(id === 'q2' ? 300 : 120); await answer(p, { id }, false);
@@ -176,6 +177,7 @@ D.CE.forEach(c => { n++; if (!fs.existsSync(path.join(__dirname, 'img', c.k + '.
       n++; const lb2 = await p.evaluate(() => [...document.querySelectorAll('#xrow .xb')].filter(b => b.style.display !== 'none').map(b => b.dataset.x + ':' + Math.round(b.getBoundingClientRect().height)).join());
       if (lb2.split(':')[0] !== String(N) || +lb2.split(':')[1] < 60) E.push(tag + ' 現場任務 大廳 沒有〔📝 ' + N + ' 題〕大按鈕：' + lb2);
 await p.evaluate(d1 => { if (!d1) Object.keys(localStorage).filter(k => /^dcl_seen_/.test(k)).forEach(k => localStorage.removeItem(k)); window.__DCLMIN = d1 ? 0 : undefined; }, DCL1);   /* 第一次 量 ＝ 沒 看過 動畫（不能 跳過、≧ 20 秒）*/
+      if (await p.$('[data-duo="0"]')) await p.click('[data-duo="0"]');   /* 第四十四次：現場任務 先 選 ① 幾個 人 */
       await p.click('#xrow .xb[data-x="' + N + '"]'); await p.waitForTimeout(400);
       const pl = await p.evaluate(() => ({ c: R.cnt, s: R.nsim, sim: R.qs.filter(q => q.sim).length, n: R.qs.length, ord: R.lvOf.every((l, i) => !i || l >= R.lvOf[i - 1]) }));
       n++; const want = N === 25 ? [1, 2] : [3, 4], dN = N === 25 ? 8 : 15;   /* 2026-10-29：第 1 關 ＝ 🔓 解碼 任務 8／15 題，其他 10 關 平均 */
@@ -229,6 +231,7 @@ await p.evaluate(d1 => { if (!d1) Object.keys(localStorage).filter(k => /^dcl_se
       await p.evaluate(N => { window.__DCLMIN = 0; LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0304', t: 1, cfg: { on: 1, t: 1, set: 'n' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9 }; lobby(); }, N); await p.waitForTimeout(200);
       n++; const lb = await p.evaluate(() => [...document.querySelectorAll('#xrow [data-x],#xrow [data-xr]')].filter(b => (b.closest('.xbw') || b).style.display !== 'none').map(b => (b.dataset.x || b.dataset.xr) + (b.dataset.bk || '')).join());
       if (lb !== N + 'B') E.push(tag + ' 現場任務 開 新 ' + N + '：大廳 要 只 有〔📝 新 ' + N + '〕' + lb);
+      if (await p.$('[data-duo="0"]')) await p.click('[data-duo="0"]');   /* 第四十四次：現場任務 先 選 ① 幾個 人 */
       await p.click('#xrow .xb[data-x="' + N + '"][data-bk="B"]'); await p.waitForTimeout(400);
       n++; const pl = await p.evaluate(() => ({ c: R.cnt, sim: R.qs.filter(q => q.sim).length, n: R.qs.length, bk: R.bk, inB: R.qs.every(q => XALL2.indexOf(q) >= 0) }));
       if (pl.n !== N || pl.c[0] !== 8 || pl.sim !== Math.round(N * .5) || pl.bk !== 'B' || !pl.inB) E.push(tag + ' 新 ' + N + ' 題：抽題 不對 ' + JSON.stringify(pl));

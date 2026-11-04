@@ -54,7 +54,8 @@ var WREV=(function(){var S={my:0,it:[],k:-1,heard:[],host:null};
  function play(k,my,cb){var c=card(k),it=S.it[k];if(!c||my!==S.my)return;[].forEach.call(S.host.querySelectorAll('.wrc.on'),function(x){x.classList.remove('on')});c.classList.add('on');
    try{c.scrollIntoView({behavior:fast()?'auto':'smooth',block:'center'})}catch(e){}
    var p=c.querySelector('.wrp'),b=c.querySelector('.wrb'),z=c.querySelector('.wrz');p.classList.add('spk');b.classList.add('spk');
-   var en=function(d){if(fast()){setTimeout(d,200);return}try{it.en(d)}catch(e){setTimeout(d,800)}};
+   /* 2026-11-04 第四十四次 第 2-(2) 點（iPad 唸到 一半 卡住）：英文 也 有 保險 計時（20 秒 沒 唸完 ＝ 接 下去）*/
+   var en=function(d){var ok=0,g=function(){if(ok)return;ok=1;clearTimeout(w);d()},w=setTimeout(function(){if(my===S.my){try{if(typeof stopSay==='function')stopSay()}catch(e){}g()}},fast()?1500:20000);if(fast()){setTimeout(g,200);return}try{it.en(g)}catch(e){setTimeout(g,800)}};
    en(function(){if(my!==S.my)return;b.classList.remove('spk');z.classList.add('spk');
      setTimeout(function(){if(my!==S.my)return;zh(it.zh,function(){if(my!==S.my)return;z.classList.remove('spk');p.classList.remove('spk');c.classList.remove('on');c.classList.add('done');S.heard[k]=1;bar();setTimeout(cb,fast()?50:600)})},fast()?50:350)})}
  function auto(k,my){if(my!==S.my)return;var N=S.it.length,j=-1;for(var i=0;i<N;i++){var x=(k+i)%N;if(!S.heard[x]){j=x;break}}if(j<0)return;play(j,my,function(){auto(j+1,my)})}

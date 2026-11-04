@@ -149,6 +149,8 @@ button:active{transform:scale(.97)}
 #bchO .bt1{font-size:clamp(26px,4.4vh,40px);font-weight:700;color:#FFD54A;opacity:0}#bchO.go .bt1{animation:bchT .4s 1.3s forwards}
 #bchO .bt2{font-size:clamp(20px,3vh,28px);margin:10px 0;line-height:1.5;opacity:0}#bchO.go .bt2{animation:bchT .4s 1.7s forwards}
 #bchO .beq{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;font-size:clamp(22px,3.4vh,32px);background:rgba(255,213,74,.14);border:2px solid rgba(255,213,74,.6);border-radius:16px;padding:8px 16px}
+#bchO .blg{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;margin:10px auto 0;padding:8px 14px;border-radius:14px;background:rgba(255,255,255,.08);border:2px solid rgba(255,213,74,.45);font-size:clamp(18px,2.6vh,24px);opacity:0}#bchO.go .blg{animation:bchT .4s 2s forwards}#bchO:not(.go) .blg{opacity:1}#bchO .blg b{width:100%;color:#FFD54A}#bchO .blg .now{color:#7BF0A8;font-weight:700}
+.chips .bch.nw{animation:bchN 1.6s ease-in-out infinite;border-color:#FFF1A8}@keyframes bchN{50%{box-shadow:0 0 26px rgba(255,213,74,.95)}}.bchw{color:#FFD54A}
 #bchO .bok{margin-top:14px;font:inherit;font-size:clamp(20px,3vh,26px);min-height:56px;padding:6px 32px;border-radius:999px;border:0;background:#39D98A;color:#08210F;font-weight:700;opacity:0}#bchO.go .bok{animation:bchT .4s 2.2s forwards}
 @keyframes bchT{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){#bchO.go *{animation-duration:.01s!important;animation-delay:0s!important}}
@@ -524,7 +526,7 @@ function drawStage(){var V=RV,e=V.st.eq;try{if(e.h)localStorage.setItem('rp_hero
   var mhp=M.max-M.hp,mr=mhp/M.max,hc=mr>.5?'g':mr>.25?'y':'r',hit=d+pd,left=Math.max(1,Math.ceil(mhp/Math.max(1,hit))),hi=e.h?img(e.h):'',pi=e.p?img(e.p):'';
   h+='<div class="stat nums"><h3 class="bh">📊 我的 數字</h3>'+
     '<div class="tile lvT"><div class="lab">⭐ 等級</div><div class="lv"><b>Lv '+V.lv+'</b><span>經驗值 '+nf(V.xp)+'</span></div><div class="bar"><i id="xpb" data-w="'+pct.toFixed(1)+'"></i></div><div class="sub">再 '+nf(V.lvNext-V.xp)+' ⭐ ➜ Lv '+(V.lv+1)+'</div></div>'+
-    '<div class="tile coinT"><div class="lab">🪙 金幣</div><b class="big2" id="coinN">'+nf(V.coins)+'</b><div class="sub">＝ 錢：換 裝備</div></div>'+
+    '<div class="tile coinT"><div class="lab">🪙 金幣</div><b class="big2" id="coinN">'+nf(V.coins-bchHold().c)+'</b><div class="sub">＝ 錢：換 裝備'+(bchHold().n?'<br><b class="bchw">🎁 還有 '+bchHold().n+' 個 寶箱 沒 打開！</b>':'')+'</div></div>'+
     '<div class="tile powT"><div class="lab">⚔ 戰力 <button class="q1" data-go="qb" aria-label="戰力 是 什麼">❓</button></div><div class="pwr"><b class="big2">'+nf(V.power)+'</b>'+(TM&&window.RPFX?'<span class="pwt">'+RPFX.tb(TM,1)+'</span>':'')+'</div>'+
       '<div class="sub tabil">✅ <b>現在</b>：'+(V.tnow&&window.RPFX?RPFX.ts(V.tnow)+' '+RPFX.TN[V.tnow]:'還沒有 階級')+'<br>練習 金幣 多 '+V.pct+'%、一天 最多 拿 '+V.cap+' 🪙'+(ABIL_ON?ABIL:[]).slice(2,(V.tnow||0)+1).filter(Boolean).map(function(a){return '<br>'+a}).join('')+'</div>'+(V.tier<5?'<div class="sub">⏫ <b>再 '+nf(tnext)+' ⚔</b> ➜ 升到 '+tn+'<br>以後：練習 金幣 多 '+CAT.TB[V.tier+1][0]+'%、一天 最多 拿 '+CAT.TB[V.tier+1][1]+' 🪙'+(ABIL_ON&&ABIL[V.tier+1]?'<br>＋ '+ABIL[V.tier+1]:'')+'</div>':'<div class="sub">🎉 最高 階級</div>')+'</div>'+
     (V.ch?'<button class="chB" id="chOpen">👑 開 冠軍寶箱 ✕ '+V.ch+'</button>':'')+'</div>'+
@@ -532,7 +534,7 @@ function drawStage(){var V=RV,e=V.st.eq;try{if(e.h)localStorage.setItem('rp_hero
     ((V.hall||[]).length?'<div class="hallB"><b>🏛 名人堂：★★★★★ 傳說戰神</b>'+V.hall.map(function(id){return '<span>'+id.slice(0,3)+' 班 '+(+id.slice(3))+' 號</span>'}).join('')+'</div>':'');
   /* 2026-10-25 第二十六次 第 3-2 點（老師選 A：暫時 刪除）：👾 打 怪物、💥 一擊 算式、〔⚔ 出招！〕、🐾 我的 寵物 那一格 拿掉（資料 照 留著，要 加回來 ＝ 從 git 第二十五次 版本 拿回 這兩段） */
   h+='<div class="blkw helpB"><h3 class="bh">❓ 看不懂？點 這裡</h3><div class="idr"><button class="how1" data-go="qa">⭐🪙 經驗值、金幣 怎麼來</button><button class="how1" data-go="qc">🎁 收集 有 什麼 幫助</button>'+(ABIL_ON?'<button class="how1" data-go="qd">⚔ 階級 愈高 能力 愈強</button>':'')+'</div>'+
-    (V.medal||V.titles.length||V.chests?'<div class="chips">'+(V.medal?'<span>🏅 勳章 ✕ '+V.medal+'</span>':'')+V.titles.map(function(t){return '<span>🏷 '+t+'</span>'}).join('')+(V.chests?'<button class="bch" data-bch="'+V.chests+'"><i class="bchi">🎁</i> 保底 寶箱 ✕ '+V.chests+' <b>👆 點 我 打開</b></button>':'')+'</div>':'')+'</div>';
+    (V.medal||V.titles.length||V.chests?'<div class="chips">'+(V.medal?'<span>🏅 勳章 ✕ '+V.medal+'</span>':'')+V.titles.map(function(t){return '<span>🏷 '+t+'</span>'}).join('')+(V.chests?(bchHold().n?'<button class="bch nw" data-bch="'+bchHold().n+'"><i class="bchi">🎁</i> 新 的 保底 寶箱 ✕ '+bchHold().n+' <b>👆 點 我 打開</b></button>':'<button class="bch" data-bch="0"><i class="bchi">🎁</i> 保底 寶箱：已經 打開 '+V.chests+' 個 <b>🪙 帳本</b></button>'):'')+'</div>':'')+'</div>';
   /* 🎉 加倍 時段（2026-10-26 第二十六次 第 2-4 點）：老師 開了 ＝ 最上面 金色 橫幅 */
   if(V.bo){var bt=new Date(V.bo.to);h='<div class="boban">🎉 你們班加倍中！答對賺的🪙金幣 ✖'+V.bo.k+'、⭐經驗值 ✖'+V.bo.x+(V.bo.h>1?'；🏠 25題闖關 ✖'+V.bo.h:'')+'<small>（到'+(bt.getMonth()+1)+'/'+bt.getDate()+' '+bt.getHours()+':'+('0'+bt.getMinutes()).slice(-2)+'）</small></div>'+h}
   st.innerHTML=h;if(window.RPLIFE)RPLIFE.stage(document.getElementById('mfr'),{c:EC,tier:hs});setTimeout(function(){var b=document.getElementById('xpb');if(b)b.style.width=b.getAttribute('data-w')+'%'},60)}
@@ -833,7 +835,8 @@ function summonOf(id,isNew){var k=kOf(id),s=star(id),nm={h:'戰士',w:'武器',p
 function seen(){if(!RV||!SCID)return;var e=RV.st.eq,K='rp_seen_'+SCID,o={};try{o=JSON.parse(localStorage.getItem(K)||'{}')||{}}catch(x){}
   if(e.p&&typeof RPFX!=='undefined'){if(o.p===e.p&&(o.ps||0)<RV.petStage)setTimeout(function(){RPFX.evolve({img:img(e.p),w:e.p,to:RV.petStage})},700);o.p=e.p;o.ps=RV.petStage}
   /* 金幣 比 上一次 多 ➜ 金幣 飛進去 */
-  if(o.c!=null&&RV.coins>o.c&&typeof RPFX!=='undefined'){var add=RV.coins-o.c,c0=o.c;setTimeout(function(){var to=document.getElementById('coinN'),fr=document.querySelector('.cov');if(to)RPFX.coins(fr,to,add,function(v){to.textContent=nf(c0+v)},0)},900)}
+  var bh=bchHold();if(bh.n&&!window.__NOBCH)setTimeout(function(){if(RV&&bchHold().n&&!document.querySelector('#bchO.on'))bchOpen(bchHold().n)},1500);   /* 第四十四次 第 7 點：新 的 保底 寶箱 ＝ 自己 跳出來 請 他 打開 */
+  if(!bh.c&&o.c!=null&&RV.coins>o.c&&typeof RPFX!=='undefined'){var add=RV.coins-o.c,c0=o.c;setTimeout(function(){var to=document.getElementById('coinN'),fr=document.querySelector('.cov');if(to)RPFX.coins(fr,to,add,function(v){to.textContent=nf(c0+v)},0)},900)}
   /* 2026-10-21 第十八次 第 4-1(3) 點 B：升到 新 的 階級 ➜ ⏫ 升階 典禮（每一階 不一樣）➜ 再 演 一次 全部 合體（新 的 合體 等級）；第一次 打開 只 記下來 */
   var tm=tierMax();if(o.tm!=null&&tm>o.tm&&!window.__NOTU&&window.RPLIFE&&RPLIFE.tierUp){var tb=CAT.TB[tm]||[];setTimeout(function(){RPLIFE.tierUp({k:tm,pct:tb[0],cap:tb[1],done:function(){if(RV&&RV.st.eq.h)setTimeout(cbAuto,250)}})},1300)}o.tm=tm;
   o.c=RV.coins;try{localStorage.setItem(K,JSON.stringify(o))}catch(x){}}
@@ -844,17 +847,29 @@ function cele(id){var k=kOf(id),m=document.getElementById('rpm');m.className='on
   document.getElementById('rpmb').innerHTML=fwHTML()+(k==='t'?'<img src="'+treImg(id)+'" alt="">':'<img src="'+img(id)+'" alt="'+id+'">')+
     '<div style="font-size:1.2em;color:#FFE07A;margin-top:8px">🎉 換到了！已經 裝上</div>'+(sOf(id)&&sOf(id).slot==='fx'?'<div class="note">💥 答對 現場任務、做完 一次 的 時候 會 放出來</div>':'')+'<div class="bt"><button class="yes" data-m="x">👌 好</button></div>'}
 /* 第四十一次 第 5 點：🎁 保底 寶箱 打開（金幣 伺服器 已經 自動 加 了，這裡 只 演＋說明）*/
-function bchOpen(n){var o=document.getElementById('bchO');if(!o){o=document.createElement('div');o.id='bchO';document.body.appendChild(o)}
+/* 2026-11-04 第四十四次 第 7 點（30403、30412、30413：沒 收到 保底 寶箱 的 金幣）：只讀 查 伺服器 ＝ 三位 都 有（2、3、2 個，金幣 早就 加 進去 了），
+   但是 學生 看不到「收到」的 那一刻（數字 一 打開 就 是 加好 的；30403 金幣 都 花掉 了 只 剩 4）➜ 改成：
+   ① 新 的 寶箱（這台 平板 還沒 打開 過 的：rp_bch_5碼）＝ 先 不 算進 畫面 上 的 🪙（金幣 夠 才 扣 起來），🪙 下面 寫「🎁 還有 N 個 寶箱 沒 打開！」、一 進來 自己 跳出來 請 他 打開
+   ② 點 寶箱 打開 ＝ 金幣 一顆一顆 飛進 🪙、數字 跳 上去（真的 看得到 收到）③ 一定 附〔🪙 金幣 帳本〕：一共 賺到、保底 寶箱 幾個、換 裝備 花掉、現在 剩下（錢 去 哪裡 一目了然）*/
+function bchOp(){try{return Math.max(0,+(localStorage.getItem('rp_bch_'+SCID))||0)}catch(x){return 0}}
+function bchHold(){var V=RV;if(!V||!V.chests||window.__NOBCH)return {n:0,c:0};var n=Math.max(0,V.chests-Math.min(V.chests,bchOp())),c=n*CAT.C.chest;return {n:n,c:V.coins-c>=0?c:0}}
+function bchLedger(){if(!RV)return '';var V=RV,cc=V.chests*CAT.C.chest,sp=(V.st&&V.st.spent)||0;return '<div class="blg"><b>🪙 金幣 帳本</b><span>✅ 練習、獎勵 賺到 '+nf(V.earned-cc)+'</span><span>🎁 保底 寶箱 '+V.chests+' 個 ＝ ＋'+nf(cc)+'</span><span>🛒 換 裝備 花掉 −'+nf(sp)+'</span><span class="now">💰 現在 剩下 '+nf(V.coins)+'</span></div>'}
+function bchOpen(n){if(!n){bchView();return}var o=document.getElementById('bchO');if(!o){o=document.createElement('div');o.id='bchO';document.body.appendChild(o)}
   var cs='';for(var i=0;i<10;i++)cs+='<i class="bcn" style="--d:'+(0.95+i*0.07).toFixed(2)+'s;--x:'+((i-4.5)*26)+'px">🪙</i>';
   o.innerHTML='<div class="bw"><div class="bbx"><div class="bgl"></div><div class="blid"></div><div class="bbd"></div>'+cs+'</div>'+
     '<div class="bt1">🎉 保底 寶箱 打開 了！</div>'+
-    '<div class="bt2">📅 一週 練習 '+CAT.C.chestDays+' 天 以上 ＝ 🎁 1 個<br><span class="beq">🎁 ✕ '+n+' ➜ 🪙 ＋'+CAT.C.chest+' ✕ '+n+' ＝ <b>🪙 ＋'+(CAT.C.chest*n)+'</b></span><br>✅ 金幣 已經 自動 放進 你的 🪙 裡 了</div>'+
-    '<button class="bok" id="bchOk">👌 好</button></div>';
+    '<div class="bt2">📅 一週 練習 '+CAT.C.chestDays+' 天 以上 ＝ 🎁 1 個<br><span class="beq">🎁 ✕ '+n+' ➜ 🪙 ＋'+CAT.C.chest+' ✕ '+n+' ＝ <b>🪙 ＋'+(CAT.C.chest*n)+'</b></span><br>✅ 按〔👌 收下〕金幣 就 飛進 你的 🪙</div>'+bchLedger()+
+    '<button class="bok" id="bchOk" data-n="'+n+'">👌 收下</button></div>';
   o.classList.remove('go');o.classList.add('on');void o.offsetWidth;o.classList.add('go')}
+function bchView(){var o=document.getElementById('bchO');if(!o){o=document.createElement('div');o.id='bchO';document.body.appendChild(o)}
+  o.innerHTML='<div class="bw"><div class="bt1" style="opacity:1">🎁 保底 寶箱：已經 打開 '+RV.chests+' 個</div><div class="bt2" style="opacity:1">📅 一週 練習 '+CAT.C.chestDays+' 天 以上 ＝ 🎁 1 個（🪙 ＋'+CAT.C.chest+'）</div>'+bchLedger()+'<button class="bok" id="bchOk" data-n="0" style="opacity:1">👌 好</button></div>';o.classList.remove('go');o.classList.add('on')}
+/* 收下：記 這台 平板 已經 打開 幾個 ➜ 畫面 的 🪙 從 扣 起來 的 數字 飛 上去 */
+function bchTake(n){if(!RV)return;var h=bchHold();try{localStorage.setItem('rp_bch_'+SCID,String(RV.chests))}catch(x){}var c0=RV.coins-h.c;draw();
+  var to=document.getElementById('coinN');if(to&&h.c>0){to.textContent=nf(c0);if(typeof RPFX!=='undefined')RPFX.coins(document.querySelector('.bch')||to,to,h.c,function(v){to.textContent=nf(c0+v)},0);else to.textContent=nf(RV.coins)}}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
   if(c('#rpIn')){scLogin(function(){SCH.close();scBar();load()});return}
   if((b=c('[data-bch]'))){bchOpen(+b.getAttribute('data-bch'));return}
-  if(c('#bchOk')){var bo=document.getElementById('bchO');bo.classList.remove('on','go');return}
+  if((b=c('#bchOk'))){var bo=document.getElementById('bchO');bo.classList.remove('on','go');if(+b.getAttribute('data-n'))bchTake(+b.getAttribute('data-n'));return}
   if((b=c('#tabs button'))){TAB=b.getAttribute('data-t');[].forEach.call(document.querySelectorAll('#tabs button'),function(x){x.classList.toggle('on',x===b)});drawShop();return}
   if((b=c('[data-sex]'))){SEX=b.getAttribute('data-sex');drawShop();return}
   if((b=c('[data-scat]'))){SCAT=+b.getAttribute('data-scat');drawShop();return}

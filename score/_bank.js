@@ -99,10 +99,10 @@ Object.keys(SITES).forEach(dir => {
   G3.CSETS.forEach(x => G3.GAMES.forEach(g => put('g3gm_' + x[0] + '-' + g.id, { name: '🏫 ' + x[1].replace('三年級 ', '') + '｜' + g.ic + ' ' + g.nm, qs: G3.CB[x[0]][g.id].map(c => ({ k: 'g', kn: '🏫 三年級 複習', q: txt(qOf(g.id, c)), o: oOf(g.id, c).map(y => txt(String(y))), h: txt(c.zh || ''), ae: c.en || '' })) })));
   /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（g3gm_lw-q5；題庫 ＝ g3mid/_data.js LW）*/
   put('g3gm_lw-q5', { name: '✍️ 字母 書寫｜✍️ 字母 書寫', qs: G3.LWP.lw.map(c => ({ k: 'g', kn: '✍️ 字母 書寫', q: txt(qOf('q5', c)), o: oOf('q5', c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) });
-  /* 2026-11-03 第四十一次：在家 ✍️ 字母 書寫（lwh）、🔤 聽 字母 寫（la）、🐷 聽 字首音 寫（lf）*/
+  /* 2026-11-03 第四十一次：在家 ✍️ 字母 書寫（lwh）、🔤 聽 字母 寫（la）、🎧 聽 字首音 寫（lf）*/
   put('g3gm_lwh-q5', { name: '✍️ 字母 書寫（在家）｜✍️ 字母 書寫（在家）', qs: G3.LWP.lwh.map(c => ({ k: 'g', kn: '✍️ 字母 書寫（在家）', q: txt(qOf('q5', c)), o: oOf('q5', c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) });
   put('g3gm_la-q5', { name: '🔤 聽 字母 寫｜🔤 聽 字母 寫', qs: G3.LWP.la.map(c => ({ k: 'g', kn: '🔤 聽 字母 寫', q: txt(qOf('q5', c)), o: oOf('q5', c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) });
-  put('g3gm_lf-q5', { name: '🐷 聽 字首音 寫｜🐷 聽 字首音 寫', qs: G3.LWP.lf.map(c => ({ k: 'g', kn: '🐷 聽 字首音 寫', q: txt(qOf('q5', c)), o: oOf('q5', c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) });
+  put('g3gm_lf-q5', { name: '🎧 聽 字首音 寫｜🎧 聽 字首音 寫', qs: G3.LWP.lf.map(c => ({ k: 'g', kn: '🎧 聽 字首音 寫', q: txt(qOf('q5', c)), o: oOf('q5', c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) });
   /* 2026-10-26 第二十八次：📝 25／50 題 挑戰（g3gm_g3m-x25／x50）：題庫 ＝ 10 種 遊戲 的 挑戰 題庫 照 順序 接起來（跟 網頁 的 XALL 一樣）*/
   /* 2026-10-30 第三十四次 第 1～4 點：🏠 25 題 闖關（回家，g3gm_g3m-h25）＝ 題庫 A 的 全新 題（第幾題 ＝ 跟 25 題 挑戰 一樣 照 XORD）*/
   put('g3gm_g3m-h25', { name: '🏫 三年級 複習｜🏠 25 題 闖關', qs: G3.XORD.map(([id, j]) => { const g = G3.GAMES.filter(x => x.id === id)[0] || { ic: '🔓' }, c = G3.XB[id][j]; return { k: 'g', kn: '🏫 三年級 複習', q: txt(g.ic + ' ' + qOf(id, c)), o: oOf(id, c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' }; }) });
@@ -174,6 +174,27 @@ Object.keys(BANK).forEach(k => { if (/_fun-/.test(k)) return;   /* 🏰 守城�
   G3.GAMES.map(g => ['g3m-' + g.id, g.B]).concat([['g3m-x25', XC], ['g3m-x50', XC], ['g3m-h25', XC], ['g3m-n25', XC2], ['g3m-n50', XC2]]).concat([].concat(...G3.CSETS.map(x => G3.GAMES.map(g => [x[0] + '-' + g.id, G3.CB[x[0]][g.id]])))).forEach(([id, B]) => (BANK['g3gm_' + id] || { qs: [] }).qs.forEach((q, i) => { const c = B[i], e = String(c.en || ''); if (!e) return;
     q.ae = e; q.ag = c.dc ? c.t.map(t => [t[0].replace(/'/g, '’'), t[1]]) : tk(e).map(t => [t.replace(/'/g, '’'), zh(t)]); q.az = c.zh || ''; const say = typeof c.say === 'string' ? c.say : e, k3 = A3[akey(say)] ? akey(say) : A3['m:' + akey(say)] ? 'm:' + akey(say) : '', f = k3 ? A3[k3] : W3[akey(say)];
     q.au = f ? '../g3mid/audio/' + (k3 ? '' : 'w/') + f[0] : ''; })); }
+/* 2026-11-04 第四十四次 第 1 點：老師看板〔🏫 課堂複習〕期中 挑戰 的 錯題 分析
+   ① 每一題 記 是 哪一關（gid、gn ＝「🔓 句子 解碼 任務」，圖示 旁邊 寫 名字）
+   ② 🔓 拖曳 題：每一格 的 英文 字＋中文＋單字 語音檔（dt ＝ [[英文, 中文, 語音]]；’s ＝ 跟 前一個 字 一起：He’s）➜「最多 人 放錯 的 英文 字」前 5 名 會 唸 */
+{ const rd = f => fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8').replace(/^[\s\S]*?window\.\w*=/, '').replace(/;\s*$/, '')) : {};
+  const W3 = rd(path.join(ROOT, 'g3mid', 'audio', 'w', 'aud.js')), A3 = rd(path.join(ROOT, 'g3mid', 'audio', 'aud.js')), S4 = rd(path.join(ROOT, 'midterm', 'audio', 's', 'aud.js'));
+  const wau = (g, w) => { const k = akey(w); if (g === 3) { const f = W3[k] || A3[k]; return f ? '../g3mid/audio/' + (W3[k] ? 'w/' : '') + f[0] : ''; } const f = S4[k]; return f ? '../midterm/audio/s/' + f[0] : ''; };
+  const wOf = (t, i) => { let w = t[i][0].replace(/[.?!,]+$/, ''); if (/^['’]/.test(w) && i > 0) w = t[i - 1][0].replace(/[.?!,]+$/, '') + w; return w.replace(/'/g, '’'); };
+  [[3, require(path.join(ROOT, 'g3mid', '_data.js')), 'g3gm_g3m-'], [4, require(path.join(ROOT, 'midterm', '_data.js')), 'g4gm_mt-']].forEach(([g, D, pre]) => {
+    const GN = {}; D.GAMES.concat(D.NGAME || []).forEach(x => { GN[x.id] = x.ic + ' ' + x.nm; }); GN.dc = '🔓 句子 解碼 任務';
+    [['x25', D.XORD, D.XB], ['x50', D.XORD, D.XB], ['h25', D.XORD, D.XB], ['n25', D.XORD2, D.XB2], ['n50', D.XORD2, D.XB2]].forEach(([s, ORD, XB]) => { const B = BANK[pre + s]; if (!B) return;
+      B.qs.forEach((q, i) => { const o = ORD[i]; if (!o) return; const c = XB[o[0]][o[1]]; q.gid = o[0]; q.gn = GN[o[0]] || o[0];
+        /* ③ 正確 答案 的 圖（照片 ＝ pimg、圖示 ＝ pe）＋四年級 逐字 中文 用 midterm 自己 的 字典（Show ＝ 給…看、homework ＝ 作業：以前 用 句型 網站 的 字典 查不到 ＝ 空白）*/
+        if (c) { const o0 = String((c.o || [])[0] || ''), site = g === 3 ? 'g3mid' : 'midterm';
+          if (fs.existsSync(path.join(ROOT, site, 'img', o0 + '.jpg'))) q.pimg = '../' + site + '/img/' + o0 + '.jpg';
+          else if (g === 4 && /^\w+\|\w+$|^\w+$/.test(o0) && D.WHO[o0.split('|')[0]] && !c.dc) q.pe = D.WHO[o0.split('|')[0]][0] + (o0.split('|')[1] && D.JOB[o0.split('|')[1]] ? D.JOB[o0.split('|')[1]][0] : '');
+          else if (c.ic) q.pe = c.ic;
+          if (g === 4 && !c.dc && D.GL && (c.fe || c.ae)) { const e = String(c.fe || c.ae), r = [], re = /([A-Za-z][A-Za-z\-]*)(’|')(s|m|re|t)\b|[A-Za-z][A-Za-z\-’']*|\d+/g; let m;
+            while ((m = re.exec(e))) { if (m[2] && m[3] !== 't') r.push(m[1], "'" + m[3]); else r.push(m[0]); }
+            q.ae = e; q.az = c.fz || q.az; q.ag = r.map((w, j) => { const k = w.replace(/’/g, "'").toLowerCase(), gx = (c.gx || {})[k], lt = k === "'s" && j > 0 && r[j - 1].toLowerCase() === 'let';
+              return [w.replace(/'/g, '’'), lt ? '我們' : k === 'let' ? '讓' : gx || (D.GL[k] !== undefined ? D.GL[k] : /^[A-Z][a-z]+$/.test(w) ? '（名字）' : '')]; }); } }
+        if (c && c.dc && c.t) q.dt = c.t.map((t, j) => { const w = wOf(c.t, j); return [w, t[1], /[A-Za-z]/.test(w) ? wau(g, w) : '']; }); }); }); }); }
 /* 代號一定要是 _calc.js 認得的（以後新的教材登記錯了 build 就失敗） */
 const SC = require('./_calc.js');
 Object.keys(BANK).forEach(k => { if (!SC.cat(k.replace('g*', 'g3')).k) throw new Error('老師看板：題組代號 ' + k + ' 不合規則（score/_calc.js 的 SETRE）'); });
