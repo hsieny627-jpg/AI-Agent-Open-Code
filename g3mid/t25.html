@@ -4643,7 +4643,7 @@ REN.q2=function(q,st){var row=H('div','pmrow'),vw=H('div','pmv'),cv=document.cre
    later(function(){var k=+b.dataset.k;if(k===0){b.classList.add('ok');BUSY=false;good(b)}else{b.classList.add('no');var o=q.o[k];R.pick=o;miss(o)}},650);return true}
   function say2(t){toast.textContent=t;toast.classList.remove('on');void toast.offsetWidth;toast.classList.add('on')}
   /* 被 抓到：回 起點、鬼 退回 角落 等 2 秒；不 扣 時間（停 1.2 秒）、不 算 錯 */
-  function caught(){say2('🐝 被 蜜蜂 抓到了！回到 起點（不算 錯）');pac.classList.add('hurt');setTimeout(function(){pac.classList.remove('hurt')},500);
+  function caught(){say2('🐝 被抓到了！回到 起點（不算 錯）');pac.classList.add('hurt');setTimeout(function(){pac.classList.remove('hurt')},500);
    S.p={cx:MZP[0],cy:MZP[1],tx:MZP[0],ty:MZP[1],f:0,d:''};gReset();S.gw=2;S.nd=null;S.auto=S.goal?mzPath(MZP[0],MZP[1],S.goal):null;
    S.hold=1;tPause();setTimeout(function(){if(P2===S&&S.ph==='go'){S.hold=0;if(!BUSY)tGo()}},1200)}
   function loop(t){if(P2!==S||R.q!==q||!document.body.contains(vw))return;var dt=S.last?Math.min(.05,(t-S.last)/1000):0;S.last=t;
