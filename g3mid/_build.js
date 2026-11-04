@@ -458,7 +458,7 @@ body.lwm .mirror{width:clamp(160px,22vh,230px);height:clamp(210px,30vh,300px)}@m
 .pac2{position:absolute;z-index:4;transition:none}.pac2 i{position:absolute;inset:0;border-radius:50%;background:#FFD23F;box-shadow:0 0 16px #FFD23F;animation:chomp .22s linear infinite alternate}
 .pac2.dl i{transform:scaleX(-1)}.pac2.du i{transform:rotate(-90deg)}.pac2.dd i{transform:rotate(90deg)}.pac2.inv{animation:blink .2s infinite}.pac2.hurt i{animation:none;background:#FF5A5A}@keyframes blink{50%{opacity:.25}}
 .pac2.gulp{animation:gulp .45s}@keyframes gulp{50%{transform:scale(1.5)}}
-.gst{position:absolute;z-index:3;display:flex;align-items:center;justify-content:center;font-size:clamp(30px,5vh,52px);line-height:1;filter:drop-shadow(0 0 8px #B46BFF)}.gst.g2{filter:drop-shadow(0 0 8px #FF5A8A) hue-rotate(120deg)}
+.gst{position:absolute;z-index:3;display:flex;align-items:center;justify-content:center;font-size:clamp(30px,5vh,52px);line-height:1;filter:drop-shadow(0 0 8px #B46BFF)}.gst.g2{filter:drop-shadow(0 0 8px #FF5A8A)}
 .pmt{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:6;background:rgba(0,0,0,.8);border:3px solid #FF5A8A;border-radius:16px;padding:6px 16px;font-size:clamp(22px,3vh,30px);white-space:nowrap;opacity:0;pointer-events:none}.pmt.on{animation:pmt 1.8s forwards}@keyframes pmt{10%,80%{opacity:1}100%{opacity:0}}
 .dpad{display:grid;grid-template-columns:repeat(3,clamp(84px,12vh,124px));grid-template-rows:repeat(3,clamp(84px,12vh,124px));gap:6px;flex:0 0 auto;padding:8px;border-radius:50%;background:radial-gradient(circle,#26307A 0 40%,#151B46 70%);touch-action:none;user-select:none;-webkit-user-select:none}   /* 2026-10-30 第三十四次 第 5 點：方向鍵 放大＋整塊 都 可以 按、手指 滑 就 換 方向 */
 .dpad button{border:0;border-radius:22px;background:linear-gradient(#3E5BFF,#1F2A8C);box-shadow:0 6px 0 #0B1250;font-size:clamp(40px,6.4vh,62px);touch-action:none}.dpad button.on{transform:translateY(4px);box-shadow:0 2px 0 #0B1250;background:#5D7BFF}
@@ -923,7 +923,8 @@ function card2(c){if(c.sc&&SCSVG[c.sc])return '<div class="q2sc q2svg">'+SCSVG[c
    ① 先 看 整張 迷宮（3 張 圖 在 3 個 大 房間）＋ 唸 句子 ＋ 3、2、1、GO（鬼 不 動、時間 停）➜ ② GO 以後 鏡頭 放大 2 倍 跟著 小精靈；
    ③ 按 一下 方向 就 一直 走（轉彎 可以 先 按，走到 路口 自己 轉）；走進 房間 ＝ 選 那 一張；④ 👻 走得 比 小精靈 慢，被 抓到 ＝ 回 起點、
    鬼 退回 角落 等 2 秒，不 扣 時間、不 算 錯；⑤ 一題 25 秒（GO 才 開始 算；〔🔊 再聽一次〕的 時候 時間 停）。
-   點 畫面 上 的 圖、或 點 右邊 小 地圖 的 房間 ＝ 小精靈 自己 走過去（還是 要 小心 👻）。 */
+   點 畫面 上 的 圖、或 點 右邊 小 地圖 的 房間 ＝ 小精靈 自己 走過去（還是 要 小心 🐝）。
+   2026-11-04 第四十三次（老師：不 喜歡 👻）：追 小精靈 的 ＝ 🐝 蜜蜂（兩隻 一樣 的 黃 蜜蜂，發光 顏色 不同；規則 不變）。 */
 var MZ=['###############','#AAA#.....#BBB#','#AAA#.###.#BBB#','#.............#','#.##.##.##.##.#','#.#....P....#.#','#.#.##.#.##.#.#','#......#......#','###.#.###.#.###','#...#.....#...#','#.#.##.#.##.#.#','#.#...CCC...#.#','#...#.CCC.#...#','###############'],
   MZW=15,MZH=14,MZR={A:[1,1],B:[11,1],C:[6,11]},MZP=[7,5],MZG=[[1,12],[13,12]],P2=null,DIRS={u:[0,-1],d:[0,1],l:[-1,0],r:[1,0]},OPP={u:'d',d:'u',l:'r',r:'l'};
 function mzCh(x,y){return y>=0&&y<MZH&&x>=0&&x<MZW?MZ[y].charAt(x):'#'}
@@ -933,7 +934,7 @@ function mzPath(sx,sy,rm){var Q=[[sx,sy]],pr={},k=function(x,y){return x+','+y};
    if(/[ABC]/.test(mzCh(c[0],c[1])))continue;
    for(var d in DIRS){var nx=c[0]+DIRS[d][0],ny=c[1]+DIRS[d][1];if(mzOk(nx,ny)&&!(k(nx,ny) in pr)){pr[k(nx,ny)]=[k(c[0],c[1]),d];Q.push([nx,ny])}}}return null}
 REN.q2=function(q,st){var row=H('div','pmrow'),vw=H('div','pmv'),cv=document.createElement('canvas'),pac=H('div','pac2','<i></i>'),toast=H('div','pmt',''),gol=H('div','pmgo',''),tip=H('div','pmtip',''),
-   gh=[H('div','gst','👻'),H('div','gst g2','👻')],side=H('div','pmside'),mm=document.createElement('canvas'),
+   gh=[H('div','gst','🐝'),H('div','gst g2','🐝')],side=H('div','pmside'),mm=document.createElement('canvas'),
    pad=H('div','dpad','<button data-d="u" aria-label="上">⬆</button><button data-d="l" aria-label="左">⬅</button><button data-d="d" aria-label="下">⬇</button><button data-d="r" aria-label="右">➡</button>');
   mm.className='mmap';vw.appendChild(cv);vw.appendChild(pac);gh.forEach(function(g){vw.appendChild(g)});vw.appendChild(toast);vw.appendChild(gol);vw.appendChild(tip);
   var S=P2={q:q,p:{cx:MZP[0],cy:MZP[1],tx:MZP[0],ty:MZP[1],f:0,d:''},nd:null,auto:null,goal:'',eat:{},g:[],gw:0,last:0,ph:'ov',hold:0,cs:30,cs0:30,csZ:60,cam:[MZW/2,MZH/2],vw:0,vh:0,z:0,cards:{}};
@@ -993,7 +994,7 @@ REN.q2=function(q,st){var row=H('div','pmrow'),vw=H('div','pmv'),cv=document.cre
    later(function(){var k=+b.dataset.k;if(k===0){b.classList.add('ok');BUSY=false;good(b)}else{b.classList.add('no');var o=q.o[k];R.pick=o;miss(o)}},650);return true}
   function say2(t){toast.textContent=t;toast.classList.remove('on');void toast.offsetWidth;toast.classList.add('on')}
   /* 被 抓到：回 起點、鬼 退回 角落 等 2 秒；不 扣 時間（停 1.2 秒）、不 算 錯 */
-  function caught(){say2('👻 被抓到了！回到 起點（不算 錯）');pac.classList.add('hurt');setTimeout(function(){pac.classList.remove('hurt')},500);
+  function caught(){say2('🐝 被 蜜蜂 抓到了！回到 起點（不算 錯）');pac.classList.add('hurt');setTimeout(function(){pac.classList.remove('hurt')},500);
    S.p={cx:MZP[0],cy:MZP[1],tx:MZP[0],ty:MZP[1],f:0,d:''};gReset();S.gw=2;S.nd=null;S.auto=S.goal?mzPath(MZP[0],MZP[1],S.goal):null;
    S.hold=1;tPause();setTimeout(function(){if(P2===S&&S.ph==='go'){S.hold=0;if(!BUSY)tGo()}},1200)}
   function loop(t){if(P2!==S||R.q!==q||!document.body.contains(vw))return;var dt=S.last?Math.min(.05,(t-S.last)/1000):0;S.last=t;
@@ -1013,10 +1014,10 @@ REN.q2=function(q,st){var row=H('div','pmrow'),vw=H('div','pmv'),cv=document.cre
   function go(){tip.textContent='';sayList(q.say,function(){cd()})}
   setTimeout(function(){tPause()},0);
   if(RK()===0&&!R.q2how){R.q2how=1;   /* 2026-11-01 第三十八次 第 2-(1) 點（老師：說明 擠、太 複雜）➜ 秒懂 動畫：3 步，一步 一句 話 */
-   var hw=H('div','q2how','<div class="q2hb"><h2>🟡 怎麼 玩？</h2><div class="q2an" id="q2an"><div class="q2mz"><i class="w1"></i><i class="w2"></i><b class="rA">🍎</b><b class="rB">🐶</b><b class="rC">🐱</b><span class="pm"></span><span class="gh">👻</span><span class="sp">🔊</span><span class="hd">👆</span></div>'+
+   var hw=H('div','q2how','<div class="q2hb"><h2>🟡 怎麼 玩？</h2><div class="q2an" id="q2an"><div class="q2mz"><i class="w1"></i><i class="w2"></i><b class="rA">🍎</b><b class="rB">🐶</b><b class="rC">🐱</b><span class="pm"></span><span class="gh">🐝</span><span class="sp">🔊</span><span class="hd">👆</span></div>'+
      '<div class="q2cap" id="q2cap"></div></div><div id="q2ct"></div><button class="q2go" id="q2go" disabled>▶ 我 懂了，開始！</button></div>');st.appendChild(hw);
    var an=hw.querySelector('#q2an'),cap=hw.querySelector('#q2cap'),gb=hw.querySelector('#q2go'),
-     CAP=['① 🔊 <u>聽</u> 英文','② 👆 按 一下 方向 ➜ <u>一直 走</u>','③ 🚪 走進 <u>對 的 圖</u> ＝ 答對！','👻 碰到 鬼 ＝ 回 起點（<u>不算 錯</u>）'];
+     CAP=['① 🔊 <u>聽</u> 英文','② 👆 按 一下 方向 ➜ <u>一直 走</u>','③ 🚪 走進 <u>對 的 圖</u> ＝ 答對！','🐝 碰到 蜜蜂 ＝ 回 起點（<u>不算 錯</u>）'];
    var hplay=function(){an.className='q2an';cap.innerHTML='';CAP.forEach(function(c,k){ACTL.T(function(){an.className='q2an s'+(k+1);cap.innerHTML=c},window.__NOGO?5:300+k*2300)});
      ACTL.T(function(){gb.disabled=false;gb.classList.add('rdy')},window.__NOGO?10:300+CAP.length*2300)};
    ACTL.on(hw.querySelector('#q2ct'),hplay);hplay();
@@ -1146,7 +1147,11 @@ function warImg(){var h=rpHero();if(h&&!ls('g3m_war'))return '../rpg/chars/'+h+'
 /* 2026-10-26 第二十六次 第 1-5B 點（老師選 A：兩位 都 上場）：反派 ＝ 老師 給 的 圖（img/foe1 DARK OVERLORD 反派領袖、img/foe2 SHADOW SCHEMER 影之謀士）。
    第 1 回合 DARK OVERLORD 4 滴血 ➜ 打倒（K.O.!）➜ 第 2 回合 SHADOW SCHEMER 出場 4 滴血；8 題 全對 ＝ 兩位 都 打倒 */
 var FOE=[{img:'img/foe1.webp',en:'DARK OVERLORD',zh:'反派領袖'},{img:'img/foe2.webp',en:'SHADOW SCHEMER',zh:'影之謀士'}],FHP=4;
-REN.q8=function(q,st){if(RK()===0)HP8={b:0,e:FHP,m:8,ko:0};if(HP8.e<=0&&HP8.b===0){HP8.b=1;HP8.e=FHP;HP8.nw=1}var F=FOE[HP8.b],line=q.rev?q.b:q.a;
+/* 2026-11-04 第四十三次（家長 截圖：第 7 關 擂台 第 2 題 怎麼 按 都 沒 反應）：原因 ＝ 中途 離開、按〔▶ 繼續〕（或 換 平板 接著 做）從 這一關 的 第 2 題 開始 ➜
+   HP8 還是 網頁 剛 打開 的 樣子（沒有 第幾 回合）➜ 找不到 反派 ➜ 題目 出不來、計時 沒 開始。現在：不是 從 這一關 第 1 題 開始 ＝ 照 這一關 已經 答 的 題目 算回 血條 */
+function hp8Init(){HP8={b:0,e:FHP,m:8,ko:0,own:R};if(!R||!R.res)return;for(var j=0;j<R.k;j++){if(R.lvOf?R.lvOf[j]!==R.lv:0)continue;
+  if(R.res[j]===1){if(HP8.e<=0&&HP8.b===0){HP8.b=1;HP8.e=FHP}HP8.e=Math.max(0,HP8.e-1);if(!HP8.e)HP8.ko++}else if(R.res[j]===0)HP8.m=Math.max(0,HP8.m-1)}}
+REN.q8=function(q,st){if(RK()===0||!HP8||HP8.own!==R||!FOE[HP8.b])hp8Init();if(HP8.e<=0&&HP8.b===0){HP8.b=1;HP8.e=FHP;HP8.nw=1}var F=FOE[HP8.b],line=q.rev?q.b:q.a;
   var ar=H('div','duel','<div class="dbg"><i></i><i></i></div><div class="fig me"><div class="fcard"><img src="'+warImg()+'" alt="你的戰士"></div><div class="hpb"><b>🛡 YOU</b><span class="bar"><i style="width:'+(HP8.m/8*100)+'%"></i></span></div></div><div class="vs">VS</div>'+
    '<div class="fig dk"><div class="fcard foe"><img src="'+F.img+'" alt="'+F.en+'"></div><div class="hpb"><b>💀 '+F.en+'</b><span class="bar"><i style="width:'+(HP8.e/FHP*100)+'%"></i></span></div></div>'+
    '<div class="rnd8">ROUND '+(HP8.b+1)+' ／ 2</div>'+(HP8.nw?'<div class="nw8"><b>⚠ '+F.en+'</b><span>is coming!</span></div>':''));HP8.nw=0;
