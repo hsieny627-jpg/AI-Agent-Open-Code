@@ -6,7 +6,7 @@ let fails = 0, n = 0; const bad = (t, x) => { fails++; console.log('✗ ' + t + 
 (async () => { const b = await chromium.launch();
   for (const [f, U1] of [['g3mid/index.html', 'A'], ['midterm/index.html', 'A']]) for (const vp of [[1024, 768], [820, 1180]]) {
     const tag = f.split('/')[0] + ' ' + vp.join('×'), p = await b.newPage({ viewport: { width: vp[0], height: vp[1] } }), er = []; p.on('pageerror', e => er.push(e.message));
-    await p.addInitScript(() => { window.__SCORE_TEST_OFF = 1; window.__DCLK = .3; window.__DCLMIN = 0; window.__NOUNLOCK = 1; });
+    await p.addInitScript(() => { window.__SCORE_TEST_OFF = 1; window.__DCLK = .3; window.__DCLMIN = 0; window.__NOUNLOCK = 1; window.__NODFXI = 1; window.__NOSNH = 1;   /* 第四十二次：寶箱 說明、貪吃蛇 怎麼玩 在 _verify_42.js 量 */ });
     await p.goto('file://' + path.join(__dirname, '..', f)); await p.waitForTimeout(600);
     const L = await p.evaluate(() => { const s = LES.A[1].s; return { ex: s.filter(x => x.eq && /生活例句/.test(x.eq.tag)).length, eq: s.filter(x => x.eq && /縮寫/.test(x.eq.tag)).length }; });
     n++; if (L.ex < 2 || L.eq < 2) bad(tag + ' Unit 1 秒懂 動畫 縮寫／生活例句 不夠', L);

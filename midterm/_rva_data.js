@@ -15,7 +15,9 @@ const ANI = [
   { h: '不是', pic: '🙅‍♀️', en: "No, she isn't.", z: '不，她不是。', n: 'isn’t ＝ is not（不是）'  },
   /* 2026-11-02 第四十次 第 4-(3) 點：迷思 概念 */
   { h: '問是誰 ➜ 回答家人', pic: '❓👦', en: "Who's he?", en2: "He's my uncle.", v2: 'm', mis: 'He’s a cook.', misz: '他是一位廚師。', misw: '👨‍🍳 這是 職業，Who 問 他 是 誰（家人）！', z: '他是誰？他是我的叔叔。', n: 'Who ＝ 誰 ➜ 回答 他 是 誰（my ＋ 家人）' },
-  { h: '問是不是 ➜ 回答 Yes／No', pic: '👩‍⚕️ ❓', en: 'Is she a nurse?', en2: 'Yes, she is.', mis: 'She’s my aunt.', misz: '她是我的阿姨。', misw: '❓ Is 問「是不是」➜ 先 說 Yes 或 No！', z: '她是一位護理師嗎？是的，她是。', n: 'Is…? ➜ Yes, she is.／No, she isn’t.'}],
+  { h: '問是不是 ➜ 回答 Yes／No', pic: '👩‍⚕️ ❓', en: 'Is she a nurse?', en2: 'Yes, she is.', mis: 'She’s my aunt.', misz: '她是我的阿姨。', misw: '❓ Is 問「是不是」➜ 先 說 Yes 或 No！', z: '她是一位護理師嗎？是的，她是。', n: 'Is…? ➜ Yes, she is.／No, she isn’t.'},
+  /* 2026-11-03 第四十二次 第 7 點（老師）：🪄 直述句 ➜ 問句 魔法 變身（中英 語序：Is 跳到 最前面、he 緊跟 在 Is 後面、. 變 ?、中文 加 嗎）*/
+  { h: '變成 問句 的 魔法', mag: 1, en: 'He is a teacher.', en2: 'Is he a teacher?', z: '他 是 一位 老師。 ➜ 他 是 一位 老師 嗎？', n: 'He is ➜ Is he（Is 最前面、he 緊跟 在 後面）；. ➜ ?；中文 只 加「嗎」' }],
  qz: [
   { at: 0, ty: 'dec', en: "Who's he?", x: ['她', '什麼'], z: '他是誰？', why: '中文說「他是誰」；英文先說 Who（誰）' },
   { at: 2, ty: 'dec', en: "She's my mother.", x: ['他', '你的'], z: '她是我的媽媽。', why: 'She ＝ 她、my ＝ 我的' },
@@ -154,20 +156,22 @@ const ANI = [
   { at: 1, ty: 'ord', w: ["He's", 'my', 'father.'], x: ['his'], en: "He's my father.", v: 'm', z: '他是我的爸爸。', why: '他是 ➜ 我的 ➜ 爸爸' },
   { at: 3, ty: 'dec', en: "She's my grandma.", x: ['他', '爺爺'], z: '她是我的奶奶。', why: 'She ＝ 她、grandma ＝ 奶奶' }] },
 { id: 'm11', ic: '✅', nm: '是不是 快問快答', sc: [
+  /* 2026-11-03 第四十二次 第 7 點：🪄 魔法 變身 She is a nurse. ➜ Is she a nurse? */
+  { h: '變成 問句 的 魔法', mag: 1, en: 'She is a nurse.', en2: 'Is she a nurse?', z: '她 是 一位 護理師。 ➜ 她 是 一位 護理師 嗎？', n: 'She is ➜ Is she；. ➜ ?；中文 只 加「嗎」' },
   { h: '是 ➜ Yes', pic: '👩‍⚕️', en: 'Is she a doctor?', en2: 'Yes, she is.', sym: '➜', z: '她是醫生嗎？是的，她是。', n: '是 ➜ Yes, she is.' },
   { h: '不是 ➜ No', pic: '👨‍🍳', en: 'Is he a farmer?', en2: "No, he isn't.", sym: '➜', v2: 'm', z: '他是農夫嗎？不，他不是。', n: '不是 ➜ No, he isn’t.' },
   { h: 'he 還是 she', pic: '🧑‍🎓', en: 'Is she a student?', en2: 'Yes, she is.', sym: '➜', z: '她是學生嗎？是的，她是。', n: '問句用 she，回答也用 she' },
   { h: '最後的 is', pic: '✋', en: 'Yes, he is.', en2: "No, he isn't.", vs: 1, v: 'm', z: '是的，他是。不，他不是。', n: 'Yes, he is.（不可以說 Yes, he’s.）' }],
  qz: [
-  { at: 1, ty: 'mc', pic: '👨‍🌾', q: 'Is he a farmer?', o: ['Yes, he is.', "No, he isn't.", 'Yes, she is.', "Yes, he's."], en: 'Yes, he is.', v: 'm', z: '是的，他是。', why: '圖是農夫 ➜ Yes, he is.' },
-  { at: 1, ty: 'mc', pic: '👩‍🍳', q: 'Is she a nurse?', o: ["No, she isn't.", 'Yes, she is.', "No, he isn't.", 'No, she is.'], en: "No, she isn't.", z: '不，她不是。', why: '圖是廚師 ➜ 不是護理師' },
-  { at: 2, ty: 'mc', pic: '👦🎒', q: 'Is he a student?', o: ['Yes, he is.', 'Yes, she is.', "No, he isn't.", "Yes, he's."], en: 'Yes, he is.', v: 'm', z: '是的，他是。', why: '問 he ➜ 回答 he' },
-  { at: 0, ty: 'tf', pic: '👩‍🏫', q: 'Is she a teacher? — Yes, she is.', ok: true, en: 'Is she a teacher? Yes, she is.', z: '她是老師嗎？是的，她是。', why: '圖是老師 ➜ Yes' },
-  { at: 3, ty: 'tf', pic: '👨‍⚕️', q: "Is he a doctor? — Yes, he's.", ok: false, en: 'Is he a doctor? Yes, he is.', v: 'm', z: '他是醫生嗎？是的，他是。', why: '最後的 is 不可以縮寫' },
-  { at: 2, ty: 'spot', w: ['Is', 'she', 'a', 'cook?', 'Yes,', 'he', 'is.'], bad: 5, fix: 'she', en: 'Is she a cook? Yes, she is.', z: '她是廚師嗎？是的，她是。', why: '問 she ➜ 回答 she' },
-  { at: 1, ty: 'ord', w: ['No,', 'she', "isn't."], en: "No, she isn't.", z: '不，她不是。', why: 'No ➜ she ➜ isn’t' },
-  { at: 1, ty: 'dec', en: "No, he isn't.", x: ['是', '她'], z: '不，他不是。', why: 'isn’t ＝ 不是' },
-  { at: 2, ty: 'hear', s: 'Is your dad a cook?', pic: '👨‍🍳', o: ['Yes, he is.', 'Yes, she is.', "No, he isn't.", "Yes, he's."], en: 'Yes, he is.', v: 'm', z: '是的，他是。', why: 'dad 是男生 ➜ he；圖是廚師 ➜ Yes' }] },
+  { at: 2, ty: 'mc', pic: '👨‍🌾', q: 'Is he a farmer?', o: ['Yes, he is.', "No, he isn't.", 'Yes, she is.', "Yes, he's."], en: 'Yes, he is.', v: 'm', z: '是的，他是。', why: '圖是農夫 ➜ Yes, he is.' },
+  { at: 2, ty: 'mc', pic: '👩‍🍳', q: 'Is she a nurse?', o: ["No, she isn't.", 'Yes, she is.', "No, he isn't.", 'No, she is.'], en: "No, she isn't.", z: '不，她不是。', why: '圖是廚師 ➜ 不是護理師' },
+  { at: 3, ty: 'mc', pic: '👦🎒', q: 'Is he a student?', o: ['Yes, he is.', 'Yes, she is.', "No, he isn't.", "Yes, he's."], en: 'Yes, he is.', v: 'm', z: '是的，他是。', why: '問 he ➜ 回答 he' },
+  { at: 1, ty: 'tf', pic: '👩‍🏫', q: 'Is she a teacher? — Yes, she is.', ok: true, en: 'Is she a teacher? Yes, she is.', z: '她是老師嗎？是的，她是。', why: '圖是老師 ➜ Yes' },
+  { at: 4, ty: 'tf', pic: '👨‍⚕️', q: "Is he a doctor? — Yes, he's.", ok: false, en: 'Is he a doctor? Yes, he is.', v: 'm', z: '他是醫生嗎？是的，他是。', why: '最後的 is 不可以縮寫' },
+  { at: 3, ty: 'spot', w: ['Is', 'she', 'a', 'cook?', 'Yes,', 'he', 'is.'], bad: 5, fix: 'she', en: 'Is she a cook? Yes, she is.', z: '她是廚師嗎？是的，她是。', why: '問 she ➜ 回答 she' },
+  { at: 2, ty: 'ord', w: ['No,', 'she', "isn't."], en: "No, she isn't.", z: '不，她不是。', why: 'No ➜ she ➜ isn’t' },
+  { at: 2, ty: 'dec', en: "No, he isn't.", x: ['是', '她'], z: '不，他不是。', why: 'isn’t ＝ 不是' },
+  { at: 3, ty: 'hear', s: 'Is your dad a cook?', pic: '👨‍🍳', o: ['Yes, he is.', 'Yes, she is.', "No, he isn't.", "Yes, he's."], en: 'Yes, he is.', v: 'm', z: '是的，他是。', why: 'dad 是男生 ➜ he；圖是廚師 ➜ Yes' }] },
 { id: 'm7', ic: '✍️', nm: '拼字 救援', sc: [
   { h: '-er 結尾', pic: '👦', en: 'brother', z: '哥哥', n: 'brother、mother、farmer 都是 -er' },
   { h: '-or 結尾', pic: '👨‍⚕️', en: 'doctor', z: '醫生', n: 'doctor 是 -or（不是 -er）' },
@@ -224,7 +228,7 @@ const EXW = ['bed', 'tod', 'pit', 'dan', 'sister', 'father', 'teacher', 'nurse',
 R.list.forEach(a => a.qz.forEach((q, i) => { if ((a.id === 'm1' || a.id === 'm7') && EXW.indexOf(q.en) >= 0) R.err.push(a.nm + ' 測驗 ' + (i + 1) + '：用了 考卷 的 字 ' + q.en); }));
 /* 2026-11-03 第四十一次（老師 回答 建議 1 第 2 點）：從 第二次 看 開始，每 一部 只 留「最 重要、最 關鍵、最 容易 錯」的 頁（key ＝ 第幾頁，0 開始）
    挑法：迷思 頁（❌）、容易 搞混 的 一對（b／d、He’s／His、13／30…）、規則 最 常 錯 的 那一條 */
-const KEY = { dc: [1, 4, 5], m1: [0, 2], m2: [2, 3], m3: [1, 2], m4: [1, 2], m5: [1, 2], m6: [1, 3], m8: [1, 2], m9: [2, 3], m11: [2, 3], m7: [0, 1], m10: [2, 3], m12: [0, 1] };
+const KEY = { dc: [1, 4, 5, 6], m1: [0, 2], m2: [2, 3], m3: [1, 2], m4: [1, 2], m5: [1, 2], m6: [1, 3], m8: [1, 2], m9: [2, 3], m11: [0, 3, 4], m7: [0, 1], m10: [2, 3], m12: [0, 1] };
 R.list.forEach(a => { const k = KEY[a.id]; if (!k) R.err.push('第二次 看 的 重點 頁 沒有 設：' + a.id); else { if (k.some(i => i < 0 || i >= a.sc.length)) R.err.push('重點 頁 超出：' + a.id); a.key = k; } });
 /* 新 25／新 50 的 6 種 新 遊戲 ➜ 一樣 重點 的 那一部 */
 R.NMAP = { n1: 'm1', n2: 'm3', n3: 'm3', n4: 'm6', n5: 'm7', n6: 'm8' };

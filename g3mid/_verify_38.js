@@ -6,7 +6,7 @@ const ok = (c, m) => { n++; if (!c) E.push(m); };
   const br = await chromium.launch();
   for (const vp of [[1024, 768], [820, 1180], [1920, 1080]]) for (const site of ['g3mid', 'midterm']) {
     const tag = site + ' ' + vp.join('×'), ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } }); await ctx.route(/^https?:\/\//, r => r.abort());
-    await ctx.addInitScript(() => { window.__NOGO = 1; HTMLMediaElement.prototype.play = function () { const a = this; setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); }; try { speechSynthesis.speak = u => setTimeout(() => u.onend && u.onend(), 60); } catch (e) { } });
+    await ctx.addInitScript(() => { window.__NOGO = 1; window.__NODFXI = 1; window.__NOSNH = 1; HTMLMediaElement.prototype.play = function () { const a = this; setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); }; try { speechSynthesis.speak = u => setTimeout(() => u.onend && u.onend(), 60); } catch (e) { } });
     const p = await ctx.newPage(), er = []; p.on('pageerror', e => er.push(e.message)); await p.goto('file://' + path.join(ROOT, site, 'index.html')); await p.waitForTimeout(400);
     /* 中文 斷詞 */
     ok(await p.evaluate(() => ZSP('他是我的爺爺。') === '他 是 我的 爺爺。' && ZSP('你叫什麼名字？') === '你的 名字 是 什麼？（你 叫 什麼 名字？）'), tag + ' ZSP 斷詞 不對');

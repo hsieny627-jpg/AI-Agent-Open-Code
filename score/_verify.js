@@ -891,11 +891,13 @@ async function game(br, P, vp) {
     if (!r || r.m !== 'mem' || r.mp !== 1 || r.mw !== 1 || r.acc != null || !(r.sec > 0)) e.push('記憶配對送出去的不對：' + JSON.stringify(r && { m: r.m, mp: r.mp, mw: r.mw, acc: r.acc, sec: r.sec }));
     n += 4;
   }
-  /* ④ 中途回大廳：不送 */
+  /* ④ 中途回大廳：2026-11-03 第四十二次 第 5 點（老師）＝ 已經 答 的 立刻 送「⏸ 任務只完成到第 N 題（沒有 玩完）」，不算 練習次數（以前：不送）*/
   await p.evaluate(() => { const o = document.getElementById('scov'); if (o) o.classList.remove('on'); }); await p.click('#backhub'); await p.waitForTimeout(200);
   await p.click('.gcard[data-g="' + P.game + '"]'); await p.waitForTimeout(400);
   const b3 = G.books['紀錄'].d.length; await playSome(p, 1); await p.click('#quit'); await p.waitForTimeout(800);
-  if (G.books['紀錄'].d.length !== b3) e.push('中途回遊戲大廳也送了成績（要玩完整場才送）');
+  { const nr = G.books['紀錄'].d.slice(b3).map(SC.fromRow); n += 2;
+    if (nr.length !== 1 || !(nr[0].pt >= 1) || nr[0].ptot !== 999) e.push('中途回遊戲大廳 要 送 一筆「任務只完成到第 N 題（沒有 玩完）」：' + JSON.stringify(nr.map(r => [r.pt, r.ptot, r.n])));
+    else if (SC.counts(nr[0].ok, nr[0].n, nr[0].m, nr[0].fast, nr[0].pt)) e.push('中途回遊戲大廳 的 那一筆 不可以 算 練習次數'); }
   n++;
   out(W, e); await ctx.close();
 }

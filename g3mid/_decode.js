@@ -13,6 +13,13 @@
  *   A.aud(英文, 聲音) ➜ 語音檔 路徑（沒有 ＝ ''）、A.stop() 停 聲音、A.pause()／A.go() 倒數 停／走、
  *   A.ok(元素) 全對、A.bad(你放的, 對了 幾成) 有 錯、A.busy() 現在 不能 動、A.sid ＝ 這一位 學生 的 代號（記 看過 動畫 沒）。 */
 exports.CSS = `
+/* 第四十二次 第 3-(5) 點：答錯頁 紅底 框 A 英文 字 ➜ B 正下方 中文 ➜ C 整句 翻譯 */
+.gw.wbad b,.gw.wbad i{background:#D32F2F;color:#fff!important;border-radius:10px;box-shadow:0 0 0 4px #FF8A80,0 0 18px rgba(255,80,80,.9);animation:dzIn .55s cubic-bezier(.3,1.8,.5,1) both,dzPl 1.1s ease-in-out 2.4s 2}
+.gw.wbad b{animation-delay:.25s,2.4s;padding:0 .12em}.gw.wbad i{animation-delay:.95s,2.4s;padding:0 .2em}
+mark.dzm{background:#D32F2F;color:#fff;border-radius:8px;padding:0 .18em;box-shadow:0 0 0 4px #FF8A80,0 0 16px rgba(255,80,80,.9);animation:dzIn .55s cubic-bezier(.3,1.8,.5,1) 1.65s both,dzPl 1.1s ease-in-out 2.4s 2}
+@keyframes dzIn{0%{transform:scale(.3);opacity:0}100%{transform:none;opacity:1}}@keyframes dzPl{50%{transform:scale(1.14)}}
+.dzwhy{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:center;align-items:center;font-size:clamp(20px,2.8vh,28px);font-weight:700;color:#fff;background:#5A1010;border:3px solid #FF6B6B;border-radius:14px;padding:6px 14px;margin:4px auto}
+.dzwhy span{white-space:nowrap}.dzwhy b{color:#FFB4B4}.dzwhy em{font-style:normal;color:#9FF0B5}.dzwhy small{font-size:.8em;color:#FFD0D0;margin-left:4px}
 /* 2026-11-01 第三十八次：🎰 幸運轉盤、🔦 記憶 解碼、小提示 */
 .dcwh{position:absolute;left:50%;top:50%;z-index:22;transform:translate(-50%,-50%);width:min(92vw,520px);padding:14px;border-radius:26px;background:#1A1030;border:4px solid #FFD54A;text-align:center;box-shadow:0 14px 40px #000c}
 .dcwh .wt{font-size:clamp(26px,3.8vh,36px);font-weight:700;color:#FFE07A}.dcwh .wd{position:relative;width:clamp(220px,34vh,320px);aspect-ratio:1;margin:10px auto}
@@ -161,7 +168,7 @@ function decStop(){DEC.rid++;if(DEC.au){try{DEC.au.onended=null;DEC.au.pause()}c
    連續 全對 3 題 以上 ＝ 這一題 ✖2。只是 遊戲 裡 的 積分（讓 學生 有感），**老師看板 的 100 分 照舊 只 看 對 幾 個**（公平，第 9 點） */
 var DECPT={S:1.2,E:6,B:100,V:900,N:3};
 function decPts(avg,cb){var sp=Math.max(0,Math.min(1,(DECPT.E-avg)/(DECPT.E-DECPT.S))),v=Math.round(DECPT.V*sp/10)*10,b=DECPT.B+v;return {sp:sp,v:v,b:b,x:cb>=DECPT.N?2:1,p:b*(cb>=DECPT.N?2:1)}}
-function decScR(){var r=window.R;if(DEC.rr!==r){DEC.rr=r;DEC.sc=0;DEC.cb=0;DEC.n=0;DEC.shield=0}}
+function decScR(){var r=window.R;if(DEC.rr!==r){DEC.rr=r;DEC.sc=0;DEC.cb=0;DEC.n=0;DEC.lm=null;DEC.shield=0}}
 function decPop(st,o,avg,cb){var e=H('div','dcpt'+(o.x>1?' x2':''),'<div class="p1">✅ 全部 放對！⚡ 平均 每一格 '+avg.toFixed(1)+' 秒</div><div class="bar"><i style="width:'+Math.max(4,Math.round(o.sp*100))+'%"></i></div><div class="p2">＋'+o.p+'</div><div class="p3">✅ '+DECPT.B+' ＋ ⚡ 速度 '+o.v+(o.x>1?'　🔥 連對 '+cb+' 題 ✖2':'')+'</div>'+(o.x>1?'<div class="cb">🔥 ✖2</div>':cb===DECPT.N-1?'<div class="p3">🔥 再 全對 1 題 ＝ ✖2！</div>':'')+(o.qx?'<div class="p3">🎁 寶箱：這一題 ✖'+o.qx+'</div>':'')+'<div class="p3">🔓 解碼 積分 '+DEC.sc+'</div>');st.appendChild(e);setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e)},2800)}
 /* ══ 2026-11-01 第三十八次 C44 ⑥-(1) 🎰 幸運轉盤：連續 全對 3、6、9… 題 ＝ 轉 一次（只 是 遊戲 積分，老師看板 100 分 照舊）══
    ＋300、＋500、🔥 這一題 再 ✖2、🛡 盾牌（下一次 放錯 連對 不 中斷）；轉 2.4 秒、指針 停 在 結果、大字 說 拿到 什麼 */
@@ -175,7 +182,7 @@ function decWheel(st,done){if(!DEC.cb||DEC.cb%3!==0||window.__NOWHEEL){done();re
    A. 出現 以前 先 一頁 秒懂 動畫：英文 亮 3 秒 ➜ 變暗 ➜ 憑 記憶 放 中文；愈快 答對 積分 ✖2
    B. 不 影響 作答 權益：隨時 可以 按〔👀 再看 一次〕英文 就 回來（只是 這一題 沒有 記憶 ✖2）；100 分 的 成績 只 看 放對 幾個，跟 平常 一樣 */
 function decMemIntro(done){var o=H('div','dcmi','<div class="mb"><div class="mt">🔦 記憶 解碼！</div><div class="ms" id="dcms"></div><button class="mg" id="dcmg" disabled>▶ 我 準備好 了</button></div>');document.body.appendChild(o);
- var S=['<b>1</b> 👀 英文 先 亮 3 秒','<b>2</b> 🌑 英文 變暗','<b>3</b> 🧠 憑 記憶 放 中文 ➜ 全對 積分 ✖2','<b>4</b> 🙋 忘記 了？按〔👀 再看 一次〕（成績 一樣，只是 沒有 ✖2）'],m=o.querySelector('#dcms');
+ var S=['<b>1</b> 👀 英文 先 亮 3 秒','<b>2</b> 🌑 英文 變暗','<b>3</b> 🧠 長 句子 憑 記憶 放 中文 ➜ 一次 全對 ＝ 積分 ✖2 ＋ 👑 傳說 寶箱（最 大 的 獎勵）','<b>4</b> 🙋 忘記 了？按〔👀 再看 一次〕（成績 一樣，只是 沒有 ✖2、沒有 👑）'],m=o.querySelector('#dcms');
  S.forEach(function(t,i){setTimeout(function(){var d=H('div','mr',t);m.appendChild(d)},window.__NOGO?5:300+i*1100)});setTimeout(function(){var b=o.querySelector('#dcmg');b.disabled=false;b.classList.add('rdy')},window.__NOGO?10:300+S.length*1100);
  o.querySelector('#dcmg').onclick=function(){if(this.disabled)return;o.parentNode.removeChild(o);done()}}
 function decMemGo(st,row){DEC.memPeek=0;var pk=H('button','dcpk','👀 再看 一次');pk.hidden=true;st.insertBefore(pk,row);var A=DEC.A;
@@ -190,7 +197,8 @@ function decRender(q,st0){var A=DEC.A,st=H('div','dcbox');decScR();var t0=Date.n
  st.appendChild(row);st.appendChild(tray);st.appendChild(zh);
  /* 2026-11-03 第四十一次 第 2 點：🔦 記憶 解碼（每 4 題 的 第 4 題）錯 方塊 要 夠 多（老師：太 少 ＝ 送分）➜ 先 決定 這一題 是不是 記憶 題，
     是 ＝ 再 加「跟 答案 只 差 一點」的 錯 方塊（🔒 3 相近、有 鑑別度；不 放 同義詞、不 放 跟 正確 方塊 一樣 的 字），錯 方塊 至少 4 個、最多 跟 格子 一樣 多（最多 8）*/
- var real0=!st0.closest||!st0.closest('#dcl'),memQ=real0&&!window.__NOMEM&&((DEC.n||0)+1)%4===0,xs=(q.x||[]).slice();
+ /* 2026-11-03 第四十二次 第 1 點（老師）：句子 太 短（I am ten.）沒有 挑戰 ➜ 🔦 記憶 解碼 只 出 在「長 句子」：英文 ≧ 7 個 字，或 兩個 句子 以上；不是 第 1 題、離 上一次 記憶 題 至少 隔 3 題 */
+ var real0=!st0.closest||!st0.closest('#dcl'),memQ=real0&&!window.__NOMEM&&(DEC.n||0)>=1&&decLong(q)&&((DEC.n||0)-(DEC.lm==null?-9:DEC.lm))>=3,xs=(q.x||[]).slice();
  if(memQ){var has={},want=Math.min(8,Math.max(4,q.t.length));q.t.forEach(function(p){has[p[1]]=1});xs.forEach(function(v){has[v]=1});
   var cand=[];q.t.forEach(function(p){(decNear(p[1])||[]).forEach(function(v){if(!has[v]&&cand.indexOf(v)<0)cand.push(v)})});
   cand=shuf(cand);while(xs.length<want&&cand.length){var v=cand.shift();has[v]=1;xs.push(v)}}
@@ -226,13 +234,16 @@ function decRender(q,st0){var A=DEC.A,st=H('div','dcbox');decScR();var t0=Date.n
        再 ➜ 🎰 幸運轉盤（連對 3 題）➜ 🌟 生活 裡 怎麼 用（獨立 一頁）➜ 下一題。教學（#dcl）不 算 */
     var po=null,avg=0;if(real){decScR();DEC.cb++;avg=(Date.now()-t0)/1000/ss.length;po=decPts(avg,DEC.cb);if(DEC.mem&&!DEC.memPeek){po.p*=2;po.mem=1}if(fx){DFX.win(st)}DEC.sc+=po.p;DEC.last=po}
     /* 🎁 難題 寶箱：難度 ＝ 格子 ＋ 多 的 錯 方塊 ＋（記憶 解碼 沒 偷看 ＋3）；全對 才 算（DFX.drop 決定 掉 不 掉、什麼 寶箱）*/
-    var nx=(q._xs||q.x||[]).length,dif=ss.length+nx+(DEC.mem&&!DEC.memPeek?3:0),dr=real&&fx?DFX.drop(dif):null,why=ss.length+' 格'+(nx?'＋'+nx+' 個 陷阱 方塊':'')+(DEC.mem&&!DEC.memPeek?'＋🔦 記憶':'');
+    var nx=(q._xs||q.x||[]).length,dif=ss.length+nx+(DEC.mem&&!DEC.memPeek?3:0),dr=real&&fx?DFX.drop(dif,DEC.mem&&!DEC.memPeek):null,why=ss.length+' 格'+(nx?'＋'+nx+' 個 陷阱 方塊':'')+(DEC.mem&&!DEC.memPeek?'＋🔦 記憶':'');
     decRead(q.en,q.v||'',cs,function(){if(!real){DEC.lock=false;A.ok(row);return}DFX&&fx?DFX.chest(dr,dif,why,function(p){if(p){DEC.sc+=p;if(po)po.p+=p;decScR()}pop2()}):pop2()});
     function pop2(){decPop(st,po,avg,DEC.cb);
       setTimeout(function(){decWheel(st,function(){if(window.LIFE)LIFE.go(q,function(){DEC.lock=false;A.ok(row)});else{DEC.lock=false;A.ok(row)}})},window.__NOGO?40:2400)}return}
   decScR();if(DEC.shield&&(!st0.closest||!st0.closest('#dcl'))){DEC.shield=0;decToast(st,'🛡 盾牌 擋住 了：連對 不 中斷！')}else DEC.cb=0;setTimeout(function(){DEC.lock=false;A.bad(got,okN/ss.length)},900)}
  DEC.lock=false;decFit(st);
- var real=!st0.closest||!st0.closest('#dcl');DEC.mem=0;if(real&&!window.__NOMEM){DEC.n=(DEC.n||0)+1;if(DEC.n%4===0){DEC.mem=1;A.pause();DEC.lock=true;decMemIntro(function(){DEC.lock=false;A.go();decMemGo(st,row)})}}}
+ var real=!st0.closest||!st0.closest('#dcl');DEC.mem=0;var goMem=function(){if(real&&!window.__NOMEM){DEC.n=(DEC.n||0)+1;if(memQ){DEC.lm=DEC.n;DEC.mem=1;A.pause();DEC.lock=true;decMemIntro(function(){DEC.lock=false;A.go();decMemGo(st,row)})}}};
+ /* 2026-11-03 第四十二次 第 3-(1)(2)(3) 點：這一回 第一題 拖曳 前 ＝ 🎁 寶箱 怎麼 拿 的 秒懂 動畫（倒數 停住）*/
+ if(real&&fx&&DFX.needIn&&DFX.needIn()){A.pause();DEC.lock=true;DFX.intro(function(){DEC.lock=false;A.go();goMem()})}else goMem()}
+function decLong(q){var e=String(q.en||'');return e.split(/\\s+/).filter(Boolean).length>=7||(e.match(/[.?!](\\s|$)/g)||[]).length>=2}
 /* 第四十一次 第 2 點：每一個 中文 方塊 ➜ 只 差 一點 的 錯 方塊（他／她、我的／你的、是／不是、家人、職業、數字 ±1）*/
 var DECNEAR={'你的':['我的','你','他的'],'我的':['你的','我','她的'],'你':['你的','我','他'],'我':['我的','你','她'],'他':['她','他的','我'],'她':['他','她的','你'],'他的':['他','她的','我的'],'她的':['她','他的','你的'],
  '是':['不是','是的'],'不是':['是','不'],'不':['不是','是'],'是的':['是','不是'],'什麼':['誰','幾歲'],'誰':['什麼','誰的'],'幾歲':['歲','什麼','幾個'],'歲':['幾歲','年'],'名字':['年紀','生日'],
@@ -346,6 +357,15 @@ function decTut(T,done){var A0=DEC.A,o=$('#dcl'),k='dct_seen_'+T.key+'_'+(A0.sid
  function fin(){if(my!==DEC.lid)return;DEC.lid++;DEC.A=A0;decStop();o.classList.remove('on');o.innerHTML='';done()}
  s1()}
 DEC.lid=0;
+/* 2026-11-03 第四十二次 第 3-(5) 點（老師）：拖錯 ＝ 答錯頁 用 紅底 框 起來 三個 地方：A 剛才 放錯 的 那一個 英文 字、B 它 正下方 的 中文、C 整句 翻譯 裡 那個 意思
+   （三、四年級 一樣；一個 一個 亮：A ➜ B ➜ C，再 一起 亮 兩下）。got ＝ 學生 每一格 放 了 什麼 */
+function decBad(q,got){var b=[];if(!got||!got.length)return b;q.t.forEach(function(p,i){if(got[i]!==p[1])b.push(i)});return b}
+function decGls(q,got){var bad=decBad(q,got);return (bad.length?'<div class="dzwhy">🟥 剛才 放錯 的 地方：'+bad.map(function(i){return '<span><b>'+decEN(q.t[i][0].replace(/[.?!,]+$/,''))+'</b> ＝ <em>'+esc(q.t[i][1])+'</em>'+(got[i]?'<small>（你 放 了「'+esc(got[i])+'」）</small>':'')+'</span>'}).join('')+'</div>':'')+
+ '<div class="gls" id="gls">'+q.t.map(function(t,i){return '<span class="gw'+(/^['’]/.test(t[0])?' ct':'')+(bad.indexOf(i)>=0?' wbad':'')+'"><b>'+decEN(t[0])+'</b><i>'+esc(t[1])+'</i></span>'}).join('')+'</div>'}
+function decZhM(q,got,z){z=String(z==null?'':z);var bad=decBad(q,got),R=[];
+ bad.forEach(function(i){var w=q.t[i][1];if(!w||/^[A-Z]/.test(w))w=w||'';if(!w)return;var occ=0;for(var j=0;j<i;j++)if(q.t[j][1]===w)occ++;var at=-1,from=0;for(var k=0;k<=occ;k++){var f=z.indexOf(w,from);if(f<0)break;at=f;from=f+w.length}if(at<0)at=z.indexOf(w);if(at<0)return;
+  if(!R.some(function(r){return at<r[1]&&at+w.length>r[0]}))R.push([at,at+w.length])});
+ R.sort(function(a,b){return a[0]-b[0]});var o='',c=0;R.forEach(function(r){o+=esc(z.slice(c,r[0]))+'<mark class="dzm">'+esc(z.slice(r[0],r[1]))+'</mark>';c=r[1]});return o+esc(z.slice(c))}
 /* 2026-11-02 第四十次 第 2 點：整句 中文 詞 和 詞 空 一格（score/_zsp.js；What’s your name? ＝ 你的 名字 是 什麼？（你 叫 什麼 名字？））*/
 function decZ(z){z=String(z==null?'':z);if(!window.ZSP||/＝/.test(z))return z;var m=/^([^（]*)(（[^）]*[A-Za-z][^）]*）.*)$/.exec(z);return m?ZSP(m[1])+m[2]:ZSP(z)}
 `;

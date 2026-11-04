@@ -16,7 +16,7 @@ const E = []; let n = 0;
       window.__NOGO = 1; window.__NORVA = 1; window.__NOWB = 1; window.__DCLK = 0.15; window.__DCLMIN = 0; window.__els = new Set(); window.__src = [];
       HTMLMediaElement.prototype.play = function () { const a = this; window.__els.add(a); window.__src.push(a.src.slice(0, 30)); setTimeout(() => a.onended && a.onended(), 150); return Promise.resolve(); }; HTMLMediaElement.prototype.pause = function () {};
       Object.defineProperty(HTMLMediaElement.prototype, 'duration', { get() { return 0.15; } }); }, id);
-    await ctx.addInitScript(() => { window.__RVLIVE = 1; });   /* 第四十次：現場任務 不 演 動畫 ➜ 量測 用 __RVLIVE 照樣 演 教學 */
+    await ctx.addInitScript(() => { window.__RVLIVE = 1; window.__NODFXI = 1; });   /* 第四十次：現場任務 不 演 動畫 ➜ 量測 用 __RVLIVE 照樣 演 教學 */
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto('file://' + path.join(__dirname, '..', site, 'index.html')); await p.waitForTimeout(500);
     /* (1) 第一次 手指 碰 畫面 ＝ 解鎖（放 一段 沒 聲音 的 wav）*/

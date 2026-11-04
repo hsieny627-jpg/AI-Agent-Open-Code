@@ -357,8 +357,8 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
   /* 伺服器 */
   eq(G.get({ a: 'rpg', id: '3x' }).err !== undefined, true, '5 碼不對 ➜ 拒絕');
   const g0 = G.get({ a: 'rpg', id: '30405' }); ok(g0.ok && g0.v.lv >= 1 && !g0.v.st.eq.h, '伺服器：還沒有英雄');
-  let pr = G.post({ a: 'rpg', id: '30405', op: 'buy', item: 'g01' }); ok(pr.ok && pr.free && pr.v.st.eq.h === 'g01', '伺服器：免費選第一個英雄、存進「角色」');
-  ok(G.books['角色'] && G.books['角色'].d.filter(function (x) { return String(x[0]) === '30405'; }).length === 1 && /g01/.test(G.books['角色'].d.filter(function (x) { return String(x[0]) === '30405'; })[0][1]), '試算表「角色」30405 只有一列');   /* 2026-10-20 第十五次：別人（打怪、自動冠軍寶箱）也可能有一列 */
+  let pr = G.post({ a: 'rpg', id: '30405', op: 'buy', item: 'g57' }); ok(pr.ok && pr.free && pr.v.st.eq.h === 'g57', '伺服器：免費選第一個英雄、存進「角色」');
+  ok(G.books['角色'] && G.books['角色'].d.filter(function (x) { return String(x[0]) === '30405'; }).length === 1 && /g57/.test(G.books['角色'].d.filter(function (x) { return String(x[0]) === '30405'; })[0][1]), '試算表「角色」30405 只有一列');   /* 2026-10-20 第十五次：別人（打怪、自動冠軍寶箱）也可能有一列 */
   eq(G.post({ a: 'rpg', id: '30405', op: 'buy', item: 'b30' }).err, 'lv', '伺服器：★5 等級不夠');
   /* ⚡ 現場任務 算練習（2026-10-18 C10 第 3 題 B） */
   { eq(SC.clean({ id: '30405', set: 'g3lv_live', m: 'lv', t: Date.now(), u: 'zz' }, Date.now()), null, '平板送不進現場任務的紀錄');
@@ -370,7 +370,7 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
     const all = G.post({ a: 'teacher', pw: 'pw-test' }), rs = all.rows.map(SC.fromRow).filter(r => r.m === 'lv');
     ok(rs.length === 2 && rs.every(r => r.acc == null && r.n === 0 && SC.cat(r.set).k === 'lv'), '紀錄：⚡ 現場任務、沒有正確率');
     const p6 = SC.students(rs.filter(r => r.id === '30406'))[0]; eq([p6.count, p6.days, p6.acc, p6.lvc], [1, 1, null, 1], '30406 只玩現場任務：練習次數 1、練了 1 天、正確率 沒有'); }
-  const rv = G.post(body('30405', 'g3u1_2b', 5, { k: 'rpg' })); ok(rv.rpg && rv.rpg.gx >= 10 && rv.rpg.gc >= 5 && rv.rpg.h === 'g01', '做完一次：回傳這一次拿到的經驗值、金幣、我的英雄'); }
+  const rv = G.post(body('30405', 'g3u1_2b', 5, { k: 'rpg' })); ok(rv.rpg && rv.rpg.gx >= 10 && rv.rpg.gc >= 5 && rv.rpg.h === 'g57', '做完一次：回傳這一次拿到的經驗值、金幣、我的英雄'); }
 /* ══ 2026-10-20 第十五次：⚔ 戰力階級、10 月 31 號 下架 換品、👑 冠軍寶箱 自動 發 ══ */
 { eq([SC.rpTier(299), SC.rpTier(300), SC.rpTier(600), SC.rpTier(1000), SC.rpTier(1500), SC.rpTier(2200), SC.rpTier(99999)], [0, 1, 2, 3, 4, 5, 5], '戰力階級：300 青銅 600 白銀 1000 黃金 1500 鑽石 2200 傳說');
   const st0 = SC.rpClean({ own: { h: ['b30'], w: ['w29'], p: ['p26'], t: [], s: [] }, eq: { h: 'b30', w: 'w29', p: 'p26', t: [] } }), V0 = SC.rpView([], st0);
@@ -436,5 +436,18 @@ Object.keys(BANK).forEach(k => { const b = BANK[k]; if (!b.mem && !b.nq) ok(b.qs
   const T4 = G4.post({ a: 'teacher', pw: 'pw4' }); ok(T4.quiz && T4.quiz['40201'] && !T4.quiz['40601'] && T4.rqv === SC.RPQV, '老師看板 看得到 誰 看懂了 規則');
   const v4 = G4.post(body('40201', 'g4u1_1-1b', 3, { k: 'now' })); ok(v4.me && v4.me.dl && v4.me.dl.a === 100 && v4.me.dl.b === 0, '學生平板 拿得到 自己的 A 100%、B 0%（這週 答錯 2 題 還沒 改對）');
 }
+/* 2026-11-03 第四十二次 第 5 點：做到 一半 ＝ 立刻 存（題組名稱 後面「｜⏸ 任務只完成到第 13／25 題」）；一樣 的 編號 ＝ 蓋過去；做完 ＝ 蓋掉；進度（換 平板 接著 做）*/
+{ const G5 = make({ TEACHER_PW: 'pw5' }), q = k => Array.from({ length: k }, (_, i) => [1, 0, 3, 0, .5, i]), R = (k, part, prog) => ({ a: 'rec', r: { id: '40205', set: 'g4gm_mt-x25', name: '📝 四年級 複習｜📝 25 題 挑戰', m: 'g', qs: q(k), raw: 0, src: 'home', dev: 'abc', u: 'run1', t: Date.now(), part, prog } });
+  const rows = () => G5.books['紀錄'].d.slice(1).filter(x => String(x[1]) === '40205');
+  let a = G5.post(R(13, 25, '{"x":25,"Q":[1]}')); ok(a.saved && a.part, '做到 一半 送得 進去（part）');
+  ok(rows().length === 1 && /｜⏸ 任務只完成到第 13／25 題$/.test(rows()[0][SC.CI['題組名稱']]), '老師 看得到「任務只完成到第 13／25 題」');
+  const f0 = SC.fromRow(rows()[0]); ok(f0.pt === 13 && f0.ptot === 25 && f0.name === '📝 四年級 複習｜📝 25 題 挑戰', '讀回來 ＝ 13／25、名字 乾淨');
+  ok(!SC.counts(f0.ok, f0.n, f0.m, f0.fast, f0.pt), '做到 一半 不 算 練習次數');
+  a = G5.post(R(17, 25, '{"x":25,"Q":[2]}')); ok(rows().length === 1 && /第 17／25 題/.test(rows()[0][SC.CI['題組名稱']]), '再 送 一次（17 題）＝ 蓋過去、還是 一列');
+  const pg = G5.post({ a: 'prog', id: '40205', set: 'g4gm_mt-x25' }); ok(pg.ok && pg.prog === '{"x":25,"Q":[2]}', '換 平板：拿得到 進度');
+  a = G5.post(R(25, 0)); ok(a.saved && !a.part && rows().length === 1 && !/⏸/.test(rows()[0][SC.CI['題組名稱']]) && +rows()[0][SC.CI['題數']] === 25, '做完 ＝ 蓋掉 做到 一半 的（一列、25 題）');
+  ok(G5.post({ a: 'prog', id: '40205', set: 'g4gm_mt-x25' }).prog === null, '做完 以後 進度 刪掉');
+  a = G5.post(R(25, 0)); ok(a.dup && rows().length === 1, '做完 的 再 送 一次 ＝ 重複，不存');
+  const b = G5.post(Object.assign(R(8, 25), {})); ok(b.dup && rows().length === 1, '做完 以後 舊 的「做到 一半」補送 也 不會 蓋掉'); n += 0; }
 console.log((bad ? '✗ ' : '✓ ') + '成績紀錄規則＋Apps Script 量了 ' + n + ' 項，失敗 ' + bad + ' 項');
 process.exit(bad ? 1 : 0);

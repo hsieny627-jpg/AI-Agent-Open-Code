@@ -40,7 +40,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
   for (const vp of [[1024, 768], [820, 1180], [1920, 1080]].filter(v => !process.env.VP || process.env.VP === String(v[0]))) {   /* VP＝1024 只 量 一種 螢幕 */
     const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } }), tag = vp.join('×');
     await ctx.route(/^https?:\/\/(?!127\.)/, r => /script\.test/.test(r.request().url()) ? r.fulfill({ contentType: 'application/json', body: '{"ok":true,"dup":[]}' }) : r.abort());
-    await ctx.addInitScript(() => { window.__NOMEM = 1; window.__NOWHEEL = 1; window.__NOLIFE = 1;   /* 第三十八次 的 記憶 解碼、轉盤、生活 頁：g3mid/_verify_38.js 專門 量 */ window.__DCLK = 0.05; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__NOWB = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} });
+    await ctx.addInitScript(() => { window.__NOMEM = 1; window.__NOWHEEL = 1; window.__NOLIFE = 1;   /* 第三十八次 的 記憶 解碼、轉盤、生活 頁：g3mid/_verify_38.js 專門 量 */ window.__DCLK = 0.05; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__NODFXI = 1; window.__NOSNH = 1;   /* 第四十二次：寶箱 說明、貪吃蛇 怎麼玩 在 _verify_42.js 量 */ window.__NOWB = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} });
       localStorage.setItem('score_last', '"40201"'); localStorage.setItem('score_id_g4', '"40201"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', '40201');
       window.__say = 0; window.__pl = []; window.__RD = 2; window.speechSynthesis && (window.speechSynthesis.speak = u => setTimeout(() => u.onend && u.onend(), 100));
       HTMLMediaElement.prototype.play = function () { window.__say++; window.__pl.push(this.src.replace(/^.*\/midterm\//, '')); const a = this; setTimeout(() => { a.onended && a.onended(); }, 120); return Promise.resolve(); }; });
@@ -137,9 +137,9 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
       if (!q1.on || !/真的 要 離開 嗎/.test(q1.t) || !/存好/.test(q1.t) || !/第 4 題/.test(q1.t) || q1.run || q1.h < 64) E.push(tag + ' 按〔✕ 離開〕沒有 先 問（存好 了、從 第 4 題、倒數 停住）' + JSON.stringify(q1));
       await p.click('#xstay'); await p.waitForTimeout(300); if (await p.evaluate(() => document.getElementById('xq').classList.contains('on') || !R || R.k !== 3)) E.push(tag + '〔▶ 繼續 作答〕沒有 回到 題目');
       await p.waitForFunction(() => !document.querySelector('#okv.on'), null, { timeout: 15000 }).catch(() => {}); await p.click('.hud .qx'); await p.waitForTimeout(300); await p.click('#xleave'); await p.waitForTimeout(400);
-      const lb = await p.evaluate(() => ({ r: (document.querySelector('[data-xr="25"]') || {}).innerText || '', nw: !!document.querySelector('.xb2[data-xn="25"]'), sent: JSON.parse(localStorage.getItem('score_q') || '[]').filter(x => x.set === 'g4gm_mt-x25').length }));
+      const lb = await p.evaluate(() => ({ r: (document.querySelector('[data-xr="25"]') || {}).innerText || '', nw: !!document.querySelector('.xb2[data-xn="25"]'), sent: JSON.parse(localStorage.getItem('score_q') || '[]').filter(x => x.set === 'g4gm_mt-x25').length, part: JSON.parse(localStorage.getItem('score_q') || '[]').concat(JSON.parse(localStorage.getItem('score_sent') || '[]')).filter(x => x.set === 'g4gm_mt-x25' && x.part === 25 && x.qs.length === 3).length }));
       if (!/繼續 25 題/.test(lb.r) || !/第 3 ／ 25/.test(lb.r) || !lb.nw) E.push(tag + ' 大廳 沒有〔▶ 繼續 25 題〕〔🔄 重新 開始〕' + JSON.stringify(lb));
-      if (lb.sent !== sent0) E.push(tag + ' 中途 離開 不可以 送 成績（要 做完 才 送）');
+      if (!lb.part) E.push(tag + ' 中途 離開 要 立刻 送「任務只完成到第 3／25 題」（第四十二次 第 5 點；以前 的 規則 是 不 送）');
       await p.click('[data-xr="25"]'); await p.waitForTimeout(500); await passL(p); if (await p.evaluate(() => !!document.getElementById('rdgo'))) { await p.waitForTimeout(2600); await p.click('#rdgo'); await p.waitForTimeout(300); }
       const rs = await p.evaluate(() => ({ k: R.k, sc: R.sc, q: R.Q.length, n: R.idx.length }));
       if (rs.k !== 3 || rs.sc !== 12 || rs.q !== 3 || rs.n !== 25) E.push(tag + ' 繼續 以後 不是 從 第 4 題、12 分 接著：' + JSON.stringify(rs));
@@ -209,7 +209,7 @@ Object.keys(D.PHOTO).forEach(k => { n++; if (!fs.existsSync(path.join(__dirname,
     /* 2026-10-29 第 3、5 件：📝 新 25／新 50（題庫 B）＝ 第 1 關 🔓 ＋ 6 種 全新 遊戲（每一種 第一題 故意 錯：答錯頁 有 逐字 中文、不用 捲動）*/
     for (const N of (process.env.G && !/n/.test(process.env.G) ? [] : vp[0] === 1024 ? [25, 50] : vp[0] === 820 ? [25] : [])) {
       await p.goto('file://' + path.join(__dirname, 'index.html')); await p.waitForTimeout(400);
-      await p.evaluate(N => { window.__DCLMIN = 0; LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0402', t: 1, cfg: { on: 1, t: 1, set: 'n' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9, rd: {} }; hub(); window.__NOGO = 1; window.__NORVA = 1; document.querySelectorAll('.scfull').forEach(x => x.remove()); }, N); await p.waitForTimeout(200);
+      await p.evaluate(N => { window.__DCLMIN = 0; LDB.set = LDB.must = LDB.patch = () => Promise.resolve(true); CR = { room: '0402', t: 1, cfg: { on: 1, t: 1, set: 'n' + N, gs: [], m: 'self' }, acc: {}, n: 0, ok: 0, q: -9, rd: {} }; hub(); window.__NOGO = 1; window.__NORVA = 1; window.__NOSNH = 1; document.querySelectorAll('.scfull').forEach(x => x.remove()); }, N); await p.waitForTimeout(200);
       n++; const xb = await p.evaluate(() => [...document.querySelectorAll('.xrow .xb')].map(b => b.getAttribute('data-xn') + b.getAttribute('data-bk') + ':' + /新 /.test(b.innerText)).join());
       if (xb !== N + 'B:true') E.push(tag + ' 現場任務 開 新 ' + N + '：大廳 要 只 有〔📝 新 ' + N + ' 題 挑戰〕' + xb);
       await p.click('.xrow .xb'); await p.waitForTimeout(300);

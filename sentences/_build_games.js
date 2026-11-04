@@ -1227,7 +1227,9 @@ $('#gscore').addEventListener('click',function(){if(SCEND){SCH.open();scScene()}
 function gGo(id){if(typeof scLkGate==='function'&&!scLkGate('gm-'+id,function(){gGo(id)}))return;   /* 在家複習：老師〔🔒 開關〕鎖住的遊戲（D 第 7 件） */
   scGate(function(){scTkGo(SCH.keyOf(id),function(){if(SCH.on())SCH.close();begin(id)})})}
 function gScHub(){clearTimeout(gScT);clearTimeout(SCAUTO);SCEND=null;if(SCH)SCH.close();var m=$('#scme');if(m)m.innerHTML=scMeHTML()}
-function gScBegin(){GQ=[];GSEEN=[];GSIM=[];gFix=0;gMp=0;gMw=0;gFirst=false;gHelp=0;clearTimeout(gScT);SCH.close();$('#gscore').hidden=true;scStart(g!=='g6')}
+function gScBegin(){GQ=[];GSEEN=[];GSIM=[];gFix=0;gMp=0;gMw=0;gFirst=false;gHelp=0;clearTimeout(gScT);SCH.close();$('#gscore').hidden=true;scStart(g!=='g6');
+  /* 2026-11-03 第四十二次 第 5 點：玩 到 一半 離開（〔⬅ 回遊戲大廳〕、切到 別的 畫面、關掉）＝ 已經 答 的 題目 立刻 送 給 老師（「任務只完成到第 N 題（沒有 玩完）」，不算 練習次數；下次 重新 玩 一場）*/
+  window.SCPARTF=function(){return $('#arena').classList.contains('on')&&GQ.length&&g!=='g6'?{m:'g',qs:GQ.slice(),raw:score,fix:gFix,sec:gtOf(g)-gLeft,part:999}:null}}
 /* 這一題算不算「第一次作答」：插進去的類似題、出過的題目不算 */
 function gScNext(){gHelp=0;gT0=Date.now();if(g==='g6'||!cur)return;
   var si=GSIM.indexOf(cur);if(si>=0){GSIM.splice(si,1);gFirst=false}else gFirst=GSEEN.indexOf(cur)<0;
@@ -1245,6 +1247,7 @@ function gScOver(){if(!scLive())return;
 function gScOpen(ms){clearTimeout(gScT);if(!SCEND)return;
   gScT=setTimeout(function(){if(!SCEND||!ended||!$('#gend').classList.contains('on')||missOn())return;SCH.open();scScene()},ms)}
 $('#quit').addEventListener('click',function(){
+  if(window.SCPARTF&&typeof scPart==='function'){var po=window.SCPARTF();if(po)scPart(po);window.SCPARTF=null}
   if($('#arena').classList.contains('on')||$('#gend').classList.contains('on'))hub();
 });
 /* 一開始：大廳；網址 #g3 ＝ 直接開這一個遊戲（2026-10-03：三年級複習／四年級複習網站從自己的首頁直接進遊戲）

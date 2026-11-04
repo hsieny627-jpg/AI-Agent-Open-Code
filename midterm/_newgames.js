@@ -7,7 +7,7 @@
 exports.HOW = {
   n1: '聽 ➜ ◀ ▶ 移動 太空船 對準 隕石 ➜ 按〔🔥 發射〕（也 可以 直接 點 隕石）',
   n2: '聽 對話 ➜ ◀ ▶ 換 跑道 ➜ 按〔⬆ 衝！〕開進 對 的 拱門（也 可以 直接 點 拱門）',
-  n3: '聽 ➜ 方向鍵 讓 蛇 去 吃 對 的 那一個（也 可以 直接 點 它）；撞到 牆 或 自己 ＝ 回到 中間，不算 錯',
+  n3: '🔊 聽 ➜ 👆 點 對 的 那一個，蛇 自己 衝 過去 吃（也 可以 ⬆⬇⬅➡、手指 滑）；撞 牆 從 另一邊 出來，不會 輸',
   n4: '讀 對話 ➜ 點 寫著 對 的 回答 的 雲，袋鼠 跳 上去 往 上 爬',
   n5: '看 圖 ➜ 點 字母 泡泡 射到 空格（照 順序），拼出 這個 字',
   n6: '讀 牆上 的 對話（或 看 家族樹）➜ 選 對 的 鑰匙 🗝 打開 門'
@@ -70,19 +70,51 @@ exports.CSS = `
 .lane.aim{box-shadow:0 0 0 6px #fff,0 0 24px #FFD54A}.lane.ok{border-color:var(--ok);box-shadow:0 0 0 6px var(--ok)}.lane.no{opacity:.35}.lane.bad{border-color:var(--no);animation:shk .4s}
 .car{position:absolute;z-index:2;bottom:3%;transform:translateX(-50%) scaleX(-1) rotate(90deg);font-size:clamp(60px,10vh,90px);transition:left .25s ease,bottom .6s cubic-bezier(.5,0,.8,.4)}
 .car.go{bottom:46%}.car.spin{animation:spin .7s}@keyframes spin{to{transform:translateX(-50%) scaleX(-1) rotate(450deg)}}
-/* ── 🐍 n3 貪食蛇 ── */
-.n3w{position:relative;border-radius:18px;background:#123C1E;border:4px solid #2E7D32;background-image:linear-gradient(#174A26 1px,transparent 1px),linear-gradient(90deg,#174A26 1px,transparent 1px);touch-action:none}
-.n3w .fr{position:absolute;padding:0;border-radius:16px;border:4px solid #FFD54A;background:#fff;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.n3w .fr img{width:100%;height:100%;object-fit:cover}.n3w .fr b{font-size:clamp(34px,5.4vh,56px);color:#1B3A1F}
-.n3w .fr.ok{border-color:var(--ok);box-shadow:0 0 0 5px var(--ok)}.n3w .fr.no{opacity:.35}.n3w .fr.bad{border-color:var(--no);animation:shk .4s}
-.n3w .sg{position:absolute;border-radius:30%;background:radial-gradient(circle at 35% 35%,#B9F6CA,#00C853);box-shadow:inset 0 -3px 0 #1B5E20;transition:left .12s linear,top .12s linear}
-.n3w .sg.gold{background:radial-gradient(circle at 35% 35%,#FFF9C4,#FFC400)}
-.n3w .sg.hd{z-index:2;background:radial-gradient(circle at 35% 35%,#CCFF90,#64DD17);display:flex;align-items:center;justify-content:center;font-size:.9em}
-.n3w .sg.hd.gold{background:radial-gradient(circle at 35% 35%,#FFF59D,#FFAB00)}
-.n3w .hit{position:absolute;inset:0;background:rgba(255,80,80,.25);animation:fl .5s}@keyframes fl{to{opacity:0}}
-.n3b{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap}
-.dpad3{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(2,64px);gap:6px}.dpad3 button{border-radius:16px;border:3px solid #4A5A6C;background:#1B2633;font-size:30px}
-.dpad3 [data-d="u"]{grid-column:2}.dpad3 [data-d="l"]{grid-column:1;grid-row:2}.dpad3 [data-d="d"]{grid-column:2;grid-row:2}.dpad3 [data-d="r"]{grid-column:3;grid-row:2}
+/* ── 🐍 n3 貪食蛇（第四十二次 重做）── */
+.n3b{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap}
+.n3w{position:relative;border-radius:22px;border:5px solid #66BB6A;touch-action:none;background-color:#2E7D32;background-image:linear-gradient(45deg,rgba(255,255,255,.07) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.07) 75%),linear-gradient(45deg,rgba(255,255,255,.07) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.07) 75%);background-size:calc(var(--cs) * 2) calc(var(--cs) * 2);background-position:0 0,var(--cs) var(--cs);box-shadow:inset 0 0 40px rgba(0,0,0,.45),0 10px 30px rgba(0,0,0,.5)}
+.n3w .fr{position:absolute;padding:0;border-radius:20px;border:5px solid #FFD54A;background:#fff;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 0 #B8860B,0 0 22px rgba(255,213,74,.6);animation:frIn .6s cubic-bezier(.3,1.6,.5,1) both,frBob 2s ease-in-out .6s infinite alternate;z-index:1}
+@keyframes frIn{from{transform:scale(0) rotate(-20deg)}}@keyframes frBob{to{transform:translateY(-5px)}}
+.n3w .fr img{width:100%;height:100%;object-fit:cover}.n3w .fr b{font-size:clamp(26px,calc(var(--cs) * .42),48px);color:#1B3A1F;padding:0 6px;line-height:1.1;text-align:center}
+.n3w .fr.tgt{border-color:#40C4FF;box-shadow:0 8px 0 #0277BD,0 0 0 6px rgba(64,196,255,.5),0 0 30px #40C4FF}
+.n3w .fr.ok{border-color:var(--ok);box-shadow:0 0 0 6px var(--ok)}.n3w .fr.no{opacity:.35}.n3w .fr.bad{border-color:var(--no);animation:shk .4s}
+.n3w .fr.eat{animation:frEat .7s forwards}@keyframes frEat{40%{transform:scale(1.25);filter:brightness(1.6)}100%{transform:scale(0) rotate(40deg);opacity:0}}
+.n3w .sg{position:absolute;border-radius:42%;background:radial-gradient(circle at 35% 30%,#E8FFB0,#76D640 55%,#2E9E2E);box-shadow:inset 0 -4px 0 rgba(0,60,0,.35),0 3px 6px rgba(0,0,0,.35);transition:left .17s linear,top .17s linear}
+.n3w .sg.gold{background:radial-gradient(circle at 35% 30%,#FFFDE0,#FFD54A 55%,#E09B00)}
+.n3w .sg.rb{background:linear-gradient(135deg,#FF6B6B,#FFD54A,#5EF06A,#40C4FF,#B388FF);background-size:300% 300%;animation:snRb 1.6s linear infinite}@keyframes snRb{to{background-position:300% 300%}}
+.n3w .sg.hd{border-radius:46%;box-shadow:inset 0 -4px 0 rgba(0,60,0,.35),0 4px 10px rgba(0,0,0,.45)}
+.n3w .sg.hd .ey{position:absolute;width:26%;height:26%;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 3px #1B3A1F;top:22%}.n3w .sg.hd .ey:after{content:'';position:absolute;width:45%;height:45%;border-radius:50%;background:#111;left:30%;top:30%}
+.n3w .sg.hd .ey.l{left:18%}.n3w .sg.hd .ey.r{right:18%}
+.n3w .sg.hd .tg{position:absolute;left:44%;bottom:-16%;width:12%;height:22%;background:#E53935;border-radius:0 0 40% 40%;animation:snTg .5s ease-in-out infinite alternate}@keyframes snTg{to{transform:scaleY(.4)}}
+.n3w .sg.hd.dd{transform:rotate(0)}.n3w .sg.hd.du{transform:rotate(180deg)}.n3w .sg.hd.dl{transform:rotate(90deg)}.n3w .sg.hd.dr{transform:rotate(-90deg)}
+.n3w .sg.hd .cw{position:absolute;left:50%;top:-50%;transform:translateX(-50%);font-size:calc(var(--cs) * .38);font-style:normal}
+.n3w .sg.hd.bite{animation:snBite .35s 2}@keyframes snBite{50%{filter:brightness(1.4);scale:1.25}}
+.n3w .snp{position:absolute;font-size:calc(var(--cs) * .35);pointer-events:none;animation:snP .8s ease-out forwards;z-index:60}@keyframes snP{0%{transform:translate(-50%,-50%) rotate(var(--a)) translateY(0) scale(.5)}100%{transform:translate(-50%,-50%) rotate(var(--a)) translateY(calc(var(--cs) * -1.6)) scale(1.3);opacity:0}}
+.n3w .snb{position:absolute;transform:translate(-50%,-50%);opacity:0;pointer-events:none;z-index:70;font-size:clamp(26px,calc(var(--cs) * .45),46px);font-weight:900;color:#FFF59D;text-shadow:0 3px 0 #1B5E20,0 0 14px #000;text-align:center;white-space:nowrap}
+.n3w .snb.on{animation:snB 1s ease-out forwards}@keyframes snB{0%{opacity:0;transform:translate(-50%,-20%) scale(.4)}25%{opacity:1;transform:translate(-50%,-60%) scale(1.15)}100%{opacity:0;transform:translate(-50%,-140%)}}
+.n3w .hit{display:none}
+.dpad3{display:grid;grid-template-columns:repeat(3,clamp(70px,9vh,96px));grid-template-rows:repeat(3,clamp(70px,9vh,96px));gap:8px;padding:12px;border-radius:50%;background:radial-gradient(circle,#24384E,#0E1A26);box-shadow:0 0 0 4px #3C5A78,0 10px 24px rgba(0,0,0,.5);touch-action:none}
+.dpad3 button{border-radius:20px;border:4px solid #5C7FA3;background:linear-gradient(#2C4562,#1A2B40);font-size:clamp(32px,4.4vh,44px);color:#fff;box-shadow:0 5px 0 #0B1520}
+.dpad3 button.on{border-color:#7BF0A8;background:linear-gradient(#36D27A,#1E9E55);box-shadow:0 0 18px rgba(57,217,138,.8)}
+.dpad3 .dc{grid-column:2;grid-row:2;border-radius:50%;opacity:.8}
+@media (orientation:portrait){.dpad3{grid-template-columns:repeat(3,70px);grid-template-rows:repeat(3,64px);border-radius:40px}}
+.dpad3 [data-d="u"]{grid-column:2;grid-row:1}.dpad3 [data-d="l"]{grid-column:1;grid-row:2}.dpad3 [data-d="r"]{grid-column:3;grid-row:2}.dpad3 [data-d="d"]{grid-column:2;grid-row:3}
+.n3hud{font-size:clamp(20px,2.6vh,28px);font-weight:700;color:#CCFF90;text-align:center}.n3hud b{color:#fff;font-size:1.2em}
+.snhow{position:fixed;inset:0;z-index:9200;background:rgba(3,14,6,.92);display:flex;align-items:center;justify-content:center;padding:12px}
+.snhow .shb{width:min(940px,96vw);max-height:96vh;overflow:auto;border-radius:26px;border:4px solid #76FF03;background:linear-gradient(#123C1E,#071A0C);padding:clamp(14px,2.4vh,26px);text-align:center;color:#fff}
+.snhow .sht{font-size:clamp(30px,5vh,48px);font-weight:900;color:#CCFF90}
+.snhow .shd{display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap;margin:12px 0}
+.snhow .shg{position:relative;width:min(300px,70vw);height:180px;border-radius:18px;background:#2E7D32;border:4px solid #66BB6A;flex:none}
+.snhow .sf{position:absolute;top:30px;font-size:54px}.snhow .sf.a{left:20px}.snhow .sf.b{right:20px;border:4px solid #FFD54A;border-radius:14px;background:#fff;line-height:1.1}
+.snhow .ss{position:absolute;left:44%;top:110px;display:flex;gap:2px}.snhow .ss i{width:30px;height:30px;border-radius:40%;background:#76D640;font-style:normal;font-size:18px;display:flex;align-items:center;justify-content:center}
+.snhow .sh{position:absolute;right:30px;top:96px;font-size:50px;opacity:0}
+.snhow .shg.go .sh{animation:shTap 4.5s ease-in-out infinite}.snhow .shg.go .ss{animation:shRun 4.5s ease-in-out infinite}
+@keyframes shTap{0%,15%{opacity:0;transform:translate(30px,40px)}25%,40%{opacity:1;transform:none}48%{transform:scale(.8)}60%,100%{opacity:0}}
+@keyframes shRun{0%,45%{transform:none}75%,100%{transform:translate(70px,-74px)}}
+.snhow .shs{text-align:left;margin:0;padding-left:1.4em;font-size:clamp(22px,3.1vh,32px);line-height:1.5;flex:1;min-width:280px}.snhow .shs li{opacity:.18;transition:opacity .4s,transform .4s}.snhow .shs li.on{opacity:1;transform:translateX(6px)}
+.snhow .shs b{color:#FFE58A}.snhow .shs small{display:block;font-size:.72em;color:#BFE9C8}
+.snhow .shgo{margin-top:12px;min-height:66px;min-width:300px;border-radius:18px;border:3px solid #4A5A6E;background:#1A2230;color:#8C9AAE;font:inherit;font-size:clamp(22px,3vh,30px);font-weight:700}
+.snhow .shgo.rdy{border-color:#7BF0A8;background:linear-gradient(#36D27A,#1E9E55);color:#06210F;box-shadow:0 0 22px rgba(57,217,138,.75);cursor:pointer}
 /* ── 🥷 n4 忍者跑酷（原 跳跳樂）── */
 .n4{position:relative;width:min(100%,960px);display:flex;flex-direction:column;align-items:center;gap:10px}
 .n4 .cl{display:flex;gap:clamp(8px,1.4vw,16px);justify-content:center;width:100%}
@@ -118,7 +150,7 @@ function ngShow(id,q){var h='';NGS={id:id};
     '<div class="lz" id="lz"></div><div class="ship" id="ship" style="left:'+((R.aim+.5)/n*100)+'%">🚀</div></div><div class="ngc"><button data-x="ngl" aria-label="左">◀</button><button data-x="ngf" class="fire">🔥 發射</button><button data-x="ngr" aria-label="右">▶</button></div>'}
   else if(id==='n2'){R.aim=1;h=ngHear(0)+'<div class="n2" id="n2"><div class="road"></div>'+R.ord.map(function(i,j){return '<button class="lane" data-o="'+i+'" data-c="'+j+'" aria-label="'+esc(q.oz[i])+'">'+ngPic(q.o[i])+'</button>'}).join('')+
     '<div class="car" id="car" style="left:50%">🏎️</div></div><div class="ngc"><button data-x="ngl" aria-label="左">◀</button><button data-x="ngf" class="fire">⬆ 衝！</button><button data-x="ngr" aria-label="右">▶</button></div>'}
-  else if(id==='n3')h=ngHear(!q.photo)+'<div class="n3b"><div class="n3w" id="n3w"></div><div class="dpad3"><button data-d="u" aria-label="上">⬆</button><button data-d="l" aria-label="左">⬅</button><button data-d="d" aria-label="下">⬇</button><button data-d="r" aria-label="右">➡</button></div></div>';
+  else if(id==='n3')h=ngHear(!q.photo)+'<div class="n3b"><div class="n3w" id="n3w"></div><div class="dpad3"><button data-d="u" aria-label="上">⬆</button><button data-d="l" aria-label="左">⬅</button><button class="dc" disabled>🐍</button><button data-d="r" aria-label="右">➡</button><button data-d="d" aria-label="下">⬇</button></div></div><div class="n3hud" id="n3hud"></div>';
   else if(id==='n4'){R.jh=R.jh||0;h='<div class="n4"><div class="chat" id="chat">'+(q.chat==='A'?'<div class="bub a"><span class="who">A</span>'+esc(q.line)+'</div><div class="bub b q"><span class="who">B</span>？</div>':'<div class="bub a q"><span class="who">A</span>？</div><div class="bub b"><span class="who">B</span>'+esc(q.line)+'</div>')+'</div>'+
     '<div class="cl">'+R.ord.map(function(i){return '<button class="cld" data-o="'+i+'">'+esc(q.o[i])+'</button>'}).join('')+'</div><div class="gr"><div class="roo" id="roo">🥷</div><div class="hm" id="hm">🏔 '+R.jh+' m</div></div></div>'}
   else if(id==='n5'){R.pk=[];var w=q.spell,mid=w.slice(1,-1).split(''),ex=[];mid.forEach(function(c){(NEARL[c]||[]).forEach(function(x){if(ex.length<2&&mid.indexOf(x)<0&&ex.indexOf(x)<0)ex.push(x)})});
@@ -147,29 +179,53 @@ function ngTap(b){var id=R.g.id,i=+b.getAttribute('data-o');
   return false}
 /* 答對 以後 的 小 動畫（pick 裡 呼叫）*/
 function ngOk(id){if(id==='n6'){var d=$('#door');if(d)d.classList.add('open')}if(id==='n3')snStop()}
-/* ── 🐍 貪食蛇：9 ✕ 5 格；4 個 果實 在 四個 角落 附近；方向鍵 ＝ 一直 走（像 小精靈）；點 果實 ＝ 自己 找 路 ── */
+/* ── 🐍 貪食蛇（2026-11-03 第四十二次 第 6 點 重做：老師「不知道 怎麼 玩、不好 操作、畫面 太 小、不好玩」）──
+   ① 每一回 第一次 玩 ＝ 先 演 秒懂 動畫（3 步，倒數 停住，〔⏸️〕〔🔁〕〔🐢〕）② 畫面 變 大：11 ✕ 7 格，一格 最大 110px；答案 卡 2 ✕ 2 格（大、好 點）
+   ③ 最 好 操作：**點 答案 ＝ 蛇 自己 衝 過去 吃**；也 可以 ⬆⬇⬅➡（大 搖桿，按住 滑過去 換 方向）、手指 在 草地 上 滑
+   ④ 不會 輸：撞 牆 ＝ 從 另一邊 出來、碰到 自己 ＝ 穿 過去（只 有 答錯 才 算 錯）⑤ 好玩：吃 對 ＝ 咬 一口、果實 炸開、蛇 變 長 一節、連 吃 3 個 變 金色 👑、6 個 彩虹 🌈；蛇 有 眼睛、舌頭 */
 var SN=null;
-function snInit(){var w=$('#n3w'),q=R.q,C=9,Rw=5,cs=Math.floor(Math.min(($('#stage').clientWidth-230)/C,(innerHeight-420)/Rw,96));cs=Math.max(cs,54);
-  w.style.width=C*cs+'px';w.style.height=Rw*cs+'px';w.style.backgroundSize=cs+'px '+cs+'px';var spots=[[1,0],[7,0],[1,4],[7,4]].slice(0,q.o.length);
-  SN={C:C,Rw:Rw,cs:cs,len:3+Math.min(6,R.snk||0),body:[[4,2],[4,3],[4,4]].slice(0,1),dir:null,next:null,path:null,iv:0,fr:[]};
-  for(var k=1;k<SN.len;k++)SN.body.push([4,2]);
-  w.innerHTML=R.ord.map(function(i,j){var p=spots[j];SN.fr.push({x:p[0],y:p[1],i:i});var o=q.o[i];return '<button class="fr" data-o="'+i+'" style="left:'+(p[0]*cs+3)+'px;top:'+(p[1]*cs+3)+'px;width:'+(cs-6)+'px;height:'+(cs-6)+'px">'+(q.photo?'<img src="img/'+o+'.jpg" alt="">':'<b>'+esc(o)+'</b>')+'</button>'}).join('');
-  snDraw();SN.iv=setInterval(snStep,230);var sx,sy;w.onpointerdown=function(e){sx=e.clientX;sy=e.clientY};w.onpointerup=function(e){if(sx==null)return;var dx=e.clientX-sx,dy=e.clientY-sy;sx=null;if(Math.abs(dx)+Math.abs(dy)<30)return;snDir(Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'d':'u'))}}
+function snInit(){var w=$('#n3w'),q=R.q,C=11,Rw=7,st=$('#stage'),pd0=$('#stage .dpad3'),pdW=pd0?pd0.offsetWidth:280,pdH=pd0?pd0.offsetHeight:280,side=innerWidth>=innerHeight*1.05,top=(w.parentNode||w).getBoundingClientRect().top,aw=st.clientWidth-(side?pdW+30:10),ah=innerHeight-top-(side?0:pdH+14)-46,cs=Math.floor(Math.min(aw/C,ah/Rw,110));cs=Math.max(cs,40);   /* 畫面 放得下：橫放 方向鍵 在 右邊、直放 在 下面 */
+  w.style.width=C*cs+'px';w.style.height=Rw*cs+'px';w.style.setProperty('--cs',cs+'px');var spots=[[1,1],[8,1],[1,4],[8,4]].slice(0,q.o.length);
+  var L=Math.min(9,3+(R.snk||0));SN={C:C,Rw:Rw,cs:cs,len:L,body:[],dir:null,path:null,iv:0,fr:[],eat:0};for(var k=0;k<L;k++)SN.body.push([5,3]);
+  w.innerHTML=R.ord.map(function(i,j){var p=spots[j];SN.fr.push({x:p[0],y:p[1],i:i});var o=q.o[i];return '<button class="fr" data-o="'+i+'" style="left:'+(p[0]*cs+4)+'px;top:'+(p[1]*cs+4)+'px;width:'+(2*cs-8)+'px;height:'+(2*cs-8)+'px;animation-delay:'+(j*.15)+'s">'+(q.photo?'<img src="img/'+o+'.jpg" alt="">':'<b>'+esc(o)+'</b>')+'</button>'}).join('')+'<div class="snb" id="snb"></div>';
+  snHud();snDraw();var sx,sy;w.onpointerdown=function(e){if(e.target.closest&&e.target.closest('.fr'))return;sx=e.clientX;sy=e.clientY};w.onpointerup=function(e){if(sx==null)return;var dx=e.clientX-sx,dy=e.clientY-sy;sx=null;if(Math.abs(dx)+Math.abs(dy)<26)return;snDir(Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'d':'u'))};
+  var pd=$('#stage .dpad3');if(pd){var pdn=false,pdir=function(e){var b=document.elementFromPoint(e.clientX,e.clientY);b=b&&b.closest?b.closest('[data-d]'):null;if(b)snDir(b.getAttribute('data-d'))};
+    pd.onpointerdown=function(e){pdn=true;try{pd.setPointerCapture(e.pointerId)}catch(x){}pdir(e)};pd.onpointermove=function(e){if(pdn)pdir(e)};pd.onpointerup=pd.onpointercancel=function(){pdn=false}}
+  var go=function(){SN.iv=setInterval(snStep,window.__SNFAST?40:190)};
+  if(R.snHow!==R.x+'|'+(R.t0||'')&&!window.__NOSNH){R.snHow=R.x+'|'+(R.t0||'');snHow(go)}else go()}
+function snHud(){var e=$('#n3hud');if(!e)return;var k=R.snk||0;e.innerHTML='🐍 長度 <b>'+SN.len+'</b>　'+(k>=6?'🌈 彩虹 蛇！':k>=3?'👑 金色 蛇！':'連 吃 對 3 個 ➜ 👑 金色 蛇')}
+/* 秒懂 動畫：怎麼 玩（第一次）*/
+function snHow(done){tPause();var hold=setInterval(function(){if(TM.run)tPause()},80);try{stopSay()}catch(e){}var o=document.createElement('div');o.className='snhow';
+  o.innerHTML='<div class="shb"><div class="sht">🐍 英文 貪食蛇：怎麼 玩？</div><div class="shd"><div class="shg"><span class="sf a">🍎</span><span class="sf b">✅</span><span class="ss"><i></i><i></i><i class="h">👀</i></span><span class="sh">👆</span></div>'+
+   '<ol class="shs"><li>🔊 <b>聽</b> 一句 英文</li><li>👆 <b>點</b> 對 的 那一張（蛇 自己 衝 過去）<small>也 可以 ⬆⬇⬅➡ 或 手指 滑</small></li><li>😋 <b>吃到</b> 就 送出：吃 對 ＝ 蛇 變 長；連 吃 3 個 ＝ 👑 金色 蛇</li><li>🧱 撞 牆 從 另一邊 出來，<b>不會 輸</b></li></ol></div><div class="shc"></div><button class="shgo" disabled>🔒 看完 才 能 按</button></div>';
+  document.body.appendChild(o);var li=o.querySelectorAll('.shs li'),b=o.querySelector('.shgo'),TT=window.ACTL?ACTL.T:function(f,m){return setTimeout(f,m)},D=window.__NOGO?20:1500;
+  var run=function(){[].forEach.call(li,function(x){x.classList.remove('on')});b.disabled=true;b.className='shgo';b.textContent='🔒 看完 才 能 按';var g=o.querySelector('.shg');g.classList.remove('go');void g.offsetWidth;g.classList.add('go');
+    [].forEach.call(li,function(x,k){TT(function(){x.classList.add('on')},300+k*D)});TT(function(){b.disabled=false;b.className='shgo rdy';b.textContent='▶ 我 懂了，開始！'},300+li.length*D+400)};
+  if(window.ACTL)ACTL.on(o.querySelector('.shc'),run);run();
+  b.onclick=function(){if(b.disabled)return;clearInterval(hold);if(window.ACTL)ACTL.off();o.remove();tGo();var h=$('#hear');if(h)h.click();done()}}
 function snStop(){if(SN){clearInterval(SN.iv);SN.iv=0}}
-function snDir(d){if(!SN||!R||R.lock)return;SN.path=null;var op={u:'d',d:'u',l:'r',r:'l'};if(SN.dir&&op[SN.dir]===d&&SN.body.length>1)return;SN.dir=d}
-function snDraw(){var w=$('#n3w');if(!w)return;[].slice.call(w.querySelectorAll('.sg')).forEach(function(x){x.remove()});var gold=(R.snk||0)>=3,cs=SN.cs;
-  SN.body.forEach(function(p,k){var e=document.createElement('div');e.className='sg'+(k?'':' hd')+(gold?' gold':'');e.style.left=(p[0]*cs+5)+'px';e.style.top=(p[1]*cs+5)+'px';e.style.width=e.style.height=(cs-10)+'px';if(!k){e.style.fontSize=(cs*.45)+'px';e.textContent=(R.snk||0)>=6?'👑':'👀'}w.appendChild(e)})}
-function snStep(){if(!SN||!R||R.lock||!TM.run)return;var d=SN.dir;if(SN.path&&SN.path.length){var nx=SN.path.shift(),h0=SN.body[0];d=nx[0]>h0[0]?'r':nx[0]<h0[0]?'l':nx[1]>h0[1]?'d':'u';SN.dir=d}if(!d)return;
-  var h=SN.body[0],m={u:[0,-1],d:[0,1],l:[-1,0],r:[1,0]}[d],n=[h[0]+m[0],h[1]+m[1]];
-  if(n[0]<0||n[1]<0||n[0]>=SN.C||n[1]>=SN.Rw||SN.body.slice(0,-1).some(function(p){return p[0]===n[0]&&p[1]===n[1]})){var w=$('#n3w'),f=document.createElement('div');f.className='hit';w.appendChild(f);setTimeout(function(){f.remove()},500);
-    SN.body=[[4,2]];for(var k=1;k<SN.len;k++)SN.body.push([4,2]);SN.dir=null;SN.path=null;snDraw();return}   /* 撞到 ＝ 回到 中間，不算 錯 */
-  SN.body.unshift(n);SN.body.pop();snDraw();
-  var hit=SN.fr.filter(function(f){return f.x===n[0]&&f.y===n[1]})[0];if(hit){snStop();if(hit.i===0)R.snk=(R.snk||0)+1;pick(hit.i)}}
-function snGo(i){if(!SN)return;var f=SN.fr.filter(function(x){return x.i===i})[0];if(!f)return;var C=SN.C,Rw=SN.Rw,st=SN.body[0],key=function(p){return p[0]+','+p[1]},prev={},Q=[st],seen={};seen[key(st)]=1;
-  var blk={};SN.body.slice(1,-1).forEach(function(p){blk[key(p)]=1});
-  while(Q.length){var p=Q.shift();if(p[0]===f.x&&p[1]===f.y)break;[[1,0],[-1,0],[0,1],[0,-1]].forEach(function(m){var n=[p[0]+m[0],p[1]+m[1]],k=key(n);if(n[0]<0||n[1]<0||n[0]>=C||n[1]>=Rw||seen[k]||blk[k])return;
-    var fr=SN.fr.some(function(x){return x.x===n[0]&&x.y===n[1]&&x.i!==i});if(fr)return;seen[k]=1;prev[k]=p;Q.push(n)})}
-  var path=[],c=[f.x,f.y];if(!seen[key(c)])return;while(key(c)!==key(st)){path.unshift(c);c=prev[key(c)]}SN.path=path}
+function snDir(d){if(!SN||!R||R.lock)return;SN.path=null;var op={u:'d',d:'u',l:'r',r:'l'};if(SN.dir&&op[SN.dir]===d&&SN.len>1&&SN.moved)return;SN.dir=d;
+  [].forEach.call(document.querySelectorAll('#stage .dpad3 [data-d]'),function(x){x.classList.toggle('on',x.getAttribute('data-d')===d)})}
+function snDraw(){var w=$('#n3w');if(!w)return;var k0=R.snk||0,cs=SN.cs,cls=k0>=6?' rb':k0>=3?' gold':'',old=w.querySelectorAll('.sg'),n=SN.body.length;
+  while(old.length<n){var e=document.createElement('div');e.className='sg';w.appendChild(e);old=w.querySelectorAll('.sg')}for(var r=old.length-1;r>=n;r--)old[r].remove();old=w.querySelectorAll('.sg');
+  SN.body.forEach(function(p,k){var e=old[k],z=k?Math.max(.62,1-k*.04):1,sz=(cs-8)*z;e.className='sg'+(k?'':' hd d'+(SN.dir||'r'))+cls;e.style.width=e.style.height=sz+'px';e.style.left=(p[0]*cs+(cs-sz)/2)+'px';e.style.top=(p[1]*cs+(cs-sz)/2)+'px';e.style.zIndex=50-k;
+    if(!k&&!e.firstChild)e.innerHTML='<i class="ey l"></i><i class="ey r"></i><i class="tg"></i>'+(k0>=3?'<b class="cw">👑</b>':'');if(!k){var c=e.querySelector('.cw');if(k0>=3&&!c)e.insertAdjacentHTML('beforeend','<b class="cw">👑</b>')}})}
+function snStep(){if(!SN||!R||R.lock||!TM.run)return;var d=SN.dir;if(SN.path&&SN.path.length){var nx=SN.path.shift(),h0=SN.body[0];var dx=nx[0]-h0[0],dy=nx[1]-h0[1];d=Math.abs(dx)>1?(dx>0?'l':'r'):Math.abs(dy)>1?(dy>0?'u':'d'):dx>0?'r':dx<0?'l':dy>0?'d':'u';SN.dir=d}if(!d)return;
+  var h=SN.body[0],m={u:[0,-1],d:[0,1],l:[-1,0],r:[1,0]}[d],n=[(h[0]+m[0]+SN.C)%SN.C,(h[1]+m[1]+SN.Rw)%SN.Rw];   /* 撞 牆 ＝ 從 另一邊 出來 */
+  SN.moved=1;SN.body.unshift(n);SN.body.pop();snDraw();
+  var hit=SN.fr.filter(function(f){return n[0]>=f.x&&n[0]<=f.x+1&&n[1]>=f.y&&n[1]<=f.y+1})[0];if(hit){snStop();snEat(hit)}}
+/* 吃 ＝ 咬 一口 ➜ 對：果實 炸開＋變 長 一節＋「＋1」；錯：果實 搖 ➜ 答錯頁 */
+function snEat(f){var w=$('#n3w'),b=w.querySelector('.fr[data-o="'+f.i+'"]'),hd=w.querySelector('.sg.hd');if(hd)hd.classList.add('bite');tPause();
+  if(f.i===0){R.snk=(R.snk||0)+1;if(b)b.classList.add('eat');var bs=$('#snb');if(bs){bs.style.left=((f.x+1)*SN.cs)+'px';bs.style.top=((f.y+1)*SN.cs)+'px';bs.innerHTML='😋 ＋1 節'+(R.snk===3?'<br>👑 金色 蛇！':R.snk===6?'<br>🌈 彩虹 蛇！':'');bs.className='snb on'}
+    for(var k=0;k<14;k++){var sp=document.createElement('span');sp.className='snp';sp.textContent=['✨','🌟','💚','⭐'][k%4];sp.style.left=((f.x+1)*SN.cs)+'px';sp.style.top=((f.y+1)*SN.cs)+'px';sp.style.setProperty('--a',(k*360/14)+'deg');w.appendChild(sp)}
+    SN.body.push(SN.body[SN.body.length-1].slice());SN.len++;snDraw();snHud();later(function(){pick(0)},window.__SNFAST?60:900)}
+  else{if(b)b.classList.add('bad');later(function(){pick(f.i)},window.__SNFAST?60:650)}}
+/* 點 答案 ＝ 蛇 自己 找 最近 的 路（可以 穿過 牆、穿過 自己；不 經過 別的 答案）*/
+function snGo(i){if(!SN||R.lock)return;var f=SN.fr.filter(function(x){return x.i===i})[0];if(!f)return;var C=SN.C,Rw=SN.Rw,st=SN.body[0],key=function(p){return p[0]+','+p[1]},prev={},Q=[st],seen={},end=null;seen[key(st)]=1;
+  var inF=function(p,x){return p[0]>=x.x&&p[0]<=x.x+1&&p[1]>=x.y&&p[1]<=x.y+1};
+  while(Q.length){var p=Q.shift();if(inF(p,f)){end=p;break}[[1,0],[-1,0],[0,1],[0,-1]].forEach(function(m){var n=[(p[0]+m[0]+C)%C,(p[1]+m[1]+Rw)%Rw],k=key(n);if(seen[k])return;
+    if(SN.fr.some(function(x){return x.i!==i&&inF(n,x)}))return;seen[k]=1;prev[k]=p;Q.push(n)})}
+  if(!end)return;var path=[],c=end;while(key(c)!==key(st)){path.unshift(c);c=prev[key(c)]}SN.path=path;var b=$('#n3w .fr[data-o="'+i+'"]');[].forEach.call(document.querySelectorAll('#n3w .fr'),function(x){x.classList.toggle('tgt',x===b)})}
 addEventListener('keydown',function(e){if(!R||!R.g||!NG[R.g.id]||R.lock)return;var id=R.g.id,k=e.key;
   if(id==='n3'){var d={ArrowUp:'u',ArrowDown:'d',ArrowLeft:'l',ArrowRight:'r'}[k];if(d){e.preventDefault();snDir(d)}return}
   if(id==='n1'||id==='n2'){if(k==='ArrowLeft'){e.preventDefault();ngMove(-1)}else if(k==='ArrowRight'){e.preventDefault();ngMove(1)}else if(k===' '||k==='Enter'||k==='ArrowUp'){e.preventDefault();ngFire()}}});

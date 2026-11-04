@@ -565,6 +565,13 @@ body.ing #scbar{display:none!important}
 #crw{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(6,10,24,.94)}#crw.on{display:flex}.crb{text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px}.cri{font-size:clamp(70px,12vh,120px)}.crt{font-size:clamp(30px,5vh,52px);font-weight:900;line-height:1.35}.crt small{font-size:.6em;color:#B8C4D2;font-weight:700}.crbk{display:inline-flex;align-items:center;min-height:64px;padding:0 30px;border-radius:999px;background:linear-gradient(#FFE07A,#E0A800);color:#3A2A00;font-size:clamp(22px,3vh,30px);font-weight:900;text-decoration:none}
 body.crm #lobby .home{display:none}
 
+/* 第四十二次 第 3-(5) 點：答錯頁 紅底 框 A 英文 字 ➜ B 正下方 中文 ➜ C 整句 翻譯 */
+.gw.wbad b,.gw.wbad i{background:#D32F2F;color:#fff!important;border-radius:10px;box-shadow:0 0 0 4px #FF8A80,0 0 18px rgba(255,80,80,.9);animation:dzIn .55s cubic-bezier(.3,1.8,.5,1) both,dzPl 1.1s ease-in-out 2.4s 2}
+.gw.wbad b{animation-delay:.25s,2.4s;padding:0 .12em}.gw.wbad i{animation-delay:.95s,2.4s;padding:0 .2em}
+mark.dzm{background:#D32F2F;color:#fff;border-radius:8px;padding:0 .18em;box-shadow:0 0 0 4px #FF8A80,0 0 16px rgba(255,80,80,.9);animation:dzIn .55s cubic-bezier(.3,1.8,.5,1) 1.65s both,dzPl 1.1s ease-in-out 2.4s 2}
+@keyframes dzIn{0%{transform:scale(.3);opacity:0}100%{transform:none;opacity:1}}@keyframes dzPl{50%{transform:scale(1.14)}}
+.dzwhy{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:center;align-items:center;font-size:clamp(20px,2.8vh,28px);font-weight:700;color:#fff;background:#5A1010;border:3px solid #FF6B6B;border-radius:14px;padding:6px 14px;margin:4px auto}
+.dzwhy span{white-space:nowrap}.dzwhy b{color:#FFB4B4}.dzwhy em{font-style:normal;color:#9FF0B5}.dzwhy small{font-size:.8em;color:#FFD0D0;margin-left:4px}
 /* 2026-11-01 第三十八次：🎰 幸運轉盤、🔦 記憶 解碼、小提示 */
 .dcwh{position:absolute;left:50%;top:50%;z-index:22;transform:translate(-50%,-50%);width:min(92vw,520px);padding:14px;border-radius:26px;background:#1A1030;border:4px solid #FFD54A;text-align:center;box-shadow:0 14px 40px #000c}
 .dcwh .wt{font-size:clamp(26px,3.8vh,36px);font-weight:700;color:#FFE07A}.dcwh .wd{position:relative;width:clamp(220px,34vh,320px);aspect-ratio:1;margin:10px auto}
@@ -779,6 +786,62 @@ body.crm #lobby .home{display:none}
 .sk-card .dcs{border-style:solid;border-color:#B66BFF;background:repeating-linear-gradient(45deg,#1E1030 0 10px,#2A1640 10px 20px);border-radius:12px;box-shadow:0 0 12px rgba(182,107,255,.4)}
 .sk-card .dctl{border-color:#7A3FD0;background:linear-gradient(120deg,#F3E6FF,#C9A6FF 40%,#FFD6F5 60%,#B6E0FF);background-size:250% 100%;color:#2A0E50;border-radius:12px;box-shadow:0 6px 0 #4A2280,0 0 14px rgba(182,107,255,.5);animation:dfxGem 3s ease-in-out infinite}
 .sk-card.win .dcs.ok{animation:dfxFlip .6s 2}@keyframes dfxFlip{50%{transform:rotateY(180deg)}}
+
+/* ══ 第四十二次：🎁 驚喜 7 種 玩法＋👑 傳說 寶箱＋寶箱 秒懂 動畫 ══ */
+.dfxch2 .nm small{display:block;font-size:.6em;color:#FFE07A}
+.dfxpl .pst{display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,26px);width:auto;min-width:clamp(260px,40vw,560px);height:clamp(190px,30vh,300px)}
+.dfxcd{width:clamp(110px,15vh,150px);height:clamp(150px,21vh,210px);border-radius:16px;border:4px solid #FFE07A;background:linear-gradient(135deg,#5E2BB8,#1E5BD8);color:#fff;font-size:44px;position:relative;cursor:pointer;animation:dfxDrop .6s cubic-bezier(.3,1.5,.5,1) both;transform-style:preserve-3d;transition:transform .6s}
+.dfxcd .b{display:none;flex-direction:column;align-items:center;font-size:38px}.dfxcd .b b{font-size:32px;color:#FFE58A}.dfxcd.fl{transform:rotateY(180deg)}.dfxcd.fl .f{display:none}.dfxcd.fl .b{display:flex;transform:rotateY(180deg)}
+.dfxcd.me{box-shadow:0 0 0 6px #FFE58A,0 0 40px #FFD54A}.dfxcd.dim2,.dfxbl.dim2{opacity:.5}
+.dfxbl{background:none;border:0;display:flex;flex-direction:column;align-items:center;cursor:pointer;animation:dfxRise 2.2s ease-in-out infinite alternate}
+.dfxbl .bl{font-size:clamp(80px,13vh,130px);filter:hue-rotate(calc(var(--h)*1deg)) drop-shadow(0 8px 6px rgba(0,0,0,.5))}.dfxbl .v{visibility:hidden;font-size:28px;color:#FFE58A}
+.dfxbl.fl .bl{animation:dfxPop .35s forwards}.dfxbl.fl .v{visibility:visible}@keyframes dfxRise{to{transform:translateY(-22px)}}@keyframes dfxPop{60%{transform:scale(1.5)}100%{transform:scale(0);opacity:0}}
+.dfxsc{position:relative;width:clamp(300px,42vw,460px);height:clamp(150px,22vh,200px);border-radius:18px;overflow:hidden;border:5px solid #FFE07A;background:linear-gradient(135deg,#FFF3B0,#FFC93C)}
+.dfxsc .u{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(40px,7vh,64px);font-weight:900;color:#7A3B00}.dfxsc canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:pointer}
+.dfxeg{background:none;border:0;position:relative;cursor:pointer;animation:dfxIdle 1.1s ease-in-out infinite}.dfxeg .e{font-size:clamp(130px,22vh,200px);display:block;filter:drop-shadow(0 0 20px #FFE07A)}
+.dfxeg.c1{animation:dfxHit .3s}.dfxeg.c2 .e{filter:drop-shadow(0 0 30px #FFD54A) brightness(1.15)}.dfxeg.c3 .e{filter:drop-shadow(0 0 44px #FFF3B0) brightness(1.3);animation:dfxHit .25s infinite}
+.dfxeg.c1 .ck,.dfxeg.c2 .ck,.dfxeg.c3 .ck{position:absolute;left:30%;top:40%;width:40%;height:4px;background:#5A3A10;transform:rotate(-12deg);box-shadow:0 14px 0 #5A3A10}
+.dfxeg .e.dr{animation:dfxPz .7s cubic-bezier(.2,1.8,.4,1) both}
+.dfxga{position:relative;width:clamp(200px,28vh,260px);height:clamp(220px,31vh,290px);border-radius:28px 28px 14px 14px;background:linear-gradient(#E53935,#9A1A1A);border:5px solid #FFE07A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.dfxga .gl{width:70%;border-radius:50%;background:rgba(255,255,255,.85);font-size:30px;line-height:1.3;padding:10px 0;text-align:center}
+.dfxga .kn{width:70px;height:70px;border-radius:50%;border:5px solid #fff;background:#FFC93C;font-size:40px;color:#7A2E00;cursor:pointer}.dfxga .kn.sp{animation:dfxKn .6s}@keyframes dfxKn{to{transform:rotate(360deg)}}
+.dfxga .cap{position:absolute;bottom:-50px;font-size:64px;opacity:0;cursor:pointer}.dfxga .cap.in{opacity:1;animation:dfxDrop .6s cubic-bezier(.3,1.5,.5,1) both}.dfxga .cap.op{animation:dfxPz .5s both}
+.dfxrk{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;touch-action:none}.dfxrk .r{font-size:clamp(110px,18vh,170px);transform:rotate(-45deg);display:block}
+.dfxrk .pw{width:200px;height:18px;border-radius:9px;background:#22304A;border:3px solid #FFE07A;overflow:hidden}.dfxrk .pw i{display:block;height:100%;width:0;background:linear-gradient(90deg,#FFB300,#FF3D00)}
+.dfxrk.sh .r{animation:dfxHit .15s infinite}.dfxrk.go .r{animation:dfxLaunch .8s ease-in forwards}@keyframes dfxLaunch{to{transform:translate(260px,-420px) rotate(-45deg) scale(.4);opacity:0}}
+.dfxfw{position:absolute;font-size:120px;animation:dfxPz .7s both}
+/* 👑 傳說 */
+.dfxlg .dim{background:radial-gradient(circle at 50% 45%,rgba(255,200,60,.5),rgba(60,0,80,.85) 55%,rgba(0,0,0,.92))}
+.dfxlg .lgn{font-size:clamp(34px,6vh,60px);background:linear-gradient(90deg,#FFE58A,#FF8AD8,#8AF0FF,#FFE58A);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:300% 100%;animation:lgSh 2.4s linear infinite,dfxBan .6s both}
+@keyframes lgSh{to{background-position:300% 0}}
+.dfxlg .drop{width:clamp(240px,34vh,340px);height:clamp(220px,31vh,310px)}
+.dfxlg .ring{position:absolute;left:50%;top:50%;width:150%;height:150%;transform:translate(-50%,-50%);border-radius:50%;border:8px solid transparent;background:conic-gradient(#FF5A8A,#FFD54A,#5EF0B0,#5E9BFF,#FF5A8A) border-box;-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 9px),#000 0);mask:radial-gradient(farthest-side,transparent calc(100% - 9px),#000 0);animation:dfxSpin 2.6s linear infinite;opacity:.9}
+.dfxlg .rays{opacity:.8;background:repeating-conic-gradient(rgba(255,230,140,.85) 0 7deg,transparent 7deg 18deg);animation:dfxSpin 6s linear infinite}
+.dfxlg .bx{filter:drop-shadow(0 0 40px #FFD54A) drop-shadow(0 0 80px #FF8AD8)}
+.dfxlg .lgfw{position:absolute;inset:0;pointer-events:none}.dfxlg .lgb{position:absolute;font-size:clamp(40px,7vh,70px);animation:lgB 1.4s ease-out infinite}@keyframes lgB{0%{transform:scale(.2);opacity:0}40%{opacity:1}100%{transform:scale(1.6);opacity:0}}
+.dfxlg .lgrain{position:absolute;top:-60px;font-size:40px;animation:lgR 1.9s ease-in forwards;pointer-events:none}@keyframes lgR{to{transform:translateY(115vh) rotate(540deg)}}
+.dfxlg .lgw{min-height:1.2em;font-size:clamp(22px,3.4vh,34px);color:#fff;text-shadow:0 2px 8px #000}
+.dfxlg .pz{font-size:clamp(60px,11vh,110px)}
+/* 🎁 寶箱 秒懂 動畫 */
+.dfxin{position:fixed;inset:0;z-index:9250;background:rgba(4,8,22,.94);display:flex;align-items:center;justify-content:center;padding:12px}
+.dfxin .ib{width:min(980px,96vw);max-height:96vh;overflow:auto;background:linear-gradient(#17244A,#0C1430);border:4px solid #FFD54A;border-radius:24px;padding:clamp(12px,2vh,24px);text-align:center;color:#fff}
+.dfxin .ip{font-size:20px;color:#9FB0C8}.dfxin .ih{font-size:clamp(30px,5vh,48px);font-weight:900;color:#FFE58A;animation:dfxBan .5s both}
+.dfxin .iv{min-height:clamp(160px,26vh,250px);display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin:10px 0}
+.dfxin .it{font-size:clamp(22px,3.2vh,32px);font-weight:700;line-height:1.5;animation:dfxBan .6s .6s both}
+.dfxin .ich{display:inline-block;width:clamp(70px,10vh,100px)}.dfxin .ich svg{width:100%;height:auto;display:block}
+.dfxin .i1{display:flex;gap:10px}.dfxin .sl{display:inline-block;min-width:80px;padding:10px 14px;border-radius:12px;background:#2E7D32;border:3px solid #7BF0A8;font-size:28px;animation:dfxDrop .5s both}
+.dfxin .i1 .sl:nth-child(2){animation-delay:.4s}.dfxin .i1 .sl:nth-child(3){animation-delay:.8s}.dfxin .i1 .sl:nth-child(4){animation-delay:1.2s}
+.dfxin .itm{width:220px;height:16px;border-radius:8px;background:#22304A;overflow:hidden}.dfxin .itm i{display:block;height:100%;background:#36D27A;animation:inTm 2.4s linear both}@keyframes inTm{from{width:100%}to{width:35%}}
+.dfxin .i1c{animation:dfxDrop .8s 2.2s cubic-bezier(.3,1.5,.5,1) both}
+.dfxin .i2{display:flex;align-items:flex-end;gap:clamp(8px,1.6vw,20px)}.dfxin .i2 span{display:flex;flex-direction:column;align-items:center;gap:4px;background:#1E2E52;border-radius:14px;padding:10px;animation:dfxDrop .6s both;font-size:22px}
+.dfxin .i2 span:nth-child(1){height:120px;animation-delay:.2s}.dfxin .i2 span:nth-child(2){height:160px;animation-delay:.9s}.dfxin .i2 span:nth-child(3){height:200px;animation-delay:1.6s}.dfxin .i2 span:nth-child(4){height:240px;animation-delay:2.3s}
+.dfxin .i2 em{font-style:normal;font-size:48px}.dfxin .i2 small{font-size:18px;color:#FFE58A}.dfxin .i2 .lg{border:3px solid #FFD54A;box-shadow:0 0 26px #FFD54A}
+.dfxin .i3{display:flex;align-items:center;gap:10px}.dfxin .sl.x{background:#7A1A1A;border-color:#FF8A80;animation:inX 1s both}.dfxin .i3 .sl.x:nth-child(2){animation-delay:.3s}.dfxin .i3 .sl.x:nth-child(3){animation-delay:.6s}
+@keyframes inX{0%{transform:translate(-120px,-80px) rotate(-30deg);opacity:0}70%{transform:rotate(8deg)}100%{transform:none;opacity:1}}
+.dfxin .no{font-size:70px;animation:dfxPz .5s 1.3s both}.dfxin .nob{position:relative;opacity:.55;animation:dfxBan .5s 1.8s both}.dfxin .nob b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:60px}
+.dfxin .i4 span{font-size:clamp(50px,8vh,76px);display:inline-block;animation:dfxPz .6s both}
+.dfxin .ic{margin-top:6px}.dfxin .igo{margin-top:12px;min-height:64px;min-width:280px;border-radius:18px;border:3px solid #4A5A6E;background:#1A2230;color:#8C9AAE;font:inherit;font-size:clamp(22px,3vh,30px);font-weight:700}
+.dfxin .igo.rdy{border-color:#7BF0A8;background:linear-gradient(#36D27A,#1E9E55);color:#06210F;box-shadow:0 0 22px rgba(57,217,138,.75);cursor:pointer}
 @media (prefers-reduced-motion:reduce){.dfxban,.dfxban .i,.dfxch2 *,.dfxpt,.dcbox.dfx *,.dfxbub,.dfxstar{animation:none!important}}
 .scv{display:block;width:100%;height:auto;max-height:100%;border-radius:12px;overflow:visible}
 .scv .gift{animation:scgift 2.4s ease-in-out infinite}@keyframes scgift{0%,15%{transform:translateX(-14px)}45%,100%{transform:translateX(16px)}}
@@ -809,6 +872,28 @@ body.crm #lobby .home{display:none}
 .rvc button{min-height:58px;min-width:150px;font:inherit;font-size:clamp(19px,2.5vh,25px);font-weight:700;border-radius:16px;border:3px solid #5E7FA8;background:#14263F;color:#fff;cursor:pointer}
 .rvc button.on{background:#FFB300;color:#2A1A00;border-color:#FFE07A}
 .rvc button.rvnx{min-width:220px;border-color:#4A5A6E;background:#1A2230;color:#8C9AAE}
+.rvmag .mgst{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 4px 4px}
+.rvmag .mgcap{min-height:1.4em;font-size:clamp(22px,3.3vh,34px);font-weight:700;color:#FFE58A;text-align:center;opacity:0}.rvmag .mgcap.in{animation:mgCap .5s both}.rvmag .mgcap b{color:#fff;font-size:1.15em}
+@keyframes mgCap{0%{opacity:0;transform:translateY(10px) scale(.9)}100%{opacity:1;transform:none}}
+.rvmag .mgen{display:flex;gap:clamp(8px,1.4vw,16px);align-items:flex-end;justify-content:center;flex-wrap:nowrap}
+.rvmag .mgk{display:flex;flex-direction:column;align-items:center;border-radius:16px;padding:8px clamp(12px,1.6vw,22px) 6px;color:#fff;opacity:0;transform:scale(.4);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 6px 0 rgba(0,0,0,.35)}
+.rvmag .mgk.in{opacity:1;transform:none;transition:opacity .3s,transform .45s cubic-bezier(.3,1.7,.5,1)}
+.rvmag .mgk b{font-size:calc(clamp(44px,8.5vh,88px)*var(--rz,1));line-height:1.1;font-weight:700}.rvmag .mgk i{font-style:normal;font-size:calc(clamp(22px,3.4vh,34px)*var(--rz,1));color:#FFF6D0;line-height:1.2}
+.rvmag .mgk.spk{filter:brightness(1.3);transform:scale(1.1)}
+.rvmag .mgk.glow{box-shadow:0 0 0 5px #FFE58A,0 0 30px #FFD54A,0 6px 0 rgba(0,0,0,.35)}
+.rvmag .mgcp{display:inline-block;color:#FFF;text-shadow:0 0 12px #fff,0 0 24px #FFE58A;animation:mgCp 1.4s ease-in-out 2}@keyframes mgCp{50%{transform:scale(1.5)}}
+.rvmag .mgp{min-width:1.4em}.rvmag .mgp.pp b{animation:mgPp .9s}@keyframes mgPp{50%{transform:scale(1.8);color:#FFE58A}}
+.rvmag .mgp.fly{animation:mgFly 1.5s cubic-bezier(.4,1.4,.5,1)}@keyframes mgFly{0%{transform:none}40%{transform:translateY(-70px) rotate(360deg) scale(1.6)}100%{transform:none}}
+.rvmag .mgp.q{background:#E0A030!important;box-shadow:0 0 0 5px #FFE58A,0 0 34px #FFD54A}.rvmag .mgp.q b{color:#3A2600}
+.rvmag .mgzl{font-size:18px;color:#9FB0C8;margin-top:6px}
+.rvmag .mgzh{display:flex;gap:.5em;font-size:calc(clamp(34px,6vh,60px)*var(--rz,1));font-weight:700}.rvmag .mgz{opacity:0}.rvmag .mgz.in{opacity:1;transition:opacity .4s}
+.rvmag .mgzp.ma{color:#FFE58A}.rvmag .mgma{display:inline-block;padding:0 .15em;border-radius:10px;box-shadow:0 0 0 4px #FFE58A,0 0 22px #FFD54A;animation:mgMa .8s cubic-bezier(.3,1.8,.5,1)}@keyframes mgMa{0%{transform:scale(0)}100%{transform:none}}
+.rvmag .mgwd{position:absolute;left:0;top:0;font-size:58px;opacity:0;pointer-events:none;filter:drop-shadow(0 0 12px #FFE58A)}
+.rvmag .mgwd.go{animation:mgWd 1.6s ease-in-out both}@keyframes mgWd{0%{opacity:0;transform:rotate(-30deg)}15%{opacity:1}70%{opacity:1;transform:translateX(var(--dx,200px)) rotate(25deg)}100%{opacity:0;transform:translateX(var(--dx,200px)) rotate(25deg) scale(1.3)}}
+.rvmag .mgst.wave:after{content:'✨ ✨ ✨';position:absolute;top:34%;left:0;right:0;text-align:center;font-size:40px;animation:mgSp 1.6s both;pointer-events:none}@keyframes mgSp{0%,100%{opacity:0}40%{opacity:1;transform:scale(1.3)}}
+.rvmag .mgsum{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:8px;opacity:0}.rvmag .mgsum.on{opacity:1;transition:opacity .5s}
+.rvmag .mgsum span{font-size:clamp(19px,2.6vh,26px);padding:6px 14px;border-radius:12px;background:#1B2A40;border:2px solid #FFD54A;color:#fff}.rvmag .mgsum b{color:#FFE58A;font-size:1.2em}
+.rvc button.rvnx.nud{animation:rvNud 1.1s ease-in-out}@keyframes rvNud{0%,100%{transform:scale(1)}45%{transform:scale(1.14)}}
 .rvc button.rvnx.rdy{border-color:#7BF0A8;background:linear-gradient(#36D27A,#1E9E55);color:#06210F;font-size:clamp(22px,3vh,30px);box-shadow:0 0 0 4px rgba(123,240,168,.35),0 0 22px rgba(57,217,138,.75)}
 body.rvpz .rvcard *{animation-play-state:paused!important}
 .rvcard{--rz:1;width:min(100%,1180px);max-height:100%;overflow:hidden;background:linear-gradient(180deg,#0E1E36,#0A1628);border:3px solid #2F4E78;border-radius:26px;padding:clamp(10px,2vh,22px) clamp(12px,2.4vw,30px);display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.4vh,14px);font-size:calc(var(--rz) * 1px * 1);animation:rvIn .5s cubic-bezier(.3,1.4,.6,1)}
@@ -2457,6 +2542,14 @@ function scFetch(q,body,ms){
 }
 /* 沒網路先存平板，連上網補送（同一筆有編號，伺服器不會重複存） */
 var SCBUSY=false,SCRES={};
+/* 2026-11-03 第四十二次 第 5 點：做到 一半 也 立刻 送（一樣 的 編號 ＝ 伺服器 蓋過去）＝ 佇列 裡 一樣 編號 的 舊 的 先 拿掉，只 送 最新 的 */
+function scQAdd(r){if(!r||!r.u)return;var Q=(scGet('q')||[]).filter(function(x){return x.u!==r.u});Q.push(r);scPut('q',Q.slice(-200));scFlush()}
+/* 做到 一半 ＝ 不 演 結束 畫面，只 送（o.part ＝ 一共 幾題；限時 遊戲 ＝ 999「沒有 玩完」）。頁面 正在 作答 的 時候 設 window.SCPARTF（回傳 o），切到 別的 畫面、關掉 分頁 ＝ 自己 送 */
+var SCPU='';function scPart(o){try{o=o||{};var m=o.m||'q',Q=o.qs||SCQ;if(!scLive()||!SCH||!SCPU||!Q.length||m==='mem'||m==='v'||m==='l'||Q.length>=(o.part||0))return;
+  scQAdd({id:SCID,set:SCH.key(),name:SCH.name(),m:m,qs:Q,raw:Math.round(o.raw||0),fix:o.fix||0,mp:0,mw:0,sec:Math.round(o.sec||0),src:SCSRC,dev:SCDEV,u:SCPU,t:Date.now(),part:o.part})}catch(e){}}
+document.addEventListener('visibilitychange',function(){if(document.hidden&&window.SCPARTF){var o=window.SCPARTF();if(o)scPart(o)}});addEventListener('pagehide',function(){if(window.SCPARTF){var o=window.SCPARTF();if(o)scPart(o)}});
+/* 換 一台 平板 接著 做：伺服器「進度」分頁 拿 這個 人 這個 題組 做到 一半 的 那一份（要 通行證）*/
+function scProg(set,cb){if(typeof scLive!=='function'||!scLive()){cb(null);return}scFetch('',{a:'prog',id:SCID,set:set,k:scPk(SCID)},12000).then(function(j){cb(j&&j.ok&&j.prog?j.prog:null)},function(){cb(null)})}
 var SCJIT=0;function scFlush(){
   if(!SCON||SCBUSY)return Promise.resolve(null);
   if((window.SCLIVE||/[?&]live=/.test(location.search))&&!window.__SCNOJIT&&SCJIT!==2){if(!SCJIT){SCJIT=1;setTimeout(function(){SCJIT=2;scFlush()},Math.random()*4000)}return Promise.resolve(null)}   /* ⚡ 現場任務：全班 同時 送 ➜ 錯開 0～4 秒 */
@@ -2612,7 +2705,7 @@ function scMeHTML(){
 }
 /* ── 作答中：本班這一組的名次（只有前 10 名給名次；不在前 10 ＝ 再幾分進前 10） ── */
 function scStart(gt){
-  SCQ=[];SCV=null;SCIN='';clearTimeout(SCAUTO);SCEND=null;
+  SCQ=[];SCV=null;SCIN='';clearTimeout(SCAUTO);SCEND=null;SCPU=SCID?SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6):'';
   if(!scLive())return;
   var my=SCH.key();
   scFetch('a=view&id='+SCID+'&set='+encodeURIComponent(my)+(gt?'&gt=1':''),null,6000).then(function(j){if(j&&!j.err&&SCH.key()===my){SCV=j;if(SCH.rk)SCH.rk()}},function(){});
@@ -2645,7 +2738,7 @@ function scS100(Q){var n=Q.length,s=0;Q.forEach(function(q){if(q[0])s+=60/n+40/n
 function scEnd(o){
   o=o||{};var m=o.m||'q',Q=o.qs||SCQ,key=SCH.key(),n=Q.length,ok=0,fast=0;Q.forEach(function(q){ok+=q[0];fast+=q[3]});
   if(m!=='mem'&&!n)return false;
-  var acc=m==='mem'?null:Math.round(ok/n*100),u=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  var acc=m==='mem'?null:Math.round(ok/n*100),u=(SCPU&&SCPU.indexOf(SCID)===0?SCPU:'')||SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);SCPU='';window.SCPARTF=null;   /* 第四十二次：跟 做到 一半 的 同一個 編號 ＝ 蓋過去 */
   var R={id:SCID,set:key,name:SCH.name(),m:m,qs:m==='mem'?[]:Q,raw:Math.round(o.raw||0),fix:o.fix||0,mp:o.mp||0,mw:o.mw||0,sec:Math.round(o.sec||0),
     src:SCSRC,dev:SCDEV,u:u,t:Date.now()};
   var hk='h_'+SCID+'_'+key,H=scGet(hk)||[],sv=SCV&&SCV.set;
@@ -3212,7 +3305,7 @@ function decStop(){DEC.rid++;if(DEC.au){try{DEC.au.onended=null;DEC.au.pause()}c
    連續 全對 3 題 以上 ＝ 這一題 ✖2。只是 遊戲 裡 的 積分（讓 學生 有感），**老師看板 的 100 分 照舊 只 看 對 幾 個**（公平，第 9 點） */
 var DECPT={S:1.2,E:6,B:100,V:900,N:3};
 function decPts(avg,cb){var sp=Math.max(0,Math.min(1,(DECPT.E-avg)/(DECPT.E-DECPT.S))),v=Math.round(DECPT.V*sp/10)*10,b=DECPT.B+v;return {sp:sp,v:v,b:b,x:cb>=DECPT.N?2:1,p:b*(cb>=DECPT.N?2:1)}}
-function decScR(){var r=window.R;if(DEC.rr!==r){DEC.rr=r;DEC.sc=0;DEC.cb=0;DEC.n=0;DEC.shield=0}}
+function decScR(){var r=window.R;if(DEC.rr!==r){DEC.rr=r;DEC.sc=0;DEC.cb=0;DEC.n=0;DEC.lm=null;DEC.shield=0}}
 function decPop(st,o,avg,cb){var e=H('div','dcpt'+(o.x>1?' x2':''),'<div class="p1">✅ 全部 放對！⚡ 平均 每一格 '+avg.toFixed(1)+' 秒</div><div class="bar"><i style="width:'+Math.max(4,Math.round(o.sp*100))+'%"></i></div><div class="p2">＋'+o.p+'</div><div class="p3">✅ '+DECPT.B+' ＋ ⚡ 速度 '+o.v+(o.x>1?'　🔥 連對 '+cb+' 題 ✖2':'')+'</div>'+(o.x>1?'<div class="cb">🔥 ✖2</div>':cb===DECPT.N-1?'<div class="p3">🔥 再 全對 1 題 ＝ ✖2！</div>':'')+(o.qx?'<div class="p3">🎁 寶箱：這一題 ✖'+o.qx+'</div>':'')+'<div class="p3">🔓 解碼 積分 '+DEC.sc+'</div>');st.appendChild(e);setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e)},2800)}
 /* ══ 2026-11-01 第三十八次 C44 ⑥-(1) 🎰 幸運轉盤：連續 全對 3、6、9… 題 ＝ 轉 一次（只 是 遊戲 積分，老師看板 100 分 照舊）══
    ＋300、＋500、🔥 這一題 再 ✖2、🛡 盾牌（下一次 放錯 連對 不 中斷）；轉 2.4 秒、指針 停 在 結果、大字 說 拿到 什麼 */
@@ -3226,7 +3319,7 @@ function decWheel(st,done){if(!DEC.cb||DEC.cb%3!==0||window.__NOWHEEL){done();re
    A. 出現 以前 先 一頁 秒懂 動畫：英文 亮 3 秒 ➜ 變暗 ➜ 憑 記憶 放 中文；愈快 答對 積分 ✖2
    B. 不 影響 作答 權益：隨時 可以 按〔👀 再看 一次〕英文 就 回來（只是 這一題 沒有 記憶 ✖2）；100 分 的 成績 只 看 放對 幾個，跟 平常 一樣 */
 function decMemIntro(done){var o=H('div','dcmi','<div class="mb"><div class="mt">🔦 記憶 解碼！</div><div class="ms" id="dcms"></div><button class="mg" id="dcmg" disabled>▶ 我 準備好 了</button></div>');document.body.appendChild(o);
- var S=['<b>1</b> 👀 英文 先 亮 3 秒','<b>2</b> 🌑 英文 變暗','<b>3</b> 🧠 憑 記憶 放 中文 ➜ 全對 積分 ✖2','<b>4</b> 🙋 忘記 了？按〔👀 再看 一次〕（成績 一樣，只是 沒有 ✖2）'],m=o.querySelector('#dcms');
+ var S=['<b>1</b> 👀 英文 先 亮 3 秒','<b>2</b> 🌑 英文 變暗','<b>3</b> 🧠 長 句子 憑 記憶 放 中文 ➜ 一次 全對 ＝ 積分 ✖2 ＋ 👑 傳說 寶箱（最 大 的 獎勵）','<b>4</b> 🙋 忘記 了？按〔👀 再看 一次〕（成績 一樣，只是 沒有 ✖2、沒有 👑）'],m=o.querySelector('#dcms');
  S.forEach(function(t,i){setTimeout(function(){var d=H('div','mr',t);m.appendChild(d)},window.__NOGO?5:300+i*1100)});setTimeout(function(){var b=o.querySelector('#dcmg');b.disabled=false;b.classList.add('rdy')},window.__NOGO?10:300+S.length*1100);
  o.querySelector('#dcmg').onclick=function(){if(this.disabled)return;o.parentNode.removeChild(o);done()}}
 function decMemGo(st,row){DEC.memPeek=0;var pk=H('button','dcpk','👀 再看 一次');pk.hidden=true;st.insertBefore(pk,row);var A=DEC.A;
@@ -3241,7 +3334,8 @@ function decRender(q,st0){var A=DEC.A,st=H('div','dcbox');decScR();var t0=Date.n
  st.appendChild(row);st.appendChild(tray);st.appendChild(zh);
  /* 2026-11-03 第四十一次 第 2 點：🔦 記憶 解碼（每 4 題 的 第 4 題）錯 方塊 要 夠 多（老師：太 少 ＝ 送分）➜ 先 決定 這一題 是不是 記憶 題，
     是 ＝ 再 加「跟 答案 只 差 一點」的 錯 方塊（🔒 3 相近、有 鑑別度；不 放 同義詞、不 放 跟 正確 方塊 一樣 的 字），錯 方塊 至少 4 個、最多 跟 格子 一樣 多（最多 8）*/
- var real0=!st0.closest||!st0.closest('#dcl'),memQ=real0&&!window.__NOMEM&&((DEC.n||0)+1)%4===0,xs=(q.x||[]).slice();
+ /* 2026-11-03 第四十二次 第 1 點（老師）：句子 太 短（I am ten.）沒有 挑戰 ➜ 🔦 記憶 解碼 只 出 在「長 句子」：英文 ≧ 7 個 字，或 兩個 句子 以上；不是 第 1 題、離 上一次 記憶 題 至少 隔 3 題 */
+ var real0=!st0.closest||!st0.closest('#dcl'),memQ=real0&&!window.__NOMEM&&(DEC.n||0)>=1&&decLong(q)&&((DEC.n||0)-(DEC.lm==null?-9:DEC.lm))>=3,xs=(q.x||[]).slice();
  if(memQ){var has={},want=Math.min(8,Math.max(4,q.t.length));q.t.forEach(function(p){has[p[1]]=1});xs.forEach(function(v){has[v]=1});
   var cand=[];q.t.forEach(function(p){(decNear(p[1])||[]).forEach(function(v){if(!has[v]&&cand.indexOf(v)<0)cand.push(v)})});
   cand=shuf(cand);while(xs.length<want&&cand.length){var v=cand.shift();has[v]=1;xs.push(v)}}
@@ -3277,13 +3371,16 @@ function decRender(q,st0){var A=DEC.A,st=H('div','dcbox');decScR();var t0=Date.n
        再 ➜ 🎰 幸運轉盤（連對 3 題）➜ 🌟 生活 裡 怎麼 用（獨立 一頁）➜ 下一題。教學（#dcl）不 算 */
     var po=null,avg=0;if(real){decScR();DEC.cb++;avg=(Date.now()-t0)/1000/ss.length;po=decPts(avg,DEC.cb);if(DEC.mem&&!DEC.memPeek){po.p*=2;po.mem=1}if(fx){DFX.win(st)}DEC.sc+=po.p;DEC.last=po}
     /* 🎁 難題 寶箱：難度 ＝ 格子 ＋ 多 的 錯 方塊 ＋（記憶 解碼 沒 偷看 ＋3）；全對 才 算（DFX.drop 決定 掉 不 掉、什麼 寶箱）*/
-    var nx=(q._xs||q.x||[]).length,dif=ss.length+nx+(DEC.mem&&!DEC.memPeek?3:0),dr=real&&fx?DFX.drop(dif):null,why=ss.length+' 格'+(nx?'＋'+nx+' 個 陷阱 方塊':'')+(DEC.mem&&!DEC.memPeek?'＋🔦 記憶':'');
+    var nx=(q._xs||q.x||[]).length,dif=ss.length+nx+(DEC.mem&&!DEC.memPeek?3:0),dr=real&&fx?DFX.drop(dif,DEC.mem&&!DEC.memPeek):null,why=ss.length+' 格'+(nx?'＋'+nx+' 個 陷阱 方塊':'')+(DEC.mem&&!DEC.memPeek?'＋🔦 記憶':'');
     decRead(q.en,q.v||'',cs,function(){if(!real){DEC.lock=false;A.ok(row);return}DFX&&fx?DFX.chest(dr,dif,why,function(p){if(p){DEC.sc+=p;if(po)po.p+=p;decScR()}pop2()}):pop2()});
     function pop2(){decPop(st,po,avg,DEC.cb);
       setTimeout(function(){decWheel(st,function(){if(window.LIFE)LIFE.go(q,function(){DEC.lock=false;A.ok(row)});else{DEC.lock=false;A.ok(row)}})},window.__NOGO?40:2400)}return}
   decScR();if(DEC.shield&&(!st0.closest||!st0.closest('#dcl'))){DEC.shield=0;decToast(st,'🛡 盾牌 擋住 了：連對 不 中斷！')}else DEC.cb=0;setTimeout(function(){DEC.lock=false;A.bad(got,okN/ss.length)},900)}
  DEC.lock=false;decFit(st);
- var real=!st0.closest||!st0.closest('#dcl');DEC.mem=0;if(real&&!window.__NOMEM){DEC.n=(DEC.n||0)+1;if(DEC.n%4===0){DEC.mem=1;A.pause();DEC.lock=true;decMemIntro(function(){DEC.lock=false;A.go();decMemGo(st,row)})}}}
+ var real=!st0.closest||!st0.closest('#dcl');DEC.mem=0;var goMem=function(){if(real&&!window.__NOMEM){DEC.n=(DEC.n||0)+1;if(memQ){DEC.lm=DEC.n;DEC.mem=1;A.pause();DEC.lock=true;decMemIntro(function(){DEC.lock=false;A.go();decMemGo(st,row)})}}};
+ /* 2026-11-03 第四十二次 第 3-(1)(2)(3) 點：這一回 第一題 拖曳 前 ＝ 🎁 寶箱 怎麼 拿 的 秒懂 動畫（倒數 停住）*/
+ if(real&&fx&&DFX.needIn&&DFX.needIn()){A.pause();DEC.lock=true;DFX.intro(function(){DEC.lock=false;A.go();goMem()})}else goMem()}
+function decLong(q){var e=String(q.en||'');return e.split(/\s+/).filter(Boolean).length>=7||(e.match(/[.?!](\s|$)/g)||[]).length>=2}
 /* 第四十一次 第 2 點：每一個 中文 方塊 ➜ 只 差 一點 的 錯 方塊（他／她、我的／你的、是／不是、家人、職業、數字 ±1）*/
 var DECNEAR={'你的':['我的','你','他的'],'我的':['你的','我','她的'],'你':['你的','我','他'],'我':['我的','你','她'],'他':['她','他的','我'],'她':['他','她的','你'],'他的':['他','她的','我的'],'她的':['她','他的','你的'],
  '是':['不是','是的'],'不是':['是','不'],'不':['不是','是'],'是的':['是','不是'],'什麼':['誰','幾歲'],'誰':['什麼','誰的'],'幾歲':['歲','什麼','幾個'],'歲':['幾歲','年'],'名字':['年紀','生日'],
@@ -3397,6 +3494,15 @@ function decTut(T,done){var A0=DEC.A,o=$('#dcl'),k='dct_seen_'+T.key+'_'+(A0.sid
  function fin(){if(my!==DEC.lid)return;DEC.lid++;DEC.A=A0;decStop();o.classList.remove('on');o.innerHTML='';done()}
  s1()}
 DEC.lid=0;
+/* 2026-11-03 第四十二次 第 3-(5) 點（老師）：拖錯 ＝ 答錯頁 用 紅底 框 起來 三個 地方：A 剛才 放錯 的 那一個 英文 字、B 它 正下方 的 中文、C 整句 翻譯 裡 那個 意思
+   （三、四年級 一樣；一個 一個 亮：A ➜ B ➜ C，再 一起 亮 兩下）。got ＝ 學生 每一格 放 了 什麼 */
+function decBad(q,got){var b=[];if(!got||!got.length)return b;q.t.forEach(function(p,i){if(got[i]!==p[1])b.push(i)});return b}
+function decGls(q,got){var bad=decBad(q,got);return (bad.length?'<div class="dzwhy">🟥 剛才 放錯 的 地方：'+bad.map(function(i){return '<span><b>'+decEN(q.t[i][0].replace(/[.?!,]+$/,''))+'</b> ＝ <em>'+esc(q.t[i][1])+'</em>'+(got[i]?'<small>（你 放 了「'+esc(got[i])+'」）</small>':'')+'</span>'}).join('')+'</div>':'')+
+ '<div class="gls" id="gls">'+q.t.map(function(t,i){return '<span class="gw'+(/^['’]/.test(t[0])?' ct':'')+(bad.indexOf(i)>=0?' wbad':'')+'"><b>'+decEN(t[0])+'</b><i>'+esc(t[1])+'</i></span>'}).join('')+'</div>'}
+function decZhM(q,got,z){z=String(z==null?'':z);var bad=decBad(q,got),R=[];
+ bad.forEach(function(i){var w=q.t[i][1];if(!w||/^[A-Z]/.test(w))w=w||'';if(!w)return;var occ=0;for(var j=0;j<i;j++)if(q.t[j][1]===w)occ++;var at=-1,from=0;for(var k=0;k<=occ;k++){var f=z.indexOf(w,from);if(f<0)break;at=f;from=f+w.length}if(at<0)at=z.indexOf(w);if(at<0)return;
+  if(!R.some(function(r){return at<r[1]&&at+w.length>r[0]}))R.push([at,at+w.length])});
+ R.sort(function(a,b){return a[0]-b[0]});var o='',c=0;R.forEach(function(r){o+=esc(z.slice(c,r[0]))+'<mark class="dzm">'+esc(z.slice(r[0],r[1]))+'</mark>';c=r[1]});return o+esc(z.slice(c))}
 /* 2026-11-02 第四十次 第 2 點：整句 中文 詞 和 詞 空 一格（score/_zsp.js；What’s your name? ＝ 你的 名字 是 什麼？（你 叫 什麼 名字？））*/
 function decZ(z){z=String(z==null?'':z);if(!window.ZSP||/＝/.test(z))return z;var m=/^([^（]*)(（[^）]*[A-Za-z][^）]*）.*)$/.exec(z);return m?ZSP(m[1])+m[2]:ZSP(z)}
 
@@ -3433,23 +3539,23 @@ var DFX=(function DFXSRC() {
   /* 2026-11-03 第四十一次 第 1 點：🏁 跟 上次 的 自己 賽跑（👻）整個 刪除 */
 
   /* ── 🎁 難題 寶箱（全對 以後 才 掉）── */
-  D.TIER = [['wood', '木頭 寶箱'], ['silver', '銀 寶箱'], ['gold', '金 寶箱'], ['rainbow', '💎 彩虹 寶箱']];
-  D.PTS = [400, 900, 1800, 3500];
+  D.TIER = [['wood', '木頭 寶箱'], ['silver', '銀 寶箱'], ['gold', '金 寶箱'], ['rainbow', '💎 彩虹 寶箱'], ['legend', '👑 傳說 寶箱']];
+  D.PTS = [400, 900, 1800, 3500, 8000];   /* 第四十二次 第 2 點：🔦 記憶 解碼（長 句子、沒 偷看、一次 全對）＝ 一定 掉 👑 傳說 寶箱 */
   /* 難度 ＝ 格子 數 ＋ 多 的 錯 方塊 數 ＋（記憶 解碼 沒 偷看 ＋3）；機會、稀有度、獎勵 都 跟著 難度 變 大 */
-  D.drop = function (diff) { var ch = diff <= 4 ? 0 : diff === 5 ? .25 : diff === 6 ? .45 : diff === 7 ? .6 : diff === 8 ? .75 : .9; if (rnd() >= ch) return null;
+  D.drop = function (diff, mem) { if (mem) return { t: 4, p: Math.round((8000 + Math.max(0, diff - 8) * 600) / 100) * 100, mem: 1 }; var ch = diff <= 4 ? 0 : diff === 5 ? .25 : diff === 6 ? .45 : diff === 7 ? .6 : diff === 8 ? .75 : .9; if (rnd() >= ch) return null;
     var x = rnd(), t = diff >= 9 ? (x < .35 ? 3 : 2) : diff >= 8 ? (x < .12 ? 3 : x < .6 ? 2 : 1) : diff >= 7 ? (x < .35 ? 2 : 1) : diff >= 6 ? (x < .4 ? 1 : 0) : 0;
     return { t: t, p: Math.round(D.PTS[t] * (1 + Math.max(0, diff - 5) * .15) / 50) * 50 }; };
-  D.CHEST = function (t, open) { var C = [['#8D5A2B', '#5E3A17', '#C99A5B'], ['#AEB8C4', '#6E7A86', '#E6EEF6'], ['#F5B829', '#9A6B00', '#FFE58A'], ['#B66BFF', '#3A6BFF', '#7CFFE0']][t];
+  D.CHEST = function (t, open) { var C = [['#8D5A2B', '#5E3A17', '#C99A5B'], ['#AEB8C4', '#6E7A86', '#E6EEF6'], ['#F5B829', '#9A6B00', '#FFE58A'], ['#B66BFF', '#3A6BFF', '#7CFFE0'], ['#FFC93C', '#7A2E00', '#FFFFFF']][t];
     var g = '<defs><linearGradient id="dfxS' + t + '" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>' + (t === 3 ? '<linearGradient id="dfxRb" x1="0" x2="1"><stop offset="0" stop-color="#FF5A8A"/><stop offset=".33" stop-color="#FFD54A"/><stop offset=".66" stop-color="#5EF0B0"/><stop offset="1" stop-color="#5E9BFF"/></linearGradient>' : '') + '</defs>';
-    var f = t === 3 ? 'url(#dfxRb)' : C[0];
+    var f = t === 3 ? 'url(#dfxRb)' : C[0], crown = t === 4 ? '<path d="M20 8 L26 0 L32 7 L38 0 L44 8 Z" fill="#FFE58A" stroke="#7A2E00" stroke-width="1.6"/><circle cx="32" cy="5" r="1.8" fill="#FF3B6B"/>' : '';
     return '<svg viewBox="0 0 64 56" aria-hidden="true">' + g + (open ? '<path d="M32 28 L4 -6 L60 -6 Z" fill="#FFF6C0" opacity=".9"/>' : '') +
       '<rect x="6" y="24" width="52" height="28" rx="4" fill="' + f + '" stroke="' + C[1] + '" stroke-width="3"/><rect x="6" y="24" width="52" height="28" rx="4" fill="url(#dfxS' + t + ')"/>' +
       '<rect x="6" y="34" width="52" height="5" fill="' + C[1] + '" opacity=".55"/><rect x="14" y="24" width="5" height="28" fill="' + C[1] + '" opacity=".4"/><rect x="45" y="24" width="5" height="28" fill="' + C[1] + '" opacity=".4"/>' +
       (open ? '<path d="M6 22 Q32 2 58 22 L58 16 Q32 -4 6 16 Z" fill="' + f + '" stroke="' + C[1] + '" stroke-width="3" transform="rotate(-28 6 22)"/>'
         : '<path d="M6 24 Q6 8 32 8 Q58 8 58 24 Z" fill="' + f + '" stroke="' + C[1] + '" stroke-width="3"/><path d="M6 24 Q6 8 32 8 Q58 8 58 24 Z" fill="url(#dfxS' + t + ')"/>') +
-      '<rect x="27" y="' + (open ? 26 : 20) + '" width="10" height="13" rx="2" fill="' + C[2] + '" stroke="' + C[1] + '" stroke-width="2"/></svg>'; };
+      '<rect x="27" y="' + (open ? 26 : 20) + '" width="10" height="13" rx="2" fill="' + C[2] + '" stroke="' + C[1] + '" stroke-width="2"/>' + (open ? '' : crown) + '</svg>'; };
   /* 掉 下來 ➜ 點 3 下 打開；ctl.done(加 幾分) */
-  D.chest = function (dr, diff, why, done) { if (!dr) { done(0); return; } D.open++; var t = dr.t, tap = 0, fin = 0;
+  D.chestBox = function (dr, diff, why, done) { if (!dr) { done(0); return; } D.open++; var t = dr.t, tap = 0, fin = 0;
     var o = H('div', 'dfxch2 ch-' + D.TIER[t][0], '<div class="dim"></div><div class="why">🔥 難題 <b>' + why + '</b> 一次 全對！</div><div class="drop"><div class="rays"></div><div class="bx">' + D.CHEST(t, 0) + '</div></div>' +
       '<div class="nm">🎁 ' + D.TIER[t][1] + ' 掉 下來 了！</div><div class="tap">👆 點 寶箱 3 下 打開！ <span class="d"><i></i><i></i><i></i></span></div><div class="pz"></div>');
     document.body.appendChild(o); var bx = o.querySelector('.bx'), dots = o.querySelectorAll('.tap i');
@@ -3459,6 +3565,74 @@ var DFX=(function DFXSRC() {
       setTimeout(function () { o.classList.add('out'); setTimeout(function () { if (o.parentNode) o.parentNode.removeChild(o); done(dr.p); }, 380); }, window.__NOGO ? 40 : 2200); }
     bx.onclick = function () { if (fin) return; tap++; if (dots[tap - 1]) dots[tap - 1].classList.add('on'); bx.classList.remove('hit'); void bx.offsetWidth; bx.classList.add('hit', 'h' + Math.min(3, tap)); if (tap >= 3) setTimeout(openIt, 250); };
     var au = setTimeout(openIt, 6000); };
+
+  /* ══ 2026-11-03 第四十二次 第 3-(4) 點（老師：每一題 都 是 寶箱 會 膩）＝ 掉 下來 的 驚喜 每一次 換 一種 玩法（同一回 不 連續 重複）：
+     🎁 寶箱 點 3 下、🃏 翻牌 三選一、🪙 刮刮卡、🥚 龍蛋 孵化、🎰 扭蛋機、🎈 射 氣球、🚀 按住 發射；🔦 記憶 解碼 成功 ＝ 一定 是 👑 傳說 寶箱（最 華麗）。
+     只 給 遊戲 積分（不 算進 100 分，🔒 11 第 3 條 照舊）；動畫 的 時候 倒數 停住；8 秒 沒 動 ＝ 自己 打開（不會 卡住） ══ */
+  D.STY = ['box', 'card', 'scratch', 'egg', 'gacha', 'balloon', 'rocket'];
+  D.nextSty = function () { if (window.__DFXSTY) return window.__DFXSTY; var L = D.STY.filter(function (x) { return x !== D.lastSty; }), k = L[Math.floor(rnd() * L.length) % L.length]; D.lastSty = k; return k; };
+  D.chest = function (dr, diff, why, done) { if (!dr) { done(0); return; } if (dr.t === 4) { D.legend(dr, why, done); return; } var st = D.nextSty(); if (st === 'box') { D.chestBox(dr, diff, why, done); return; } D.open++; D.play(st, dr, why, done); };
+  function coins(host, n, t) { for (var i = 0; i < n; i++) { var cn = H('span', 'dfxcn', t >= 3 && i % 2 ? '💎' : '🪙'); cn.style.setProperty('--a', (i * (360 / n)) + 'deg'); cn.style.setProperty('--r', (120 + (i % 3) * 45) + 'px'); cn.style.animationDelay = (i * 18) + 'ms'; host.appendChild(cn); } }
+  D.play = function (st, dr, why, done) { var t = dr.t, fin = 0, pts = dr.p;
+    var TT = { card: ['🃏 魔法 翻牌！', '👆 選 一張 牌 翻開！'], scratch: ['🪙 刮刮卡！', '👆 用 手指 在 銀色 上面 刮 一刮！'], egg: ['🥚 神秘 龍蛋！', '👆 點 蛋 4 下，讓 牠 孵 出來！'],
+      gacha: ['🎰 扭蛋機！', '👆 轉 2 下 把手，再 點 扭蛋！'], balloon: ['🎈 驚喜 氣球！', '👆 點破 一顆 氣球！'], rocket: ['🚀 寶藏 火箭！', '👆 按住 火箭 蓄力，放開 發射！'] }[st];
+    var o = H('div', 'dfxch2 dfxpl ps-' + st + ' ch-' + D.TIER[t][0], '<div class="dim"></div><div class="why">🔥 難題 <b>' + why + '</b> 一次 全對！</div><div class="nm">' + TT[0] + '<small>' + D.TIER[t][1] + ' 等級</small></div><div class="drop pst"></div><div class="tap">' + TT[1] + '</div><div class="pz"></div>');
+    document.body.appendChild(o); var S = o.querySelector('.pst'), tap = o.querySelector('.tap'), au = setTimeout(function () { auto(); }, window.__NOGO ? 60 : 8000), auto = function () { };
+    function open(p, extra) { if (fin) return; fin = 1; clearTimeout(au); pts = p; o.classList.add('op'); tap.style.visibility = 'hidden'; coins(S, t >= 2 ? 22 : 14, t);
+      o.querySelector('.pz').innerHTML = (extra || '') + '🪙 ＋' + p + '<small>遊戲 積分</small>';
+      setTimeout(function () { o.classList.add('out'); setTimeout(function () { if (o.parentNode) o.parentNode.removeChild(o); done(pts); }, 380); }, window.__NOGO ? 40 : 2300); }
+    var vr = function () { var a = [Math.round(pts * .8 / 50) * 50, pts, Math.round(pts * 1.3 / 50) * 50]; for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), x = a[i]; a[i] = a[j]; a[j] = x; } return a; };
+    if (st === 'card' || st === 'balloon') { var A = vr(), it = A.map(function (v, i) { var e = H('button', st === 'card' ? 'dfxcd' : 'dfxbl', st === 'card' ? '<span class="f">✨</span><span class="b">🪙<b>' + v + '</b></span>' : '<span class="bl" style="--h:' + [350, 200, 50][i] + '">🎈</span><span class="v">🪙 ' + v + '</span>'); e.style.animationDelay = (i * .15) + 's'; S.appendChild(e); return e; });
+      var pickI = function (k) { if (fin) return; it.forEach(function (e, i) { setTimeout(function () { e.classList.add('fl'); if (i !== k) e.classList.add('dim2'); }, i === k ? 0 : 500); }); it[k].classList.add('me'); setTimeout(function () { open(A[k]); }, 900); };
+      it.forEach(function (e, i) { e.onclick = function () { pickI(i); }; }); auto = function () { pickI(1); }; }
+    else if (st === 'scratch') { var w = H('div', 'dfxsc', '<div class="u">🪙 ＋' + pts + '</div><canvas></canvas>'); S.appendChild(w); var cv = w.querySelector('canvas'), cx, mv = 0, dn = false;
+      setTimeout(function () { var r = w.getBoundingClientRect(); cv.width = r.width; cv.height = r.height; cx = cv.getContext('2d'); var g = cx.createLinearGradient(0, 0, r.width, r.height); g.addColorStop(0, '#C8CED6'); g.addColorStop(.5, '#F4F6F8'); g.addColorStop(1, '#9AA3AE'); cx.fillStyle = g; cx.fillRect(0, 0, r.width, r.height); cx.fillStyle = '#6E7783'; cx.font = 'bold 28px sans-serif'; cx.textAlign = 'center'; cx.fillText('✋ 刮 這裡', r.width / 2, r.height / 2 + 10); cx.globalCompositeOperation = 'destination-out'; }, 30);
+      var sc = function (e) { if (!cx || fin) return; var r = cv.getBoundingClientRect(); cx.beginPath(); cx.arc(e.clientX - r.left, e.clientY - r.top, 30, 0, 7); cx.fill(); mv++; if (mv > 28) { cv.style.transition = 'opacity .4s'; cv.style.opacity = '0'; open(pts); } };
+      cv.addEventListener('pointerdown', function (e) { dn = true; sc(e); }); cv.addEventListener('pointermove', function (e) { if (dn) sc(e); }); window.addEventListener('pointerup', function () { dn = false; });
+      auto = function () { cv.style.opacity = '0'; open(pts); }; }
+    else if (st === 'egg') { var eg = H('button', 'dfxeg', '<span class="e">🥚</span><span class="ck"></span>'), n = 0; S.appendChild(eg);
+      eg.onclick = function () { if (fin) return; n++; eg.className = 'dfxeg c' + Math.min(4, n); if (n >= 4) { eg.innerHTML = '<span class="e dr">🐉</span>'; open(pts, '🐉 '); } }; auto = function () { eg.innerHTML = '<span class="e dr">🐉</span>'; open(pts, '🐉 '); }; }
+    else if (st === 'gacha') { var gm = H('div', 'dfxga', '<div class="gl">🔴🟡🔵<br>🟢🟣🟠</div><button class="kn">⟳</button><div class="cap"></div>'), turns = 0; S.appendChild(gm); var kn = gm.querySelector('.kn'), cp = gm.querySelector('.cap');
+      kn.onclick = function () { if (fin || turns >= 2) return; turns++; kn.classList.remove('sp'); void kn.offsetWidth; kn.classList.add('sp'); if (turns >= 2) { setTimeout(function () { cp.classList.add('in'); cp.innerHTML = '🟡'; tap.textContent = '👆 點 扭蛋 打開！'; }, 500); } };
+      cp.onclick = function () { if (!cp.classList.contains('in') || fin) return; cp.classList.add('op'); open(pts); }; auto = function () { cp.classList.add('in', 'op'); open(pts); }; }
+    else if (st === 'rocket') { var rk = H('button', 'dfxrk', '<span class="r">🚀</span><span class="pw"><i></i></span>'), hold = 0, t0 = 0, iv = 0; S.appendChild(rk); var bar = rk.querySelector('.pw i');
+      var go = function () { if (fin) return; clearInterval(iv); rk.classList.add('go'); setTimeout(function () { S.appendChild(H('div', 'dfxfw', '🎆')); open(pts, '🎆 '); }, 700); };
+      rk.addEventListener('pointerdown', function (e) { if (fin) return; e.preventDefault(); t0 = Date.now(); clearInterval(iv); iv = setInterval(function () { var r = Math.min(1, (Date.now() - t0) / 1200); bar.style.width = (r * 100) + '%'; rk.classList.toggle('sh', r > .3); if (r >= 1) go(); }, 40); });
+      var up = function () { clearInterval(iv); if (fin) return; if (Date.now() - t0 >= 600) go(); else { bar.style.width = '0'; rk.classList.remove('sh'); } }; rk.addEventListener('pointerup', up); rk.addEventListener('pointercancel', up); auto = go; }
+  };
+  /* 👑 傳說 寶箱（只 有 🔦 記憶 解碼 長 句子 成功）：全 螢幕 金光、彩虹 光環、煙火、點 5 下、金幣 雨＋「你 的 努力 有 價值！」*/
+  D.legend = function (dr, why, done) { D.open++; var tap = 0, fin = 0;
+    var o = H('div', 'dfxch2 dfxlg ch-legend', '<div class="dim"></div><div class="lgfw"></div><div class="why">🔦 記憶 解碼：長 句子 憑 記憶 <b>一次 全對！</b></div><div class="nm lgn">👑 傳說 寶箱 降臨！</div>' +
+      '<div class="drop"><div class="rays"></div><div class="ring"></div><div class="bx">' + D.CHEST(4, 0) + '</div></div><div class="tap">👆 點 寶箱 5 下 打開！ <span class="d"><i></i><i></i><i></i><i></i><i></i></span></div><div class="pz"></div><div class="lgw"></div>');
+    document.body.appendChild(o); var bx = o.querySelector('.bx'), dots = o.querySelectorAll('.tap i'), fw = o.querySelector('.lgfw');
+    for (var k = 0; k < 8; k++) { var f = H('span', 'lgb', ['🎆', '🎇', '✨', '🌟'][k % 4]); f.style.left = (8 + k * 12) + '%'; f.style.top = (10 + (k % 3) * 22) + '%'; f.style.animationDelay = (k * .35) + 's'; fw.appendChild(f); }
+    function openIt() { if (fin) return; fin = 1; clearTimeout(au); o.classList.add('op'); bx.innerHTML = D.CHEST(4, 1); o.querySelector('.tap').style.visibility = 'hidden'; coins(o.querySelector('.drop'), 36, 4);
+      for (var i = 0; i < 26; i++) { var r = H('span', 'lgrain', i % 3 ? '🪙' : '💎'); r.style.left = (Math.random() * 100) + '%'; r.style.animationDelay = (Math.random() * 1.4) + 's'; o.appendChild(r); }
+      o.querySelector('.pz').innerHTML = '🪙 ＋' + dr.p + '<small>遊戲 積分（最 高 等級）</small>'; o.querySelector('.lgw').textContent = '💪 專心 記住 長 句子 ＝ 真 本事！你 的 努力 有 價值！';
+      setTimeout(function () { o.classList.add('out'); setTimeout(function () { if (o.parentNode) o.parentNode.removeChild(o); done(dr.p); }, 380); }, window.__NOGO ? 40 : 3600); }
+    bx.onclick = function () { if (fin) return; tap++; if (dots[tap - 1]) dots[tap - 1].classList.add('on'); bx.classList.remove('hit'); void bx.offsetWidth; bx.classList.add('hit', 'h' + Math.min(3, tap)); if (tap >= 5) setTimeout(openIt, 250); };
+    var au = setTimeout(openIt, window.__NOGO ? 60 : 9000); };
+
+  /* ══ 2026-11-03 第四十二次 第 3-(1)(2)(3) 點：拖曳 題 開始 前 的 秒懂 動畫「🎁 寶箱 怎麼 拿？」（現場任務 也 演，老師 選）
+     每一位 學生 第一次 ＝ 4 幕 完整（約 22 秒，有〔⏸️ 暫停〕〔🔁 再播一次〕〔🐢 慢速〕，演完 才 能 按）；之後 每 一回 ＝ 1 幕 重點（約 5 秒）。 ══ */
+  D.inKey = function () { var A = window.DEC && DEC.A; return 'dfx_in_' + (location.pathname.indexOf('midterm') >= 0 ? 'g4' : 'g3') + '_' + ((A && A.sid && A.sid()) || '0'); };
+  D.needIn = function () { if (window.__NODFXI) return false; return D.inR !== window.R; };
+  D.intro = function (done) { D.inR = window.R; var seen = false; try { seen = !!localStorage.getItem(D.inKey()); } catch (e) { }
+    var C = function (t) { return '<span class="ich">' + D.CHEST(t, 0) + '</span>'; };
+    var SL = [
+      ['🎁 怎麼 拿到 寶箱？', '<div class="i1"><span class="sl">我的</span><span class="sl">名字</span><span class="sl">是</span><span class="sl">Bill</span></div><div class="itm"><i></i></div><div class="i1c">' + C(2) + '</div>', '① 每一格 都 放對（一次 全對）＋ ② ⏱ 時間 到 以前 完成 ➜ 才 有 機會 掉 下 寶箱'],
+      ['📈 愈 難 ＝ 獎勵 愈 豐盛', '<div class="i2"><span><b>短 句子</b><em>🙂</em><small>沒有 寶箱</small></span><span><b>中等</b>' + C(0) + '<small>小 獎勵</small></span><span><b>很 難</b>' + C(2) + '<small>大 獎勵</small></span><span class="lg"><b>🔦 長 句子 記憶</b>' + C(4) + '<small>👑 傳說 獎勵</small></span></div>', '格子 愈 多、陷阱 方塊 愈 多、憑 記憶 ➜ 寶箱 愈 好'],
+      ['🚫 隨便 亂 放 ＝ 什麼 都 沒有', '<div class="i3"><span class="sl x">她</span><span class="sl x">是的</span><span class="sl x">年紀</span><span class="no">❌</span><span class="ich nob">' + D.CHEST(0, 0) + '<b>🚫</b></span></div>', '💪 想要 得到，先 付出 對等 的 努力：看 清楚、想 清楚，再 放'],
+      ['🎉 每一次 驚喜 都 不一樣', '<div class="i4">' + ['🎁', '🃏', '🪙', '🥚', '🎰', '🎈', '🚀', '👑'].map(function (x, i) { return '<span style="animation-delay:' + (i * .35) + 's">' + x + '</span>'; }).join('') + '</div>', '答對 難題 才 知道 這一次 是 哪一種！（只 加 遊戲 積分，不 影響 100 分）']];
+    var L = seen ? [['🎁 寶箱 的 規則', '<div class="i2"><span><b>簡單</b><em>🙂</em><small>沒有</small></span><span><b>難</b>' + C(2) + '<small>大 獎勵</small></span><span class="lg"><b>🔦 記憶</b>' + C(4) + '<small>👑 傳說</small></span></div>', '一次 全對＋時間 內 ➜ 愈 難 愈 豐盛；隨便 放 ＝ 沒有']] : SL;
+    var o = H('div', 'dfxin', '<div class="ib"><div class="ip"></div><div class="iw"></div><div class="ia"></div><div class="ic"></div><button class="igo" disabled>🔒 看完 才 能 按</button></div>');
+    document.body.appendChild(o); var ip = o.querySelector('.ip'), iw = o.querySelector('.iw'), ia = o.querySelector('.ia'), go = o.querySelector('.igo'), TM = window.ACTL ? ACTL.T : function (f, m) { return setTimeout(f, m); };
+    var D1 = window.__NOGO ? 30 : 5600;
+    function run() { go.disabled = true; go.className = 'igo'; go.textContent = '🔒 看完 才 能 按'; show(0); }
+    function show(k) { var s = L[k]; ip.textContent = (k + 1) + ' ／ ' + L.length; iw.innerHTML = '<div class="ih">' + s[0] + '</div>'; ia.innerHTML = '<div class="iv iv' + (seen ? 2 : k + 1) + '">' + s[1] + '</div><div class="it">' + s[2] + '</div>';
+      TM(function () { if (k + 1 < L.length) show(k + 1); else { go.disabled = false; go.className = 'igo rdy'; go.textContent = '▶ 我 懂了，開始！'; } }, seen ? Math.min(D1, 4200) : D1); }
+    if (window.ACTL) ACTL.on(o.querySelector('.ic'), run); run();
+    go.onclick = function () { if (go.disabled) return; try { localStorage.setItem(D.inKey(), '1'); } catch (e) { } if (window.ACTL) ACTL.off(); o.remove(); done(); }; };
   return D;
 })();
 
@@ -3493,7 +3667,7 @@ var RVA=(function(){function RVASRC() {
   function read(text, v, cells, done, rate) {
     var S = RVA.S; stopAu(); var my = S.rid, f = RVA.A.aud(text, v || ''), w = cells.map(function (c) { return Math.max(1, (c.getAttribute('data-w') || '').replace(/[^A-Za-z0-9]/g, '').length) + 1; }), tot = w.reduce(function (a, b) { return a + b; }, 0) || 1;
     function hl(r) { var acc = 0, k = -1; for (var i = 0; i < w.length; i++) { acc += w[i]; if (r * tot < acc) { k = i; break; } } cells.forEach(function (c, i) { c.classList.toggle('spk', i === k); }); }
-    var fin = function () { if (!RVA.S || my !== RVA.S.rid) return; cells.forEach(function (c) { c.classList.remove('spk'); }); if (done) done(); };
+    var fired = 0, fin = function () { if (!RVA.S || my !== RVA.S.rid || fired) return; fired = 1; cells.forEach(function (c) { c.classList.remove('spk'); }); if (done) done(); };
     var est = function () { var s = performance.now(), D = Math.max(1200, tot * 95) * (S.slow ? 1.4 : 1); try { var u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = S.slow ? .6 : .82; speechSynthesis.speak(u); } catch (e) { }
       (function lp() { if (!RVA.S || my !== RVA.S.rid) return; if (S.pause) { s += 16; requestAnimationFrame(lp); return; } var r = (performance.now() - s) / D; if (r >= 1) { fin(); return; } hl(r); requestAnimationFrame(lp); })(); };
     if (!f) { est(); return; }
@@ -3552,6 +3726,7 @@ var RVA=(function(){function RVASRC() {
   /* ② 一頁 一個 重點 */
   function scene(i) { var S = RVA.S, sp = S.spec, c = sp.sc[i]; S.i = i; S.part = 0; S.misd = 0; $id('rvc').classList.remove('hid'); nxLock();
     $id('rvp').textContent = '📍 ' + (i + 1) + ' ／ ' + sp.sc.length;
+    if (c.mag) { magScene(i, c); return; }
     var st = $id('rvs'); st.innerHTML = ''; var card = h('div', 'rvcard' + (c.t2 ? ' eq' : ''), '');
     card.appendChild(h('div', 'rvh', '<span>重點 ' + (i + 1) + '</span>' + esc(c.h)));
     if (c.pic) card.appendChild(h('div', 'rvpic', c.pic));
@@ -3567,14 +3742,54 @@ var RVA=(function(){function RVASRC() {
     if (c.mis && w2) w2.classList.add('rvwait');
     (function pop() { if (c.mis && k === k1 && !S.misd) { S.misd = 1; T(function () { misShow(card, c); T(function () { w2.classList.remove('rvwait'); pop(); }, 2600); }, 400); return; }
       if (k < ks.length) { ks[k].classList.add('in'); k++; T(pop, 330); return; } S.misd = 0; T(function () { readS(i, 0); }, 350); })(); }
+  /* 2026-11-03 第四十二次 第 7 點（老師）：🪄 直述句 ➜ 問句 魔法 變身（He is a teacher. ➜ Is he a teacher?）
+     ① 一個 字 一張 彩色 卡（英文＋正下方 中文）唸 直述句 ➜ ② 🪄 魔杖 掃過 He、is ➜ ③ is 跳到 最前面 變 Is（大寫 I 發亮）、He 變 he 緊跟 在 Is 後面
+     ➜ ④ 句點 . 飛起來 轉 一圈 變成 ? ➜ ⑤ 中文 順序 不變，句點 變成「嗎？」➜ ⑥ 唸 問句（唸到 哪 亮到 哪）➜ ⑦ 三個 關鍵 一起 亮 */
+  var MAGC = { he: '#1565C0', she: '#AD1457', is: '#C98A00', a: '#4E6E8E', p: '#5A5A66' };
+  function magScene(i, c) { var TT = function (f, ms) { T(f, ms * (window.__RVAUTO ? .15 : 1)); }, S = RVA.S, sp = S.spec, st = $id('rvs'); st.innerHTML = '';
+    var card = h('div', 'rvcard rvmag', ''); card.appendChild(h('div', 'rvh', '<span>重點 ' + (i + 1) + '</span>' + esc(c.h)));
+    var t = c.t.map(function (p) { return [String(p[0]).replace(/[.?!]$/, ''), p[1]]; }), pn = /\?$/.test(c.en) ? '?' : '.';
+    var stage = h('div', 'mgst', ''), en = h('div', 'mgen', ''), zh = h('div', 'mgzh keepsp', ''), cap = h('div', 'mgcap', ''), wand = h('div', 'mgwd', '🪄');
+    var col = function (w) { w = w.toLowerCase(); return MAGC[w] || (w === 'a' || w === 'an' ? MAGC.a : '#6A3FB0'); };
+    var cards = t.map(function (p) { var k = h('span', 'mgk', '<b>' + ap(p[0]) + '</b><i>' + esc(p[1]) + '</i>'); k.style.background = col(p[0]); k.setAttribute('data-w', p[0]); en.appendChild(k); return k; });
+    var pc = h('span', 'mgk mgp', '<b>' + pn + '</b><i>　</i>'); pc.style.background = MAGC.p; en.appendChild(pc);
+    var zs = t.map(function (p) { var z = h('span', 'mgz', esc(p[1])); z.style.color = col(p[0]); zh.appendChild(z); return z; }), zp = h('span', 'mgz mgzp', '。'); zh.appendChild(zp);
+    stage.appendChild(cap); stage.appendChild(en); stage.appendChild(h('div', 'mgzl', '中文')); stage.appendChild(zh); stage.appendChild(wand); card.appendChild(stage);
+    var sum = h('div', 'mgsum', '<span>① <b>Is</b> 跳到 最前面（I 大寫）</span><span>② <b>' + esc(t[0][0].toLowerCase()) + '</b> 緊跟 在 Is 後面</span><span>③ <b>.</b> 變成 <b>?</b>　中文 加「嗎」</span>'); card.appendChild(sum);
+    card.appendChild(h('div', 'rvcnt', S.once ? '🔊 <i>1</i>' : '🔊 <i>1</i><i>2</i>'));
+    st.appendChild(card); fit(card);
+    var all = cards.concat([pc]), k = 0, say = function (m) { cap.innerHTML = m; cap.classList.remove('in'); void cap.offsetWidth; cap.classList.add('in'); };
+    var cnt = function (n) { var q = card.querySelectorAll('.rvcnt i'); q[n] && q[n].classList.add('on'); };
+    var iH = 0, iIs = 1;   /* 第 1 個 字 ＝ He／She、第 2 個 ＝ is */
+    function flip(els, fn) { var a = els.map(function (e) { return e.getBoundingClientRect(); }); fn(); els.forEach(function (e, j) { var b = e.getBoundingClientRect(); e.style.transition = 'none'; e.style.transform = 'translate(' + (a[j].left - b.left).toFixed(1) + 'px,' + (a[j].top - b.top).toFixed(1) + 'px)'; void e.offsetWidth; e.style.transition = 'transform 1.1s cubic-bezier(.45,1.5,.5,1)'; e.style.transform = ''; }); }
+    (function pop() { if (k < all.length) { all[k].classList.add('in'); if (zs[k]) zs[k].classList.add('in'); if (k === all.length - 1) zp.classList.add('in'); k++; TT(pop, 380); return; }
+      say('📢 直述句：在 說 一件 事'); TT(step1, 400); })();
+    function step1() { cnt(0); read(c.en, c.v, cards, function () { pc.classList.add('pp'); TT(step2, 900); }); }
+    function step2() { say('🪄 加 一個 魔法 ➜ 變成 問句！'); stage.classList.add('wave');
+      var a = cards[iH].getBoundingClientRect(), b = cards[iIs].getBoundingClientRect(), r = stage.getBoundingClientRect();
+      wand.style.left = (a.left - r.left - 20) + 'px'; wand.style.top = (a.top - r.top - 50) + 'px'; wand.classList.add('go'); wand.style.setProperty('--dx', (b.right - a.left) + 'px');
+      cards[iH].classList.add('glow'); cards[iIs].classList.add('glow');
+      TT(step3, 1700); }
+    function step3() { say('① <b>Is</b> 跳到 最前面　② <b>' + esc(t[iH][0].toLowerCase()) + '</b> 緊跟 在 Is 後面'); var A = cards[iH], B = cards[iIs];
+      flip([A, B], function () { en.insertBefore(B, A); });
+      TT(function () { var bA = A.querySelector('b'), bB = B.querySelector('b'); bA.innerHTML = ap(t[iH][0].charAt(0).toLowerCase() + t[iH][0].slice(1)); bB.innerHTML = '<span class="mgcp">' + esc(t[iIs][0].charAt(0).toUpperCase()) + '</span>' + esc(t[iIs][0].slice(1)); A.setAttribute('data-w', t[iH][0].toLowerCase()); B.setAttribute('data-w', 'Is'); B.classList.add('cap'); }, 650);
+      TT(step4, 2600); }
+    function step4() { say('③ 句點 <b>.</b> 變成 問號 <b>?</b>'); pc.classList.remove('pp'); pc.classList.add('fly'); TT(function () { pc.querySelector('b').textContent = '?'; pc.classList.add('q'); }, 600); TT(step5, 2400); }
+    function step5() { say('中文：順序 不變，最後 加 <b>嗎</b>'); zp.innerHTML = '<b class="mgma">嗎</b>？'; zp.classList.add('ma'); TT(step6, 2400); }
+    function step6() { cards.forEach(function (x) { x.classList.remove('glow'); }); say('🔊 ' + esc(c.en2));
+      var ord = [].slice.call(en.querySelectorAll('.mgk')).filter(function (x) { return x !== pc; });
+      cnt(0); read(c.en2, c.v2 != null ? c.v2 : c.v, ord, function () { pc.classList.add('pp'); if (S.once) { fin(); return; } TT(function () { cnt(1); read(c.en2, c.v2 != null ? c.v2 : c.v, ord, fin); }, 700); }); }
+    function fin() { sum.classList.add('on'); card.classList.add('z'); say('✨ 變身 完成！'); card.appendChild(h('div', 'rvz keepsp', esc(ZS(c.z)))); if (c.n) card.appendChild(h('div', 'rvn', '💡 ' + c.n)); fit(card); TT(function () { slot(2 * i + 1, function () { nxOpen(); }); }, 900); } }
   /* 唸 第 n 次（等句 ＝ 上面 一行 再 下面 一行）*/
   function readS(i, n) { var S = RVA.S, c = S.spec.sc[i], card = $id('rvs').querySelector('.rvcard'); if (!card) return;
     var cnt = card.querySelectorAll('.rvcnt i'); cnt[n] && cnt[n].classList.add('on');
     var rows = card.querySelectorAll('.rvrow'), c1 = [].slice.call(rows[0].children), fin = function () { if (n === 0) { card.classList.add('z'); T(function () { order(card, c); }, 500); } T(function () { slot(2 * i + n, function () { if (n === 0 && !S.once) T(function () { readS(i, 1); }, 650); else T(function () { nxOpen(); }, 400); }); }, n === 0 ? 900 : 500); };
     read(c.en, c.v, c1, function () { if (rows[1]) T(function () { read(c.en2, c.v2 != null ? c.v2 : c.v, [].slice.call(rows[1].children), fin); }, 450); else fin(); }); }
   /* 2026-11-03 第四十一次（老師 建議 1 乙）：學生 自己 按〔▶ 進入 下一頁〕；這一頁 全部 演完、唸完 才 解鎖（不會 看 到 睡著，也 不能 跳過）*/
-  function nxLock() { var b = $id('rvnext'); if (!b) return; b.disabled = true; b.classList.remove('rdy'); b.innerHTML = '🔒 看完 才 能 按'; }
-  function nxOpen() { var S = RVA.S, b = $id('rvnext'); if (!S || !b) return; if (window.__RVAUTO) { nextS(); return; } b.disabled = false; b.classList.add('rdy'); b.innerHTML = S.i + 1 < S.spec.sc.length ? '▶ 進入 下一頁' : '✅ 看完 了'; }
+  function nxLock() { var b = $id('rvnext'); if (!b) return; b.disabled = true; b.classList.remove('rdy', 'nud'); clearInterval(b._nud); b.innerHTML = '🔒 看完 才 能 按'; }
+  function nxOpen() { var S = RVA.S, b = $id('rvnext'); if (!S || !b) return; if (window.__RVAUTO) { nextS(); return; } b.disabled = false; b.classList.add('rdy'); b.innerHTML = S.i + 1 < S.spec.sc.length ? '▶ 進入 下一頁' : '✅ 看完 了';
+    /* 2026-11-03 第四十二次（老師）：停 太 久 不 按〔▶ 進入 下一頁〕＝ 每 15 秒 輕輕 放大 一次 提醒（暫停 的 時候 不 提醒、不 自己 換頁）*/
+    clearInterval(b._nud); b._nud = setInterval(function () { if (!b.isConnected) { clearInterval(b._nud); return; } if (!RVA.S || b.disabled || RVA.S.pause) return; b.classList.remove('nud'); void b.offsetWidth; b.classList.add('nud'); }, window.__RVNUD || 15000); }
   function nextS() { var S = RVA.S; if (S.i + 1 < S.spec.sc.length) scene(S.i + 1); else finish(); }
   /* 這個 位置 有 排 突擊 測驗 嗎？ */
   function slot(s, go) { var S = RVA.S; if (S.plan[s] == null) { go(); return; } var qi = S.plan[s]; delete S.plan[s]; S.qpg = (s - 1) / 2 + 1;
@@ -4105,9 +4320,9 @@ function sayList(L,done){var pv=PD;stopSay();var cb=pv||done?function(){if(pv)pv
 function sayT(t,done){var v=/^(Hi|Hello), I'm (\w+)/.exec(t);sayList([[v&&BOYS.indexOf(v[2])>=0?'m':'',t]],done)}
 /* ── 狀態 ── */
 var G=null,R=null,TM={t0:0,used:0,run:false,T:15,raf:0},BUSY=false;
-function lobby(){if(CR&&CR.cfg&&CR.cfg.m==='sync')return;document.body.classList.remove('lwm');decClose();coopStop();$('#xq').classList.remove('on');if(R&&!R.sent&&R.Q&&R.Q.length&&!(R.x&&!R.crs))rec1();   /* 25／50 題 中途 離開 ＝ 存 進度（xSave），做完 才 送 */
+function lobby(){if(CR&&CR.cfg&&CR.cfg.m==='sync')return;document.body.classList.remove('lwm');decClose();coopStop();$('#xq').classList.remove('on');if(R&&!R.sent&&R.Q&&R.Q.length&&!(R.x&&!R.crs))rec1();if(R&&R.x&&!R.crs&&!R.sent)recPart();   /* 25／50 題 中途 離開 ＝ 存 進度（xSave），做完 才 送 */
  /* 2026-10-26 第二十八次 第 1、2 點：大廳 最上面〔📝 25 題〕〔📝 50 題〕（10 關 連著 玩）*/
- var xk0=XBK;$('#xrow').innerHTML=[[25,'A'],[50,'A'],[25,'B'],[50,'B']].map(function(a){XBK=a[1];var n=a[0],bk=' data-bk="'+a[1]+'"',b=ls('g3m_bx'+XS()+n),v=xLoad(n),nm=XNM(n);if(v)return '<div class="xbw"><button class="xb xr" data-xr="'+n+'"'+bk+'><b>▶ 繼續 '+nm+'</b><small>已經 做到 第 '+v.Q.length+' ／ '+n+' 題 · 從 第 '+(v.Q.length+1)+' 題 接著 做</small></button><button class="xb2" data-x="'+n+'"'+bk+'>🔄 重新 開始</button></div>';
+ var xk0=XBK;$('#xrow').innerHTML=[[25,'A'],[50,'A'],[25,'B'],[50,'B']].map(function(a){XBK=a[1];var n=a[0],bk=' data-bk="'+a[1]+'"',b=ls('g3m_bx'+XS()+n),v=xLoad(n),nm=XNM(n);if(!v)xRemote(n,a[1],xRemoteRe);if(v)return '<div class="xbw"><button class="xb xr" data-xr="'+n+'"'+bk+'><b>▶ 繼續 '+nm+'</b><small>已經 做到 第 '+v.Q.length+' ／ '+n+' 題 · 從 第 '+(v.Q.length+1)+' 題 接著 做</small></button><button class="xb2" data-x="'+n+'"'+bk+'>🔄 重新 開始</button></div>';
    return '<button class="xb" data-x="'+n+'"'+bk+'><b>📝 '+nm+'</b><small>11 關 連著 玩 · 每題 '+(100/n)+' 分 · 滿分 100</small>'+(b?'<span class="best">🏆 最高 '+b+' 分</span>':'')+'</button>'}).join('');XBK=xk0;document.body.classList.remove('ing');QID++;stopSay();cancelAnimationFrame(TM.raf);TM.run=false;$('#stage').innerHTML='';$('#go').classList.remove('on');$('#wp').classList.remove('on');$('#game').hidden=true;$('#endv').hidden=true;$('#lobby').hidden=false;$('#fb').classList.remove('on');
  $('#grid').innerHTML=GM.map(function(g,i){var b=ls('g3m_best_'+g.id);return '<button class="gc" data-g="'+i+'" style="--c1:'+g.c1+';--c2:'+g.c2+'"><span class="bd">'+g.ic+'</span><span><b>'+(i+1)+'　'+g.nm+'</b><small>'+g.how+'</small>'+(b?'<span class="best">🏆 最高 '+b+' 分</span>':'')+'</span></button>'}).join('');
  window.scrollTo(0,0)}
@@ -4187,13 +4402,17 @@ function hudX(){$('#gnm').textContent='第 '+(R.lv+1)+' 關 · '+G.ic+' '+G.nm;s
    大廳〔▶ 繼續 25 題 挑戰〕＝ 從 下一題 接著 做（分數、答對 幾題 接著 算），做完 才 送 成績；〔🔄 重新 開始〕＝ 丟掉 存 的。
    3-(2)：這一位 做過 的 題目（g3m_seen_5碼）先 不出，全部 做過 才 重新 洗 */
 function xKey(n){return 'g3m_xs'+n+XS()+'_'+((typeof SCID!=='undefined'&&SCID)||'0')}
-function xSave(){if(!R||!R.x||R.crs||DUO)return;try{ls(xKey(R.x),JSON.stringify({x:R.x,qi:R.qs.map(function(q){return XA().indexOf(q)}),lvOf:R.lvOf,cnt:R.cnt,nsim:R.nsim,score:R.score,res:R.res,wrong:R.wrong,Q:R.Q,t0:R.t0,t:Date.now()}))}catch(e){}}
+function xSave(){if(!R||!R.x||R.crs||DUO)return;try{ls(xKey(R.x),JSON.stringify({pu:R.pu,x:R.x,qi:R.qs.map(function(q){return XA().indexOf(q)}),lvOf:R.lvOf,cnt:R.cnt,nsim:R.nsim,score:R.score,res:R.res,wrong:R.wrong,Q:R.Q,t0:R.t0,t:Date.now()}))}catch(e){}}
 function xLoad(n){try{var v=JSON.parse(ls(xKey(n))||'null');if(!v||v.x!==n||!v.Q||v.Q.length>=v.qi.length||Date.now()-v.t>14*864e5||v.qi.some(function(i){return i<0||!XA()[i]}))return null;return v}catch(e){return null}}
+/* 2026-11-03 第四十二次 第 5 點（老師 選「長 的 任務 換 平板 也 可以」）：這台 平板 沒有 存 ＝ 問 伺服器 有沒有 做到 一半 的 進度 ➜ 有 ＝ 存 到 這台、按鈕 變〔▶ 繼續〕*/
+function xRemote(n,bk,cb){var XRM=window.XRM||(window.XRM={}),id=(typeof SCID!=='undefined'&&SCID)||'',set='g3gm_g3m-'+(bk==='B'?'n':bk==='H'?'h':'x')+n,k=set+'|'+id;if(!id||typeof scProg!=='function'||XRM[k])return;XRM[k]=1;
+  scProg(set,function(b){if(!b)return;var o=XBK;XBK=bk;var ok=false;try{if(!xLoad(n)){localStorage.setItem(xKey(n),b);ok=!!xLoad(n);if(!ok)localStorage.removeItem(xKey(n))}}catch(e){}XBK=o;if(ok&&cb)cb()})}
+function xRemoteRe(){if(R&&R.Q&&R.Q.length&&!R.sent)return;if(document.querySelector('.xrow'))lobby()}
 function xDel(n){try{localStorage.removeItem(xKey(n))}catch(e){}}
 function xSeen(){try{var a=JSON.parse(ls('g3m_seen'+XS()+'_'+((typeof SCID!=='undefined'&&SCID)||'0'))||'[]'),o={};if(a.length>=XA().length)a=[];a.forEach(function(i){o[i]=1});return o}catch(e){return {}}}
 function xSeenAdd(i){if(i<0)return;try{var k='g3m_seen'+XS()+'_'+((typeof SCID!=='undefined'&&SCID)||'0'),a=JSON.parse(ls(k)||'[]');if(a.length>=XA().length)a=[];if(a.indexOf(i)<0)a.push(i);ls(k,JSON.stringify(a))}catch(e){}}
 function resumeX(n){if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();resumeX(n)});return}var v=xLoad(n);if(!v){startX(n);return}
- document.body.classList.add('ing');DCG.B=XBX().dc;LVS=v.cnt.length>GM.length?[DCG].concat(GM):GM;R={x:v.x,bk:XBK,pt:100/v.x,i:-1,qs:v.qi.map(function(i){return XA()[i]}),lvOf:v.lvOf,cnt:v.cnt,nsim:v.nsim,k:v.Q.length-1,lv:-1,gk:-1,score:v.score,streak:0,res:v.res,wrong:v.wrong||[],Q:v.Q,t0:v.t0};
+ document.body.classList.add('ing');DCG.B=XBX().dc;LVS=v.cnt.length>GM.length?[DCG].concat(GM):GM;R={x:v.x,bk:XBK,pt:100/v.x,i:-1,qs:v.qi.map(function(i){return XA()[i]}),lvOf:v.lvOf,cnt:v.cnt,nsim:v.nsim,k:v.Q.length-1,lv:-1,gk:-1,score:v.score,streak:0,res:v.res,wrong:v.wrong||[],Q:v.Q,t0:v.t0,pu:v.pu};
  $('#lobby').hidden=true;$('#endv').hidden=true;$('#game').hidden=false;$('#sc').textContent=R.score;$('#cmb').className='cmb';$('#cmb').textContent='';$('#stage').innerHTML='';next()}
 function xAsk(){if(DUO){var D=DUO;DUO=null;SCID=D.id[0];document.body.classList.remove('duoon');lobby();return}if(!R||!R.x||R.crs){lobby();return}xSave();tPause();var n=R.Q.length;$('#xqt').innerHTML='已經 做 了 <b>'+n+'</b> 題，都 <b>存好 了</b>。<br>下次 按〔▶ 繼續 '+XNM(R.x)+'〕，從 第 '+(n+1)+' 題 接著 做。';$('#xq').classList.add('on')}
 /* 25／50 題 挑戰：10 種 遊戲 平均 抽（25 ＝ 5 關 3 題、5 關 2 題；50 ＝ 每關 5 題）；🔁 類似 ＝ 30%（25 題 8 題、50 題 15 題），平均 分 在 各 關；每一次 重新 抽 */
@@ -4224,11 +4443,17 @@ function tick(){cancelAnimationFrame(TM.raf);var l=tLeft();$('#tmb').style.trans
 /* 成績（第二十七次）：一題 一筆 [答對, 選了 第幾個（0 ＝ 正解、-1 ＝ 時間到、1 ＝ 其他 錯的）, 秒數, 1 秒 內 就 按, 剩下, 題庫 第幾題] */
 function qRec(ok,pick){if(!R||R.Q.length>R.k)return;var ms=Date.now()-(R.ts||Date.now()),o=R.q.o,ci=ok?0:pick==null?-1:1;
   if(!ok&&o&&pick!=null){try{var pj=JSON.stringify(pick);for(var i=1;i<o.length;i++)if(JSON.stringify(o[i])===pj||o[i]===pick){ci=Math.min(3,i);break}}catch(e){}}   /* 寫字題 的 pick 有 畫布（不能 轉 文字）➜ 算 1 */
-  R.Q.push([ok?1:0,ci,Math.round(ms/100)/10,pick!=null&&ms<1000?1:0,ok?Math.round(tLeft()/TM.T*1000)/1000:R.x&&G.id==='dc'?Math.round((R.frac||0)*1000)/1000:0,R.x?XA().indexOf(R.q):G.B.indexOf(R.q)]);   /* 🔓 解碼 任務 答錯 ＝ 第 5 格 放 放對 幾成（伺服器 照 這個 算 分）*/crProg(ok);if(R.x&&!R.crs){xSeenAdd(XA().indexOf(R.q));setTimeout(xSave,0)}}   /* 25／50 題：題庫 ＝ 挑戰 題庫（10 種 接起來）*/
-function rec1(){try{if(!R||R.sent||!R.Q.length||typeof scLive!=='function'||!scLive())return false;var fast=0;R.Q.forEach(function(x){fast+=x[3]});if(fast*2>R.Q.length)return false;R.sent=1;
-  var u=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  R.Q.push([ok?1:0,ci,Math.round(ms/100)/10,pick!=null&&ms<1000?1:0,ok?Math.round(tLeft()/TM.T*1000)/1000:R.x&&G.id==='dc'?Math.round((R.frac||0)*1000)/1000:0,R.x?XA().indexOf(R.q):G.B.indexOf(R.q)]);   /* 🔓 解碼 任務 答錯 ＝ 第 5 格 放 放對 幾成（伺服器 照 這個 算 分）*/crProg(ok);if(R.x&&!R.crs){xSeenAdd(XA().indexOf(R.q));setTimeout(xSave,0)}if(R.Q.length%5===0)setTimeout(recPart,0)}   /* 25／50 題：題庫 ＝ 挑戰 題庫（10 種 接起來）*/
+/* 2026-11-03 第四十二次 第 5 點（老師）：做到 一半 ＝ 立刻 存＋送 給 老師（每 5 題、按〔先 離開〕、切到 別的 畫面）；老師看板「任務只完成到第 N 題」；
+   同一次 ＝ 同一個 編號（R.pu），做完 的 那一筆 蓋掉 做到 一半 的；25／50 題 多 送 進度（換 平板 也 能 接著 做）*/
+function recTot(){return R?(R.x||(R.qs?R.qs.length:0)):0}
+function recPart(){try{if(!R||R.sent||R.crs||DUO||!R.Q||!R.Q.length||typeof scLive!=='function'||!scLive()||R.Q.length>=recTot())return;var r=recObj();r.part=recTot();if(R.x){xSave();try{r.prog=ls(xKey(R.x))||''}catch(e){}}scQAdd(r)}catch(e){}}
+function recObj(){if(!R.pu)R.pu=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);var u=R.pu;
   var Rr={id:SCID,set:R.x?'g3gm_g3m-'+(R.bk==='B'?'n':R.bk==='H'?'h':'x')+R.x:'g3gm_'+crSet()+'-'+G.id,name:R.x?'📝 三年級 複習｜📝 '+XNM(R.x):crName()+'｜'+G.ic+' '+G.nm,m:'g',qs:R.Q,raw:R.score,fix:0,mp:0,mw:0,sec:Math.round((Date.now()-R.t0)/1000),src:window.HOMELW?'home':'school',dev:SCDEV,u:u,t:Date.now()};if(R.x&&CR&&CR.cfg)Rr.lc=1;   /* 第三十八次 第 7 點：現場任務 ＝ 正確率 計分 */
-  var QQ=scGet('q')||[];QQ.push(Rr);scPut('q',QQ.slice(-200));scFlush();return true}catch(e){return false}}
+  return Rr}
+function rec1(){try{if(!R||R.sent||!R.Q.length||typeof scLive!=='function'||!scLive())return false;var fast=0;R.Q.forEach(function(x){fast+=x[3]});if(fast*2>R.Q.length)return false;R.sent=1;
+  var Rr=recObj();if(R.Q.length<recTot()&&!R.fz)Rr.part=recTot();scQAdd(Rr);return true}catch(e){return false}}   /* 現場任務 時間 到（R.fz）＝ 老師 結束 的，算 做完 */
+document.addEventListener('visibilitychange',function(){if(document.hidden)recPart()});addEventListener('pagehide',function(){recPart()});
 function good(el,hold){if(BUSY)return;qRec(1);BUSY=true;tPause();var l=tLeft(),sp=Math.round(900*l/TM.T),cb=Math.min(250,R.streak*50),p=R.x?R.pt:100+sp+cb;   /* 25／50 題：答對 一題 ＝ 4／2 分 */
  R.streak++;R.best=Math.max(R.best||0,R.streak);if(R.x&&R.bmax&&R.bhp>0){R.bhp--;bossHit();bossHud()}R.score=Math.round((R.score+p)*10)/10;R.res[R.k]=1;dots();$('#sc').textContent=R.score;var cm=$('#cmb');if(R.streak>=2){cm.textContent='🔥 連對 '+R.streak;cm.className='cmb on'+(R.streak>=4?' hot':'');void cm.offsetWidth}
  var g=$('#gain');g.innerHTML=R.x?'<b>＋'+p+' 分</b><span>✅ 答對 一題 ＝ '+p+' 分</span>':'<b>＋'+p+'</b><span>✅ 100 ＋ ⚡ 快 '+sp+(cb?' ＋ 🔥 連對 '+cb:'')+'</span>';g.classList.remove('on');void g.offsetWidth;g.classList.add('on');
@@ -4250,7 +4475,7 @@ function gloss(s){var T=toks(s),h='';for(var i=0;i<T.length;i++){var w=T[i];if(/
   h+='<span class="gw'+(/^'/.test(w)?' ct':'')+'"><b>'+esc(w.replace(/'/g,'’'))+esc(p)+'</b><i>'+esc(zhOf(w))+'</i></span>'}return '<div class="gls" id="gls">'+h+'</div>'}
 function miss(pick){if(R.pre){var pf=R.pre;R.pre=null;BUSY=true;tPause();pf(pick,function(){miss(pick)});return}qRec(0,pick);if(R.x&&G.id==='dc'&&R.frac>0){R.score=Math.round((R.score+R.pt*R.frac)*10)/10;$('#sc').textContent=R.score}BUSY=true;tPause();if(R.streak>=2){var cm0=$('#cmb');cm0.textContent='🔥 最高 連對 '+R.best+' 題，已經 記住 了！';cm0.className='cmb on mem'}else $('#cmb').className='cmb';R.streak=0;   /* C42 6B：答錯 不 寫「火 熄了」*/R.res[R.k]=0;dots();var q=R.q,o=FB[G.id](q,pick);R.wrong.push({en:o.say||q.en,show:o.show||q.en,body:o.body,after:o.after,zh:q.zh,sl:o.sl||[['',o.say||q.en]],gi:(G.ic||'')+' '+(G.nm||'')});   /* 第三十七次 第 10 點：錯題 總複習 用 */
  var x=$('#fbx');x.innerHTML='<div class="hd">'+(pick==null?'⏰ 時間到':'❌ 答錯了')+'</div>'+(o.you?'<div class="yp">你的答案：'+o.you+'</div>':'')+
-  (R.x&&R.bmax&&R.bhp>0?'<div class="bsr">👾 魔王 還在：答錯 不扣分 ➜ 💪 下一題 再試一次！</div>':'')+'<div class="ca">✅ 正確答案</div>'+o.body+'<div><span class="tr keepsp">整句：'+esc(ZS(q.zh))+'</span></div>'+
+  (R.x&&R.bmax&&R.bhp>0?'<div class="bsr">👾 魔王 還在：答錯 不扣分 ➜ 💪 下一題 再試一次！</div>':'')+'<div class="ca">✅ 正確答案</div>'+o.body+'<div><span class="tr keepsp">整句：'+(o.zhh||esc(ZS(q.zh)))+'</span></div>'+
   '<div class="ft"><span class="n3" id="n3">'+(o.rep===1?'<span>1</span>':'<span>1</span><span>2</span><span>3</span>')+'</span><button class="say" id="fbs">🔊 再聽</button><span id="nxw"></span></div>';
  $('#fb').classList.add('on');if(o.after)o.after();fbFit();
  var c=0,my=++FBN,REP=o.rep||3;function one(){if(my!==FBN)return;if(c>=REP){var w=$('#nxw');w.innerHTML='<button class="nx" id="fbn">▶ 下一題</button>';
@@ -4539,7 +4764,7 @@ function n6sl(w){return [[(window.ENAUDM||{})[akey(w)]?'M1':'',w]]}   /* 第三�
 DEC.A={aud:aud,stop:stopSay,pause:tPause,go:tGo,busy:function(){return BUSY},sid:function(){return (typeof SCID!=='undefined'&&SCID)||''},ok:function(el){good(el)},bad:function(got,f){R.pick=got;R.frac=f;miss(got)}};
 REN.dc=function(q,st){st.appendChild(H('div','dcu','📘 Unit '+q.u));decRender(q,st)};
 FB.dc=function(q,p){return {you:decYou(q,p)+(R.x&&R.frac>0?'<div class="yp">✅ 放對 '+Math.round(R.frac*q.t.length)+' ／ '+q.t.length+' 個 ➜ 拿 '+(Math.round(R.pt*R.frac*10)/10)+' 分</div>':''),
-  body:'<div class="gls" id="gls">'+q.t.map(function(t){return '<span class="gw'+(/^'/.test(t[0])?' ct':'')+'"><b>'+decEN(t[0])+'</b><i>'+esc(t[1])+'</i></span>'}).join('')+'</div>',say:q.en,sl:[[q.v||'',q.en]]}};
+  body:decGls(q,p),zhh:p&&p.length?decZhM(q,p,ZS(q.zh)):null,say:q.en,sl:[[q.v||'',q.en]]}};   /* 第四十二次 第 3-(5) 點：放錯 的 A 英文 B 中文 C 整句 紅底 框 */
 REN.q7=function(q,st){var parts=q.s.split('___'),se=H('div','sent',esc(parts[0])+'<span class="gap" id="gap">　</span>'+esc(parts[1])),fd=H('div','field');st.appendChild(se);st.appendChild(fd);st.appendChild(H('div','ask','👆 拖 一隻 皮克敏 到 空格'));
   /* 2026-11-01 第三十九次 第 1 點：🧩 樣子＋🎁 神秘 寶箱（隨機 一隻 皮克敏 背 寶箱；放對 ＝ 打開，🪙 只 是 遊戲 積分）*/
   var fx=false&&typeof DFX!=='undefined'&&DFX.on(st),chI=fx?Math.floor((window.__DFXR!=null?+window.__DFXR:Math.random())*q.o.length)%q.o.length:-1,chT=fx?DFX.pickTier():0,chW=null;if(fx){DFX.skin(st);st.classList.add('dfxq')}
@@ -4766,7 +4991,7 @@ if(window.HOME25){XBK='H';document.title='三年級 25 題 闖關';crAuto=functi
  var hmEl=function(){var o=document.getElementById('hm25');if(!o){o=document.createElement('div');o.id='hm25';document.body.appendChild(o)}return o};
  var hmBanner=function(){try{var h=SCH.box().querySelector('h2');if(h)h.innerHTML='📝 三年級 25 題 闖關<br><span style="color:#FFE07A">'+HMS+'</span>'}catch(e){}};
  var hmGo=function(){if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();hmGo()});hmBanner();return}XBK='H';hmEl().hidden=true;if(xLoad(25))resumeX(25);else startX(25)};
- var hmCover=function(){XBK='H';$('#lobby').hidden=true;var o=hmEl(),v=xLoad(25),b=ls('g3m_bxh25');
+ var hmCover=function(){XBK='H';$('#lobby').hidden=true;var o=hmEl(),v=xLoad(25),b=ls('g3m_bxh25');if(!v)xRemote(25,'H',function(){if(!R||!R.Q||!R.Q.length)hmCover()});
    o.innerHTML='<div class="hmw"><div class="hmt">📝 三年級 25 題 闖關</div><div class="hms">'+HMS+'</div>'+
     '<div class="hmk"><span>🔓 句子 解碼 8 題</span><span>🎮 10 種 遊戲 17 題</span><span>⏳ 不限 時間</span><span>🔁 每次 題目 不一樣</span></div>'+
     '<div class="hmb">'+(v?'<button id="hmgo">▶ 繼續 第 '+(v.Q.length+1)+' 題<small>已經 做 了 '+v.Q.length+' ／ 25 題</small></button><button class="b2" id="hmnew">🔄 重新 開始</button>':'<button id="hmgo">▶ 開始 第 1 題</button>')+'</div>'+

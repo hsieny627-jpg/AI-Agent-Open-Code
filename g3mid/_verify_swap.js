@@ -2,7 +2,7 @@
 const { chromium } = require('playwright');
 (async () => { const b = await chromium.launch(); const E = [];
   for (const site of ['g3mid', 'midterm']) for (const vp of [[1024, 768], [820, 1180]]) { const ctx = await b.newContext({ viewport: { width: vp[0], height: vp[1] } }); await ctx.route(/^https?:\/\//, r => r.abort());
-    await ctx.addInitScript(() => { window.__SCORE_TEST_OFF = 1; window.__NOUNLOCK = 1; });
+    await ctx.addInitScript(() => { window.__SCORE_TEST_OFF = 1; window.__NOUNLOCK = 1; window.__NODFXI = 1; window.__NOSNH = 1;   /* 第四十二次：寶箱 說明、貪吃蛇 怎麼玩 在 _verify_42.js 量 */ });
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto('file://' + require('path').join(__dirname, '..') + '/' + site + '/index.html'); await p.waitForTimeout(700);
     await p.evaluate(() => { document.querySelectorAll('#scov,.scfull').forEach(x => x.remove()); var d = document.createElement('div'); d.id = 'tdc'; d.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#000'; document.body.appendChild(d);

@@ -91,7 +91,7 @@ var SC = (function () {
     return { id: id, g: gg, cls: c, seat: s };
   }
   /* 練習次數 ＋1 嗎（2026-10-12 F4）：做完就算；太快亂按超過一半不算；遊戲還要第一次作答 ≧ GMIN 題；記憶配對 ＝ 玩完整場就算（ok 留著給舊的呼叫） */
-  function counts(ok, n, m, fast) { if (m === 'v') return false; if (m === 'mem' || m === 'l' || m === 'lv') return true; if (m === 'g' && n < GMIN) return false; return n > 0 && (+fast || 0) * 2 <= n; }
+  function counts(ok, n, m, fast, pt) { if (m === 'v' || pt) return false;   /* 第四十二次：還 沒 做完 的（pt）不 算 練習次數 */ if (m === 'mem' || m === 'l' || m === 'lv') return true; if (m === 'g' && n < GMIN) return false; return n > 0 && (+fast || 0) * 2 <= n; }
   /* 一筆紀錄練了幾秒 */
   function secOf(r) { if (r.m === 'l' || r.m === 'lv') return 0; if (r.m === 'mem' || r.m === 'v') return +r.sec || 0; if ((+r.fast || 0) * 2 > r.n) return 0;
     var s = 0; for (var i = 0; i < (r.qs || []).length; i++) if (!r.qs[i][3]) s += +r.qs[i][2] || 0; return s; }
@@ -112,20 +112,24 @@ var SC = (function () {
   }
   function num(x) { return x === '' || x == null || isNaN(+x) ? null : +x; }   /* 空白 ＝ 沒有（記憶配對沒有正確率） */
   /* 一列（試算表）➜ 一筆紀錄 */
+  /* 2026-11-03 第四十二次 第 5 點（老師：做到 一半 離開 ＝ 立刻 存、老師 看得到「任務只完成到第 ___ 題」）：記 在 題組名稱 後面（不 加 新 欄位：「作廢」還是 最後 一欄）
+     同一次 作答 ＝ 同一個 編號：伺服器 收到 一樣 的 編號、原本 那一列 還 沒做完 ＝ 用 新 的 蓋過去（做完 的 那一筆 蓋掉 做到 一半 的）*/
+  var PTRE = /｜⏸ 任務只完成到第 (\d+)(?:／(\d+))? 題(?:（沒有 玩完）)?$/;   /* 限時 遊戲（1 分 30 秒）沒有 固定 題數 ＝ part 999 ＝「（沒有 玩完）」*/
+  function PTS(n, t) { return '｜⏸ 任務只完成到第 ' + n + (t >= 999 ? ' 題（沒有 玩完）' : '／' + (t || n) + ' 題'); }
   function fromRow(r) {
     var c = function (k) { return r[CI[k]]; }, q = c('每題'), qs = [];
     try { qs = typeof q === 'string' ? JSON.parse(q || '[]') : (q || []); } catch (e) { qs = []; }
     var t = r[0] instanceof Date ? r[0].getTime() : (typeof r[0] === 'number' ? r[0] : Date.parse(r[0]));
     var id = String(c('5碼')).replace(/\D/g, ''); while (id.length < 5 && id.length) id = '0' + id;
-    var x = c('作廢');
-    return { t: t, id: id, g: +c('年級'), cls: String(c('班級')), seat: +c('座號'), set: String(c('題組')), name: String(c('題組名稱')),
+    var x = c('作廢'), nm = String(c('題組名稱')), pm = PTRE.exec(nm);   /* 2026-11-03 第四十二次 第 5 點：「｜⏸ 任務只完成到第 13／25 題」＝ 還沒 做完 的 那一次 */
+    return { t: t, id: id, g: +c('年級'), cls: String(c('班級')), seat: +c('座號'), set: String(c('題組')), name: pm ? nm.slice(0, pm.index) : nm, pt: pm ? +pm[1] : 0, ptot: pm ? (pm[2] ? +pm[2] : 999) : 0,
       m: TM[c('玩法')] || 'q', n: +c('題數') || 0, ok: +c('答對') || 0, acc: num(c('正確率')), s: num(c('總分百分制')), fix: +c('訂正成功') || 0,
       mp: +c('配對') || 0, mw: +c('翻錯') || 0, sec: +c('秒數') || 0, raw: +c('原始分數') || 0, fast: +c('秒按') || 0,
       src: String(c('來源')), dev: String(c('平板')), u: String(c('編號')), qs: qs,
       x: x === true || String(x).toUpperCase() === 'TRUE' || x === '✔' || x === 'v' || x === 'V' };
   }
   function toRow(R) {
-    var o = { '時間': new Date(R.t), '5碼': R.id, '年級': R.g, '班級': R.cls, '座號': R.seat, '類別': cat(R.set).t, '題組': R.set, '題組名稱': R.name,
+    var o = { '時間': new Date(R.t), '5碼': R.id, '年級': R.g, '班級': R.cls, '座號': R.seat, '類別': cat(R.set).t, '題組': R.set, '題組名稱': R.name + (R.pt ? PTS(R.pt, R.ptot) : ''),
       '玩法': MT[R.m], '題數': noQ(R.m) ? '' : R.n, '答對': noQ(R.m) ? '' : R.ok, '正確率': R.acc == null ? '' : R.acc, '總分百分制': R.s == null ? '' : R.s,
       '訂正成功': R.fix || 0, '配對': R.m === 'mem' ? R.mp : '', '翻錯': R.m === 'mem' ? R.mw : '', '秒數': R.sec || '', '原始分數': R.raw, '秒按': R.fast,
       '來源': R.src, '平板': R.dev, '編號': R.u, '每題': JSON.stringify(R.qs), '作廢': false };
@@ -154,7 +158,8 @@ var SC = (function () {
       acc: noQ(m) ? null : Math.round(ok / Q.length * 100), s: noQ(m) ? null : xN(set) ? Math.min(100, Math.round(xOk(Q) * 1000 / (o.lc === 1 && !/-h25$/.test(set) ? Q.length : xN(set))) / 10) : s100(Q),   /* 2026-11-01 第三十八次 第 7 點：⚡ 現場任務（lc:1）＝ 一律 正確率（答了 幾題 就 算 那幾題；提早 結束 也 公平）*/   /* 2026-10-26 第二十八次：📝 25／50 題 挑戰 ＝ 答對 一題 4／2 分（沒 做完 的 算 0 分）*/ fix: lim(o.fix, 0, 999),
       mp: m === 'mem' ? lim(o.mp, 0, 999) : 0, mw: m === 'mem' ? lim(o.mw, 0, 9999) : 0, sec: m === 'l' ? 0 : lim(o.sec, 0, 3600),
       raw: lim(o.raw, 0, 1e8), fast: f,
-      src: o.src === 'home' ? 'home' : 'school', dev: String(o.dev || '').replace(/[^\w]/g, '').slice(0, 12), u: String(o.u || '').replace(/[^\w]/g, '').slice(0, 24), qs: Q, x: false };
+      src: o.src === 'home' ? 'home' : 'school', dev: String(o.dev || '').replace(/[^\w]/g, '').slice(0, 12), u: String(o.u || '').replace(/[^\w]/g, '').slice(0, 24), qs: Q, x: false,
+      pt: +o.part > Q.length && !noQ(m) ? Q.length : 0, ptot: +o.part > Q.length && !noQ(m) ? lim(o.part, 1, 999) : 0 };   /* 第四十二次 第 5 點：part ＝ 這個 任務 一共 幾題（還 沒 做完 才 送）*/
   }
   /* 🕘 上課 時間／課後 時間（2026-10-26 第二十七次 第 2 點，老師 選 C30 第 1 題 A）：不再 看「用 哪一個 網站」，看「什麼 時候 做 的」（台灣 時間）
      星期一～五 7:40～16:00 ＝ 上課 時間（in）；課後班 400 ＝ 7:40～17:30（老師：下午 5:30 以後 才 算 在家）；其他 ＝ 課後 時間（out） */
@@ -190,7 +195,7 @@ var SC = (function () {
       var p = by[id], A = [], S = [], D = [], PF = [], PT = [], keep = false, cnt = 0, nsets = 0;
       for (var k in p.sets) { var a = p.sets[k], L = a[a.length - 1]; nsets++;
         if (L.acc != null) A.push(L.acc); if (L.s != null) S.push(L.s);   /* 記憶配對沒有正確率、總分 */
-        var perDay = {}; a.forEach(function (r) { if (counts(r.ok, r.n, r.m, r.fast)) { var d = day(r.t); perDay[d] = (perDay[d] || 0) + 1; if (perDay[d] <= CAP) cnt++; } });
+        var perDay = {}; a.forEach(function (r) { if (counts(r.ok, r.n, r.m, r.fast, r.pt)) { var d = day(r.t); perDay[d] = (perDay[d] || 0) + 1; if (perDay[d] <= CAP) cnt++; } });
         var v = a.filter(function (r) { return r.acc != null && r.fast * 2 <= r.n; });
         if (v.length >= 2) { var x = v[v.length - 1].acc, y = v[v.length - 2].acc; if (x === 100 && y === 100) keep = true; else { D.push(x - y); PF.push(y); PT.push(x); } }
       }
@@ -378,7 +383,7 @@ var SC = (function () {
         prev: mineSet.length ? mineSet[mineSet.length - 1].acc : null,
         prevValid: (function () { var a = mineSet.filter(function (r) { return r.fast * 2 <= r.n; }); return a.length ? a[a.length - 1].acc : null; })(),
         best: mineSet.length ? Math.max.apply(null, mineSet.map(function (r) { return r.acc; })) : null,
-        today: mineSet.filter(function (r) { return day(r.t) === day(now) && counts(r.ok, r.n, r.m, r.fast); }).length };
+        today: mineSet.filter(function (r) { return day(r.t) === day(now) && counts(r.ok, r.n, r.m, r.fast, r.pt); }).length };
       /* 遊戲：這個遊戲本班前 10 名（這週，每個人最好的一次：正確率，同分比總分） */
       if (o.gt && boardsOn) out.gtop = gtop(W.filter(function (r) { return r.set === o.set && r.cls === c.cls && r.acc != null; }), c.id);
     }
@@ -554,7 +559,7 @@ var SC = (function () {
     L.forEach(function (r) {
       var d = day(r.t), ck = d + '|' + r.set, fast = (+r.fast || 0) * 2 > r.n;
       var bo = bstAt(r.cls || String(r.id || '').slice(0, 3), r.t, r.set);   /* 🎉 加倍 時段 */
-      if (r.m !== 'lv' && counts(r.ok, r.n, r.m, r.fast)) { cnt[ck] = (cnt[ck] || 0) + 1; if (cnt[ck] <= CAP) xp += Math.round(RPX.rec * bo[1]); }
+      if (r.m !== 'lv' && counts(r.ok, r.n, r.m, r.fast, r.pt)) { cnt[ck] = (cnt[ck] || 0) + 1; if (cnt[ck] <= CAP) xp += Math.round(RPX.rec * bo[1]); }
       if (!days[d]) { days[d] = 1; xp += RPX.day; var w0 = weekStart(r.t); wk[w0] = (wk[w0] || 0) + 1; }
       if (r.m === 'l' || r.m === 'lv' || r.m === 'mem' || fast) return;
       var c = 0;
@@ -617,7 +622,7 @@ var SC = (function () {
   function rpMonHp(i) { return 80 + 40 * Math.max(0, +i || 0); }
   function rpMonAt(m) { m = m || { i: 0, hp: 0 }; return { i: m.i, m: RPMON[m.i % RPMON.length], hp: m.hp, max: rpMonHp(m.i), round: Math.floor(m.i / RPMON.length) + 1 }; }
   /* 做完一次練習（伺服器存好那一筆以後）：答對幾題 ＝ 打幾下；一下 ＝ 一擊（武器愈強愈痛）＋ 寵物；一次最多打倒 2 隻；太快亂按、不算練習次數的 ＝ 不打 */
-  function rpFight(rs, st, R) { st = rpClean(st); if (!R || R.m === 'v' || R.m === 'l' || R.m === 'lv' || !counts(R.ok, R.n, R.m, R.fast) || (+R.fast || 0) * 2 > R.n) return { st: st, f: null };
+  function rpFight(rs, st, R) { st = rpClean(st); if (!R || R.m === 'v' || R.m === 'l' || R.m === 'lv' || !counts(R.ok, R.n, R.m, R.fast, R.pt) || (+R.fast || 0) * 2 > R.n) return { st: st, f: null };
     var hits = Math.max(0, Math.min(60, Math.round(+R.ok || 0))); if (!hits) return { st: st, f: null };
     var V = rpView(rs, st), d = V.hit, pd = V.petHit, tot = hits * (d + pd), f = { hits: hits, d: d, pd: pd, from: rpMonAt(st.mon), kill: [] };
     while (tot > 0) { var need = rpMonHp(st.mon.i) - st.mon.hp; if (tot >= need && f.kill.length < 2) { tot -= need; f.kill.push(RPMON[st.mon.i % RPMON.length]); st.mon.i++; st.mon.hp = 0; } else { st.mon.hp = Math.min(rpMonHp(st.mon.i) - 1, st.mon.hp + tot); tot = 0; } }
@@ -654,7 +659,7 @@ var SC = (function () {
     else if (k === 't') { var i = st.eq.t.indexOf(id); if (i >= 0) st.eq.t.splice(i, 1); else { st.eq.t.push(id); rpWear(st, id); } }
     else { if (k === 'p' && st.eq.p !== id) st.pt = now || 0; st.eq[k] = id; }
     return { st: st }; }
-  return { CLASSES: CLASSES, AFTER: AFTER, cname: cname, SEAT: SEAT, COLS: COLS, CI: CI, CAP: CAP, TOP: TOP, GMIN: GMIN, MT: MT, checkId: checkId, cat: cat, when: when, me: me, STAR: STAR, RPCHAL: RPCHAL, counts: counts, need: need, day: day, weekStart: weekStart,
+  return { PTRE: PTRE, PTS: PTS, CLASSES: CLASSES, AFTER: AFTER, cname: cname, SEAT: SEAT, COLS: COLS, CI: CI, CAP: CAP, TOP: TOP, GMIN: GMIN, MT: MT, checkId: checkId, cat: cat, when: when, me: me, STAR: STAR, RPCHAL: RPCHAL, counts: counts, need: need, day: day, weekStart: weekStart,
     AW: AW, care: care, CAREMAX: CAREMAX, s100: s100, xN: xN, fromRow: fromRow, toRow: toRow, clean: clean, pick: pick, students: students, rank: rank, classes: classes, clsAwards: clsAwards, secOf: secOf, questions: questions, gtop: gtop, view: view,
     lkClean: lkClean, lkSet: lkSet, lkAny: lkAny, lkFor: lkFor, LKRE: LKRE, lktClean: lktClean, lktSet: lktSet, lkNow: lkNow,
     tkClean: tkClean, tkFor: tkFor, tkDone: tkDone, tkLock: tkLock, TKGRACE: TKGRACE,

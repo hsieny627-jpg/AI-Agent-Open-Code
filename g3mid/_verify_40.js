@@ -20,7 +20,7 @@ const HO = fs.readFileSync(path.join(ROOT, 'live/host.html'), 'utf8'); ok(/\[3,5
   const br = await chromium.launch();
   for (const vp of [[1024, 768], [820, 1180], [1920, 1080]]) {
     const tag = vp.join('×'), ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } }); await ctx.route(/^https?:\/\//, r => r.abort());
-    await ctx.addInitScript(() => { window.__SCORE_TEST_OFF = 1; window.__NOUNLOCK = 1; });
+    await ctx.addInitScript(() => { window.__SCORE_TEST_OFF = 1; window.__NOUNLOCK = 1; window.__NODFXI = 1; window.__NOSNH = 1;   /* 第四十二次：寶箱 說明、貪吃蛇 怎麼玩 在 _verify_42.js 量 */ });
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto('file://' + path.join(ROOT, 'g3mid/index.html')); await p.waitForTimeout(700);
     await p.evaluate(() => document.querySelectorAll('#scov,.scfull').forEach(x => x.remove()));

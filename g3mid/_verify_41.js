@@ -15,7 +15,7 @@ const D = require('./_data.js');
   const mkCtx = async (vp, opt) => { const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } });
     await ctx.route(/^https?:\/\//, r => r.abort());
     await ctx.route(/script\.test/, r => { const b = r.request().postData() || ''; let j = { ok: true }; try { const o = JSON.parse(b); if (o.a === 'rec') j = (opt && opt.spk) ? { err: 'spk' } : { saved: true }; } catch (e) { } r.fulfill({ contentType: 'application/json', body: JSON.stringify(j) }); });
-    await ctx.addInitScript(o => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} }); window.__NOUNLOCK = 1; window.__NOWB = 1; window.__NOLIFE = 1; window.__NOWHEEL = 1; window.__SCNOJIT = 1;
+    await ctx.addInitScript(o => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} }); window.__NOUNLOCK = 1; window.__NODFXI = 1; window.__NOSNH = 1;   /* 第四十二次：寶箱 說明、貪吃蛇 怎麼玩 在 _verify_42.js 量 */ window.__NOWB = 1; window.__NOLIFE = 1; window.__NOWHEEL = 1; window.__SCNOJIT = 1;
       if (o && o.login) { localStorage.setItem('score_last', '"' + o.login + '"'); localStorage.setItem('score_id_g' + o.login[0], '"' + o.login + '"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', o.login); }
       if (o && o.mute) { HTMLMediaElement.prototype.play = function () { return new Promise(() => {}); }; try { speechSynthesis.speak = function () {}; } catch (e) { } }
       else HTMLMediaElement.prototype.play = function () { const a = this; setTimeout(() => a.onended && a.onended(), 40); return Promise.resolve(); }; }, opt || {});
@@ -32,17 +32,20 @@ const D = require('./_data.js');
   { const ctx = await mkCtx([1024, 768], { login: '30401' }), p = await ctx.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto('file://' + path.join(ROOT, 'g3mid', 'index.html')); await p.waitForTimeout(700);
     const r = await p.evaluate(() => { document.querySelectorAll('#scov,.scfull').forEach(x => x.remove()); DEC.A = { aud: () => null, stop: () => {}, pause: () => {}, go: () => {}, busy: () => false, sid: () => '30499', ok: () => {}, bad: () => {} };
-      const q = { en: "What's your name?", t: [['What', '什麼'], ["'s", '是'], ['your', '你的'], ['name?', '名字']], x: ['我的'], z: '你叫什麼名字？' };
-      const out = []; for (let i = 0; i < 4; i++) { const d = document.createElement('div'); d.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#000'; document.body.appendChild(d); DEC.lock = false;
-        const n0 = DEC.n || 0; decRender(q, d); const tz = [].map.call(d.querySelectorAll('.dctl'), b => b._z); out.push({ mem: (n0 + 1) % 4 === 0, n: tz.length, tz, rc: d.querySelectorAll('.dfxrc').length, gh: /👻|上次 的 你/.test(d.textContent) }); d.remove(); document.querySelectorAll('.dcmi').forEach(x => x.remove()); }
+      /* 2026-11-03 第四十二次 第 1 點：🔦 記憶 解碼 只 給 長 句子（≧ 7 字 或 兩 句）➜ 前 4 題 短 句子 一定 不是 記憶 題，後 4 題 長 句子 才 有 */
+      window.__NODFXI = 1; const q0 = { en: "What's your name?", t: [['What', '什麼'], ["'s", '是'], ['your', '你的'], ['name?', '名字']], x: ['我的'], z: '你叫什麼名字？' };
+      const q1 = { en: "What's your name? My name is Ben.", t: [['What', '什麼'], ["'s", '是'], ['your', '你的'], ['name?', '名字'], ['My', '我的'], ['name', '名字'], ['is', '是'], ['Ben.', 'Ben']], x: ['你'], z: '你叫什麼名字？我的名字是 Ben。' };
+      const out = []; for (let i = 0; i < 8; i++) { const q = i < 4 ? q0 : q1; const d = document.createElement('div'); d.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#000'; document.body.appendChild(d); DEC.lock = false;
+        const n0 = DEC.n || 0; decRender(q, d); const tz = [].map.call(d.querySelectorAll('.dctl'), b => b._z); out.push({ mem: DEC.lm === DEC.n && DEC.n !== n0, lng: i >= 4, n: tz.length, tz, ext: tz.filter(z => q.t.map(p => p[1]).indexOf(z) < 0), rc: d.querySelectorAll('.dfxrc').length, gh: /👻|上次 的 你/.test(d.textContent) }); d.remove(); document.querySelectorAll('.dcmi').forEach(x => x.remove()); }
       return { out, race: typeof DFX.race };
     });
     r.out.forEach((o, i) => { ok(!o.rc && !o.gh, '解碼 第 ' + (i + 1) + ' 題 還 有 🏁👻 跑道');
-      if (o.mem) { const ex = o.tz.filter(z => ['什麼', '是', '你的', '名字'].indexOf(z) < 0); ok(ex.length >= 4, '🔦 記憶 解碼 錯 方塊 要 ≧ 4 個：' + ex.join(','));
-        ok(new Set(o.tz).size === o.tz.length, '🔦 記憶 解碼 方塊 有 重複 ' + o.tz.join(','));
+      if (!o.lng) ok(!o.mem, '短 句子 不可以 是 🔦 記憶 題（第 ' + (i + 1) + ' 題）');
+      if (o.mem) { const ex = o.ext; ok(ex.length >= 4, '🔦 記憶 解碼 錯 方塊 要 ≧ 4 個：' + ex.join(','));
+        ok(new Set(ex).size === ex.length, '🔦 記憶 解碼 多 的 錯 方塊 有 重複 ' + ex.join(','));
         ok(ex.every(z => ['我的', '你', '他的', '誰', '幾歲', '不是', '是的', '年紀', '生日', '她的', '我'].indexOf(z) >= 0), '🔦 記憶 解碼 錯 方塊 不是 相近 的：' + ex.join(',')); }
-      else ok(o.n === 5, '一般 解碼 方塊 數 不 應該 變（4 格＋1 錯）' + o.n); });
-    ok(r.out.some(o => o.mem), '4 題 裡 沒有 🔦 記憶 題'); ok(r.race === 'undefined', 'DFX.race 還在');
+      else ok(o.n === (o.lng ? 9 : 5), '一般 解碼 方塊 數 不 應該 變（格子＋1 錯）' + o.n); });
+    ok(r.out.some(o => o.mem && o.lng), '長 句子 4 題 裡 沒有 🔦 記憶 題'); ok(r.race === 'undefined', 'DFX.race 還在');
     /* 7-A 大／小 動畫 */
     const cz = await p.evaluate(() => { const d = document.createElement('div'); d.innerHTML = caseTag('A') + caseTag('a'); document.body.appendChild(d); const k = d.querySelectorAll('.czk'); const a = [].map.call(k, x => getComputedStyle(x).animationName + '|' + x.textContent); d.remove(); return a; });
     ok(cz[0] === 'czBig|大' && cz[1] === 'czSm|小', '7-A：「大」變大、「小」變小 的 動畫 不對 ' + cz.join(','));

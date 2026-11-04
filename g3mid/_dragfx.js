@@ -40,23 +40,23 @@ function DFXSRC() {
   /* 2026-11-03 第四十一次 第 1 點：🏁 跟 上次 的 自己 賽跑（👻）整個 刪除 */
 
   /* ── 🎁 難題 寶箱（全對 以後 才 掉）── */
-  D.TIER = [['wood', '木頭 寶箱'], ['silver', '銀 寶箱'], ['gold', '金 寶箱'], ['rainbow', '💎 彩虹 寶箱']];
-  D.PTS = [400, 900, 1800, 3500];
+  D.TIER = [['wood', '木頭 寶箱'], ['silver', '銀 寶箱'], ['gold', '金 寶箱'], ['rainbow', '💎 彩虹 寶箱'], ['legend', '👑 傳說 寶箱']];
+  D.PTS = [400, 900, 1800, 3500, 8000];   /* 第四十二次 第 2 點：🔦 記憶 解碼（長 句子、沒 偷看、一次 全對）＝ 一定 掉 👑 傳說 寶箱 */
   /* 難度 ＝ 格子 數 ＋ 多 的 錯 方塊 數 ＋（記憶 解碼 沒 偷看 ＋3）；機會、稀有度、獎勵 都 跟著 難度 變 大 */
-  D.drop = function (diff) { var ch = diff <= 4 ? 0 : diff === 5 ? .25 : diff === 6 ? .45 : diff === 7 ? .6 : diff === 8 ? .75 : .9; if (rnd() >= ch) return null;
+  D.drop = function (diff, mem) { if (mem) return { t: 4, p: Math.round((8000 + Math.max(0, diff - 8) * 600) / 100) * 100, mem: 1 }; var ch = diff <= 4 ? 0 : diff === 5 ? .25 : diff === 6 ? .45 : diff === 7 ? .6 : diff === 8 ? .75 : .9; if (rnd() >= ch) return null;
     var x = rnd(), t = diff >= 9 ? (x < .35 ? 3 : 2) : diff >= 8 ? (x < .12 ? 3 : x < .6 ? 2 : 1) : diff >= 7 ? (x < .35 ? 2 : 1) : diff >= 6 ? (x < .4 ? 1 : 0) : 0;
     return { t: t, p: Math.round(D.PTS[t] * (1 + Math.max(0, diff - 5) * .15) / 50) * 50 }; };
-  D.CHEST = function (t, open) { var C = [['#8D5A2B', '#5E3A17', '#C99A5B'], ['#AEB8C4', '#6E7A86', '#E6EEF6'], ['#F5B829', '#9A6B00', '#FFE58A'], ['#B66BFF', '#3A6BFF', '#7CFFE0']][t];
+  D.CHEST = function (t, open) { var C = [['#8D5A2B', '#5E3A17', '#C99A5B'], ['#AEB8C4', '#6E7A86', '#E6EEF6'], ['#F5B829', '#9A6B00', '#FFE58A'], ['#B66BFF', '#3A6BFF', '#7CFFE0'], ['#FFC93C', '#7A2E00', '#FFFFFF']][t];
     var g = '<defs><linearGradient id="dfxS' + t + '" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>' + (t === 3 ? '<linearGradient id="dfxRb" x1="0" x2="1"><stop offset="0" stop-color="#FF5A8A"/><stop offset=".33" stop-color="#FFD54A"/><stop offset=".66" stop-color="#5EF0B0"/><stop offset="1" stop-color="#5E9BFF"/></linearGradient>' : '') + '</defs>';
-    var f = t === 3 ? 'url(#dfxRb)' : C[0];
+    var f = t === 3 ? 'url(#dfxRb)' : C[0], crown = t === 4 ? '<path d="M20 8 L26 0 L32 7 L38 0 L44 8 Z" fill="#FFE58A" stroke="#7A2E00" stroke-width="1.6"/><circle cx="32" cy="5" r="1.8" fill="#FF3B6B"/>' : '';
     return '<svg viewBox="0 0 64 56" aria-hidden="true">' + g + (open ? '<path d="M32 28 L4 -6 L60 -6 Z" fill="#FFF6C0" opacity=".9"/>' : '') +
       '<rect x="6" y="24" width="52" height="28" rx="4" fill="' + f + '" stroke="' + C[1] + '" stroke-width="3"/><rect x="6" y="24" width="52" height="28" rx="4" fill="url(#dfxS' + t + ')"/>' +
       '<rect x="6" y="34" width="52" height="5" fill="' + C[1] + '" opacity=".55"/><rect x="14" y="24" width="5" height="28" fill="' + C[1] + '" opacity=".4"/><rect x="45" y="24" width="5" height="28" fill="' + C[1] + '" opacity=".4"/>' +
       (open ? '<path d="M6 22 Q32 2 58 22 L58 16 Q32 -4 6 16 Z" fill="' + f + '" stroke="' + C[1] + '" stroke-width="3" transform="rotate(-28 6 22)"/>'
         : '<path d="M6 24 Q6 8 32 8 Q58 8 58 24 Z" fill="' + f + '" stroke="' + C[1] + '" stroke-width="3"/><path d="M6 24 Q6 8 32 8 Q58 8 58 24 Z" fill="url(#dfxS' + t + ')"/>') +
-      '<rect x="27" y="' + (open ? 26 : 20) + '" width="10" height="13" rx="2" fill="' + C[2] + '" stroke="' + C[1] + '" stroke-width="2"/></svg>'; };
+      '<rect x="27" y="' + (open ? 26 : 20) + '" width="10" height="13" rx="2" fill="' + C[2] + '" stroke="' + C[1] + '" stroke-width="2"/>' + (open ? '' : crown) + '</svg>'; };
   /* 掉 下來 ➜ 點 3 下 打開；ctl.done(加 幾分) */
-  D.chest = function (dr, diff, why, done) { if (!dr) { done(0); return; } D.open++; var t = dr.t, tap = 0, fin = 0;
+  D.chestBox = function (dr, diff, why, done) { if (!dr) { done(0); return; } D.open++; var t = dr.t, tap = 0, fin = 0;
     var o = H('div', 'dfxch2 ch-' + D.TIER[t][0], '<div class="dim"></div><div class="why">🔥 難題 <b>' + why + '</b> 一次 全對！</div><div class="drop"><div class="rays"></div><div class="bx">' + D.CHEST(t, 0) + '</div></div>' +
       '<div class="nm">🎁 ' + D.TIER[t][1] + ' 掉 下來 了！</div><div class="tap">👆 點 寶箱 3 下 打開！ <span class="d"><i></i><i></i><i></i></span></div><div class="pz"></div>');
     document.body.appendChild(o); var bx = o.querySelector('.bx'), dots = o.querySelectorAll('.tap i');
@@ -66,6 +66,74 @@ function DFXSRC() {
       setTimeout(function () { o.classList.add('out'); setTimeout(function () { if (o.parentNode) o.parentNode.removeChild(o); done(dr.p); }, 380); }, window.__NOGO ? 40 : 2200); }
     bx.onclick = function () { if (fin) return; tap++; if (dots[tap - 1]) dots[tap - 1].classList.add('on'); bx.classList.remove('hit'); void bx.offsetWidth; bx.classList.add('hit', 'h' + Math.min(3, tap)); if (tap >= 3) setTimeout(openIt, 250); };
     var au = setTimeout(openIt, 6000); };
+
+  /* ══ 2026-11-03 第四十二次 第 3-(4) 點（老師：每一題 都 是 寶箱 會 膩）＝ 掉 下來 的 驚喜 每一次 換 一種 玩法（同一回 不 連續 重複）：
+     🎁 寶箱 點 3 下、🃏 翻牌 三選一、🪙 刮刮卡、🥚 龍蛋 孵化、🎰 扭蛋機、🎈 射 氣球、🚀 按住 發射；🔦 記憶 解碼 成功 ＝ 一定 是 👑 傳說 寶箱（最 華麗）。
+     只 給 遊戲 積分（不 算進 100 分，🔒 11 第 3 條 照舊）；動畫 的 時候 倒數 停住；8 秒 沒 動 ＝ 自己 打開（不會 卡住） ══ */
+  D.STY = ['box', 'card', 'scratch', 'egg', 'gacha', 'balloon', 'rocket'];
+  D.nextSty = function () { if (window.__DFXSTY) return window.__DFXSTY; var L = D.STY.filter(function (x) { return x !== D.lastSty; }), k = L[Math.floor(rnd() * L.length) % L.length]; D.lastSty = k; return k; };
+  D.chest = function (dr, diff, why, done) { if (!dr) { done(0); return; } if (dr.t === 4) { D.legend(dr, why, done); return; } var st = D.nextSty(); if (st === 'box') { D.chestBox(dr, diff, why, done); return; } D.open++; D.play(st, dr, why, done); };
+  function coins(host, n, t) { for (var i = 0; i < n; i++) { var cn = H('span', 'dfxcn', t >= 3 && i % 2 ? '💎' : '🪙'); cn.style.setProperty('--a', (i * (360 / n)) + 'deg'); cn.style.setProperty('--r', (120 + (i % 3) * 45) + 'px'); cn.style.animationDelay = (i * 18) + 'ms'; host.appendChild(cn); } }
+  D.play = function (st, dr, why, done) { var t = dr.t, fin = 0, pts = dr.p;
+    var TT = { card: ['🃏 魔法 翻牌！', '👆 選 一張 牌 翻開！'], scratch: ['🪙 刮刮卡！', '👆 用 手指 在 銀色 上面 刮 一刮！'], egg: ['🥚 神秘 龍蛋！', '👆 點 蛋 4 下，讓 牠 孵 出來！'],
+      gacha: ['🎰 扭蛋機！', '👆 轉 2 下 把手，再 點 扭蛋！'], balloon: ['🎈 驚喜 氣球！', '👆 點破 一顆 氣球！'], rocket: ['🚀 寶藏 火箭！', '👆 按住 火箭 蓄力，放開 發射！'] }[st];
+    var o = H('div', 'dfxch2 dfxpl ps-' + st + ' ch-' + D.TIER[t][0], '<div class="dim"></div><div class="why">🔥 難題 <b>' + why + '</b> 一次 全對！</div><div class="nm">' + TT[0] + '<small>' + D.TIER[t][1] + ' 等級</small></div><div class="drop pst"></div><div class="tap">' + TT[1] + '</div><div class="pz"></div>');
+    document.body.appendChild(o); var S = o.querySelector('.pst'), tap = o.querySelector('.tap'), au = setTimeout(function () { auto(); }, window.__NOGO ? 60 : 8000), auto = function () { };
+    function open(p, extra) { if (fin) return; fin = 1; clearTimeout(au); pts = p; o.classList.add('op'); tap.style.visibility = 'hidden'; coins(S, t >= 2 ? 22 : 14, t);
+      o.querySelector('.pz').innerHTML = (extra || '') + '🪙 ＋' + p + '<small>遊戲 積分</small>';
+      setTimeout(function () { o.classList.add('out'); setTimeout(function () { if (o.parentNode) o.parentNode.removeChild(o); done(pts); }, 380); }, window.__NOGO ? 40 : 2300); }
+    var vr = function () { var a = [Math.round(pts * .8 / 50) * 50, pts, Math.round(pts * 1.3 / 50) * 50]; for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), x = a[i]; a[i] = a[j]; a[j] = x; } return a; };
+    if (st === 'card' || st === 'balloon') { var A = vr(), it = A.map(function (v, i) { var e = H('button', st === 'card' ? 'dfxcd' : 'dfxbl', st === 'card' ? '<span class="f">✨</span><span class="b">🪙<b>' + v + '</b></span>' : '<span class="bl" style="--h:' + [350, 200, 50][i] + '">🎈</span><span class="v">🪙 ' + v + '</span>'); e.style.animationDelay = (i * .15) + 's'; S.appendChild(e); return e; });
+      var pickI = function (k) { if (fin) return; it.forEach(function (e, i) { setTimeout(function () { e.classList.add('fl'); if (i !== k) e.classList.add('dim2'); }, i === k ? 0 : 500); }); it[k].classList.add('me'); setTimeout(function () { open(A[k]); }, 900); };
+      it.forEach(function (e, i) { e.onclick = function () { pickI(i); }; }); auto = function () { pickI(1); }; }
+    else if (st === 'scratch') { var w = H('div', 'dfxsc', '<div class="u">🪙 ＋' + pts + '</div><canvas></canvas>'); S.appendChild(w); var cv = w.querySelector('canvas'), cx, mv = 0, dn = false;
+      setTimeout(function () { var r = w.getBoundingClientRect(); cv.width = r.width; cv.height = r.height; cx = cv.getContext('2d'); var g = cx.createLinearGradient(0, 0, r.width, r.height); g.addColorStop(0, '#C8CED6'); g.addColorStop(.5, '#F4F6F8'); g.addColorStop(1, '#9AA3AE'); cx.fillStyle = g; cx.fillRect(0, 0, r.width, r.height); cx.fillStyle = '#6E7783'; cx.font = 'bold 28px sans-serif'; cx.textAlign = 'center'; cx.fillText('✋ 刮 這裡', r.width / 2, r.height / 2 + 10); cx.globalCompositeOperation = 'destination-out'; }, 30);
+      var sc = function (e) { if (!cx || fin) return; var r = cv.getBoundingClientRect(); cx.beginPath(); cx.arc(e.clientX - r.left, e.clientY - r.top, 30, 0, 7); cx.fill(); mv++; if (mv > 28) { cv.style.transition = 'opacity .4s'; cv.style.opacity = '0'; open(pts); } };
+      cv.addEventListener('pointerdown', function (e) { dn = true; sc(e); }); cv.addEventListener('pointermove', function (e) { if (dn) sc(e); }); window.addEventListener('pointerup', function () { dn = false; });
+      auto = function () { cv.style.opacity = '0'; open(pts); }; }
+    else if (st === 'egg') { var eg = H('button', 'dfxeg', '<span class="e">🥚</span><span class="ck"></span>'), n = 0; S.appendChild(eg);
+      eg.onclick = function () { if (fin) return; n++; eg.className = 'dfxeg c' + Math.min(4, n); if (n >= 4) { eg.innerHTML = '<span class="e dr">🐉</span>'; open(pts, '🐉 '); } }; auto = function () { eg.innerHTML = '<span class="e dr">🐉</span>'; open(pts, '🐉 '); }; }
+    else if (st === 'gacha') { var gm = H('div', 'dfxga', '<div class="gl">🔴🟡🔵<br>🟢🟣🟠</div><button class="kn">⟳</button><div class="cap"></div>'), turns = 0; S.appendChild(gm); var kn = gm.querySelector('.kn'), cp = gm.querySelector('.cap');
+      kn.onclick = function () { if (fin || turns >= 2) return; turns++; kn.classList.remove('sp'); void kn.offsetWidth; kn.classList.add('sp'); if (turns >= 2) { setTimeout(function () { cp.classList.add('in'); cp.innerHTML = '🟡'; tap.textContent = '👆 點 扭蛋 打開！'; }, 500); } };
+      cp.onclick = function () { if (!cp.classList.contains('in') || fin) return; cp.classList.add('op'); open(pts); }; auto = function () { cp.classList.add('in', 'op'); open(pts); }; }
+    else if (st === 'rocket') { var rk = H('button', 'dfxrk', '<span class="r">🚀</span><span class="pw"><i></i></span>'), hold = 0, t0 = 0, iv = 0; S.appendChild(rk); var bar = rk.querySelector('.pw i');
+      var go = function () { if (fin) return; clearInterval(iv); rk.classList.add('go'); setTimeout(function () { S.appendChild(H('div', 'dfxfw', '🎆')); open(pts, '🎆 '); }, 700); };
+      rk.addEventListener('pointerdown', function (e) { if (fin) return; e.preventDefault(); t0 = Date.now(); clearInterval(iv); iv = setInterval(function () { var r = Math.min(1, (Date.now() - t0) / 1200); bar.style.width = (r * 100) + '%'; rk.classList.toggle('sh', r > .3); if (r >= 1) go(); }, 40); });
+      var up = function () { clearInterval(iv); if (fin) return; if (Date.now() - t0 >= 600) go(); else { bar.style.width = '0'; rk.classList.remove('sh'); } }; rk.addEventListener('pointerup', up); rk.addEventListener('pointercancel', up); auto = go; }
+  };
+  /* 👑 傳說 寶箱（只 有 🔦 記憶 解碼 長 句子 成功）：全 螢幕 金光、彩虹 光環、煙火、點 5 下、金幣 雨＋「你 的 努力 有 價值！」*/
+  D.legend = function (dr, why, done) { D.open++; var tap = 0, fin = 0;
+    var o = H('div', 'dfxch2 dfxlg ch-legend', '<div class="dim"></div><div class="lgfw"></div><div class="why">🔦 記憶 解碼：長 句子 憑 記憶 <b>一次 全對！</b></div><div class="nm lgn">👑 傳說 寶箱 降臨！</div>' +
+      '<div class="drop"><div class="rays"></div><div class="ring"></div><div class="bx">' + D.CHEST(4, 0) + '</div></div><div class="tap">👆 點 寶箱 5 下 打開！ <span class="d"><i></i><i></i><i></i><i></i><i></i></span></div><div class="pz"></div><div class="lgw"></div>');
+    document.body.appendChild(o); var bx = o.querySelector('.bx'), dots = o.querySelectorAll('.tap i'), fw = o.querySelector('.lgfw');
+    for (var k = 0; k < 8; k++) { var f = H('span', 'lgb', ['🎆', '🎇', '✨', '🌟'][k % 4]); f.style.left = (8 + k * 12) + '%'; f.style.top = (10 + (k % 3) * 22) + '%'; f.style.animationDelay = (k * .35) + 's'; fw.appendChild(f); }
+    function openIt() { if (fin) return; fin = 1; clearTimeout(au); o.classList.add('op'); bx.innerHTML = D.CHEST(4, 1); o.querySelector('.tap').style.visibility = 'hidden'; coins(o.querySelector('.drop'), 36, 4);
+      for (var i = 0; i < 26; i++) { var r = H('span', 'lgrain', i % 3 ? '🪙' : '💎'); r.style.left = (Math.random() * 100) + '%'; r.style.animationDelay = (Math.random() * 1.4) + 's'; o.appendChild(r); }
+      o.querySelector('.pz').innerHTML = '🪙 ＋' + dr.p + '<small>遊戲 積分（最 高 等級）</small>'; o.querySelector('.lgw').textContent = '💪 專心 記住 長 句子 ＝ 真 本事！你 的 努力 有 價值！';
+      setTimeout(function () { o.classList.add('out'); setTimeout(function () { if (o.parentNode) o.parentNode.removeChild(o); done(dr.p); }, 380); }, window.__NOGO ? 40 : 3600); }
+    bx.onclick = function () { if (fin) return; tap++; if (dots[tap - 1]) dots[tap - 1].classList.add('on'); bx.classList.remove('hit'); void bx.offsetWidth; bx.classList.add('hit', 'h' + Math.min(3, tap)); if (tap >= 5) setTimeout(openIt, 250); };
+    var au = setTimeout(openIt, window.__NOGO ? 60 : 9000); };
+
+  /* ══ 2026-11-03 第四十二次 第 3-(1)(2)(3) 點：拖曳 題 開始 前 的 秒懂 動畫「🎁 寶箱 怎麼 拿？」（現場任務 也 演，老師 選）
+     每一位 學生 第一次 ＝ 4 幕 完整（約 22 秒，有〔⏸️ 暫停〕〔🔁 再播一次〕〔🐢 慢速〕，演完 才 能 按）；之後 每 一回 ＝ 1 幕 重點（約 5 秒）。 ══ */
+  D.inKey = function () { var A = window.DEC && DEC.A; return 'dfx_in_' + (location.pathname.indexOf('midterm') >= 0 ? 'g4' : 'g3') + '_' + ((A && A.sid && A.sid()) || '0'); };
+  D.needIn = function () { if (window.__NODFXI) return false; return D.inR !== window.R; };
+  D.intro = function (done) { D.inR = window.R; var seen = false; try { seen = !!localStorage.getItem(D.inKey()); } catch (e) { }
+    var C = function (t) { return '<span class="ich">' + D.CHEST(t, 0) + '</span>'; };
+    var SL = [
+      ['🎁 怎麼 拿到 寶箱？', '<div class="i1"><span class="sl">我的</span><span class="sl">名字</span><span class="sl">是</span><span class="sl">Bill</span></div><div class="itm"><i></i></div><div class="i1c">' + C(2) + '</div>', '① 每一格 都 放對（一次 全對）＋ ② ⏱ 時間 到 以前 完成 ➜ 才 有 機會 掉 下 寶箱'],
+      ['📈 愈 難 ＝ 獎勵 愈 豐盛', '<div class="i2"><span><b>短 句子</b><em>🙂</em><small>沒有 寶箱</small></span><span><b>中等</b>' + C(0) + '<small>小 獎勵</small></span><span><b>很 難</b>' + C(2) + '<small>大 獎勵</small></span><span class="lg"><b>🔦 長 句子 記憶</b>' + C(4) + '<small>👑 傳說 獎勵</small></span></div>', '格子 愈 多、陷阱 方塊 愈 多、憑 記憶 ➜ 寶箱 愈 好'],
+      ['🚫 隨便 亂 放 ＝ 什麼 都 沒有', '<div class="i3"><span class="sl x">她</span><span class="sl x">是的</span><span class="sl x">年紀</span><span class="no">❌</span><span class="ich nob">' + D.CHEST(0, 0) + '<b>🚫</b></span></div>', '💪 想要 得到，先 付出 對等 的 努力：看 清楚、想 清楚，再 放'],
+      ['🎉 每一次 驚喜 都 不一樣', '<div class="i4">' + ['🎁', '🃏', '🪙', '🥚', '🎰', '🎈', '🚀', '👑'].map(function (x, i) { return '<span style="animation-delay:' + (i * .35) + 's">' + x + '</span>'; }).join('') + '</div>', '答對 難題 才 知道 這一次 是 哪一種！（只 加 遊戲 積分，不 影響 100 分）']];
+    var L = seen ? [['🎁 寶箱 的 規則', '<div class="i2"><span><b>簡單</b><em>🙂</em><small>沒有</small></span><span><b>難</b>' + C(2) + '<small>大 獎勵</small></span><span class="lg"><b>🔦 記憶</b>' + C(4) + '<small>👑 傳說</small></span></div>', '一次 全對＋時間 內 ➜ 愈 難 愈 豐盛；隨便 放 ＝ 沒有']] : SL;
+    var o = H('div', 'dfxin', '<div class="ib"><div class="ip"></div><div class="iw"></div><div class="ia"></div><div class="ic"></div><button class="igo" disabled>🔒 看完 才 能 按</button></div>');
+    document.body.appendChild(o); var ip = o.querySelector('.ip'), iw = o.querySelector('.iw'), ia = o.querySelector('.ia'), go = o.querySelector('.igo'), TM = window.ACTL ? ACTL.T : function (f, m) { return setTimeout(f, m); };
+    var D1 = window.__NOGO ? 30 : 5600;
+    function run() { go.disabled = true; go.className = 'igo'; go.textContent = '🔒 看完 才 能 按'; show(0); }
+    function show(k) { var s = L[k]; ip.textContent = (k + 1) + ' ／ ' + L.length; iw.innerHTML = '<div class="ih">' + s[0] + '</div>'; ia.innerHTML = '<div class="iv iv' + (seen ? 2 : k + 1) + '">' + s[1] + '</div><div class="it">' + s[2] + '</div>';
+      TM(function () { if (k + 1 < L.length) show(k + 1); else { go.disabled = false; go.className = 'igo rdy'; go.textContent = '▶ 我 懂了，開始！'; } }, seen ? Math.min(D1, 4200) : D1); }
+    if (window.ACTL) ACTL.on(o.querySelector('.ic'), run); run();
+    go.onclick = function () { if (go.disabled) return; try { localStorage.setItem(D.inKey(), '1'); } catch (e) { } if (window.ACTL) ACTL.off(); o.remove(); done(); }; };
   return D;
 }
 const CSS = `
@@ -171,6 +239,62 @@ const CSS = `
 .sk-card .dcs{border-style:solid;border-color:#B66BFF;background:repeating-linear-gradient(45deg,#1E1030 0 10px,#2A1640 10px 20px);border-radius:12px;box-shadow:0 0 12px rgba(182,107,255,.4)}
 .sk-card .dctl{border-color:#7A3FD0;background:linear-gradient(120deg,#F3E6FF,#C9A6FF 40%,#FFD6F5 60%,#B6E0FF);background-size:250% 100%;color:#2A0E50;border-radius:12px;box-shadow:0 6px 0 #4A2280,0 0 14px rgba(182,107,255,.5);animation:dfxGem 3s ease-in-out infinite}
 .sk-card.win .dcs.ok{animation:dfxFlip .6s 2}@keyframes dfxFlip{50%{transform:rotateY(180deg)}}
+
+/* ══ 第四十二次：🎁 驚喜 7 種 玩法＋👑 傳說 寶箱＋寶箱 秒懂 動畫 ══ */
+.dfxch2 .nm small{display:block;font-size:.6em;color:#FFE07A}
+.dfxpl .pst{display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,26px);width:auto;min-width:clamp(260px,40vw,560px);height:clamp(190px,30vh,300px)}
+.dfxcd{width:clamp(110px,15vh,150px);height:clamp(150px,21vh,210px);border-radius:16px;border:4px solid #FFE07A;background:linear-gradient(135deg,#5E2BB8,#1E5BD8);color:#fff;font-size:44px;position:relative;cursor:pointer;animation:dfxDrop .6s cubic-bezier(.3,1.5,.5,1) both;transform-style:preserve-3d;transition:transform .6s}
+.dfxcd .b{display:none;flex-direction:column;align-items:center;font-size:38px}.dfxcd .b b{font-size:32px;color:#FFE58A}.dfxcd.fl{transform:rotateY(180deg)}.dfxcd.fl .f{display:none}.dfxcd.fl .b{display:flex;transform:rotateY(180deg)}
+.dfxcd.me{box-shadow:0 0 0 6px #FFE58A,0 0 40px #FFD54A}.dfxcd.dim2,.dfxbl.dim2{opacity:.5}
+.dfxbl{background:none;border:0;display:flex;flex-direction:column;align-items:center;cursor:pointer;animation:dfxRise 2.2s ease-in-out infinite alternate}
+.dfxbl .bl{font-size:clamp(80px,13vh,130px);filter:hue-rotate(calc(var(--h)*1deg)) drop-shadow(0 8px 6px rgba(0,0,0,.5))}.dfxbl .v{visibility:hidden;font-size:28px;color:#FFE58A}
+.dfxbl.fl .bl{animation:dfxPop .35s forwards}.dfxbl.fl .v{visibility:visible}@keyframes dfxRise{to{transform:translateY(-22px)}}@keyframes dfxPop{60%{transform:scale(1.5)}100%{transform:scale(0);opacity:0}}
+.dfxsc{position:relative;width:clamp(300px,42vw,460px);height:clamp(150px,22vh,200px);border-radius:18px;overflow:hidden;border:5px solid #FFE07A;background:linear-gradient(135deg,#FFF3B0,#FFC93C)}
+.dfxsc .u{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(40px,7vh,64px);font-weight:900;color:#7A3B00}.dfxsc canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:pointer}
+.dfxeg{background:none;border:0;position:relative;cursor:pointer;animation:dfxIdle 1.1s ease-in-out infinite}.dfxeg .e{font-size:clamp(130px,22vh,200px);display:block;filter:drop-shadow(0 0 20px #FFE07A)}
+.dfxeg.c1{animation:dfxHit .3s}.dfxeg.c2 .e{filter:drop-shadow(0 0 30px #FFD54A) brightness(1.15)}.dfxeg.c3 .e{filter:drop-shadow(0 0 44px #FFF3B0) brightness(1.3);animation:dfxHit .25s infinite}
+.dfxeg.c1 .ck,.dfxeg.c2 .ck,.dfxeg.c3 .ck{position:absolute;left:30%;top:40%;width:40%;height:4px;background:#5A3A10;transform:rotate(-12deg);box-shadow:0 14px 0 #5A3A10}
+.dfxeg .e.dr{animation:dfxPz .7s cubic-bezier(.2,1.8,.4,1) both}
+.dfxga{position:relative;width:clamp(200px,28vh,260px);height:clamp(220px,31vh,290px);border-radius:28px 28px 14px 14px;background:linear-gradient(#E53935,#9A1A1A);border:5px solid #FFE07A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.dfxga .gl{width:70%;border-radius:50%;background:rgba(255,255,255,.85);font-size:30px;line-height:1.3;padding:10px 0;text-align:center}
+.dfxga .kn{width:70px;height:70px;border-radius:50%;border:5px solid #fff;background:#FFC93C;font-size:40px;color:#7A2E00;cursor:pointer}.dfxga .kn.sp{animation:dfxKn .6s}@keyframes dfxKn{to{transform:rotate(360deg)}}
+.dfxga .cap{position:absolute;bottom:-50px;font-size:64px;opacity:0;cursor:pointer}.dfxga .cap.in{opacity:1;animation:dfxDrop .6s cubic-bezier(.3,1.5,.5,1) both}.dfxga .cap.op{animation:dfxPz .5s both}
+.dfxrk{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;touch-action:none}.dfxrk .r{font-size:clamp(110px,18vh,170px);transform:rotate(-45deg);display:block}
+.dfxrk .pw{width:200px;height:18px;border-radius:9px;background:#22304A;border:3px solid #FFE07A;overflow:hidden}.dfxrk .pw i{display:block;height:100%;width:0;background:linear-gradient(90deg,#FFB300,#FF3D00)}
+.dfxrk.sh .r{animation:dfxHit .15s infinite}.dfxrk.go .r{animation:dfxLaunch .8s ease-in forwards}@keyframes dfxLaunch{to{transform:translate(260px,-420px) rotate(-45deg) scale(.4);opacity:0}}
+.dfxfw{position:absolute;font-size:120px;animation:dfxPz .7s both}
+/* 👑 傳說 */
+.dfxlg .dim{background:radial-gradient(circle at 50% 45%,rgba(255,200,60,.5),rgba(60,0,80,.85) 55%,rgba(0,0,0,.92))}
+.dfxlg .lgn{font-size:clamp(34px,6vh,60px);background:linear-gradient(90deg,#FFE58A,#FF8AD8,#8AF0FF,#FFE58A);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:300% 100%;animation:lgSh 2.4s linear infinite,dfxBan .6s both}
+@keyframes lgSh{to{background-position:300% 0}}
+.dfxlg .drop{width:clamp(240px,34vh,340px);height:clamp(220px,31vh,310px)}
+.dfxlg .ring{position:absolute;left:50%;top:50%;width:150%;height:150%;transform:translate(-50%,-50%);border-radius:50%;border:8px solid transparent;background:conic-gradient(#FF5A8A,#FFD54A,#5EF0B0,#5E9BFF,#FF5A8A) border-box;-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 9px),#000 0);mask:radial-gradient(farthest-side,transparent calc(100% - 9px),#000 0);animation:dfxSpin 2.6s linear infinite;opacity:.9}
+.dfxlg .rays{opacity:.8;background:repeating-conic-gradient(rgba(255,230,140,.85) 0 7deg,transparent 7deg 18deg);animation:dfxSpin 6s linear infinite}
+.dfxlg .bx{filter:drop-shadow(0 0 40px #FFD54A) drop-shadow(0 0 80px #FF8AD8)}
+.dfxlg .lgfw{position:absolute;inset:0;pointer-events:none}.dfxlg .lgb{position:absolute;font-size:clamp(40px,7vh,70px);animation:lgB 1.4s ease-out infinite}@keyframes lgB{0%{transform:scale(.2);opacity:0}40%{opacity:1}100%{transform:scale(1.6);opacity:0}}
+.dfxlg .lgrain{position:absolute;top:-60px;font-size:40px;animation:lgR 1.9s ease-in forwards;pointer-events:none}@keyframes lgR{to{transform:translateY(115vh) rotate(540deg)}}
+.dfxlg .lgw{min-height:1.2em;font-size:clamp(22px,3.4vh,34px);color:#fff;text-shadow:0 2px 8px #000}
+.dfxlg .pz{font-size:clamp(60px,11vh,110px)}
+/* 🎁 寶箱 秒懂 動畫 */
+.dfxin{position:fixed;inset:0;z-index:9250;background:rgba(4,8,22,.94);display:flex;align-items:center;justify-content:center;padding:12px}
+.dfxin .ib{width:min(980px,96vw);max-height:96vh;overflow:auto;background:linear-gradient(#17244A,#0C1430);border:4px solid #FFD54A;border-radius:24px;padding:clamp(12px,2vh,24px);text-align:center;color:#fff}
+.dfxin .ip{font-size:20px;color:#9FB0C8}.dfxin .ih{font-size:clamp(30px,5vh,48px);font-weight:900;color:#FFE58A;animation:dfxBan .5s both}
+.dfxin .iv{min-height:clamp(160px,26vh,250px);display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin:10px 0}
+.dfxin .it{font-size:clamp(22px,3.2vh,32px);font-weight:700;line-height:1.5;animation:dfxBan .6s .6s both}
+.dfxin .ich{display:inline-block;width:clamp(70px,10vh,100px)}.dfxin .ich svg{width:100%;height:auto;display:block}
+.dfxin .i1{display:flex;gap:10px}.dfxin .sl{display:inline-block;min-width:80px;padding:10px 14px;border-radius:12px;background:#2E7D32;border:3px solid #7BF0A8;font-size:28px;animation:dfxDrop .5s both}
+.dfxin .i1 .sl:nth-child(2){animation-delay:.4s}.dfxin .i1 .sl:nth-child(3){animation-delay:.8s}.dfxin .i1 .sl:nth-child(4){animation-delay:1.2s}
+.dfxin .itm{width:220px;height:16px;border-radius:8px;background:#22304A;overflow:hidden}.dfxin .itm i{display:block;height:100%;background:#36D27A;animation:inTm 2.4s linear both}@keyframes inTm{from{width:100%}to{width:35%}}
+.dfxin .i1c{animation:dfxDrop .8s 2.2s cubic-bezier(.3,1.5,.5,1) both}
+.dfxin .i2{display:flex;align-items:flex-end;gap:clamp(8px,1.6vw,20px)}.dfxin .i2 span{display:flex;flex-direction:column;align-items:center;gap:4px;background:#1E2E52;border-radius:14px;padding:10px;animation:dfxDrop .6s both;font-size:22px}
+.dfxin .i2 span:nth-child(1){height:120px;animation-delay:.2s}.dfxin .i2 span:nth-child(2){height:160px;animation-delay:.9s}.dfxin .i2 span:nth-child(3){height:200px;animation-delay:1.6s}.dfxin .i2 span:nth-child(4){height:240px;animation-delay:2.3s}
+.dfxin .i2 em{font-style:normal;font-size:48px}.dfxin .i2 small{font-size:18px;color:#FFE58A}.dfxin .i2 .lg{border:3px solid #FFD54A;box-shadow:0 0 26px #FFD54A}
+.dfxin .i3{display:flex;align-items:center;gap:10px}.dfxin .sl.x{background:#7A1A1A;border-color:#FF8A80;animation:inX 1s both}.dfxin .i3 .sl.x:nth-child(2){animation-delay:.3s}.dfxin .i3 .sl.x:nth-child(3){animation-delay:.6s}
+@keyframes inX{0%{transform:translate(-120px,-80px) rotate(-30deg);opacity:0}70%{transform:rotate(8deg)}100%{transform:none;opacity:1}}
+.dfxin .no{font-size:70px;animation:dfxPz .5s 1.3s both}.dfxin .nob{position:relative;opacity:.55;animation:dfxBan .5s 1.8s both}.dfxin .nob b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:60px}
+.dfxin .i4 span{font-size:clamp(50px,8vh,76px);display:inline-block;animation:dfxPz .6s both}
+.dfxin .ic{margin-top:6px}.dfxin .igo{margin-top:12px;min-height:64px;min-width:280px;border-radius:18px;border:3px solid #4A5A6E;background:#1A2230;color:#8C9AAE;font:inherit;font-size:clamp(22px,3vh,30px);font-weight:700}
+.dfxin .igo.rdy{border-color:#7BF0A8;background:linear-gradient(#36D27A,#1E9E55);color:#06210F;box-shadow:0 0 22px rgba(57,217,138,.75);cursor:pointer}
 @media (prefers-reduced-motion:reduce){.dfxban,.dfxban .i,.dfxch2 *,.dfxpt,.dcbox.dfx *,.dfxbub,.dfxstar{animation:none!important}}
 `;
 module.exports = { CSS, JS: '\n/* ══ 🎁🧩👻 拖曳題 不 無聊（g3mid/_dragfx.js）══ */\nvar DFX=(' + DFXSRC.toString() + ')();\n', DFXSRC };

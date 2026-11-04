@@ -198,8 +198,10 @@ const H_PH = ph => ph === 'q';
     }
     await h.waitForFunction(() => !document.getElementById('hend').hidden, null, { timeout: 8000 }).catch(async () => E.push(tag + '：5 題 做完 沒有 頒獎 典禮 ' + JSON.stringify(await h.evaluate(() => ({ p: H.phase, qi: H.qi, n: H.n, s: H.scr })))));
     await h.waitForTimeout(9000); await shot(h, 'c_cer');
-    const ce = await h.evaluate(() => ({ cls: document.getElementById('cerst').className, pod: document.querySelectorAll('#cerst .cp:not(.nop)').length, img: document.querySelectorAll('#cerst .cp img').length, ac: window.__snd.ac }));
-    if (!/cx cs\d/.test(ce.cls) || ce.pod !== 3 || ce.img < 1) E.push(tag + '：頒獎 典禮 不對 ' + JSON.stringify(ce));
+    /* 2026-11-03 第四十二次 第 4 點：新 頒獎 典禮 AWD（3D 舞台、配樂、第 5 ➜ 1 名、班級 號碼＋中文 全名、戰士／寵物／武器 開關）*/
+    const ce = await h.evaluate(() => ({ cls: document.getElementById('cerst').className, grp: document.querySelectorAll('#cerst .awgrp').length, pod: document.querySelectorAll('#cerst .awpod').length, img: document.querySelectorAll('#cerst .awp img.aw-h').length, code: [...document.querySelectorAll('#cerst .awcode')].map(x => x.textContent).join(), bar: document.querySelectorAll('#awb1 [data-awt]').length, ac: window.__snd.ac }));
+    if (!/\bawd\b/.test(ce.cls) || ce.grp < 1 || ce.pod !== ce.grp || ce.img < 1 || !/^\d{5}/.test(ce.code) || ce.bar !== 4) E.push(tag + '：頒獎 典禮 不對 ' + JSON.stringify(ce));
+    if (!ce.ac) E.push(tag + '：頒獎 典禮 沒有 配樂（AudioContext）'); n++;
     await ckWords(h, tag + ' 頒獎');
     await h.click('#tana'); await h.waitForTimeout(3500); await shot(h, 'c_ana');
     const an = await h.evaluate(() => ({ bars: document.querySelectorAll('#hanab .bar.go').length, w: document.querySelectorAll('#hanab .wr').length, gl: document.querySelectorAll('#hanab .wr .gls').length, say: document.querySelectorAll('#hanab [data-say]').length }));
@@ -217,7 +219,8 @@ const H_PH = ph => ph === 'q';
     await h.click('#give'); await h.waitForTimeout(900);
     if (!/發好了/.test(await h.textContent('#gm'))) E.push(tag + '：〔🎁 發獎勵〕沒有 成功：' + (await h.textContent('#gm')));
     const v1 = G.get({ a: 'rpg', id: '40201' }).v; if (!(v1.st.bx >= 10 && v1.st.bc >= 4)) E.push('發獎勵：「角色」沒有 加上 經驗值、金幣：' + JSON.stringify([v1.st.bc, v1.st.bx]));
-    if ((await h.evaluate(() => window.__snd.ac))) E.push(tag + '：大螢幕 有 音效（AudioContext）');
+    /* 第四十二次：配樂 只 在 頒獎 典禮（量：離開 頒獎 以後 AWD 停 了）*/
+    if ((await h.evaluate(() => !!(document.getElementById('cerst')._aw)))) E.push(tag + '：離開 頒獎 典禮 以後 配樂 還在');
     for (const s of S) await s.c.close(); await hc.close(); n += 90; }
   /* ════ 第二場：⚔️ 討伐魔王 10 題（干擾、禮物盒、✂ 功能）、大螢幕 1024 ════ */
   { DB = {}; const G = make({ TEACHER_PW: PW }), HV = [1024, 768], tag = '魔王 1024';

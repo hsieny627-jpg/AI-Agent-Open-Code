@@ -95,9 +95,9 @@ function crRows(){var c=CRS.cfg,L=[];Object.keys(CRS.crp).forEach(function(id){v
   /* 2026-11-01 第三十九次（老師 C45 ③ 甲）：正確率 計分，答 1～2 題 也 可能 100 分 ➜ 答不到 CRMIN（5）題 的 不 排 名次、不上 前 10 名（分數 照樣 記），排在 最 後面、寫「答 N 題」 */
   L.forEach(function(x){x.few=x.n<CRMIN});L.sort(function(a,b){return (a.few-b.few)||b.s-a.s||b.ok-a.ok||b.gp-a.gp||a.n-b.n||(a.id<b.id?-1:1)});var rk=0,pv=null;L.forEach(function(x,i){if(x.few){x.rk=0;return}if(!pv||x.s!==pv.s||x.ok!==pv.ok||x.gp!==pv.gp)rk=i+1;x.rk=rk;pv=x});return L}
 var CRMIN=5;
-function crWho(x){return '<b>'+(+x.id.slice(3))+' 號</b>'+(x.p?'<small class="crdu">👥 和 '+(+String(x.p).slice(3))+' 號 一台</small>':'')}
+function crWho(x){return nmI(x.id)+(x.p?'<small class="crdu">👥 和 '+esc(String(x.p))+(nmOf(x.p)?' '+esc(nmOf(x.p)):'')+' 一台</small>':'')}
 function crLB(){var c=CRS.cfg,o=$('#hcrr .in');if(!c)return;
-  if(CRS.built!==c.t||!$('#crlbw')){CRS.built=c.t;CRS.lbp={};CRS.lead='';
+  if(CRS.built!==c.t||!$('#crlbw')){CRS.built=c.t;CRS.lbp={};CRS.lsc={};CRS.ovt='';CRS.lead='';
     o.innerHTML='<div class="crxh"><div><h1>'+esc(crName())+'</h1><div class="crxs">'+esc(H.cls)+' 班 · 分數 ＝ 正確率（答對 ÷ 已經 答 的 題數）'+(crLW(c.set)?' · 一樣 再 比 ⚡ 遊戲 積分':'')+(c.qk?' · ⚡ 快速 模式':'')+' · 時間 到 自動 結束</div></div><div id="crclk" class="crclk">⏱ '+crMM(crLeft())+'</div></div>'+
       '<div id="crjb" class="crjn"></div><div id="crlead" class="crlead"></div><div id="crlbw" class="crlbw"><div class="crlbe">👀 學生 一 開始 答題，名次 就 會 出現 在 這裡</div></div><div id="crrest" class="crrest"></div>'+
       '<div class="hbar"><span class="crlf">⏱ 只 剩：</span>'+[3,5,8,10].map(function(m){return '<button data-crleft="'+m+'" class="'+(m===3?'ghost cr3':'ghost')+'">'+m+' 分鐘</button>'}).join('')+'<button id="crend" class="big stopb">⏹ 提早 結束</button></div>'}
@@ -109,32 +109,36 @@ function crLB(){var c=CRS.cfg,o=$('#hcrr .in');if(!c)return;
   var have={};[].forEach.call(W.querySelectorAll('.crlr'),function(r){have[r.getAttribute('data-id')]=r});
   top.forEach(function(x,i){var r=have[x.id],pr=CRS.lbp[x.id];delete have[x.id];if(!r){r=document.createElement('div');r.className='crlr nw';r.setAttribute('data-id',x.id);W.appendChild(r)}
     var up=pr!=null&&pr>i?pr-i:0;r.style.top=(i*10)+'%';r.className='crlr'+(i===0?' g1':i===1?' g2':i===2?' g3':'')+(up?' up':'')+(pr==null?' nw':'');
-    r.innerHTML='<span class="crrk">'+(x.rk<=3?['🥇','🥈','🥉'][x.rk-1]:x.rk)+'</span><span class="crhi">'+heroI(x.id,'crhim')+'</span><span class="crnm">'+crWho(x)+'</span><span class="crbar"><i style="width:'+Math.max(2,x.s)+'%"></i></span><span class="crsc">'+x.s+'<small> 分</small></span><span class="crok">答 '+x.n+' 題 · ✅ '+x.ok+(crLW(c.set)?' · ⚡ '+x.gp:'')+'</span>'+(up?'<em class="crup">▲ '+up+'</em>':'');
-    CRS.lbp[x.id]=i});
+    /* 2026-11-03 第四十二次 第 4 點（老師：更 秒懂、更 好玩、更 刺激）：🏎 賽道 排行榜：每 一個 人 一條 跑道，自己 的 戰士 跑 到 分數 的 位置（100 分 ＝ 🏁）；
+       超車 ＝ 綠色 閃光＋「🚀 超車 ▲2」＋ 大 橫幅；前 3 名 跑道 冒 🔥；第 1 名 戰士 戴 👑；分數 一格 一格 跳 上去 */
+    var ps=CRS.lsc[x.id];if(ps==null)ps=0;
+    r.innerHTML='<span class="crrk">'+(x.rk<=3?['🥇','🥈','🥉'][x.rk-1]:x.rk)+'</span><span class="crnm">'+crWho(x)+'</span><span class="crtrk'+(i<3?' hot':'')+'"><i style="width:'+Math.max(2,x.s)+'%"></i><span class="crrun" style="left:'+Math.max(2,Math.min(96,x.s))+'%">'+(i===0?'<b class="crcw">👑</b>':'')+heroI(x.id,'crhim')+(i<3?'<em class="crfl">🔥</em>':'')+'</span><span class="crfin">🏁</span></span><span class="crsc"><b data-v="'+x.s+'" data-f="'+ps+'">'+ps+'</b><small> 分</small></span><span class="crok">答 '+x.n+' 題 · ✅ '+x.ok+(crLW(c.set)?' · ⚡ '+x.gp:'')+'</span>'+(up?'<em class="crup">🚀 超車 ▲ '+up+'</em>':'');
+    if(up>=1&&i<3&&CRS.ovt!==x.id+':'+i){CRS.ovt=x.id+':'+i;var bo=$('#crlead');if(bo&&i>0){bo.innerHTML='🚀 '+nmI(x.id)+' 超車 ➜ 第 '+(i+1)+' 名！';bo.classList.remove('on');void bo.offsetWidth;bo.classList.add('on')}}
+    CRS.lsc[x.id]=x.s;CRS.lbp[x.id]=i});
+  [].forEach.call(W.querySelectorAll('.crsc b[data-v]'),function(b){var f=+b.getAttribute('data-f'),v=+b.getAttribute('data-v');if(f===v)return;var t0=performance.now();(function tk(){var k=Math.min(1,(performance.now()-t0)/700);b.textContent=Math.round(f+(v-f)*k);if(k<1)requestAnimationFrame(tk)})()});
   Object.keys(have).forEach(function(id){have[id].remove();delete CRS.lbp[id]});
-  if(top[0]&&top[0].s>0&&top[0].id!==CRS.lead){var was=CRS.lead;CRS.lead=top[0].id;if(was){var b=$('#crlead');b.innerHTML='👑 新 的 第 1 名：'+(+top[0].id.slice(3))+' 號！';b.classList.remove('on');void b.offsetWidth;b.classList.add('on')}}
+  if(top[0]&&top[0].s>0&&top[0].id!==CRS.lead){var was=CRS.lead;CRS.lead=top[0].id;if(was){var b=$('#crlead');b.innerHTML='👑 新 的 第 1 名：'+nmI(top[0].id)+'！';b.classList.remove('on');void b.offsetWidth;b.classList.add('on')}}
   var R2=L.filter(function(x){return !x.few}).slice(10),F=L.filter(function(x){return x.few});
-  $('#crrest').innerHTML=(R2.length?'<span class="crrt">第 11 名 以後：</span>'+R2.map(function(x){return '<span>'+x.rk+'. '+(+x.id.slice(3))+' 號 '+x.s+' 分（答 '+x.n+' 題）</span>'}).join(''):'')+
-   (F.length?'<span class="crrt">✍️ 答 滿 '+CRMIN+' 題 才 排 名次：</span>'+F.map(function(x){return '<span>'+(+x.id.slice(3))+' 號 答 '+x.n+' 題</span>'}).join(''):'')}
+  $('#crrest').innerHTML=(R2.length?'<span class="crrt">第 11 名 以後：</span>'+R2.map(function(x){return '<span>'+x.rk+'. '+nmI(x.id)+' '+x.s+' 分（答 '+x.n+' 題）</span>'}).join(''):'')+
+   (F.length?'<span class="crrt">✍️ 答 滿 '+CRMIN+' 題 才 排 名次：</span>'+F.map(function(x){return '<span>'+nmI(x.id)+' 答 '+x.n+' 題</span>'}).join(''):'')}
 function crUp(){var c=CRS.cfg;if(!c||c.fin)return;c.fin=1;clearInterval(CRS.tk);LDB.must('PATCH','rooms/'+H.code+'/cr',{fin:1,left:0},6);
   var o=$('#hcrr .in'),n=6;o.innerHTML='<div class="crup0"><div class="cru1">⏰</div><div class="cru2">時間 到！</div><div class="cru3">📝 收 成績 中… <b id="crun">'+n+'</b></div></div>';
   var tm=setInterval(function(){n--;var e=$('#crun');if(e)e.textContent=n;if(n<=0){clearInterval(tm);crShowX()}},1000)}
-function crShowX(){var c=CRS.cfg||CRS.lastX;if(!c)return;CRS.lastX=c;if(CRS.stop){CRS.stop();CRS.stop=null}var L=crRows().filter(function(x){return x.n>0&&!x.few}),gst=GLORY.pick(),st=$('#crgl');
-  if(!st){st=document.createElement('div');st.id='crgl';st.innerHTML='<div id="crgls"></div><div class="crglb"><button id="crxs" class="ghost">⏭ 跳過</button><button id="crxa" class="ghost">🔁 再 看 一次</button><button id="crxe" class="big go">⏹ 結束（學生 回 現場任務）</button></div>';document.body.appendChild(st)}
-  st.classList.add('on');var S=$('#crgls'),w=function(x){return '<span class="crgw">'+heroI(x.id,'crghi')+'<span>'+esc(H.cls)+' 班 '+(+x.id.slice(3))+' 號</span></span>'},v=function(x){return x.s+' 分'};
-  var T={};[1,2,3].forEach(function(r){var a=L.filter(function(x){return x.rk===r});if(a.length)T[r]=a.map(function(x){return {w:w(x),v:v(x),l:'答對 '+x.ok+' 題'}})});
-  var D={kick:esc(H.cls)+' 班　'+esc(crName()),aw:'',title:'🏆 前 10 名',ic:'🏆',per:'',rows:L.filter(function(x){return x.rk>=4&&x.rk<=10}).map(function(x){return {rk:x.rk,w:w(x),v:v(x)}}),top:T};
-  var P=[{g:0,t:5200}];if(D.rows.length)P.push({g:1,t:1800+D.rows.length*1250+1600});if(L.length>=4)P.push({f5:1,t:8200});if(T[3])P.push({g:2,t:6800});if(T[2])P.push({g:3,t:7400});if(T[1])P.push({g:4,t:11500});if(L.length)P.push({g:5,t:9000});
-  if(!L.length){S.className='';S.innerHTML='<div class="crnone">這一場 還沒有 人 答題</div>';return}
-  var i=0;clearTimeout(CRS.gt);(function nx(){var p=P[i];if(!p)return;try{if(p.f5){GLORY.stop(S);crF5(S,L.slice(0,5))}else GLORY.scene(S,gst,p.g,D,false)}catch(e){}i++;CRS.gt=setTimeout(nx,window.__NOGO?60:p.t)})();
-  CRS.skip=function(){clearTimeout(CRS.gt);GLORY.stop(S);try{GLORY.scene(S,gst,5,D,false)}catch(e){}}}
+function crShowX(){var c=CRS.cfg||CRS.lastX;if(!c)return;CRS.lastX=c;if(CRS.stop){CRS.stop();CRS.stop=null}var L=crRows().filter(function(x){return x.n>0&&!x.few}),st=$('#crgl');
+  if(!st){st=document.createElement('div');st.id='crgl';st.innerHTML='<div id="crgls"></div><div class="crglb"><span id="awb2"></span><button id="crxs" class="ghost">⏭ 直接 看 頒獎台</button><button id="crxa" class="ghost">🔁 再 看 一次</button><button id="crxe" class="big go">⏹ 結束（學生 回 現場任務）</button></div>';document.body.appendChild(st)}
+  st.classList.add('on');var S=$('#crgls');$('#awb2').innerHTML=AWD.bar();
+  if(!L.length){AWD.stop(S);S.className='';S.innerHTML='<div class="crnone">這一場 還沒有 人 答題</div>';return}
+  /* 2026-11-03 第四十二次 第 4 點（老師）：新 頒獎 典禮 AWD：開場 ➜ 第 10～6 名 ➜ 第 5、4 名 ➜ 第 3、2 名 升 上 頒獎台 ➜ 心跳 懸疑 3 2 1 ➜ 第 1 名 ➜ 全部 站 上 頒獎台；
+     3D 舞台、每一次 不同 主題＋配樂；班級 號碼＋中文 全名；下面〔🦸 戰士〕〔🐾 寵物〕〔⚔ 武器〕〔🎵 配樂〕開／關 */
+  var rows=L.filter(function(x){return x.rk>=1&&x.rk<=10}).map(function(x){return awRow(x.id,x.rk,x.s+' 分','答 '+x.n+' 題 · ✅ 答對 '+x.ok+(crLW(c.set)?' · ⚡ '+x.gp:''))});
+  var go=function(){AWD.play(S,{kick:esc(H.cls)+' 班',title:'🏆 '+crName()+' 頒獎 典禮',rows:rows})};go();CRS.awGo=go;
+  CRS.skip=function(){AWD.skip(S)}}
 /* ⚔ 前 5 名 決戰：5 張 卡 一起 數分數 ➜ 第 5、4 名 退下 ➜ 前 3 名 發光「🔥 前 3 名 決戰！」 */
 function crF5(S,L){S.className='crf5';var sh=L.slice().sort(function(){return Math.random()-.5});
   S.innerHTML='<div class="f5t">⚔ 前 5 名 決戰！</div><div class="f5r">'+sh.map(function(x){return '<div class="f5c" data-rk="'+x.rk+'">'+heroI(x.id,'f5h')+'<b>'+(+x.id.slice(3))+' 號</b><span class="f5s" data-v="'+x.s+'">0</span><em></em></div>'}).join('')+'</div><div class="f5b"></div>';
   var t0=Date.now(),D=2600,cs=S.querySelectorAll('.f5s');(function cnt(){var k=Math.min(1,(Date.now()-t0)/D);[].forEach.call(cs,function(e){e.textContent=Math.round(+e.getAttribute('data-v')*k)+' 分'});if(k<1&&S.className==='crf5')requestAnimationFrame(cnt)})();
   setTimeout(function(){[].forEach.call(S.querySelectorAll('.f5c'),function(c){var r=+c.getAttribute('data-rk');c.querySelector('em').textContent=r<=3?'':'第 '+r+' 名';c.classList.add(r<=3?'win':'out')});var b=S.querySelector('.f5b');if(b)b.textContent='🔥 前 3 名 決戰！'},window.__NOGO?10:3600)}
-document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('#crxs')&&CRS.skip)CRS.skip()});
-var crEnd0=crEnd;crEnd=function(){var g=$('#crgl');if(g){g.classList.remove('on');clearTimeout(CRS.gt);try{GLORY.stop($('#crgls'))}catch(e){}}clearInterval(CRS.tk);if(!CRS.cfg&&CRS.lastX){CRS.cfg=CRS.lastX}CRS.lastX=null;CRS.built=null;crEnd0()};
+var crEnd0=crEnd;crEnd=function(){var g=$('#crgl');if(g){g.classList.remove('on');clearTimeout(CRS.gt);try{GLORY.stop($('#crgls'))}catch(e){}try{AWD.stop($('#crgls'))}catch(e){}}clearInterval(CRS.tk);if(!CRS.cfg&&CRS.lastX){CRS.cfg=CRS.lastX}CRS.lastX=null;CRS.built=null;crEnd0()};
 
 /* ══ 2026-11-01 第三十八次 C44 ④ B＋第 7、8 點（老師 選 甲）══
    開始 前 選〔5／8／10 分鐘 作答〕＝ ⚡ 快速 模式（cfg.qk：每個 學生 的 秒懂 動畫 只 演 第 1 關；cfg.qg ＝ 這一班 最常 錯 的 3 關 先 出）；

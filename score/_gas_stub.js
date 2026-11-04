@@ -12,6 +12,7 @@ function make(props) {
     deleteRow(r) { this.d.splice(r - 1, 1); },
     getRange(r, c, nr, nc) { const S = this; nr = nr || 1; nc = nc || 1;
       return { getValues() { const o = []; for (let i = 0; i < nr; i++) { const row = S.d[r - 1 + i] || []; const x = []; for (let j = 0; j < nc; j++) x.push(row[c - 1 + j] === undefined ? '' : row[c - 1 + j]); o.push(x); } return o; },
+        getValue() { const row = S.d[r - 1] || []; return row[c - 1] === undefined ? '' : row[c - 1]; },
         setValue(v) { (S.d[r - 1] = S.d[r - 1] || [])[c - 1] = v; },
         setValues(V) { V.forEach((row, i) => row.forEach((v, j) => { (S.d[r - 1 + i] = S.d[r - 1 + i] || [])[c - 1 + j] = v; })); },
         /* 跟真的 Apps Script 一樣：清掉以後，最後面的空白列不算（getLastRow 只算有內容的） */

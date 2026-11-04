@@ -9,7 +9,7 @@ const ok = (c, m) => { n++; if (!c) E.push(m); };
 const rdA = f => { if (!fs.existsSync(f)) return {}; const c = { window: {} }; vm.runInNewContext(fs.readFileSync(f, 'utf8'), c); return Object.assign({}, ...Object.values(c.window)); };
 const AK = t => String(t).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…＿_　]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
 (async () => {
-  for (const site of ['g3mid', 'midterm']) { const R = require(path.join(ROOT, site, '_rva_data.js')), A = Object.assign(rdA(path.join(ROOT, site, 'audio/rv/aud.js')), rdA(path.join(ROOT, site, 'audio/rvw/aud.js')));
+  for (const site of ['g3mid', 'midterm']) { const R = require(path.join(ROOT, site, '_rva_data.js')), A = Object.assign(rdA(path.join(ROOT, site, 'audio/rv/aud.js')), rdA(path.join(ROOT, site, 'audio/rvw/aud.js')), site === 'midterm' ? rdA(path.join(ROOT, 'sentences/audio/aud.js')) : {});   /* 第四十二次：🪄 魔法 頁 的 3 句 ＝ 句型 網站 的 檔（midterm/_build.js RVB 複製）*/
     ok(!R.err.length, site + ' 題庫 錯誤 ' + R.err.slice(0, 3).join('｜'));
     R.say.forEach(t => ok(A[AK(t.replace(/^m:/, '').replace(/^/, t.indexOf('m:') === 0 ? 'm:' : ''))] || A[AK(t)], site + ' 沒有 語音檔：' + t));
     R.list.forEach(a => { ok(a.qz.length >= 8, site + ' ' + a.nm + ' 測驗 不到 8'); ok(new Set(a.qz.map(q => q.ty)).size >= 4, site + ' ' + a.nm + ' 題型 不到 4 種');
@@ -20,7 +20,7 @@ const AK = t => String(t).replace(/[’]/g, "'").replace(/[=＝≠➜→⇒…�
     const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } });
     await ctx.route(/^https?:\/\//, r => r.abort());
     await ctx.route(/script\.test/, r => { const b = r.request().postData() || ''; if (b) sent.push(b); r.fulfill({ contentType: 'application/json', body: '{"ok":true,"dup":[]}' }); });
-    await ctx.addInitScript(([id]) => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} }); window.__NOUNLOCK = 1; window.__RVAUTO = 1; /* 第四十一次：〔▶ 進入 下一頁〕在 _verify_41.js 量；這裡 自動 換頁 量 其他 */ window.__RVQ = 1; /* 第三十九次：突擊 題 暫時 關掉 ➜ 量 引擎 時 強制 打開 */ window.__NOGO = 1; window.__NOWB = 1; window.__NOTUT = 1; window.__DCLK = .05;
+    await ctx.addInitScript(([id]) => { Object.defineProperty(window, 'SCORE_URL', { get: () => 'https://script.test/exec', set: () => {} }); window.__NOUNLOCK = 1; window.__NODFXI = 1; window.__NOSNH = 1;   /* 第四十二次：寶箱 說明、貪吃蛇 怎麼玩 在 _verify_42.js 量 */ window.__RVAUTO = 1; /* 第四十一次：〔▶ 進入 下一頁〕在 _verify_41.js 量；這裡 自動 換頁 量 其他 */ window.__RVQ = 1; /* 第三十九次：突擊 題 暫時 關掉 ➜ 量 引擎 時 強制 打開 */ window.__NOGO = 1; window.__NOWB = 1; window.__NOTUT = 1; window.__DCLK = .05;
       window.__PLAYED = []; HTMLMediaElement.prototype.play = function () { const a = this; window.__PLAYED.push(a.src); setTimeout(() => a.onended && a.onended(), 60); return Promise.resolve(); };
       HTMLMediaElement.prototype.pause = function () {};
       localStorage.setItem('score_last', '"' + id + '"'); localStorage.setItem('score_id_g' + id[0], '"' + id + '"'); localStorage.setItem('score_act', String(Date.now())); sessionStorage.setItem('sc_ok', id); sessionStorage.setItem('score_pks_' + id, 'tk'); }, [id]);

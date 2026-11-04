@@ -206,7 +206,7 @@ function tqOpen(){
 }
 function tqStart(){
   tqStop();sayStop();missHide(false);
-  tqQ=tqSet();tqN=0;tqScore=0;tqOK=0;MISSLOG=[];clearTimeout(SCAUTO);SCEND=null;scStart();
+  tqQ=tqSet();tqN=0;tqScore=0;tqOK=0;MISSLOG=[];clearTimeout(SCAUTO);SCEND=null;scStart();window.SCPARTF=function(){return document.body.classList.contains('tqon')&&tqQ&&SCQ.length&&SCQ.length<tqQ.length?{m:'q',raw:tqScore,part:tqQ.length}:null};   /* 第四十二次 第 5 點：做 到 一半 離開 ＝ 送「只完成到第 N／5 題」*/
   tqAsk();
 }
 function tqTop(){return '<span class="tqtop"><b id="tqsc">'+tqScore+'</b><span class="rk" id="tqrk">'+tqRkHTML(tqScore)+'</span></span>'}
@@ -300,7 +300,7 @@ function tqEnd(){
   sWow();
   missAll(tqNm()+'　答錯整理');
 }
-function tqClose(){tqStop();sayStop();clearTimeout(SCAUTO);SCEND=null;missHide(false);var m=$('#missAll');if(m)m.classList.remove('on');
+function tqClose(){if(window.SCPARTF&&typeof scPart==='function'){var po=window.SCPARTF();if(po)scPart(po);window.SCPARTF=null}tqStop();sayStop();clearTimeout(SCAUTO);SCEND=null;missHide(false);var m=$('#missAll');if(m)m.classList.remove('on');
   $('#rv').classList.remove('on');document.body.classList.remove('tqon');var g=$('.tqgain');if(g&&g.parentNode)g.parentNode.removeChild(g)}
 $('#rv').addEventListener('click',function(e){
   if(!document.body.classList.contains('tqon'))return;

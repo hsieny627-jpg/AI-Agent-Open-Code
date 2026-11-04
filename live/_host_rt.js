@@ -11,9 +11,17 @@
 var H={pw:'',g:4,qg:4,cls:'',game:'classic',sets:{},n:5,int:1,ch:1,x15:0,say:1,code:'',Q:[],qi:-1,P:{},seen:{},pl:{},tot:{},okc:{},st:{},best:{},fxc:{},okq:{},gs:{},tm:null,A:{},xt:{},rw:{},done:false,log:[],prv:{},phase:'',m:{},ver:0,stops:[]};
 function $(s){return document.querySelector(s)}function $$(s){return [].slice.call(document.querySelectorAll(s))}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function scr(id){$$('.scr').forEach(function(x){x.hidden=x.id!==id});H.scr=id;document.body.setAttribute('data-scr',id);var t=$('#hstp');if(t)t.hidden=id==='hpw'||id==='hset'||id==='hlob';if(id==='hpw'||id==='hset')hqr(false)}
+function scr(id){if(id!=='hend'&&typeof AWD!=='undefined'){var ce=document.getElementById('cerst');if(ce&&ce._aw)AWD.stop(ce)}$$('.scr').forEach(function(x){x.hidden=x.id!==id});H.scr=id;document.body.setAttribute('data-scr',id);var t=$('#hstp');if(t)t.hidden=id==='hpw'||id==='hset'||id==='hlob';if(id==='hpw'||id==='hset')hqr(false)}
 function post(o){var u=String(window.SCORE_URL||'').trim();if(!u)return Promise.reject(new Error('nourl'));return fetch(u,{method:'POST',body:JSON.stringify(o)}).then(function(r){return r.json()})}
 function seatOf(id){return +String(id).slice(3)}
+/* 2026-11-03 第四十二次 第 4 點（老師）：排行榜、頒獎 典禮 寫 班級 號碼＋中文 全名（40203 高天宇）。名單 ＝ 伺服器 {a:'pw'} 的 roster（要 老師 密碼）；
+   **只 放 在 這一台 電腦 的 記憶體（H.NM）**，不 寫進 Firebase、不 存 localStorage；舊 伺服器 沒有 roster ＝ 改 問 {a:'teacher'} 的 roster；拿不到 ＝ 只 寫 5 碼 */
+function nmSet(r){H.NM={};(r||[]).forEach(function(x){if(x&&x[2])H.NM[String(x[0])+(x[1]<10?'0':'')+x[1]]=String(x[2])})}
+function nmLoad(j){if(j&&j.roster){nmSet(j.roster);return}if(!H.pw)return;post({a:'teacher',pw:H.pw}).then(function(t){if(t&&t.roster)nmSet(t.roster)},function(){})}
+function nmOf(id){return (H.NM||{})[id]||''}
+function awRow(id,rk,sc,ln){var p=(H.P||{})[id]||{},im=function(u){return u?LV.img(BASE,u):''};return {rk:rk,code:String(id),nm:nmOf(id),sc:sc,ln:ln,h:im(p.h),p:im(p.pt),w:im(p.w)}}
+document.addEventListener('click',function(e){var t=e.target;if(!t.closest)return;if(t.closest('#awsk'))AWD.skip($('#cerst'));if(t.closest('#awag')&&H.awGo)H.awGo();if(t.closest('#crxs')&&$('#crgls')&&$('#crgls')._aw)AWD.skip($('#crgls'));});
+function nmI(id){var n=nmOf(id);return '<b class="nmc">'+esc(String(id))+'</b>'+(n?' <span class="nmz">'+esc(n)+'</span>':'')}
 function sp2(n){return (n<10?'0':'')+n}
 function R(p){return 'rooms/'+H.code+(p?'/'+p:'')}
 LV.ICON=ICON;
@@ -26,7 +34,7 @@ LDB.onBad(net);
 /* ── 🔑 密碼 ── */
 function pwGo(){var p=$('#pw').value.trim(),m=$('#pwm');if(!p){m.textContent='請打密碼';return}
   if(!LDB.on()){m.innerHTML='⚠ 現場任務 還沒有 設定 Firebase ➜ 請看 <a href="setup.html">大字版 設定頁</a>';return}
-  m.textContent='⏳ 檢查中…';post({a:'pw',pw:p}).then(function(j){if(j&&j.ok){H.pw=p;H.champs=j.champs||{};H.tiers=j.tiers||{};H.sq=j.sq||[];sqAdd();try{sessionStorage.setItem('lvpw',p)}catch(e){}setDraw();scr('hset')}else m.textContent='❌ 密碼 不對'},function(){m.textContent='📶 連不到 成績系統'})}
+  m.textContent='⏳ 檢查中…';post({a:'pw',pw:p}).then(function(j){if(j&&j.ok){H.pw=p;nmLoad(j);H.champs=j.champs||{};H.tiers=j.tiers||{};H.sq=j.sq||[];sqAdd();try{sessionStorage.setItem('lvpw',p)}catch(e){}setDraw();scr('hset')}else m.textContent='❌ 密碼 不對'},function(){m.textContent='📶 連不到 成績系統'})}
 /* ── 👑 每一班 上一週 最認真練習 第 1 名 ➜ 這一週 選 1 次 遊戲（2026-10-21 老師再加第 3 點；選擇題：每班 上週 第 1 名、大螢幕 上 點）──
    名單 ＝ 伺服器（{a:'pw'} 的 champs，A、B 都 做到、同 時間 比 正確率）；用過 了 ＝ Firebase rooms/0班/champ {w 那一週, ids, game}（換 電腦 也 知道）；老師 勾 這次 可以 選 哪幾種（預設 全部） */
 H.champs={};H.chU={};H.cOk={};H.chSel=null;
@@ -214,7 +222,7 @@ function lbShow(){H.phase='lb';LV.stopSay();if(H.unC)H.unC();putM({phase:'lb'});
 function ctl2(){var b=$('#hgo2'),last=H.qi>=H.n-1;b.textContent=last?'🏆 頒獎 典禮 ➜':'▶ 下一題（第 '+(H.qi+2)+' 題）'}
 function drawLB(){var el=$('#lb');var R0=H.rk0||[],R1=rank().slice(0,5);
   el.innerHTML='<div class="lbt">🏆 前 5 名　<small>第 '+(H.qi+1)+' ／ '+H.n+' 題 以後</small></div>'+R1.map(function(x,i){var was=R0.indexOf(x.id),dy=(was<0?5:Math.min(5,was))-i;
-    return '<div class="lbr'+(i===0?' top':'')+'" style="--dy:'+dy+'"><b class="lbn">'+(i+1)+'</b>'+heroI(x.id,'lbi')+'<span class="lbs">'+seatOf(x.id)+' 號 '+tbI(x.id)+'</span>'+(dy>0?'<i class="up">▲ '+dy+'</i>':'')+
+    return '<div class="lbr'+(i===0?' top':'')+'" style="--dy:'+dy+'"><b class="lbn">'+(i+1)+'</b>'+heroI(x.id,'lbi')+'<span class="lbs">'+nmI(x.id)+' '+tbI(x.id)+'</span>'+(dy>0?'<i class="up">▲ '+dy+'</i>':'')+
       ((H.st[x.id]||0)>=2?'<i class="fire">🔥 連對 '+H.st[x.id]+'</i>':'')+'<em>'+(x.v||0).toLocaleString()+'</em></div>'}).join('')}
 /* ⚔ 戰力階級 徽章（2026-10-20 第十五次）：學生 平板 送來 的 tr */
 function tbI(id){var p=H.P[id]||{};return p.tr&&typeof RPFX!=='undefined'?RPFX.tb(p.tr):''}
@@ -291,7 +299,7 @@ function drawGame(){var el=$('#gv');if(!el||H.game==='classic')return;var G=H.gs
   else{var t3=R.slice(0,3),cc=0,chg='';for(var c2 in (H.ch2||{}))cc+=+H.ch2[c2]||0;if(rv&&H.hits)for(var j=0;j<H.hits.length;j++){if(!t3.some(function(x){return x.id===H.hits[j].id})){chg=H.hits[j].id;break}}
     h+='<div class="kg"><div class="kpod">'+[1,0,2].map(function(n){var x=t3[n];return '<div class="kp p'+(n+1)+'">'+(x?(n===0?'<span class="crown">👑</span>':'')+heroI(x.id,'kpi')+'<b>'+seatOf(x.id)+' 號 '+tbI(x.id)+'</b><em>'+x.v.toLocaleString()+'</em>':'')+'<div class="kb">'+(n+1)+'</div></div>'}).join('')+'</div>'+
       (chg?'<div class="chg">👊 挑戰者：'+heroI(chg,'chgi')+seatOf(chg)+' 號（台下 答對 最快）</div>':'')+'<div class="kc">📣 台下 加油 <b>'+cc+'</b> 次</div></div>'}
-  h+='<div class="rk5">'+R.slice(0,5).map(function(x,i){return '<span><b>'+(i+1)+'</b> '+seatOf(x.id)+' 號 '+(x.v||0).toLocaleString()+'</span>'}).join('')+'</div>';
+  h+='<div class="rk5">'+R.slice(0,5).map(function(x,i){return '<span><b>'+(i+1)+'</b> '+nmI(x.id)+' '+(x.v||0).toLocaleString()+'</span>'}).join('')+'</div>';
   el.innerHTML=h}
 /* ── 結束 ① 🏆 頒獎 典禮（老師 8(6)：潦草 ➜ 用 老師看板 的 10 種 風格〔每一次 不一樣〕、前 3 名 一個一個 上台；沒有 聲音）── */
 function end(){H.phase='end';clearTimeout(H.tm);clearTimeout(H.tm3);LV.stopSay();stopAll();
@@ -308,12 +316,13 @@ function cerShow(){scr('hend');hstep(3);hqr(true);var Rk=rank(),G=H.gs,k=H.game,
     k==='map'?(cnt[0]===cnt[1]?'🤝 兩隊 平手':(cnt[0]>cnt[1]?'🔵 單號隊':'🔴 雙號隊')+' 搶到 比較 多 地'):k==='pet'?['🥚 龍蛋 快 孵出來 了','💥 龍蛋 裂開 了','🐣 孵出 傳說 寵物','🐲 寵物 長大 了','🐉 傳說 進化'][G.pet||0]:k==='treasure'?'🗝 全班 打開 '+G.tr+' 個 寶箱':k==='castle'?(G.hole?'🏰 城門 破了 '+G.hole+' 次，蓋了 '+G.br+' 塊 磚':'🏰 全班 守住 城堡！蓋了 '+G.br+' 塊 磚'):k==='fish'?'🎣 全班 一共 釣到 '+Object.keys(G.fish).reduce(function(a,id){return a+G.fish[id].length},0)+' 條 魚':'';
   var pod=[];for(var i=0;i<Rk.length&&i<3;i++){var x=Rk[i];pod.push({rk:i+1,w:'<span class="cph">'+heroI(x.id,'cpi')+'</span><span class="cpn">'+seatOf(x.id)+' 號</span><span class="cps">'+x.v.toLocaleString()+' 分</span>'})}
   var one=Rk[0],G2=LV.game(H.game);
-  H.cerK=CERX.pick();
-  CERX.play($('#cerst'),H.cerK,{ribbon:'⚡ 現場任務 冠軍',sub:H.cls+' 班　'+G2.nm+'　'+H.n+' 題'+(res?'　'+res:''),cls:one?'👑 '+seatOf(one.id)+' 號':'',
-    say:one?'🌟 總分 '+one.v.toLocaleString()+' 分、答對 '+(H.okc[one.id]||0)+' ／ '+H.n+' 題':'',pod:pod},{snd:false});
-  $('#cstn').textContent='第 '+(H.cerK+1)+' 種 風格：'+CERX.ST[H.cerK].nm}
+  /* 2026-11-03 第四十二次 第 4 點（老師）：新 頒獎 典禮 AWD（3D、配樂、第 5 ➜ 1 名 一層 一層 揭開、班級 號碼＋中文 全名、每一次 不一樣）；同 分 ＝ 同 名次 */
+  var rows=[],pr=null,rk=0;Rk.slice(0,10).forEach(function(x,i){if(!pr||x.v!==pr.v)rk=i+1;pr=x;rows.push(awRow(x.id,rk,x.v.toLocaleString()+' 分','答對 '+(H.okc[x.id]||0)+' ／ '+H.n+' 題'))});
+  $('#awb1').innerHTML=AWD.bar();var st=$('#cerst');st.className='cx';
+  var go=function(){AWD.play(st,{kick:H.cls+' 班　'+G2.nm+'　'+H.n+' 題'+(res?'　'+res:''),title:'⚡ 現場任務 頒獎 典禮',rows:rows})};go();H.awGo=go;
+  $('#cstn').textContent=st._aw?st._aw.th.nm:''}
 /* ── 結束 ② 📊 全班 錯題 總分析：每一題 答對 率 長條（一條一條 長出來）＋ 最多人 錯 的 前 3 名（逐字 中文、翻譯、🔊）── */
-function anaShow(){CERX.stop($('#cerst'));scr('hana');hstep(4);hqr(true);var S=H.S||[],n=S.length,okA=0,nA=0;S.forEach(function(s){okA+=s.ok;nA+=s.n});var acc=nA?Math.round(okA/nA*100):0;
+function anaShow(){CERX.stop($('#cerst'));AWD.stop($('#cerst'));scr('hana');hstep(4);hqr(true);var S=H.S||[],n=S.length,okA=0,nA=0;S.forEach(function(s){okA+=s.ok;nA+=s.n});var acc=nA?Math.round(okA/nA*100):0;
   var RD=46,L=2*Math.PI*RD;
   var h='<div class="anahd"><svg class="ring2" viewBox="0 0 110 110"><circle cx="55" cy="55" r="'+RD+'" fill="none" stroke="#24313F" stroke-width="12"/><circle class="rg" cx="55" cy="55" r="'+RD+'" fill="none" stroke="#3BD16F" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+L.toFixed(1)+'" stroke-dashoffset="'+L.toFixed(1)+'" style="--to:'+(L*(1-acc/100)).toFixed(1)+'" transform="rotate(-90 55 55)"/><text x="55" y="62" text-anchor="middle" font-size="26" fill="#fff" font-weight="700">'+acc+'%</text></svg>'+
     '<div><h1>📊 全班 錯題 總分析</h1><div class="note big2">'+H.cls+' 班　全班 平均 答對 '+acc+'%</div></div></div>'+
@@ -378,7 +387,7 @@ document.addEventListener('click',function(e){var t=e.target,c=function(s){retur
 });
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement&&document.activeElement.id==='pw')pwGo();
   if((e.key===' '||e.key==='ArrowRight')&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||'')){if(H.scr==='hq'){e.preventDefault();hgo()}else if(H.scr==='hlb'){e.preventDefault();next()}}});
-(function(){try{var p=sessionStorage.getItem('lvpw');if(p&&LDB.on()){H.pw=p;setDraw();scr('hset');post({a:'pw',pw:p}).then(function(j){if(j&&j.ok){H.champs=j.champs||{};if(H.scr==='hset')setDraw()}},function(){});return}}catch(e){}scr('hpw')})();
+(function(){try{var p=sessionStorage.getItem('lvpw');if(p&&LDB.on()){H.pw=p;setDraw();scr('hset');post({a:'pw',pw:p}).then(function(j){if(j&&j.ok){nmLoad(j);H.champs=j.champs||{};if(H.scr==='hset')setDraw()}},function(){});return}}catch(e){}scr('hpw')})();
 
 /* ══ 2026-10-26 第二十七次 第 2 點（老師 選 C30 第 4 題「照 表 做」）：⚔ 階級 愈高 能力 愈強 ══
    伺服器 {a:'pw'} 多 給：sq ＝ 老師 說 可以 的 ✍ 學生 出題、tiers ＝ 每一個 人 的 階級（只有 5 碼）。

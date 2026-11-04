@@ -16,7 +16,7 @@ function dset(p, v, patch) { const S = seg(p); let o = DB; for (let i = 0; i < S
 const POSTS = [];
 async function ctxOf(br, vp, G) { const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } });
   await ctx.route(/firebaseio\.com|firebasedatabase\.app|script\.google\.com/, r => { E.push('想 連 真的：' + r.request().url().slice(0, 50)); r.abort(); });
-  await ctx.addInitScript(u => { window.__SCNOJIT = 1; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__NOWB = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => u, set: () => {}, configurable: true }); Object.defineProperty(window, 'LIVE_DB', { get: () => 'https://fake.test', set: () => {}, configurable: true });
+  await ctx.addInitScript(u => { window.__SCNOJIT = 1; window.__NOTUT = 1; window.__NOUNLOCK = 1; window.__NODFXI = 1; window.__NOSNH = 1;   /* 第四十二次：寶箱 說明、貪吃蛇 怎麼玩 在 _verify_42.js 量 */ window.__NOWB = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => u, set: () => {}, configurable: true }); Object.defineProperty(window, 'LIVE_DB', { get: () => 'https://fake.test', set: () => {}, configurable: true });
     window.__NOGO = 1; window.__NORVA = 1; HTMLMediaElement.prototype.play = function () { const a = this; setTimeout(() => a.onended && a.onended(), 40); return Promise.resolve(); }; }, URL0);
   await ctx.route(/fake\.test/, async r => { const u = new URL(r.request().url()), m = r.request().method(); let b = null;
     if (m === 'GET') b = dget(u.pathname); else { const v = m === 'DELETE' ? null : JSON.parse(r.request().postData() || 'null'); dset(u.pathname, v, m === 'PATCH'); b = v; }
@@ -93,12 +93,16 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
       n += 9; const cd = dget('rooms/0304/cr'); if (!cd || cd.d !== 600000) E.push(tag + ' 三年級 25 題 預設 不是 10 分鐘（第四十次：現場任務 不 演 動畫）' + (cd && cd.d));
       const tl = await s5.evaluate(() => { const t = document.getElementById('xlvT'); return t && t.classList.contains('on') ? t.textContent : ''; }); if (!/⏱ (9|10):\d\d/.test(tl)) E.push(tag + ' 平板 上面 沒有 ⏱ 倒數 ' + tl);
       dset('rooms/0304/crp/30403', { n: 6, ok: 4, s: 66.7, p: '30404', g: 'q1', t: cd.t }); dset('rooms/0304/crp/30405', { n: 5, ok: 5, s: 100, g: 'q1', t: cd.t });   /* 第三十九次 C45 ③ 甲：答 滿 5 題 才 排 名次 */   /* 第三十八次 第 7 點：分數 ＝ 正確率 */
+      await h.evaluate(() => nmSet([['304', 5, '測試甲'], ['304', 3, '測試乙']]));   /* 第四十二次 第 4 點：班級 號碼＋中文 全名（假 名單）*/
       await s5.evaluate(() => { R.Q.push([1, 0, 3, 0, .5, 0]); R.score = 4; xPub(); }); await h.waitForTimeout(1800);
       n++; if (await s5.evaluate(() => xAcc()) !== 100) E.push(tag + ' 平板 分數 不是 正確率（答對 1 ／ 1 ＝ 100）');
       const lb = await h.evaluate(() => ({ rest: (document.getElementById('crrest') || {}).textContent || '', ok: [...document.querySelectorAll('#crlbw .crok')].map(e => e.textContent).join('|'), r: [...document.querySelectorAll('#crlbw .crlr')].map(r => r.dataset.id), j: (document.getElementById('crjb') || {}).textContent || '', clk: (document.getElementById('crclk') || {}).textContent || '' }));
       if (lb.r.join() !== '30405,30403')   /* 第三十九次：只 答 1 題 的 2 號（100 分）不上 前 10 名 */ E.push(tag + ' 大螢幕 即時 排行榜 名次 不對（答不到 5 題 不 排）' + lb.r.join());
       n += 2; if (!/答 5 題/.test(lb.ok) || !/答 6 題/.test(lb.ok)) E.push(tag + ' 排行榜 旁邊 沒有 寫「答 N 題」' + lb.ok);
-      if (!/答 滿 5 題 才 排 名次/.test(lb.rest) || !/2 號 答 \d 題/.test(lb.rest)) E.push(tag + ' 答不到 5 題 的 沒有 寫 在 下面 ' + lb.rest);
+      { n += 3; const nm = await h.evaluate(() => ({ t: [...document.querySelectorAll('#crlbw .crnm')].map(e => e.textContent).join('|'), run: document.querySelectorAll('#crlbw .crtrk .crrun img, #crlbw .crtrk .crrun .noh').length, fin: document.querySelectorAll('#crlbw .crfin').length }));
+        if (!/30405 測試甲/.test(nm.t) || !/30403 測試乙/.test(nm.t)) E.push(tag + ' 即時 排行榜 沒有 寫「30405 測試甲」' + nm.t);
+        if (nm.run !== 2 || nm.fin !== 2) E.push(tag + ' 即時 排行榜 不是 賽道（戰士 跑 在 跑道 上、🏁）' + JSON.stringify(nm)); }
+      if (!/答 滿 5 題 才 排 名次/.test(lb.rest) || !/30402 答 \d 題/.test(lb.rest)) E.push(tag + ' 答不到 5 題 的 沒有 寫 在 下面 ' + lb.rest);
       if (!/3 👥 4/.test(lb.j)) E.push(tag + ' 兩人 一台 大螢幕 要 寫 兩個 號碼「3 👥 4」：' + lb.j);
       if (!/⏱ (9|10):\d\d/.test(lb.clk)) E.push(tag + ' 大螢幕 沒有 大 倒數 ' + lb.clk);
       const np = POSTS.length; await h.click('#crend'); await h.waitForTimeout(1500);
@@ -108,6 +112,9 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
       await h.waitForTimeout(800); if (!POSTS.slice(np).some(x => /g3gm_g3m-x25/.test(x))) E.push(tag + ' 時間 到：答了 1 題 也 要 送 成績 g3gm_g3m-x25');
       await h.waitForTimeout(6500); const gl = await h.evaluate(() => ({ on: (document.getElementById('crgl') || {}).className || '', h: (document.getElementById('crgls') || {}).innerHTML.length || 0 }));
       if (!/on/.test(gl.on) || gl.h < 50) E.push(tag + ' 時間 到 以後 沒有 前 10 名＋頒獎 典禮 ' + JSON.stringify(gl));
+      { n += 2; const aw = await h.evaluate(() => ({ c: document.getElementById('crgls').className, code: [...document.querySelectorAll('#crgls .awcode')].map(x => x.textContent + ' ' + x.nextSibling.textContent).join('|'), bar: document.querySelectorAll('#awb2 [data-awt]').length }));
+        if (!/awd/.test(aw.c) || !/30405 測試甲/.test(aw.code)) E.push(tag + ' 頒獎 典禮 不是 新 的 AWD 或 沒有 號碼＋全名 ' + JSON.stringify(aw));
+        if (aw.bar !== 4) E.push(tag + ' 頒獎 典禮 下面 沒有〔戰士〕〔寵物〕〔武器〕〔配樂〕開關'); }
       await h.click('#crxe'); await h.waitForTimeout(600); if ((dget('rooms/0304/cr') || {}).on !== 0) E.push(tag + ' 按〔⏹ 結束〕要 寫 on:0');
       if (du !== true) E.push(tag + ' 平板 大廳：〔🙋 一個人｜👥 兩個人〕要 在〔📝 25 題〕上面 ' + du);
       await s5.close(); }

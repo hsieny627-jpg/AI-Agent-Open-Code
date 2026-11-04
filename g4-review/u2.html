@@ -4261,6 +4261,14 @@ function scFetch(q,body,ms){
 }
 /* 沒網路先存平板，連上網補送（同一筆有編號，伺服器不會重複存） */
 var SCBUSY=false,SCRES={};
+/* 2026-11-03 第四十二次 第 5 點：做到 一半 也 立刻 送（一樣 的 編號 ＝ 伺服器 蓋過去）＝ 佇列 裡 一樣 編號 的 舊 的 先 拿掉，只 送 最新 的 */
+function scQAdd(r){if(!r||!r.u)return;var Q=(scGet('q')||[]).filter(function(x){return x.u!==r.u});Q.push(r);scPut('q',Q.slice(-200));scFlush()}
+/* 做到 一半 ＝ 不 演 結束 畫面，只 送（o.part ＝ 一共 幾題；限時 遊戲 ＝ 999「沒有 玩完」）。頁面 正在 作答 的 時候 設 window.SCPARTF（回傳 o），切到 別的 畫面、關掉 分頁 ＝ 自己 送 */
+var SCPU='';function scPart(o){try{o=o||{};var m=o.m||'q',Q=o.qs||SCQ;if(!scLive()||!SCH||!SCPU||!Q.length||m==='mem'||m==='v'||m==='l'||Q.length>=(o.part||0))return;
+  scQAdd({id:SCID,set:SCH.key(),name:SCH.name(),m:m,qs:Q,raw:Math.round(o.raw||0),fix:o.fix||0,mp:0,mw:0,sec:Math.round(o.sec||0),src:SCSRC,dev:SCDEV,u:SCPU,t:Date.now(),part:o.part})}catch(e){}}
+document.addEventListener('visibilitychange',function(){if(document.hidden&&window.SCPARTF){var o=window.SCPARTF();if(o)scPart(o)}});addEventListener('pagehide',function(){if(window.SCPARTF){var o=window.SCPARTF();if(o)scPart(o)}});
+/* 換 一台 平板 接著 做：伺服器「進度」分頁 拿 這個 人 這個 題組 做到 一半 的 那一份（要 通行證）*/
+function scProg(set,cb){if(typeof scLive!=='function'||!scLive()){cb(null);return}scFetch('',{a:'prog',id:SCID,set:set,k:scPk(SCID)},12000).then(function(j){cb(j&&j.ok&&j.prog?j.prog:null)},function(){cb(null)})}
 var SCJIT=0;function scFlush(){
   if(!SCON||SCBUSY)return Promise.resolve(null);
   if((window.SCLIVE||/[?&]live=/.test(location.search))&&!window.__SCNOJIT&&SCJIT!==2){if(!SCJIT){SCJIT=1;setTimeout(function(){SCJIT=2;scFlush()},Math.random()*4000)}return Promise.resolve(null)}   /* ⚡ 現場任務：全班 同時 送 ➜ 錯開 0～4 秒 */
@@ -4416,7 +4424,7 @@ function scMeHTML(){
 }
 /* ── 作答中：本班這一組的名次（只有前 10 名給名次；不在前 10 ＝ 再幾分進前 10） ── */
 function scStart(gt){
-  SCQ=[];SCV=null;SCIN='';clearTimeout(SCAUTO);SCEND=null;
+  SCQ=[];SCV=null;SCIN='';clearTimeout(SCAUTO);SCEND=null;SCPU=SCID?SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6):'';
   if(!scLive())return;
   var my=SCH.key();
   scFetch('a=view&id='+SCID+'&set='+encodeURIComponent(my)+(gt?'&gt=1':''),null,6000).then(function(j){if(j&&!j.err&&SCH.key()===my){SCV=j;if(SCH.rk)SCH.rk()}},function(){});
@@ -4449,7 +4457,7 @@ function scS100(Q){var n=Q.length,s=0;Q.forEach(function(q){if(q[0])s+=60/n+40/n
 function scEnd(o){
   o=o||{};var m=o.m||'q',Q=o.qs||SCQ,key=SCH.key(),n=Q.length,ok=0,fast=0;Q.forEach(function(q){ok+=q[0];fast+=q[3]});
   if(m!=='mem'&&!n)return false;
-  var acc=m==='mem'?null:Math.round(ok/n*100),u=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  var acc=m==='mem'?null:Math.round(ok/n*100),u=(SCPU&&SCPU.indexOf(SCID)===0?SCPU:'')||SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);SCPU='';window.SCPARTF=null;   /* 第四十二次：跟 做到 一半 的 同一個 編號 ＝ 蓋過去 */
   var R={id:SCID,set:key,name:SCH.name(),m:m,qs:m==='mem'?[]:Q,raw:Math.round(o.raw||0),fix:o.fix||0,mp:o.mp||0,mw:o.mw||0,sec:Math.round(o.sec||0),
     src:SCSRC,dev:SCDEV,u:u,t:Date.now()};
   var hk='h_'+SCID+'_'+key,H=scGet(hk)||[],sv=SCV&&SCV.set;
@@ -4932,7 +4940,7 @@ function tqOpen(){
 }
 function tqStart(){
   tqStop();sayStop();missHide(false);
-  tqQ=tqSet();tqN=0;tqScore=0;tqOK=0;MISSLOG=[];clearTimeout(SCAUTO);SCEND=null;scStart();
+  tqQ=tqSet();tqN=0;tqScore=0;tqOK=0;MISSLOG=[];clearTimeout(SCAUTO);SCEND=null;scStart();window.SCPARTF=function(){return document.body.classList.contains('tqon')&&tqQ&&SCQ.length&&SCQ.length<tqQ.length?{m:'q',raw:tqScore,part:tqQ.length}:null};   /* 第四十二次 第 5 點：做 到 一半 離開 ＝ 送「只完成到第 N／5 題」*/
   tqAsk();
 }
 function tqTop(){return '<span class="tqtop"><b id="tqsc">'+tqScore+'</b><span class="rk" id="tqrk">'+tqRkHTML(tqScore)+'</span></span>'}
@@ -5026,7 +5034,7 @@ function tqEnd(){
   sWow();
   missAll(tqNm()+'　答錯整理');
 }
-function tqClose(){tqStop();sayStop();clearTimeout(SCAUTO);SCEND=null;missHide(false);var m=$('#missAll');if(m)m.classList.remove('on');
+function tqClose(){if(window.SCPARTF&&typeof scPart==='function'){var po=window.SCPARTF();if(po)scPart(po);window.SCPARTF=null}tqStop();sayStop();clearTimeout(SCAUTO);SCEND=null;missHide(false);var m=$('#missAll');if(m)m.classList.remove('on');
   $('#rv').classList.remove('on');document.body.classList.remove('tqon');var g=$('.tqgain');if(g&&g.parentNode)g.parentNode.removeChild(g)}
 $('#rv').addEventListener('click',function(e){
   if(!document.body.classList.contains('tqon'))return;

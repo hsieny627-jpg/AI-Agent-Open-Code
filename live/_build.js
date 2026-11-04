@@ -50,7 +50,7 @@ ${CSS}${extra || ''}
 </style></head>`;
 const RT = R('_db.js') + '\n' + R('_common.js');
 /* ── 老師大螢幕 ── */
-const CER = fs.readFileSync(path.join(ROOT, 'score/_cer.css'), 'utf8') + fs.readFileSync(path.join(ROOT, 'rpg/_fx.css'), 'utf8') + fs.readFileSync(path.join(ROOT, 'score/_honor.css'), 'utf8') + fs.readFileSync(path.join(ROOT, 'score/_glory.css'), 'utf8'), CERRT = fs.readFileSync(path.join(ROOT, 'score/_cer_rt.js'), 'utf8') + fs.readFileSync(path.join(ROOT, 'rpg/_fx_rt.js'), 'utf8') + fs.readFileSync(path.join(ROOT, 'score/_glory_rt.js'), 'utf8');   /* 2026-10-30 第三十四次 第 12-(4) 點：期中 挑戰 時間 到 ＝ 🏆 前 10 名（榮譽榜 那一套 GLORY，沒有 聲音）   /* 2026-10-20 第十四次：特效引擎＋自己畫的 金幣（大螢幕） */
+const CER = require('../score/_awd.js').CSS + fs.readFileSync(path.join(ROOT, 'score/_cer.css'), 'utf8') + fs.readFileSync(path.join(ROOT, 'rpg/_fx.css'), 'utf8') + fs.readFileSync(path.join(ROOT, 'score/_honor.css'), 'utf8') + fs.readFileSync(path.join(ROOT, 'score/_glory.css'), 'utf8'), CERRT = fs.readFileSync(path.join(ROOT, 'score/_cer_rt.js'), 'utf8') + fs.readFileSync(path.join(ROOT, 'rpg/_fx_rt.js'), 'utf8') + fs.readFileSync(path.join(ROOT, 'score/_glory_rt.js'), 'utf8') + require('../score/_awd.js').JS;   /* 2026-11-03 第四十二次 第 4 點：🏆 新 頒獎 典禮 AWD */   /* 2026-10-30 第三十四次 第 12-(4) 點：期中 挑戰 時間 到 ＝ 🏆 前 10 名（榮譽榜 那一套 GLORY，沒有 聲音）   /* 2026-10-20 第十四次：特效引擎＋自己畫的 金幣（大螢幕） */
 const J = o => JSON.stringify(o).replace(/</g, '\\u003c');
 /* ── 老師大螢幕 ── 按鈕 永遠 在 右下角 同一個 位置（#hgo）；沒有 音樂、音效 */
 const host = head('現場任務 大螢幕', CER) + `<body class="host">
@@ -72,7 +72,7 @@ const host = head('現場任務 大螢幕', CER) + `<body class="host">
  <div id="qq" class="qq"></div><div id="qo"></div><div id="qh" class="qh" hidden></div><div id="qs"></div></div><div class="qside" id="gv"></div></div>
  <div class="hbar"><span id="hctl2"><button id="hpz" class="ghost">⏸ 暫停</button><button id="hint" class="ghost">😆 干擾：開</button></span><button id="htut" class="ghost" hidden>🧑‍🏫 請 小老師</button><button id="hsay" class="ghost hsay">🗣 自動 唸：開</button><button id="hgo" class="big go"></button></div></div>
 <div class="scr" id="hlb" hidden><div id="lb" class="lb on"></div><div class="hbar"><button id="hgo2" class="big go"></button></div></div>
-<div class="scr" id="hend" hidden><div id="cerw"><div class="cx" id="cerst"></div></div><div class="hbar"><span id="cstn" class="note"></span><button id="tana" class="big go">📊 全班 錯題 分析 ➜</button></div></div>
+<div class="scr" id="hend" hidden><div id="cerw"><div class="cx" id="cerst"></div></div><div class="hbar"><span id="cstn" class="note"></span><span id="awb1"></span><button id="awsk" class="ghost">⏭ 直接 看 頒獎台</button><button id="awag" class="ghost">🔁 再 看 一次</button><button id="tana" class="big go">📊 全班 錯題 分析 ➜</button></div></div>
 <div class="scr" id="hana" hidden><div class="in" id="hanab"></div><div class="hbar"><span id="erw" class="note"></span><span id="gm" class="note"></span><button id="tcer" class="ghost">🏆 再看 頒獎</button><button id="close2" class="ghost">✕ 結束 這一場</button><button id="give" class="big go">🎁 發獎勵 ＋ 記 練習次數</button></div></div>
 <div class="scr" id="hcr" hidden><div class="in"></div></div><div class="scr" id="hcrr" hidden><div class="in"></div></div>
 <script>var BASE='../',GR=${J(QB.GR)},LIST=${J(QB.LIST)},CHAL=${J(CHAL)},ICON=${J(QB.ICON)},CRDS=${J({ 3: CRD, 4: CRD4 })};

@@ -43,7 +43,7 @@ function RVASRC() {
   function read(text, v, cells, done, rate) {
     var S = RVA.S; stopAu(); var my = S.rid, f = RVA.A.aud(text, v || ''), w = cells.map(function (c) { return Math.max(1, (c.getAttribute('data-w') || '').replace(/[^A-Za-z0-9]/g, '').length) + 1; }), tot = w.reduce(function (a, b) { return a + b; }, 0) || 1;
     function hl(r) { var acc = 0, k = -1; for (var i = 0; i < w.length; i++) { acc += w[i]; if (r * tot < acc) { k = i; break; } } cells.forEach(function (c, i) { c.classList.toggle('spk', i === k); }); }
-    var fin = function () { if (!RVA.S || my !== RVA.S.rid) return; cells.forEach(function (c) { c.classList.remove('spk'); }); if (done) done(); };
+    var fired = 0, fin = function () { if (!RVA.S || my !== RVA.S.rid || fired) return; fired = 1; cells.forEach(function (c) { c.classList.remove('spk'); }); if (done) done(); };
     var est = function () { var s = performance.now(), D = Math.max(1200, tot * 95) * (S.slow ? 1.4 : 1); try { var u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = S.slow ? .6 : .82; speechSynthesis.speak(u); } catch (e) { }
       (function lp() { if (!RVA.S || my !== RVA.S.rid) return; if (S.pause) { s += 16; requestAnimationFrame(lp); return; } var r = (performance.now() - s) / D; if (r >= 1) { fin(); return; } hl(r); requestAnimationFrame(lp); })(); };
     if (!f) { est(); return; }
@@ -102,6 +102,7 @@ function RVASRC() {
   /* ② 一頁 一個 重點 */
   function scene(i) { var S = RVA.S, sp = S.spec, c = sp.sc[i]; S.i = i; S.part = 0; S.misd = 0; $id('rvc').classList.remove('hid'); nxLock();
     $id('rvp').textContent = '📍 ' + (i + 1) + ' ／ ' + sp.sc.length;
+    if (c.mag) { magScene(i, c); return; }
     var st = $id('rvs'); st.innerHTML = ''; var card = h('div', 'rvcard' + (c.t2 ? ' eq' : ''), '');
     card.appendChild(h('div', 'rvh', '<span>重點 ' + (i + 1) + '</span>' + esc(c.h)));
     if (c.pic) card.appendChild(h('div', 'rvpic', c.pic));
@@ -117,14 +118,54 @@ function RVASRC() {
     if (c.mis && w2) w2.classList.add('rvwait');
     (function pop() { if (c.mis && k === k1 && !S.misd) { S.misd = 1; T(function () { misShow(card, c); T(function () { w2.classList.remove('rvwait'); pop(); }, 2600); }, 400); return; }
       if (k < ks.length) { ks[k].classList.add('in'); k++; T(pop, 330); return; } S.misd = 0; T(function () { readS(i, 0); }, 350); })(); }
+  /* 2026-11-03 第四十二次 第 7 點（老師）：🪄 直述句 ➜ 問句 魔法 變身（He is a teacher. ➜ Is he a teacher?）
+     ① 一個 字 一張 彩色 卡（英文＋正下方 中文）唸 直述句 ➜ ② 🪄 魔杖 掃過 He、is ➜ ③ is 跳到 最前面 變 Is（大寫 I 發亮）、He 變 he 緊跟 在 Is 後面
+     ➜ ④ 句點 . 飛起來 轉 一圈 變成 ? ➜ ⑤ 中文 順序 不變，句點 變成「嗎？」➜ ⑥ 唸 問句（唸到 哪 亮到 哪）➜ ⑦ 三個 關鍵 一起 亮 */
+  var MAGC = { he: '#1565C0', she: '#AD1457', is: '#C98A00', a: '#4E6E8E', p: '#5A5A66' };
+  function magScene(i, c) { var TT = function (f, ms) { T(f, ms * (window.__RVAUTO ? .15 : 1)); }, S = RVA.S, sp = S.spec, st = $id('rvs'); st.innerHTML = '';
+    var card = h('div', 'rvcard rvmag', ''); card.appendChild(h('div', 'rvh', '<span>重點 ' + (i + 1) + '</span>' + esc(c.h)));
+    var t = c.t.map(function (p) { return [String(p[0]).replace(/[.?!]$/, ''), p[1]]; }), pn = /\?$/.test(c.en) ? '?' : '.';
+    var stage = h('div', 'mgst', ''), en = h('div', 'mgen', ''), zh = h('div', 'mgzh keepsp', ''), cap = h('div', 'mgcap', ''), wand = h('div', 'mgwd', '🪄');
+    var col = function (w) { w = w.toLowerCase(); return MAGC[w] || (w === 'a' || w === 'an' ? MAGC.a : '#6A3FB0'); };
+    var cards = t.map(function (p) { var k = h('span', 'mgk', '<b>' + ap(p[0]) + '</b><i>' + esc(p[1]) + '</i>'); k.style.background = col(p[0]); k.setAttribute('data-w', p[0]); en.appendChild(k); return k; });
+    var pc = h('span', 'mgk mgp', '<b>' + pn + '</b><i>　</i>'); pc.style.background = MAGC.p; en.appendChild(pc);
+    var zs = t.map(function (p) { var z = h('span', 'mgz', esc(p[1])); z.style.color = col(p[0]); zh.appendChild(z); return z; }), zp = h('span', 'mgz mgzp', '。'); zh.appendChild(zp);
+    stage.appendChild(cap); stage.appendChild(en); stage.appendChild(h('div', 'mgzl', '中文')); stage.appendChild(zh); stage.appendChild(wand); card.appendChild(stage);
+    var sum = h('div', 'mgsum', '<span>① <b>Is</b> 跳到 最前面（I 大寫）</span><span>② <b>' + esc(t[0][0].toLowerCase()) + '</b> 緊跟 在 Is 後面</span><span>③ <b>.</b> 變成 <b>?</b>　中文 加「嗎」</span>'); card.appendChild(sum);
+    card.appendChild(h('div', 'rvcnt', S.once ? '🔊 <i>1</i>' : '🔊 <i>1</i><i>2</i>'));
+    st.appendChild(card); fit(card);
+    var all = cards.concat([pc]), k = 0, say = function (m) { cap.innerHTML = m; cap.classList.remove('in'); void cap.offsetWidth; cap.classList.add('in'); };
+    var cnt = function (n) { var q = card.querySelectorAll('.rvcnt i'); q[n] && q[n].classList.add('on'); };
+    var iH = 0, iIs = 1;   /* 第 1 個 字 ＝ He／She、第 2 個 ＝ is */
+    function flip(els, fn) { var a = els.map(function (e) { return e.getBoundingClientRect(); }); fn(); els.forEach(function (e, j) { var b = e.getBoundingClientRect(); e.style.transition = 'none'; e.style.transform = 'translate(' + (a[j].left - b.left).toFixed(1) + 'px,' + (a[j].top - b.top).toFixed(1) + 'px)'; void e.offsetWidth; e.style.transition = 'transform 1.1s cubic-bezier(.45,1.5,.5,1)'; e.style.transform = ''; }); }
+    (function pop() { if (k < all.length) { all[k].classList.add('in'); if (zs[k]) zs[k].classList.add('in'); if (k === all.length - 1) zp.classList.add('in'); k++; TT(pop, 380); return; }
+      say('📢 直述句：在 說 一件 事'); TT(step1, 400); })();
+    function step1() { cnt(0); read(c.en, c.v, cards, function () { pc.classList.add('pp'); TT(step2, 900); }); }
+    function step2() { say('🪄 加 一個 魔法 ➜ 變成 問句！'); stage.classList.add('wave');
+      var a = cards[iH].getBoundingClientRect(), b = cards[iIs].getBoundingClientRect(), r = stage.getBoundingClientRect();
+      wand.style.left = (a.left - r.left - 20) + 'px'; wand.style.top = (a.top - r.top - 50) + 'px'; wand.classList.add('go'); wand.style.setProperty('--dx', (b.right - a.left) + 'px');
+      cards[iH].classList.add('glow'); cards[iIs].classList.add('glow');
+      TT(step3, 1700); }
+    function step3() { say('① <b>Is</b> 跳到 最前面　② <b>' + esc(t[iH][0].toLowerCase()) + '</b> 緊跟 在 Is 後面'); var A = cards[iH], B = cards[iIs];
+      flip([A, B], function () { en.insertBefore(B, A); });
+      TT(function () { var bA = A.querySelector('b'), bB = B.querySelector('b'); bA.innerHTML = ap(t[iH][0].charAt(0).toLowerCase() + t[iH][0].slice(1)); bB.innerHTML = '<span class="mgcp">' + esc(t[iIs][0].charAt(0).toUpperCase()) + '</span>' + esc(t[iIs][0].slice(1)); A.setAttribute('data-w', t[iH][0].toLowerCase()); B.setAttribute('data-w', 'Is'); B.classList.add('cap'); }, 650);
+      TT(step4, 2600); }
+    function step4() { say('③ 句點 <b>.</b> 變成 問號 <b>?</b>'); pc.classList.remove('pp'); pc.classList.add('fly'); TT(function () { pc.querySelector('b').textContent = '?'; pc.classList.add('q'); }, 600); TT(step5, 2400); }
+    function step5() { say('中文：順序 不變，最後 加 <b>嗎</b>'); zp.innerHTML = '<b class="mgma">嗎</b>？'; zp.classList.add('ma'); TT(step6, 2400); }
+    function step6() { cards.forEach(function (x) { x.classList.remove('glow'); }); say('🔊 ' + esc(c.en2));
+      var ord = [].slice.call(en.querySelectorAll('.mgk')).filter(function (x) { return x !== pc; });
+      cnt(0); read(c.en2, c.v2 != null ? c.v2 : c.v, ord, function () { pc.classList.add('pp'); if (S.once) { fin(); return; } TT(function () { cnt(1); read(c.en2, c.v2 != null ? c.v2 : c.v, ord, fin); }, 700); }); }
+    function fin() { sum.classList.add('on'); card.classList.add('z'); say('✨ 變身 完成！'); card.appendChild(h('div', 'rvz keepsp', esc(ZS(c.z)))); if (c.n) card.appendChild(h('div', 'rvn', '💡 ' + c.n)); fit(card); TT(function () { slot(2 * i + 1, function () { nxOpen(); }); }, 900); } }
   /* 唸 第 n 次（等句 ＝ 上面 一行 再 下面 一行）*/
   function readS(i, n) { var S = RVA.S, c = S.spec.sc[i], card = $id('rvs').querySelector('.rvcard'); if (!card) return;
     var cnt = card.querySelectorAll('.rvcnt i'); cnt[n] && cnt[n].classList.add('on');
     var rows = card.querySelectorAll('.rvrow'), c1 = [].slice.call(rows[0].children), fin = function () { if (n === 0) { card.classList.add('z'); T(function () { order(card, c); }, 500); } T(function () { slot(2 * i + n, function () { if (n === 0 && !S.once) T(function () { readS(i, 1); }, 650); else T(function () { nxOpen(); }, 400); }); }, n === 0 ? 900 : 500); };
     read(c.en, c.v, c1, function () { if (rows[1]) T(function () { read(c.en2, c.v2 != null ? c.v2 : c.v, [].slice.call(rows[1].children), fin); }, 450); else fin(); }); }
   /* 2026-11-03 第四十一次（老師 建議 1 乙）：學生 自己 按〔▶ 進入 下一頁〕；這一頁 全部 演完、唸完 才 解鎖（不會 看 到 睡著，也 不能 跳過）*/
-  function nxLock() { var b = $id('rvnext'); if (!b) return; b.disabled = true; b.classList.remove('rdy'); b.innerHTML = '🔒 看完 才 能 按'; }
-  function nxOpen() { var S = RVA.S, b = $id('rvnext'); if (!S || !b) return; if (window.__RVAUTO) { nextS(); return; } b.disabled = false; b.classList.add('rdy'); b.innerHTML = S.i + 1 < S.spec.sc.length ? '▶ 進入 下一頁' : '✅ 看完 了'; }
+  function nxLock() { var b = $id('rvnext'); if (!b) return; b.disabled = true; b.classList.remove('rdy', 'nud'); clearInterval(b._nud); b.innerHTML = '🔒 看完 才 能 按'; }
+  function nxOpen() { var S = RVA.S, b = $id('rvnext'); if (!S || !b) return; if (window.__RVAUTO) { nextS(); return; } b.disabled = false; b.classList.add('rdy'); b.innerHTML = S.i + 1 < S.spec.sc.length ? '▶ 進入 下一頁' : '✅ 看完 了';
+    /* 2026-11-03 第四十二次（老師）：停 太 久 不 按〔▶ 進入 下一頁〕＝ 每 15 秒 輕輕 放大 一次 提醒（暫停 的 時候 不 提醒、不 自己 換頁）*/
+    clearInterval(b._nud); b._nud = setInterval(function () { if (!b.isConnected) { clearInterval(b._nud); return; } if (!RVA.S || b.disabled || RVA.S.pause) return; b.classList.remove('nud'); void b.offsetWidth; b.classList.add('nud'); }, window.__RVNUD || 15000); }
   function nextS() { var S = RVA.S; if (S.i + 1 < S.spec.sc.length) scene(S.i + 1); else finish(); }
   /* 這個 位置 有 排 突擊 測驗 嗎？ */
   function slot(s, go) { var S = RVA.S; if (S.plan[s] == null) { go(); return; } var qi = S.plan[s]; delete S.plan[s]; S.qpg = (s - 1) / 2 + 1;
@@ -299,6 +340,28 @@ const CSS = `
 .rvc button{min-height:58px;min-width:150px;font:inherit;font-size:clamp(19px,2.5vh,25px);font-weight:700;border-radius:16px;border:3px solid #5E7FA8;background:#14263F;color:#fff;cursor:pointer}
 .rvc button.on{background:#FFB300;color:#2A1A00;border-color:#FFE07A}
 .rvc button.rvnx{min-width:220px;border-color:#4A5A6E;background:#1A2230;color:#8C9AAE}
+.rvmag .mgst{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 4px 4px}
+.rvmag .mgcap{min-height:1.4em;font-size:clamp(22px,3.3vh,34px);font-weight:700;color:#FFE58A;text-align:center;opacity:0}.rvmag .mgcap.in{animation:mgCap .5s both}.rvmag .mgcap b{color:#fff;font-size:1.15em}
+@keyframes mgCap{0%{opacity:0;transform:translateY(10px) scale(.9)}100%{opacity:1;transform:none}}
+.rvmag .mgen{display:flex;gap:clamp(8px,1.4vw,16px);align-items:flex-end;justify-content:center;flex-wrap:nowrap}
+.rvmag .mgk{display:flex;flex-direction:column;align-items:center;border-radius:16px;padding:8px clamp(12px,1.6vw,22px) 6px;color:#fff;opacity:0;transform:scale(.4);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 6px 0 rgba(0,0,0,.35)}
+.rvmag .mgk.in{opacity:1;transform:none;transition:opacity .3s,transform .45s cubic-bezier(.3,1.7,.5,1)}
+.rvmag .mgk b{font-size:calc(clamp(44px,8.5vh,88px)*var(--rz,1));line-height:1.1;font-weight:700}.rvmag .mgk i{font-style:normal;font-size:calc(clamp(22px,3.4vh,34px)*var(--rz,1));color:#FFF6D0;line-height:1.2}
+.rvmag .mgk.spk{filter:brightness(1.3);transform:scale(1.1)}
+.rvmag .mgk.glow{box-shadow:0 0 0 5px #FFE58A,0 0 30px #FFD54A,0 6px 0 rgba(0,0,0,.35)}
+.rvmag .mgcp{display:inline-block;color:#FFF;text-shadow:0 0 12px #fff,0 0 24px #FFE58A;animation:mgCp 1.4s ease-in-out 2}@keyframes mgCp{50%{transform:scale(1.5)}}
+.rvmag .mgp{min-width:1.4em}.rvmag .mgp.pp b{animation:mgPp .9s}@keyframes mgPp{50%{transform:scale(1.8);color:#FFE58A}}
+.rvmag .mgp.fly{animation:mgFly 1.5s cubic-bezier(.4,1.4,.5,1)}@keyframes mgFly{0%{transform:none}40%{transform:translateY(-70px) rotate(360deg) scale(1.6)}100%{transform:none}}
+.rvmag .mgp.q{background:#E0A030!important;box-shadow:0 0 0 5px #FFE58A,0 0 34px #FFD54A}.rvmag .mgp.q b{color:#3A2600}
+.rvmag .mgzl{font-size:18px;color:#9FB0C8;margin-top:6px}
+.rvmag .mgzh{display:flex;gap:.5em;font-size:calc(clamp(34px,6vh,60px)*var(--rz,1));font-weight:700}.rvmag .mgz{opacity:0}.rvmag .mgz.in{opacity:1;transition:opacity .4s}
+.rvmag .mgzp.ma{color:#FFE58A}.rvmag .mgma{display:inline-block;padding:0 .15em;border-radius:10px;box-shadow:0 0 0 4px #FFE58A,0 0 22px #FFD54A;animation:mgMa .8s cubic-bezier(.3,1.8,.5,1)}@keyframes mgMa{0%{transform:scale(0)}100%{transform:none}}
+.rvmag .mgwd{position:absolute;left:0;top:0;font-size:58px;opacity:0;pointer-events:none;filter:drop-shadow(0 0 12px #FFE58A)}
+.rvmag .mgwd.go{animation:mgWd 1.6s ease-in-out both}@keyframes mgWd{0%{opacity:0;transform:rotate(-30deg)}15%{opacity:1}70%{opacity:1;transform:translateX(var(--dx,200px)) rotate(25deg)}100%{opacity:0;transform:translateX(var(--dx,200px)) rotate(25deg) scale(1.3)}}
+.rvmag .mgst.wave:after{content:'✨ ✨ ✨';position:absolute;top:34%;left:0;right:0;text-align:center;font-size:40px;animation:mgSp 1.6s both;pointer-events:none}@keyframes mgSp{0%,100%{opacity:0}40%{opacity:1;transform:scale(1.3)}}
+.rvmag .mgsum{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:8px;opacity:0}.rvmag .mgsum.on{opacity:1;transition:opacity .5s}
+.rvmag .mgsum span{font-size:clamp(19px,2.6vh,26px);padding:6px 14px;border-radius:12px;background:#1B2A40;border:2px solid #FFD54A;color:#fff}.rvmag .mgsum b{color:#FFE58A;font-size:1.2em}
+.rvc button.rvnx.nud{animation:rvNud 1.1s ease-in-out}@keyframes rvNud{0%,100%{transform:scale(1)}45%{transform:scale(1.14)}}
 .rvc button.rvnx.rdy{border-color:#7BF0A8;background:linear-gradient(#36D27A,#1E9E55);color:#06210F;font-size:clamp(22px,3vh,30px);box-shadow:0 0 0 4px rgba(123,240,168,.35),0 0 22px rgba(57,217,138,.75)}
 body.rvpz .rvcard *{animation-play-state:paused!important}
 .rvcard{--rz:1;width:min(100%,1180px);max-height:100%;overflow:hidden;background:linear-gradient(180deg,#0E1E36,#0A1628);border:3px solid #2F4E78;border-radius:26px;padding:clamp(10px,2vh,22px) clamp(12px,2.4vw,30px);display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.4vh,14px);font-size:calc(var(--rz) * 1px * 1);animation:rvIn .5s cubic-bezier(.3,1.4,.6,1)}

@@ -158,6 +158,13 @@ function tasksSave(T) {
   if (T.length) s.getRange(2, 1, T.length, TKCOLS.length).setValues(T.map(function (t) {
     return [t.id, t.name, t.g, t.cls.join('、'), new Date(t.from), new Date(t.to), JSON.stringify({ items: t.items, nm: t.nm })]; }));
 }
+/* 2026-11-03 第四十二次 第 5 點（老師：換 一台 平板 也 能 接著 做）：「進度」分頁 ＝ 5碼｜題組｜編號｜進度（平板 存 的 那一份，JSON）｜時間；一個 人 一個 題組 一列；做完 ＝ 刪掉 */
+var PROG = '進度';
+function progSheet() { var ss = SpreadsheetApp.getActiveSpreadsheet(), p = ss.getSheetByName(PROG); if (!p) { p = ss.insertSheet(PROG); p.appendRow(['5碼', '題組', '編號', '進度', '時間']); p.setFrozenRows(1); } return p; }
+function progFind(p, id, set) { var n = p.getLastRow(); if (n < 2) return -1; var V = p.getRange(2, 1, n - 1, 2).getValues(); for (var i = 0; i < V.length; i++) if (String(V[i][0]) === id && String(V[i][1]) === set) return i + 2; return -1; }
+function progPut(R, prog) { if (!R || !R.u) return; var p = progSheet(), r = progFind(p, R.id, R.set);
+  if (R.pt && typeof prog === 'string' && prog.length > 2 && prog.length < 45000) { var row = [R.id, R.set, R.u, prog, new Date()]; if (r > 0) p.getRange(r, 1, 1, 5).setValues([row]); else p.appendRow(row); return; }
+  if (!R.pt && r > 0 && String(p.getRange(r, 3).getValue()) === R.u) p.deleteRow(r); }
 /* 學生：GET ?a=view&id=30509&set=g3u1_1-1b（遊戲加 &gt=1 ＝ 要這個遊戲本班前 10 名）／ ?a=who&id=30509 */
 /* 🎉 加倍 時段（2026-10-26 第二十六次 第 2-4 點）：老師 看板 存 在 指令碼屬性 BOOST；每一次 收到 要求 先 交給 _calc.js（金幣、經驗值 照 這個 算） */
 function boost() { try { return SC.bstClean(JSON.parse(prop('BOOST') || '{}')); } catch (x) { return SC.bstClean({}); } }
@@ -201,6 +208,10 @@ function doPost(e) {
         me = spMap()[cs.id]; return out(me && me.p === p ? { ok: true, tk: spTok(cs.id, p), nw: 1 } : { err: 'wrong' }); }
       if (me.p !== p) { C.put(fk, String(nf + 1), 600); return out({ err: 'wrong', left: 7 - nf }); }
       C.remove(fk); return out({ ok: true, tk: spTok(cs.id, p) }); }
+    /* 接著 做（換 平板）：{a:'prog', id, set, k} ＝ 這個 人 這個 題組 做到 一半 的 進度（要 對 的 通行證；14 天 以內）*/
+    if (o.a === 'prog') { var cq = SC.checkId(o.id); if (cq.err) return out({ err: cq.err }); if (!spOk(cq.id, o.k)) return out({ err: 'spk' });
+      var pq = progSheet(), rq = progFind(pq, cq.id, String(o.set || '')); if (rq < 0) return out({ ok: true, prog: null });
+      var vq = pq.getRange(rq, 1, 1, 5).getValues()[0], tq = vq[4] instanceof Date ? vq[4].getTime() : Date.parse(vq[4]); return out({ ok: true, prog: Date.now() - tq < 14 * 864e5 ? String(vq[3]) : null, u: String(vq[2]), t: tq }); }
     if (o.a === 'rec') {
       var now = Date.now(), R = SC.clean(o.r || {}, now);
       if (!R) return out({ err: 'bad' });
@@ -208,9 +219,14 @@ function doPost(e) {
       var lock = LockService.getScriptLock(); lock.waitLock(20000);
       try {
         var s = sheet(SHEET), n = s.getLastRow(), dup = false;
-        if (R.u && n >= 2) { var us = s.getRange(2, SC.CI['編號'] + 1, n - 1, 1).getValues(); for (var i = 0; i < us.length; i++) if (String(us[i][0]) === R.u) { dup = true; break; } }
-        if (!dup) s.appendRow(SC.toRow(R));
+        var row0 = -1;
+        if (R.u && n >= 2) { var us = s.getRange(2, SC.CI['編號'] + 1, n - 1, 1).getValues(); for (var i = us.length - 1; i >= 0; i--) if (String(us[i][0]) === R.u) { row0 = i + 2; break; } }
+        /* 2026-11-03 第四十二次 第 5 點：一樣 的 編號、原本 那一列 是「做到 一半」＝ 用 新 的 蓋過去（做完 的 蓋掉 做到 一半 的）；原本 已經 做完 ＝ 重複，不存 */
+        if (row0 > 0) { if (SC.PTRE.test(String(s.getRange(row0, SC.CI['題組名稱'] + 1).getValue()))) s.getRange(row0, 1, 1, SC.COLS.length).setValues([SC.toRow(R)]); else dup = true; }
+        else s.appendRow(SC.toRow(R));
+        try { progPut(R, o.r && o.r.prog); } catch (x) { }
       } finally { lock.releaseLock(); }
+      if (R.pt) return out({ saved: true, dup: dup, part: 1 });   /* 做到 一半：只 存，不 算 排行、不 打怪、不 算 練習次數 */
       if (R.m === 'v' || R.m === 'l') return out({ saved: true, dup: dup });   /* 👀 看字卡（2026-10-15 D 第 8 件）、🎧 聽完字卡（2026-10-16 C4 第 6 題）：只存，不用算排行 */
       var all5 = records(), v = SC.view(all5, { id: R.id, set: R.set, u: R.u, gt: R.m === 'g' }, now, boardsOn(), clsSizes()); v.saved = true; v.dup = dup; tierOf(v);
       try { var mineR = all5.filter(function (r) { return r.id === R.id; }), RR = rpRow(R.id), FF = dup ? { st: RR.st, f: null } : SC.rpFight(mineR, RR.st, R);
@@ -246,8 +262,9 @@ function doPost(e) {
       /* ⚡ 現場任務 大螢幕：只檢查老師密碼（2026-10-17 第八次） */
       /* 2026-10-21：每一班 上一週 最認真練習 第 1 名（👑 選 1 次 現場任務 的 遊戲） */
       if (o.a === 'pw') { var cp = {}; try { cp = SC.champs(records(), Date.now()); } catch (x) { }
-        /* 2026-10-26 第二十七次：✍ 老師 說 可以 的 學生 出題、每一個 人 的 階級（★★★★ 小老師、★★★★★ 傳說戰神 一個月 選 1 次 遊戲）——只有 5 碼，沒有 姓名 */
-        return out({ ok: true, champs: cp, sq: qsGet().filter(function (x) { return x.st === 1; }).slice(-80).map(function (x) { return { k: x.k, id: x.id, zh: x.zh, o: x.o }; }), tiers: rpTiers() }); }
+        /* 2026-10-26 第二十七次：✍ 老師 說 可以 的 學生 出題、每一個 人 的 階級（★★★★ 小老師、★★★★★ 傳說戰神 一個月 選 1 次 遊戲）——只有 5 碼。
+           2026-11-03 第四十二次 第 4 點：⚡ 現場任務 大螢幕（要 老師 密碼）多 名單 roster，排行榜、頒獎 典禮 寫「40203 高天宇」；姓名 只 在 老師 電腦 的 記憶體，不 寫進 Firebase */
+        return out({ ok: true, roster: roster(), champs: cp, sq: qsGet().filter(function (x) { return x.st === 1; }).slice(-80).map(function (x) { return { k: x.k, id: x.id, zh: x.zh, o: x.o }; }), tiers: rpTiers() }); }
       if (o.a === 'qok') { var lkO = LockService.getScriptLock(); lkO.waitLock(20000); try { var A2 = qsGet(); A2.forEach(function (x) { if (x.k === o.k) x.st = +o.v === 1 ? 1 : +o.v === 0 ? 0 : -1; }); qsPut(A2); } finally { lkO.releaseLock(); } return out({ ok: true, qsub: qsGet() }); }
       /* ⚡ 現場任務 結束：老師大螢幕一次發獎勵（list ＝ [{id, c, x, tre, title, snack, medal}]） */
       if (o.a === 'rpgb') {
@@ -271,7 +288,7 @@ function doPost(e) {
       if (o.a === 'void') {
         var s2 = sheet(SHEET), m = s2.getLastRow(), done = false;
         if (m >= 2) { var u2 = s2.getRange(2, SC.CI['編號'] + 1, m - 1, 1).getValues();
-          for (var j = 0; j < u2.length; j++) if (String(u2[j][0]) === String(o.u)) { s2.getRange(j + 2, SC.COLS.length).setValue(!!o.v); done = true; break; } }
+          for (var j = 0; j < u2.length; j++) if (String(u2[j][0]) === String(o.u)) { s2.getRange(j + 2, SC.CI['作廢'] + 1).setValue(!!o.v); done = true; break; } }
         return out({ ok: done });
       }
       /* 刪除一個人全部的成績（老師 2026-10-17 C8 另 4：例 30430 是老師自己測試）：先整列搬到「已刪除」工作表（萬一刪錯，老師可以從那裡抄回來），再從「紀錄」刪掉 */

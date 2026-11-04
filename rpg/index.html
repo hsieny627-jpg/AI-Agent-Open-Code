@@ -1920,6 +1920,14 @@ function scFetch(q,body,ms){
 }
 /* 沒網路先存平板，連上網補送（同一筆有編號，伺服器不會重複存） */
 var SCBUSY=false,SCRES={};
+/* 2026-11-03 第四十二次第 5 點：做到一半也立刻送（一樣的編號＝伺服器蓋過去）＝佇列裡一樣編號的舊的先拿掉，只送最新的 */
+function scQAdd(r){if(!r||!r.u)return;var Q=(scGet('q')||[]).filter(function(x){return x.u!==r.u});Q.push(r);scPut('q',Q.slice(-200));scFlush()}
+/* 做到一半＝不演結束畫面，只送（o.part ＝一共幾題；限時遊戲＝ 999「沒有玩完」）。頁面正在作答的時候設 window.SCPARTF（回傳 o），切到別的畫面、關掉分頁＝自己送 */
+var SCPU='';function scPart(o){try{o=o||{};var m=o.m||'q',Q=o.qs||SCQ;if(!scLive()||!SCH||!SCPU||!Q.length||m==='mem'||m==='v'||m==='l'||Q.length>=(o.part||0))return;
+  scQAdd({id:SCID,set:SCH.key(),name:SCH.name(),m:m,qs:Q,raw:Math.round(o.raw||0),fix:o.fix||0,mp:0,mw:0,sec:Math.round(o.sec||0),src:SCSRC,dev:SCDEV,u:SCPU,t:Date.now(),part:o.part})}catch(e){}}
+document.addEventListener('visibilitychange',function(){if(document.hidden&&window.SCPARTF){var o=window.SCPARTF();if(o)scPart(o)}});addEventListener('pagehide',function(){if(window.SCPARTF){var o=window.SCPARTF();if(o)scPart(o)}});
+/* 換一台平板接著做：伺服器「進度」分頁拿這個人這個題組做到一半的那一份（要通行證）*/
+function scProg(set,cb){if(typeof scLive!=='function'||!scLive()){cb(null);return}scFetch('',{a:'prog',id:SCID,set:set,k:scPk(SCID)},12000).then(function(j){cb(j&&j.ok&&j.prog?j.prog:null)},function(){cb(null)})}
 var SCJIT=0;function scFlush(){
   if(!SCON||SCBUSY)return Promise.resolve(null);
   if((window.SCLIVE||/[?&]live=/.test(location.search))&&!window.__SCNOJIT&&SCJIT!==2){if(!SCJIT){SCJIT=1;setTimeout(function(){SCJIT=2;scFlush()},Math.random()*4000)}return Promise.resolve(null)}   /* ⚡ 現場任務：全班同時送 ➜ 錯開 0～4 秒 */
@@ -2075,7 +2083,7 @@ function scMeHTML(){
 }
 /* ── 作答中：本班這一組的名次（只有前 10 名給名次；不在前 10 ＝再幾分進前 10） ── */
 function scStart(gt){
-  SCQ=[];SCV=null;SCIN='';clearTimeout(SCAUTO);SCEND=null;
+  SCQ=[];SCV=null;SCIN='';clearTimeout(SCAUTO);SCEND=null;SCPU=SCID?SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6):'';
   if(!scLive())return;
   var my=SCH.key();
   scFetch('a=view&id='+SCID+'&set='+encodeURIComponent(my)+(gt?'&gt=1':''),null,6000).then(function(j){if(j&&!j.err&&SCH.key()===my){SCV=j;if(SCH.rk)SCH.rk()}},function(){});
@@ -2108,7 +2116,7 @@ function scS100(Q){var n=Q.length,s=0;Q.forEach(function(q){if(q[0])s+=60/n+40/n
 function scEnd(o){
   o=o||{};var m=o.m||'q',Q=o.qs||SCQ,key=SCH.key(),n=Q.length,ok=0,fast=0;Q.forEach(function(q){ok+=q[0];fast+=q[3]});
   if(m!=='mem'&&!n)return false;
-  var acc=m==='mem'?null:Math.round(ok/n*100),u=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  var acc=m==='mem'?null:Math.round(ok/n*100),u=(SCPU&&SCPU.indexOf(SCID)===0?SCPU:'')||SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);SCPU='';window.SCPARTF=null;   /* 第四十二次：跟做到一半的同一個編號＝蓋過去 */
   var R={id:SCID,set:key,name:SCH.name(),m:m,qs:m==='mem'?[]:Q,raw:Math.round(o.raw||0),fix:o.fix||0,mp:o.mp||0,mw:o.mw||0,sec:Math.round(o.sec||0),
     src:SCSRC,dev:SCDEV,u:u,t:Date.now()};
   var hk='h_'+SCID+'_'+key,H=scGet(hk)||[],sv=SCV&&SCV.set;
@@ -2980,7 +2988,7 @@ homeFix();
 setInterval(function(){var k=(SCID||'')+'|'+(SCID&&scAsked()?1:0);if(k!==LAST){LAST=k;RV=null;homeFix();load()}},800);
 /* 2026-10-22 第二十一次第 1、2 點：學生平板一直開著舊的網頁（第十八次的版本：等伺服器說第 2 版才放行）➜ 答對 5 題又被鎖回規則。
    現在：打開、回到這個分頁、每 5 分鐘問一次 ver.txt（不用快取），有新版＝自動換成新版（網址加 ?v＝新版，一定拿到新的）；正在答題不換 */
-var RPVER='421d58d55e';
+var RPVER='4adcf755e9';
 function verChk(force){try{if(!force&&(document.getElementById('rqz').className==='on'||BUSY))return;
   fetch('ver.txt?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=String(v||'').trim();if(!/^[0-9a-f]{10}$/.test(v)||v===RPVER)return;
     var K='rp_rl_'+v;try{if(sessionStorage.getItem(K))return;sessionStorage.setItem(K,'1')}catch(e){}location.replace(location.pathname+'?v='+v+location.hash)},function(){})}catch(e){}}

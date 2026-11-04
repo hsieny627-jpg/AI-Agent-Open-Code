@@ -15,7 +15,7 @@ const Q = [{ en: "What's your name?", t: [['What', '什麼'], ["'s", '是'], ['y
   for (const site of ['g3mid', 'midterm']) for (const vp of [[1024, 768], [820, 1180], [1366, 1024]]) {
     const tag = site + ' ' + vp.join('×');
     const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } }); await ctx.route(/^https?:\/\//, r => r.abort());
-    await ctx.addInitScript(() => { window.__SCORE_TEST_OFF = 1; window.__NOUNLOCK = 1; window.__NOGO = 1; window.__NOWHEEL = 1; window.__NOLIFE = 1; window.__NOMEM = 1; });
+    await ctx.addInitScript(() => { window.__SCORE_TEST_OFF = 1; window.__NOUNLOCK = 1; window.__NODFXI = 1; window.__NOSNH = 1;   /* 第四十二次：寶箱 說明、貪吃蛇 怎麼玩 在 _verify_42.js 量 */ window.__NOGO = 1; window.__NOWHEEL = 1; window.__NOLIFE = 1; window.__NOMEM = 1; });
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto('file://' + path.join(__dirname, '..', site, 'index.html')); await p.waitForTimeout(700);
     await p.evaluate(() => { document.querySelectorAll('#scov,.scfull').forEach(x => x.remove());
