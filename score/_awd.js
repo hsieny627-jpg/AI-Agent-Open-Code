@@ -87,6 +87,33 @@ function AWDSRC() {
       requestAnimationFrame(lp); })();
     return o; }
 
+  /* ══ 2026-11-09 第四十五次 第 2-(3) 點：背景 光效 全部 畫 在 一張 畫布（awbc，在 卡片 後面）══
+     老師 截圖：前 三名 的 時候 上半部 一大片 灰白 方格（＝ 教室 電腦 的 瀏覽器 畫不動 超大 的 會動 圖層：1500px 旋轉 光芒、整個 畫面 的 濾鏡 動畫、混色 聚光燈、轉 74 度 的 3D 地板）。
+     現在 這些 都 改 成 同一張 畫布 上 畫（一張 圖、不 會 分塊 畫不出來）：會 掃 的 聚光燈、立體 透視 地板、頒獎台 下 的 光暈、第 1 名 旋轉 金色 光芒（12 道 ＋ 光環）、前 三名 光柱。 */
+  function BG(cv, host, th) { var g = cv.getContext('2d'), run = true, W = 0, Hh = 0, t0 = performance.now();
+    function fit() { var r = cv.getBoundingClientRect(); W = cv.width = Math.max(1, Math.round(r.width)); Hh = cv.height = Math.max(1, Math.round(r.height)); } fit();
+    function rect(sel) { var e = host.querySelector(sel), h = host.getBoundingClientRect(); if (!e) return null; var r = e.getBoundingClientRect(); return { x: r.left - h.left + r.width / 2, y: r.top - h.top + r.height / 2, w: r.width, h: r.height, t: r.top - h.top, b: r.bottom - h.top }; }
+    function hexA(c, a) { var m = /^#?([0-9a-f]{6})$/i.exec(c || ''); if (!m) return 'rgba(255,213,74,' + a + ')'; var n = parseInt(m[1], 16); return 'rgba(' + (n >> 16) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')'; }
+    (function lp(now) { if (!run || !cv.isConnected) return; if (cv.width !== Math.round(cv.getBoundingClientRect().width)) fit(); var t = ((now || performance.now()) - t0) / 1000, C = host.classList;
+      g.clearRect(0, 0, W, Hh);
+      /* 透視 地板（2D 畫，不 用 3D）*/
+      var fy = Hh * .62, vx = W / 2; g.save(); var fg = g.createLinearGradient(0, fy, 0, Hh); fg.addColorStop(0, hexA(th.fl, 0)); fg.addColorStop(1, hexA(th.fl, .28)); g.fillStyle = fg; g.fillRect(0, fy, W, Hh - fy);
+      g.strokeStyle = hexA(th.fl, .35); g.lineWidth = 1.5; for (var i = -12; i <= 12; i++) { g.beginPath(); g.moveTo(vx + i * W * .02, fy); g.lineTo(vx + i * W * .16, Hh); g.stroke(); }
+      for (var j = 0; j < 7; j++) { var yy = fy + (Hh - fy) * Math.pow(((j + (t * .25) % 1) / 7), 1.8); g.globalAlpha = .5; g.beginPath(); g.moveTo(0, yy); g.lineTo(W, yy); g.stroke(); } g.restore(); g.globalAlpha = 1;
+      /* 三 道 會 掃 的 聚光燈（暗場 的 時候 更 亮）*/
+      var dim = C.contains('dim') || C.contains('sus'); [[.12, 5, 0], [.5, 6.4, 2], [.88, 5.6, 1]].forEach(function (s, k) { var ang = Math.sin(t * 2 * Math.PI / s[1] + s[2]) * (C.contains('sus') ? .5 : .28), x0 = W * s[0], len = Hh * 1.15, wd = W * .09;
+        g.save(); g.translate(x0, -10); g.rotate(ang); var lg = g.createLinearGradient(0, 0, 0, len); lg.addColorStop(0, hexA(k === 1 ? th.c1 : th.c2, dim ? .5 : .28)); lg.addColorStop(1, hexA(k === 1 ? th.c1 : th.c2, 0)); g.fillStyle = lg; g.beginPath(); g.moveTo(-8, 0); g.lineTo(8, 0); g.lineTo(wd, len); g.lineTo(-wd, len); g.closePath(); g.fill(); g.restore(); });
+      /* 頒獎台 光柱＋光暈（升 起來 的 才 有）*/
+      [1, 2, 3].forEach(function (rk) { var p = host.querySelector('.awpod.r' + rk + '.up'); if (!p) return; var r = rect('.awpod.r' + rk); if (!r) return; var pul = .75 + .25 * Math.sin(t * 3 + rk);
+        var bw = r.w * (rk === 1 ? .9 : .7), lg = g.createLinearGradient(0, 0, 0, r.t); lg.addColorStop(0, hexA(th.c1, 0)); lg.addColorStop(1, hexA(rk === 1 ? th.c1 : '#ffffff', (rk === 1 ? .38 : .22) * pul)); g.fillStyle = lg; g.beginPath(); g.moveTo(r.x - bw * .25, 0); g.lineTo(r.x + bw * .25, 0); g.lineTo(r.x + bw / 2, r.t); g.lineTo(r.x - bw / 2, r.t); g.closePath(); g.fill();
+        var rg = g.createRadialGradient(r.x, r.t, 2, r.x, r.t, r.w * .9); rg.addColorStop(0, hexA(rk === 1 ? th.c1 : '#ffffff', .55 * pul)); rg.addColorStop(1, hexA(th.c1, 0)); g.fillStyle = rg; g.beginPath(); g.ellipse(r.x, r.t, r.w * .9, r.w * .22, 0, 0, 7); g.fill(); });
+      /* 第 1 名：旋轉 金色 光芒＋光環（在 卡片 後面）*/
+      if (C.contains('king') || C.contains('fin')) { var c1 = rect('.awgrp.r1 .awp') || rect('.awgrp.r1'); if (c1) { var R0 = Math.max(c1.w, c1.h) * .55, R1 = Math.min(Math.max(W, Hh) * .6, R0 * 3.2), n = 16, k0 = C.contains('fin') ? .55 : .8;
+        g.save(); g.translate(c1.x, c1.y); g.rotate(t * .35); for (var q = 0; q < n; q++) { g.rotate(Math.PI * 2 / n); var rl = g.createLinearGradient(0, 0, R1, 0); rl.addColorStop(0, hexA(th.c1, .55 * k0)); rl.addColorStop(1, hexA(th.c1, 0)); g.fillStyle = rl; g.beginPath(); g.moveTo(R0 * .4, 0); g.lineTo(R1, -R1 * .09); g.lineTo(R1, R1 * .09); g.closePath(); g.fill(); } g.restore();
+        for (var h2 = 0; h2 < 2; h2++) { var rr = R0 * (1.05 + ((t * .6 + h2 * .5) % 1) * 1.4); g.strokeStyle = hexA('#FFF6C0', .6 * (1 - ((t * .6 + h2 * .5) % 1))); g.lineWidth = 4; g.beginPath(); g.arc(c1.x, c1.y, rr, 0, 7); g.stroke(); } } }
+      requestAnimationFrame(lp); })();
+    return { stop: function () { run = false; } }; }
+
   /* ══ 一個 名次（同 分 ＝ 一起）的 卡 ══ */
   function person(x) { var im = function (u, c, fb) { return u ? '<img class="' + c + '" src="' + esc(u) + '" alt="">' : (fb ? '<span class="' + c + ' noi">' + fb + '</span>' : ''); };
     return '<div class="awp"><div class="awav">' + im(x.h, 'aw-h', '👤') + im(x.p, 'aw-p', '') + im(x.w, 'aw-w', '') + '</div><div class="awcode">' + esc(x.code) + '</div><div class="awnm">' + esc(x.nm || '') + '</div><div class="awsc">' + esc(x.sc || '') + '</div>' + (x.ln ? '<div class="awln">' + esc(x.ln) + '</div>' : '') + '</div>'; }
@@ -96,9 +123,11 @@ function AWDSRC() {
     g.style.setProperty('--ss', Math.min(rk === 1 ? .85 : .7, W * (rk === 1 ? .23 : .185) / w, (Hh - ph - Hh * .03) / h).toFixed(3)); }
   function fitAll(host) { var ar = host.querySelector('.awar'); if (!ar) return; [].forEach.call(ar.querySelectorAll('.awgrp'), function (g) { fitG(ar, g, +g.getAttribute('data-rk')); }); }
   window.addEventListener('resize', function () { [].forEach.call(document.querySelectorAll('.awd'), fitAll); });
+  /* 第四十五次：前 三名 一句 榮譽（正向、肯定 努力；每 場 隨機 一句）*/
+  var HON = { 1: ['✨ 堅持 練習 的 光芒', '🔥 用心 讓 你 站 上 最 高 處', '🌟 全班 的 榜樣'], 2: ['💪 每 一題 都 很 拼', '🚀 再 一步 就 是 冠軍', '⭐ 進步 的 力量'], 3: ['🌱 努力 一定 被 看見', '👏 勇敢 挑戰 到底', '💎 專心 就 會 發光'] };
   var MED = { 1: '🥇', 2: '🥈', 3: '🥉', 4: '4', 5: '5' }, SLOT = { 1: 50, 2: 30, 3: 70, 4: 11, 5: 89 }, PODH = { 1: 32, 2: 25, 3: 19, 4: 13, 5: 10 };
 
-  A.stop = function (host) { if (!host) return; var S = host._aw; if (S) { S.gen++; S.tm.forEach(clearTimeout); S.tm = []; if (S.pt) S.pt.stop(); } if (A.M) { A.M.stop(); A.M = null; } host._aw = null; host.classList.remove('awd'); host.innerHTML = ''; };
+  A.stop = function (host) { if (!host) return; var S = host._aw; if (S) { S.gen++; S.tm.forEach(clearTimeout); S.tm = []; if (S.pt) S.pt.stop(); if (S.bg) S.bg.stop(); } if (A.M) { A.M.stop(); A.M = null; } host._aw = null; host.classList.remove('awd'); host.innerHTML = ''; };
   A.skip = function (host) { var S = host && host._aw; if (!S || S.fin) return; S.gen++; S.tm.forEach(clearTimeout); S.tm = []; [].forEach.call(host.querySelectorAll('.awgrp'), function (g) { g.classList.add('seat', 'shown'); }); finale(host, S, 1); };
   A.play = function (host, data, opt) { A.stop(host); opt = opt || {};
     var last = +(ls('awd_last') || -1), ti = rnd(A.TH.length); if (ti === last) ti = (ti + 1 + rnd(A.TH.length - 1)) % A.TH.length; ls('awd_last', String(ti)); var th = A.TH[ti];
@@ -106,10 +135,10 @@ function AWDSRC() {
     var S = { gen: 1, tm: [], th: th, fx: fx, fin: 0, rows: data.rows || [], data: data, opt: opt }; host._aw = S;
     host.className = (host.className.replace(/\bawd\b|\bno-\w\b|\bth-\w+/g, '') + ' awd th-' + th.k).trim(); ['h', 'p', 'w'].forEach(function (k) { if (!sh[k]) host.classList.add('no-' + k); });
     host.style.setProperty('--aw1', th.c1); host.style.setProperty('--aw2', th.c2); host.style.setProperty('--awf', th.fl);
-    host.innerHTML = '<div class="awbg" style="background:' + th.bg + '"></div><div class="awspot s1"></div><div class="awspot s2"></div><div class="awspot s3"></div><div class="awfloor"></div><canvas class="awcv"></canvas>' +
+    host.innerHTML = '<div class="awbg" style="background:' + th.bg + '"></div><canvas class="awbc"></canvas><canvas class="awcv"></canvas>' +   /* 第四十五次：聚光燈、地板、光芒 ＝ awbc 一張 畫布 */
       '<div class="awtop"><div class="awkick">' + esc(data.kick || '') + '</div><div class="awttl">' + esc(data.title || '🏆 頒獎 典禮').replace(/(\p{Extended_Pictographic}\uFE0F?)/gu, '<i class="awem">$1</i>') + '</div><div class="awthm">' + esc(th.nm) + '</div></div>' +
       '<div class="awar"></div><div class="awcap"></div><div class="awflash"></div>';
-    var ar = $(host, '.awar'), cap = $(host, '.awcap'), cv = $(host, '.awcv'); S.pt = Parts(cv, th);
+    var ar = $(host, '.awar'), cap = $(host, '.awcap'), cv = $(host, '.awcv'); S.pt = Parts(cv, th); S.bg = BG($(host, '.awbc'), host, th);
     var seed = (Date.now() ^ (Math.random() * 1e9)) >>> 0; A.M = Music(seed); if (!sh.m) A.M.mute(true); S.music = A.M.info;
     var my = S.gen, at = 0, T = function (f, ms) { at += ms * K; var g = my; S.tm.push(setTimeout(function () { if (S.gen === g && host._aw === S) f(); }, at)); };
     var say = function (h, cls) { cap.className = 'awcap ' + (cls || ''); cap.innerHTML = h; void cap.offsetWidth; cap.classList.add('in'); };
@@ -118,7 +147,7 @@ function AWDSRC() {
     S.ranks = ranks;
     /* 頒獎台（一開始 在 地板 下面，輪到 才 升 起來）*/
     ranks.forEach(function (rk) { var p = H('div', 'awpod r' + rk, '<div class="pf"><b>' + MED[rk] + '</b></div><div class="pt"></div><div class="ps"></div>'); p.style.left = SLOT[rk] + '%'; p.style.setProperty('--ph', PODH[rk] + '%'); ar.appendChild(p);
-      var gp = H('div', 'awgrp r' + rk + ' n' + Math.min(3, G[rk].length), (rk === 1 ? '<div class="awrays"></div><div class="awcrown">👑</div><div class="awchamp">👑 冠軍</div>' : '') + '<div class="awmd">' + (rk <= 3 ? MED[rk] : '第 ' + rk + ' 名') + '</div><div class="awps">' + G[rk].map(person).join('') + '</div>'); gp.style.setProperty('--sx', SLOT[rk] + '%'); gp.style.setProperty('--ph', PODH[rk] + '%'); gp.setAttribute('data-rk', rk); ar.appendChild(gp); });
+      var gp = H('div', 'awgrp r' + rk + ' n' + Math.min(3, G[rk].length), (rk === 1 ? '<div class="awcrown">👑</div><div class="awchamp">👑 冠軍</div>' : '') + '<div class="awmd">' + (rk <= 3 ? MED[rk] : '第 ' + rk + ' 名') + '</div><div class="awps">' + G[rk].map(person).join('') + '</div>' + (rk <= 3 ? '<div class="awhon">' + HON[rk][rnd(HON[rk].length)] + '</div>' : '')); gp.style.setProperty('--sx', SLOT[rk] + '%'); gp.style.setProperty('--ph', PODH[rk] + '%'); gp.setAttribute('data-rk', rk); ar.appendChild(gp); });
     fitAll(host); S.tm.push(setTimeout(function () { fitAll(host); }, 600));   /* 圖 載 好 以後 再 算 一次 */
     /* ① 開場 */
     host.classList.add('st0'); A.M.pad(6); A.M.roll(3.6, true); S.pt.conf(30);
@@ -234,6 +263,38 @@ const CSS = `
 .awd .awchamp{position:absolute;left:50%;top:-24%;transform:translateX(-50%);white-space:nowrap;font-size:clamp(40px,7vh,84px);font-weight:900;opacity:0;background:linear-gradient(90deg,#FFE58A,#fff,#FFD54A,#fff,#FFE58A);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 22px #FFD54A)}
 .awd.king .awgrp.r1 .awchamp{animation:awCh .8s 2.4s cubic-bezier(.2,1.6,.4,1) forwards,awSh 3s 3.2s linear infinite}@keyframes awCh{from{opacity:0;transform:translateX(-50%) scale(.2)}to{opacity:1;transform:translateX(-50%) scale(1)}}
 .awd .awgrp.seat .awchamp{top:-42%}.awd.fin .awgrp.r1 .awrays{opacity:.5}
+/* ══ 2026-11-09 第四十五次 第 2-(3) 點：不 會 遮住 畫面 的 版本（不用 3D 空間、不用 混色、不用 大 圖層 的 濾鏡 動畫；光效 在 awbc 畫布）══ */
+.awd{perspective:none;isolation:isolate;contain:paint}.awd *{transform-style:flat!important}
+.awd .awbg{animation:none}.awd .awspot,.awd .awfloor,.awd .awrays{display:none!important}
+.awd .awbc{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+@keyframes awT{0%{opacity:0;transform:scale(.2) translateY(40px)}70%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:none}}
+@keyframes fxFlip{0%{transform:translate(-50%,-50%) scaleX(.02) scaleY(.3)}50%{transform:translate(-50%,-50%) scaleX(-.6) scaleY(.8)}100%{transform:translate(-50%,-50%) scale(var(--sc,1.25))}}
+@keyframes fxCube{0%{transform:translate(-50%,-50%) scale(.3) rotate(-90deg);opacity:0}100%{transform:translate(-50%,-50%) scale(var(--sc,1.25)) rotate(0);opacity:1}}
+@keyframes fxCoin{0%{transform:translate(-50%,-50%) scale(.2,.2)}25%{transform:translate(-50%,-50%) scale(-.6,.6)}50%{transform:translate(-50%,-50%) scale(.8,.8)}75%{transform:translate(-50%,-50%) scale(-1,1)}100%{transform:translate(-50%,-50%) scale(var(--sc,1.25))}}
+@keyframes fxKing{0%{transform:translate(-50%,-50%) scale(.1) rotate(-20deg);opacity:0}60%{transform:translate(-50%,-50%) scale(calc(var(--sc,1.25) * 1.2)) rotate(3deg);opacity:1}100%{transform:translate(-50%,-50%) scale(var(--sc,1.25))}}
+@keyframes fxBeam{0%{transform:translate(-50%,-50%) scaleX(.02) scaleY(1.5);opacity:.4}60%{transform:translate(-50%,-50%) scaleX(1.3) scaleY(1.05);opacity:1}100%{transform:translate(-50%,-50%) scale(var(--sc,1.25))}}
+@keyframes fxSh{0%{transform:translate(-50%,-50%) scale(calc(var(--sc,1.25) * 1.4));opacity:0}40%{opacity:1}100%{transform:translate(-50%,-50%) scale(var(--sc,1.25))}}
+/* 毛玻璃 的 樣子（不用 backdrop-filter）：半 透明 漸層＋上面 一條 亮邊＋斜 斜 的 光 掃過 */
+.awd .awp{position:relative;overflow:hidden;background:linear-gradient(160deg,rgba(255,255,255,.22),rgba(255,255,255,.06) 38%,rgba(20,26,50,.82) 60%,rgba(10,14,30,.9));box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -10px 30px rgba(0,0,0,.35),0 14px 30px rgba(0,0,0,.5)}
+.awd .awp::before{content:'';position:absolute;left:0;top:0;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:translateX(-120%) skewX(-18deg);animation:awGlass 3.2s ease-in-out infinite;pointer-events:none}
+.awd .awgrp.r2 .awp::before{animation-delay:.6s}.awd .awgrp.r3 .awp::before{animation-delay:1.2s}
+@keyframes awGlass{0%,55%{transform:translateX(-120%) skewX(-18deg)}100%{transform:translateX(330%) skewX(-18deg)}}
+/* 立體 頒獎台：上 面（亮）＋正 面（漸層）＋右 側 面（暗、斜 的）＝ 2D 畫 出 3D */
+.awd .awpod .pf{box-shadow:inset 6px 0 0 rgba(255,255,255,.25),inset -8px 0 0 rgba(0,0,0,.25)}
+.awd .awpod .pt{height:22px;top:-22px;left:-3%;right:-9%;clip-path:polygon(0 100%,7% 0,100% 0,93% 100%)}
+.awd .awpod .ps{position:absolute;top:-11px;right:-9%;width:9%;bottom:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.55));clip-path:polygon(0 11px,100% 0,100% calc(100% - 11px),0 100%)}
+.awd .awpod.r1 .pf{background:linear-gradient(180deg,#FFF3B0,#FFD54A 22%,#C98A00 65%,#7A5200)}
+.awd .awpod.r1 .pf::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.55) 45%,transparent 60%);background-size:250% 100%;animation:awPg 2.6s linear infinite;border-radius:6px 6px 0 0}
+@keyframes awPg{from{background-position:120% 0}to{background-position:-120% 0}}
+/* 前 三名 一句 榮譽 */
+.awd .awhon{display:inline-block;margin:8px 0 0;padding:3px 16px;border-radius:999px;font-size:clamp(18px,2.6vh,28px);font-weight:900;color:#3A2600;background:linear-gradient(90deg,#FFE58A,#fff,#FFD54A);box-shadow:0 0 16px var(--aw1);opacity:0;transform:scale(.4)}
+.awd .awgrp.show .awhon{animation:awHon .6s .8s cubic-bezier(.2,1.6,.4,1) forwards}@keyframes awHon{to{opacity:1;transform:none}}
+.awd .awgrp.r2 .awhon{background:linear-gradient(90deg,#E8EEF6,#fff,#B9C4D4)}.awd .awgrp.r3 .awhon{background:linear-gradient(90deg,#F7C89A,#fff,#E09A5A)}
+/* 冠軍 卡 外面 一圈 金色 呼吸 光（用 透明度，不 用 大 圖層 濾鏡）*/
+.awd .awgrp.r1 .awps{position:relative}.awd .awgrp.r1 .awps::after{content:'';position:absolute;inset:-12px;border-radius:30px;border:4px solid #FFE58A;box-shadow:0 0 30px #FFD54A;opacity:0;pointer-events:none}
+.awd.king .awgrp.r1 .awps::after,.awd.fin .awgrp.r1 .awps::after{animation:awBr 1.6s ease-in-out infinite}@keyframes awBr{0%,100%{opacity:.25}50%{opacity:1}}
+/* 第四十五次：全部 站 上 頒獎台 以後「👑 冠軍」字 收起來（不 跟 最上面 的「🎉 恭喜！」疊 在 一起；皇冠、金色 光芒、呼吸 光 留著）*/
+.awd.fin .awgrp.seat .awchamp{display:none}
 @media (prefers-reduced-motion:reduce){.awd *{animation-duration:.01s!important;transition-duration:.01s!important}}
 `;
 module.exports = { CSS, JS: '\n/* ══ 🏆 頒獎 典禮（score/_awd.js）══ */\nvar AWD=(' + AWDSRC.toString() + ')();\n', AWDSRC };

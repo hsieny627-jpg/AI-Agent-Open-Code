@@ -69,7 +69,42 @@ const SVG = {
     `<path d="M0,84 q50,-26 100,-6 q50,-22 100,2 v50 h-200z" fill="#7BC67E"/><rect x="0" y="110" width="200" height="20" fill="#5DAA61"/>` +
     `<g class="clk"><circle cx="180" cy="24" r="12" fill="#fff" stroke="#E74C3C" stroke-width="3"/><circle cx="171" cy="12" r="3.6" fill="#E74C3C"/><circle cx="189" cy="12" r="3.6" fill="#E74C3C"/><path d="M180,24 v-8 M180,24 l-3.2,5.6" stroke="${LN}" stroke-width="2.4" stroke-linecap="round"/><circle cx="180" cy="24" r="1.5" fill="${LN}"/></g>` +
     kid(42, { g: 1, shirt: '#E84393', face: 'happy', aR: [64, 26], aL: [30, 94], cR: 'wave', bag: '#2E86DE' }) +
-    kid(158, { shirt: '#0984E3', face: 'happy', aL: [136, 26], aR: [170, 94], cL: 'wave w2', bag: '#E17055', flip: 1 })
+    kid(158, { shirt: '#0984E3', face: 'happy', aL: [136, 26], aR: [170, 94], cL: 'wave w2', bag: '#E17055', flip: 1 }),
+  /* 2026-11-09 第四十五次：三年級 成長測驗 常用語（聽 一句 ➜ 選 一張 圖）的 圖。畫面 上 沒有 英文 字（不 洩 答案）；
+     相近 的 兩張 一定 分得 出來：hello（走廊 相遇、揮手、沒有 太陽 沒有 時鐘）／bye（一個 走 出 門、背 書包、箭頭 往外）／
+     aft（藍天 太陽 在 頭頂、牆上 時鐘 2:00）／morn（日出＋鬧鐘 7:00）；goodjob（老師 比 讚＋100 分 考卷）／thank（遞 禮物）；
+     listen（手 放 耳朵、聲波 進 耳朵）／look（手 指 天空 的 小鳥、虛線 從 眼睛 到 小鳥）*/
+  hello: floor('#FFF4E0', '#F2DDB8') +
+    `<rect x="8" y="22" width="22" height="20" rx="2" fill="#BFE3FF" stroke="#9AA7B5"/><rect x="170" y="22" width="22" height="20" rx="2" fill="#BFE3FF" stroke="#9AA7B5"/>` +
+    `<g class="walkl">${kid(56, { g: 1, shirt: '#E84393', face: 'happy', aR: [80, 26], aL: [44, 94], cR: 'wave' })}</g>` +
+    `<g class="walkr">${kid(144, { shirt: '#00A86B', face: 'happy', aL: [120, 26], aR: [156, 94], cL: 'wave w2' })}</g>` +
+    `<g class="bub"><path d="M84,8 h32 a6,6 0 0 1 6,6 v10 a6,6 0 0 1 -6,6 h-12 l-4,6 l-4,-6 h-12 a6,6 0 0 1 -6,-6 v-10 a6,6 0 0 1 6,-6z" fill="#fff" stroke="#F39C12" stroke-width="1.5"/><circle cx="94" cy="17" r="1.8" fill="${LN}"/><circle cx="106" cy="17" r="1.8" fill="${LN}"/><path d="M92,22 q8,5 16,0" stroke="${LN}" stroke-width="1.6" fill="none" stroke-linecap="round"/></g>`,
+  aft: `<rect x="0" y="0" width="200" height="130" rx="12" fill="#8FD3FF"/>` +
+    `<g class="sunhi"><circle cx="100" cy="20" r="14" fill="#FFD23F"/>${[0, 60, 120, 180, 240, 300].map(a => `<path d="M${100 + 18 * Math.cos(a * Math.PI / 180)},${20 + 18 * Math.sin(a * Math.PI / 180)} L${100 + 25 * Math.cos(a * Math.PI / 180)},${20 + 25 * Math.sin(a * Math.PI / 180)}" stroke="#FFD23F" stroke-width="3.5" stroke-linecap="round"/>`).join('')}</g>` +
+    `<rect x="0" y="96" width="200" height="34" fill="#9BD37A"/><rect x="0" y="110" width="200" height="20" fill="#7CBF5A"/>` +
+    `<g class="clk"><rect x="160" y="6" width="34" height="34" rx="8" fill="#fff" stroke="#2E86DE" stroke-width="3"/><circle cx="177" cy="23" r="12" fill="#fff" stroke="#2E86DE" stroke-width="1.5"/><path d="M177,23 v-8 M177,23 l6.5,-3.8" stroke="${LN}" stroke-width="2.4" stroke-linecap="round"/><circle cx="177" cy="23" r="1.5" fill="${LN}"/></g>` +
+    kid(48, { g: 1, shirt: '#F39C12', face: 'happy', aR: [70, 26], aL: [36, 94], cR: 'wave' }) +
+    kid(152, { shirt: '#6C5CE7', face: 'happy', aL: [130, 26], aR: [164, 94], cL: 'wave w2' }),
+  bye: floor('#EAF2FF', '#C9D8F0') +
+    `<rect x="150" y="18" width="40" height="92" rx="3" fill="#A0785A"/><rect x="154" y="22" width="32" height="88" fill="#FFF7D6"/><circle cx="182" cy="70" r="2.4" fill="#FFD54A"/>` +
+    `<path class="exit" d="M118,60 h22 m-7,-7 l7,7 l-7,7" stroke="#27AE60" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` +
+    kid(46, { g: 1, shirt: '#FF8FB1', face: 'smile', aR: [68, 26], aL: [34, 94], cR: 'wave' }) +
+    `<g class="leave">${kid(104, { shirt: '#2E86DE', face: 'smile', aL: [82, 26], aR: [116, 94], cL: 'wave w2', bag: '#E17055', flip: 1 })}</g>`,
+  goodjob: floor('#FFF0F6', '#F5D3E3') +
+    `<g transform="translate(46,0)">${kid(0, { g: 1, shirt: '#8E44AD', face: 'happy', aR: [22, 34], aL: [-12, 94] })}</g>` +
+    `<g class="thumb"><text x="62" y="44" font-size="26">👍</text></g>` +
+    kid(146, { shirt: '#00A86B', face: 'happy', aL: [124, 52], aR: [168, 52] }) +
+    `<g class="paper"><rect x="124" y="36" width="44" height="34" rx="3" fill="#fff" stroke="#9AA7B5" stroke-width="1.5"/><text x="129" y="62" font-size="18" font-weight="700" fill="#E53935" font-family="Arial">100</text></g>` +
+    star(118, 30, 7, 'tw') + star(176, 30, 6, 'tw t2') + star(146, 18, 5, 'tw t3'),
+  listen: floor('#EAFBF0', '#C8EBD4') +
+    `<g class="note"><text x="24" y="40" font-size="20">🎵</text><text x="50" y="26" font-size="16">🎶</text></g>` +
+    `<g class="wavs"><path d="M78,52 q8,10 0,20" stroke="#2E86DE" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M70,46 q14,16 0,32" stroke="#2E86DE" stroke-width="3" fill="none" stroke-linecap="round" class="wv2"/><path d="M62,40 q20,22 0,44" stroke="#2E86DE" stroke-width="3" fill="none" stroke-linecap="round" class="wv3"/></g>` +
+    kid(120, { g: 1, shirt: '#E67E22', face: 'smile', aL: [104, 48], aR: [134, 94] }) +
+    `<path d="M104,48 q-6,-4 -4,-10" stroke="${SK2}" stroke-width="3" fill="none"/>`,
+  look: `<rect x="0" y="0" width="200" height="130" rx="12" fill="#D6F0FF"/><rect x="0" y="110" width="200" height="20" fill="#9BD37A"/>` +
+    `<path class="sight" d="M76,42 L156,18" stroke="#E53935" stroke-width="2.5" stroke-dasharray="5 5" fill="none"/>` +
+    `<g class="bird"><text x="150" y="30" font-size="24">🐦</text></g>` +
+    kid(66, { shirt: '#16A085', face: 'open', aR: [96, 22], aL: [52, 94] })
 };
 const CSS = `.scv{display:block;width:100%;height:auto;max-height:100%;border-radius:12px;overflow:visible}
 .scv .gift{animation:scgift 2.4s ease-in-out infinite}@keyframes scgift{0%,15%{transform:translateX(-14px)}45%,100%{transform:translateX(16px)}}
@@ -88,6 +123,16 @@ const CSS = `.scv{display:block;width:100%;height:auto;max-height:100%;border-ra
 .scv .glow{transform-box:fill-box;transform-origin:center;animation:scglow 1.4s ease-in-out infinite}@keyframes scglow{0%,100%{transform:scale(.85)}50%{transform:scale(1.15)}}
 .scv .bub{transform-box:fill-box;transform-origin:50% 100%;animation:scbub 2.4s ease-out infinite}.scv .b2{animation-delay:.5s}@keyframes scbub{0%{transform:scale(0);opacity:0}25%,100%{transform:scale(1);opacity:1}}
 .scv .clk{transform-box:fill-box;transform-origin:center;animation:scclk .3s ease-in-out 6 alternate}@keyframes scclk{from{transform:rotate(-8deg)}to{transform:rotate(8deg)}}
+.scv .walkl{animation:scwl 2.4s ease-out infinite}.scv .walkr{animation:scwr 2.4s ease-out infinite}@keyframes scwl{0%{transform:translateX(-22px)}40%,100%{transform:translateX(0)}}@keyframes scwr{0%{transform:translateX(22px)}40%,100%{transform:translateX(0)}}
+.scv .sunhi{transform-box:fill-box;transform-origin:center;animation:scsunhi 3s linear infinite}@keyframes scsunhi{to{transform:rotate(360deg)}}
+.scv .leave{animation:scleave 2.6s ease-in-out infinite}@keyframes scleave{0%,20%{transform:translateX(0)}80%,100%{transform:translateX(34px)}}
+.scv .exit{animation:sccall .8s ease-in-out infinite}
+.scv .thumb{transform-box:fill-box;transform-origin:center;animation:scthumb 1.2s ease-in-out infinite}@keyframes scthumb{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+.scv .paper{animation:scshake 1.1s ease-in-out infinite}
+.scv .wavs path{animation:sccall 1s ease-in-out infinite}.scv .wavs .wv2{animation-delay:.2s}.scv .wavs .wv3{animation-delay:.4s}
+.scv .note{animation:scthink 1.6s ease-in-out infinite}
+.scv .bird{transform-box:fill-box;transform-origin:center;animation:scbird 1.6s ease-in-out infinite}@keyframes scbird{0%,100%{transform:translate(0,0)}50%{transform:translate(-6px,-5px)}}
+.scv .sight{animation:sccall 1.2s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){.scv *{animation:none!important}}`;
 const svg = k => SVG[k] ? `<svg class="scv sc-${k}" viewBox="0 0 200 130" role="img" aria-label="${k}" xmlns="http://www.w3.org/2000/svg">${SVG[k]}</svg>` : '';
 module.exports = { SVG, CSS, svg, KEYS: Object.keys(SVG) };

@@ -42,7 +42,7 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
     await h.click('#crback'); await h.waitForTimeout(150);
     await h.click('[data-sc="304"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.waitForTimeout(200);
     n++; const s0 = await h.evaluate(() => ({ scr: H.scr, sets: [].map.call(document.querySelectorAll('[data-crs]'), b => b.textContent), gs: [].map.call(document.querySelectorAll('[data-crg]'), b => b.textContent), sm: [].filter.call(document.querySelectorAll('#hcr button'), b => b.getBoundingClientRect().height < 48 || parseFloat(getComputedStyle(b).fontSize) < 18).length }));
-    if (s0.scr !== 'hcr' || s0.sets.length !== 11 || !/25 題 挑戰\|📝 50 題 挑戰\|📝 新 25 題 挑戰\|📝 新 50 題 挑戰\|✍️ 字母 書寫\|🔤 聽 字母 寫\|🎧 聽 字首音 寫$/.test(s0.sets.join('|')) || !/課堂複習 1/.test(s0.sets.join()) || s0.gs.length !== 10 || !/第 9 關.*夾娃娃/.test(s0.gs[8]) || !/第 10 關.*小精靈/.test(s0.gs[9]) || s0.sm) E.push(tag + ' 課堂複習 設定 畫面 ' + JSON.stringify(s0).slice(0, 300));
+    if (s0.scr !== 'hcr' || s0.sets.length !== 12 || !/25 題 挑戰\|📝 50 題 挑戰\|📝 新 25 題 挑戰\|📝 新 50 題 挑戰\|📝 成長測驗 25 題 挑戰\|✍️ 字母 書寫\|🔤 聽 字母 寫\|🎧 聽 字首音 寫$/.test(s0.sets.join('|')) || !/課堂複習 1/.test(s0.sets.join()) || s0.gs.length !== 10 || !/第 9 關.*夾娃娃/.test(s0.gs[8]) || !/第 10 關.*小精靈/.test(s0.gs[9]) || s0.sm) E.push(tag + ' 課堂複習 設定 畫面 ' + JSON.stringify(s0).slice(0, 300));
     /* 〔👥 全班 同步〕課堂複習 1：打地鼠、空投 */
     await h.click('[data-crs="c1"]'); await h.click('[data-cra="0"]'); await h.click('[data-crg="q1"]'); await h.click('[data-crg="q10"]'); await h.click('[data-crm="sync"]'); await h.click('#crstart'); await h.waitForTimeout(500);
     n++; const cr = dget('rooms/0304/cr'); if (!cr || cr.on !== 1 || cr.set !== 'c1' || cr.m !== 'sync' || cr.deck.length !== 16 || cr.q !== 0 || cr.deck[0][0] !== 'q1' || cr.deck[15][0] !== 'q10') E.push(tag + ' 同步 開始 寫 的 Firebase 不對 ' + JSON.stringify(cr).slice(0, 200));
@@ -102,6 +102,14 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
       { n += 3; const nm = await h.evaluate(() => ({ t: [...document.querySelectorAll('#crlbw .crnm')].map(e => e.textContent).join('|'), run: document.querySelectorAll('#crlbw .crtrk .crrun img, #crlbw .crtrk .crrun .noh').length, fin: document.querySelectorAll('#crlbw .crfin').length }));
         if (!/30405 測試甲/.test(nm.t) || !/30403 測試乙/.test(nm.t)) E.push(tag + ' 即時 排行榜 沒有 寫「30405 測試甲」' + nm.t);
         if (nm.run !== 2 || nm.fin !== 2) E.push(tag + ' 即時 排行榜 不是 賽道（戰士 跑 在 跑道 上、🏁）' + JSON.stringify(nm)); }
+      { n += 4; const d = await h.evaluate(() => { const ps = [...document.querySelectorAll('#crlbw .crlr[data-id="30403"] .crdp')].map(e => parseFloat(getComputedStyle(e.querySelector('.nmc') || e).fontSize)), rows = [...document.querySelectorAll('#crlbw .crlr')];
+          const ov = rows.filter(r => { const b = r.getBoundingClientRect(); return [...r.querySelectorAll('.crok,.crnm,.crgap')].some(e => { const q = e.getBoundingClientRect(); return q.bottom > b.bottom + 3 || q.top < b.top - 3; }); }).map(r => r.dataset.id);
+          return { ps, gap: [...document.querySelectorAll('#crlbw .crgap')].map(e => e.textContent), th: (document.querySelector('.crlbth') || {}).textContent || '', veh: document.querySelectorAll('#crlbw .crveh').length, ov }; });
+        if (d.ps.length !== 2 || d.ps[0] !== d.ps[1]) E.push(tag + ' 兩人 一台 兩個 名字 字 不 一樣 大 ' + JSON.stringify(d.ps));   /* 第四十五次 2-(2) */
+        if (d.gap.length !== 2 || !/守住|領先/.test(d.gap[0]) || !/超車|衝/.test(d.gap[1])) E.push(tag + ' 排行榜 沒有「守住／再 對 N 題 超車」' + JSON.stringify(d.gap));
+        if (!/（每 一場 主題 都 不一樣）/.test(d.th) || d.veh !== 2) E.push(tag + ' 排行榜 主題 沒有 出來 ' + d.th + ' ' + d.veh);
+        if (d.ov.length) E.push(tag + ' 排行榜 字 超出 那一行 ' + d.ov.join());
+        if (process.env.SHOT) await h.screenshot({ path: process.env.SHOT + '/lb_' + tag.replace(/\W+/g, '') + '.png' }); }
       if (!/答 滿 5 題 才 排 名次/.test(lb.rest) || !/30402 答 \d 題/.test(lb.rest)) E.push(tag + ' 答不到 5 題 的 沒有 寫 在 下面 ' + lb.rest);
       if (!/3 👥 4/.test(lb.j)) E.push(tag + ' 兩人 一台 大螢幕 要 寫 兩個 號碼「3 👥 4」：' + lb.j);
       if (!/⏱ (9|10):\d\d/.test(lb.clk)) E.push(tag + ' 大螢幕 沒有 大 倒數 ' + lb.clk);

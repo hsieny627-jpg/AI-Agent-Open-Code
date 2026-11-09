@@ -78,9 +78,17 @@ var HSTEPS=[['⚙️','設定'],['📱','等 學生'],['⚡','答題'],['🏆','
 function hstep(k){$$('.hstp').forEach(function(e){if(e.getAttribute('data-k')!==String(k)){e.setAttribute('data-k',k);e.innerHTML=LV.stepsHTML(HSTEPS,k)}})}
 function allSets(g){(LIST[g]||[]).forEach(function(k){if(H.sets[g+'_'+k]==null)H.sets[g+'_'+k]=true})}
 function mins(n){return Math.max(1,Math.round(n*36/60))}
+/* 2026-11-09 第四十五次 第 2-(4) 點（老師：現場任務 學生 不用 打 密碼 就 能 登入；老師 可以 一鍵 改成 要 密碼）
+   每一班 一個 開關：Firebase rooms/0班/lvpw（學生 平板 登入 前 看 這個）＋ 伺服器 {a:'lvpw'}（要 密碼 的 時候，伺服器 也 只 收 有 通行證 的 成績）。預設 ＝ 不用 密碼 */
+function pwRow(){if(!H.cls)return '';if(!H.lvpw||!(H.cls in H.lvpw))setTimeout(pwLoad,0);var on=!!(H.lvpw||{})[H.cls];if(H.lvOld)return '<div class="pwrow"><b>🔑 學生 登入：要 密碼</b><small>⚠️ 成績 伺服器 還沒 更新（老師 重新 部署 以後，這裡 就 可以 選「🔓 不用 密碼」）</small></div>';return '<div class="pwrow"><b>🔑 學生 登入：</b><button data-lvpw="0" class="pwb'+(on?'':' on')+'">🔓 不用 密碼'+(on?'':' ✔')+'</button><button data-lvpw="1" class="pwb'+(on?' on':'')+'">🔑 要 密碼'+(on?' ✔':'')+'</button><small id="pwm">'+(on?'學生 要 打 8 碼 密碼 才 能 登入':'學生 只 打 班級 號碼 就 能 登入（現在）')+'</small></div>'}
+function pwLoad(){var cls=H.cls;if(!cls||!LDB.on())return;LDB.get('rooms/'+LV.room(cls)+'/lvpw').then(function(v){H.lvpw=H.lvpw||{};var n=!!v;if(H.lvpw[cls]!==n){H.lvpw[cls]=n;if(H.scr==='hset'&&H.cls===cls)setDraw()}
+    /* 成績 伺服器 還是 舊 版（不認得 lvpw ＝ err 'a'）＝ 不用 密碼 的 成績 會 被 擋 ➜ 這一班 先 自動 改成「要 密碼」，等 老師 重新 部署 */
+    if(H.pw&&H.lvOld==null)post({a:'lvpw',pw:H.pw,cls:cls,on:n?1:0}).then(function(j){H.lvOld=!!(j&&j.err==='a');if(H.lvOld&&!H.lvpw[cls]){H.lvpw[cls]=true;LDB.must('PUT','rooms/'+LV.room(cls)+'/lvpw',1,6)}if(H.lvOld&&H.scr==='hset')setDraw()},function(){})},function(){})}
+function pwSet(on){var cls=H.cls;if(!cls||H.lvOld)return;H.lvpw=H.lvpw||{};H.lvpw[cls]=on;setDraw();var m=$('#pwm');if(m)m.textContent='⏳ 設定 中…';
+  Promise.all([LDB.must('PUT','rooms/'+LV.room(cls)+'/lvpw',on?1:0,6),H.pw?post({a:'lvpw',pw:H.pw,cls:cls,on:on?1:0}).catch(function(){return null}):Promise.resolve(null)]).then(function(r){var e=$('#pwm');if(e&&H.cls===cls)e.textContent=r[0]?(on?'✅ 設好 了：學生 要 打 8 碼 密碼 才 能 登入':'✅ 設好 了：學生 只 打 班級 號碼 就 能 登入'):'⚠️ 沒有 存 到（網路），再 按 一次'})}
 function setDraw(){allSets(H.qg);var G=LV.game(H.game),L=LIST[H.qg]||[],secs=[];L.forEach(function(k){var s=GR[k].sec;if(secs.indexOf(s)<0)secs.push(s)});
   var h='<div class="sett"><h1>⚡ 現場任務</h1>'+LV.stepsHTML(HSTEPS,0)+'</div>'+
-  '<div class="sbox"><h2><b class="sn">1</b> 哪一班</h2><div class="row">'+[3,4].map(function(g){return CLS[g].map(function(c){return '<button data-sc="'+c+'" class="clsb'+(H.cls===c?' on':'')+'">'+c+(c==='400'?' 課後班':'')+'</button>'}).join('')}).join('<span class="gsep"></span>')+'</div>'+
+  '<div class="sbox"><h2><b class="sn">1</b> 哪一班</h2><div class="row">'+[3,4].map(function(g){return CLS[g].map(function(c){return '<button data-sc="'+c+'" class="clsb'+(H.cls===c?' on':'')+'">'+c+(c==='400'?' 課後班':'')+'</button>'}).join('')}).join('<span class="gsep"></span>')+'</div>'+pwRow()+
   '</div><div class="sbox"><h2><b class="sn">2</b> 哪一種 遊戲</h2>'+chBox()+legBox()+(typeof crBox==='function'?crBox():'')+GRP.map(function(g){return '<div class="sgrp"><div class="sgh"><span class="sgi">'+g[1]+'</span><b>'+g[2]+'</b><small>'+g[3]+'</small></div><div class="ggrid">'+
     g[4].map(function(k){var x=LV.game(k);return '<button data-sk="'+k+'" class="gcd'+(H.game===k?' on':'')+'">'+LV.badge(k)+'<span class="gtx"><b>'+x.nm+(k==='classic'?' <em>推薦</em>':'')+'</b><small>'+x.d+'</small></span></button>'}).join('')+'</div></div>'}).join('')+
   '</div><div class="sbox"><h2><b class="sn">3</b> 題目</h2><div class="row"><button data-qg="3" class="'+(H.qg===3?'on':'')+'">三年級 的 題目</button><button data-qg="4" class="'+(H.qg===4?'on':'')+'">四年級 的 題目</button>'+
@@ -350,7 +358,8 @@ function copyURL(b){var u=taskURL(),t0=b.textContent,ok=function(){b.textContent
   function fb(){var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok()}catch(e){}t.remove()}}
 document.addEventListener('click',function(e){var t=e.target,c=function(s){return t.closest?t.closest(s):null},b;
   if(c('#pwgo')){pwGo();return}
-  if((b=c('[data-sc]'))){H.cls=b.getAttribute('data-sc');H.g=H.cls.charAt(0)==='3'?3:4;H.qg=H.g;chLoad();setDraw();return}
+  if((b=c('[data-sc]'))){H.cls=b.getAttribute('data-sc');H.g=H.cls.charAt(0)==='3'?3:4;H.qg=H.g;chLoad();pwLoad();setDraw();return}
+  if((b=c('[data-lvpw]'))){pwSet(b.getAttribute('data-lvpw')==='1');return}
   if((b=c('[data-sk]'))){H.game=b.getAttribute('data-sk');setDraw();return}
   if((b=c('[data-qg]'))){H.qg=+b.getAttribute('data-qg');setDraw();return}
   if((b=c('[data-sa]'))){var on=b.getAttribute('data-sa')==='1';(LIST[H.qg]||[]).forEach(function(k){H.sets[H.qg+'_'+k]=on});setDraw();return}

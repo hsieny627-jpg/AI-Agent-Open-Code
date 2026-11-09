@@ -10,6 +10,7 @@
 
 /* ── 逐字中文（答錯頁：每一個英文字正下方 ＝ 中文）── */
 var GL = {
+  afternoon: '下午', goodbye: '再見', bye: '再見', job: '工作', listen: '聽', look: '看',   /* 2026-11-09 成長測驗 常用語 */
   i: '我', "'m": '是', am: '是', is: '是', are: '是', my: '我的', your: '你的', you: '你', "you're": '你是', "'re": '是', name: '名字',
   what: '什麼', "what's": '什麼是', "'s": '是', how: '如何', old: '老的', years: '歲', year: '年', hi: '嗨', hello: '哈囉', hey: '嘿',
   nice: '很高興', to: '', meet: '認識', too: '也', thank: '謝謝', welcome: '受歡迎的', good: '好的', morning: '早上',
@@ -245,6 +246,7 @@ function addS(t, v) { SAY.push((v === 'm' ? 'm:' : '') + t); }
 G1.forEach(function (q) { addS(q.say); });
 G2.forEach(function (q) { q.say.forEach(function (s) { addS(s[1], s[0]); }); });
 CE.forEach(function (c) { addS(c.en); });
+var GTD = require('./_gt_data.js'); GTD.GTSAY.forEach(function (t) { addS(t); });   /* 2026-11-09 第四十五次：成長測驗 常用語 */
 G4.forEach(function (q) { addS(q.say); });
 /* 字母名稱：照音標唸（2026-10-25 量過：直接唸「a.」會變 ㄜ（句子裡 a 一律 ㄜ 的規則）、「e.」聽成 eye）*/
 var LN = { a: 'ˈeɪ', b: 'bˈiː', c: 'sˈiː', d: 'dˈiː', e: 'ˈiː', f: 'ˈɛf', g: 'dʒˈiː', h: 'ˈeɪtʃ', i: 'ˈaɪ', j: 'dʒˈeɪ', k: 'kˈeɪ', l: 'ˈɛl', m: 'ˈɛm',
@@ -413,7 +415,8 @@ CD.SETS.forEach(function (x) { var k = x[0], B = CB[k] = {};
   B.q9.forEach(function (q) { q.lines.forEach(function (l, i) { addS(l, BOYS.indexOf(q.c[i].t) >= 0 ? 'm' : ''); }); }); B.q10.forEach(function (q) { addS(q.say); }); });
 
 /* 2026-10-26 第二十六次 第 1-1 點（老師：打地鼠 單字 模糊、太快）：打地鼠 的 字 另外 做 慢的（audio/m1 語速 0.78）、更慢的（audio/m2 語速 0.62，〔🐢 慢慢 唸〕）*/
-var SAYM = G1.map(function (q) { return q.say; }).concat(XB.q1.concat(XB2.q1).map(function (q) { return q.say; })).concat([].concat.apply([], Object.keys(CB).map(function (k) { return CB[k].q1.map(function (q) { return q.say; }); }))).concat(NUMW.slice(1, 11))   /* 2026-10-30 第三十四次 第 7 點：數字 金幣磚 答對 ＝ 男聲 慢 唸 one～ten */
+var SAYM = G1.map(function (q) { return q.say; }).concat(XB.q1.concat(XB2.q1).map(function (q) { return q.say; })).concat([].concat.apply([], Object.keys(CB).map(function (k) { return CB[k].q1.map(function (q) { return q.say; }); }))).concat(NUMW.slice(1, 11)).concat(require('./_gt_data.js').GTWORDS)   /* 2026-11-09 第四十五次：成長測驗 開頭 的 音（男聲 慢）*/
+     /* 2026-10-30 第三十四次 第 7 點：數字 金幣磚 答對 ＝ 男聲 慢 唸 one～ten */
   .filter(function (x, i, a) { return a.indexOf(x) === i; });
 /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（三年級 現場任務，獨立 一個 任務）：一回 10 題 ＝ 5 題 跟 期中考 相似（考卷 的 8 個 字母，方向 反過來：考卷 G ➜ g，這裡 g ➜ G）＋ 5 題 其他 字母（大寫 ➜ 小寫、小寫 ➜ 大寫 都 有）。
    嚴禁 洩題：考卷 的 原題（EXAM_E 一模一樣 的 方向）一題 都 不 出（build 檢查）。格式 跟 🪞 大小寫 魔鏡（q5）一樣：show 看到 的、want 要 寫 的 */

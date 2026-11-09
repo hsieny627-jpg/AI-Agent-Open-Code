@@ -1484,9 +1484,9 @@ function g3Col(v){return v<=59?'p0':v<=80?'p1':'p2'}
    ② 錯題 分析：每一關（遊戲）全班 的 正確率 長條（最 難 的 排 前面）
    ③ 錯題 排行榜：答錯率 最高 的 15 題 ➜ 點 一題 ＝ 詳解（每個 選項 幾 %、最多人 選 的 錯 答案、💡 為什麼、📺 全班 訂正：逐字 中文、整句 中文、唸 3 次 美式 發音）*/
 var QDR=null,QDS=false;
-function paneX(g,hm){var CC=SC.CLASSES[g]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===g&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),re=hm?(g===3?/^g3gm_g3m-(h)(25)$/:/^g4gm_mt-(h)(25)$/):g===3?/^g3gm_g3m-([xn])(25|50)$/:/^g4gm_mt-([xn])(25|50)$/;
+function paneX(g,hm){var CC=SC.CLASSES[g]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===g&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),re=hm?(g===3?/^g3gm_g3m-(h)(25)$/:/^g4gm_mt-(h)(25)$/):g===3?/^g3gm_g3m-([xng])(25|50)$/:/^g4gm_mt-([xn])(25|50)$/;
   var RS=ALL.filter(function(x){return re.test(x.set)&&!x.x&&x.cls===c&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)});QDR=RS;
-  var COLS=hm?[['h25','🏠 最近 一次'],['hb','🏆 最高'],['hd','📅 最近 哪一天']]:[['x25','📝 25 題'],['x50','📝 50 題'],['n25','📝 新 25 題'],['n50','📝 新 50 題']],P={};
+  var COLS=hm?[['h25','🏠 最近 一次'],['hb','🏆 最高'],['hd','📅 最近 哪一天']]:[['x25','📝 25 題'],['x50','📝 50 題'],['n25','📝 新 25 題'],['n50','📝 新 50 題']].concat(g===3?[['g25','📝 成長測驗']]:[]),P={};
   RS.slice().sort(function(a,b){return a.t-b.t}).forEach(function(x){var m=re.exec(x.set),k=m[1]+m[2],p=P[x.id]=P[x.id]||{};p[k]=p[k]||{n:0};p[k].n++;p[k].s=x.s;p[k].q=(x.qs||[]).length;p[k].pt=x.pt;p[k].pto=x.ptot;if(hm){p.hb=p.hb||{n:0,s:-1};p.hb.n++;if(x.s>p.hb.s)p.hb.s=x.s;p.hd={n:0,d:dt(x.t).split(' ')[0]}}});XROWS={g:g,hm:hm,c:c,cols:COLS,ids:null,P:P};
   var ids=(RCLS[c]||[]).slice();Object.keys(P).forEach(function(id){if(ids.indexOf(id)<0)ids.push(id)});ids.sort();
   XROWS.ids=ids;var h='<div class="fvhd g3h">'+(hm?'🏠 '+(g===3?'三':'四')+'年級 25 題 闖關（回家）：學生 成績、錯題 排行榜、錯題 分析<small>（時間 ＝ 上面 選 的）</small>':'📝 '+(g===3?'三':'四')+'年級 期中 挑戰：學生 成績、錯題 排行榜、錯題 分析<small>（時間 ＝ 上面 選 的；分數 ＝ 最近 一次）</small>')+'</div>'+
@@ -1545,7 +1545,7 @@ function paneGT(){var g4=G3S==='mt',CC=SC.CLASSES[g4?4:3]||[],c=G3C&&CC.indexOf(
    先 選〔三年級〕〔四年級〕➜ 三張 大卡：⚡ 期中 挑戰（上課：25／50、新 25／新 50）、🏠 25 題 闖關（回家：h25）、🎮 期中複習 遊戲（三年級 複習＋課堂複習 1～3／四年級 複習 12 種）；
    點 一張 ＝ 下面 出現 那一張 的 表。**有 新 成績 的 那一張 亮起來**（金色 光＋「🆕 有 新 成績」）＝ 這一張 最近 一筆 成績 比 老師 上一次 打開 這一張 還 新（記 在 這台 電腦 tcr_seen_年級_卡）*/
 var CRG=0,CRK='';
-var CRC=[['x','⚡','期中 挑戰','上課',function(g){return g===3?/^g3gm_g3m-[xn](25|50)$/:/^g4gm_mt-[xn](25|50)$/}],['h','🏠','25 題 闖關','回家',function(g){return g===3?/^g3gm_g3m-h25$/:/^g4gm_mt-h25$/}],
+var CRC=[['x','⚡','期中 挑戰','上課',function(g){return g===3?/^g3gm_g3m-[xng](25|50)$/:/^g4gm_mt-[xn](25|50)$/}],['h','🏠','25 題 闖關','回家',function(g){return g===3?/^g3gm_g3m-h25$/:/^g4gm_mt-h25$/}],
   ['g','🎮','期中複習 遊戲','上課／自己 玩',function(g){return g===3?/^g3gm_(g3m|c[123]|lw|lwh|la|lf)-q\\d+$/:/^g4gm_mt-m\\d+$/}]];   /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（g3gm_lw-q5）*/
 function crLast(g,k){var re=CRC.filter(function(c){return c[0]===k})[0][4](g),t=0;ALL.forEach(function(x){if(!x.x&&x.t>t&&re.test(x.set))t=x.t});return t}
 function crSeen(g,k,v){var key='tcr_seen_'+g+'_'+k;try{if(v!=null)localStorage.setItem(key,String(v));return +localStorage.getItem(key)||0}catch(e){return 0}}

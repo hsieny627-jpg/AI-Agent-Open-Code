@@ -112,7 +112,7 @@ const W = ms => new Promise(r => setTimeout(r, ms));
       await ctx.close(); }
   }
   /* ⑦ 計分 說明 有 例子 */
-  { const s = fs.readFileSync(path.join(__dirname, '_duo.js'), 'utf8'); ok(/9 ÷ 12 ＝ <b>75 分/.test(s) && /各 一行/.test(s), '兩人 輪流 說明 沒有 計分 例子'); }
+  { const s = fs.readFileSync(path.join(__dirname, '_duo.js'), 'utf8'); ok(/tally\(A, 'p1', 12, \[3, 7, 10\]\)/.test(s) && /各 一行/.test(s), '兩人 輪流 說明 沒有 計分 例子');   /* 第四十五次：例子 改 成 秒懂 動畫（tally）*/ }
   /* ⑤ 老師看板 */
   if (SKIP.indexOf('t') < 0) { const { make } = require('../score/_gas_stub.js'), B = require('../score/_bank.js'), G = make({ TEACHER_PW: 'pw' }), NOW = Date.now();
     for (let s = 1; s <= 30; s++) G.books['名單'].d.push(['410', s, '測試' + String(s).padStart(2, '0')]);

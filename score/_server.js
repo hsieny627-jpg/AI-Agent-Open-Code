@@ -49,6 +49,7 @@ function spMap() { var s = sheet(SPW), n = s.getLastRow(), o = {}; if (n < 2) re
   s.getRange(2, 1, n - 1, 2).getValues().forEach(function (v, i) { var id = String(v[0]).replace(/\D/g, ''); if (/^\d{5}$/.test(id) && v[1] !== '') o[id] = { p: String(v[1]), r: i + 2 }; }); return o; }
 function spSec() { var P = PropertiesService.getScriptProperties(), k = P.getProperty('SPSEC'); if (!k) { k = Utilities.getUuid() + Utilities.getUuid(); P.setProperty('SPSEC', k); } return k; }
 function spTok(id, pw) { return Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, id + '|' + pw + '|' + spSec())).slice(0, 24); }
+function lvpwOn(id) { var m = {}; try { m = JSON.parse(PropertiesService.getScriptProperties().getProperty('LVPW') || '{}'); } catch (x) { } return !!m[String(id).slice(0, 3)]; }   /* 2026-11-09 第四十五次 */
 function spOk(id, k) { var m = spMap()[id]; return !m || (!!k && k === spTok(id, m.p)); }   /* 還沒 設 密碼 的 人（舊 的 平板、舊 的 紀錄）照樣 收 */
 /* 🦸 角色（2026-10-17 第八次）：一個人一列；找不到 ＝ 還沒有英雄 */
 function rpRow(id) { var s = sheet(RPG), n = s.getLastRow(); if (n < 2) return { s: s, r: 0, st: SC.rpClean({}) };
@@ -215,7 +216,9 @@ function doPost(e) {
     if (o.a === 'rec') {
       var now = Date.now(), R = SC.clean(o.r || {}, now);
       if (!R) return out({ err: 'bad' });
-      if (!/_job/.test(String(R.set || '')) && !spOk(R.id, (o.r && o.r.k) || o.k)) return out({ err: 'spk' });   /* 2026-10-28：有 設 密碼 的 人 ＝ 要 帶 對 的 通行證（職業 單字 網站 English-Jobs-New 是 另一個 網站，還 沒有 密碼，先 照收） */
+      /* 2026-11-09 第四十五次 第 2-(4) 點：⚡ 現場任務（lv:1）預設 不用 密碼 ＝ 照收；老師 在 大螢幕 按〔🔑 要 密碼〕（LVPW 那一班）才 要 通行證 */
+      var lvOk = o.r && o.r.lv === 1 && !lvpwOn(R.id);
+      if (!/_job/.test(String(R.set || '')) && !lvOk && !spOk(R.id, (o.r && o.r.k) || o.k)) return out({ err: 'spk' });   /* 2026-10-28：有 設 密碼 的 人 ＝ 要 帶 對 的 通行證（職業 單字 網站 English-Jobs-New 是 另一個 網站，還 沒有 密碼，先 照收） */
       var lock = LockService.getScriptLock(); lock.waitLock(20000);
       try {
         var s = sheet(SHEET), n = s.getLastRow(), dup = false;
@@ -255,8 +258,10 @@ function doPost(e) {
         if (mineQ.some(function (x) { return x.st === 1; })) return out({ err: 'week' });
         A = A.filter(function (x) { return !(x.id === cq.id && x.t >= w0); }); A.push({ k: cq.id + nq.toString(36), id: cq.id, t: nq, zh: qq.zh, o: qq.o, st: 0 }); qsPut(A); } finally { lkQ.releaseLock(); }
       return out({ ok: true }); }
-    if (o.a === 'teacher' || o.a === 'qok' || o.a === 'void' || o.a === 'set' || o.a === 'task' || o.a === 'lock' || o.a === 'lockt' || o.a === 'delp' || o.a === 'pw' || o.a === 'rpgb' || o.a === 'rpgw' || o.a === 'boost' || o.a === 'spl' || o.a === 'spr') {
+    if (o.a === 'teacher' || o.a === 'qok' || o.a === 'void' || o.a === 'set' || o.a === 'task' || o.a === 'lock' || o.a === 'lockt' || o.a === 'delp' || o.a === 'pw' || o.a === 'rpgb' || o.a === 'rpgw' || o.a === 'boost' || o.a === 'spl' || o.a === 'spr' || o.a === 'lvpw') {
       if (!pwOk(o.pw)) return out({ err: 'pw' });
+      /* 🔑 現場任務 登入 要不要 密碼（2026-11-09 第四十五次）：{cls, on} */
+      if (o.a === 'lvpw') { var cv = String(o.cls || '').replace(/\D/g, '').slice(0, 3); if (cv.length !== 3) return out({ err: 'bad' }); var lkV = LockService.getScriptLock(); lkV.waitLock(20000); try { var PV = PropertiesService.getScriptProperties(), MV = {}; try { MV = JSON.parse(PV.getProperty('LVPW') || '{}'); } catch (x) { } if (o.on) MV[cv] = 1; else delete MV[cv]; PV.setProperty('LVPW', JSON.stringify(MV)); } finally { lkV.releaseLock(); } return out({ ok: true, lvpw: MV }); }
       /* 🎉 加倍 時段：{m: off／all／set, k, x, from, to, cls, cats}（2026-10-26） */
       if (o.a === 'boost') { var lkB = LockService.getScriptLock(); lkB.waitLock(20000); try { PropertiesService.getScriptProperties().setProperty('BOOST', JSON.stringify(SC.bstClean(o.b))); } finally { lkB.releaseLock(); } return out({ ok: true, boost: boost() }); }
       /* ⚡ 現場任務 大螢幕：只檢查老師密碼（2026-10-17 第八次） */

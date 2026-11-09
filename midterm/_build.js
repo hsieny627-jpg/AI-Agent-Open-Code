@@ -325,7 +325,7 @@ function duoEnd1(){var c=DUO.cur;DUO.done[c]=1;DUO.rc[c]=rec1();var o=1-c;if(!DU
   var D=DUO;DUO=null;SCID=D.id[0];stopSay();
   $('#app').innerHTML='<div class="end"><div class="big xsc">👥 兩個人 輪流：📝 '+XNM(D.R[0].x)+'</div><div class="duoe">'+[0,1].map(function(k){var r=D.R[k],ok=0;r.Q.forEach(function(x){ok+=x[0]});
     var lv=CR&&CR.cfg,P=duoPct(r),P2=duoPct(D.R[1-k]),sc=lv?P.p:Math.min(100,Math.round(r.sc*10)/10),w=lv?P.p>P2.p:r.sc>D.R[1-k].sc;return '<div class="'+(k?'p2':'p1')+(w?' win':'')+'">'+(w?'<span class="cr">🏆</span>':'')+'<b>👤 '+duoNm(D.id[k])+'</b><span class="big">'+sc+' 分 ／ 100</span>'+
-      (lv?'<span>答了 '+P.n+' 題 · 答對 '+P.ok+' 題 ➜ '+P.ok+' ÷ '+P.n+' ＝ '+P.p+' 分</span>':'<span>答對 '+ok+' ／ '+r.x+'</span>')+'<small>'+(D.rc[k]?'📝 記進 成績 了':'⚠️ 沒有 記 成績')+'</small></div>'}).join('')+'</div>'+
+      (lv?DUOI.tallyR(D.id[k],k?'p2':'p1',r.Q,P.p):'<span>答對 '+ok+' ／ '+r.x+'</span>')+'<small>'+(D.rc[k]?'📝 記進 成績 了':'⚠️ 沒有 記 成績')+'</small></div>'}).join('')+'</div>'+
     '<div class="dsts" id="dsts"></div><div class="nav"><button id="duore">🔁 再 挑戰 一次</button><button data-x="hub">🎮 回 大廳</button></div></div>';window.scrollTo(0,0);DUOI.status($('#dsts'),D.id)}
 document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('#duore')&&window.DUOLAST){var L=DUOLAST;SCID=L.A;duoRun(L.A,L.B,L.N)}});
 function hub(){if(CR&&CR.cfg&&CR.cfg.m==='sync')return;decClose();coopStop();if(R&&!R.crs&&!R.x&&!R.sent&&R.Q&&R.Q.length>=6)rec1();else if(R&&!R.crs&&!R.sent)recPart();clr();stopSay();R=null;window.scrollTo(0,0);var GM=CR&&CR.cfg?GMA.filter(function(g){return (CR.cfg.gs||[]).indexOf(g.id)>=0}):LOB;

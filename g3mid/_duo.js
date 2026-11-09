@@ -7,10 +7,19 @@ function DUOSRC() {
   var D = {};
   function k(A, B) { var a = [String(A), String(B)].sort(); return 'duo_n_' + a[0] + '_' + a[1]; }
   function nm(id) { id = String(id || ''); return id.slice(0, 3) + ' 班 ' + (+id.slice(3)) + ' 號'; }
+  /* 一個 人 的 計分 小 卡：n 格（✅／❌ 一格 一格 翻）➜「✅ 對 ok 題 ／ 一共 答 n 題」➜ ok ÷ n ＝ 分數 ➜ 分數 條 長 到 那裡 */
+  function tally(id, cls, n, wrong, sc0) { var ok = n - wrong.length, sc = sc0 != null ? sc0 : Math.round(ok / n * 1000) / 10, h = '';
+    for (var i = 1; i <= n; i++) h += '<i class="' + (wrong.indexOf(i) >= 0 ? 'no' : 'ok') + '" style="animation-delay:' + (.3 + i * .16).toFixed(2) + 's">' + (wrong.indexOf(i) >= 0 ? '❌' : '✅') + '</i>';
+    var t = (.5 + n * .16).toFixed(2);
+    return '<div class="dtly ' + cls + '"><b class="dtn">' + nm(id) + '</b><div class="dsq">' + h + '</div>' +
+      '<div class="dfr" style="animation-delay:' + t + 's">✅ 對 <b>' + ok + '</b> 題 ／ 一共 答 <b>' + n + '</b> 題 ➜ <b>' + ok + ' ÷ ' + n + '</b> ＝ <b class="dsc">' + sc + ' 分</b>' + (sc0 != null && sc0 !== Math.round(ok / n * 1000) / 10 ? '<small>（拖曳 題 放對 幾成 也 算）</small>' : '') + '</div>' +
+      '<div class="dbar"><i style="--w:' + sc + '%;animation-delay:' + t + 's"></i><em style="animation-delay:' + t + 's">' + sc + '</em></div></div>'; }
   D.nm = nm;
   D.count = function (A, B) { try { return +localStorage.getItem(k(A, B)) || 0; } catch (e) { return 0; } };
   D.first = function (A, B) { var lo = String(A) < String(B) ? A : B, hi = lo === A ? B : A; return D.count(A, B) % 2 ? hi : lo; };
   D.bump = function (A, B) { try { localStorage.setItem(k(A, B), String(D.count(A, B) + 1)); } catch (e) { } };
+  /* 第四十五次 第 4 點：結束 頁 也 用 同一個 秒懂 小 卡（真的 答 的 題目：res 1 ＝ 對、0 ＝ 錯）*/
+  D.tallyR = function (id, cls, Q, sc) { var w = []; (Q || []).forEach(function (x, i) { if (!x[0]) w.push(i + 1); }); return (Q || []).length ? tally(id, cls, Q.length, w, sc) : '<div class="dtly ' + cls + '"><b class="dtn">' + nm(id) + '</b><div class="dfr" style="opacity:1">還沒 答 題目</div></div>'; };
   D.intro = function (A, B, first, done) {
     var sec = first === A ? B : A, n = D.count(A, B) + 1, o = document.getElementById('duoi');
     if (!o) { o = document.createElement('div'); o.id = 'duoi'; document.body.appendChild(o); }
@@ -23,7 +32,10 @@ function DUOSRC() {
       (typeof RVA !== 'undefined' && RVA && (RVA.QON || window.__RVQ)) ? ['⚡', '動畫 裡 的 <b>突擊 測驗</b> 也 一人 一題', '<span class="dub">畫面 寫「請 ○○ 號 作答」＝ 輪到 那個 人</span>'] : null,   /* 第三十九次：突擊 題 暫時 移除 ➜ 這一句 不 演 */
       ['💯', '<b>各 算 各 的 分數</b>（自己 的 正確率），成績 各 記 各 的', '<span class="dup p1">' + nm(A) + '：自己 的 分數</span><span class="dup p2">' + nm(B) + '：自己 的 分數</span>'],
       /* 2026-11-04 第四十四次 第 4-(2) 點（老師：學生、家長 不懂 兩人 輪流 怎麼 計分、哪一位 答錯 哪一題）：用 例子 算 給 他們 看 */
-      ['🧮', '分數 ＝ <b>自己 答對 幾題 ÷ 自己 答了 幾題</b>（另一個 人 答 的 不 算 你 的）', '<span class="dup p1">' + nm(A) + '：答 12 題 對 9 題 ➜ 9 ÷ 12 ＝ <b>75 分</b></span><span class="dup p2">' + nm(B) + '：答 13 題 對 12 題 ➜ 12 ÷ 13 ＝ <b>92.3 分</b></span>'],
+      /* 2026-11-09 第四十五次 第 4 點（老師：我 和 學生 還是 看不懂 怎麼 算分）➜ 不用 文字 講，用 秒懂 動畫 演：
+         ① 題目 一格 一格 亮：藍 ＝ 第 1 位 答 的、粉紅 ＝ 第 2 位 答 的 ② 每 一位 自己 的 小格子 一格 一格 翻：✅ 綠、❌ 紅 ③ 數 出來「✅ 9 題 ／ 一共 答 12 題」④ 分數 條 長 到 75％ ＝ 75 分 */
+      ['🎨', '題目 <b>一人 一題</b>：<b class="c1">藍色</b> ＝ ' + nm(first) + ' 答 的、<b class="c2">粉紅</b> ＝ ' + nm(sec) + ' 答 的', '<span class="dqs">' + [1, 2, 3, 4, 5, 6, 7, 8].map(function (k) { return '<i class="' + (k % 2 ? 'q1' : 'q2') + '" style="animation-delay:' + (k * .18).toFixed(2) + 's">' + k + '</i>'; }).join('') + '<i class="qd">…</i></span>'],
+      ['🧮', '分數 ＝ <b>自己</b> 答對 的 題數 ÷ <b>自己</b> 答 的 題數（另一個 人 答 的 不 算 你 的）', tally(A, 'p1', 12, [3, 7, 10]) + tally(B, 'p2', 13, [6])],
       ['🏆', '排行榜、老師 的 成績、答錯 哪一題 ＝ <b>兩個 人 各 一行</b>（班級 號碼＋名字）', '<span class="dub">誰 答錯 哪一題，老師 看板 點 名字 就 看得到（各 是 各 的）</span>'],
       ['👉', '這是 第 <b>' + n + '</b> 次：<b>' + nm(first) + ' 先</b>', '<span class="dub">' + (n % 2 ? '第 1、3、5 … 次 ＝ 號碼 小 的 先' : '第 2、4、6 … 次 ＝ 號碼 大 的 先') + '</span>']
     ].filter(Boolean);
@@ -100,6 +112,9 @@ const CSS = '.lvg{margin:6px auto 10px;max-width:980px;text-align:center;flex:1 
   '.dur{display:flex;align-items:center;gap:14px;text-align:left;background:#16264A;border:3px solid #3E5C88;border-radius:20px;padding:10px 14px;animation:durIn .5s ease both}' +
   '@keyframes durIn{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:none}}' +
   '.dui0{font-size:clamp(40px,6vh,58px)}.dur1{font-size:clamp(24px,3.4vh,34px);color:#fff}.dur1 b{color:#FFE07A}.dur2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}' +
+  '.dqs{display:flex;flex-wrap:wrap;gap:6px}.dqs i{font-style:normal;width:clamp(38px,5vh,52px);height:clamp(38px,5vh,52px);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:clamp(20px,2.8vh,28px);opacity:0;animation:dqin .35s forwards}.dqs .q1{background:#1E5BB8;border:3px solid #5BB8FF}.dqs .q2{background:#8E2A6E;border:3px solid #FF8AD0}.dqs .qd{background:none;border:0}@keyframes dqin{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}' +
+  '.dtly{flex:1 1 300px;border-radius:16px;padding:8px 12px;border:3px solid;margin:4px}.dtly.p1{background:#0E3A6E;border-color:#5BB8FF}.dtly.p2{background:#5A1E4A;border-color:#FF8AD0}.dtn{font-size:clamp(20px,2.6vh,28px)}.dsq{display:flex;flex-wrap:wrap;gap:3px;margin:4px 0}.dsq i{font-style:normal;font-size:clamp(18px,2.4vh,26px);opacity:0;animation:dqin .3s forwards}' +
+  '.dfr{font-size:clamp(20px,2.6vh,28px);opacity:0;animation:dqin .4s forwards}.dfr .dsc{color:#FFD54A;font-size:1.3em}.dbar{position:relative;height:22px;border-radius:11px;background:#ffffff22;margin-top:6px;overflow:hidden}.dbar i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#2BD46A,#FFD54A);animation:dbar 1.2s forwards}.dbar em{position:absolute;right:8px;top:-1px;font-style:normal;font-weight:700;opacity:0;animation:dqin .4s 1.2s forwards}@keyframes dbar{to{width:var(--w)}}' +
   '.dup{font-size:clamp(20px,2.8vh,28px);padding:4px 14px;border-radius:999px;border:3px solid}.dup.p1{background:#0E3A6E;border-color:#5BB8FF}.dup.p2{background:#5A1E4A;border-color:#FF8AD0}' +
   '.dua{font-size:28px;color:#FFE07A}.dub{font-size:clamp(20px,2.8vh,26px);color:#CFE3F5}' +
   '.duik{display:inline-flex;align-items:center;gap:12px;margin:14px auto 6px;padding:8px 22px;border-radius:18px;border:3px dashed #5E7FA8;font-size:clamp(26px,3.6vh,36px);color:#fff;opacity:.35;pointer-events:none}' +

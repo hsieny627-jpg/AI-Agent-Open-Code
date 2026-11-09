@@ -33,7 +33,7 @@ while(guard++<400){const s=await p.evaluate(()=>({duo:!!DUO,cur:DUO?DUO.cur:-1,k
  await p.waitForTimeout(600);await p.waitForFunction(()=>!DUO||document.getElementById('duob').classList.contains('on')||(typeof good==='function'?!BUSY:!(R&&R.lock)),null,{timeout:12000}).catch(()=>{});   /* 2026-10-30 第三十四次：答對 先 唸完 正確 答案 才 下一題 ➜ 等 下一題 出現 */
 }
 n++;if(turns.length!==50||turns.some((t,i)=>+t[0]!==i%2))E.push(SITE+' 沒有 一人 一題 輪流：'+turns.join(' '));
-const end=await p.evaluate(()=>document.body.innerText.match(/👥 兩個人 輪流[\s\S]{0,200}/));n++;if(!end||(end[0].match(/記進 成績 了/g)||[]).length!==2)E.push(SITE+' 結束 頁 沒有 兩個 人：'+(end&&end[0].slice(0,80)));
+const end=await p.evaluate(()=>document.body.innerText.match(/👥 兩個人 輪流[\s\S]{0,1500}/));n++;if(!end||(end[0].match(/記進 成績 了/g)||[]).length!==2)E.push(SITE+' 結束 頁 沒有 兩個 人：'+(end&&end[0].slice(0,80)));
 /* 〔🔁 再 挑戰 一次〕＝ 第 2 次：號碼 大 的 先 */
 await p.click('#duore').catch(()=>E.push(SITE+' 結束 頁 沒有〔🔁 再 挑戰 一次〕'));await p.waitForTimeout(500);await intro(SITE==='g3mid'?'304 班 2 號 先':'402 班 2 號 先');
 n++;const st2=await p.evaluate(()=>({cur:DUO&&DUO.cur,scid:SCID}));if(st2.cur!==1||st2.scid!==(SITE==='g3mid'?'30402':'40202'))E.push(SITE+' 第 2 次 不是 號碼 大 的 先 '+JSON.stringify(st2));

@@ -8,10 +8,10 @@ var CRS={set:'c1',gs:null,m:'sync',on:false,cfg:null,stop:null,rv:false,ans:{},c
    CRDS ＝ {3: 三年級（g3mid/）, 4: 四年級（midterm/）}；only ＝ 每一套 有 哪幾種 遊戲；學生 平板 跳到 midterm/index.html?live=0402 */
 function crGr(){return H.cls&&/^[34]/.test(H.cls)?H.cls.charAt(0):''}
 function CD(){return CRDS[crGr()||'3']}
-function crLW(t){t=t||CRS.set;return t==='lw'||t==='la'||t==='lf'}function crX(){return /^[xn]\d+$/.test(CRS.set)||crLW()}   /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫 也 是 限時、即時 排行榜 */   /* 2026-10-29：n25／n50 ＝ 新 25／新 50 */   /* 2026-10-27 第三十二次 3-(3)：📝 25／50 題 挑戰 ＝ 只 能 學生 自己 答、全部 關卡 連著 玩（不用 選 遊戲）*/
+function crLW(t){t=t||CRS.set;return t==='lw'||t==='la'||t==='lf'}function crX(){return /^[xng]\d+$/.test(CRS.set)||crLW()}   /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫 也 是 限時、即時 排行榜 */   /* 2026-10-29：n25／n50 ＝ 新 25／新 50 */   /* 2026-10-27 第三十二次 3-(3)：📝 25／50 題 挑戰 ＝ 只 能 學生 自己 答、全部 關卡 連著 玩（不用 選 遊戲）*/
 /* 2026-10-31 第三十六次 第 1-(5) 點：每 一關 前面 多 了 🎬 秒懂 複習 動畫（一部 約 1 分 10 秒，含 3 題 突擊 測驗）➜ 預設 限時 加上 動畫 的 時間：
    三年級 11 關 ≈ 13 分鐘 動畫 ➜ 25 題 20 分鐘、50 題 25 分鐘；四年級 13 關 ≈ 16 分鐘 ➜ 25 題 25 分鐘、50 題 30 分鐘（老師 可以 換）*/
-function crMin(){var n=+(/\d+/.exec(CRS.set)||[25])[0],g4=String((typeof H!=='undefined'&&H&&H.cls)||'').charAt(0)==='4',k=CRS.set+'|'+g4;if(!CRS.min||CRS.minSet!==k){CRS.minSet=k;CRS.min=crLW()?5:g4?(n>=50?20:15):(n>=50?15:10)}return CRS.min}   /* 2026-11-02 第四十次 第 4-(5) 點：現場任務 不 演 秒懂 動畫 了 ➜ 預設 時間 變 短（三年級 25 題 10、50 題 15；四年級 15、20；✍️ 字母 書寫 5 分鐘）*/   /* 第三十四次 第 12-(4) 點：25 題 5 分鐘、50 題 10 分鐘（老師 可以 換）*/
+function crMin(){var n=+(/\d+/.exec(CRS.set)||[25])[0],g4=String((typeof H!=='undefined'&&H&&H.cls)||'').charAt(0)==='4',k=CRS.set+'|'+g4;if(!CRS.min||CRS.minSet!==k){CRS.minSet=k;CRS.min=crLW()?5:CRS.set==='g25'?15:g4?(n>=50?20:15):(n>=50?15:10)}return CRS.min}   /* 2026-11-02 第四十次 第 4-(5) 點：現場任務 不 演 秒懂 動畫 了 ➜ 預設 時間 變 短（三年級 25 題 10、50 題 15；四年級 15、20；✍️ 字母 書寫 5 分鐘）*/   /* 第三十四次 第 12-(4) 點：25 題 5 分鐘、50 題 10 分鐘（老師 可以 換）*/
 function crGs(){var d=CD();if(crX())return [];return d.gs.filter(function(g){return !d.only||(d.only[CRS.set]||[]).indexOf(g[0])>=0})}
 function crTitle(){return crGr()==='4'?'📝 四年級 期中複習':'📝 三年級 期中複習'}   /* 2026-10-30 第三十四次 第 1-(1)、2-(1) 點：主題 改名（成績 的 名字 不變）*/
 function crBox(){var g=crGr();if(g==='4')return '<div class="sgrp crg"><div class="sgh"><span class="sgi">📝</span><b>四年級 期中複習</b><small>12 種 遊戲（字首音 氣球、短文 偵探、陷阱 偵測器…）；學生 自己 答 或 全班 同步</small></div>'+
@@ -95,11 +95,23 @@ function crRows(){var c=CRS.cfg,L=[];Object.keys(CRS.crp).forEach(function(id){v
   /* 2026-11-01 第三十九次（老師 C45 ③ 甲）：正確率 計分，答 1～2 題 也 可能 100 分 ➜ 答不到 CRMIN（5）題 的 不 排 名次、不上 前 10 名（分數 照樣 記），排在 最 後面、寫「答 N 題」 */
   L.forEach(function(x){x.few=x.n<CRMIN});L.sort(function(a,b){return (a.few-b.few)||b.s-a.s||b.ok-a.ok||b.gp-a.gp||a.n-b.n||(a.id<b.id?-1:1)});var rk=0,pv=null;L.forEach(function(x,i){if(x.few){x.rk=0;return}if(!pv||x.s!==pv.s||x.ok!==pv.ok||x.gp!==pv.gp)rk=i+1;x.rk=rk;pv=x});return L}
 var CRMIN=5;
-function crWho(x){return nmI(x.id)+(x.p?'<small class="crdu">👥 和 '+esc(String(x.p))+(nmOf(x.p)?' '+esc(nmOf(x.p)):'')+' 一台</small>':'')}
+function crWho(x){return x.p?'<span class="crduo"><span class="crdp">'+nmI(x.id)+'</span><span class="crdp"><i>👥</i>'+nmI(x.p)+'</span></span>':nmI(x.id)}   /* 2026-11-09 第四十五次 第 2-(2) 點：兩人 一台 ＝ 兩個 名字 一樣 大（以前 第二位 是 0.6 倍 的 小字）*/
+/* 2026-11-09 第四十五次 第 2-(1) 點（老師：排行榜 讓 教室 充滿 鬥志 和 笑聲 ➜ 每一次 呈現 都 不一樣、更 有趣 更 刺激）：
+   10 種 主題 每 一場 換 一種（跟 上一場 一定 不一樣，localStorage cr_lbt）：跑道、車子、尾巴 的 特效、終點、超車 的 話 都 不同；
+   每 一行 多 一句「🎯 再 對 N 題 ➜ 超車！」（怕 被 追上、想 追上）、第 1 名「🛡 守住！第 2 名 只 差 N 分」；全部 用 正向 的 話 */
+var LBT=[{k:'race',n:'🏎 極速 賽車 大賽',v:'🏎️',tr:'🔥',f:'🏁',ov:'🏎️ 加速 超車！',ld:'👑 新 車王'},{k:'rocket',n:'🚀 火箭 衝 太空',v:'🚀',tr:'✨',f:'🪐',ov:'🚀 點火 超越！',ld:'👑 新 太空 艦長'},
+ {k:'ocean',n:'🏄 衝浪 大 挑戰',v:'🏄',tr:'💦',f:'🏝️',ov:'🌊 乘 浪 超車！',ld:'👑 新 浪王'},{k:'balloon',n:'🎈 熱氣球 飛 上 天',v:'🎈',tr:'☁️',f:'🏆',ov:'🎈 飛 過去 了！',ld:'👑 新 天空 之 王'},
+ {k:'dragon',n:'🐉 神龍 火焰 競速',v:'🐉',tr:'🔥',f:'🏯',ov:'🐉 神龍 擺尾 超車！',ld:'👑 新 龍王'},{k:'snow',n:'🏂 雪山 滑雪 賽',v:'🏂',tr:'❄️',f:'🚩',ov:'🏂 甩尾 超車！',ld:'👑 新 雪山 王'},
+ {k:'train',n:'🚂 魔法 列車 衝刺',v:'🚂',tr:'💨',f:'🚉',ov:'🚂 全速 超車！',ld:'👑 新 列車長'},{k:'rainbow',n:'🦄 彩虹 獨角獸 賽跑',v:'🦄',tr:'🌟',f:'🌈',ov:'🦄 彩虹 衝刺！',ld:'👑 新 彩虹 王'},
+ {k:'ufo',n:'🛸 外星 飛碟 光速 賽',v:'🛸',tr:'⚡',f:'🌌',ov:'🛸 光速 超越！',ld:'👑 新 銀河 王'},{k:'horse',n:'🏇 草原 駿馬 賽',v:'🏇',tr:'💨',f:'🏆',ov:'🏇 衝 過 去 了！',ld:'👑 新 冠軍 騎士'}];
+function crLBT(){var l=-1;try{l=+(localStorage.getItem('cr_lbt')||-1)}catch(e){}var i=Math.floor(Math.random()*LBT.length);if(i===l)i=(i+1+Math.floor(Math.random()*(LBT.length-1)))%LBT.length;try{localStorage.setItem('cr_lbt',String(i))}catch(e){}return LBT[i]}
+/* 差 幾題：要 再 對 k 題（一直 對）才 會 超過 上一名 的 分數 */
+function crNeed(x,a){if(!a)return 0;for(var k=1;k<=9;k++)if((x.ok+k)*100/(x.n+k)>a.s+1e-9)return k;return 0}
+function crGap(x,i,top){if(i===0){var b=top[1];return b?'🛡 守住！第 2 名 差 '+Math.max(0,Math.round((x.s-b.s)*10)/10)+' 分':'👑 領先 中！'}var k=crNeed(x,top[i-1]);return k?'🎯 再 對 <b>'+k+'</b> 題 ➜ 超車！':'💪 全 對 衝 衝 衝！'}
 function crLB(){var c=CRS.cfg,o=$('#hcrr .in');if(!c)return;
-  if(CRS.built!==c.t||!$('#crlbw')){CRS.built=c.t;CRS.lbp={};CRS.lsc={};CRS.ovt='';CRS.lead='';
+  if(CRS.built!==c.t||!$('#crlbw')){CRS.built=c.t;CRS.lbp={};CRS.lsc={};CRS.ovt='';CRS.lead='';if(CRS.lbtT!==c.t){CRS.lbtT=c.t;CRS.lbt=crLBT()}
     o.innerHTML='<div class="crxh"><div><h1>'+esc(crName())+'</h1><div class="crxs">'+esc(H.cls)+' 班 · 分數 ＝ 正確率（答對 ÷ 已經 答 的 題數）'+(crLW(c.set)?' · 一樣 再 比 ⚡ 遊戲 積分':'')+(c.qk?' · ⚡ 快速 模式':'')+' · 時間 到 自動 結束</div></div><div id="crclk" class="crclk">⏱ '+crMM(crLeft())+'</div></div>'+
-      '<div id="crjb" class="crjn"></div><div id="crlead" class="crlead"></div><div id="crlbw" class="crlbw"><div class="crlbe">👀 學生 一 開始 答題，名次 就 會 出現 在 這裡</div></div><div id="crrest" class="crrest"></div>'+
+      '<div id="crjb" class="crjn"></div><div class="crlbth lbt-'+CRS.lbt.k+'">'+CRS.lbt.n+'<small>（每 一場 主題 都 不一樣）</small></div><div id="crlead" class="crlead"></div><div id="crlbw" class="crlbw lbt lbt-'+CRS.lbt.k+'"><div class="crlbe">👀 學生 一 開始 答題，名次 就 會 出現 在 這裡</div></div><div id="crrest" class="crrest"></div>'+
       '<div class="hbar"><span class="crlf">⏱ 只 剩：</span>'+[3,5,8,10].map(function(m){return '<button data-crleft="'+m+'" class="'+(m===3?'ghost cr3':'ghost')+'">'+m+' 分鐘</button>'}).join('')+'<button id="crend" class="big stopb">⏹ 提早 結束</button></div>'}
   var L=crRows(),on=online().filter(function(id){return id.slice(0,3)===String(H.cls)}),ids={};on.forEach(function(id){ids[id]=1});L.forEach(function(x){ids[x.id]=1;if(x.p)ids[x.p]=1});
   var pair={};L.forEach(function(x){if(x.p)pair[x.id]=x.p});var sh={},chips=Object.keys(ids).sort().filter(function(id){if(sh[id])return false;sh[id]=1;if(pair[id])sh[pair[id]]=1;return true}).map(function(id){var st=L.some(function(x){return x.id===id||x.id===pair[id]});
@@ -112,12 +124,12 @@ function crLB(){var c=CRS.cfg,o=$('#hcrr .in');if(!c)return;
     /* 2026-11-03 第四十二次 第 4 點（老師：更 秒懂、更 好玩、更 刺激）：🏎 賽道 排行榜：每 一個 人 一條 跑道，自己 的 戰士 跑 到 分數 的 位置（100 分 ＝ 🏁）；
        超車 ＝ 綠色 閃光＋「🚀 超車 ▲2」＋ 大 橫幅；前 3 名 跑道 冒 🔥；第 1 名 戰士 戴 👑；分數 一格 一格 跳 上去 */
     var ps=CRS.lsc[x.id];if(ps==null)ps=0;
-    r.innerHTML='<span class="crrk">'+(x.rk<=3?['🥇','🥈','🥉'][x.rk-1]:x.rk)+'</span><span class="crnm">'+crWho(x)+'</span><span class="crtrk'+(i<3?' hot':'')+'"><i style="width:'+Math.max(2,x.s)+'%"></i><span class="crrun" style="left:'+Math.max(2,Math.min(96,x.s))+'%">'+(i===0?'<b class="crcw">👑</b>':'')+heroI(x.id,'crhim')+(i<3?'<em class="crfl">🔥</em>':'')+'</span><span class="crfin">🏁</span></span><span class="crsc"><b data-v="'+x.s+'" data-f="'+ps+'">'+ps+'</b><small> 分</small></span><span class="crok">答 '+x.n+' 題 · ✅ '+x.ok+(crLW(c.set)?' · ⚡ '+x.gp:'')+'</span>'+(up?'<em class="crup">🚀 超車 ▲ '+up+'</em>':'');
-    if(up>=1&&i<3&&CRS.ovt!==x.id+':'+i){CRS.ovt=x.id+':'+i;var bo=$('#crlead');if(bo&&i>0){bo.innerHTML='🚀 '+nmI(x.id)+' 超車 ➜ 第 '+(i+1)+' 名！';bo.classList.remove('on');void bo.offsetWidth;bo.classList.add('on')}}
+    var LT=CRS.lbt||LBT[0];r.innerHTML='<span class="crrk">'+(x.rk<=3?['🥇','🥈','🥉'][x.rk-1]:x.rk)+'</span><span class="crnm">'+crWho(x)+'</span><span class="crtrk'+(i<3?' hot':'')+'"><i style="width:'+Math.max(2,x.s)+'%"></i><span class="crrun" style="left:'+Math.max(2,Math.min(96,x.s))+'%">'+(i===0?'<b class="crcw">👑</b>':'')+'<em class="crveh">'+LT.v+'</em>'+heroI(x.id,'crhim')+(i<3?'<em class="crfl">'+LT.tr+'</em>':'')+'<i class="crsh"></i></span><span class="crfin">'+LT.f+'</span></span><span class="crsc"><b data-v="'+x.s+'" data-f="'+ps+'">'+ps+'</b><small> 分</small></span><span class="crok">答 '+x.n+' 題 · ✅ '+x.ok+(crLW(c.set)?' · ⚡ '+x.gp:'')+'<small class="crgap">'+crGap(x,i,top)+'</small></span>'+(up?'<em class="crup">'+LT.ov+' ▲ '+up+'</em>':'');
+    if(up>=1&&i<3&&CRS.ovt!==x.id+':'+i){CRS.ovt=x.id+':'+i;var bo=$('#crlead');if(bo&&i>0){bo.innerHTML=(CRS.lbt||LBT[0]).ov+' '+nmI(x.id)+' ➜ 第 '+(i+1)+' 名！';bo.classList.remove('on');void bo.offsetWidth;bo.classList.add('on')}}
     CRS.lsc[x.id]=x.s;CRS.lbp[x.id]=i});
   [].forEach.call(W.querySelectorAll('.crsc b[data-v]'),function(b){var f=+b.getAttribute('data-f'),v=+b.getAttribute('data-v');if(f===v)return;var t0=performance.now();(function tk(){var k=Math.min(1,(performance.now()-t0)/700);b.textContent=Math.round(f+(v-f)*k);if(k<1)requestAnimationFrame(tk)})()});
   Object.keys(have).forEach(function(id){have[id].remove();delete CRS.lbp[id]});
-  if(top[0]&&top[0].s>0&&top[0].id!==CRS.lead){var was=CRS.lead;CRS.lead=top[0].id;if(was){var b=$('#crlead');b.innerHTML='👑 新 的 第 1 名：'+nmI(top[0].id)+'！';b.classList.remove('on');void b.offsetWidth;b.classList.add('on')}}
+  if(top[0]&&top[0].s>0&&top[0].id!==CRS.lead){var was=CRS.lead;CRS.lead=top[0].id;if(was){var b=$('#crlead');b.innerHTML=(CRS.lbt||LBT[0]).ld+'：'+nmI(top[0].id)+'！';b.classList.remove('on');void b.offsetWidth;b.classList.add('on')}}
   var R2=L.filter(function(x){return !x.few}).slice(10),F=L.filter(function(x){return x.few});
   $('#crrest').innerHTML=(R2.length?'<span class="crrt">第 11 名 以後：</span>'+R2.map(function(x){return '<span>'+x.rk+'. '+nmI(x.id)+' '+x.s+' 分（答 '+x.n+' 題）</span>'}).join(''):'')+
    (F.length?'<span class="crrt">✍️ 答 滿 '+CRMIN+' 題 才 排 名次：</span>'+F.map(function(x){return '<span>'+nmI(x.id)+' 答 '+x.n+' 題</span>'}).join(''):'')}

@@ -364,7 +364,7 @@ function scFetch(q,body,ms){
 /* 沒網路先存平板，連上網補送（同一筆有編號，伺服器不會重複存） */
 var SCBUSY=false,SCRES={};
 /* 2026-11-03 第四十二次 第 5 點：做到 一半 也 立刻 送（一樣 的 編號 ＝ 伺服器 蓋過去）＝ 佇列 裡 一樣 編號 的 舊 的 先 拿掉，只 送 最新 的 */
-function scQAdd(r){if(!r||!r.u)return;var Q=(scGet('q')||[]).filter(function(x){return x.u!==r.u});Q.push(r);scPut('q',Q.slice(-200));scFlush()}
+function scQAdd(r){if(!r||!r.u)return;if(scLiveCtx()&&r.id&&!scPk(r.id))r.lv=1;   /* 第四十五次：現場任務 沒有 打 密碼 的 成績（伺服器 看 老師 有沒有 開〔🔑 要 密碼〕）*/var Q=(scGet('q')||[]).filter(function(x){return x.u!==r.u});Q.push(r);scPut('q',Q.slice(-200));scFlush()}
 /* 做到 一半 ＝ 不 演 結束 畫面，只 送（o.part ＝ 一共 幾題；限時 遊戲 ＝ 999「沒有 玩完」）。頁面 正在 作答 的 時候 設 window.SCPARTF（回傳 o），切到 別的 畫面、關掉 分頁 ＝ 自己 送 */
 var SCPU='';function scPart(o){try{o=o||{};var m=o.m||'q',Q=o.qs||SCQ;if(!scLive()||!SCH||!SCPU||!Q.length||m==='mem'||m==='v'||m==='l'||Q.length>=(o.part||0))return;
   scQAdd({id:SCID,set:SCH.key(),name:SCH.name(),m:m,qs:Q,raw:Math.round(o.raw||0),fix:o.fix||0,mp:0,mw:0,sec:Math.round(o.sec||0),src:SCSRC,dev:SCDEV,u:SCPU,t:Date.now(),part:o.part})}catch(e){}}
@@ -464,7 +464,11 @@ function scWho(r){
 var SCPW=null;
 function scPk(id){var v='';try{v=sessionStorage.getItem('score_pks_'+id)||''}catch(e){}return v||scGet('pk_'+id)||''}
 function scPkSave(id,k,rem){try{sessionStorage.setItem('score_pks_'+id,k)}catch(e){}scPut('pk_'+id,rem?k:null);var H=scGet('qk')||[],B=H.filter(function(r){return r.id===id});if(B.length){scPut('qk',H.filter(function(r){return r.id!==id}));B.forEach(function(r){r.k=k});scPut('q',(scGet('q')||[]).concat(B).slice(-200));setTimeout(scFlush,300)}}   /* 第四十一次 第 3 點：密碼 對了 ➜ 之前 沒 送 進去 的 紀錄 補 送 */
-function scPwStep(id,done){if(/script\\.test/.test(SCURL)&&!window.__SCORE_PW){done();return}   /* 量測 的 假 伺服器：別的 量測 不打 密碼（密碼 本身 在 score/_verify_pw.js 量，它 設 __SCORE_PW） */
+/* 2026-11-09 第四十五次 第 2-(4) 點：⚡ 現場任務 預設 不用 密碼（老師 在 大螢幕〔🔑 要 密碼〕才 要）＝ Firebase rooms/0班/lvpw；問不到（2.5 秒）＝ 不用 */
+function scLiveCtx(){return !!(window.SCLIVE||/[?&]live=/.test(location.search))}
+function scPwStep(id,done){if(scLiveCtx()&&!window.__SCLVASK){var LD=window.LDB,fin=false,go=function(np){if(fin)return;fin=true;clearTimeout(t);if(np)scPwStep0(id,done);else{scPut('lvnp_'+id,Date.now());done()}},t=setTimeout(function(){go(0)},window.__SCLVT||2500);
+   if(window.__SCLVPW!=null){go(window.__SCLVPW);return}if(!LD||!LD.on||!LD.on()){go(0);return}LD.get('rooms/0'+String(id).slice(0,3)+'/lvpw').then(function(v){go(v?1:0)},function(){go(0)});return}scPwStep0(id,done)}
+function scPwStep0(id,done){if(/script\\.test/.test(SCURL)&&!window.__SCORE_PW){done();return}   /* 量測 的 假 伺服器：別的 量測 不打 密碼（密碼 本身 在 score/_verify_pw.js 量，它 設 __SCORE_PW） */
   SCPW={id:id,done:done,v:'',first:'',mode:'?',eye:false,rem:!!scGet('pk_'+id)};if(!SCH.on||!SCH.on())SCH.open();
   var ex='<span class="pwex">'+'ab123456'.split('').map(function(c,i){return '<i class="'+(i<2?'l':'d')+'" style="animation-delay:'+(i*.35).toFixed(2)+'s">'+c+'</i>'}).join('')+'</span>';
   SCH.box().innerHTML='<div class="sclog scpw"><h2>🔑 密碼</h2>'+

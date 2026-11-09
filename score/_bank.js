@@ -25,7 +25,9 @@ function gameQ(ty, c, B, meta) {
     case 'g8': return { q: (c.b === '___' ? '' : c.b + ' ') + '＿＿' + (/^[.?!,]/.test(c.a) ? '' : ' ') + c.a + '　' + txt(c.zh), o: c.o.map(txt), h };
     case 'g2': { const d = duo(M('g2')) || [{ v: 'he', t: 'He' }, { v: 'she', t: 'She' }], lab = v => (d.filter(x => x.v === v)[0] || {}).t || v;
       /* 每一個 ___ 都填（句子開頭大寫）；括號裡給學生看的中文提示（例「(爸爸)」）不唸（2026-10-15 第 9 件：原本第二個 ___ 沒有填） */
-      const fill = v => /___/.test(c.txt) ? c.txt.replace(/___/g, (m, off, all) => /^\s*$|[.?!]\s*$/.test(all.slice(0, off)) ? cap(lab(v)) : lab(v)) : lab(v);
+      /* 2026-11-09 第四十五次 第 5 點（老師：Yes, She is.／Who’s She? 的 S 要 小寫）：句子 中間 ＝ 小寫（he／she／my），只有 I 永遠 大寫 */
+      const mid = t => t === 'I' ? t : t.toLowerCase();
+      const fill = v => /___/.test(c.txt) ? c.txt.replace(/___/g, (m, off, all) => /^\s*$|[.?!]\s*$/.test(all.slice(0, off)) ? cap(lab(v)) : mid(lab(v))) : lab(v);
       const spk = t => t.replace(/\s*[（(][^）)]*[）)]\s*/g, ' ').trim();
       return { q: txt(c.zh) + '　' + c.txt, o: [fill(c.a)].concat(d.filter(x => x.v !== c.a).map(x => fill(x.v))), h, sp: /___/.test(c.txt) ? spk(fill(c.a)) : '' }; }
     case 'g3': return { q: txt(c.zh) + '　排出順序', o: [joinS(c.s), '❌ 順序排錯'], h, sp: joinS(c.s) };
@@ -108,7 +110,14 @@ Object.keys(SITES).forEach(dir => {
   put('g3gm_g3m-h25', { name: '🏫 三年級 複習｜🏠 25 題 闖關', qs: G3.XORD.map(([id, j]) => { const g = G3.GAMES.filter(x => x.id === id)[0] || { ic: '🔓' }, c = G3.XB[id][j]; return { k: 'g', kn: '🏫 三年級 複習', q: txt(g.ic + ' ' + qOf(id, c)), o: oOf(id, c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' }; }) });
   [25, 50].forEach(N => put('g3gm_g3m-x' + N, { name: '🏫 三年級 複習｜📝 ' + N + ' 題 挑戰', qs: G3.XORD.map(([id, j]) => { const g = G3.GAMES.filter(x => x.id === id)[0] || { ic: '🔓' }, c = G3.XB[id][j]; return { k: 'g', kn: '🏫 三年級 複習', q: txt(g.ic + ' ' + qOf(id, c)), o: oOf(id, c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' }; }) }));   /* 2026-10-28：照 XORD */
   /* 2026-10-29 第三十三次 第 3 件：📝 新 25／新 50（g3gm_g3m-n25／n50）＝ 題庫 B（XB2，照 XORD2）*/
-  [25, 50].forEach(N => put('g3gm_g3m-n' + N, { name: '🏫 三年級 複習｜📝 新 ' + N + ' 題 挑戰', qs: G3.XORD2.map(([id, j]) => { const g = G3.GAMES.filter(x => x.id === id)[0] || { ic: '🔓' }, c = G3.XB2[id][j]; return { k: 'g', kn: '🏫 三年級 複習', q: txt(g.ic + ' ' + qOf(id, c)), o: oOf(id, c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' }; }) })); }   
+  [25, 50].forEach(N => put('g3gm_g3m-n' + N, { name: '🏫 三年級 複習｜📝 新 ' + N + ' 題 挑戰', qs: G3.XORD2.map(([id, j]) => { const g = G3.GAMES.filter(x => x.id === id)[0] || { ic: '🔓' }, c = G3.XB2[id][j]; return { k: 'g', kn: '🏫 三年級 複習', q: txt(g.ic + ' ' + qOf(id, c)), o: oOf(id, c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' }; }) })); 
+  /* 2026-11-09 第四十五次：📝 三年級 成長測驗 25 題（g3gm_g3m-g25）＝ g3mid/_gt_data.js 的 GTALL（字母 26 ➜ 開頭 的 音 52 ➜ 常用語 15，只 可以 接 在 後面 加）*/
+  { const GT = require(path.join(ROOT, 'g3mid', '_gt_data.js')), GTI = { gl: '🔤 聽寫 字母', gs: '👂 開頭 的 音', gc: '🖼 聽 一句 選 圖' };
+    const CEZ2 = { hello: '揮手 打招呼 的 圖', morn: '早上 的 圖', aft: '下午 的 圖', bye: '離開 揮手 的 圖', thank: '送 禮物 的 圖', goodjob: '老師 比讚 的 圖', listen: '聽 的 圖', look: '看 的 圖', quiet: '安靜 的 圖', openbook: '打開 書 的 圖', closebook: '闔上 書 的 圖', sitdown: '坐下 的 圖', standup: '起立 的 圖' };
+    put('g3gm_g3m-g25', { name: '🏫 三年級 複習｜📝 成長測驗 25 題 挑戰', qs: GT.GTALL.map(c => c.up ? { k: 'g', kn: '📝 成長測驗', q: txt('🔤 🔊 聽 ' + c.up + ' ➜ 寫 大寫＋小寫'), o: [c.up + ' ' + c.lo, '❌ 寫錯 了'], h: txt(c.zh), ae: c.up + ' ' + c.lo, gid: 'gl', gn: GTI.gl }
+      : c.a ? { k: 'g', kn: '📝 成長測驗', q: txt('👂 🔊 ' + c.a + '、' + c.b + '：開頭 的 音 一樣 嗎？'), o: c.o.map(x => x === 'same' ? '⭕ Same' : '❌ Different'), h: txt(c.zh), ae: c.a + ', ' + c.b, gid: 'gs', gn: GTI.gs }
+      : { k: 'g', kn: '📝 成長測驗', q: txt('🖼 🔊 ' + c.say + '：選 圖'), o: c.o.map(k => CEZ2[k] || k), h: txt(c.zh), ae: c.en, az: c.zh, gid: 'gc', gn: GTI.gc, pimg: GT.PICS[c.k] === 'img' ? '../g3mid/img/' + c.k + '.jpg' : '' }) }); }
+}   
 /* 🏰 守城、🎣 釣魚（2026-10-26 第二十九次 第 3 點；在家複習 版）：題目 ＝ fun/_pool.json（fun/_build.js 做 的，第幾題 跟 網頁 一樣）*/
 if (fs.existsSync(path.join(__dirname, '..', 'fun', '_pool.json'))) { const FP = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'fun', '_pool.json'), 'utf8'));
   [3, 4].forEach(g => [['fun-castle', '🏰 守城 大作戰（在家）'], ['fun-fish', '🎣 英文 釣魚 大賽（在家）']].forEach(x => put('g' + g + 'gm_' + x[0], { name: x[1], qs: (FP[g] || []).map(q => ({ k: 'g', kn: '🎮 遊戲', q: txt(q.q), o: q.o.map(y => txt(String(y))), h: '', ae: q.ae || '', ag: q.ag || [], az: q.az || '', au: q.au || '' })) }))); }

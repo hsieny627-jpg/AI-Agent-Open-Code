@@ -4,6 +4,17 @@
 > 設計、研究證據（21 條）、使用者的決定：`sentences/2026-10-07_C_設計與研究清單.md`（**Q1～Q18 使用者 2026-10-07 全部照建議**）。
 > 根目錄 `AGENTS.md` 第四節（最高原則、品質、省額度）同樣適用。
 
+## 2026-11-09 第四十五次（先讀這一節）
+
+**改了 `_calc.js`、`_server.js` ➜ 要 重新 部署** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html （網址 不變）。量測 `node g3mid/_verify_45.js`、`node score/_test.js`（530 項）。
+
+| 改了 什麼 | 在哪裡 |
+|---|---|
+| 成長測驗 25 題 成績 `g3gm_g3m-g25` 算 25 題 挑戰（現場任務 ＝ 正確率）| `_calc.js` `xN` 認 `g`；題庫 `_bank.js` `g3gm_g3m-g25`（＝ `g3mid/_gt_data.js` GTALL，只 可以 接 在 後面）；老師看板〔🏫 課堂複習〕三年級 多「📝 成長測驗」一欄（`_teacher.js` `paneX`、`CRC`）|
+| 現場任務 不用 密碼 的 成績 | `_server.js` `rec`：`o.r.lv === 1` 而且 這一班 沒有 開〔🔑 要 密碼〕（`lvpwOn`，指令碼 屬性 `LVPW`）＝ 照收；新 老師 動作 `{a:'lvpw', cls, on}`；`_client.js` `scLiveCtx`、`scPwStep`（現場任務 先 看 Firebase `rooms/0班/lvpw`）、`scQAdd` 標 `lv:1` |
+| 第 5 點 老師看板「最常 錯」的 他還是她：Yes, She is.／Who’s She? | `_bank.js` g2 `fill`：句子 中間 ＝ 小寫（he、she、my），只有 I 永遠 大寫 ➜ Yes, she is.／Who’s she? She’s my grandpa. |
+| 頒獎 典禮 不 遮擋 | `_awd.js`（見 `live/CLAUDE.md` 第四十五次）|
+
 ## 2026-11-04 第四十四次（先讀這一節）
 
 需求檔 第四節 最下面「第四十四次」。**改了 `_calc.js` ➜ 要 重新 部署** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html （網址 不變）。量測 `node g3mid/_verify_44.js`、`node score/_test.js`。
