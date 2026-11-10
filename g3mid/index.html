@@ -2529,7 +2529,7 @@ var RPT=(function(){
    SCH ＝ 這一頁怎麼畫（下面那一段由 _tq.js／遊戲引擎／Review 1 複習各自給）：
      on() 畫面開著嗎、open() 打開、box() 畫在哪、back 回去的按鈕、key() 題組代號、name() 題組名稱、
      reopen() 換人以後回哪裡、rk() 作答中名次、btns(E) 最後一幕的按鈕、miss() 答錯整理的標題、act(a) data-sca 按鈕 */
-var SCG=3,SCSRC="school";
+var SCG=/[?&]live=04\d\d/.test(location.search)?4:3,SCSRC="school";
 var SCURL=String(window.SCORE_URL||'').replace(/^\s+|\s+$/g,''),SCON=!!SCURL&&!window.__SCORE_TEST_OFF;
 var SCCLS={3:['304','307','311'],4:['402','406','409','410','400']},SCSEAT=30,SCAFTER={'400':'課後班'};   /* 400 ＝ 四年級課後班（2026-10-09 E9～E11）；跟 _calc.js 的 CLASSES／AFTER 一樣 */
 function scCn(c){return SCAFTER[c]?c+' '+SCAFTER[c]:c+' 班'}
@@ -4487,7 +4487,9 @@ function xKey(n){return 'g3m_xs'+n+XS()+'_'+((typeof SCID!=='undefined'&&SCID)||
 function xSave(){if(!R||!R.x||R.crs||DUO)return;try{ls(xKey(R.x),JSON.stringify({pu:R.pu,x:R.x,qi:R.qs.map(function(q){return XA().indexOf(q)}),lvOf:R.lvOf,cnt:R.cnt,nsim:R.nsim,score:R.score,res:R.res,wrong:R.wrong,Q:R.Q,t0:R.t0,t:Date.now()}))}catch(e){}}
 function xLoad(n){try{var v=JSON.parse(ls(xKey(n))||'null');if(!v||v.x!==n||!v.Q||v.Q.length>=v.qi.length||Date.now()-v.t>14*864e5||v.qi.some(function(i){return i<0||!XA()[i]}))return null;return v}catch(e){return null}}
 /* 2026-11-03 第四十二次 第 5 點（老師 選「長 的 任務 換 平板 也 可以」）：這台 平板 沒有 存 ＝ 問 伺服器 有沒有 做到 一半 的 進度 ➜ 有 ＝ 存 到 這台、按鈕 變〔▶ 繼續〕*/
-function xRemote(n,bk,cb){var XRM=window.XRM||(window.XRM={}),id=(typeof SCID!=='undefined'&&SCID)||'',set='g3gm_g3m-'+(bk==='B'?'n':bk==='H'?'h':bk==='G'?'g':'x')+n,k=set+'|'+id;if(!id||typeof scProg!=='function'||XRM[k])return;XRM[k]=1;
+/* 2026-11-10 第四十六次（老師：400 課後班 要 做 成長測驗）：四年級 的 班 從 ⚡ 現場任務 進來（?live=04xx）＝ 這一頁 當 四年級（SCG 4），成績 g4gm_g3m-g25（伺服器：題組 年級 ＝ 登入 年級）*/
+function GPF(){return 'g'+(typeof SCG!=='undefined'&&SCG===4?4:3)+'gm_g3m-'}
+function xRemote(n,bk,cb){var XRM=window.XRM||(window.XRM={}),id=(typeof SCID!=='undefined'&&SCID)||'',set=GPF()+(bk==='B'?'n':bk==='H'?'h':bk==='G'?'g':'x')+n,k=set+'|'+id;if(!id||typeof scProg!=='function'||XRM[k])return;XRM[k]=1;
   scProg(set,function(b){if(!b)return;var o=XBK;XBK=bk;var ok=false;try{if(!xLoad(n)){localStorage.setItem(xKey(n),b);ok=!!xLoad(n);if(!ok)localStorage.removeItem(xKey(n))}}catch(e){}XBK=o;if(ok&&cb)cb()})}
 function xRemoteRe(){if(R&&R.Q&&R.Q.length&&!R.sent)return;if(document.querySelector('.xrow'))lobby()}
 function xDel(n){try{localStorage.removeItem(xKey(n))}catch(e){}}
@@ -4532,7 +4534,7 @@ function qRec(ok,pick){if(!R||R.Q.length>R.k)return;var ms=Date.now()-(R.ts||Dat
 function recTot(){return R?(R.x||(R.qs?R.qs.length:0)):0}
 function recPart(){try{if(!R||R.sent||R.crs||DUO||!R.Q||!R.Q.length||typeof scLive!=='function'||!scLive()||R.Q.length>=recTot())return;var r=recObj();r.part=recTot();if(R.x){xSave();try{r.prog=ls(xKey(R.x))||''}catch(e){}}scQAdd(r)}catch(e){}}
 function recObj(){if(!R.pu)R.pu=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);var u=R.pu;
-  var Rr={id:SCID,set:R.x?'g3gm_g3m-'+(R.bk==='B'?'n':R.bk==='H'?'h':R.bk==='G'?'g':'x')+R.x:'g3gm_'+crSet()+'-'+G.id,name:R.x?'📝 三年級 複習｜📝 '+XNM(R.x):crName()+'｜'+G.ic+' '+G.nm,m:'g',qs:R.Q,raw:R.score,fix:0,mp:0,mw:0,sec:Math.round((Date.now()-R.t0)/1000),src:window.HOMELW?'home':'school',dev:SCDEV,u:u,t:Date.now()};if(R.x&&CR&&CR.cfg)Rr.lc=1;   /* 第三十八次 第 7 點：現場任務 ＝ 正確率 計分 */
+  var Rr={id:SCID,set:R.x?GPF()+(R.bk==='B'?'n':R.bk==='H'?'h':R.bk==='G'?'g':'x')+R.x:'g3gm_'+crSet()+'-'+G.id,name:R.x?'📝 三年級 複習｜📝 '+XNM(R.x):crName()+'｜'+G.ic+' '+G.nm,m:'g',qs:R.Q,raw:R.score,fix:0,mp:0,mw:0,sec:Math.round((Date.now()-R.t0)/1000),src:window.HOMELW?'home':'school',dev:SCDEV,u:u,t:Date.now()};if(R.x&&CR&&CR.cfg)Rr.lc=1;   /* 第三十八次 第 7 點：現場任務 ＝ 正確率 計分 */
   return Rr}
 function rec1(){try{if(!R||R.sent||!R.Q.length||typeof scLive!=='function'||!scLive())return false;var fast=0;R.Q.forEach(function(x){fast+=x[3]});if(fast*2>R.Q.length)return false;R.sent=1;
   var Rr=recObj();if(R.Q.length<recTot()&&!R.fz)Rr.part=recTot();scQAdd(Rr);return true}catch(e){return false}}   /* 現場任務 時間 到（R.fz）＝ 老師 結束 的，算 做完 */

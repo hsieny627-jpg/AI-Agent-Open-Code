@@ -4308,12 +4308,12 @@ function crAuto(){if(/[?&]live=/.test(location.search)||typeof LDB==='undefined'
   setInterval(function(){var id=typeof SCID!=='undefined'?String(SCID||''):'';var r=/^\d{5}$/.test(id)?'0'+id.slice(0,3):'';if(r===room)return;room=r;if(stop){stop();stop=null}if(!r)return;
     stop=LDB.poll('rooms/'+r+'/cr',2000,function(v){if(go||!v||!v.on||Date.now()-(+v.t||0)>4*36e5)return;go=1;var o=document.createElement('div');o.id='crgo';
       o.innerHTML='<div class="crgob"><div style="font-size:clamp(70px,12vh,120px)">📢</div><div class="crgot">老師 開了 四年級 複習！</div><div style="font-size:28px">⏳ 馬上 進去…</div></div>';document.body.appendChild(o);
-      setTimeout(function(){location.replace(location.pathname+'?live='+r)},1400)})},2000)}
+      setTimeout(function(){location.replace(v.set==='g25'?'../g3mid/index.html?live='+r:location.pathname+'?live='+r)},1400)})},2000)}   /* 第四十六次：成長測驗 ＝ g3mid 那一頁 */
 function crInit(){var m=/[?&]live=(\d{4})/.exec(location.search);if(!m){crAuto();return}CR={room:m[1],t:0,cfg:null,acc:{},n:0,ok:0,q:-9,rd:{}};document.body.classList.add('crm');
   if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();crInit2()});return}crInit2()}
 function crInit2(){crWait('⏳ 等 老師 開始…');if(typeof LDB==='undefined'||!LDB.on()){crWait('📶 現場任務 還沒 開（老師 要 先 設定 Firebase）');return}LDB.poll('rooms/'+CR.room+'/cr',900,crOn)}
 function crStop(){clr();stopSay();FBN++;$('#wf').classList.remove('on')}
-function crOn(v){if(!CR)return;XLV.cfg(v);if(!v||!v.on){if(CR.cfg){crFlush();CR.cfg=null;R=null;crStop();$('#app').innerHTML='';document.body.classList.remove('crs');
+function crOn(v){if(!CR)return;if(v&&v.on&&v.set==='g25'){location.replace('../g3mid/index.html?live='+CR.room);return}XLV.cfg(v);if(!v||!v.on){if(CR.cfg){crFlush();CR.cfg=null;R=null;crStop();$('#app').innerHTML='';document.body.classList.remove('crs');
       crWait('✅ 老師 結束 了，謝謝！','<a class="crbk" href="../live/index.html">⬅ 回 現場任務</a>')}else crWait('⏳ 等 老師 開始…');return}
   if(v.t!==CR.t){if(CR.cfg)crFlush();CR.t=v.t;CR.cfg=v;CR.acc={};CR.n=0;CR.ok=0;CR.q=-9;CR.sc=0;CR.st=0;CR.rd={};R=null;crStop();
     document.body.classList.toggle('crs',v.m==='sync');if(v.m==='self'){crWait('');hub();if(/^[xn]\d+$/.test(v.set||''))XLV.intro(Math.round((+v.d||0)/60000),function(){})}else{$('#app').innerHTML='';crWait('⏳ 等 老師 出 第 1 題…')}}

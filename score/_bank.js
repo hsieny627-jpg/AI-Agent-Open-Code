@@ -117,6 +117,7 @@ Object.keys(SITES).forEach(dir => {
     put('g3gm_g3m-g25', { name: '🏫 三年級 複習｜📝 成長測驗 25 題 挑戰', qs: GT.GTALL.map(c => c.up ? { k: 'g', kn: '📝 成長測驗', q: txt('🔤 🔊 聽 ' + c.up + ' ➜ 寫 大寫＋小寫'), o: [c.up + ' ' + c.lo, '❌ 寫錯 了'], h: txt(c.zh), ae: c.up + ' ' + c.lo, gid: 'gl', gn: GTI.gl }
       : c.a ? { k: 'g', kn: '📝 成長測驗', q: txt('👂 🔊 ' + c.a + '、' + c.b + '：開頭 的 音 一樣 嗎？'), o: c.o.map(x => x === 'same' ? '⭕ Same' : '❌ Different'), h: txt(c.zh), ae: c.a + ', ' + c.b, gid: 'gs', gn: GTI.gs }
       : { k: 'g', kn: '📝 成長測驗', q: txt('🖼 🔊 ' + c.say + '：選 圖'), o: c.o.map(k => CEZ2[k] || k), h: txt(c.zh), ae: c.en, az: c.zh, gid: 'gc', gn: GTI.gc, pimg: GT.PICS[c.k] === 'img' ? '../g3mid/img/' + c.k + '.jpg' : '' }) }); }
+    put('g4gm_g3m-g25', Object.assign({}, BANK['g3gm_g3m-g25'], { name: '📝 四年級 班｜📝 成長測驗 25 題 挑戰' }));   /* 2026-11-10 第四十六次：400 課後班（四年級 的 班）做 成長測驗 ＝ 同 一份 題庫 */
 }   
 /* 🏰 守城、🎣 釣魚（2026-10-26 第二十九次 第 3 點；在家複習 版）：題目 ＝ fun/_pool.json（fun/_build.js 做 的，第幾題 跟 網頁 一樣）*/
 if (fs.existsSync(path.join(__dirname, '..', 'fun', '_pool.json'))) { const FP = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'fun', '_pool.json'), 'utf8'));

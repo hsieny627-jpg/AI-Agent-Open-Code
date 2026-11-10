@@ -4,6 +4,10 @@
 > 設計、研究證據（21 條）、使用者的決定：`sentences/2026-10-07_C_設計與研究清單.md`（**Q1～Q18 使用者 2026-10-07 全部照建議**）。
 > 根目錄 `AGENTS.md` 第四節（最高原則、品質、省額度）同樣適用。
 
+## 2026-11-10 第四十六次
+
+四年級 的 班（400 課後班）做 成長測驗 ＝ 題組 `g4gm_g3m-g25`（`_bank.js` 跟 `g3gm_g3m-g25` 同 一份 題庫）；老師看板 四年級 期中 挑戰 表 多「📝 成長測驗」一欄。**沒有 改 `_calc.js`／`_server.js`，不用 重新 部署。**
+
 ## 2026-11-09 第四十五次（先讀這一節）
 
 **改了 `_calc.js`、`_server.js` ➜ 要 重新 部署** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html （網址 不變）。量測 `node g3mid/_verify_45.js`、`node score/_test.js`（530 項）。

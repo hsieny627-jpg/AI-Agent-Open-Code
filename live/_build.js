@@ -32,7 +32,8 @@ G3M.CSETS.forEach(x => { CRD.B[x[0]] = {}; G3M.GAMES.forEach(g => { CRD.B[x[0]][
 const MT = require(path.join(ROOT, 'midterm', '_data.js'));
 const MTORD = ['lis', 'read', 'write'].map(k => MT.GAMES.filter(g => g.sec === k)).flat();
 /* 2026-10-27 第三十一次（老師 選 D 回到以前）：沒有「🪤 四年級 複習 0」了，只有 一套 📝 四年級 複習 ＝ 12 種（陷阱 偵測器 在 最後）*/
-const CRD4 = { gs: MTORD.map(g => [g.id, g.ic, g.nm]), sets: [['mt', '📝 四年級 複習'], ['x25', '📝 25 題 挑戰'], ['x50', '📝 50 題 挑戰'], ['n25', '📝 新 25 題 挑戰'], ['n50', '📝 新 50 題 挑戰']], only: { mt: MTORD.map(g => g.id), x25: [], x50: [], n25: [], n50: [] }, B: { mt: {} } };
+/* 2026-11-10 第四十六次（老師：400 課後班 要 做 成長測驗）：四年級 的 班 也 有「📝 成長測驗 25 題 挑戰」＝ 平板 跳到 g3mid/index.html?live=04xx（那一頁 自己 當 四年級）*/
+const CRD4 = { gs: MTORD.map(g => [g.id, g.ic, g.nm]), sets: [['mt', '📝 四年級 複習'], ['x25', '📝 25 題 挑戰'], ['x50', '📝 50 題 挑戰'], ['n25', '📝 新 25 題 挑戰'], ['n50', '📝 新 50 題 挑戰'], ['g25', '📝 成長測驗 25 題 挑戰']], only: { mt: MTORD.map(g => g.id), x25: [], x50: [], n25: [], n50: [], g25: [] }, B: { mt: {} } };
 /* 2026-11-01 第三十八次 C44 ④ B＋第 7、8 點：⚡ 快速 模式 要 知道「挑戰 題庫 第幾題 ＝ 哪一關」（老師看板 錯題 一樣 照 XORD／XORD2）➜ 大螢幕 算 這一班 最常 錯 的 3 關 */
 { const MT = require('../midterm/_data.js'); CRD.xo = G3M.XORD.map(x => x[0]); CRD.xo2 = G3M.XORD2.map(x => x[0]); CRD4.xo = MT.XORD.map(x => x[0]); CRD4.xo2 = (MT.XORD2 || []).map(x => x[0]);
   const nm = (L, id) => { const g = L.filter(x => x.id === id)[0]; return g ? [g.ic, g.nm] : id === 'dc' ? ['🔓', '句子 解碼'] : ['', id]; };

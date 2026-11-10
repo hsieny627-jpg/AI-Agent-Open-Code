@@ -37,7 +37,7 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
     /* 2026-10-27 第三十一次：四年級 的 班 ＝〔📝 四年級 複習〕一套 12 種（陷阱 偵測器 放回 最後；沒有「四年級 複習 0」）*/
     await h.click('[data-sc="402"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.waitForTimeout(200);
     n++; const s4 = await h.evaluate(() => ({ scr: H.scr, h1: document.querySelector('#hcr h1').textContent, sets: [].map.call(document.querySelectorAll('[data-crs]'), b => b.textContent), gs: [].map.call(document.querySelectorAll('[data-crg]'), b => b.textContent) }));
-    if (s4.scr !== 'hcr' || !/四年級 期中複習/.test(s4.h1) || s4.sets.join('|') !== '📝 四年級 複習|📝 25 題 挑戰|📝 50 題 挑戰|📝 新 25 題 挑戰|📝 新 50 題 挑戰' || s4.gs.length !== 12 || !/陷阱/.test(s4.gs[11]) || !/字首音/.test(s4.gs[0])) E.push(tag + ' 四年級 複習 設定 畫面 ' + JSON.stringify(s4).slice(0, 300));
+    if (s4.scr !== 'hcr' || !/四年級 期中複習/.test(s4.h1) || s4.sets.join('|') !== '📝 四年級 複習|📝 25 題 挑戰|📝 50 題 挑戰|📝 新 25 題 挑戰|📝 新 50 題 挑戰|📝 成長測驗 25 題 挑戰' || s4.gs.length !== 12 || !/陷阱/.test(s4.gs[11]) || !/字首音/.test(s4.gs[0])) E.push(tag + ' 四年級 複習 設定 畫面 ' + JSON.stringify(s4).slice(0, 300));
     n++; if (!s4.gs.every(t => /☑/.test(t))) E.push(tag + ' 四年級 複習 12 種 沒有 預設 全選 ' + JSON.stringify(s4.gs));
     await h.click('#crback'); await h.waitForTimeout(150);
     await h.click('[data-sc="304"]'); await h.waitForTimeout(200); await h.click('[data-crgo]'); await h.waitForTimeout(200);
