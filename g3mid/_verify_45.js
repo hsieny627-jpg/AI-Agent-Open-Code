@@ -28,9 +28,12 @@ const ok = (c, m) => { n++; if (!c) E.push(m); };
         ok(x.same === 3, tag + ' 開頭 的 音 一樣 的 不是 3 題');
         ok(new Set(x.gcK).size === 4, tag + ' 常用語 4 題 的 圖 有 重複');
       });
-      const gs = r.slice(0, 3).map(x => x.q.filter(i => i >= 26 && i < 78)), gc = r.slice(0, 3).map(x => x.q.filter(i => i >= 78));
+      const GC0 = await p.evaluate(() => GTALL.indexOf(GT.GC.filter(q => q.say === 'Close your book.')[0])), gs = r.slice(0, 3).map(x => x.q.filter(i => (i >= 26 && i < 78) || i >= 93)), gc = r.slice(0, 3).map(x => x.q.filter(i => i >= 78 && i < 93 && i !== GC0));   /* 第四十七次：Close your book. 每 一回 一定 出（TOP）*/
+      { const GA = require('./_gt_data.js').GTALL; r.forEach((x, k) => { const Q = x.q.map(i => GA[i]).filter(q => q && q.a);
+        ok(Q.filter(q => q.same && ['m', 'h', 'b', 'y'].indexOf(q.on) >= 0).length >= 2 && Q.some(q => !q.same && ((q.on === 'f' && q.on2 === 'v') || (q.on === 'v' && q.on2 === 'f'))), tag + ' 第 ' + (k + 1) + ' 回 開頭 的 音 沒有 通過率 最低 的 題型（一樣 m／h／b／y ≧ 2、不一樣 f／v）'); }); }
+      r.forEach((x, k) => ok(x.q.indexOf(GC0) >= 0 && ['n', 'q', 'j'].every(c => x.q.indexOf(c.charCodeAt(0) - 97) >= 0), tag + ' 第 ' + (k + 1) + ' 回 沒有 通過率 最低 的 題型（N Q J、Close your book.）'));
       ok(new Set([].concat(...gs)).size === 18, tag + ' 連 3 回 開頭 的 音 有 重複');
-      ok(new Set([].concat(...gc)).size === 12, tag + ' 連 3 回 常用語 有 重複');
+      ok(new Set([].concat(...gc)).size === 9, tag + ' 連 3 回 常用語 有 重複');
       const l1 = r[0].q.filter(i => i < 26), l2 = r[1].q.filter(i => i < 26);
       ok(l2.filter(i => l1.indexOf(i) < 0).length === 11, tag + ' 第 2 回 字母 沒有 先 出 沒寫過 的 11 個');
       ok(await p.evaluate(() => { XBK = 'G'; XQUIET = 1; startGT(25); XQUIET = 0; return recObj().set; }) === 'g3gm_g3m-g25', tag + ' 成績 代號 不是 g3gm_g3m-g25');
@@ -114,7 +117,7 @@ const ok = (c, m) => { n++; if (!c) E.push(m); };
         const q = e.getBoundingClientRect(); if (getComputedStyle(e).display !== 'none' && (q.width > H.width * 1.6 || q.height > H.height * 1.6)) bad.push('太大 ' + e.className + ' ' + Math.round(q.width) + '×' + Math.round(q.height)); if (/hue-rotate|blur/.test(c.filter) && q.width * q.height > H.width * H.height * .25) bad.push('大 濾鏡 ' + e.className); });
       return { bad: [...new Set(bad)].slice(0, 6), bc: !!document.querySelector('#h canvas.awbc'), hon: [...document.querySelectorAll('.awhon')].map(x => x.textContent).length, glass: getComputedStyle(document.querySelector('.awp'), '::before').content, ps: document.querySelectorAll('.awpod .ps').length }; });
     ok(!r.bad.length, vp.join('×') + ' 頒獎 典禮 還有 可能 遮住 畫面 的 效果：' + r.bad.join(' | '));
-    ok(r.bc && r.hon === 3 && r.glass !== 'none' && r.ps >= 3, vp.join('×') + ' 頒獎 典禮 少了 光效 畫布／前 三名 榮譽／玻璃 光／立體 側面 ' + JSON.stringify(r));
+    ok(r.bc && r.hon === 0 && r.glass !== 'none' && r.ps >= 3, vp.join('×') + ' 頒獎 典禮 少了 光效 畫布／前 三名 榮譽／玻璃 光／立體 側面 ' + JSON.stringify(r));
     ok(!er.length, vp.join('×') + ' 頒獎 典禮 錯誤 ' + er.join('|')); await pg.close(); } }
   await br.close();
   if (E.length) E.forEach(e => console.log('❌ ' + e));

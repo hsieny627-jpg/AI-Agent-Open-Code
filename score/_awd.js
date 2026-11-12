@@ -136,7 +136,7 @@ function AWDSRC() {
     host.className = (host.className.replace(/\bawd\b|\bno-\w\b|\bth-\w+/g, '') + ' awd th-' + th.k).trim(); ['h', 'p', 'w'].forEach(function (k) { if (!sh[k]) host.classList.add('no-' + k); });
     host.style.setProperty('--aw1', th.c1); host.style.setProperty('--aw2', th.c2); host.style.setProperty('--awf', th.fl);
     host.innerHTML = '<div class="awbg" style="background:' + th.bg + '"></div><canvas class="awbc"></canvas><canvas class="awcv"></canvas>' +   /* 第四十五次：聚光燈、地板、光芒 ＝ awbc 一張 畫布 */
-      '<div class="awtop"><div class="awkick">' + esc(data.kick || '') + '</div><div class="awttl">' + esc(data.title || '🏆 頒獎 典禮').replace(/(\p{Extended_Pictographic}\uFE0F?)/gu, '<i class="awem">$1</i>') + '</div><div class="awthm">' + esc(th.nm) + '</div></div>' +
+      '<div class="awtop"><div class="awkick">' + esc(data.kick || '') + '</div><div class="awttl">' + esc(data.title || '🏆 頒獎 典禮').replace(/(\p{Extended_Pictographic}\uFE0F?)/gu, '<i class="awem">$1</i>') + '</div></div>' +  /* 第四十七次 1-(1)：主題 名稱 拿掉 */
       '<div class="awar"></div><div class="awcap"></div><div class="awflash"></div>';
     var ar = $(host, '.awar'), cap = $(host, '.awcap'), cv = $(host, '.awcv'); S.pt = Parts(cv, th); S.bg = BG($(host, '.awbc'), host, th);
     var seed = (Date.now() ^ (Math.random() * 1e9)) >>> 0; A.M = Music(seed); if (!sh.m) A.M.mute(true); S.music = A.M.info;
@@ -147,7 +147,7 @@ function AWDSRC() {
     S.ranks = ranks;
     /* 頒獎台（一開始 在 地板 下面，輪到 才 升 起來）*/
     ranks.forEach(function (rk) { var p = H('div', 'awpod r' + rk, '<div class="pf"><b>' + MED[rk] + '</b></div><div class="pt"></div><div class="ps"></div>'); p.style.left = SLOT[rk] + '%'; p.style.setProperty('--ph', PODH[rk] + '%'); ar.appendChild(p);
-      var gp = H('div', 'awgrp r' + rk + ' n' + Math.min(3, G[rk].length), (rk === 1 ? '<div class="awcrown">👑</div><div class="awchamp">👑 冠軍</div>' : '') + '<div class="awmd">' + (rk <= 3 ? MED[rk] : '第 ' + rk + ' 名') + '</div><div class="awps">' + G[rk].map(person).join('') + '</div>' + (rk <= 3 ? '<div class="awhon">' + HON[rk][rnd(HON[rk].length)] + '</div>' : '')); gp.style.setProperty('--sx', SLOT[rk] + '%'); gp.style.setProperty('--ph', PODH[rk] + '%'); gp.setAttribute('data-rk', rk); ar.appendChild(gp); });
+      var gp = H('div', 'awgrp r' + rk + ' n' + Math.min(3, G[rk].length), (rk === 1 ? '<div class="awcrown">👑</div><div class="awchamp">👑 冠軍</div>' : '') + '<div class="awmd">' + (rk <= 3 ? MED[rk] : '第 ' + rk + ' 名') + '</div><div class="awps">' + G[rk].map(person).join('') + '</div>' /* 第四十七次 1-(3)：前 三名 一句 正向 的 話 拿掉 */); gp.style.setProperty('--sx', SLOT[rk] + '%'); gp.style.setProperty('--ph', PODH[rk] + '%'); gp.setAttribute('data-rk', rk); ar.appendChild(gp); });
     fitAll(host); S.tm.push(setTimeout(function () { fitAll(host); }, 600));   /* 圖 載 好 以後 再 算 一次 */
     /* ① 開場 */
     host.classList.add('st0'); A.M.pad(6); A.M.roll(3.6, true); S.pt.conf(30);
@@ -173,7 +173,7 @@ function AWDSRC() {
     T(function () { finale(host, S, 0); }, 2600); };
   function finale(host, S, fast) { if (S.fin) return; S.fin = 1; var ar = $(host, '.awar'), cap = $(host, '.awcap'); host.classList.remove('dim', 'sus', 'boom'); host.classList.add('fin');
     [].forEach.call(ar.querySelectorAll('.awpod'), function (p) { p.classList.add('up'); }); [].forEach.call(ar.querySelectorAll('.awgrp'), function (g) { g.classList.add('show', 'seat'); });
-    cap.className = 'awcap fin in'; cap.innerHTML = '🎉 恭喜！你們 的 用心 被 看見 了！';
+    cap.className = 'awcap'; cap.innerHTML = '';   /* 第四十七次 1-(2)：「恭喜！你們 的 用心 被 看見 了！」拿掉 */
     if (A.M) A.M.finale(fast ? 8 : 12); S.pt.conf(160);
     var my = S.gen; (function loop(k) { if (host._aw !== S || S.gen !== my) return; S.pt.burst(Math.random() * .8 + .1, Math.random() * .3 + .1, 70); if (k < 14) S.tm.push(setTimeout(function () { loop(k + 1); }, 900)); })(0);
     if (S.opt.done) S.opt.done(); }

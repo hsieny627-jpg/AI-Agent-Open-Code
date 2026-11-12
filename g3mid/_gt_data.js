@@ -6,7 +6,13 @@
  *   B. 110 年 國民小學 英語科 基本學習內容「三年級」：① 字母 Aa～Zz 26 個 大小寫（聽懂、口說、認讀、書寫）② 音韻覺識：能 聽出 CVC 的 起始 子音
  *      ③ 常用語（聽懂＋口說）Hi!/Hello!、Good morning.、Good afternoon.、Goodbye./Bye.、Thank you.；（聽懂）Be quiet.、Good job.、Listen!、Look!、
  *      Open/Close your book.、Sit down.、Stand up.（三年級 沒有 字詞、文法 句構）
- *   C. 當年度 錯 最多 的 前 5 題：**老師 還沒 給**（TOP 空 的）➜ 給 了 以後 寫進 TOP，那 幾 種 題目 每 一回 一定 出、而且 多 出。
+ *   C. 通過率 最低 前 5 題（老師 2026-11-12 給：112 年＋113 年；學習扶助 評量系統 5 月 篩選測驗）＝ TOP，那 幾 種 題目 每 一回 一定 出：
+ *      112：10 大寫 N、10 小寫 n、15 小寫 q、16 bam／boot（一樣）、20 yam／yoke（一樣）
+ *      113：17 /mɑk/／/mæs/（一樣）、20 /hʌm/／/hip/（一樣）、19 /fɑɡ/／/væt/（不一樣 f／v）、23 Close your book.（三張 圖：開書／拿書／闔書）、5 小寫 j
+ *   D. 114 年 聽力 錄音（老師 2026-11-12 給；雲端 電腦 聽寫 核對）：字母 ＝ V N J T C P S G ? Y U D Q L H（第 10 題 聽寫 聽成 s，可能 是 F 或 X）；
+ *      開頭 的 音 ＝ jab／jeep、shore／shade、dawn／loaf、height／hose、Zeb／yam、(v)／then；常用語 ＝ Good job!／Be quiet.／Look!／Open your book.
+ *      ➜ 新 加 j、sh、y 一樣 的 組；z／y、d／l、s／sh 不一樣 的 組（GS2，接 在 題庫 最 後面）
+ *   老師 2026-11-12：「考卷 用過 的 字 可以 用」➜ EXAM_W 不再 擋（留著 當 紀錄）
  *
  * 一回 25 題 ＝ 跟 考卷 一樣 的 三 部分、一樣 的 題數：
  *   第 1 關 🔤 聽寫 字母 15 題（聽 字母 ➜ 先 寫 大寫 ➜ 再 寫 小寫；考卷 第 1～15 題、60%）
@@ -24,6 +30,7 @@ var GTW = {   /* 字：中文、圖（答錯頁 用；題目 只 用 聽）*/
   mom: ['媽媽', '👩'], monkey: ['猴子', '🐒'], milk: ['牛奶', '🥛'], moon: ['月亮', '🌙'], net: ['網子', '🥅'], nose: ['鼻子', '👃'], nut: ['堅果', '🥜'], nine: ['九', '9️⃣'],
   pen: ['筆', '🖊️'], pig: ['豬', '🐷'], pot: ['鍋子', '🍲'], pin: ['別針', '📌'], panda: ['熊貓', '🐼'], rat: ['老鼠', '🐀'], red: ['紅色', '🟥'], rabbit: ['兔子', '🐰'], ring: ['戒指', '💍'],
   six: ['六', '6️⃣'], sock: ['襪子', '🧦'], seven: ['七', '7️⃣'], ten: ['十', '🔟'], tent: ['帳篷', '⛺'], tub: ['浴缸', '🛁'], tiger: ['老虎', '🐯'], toy: ['玩具', '🧸'],
+  jam: ['果醬', '🍓'], juice: ['果汁', '🧃'], ship: ['船', '🚢'], shoe: ['鞋子', '👟'], yak: ['犛牛', '🐃'], yarn: ['毛線', '🧶'], log: ['木頭', '🪵'],
   van: ['廂型車', '🚐'], vest: ['背心', '🦺'], web: ['蜘蛛網', '🕸️'], window: ['窗戶', '🪟'], wolf: ['狼', '🐺'], zebra: ['斑馬', '🦓'], zoo: ['動物園', '🦁'], zero: ['零', '0️⃣']
 };
 /* 開頭 的 音：[字 1, 字 2]（第一個 音 一樣 ＝ ⭕；cat／kite、cup／kid ＝ 字母 不同 但是 音 一樣 /k/ ＝ ⭕，答錯頁 說明）*/
@@ -37,15 +44,19 @@ var GTS0 = [
   ['fan', 'van'], ['fox', 'vest'], ['five', 'van'], ['mom', 'nut'], ['milk', 'net'], ['monkey', 'nose'], ['goat', 'kite'], ['girl', 'king'],
   ['leg', 'red'], ['lion', 'rabbit'], ['lamp', 'rat'], ['six', 'zebra'], ['sock', 'zoo'], ['seven', 'zero'], ['web', 'vest'], ['window', 'van'], ['wolf', 'fox']
 ];
-var SND = { c: 'k', k: 'k' };   /* 音 一樣 的 不同 字母 */
-var IPA = { b: '/b/', p: '/p/', d: '/d/', t: '/t/', f: '/f/', v: '/v/', m: '/m/', n: '/n/', g: '/g/', k: '/k/', c: '/k/', l: '/l/', r: '/r/', s: '/s/', z: '/z/', w: '/w/', h: '/h/' };
+var SND = { c: 'k', k: 'k' };
+function ON(w) { return /^sh/.test(w) ? 'sh' : w[0]; }   /* 開頭 的 音：sh 算 一個 音 /ʃ/ */   /* 音 一樣 的 不同 字母 */
+var IPA = { sh: '/ʃ/', j: '/dʒ/', y: '/j/', b: '/b/', p: '/p/', d: '/d/', t: '/t/', f: '/f/', v: '/v/', m: '/m/', n: '/n/', g: '/g/', k: '/k/', c: '/k/', l: '/l/', r: '/r/', s: '/s/', z: '/z/', w: '/w/', h: '/h/' };
 var EXAM_W = ['sun', 'soup', 'jet', 'gum', 'dot', 'mop', 'map', 'mat', 'fat', 'that', 'hip', 'hum', 'sit', 'chop', 'sam'];
-var GS = GTS0.map(function (p) {
-  var a = p[0], b = p[1];[a, b].forEach(function (w) { if (!GTW[w]) throw new Error('成長測驗 開頭 的 音：' + w + ' 沒有 中文'); if (EXAM_W.indexOf(w) >= 0) throw new Error('成長測驗 洩題：' + w); });
-  var sa = SND[a[0]] || a[0], sb = SND[b[0]] || b[0], same = sa === sb;
-  return { a: a, b: b, same: same ? 1 : 0, say: a + '. ' + b + '.', o: same ? ['same', 'diff'] : ['diff', 'same'], en: a + ', ' + b,
-    zh: a + '（' + GTW[a][0] + '）的 開頭 是 ' + IPA[a[0]] + '，' + b + '（' + GTW[b][0] + '）的 開頭 是 ' + IPA[b[0]] + ' ➜ ' + (same ? '一樣' : '不一樣') + '。' };
-});
+/* 2026-11-12 第四十七次：114 年 聽力 考 了 j、sh、y、z／y、d／l ➜ 新 的 組（接 在 最 後面，老師看板 的 題號 不 變）*/
+var GTS2 = [['jam', 'juice'], ['ship', 'shoe'], ['yak', 'yarn'], ['zebra', 'yarn'], ['dog', 'log'], ['desk', 'lamp'], ['ship', 'sock'], ['shoe', 'six'], ['jam', 'yak']];
+function mkGS(p) {
+  var a = p[0], b = p[1];[a, b].forEach(function (w) { if (!GTW[w]) throw new Error('成長測驗 開頭 的 音：' + w + ' 沒有 中文');  });
+  var oa = ON(a), ob = ON(b), sa = SND[oa] || oa, sb = SND[ob] || ob, same = sa === sb;
+  return { a: a, b: b, on: sa, on2: sb, same: same ? 1 : 0, say: a + '. ' + b + '.', o: same ? ['same', 'diff'] : ['diff', 'same'], en: a + ', ' + b,
+    zh: a + '（' + GTW[a][0] + '）的 開頭 是 ' + IPA[oa] + '，' + b + '（' + GTW[b][0] + '）的 開頭 是 ' + IPA[ob] + ' ➜ ' + (same ? '一樣' : '不一樣') + '。' };
+}
+var GS1 = GTS0.map(mkGS), GS2 = GTS2.map(mkGS), GS = GS1.concat(GS2);
 /* 常用語：k ＝ 圖（照片 img/k.jpg 或 漫畫 _scenes.js）、near ＝ 相近 的 圖（錯 的 選項 從 這裡 挑 2 張）*/
 var PICS = { hello: 'sc', morn: 'sc', aft: 'sc', bye: 'sc', thank: 'sc', goodjob: 'sc', listen: 'sc', look: 'sc', quiet: 'img', openbook: 'img', closebook: 'img', sitdown: 'img', standup: 'img' };
 var GC0 = [
@@ -70,12 +81,15 @@ var GC = GC0.map(function (c) { [c[2]].concat(c[3]).forEach(function (k) { if (!
 /* 字母：26 個（聽 字母 ➜ 大寫 ➜ 小寫）*/
 var GL = 'abcdefghijklmnopqrstuvwxyz'.split('').map(function (c) { var C = c.toUpperCase();
   return { up: C, lo: c, say: c, want: C, show: C, lis: 1, en: C + ' ' + c, o: [C + c, '❌ 寫錯 了'], zh: '聽到 ' + C + '：大寫 ' + C + '、小寫 ' + c + '。' }; });
-var TOP = [];   /* C. 當年度 錯 最多 前 5 題（老師 給 了 再 填：[{p:'gl', v:'b'}…]）*/
+/* C. 通過率 最低 前 5 題（112＋113）＝ 每 一回 一定 出 的 題型（不是 原題：開頭 的 音 用 同 一種 音 的 別的 字）：
+ *   gl ＝ 這 幾 個 字母 每 一回 一定 出（N、Q、J）；gs1 ＝ 一樣 的 3 組 裡 至少 2 組 開頭 是 這 幾 個 音（m、h、b、y）；
+ *   gs0 ＝ 不一樣 的 3 組 裡 一定 有 1 組 f／v；gc ＝ 這 一句 一定 出（Close your book.，錯 的 圖 一定 有 開書） */
+var TOP = { gl: ['n', 'q', 'j'], gs1: ['m', 'h', 'b', 'y'], gs0: [['f', 'v']], gc: ['Close your book.'] };
 if (GS.length < 48) throw new Error('成長測驗 開頭 的 音 太 少：' + GS.length);
-if (GS.filter(function (q) { return q.same; }).length !== 26) throw new Error('成長測驗：一樣 的 要 26 組');
+if (GS1.filter(function (q) { return q.same; }).length !== 26) throw new Error('成長測驗：一樣 的 要 26 組');
 var GORD = [['gl', 'GL'], ['gs', 'GS'], ['gc', 'GC']];
 var GCNT = { gl: 15, gs: 6, gc: 4 };
-var GTALL = GL.concat(GS).concat(GC);   /* 題庫 第幾題（老師看板 用；只 可以 接 在 後面 加）*/
+var GTALL = GL.concat(GS1).concat(GC).concat(GS2);   /* 題庫 第幾題（老師看板 用；只 可以 接 在 後面 加）*/
 var GTSAY = GC.map(function (c) { return c.say; });
 var GTWORDS = Object.keys(GTW).filter(function (w) { return GS.some(function (q) { return q.a === w || q.b === w; }); });
-module.exports = { IPA: IPA, GTW: GTW, GS: GS, GC: GC, GL: GL, PICS: PICS, TOP: TOP, GORD: GORD, GCNT: GCNT, GTALL: GTALL, GTSAY: GTSAY, GTWORDS: GTWORDS };
+module.exports = { IPA: IPA, GTW: GTW, GS: GS, GC: GC, GL: GL, PICS: PICS, TOP: TOP, GORD: GORD, GCNT: GCNT, GTALL: GTALL, NGS1: GS1.length, GTSAY: GTSAY, GTWORDS: GTWORDS };

@@ -111,6 +111,15 @@
 
 量測 **`node g3mid/_verify_dfx.js`**（三、四年級 ✕ 3 種 螢幕：8 題 8 種 樣子、剛好 1 個 寶箱 而且 是 正確 答案、不 超出、字 ≧ 20px、放錯 不開、放對 開＋倒數 停、🔦 透視、✖2、過關 特效、影子、教學 不 加、皮克敏／資料表 有）。
 
+## 2026-11-12 第四十七次（先讀這一節）
+
+需求檔 第四節 最下面「第四十七次」。**不用 重新 部署**。量測 `node g3mid/_verify_45.js`（115 項）。
+| 老師 | 做法 |
+|---|---|
+| 考卷 用過 的 字 可以 用 | `_gt_data.js` `EXAM_W` 不再 擋（留著 當 紀錄）|
+| 通過率 最低 前 5 題（112＋113）| `GT.TOP` ＝ {gl: n q j, gs1: m h b y, gs0: f／v, gc: Close your book.}；`_build.js` `startGT`／`gtTop`：這 幾 個 字母、Close your book. 每 一回 一定 出；開頭 的 音「一樣」3 組 裡 2 組 是 m／h／b／y（輪流）、「不一樣」3 組 裡 1 組 f／v；其他 的 不 用 TOP 的（連 幾 回 不 重複）|
+| 114 年 聽力 | 新 字 jam juice ship shoe yak yarn log（男聲 慢 m1／m2 `node g3mid/_audio.js`）；`GS2` 9 組（j、sh、y 一樣；z／y、d／l、s／sh、j／y 不一樣），**接 在 題庫 最 後面**：`GTALL` ＝ 字母＋舊 開頭 的 音＋常用語＋`GS2`（老師看板 題號 不 變；`NGS1`）；sh 算 一個 音（`ON()`）|
+
 ## 2026-11-10 第四十六次：四年級 的 班（400 課後班）也 能 做 📝 成長測驗 25 題
 
 `index.html` 帶 `?live=04xx` ＝ 這一頁 當 四年級（`SCG` 4、成績 `g4gm_g3m-g25`，`GPF()`）；其他 時候 照舊 三年級。細節 `live/CLAUDE.md` 最上面「第四十六次」。量測 `node g3mid/_verify_46.js`。

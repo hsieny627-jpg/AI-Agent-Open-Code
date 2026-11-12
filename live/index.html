@@ -494,7 +494,7 @@ body.host .hbar{padding-right:calc(clamp(180px,26vh,300px) + 34px)}
 body[data-scr=hq] .sqrc.hq2 .qrb{width:clamp(120px,15vh,170px);height:clamp(120px,15vh,170px)}body[data-scr=hq] .hbar{padding-right:calc(clamp(120px,15vh,170px) + 34px)}
 .sqrc.hq2::after{content:'👆 點 我 放大';font-size:clamp(16px,2vh,22px);color:#FFE9A8}
 .qrbig{position:fixed;inset:0;z-index:99;background:rgba(5,7,10,.94);display:flex;align-items:center;justify-content:center}.qrbig[hidden]{display:none!important}
-.qrbw{display:flex;flex-direction:column;align-items:center;gap:14px}.qrbb{width:min(78vh,86vw);height:min(78vh,86vw);background:#fff;border-radius:24px;padding:14px}.qrbb svg{width:100%;height:100%;display:block}
+.qrbw{display:flex;flex-direction:column;align-items:center;gap:10px;height:100vh;height:100dvh;padding:10px 0;box-sizing:border-box}.qrbw>*{flex:0 0 auto}.qrbw>.qrbb{flex:1 1 0;min-height:0;height:auto;width:auto;max-width:86vw;aspect-ratio:1/1;box-sizing:border-box;background:#fff;border-radius:24px;padding:14px}.qrbb svg{width:100%;height:100%;display:block}   /* 第四十七次 3-(4)：放大 以後 QR 上面 1/6 被 切掉 ➜ QR ＝ 畫面 高度 扣掉 下面 的 字 和 按鈕 剩下 的 空間（正方形）*/.qrbb svg{width:100%;height:100%;display:block}
 .qrbt{font-size:clamp(28px,4vh,48px);color:#FFD54A}
 
 /* 2026-10-20 第十四次：💡 加回來（一句、燈泡 亮 一下） */
@@ -689,6 +689,12 @@ body.host #hlob .lobr{padding-top:62px}   /* 右上角〔🏠 總首頁〕〔老
 .lbt-ufo .crtrk{background:repeating-linear-gradient(90deg,#1A0638 0 40px,#250A52 40px 80px);border-color:#C86BFF!important;box-shadow:0 0 12px #C86BFF,inset 0 0 10px #7A2BFF}
 .lbt-horse .crtrk{background:repeating-linear-gradient(90deg,#2E7D32 0 40px,#388E3C 40px 80px)}
 .lbt-snow .crtrk:before,.lbt-balloon .crtrk:before{border-top-color:rgba(0,0,0,.18)}
+
+/* 2026-11-12 第四十七次 第 3-(2)(3) 點：右上角〔⬅ 回 設定〕、開始 以後 右上角＋右下角〔⬅ 回 上一頁〕（右下角 在 QR 的 左邊，不 蓋住 QR）*/
+.crtr,.crbr{position:fixed;z-index:44;font-size:clamp(20px,2.6vh,28px);font-weight:900;padding:10px 18px;border-radius:14px;border:3px solid #FFD54A;background:#2A2410;color:#FFE07A;box-shadow:0 4px 0 rgba(0,0,0,.5),0 0 18px rgba(255,213,74,.35);cursor:pointer}
+.crtr{top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right))}
+.crbr{bottom:max(10px,env(safe-area-inset-bottom));right:calc(clamp(180px,26vh,300px) + 46px)}
+.crtr:active,.crbr:active{transform:translateY(2px)}
 
 </style></head><body class="stu">
 <script>window.SCLIVE=1;</script>

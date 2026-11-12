@@ -1117,12 +1117,17 @@ FB.q5=function(q){var o=fbWrite(q);if(q.lisw){o.say=q.say;o.body+='<div style="d
 /* ══ 2026-11-09 第四十五次 第 1 點：📝 三年級 成長測驗 25 題 挑戰（⚡ 現場任務 set g25；資料 g3mid/_gt_data.js；規格 g3mid/CLAUDE.md「第四十五次」）
    跟 考卷 一樣 三 關：🔤 聽寫 字母 15（聽 字母 3 次 ➜ ① 寫 大寫 ➜ ② 寫 小寫）、👂 開頭 的 音 6（聽 兩個 字 ➜ ⭕ Same／❌ Different）、🖼 聽 一句 選 圖 4（三張 圖）。
    每 一回 重新 抽：這一位 學生 最近 做過 的 先 不出（gtPick）；答錯頁、答對頁、錯題 總複習 ＝ 新 25 題 同一套 ══ */
-var GT=${J(GTD)},GTALL=GT.GL.concat(GT.GS,GT.GC),GTL=[{id:'gl',ic:'🔤',nm:'聽寫 字母',how:'🔊 聽 字母 ➜ ① 寫 大寫 ➜ ② 寫 小寫（頂天 立地）',t:45,c1:'#5B2BD6',c2:'#2BB3FF'},{id:'gs',ic:'👂',nm:'開頭 的 音',how:'🔊 聽 兩個 字 ➜ 開頭 的 音 一樣 ⭕ Same、不一樣 ❌ Different',t:25,c1:'#0E8A5F',c2:'#7BE0A8'},{id:'gc',ic:'🖼',nm:'聽 一句 選 圖',how:'🔊 聽 一句 話 ➜ 三張 圖 選 一張',t:20,c1:'#C2410C',c2:'#FDBA74'}];
+var GT=${J(GTD)},GTALL=GT.GL.concat(GT.GS.slice(0,GT.NGS1),GT.GC,GT.GS.slice(GT.NGS1)),GTL=[{id:'gl',ic:'🔤',nm:'聽寫 字母',how:'🔊 聽 字母 ➜ ① 寫 大寫 ➜ ② 寫 小寫（頂天 立地）',t:45,c1:'#5B2BD6',c2:'#2BB3FF'},{id:'gs',ic:'👂',nm:'開頭 的 音',how:'🔊 聽 兩個 字 ➜ 開頭 的 音 一樣 ⭕ Same、不一樣 ❌ Different',t:25,c1:'#0E8A5F',c2:'#7BE0A8'},{id:'gc',ic:'🖼',nm:'聽 一句 選 圖',how:'🔊 聽 一句 話 ➜ 三張 圖 選 一張',t:20,c1:'#C2410C',c2:'#FDBA74'}];
 function gtPick(key,arr,n,ok){var k='g3m_gt_'+key+'_'+((typeof SCID!=='undefined'&&SCID)||'0'),seen=[];try{seen=JSON.parse(ls(k)||'[]')}catch(e){}
   var idx=arr.map(function(q,i){return i}).filter(function(i){return !ok||ok(arr[i])}),fr=shuf(idx.filter(function(i){return seen.indexOf(i)<0})),od=idx.filter(function(i){return seen.indexOf(i)>=0}).sort(function(a,b){return seen.indexOf(a)-seen.indexOf(b)}),pk=[],ks={};
   fr.concat(od).forEach(function(i){if(pk.length>=n)return;var u=arr[i].k||arr[i].up||(arr[i].a+arr[i].b);if(ks[u])return;ks[u]=1;pk.push(i)});
   try{ls(k,JSON.stringify(seen.filter(function(i){return pk.indexOf(i)<0}).concat(pk)))}catch(e){}return pk.map(function(i){return arr[i]})}
-function startGT(N){var C=GT.GCNT,top=GT.TOP||[],L=gtPick('gl',GT.GL,C.gl),S=shuf(gtPick('gs1',GT.GS,3,function(q){return q.same}).concat(gtPick('gs0',GT.GS,3,function(q){return !q.same}))),P=gtPick('gc',GT.GC,C.gc);
+/* 2026-11-12 第四十七次：通過率 最低 前 5 題（112＋113，GT.TOP）每 一回 一定 出：N、Q、J；一樣 的 至少 2 組 m／h／b／y；不一樣 一定 1 組 f／v；Close your book. */
+function gtTop(key,arr,nT,isT,n,ok){var a=nT?gtPick(key+'t',arr,nT,function(q){return (!ok||ok(q))&&isT(q)}):[];return a.concat(gtPick(key,arr,n-a.length,function(q){return (!ok||ok(q))&&!(nT&&isT(q))}))}   /* 其他 的 ＝ 不是 TOP 的（TOP 的 輪流 出，連 幾 回 不 重複）*/
+function startGT(N){var C=GT.GCNT,T=GT.TOP||{},tg=T.gl||[],t1=T.gs1||[],t0=T.gs0||[],tc=T.gc||[],
+  L=GT.GL.filter(function(q){return tg.indexOf(q.lo)>=0}).concat(gtPick('gl',GT.GL,C.gl-tg.length,function(q){return tg.indexOf(q.lo)<0})),
+  S=shuf(gtTop('gs1',GT.GS,Math.min(2,t1.length),function(q){return t1.indexOf(q.on)>=0},3,function(q){return q.same}).concat(gtTop('gs0',GT.GS,t0.length?1:0,function(q){return t0.some(function(p){return (q.on===p[0]&&q.on2===p[1])||(q.on===p[1]&&q.on2===p[0])})},3,function(q){return !q.same}))),
+  P=GT.GC.filter(function(q){return tc.indexOf(q.say)>=0}).concat(gtPick('gc',GT.GC,C.gc-tc.length,function(q){return tc.indexOf(q.say)<0}));
   LVS=GTL;var qs=[],lv=[];[L,S,P].forEach(function(A,i){shuf(A).forEach(function(q){qs.push(q);lv.push(i)})});
   R={x:N,bk:'G',pt:100/N,i:-1,qs:qs,lvOf:lv,cnt:[L.length,S.length,P.length],nsim:[0,0,0],k:-1,lv:-1,gk:-1,score:0,streak:0,res:[],wrong:[],Q:[],t0:Date.now(),qk:0};if(XQUIET)return;xDel(N);xSave();coopStart();
   document.body.classList.add('ing');$('#lobby').hidden=true;$('#endv').hidden=true;$('#game').hidden=false;$('#sc').textContent='0';$('#cmb').className='cmb';$('#cmb').textContent='';$('#stage').innerHTML='';next()}

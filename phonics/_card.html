@@ -1,0 +1,320 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Phonics Master</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<!-- phonics/index.html 是 node phonics/_build.js 從 _card.html 做 出來 的；要 改 改 _card.html／_ph.js -->
+<style>
+  :root{
+    --vowel:#F4A69E;--cons:#90C2E7;--yellow:#FACC15;--yellow-d:#EAB308;--amber:#F59E0B;--red:#EF4444;
+    --silent:#6E6E6E;--dim:#565656;--line:#1a1a1a;
+    --andika:'Andika','Century Gothic','Trebuchet MS',sans-serif;
+    --han:'Microsoft JhengHei','PingFang TC','Noto Sans TC',sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{margin:0;background:#000;color:#fff;font-family:var(--han);display:flex;flex-direction:column;overflow:hidden}
+  .rail{display:flex;align-items:center;gap:12px;padding:7px 16px;flex:0 0 auto;min-height:0}
+  .rail.top{border-bottom:1px solid var(--line)}
+  .rail.bot{border-top:1px solid var(--line)}
+  .tag{font-size:9.5px;letter-spacing:2.5px;color:var(--dim);font-weight:700;white-space:nowrap}
+  .btn{flex:0 0 auto;background:transparent;border:1px solid var(--line);color:#8f8f8f;font-family:var(--han);font-size:11px;font-weight:700;letter-spacing:.4px;padding:5px 10px;border-radius:6px;cursor:pointer;transition:.14s;white-space:nowrap}
+  .btn.en{font-family:var(--andika);font-size:14px;padding:4px 11px}
+  .btn:hover{border-color:#3a3a3a;color:#e0e0e0}
+  .btn.on{background:#fff;color:#000;border-color:#fff}
+  .grp{display:flex;gap:3px;flex:0 0 auto}
+  .scroll{display:flex;gap:4px;overflow-x:auto;flex:1;padding-bottom:2px;scrollbar-width:thin}
+  .scroll::-webkit-scrollbar{height:4px}.scroll::-webkit-scrollbar-thumb{background:#242424;border-radius:3px}.scroll::-webkit-scrollbar-track{background:transparent}
+  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(10px,2vh,20px);min-height:0;padding:8px 10px;overflow:hidden}
+  .deck{display:flex;align-items:center;gap:clamp(10px,2.2vw,26px);max-width:100%}
+  .arrow{width:38px;height:38px;border-radius:50%;flex:0 0 auto;background:transparent;border:1px solid #202020;color:#5e5e5e;font-size:18px;line-height:1;cursor:pointer;transition:.14s;display:flex;align-items:center;justify-content:center}
+  .arrow:hover{border-color:#3f3f3f;color:#fff}.arrow:disabled{opacity:.2;cursor:default}
+  .card{position:relative;cursor:pointer;min-width:0;background:#0b0b0b;border:1px solid #1b1b1b;border-radius:22px;padding:clamp(20px,3.4vh,40px) clamp(18px,3.6vw,52px);box-shadow:0 20px 50px rgba(0,0,0,.85);transition:.16s}
+  .card:hover{border-color:#2b2b2b}
+  .grid{display:grid;grid-auto-flow:column;justify-content:center;align-items:center;column-gap:clamp(5px,1vw,12px);row-gap:clamp(12px,2.2vh,22px);grid-template-rows:auto auto}
+  .cell{display:flex;align-items:center;justify-content:center;gap:4px}
+  .letter{font-family:var(--andika);font-weight:700;white-space:nowrap;font-size:clamp(52px,min(11vw,17vh),124px);line-height:.9;letter-spacing:-.015em}
+  .letter .nm{display:inline-block;line-height:.78;padding:.10em .09em .16em;border-radius:.13em;color:#000}
+  .tile{position:relative;border-radius:.28em;min-width:1.9em;height:1.78em;padding:0 .30em;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;white-space:nowrap;-webkit-text-stroke:.034em currentColor;font-size:clamp(25px,min(4.7vw,7.4vh),46px)}
+  .tile.zh{font-family:var(--han)}.tile.ph{font-family:var(--andika)}.tile.dark{color:#111}
+  .tile .sup{position:absolute;top:.3em;right:.3em;font-size:.44em;line-height:1;font-weight:800;-webkit-text-stroke:0}
+  .tile.stack{flex-direction:column;line-height:.92}.tile.stack span{font-size:.62em}
+  .vowelrow{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;max-width:min(1100px,94vw)}
+  .vowelrow .inner{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+  .deckbar{display:flex;align-items:center;gap:12px}
+  .counter{font-family:var(--andika);font-size:11.5px;letter-spacing:2px;color:#464646;font-weight:700;min-width:88px;text-align:center}
+  /* 第四十七次：🏠 總首頁、🎮 遊戲（加進 網站 才 有 的 兩顆）*/
+  .nav{flex:0 0 auto;display:flex;gap:6px}
+  .nav a{font-family:var(--han);font-size:14px;font-weight:900;color:#FFE07A;border:1px solid #6b5a1a;border-radius:8px;padding:6px 12px;text-decoration:none;white-space:nowrap}
+  .nav a.gm{color:#7FE3FF;border-color:#1f5a6b}
+</style></head><body>
+
+<div class="rail top">
+  <span class="tag">字首</span>
+  <div class="grp" id="segInit">
+    <button class="btn" data-v="basic">基礎</button>
+    <button class="btn" data-v="adv">進階</button>
+  </div>
+  <div class="scroll" id="initChips"></div>
+  <div class="nav"><a class="gm" href="games.html">🎮 遊戲</a><a href="../index.html">🏠 總首頁</a></div>
+</div>
+
+<main>
+  <div class="deck">
+    <button class="arrow" id="prev" title="上一頁 ←">&#10094;</button>
+    <div class="card" id="card"><div class="grid" id="grid"></div></div>
+    <button class="arrow" id="next" title="下一頁 →">&#10095;</button>
+  </div>
+  <div class="deckbar">
+    <span class="counter" id="counter"></span>
+    <button class="btn" id="play">▶ 自動播放</button>
+    <div class="grp" id="segSpeed">
+      <button class="btn" data-v="3400">很慢</button>
+      <button class="btn" data-v="2600">慢</button>
+      <button class="btn" data-v="1900">中</button>
+    </div>
+  </div>
+  <div class="vowelrow">
+    <span class="tag">母音</span>
+    <div class="inner" id="vowels"></div>
+  </div>
+</main>
+
+<div class="rail bot">
+  <span class="tag">字尾</span>
+  <div class="grp" id="segEnd">
+    <button class="btn" data-v="g1">1</button>
+    <button class="btn" data-v="g2">2</button>
+    <button class="btn" data-v="g3">3</button>
+  </div>
+  <div class="scroll" id="endChips"></div>
+</div>
+
+<div class="rail bot">
+  <span class="tag">音標</span>
+  <div class="grp" id="segMode">
+    <button class="btn" data-v="zh">專利注音</button>
+    <button class="btn" data-v="kk">KK</button>
+    <button class="btn" data-v="ipa">IPA</button>
+    <button class="btn" data-v="none">無音標</button>
+  </div>
+  <span class="tag">部位</span>
+  <div class="grp" id="segPart">
+    <button class="btn" data-v="all">全部</button>
+    <button class="btn" data-v="initial">字首</button>
+    <button class="btn" data-v="vowel">母音</button>
+    <button class="btn" data-v="ending">字尾</button>
+  </div>
+  <div style="flex:1"></div>
+  <span class="tag">語速</span>
+  <div class="grp" id="segRate">
+    <button class="btn" data-v="0.8">0.8×</button>
+    <button class="btn" data-v="0.95">0.95×</button>
+    <button class="btn" data-v="1">1×</button>
+  </div>
+</div>
+
+<script>/*__PH__*/</script>
+<script>
+"use strict";
+/* 2026-11-12 第四十七次：發音 一律 用 預先 做好 的 音檔 au/<碼>.mp3（照 字卡 下面 的 雙語 注音 做；PH.code）。
+   原本 的 瀏覽器 語音 拿掉：它 看到 Ced 會 唸 C-E-D、看到 ward／good 會 唸 真的 字 的 唸法。
+   真的 英文 字 但 唸法 跟 字卡 規則 不一樣（PH.EXC）、唸起來 像 不雅 字（PH.BAD）＝ 這一張 不放（翻頁 自動 跳過）。 */
+const {CONS,VOW,RVOW,TRIPLE,INITIALS,ENDINGS,VLIST,SOFT,VC,CC}=PH;
+function vowLetterBg(v){
+  if(v.name)return 'var(--yellow)';
+  if(v.key==='oo_long')return 'var(--red)';
+  if(v.key==='oo_short')return 'var(--amber)';
+  if(RVOW[v.t])return RVOW[v.t].bg;
+  return VC;
+}
+let mode='zh', part='all', initGrp='basic', endGrp='g1', curEnd='d';
+let deck=[], idx=0, timer=null, speed=2600, rate=0.95;
+function buildDeck(keep){
+  const k = keep&&deck.length ? deck[idx].v+'|'+deck[idx].i : null, kv=keep&&deck.length?deck[idx].v:-1;
+  deck=[];
+  VLIST.forEach((v,vi)=>INITIALS[initGrp].forEach(i=>{if(!PH.skip(i,v,curEnd))deck.push({v:vi,i:i})}));
+  if(k){let at=deck.findIndex(c=>c.v+'|'+c.i===k);if(at<0)at=deck.findIndex(c=>c.v===kv);idx=at>=0?at:0;}else idx=0;
+}
+const curVow =()=>VLIST[deck[idx].v];
+const curInit=()=>deck[idx].i;
+const effEnd =()=>PH.effEnd(curVow(),curEnd);
+
+/* ===================== 發音（音檔）===================== */
+let curAudio=null;
+function stopSound(){if(curAudio){curAudio.pause();curAudio=null;}}
+function playCur(){
+  const src='au/'+PH.code(curInit(),curVow(),curEnd)+'.mp3';
+  stopSound();
+  const a=new Audio(src);curAudio=a;a.playbackRate=rate;try{a.preservesPitch=true;a.webkitPreservesPitch=true}catch(e){}
+  a.play().catch(()=>{});
+}
+
+/* ===================== 繪製 ===================== */
+function el(cls,txt){const d=document.createElement('div');d.className=cls;if(txt!=null)d.textContent=txt;return d;}
+function tile(txt,bg,opt){
+  opt=opt||{};
+  const d=el('tile '+(mode==='zh'?'zh':'ph')+(opt.dark?' dark':'')+(opt.stack?' stack':''));
+  d.style.background=bg;
+  if(Array.isArray(txt))txt.forEach(t=>{const s=document.createElement('span');s.textContent=t;d.appendChild(s);});
+  else d.textContent=txt;
+  if(opt.sup){const s=document.createElement('span');s.className='sup';s.textContent=opt.sup;d.appendChild(s);}
+  return d;
+}
+function txtSpan(t,color,bg){
+  const s=document.createElement('span');s.textContent=t;
+  if(color)s.style.color=color;
+  if(bg){s.className='nm';s.style.background=bg;}
+  return s;
+}
+function phon(e,isVowel,bg,dark){
+  if(mode==='none')return[];
+  const val = mode==='zh' ? e.zh : (mode==='kk'?e.kk:e.ipa);
+  if(val===undefined||val===null||val==='')return[];
+  const col = isVowel ? bg : CC;
+  const sup = (mode==='zh') ? e.sup : null;
+  if(mode==='zh'&&e.stack)return[tile(val,col,{stack:true,dark:dark})];
+  if(Array.isArray(val))
+    return val.map((t,i)=>tile(t,col,{sup:Array.isArray(sup)?(sup[i]||null):(i===0?sup:null),dark:dark}));
+  return[tile(val,col,{sup:sup,dark:dark})];
+}
+function pushUnit(g,glyphNodes,phonNodes,hide){
+  const c1=el('cell');const L=el('letter');glyphNodes.forEach(n=>L.appendChild(n));c1.appendChild(L);
+  const c2=el('cell');(phonNodes||[]).forEach(n=>c2.appendChild(n));
+  if(hide){c1.style.visibility='hidden';c2.style.visibility='hidden';}
+  g.appendChild(c1);g.appendChild(c2);
+}
+function build(){
+  const g=document.getElementById('grid');g.innerHTML='';
+  const V=curVow(), I=curInit(), vbg=vowLetterBg(V);
+  const hI=(part==='vowel'||part==='ending');
+  const hV=(part==='initial'||part==='ending');
+  const hE=(part==='initial'||part==='vowel');
+  {
+    let key=I;
+    if(I==='c'||I==='g')key=I+'_'+(SOFT.includes(V.t)?'soft':'hard');
+    const e=CONS[key]||CONS[I];
+    if(e){
+      if(I==='wh'){
+        pushUnit(g,[txtSpan('w','#fff')],phon(e,false),hI);
+        pushUnit(g,[txtSpan('h','var(--silent)')],[],hI);
+      } else {
+        let glyphs;
+        if(I==='th(無聲)'||I==='th(有聲)')glyphs=[txtSpan('t','#fff'),txtSpan('h','#fff')];
+        else if(['qu','ch','sh','ph'].includes(I))glyphs=I.split('').map(c=>txtSpan(c,'#fff'));
+        else glyphs=[txtSpan(I,'#fff')];
+        pushUnit(g,glyphs,phon(e,false),hI);
+      }
+    }
+  }
+  {
+    const t=V.t;
+    if(RVOW[t]){
+      const r=RVOW[t], base=t.slice(0,-1);
+      let vNodes=[];
+      if(mode==='zh')      vNodes=[tile(r.zh,r.bg,{sup:r.sup,dark:r.dark})];
+      else if(mode!=='none'){const v=(mode==='kk')?r.vkk:r.vipa;if(v)vNodes=[tile(v,r.bg,{dark:r.dark})];}
+      pushUnit(g,[txtSpan(base,'#000',r.bg)],vNodes,hV);
+      let rNodes=[];
+      if(mode==='zh')      rNodes=[tile('ㄦ',CC)];
+      else if(mode!=='none'){const rv=(mode==='kk')?r.rkk:r.ripa;if(rv)rNodes=[tile(rv,CC)];}
+      pushUnit(g,[txtSpan('r','#fff')],rNodes,hV);
+    } else if(V.name){
+      const e=VOW[t];
+      pushUnit(g,[txtSpan(t[0],'#000',vbg)],phon(e,true,e.bg),hV);
+      pushUnit(g,[txtSpan(t[1],'var(--silent)')],[],hV);
+    } else {
+      const e=VOW[V.key||t];
+      pushUnit(g,[txtSpan(t,'#000',vbg)],phon(e,true,e.bg,e.dark),hV);
+    }
+  }
+  const E=effEnd();
+  if(E!=='無'){
+    if(E==='ck'){
+      pushUnit(g,[txtSpan('c','var(--silent)')],[],hE);
+      pushUnit(g,[txtSpan('k','#fff')],phon(CONS['ck'],false),hE);
+    } else if(E==='mb'){
+      pushUnit(g,[txtSpan('m','#fff')],phon(CONS['mb'],false),hE);
+      pushUnit(g,[txtSpan('b','var(--silent)')],[],hE);
+    } else if(E==='tch'){
+      pushUnit(g,[txtSpan('t','var(--silent)')],[],hE);
+      pushUnit(g,[txtSpan('c','#fff'),txtSpan('h','#fff')],phon(CONS['tch'],false),hE);
+    } else if(['tion','sion','ssion'].includes(E)){
+      const glyphs=E.split('').map(ch=>ch==='i'?txtSpan(ch,'var(--silent)'):ch==='o'?txtSpan(ch,'var(--amber)'):txtSpan(ch,'#fff'));
+      let nodes=[];
+      if(E==='sion')nodes=phon(CONS['sion'],false);
+      else if(mode!=='none'){
+        const parts=(mode==='zh')?TRIPLE.zh:(mode==='kk'?TRIPLE.kk:TRIPLE.ipa);
+        nodes=parts.map(b=>tile(b.t, b.v?VC:CC, {sup:b.sup}));
+      }
+      pushUnit(g,glyphs,nodes,hE);
+    } else {
+      const key = E==='l'?'l_end' : E==='d'?'d_end' : E==='m'?'m_end' : E==='n'?'n_end' : E==='r'?'r_end'
+                : E==='g'?'g_end' : E==='p'?'p_end' : E==='f'?'f_end' : E==='t'?'t_end' : E==='th'?'th(無聲)' : E;
+      const e=CONS[key];
+      if(e)pushUnit(g,E.split('').map(c=>txtSpan(c,'#fff')),phon(e,false),hE);
+    }
+  }
+  document.getElementById('counter').textContent=(idx+1)+' / '+deck.length;
+  document.getElementById('prev').disabled=idx<=0;
+  document.getElementById('next').disabled=idx>=deck.length-1;
+  drawChips();drawVowels();
+}
+function go(n,sound){idx=Math.max(0,Math.min(deck.length-1,n));build();if(sound!==false)playCur();}
+function pauseAuto(){
+  if(timer){clearInterval(timer);timer=null;}
+  stopSound();
+  const b=document.getElementById('play');
+  b.classList.remove('on');b.textContent='▶ 自動播放';b.title='自動慢速播放';
+}
+function startAuto(){
+  const b=document.getElementById('play');
+  b.classList.add('on');b.textContent='⏸ 暫停';b.title='暫停（保留目前頁數）';
+  playCur();
+  timer=setInterval(()=>{if(idx>=deck.length-1){pauseAuto();return;}go(idx+1);},speed);
+}
+const isPlaying=()=>timer!==null;
+document.getElementById('play').onclick=()=>{isPlaying()?pauseAuto():startAuto();};
+document.getElementById('prev').onclick=()=>{pauseAuto();go(idx-1);};
+document.getElementById('next').onclick=()=>{pauseAuto();go(idx+1);};
+document.getElementById('card').onclick=()=>{isPlaying()?pauseAuto():playCur();};
+document.addEventListener('keydown',e=>{
+  if(e.code==='ArrowLeft'){e.preventDefault();pauseAuto();go(idx-1);}
+  else if(e.code==='ArrowRight'){e.preventDefault();pauseAuto();go(idx+1);}
+  else if(e.code==='Space'){e.preventDefault();isPlaying()?pauseAuto():playCur();}
+});
+function mkBtn(label,on,en,fn){const b=document.createElement('button');b.className='btn'+(en?' en':'')+(on?' on':'');b.textContent=label;b.onclick=fn;return b;}
+function drawChips(){
+  const I=curInit();
+  const ic=document.getElementById('initChips');ic.innerHTML='';
+  INITIALS[initGrp].forEach(x=>ic.appendChild(mkBtn(x,x===I,true,()=>{
+    pauseAuto();
+    const at=deck.findIndex(c=>c.v===deck[idx].v&&c.i===x);
+    go(at>=0?at:idx);
+  })));
+  const ec=document.getElementById('endChips');ec.innerHTML='';
+  ENDINGS[endGrp].forEach(x=>ec.appendChild(mkBtn(x,x===curEnd,true,()=>{pauseAuto();curEnd=x;buildDeck(true);build();playCur();})));
+}
+function drawVowels(){
+  const V=curVow();
+  const c=document.getElementById('vowels');c.innerHTML='';
+  VLIST.forEach((v,vi)=>{
+    const label=v.mark?v.t+' '+v.mark:v.t;
+    c.appendChild(mkBtn(label,v===V,true,()=>{pauseAuto();const at=deck.findIndex(c2=>c2.v===vi);go(at>=0?at:idx);}));
+  });
+}
+function seg(id,init,fn){
+  const box=document.getElementById(id);
+  [...box.children].forEach(b=>{if(b.dataset.v===init)b.classList.add('on');});
+  box.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;[...box.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');fn(b.dataset.v);});
+}
+seg('segMode','zh',v=>{mode=v;build();});
+seg('segPart','all',v=>{part=v;build();});
+seg('segInit','basic',v=>{pauseAuto();initGrp=v;buildDeck(true);build();});
+seg('segEnd','g1',v=>{pauseAuto();endGrp=v;if(!ENDINGS[v].includes(curEnd))curEnd=ENDINGS[v][0];buildDeck(true);build();});
+seg('segSpeed','2600',v=>{speed=+v;if(isPlaying()){pauseAuto();startAuto();}});
+seg('segRate','0.95',v=>{rate=+v;});
+buildDeck(false);
+build();
+</script>
+</body></html>

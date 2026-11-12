@@ -107,7 +107,7 @@ const ans = p => p.evaluate(() => { const q = R.q, id = G.id; if (id === 'q1') {
           return { ps, gap: [...document.querySelectorAll('#crlbw .crgap')].map(e => e.textContent), th: (document.querySelector('.crlbth') || {}).textContent || '', veh: document.querySelectorAll('#crlbw .crveh').length, ov }; });
         if (d.ps.length !== 2 || d.ps[0] !== d.ps[1]) E.push(tag + ' 兩人 一台 兩個 名字 字 不 一樣 大 ' + JSON.stringify(d.ps));   /* 第四十五次 2-(2) */
         if (d.gap.length !== 2 || !/守住|領先/.test(d.gap[0]) || !/超車|衝/.test(d.gap[1])) E.push(tag + ' 排行榜 沒有「守住／再 對 N 題 超車」' + JSON.stringify(d.gap));
-        if (!/（每 一場 主題 都 不一樣）/.test(d.th) || d.veh !== 2) E.push(tag + ' 排行榜 主題 沒有 出來 ' + d.th + ' ' + d.veh);
+        if (d.th || d.veh !== 2) E.push(tag + ' 排行榜 主題 名稱 應該 拿掉（第四十七次）或 車子 沒有 出來 ' + d.th + ' ' + d.veh);
         if (d.ov.length) E.push(tag + ' 排行榜 字 超出 那一行 ' + d.ov.join());
         if (process.env.SHOT) await h.screenshot({ path: process.env.SHOT + '/lb_' + tag.replace(/\W+/g, '') + '.png' }); }
       if (!/答 滿 5 題 才 排 名次/.test(lb.rest) || !/30402 答 \d 題/.test(lb.rest)) E.push(tag + ' 答不到 5 題 的 沒有 寫 在 下面 ' + lb.rest);
