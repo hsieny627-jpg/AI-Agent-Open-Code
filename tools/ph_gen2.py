@@ -10,6 +10,7 @@ import tts_gen as T, asr_lib, cmudict
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 OUT = os.path.join(ROOT, 'phonics', 'au')
 L = json.load(open(os.path.join(ROOT, 'phonics', '_codes2.json'), encoding='utf8'))
+RETRY = os.environ.get('PH_RETRY')   # 2026-11-12：只 重做 上一輪 聽寫 不 對 的（_asrbad_*.json），最多 30 次
 P = int(sys.argv[1]) if len(sys.argv) > 1 else 1; K = int(sys.argv[2]) if len(sys.argv) > 2 else 0; ONLY = sys.argv[3] if len(sys.argv) > 3 else ''
 CMU = cmudict.dict()
 def prons(w): return {' '.join(re.sub(r'\d', '', x) for x in p) for p in CMU.get(w, [])}
@@ -19,11 +20,18 @@ def same(heard, want):
     for k, v in getattr(asr_lib, 'NUM', {}).items():
         if re.sub(r'[^0-9]', '', heard) == k: h = v
     if h == want: return True
+    if h and all(x == want for x in h.split()): return True   # 聽寫 重複 兩次（spat spat）＝ 對
     if h.replace(' ', '') == want.replace(' ', ''): return True
     a, b = prons(h), prons(want)
     return bool(a & b)
 SPD = [0.8, 0.85, 0.75, 0.9, 0.8, 0.85, 0.7, 0.8, 0.9, 0.85, 0.75, 0.8]
 bad, made = {}, 0
+if RETRY:
+    B = {}
+    for k in range(4):
+        q = os.path.join(ROOT, 'phonics', '_asrbad_%d.json' % k)
+        if os.path.exists(q): B.update(json.load(open(q, encoding='utf8')))
+    L = [x for x in L if x[0] in B]; SPD = SPD + [0.8, 0.85, 0.75, 0.9, 0.95, 0.7, 0.8, 0.85, 0.9, 0.8, 0.75, 0.85, 0.8, 0.9, 0.95, 0.8, 0.85, 0.75]
 for n, (f, ph, kind, want, ms) in enumerate(L):
     if n % P != K or (ONLY and kind != ONLY): continue
     path = os.path.join(OUT, f + '.mp3')
@@ -45,5 +53,5 @@ for n, (f, ph, kind, want, ms) in enumerate(L):
         if same(h, want): ok = True; best = (y, h); break
     if not ok: bad[f] = [want, best[1]]
     T.mp3(best[0], 22050, path); made += 1
-json.dump(bad, open(os.path.join(ROOT, 'phonics', '_asrbad_%d.json' % K), 'w', encoding='utf8'), ensure_ascii=False)
+json.dump(bad, open(os.path.join(ROOT, 'phonics', ('_asrbad2_%d.json' if RETRY else '_asrbad_%d.json') % K), 'w', encoding='utf8'), ensure_ascii=False)
 print('第', K, '份：做了', made, '個；聽寫 12 次 都 不 對：', len(bad), list(bad.items())[:15])
