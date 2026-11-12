@@ -30,7 +30,7 @@
 | 種類 | 做法 |
 |---|---|
 | r 沒有 意思 的 組合 | 音標 直接 送 HiFi-Captain 女聲（語速 0.8，跟 原本 一樣）|
-| w 真的 英文 字（約 2,000 個：照 規則 的 真的 字 `_realreg.json`、例外 字 真的 唸法 `x_<字>`、課本 字 `bk_`）| 做 完 用 電腦 聽寫（Whisper small.en）聽，**聽到 的 ＝ 要 的 字（或 CMU 唸法 一樣 的 同音字）才 用**，不 一樣 換 語速 重做，最多 12 次（老師：big 怪怪 的 ➜ 舊 的 big 聽寫 聽成 beg）。12 次 都 不 對 記在 `_asrbad_*.json` |
+| w 真的 英文 字（約 2,000 個：照 規則 的 真的 字 `_realreg.json`、例外 字 真的 唸法 `x_<字>`、課本 字 `bk_`）| 做 完 用 電腦 聽寫（Whisper small.en）聽，**聽到 的 ＝ 要 的 字（或 CMU 唸法 一樣 的 同音字）才 用**，不 一樣 換 語速 重做，最多 12 次（老師：big 怪怪 的 ➜ 舊 的 big 聽寫 聽成 beg）。12 次 都 不 對 ＝ 再 重做 30 次（`PH_RETRY=1`）。結果：2,207 個 裡 2,113 個 聽 對；**還是 聽 不 準 的 94 個 記在 `_asrbad.json`**（多 是 人名、罕見 字：moor、geek、than、fume…，只 在 字卡 出現）；遊戲 字 只有 tub 聽成 Tom ➜ **tub 從 遊戲 拿掉**（`_words.js` 剩 62 個，字卡 照舊）|
 | t 單獨 一個 音 | 做 完 從 聲音 開始 只 留 N 毫秒＋淡出：b d 75、g 85、p t 95、k 105、j 150、ch 160（**塞音 只 剩 爆破 那 一下 ＝ 幾乎 沒有 ㄜ**）；m n f s z v sh th l 長音 0.42～0.48 秒；**字尾 m ＝ `s_em`（閉嘴 mmm）、字尾 n ＝ `s_en`（嗯）** |
 | 部位 | `<字首>-<母音>`、`0-<母音>-<字尾>` |
 重做：`node phonics/_enum.js && node phonics/_enum2.js && python3 tools/ph_exc2.py && node phonics/_codes2_build.js && TTS_MODELS=<模型> python3 tools/ph_gen2.py 4 0 &`（0～3 四份 同時）`&& node phonics/_build.js`。套件 `pip install "sherpa-onnx==1.12.40" lameenc onnxruntime espeakng-loader phonemizer-fork cmudict wordfreq english-words`。
