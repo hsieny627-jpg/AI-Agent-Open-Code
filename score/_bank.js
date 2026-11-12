@@ -205,6 +205,20 @@ Object.keys(BANK).forEach(k => { if (/_fun-/.test(k)) return;   /* 🏰 守城�
             q.ae = e; q.az = c.fz || q.az; q.ag = r.map((w, j) => { const k = w.replace(/’/g, "'").toLowerCase(), gx = (c.gx || {})[k], lt = k === "'s" && j > 0 && r[j - 1].toLowerCase() === 'let';
               return [w.replace(/'/g, '’'), lt ? '我們' : k === 'let' ? '讓' : gx || (D.GL[k] !== undefined ? D.GL[k] : /^[A-Z][a-z]+$/.test(w) ? '（名字）' : '')]; }); } }
         if (c && c.dc && c.t) q.dt = c.t.map((t, j) => { const w = wOf(c.t, j); return [w, t[1], /[A-Za-z]/.test(w) ? wau(g, w) : '']; }); }); }); }); }
+/* 🔤 自然發音 遊戲（2026-11-12 第四十八次：老師「CVC 遊戲 要 記 成績、進 老師看板」）：g年級gm_ph-遊戲；三、四年級 都 可以 玩（年級 看 登入 的 5 碼）
+ *   第幾題 ＝ phonics/games.html 的 ITEMS（_words.js 的 真的 字 ＋ _pseudo.json 的 🔮 魔法 咒語），課本 遊戲 ＝ _book.js 的 字（照 課本 順序）；聲音 ＝ phonics/au/ */
+(() => { const PH = require('../phonics/_ph.js'), W = require('../phonics/_words.js'), PSE = require('../phonics/_pseudo.json'), BK = require('../phonics/_book.js');
+  const VO = { a: PH.VLIST[0], e: PH.VLIST[1], i: PH.VLIST[2], o: PH.VLIST[3], u: PH.VLIST[4] }, ZH = {}; W.forEach(x => ZH[x[0]] = x[1]);
+  const cOf = w => { const m = /^(qu|[a-z])([aeiou])(ck|[a-z])$/.exec(w); return PH.code(m[1], VO[m[2]], m[3]); };
+  const ITEMS = W.map(x => x[0]).concat(PSE.map(x => x[0])), BWL = []; BK.topics.forEach(t => t.ls.forEach(l => l.w.forEach(w => BWL.push(w))));
+  const one = (w, lsn) => { const z = ZH[w] || '🔮 魔法 咒語（不是 真的 字）', au = '../phonics/au/' + cOf(w) + '.mp3';
+    const vv = 'aeiou', alt = w.replace(/[aeiou]/, v => vv[(vv.indexOf(v) + 1) % 5]);   /* 選項 第 2 個 ＝「答錯」（網頁 記 1 ＝ 錯、-1 ＝ 時間 到），寫 一個 只 差 母音 的 字 當 例子 */
+    return { k: 'g', kn: '🔤 自然發音', q: (lsn ? '🔊 ' : '👀 ') + w, o: [w, alt + '（答錯）'], h: z, ae: w, ag: [[w, ZH[w] || '']], az: ZH[w] || '', au, al: au, say: lsn ? w : undefined }; };
+  const bone = (w, lsn) => { const x = BK.W[w], au = '../phonics/au/bk_' + w.replace(/ /g, '_') + '.mp3'; return { k: 'g', kn: '📗 課本 單字', q: (lsn ? '🔊 ' : '👀 ') + w, o: [w, '（答錯）'], h: x.tip, ae: w, ag: [[w, x.zh]], az: x.zh, au, al: au, say: lsn ? w : undefined }; };
+  const NM = { slot: '🎰 CVC 拉霸機', ufo: '🛸 聽音 打 飛碟', vault: '🔐 聽音 拼字 保險箱', zhu: '🀄 看字 選 音標', bal: '🎈 字首音 氣球', vow: '⚔️ 母音 對決', end: '🎯 尾音 狙擊', lad: '🪜 換 字母 爬 階梯', pic: '🖼️ 看字 找圖', train: '🚂 聲音 火車（拼字）', ls: '🐣 小學堂 小 測驗', bk: '📗 課本 單字 拼塊', bkp: '📘 課本 單字 找圖' };
+  const READ = { zhu: 1, pic: 1, bkp: 1 };
+  [3, 4].forEach(g => Object.keys(NM).forEach(k => put('g' + g + 'gm_ph-' + k, { name: '🔤 自然發音｜' + NM[k], qs: /^bk/.test(k) ? BWL.map(w => bone(w, !READ[k])) : ITEMS.map(w => one(w, !READ[k])) })));
+})();
 /* 代號一定要是 _calc.js 認得的（以後新的教材登記錯了 build 就失敗） */
 const SC = require('./_calc.js');
 Object.keys(BANK).forEach(k => { if (!SC.cat(k.replace('g*', 'g3')).k) throw new Error('老師看板：題組代號 ' + k + ' 不合規則（score/_calc.js 的 SETRE）'); });

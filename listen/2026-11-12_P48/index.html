@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>舊 聲音 vs 新 聲音</title>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<!-- 2026-11-12 第四十八次：老師 選「甲：直接 換＋試聽頁」➜ 網站 已經 用 新 的；這一頁 比 舊 的（old/）和 新 的（../../phonics/au/）。老師 覺得 舊 的 好 ＝ 告訴 Claude 換 回來 -->
+<style>
+body{margin:0;background:#0B1026;color:#fff;font-family:'Microsoft JhengHei','PingFang TC',sans-serif;padding:18px}
+h1{font-size:34px;margin:0 0 6px;color:#FFE07A}p{font-size:22px;line-height:1.6;color:#DCE4FF;margin:4px 0 14px}
+h2{font-size:28px;margin:22px 0 8px}
+table{border-collapse:collapse;width:100%;max-width:1100px}
+td,th{border:1px solid #2A3570;padding:10px;font-size:24px;text-align:center}th{background:#141B3D;color:#FFE07A}
+td.w{font-family:Andika,sans-serif;font-size:40px;font-weight:700}
+button{font-size:24px;font-weight:900;border-radius:14px;padding:8px 18px;cursor:pointer}
+.o{background:#2A2A2A;color:#ccc;border:2px solid #666}.n{background:#062A35;color:#9EF0FF;border:2px solid #22D3EE}
+</style></head><body>
+<h1>🎧 舊 聲音 vs 新 聲音（第四十八次）</h1>
+<p>網站 <b>已經 換成 新 的</b>（老師 選 甲）。請 一個 一個 比：<b>新 的 比較 好 ＝ 不用 做 什麼</b>；<b>舊 的 比較 好 ＝ 告訴 我 哪 一個</b>，我 換 回來。</p>
+<h2>① 字首音：不 帶 ㄜ（塞音 只 留 爆破 的 那 一下）</h2>
+<table id="t1"><tr><th>字母</th><th>舊</th><th>新</th></tr></table>
+<h2>② 字尾 m、n：m ＝ 閉嘴 mmm、n ＝ 嘴巴 張開 嗯</h2>
+<table id="t2"><tr><th>字尾</th><th>舊（跟 字首 同一個）</th><th>新</th></tr></table>
+<h2>③ 真的 單字：電腦 聽寫 聽 對 才 用（老師：big 怪怪 的）</h2>
+<p>舊 的 big，電腦 聽寫 聽成 beg；新 的 每 一個 真的 字 都 要 聽 對 才 放 上 網站（全部 約 2,000 個 字）。</p>
+<table id="t3"><tr><th>單字</th><th>舊</th><th>新</th></tr></table>
+<script>
+const A=new Audio();const P=f=>{A.src=f;A.play().catch(()=>{})};
+const row=(t,a,b,id,cls)=>{const r=document.createElement('tr');r.innerHTML='<td class="'+(cls||'w')+'">'+a+'</td><td><button class="o" data-f="old/'+b[0]+'.mp3">🔊 舊</button></td><td><button class="n" data-f="../../phonics/au/'+b[1]+'.mp3">🔊 新</button></td>';document.getElementById(id).appendChild(r)};
+'b d g p t k j m n f s l h w'.split(' ').forEach(x=>row(0,x,['s_'+x,'s_'+x],'t1'));
+row(0,'m（字尾）',['s_m','s_em'],'t2');row(0,'n（字尾）',['s_n','s_en'],'t2');
+[['big','b-ih-g'],['beg','b-eh-g'],['bed','b-eh-d'],['pig','p-ih-g'],['pen','p-eh-n'],['ham','h-ae-m'],['cat','k-ae-t'],['rat','r-ae-t'],['pan','p-ae-n'],['sit','s-ih-t'],['bug','b-uh-g'],['dog','d-aa-g']].forEach(x=>row(0,x[0],[x[1],x[1]],'t3'));
+document.addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(b)P(b.dataset.f)});
+</script>
+</body></html>

@@ -17,9 +17,9 @@
   .rail{display:flex;align-items:center;gap:12px;padding:7px 16px;flex:0 0 auto;min-height:0}
   .rail.top{border-bottom:1px solid var(--line)}
   .rail.bot{border-top:1px solid var(--line)}
-  .tag{font-size:9.5px;letter-spacing:2.5px;color:var(--dim);font-weight:700;white-space:nowrap}
-  .btn{flex:0 0 auto;background:transparent;border:1px solid var(--line);color:#8f8f8f;font-family:var(--han);font-size:11px;font-weight:700;letter-spacing:.4px;padding:5px 10px;border-radius:6px;cursor:pointer;transition:.14s;white-space:nowrap}
-  .btn.en{font-family:var(--andika);font-size:14px;padding:4px 11px}
+  .tag{font-size:12px;letter-spacing:2px;color:var(--dim);font-weight:700;white-space:nowrap}
+  .btn{flex:0 0 auto;background:transparent;border:1px solid var(--line);color:#8f8f8f;font-family:var(--han);font-size:13.5px;font-weight:700;letter-spacing:.4px;padding:6px 11px;border-radius:7px;cursor:pointer;transition:.14s;white-space:nowrap}
+  .btn.en{font-family:var(--andika);font-size:17px;padding:4px 12px}
   .btn:hover{border-color:#3a3a3a;color:#e0e0e0}
   .btn.on{background:#fff;color:#000;border-color:#fff}
   .grp{display:flex;gap:3px;flex:0 0 auto}
@@ -27,7 +27,7 @@
   .scroll::-webkit-scrollbar{height:4px}.scroll::-webkit-scrollbar-thumb{background:#242424;border-radius:3px}.scroll::-webkit-scrollbar-track{background:transparent}
   main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(10px,2vh,20px);min-height:0;padding:8px 10px;overflow:hidden}
   .deck{display:flex;align-items:center;gap:clamp(10px,2.2vw,26px);max-width:100%}
-  .arrow{width:38px;height:38px;border-radius:50%;flex:0 0 auto;background:transparent;border:1px solid #202020;color:#5e5e5e;font-size:18px;line-height:1;cursor:pointer;transition:.14s;display:flex;align-items:center;justify-content:center}
+  .arrow{width:46px;height:46px;border-radius:50%;flex:0 0 auto;background:transparent;border:1px solid #202020;color:#5e5e5e;font-size:18px;line-height:1;cursor:pointer;transition:.14s;display:flex;align-items:center;justify-content:center}
   .arrow:hover{border-color:#3f3f3f;color:#fff}.arrow:disabled{opacity:.2;cursor:default}
   .card{position:relative;cursor:pointer;min-width:0;background:#0b0b0b;border:1px solid #1b1b1b;border-radius:22px;padding:clamp(20px,3.4vh,40px) clamp(18px,3.6vw,52px);box-shadow:0 20px 50px rgba(0,0,0,.85);transition:.16s}
   .card:hover{border-color:#2b2b2b}
@@ -41,12 +41,24 @@
   .tile.stack{flex-direction:column;line-height:.92}.tile.stack span{font-size:.62em}
   .vowelrow{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;max-width:min(1100px,94vw)}
   .vowelrow .inner{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
-  .deckbar{display:flex;align-items:center;gap:12px}
-  .counter{font-family:var(--andika);font-size:11.5px;letter-spacing:2px;color:#464646;font-weight:700;min-width:88px;text-align:center}
+  .deckbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
+  .counter{font-family:var(--andika);font-size:14px;letter-spacing:2px;color:#464646;font-weight:700;min-width:88px;text-align:center}
   /* 第四十七次：🏠 總首頁、🎮 遊戲（加進 網站 才 有 的 兩顆）*/
   .nav{flex:0 0 auto;display:flex;gap:6px}
-  .nav a{font-family:var(--han);font-size:14px;font-weight:900;color:#FFE07A;border:1px solid #6b5a1a;border-radius:8px;padding:6px 12px;text-decoration:none;white-space:nowrap}
+  .nav a{font-family:var(--han);font-size:16px;font-weight:900;color:#FFE07A;border:1px solid #6b5a1a;border-radius:8px;padding:6px 12px;text-decoration:none;white-space:nowrap}
   .nav a.gm{color:#7FE3FF;border-color:#1f5a6b}
+  .nav a.dk{color:#B9F6CA;border-color:#2E6B3A}.nav a.ex{color:#FFB4A8;border-color:#7a3328}.nav a.cur{background:#1d1d1d;outline:2px solid currentColor}
+  /* 第四十八次：部位 ＝ 小 圖 一看 就 懂（藍 ＝ 字首、粉 ＝ 母音、藍 ＝ 字尾；實心 ＝ 看得到、虛線 ＝ 藏起來、沒有 ＝ 拿掉）*/
+  .pt{display:inline-flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px}
+  .pt .ico{display:flex;gap:2px;height:12px}.pt .ico i{display:block;width:12px;height:12px;border-radius:3px}
+  .pt .ico i.c{background:var(--cons)}.pt .ico i.v{background:var(--vowel)}.pt .ico i.h{border:2px dashed #777}.pt .ico i.x{width:6px;background:none}
+  .pt.on .ico i.h{border-color:#555}
+  .rail.part{justify-content:center;flex-wrap:wrap;row-gap:4px}
+  .card .xb{position:absolute;left:14px;top:10px;font-size:15px;font-weight:900;color:#FFB4A8;border:1px solid #7a3328;border-radius:8px;padding:2px 8px;background:#1a0b08}
+  .card .real{display:flex;justify-content:center;align-items:center;gap:4px;margin-top:clamp(12px,2.2vh,22px)}
+  .card .real .rl{font-size:14px;color:#FFB4A8;font-weight:900;margin-right:8px}
+  .card .hear{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(26px,5vh,46px);color:#5a5a5a;font-weight:900;pointer-events:none}
+
 </style></head><body>
 
 <div class="rail top">
@@ -73,6 +85,7 @@
       <button class="btn" data-v="2600">慢</button>
       <button class="btn" data-v="1900">中</button>
     </div>
+    <div class="nav" id="nav"><a class="dk" data-dk="" href="index.html">原本</a><a class="dk" data-dk="basic" href="basic.html">🟢 基礎版</a><a class="dk" data-dk="advanced" href="advanced.html">🔵 進階版</a><a class="ex" href="exceptions.html">⚠ 例外 字</a></div>
   </div>
   <div class="vowelrow">
     <span class="tag">母音</span>
@@ -90,6 +103,22 @@
   <div class="scroll" id="endChips"></div>
 </div>
 
+<div class="rail bot part">
+  <span class="tag">部位</span>
+  <div class="grp" id="segPart">
+    <button class="btn pt" data-v="all"><span class="ico"><i class="c"></i><i class="v"></i><i class="c"></i></span>全部</button>
+    <button class="btn pt" data-v="none"><span class="ico"><i class="h"></i><i class="h"></i><i class="h"></i></span>全無（只 聽）</button>
+    <button class="btn pt" data-v="initial"><span class="ico"><i class="c"></i><i class="h"></i><i class="h"></i></span>字首</button>
+    <button class="btn pt" data-v="vowel"><span class="ico"><i class="h"></i><i class="v"></i><i class="h"></i></span>母音</button>
+    <button class="btn pt" data-v="ending"><span class="ico"><i class="h"></i><i class="h"></i><i class="c"></i></span>字尾</button>
+    <button class="btn pt" data-v="noI"><span class="ico"><i class="h"></i><i class="v"></i><i class="c"></i></span>字首：無</button>
+    <button class="btn pt" data-v="noV"><span class="ico"><i class="c"></i><i class="h"></i><i class="c"></i></span>母音：無</button>
+    <button class="btn pt" data-v="noE"><span class="ico"><i class="c"></i><i class="v"></i><i class="h"></i></span>字尾：無</button>
+    <button class="btn pt" data-v="iv"><span class="ico"><i class="c"></i><i class="v"></i><i class="x"></i></span>字首＋母音</button>
+    <button class="btn pt" data-v="ve"><span class="ico"><i class="x"></i><i class="v"></i><i class="c"></i></span>母音＋字尾</button>
+  </div>
+</div>
+
 <div class="rail bot">
   <span class="tag">音標</span>
   <div class="grp" id="segMode">
@@ -97,13 +126,6 @@
     <button class="btn" data-v="kk">KK</button>
     <button class="btn" data-v="ipa">IPA</button>
     <button class="btn" data-v="none">無音標</button>
-  </div>
-  <span class="tag">部位</span>
-  <div class="grp" id="segPart">
-    <button class="btn" data-v="all">全部</button>
-    <button class="btn" data-v="initial">字首</button>
-    <button class="btn" data-v="vowel">母音</button>
-    <button class="btn" data-v="ending">字尾</button>
   </div>
   <div style="flex:1"></div>
   <span class="tag">語速</span>
@@ -115,37 +137,64 @@
 </div>
 
 <script>/*__PH__*/</script>
+<script>/*__PH2__*/</script>
+<script>/*__DECK__*/</script>
 <script>
 "use strict";
 /* 2026-11-12 第四十七次：發音 一律 用 預先 做好 的 音檔 au/<碼>.mp3（照 字卡 下面 的 雙語 注音 做；PH.code）。
    原本 的 瀏覽器 語音 拿掉：它 看到 Ced 會 唸 C-E-D、看到 ward／good 會 唸 真的 字 的 唸法。
-   真的 英文 字 但 唸法 跟 字卡 規則 不一樣（PH.EXC）、唸起來 像 不雅 字（PH.BAD）＝ 這一張 不放（翻頁 自動 跳過）。 */
-const {CONS,VOW,RVOW,TRIPLE,INITIALS,ENDINGS,VLIST,SOFT,VC,CC}=PH;
+   唸起來 像 不雅 字（PH.BAD）＝ 這一張 不放（翻頁 自動 跳過）。
+   2026-11-12 第四十八次（老師）：
+   ① 例外 字（said、come、good、word…，CMU 字典＋常見 程度 挑 出來 的 EXSHOW）放回 字卡：唸 真的（au/x_<字>.mp3）＋下面 寫 真的 雙語 注音／KK／IPA＋左上角「⚠ 例外」；不 常見 的（人名、罕見 字）照舊 不放
+   ② 部位：全部｜全無（只 聽）｜字首｜母音｜字尾｜字首：無｜母音：無｜字尾：無｜字首＋母音（只 看到 ba、唸 ba）｜母音＋字尾（只 看到 ad、唸 ad）
+   ③ 同 一個 樣板 做 基礎版、進階版（window.DECK；原本 的 index.html 沒有 DECK ＝ 原本 的 內容 一張 都 沒 變） */
+const {CONS,VOW,RVOW,TRIPLE,SOFT,VC,CC}=PH;
+const DK=window.DECK||null, EXSHOW=window.EXSHOW||{}, EXC2=window.EXC2||{};
+const INITIALS=DK?DK.INITIALS:PH.INITIALS, ENDINGS=DK?DK.ENDINGS:PH.ENDINGS, VLIST=DK?DK.VLIST:PH.VLIST;
+const CONS2=PH2.CONS2, VOW2=PH2.VOW2;
+const cCode =(I,V,E)=>DK?PH2.code2(I,V,E):PH.code(I,V,E);
+const cSpell=(I,V,E)=>DK?PH2.spell2(I,V,E):PH.spell(I,V,E);
+const exKey =(I,V,E)=>cSpell(I,V,E).toLowerCase()+'|'+cCode(I,V,E);
+function cSkip(I,V,E){
+  if(EXSHOW[exKey(I,V,E)])return false;
+  if(!DK)return PH.skip(I,V,E);
+  if(DK.adv&&!PH2.fits(I,V,E))return true;
+  return PH2.bad2(cCode(I,V,E))||!!EXC2[exKey(I,V,E)]||!!PH.EXC[exKey(I,V,E)];
+}
 function vowLetterBg(v){
   if(v.name)return 'var(--yellow)';
+  if(VOW2[v.key])return VOW2[v.key].bg;
   if(v.key==='oo_long')return 'var(--red)';
   if(v.key==='oo_short')return 'var(--amber)';
   if(RVOW[v.t])return RVOW[v.t].bg;
   return VC;
 }
-let mode='zh', part='all', initGrp='basic', endGrp='g1', curEnd='d';
+let mode='zh', part='all', initGrp=DK?DK.IG[0][0]:'basic', endGrp='g1', curEnd=DK?DK.end0:'d';
 let deck=[], idx=0, timer=null, speed=2600, rate=0.95;
 function buildDeck(keep){
   const k = keep&&deck.length ? deck[idx].v+'|'+deck[idx].i : null, kv=keep&&deck.length?deck[idx].v:-1;
   deck=[];
-  VLIST.forEach((v,vi)=>INITIALS[initGrp].forEach(i=>{if(!PH.skip(i,v,curEnd))deck.push({v:vi,i:i})}));
+  VLIST.forEach((v,vi)=>INITIALS[initGrp].forEach(i=>{if(!cSkip(i,v,curEnd))deck.push({v:vi,i:i})}));
   if(k){let at=deck.findIndex(c=>c.v+'|'+c.i===k);if(at<0)at=deck.findIndex(c=>c.v===kv);idx=at>=0?at:0;}else idx=0;
 }
 const curVow =()=>VLIST[deck[idx].v];
 const curInit=()=>deck[idx].i;
 const effEnd =()=>PH.effEnd(curVow(),curEnd);
+const curEx  =()=>deck.length?EXSHOW[exKey(curInit(),curVow(),curEnd)]:null;
 
 /* ===================== 發音（音檔）===================== */
 let curAudio=null;
 function stopSound(){if(curAudio){curAudio.pause();curAudio=null;}}
+/* 這一張 現在 要 唸 的 檔：部位〔字首＋母音〕〔母音＋字尾〕＝ 只 唸 那 兩個 音；例外 字 ＝ 真的 唸法 */
+function curSrc(){
+  const c=cCode(curInit(),curVow(),curEnd);
+  if(part==='iv'||part==='ve'){const pc=PH2.partCode(c,part);return PH2.bad2(pc)?'':'au/'+pc+'.mp3';}
+  const ex=curEx();if(ex)return 'au/x_'+cSpell(curInit(),curVow(),curEnd).toLowerCase()+'.mp3';
+  return 'au/'+c+'.mp3';
+}
 function playCur(){
-  const src='au/'+PH.code(curInit(),curVow(),curEnd)+'.mp3';
-  stopSound();
+  const src=curSrc();
+  stopSound();if(!src)return;
   const a=new Audio(src);curAudio=a;a.playbackRate=rate;try{a.preservesPitch=true;a.webkitPreservesPitch=true}catch(e){}
   a.play().catch(()=>{});
 }
@@ -178,23 +227,31 @@ function phon(e,isVowel,bg,dark){
     return val.map((t,i)=>tile(t,col,{sup:Array.isArray(sup)?(sup[i]||null):(i===0?sup:null),dark:dark}));
   return[tile(val,col,{sup:sup,dark:dark})];
 }
+let EXNOW=null;
 function pushUnit(g,glyphNodes,phonNodes,hide){
   const c1=el('cell');const L=el('letter');glyphNodes.forEach(n=>L.appendChild(n));c1.appendChild(L);
-  const c2=el('cell');(phonNodes||[]).forEach(n=>c2.appendChild(n));
+  const c2=el('cell');if(!EXNOW)(phonNodes||[]).forEach(n=>c2.appendChild(n));
   if(hide){c1.style.visibility='hidden';c2.style.visibility='hidden';}
   g.appendChild(c1);g.appendChild(c2);
 }
 function build(){
   const g=document.getElementById('grid');g.innerHTML='';
+  const card=document.getElementById('card');card.querySelectorAll('.xb,.real,.hear').forEach(x=>x.remove());
   const V=curVow(), I=curInit(), vbg=vowLetterBg(V);
-  const hI=(part==='vowel'||part==='ending');
-  const hV=(part==='initial'||part==='ending');
-  const hE=(part==='initial'||part==='vowel');
-  {
+  EXNOW=(part==='iv'||part==='ve')?null:curEx();
+  /* 部位：藏起來（位置 留著）、拿掉（不畫）*/
+  const hI=['vowel','ending','none','noI'].includes(part);
+  const hV=['initial','ending','none','noV'].includes(part);
+  const hE=['initial','vowel','none','noE'].includes(part);
+  const rI=part==='ve', rE=part==='iv';
+  if(!rI){
     let key=I;
-    if(I==='c'||I==='g')key=I+'_'+(SOFT.includes(V.t)?'soft':'hard');
-    const e=CONS[key]||CONS[I];
-    if(e){
+    if(I==='c'||I==='g')key=I+'_'+(DK?(PH2.initCode2(I,V)==='s'||PH2.initCode2(I,V)==='j'?'soft':'hard'):(SOFT.includes(V.t)?'soft':'hard'));
+    const e=PH2.BLEND[I]?null:(CONS[key]||CONS2[I]||CONS[I]);
+    if(PH2.BLEND[I]){
+      let nodes=[];PH2.BLEND[I].forEach(c=>{nodes=nodes.concat(phon(CONS[c],false));});
+      pushUnit(g,I.split('').map(c=>txtSpan(c,'#fff')),nodes,hI);
+    } else if(e){
       if(I==='wh'){
         pushUnit(g,[txtSpan('w','#fff')],phon(e,false),hI);
         pushUnit(g,[txtSpan('h','var(--silent)')],[],hI);
@@ -207,10 +264,16 @@ function build(){
       }
     }
   }
+  const t=V.key||V.t, v2=VOW2[t];
   {
-    const t=V.t;
-    if(RVOW[t]){
-      const r=RVOW[t], base=t.slice(0,-1);
+    if(v2&&v2.magic){
+      const e=(t==='u_e'&&PH2.uIsU(I))?Object.assign({},v2,v2.uu):v2;
+      pushUnit(g,[txtSpan(t.charAt(0),'#000',v2.bg)],phon(e,true,v2.bg),hV);
+    } else if(v2&&v2.team){
+      pushUnit(g,[txtSpan(t[0],'#000',v2.bg)],phon(v2,true,v2.bg),hV);
+      pushUnit(g,[txtSpan(t[1],'var(--silent)')],[],hV);
+    } else if(RVOW[V.t]){
+      const r=RVOW[V.t], base=V.t.slice(0,-1);
       let vNodes=[];
       if(mode==='zh')      vNodes=[tile(r.zh,r.bg,{sup:r.sup,dark:r.dark})];
       else if(mode!=='none'){const v=(mode==='kk')?r.vkk:r.vipa;if(v)vNodes=[tile(v,r.bg,{dark:r.dark})];}
@@ -220,16 +283,16 @@ function build(){
       else if(mode!=='none'){const rv=(mode==='kk')?r.rkk:r.ripa;if(rv)rNodes=[tile(rv,CC)];}
       pushUnit(g,[txtSpan('r','#fff')],rNodes,hV);
     } else if(V.name){
-      const e=VOW[t];
-      pushUnit(g,[txtSpan(t[0],'#000',vbg)],phon(e,true,e.bg),hV);
-      pushUnit(g,[txtSpan(t[1],'var(--silent)')],[],hV);
+      const e=VOW[V.t];
+      pushUnit(g,[txtSpan(V.t[0],'#000',vbg)],phon(e,true,e.bg),hV);
+      pushUnit(g,[txtSpan(V.t[1],'var(--silent)')],[],hV);
     } else {
-      const e=VOW[V.key||t];
-      pushUnit(g,[txtSpan(t,'#000',vbg)],phon(e,true,e.bg,e.dark),hV);
+      const e=VOW[V.key||V.t];
+      pushUnit(g,[txtSpan(V.t,'#000',vbg)],phon(e,true,e.bg,e.dark),hV);
     }
   }
   const E=effEnd();
-  if(E!=='無'){
+  if(E!=='無'&&!rE){
     if(E==='ck'){
       pushUnit(g,[txtSpan('c','var(--silent)')],[],hE);
       pushUnit(g,[txtSpan('k','#fff')],phon(CONS['ck'],false),hE);
@@ -251,10 +314,18 @@ function build(){
     } else {
       const key = E==='l'?'l_end' : E==='d'?'d_end' : E==='m'?'m_end' : E==='n'?'n_end' : E==='r'?'r_end'
                 : E==='g'?'g_end' : E==='p'?'p_end' : E==='f'?'f_end' : E==='t'?'t_end' : E==='th'?'th(無聲)' : E;
-      const e=CONS[key];
+      const e=(DK&&E==='k')?CONS2.k_end:(CONS[key]||CONS2[key]);
       if(e)pushUnit(g,E.split('').map(c=>txtSpan(c,'#fff')),phon(e,false),hE);
     }
+    if(v2&&v2.magic)pushUnit(g,[txtSpan('e','var(--silent)')],[],hE);   /* magic e 最後 的 e 不 唸（灰色）*/
   }
+  /* 例外 字：⚠＋真的 雙語 注音／KK／IPA（一排，放在 字母 下面）*/
+  if(EXNOW){
+    const b=el('xb','⚠ 例外：不照 規則');card.appendChild(b);
+    if(mode!=='none'){const rt=PH2.realTiles(EXNOW[0],mode)||[];const r=el('real');r.appendChild(el('rl','真的 唸法'));
+      rt.forEach(x=>r.appendChild(tile(x.t,x.bg,{sup:x.sup,stack:x.stack,dark:x.dark})));card.appendChild(r);}
+  }
+  if(part==='none')card.appendChild(el('hear','🎧 聽 聲音，猜 猜 看'));
   document.getElementById('counter').textContent=(idx+1)+' / '+deck.length;
   document.getElementById('prev').disabled=idx<=0;
   document.getElementById('next').disabled=idx>=deck.length-1;
@@ -284,10 +355,11 @@ document.addEventListener('keydown',e=>{
   else if(e.code==='Space'){e.preventDefault();isPlaying()?pauseAuto():playCur();}
 });
 function mkBtn(label,on,en,fn){const b=document.createElement('button');b.className='btn'+(en?' en':'')+(on?' on':'');b.textContent=label;b.onclick=fn;return b;}
+const iLab=x=>x.replace('(無聲)','(無聲)');
 function drawChips(){
   const I=curInit();
   const ic=document.getElementById('initChips');ic.innerHTML='';
-  INITIALS[initGrp].forEach(x=>ic.appendChild(mkBtn(x,x===I,true,()=>{
+  INITIALS[initGrp].forEach(x=>ic.appendChild(mkBtn(iLab(x),x===I,true,()=>{
     pauseAuto();
     const at=deck.findIndex(c=>c.v===deck[idx].v&&c.i===x);
     go(at>=0?at:idx);
@@ -300,7 +372,10 @@ function drawVowels(){
   const c=document.getElementById('vowels');c.innerHTML='';
   VLIST.forEach((v,vi)=>{
     const label=v.mark?v.t+' '+v.mark:v.t;
-    c.appendChild(mkBtn(label,v===V,true,()=>{pauseAuto();const at=deck.findIndex(c2=>c2.v===vi);go(at>=0?at:idx);}));
+    const has=deck.some(c2=>c2.v===vi);
+    const b=mkBtn(label,v===V,true,()=>{pauseAuto();const at=deck.findIndex(c2=>c2.v===vi);go(at>=0?at:idx);});
+    if(!has)b.style.opacity='.35';
+    c.appendChild(b);
   });
 }
 function seg(id,init,fn){
@@ -308,9 +383,16 @@ function seg(id,init,fn){
   [...box.children].forEach(b=>{if(b.dataset.v===init)b.classList.add('on');});
   box.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;[...box.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');fn(b.dataset.v);});
 }
+/* 基礎版、進階版：字首、字尾 的 分組 按鈕 換成 這一副 的 */
+if(DK){
+  document.getElementById('segInit').innerHTML=DK.IG.map(x=>'<button class="btn" data-v="'+x[0]+'">'+x[1]+'</button>').join('');
+  document.getElementById('segEnd').innerHTML=DK.EG.map(x=>'<button class="btn" data-v="'+x[0]+'">'+x[1]+'</button>').join('');
+  document.title='Phonics Master '+DK.title;
+}
+document.querySelectorAll('#nav a.dk').forEach(a=>{if(a.dataset.dk===(DK?DK.id:''))a.classList.add('cur');});
 seg('segMode','zh',v=>{mode=v;build();});
-seg('segPart','all',v=>{part=v;build();});
-seg('segInit','basic',v=>{pauseAuto();initGrp=v;buildDeck(true);build();});
+seg('segPart','all',v=>{part=v;build();playCur();});
+seg('segInit',initGrp,v=>{pauseAuto();initGrp=v;buildDeck(true);build();});
 seg('segEnd','g1',v=>{pauseAuto();endGrp=v;if(!ENDINGS[v].includes(curEnd))curEnd=ENDINGS[v][0];buildDeck(true);build();});
 seg('segSpeed','2600',v=>{speed=+v;if(isPlaying()){pauseAuto();startAuto();}});
 seg('segRate','0.95',v=>{rate=+v;});

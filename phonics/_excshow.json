@@ -1,0 +1,614 @@
+{
+"bar|b-ae-r": [
+"B AA1 R",
+4.94
+],
+"been|b-ee-n": [
+"B IH1 N",
+6.27
+],
+"bees|b-ee-s": [
+"B IY1 Z",
+3.96
+],
+"bind|b-ih-nd": [
+"B AY1 N D",
+3.75
+],
+"blind|bl-ih-nd": [
+"B L AY1 N D",
+4.52
+],
+"boom|b-oo-m": [
+"B UW1 M",
+4.33
+],
+"booth|b-oo-th": [
+"B UW1 TH",
+4.1
+],
+"boot|b-oo-t": [
+"B UW1 T",
+4.19
+],
+"boo|b-oo": [
+"B UW1",
+3.92
+],
+"both|b-aa-th": [
+"B OW1 TH",
+5.79
+],
+"bread|br-ee-d": [
+"B R EH1 D",
+4.5
+],
+"break|br-ee-k": [
+"B R EY1 K",
+5.18
+],
+"broad|br-oa-d": [
+"B R AO1 D",
+4.53
+],
+"brow|br-oa": [
+"B R AW1",
+3.55
+],
+"bush|b-uh-sh": [
+"B UH1 SH",
+4.49
+],
+"car|k-ae-r": [
+"K AA1 R",
+5.45
+],
+"chair|ch-ai-r": [
+"CH EH1 R",
+4.69
+],
+"char|ch-ae-r": [
+"CH AA1 R",
+3.47
+],
+"cheer|ch-ee-r": [
+"CH IH1 R",
+4.06
+],
+"chef|ch-eh-f": [
+"SH EH1 F",
+4.23
+],
+"chord|ch-or-d": [
+"K AO1 R D",
+3.65
+],
+"comb|k-aa-m": [
+"K OW1 M",
+3.52
+],
+"come|k-oa-m": [
+"K AH1 M",
+5.78
+],
+"cool|k-oo-l": [
+"K UW1 L",
+5.15
+],
+"coop|k-oo-p": [
+"K UW1 P",
+3.41
+],
+"cow|k-oa": [
+"K AW1",
+4.14
+],
+"dead|d-ee-d": [
+"D EH1 D",
+5.19
+],
+"deer|d-ee-r": [
+"D IH1 R",
+4.12
+],
+"done|d-oa-n": [
+"D AH1 N",
+5.58
+],
+"doom|d-oo-m": [
+"D UW1 M",
+3.81
+],
+"door|d-oo-r": [
+"D AO1 R",
+5.08
+],
+"door|d-uu-r": [
+"D AO1 R",
+5.08
+],
+"dread|dr-ee-d": [
+"D R EH1 D",
+3.64
+],
+"fair|f-ai-r": [
+"F EH1 R",
+4.99
+],
+"far|f-ae-r": [
+"F AA1 R",
+5.5
+],
+"find|f-ih-nd": [
+"F AY1 N D",
+5.76
+],
+"fir|f-ih-r": [
+"F ER1",
+3.48
+],
+"food|f-oo-d": [
+"F UW1 D",
+5.4
+],
+"fool|f-oo-l": [
+"F UW1 L",
+4.29
+],
+"foot|f-uu-t": [
+"F UH1 T",
+4.87
+],
+"for|f-aa-r": [
+"F AO1 R",
+7.01
+],
+"four|f-ou-r": [
+"F AO1 R",
+5.53
+],
+"from|fr-aa-m": [
+"F R AH1 M",
+6.63
+],
+"front|fr-aa-nt": [
+"F R AH1 N T",
+5.28
+],
+"fur|f-uh-r": [
+"F ER1",
+4.03
+],
+"geek|j-ee-k": [
+"G IY1 K",
+3.61
+],
+"get|j-eh-t": [
+"G EH1 T",
+6.28
+],
+"gift|j-ih-ft": [
+"G IH1 F T",
+4.78
+],
+"gig|j-ih-g": [
+"G IH1 G",
+3.98
+],
+"girl|j-er-l": [
+"G ER1 L",
+5.38
+],
+"gone|g-oa-n": [
+"G AO1 N",
+5.17
+],
+"good|g-uu-d": [
+"G UH1 D",
+6.12
+],
+"goo|g-oo": [
+"G UW1",
+3.41
+],
+"great|gr-ee-t": [
+"G R EY1 T",
+5.88
+],
+"grind|gr-ih-nd": [
+"G R AY1 N D",
+3.94
+],
+"hair|h-ai-r": [
+"HH EH1 R",
+5.08
+],
+"head|h-ee-d": [
+"HH EH1 D",
+5.51
+],
+"hers|h-er-s": [
+"HH ER0 Z",
+3.97
+],
+"her|h-eh-r": [
+"HH ER1",
+6.3
+],
+"his|h-ih-s": [
+"HH IH1 Z",
+6.51
+],
+"hood|h-uu-d": [
+"HH UH1 D",
+4.21
+],
+"hoop|h-oo-p": [
+"HH UW1 P",
+3.41
+],
+"host|h-aa-st": [
+"HH OW1 S T",
+4.77
+],
+"jar|j-ae-r": [
+"JH AA1 R",
+3.93
+],
+"kind|k-ih-nd": [
+"K AY1 N D",
+5.45
+],
+"loop|l-oo-p": [
+"L UW1 P",
+4.29
+],
+"loot|l-oo-t": [
+"L UW1 T",
+3.49
+],
+"mind|m-ih-nd": [
+"M AY1 N D",
+5.41
+],
+"monk|m-aa-nk": [
+"M AH1 NG K",
+3.93
+],
+"mood|m-oo-d": [
+"M UW1 D",
+4.44
+],
+"moon|m-oo-n": [
+"M UW1 N",
+4.7
+],
+"moor|m-uu-r": [
+"M UH1 R",
+3.35
+],
+"most|m-aa-st": [
+"M OW1 S T",
+6.0
+],
+"none|n-oa-n": [
+"N AH1 N",
+4.93
+],
+"noon|n-oo-n": [
+"N UW1 N",
+4.11
+],
+"nor|n-aa-r": [
+"N AO1 R",
+4.78
+],
+"now|n-oa": [
+"N AW1",
+6.18
+],
+"pair|p-ai-r": [
+"P EH1 R",
+4.72
+],
+"pint|p-ih-nt": [
+"P AY1 N T",
+3.66
+],
+"plaid|pl-ai-d": [
+"P L AE1 D",
+3.33
+],
+"pool|p-oo-l": [
+"P UW1 L",
+4.67
+],
+"poor|p-oo-r": [
+"P UW1 R",
+5.09
+],
+"post|p-aa-st": [
+"P OW1 S T",
+5.43
+],
+"pour|p-ou-r": [
+"P AO1 R",
+4.1
+],
+"pow|p-oa": [
+"P AW1",
+3.44
+],
+"push|p-uh-sh": [
+"P UH1 SH",
+4.82
+],
+"put|p-uh-t": [
+"P UH1 T",
+5.66
+],
+"quad|kw-ae-d": [
+"K W AA1 D",
+3.7
+],
+"roar|r-oa-r": [
+"R AO1 R",
+3.7
+],
+"room|r-oo-m": [
+"R UW1 M",
+5.39
+],
+"root|r-oo-t": [
+"R UW1 T",
+4.41
+],
+"said|s-ai-d": [
+"S EH1 D",
+6.01
+],
+"she|sh-eh": [
+"SH IY1",
+6.26
+],
+"shoot|sh-oo-t": [
+"SH UW1 T",
+4.73
+],
+"sir|s-ih-r": [
+"S ER1",
+5.06
+],
+"soar|s-oa-r": [
+"S AO1 R",
+3.39
+],
+"some|s-oa-m": [
+"S AH1 M",
+6.2
+],
+"son|s-aa-n": [
+"S AH1 N",
+5.28
+],
+"soon|s-oo-n": [
+"S UW1 N",
+5.32
+],
+"soul|s-ou-l": [
+"S OW1 L",
+4.81
+],
+"soup|s-ou-p": [
+"S UW1 P",
+4.15
+],
+"spread|spr-ee-d": [
+"S P R EH1 D",
+4.81
+],
+"steak|st-ee-k": [
+"S T EY1 K",
+3.97
+],
+"swamp|sw-ae-mp": [
+"S W AA1 M P",
+3.84
+],
+"swan|sw-ae-n": [
+"S W AA1 N",
+3.84
+],
+"swap|sw-ae-p": [
+"S W AA1 P",
+3.94
+],
+"swat|sw-ae-t": [
+"S W AA1 T",
+3.46
+],
+"sweat|sw-ee-t": [
+"S W EH1 T",
+4.14
+],
+"than|th-ae-n": [
+"DH AE1 N",
+6.13
+],
+"that|th-ae-t": [
+"DH AE1 T",
+7.01
+],
+"them|th-eh-m": [
+"DH EH1 M",
+6.19
+],
+"then|th-eh-n": [
+"DH EH1 N",
+6.07
+],
+"the|dh-eh": [
+"DH AH0",
+7.73
+],
+"the|th-eh": [
+"DH AH0",
+7.73
+],
+"thick|dh-ih-k": [
+"TH IH1 K",
+4.46
+],
+"thin|dh-ih-n": [
+"TH IH1 N",
+4.47
+],
+"third|dh-er-d": [
+"TH ER1 D",
+5.32
+],
+"this|th-ih-s": [
+"DH IH1 S",
+6.82
+],
+"thorn|dh-or-n": [
+"TH AO1 R N",
+3.48
+],
+"thumb|dh-uh-m": [
+"TH AH1 M",
+4.01
+],
+"thus|th-uh-s": [
+"DH AH1 S",
+4.91
+],
+"tomb|t-aa-m": [
+"T UW1 M",
+3.89
+],
+"ton|t-aa-n": [
+"T AH1 N",
+4.29
+],
+"tool|t-oo-l": [
+"T UW1 L",
+4.56
+],
+"tooth|t-oo-th": [
+"T UW1 TH",
+4.08
+],
+"too|t-oo": [
+"T UW1",
+5.95
+],
+"touch|t-ou-ch": [
+"T AH1 CH",
+4.91
+],
+"tour|t-ou-r": [
+"T UH1 R",
+4.99
+],
+"tread|tr-ee-d": [
+"T R EH1 D",
+3.52
+],
+"truth|tr-uh-th": [
+"T R UW1 TH",
+5.05
+],
+"vow|v-oa": [
+"V AW1",
+3.56
+],
+"wand|w-ae-nd": [
+"W AA1 N D",
+3.47
+],
+"want|w-ae-nt": [
+"W AA1 N T",
+6.04
+],
+"ward|w-ar-d": [
+"W AO1 R D",
+4.37
+],
+"warm|w-ar-m": [
+"W AO1 R M",
+4.71
+],
+"warn|w-ar-n": [
+"W AO1 R N",
+4.02
+],
+"warp|w-ar-p": [
+"W AO1 R P",
+3.63
+],
+"war|w-ae-r": [
+"W AO1 R",
+5.46
+],
+"war|w-ar": [
+"W AO1 R",
+5.46
+],
+"wash|w-ae-sh": [
+"W AA1 SH",
+4.46
+],
+"was|w-ae-s": [
+"W AA1 Z",
+6.82
+],
+"watch|w-ae-ch": [
+"W AA1 CH",
+5.34
+],
+"what|w-ae-t": [
+"W AH1 T",
+6.38
+],
+"who|w-aa": [
+"HH UW1",
+6.34
+],
+"wood|w-uu-d": [
+"W UH1 D",
+4.78
+],
+"wool|w-uu-l": [
+"W UH1 L",
+3.91
+],
+"woo|w-oo": [
+"W UW1",
+3.87
+],
+"word|w-or-d": [
+"W ER1 D",
+5.26
+],
+"worm|w-or-m": [
+"W ER1 M",
+3.77
+],
+"worth|w-or-th": [
+"W ER1 TH",
+5.16
+],
+"wow|w-oa": [
+"W AW1",
+4.96
+],
+"zoom|z-oo-m": [
+"Z UW1 M",
+3.83
+],
+"zoo|z-oo": [
+"Z UW1",
+4.14
+]
+}

@@ -1,0 +1,50 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>例外 字</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<!-- phonics/exceptions.html 是 node phonics/_build.js 從 _exc.html 做 出來 的（2026-11-12 第四十八次：老師「例外 字 ＝ 真的 音檔＋真的 雙語 注音」甲＋乙 的 甲）-->
+<style>
+:root{--vowel:#F4A69E;--cons:#90C2E7;--yellow:#FACC15;--andika:'Andika','Century Gothic',sans-serif;--han:'Microsoft JhengHei','PingFang TC','Noto Sans TC',sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#000;color:#fff;font-family:var(--han);touch-action:manipulation}
+header{position:sticky;top:0;z-index:5;background:rgba(0,0,0,.92);border-bottom:1px solid #222;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+header h1{margin:0;font-size:clamp(24px,3.4vw,34px);color:#FFB4A8;flex:1;min-width:280px}
+header a,header button{font-family:var(--han);font-size:18px;font-weight:900;color:#FFE07A;background:#1a1606;border:2px solid #6b5a1a;border-radius:10px;padding:6px 12px;text-decoration:none;cursor:pointer}
+header button.on{background:#fff;color:#000;border-color:#fff}
+.why{font-size:20px;color:#ccc;margin:12px 16px 4px;line-height:1.5}
+.why b{color:#FFE07A}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;padding:12px 16px 40px}
+.it{border:1px solid #333;border-radius:16px;background:#0c0c0c;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.it .w{font-family:var(--andika);font-size:46px;font-weight:700;line-height:1}
+.it .tl{display:flex;gap:4px;flex-wrap:wrap}
+.tile{position:relative;border-radius:.28em;min-width:1.7em;height:1.6em;padding:0 .25em;display:inline-flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:28px}
+.tile.dark{color:#111}.tile.ph{font-family:var(--andika)}
+.tile .sup{position:absolute;top:.25em;right:.25em;font-size:.44em;line-height:1}
+.tile.stack{flex-direction:column;line-height:.92}.tile.stack span{font-size:.62em}
+.it .b{display:flex;gap:8px;flex-wrap:wrap}
+.it .b button{font-family:var(--han);font-size:18px;font-weight:900;border-radius:10px;padding:6px 12px;cursor:pointer}
+.it .b .r{background:#062A35;color:#9EF0FF;border:2px solid #22D3EE}
+.it .b .g{background:#1a1a1a;color:#bbb;border:2px solid #444}
+</style></head><body>
+<header><h1>⚠ 例外 字：不 照 規則 的 常見 字</h1>
+<span id="md"><button data-m="zh" class="on">雙語 注音</button> <button data-m="kk">KK</button> <button data-m="ipa">IPA</button></span>
+<a href="index.html">⬅ 字卡</a><a href="../index.html">🏠 總首頁</a></header>
+<p class="why">這些 是 <b>真的 英文 字</b>，但是 <b>不 照 字卡 的 規則 唸</b>。<br>按〔🔊 真的〕聽 正確 唸法；按〔照 規則 會 唸 成〕比 一比 哪裡 不一樣。<br>（依據：美國 卡內基美隆大學 CMU 美式 發音 字典；常見 程度：wordfreq）</p>
+<div class="grid" id="g"></div>
+<script>/*__PH__*/</script>
+<script>/*__PH2__*/</script>
+<script>/*__ROWS__*/</script>
+<script>
+"use strict";
+let mode='zh';const A=new Audio();
+function tile(x){const d=document.createElement('span');d.className='tile'+(mode==='zh'?'':' ph')+(x.dark?' dark':'')+(x.stack?' stack':'');d.style.background=x.bg;
+  if(Array.isArray(x.t))x.t.forEach(t=>{const s=document.createElement('span');s.textContent=t;d.appendChild(s)});else d.textContent=x.t;
+  if(x.sup){const s=document.createElement('span');s.className='sup';s.textContent=x.sup;d.appendChild(s)}return d}
+function draw(){const g=document.getElementById('g');g.innerHTML='';ROWS.forEach(r=>{const it=document.createElement('div');it.className='it';
+  it.innerHTML='<div class="w">'+r.w+'</div><div class="tl"></div><div class="b"><button class="r" data-a="x_'+r.w+'">🔊 真的</button><button class="g" data-a="'+r.c+'">照 規則 會 唸 成…</button></div>';
+  const tl=it.querySelector('.tl');(PH2.realTiles(r.ph,mode)||[]).forEach(x=>tl.appendChild(tile(x)));g.appendChild(it)})}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){A.src='au/'+b.dataset.a+'.mp3';A.play().catch(()=>{})}
+  const m=e.target.closest('[data-m]');if(m){mode=m.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x===m));draw()}});
+draw();
+</script>
+</body></html>

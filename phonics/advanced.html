@@ -1,0 +1,657 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Phonics Master</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<!-- phonics/index.html 是 node phonics/_build.js 從 _card.html 做 出來 的；要 改 改 _card.html／_ph.js -->
+<style>
+  :root{
+    --vowel:#F4A69E;--cons:#90C2E7;--yellow:#FACC15;--yellow-d:#EAB308;--amber:#F59E0B;--red:#EF4444;
+    --silent:#6E6E6E;--dim:#565656;--line:#1a1a1a;
+    --andika:'Andika','Century Gothic','Trebuchet MS',sans-serif;
+    --han:'Microsoft JhengHei','PingFang TC','Noto Sans TC',sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{margin:0;background:#000;color:#fff;font-family:var(--han);display:flex;flex-direction:column;overflow:hidden}
+  .rail{display:flex;align-items:center;gap:12px;padding:7px 16px;flex:0 0 auto;min-height:0}
+  .rail.top{border-bottom:1px solid var(--line)}
+  .rail.bot{border-top:1px solid var(--line)}
+  .tag{font-size:12px;letter-spacing:2px;color:var(--dim);font-weight:700;white-space:nowrap}
+  .btn{flex:0 0 auto;background:transparent;border:1px solid var(--line);color:#8f8f8f;font-family:var(--han);font-size:13.5px;font-weight:700;letter-spacing:.4px;padding:6px 11px;border-radius:7px;cursor:pointer;transition:.14s;white-space:nowrap}
+  .btn.en{font-family:var(--andika);font-size:17px;padding:4px 12px}
+  .btn:hover{border-color:#3a3a3a;color:#e0e0e0}
+  .btn.on{background:#fff;color:#000;border-color:#fff}
+  .grp{display:flex;gap:3px;flex:0 0 auto}
+  .scroll{display:flex;gap:4px;overflow-x:auto;flex:1;padding-bottom:2px;scrollbar-width:thin}
+  .scroll::-webkit-scrollbar{height:4px}.scroll::-webkit-scrollbar-thumb{background:#242424;border-radius:3px}.scroll::-webkit-scrollbar-track{background:transparent}
+  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(10px,2vh,20px);min-height:0;padding:8px 10px;overflow:hidden}
+  .deck{display:flex;align-items:center;gap:clamp(10px,2.2vw,26px);max-width:100%}
+  .arrow{width:46px;height:46px;border-radius:50%;flex:0 0 auto;background:transparent;border:1px solid #202020;color:#5e5e5e;font-size:18px;line-height:1;cursor:pointer;transition:.14s;display:flex;align-items:center;justify-content:center}
+  .arrow:hover{border-color:#3f3f3f;color:#fff}.arrow:disabled{opacity:.2;cursor:default}
+  .card{position:relative;cursor:pointer;min-width:0;background:#0b0b0b;border:1px solid #1b1b1b;border-radius:22px;padding:clamp(20px,3.4vh,40px) clamp(18px,3.6vw,52px);box-shadow:0 20px 50px rgba(0,0,0,.85);transition:.16s}
+  .card:hover{border-color:#2b2b2b}
+  .grid{display:grid;grid-auto-flow:column;justify-content:center;align-items:center;column-gap:clamp(5px,1vw,12px);row-gap:clamp(12px,2.2vh,22px);grid-template-rows:auto auto}
+  .cell{display:flex;align-items:center;justify-content:center;gap:4px}
+  .letter{font-family:var(--andika);font-weight:700;white-space:nowrap;font-size:clamp(52px,min(11vw,17vh),124px);line-height:.9;letter-spacing:-.015em}
+  .letter .nm{display:inline-block;line-height:.78;padding:.10em .09em .16em;border-radius:.13em;color:#000}
+  .tile{position:relative;border-radius:.28em;min-width:1.9em;height:1.78em;padding:0 .30em;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;white-space:nowrap;-webkit-text-stroke:.034em currentColor;font-size:clamp(25px,min(4.7vw,7.4vh),46px)}
+  .tile.zh{font-family:var(--han)}.tile.ph{font-family:var(--andika)}.tile.dark{color:#111}
+  .tile .sup{position:absolute;top:.3em;right:.3em;font-size:.44em;line-height:1;font-weight:800;-webkit-text-stroke:0}
+  .tile.stack{flex-direction:column;line-height:.92}.tile.stack span{font-size:.62em}
+  .vowelrow{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;max-width:min(1100px,94vw)}
+  .vowelrow .inner{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+  .deckbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
+  .counter{font-family:var(--andika);font-size:14px;letter-spacing:2px;color:#464646;font-weight:700;min-width:88px;text-align:center}
+  /* 第四十七次：🏠 總首頁、🎮 遊戲（加進 網站 才 有 的 兩顆）*/
+  .nav{flex:0 0 auto;display:flex;gap:6px}
+  .nav a{font-family:var(--han);font-size:16px;font-weight:900;color:#FFE07A;border:1px solid #6b5a1a;border-radius:8px;padding:6px 12px;text-decoration:none;white-space:nowrap}
+  .nav a.gm{color:#7FE3FF;border-color:#1f5a6b}
+  .nav a.dk{color:#B9F6CA;border-color:#2E6B3A}.nav a.ex{color:#FFB4A8;border-color:#7a3328}.nav a.cur{background:#1d1d1d;outline:2px solid currentColor}
+  /* 第四十八次：部位 ＝ 小 圖 一看 就 懂（藍 ＝ 字首、粉 ＝ 母音、藍 ＝ 字尾；實心 ＝ 看得到、虛線 ＝ 藏起來、沒有 ＝ 拿掉）*/
+  .pt{display:inline-flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px}
+  .pt .ico{display:flex;gap:2px;height:12px}.pt .ico i{display:block;width:12px;height:12px;border-radius:3px}
+  .pt .ico i.c{background:var(--cons)}.pt .ico i.v{background:var(--vowel)}.pt .ico i.h{border:2px dashed #777}.pt .ico i.x{width:6px;background:none}
+  .pt.on .ico i.h{border-color:#555}
+  .rail.part{justify-content:center;flex-wrap:wrap;row-gap:4px}
+  .card .xb{position:absolute;left:14px;top:10px;font-size:15px;font-weight:900;color:#FFB4A8;border:1px solid #7a3328;border-radius:8px;padding:2px 8px;background:#1a0b08}
+  .card .real{display:flex;justify-content:center;align-items:center;gap:4px;margin-top:clamp(12px,2.2vh,22px)}
+  .card .real .rl{font-size:14px;color:#FFB4A8;font-weight:900;margin-right:8px}
+  .card .hear{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(26px,5vh,46px);color:#5a5a5a;font-weight:900;pointer-events:none}
+
+</style></head><body>
+
+<div class="rail top">
+  <span class="tag">字首</span>
+  <div class="grp" id="segInit">
+    <button class="btn" data-v="basic">基礎</button>
+    <button class="btn" data-v="adv">進階</button>
+  </div>
+  <div class="scroll" id="initChips"></div>
+  <div class="nav"><a class="gm" href="games.html">🎮 遊戲</a><a href="../index.html">🏠 總首頁</a></div>
+</div>
+
+<main>
+  <div class="deck">
+    <button class="arrow" id="prev" title="上一頁 ←">&#10094;</button>
+    <div class="card" id="card"><div class="grid" id="grid"></div></div>
+    <button class="arrow" id="next" title="下一頁 →">&#10095;</button>
+  </div>
+  <div class="deckbar">
+    <span class="counter" id="counter"></span>
+    <button class="btn" id="play">▶ 自動播放</button>
+    <div class="grp" id="segSpeed">
+      <button class="btn" data-v="3400">很慢</button>
+      <button class="btn" data-v="2600">慢</button>
+      <button class="btn" data-v="1900">中</button>
+    </div>
+    <div class="nav" id="nav"><a class="dk" data-dk="" href="index.html">原本</a><a class="dk" data-dk="basic" href="basic.html">🟢 基礎版</a><a class="dk" data-dk="advanced" href="advanced.html">🔵 進階版</a><a class="ex" href="exceptions.html">⚠ 例外 字</a></div>
+  </div>
+  <div class="vowelrow">
+    <span class="tag">母音</span>
+    <div class="inner" id="vowels"></div>
+  </div>
+</main>
+
+<div class="rail bot">
+  <span class="tag">字尾</span>
+  <div class="grp" id="segEnd">
+    <button class="btn" data-v="g1">1</button>
+    <button class="btn" data-v="g2">2</button>
+    <button class="btn" data-v="g3">3</button>
+  </div>
+  <div class="scroll" id="endChips"></div>
+</div>
+
+<div class="rail bot part">
+  <span class="tag">部位</span>
+  <div class="grp" id="segPart">
+    <button class="btn pt" data-v="all"><span class="ico"><i class="c"></i><i class="v"></i><i class="c"></i></span>全部</button>
+    <button class="btn pt" data-v="none"><span class="ico"><i class="h"></i><i class="h"></i><i class="h"></i></span>全無（只 聽）</button>
+    <button class="btn pt" data-v="initial"><span class="ico"><i class="c"></i><i class="h"></i><i class="h"></i></span>字首</button>
+    <button class="btn pt" data-v="vowel"><span class="ico"><i class="h"></i><i class="v"></i><i class="h"></i></span>母音</button>
+    <button class="btn pt" data-v="ending"><span class="ico"><i class="h"></i><i class="h"></i><i class="c"></i></span>字尾</button>
+    <button class="btn pt" data-v="noI"><span class="ico"><i class="h"></i><i class="v"></i><i class="c"></i></span>字首：無</button>
+    <button class="btn pt" data-v="noV"><span class="ico"><i class="c"></i><i class="h"></i><i class="c"></i></span>母音：無</button>
+    <button class="btn pt" data-v="noE"><span class="ico"><i class="c"></i><i class="v"></i><i class="h"></i></span>字尾：無</button>
+    <button class="btn pt" data-v="iv"><span class="ico"><i class="c"></i><i class="v"></i><i class="x"></i></span>字首＋母音</button>
+    <button class="btn pt" data-v="ve"><span class="ico"><i class="x"></i><i class="v"></i><i class="c"></i></span>母音＋字尾</button>
+  </div>
+</div>
+
+<div class="rail bot">
+  <span class="tag">音標</span>
+  <div class="grp" id="segMode">
+    <button class="btn" data-v="zh">專利注音</button>
+    <button class="btn" data-v="kk">KK</button>
+    <button class="btn" data-v="ipa">IPA</button>
+    <button class="btn" data-v="none">無音標</button>
+  </div>
+  <div style="flex:1"></div>
+  <span class="tag">語速</span>
+  <div class="grp" id="segRate">
+    <button class="btn" data-v="0.8">0.8×</button>
+    <button class="btn" data-v="0.95">0.95×</button>
+    <button class="btn" data-v="1">1×</button>
+  </div>
+</div>
+
+<script>/* phonics/_ph.js — 🔤 Phonics Master 共用 資料＋發音 碼（字卡 頁、遊戲 頁、node build 都 用 這一份）
+ * 2026-11-12 第四十七次 第 2 點（老師 的 Phonics Master，原本 在 claude.ai 字卡 頁）：
+ *   ① 發音 ＝ 照 字卡 下面 的 雙語 注音 唸：每一張 卡 ＝ 字首 碼＋母音 碼＋字尾 碼（例 k-ae-d），音檔 ＝ phonics/au/<碼>.mp3
+ *      （tools/ph_gen.py 把 碼 的 音標 直接 送進 HiFi-Captain 女聲；不 經過 拼字 ➜ Ced 不會 唸 C-E-D、kad 的 a 一定 /æ/、kod 的 o 一定 /ɑ/）
+ *   ② 母音 o、ar 右上角 的 愛心 暫時 拿掉（老師）
+ *   ③ 真的 英文 字 但是 唸法 跟 字卡 規則 不一樣（said、word、ward、good…，phonics/_exc.json，CMU 發音 字典 自動 找）＝ 暫時 不放；
+ *      唸起來 像 不雅 字 的 組合（BAD）＝ 永遠 不放
+ */
+(function (root) {
+  'use strict';
+  var VC = 'var(--vowel)', CC = 'var(--cons)';
+  var CONS = {
+    'b': { zh: 'ㄅ', kk: 'b', ipa: 'b' }, 'p': { zh: 'ㄆ', kk: 'p', ipa: 'p' },
+    'm': { zh: 'ㄇ', kk: 'm', ipa: 'm' }, 'f': { zh: 'ㄈ', kk: 'f', ipa: 'f' },
+    'd': { zh: 'ㄉ', kk: 'd', ipa: 'd' }, 't': { zh: 'ㄊ', kk: 't', ipa: 't' },
+    'n': { zh: 'ㄋ', kk: 'n', ipa: 'n' }, 'l': { zh: 'ㄌ', kk: 'l', ipa: 'l' },
+    'k': { zh: 'ㄎ', kk: 'k', ipa: 'k' }, 'h': { zh: 'ㄏ', kk: 'h', ipa: 'h' },
+    's': { zh: 'ㄙ', kk: 's', ipa: 's' },
+    'g_hard': { zh: 'ㄍ', kk: 'g', ipa: 'ɡ' }, 'g_soft': { zh: 'ㄓ', kk: 'dʒ', ipa: 'dʒ' },
+    'c_hard': { zh: 'ㄎ', kk: 'k', ipa: 'k' }, 'c_soft': { zh: 'ㄙ', kk: 's', ipa: 's' },
+    'j': { zh: 'ㄓ', kk: 'dʒ', ipa: 'dʒ' },
+    'w': { zh: 'ㄨ', kk: 'w', ipa: 'w' },
+    'z': { zh: 'z', kk: 'z', ipa: 'z' },
+    'ch': { zh: 'ㄔ', kk: 'tʃ', ipa: 'tʃ' }, 'sh': { zh: 'ㄕ', kk: 'ʃ', ipa: 'ʃ' },
+    'th(無聲)': { zh: 'θ', kk: 'θ', ipa: 'θ' },
+    'th(有聲)': { zh: 'ð', kk: 'ð', ipa: 'ð' },
+    'ph': { zh: 'ㄈ', kk: 'f', ipa: 'f' },
+    'wh': { zh: 'ㄨ', kk: 'hw', ipa: 'w' },
+    'qu': { zh: ['ㄎ', 'ㄨ'], kk: ['k', 'w'], ipa: ['k', 'w'] },
+    'r': { zh: ['ㄖ', 'ㄨ'], kk: 'r', ipa: 'ɹ', stack: true },
+    'r_end': { zh: 'ㄦ', kk: 'r', ipa: 'ɹ' },
+    'ck': { zh: 'ㄎ', sup: '〃', kk: 'k', ipa: 'k' },
+    'x': { zh: ['ㄎ', 'ㄙ'], kk: ['k', 's'], ipa: ['k', 's'] },
+    'm_end': { zh: 'ㄇ', sup: '~', kk: 'm', ipa: 'm' },
+    'mb': { zh: 'ㄇ', sup: '~', kk: 'm', ipa: 'm' },
+    'mp': { zh: ['ㄇ', 'ㄆ'], sup: ['~', '〃'], kk: ['m', 'p'], ipa: ['m', 'p'] },
+    'n_end': { zh: 'ㄋ', sup: '~', kk: 'n', ipa: 'n' },
+    'nd': { zh: ['ㄋ', 'ㄉ'], sup: ['~', '〃'], kk: ['n', 'd'], ipa: ['n', 'd'] },
+    'nt': { zh: ['ㄋ', 'ㄊ'], sup: ['~', '〃'], kk: ['n', 't'], ipa: ['n', 't'] },
+    'tch': { zh: 'ㄔ', kk: 'tʃ', ipa: 'tʃ' },
+    'ss': { zh: 'ㄙ', kk: 's', ipa: 's' }, 'zz': { zh: 'z', kk: 'z', ipa: 'z' },
+    'l_end': { zh: 'ㄛ', kk: 'l', ipa: 'l' },
+    'd_end': { zh: 'ㄉ', sup: '〃', kk: 'd', ipa: 'd' },
+    'p_end': { zh: 'ㄆ', sup: '〃', kk: 'p', ipa: 'p' },
+    'f_end': { zh: 'ㄈ', sup: '〃', kk: 'f', ipa: 'f' },
+    't_end': { zh: 'ㄊ', sup: '〃', kk: 't', ipa: 't' },
+    'g_end': { zh: 'ㄍ', sup: '〃', kk: 'g', ipa: 'ɡ' },
+    'sion': { zh: 'ʒən', kk: 'ʒən', ipa: 'ʒən' }
+  };
+  /* 第四十七次：o、ar 右上角 的 愛心 拿掉（老師：暫時 刪除）*/
+  var VOW = {
+    'a': { zh: 'ㄚ', sup: 'ㄝ', kk: 'æ', ipa: 'æ', bg: VC },
+    'e': { zh: 'ㄝ', kk: 'ɛ', ipa: 'ɛ', bg: VC },
+    'i': { zh: 'ㄜ', sup: '一', kk: 'ɪ', ipa: 'ɪ', bg: VC },
+    'o': { zh: 'ㄚ', kk: 'ɑ', ipa: 'ɑ', bg: VC },
+    'u': { zh: 'ㄜ', kk: 'ʌ', ipa: 'ʌ', bg: VC },
+    'ai': { zh: '一', sup: 'ㄝ', kk: 'e', ipa: 'eɪ', bg: VC },
+    'ee': { zh: '一', kk: 'i', ipa: 'i', bg: VC },
+    'oa': { zh: 'ㄨ', sup: 'ㄜ', kk: 'o', ipa: 'oʊ', bg: VC },
+    'oo_long': { zh: 'ㄨ', kk: 'u', ipa: 'u', bg: 'var(--red)' },
+    'oo_short': { zh: 'ㄛ', sup: 'ㄨ', kk: 'ʊ', ipa: 'ʊ', bg: 'var(--amber)' },
+    'ou': { zh: 'ㄠ', sup: 'ㄝ', kk: 'aʊ', ipa: 'aʊ', bg: VC }
+  };
+  var RVOW = {
+    'ar': { zh: 'ㄚ', bg: VC, vkk: 'ɑ', vipa: 'ɑ', rkk: 'r', ripa: 'ɹ' },
+    'er': { zh: 'ㄜ', bg: 'var(--yellow)', vkk: 'ɚ', vipa: 'ɚ', rkk: '', ripa: '', dark: true },
+    'ir': { zh: 'ㄜ', bg: 'var(--yellow-d)', vkk: 'ɚ', vipa: 'ɚ', rkk: '', ripa: '', dark: true },
+    'ur': { zh: 'ㄜ', bg: 'var(--yellow-d)', vkk: 'ɝ', vipa: 'ɝ', rkk: '', ripa: '', dark: true },
+    'or': { zh: 'ㄛ', bg: VC, vkk: 'ɔ', vipa: 'ɔ', rkk: 'r', ripa: 'ɹ' }
+  };
+  var TRIPLE = {
+    zh: [{ t: 'ㄕ' }, { t: 'ㄜ', v: true }, { t: 'ㄋ', sup: '~' }],
+    kk: [{ t: 'ʃ' }, { t: 'ə', v: true }, { t: 'n' }],
+    ipa: [{ t: 'ʃ' }, { t: 'ə', v: true }, { t: 'n' }]
+  };
+  var INITIALS = {
+    basic: ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'c', 'k', 'h', 'j', 'qu', 'w', 'r', 's', 'z'],
+    adv: ['j', 'ch', 'sh', 'th(無聲)', 'th(有聲)', 'ph', 'wh', 'qu']
+  };
+  var ENDINGS = {
+    g1: ['無', 'b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'ck', 'r', 's', 'z', 'x'],
+    g2: ['b', 'p', 'm', 'f', 'ph', 'd', 't', 'n', 'l', 'g', 'ck', 'mb', 'mp', 'nd', 'nt', 'ch', 'tch', 'sh', 'th', 's', 'ss', 'zz', 'tion', 'sion', 'ssion'],
+    g3: ['s', 'ss', 'b', 'p', 'd', 't', 'g', 'ck', 'm', 'mb', 'mp', 'n', 'nd', 'nt', 'ph', 'ch', 'sh', 'th']
+  };
+  var VLIST = [
+    { t: 'a' }, { t: 'e' }, { t: 'i' }, { t: 'o' }, { t: 'u' },
+    { t: 'ar' }, { t: 'er' }, { t: 'ir' }, { t: 'or' }, { t: 'ur' },
+    { t: 'ai', name: true }, { t: 'ee', name: true }, { t: 'oa', name: true },
+    { t: 'oo', key: 'oo_long', mark: '長' }, { t: 'oo', key: 'oo_short', mark: '短' },
+    { t: 'ou' }
+  ];
+  var SOFT = ['e', 'i', 'ee', 'er', 'ir'];
+
+  /* ── 發音 碼 ── */
+  function initCode(I, vt) {
+    if (I === 'g') return SOFT.indexOf(vt) >= 0 ? 'j' : 'g';
+    if (I === 'c') return SOFT.indexOf(vt) >= 0 ? 's' : 'k';
+    return { qu: 'kw', 'th(無聲)': 'th', 'th(有聲)': 'dh', ph: 'f', wh: 'w' }[I] || I;
+  }
+  function vowCode(V) { return { a: 'ae', e: 'eh', i: 'ih', o: 'aa', u: 'uh', ar: 'ar', er: 'er', ir: 'er', ur: 'er', or: 'or', ai: 'ai', ee: 'ee', oa: 'oa', ou: 'ou' }[V.t] || (V.key === 'oo_long' ? 'uu' : 'oo'); }
+  function endCode(E) { if (E === '無') return ''; return { g: 'g', ck: 'k', x: 'ks', ph: 'f', mb: 'm', tch: 'ch', ss: 's', zz: 'z', tion: 'shn', ssion: 'shn', sion: 'zhn' }[E] || E; }
+  /* 母音 是 ar／er／ir／or／ur 時 字尾 r 不 顯示、不 發音（原本 的 規則：barr ➜ bar）*/
+  function effEnd(V, E) { return (E === 'r' && RVOW[V.t]) ? '無' : E; }
+  function code(I, V, E) { E = effEnd(V, E); var e = endCode(E); return initCode(I, V.t) + '-' + vowCode(V) + (e ? '-' + e : ''); }
+  /* 碼 ➜ 音標（送進 語音 模型；z 開頭 拉長 一點，跟 s 分得 出來）*/
+  var IPA_I = { b: 'b', p: 'p', m: 'm', f: 'f', d: 'd', t: 't', n: 'n', l: 'l', k: 'k', h: 'h', s: 's', j: 'dʒ', w: 'w', r: 'ɹ', z: 'z', g: 'ɡ', kw: 'kw', ch: 'tʃ', sh: 'ʃ', th: 'θ', dh: 'ð' };
+  var IPA_V = { ae: 'æ', eh: 'ɛ', ih: 'ɪ', aa: 'ɑː', uh: 'ʌ', ar: 'ɑːɹ', er: 'ɜː', or: 'ɔːɹ', ai: 'eɪ', ee: 'iː', oa: 'oʊ', uu: 'uː', oo: 'ʊ', ou: 'aʊ' };
+  var IPA_E = { b: 'b', p: 'p', m: 'm', f: 'f', d: 'd', t: 't', n: 'n', l: 'l', g: 'ɡ', k: 'k', r: 'ɹ', s: 's', z: 'z', ks: 'ks', mp: 'mp', nd: 'nd', nt: 'nt', ch: 'tʃ', sh: 'ʃ', th: 'θ', shn: 'ʃən', zhn: 'ʒən' };
+  function ipaOf(c) { var p = c.split('-'); return IPA_I[p[0]] + 'ˈ' + IPA_V[p[1]] + (p[2] ? IPA_E[p[2]] : '') + '.'; }
+  /* 拼字（字卡 上 的 字）*/
+  function spell(I, V, E) { E = effEnd(V, E); return I.replace('(無聲)', '').replace('(有聲)', '') + V.t + (E === '無' ? '' : E); }
+  /* 唸起來 像 不雅 的 字（碼）＝ 永遠 不放（字卡、遊戲 都 不 出現）*/
+  var BAD = ['f-uh-k', 'sh-ih-t', 'd-ih-k', 'k-aa-k', 'k-uh-m', 't-ih-t', 'f-ae-g', 'n-ih-g', 'n-ih-g-r', 'p-ih-s', 'b-ih-ch', 'k-uh-nt', 'j-ih-z', 'p-or-n', 't-er-d',
+    'f-ar-t', 's-eh-ks', 'h-oa', 'h-or', 'sh-ae-g', 'f-ae-p', 'b-uu-b', 'p-uu-p', 'p-uu', 'p-ee', 'w-ee-d', 'k-uu-n', 'l-eh-z', 'b-uh-m', 'd-ae-m', 'j-ae-p',
+    'p-uh-s', 'k-uh-k', 'k-ih-l', 'p-ih-mp', 'h-eh-l', 't-ih-ts', 'b-ar-f', 'p-uu-k'];
+  var EXC = {};   /* 真的 英文 字、唸法 不一樣（build 從 _exc.json 填）*/
+  function skip(I, V, E) { var c = code(I, V, E); return BAD.indexOf(c) >= 0 || !!EXC[spell(I, V, E).toLowerCase() + '|' + c]; }
+  var PH = { CONS: CONS, VOW: VOW, RVOW: RVOW, TRIPLE: TRIPLE, INITIALS: INITIALS, ENDINGS: ENDINGS, VLIST: VLIST, SOFT: SOFT, VC: VC, CC: CC,
+    initCode: initCode, vowCode: vowCode, endCode: endCode, effEnd: effEnd, code: code, ipaOf: ipaOf, spell: spell, BAD: BAD, EXC: EXC, skip: skip };
+  if (typeof module !== 'undefined' && module.exports) module.exports = PH; else root.PH = PH;
+})(this);
+
+Object.assign(PH.EXC,{"bach|b-ae-ch":"B AA K","bair|b-ai-r":"B EH R","barch|b-ar-ch":"B AA R K","bars|b-ar-s":"B AA R Z","bar|b-ae-r":"B AA R","ba|b-ae":"B IY EY","been|b-ee-n":"B IH N","beer|b-ee-r":"B IH R","bees|b-ee-s":"B IY Z","berch|b-er-ch":"B ER K","bernd|b-er-nd":"B ER N T","bes|b-eh-s":"B IY Z","be|b-eh":"B IY","bind|b-ih-nd":"B AY N D","bir|b-ih-r":"B ER","bi|b-ih":"B AY","boar|b-oa-r":"B AO R","boas|b-oa-s":"B OW AH Z","boaz|b-oa-z":"B OW AE Z","boa|b-oa":"B OW AH","boch|b-aa-ch":"B AA K","boob|b-oo-b":"B UW B","boock|b-oo-k":"B UW K","boom|b-oo-m":"B UW M","boon|b-oo-n":"B UW N","boop|b-oo-p":"B UW P","boor|b-uu-r":"B UH R","boos|b-oo-s":"B UW Z","boos|b-uu-s":"B UW Z","booth|b-oo-th":"B UW TH","boot|b-oo-t":"B UW T","booz|b-oo-z":"B UW Z","boo|b-oo":"B UW","bors|b-or-s":"B AO R Z","both|b-aa-th":"B OW TH","bouck|b-ou-k":"B OW K","bo|b-aa":"B OW","bur|b-uh-r":"B ER","bush|b-uh-sh":"B UH SH","butch|b-uh-ch":"B UH CH","buth|b-uh-th":"B UW TH","cai|k-ai":"K AY","cars|k-ar-s":"K AA R Z","car|k-ae-r":"K AA R","cation|k-ae-shn":"K AE T AY AH N","ca|k-ae":"K AH","cech|s-eh-ch":"S EH K","cees|s-ee-s":"S IY Z","ce|s-eh":"S IY IY","chaim|ch-ai-m":"HH AY IH M","chair|ch-ai-r":"CH EH R","chai|ch-ai":"CH AY","char|ch-ae-r":"CH AA R","chas|ch-ae-s":"CH AA Z","cha|ch-ae":"CH AA","cheer|ch-ee-r":"CH IH R","chef|ch-eh-f":"SH EH F","chem|ch-eh-m":"K EH M","cher|ch-eh-r":"SH EH R","cher|ch-er":"SH EH R","che|ch-eh":"CH EY","chi|ch-ih":"K AY","choon|ch-oo-n":"CH UW N","choo|ch-oo":"CH UW","chord|ch-or-d":"K AO R D","chou|ch-ou":"CH UW","cho|ch-aa":"CH OW","chu|ch-uh":"CH UW","cit|s-ih-t":"S IY AY T IY","coar|k-oa-r":"K AO R","comb|k-aa-m":"K OW M","cool|k-oo-l":"K UW L","coon|k-oo-n":"K UW N","coop|k-oo-p":"K UW P","coos|k-oo-s":"K UW S","coot|k-oo-t":"K UW T","coo|k-oo":"K UW","cor|k-aa-r":"K AO R","coup|k-ou-p":"K UW","cour|k-ou-r":"K UH R","cou|k-ou":"K UW","co|k-aa":"K OW","cur|k-uh-r":"K ER","dais|d-ai-s":"D EY Z","dai|d-ai":"D AY","dar|d-ae-r":"D AA R","da|d-ae":"D AA","dech|d-eh-ch":"D EH K","deer|d-ee-r":"D IH R","dees|d-ee-s":"D IY Z","der|d-eh-r":"D ER","de|d-eh":"D IY","di|d-ih":"D IY","doar|d-oa-r":"D AO R","doom|d-oo-m":"D UW M","door|d-oo-r":"D AO R","door|d-uu-r":"D AO R","doo|d-oo":"D UW","dorch|d-or-ch":"D AO R K","doug|d-ou-g":"D AH G","do|d-aa":"D UW","fair|f-ai-r":"F EH R","far|f-ae-r":"F AA R","feb|f-eh-b":"F EH B Y AH W EH R IY","fees|f-ee-s":"F IY Z","ferch|f-er-ch":"F ER K","fe|f-eh":"F EY","find|f-ih-nd":"F AY N D","firs|f-er-s":"F ER Z","fir|f-ih-r":"F ER","fi|f-ih":"F AY","food|f-oo-d":"F UW D","fool|f-oo-l":"F UW L","foor|f-uu-r":"F UH R","foos|f-oo-s":"F UW Z","foos|f-uu-s":"F UW Z","foot|f-uu-t":"F UH T","foo|f-oo":"F UW","fors|f-or-s":"F ER Z","for|f-aa-r":"F AO R","four|f-ou-r":"F AO R","furs|f-er-s":"F ER Z","fur|f-uh-r":"F ER","fusion|f-uh-zhn":"F Y UW ZH AH N","fu|f-uh":"F UW","gair|g-ai-r":"G EH R","gars|g-ar-s":"G AA R Z","gar|g-ae-r":"G AA R","ga|g-ae":"G AA","ged|j-eh-d":"G EH D","geer|j-ee-r":"G IH R","gerd|j-er-d":"G ER D","gersh|j-er-sh":"G ER SH","gerth|j-er-th":"G ER TH","gert|j-er-t":"G ER T","get|j-eh-t":"G EH T","gib|j-ih-b":"G IH B","gig|j-ih-g":"G IH G","gil|j-ih-l":"G IH L","gird|j-er-d":"G ER D","girl|j-er-l":"G ER L","girth|j-er-th":"G ER TH","girt|j-er-t":"G ER T","git|j-ih-t":"G IH T","goar|g-oa-r":"G AO R","goa|g-oa":"G OW AH","gooch|g-oo-ch":"G UW CH","good|g-uu-d":"G UH D","goof|g-oo-f":"G UW F","goon|g-oo-n":"G UW N","goop|g-oo-p":"G UW P","goos|g-oo-s":"G UW Z","goos|g-uu-s":"G UW Z","goo|g-oo":"G UW","go|g-aa":"G OW","guth|g-uh-th":"G UW TH","gu|g-uh":"G UW","hair|h-ai-r":"HH EH R","har|h-ae-r":"HH AA R","has|h-ae-s":"HH AE Z","ha|h-ae":"HH AA","heer|h-ee-r":"HH IY ER","hees|h-ee-s":"HH IY Z","hers|h-er-s":"HH ER Z","her|h-eh-r":"HH ER","hession|h-eh-shn":"HH EH SH IH N","he|h-eh":"HH IY","hind|h-ih-nd":"HH AY N D","his|h-ih-s":"HH IH Z","hi|h-ih":"HH AY","hoar|h-oa-r":"HH AO R","hoch|h-aa-ch":"HH AA K","hooch|h-oo-ch":"HH UW CH","hoock|h-oo-k":"HH UW K","hood|h-uu-d":"HH UH D","hoof|h-oo-f":"HH UW F","hoog|h-oo-g":"HH UW G","hoon|h-oo-n":"HH UW N","hoop|h-oo-p":"HH UW P","hoos|h-oo-s":"HH UW Z","hoos|h-uu-s":"HH UW Z","hoot|h-oo-t":"HH UW T","hoo|h-oo":"HH UW","horch|h-or-ch":"HH AO R K","hors|h-or-s":"HH AO R Z","houp|h-ou-p":"HH UW P","hour|h-ou-r":"AW ER","houx|h-ou-ks":"HH UW","hou|h-ou":"HH UW","ho|h-aa":"HH OW","hur|h-uh-r":"HH ER","huth|h-uh-th":"HH UW TH","hu|h-uh":"HH UW","jai|j-ai":"JH AY","jars|j-ar-s":"JH AA R Z","jar|j-ae-r":"JH AA R","ja|j-ae":"Y AA","jech|j-eh-ch":"JH EH K","jeer|j-ee-r":"JH IH R","jees|j-ee-s":"JH IY Z","je|j-eh":"JH IY","ji|j-ih":"JH IY","joon|j-oo-n":"JH UW N","joos|j-oo-s":"JH UW Z","joos|j-uu-s":"JH UW Z","joo|j-oo":"JH UW","jos|j-aa-s":"JH OW Z","jour|j-ou-r":"JH UW R","jo|j-aa":"JH OW","jurs|j-er-s":"JH ER Z","ju|j-uh":"JH UW","kai|k-ai":"K AY","karch|k-ar-ch":"K AA R K","ka|k-ae":"K AA","kees|k-ee-s":"K IY Z","ker|k-eh-r":"K ER","kind|k-ih-nd":"K AY N D","kirch|k-er-ch":"K ER K","kir|k-er":"K IH R","ki|k-ih":"K IY","kol|k-aa-l":"K OW L","koob|k-oo-b":"K UW B","kool|k-oo-l":"K UW L","koon|k-oo-n":"K UW N","koop|k-oo-p":"K UW P","koor|k-oo-r":"K UW R","koos|k-oo-s":"K UW Z","koos|k-uu-s":"K UW Z","koo|k-oo":"K UW","ko|k-aa":"K OW","kush|k-uh-sh":"K UH SH","ku|k-uh":"K UW","lair|l-ai-r":"L EH R","lais|l-ai-s":"L EY Z","lait|l-ai-t":"L EY","lai|l-ai":"L AY","lars|l-ar-s":"L AA R Z","lar|l-ae-r":"L AA R","las|l-ae-s":"L AA S","la|l-ae":"L AA","lech|l-eh-ch":"L EH K","lees|l-ee-s":"L IY Z","lerch|l-er-ch":"L ER K","lesion|l-eh-zhn":"L IY ZH AH N","le|l-eh":"L AH","li|l-ih":"L IY","loar|l-oa-r":"L AO R","loch|l-aa-ch":"L AA K","loom|l-oo-m":"L UW M","loon|l-oo-n":"L UW N","loop|l-oo-p":"L UW P","loos|l-oo-s":"L UW Z","loos|l-uu-s":"L UW Z","loot|l-oo-t":"L UW T","loo|l-oo":"L UW","lorch|l-or-ch":"L AO R K","lor|l-aa-r":"L AO R","lotion|l-aa-shn":"L OW SH AH N","loup|l-ou-p":"L UW P","loux|l-ou-ks":"L UW","lou|l-ou":"L UW","lo|l-aa":"L OW","luth|l-uh-th":"L UW TH","lu|l-uh":"L UW","mach|m-ae-ch":"M AA K","mair|m-ai-r":"M EH R","maish|m-ai-sh":"M AA IH SH","mai|m-ai":"M AY","mam|m-ae-m":"M AA M","mars|m-ar-s":"M AA R Z","martion|m-ar-shn":"M AA R SH Y AH N","mar|m-ae-r":"M AA R","mas|m-ae-s":"M AA Z","mation|m-ae-shn":"M AE T Y AH N","maz|m-ae-z":"M AA Z","ma|m-ae":"M AA","mech|m-eh-ch":"M EH K","meer|m-ee-r":"M IY ER","mees|m-ee-s":"M IY Z","mers|m-er-s":"M ER Z","me|m-eh":"M IY","mind|m-ih-nd":"M AY N D","mir|m-er":"M IH R","mi|m-ih":"M IY","moab|m-oa-b":"M OW AE B","moch|m-aa-ch":"M AA K","mood|m-oo-d":"M UW D","moog|m-oo-g":"M UW G","moon|m-oo-n":"M UW N","moor|m-uu-r":"M UH R","moos|m-oo-s":"M UW Z","moos|m-uu-s":"M UW Z","moot|m-oo-t":"M UW T","moo|m-oo":"M UW","mor|m-aa-r":"M AO R","motion|m-aa-shn":"M OW SH AH N","mo|m-aa":"M OW","murch|m-er-ch":"M ER K","muth|m-uh-th":"M UW TH","mu|m-uh":"M UW","naim|n-ai-m":"N AY IH M","nair|n-ai-r":"N EH R","nars|n-ar-s":"N AA R Z","nation|n-ae-shn":"N EY SH AH N","na|n-ae":"N AA","neer|n-ee-r":"N IH R","nees|n-ee-s":"N IY Z","ne|n-eh":"N IY","nir|n-er":"N IH R","ni|n-ih":"N IY","noa|n-oa":"N OW AH","noon|n-oo-n":"N UW N","nor|n-aa-r":"N AO R","notion|n-aa-shn":"N OW SH AH N","nous|n-ou-s":"N UW S","no|n-aa":"N OW","nur|n-er":"N UH R","nur|n-uh-r":"N UH R","nu|n-uh":"N UW","pair|p-ai-r":"P EH R","pais|p-ai-s":"P EY Z","pai|p-ai":"P AA IY","pars|p-ar-s":"P AA R Z","par|p-ae-r":"P AA R","pasion|p-ae-zhn":"P AA ZH IY N","pas|p-ae-s":"P AA Z","paz|p-ae-z":"P AA Z","pa|p-ae":"P AA","pech|p-eh-ch":"P EH K","peer|p-ee-r":"P IH R","pees|p-ee-s":"P IY Z","per|p-eh-r":"P ER","phair|f-ai-r":"F EH R","phar|f-ae-r":"F AA R","phi|f-ih":"F AY","pho|f-aa":"F OW","phu|f-uh":"F UW","pint|p-ih-nt":"P AY N T","pi|p-ih":"P AY","poch|p-aa-ch":"P AA K","pooch|p-oo-ch":"P UW CH","poof|p-oo-f":"P UW F","pool|p-oo-l":"P UW L","poon|p-oo-n":"P UW N","poop|p-oo-p":"P UW P","poor|p-oo-r":"P UW R","poo|p-oo":"P UW","por|p-aa-r":"P AO R","potion|p-aa-shn":"P OW SH AH N","poul|p-ou-l":"P UW L","pour|p-ou-r":"P AO R","pou|p-ou":"P UW","po|p-aa":"P OW","pur|p-uh-r":"P ER","push|p-uh-sh":"P UH SH","puth|p-uh-th":"P UW TH","put|p-uh-t":"P UH T","pu|p-uh":"P UW","quach|kw-ae-ch":"K W AA CH","quad|kw-ae-d":"K W AA D","quai|kw-ai":"K IY","qual|kw-ae-l":"K W AA L","quam|kw-ae-m":"K W AA M","quan|kw-ae-n":"K W AO N","quart|kw-ar-t":"K W AO R T","quash|kw-ae-sh":"K W AO SH","qua|kw-ae":"K W AA","queer|kw-ee-r":"K W IH R","que|kw-eh":"K Y UW","qui|kw-ih":"K IY","quoth|kw-aa-th":"K W OW TH","quo|kw-aa":"K W OW","rai|r-ai":"R AA IY","ra|r-ae":"R AA","rech|r-eh-ch":"R EH K","rees|r-ee-s":"R IY Z","res|r-eh-s":"R EY Z","re|r-eh":"R EY","rind|r-ih-nd":"R AY N D","roar|r-oa-r":"R AO R","roa|r-oa":"R OW AH","roch|r-aa-ch":"R AA K","rol|r-aa-l":"R OW L","rood|r-oo-d":"R UW D","room|r-oo-m":"R UW M","roop|r-oo-p":"R UW P","roos|r-oo-s":"R UW Z","roos|r-uu-s":"R UW Z","root|r-oo-t":"R UW T","roux|r-ou-ks":"R UW","ro|r-aa":"R OW","ruth|r-uh-th":"R UW TH","ru|r-uh":"R UW","said|s-ai-d":"S EH D","saif|s-ai-f":"S AA IY F","sais|s-ai-s":"S EY Z","sai|s-ai":"S AY","sars|s-ar-s":"S AA R Z","sar|s-ae-r":"S AA R","sa|s-ae":"S AA","sees|s-ee-s":"S IY Z","se|s-eh":"S EY","shai|sh-ai":"SH AY","shant|sh-ae-nt":"SH AA N T","shas|sh-ae-s":"SH AA S","sha|sh-ae":"SH AA","sheer|sh-ee-r":"SH IH R","sher|sh-eh-r":"SH ER","she|sh-eh":"SH IY","shir|sh-ih-r":"SH ER","shi|sh-ih":"SH IY","shoob|sh-oo-b":"SH UW B","shoop|sh-oo-p":"SH UW P","shoot|sh-oo-t":"SH UW T","shoo|sh-oo":"SH UW","shor|sh-aa-r":"SH AO R","shosh|sh-aa-sh":"SH OW SH","shoup|sh-ou-p":"SH UW P","shur|sh-uh-r":"SH ER","shu|sh-uh":"SH UW","sirs|s-er-s":"S ER R Z","sir|s-ih-r":"S ER","si|s-ih":"S IY","soar|s-oa-r":"S AO R","son|s-aa-n":"S AH N","sood|s-oo-d":"S UW D","soon|s-oo-n":"S UW N","soos|s-oo-s":"S UW Z","soos|s-uu-s":"S UW Z","soot|s-uu-t":"S UH T","soo|s-oo":"S UW","sor|s-aa-r":"S AO R","sos|s-aa-s":"EH OW EH S","soul|s-ou-l":"S OW L","soup|s-ou-p":"S UW P","sous|s-ou-s":"S UW Z","so|s-aa":"S OW","sur|s-uh-r":"S ER","su|s-uh":"S UW","tai|t-ai":"T AY","tal|t-ae-l":"T AA L","tar|t-ae-r":"T AA R","ta|t-ae":"T AA","tech|t-eh-ch":"T EH K","teer|t-ee-r":"T IH R","tees|t-ee-s":"T IY Z","tern|t-er-n":"T ER N Z","ter|t-eh-r":"T ER","te|t-eh":"T IY","thach|dh-ae-ch":"TH AE CH","thad|dh-ae-d":"TH AE D","thain|dh-ai-n":"TH EY N","thais|dh-ai-s":"T AY Z","thais|th-ai-s":"T AY Z","thai|dh-ai":"T AY","thai|th-ai":"T AY","thal|dh-ae-l":"TH AE L","tham|dh-ae-m":"TH AE M","than|th-ae-n":"DH AE N","tharp|dh-ar-p":"TH AA R P","thar|dh-ae-r":"TH AA R","thar|dh-ar":"TH AA R","thar|th-ae-r":"TH AA R","thatch|dh-ae-ch":"TH AE CH","that|th-ae-t":"DH AE T","theel|dh-ee-l":"TH IY L","thee|th-ee":"DH IY","them|th-eh-m":"DH EH M","then|th-eh-n":"DH EH N","therm|dh-er-m":"TH ER M","the|dh-eh":"DH AH","the|th-eh":"DH AH","thick|dh-ih-k":"TH IH K","thin|dh-ih-n":"TH IH N","third|dh-er-d":"TH ER D","this|th-ih-s":"DH IH S","thi|dh-ih":"TH IY","thi|th-ih":"TH IY","thomp|dh-aa-mp":"TH AA M P","thom|dh-aa-m":"T AA M","thom|th-aa-m":"T AA M","thon|dh-aa-n":"TH AA N","thorn|dh-or-n":"TH AO R N","thorp|dh-or-p":"TH AO R P","thor|dh-aa-r":"TH AO R","thor|dh-or":"TH AO R","thor|th-aa-r":"TH AO R","thous|dh-ou-s":"DH AW Z","thous|th-ou-s":"DH AW Z","thou|th-ou":"DH AW","tho|dh-aa":"DH OW","tho|th-aa":"DH OW","thud|dh-uh-d":"TH AH D","thug|dh-uh-g":"TH AH G","thul|dh-uh-l":"TH AH L","thumb|dh-uh-m":"TH AH M","thump|dh-uh-mp":"TH AH M P","thum|dh-uh-m":"TH AH M","thun|dh-uh-n":"TH AH N","thurm|dh-er-m":"TH ER M","thurn|dh-er-n":"TH ER N","thur|dh-uh-r":"DH ER","thur|th-er":"DH ER","thur|th-uh-r":"DH ER","thus|th-uh-s":"DH AH S","tis|t-ih-s":"T IH Z","ti|t-ih":"T IY","toa|t-oa":"T OW AA","tomb|t-aa-m":"T UW M","ton|t-aa-n":"T AH N","tool|t-oo-l":"T UW L","toon|t-oo-n":"T UW N","tooth|t-oo-th":"T UW TH","toot|t-oo-t":"T UW T","too|t-oo":"T UW","torsion|t-or-zhn":"T AO R SH AH N","tor|t-aa-r":"T AO R","touch|t-ou-ch":"T AH CH","tour|t-ou-r":"T UH R","to|t-aa":"T UW","tush|t-uh-sh":"T UH SH","tu|t-uh":"T UW","wach|w-ae-ch":"W AO CH","wad|w-ae-d":"W AA D","wais|w-ai-s":"W EY Z","wai|w-ai":"W AY","wal|w-ae-l":"W AO L","wand|w-ae-nd":"W AA N D","want|w-ae-nt":"W AA N T","wan|w-ae-n":"W AA N","ward|w-ar-d":"W AO R D","warf|w-ar-f":"W AO R F","warm|w-ar-m":"W AO R M","warn|w-ar-n":"W AO R N","warp|w-ar-p":"W AO R P","wars|w-ar-s":"W AO R Z","warth|w-ar-th":"W AO R TH","wart|w-ar-t":"W AO R T","war|w-ae-r":"W AO R","war|w-ar":"W AO R","wash|w-ae-sh":"W AA SH","wass|w-ae-s":"W AH S","was|w-ae-s":"W AA Z","watch|w-ae-ch":"W AA CH","wat|w-ae-t":"W AO T","wa|w-ae":"W AA","we|w-eh":"W IY","wharf|w-ar-f":"W AO R F","what|w-ae-t":"W AH T","whom|w-aa-m":"HH UW M","whoop|w-oo-p":"W UW P","whoosh|w-oo-sh":"W UW SH","whoo|w-oo":"W UW","who|w-aa":"HH UW","womb|w-aa-m":"W UW M","wont|w-aa-nt":"W OW N T","wood|w-uu-d":"W UH D","woof|w-oo-f":"W UW F","wool|w-uu-l":"W UH L","woos|w-oo-s":"W UW Z","woos|w-uu-s":"W UW Z","woo|w-oo":"W UW","word|w-or-d":"W ER D","worm|w-or-m":"W ER M","worth|w-or-th":"W ER TH","wor|w-aa-r":"W AO R","wo|w-aa":"W OW","wu|w-uh":"W UW","zach|z-ae-ch":"Z AE K","zech|z-eh-ch":"Z EH K","zern|z-er-n":"Z IH R N","ze|z-eh":"Z IY","zi|z-ih":"Z IY","zoch|z-aa-ch":"Z AA K","zoom|z-oo-m":"Z UW M","zoos|z-oo-s":"Z UW Z","zoos|z-uu-s":"Z UW Z","zoo|z-oo":"Z UW"});</script>
+<script>/* phonics/_ph2.js — 2026-11-12 第四十八次：Phonics Master 的 新 東西（_ph.js 原本 的 資料 一個 字 都 不改，這裡 只 「加」）
+ *   ① 基礎版、進階版 字卡（老師：嚴禁 更動 原本 字卡 ➜ 另外 兩頁 basic.html、advanced.html；內容 ＝ 第四十七次 我的 建議，老師 2026-11-12「暫時 完全 依 建議」）
+ *   ② 字首 v、y；雙子音 bl cl fl pl sl、br cr dr fr gr pr tr、sk sm sn sp st sw；三子音 scr spl spr str
+ *   ③ magic e（a_e、i_e、o_e、u_e）、ai ay、ee ea、oa ow；字尾 st sk ft、ng nk（老師：ng ＝ ㄥ、nk ＝ ㄥㄎ）、tch、k、l
+ *      老師 2026-11-12：i_e ＝ ㄞ；u_e 兩種 都 放：/ju/（cute）寫 一ㄨ、/u/（rule）寫 ㄨ
+ *   ④ 部位〔字首＋母音〕、〔母音＋字尾〕的 聲音 碼（例 b-ae、0-ae-d）
+ *   ⑤ 例外 字（真的 英文 字、唸法 跟 規則 不一樣）：真的 唸法 的 音標 ➜ 真的 雙語 注音（PH2.realTiles）
+ */
+(function (root) {
+  'use strict';
+  var PH = root.PH || (typeof require !== 'undefined' ? require('./_ph.js') : null);
+  var CC = PH.CC, VC = PH.VC;
+  /* ── 新 的 子音（字首 v、y；字尾 st sk ft ng nk k）── */
+  var CONS2 = {
+    'v': { zh: 'v', kk: 'v', ipa: 'v' },
+    'y': { zh: '一', kk: 'j', ipa: 'j' },
+    'k_end': { zh: 'ㄎ', sup: '〃', kk: 'k', ipa: 'k' },
+    'st': { zh: ['ㄙ', 'ㄊ'], sup: [null, '〃'], kk: ['s', 't'], ipa: ['s', 't'] },
+    'sk': { zh: ['ㄙ', 'ㄎ'], sup: [null, '〃'], kk: ['s', 'k'], ipa: ['s', 'k'] },
+    'ft': { zh: ['ㄈ', 'ㄊ'], sup: ['〃', '〃'], kk: ['f', 't'], ipa: ['f', 't'] },
+    'ng': { zh: 'ㄥ', kk: 'ŋ', ipa: 'ŋ' },
+    'nk': { zh: ['ㄥ', 'ㄎ'], sup: [null, '〃'], kk: ['ŋ', 'k'], ipa: ['ŋ', 'k'] }
+  };
+  /* 雙子音、三子音 ＝ 一個 一個 子音 的 方塊 接 起來（r 一樣 是 疊 起來 的 ㄖ／ㄨ）*/
+  var BLEND = { bl: ['b', 'l'], cl: ['c_hard', 'l'], fl: ['f', 'l'], pl: ['p', 'l'], sl: ['s', 'l'],
+    br: ['b', 'r'], cr: ['c_hard', 'r'], dr: ['d', 'r'], fr: ['f', 'r'], gr: ['g_hard', 'r'], pr: ['p', 'r'], tr: ['t', 'r'],
+    sk: ['s', 'k'], sm: ['s', 'm'], sn: ['s', 'n'], sp: ['s', 'p'], st: ['s', 't'], sw: ['s', 'w'],
+    scr: ['s', 'c_hard', 'r'], spl: ['s', 'p', 'l'], spr: ['s', 'p', 'r'], str: ['s', 't', 'r'] };
+  var BCODE = { cl: 'kl', cr: 'kr', scr: 'skr' };
+  /* ── 新 的 母音 ── */
+  var VOW2 = {
+    'a_e': { zh: '一', sup: 'ㄝ', kk: 'e', ipa: 'eɪ', bg: 'var(--yellow)', magic: 1 },
+    'i_e': { zh: 'ㄞ', kk: 'aɪ', ipa: 'aɪ', bg: 'var(--yellow)', magic: 1 },
+    'o_e': { zh: 'ㄨ', sup: 'ㄜ', kk: 'o', ipa: 'oʊ', bg: 'var(--yellow)', magic: 1 },
+    'u_e': { zh: '一ㄨ', kk: 'ju', ipa: 'ju', bg: 'var(--yellow)', magic: 1, uu: { zh: 'ㄨ', kk: 'u', ipa: 'u' } },
+    'ay': { zh: '一', sup: 'ㄝ', kk: 'e', ipa: 'eɪ', bg: 'var(--yellow)', team: 1 },
+    'ea': { zh: '一', kk: 'i', ipa: 'i', bg: 'var(--yellow)', team: 1 },
+    'ow': { zh: 'ㄨ', sup: 'ㄜ', kk: 'o', ipa: 'oʊ', bg: 'var(--yellow)', team: 1 }
+  };
+  /* u_e 唸 /u/（不是 /ju/）：前面 最後 一個 子音 是 r l j ch sh t d n s z th（美國 英語 這些 後面 沒有 y 的 聲音：rule、flute、June、tube、dune）*/
+  var UU_AFTER = /(r|l|j|ch|sh|t|d|n|s|z|th|無聲\)|有聲\))$/;
+  function uIsU(I) { return UU_AFTER.test(I); }
+  var VLIST_SHORT = [{ t: 'a' }, { t: 'e' }, { t: 'i' }, { t: 'o' }, { t: 'u' }];
+  var VLIST_ADV = VLIST_SHORT.concat([{ t: 'a_e', key: 'a_e' }, { t: 'i_e', key: 'i_e' }, { t: 'o_e', key: 'o_e' }, { t: 'u_e', key: 'u_e' },
+    { t: 'ai', name: true }, { t: 'ay', key: 'ay' }, { t: 'ee', name: true }, { t: 'ea', key: 'ea' }, { t: 'oa', name: true }, { t: 'ow', key: 'ow' }]);
+  /* ── 兩個 新 的 字卡 頁 ── */
+  var DECKS = {
+    basic: { title: '基礎版', file: 'basic.html',
+      INITIALS: { basic: ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'c', 'k', 'h', 'j', 'qu', 'w', 'r', 's', 'z', 'v', 'y'] },
+      IG: [['basic', '單 子音']],
+      VLIST: VLIST_SHORT,
+      ENDINGS: { g1: ['b', 'd', 'g', 'm', 'n', 'p', 't', 'x'], g2: ['s', 'ck'] },
+      EG: [['g1', '1'], ['g2', '2']], end0: 'd' },
+    advanced: { title: '進階版', file: 'advanced.html',
+      INITIALS: { blend: ['bl', 'cl', 'fl', 'pl', 'sl', 'br', 'cr', 'dr', 'fr', 'gr', 'pr', 'tr', 'sk', 'sm', 'sn', 'sp', 'st', 'sw'], trip: ['scr', 'spl', 'spr', 'str'],
+        basic: ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'c', 'k', 'h', 'j', 'w', 'r', 's', 'v', 'y'] },
+      IG: [['blend', '雙 子音'], ['trip', '三 子音'], ['basic', '單 子音']],
+      VLIST: VLIST_ADV,
+      ENDINGS: { g1: ['無', 'b', 'd', 'g', 'k', 'l', 'm', 'n', 'p', 't', 'x'], g2: ['nd', 'nt', 'mp', 'st', 'sk', 'ft'], g3: ['sh', 'ch', 'th', 'ck', 'tch', 'ng', 'nk'] },
+      EG: [['g1', '1'], ['g2', '2'], ['g3', '3']], end0: 't' }
+  };
+  var MAGIC_END = ['b', 'd', 'k', 'l', 'm', 'n', 'p', 't'];   /* magic e 後面 只 放 一個 子音 的 聲音（g、s、r 加 e 會 變 音：age、rose、care）*/
+  var TEAM_END = ['d', 'k', 'l', 'm', 'n', 'p', 't', 'st', 'ch'];
+  var SHORT_ONLY = ['g', 'x', 'ck', 'tch', 'sh', 'ng', 'nk', 'nd', 'mp', 'sk', 'ft', 'b'];
+  /* 進階版 組合 合不合 英文 拼字 習慣（不合 ＝ 這一張 不 出現）*/
+  function fits(I, V, E) {
+    var t = V.key || V.t, sh = /^[aeiou]$/.test(t);
+    if (t === 'ay' || t === 'ow') return E === '無';
+    if (sh) { if (E === '無' || E === 'k' || E === 'l') return false; if ((E === 'ng' || E === 'nk') && t === 'e') return false; return true; }
+    if (VOW2[t] && VOW2[t].magic) { if (MAGIC_END.indexOf(E) < 0) return false; if (t === 'u_e' && (I === 'qu' || I === 'w' || I === 'y')) return false; return true; }
+    return TEAM_END.indexOf(E) >= 0;   /* ai ee ea oa */
+  }
+  /* ── 碼 ── */
+  function initCode2(I, V) { if (BLEND[I]) return BCODE[I] || I; if (I === 'v' || I === 'y') return I; return PH.initCode(I, V.t.charAt(0) === 'e' || V.t.charAt(0) === 'i' ? 'e' : V.t); }
+  function vowCode2(I, V) { var t = V.key || V.t; if (t === 'a_e' || t === 'ay') return 'ai'; if (t === 'i_e') return 'ii'; if (t === 'o_e' || t === 'ow') return 'oa'; if (t === 'ea') return 'ee'; if (t === 'u_e') return uIsU(I) ? 'uu' : 'yu'; return PH.vowCode(V); }
+  function endCode2(E) { if (E === 'k') return 'k'; if (E === 'ng' || E === 'nk' || E === 'st' || E === 'sk' || E === 'ft') return E; return PH.endCode(E); }
+  function code2(I, V, E) { var e = endCode2(E); return initCode2(I, V) + '-' + vowCode2(I, V) + (e ? '-' + e : ''); }
+  /* 拼字（例 bl＋a_e＋k ＝ blake、b＋ay ＝ bay）*/
+  function spell2(I, V, E) { var t = V.key || V.t, i = I.replace('(無聲)', '').replace('(有聲)', ''), e = E === '無' ? '' : E;
+    if (VOW2[t] && VOW2[t].magic) return i + t.charAt(0) + e + 'e'; return i + t + e; }
+  var IPA_I2 = { v: 'v', y: 'j', bl: 'bl', kl: 'kl', fl: 'fl', pl: 'pl', sl: 'sl', br: 'bɹ', kr: 'kɹ', dr: 'dɹ', fr: 'fɹ', gr: 'ɡɹ', pr: 'pɹ', tr: 'tɹ',
+    sk: 'sk', sm: 'sm', sn: 'sn', sp: 'sp', st: 'st', sw: 'sw', skr: 'skɹ', spl: 'spl', spr: 'spɹ', str: 'stɹ', '0': '' };
+  var IPA_V2 = { ii: 'aɪ', yu: 'juː' }, IPA_E2 = { st: 'st', sk: 'sk', ft: 'ft', ng: 'ŋ', nk: 'ŋk', k: 'k', l: 'l' };
+  function ipa2(c) { var p = c.split('-'), V = Object.assign({ ae: 'æ', eh: 'ɛ', ih: 'ɪ', aa: 'ɑː', uh: 'ʌ', ar: 'ɑːɹ', er: 'ɜː', or: 'ɔːɹ', ai: 'eɪ', ee: 'iː', oa: 'oʊ', uu: 'uː', oo: 'ʊ', ou: 'aʊ' }, IPA_V2),
+    I = Object.assign({ b: 'b', p: 'p', m: 'm', f: 'f', d: 'd', t: 't', n: 'n', l: 'l', k: 'k', h: 'h', s: 's', j: 'dʒ', w: 'w', r: 'ɹ', z: 'z', g: 'ɡ', kw: 'kw', ch: 'tʃ', sh: 'ʃ', th: 'θ', dh: 'ð' }, IPA_I2),
+    E = Object.assign({ b: 'b', p: 'p', m: 'm', f: 'f', d: 'd', t: 't', n: 'n', l: 'l', g: 'ɡ', k: 'k', r: 'ɹ', s: 's', z: 'z', ks: 'ks', mp: 'mp', nd: 'nd', nt: 'nt', ch: 'tʃ', sh: 'ʃ', th: 'θ', shn: 'ʃən', zhn: 'ʒən' }, IPA_E2);
+    return I[p[0]] + 'ˈ' + V[p[1]] + (p[2] ? E[p[2]] : '') + '.'; }
+  /* 部位 的 聲音：〔字首＋母音〕＝ 字首 碼-母音 碼；〔母音＋字尾〕＝ 0-母音 碼-字尾 碼 */
+  function partCode(full, part) { var p = full.split('-'); if (part === 'iv') return p[0] + '-' + p[1]; if (part === 've') return p[2] ? '0-' + p[1] + '-' + p[2] : 's_' + p[1]; return full; }
+  /* 唸起來 像 不雅 字 的（新 的 組合）＝ 永遠 不放 */
+  var BAD2 = ['sl-uh-t', 'pr-ih-k', 'kr-ae-p', 'sp-uh-nk', 'kl-ih-t', 'sm-uh-t', 'gr-oa-p', 'sp-ih-k', 'sn-ae-ch', 'bl-oa', 'sl-ae-g', 'tr-ae-mp', 'st-ih-ft',
+    'sk-uh-nk', 'sh-ih-t', '0-ae-s', 'k-uh-nt', 'f-ae-g', 'sl-oa-b', 'sk-ae-nk', 'kr-uh-k', 'b-uh-t', 'tw-ae-t', 'd-ih-k', 'p-ih-s', 'k-ae-nk', 'h-oa', 'p-ee', 'p-uu', 'p-oa-n', 'p-ih-nk',
+    'ch-ih-nk', 'g-uu-k', 'k-oa-k', 'j-ih-z', 'sp-uu-ch', 'kr-ae-k', 'st-ae-nk', 'sk-ae-nk', 'gr-ih-ng', 'b-ae-ng', 'sh-ae-g', 'n-ih-g', 'f-ae-nk', 'j-ae-p', 'v-ae-j', 'f-uh-ks', 's-uh-ks', 'f-ae-ks'];
+  function bad2(c) { return PH.BAD.indexOf(c) >= 0 || BAD2.indexOf(c) >= 0; }
+  /* ── 例外 字：CMU 美式 發音 字典 的 音素 ➜ 真的 雙語 注音／KK／IPA（老師 2026-11-12：例外 字 ＝ 唸 真的＋寫 真的 注音＋標 ⚠）──
+     子音 照 字卡 的 寫法（字尾 塞音 右上角 〃、字尾 m n ～、字尾 l ＝ ㄛ、字尾 r ＝ ㄦ），母音：老師 的 母音 表＋i_e ＝ ㄞ；沒有 寫法 的 音（OY、ZH 開頭）＝ 這個 字 不放 */
+  var RC = { B: ['ㄅ', 'b', 'b'], P: ['ㄆ', 'p', 'p'], M: ['ㄇ', 'm', 'm'], F: ['ㄈ', 'f', 'f'], D: ['ㄉ', 'd', 'd'], T: ['ㄊ', 't', 't'], N: ['ㄋ', 'n', 'n'], L: ['ㄌ', 'l', 'l'],
+    K: ['ㄎ', 'k', 'k'], G: ['ㄍ', 'g', 'ɡ'], HH: ['ㄏ', 'h', 'h'], S: ['ㄙ', 's', 's'], Z: ['z', 'z', 'z'], JH: ['ㄓ', 'dʒ', 'dʒ'], CH: ['ㄔ', 'tʃ', 'tʃ'], SH: ['ㄕ', 'ʃ', 'ʃ'],
+    TH: ['θ', 'θ', 'θ'], DH: ['ð', 'ð', 'ð'], W: ['ㄨ', 'w', 'w'], R: [['ㄖ', 'ㄨ'], 'r', 'ɹ'], Y: ['一', 'j', 'j'], V: ['v', 'v', 'v'], NG: ['ㄥ', 'ŋ', 'ŋ'] };
+  var RV = { AE: ['ㄚ', 'ㄝ', 'æ', 'æ'], EH: ['ㄝ', null, 'ɛ', 'ɛ'], IH: ['ㄜ', '一', 'ɪ', 'ɪ'], AA: ['ㄚ', null, 'ɑ', 'ɑ'], AO: ['ㄛ', null, 'ɔ', 'ɔ'], AH: ['ㄜ', null, 'ʌ', 'ʌ'],
+    EY: ['一', 'ㄝ', 'e', 'eɪ'], IY: ['一', null, 'i', 'i'], OW: ['ㄨ', 'ㄜ', 'o', 'oʊ'], UW: ['ㄨ', null, 'u', 'u'], UH: ['ㄛ', 'ㄨ', 'ʊ', 'ʊ'], AW: ['ㄠ', 'ㄝ', 'aʊ', 'aʊ'], AY: ['ㄞ', null, 'aɪ', 'aɪ'], ER: ['ㄜ', null, 'ɝ', 'ɝ'] };
+  var STOPS = { B: 1, P: 1, D: 1, T: 1, G: 1, K: 1, F: 1 };
+  /* ph ＝ 'S EH1 D' ➜ [{t, sup, bg, v, stack, dark}]（mode ＝ zh／kk／ipa）；不能 寫 ＝ null */
+  function realTiles(ph, mode, fin) {   /* 只有 子音 的 一塊（bird 的 b、d）：fin ＝ 在 字 的 最後 ➜ 字尾 寫法 */
+    var P = ph.split(' ').map(function (x) { return x.replace(/\d/g, ''); }), vi = -1, out = [];
+    for (var k = 0; k < P.length; k++) if (RV[P[k]]) { if (vi >= 0) return null; vi = k; }
+    if (vi < 0) vi = fin ? -1 : P.length;
+    for (k = 0; k < P.length; k++) {
+      var x = P[k], last = k === P.length - 1, m = mode === 'zh' ? 0 : mode === 'kk' ? 1 : 2;
+      if (k === vi) { var v = RV[x]; if (!v) return null;
+        if (mode === 'zh') out.push({ t: v[0], sup: v[1], bg: x === 'ER' ? 'var(--yellow)' : VC, dark: x === 'ER', v: 1 });
+        else out.push({ t: mode === 'kk' ? v[2] : v[3], bg: x === 'ER' ? 'var(--yellow)' : VC, dark: x === 'ER', v: 1 });
+        if (x === 'ER' && mode === 'zh') out.push({ t: 'ㄦ', bg: CC });
+        continue; }
+      var c = RC[x]; if (!c) return null;
+      if (k < vi) { if (x === 'R' && mode === 'zh') out.push({ t: c[0], bg: CC, stack: 1 }); else out.push({ t: c[m], bg: CC }); continue; }
+      /* 字尾 */
+      if (mode === 'zh') {
+        if (x === 'L') out.push({ t: 'ㄛ', bg: CC });
+        else if (x === 'R') out.push({ t: 'ㄦ', bg: CC });
+        else out.push({ t: c[0], bg: CC, sup: (x === 'M' || x === 'N') ? '~' : (STOPS[x] && last) ? '〃' : null });
+      } else out.push({ t: c[m], bg: CC });
+    }
+    return out;
+  }
+  /* 真的 唸法 ➜ 音標（給 語音 模型）*/
+  var RI = { B: 'b', P: 'p', M: 'm', F: 'f', D: 'd', T: 't', N: 'n', L: 'l', K: 'k', G: 'ɡ', HH: 'h', S: 's', Z: 'z', JH: 'dʒ', CH: 'tʃ', SH: 'ʃ', TH: 'θ', DH: 'ð', W: 'w', R: 'ɹ', Y: 'j', V: 'v', NG: 'ŋ', ZH: 'ʒ',
+    AE: 'æ', EH: 'ɛ', IH: 'ɪ', AA: 'ɑː', AO: 'ɔː', AH: 'ʌ', EY: 'eɪ', IY: 'iː', OW: 'oʊ', UW: 'uː', UH: 'ʊ', AW: 'aʊ', AY: 'aɪ', ER: 'ɜː', OY: 'ɔɪ' };
+  function realIpa(ph) { var P = ph.split(' '), s = ''; P.forEach(function (x) { var b = x.replace(/\d/g, ''); if (/1/.test(x)) s += 'ˈ'; s += RI[b] || ''; }); return s + '.'; }
+  var PH2 = { CONS2: CONS2, BLEND: BLEND, VOW2: VOW2, VLIST_ADV: VLIST_ADV, DECKS: DECKS, fits: fits, code2: code2, spell2: spell2, ipa2: ipa2, partCode: partCode, bad2: bad2, BAD2: BAD2,
+    uIsU: uIsU, realTiles: realTiles, realIpa: realIpa, initCode2: initCode2, vowCode2: vowCode2, endCode2: endCode2 };
+  if (typeof module !== 'undefined' && module.exports) module.exports = PH2; else root.PH2 = PH2;
+})(this);
+</script>
+<script>window.EXSHOW={"bar|b-ae-r":["B AA1 R",4.94],"been|b-ee-n":["B IH1 N",6.27],"bees|b-ee-s":["B IY1 Z",3.96],"bind|b-ih-nd":["B AY1 N D",3.75],"blind|bl-ih-nd":["B L AY1 N D",4.52],"boom|b-oo-m":["B UW1 M",4.33],"booth|b-oo-th":["B UW1 TH",4.1],"boot|b-oo-t":["B UW1 T",4.19],"boo|b-oo":["B UW1",3.92],"both|b-aa-th":["B OW1 TH",5.79],"bread|br-ee-d":["B R EH1 D",4.5],"break|br-ee-k":["B R EY1 K",5.18],"broad|br-oa-d":["B R AO1 D",4.53],"brow|br-oa":["B R AW1",3.55],"bush|b-uh-sh":["B UH1 SH",4.49],"car|k-ae-r":["K AA1 R",5.45],"chair|ch-ai-r":["CH EH1 R",4.69],"char|ch-ae-r":["CH AA1 R",3.47],"cheer|ch-ee-r":["CH IH1 R",4.06],"chef|ch-eh-f":["SH EH1 F",4.23],"chord|ch-or-d":["K AO1 R D",3.65],"comb|k-aa-m":["K OW1 M",3.52],"come|k-oa-m":["K AH1 M",5.78],"cool|k-oo-l":["K UW1 L",5.15],"coop|k-oo-p":["K UW1 P",3.41],"cow|k-oa":["K AW1",4.14],"dead|d-ee-d":["D EH1 D",5.19],"deer|d-ee-r":["D IH1 R",4.12],"done|d-oa-n":["D AH1 N",5.58],"doom|d-oo-m":["D UW1 M",3.81],"door|d-oo-r":["D AO1 R",5.08],"door|d-uu-r":["D AO1 R",5.08],"dread|dr-ee-d":["D R EH1 D",3.64],"fair|f-ai-r":["F EH1 R",4.99],"far|f-ae-r":["F AA1 R",5.5],"find|f-ih-nd":["F AY1 N D",5.76],"fir|f-ih-r":["F ER1",3.48],"food|f-oo-d":["F UW1 D",5.4],"fool|f-oo-l":["F UW1 L",4.29],"foot|f-uu-t":["F UH1 T",4.87],"for|f-aa-r":["F AO1 R",7.01],"four|f-ou-r":["F AO1 R",5.53],"from|fr-aa-m":["F R AH1 M",6.63],"front|fr-aa-nt":["F R AH1 N T",5.28],"fur|f-uh-r":["F ER1",4.03],"geek|j-ee-k":["G IY1 K",3.61],"get|j-eh-t":["G EH1 T",6.28],"gift|j-ih-ft":["G IH1 F T",4.78],"gig|j-ih-g":["G IH1 G",3.98],"girl|j-er-l":["G ER1 L",5.38],"gone|g-oa-n":["G AO1 N",5.17],"good|g-uu-d":["G UH1 D",6.12],"goo|g-oo":["G UW1",3.41],"great|gr-ee-t":["G R EY1 T",5.88],"grind|gr-ih-nd":["G R AY1 N D",3.94],"hair|h-ai-r":["HH EH1 R",5.08],"head|h-ee-d":["HH EH1 D",5.51],"hers|h-er-s":["HH ER0 Z",3.97],"her|h-eh-r":["HH ER1",6.3],"his|h-ih-s":["HH IH1 Z",6.51],"hood|h-uu-d":["HH UH1 D",4.21],"hoop|h-oo-p":["HH UW1 P",3.41],"host|h-aa-st":["HH OW1 S T",4.77],"jar|j-ae-r":["JH AA1 R",3.93],"kind|k-ih-nd":["K AY1 N D",5.45],"loop|l-oo-p":["L UW1 P",4.29],"loot|l-oo-t":["L UW1 T",3.49],"mind|m-ih-nd":["M AY1 N D",5.41],"monk|m-aa-nk":["M AH1 NG K",3.93],"mood|m-oo-d":["M UW1 D",4.44],"moon|m-oo-n":["M UW1 N",4.7],"moor|m-uu-r":["M UH1 R",3.35],"most|m-aa-st":["M OW1 S T",6],"none|n-oa-n":["N AH1 N",4.93],"noon|n-oo-n":["N UW1 N",4.11],"nor|n-aa-r":["N AO1 R",4.78],"now|n-oa":["N AW1",6.18],"pair|p-ai-r":["P EH1 R",4.72],"pint|p-ih-nt":["P AY1 N T",3.66],"plaid|pl-ai-d":["P L AE1 D",3.33],"pool|p-oo-l":["P UW1 L",4.67],"poor|p-oo-r":["P UW1 R",5.09],"post|p-aa-st":["P OW1 S T",5.43],"pour|p-ou-r":["P AO1 R",4.1],"pow|p-oa":["P AW1",3.44],"push|p-uh-sh":["P UH1 SH",4.82],"put|p-uh-t":["P UH1 T",5.66],"quad|kw-ae-d":["K W AA1 D",3.7],"roar|r-oa-r":["R AO1 R",3.7],"room|r-oo-m":["R UW1 M",5.39],"root|r-oo-t":["R UW1 T",4.41],"said|s-ai-d":["S EH1 D",6.01],"she|sh-eh":["SH IY1",6.26],"shoot|sh-oo-t":["SH UW1 T",4.73],"sir|s-ih-r":["S ER1",5.06],"soar|s-oa-r":["S AO1 R",3.39],"some|s-oa-m":["S AH1 M",6.2],"son|s-aa-n":["S AH1 N",5.28],"soon|s-oo-n":["S UW1 N",5.32],"soul|s-ou-l":["S OW1 L",4.81],"soup|s-ou-p":["S UW1 P",4.15],"spread|spr-ee-d":["S P R EH1 D",4.81],"steak|st-ee-k":["S T EY1 K",3.97],"swamp|sw-ae-mp":["S W AA1 M P",3.84],"swan|sw-ae-n":["S W AA1 N",3.84],"swap|sw-ae-p":["S W AA1 P",3.94],"swat|sw-ae-t":["S W AA1 T",3.46],"sweat|sw-ee-t":["S W EH1 T",4.14],"than|th-ae-n":["DH AE1 N",6.13],"that|th-ae-t":["DH AE1 T",7.01],"them|th-eh-m":["DH EH1 M",6.19],"then|th-eh-n":["DH EH1 N",6.07],"the|dh-eh":["DH AH0",7.73],"the|th-eh":["DH AH0",7.73],"thick|dh-ih-k":["TH IH1 K",4.46],"thin|dh-ih-n":["TH IH1 N",4.47],"third|dh-er-d":["TH ER1 D",5.32],"this|th-ih-s":["DH IH1 S",6.82],"thorn|dh-or-n":["TH AO1 R N",3.48],"thumb|dh-uh-m":["TH AH1 M",4.01],"thus|th-uh-s":["DH AH1 S",4.91],"tomb|t-aa-m":["T UW1 M",3.89],"ton|t-aa-n":["T AH1 N",4.29],"tool|t-oo-l":["T UW1 L",4.56],"tooth|t-oo-th":["T UW1 TH",4.08],"too|t-oo":["T UW1",5.95],"touch|t-ou-ch":["T AH1 CH",4.91],"tour|t-ou-r":["T UH1 R",4.99],"tread|tr-ee-d":["T R EH1 D",3.52],"truth|tr-uh-th":["T R UW1 TH",5.05],"vow|v-oa":["V AW1",3.56],"wand|w-ae-nd":["W AA1 N D",3.47],"want|w-ae-nt":["W AA1 N T",6.04],"ward|w-ar-d":["W AO1 R D",4.37],"warm|w-ar-m":["W AO1 R M",4.71],"warn|w-ar-n":["W AO1 R N",4.02],"warp|w-ar-p":["W AO1 R P",3.63],"war|w-ae-r":["W AO1 R",5.46],"war|w-ar":["W AO1 R",5.46],"wash|w-ae-sh":["W AA1 SH",4.46],"was|w-ae-s":["W AA1 Z",6.82],"watch|w-ae-ch":["W AA1 CH",5.34],"what|w-ae-t":["W AH1 T",6.38],"who|w-aa":["HH UW1",6.34],"wood|w-uu-d":["W UH1 D",4.78],"wool|w-uu-l":["W UH1 L",3.91],"woo|w-oo":["W UW1",3.87],"word|w-or-d":["W ER1 D",5.26],"worm|w-or-m":["W ER1 M",3.77],"worth|w-or-th":["W ER1 TH",5.16],"wow|w-oa":["W AW1",4.96],"zoom|z-oo-m":["Z UW1 M",3.83],"zoo|z-oo":["Z UW1",4.14]};window.EXC2={"bach|b-ae-ch":"B AA1 K","bes|b-eh-s":"B IY1 Z","blech|bl-eh-ch":"B L EH1 K","bloch|bl-aa-ch":"B L AA1 K","blotch|bl-aa-ch":"B L AA1 T CH","blum|bl-uh-m":"B L UW1 M","bluth|bl-uh-th":"B L UW1 TH","boch|b-aa-ch":"B AA1 K","breast|br-ee-st":"B R EH1 S T","brut|br-uh-t":"B R UW1 T","butch|b-uh-ch":"B UH1 CH","buth|b-uh-th":"B UW1 TH","cech|s-eh-ch":"S EH1 K","cit|s-ih-t":"S IY2 AY2 T IY1","croat|kr-oa-t":"K R OW1 AA2 T","dech|d-eh-ch":"D EH1 K","dow|d-oa":"D AW1","faist|f-ai-st":"F AA1 IH0 S T","feb|f-eh-b":"F EH1 B Y AH0 W EH2 R IY0","fread|fr-ee-d":"F R EH1 D","frech|fr-eh-ch":"F R EH1 K","freest|fr-ee-st":"F R IY1 IH0 S T","fruth|fr-uh-th":"F R UW1 TH","fuke|f-yu-k":"F UW1 K","ged|j-eh-d":"G EH1 D","gib|j-ih-b":"G IH1 B","gide|j-ii-d":"ZH IY1 D","gile|j-ii-l":"G AY1 L","git|j-ih-t":"G IH1 T","gow|g-oa":"G AW1","grech|gr-eh-ch":"G R EH1 K","groch|gr-aa-ch":"G R AA1 K","guth|g-uh-th":"G UW1 TH","haist|h-ai-st":"HH AA1 IH0 S T","has|h-ae-s":"HH AE1 Z","hind|h-ih-nd":"HH AY1 N D","hoch|h-aa-ch":"HH AA1 K","huth|h-uh-th":"HH UW1 TH","jech|j-eh-ch":"JH EH1 K","jos|j-aa-s":"JH OW1 Z","jung|j-uh-ng":"Y UH1 NG","kobe|k-oa-b":"K OW1 B EY0","kush|k-uh-sh":"K UH1 SH","lait|l-ai-t":"L EY1","las|l-ae-s":"L AA1 S","lech|l-eh-ch":"L EH1 K","loch|l-aa-ch":"L AA1 K","luth|l-uh-th":"L UW1 TH","mach|m-ae-ch":"M AA1 K","mam|m-ae-m":"M AA1 M","mas|m-ae-s":"M AA1 Z","mech|m-eh-ch":"M EH1 K","moch|m-aa-ch":"M AA1 K","muth|m-uh-th":"M UW1 TH","naim|n-ai-m":"N AY1 IH0 M","nike|n-ii-k":"N AY1 K IY0","nute|n-uu-t":"N Y UW1 T","pas|p-ae-s":"P AA1 Z","pech|p-eh-ch":"P EH1 K","ploch|pl-aa-ch":"P L AA1 K","plow|pl-oa":"P L AW1","pluth|pl-uh-th":"P L UW1 TH","poch|p-aa-ch":"P AA1 K","prix|pr-ih-ks":"P R IY1","proch|pr-aa-ch":"P R AA1 K","prow|pr-oa":"P R AW1","puth|p-uh-th":"P UW1 TH","quam|kw-ae-m":"K W AA1 M","quan|kw-ae-n":"K W AO1 N","rech|r-eh-ch":"R EH1 K","res|r-eh-s":"R EY1 Z","rind|r-ih-nd":"R AY1 N D","roch|r-aa-ch":"R AA1 K","ruth|r-uh-th":"R UW1 TH","sean|s-ee-n":"SH AO1 N","skow|sk-oa":"S K AW1","sloth|sl-aa-th":"S L OW1 TH","smosh|sm-aa-sh":"S M UH1 SH","sos|s-aa-s":"EH2 OW2 EH1 S","sprow|spr-oa":"S P R AW1","stead|st-ee-d":"S T EH1 D","stech|st-eh-ch":"S T EH1 K","swab|sw-ae-b":"S W AA1 B","swatch|sw-ae-ch":"S W AA1 CH","swath|sw-ae-th":"S W AA1 TH","tech|t-eh-ch":"T EH1 K","tis|t-ih-s":"T IH1 Z","tush|t-uh-sh":"T UH1 SH","vip|v-ih-p":"V IY2 AY2 P IY1","wach|w-ae-ch":"W AO1 CH","wad|w-ae-d":"W AA1 D","waft|w-ae-ft":"W AA1 F T","wank|w-ae-nk":"W AA1 NG K","wan|w-ae-n":"W AA1 N","wat|w-ae-t":"W AO1 T","wont|w-aa-nt":"W OW1 N T","yost|y-aa-st":"Y OW1 S T","yow|y-oa":"Y AW1"};window.DECK={"id":"advanced","adv":true,"title":"進階版","file":"advanced.html","INITIALS":{"blend":["bl","cl","fl","pl","sl","br","cr","dr","fr","gr","pr","tr","sk","sm","sn","sp","st","sw"],"trip":["scr","spl","spr","str"],"basic":["b","p","m","f","d","t","n","l","g","c","k","h","j","w","r","s","v","y"]},"IG":[["blend","雙 子音"],["trip","三 子音"],["basic","單 子音"]],"VLIST":[{"t":"a"},{"t":"e"},{"t":"i"},{"t":"o"},{"t":"u"},{"t":"a_e","key":"a_e"},{"t":"i_e","key":"i_e"},{"t":"o_e","key":"o_e"},{"t":"u_e","key":"u_e"},{"t":"ai","name":true},{"t":"ay","key":"ay"},{"t":"ee","name":true},{"t":"ea","key":"ea"},{"t":"oa","name":true},{"t":"ow","key":"ow"}],"ENDINGS":{"g1":["無","b","d","g","k","l","m","n","p","t","x"],"g2":["nd","nt","mp","st","sk","ft"],"g3":["sh","ch","th","ck","tch","ng","nk"]},"EG":[["g1","1"],["g2","2"],["g3","3"]],"end0":"t"};</script>
+<script>
+"use strict";
+/* 2026-11-12 第四十七次：發音 一律 用 預先 做好 的 音檔 au/<碼>.mp3（照 字卡 下面 的 雙語 注音 做；PH.code）。
+   原本 的 瀏覽器 語音 拿掉：它 看到 Ced 會 唸 C-E-D、看到 ward／good 會 唸 真的 字 的 唸法。
+   唸起來 像 不雅 字（PH.BAD）＝ 這一張 不放（翻頁 自動 跳過）。
+   2026-11-12 第四十八次（老師）：
+   ① 例外 字（said、come、good、word…，CMU 字典＋常見 程度 挑 出來 的 EXSHOW）放回 字卡：唸 真的（au/x_<字>.mp3）＋下面 寫 真的 雙語 注音／KK／IPA＋左上角「⚠ 例外」；不 常見 的（人名、罕見 字）照舊 不放
+   ② 部位：全部｜全無（只 聽）｜字首｜母音｜字尾｜字首：無｜母音：無｜字尾：無｜字首＋母音（只 看到 ba、唸 ba）｜母音＋字尾（只 看到 ad、唸 ad）
+   ③ 同 一個 樣板 做 基礎版、進階版（window.DECK；原本 的 index.html 沒有 DECK ＝ 原本 的 內容 一張 都 沒 變） */
+const {CONS,VOW,RVOW,TRIPLE,SOFT,VC,CC}=PH;
+const DK=window.DECK||null, EXSHOW=window.EXSHOW||{}, EXC2=window.EXC2||{};
+const INITIALS=DK?DK.INITIALS:PH.INITIALS, ENDINGS=DK?DK.ENDINGS:PH.ENDINGS, VLIST=DK?DK.VLIST:PH.VLIST;
+const CONS2=PH2.CONS2, VOW2=PH2.VOW2;
+const cCode =(I,V,E)=>DK?PH2.code2(I,V,E):PH.code(I,V,E);
+const cSpell=(I,V,E)=>DK?PH2.spell2(I,V,E):PH.spell(I,V,E);
+const exKey =(I,V,E)=>cSpell(I,V,E).toLowerCase()+'|'+cCode(I,V,E);
+function cSkip(I,V,E){
+  if(EXSHOW[exKey(I,V,E)])return false;
+  if(!DK)return PH.skip(I,V,E);
+  if(DK.adv&&!PH2.fits(I,V,E))return true;
+  return PH2.bad2(cCode(I,V,E))||!!EXC2[exKey(I,V,E)]||!!PH.EXC[exKey(I,V,E)];
+}
+function vowLetterBg(v){
+  if(v.name)return 'var(--yellow)';
+  if(VOW2[v.key])return VOW2[v.key].bg;
+  if(v.key==='oo_long')return 'var(--red)';
+  if(v.key==='oo_short')return 'var(--amber)';
+  if(RVOW[v.t])return RVOW[v.t].bg;
+  return VC;
+}
+let mode='zh', part='all', initGrp=DK?DK.IG[0][0]:'basic', endGrp='g1', curEnd=DK?DK.end0:'d';
+let deck=[], idx=0, timer=null, speed=2600, rate=0.95;
+function buildDeck(keep){
+  const k = keep&&deck.length ? deck[idx].v+'|'+deck[idx].i : null, kv=keep&&deck.length?deck[idx].v:-1;
+  deck=[];
+  VLIST.forEach((v,vi)=>INITIALS[initGrp].forEach(i=>{if(!cSkip(i,v,curEnd))deck.push({v:vi,i:i})}));
+  if(k){let at=deck.findIndex(c=>c.v+'|'+c.i===k);if(at<0)at=deck.findIndex(c=>c.v===kv);idx=at>=0?at:0;}else idx=0;
+}
+const curVow =()=>VLIST[deck[idx].v];
+const curInit=()=>deck[idx].i;
+const effEnd =()=>PH.effEnd(curVow(),curEnd);
+const curEx  =()=>deck.length?EXSHOW[exKey(curInit(),curVow(),curEnd)]:null;
+
+/* ===================== 發音（音檔）===================== */
+let curAudio=null;
+function stopSound(){if(curAudio){curAudio.pause();curAudio=null;}}
+/* 這一張 現在 要 唸 的 檔：部位〔字首＋母音〕〔母音＋字尾〕＝ 只 唸 那 兩個 音；例外 字 ＝ 真的 唸法 */
+function curSrc(){
+  const c=cCode(curInit(),curVow(),curEnd);
+  if(part==='iv'||part==='ve'){const pc=PH2.partCode(c,part);return PH2.bad2(pc)?'':'au/'+pc+'.mp3';}
+  const ex=curEx();if(ex)return 'au/x_'+cSpell(curInit(),curVow(),curEnd).toLowerCase()+'.mp3';
+  return 'au/'+c+'.mp3';
+}
+function playCur(){
+  const src=curSrc();
+  stopSound();if(!src)return;
+  const a=new Audio(src);curAudio=a;a.playbackRate=rate;try{a.preservesPitch=true;a.webkitPreservesPitch=true}catch(e){}
+  a.play().catch(()=>{});
+}
+
+/* ===================== 繪製 ===================== */
+function el(cls,txt){const d=document.createElement('div');d.className=cls;if(txt!=null)d.textContent=txt;return d;}
+function tile(txt,bg,opt){
+  opt=opt||{};
+  const d=el('tile '+(mode==='zh'?'zh':'ph')+(opt.dark?' dark':'')+(opt.stack?' stack':''));
+  d.style.background=bg;
+  if(Array.isArray(txt))txt.forEach(t=>{const s=document.createElement('span');s.textContent=t;d.appendChild(s);});
+  else d.textContent=txt;
+  if(opt.sup){const s=document.createElement('span');s.className='sup';s.textContent=opt.sup;d.appendChild(s);}
+  return d;
+}
+function txtSpan(t,color,bg){
+  const s=document.createElement('span');s.textContent=t;
+  if(color)s.style.color=color;
+  if(bg){s.className='nm';s.style.background=bg;}
+  return s;
+}
+function phon(e,isVowel,bg,dark){
+  if(mode==='none')return[];
+  const val = mode==='zh' ? e.zh : (mode==='kk'?e.kk:e.ipa);
+  if(val===undefined||val===null||val==='')return[];
+  const col = isVowel ? bg : CC;
+  const sup = (mode==='zh') ? e.sup : null;
+  if(mode==='zh'&&e.stack)return[tile(val,col,{stack:true,dark:dark})];
+  if(Array.isArray(val))
+    return val.map((t,i)=>tile(t,col,{sup:Array.isArray(sup)?(sup[i]||null):(i===0?sup:null),dark:dark}));
+  return[tile(val,col,{sup:sup,dark:dark})];
+}
+let EXNOW=null;
+function pushUnit(g,glyphNodes,phonNodes,hide){
+  const c1=el('cell');const L=el('letter');glyphNodes.forEach(n=>L.appendChild(n));c1.appendChild(L);
+  const c2=el('cell');if(!EXNOW)(phonNodes||[]).forEach(n=>c2.appendChild(n));
+  if(hide){c1.style.visibility='hidden';c2.style.visibility='hidden';}
+  g.appendChild(c1);g.appendChild(c2);
+}
+function build(){
+  const g=document.getElementById('grid');g.innerHTML='';
+  const card=document.getElementById('card');card.querySelectorAll('.xb,.real,.hear').forEach(x=>x.remove());
+  const V=curVow(), I=curInit(), vbg=vowLetterBg(V);
+  EXNOW=(part==='iv'||part==='ve')?null:curEx();
+  /* 部位：藏起來（位置 留著）、拿掉（不畫）*/
+  const hI=['vowel','ending','none','noI'].includes(part);
+  const hV=['initial','ending','none','noV'].includes(part);
+  const hE=['initial','vowel','none','noE'].includes(part);
+  const rI=part==='ve', rE=part==='iv';
+  if(!rI){
+    let key=I;
+    if(I==='c'||I==='g')key=I+'_'+(DK?(PH2.initCode2(I,V)==='s'||PH2.initCode2(I,V)==='j'?'soft':'hard'):(SOFT.includes(V.t)?'soft':'hard'));
+    const e=PH2.BLEND[I]?null:(CONS[key]||CONS2[I]||CONS[I]);
+    if(PH2.BLEND[I]){
+      let nodes=[];PH2.BLEND[I].forEach(c=>{nodes=nodes.concat(phon(CONS[c],false));});
+      pushUnit(g,I.split('').map(c=>txtSpan(c,'#fff')),nodes,hI);
+    } else if(e){
+      if(I==='wh'){
+        pushUnit(g,[txtSpan('w','#fff')],phon(e,false),hI);
+        pushUnit(g,[txtSpan('h','var(--silent)')],[],hI);
+      } else {
+        let glyphs;
+        if(I==='th(無聲)'||I==='th(有聲)')glyphs=[txtSpan('t','#fff'),txtSpan('h','#fff')];
+        else if(['qu','ch','sh','ph'].includes(I))glyphs=I.split('').map(c=>txtSpan(c,'#fff'));
+        else glyphs=[txtSpan(I,'#fff')];
+        pushUnit(g,glyphs,phon(e,false),hI);
+      }
+    }
+  }
+  const t=V.key||V.t, v2=VOW2[t];
+  {
+    if(v2&&v2.magic){
+      const e=(t==='u_e'&&PH2.uIsU(I))?Object.assign({},v2,v2.uu):v2;
+      pushUnit(g,[txtSpan(t.charAt(0),'#000',v2.bg)],phon(e,true,v2.bg),hV);
+    } else if(v2&&v2.team){
+      pushUnit(g,[txtSpan(t[0],'#000',v2.bg)],phon(v2,true,v2.bg),hV);
+      pushUnit(g,[txtSpan(t[1],'var(--silent)')],[],hV);
+    } else if(RVOW[V.t]){
+      const r=RVOW[V.t], base=V.t.slice(0,-1);
+      let vNodes=[];
+      if(mode==='zh')      vNodes=[tile(r.zh,r.bg,{sup:r.sup,dark:r.dark})];
+      else if(mode!=='none'){const v=(mode==='kk')?r.vkk:r.vipa;if(v)vNodes=[tile(v,r.bg,{dark:r.dark})];}
+      pushUnit(g,[txtSpan(base,'#000',r.bg)],vNodes,hV);
+      let rNodes=[];
+      if(mode==='zh')      rNodes=[tile('ㄦ',CC)];
+      else if(mode!=='none'){const rv=(mode==='kk')?r.rkk:r.ripa;if(rv)rNodes=[tile(rv,CC)];}
+      pushUnit(g,[txtSpan('r','#fff')],rNodes,hV);
+    } else if(V.name){
+      const e=VOW[V.t];
+      pushUnit(g,[txtSpan(V.t[0],'#000',vbg)],phon(e,true,e.bg),hV);
+      pushUnit(g,[txtSpan(V.t[1],'var(--silent)')],[],hV);
+    } else {
+      const e=VOW[V.key||V.t];
+      pushUnit(g,[txtSpan(V.t,'#000',vbg)],phon(e,true,e.bg,e.dark),hV);
+    }
+  }
+  const E=effEnd();
+  if(E!=='無'&&!rE){
+    if(E==='ck'){
+      pushUnit(g,[txtSpan('c','var(--silent)')],[],hE);
+      pushUnit(g,[txtSpan('k','#fff')],phon(CONS['ck'],false),hE);
+    } else if(E==='mb'){
+      pushUnit(g,[txtSpan('m','#fff')],phon(CONS['mb'],false),hE);
+      pushUnit(g,[txtSpan('b','var(--silent)')],[],hE);
+    } else if(E==='tch'){
+      pushUnit(g,[txtSpan('t','var(--silent)')],[],hE);
+      pushUnit(g,[txtSpan('c','#fff'),txtSpan('h','#fff')],phon(CONS['tch'],false),hE);
+    } else if(['tion','sion','ssion'].includes(E)){
+      const glyphs=E.split('').map(ch=>ch==='i'?txtSpan(ch,'var(--silent)'):ch==='o'?txtSpan(ch,'var(--amber)'):txtSpan(ch,'#fff'));
+      let nodes=[];
+      if(E==='sion')nodes=phon(CONS['sion'],false);
+      else if(mode!=='none'){
+        const parts=(mode==='zh')?TRIPLE.zh:(mode==='kk'?TRIPLE.kk:TRIPLE.ipa);
+        nodes=parts.map(b=>tile(b.t, b.v?VC:CC, {sup:b.sup}));
+      }
+      pushUnit(g,glyphs,nodes,hE);
+    } else {
+      const key = E==='l'?'l_end' : E==='d'?'d_end' : E==='m'?'m_end' : E==='n'?'n_end' : E==='r'?'r_end'
+                : E==='g'?'g_end' : E==='p'?'p_end' : E==='f'?'f_end' : E==='t'?'t_end' : E==='th'?'th(無聲)' : E;
+      const e=(DK&&E==='k')?CONS2.k_end:(CONS[key]||CONS2[key]);
+      if(e)pushUnit(g,E.split('').map(c=>txtSpan(c,'#fff')),phon(e,false),hE);
+    }
+    if(v2&&v2.magic)pushUnit(g,[txtSpan('e','var(--silent)')],[],hE);   /* magic e 最後 的 e 不 唸（灰色）*/
+  }
+  /* 例外 字：⚠＋真的 雙語 注音／KK／IPA（一排，放在 字母 下面）*/
+  if(EXNOW){
+    const b=el('xb','⚠ 例外：不照 規則');card.appendChild(b);
+    if(mode!=='none'){const rt=PH2.realTiles(EXNOW[0],mode)||[];const r=el('real');r.appendChild(el('rl','真的 唸法'));
+      rt.forEach(x=>r.appendChild(tile(x.t,x.bg,{sup:x.sup,stack:x.stack,dark:x.dark})));card.appendChild(r);}
+  }
+  if(part==='none')card.appendChild(el('hear','🎧 聽 聲音，猜 猜 看'));
+  document.getElementById('counter').textContent=(idx+1)+' / '+deck.length;
+  document.getElementById('prev').disabled=idx<=0;
+  document.getElementById('next').disabled=idx>=deck.length-1;
+  drawChips();drawVowels();
+}
+function go(n,sound){idx=Math.max(0,Math.min(deck.length-1,n));build();if(sound!==false)playCur();}
+function pauseAuto(){
+  if(timer){clearInterval(timer);timer=null;}
+  stopSound();
+  const b=document.getElementById('play');
+  b.classList.remove('on');b.textContent='▶ 自動播放';b.title='自動慢速播放';
+}
+function startAuto(){
+  const b=document.getElementById('play');
+  b.classList.add('on');b.textContent='⏸ 暫停';b.title='暫停（保留目前頁數）';
+  playCur();
+  timer=setInterval(()=>{if(idx>=deck.length-1){pauseAuto();return;}go(idx+1);},speed);
+}
+const isPlaying=()=>timer!==null;
+document.getElementById('play').onclick=()=>{isPlaying()?pauseAuto():startAuto();};
+document.getElementById('prev').onclick=()=>{pauseAuto();go(idx-1);};
+document.getElementById('next').onclick=()=>{pauseAuto();go(idx+1);};
+document.getElementById('card').onclick=()=>{isPlaying()?pauseAuto():playCur();};
+document.addEventListener('keydown',e=>{
+  if(e.code==='ArrowLeft'){e.preventDefault();pauseAuto();go(idx-1);}
+  else if(e.code==='ArrowRight'){e.preventDefault();pauseAuto();go(idx+1);}
+  else if(e.code==='Space'){e.preventDefault();isPlaying()?pauseAuto():playCur();}
+});
+function mkBtn(label,on,en,fn){const b=document.createElement('button');b.className='btn'+(en?' en':'')+(on?' on':'');b.textContent=label;b.onclick=fn;return b;}
+const iLab=x=>x.replace('(無聲)','(無聲)');
+function drawChips(){
+  const I=curInit();
+  const ic=document.getElementById('initChips');ic.innerHTML='';
+  INITIALS[initGrp].forEach(x=>ic.appendChild(mkBtn(iLab(x),x===I,true,()=>{
+    pauseAuto();
+    const at=deck.findIndex(c=>c.v===deck[idx].v&&c.i===x);
+    go(at>=0?at:idx);
+  })));
+  const ec=document.getElementById('endChips');ec.innerHTML='';
+  ENDINGS[endGrp].forEach(x=>ec.appendChild(mkBtn(x,x===curEnd,true,()=>{pauseAuto();curEnd=x;buildDeck(true);build();playCur();})));
+}
+function drawVowels(){
+  const V=curVow();
+  const c=document.getElementById('vowels');c.innerHTML='';
+  VLIST.forEach((v,vi)=>{
+    const label=v.mark?v.t+' '+v.mark:v.t;
+    const has=deck.some(c2=>c2.v===vi);
+    const b=mkBtn(label,v===V,true,()=>{pauseAuto();const at=deck.findIndex(c2=>c2.v===vi);go(at>=0?at:idx);});
+    if(!has)b.style.opacity='.35';
+    c.appendChild(b);
+  });
+}
+function seg(id,init,fn){
+  const box=document.getElementById(id);
+  [...box.children].forEach(b=>{if(b.dataset.v===init)b.classList.add('on');});
+  box.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;[...box.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');fn(b.dataset.v);});
+}
+/* 基礎版、進階版：字首、字尾 的 分組 按鈕 換成 這一副 的 */
+if(DK){
+  document.getElementById('segInit').innerHTML=DK.IG.map(x=>'<button class="btn" data-v="'+x[0]+'">'+x[1]+'</button>').join('');
+  document.getElementById('segEnd').innerHTML=DK.EG.map(x=>'<button class="btn" data-v="'+x[0]+'">'+x[1]+'</button>').join('');
+  document.title='Phonics Master '+DK.title;
+}
+document.querySelectorAll('#nav a.dk').forEach(a=>{if(a.dataset.dk===(DK?DK.id:''))a.classList.add('cur');});
+seg('segMode','zh',v=>{mode=v;build();});
+seg('segPart','all',v=>{part=v;build();playCur();});
+seg('segInit',initGrp,v=>{pauseAuto();initGrp=v;buildDeck(true);build();});
+seg('segEnd','g1',v=>{pauseAuto();endGrp=v;if(!ENDINGS[v].includes(curEnd))curEnd=ENDINGS[v][0];buildDeck(true);build();});
+seg('segSpeed','2600',v=>{speed=+v;if(isPlaying()){pauseAuto();startAuto();}});
+seg('segRate','0.95',v=>{rate=+v;});
+buildDeck(false);
+build();
+</script>
+</body></html>

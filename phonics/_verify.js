@@ -7,6 +7,8 @@ const path = require('path'), fs = require('fs'), http = require('http');
 const D = __dirname, ROOT = path.join(D, '..'), E = []; let n = 0; const ok = (c, m) => { n++; if (!c) E.push(m); };
 const PH = require('./_ph.js'); Object.assign(PH.EXC, require('./_exc.json'));
 const have = new Set(fs.readdirSync(path.join(D, 'au')).map(f => f.replace(/\.mp3$/, '')));
+/* 第四十八次：遊戲、部位、例外 字、課本 要 的 音檔 都 要 有 */
+require('./_codes2.json').forEach(x => { if (!have.has(x[0])) E.push('沒有 音檔：' + x[0]); }); n++;
 /* ① */
 const { all } = require('./_enum.js'); let cnt = 0;
 all().forEach(x => { const V = PH.VLIST[x[3]]; if (PH.skip(x[2], V, x[4])) return; cnt++; if (!have.has(x[1])) E.push('沒有 音檔：' + x[0] + ' ' + x[1]); }); n++;
@@ -34,51 +36,80 @@ function serve() { return new Promise(r => { const T = { '.html': 'text/html', '
     ok(/\/phonics\/au\/b-ae-d\.mp3$/.test(c1.pl), tag + ' 點 字卡 沒有 播 au/b-ae-d.mp3：' + c1.pl);
     /* 翻 完 一整 副（字尾 d、基礎）：每一張 播 的 檔 都 存在、沒有 例外 字 */
     const deckW = await p.evaluate(() => { const out = []; for (let k = 0; k < deck.length; k++) { idx = k; out.push(PH.spell(curInit(), curVow(), curEnd).toLowerCase() + '|' + PH.code(curInit(), curVow(), curEnd)); } idx = 0; build(); return out; });
-    ok(deckW.every(x => !PH.EXC[x]) && deckW.every(x => have.has(x.split('|')[1])), tag + ' 字卡 副 裡 有 例外 字 或 沒有 音檔');
-    ok(deckW.indexOf('good|g-uu-d') < 0 && deckW.indexOf('said|s-ai-d') < 0, tag + ' good／said 還在 字卡 裡');
+    const XS = require('./_excshow.json');
+    ok(deckW.every(x => !PH.EXC[x] || XS[x]) && deckW.every(x => XS[x] ? have.has('x_' + x.split('|')[0]) : have.has(x.split('|')[1])), tag + ' 字卡 副 裡 有 不 常見 的 例外 字 或 沒有 音檔');
+    ok(deckW.indexOf('said|s-ai-d') >= 0, tag + ' 第四十八次：said（常見 例外 字）應該 放回 字卡');
     /* 換 字尾 x、進階 */
     await p.evaluate(() => { [...document.querySelectorAll('#endChips button')].find(b => b.textContent === 'x').click(); });
     await p.click('[data-v="adv"]'); await p.waitForTimeout(100);
-    const c2 = await p.evaluate(() => ({ n: deck.length, ok: deck.every((c, i) => { idx = i; return !PH.skip(curInit(), curVow(), curEnd); }) }));
+    const c2 = await p.evaluate(() => ({ n: deck.length, ok: deck.every((c, i) => { idx = i; return !cSkip(curInit(), curVow(), curEnd); }) }));
     ok(c2.n > 50 && c2.ok, tag + ' 進階＋字尾 x 的 字卡 副 不對 ' + JSON.stringify(c2));
     const ov = await p.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1); ok(!ov, tag + ' 字卡 頁 左右 超出');
     ok(!errs.length, tag + ' 字卡 頁 JS 錯誤：' + errs.join(' | '));
     await p.close();
-    /* ③ 遊戲 */
-    for (const g of ['slot', 'ufo', 'vault', 'zhu']) {
+    /* ②-2 第四十八次：部位 10 顆、例外 字、按鈕 放大 不 影響 中間 的 字 */
+    const p2 = await ctx.newPage(); const e2 = []; p2.on('pageerror', e => e2.push(e.message)); await p2.goto(U + '/phonics/index.html'); await p2.waitForTimeout(200);
+    const pt = await p2.evaluate(() => { const r = {}; const L = parseFloat(getComputedStyle(document.querySelector('.letter')).fontSize), cr = document.getElementById('card').getBoundingClientRect(), mr = document.querySelector('main').getBoundingClientRect();
+      r.L = L; r.inMain = cr.bottom <= mr.bottom + 1 && cr.top >= mr.top - 1; r.btn = Math.min(...[...document.querySelectorAll('.btn')].map(b => parseFloat(getComputedStyle(b).fontSize))); r.n = document.querySelectorAll('#segPart button').length;
+      const vis = () => [...document.querySelectorAll('#grid .cell')].filter((c, i) => i % 2 === 0).map(c => c.style.visibility !== 'hidden');
+      const clk = v => { document.querySelector('#segPart [data-v="' + v + '"]').click(); return { vis: vis(), src: curSrc(), hear: !!document.querySelector('.hear') }; };
+      r.none = clk('none'); r.noI = clk('noI'); r.noV = clk('noV'); r.noE = clk('noE'); r.iv = clk('iv'); r.ve = clk('ve'); r.all = clk('all'); return r; });
+    ok(pt.n === 10, tag + ' 部位 不是 10 顆 ' + pt.n);
+    ok(pt.L >= 100 && pt.inMain, tag + ' 中間 的 字 變小 或 字卡 被 切掉 ' + JSON.stringify([pt.L, pt.inMain]));
+    ok(pt.btn >= 13, tag + ' 下面 小 按鈕 沒有 放大 ' + pt.btn);
+    ok(pt.none.vis.every(v => !v) && pt.none.hear && /b-ae-d/.test(pt.none.src), tag + ' 全無 不對 ' + JSON.stringify(pt.none));
+    ok(JSON.stringify(pt.noI.vis) === '[false,true,true]' && JSON.stringify(pt.noV.vis) === '[true,false,true]' && JSON.stringify(pt.noE.vis) === '[true,true,false]', tag + ' 字首／母音／字尾：無 不對');
+    ok(pt.iv.vis.length === 2 && /au\/b-ae\.mp3$/.test(pt.iv.src) && pt.ve.vis.length === 2 && /au\/0-ae-d\.mp3$/.test(pt.ve.src), tag + ' 字首＋母音／母音＋字尾 不對 ' + JSON.stringify([pt.iv, pt.ve]));
+    ok(have.has('b-ae') && have.has('0-ae-d'), '部位 的 音檔 沒有 b-ae／0-ae-d');
+    const ex = await p2.evaluate(() => { [...document.querySelectorAll('#vowels button')].find(b => b.textContent === 'ai').click(); [...document.querySelectorAll('#initChips button')].find(b => b.textContent === 's').click();
+      return { xb: !!document.querySelector('.xb'), real: document.querySelectorAll('.real .tile').length, src: curSrc(), tiles: document.querySelectorAll('#grid .tile').length }; });
+    ok(ex.xb && ex.real === 3 && /x_said\.mp3$/.test(ex.src) && ex.tiles === 0, tag + ' said 例外 字 卡 不對 ' + JSON.stringify(ex));
+    ok(!e2.length, tag + ' 字卡 頁（部位）JS 錯誤：' + e2.join(' | ')); await p2.close();
+    /* ②-3 基礎版、進階版、例外 字 頁 */
+    for (const f of ['basic', 'advanced']) { const p3 = await ctx.newPage(); const e3 = []; p3.on('pageerror', e => e3.push(e.message)); await p3.goto(U + '/phonics/' + f + '.html'); await p3.waitForTimeout(200);
+      const r = await p3.evaluate(() => { const out = { n: 0, miss: [], ig: DK.IG.length, ov: document.documentElement.scrollWidth > innerWidth + 1 };
+        for (const ig of DK.IG) { document.querySelector('#segInit [data-v="' + ig[0] + '"]').click(); for (const eg of DK.EG) { document.querySelector('#segEnd [data-v="' + eg[0] + '"]').click();
+          for (const e of ENDINGS[eg[0]]) { [...document.querySelectorAll('#endChips button')].find(b => b.textContent === e).click(); for (let k = 0; k < deck.length; k++) { idx = k; out.n++; out.miss.push(curSrc()); } } } }
+        idx = 0; build(); return out; });
+      const miss = [...new Set(r.miss)].filter(x => !have.has(x.replace(/^au\//, '').replace(/\.mp3$/, '')));
+      ok(r.n > 300 && !miss.length && !r.ov, tag + ' ' + f + ' 字卡 沒有 音檔 或 超出：' + r.n + ' 張，少 ' + miss.length + ' ' + miss.slice(0, 5));
+      if (f === 'advanced') { const m = await p3.evaluate(() => { document.querySelector('#segInit [data-v="blend"]').click(); document.querySelector('#segEnd [data-v="g1"]').click();
+          [...document.querySelectorAll('#endChips button')].find(b => b.textContent === 'k').click(); [...document.querySelectorAll('#vowels button')].find(b => b.textContent === 'a_e').click();
+          [...document.querySelectorAll('#initChips button')].find(b => b.textContent === 'bl').click(); return { t: document.getElementById('grid').textContent, src: curSrc() }; });
+        ok(/blake/.test(m.t.replace(/[^a-z]/g, '')) && /bl-ai-k/.test(m.src), tag + ' 進階版 blake（magic e）不對 ' + JSON.stringify(m)); }
+      ok(!e3.length, tag + ' ' + f + ' JS 錯誤：' + e3.join(' | ')); await p3.close(); }
+    { const p4 = await ctx.newPage(); const e4 = []; p4.on('pageerror', e => e4.push(e.message)); await p4.goto(U + '/phonics/exceptions.html'); await p4.waitForTimeout(200);
+      const r = await p4.evaluate(() => ({ n: document.querySelectorAll('.it').length, t0: [...document.querySelectorAll('.it')].filter(i => !i.querySelector('.tile')).length, a: [...document.querySelectorAll('[data-a^="x_"]')].map(b => b.dataset.a) }));
+      ok(r.n >= 100 && !r.t0 && r.a.every(a => have.has(a)), tag + ' 例外 字 頁 不對 ' + JSON.stringify({ n: r.n, t0: r.t0, miss: r.a.filter(a => !have.has(a)).slice(0, 5) }));
+      ok(!e4.length, tag + ' 例外 字 頁 JS 錯誤 ' + e4.join('|')); await p4.close(); }
+    /* ③ 遊戲：13 種 ✕ 一局 5 題（第 2 題 故意 答錯）＋小學堂＋課本 動畫 */
+    const GS = ['slot', 'ufo', 'vault', 'zhu', 'bal', 'vow', 'end', 'lad', 'pic', 'train', 'bk', 'bkp'];
+    for (const g of GS.concat(['ls', 'br'])) {
       const q = await ctx.newPage(); const er = []; q.on('pageerror', e => er.push(e.message));
-      await q.addInitScript(() => { window.__PHN = 3; window.__PHFAST = 1; window.__PHAUTO = 1; window.__PHWDG = 60; try { localStorage.clear(); } catch (e) {} });
+      await q.addInitScript(() => { window.__PHFAST = 1; window.__PHAUTO = 1; window.__PHWDG = 60; window.__PHBR = []; try { localStorage.clear(); } catch (e) {}
+        Object.defineProperty(window, '__PHWRONG', { get() { return !!(window.PHG && PHG.G && PHG.G.q === 1); } }); });
       await q.goto(U + '/phonics/games.html'); await q.waitForTimeout(200);
-      const lob = await q.evaluate(() => ({ cards: document.querySelectorAll('.gc').length, small: [...document.querySelectorAll('.gc b,.gc small,.lvrow button')].filter(e => parseFloat(getComputedStyle(e).fontSize) < 18).length }));
-      ok(lob.cards === 4 && !lob.small, tag + ' 大廳 不是 4 個 遊戲 或 字 太 小 ' + JSON.stringify(lob));
-      await q.click('[data-go="' + g + '"]');
-      for (let k = 0; k < 3; k++) {
-        const right = k !== 1;
-        if (g === 'slot') { await q.waitForSelector('[data-pk]:not([disabled])', { timeout: 15000 }).catch(() => E.push(tag + ' 拉霸機 沒有 出現 三個 聲音 選項'));
-          const lay = await q.evaluate(() => { const r = [...document.querySelectorAll('.reel,.ch,.zrow .tl')].map(e => e.getBoundingClientRect()); return { out: r.filter(b => b.right > innerWidth + 1 || b.left < -1).length, reels: document.querySelectorAll('.reel').length, z: document.querySelectorAll('.zrow .tl').length, big: parseFloat(getComputedStyle(document.querySelector('.reel b')).fontSize) }; });
-          ok(lay.reels === 3 && lay.z >= 3 && !lay.out && lay.big >= 80, tag + ' 拉霸機 版面 不對 ' + JSON.stringify(lay));
-          await q.evaluate(r => { const btns = [...document.querySelectorAll('#chz [data-pk]')], pl = window.__PLAYED.slice(-3).map(s => s.split('/au/')[1].replace('.mp3', '')), good = pl.indexOf(codeOf(G.w));
-            btns[r ? good : (good + 1) % btns.length].click(); }, right);
-        } else if (g === 'ufo') { await q.waitForSelector('.ufo'); const lay = await q.evaluate(() => { const r = [...document.querySelectorAll('.ufo')].map(e => e.getBoundingClientRect()), s = document.getElementById('sky').getBoundingClientRect(); return { n: r.length, out: r.filter(b => b.right > s.right + 2 || b.left < s.left - 2 || b.bottom > s.bottom + 2 || b.top < s.top - 2).length, fs: parseFloat(getComputedStyle(document.querySelector('.ufo .w')).fontSize) }; });
-          ok(lay.n === 4 && !lay.out && lay.fs >= 40, tag + ' 飛碟 版面 不對 ' + JSON.stringify(lay));
-          await q.evaluate(r => { const u = [...document.querySelectorAll('.ufo')]; const t = u.find(x => x.dataset.w === G.w); (r ? t : u.find(x => x !== t)).click(); }, right);
-        } else if (g === 'vault') { await q.waitForSelector('.dial'); const lay = await q.evaluate(() => { const r = [...document.querySelectorAll('.dial')].map(e => e.getBoundingClientRect()); return { out: r.filter(b => b.right > innerWidth + 1 || b.bottom > innerHeight + 1).length, fs: parseFloat(getComputedStyle(document.querySelector('.dial .face b')).fontSize) }; });
-          ok(!lay.out && lay.fs >= 70, tag + ' 保險箱 版面 不對（超出 畫面 或 字 太 小）' + JSON.stringify(lay));
-          for (let t = 0; t < (right ? 1 : 2); t++) {
-            await q.evaluate(r => { const w = G.w.split(''); [0, 1, 2].forEach(k => { const d = document.getElementById('d' + k); for (let s = 0; s < 6; s++) { if (d.querySelector('.face b').textContent === w[k] || d.classList.contains('okd')) break; d.querySelector('[data-d="1"]').click(); } if (!r && k === 0 && d.querySelector('.face b').textContent === w[0] && !d.classList.contains('okd')) d.querySelector('[data-d="1"]').click(); }); document.getElementById('open').click(); }, right);
-            await q.waitForTimeout(80); }
-        } else { await q.waitForSelector('.opt'); const lay = await q.evaluate(() => ({ n: document.querySelectorAll('.opt').length, out: [...document.querySelectorAll('.opt,.word0')].map(e => e.getBoundingClientRect()).filter(b => b.right > innerWidth + 1).length, diff: new Set([...document.querySelectorAll('.opt')].map(o => o.textContent)).size }));
-          ok(lay.n === 3 && !lay.out && lay.diff === 3, tag + ' 注音 選項 不對（要 3 排、不一樣、不 超出）' + JSON.stringify(lay));
-          await q.evaluate(r => { const T = tiles(G.w).map(x => [].concat(x.t).join('') + (x.sup || '')).join(''); const o = [...document.querySelectorAll('.opt')]; const g0 = o.find(b => [...b.querySelectorAll('.tl')].map(x => x.textContent).join('') === T); (r ? g0 : o.find(b => b !== g0)).click(); }, right);
-        }
-        await q.waitForTimeout(400);
-        if (k < 2) await q.waitForFunction(n => G && G.q === n, k + 1, { timeout: 15000 }).catch(() => E.push(tag + ' ' + g + ' 第 ' + (k + 1) + ' 題 以後 沒有 下一題'));
-      }
-      await q.waitForSelector('.end', { timeout: 15000 }).catch(() => E.push(tag + ' ' + g + ' 沒有 結束 頁'));
-      const en = await q.evaluate(() => ({ t: (document.querySelector('.end .sc') || {}).textContent || '', rv: document.querySelectorAll('.rv .r').length, best: localStorage.getItem('phm_best_' + G.k) }));
-      ok(/答對 2 ／ 3 題/.test(en.t) && en.rv === 1, tag + ' ' + g + ' 結束 頁 不對（要 答對 2／3、答錯 1 個 字）' + JSON.stringify(en));
+      if (g === 'slot') { const lob = await q.evaluate(() => ({ cards: document.querySelectorAll('.gc').length, small: [...document.querySelectorAll('.gc b,.gc small,.lv button,.sec h2')].filter(e => parseFloat(getComputedStyle(e).fontSize) < 17).length, book: document.querySelectorAll('.bkb').length, path: document.querySelectorAll('.pstop').length, ov: document.documentElement.scrollWidth > innerWidth + 1 }));
+        ok(lob.cards === 12 && !lob.small && lob.book === 25 && lob.path === 5 && !lob.ov, tag + ' 大廳 不對（12 個 遊戲、25 個 課本 字、5 課）' + JSON.stringify(lob)); }
+      /* 成績：假 登入（不 連 真的 伺服器）*/
+      await q.evaluate(() => { window.__RECS = []; window.scLive = () => true; window.scQAdd = r => window.__RECS.push(r); try { SCID = '30412'; } catch (e) {} });
+      if (g === 'ls') await q.evaluate(() => PHG.lessonOpen(0)); else if (g === 'br') await q.evaluate(() => PHG.bridgeOpen('kitchen')); else await q.evaluate(g => PHG.start(g), g);
+      /* 每 一題 量 版面 */
+      const lays = [];
+      for (let t = 0; t < 60; t++) { await q.waitForTimeout(120); const L = await q.evaluate(() => { const m = document.querySelector('main'), els = [...document.querySelectorAll('#game *')].filter(e => e.offsetParent && e.children.length === 0 && e.textContent.trim());
+          return { q: PHG.G && PHG.G.q, end: !!document.querySelector('.end'), out: els.filter(e => { const b = e.getBoundingClientRect(); return b.right > innerWidth + 2 || b.left < -2; }).map(e => e.textContent.slice(0, 12)).slice(0, 3),
+            small: els.filter(e => !e.closest('.tmr,.marq,.ctg,.vk small,.tgt small,.dial .cue,.sup') && parseFloat(getComputedStyle(e).fontSize) < 15).map(e => e.textContent.slice(0, 10)).slice(0, 3) }; });
+        lays.push(L); if (L.end || (g === 'br' && t > 8)) break; }
+      const bad = lays.filter(L => L.out.length || L.small.length);
+      ok(!bad.length, tag + ' ' + g + ' 有 字 超出 畫面 或 太 小：' + JSON.stringify(bad[0]));
+      if (g === 'br') { const b = await q.evaluate(() => ({ br: window.__PHBR, chk: document.querySelectorAll('.chk').length, em: !!document.querySelector('.bres .em') }));
+        ok(b.br.indexOf('kitchen') >= 0 && b.chk === 2 && b.em, tag + ' 課本 動畫 kitchen 沒有 演完 ' + JSON.stringify(b)); }
+      else { const en = await q.evaluate(() => ({ t: (document.querySelector('.end .sc') || {}).textContent || '', rk: (document.querySelector('.end .rk') || {}).textContent, rv: document.querySelectorAll('.rv .r').length, rec: window.__RECS.map(r => [r.set, r.m, r.qs.length, r.qs.map(x => x[0]).join(''), r.qs.every(x => x[5] >= 0)]) }));
+        ok(/✅ 4 ／ 5/.test(en.t) && en.rk === 'A' && en.rv === 1, tag + ' ' + g + ' 結束 頁 不對（要 4／5、A、錯題 1 個）' + JSON.stringify(en));
+        ok(en.rec.length === 1 && en.rec[0][0] === 'g3gm_ph-' + g && en.rec[0][1] === 'q' && en.rec[0][2] === 5 && en.rec[0][3] === '10111' && en.rec[0][4], tag + ' ' + g + ' 成績 沒有 送 或 不對 ' + JSON.stringify(en.rec)); }
       const pl = await q.evaluate(() => window.__PLAYED.filter(s => !/\/au\//.test(s) || /undefined/.test(s)));
       ok(!pl.length, tag + ' ' + g + ' 播了 不是 音檔 的 聲音 ' + pl.slice(0, 3));
+      const said = await q.evaluate(() => (window.__PHSAY || []));
       ok(!er.length, tag + ' ' + g + ' JS 錯誤：' + er.join(' | '));
       await q.close();
     }
