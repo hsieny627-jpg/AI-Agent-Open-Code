@@ -215,9 +215,10 @@ Object.keys(BANK).forEach(k => { if (/_fun-/.test(k)) return;   /* 🏰 守城�
     const vv = 'aeiou', alt = w.replace(/[aeiou]/, v => vv[(vv.indexOf(v) + 1) % 5]);   /* 選項 第 2 個 ＝「答錯」（網頁 記 1 ＝ 錯、-1 ＝ 時間 到），寫 一個 只 差 母音 的 字 當 例子 */
     return { k: 'g', kn: '🔤 自然發音', q: (lsn ? '🔊 ' : '👀 ') + w, o: [w, alt + '（答錯）'], h: z, ae: w, ag: [[w, ZH[w] || '']], az: ZH[w] || '', au, al: au, say: lsn ? w : undefined }; };
   const bone = (w, lsn) => { const x = BK.W[w], au = '../phonics/au/bk_' + w.replace(/ /g, '_') + '.mp3'; return { k: 'g', kn: '📗 課本 單字', q: (lsn ? '🔊 ' : '👀 ') + w, o: [w, '（答錯）'], h: x.tip, ae: w, ag: [[w, x.zh]], az: x.zh, au, al: au, say: lsn ? w : undefined }; };
-  const NM = { slot: '🎰 CVC 拉霸機', ufo: '🛸 聽音 打 飛碟', vault: '🔐 聽音 拼字 保險箱', zhu: '🀄 看字 選 音標', bal: '🎈 字首音 氣球', vow: '⚔️ 母音 對決', end: '🎯 尾音 狙擊', lad: '🪜 換 字母 爬 階梯', pic: '🖼️ 看字 找圖', train: '🚂 聲音 火車（拼字）', ls: '🐣 小學堂 小 測驗', bk: '📗 課本 單字 拼塊', bkp: '📘 課本 單字 找圖' };
+  const NM = { slot: '🎰 CVC 拉霸機', ufo: '🛸 聽音 打 飛碟', vault: '🔐 聽音 拼字 保險箱', zhu: '🀄 看字 選 音標', bal: '🎈 字首音 氣球', vow: '⚔️ 母音 對決', end: '🎯 尾音 狙擊', lad: '🪜 換 字母 爬 階梯', pic: '🖼️ 看字 找圖', train: '🚂 聲音 火車（拼字）', ls: '🐣 小學堂 小 測驗', bk: '📗 課本 單字 拼塊', bkp: '📘 課本 單字 找圖', bksp: '🧩 音標 密碼 拼字', c25: '🏁 CVC 單字 25 題 闖關' };
   const READ = { zhu: 1, pic: 1, bkp: 1 };
-  [3, 4].forEach(g => Object.keys(NM).forEach(k => put('g' + g + 'gm_ph-' + k, { name: '🔤 自然發音｜' + NM[k], qs: /^bk/.test(k) ? BWL.map(w => bone(w, !READ[k])) : ITEMS.map(w => one(w, !READ[k])) })));
+  [3, 4].forEach(g => Object.keys(NM).forEach(k => put('g' + g + 'gm_ph-' + k, { name: '🔤 自然發音｜' + NM[k], qs: k === 'c25' ? ITEMS.map(w => one(w, true)).concat(BWL.map(w => bone(w, true))) : /^bk/.test(k) ? BWL.map(w => bone(w, !READ[k])) : ITEMS.map(w => one(w, !READ[k])) })));
+  /* 2026-11-13 第四十九次：🧩 音標 密碼 拼字（bksp）、🏁 CVC 單字 25 題 闖關（c25：第幾題 ＝ ITEMS，課本 字 ＝ ITEMS 長度 ＋ 課本 順序）*/
 })();
 /* 代號一定要是 _calc.js 認得的（以後新的教材登記錯了 build 就失敗） */
 const SC = require('./_calc.js');

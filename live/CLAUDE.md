@@ -4,6 +4,12 @@
 > 根目錄 `AGENTS.md` 第四節同樣適用。
 
 
+## 2026-11-13 第四十九次（先讀這一節）
+| 老師 | 做法 |
+|---|---|
+| 9-(2) 🏁 CVC 單字 25 題 闖關 放 在 現場任務（三年級 和 四年級）| `_build.js` 的 `CRD`、`CRD4` 多 `['c25','🏁 CVC 單字 25 題 闖關']`；`_cr_host.js` `crX()` 多 `c25`（限時＋即時 排行榜，預設 15 分鐘、可 選 8／10／12／15；不 走 ⚡ 快速 模式）；平板 `_stu_rt.js`：set `c25` ＝ 跳到 `../phonics/games.html?live=0班`（g3mid、midterm 頁 也 會 轉 過去）。phonics 那 一頁：登入 ➜ 讀 `rooms/0班/cr` ➜ 自己 開始 25 題 ➜ 每 題 寫 `crp/5碼`（n、ok、s 💯 正確率）➜ 時間 到 `xForce` 答了 幾題 送 幾題（`g年級gm_ph-c25`）。規格 `phonics/CLAUDE.md` 第四十九次 |
+量測：`node live/_verify_cr.js`（108 項，設定 畫面 多 一顆）、`node live/_verify.js`（237 項）、`node phonics/_verify_49.js`（假 資料庫）。不用 重新 部署。
+
 ## 2026-11-12 第四十七次（先讀這一節）
 
 需求檔 第四節 最下面「第四十七次」。量測 **`node live/_verify_47.js`**（32 項）、`live/_verify_cr.js`、`live/_verify.js`。不用 重新 部署。

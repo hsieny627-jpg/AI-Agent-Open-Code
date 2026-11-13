@@ -1,0 +1,33 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第四十九次 新聲音</title>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<!-- 2026-11-13 第四十九次：老師 第 1 點「每一個 字母 的 聲音 都 要 100% 正確」➜ 網站 已經 換 新 的；這一頁 比 第四十八次（v48/）和 現在（../../phonics/au/）。做法 寫在 tools/ph_iso.py、tools/ph_fix49.py -->
+<style>
+body{margin:0;background:#0B1026;color:#fff;font-family:'Microsoft JhengHei','PingFang TC',sans-serif;padding:18px}
+h1{font-size:36px;margin:0 0 6px;color:#FFE07A}p{font-size:24px;line-height:1.6;color:#DCE4FF;margin:4px 0 14px}
+h2{font-size:30px;margin:24px 0 8px}
+table{border-collapse:collapse;width:100%;max-width:1150px}
+td,th{border:1px solid #2A3570;padding:10px;font-size:24px;text-align:center}th{background:#141B3D;color:#FFE07A}
+td.w{font-family:Andika,sans-serif;font-size:42px;font-weight:700}td.t{text-align:left;font-size:22px;color:#DCE4FF}
+button{font-size:26px;font-weight:900;border-radius:14px;padding:10px 20px;cursor:pointer}
+.o{background:#2A2A2A;color:#ccc;border:2px solid #666}.n{background:#062A35;color:#9EF0FF;border:3px solid #22D3EE}
+</style></head><body>
+<h1>🎧 第四十九次 新聲音（網站已經換成新的）</h1>
+<p>請一個一個比：<b>新的對 ＝ 不用做什麼</b>；<b>還是不對 ＝ 告訴我哪一個、聽起來像什麼</b>。</p>
+<h2>① 字首音（老師說舊的、新的都錯）</h2>
+<table id="t1"><tr><th>字母</th><th>老師聽到的問題</th><th>第四十八次</th><th>現在</th></tr></table>
+<h2>② 字尾 m、n</h2>
+<table id="t2"><tr><th>字尾</th><th>老師聽到的問題</th><th>第四十八次</th><th>現在</th></tr></table>
+<h2>③ 單字</h2>
+<table id="t3"><tr><th>單字</th><th>老師說</th><th>第四十八次</th><th>現在</th></tr></table>
+<script>
+const A=new Audio();const P=f=>{A.src=f;A.play().catch(()=>{})};
+const row=(id,w,why,a,b)=>{const r=document.createElement('tr');r.innerHTML='<td class="w">'+w+'</td><td class="t">'+why+'</td><td><button class="o" data-f="v48/'+a+'.mp3">🔊 舊</button></td><td><button class="n" data-f="../../phonics/au/'+b+'.mp3">🔊 新</button></td>';document.getElementById(id).appendChild(r)};
+[['b','像 neh／m ➜ 跳過 閉嘴的嗡嗡聲，只留爆破'],['g','聽辨不出來 ➜ 爆破＋一點點，聲音放大'],['p','像 b ➜ 留下吹氣（ㄆ）'],['t','聽不到 ➜ 留下吹氣（ㄊ）'],['j','像 di ➜ 只留 j 的摩擦聲'],
+ ['m','ㄇㄜ ➜ 只留閉嘴的 mmm'],['n','ㄋㄜ ➜ 只留 n'],['f','ㄈㄜ ➜ 只留吹氣'],['s','ㄙㄜ ➜ 只留嘶聲'],['l','ㄌㄜ ➜ 只留 l'],['h','ㄌㄜ／ㄍㄜ ➜ 只留哈氣'],['w','改成單音 ㄨ'],['z','刪除 ㄜ（喉嚨震動的 z）']]
+ .forEach(x=>row('t1',x[0],x[1],'s_'+x[0],'s_'+x[0]));
+[['m','ㄇㄜ ➜ 閉嘴 mmm','s_em'],['n','ㄋㄜ ➜ 嗯','s_en']].forEach(x=>row('t2',x[0],x[1],x[2],x[2]));
+[['big','像 beg ➜ 用老師說對的 pig 的 ig，接上新的 b（電腦聽寫 3 次都是 big）','b-ih-g'],['pig','舊的對 ➜ 用回舊的','p-ih-g'],['ham','m 稍微拉長一點點（0.18 秒）','h-ae-m'],['cat','保留舊的','k-ae-t'],
+ ['top','字尾 p 難聽辨 ➜ 加上 p 的爆破（電腦聽寫 3 次都是 top）','t-aa-p'],['kitchen','i 像 一 ➜ 挑 i 最像 一ㄜ 的一次','bk_kitchen'],['fish','sh 要像 ㄕ 不是 ㄔ ➜ 挑嘶聲慢慢變大的一次','bk_fish']].forEach(x=>row('t3',x[0],x[1],x[2],x[2]));
+document.addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(b)P(b.dataset.f)});
+</script></body></html>

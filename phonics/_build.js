@@ -31,5 +31,7 @@ fs.writeFileSync(path.join(D, 'exceptions.html'), exHTML.replace('</body>', '<sc
 /* 遊戲 頁：成績（score/_client.js 的 home：登入 畫面＋送 成績；年級 看 登入 的 5 碼）、遊戲 樣子 _games.css、程式 _games.js */
 const CL = require('../score/_client.js'), PSE = require('./_pseudo.json');
 put('_games.html', 'games.html', { '/*__PH__*/': phJS, '/*__PH2__*/': ph2JS, '/*__WORDS__*/': 'var WORDS=' + JSON.stringify(W) + ',CODES=' + JSON.stringify(cvc) + ',BOOK=' + JSON.stringify(BOOK) + ',PSE=' + JSON.stringify(PSE) + ';',
-  '/*__SCORE__*/': CL.home(0, '../', 'school') + '<script>' + require('../score/_dsp.js').js('') + '</script>', '/*__GAMECSS__*/': fs.readFileSync(path.join(D, '_games.css'), 'utf8'), '/*__GAMEJS__*/': fs.readFileSync(path.join(D, '_games.js'), 'utf8') });
+  '/*__SCORE__*/': CL.home(0, '../', 'school') + '<script>' + require('../score/_dsp.js').js('') + '</script>' +
+    /* 第四十九次：〔⚡ 現場任務〕🏁 CVC 單字 25 題 闖關（Firebase 網址、讀寫、時間 到 自動 送）*/
+    '<script src="../live/fb.js"></script><script>' + fs.readFileSync(path.join(D, '..', 'live', '_db.js'), 'utf8') + '</script><script>' + fs.readFileSync(path.join(D, '..', 'live', '_xlive_rt.js'), 'utf8') + '</script>', '/*__GAMECSS__*/': fs.readFileSync(path.join(D, '_games.css'), 'utf8'), '/*__GAMEJS__*/': fs.readFileSync(path.join(D, '_games.js'), 'utf8') });
 console.log('phonics ok：字卡＋基礎版＋進階版＋例外 字', exRows.length, '個（放回 字卡 的 組合', Object.keys(EXSHOW).length, '）＋遊戲；遊戲 單字', W.length, '個；遊戲 用 的 音檔', cvc.length, '個');

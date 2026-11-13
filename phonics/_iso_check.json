@@ -1,0 +1,146 @@
+{
+"p": {
+"ok": true,
+"sec": 0.14,
+"ph": "phhhɑː",
+"spd": 0.8
+},
+"t": {
+"ok": true,
+"sec": 0.14,
+"ph": "thhhɑː",
+"spd": 0.9
+},
+"k": {
+"ok": true,
+"sec": 0.155,
+"ph": "khhhɑː",
+"spd": 0.7
+},
+"ck": {
+"ok": true,
+"sec": 0.16,
+"ph": "khhhɑː",
+"spd": 0.7
+},
+"ch": {
+"ok": true,
+"sec": 0.2,
+"ph": "tʃʃʃɑː",
+"spd": 0.8
+},
+"f": {
+"ok": true,
+"sec": 0.423,
+"ph": "ffffɑː",
+"spd": 0.8
+},
+"s": {
+"ok": true,
+"sec": 0.505,
+"ph": "ssssɑː",
+"spd": 0.6
+},
+"sh": {
+"ok": true,
+"sec": 0.426,
+"ph": "ʃʃʃʃɑː",
+"spd": 0.7
+},
+"th": {
+"ok": true,
+"sec": 0.449,
+"ph": "θθθθɑː",
+"spd": 0.6
+},
+"h": {
+"ok": true,
+"sec": 0.215,
+"ph": "hhhhɑː",
+"spd": 0.6
+},
+"m": {
+"ok": true,
+"sec": 0.426,
+"ph": "mmmɑː",
+"spd": 0.7
+},
+"n": {
+"ok": true,
+"sec": 0.429,
+"ph": "nnnnɑː",
+"spd": 0.8
+},
+"l": {
+"ok": true,
+"sec": 0.424,
+"ph": "lllɑː",
+"spd": 0.6
+},
+"z": {
+"ok": true,
+"sec": 0.454,
+"ph": "zzzɑː",
+"spd": 0.7
+},
+"v": {
+"ok": true,
+"sec": 0.401,
+"ph": "vːːɑː",
+"spd": 0.6
+},
+"dh": {
+"ok": true,
+"sec": 0.38,
+"ph": "ðːːɑː",
+"spd": 0.9
+},
+"em": {
+"ok": true,
+"sec": 0.508,
+"ph": "mmmmɑː",
+"spd": 0.7
+},
+"en": {
+"ok": true,
+"sec": 0.513,
+"ph": "nnnnnɑː",
+"spd": 0.6
+},
+"b": {
+"ok": true,
+"sec": 0.04,
+"ph": "bɑː",
+"spd": 0.9
+},
+"d": {
+"ok": true,
+"sec": 0.04,
+"ph": "də",
+"spd": 0.8
+},
+"g": {
+"ok": true,
+"sec": 0.05,
+"ph": "ɡɑː",
+"spd": 0.6
+},
+"w": {
+"ok": true,
+"sec": 0.26,
+"ph": "uː",
+"spd": 0.8
+},
+"j": {
+"ok": true,
+"sec": 0.16,
+"ph": "dʒɑː",
+"spd": 0.8
+},
+"ng": {
+"ok": true,
+"sec": 0.471,
+"ph": "ŋŋŋŋɑː",
+"spd": 0.6
+}
+}

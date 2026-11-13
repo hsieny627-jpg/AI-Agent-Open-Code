@@ -27,7 +27,7 @@ function serve() { return new Promise(r => { const T = { '.html': 'text/html', '
 (async () => { const [srv, U] = await serve(), br = await chromium.launch();
   for (const vp of [[1024, 768], [1920, 1080]]) { const tag = vp.join('×');
     const ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] } });
-    await ctx.route(/fonts\.googleapis|fonts\.gstatic/, r => r.abort());
+    await ctx.route(/fonts\.googleapis|fonts\.gstatic|firebasedatabase|firebaseio/, r => r.abort());   /* 第四十九次：games.html 帶 了 現場任務，量測 絕對 不 連 真的 Firebase */
     await ctx.addInitScript(() => { window.__PLAYED = []; HTMLMediaElement.prototype.play = function () { const a = this; window.__PLAYED.push(a.src); setTimeout(() => a.onended && a.onended(), 20); return Promise.resolve(); }; });
     /* ② 字卡 */
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message)); await p.goto(U + '/phonics/index.html'); await p.waitForTimeout(300);
@@ -82,15 +82,15 @@ function serve() { return new Promise(r => { const T = { '.html': 'text/html', '
       const r = await p4.evaluate(() => ({ n: document.querySelectorAll('.it').length, t0: [...document.querySelectorAll('.it')].filter(i => !i.querySelector('.tile')).length, a: [...document.querySelectorAll('[data-a^="x_"]')].map(b => b.dataset.a) }));
       ok(r.n >= 100 && !r.t0 && r.a.every(a => have.has(a)), tag + ' 例外 字 頁 不對 ' + JSON.stringify({ n: r.n, t0: r.t0, miss: r.a.filter(a => !have.has(a)).slice(0, 5) }));
       ok(!e4.length, tag + ' 例外 字 頁 JS 錯誤 ' + e4.join('|')); await p4.close(); }
-    /* ③ 遊戲：13 種 ✕ 一局 5 題（第 2 題 故意 答錯）＋小學堂＋課本 動畫 */
-    const GS = ['slot', 'ufo', 'vault', 'zhu', 'bal', 'vow', 'end', 'lad', 'pic', 'train', 'bk', 'bkp'];
+    /* ③ 遊戲：14 種（第四十九次 多 🧩 bksp） ✕ 一局 5 題（第 2 題 故意 答錯）＋小學堂＋課本 動畫 */
+    const GS = ['slot', 'ufo', 'vault', 'zhu', 'bal', 'vow', 'end', 'lad', 'pic', 'train', 'bk', 'bkp', 'bksp'];
     for (const g of GS.concat(['ls', 'br'])) {
       const q = await ctx.newPage(); const er = []; q.on('pageerror', e => er.push(e.message));
       await q.addInitScript(() => { window.__PHFAST = 1; window.__PHAUTO = 1; window.__PHWDG = 60; window.__PHBR = []; try { localStorage.clear(); } catch (e) {}
         Object.defineProperty(window, '__PHWRONG', { get() { return !!(window.PHG && PHG.G && PHG.G.q === 1); } }); });
       await q.goto(U + '/phonics/games.html'); await q.waitForTimeout(200);
       if (g === 'slot') { const lob = await q.evaluate(() => ({ cards: document.querySelectorAll('.gc').length, small: [...document.querySelectorAll('.gc b,.gc small,.lv button,.sec h2')].filter(e => parseFloat(getComputedStyle(e).fontSize) < 17).length, book: document.querySelectorAll('.bkb').length, path: document.querySelectorAll('.pstop').length, ov: document.documentElement.scrollWidth > innerWidth + 1 }));
-        ok(lob.cards === 12 && !lob.small && lob.book === 25 && lob.path === 5 && !lob.ov, tag + ' 大廳 不對（12 個 遊戲、25 個 課本 字、5 課）' + JSON.stringify(lob)); }
+        ok(lob.cards === 13 && !lob.small && lob.book === 25 && lob.path === 5 && !lob.ov, tag + ' 大廳 不對（13 個 遊戲、25 個 課本 字、5 課）' + JSON.stringify(lob)); }
       /* 成績：假 登入（不 連 真的 伺服器）*/
       await q.evaluate(() => { window.__RECS = []; window.scLive = () => true; window.scQAdd = r => window.__RECS.push(r); try { SCID = '30412'; } catch (e) {} });
       if (g === 'ls') await q.evaluate(() => PHG.lessonOpen(0)); else if (g === 'br') await q.evaluate(() => PHG.bridgeOpen('kitchen')); else await q.evaluate(g => PHG.start(g), g);
@@ -102,8 +102,8 @@ function serve() { return new Promise(r => { const T = { '.html': 'text/html', '
         lays.push(L); if (L.end || (g === 'br' && t > 8)) break; }
       const bad = lays.filter(L => L.out.length || L.small.length);
       ok(!bad.length, tag + ' ' + g + ' 有 字 超出 畫面 或 太 小：' + JSON.stringify(bad[0]));
-      if (g === 'br') { const b = await q.evaluate(() => ({ br: window.__PHBR, chk: document.querySelectorAll('.chk').length, em: !!document.querySelector('.bres .em') }));
-        ok(b.br.indexOf('kitchen') >= 0 && b.chk === 2 && b.em, tag + ' 課本 動畫 kitchen 沒有 演完 ' + JSON.stringify(b)); }
+      if (g === 'br') { const b = await q.evaluate(() => ({ br: window.__PHBR, gp: document.querySelectorAll('.brg .bgp').length, plus: /＋/.test(document.querySelector('.brg').textContent), bars: !!document.querySelector('.bw2.bars'), em: !!document.querySelector('.bres .em') }));
+        ok(b.br.indexOf('kitchen') >= 0 && b.gp === 6 && !b.plus && !b.bars && b.em, tag + ' 課本 動畫 kitchen 沒有 演完（第四十九次：6 組 字母、沒有 ＋）' + JSON.stringify(b)); }
       else { const en = await q.evaluate(() => ({ t: (document.querySelector('.end .sc') || {}).textContent || '', rk: (document.querySelector('.end .rk') || {}).textContent, rv: document.querySelectorAll('.rv .r').length, rec: window.__RECS.map(r => [r.set, r.m, r.qs.length, r.qs.map(x => x[0]).join(''), r.qs.every(x => x[5] >= 0)]) }));
         ok(/✅ 4 ／ 5/.test(en.t) && en.rk === 'A' && en.rv === 1, tag + ' ' + g + ' 結束 頁 不對（要 4／5、A、錯題 1 個）' + JSON.stringify(en));
         ok(en.rec.length === 1 && en.rec[0][0] === 'g3gm_ph-' + g && en.rec[0][1] === 'q' && en.rec[0][2] === 5 && en.rec[0][3] === '10111' && en.rec[0][4], tag + ' ' + g + ' 成績 沒有 送 或 不對 ' + JSON.stringify(en.rec)); }

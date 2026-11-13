@@ -25,15 +25,16 @@ const CHAL = { 3: { sp: WORDS[3], or: QB.GR['3sg3'].qs }, 4: { sp: WORDS[4], or:
 const CSS = R('_live.css');
 /* 🏫 三年級 課堂複習（2026-10-26 第二十九次 第 1 點）：遊戲 名字（關卡 順序）、哪幾套、每一題 的 英文＋中文（公布 答案 用）＝ g3mid/_data.js */
 const G3M = require(path.join(ROOT, 'g3mid', '_data.js'));
-const CRD = { gs: G3M.ORD.map(id => { const g = G3M.GAMES.filter(x => x.id === id)[0]; return [id, g.ic, g.nm]; }), sets: [['g3m', '📝 三年級 複習']].concat(G3M.CSETS.map(x => [x[0], '🏫 ' + x[1].replace('三年級 ', '')]), [['x25', '📝 25 題 挑戰'], ['x50', '📝 50 題 挑戰'], ['n25', '📝 新 25 題 挑戰'], ['n50', '📝 新 50 題 挑戰'], ['g25', '📝 成長測驗 25 題 挑戰'], ['lw', '✍️ 字母 書寫'], ['la', '🔤 聽 字母 寫'], ['lf', '🎧 聽 字首音 寫']]), B: {} };   /* 2026-11-03 第四十一次 第 7-B、7-C 點：兩個 新 的 獨立 任務 */   /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（10 題）*/   /* 2026-10-29 第 3 件：新 25／新 50（題庫 B）*/   /* 2026-10-27 第三十二次 3-(3)（老師 A）：25／50 題 只 在 現場任務 開 */
+const CRD = { gs: G3M.ORD.map(id => { const g = G3M.GAMES.filter(x => x.id === id)[0]; return [id, g.ic, g.nm]; }), sets: [['g3m', '📝 三年級 複習']].concat(G3M.CSETS.map(x => [x[0], '🏫 ' + x[1].replace('三年級 ', '')]), [['x25', '📝 25 題 挑戰'], ['x50', '📝 50 題 挑戰'], ['n25', '📝 新 25 題 挑戰'], ['n50', '📝 新 50 題 挑戰'], ['g25', '📝 成長測驗 25 題 挑戰'], ['c25', '🏁 CVC 單字 25 題 闖關'], ['lw', '✍️ 字母 書寫'], ['la', '🔤 聽 字母 寫'], ['lf', '🎧 聽 字首音 寫']]), B: {} };   /* 2026-11-03 第四十一次 第 7-B、7-C 點：兩個 新 的 獨立 任務 */   /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（10 題）*/   /* 2026-10-29 第 3 件：新 25／新 50（題庫 B）*/   /* 2026-10-27 第三十二次 3-(3)（老師 A）：25／50 題 只 在 現場任務 開 */
 CRD.B.g3m = {}; G3M.GAMES.forEach(g => { CRD.B.g3m[g.id] = g.B.map(q => [String(q.en || ''), String(q.zh || '')]); });
 G3M.CSETS.forEach(x => { CRD.B[x[0]] = {}; G3M.GAMES.forEach(g => { CRD.B[x[0]][g.id] = G3M.CB[x[0]][g.id].map(q => [String(q.en || ''), String(q.zh || '')]); }); });
 /* 📝 四年級 複習（2026-10-27 第三十次 2-(2)(4)，老師 選 A「跟 三年級 一樣」）＝ midterm/_data.js：大廳 順序 11 種＋🪤 四年級 複習 0（m12）；公布 答案 ＝ 答錯頁 的 英文 fe＋中文 fz */
 const MT = require(path.join(ROOT, 'midterm', '_data.js'));
 const MTORD = ['lis', 'read', 'write'].map(k => MT.GAMES.filter(g => g.sec === k)).flat();
 /* 2026-10-27 第三十一次（老師 選 D 回到以前）：沒有「🪤 四年級 複習 0」了，只有 一套 📝 四年級 複習 ＝ 12 種（陷阱 偵測器 在 最後）*/
+/* 2026-11-13 第四十九次 第 9-(2) 點：三、四年級 都 有「🏁 CVC 單字 25 題 闖關」（c25）＝ 平板 跳到 phonics/games.html?live=0班（那一頁 自己 開 25 題、送 成績 g年級gm_ph-c25）*/
 /* 2026-11-10 第四十六次（老師：400 課後班 要 做 成長測驗）：四年級 的 班 也 有「📝 成長測驗 25 題 挑戰」＝ 平板 跳到 g3mid/index.html?live=04xx（那一頁 自己 當 四年級）*/
-const CRD4 = { gs: MTORD.map(g => [g.id, g.ic, g.nm]), sets: [['mt', '📝 四年級 複習'], ['x25', '📝 25 題 挑戰'], ['x50', '📝 50 題 挑戰'], ['n25', '📝 新 25 題 挑戰'], ['n50', '📝 新 50 題 挑戰'], ['g25', '📝 成長測驗 25 題 挑戰']], only: { mt: MTORD.map(g => g.id), x25: [], x50: [], n25: [], n50: [], g25: [] }, B: { mt: {} } };
+const CRD4 = { gs: MTORD.map(g => [g.id, g.ic, g.nm]), sets: [['mt', '📝 四年級 複習'], ['x25', '📝 25 題 挑戰'], ['x50', '📝 50 題 挑戰'], ['n25', '📝 新 25 題 挑戰'], ['n50', '📝 新 50 題 挑戰'], ['g25', '📝 成長測驗 25 題 挑戰'], ['c25', '🏁 CVC 單字 25 題 闖關']], only: { mt: MTORD.map(g => g.id), x25: [], x50: [], n25: [], n50: [], g25: [], c25: [] }, B: { mt: {} } };
 /* 2026-11-01 第三十八次 C44 ④ B＋第 7、8 點：⚡ 快速 模式 要 知道「挑戰 題庫 第幾題 ＝ 哪一關」（老師看板 錯題 一樣 照 XORD／XORD2）➜ 大螢幕 算 這一班 最常 錯 的 3 關 */
 { const MT = require('../midterm/_data.js'); CRD.xo = G3M.XORD.map(x => x[0]); CRD.xo2 = G3M.XORD2.map(x => x[0]); CRD4.xo = MT.XORD.map(x => x[0]); CRD4.xo2 = (MT.XORD2 || []).map(x => x[0]);
   const nm = (L, id) => { const g = L.filter(x => x.id === id)[0]; return g ? [g.ic, g.nm] : id === 'dc' ? ['🔓', '句子 解碼'] : ['', id]; };

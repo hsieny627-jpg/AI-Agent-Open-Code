@@ -249,8 +249,8 @@ function build(){
     if(I==='c'||I==='g')key=I+'_'+(DK?(PH2.initCode2(I,V)==='s'||PH2.initCode2(I,V)==='j'?'soft':'hard'):(SOFT.includes(V.t)?'soft':'hard'));
     const e=PH2.BLEND[I]?null:(CONS[key]||CONS2[I]||CONS[I]);
     if(PH2.BLEND[I]){
-      let nodes=[];PH2.BLEND[I].forEach(c=>{nodes=nodes.concat(phon(CONS[c],false));});
-      pushUnit(g,I.split('').map(c=>txtSpan(c,'#fff')),nodes,hI);
+      /* 第四十九次 老師 第 8 點：兩個、三個 字首音 ＝ 每 一個 字母 正下方 對齊 它 自己 的 音標 */
+      PH2.BLEND[I].forEach((c,k)=>pushUnit(g,[txtSpan(I.charAt(k),'#fff')],phon(CONS[c],false),hI));
     } else if(e){
       if(I==='wh'){
         pushUnit(g,[txtSpan('w','#fff')],phon(e,false),hI);
@@ -315,7 +315,9 @@ function build(){
       const key = E==='l'?'l_end' : E==='d'?'d_end' : E==='m'?'m_end' : E==='n'?'n_end' : E==='r'?'r_end'
                 : E==='g'?'g_end' : E==='p'?'p_end' : E==='f'?'f_end' : E==='t'?'t_end' : E==='th'?'th(無聲)' : E;
       const e=(DK&&E==='k')?CONS2.k_end:(CONS[key]||CONS2[key]);
-      if(e)pushUnit(g,E.split('').map(c=>txtSpan(c,'#fff')),phon(e,false),hE);
+      /* 第四十九次 老師 第 8 點：兩個、三個 字尾音（st sk ft mp nd nt nk）＝ 每 一個 字母 正下方 對齊 它 自己 的 音標 */
+      if(e&&Array.isArray(e.zh)&&e.zh.length===E.length&&E.length>1)E.split('').forEach((c,k)=>pushUnit(g,[txtSpan(c,'#fff')],phon({zh:e.zh[k],sup:Array.isArray(e.sup)?e.sup[k]:null,kk:Array.isArray(e.kk)?e.kk[k]:e.kk,ipa:Array.isArray(e.ipa)?e.ipa[k]:e.ipa},false),hE));
+      else if(e)pushUnit(g,E.split('').map(c=>txtSpan(c,'#fff')),phon(e,false),hE);
     }
     if(v2&&v2.magic)pushUnit(g,[txtSpan('e','var(--silent)')],[],hE);   /* magic e 最後 的 e 不 唸（灰色）*/
   }
