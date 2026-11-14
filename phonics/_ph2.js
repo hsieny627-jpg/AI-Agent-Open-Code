@@ -108,18 +108,18 @@
     for (k = 0; k < P.length; k++) {
       var x = P[k], last = k === P.length - 1, m = mode === 'zh' ? 0 : mode === 'kk' ? 1 : 2;
       if (k === vi) { var v = RV[x]; if (!v) return null;
-        if (mode === 'zh') out.push({ t: v[0], sup: v[1], bg: x === 'ER' ? 'var(--yellow)' : VC, dark: x === 'ER', v: 1 });
-        else out.push({ t: mode === 'kk' ? v[2] : v[3], bg: x === 'ER' ? 'var(--yellow)' : VC, dark: x === 'ER', v: 1 });
-        if (x === 'ER' && mode === 'zh') out.push({ t: 'ㄦ', bg: CC });
+        if (mode === 'zh') out.push({ pi: k, t: v[0], sup: v[1], bg: x === 'ER' ? 'var(--yellow)' : VC, dark: x === 'ER', v: 1 });
+        else out.push({ pi: k, t: mode === 'kk' ? v[2] : v[3], bg: x === 'ER' ? 'var(--yellow)' : VC, dark: x === 'ER', v: 1 });
+        if (x === 'ER' && mode === 'zh') out.push({ pi: k, t: 'ㄦ', bg: CC });
         continue; }
       var c = RC[x]; if (!c) return null;
-      if (k < vi) { if (x === 'R' && mode === 'zh') out.push({ t: c[0], bg: CC, stack: 1 }); else out.push({ t: c[m], bg: CC }); continue; }
+      if (k < vi) { if (x === 'R' && mode === 'zh') out.push({ pi: k, t: c[0], bg: CC, stack: 1 }); else out.push({ pi: k, t: c[m], bg: CC }); continue; }
       /* 字尾 */
       if (mode === 'zh') {
-        if (x === 'L') out.push({ t: 'ㄛ', bg: CC });
-        else if (x === 'R') out.push({ t: 'ㄦ', bg: CC });
-        else out.push({ t: c[0], bg: CC, sup: (x === 'M' || x === 'N') ? '~' : (STOPS[x] && last) ? '〃' : null });
-      } else out.push({ t: c[m], bg: CC });
+        if (x === 'L') out.push({ pi: k, t: 'ㄛ', bg: CC });
+        else if (x === 'R') out.push({ pi: k, t: 'ㄦ', bg: CC });
+        else out.push({ pi: k, t: c[0], bg: CC, sup: (x === 'M' || x === 'N') ? '~' : (STOPS[x] && last) ? '〃' : null });
+      } else out.push({ pi: k, t: c[m], bg: CC });
     }
     return out;
   }
@@ -127,7 +127,45 @@
   var RI = { B: 'b', P: 'p', M: 'm', F: 'f', D: 'd', T: 't', N: 'n', L: 'l', K: 'k', G: 'ɡ', HH: 'h', S: 's', Z: 'z', JH: 'dʒ', CH: 'tʃ', SH: 'ʃ', TH: 'θ', DH: 'ð', W: 'w', R: 'ɹ', Y: 'j', V: 'v', NG: 'ŋ', ZH: 'ʒ',
     AE: 'æ', EH: 'ɛ', IH: 'ɪ', AA: 'ɑː', AO: 'ɔː', AH: 'ʌ', EY: 'eɪ', IY: 'iː', OW: 'oʊ', UW: 'uː', UH: 'ʊ', AW: 'aʊ', AY: 'aɪ', ER: 'ɜː', OY: 'ɔɪ' };
   function realIpa(ph) { var P = ph.split(' '), s = ''; P.forEach(function (x) { var b = x.replace(/\d/g, ''); if (/1/.test(x)) s += 'ˈ'; s += RI[b] || ''; }); return s + '.'; }
-  var PH2 = { CONS2: CONS2, BLEND: BLEND, VOW2: VOW2, VLIST_ADV: VLIST_ADV, DECKS: DECKS, fits: fits, code2: code2, spell2: spell2, ipa2: ipa2, partCode: partCode, bad2: bad2, BAD2: BAD2,
+  /* 2026-11-14 第五十次（老師 第 2、3 點）：例外 字 的 每 一個 字母 正下方 對齊 它 的 音標 ＝ 把 真的 唸法 的 音 分 給 字母（動態 規劃，挑 最 合理 的 分法）
+     align(字, 音素, 固定 的 字母 塊?) ➜ [{l: 字母, p: [第幾 個 音…]}]；沒有 音 ＝ 不 發音（灰色）*/
+  var GP = { a: 'AE EY AA AO AH EH IH', e: 'EH IY IH AH', i: 'IH AY IY AH', o: 'AA OW AH AO UW UH', u: 'AH UW UH|Y UW', y: 'Y IY AY IH', w: 'W', b: 'B', c: 'K S', d: 'D', f: 'F', g: 'G JH', h: 'HH', j: 'JH', k: 'K', l: 'L', m: 'M', n: 'N NG', p: 'P', q: 'K', r: 'R', s: 'S Z SH', t: 'T SH CH', v: 'V', x: 'K S|G Z', z: 'Z',
+    ai: 'EY EH', ay: 'EY', ee: 'IY IH', ea: 'IY EH EY', ei: 'EY IY', ey: 'EY IY', ie: 'IY AY', oa: 'OW', oe: 'OW UW', oo: 'UW UH AH', ou: 'AW UW AH OW UH', ow: 'OW AW', au: 'AO AA', aw: 'AO AA', ew: 'UW|Y UW', ue: 'UW', ui: 'UW IH', oy: 'OY', oi: 'OY',
+    ch: 'CH K', sh: 'SH', th: 'TH DH', ph: 'F', wh: 'W HH', ck: 'K', ng: 'NG', nk: 'NG K', tch: 'CH', dge: 'JH', qu: 'K W', igh: 'AY', augh: 'AO', ough: 'AO|OW|UW|AW', al: 'AO L|AA L|AO', all: 'AO L', ould: 'UH D', gh: '', 
+    ll: 'L', ss: 'S', ff: 'F', zz: 'Z', tt: 'T', dd: 'D', pp: 'P', bb: 'B', mm: 'M', nn: 'N', gg: 'G', rr: 'R' };
+  var VS = 'AE EY AA AO AH EH IH IY AY OW UW UH AW OY ER';
+  function gpCost(ch, P, last) {
+    var t = GP[ch], key = P.join(' ');
+    if (!P.length) { if (ch === 'e' && last) return 0.2; if (ch === 'gh' || ch === 'h' || ch === 'e' || ch === 'u' || ch === 'w' || ch === 'k' || ch === 'b' || ch === 'l' || ch === 't') return 1.2; if (/^[aeiouy]$/.test(ch)) return 1.6; return 4; }
+    if (t !== undefined && t !== '') { var alts = t.indexOf('|') >= 0 ? t.split('|') : (t.split(' ').length > 1 && P.length === 1 ? t.split(' ') : [t]); if (alts.indexOf(key) >= 0) return 0.05 * ch.length; }
+    if (ch === 'r' && key === 'ER') return 0.3;   /* her、girl、word 的 r ＝ ㄦ（前面 的 母音 一起 用 ER）*/
+    var c = 0, isV = /^[aeiouy]+$/.test(ch);
+    P.forEach(function (x) { var pv = VS.indexOf(x) >= 0 && x.length > 1; c += isV ? (pv ? 1 : 2.5) : (pv ? 3 : 1.6); });
+    return c + 0.8 * (P.length - 1) + (ch.length > 1 && t === undefined ? 0.6 : 0);
+  }
+  function align(word, ph, units) {
+    var P = ph.split(' ').map(function (x) { return x.replace(/\d/g, ''); }), W = word.toLowerCase();
+    var U = units || null, n = U ? U.length : W.length, m = P.length, INF = 1e9, D = [], B = [];
+    for (var i = 0; i <= n; i++) { D.push([]); B.push([]); for (var j = 0; j <= m; j++) { D[i].push(INF); B[i].push(null); } }
+    D[0][0] = 0;
+    for (i = 0; i < n; i++) for (j = 0; j <= m; j++) { if (D[i][j] >= INF) continue;
+      var chs = U ? [[U[i], i + 1]] : [];
+      if (!U) for (var L = 1; L <= 4 && i + L <= n; L++) { var cc = W.substr(i, L); if (L === 1 || GP[cc] !== undefined) chs.push([cc, i + L]); }
+      chs.forEach(function (o) { for (var k = 0; k <= 3 && j + k <= m; k++) { var sub = P.slice(j, j + k), c = D[i][j] + gpCost(o[0], sub, o[1] === n);
+        if (c < D[o[1]][j + k]) { D[o[1]][j + k] = c; B[o[1]][j + k] = [i, j, o[0]]; } } }); }
+    var out = [], x = n, y = m; if (D[n][m] >= INF) return null;
+    while (x > 0) { var b = B[x][y], idx = []; for (var q = b[1]; q < y; q++) idx.push(q); out.unshift({ l: b[2], p: idx }); x = b[0]; y = b[1]; }
+    /* 母音 字母＋r ＝ ER（ㄜㄦ）：母音 字母 和 r 一起 用 這 一個 音（注音 ㄜ 在 母音 下面、ㄦ 在 r 下面）*/
+    for (var z = 1; z < out.length; z++) if (out[z].l === 'r' && out[z].p.length === 1 && P[out[z].p[0]] === 'ER' && /^[aeiou]+$/.test(out[z - 1].l) && !out[z - 1].p.length) out[z - 1].p = out[z].p.slice();
+    return out;
+  }
+  /* 把 realTiles 的 方塊 分 給 align 的 每 一塊（同 一個 音 給 兩塊 ＝ 第一 塊 拿 第一 個 方塊，最後 一塊 拿 剩下 的）*/
+  function tilesFor(al, rt) {
+    var used = {}; return al.map(function (u, k) {
+      return rt.filter(function (x) { if (u.p.indexOf(x.pi) < 0) return false; var sh = al.filter(function (v) { return v.p.indexOf(x.pi) >= 0; });
+        if (sh.length < 2) return true; var mine = rt.filter(function (y) { return y.pi === x.pi; }), at = mine.indexOf(x), first = sh[0] === u;
+        return first ? at === 0 : at > 0; }); }); }
+  var PH2 = { align: align, tilesFor: tilesFor, CONS2: CONS2, BLEND: BLEND, VOW2: VOW2, VLIST_ADV: VLIST_ADV, DECKS: DECKS, fits: fits, code2: code2, spell2: spell2, ipa2: ipa2, partCode: partCode, bad2: bad2, BAD2: BAD2,
     uIsU: uIsU, realTiles: realTiles, realIpa: realIpa, initCode2: initCode2, vowCode2: vowCode2, endCode2: endCode2 };
   if (typeof module !== 'undefined' && module.exports) module.exports = PH2; else root.PH2 = PH2;
 })(this);

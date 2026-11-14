@@ -1,0 +1,40 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第五十次 新聲音</title>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<!-- 2026-11-14 第五十次：老師 聽完 P49 以後 的 修正 ➜ 網站 已經 換 新 的；這一頁 比 第四十九次（v49/）和 現在（../../phonics/au/），b d g 多 一種 B。做法 tools/ph_iso50.py、tools/ph_fix50.py -->
+<style>
+body{margin:0;background:#0B1026;color:#fff;font-family:'Microsoft JhengHei','PingFang TC',sans-serif;padding:18px}
+h1{font-size:36px;margin:0 0 6px;color:#FFE07A}p{font-size:24px;line-height:1.6;color:#DCE4FF;margin:4px 0 14px}
+h2{font-size:30px;margin:24px 0 8px}
+table{border-collapse:collapse;width:100%;max-width:1150px}
+td,th{border:1px solid #2A3570;padding:10px;font-size:24px;text-align:center}th{background:#141B3D;color:#FFE07A}
+td.w{font-family:Andika,sans-serif;font-size:42px;font-weight:700}td.t{text-align:left;font-size:22px;color:#DCE4FF}
+button{font-size:26px;font-weight:900;border-radius:14px;padding:10px 20px;cursor:pointer}
+.b2{background:#2A1A06;color:#FFD58A;border:3px solid #F2A93B}
+.o{background:#2A2A2A;color:#ccc;border:2px solid #666}.n{background:#062A35;color:#9EF0FF;border:3px solid #22D3EE}
+</style><body>
+<h1>🎧 第五十次 新聲音（網站已經換成新的）</h1>
+<p><b>這次 先 修 了 兩個 原因</b>：① 子音 比 母音 大聲 3～7 倍 ➜ 全部 字母 音量 一樣；② f、h、s 用「重複 接 起來」拉長 ＝ 會 震動 ➜ 改成 平穩 的 聲音。</p>
+<p>請一個一個比：<b>新的對 ＝ 不用做什麼</b>；<b>還是不對 ＝ 告訴我哪一個、聽起來像什麼</b>。b、d、g 有 <b>A（網站 現在 用 的）</b>和 <b>B</b> 兩種，請 選 一種。</p>
+<h2>① 字首音</h2>
+<table id="t1"><tr><th>字母</th><th>老師聽到的問題 ➜ 這次 怎麼 改</th><th>第四十九次</th><th>現在</th></tr></table>
+<h2>② b、d、g 選 一種</h2>
+<table id="t4"><tr><th>字母</th><th>兩種 的 差別</th><th>A（網站 現在）</th><th>B</th></tr></table>
+<h2>③ 字尾</h2>
+<table id="t2"><tr><th>字尾</th><th>老師聽到的問題 ➜ 這次 怎麼 改</th><th>第四十九次</th><th>現在</th></tr></table>
+<h2>④ 單字</h2>
+<table id="t3"><tr><th>單字</th><th>老師說 ➜ 這次 怎麼 改</th><th>第四十九次</th><th>現在</th></tr></table>
+<script>
+const A=new Audio();const P=f=>{A.src=f;A.play().catch(()=>{})};
+const row=(id,w,why,a,b,cl)=>{const r=document.createElement('tr');r.innerHTML='<td class="w">'+w+'</td><td class="t">'+why+'</td><td>'+(a?'<button class="o" data-f="'+a+'">🔊 舊</button>':'（新 加 的）')+'</td><td><button class="'+(cl||'n')+'" data-f="'+b+'">🔊 '+(cl?'B':'新')+'</button></td>';document.getElementById(id).appendChild(r)};
+const O=c=>'v49/'+c+'.mp3',N=c=>'../../phonics/au/'+c+'.mp3';
+[['p','像 很 大聲 的 ㄏ ➜ 吹氣 只 留 一點點、聲音 變 小'],['t','像 很 大聲 的 ㄊㄜ ➜ 只 留 爆破＋一點點 吹氣（沒有 ㄜ）、聲音 變 小'],['j','開頭 有「嗯」➜ 從 j 的 摩擦 開始'],
+ ['f','太 大聲、一直 震動 ➜ 聲音 變 小、平穩 不 震動'],['s','結尾 有 ㄉ ➜ 平穩 的 嘶聲，結尾 慢慢 變 小'],['l','字首 ＝ ㄌ（l＋一點點 放開）'],['h','不像 ㄏ、太 大聲、震動 ➜ 平穩 的 哈氣、小聲'],
+ ['w','舊 的 接近 正確 但 太 小聲 ➜ 用 第四十八次 的、放 大聲'],['z','結尾 有 s ➜ 只 留 喉嚨 一直 震動 的 z'],['ng','像 ning ➜ 只 留 ŋ（song 最後 的 音）'],['r','不在 字尾 ＝ ㄖㄨ']]
+ .forEach(x=>row('t1',x[0],x[1],O('s_'+x[0]),N('s_'+x[0])));
+[['b','像 敲門聲'],['d','（跟 b 一樣 做法）'],['g','像 射擊聲']].forEach(x=>{const r=document.createElement('tr');r.innerHTML='<td class="w">'+x[0]+'</td><td class="t">'+x[1]+' ➜ A：爆破＋很 短、很 輕 的 帶聲（很快 變 小）／B：很 短 的 閉嘴 嗡嗡＋爆破</td><td><button class="n" data-f="s_'+x[0]+'_A.mp3">🔊 A</button></td><td><button class="b2" data-f="s_'+x[0]+'_B.mp3">🔊 B</button></td>';document.getElementById('t4').appendChild(r)});
+[['m','改成 字首 新 的 m','s_em','s_em'],['n','改成 字首 新 的 n','s_en','s_en'],['g','像「的」➜ 新 做：bag 最後 的 g（閉住 再 放開）',null,'s_eg'],['l','字尾 ＝ ㄛ ➜ 新 做：ball 最後 的 l',null,'s_el']].forEach(x=>row('t2',x[0],x[1],x[2]?O(x[2]):null,N(x[3])));
+[['top','p 結尾 走音 ➜ 用 第四十八次 的 top（沒有 走音）＋ 新 的 p 放開（電腦 聽寫 3 次 都 是 top）','t-aa-p'],['kitchen','改成 舊 的（第四十八次）','bk_kitchen'],
+ ['rabbit','i 要 接近 一ㄜ；最後 t 刪 ㄜ、太 大聲 ➜ i ＝ ɪ、t 只 留 短短 的 爆破（電腦 聽寫 ＝ rabbit）','bk_rabbit'],['strong','o 要 ㄛ ➜ 挑 o 最 圓 的 一次（電腦 聽寫 ＝ strong）','bk_strong']].forEach(x=>row('t3',x[0],x[1],O(x[2]),N(x[2])));
+document.addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(b)P(b.dataset.f)});
+</script></body></html>

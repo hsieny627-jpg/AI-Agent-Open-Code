@@ -21,6 +21,12 @@ header button.on{background:#fff;color:#000;border-color:#fff}
 .tile.dark{color:#111}.tile.ph{font-family:var(--andika)}
 .tile .sup{position:absolute;top:.25em;right:.25em;font-size:.44em;line-height:1}
 .tile.stack{flex-direction:column;line-height:.92}.tile.stack span{font-size:.62em}
+.aw{display:flex;align-items:flex-start;gap:4px;flex-wrap:nowrap}
+.aw .ch{display:inline-flex;flex-direction:column;align-items:center;gap:4px}
+.aw .lt{font-family:var(--andika);font-size:52px;font-weight:700;line-height:1.15;padding-bottom:.08em}
+.aw .ch.sil .lt{color:#8C92A3}.aw .tl{display:flex;gap:3px}
+.tile.none{background:transparent!important;border:2px dashed #555;min-width:1.2em}
+.aw .tile{font-size:24px}
 .it .b{display:flex;gap:8px;flex-wrap:wrap}
 .it .b button{font-family:var(--han);font-size:18px;font-weight:900;border-radius:10px;padding:6px 12px;cursor:pointer}
 .it .b .r{background:#062A35;color:#9EF0FF;border:2px solid #22D3EE}
@@ -41,8 +47,11 @@ function tile(x){const d=document.createElement('span');d.className='tile'+(mode
   if(Array.isArray(x.t))x.t.forEach(t=>{const s=document.createElement('span');s.textContent=t;d.appendChild(s)});else d.textContent=x.t;
   if(x.sup){const s=document.createElement('span');s.className='sup';s.textContent=x.sup;d.appendChild(s)}return d}
 function draw(){const g=document.getElementById('g');g.innerHTML='';ROWS.forEach(r=>{const it=document.createElement('div');it.className='it';
-  it.innerHTML='<div class="w">'+r.w+'</div><div class="tl"></div><div class="b"><button class="r" data-a="x_'+r.w+'">🔊 真的</button><button class="g" data-a="'+r.c+'">照 規則 會 唸 成…</button></div>';
-  const tl=it.querySelector('.tl');(PH2.realTiles(r.ph,mode)||[]).forEach(x=>tl.appendChild(tile(x)));g.appendChild(it)})}
+  it.innerHTML='<div class="aw"></div><div class="b"><button class="r" data-a="x_'+r.w+'">🔊 真的</button><button class="g" data-a="'+r.c+'">照 規則 會 唸 成…</button></div>';
+  /* 第五十次（老師 第 3 點）：每 一個 字母 正下方 ＝ 它 的 音標（雙語 注音／KK／IPA）；不 發音 ＝ 灰色＋虛線 方塊 */
+  const aw=it.querySelector('.aw'),rt=PH2.realTiles(r.ph,mode)||[],al=PH2.align(r.w,r.ph)||[{l:r.w,p:rt.map(x=>x.pi)}],TT=PH2.tilesFor(al,rt);
+  al.forEach((u,k)=>{const c=document.createElement('span');c.className='ch'+(u.p.length?'':' sil');c.innerHTML='<span class="lt">'+u.l+'</span><span class="tl"></span>';const tl=c.querySelector('.tl');
+    if(TT[k].length)TT[k].forEach(x=>tl.appendChild(tile(x)));else{const d=document.createElement('span');d.className='tile none';tl.appendChild(d)}aw.appendChild(c)});g.appendChild(it)})}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){A.src='au/'+b.dataset.a+'.mp3';A.play().catch(()=>{})}
   const m=e.target.closest('[data-m]');if(m){mode=m.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x===m));draw()}});
 draw();

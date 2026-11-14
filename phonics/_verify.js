@@ -62,8 +62,8 @@ function serve() { return new Promise(r => { const T = { '.html': 'text/html', '
     ok(pt.iv.vis.length === 2 && /au\/b-ae\.mp3$/.test(pt.iv.src) && pt.ve.vis.length === 2 && /au\/0-ae-d\.mp3$/.test(pt.ve.src), tag + ' 字首＋母音／母音＋字尾 不對 ' + JSON.stringify([pt.iv, pt.ve]));
     ok(have.has('b-ae') && have.has('0-ae-d'), '部位 的 音檔 沒有 b-ae／0-ae-d');
     const ex = await p2.evaluate(() => { [...document.querySelectorAll('#vowels button')].find(b => b.textContent === 'ai').click(); [...document.querySelectorAll('#initChips button')].find(b => b.textContent === 's').click();
-      return { xb: !!document.querySelector('.xb'), real: document.querySelectorAll('.real .tile').length, src: curSrc(), tiles: document.querySelectorAll('#grid .tile').length }; });
-    ok(ex.xb && ex.real === 3 && /x_said\.mp3$/.test(ex.src) && ex.tiles === 0, tag + ' said 例外 字 卡 不對 ' + JSON.stringify(ex));
+      return { xb: !!document.querySelector('.xb'), real: document.querySelectorAll('.real .tile').length, xl: !!document.querySelector('.xl'), src: curSrc(), tiles: document.querySelectorAll('#grid .tile').length }; });
+    ok(ex.xb && ex.xl && ex.real === 0 && /x_said\.mp3$/.test(ex.src) && ex.tiles === 3,   /* 第五十次：真的 唸法 放在 字母 正下方 */ tag + ' said 例外 字 卡 不對 ' + JSON.stringify(ex));
     ok(!e2.length, tag + ' 字卡 頁（部位）JS 錯誤：' + e2.join(' | ')); await p2.close();
     /* ②-3 基礎版、進階版、例外 字 頁 */
     for (const f of ['basic', 'advanced']) { const p3 = await ctx.newPage(); const e3 = []; p3.on('pageerror', e => e3.push(e.message)); await p3.goto(U + '/phonics/' + f + '.html'); await p3.waitForTimeout(200);

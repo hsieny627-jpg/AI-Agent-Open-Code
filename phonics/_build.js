@@ -19,7 +19,7 @@ W.forEach(([w]) => { const m = /^([bcdfghjklmnprstwz])([aeiou])([bdgmnptx])$/.ex
 if (new Set(W.map(x => x[0])).size !== W.length) bad.push('單字 重複');
 if (bad.length) { console.error('✗ ' + bad.join('；')); process.exit(1); }
 /* 遊戲 要 的 碼：CVC（短 母音）＋ 部位 ＋ 單獨 的 音 ＋ 課本 */
-const cvc = [...have].filter(c => /^s_|^bk_|^bc_|^[a-z0]+-(ae|eh|ih|aa|uh)(-[a-z]+)?$/.test(c)).sort();
+const cvc = [...have].filter(c => /^s_|^bk_|^bc_|^sy_|^cv_|^rm_|^[a-z0]+-(ae|eh|ih|aa|uh)(-[a-z]+)?$/.test(c)).sort();
 const put = (f, o, rep) => { let s = fs.readFileSync(path.join(D, f), 'utf8'); for (const k in rep) s = s.split(k).join(rep[k]); fs.writeFileSync(path.join(D, o), s); };
 put('_card.html', 'index.html', { '/*__PH__*/': phJS, '/*__PH2__*/': ph2JS, '/*__DECK__*/': exJS });
 for (const id in PH2.DECKS) { const dk = Object.assign({ id, adv: id === 'advanced' }, PH2.DECKS[id]);

@@ -56,6 +56,7 @@
   .rail.part{justify-content:center;flex-wrap:wrap;row-gap:4px}
   .card .xb{position:absolute;left:14px;top:10px;font-size:15px;font-weight:900;color:#FFB4A8;border:1px solid #7a3328;border-radius:8px;padding:2px 8px;background:#1a0b08}
   .card .real{display:flex;justify-content:center;align-items:center;gap:4px;margin-top:clamp(12px,2.2vh,22px)}
+  .card .rl.xl{position:absolute;left:16px;bottom:12px;font-size:14px;color:#FFB4A8;font-weight:900}
   .card .real .rl{font-size:14px;color:#FFB4A8;font-weight:900;margin-right:8px}
   .card .hear{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(26px,5vh,46px);color:#5a5a5a;font-weight:900;pointer-events:none}
 
@@ -236,7 +237,7 @@ function pushUnit(g,glyphNodes,phonNodes,hide){
 }
 function build(){
   const g=document.getElementById('grid');g.innerHTML='';
-  const card=document.getElementById('card');card.querySelectorAll('.xb,.real,.hear').forEach(x=>x.remove());
+  const card=document.getElementById('card');card.querySelectorAll('.xb,.real,.hear,.xl').forEach(x=>x.remove());
   const V=curVow(), I=curInit(), vbg=vowLetterBg(V);
   EXNOW=(part==='iv'||part==='ve')?null:curEx();
   /* 部位：藏起來（位置 留著）、拿掉（不畫）*/
@@ -324,8 +325,12 @@ function build(){
   /* 例外 字：⚠＋真的 雙語 注音／KK／IPA（一排，放在 字母 下面）*/
   if(EXNOW){
     const b=el('xb','⚠ 例外：不照 規則');card.appendChild(b);
-    if(mode!=='none'){const rt=PH2.realTiles(EXNOW[0],mode)||[];const r=el('real');r.appendChild(el('rl','真的 唸法'));
-      rt.forEach(x=>r.appendChild(tile(x.t,x.bg,{sup:x.sup,stack:x.stack,dark:x.dark})));card.appendChild(r);}
+    /* 第五十次（老師 第 2 點）：真的 唸法 的 音標 放在 每 一個 字母 的 正下方（PH2.align 把 音 分 給 字母；不 發音 ＝ 灰色）*/
+    if(mode!=='none'){const rt=PH2.realTiles(EXNOW[0],mode)||[],cells=[...g.children],U=[];for(let i=0;i<cells.length;i+=2)U.push(cells[i].textContent);
+      const al=PH2.align(U.join(''),EXNOW[0],U);
+      if(al){const TT=PH2.tilesFor(al,rt);al.forEach((u,k)=>{const c2=cells[2*k+1];if(!c2)return;c2.innerHTML='';TT[k].forEach(x=>c2.appendChild(tile(x.t,x.bg,{sup:x.sup,stack:x.stack,dark:x.dark})));
+        if(!u.p.length)cells[2*k].querySelectorAll('span').forEach(sp=>{sp.style.color='var(--silent)';sp.style.background='transparent'})});card.appendChild(el('rl xl','真的 唸法'))}
+      else{const r=el('real');r.appendChild(el('rl','真的 唸法'));rt.forEach(x=>r.appendChild(tile(x.t,x.bg,{sup:x.sup,stack:x.stack,dark:x.dark})));card.appendChild(r);}}
   }
   if(part==='none')card.appendChild(el('hear','🎧 聽 聲音，猜 猜 看'));
   document.getElementById('counter').textContent=(idx+1)+' / '+deck.length;
@@ -363,7 +368,8 @@ function drawChips(){
   const ic=document.getElementById('initChips');ic.innerHTML='';
   INITIALS[initGrp].forEach(x=>ic.appendChild(mkBtn(iLab(x),x===I,true,()=>{
     pauseAuto();
-    const at=deck.findIndex(c=>c.v===deck[idx].v&&c.i===x);
+    let at=deck.findIndex(c=>c.v===deck[idx].v&&c.i===x);
+    if(at<0){const cv=deck[idx].v;let best=-1,bd=1e9;deck.forEach((c,k)=>{if(c.i===x&&Math.abs(c.v-cv)<bd){bd=Math.abs(c.v-cv);best=k}});at=best;}   /* 第五十次：老師 點 W 沒 變 ➜ 換 到 有 W 的 最近 母音 */
     go(at>=0?at:idx);
   })));
   const ec=document.getElementById('endChips');ec.innerHTML='';
@@ -375,7 +381,7 @@ function drawVowels(){
   VLIST.forEach((v,vi)=>{
     const label=v.mark?v.t+' '+v.mark:v.t;
     const has=deck.some(c2=>c2.v===vi);
-    const b=mkBtn(label,v===V,true,()=>{pauseAuto();const at=deck.findIndex(c2=>c2.v===vi);go(at>=0?at:idx);});
+    const b=mkBtn(label,v===V,true,()=>{pauseAuto();const I0=curInit();let at=deck.findIndex(c2=>c2.v===vi&&c2.i===I0);if(at<0)at=deck.findIndex(c2=>c2.v===vi);go(at>=0?at:idx);});   /* 第五十次：點 母音 ＝ 字首 不 變（quir 點 a ＝ quar）*/
     if(!has)b.style.opacity='.35';
     c.appendChild(b);
   });

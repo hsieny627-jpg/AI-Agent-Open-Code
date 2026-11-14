@@ -49,7 +49,7 @@ function serve() { return new Promise(r => { const TY = { '.html': 'text/html', 
             em: !!document.querySelector('.bres .em'), lb: document.querySelector('.brg .lh').textContent }; }, w);
         ok(r.done && !r.bars && !r.split && r.word === w.replace(/ /g, '') && r.em, tag + ' 課本 動畫 ' + w + ' 沒有 演完 或 最後 不是 正確 拼字 ' + JSON.stringify(r).slice(0, 200));
         ok(!r.mis.length && !r.ov && !r.small, tag + ' 課本 ' + w + ' 字母 下面 的 音標 沒有 對齊／超出／太 小 ' + JSON.stringify([r.mis, r.ov, r.small]));
-        ok(/Topic 2: (We Can Help（我們可以幫忙）　三年級|My Home（我的家）　四年級) 第三、四 課/.test(r.lb), tag + ' ' + w + ' 沒有 Topic 年級 標示 ' + r.lb);
+        ok(/^G[34]\s+L[34]\s+\d+\/\d+$/.test(r.lb), tag + ' ' + w + ' 沒有 年級 課 標示（第五十次 老師：只 留 G4 L3 1/6）' + r.lb);
         const want = { where: ['h:lc-x', 'e:lc-x', 'w:lc-c'], kitchen: ['t:lc-x', 'i:lc-v', 'c:lc-dg'], tired: ['e:lc-x', 'i:lc-v'], bathroom: ['a:lc-v', 'o:lc-vt', 't:lc-dg', 'h:lc-dg'], happy: ['a:lc-v', 'y:lc-v'], fish: ['s:lc-dg', 'h:lc-dg'], turtle: ['e:lc-x'] }[w];
         if (want) want.forEach(x => ok(r.cls.indexOf(x) >= 0, tag + ' ' + w + ' 字母 顏色 不對（要 ' + x + '）' + r.cls)); }
       /* 音標：tired 的 r ＝ ㄦ、fish 的 sh ＝ ㄕ、kitchen 的 i ＝ ㄜ＋一；換 KK 馬上 換 */
