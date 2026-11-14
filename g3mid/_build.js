@@ -671,7 +671,7 @@ var AU=null,ST=null,SID=0,PD=null;
 /* 2026-10-26 第二十六次 第 1-7 點（老師：答錯頁 正在 唸 的 時候 點〔再聽〕就 當機）：原因 ＝ 新的 唸 把 舊的 停掉，舊的「唸完 以後 要做 的 事」（數 第幾次、出現〔▶ 下一題〕、倒數 繼續）就 不見 了。
    現在 ＝ 被 打斷 的 那一件 事 交給 新的 唸，唸完 一樣 會 做（PD）；換題、回大廳 才 真的 丟掉 */
 function stopSay(){if(typeof decStop==='function')decStop();PD=null;SID++;clearTimeout(ST);if(AU){try{AU.pause()}catch(e){}AU=null}try{speechSynthesis.cancel()}catch(e){}}
-function aud(t,v){if(v==='M1'||v==='M2'){var X=window[v==='M1'?'ENAUDM':'ENAUDS']||{},y=X[akey(t)];if(y)return 'audio/'+(v==='M1'?'m1/':'m2/')+y[0]}var k=akey(t),A=window.ENAUD||{},W=window.ENAUDW||{},f=A[(v==='m'?'m:':'')+k]||A[k];if(f)return 'audio/'+f[0];f=W[k];return f?'audio/w/'+f[0]:''}
+function aud(t,v){if(v==='X'){var xc=String(t).replace(/[^A-Za-z]/g,'').toLowerCase();if(xc.length===1&&typeof GT!=='undefined'&&GT.GTEX&&GT.GTEX.indexOf(xc)>=0)return 'audio/ex/'+xc+'.mp3';v=''}if(v==='M1'||v==='M2'){var X=window[v==='M1'?'ENAUDM':'ENAUDS']||{},y=X[akey(t)];if(y)return 'audio/'+(v==='M1'?'m1/':'m2/')+y[0]}var k=akey(t),A=window.ENAUD||{},W=window.ENAUDW||{},f=A[(v==='m'?'m:':'')+k]||A[k];if(f)return 'audio/'+f[0];f=W[k];return f?'audio/w/'+f[0]:''}
 /* 2026-11-03 第四十一次 第 4 點（31124、40204 回家 25 題 做到 一半 當掉）：平板 擋掉 聲音（play() 被拒、語音 引擎 不出聲 也 不 回 onend、網路 慢 檔案 卡住）
    ＝ 以前 一直 等「唸完」➜ 下一題 永遠 不來。現在 每一次 唸 都 有 看門狗：檔案 長度＋2.5 秒、沒有 長度 ＝ 照 字數 估，時間 到 一定 往下 走 */
 function say1(t,v,done){var my=SID,f=aud(t,v),ok=false,wd=0,fin=function(){if(ok)return;ok=true;clearTimeout(wd);if(my===SID&&done)done()},
@@ -1132,7 +1132,7 @@ function startGT(N){var C=GT.GCNT,T=GT.TOP||{},tg=T.gl||[],t1=T.gs1||[],t0=T.gs0
   R={x:N,bk:'G',pt:100/N,i:-1,qs:qs,lvOf:lv,cnt:[L.length,S.length,P.length],nsim:[0,0,0],k:-1,lv:-1,gk:-1,score:0,streak:0,res:[],wrong:[],Q:[],t0:Date.now(),qk:0};if(XQUIET)return;xDel(N);xSave();coopStart();
   document.body.classList.add('ing');$('#lobby').hidden=true;$('#endv').hidden=true;$('#game').hidden=false;$('#sc').textContent='0';$('#cmb').className='cmb';$('#cmb').textContent='';$('#stage').innerHTML='';next()}
 /* 🔤 聽寫 字母：一題 寫 兩次（大寫 ➜ 小寫），兩次 都 對 才 算 對；寫 大寫 對 了 ＝ 綠色 ✅ ➜ 換 小寫（時間 接著 算）*/
-REN.gl=function(q,st){var ph=0,SL=[['',q.say+'.'],['',q.say+'.'],['',q.say+'.']];R.lastImg=null;R.lastLn=null;R.lastSk=null;
+REN.gl=function(q,st){var ph=0,SL=[['X',q.say+'.'],['X',q.say+'.'],['X',q.say+'.']];/* 第五十三次：X ＝ 老師 給 的 錄音 */R.lastImg=null;R.lastLn=null;R.lastSk=null;
   function draw(){st.innerHTML='';var cur={show:ph?q.lo:q.up,want:ph?q.lo:q.up,say:q.say,lis:1};R.glq=cur;
    writeUI(st,cur,function(L){L.appendChild(H('div','glstep','<span class="'+(ph?'ok':'on')+'">① 大寫'+(ph?' ✅ <b>'+q.up+'</b>':'')+'</span><i>➜</i><span class="'+(ph?'on':'')+'">② 小寫</span>'));
     var mi=H('div','mirror lis','<button class="mlis" aria-label="聽">🔊</button>');L.appendChild(mi);mi.querySelector('.mlis').onclick=function(){sayList(SL.slice(0,1))};
@@ -1146,7 +1146,7 @@ FB.gl=function(q,p){var c=R&&R.q===q&&R.glq?R.glq:{want:q.up,show:q.up},o=fbWrit
   o.after=function(){var l=$('#ltr');if(!l)return;var big=Math.round(Math.min(innerHeight*.2,220)),fig=function(t,cv){var f=H('div','ltf','<span>'+t+'</span>');f.appendChild(cv);return f};
    l.appendChild(fig('✅ 大寫 <b>'+esc(q.up)+'</b>',letterCanvas(q.up,big,'#0A5E2D',1)));l.appendChild(H('span','ar','＋'));l.appendChild(fig('✅ 小寫 <b>'+esc(q.lo)+'</b>',letterCanvas(q.lo,big,'#0A5E2D',1)));
    var ln=R.lastLn&&!R.lastLn.ok?R.lastLn:null,m=$('#mysk');if(m&&ln&&R.lastSk)m.appendChild(skCanvas(R.lastSk,Math.round(Math.min(innerHeight*.13,130)),ln))};
-  o.say=q.say+'.';o.sl=[['',q.say+'.']];o.show=q.up+' '+q.lo;return o};
+  o.say=q.say+'.';o.sl=[['X',q.say+'.']];o.show=q.up+' '+q.lo;return o};
 /* 👂 開頭 的 音：題目 只 用 聽（跟 考卷 一樣 看不到 字）；①② 兩個 喇叭 唸到 哪 個 亮 哪 個、可以 再 點；男聲 慢（audio/m1）*/
 function gtW1(w,d){sayList([[(window.ENAUDM||{})[akey(w)]?'M1':'',w]],d)}
 REN.gs=function(q,st){var w=H('div','gsw','<div class="gsq"><button class="gsb" data-i="0"><span class="gsn">①</span><span class="gsi">🔊</span></button><span class="gsv">🆚</span><button class="gsb" data-i="1"><span class="gsn">②</span><span class="gsi">🔊</span></button></div><div class="ask">🔊 聽 兩個 字 ➜ <b>開頭 的 音</b> 一樣 嗎？</div><div class="gso"></div>'),bs=w.querySelectorAll('.gsb'),O=w.querySelector('.gso'),W=[q.a,q.b],my=QID;

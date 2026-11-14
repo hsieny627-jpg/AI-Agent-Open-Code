@@ -92,4 +92,6 @@ var GCNT = { gl: 15, gs: 6, gc: 4 };
 var GTALL = GL.concat(GS1).concat(GC).concat(GS2);   /* 題庫 第幾題（老師看板 用；只 可以 接 在 後面 加）*/
 var GTSAY = GC.map(function (c) { return c.say; });
 var GTWORDS = Object.keys(GTW).filter(function (w) { return GS.some(function (q) { return q.a === w || q.b === w; }); });
-module.exports = { IPA: IPA, GTW: GTW, GS: GS, GC: GC, GL: GL, PICS: PICS, TOP: TOP, GORD: GORD, GCNT: GCNT, GTALL: GTALL, NGS1: GS1.length, GTSAY: GTSAY, GTWORDS: GTWORDS };
+/* 2026-11-14 第五十三次：聽寫 字母 用 老師 給 的 113、114 年 錄音（tools/gt_ex53.py ➜ g3mid/audio/ex/<字母>.mp3）；錄音 裡 沒有 的 i o w 用 網站 語音 */
+var GTEX = 'abcdefghjklmnpqrstuvxyz';
+module.exports = { GTEX: GTEX, IPA: IPA, GTW: GTW, GS: GS, GC: GC, GL: GL, PICS: PICS, TOP: TOP, GORD: GORD, GCNT: GCNT, GTALL: GTALL, NGS1: GS1.length, GTSAY: GTSAY, GTWORDS: GTWORDS };

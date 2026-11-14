@@ -28,7 +28,7 @@ const V51 = path.join(ROOT, 'listen', '2026-11-14_P52', 'v51');
 ['s_ng', 's_r'].forEach(c => ok(dur(au(c)) < 0.36, c + ' 太 長（尾巴 沒 刪）' + dur(au(c)).toFixed(2)));
 const ini = { b: 's_b', d: 's_d', g: 's_g', p: 's_p', t: 's_t', k: 's_k' };
 for (const c in ini) { const e = au('s_e' + c); ok(fs.existsSync(e), '沒有 字尾 ' + c); if (!fs.existsSync(e)) continue;
-  const a = actRms(pcm(e)), b = actRms(pcm(au(ini[c]))); ok(a < b * 0.7 && a > 0.015, '字尾 ' + c + ' 沒有 比 字首 小聲 ' + a.toFixed(3) + ' / ' + b.toFixed(3)); ok(dur(e) < 0.3, '字尾 ' + c + ' 太 長'); }
+/* 第五十三次：字尾 b d g k ＝ 字首 的 7 成（老師：一半 聽不清楚）➜ 上限 改 0.8 */   const a = actRms(pcm(e)), b = actRms(pcm(au(ini[c]))); ok(a < b * 0.8 && a > 0.015, '字尾 ' + c + ' 沒有 比 字首 小聲 ' + a.toFixed(3) + ' / ' + b.toFixed(3)); ok(dur(e) < 0.3, '字尾 ' + c + ' 太 長'); }
 ok(fs.readFileSync(path.join(D, '_book.js'), 'utf8').indexOf('🚪') < 0, 'room 還是 門 🚪');
 (async () => { const [srv, U] = await serve(), br = await chromium.launch();
   for (const vp of [[1024, 768], [1366, 1024], [1920, 1080]]) { const tag = vp.join('×');

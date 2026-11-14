@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第五十三次 新聲音</title>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<!-- 2026-11-14 第五十三次：老師 聽完 P52 的 回答 ➜ 網站 已經 換 新 的；v52/ ＝ 第五十二次。做法 tools/ph_fix53.py -->
+<style>
+body{margin:0;background:#0B1026;color:#fff;font-family:'Microsoft JhengHei','PingFang TC',sans-serif;padding:18px}
+h1{font-size:36px;margin:0 0 6px;color:#FFE07A}p{font-size:24px;line-height:1.6;color:#DCE4FF;margin:4px 0 14px}
+h2{font-size:30px;margin:24px 0 8px}
+table{border-collapse:collapse;width:100%;max-width:1150px}
+td,th{border:1px solid #2A3570;padding:10px;font-size:24px;text-align:center}th{background:#141B3D;color:#FFE07A}
+td.w{font-family:Andika,sans-serif;font-size:42px;font-weight:700}td.t{text-align:left;font-size:22px;color:#DCE4FF}
+button{font-size:26px;font-weight:900;border-radius:14px;padding:10px 20px;cursor:pointer;margin:3px}
+.o{background:#2A2A2A;color:#ccc;border:2px solid #666}.n{background:#062A35;color:#9EF0FF;border:3px solid #22D3EE}
+.r{color:#FF6B6B}
+</style><body>
+<h1>🎧 第五十三次 新聲音（網站已經換成新的）</h1>
+<p>請一個一個比：<b>新的對</b> ＝ 不用做什麼；<b>還是不對</b> ＝ 告訴我哪一個、聽起來像什麼。</p>
+<h2>① 字母 R</h2><table id="t1"><tr><th>字母</th><th>老師說 ➜ 這次 怎麼 改</th><th>第五十二次</th><th>現在（新）</th></tr></table>
+<h2>② 字尾 的 聲音</h2><table id="t2"><tr><th>字尾</th><th>老師說 ➜ 這次 怎麼 改</th><th>第五十二次</th><th>現在（新）</th></tr></table>
+<h2>③ 在 遊戲 裡 拼 起來（一個 聲音 一個 聲音 接著 唸）</h2><table id="t3"><tr><th>單字</th><th>第五十二次 的 字尾</th><th>現在（新）的 字尾</th></tr></table>
+<h2>④ 沒有 改 的（請 老師 確認）</h2><table id="t4"><tr><th>聲音</th><th>說明</th><th>聽</th></tr></table>
+<script>
+const A=new Audio(),O=c=>'v52/'+c+'.mp3',N=c=>'../../phonics/au/'+c+'.mp3';
+function bt(src,cls,t){return src?'<button class="'+cls+'" data-s="'+src+'">'+t+'</button>':'—'}
+function row(id,w,t,o,n){document.getElementById(id).insertAdjacentHTML('beforeend','<tr><td class="w">'+w+'</td><td class="t">'+t+'</td><td>'+bt(o,'o','🔊 舊')+'</td><td>'+bt(n,'n','🔊 新')+'</td></tr>')}
+row('t1','R','應該 是 <b>ㄖㄨ</b>（接近「入」）➜ 唸 ㄖ＋一小段 嘴巴 圓圓 的 ㄨ（電腦 聽寫 3 次 都 聽 成 roo）',O('s_r'),N('s_r'));
+[['d','新 的 聽不清楚 ➜ 改 用 老師 選 的 字首 d（B），只是 小聲 一點（字首 的 7 成）、開頭 輕輕 進來','s_ed'],
+ ['b','新 的 聽不清楚 ➜ 改 用 老師 選 的 字首 b（B），小聲 一點','s_eb'],
+ ['g','新 的 聽不清楚 ➜ 改 用 老師 選 的 字首 g（B），小聲 一點','s_eg'],
+ ['k／ck','新 的 像 ㄍ ➜ 改 用 字首 k（有 ㄎ 的 吹氣），小聲 一點','s_ek']].forEach(r=>row('t2',r[0],r[1],O(r[2]),N(r[2])));
+const V={a:'s_ae',e:'s_eh',i:'s_ih',o:'s_aa',u:'s_uh'};
+[['bad','b','a','d'],['bed','b','e','d'],['web','w','e','b'],['dog','d','o','g'],['bug','b','u','g'],['back','b','a','k'],['duck','d','u','k'],['red','r','e','d'],['run','r','u','n']].forEach(([w,c,v,e])=>{
+  const ini='s_'+c,end=e==='n'?'s_en':'s_e'+e;
+  const old=[O(ini),N(V[v]),O(end)].join('|'),nw=[N(ini),N(V[v]),N(end)].join('|');
+  document.getElementById('t3').insertAdjacentHTML('beforeend','<tr><td class="w">'+w.replace(/[aeiou]/g,m=>'<span class="r">'+m+'</span>')+'</td><td>'+bt(old,'o','🔊 舊')+'</td><td>'+bt(nw,'n','🔊 新')+'</td></tr>')});
+[['b、g','老師 選 B ＝ 網站 第五十二次 已經 是 B（沒有 再 改）','s_b'],['str','老師 說「r 聲音 接近 中文 入」：是 說「這樣 對」嗎？（沒有 改）','cl_strong_0_3'],['gr','同上（沒有 改）','cl_angry_1_2'],['字尾 p','老師 沒有 說 不對（沒有 改）','s_ep'],['字尾 t','老師 沒有 說 不對（沒有 改）','s_et']].forEach(r=>
+  document.getElementById('t4').insertAdjacentHTML('beforeend','<tr><td class="w">'+r[0]+'</td><td class="t">'+r[1]+'</td><td>'+bt(N(r[2]),'n','🔊 聽')+(r[0]==='b、g'?bt(N('s_g'),'n','🔊 g'):'')+'</td></tr>'));
+let Q=[];function nx(){if(!Q.length)return;A.src=Q.shift();A.play().catch(()=>{});}
+A.addEventListener('ended',()=>setTimeout(nx,60));
+document.addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(!b)return;Q=b.dataset.s.split('|');nx()});
+</script></body></html>

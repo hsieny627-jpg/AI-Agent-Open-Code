@@ -1,0 +1,112 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>聲音變字母 預覽</title>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<!-- 2026-11-14 第五十三次 第 ③ 點 預覽：「從 CVC 到 課本」的 秒懂 動畫 要 放 在 哪裡？＝ 放 在 單字 本身 上（字母 方塊 自己 動）。
+     教法 ＝ 老師 G3 L3 pptx 第 392～566 頁：先 音素 覺察（只 用 耳朵 數 聲音）➜ 再 字母 拼讀（聲音 ➜ 字母）➜ 合 起來 ➜ 拿掉 母音。聲音 ＝ phonics/au/ 已經 做好 的 檔。 -->
+<style>
+:root{--bg:#0B1026;--card:#141B3D;--line:#2A3570;--gold:#FFE07A;--aqua:#22D3EE;--red:#FF4D4D;--txt:#E8EEFF}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#1B2560,#0B1026 60%);color:var(--txt);font-family:'Microsoft JhengHei','PingFang TC',sans-serif;min-height:100vh;padding:14px 16px 28px}
+h1{font-size:clamp(26px,3.6vw,40px);margin:4px 0 6px;color:var(--gold)}
+.sub{font-size:clamp(18px,2.2vw,24px);color:#C9D3FF;margin:0 0 12px;line-height:1.5}
+.top{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+button{font-family:inherit;font-size:clamp(20px,2.4vw,26px);font-weight:900;border-radius:14px;padding:10px 18px;cursor:pointer;border:3px solid #3A4A90;background:#18224F;color:#fff}
+button.on{background:var(--gold);color:#2A1D00;border-color:#fff}
+.card{position:relative;max-width:1100px;margin:0 auto;background:linear-gradient(160deg,#18224F,#0E1534);border:3px solid var(--line);border-radius:28px;padding:clamp(14px,2.4vw,30px);box-shadow:0 20px 60px #0009}
+.tag{position:absolute;top:12px;left:16px;font-size:18px;color:#9FB0FF}
+.step{text-align:center;font-size:clamp(24px,3.4vw,40px);font-weight:900;min-height:1.6em;margin:18px 0 6px;color:#fff}
+.step b{color:var(--gold)}
+.hint{text-align:center;font-size:clamp(18px,2.3vw,26px);color:#C9D3FF;min-height:1.4em}
+.stage{position:relative;height:clamp(250px,36vh,360px);display:flex;align-items:center;justify-content:center}
+.boxes{display:flex;gap:clamp(8px,1.6vw,18px);align-items:flex-end}
+.bx{position:relative;width:clamp(96px,13vw,150px);height:clamp(110px,15vw,170px);border:4px dashed #5A6CC0;border-radius:20px;display:flex;align-items:center;justify-content:center;transition:all .45s cubic-bezier(.2,1.4,.4,1);background:#0E1534}
+.bx.show{border-style:solid}
+.bx.hot{border-color:var(--gold);box-shadow:0 0 0 6px #FFE07A44,0 0 40px #FFE07A88;transform:translateY(-10px) scale(1.06)}
+.bx .no{position:absolute;top:-34px;left:50%;transform:translateX(-50%);font-size:22px;color:#9FB0FF;font-weight:900}
+.bx .ear{font-size:clamp(40px,6vw,64px);opacity:.9}
+.bx .lt{font-family:Andika,sans-serif;font-size:clamp(60px,9vw,108px);font-weight:700;line-height:1;color:#fff;display:flex}
+.lt i{font-style:normal;display:inline-block;animation:drop .55s cubic-bezier(.2,1.6,.4,1) both}
+.lt i.v{color:var(--red)}.lt i.d{color:var(--aqua)}
+@keyframes drop{from{transform:translateY(-140px) scale(.4);opacity:0}to{transform:none;opacity:1}}
+.boxes.merge{gap:0}.boxes.merge .bx{border-color:transparent;background:transparent;width:auto;padding:0 .04em}.boxes.merge .no{display:none}
+.boxes.merge .bx.hot{box-shadow:none;transform:translateY(-8px)}
+.cnt{position:absolute;left:0;right:0;display:flex;justify-content:center;gap:clamp(8px,1.6vw,18px);font-weight:900;font-size:clamp(20px,2.6vw,30px)}
+.cnt.up{top:4px;color:#FFB4B4}.cnt.dn{bottom:0;color:#9EF0FF}
+.vw{display:flex;gap:12px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.vw button{font-family:Andika,sans-serif;font-size:clamp(34px,5vw,54px);width:clamp(70px,9vw,96px);color:var(--red);background:#1A1030;border-color:#7A3050}
+.vw button.ok{background:#0A5E2D;color:#fff;border-color:#2BD46A}.vw button.no{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.zh{text-align:center;font-size:clamp(26px,3.6vw,40px);color:var(--gold);min-height:1.3em;margin-top:6px}
+.ctl{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.dots{display:flex;gap:8px;justify-content:center;margin-top:12px}.dots span{width:16px;height:16px;border-radius:50%;background:#2A3570}.dots span.on{background:var(--gold)}
+.q{max-width:1100px;margin:18px auto 0;background:#101838;border:2px solid var(--line);border-radius:18px;padding:14px 18px;font-size:clamp(18px,2.2vw,24px);line-height:1.6}
+.q b{color:var(--gold)}
+</style></head><body>
+<h1>🧩 聲音 變 字母（預覽）</h1>
+<p class="sub">動畫 ＝ <b style="color:#FFE07A">放 在 單字 本身 上</b>：字母 方塊 自己 動，不是 另外 一個 框。教法 照 老師 的 pptx：<b style="color:#FFE07A">先 用 耳朵 數 聲音 ➜ 再 換 成 字母 ➜ 合 起來 ➜ 拿掉 母音</b>。</p>
+<div class="top"><button data-w="thin" class="on">thin 瘦的</button><button data-w="strong">strong 強壯的</button></div>
+<div class="card">
+  <div class="tag">📗 從 CVC 到 課本 ｜ 三年級 L3</div>
+  <div class="step" id="step">按〔▶ 開始〕</div>
+  <div class="hint" id="hint"></div>
+  <div class="stage"><div class="cnt up" id="cu"></div><div class="boxes" id="bx"></div><div class="cnt dn" id="cd"></div></div>
+  <div class="vw" id="vw"></div>
+  <div class="zh" id="zh"></div>
+  <div class="dots" id="dots"></div>
+  <div class="ctl"><button id="go">▶ 開始</button><button id="pz">⏸️ 暫停</button><button id="rp">🔁 再一次</button><button id="sl">🐢 慢速</button></div>
+</div>
+<div class="q"><b>老師 請 看：</b>① 動畫 放 在 單字 本身 上（像 這樣），可以 嗎？② 順序（先 耳朵 ➜ 再 字母 ➜ 合 起來 ➜ 拿掉 母音）跟 您 上課 一樣 嗎？③ 第 2 個 聲音（母音）放 最後 才 問，照 您 的 pptx。</div>
+<script>
+const AU='../../phonics/au/';
+const W={
+ thin:{zh:'瘦的',snd:[['th','s_th','d'],['i','s_ih','v'],['n','s_n','']],order:[0,2,1],blend:[['th','s_th'],['i','s_ih'],['thi','cv_thin_0'],['thin','bk_thin']],word:'bk_thin',vowel:1},
+ strong:{zh:'強壯的',snd:[['s','s_s',''],['t','s_t',''],['r','s_r',''],['o','s_ao','v'],['ng','s_ng','d']],order:[0,1,2,4,3],blend:[['s','s_s'],['st','cl_strong_0_2'],['str','cl_strong_0_3'],['ong','rm_strong_0'],['strong','bk_strong']],word:'bk_strong',vowel:3,count:1}
+};
+let cur='thin',RATE=1,PAUSE=false,RUN=0,gate=null;
+const $=id=>document.getElementById(id);
+const wait=ms=>new Promise(r=>{const my=RUN;let t=0;const tick=()=>{if(my!==RUN)return r('stop');if(PAUSE){gate=tick;return}t+=50;if(t>=ms/RATE)return r();setTimeout(tick,50)};tick()});
+const A=new Audio();
+function play(c){return new Promise(r=>{const my=RUN;let done=false;const fin=()=>{if(done)return;done=true;r()};A.src=AU+c+'.mp3';try{A.playbackRate=Math.min(RATE,4)}catch(e){}A.onended=fin;A.onerror=fin;A.play().catch(fin);setTimeout(fin,3000);if(my!==RUN)fin()})}
+async function say(c){await play(c);await wait(250)}
+function step(t,h){$('step').innerHTML=t;$('hint').innerHTML=h||''}
+function ltr(s,cls){return '<span class="lt">'+[...s].map((c,k)=>'<i class="'+cls+'" style="animation-delay:'+(k*.12)+'s">'+c+'</i>').join('')+'</span>'}
+function dots(n,k){$('dots').innerHTML=Array.from({length:n},(_,i)=>'<span class="'+(i<=k?'on':'')+'"></span>').join('')}
+async function run(){
+  const my=++RUN,w=W[cur],N=w.snd.length,bx=$('bx');PAUSE=false;$('pz').textContent='⏸️ 暫停';
+  bx.className='boxes';bx.innerHTML='';$('vw').innerHTML='';$('zh').textContent='';$('cu').innerHTML='';$('cd').innerHTML='';
+  const S=w.count?6:5;let k=0;const ok=()=>my===RUN;
+  /* 1 只 用 耳朵 */
+  dots(S,k);step('👂 只 用 耳朵：<b>'+cur+'</b> 有 幾個 聲音？','（先 不要 看 字母，像 注音 一樣 一個 一個 聽）');await say(w.word);if(!ok())return;
+  for(let i=0;i<N;i++){const b=document.createElement('div');b.className='bx';b.innerHTML='<span class="no">'+(i+1)+'</span><span class="ear">👂</span>';bx.appendChild(b);await wait(60);b.classList.add('show','hot');await say(w.snd[i][1]);b.classList.remove('hot');if(!ok())return}
+  step('有 <b>'+N+' 個 聲音</b>','一個 聲音 ＝ 一個 格子');await wait(1600);if(!ok())return;
+  /* 2 聲音 ➜ 字母（母音 最後）*/
+  dots(S,++k);
+  for(const i of w.order){const b=bx.children[i],s=w.snd[i];b.classList.add('hot');
+    step('第 <b>'+(i+1)+'</b> 個 聲音 是 ……',i===w.vowel?'母音 最 難，放 最後 想':'');await say(s[1]);if(!ok())return;
+    b.querySelector('.ear').outerHTML=ltr(s[0],s[2]);
+    step('第 <b>'+(i+1)+'</b> 個 聲音 ＝ <span style="font-family:Andika;color:'+(s[2]==='v'?'#FF4D4D':s[2]==='d'?'#22D3EE':'#fff')+'">'+s[0]+'</span>',s[0].length===2?'<b style="color:#22D3EE">兩個 字母、一個 聲音</b>':s[2]==='v'?'<b style="color:#FF4D4D">母音（紅色）</b>':'');
+    await say(s[1]);b.classList.remove('hot');await wait(500);if(!ok())return}
+  /* 2.5 數 字母 vs 數 聲音（strong）*/
+  if(w.count){dots(S,++k);const B=[...bx.children];
+    step('數 一數：<b>6 個 字母</b>、只有 <b>5 個 聲音</b>','因為 <b style="color:#22D3EE">ng</b> 兩個 字母 只 唸 一個 聲音');
+    $('cd').innerHTML=B.map((b,i)=>'<span style="width:'+b.offsetWidth+'px;text-align:center">聲音 '+(i+1)+'</span>').join('');
+    let n=0;$('cu').innerHTML=B.map(b=>{const L=b.querySelectorAll('.lt i').length;const s=[];for(let j=0;j<L;j++)s.push(++n);return '<span style="width:'+b.offsetWidth+'px;text-align:center">'+s.join(' ')+'</span>'}).join('');
+    await wait(3600);if(!ok())return;$('cu').innerHTML='';$('cd').innerHTML=''}
+  /* 3 合 起來 */
+  dots(S,++k);step('🔗 合 起來','一個 一個 加上去');
+  for(const [t,c] of w.blend){step('🔗 <span style="font-family:Andika;font-size:1.3em">'+t+'</span>');await say(c);if(!ok())return}
+  bx.classList.add('merge');[...bx.children].forEach(b=>b.classList.add('hot'));await say(w.word);[...bx.children].forEach(b=>b.classList.remove('hot'));
+  $('zh').textContent=cur+' ＝ '+w.zh;await say(w.word);await wait(900);if(!ok())return;
+  /* 4 拿掉 母音 */
+  dots(S,++k);const vb=bx.children[w.vowel];vb.style.opacity=.15;
+  step('🕵️ 母音 偵探：中間 少了 哪 一個？','5 個 母音 字母 ＝ a e i o u（點 一個）');
+  const right=w.snd[w.vowel][0];$('vw').innerHTML='aeiou'.split('').map(c=>'<button data-v="'+c+'">'+c+'</button>').join('');
+  await new Promise(r=>{$('vw').onclick=async e=>{const b=e.target.closest('[data-v]');if(!b)return;
+    if(b.dataset.v===right){b.classList.add('ok');vb.style.opacity=1;step('✅ 對！<span style="font-family:Andika">'+cur+'</span>');await say(w.word);r()}
+    else{b.classList.add('no');setTimeout(()=>b.classList.remove('no'),450);await say('s_'+({a:'ae',e:'eh',i:'ih',o:'aa',u:'uh'})[b.dataset.v]);step('再 聽 一次 中間 的 聲音');await say(w.snd[w.vowel][1])}}});
+  dots(S,S);step('🎉 完成！','先 耳朵 ➜ 再 字母 ➜ 合 起來 ➜ 母音 偵探')}
+document.querySelector('.top').onclick=e=>{const b=e.target.closest('[data-w]');if(!b)return;cur=b.dataset.w;document.querySelectorAll('.top button').forEach(x=>x.classList.toggle('on',x===b));RUN++;step('按〔▶ 開始〕');$('bx').innerHTML='';$('vw').innerHTML='';$('zh').textContent='';dots(0,0)};
+$('go').onclick=run;$('rp').onclick=run;
+$('pz').onclick=()=>{PAUSE=!PAUSE;$('pz').textContent=PAUSE?'▶ 繼續':'⏸️ 暫停';if(PAUSE)A.pause();else{if(gate){const g=gate;gate=null;g()}}};
+$('sl').onclick=()=>{RATE=RATE===1?.7:1;$('sl').classList.toggle('on',RATE<1)};
+</script></body></html>
