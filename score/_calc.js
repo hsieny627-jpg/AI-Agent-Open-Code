@@ -386,7 +386,9 @@ var SC = (function () {
         prev: mineSet.length ? mineSet[mineSet.length - 1].acc : null,
         prevValid: (function () { var a = mineSet.filter(function (r) { return r.fast * 2 <= r.n; }); return a.length ? a[a.length - 1].acc : null; })(),
         best: mineSet.length ? Math.max.apply(null, mineSet.map(function (r) { return r.acc; })) : null,
-        today: mineSet.filter(function (r) { return day(r.t) === day(now) && counts(r.ok, r.n, r.m, r.fast, r.pt); }).length };
+        today: mineSet.filter(function (r) { return day(r.t) === day(now) && counts(r.ok, r.n, r.m, r.fast, r.pt); }).length,
+        /* 2026-11-14 第五十四次：⚔️ 左右 對戰 的 📈 進步 ＝ 跟「最近 3 次 的 平均」比 ➜ 不 限 這一週（全部 時間）最近 3 次 [💯 正確率, ⚡ 正確＋速度（raw）]；只給 自己 的 */
+        h: /_vs-/.test(String(o.set)) ? all.filter(function (r) { return r.set === o.set && r.id === c.id && r.acc != null && !r.x; }).sort(function (a, b) { return a.t - b.t; }).slice(-3).map(function (r) { return [r.acc, Math.round(+r.raw || 0)]; }) : undefined };
       /* 遊戲：這個遊戲本班前 10 名（這週，每個人最好的一次：正確率，同分比總分） */
       if (o.gt && boardsOn) out.gtop = gtop(W.filter(function (r) { return r.set === o.set && r.cls === c.cls && r.acc != null; }), c.id);
     }

@@ -18,6 +18,8 @@ function seed() { const G = make({ TEACHER_PW: PW });
   rec('30401', 'g3gm_g3m-q1', Q(6, 8), 'a'); rec('30402', 'g3gm_g3m-q1', Q(4, 8), 'b'); rec('30402', 'g3gm_g3m-q2', Q(3, 3), 'c'); rec('30401', 'g3gm_c1-q1', Q(8, 8), 'd'); rec('30703', 'g3gm_g3m-q1', Q(2, 8), 'e');
   /* 2026-10-29 第 6 件：期中 挑戰：01 號 25 題 對 24（96 分）、02 號 新 25 題 對 20（80 分）*/ rec('30401', 'g3gm_g3m-x25', Q(24, 25), 'f'); rec('30402', 'g3gm_g3m-n25', Q(20, 25), 'g');
   /* 2026-10-30 第三十四次：🏠 25 題 闖關（h25）：01 號 對 20（80 分）、再 一次 對 23（92 分）*/ rec('30401', 'g3gm_g3m-h25', Q(20, 25), 'h'); rec('30401', 'g3gm_g3m-h25', Q(23, 25), 'i');
+  /* 2026-11-14 第五十四次：⚔️ 左右 對戰：01 號 以前 3 次 50／60／70 分，這一次 100 分（比 平均 高 40 ➜ 👀 請 看一下）*/
+  [[50, 40, 3], [60, 50, 2], [70, 60, 1], [100, 95, 0]].forEach((x, i) => G.post({ a: 'rec', r: { id: '30401', set: 'g3gm_vs-q1', name: '⚔️ 左右 對戰｜x', m: 'q', qs: Q(x[0] / 10, 10), raw: x[1], fix: 1, lc: 1, src: 'school', dev: 'x', u: 'vs' + i, t: NOW - 6e4 - x[2] * 36e5 } }));
   return G; }
 let HTTP = '';
 function serve() { return new Promise(ok => { const T = { '.html': 'text/html', '.js': 'text/javascript', '.woff2': 'font/woff2', '.css': 'text/css' };
@@ -36,10 +38,15 @@ async function teacher(br, vp) {
   /* 2026-10-30 第三十四次 第 11 點：先 選 年級 ➜ 三張 大卡（有 新 成績 的 亮）➜ 點 一張 才 出 表 */
   n++; const cr0 = await p.evaluate(() => ({ g: [].map.call(document.querySelectorAll('[data-crg]'), b => b.textContent + (b.classList.contains('on') ? '*' : '')).join(), k: [].map.call(document.querySelectorAll('[data-crk]'), b => b.getAttribute('data-crk') + (b.classList.contains('new') ? '!' : '') + ':' + Math.round(b.getBoundingClientRect().height)).join(), t: document.querySelectorAll('.g3t').length,
     sm: [].filter.call(document.querySelectorAll('.crnav *,.crcards *'), x => [].some.call(x.childNodes, c => c.nodeType === 3 && c.textContent.trim()) && parseFloat(getComputedStyle(x).fontSize) < 18).length }));
-  if (!/三年級\*/.test(cr0.g) || !/四年級/.test(cr0.g) || !/^x!:\d+,h!:\d+,g!:\d+$/.test(cr0.k) || cr0.t || cr0.sm || cr0.k.split(',').some(x => +x.split(':')[1] < 100)) e.push('〔課堂複習〕先 選 年級＋三張 大卡（有 新 成績 亮）不對 ' + JSON.stringify(cr0));
+  if (!/三年級\*/.test(cr0.g) || !/四年級/.test(cr0.g) || !/^x!:\d+,h!:\d+,g!:\d+,v!:\d+$/.test(cr0.k) || cr0.t || cr0.sm || cr0.k.split(',').some(x => +x.split(':')[1] < 100)) e.push('〔課堂複習〕先 選 年級＋三張 大卡（有 新 成績 亮）不對 ' + JSON.stringify(cr0));
   await p.click('[data-crk="g"]'); await p.waitForTimeout(250);
   n++; const cr1 = await p.evaluate(() => [].map.call(document.querySelectorAll('[data-crk]'), b => b.getAttribute('data-crk') + (b.classList.contains('new') ? '!' : '') + (b.classList.contains('on') ? '*' : '')).join());
-  if (cr1 !== 'x!,h!,g*') e.push('點 遊戲 卡：那一張 不再 亮、其他 兩張 還 亮 ' + cr1);
+  if (cr1 !== 'x!,h!,g*,v!') e.push('點 遊戲 卡：那一張 不再 亮、其他 兩張 還 亮 ' + cr1);
+  /* ⚔️ 左右 對戰 卡（第五十四次）*/
+  await p.click('[data-crk="v"]'); await p.waitForTimeout(300);
+  n++; const vs = await p.evaluate(() => { const tr = [].find.call(document.querySelectorAll('.g3t tr'), t => /^01$/.test((t.children[0] || {}).textContent || '')); return { t: tr ? tr.innerText.replace(/\s+/g, ' ') : '', h: (document.querySelector('.fvhd') || {}).textContent || '' }; });
+  if (!/⚔️ 左右 對戰/.test(vs.h) || !/100/.test(vs.t) || !/👀 請 看一下/.test(vs.t) || !/＋\d/.test(vs.t)) e.push('⚔️ 左右 對戰 表 不對 ' + JSON.stringify(vs));
+  await p.click('[data-crk="g"]'); await p.waitForTimeout(250);
   const cellOf = () => p.evaluate(() => { const rows = [].map.call(document.querySelectorAll('.g3t tr'), tr => [].map.call(tr.children, td => td.childNodes[0] ? td.childNodes[0].textContent.trim() : ''));
     const sm = [].filter.call(document.querySelectorAll('#pane *'), x => [].some.call(x.childNodes, c => c.nodeType === 3 && c.textContent.trim()) && x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < 17).map(x => x.textContent.trim().slice(0, 8));
     const lo = [].filter.call(document.querySelectorAll('.g3sw button'), b => b.getBoundingClientRect().height < 48).length;

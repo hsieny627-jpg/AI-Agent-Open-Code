@@ -688,3 +688,25 @@ body.host #hlob .lobr{padding-top:62px}   /* 右上角〔🏠 總首頁〕〔老
 .crtr{top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right))}
 .crbr{bottom:max(10px,env(safe-area-inset-bottom));right:calc(clamp(180px,26vh,300px) + 46px)}
 .crtr:active,.crbr:active{transform:translateY(2px)}
+
+/* ══ 2026-11-14 第五十四次：⚔️ 左右 對戰（live/_cr_host.js 最下面）══ */
+.vsmode{display:flex;flex-direction:column;gap:12px}
+.vsmb{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:6px 16px;text-align:left;min-height:84px;padding:10px 18px;border-radius:20px;border:3px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:inherit;font-size:clamp(18px,1.6vw,24px)}
+.vsmb b{font-size:1.2em;white-space:nowrap}.vsmb span{opacity:.9}.vsmb em{font-style:normal;font-size:.85em;background:rgba(0,0,0,.3);border-radius:999px;padding:2px 12px;white-space:nowrap}
+.vsmb.on{border-color:#FFD24A;background:rgba(255,210,74,.16);box-shadow:0 0 0 4px rgba(255,210,74,.2)}
+.vsw2{display:grid;grid-template-columns:6fr 4fr;gap:18px;align-items:start}
+.vsl,.vsr{min-width:0}.vsh{font-size:clamp(22px,2vw,32px);font-weight:900;color:#FFD24A;margin:0 0 6px}.vsh small{font-size:.6em;color:#C9CFFF;font-weight:700}
+.vsh.pg{color:#9EF0FF}
+.crpg{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:22px;background:linear-gradient(160deg,rgba(80,200,255,.16),rgba(150,100,255,.12));border:2px solid rgba(158,240,255,.45);min-height:300px}
+.vsg{display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:10px;padding:8px 12px;border-radius:16px;background:rgba(0,0,0,.28);font-size:clamp(18px,1.6vw,26px);animation:vsgIn .5s both}
+.vsg.g1{background:linear-gradient(90deg,rgba(158,240,255,.35),rgba(255,227,138,.25));box-shadow:0 0 18px rgba(158,240,255,.5)}
+.vsgr{width:1.8em;height:1.8em;border-radius:50%;background:#2A7FBF;display:flex;align-items:center;justify-content:center;font-weight:900}.vsg.g1 .vsgr{background:#FFD24A;color:#3A2600}
+.vsg .crhim{width:2.4em;height:2.4em;object-fit:contain}.vsgn{min-width:0}.vsgn small{display:block;font-size:.7em;opacity:.85}
+.vsgp{font-size:1.25em;color:#9EF0FF;white-space:nowrap;text-shadow:0 0 10px rgba(158,240,255,.7)}
+.vsge{font-size:clamp(18px,1.6vw,24px);opacity:.85;text-align:center;padding:30px 10px}.vsgk{font-size:clamp(16px,1.4vw,22px);color:#C8FFD8;padding:4px 6px}
+@keyframes vsgIn{0%{opacity:0;transform:translateX(30px)}100%{opacity:1;transform:none}}
+#vsgrow .grbar,#vsgrow .grbar0{position:fixed;z-index:130;display:flex;gap:12px}#vsgrow .grbar{left:50%;bottom:9vh;transform:translateX(-50%)}#vsgrow .grbar0{left:1.5vw;top:1.5vh}
+#vsgrow .grbar button,#vsgrow .grbar0 button{min-height:56px;font-size:clamp(18px,1.6vw,24px)}
+#awb2 #vsgo{animation:vsgIn .6s both;box-shadow:0 0 24px rgba(158,240,255,.8)}
+@media (max-width:1100px){.vsw2{grid-template-columns:1fr}}
+.crnm .vspb{display:inline-block;margin-left:8px;font-style:normal;font-size:.72em;padding:1px 10px;border-radius:999px;background:rgba(158,240,255,.2);border:1px solid rgba(158,240,255,.6);color:#BFF6FF;white-space:nowrap;vertical-align:middle}

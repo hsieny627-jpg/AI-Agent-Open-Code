@@ -1558,12 +1558,30 @@ function paneAZ(){var CC=(SC.CLASSES[3]||[]).concat(SC.CLASSES[4]||[]),c=G3C&&CC
     '<tr class="all"><td colspan="2">🏫 全班 平均</td>'+td(av('acc'))+td(av('gp'))+'<td></td><td></td><td></td></tr>';
   ids.forEach(function(id){var p=P[id];h+='<tr><td>'+id.slice(3)+'</td><td class="nm">'+esc(nm(id)||'')+'</td>'+(p?td(p.acc,'最好 '+p.best)+td(p.gp)+'<td>'+p.ok+' ／ 26</td><td style="font-family:Andika,sans-serif;font-size:1.3em">'+p.to+'</td><td>'+p.k+'</td>':'<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')+'</tr>'});
   h+='</table></div>';if(!RS.length)h+='<div class="note">這個 時間、這一班 還沒有 人 做「🔠 A～Z 依序 背寫」。</div>';return h}
+/* ══ 2026-11-14 第五十四次：⚔️ 左右 對戰（g3gm_vs-q1／g4gm_vs-q1）══
+   一位 學生 一列 ＝ 這個 時間 裡 最近 的 一次：💯 正確率、⚡ 正確＋速度（raw）、📈 跟 他 自己 前面 最近 3 次 的 平均 比（💯 進步＋⚡ 進步）÷ 2、✨ 學會 了（換 字 再 考 答對，fix）、做 了 幾 次；
+   👀 請 老師 看一下 ＝ 這一次 💯 比 他 前面 最近 3 次 的 平均 高 30 分 以上（可能 偷看 或 被 告訴；不 扣分、不 公開，只 給 老師 參考）。錯題 分析 ＝ 個人 成績卡（題庫 _bank.js g年級gm_vs-q1）。 */
+function paneVS(g){var CC=SC.CLASSES[g]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===g&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),key='g'+g+'gm_vs-q1';
+  var AL=ALL.filter(function(x){return x.set===key&&!x.x&&x.cls===c}).sort(function(a,b){return a.t-b.t}),P={};
+  AL.forEach(function(x){var p=P[x.id]=P[x.id]||{h:[],k:0},inR=(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to);
+    if(inR){var pv=p.h.slice(-3),b0=null,b1=null;if(pv.length){b0=0;b1=0;pv.forEach(function(y){b0+=y[0];b1+=y[1]});b0/=pv.length;b1/=pv.length}
+      p.k++;p.acc=x.acc;p.gp=Math.round(+x.raw||0);p.fix=+x.fix||0;p.n=x.n;p.t=x.t;p.pr=(pv.length&&x.n>=5)?Math.round(((x.acc-b0)+(p.gp-b1))/2*10)/10:null;p.look=pv.length&&x.acc-b0>=30}
+    p.h.push([x.acc||0,Math.round(+x.raw||0)])});
+  var ids=(RCLS[c]||[]).slice();Object.keys(P).forEach(function(id){if(P[id].k&&ids.indexOf(id)<0)ids.push(id)});ids.sort();
+  var td=function(v,sm){return v==null?'<td>—</td>':'<td class="'+g3Col(v)+'">'+v+(sm?'<small>'+sm+'</small>':'')+'</td>'};
+  var h='<div class="fvhd g3h">⚔️ 左右 對戰：個人 成績<small>（兩人 一台，但 各 算 各 的；💯 正確率 ＝ 答對 ÷ 答了；⚡ 正確＋速度 ＝ 答錯 0、答對 600＋速度 300＋搶先 100，換成 百分制；📈 ＝ 跟 自己 最近 3 次 的 平均 比）</small></div>'+
+    '<div class="g3sw">'+CC.map(function(x){return '<button data-g3c="'+x+'" class="'+(x===c?'on':'')+'" style="border-color:'+ccol(x)+'">'+esc(SC.cname(x))+'</button>'}).join('')+'</div>'+
+    '<div class="note">👀 ＝ 這一次 💯 比 自己 平常 高 30 分 以上，<b>請 老師 看一下</b>（可能 偷看、被 告訴，也 可能 真的 進步；不 扣分、不 公開）。點 名字 ＝ 成績卡（錯題）。</div>'+
+    '<div class="g3w"><table class="g3t"><tr><th>號碼</th><th>姓名</th><th><b>💯</b>正確率</th><th><b>⚡</b>正確＋速度</th><th><b>📈</b>跟 自己 比</th><th><b>✨</b>學會 了</th><th><b>👀</b>請 看一下</th><th><b>🔁</b>做 了 幾 次</th></tr>';
+  ids.forEach(function(id){var p=P[id];h+='<tr><td>'+id.slice(3)+'</td><td class="nm" data-pid="'+id+'">'+esc(nm(id)||'')+'</td>'+(p&&p.k?td(p.acc,'答 '+p.n+' 題')+td(p.gp)+'<td>'+(p.pr==null?'<small>第一次／答 不到 5 題</small>':(p.pr>0?'＋':'')+p.pr)+'</td><td>'+p.fix+'</td><td>'+(p.look?'<b style="color:#FFB020">👀 請 看一下</b>':'')+'</td><td>'+p.k+'</td>':'<td>—</td><td>—</td><td>—</td><td>—</td><td></td><td>—</td>')+'</tr>'});
+  h+='</table></div>';if(!AL.length)h+='<div class="note">這一班 還沒有 人 做「⚔️ 左右 對戰」（在〔⚡ 現場任務 大螢幕〕開）。</div>';return h}
 /* ══ 2026-10-30 第三十四次 第 11 點（老師：〔課堂複習〕主題 太多 看不懂 ➜ 照 建議）══
    先 選〔三年級〕〔四年級〕➜ 三張 大卡：⚡ 期中 挑戰（上課：25／50、新 25／新 50）、🏠 25 題 闖關（回家：h25）、🎮 期中複習 遊戲（三年級 複習＋課堂複習 1～3／四年級 複習 12 種）；
    點 一張 ＝ 下面 出現 那一張 的 表。**有 新 成績 的 那一張 亮起來**（金色 光＋「🆕 有 新 成績」）＝ 這一張 最近 一筆 成績 比 老師 上一次 打開 這一張 還 新（記 在 這台 電腦 tcr_seen_年級_卡）*/
 var CRG=0,CRK='';
 var CRC=[['x','⚡','期中 挑戰','上課',function(g){return g===3?/^g3gm_g3m-[xng](25|50)$/:/^g4gm_mt-[xn](25|50)$/}],['h','🏠','25 題 闖關','回家',function(g){return g===3?/^g3gm_g3m-h25$/:/^g4gm_mt-h25$/}],
-  ['g','🎮','期中複習 遊戲','上課／自己 玩',function(g){return g===3?/^g3gm_(g3m|c[123]|lw|lwh|la|lf|az)-q\\d+$/:/^g4gm_(mt-m\\d+|az-q5)$/}]];   /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（g3gm_lw-q5）*/
+  ['g','🎮','期中複習 遊戲','上課／自己 玩',function(g){return g===3?/^g3gm_(g3m|c[123]|lw|lwh|la|lf|az)-q\\d+$/:/^g4gm_(mt-m\\d+|az-q5)$/}],
+  ['v','⚔️','左右 對戰','上課・兩人 一台',function(g){return new RegExp('^g'+g+'gm_vs-q1$')}]];   /* 2026-11-14 第五十四次 */   /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（g3gm_lw-q5）*/
 function crLast(g,k){var re=CRC.filter(function(c){return c[0]===k})[0][4](g),t=0;ALL.forEach(function(x){if(!x.x&&x.t>t&&re.test(x.set))t=x.t});return t}
 function crSeen(g,k,v){var key='tcr_seen_'+g+'_'+k;try{if(v!=null)localStorage.setItem(key,String(v));return +localStorage.getItem(key)||0}catch(e){return 0}}
 function paneG(){var g=CRG||(F.g===4?4:3);CRG=g;
@@ -1572,7 +1590,7 @@ function paneG(){var g=CRG||(F.g===4?4:3);CRG=g;
       return '<button data-crk="'+c[0]+'" class="crc'+(CRK===c[0]?' on':'')+(nw&&CRK!==c[0]?' new':'')+'"><b class="ic">'+c[1]+'</b><b>'+c[2]+'</b><small>（'+c[3]+'）</small>'+(nw&&CRK!==c[0]?'<em>🆕 有 新 成績</em>':t?'<i>最近 '+dt(t).split(' ')[0]+'</i>':'<i>還 沒有 成績</i>')+'</button>'}).join('')+'</div>';
   if(!CRK)return h+'<div class="note crhint">👆 點 一張 大卡，下面 就 出現 那一張 的 成績 表。</div>';
   crSeen(g,CRK,crLast(g,CRK)||Date.now());
-  if(CRK==='x')return h+paneX(g);if(CRK==='h')return h+paneX(g,1);
+  if(CRK==='x')return h+paneX(g);if(CRK==='h')return h+paneX(g,1);if(CRK==='v')return h+paneVS(g);
   if(g===4)G3S='mt';else if(!/^(g3m|c[123]|lw|lwh|la|lf|all)$/.test(G3S))G3S='all';return h+paneGT()}
 var XROWS=null;
 /* ══ 2026-10-31 第三十七次 第 11 點：🏠 25 題 闖關 ＝ ⓪ 加倍 時段 誰 完成 了（這個 年級 每一班）＋ 每一個 學生 每一關、每一題 的 作答（秒懂 長條 動畫）══

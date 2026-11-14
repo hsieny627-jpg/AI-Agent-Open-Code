@@ -4,6 +4,14 @@
 > 根目錄 `AGENTS.md` 第四節同樣適用。
 
 
+## 2026-11-14 第五十四次：⚔️ 左右 對戰（set `vs`；三、四年級 的 班 都 有；規格 `vs/CLAUDE.md`）
+| 老師 | 做法 |
+|---|---|
+| 兩人 一台 iPad 左右 分割、兩種 方式 任務 前 選 | `_build.js` `CRD`／`CRD4` 多〔⚔️ 左右 對戰〕；`_cr_host.js` `crX` 認 `vs`、`crMin` 預設 10 分鐘（5／8／10／15）、不 走 ⚡ 快速 模式；第 2 步 `vsBox` 三種 模式（🎯 戊 預設／🔒 丙／🔀 乙）➜ `cr.vm`；平板 跳 `../vs/index.html?live=0班`（`_stu_rt.js`、g3mid／midterm 的 `crAuto`／`crOn`、QR `taskURL`）|
+| 全班 排行榜＋🚀 進步 排行榜 前 5 名（即時）| `crLB`：vs ＝ `.vsw2` 左 6 成 全班 前 10 名（💯，同分 比 ⚡；名字 旁邊 📈 小 徽章 `.vspb`）、右 4 成 `#crpg`（`vsProg`：（💯 進步＋⚡ 進步）÷ 2，跟 最近 3 次 平均 比；只 寫 ＋幾分；🛡 保持 滿分 一行）；`crRows` 多 `b0`、`b1`、`lr` |
+| 先 全班 頒獎 ➜ 再 進步 頒獎（風格 完全 不同、更 重要）| `crShowX` 給 AWD `done` ➜ `vsAfterAwd` 出現〔🌟 下一個：進步 之星 ➜〕➜ `vsGrow` ＝ `score/_grow.js` `GROW`（`#vsgrow`，z-index 120 蓋 在 `#crgl` 上面）；〔⏭ 直接 看 最後〕〔🔁 再 看 一次〕〔⏹ 結束〕＝ `crEnd`（on:0）|
+量測 `node vs/_verify.js`（1307 項）、`node live/_verify_cr.js`（108 項，選單 多 一顆）、`node live/_verify.js`。
+
 ## 2026-11-14 第五十二次 第 7 點：🔠 A～Z 依序 背寫（⚡ 現場任務 set `az`；三、四年級 的 班 都 有；不用 重新 部署）
 | 老師 | 做法（在哪裡）|
 |---|---|

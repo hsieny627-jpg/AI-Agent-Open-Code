@@ -105,7 +105,7 @@ Object.keys(SITES).forEach(dir => {
   put('g3gm_lwh-q5', { name: '✍️ 字母 書寫（在家）｜✍️ 字母 書寫（在家）', qs: G3.LWP.lwh.map(c => ({ k: 'g', kn: '✍️ 字母 書寫（在家）', q: txt(qOf('q5', c)), o: oOf('q5', c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) });
   put('g3gm_la-q5', { name: '🔤 聽 字母 寫｜🔤 聽 字母 寫', qs: G3.LWP.la.map(c => ({ k: 'g', kn: '🔤 聽 字母 寫', q: txt(qOf('q5', c)), o: oOf('q5', c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) });
   /* 2026-11-14 第五十二次 第 7 點：🔠 A～Z 依序 背寫（三、四年級 的 班 都 可以 做；題目 ＝ 26 個 字母，一題 ＝ 大寫＋小寫）*/
-  ['g3gm_az-q5', 'g4gm_az-q5'].forEach(k => put(k, { name: '🔠 A～Z 依序 背寫｜🔠 A～Z 依序 背寫', qs: G3.LWP.az.map(c => ({ k: 'g', kn: '🔠 A～Z 依序 背寫', q: txt('第 ' + c.n + ' 個 字母（大寫＋小寫）'), o: [txt(c.up + ' ' + c.lo)], h: txt(c.zh || ''), ae: c.up + ' ' + c.lo })) }));
+  ['g3gm_az-q5', 'g4gm_az-q5'].forEach(k => put(k, { name: '🔠 A～Z 依序 背寫｜🔠 A～Z 依序 背寫', qs: G3.LWP.az.map(c => ({ k: 'g', kn: '🔠 A～Z 依序 背寫', q: txt('第 ' + c.n + ' 個 字母（大寫＋小寫）'), o: [txt(c.up + ' ' + c.lo), '❌ 寫錯 了'], h: txt(c.zh || ''), ae: c.up + ' ' + c.lo }))   /* 2026-11-14 第五十四次：跟 其他 寫字 題 一樣 [正解, ❌ 寫錯 了]（score/_test.js 要 2～4 個 選項）*/ }));
   put('g3gm_lf-q5', { name: '🎧 聽 字首音 寫｜🎧 聽 字首音 寫', qs: G3.LWP.lf.map(c => ({ k: 'g', kn: '🎧 聽 字首音 寫', q: txt(qOf('q5', c)), o: oOf('q5', c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) });
   /* 2026-10-26 第二十八次：📝 25／50 題 挑戰（g3gm_g3m-x25／x50）：題庫 ＝ 10 種 遊戲 的 挑戰 題庫 照 順序 接起來（跟 網頁 的 XALL 一樣）*/
   /* 2026-10-30 第三十四次 第 1～4 點：🏠 25 題 闖關（回家，g3gm_g3m-h25）＝ 題庫 A 的 全新 題（第幾題 ＝ 跟 25 題 挑戰 一樣 照 XORD）*/
@@ -221,6 +221,14 @@ Object.keys(BANK).forEach(k => { if (/_fun-/.test(k)) return;   /* 🏰 守城�
   const READ = { zhu: 1, pic: 1, bkp: 1 };
   [3, 4].forEach(g => Object.keys(NM).forEach(k => put('g' + g + 'gm_ph-' + k, { name: '🔤 自然發音｜' + NM[k], qs: k === 'c25' ? ITEMS.map(w => one(w, true)).concat(BWL.map(w => bone(w, true))) : /^bk/.test(k) ? BWL.map(w => bone(w, !READ[k])) : ITEMS.map(w => one(w, !READ[k])) })));
   /* 2026-11-13 第四十九次：🧩 音標 密碼 拼字（bksp）、🏁 CVC 單字 25 題 闖關（c25：第幾題 ＝ ITEMS，課本 字 ＝ ITEMS 長度 ＋ 課本 順序）*/
+})();
+/* ⚔️ 左右 對戰（2026-11-14 第五十四次；⚡ 現場任務 set vs，平板 vs/index.html）：g年級gm_vs-q1；第幾題 ＝ vs/_data.js 的 BANK[年級]（只 可以 接 在 後面 加）
+ *   每一題 的 選項 第 0 個 ＝ 正解（平板 記 的「選了 第幾個」＝ 這個 順序，畫面 上 的 位置 每次 洗牌 不影響）；語音 ＝ vs/_build.js 同 一份 查表 */
+(() => { const VD = require('../vs/_data.js'), fs2 = require('fs'), MAPS = ['midterm/audio/s', 'g3mid/audio', 'midterm/audio', 'sentences/audio', 'G3 - L1 + L2/audio'], AL = {};
+  const ak = t => String(t).replace(/[’]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
+  MAPS.forEach(d => { const o = JSON.parse(fs2.readFileSync(path.join(ROOT, d, 'aud.js'), 'utf8').match(/=(\{.*\})/s)[1]); Object.keys(o).forEach(k => { if (!AL[k]) AL[k] = '../' + d + '/' + o[k][0]; }); });
+  [3, 4].forEach(g => put('g' + g + 'gm_vs-q1', { name: '⚔️ 左右 對戰｜⚔️ 左右 對戰', qs: VD.BANK[g].map(q => ({ k: 'g', kn: '⚔️ 左右 對戰｜' + (VD.FN[q.f] || q.f),
+    q: txt((q.cuet ? q.cue + ' ' + q.cuet + '　' : q.cue + '　') + q.q), o: q.o.slice(), h: q.h.slice(1).filter(Boolean).join('；'), ae: q.say, ag: q.ag, az: q.az, au: AL[ak(q.say)] || '' })) }));
 })();
 /* 代號一定要是 _calc.js 認得的（以後新的教材登記錯了 build 就失敗） */
 const SC = require('./_calc.js');
