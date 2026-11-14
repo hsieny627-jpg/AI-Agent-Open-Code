@@ -24,7 +24,9 @@ const VOWS={a:PH.VLIST[0],e:PH.VLIST[1],i:PH.VLIST[2],o:PH.VLIST[3],u:PH.VLIST[4
 function parts(w){const m=/^(qu|[bcdfghjklmnprstvwyz])([aeiou])(ck|[bdfgklmnprstxz])$/.exec(w);return m?{i:m[1],v:m[2],e:m[3]}:null}
 const codeOf=w=>{const p=parts(w);return PH.code(p.i,VOWS[p.v],p.e)};
 /* 單獨 一個 音：字首（不 帶 ㄜ）、母音、字尾（m ＝ 閉嘴 mmm、n ＝ 嗯）*/
-const sOf=(p,k)=>k===0?'s_'+PH.initCode(p.i,p.v):k===1?'s_'+PH.vowCode(VOWS[p.v]):(p.e==='m'?'s_em':p.e==='n'?'s_en':p.e==='g'?'s_eg':p.e==='l'?'s_el':p.e==='x'?'s_x':p.e==='ck'?'s_ck':'s_'+PH.endCode(p.e));
+const sOf=(p,k)=>k===0?'s_'+PH.initCode(p.i,p.v):k===1?'s_'+PH.vowCode(VOWS[p.v]):(p.e==='m'?'s_em':p.e==='n'?'s_en':p.e==='l'?'s_el':p.e==='x'?'s_x':ESTOP[p.e]||'s_'+PH.endCode(p.e));
+/* 第五十二次 老師 第 1 點：字尾 d 太 大聲、太 刻意 ➜ 字尾 塞音 b d g p t k 全部 用 真的 字 最後 的 那 一個 音（輕、自然；tools/ph_fix52.py）*/
+const ESTOP={b:'s_eb',d:'s_ed',g:'s_eg',p:'s_ep',t:'s_et',k:'s_ek',ck:'s_ek'};
 const REAL={};WORDS.forEach(x=>REAL[x[0]]={zh:x[1],em:x[2]});
 const PSEW=PSE.map(x=>x[0]);
 const ITEMS=WORDS.map(x=>x[0]).concat(PSEW);   /* 老師看板 的 第幾題 ＝ 這個 清單 的 第幾個（score/_bank.js 同一份）*/
@@ -76,11 +78,12 @@ function letRow(w,sz,id){const p=parts(w),T=unitTiles(w),L=[p.i,p.v,p.e];
 async function blend(root,w,full){const p=parts(w),us=[...root.querySelectorAll('.u')];
   for(let k=0;k<3;k++){if(!us[k])continue;us[k].classList.add('hl');await say(sOf(p,k));await wait(220);us[k].classList.remove('hl');await wait(80)}
   if(full===false)return;us.forEach(u=>u.classList.add('hl'));await say(codeOf(w));await wait(350);us.forEach(u=>u.classList.remove('hl'))}
+/* 第五十二次 老師：拼法 1 改 成 s ➜ si ➜ six（字首 ➜ 字首＋母音 ➜ 整個 字）；意思 左邊 的 ＝ 刪 掉 */
 /* 第五十次（老師 第 10 點）小學堂 拼法：方式 1 ＝ s＋i 先 合（si）➜ 接 x ➜ six；方式 2 ＝ s ➜ i＋x 先 合（ix）➜ six。唸到 的 字母 稍微 放大 發亮 */
 let LBM=LS.g('lbm',1),LBT=0;
-const lbTxt=w=>{const p=parts(w);return LBM===1?p.i+p.v+' ＋ '+p.e+' ➜ '+w:p.i+' ＋ '+p.v+p.e+' ➜ '+w};
+const lbTxt=w=>{const p=parts(w);return LBM===1?p.i+' ➜ '+p.i+p.v+' ➜ '+w:p.i+' ＋ '+p.v+p.e+' ➜ '+w};
 async function blend2(root,w,m,dead){dead=dead||(()=>false);const p=parts(w),us=[...root.querySelectorAll('.u')],c=codeOf(w),on=a=>{us.forEach((u,k)=>u.classList.toggle('hl',a.indexOf(k)>=0))};
-  const steps=m===1?[[[0,1],PH2.partCode(c,'iv')],[[2],sOf(p,2)],[[0,1,2],c]]:[[[0],sOf(p,0)],[[1,2],PH2.partCode(c,'ve')],[[0,1,2],c]];
+  const steps=m===1?[[[0],sOf(p,0)],[[0,1],PH2.partCode(c,'iv')],[[0,1,2],c]]:[[[0],sOf(p,0)],[[1,2],PH2.partCode(c,'ve')],[[0,1,2],c]];
   root.classList.add('j1');for(const [ks,au] of steps){if(dead())break;on(ks);if(ks.length===3)root.classList.add('j2');await say(au);await wait(450)}on([])}
 function bindLet(root){root.addEventListener('click',e=>{const u=e.target.closest('.u');if(!u)return;const w=u.closest('.lt').dataset.w,k=+u.dataset.u;u.classList.add('hl');say(sOf(parts(w),k)).then(()=>setTimeout(()=>u.classList.remove('hl'),150))})}
 /* ══ 嘴巴 提示（容易 搞混 的 音）══ */
@@ -96,6 +99,8 @@ function diffTip(w,x){if(!x||!parts(x))return '';const p=parts(w),q=parts(x),out
   return out.join('<br>')}
 /* ══ 圖 ══ */
 const SVG={where:'<svg viewBox="0 0 100 100" width="1.15em" height="1.15em"><rect x="6" y="58" width="58" height="36" rx="6" fill="#2E7D5B"/><path d="M6 76h58M30 58v36" stroke="#5FBF8F" stroke-width="3"/><circle cx="17" cy="67" r="5" fill="#FFD54A"/><circle cx="50" cy="86" r="4" fill="#FF7A7A"/><circle cx="58" cy="40" r="27" fill="rgba(170,225,255,.35)" stroke="#FFD54A" stroke-width="8"/><path d="M77 60l15 15" stroke="#8D6E63" stroke-width="11" stroke-linecap="round"/><text x="58" y="52" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="36" fill="#fff" stroke="#1A237E" stroke-width="2">?</text></svg>',
+  /* 第五十二次 老師：room 不是 門 ➜ 一個 房間 的 室內 圖（天花板、三面 牆、窗戶、燈、木 地板、地毯）*/
+  room:'<svg viewBox="0 0 100 100" width="1.15em" height="1.15em"><path d="M4 6h92L74 26H26z" fill="#E9DCC6"/><path d="M4 6l22 20v48L4 96z" fill="#8FB9D9"/><path d="M96 6L74 26v48l22 22z" fill="#7AA7CC"/><rect x="26" y="26" width="48" height="48" fill="#B5D3EA"/><path d="M26 74h48l22 22H4z" fill="#C98A4B"/><path d="M15 85h70M26 74L12 96M50 74v22M74 74l14 22" stroke="#A86B33" stroke-width="1.6"/><rect x="38" y="33" width="24" height="20" rx="2" fill="#FFF"/><rect x="40" y="35" width="20" height="16" fill="#7FD3FF"/><path d="M50 35v16M40 43h20" stroke="#FFF" stroke-width="2"/><circle cx="55" cy="39" r="2.6" fill="#FFE066"/><path d="M50 6v8" stroke="#555" stroke-width="1.5"/><path d="M44 18h12l-3-5h-6z" fill="#FFC93C"/><ellipse cx="50" cy="86" rx="19" ry="5" fill="#E46A6A" opacity=".9"/><rect x="62" y="58" width="9" height="16" rx="1.5" fill="#5A8F4E"/></svg>',
   thin:'<svg viewBox="0 0 60 90" width="1em" height="1.3em"><circle cx="30" cy="14" r="9" fill="#FFD7A8"/><rect x="26" y="25" width="8" height="34" rx="4" fill="#4FC3F7"/><rect x="26" y="58" width="3.5" height="28" rx="2" fill="#37474F"/><rect x="30.5" y="58" width="3.5" height="28" rx="2" fill="#37474F"/><rect x="20" y="27" width="3" height="26" rx="1.5" fill="#FFD7A8"/><rect x="37" y="27" width="3" height="26" rx="1.5" fill="#FFD7A8"/></svg>',
   tall:'<svg viewBox="0 0 90 90" width="1.2em" height="1.2em"><g opacity=".45"><circle cx="20" cy="52" r="7" fill="#ccc"/><rect x="13" y="60" width="14" height="28" rx="5" fill="#999"/></g><circle cx="58" cy="12" r="9" fill="#FFD7A8"/><rect x="49" y="22" width="18" height="66" rx="6" fill="#FFC21A"/><path d="M80 80V12m-6 8 6-8 6 8" stroke="#2EE59D" stroke-width="4" fill="none"/></svg>',
   short:'<svg viewBox="0 0 90 90" width="1.2em" height="1.2em"><g opacity=".45"><circle cx="58" cy="12" r="9" fill="#ccc"/><rect x="49" y="22" width="18" height="66" rx="6" fill="#999"/></g><circle cx="20" cy="52" r="7" fill="#FFD7A8"/><rect x="13" y="60" width="14" height="28" rx="5" fill="#FFC21A"/><path d="M36 50v34m-6-8 6 8 6-8" stroke="#2EE59D" stroke-width="4" fill="none"/></svg>'};
@@ -408,7 +413,7 @@ function lessonOpen(i){LSN=LESS[i];const L=LSN,tok={};let k=-1;G={k:'lesson',tok
     bindCtl(word);$('#lbm').onclick=()=>{LBM=LBM===1?2:1;LS.s('lbm',LBM);$('#lbm').textContent='🔀 拼法 '+LBM+'：'+lbTxt(w)};const lw=$('#lw'),us=[...lw.querySelectorAll('.u')],st=$('#st'),dead=()=>G!==me||tok.n!==my;
     for(let j=0;j<3;j++){if(dead())return;us[j].style.opacity=1;us[j].classList.add('pop','hl');await say(sOf(p,j));await wait(450);us[j].classList.remove('hl');await wait(250)}
     if(dead())return;st.textContent='② 慢慢 合 起來（'+lbTxt(w)+'）';await blend2(lw,w,LBM,dead);
-    if(dead())return;st.textContent='③ 它 是 什麼 意思？';$('#lm').innerHTML='<span class="eq">＝</span><span class="em pop">'+REAL[w].em+'</span><span class="zh pop">'+REAL[w].zh+'</span>';await say(codeOf(w));await wait(600);
+    if(dead())return;st.textContent='③ 它 是 什麼 意思？';$('#lm').innerHTML='<span class="em pop">'+REAL[w].em+'</span><span class="zh pop">'+REAL[w].zh+'</span>';await say(codeOf(w));await wait(600);
     if(dead())return;st.textContent='④ 換 你 了！';lw.classList.remove('j1','j2');bindLet(lw);$('#ly').hidden=false;book(w);
     const lnb=$('#ln');$('#lj').onclick=async()=>{const t=++LBT;await blend2(lw,w,LBM,()=>t!==LBT);lnb.hidden=false};$('#ln').onclick=()=>{if(k<4){k++;word()}else{LS.s('ls_'+L.v,1);start('ls')}};
     if(window.__PHAUTO){$('#lj').click();setTimeout(()=>$('#ln').click(),60)}};
@@ -445,7 +450,7 @@ function bkInner(I){return '<span class="bwd" data-w="'+I.w+'">'+I.S.map((s,si)=
 function bkWordHTML(w,o){o=o||{};const I=bkInfo(w);return '<div class="bw2'+(o.cls?' '+o.cls:'')+'" style="--fs:'+(o.fs||(w.length>9?60:w.length>6?72:88))+'px">'+(I.parts?I.parts.map(bkInner).join('<span class="bsp"></span>'):bkInner(I))+'</div>'}
 const BKS={ERV:'ir',AE:'ae',EH:'eh',IH:'ih',AA:'aa',AO:'ao',AH:'uh',AH0:'uh',IY:'ee',IY0:'ee',UW:'uu',AY:'ii',OW:'oa',ER:'er',ER0:'er'};
 function phAu(o,j){const b=o.P[j].replace(/[12]/g,'');if(BKS[b])return 's_'+BKS[b];const cd=o.coda||(j>0&&o.v);
-  return 's_'+({B:'b',P:'p',F:'f',D:'d',T:'t',L:cd?'el':'l',K:'k',G:cd?'eg':'g',HH:'h',S:'s',Z:'z',JH:'j',CH:'ch',SH:'sh',TH:'th',DH:'dh',W:'w',Y:'y',V:'v',NG:'ng',M:cd?'em':'m',N:cd?'en':'n',R:cd?'er':'r',RC:'er'}[b])}
+  return 's_'+({B:cd?'eb':'b',P:cd?'ep':'p',F:'f',D:cd?'ed':'d',T:cd?'et':'t',L:cd?'el':'l',K:cd?'ek':'k',G:cd?'eg':'g',HH:'h',S:'s',Z:'z',JH:'j',CH:'ch',SH:'sh',TH:'th',DH:'dh',W:'w',Y:'y',V:'v',NG:'ng',M:cd?'em':'m',N:cd?'en':'n',R:cd?'er':'r',RC:'er'}[b])}
 const bkAu=w=>'bk_'+w.replace(/ /g,'_');
 const bkWords=I=>I.parts||[I];
 /* 一個 一個 字母 出來＋唸 它 的 聲音（不 發音 的 ＝ 灰色＋🤫，不 出 聲）*/
@@ -496,6 +501,7 @@ function stepPlan(w,m){const out=[],WS=bkWords(bkInfo(w)),nsy=WS.reduce((n,I)=>n
     if(m===1){
       if(cl){onG.forEach((g,n)=>out.push(n?{g:G(upTo(n+1)),au:'cl_'+I.w+'_'+si+'_'+(n+1)}:{g:G(upTo(1)),gp:g,I}));if(q.vw)out.push(rime())}
       else{q.on.forEach(g=>out.push({g:G([g]),gp:g,I}));
+        if(q.onS&&q.vw)out.push({g:G([q.vw]),gp:q.vw,I});   /* 第五十二次 老師：母音 也 單獨 唸（th ➜ i ➜ thi ➜ thin；r ➜ oo ➜ roo ➜ room）*/
         if(q.onS&&q.vw&&q.more)out.push({g:G(q.on.concat([q.vw])),au:'cv_'+I.w+'_'+si});
         else if(!q.onS&&q.vw&&q.more)out.push({g:G([q.vw]),gp:q.vw,I})}}
     else{if(cl)out.push({g:G(q.on),au:'cl_'+I.w+'_'+si+'_'+onG.length});else q.on.forEach(g=>out.push({g:G([g]),gp:g,I}));
@@ -505,21 +511,21 @@ function stepPlan(w,m){const out=[],WS=bkWords(bkInfo(w)),nsy=WS.reduce((n,I)=>n
 const stepTxt=(w,m)=>{const I=bkWords(bkInfo(w))[0],q=sylParts(I,0),on=q.on.map(g=>g.l).join(''),v=q.vw?q.vw.l:'',c=q.cd.map(g=>g.l).join(''),sy=I.S[0],onG=q.on.filter(g=>g.P.length);
   if(!on)return sy;if(m===2)return on+' ➜ '+v+c+' ➜ '+sy;
   if(onG.length>=2){const L=[];let t='';q.on.forEach(g=>{t+=g.l;if(g.P.length)L.push(t)});return L.join(' ➜ ')+' ➜ '+v+c+' ➜ '+sy}
-  return on+' ➜ '+(q.more?on+v+' ➜ ':'')+sy};
+  return on+' ➜ '+(v?v+' ➜ ':'')+(q.more?on+v+' ➜ ':'')+sy};
 async function bkStep(root,w,m,dead){const bw=root.querySelector('.bw2');bw.classList.remove('bars');for(const st of stepPlan(w,m)){if(dead())return;
   const els=st.all?[...bw.querySelectorAll('.bgp')]:st.g.map(([x,k])=>bw.querySelector('.bwd[data-w="'+x+'"] .bgp[data-g="'+k+'"]')).filter(Boolean);els.forEach(e=>e.classList.add('tap'));
   if(st.gp){if(!st.gp.P.length)await wait(500);else for(let j=0;j<st.gp.P.length;j++)await say(phAu(st.gp,j))}else await say(st.au);
   await wait(st.all?500:380);els.forEach(e=>e.classList.remove('tap'));await wait(120)}}
-function bridgeOpen(w0){const L=bkOrder();let k=Math.max(0,L.indexOf(w0));G={k:'bridge'};const me=G;$('#lobby').hidden=true;const s=$('#game');s.hidden=false;s.onclick=null;$('#quit').hidden=false;$('#ttl').textContent='📗 從 CVC 到 課本';PAUSED=false;let tok=0,fin=false,SM=LS.g('bsm',1);
+function bridgeOpen(w0){const L=bkOrder();let k=Math.max(0,L.indexOf(w0));G={k:'bridge'};const me=G;$('#lobby').hidden=true;const s=$('#game');s.hidden=false;s.onclick=null;$('#quit').hidden=false;$('#ttl').textContent='📗 從 CVC 到 課本';PAUSED=false;let DONE=-1,tok=0,fin=false,SM=LS.g('bsm',1),AUTO=false;document.body.classList.add('inBr');
   const tgl=(id,key,lb)=>'<button class="btg'+(BT[key]?' on':'')+'" id="'+id+'">'+lb+'</button>';
   const show=async()=>{const w=L[k],x=BOOK.W[w],my=++tok,dead=()=>G!==me||tok!==my;fin=false;
-    s.innerHTML='<div class="brg pnl'+(BT.no?' notile':'')+'"><div class="btop"><span class="lh">'+bkLesson(w)+'</span><span class="btgs">'+tgl('tN','no','無')+tgl('tI','ic','🖼 圖示')+tgl('tZ','zh','中文')+'<button class="btg" id="bl">📋 單字 清單</button></span></div>'+
-     '<div class="bstep" id="bst">① 🎧 先 聽，看 字母 下面 的 音標</div>'+bkWordHTML(w,{cls:'bars'})+'<div class="blabs"></div><div class="bres" id="br"></div>'+ctlHTML()+
+    s.innerHTML='<div class="brg pnl'+(BT.no?' notile':'')+'"><div class="btop"><span class="lh">'+bkLesson(w)+'</span><span class="btgs">'+tgl('tI','ic','🖼 圖示')+tgl('tZ','zh','中文')+'<button class="btg" id="bl">📋 單字 清單</button></span></div>'+
+     '<div class="bstep" id="bst">① 🎧 先 聽，看 字母 下面 的 音標</div>'+bkWordHTML(w,{cls:'bars'})+'<div class="blabs"></div><div class="bres" id="br"></div>'+ctlHTML().replace('<div class="ctl">','<div class="ctl"><button id="bA" class="bauto'+(AUTO?' on':'')+'">'+(AUTO?'▶ 自動 播放 中…':'▶ 自動 播放')+'</button>')+
      '<div class="row bsp2"><button class="say cy" id="bsS">🧩 逐步 拼音</button><button class="say" id="bsM">方式 '+SM+'：'+stepTxt(w,SM)+'</button></div>'+
      '<div class="row"><button class="say" id="bp">◀ 上 一個</button><button class="say" id="bn">下 一個 ▶</button></div></div>';
     const root=s.querySelector('.brg');root.dataset.w=w;const bw=root.querySelector('.bw2'),st=$('#bst'),refresh=()=>{bkLabs(root,w);bkRes(root,w,fin)};
-    bindCtl(show);$('#bp').onclick=()=>{k=(k+L.length-1)%L.length;show()};$('#bn').onclick=()=>{k=(k+1)%L.length;show()};$('#bl').onclick=()=>lobby('book');
-    const flip=(id,key)=>{$('#'+id).onclick=()=>{BT[key]=!BT[key];LS.s('bt',BT);$('#'+id).classList.toggle('on',BT[key]);root.classList.toggle('notile',BT.no);refresh()}};flip('tN','no');flip('tI','ic');flip('tZ','zh');
+    bindCtl(show);{const cp=$('#cP'),o=cp.onclick,bA=$('#bA'),up=()=>{bA.classList.toggle('on',AUTO);bA.textContent=AUTO?'▶ 自動 播放 中…':'▶ 自動 播放'};cp.onclick=()=>{o();if(PAUSED){AUTO=false;up()}};bA.onclick=()=>{if(AUTO)return;AUTO=true;up();if(PAUSED)o();if(fin&&DONE===tok){k=(k+1)%L.length;show()}}}$('#bp').onclick=()=>{k=(k+L.length-1)%L.length;show()};$('#bn').onclick=()=>{k=(k+1)%L.length;show()};$('#bl').onclick=()=>lobby('book');
+    const flip=(id,key)=>{$('#'+id).onclick=()=>{BT[key]=!BT[key];LS.s('bt',BT);$('#'+id).classList.toggle('on',BT[key]);root.classList.toggle('notile',BT.no);refresh()}};flip('tI','ic');flip('tZ','zh');
     $('#bsM').onclick=()=>{SM=SM===1?2:1;LS.s('bsm',SM);$('#bsM').textContent='方式 '+SM+'：'+stepTxt(w,SM)};
     $('#bsS').onclick=async()=>{++tok;const t2=tok;st.innerHTML='🧩 逐步 拼音（方式 '+SM+'）';bw.classList.remove('bars','split');await bkStep(root,w,SM,()=>G!==me||tok!==t2);if(G===me&&tok===t2){st.innerHTML='&nbsp;';fin=true;refresh()}};
     root.addEventListener('click',e=>{const gp=e.target.closest('.bw2 .bgp');if(gp&&!bw.classList.contains('bars'))bkTap(gp)});
@@ -532,7 +538,9 @@ function bridgeOpen(w0){const L=bkOrder();let k=Math.max(0,L.indexOf(w0));G={k:'
     const P=bkPieces(root,w).length?bkPieces(root,w):hasSyl(w)?bkWords(bkInfo(w)).map(I=>[...bw.querySelectorAll('.bwd[data-w="'+I.w+'"] .bsy')].map((el,i)=>({el,au:'sy_'+I.w+'_'+i})))[0]:[];
     for(const p of P){if(dead())return;p.el.classList.add('hl');await say(p.au);await wait(380);p.el.classList.remove('hl');await wait(120)}
     for(let r=0;r<2;r++){if(dead())return;bw.classList.add('hl');await say(bkAu(w));await wait(420);bw.classList.remove('hl');await wait(200)}
-    if(window.__PHAUTO&&window.__PHBR)window.__PHBR.push(w)};
+    DONE=my;if(window.__PHAUTO&&window.__PHBR)window.__PHBR.push(w);
+    /* 第五十二次 老師：〔▶ 自動 播放〕＝ 唸完 這 一個 字，自己 換 下 一個 字 再 唸；〔⏸ 暫停〕＝ 停 下來（最後 一個 字 唸完 也 停）*/
+    if(AUTO){await wait(1300);if(dead()||!AUTO)return;if(k>=L.length-1){AUTO=false;const b=$('#bA');if(b){b.classList.remove('on');b.textContent='▶ 自動 播放'}return}k++;show()}};
   if(!window.__bkRZ){window.__bkRZ=1;addEventListener('resize',()=>{const r=document.querySelector('.brg');if(r&&r.dataset.w&&G&&G.k==='bridge')bkLabs(r,r.dataset.w)})}
   show()}
 /* 課本 字 的 順序：三年級（We Can Help）在 前、四年級（My Home）在 後（BWL 的 順序 不 動 ＝ 老師看板 第幾題 不 變）*/
@@ -620,7 +628,7 @@ const LI2={slot:'<rect x="5" y="7" width="19" height="19" rx="3"/><path d="M10 7
   ls:'<path d="M16 28V15"/><path d="M16 17c-6 0-9-4-9-9 6 0 9 4 9 9zM16 15c0-5 3-8 9-8 0 5-3 8-9 8z"/>'};
 const lic=k=>'<svg class="li" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">'+(LI2[k]||'')+'</svg>';
 const SHOW={yn:'聽 一個 字，開頭 是 不是 這個 字母',twin:'聽 兩個 字，開頭 或 母音 一樣 嗎',line:'跟 魔王 搶 格子，拼 對 就 佔領，連 3 格',slot:'拉 拉桿，聽 3 個 聲音，選 對 的 字',ufo:'聽 一個 字，打 對 的 飛碟',vault:'聽 一個 字，轉 密碼 拼 出來',zhu:'看 一個 字，選 對 的 音標',bal:'聽 一個 字，戳 它 的 第一個 字母',vow:'聽 一個 字，選 中間 的 母音',end:'聽 一個 字，選 最後 的 聲音',lad:'聽 一個 字，只 換 一個 字母',pic:'自己 唸，選 對 的 圖',train:'聽 一個 字，字母 照 順序 放上 車廂',bk:'聽 課本 的 字，一塊 一塊 拼',bkp:'自己 唸 課本 的 字，選 對 的 圖',bksp:'看 音標，把 字母 放 回去'};
-function lobby(sec){G=null;AUtok++;PAUSED=false;document.body.classList.remove('fever');$('#lobby').hidden=false;$('#game').hidden=true;$('#game').innerHTML='';$('#quit').hidden=true;$('#ttl').textContent='自然發音 遊戲場';
+function lobby(sec){G=null;document.body.classList.remove('inBr');AUtok++;PAUSED=false;document.body.classList.remove('fever');$('#lobby').hidden=false;$('#game').hidden=true;$('#game').innerHTML='';$('#quit').hidden=true;$('#ttl').textContent='自然發音 遊戲場';
   const gc=k=>{const M=GM[k],b=LS.g('best_'+k,0);return '<button class="gc" data-go="'+k+'"><span class="ic">'+lic(k)+'</span><span class="gt"><b>'+M.nm+'</b><small>'+(SHOW[k]||M.how.split('。')[0])+'</small><span class="gm"><span class="tg">'+M.tag+'</span>'+(b?'<span class="best">最佳 '+b+'</span>':'')+'</span></span></button>'};
   const bk=LS.g('book',[]),all=WORDS.map(x=>x[0]).concat(bkOrder());
   /* 第四十九次 第 7-(1) 點：圖鑑 的 字 ＝ 母音 字母 紅色、不 發音 的 字母 灰色（課本 的 字 也 收集）*/
@@ -664,9 +672,10 @@ async function ruleShow(kind,then){const tok=++RXn,ov=H('div','rx'),gem=(c,t)=>'
 let RXn=0;
 document.addEventListener('click',e=>{const rx=e.target.closest('[data-rx]');if(rx){ruleShow(rx.dataset.rx,rx.dataset.rx==='fever'&&rx.classList.contains('rxq')?()=>ruleShow('boss'):null);return}const dw=e.target.closest('[data-dw]');if(dw){dw.classList.add('tap');say(auOf(dw.dataset.dw)).then(()=>dw.classList.remove('tap'));return}const l=e.target.closest('[data-lv]');if(l){LV=+l.dataset.lv;LS.s('lv',LV);lobby();return}
   const g=e.target.closest('[data-go]');if(g){start(g.dataset.go);return}const ls=e.target.closest('[data-ls]');if(ls){lessonOpen(+ls.dataset.ls);return}const br=e.target.closest('[data-br]');if(br){bridgeOpen(br.dataset.br);return}const c5=e.target.closest('[data-c25]');if(c5){c25Start(+c5.dataset.c25);return}
+  if(e.target.closest('#mdNo')){BT.no=!BT.no;LS.s('bt',BT);$('#mdNo').classList.toggle('on',BT.no);const r=document.querySelector('.brg');if(r){r.classList.toggle('notile',BT.no);bkLabs(r,r.dataset.w)}return}
   const md=e.target.closest('[data-md]');if(md){MD=md.dataset.md;LS.s('md',MD);$$('[data-md]').forEach(b=>b.classList.toggle('on',b===md));retile();if(G&&G.k==='bridge')$('#cR').click();return}
   if(e.target.closest('#quit')){if(G&&G.t)G.t.stop();lobby()}});
-$$('[data-md]').forEach(b=>b.classList.toggle('on',b.dataset.md===MD));
+$$('[data-md]').forEach(b=>b.classList.toggle('on',b.dataset.md===MD));$('#mdNo').classList.toggle('on',BT.no);
 lobby();crInit();{const sb=document.getElementById('scbar');if(sb&&window.ResizeObserver)new ResizeObserver(()=>document.documentElement.style.setProperty('--sbh',(sb.hidden?0:sb.offsetHeight)+'px')).observe(sb)}{const m=/[?&]c25=([34])/.exec(location.search);if(m&&!/[?&]live=/.test(location.search))c25Start(+m[1])}
-window.PHG={get G(){return G},GM:GM,start:start,lobby:lobby,lessonOpen:lessonOpen,bridgeOpen:bridgeOpen,c25Start:c25Start,crGo:()=>CRP&&CRP.go&&CRP.go(),bkInfo:bkInfo,bkOrder:bkOrder,slotNear:slotNear,phAu:phAu,HARDV:HARDV,CNEAR:CNEAR,C25A:C25A,C25B:C25B,ITEMS:ITEMS,BWL:BWL,codeOf:codeOf,near:near,realOf:realOf,pseOf:pseOf};
+window.PHG={get G(){return G},sOf:sOf,ESTOP:ESTOP,stepTxt:stepTxt,GM:GM,start:start,lobby:lobby,lessonOpen:lessonOpen,bridgeOpen:bridgeOpen,c25Start:c25Start,crGo:()=>CRP&&CRP.go&&CRP.go(),bkInfo:bkInfo,bkOrder:bkOrder,slotNear:slotNear,phAu:phAu,HARDV:HARDV,CNEAR:CNEAR,C25A:C25A,C25B:C25B,ITEMS:ITEMS,BWL:BWL,codeOf:codeOf,near:near,realOf:realOf,pseOf:pseOf};
 })();

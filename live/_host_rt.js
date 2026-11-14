@@ -352,7 +352,7 @@ function give(){var b=$('#give'),m=$('#gm');if(H.done){m.textContent='✅ 已經
 /* 結束 這一場：清掉 遊戲（留著 p：學生 還 登入 著，下一場 直接 進來）*/
 function closeGame(){LV.stopSay();stopAll();if(H.code)LDB.must('PATCH',R(),{m:null,v:Date.now(),a:null,rw:null,xt:null,ch:null},6).then(function(){location.reload()});else location.reload()}
 /* 2026-11-01 第三十八次 第 9 點：老師 一鍵 複製 學生 作答 任務 的 網址（期中複習 進行 中 ＝ 直接 到 那個 任務：g3mid／midterm ?live=0班；其他 ＝ 現場任務 頁）*/
-function taskURL(){try{if(typeof CRS!=='undefined'&&CRS.cfg&&H.code){return new URL('../'+(String(H.cls).charAt(0)==='4'?'midterm':'g3mid')+'/index.html?live='+H.code,location.href).href}}catch(e){}return stuURL()}
+function taskURL(){try{if(typeof CRS!=='undefined'&&CRS.cfg&&H.code){return new URL('../'+(String(H.cls).charAt(0)==='4'&&CRS.cfg.set!=='g25'&&CRS.cfg.set!=='az'?'midterm':'g3mid')+'/index.html?live='+H.code,location.href).href}}catch(e){}return stuURL()}
 function copyURL(b){var u=taskURL(),t0=b.textContent,ok=function(){b.textContent='✅ 複製 好了';setTimeout(function(){b.textContent=t0},2000)};
   try{navigator.clipboard.writeText(u).then(ok,function(){fb()})}catch(e){fb()}
   function fb(){var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok()}catch(e){}t.remove()}}

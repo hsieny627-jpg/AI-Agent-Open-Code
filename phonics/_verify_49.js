@@ -41,6 +41,7 @@ function serve() { return new Promise(r => { const TY = { '.html': 'text/html', 
       ok(L.length === 25 && L[0] === 'strong' && L[24] === 'fish', tag + ' 課本 字 順序（三年級 在 前）不對 ' + L.slice(0, 2));
       for (const w of L) { await q.evaluate(w => PHG.bridgeOpen(w), w);
         for (let t = 0; t < 120; t++) { await q.waitForTimeout(60); if (await q.evaluate(w => window.__PHBR.indexOf(w) >= 0, w)) break; }
+        await q.waitForTimeout(500);   /* 第五十二次：等 放大 動畫（0.4 秒）結束 再 量 */
         const r = await q.evaluate(w => { const b = document.querySelector('.brg .bw2'), gp = [...b.querySelectorAll('.bgp')];
           const mis = gp.filter(g => { const l = g.querySelector('.bgl').getBoundingClientRect(), t = g.querySelector('.tls'); return t.scrollWidth > l.width + 6 || Math.abs(t.getBoundingClientRect().left - l.left) > 4; }).map(g => g.textContent.slice(0, 4));
           const cls = gp.map(g => [...g.querySelectorAll('.bgl i')].map(i => i.textContent + ':' + i.className.replace(/ ?on/, '')).join(','));

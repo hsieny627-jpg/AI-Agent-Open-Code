@@ -13,7 +13,7 @@ const BOOK = require('./_book.js'), EXS = require('./_excshow.json');
 /* ① 聲音 */
 const pcm = f => { const b = cp.execFileSync('ffmpeg', ['-v', 'quiet', '-i', f, '-f', 'f32le', '-ac', '1', '-ar', '22050', '-']); return new Float32Array(b.buffer, b.byteOffset, b.length / 4); };
 const actRms = y => { const w = 441, fr = []; for (let i = 0; i + w < y.length; i += w) { let s = 0; for (let j = i; j < i + w; j++) s += y[j] * y[j]; fr.push(Math.sqrt(s / w)); } const mx = Math.max(...fr), a = fr.filter(x => x > mx * 0.1); return Math.sqrt(a.reduce((t, x) => t + x * x, 0) / a.length); };
-const S = [...have].filter(c => /^s_/.test(c)); let lo = 1, hi = 0;
+const S = [...have].filter(c => /^s_/.test(c) && !/^s_e[bdgptk]$/.test(c));   /* 第五十二次：字尾 塞音 故意 小聲 一半（老師 第 1 點）＝ _verify_52.js 量 */ let lo = 1, hi = 0;
 S.forEach(c => { const r = actRms(pcm(path.join(D, 'au', c + '.mp3'))); lo = Math.min(lo, r); hi = Math.max(hi, r); ok(r > 0.03 && r < 0.1, '單獨 字母 音量 不 一致 ' + c + ' ' + r.toFixed(3)); });
 ok(hi / lo < 2.6, '單獨 字母 最 大聲／最 小聲 差 太 多 ' + (hi / lo).toFixed(2));
 ['s_eg', 's_el', 's_ir', 's_r', 's_ng', 't-aa-p', 'bk_rabbit', 'sy_rabbit_1', 'bk_strong'].forEach(c => ok(have.has(c), '沒有 音檔 ' + c));
@@ -44,7 +44,7 @@ function serve() { return new Promise(r => { const TY = { '.html': 'text/html', 
           return { lh: top.querySelector('.lh').textContent, tg, right: rt.right > innerWidth * 0.6 && rt.bottom < word.top, st: document.getElementById('bst').textContent.trim(), eq: /＝/.test(document.getElementById('br').textContent), br: document.getElementById('br').textContent.trim(), say: window.__PHSAY.slice(), desc, over: document.documentElement.scrollWidth > innerWidth + 1 }; }, w);
         ok(done, tag + ' 課本 ' + w + ' 動畫 沒 演完');
         ok(/^G[34]\s+L\d\s+\d+\/\d+$/.test(r.lh), tag + ' ' + w + ' 上面 不是 G4 L3 1/6：' + r.lh);
-        ok(r.tg.join() === 'tN,tI,tZ,bl' && r.right, tag + ' ' + w + ' 右上角 按鈕 不對 ' + r.tg.join());
+        ok(r.tg.join() === 'tI,tZ,bl' && r.right, tag + ' ' + w + ' 右上角 按鈕 不對 ' + r.tg.join());
         ok(r.st === '' && !r.eq && r.br.length > 0, tag + ' ' + w + ' 第 ④ 步 還 有 字／還 有 ＝／沒有 圖＋中文 ' + JSON.stringify([r.st, r.br]));
         const au = w.replace(/ /g, '_'), tail = r.say.slice(-2);
         ok(tail[0] === 'bk_' + au && tail[1] === 'bk_' + au, tag + ' ' + w + ' 最後 沒有 唸 整個 字 兩次 ' + tail.join());
@@ -60,13 +60,13 @@ function serve() { return new Promise(r => { const TY = { '.html': 'text/html', 
       const lab = await q.evaluate(() => { document.getElementById('tI').click(); document.getElementById('tZ').click(); const sy = [...document.querySelectorAll('.bwd .bsy')].map(e => { const r = e.getBoundingClientRect(); return r.left + r.width / 2; });
         const pl = [...document.querySelectorAll('.plab')].map(e => { const r = e.getBoundingClientRect(); return [r.left + r.width / 2, e.textContent]; }); return { sy, pl, br: document.getElementById('br').textContent }; });
       ok(lab.pl.length === 2 && lab.pl.every((p, i) => Math.abs(p[0] - lab.sy[i]) < 12) && /洗澡/.test(lab.pl[0][1]) && /房間/.test(lab.pl[1][1]), tag + ' 圖示／中文 沒有 在 bath room 正下方 ' + JSON.stringify(lab));
-      const no = await q.evaluate(() => { document.getElementById('tI').click(); document.getElementById('tZ').click(); document.getElementById('tN').click(); const t = [...document.querySelectorAll('.bw2 .tls')].filter(x => x.offsetWidth > 0).length; document.getElementById('tN').click(); return t; });
+      const no = await q.evaluate(() => { document.getElementById('tI').click(); document.getElementById('tZ').click(); document.getElementById('mdNo').click(); const t = [...document.querySelectorAll('.bw2 .tls')].filter(x => x.offsetWidth > 0).length; document.getElementById('mdNo').click(); return t; });
       ok(no === 0, tag + '〔無〕還 看得到 音標 ' + no);
       /* 點 字母 ＝ 唸 那 個 字母（放大）*/
       const tp = await q.evaluate(async () => { window.__PHSAY.length = 0; const g = document.querySelector('.bwd .bgp[data-g="2"]'); g.click(); const cls = g.classList.contains('tap'); await new Promise(r => setTimeout(r, 200)); return [cls, window.__PHSAY.join()]; });
       ok(tp[0] && tp[1] === 's_th', tag + ' 點 th 沒有 唸／沒有 放大 ' + tp.join(' '));
       /* 逐步 拼音 兩種 */
-      for (const [m, want] of [[1, 's_b,cv_bathroom_0,sy_bathroom_0,s_r,cv_bathroom_1,sy_bathroom_1,bk_bathroom'], [2, 's_b,rm_bathroom_0,sy_bathroom_0,s_r,rm_bathroom_1,sy_bathroom_1,bk_bathroom']]) {
+      for (const [m, want] of [[1, 's_b,s_ae,cv_bathroom_0,sy_bathroom_0,s_r,s_uu,cv_bathroom_1,sy_bathroom_1,bk_bathroom'], [2, 's_b,rm_bathroom_0,sy_bathroom_0,s_r,rm_bathroom_1,sy_bathroom_1,bk_bathroom']]) {
         await q.evaluate(m => { localStorage.setItem('phm_bsm', m); }, m); await q.evaluate(() => PHG.bridgeOpen('bathroom'));
         await q.evaluate(m => { const b = document.getElementById('bsM'); if (!b.textContent.startsWith('方式 ' + m)) b.click(); window.__PHSAY.length = 0; document.getElementById('bsS').click(); }, m);
         await q.waitForTimeout(1500); const got = await q.evaluate(() => window.__PHSAY.join());

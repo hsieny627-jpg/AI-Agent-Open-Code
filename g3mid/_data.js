@@ -439,6 +439,8 @@ var LF = []; LFW.forEach(function (w) { var c = w[0][0], C = c.toUpperCase();
   LF.push({ show: c, want: C, say: w[0], en: w[0], ic: w[2], wz: w[1], lis: 1, lisw: 1, zh: w[0] + ' ＝ ' + w[1] + '，第一個 字母 的 大寫 是 ' + C + '。' });
   LF.push({ show: c, want: c, say: w[0], en: w[0], ic: w[2], wz: w[1], lis: 1, lisw: 1, zh: w[0] + ' ＝ ' + w[1] + '，第一個 字母 的 小寫 是 ' + c + '。' }); });
 if (LF.length < 20) throw new Error('🔊 聽 字首音 寫：字 太 少 ' + LF.length);
-var LWP = { lw: LW0, lwh: LW, la: LA, lf: LF };
+/* 2026-11-14 第五十二次 第 7 點（老師）：🔠 A～Z 依序 背寫 ＝ 26 頁，一頁 一個 字母：① 寫 大寫 ➜ ② 寫 小寫（順序 不可以 錯；不 給 看、不 給 聽 ＝ 背 出來）*/
+var AZ = 'abcdefghijklmnopqrstuvwxyz'.split('').map(function (c, i) { var C = c.toUpperCase(); return { show: C, want: C, up: C, lo: c, say: c, en: C + ' ' + c, az: 1, n: i + 1, zh: '第 ' + (i + 1) + ' 個 字母：大寫 ' + C + '、小寫 ' + c + '。' }; });
+var LWP = { lw: LW0, lwh: LW, la: LA, lf: LF, az: AZ };
 module.exports = { LWP: LWP, LW: LW, DTUT: DTUT, LES: LES, SIL: require('../G3 - L1 + L2/_data.js').SIL, XB2: XB2, XORD: XORD, XORD2: XORD2, XN0: XN0, CB: CB, CSETS: CD.SETS, CZH: CZH, ORD: ORD, XB: XB, SAYM: SAYM, GL: GL, PH: PH, PHM: PHM, CE: CE, SC: SC, GAMES: GAMES, SAY: SAY, BOYS: BOYS, GIRLS: GIRLS, NUMW: NUMW,
   EXAM_A: EXAM_A, EXAM_D: EXAM_D, EXAM_E: EXAM_E };

@@ -1,0 +1,129 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>雙人 大冒險 預覽</title>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<!-- 2026-11-14 第五十二次 第 4 點：👥 兩人 輪流 的 3D 大富翁「英語 世界 大冒險」＝ 預覽（老師 說「同意」才 放進 ⚡ 現場任務）。題目 ＝ 示範 用，正式 版 用 那一個 任務 的 題目。 -->
+<style>
+:root{--bg:#070B1E;--p1:#3BA4FF;--p2:#FF5FA8;--gold:#FFD54A;--t1:#1B2A6B;--t2:#13204F;--glow:#7FD3FF}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:#fff;font-family:'Microsoft JhengHei','PingFang TC',sans-serif;overflow:hidden;user-select:none}
+.en{font-family:Andika,sans-serif}
+#app{position:fixed;inset:0;display:grid;grid-template-columns:1fr minmax(320px,30vw);gap:0}
+#sky{position:absolute;inset:0;background:var(--sky);transition:background 1s}
+.scene{position:relative;perspective:1500px;perspective-origin:50% 30%;overflow:hidden}
+.board{position:absolute;left:50%;top:52%;width:min(70vh,58vw);height:min(70vh,58vw);margin:calc(min(70vh,58vw)/-2) 0 0 calc(min(70vh,58vw)/-2);transform-style:preserve-3d;transform:rotateX(56deg) rotateZ(var(--rz,-20deg));transition:transform 1.6s cubic-bezier(.3,.9,.3,1)}
+.base{position:absolute;inset:-3%;border-radius:4%;background:var(--base);box-shadow:0 0 0 6px rgba(255,255,255,.08),0 40px 80px rgba(0,0,0,.6);transform:translateZ(-14px)}
+.base:after{content:"";position:absolute;inset:0;border-radius:4%;background:linear-gradient(90deg,rgba(255,255,255,.12),transparent 40%,rgba(255,255,255,.06));}
+.tile{position:absolute;width:15.4%;height:15.4%;border-radius:12%;transform-style:preserve-3d;background:linear-gradient(160deg,var(--t1),var(--t2));border:2px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 8px 0 rgba(0,0,0,.45);transition:transform .3s}
+.tile .ic{font-size:min(4.4vh,3.6vw);transform:rotateX(-30deg) translateZ(14px);filter:drop-shadow(0 6px 6px rgba(0,0,0,.5))}
+.tile .nm{font-size:min(1.6vh,1.3vw);font-weight:900;color:#E7EEFF;transform:translateZ(2px)}
+.tile.p1own{box-shadow:0 8px 0 rgba(0,0,0,.45),0 0 0 4px var(--p1) inset}.tile.p2own{box-shadow:0 8px 0 rgba(0,0,0,.45),0 0 0 4px var(--p2) inset}
+.tile.hit{transform:translateZ(18px);border-color:var(--gold);box-shadow:0 0 30px var(--gold)}
+.center{position:absolute;left:19%;top:19%;width:62%;height:62%;border-radius:8%;background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.14),rgba(0,0,0,.25));transform:translateZ(1px);display:flex;align-items:center;justify-content:center}
+.center .logo{transform:rotateX(-20deg) translateZ(30px);text-align:center;font-weight:900;font-size:min(3.4vh,2.8vw);text-shadow:0 0 18px var(--glow)}
+.center .logo b{display:block;font-size:2em}
+.tok{position:absolute;width:6.6%;height:6.6%;transform-style:preserve-3d;transition:left .28s ease,top .28s ease;z-index:5}
+.tok .up{position:absolute;left:50%;bottom:0;transform:translateX(-50%) rotateX(-56deg);transform-origin:50% 100%;display:flex;flex-direction:column;align-items:center}
+.tok .hd{width:min(5.2vh,4.2vw);height:min(5.2vh,4.2vw);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:min(3.4vh,2.8vw);border:3px solid #fff;box-shadow:0 0 18px var(--c)}
+.tok .bd{width:0;height:0;border-left:min(2.2vh,1.8vw) solid transparent;border-right:min(2.2vh,1.8vw) solid transparent;border-top:min(3.2vh,2.6vw) solid var(--c)}
+.tok.hop .up{animation:hop .28s ease}@keyframes hop{50%{transform:translateX(-50%) rotateX(-56deg) translateY(-60%)}}
+.tok.p1{--c:var(--p1)}.tok.p2{--c:var(--p2)}.tok.p1 .hd{background:var(--p1)}.tok.p2 .hd{background:var(--p2)}
+.shadow{position:absolute;left:50%;bottom:-4%;width:70%;height:30%;transform:translateX(-50%);border-radius:50%;background:rgba(0,0,0,.45);filter:blur(3px)}
+/* 右邊 */
+.side{position:relative;z-index:3;background:linear-gradient(180deg,rgba(15,22,60,.96),rgba(8,12,34,.98));border-left:2px solid rgba(255,255,255,.1);display:flex;flex-direction:column;gap:10px;padding:14px;overflow:auto}
+.ttl{font-size:clamp(22px,2.6vh,30px);font-weight:900;color:var(--gold)}.ttl small{display:block;font-size:.62em;color:#C9D4FF;font-weight:700}
+.pl{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:10px 12px;border-radius:16px;border:3px solid transparent;background:rgba(255,255,255,.06)}
+.pl.on{border-color:var(--gold);box-shadow:0 0 22px rgba(255,213,74,.45)}
+.pl .a{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;border:3px solid #fff}
+.pl .n{font-size:clamp(20px,2.4vh,26px);font-weight:900}.pl .n small{display:block;font-size:.7em;color:#C9D4FF}
+.pl .c{font-size:clamp(22px,2.8vh,30px);font-weight:900;color:var(--gold);text-align:right}.pl .c small{display:block;font-size:.6em;color:#9EF0C0}
+.team{padding:6px 12px;border-radius:16px;background:linear-gradient(90deg,rgba(59,164,255,.25),rgba(255,95,168,.25));font-size:clamp(20px,2.4vh,26px);font-weight:900;text-align:center}
+.team b{color:var(--gold);font-size:1.4em}
+.qc{flex:0 0 auto;display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:18px;background:rgba(255,255,255,.07);min-height:0}
+.qc .who{font-size:clamp(20px,2.4vh,26px);font-weight:900}
+.qc .q{font-family:Andika,sans-serif;font-size:clamp(28px,3.6vh,40px);font-weight:700;text-align:center;padding:6px}
+.ops{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ops button{font-family:Andika,sans-serif;font-size:clamp(26px,3.2vh,38px);font-weight:700;min-height:62px;border-radius:16px;border:3px solid #5C6CC8;background:#1A2563;color:#fff}
+.ops button.ok{background:#0F7A45;border-color:#2EE59D}.ops button.no{background:#7A1A28;border-color:#FF6B6B}
+.big{font-size:clamp(24px,3vh,32px);font-weight:900;min-height:70px;border-radius:999px;border:0;background:linear-gradient(#FFE07A,#FFB300);color:#2A1B00;box-shadow:0 6px 0 #9A6A00;padding:0 26px}
+.big:disabled{opacity:.4}
+.msg{font-size:clamp(20px,2.4vh,26px);font-weight:900;text-align:center;min-height:2.6em;color:#FFE9A8}
+/* 骰子 */
+#dice{position:absolute;left:50%;top:40%;width:110px;height:110px;margin:-55px 0 0 -55px;transform-style:preserve-3d;z-index:20;transition:transform 1.1s cubic-bezier(.2,.8,.3,1);display:none}
+#dice.on{display:block}#dice i{position:absolute;inset:0;border-radius:18px;background:linear-gradient(145deg,#fff,#DDE4FF);border:3px solid #9AA6E8;display:flex;align-items:center;justify-content:center;font-style:normal;font-family:Andika,sans-serif;font-weight:700;font-size:58px;color:#1A2563}
+#dice i:nth-child(1){transform:translateZ(55px)}#dice i:nth-child(2){transform:rotateY(180deg) translateZ(55px)}#dice i:nth-child(3){transform:rotateY(90deg) translateZ(55px)}#dice i:nth-child(4){transform:rotateY(-90deg) translateZ(55px)}#dice i:nth-child(5){transform:rotateX(90deg) translateZ(55px)}#dice i:nth-child(6){transform:rotateX(-90deg) translateZ(55px)}
+/* 事件 大字 */
+#ev{position:absolute;left:50%;top:18%;transform:translateX(-50%) scale(.3);opacity:0;z-index:25;padding:14px 26px;border-radius:22px;background:rgba(10,14,40,.9);border:3px solid var(--gold);font-size:clamp(26px,3.6vh,40px);font-weight:900;text-align:center;transition:.35s cubic-bezier(.2,1.6,.4,1);pointer-events:none;max-width:90%}
+#ev.on{transform:translateX(-50%) scale(1);opacity:1}#ev small{display:block;font-size:.6em;color:#DCE4FF}
+.spark{position:absolute;z-index:24;font-size:34px;pointer-events:none;animation:sp 1.1s ease-out forwards}@keyframes sp{to{transform:translate(var(--x),var(--y)) scale(1.6) rotate(200deg);opacity:0}}
+.theme{position:absolute;left:14px;top:12px;z-index:4;font-size:clamp(18px,2.2vh,24px);font-weight:900;background:rgba(0,0,0,.4);padding:6px 14px;border-radius:999px}
+.nt{position:absolute;right:14px;top:12px;z-index:4;display:flex;gap:8px}.nt button{font-size:18px;font-weight:900;border-radius:999px;border:2px solid #fff3;background:rgba(0,0,0,.45);color:#fff;padding:8px 14px;min-height:48px}
+@media (max-width:900px){#app{grid-template-columns:1fr}.side{position:absolute;left:0;right:0;bottom:0;max-height:52vh}.board{top:30%}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style></head><body>
+<div id="app"><div class="scene" id="scene"><div id="sky"></div><div class="theme" id="theme"></div><div class="nt"><button id="newb">🔄 換 一張 地圖</button></div>
+<div class="board" id="board"><div class="base"></div><div class="center"><div class="logo" id="logo"></div></div></div><div id="dice"><i>1</i><i>6</i><i>3</i><i>4</i><i>5</i><i>2</i></div><div id="ev"></div></div>
+<div class="side"><div class="ttl">👥 英語 世界 大冒險<small>預覽：兩個 人 輪流 答題 ➜ 答對 才 擲 骰子</small></div>
+<div class="pl" id="pl0"><div class="a" style="background:var(--p1)">🦸</div><div class="n">第 1 位<small>30401</small></div><div class="c"><span id="c0">0</span><small id="t0">🏰 0</small></div></div>
+<div class="pl" id="pl1"><div class="a" style="background:var(--p2)">🧚</div><div class="n">第 2 位<small>30402</small></div><div class="c"><span id="c1">0</span><small id="t1">🏰 0</small></div></div>
+<div class="team">🤝 兩人 隊伍 ＝ <b id="tm">0</b> 分<br><small>（兩個 人 加起來，跟 全班 其他 隊伍 比）</small></div>
+<div class="qc"><div class="who" id="who"></div><div class="q en" id="q"></div><div class="ops" id="ops"></div><div class="msg" id="msg"></div><button class="big" id="roll" disabled>🎲 擲 骰子</button></div></div></div>
+<script>
+/* ── 10 種 主題：每 一局 不一樣（地圖 顏色、地標、事件 組合、鏡頭 角度 都 換）── */
+const TH=[
+ {n:'🌃 霓虹 城市',sky:'radial-gradient(circle at 50% 0%,#3B1E7A,#070B1E 70%)',base:'linear-gradient(135deg,#251552,#120A33)',t1:'#3A1F8A',t2:'#1C0F4F',g:'#FF4FD8',L:['🏙️','🎡','🚇','🏟️','🗼','🎢']},
+ {n:'🌊 深海 王國',sky:'radial-gradient(circle at 50% 0%,#0B6E8F,#03182B 70%)',base:'linear-gradient(135deg,#0A4D6E,#062B40)',t1:'#0D6C8E',t2:'#074056',g:'#5DF2FF',L:['🐙','🐠','🦈','🐚','🪸','🐋']},
+ {n:'🚀 銀河 探險',sky:'radial-gradient(circle at 50% 0%,#24306E,#02030C 70%)',base:'linear-gradient(135deg,#171C4A,#090B22)',t1:'#27307A',t2:'#141A4A',g:'#9DB4FF',L:['🪐','🛰️','🌕','☄️','👽','🌌']},
+ {n:'🦖 恐龍 島',sky:'radial-gradient(circle at 50% 0%,#5E8F2E,#10200A 70%)',base:'linear-gradient(135deg,#355A1E,#1B300F)',t1:'#4E7A2A',t2:'#2A4416',g:'#C6FF5D',L:['🦖','🦕','🌋','🥚','🌴','🦴']},
+ {n:'🧙 魔法 森林',sky:'radial-gradient(circle at 50% 0%,#5B2A8C,#0D0618 70%)',base:'linear-gradient(135deg,#3A1A5C,#1C0C30)',t1:'#552C86',t2:'#2D1650',g:'#D59BFF',L:['🔮','🍄','🦄','🧚','📜','🏰']},
+ {n:'🍰 甜點 王國',sky:'radial-gradient(circle at 50% 0%,#C2457A,#2A0B1C 70%)',base:'linear-gradient(135deg,#8A2E58,#4A1530)',t1:'#A33A6C',t2:'#621F41',g:'#FFB3D9',L:['🍰','🍩','🍭','🧁','🍫','🍦']},
+ {n:'🤖 未來 科技',sky:'radial-gradient(circle at 50% 0%,#0E7C86,#020F14 70%)',base:'linear-gradient(135deg,#0B4A52,#05252A)',t1:'#0F6670',t2:'#073A40',g:'#4DFFE1',L:['🤖','🛸','💾','🔋','🧬','📡']},
+ {n:'❄️ 冰雪 世界',sky:'radial-gradient(circle at 50% 0%,#5EA8D8,#0A1A2C 70%)',base:'linear-gradient(135deg,#3C7AA8,#1C3C5A)',t1:'#4F8FC0',t2:'#24507A',g:'#E4F6FF',L:['⛄','🐧','🏔️','🛷','🧊','🦭']},
+ {n:'🌋 火山 冒險',sky:'radial-gradient(circle at 50% 0%,#B33A12,#1A0502 70%)',base:'linear-gradient(135deg,#7A220A,#3A0E04)',t1:'#9A2E0E',t2:'#561805',g:'#FFB04D',L:['🌋','🔥','🐉','💎','⛏️','🛡️']},
+ {n:'☁️ 天空 之 城',sky:'radial-gradient(circle at 50% 0%,#7FB6FF,#13234A 70%)',base:'linear-gradient(135deg,#4A6FB8,#25407A)',t1:'#5A86D8',t2:'#2F5296',g:'#FFF3A8',L:['🏯','🎈','🌈','🦅','☁️','🪁']}];
+/* 事件 格（全部 是 好事：兩個 人 一起 變強；競爭 ＝ 誰 收集 得 多，不 扣 對方 分）*/
+const EV={st:['🏁','起點','經過 起點：隊伍 ＋5'],lm:['','地標','第一個 到 ＝ 插 旗子（之後 誰 經過 都 幫 隊伍 ＋2）'],star:['⭐','星星','＋3 分'],gift:['🎁','驚喜','抽 一張 好運 卡'],port:['🌀','傳送門','往前 飛 3 格'],
+ duo:['🤝','合作','兩個 人 一起 答 一題：對 了 兩個 人 都 ＋4'],fire:['🔥','挑戰','下一題 答對 ✖2'],rain:['🌈','彩虹','下一題 兩個 人 都 ＋2']};
+const LUCK=['🍀 幸運 草：＋5','💰 金幣 雨：兩個 人 都 ＋3','⚡ 閃電 鞋：再 擲 一次','🛡️ 守護 盾：下一題 答錯 也 不 扣 機會','🎯 神射手：下一題 答對 ✖2'];
+/* 示範 題目（全 英文、Andika；正式 版 ＝ 那一個 任務 的 題目）*/
+const Q=[['What comes after C?','D',['B','G','E']],['What comes after m?','n',['w','h','u']],['Which is a real word?','cat',['cta','tca','atc']],['Which word starts like ball?','bed',['pen','dog','ten']],
+ ['What comes after P?','Q',['O','R','B']],['Which word ends like dog?','big',['bit','bid','bin']],['Which word has the same vowel as hat?','map',['mop','mud','men']],['What comes after x?','y',['v','z','w']],
+ ['Which word starts like fish?','fan',['van','pan','ten']],['Which is a real word?','sun',['snu','usn','nsu']]];
+let T,lay,pos=[0,0],coin=[0,0],own={},turn=0,bonus=[0,0],busy=false,qi=0;
+const $=s=>document.querySelector(s),R=a=>a[Math.floor(Math.random()*a.length)],SH=a=>a.slice().sort(()=>Math.random()-.5);
+function cell(i){if(i<6)return [i,0];if(i<11)return [5,i-5];if(i<16)return [15-i,5];return [0,20-i]}   /* 20 格 繞 一圈（6✕6 的 外圈）*/
+function newMap(){T=R(TH);const S=document.documentElement.style;S.setProperty('--sky',T.sky);S.setProperty('--base',T.base);S.setProperty('--t1',T.t1);S.setProperty('--t2',T.t2);S.setProperty('--glow',T.g);
+  $('#theme').textContent=T.n+'（每 一局 地圖 不一樣）';$('#logo').innerHTML=T.L[0]+'<b class="en">WORLD QUEST</b>'+T.n.split(' ')[1];
+  const pool=SH(['star','star','gift','gift','port','duo','duo','fire','rain','lm','lm','lm','lm','lm','lm','gift','star','rain','fire']);lay=['st'].concat(pool.slice(0,19));own={};pos=[0,0];
+  const b=$('#board');b.querySelectorAll('.tile,.tok').forEach(e=>e.remove());let li=0;
+  lay.forEach((k,i)=>{const [x,y]=cell(i),d=document.createElement('div');d.className='tile';d.id='tl'+i;d.style.left=(x*16.9)+'%';d.style.top=(y*16.9)+'%';const e=EV[k];
+    d.innerHTML='<span class="ic">'+(k==='lm'?T.L[(li++)%T.L.length]:e[0])+'</span><span class="nm">'+e[1]+'</span>';b.appendChild(d)});
+  [0,1].forEach(p=>{const t=document.createElement('div');t.className='tok p'+(p+1);t.id='tk'+p;t.innerHTML='<div class="shadow"></div><div class="up"><div class="hd">'+(p?'🧚':'🦸')+'</div><div class="bd"></div></div>';b.appendChild(t);place(p)});
+  b.style.setProperty('--rz',(Math.random()*50-35).toFixed(0)+'deg');draw();ask()}
+function place(p){const [x,y]=cell(pos[p]),t=$('#tk'+p);t.style.left=(x*16.9+4.4+(p?3.4:-1.5))+'%';t.style.top=(y*16.9+2+(p?3:-1))+'%'}
+function draw(){[0,1].forEach(p=>{$('#c'+p).textContent=coin[p];$('#t'+p).textContent='🏰 '+Object.values(own).filter(v=>v===p).length;$('#pl'+p).classList.toggle('on',p===turn)});$('#tm').textContent=coin[0]+coin[1];
+  $('#who').innerHTML='<span style="color:'+(turn?'var(--p2)':'var(--p1)')+'">'+(turn?'🧚 第 2 位':'🦸 第 1 位')+'</span> 答題'}
+function ev(h,s){const e=$('#ev');e.innerHTML=h+(s?'<small>'+s+'</small>':'');e.classList.add('on');clearTimeout(ev.t);ev.t=setTimeout(()=>e.classList.remove('on'),1700)}
+function spark(n,ic){const sc=$('#scene').getBoundingClientRect();for(let i=0;i<n;i++){const s=document.createElement('div');s.className='spark';s.textContent=ic||R(['✨','⭐','💫']);s.style.left=sc.width*0.4+'px';s.style.top=sc.height*0.42+'px';const a=Math.random()*6.28,r=120+Math.random()*200;s.style.setProperty('--x',Math.cos(a)*r+'px');s.style.setProperty('--y',Math.sin(a)*r+'px');$('#scene').appendChild(s);setTimeout(()=>s.remove(),1200)}}
+function ask(){const q=Q[qi++%Q.length],o=SH([q[1]].concat(q[2]));$('#q').textContent=q[0];$('#msg').textContent='';$('#roll').disabled=true;draw();
+  $('#ops').innerHTML=o.map(x=>'<button class="en" data-v="'+x+'">'+x+'</button>').join('');
+  $('#ops').onclick=e=>{const b=e.target.closest('button');if(!b||busy)return;busy=true;const ok=b.dataset.v===q[1];b.classList.add(ok?'ok':'no');
+    if(ok){const g=bonus[turn]?2:1;bonus[turn]=0;coin[turn]+=2*g;draw();spark(14);$('#msg').textContent='✅ 答對了！＋'+2*g+' 分 ➜ 擲 骰子';$('#roll').disabled=false;busy=false}
+    else{[...$('#ops').children].forEach(x=>{if(x.dataset.v===q[1])x.classList.add('ok')});$('#msg').textContent='❌ 這一題 是 '+q[1]+'（正式 版 ＝ 綠底 答錯頁）➜ 換 下一位';setTimeout(()=>{busy=false;turn=1-turn;ask()},1800)}}}
+function roll(){if(busy)return;busy=true;$('#roll').disabled=true;const n=1+Math.floor(Math.random()*6),d=$('#dice'),RY=[0,0,-90,90,0,180];d.classList.add('on');
+  d.style.transform='rotateX('+(n===5?-90:n===2?90:0)+'deg) rotateY('+RY[n-1]+'deg)';
+  d.animate([{transform:'rotateX(0) rotateY(0) scale(.6)'},{transform:'rotateX('+(720+(n===5?-90:n===2?90:0))+'deg) rotateY('+(720+RY[n-1])+'deg) scale(1.15)'}],{duration:1100,easing:'cubic-bezier(.2,.8,.3,1)'});
+  setTimeout(()=>{ev('🎲 '+n+' 步！');setTimeout(()=>{d.classList.remove('on');walk(n)},700)},1150)}
+function walk(n){const p=turn,t=$('#tk'+p);let k=0;const st=()=>{if(k>=n){land();return}pos[p]=(pos[p]+1)%20;if(pos[p]===0){coin[p]+=5;draw();ev('🏁 經過 起點','隊伍 ＋5')}place(p);t.classList.remove('hop');void t.offsetWidth;t.classList.add('hop');
+    k++;setTimeout(st,300)};st()}
+function land(){const p=turn,i=pos[p],k=lay[i],tl=$('#tl'+i);tl.classList.add('hit');setTimeout(()=>tl.classList.remove('hit'),900);let msg='';
+  if(k==='lm'){if(own[i]==null){own[i]=p;tl.classList.add(p?'p2own':'p1own');coin[p]+=3;msg='🚩 插 旗子！這個 地標 是 你的 ＋3';spark(18,'🚩')}else{coin[0]+=1;coin[1]+=1;msg='🎟️ 參觀 地標：兩個 人 都 ＋1（合作 也 加分）'}}
+  else if(k==='star'){coin[p]+=3;msg='⭐ 星星 ＋3';spark(16,'⭐')}
+  else if(k==='gift'){const c=R(LUCK);msg='🎁 好運 卡：'+c;if(/＋5/.test(c))coin[p]+=5;else if(/兩個 人/.test(c)){coin[0]+=3;coin[1]+=3}else if(/✖2/.test(c))bonus[p]=1;spark(20,'🎁')}
+  else if(k==='port'){msg='🌀 傳送門：往前 飛 3 格';setTimeout(()=>{pos[p]=(pos[p]+3)%20;place(p);spark(14,'🌀')},500)}
+  else if(k==='duo'){coin[0]+=4;coin[1]+=4;msg='🤝 合作 格：兩個 人 一起 想（示範：都 ＋4）';spark(18,'🤝')}
+  else if(k==='fire'){bonus[p]=1;msg='🔥 挑戰：下一題 答對 ✖2'}
+  else if(k==='rain'){coin[0]+=2;coin[1]+=2;msg='🌈 彩虹：兩個 人 都 ＋2';spark(18,'🌈')}
+  else msg='🏁 起點';
+  ev(msg);draw();setTimeout(()=>{busy=false;turn=1-turn;ask()},1900)}
+$('#roll').onclick=roll;$('#newb').onclick=newMap;newMap();
+</script></body></html>

@@ -1,0 +1,38 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第五十二次 新聲音</title>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<!-- 2026-11-14 第五十二次：老師 聽完 P51 的 回答 ➜ 網站 已經 換 新 的；v51/ ＝ 第五十一次。做法 tools/ph_fix52.py -->
+<style>
+body{margin:0;background:#0B1026;color:#fff;font-family:'Microsoft JhengHei','PingFang TC',sans-serif;padding:18px}
+h1{font-size:36px;margin:0 0 6px;color:#FFE07A}p{font-size:24px;line-height:1.6;color:#DCE4FF;margin:4px 0 14px}
+h2{font-size:30px;margin:24px 0 8px}
+table{border-collapse:collapse;width:100%;max-width:1150px}
+td,th{border:1px solid #2A3570;padding:10px;font-size:24px;text-align:center}th{background:#141B3D;color:#FFE07A}
+td.w{font-family:Andika,sans-serif;font-size:42px;font-weight:700}td.t{text-align:left;font-size:22px;color:#DCE4FF}
+button{font-size:26px;font-weight:900;border-radius:14px;padding:10px 20px;cursor:pointer}
+.o{background:#2A2A2A;color:#ccc;border:2px solid #666}.n{background:#062A35;color:#9EF0FF;border:3px solid #22D3EE}
+</style><body>
+<h1>🎧 第五十二次 新聲音（網站已經換成新的）</h1>
+<p>請一個一個比：<b>新的對</b> ＝ 不用做什麼；<b>還是不對</b> ＝ 告訴我哪一個、聽起來像什麼。</p>
+<h2>① 字母 的 聲音</h2><table id="t1"><tr><th>字母</th><th>老師說 ➜ 這次 怎麼 改</th><th>第五十一次</th><th>現在（新）</th></tr></table>
+<h2>② b、g 請 老師 選一個（網站 現在 ＝ B）</h2><table id="t4"><tr><th>字母</th><th>A（第五十次：爆破＋70 毫秒）</th><th>B（跟 d 一樣：很短 的 閉嘴 嗡嗡＋爆破）</th></tr></table>
+<h2>③ 字尾 的 聲音（老師 第 1 點：字尾 d 太 大聲、太 刻意）</h2><table id="t2"><tr><th>字尾</th><th>這次 怎麼 改</th><th>第五十一次</th><th>現在（新）</th></tr></table>
+<h2>④ 單字、子音 一個 一個 加上去</h2><table id="t3"><tr><th>聲音</th><th>老師說 ➜ 這次 怎麼 改</th><th>第五十一次</th><th>現在（新）</th></tr></table>
+<script>
+const A=new Audio(),O=c=>'v51/'+c+'.mp3',N=c=>'../../phonics/au/'+c+'.mp3';
+function bt(src,cls,t){return src?'<button class="'+cls+'" data-s="'+src+'">'+t+'</button>':'—'}
+function row(id,w,t,o,n){document.getElementById(id).insertAdjacentHTML('beforeend','<tr><td class="w">'+w+'</td><td class="t">'+t+'</td><td>'+bt(o,'o','🔊 舊')+'</td><td>'+bt(n,'n','🔊 新')+'</td></tr>')}
+[['ng','刪 不相關 的 尾音 ➜ 只 留「鼻音 一直 很 穩」的 那 一段','s_ng'],
+ ['r','刪 尾音 ㄜ ➜ 只 留 舌頭 捲 起來 不 動 的 ㄖ，往 母音 走 以前 就 切掉','s_r']].forEach(r=>row('t1',r[0],r[1],O(r[2]),N(r[2])));
+['b','g'].forEach(c=>document.getElementById('t4').insertAdjacentHTML('beforeend','<tr><td class="w">'+c+'</td><td>'+bt('s_'+c+'_A.mp3','o','🔊 A')+'</td><td>'+bt('s_'+c+'_B.mp3','n','🔊 B')+'</td></tr>'));
+[['d','以前 ＝ 字首 的 d（又 大聲 又 用力）➜ 真的 字 最後 的 d（bad 的 d）：輕、短、自然','s_d','s_ed'],
+ ['b','同樣 的 問題 ➜ 真的 字 最後 的 b（web 的 b）','s_b','s_eb'],
+ ['g','同樣 的 問題 ➜ 真的 字 最後 的 g（bug 的 g）','s_eg','s_eg'],
+ ['p','同樣 的 問題 ➜ 真的 字 最後 的 p，小聲 一半','s_p','s_ep'],
+ ['t','同樣 的 問題 ➜ 真的 字 最後 的 t，小聲 一半','s_t','s_et'],
+ ['k／ck','同樣 的 問題 ➜ 真的 字 最後 的 k','s_ck','s_ek']].forEach(r=>row('t2',r[0],r[1],O(r[2]),N(r[3])));
+[['top','尾音 像 兩個 p ➜ 原因：舊 的 top 本來 就 有 p，又 接 一個 p ➜ 現在 只 有 一個 p','t-aa-p'],
+ ['str','r 刪 尾音 ㄜ（用 新 的 r 重新 接）','cl_strong_0_3'],
+ ['gr','r 刪 尾音 ㄜ','cl_angry_1_2']].forEach(r=>row('t3',r[0],r[1],O(r[2]),N(r[2])));
+document.addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(!b)return;A.src=b.dataset.s;A.play()});
+</script></body></html>

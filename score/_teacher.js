@@ -1470,7 +1470,7 @@ function favNm(id){var k=id.charAt(0),n=+id.slice(1);if(k==='t'){var T=(SC.RPT||
    三年級 複習（g3m）、課堂複習 1～3（c1～c3）的 10 種 遊戲：一列 一位 學生（號碼＋姓名），10 欄 ＝ 每一種 遊戲 的 正確率（百分制），最後 一欄 ＝ 這位 學生 的 平均；
    最下面 一列 ＝ 全班 每一種 遊戲 的 平均。**只 算 已經 作答 的 題目**（答 了 幾題 就 算 幾題；時間 到 ＝ 答錯）＝ 答對 題數 ÷ 作答 題數 ✕ 100。時間 ＝ 上面 選 的 時間。 */
 var G3S='all',G3C='';
-var G3SETS=[['g3m','📝 三年級 複習'],['c1','🏫 課堂複習 1'],['c2','🏫 課堂複習 2'],['c3','🏫 課堂複習 3'],['lw','✍️ 字母 書寫'],['la','🔤 聽 字母 寫'],['lf','🎧 聽 字首音 寫'],['lwh','✍️ 字母 書寫（在家）'],['all','三年級 全部'],['mt','📝 四年級 複習'],['x3','📝 三年級 期中 挑戰'],['x4','📝 四年級 期中 挑戰']];
+var G3SETS=[['g3m','📝 三年級 複習'],['c1','🏫 課堂複習 1'],['c2','🏫 課堂複習 2'],['c3','🏫 課堂複習 3'],['lw','✍️ 字母 書寫'],['la','🔤 聽 字母 寫'],['lf','🎧 聽 字首音 寫'],['lwh','✍️ 字母 書寫（在家）'],['az','🔠 A～Z 依序 背寫'],['all','三年級 全部'],['mt','📝 四年級 複習'],['x3','📝 三年級 期中 挑戰'],['x4','📝 四年級 期中 挑戰']];
 /* 2026-10-26 第二十九次 第 7 點（老師）：(1) 欄 的 順序 ＝ 關卡 順序（第 9 關 夾娃娃、第 10 關 小精靈）(2) 每一個 遊戲 的 平均 正確率 放 最上面 一格（每班 1 號 的 正上方）
    (3) 底色：59 以下 紅、60～80 黃、81～100 綠；多〔📝 四年級 複習〕（12 種 遊戲，四年級 的 班） */
 var G3ORD=['q1','q4','q5','q6','q7','q8','q9','q10','q3','q2'];
@@ -1524,14 +1524,14 @@ function dwrPlay(){var my=++DWN,box=$('#dwr');if(!box)return;var R=[].slice.call
     setTimeout(function(){if(my!==DWN)return;play(x.au,x.en,function(){if(my!==DWN)return;setTimeout(function(){dwrZh(x.z1,function(){if(my!==DWN)return;r.classList.remove('spk');setTimeout(nx,500)})},300)})},700)})()}
 function dwrZh(t,cb){var done=false,f=function(){if(!done){done=true;cb()}};setTimeout(f,Math.max(1800,600+String(t).length*450)+2500);try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(String(t)),V=speechSynthesis.getVoices()||[],v=V.filter(function(x){return /zh[-_]TW/i.test(x.lang)})[0];u.lang='zh-TW';if(v)u.voice=v;u.rate=.9;u.onend=f;u.onerror=f;setTimeout(function(){try{speechSynthesis.speak(u)}catch(e){}},90)}catch(e){f()}}
 document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-dwr]');if(b)dwrPlay()});
-function paneGT(){var g4=G3S==='mt',CC=SC.CLASSES[g4?4:3]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===(g4?4:3)&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),GM=g3Games();
+function paneGT(){if(G3S==='az')return paneAZ();var g4=G3S==='mt',CC=SC.CLASSES[g4?4:3]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===(g4?4:3)&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),GM=g3Games();
   var RS=ALL.filter(function(x){var m=g4?/^g4gm_(mt)-(m\\d+)$/.exec(x.set):/^g3gm_(g3m|c[123]|lw|lwh|la|lf)-(q\\d+)$/.exec(x.set);return m&&!x.x&&x.cls===c&&(g4||G3S==='all'||m[1]===G3S)&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)});
   var P={},T={};RS.forEach(function(x){var g=/-([qm]\\d+)$/.exec(x.set)[1],p=P[x.id]=P[x.id]||{};(x.qs||[]).forEach(function(q){var a=p[g]=p[g]||[0,0],b=T[g]=T[g]||[0,0];a[0]+=q[0]?1:0;a[1]++;b[0]+=q[0]?1:0;b[1]++})});
   var ids=(RCLS[c]||[]).slice();Object.keys(P).forEach(function(id){if(ids.indexOf(id)<0)ids.push(id)});ids.sort();
   var cell=function(a,av){var x=av?' av':'';if(!a||!a[1])return '<td class="'+x+'">—</td>';var v=Math.round(a[0]/a[1]*100);return '<td class="'+g3Col(v)+x+'">'+v+'<small>'+a[1]+' 題</small></td>'};
   var sum=function(o){var a=[0,0];GM.forEach(function(g){var x=o[g[0]];if(x){a[0]+=x[0];a[1]+=x[1]}});return a};
   var h='<div class="fvhd g3h">'+(g4?'📝 四年級 複習：12 種':'🏫 三年級 課堂 複習：10 種')+' 遊戲 的 平均 正確率<small>（百分制；只 算 已經 作答 的 題目；時間 到 沒有 選 ＝ 答錯；時間 ＝ 上面 選 的）</small></div>'+
-    (g4?'':'<div class="g3sw">'+G3SETS.filter(function(x){return /^(g3m|c[123]|lw|lwh|la|lf|all)$/.test(x[0])}).map(function(x){return '<button data-g3s="'+x[0]+'" class="'+(G3S===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div>')+
+    (g4?'<div class="g3sw"><button data-g3s="mt" class="on">📝 四年級 複習</button><button data-g3s="az">🔠 A～Z 依序 背寫</button></div>':'<div class="g3sw">'+G3SETS.filter(function(x){return /^(g3m|c[123]|lw|lwh|la|lf|az|all)$/.test(x[0])}).map(function(x){return '<button data-g3s="'+x[0]+'" class="'+(G3S===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div>')+
     '<div class="g3sw">'+CC.map(function(x){return '<button data-g3c="'+x+'" class="'+(x===c?'on':'')+'" style="border-color:'+ccol(x)+'">'+esc(SC.cname(x))+'</button>'}).join('')+'</div>'+
     '<div class="note"><span class="g3k p2">🟢 81～100</span> <span class="g3k p1">🟡 60～80</span> <span class="g3k p0">🔴 59 以下</span>　—　還沒 做；小字 ＝ 作答 幾題。</div><div class="g3w"><table class="g3t"><tr><th>號碼</th><th>姓名</th>'+
     GM.map(function(g,i){var t=g[1].split(' '),ic=t.shift();return '<th><small class="g3n">第 '+(i+1)+' 關</small><b>'+ic+'</b>'+esc(t.join(' '))+'</th>'}).join('')+'<th class="av"><b>⭐</b>平均</th></tr>';
@@ -1541,12 +1541,29 @@ function paneGT(){var g4=G3S==='mt',CC=SC.CLASSES[g4?4:3]||[],c=G3C&&CC.indexOf(
   if(!RS.length)h+='<div class="note">這個 時間、這一班 還沒有 人 做'+(G3S==='all'?'':'「'+G3SETS.filter(function(x){return x[0]===G3S})[0][1]+'」')+'。</div>';
   return h}
 
+
+/* ══ 2026-11-14 第五十二次 第 7 點（老師）：🔠 A～Z 依序 背寫 ＝ 兩個 成績（百分制）：💯 正確率（寫對 幾 個 字母 ÷ 26）、🎮 遊戲 積分（火箭 積分 ÷ 26 頁 ✕ 500）
+   三、四年級 的 班 都 可以 做（g3gm_az-q5、g4gm_az-q5）；一位 學生 一列 ＝ 這個 時間 裡 最近 的 一次（右邊 小字 ＝ 做 了 幾 次、最好 的 正確率）*/
+function paneAZ(){var CC=(SC.CLASSES[3]||[]).concat(SC.CLASSES[4]||[]),c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.cls&&CC.indexOf(F.cls)>=0?F.cls:CC[0]);G3C=c;var r=range();
+  var RS=ALL.filter(function(x){return /^g[34]gm_az-q5$/.test(x.set)&&x.cls===c&&(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to)}).sort(function(a,b){return a.t-b.t});
+  var P={};RS.forEach(function(x){var Q=x.qs||[],ok=0,n=0;Q.forEach(function(q){ok+=q[0]?1:0;n++});var acc=Math.round(ok/26*100),p=P[x.id]=P[x.id]||{k:0,best:0};p.k++;p.best=Math.max(p.best,acc);p.acc=acc;p.ok=ok;p.n=n;p.gp=Math.max(0,Math.min(100,Math.round(+x.raw||0)));p.t=x.t;
+    var last=-1;Q.forEach(function(q,i){if(q[0])last=i});p.to=last>=0?'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.charAt(last):'—'});
+  var ids=(RCLS[c]||[]).slice();Object.keys(P).forEach(function(id){if(ids.indexOf(id)<0)ids.push(id)});ids.sort();
+  var col=function(v){return v==null?'':g3Col(v)},td=function(v,sm){return v==null?'<td>—</td>':'<td class="'+col(v)+'">'+v+(sm?'<small>'+sm+'</small>':'')+'</td>'};
+  var av=function(k){var a=0,n=0;ids.forEach(function(id){var p=P[id];if(p){a+=p[k];n++}});return n?Math.round(a/n):null};
+  var h='<div class="fvhd g3h">🔠 A～Z 依序 背寫：兩個 成績<small>（百分制；💯 正確率 ＝ 寫對 幾 個 字母 ÷ 26（大寫、小寫 都 對 才 算；時間 到 還 沒 寫到 ＝ 錯）；🎮 遊戲 積分 ＝ 寫得 愈 整齊、愈 快 愈 高）</small></div>'+
+    '<div class="g3sw">'+G3SETS.filter(function(x){return /^(g3m|c[123]|lw|lwh|la|lf|az|all)$/.test(x[0])}).map(function(x){return '<button data-g3s="'+x[0]+'" class="'+(G3S===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'<button data-g3s="mt">📝 四年級 複習</button></div>'+
+    '<div class="g3sw">'+CC.map(function(x){return '<button data-g3c="'+x+'" class="'+(x===c?'on':'')+'" style="border-color:'+ccol(x)+'">'+esc(SC.cname(x))+'</button>'}).join('')+'</div>'+
+    '<div class="note"><span class="g3k p2">🟢 81～100</span> <span class="g3k p1">🟡 60～80</span> <span class="g3k p0">🔴 59 以下</span>　—　還沒 做。</div><div class="g3w"><table class="g3t"><tr><th>號碼</th><th>姓名</th><th><b>💯</b>正確率</th><th><b>🎮</b>遊戲 積分</th><th><b>✅</b>寫對 幾 個</th><th><b>🔠</b>最後 寫對 到</th><th><b>🔁</b>做 了 幾 次</th></tr>'+
+    '<tr class="all"><td colspan="2">🏫 全班 平均</td>'+td(av('acc'))+td(av('gp'))+'<td></td><td></td><td></td></tr>';
+  ids.forEach(function(id){var p=P[id];h+='<tr><td>'+id.slice(3)+'</td><td class="nm">'+esc(nm(id)||'')+'</td>'+(p?td(p.acc,'最好 '+p.best)+td(p.gp)+'<td>'+p.ok+' ／ 26</td><td style="font-family:Andika,sans-serif;font-size:1.3em">'+p.to+'</td><td>'+p.k+'</td>':'<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')+'</tr>'});
+  h+='</table></div>';if(!RS.length)h+='<div class="note">這個 時間、這一班 還沒有 人 做「🔠 A～Z 依序 背寫」。</div>';return h}
 /* ══ 2026-10-30 第三十四次 第 11 點（老師：〔課堂複習〕主題 太多 看不懂 ➜ 照 建議）══
    先 選〔三年級〕〔四年級〕➜ 三張 大卡：⚡ 期中 挑戰（上課：25／50、新 25／新 50）、🏠 25 題 闖關（回家：h25）、🎮 期中複習 遊戲（三年級 複習＋課堂複習 1～3／四年級 複習 12 種）；
    點 一張 ＝ 下面 出現 那一張 的 表。**有 新 成績 的 那一張 亮起來**（金色 光＋「🆕 有 新 成績」）＝ 這一張 最近 一筆 成績 比 老師 上一次 打開 這一張 還 新（記 在 這台 電腦 tcr_seen_年級_卡）*/
 var CRG=0,CRK='';
 var CRC=[['x','⚡','期中 挑戰','上課',function(g){return g===3?/^g3gm_g3m-[xng](25|50)$/:/^g4gm_mt-[xn](25|50)$/}],['h','🏠','25 題 闖關','回家',function(g){return g===3?/^g3gm_g3m-h25$/:/^g4gm_mt-h25$/}],
-  ['g','🎮','期中複習 遊戲','上課／自己 玩',function(g){return g===3?/^g3gm_(g3m|c[123]|lw|lwh|la|lf)-q\\d+$/:/^g4gm_mt-m\\d+$/}]];   /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（g3gm_lw-q5）*/
+  ['g','🎮','期中複習 遊戲','上課／自己 玩',function(g){return g===3?/^g3gm_(g3m|c[123]|lw|lwh|la|lf|az)-q\\d+$/:/^g4gm_(mt-m\\d+|az-q5)$/}]];   /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（g3gm_lw-q5）*/
 function crLast(g,k){var re=CRC.filter(function(c){return c[0]===k})[0][4](g),t=0;ALL.forEach(function(x){if(!x.x&&x.t>t&&re.test(x.set))t=x.t});return t}
 function crSeen(g,k,v){var key='tcr_seen_'+g+'_'+k;try{if(v!=null)localStorage.setItem(key,String(v));return +localStorage.getItem(key)||0}catch(e){return 0}}
 function paneG(){var g=CRG||(F.g===4?4:3);CRG=g;

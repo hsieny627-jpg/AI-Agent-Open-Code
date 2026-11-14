@@ -17,9 +17,9 @@ const actRms = y => { const w = 441, fr = []; for (let i = 0; i + w < y.length; 
 const au = c => path.join(D, 'au', c + '.mp3');
 ['s_p', 's_t', 's_w', 's_r', 's_ng', 's_b', 's_d', 's_g', 's_eg', 't-aa-p', 'bk_rabbit', 'sy_rabbit_1', 'bk_strong', 'rm_strong_0', 'cl_strong_0_2', 'cl_strong_0_3', 'cl_angry_1_2'].forEach(c => ok(have.has(c), '沒有 音檔 ' + c));
 ['s_p', 's_t', 's_w', 's_r', 's_ng', 's_b', 's_g', 's_eg', 't-aa-p', 'bk_rabbit', 'bk_strong'].forEach(c => ok(!fs.readFileSync(au(c)).equals(fs.readFileSync(path.join(V50, c + '.mp3'))), c + ' 沒有 換 新 的'));
-['s_w', 's_r', 's_ng', 's_b', 's_g'].forEach(c => ok(dur(au(c)) < dur(path.join(V50, c + '.mp3')) - 0.02, c + ' 尾巴 沒有 變 短（刪 ㄜ）'));
+/* 第五十二次：r ng b g 又 重做 了（_verify_52.js 量）*/ ['s_w'].forEach(c => ok(dur(au(c)) < dur(path.join(V50, c + '.mp3')) - 0.02, c + ' 尾巴 沒有 變 短（刪 ㄜ）'));
 ok(fs.readFileSync(au('s_d')).equals(fs.readFileSync(path.join(ROOT, 'listen', '2026-11-14_P50', 's_d_B.mp3'))), 'd 不是 B');
-ok(fs.readFileSync(au('s_eg')).equals(fs.readFileSync(au('s_g'))), '字尾 g 不是 新 的 g');
+/* 第五十二次：字尾 g ＝ s_eg（真的 字 最後 的 g，_verify_52.js 量）*/
 ['s_p', 's_t', 's_b', 's_d', 's_g', 's_w', 's_r', 's_ng'].forEach(c => { const r = actRms(pcm(au(c))); ok(r > 0.03 && r < 0.1, '音量 不 一致 ' + c + ' ' + r.toFixed(3)); });
 /* ③ 逐步 拼音 要 的 每 一個 聲音 */
 function serve() { return new Promise(r => { const TY = { '.html': 'text/html', '.js': 'text/javascript', '.mp3': 'audio/mpeg' };
@@ -53,9 +53,9 @@ const TB = fs.readFileSync(path.join(ROOT, 'teacher', 'index.html'), 'utf8');
       ok(!q.__er.length, tag + ' 例外 字 頁 有 錯誤 ' + q.__er.join('|')); await q.close(); }
     /* ③ 逐步 拼音（老師 的 例子）＋ 全部 課本 字 的 聲音 都 有 檔 */
     { const q = await page('/phonics/games.html', () => { window.__PHAUTO = 0; });
-      const EX = { 'strong|1': 's_s,cl_strong_0_2,cl_strong_0_3,rm_strong_0,bk_strong', 'strong|2': 'cl_strong_0_3,rm_strong_0,bk_strong', 'thin|1': 's_th,cv_thin_0,bk_thin', 'thin|2': 's_th,rm_thin_0,bk_thin',
-        'bathroom|1': 's_b,cv_bathroom_0,sy_bathroom_0,s_r,cv_bathroom_1,sy_bathroom_1,bk_bathroom', 'bathroom|2': 's_b,rm_bathroom_0,sy_bathroom_0,s_r,rm_bathroom_1,sy_bathroom_1,bk_bathroom' };
-      const TX = { 'strong|1': 's ➜ st ➜ str ➜ ong ➜ strong', 'strong|2': 'str ➜ ong ➜ strong', 'thin|1': 'th ➜ thi ➜ thin', 'thin|2': 'th ➜ in ➜ thin' };
+      const EX = { 'strong|1': 's_s,cl_strong_0_2,cl_strong_0_3,rm_strong_0,bk_strong', 'strong|2': 'cl_strong_0_3,rm_strong_0,bk_strong', 'thin|1': 's_th,s_ih,cv_thin_0,bk_thin', 'thin|2': 's_th,rm_thin_0,bk_thin',
+        'bathroom|1': 's_b,s_ae,cv_bathroom_0,sy_bathroom_0,s_r,s_uu,cv_bathroom_1,sy_bathroom_1,bk_bathroom', 'bathroom|2': 's_b,rm_bathroom_0,sy_bathroom_0,s_r,rm_bathroom_1,sy_bathroom_1,bk_bathroom' };
+      const TX = { 'strong|1': 's ➜ st ➜ str ➜ ong ➜ strong', 'strong|2': 'str ➜ ong ➜ strong', 'thin|1': 'th ➜ i ➜ thi ➜ thin', 'thin|2': 'th ➜ in ➜ thin' };
       const L = vp[0] === 1024 ? await q.evaluate(() => PHG.bkOrder()) : ['strong', 'thin', 'bathroom'];
       for (const w of L) for (const m of [1, 2]) {
         await q.evaluate(m => localStorage.setItem('phm_bsm', m), m); await q.evaluate(w => PHG.bridgeOpen(w), w);

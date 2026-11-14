@@ -21,6 +21,9 @@ button{font-family:var(--han);cursor:pointer;color:inherit}
 #top .ttl{flex:1;text-align:center;font-size:clamp(20px,2.6vw,28px);font-weight:900;letter-spacing:.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:linear-gradient(90deg,#FFE9A8,#FFFFFF,#9EEBFF);-webkit-background-clip:text;background-clip:text;color:transparent}
 #mdSw{display:flex;gap:3px;background:rgba(0,0,0,.35);border:1px solid var(--ln);border-radius:12px;padding:3px}
 #mdSw button{font-size:16px;font-weight:900;border:0;border-radius:9px;padding:6px 10px;background:transparent;color:#B8C6FF}
+#mdNo{display:none}body.inBr #mdNo{display:inline-block}
+#mdSw #mdNo.on{background:linear-gradient(180deg,#FFFFFF,#D9E2FF);color:#0B1236}
+.ctl button.bauto{border-color:#2EE59D;color:#B9FFE0}.ctl button.bauto.on{background:#2EE59D;color:#002914}
 #mdSw button.on{background:linear-gradient(180deg,#FFFFFF,#D9E2FF);color:#0B1236}
 main{position:absolute;left:0;right:0;top:66px;bottom:0;overflow:auto;padding:14px max(16px,env(safe-area-inset-right)) 24px max(16px,env(safe-area-inset-left))}
 .scr[hidden]{display:none!important}
@@ -137,7 +140,7 @@ body.fever main{box-shadow:inset 0 0 60px rgba(255,120,0,.45)}
 /*__GAMECSS__*/
 </style></head><body>
 <div id="top"><a href="index.html">⬅ 字卡</a><a href="../index.html">🏠 總首頁</a><div class="ttl" id="ttl">🎮 自然發音 遊戲場</div>
-<div id="mdSw" title="字母 下面 的 音標"><button data-md="zh">注音</button><button data-md="kk">KK</button><button data-md="ipa">IPA</button></div>
+<div id="mdSw" title="字母 下面 的 音標"><button id="mdNo" title="不 顯示 音標">無</button><button data-md="zh">注音</button><button data-md="kk">KK</button><button data-md="ipa">IPA</button></div>
 <button class="tb" id="quit" hidden>⏹ 離開</button></div>
 <main>
  <section id="lobby" class="scr lobby"></section>

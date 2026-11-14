@@ -104,6 +104,8 @@ Object.keys(SITES).forEach(dir => {
   /* 2026-11-03 第四十一次：在家 ✍️ 字母 書寫（lwh）、🔤 聽 字母 寫（la）、🎧 聽 字首音 寫（lf）*/
   put('g3gm_lwh-q5', { name: '✍️ 字母 書寫（在家）｜✍️ 字母 書寫（在家）', qs: G3.LWP.lwh.map(c => ({ k: 'g', kn: '✍️ 字母 書寫（在家）', q: txt(qOf('q5', c)), o: oOf('q5', c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) });
   put('g3gm_la-q5', { name: '🔤 聽 字母 寫｜🔤 聽 字母 寫', qs: G3.LWP.la.map(c => ({ k: 'g', kn: '🔤 聽 字母 寫', q: txt(qOf('q5', c)), o: oOf('q5', c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) });
+  /* 2026-11-14 第五十二次 第 7 點：🔠 A～Z 依序 背寫（三、四年級 的 班 都 可以 做；題目 ＝ 26 個 字母，一題 ＝ 大寫＋小寫）*/
+  ['g3gm_az-q5', 'g4gm_az-q5'].forEach(k => put(k, { name: '🔠 A～Z 依序 背寫｜🔠 A～Z 依序 背寫', qs: G3.LWP.az.map(c => ({ k: 'g', kn: '🔠 A～Z 依序 背寫', q: txt('第 ' + c.n + ' 個 字母（大寫＋小寫）'), o: [txt(c.up + ' ' + c.lo)], h: txt(c.zh || ''), ae: c.up + ' ' + c.lo })) }));
   put('g3gm_lf-q5', { name: '🎧 聽 字首音 寫｜🎧 聽 字首音 寫', qs: G3.LWP.lf.map(c => ({ k: 'g', kn: '🎧 聽 字首音 寫', q: txt(qOf('q5', c)), o: oOf('q5', c).map(x => txt(String(x))), h: txt(c.zh || ''), ae: c.en || '' })) });
   /* 2026-10-26 第二十八次：📝 25／50 題 挑戰（g3gm_g3m-x25／x50）：題庫 ＝ 10 種 遊戲 的 挑戰 題庫 照 順序 接起來（跟 網頁 的 XALL 一樣）*/
   /* 2026-10-30 第三十四次 第 1～4 點：🏠 25 題 闖關（回家，g3gm_g3m-h25）＝ 題庫 A 的 全新 題（第幾題 ＝ 跟 25 題 挑戰 一樣 照 XORD）*/
