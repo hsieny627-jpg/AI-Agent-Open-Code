@@ -90,7 +90,7 @@ function serve() { return new Promise(r => { const T = { '.html': 'text/html', '
         Object.defineProperty(window, '__PHWRONG', { get() { return !!(window.PHG && PHG.G && PHG.G.q === 1); } }); });
       await q.goto(U + '/phonics/games.html'); await q.waitForTimeout(200);
       if (g === 'slot') { const lob = await q.evaluate(() => ({ cards: document.querySelectorAll('.gc').length, small: [...document.querySelectorAll('.gc b,.gc small,.lv button,.sec h2')].filter(e => parseFloat(getComputedStyle(e).fontSize) < 17).length, book: document.querySelectorAll('.bkb').length, path: document.querySelectorAll('.pstop').length, ov: document.documentElement.scrollWidth > innerWidth + 1 }));
-        ok(lob.cards === 13 && !lob.small && lob.book === 25 && lob.path === 5 && !lob.ov, tag + ' 大廳 不對（13 個 遊戲、25 個 課本 字、5 課）' + JSON.stringify(lob)); }
+        ok(lob.cards === 16 && !lob.small && lob.book === 25 && lob.path === 5 && !lob.ov, tag + ' 大廳 不對（16 個 遊戲（第五十一次 多 3 種）、25 個 課本 字、5 課）' + JSON.stringify(lob)); }
       /* 成績：假 登入（不 連 真的 伺服器）*/
       await q.evaluate(() => { window.__RECS = []; window.scLive = () => true; window.scQAdd = r => window.__RECS.push(r); try { SCID = '30412'; } catch (e) {} });
       if (g === 'ls') await q.evaluate(() => PHG.lessonOpen(0)); else if (g === 'br') await q.evaluate(() => PHG.bridgeOpen('kitchen')); else await q.evaluate(g => PHG.start(g), g);

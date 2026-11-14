@@ -25,6 +25,10 @@ header button.on{background:#fff;color:#000;border-color:#fff}
 .aw .ch{display:inline-flex;flex-direction:column;align-items:center;gap:4px}
 .aw .lt{font-family:var(--andika);font-size:52px;font-weight:700;line-height:1.15;padding-bottom:.08em}
 .aw .ch.sil .lt{color:#8C92A3}.aw .tl{display:flex;gap:3px}
+.aw .lt i{font-style:normal;display:inline-block;border-radius:.12em;padding:0 .02em}
+.aw .lt i.v{color:#FF4D4D}.aw .ch.sil .lt i,.aw .lt i.sl{color:#8C92A3}.aw .lt i.nm{background:#FACC15;color:#C00000;line-height:1;padding:.04em .04em}
+.lg{display:flex;flex-wrap:wrap;gap:10px 18px;margin:4px 16px 0;font-size:22px;font-weight:900;color:#ddd;align-items:center}
+.lg span{display:inline-flex;align-items:center;gap:6px}.lg i{font-style:normal;font-family:var(--andika);font-size:30px;border-radius:.12em;padding:0 .12em}
 .tile.none{background:transparent!important;border:2px dashed #555;min-width:1.2em}
 .aw .tile{font-size:24px}
 .it .b{display:flex;gap:8px;flex-wrap:wrap}
@@ -36,6 +40,7 @@ header button.on{background:#fff;color:#000;border-color:#fff}
 <span id="md"><button data-m="zh" class="on">雙語 注音</button> <button data-m="kk">KK</button> <button data-m="ipa">IPA</button></span>
 <a href="index.html">⬅ 字卡</a><a href="../index.html">🏠 總首頁</a></header>
 <p class="why">這些 是 <b>真的 英文 字</b>，但是 <b>不 照 字卡 的 規則 唸</b>。<br>按〔🔊 真的〕聽 正確 唸法；按〔照 規則 會 唸 成〕比 一比 哪裡 不一樣。<br>（依據：美國 卡內基美隆大學 CMU 美式 發音 字典；常見 程度：wordfreq）</p>
+<div class="lg"><span><i style="color:#FF4D4D">a</i> 紅色 ＝ 母音 字母</span><span><i style="color:#8C92A3">e</i> 灰色 ＝ 不 發音</span><span><i style="background:#FACC15;color:#C00000">o</i> 黃底 ＝ 唸 字母 的 名字（go 的 o）</span></div>
 <div class="grid" id="g"></div>
 <script>/* phonics/_ph.js — 🔤 Phonics Master 共用 資料＋發音 碼（字卡 頁、遊戲 頁、node build 都 用 這一份）
  * 2026-11-12 第四十七次 第 2 點（老師 的 Phonics Master，原本 在 claude.ai 字卡 頁）：
@@ -339,11 +344,16 @@ let mode='zh';const A=new Audio();
 function tile(x){const d=document.createElement('span');d.className='tile'+(mode==='zh'?'':' ph')+(x.dark?' dark':'')+(x.stack?' stack':'');d.style.background=x.bg;
   if(Array.isArray(x.t))x.t.forEach(t=>{const s=document.createElement('span');s.textContent=t;d.appendChild(s)});else d.textContent=x.t;
   if(x.sup){const s=document.createElement('span');s.className='sup';s.textContent=x.sup;d.appendChild(s)}return d}
+/* 第五十一次（老師 第 1 點）：母音 字母 紅色、不 發音 灰色、母音 字母 唸 自己 的 名字 ＝ 黃底（a＝EY e＝IY i＝AY o＝OW u＝UW／Y UW）*/
+const NM={a:['EY'],e:['IY'],i:['AY'],o:['OW'],u:['UW','Y UW']},VW=/^(AA|AE|AH|AO|AW|AY|EH|ER|EY|IH|IY|OW|OY|UH|UW)$/;
+function ltr(u,ph){const P=ph.split(' ').map(x=>x.replace(/[0-9]/g,'')),my=u.p.map(k=>P[k]),snd=my.join(' '),vs=my.filter(x=>VW.test(x)).join(' ');
+  let yl=-1;if(u.p.length){for(let k=0;k<u.l.length;k++){const L=u.l[k];if(NM[L]&&NM[L].some(n=>n===vs||n===snd)){yl=k;break}}}
+  return u.l.split('').map((L,k)=>{const isV=/[aeiou]/.test(L)||(L==='y'&&!!vs&&my[0]!=='Y');return '<i class="'+(u.p.length?'':'sl ')+(isV?'v':'')+(k===yl?' nm':'')+'">'+L+'</i>'}).join('')}
 function draw(){const g=document.getElementById('g');g.innerHTML='';ROWS.forEach(r=>{const it=document.createElement('div');it.className='it';
   it.innerHTML='<div class="aw"></div><div class="b"><button class="r" data-a="x_'+r.w+'">🔊 真的</button><button class="g" data-a="'+r.c+'">照 規則 會 唸 成…</button></div>';
   /* 第五十次（老師 第 3 點）：每 一個 字母 正下方 ＝ 它 的 音標（雙語 注音／KK／IPA）；不 發音 ＝ 灰色＋虛線 方塊 */
   const aw=it.querySelector('.aw'),rt=PH2.realTiles(r.ph,mode)||[],al=PH2.align(r.w,r.ph)||[{l:r.w,p:rt.map(x=>x.pi)}],TT=PH2.tilesFor(al,rt);
-  al.forEach((u,k)=>{const c=document.createElement('span');c.className='ch'+(u.p.length?'':' sil');c.innerHTML='<span class="lt">'+u.l+'</span><span class="tl"></span>';const tl=c.querySelector('.tl');
+  al.forEach((u,k)=>{const c=document.createElement('span');c.className='ch'+(u.p.length?'':' sil');c.innerHTML='<span class="lt">'+ltr(u,r.ph)+'</span><span class="tl"></span>';const tl=c.querySelector('.tl');
     if(TT[k].length)TT[k].forEach(x=>tl.appendChild(tile(x)));else{const d=document.createElement('span');d.className='tile none';tl.appendChild(d)}aw.appendChild(c)});g.appendChild(it)})}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){A.src='au/'+b.dataset.a+'.mp3';A.play().catch(()=>{})}
   const m=e.target.closest('[data-m]');if(m){mode=m.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x===m));draw()}});

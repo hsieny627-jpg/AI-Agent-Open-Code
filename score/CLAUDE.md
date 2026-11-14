@@ -4,6 +4,9 @@
 > 設計、研究證據（21 條）、使用者的決定：`sentences/2026-10-07_C_設計與研究清單.md`（**Q1～Q18 使用者 2026-10-07 全部照建議**）。
 > 根目錄 `AGENTS.md` 第四節（最高原則、品質、省額度）同樣適用。
 
+## 2026-11-14 第五十一次：🔤 自然發音 新 遊戲 3 種 進 老師看板（不用 重新 部署）
+`_bank.js` 的 `NM` 加 `yn`（⭕ 開頭 是 它 嗎？）、`twin`（👯 聲音 雙胞胎）、`line`（⚔️ 連線 大 對決，一局 8 題）＝ 題組 `g3gm_ph-…`、`g4gm_ph-…`；`Code.gs` 沒 變。
+
 ## 2026-11-12 第四十八次：🔤 自然發音 遊戲 進 老師看板（不用 重新 部署）
 老師「CVC 遊戲 要 記 成績、進 老師看板」。`phonics/games.html` 接 `CL.home(0,'../','school')`（登入 畫面；年級 看 登入 的 5 碼），一局 5 題 做完 用 `scQAdd` 送：`set` ＝ `g年級gm_ph-遊戲`（slot ufo vault zhu bal vow end lad pic train ls bk bkp），`m:'q'`（「題目」格式：5 題 做完 就 算 練習 次數 ＋1；遊戲 格式 要 ≧ 6 題 `GMIN`）。類別 ＝ 🎮 遊戲（`cat()` 本來 就 認得 `gm`）。題庫 `_bank.js` 最下面「🔤 自然發音」：三、四年級 各 13 組，第幾題 ＝ `phonics/_words.js`＋`phonics/_pseudo.json`（課本 遊戲 ＝ `phonics/_book.js` 順序），每 題 有 聲音 `../phonics/au/`。**`_calc.js`、`_server.js`、Code.gs 都 沒 變。** 規格 `phonics/CLAUDE.md` 最上面「第四十八次」。
 
