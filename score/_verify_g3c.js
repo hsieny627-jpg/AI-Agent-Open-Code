@@ -45,7 +45,7 @@ async function teacher(br, vp) {
   /* ⚔️ 左右 對戰 卡（第五十四次）*/
   await p.click('[data-crk="v"]'); await p.waitForTimeout(300);
   n++; const vs = await p.evaluate(() => { const tr = [].find.call(document.querySelectorAll('.g3t tr'), t => /^01$/.test((t.children[0] || {}).textContent || '')); return { t: tr ? tr.innerText.replace(/\s+/g, ' ') : '', h: (document.querySelector('.fvhd') || {}).textContent || '' }; });
-  if (!/⚔️ 左右 對戰/.test(vs.h) || !/100/.test(vs.t) || !/👀 請 看一下/.test(vs.t) || !/＋\d/.test(vs.t)) e.push('⚔️ 左右 對戰 表 不對 ' + JSON.stringify(vs));
+  if (!/⚔️ 左右 對戰/.test(vs.h) || !/100/.test(vs.t) || !/⚠️ 請 看一下/.test(vs.t) || !/⚠️ 突然 高 30 分/.test(vs.t) || !/🚀 進步 [0-9.]+%/.test(vs.t) || !/＋\d/.test(vs.t)) e.push('⚔️ 左右 對戰 表 不對 ' + JSON.stringify(vs));
   await p.click('[data-crk="g"]'); await p.waitForTimeout(250);
   const cellOf = () => p.evaluate(() => { const rows = [].map.call(document.querySelectorAll('.g3t tr'), tr => [].map.call(tr.children, td => td.childNodes[0] ? td.childNodes[0].textContent.trim() : ''));
     const sm = [].filter.call(document.querySelectorAll('#pane *'), x => [].some.call(x.childNodes, c => c.nodeType === 3 && c.textContent.trim()) && x.getBoundingClientRect().width && parseFloat(getComputedStyle(x).fontSize) < 17).map(x => x.textContent.trim().slice(0, 8));
