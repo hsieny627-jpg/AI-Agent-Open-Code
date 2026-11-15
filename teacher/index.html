@@ -561,7 +561,8 @@ em.ok{background:#0F3A20;border-color:#3BD16F;color:#C8FFD9}em.no{background:#3A
 @media (prefers-reduced-motion:reduce){.dwr .dwrr,#show .spic img,#show .spic .pe,#show .sdif .w b,#show .skey{animation:none;transition:none}}
 .ptg{display:block;margin-top:4px;padding:2px 8px;border-radius:10px;background:#5A3A00;border:2px solid #FFB300;color:#FFE58A;font-size:max(17px,.6em);font-weight:700;white-space:nowrap}
 .g3t{border-collapse:collapse;width:100%;font-size:clamp(20px,1.7vw,28px)}.g3t th,.g3t td{border:2px solid #2A3A4A;padding:6px 8px;text-align:center}.g3t th{background:#14202B;font-size:clamp(18px,1.3vw,22px);line-height:1.25}.g3t th b{display:block;font-size:1.6em}
-.g3t td.nm{text-align:left;white-space:nowrap}.g3t td small{display:block;font-size:max(18px,.62em);color:#9FB4C8}.g3h small{font-size:max(20px,.6em)!important}.g3t .p2{background:#1F7A45;color:#fff}.g3t .p1{background:#B08A10;color:#fff}.g3t .p0{background:#A3263A;color:#fff}.g3t td.p0 small,.g3t td.p1 small,.g3t td.p2 small{color:rgba(255,255,255,.85)}.g3t .av{font-size:1.15em;border-left:5px solid var(--gold)}
+.g3t td.nm{text-align:left;white-space:nowrap}
+/* 第五十五次 第 6 點 */.vsl1,.vsl2{display:inline-block;margin-left:10px;border-radius:999px;padding:2px 12px;font-size:.8em;vertical-align:middle;white-space:nowrap}.vsl1{background:#FFB020;color:#3A2000}.vsl2{background:#2BB673;color:#fff}.vslg{font-size:clamp(18px,1.5vw,24px);line-height:1.9;margin:10px 0;background:#0E2238;border-radius:14px;padding:10px 16px}.vslg .vsl1,.vslg .vsl2{margin:0 4px 0 0}.g3t td small{display:block;font-size:max(18px,.62em);color:#9FB4C8}.g3h small{font-size:max(20px,.6em)!important}.g3t .p2{background:#1F7A45;color:#fff}.g3t .p1{background:#B08A10;color:#fff}.g3t .p0{background:#A3263A;color:#fff}.g3t td.p0 small,.g3t td.p1 small,.g3t td.p2 small{color:rgba(255,255,255,.85)}.g3t .av{font-size:1.15em;border-left:5px solid var(--gold)}
 .g3t tr.all td{border-bottom:5px solid var(--gold);font-size:1.1em;font-weight:700}.g3t th small.g3n{display:block;font-size:18px;color:#9FB4C8;font-weight:400}.g3k{display:inline-block;padding:2px 10px;border-radius:8px;margin-right:6px}.g3k.p2{background:#1F7A45;color:#fff}.g3k.p1{background:#B08A10;color:#fff}.g3k.p0{background:#A3263A;color:#fff}.g3w{overflow-x:auto}.g3sw{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.g3sw button{min-height:56px;font-size:clamp(20px,1.7vw,26px)}.g3sw button.on{background:#2A2208;border-color:var(--gold);color:#FFE9A8}
 .crnav,.crcards{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:4px 0 12px}.crlb{font-size:clamp(20px,1.6vw,26px);color:#CFE3F5;min-width:5.5em}
 .crg{min-height:64px;padding:4px 30px;border-radius:18px;border:4px solid #4A5A6C;background:#1B2633;color:#fff;font:inherit;font-weight:700;font-size:clamp(26px,2.2vw,34px);cursor:pointer}.crg.on{background:#FFD54A;color:#2A1A00;border-color:#FFE9A0}
@@ -3482,7 +3483,8 @@ function hPrint(){var d=new Date(DATA.now+288e5),dt0=d.getUTCFullYear()+' 年 '+
       '<div class="ca">'+esc(c.aw)+'</div><div class="cl">'+esc(c.l)+'</div><div class="cd">'+dt0+'</div></div>'}).join('');
   window.print()}
 /* 題庫：三、四年級共用的（Review 1 遊戲）存成 g*r1_… */
-function bankOf(set){return BANK[set]||BANK[String(set).replace(/^g\d/,'g*')]||null}
+function bankOf(set){var m=/^g(\d)gm_vs-([sr])(.+)$/.exec(set);if(m)return BANK['g'+m[1]+'gm_'+m[3]]||BANK['g*r1_'+m[3]]||null;   /* 第五十五次 第 7 點：⚔️ 左右 對戰 用 某個 主題 ＝ 原本 那個 遊戲 的 題庫 */
+  return BANK[set]||BANK[String(set).replace(/^g\d/,'g*')]||null}
 function qOf(k){var a=k.split('#'),b=bankOf(a[0]);return b&&b.qs[+a[1]]?{set:b,q:b.qs[+a[1]]}:null}
 function kn(q){return q.kn||KN[q.k]||''}
 var KN={read:'👀 認讀',listen:'🎧 聽力',zh2en:'看中文選英文',en2zh:'看英文選中文',trap:'⚠️ 易錯'};
@@ -4123,19 +4125,21 @@ function paneAZ(){var CC=(SC.CLASSES[3]||[]).concat(SC.CLASSES[4]||[]),c=G3C&&CC
 /* ══ 2026-11-14 第五十四次：⚔️ 左右 對戰（g3gm_vs-q1／g4gm_vs-q1）══
    一位 學生 一列 ＝ 這個 時間 裡 最近 的 一次：💯 正確率、⚡ 正確＋速度（raw）、📈 跟 他 自己 前面 最近 3 次 的 平均 比（💯 進步＋⚡ 進步）÷ 2、✨ 學會 了（換 字 再 考 答對，fix）、做 了 幾 次；
    👀 請 老師 看一下 ＝ 這一次 💯 比 他 前面 最近 3 次 的 平均 高 30 分 以上（可能 偷看 或 被 告訴；不 扣分、不 公開，只 給 老師 參考）。錯題 分析 ＝ 個人 成績卡（題庫 _bank.js g年級gm_vs-q1）。 */
-function paneVS(g){var CC=SC.CLASSES[g]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===g&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),key='g'+g+'gm_vs-q1';
-  var AL=ALL.filter(function(x){return x.set===key&&!x.x&&x.cls===c}).sort(function(a,b){return a.t-b.t}),P={};
+function paneVS(g){var CC=SC.CLASSES[g]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g===g&&F.cls?F.cls:CC[0]);G3C=c;var r=range(),kre=new RegExp('^g'+g+'gm_vs-');
+  var AL=ALL.filter(function(x){return kre.test(x.set)&&!x.x&&x.cls===c}).sort(function(a,b){return a.t-b.t}),P={};
   AL.forEach(function(x){var p=P[x.id]=P[x.id]||{h:[],k:0},inR=(r.from==null||x.t>=r.from)&&(r.to==null||x.t<r.to);
     if(inR){var pv=p.h.slice(-3),b0=null,b1=null;if(pv.length){b0=0;b1=0;pv.forEach(function(y){b0+=y[0];b1+=y[1]});b0/=pv.length;b1/=pv.length}
-      p.k++;p.acc=x.acc;p.gp=Math.round(+x.raw||0);p.fix=+x.fix||0;p.n=x.n;p.t=x.t;p.pr=(pv.length&&x.n>=5)?Math.round(((x.acc-b0)+(p.gp-b1))/2*10)/10:null;p.look=pv.length&&x.acc-b0>=30}
+      p.k++;p.acc=x.acc;p.gp=Math.round(+x.raw||0);p.fix=+x.fix||0;p.n=x.n;p.t=x.t;p.pr=(pv.length&&x.n>=5)?Math.round(((x.acc-b0)+(p.gp-b1))/2*10)/10:null;p.look=pv.length&&x.acc-b0>=30;p.b0=b0}
     p.h.push([x.acc||0,Math.round(+x.raw||0)])});
   var ids=(RCLS[c]||[]).slice();Object.keys(P).forEach(function(id){if(P[id].k&&ids.indexOf(id)<0)ids.push(id)});ids.sort();
   var td=function(v,sm){return v==null?'<td>—</td>':'<td class="'+g3Col(v)+'">'+v+(sm?'<small>'+sm+'</small>':'')+'</td>'};
+  /* 第五十五次 第 6 點：這一次 進步 前 5 名 ➜ 名字 旁邊「🚀 進步 35%」（💯、⚡ 都 是 百分制 ➜ 進步 幾分 ＝ 進步 幾 %）*/
+  var TOP5=ids.filter(function(id){return P[id]&&P[id].k&&P[id].pr!=null&&P[id].pr>0}).sort(function(a,b){return P[b].pr-P[a].pr}).slice(0,5);
   var h='<div class="fvhd g3h">⚔️ 左右 對戰：個人 成績<small>（兩人 一台，但 各 算 各 的；💯 正確率 ＝ 答對 ÷ 答了；⚡ 正確＋速度 ＝ 答錯 0、答對 600＋速度 300＋搶先 100，換成 百分制；📈 ＝ 跟 自己 最近 3 次 的 平均 比）</small></div>'+
     '<div class="g3sw">'+CC.map(function(x){return '<button data-g3c="'+x+'" class="'+(x===c?'on':'')+'" style="border-color:'+ccol(x)+'">'+esc(SC.cname(x))+'</button>'}).join('')+'</div>'+
-    '<div class="note">👀 ＝ 這一次 💯 比 自己 平常 高 30 分 以上，<b>請 老師 看一下</b>（可能 偷看、被 告訴，也 可能 真的 進步；不 扣分、不 公開）。點 名字 ＝ 成績卡（錯題）。</div>'+
-    '<div class="g3w"><table class="g3t"><tr><th>號碼</th><th>姓名</th><th><b>💯</b>正確率</th><th><b>⚡</b>正確＋速度</th><th><b>📈</b>跟 自己 比</th><th><b>✨</b>學會 了</th><th><b>👀</b>請 看一下</th><th><b>🔁</b>做 了 幾 次</th></tr>';
-  ids.forEach(function(id){var p=P[id];h+='<tr><td>'+id.slice(3)+'</td><td class="nm" data-pid="'+id+'">'+esc(nm(id)||'')+'</td>'+(p&&p.k?td(p.acc,'答 '+p.n+' 題')+td(p.gp)+'<td>'+(p.pr==null?'<small>第一次／答 不到 5 題</small>':(p.pr>0?'＋':'')+p.pr)+'</td><td>'+p.fix+'</td><td>'+(p.look?'<b style="color:#FFB020">👀 請 看一下</b>':'')+'</td><td>'+p.k+'</td>':'<td>—</td><td>—</td><td>—</td><td>—</td><td></td><td>—</td>')+'</tr>'});
+    '<div class="vslg"><span class="vsl1">⚠️ 突然 高 30 分</span> ＝ 這一次 💯 比 自己 平常 高 30 分 以上 ➜ <b>請 老師 看一下</b>（可能 偷看、被 告訴，也 可能 真的 進步；不 扣分、不 公開）<br><span class="vsl2">🚀 進步 35%</span> ＝ 這一班 這一次 進步 最多 的 前 5 名（跟 自己 最近 3 次 的 平均 比）<br>點 名字 ＝ 成績卡（錯題）</div>'+
+    '<div class="g3w"><table class="g3t"><tr><th>號碼</th><th>姓名</th><th><b>💯</b>正確率</th><th><b>⚡</b>正確＋速度</th><th><b>📈</b>跟 自己 比</th><th><b>✨</b>學會 了</th><th><b>⚠️</b>請 看一下</th><th><b>🔁</b>做 了 幾 次</th></tr>';
+  ids.forEach(function(id){var p=P[id];h+='<tr><td>'+id.slice(3)+'</td><td class="nm" data-pid="'+id+'">'+esc(nm(id)||'')+(p&&p.k&&p.look?'<span class="vsl1">⚠️ 突然 高 30 分</span>':'')+(TOP5.indexOf(id)>=0?'<span class="vsl2">🚀 進步 '+P[id].pr+'%</span>':'')+'</td>'+(p&&p.k?td(p.acc,'答 '+p.n+' 題')+td(p.gp)+'<td>'+(p.pr==null?'<small>第一次／答 不到 5 題</small>':(p.pr>0?'＋':'')+p.pr)+'</td><td>'+p.fix+'</td><td>'+(p.look?'<b style="color:#FFB020">⚠️ 請 看一下</b><small>突然 高 '+Math.round(p.acc-p.b0)+' 分</small>':'')+'</td><td>'+p.k+'</td>':'<td>—</td><td>—</td><td>—</td><td>—</td><td></td><td>—</td>')+'</tr>'});
   h+='</table></div>';if(!AL.length)h+='<div class="note">這一班 還沒有 人 做「⚔️ 左右 對戰」（在〔⚡ 現場任務 大螢幕〕開）。</div>';return h}
 /* ══ 2026-10-30 第三十四次 第 11 點（老師：〔課堂複習〕主題 太多 看不懂 ➜ 照 建議）══
    先 選〔三年級〕〔四年級〕➜ 三張 大卡：⚡ 期中 挑戰（上課：25／50、新 25／新 50）、🏠 25 題 闖關（回家：h25）、🎮 期中複習 遊戲（三年級 複習＋課堂複習 1～3／四年級 複習 12 種）；
@@ -4143,7 +4147,7 @@ function paneVS(g){var CC=SC.CLASSES[g]||[],c=G3C&&CC.indexOf(G3C)>=0?G3C:(F.g==
 var CRG=0,CRK='';
 var CRC=[['x','⚡','期中 挑戰','上課',function(g){return g===3?/^g3gm_g3m-[xng](25|50)$/:/^g4gm_mt-[xn](25|50)$/}],['h','🏠','25 題 闖關','回家',function(g){return g===3?/^g3gm_g3m-h25$/:/^g4gm_mt-h25$/}],
   ['g','🎮','期中複習 遊戲','上課／自己 玩',function(g){return g===3?/^g3gm_(g3m|c[123]|lw|lwh|la|lf|az)-q\d+$/:/^g4gm_(mt-m\d+|az-q5)$/}],
-  ['v','⚔️','左右 對戰','上課・兩人 一台',function(g){return new RegExp('^g'+g+'gm_vs-q1$')}]];   /* 2026-11-14 第五十四次 */   /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（g3gm_lw-q5）*/
+  ['v','⚔️','左右 對戰','上課・兩人 一台',function(g){return new RegExp('^g'+g+'gm_vs-')}]];   /* 2026-11-14 第五十四次 */   /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（g3gm_lw-q5）*/
 function crLast(g,k){var re=CRC.filter(function(c){return c[0]===k})[0][4](g),t=0;ALL.forEach(function(x){if(!x.x&&x.t>t&&re.test(x.set))t=x.t});return t}
 function crSeen(g,k,v){var key='tcr_seen_'+g+'_'+k;try{if(v!=null)localStorage.setItem(key,String(v));return +localStorage.getItem(key)||0}catch(e){return 0}}
 function paneG(){var g=CRG||(F.g===4?4:3);CRG=g;

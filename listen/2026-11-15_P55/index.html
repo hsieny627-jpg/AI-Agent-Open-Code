@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第五十五次 新聲音</title><style>
+body{margin:0;background:#0B1026;color:#fff;font-family:'Microsoft JhengHei','PingFang TC',sans-serif;padding:18px}
+h1{font-size:38px;margin:0 0 6px;color:#FFE07A}p{font-size:26px;line-height:1.6;color:#DCE4FF;margin:4px 0 14px}h2{font-size:32px;margin:26px 0 8px}
+table{border-collapse:collapse;width:100%;max-width:1200px}td,th{border:1px solid #2A3570;padding:10px;font-size:26px;text-align:center}th{background:#141B3D;color:#FFE07A}
+td.w{font-family:Andika,sans-serif;font-size:44px;font-weight:700}td.t{text-align:left;font-size:24px;color:#DCE4FF}
+button{font-size:28px;font-weight:900;border-radius:14px;padding:12px 22px;cursor:pointer;margin:3px;min-height:60px}
+.o{background:#2A2A2A;color:#ccc;border:2px solid #666}.n{background:#062A35;color:#9EF0FF;border:3px solid #22D3EE}.k{background:#3A2A06;color:#FFE07A;border:3px solid #FFC400}
+</style></head><body>
+<h1>🎧 第五十五次 新聲音</h1>
+<p>① 字尾 b、d、k：<b>A、B、C 三種</b>，請 老師 選 一個（網站 現在 先 用 <b>A</b>）。<br>② 其他 的 已經 換 進 網站：<b>新 的 對 ＝ 不用 做 什麼</b>；還是 不對 ＝ 告訴 我 哪一個、聽起來 像 什麼。</p>
+<h2>① 字尾 的 b、d、k（請 選 A／B／C）</h2>
+<table id="t1"><tr><th>字尾</th><th>老師 說</th><th>第五十三次</th><th>A（真的 字 最後 的 音）</th><th>B（柔和、很短）</th><th>C（A 和 B 中間）</th></tr></table>
+<h2>② 字尾 m、n ＝ 國語 三聲 ˇ</h2>
+<table id="t2"><tr><th>字尾</th><th>怎麼 改</th><th>第五十三次</th><th>現在（新）</th></tr></table>
+<h2>③ str、gr 的 r ＝ 輕聲 的「入」（刪 尾音 ㄜ）</h2>
+<table id="t3"><tr><th>聲音</th><th>怎麼 改</th><th>第五十三次</th><th>現在（新）</th></tr></table>
+<h2>④ kitchen 的 音節（第 8 點）</h2>
+<table id="t4"><tr><th>音節</th><th>怎麼 改</th><th>以前</th><th>現在（新）</th></tr></table>
+<h2>⑤ 在 遊戲 裡 拼 起來</h2>
+<table id="t5"><tr><th>單字</th><th>第五十三次 的 字尾</th><th>A</th><th>B</th><th>C</th></tr></table>
+<script>
+const A=new Audio(),O=c=>'v53/'+c+'.mp3',N=c=>c+'.mp3';
+function pl(L){let i=0;const nx=()=>{if(i>=L.length)return;A.src=L[i++];A.onended=()=>setTimeout(nx,120);A.play().catch(()=>{})};nx()}
+function bt(src,cls,t){return '<button class="'+cls+'" onclick="pl('+JSON.stringify([].concat(src)).replace(/"/g,'&quot;')+')">'+t+'</button>'}
+function tr(id,cells){document.getElementById(id).insertAdjacentHTML('beforeend','<tr>'+cells.map((c,i)=>i===0?'<td class="w">'+c+'</td>':(typeof c==='string'&&c.indexOf('<button')<0?'<td class="t">'+c+'</td>':'<td>'+c+'</td>')).join('')+'</tr>')}
+[['d','有 一點點 接近，但 太 尖銳、太 突兀、太 刻意','s_ed'],['b','不像 B','s_eb'],['k／ck','像 大聲 的 ㄏ','s_ek']].forEach(r=>tr('t1',[r[0],r[1],bt(O(r[2]),'o','🔊 舊'),bt(N(r[2]+'_A'),'n','🔊 A'),bt(N(r[2]+'_B'),'n','🔊 B'),bt(N(r[2]+'_C'),'n','🔊 C')]));
+[['m','嘴巴 閉著「嗯ˇ」：先 往 下、再 往 上 一點','s_em','s_m'],['n','舌頭 頂住「嗯ˇ」：先 往 下、再 往 上 一點','s_en','s_n']].forEach(r=>tr('t2',[r[0],r[1],bt(O(r[3]),'o','🔊 舊'),bt(N(r[2]),'n','🔊 新')]));
+[['str','s ➜ t ➜ 輕聲 的 r（小聲、沒有 ㄜ）','cl_strong_0_3'],['gr','g ➜ 輕聲 的 r','cl_angry_1_2']].forEach(r=>tr('t3',[r[0],r[1],bt(O(r[2]),'o','🔊 舊'),bt(N(r[2]),'n','🔊 新')]));
+tr('t3',['r（輕聲）','只 用 在 子音 群；單獨 的 R 沒有 改','—',bt(N('r_light'),'n','🔊 新')]);
+[['ki','以前 是 電腦 單獨 唸（音調 不對）➜ 改 從 真的 kitchen 切 開','sy_kitchen_0'],['tchen','以前 被 唸 成 中文 姓「Chen」的 音調 ➜ 改 從 真的 kitchen 切 開','sy_kitchen_1']].forEach(r=>tr('t4',[r[0],r[1],bt(O(r[2]),'o','🔊 舊'),bt(N(r[2]),'n','🔊 新')]));
+tr('t4',['kitchen','整個 字（沒有 改）','—',bt('../../phonics/au/bk_kitchen.mp3','k','🔊 kitchen')]);
+const V={a:'s_ae',e:'s_eh',i:'s_ih',o:'s_aa',u:'s_uh'},U='../../phonics/au/';
+[['bed','b','e','d'],['bad','b','a','d'],['web','w','e','b'],['tub','t','u','b'],['back','b','a','k'],['kick','k','i','k']].forEach(w=>{const s=U+'s_'+w[1]+'.mp3',v=U+V[w[2]]+'.mp3',e=w[3]==='k'?'s_ek':'s_e'+w[3];
+ tr('t5',[w[0],bt([s,v,O(e)],'o','🔊 舊'),bt([s,v,N(e+'_A')],'n','🔊 A'),bt([s,v,N(e+'_B')],'n','🔊 B'),bt([s,v,N(e+'_C')],'n','🔊 C')])});
+</script></body></html>

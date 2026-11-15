@@ -20,6 +20,24 @@ const bad = [];
 [3, 4].forEach(g => { const F = {}; D.BANK[g].forEach(q => { (F[q.f] = F[q.f] || new Set()).add(q.o[0]); }); Object.keys(F).forEach(f => { if (F[f].size < 2) bad.push(g + ' ' + f + ' 配不成 對'); }); });
 if (bad.length) { console.error('✗ ' + bad.join('\n✗ ')); process.exit(1); }
 const J = o => JSON.stringify(o).replace(/</g, '\\u003c');
+/* ══ 2026-11-15 第五十五次 第 7 點：任何 一個 主題 都 可以 ⚔️ 左右 對戰 ══
+ * 題目 ＝ ⚡ 現場任務 同 一份（live/_qbank.js 的 GR：10 種 句型遊戲＋Review 1 遊戲）➜ vs/t/主題.js（平板 選到 才 載入）。
+ * 只 用 四選一（ty mc、2～4 個 選項）；🎧 聽力題 不 用（兩 人 一台 同時 放 聲音 會 互相 干擾）。
+ * 成績 ＝ g年級gm_vs-主題（例 g3gm_vs-sg1）、第幾題 ＝ 原本 遊戲 的 第幾題 ➜ 老師看板 錯題 分析 自動 用 原本 遊戲 的 題庫（score/_teacher.js bankOf）。 */
+const QB = require('../live/_qbank.js')(), TDIR = path.join(__dirname, 't'), TLIST = { 3: [], 4: [] };
+if (!fs.existsSync(TDIR)) fs.mkdirSync(TDIR);
+const unI = h => String(h == null ? '' : h).replace(/§i:([^§]+)§/g, (m, k) => QB.ICON[k] || '');
+const stripT = h => String(h).replace(/<svg[\s\S]*?<\/svg>/g, '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+[3, 4].forEach(g => QB.LIST[g].forEach(k => { const G = QB.GR[k];
+  const qs = G.qs.filter(q => q.ty === 'mc' && !q.ls && !q.al && q.o && q.o.length >= 2 && q.o.length <= 4).map(q => ({
+    t: unI(q.t), o: q.o.map(unI), ot: q.ot, h: q.o.map((x, j) => j ? (q.h || '') : ''), ag: (q.ag || []).reduce((o, w) => { if (/^[.?!,]+$/.test(w[0]) && o.length) o[o.length - 1] = [o[o.length - 1][0] + w[0], o[o.length - 1][1]]; else o.push(w); return o; }, []),   /* 句點、問號 接 在 前一個 字 */ az: q.az || (q.ag || []).map(w => w[1]).filter(Boolean).join(' ') || stripT((/<small>([\s\S]*?)<\/small>/.exec(q.t) || ['', ''])[1]),   /* 沒有 整句 翻譯 ＝ 用 逐字 中文 接 起來 */ au: q.au || '', ae: q.ae || q.ot[0], i: q.i }));
+  qs.forEach(q => { if (!q.ag.length) q.ag = [[q.ae, q.az]]; });   /* 沒有 逐字 中文 ＝ 整個 答案 ＋ 中文 意思 */
+  for (let j = qs.length - 1; j >= 0; j--) if (!/[㐀-鿿]/.test(qs[j].az)) qs.splice(j, 1);   /* 沒有 中文 意思 的 題目（例：哪個 字母 不 發音）不 放 */
+  if (qs.length < 4 || new Set(qs.map(q => q.ot[0])).size < 2) return;
+  const tk = k.replace(/^[34]/, ''), file = g + '_' + tk + '.js';
+  fs.writeFileSync(path.join(TDIR, file), 'VST(' + J({ k: tk, g, nm: G.nm, sec: G.sec, qs }) + ');');
+  TLIST[g].push({ k: tk, nm: G.nm, sec: G.sec, n: qs.length }); }));
+fs.writeFileSync(path.join(TDIR, 'list.json'), JSON.stringify(TLIST));
 const CSS = `
 @font-face{font-family:Andika;src:url(../words/fonts/andika-700.woff2) format('woff2');font-weight:700}
 :root{--bg:#120B33;--l:#2F6BFF;--r:#FF4F8B;--gold:#FFD24A;--ok:#2BB673;--no:#FF5A5A;--card:#FFFFFF;--ink:#1B1640}
@@ -46,7 +64,9 @@ body{background:radial-gradient(120% 90% at 50% 0%,#3A1F8F 0%,var(--bg) 60%);col
 .vb:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.3)}
 .vb em{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-style:normal;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.25);font-size:16px;display:flex;align-items:center;justify-content:center}
 .vb:nth-child(1){background:#E21B3C}.vb:nth-child(2){background:#1368CE}.vb:nth-child(3){background:#D89E00}.vb:nth-child(4){background:#26890C}
-.vb.dim{opacity:.35}.vb.lock{opacity:1;background:#5A5A7A!important;outline:4px solid #fff}.vb.ok{opacity:1;outline:5px solid var(--ok)}.vb.no{opacity:1;outline:5px solid var(--no)}
+.vb.dim{opacity:.35}.vb.lock{opacity:1;background:#5A5A7A!important;outline:4px solid #fff}
+/* 第五十五次 第 1 點：按了 ＝ 那一格 中間 大大 的 🔒（看不出 選 哪一個 對 不 對）*/.vlk{display:none;font-style:normal}.vb.lock .vlk{display:flex;position:absolute;inset:0;align-items:center;justify-content:center;font-size:clamp(40px,7vh,72px);background:rgba(40,40,70,.82);border-radius:18px;animation:vpop .3s}
+/* 第 7 點：主題 題目 有 圖示 */.vq svg,.vb svg,.vme svg{height:1.3em;width:auto;vertical-align:middle}.vb .opic{display:inline-flex;align-items:center;gap:8px}.vb.ok{opacity:1;outline:5px solid var(--ok)}.vb.no{opacity:1;outline:5px solid var(--no)}
 .vst{text-align:center;font-size:clamp(16px,2.2vh,22px);opacity:.9}
 .vh.fb{justify-content:center;align-items:center;text-align:center;animation:vpop .35s}#h0.good,#h1.good{background:linear-gradient(180deg,#0E5A3A,#0B3A2A)}#h0.bad,#h1.bad{background:linear-gradient(180deg,#14805A,#0E5C40)}
 .vh.talk{box-shadow:inset 0 0 0 5px var(--gold)}
@@ -91,4 +111,4 @@ ${fs.readFileSync(path.join(__dirname, '_vs.js'), 'utf8')}
 VS.init();
 </script><script>${require('../score/_dsp.js').js()}</script></body></html>`;
 fs.writeFileSync(path.join(__dirname, 'index.html'), html);
-console.log('vs ok：三年級 ' + D.BANK[3].length + ' 題、四年級 ' + D.BANK[4].length + ' 題；語音 ' + Object.keys(AUD).length + ' 句；' + Math.round(html.length / 1024) + ' KB');
+console.log('vs ok：主題 三年級 ' + TLIST[3].length + ' 個、四年級 ' + TLIST[4].length + ' 個；三年級 ' + D.BANK[3].length + ' 題、四年級 ' + D.BANK[4].length + ' 題；語音 ' + Object.keys(AUD).length + ' 句；' + Math.round(html.length / 1024) + ' KB');

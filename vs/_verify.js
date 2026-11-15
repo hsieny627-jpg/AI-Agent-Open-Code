@@ -29,23 +29,24 @@ async function ctxOf(br, vp) { const ctx = await br.newContext({ viewport: { wid
 /* 一回合：等 題目 出來 ➜ 照 計畫 按 ➜ 等 下一題 */
 async function playRound(p, plan) {
   await p.waitForFunction(() => { const S = VS.st(); return S && S.cur && !S.cur.rev && document.querySelector('#h0 .vb'); }, null, { timeout: 15000 });
-  const st = await p.evaluate(() => { const S = VS.st(), B = VSBANK[+String(location.search.match(/live=(\d{4})/)[1]).charAt(1)];
-    return { r: S.r, vm: S.vm, f: S.cur.f, q: S.cur.q.map(c => c && { i: c.i, ord: c.ord, rc: c.rc, o0: B[c.i].o[0], f: B[c.i].f }) }; });
+  const st = await p.evaluate(() => { const S = VS.st(), B = VS.bk();
+    return { r: S.r, vm: S.vm, f: S.cur.f, q: S.cur.q.map(c => c && { i: c.i, ord: c.ord, rc: c.rc, o0: (B[c.i].ot || B[c.i].o)[0], f: B[c.i].f }) }; });
   for (const k of [0, 1]) { const c = st.q[k]; if (!c) continue; const want = plan[k]; if (want == null) continue;
     const oi = want ? 0 : 1; await p.click('#h' + k + ' .vb[data-o="' + oi + '"]'); await p.waitForTimeout(40); }
   return st; }
 async function waitNext(p, r) { await p.waitForFunction(r => { const S = VS.st(); return !S || S.over || (S.r > r && S.cur && !S.cur.rev); }, r, { timeout: 30000 }); }
 
-async function tablet(br, vp, room, vm, opt) { opt = opt || {}; const tag = vp.join('×') + ' ' + room + ' ' + vm + (opt.solo ? ' 一個人' : '');
+async function tablet(br, vp, room, vm, opt) { opt = opt || {}; const tag = vp.join('×') + ' ' + room + ' ' + vm + (opt.solo ? ' 一個人' : '') + (opt.tp ? ' 主題 ' + opt.tp : '');
   const ctx = await ctxOf(br, vp), p = await ctx.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message));
   const g = +room.charAt(1), A = room.slice(1) + '01', B = room.slice(1) + '02';
-  await p.addInitScript(INIT, { u: URL0, ids: opt.solo ? [A] : [A, B], cr: { on: 1, t: 1, set: 'vs', vm, d: 600000, left: 600000 }, hist: { [A]: [[50, 40], [60, 50], [70, 60]], [B]: [[100, 90], [100, 95], [100, 100]] } });
+  await p.addInitScript(INIT, { u: URL0, ids: opt.solo ? [A] : [A, B], cr: { on: 1, t: 1, set: 'vs', vm, d: 600000, left: 600000, tp: opt.tp || '', qs: opt.qs || 15 }, hist: { [A]: [[50, 40], [60, 50], [70, 60]], [B]: [[100, 90], [100, 95], [100, 100]] } });
   await p.goto('file://' + path.join(ROOT, 'vs', 'index.html') + '?live=' + room);
   /* 開場 說明 */
   await p.waitForSelector('#vok', { timeout: 5000 }).catch(() => {});
   const it = await p.evaluate(() => { const o = document.getElementById('vcv'); return { t: o.innerText, n: o.querySelectorAll('.vil li').length, b: o.querySelector('#vok') ? o.querySelector('#vok').getBoundingClientRect().height : 0 }; });
-  ok(it.n === 5 && /左右 對戰/.test(it.t) && it.b >= 56, tag + ' 開場 說明 不對 ' + JSON.stringify(it).slice(0, 160));
-  ok(vm === 'e' ? /題目 不一樣/.test(it.t) : vm === 'c' ? /🔒/.test(it.t) : /位置 不一樣/.test(it.t), tag + ' 開場 沒有 說 這個 模式');
+  ok(it.n === 6 && /一題 .*秒/.test(it.t) && !/戊|丙|乙|防抄/.test(it.t) && /左右 對戰/.test(it.t) && it.b >= 56, tag + ' 開場 說明 不對 ' + JSON.stringify(it).slice(0, 160));
+  ok(vm === 'e' ? /題目 不一樣/.test(it.t) : /🔒/.test(it.t), tag + ' 開場 沒有 說 這個 模式');
+  if (opt.tp) { const tk = await p.evaluate(() => VS.topic()); ok(tk === opt.tp, tag + ' 主題 沒有 載入 ' + tk); }
   await p.waitForTimeout(120); await p.click('#vok');
   const R = [], plans = [[1, 0], [0, 1], [1, 1], [0, 0], [1, 0], [1, 1], [1, 1], [1, 1]];
   for (let i = 0; i < plans.length; i++) {
@@ -65,15 +66,15 @@ async function tablet(br, vp, room, vm, opt) { opt = opt || {}; const tag = vp.j
       else { ok(st.q[0].i === st.q[1].i, tag + ' ' + vm + '：兩邊 不是 同一題'); ok(st.q[0].ord.every((v, j) => v !== st.q[1].ord[j]), tag + ' ' + vm + '：有 選項 位置 一樣（會 抄）' + st.q[0].ord + '|' + st.q[1].ord); }
     }
     /* 按了 以後 的 樣子 */
-    if (i === 0) { const lk = await p.evaluate(() => { const b = document.querySelector('#h0 .vb.lock,#h0 .vb.ok,#h0 .vb.no'); return b ? b.className : ''; });
-      if (!opt.solo) ok(vm === 'b' ? /\bok\b/.test(lk) : /\block\b/.test(lk) && !/\b(ok|no)\b/.test(lk), tag + ' 按了 以後 樣子 不對（' + vm + '）：' + lk); }
+    if (i === 0) { const lk = await p.evaluate(() => { const b = document.querySelector('#h0 .vb.lock,#h0 .vb.ok,#h0 .vb.no'); const l = b && b.querySelector('.vlk'); return b ? b.className + (l && getComputedStyle(l).display !== 'none' ? ' 🔒看得到' : '') : ''; });
+      if (!opt.solo) ok(/\block\b/.test(lk) && /🔒看得到/.test(lk) && !/\b(ok|no)\b/.test(lk), tag + ' 按了 以後 樣子 不對（' + vm + '）：' + lk); }
     /* 公布：答對頁／答錯頁 */
     await p.waitForFunction(() => VS.st().cur.rev && document.querySelector('#h0.fb'), null, { timeout: 15000 });
     const fb = await p.evaluate(() => [0, 1].map(k => { const h = document.getElementById('h' + k); if (!h.classList.contains('fb')) return null;
       return { good: h.classList.contains('good'), me: !!h.querySelector('.vme s'), why: (h.querySelector('.vwhy') || {}).textContent || '', w: h.querySelectorAll('.vgl .w').length, zh: [].every.call(h.querySelectorAll('.vgl .w small'), s => /[㐀-鿿]|^[A-Z][a-z]+$/.test(s.textContent)), az: (h.querySelector('.vaz') || {}).textContent || '', green: /rgb\((14, 90|20, 128)/.test(getComputedStyle(h).backgroundImage), over: h.scrollHeight > h.clientHeight + 2 }; }));
     [0, 1].forEach(k => { const f = fb[k], pl = plans[i][k]; if (opt.solo && k === 1) return; if (!f) { E.push(tag + ' 沒有 公布 頁 ' + k); n++; return; }
-      ok(f.good === !!pl, tag + ' 公布 頁 對錯 不對 ' + k); ok(f.w >= 2 && f.zh && /[㐀-鿿]/.test(f.az), tag + ' 公布 頁 沒有 逐字 中文／整句 ' + JSON.stringify(f));
-      if (!pl) ok(f.me && f.why.length > 3, tag + ' 答錯頁 沒有 你選的／💡 ' + JSON.stringify(f)); ok(!f.over, tag + ' 公布 頁 放不下 ' + k); ok(f.green, tag + ' 公布 頁 不是 綠底 ' + k); });
+      ok(f.good === !!pl, tag + ' 公布 頁 對錯 不對 ' + k); ok(f.w >= (opt.tp ? 1 : 2) && f.zh && /[㐀-鿿]/.test(f.az), tag + ' 公布 頁 沒有 逐字 中文／整句 ' + JSON.stringify(f));
+      if (!pl) ok(f.me && (opt.tp || f.why.length > 3), tag + ' 答錯頁 沒有 你選的／💡 ' + JSON.stringify(f)); ok(!f.over, tag + ' 公布 頁 放不下 ' + k); ok(f.green, tag + ' 公布 頁 不是 綠底 ' + k); });
     await waitNext(p, st.r);
   }
   /* 換 字 再 考：右邊 第 1 題 錯 ➜ 之後 有 一題 同 句型、標 🔁、題目 不是 同一題 */
@@ -91,7 +92,7 @@ async function tablet(br, vp, room, vm, opt) { opt = opt || {}; const tag = vp.j
   await p.evaluate(() => window.__crcb(Object.assign({}, window.__CR, { fin: 1, left: 0 })));
   await p.waitForTimeout(600);
   const rec = await p.evaluate(() => ({ r: window.__VSREC, q: JSON.parse(localStorage.getItem('score_q') || '[]').concat(JSON.parse(localStorage.getItem('score_sent') || '[]')).map(x => x.id + '|' + x.set + '|' + x.qs.length + '|' + x.fix + '|' + x.lc), end: document.querySelectorAll('.endh').length, t: document.body.innerText }));
-  ok(rec.r.length === (opt.solo ? 1 : 2) && rec.r.every(x => x.set === 'g' + g + 'gm_vs-q1' && x.n === plans.length), tag + ' 送 成績 不對 ' + JSON.stringify(rec.r));
+  ok(rec.r.length === (opt.solo ? 1 : 2) && rec.r.every(x => x.set === 'g' + g + 'gm_vs-' + (opt.tp || 'q1') && x.n === plans.length), tag + ' 送 成績 不對 ' + JSON.stringify(rec.r));
   ok(rec.end === (opt.solo ? 1 : 2) && /📈/.test(rec.t) && /✨ 學會 了/.test(rec.t), tag + ' 結束 頁 不對');
   ok(!errs.length, tag + ' 程式 錯誤 ' + errs.slice(0, 2).join('｜'));
   await ctx.close(); }
@@ -145,11 +146,11 @@ async function host(br, vp) { const tag = '大螢幕 ' + vp.join('×'); for (con
   ok(has, tag + ' 三年級 沒有〔⚔️ 左右 對戰〕');
   await h.click('[data-crs="vs"]'); await h.waitForTimeout(200);
   const md = await h.evaluate(() => ({ b: [].map.call(document.querySelectorAll('[data-vsm]'), b => b.getAttribute('data-vsm') + (b.classList.contains('on') ? '*' : '')), mn: (document.querySelector('[data-crmin].on') || {}).textContent, gs: document.querySelectorAll('[data-crg]').length,
-    small: [].filter.call(document.querySelectorAll('[data-vsm]'), b => b.getBoundingClientRect().height < 56).length }));
-  ok(md.b.join() === 'e*,c,b' && /10 分鐘/.test(md.mn) && md.gs === 0 && !md.small, tag + ' 設定 頁 不對 ' + JSON.stringify(md));
-  await h.click('[data-vsm="c"]'); await h.waitForTimeout(100); await h.click('[data-vsm="e"]'); await h.waitForTimeout(100);
+    small: [].filter.call(document.querySelectorAll('[data-vsm],[data-vtp],[data-vqs]'), b => b.getBoundingClientRect().height < 48).length, tp: document.querySelectorAll('[data-vtp]').length, qs: [].map.call(document.querySelectorAll('[data-vqs]'), b => b.textContent).join(), txt: document.body.innerText }));
+  ok(md.b.join() === 'e*,c' && md.tp >= 10 && /10 秒,12 秒,15 秒/.test(md.qs) && !/戊|丙|乙 |防抄/.test(md.txt) && /10 分鐘/.test(md.mn) && md.gs === 0 && !md.small, tag + ' 設定 頁 不對 ' + JSON.stringify(md));
+  await h.click('[data-vsm="c"]'); await h.waitForTimeout(100); await h.click('[data-vsm="e"]'); await h.waitForTimeout(100); await h.click('[data-vqs="12"]'); await h.waitForTimeout(100);
   await h.click('#crstart'); await h.waitForTimeout(800);
-  const cr = dget('/rooms/0304/cr'); ok(cr && cr.on && cr.set === 'vs' && cr.vm === 'e' && cr.d === 600000 && !cr.qk, tag + ' Firebase cr 不對 ' + JSON.stringify(cr));
+  const cr = dget('/rooms/0304/cr'); ok(cr && cr.on && cr.set === 'vs' && cr.vm === 'e' && cr.qs === 12 && cr.tp === '' && cr.d === 600000 && !cr.qk, tag + ' Firebase cr 不對 ' + JSON.stringify(cr));
   ok(/vs\/index\.html\?live=0304/.test(await h.evaluate(() => taskURL())), tag + ' QR 網址 不是 vs 頁');
   /* 平板：從 現場任務 的 g3mid 頁 也 會 自己 跳 過來 */
   const t = await ctx.newPage(); t.on('pageerror', e => errs.push('平板 ' + e.message));
@@ -188,7 +189,8 @@ async function host(br, vp) { const tag = '大螢幕 ' + vp.join('×'); for (con
   await ctx.close(); }
 
 (async () => { const srv = await serve(), br = await chromium.launch();
-  for (const vp of [[1024, 768], [768, 1024], [1920, 1080]]) for (const vm of ['e', 'c', 'b']) await tablet(br, vp, vp[0] === 768 && vm !== 'e' ? '0402' : '0304', vm);
+  for (const vp of [[1024, 768], [768, 1024], [1920, 1080]]) for (const vm of ['e', 'c']) await tablet(br, vp, vp[0] === 768 && vm !== 'e' ? '0402' : '0304', vm);
+  /* 第五十五次 第 7 點：任何 主題 */ await tablet(br, [1024, 768], '0304', 'e', { tp: 'sg1', qs: 12 }); await tablet(br, [768, 1024], '0402', 'c', { tp: 'ri1_1' }); await tablet(br, [1920, 1080], '0402', 'e', { tp: 'rx4' });
   await tablet(br, [1024, 768], '0402', 'e'); await tablet(br, [1024, 768], '0311', 'e', { solo: 1 }); await loginTest(br);
   for (const vp of [[1920, 1080], [1024, 768]]) await host(br, vp);
   await br.close(); srv.close();

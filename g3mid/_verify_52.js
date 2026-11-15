@@ -44,7 +44,7 @@ const ok = (c, m) => { n++; if (!c) E.push(m); };
       ok(ui.f >= 18, tag + ' 秒數 按鈕 字 太小 ' + ui.f);
       await h.click('[data-cras="20"]'); await h.waitForTimeout(100); await h.click('#crstart'); await h.waitForTimeout(800);
       const cfg = DB.rooms && DB.rooms['0' + cls] && DB.rooms['0' + cls].cr;
-      ok(cfg && cfg.on && cfg.set === 'az' && cfg.as === 20 && cfg.d === 5 * 60000, tag + ' ' + cls + ' Firebase 不對：' + JSON.stringify(cfg || null).slice(0, 140));
+      ok(cfg && cfg.on && cfg.set === 'az' && cfg.as === 20 && cfg.d === 11 * 60000, tag + ' ' + cls + ' Firebase 不對：' + JSON.stringify(cfg || null).slice(0, 140));
       const qr = await h.evaluate(() => taskURL());
       ok(/g3mid\/index\.html\?live=0/.test(qr), tag + ' ' + cls + ' QR 網址 不是 g3mid：' + qr);
       /* 平板 */
@@ -70,14 +70,9 @@ const ok = (c, m) => { n++; if (!c) E.push(m); };
       ok(await s.evaluate(() => R.glq.want === 'a' && /②/.test(document.querySelector('.wleft .ask').textContent)), tag + ' ' + cls + ' 大寫 對了 沒有 換 小寫');
       await s.evaluate(() => { R.lastLn = { dmx: 0.05 }; WOK(R.glq, document.querySelector('.wleft')); }); for (let t = 0; t < 300 && !(await s.evaluate(() => R.k === 1 && !!document.querySelector('.azq'))); t++) { await s.evaluate(() => { const b = [...document.querySelectorAll('button')].filter(x => x.offsetParent && /下一題|繼續|下一個|➡/.test(x.textContent))[0]; if (b) b.click(); }); await s.waitForTimeout(100); } await s.waitForTimeout(300);
       const a2 = await s.evaluate(() => ({ k: R.k, q0: R.Q[0] && R.Q[0][0], mg: R.mg[0], sc: R.score, ph: (document.querySelector('.azq .azn') || {}).textContent || '', done: (document.querySelector('.azs i.ok') || {}).textContent || '' }));
-      ok(a2.k === 1 && a2.q0 === 1 && a2.mg > 0 && a2.sc > 0 && /第 2 個/.test(a2.ph) && /Aa/.test(a2.done), tag + ' ' + cls + ' A 寫對 以後 不對：' + JSON.stringify(a2));
-      /* B：大寫 寫錯 ➜ 答錯頁（兩個 正確 字母）➜ 下一頁 */
-      await s.evaluate(() => { window.__NOGO = 0; miss('draw'); }); await s.waitForTimeout(700);
-      const fb = await s.evaluate(() => ({ on: document.getElementById('fb').classList.contains('on'), az: (document.querySelector('#fbx .azfb') || {}).textContent || '', cv: document.querySelectorAll('#ltr canvas').length, ov: (() => { const b = document.getElementById('fbx'); return b ? b.scrollHeight > b.clientHeight + 4 && getComputedStyle(b).overflowY === 'hidden' : false; })() }));
-      ok(fb.on && /第 2 個 字母/.test(fb.az) && /B b/.test(fb.az) && /A a 的 下一個/.test(fb.az) && fb.cv >= 2, tag + ' ' + cls + ' 答錯頁 不對：' + JSON.stringify(fb));
-      ok(!fb.ov, tag + ' ' + cls + ' 答錯頁 被 切掉');
+      ok(a2.k === 1 && a2.q0 === 1 && a2.mg > 0 && a2.sc > 0 && /第 2 個/.test(a2.ph) && /Aa/.test(a2.done), tag + ' ' + cls + ' A 寫對 以後 不對：' + JSON.stringify(a2));      /* 第五十五次：寫錯 以後 ＝ 安靜 書寫 動畫（在 _verify_55.js 量）*/
       /* 時間 到（5 分鐘）＝ 送 成績：26 題、正確率 1／26、遊戲 積分 百分制 */
-      POSTS.length = 0; await s.evaluate(() => xForce()); await s.waitForTimeout(1500); await s.evaluate(() => { try { scFlush(); } catch (e) { } }); await s.waitForTimeout(1500);
+      POSTS.length = 0; await s.evaluate(() => { window.__NOGO = 1; xForce(); }); await s.waitForTimeout(1500); await s.evaluate(() => { try { scFlush(); } catch (e) { } }); await s.waitForTimeout(1500);
       const P = POSTS.map(x => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(Boolean), recs = [];
       P.forEach(p => (p.q || p.rows || []).forEach(r => recs.push(r)));
       const want = (cls === '400' ? 'g4' : 'g3') + 'gm_az-q5', r = recs.filter(x => x.set === want)[0] || JSON.parse((POSTS.join('').match(new RegExp('\\{[^{}]*"set":"' + want + '"[^{}]*\\}')) || ['null'])[0]);

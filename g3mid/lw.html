@@ -4534,7 +4534,7 @@ function qRec(ok,pick){if(!R||R.Q.length>R.k)return;var ms=Date.now()-(R.ts||Dat
 function recTot(){return R?(R.x||(R.qs?R.qs.length:0)):0}
 function recPart(){try{if(!R||R.sent||R.crs||DUO||!R.Q||!R.Q.length||typeof scLive!=='function'||!scLive()||R.Q.length>=recTot())return;var r=recObj();r.part=recTot();if(R.x){xSave();try{r.prog=ls(xKey(R.x))||''}catch(e){}}scQAdd(r)}catch(e){}}
 function recObj(){if(!R.pu)R.pu=SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6);var u=R.pu;
-  var Rr={id:SCID,set:R.x?GPF()+(R.bk==='B'?'n':R.bk==='H'?'h':R.bk==='G'?'g':'x')+R.x:'g3gm_'+crSet()+'-'+G.id,name:R.x?'📝 三年級 複習｜📝 '+XNM(R.x):crName()+'｜'+G.ic+' '+G.nm,m:'g',qs:R.Q,raw:R.score,fix:0,mp:0,mw:0,sec:Math.round((Date.now()-R.t0)/1000),src:window.HOMELW?'home':'school',dev:SCDEV,u:u,t:Date.now()};if(R.x&&CR&&CR.cfg)Rr.lc=1;if(R.az){Rr.set='g'+(typeof SCG!=='undefined'&&SCG===4?4:3)+'gm_az-q5';Rr.gp=R.score;Rr.raw=Math.round(R.score/(R.qs.length*500)*1000)/10}   /* 第五十二次 第 7 點：🔠 A～Z ＝ 遊戲 積分 百分制（每 一頁 最多 500）＋ 正確率（26 頁）*/   /* 第三十八次 第 7 點：現場任務 ＝ 正確率 計分 */
+  var Rr={id:SCID,set:R.x?GPF()+(R.bk==='B'?'n':R.bk==='H'?'h':R.bk==='G'?'g':'x')+R.x:'g3gm_'+crSet()+'-'+G.id,name:R.x?'📝 三年級 複習｜📝 '+XNM(R.x):crName()+'｜'+G.ic+' '+G.nm,m:'g',qs:R.Q,raw:R.score,fix:0,mp:0,mw:0,sec:Math.round((Date.now()-R.t0)/1000),src:window.HOMELW?'home':'school',dev:SCDEV,u:u,t:Date.now()};if(R.x&&CR&&CR.cfg)Rr.lc=1;if(R.az){Rr.set='g'+(typeof SCG!=='undefined'&&SCG===4?4:3)+'gm_az-q'+(4+(R.azr||1));if(R.azr>1)Rr.name=crName()+'｜🔠 A～Z 第'+(R.azr===3?'三':'二')+'次';Rr.gp=R.score;Rr.raw=Math.round(R.score/(R.qs.length*500)*1000)/10}   /* 第五十二次 第 7 點：🔠 A～Z ＝ 遊戲 積分 百分制（每 一頁 最多 500）＋ 正確率（26 頁）*/   /* 第三十八次 第 7 點：現場任務 ＝ 正確率 計分 */
   return Rr}
 function rec1(){try{if(!R||R.sent||!R.Q.length||typeof scLive!=='function'||!scLive())return false;var fast=0;R.Q.forEach(function(x){fast+=x[3]});if(fast*2>R.Q.length)return false;R.sent=1;
   var Rr=recObj();if(R.Q.length<recTot()&&!R.fz)Rr.part=recTot();scQAdd(Rr);return true}catch(e){return false}}   /* 現場任務 時間 到（R.fz）＝ 老師 結束 的，算 做完 */
@@ -5166,9 +5166,9 @@ function lwIntro(done){if(window.__NOGO||window.__NOLWI){done();return}var o=H('
     function(b){b.innerHTML='<div class="lwt">④ 🚫 不超線：這樣 <b class="rd">算 錯</b> ❌，這樣 才 對 ✅</div><div class="lwr"></div>';var r=b.querySelector('.lwr');
       [[lwSk('h',.45),'❌ 腳 掉到 紅線 下面','h'],[lwSk('H',.55,.72),'❌ 頭 沒有 碰到 最上面','H'],[lwSk('a',-.55),'❌ 飄 在 半空中','a']].forEach(function(x){var d=H('div','lwc no'),ln;try{ln=HW.lines(x[0],x[2])}catch(e){ln=null}if(!ln||!ln.map)ln={map:{sw:0,sx0:0,tx0:0,tw:1},miss:[],over:[]};d.appendChild(skCanvas(x[0],h,ln));d.appendChild(H('div','lwk',x[1]));r.appendChild(d)});
       var d=H('div','lwc ok');d.appendChild(letterCanvas('h',h,'#0A5E2D',1));d.appendChild(H('div','lwk','✅ 頂天 立地'));r.appendChild(d)}];
-  S.unshift(mgIntro);if(LWM==='az')S.unshift(azIntro);   /* 第四十五次 第 3 點：三種 都 先 演 獎勵 規則 */   /* 第四十四次 第 6-(3) 點：先 用 秒懂 動畫 說：寫得 愈好 ＝ 魔法 獎勵 愈 豐盛；寫錯 ＝ 沒有 獎勵 */
+  S.unshift(mgIntro);if(LWM==='az'){S.unshift(azJ);S.unshift(azScore);S.unshift(azIntro)}   /* 第五十五次 第 1-(1)B 點：怎麼 算 分數、大寫 J 一橫 */   /* 第四十五次 第 3 點：三種 都 先 演 獎勵 規則 */   /* 第四十四次 第 6-(3) 點：先 用 秒懂 動畫 說：寫得 愈好 ＝ 魔法 獎勵 愈 豐盛；寫錯 ＝ 沒有 獎勵 */
   o.innerHTML='<div class="lww"><div class="lwh">'+(LWN[LWM]||LWN.lw)[0]+' '+(LWN[LWM]||LWN.lw)[1]+'：開始 前 看 一下</div><div class="lwd">'+S.map(function(){return '<i></i>'}).join('')+'</div><div class="lwb" id="lwb"></div><div class="lwbt"><button id="lwag" class="b2">🔁 再看 一次</button><button id="lwgo" class="b1" disabled>▶ 開始 寫（'+(LWM==='az'?'26 個 字母':'10 題')+'）</button></div></div>';
-  var tm=null;function show(){var b=$('#lwb');[].forEach.call(o.querySelectorAll('.lwd i'),function(d,j){d.className=j<k?'ok':j===k?'on':''});S[k](b);b.classList.remove('in');void b.offsetWidth;b.classList.add('in');
+  var tm=null;function show(){var b=$('#lwb');if(!b)return;[].forEach.call(o.querySelectorAll('.lwd i'),function(d,j){d.className=j<k?'ok':j===k?'on':''});S[k](b);b.classList.remove('in');void b.offsetWidth;b.classList.add('in');
     tm=setTimeout(function(){k++;if(k<S.length)show();else{[].forEach.call(o.querySelectorAll('.lwd i'),function(d){d.className='ok'});$('#lwgo').disabled=false;$('#lwgo').classList.add('rdy')}},S[k].ms||(k===S.length-1?4200:3200))}
   $('#lwag').onclick=function(){clearTimeout(tm);k=0;show()};$('#lwgo').onclick=function(){if(this.disabled)return;clearTimeout(tm);o.remove();try{ls('g3m_lwi_'+(SCID||'0'),'1')}catch(e){}done()};show()}
 function startLW(m){if(m&&LWP[m])LWM=m;if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();startLW()});return}
@@ -5230,6 +5230,88 @@ function renAZ(q,st){var ph=0;R.lastImg=null;R.lastLn=null;R.lastSk=null;R.lastG
     else{var mi=st.querySelector('.mirror');if(mi)mi.classList.add('magic');if(R.mg&&!R.x){mgWin(q,mi||L);return}good(L)}}}
   draw()}
 var FB5=FB.q5;FB.q5=function(q,p){if(!q.az)return FB5(q,p);var o=FB.gl(q,p),pv=q.n>1?R.qs[q.n-2]:null;o.body='<div class="azfb">第 '+q.n+' 個 字母：<b>'+q.up+' '+q.lo+'</b>'+(pv?'<small>'+pv.up+' '+pv.lo+' 的 下一個 是 '+q.up+' '+q.lo+'</small>':'')+'</div>'+o.body;o.sl=[['',q.lo+'.'],['',q.lo+'.']];return o};
+/* ══ 2026-11-15 第五十五次 第 1 點（老師）：🔠 A～Z 依序 背寫 改版 ══
+   (1)A 整個 測驗 預設 11 分鐘（live/_cr_host.js）；(1)B 開始 前 多 兩段 秒懂 動畫：🏆 怎麼 算 分數、⚠️ 大寫 J 上面 加 一橫。
+   (2) 寫錯／25 秒 到 沒 寫完 ＝ 馬上 一段 10 秒 內 的「安靜」書寫 動畫（大寫 ➜ 小寫 一筆 一筆 寫 出來，不 唸 字母，不 吵 別人）➜ 自己 下一頁。
+       26 個 寫完（或 整個 時間 到）➜ 📒 錯題 統整：剛才 錯／沒寫 的 字母 一個 一個「一邊 寫 一邊 唸 字母 名字」。
+       ➜ 第二次 測驗：A 大 A 小 a ～ 大 Z 小 z 整頁 ➜ B 錯 的 格子 變 黃底 發亮（倒數 10 秒）➜ 變成 空白 四線格 ➜ 一頁 一個 字母（大寫＋小寫）、一頁 25 秒，只 寫 錯 的。
+       成績 g年級gm_az-q6（第二次）、q7（第三次）：💯 正確率 ＝ 寫對 ÷ 這次 要 寫 的 字母 數（每 個 字母 100 ÷ 個數 分）；🎮 遊戲 分數 另外 算（寫對 又 快 又 整齊 愈 高）。
+       第三次：第二次 還 有 錯 ＝ 平板 寫 rooms/0班/az2/5碼 ➜ 老師 大螢幕〔🔠 第三次：老師 決定〕按〔🔓 開 第三次〕（rooms/0班/az3/5碼 ＝ 這一場 t）➜ 一樣 的 流程。 */
+function azCss2(){if(document.getElementById('azcss2'))return;var st=document.createElement('style');st.id='azcss2';st.textContent=
+ '#azov{position:fixed;inset:0;z-index:90;background:radial-gradient(circle at 50% 20%,#24307A,#0B1030 70%);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,1.6vh,18px);padding:16px;text-align:center;overflow:auto}'+
+ '#azov .azoh{font-size:clamp(26px,4vh,44px);font-weight:900;color:#FFE07A}#azov .azos{font-size:clamp(18px,2.6vh,28px);opacity:.95}'+
+ '#azov .azpair{display:flex;gap:clamp(12px,3vw,40px);justify-content:center;align-items:flex-end;flex-wrap:wrap}#azov .azpair figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px}#azov .azpair figcaption{font-size:clamp(18px,2.6vh,28px);font-weight:900}'+
+ '#azov canvas{border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.4)}#azov .azbar{width:min(700px,90vw);height:14px;border-radius:999px;background:rgba(255,255,255,.18);overflow:hidden}#azov .azbar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#2EE59D,#FFE07A);transform-origin:left;transition:transform .1s linear}'+
+ '#azov .azq{font-size:clamp(16px,2.2vh,22px);background:rgba(0,0,0,.3);border-radius:999px;padding:4px 18px}#azov button.azb{min-height:72px;min-width:280px;padding:6px 26px;border:0;border-radius:22px;background:linear-gradient(180deg,#FFE27A,#F5B800);color:#3A2600;font-size:clamp(22px,3.2vh,32px);font-weight:900;box-shadow:0 6px 0 #B07F00}'+
+ '.azgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:clamp(4px,.8vw,10px);width:min(1100px,96vw)}@media (orientation:portrait){.azgrid{grid-template-columns:repeat(5,1fr)}}'+
+ '.azgrid i{font-style:normal;position:relative;display:flex;align-items:center;justify-content:center;gap:4px;min-height:clamp(54px,8vh,86px);border-radius:12px;background:#fff;color:#1A237E;font-family:Andika,sans-serif;font-weight:700;font-size:clamp(26px,4.4vh,46px);'+
+ 'background-image:linear-gradient(#9AA7B5,#9AA7B5),linear-gradient(#9AA7B5,#9AA7B5),linear-gradient(#E53935,#E53935),linear-gradient(#9AA7B5,#9AA7B5);background-size:100% 1px,100% 1px,100% 3px,100% 1px;background-position:0 12%,0 37%,0 72%,0 95%;background-repeat:no-repeat;animation:mgpop .4s both}'+
+ '.azgrid i.w{background-color:#FFE96B;box-shadow:0 0 0 4px #FFC400,0 0 26px #FFD54F;animation:azglow 1.2s ease-in-out infinite alternate}.azgrid i.w.blank span{opacity:0;transition:opacity .6s}'+
+ '.azgrid i.blank{background-color:#fff;box-shadow:0 0 0 4px #FFC400}@keyframes azglow{0%{box-shadow:0 0 0 4px #FFC400,0 0 10px #FFD54F}100%{box-shadow:0 0 0 6px #FFC400,0 0 34px #FFE082}}'+
+ '.azcd{font-size:clamp(54px,10vh,110px);font-weight:900;color:#FFE07A;line-height:1;text-shadow:0 0 24px rgba(255,224,122,.7)}'+
+ '.azsc{display:flex;gap:clamp(10px,2vw,24px);flex-wrap:wrap;justify-content:center}.azsc>div{background:#1B2560;border:3px solid #4F62C9;border-radius:20px;padding:12px 18px;width:min(420px,90vw);text-align:left;font-size:clamp(18px,2.6vh,26px);animation:mgpop .5s both}.azsc b{color:#FFE07A}.azsc .big{font-size:1.5em;display:block;color:#fff}'+
+ '.azj{display:flex;gap:clamp(12px,3vw,40px);justify-content:center;align-items:flex-end}.azj .jx{position:relative}.azj .jx:after{content:"❌";position:absolute;right:-10px;top:-10px;font-size:40px}.azj .jo:after{content:"✅";position:absolute;right:-10px;top:-10px;font-size:40px}.azj .jo{position:relative}';
+ document.head.appendChild(st)}
+/* 在 四線格 一筆 一筆 寫 出 字母（同一份 筆畫 HW.T，跟 letterCanvas 一樣 的 格子）；ms ＝ 整個 字 寫 多久 */
+function azWrite(ch,hpx,ms,col,done){var st=HW.T[ch][0],u=hpx/3.5,xs=[];st.forEach(function(s){s.forEach(function(p){xs.push(p[0])})});var x0=Math.min.apply(0,xs),x1=Math.max.apply(0,xs),W=Math.max(u*2.2,(x1-x0)*u+u*1.2),ox=(W-(x1-x0)*u)/2-x0*u;
+ var c=document.createElement('canvas'),d=2;c.width=W*d;c.height=hpx*d;c.style.height=hpx+'px';var cx=c.getContext('2d');cx.scale(d,d);
+ function Y(g){return u*(g+.25)}var tot=0,seg=[];st.forEach(function(s){for(var i=1;i<s.length;i++){var l=Math.hypot(s[i][0]-s[i-1][0],s[i][1]-s[i-1][1]);seg.push([s,i,l]);tot+=l}});
+ function grid(){cx.fillStyle='#fff';cx.fillRect(0,0,W,hpx);[[0,'#9AA7B5',2,[8,6]],[1,'#9AA7B5',2,[8,6]],[2,'#E53935',4,[]],[3,'#9AA7B5',2,[8,6]]].forEach(function(l){cx.beginPath();cx.setLineDash(l[3]);cx.strokeStyle=l[1];cx.lineWidth=l[2];cx.moveTo(4,Y(l[0]));cx.lineTo(W-4,Y(l[0]));cx.stroke()});cx.setLineDash([])}
+ function upto(f){grid();var lim=tot*f,acc=0;cx.strokeStyle=col||'#1A237E';cx.lineWidth=Math.max(6,u*.1);cx.lineCap='round';cx.lineJoin='round';var pen=null;
+  for(var k=0;k<seg.length&&acc<lim;k++){var s=seg[k][0],i=seg[k][1],l=seg[k][2],a=s[i-1],b=s[i],t=Math.min(1,(lim-acc)/(l||1));cx.beginPath();cx.moveTo(ox+a[0]*u,Y(a[1]));var px=a[0]+(b[0]-a[0])*t,py=a[1]+(b[1]-a[1])*t;cx.lineTo(ox+px*u,Y(py));cx.stroke();pen=[px,py];acc+=l}
+  if(pen&&f<1){cx.beginPath();cx.fillStyle='#FF9800';cx.arc(ox+pen[0]*u,Y(pen[1]),Math.max(7,u*.13),0,7);cx.fill()}}
+ grid();c.play=function(cb){var t0=performance.now(),my=c.tok=(c.tok||0)+1;(function f(){if(c.tok!==my)return;var k=Math.min(1,(performance.now()-t0)/(window.__NOGO?60:ms));upto(k);if(k<1)requestAnimationFrame(f);else if(cb)cb()})()};
+ if(done)c.play(done);return c}
+function azOv(){azCss2();var o=document.getElementById('azov');if(!o){o=document.createElement('div');o.id='azov';document.body.appendChild(o)}o.hidden=false;return o}
+function azOvOff(){var o=document.getElementById('azov');if(o)o.remove()}
+/* (1)B 開始 前：🏆 怎麼 算 分數 */
+function azScore(b){azCss2();b.innerHTML='<div class="lwt">🏆 怎麼 算 分數？（兩個 分數，都 是 100 分 滿分）</div><div class="azsc">'+
+  '<div style="animation-delay:.3s"><span class="big">💯 正確率</span>一個 字母 的 <b>大寫＋小寫</b> 都 寫對 ＝ 寫對 1 個<br>寫對 幾 個 ÷ 26 個 ✕ 100<br><small>（寫對 13 個 ＝ 50 分）</small></div>'+
+  '<div style="animation-delay:1.6s"><span class="big">🎮 遊戲 分數</span>寫對 又 <b>整齊</b>、又 <b>快</b> ＝ 火箭 衝 得 愈 高<br>🔥 寫對 ➜ ⚡ 整齊 ➜ 💎 非常 整齊 ➜ 🌈 非常 整齊＋快</div>'+
+  '<div style="animation-delay:2.9s"><span class="big">❌ 寫錯、時間 到</span>馬上 安靜 看 一次 怎麼 寫 ➜ 最後 <b>第二次</b> 只 寫 錯 的（另外 一個 成績）</div></div>'}
+azScore.ms=8500;
+/* (1)B 開始 前：⚠️ 大寫 J 上面 加 一橫（自己 寫 出來 的 動畫）*/
+function azJ(b){azCss2();var h=Math.round(Math.min(innerHeight*.28,240));b.innerHTML='<div class="lwt">⚠️ 大寫 <b>J</b>：上面 一定 要 加 <b style="color:#FFE07A">一橫</b></div><div class="azj"></div><div class="lwt" style="font-size:.85em">先 寫 上面 一橫 ➜ 再 寫 下來 彎 一個 勾</div>';var r=b.querySelector('.azj');
+  var f1=document.createElement('figure');f1.className='jo';var c1=azWrite('J',h,2600,'#0A5E2D');f1.appendChild(c1);r.appendChild(f1);setTimeout(function(){c1.play()},300);
+  try{var sk=[HW.T.J[1][0]],ln={map:{sw:0,sx0:0,tx0:0,tw:1},miss:[],over:[]},f2=document.createElement('figure');f2.className='jx';f2.appendChild(skCanvas(sk,h,ln));r.appendChild(f2)}catch(e){}}
+azJ.ms=6000;
+/* (2) 寫錯／時間 到：安靜 的 書寫 動畫（10 秒 內），不 唸 字母 */
+function azMiss(pick){var q=R.q;if(R.mg&&R.q&&R.mg[R.k]==null)R.mg[R.k]=0;qRec(0,pick);BUSY=true;tPause();R.streak=0;R.res[R.k]=0;dots();$('#cmb').className='cmb';
+ R.wrong.push({en:q.up+' '+q.lo,show:q.up+' '+q.lo,body:'',zh:'',sl:[['',q.lo+'.']],gi:(G.ic||'')+' '+(G.nm||'')});
+ var o=azOv(),h=Math.round(Math.min(innerHeight*.34,300)),k0=R.k,my=++FBN;
+ o.innerHTML='<div class="azoh">'+(pick==null?'⏰ 時間 到':'❌ 再 看 一次 怎麼 寫')+'</div><div class="azos">第 '+q.n+' 個 字母：<b class="en" style="font-size:1.4em">'+q.up+' '+q.lo+'</b></div><div class="azpair"><figure id="azf1"></figure><figure id="azf2"></figure></div><div class="azq">🤫 安靜 看（不 唸 出來，不 吵 別人）</div><div class="azbar"><i id="azbi"></i></div>';
+ var c1=azWrite(q.up,h,3000),c2=azWrite(q.lo,h,2600);$('#azf1').appendChild(c1);$('#azf1').insertAdjacentHTML('beforeend','<figcaption>大寫 '+q.up+'</figcaption>');$('#azf2').appendChild(c2);$('#azf2').insertAdjacentHTML('beforeend','<figcaption>小寫 '+q.lo+'</figcaption>');
+ c1.play(function(){setTimeout(function(){c2.play()},300)});var T0=Date.now(),D=window.__NOGO?400:9000,iv=setInterval(function(){var f=1-(Date.now()-T0)/D,bi=$('#azbi');if(bi)bi.style.transform='scaleX('+Math.max(0,f)+')';if(f<=0||my!==FBN){clearInterval(iv);if(my!==FBN)return;FBN++;azOvOff();if(R&&R.k===k0)next()}},100)}
+var miss0AZ=miss;miss=function(pick){if(R&&R.az&&!R.crs&&!R.fz){azMiss(pick);return}return miss0AZ(pick)};
+/* 這一次 錯／沒寫 的 字母（照 A ➜ Z）*/
+function azWrong(){var W=[];R.qs.forEach(function(q,i){if(R.res[i]!==1)W.push(q)});return W}
+/* 📒 錯題 統整：一邊 寫 一邊 唸 字母 名字（大寫 ➜ 小寫）*/
+function azSummary(W,done){var o=azOv(),h=Math.round(Math.min(innerHeight*.3,260)),i=0,stop=false;
+ o.innerHTML='<div class="azoh">📒 剛才 寫錯、還 沒 寫 的 字母（'+W.length+' 個）</div><div class="azos" id="azsn"></div><div class="azpair"><figure id="azf1"></figure><figure id="azf2"></figure></div><div class="azq">👀 看 筆順 ＋ 👂 聽 字母 的 名字</div><div class="azgrid azsl" id="azsl" style="grid-template-columns:repeat('+Math.min(13,W.length)+',1fr)">'+W.map(function(q){return '<i><span>'+q.up+q.lo+'</span></i>'}).join('')+'</div><button class="azb" id="azsk" hidden>▶ 開始 第二次</button>';
+ (function one(){if(stop||!document.getElementById('azsn'))return;if(i>=W.length){stop=true;var b=$('#azsk'),gone=false,fin=function(){if(gone)return;gone=true;done()};b.hidden=false;b.onclick=fin;setTimeout(fin,window.__NOGO?10:2500);return}   /* 老師：統整 完 ➜ 緊接著 立刻 第二次 */var q=W[i];[].forEach.call(o.querySelectorAll('#azsl i'),function(e,j){e.classList.toggle('w',j===i)});
+  $('#azsn').innerHTML='<b class="en" style="font-size:1.5em">'+q.up+' '+q.lo+'</b>　（'+(i+1)+' ／ '+W.length+'）';var f1=$('#azf1'),f2=$('#azf2');f1.innerHTML='';f2.innerHTML='';
+  var c1=azWrite(q.up,h,1900),c2=azWrite(q.lo,h,1700);f1.appendChild(c1);f2.appendChild(c2);f1.insertAdjacentHTML('beforeend','<figcaption>大寫 '+q.up+'</figcaption>');f2.insertAdjacentHTML('beforeend','<figcaption>小寫 '+q.lo+'</figcaption>');
+  var n=0,my=i,adv=false,go=function(){n++;if(n<2||adv||my!==i)return;adv=true;i++;setTimeout(one,window.__NOGO?20:600)};
+  c1.play(function(){c2.play(function(){sayList([['',q.lo+'.']],go)})});n=1;setTimeout(function(){if(!adv&&my===i){n=1;go()}},window.__NOGO?400:7000)})()}
+/* 第二次（第三次）開始 前：A a ～ Z z 整頁 ➜ 錯 的 格子 黃底 發亮 倒數 10 秒 ➜ 變成 空白 四線格 */
+function azBoard(W,r,done){var o=azOv(),L=G.B.slice(0,26),ws={};W.forEach(function(q){ws[q.up]=1});
+ o.innerHTML='<div class="azoh">✍️ 第'+(r===3?'三':'二')+'次：只 寫 <b style="color:#fff">黃色</b> 的 字母（'+W.length+' 個）</div><div class="azgrid">'+L.map(function(q,j){return '<i class="'+(ws[q.up]?'w':'')+'" style="animation-delay:'+(j*.04).toFixed(2)+'s"><span>'+q.up+' '+q.lo+'</span></i>'}).join('')+'</div><div class="azcd" id="azcd">10</div><div class="azq">一頁 一個 字母：大寫 ➜ 小寫，一頁 '+azSec()+' 秒</div>';
+ var n=10,iv=setInterval(function(){n--;var e=$('#azcd');if(e)e.textContent=n>0?n:'✍️';if(n===0){[].forEach.call(o.querySelectorAll('.azgrid i.w'),function(x){x.classList.add('blank')});$('.azq')&&($('#azov .azq').innerHTML='🟨 空白 的 格子 ＝ 等一下 要 寫 的 字母')}
+  if(n<=-2){clearInterval(iv);azOvOff();done()}},window.__NOGO?30:1000)}
+/* 開始 第 r 次（只 寫 W）*/
+function azRound(W,r){var g=SCG===4?4:3;R={i:-1,lw:1,az:1,azr:r,mg:[],qs:W.slice(),k:-1,score:0,streak:0,res:[],wrong:[],Q:[],t0:Date.now()};document.body.classList.add('ing','lwm');
+ $('#endv').hidden=true;$('#game').hidden=false;$('#gnm').textContent='🔠 A～Z 第'+(r===3?'三':'二')+'次（'+W.length+' 個 字母）';$('#how').textContent='🔠 只 寫 剛才 錯 的 字母：一頁 一個（① 大寫 ➜ ② 小寫）· ⏱ 一頁 '+G.t+' 秒 · 頂天 立地 不超線';$('#sc').textContent='0';$('#stage').innerHTML='';next()}
+/* 一次 做完 ➜ 送 成績 ➜ 統整 ➜ 下一次 */
+function azAfter(){var r=R.azr||1,W=azWrong(),n=R.qs.length,ok=n-W.length;$('#game').hidden=true;azRep(r,W,ok,n);
+ if(!W.length){var o=azOv();o.innerHTML='<div class="azoh">🎉 '+(r===1?'26 個 字母 全部 寫對！':'第'+(r===3?'三':'二')+'次 全部 寫對 了！')+'</div><div class="azos">💯 正確率 100　·　🎮 遊戲 分數 '+Math.round(R.score/(n*500)*1000)/10+'</div><button class="azb" id="azdn">👍 完成</button>';try{confetti()}catch(e){}$('#azdn').onclick=function(){azOvOff();crWait('✅ 做完 了！<br><small>👀 請 看 大螢幕</small>')};return}
+ azSummary(W,function(){if(r===1){azBoard(W,r+1,function(){azRound(W,r+1)})}else if(r===2)azWait3(W);else{var o=azOv();o.innerHTML='<div class="azoh">💪 第三次 做完 了！</div><div class="azos">還 要 多 練習 的 字母：<b class="en" style="font-size:1.4em">'+W.map(function(q){return q.up+q.lo}).join('　')+'</b></div><button class="azb" id="azdn">👍 完成</button>';$('#azdn').onclick=function(){azOvOff();crWait('✅ 做完 了！')}}})}
+/* 告訴 大螢幕（第二次 以後 還 錯 哪些）*/
+function azRep(r,W,ok,n){if(r<2||typeof LDB==='undefined'||!LDB.set||!CR||!SCID)return;try{LDB.set('rooms/'+CR.room+'/az2/'+SCID,{r:r,w:W.map(function(q){return q.up+q.lo}).join(' '),ok:ok,n:n,t:CR.t})}catch(e){}}
+/* 第二次 還 有 錯：等 老師 決定 第三次 */
+function azWait3(W){var o=azOv(),stop=null;o.innerHTML='<div class="azoh">⏳ 第二次 做完 了</div><div class="azos">還 要 練習：<b class="en" style="font-size:1.3em">'+W.map(function(q){return q.up+q.lo}).join('　')+'</b></div><div class="azq">老師 會 決定 要不要 開 <b>第三次</b>，請 等一下 👀</div>';
+ if(typeof LDB==='undefined'||!LDB.poll||!CR)return;stop=LDB.poll('rooms/'+CR.room+'/az3/'+SCID,1500,function(v){if(v&&v===CR.t){if(stop)stop();stop=null;azBoard(W,3,function(){azRound(W,3)})}})}
+var end0AZ=end;end=function(){if(R&&R.az&&!R.crs&&!DUO){stopSay();cancelAnimationFrame(TM.raf);rec1();azAfter();return}return end0AZ()};
+var xForce0AZ=window.xForce;window.xForce=function(){if(R&&R.az&&!R.crs&&!R.fz&&!DUO){var r=R.azr||1,a=xForce0AZ();if(r===1){R.res=R.qs.map(function(q,i){return R.Q[i]&&R.Q[i][0]?1:0});setTimeout(azAfter,window.__NOGO?50:2500)}return a}return xForce0AZ()};
 /* ══ 2026-10-30 第三十四次 第 1～4 點：🏠 三年級 25 題 闖關（回家 練習；只有 home.html 才 開：window.HOME25）══
    老師 的 決定：每個 年級 一個 專屬 網址＋QR（放 總首頁、老師看板）➜ 掃了 ➜ 打 班級號碼＋密碼 ➜ 馬上 第 1 題；
    題目 ＝ 25 題 挑戰 的 題庫 A 裡「全新 題」（跟 兩個 年級 期中考卷 100% 不一樣、不用 類似 題）、每次 先 出 沒 做過 的（XBK 'H'：存 進度、做過 的、最高分 都 分開，成績 g?gm_…-h25）；

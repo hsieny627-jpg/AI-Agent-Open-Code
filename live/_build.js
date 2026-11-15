@@ -77,7 +77,8 @@ const host = head('現場任務 大螢幕', CER) + `<body class="host">
 <div class="scr" id="hend" hidden><div id="cerw"><div class="cx" id="cerst"></div></div><div class="hbar"><span id="cstn" class="note"></span><span id="awb1"></span><button id="awsk" class="ghost">⏭ 直接 看 頒獎台</button><button id="awag" class="ghost">🔁 再 看 一次</button><button id="tana" class="big go">📊 全班 錯題 分析 ➜</button></div></div>
 <div class="scr" id="hana" hidden><div class="in" id="hanab"></div><div class="hbar"><span id="erw" class="note"></span><span id="gm" class="note"></span><button id="tcer" class="ghost">🏆 再看 頒獎</button><button id="close2" class="ghost">✕ 結束 這一場</button><button id="give" class="big go">🎁 發獎勵 ＋ 記 練習次數</button></div></div>
 <div class="scr" id="hcr" hidden><div class="in"></div></div><div class="scr" id="hcrr" hidden><div class="in"></div></div>
-<script>var BASE='../',GR=${J(QB.GR)},LIST=${J(QB.LIST)},CHAL=${J(CHAL)},ICON=${J(QB.ICON)},CRDS=${J({ 3: CRD, 4: CRD4 })};
+<script>var VSTL=${fs.readFileSync(path.join(__dirname, '..', 'vs', 't', 'list.json'), 'utf8')};/* 第五十五次 第 7 點：⚔️ 左右 對戰 主題 清單（先 跑 node vs/_build.js）*/
+var BASE='../',GR=${J(QB.GR)},LIST=${J(QB.LIST)},CHAL=${J(CHAL)},ICON=${J(QB.ICON)},CRDS=${J({ 3: CRD, 4: CRD4 })};
 ${RT}
 ${CERRT}
 ${R('_host_rt.js')}
