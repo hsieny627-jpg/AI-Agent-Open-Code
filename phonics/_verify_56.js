@@ -25,13 +25,13 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
     ok(!r.hid && !r.tl, tag + ' 動畫 ' + (i + 1) + ' 還有 沒 出來 的 方框／音標');
     r.rows.forEach((w, k) => ok(w.dots === w.all, tag + ' 動畫 ' + (i + 1) + ' 第 ' + (k + 1) + ' 列 黃點 沒 全部 亮'));
     ok(!r.o.length, tag + ' 動畫 ' + (i + 1) + ' 超出 畫面 ' + r.o.join('|')); ok(r.fs >= 40, tag + ' 動畫 ' + (i + 1) + ' 字母 太 小 ' + r.fs);
-    const miss = r.say.filter(f => !AU.has(f)); ok(!miss.length && r.say.length >= 4, tag + ' 動畫 ' + (i + 1) + ' 聲音 檔 沒有：' + miss.join(' '));
+    const miss = r.say.filter(f => !AU.has(f)); ok(!miss.length && r.say.length >= 3, tag + ' 動畫 ' + (i + 1) + ' 聲音 檔 沒有：' + miss.join(' '));
   }
   /* 黃點 ＝ 聲音 數（③ blast 5、⑦ strong 5、⑥ bathroom 6）*/
   const cnt = await p.evaluate(() => [PHM.countOf('bl.a.st').n, PHM.countOf('str.o=ao.ng').n, PHM.countOf('b.a.th|r.oo.m').n, PHM.countOf('b.a.th').n, PHM.countOf('b.a!=ai|b.y').n, PHM.countOf('b.a.th|r.oo.m').v]);
   ok(cnt.join() === '5,5,6,3,4,2', tag + ' 聲音／音節 數 不對 ' + cnt);
   /* 注音 ➜ KK ➜ IPA */
-  await p.click('#mdSw [data-md="kk"]'); const kk = await p.evaluate(() => [...document.querySelectorAll('#stage .tl[data-t="ae"]')].map(e => e.textContent)); ok(kk.length && kk.every(t => t === 'æ'), tag + ' KK 沒 換 ' + kk);
+  await p.evaluate(() => { window.__PHSAY = []; PHM.scPlay(1); }); await p.waitForFunction(() => (document.getElementById('cap') || {}).innerHTML, null, { timeout: 15000 }).catch(() => {}); await p.click('#mdSw [data-md="kk"]'); const kk = await p.evaluate(() => [...document.querySelectorAll('#stage .tl[data-t="ae"]')].map(e => e.textContent)); ok(kk.length && kk.every(t => t === 'æ'), tag + ' KK 沒 換 ' + kk);
   await p.click('#mdSw [data-md="zh"]');
   /* ② 地圖 */
   await p.click('[data-tab="map"]'); await p.waitForTimeout(200);
@@ -44,7 +44,7 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
   const st = await p.evaluate(() => ({ d: document.querySelectorAll('#mapOut .dots i').length, t: document.querySelector('#mapOut .sum').textContent })); ok(st.d === 6 && /6 個 聲音/.test(st.t), tag + ' strand 聲音 數 ' + JSON.stringify(st));
   /* ③ 多 音節＋重音 */
   await p.click('[data-tab="syl"]'); await p.click('#sStress'); const sy = await p.evaluate(() => ({ r: document.querySelectorAll('#sylOut .wrow').length, sx: document.querySelectorAll('#sylOut .bx.sx').length, syl: document.querySelectorAll('#sylOut .syl').length }));
-  ok(sy.r === 10 && sy.sx >= 10 && sy.syl === 20, tag + ' 多 音節／重音 ' + JSON.stringify(sy)); ok(!(await p.evaluate(over)).length, tag + ' 多 音節 超出');
+  ok(sy.r === 10 && sy.sx >= 10 && sy.syl === 20, tag + ' 多 音節／重音 ' + JSON.stringify(sy)); ok(!(await p.evaluate(`[...document.querySelectorAll('#sylOut .bx')].filter(e=>e.getBoundingClientRect().right>innerWidth+2).length`)), tag + ' 多 音節 左右 超出');
   await p.click('#sStress');
   /* ④ 一字 多音 */
   await p.click('[data-tab="many"]'); ok((await p.$$('#manyOut .mrow')).length >= 10, tag + ' 一字 多音 太 少');

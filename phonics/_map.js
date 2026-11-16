@@ -62,7 +62,7 @@ const DG=[['ch','ch-ih-n','chin','ch'],['sh','sh-ih-p','ship','sh'],['th','th-ih
 let SCI=LS.g('sci',0),STR=false;if(SCI>=SC.length)SCI=0;
 function scList(){$('#scList').innerHTML=SC.map((s,i)=>'<button data-sc="'+i+'" class="'+(i===SCI?'on':'')+(LS.g('scs',[]).indexOf(i)>=0?' seen':'')+'">'+s.t.split('：')[0].split(' ')[0]+'</button>').join('')}
 async function scPlay(i){SCI=i;LS.s('sci',i);const me=++TOK,S=SC[i];scList();PAUSED=false;$('#aPause').textContent='⏸️ 暫停';
-  $('#stage').innerHTML='<h2 class="st">'+S.t+'</h2>'+S.rows.map((r,ri)=>'<div class="wrow'+(STR?' stress':'')+'" data-r="'+ri+'">'+(r.fake?'<span class="lab">🔮 練習 用 的 假字</span>':'')+wordHTML(r.s,{lab:1,hide:1,hideT:1,st:STR?r.st:null})+'</div><div class="sum" data-sum="'+ri+'"></div>').join('')+(S.extra==='dg'?'<div id="dgw"></div>':'')+'<div class="cap" id="cap"></div>';
+  $('#stage').className='pnl n'+S.rows.length;$('#stage').innerHTML='<h2 class="st">'+S.t+'</h2><div class="rows">'+S.rows.map((r,ri)=>'<div class="rw"><div class="wrow'+(STR?' stress':'')+'" data-r="'+ri+'">'+(r.fake?'<span class="lab">🔮 練習 用 的 假字</span>':'')+wordHTML(r.s,{lab:1,hide:1,hideT:1,st:STR?r.st:null})+'</div><div class="sum" data-sum="'+ri+'"></div></div>').join('')+'</div>'+(S.extra==='dg'?'<div id="dgw"></div>':'')+'<div class="cap" id="cap"></div>';
   for(let ri=0;ri<S.rows.length;ri++){if(me!==TOK)return;const r=S.rows[ri],row=$('.wrow[data-r="'+ri+'"]'),bx=[].slice.call(row.querySelectorAll('.bx'));
     /* (1) 方框＋字母 一個 一個 出來，出來 就 唸 那個 聲音 */
     let k=0;const all=[];parse(r.s).forEach(B=>B.forEach(b=>all.push(b)));
@@ -77,7 +77,7 @@ async function scPlay(i){SCI=i;LS.s('sci',i);const me=++TOK,S=SC[i];scList();PAU
     await sayW(r.au,me);
     /* (4) 黃點 數 聲音 */
     let n=0;for(const d of row.querySelectorAll('.dots i')){if(me!==TOK)return;d.classList.add('on');n++;await wait(260)}
-    const C=countOf(r.s);row.parentNode.querySelector('[data-sum="'+ri+'"]').innerHTML=patTxt(r.s)+'：'+C.b+' 個 方框、<b>'+C.n+' 個 聲音</b>'+(C.v>1?'、'+C.v+' 個 紅框 ＝ '+C.v+' 個 音節':'');
+    const C=countOf(r.s);$('#stage [data-sum="'+ri+'"]').innerHTML=patTxt(r.s)+'：'+C.b+' 個 方框、<b>'+C.n+' 個 聲音</b>'+(C.v>1?'、'+C.v+' 個 紅框 ＝ '+C.v+' 個 音節':'');
     if(r.dim)row.style.opacity=.6;await wait(500)}
   if(me!==TOK)return;
   if(S.extra==='dg'){$('#dgw').innerHTML='<div class="cap">兩個 字母、一個 聲音：</div><div class="ctl">'+DG.map(d=>'<button data-au="'+d[1]+'" data-s1="'+auOf(d[3])+'"><span class="en" style="font-size:28px">'+d[0]+'</span>'+(d[4]?'（'+d[4]+'）':'')+' '+tileHTML(d[3])+' <span class="en">'+d[2]+'</span></button>').join('')+'</div>';

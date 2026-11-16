@@ -64,7 +64,7 @@ h2.st{margin:4px 0 8px;font-size:clamp(24px,3vw,34px);color:#FFE07A;text-align:c
 .ctl button.on{background:#FFE07A;color:#2A1B00}
 .btn.go{background:linear-gradient(180deg,#3BE88A,#16A35A);color:#00230F;border-color:#7CFFB4}
 .btn.gold{background:linear-gradient(180deg,#FFE9A8,#FFC21A);color:#2A1B00;border-color:#FFE07A}
-#scList{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:6px}
+#scList{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;margin:0 auto 6px;max-width:1280px;padding-bottom:4px}#scList button{flex:none}
 #scList button{font-size:16px;font-weight:900;border-radius:12px;border:1px solid var(--ln);padding:7px 10px;background:rgba(20,28,70,.75);color:#CFD9FF;min-height:44px}
 #scList button.on{background:#FFE07A;color:#2A1B00}#scList button.seen::after{content:' ✔';color:#2EE59D}
 #stage{min-height:300px;padding:10px;max-width:1280px;margin:0 auto}
@@ -76,7 +76,7 @@ h2.st{margin:4px 0 8px;font-size:clamp(24px,3vw,34px);color:#FFE07A;text-align:c
 .chip{font-family:var(--an);font-weight:700;font-size:24px;min-width:56px;min-height:48px;border-radius:12px;border:2px solid rgba(255,255,255,.2);padding:4px 10px;color:#fff}
 .mcol.c .chip{background:#1B3A8F}.mcol.v .chip{background:#8F1B1B}.mcol .chip.on{background:#FFE07A;color:#2A1B00;border-color:#fff;transform:scale(1.06)}
 .chip.dim{opacity:.35}.chip small{display:block;font-family:var(--han);font-size:12px;font-weight:900;color:#FFE9A8}
-#mapOut{max-width:1280px;margin:12px auto 0;padding:10px}
+#mapOut{max-width:1280px;margin:0 auto 12px;padding:6px 10px;position:sticky;top:0;z-index:5;background:linear-gradient(160deg,#26306E,#0E1336)}#mapOut .wrow{padding:28px 6px 30px}
 .mtag{display:inline-block;padding:4px 12px;border-radius:999px;font-size:20px;font-weight:900;margin:0 4px}
 .mtag.r{background:#14532D;color:#B9FFD6}.mtag.p{background:#4C1D95;color:#E9D5FF}.mtag.w{background:#7C2D12;color:#FFD7B5}
 /* ── 一字 多音 ── */
@@ -188,6 +188,33 @@ h2.st{margin:4px 0 8px;font-size:clamp(24px,3vw,34px);color:#FFE07A;text-align:c
 .launch{width:110px;height:70px;border-radius:55px 55px 14px 14px;background:linear-gradient(180deg,#3BE8FF,#1B46C9);box-shadow:0 0 22px #3BE8FF;display:flex;align-items:flex-start;justify-content:center}
 .launch i{width:46px;height:46px;border-radius:50%;margin-top:-18px;background:radial-gradient(circle at 30% 25%,#fff,#9EF0FF 50%,#1B46C9);box-shadow:0 0 14px #9EF0FF}
 .shot{position:fixed;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:radial-gradient(circle,#fff,#9EF0FF);box-shadow:0 0 20px #9EF0FF;z-index:9;transition:left .22s linear,top .22s linear;pointer-events:none}
+/* 第五十六次（老師 截圖）：☕ 櫃台＋客人＋藥水 架、🗼 小島 塔防、🪐 紅色 星球 打磚塊 */
+.cafe{width:100%;display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px;border-radius:24px;background:linear-gradient(180deg,#7C3AED 0,#5B21B6 38%,#1E3A8A 38%,#1D4ED8 100%);position:relative}
+.cafe .lamps{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-around;pointer-events:none}.cafe .lamps i{width:60px;height:30px;border-radius:0 0 30px 30px;background:#3B2A0B;box-shadow:0 18px 30px rgba(255,213,74,.5)}
+.queue{display:flex;gap:14px;align-items:flex-end;justify-content:center;width:100%;min-height:150px}
+.cu{display:flex;flex-direction:column;align-items:center;opacity:.6;transform:scale(.8);transition:.4s}.cu.now{opacity:1;transform:none}.cu.served{transform:translateX(-120px);opacity:0}
+.ord{background:#fff;color:#0B1236;border-radius:18px;padding:6px 12px;box-shadow:0 6px 0 rgba(0,0,0,.25);position:relative}.ord::after{content:'';position:absolute;bottom:-12px;left:50%;border:8px solid transparent;border-top-color:#fff;transform:translateX(-50%)}
+.ord.sm{font-size:22px;font-weight:900}.ord .gq{color:#0B1236;font-size:22px}
+.shelf{background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(0,0,0,.2));border-radius:20px;padding:10px 14px;border-top:6px solid #FFE07A}
+.pot .stk{position:absolute;right:6px;bottom:6px;font-style:normal;font-size:18px;font-weight:900;background:#0E7490;color:#fff;border-radius:8px;padding:0 6px}
+.arena.td{background:repeating-conic-gradient(#5FBF4A 0 25%,#6DCB57 0 50%) 0 0/60px 60px;border:10px solid #8B5A2B;box-shadow:0 0 0 8px #3BB2E8;min-height:240px}
+.arena.td svg{position:absolute;inset:0;width:100%;height:100%}
+.tdr{position:absolute;right:10px;top:8px;background:#7A3E12;color:#FFE9A8;font-weight:900;font-size:22px;border-radius:10px;padding:4px 12px;border:2px solid #FFE07A}
+.twr{position:absolute;font-size:40px;transform:translate(-50%,-50%);filter:drop-shadow(0 4px 2px rgba(0,0,0,.4))}.twr.new{animation:drop2 .5s}
+.enemy{position:absolute;font-size:46px;transform:translate(-50%,-50%);filter:drop-shadow(0 0 8px #FF4FA3);z-index:3}.enemy.dead{animation:boom .5s forwards}
+.arena.zorb{background:radial-gradient(circle at 70% 70%,#C2410C 0,#7C2D12 30%,#3B0A0A 70%);border:14px solid #4B5563;box-shadow:inset 0 0 0 4px #9CA3AF,0 0 0 4px #1F2937}
+.zorb .planet{position:absolute;right:-60px;bottom:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#F97316,#9A3412 60%,#431407);opacity:.75}
+.zorb .zh{position:relative;display:flex;justify-content:space-between;align-items:center;padding:4px 12px;font-size:22px;font-weight:900;color:#fff}.zorb .zh b{font-size:30px;color:#9EF0FF;letter-spacing:.1em}
+.zorb .wall{position:relative}
+.zorb .paddle{background:linear-gradient(180deg,#E5E7EB,#6B7280);box-shadow:0 0 18px #9EF0FF}.zorb .paddle i{position:absolute;left:50%;top:-26px;width:52px;height:30px;margin-left:-26px;border-radius:26px 26px 0 0;background:radial-gradient(circle at 40% 40%,#BFF6FF,#3BA0FF);border:2px solid #E5E7EB}
+/* 第五十六次：動畫 列 多 的 時候（3～5 列）：字 稍微 小 一點、4、5 列 排 兩欄（iPad 一個 畫面 看得 完）*/
+.rows{display:grid;gap:2px 18px}
+#stage.n3 .ck .L{font-size:clamp(36px,5.2vh,60px)}#stage.n4 .ck .L,#stage.n5 .ck .L{font-size:clamp(32px,4.4vh,52px)}
+#stage.n3 .wrow,#stage.n4 .wrow,#stage.n5 .wrow{padding:24px 4px 28px}#stage.n4 .tl,#stage.n5 .tl{min-width:34px;height:34px;font-size:21px}
+#stage.n4 .bx,#stage.n5 .bx{min-width:56px;padding:6px 8px 8px}#stage.n3 .sum,#stage.n4 .sum,#stage.n5 .sum{font-size:20px;margin-top:0;min-height:1.2em}
+#stage.n4 .rows,#stage.n5 .rows{grid-template-columns:1fr 1fr}
+@media (max-width:1000px){#stage.n4 .rows,#stage.n5 .rows{grid-template-columns:1fr}#stage.n5 .ck .L{font-size:clamp(28px,3.6vh,46px)}}
+#s_ani h2.st{margin:0 0 2px}#s_ani .cap{font-size:clamp(19px,2.2vw,26px)}
 @media (max-width:900px){.mapw{grid-template-columns:1fr}.many{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
 </style></head><body>
@@ -198,8 +225,8 @@ h2.st{margin:4px 0 8px;font-size:clamp(24px,3vw,34px);color:#FFE07A;text-align:c
 <section class="scr" id="s_ani"><div id="scList"></div><div class="pnl" id="stage"></div>
   <div class="ctl"><button id="aPrev">◀ 上一段</button><button id="aPause">⏸️ 暫停</button><button id="aSlow">🐢 慢速</button><button id="aAgain">🔁 再一次</button><button id="aStress">🎵 重音：關</button><button id="aNext">下一段 ▶</button></div></section>
 <section class="scr" id="s_map" hidden><div class="ctl"><button id="lvB" class="on">🟢 基礎</button><button id="lvA">🔵 進階</button><button id="mRand">🎲 隨機 換 一個</button></div>
-  <div class="mapw"><div class="pnl mcol c"><h3>① 字首（子音）</h3><div id="mOn"></div></div><div class="pnl mcol v"><h3>② 母音</h3><div id="mV"></div></div><div class="pnl mcol c"><h3>③ 字尾（子音）</h3><div id="mCo"></div></div></div>
-  <div class="pnl" id="mapOut"></div></section>
+  <div class="pnl" id="mapOut"></div>
+  <div class="mapw"><div class="pnl mcol c"><h3>① 字首（子音）</h3><div id="mOn"></div></div><div class="pnl mcol v"><h3>② 母音</h3><div id="mV"></div></div><div class="pnl mcol c"><h3>③ 字尾（子音）</h3><div id="mCo"></div></div></div></section>
 <section class="scr" id="s_syl" hidden><div class="ctl"><button id="sStress">🎵 重音：關</button></div><div class="pnl" id="sylOut" style="max-width:1280px;margin:0 auto;padding:10px"></div></section>
 <section class="scr" id="s_many" hidden><div class="many" id="manyOut"></div></section>
 <section class="scr" id="s_play" hidden><div class="gl" id="gList"></div></section>
@@ -2398,7 +2425,7 @@ const DG=[['ch','ch-ih-n','chin','ch'],['sh','sh-ih-p','ship','sh'],['th','th-ih
 let SCI=LS.g('sci',0),STR=false;if(SCI>=SC.length)SCI=0;
 function scList(){$('#scList').innerHTML=SC.map((s,i)=>'<button data-sc="'+i+'" class="'+(i===SCI?'on':'')+(LS.g('scs',[]).indexOf(i)>=0?' seen':'')+'">'+s.t.split('：')[0].split(' ')[0]+'</button>').join('')}
 async function scPlay(i){SCI=i;LS.s('sci',i);const me=++TOK,S=SC[i];scList();PAUSED=false;$('#aPause').textContent='⏸️ 暫停';
-  $('#stage').innerHTML='<h2 class="st">'+S.t+'</h2>'+S.rows.map((r,ri)=>'<div class="wrow'+(STR?' stress':'')+'" data-r="'+ri+'">'+(r.fake?'<span class="lab">🔮 練習 用 的 假字</span>':'')+wordHTML(r.s,{lab:1,hide:1,hideT:1,st:STR?r.st:null})+'</div><div class="sum" data-sum="'+ri+'"></div>').join('')+(S.extra==='dg'?'<div id="dgw"></div>':'')+'<div class="cap" id="cap"></div>';
+  $('#stage').className='pnl n'+S.rows.length;$('#stage').innerHTML='<h2 class="st">'+S.t+'</h2><div class="rows">'+S.rows.map((r,ri)=>'<div class="rw"><div class="wrow'+(STR?' stress':'')+'" data-r="'+ri+'">'+(r.fake?'<span class="lab">🔮 練習 用 的 假字</span>':'')+wordHTML(r.s,{lab:1,hide:1,hideT:1,st:STR?r.st:null})+'</div><div class="sum" data-sum="'+ri+'"></div></div>').join('')+'</div>'+(S.extra==='dg'?'<div id="dgw"></div>':'')+'<div class="cap" id="cap"></div>';
   for(let ri=0;ri<S.rows.length;ri++){if(me!==TOK)return;const r=S.rows[ri],row=$('.wrow[data-r="'+ri+'"]'),bx=[].slice.call(row.querySelectorAll('.bx'));
     /* (1) 方框＋字母 一個 一個 出來，出來 就 唸 那個 聲音 */
     let k=0;const all=[];parse(r.s).forEach(B=>B.forEach(b=>all.push(b)));
@@ -2413,7 +2440,7 @@ async function scPlay(i){SCI=i;LS.s('sci',i);const me=++TOK,S=SC[i];scList();PAU
     await sayW(r.au,me);
     /* (4) 黃點 數 聲音 */
     let n=0;for(const d of row.querySelectorAll('.dots i')){if(me!==TOK)return;d.classList.add('on');n++;await wait(260)}
-    const C=countOf(r.s);row.parentNode.querySelector('[data-sum="'+ri+'"]').innerHTML=patTxt(r.s)+'：'+C.b+' 個 方框、<b>'+C.n+' 個 聲音</b>'+(C.v>1?'、'+C.v+' 個 紅框 ＝ '+C.v+' 個 音節':'');
+    const C=countOf(r.s);$('#stage [data-sum="'+ri+'"]').innerHTML=patTxt(r.s)+'：'+C.b+' 個 方框、<b>'+C.n+' 個 聲音</b>'+(C.v>1?'、'+C.v+' 個 紅框 ＝ '+C.v+' 個 音節':'');
     if(r.dim)row.style.opacity=.6;await wait(500)}
   if(me!==TOK)return;
   if(S.extra==='dg'){$('#dgw').innerHTML='<div class="cap">兩個 字母、一個 聲音：</div><div class="ctl">'+DG.map(d=>'<button data-au="'+d[1]+'" data-s1="'+auOf(d[3])+'"><span class="en" style="font-size:28px">'+d[0]+'</span>'+(d[4]?'（'+d[4]+'）':'')+' '+tileHTML(d[3])+' <span class="en">'+d[2]+'</span></button>').join('')+'</div>';
@@ -2566,8 +2593,11 @@ const VCOL={a:'#FF5A5A',e:'#FF9F43',i:'#2EE59D',o:'#3BE8FF',u:'#B57BFF',ai:'#FFD
 function qVow(){const x=pickW(y=>y.on.length+y.co.length>=1&&(G.q<3?!y.long:true));const vs=x.v+(x.mg?'_e':'');
   let O;if(!x.long)O=['a','e','i','o','u'];else{const by={};QW.forEach(y=>{if(y.long&&y.vc!==x.vc)by[y.vc]=y.v+(y.mg?'_e':'')});O=SH([vs].concat(SH(Object.values(by)).slice(0,3)))}
   const info=inf(x,{tip:'中間 的 母音 是 <b class="en">'+vs+'</b>（'+tileHTML(x.vc)+'）'});
-  B().innerHTML=reTag()+'<div class="cust">'+R(CUS)+'</div><div class="gq">我 要 這個 字 👉 🔊</div><div class="wrow">'+wordHTML(x.on.join('')+(x.on.length?'.':'')+'[?]v'+(x.co.length?'.'+x.co.join(''):'')+(x.mg?'.e~':''),{hideT:1})+'</div><div class="potions">'+O.map(v=>'<button class="pot" data-v="'+v+'"><i style="background:linear-gradient(180deg,'+VCOL[v]+'cc,'+VCOL[v]+')"></i><b class="en">'+v+'</b><small>'+(x.long?'':'')+'</small></button>').join('')+'</div>';
-  B().appendChild(earBtn(x.c));B().querySelectorAll('.pot').forEach(p=>p.onclick=()=>{const ok=p.dataset.v===vs;const c=ctr(p);if(ok){sparks(c[0],c[1],20,VCOL[vs]);p.style.transform='translateY(-30px) rotate(-30deg)'}else{p.classList.add('shake')}answer(ok,Object.assign(info,{yours:ok?undefined:p.dataset.v}))});
+  /* 第五十六次（老師 的 Cafe 截圖）：櫃台 前 排 一排 客人（頭上 點單 泡泡），下面 一排 藥水 架（右下角 存量）；倒 對 ＝ 出餐＋那 一瓶 補 貨 */
+  G.st=G.st||{};O.forEach(v=>{if(G.st[v]==null)G.st[v]=3+Math.floor(Math.random()*5)});const cs=SH(CUS).slice(0,3);
+  B().innerHTML=reTag()+'<div class="cafe"><div class="lamps"><i></i><i></i></div><div class="queue"><div class="cu now"><div class="ord"><div class="gq" style="margin:0">我 要 👉 🔊</div><div class="wrow" style="padding:22px 4px 26px">'+wordHTML(x.on.join('')+(x.on.length?'.':'')+'[?]v'+(x.co.length?'.'+x.co.join(''):'')+(x.mg?'.e~':''),{hideT:1})+'</div></div><div class="cust">'+cs[0]+'</div></div><div class="cu"><div class="ord sm">🔊 ?</div><div class="cust">'+cs[1]+'</div></div><div class="cu"><div class="ord sm">🔊 ?</div><div class="cust">'+cs[2]+'</div></div></div>'+
+    '<div class="potions shelf">'+O.map(v=>'<button class="pot" data-v="'+v+'"><i style="background:linear-gradient(180deg,'+VCOL[v]+'cc,'+VCOL[v]+')"></i><b class="en">'+v+'</b><em class="stk">'+G.st[v]+'</em></button>').join('')+'</div></div>';
+  B().appendChild(earBtn(x.c));B().querySelectorAll('.pot').forEach(p=>p.onclick=()=>{const ok=p.dataset.v===vs;const c=ctr(p);if(ok){sparks(c[0],c[1],20,VCOL[vs]);p.style.transform='translateY(-30px) rotate(-30deg)';G.st[vs]++;p.querySelector('.stk').textContent=G.st[vs];const cu=B().querySelector('.cu.now');if(cu)cu.classList.add('served')}else{p.classList.add('shake')}answer(ok,Object.assign(info,{yours:ok?undefined:p.dataset.v}))});
   G.hk={ok:()=>B().querySelector('.pot[data-v="'+vs+'"]').click(),no:()=>[].find.call(B().querySelectorAll('.pot'),p=>p.dataset.v!==vs).click()};begin(GM.mvow.T,()=>info);play1(x.c)}
 /* ══ 2 ⚔️ 聲音 結界（Monster Brawl）══ */
 function onNear(on){const all=[...new Set(QW.map(y=>y.on.join('')).filter(Boolean))];const sc=y=>(y[0]===on[0]?2:0)+(y.length===on.length?1:0)+(y.slice(-1)===on.slice(-1)?1:0);return SH(all.filter(y=>y!==on)).sort((a,b)=>sc(b)-sc(a)).slice(0,3)}
@@ -2583,7 +2613,7 @@ function qOn(){const x=pickW(y=>y.on.length&&(G.q<2?y.ot.length>=1:y.ot.length>=
 function qCo(){const x=pickW(y=>y.co.length&&!y.mg);const co=x.co.join('');const all=[...new Set(QW.filter(y=>!y.mg).map(y=>y.co.join('')).filter(Boolean))];
   const sc=y=>(y[0]===co[0]?2:0)+(y.slice(-1)===co.slice(-1)?2:0)+(y.length===co.length?1:0);const O=SH([co].concat(SH(all.filter(y=>y!==co)).sort((a,b)=>sc(b)-sc(a)).slice(0,5)));
   const info=inf(x,{tip:'字尾 是 <b class="en">'+co+'</b>（'+x.ct.length+' 個 聲音）'});
-  B().innerHTML=reTag()+'<div class="gq">🔊 聽 ➜ 打碎 寫著 <b>字尾</b> 的 磚塊</div><div class="arena" id="ar" style="background:linear-gradient(180deg,#0B1236,#1A0B36)"><div class="wall en" style="grid-template-columns:repeat(3,1fr)">'+O.map(o=>'<button class="brick" data-o="'+o+'">'+o+'</button>').join('')+'</div><div class="paddle"></div><div class="ball" id="bl"></div></div>';B().appendChild(earBtn(x.c));
+  B().innerHTML=reTag()+'<div class="gq">🔊 聽 ➜ 打碎 寫著 <b>字尾</b> 的 磚塊</div><div class="arena zorb" id="ar"><div class="zh"><span>'+'❤️'.repeat(3)+'</span><b>'+String(G.score).padStart(5,'0')+'</b><span>第 '+(G.q+1)+' 關</span></div><div class="planet"></div><div class="wall en" style="grid-template-columns:repeat(3,1fr)">'+O.map(o=>'<button class="brick" data-o="'+o+'">'+o+'</button>').join('')+'</div><div class="paddle"><i></i></div><div class="ball" id="bl"></div></div>';B().appendChild(earBtn(x.c));
   const ar=$('#ar'),bl=$('#bl');bl.style.left=(ar.clientWidth/2-15)+'px';bl.style.top=(ar.clientHeight-70)+'px';bl.style.transition='left .35s,top .35s';
   B().querySelectorAll('.brick').forEach(b=>b.onclick=()=>{const ok=b.dataset.o===co,r=b.getBoundingClientRect(),a=ar.getBoundingClientRect();bl.style.left=(r.left-a.left+r.width/2-15)+'px';bl.style.top=(r.top-a.top+r.height/2-15)+'px';
     setTimeout(()=>{if(ok){b.classList.add('gone');sparks(r.left+r.width/2,r.top+r.height/2,24,'#FF9F43')}else{b.classList.add('shake');bl.style.top=(ar.clientHeight-70)+'px'}},300);answer(ok,Object.assign(info,{yours:ok?undefined:b.dataset.o}))});
@@ -2594,9 +2624,13 @@ function patDraw(p){const m=/^(C*)V(C*)$/.exec(p),bx=(t,n)=>'<div class="bx '+t+
   return '<div class="patb">'+(m[1]?bx('c',m[1].length):'')+bx('v',1)+(m[2]?bx('c',m[2].length):'')+'</div>'}
 function qPat(){const x=pickW(y=>PATS.indexOf(y.pat)>=0),lsn=G.q%2===0;const O=SH([x.pat].concat(SH(PATS.filter(p=>p!==x.pat&&Math.abs(p.length-x.pat.length)<=1)).slice(0,2)));
   const info=inf(x,{tip:x.w+' ＝ '+patTxt(specOf(x))+'：'+x.n+' 個 聲音'});G.tw=G.tw||0;
-  B().innerHTML=reTag()+'<div class="gq">'+(lsn?'🔊 聽 ➜ 這個 字 的 方框 長 什麼 樣子？':'👀 看 字 ➜ 方框 長 什麼 樣子？')+'</div>'+(lsn?'':'<div class="scroll" style="font-size:64px;padding:6px 30px">'+x.w+'</div>')+'<div style="display:flex;gap:20px;align-items:flex-end;justify-content:center;flex-wrap:wrap"><div class="opts">'+O.map(p=>'<button class="op" data-p="'+p+'" style="padding:4px 8px">'+patDraw(p)+'</button>').join('')+'</div><div class="tower" id="tw">'+Array.from({length:G.tw},()=>'<div class="fl"><i class="c"></i><i class="v"></i><i class="c"></i></div>').join('')+'<div style="font-size:40px">🏰</div></div></div>';
-  if(lsn)B().appendChild(earBtn(x.c));B().querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const ok=b.dataset.p===x.pat;b.classList.add(ok?'ok':'no');if(ok){G.tw++;$('#tw').insertAdjacentHTML('afterbegin','<div class="fl">'+x.pat.split('').map(c=>'<i class="'+(c==='C'?'c':'v')+'"></i>').join('')+'</div>')}answer(ok,Object.assign(info,{yours:ok?undefined:b.dataset.p.split('').map(c=>c==='C'?'子':'母').join(' ')}))});
-  G.hk={ok:()=>B().querySelector('[data-p="'+x.pat+'"]').click(),no:()=>[].find.call(B().querySelectorAll('[data-p]'),b=>b.dataset.p!==x.pat).click()};begin(GM.mpat.T,()=>info);if(lsn)play1(x.c)}
+  B().innerHTML=reTag()+'<div class="gq">'+(lsn?'🔊 聽 ➜ 這個 字 的 方框 長 什麼 樣子？':'👀 看 字 ➜ 方框 長 什麼 樣子？')+'</div>'+(lsn?'':'<div class="scroll" style="font-size:64px;padding:6px 30px">'+x.w+'</div>')+'<div class="arena td" id="ar"><svg viewBox="0 0 100 60" preserveAspectRatio="none"><path d="'+TDP+'" fill="none" stroke="#B9824A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="'+TDP+'" fill="none" stroke="#D9A86A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="tdr">第 '+(G.q+1)+' 波</div>'+Array.from({length:G.tw},(_,k)=>'<div class="twr" style="left:'+TDS[k%TDS.length][0]+'%;top:'+TDS[k%TDS.length][1]+'%">🗼</div>').join('')+'<div class="enemy" id="en">👾</div></div><div class="opts">'+O.map(p=>'<button class="op" data-p="'+p+'" style="padding:4px 8px">'+patDraw(p)+'</button>').join('')+'</div>';
+  if(lsn)B().appendChild(earBtn(x.c));B().querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const ok=b.dataset.p===x.pat;b.classList.add(ok?'ok':'no');const en=$('#en');if(ok){const sp=TDS[G.tw%TDS.length];G.tw++;$('#ar').insertAdjacentHTML('beforeend','<div class="twr new" style="left:'+sp[0]+'%;top:'+sp[1]+'%">🗼</div>');if(en){const c=ctr(en);setTimeout(()=>{en.classList.add('dead');sparks(c[0],c[1],22,'#FFE07A')},250)}}answer(ok,Object.assign(info,{yours:ok?undefined:b.dataset.p.split('').map(c=>c==='C'?'子':'母').join(' ')}))});
+  tdMove();G.hk={ok:()=>B().querySelector('[data-p="'+x.pat+'"]').click(),no:()=>[].find.call(B().querySelectorAll('[data-p]'),b=>b.dataset.p!==x.pat).click()};begin(GM.mpat.T,()=>info);if(lsn)play1(x.c)}
+/* 塔防 的 路（0～100 ✕ 0～60）：魔物 沿著 路 走，時間 到 走 到 終點；答 對 ＝ 路 邊 蓋 一座 塔 把 牠 打掉 */
+const TDP='M2 8 L30 8 L30 30 L60 30 L60 10 L85 10 L85 50 L40 50 L40 58',TDPT=[[2,8],[30,8],[30,30],[60,30],[60,10],[85,10],[85,50],[40,50],[40,58]],TDS=[[18,18],[45,40],[70,20],[72,58],[48,62],[92,30],[12,40]];
+function tdMove(){const en=$('#en');if(!en)return;const L=[];let tot=0;for(let i=1;i<TDPT.length;i++){const d=Math.hypot(TDPT[i][0]-TDPT[i-1][0],TDPT[i][1]-TDPT[i-1][1]);L.push(d);tot+=d}const me=G,q=G.q;
+  (function tk(){if(G!==me||G.q!==q||en.classList.contains('dead')||!G.t)return;const f=1-G.t.left();let d=f*tot,i=0;while(i<L.length-1&&d>L[i]){d-=L[i];i++}const a=TDPT[i],b=TDPT[i+1],k=Math.min(1,d/L[i]);en.style.left=(a[0]+(b[0]-a[0])*k)+'%';en.style.top=((a[1]+(b[1]-a[1])*k)/60*100)+'%';requestAnimationFrame(tk)})()}
 /* ══ 5 🥁 聲音 戰鼓 ══ */
 const CONF={b:'p',p:'b',d:'t',t:'d',m:'n',n:'m',s:'sh',sh:'s',th:'t',ch:'sh',ng:'n',k:'g',g:'k',f:'v',v:'f',l:'r',r:'l',ae:'eh',eh:'ih',ih:'ee',aa:'uh',uh:'aa',ai:'ee',ee:'ih',oa:'aa',ii:'ai',uu:'oa',z:'s',j:'ch',w:'r',h:'f',y:'ee',ks:'k',kw:'k',dh:'th'};
 function seqOf(x){return x.ot.map(t=>[t,0]).concat([[x.vc,0]],x.ct.map(t=>[t,1]))}
