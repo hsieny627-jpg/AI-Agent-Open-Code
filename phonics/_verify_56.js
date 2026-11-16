@@ -24,7 +24,7 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
       fs:Math.min(...[...document.querySelectorAll('#stage .ck .L')].map(e=>parseFloat(getComputedStyle(e).fontSize)))}})()`);
     ok(!r.hid && !r.tl, tag + ' 動畫 ' + (i + 1) + ' 還有 沒 出來 的 方框／音標');
     r.rows.forEach((w, k) => ok(w.dots === w.all, tag + ' 動畫 ' + (i + 1) + ' 第 ' + (k + 1) + ' 列 黃點 沒 全部 亮'));
-    ok(!r.o.length, tag + ' 動畫 ' + (i + 1) + ' 超出 畫面 ' + r.o.join('|')); ok(r.fs >= 40, tag + ' 動畫 ' + (i + 1) + ' 字母 太 小 ' + r.fs);
+    ok(!r.o.length, tag + ' 動畫 ' + (i + 1) + ' 超出 畫面 ' + r.o.join('|')); ok(r.fs >= (r.rows.length >= 3 ? 32 : 40), tag + ' 動畫 ' + (i + 1) + ' 字母 太 小 ' + r.fs);   /* 3～5 列 ＝ 一個 畫面 要 看得 完：字母 ≧ 32px；1～2 列 ≧ 40px */
     const miss = r.say.filter(f => !AU.has(f)); ok(!miss.length && r.say.length >= 3, tag + ' 動畫 ' + (i + 1) + ' 聲音 檔 沒有：' + miss.join(' '));
   }
   /* 黃點 ＝ 聲音 數（③ blast 5、⑦ strong 5、⑥ bathroom 6）*/
