@@ -3262,7 +3262,7 @@ function trainQ(g){const w=R(realOf()),p=parts(w);g.w=w;const ex=SH((CF[p.i]||''
   $('#game').onclick=e=>{const t=e.target.closest('.tk');if(t&&!t.classList.contains('used')){const i=fill.indexOf(null);if(i<0)return;fill[i]=T.find(x=>x.k===+t.dataset.k);say('s_'+(('aeiou'.indexOf(fill[i].x)>=0)?PH.vowCode(VOWS[fill[i].x]):i===2?(fill[i].x==='m'?'em':fill[i].x==='n'?'en':fill[i].x):PH.initCode(fill[i].x,'a')));draw();if(fill.indexOf(null)<0)setTimeout(()=>chk(false),350);return}
     const c=e.target.closest('.car');if(c&&fill[+c.dataset.c]){fill[+c.dataset.c]=null;draw()}};
   function chk(tout){if(g.lock===g.q)return;const s=fill.map(f=>f?f.x:'_').join('');const right=!tout&&s===w;if(right)$('.train').classList.add('go');answer(g,right,tout?null:s,w,{yours:tout?null:s})}
-  if(window.__PHAUTO){const want=window.__PHWRONG?[p.e,p.v,p.i]:[p.i,p.v,p.e];want.forEach(x=>{const t=[...$$('.tk')].find(b=>b.textContent===x&&!b.classList.contains('used'));if(t)t.click()})}}
+  if(window.__PHAUTO){const want=window.__PHWRONG?[p.v,p.i,p.e]:[p.i,p.v,p.e];want.forEach(x=>{const t=[...$$('.tk')].find(b=>b.textContent===x&&!b.classList.contains('used'));if(t)t.click()})}}
 /* ══ 📗 課本：拼塊、看字 找圖 ══ */
 const BKW={};BOOK.topics.forEach(t=>t.ls.forEach(l=>l.w.forEach(w=>BKW[w]=BOOK.W[w])));
 const BWL=Object.keys(BKW);
