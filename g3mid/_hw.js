@@ -120,6 +120,11 @@ var HWSRC = function () {
   /* 對不對：第一名 ＝ 要寫的字 ➜ 對；寫成另一個大小寫（g 寫成 G）一定錯；
      第一名是別的字但「要寫的字」幾乎一樣像（差不到 12%）➜ 也算對（小朋友寫得歪一點，不冤枉） */
   /* noPos ＝ 只看 形狀、不看 寫在 哪一條 線（2026-10-25：形狀 對 但是 沒有 頂天立地 ➜ 告訴 學生 是 線 的 問題）*/
+  /* 2026-11-16 第五十六次（老師 第五十五次 問題 3 選 乙）：大寫 J 上面 沒有 一橫 ＝ 算 錯。
+     看 字母 最上面 兩成 的 筆畫：左右 寬度 ≧ 整個 字母 寬 的 四成 ＝ 有 一橫（只有 一條 直線 的 頭 ＝ 沒有）*/
+  function jbar(strokes) { var b = xbox(strokes), h = Math.max(.2, b.y1 - b.y0), w = Math.max(.4, b.x1 - b.x0), lo = 1e9, hi = -1e9;
+    strokes.forEach(function (s) { s.forEach(function (q) { if (q[1] <= b.y0 + h * .2) { lo = Math.min(lo, q[0]); hi = Math.max(hi, q[0]); } }); });
+    return hi - lo >= w * .4; }
   function judge(strokes, want, noPos) {
     var r = rank(strokes, noPos); if (!r.length) return { ok: false, got: '', r: r };
     var top = r[0], mine = null;
@@ -163,7 +168,7 @@ var HWSRC = function () {
     best.miss.forEach(function (m) { var k = 'm' + m.hf + m.L; if (seen[k]) return; seen[k] = 1; ws.push((m.hf === 'h' ? '⬆️ 頭 沒有 碰到 ' : m.hf === 'f' ? '⬇️ 腳 沒有 碰到 ' : '↔️ 中間 沒有 碰到 ') + LN[m.L] + (m.d > .45 ? '（差 很多）' : '（還 差 一點）')); });
     best.over.forEach(function (m) { ws.push((m.hf === 'h' ? '⬆️ 頭 超出 ' : '⬇️ 腳 超出 ') + LN[m.L] + ' 太多'); });
     best.words = ws.slice(0, 2).join('；');   /* 最多 說 2 件（字 太多 學生 看 不完、畫面 放不下）*/ best.rule = (best.miss.some(function (m) { return m.hf === 'h'; }) || best.over.some(function (m) { return m.hf === 'h'; }) ? '頂天' : '') + (best.miss.some(function (m) { return m.hf === 'f'; }) || best.over.some(function (m) { return m.hf === 'f'; }) ? '立地' : ''); return best; }
-  return { T: T, rank: rank, judge: judge, body: body, lines: lines, contacts: contacts, TOL: TOL, THF: THF, OVT: OVT, LN: LN };
+  return { T: T, rank: rank, judge: judge, jbar: jbar, body: body, lines: lines, contacts: contacts, TOL: TOL, THF: THF, OVT: OVT, LN: LN };
 };
 var HW = HWSRC();
 module.exports = { HW: HW, js: 'var HW=(' + HWSRC.toString() + ')();' };

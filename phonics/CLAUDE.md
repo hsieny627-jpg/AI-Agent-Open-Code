@@ -3,6 +3,35 @@
 > 2026-11-12 第四十七次 第 2 點：老師 的 Phonics Master（原本 在 claude.ai 字卡 頁 https://claude.ai/artifact/PBkfDY3omYxT4VYRMaH4Yw）加進 網站。
 > 根目錄 `AGENTS.md` 第四節 同樣 適用。⚠ 老師：只 說 改 一個 地方 就 只 改 那 一個 地方。
 
+## 2026-11-16 第五十六次（計畫＋老師 回答：`phonics/2026-11-16_第五十六次_計畫.md`；需求檔 第四節 最下面「第五十六次」）——先讀 這一節
+### 🗺️ 拼音 地圖 新頁 `map.html`（https://hsieny627-jpg.github.io/AI-Agent-Open-Code/phonics/map.html ）＝ `_map.html`＋`_map.js`＋`_map_games.js`，`node phonics/_map_build.js`（`_build.js` 最後 也 跑）
+| 分頁 | 做法 |
+|---|---|
+| 🎬 秒懂 動畫 13 段 | 老師 的 步驟（`SC`）：① 注音 ㄅ＋ㄚ（`zy_b zy_a zy_ba` ＝ melo 中文 女聲）② b a t ③ bat／blat／blast ④ bat／bath＋ch sh th（無聲／有聲）ph ng ⑤ rom／room ⑥ bath＋room ⑦ song／stong／strong ⑧ ba／baby ⑨ tin／thin ⑩ ball／tall／fall ⑪ sot…shomp ⑫ 一個 字母 a 很多 聲音 ⑬ 一個 聲音 ㄟ 很多 拼法。每 一列：方框 一個 一個 出來＋字母 唸 自己 的 聲音 ➜ 合 起來 ➜ 字母 正下方 音標 一個 一個 出現＋唸 ➜ 再 合 起來 ➜ 黃點 數 聲音 ➜「子 母 子：3 個 方框、N 個 聲音（2 個 紅框 ＝ 2 個 音節）」。藍 ＝ 子音、紅 ＝ 母音、黃 ＝ 唸 名字 的 母音、灰 ＝ 不 發音。〔⏸️ 暫停〕〔🐢 慢速〕〔🔁 再一次〕〔🎵 重音〕〔◀ ▶〕|
+| 字 的 寫法 | `parse('b.a.th|r.oo.m')`：`.` 方框、`|` 音節、`o=ao` 指定 母音 碼、`a!=ai` 黃框、`e~` 不 發音、`[ㄅ]c` 注音 |
+| 🗺️ 拼音 地圖 | 三欄 字首｜母音｜字尾（🟢 基礎／🔵 進階：2、3 個 子音 字首、magic e／兩 個 母音 字母、nd nt mp st sk ft nk）；點 ＝ 組 字（FLoSS：短 母音 後 ll ss ff zz、ck、tch）＋黃點＋音標＋🔊 一個 一個 唸 ➜ 合 起來；真的 字 ✅／🔮 假字；**老師 第 6 點 新 字尾 pt ct xt lp lf lt sp mb＋ld lk（⚠ 母音 會 變）＋nch** ＝ 例字（`w_kept`… 電腦 聽寫 聽 對）|
+| 🪜 多 音節 | 10 個 兩 音節 字（bathroom…baby），一個 音節 一個 虛線 框；**🎵 重音 開關**：重音 音節 放大＋●、其他 縮小 |
+| 🔤 一 字母 多 聲音 | a：cat cake ball car；ㄟ：cake rain day；o：hot note for；一：seed seat |
+| 🎮 10 種 遊戲＋📝 25 題 闖關 | 見 下表；字 ＝ `_qwords.json`（`node phonics/_qwords_build.js`：照 規則 的 真的 字、Zipf ≧ 3.8、電腦 聽寫 聽 對、拿掉 人名／不雅／暴力 `NO`）668 個 |
+| 遊戲（「英文 就是 玩法」）| 🎯 目標 |
+|---|---|
+| 🧪 母音 煉金坊（Cafe）| 母音 聽辨＋認讀：選 對 的 母音 藥水 倒進 紅框 |
+| ⚔️ 聲音 結界（Monster Brawl，老師 截圖：英雄 在 中間＋魔法 光環、魔物 從 四面 來）| 字首音 1、2、3 個 子音 |
+| 🧲 磁浮 打磚塊（Zorb Blitz）| 字尾音 |
+| 🧱 子母 方塊 塔（Tower Defense）| 子音 母音 排列（子母子、子子母子…）|
+| 🥁 聲音 戰鼓 | 幾 個 聲音＋哪些 聲音（兩步）|
+| 📜 咒語 卷軸 | 聽音 拼字（th sh ng ＝ 一塊）|
+| 🎱 金幣 彈珠台（Pirate Pool）| 聽音 認字（錯 的 只 差 一個 地方）|
+| 👑 拼音 王國（Crazy Kingdom）| 看字 讀音：使者 唸 得 對 嗎（四種 資源 條）|
+| 🫧 泡泡 救援（Plushie Panic，老師 截圖：街機 機台＋下面 發射器）| 兩個 字母 一個 聲音 |
+| 🏭 音節 工廠（Factory）| 兩 音節 的 課本 字 |
+共用：開場 目標＋玩法 ➜ 3 2 1 GO ➜ 5 題 限時 ➜ ⚡ 速度、🔥 連對 ✖2、👑 最後 ✖2 ➜ 答錯 ＝ 綠底 頁（劃掉、方框＋音標＋黃點、💡 一句、一個 一個 唸 ➜ 整個 字 兩次、唸完 才〔▶ 繼續〕）＋**答錯 的 字 隔 1 題 再 出（🔁 剛才 錯 的 字 再 挑戰；老師 簡報 第 12 頁「間隔 重複」）** ➜ 結果 S／A／B／C＋📒 錯題 聽完 才 能 再 玩。**25 題 闖關** ＝ 10 種 抽 5 種 ✕ 5 題，組合 跟 上次 不同（`q25Seq`，`phm_q25last`）。成績 `g年級gm_ph-<mvow…msyl／q25>`，老師看板 題庫 `score/_bank.js`（第幾題 ＝ `_qwords.json` 位置；音節 ＝ 長度＋`SYLW`）。**Code.gs 沒 變 ＝ 不用 重新 部署**。
+入口：總首頁「🔤 自然發音」一排 最後〔🗺️ 拼音 地圖〕、遊戲場 上面〔🗺️ 拼音 地圖〕。
+量測 `node phonics/_verify_56.js`（三種 螢幕：13 段 動畫、地圖 每 種、多 音節＋重音、10 種 ✕ 全對／全錯、25 題、成績）。
+### 聲音（老師 聽 P55）➜ `tools/ph_fix56.py`，試聽 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-11-16_P56/ （舊 的 `v55/`；網站 先 用 A）
+a ＝ ㄝㄚ（舊 的 拉長 以後 F2 1679 ➜ 掉 到 ㄚ；新 的 用 最 穩 的 一段 重複 F2 ≈ 1760～1900）、字首 K ＝ ㄎ（真的 kæ 開頭：爆破＋45 毫秒 吹氣）、字尾 d ＝ C 更 柔和（2.8 kHz 低通、慢 淡入）、字尾 k ＝ A 刪 開頭 ㄜ（從 爆破 開始）、字尾 m n ＝ 輕聲（0.3 秒、微 降、小聲）、str gr ＝ 舊 的（v53）最後 的 r 只 留 0.11 秒；b ＝ A、kitchen 不動。
+### ❓ 等 老師：原本 字卡 index.html 加 2、3 個 子音 的 字首／字尾 ＝ 兩種 意思（見 計畫 檔 3-6）；新 字尾 放 進 advanced.html 字卡（每 個 約 200 個 新 聲音）
+
 ## 2026-11-15 第五十五次（需求檔 第四節 最下面「第五十五次」）
 ### 聲音（老師 聽 P53 的 回答 第 4 點＋第 8 點）➜ `tools/ph_fix55.py`；試聽頁 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-11-15_P55/ （舊 的 在 `v53/`）
 | 老師 | 做法 |

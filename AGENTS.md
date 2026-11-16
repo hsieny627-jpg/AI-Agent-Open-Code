@@ -426,6 +426,10 @@
    **聲音**：字尾 b d k 各 A／B／C 選（網站 先 A）、m n 三聲、str gr 輕聲 入、kitchen 音節 從 真的 字 切（試聽 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-11-15_P55/ ）；第 2、3 點 10 個 困難 動畫 **暫時 不 做**（老師）；
    **預覽** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-11-15_C55/ （從 注音 到 英文 拼字 9 步、44 音、🎵 重音 開關）＋10 種 遊戲 點子＋第 7 點 字尾 頻率 表 ➜ **老師 說「對」才 做**；`ref/SOIL_新_重點.md`、Mini Mine 筆記。
    規格 `vs/`、`g3mid/`、`phonics/` 的 CLAUDE.md 最上面「第五十五次」。**不用 重新 部署**。量測 `node vs/_verify.js`、`node g3mid/_verify_55.js`、`node tools/verify_listen55.js`。➡️ 開場白最下面「2026-11-15 C62」。
+   ✅ 2026-11-16 **第五十六次**（老師 回答 第五十五次：1甲 2甲 3乙 4 聲音 5 照 建議＋新 步驟 6 字尾＋現場任務 進步 排行榜；上傳 Blooket 影片 2 段＋講稿＋簡報 PDF 15 頁＋截圖 2 張 ➜ `ref/遊戲影片_玩法筆記.md` 最下面）：
+   **大寫 J 沒 一橫 ＝ 錯**；**聲音 P56**（a ＝ ㄝㄚ、字首 K ＝ ㄎ、字尾 d k m n、str gr；試聽 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-11-16_P56/ ）；**每 一次 現場任務 ＝ 全班 前 10 名＋🚀 進步 前 5 名 即時 排行榜＋兩場 頒獎 典禮**（限時 任務＋經典 搶答，大螢幕 電腦 記 最近 3 次）；
+   **🗺️ 拼音 地圖 新頁** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/phonics/map.html （🎬 秒懂 動畫 13 段 照 老師 步驟、拼音 地圖 換 字首 母音 字尾＋新 字尾 例字、多 音節＋🎵 重音、一 字母 多 聲音、**10 種「英文 就是 玩法」遊戲＋📝 25 題 闖關**、答錯 的 字 隔 1 題 再 出）。
+   計畫 `phonics/2026-11-16_第五十六次_計畫.md`；規格 `phonics/`、`live/`、`g3mid/` 的 CLAUDE.md 最上面「第五十六次」。**不用 重新 部署**。❓ 等 老師 4 題（需求檔「第五十六次」最下面）。➡️ 開場白最下面「2026-11-16 C63」。
 14. 📋 使用者開新對話修改教學網站時，用的開場白存在 `新對話開場白_修改教學網站.md`
    （讀哪一份規格、每一點寫哪一頁哪一張、看不懂先問、只量改到的頁、0 失敗才推 main）。
 

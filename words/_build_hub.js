@@ -213,7 +213,7 @@ ${require('../score/_client.js').home(0, '', 'school', 1)}
 
 <main id="hub">
 ${require('./_grades').GRADES.map(G => require('./_grades').rows(G, '').replace('年級首頁 ➜</a>', '年級首頁 ➜</a> <a class="h25 c25" href="go25/index.html?g=' + (/三/.test(G.g) ? 3 : 4) + '">📱 25 題 闖關 QR ➜</a>')).join('\n')}
-<section class="gr phm"><h2>🔤 自然發音 Phonics Master <a href="phonics/index.html">🃏 字卡 ➜</a> <a class="h25" href="phonics/games.html">🎮 CVC 遊戲 ➜</a> <a class="h25" href="phonics/games.html?c25=3">🏁 三年級 CVC 單字 25 題 闖關 ➜</a> <a class="h25" href="phonics/games.html?c25=4">🏁 四年級 CVC 單字 25 題 闖關 ➜</a></h2></section>
+<section class="gr phm"><h2>🔤 自然發音 Phonics Master <a href="phonics/index.html">🃏 字卡 ➜</a> <a class="h25" href="phonics/games.html">🎮 CVC 遊戲 ➜</a> <a class="h25" href="phonics/games.html?c25=3">🏁 三年級 CVC 單字 25 題 闖關 ➜</a> <a class="h25" href="phonics/games.html?c25=4">🏁 四年級 CVC 單字 25 題 闖關 ➜</a> <a class="h25" href="phonics/map.html">🗺️ 拼音 地圖：從 CVC 到 課本（秒懂 動畫＋10 種 遊戲）➜</a></h2></section>
 </main>
 
 <footer>

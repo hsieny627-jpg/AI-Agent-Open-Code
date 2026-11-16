@@ -228,10 +228,19 @@ function rank(){return ids().map(function(id){return {id:id,v:H.tot[id]||0}}).so
 /* 🏆 前 5 名：每一列 從「上一題 的 名次」滑到 現在 的 名次；🔥 連對 */
 function lbShow(){H.phase='lb';LV.stopSay();if(H.unC)H.unC();putM({phase:'lb'});scr('hlb');drawLB();ctl2()}
 function ctl2(){var b=$('#hgo2'),last=H.qi>=H.n-1;b.textContent=last?'🏆 頒獎 典禮 ➜':'▶ 下一題（第 '+(H.qi+2)+' 題）'}
-function drawLB(){var el=$('#lb');var R0=H.rk0||[],R1=rank().slice(0,5);
-  el.innerHTML='<div class="lbt">🏆 前 5 名　<small>第 '+(H.qi+1)+' ／ '+H.n+' 題 以後</small></div>'+R1.map(function(x,i){var was=R0.indexOf(x.id),dy=(was<0?5:Math.min(5,was))-i;
+/* 2026-11-16 第五十六次（老師：每一次 現場任務 投影 ＝ 全班 前 10 名＋進步 前 5 名 即時 排行榜；結束 ＝ 前 10 名 頒獎 ➜ 進步 前 5 名 頒獎）：
+   經典 搶答 的 進步 ＝ 這一場 到 現在 的 💯 正確率（答對 ÷ 已經 出 的 題數）跟 自己 最近 3 場 的 平均 比（這台 大螢幕 電腦 記 的 crh_lv_5碼；第 5 題 以後 才 比）*/
+function lvHL(id){try{return JSON.parse(localStorage.getItem('crh_lv_'+id)||'[]')||[]}catch(e){return []}}
+function lvAcc(id){var n=Math.max(1,H.qi+1);return Math.round((H.okc[id]||0)/n*1000)/10}
+function lvBase(id){var h=lvHL(id).filter(function(r){return r.t!==H.start}).slice(-3);if(!h.length)return null;var a=0;h.forEach(function(r){a+=+r.s||0});return Math.round(a/h.length*10)/10}
+function lvProg(){if(H.qi+1<5)return [];return ids().map(function(id){var b=lvBase(id),a=lvAcc(id);return {id:id,b:b,a:a,p:b==null?null:Math.round((a-b)*10)/10}}).filter(function(o){return o.p!=null&&o.p>0&&!(o.b===100&&o.a===100)}).sort(function(x,y){return y.p-x.p||y.a-x.a||(x.id<y.id?-1:1)}).slice(0,5)}
+function lvSave(){if(H.lvSv===H.start)return;H.lvSv=H.start;if(H.qi+1<5)return;ids().forEach(function(id){var h=lvHL(id).filter(function(r){return r.t!==H.start});h.push({t:H.start,s:lvAcc(id)});try{localStorage.setItem('crh_lv_'+id,JSON.stringify(h.slice(-10)))}catch(e){}})}
+function drawLB(){var el=$('#lb');var R0=H.rk0||[],R1=rank().slice(0,10),P=lvProg();
+  el.innerHTML='<div class="lbt">🏆 全班 前 10 名　<small>第 '+(H.qi+1)+' ／ '+H.n+' 題 以後</small></div><div class="vsw2 lvw2"><div class="vsl">'+R1.map(function(x,i){var was=R0.indexOf(x.id),dy=(was<0?10:Math.min(10,was))-i;
     return '<div class="lbr'+(i===0?' top':'')+'" style="--dy:'+dy+'"><b class="lbn">'+(i+1)+'</b>'+heroI(x.id,'lbi')+'<span class="lbs">'+nmI(x.id)+' '+tbI(x.id)+'</span>'+(dy>0?'<i class="up">▲ '+dy+'</i>':'')+
-      ((H.st[x.id]||0)>=2?'<i class="fire">🔥 連對 '+H.st[x.id]+'</i>':'')+'<em>'+(x.v||0).toLocaleString()+'</em></div>'}).join('')}
+      ((H.st[x.id]||0)>=2?'<i class="fire">🔥 連對 '+H.st[x.id]+'</i>':'')+'<em>'+(x.v||0).toLocaleString()+'</em></div>'}).join('')+'</div>'+
+    '<div class="vsr"><div class="vsh pg">🚀 進步 排行榜 <small>前 5 名・跟 最近 的 自己 比</small></div><div class="crpg">'+(P.length?P.map(function(o,i){return '<div class="vsg'+(i===0?' g1':'')+'"><span class="vsgr">'+(i+1)+'</span>'+heroI(o.id,'crhim')+'<span class="vsgn">'+nmI(o.id)+'<small>💯 '+o.a+' 分</small></span><b class="vsgp">📈 ＋'+o.p+'</b></div>'}).join('')
+      :'<div class="vsge">🌱 第 5 題 以後，以前 玩過 的 人 進步 了 就 會 出現 在 這裡</div>')+'</div></div></div>'}
 /* ⚔ 戰力階級 徽章（2026-10-20 第十五次）：學生 平板 送來 的 tr */
 function tbI(id){var p=H.P[id]||{};return p.tr&&typeof RPFX!=='undefined'?RPFX.tb(p.tr):''}
 function heroI(id,cls){var p=H.P[id]||{};return p.h?'<img class="'+(cls||'')+'" src="'+LV.img(BASE,p.h)+'" alt="">':'<span class="noh '+(cls||'')+'">👤</span>'}
@@ -315,7 +324,7 @@ function end(){H.phase='end';clearTimeout(H.tm);clearTimeout(H.tm3);LV.stopSay()
   /* 全班 錯題：每一題 答對 率；最多人 錯 的 前 3 題（平板 的 個人 總分析 也 要 用） */
   var S=H.sum.map(function(s){var q=H.Q[s.qi];return {qi:s.qi,ok:s.ok,n:s.n,r:s.n?Math.round(s.ok/s.n*100):0,ans:q.ans,ae:q.ae,ag:q.ag,az:q.az,au:q.au,h:q.h,t:q.ty==='mc'?(q.ls?'🎧 聽力題':q.t):q.t+'：'+LV.ic(q.zh||'')}});
   var W=S.filter(function(s){return s.ok<s.n}).sort(function(a,b){return a.r-b.r||a.qi-b.qi}).slice(0,3).map(function(s){return s.qi});
-  H.S=S;H.W=W;
+  H.S=S;H.W=W;lvSave();
   putM({phase:'end',r:{qi:H.qi,tot:H.tot,okc:H.okc,st:H.st,okq:H.okq},gs:H.game==='classic'?null:H.gs,sum:{w:W,s:S.map(function(s){return {qi:s.qi,r:s.r,ok:s.ok,n:s.n}}),
     wq:W.map(function(k){var s=S[k];return {qi:k,r:s.r,ans:s.ans,ae:s.ae,ag:s.ag,az:s.az,au:s.au,h:s.h}})}});
   cerShow()}
@@ -327,7 +336,7 @@ function cerShow(){scr('hend');hstep(3);hqr(true);var Rk=rank(),G=H.gs,k=H.game,
   /* 2026-11-03 第四十二次 第 4 點（老師）：新 頒獎 典禮 AWD（3D、配樂、第 5 ➜ 1 名 一層 一層 揭開、班級 號碼＋中文 全名、每一次 不一樣）；同 分 ＝ 同 名次 */
   var rows=[],pr=null,rk=0;Rk.slice(0,10).forEach(function(x,i){if(!pr||x.v!==pr.v)rk=i+1;pr=x;rows.push(awRow(x.id,rk,x.v.toLocaleString()+' 分','答對 '+(H.okc[x.id]||0)+' ／ '+H.n+' 題'))});
   $('#awb1').innerHTML=AWD.bar();var st=$('#cerst');st.className='cx';
-  var go=function(){AWD.play(st,{kick:H.cls+' 班　'+G2.nm+'　'+H.n+' 題'+(res?'　'+res:''),title:'⚡ 現場任務 頒獎 典禮',rows:rows})};go();H.awGo=go;
+  var go=function(){AWD.play(st,{kick:H.cls+' 班　'+G2.nm+'　'+H.n+' 題'+(res?'　'+res:''),title:'⚡ 現場任務 頒獎 典禮',rows:rows},{done:lvAfter})};go();H.awGo=go;
   $('#cstn').textContent=st._aw?st._aw.th.nm:''}
 /* ── 結束 ② 📊 全班 錯題 總分析：每一題 答對 率 長條（一條一條 長出來）＋ 最多人 錯 的 前 3 名（逐字 中文、翻譯、🔊）── */
 function anaShow(){CERX.stop($('#cerst'));AWD.stop($('#cerst'));scr('hana');hstep(4);hqr(true);var S=H.S||[],n=S.length,okA=0,nA=0;S.forEach(function(s){okA+=s.ok;nA+=s.n});var acc=nA?Math.round(okA/nA*100):0;
@@ -426,3 +435,14 @@ function legChose(k){var L=legOf();if(!L)return;var w={m:mon(),ids:L,game:k,t:Da
   var o=$('#chpk');o.innerHTML='<div class="chin chok"><div class="chcr">⭐</div><h1>傳說戰神 選了</h1><div class="chsel">'+LV.badge(k,'xl')+'<b>'+esc(LV.game(k).nm)+'</b></div></div>';
   if(typeof RPFX!=='undefined'){var r=o.getBoundingClientRect();RPFX.spark(o,r.width*.5,r.height*.5,'star',70)}
   setTimeout(function(){o.hidden=true;setDraw()},2600)}
+
+/* 2026-11-16 第五十六次：經典 搶答 頒獎 典禮 演完 ➜〔🌟 下一個：進步 之星 ➜〕➜ 🌟 進步 之星 頒獎 典禮（score/_grow.js，跟 ⚔️ 左右 對戰 同 一套）*/
+function lvAfter(){clearTimeout(H.lvT);H.lvT=setTimeout(function(){if(H.scr!=='hend'||$('#lvgo'))return;var b=$('#awb1');if(b)b.insertAdjacentHTML('afterbegin','<button id="lvgo" class="big go">🌟 下一個：進步 之星 ➜</button>')},window.__AWDFAST?50:5000)}
+function lvGrow(){try{AWD.stop($('#cerst'))}catch(e){}H.qi=Math.max(H.qi,H.n-1);var P=lvProg(),rows=P.map(function(o,i){return {rk:i+1,nm:nmI(o.id),hero:heroI(o.id,'grhi'),pr:o.p,ds:'＋'+o.p,dg:''}});
+  var keep=ids().filter(function(id){return lvBase(id)===100&&lvAcc(id)===100}).map(function(id){return nmI(id)});
+  var g=$('#lvgrow');if(!g){g=document.createElement('div');g.id='lvgrow';g.className='vsgrowx';document.body.appendChild(g)}
+  GROW.play(g,{kick:H.cls+' 班',rows:rows,keep:keep},{done:function(){if(!$('#lvgx'))g.insertAdjacentHTML('beforeend','<div class="grbar" id="lvgx"><button id="lvgr" class="ghost">🔁 再 看 一次</button><button id="lvge" class="big go">📊 全班 錯題 分析 ➜</button></div>')}});
+  g.insertAdjacentHTML('beforeend','<div class="grbar0"><button id="lvgs" class="ghost">⏭ 直接 看 最後</button></div>')}
+document.addEventListener('click',function(e){var t=e.target;if(!t.closest)return;if(t.closest('#lvgo')||t.closest('#lvgr')){lvGrow();return}
+  if(t.closest('#lvgs')){window.__GROWFAST=1;lvGrow();setTimeout(function(){window.__GROWFAST=0},3000);return}
+  if(t.closest('#lvge')){var g=$('#lvgrow');if(g){try{GROW.stop(g)}catch(x){}g.remove()}anaShow();return}});

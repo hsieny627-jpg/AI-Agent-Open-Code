@@ -220,6 +220,15 @@ Object.keys(BANK).forEach(k => { if (/_fun-/.test(k)) return;   /* 🏰 守城�
   const NM = { slot: '🎰 CVC 拉霸機', ufo: '🛸 聽音 打 飛碟', vault: '🔐 聽音 拼字 保險箱', zhu: '🀄 看字 選 音標', bal: '🎈 字首音 氣球', vow: '⚔️ 母音 對決', end: '🎯 尾音 狙擊', lad: '🪜 換 字母 爬 階梯', pic: '🖼️ 看字 找圖', train: '🚂 聲音 火車（拼字）', ls: '🐣 小學堂 小 測驗', bk: '📗 課本 單字 拼塊', bkp: '📘 課本 單字 找圖', bksp: '🧩 音標 密碼 拼字', c25: '🏁 CVC 單字 25 題 闖關', yn: '⭕ 開頭 是 它 嗎？', twin: '👯 聲音 雙胞胎', line: '⚔️ 連線 大 對決' };
   const READ = { zhu: 1, pic: 1, bkp: 1 };
   [3, 4].forEach(g => Object.keys(NM).forEach(k => put('g' + g + 'gm_ph-' + k, { name: '🔤 自然發音｜' + NM[k], qs: k === 'c25' ? ITEMS.map(w => one(w, true)).concat(BWL.map(w => bone(w, true))) : /^bk/.test(k) ? BWL.map(w => bone(w, !READ[k])) : ITEMS.map(w => one(w, !READ[k])) })));
+  /* 2026-11-16 第五十六次：🗺️ 拼音 地圖 的 10 種 遊戲＋📝 拼音 25 題 闖關（phonics/map.html#play）：第幾題 ＝ phonics/_qwords.json 的 位置；
+     🏭 音節 工廠 ＝ _qwords.json 長度 ＋ 兩 音節 字 的 位置（跟 phonics/_map_games.js 的 SYLW 同 順序）*/
+  const QW = require('../phonics/_qwords.json'), SYLW = ['bathroom', 'bedroom', 'rabbit', 'happy', 'kitchen', 'angry', 'turtle', 'dining', 'living', 'baby'];
+  const SYZ = { bathroom: '浴室', bedroom: '臥室', rabbit: '兔子', happy: '快樂的', kitchen: '廚房', angry: '生氣的', turtle: '烏龜', dining: '用餐', living: '生活', baby: '嬰兒' };
+  const qone = x => { const au = '../phonics/au/' + x.c + '.mp3'; return { k: 'g', kn: '🗺️ 拼音 地圖', q: '🔊 ' + x.w, o: [x.w, '（答錯）'], h: x.pat.replace(/C/g, '子 ').replace(/V/g, '母 ').trim() + '：' + x.n + ' 個 聲音', ae: x.w, ag: [[x.w, '']], az: '', au, al: au, say: x.w }; };
+  const sone = w => { const au = '../phonics/au/' + (w === 'baby' ? 'w_c55_baby' : 'bk_' + w) + '.mp3'; return { k: 'g', kn: '🗺️ 拼音 地圖', q: '🔊 ' + w, o: [w, '（答錯）'], h: '兩 個 音節', ae: w, ag: [[w, SYZ[w]]], az: SYZ[w], au, al: au, say: w }; };
+  const QI = QW.map(qone).concat(SYLW.map(sone));
+  const QNM = { mvow: '🧪 母音 煉金坊', mon: '⚔️ 聲音 結界', mco: '🧲 磁浮 打磚塊', mpat: '🧱 子母 方塊 塔', mcnt: '🥁 聲音 戰鼓', mspl: '📜 咒語 卷軸', mcoin: '🎱 金幣 彈珠台', mking: '👑 拼音 王國', mbub: '🫧 泡泡 救援', msyl: '🏭 音節 工廠', q25: '📝 拼音 25 題 闖關' };
+  [3, 4].forEach(g => Object.keys(QNM).forEach(k => put('g' + g + 'gm_ph-' + k, { name: '🔤 自然發音｜' + QNM[k], qs: QI })));
   /* 2026-11-13 第四十九次：🧩 音標 密碼 拼字（bksp）、🏁 CVC 單字 25 題 闖關（c25：第幾題 ＝ ITEMS，課本 字 ＝ ITEMS 長度 ＋ 課本 順序）*/
 })();
 /* ⚔️ 左右 對戰（2026-11-14 第五十四次；⚡ 現場任務 set vs，平板 vs/index.html）：g年級gm_vs-q1；第幾題 ＝ vs/_data.js 的 BANK[年級]（只 可以 接 在 後面 加）

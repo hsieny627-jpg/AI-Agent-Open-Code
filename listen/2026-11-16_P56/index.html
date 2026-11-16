@@ -1,0 +1,25 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第五十六次 新聲音</title><style>
+body{margin:0;background:#0B1026;color:#fff;font-family:'Microsoft JhengHei','PingFang TC',sans-serif;padding:18px}
+h1{font-size:38px;margin:0 0 6px;color:#FFE07A}p{font-size:26px;line-height:1.6;color:#DCE4FF;margin:4px 0 14px}
+table{border-collapse:collapse;width:100%;max-width:1200px}td,th{border:1px solid #2A3570;padding:10px;font-size:26px;text-align:center}th{background:#141B3D;color:#FFE07A}
+td.w{font-size:40px;font-weight:700}td.t{text-align:left;font-size:24px;color:#DCE4FF}
+button{font-size:28px;font-weight:900;border-radius:14px;padding:12px 22px;cursor:pointer;margin:3px;min-height:60px}
+.o{background:#2A2A2A;color:#ccc;border:2px solid #666}.n{background:#062A35;color:#9EF0FF;border:3px solid #22D3EE}
+</style></head><body>
+<h1>🎧 第五十六次 新聲音</h1>
+<p>每一個 聲音 都 有 <b>A、B</b> 兩種，請 老師 選 一個（網站 現在 先 用 <b>A</b>）。<br>灰色 ＝ 現在（舊 的）、藍色 ＝ 新 的。</p>
+<table id="t"><tr><th>聲音</th><th>老師 說</th><th>我 怎麼 改</th><th>舊 的</th><th>A（網站 先 用）</th><th>B</th></tr></table>
+<script>
+const A=new Audio();function pl(s){A.src=s;A.play().catch(()=>{})}
+const R=[['字母 a','必須 是 ㄝㄚ','舊 的 拉長 以後 嘴型 跑 到 ㄚ ➜ 只 用 最 穩 的 ㄝㄚ 那 一段（A 長、B 短）','s_ae'],
+['字首 k','必須 是 ㄎ，現在 像 大聲 的 ㄏ','吹氣 太 長 ➜ 只 留 爆破＋短短 的 吹氣（B 再 去掉 尖 的 嘶）','s_k'],
+['字尾 d','C 比較 接近，但 要 更 柔和','用 C，去掉 尖 的 高音、慢慢 出來（B 更 輕 更 短）','s_ed'],
+['字尾 k','A，但 刪 一開始 的 ㄜ','把 開頭 那 一小段 母音 尾巴 切掉，只 留 閉住 以後 的 放開（B 更 柔和）','s_ek'],
+['字尾 m','改成 輕聲','短、音高 微微 往 下、慢慢 收（A 0.3 秒、B 0.22 秒）','s_em'],
+['字尾 n','改成 輕聲','同上','s_en'],
+['str','舊 的 好 一點，但 刪 尾音 ㄜ','用 舊 的，最後 的 r 只 留 一下下 就 收（A 更 短）','cl_strong_0_3'],
+['gr','舊 的 好 一點，但 刪 尾音 ㄜ','同上','cl_angry_1_2']];
+const T=document.getElementById('t');R.forEach(r=>{T.insertAdjacentHTML('beforeend','<tr><td class="w">'+r[0]+'</td><td class="t">'+r[1]+'</td><td class="t">'+r[2]+'</td><td><button class="o" data-s="v55/'+r[3]+'.mp3">🔊 舊</button></td><td><button class="n" data-s="'+r[3]+'_A.mp3">🔊 A</button></td><td><button class="n" data-s="'+r[3]+'_B.mp3">🔊 B</button></td></tr>')});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b)pl(b.getAttribute('data-s'))});
+</script></body></html>

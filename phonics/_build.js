@@ -35,3 +35,4 @@ put('_games.html', 'games.html', { '/*__PH__*/': phJS, '/*__PH2__*/': ph2JS, '/*
     /* 第四十九次：〔⚡ 現場任務〕🏁 CVC 單字 25 題 闖關（Firebase 網址、讀寫、時間 到 自動 送）*/
     '<script src="../live/fb.js"></script><script>' + fs.readFileSync(path.join(D, '..', 'live', '_db.js'), 'utf8') + '</script><script>' + fs.readFileSync(path.join(D, '..', 'live', '_xlive_rt.js'), 'utf8') + '</script>', '/*__GAMECSS__*/': fs.readFileSync(path.join(D, '_games.css'), 'utf8'), '/*__GAMEJS__*/': fs.readFileSync(path.join(D, '_games.js'), 'utf8') });
 console.log('phonics ok：字卡＋基礎版＋進階版＋例外 字', exRows.length, '個（放回 字卡 的 組合', Object.keys(EXSHOW).length, '）＋遊戲；遊戲 單字', W.length, '個；遊戲 用 的 音檔', cvc.length, '個');
+require('./_map_build.js');   /* 2026-11-16 第五十六次：🗺️ 拼音 地圖 map.html */

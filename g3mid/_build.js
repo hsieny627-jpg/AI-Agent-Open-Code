@@ -914,12 +914,12 @@ function skCanvas(sk,hpx,ln){var u=hpx/3.5,xs=[];sk.forEach(function(s){s.forEac
 function writeUI(stage,q,left,lk){var row=H('div','wrow'),L=H('div','wleft'),Rt=H('div','wrt');row.appendChild(L);row.appendChild(Rt);stage.appendChild(row);left(L);
  var pad=new Pad(Rt,{lock:function(){return BUSY||(lk&&lk())}}),bt=H('div','wbtn','<button class="er">🧽 擦掉</button><button class="go">✅ 寫好了</button>');Rt.appendChild(bt);
  bt.querySelector('.er').onclick=function(){if(!BUSY)pad.clear()};
- bt.querySelector('.go').onclick=function(){if(BUSY||pad.empty()||(lk&&lk()))return;var sk=pad.strokes(),j=HW.judge(sk,q.want);R.lastImg=pad.img();R.lastGot=j.got;R.lastSk=JSON.parse(JSON.stringify(sk));R.lastLn=null;
+ bt.querySelector('.go').onclick=function(){if(BUSY||pad.empty()||(lk&&lk()))return;var sk=pad.strokes(),j=HW.judge(sk,q.want);R.lastImg=pad.img();R.lastGot=j.got;R.lastSk=JSON.parse(JSON.stringify(sk));R.lastLn=null;R.lastJ=0;
    var ln=HW.lines(sk,q.want),yy=[];sk.forEach(function(t){t.forEach(function(p){yy.push(p[1])})});var outG=Math.min.apply(0,yy)<-.2||Math.max.apply(0,yy)>3.2;   /* 2026-10-31 第三十五次 第 4 點：-.15 ➜ -.2（寫字板 的 邊 ＝ -.25，碰到 邊 才 叫 學生 再 寫 一次）*/   /* 超出 整個 四線格（最上面、最下面 的 線 外面）＝ 超出 格子 */
    if(outG&&!R.retry){R.retry=1;BUSY=true;tPause();var tt=H('div','rtry','✋ 超出 格子 了！<br>再 寫 一次<small>（不扣 時間，一題 一次）</small>');Rt.appendChild(tt);later(function(){tt.remove();pad.clear();BUSY=false;tGo()},1800);return}
    /* 2026-10-31 第三十五次 第 4 點：形狀 對（不看 位置）＋線 也 對（照 要寫 的 那一個 字母 的 線）＋不是 寫成 另一個 大小寫 ＝ 對（原本 位置 有一點 偏 就 判 錯）*/
    if(!j.ok){var j2=HW.judge(sk,q.want,1),pt=q.want===q.want.toUpperCase()?q.want.toLowerCase():q.want.toUpperCase();if(j2.ok&&ln.ok&&j.got!==pt){j.ok=true;R.lastGot=q.want}}
-   if(!j.ok){var j2=HW.judge(sk,q.want,1);if(j2.ok&&!ln.ok){R.lastLn=ln;miss('line');return}miss('draw');return}R.lastLn=ln;if(!ln.ok){miss('line');return}WOK(q,L)};return pad}
+   if(!j.ok){var j2=HW.judge(sk,q.want,1);if(j2.ok&&!ln.ok){R.lastLn=ln;miss('line');return}miss('draw');return}R.lastLn=ln;if(!ln.ok){miss('line');return}if(q.want==='J'&&!HW.jbar(sk)){R.lastJ=1;miss('jbar');return}WOK(q,L)};return pad}
 
 /* ═══════ 10 種 遊戲 的 畫面（2026-10-25 第二十五次 老師第 3 點：每一個遊戲 更好玩、更刺激、更有 回饋；規格 g3mid/CLAUDE.md 最上面）═══════ */
 var REN={},FB={},WOK=null;
@@ -1097,7 +1097,7 @@ REN.q4=function(q,st){var mc,picked=false;R.pic=null;writeUI(st,q,function(L){L.
   WOK=function(q,L){var o=L.querySelector('.ore.ok');if(o){o.classList.add('crack');setTimeout(function(){o.classList.add('brk')},350)}good(o||L)};
   setTimeout(function(){sayT(q.say)},350)};
 /* 寫字 的 答錯頁：電腦 看到 的 字、頂天立地 沒 做到 的 地方（紅圈）、正確 的 字（● ＝ 要 碰到 線 的 地方） */
-function fbWrite(q){var big=Math.round(Math.min(innerHeight*.2,220)),ln=R.lastLn&&!R.lastLn.ok?R.lastLn:null;return {you:R.lastImg&&R.lastImg.length?(ln?'<span id="mysk"></span>':'<img src="'+R.lastImg+'" style="height:clamp(70px,11vh,110px);background:#fff;border-radius:10px">')+(ln?'<span class="lnw">📏 形狀 對了，但是 <b>'+esc(ln.words)+'</b><small class="lnr">✍️ ⬆️ 頂天 · ⬇️ 立地 · 🚫 不超線（紅圈 ＝ 沒 碰到、紅線 ＝ 超出）</small></span>':R.lastGot&&R.lastGot!==q.want?'<span>（電腦看到的是 <b>'+esc(R.lastGot)+'</b>）</span>':''):'',
+function fbWrite(q){var big=Math.round(Math.min(innerHeight*.2,220)),ln=R.lastLn&&!R.lastLn.ok?R.lastLn:null;return {you:R.lastImg&&R.lastImg.length?(ln?'<span id="mysk"></span>':'<img src="'+R.lastImg+'" style="height:clamp(70px,11vh,110px);background:#fff;border-radius:10px">')+(R.lastJ&&q.want==='J'?'<span class="lnw">⚠️ 大寫 <b>J</b> 上面 少了 <b>一橫</b><small class="lnr">✍️ 先 寫 上面 一橫 ➜ 再 往下 彎</small></span>':'')+(ln?'<span class="lnw">📏 形狀 對了，但是 <b>'+esc(ln.words)+'</b><small class="lnr">✍️ ⬆️ 頂天 · ⬇️ 立地 · 🚫 不超線（紅圈 ＝ 沒 碰到、紅線 ＝ 超出）</small></span>':R.lastGot&&R.lastGot!==q.want?'<span>（電腦看到的是 <b>'+esc(R.lastGot)+'</b>）</span>':''):'',
   body:'<div class="ltr" id="ltr"></div><div class="lnh">📏 頂天立地：<b>●</b> 的 地方 都 要 碰到 線，不可以 超出</div>',after:function(){var l=$('#ltr'),fig=function(t,c){var f=H('div','ltf','<span>'+t+'</span>');f.appendChild(c);return f},up=function(c){return c===c.toUpperCase()},nm=function(c){return (up(c)?'大寫 ':'小寫 ')+'<b>'+esc(c)+'</b>'};
    /* 2026-10-26 第二十六次 第 1-4B 點（老師：用 正確 的 格線 呈現 題目 的 字母 和 正確答案 的 字母，比較 大寫 小寫 在 格線 的 位置）*/
    if(G.id==='q5'){l.appendChild(fig((q.lis?'比一比：':'題目：')+nm(q.show),letterCanvas(q.show,big,'#3A1A80')));l.appendChild(H('span','ar','➜'));l.appendChild(fig('✅ 正確答案：'+nm(q.want),letterCanvas(q.want,big,'#0A5E2D',1)))}

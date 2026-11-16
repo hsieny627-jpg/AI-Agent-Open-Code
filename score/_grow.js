@@ -38,7 +38,7 @@ function GROWSRC() {
           '<div class="grmeteor"></div><div class="grstar">' + (r.rk === 1 ? '👑' : '🌟') + '</div><div class="grrk">第 ' + r.rk + ' 名</div>' +
           '<div class="grhero">' + (r.hero || '') + '</div><div class="grnm">' + (r.nm || '') + '</div>' +
           '<div class="grpr">📈 ＋<b data-v="' + r.pr + '">0</b> 分</div>' +
-          '<div class="grd"><span>💯 ' + esc(r.ds) + '</span><span>⚡ ' + esc(r.dg) + '</span></div>' +
+          '<div class="grd"><span>💯 ' + esc(r.ds) + '</span>' + (r.dg ? '<span>⚡ ' + esc(r.dg) + '</span>' : '') + '</div>' +
           '<div class="grp">「' + esc(P[i % P.length]) + '」</div>';
         st.querySelectorAll('.grc.on').forEach(function (x) { x.classList.add('mini'); });
         st.appendChild(c); arp(5 - r.rk);
