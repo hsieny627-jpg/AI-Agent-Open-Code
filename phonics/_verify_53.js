@@ -9,10 +9,10 @@ const dur = f => { const y = pcm(f); let a = 0, b = y.length - 1; const mx = y.r
 const actRms = y => { const w = 441, fr = []; for (let i = 0; i + w < y.length; i += w) { let s = 0; for (let j = i; j < i + w; j++) s += y[j] * y[j]; fr.push(Math.sqrt(s / w)); } const mx = Math.max(...fr), a = fr.filter(x => x > mx * 0.1); return Math.sqrt(a.reduce((t, x) => t + x * x, 0) / a.length); };
 const au = c => path.join(D, 'au', c + '.mp3'), same = (a, b) => fs.readFileSync(a).equals(fs.readFileSync(b));
 ok(!same(au('s_r'), path.join(V52, 's_r.mp3')), 'R 沒有 換 新 的'); const dr = dur(au('s_r')); ok(dr > 0.2 && dr < 0.36, 'R 長度 ' + dr.toFixed(2));
-for (const c of 'bdgk') { const e = au('s_e' + c), a = actRms(pcm(e)), b = actRms(pcm(au('s_' + c))), o = actRms(pcm(path.join(V52, 's_e' + c + '.mp3')));
+for (const c of 'bg') {   /* 2026-11-16 第五十六次：字尾 d（更 柔和）、k（刪 開頭 ㄜ）老師 改 了 ➜ 改 由 _verify_56s.js 量 */ const e = au('s_e' + c), a = actRms(pcm(e)), b = actRms(pcm(au('s_' + c))), o = actRms(pcm(path.join(V52, 's_e' + c + '.mp3')));
   ok(!same(e, path.join(V52, 's_e' + c + '.mp3')), '字尾 ' + c + ' 沒有 換'); ok(a > b * 0.5 && a < b * 0.8, '字尾 ' + c + ' 音量 ' + a.toFixed(3) + ' / 字首 ' + b.toFixed(3));
   ok(a > o * 1.1, '字尾 ' + c + ' 沒有 比 第五十二次 大聲'); ok(dur(e) < 0.3, '字尾 ' + c + ' 太 長'); }
-for (const c of ['s_b', 's_g', 's_ep', 's_et', 'cl_strong_0_3', 'cl_angry_1_2']) ok(same(au(c), path.join(V52, c + '.mp3')), c + ' 不應該 改');
+for (const c of ['s_b', 's_g', 's_ep', 's_et'])   /* str gr 第五十六次 老師 改 了（_verify_56s.js）*/ ok(same(au(c), path.join(V52, c + '.mp3')), c + ' 不應該 改');
 const h = fs.readFileSync(path.join(LI, 'index.html'), 'utf8');
 for (const c of ['s_r', 's_eb', 's_ed', 's_eg', 's_ek', 's_b', 's_g', 's_ep', 's_et', 'cl_strong_0_3', 'cl_angry_1_2', 's_ae', 's_eh', 's_aa', 's_uh', 's_w', 's_d', 's_en']) ok(fs.existsSync(au(c)), '沒有 ' + c);
 ok(/<title>[^<]+<\/title>/.test(h) && h.indexOf("O('s_r')") > 0, '試聽頁 不 完整');
