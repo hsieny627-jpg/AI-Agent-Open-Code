@@ -16,6 +16,8 @@ Object.assign(TT, { ae: t(V.a), eh: t(V.e), ih: t(V.i), aa: t(V.o), uh: t(V.u), 
   /* 第五十七次：母音＋r 的 r ＝ 子音 ㄦ（bird 的 ɜ＋ɹ：KK 空白，照 課本 字卡）、ou ㄠ、oy ㄛ一 */
   rr: { zh: 'ㄦ', sup: '', kk: 'r', ipa: 'ɹ' }, rr2: { zh: 'ㄦ', sup: '', kk: '', ipa: 'ɹ' }, er1: { zh: 'ㄜ', sup: '', kk: 'ɝ', ipa: 'ɜ' }, ou: { zh: 'ㄠ', sup: '', kk: 'aʊ', ipa: 'aʊ' }, oy: { zh: 'ㄛ一', sup: '', kk: 'ɔɪ', ipa: 'ɔɪ' } });
 const REALC = {}; REAL.forEach(r => REALC[r[0]] = r[1]);
+/* 第五十七次：真的 英文 字 但 電腦 聽寫 照 規則 唸 不 對（wild、bolt、sword…＝ 例外 字）➜ 地圖 上 說「例外」、不 放 照 規則 的 聲音 */
+const XBAD = {}; for (let k = 0; k < 4; k++) { const f = path.join(D, '_asrbad57_' + k + '.json'); if (fs.existsSync(f)) Object.assign(XBAD, JSON.parse(fs.readFileSync(f, 'utf8'))); }
 /* 檢查：動畫、遊戲 要 的 聲音 都 有 */
 const js = fs.readFileSync(path.join(D, '_map.js'), 'utf8'), gjs = fs.readFileSync(path.join(D, '_map_games.js'), 'utf8');
 const want = [...new Set((js + gjs).match(/'(w_[a-z0-9_]+|zy_[a-z]+|bk_[a-z_]+|sy_[a-z]+_\d|[a-z]+-[a-z]+(?:-[a-z]+)?)'/g).map(x => x.slice(1, -1)))].filter(c => !/^(no|ok|on|lo|go|fl)$/.test(c) && !/_$/.test(c));
@@ -26,7 +28,7 @@ if (miss.length && !process.env.PH_LAX) { console.error('✗ 沒有 音檔：', 
 const CL = require('../score/_client.js');
 let html = fs.readFileSync(path.join(D, '_map.html'), 'utf8');
 const MAPCJS = fs.readFileSync(path.join(D, '_map_combos.js'), 'utf8');
-html = html.split('/*__DATA__*/').join('var QW=' + JSON.stringify(QW) + ',TT=' + JSON.stringify(TT) + ',REALC=' + JSON.stringify(REALC) + ',AVL=' + JSON.stringify(AVL) + ';')
+html = html.split('/*__DATA__*/').join('var QW=' + JSON.stringify(QW) + ',TT=' + JSON.stringify(TT) + ',REALC=' + JSON.stringify(REALC) + ',XBAD=' + JSON.stringify(Object.keys(XBAD)) + ',AVL=' + JSON.stringify(AVL) + ';')
   .split('/*__SCORE__*/').join(CL.home(0, '../', 'school') + '<script>' + require('../score/_dsp.js').js('') + '</script>')
   .split('/*__JS__*/').join(MAPCJS + '\n' + js.split('/*__GAMES__*/').join(gjs));
 fs.writeFileSync(path.join(D, 'map.html'), html);

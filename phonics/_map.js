@@ -187,7 +187,7 @@ $('#aStress').onclick=()=>{STR=!STR;strBtn();scPlay(SCI,SMODE)};
 /* ══ ② 🗺️ 拼音 地圖（第五十七次 老師 4-20）══
  * 清單＋規則 ＝ _map_combos.js（MAPC）；點 一顆 ＝ 只 換 那 一個 地方（字首／母音／字尾），其他 不 動；不合 拼字 習慣 的 ＝ 暗＋說 為什麼（不 自動 改 別的 地方）
  * 新 字尾 pt ct xt lp lf lt sp mb ld lk nch 可以 自由 組合（不再 是 固定 的 例字）；ch 就 是 ch、tch 另外 一顆；全部 組合 都 有 聲音（tools/ph_gen57.py）*/
-const MAPC=window.MAPC,ON=MAPC.ON,VV=MAPC.VV,CO=MAPC.CO;
+const XBS=new Set(typeof XBAD!=='undefined'?XBAD:[]),MAPC=window.MAPC,ON=MAPC.ON,VV=MAPC.VV,CO=MAPC.CO;
 let MLV=LS.g('mlv','b'),MS=LS.g('ms2',{o:'b',v:'a',c:'t'}),MG={o:LS.g('mgo','b'),c:LS.g('mgc','b')};
 const VNM={a:'a',e:'e',i:'i',o:'o',u:'u',a_e:'a_e',i_e:'i_e',o_e:'o_e',u_e:'u_e',ai:'ai',ay:'ay',ee:'ee',ea:'ea',oa:'oa',ow:'ow',ou:'ou',ow2:'ow',oi:'oi',oy:'oy',au:'au',aw:'aw',oo:'oo',ar:'ar',or:'or',er:'er',ir:'ir',ur:'ur'};
 const VSUB={ow:'ㄡ',ow2:'ㄠ',au:'ㄛ',aw:'ㄛ',oo:'ㄨ',ou:'ㄠ',oi:'ㄛ一',oy:'ㄛ一'};
@@ -214,10 +214,10 @@ function mapDraw(){const A=MLV==='a';$('#lvB').classList.toggle('on',!A);$('#lvA
     $('#mOn').innerHTML=grpTabs('o',OG,og[0])+chipHTML(og[1],og[2],'o');$('#mV').innerHTML=VG.map(g=>chipHTML(g[1],g[2],'v')).join('');$('#mCo').innerHTML=grpTabs('c',CG,cg[0])+chipHTML(cg[1],cg[2],'c',cg[3])}
   mapOut()}
 function mapSet(o,v,c){MS={o,v,c};LS.s('ms2',MS);if(TAB==='map')mapDraw()}
-async function mapOut(){TOK++;const o=MS.o,v=MS.v,c=MS.c,box=M2?$('#m2w'):$('#mapOut');const ok=MAPC.ok(o,v,c),spec=specOfMap(o,v,c),w=spellOf(o,v,c),code=codeOf(o,v,c),has=ok&&AV.has(code),real=REALC[code]===w,C=countOf(spec);
+async function mapOut(){TOK++;const o=MS.o,v=MS.v,c=MS.c,box=M2?$('#m2w'):$('#mapOut');const ok=MAPC.ok(o,v,c),spec=specOfMap(o,v,c),w=spellOf(o,v,c),code=codeOf(o,v,c),xb=XBS.has(code),has=ok&&!xb&&AV.has(code),real=REALC[code]===w,C=countOf(spec);
   const note=(c==='ld'||c==='lk')?'<span class="mtag p">⚠ old、talk 的 母音 會 變（a、o 不 接 ld、lk）</span>':c==='mb'?'<span class="mtag p">mb 的 b 不 發音</span>':c==='tch'?'<span class="mtag p">tch 的 t 不 發音</span>':(v==='au'||v==='aw')?'<span class="mtag p">au、aw ＝ ㄛ（嘴巴 大大 張開，像 talk 的 a）</span>':'';
   box.innerHTML='<div class="wrow'+(ok?'':' bad')+'">'+wordHTML(spec,{lab:1,dots:1})+'</div><div class="sum">'+patTxt(spec)+'：'+C.b+' 個 方框、<b>'+C.n+' 個 聲音</b>'+(C.v>1?'、'+C.v+' 個 音節':'')+'</div>'+
-    '<div class="cap">'+(!ok?'<span class="mtag w">⚠ '+why(o,v,c)+'</span>':real?'<span class="mtag r">✅ 真的 英文 字</span>':'<span class="mtag p">🔮 練習 用 的 假字（照 規則 唸）</span>')+note+'</div>'+
+    '<div class="cap">'+(xb?'<span class="mtag w">⚠ '+w+' 是 真的 英文 字，但是 不 照 規則 唸（例外 字），所以 這裡 不 唸</span>':!ok?'<span class="mtag w">⚠ '+why(o,v,c)+'</span>':real?'<span class="mtag r">✅ 真的 英文 字</span>':'<span class="mtag p">🔮 練習 用 的 假字（照 規則 唸）</span>')+note+'</div>'+
     '<div class="ctl"><button id="mSay1"'+(has?'':' disabled')+'>🔊 一個 一個 唸 ➜ 合 起來</button><button id="mSay2"'+(has?'':' disabled')+'>🔊 整個 字</button></div>';
   if(M2)m2Arrows();$('#mSay2').onclick=()=>say(code);$('#mSay1').onclick=()=>mapSay(spec,code,box);if(has&&!FAST&&!PRAC)mapSay(spec,code,box)}
 async function mapSay(spec,code,box){const me=++TOK,S=parse(spec),cks=qsa(box,'.ck');let k=0;for(const B of S)for(const b of B)for(const c of b.ch){const el=cks[k++];const a=auOf(c.t,b.coda);if(!a||c.sil||b.type==='g')continue;if(me!==TOK)return;el.classList.add('on');await sayW(a,me);el.classList.remove('on')}
@@ -225,7 +225,7 @@ async function mapSay(spec,code,box){const me=++TOK,S=parse(spec),cks=qsa(box,'.
 document.addEventListener('click',e=>{const g=e.target.closest('[data-gk]');if(g){MG[g.dataset.gk]=g.dataset.gv;LS.s('mg'+g.dataset.gk,g.dataset.gv);mapDraw();return}
   const b=e.target.closest('[data-mk]');if(!b)return;MS[b.dataset.mk]=b.dataset.mv;LS.s('ms2',MS);mapDraw();if(PRAC)pracCheck()});
 $('#lvB').onclick=()=>{MLV='b';LS.s('mlv','b');if(VV.b.indexOf(MS.v)<0)MS.v='a';if(ON.b.indexOf(MS.o)<0)MS.o='b';if(CO.b.concat(CO.d).indexOf(MS.c)<0)MS.c='t';mapDraw()};$('#lvA').onclick=()=>{MLV='a';LS.s('mlv','a');mapDraw()};
-$('#mRand').onclick=()=>{const L=MAPC.all().filter(x=>AV.has(x.code)&&(MLV==='a'||(ON.b.indexOf(x.o)>=0&&VV.b.indexOf(x.v)>=0&&CO.b.concat(CO.d).indexOf(x.c)>=0)));const x=R(L);MS={o:x.o,v:x.v,c:x.c};LS.s('ms2',MS);mapDraw()};
+$('#mRand').onclick=()=>{const L=MAPC.all().filter(x=>AV.has(x.code)&&!XBS.has(x.code)&&(MLV==='a'||(ON.b.indexOf(x.o)>=0&&VV.b.indexOf(x.v)>=0&&CO.b.concat(CO.d).indexOf(x.c)>=0)));const x=R(L);MS={o:x.o,v:x.v,c:x.c};LS.s('ms2',MS);mapDraw()};
 /* 🎧 你 來 拼（聽 ➜ 自己 點 字首、母音、字尾）／👀 你 來 讀（看 ➜ 先 自己 唸 ➜ 再 聽 對 不 對）：我 做 ➜ 一起 做 ➜ 你 做 */
 let PRAC=null;
 function pracPool(){return QW.filter(x=>MLV==='a'||(!x.long&&x.on.join('').length<=2&&x.co.join('').length<=2)).map(x=>{const o=x.on.join(''),c=x.co.join('')||'無',v=x.v+(x.mg?'_e':'');return {o,v,c:c==='ck'?'k':/^(ll|ss|ff|zz)$/.test(c)?c[0]:c,x}}).filter(y=>MAPC.ok(y.o,y.v,y.c)&&codeOf(y.o,y.v,y.c)===y.x.c)}
