@@ -28,7 +28,7 @@ if (miss.length && !process.env.PH_LAX) { console.error('✗ 沒有 音檔：', 
 const CL = require('../score/_client.js');
 let html = fs.readFileSync(path.join(D, '_map.html'), 'utf8');
 const MAPCJS = fs.readFileSync(path.join(D, '_map_combos.js'), 'utf8');
-html = html.split('/*__DATA__*/').join('var QW=' + JSON.stringify(QW) + ',TT=' + JSON.stringify(TT) + ',REALC=' + JSON.stringify(REALC) + ',XBAD=' + JSON.stringify(Object.keys(XBAD)) + ',AVL=' + JSON.stringify(AVL) + ';')
+html = html.split('/*__DATA__*/').join('var QW=' + JSON.stringify(QW) + ',TT=' + JSON.stringify(TT) + ',REALC=' + JSON.stringify(REALC) + ',XBAD=' + JSON.stringify(Object.keys(XBAD)) + ',BADC=' + JSON.stringify(require('./_map_combos.js').all().filter(x => PH2.bad2(x.code)).map(x => x.code)) + ',AVL=' + JSON.stringify(AVL) + ';')
   .split('/*__SCORE__*/').join(CL.home(0, '../', 'school') + '<script>' + require('../score/_dsp.js').js('') + '</script>')
   .split('/*__JS__*/').join(MAPCJS + '\n' + js.split('/*__GAMES__*/').join(gjs));
 fs.writeFileSync(path.join(D, 'map.html'), html);
