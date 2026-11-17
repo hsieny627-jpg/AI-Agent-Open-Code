@@ -15,9 +15,11 @@ Object.assign(TT, { ae: t(V.a), eh: t(V.e), ih: t(V.i), aa: t(V.o), uh: t(V.u), 
   el: { zh: 'ㄜㄛ', sup: '', kk: 'əl', ipa: 'əl' }, ah: { zh: 'ㄜ', sup: '', kk: 'ə', ipa: 'ə' },
   /* 第五十七次：母音＋r 的 r ＝ 子音 ㄦ（bird 的 ɜ＋ɹ：KK 空白，照 課本 字卡）、ou ㄠ、oy ㄛ一 */
   rr: { zh: 'ㄦ', sup: '', kk: 'r', ipa: 'ɹ' }, rr2: { zh: 'ㄦ', sup: '', kk: '', ipa: 'ɹ' }, er1: { zh: 'ㄜ', sup: '', kk: 'ɝ', ipa: 'ɜ' }, ou: { zh: 'ㄠ', sup: '', kk: 'aʊ', ipa: 'aʊ' }, oy: { zh: 'ㄛ一', sup: '', kk: 'ɔɪ', ipa: 'ɔɪ' } });
-const REALC = {}; REAL.forEach(r => REALC[r[0]] = r[1]);
+const REALC = {}; REAL.forEach(r => REALC[r[0]] = r[1]); Object.assign(REALC, { 'k-oy': 'coy', 't-oy': 'toy', 'b-oy-s': 'boys' });   /* 第五十八次：真的 字 ✅ */
 /* 第五十七次：真的 英文 字 但 電腦 聽寫 照 規則 唸 不 對（wild、bolt、sword…＝ 例外 字）➜ 地圖 上 說「例外」、不 放 照 規則 的 聲音 */
 const XBAD = {}; for (let k = 0; k < 4; k++) { const f = path.join(D, '_asrbad57_' + k + '.json'); if (fs.existsSync(f)) Object.assign(XBAD, JSON.parse(fs.readFileSync(f, 'utf8'))); }
+/* 2026-11-17 第五十八次 老師 (6)-9：coy 是 真的 字、也 照 規則 唸 ➜ 有 聲音（電腦 聽寫 聽 不 準 不 代表 唸 錯）；toy、boys 同 一種 */
+['k-oy', 't-oy', 'b-oy-s'].forEach(c => { delete XBAD[c]; });
 /* 檢查：動畫、遊戲 要 的 聲音 都 有 */
 const js = fs.readFileSync(path.join(D, '_map.js'), 'utf8'), gjs = fs.readFileSync(path.join(D, '_map_games.js'), 'utf8');
 const want = [...new Set((js + gjs).match(/'(w_[a-z0-9_]+|zy_[a-z]+|bk_[a-z_]+|sy_[a-z]+_\d|[a-z]+-[a-z]+(?:-[a-z]+)?)'/g).map(x => x.slice(1, -1)))].filter(c => !/^(no|ok|on|lo|go|fl)$/.test(c) && !/_$/.test(c));
@@ -34,4 +36,6 @@ html = html.split('/*__DATA__*/').join('var QW=' + JSON.stringify(QW) + ',TT=' +
 fs.writeFileSync(path.join(D, 'map.html'), html);
 /* 第五十七次 老師 4-20：新 版本 拼音 地圖 map2.html（同 一套 程式，window.MAP2 ＝ 每 一個 方框 正下方 ▲▼ 直接 換）*/
 fs.writeFileSync(path.join(D, 'map2.html'), html.replace('<title>拼音 地圖</title>', '<title>新版 拼音 地圖</title>').replace('<body>', '<body class="m2"><script>window.MAP2=1</script>').replace('🗺️ 拼音 地圖：從 CVC 到 課本', '🗺️ 新版 拼音 地圖（▲▼ 直接 換）'));
+/* 2026-11-17 第五十八次 老師 (7)：第三 版 map3.html ＝ 聲音 積木 拼字台（window.MAP3）*/
+fs.writeFileSync(path.join(D, 'map3.html'), html.replace('<title>拼音 地圖</title>', '<title>聲音 積木 拼字台</title>').replace('<body>', '<body class="m3"><script>window.MAP3=1</script>').replace('🗺️ 拼音 地圖：從 CVC 到 課本', '🧱 聲音 積木 拼字台（第三 版）'));
 console.log('map.html ok：字', QW.length, '個、音檔 名單', AVL.length, '個、', Math.round(html.length / 1024), 'KB');

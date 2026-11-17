@@ -4,6 +4,10 @@
 > 設計、研究證據（21 條）、使用者的決定：`sentences/2026-10-07_C_設計與研究清單.md`（**Q1～Q18 使用者 2026-10-07 全部照建議**）。
 > 根目錄 `AGENTS.md` 第四節（最高原則、品質、省額度）同樣適用。
 
+## 2026-11-17 第五十八次（先讀 這一節）
+`_calc.js` `clean`：寫字 題 答錯 的 原因 第 7 格 `~draw`／`~line`／`~jbar` 留著（以前 只 留 拖曳 的 `~1.4`）；`questions()` 多 `wy`（每 一題 每 種 原因 幾次）。**要 重新 部署**（大字版 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html ）。
+老師看板 `_teacher.js` `hwHTML`：〔🏫 課堂複習〕成長測驗 ✍️ 字母 書寫 分析（全班 錯 的 原因 長條、每 位 學生 第 1 次 ➜ 第 2 次＋進步、最近 一次 錯 在 哪裡）。`_wrev.js` 錯題 總複習：英文 中文 分開 記、步驟 條（見 `g3mid/CLAUDE.md`）。
+
 ## 2026-11-14 第五十四次：⚔️ 左右 對戰 的 成績、📈 最近 3 次、老師看板 第 4 張 卡（**改了 `_calc.js` ➜ 要 重新 部署** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html ）
 | 做法 | 在哪裡 |
 |---|---|

@@ -564,7 +564,7 @@ function crAuto(){if(/[?&]live=/.test(location.search)||typeof LDB==='undefined'
     stop=LDB.poll('rooms/'+r+'/cr',2000,function(v){if(go||!v||!v.on||Date.now()-(+v.t||0)>4*36e5)return;if(v.set==='vs'){go=1;location.replace('../vs/index.html?live='+r);return}if(v.set==='c25'){go=1;location.replace('../phonics/games.html?live='+r);return}   /* 第四十九次：🏁 CVC 單字 25 題 闖關 在 phonics/ */go=1;var o=document.createElement('div');o.id='crgo';
       o.innerHTML='<div class="crgob"><div style="font-size:clamp(70px,12vh,120px)">📢</div><div class="crgot">老師 開了 四年級 複習！</div><div style="font-size:28px">⏳ 馬上 進去…</div></div>';document.body.appendChild(o);
       setTimeout(function(){location.replace(v.set==='g25'||v.set==='az'?'../g3mid/index.html?live='+r:location.pathname+'?live='+r)},1400)})},2000)}   /* 第四十六次：成長測驗 ＝ g3mid 那一頁 */
-function crInit(){var m=/[?&]live=(\\d{4})/.exec(location.search);if(!m){crAuto();return}CR={room:m[1],t:0,cfg:null,acc:{},n:0,ok:0,q:-9,rd:{}};document.body.classList.add('crm');
+function crInit(){var m=/[?&]live=(\\d{4})/.exec(location.search);if(!m){crAuto();return}window.WRNX='live';CR={room:m[1],t:0,cfg:null,acc:{},n:0,ok:0,q:-9,rd:{}};document.body.classList.add('crm');
   if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();crInit2()});return}crInit2()}
 function crInit2(){crWait('⏳ 等 老師 開始…');if(typeof LDB==='undefined'||!LDB.on()){crWait('📶 現場任務 還沒 開（老師 要 先 設定 Firebase）');return}LDB.poll('rooms/'+CR.room+'/cr',900,crOn)}
 function crStop(){clr();stopSay();FBN++;$('#wf').classList.remove('on')}

@@ -811,7 +811,9 @@ function tick(){cancelAnimationFrame(TM.raf);var l=tLeft();$('#tmb').style.trans
 function qRec(ok,pick){if(!R||R.Q.length>R.k)return;var ms=Date.now()-(R.ts||Date.now()),o=R.q.o,ci=ok?0:pick==null?-1:1;
   if(!ok&&o&&pick!=null){try{var pj=JSON.stringify(pick);for(var i=1;i<o.length;i++)if(JSON.stringify(o[i])===pj||o[i]===pick){ci=Math.min(3,i);break}}catch(e){}}   /* 寫字題 的 pick 有 畫布（不能 轉 文字）➜ 算 1 */
   R.Q.push([ok?1:0,ci,Math.round(ms/100)/10,pick!=null&&ms<1000?1:0,ok?Math.round(tLeft()/TM.T*1000)/1000:R.x&&G.id==='dc'?Math.round((R.frac||0)*1000)/1000:0,R.x?XA().indexOf(R.q):G.B.indexOf(R.q)]);   /* 🔓 解碼 任務 答錯 ＝ 第 5 格 放 放對 幾成（伺服器 照 這個 算 分）*/
-  if(!ok&&G.id==='dc'&&pick&&pick.length&&R.q.t){var bd=decBad(R.q,pick);if(bd.length)R.Q[R.Q.length-1].push('~'+bd.slice(0,12).join('.'))}   /* 第四十四次 第 1-(2) 點：第 7 格 ＝ 放錯 的 是 哪幾個 英文 字 */crProg(ok);if(R.x&&!R.crs){xSeenAdd(XA().indexOf(R.q));setTimeout(xSave,0)}if(R.Q.length%5===0)setTimeout(recPart,0)}   /* 25／50 題：題庫 ＝ 挑戰 題庫（10 種 接起來）*/
+  if(!ok&&G.id==='dc'&&pick&&pick.length&&R.q.t){var bd=decBad(R.q,pick);if(bd.length)R.Q[R.Q.length-1].push('~'+bd.slice(0,12).join('.'))}   /* 第四十四次 第 1-(2) 點：第 7 格 ＝ 放錯 的 是 哪幾個 英文 字 */
+  /* 2026-11-17 第五十八次 第 11 點（老師：字母 書寫 是 真的 寫錯、時間 到 不會 寫，還是 只 是 沒 碰到 線？）：寫字 題 答錯 ＝ 第 7 格 記 原因 ~draw 字形 錯、~line 沒 碰到 線／超線、~jbar J 少 一橫；時間 到 ＝ 第 2 格 -1（本來 就 有）*/
+  if(!ok&&(pick==='line'||pick==='draw'||pick==='jbar'))R.Q[R.Q.length-1].push('~'+pick);crProg(ok);if(R.x&&!R.crs){xSeenAdd(XA().indexOf(R.q));setTimeout(xSave,0)}if(R.Q.length%5===0)setTimeout(recPart,0)}   /* 25／50 題：題庫 ＝ 挑戰 題庫（10 種 接起來）*/
 /* 2026-11-03 第四十二次 第 5 點（老師）：做到 一半 ＝ 立刻 存＋送 給 老師（每 5 題、按〔先 離開〕、切到 別的 畫面）；老師看板「任務只完成到第 N 題」；
    同一次 ＝ 同一個 編號（R.pu），做完 的 那一筆 蓋掉 做到 一半 的；25／50 題 多 送 進度（換 平板 也 能 接著 做）*/
 function recTot(){return R?(R.x||(R.qs?R.qs.length:0)):0}
@@ -1341,7 +1343,7 @@ function crAuto(){if(/[?&]live=/.test(location.search)||typeof LDB==='undefined'
     stop=LDB.poll('rooms/'+r+'/cr',2000,function(v){if(go||!v||!v.on||Date.now()-(+v.t||0)>4*36e5)return;if(v.set==='vs'){go=1;location.replace('../vs/index.html?live='+r);return}if(v.set==='c25'){go=1;location.replace('../phonics/games.html?live='+r);return}   /* 第四十九次：🏁 CVC 單字 25 題 闖關 在 phonics/ */go=1;var o=document.createElement('div');o.id='crgo';
       o.innerHTML='<div class="crgob"><div style="font-size:clamp(70px,12vh,120px)">📢</div><div class="crgot">老師 開了 三年級 複習！</div><div style="font-size:28px">⏳ 馬上 進去…</div></div>';document.body.appendChild(o);
       setTimeout(function(){location.replace(location.pathname+'?live='+r)},1400)})},2000)}
-function crInit(){var m=/[?&]live=(\\d{4})/.exec(location.search);if(!m){crAuto();return}CR={room:m[1],t:0,cfg:null,acc:{},n:0,ok:0,q:-9};document.body.classList.add('crm');
+function crInit(){var m=/[?&]live=(\\d{4})/.exec(location.search);if(!m){crAuto();return}window.WRNX='live';CR={room:m[1],t:0,cfg:null,acc:{},n:0,ok:0,q:-9};document.body.classList.add('crm');
   if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();crInit2()});return}crInit2()}
 function crInit2(){crWait('⏳ 等 老師 開始 課堂複習…');if(typeof LDB==='undefined'||!LDB.on()){crWait('📶 現場任務 還沒 開（老師 要 先 設定 Firebase）');return}LDB.poll('rooms/'+CR.room+'/cr',900,crOn)}
 function crBanks(set){GM.forEach(function(g){g.B=set==='g3m'||!CB[set]?g.B0:CB[set][g.id]})}

@@ -57,7 +57,7 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
       const fs2 = await p.evaluate(() => Math.min(...[...document.querySelectorAll('#gbody button')].filter(b => b.offsetParent).map(b => parseFloat(getComputedStyle(b).fontSize)))); ok(fs2 >= 18, tag + ' ' + k + ' 按鈕 字 太 小 ' + fs2);
       await p.evaluate(m => { try { PHM.G().hk[m](); } catch (e) { window.__hkerr = e.message; } }, mode); await p.waitForTimeout(60); }
     await p.waitForFunction(() => document.querySelector('.res2'), null, { timeout: 8000 }).catch(() => E.push(tag + ' ' + k + ' ' + mode + ' 沒有 結果 頁'));
-    const g = await p.evaluate(() => { const g = PHM.G(); return { ok: g.ok, rk: document.querySelector('.res2') && document.querySelector('.res2').textContent, rec: window.__PHREC.slice(), err: window.__hkerr, idx: g.Q.map(x => x[5]) }; });
+    const g = await p.evaluate(() => { const g = PHM.G(); return { ok: g.ok, rk: document.querySelector('.res2') && document.querySelector('.res2').dataset.rk, rec: window.__PHREC.slice(), err: window.__hkerr, idx: g.Q.map(x => x[5]) }; });
     ok(mode === 'ok' ? g.ok === 5 && g.rk === 'S' : g.ok === 0 && g.rk === 'C', tag + ' ' + k + ' ' + mode + ' 分數 不對 ' + JSON.stringify(g));
     ok(g.rec.length === 1 && g.rec[0].set === 'g3gm_ph-' + k && g.rec[0].n === 5, tag + ' ' + k + ' 成績 ' + JSON.stringify(g.rec)); ok(g.idx.every(i => i >= 0), tag + ' ' + k + ' 第幾題 不對');
     if (mode === 'no') { const w = await p.evaluate(() => document.querySelectorAll('#wl .mrow').length); ok(w === 5, tag + ' ' + k + ' 錯題 清單 ' + w); }

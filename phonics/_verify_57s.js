@@ -4,7 +4,7 @@ const fs = require('fs'), path = require('path'), { execFileSync } = require('ch
 const D = __dirname, LI = path.join(D, '..', 'listen', '2026-11-17_P57'), P56 = path.join(D, '..', 'listen', '2026-11-16_P56'); const E = []; let n = 0; const ok = (c, m) => { n++; if (!c) E.push(m); };
 const dur = f => +execFileSync('ffprobe', ['-v', 'quiet', '-show_entries', 'format=duration', '-of', 'csv=p=0', f]).toString();
 const vol = f => { const o = execFileSync('ffmpeg', ['-hide_banner', '-i', f, '-af', 'volumedetect', '-f', 'null', '-'], { stdio: ['ignore', 'ignore', 'pipe'] }).toString(); return 0; };
-const same = (a, b) => fs.readFileSync(a).equals(fs.readFileSync(b)), AU = c => path.join(D, 'au', c + '.mp3');
+const same = (a, b) => fs.readFileSync(a).equals(fs.readFileSync(b)), V57 = path.join(D, '..', 'listen', '2026-11-17_P58', 'v57'), AU = c => /^(s_k|s_ed|cl_angry_1_2)$/.test(c) && fs.existsSync(path.join(V57, c + '.mp3')) ? path.join(V57, c + '.mp3') : path.join(D, 'au', c + '.mp3');   /* 第五十八次 換 了 K、字尾 d、gr ➜ 第五十七次 的 網站 檔 ＝ P58 的 v57/（現在 的 網站 由 _verify_58s.js 量）*/
 ok(same(AU('s_ae'), path.join(LI, 's_ae_A.mp3')), 'a 網站 不是 老師 的 音檔（A）'); { const d = dur(AU('s_ae')); ok(d > .3 && d < .8, 'a 長度 ' + d); }
 for (const v of ['A', 'B']) ok(fs.existsSync(path.join(LI, 's_k_' + v + '.mp3')), 'K ' + v + ' 沒有'); ok(same(AU('s_k'), path.join(LI, 's_k_A.mp3')), 'K 網站 不是 A');
 { const a = dur(path.join(LI, 's_k_A.mp3')), b = dur(path.join(LI, 's_k_B.mp3')), o = dur(path.join(LI, 'v56', 's_k.mp3')); ok(a > o + .015 && b > a, 'K 吹氣 沒有 加長 ' + [o, a, b]); }

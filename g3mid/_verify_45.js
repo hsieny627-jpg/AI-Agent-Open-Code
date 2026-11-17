@@ -85,7 +85,7 @@ const ok = (c, m) => { n++; if (!c) E.push(m); };
       }
       if (gid === 'gs') {
         const f = await p.evaluate(async () => { BUSY = false; const q = R.q, b = [].filter.call(document.querySelectorAll('.gsk'), x => !x.classList.contains(q.o[0]))[0]; b.click(); await new Promise(s => setTimeout(s, 700)); const x = $('#fbx'); return { on: $('#fb').classList.contains('on'), f: x.querySelectorAll('.gsf').length, yp: (x.querySelector('.yp') || {}).textContent || '', em: [].map.call(x.querySelectorAll('.gsf em'), e => e.textContent).join() }; });
-        ok(f.on && f.f === 2 && /Same|Different/.test(f.yp) && /\/\w\/,\/\w\//.test(f.em), tag + ' 👂 答錯頁 不對 ' + JSON.stringify(f));
+        ok(f.on && f.f === 2 && /Same|Different/.test(f.yp) && /\/[^/]+\/,\/[^/]+\//.test(f.em), tag + ' 👂 答錯頁 不對 ' + JSON.stringify(f));
       }
       if (gid === 'gc') {
         const f = await p.evaluate(async () => { BUSY = false; const q = R.q, b = [].filter.call(document.querySelectorAll('.gcp'), x => x.dataset.k !== q.k)[0]; b.click(); await new Promise(s => setTimeout(s, 700)); const x = $('#fbx'); return { on: $('#fb').classList.contains('on'), pic: x.querySelectorAll('.gcfb svg,.gcfb img').length, gw: x.querySelectorAll('.gls .gw').length, zh: [].every.call(x.querySelectorAll('.gls .gw i'), i => i.textContent.trim()), yp: x.querySelectorAll('.yp svg,.yp img').length }; });

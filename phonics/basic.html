@@ -60,6 +60,11 @@
   .card .real .rl{font-size:14px;color:#FFB4A8;font-weight:900;margin-right:8px}
   .card .hear{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(26px,5vh,46px);color:#5a5a5a;font-weight:900;pointer-events:none}
 
+.cmpw{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:60;width:min(1100px,96vw);max-height:62vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,.7);padding:12px 16px;border-radius:18px;background:#10233A;border:3px solid #7FD4FF;color:#fff}
+.cmpt{font-size:clamp(22px,2.6vw,30px);font-weight:900;margin-bottom:8px}.cmpt .cw{font-family:var(--andika,Andika,sans-serif);font-size:1.3em;color:#FFE07A}
+.cmpg{border-collapse:collapse;width:100%}.cmpg th,.cmpg td{border:1px solid #2A3E6E;padding:8px;font-size:clamp(18px,2vw,24px);text-align:center;vertical-align:middle}.cmpg th{color:#BFD0FF;white-space:nowrap}
+.cmpg td{white-space:nowrap}.cmpg td>*{display:inline-flex;vertical-align:middle;margin:1px}.cmpg .tile{width:auto!important;min-width:1.7em;height:auto!important;min-height:1.7em;font-size:clamp(20px,2.4vw,30px)!important;padding:2px 6px!important;border-radius:10px!important;position:relative}.cmpg .tile sup,.cmpg .tile .sup{font-size:.55em}.cmpx{float:right;font-size:22px;font-weight:900;min-height:48px;padding:4px 14px;border-radius:12px;border:2px solid #fff;background:#E53935;color:#fff;cursor:pointer}.cmpg .cps{display:inline-block;width:8px}.cmpg tr.dif td{background:rgba(255,179,0,.14)}
+#cmpB.on{background:#FFE07A;color:#2A1B00}
 </style></head><body>
 
 <div class="rail top">
@@ -80,7 +85,7 @@
   </div>
   <div class="deckbar">
     <span class="counter" id="counter"></span>
-    <button class="btn" id="play">▶ 自動播放</button>
+    <button class="btn" id="play">▶ 自動播放</button><button class="btn" id="cmpB">⚖️ 比較：規則 vs 真的</button>
     <div class="grp" id="segSpeed">
       <button class="btn" data-v="3400">很慢</button>
       <button class="btn" data-v="2600">慢</button>
@@ -292,7 +297,13 @@ Object.assign(PH.EXC,{"bach|b-ae-ch":"B AA K","bair|b-ai-r":"B EH R","barch|b-ar
     'sp': { zh: ['ㄙ', 'ㄆ'], sup: [null, '〃'], kk: ['s', 'p'], ipa: ['s', 'p'] },
     'ld': { zh: ['ㄛ', 'ㄉ'], sup: [null, '〃'], kk: ['l', 'd'], ipa: ['l', 'd'] },
     'lk': { zh: ['ㄛ', 'ㄎ'], sup: [null, '〃'], kk: ['l', 'k'], ipa: ['l', 'k'] },
-    'nch': { zh: ['ㄋ', 'ㄔ'], sup: [null, null], kk: ['n', 'tʃ'], ipa: ['n', 'tʃ'] }
+    'nch': { zh: ['ㄋ', 'ㄔ'], sup: [null, null], kk: ['n', 'tʃ'], ipa: ['n', 'tʃ'] },
+    /* 2026-11-17 第五十八次 第 2 點（老師 選 乙）：字尾 加 s ＝ ts ps ks（ㄙ）＋ds gs（z：前面 是 有聲 的 d g，s 唸 z）；cats、cups、yaks、beds、dogs */
+    'ts': { zh: ['ㄊ', 'ㄙ'], sup: [null, null], kk: ['t', 's'], ipa: ['t', 's'] },
+    'ps': { zh: ['ㄆ', 'ㄙ'], sup: [null, null], kk: ['p', 's'], ipa: ['p', 's'] },
+    'ks': { zh: ['ㄎ', 'ㄙ'], sup: [null, null], kk: ['k', 's'], ipa: ['k', 's'] },
+    'ds': { zh: ['ㄉ', 'z'], sup: [null, null], kk: ['d', 'z'], ipa: ['d', 'z'] },
+    'gs': { zh: ['ㄍ', 'z'], sup: [null, null], kk: ['g', 'z'], ipa: ['ɡ', 'z'] }
   };
   /* 雙子音、三子音 ＝ 一個 一個 子音 的 方塊 接 起來（r 一樣 是 疊 起來 的 ㄖ／ㄨ）*/
   var BLEND = { bl: ['b', 'l'], cl: ['c_hard', 'l'], fl: ['f', 'l'], pl: ['p', 'l'], sl: ['s', 'l'],
@@ -329,14 +340,14 @@ Object.assign(PH.EXC,{"bach|b-ae-ch":"B AA K","bair|b-ai-r":"B EH R","barch|b-ar
         basic: ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'c', 'k', 'h', 'j', 'w', 'r', 's', 'v', 'y'] },
       IG: [['blend', '雙 子音'], ['trip', '三 子音'], ['basic', '單 子音']],
       VLIST: VLIST_ADV,
-      ENDINGS: { g1: ['無', 'b', 'd', 'g', 'k', 'l', 'm', 'n', 'p', 't', 'x'], g2: ['nd', 'nt', 'mp', 'st', 'sk', 'ft'], g3: ['sh', 'ch', 'th', 'ck', 'tch', 'ng', 'nk'], g4: ['pt', 'ct', 'xt', 'lp', 'lf', 'lt', 'sp', 'mb', 'ld', 'lk', 'nch'] },
-      EG: [['g1', '1'], ['g2', '2'], ['g3', '3'], ['g4', '新']], end0: 't' }
+      ENDINGS: { g1: ['無', 'b', 'd', 'g', 'k', 'l', 'm', 'n', 'p', 't', 'x'], g2: ['nd', 'nt', 'mp', 'st', 'sk', 'ft'], g3: ['sh', 'ch', 'th', 'ck', 'tch', 'ng', 'nk'], g4: ['pt', 'ct', 'xt', 'lp', 'lf', 'lt', 'sp', 'mb', 'ld', 'lk', 'nch'], g5: ['ts', 'ps', 'ks', 'ds', 'gs'] },
+      EG: [['g1', '1'], ['g2', '2'], ['g3', '3'], ['g4', '新'], ['g5', '＋s']], end0: 't' }
   };
   var MAGIC_END = ['b', 'd', 'k', 'l', 'm', 'n', 'p', 't'];   /* magic e 後面 只 放 一個 子音 的 聲音（g、s、r 加 e 會 變 音：age、rose、care）*/
   var TEAM_END = ['d', 'k', 'l', 'm', 'n', 'p', 't', 'st', 'ch'];
   var SHORT_ONLY = ['g', 'x', 'ck', 'tch', 'sh', 'ng', 'nk', 'nd', 'mp', 'sk', 'ft', 'b'];
   /* 進階版 組合 合不合 英文 拼字 習慣（不合 ＝ 這一張 不 出現）*/
-  var NEW_END = { pt: 1, ct: 1, xt: 1, lp: 1, lf: 1, lt: 1, sp: 1, mb: 1, ld: 1, lk: 1, nch: 1 };
+  var NEW_END = { pt: 1, ct: 1, xt: 1, lp: 1, lf: 1, lt: 1, sp: 1, mb: 1, ld: 1, lk: 1, nch: 1, ts: 1, ps: 1, ks: 1, ds: 1, gs: 1 };
   function fits(I, V, E) {
     var t = V.key || V.t, sh = /^[aeiou]$/.test(t);
     /* 第五十七次：新 字尾 只 跟 短 母音；ld lk 不 跟 a o（old、talk 母音 會 變）；mb 只 跟 a i u（lamb、limb、thumb）*/
@@ -356,7 +367,7 @@ Object.assign(PH.EXC,{"bach|b-ae-ch":"B AA K","bair|b-ai-r":"B EH R","barch|b-ar
     if (VOW2[t] && VOW2[t].magic) return i + t.charAt(0) + e + 'e'; return i + t + e; }
   var IPA_I2 = { v: 'v', y: 'j', gl: 'ɡl', bl: 'bl', kl: 'kl', fl: 'fl', pl: 'pl', sl: 'sl', br: 'bɹ', kr: 'kɹ', dr: 'dɹ', fr: 'fɹ', gr: 'ɡɹ', pr: 'pɹ', tr: 'tɹ',
     sk: 'sk', sm: 'sm', sn: 'sn', sp: 'sp', st: 'st', sw: 'sw', skr: 'skɹ', spl: 'spl', spr: 'spɹ', str: 'stɹ', '0': '' };
-  var IPA_V2 = { ii: 'aɪ', yu: 'juː', oy: 'ɔɪ', ao: 'ɔː' }, IPA_E2 = { st: 'st', sk: 'sk', ft: 'ft', ng: 'ŋ', nk: 'ŋk', k: 'k', l: 'l', pt: 'pt', kt: 'kt', kst: 'kst', lp: 'lp', lf: 'lf', lt: 'lt', sp: 'sp', ld: 'ld', lk: 'lk', nch: 'ntʃ' };
+  var IPA_V2 = { ii: 'aɪ', yu: 'juː', oy: 'ɔɪ', ao: 'ɔː' }, IPA_E2 = { st: 'st', sk: 'sk', ft: 'ft', ng: 'ŋ', nk: 'ŋk', k: 'k', l: 'l', pt: 'pt', kt: 'kt', kst: 'kst', lp: 'lp', lf: 'lf', lt: 'lt', sp: 'sp', ld: 'ld', lk: 'lk', nch: 'ntʃ', ts: 'ts', ps: 'ps', ks: 'ks', ds: 'dz', gs: 'ɡz' };
   function ipa2(c) { var p = c.split('-'), V = Object.assign({ ae: 'æ', eh: 'ɛ', ih: 'ɪ', aa: 'ɑː', uh: 'ʌ', ar: 'ɑːɹ', er: 'ɜː', or: 'ɔːɹ', ai: 'eɪ', ee: 'iː', oa: 'oʊ', uu: 'uː', oo: 'ʊ', ou: 'aʊ' }, IPA_V2),
     I = Object.assign({ b: 'b', p: 'p', m: 'm', f: 'f', d: 'd', t: 't', n: 'n', l: 'l', k: 'k', h: 'h', s: 's', j: 'dʒ', w: 'w', r: 'ɹ', z: 'z', g: 'ɡ', kw: 'kw', ch: 'tʃ', sh: 'ʃ', th: 'θ', dh: 'ð' }, IPA_I2),
     E = Object.assign({ b: 'b', p: 'p', m: 'm', f: 'f', d: 'd', t: 't', n: 'n', l: 'l', g: 'ɡ', k: 'k', r: 'ɹ', s: 's', z: 'z', ks: 'ks', mp: 'mp', nd: 'nd', nt: 'nt', ch: 'tʃ', sh: 'ʃ', th: 'θ', shn: 'ʃən', zhn: 'ʒən' }, IPA_E2);
@@ -546,7 +557,7 @@ function build(){
   const g=document.getElementById('grid');g.innerHTML='';
   const card=document.getElementById('card');card.querySelectorAll('.xb,.real,.hear,.xl').forEach(x=>x.remove());
   const V=curVow(), I=curInit(), vbg=vowLetterBg(V);
-  EXNOW=(part==='iv'||part==='ve')?null:curEx();
+  EXNOW=(NOEX||part==='iv'||part==='ve')?null:curEx();
   /* 部位：藏起來（位置 留著）、拿掉（不畫）*/
   const hI=['vowel','ending','none','noI'].includes(part);
   const hV=['initial','ending','none','noV'].includes(part);
@@ -647,7 +658,18 @@ function build(){
   document.getElementById('prev').disabled=idx<=0;
   document.getElementById('next').disabled=idx>=deck.length-1;
   drawChips();drawVowels();
+  if(CMP&&!CMPB)cmpPanel();else if(!CMP){const w=document.getElementById('cmpw');if(w)w.remove()}
 }
+/* ══ 2026-11-17 第五十八次 老師 (10)：〔⚖️ 比較〕＝ ① 照 字母 發音 規則 的 雙語 注音／KK／IPA ② 真的 唸法 的 雙語 注音／KK／IPA，上下 對照 ══
+   ① ＝ 這 一張 卡 照 規則 畫 出來 的 音標（每 種 都 畫 一次 再 收 起來）；② ＝ 例外 字 用 CMU 美式 字典 的 真的 唸法（PH2.realTiles），照 規則 的 字 ＝ 跟 ① 一樣（✅）*/
+let CMP=false,CMPB=0,NOEX=0;
+function cmpPanel(){CMPB=1;const sv={mode,part},ex=curEx(),M=['zh','kk','ipa'],NM={zh:'雙語 注音',kk:'KK 音標',ipa:'IPA 音標'},rule={};let letters='';
+  try{M.forEach(m=>{mode=m;part='all';NOEX=1;build();NOEX=0;const ch=[...document.getElementById('grid').children];if(m==='zh')letters=ch.filter((c,i)=>i%2===0).map(c=>c.textContent).join('');
+    rule[m]=ch.filter((c,i)=>i%2===1).map(c=>[...c.querySelectorAll('.tile,[class*="tile"]')].map(t=>t.outerHTML).join('')||c.innerHTML).join('<i class="cps"></i>')});}finally{mode=sv.mode;part=sv.part;NOEX=0;build();CMPB=0}
+  const real=m=>{if(!ex)return rule[m];const r=PH2.realTiles(ex[0],m)||[];return r.map(x=>tile(x.t,x.bg,{sup:x.sup,stack:x.stack,dark:x.dark}).outerHTML).join('')};
+  let w=document.getElementById('cmpw');if(!w){w=el('cmpw');w.id='cmpw';document.body.appendChild(w)}
+  w.innerHTML='<button class="cmpx" onclick="document.getElementById(\'cmpB\').click()">✖ 關</button><div class="cmpt">⚖️ <b class="cw">'+letters+'</b>：'+(ex?'⚠ <b>例外 字</b>：真的 唸法 跟 規則 <b>不一樣</b>':'✅ 照 規則 唸 ＝ 真的 唸法（一樣）')+'</div><table class="cmpg"><tr><th></th>'+M.map(m=>'<th>'+NM[m]+'</th>').join('')+'</tr>'+
+    '<tr><th>📏 照 規則</th>'+M.map(m=>'<td>'+rule[m]+'</td>').join('')+'</tr><tr class="'+(ex?'dif':'')+'"><th>🗣 真的 唸法</th>'+M.map(m=>'<td>'+real(m)+'</td>').join('')+'</tr></table>'}
 function go(n,sound){idx=Math.max(0,Math.min(deck.length-1,n));build();if(sound!==false)playCur();}
 function pauseAuto(){
   if(timer){clearInterval(timer);timer=null;}
@@ -709,6 +731,7 @@ if(DK){
 }
 document.querySelectorAll('#nav a.dk').forEach(a=>{if(a.dataset.dk===(DK?DK.id:''))a.classList.add('cur');});
 seg('segMode','zh',v=>{mode=v;build();});
+document.getElementById('cmpB').onclick=()=>{CMP=!CMP;document.getElementById('cmpB').classList.toggle('on',CMP);build()};
 seg('segPart','all',v=>{part=v;build();playCur();});
 seg('segInit',initGrp,v=>{pauseAuto();initGrp=v;buildDeck(true);build();});
 seg('segEnd','g1',v=>{pauseAuto();endGrp=v;if(!ENDINGS[v].includes(curEnd))curEnd=ENDINGS[v][0];buildDeck(true);build();});

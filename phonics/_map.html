@@ -279,6 +279,77 @@ body.m2 #m2w .ck .L{font-size:clamp(70px,11vw,130px);line-height:1.2;padding-bot
 body.m2 #m2lnk{display:none}
 .gsw{margin-left:6px}.gsw button{font-size:15px;padding:5px 8px;min-height:40px}
 @media (max-width:900px){.mapw{grid-template-columns:1fr}.many{grid-template-columns:1fr}}
+
+/* ══ 2026-11-17 第五十八次（老師 拼音 地圖 大 改）══ */
+.tl{font-size:clamp(24px,2.6vw,32px)!important;height:auto!important;min-height:44px;padding:2px 8px;position:relative}
+#stage.n3 .tl{font-size:22px!important;min-height:32px}#stage.n3 .wsay,#stage.n4 .wsay,#stage.n5 .wsay{font-size:20px;min-height:38px;padding:2px 10px}#stage.n3 .rsd .mtag{font-size:16px}#stage.n4 .tl,#stage.n5 .tl{font-size:20px!important;min-height:29px}#stage.n5 .tl{font-size:19px!important;min-height:25px;padding:0 6px}#stage.n5 .ck .L{font-size:clamp(32px,3.8vh,46px)!important}#stage.n5 .dt{min-height:11px;margin-top:0}#stage.n5 .ck .T{min-height:26px}#stage.n5 .kcap{font-size:22px;padding:4px 14px;margin-top:2px}#stage .rsd{flex-direction:row!important;flex-wrap:wrap;align-items:center!important;gap:6px 12px!important}
+.tl.hs{padding-right:.62em}.tl .zm{font-weight:inherit}.tl sup.zc{position:absolute!important;top:-.12em;right:.06em;font-size:.56em!important;line-height:1;margin:0;vertical-align:baseline;color:#FFE07A}.tl.on sup.zc{color:#7A3B00}
+/* (6)-6 g j p q y ng 跟 其他 字母 同 一條 基準線 */
+.ck .L,.ck .L.dsc,#stage.n4 .ck .L.dsc,#stage.n5 .ck .L.dsc{padding-bottom:.2em!important;margin-bottom:-.06em!important}
+/* (6)-5 合 起來 唸 ＝ 每 個 字母 同時 稍微 發亮 */
+.bx.say .ck .L{filter:brightness(1.45) drop-shadow(0 0 10px #FFE07A);transform:scale(1.06)}
+/* (5)-18、27、(6)-10 兩個 母音 字母：第一個 黃底、第二個 灰（不 是 黃底）*/
+.bx.n{background:none!important;padding:0!important;gap:0!important;align-items:stretch}
+.bx.n .ck{padding:8px 8px 10px;justify-content:flex-end;background:linear-gradient(180deg,#FFD54F,#F5A300);border-radius:18px}
+.bx.n .ck.nm:not(:last-child){border-radius:18px 0 0 18px}.bx.n .ck.sil{background:linear-gradient(180deg,#8C92A3,#5B6070);border-radius:0 18px 18px 0}
+.bx.n .ck.sil .L{color:#E9ECF2!important}
+#stage.n4 .bx.n .ck,#stage.n5 .bx.n .ck{padding:4px 6px 5px}
+/* (5)-6～13 錯 的 唸法 ＝ 大 紅 ✖ */
+.wrow.wx{position:relative}.wrow.wx .bx{opacity:.55}.bigx{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);font-size:clamp(90px,13vh,150px);font-weight:900;color:#FF2D2D;text-shadow:0 0 12px #000,0 4px 0 #6B0000;pointer-events:none;line-height:1}
+.mtag.xw{background:#5A0E0E;border-color:#FF5A5A;color:#FFD0D0;font-size:22px}
+/* 點 整個 例字 ＝ 唸 整個 字 */
+.wsay{font-family:var(--an);font-size:clamp(24px,2.6vw,34px);font-weight:800;padding:6px 16px;border-radius:14px;border:2px solid #7FD4FF;background:#0E2238;color:#fff;cursor:pointer;min-height:52px}.wsay.on{background:#7FD4FF;color:#0B1236}
+/* (1) 一行 秒懂 重點 卡 */
+.kcap{display:inline-block;margin-top:8px;padding:8px 22px;border-radius:18px;background:#2B2A10;border:3px solid #FFD54A;font-size:clamp(24px,2.8vw,34px);font-weight:900;color:#FFF3C4;animation:kcap .5s cubic-bezier(.2,1.6,.4,1) both}
+.kcap .nmb{background:#FFE07A;color:#4A2600;border-radius:8px;padding:0 6px;font-family:var(--an)}.kcap .grb{color:#9AA1B2;font-family:var(--an);padding:0 2px}
+.kwhy{margin-top:8px;font-size:clamp(20px,2.2vw,26px);color:#CFE6FF;line-height:1.5}
+@keyframes kcap{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+/* 看字 讀音／聽字 拼音 怎麼 做：步驟 條 */
+.hsteps{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0}.hsteps span{padding:6px 14px;border-radius:14px;background:#1B2A55;border:3px solid #3C5598;font-size:clamp(18px,2vw,24px);font-weight:900;color:#BFD0FF;opacity:.6}
+.hsteps span.on{opacity:1;background:#2B2A10;border-color:#FFD54A;color:#FFF3C4;transform:scale(1.06)}.hsteps span.ok{opacity:1;border-color:#3BD16F;color:#BFF5D2}
+.bx.vpulse{animation:vpl .45s ease-in-out 3 alternate;box-shadow:0 0 0 5px #FFE07A,0 0 30px #FF5A5A}@keyframes vpl{to{transform:scale(1.14)}}
+.hdots{display:flex;gap:10px;margin:4px 0}.hdots i{width:22px;height:22px;border-radius:50%;background:#FFE07A;box-shadow:0 0 10px #FFE07A;transform:scale(0);transition:transform .3s}.hdots i.on{transform:scale(1)}
+/* 隨堂 測驗／遊戲：〔✖ 離開〕放大、最 顯眼；母音 紅；全部 同色 */
+#gx{order:-1;font-size:clamp(24px,2.6vw,30px)!important;min-height:64px!important;padding:8px 22px!important;border-radius:16px!important;background:#E53935!important;border:3px solid #fff!important;color:#fff!important;font-weight:900;box-shadow:0 0 0 4px rgba(229,57,53,.35)}
+.qred{display:flex;gap:8px;justify-content:center;margin:2px 0 6px}.qred button{font-size:18px;padding:6px 12px;border-radius:12px;border:2px solid #3C5598;background:#1B2A55;color:#DCE8FF;min-height:44px}.qred button.on{border-color:#FFD54A;background:#2B2A10;color:#FFF3C4}
+.op .vr{color:#FF5A5A}#gbody.mono .bx{background:#34407A!important}#gbody.mono .bx.n .ck{background:#34407A!important}#gbody.mono .ck.nm .L{background:none!important;color:#fff!important}#gbody.mono .ck.sil .L{color:#fff!important}
+.opts.aud{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}.aop{display:flex;flex-direction:column;gap:8px}.aop .aplay{background:#0E2238;border-color:#7FD4FF}.aop .aplay.on{background:#7FD4FF;color:#0B1236}.aop .apick{font-size:22px}
+/* 一行 換 顏色 的 母音 方框（4 個 a）*/
+.bx.n[style*="--sh"] .ck{background:var(--sh)!important}
+
+/* 2026-11-17 第五十八次 (9) 結束 頁：答對 幾 題＋每 題 ✅❌＋跟 上一次 比＋下一步；〔✖ 離開〕放大 */
+.end .rk,.res2{font-family:inherit!important;font-size:clamp(40px,6.5vh,64px)!important;line-height:1.15!important;background:none!important;-webkit-text-fill-color:#FFF3C4!important;color:#FFF3C4!important;text-shadow:none!important;font-weight:900}
+.end .rk b,.res2 b{color:#5BE38C;-webkit-text-fill-color:#5BE38C;font-size:1.3em}
+.eqd{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0;font-size:clamp(30px,4.5vh,44px)}.eqd i{font-style:normal}
+.eprog{margin:8px auto;padding:10px 18px;max-width:900px;border-radius:18px;background:#10233A;border:3px solid #7FD4FF;font-size:clamp(24px,3.4vh,34px);font-weight:800;color:#DCE8FF}.eprog .up{color:#5BE38C}.eprog .dn{color:#FFB37A}
+.enext{margin:8px auto;font-size:clamp(22px,3vh,30px);font-weight:900;color:#FFE07A}
+.bigx2{position:absolute;top:10px;right:12px;z-index:5;font-size:clamp(24px,3vh,30px);font-weight:900;min-height:64px;padding:8px 22px;border-radius:16px;background:#E53935;color:#fff;border:3px solid #fff;box-shadow:0 0 0 4px rgba(229,57,53,.35);cursor:pointer}
+.end{position:relative}
+/* (6)-4 電腦 放大 畫面：字首｜母音｜字尾 不 再 被 擋住／切掉 ➜ 橫 的 螢幕：字首 在 左、字尾 在 右、單字＋母音 在 中間（一個 畫面 全部 看得到）；單字 大小 跟著 畫面 高度 */
+#mapOut .ck .L{font-size:clamp(40px,min(8vw,11vh),118px)!important}
+@media (min-aspect-ratio:5/4) and (min-width:820px){
+ body:not(.m2) #s_map:not([hidden]){display:grid;grid-template-columns:minmax(160px,1fr) minmax(0,2.1fr) minmax(160px,1fr);grid-template-areas:"ctl ctl ctl" "prac prac prac" "on out co" "on v co";gap:10px 12px;align-items:start;max-width:1500px;margin:0 auto}
+ body:not(.m2) #s_map>.ctl{grid-area:ctl}body:not(.m2) #prac{grid-area:prac}body:not(.m2) #mapOut{grid-area:out;position:static;max-width:none;width:100%;margin:0}
+ body:not(.m2) .mapw{display:contents}body:not(.m2) .mapw>.mcol:nth-child(1){grid-area:on}body:not(.m2) .mapw>.mcol:nth-child(2){grid-area:v}body:not(.m2) .mapw>.mcol:nth-child(3){grid-area:co}
+ body:not(.m2) .mapw>.mcol{max-height:calc(100vh - 210px);overflow:auto}body:not(.m2) .mapw>.mcol.v{max-height:none}
+}
+/* (7) map2 你 來 拼 選項、map3 聲音 積木 拼字台 */
+.m2p{display:flex;flex-direction:column;gap:6px;margin-top:8px}.m2p button{font-family:var(--an);font-size:clamp(24px,3vw,34px);font-weight:800;min-width:76px;min-height:56px;border-radius:14px;border:3px solid #fff;background:#0B1236;color:#fff}.m2p button.on{background:#FFE07A;color:#2A1B00}
+body.m3 main{top:64px}#m3{max-width:1200px;margin:0 auto;padding:12px 16px;text-align:center}
+.m3top{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center}.m3top button{font-size:clamp(22px,2.4vw,28px);font-weight:900;min-height:58px;padding:6px 18px;border-radius:16px;border:3px solid #3C5598;background:#1B2A55;color:#DCE8FF}.m3top button.on{border-color:#FFD54A;background:#2B2A10;color:#FFF3C4}.m3f{font-size:26px;font-weight:900;color:#FFB300}
+.m3q{margin:10px 0;display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap}.m3ear{font-size:clamp(26px,3vw,36px);font-weight:900;min-height:70px;padding:8px 26px;border-radius:20px;border:3px solid #7FD4FF;background:#0E2238;color:#fff}
+.m3dots{display:flex;gap:10px;align-items:center;font-size:24px;font-weight:900;color:#FFE07A}.m3dots i{width:24px;height:24px;border-radius:50%;background:#FFE07A;box-shadow:0 0 10px #FFE07A}
+.m3slots{display:flex;gap:14px;justify-content:center;margin:12px 0}.m3s{min-width:clamp(110px,14vw,170px);min-height:clamp(120px,17vh,170px);border-radius:22px;border:4px dashed rgba(255,255,255,.5);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.m3s small{font-size:20px;font-weight:900;color:#BFD0FF}.m3s b{font-family:var(--an);font-size:clamp(56px,8vw,96px);line-height:1;color:#fff}.m3s.c{background:rgba(74,134,255,.18)}.m3s.v{background:rgba(255,90,90,.18)}
+.m3s.full{border-style:solid}.m3s.c.full{background:linear-gradient(180deg,#4A86FF,#1F4FD1)}.m3s.v.full{background:linear-gradient(180deg,#FF5A5A,#C62828)}.m3s.bad{border-color:#FF2D2D;box-shadow:0 0 0 5px rgba(255,45,45,.45);animation:m3sh .35s 2}.m3s.good{border-color:#5BE38C;box-shadow:0 0 0 5px rgba(91,227,140,.45)}
+@keyframes m3sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.m3row{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin:8px 0}.m3l{font-size:20px;font-weight:900;min-width:64px}.m3l.c{color:#8FB6FF}.m3l.v{color:#FF9A9A}
+.m3b{font-family:var(--an);font-size:clamp(28px,3.4vw,40px);font-weight:800;min-width:clamp(72px,9vw,104px);min-height:64px;border-radius:16px;border:3px solid rgba(255,255,255,.6);color:#fff;cursor:pointer}.m3b.c{background:#1B3A8F}.m3b.v{background:#8F1B1B}.m3b.on{background:#FFE07A;color:#2A1B00;border-color:#fff;transform:scale(1.06)}
+.m3ctl{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0}.m3ctl .btn{font-size:clamp(22px,2.4vw,28px);min-height:60px}.m3msg{font-size:clamp(24px,2.8vw,32px);font-weight:900;color:#FFF3C4;min-height:1.4em}.m3w{justify-content:center;padding-top:30px}
+#sylOut.s3 .ck .L{font-size:clamp(32px,4.2vw,56px)!important}#sylOut.s4 .ck .L{font-size:clamp(26px,3.1vw,44px)!important}#sylOut.s3 .tl,#sylOut.s4 .tl{font-size:20px!important;min-height:28px}#sylOut.s3 .bx,#sylOut.s4 .bx{min-width:0;padding:6px 6px 8px}#sylOut.s4 .wrow,#sylOut.s3 .wrow{flex-wrap:nowrap;gap:2px}#sylOut.s4 .plus,#sylOut.s3 .plus{margin:0 2px}
+#sylOut.s3 .syl,#sylOut.s4 .syl{padding:6px 4px}@media (max-width:1100px){#sylOut.s4 .wrow{flex-wrap:wrap;row-gap:30px}#sylOut.s4 .ck .L{font-size:clamp(26px,4.4vw,44px)!important}}@media (max-width:800px){#sylOut.s3 .wrow{flex-wrap:wrap;row-gap:30px}}
+/* (8) 多 音節：每 個 字 第一個 字母 上下 對齊 */
+#sylOut .wrow,#more2w .wrow{justify-content:flex-start!important}#sylOut{display:flex;flex-direction:column;align-items:flex-start}#sylOut>.cap{align-self:stretch}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
 </style></head><body>
 <div id="top"><a href="index.html">🔤 字卡</a><a href="games.html">🎮 遊戲場</a><div class="ttl">🗺️ 拼音 地圖：從 CVC 到 課本</div>
@@ -286,13 +357,14 @@ body.m2 #m2lnk{display:none}
 <div id="tabs"><button data-tab="ani">🎬 秒懂 動畫</button><button data-tab="map">🗺️ 拼音 地圖</button><button data-tab="syl">🪜 多 音節</button><button data-tab="many">🔤 一 字母 多 聲音</button><button data-tab="play">🎮 10 種 遊戲＋25 題 闖關</button></div>
 <main>
 <section class="scr" id="s_ani"><div class="ctl top"><button id="aIdx" class="btn gold">📑 目次</button><div id="scList"></div></div><div class="pnl" id="stage"></div>
-  <div class="ctl"><button id="aPrev">◀ 上一段</button><button id="aStep">▶ 逐次 播放</button><button id="aAll">👀 全部 展示</button><button id="aThink">🤔 引導 思考</button><button id="aPause">⏸️ 暫停</button><button id="aSlow">🐢 慢速</button><button id="aAgain">🔁 再一次</button><button id="aOne">1️⃣ 單字 唸 一次：關</button><button id="aStress">🎵 重音：關</button><button id="aQz" class="btn gold">📝 隨堂 測驗</button><button id="aNext">下一段 ▶</button></div>
+  <div class="ctl"><button id="aAni">🎬 秒懂 動畫：開</button><button id="aPrev">◀ 上一段</button><button id="aStep">▶ 逐次 播放</button><button id="aAll">👀 全部 展示</button><button id="aThink">🤔 引導 思考</button><button id="aPause">⏸️ 暫停</button><button id="aSlow">🐢 慢速</button><button id="aAgain">🔁 再一次</button><button id="aOne">1️⃣ 單字 唸 一次：關</button><button id="aStress">🎵 重音：關</button><button id="aQz" class="btn gold">📝 隨堂 測驗</button><button id="aNext">下一段 ▶</button></div>
   <div id="scIdx" hidden></div></section>
-<section class="scr" id="s_map" hidden><div class="ctl"><button id="lvB" class="on">🟢 基礎</button><button id="lvA">🔵 進階</button><button id="mRand">🎲 隨機 換 一個</button><button id="pSpell" class="btn gold">🎧 你 來 拼</button><button id="pRead" class="btn gold">👀 你 來 讀</button><a class="btn" id="m2lnk" href="map2.html" style="text-decoration:none">🆕 新版（▲▼ 直接 換）</a></div>
+<section class="scr" id="s_map" hidden><div class="ctl"><button id="lvB" class="on">🟢 基礎</button><button id="lvA">🔵 進階</button><button id="mRand">🎲 隨機 換 一個</button><button id="pSpell" class="btn gold">🎧 你 來 拼</button><button id="pRead" class="btn gold">👀 你 來 讀</button><a class="btn" id="m2lnk" href="map2.html" style="text-decoration:none">🆕 新版（▲▼ 直接 換）</a><a class="btn" id="m3lnk" href="map3.html" style="text-decoration:none">🧱 第三 版：聲音 積木</a></div>
   <div class="pnl" id="prac" hidden></div><div class="pnl" id="mapOut"></div><div class="pnl" id="m2w"></div>
   <div class="mapw"><div class="pnl mcol c"><h3>① 字首（子音）</h3><div id="mOn"></div></div><div class="pnl mcol v"><h3>② 母音</h3><div id="mV"></div></div><div class="pnl mcol c"><h3>③ 字尾（子音）</h3><div id="mCo"></div></div></div></section>
-<section class="scr" id="s_syl" hidden><div class="ctl"><button id="sStress">🎵 重音：關</button></div><div class="pnl" id="sylOut" style="max-width:1280px;margin:0 auto;padding:10px"></div></section>
+<section class="scr" id="s_syl" hidden><div class="ctl"><button data-syln="2">🟢 2 音節</button><button data-syln="3">🔵 3 音節（進階）</button><button data-syln="4">🟣 4 音節（進階）</button><button id="sStress">🎵 重音：關</button></div><div class="pnl" id="sylOut" style="max-width:1280px;margin:0 auto;padding:10px"></div></section>
 <section class="scr" id="s_many" hidden><div class="many" id="manyOut"></div></section>
+<div id="m3" class="pnl" hidden></div>
 <section class="scr" id="s_play" hidden><div class="gl" id="gList"></div></section>
 </main>
 <div id="game" hidden><div id="ghud"><button id="gx">✖ 離開</button><div class="mdSw gsw"><button data-md="zh">注音</button><button data-md="kk">KK</button><button data-md="ipa">IPA</button></div><span id="gq"></span><span class="gt" id="gt"></span><span id="gsc">⭐ 0</span></div><div id="gtm"><i></i></div><div id="gbody"></div></div>

@@ -18,7 +18,7 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
   await ctx.addInitScript(() => { window.__PHFAST = 1; window.__PHAUTO = 1; window.__PHSAY = []; window.__PHREC = []; window.__PHNOLOGIN = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => '', set: () => {}, configurable: true }); });
   const p = await ctx.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message));
   await p.goto(HTTP + '/phonics/map.html#ani'); await p.waitForTimeout(300);
-  const NS = await p.evaluate(() => PHM.SC.length); ok(NS === 28, tag + ' 動畫 段數 ' + NS);
+  const NS = await p.evaluate(() => PHM.SC.length); ok(NS === 30, tag + ' 動畫 段數 ' + NS);
   const capOK = () => p.waitForFunction(() => { const c = document.querySelector('#stage .cap'); return c && c.innerHTML; }, null, { timeout: 20000 });
   for (let i = 0; i < NS; i++) { const mode = ['step', 'all', 'think'][i % 3];
     await p.evaluate(i => { PHM.scCard(i); }, i); ok(await p.evaluate(() => !!document.querySelector('#stage [data-pm="step"]') && !!document.querySelector('#stage [data-pm="all"]') && /🎯/.test(document.querySelector('#stage').innerText) && /💪/.test(document.querySelector('#stage').innerText)), tag + ' 動畫 ' + (i + 1) + ' 開始 卡 沒有 🎯／💪／兩種 播法');
@@ -26,18 +26,18 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
     const r = await p.evaluate(`(()=>{const st=document.getElementById('stage'),rows=[...st.querySelectorAll('.rows .wrow')];const R=e=>e.getBoundingClientRect();
       const tlOut=[...st.querySelectorAll('.tl[data-t]')].filter(t=>{const b=t.closest('.bx'),a=R(t),c=R(b);return a.left<c.left-1||a.right>c.right+1}).map(t=>t.textContent);
       const labHit=[...st.querySelectorAll('.bx .bl')].filter(l=>{const a=R(l);return [...l.parentNode.querySelectorAll('.L')].some(L=>{const c=R(L);return !(a.bottom<=c.top+2||a.top>=c.bottom||a.right<=c.left||a.left>=c.right)})}).length;
-      const firstL=rows.map(w=>{const b=w.querySelector('.bx');return b?Math.round(R(b).left):0});
+      const AL=PHM.SC[${i}]?PHM.SC[${i}].al:null,firstL=rows.filter(w=>!w.querySelector('.syl')||!AL).map(w=>{const b=AL==='v'?[...w.querySelectorAll('.bx')].find(x=>/\b(v|n)\b/.test(x.className)):w.querySelector('.bx');return b?Math.round(R(b).left):0});
       return {n:rows.length,two:getComputedStyle(st.querySelector('.rows')).gridTemplateColumns.split(' ').length,hid:st.querySelectorAll('.bx.hid').length,tl:st.querySelectorAll('.tl.hide').length,
-      rows:rows.map(w=>({dots:w.querySelectorAll('.dt i.on').length,all:w.querySelectorAll('.dt i').length})),say:window.__PHSAY.slice(),o:${over},tlOut,labHit,firstL,
+      rows:rows.map(w=>({dots:w.querySelectorAll('.dt i.on').length,all:w.querySelectorAll('.dt i').length})),say:window.__PHSAY.slice(),o:${over},tlOut,labHit,firstL,AL,
       dotsPerCk:[...st.querySelectorAll('.ck')].filter(c=>!c.classList.contains('sil')&&!c.closest('.bx.g')).every(c=>c.querySelectorAll('.dt i').length>=1),
       silNoDot:[...st.querySelectorAll('.ck.sil')].every(c=>!c.querySelectorAll('.dt i').length),
       fs:Math.min(...[...st.querySelectorAll('.ck .L')].map(e=>parseFloat(getComputedStyle(e).fontSize)))}})()`);
     ok(!r.hid && !r.tl, tag + ' 動畫 ' + (i + 1) + ' 還有 沒 出來 的 方框／音標');
     r.rows.forEach((w, k) => ok(w.dots === w.all, tag + ' 動畫 ' + (i + 1) + ' 第 ' + (k + 1) + ' 列 聲音 點 沒 全部 亮'));
-    ok(!r.o.length, tag + ' 動畫 ' + (i + 1) + ' 超出 畫面 ' + r.o.join('|')); ok(r.fs >= (r.n >= 3 ? 32 : 40), tag + ' 動畫 ' + (i + 1) + ' 字母 太 小 ' + r.fs);
+    ok(!r.o.length, tag + ' 動畫 ' + (i + 1) + ' 超出 畫面 ' + r.o.join('|')); ok(r.fs >= (r.n >= 3 || await p.evaluate(i => !!PHM.SC[i].how, i) ? 32 : 40), tag + ' 動畫 ' + (i + 1) + ' 字母 太 小 ' + r.fs);
     ok(!r.tlOut.length, tag + ' 動畫 ' + (i + 1) + ' 音標 超出 方框 ' + r.tlOut.join(' ')); ok(!r.labHit, tag + ' 動畫 ' + (i + 1) + ' 「子音／母音」被 字母 擋住 ' + r.labHit);
     ok(r.dotsPerCk && r.silNoDot, tag + ' 動畫 ' + (i + 1) + ' 字母 下面 的 聲音 點 不對');
-    if (r.two === 1) ok(Math.max(...r.firstL) - Math.min(...r.firstL) <= 2, tag + ' 動畫 ' + (i + 1) + ' 每 一行 第一個 方框 沒 對齊 ' + r.firstL.join(','));
+    if (r.two === 1) ok(Math.max(...r.firstL) - Math.min(...r.firstL) <= 2, tag + ' 動畫 ' + (i + 1) + (r.AL==='v'?' 每 一行 母音 方框 沒 對齊 ':' 每 一行 第一個 方框 沒 對齊 ') + r.firstL.join(','));
     if (mode !== 'all') { const miss = r.say.filter(f => !AU.has(f)); ok(!miss.length && r.say.length >= 2, tag + ' 動畫 ' + (i + 1) + ' 聲音 檔 沒有：' + miss.join(' ')); }
     ok(await p.evaluate(() => !document.querySelector('#stage .qzrow').hidden), tag + ' 動畫 ' + (i + 1) + ' 演完 沒有〔📝 隨堂 測驗〕');
     /* 隨堂 測驗：全對 3／3、全錯 0／3（錯 ＝ 綠底 答錯頁）*/
@@ -54,7 +54,7 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
   await p.evaluate(() => { window.__PHSAY = []; localStorage.setItem('phm_one', '1'); }); await p.reload(); await p.waitForTimeout(300);
   await p.evaluate(() => { window.__PHSAY = []; PHM.scPlay(2, 'step'); }); await capOK().catch(() => {}); const sy1 = await p.evaluate(() => window.__PHSAY.filter(f => /^[a-z]+-[a-z]+-[a-z]+$/.test(f)));
   ok(sy1.length === 3, tag + ' 單字 唸 一次：整個 字 唸 了 ' + sy1.length + ' 次（3 個 字）'); await p.evaluate(() => localStorage.setItem('phm_one', '0')); await p.reload(); await p.waitForTimeout(300);
-  await p.click('#aIdx'); ok(await p.evaluate(() => document.querySelectorAll('#scIdx .idxg button').length === 28 && !document.getElementById('scIdx').hidden), tag + ' 目次 不對'); await p.click('#idxX');
+  await p.click('#aIdx'); ok(await p.evaluate(() => document.querySelectorAll('#scIdx .idxg button').length === 30 && !document.getElementById('scIdx').hidden), tag + ' 目次 不對'); await p.click('#idxX');
   const bi = await p.evaluate(() => PHM.SC.findIndex(s => s.k === 'baby')); await p.evaluate(i => PHM.scPlay(i, 'all'), bi); await p.click('#more2');
   ok(await p.evaluate(() => document.querySelectorAll('#more2w .wrow').length) >= 5, tag + ' ➕ 補充 兩 音節 字 少於 5 個'); 
   /* 黃點 ＝ 聲音 數（③ blast 5、⑦ strong 5、⑥ bathroom 6）*/
@@ -106,7 +106,7 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
       const fs2 = await p.evaluate(() => Math.min(...[...document.querySelectorAll('#gbody button')].filter(b => b.offsetParent).map(b => parseFloat(getComputedStyle(b).fontSize)))); ok(fs2 >= 18, tag + ' ' + k + ' 按鈕 字 太 小 ' + fs2);
       await p.evaluate(m => { try { PHM.G().hk[m](); } catch (e) { window.__hkerr = e.message; } }, mode); await p.waitForTimeout(60); }
     await p.waitForFunction(() => document.querySelector('.res2'), null, { timeout: 8000 }).catch(() => E.push(tag + ' ' + k + ' ' + mode + ' 沒有 結果 頁'));
-    const g = await p.evaluate(() => { const g = PHM.G(); return { ok: g.ok, rk: document.querySelector('.res2') && document.querySelector('.res2').textContent, rec: window.__PHREC.slice(), err: window.__hkerr, idx: g.Q.map(x => x[5]) }; });
+    const g = await p.evaluate(() => { const g = PHM.G(); return { ok: g.ok, rk: document.querySelector('.res2') && document.querySelector('.res2').dataset.rk, rec: window.__PHREC.slice(), err: window.__hkerr, idx: g.Q.map(x => x[5]) }; });
     ok(mode === 'ok' ? g.ok === 5 && g.rk === 'S' : g.ok === 0 && g.rk === 'C', tag + ' ' + k + ' ' + mode + ' 分數 不對 ' + JSON.stringify(g));
     ok(g.rec.length === 1 && g.rec[0].set === 'g3gm_ph-' + k && g.rec[0].n === 5, tag + ' ' + k + ' 成績 ' + JSON.stringify(g.rec)); ok(g.idx.every(i => i >= 0), tag + ' ' + k + ' 第幾題 不對');
     if (mode === 'no') { const w = await p.evaluate(() => ({ n: document.querySelectorAll('#wl .mrow').length, t: document.querySelectorAll('#wl .tl[data-t]').length })); ok(w.n === 5 && w.t >= 10, tag + ' ' + k + ' 錯題 清單（字母 下面 要 有 音標）' + JSON.stringify(w)); }

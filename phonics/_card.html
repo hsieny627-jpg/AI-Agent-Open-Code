@@ -60,6 +60,11 @@
   .card .real .rl{font-size:14px;color:#FFB4A8;font-weight:900;margin-right:8px}
   .card .hear{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(26px,5vh,46px);color:#5a5a5a;font-weight:900;pointer-events:none}
 
+.cmpw{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:60;width:min(1100px,96vw);max-height:62vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,.7);padding:12px 16px;border-radius:18px;background:#10233A;border:3px solid #7FD4FF;color:#fff}
+.cmpt{font-size:clamp(22px,2.6vw,30px);font-weight:900;margin-bottom:8px}.cmpt .cw{font-family:var(--andika,Andika,sans-serif);font-size:1.3em;color:#FFE07A}
+.cmpg{border-collapse:collapse;width:100%}.cmpg th,.cmpg td{border:1px solid #2A3E6E;padding:8px;font-size:clamp(18px,2vw,24px);text-align:center;vertical-align:middle}.cmpg th{color:#BFD0FF;white-space:nowrap}
+.cmpg td{white-space:nowrap}.cmpg td>*{display:inline-flex;vertical-align:middle;margin:1px}.cmpg .tile{width:auto!important;min-width:1.7em;height:auto!important;min-height:1.7em;font-size:clamp(20px,2.4vw,30px)!important;padding:2px 6px!important;border-radius:10px!important;position:relative}.cmpg .tile sup,.cmpg .tile .sup{font-size:.55em}.cmpx{float:right;font-size:22px;font-weight:900;min-height:48px;padding:4px 14px;border-radius:12px;border:2px solid #fff;background:#E53935;color:#fff;cursor:pointer}.cmpg .cps{display:inline-block;width:8px}.cmpg tr.dif td{background:rgba(255,179,0,.14)}
+#cmpB.on{background:#FFE07A;color:#2A1B00}
 </style></head><body>
 
 <div class="rail top">
@@ -80,7 +85,7 @@
   </div>
   <div class="deckbar">
     <span class="counter" id="counter"></span>
-    <button class="btn" id="play">▶ 自動播放</button>
+    <button class="btn" id="play">▶ 自動播放</button><button class="btn" id="cmpB">⚖️ 比較：規則 vs 真的</button>
     <div class="grp" id="segSpeed">
       <button class="btn" data-v="3400">很慢</button>
       <button class="btn" data-v="2600">慢</button>
@@ -239,7 +244,7 @@ function build(){
   const g=document.getElementById('grid');g.innerHTML='';
   const card=document.getElementById('card');card.querySelectorAll('.xb,.real,.hear,.xl').forEach(x=>x.remove());
   const V=curVow(), I=curInit(), vbg=vowLetterBg(V);
-  EXNOW=(part==='iv'||part==='ve')?null:curEx();
+  EXNOW=(NOEX||part==='iv'||part==='ve')?null:curEx();
   /* 部位：藏起來（位置 留著）、拿掉（不畫）*/
   const hI=['vowel','ending','none','noI'].includes(part);
   const hV=['initial','ending','none','noV'].includes(part);
@@ -340,7 +345,18 @@ function build(){
   document.getElementById('prev').disabled=idx<=0;
   document.getElementById('next').disabled=idx>=deck.length-1;
   drawChips();drawVowels();
+  if(CMP&&!CMPB)cmpPanel();else if(!CMP){const w=document.getElementById('cmpw');if(w)w.remove()}
 }
+/* ══ 2026-11-17 第五十八次 老師 (10)：〔⚖️ 比較〕＝ ① 照 字母 發音 規則 的 雙語 注音／KK／IPA ② 真的 唸法 的 雙語 注音／KK／IPA，上下 對照 ══
+   ① ＝ 這 一張 卡 照 規則 畫 出來 的 音標（每 種 都 畫 一次 再 收 起來）；② ＝ 例外 字 用 CMU 美式 字典 的 真的 唸法（PH2.realTiles），照 規則 的 字 ＝ 跟 ① 一樣（✅）*/
+let CMP=false,CMPB=0,NOEX=0;
+function cmpPanel(){CMPB=1;const sv={mode,part},ex=curEx(),M=['zh','kk','ipa'],NM={zh:'雙語 注音',kk:'KK 音標',ipa:'IPA 音標'},rule={};let letters='';
+  try{M.forEach(m=>{mode=m;part='all';NOEX=1;build();NOEX=0;const ch=[...document.getElementById('grid').children];if(m==='zh')letters=ch.filter((c,i)=>i%2===0).map(c=>c.textContent).join('');
+    rule[m]=ch.filter((c,i)=>i%2===1).map(c=>[...c.querySelectorAll('.tile,[class*="tile"]')].map(t=>t.outerHTML).join('')||c.innerHTML).join('<i class="cps"></i>')});}finally{mode=sv.mode;part=sv.part;NOEX=0;build();CMPB=0}
+  const real=m=>{if(!ex)return rule[m];const r=PH2.realTiles(ex[0],m)||[];return r.map(x=>tile(x.t,x.bg,{sup:x.sup,stack:x.stack,dark:x.dark}).outerHTML).join('')};
+  let w=document.getElementById('cmpw');if(!w){w=el('cmpw');w.id='cmpw';document.body.appendChild(w)}
+  w.innerHTML='<button class="cmpx" onclick="document.getElementById(\'cmpB\').click()">✖ 關</button><div class="cmpt">⚖️ <b class="cw">'+letters+'</b>：'+(ex?'⚠ <b>例外 字</b>：真的 唸法 跟 規則 <b>不一樣</b>':'✅ 照 規則 唸 ＝ 真的 唸法（一樣）')+'</div><table class="cmpg"><tr><th></th>'+M.map(m=>'<th>'+NM[m]+'</th>').join('')+'</tr>'+
+    '<tr><th>📏 照 規則</th>'+M.map(m=>'<td>'+rule[m]+'</td>').join('')+'</tr><tr class="'+(ex?'dif':'')+'"><th>🗣 真的 唸法</th>'+M.map(m=>'<td>'+real(m)+'</td>').join('')+'</tr></table>'}
 function go(n,sound){idx=Math.max(0,Math.min(deck.length-1,n));build();if(sound!==false)playCur();}
 function pauseAuto(){
   if(timer){clearInterval(timer);timer=null;}
@@ -402,6 +418,7 @@ if(DK){
 }
 document.querySelectorAll('#nav a.dk').forEach(a=>{if(a.dataset.dk===(DK?DK.id:''))a.classList.add('cur');});
 seg('segMode','zh',v=>{mode=v;build();});
+document.getElementById('cmpB').onclick=()=>{CMP=!CMP;document.getElementById('cmpB').classList.toggle('on',CMP);build()};
 seg('segPart','all',v=>{part=v;build();playCur();});
 seg('segInit',initGrp,v=>{pauseAuto();initGrp=v;buildDeck(true);build();});
 seg('segEnd','g1',v=>{pauseAuto();endGrp=v;if(!ENDINGS[v].includes(curEnd))curEnd=ENDINGS[v][0];buildDeck(true);build();});

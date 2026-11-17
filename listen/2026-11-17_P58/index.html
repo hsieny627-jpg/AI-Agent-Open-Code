@@ -1,0 +1,23 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第五十八次 新聲音</title><style>
+body{margin:0;background:#0B1026;color:#fff;font-family:'Microsoft JhengHei','PingFang TC',sans-serif;padding:18px}
+h1{font-size:38px;margin:0 0 6px;color:#FFE07A}p{font-size:26px;line-height:1.6;color:#DCE4FF;margin:4px 0 14px}
+table{border-collapse:collapse;width:100%;max-width:1200px}td,th{border:1px solid #2A3570;padding:10px;font-size:26px;text-align:center}th{background:#141B3D;color:#FFE07A}
+td.w{font-size:40px;font-weight:700}td.t{text-align:left;font-size:24px;color:#DCE4FF}
+button{font-size:28px;font-weight:900;border-radius:14px;padding:12px 22px;cursor:pointer;margin:3px;min-height:60px}
+.o{background:#2A2A2A;color:#ccc;border:2px solid #666}.n{background:#062A35;color:#9EF0FF;border:3px solid #22D3EE}.s{outline:5px solid #FFE07A}
+</style></head><body>
+<h1>🎧 第五十八次 新聲音</h1>
+<p>灰色 ＝ 上一次（第五十七次）的、藍色 ＝ 新 的。<b style="color:#FFE07A">黃框 ＝ 網站 現在 用 的</b>。有 兩、三種 的 請 老師 選 一個。</p>
+<table id="t"><tr><th>聲音</th><th>老師 說</th><th>我 怎麼 改</th><th>上一次</th><th>新 的</th></tr></table>
+<script>
+const A=new Audio();function pl(s){A.src=s;A.play().catch(()=>{})}
+const R=[['字首 K、c（同 一個 聲音）','A、B 都 像 噴氣 音','原因：上次 的 吹氣 是 電腦 接 上去 的 雜音 ➜ 這次 不 加 任何 雜音：A ＝ 真的 key 開頭 的 k、B ＝ 真的 coo 開頭 的 k','s_k',[['A key','s_k_A',1],['B coo','s_k_B']]],
+['gr','A、B 都 像 ㄍ','原因：r 切 得 太 短 ➜ 真的 grip 開頭 的 g＋r 全部 留下來（A），B ＝ r 再 長 一點','cl_angry_1_2',[['A','cl_angry_1_2_A',1],['B','cl_angry_1_2_B']]],
+['字尾 d','C 勉強 接近，但 不太像','網站 先 用 C；D ＝ 真的 red 最後 的 d、E ＝ 字首 d 只 留 最 前面 的 一下（輕）','s_ed',[['C','s_ed_C',1],['D','s_ed_D'],['E','s_ed_E']]],
+['有聲 th（this）','聽起來 完全 不像','真的 this 開頭 的 th，慢慢 唸、震動 拉長（A），B ＝ 更 長','s_dh',[['A','s_dh_A'],['B','s_dh_B',1]]],
+['blame','容易 聽成 bleam','整個 字 重 做（電腦 聽寫 ＝ blame）','bl-ai-m',[['新','bl-ai-m',1]]],
+['ball 的 a（ㄛ）','發音 改成 ㄛ','慢慢 唸 的 ㄛ（ɔ），長短 跟 其他 母音 一樣','s_ao',[['A','s_ao_A',1]]]];
+const T=document.getElementById('t');R.forEach(r=>{T.insertAdjacentHTML('beforeend','<tr><td class="w">'+r[0]+'</td><td class="t">'+r[1]+'</td><td class="t">'+r[2]+'</td><td><button class="o" data-s="v57/'+r[3]+'.mp3">🔊 上一次</button></td><td>'+r[4].map(x=>'<button class="n'+(x[2]?' s':'')+'" data-s="'+x[1]+'.mp3">🔊 '+x[0]+'</button>').join('')+'</td></tr>')});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b)pl(b.getAttribute('data-s'))});
+</script></body></html>

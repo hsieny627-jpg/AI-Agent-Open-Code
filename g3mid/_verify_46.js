@@ -42,7 +42,7 @@ const ok = (c, m) => { n++; if (!c) E.push(m); };
     ok(bx, tag + ' 成長測驗 按鈕 看不到 或 字 太小');
     await h.click('[data-crs="g25"]'); await h.waitForTimeout(150); await h.click('#crstart'); await h.waitForTimeout(800);
     const cfg = DB.rooms && DB.rooms['0400'] && DB.rooms['0400'].cr;
-    ok(cfg && cfg.on && cfg.set === 'g25' && cfg.d === 15 * 60000, tag + ' 開始 以後 Firebase 不對：' + JSON.stringify(cfg || null).slice(0, 120));
+    ok(cfg && cfg.on && cfg.set === 'g25' && cfg.d === 12 * 60000, tag + ' 開始 以後 Firebase 不對：' + JSON.stringify(cfg || null).slice(0, 120));
     /* 平板：在 現場任務 頁 ➜ 自己 跳 到 g3mid */
     const s = await stuPage(ctx, HTTP + '/live/index.html', '40001'); await s.waitForURL(/g3mid\/index\.html\?live=0400/, { timeout: 12000 }).catch(() => {});
     ok(/g3mid\/index\.html\?live=0400/.test(s.url()), tag + ' 平板（現場任務 頁）沒有 跳 到 g3mid：' + s.url());

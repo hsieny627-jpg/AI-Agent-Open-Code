@@ -30,7 +30,13 @@
     'sp': { zh: ['ㄙ', 'ㄆ'], sup: [null, '〃'], kk: ['s', 'p'], ipa: ['s', 'p'] },
     'ld': { zh: ['ㄛ', 'ㄉ'], sup: [null, '〃'], kk: ['l', 'd'], ipa: ['l', 'd'] },
     'lk': { zh: ['ㄛ', 'ㄎ'], sup: [null, '〃'], kk: ['l', 'k'], ipa: ['l', 'k'] },
-    'nch': { zh: ['ㄋ', 'ㄔ'], sup: [null, null], kk: ['n', 'tʃ'], ipa: ['n', 'tʃ'] }
+    'nch': { zh: ['ㄋ', 'ㄔ'], sup: [null, null], kk: ['n', 'tʃ'], ipa: ['n', 'tʃ'] },
+    /* 2026-11-17 第五十八次 第 2 點（老師 選 乙）：字尾 加 s ＝ ts ps ks（ㄙ）＋ds gs（z：前面 是 有聲 的 d g，s 唸 z）；cats、cups、yaks、beds、dogs */
+    'ts': { zh: ['ㄊ', 'ㄙ'], sup: [null, null], kk: ['t', 's'], ipa: ['t', 's'] },
+    'ps': { zh: ['ㄆ', 'ㄙ'], sup: [null, null], kk: ['p', 's'], ipa: ['p', 's'] },
+    'ks': { zh: ['ㄎ', 'ㄙ'], sup: [null, null], kk: ['k', 's'], ipa: ['k', 's'] },
+    'ds': { zh: ['ㄉ', 'z'], sup: [null, null], kk: ['d', 'z'], ipa: ['d', 'z'] },
+    'gs': { zh: ['ㄍ', 'z'], sup: [null, null], kk: ['g', 'z'], ipa: ['ɡ', 'z'] }
   };
   /* 雙子音、三子音 ＝ 一個 一個 子音 的 方塊 接 起來（r 一樣 是 疊 起來 的 ㄖ／ㄨ）*/
   var BLEND = { bl: ['b', 'l'], cl: ['c_hard', 'l'], fl: ['f', 'l'], pl: ['p', 'l'], sl: ['s', 'l'],
@@ -67,14 +73,14 @@
         basic: ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'c', 'k', 'h', 'j', 'w', 'r', 's', 'v', 'y'] },
       IG: [['blend', '雙 子音'], ['trip', '三 子音'], ['basic', '單 子音']],
       VLIST: VLIST_ADV,
-      ENDINGS: { g1: ['無', 'b', 'd', 'g', 'k', 'l', 'm', 'n', 'p', 't', 'x'], g2: ['nd', 'nt', 'mp', 'st', 'sk', 'ft'], g3: ['sh', 'ch', 'th', 'ck', 'tch', 'ng', 'nk'], g4: ['pt', 'ct', 'xt', 'lp', 'lf', 'lt', 'sp', 'mb', 'ld', 'lk', 'nch'] },
-      EG: [['g1', '1'], ['g2', '2'], ['g3', '3'], ['g4', '新']], end0: 't' }
+      ENDINGS: { g1: ['無', 'b', 'd', 'g', 'k', 'l', 'm', 'n', 'p', 't', 'x'], g2: ['nd', 'nt', 'mp', 'st', 'sk', 'ft'], g3: ['sh', 'ch', 'th', 'ck', 'tch', 'ng', 'nk'], g4: ['pt', 'ct', 'xt', 'lp', 'lf', 'lt', 'sp', 'mb', 'ld', 'lk', 'nch'], g5: ['ts', 'ps', 'ks', 'ds', 'gs'] },
+      EG: [['g1', '1'], ['g2', '2'], ['g3', '3'], ['g4', '新'], ['g5', '＋s']], end0: 't' }
   };
   var MAGIC_END = ['b', 'd', 'k', 'l', 'm', 'n', 'p', 't'];   /* magic e 後面 只 放 一個 子音 的 聲音（g、s、r 加 e 會 變 音：age、rose、care）*/
   var TEAM_END = ['d', 'k', 'l', 'm', 'n', 'p', 't', 'st', 'ch'];
   var SHORT_ONLY = ['g', 'x', 'ck', 'tch', 'sh', 'ng', 'nk', 'nd', 'mp', 'sk', 'ft', 'b'];
   /* 進階版 組合 合不合 英文 拼字 習慣（不合 ＝ 這一張 不 出現）*/
-  var NEW_END = { pt: 1, ct: 1, xt: 1, lp: 1, lf: 1, lt: 1, sp: 1, mb: 1, ld: 1, lk: 1, nch: 1 };
+  var NEW_END = { pt: 1, ct: 1, xt: 1, lp: 1, lf: 1, lt: 1, sp: 1, mb: 1, ld: 1, lk: 1, nch: 1, ts: 1, ps: 1, ks: 1, ds: 1, gs: 1 };
   function fits(I, V, E) {
     var t = V.key || V.t, sh = /^[aeiou]$/.test(t);
     /* 第五十七次：新 字尾 只 跟 短 母音；ld lk 不 跟 a o（old、talk 母音 會 變）；mb 只 跟 a i u（lamb、limb、thumb）*/
@@ -94,7 +100,7 @@
     if (VOW2[t] && VOW2[t].magic) return i + t.charAt(0) + e + 'e'; return i + t + e; }
   var IPA_I2 = { v: 'v', y: 'j', gl: 'ɡl', bl: 'bl', kl: 'kl', fl: 'fl', pl: 'pl', sl: 'sl', br: 'bɹ', kr: 'kɹ', dr: 'dɹ', fr: 'fɹ', gr: 'ɡɹ', pr: 'pɹ', tr: 'tɹ',
     sk: 'sk', sm: 'sm', sn: 'sn', sp: 'sp', st: 'st', sw: 'sw', skr: 'skɹ', spl: 'spl', spr: 'spɹ', str: 'stɹ', '0': '' };
-  var IPA_V2 = { ii: 'aɪ', yu: 'juː', oy: 'ɔɪ', ao: 'ɔː' }, IPA_E2 = { st: 'st', sk: 'sk', ft: 'ft', ng: 'ŋ', nk: 'ŋk', k: 'k', l: 'l', pt: 'pt', kt: 'kt', kst: 'kst', lp: 'lp', lf: 'lf', lt: 'lt', sp: 'sp', ld: 'ld', lk: 'lk', nch: 'ntʃ' };
+  var IPA_V2 = { ii: 'aɪ', yu: 'juː', oy: 'ɔɪ', ao: 'ɔː' }, IPA_E2 = { st: 'st', sk: 'sk', ft: 'ft', ng: 'ŋ', nk: 'ŋk', k: 'k', l: 'l', pt: 'pt', kt: 'kt', kst: 'kst', lp: 'lp', lf: 'lf', lt: 'lt', sp: 'sp', ld: 'ld', lk: 'lk', nch: 'ntʃ', ts: 'ts', ps: 'ps', ks: 'ks', ds: 'dz', gs: 'ɡz' };
   function ipa2(c) { var p = c.split('-'), V = Object.assign({ ae: 'æ', eh: 'ɛ', ih: 'ɪ', aa: 'ɑː', uh: 'ʌ', ar: 'ɑːɹ', er: 'ɜː', or: 'ɔːɹ', ai: 'eɪ', ee: 'iː', oa: 'oʊ', uu: 'uː', oo: 'ʊ', ou: 'aʊ' }, IPA_V2),
     I = Object.assign({ b: 'b', p: 'p', m: 'm', f: 'f', d: 'd', t: 't', n: 'n', l: 'l', k: 'k', h: 'h', s: 's', j: 'dʒ', w: 'w', r: 'ɹ', z: 'z', g: 'ɡ', kw: 'kw', ch: 'tʃ', sh: 'ʃ', th: 'θ', dh: 'ð' }, IPA_I2),
     E = Object.assign({ b: 'b', p: 'p', m: 'm', f: 'f', d: 'd', t: 't', n: 'n', l: 'l', g: 'ɡ', k: 'k', r: 'ɹ', s: 's', z: 'z', ks: 'ks', mp: 'mp', nd: 'nd', nt: 'nt', ch: 'tʃ', sh: 'ʃ', th: 'θ', shn: 'ʃən', zhn: 'ʒən' }, IPA_E2);

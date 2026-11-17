@@ -104,7 +104,7 @@ function serve() { return new Promise(r => { const T = { '.html': 'text/html', '
       ok(!bad.length, tag + ' ' + g + ' 有 字 超出 畫面 或 太 小：' + JSON.stringify(bad[0]));
       if (g === 'br') { const b = await q.evaluate(() => ({ br: window.__PHBR, gp: document.querySelectorAll('.brg .bgp').length, plus: /＋/.test(document.querySelector('.brg').textContent), bars: !!document.querySelector('.bw2.bars'), em: !!document.querySelector('.bres .em') }));
         ok(b.br.indexOf('kitchen') >= 0 && b.gp === 6 && !b.plus && !b.bars && b.em, tag + ' 課本 動畫 kitchen 沒有 演完（第四十九次：6 組 字母、沒有 ＋）' + JSON.stringify(b)); }
-      else { const en = await q.evaluate(() => ({ t: (document.querySelector('.end .sc') || {}).textContent || '', rk: (document.querySelector('.end .rk') || {}).textContent, rv: document.querySelectorAll('.rv .r').length, rec: window.__RECS.map(r => [r.set, r.m, r.qs.length, r.qs.map(x => x[0]).join(''), r.qs.every(x => x[5] >= 0)]) }));
+      else { const en = await q.evaluate(() => ({ t: (document.querySelector('.end .sc') || {}).textContent || '', rk: (document.querySelector('.end .rk') || {dataset:{}}).dataset.rk, rv: document.querySelectorAll('.rv .r').length, rec: window.__RECS.map(r => [r.set, r.m, r.qs.length, r.qs.map(x => x[0]).join(''), r.qs.every(x => x[5] >= 0)]) }));
         ok(/✅ 4 ／ 5/.test(en.t) && en.rk === 'A' && en.rv === 1, tag + ' ' + g + ' 結束 頁 不對（要 4／5、A、錯題 1 個）' + JSON.stringify(en));
         ok(en.rec.length === 1 && en.rec[0][0] === 'g3gm_ph-' + g && en.rec[0][1] === 'q' && en.rec[0][2] === 5 && en.rec[0][3] === '10111' && en.rec[0][4], tag + ' ' + g + ' 成績 沒有 送 或 不對 ' + JSON.stringify(en.rec)); }
       const pl = await q.evaluate(() => window.__PLAYED.filter(s => !/\/au\//.test(s) || /undefined/.test(s)));

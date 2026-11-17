@@ -3064,7 +3064,9 @@ var MINI=(function(){
     g9:'<rect x="5" y="22" width="16" height="18" rx="3" fill="#fff"/><rect x="27" y="22" width="16" height="18" rx="3" fill="#fff"/><path d="M24 4v12m-6-5 6 6 6-6" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'};
   function icon(id){return '<span class="mgic"><svg viewBox="0 0 48 48" aria-hidden="true">'+(IC[id]||'')+'</svg></span>'}
   function nmOf(id){return String((B[id]||{}).nm||'').replace(/^[^\u4e00-\u9fff]+/,'')}
-  function kind(){var q=R&&R.q;return R&&R.id==='g4'&&q&&q.dg?KD:KIND[R.id]}
+  function kind(){var q=R&&R.q,k=R&&R.id==='g4'&&q&&q.dg?KD:KIND[R.id];return k?{c:k.c,t:k.t,sec:Math.round(k.sec*SLW())}:k}
+  /* 2026-11-17 第五十八次 第 11 點（老師：400 課後班 低成就 學生 說 等人 小遊戲「太快」）：400 班 每 題 秒數、看 正確 答案 的 時間 ✕ 1.6（其他 班 不 變）*/
+  function SLW(){try{return /^400/.test(String((typeof SCID!=='undefined'&&SCID)||''))?1.6:1}catch(e){return 1}}
   function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
   function clr(){T.forEach(clearTimeout);T=[]}
   function later(f,ms){T.push(setTimeout(f,ms))}
@@ -3132,7 +3134,7 @@ var MINI=(function(){
       var mq=document.getElementById('mq');if(mq&&R.id==='g4')mq.classList.add('go');if(R.id==='g8'&&mq)mq.innerHTML=String(mq.innerHTML).replace('＿＿','<b class="mfill">'+(q.ot?esc(q.ot[0]):'')+'</b>');
       if(R.id==='g10'){var bo=EL.querySelector('.mboss');if(bo){bo.classList.add('hit');bo.querySelector('i').style.width=(R.hp/8*100)+'%';bo.querySelector('b').textContent='❤ '+R.hp+' ／ 8'}}
       later(go,ok&&R.id==='g4'?1000:750)}
-    else{if(fb)fb.innerHTML='<div class="mno">'+(i<0?'⏰ 時間 到':'再 看 一次 正確 答案')+'</div>'+LV.glHTML({ag:q.ag,az:q.az,ae:q.ae,ans:q.ot?q.ot[0]:q.a,h:q.h});later(go,2600)}
+    else{if(fb)fb.innerHTML='<div class="mno">'+(i<0?'⏰ 時間 到':'再 看 一次 正確 答案')+'</div>'+LV.glHTML({ag:q.ag,az:q.az,ae:q.ae,ans:q.ot?q.ot[0]:q.a,h:q.h});later(go,Math.round(2600*SLW()))}
     var bar=document.getElementById('mgbar');if(bar){bar.style.transition='none';bar.style.width=bar.getBoundingClientRect().width+'px'}}
   function go(){R.k++;R.dg=null;if(R.k>=R.qs.length||(R.id==='g10'&&R.hp<=0)){fin();return}show()}
   /* 一回合 結束：星星、答對 幾題、最高 連擊、記進 成績 */

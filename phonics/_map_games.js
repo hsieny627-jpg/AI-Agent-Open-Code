@@ -72,13 +72,19 @@ function q25Seq(){const last=LS.g('q25last','');let pick;for(let t=0;t<30;t++){p
 function gQuit(){if(G&&G.t)G.t.stop();G=null;TOK++;$('#game').hidden=true;$('#fb').hidden=true}
 $('#gx').onclick=()=>{if(G&&G.Q.length&&!G.sent)rec(G);gQuit()};
 async function end(){const g=G,N=g.N||NQ,fr=g.ok/N,rk=fr>=1?'S':fr>=.8?'A':fr>=.6?'B':'C',bk='best_'+g.k,best=LS.g(bk,0);if(g.score>best)LS.s(bk,g.score);rec(g);$('#gtm').firstChild.style.transform='scaleX(0)';
-  B().innerHTML='<div class="pnl" style="padding:16px 24px;text-align:center;max-width:980px;max-height:100%;overflow:auto"><div class="res2">'+rk+'</div><div class="cap">答對 <b>'+g.ok+' ／ '+N+'</b>　⭐ '+g.score+(g.score>best?'　🏆 新 紀錄！':'　🏆 最佳 '+best)+'</div>'+
+  /* 2026-11-17 第五十八次 老師 (9)：黃色 S 看不懂 ➜ 改「跟 上一次 的 自己 比」＋這次 每 一題 ✅❌＋下一步（研究：跟 自己 比 的 進步 回饋 Hattie & Timperley 2007）*/
+  const last=LS.g('last_'+g.k,null);LS.s('last_'+g.k,g.ok);
+  B().innerHTML='<div class="pnl" style="padding:16px 24px;text-align:center;max-width:980px;max-height:100%;overflow:auto">'+endProg(g.ok,N,last,g.Q.map(x=>x[0]),rk)+'<div class="cap">⭐ 遊戲 積分 '+g.score+(g.score>best?'　🏆 新 紀錄！':'　（最佳 '+best+'）')+'</div>'+
     (g.wrong.length?'<div class="cap">📒 先 聽完 每 一個 錯題 的 正確 發音</div><div id="wl">'+g.wrong.map((w,i)=>'<div class="mrow" data-wi="'+i+'"><div class="wrow mw2">'+wordHTML(info2spec(w.x||w),{dots:1})+'</div><span class="mz">'+(w.zh||'')+'</span><span class="ms">🔊</span></div>').join('')+'</div>':'')+
     '<div class="ctl" id="endB" style="'+(g.wrong.length?'visibility:hidden':'')+'"><button class="btn go" id="again">🔁 再 玩</button><button class="btn" id="back">🎮 換 遊戲</button></div></div>';
   $('#again').onclick=()=>start(g.k);$('#back').onclick=()=>gQuit();
   B().querySelectorAll('[data-wi]').forEach(r=>r.onclick=()=>say(g.wrong[+r.dataset.wi].au));
   for(let i=0;i<g.wrong.length;i++){if(G!==g)return;const r=B().querySelector('[data-wi="'+i+'"]');if(r)r.style.background='rgba(255,224,122,.25)';await say(g.wrong[i].au);await wait(300);if(r){r.style.background='';r.querySelector('.ms').textContent='✔'}}
   const e=$('#endB');if(e)e.style.visibility='visible'}
+function endProg(ok,N,last,res,rk){const d=last==null?null:ok-last;
+  return '<div class="res2" data-rk="'+rk+'">✅ 答對 <b>'+ok+'</b> ／ '+N+'</div><div class="eqd">'+res.map(x=>'<i class="'+(x?'y':'n')+'">'+(x?'✅':'❌')+'</i>').join('')+'</div>'+
+   '<div class="eprog">'+(last==null?'🌱 第一次 玩：這 就 是 你 的 <b>起點</b>':'📈 上一次 <b>'+last+'</b> ➜ 這次 <b>'+ok+'</b>　'+(d>0?'<b class="up">進步 ＋'+d+' 題！</b>':d===0?(ok===N?'<b class="up">又 全對！穩穩 的！</b>':'<b>一樣，再 加油 1 題 就 進步！</b>'):'<b class="dn">差 '+(-d)+' 題，再 試 一次 一定 行！</b>'))+'</div>'+
+   '<div class="enext">'+(ok===N?'💯 全部 答對：你 已經 學會 了！':'💪 下一步：聽 錯 的 '+(N-ok)+' 個 字 ➜ 再 玩 一次，挑戰 '+N+' ／ '+N)+'</div>'}
 function rec(g){try{if(g.sent||!g.Q.length)return;g.sent=1;const gr=(typeof scGr==='function'&&scGr())||3;if(window.__PHREC)window.__PHREC.push({k:g.k,n:g.Q.length,set:'g'+gr+'gm_ph-'+g.k});
   if(typeof scLive!=='function'||!scLive())return;const fast=g.Q.reduce((t,x)=>t+x[3],0);
   scQAdd({id:SCID,set:'g'+gr+'gm_ph-'+g.k,name:'🔤 自然發音｜'+(g.k==='q25'?'📝 拼音 25 題 闖關':GM[g.k].ic+' '+GM[g.k].nm),m:'q',qs:g.Q,raw:g.score,fix:0,mp:0,mw:0,sec:Math.round((Date.now()-g.t0)/1000),src:'school',dev:typeof SCDEV!=='undefined'?SCDEV:'',u:SCID+Date.now().toString(36)+Math.random().toString(36).slice(2,6),t:Date.now()})}catch(e){}}

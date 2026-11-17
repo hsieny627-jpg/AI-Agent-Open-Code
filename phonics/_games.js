@@ -143,15 +143,19 @@ function noPage(g,w,pick,o){return new Promise(async res=>{const yp=o.yours!=nul
 /* 結果 */
 function end(g){document.body.classList.remove('fever');const N=nq(g),fr=g.ok/N,st=fr>=1?3:fr>=.8?2:fr>=.6?1:0,rk=fr>=1?'S':fr>=.8?'A':fr>=.6?'B':'C',best=LS.g('best_'+g.k,0),nb=g.score>best;if(nb)LS.s('best_'+g.k,g.score);
   rec(g);if(typeof g.onEnd==='function')g.onEnd();const W=[...new Set(g.wrong)];
-  const s=$('#game');s.innerHTML='<div class="end"><div style="font-size:30px;font-weight:900">'+GM[g.k].ic+' '+GM[g.k].nm+'</div><div class="rk">'+rk+'</div><div class="stars">'+[0,1,2].map(k=>'<i>'+(k<st?'⭐':'☆')+'</i>').join('')+'</div>'+
-   '<div class="sc">✅ '+g.ok+' ／ '+N+'　⭐ <b>'+g.score+'</b></div>'+(nb?'<div class="nb">🏆 新 紀錄！</div>':'<div class="nb" style="color:#C9D4FF">最佳 紀錄 ⭐ '+best+'</div>')+
+  /* 2026-11-17 第五十八次 老師 (9)：黃色 S 看不懂 ➜「跟 上一次 的 自己 比」＋每 一題 ✅❌＋下一步；〔✖ 離開〕放大 在 右上角 */
+  const last=LS.g('last_'+g.k,null);LS.s('last_'+g.k,g.ok);const d=last==null?null:g.ok-last;
+  const s=$('#game');s.innerHTML='<div class="end"><button class="bigx2" id="back2">✖ 離開</button><div style="font-size:30px;font-weight:900">'+GM[g.k].ic+' '+GM[g.k].nm+'</div><div class="rk" data-rk="'+rk+'">✅ 答對 <b>'+g.ok+'</b> ／ '+N+'</div><div class="eqd">'+g.Q.map(x=>'<i>'+(x[0]?'✅':'❌')+'</i>').join('')+'</div>'+
+   '<div class="eprog">'+(last==null?'🌱 第一次 玩：這 就 是 你 的 <b>起點</b>':'📈 上一次 <b>'+last+'</b> ➜ 這次 <b>'+g.ok+'</b>　'+(d>0?'<b class="up">進步 ＋'+d+' 題！</b>':d===0?(g.ok===N?'<b class="up">又 全對！穩穩 的！</b>':'<b>一樣，再 1 題 就 進步！</b>'):'<b class="dn">差 '+(-d)+' 題，再 試 一次 一定 行！</b>'))+'</div>'+
+   '<div class="sc">✅ '+g.ok+' ／ '+N+'　⭐ 遊戲 積分 <b>'+g.score+'</b></div>'+(nb?'<div class="nb">🏆 新 紀錄！</div>':'<div class="nb" style="color:#C9D4FF">最佳 紀錄 ⭐ '+best+'</div>')+
+   '<div class="enext">'+(g.ok===N?'💯 全部 答對：你 已經 學會 了！':'💪 下一步：聽 錯 的 字 ➜ 再 玩 一次，挑戰 '+N+' ／ '+N)+'</div>'+
    (W.length?'<h2>📒 錯題 再 聽 一次</h2><div class="rv">'+W.map(w=>'<div class="r" data-rv="'+w+'">'+(parts(w)?wordHTML(w)+allTiles(w):'<span class="wd" style="font-size:40px">'+w+'</span>')+'<span class="zh">'+(REAL[w]?REAL[w].em+' '+REAL[w].zh:BKW[w]?ICON(BKW[w].ic)+' '+BKW[w].zh:'🔮 魔法 咒語')+'</span><button data-rw="'+w+'">🔊</button></div>').join('')+'</div>':'<h2>💯 全部 答對！太 厲害 了！</h2>')+
    (W.length?'<div class="lk" id="lk">🔒 先 聽完 每 一個 錯題 的 正確 發音</div>':'')+
    '<div class="row" id="endRow"'+(W.length?' hidden':'')+'><button class="big" data-go="'+g.k+'">🔁 再 玩 一次</button><button class="big cy" id="back">🎮 換 遊戲</button></div></div>';
   /* 第四十九次 老師：遊戲 結束 一定 要 聽 過 一次 剛才 答錯 的 字 的 正確 發音 ➜ 每 一個 都 唸 完（✔）才 出現〔再 玩〕〔換 遊戲〕*/
   const heard=new Set(),unlock=()=>{if(heard.size>=W.length){const r=s.querySelector('#endRow'),l=s.querySelector('#lk');if(r)r.hidden=false;if(l)l.remove()}};
   const hear=async w=>{const r=s.querySelector('[data-rv="'+w+'"]');if(r)r.classList.add('on');await say(auOf(w));if(r){r.classList.remove('on');r.classList.add('heard')}heard.add(w);unlock()};
-  s.onclick=e=>{const rw=e.target.closest('[data-rw]');if(rw)hear(rw.dataset.rw);if(e.target.closest('#back'))lobby()};if(st>=2)conf(60);
+  s.onclick=e=>{const rw=e.target.closest('[data-rw]');if(rw)hear(rw.dataset.rw);if(e.target.closest('#back')||e.target.closest('#back2'))lobby()};if(st>=2)conf(60);
   (async()=>{for(const w of W){if(!alive(g))return;await hear(w);await wait(500)}})()}
 const auOf=w=>BKW[w]?'bk_'+w.replace(/ /g,'_'):codeOf(w);
 /* 成績（老師看板）：g年級gm_ph-遊戲；一題 [答對, 0 對／1 錯／-1 時間到, 秒, 1 秒 內, 剩下 比例, 第幾題]；「題目」格式 ＝ 做完 5 題 就 算 練習 次數 */

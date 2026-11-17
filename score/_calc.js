@@ -153,7 +153,7 @@ var SC = (function () {
       /* 📅 今日任務：每一題 從 哪一個 題組 來（第 7 格；錯題 分析、「答錯 改對」用）*/
       if (sm[2] === 'td' && typeof q[6] === 'string' && SETRE.test(q[6].replace(/^g\*/, 'g' + c.g)) && !/td_/.test(q[6])) Q[Q.length - 1].push(q[6].slice(0, 40));
       /* 2026-11-04 第四十四次 第 1-(2) 點：🔓 拖曳 題 放錯 的 是 哪幾格（第 7 格 ＝ "~1.4" 第 1、4 個 英文 字；老師看板「最多 人 放錯 的 英文 字」排行）*/
-      else if (!q[0] && typeof q[6] === 'string' && /^~\d{1,2}(\.\d{1,2}){0,11}$/.test(q[6])) Q[Q.length - 1].push(q[6]); }
+      else if (!q[0] && typeof q[6] === 'string' && /^~(\d{1,2}(\.\d{1,2}){0,11}|line|draw|jbar)$/.test(q[6])) Q[Q.length - 1].push(q[6]); }   /* 2026-11-17 第五十八次：寫字 題 答錯 的 原因 ~draw 字形 錯／~line 沒 碰到 線／~jbar J 少 一橫 */
     var ok = 0, f = 0; for (i = 0; i < Q.length; i++) { ok += Q[i][0]; f += Q[i][3]; }
     var t = +o.t; if (!(t > now - 30 * DAY && t < now + 5 * 6e4)) t = now;   /* 平板時間不對就用伺服器時間；沒網路補送的照當時 */
     return { t: t, id: c.id, g: c.g, cls: c.cls, seat: c.seat, set: set, name: String(o.name || '').slice(0, 60), m: m, n: Q.length, ok: ok,
@@ -355,7 +355,7 @@ var SC = (function () {
       var st = (typeof q[6] === 'string' && q[6].charAt(0) !== '~' ? q[6] : '') || r.set; if (/^g[34]td_/.test(st)) return;   /* 📅 今日任務：算回 原本 的 題組 */
       var i = q[5] == null ? j : +q[5], k = st + '#' + i, o = Q[k] = Q[k] || { k: k, set: st, i: i, n: 0, bad: 0, p: { '-1': 0, 0: 0, 1: 0, 2: 0, 3: 0 }, fast: 0 };
       o.n++; if (!q[0]) o.bad++; o.p[q[1]] = (o.p[q[1]] || 0) + 1; o.fast += q[3];
-      if (!q[0] && typeof q[6] === 'string' && q[6].charAt(0) === '~') { o.sl = o.sl || {}; q[6].slice(1).split('.').forEach(function (x) { o.sl[x] = (o.sl[x] || 0) + 1; }); } }); });   /* 第四十四次：拖曳 題 每一格 被 放錯 幾次 */
+      if (!q[0] && /^~(line|draw|jbar)$/.test(q[6])) { o.wy = o.wy || {}; o.wy[q[6].slice(1)] = (o.wy[q[6].slice(1)] || 0) + 1; } else if (!q[0] && typeof q[6] === 'string' && q[6].charAt(0) === '~') { o.sl = o.sl || {}; q[6].slice(1).split('.').forEach(function (x) { o.sl[x] = (o.sl[x] || 0) + 1; }); } }); });   /* 第四十四次：拖曳 題 每一格 被 放錯 幾次 */
     var L = []; for (var k in Q) { Q[k].rate = Math.round(Q[k].bad / Q[k].n * 100); L.push(Q[k]); }
     return L.sort(function (a, b) { return (b.rate - a.rate) || (b.bad - a.bad); });
   }
