@@ -3,6 +3,33 @@
 > 2026-11-12 第四十七次 第 2 點：老師 的 Phonics Master（原本 在 claude.ai 字卡 頁 https://claude.ai/artifact/PBkfDY3omYxT4VYRMaH4Yw）加進 網站。
 > 根目錄 `AGENTS.md` 第四節 同樣 適用。⚠ 老師：只 說 改 一個 地方 就 只 改 那 一個 地方。
 
+## 2026-11-17 第五十七次（計畫＋狀態：`phonics/2026-11-17_第五十七次_計畫.md`；需求檔 第四節 最下面「第五十七次」）——先讀 這一節
+### 🔒 永久 規則（老師 4-4、4-5、4-13、4-15：以後 全部 字卡、動畫、遊戲 都 照 這樣，不用 再 說）
+| 規則 | 做法（`_map.js` 的 `parse`／`bxHTML`）|
+|---|---|
+| 點 任何 一個 注音 符號、英文 字母、音標 ＝ 唸 那 一個 聲音＋字母 稍微 放大、明顯 發亮 | `.ck.on`（放大 1.3＋金色 光暈）；注音 `data-zy` |
+| 每 個 字母 正下方：音標（注音／KK／IPA）➜ 聲音 點點（一個 聲音 一個 點；x、qu ＝ 2 個；不 發音 ＝ 沒有 點、空 一格 保持 對齊）| `.dt`（不再 是 方框 下面 一排）|
+| 每 一段 的 每 一行：第一個 方框 上下 對齊（ㄅ 正下方 b、sot 正下方 shot）；一律 一欄，說明 放 右邊 | `#stage .rows` 一欄、`.rw` 右邊 `.rsd` |
+| 音標 不 可以 超出 方框；「子音／母音」字 不 可以 被 擋（只 在 第一行）| 量測 `_verify_57.js` |
+| 顏色：子音 藍、母音 紅、唸 名字 的 母音 黃（ai ay ee ea oa ow：**第一個 黃、第二個 灰**）、母音 後面 的 r ＝ 藍色 子音（ㄦ，car、for、short、bird）、灰 ＝ 不 發音（wh 的 h、ck 的 c、tch 的 t、mb 的 b、magic e）| `TEAM2`、`RV`、`ck`／`wh`／`tch`／`mb` |
+| s 後面 的 p t k：注音 ＝ ㄅ ㄉ ㄍ（speech、strong），聲音 用 b d g | `UNASP` |
+| 一 字母 多 聲音：同 一組 裡 不同 的 聲音 ＝ 不同 深淺 的 紅（`RED`）| `shadeOf` |
+### 🎬 秒懂 動畫 28 段（老師 4-3：從 零 開始 的 鷹架；順序 見 計畫 檔 第三節）
+每 段：開始 卡（🎯 學 什麼、💪 對 英文 有 什麼 幫助）➜〔▶ 逐次 播放〕〔👀 全部 展示〕〔🤔 引導 思考〕（每 一步 先 問、停 住、點〔👉 公布 答案〕才 往 下：先 自己 唸 ➜ 合 起來 怎麼 唸 ➜ 數 聲音 ➜ 這 一段 的 關鍵 問題 `ask`）；演完〔📝 隨堂 測驗〕3 題（`qzMake` 題型 `qz`：zy spell count part dig on co magic team syl many mix，每 次 不同；答錯 ＝ 遊戲 的 綠底 答錯頁 `noPage`）。
+上面〔📑 目次〕（28 段 完整 名稱＋✔）、下面〔1️⃣ 單字 唸 一次〕（整個 字 只 在 最後 唸 一次，`phm_one`）。兩個 字母 一個 聲音 ＝ ch sh th（無聲）th（有聲）ph ng wh ck **一個 一頁**。⑧ baby〔➕ 再 看 6 個〕＝ 老師 簡報 裡 的 課本 兩 音節 字 seven letter doctor number sister farmer（`MORE2`，聲音 `w_c57_*` 電腦 聽寫 聽 對，`tools/ph_c57.py`）。
+課本 單字〔🎬 秒懂 動畫：從 CVC 變成 ___〕（「從 CVC 到 課本」每 張 卡，`_games.js` ➜ `map.html#chain=字`，`CHAIN`）：cat ＝ bat ➜ cat、strong ＝ song ➜ stong ➜ strong、thin ＝ tin ➜ thin…
+遊戲 前（老師 4-16）：開場 頁 自動 演 對應 的 那 一段（`GREV`）＋「💪 學會 了 …」，〔我 會 了 ▶ 開始〕。
+### 🗺️ 拼音 地圖（老師 4-20）＝ `_map_combos.js`（清單＋「合 英文 拼字 習慣」`ok()`＋碼＋拼字；`_codes57_build.js` 也 用）
+點 一顆 ＝ **只 換 那 一個 地方**（不合 的 ＝ 暗＋說 為什麼，不 自動 改 別的）；新 字尾 pt ct xt lp lf lt sp mb ld lk nch 自由 組；ch ＝ ch、tch 另外 一顆；母音 多 ou ow（ㄠ）oi oy au aw oo ar or er ir ur；**全部 合 規則 的 組合 都 有 聲音**（`tools/ph_gen57.py`，真的 字 電腦 聽寫）。🟢 基礎 ＝ 原本 樣子；🔵 進階 ＝ 字首、字尾 上面 分組 按鈕（一次 只 看 一組）。〔🎧 你 來 拼〕〔👀 你 來 讀〕（我 做 ➜ 一起 做 ➜ 你 做）。
+**新 版本 `map2.html`**（https://hsieny627-jpg.github.io/AI-Agent-Open-Code/phonics/map2.html ）＝ 同 一套 程式 `window.MAP2`：字 在 最 上面 大大 的，每 一個 方框 正下方〔▲〕〔▼〕直接 換（照 Phonics Master 字卡 的 操作）。
+### 其他
+多 音節：唸到 的 音節 整個 放大 1.12＋金框＋發亮（`.syl.hot`）。一 字母 多 聲音：6 組（多 ow 兩種、ou oy oi aw oo）。遊戲：s 後 的 p ＝ ㄅ；字尾 遊戲 th 不 跟 s ss f ff 一起 當 選項（path／pass）；🧱 方框 樣子 magic e ＝ 最後 灰 方框；**🎱 星環 彈珠台 重做**（傾斜 3D 檯面、霓虹 軌道、彈簧 柱、發射 彈簧、擋板、真的 重力 碰撞、JACKPOT）；遊戲 上面 也 有〔注音｜KK｜IPA〕；結束 錯題 每 個 字 的 字母 下面 有 音標。
+### 進階版 字卡（老師 第 2 點）：`_ph2.js` `DECKS.advanced.ENDINGS.g4`〔新〕＝ pt ct xt lp lf lt sp mb ld lk nch（只 跟 短 母音；ld lk 不 跟 a o；mb 只 跟 a i u）；`_card.html` nch ＝ n＋ch。
+### 聲音（老師 聽 P56）`tools/ph_fix57.py`，試聽 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-11-17_P57/
+a ＝ **老師 給 的 錄音**（`ref/audio/老師_a_2025-09-22.mp3`）；字首 K 吹氣 加長（A 0.075 秒 網站／B 0.095 秒）；字尾 d ＝ 用 回 舊 的（v55）＋B（真的 bad 的 d）、C（字首 d 小聲）給 老師 選；字尾 k ＝ B；字尾 n ＝ A 大聲 1.4 倍；gr ＝ A 的 r 只 留 0.06 秒。
+### 量測
+`node phonics/_verify_57.js`（三種 螢幕；取代 `_verify_56.js`）、`node phonics/_verify_57s.js`（聲音）、`node live/_verify_57.js`（頒獎）、`node g3mid/_verify_45.js`（成長測驗 8 個 字母）、`node phonics/_verify.js`（字卡）。
+
 ## 2026-11-16 第五十六次（計畫＋老師 回答：`phonics/2026-11-16_第五十六次_計畫.md`；需求檔 第四節 最下面「第五十六次」）——先讀 這一節
 ### 🗺️ 拼音 地圖 新頁 `map.html`（https://hsieny627-jpg.github.io/AI-Agent-Open-Code/phonics/map.html ）＝ `_map.html`＋`_map.js`＋`_map_games.js`，`node phonics/_map_build.js`（`_build.js` 最後 也 跑）
 | 分頁 | 做法 |

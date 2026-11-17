@@ -131,13 +131,13 @@ function AWDSRC() {
   A.skip = function (host) { var S = host && host._aw; if (!S || S.fin) return; S.gen++; S.tm.forEach(clearTimeout); S.tm = []; [].forEach.call(host.querySelectorAll('.awgrp'), function (g) { g.classList.add('seat', 'shown'); }); finale(host, S, 1); };
   A.play = function (host, data, opt) { A.stop(host); opt = opt || {};
     var last = +(ls('awd_last') || -1), ti = rnd(A.TH.length); if (ti === last) ti = (ti + 1 + rnd(A.TH.length - 1)) % A.TH.length; ls('awd_last', String(ti)); var th = A.TH[ti];
-    var fx = shuf(A.FX.map(function (f) { return f[0]; })), sh = A.SH(), K = window.__AWDFAST ? .05 : 1;
+    var fx = shuf(A.FX.map(function (f) { return f[0]; })), sh = A.SH(), K = (window.__AWDFAST ? .05 : 1) * .62;   /* 2026-11-17 第五十七次 第 2 點（老師）：節奏 更 緊湊 ＝ 全部 時間 ✕ 0.62（約 60 秒 ➜ 37 秒）*/
     var S = { gen: 1, tm: [], th: th, fx: fx, fin: 0, rows: data.rows || [], data: data, opt: opt }; host._aw = S;
     host.className = (host.className.replace(/\bawd\b|\bno-\w\b|\bth-\w+/g, '') + ' awd th-' + th.k).trim(); ['h', 'p', 'w'].forEach(function (k) { if (!sh[k]) host.classList.add('no-' + k); });
     host.style.setProperty('--aw1', th.c1); host.style.setProperty('--aw2', th.c2); host.style.setProperty('--awf', th.fl);
     host.innerHTML = '<div class="awbg" style="background:' + th.bg + '"></div><canvas class="awbc"></canvas><canvas class="awcv"></canvas>' +   /* 第四十五次：聚光燈、地板、光芒 ＝ awbc 一張 畫布 */
       '<div class="awtop"><div class="awkick">' + esc(data.kick || '') + '</div><div class="awttl">' + esc(data.title || '🏆 頒獎 典禮').replace(/(\p{Extended_Pictographic}\uFE0F?)/gu, '<i class="awem">$1</i>') + '</div></div>' +  /* 第四十七次 1-(1)：主題 名稱 拿掉 */
-      '<div class="awar"></div><div class="awcap"></div><div class="awflash"></div>';
+      '<div class="awbeams"><i></i><i></i><i></i><i></i></div><div class="awnova"></div><div class="awar"></div><div class="awcap"></div><div class="awflash"></div>';
     var ar = $(host, '.awar'), cap = $(host, '.awcap'), cv = $(host, '.awcv'); S.pt = Parts(cv, th); S.bg = BG($(host, '.awbc'), host, th);
     var seed = (Date.now() ^ (Math.random() * 1e9)) >>> 0; A.M = Music(seed); if (!sh.m) A.M.mute(true); S.music = A.M.info;
     var my = S.gen, at = 0, T = function (f, ms) { at += ms * K; var g = my; S.tm.push(setTimeout(function () { if (S.gen === g && host._aw === S) f(); }, at)); };
@@ -150,10 +150,10 @@ function AWDSRC() {
       var gp = H('div', 'awgrp r' + rk + ' n' + Math.min(3, G[rk].length), (rk === 1 ? '<div class="awcrown">👑</div><div class="awchamp">👑 冠軍</div>' : '') + '<div class="awmd">' + (rk <= 3 ? MED[rk] : '第 ' + rk + ' 名') + '</div><div class="awps">' + G[rk].map(person).join('') + '</div>' /* 第四十七次 1-(3)：前 三名 一句 正向 的 話 拿掉 */); gp.style.setProperty('--sx', SLOT[rk] + '%'); gp.style.setProperty('--ph', PODH[rk] + '%'); gp.setAttribute('data-rk', rk); ar.appendChild(gp); });
     fitAll(host); S.tm.push(setTimeout(function () { fitAll(host); }, 600));   /* 圖 載 好 以後 再 算 一次 */
     /* ① 開場 */
-    host.classList.add('st0'); A.M.pad(6); A.M.roll(3.6, true); S.pt.conf(30);
+    host.classList.add('st0'); A.M.pad(6); A.M.roll(3.6 * .62, true); S.pt.conf(30);
     T(function () { A.M.hit(0); host.classList.add('st1'); S.pt.burst(.5, .3, 90); }, 3600);
     /* 2026-11-04 第四十四次 第 4-(3)(a) 點（老師）：第 10～6 名 ＝ 階梯，由下 往上 一階 一階 出現（最 下面 一階 第 10 名 ➜ 上面 第 9 名 … ➜ 最 上面 第 6 名；名次 愈 高 愈 亮、愈 尊榮）*/
-    if (rest.length) { var RD = rest.slice().sort(function (a, b) { return b.rk - a.rk; }), stp = 1.05;
+    if (rest.length) { var RD = rest.slice().sort(function (a, b) { return b.rk - a.rk; }), stp = .7;
       T(function () { say('<div class="awst">' + RD.slice().reverse().map(function (x) { var i = RD.indexOf(x); return '<div class="aws" style="--i:' + i + ';--n:' + RD.length + ';animation-delay:' + (i * stp * K).toFixed(2) + 's"><b>第 ' + x.rk + ' 名</b><span class="awsc2">' + esc(x.code) + ' ' + esc(x.nm || '') + '</span><em>' + esc(x.sc || '') + '</em></div>'; }).join('') +
         '</div><div class="awrt" style="animation-delay:' + (RD.length * stp * K).toFixed(2) + 's">👏 第 10～6 名，恭喜！</div>', 'rest');
         RD.forEach(function (x, i) { S.tm.push(setTimeout(function () { if (host._aw === S && A.M) A.M.hit(i % 3); }, i * stp * 1000 * K)); }); }, 1800);
@@ -161,17 +161,19 @@ function AWDSRC() {
     /* ② 第 5 ➜ 2 名：一層 一層 揭開 */
     ranks.forEach(function (rk, i) { if (rk === 1) return; var f = fx[i % fx.length], grp = ar.querySelector('.awgrp.r' + rk), pod = ar.querySelector('.awpod.r' + rk), pre = rk <= 3 ? 2600 : 1900;
       T(function () { say('<span class="awnum">第 ' + rk + ' 名</span><small>是……</small>', 'pre r' + rk); A.M.roll(pre / 1000 * K, true); host.classList.add('dim'); }, 2200);
-      T(function () { host.classList.remove('dim'); cap.classList.remove('in'); pod.classList.add('up'); grp.classList.add('show', 'fx-' + f); A.M.hit(4 - rk + 2); S.pt.burst(SLOT[rk] / 100, .45, rk <= 3 ? 120 : 70); if (rk <= 3) S.pt.conf(40, SLOT[rk] / 100); }, pre);
+      T(function () { host.classList.remove('dim'); cap.classList.remove('in'); pod.classList.add('up'); grp.classList.add('show', 'fx-' + f); shock(host, SLOT[rk], rk); A.M.hit(4 - rk + 2); S.pt.burst(SLOT[rk] / 100, .45, rk <= 3 ? 120 : 70); if (rk <= 3) S.pt.conf(40, SLOT[rk] / 100); }, pre);
       T(function () { grp.classList.add('seat'); }, rk <= 3 ? 3600 : 3000); });
     /* ③ 懸疑：第 1 名 是…… 心跳＋燈光 掃 ＋ 3 2 1 */
-    if (G[1]) { T(function () { host.classList.add('sus'); say('<span class="awnum">第 1 名</span><small>是……</small>', 'pre r1'); A.M.beat(4); }, 2400);
+    if (G[1]) { T(function () { host.classList.add('sus'); say('<span class="awnum">第 1 名</span><small>是……</small>', 'pre r1'); A.M.beat(3); host.classList.add('beam'); }, 2400);
       [3, 2, 1].forEach(function (n) { T(function () { say('<span class="awcd">' + n + '</span>', 'cd'); A.M.hit(n % 3); }, n === 3 ? 3400 : 1000); });
-      T(function () { host.classList.remove('sus'); host.classList.add('boom'); cap.classList.remove('in'); var gp = ar.querySelector('.awgrp.r1'), pd = ar.querySelector('.awpod.r1'); pd.classList.add('up'); gp.classList.add('show', 'fx-king'); host.classList.add('king');   /* 第四十四次 4-(3)(a)：第 1 名 ＝ 最 尊榮 的 加冕：金色 光芒 轉、皇冠 從 天上 落下 戴 上、「👑 冠軍」金字 */
+      T(function () { host.classList.remove('sus', 'beam'); host.classList.add('boom', 'nova'); shock(host, 50, 1); S.tm.push(setTimeout(function () { if (host._aw === S) shock(host, 50, 1); }, 260)); S.tm.push(setTimeout(function () { host.classList.remove('nova'); }, 2600)); cap.classList.remove('in'); var gp = ar.querySelector('.awgrp.r1'), pd = ar.querySelector('.awpod.r1'); pd.classList.add('up'); gp.classList.add('show', 'fx-king'); host.classList.add('king');   /* 第四十四次 4-(3)(a)：第 1 名 ＝ 最 尊榮 的 加冕：金色 光芒 轉、皇冠 從 天上 落下 戴 上、「👑 冠軍」金字 */
         A.M.fanfare(); for (var b = 0; b < 6; b++) (function (b) { S.tm.push(setTimeout(function () { if (host._aw === S) S.pt.burst(.15 + .14 * b, .2 + (b % 2) * .15, 110); }, b * 380 * K)); })(b); S.pt.conf(120); }, 1000);
       T(function () { ar.querySelector('.awgrp.r1').classList.add('seat'); host.classList.remove('boom'); }, 4200); }
     /* ④ 終曲：全部 站 在 頒獎台 上 */
     T(function () { finale(host, S, 0); }, 2600); };
-  function finale(host, S, fast) { if (S.fin) return; S.fin = 1; var ar = $(host, '.awar'), cap = $(host, '.awcap'); host.classList.remove('dim', 'sus', 'boom'); host.classList.add('fin');
+  /* 第五十七次 第 4 點：疊 上去 的 新 特效（不 拿掉 原本 的）＝ 揭曉 那 一刻 地上 一圈 衝擊波＋光柱；第 1 名 兩圈＋金色 光爆 */
+  function shock(host, x, rk) { var ar = $(host, '.awar'); if (!ar) return; var w = H('div', 'awshk r' + rk); w.style.left = x + '%'; ar.insertBefore(w, ar.firstChild); setTimeout(function () { if (w.parentNode) w.parentNode.removeChild(w); }, 1900); }
+  function finale(host, S, fast) { if (S.fin) return; S.fin = 1; var ar = $(host, '.awar'), cap = $(host, '.awcap'); host.classList.remove('dim', 'sus', 'boom', 'beam', 'nova'); host.classList.add('fin');
     [].forEach.call(ar.querySelectorAll('.awpod'), function (p) { p.classList.add('up'); }); [].forEach.call(ar.querySelectorAll('.awgrp'), function (g) { g.classList.add('show', 'seat'); });
     cap.className = 'awcap'; cap.innerHTML = '';   /* 第四十七次 1-(2)：「恭喜！你們 的 用心 被 看見 了！」拿掉 */
     if (A.M) A.M.finale(fast ? 8 : 12); S.pt.conf(160);
@@ -186,7 +188,7 @@ const CSS = `
 .awd .awcv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:6}
 .awd .awfloor{position:absolute;left:-30%;right:-30%;bottom:-8%;height:46%;transform:rotateX(74deg);transform-origin:50% 100%;background:repeating-linear-gradient(90deg,transparent 0 58px,color-mix(in srgb,var(--awf) 45%,transparent) 58px 61px),repeating-linear-gradient(0deg,transparent 0 58px,color-mix(in srgb,var(--awf) 45%,transparent) 58px 61px);box-shadow:inset 0 0 160px rgba(0,0,0,.9);animation:awFl 4s linear infinite;opacity:.75}
 @keyframes awFl{to{background-position:0 61px,0 61px}}
-.awd .awspot{position:absolute;top:-10%;width:34%;height:120%;background:conic-gradient(from 168deg at 50% 0,transparent 0 0deg,color-mix(in srgb,var(--aw2) 34%,transparent) 8deg 16deg,transparent 24deg);transform-origin:50% 0;opacity:.75;mix-blend-mode:screen;z-index:1}
+.awd .awspot{position:absolute;top:-10%;width:34%;height:120%;background:conic-gradient(from 168deg at 50% 0,transparent 0 0deg,color-mix(in srgb,var(--aw2) 34%,transparent) 8deg 16deg,transparent 24deg);transform-origin:50% 0;opacity:.75;z-index:1}
 .awd .awspot.s1{left:4%;animation:awSp 5s ease-in-out infinite alternate}.awd .awspot.s2{left:33%;animation:awSp 6.4s ease-in-out -2s infinite alternate}.awd .awspot.s3{left:62%;animation:awSp 5.6s ease-in-out -1s infinite alternate}
 @keyframes awSp{0%{transform:rotate(-24deg)}100%{transform:rotate(24deg)}}
 .awd.sus .awspot{animation-duration:.9s}.awd.sus .awbg{filter:brightness(.45)}
@@ -296,5 +298,21 @@ const CSS = `
 /* 第四十五次：全部 站 上 頒獎台 以後「👑 冠軍」字 收起來（不 跟 最上面 的「🎉 恭喜！」疊 在 一起；皇冠、金色 光芒、呼吸 光 留著）*/
 .awd.fin .awgrp.seat .awchamp{display:none}
 @media (prefers-reduced-motion:reduce){.awd *{animation-duration:.01s!important;transition-duration:.01s!important}}
+/* ── 2026-11-17 第五十七次 第 4 點：疊 上去 的 特效（探照燈 掃射、衝擊波、金色 光爆）；全部 pointer-events:none、在 人物 後面（不 遮擋）── */
+.awd .awbeams{position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .4s}
+.awd .awbeams i{position:absolute;bottom:-10%;width:18vw;height:130%;left:calc(var(--bx) - 9vw);transform-origin:50% 100%;background:linear-gradient(0deg,rgba(255,255,255,.55),rgba(255,255,255,0) 85%);clip-path:polygon(40% 100%,60% 100%,100% 0,0 0)}
+.awd .awbeams i:nth-child(1){--bx:8%;animation:awBeam 1.1s ease-in-out infinite alternate}.awd .awbeams i:nth-child(2){--bx:36%;animation:awBeam 1.3s -.4s ease-in-out infinite alternate-reverse}
+.awd .awbeams i:nth-child(3){--bx:64%;animation:awBeam 1.2s -.7s ease-in-out infinite alternate}.awd .awbeams i:nth-child(4){--bx:92%;animation:awBeam 1.05s -.2s ease-in-out infinite alternate-reverse}
+.awd.beam .awbeams,.awd.dim .awbeams{opacity:.75}.awd.fin .awbeams{opacity:.35}
+.awd .awbeams i{background:linear-gradient(0deg,color-mix(in srgb,var(--aw1) 70%,#fff),rgba(255,255,255,0) 85%)}
+@keyframes awBeam{0%{transform:rotate(-24deg)}100%{transform:rotate(24deg)}}
+.awd .awshk{position:absolute;bottom:4%;width:10px;height:10px;margin-left:-5px;border-radius:50%;pointer-events:none;border:6px solid var(--aw2);box-shadow:0 0 30px var(--aw1),inset 0 0 20px var(--aw1);transform:scaleY(.28);animation:awShk 1.4s cubic-bezier(.1,.7,.3,1) forwards}
+.awd .awshk.r1{border-color:#FFE38A;box-shadow:0 0 60px #FFD54A,inset 0 0 30px #FFD54A}
+@keyframes awShk{0%{width:10px;height:10px;margin-left:-5px;opacity:1}100%{width:70vw;height:70vw;margin-left:-35vw;margin-bottom:-35vw;opacity:0}}
+.awd .awshk::after{content:'';position:absolute;left:50%;bottom:50%;width:24px;margin-left:-12px;height:900%;transform:scaleY(3.6);transform-origin:50% 100%;background:linear-gradient(0deg,var(--aw2),transparent);opacity:.7}
+.awd .awnova{position:absolute;inset:0;pointer-events:none;opacity:0;background:repeating-conic-gradient(from 0deg at 50% 62%,rgba(255,227,138,.55) 0 4deg,transparent 4deg 15deg)}
+.awd.nova .awnova{animation:awNova 2.6s ease-out both}
+@keyframes awNova{0%{opacity:0;transform:scale(.3) rotate(0)}15%{opacity:1}100%{opacity:0;transform:scale(1.35) rotate(40deg)}}
+@media (prefers-reduced-motion:reduce){.awd .awbeams i,.awd .awshk,.awd.nova .awnova{animation:none!important}}
 `;
 module.exports = { CSS, JS: '\n/* ══ 🏆 頒獎 典禮（score/_awd.js）══ */\nvar AWD=(' + AWDSRC.toString() + ')();\n', AWDSRC };

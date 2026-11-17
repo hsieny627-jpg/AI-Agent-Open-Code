@@ -32,10 +32,11 @@ const ok = (c, m) => { n++; if (!c) E.push(m); };
       { const GA = require('./_gt_data.js').GTALL; r.forEach((x, k) => { const Q = x.q.map(i => GA[i]).filter(q => q && q.a);
         ok(Q.filter(q => q.same && ['m', 'h', 'b', 'y'].indexOf(q.on) >= 0).length >= 2 && Q.some(q => !q.same && ((q.on === 'f' && q.on2 === 'v') || (q.on === 'v' && q.on2 === 'f'))), tag + ' 第 ' + (k + 1) + ' 回 開頭 的 音 沒有 通過率 最低 的 題型（一樣 m／h／b／y ≧ 2、不一樣 f／v）'); }); }
       r.forEach((x, k) => ok(x.q.indexOf(GC0) >= 0 && ['n', 'q', 'j'].every(c => x.q.indexOf(c.charCodeAt(0) - 97) >= 0), tag + ' 第 ' + (k + 1) + ' 回 沒有 通過率 最低 的 題型（N Q J、Close your book.）'));
+      r.forEach((x, k) => ok('gkpqjehy'.split('').every(c => x.q.indexOf(c.charCodeAt(0) - 97) >= 0), tag + ' 第 ' + (k + 1) + ' 回 沒有 老師 考卷 的 8 個 字母（g k p q j e h y，第五十七次）'));
       ok(new Set([].concat(...gs)).size === 18, tag + ' 連 3 回 開頭 的 音 有 重複');
       ok(new Set([].concat(...gc)).size === 9, tag + ' 連 3 回 常用語 有 重複');
       const l1 = r[0].q.filter(i => i < 26), l2 = r[1].q.filter(i => i < 26);
-      ok(l2.filter(i => l1.indexOf(i) < 0).length === 11, tag + ' 第 2 回 字母 沒有 先 出 沒寫過 的 11 個');
+      ok(l2.filter(i => l1.indexOf(i) < 0).length === 6, tag + ' 第 2 回 字母 沒有 先 出 沒寫過 的 6 個（第五十七次：必考 9 個＋輪流 6 個）');
       ok(await p.evaluate(() => { XBK = 'G'; XQUIET = 1; startGT(25); XQUIET = 0; return recObj().set; }) === 'g3gm_g3m-g25', tag + ' 成績 代號 不是 g3gm_g3m-g25');
       /* ⑥ 現場任務 大廳 */
       const lb = await p.evaluate(() => { CR = { cfg: { set: 'g25', on: 1 } }; try { lobby(); } catch (e) { return 'err ' + e.message; } const v = [].filter.call(document.querySelectorAll('#xrow [data-x]'), b => (b.closest('.xbw') || b).style.display !== 'none' && b.offsetParent); const r = v.map(b => b.getAttribute('data-bk') + b.textContent); CR = null; return r; });

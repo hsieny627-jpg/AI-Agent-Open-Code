@@ -15,11 +15,15 @@ const GM={
   mpat:{ic:'🧱',nm:'子母 方塊 塔',goal:'子音 母音 怎麼 排（子母子、子子母子…）',how:'聽 🔊 或 看 字 ➜ 選 對 的 <b>方框 樣子</b>（藍 ＝ 子音、紅 ＝ 母音、黃點 ＝ 聲音），塔 才 蓋 得 上去',T:15,q:qPat},
   mcnt:{ic:'🥁',nm:'聲音 戰鼓',goal:'這個 字 有 幾個 聲音、是 哪些 聲音',how:'聽 🔊 ➜ ① 一個 聲音 敲 一下 鼓 ➜ ② 選 對 的 一排 音標',T:25,q:qCnt},
   mspl:{ic:'📜',nm:'咒語 卷軸',goal:'聽音 拼字',how:'聽 🔊 ➜ 照 聲音 的 順序 把 字母 塊 放進 卷軸（th、sh、ng ＝ 一塊）',T:30,q:qSpl},
-  mcoin:{ic:'🎱',nm:'金幣 彈珠台',goal:'聽音 認字（拼字 很 像 也 不 會 錯）',how:'聽 🔊 ➜ 點 寫著 那個 字 的 金幣，彈珠 射 過去 把 它 打 進 洞',T:15,q:qCoin},
+  mcoin:{ic:'🎱',nm:'星環 彈珠台',goal:'聽音 認字（拼字 很 像 也 不 會 錯）',how:'聽 🔊 ➜ 點 寫著 那個 字 的 金幣 洞 ➜ 彈簧 一拉，彈珠 繞 軌道 射 進去、撞 彈簧 柱 加 分',T:15,q:qCoin},
   mking:{ic:'👑',nm:'拼音 王國',goal:'看字 讀音（自己 拼 出來，判斷 唸 得 對 不 對）',how:'使者 拿著 一個 字、唸 給 你 聽 🔊 ➜ 他 唸 得 <b>對</b> 還是 <b>錯</b>？判斷 對 ＝ 王國 變 強',T:15,q:qKing},
   mbub:{ic:'🫧',nm:'泡泡 救援',goal:'兩個 字母 一個 聲音（sh ch th ng ck）',how:'聽 🔊 ➜ 照 聲音 順序 戳 泡泡；<b>sh、th 是 一顆</b>，不要 戳 分開 的 s、h',T:25,q:qBub},
   msyl:{ic:'🏭',nm:'音節 工廠',goal:'兩 個 音節 的 字（課本 字）',how:'聽 🔊 ➜ 照 順序 選 兩 個 <b>音節 卡</b> 送進 機器（bath＋room）',T:20,q:qSyl}};
 const GK=Object.keys(GM);
+/* 2026-11-17 第五十七次 老師 4-16：每 一種 遊戲 開始 前，先 用 秒懂 動畫 複習 這個 遊戲 要 測 的 重點（自動 演，可以〔我 會 了 ▶ 開始〕）＋學會 了 有 什麼 用 */
+const GREV={mvow:['cvc','聽到 字 就 知道 中間 是 哪 一個 母音 ＝ 拼字 不 會 拼 錯 母音'],mon:['bl2','字首 有 2、3 個 子音 也 聽 得 出來 ＝ 長 的 字 也 拼 得 出來'],mco:['fin','字尾 聽 得 清楚 ＝ 拼字 不 漏 掉 最後 的 字母'],
+  mpat:['seg','知道 字 是 幾 個 方框、幾 個 聲音 ＝ 看到 新 字 知道 怎麼 拆'],mcnt:['seg','數 得 出 聲音 ＝ 聽音 拼字 的 第一步'],mspl:['seg','聽 一個 字 寫 得 出來 ＝ 聽寫、作文 都 用 得 到'],
+  mcoin:['chg','只 差 一個 字母 也 分 得 出來 ＝ 不 會 看錯 字'],mking:['cvc','看 到 字 自己 唸 得 出來 ＝ 自己 讀 課本、讀 故事'],mbub:['d_sh','sh ch th 不 拆 開 ＝ ship、chin、thin 唸 得 對'],msyl:['syl','長 的 字 一塊 一塊 唸 ＝ 課本 的 長 單字 不 怕']};
 let G=null;
 function QI(x){return QW.indexOf(x)}
 /* 第五十六次（老師 的 簡報「適應性 難度」：答錯 的 字 會 變成 下一波 的 題目 ＝ 間隔 重複）：答錯 的 字 隔 1 題 以上 再 出 一次（同 一種 遊戲 用 得 到 才 出），上面 寫「🔁 剛才 錯 的 字 再 挑戰」*/
@@ -60,15 +64,16 @@ function start(k,opt){opt=opt||{};if(typeof SCON!=='undefined'&&SCON&&!SCID&&typ
   $('#game').hidden=false;const M=k==='q25'?{ic:'📝',nm:'拼音 25 題 闖關',goal:'10 種 遊戲 混 在 一起',how:'這 一回 抽到：<br>'+[...new Set(G.seq)].map(g=>GM[g].ic+' '+GM[g].nm).join('、')+'<br>每 一次 組合 都 不一樣'}:GM[k];
   $('#gq').textContent='';$('#gt').textContent=M.ic+' '+M.nm;$('#gsc').textContent='⭐ 0';
   B().innerHTML='<div class="pnl" style="padding:20px 26px;text-align:center;max-width:900px"><div style="font-size:70px">'+M.ic+'</div><h2 class="st">'+M.nm+'</h2><div class="cap">🎯 學習 目標：<b>'+M.goal+'</b></div><div class="cap">'+M.how+'</div>'+
-    '<div class="cap" style="font-size:20px;color:#BFD0FF">📝 '+(G.N||NQ)+' 題　⚡ 愈 快 分數 愈 高　🔥 連對 2 題 ➜ 下一題 ✖2　👑 最後 一題 ✖2</div><button class="btn go" id="gGo" style="font-size:30px;min-height:70px;padding:10px 40px">▶ 開始！</button></div>';
-  $('#gGo').onclick=async()=>{for(const n of ['3','2','1','GO!']){B().innerHTML='<div class="big3">'+n+'</div>';await wait(window.__PHFAST?5:650)}next()};if(window.__PHAUTO)$('#gGo').click()}
+    (GREV[k]?'<div class="cap">💪 學會 了：'+GREV[k][1]+'</div><div class="grev"><div class="grevt">🎬 先 複習 一下（約 30 秒）</div><div class="pnl" id="grevS"></div></div>':'')+'<div class="cap" style="font-size:20px;color:#BFD0FF">📝 '+(G.N||NQ)+' 題　⚡ 愈 快 分數 愈 高　🔥 連對 2 題 ➜ 下一題 ✖2　👑 最後 一題 ✖2</div><button class="btn go" id="gGo" style="font-size:30px;min-height:70px;padding:10px 40px">▶ 開始！</button></div>';
+  if(GREV[k]&&!window.__PHFAST){const si=SC.findIndex(x=>x.k===GREV[k][0]);const one=ONE;ONE=1;scPlay(si,'step',$('#grevS')).then(()=>{ONE=one;const b=$('#gGo');if(b)b.textContent='▶ 開始！'});const b=$('#gGo');if(b)b.textContent='我 會 了 ▶ 開始'}
+  $('#gGo').onclick=async()=>{TOK++;for(const n of ['3','2','1','GO!']){B().innerHTML='<div class="big3">'+n+'</div>';await wait(window.__PHFAST?5:650)}next()};if(window.__PHAUTO)$('#gGo').click()}
 function next(){const me=G;G.cur=GM[G.seq?G.seq[G.q]:G.k];gHud();if(G.seq&&(G.q===0||G.seq[G.q]!==G.seq[G.q-1])&&!window.__PHFAST){const b=H('div','ban',G.cur.ic+' '+G.cur.nm+'<br><span style="font-size:.7em">🎯 '+G.cur.goal+'</span>');document.body.appendChild(b);setTimeout(()=>{b.remove();if(G===me)G.cur.q()},1300)}else G.cur.q()}
 function q25Seq(){const last=LS.g('q25last','');let pick;for(let t=0;t<30;t++){pick=SH(GK).slice(0,5);if(pick.slice().sort().join()!==last)break}LS.s('q25last',pick.slice().sort().join());return [].concat(...pick.map(g=>[g,g,g,g,g]))}
 function gQuit(){if(G&&G.t)G.t.stop();G=null;TOK++;$('#game').hidden=true;$('#fb').hidden=true}
 $('#gx').onclick=()=>{if(G&&G.Q.length&&!G.sent)rec(G);gQuit()};
 async function end(){const g=G,N=g.N||NQ,fr=g.ok/N,rk=fr>=1?'S':fr>=.8?'A':fr>=.6?'B':'C',bk='best_'+g.k,best=LS.g(bk,0);if(g.score>best)LS.s(bk,g.score);rec(g);$('#gtm').firstChild.style.transform='scaleX(0)';
   B().innerHTML='<div class="pnl" style="padding:16px 24px;text-align:center;max-width:980px;max-height:100%;overflow:auto"><div class="res2">'+rk+'</div><div class="cap">答對 <b>'+g.ok+' ／ '+N+'</b>　⭐ '+g.score+(g.score>best?'　🏆 新 紀錄！':'　🏆 最佳 '+best)+'</div>'+
-    (g.wrong.length?'<div class="cap">📒 先 聽完 每 一個 錯題 的 正確 發音</div><div id="wl">'+g.wrong.map((w,i)=>'<div class="mrow" data-wi="'+i+'"><span class="mw en">'+(w.x?w.x.w:w.w)+'</span><span class="mz">'+(w.zh||'')+'</span><span class="ms">🔊</span></div>').join('')+'</div>':'')+
+    (g.wrong.length?'<div class="cap">📒 先 聽完 每 一個 錯題 的 正確 發音</div><div id="wl">'+g.wrong.map((w,i)=>'<div class="mrow" data-wi="'+i+'"><div class="wrow mw2">'+wordHTML(info2spec(w.x||w),{dots:1})+'</div><span class="mz">'+(w.zh||'')+'</span><span class="ms">🔊</span></div>').join('')+'</div>':'')+
     '<div class="ctl" id="endB" style="'+(g.wrong.length?'visibility:hidden':'')+'"><button class="btn go" id="again">🔁 再 玩</button><button class="btn" id="back">🎮 換 遊戲</button></div></div>';
   $('#again').onclick=()=>start(g.k);$('#back').onclick=()=>gQuit();
   B().querySelectorAll('[data-wi]').forEach(r=>r.onclick=()=>say(g.wrong[+r.dataset.wi].au));
@@ -105,7 +110,8 @@ function qOn(){const x=pickW(y=>y.on.length&&(G.q<2?y.ot.length>=1:y.ot.length>=
   G.hk={ok:()=>[].find.call(B().querySelectorAll('.mon'),m=>m.textContent===on).click(),no:()=>[].find.call(B().querySelectorAll('.mon'),m=>m.textContent!==on).click()};begin(GM.mon.T,()=>info);play1(x.c)}
 /* ══ 3 🧲 磁浮 打磚塊（Zorb Blitz）══ */
 function qCo(){const x=pickW(y=>y.co.length&&!y.mg);const co=x.co.join('');const all=[...new Set(QW.filter(y=>!y.mg).map(y=>y.co.join('')).filter(Boolean))];
-  const sc=y=>(y[0]===co[0]?2:0)+(y.slice(-1)===co.slice(-1)?2:0)+(y.length===co.length?1:0);const O=SH([co].concat(SH(all.filter(y=>y!==co)).sort((a,b)=>sc(b)-sc(a)).slice(0,5)));
+  const sc=y=>(y[0]===co[0]?2:0)+(y.slice(-1)===co.slice(-1)?2:0)+(y.length===co.length?1:0);const HARD=a=>/^(th|s|ss|f|ff)$/.test(a);/* 第五十七次（老師）：path 的 th、pass 的 s 字尾 很 難 聽辨 ➜ th 不 跟 s ss f ff 一起 當 選項 */
+  const O=SH([co].concat(SH(all.filter(y=>y!==co&&!(HARD(co)&&HARD(y)&&(co==='th')!==(y==='th')))).sort((a,b)=>sc(b)-sc(a)).slice(0,5)));
   const info=inf(x,{tip:'字尾 是 <b class="en">'+co+'</b>（'+x.ct.length+' 個 聲音）'});
   B().innerHTML=reTag()+'<div class="gq">🔊 聽 ➜ 打碎 寫著 <b>字尾</b> 的 磚塊</div><div class="arena zorb" id="ar"><div class="zh"><span>'+'❤️'.repeat(3)+'</span><b>'+String(G.score).padStart(5,'0')+'</b><span>第 '+(G.q+1)+' 關</span></div><div class="planet"></div><div class="wall en" style="grid-template-columns:repeat(3,1fr)">'+O.map(o=>'<button class="brick" data-o="'+o+'">'+o+'</button>').join('')+'</div><div class="paddle"><i></i></div><div class="ball" id="bl"></div></div>';B().appendChild(earBtn(x.c));
   const ar=$('#ar'),bl=$('#bl');bl.style.left=(ar.clientWidth/2-15)+'px';bl.style.top=(ar.clientHeight-70)+'px';bl.style.transition='left .35s,top .35s';
@@ -114,11 +120,11 @@ function qCo(){const x=pickW(y=>y.co.length&&!y.mg);const co=x.co.join('');const
   G.hk={ok:()=>B().querySelector('.brick[data-o="'+co+'"]').click(),no:()=>[].find.call(B().querySelectorAll('.brick'),b=>b.dataset.o!==co).click()};begin(GM.mco.T,()=>info);play1(x.c)}
 /* ══ 4 🧱 子母 方塊 塔（Tower Defense）══ */
 const PATS=['CVC','CCVC','CVCC','CCVCC','CCCVC','CV','CCV'];
-function patDraw(p){const m=/^(C*)V(C*)$/.exec(p),bx=(t,n)=>'<div class="bx '+t+'"><div class="dots" style="position:static;margin-top:4px">'+Array.from({length:n},()=>'<i class="on"></i>').join('')+'</div></div>';
-  return '<div class="patb">'+(m[1]?bx('c',m[1].length):'')+bx('v',1)+(m[2]?bx('c',m[2].length):'')+'</div>'}
+function patDraw(p,mg){const m=/^(C*)V(C*)$/.exec(p),bx=(t,n)=>'<div class="bx '+t+'"><div class="dots" style="position:static;margin-top:4px">'+Array.from({length:n},()=>'<i class="on"></i>').join('')+'</div></div>';
+  return '<div class="patb">'+(m[1]?bx('c',m[1].length):'')+bx('v',1)+(m[2]?bx('c',m[2].length):'')+(mg?'<div class="bx g" title="不 發音"><div class="dots" style="position:static;margin-top:4px"></div></div>':'')+'</div>'}   /* 第五十七次：magic e ＝ 最後 一個 灰色 方框（不 發音、沒有 點）*/
 function qPat(){const x=pickW(y=>PATS.indexOf(y.pat)>=0),lsn=G.q%2===0;const O=SH([x.pat].concat(SH(PATS.filter(p=>p!==x.pat&&Math.abs(p.length-x.pat.length)<=1)).slice(0,2)));
   const info=inf(x,{tip:x.w+' ＝ '+patTxt(specOf(x))+'：'+x.n+' 個 聲音'});G.tw=G.tw||0;
-  B().innerHTML=reTag()+'<div class="gq">'+(lsn?'🔊 聽 ➜ 這個 字 的 方框 長 什麼 樣子？':'👀 看 字 ➜ 方框 長 什麼 樣子？')+'</div>'+(lsn?'':'<div class="scroll" style="font-size:64px;padding:6px 30px">'+x.w+'</div>')+'<div class="arena td" id="ar"><svg viewBox="0 0 100 60" preserveAspectRatio="none"><path d="'+TDP+'" fill="none" stroke="#B9824A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="'+TDP+'" fill="none" stroke="#D9A86A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="tdr">第 '+(G.q+1)+' 波</div>'+Array.from({length:G.tw},(_,k)=>'<div class="twr" style="left:'+TDS[k%TDS.length][0]+'%;top:'+TDS[k%TDS.length][1]+'%">🗼</div>').join('')+'<div class="enemy" id="en">👾</div></div><div class="opts">'+O.map(p=>'<button class="op" data-p="'+p+'" style="padding:4px 8px">'+patDraw(p)+'</button>').join('')+'</div>';
+  B().innerHTML=reTag()+'<div class="gq">'+(lsn?'🔊 聽 ➜ 這個 字 的 方框 長 什麼 樣子？':'👀 看 字 ➜ 方框 長 什麼 樣子？')+'</div>'+(lsn?'':'<div class="scroll" style="font-size:64px;padding:6px 30px">'+x.w+'</div>')+'<div class="arena td" id="ar"><svg viewBox="0 0 100 60" preserveAspectRatio="none"><path d="'+TDP+'" fill="none" stroke="#B9824A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="'+TDP+'" fill="none" stroke="#D9A86A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="tdr">第 '+(G.q+1)+' 波</div>'+Array.from({length:G.tw},(_,k)=>'<div class="twr" style="left:'+TDS[k%TDS.length][0]+'%;top:'+TDS[k%TDS.length][1]+'%">🗼</div>').join('')+'<div class="enemy" id="en">👾</div></div><div class="opts">'+O.map(p=>'<button class="op" data-p="'+p+'" style="padding:4px 8px">'+patDraw(p,x.mg)+'</button>').join('')+'</div>';
   if(lsn)B().appendChild(earBtn(x.c));B().querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const ok=b.dataset.p===x.pat;b.classList.add(ok?'ok':'no');const en=$('#en');if(ok){const sp=TDS[G.tw%TDS.length];G.tw++;$('#ar').insertAdjacentHTML('beforeend','<div class="twr new" style="left:'+sp[0]+'%;top:'+sp[1]+'%">🗼</div>');if(en){const c=ctr(en);setTimeout(()=>{en.classList.add('dead');sparks(c[0],c[1],22,'#FFE07A')},250)}}answer(ok,Object.assign(info,{yours:ok?undefined:b.dataset.p.split('').map(c=>c==='C'?'子':'母').join(' ')}))});
   tdMove();G.hk={ok:()=>B().querySelector('[data-p="'+x.pat+'"]').click(),no:()=>[].find.call(B().querySelectorAll('[data-p]'),b=>b.dataset.p!==x.pat).click()};begin(GM.mpat.T,()=>info);if(lsn)play1(x.c)}
 /* 塔防 的 路（0～100 ✕ 0～60）：魔物 沿著 路 走，時間 到 走 到 終點；答 對 ＝ 路 邊 蓋 一座 塔 把 牠 打掉 */
@@ -147,12 +153,47 @@ function qSpl(){const x=pickW(y=>G.q<2?y.n<=3:true),U=x.on.concat([x.v],x.co);co
   B().querySelectorAll('#sl [data-s]').forEach(s=>s.onclick=()=>{const k=+s.dataset.s;if(put[k]==null)return;put=put.slice(0,k);draw()});
   G.hk={ok:()=>{const used=[];U.forEach(u=>{const k=tiles.findIndex((t,i)=>t===u&&used.indexOf(i)<0);used.push(k);B().querySelector('.opts .op[data-k="'+k+'"]').click()})},no:()=>{const used=[];ex.concat(U).slice(0,U.length).forEach(u=>{const k=tiles.findIndex((t,i)=>t===u&&used.indexOf(i)<0);used.push(k);B().querySelector('.opts .op[data-k="'+k+'"]').click()})}};begin(GM.mspl.T,()=>info);play1(x.c)}
 function tokOfChunk(c){return CMAP[c]||VMAP[c]||c}
-/* ══ 7 🎱 金幣 彈珠台（Pirate Pool）══ */
+/* ══ 7 🎱 星環 彈珠台（Pirate Pool 的 玩法；2026-11-17 第五十七次 老師 4-17：原本 沒有 彈珠台 的 樂趣 ➜ 整個 重做）
+ * 傾斜 的 3D 檯面＋霓虹 軌道＋會 亮 的 彈簧 柱（bumper）＋右下 發射 彈簧＋下面 兩支 擋板（flipper）；
+ * 聽 🔊 ➜ 點 上面 寫著 那個 字 的 金幣 洞 ➜ 拉 彈簧、彈珠 射 上 軌道、繞 一圈 掉進 你 選 的 洞（真的 重力＋碰撞，碰到 彈簧 柱 會 閃＋加 分）
+ * 對 ＝ JACKPOT（洞 爆開、金幣 雨、軌道 燈 繞 圈）；錯 ＝ 洞 裂開、彈珠 掉 下去 被 擋板 打 出去 */
 function qCoin(){const x=pickW(()=>true);let O=[x].concat(near(x,'v',1),near(x,'on',1),near(x,'co',1));while(O.length<4){const y=R(QW);if(O.indexOf(y)<0&&O.every(z=>z.w!==y.w))O.push(y)}O=SH(O.slice(0,4));const info=inf(x,{tip:'聽 每 一個 聲音：'+patTxt(specOf(x))});
-  B().innerHTML=reTag()+'<div class="gq">🔊 聽 ➜ 點 寫著 那個 字 的 金幣</div><div class="arena" id="ar" style="background:radial-gradient(circle,#0E5E3A,#063A23 70%);border:10px solid #6B3A12"><div class="ball" id="bl"></div></div>';B().appendChild(earBtn(x.c));
-  const ar=$('#ar'),W=ar.clientWidth,Hh=ar.clientHeight,P=[[.2,.25],[.75,.22],[.3,.62],[.78,.6]];O.forEach((y,i)=>{const c=H('button','coin',y.w);c.style.left=(W*P[i][0]-75)+'px';c.style.top=(Hh*P[i][1]-60)+'px';ar.appendChild(c);
-    c.onclick=()=>{const ok=y===x,bl=$('#bl');bl.style.left=(W*P[i][0]-15)+'px';bl.style.top=(Hh*P[i][1]-15)+'px';setTimeout(()=>{if(ok){c.classList.add('sink');const k=ctr(c);sparks(k[0],k[1],26,'#FFD54A')}else c.classList.add('shake')},320);answer(ok,Object.assign(info,{yours:ok?undefined:y.w}))}});
-  const bl=$('#bl');bl.style.left=(W/2-15)+'px';bl.style.top=(Hh-40)+'px';bl.style.transition='left .3s,top .3s';G.hk={ok:()=>[].find.call(B().querySelectorAll('.coin'),c=>c.textContent===x.w).click(),no:()=>[].find.call(B().querySelectorAll('.coin'),c=>c.textContent!==x.w).click()};begin(GM.mcoin.T,()=>info);play1(x.c)}
+  B().innerHTML=reTag()+'<div class="gq">🔊 聽 ➜ 點 寫著 那個 字 的 金幣 洞，把 彈珠 射 進去！</div><div class="pin" id="ar"><div class="pinb"><canvas id="pcv"></canvas><div class="prail"></div><div class="plane"><i id="pspr"></i></div><div class="pjack" id="pjk">JACKPOT</div></div></div>';B().appendChild(earBtn(x.c));
+  const ar=$('#ar'),bd=ar.querySelector('.pinb'),cv=$('#pcv'),W=bd.clientWidth,Hh=bd.clientHeight,ctx=cv.getContext('2d');cv.width=W;cv.height=Hh;
+  const HX=[.16,.39,.61,.84],HY=.2,holes=O.map((y,i)=>({x:W*HX[i]*.9,y:Hh*HY,y0:y}));
+  const PEG=[];[[.22,.42],[.45,.4],[.68,.42],[.12,.6],[.34,.58],[.57,.6],[.79,.58],[.24,.76],[.66,.76]].forEach(p=>PEG.push({x:W*p[0]*.9,y:Hh*p[1],r:Math.max(14,W*.022),f:0}));
+  holes.forEach((h,i)=>{const c=H('button','coin pcoin',h.y0.w);c.style.left=(h.x-Math.min(80,W*.09))+'px';c.style.top=(h.y-Math.min(80,W*.09)*.75)+'px';bd.appendChild(c);
+    c.onclick=()=>{if(G.lock===G.q||G.pin)return;G.pin=1;if(G.t)G.t.stop();const ok=h.y0===x;launch(h,c,ok)}});
+  let ball=null,parts=[],lights=0,raf=0;const me=G,q=G.q;
+  function draw(){if(G!==me||G.q!==q){cancelAnimationFrame(raf);return}ctx.clearRect(0,0,W,Hh);lights+=.06;
+    /* 軌道 燈：一圈 會 繞 的 小 燈 */
+    for(let k=0;k<26;k++){const a=Math.PI+k/25*Math.PI,lx=W*.45+Math.cos(a)*W*.43,ly=Hh*.34+Math.sin(a)*Hh*.3,on=(Math.floor(lights*3)+k)%5===0||G.jack;ctx.fillStyle=on?'#FFE07A':'rgba(255,224,122,.25)';ctx.beginPath();ctx.arc(lx,ly,on?5:3,0,7);ctx.fill()}
+    PEG.forEach(p=>{p.f*=.9;const g=ctx.createRadialGradient(p.x-p.r*.3,p.y-p.r*.3,2,p.x,p.y,p.r);g.addColorStop(0,'#fff');g.addColorStop(.35,p.f>.2?'#FFE07A':'#9EF0FF');g.addColorStop(1,p.f>.2?'#FF7A00':'#1B46C9');
+      ctx.shadowColor=p.f>.2?'#FFB000':'#3BE8FF';ctx.shadowBlur=14+p.f*30;ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,p.r*(1+p.f*.35),0,7);ctx.fill();ctx.shadowBlur=0});
+    /* 擋板 */
+    const fl=G.flip||0;[[.24,1],[.66,-1]].forEach(([fx,s])=>{ctx.save();ctx.translate(W*fx,Hh*.93);ctx.rotate(s*(.35-fl*.8));ctx.fillStyle='#FF4FA3';ctx.shadowColor='#FF4FA3';ctx.shadowBlur=16;ctx.beginPath();ctx.roundRect?ctx.roundRect(s>0?0:-W*.17,-9,W*.17,18,9):ctx.rect(s>0?0:-W*.17,-9,W*.17,18);ctx.fill();ctx.restore()});ctx.shadowBlur=0;
+    parts=parts.filter(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.25;p.l-=.02;if(p.l<=0)return false;ctx.globalAlpha=p.l;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();ctx.globalAlpha=1;return true});
+    if(ball){(ball.tr||[]).forEach((t,k,A)=>{ctx.globalAlpha=k/A.length*.6;ctx.fillStyle='#9EF0FF';ctx.beginPath();ctx.arc(t[0],t[1],ball.r*(k/A.length),0,7);ctx.fill()});ctx.globalAlpha=1;
+      const g=ctx.createRadialGradient(ball.x-4,ball.y-4,2,ball.x,ball.y,ball.r);g.addColorStop(0,'#fff');g.addColorStop(.5,'#E5E7EB');g.addColorStop(1,'#6B7280');ctx.fillStyle=g;ctx.shadowColor='#fff';ctx.shadowBlur=18;ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,7);ctx.fill();ctx.shadowBlur=0}
+    raf=requestAnimationFrame(draw)}
+  draw();
+  function boom(px,py,n,c){for(let k=0;k<n;k++){const a=Math.random()*6.28,v=Math.random()*7+2;parts.push({x:px,y:py,vx:Math.cos(a)*v,vy:Math.sin(a)*v-3,r:Math.random()*4+2,l:1,c:c||R(['#FFE07A','#FFD54A','#fff','#FF9F43'])})}}
+  async function launch(h,coin,ok){const F=window.__PHFAST,spr=$('#pspr');spr.classList.add('pull');await wait(F?5:380);spr.classList.remove('pull');
+    ball={x:W*.955,y:Hh*.88,r:Math.max(11,W*.016),tr:[]};
+    /* ① 發射：沿著 右邊 軌道 往上 ➜ 繞 上面 的 弧 ➜ 到 你 選 的 洞 上方（貝茲 曲線）*/
+    const P0=[W*.955,Hh*.88],P1=[W*.97,Hh*.02],P2=[h.x+(h.x<W*.45?-W*.1:W*.1),-Hh*.05],P3=[h.x,h.y];const T1=F?2:900,t0=performance.now();
+    await new Promise(res=>{(function mv(){const k=Math.min(1,(performance.now()-t0)/T1),u=1-k,bz=i=>u*u*u*P0[i]+3*u*u*k*P1[i]+3*u*k*k*P2[i]+k*k*k*P3[i];ball.tr.push([ball.x,ball.y]);if(ball.tr.length>10)ball.tr.shift();ball.x=bz(0);ball.y=bz(1);if(k<1)requestAnimationFrame(mv);else res()})()});
+    if(ok){G.jack=1;coin.classList.add('sink','jk');boom(h.x,h.y,F?4:90);$('#pjk').classList.add('on');const k2=ctr(coin);sparks(k2[0],k2[1],30,'#FFD54A');setTimeout(()=>{G.jack=0},1600)}else{coin.classList.add('crack');boom(h.x,h.y,F?2:24,'#9CA3AF')}
+    /* ② 掉 下來：真的 重力＋碰 彈簧 柱 反彈（碰 一下 ＝ 閃＋＋10）*/
+    let vx=(Math.random()-.5)*4,vy=1;const t2=performance.now();
+    await new Promise(res=>{(function fall(){if(F){res();return}vy+=.38;ball.x+=vx;ball.y+=vy;ball.tr.push([ball.x,ball.y]);if(ball.tr.length>10)ball.tr.shift();
+      PEG.forEach(p=>{const dx=ball.x-p.x,dy=ball.y-p.y,d=Math.hypot(dx,dy),m=ball.r+p.r;if(d<m&&d>0){const nx=dx/d,ny=dy/d,dot=vx*nx+vy*ny;vx-=1.9*dot*nx;vy-=1.9*dot*ny;vx+=nx*1.5;ball.x=p.x+nx*m;ball.y=p.y+ny*m;p.f=1;boom(p.x,p.y,10,'#9EF0FF');fx('＋10',p.x+bd.getBoundingClientRect().left,p.y+bd.getBoundingClientRect().top-30,'#9EF0FF')}});
+      if(ball.x<ball.r){ball.x=ball.r;vx=Math.abs(vx)*.8}if(ball.x>W*.9-ball.r){ball.x=W*.9-ball.r;vx=-Math.abs(vx)*.8}
+      if(ball.y>Hh*.88||performance.now()-t2>2600){res();return}requestAnimationFrame(fall)})()});
+    /* ③ 擋板 一拍，彈珠 飛 出去 */
+    G.flip=1;setTimeout(()=>{if(G)G.flip=0},F?2:220);ball=null;await wait(F?5:300);
+    answer(ok,Object.assign(info,{yours:ok?undefined:h.y0.w}))}
+  G.pin=0;G.hk={ok:()=>[].find.call(B().querySelectorAll('.coin'),c=>c.textContent===x.w).click(),no:()=>[].find.call(B().querySelectorAll('.coin'),c=>c.textContent!==x.w).click()};begin(GM.mcoin.T,()=>info);play1(x.c)}
 /* ══ 8 👑 拼音 王國（Crazy Kingdom）══ */
 const KR=[['🪵','木材'],['👥','人民'],['😊','快樂'],['🪙','黃金']];
 function qKing(){const x=pickW(()=>true),alt=R(near(x,'v',2).concat(near(x,'on',2),near(x,'co',2))),right=!alt||Math.random()<.5,au=right?x.c:alt.c;G.kr=G.kr||[60,60,60,60];

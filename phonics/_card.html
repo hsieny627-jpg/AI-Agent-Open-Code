@@ -300,6 +300,9 @@ function build(){
     } else if(E==='mb'){
       pushUnit(g,[txtSpan('m','#fff')],phon(CONS['mb'],false),hE);
       pushUnit(g,[txtSpan('b','var(--silent)')],[],hE);
+    } else if(E==='nch'){   /* 第五十七次：nch ＝ n（ㄋ）＋ch（一個 聲音 ㄔ）*/
+      pushUnit(g,[txtSpan('n','#fff')],phon({zh:'ㄋ',kk:'n',ipa:'n'},false),hE);
+      pushUnit(g,[txtSpan('c','#fff'),txtSpan('h','#fff')],phon(CONS['ch']||CONS['tch'],false),hE);
     } else if(E==='tch'){
       pushUnit(g,[txtSpan('t','var(--silent)')],[],hE);
       pushUnit(g,[txtSpan('c','#fff'),txtSpan('h','#fff')],phon(CONS['tch'],false),hE);

@@ -16,9 +16,9 @@ button{font-family:var(--han);cursor:pointer;color:inherit}
   background:linear-gradient(180deg,rgba(6,10,30,.97),rgba(6,10,30,.85));border-bottom:1px solid var(--ln);z-index:30}
 #top a{font-size:18px;font-weight:900;color:#FFE9A8;background:linear-gradient(180deg,#3A2E0B,#1E1806);border:1px solid #8a7420;border-radius:12px;padding:8px 12px;text-decoration:none;white-space:nowrap}
 #top .ttl{flex:1;text-align:center;font-size:clamp(20px,2.6vw,28px);font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:linear-gradient(90deg,#FFE9A8,#FFD54A,#FF9F43);-webkit-background-clip:text;background-clip:text;color:transparent}
-#mdSw{display:flex;gap:3px;background:rgba(0,0,0,.35);border:1px solid var(--ln);border-radius:12px;padding:3px}
-#mdSw button{font-size:17px;font-weight:900;border:0;border-radius:9px;padding:7px 11px;background:transparent;color:#B8C6FF;min-height:40px}
-#mdSw button.on{background:linear-gradient(180deg,#fff,#D9E2FF);color:#0B1236}
+.mdSw{display:flex;gap:3px;background:rgba(0,0,0,.35);border:1px solid var(--ln);border-radius:12px;padding:3px}
+.mdSw button{font-size:17px;font-weight:900;border:0;border-radius:9px;padding:7px 11px;background:transparent;color:#B8C6FF;min-height:40px}
+.mdSw button.on{background:linear-gradient(180deg,#fff,#D9E2FF);color:#0B1236}
 #tabs{position:fixed;left:0;right:0;top:64px;height:62px;display:flex;gap:6px;justify-content:center;align-items:center;padding:0 8px;background:rgba(5,8,24,.92);border-bottom:1px solid var(--ln);z-index:29;overflow-x:auto}
 #tabs button{flex:none;font-size:clamp(17px,1.9vw,21px);font-weight:900;border-radius:14px;border:1px solid var(--ln);padding:9px 14px;background:rgba(20,28,70,.8);color:#D6E0FF;min-height:48px}
 #tabs button.on{background:linear-gradient(180deg,#FFE9A8,#FFC21A);color:#2A1B00;border-color:#FFE07A}
@@ -215,23 +215,87 @@ h2.st{margin:4px 0 8px;font-size:clamp(24px,3vw,34px);color:#FFE07A;text-align:c
 #stage.n4 .rows,#stage.n5 .rows{grid-template-columns:1fr 1fr}
 @media (max-width:700px){#stage.n4 .rows,#stage.n5 .rows{grid-template-columns:1fr}}
 #s_ani h2.st{margin:0 0 2px}#s_ani .cap{font-size:clamp(19px,2.2vw,26px)}
+
+/* ══ 2026-11-17 第五十七次 ══ */
+/* 每 個 字母 正下方：字母 ➜ 音標 ➜ 聲音 點點（一個 聲音 一個 點；不 發音 ＝ 沒有 點）*/
+.dt{display:flex;gap:6px;justify-content:center;min-height:16px;margin-top:2px}.dt i{width:14px;height:14px;border-radius:50%;background:#FFE07A;box-shadow:0 0 9px #FFE07A;transform:scale(0);transition:transform .3s}.dt i.on{transform:scale(1)}
+.ck .tl.sl0{visibility:hidden;min-width:20px}.ck{min-width:44px}
+.ck.nm .L{background:#FFE07A;color:#4A2600!important;border-radius:10px;padding:0 6px}.bx.n .ck.sil .L{color:#6E7486}
+.ck.sil .L,.ck .L.gr{color:#9AA1B2!important}.bx.v .ck.sil .L{color:#E8B9B9!important;opacity:.85}
+.ck.on .L{transform:scale(1.3);filter:brightness(1.5) drop-shadow(0 0 16px #FFE07A) drop-shadow(0 0 6px #fff)}.ck.on .tl{transform:scale(1.15);background:#FFE07A;color:#2A1B00}
+.ck[data-zy]{cursor:pointer}.ck{cursor:pointer}
+/* 「子音」「母音」字 在 方框 上面 留 空間，不 被 字母 擋住 */
+.wrow{padding-top:40px}.bx .bl{top:-30px!important;bottom:auto!important;height:auto!important;display:block;line-height:1.2}.ck .L.zy{line-height:1.05}
+/* 每 一行 第一個 方框 上下 對齊（整組 置中、行 內 靠左）*/
+#stage .rows,#more2w .rows{width:fit-content;max-width:100%;margin:0 auto;justify-items:start}#stage .wrow,#more2w .wrow{justify-content:flex-start}
+#stage.n4 .rows,#stage.n5 .rows{width:auto}
+/* 音標 不 超出 方框 */
+.tl{max-width:none;white-space:nowrap}.tl sup{position:static;font-size:.5em;vertical-align:super;margin-left:1px}
+/* 開始 卡、目次、引導 思考 */
+.scard{text-align:center;padding:14px 10px}.scard .sno{font-size:20px;color:#BFD0FF}.goal{font-size:clamp(22px,2.6vw,30px);color:#FFF3C4;margin:8px 0;line-height:1.5}.goal.sm{font-size:clamp(18px,2vw,22px);margin:0 0 4px;text-align:center}
+.why{font-size:clamp(20px,2.3vw,26px);color:#B9FFD6;margin:6px 0 12px}.ctl.big .btn{font-size:clamp(22px,2.6vw,30px);min-height:70px;padding:12px 26px}.hint{font-size:18px;color:#BFD0FF;line-height:1.6}
+.shead{text-align:center}.ctl.top{justify-content:flex-start;max-width:1280px;margin:0 auto 6px;flex-wrap:nowrap;align-items:center}.ctl.top #scList{margin:0;flex:1}
+#scIdx{position:fixed;inset:0;z-index:50;background:rgba(3,6,20,.92);overflow:auto;padding:16px}.idxp{max-width:1200px;margin:0 auto}.idxg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+.idxg button{font-size:20px;font-weight:900;text-align:left;border-radius:14px;border:1px solid var(--ln);background:rgba(20,28,70,.9);color:#E0E8FF;padding:12px 14px;min-height:60px}.idxg button.on{background:#FFE07A;color:#2A1B00}.idxg b{color:#FFE07A;margin-right:6px}.idxg button.on b{color:#7A3B00}.idxg i{color:#2EE59D;font-style:normal}
+.think{margin:10px auto;max-width:980px;text-align:center;padding:12px 16px;border-radius:20px;border:3px solid #FFE07A;background:linear-gradient(160deg,#3B2A0B,#1A1405);animation:cd .4s}.think .tq,#prac .tq{font-size:clamp(22px,2.6vw,30px);font-weight:900;color:#FFF3C4;margin-bottom:8px;line-height:1.5}
+.qzrow .btn{font-size:24px;min-height:64px}
+/* 母音＋r：r ＝ 藍色 子音 方框（小 一點，緊 貼 母音）*/
+.bx.rr{min-width:clamp(52px,6vw,74px)}
+/* 多 音節：唸 到 的 音節 整個 放大＋發亮（老師 4-14）*/
+.syl{transition:transform .25s,box-shadow .25s,border-color .25s}.syl.hot{transform:scale(1.12);border-color:#FFE07A;border-style:solid;box-shadow:0 0 0 4px rgba(255,224,122,.5),0 0 40px rgba(255,224,122,.85);background:rgba(255,224,122,.12)}
+.syl.hot .L{filter:brightness(1.5) drop-shadow(0 0 12px #FFE07A)}.mz2{align-self:center;margin-left:12px}
+/* 一 字母 多 聲音 */
+.mw2{padding:30px 4px 8px;margin:0;justify-content:flex-start}.mrow .mw2 .bx{min-width:56px}.mrow{flex-wrap:wrap}
+/* 地圖 */
+.chip.dim{opacity:.32;border-style:dashed}.wrow.bad{opacity:.55}.gtabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}.gtabs button{font-size:16px;font-weight:900;border-radius:10px;border:1px solid var(--ln);background:rgba(0,0,0,.3);color:#CFD9FF;padding:6px 10px;min-height:44px}.gtabs button.on{background:#FFE07A;color:#2A1B00}
+#prac{max-width:1280px;margin:0 auto 10px;padding:10px;text-align:center;border:3px solid #FFE07A}
+#m2w{display:none}body.m2 #m2w{display:block;max-width:1280px;margin:0 auto 12px;padding:10px}body.m2 #mapOut{display:none}body.m2 .mapw{display:none}
+body.m2 #m2w .ck .L{font-size:clamp(70px,11vw,130px);line-height:1.2;padding-bottom:.06em}body.m2 #m2w .wrow{padding-bottom:110px}
+.m2a{position:absolute;left:0;right:0;bottom:-104px;display:flex;flex-direction:column;align-items:center;gap:2px}.m2a button{font-size:30px;width:100%;min-height:44px;border-radius:12px;border:2px solid rgba(255,255,255,.5);background:rgba(10,16,50,.9);color:#fff}.m2a span{font-size:15px;font-weight:900;color:#FFE9A8}
+.grev{margin:8px auto;max-width:1000px}.grevt{font-size:22px;font-weight:900;color:#FFE07A}#grevS{padding:6px;max-height:46vh;overflow:auto}#grevS .ck .L{font-size:clamp(34px,5vh,58px)}#grevS .wrow{padding:34px 4px 6px}#grevS .shead .goal{display:none}#grevS h2.st{font-size:22px}
+.pin{position:relative;width:100%;flex:1;min-height:320px;perspective:1100px;display:flex;justify-content:center}
+.pinb{position:relative;width:min(100%,980px);height:100%;min-height:320px;border-radius:30px 30px 18px 18px;overflow:hidden;transform:rotateX(14deg);transform-origin:50% 100%;
+  background:radial-gradient(120% 80% at 50% 0%,#2B1B6B,#0E1336 55%,#05060F);border:10px solid #3B2A0B;box-shadow:inset 0 0 0 3px #FFD54A,inset 0 0 60px rgba(124,92,255,.45),0 30px 50px rgba(0,0,0,.6)}
+.pinb canvas{position:absolute;inset:0;width:100%;height:100%}
+.prail{position:absolute;left:4%;right:14%;top:4%;height:62%;border:4px solid rgba(59,232,255,.55);border-bottom:0;border-radius:50% 50% 0 0/40% 40% 0 0;box-shadow:0 0 18px rgba(59,232,255,.5),inset 0 0 18px rgba(59,232,255,.35);pointer-events:none}
+.plane{position:absolute;right:2%;top:6%;bottom:4%;width:7%;border-left:3px solid rgba(255,213,74,.6);display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
+.plane i{width:70%;height:16%;border-radius:8px;background:repeating-linear-gradient(0deg,#9CA3AF 0 6px,#4B5563 6px 10px);transition:height .35s cubic-bezier(.3,1.6,.5,1)}.plane i.pull{height:5%;transition:height .35s ease-in}
+.pcoin{z-index:3;width:clamp(110px,15vw,160px);height:clamp(110px,15vw,160px);box-shadow:0 0 0 6px rgba(0,0,0,.45),0 0 30px rgba(255,213,74,.7),inset 0 -10px 0 rgba(0,0,0,.25);animation:pcG 1.6s ease-in-out infinite alternate}
+@keyframes pcG{to{box-shadow:0 0 0 6px rgba(0,0,0,.45),0 0 50px rgba(255,213,74,1),inset 0 -10px 0 rgba(0,0,0,.25)}}
+.pcoin.jk{animation:pcJ .9s forwards}@keyframes pcJ{40%{transform:scale(1.5) rotateY(360deg);filter:brightness(2)}100%{transform:scale(.1) rotateY(720deg);opacity:0}}
+.pcoin.crack{filter:grayscale(1) brightness(.6);animation:shake .4s}
+.pjack{position:absolute;left:0;right:0;top:40%;text-align:center;font-family:var(--an);font-size:clamp(50px,9vw,110px);font-weight:700;color:#FFE07A;text-shadow:0 0 30px #FFB000,0 6px 0 #7A3B00;opacity:0;pointer-events:none;z-index:4}
+.pjack.on{animation:pjk 1.6s ease-out}@keyframes pjk{0%{opacity:0;transform:scale(3)}20%{opacity:1;transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:translateY(-40px)}}
+/* 第五十七次 4-9：每 一行 第一個 字母 上下 對齊（sot 正下方 shot、shot 正下方 short）＝ 一律 一欄；說明 放 在 右邊；「子音／母音」只 在 第一行 */
+#stage .rows{grid-template-columns:1fr!important;width:fit-content;max-width:100%;margin:0 auto;justify-items:start;gap:0}
+#stage .rw{display:flex;align-items:center;gap:6px 16px;flex-wrap:wrap}#stage .rw>.wrow{flex-wrap:nowrap;flex:none}#stage .rsd{flex:1 1 220px}#stage .rsd{display:flex;flex-direction:column;align-items:flex-start;gap:4px}#stage .rsd .sum{text-align:left;margin:0}#stage .rsd .mtag{font-size:16px;margin:0}
+#stage .wrow{padding:8px 4px 10px}#stage .rw.r0 .wrow{padding-top:34px}
+#stage.n3 .ck .L{font-size:clamp(34px,4.8vh,56px)}#stage.n3 .tl{height:30px;font-size:19px;min-width:32px}#stage.n3 .ck .T{min-height:32px}#stage.n3 .wrow{padding:4px 4px 6px}#stage.n3 .rw.r0 .wrow{padding-top:30px}#stage.n3 .shead .goal{font-size:17px}#stage.n3 h2.st{font-size:26px;margin:0}
+#stage .wrow>.syl:first-child{margin-left:-13px}#more2w .wrow>.syl:first-child{margin-left:-13px}
+#stage.n4 .ck .L,#stage.n5 .ck .L{font-size:clamp(32px,4.2vh,48px)}#stage.n4 .tl,#stage.n5 .tl{height:28px;font-size:18px;min-width:30px}#stage.n4 .dt i,#stage.n5 .dt i{width:11px;height:11px}
+#stage.n4 .wrow,#stage.n5 .wrow{padding:3px 4px 5px}#stage.n4 .rw.r0 .wrow,#stage.n5 .rw.r0 .wrow{padding-top:28px}#stage.n4 .bx,#stage.n5 .bx{padding:4px 7px 5px}#stage.n4 .ck,#stage.n5 .ck{gap:3px}
+#stage.n4 .shead .goal,#stage.n5 .shead .goal{display:none}#stage.n4 .ck .T,#stage.n5 .ck .T{min-height:30px}#stage.n4,#stage.n5{padding-top:4px;padding-bottom:4px}#stage.n4 h2.st,#stage.n5 h2.st{font-size:24px;margin:0}
+.ck .L.dsc{padding-bottom:.2em;margin-bottom:-.06em}/* g j p q y 的 尾巴 不 被 音標 蓋住 */
+body.m2 #m2lnk{display:none}
+.gsw{margin-left:6px}.gsw button{font-size:15px;padding:5px 8px;min-height:40px}
 @media (max-width:900px){.mapw{grid-template-columns:1fr}.many{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
 </style></head><body>
 <div id="top"><a href="index.html">🔤 字卡</a><a href="games.html">🎮 遊戲場</a><div class="ttl">🗺️ 拼音 地圖：從 CVC 到 課本</div>
-<div id="mdSw"><button data-md="zh">注音</button><button data-md="kk">KK</button><button data-md="ipa">IPA</button></div><a href="../index.html">🏠</a></div>
+<div id="mdSw" class="mdSw"><button data-md="zh">注音</button><button data-md="kk">KK</button><button data-md="ipa">IPA</button></div><a href="../index.html">🏠</a></div>
 <div id="tabs"><button data-tab="ani">🎬 秒懂 動畫</button><button data-tab="map">🗺️ 拼音 地圖</button><button data-tab="syl">🪜 多 音節</button><button data-tab="many">🔤 一 字母 多 聲音</button><button data-tab="play">🎮 10 種 遊戲＋25 題 闖關</button></div>
 <main>
-<section class="scr" id="s_ani"><div id="scList"></div><div class="pnl" id="stage"></div>
-  <div class="ctl"><button id="aPrev">◀ 上一段</button><button id="aPause">⏸️ 暫停</button><button id="aSlow">🐢 慢速</button><button id="aAgain">🔁 再一次</button><button id="aStress">🎵 重音：關</button><button id="aNext">下一段 ▶</button></div></section>
-<section class="scr" id="s_map" hidden><div class="ctl"><button id="lvB" class="on">🟢 基礎</button><button id="lvA">🔵 進階</button><button id="mRand">🎲 隨機 換 一個</button></div>
-  <div class="pnl" id="mapOut"></div>
+<section class="scr" id="s_ani"><div class="ctl top"><button id="aIdx" class="btn gold">📑 目次</button><div id="scList"></div></div><div class="pnl" id="stage"></div>
+  <div class="ctl"><button id="aPrev">◀ 上一段</button><button id="aStep">▶ 逐次 播放</button><button id="aAll">👀 全部 展示</button><button id="aThink">🤔 引導 思考</button><button id="aPause">⏸️ 暫停</button><button id="aSlow">🐢 慢速</button><button id="aAgain">🔁 再一次</button><button id="aOne">1️⃣ 單字 唸 一次：關</button><button id="aStress">🎵 重音：關</button><button id="aQz" class="btn gold">📝 隨堂 測驗</button><button id="aNext">下一段 ▶</button></div>
+  <div id="scIdx" hidden></div></section>
+<section class="scr" id="s_map" hidden><div class="ctl"><button id="lvB" class="on">🟢 基礎</button><button id="lvA">🔵 進階</button><button id="mRand">🎲 隨機 換 一個</button><button id="pSpell" class="btn gold">🎧 你 來 拼</button><button id="pRead" class="btn gold">👀 你 來 讀</button><a class="btn" id="m2lnk" href="map2.html" style="text-decoration:none">🆕 新版（▲▼ 直接 換）</a></div>
+  <div class="pnl" id="prac" hidden></div><div class="pnl" id="mapOut"></div><div class="pnl" id="m2w"></div>
   <div class="mapw"><div class="pnl mcol c"><h3>① 字首（子音）</h3><div id="mOn"></div></div><div class="pnl mcol v"><h3>② 母音</h3><div id="mV"></div></div><div class="pnl mcol c"><h3>③ 字尾（子音）</h3><div id="mCo"></div></div></div></section>
 <section class="scr" id="s_syl" hidden><div class="ctl"><button id="sStress">🎵 重音：關</button></div><div class="pnl" id="sylOut" style="max-width:1280px;margin:0 auto;padding:10px"></div></section>
 <section class="scr" id="s_many" hidden><div class="many" id="manyOut"></div></section>
 <section class="scr" id="s_play" hidden><div class="gl" id="gList"></div></section>
 </main>
-<div id="game" hidden><div id="ghud"><button id="gx">✖ 離開</button><span id="gq"></span><span class="gt" id="gt"></span><span id="gsc">⭐ 0</span></div><div id="gtm"><i></i></div><div id="gbody"></div></div>
+<div id="game" hidden><div id="ghud"><button id="gx">✖ 離開</button><div class="mdSw gsw"><button data-md="zh">注音</button><button data-md="kk">KK</button><button data-md="ipa">IPA</button></div><span id="gq"></span><span class="gt" id="gt"></span><span id="gsc">⭐ 0</span></div><div id="gtm"><i></i></div><div id="gbody"></div></div>
 <div id="fb" hidden></div>
 <script>/*__DATA__*/</script>
 /*__SCORE__*/

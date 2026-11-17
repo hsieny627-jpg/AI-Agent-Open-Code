@@ -19,7 +19,18 @@
     'sk': { zh: ['ㄙ', 'ㄎ'], sup: [null, '〃'], kk: ['s', 'k'], ipa: ['s', 'k'] },
     'ft': { zh: ['ㄈ', 'ㄊ'], sup: ['〃', '〃'], kk: ['f', 't'], ipa: ['f', 't'] },
     'ng': { zh: 'ㄥ', kk: 'ŋ', ipa: 'ŋ' },
-    'nk': { zh: ['ㄥ', 'ㄎ'], sup: [null, '〃'], kk: ['ŋ', 'k'], ipa: ['ŋ', 'k'] }
+    'nk': { zh: ['ㄥ', 'ㄎ'], sup: [null, '〃'], kk: ['ŋ', 'k'], ipa: ['ŋ', 'k'] },
+    /* 2026-11-17 第五十七次 第 2 點（老師：新 字尾 放進 進階版 字卡）：一個 字母 一個 音標（字尾 l ＝ ㄛ、字尾 塞音 〃；mb 的 b 不 發音、nch 的 ch ＝ 一個 聲音 在 _card.html 另外 排）*/
+    'pt': { zh: ['ㄆ', 'ㄊ'], sup: ['〃', '〃'], kk: ['p', 't'], ipa: ['p', 't'] },
+    'ct': { zh: ['ㄎ', 'ㄊ'], sup: ['〃', '〃'], kk: ['k', 't'], ipa: ['k', 't'] },
+    'xt': { zh: ['ㄎㄙ', 'ㄊ'], sup: [null, '〃'], kk: ['ks', 't'], ipa: ['ks', 't'] },
+    'lp': { zh: ['ㄛ', 'ㄆ'], sup: [null, '〃'], kk: ['l', 'p'], ipa: ['l', 'p'] },
+    'lf': { zh: ['ㄛ', 'ㄈ'], sup: [null, '〃'], kk: ['l', 'f'], ipa: ['l', 'f'] },
+    'lt': { zh: ['ㄛ', 'ㄊ'], sup: [null, '〃'], kk: ['l', 't'], ipa: ['l', 't'] },
+    'sp': { zh: ['ㄙ', 'ㄆ'], sup: [null, '〃'], kk: ['s', 'p'], ipa: ['s', 'p'] },
+    'ld': { zh: ['ㄛ', 'ㄉ'], sup: [null, '〃'], kk: ['l', 'd'], ipa: ['l', 'd'] },
+    'lk': { zh: ['ㄛ', 'ㄎ'], sup: [null, '〃'], kk: ['l', 'k'], ipa: ['l', 'k'] },
+    'nch': { zh: ['ㄋ', 'ㄔ'], sup: [null, null], kk: ['n', 'tʃ'], ipa: ['n', 'tʃ'] }
   };
   /* 雙子音、三子音 ＝ 一個 一個 子音 的 方塊 接 起來（r 一樣 是 疊 起來 的 ㄖ／ㄨ）*/
   var BLEND = { bl: ['b', 'l'], cl: ['c_hard', 'l'], fl: ['f', 'l'], pl: ['p', 'l'], sl: ['s', 'l'],
@@ -56,15 +67,18 @@
         basic: ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'c', 'k', 'h', 'j', 'w', 'r', 's', 'v', 'y'] },
       IG: [['blend', '雙 子音'], ['trip', '三 子音'], ['basic', '單 子音']],
       VLIST: VLIST_ADV,
-      ENDINGS: { g1: ['無', 'b', 'd', 'g', 'k', 'l', 'm', 'n', 'p', 't', 'x'], g2: ['nd', 'nt', 'mp', 'st', 'sk', 'ft'], g3: ['sh', 'ch', 'th', 'ck', 'tch', 'ng', 'nk'] },
-      EG: [['g1', '1'], ['g2', '2'], ['g3', '3']], end0: 't' }
+      ENDINGS: { g1: ['無', 'b', 'd', 'g', 'k', 'l', 'm', 'n', 'p', 't', 'x'], g2: ['nd', 'nt', 'mp', 'st', 'sk', 'ft'], g3: ['sh', 'ch', 'th', 'ck', 'tch', 'ng', 'nk'], g4: ['pt', 'ct', 'xt', 'lp', 'lf', 'lt', 'sp', 'mb', 'ld', 'lk', 'nch'] },
+      EG: [['g1', '1'], ['g2', '2'], ['g3', '3'], ['g4', '新']], end0: 't' }
   };
   var MAGIC_END = ['b', 'd', 'k', 'l', 'm', 'n', 'p', 't'];   /* magic e 後面 只 放 一個 子音 的 聲音（g、s、r 加 e 會 變 音：age、rose、care）*/
   var TEAM_END = ['d', 'k', 'l', 'm', 'n', 'p', 't', 'st', 'ch'];
   var SHORT_ONLY = ['g', 'x', 'ck', 'tch', 'sh', 'ng', 'nk', 'nd', 'mp', 'sk', 'ft', 'b'];
   /* 進階版 組合 合不合 英文 拼字 習慣（不合 ＝ 這一張 不 出現）*/
+  var NEW_END = { pt: 1, ct: 1, xt: 1, lp: 1, lf: 1, lt: 1, sp: 1, mb: 1, ld: 1, lk: 1, nch: 1 };
   function fits(I, V, E) {
     var t = V.key || V.t, sh = /^[aeiou]$/.test(t);
+    /* 第五十七次：新 字尾 只 跟 短 母音；ld lk 不 跟 a o（old、talk 母音 會 變）；mb 只 跟 a i u（lamb、limb、thumb）*/
+    if (NEW_END[E]) { if (!sh) return false; if ((E === 'ld' || E === 'lk') && (t === 'a' || t === 'o')) return false; if (E === 'mb' && 'aiu'.indexOf(t) < 0) return false; return true; }
     if (t === 'ay' || t === 'ow') return E === '無';
     if (sh) { if (E === '無' || E === 'k' || E === 'l') return false; if ((E === 'ng' || E === 'nk') && t === 'e') return false; return true; }
     if (VOW2[t] && VOW2[t].magic) { if (MAGIC_END.indexOf(E) < 0) return false; if (t === 'u_e' && (I === 'qu' || I === 'w' || I === 'y')) return false; return true; }
@@ -73,14 +87,14 @@
   /* ── 碼 ── */
   function initCode2(I, V) { if (BLEND[I]) return BCODE[I] || I; if (I === 'v' || I === 'y') return I; return PH.initCode(I, V.t.charAt(0) === 'e' || V.t.charAt(0) === 'i' ? 'e' : V.t); }
   function vowCode2(I, V) { var t = V.key || V.t; if (t === 'a_e' || t === 'ay') return 'ai'; if (t === 'i_e') return 'ii'; if (t === 'o_e' || t === 'ow') return 'oa'; if (t === 'ea') return 'ee'; if (t === 'u_e') return uIsU(I) ? 'uu' : 'yu'; return PH.vowCode(V); }
-  function endCode2(E) { if (E === 'k') return 'k'; if (E === 'ng' || E === 'nk' || E === 'st' || E === 'sk' || E === 'ft') return E; return PH.endCode(E); }
+  function endCode2(E) { if (E === 'k') return 'k'; if (E === 'ct') return 'kt'; if (E === 'xt') return 'kst'; if (NEW_END[E] && E !== 'mb') return E; if (E === 'ng' || E === 'nk' || E === 'st' || E === 'sk' || E === 'ft') return E; return PH.endCode(E); }
   function code2(I, V, E) { var e = endCode2(E); return initCode2(I, V) + '-' + vowCode2(I, V) + (e ? '-' + e : ''); }
   /* 拼字（例 bl＋a_e＋k ＝ blake、b＋ay ＝ bay）*/
   function spell2(I, V, E) { var t = V.key || V.t, i = I.replace('(無聲)', '').replace('(有聲)', ''), e = E === '無' ? '' : E;
     if (VOW2[t] && VOW2[t].magic) return i + t.charAt(0) + e + 'e'; return i + t + e; }
-  var IPA_I2 = { v: 'v', y: 'j', bl: 'bl', kl: 'kl', fl: 'fl', pl: 'pl', sl: 'sl', br: 'bɹ', kr: 'kɹ', dr: 'dɹ', fr: 'fɹ', gr: 'ɡɹ', pr: 'pɹ', tr: 'tɹ',
+  var IPA_I2 = { v: 'v', y: 'j', gl: 'ɡl', bl: 'bl', kl: 'kl', fl: 'fl', pl: 'pl', sl: 'sl', br: 'bɹ', kr: 'kɹ', dr: 'dɹ', fr: 'fɹ', gr: 'ɡɹ', pr: 'pɹ', tr: 'tɹ',
     sk: 'sk', sm: 'sm', sn: 'sn', sp: 'sp', st: 'st', sw: 'sw', skr: 'skɹ', spl: 'spl', spr: 'spɹ', str: 'stɹ', '0': '' };
-  var IPA_V2 = { ii: 'aɪ', yu: 'juː' }, IPA_E2 = { st: 'st', sk: 'sk', ft: 'ft', ng: 'ŋ', nk: 'ŋk', k: 'k', l: 'l' };
+  var IPA_V2 = { ii: 'aɪ', yu: 'juː', oy: 'ɔɪ', ao: 'ɔː' }, IPA_E2 = { st: 'st', sk: 'sk', ft: 'ft', ng: 'ŋ', nk: 'ŋk', k: 'k', l: 'l', pt: 'pt', kt: 'kt', kst: 'kst', lp: 'lp', lf: 'lf', lt: 'lt', sp: 'sp', ld: 'ld', lk: 'lk', nch: 'ntʃ' };
   function ipa2(c) { var p = c.split('-'), V = Object.assign({ ae: 'æ', eh: 'ɛ', ih: 'ɪ', aa: 'ɑː', uh: 'ʌ', ar: 'ɑːɹ', er: 'ɜː', or: 'ɔːɹ', ai: 'eɪ', ee: 'iː', oa: 'oʊ', uu: 'uː', oo: 'ʊ', ou: 'aʊ' }, IPA_V2),
     I = Object.assign({ b: 'b', p: 'p', m: 'm', f: 'f', d: 'd', t: 't', n: 'n', l: 'l', k: 'k', h: 'h', s: 's', j: 'dʒ', w: 'w', r: 'ɹ', z: 'z', g: 'ɡ', kw: 'kw', ch: 'tʃ', sh: 'ʃ', th: 'θ', dh: 'ð' }, IPA_I2),
     E = Object.assign({ b: 'b', p: 'p', m: 'm', f: 'f', d: 'd', t: 't', n: 'n', l: 'l', g: 'ɡ', k: 'k', r: 'ɹ', s: 's', z: 'z', ks: 'ks', mp: 'mp', nd: 'nd', nt: 'nt', ch: 'tʃ', sh: 'ʃ', th: 'θ', shn: 'ʃən', zhn: 'ʒən' }, IPA_E2);

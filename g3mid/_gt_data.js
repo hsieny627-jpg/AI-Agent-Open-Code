@@ -84,7 +84,8 @@ var GL = 'abcdefghijklmnopqrstuvwxyz'.split('').map(function (c) { var C = c.toU
 /* C. 通過率 最低 前 5 題（112＋113）＝ 每 一回 一定 出 的 題型（不是 原題：開頭 的 音 用 同 一種 音 的 別的 字）：
  *   gl ＝ 這 幾 個 字母 每 一回 一定 出（N、Q、J）；gs1 ＝ 一樣 的 3 組 裡 至少 2 組 開頭 是 這 幾 個 音（m、h、b、y）；
  *   gs0 ＝ 不一樣 的 3 組 裡 一定 有 1 組 f／v；gc ＝ 這 一句 一定 出（Close your book.，錯 的 圖 一定 有 開書） */
-var TOP = { gl: ['n', 'q', 'j'], gs1: ['m', 'h', 'b', 'y'], gs0: [['f', 'v']], gc: ['Close your book.'] };
+/* 2026-11-17 第五十七次 第 1 點：老師 考卷「Read and Write 寫出 對應 的 大寫 或 小寫」的 8 個（G➜g、k➜K、P➜p、Q➜q、J➜j、e➜E、h➜H、Y➜y）＝ 每 一回 一定 出（學生 最 需要 精熟、最 容易 寫錯）；加上 原本 的 N ＝ 9 個 必考＋6 個 輪流 */
+var TOP = { gl: ['g', 'k', 'p', 'q', 'j', 'e', 'h', 'y', 'n'], gs1: ['m', 'h', 'b', 'y'], gs0: [['f', 'v']], gc: ['Close your book.'] };
 if (GS.length < 48) throw new Error('成長測驗 開頭 的 音 太 少：' + GS.length);
 if (GS1.filter(function (q) { return q.same; }).length !== 26) throw new Error('成長測驗：一樣 的 要 26 組');
 var GORD = [['gl', 'GL'], ['gs', 'GS'], ['gc', 'GC']];
