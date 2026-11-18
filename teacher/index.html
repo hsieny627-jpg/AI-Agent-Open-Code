@@ -232,7 +232,7 @@ h3{margin:18px 0 8px;font-size:clamp(22px,1.8vw,32px)}
 .tabS .fline,.tabS #tiles{display:none!important}
 .tabs button.stab{background:#FFD54A;color:#2B1A00;font-weight:900}.tabs button.stab.on{outline:4px solid #fff}
 .sBar{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}#sq{font-size:clamp(22px,2vw,30px);padding:12px 16px;border-radius:16px;border:3px solid #FFD54A;background:#0B1236;color:#fff;width:100%;box-sizing:border-box}
-.sDt{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.sDt button{font-size:clamp(18px,1.5vw,24px);font-weight:900;padding:6px 16px;min-height:48px;border-radius:14px;border:2px solid #3C5598;background:#1B2A55;color:#DCE8FF;cursor:pointer}.sDt button.on{background:#FFD54A;color:#2B1A00;border-color:#fff}.sDt input{font-size:20px;padding:6px;border-radius:10px}
+.sNth{font-style:normal;background:#FFD54A;color:#2B1A00;border-radius:10px;padding:0 8px;font-size:.8em}.sGr{margin-bottom:6px}.sDt{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.sDt button{font-size:clamp(18px,1.5vw,24px);font-weight:900;padding:6px 16px;min-height:48px;border-radius:14px;border:2px solid #3C5598;background:#1B2A55;color:#DCE8FF;cursor:pointer}.sDt button.on{background:#FFD54A;color:#2B1A00;border-color:#fff}.sDt input{font-size:20px;padding:6px;border-radius:10px}
 .sSum{font-size:22px;margin:4px 0 10px;color:#DCE4FF}.s2c{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media (max-width:900px){.s2c{grid-template-columns:1fr}}
 .sCol{border-radius:18px;padding:12px;border:3px solid}.sCol.L{border-color:#FF9F43;background:rgba(255,159,67,.08)}.sCol.H{border-color:#4ADE80;background:rgba(74,222,128,.08)}.sCol h2{margin:0 0 10px;font-size:clamp(24px,2.2vw,34px)}.sCol h2 small{font-size:.6em;color:#BFD0FF}
 .sT{display:grid;grid-template-columns:1fr auto;gap:2px 10px;width:100%;text-align:left;padding:10px 14px;margin:6px 0;border-radius:14px;border:2px solid #34407A;background:#141B3D;color:#fff;cursor:pointer;font:inherit}.sT:hover{border-color:#FFD54A}
@@ -4186,7 +4186,7 @@ function crSeen(g,k,v){var key='tcr_seen_'+g+'_'+k;try{if(v!=null)localStorage.s
  * ① 上面：關鍵字（班級 406、5 碼、座號、姓名、遊戲 名字）＋日期（今天／昨天／這週／最近 7 天／全部／自己 選）
  * ② 兩大類 並排：⚡ 現場 任務（上課，來源 school）｜🏠 回家 任務（來源 home）；每 一類 ＝ 最近 一次（大 卡）＋最近 五次（照 時間，新 的 在 上面）
  * ③ 一個「任務」＝ 同 一天、同 一班、同 一個 遊戲／題組；點 一下 ＝ 全班 每 一個 人 的 成績（照 座號）＋成長測驗 的 ✍️ 字母 書寫 分析 */
-var SQ={q:'',d1:'',d2:'',pr:'all',n:{L:5,H:5}};
+var SQ={q:'',d1:'',d2:'',pr:'all',g:0,n:{L:5,H:5}};   /* 2026-11-18 第六十次 老師 6：以前 偷偷 只 看 上面 選 的 年級（400 課後班 ＝ 四年級，選 三年級 就 看不到 它 做 的 三年級 成長測驗）➜ 預設 全部 年級＋看得到 的〔全部｜三年級｜四年級〕*/
 function sDay(t){return new Date(t+288e5).toISOString().slice(0,10)}
 function sRange(){var now=DATA.now,today=sDay(now),D=function(s){return Date.parse(s+'T00:00:00+08:00')};
   if(SQ.pr==='t')return [D(today),null];if(SQ.pr==='y')return [D(today)-864e5,D(today)];if(SQ.pr==='w')return [SC.weekStart(now),null];if(SQ.pr==='7')return [D(today)-6*864e5,null];
@@ -4194,31 +4194,35 @@ function sRange(){var now=DATA.now,today=sDay(now),D=function(s){return Date.par
 function sMatch(r,q){if(!q)return true;var id=r.id,n=nm(id)||'',nmS=String(r.name||'')+' '+String((SC.cat(r.set)||{}).t||'');
   return q.split(/\s+/).filter(Boolean).every(function(w){if(/^\d{5}$/.test(w))return id===w;if(/^\d{3}$/.test(w))return r.cls===w;if(/^\d{1,2}$/.test(w))return +r.seat===+w;
     return n.indexOf(w)>=0||nmS.toLowerCase().indexOf(w.toLowerCase())>=0||SC.cname(r.cls).indexOf(w)>=0})}
-function sTasks(rows){var M={};rows.forEach(function(r){var k=(r.src==='home'?'H':'L')+'|'+r.set+'|'+r.cls+'|'+sDay(r.t);var o=M[k]=M[k]||{k:k,set:r.set,name:r.name,cls:r.cls,day:sDay(r.t),t0:r.t,t1:r.t,R:[]};o.R.push(r);if(r.t>o.t1)o.t1=r.t;if(r.t<o.t0)o.t0=r.t});
+/* 2026-11-18 第六十次 老師 6：同 一天 同 一班 同 一個 題組 做 兩次（成長測驗 第 1、2 次）＝ 兩張 卡（中間 隔 20 分鐘 以上 ＝ 另 一次）*/
+function sTasks(rows){var M={},SS={},GAP=20*6e4;rows.slice().sort(function(a,b){return a.t-b.t}).forEach(function(r){var b=(r.src==='home'?'H':'L')+'|'+r.set+'|'+r.cls+'|'+sDay(r.t),z=SS[b];if(!z)z=SS[b]={n:1,t:r.t};else if(r.t-z.t>GAP)z.n++;z.t=r.t;r._sn=z.n});
+  rows.forEach(function(r){var b=(r.src==='home'?'H':'L')+'|'+r.set+'|'+r.cls+'|'+sDay(r.t),k=b+'|'+r._sn;var o=M[k]=M[k]||{k:k,set:r.set,name:r.name,cls:r.cls,day:sDay(r.t),t0:r.t,t1:r.t,R:[]};o.sn=r._sn;o.sb=b;o.R.push(r);if(r.t>o.t1)o.t1=r.t;if(r.t<o.t0)o.t0=r.t});
+  Object.keys(M).forEach(function(k){var o=M[k];o.nth=(SS[o.sb].n>1)?o.sn:0});
   return Object.keys(M).map(function(k){var o=M[k],last={};o.R.forEach(function(r){if(!last[r.id]||r.t>last[r.id].t)last[r.id]=r});o.P=Object.keys(last).map(function(id){return last[id]});
     var sc=o.P.map(sScore).filter(function(v){return v!=null});o.avg=sc.length?sc.reduce(function(a,b){return a+b},0)/sc.length:null;return o}).sort(function(a,b){return b.t1-a.t1})}
 function sScore(r){return r.s!=null?r.s:r.acc!=null?r.acc:null}
-function sCard(o,big){var sz=+SIZES[o.cls]||0,a=o.avg;return '<button class="sT'+(big?' big':'')+'" data-stk="'+esc(o.k)+'"><span class="sTd">'+(big?'🆕 最近 一次　':'')+dt(o.t1)+'</span><b class="sTn">'+esc(o.name||o.set)+'</b>'+
+function sCard(o,big){var sz=+SIZES[o.cls]||0,a=o.avg;return '<button class="sT'+(big?' big':'')+'" data-stk="'+esc(o.k)+'"><span class="sTd">'+(big?'🆕 最近 一次　':'')+dt(o.t1)+'</span><b class="sTn">'+esc(o.name||o.set)+(o.nth?' <em class="sNth">第 '+o.nth+' 次</em>':'')+'</b>'+
   '<span class="sTc"><em class="cls">'+SC.cname(o.cls)+'</em>👥 '+o.P.length+(sz?'／'+sz:'')+' 人</span><span class="sTa '+(a==null?'':a>=80?'hi':a>=60?'mid':'lo')+'">'+(a==null?'—':'平均 <b>'+Math.round(a)+'</b> 分')+'</span><span class="sTgo">👉 看 每 一個 人</span></button>'}
 function sCol(tag,ic,lb,tasks){var n=SQ.n[tag];return '<section class="sCol '+tag+'"><h2>'+ic+' '+lb+'<small>（'+tasks.length+' 個）</small></h2>'+(tasks.length?sCard(tasks[0],1)+'<div class="sL5"><div class="sL5t">📋 最近 五次（新 的 在 上面）</div>'+tasks.slice(0,n).map(function(o){return sCard(o)}).join('')+'</div>'+
   (tasks.length>n?'<button class="sMore" data-smore="'+tag+'">⬇ 再 看 '+Math.min(10,tasks.length-n)+' 個（還有 '+(tasks.length-n)+' 個）</button>':''):'<div class="note">這個 條件 沒有 '+lb+' 的 成績。</div>')+'</section>'}
-function sRes(){var R=sRange(),q=SQ.q.trim(),rows=ALL.filter(function(r){return !r.x&&(q||r.g===F.g)&&(R[0]==null||r.t>=R[0])&&(R[1]==null||r.t<R[1])&&sMatch(r,q)});
+function sRes(){var R=sRange(),q=SQ.q.trim(),rows=ALL.filter(function(r){return !r.x&&(q||!SQ.g||r.g===SQ.g)&&(R[0]==null||r.t>=R[0])&&(R[1]==null||r.t<R[1])&&sMatch(r,q)});
   var live=sTasks(rows.filter(function(r){return r.src!=='home'})),home=sTasks(rows.filter(function(r){return r.src==='home'}));
   var stu='';if(q){var ids={};rows.forEach(function(r){ids[r.id]=1});var I=Object.keys(ids);if(I.length>=1&&I.length<=3)stu=I.map(function(id){var rs=rows.filter(function(r){return r.id===id}).sort(function(a,b){return b.t-a.t}).slice(0,5);
     return '<div class="sStu"><h3>👤 '+id.slice(0,3)+' 班 '+(+id.slice(3))+' 號 '+esc(nm(id))+'：最近 5 次</h3><table class="sTb"><tr><th>時間</th><th>類</th><th>做 什麼</th><th>分數</th></tr>'+rs.map(function(r){var s=sScore(r);return '<tr><td>'+dt(r.t)+'</td><td>'+(r.src==='home'?'🏠':'⚡')+'</td><td class="l">'+esc(r.name)+(r.pt?'<small>（只 做到 第 '+r.pt+' 題）</small>':'')+'</td><td class="'+(s==null?'':s>=80?'hi':s>=60?'mid':'lo')+'">'+(s==null?'—':Math.round(s))+'</td></tr>'}).join('')+'</table></div>'}).join('')}
-  $('#sres').innerHTML='<div class="sSum">找到 <b>'+rows.length+'</b> 筆　'+(q?'🔎「'+esc(q)+'」':'（'+(F.g===3?'三':'四')+'年級）')+'</div>'+stu+'<div class="s2c">'+sCol('L','⚡','現場 任務（上課）',live)+sCol('H','🏠','回家 任務',home)+'</div>';SQ.T={};live.concat(home).forEach(function(o){SQ.T[o.k]=o})}
+  $('#sres').innerHTML='<div class="sSum">找到 <b>'+rows.length+'</b> 筆　'+(q?'🔎「'+esc(q)+'」':'（'+(SQ.g?(SQ.g===3?'三':'四')+'年級':'三、四年級 全部')+'）')+'</div>'+stu+'<div class="s2c">'+sCol('L','⚡','現場 任務（上課）',live)+sCol('H','🏠','回家 任務',home)+'</div>';SQ.T={};live.concat(home).forEach(function(o){SQ.T[o.k]=o})}
 function paneS(){setTimeout(function(){sRes();var i=$('#sq');if(i&&SQ.foc){i.focus();i.setSelectionRange(i.value.length,i.value.length)}},0);
   return '<div class="sBar"><input id="sq" type="search" autocomplete="off" placeholder="🔎 打 關鍵字：班級 406、5 碼 40612、姓名、遊戲 名字（例：成長測驗）" value="'+esc(SQ.q)+'">'+
-   '<div class="sDt">'+[['t','今天'],['y','昨天'],['w','這週'],['7','最近 7 天'],['all','全部'],['c','📅 自己 選']].map(function(x){return '<button data-spr="'+x[0]+'" class="'+(SQ.pr===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+
+   '<div class="sDt sGr">'+[[0,'全部 年級'],[3,'三年級'],[4,'四年級']].map(function(x){return '<button data-sgr="'+x[0]+'" class="'+(SQ.g===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div><div class="sDt">'+[['t','今天'],['y','昨天'],['w','這週'],['7','最近 7 天'],['all','全部'],['c','📅 自己 選']].map(function(x){return '<button data-spr="'+x[0]+'" class="'+(SQ.pr===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+
    '<span class="sCd"'+(SQ.pr==='c'?'':' hidden')+'><input type="date" id="sd1" value="'+SQ.d1+'"> ～ <input type="date" id="sd2" value="'+SQ.d2+'"></span></div></div><div id="sres"></div>'}
 function sOpen(k){var o=SQ.T&&SQ.T[k];if(!o)return;var P=o.P.slice().sort(function(a,b){return a.seat-b.seat}),cnt={};o.R.forEach(function(r){cnt[r.id]=(cnt[r.id]||0)+1});
-  var h='<button class="x" id="mx">✕ 關閉</button><h2 style="margin:0 0 6px">'+(o.R[0].src==='home'?'🏠':'⚡')+' '+esc(o.name||o.set)+'</h2><div class="sMh"><em class="cls">'+SC.cname(o.cls)+'</em>📅 '+o.day+'　🕘 '+dt(o.t0).split(' ')[1]+'～'+dt(o.t1).split(' ')[1]+'　👥 '+P.length+' 人　'+(o.avg==null?'':'平均 <b>'+Math.round(o.avg)+'</b> 分')+'</div>'+
+  var h='<button class="x" id="mx">✕ 關閉</button><h2 style="margin:0 0 6px">'+(o.R[0].src==='home'?'🏠':'⚡')+' '+esc(o.name||o.set)+(o.nth?'（第 '+o.nth+' 次）':'')+'</h2><div class="sMh"><em class="cls">'+SC.cname(o.cls)+'</em>📅 '+o.day+'　🕘 '+dt(o.t0).split(' ')[1]+'～'+dt(o.t1).split(' ')[1]+'　👥 '+P.length+' 人　'+(o.avg==null?'':'平均 <b>'+Math.round(o.avg)+'</b> 分')+'</div>'+
     '<table class="sTb big"><tr><th>座號</th><th>姓名</th><th>分數</th><th>正確率</th><th>答對／題數</th><th>秒數</th><th>做 了 幾 次</th><th>最後 時間</th></tr>'+P.map(function(r){var s=sScore(r);return '<tr><td>'+r.seat+'</td><td class="l">'+esc(nm(r.id))+'</td><td class="'+(s==null?'':s>=80?'hi':s>=60?'mid':'lo')+'"><b>'+(s==null?'—':Math.round(s))+'</b>'+(r.pt?'<small>（只 做到 第 '+r.pt+' 題）</small>':'')+'</td><td>'+(r.acc==null?'—':r.acc+'%')+'</td><td>'+(r.n?r.ok+'／'+r.n:'—')+'</td><td>'+(r.sec||'—')+'</td><td>'+cnt[r.id]+'</td><td>'+dt(r.t).split(' ')[1]+'</td></tr>'}).join('')+'</table>';
   /* 成長測驗：✍️ 字母 書寫 分析 就 在 這裡（以前 要 到〔🏫 課堂複習〕找）*/
   if(/_g3m-g25$/.test(o.set)){var hw='';try{hw=hwHTML(o.R)}catch(e){}if(hw)h+='<div class="sHw">'+hw+'</div>'}
   $('#mbox').innerHTML=h;$('#modal').classList.add('on')}
 document.addEventListener('input',function(e){if(e.target.id==='sq'){SQ.q=e.target.value;SQ.foc=1;SQ.n={L:5,H:5};sRes()}else if(e.target.id==='sd1'||e.target.id==='sd2'){SQ[e.target.id.slice(1)]=e.target.value;sRes()}});
 document.addEventListener('click',function(e){var b=e.target.closest('[data-spr]');if(b){SQ.pr=b.getAttribute('data-spr');SQ.foc=0;draw();return}
+  b=e.target.closest('[data-sgr]');if(b){SQ.g=+b.getAttribute('data-sgr');SQ.foc=0;draw();return}
   b=e.target.closest('[data-smore]');if(b){SQ.n[b.getAttribute('data-smore')]+=10;sRes();return}b=e.target.closest('[data-stk]');if(b){sOpen(b.getAttribute('data-stk'));return}});
 function paneG(){var g=CRG||(F.g===4?4:3);CRG=g;
   var h='<div class="crnav"><span class="crlb">① 選 年級</span>'+[3,4].map(function(x){return '<button data-crg="'+x+'" class="crg'+(x===g?' on':'')+'">'+(x===3?'三':'四')+'年級</button>'}).join('')+'</div>'+

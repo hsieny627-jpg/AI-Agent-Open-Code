@@ -125,10 +125,14 @@ var HWSRC = function () {
   /* noPos ＝ 只看 形狀、不看 寫在 哪一條 線（2026-10-25：形狀 對 但是 沒有 頂天立地 ➜ 告訴 學生 是 線 的 問題）*/
   /* 2026-11-16 第五十六次（老師 第五十五次 問題 3 選 乙）：大寫 J 上面 沒有 一橫 ＝ 算 錯。
      看 字母 最上面 兩成 的 筆畫：左右 寬度 ≧ 整個 字母 寬 的 四成 ＝ 有 一橫（只有 一條 直線 的 頭 ＝ 沒有）*/
-  function jbar(strokes) { var b = xbox(strokes), h = Math.max(.2, b.y1 - b.y0), w = Math.max(.4, b.x1 - b.x0), lo = 1e9, hi = -1e9;
+  /* 2026-11-18 第六十次 老師 6：手掌／手指 不小心 碰到 的 小 點、小 線（很 短，而且 整個 在 四線格 外面）＝ 不是 字，判斷 以前 先 拿掉（i j 的 點 在 格子 裡面，不會 被 拿掉）*/
+  function clean(strokes) { strokes = (strokes || []).filter(function (s) { return s && s.length > 0; }); if (strokes.length < 2) return strokes;
+    var k = strokes.filter(function (s) { var L = 0, y0 = 1e9, y1 = -1e9; s.forEach(function (q, i) { if (i) L += Math.hypot(q[0] - s[i - 1][0], q[1] - s[i - 1][1]); y0 = Math.min(y0, q[1]); y1 = Math.max(y1, q[1]); });
+      return !(L < .3 && (y0 > 3 + OVT || y1 < -OVT)); }); return k.length ? k : strokes; }
+  function jbar(strokes) { strokes = clean(strokes); var b = xbox(strokes), h = Math.max(.2, b.y1 - b.y0), w = Math.max(.4, b.x1 - b.x0), lo = 1e9, hi = -1e9;
     strokes.forEach(function (s) { s.forEach(function (q) { if (q[1] <= b.y0 + h * .2) { lo = Math.min(lo, q[0]); hi = Math.max(hi, q[0]); } }); });
     return hi - lo >= w * .4; }
-  function judge(strokes, want, noPos) {
+  function judge(strokes, want, noPos) { strokes = clean(strokes);
     var r = rank(strokes, noPos); if (!r.length) return { ok: false, got: '', r: r };
     var top = r[0], mine = null;
     r.forEach(function (x) { if (x.ch === want) mine = x; });
@@ -164,14 +168,14 @@ var HWSRC = function () {
     if (sb.y0 < top - OVT) over.push({ L: top, d: top - sb.y0, hf: 'h' }); if (sb.y1 > bot + OVT) over.push({ L: bot, d: sb.y1 - bot, hf: 'f' });
     return { ok: !miss.length && !over.length, miss: miss, over: over, C: C, dmx: dmx, map: { tx0: tb.x0, tw: tw, sx0: sb.x0, sw: sw } }; }
   /* 要寫 want：每一種標準寫法都試，挑問題最少的那一種。words ＝ 給小朋友看的一句話 */
-  function lines(strokes, want) { strokes = (strokes || []).filter(function (s) { return s.length > 0; }); if (!strokes.length || !T[want]) return { ok: false, miss: [], over: [], words: '' };
+  function lines(strokes, want) { strokes = clean(strokes); if (!strokes.length || !T[want]) return { ok: false, miss: [], over: [], words: '' };
     var best = null; T[want].forEach(function (st) { var r = lineOne(strokes, st), k = r.miss.length + r.over.length; if (!best || k < best.k) { best = r; best.k = k; } });
     /* 一句 話 說 清楚 哪裡 錯：👆 頭（頂天）、👇 腳（立地）、中間、超出 */
     var W = { h: '頭', f: '腳', m: '中間' }, ws = [], seen = {};
     best.miss.forEach(function (m) { var k = 'm' + m.hf + m.L; if (seen[k]) return; seen[k] = 1; ws.push((m.hf === 'h' ? '⬆️ 頭 沒有 碰到 ' : m.hf === 'f' ? '⬇️ 腳 沒有 碰到 ' : '↔️ 中間 沒有 碰到 ') + LN[m.L] + (m.d > .45 ? '（差 很多）' : '（還 差 一點）')); });
     best.over.forEach(function (m) { ws.push((m.hf === 'h' ? '⬆️ 頭 超出 ' : '⬇️ 腳 超出 ') + LN[m.L] + ' 太多'); });
     best.words = ws.slice(0, 2).join('；');   /* 最多 說 2 件（字 太多 學生 看 不完、畫面 放不下）*/ best.rule = (best.miss.some(function (m) { return m.hf === 'h'; }) || best.over.some(function (m) { return m.hf === 'h'; }) ? '頂天' : '') + (best.miss.some(function (m) { return m.hf === 'f'; }) || best.over.some(function (m) { return m.hf === 'f'; }) ? '立地' : ''); return best; }
-  return { T: T, rank: rank, judge: judge, jbar: jbar, body: body, lines: lines, contacts: contacts, TOL: TOL, THF: THF, OVT: OVT, LN: LN };
+  return { T: T, clean: clean, rank: rank, judge: judge, jbar: jbar, body: body, lines: lines, contacts: contacts, TOL: TOL, THF: THF, OVT: OVT, LN: LN };
 };
 var HW = HWSRC();
 module.exports = { HW: HW, js: 'var HW=(' + HWSRC.toString() + ')();' };

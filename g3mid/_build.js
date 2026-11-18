@@ -895,9 +895,11 @@ function Pad(host,opt){var self=this,u=0,W=0,Hh=0,cv=document.createElement('can
  function draw(){cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,Hh);[[0,'#9AA7B5',2,[10,8]],[1,'#9AA7B5',2,[10,8]],[2,'#E53935',5,[]],[3,'#9AA7B5',2,[10,8]]].forEach(function(l){cx.beginPath();cx.setLineDash(l[3]);cx.strokeStyle=l[1];cx.lineWidth=l[2];cx.moveTo(8,Y(l[0]));cx.lineTo(W-8,Y(l[0]));cx.stroke()});
   cx.setLineDash([]);cx.strokeStyle='#1A237E';cx.lineWidth=Math.max(9,u*.09);cx.lineCap='round';cx.lineJoin='round';strokes.forEach(function(s){cx.beginPath();s.forEach(function(p,i){var X=p[0]*u,YY=Y(p[1]);if(i)cx.lineTo(X,YY);else cx.moveTo(X,YY)});if(s.length===1)cx.lineTo(s[0][0]*u+.1,Y(s[0][1]));cx.stroke()})}
  function pt(e){var r=cv.getBoundingClientRect();return [(e.clientX-r.left)/u,(e.clientY-r.top)/u-.25]}
- cv.addEventListener('pointerdown',function(e){if(opt.lock&&opt.lock())return;e.preventDefault();try{cv.setPointerCapture(e.pointerId)}catch(x){}cur=[pt(e)];strokes.push(cur);draw()});
- cv.addEventListener('pointermove',function(e){if(!cur)return;e.preventDefault();var p=pt(e),l=cur[cur.length-1];if(Math.hypot(p[0]-l[0],p[1]-l[1])>.015){cur.push(p);draw()}});
- function up(){cur=null}cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+ /* 2026-11-18 第六十次 老師 6：Apple Pencil 寫 第二次 幾乎 每 個 人 都 退步 ➜ 原因 ＝ 手掌 靠 在 螢幕 上 也 會 畫 出 線（多 一筆 ＝ 字形 錯、手掌 在 格子 下面 ＝「腳 超出 太多」）。
+    防 手掌：這台 平板 用 過 筆（pointerType pen）以後，手指／手掌 的 碰 一律 不 算；同 一時間 只 收 一個 指頭（第二個 不 算）*/
+ var pid=null;cv.addEventListener('pointerdown',function(e){if(opt.lock&&opt.lock())return;e.preventDefault();if(e.pointerType==='pen')window.__HWPEN=1;if(window.__HWPEN&&e.pointerType==='touch')return;if(cur&&pid!=null&&e.pointerId!==pid)return;pid=e.pointerId;try{cv.setPointerCapture(e.pointerId)}catch(x){}cur=[pt(e)];strokes.push(cur);draw()});
+ cv.addEventListener('pointermove',function(e){if(!cur||(pid!=null&&e.pointerId!==pid))return;e.preventDefault();var p=pt(e),l=cur[cur.length-1];if(Math.hypot(p[0]-l[0],p[1]-l[1])>.015){cur.push(p);draw()}});
+ function up(e){if(e&&pid!=null&&e.pointerId!==pid)return;cur=null;pid=null}cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
  self.clear=function(){strokes=[];draw()};self.strokes=function(){return strokes};self.size=size;self.empty=function(){return !strokes.length};
  self.img=function(){return cv.toDataURL()};setTimeout(size,0);addEventListener('resize',size)}
 /* 在四線格畫一個字母（答錯頁、魔鏡）：用辨識的同一份筆畫 */
