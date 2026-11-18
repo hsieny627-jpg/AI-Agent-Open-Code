@@ -250,6 +250,20 @@ h3{margin:18px 0 8px;font-size:clamp(22px,1.8vw,32px)}
 .wq .r span{font-weight:700}
 #modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.86);display:none;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
 #modal.on{display:flex}
+/* 第五十九次 🔎 找 成績 */
+.tabS .fline,.tabS #tiles{display:none!important}
+.tabs button.stab{background:#FFD54A;color:#2B1A00;font-weight:900}.tabs button.stab.on{outline:4px solid #fff}
+.sBar{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}#sq{font-size:clamp(22px,2vw,30px);padding:12px 16px;border-radius:16px;border:3px solid #FFD54A;background:#0B1236;color:#fff;width:100%;box-sizing:border-box}
+.sDt{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.sDt button{font-size:clamp(18px,1.5vw,24px);font-weight:900;padding:6px 16px;min-height:48px;border-radius:14px;border:2px solid #3C5598;background:#1B2A55;color:#DCE8FF;cursor:pointer}.sDt button.on{background:#FFD54A;color:#2B1A00;border-color:#fff}.sDt input{font-size:20px;padding:6px;border-radius:10px}
+.sSum{font-size:22px;margin:4px 0 10px;color:#DCE4FF}.s2c{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media (max-width:900px){.s2c{grid-template-columns:1fr}}
+.sCol{border-radius:18px;padding:12px;border:3px solid}.sCol.L{border-color:#FF9F43;background:rgba(255,159,67,.08)}.sCol.H{border-color:#4ADE80;background:rgba(74,222,128,.08)}.sCol h2{margin:0 0 10px;font-size:clamp(24px,2.2vw,34px)}.sCol h2 small{font-size:.6em;color:#BFD0FF}
+.sT{display:grid;grid-template-columns:1fr auto;gap:2px 10px;width:100%;text-align:left;padding:10px 14px;margin:6px 0;border-radius:14px;border:2px solid #34407A;background:#141B3D;color:#fff;cursor:pointer;font:inherit}.sT:hover{border-color:#FFD54A}
+.sT.big{border:4px solid #FFD54A;background:#2B2410;padding:14px 16px}.sT.big .sTn{font-size:clamp(24px,2.2vw,32px)}.sTd{grid-column:1/-1;font-size:18px;color:#FFE07A;font-weight:900}.sTn{font-size:clamp(20px,1.7vw,26px)}.sTc{font-size:18px;color:#BFD0FF}.sTa{grid-row:2;grid-column:2;font-size:20px;align-self:center}.sTa b{font-size:1.5em}.sTgo{grid-column:2;font-size:16px;color:#FFE07A}
+.sTa.hi b,.sTb td.hi{color:#5BE38C}.sTa.mid b,.sTb td.mid{color:#FFD54A}.sTa.lo b,.sTb td.lo{color:#FF7A7A}
+.sL5t{font-size:18px;font-weight:900;color:#DCE4FF;margin-top:10px}.sMore{width:100%;font-size:20px;font-weight:900;padding:8px;border-radius:12px;border:2px dashed #7FD4FF;background:none;color:#7FD4FF;cursor:pointer;margin-top:6px}
+.sStu{border:3px solid #7FD4FF;border-radius:16px;padding:10px 14px;margin-bottom:12px}.sStu h3{margin:0 0 6px;font-size:24px}
+.sTb{width:100%;border-collapse:collapse;font-size:20px}.sTb th,.sTb td{border-bottom:1px solid #2A3570;padding:6px 8px;text-align:center}.sTb td.l{text-align:left}.sTb.big{font-size:22px}.sMh{font-size:22px;margin-bottom:10px}.sHw{margin-top:16px;border-top:3px solid #FFD54A;padding-top:10px}
+
 #mbox{background:#0B0B0B;border:1px solid #333;border-radius:20px;padding:16px;width:min(900px,100%);margin:auto 0}
 #mbox .x{float:right}
 .opt{display:grid;grid-template-columns:2.2em 1fr 8em;gap:10px;align-items:center;font-size:clamp(22px,2vw,36px);font-weight:700;margin:8px 0}
@@ -638,7 +652,7 @@ ${CERCSS}
   <select id="fs" aria-label="什麼時候做的"><option value="">上課＋課後</option><option value="in">🕘 上課 時間</option><option value="out">🌙 課後 時間</option></select>
  </div>
  <div class="tiles" id="tiles"></div>
- <div class="tabs" id="tabs"><button data-t="p" class="on">👤 個人</button><button data-t="b">🏆 個人排行榜</button><button data-t="c">🏫 班級排行榜</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心<em class="bdg" id="kbdg" hidden></em></button><button data-t="l">🔒 開放／上鎖</button><!-- 2026-10-27 第三十二次 第 8 點：〔📅 一鍵設定〕〔📌 任務〕〔🔒 開關〕合併 成 這一個（paneO、paneT 程式 留著）--><button data-t="r">🎁 全班 獎勵</button><button data-t="f">📊 最受歡迎</button><button data-t="g">🏫 課堂複習</button><button data-t="m">📱 給家長</button><!-- 2026-10-27 第三十二次 第 1 點：〔⚔ 階級 能力〕暫時 拿掉（paneA 留著）--></div>
+ <div class="tabs" id="tabs"><button data-t="s" class="on stab">🔎 找 成績</button><button data-t="p">👤 個人</button><button data-t="b">🏆 個人排行榜</button><button data-t="c">🏫 班級排行榜</button><button data-t="w">❌ 錯題</button><button data-t="k">🔔 要關心<em class="bdg" id="kbdg" hidden></em></button><button data-t="l">🔒 開放／上鎖</button><!-- 2026-10-27 第三十二次 第 8 點：〔📅 一鍵設定〕〔📌 任務〕〔🔒 開關〕合併 成 這一個（paneO、paneT 程式 留著）--><button data-t="r">🎁 全班 獎勵</button><button data-t="f">📊 最受歡迎</button><button data-t="g">🏫 課堂複習</button><button data-t="m">📱 給家長</button><!-- 2026-10-27 第三十二次 第 1 點：〔⚔ 階級 能力〕暫時 拿掉（paneA 留著）--></div>
  <div class="pane" id="pane"></div>
 </div>
 <div id="modal"><div id="mbox"></div></div>
@@ -668,7 +682,7 @@ var RVT=${JSON.stringify(RVT)};
 var KP='<svg class="kp" viewBox="0 0 64 40" aria-hidden="true"><g font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="11" text-anchor="middle"><circle cx="17" cy="20" r="15" fill="#FFE07A" stroke="#B8741A" stroke-width="2.4"/><text x="17" y="24" fill="#6A3A00">100</text><circle cx="41" cy="20" r="15" fill="#FFD54A" stroke="#B8741A" stroke-width="2.4"/><text x="41" y="24" fill="#6A3A00">100</text></g><circle cx="54" cy="30" r="9" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2"/><path d="M49.5 30l3.2 3.2 6-6.4" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var UA='<svg class="ua" viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 L38 22 H27 V46 H13 V22 H2 Z" fill="#3BD16F" stroke="#0B3D1E" stroke-width="2" stroke-linejoin="round"/></svg>',CNTIC='';
 var THELP=0,RED=[];
-var URL0=String(window.SCORE_URL||'').trim(),PW='',DATA=null,ALL=[],SIZES={},NM={},RCLS={},F={g:3,cls:'',p:'w',src:'',cat:''},TAB='p',SORT={k:'last',d:1},BT='sec',BS='grade';
+var URL0=String(window.SCORE_URL||'').trim(),PW='',DATA=null,ALL=[],SIZES={},NM={},RCLS={},F={g:3,cls:'',p:'w',src:'',cat:''},TAB='s',SORT={k:'last',d:1},BT='sec',BS='grade';
 function $(s){return document.querySelector(s)}function $$(s){return [].slice.call(document.querySelectorAll(s))}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function f1(v){return v==null?'—':(Math.round(v*10)/10)}
@@ -727,7 +741,8 @@ function draw(){
   /* 分頁上面的紅色數字：🔔 要關心 ＝ 🔴 幾個人（9 甲） */
   var red=ps.filter(function(p){return light(rowOf(p,{}))===0});$('#kbdg').hidden=!red.length;$('#kbdg').textContent=red.length;RED=red.map(function(p){return p.id}).sort();
   var h='';
-  if(TAB==='p')h=paneP(ps,RK);else if(TAB==='b')h=paneB(psG);else if(TAB==='c')h=paneC(psG);else if(TAB==='w')h=paneW(S.C);else if(TAB==='t')h=paneT();else if(TAB==='l')h=paneL();else if(TAB==='o')h=paneO();else if(TAB==='r')h=paneR();else if(TAB==='f')h=paneF();else if(TAB==='g')h=paneG();else if(TAB==='m')h=paneM(psG);else if(TAB==='a')h=paneA();else h=paneK(ps,S);
+  document.body.classList.toggle('tabS',TAB==='s');   /* 找 成績：上面 的 篩選 和 大 數字 先 收起來（不 影響 搜尋，免得 看錯）*/
+  if(TAB==='s')h=paneS();else if(TAB==='p')h=paneP(ps,RK);else if(TAB==='b')h=paneB(psG);else if(TAB==='c')h=paneC(psG);else if(TAB==='w')h=paneW(S.C);else if(TAB==='t')h=paneT();else if(TAB==='l')h=paneL();else if(TAB==='o')h=paneO();else if(TAB==='r')h=paneR();else if(TAB==='f')h=paneF();else if(TAB==='g')h=paneG();else if(TAB==='m')h=paneM(psG);else if(TAB==='a')h=paneA();else h=paneK(ps,S);
   $('#pane').innerHTML=h;kanGo();
 }
 /* 2026-10-12 D6-A：只留 7 欄（其他點那個人看；Excel 照樣全部都有）。燈號：🔴 正確率不到 60 或太快亂按超過 3 成；🟡 正確率不到 80 或太快亂按超過 1 成；🟢 其他 */
@@ -1605,6 +1620,44 @@ var CRC=[['x','⚡','期中 挑戰','上課',function(g){return g===3?/^g3gm_g3m
   ['v','⚔️','左右 對戰','上課・兩人 一台',function(g){return new RegExp('^g'+g+'gm_vs-')}]];   /* 2026-11-14 第五十四次 */   /* 2026-11-02 第四十次 第 5 點：✍️ 字母 書寫（g3gm_lw-q5）*/
 function crLast(g,k){var re=CRC.filter(function(c){return c[0]===k})[0][4](g),t=0;ALL.forEach(function(x){if(!x.x&&x.t>t&&re.test(x.set))t=x.t});return t}
 function crSeen(g,k,v){var key='tcr_seen_'+g+'_'+k;try{if(v!=null)localStorage.setItem(key,String(v));return +localStorage.getItem(key)||0}catch(e){return 0}}
+/* ══ 2026-11-18 第五十九次 老師 7：🔎 找 成績（第一個 分頁）＝ 一秒 找到、絕不 找錯 ══
+ * ① 上面：關鍵字（班級 406、5 碼、座號、姓名、遊戲 名字）＋日期（今天／昨天／這週／最近 7 天／全部／自己 選）
+ * ② 兩大類 並排：⚡ 現場 任務（上課，來源 school）｜🏠 回家 任務（來源 home）；每 一類 ＝ 最近 一次（大 卡）＋最近 五次（照 時間，新 的 在 上面）
+ * ③ 一個「任務」＝ 同 一天、同 一班、同 一個 遊戲／題組；點 一下 ＝ 全班 每 一個 人 的 成績（照 座號）＋成長測驗 的 ✍️ 字母 書寫 分析 */
+var SQ={q:'',d1:'',d2:'',pr:'all',n:{L:5,H:5}};
+function sDay(t){return new Date(t+288e5).toISOString().slice(0,10)}
+function sRange(){var now=DATA.now,today=sDay(now),D=function(s){return Date.parse(s+'T00:00:00+08:00')};
+  if(SQ.pr==='t')return [D(today),null];if(SQ.pr==='y')return [D(today)-864e5,D(today)];if(SQ.pr==='w')return [SC.weekStart(now),null];if(SQ.pr==='7')return [D(today)-6*864e5,null];
+  if(SQ.pr==='c')return [SQ.d1?D(SQ.d1):null,SQ.d2?D(SQ.d2)+864e5:null];return [null,null]}
+function sMatch(r,q){if(!q)return true;var id=r.id,n=nm(id)||'',nmS=String(r.name||'')+' '+String((SC.cat(r.set)||{}).t||'');
+  return q.split(/\\s+/).filter(Boolean).every(function(w){if(/^\\d{5}$/.test(w))return id===w;if(/^\\d{3}$/.test(w))return r.cls===w;if(/^\\d{1,2}$/.test(w))return +r.seat===+w;
+    return n.indexOf(w)>=0||nmS.toLowerCase().indexOf(w.toLowerCase())>=0||SC.cname(r.cls).indexOf(w)>=0})}
+function sTasks(rows){var M={};rows.forEach(function(r){var k=(r.src==='home'?'H':'L')+'|'+r.set+'|'+r.cls+'|'+sDay(r.t);var o=M[k]=M[k]||{k:k,set:r.set,name:r.name,cls:r.cls,day:sDay(r.t),t0:r.t,t1:r.t,R:[]};o.R.push(r);if(r.t>o.t1)o.t1=r.t;if(r.t<o.t0)o.t0=r.t});
+  return Object.keys(M).map(function(k){var o=M[k],last={};o.R.forEach(function(r){if(!last[r.id]||r.t>last[r.id].t)last[r.id]=r});o.P=Object.keys(last).map(function(id){return last[id]});
+    var sc=o.P.map(sScore).filter(function(v){return v!=null});o.avg=sc.length?sc.reduce(function(a,b){return a+b},0)/sc.length:null;return o}).sort(function(a,b){return b.t1-a.t1})}
+function sScore(r){return r.s!=null?r.s:r.acc!=null?r.acc:null}
+function sCard(o,big){var sz=+SIZES[o.cls]||0,a=o.avg;return '<button class="sT'+(big?' big':'')+'" data-stk="'+esc(o.k)+'"><span class="sTd">'+(big?'🆕 最近 一次　':'')+dt(o.t1)+'</span><b class="sTn">'+esc(o.name||o.set)+'</b>'+
+  '<span class="sTc"><em class="cls">'+SC.cname(o.cls)+'</em>👥 '+o.P.length+(sz?'／'+sz:'')+' 人</span><span class="sTa '+(a==null?'':a>=80?'hi':a>=60?'mid':'lo')+'">'+(a==null?'—':'平均 <b>'+Math.round(a)+'</b> 分')+'</span><span class="sTgo">👉 看 每 一個 人</span></button>'}
+function sCol(tag,ic,lb,tasks){var n=SQ.n[tag];return '<section class="sCol '+tag+'"><h2>'+ic+' '+lb+'<small>（'+tasks.length+' 個）</small></h2>'+(tasks.length?sCard(tasks[0],1)+'<div class="sL5"><div class="sL5t">📋 最近 五次（新 的 在 上面）</div>'+tasks.slice(0,n).map(function(o){return sCard(o)}).join('')+'</div>'+
+  (tasks.length>n?'<button class="sMore" data-smore="'+tag+'">⬇ 再 看 '+Math.min(10,tasks.length-n)+' 個（還有 '+(tasks.length-n)+' 個）</button>':''):'<div class="note">這個 條件 沒有 '+lb+' 的 成績。</div>')+'</section>'}
+function sRes(){var R=sRange(),q=SQ.q.trim(),rows=ALL.filter(function(r){return !r.x&&(q||r.g===F.g)&&(R[0]==null||r.t>=R[0])&&(R[1]==null||r.t<R[1])&&sMatch(r,q)});
+  var live=sTasks(rows.filter(function(r){return r.src!=='home'})),home=sTasks(rows.filter(function(r){return r.src==='home'}));
+  var stu='';if(q){var ids={};rows.forEach(function(r){ids[r.id]=1});var I=Object.keys(ids);if(I.length>=1&&I.length<=3)stu=I.map(function(id){var rs=rows.filter(function(r){return r.id===id}).sort(function(a,b){return b.t-a.t}).slice(0,5);
+    return '<div class="sStu"><h3>👤 '+id.slice(0,3)+' 班 '+(+id.slice(3))+' 號 '+esc(nm(id))+'：最近 5 次</h3><table class="sTb"><tr><th>時間</th><th>類</th><th>做 什麼</th><th>分數</th></tr>'+rs.map(function(r){var s=sScore(r);return '<tr><td>'+dt(r.t)+'</td><td>'+(r.src==='home'?'🏠':'⚡')+'</td><td class="l">'+esc(r.name)+(r.pt?'<small>（只 做到 第 '+r.pt+' 題）</small>':'')+'</td><td class="'+(s==null?'':s>=80?'hi':s>=60?'mid':'lo')+'">'+(s==null?'—':Math.round(s))+'</td></tr>'}).join('')+'</table></div>'}).join('')}
+  $('#sres').innerHTML='<div class="sSum">找到 <b>'+rows.length+'</b> 筆　'+(q?'🔎「'+esc(q)+'」':'（'+(F.g===3?'三':'四')+'年級）')+'</div>'+stu+'<div class="s2c">'+sCol('L','⚡','現場 任務（上課）',live)+sCol('H','🏠','回家 任務',home)+'</div>';SQ.T={};live.concat(home).forEach(function(o){SQ.T[o.k]=o})}
+function paneS(){setTimeout(function(){sRes();var i=$('#sq');if(i&&SQ.foc){i.focus();i.setSelectionRange(i.value.length,i.value.length)}},0);
+  return '<div class="sBar"><input id="sq" type="search" autocomplete="off" placeholder="🔎 打 關鍵字：班級 406、5 碼 40612、姓名、遊戲 名字（例：成長測驗）" value="'+esc(SQ.q)+'">'+
+   '<div class="sDt">'+[['t','今天'],['y','昨天'],['w','這週'],['7','最近 7 天'],['all','全部'],['c','📅 自己 選']].map(function(x){return '<button data-spr="'+x[0]+'" class="'+(SQ.pr===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+
+   '<span class="sCd"'+(SQ.pr==='c'?'':' hidden')+'><input type="date" id="sd1" value="'+SQ.d1+'"> ～ <input type="date" id="sd2" value="'+SQ.d2+'"></span></div></div><div id="sres"></div>'}
+function sOpen(k){var o=SQ.T&&SQ.T[k];if(!o)return;var P=o.P.slice().sort(function(a,b){return a.seat-b.seat}),cnt={};o.R.forEach(function(r){cnt[r.id]=(cnt[r.id]||0)+1});
+  var h='<button class="x" id="mx">✕ 關閉</button><h2 style="margin:0 0 6px">'+(o.R[0].src==='home'?'🏠':'⚡')+' '+esc(o.name||o.set)+'</h2><div class="sMh"><em class="cls">'+SC.cname(o.cls)+'</em>📅 '+o.day+'　🕘 '+dt(o.t0).split(' ')[1]+'～'+dt(o.t1).split(' ')[1]+'　👥 '+P.length+' 人　'+(o.avg==null?'':'平均 <b>'+Math.round(o.avg)+'</b> 分')+'</div>'+
+    '<table class="sTb big"><tr><th>座號</th><th>姓名</th><th>分數</th><th>正確率</th><th>答對／題數</th><th>秒數</th><th>做 了 幾 次</th><th>最後 時間</th></tr>'+P.map(function(r){var s=sScore(r);return '<tr><td>'+r.seat+'</td><td class="l">'+esc(nm(r.id))+'</td><td class="'+(s==null?'':s>=80?'hi':s>=60?'mid':'lo')+'"><b>'+(s==null?'—':Math.round(s))+'</b>'+(r.pt?'<small>（只 做到 第 '+r.pt+' 題）</small>':'')+'</td><td>'+(r.acc==null?'—':r.acc+'%')+'</td><td>'+(r.n?r.ok+'／'+r.n:'—')+'</td><td>'+(r.sec||'—')+'</td><td>'+cnt[r.id]+'</td><td>'+dt(r.t).split(' ')[1]+'</td></tr>'}).join('')+'</table>';
+  /* 成長測驗：✍️ 字母 書寫 分析 就 在 這裡（以前 要 到〔🏫 課堂複習〕找）*/
+  if(/_g3m-g25$/.test(o.set)){var hw='';try{hw=hwHTML(o.R)}catch(e){}if(hw)h+='<div class="sHw">'+hw+'</div>'}
+  $('#mbox').innerHTML=h;$('#modal').classList.add('on')}
+document.addEventListener('input',function(e){if(e.target.id==='sq'){SQ.q=e.target.value;SQ.foc=1;SQ.n={L:5,H:5};sRes()}else if(e.target.id==='sd1'||e.target.id==='sd2'){SQ[e.target.id.slice(1)]=e.target.value;sRes()}});
+document.addEventListener('click',function(e){var b=e.target.closest('[data-spr]');if(b){SQ.pr=b.getAttribute('data-spr');SQ.foc=0;draw();return}
+  b=e.target.closest('[data-smore]');if(b){SQ.n[b.getAttribute('data-smore')]+=10;sRes();return}b=e.target.closest('[data-stk]');if(b){sOpen(b.getAttribute('data-stk'));return}});
 function paneG(){var g=CRG||(F.g===4?4:3);CRG=g;
   var h='<div class="crnav"><span class="crlb">① 選 年級</span>'+[3,4].map(function(x){return '<button data-crg="'+x+'" class="crg'+(x===g?' on':'')+'">'+(x===3?'三':'四')+'年級</button>'}).join('')+'</div>'+
     '<div class="crcards"><span class="crlb">② 選 一張</span>'+CRC.map(function(c){var t=crLast(g,c[0]),nw=t&&t>crSeen(g,c[0]);

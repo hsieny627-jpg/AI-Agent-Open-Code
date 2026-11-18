@@ -37,6 +37,7 @@ function fill(G) {
     await p.screenshot({ path: path.join(OUT, W + '_' + t + '.png'), fullPage: !!process.env.FULL }); }
   if (process.env.KA) { await p.click('#tabs button[data-t="k"]'); await p.waitForTimeout(500); await p.click('[data-km="a"]'); await p.waitForTimeout(2200); await p.screenshot({ path: path.join(OUT, W + '_ka.png'), fullPage: !!process.env.FULL });
     await p.click('[data-km="g"]'); await p.waitForTimeout(300); }
+  if (process.env.SQ) { await p.click('#tabs button[data-t="s"]'); await p.fill('#sq', process.env.SQ); await p.waitForTimeout(500); await p.screenshot({ path: path.join(OUT, W + '_sq.png') }); await p.click('.sT.big'); await p.waitForTimeout(600); await p.screenshot({ path: path.join(OUT, W + '_sqm.png') }); }
   if (process.env.PERSON) { await p.evaluate(id => person(id), process.env.PERSON); await p.waitForTimeout(3500);
     await p.screenshot({ path: path.join(OUT, W + '_person.png'), fullPage: !!process.env.FULL }); await p.click('#pmb'); await p.waitForTimeout(3000); await p.screenshot({ path: path.join(OUT, W + '_person2.png'), fullPage: true }); }
   if (process.env.CER) { await p.evaluate(() => document.getElementById('modal').classList.remove('on')); await p.click('#tabs button[data-t="c"]'); await p.waitForTimeout(400); const b = await p.$('#cerGo'); if (b) { await b.click();
