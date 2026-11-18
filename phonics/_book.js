@@ -47,3 +47,17 @@ module.exports = {
     happy: { g: 'h:HH a:AE pp:P y:IY0', sy: 'ha·ppy', zh: '快樂 的', ic: '😄', ph: 'HH AE1 P IY0', c: [['hap', 'HH AE1 P', 'cvc'], ['py', 'P IY0', 'new', 'y 在 最後 ＝ 一']], tip: 'hap ＋ py（pp 只 唸 一次）' }
   }
 };
+/* 2026-11-18 第六十一次 老師 7（對）：〔✨ 常見 拼字 組合〕＝ 課本 字 裡 最 常見 的 拼字 組合（金框）＋學會 一個 帶 出 一家（類比）
+ *   COMBO[課本字] ＝ [{c 組合, gs 金框 框 哪 幾 個 字母 群（g 的 l 連 起來）, au 組合 的 聲音, t 一句 話, ex 延伸 字}]；WX ＝ 延伸 字（跟 W 一樣 的 寫法，聲音 cx_<字>，tools/ph_cx61.py 電腦 聽寫 聽 對）*/
+module.exports.WX = {
+  thick: { g: 'th:TH i:IH c:- k:K', sy: 'thick', zh: '厚 的', ic: '📚', au: 'cx_thick' }, think: { g: 'th:TH i:IH n:NG k:K', sy: 'think', zh: '想', ic: '🤔', au: 'cx_think' }, thing: { g: 'th:TH i:IH ng:NG', sy: 'thing', zh: '東西', ic: '📦', au: 'cx_thing' },
+  ball: { g: 'b:B a:AO ll:L', sy: 'ball', zh: '球', ic: '⚽', au: 'cx_ball' }, fall: { g: 'f:F a:AO ll:L', sy: 'fall', zh: '跌倒；秋天', ic: '🍂', au: 'cx_fall' }, hall: { g: 'h:HH a:AO ll:L', sy: 'hall', zh: '大廳', ic: '🏛️', au: 'cx_hall' },
+  ship: { g: 'sh:SH i:IH p:P', sy: 'ship', zh: '船', ic: '🚢', au: 'cx_ship' }, shop: { g: 'sh:SH o:AA p:P', sy: 'shop', zh: '商店', ic: '🏪', au: 'cx_shop' },
+  fork: { g: 'f:F o:AO r:RC k:K', sy: 'fork', zh: '叉子', ic: '🍴', au: 'cx_fork' }, corn: { g: 'c:K o:AO r:RC n:N', sy: 'corn', zh: '玉米', ic: '🌽', au: 'cx_corn' },
+  string: { g: 's:S t:T r:R i:IH ng:NG', sy: 'string', zh: '細繩', ic: '🧵', au: 'cx_string' }, street: { g: 's:S t:T r:R e:IY e:- t:T', sy: 'street', zh: '街道', ic: '🛣️', au: 'cx_street' },
+  song: { g: 's:S o:AO ng:NG', sy: 'song', zh: '歌', ic: '🎵', au: 'cx_song' }, long: { g: 'l:L o:AO ng:NG', sy: 'long', zh: '長 的', ic: '📏', au: 'cx_long' }, king: { g: 'k:K i:IH ng:NG', sy: 'king', zh: '國王', ic: '👑', au: 'cx_king' } };
+module.exports.COMBO = {
+  thin: [{ c: 'th', au: 's_th', t: 'th 是 字首 常見 的 組合：舌頭 輕輕 咬 住，吹 氣（喉嚨 不 震動）', ex: ['thick', 'think', 'thing'] }],
+  tall: [{ c: 'all', au: 'rm_tall_0', t: 'all 是 常見 的 組合：唸 ㄛ＋ㄌ（a 不 唸 ㄝㄚ）', ex: ['ball', 'fall', 'hall'] }],
+  short: [{ c: 'sh', au: 's_sh', t: 'sh 是 字首 常見 的 組合：嘟 嘴 噓 ＝ ㄕ', ex: ['ship', 'shop'] }, { c: 'or', au: 's_or', t: 'or 是 常見 的 組合：ㄛ＋ㄦ', ex: ['fork', 'corn'] }],
+  strong: [{ c: 'str', au: 'cl_strong_0_3', t: 'str 是 字首 常見 的 三個 字母 組合：s ➜ t ➜ r 連 著 唸', ex: ['string', 'street'] }, { c: 'ng', au: 's_ng', t: 'ng 是 字尾 常見 的 組合：鼻子 出 聲 ＝ ㄥ', ex: ['song', 'long', 'king'] }] };

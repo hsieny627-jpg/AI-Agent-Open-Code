@@ -426,7 +426,7 @@ body.m3 main{top:64px}#m3{max-width:1200px;margin:0 auto;padding:12px 16px;text-
 .srs{min-width:clamp(120px,15vw,190px);padding:8px 10px 10px;border-radius:20px;border:4px solid #4D8FFF;background:#0B1A3C;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
 .srs.v{border-color:#FF5A5A;background:#3A0B0B}.srs.g{border-color:#8C92A3;background:#22252E;opacity:.85}.srs.full b{color:#FFE07A}
 .srs small{font-size:clamp(18px,1.9vw,24px);font-weight:900;color:#DCE8FF}.srs>b{font-size:clamp(46px,6vw,76px);line-height:1.05;color:#fff}
-.srht{display:flex;gap:4px;justify-content:center;background:#FFF4D6;border-radius:12px;padding:4px 8px}.srht .tl{color:#2A1B00!important;background:transparent!important}
+.srht{display:flex;gap:4px;justify-content:center;background:#E9DDFF;border:3px dashed #8B5CF6;border-radius:12px;padding:4px 10px}.srht .tl{color:#2A1B00!important;background:transparent!important}
 .srop{display:flex;flex-direction:column;gap:6px;width:100%}.srop button{font-family:var(--an);font-size:clamp(24px,2.8vw,34px);font-weight:800;min-height:58px;border-radius:14px;border:3px solid #C9A227;background:#FFF4D6;color:#2A1B00;cursor:pointer}.srop button.on{background:#2EE59D;color:#05301E;border-color:#fff}
 .srrow{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}.srl{font-size:clamp(18px,1.9vw,24px);font-weight:900;min-width:5.5em;text-align:right}.srl.c{color:#8FB4FF}.srl.v{color:#FF9A9A}
 .srb{font-family:var(--an);font-size:clamp(26px,3vw,38px);font-weight:800;min-width:clamp(70px,8.5vw,100px);min-height:62px;border-radius:14px;border:3px solid rgba(255,255,255,.7);color:#fff;cursor:pointer;box-shadow:0 6px 0 rgba(0,0,0,.45)}.srb.c{background:#1B3A8F}.srb.v{background:#8F1B1B}.srb.on{background:#FFE07A;color:#2A1B00;transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.45)}
@@ -440,6 +440,23 @@ body.m3 main{top:64px}#m3{max-width:1200px;margin:0 auto;padding:12px 16px;text-
 .rush{font-size:clamp(20px,2.2vw,28px)!important;font-weight:900;min-height:62px;padding:6px 22px;border-radius:20px;border:3px solid #FF9A3D!important;background:linear-gradient(180deg,#FFB547,#E8590C)!important;color:#2A0E00!important;cursor:pointer}
 /* 第六十次 老師 9-(4)：不 發音 的 字母（kitchen 的 t）跟 其他 字母 同 一條 水平線 */
 .ck.sil{align-self:flex-start}
+/* 第六十一次 老師 2-(1)：gain ＝ a 黃底、i 灰色（兩個 母音 字母 一個 聲音：第一個 黃、第二個 灰）*/
+.m3l1.nm{background:#FACC15}.m3l1.nm b{color:#4A2600}.m3l1.sil{background:#8C92A3}.m3l1.sil b{color:#F2F3F6}
+.vy{background:#FACC15;color:#4A2600;border-radius:8px;padding:0 4px}.vg{background:#8C92A3;color:#fff;border-radius:8px;padding:0 4px;margin-left:2px}
+/* ══ 第六十一次：子／母 標籤、真的 打磚塊、輸送帶、雷達、大 分數 ══ */
+.pbx{display:inline-flex;flex-direction:column;align-items:center;gap:2px}.patb .bx.c,.gates .bx.c,.radar .bx.c{background:#1E5BFF!important;border:4px solid #CFE0FF!important}.patb .bx.v,.gates .bx.v,.radar .bx.v{background:#E8202A!important;border:4px solid #FFD0D0!important}
+.pl{font-style:normal;font-size:clamp(22px,2.4vw,30px);font-weight:900;line-height:1}.pl.c{color:#8FB4FF}.pl.v{color:#FF8A8A}
+.arena.bo{position:relative;width:min(1100px,96vw);height:min(56vh,560px);border-radius:22px;overflow:hidden;border:3px solid #3D5AFE;touch-action:none}.arena.bo canvas{display:block;touch-action:none}
+.bohint{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);font-size:clamp(18px,2vw,24px);font-weight:900;color:#FFE07A;background:rgba(0,0,0,.55);padding:6px 16px;border-radius:999px;pointer-events:none;transition:opacity .4s}
+.cvbelt{position:relative;width:min(1100px,96vw);height:150px}.cvbelt .belt{position:absolute;left:0;right:0;bottom:16px;height:34px;border-radius:17px;background:repeating-linear-gradient(90deg,#454B63 0 26px,#2B3046 26px 52px);animation:beltM .6s linear infinite;box-shadow:inset 0 0 0 3px #7C86A8}@keyframes beltM{to{background-position:52px 0}}
+.crate{position:absolute;bottom:46px;left:4%;font-size:clamp(48px,6vw,72px);font-weight:800;color:#fff;background:linear-gradient(#8A5A2B,#5A3816);border:4px solid #E0B07A;border-radius:16px;padding:2px 22px;cursor:grab;touch-action:none;box-shadow:0 8px 0 #3A230C;z-index:5}.crate.drag{cursor:grabbing;transform:scale(1.08);z-index:60}
+.gates{display:flex;gap:clamp(12px,2vw,26px);justify-content:center;flex-wrap:wrap;margin-top:10px}.gate{padding:10px 14px 8px;border-radius:20px;border:4px dashed #FFE07A;background:#141B3D;min-width:160px;display:flex;justify-content:center}.gate.hov{background:#2B3A7A;transform:scale(1.06)}.gate.ok{background:#0F5132;border-style:solid;border-color:#2EE59D}.gate.no{background:#5A1010;border-color:#FF4D4D}
+.radar{position:relative;width:min(62vh,560px,92vw);aspect-ratio:1;border-radius:50%;border:4px solid #2EE59D;background:radial-gradient(circle,#073B24 0,#03140C 70%),repeating-radial-gradient(circle,transparent 0 18%,rgba(46,229,157,.35) 18% 18.6%);overflow:hidden;margin:6px auto}
+.radar .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(46,229,157,.55),transparent 22%);animation:swp 2.4s linear infinite}@keyframes swp{to{transform:rotate(360deg)}}
+.blip{position:absolute;transform:translate(-50%,-50%);padding:6px 10px;border-radius:18px;border:3px solid #2EE59D;background:rgba(3,30,18,.92);cursor:pointer;box-shadow:0 0 18px rgba(46,229,157,.6)}.blip.ok{background:#0F5132}.blip.no{background:#5A1010;border-color:#FF4D4D}
+#gsc{font-size:clamp(26px,3vw,38px)!important;color:#FFE07A!important;font-weight:900}
+.bx.xe{position:relative;animation:eOut 1.4s 2.2s forwards}.bx.xe::after{content:'✖';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.4em;color:#FF4D4D;opacity:0;animation:eX .6s 1.6s forwards}
+@keyframes eX{to{opacity:1}}@keyframes eOut{to{opacity:.25;transform:scale(.8)}}
 </style></head><body>
 <div id="top"><a href="index.html">🔤 拼讀 字卡</a><a href="games.html">🎮 遊戲場</a><div class="ttl">🗺️ 拼音 地圖：從 CVC 到 課本</div>
 <div id="mdSw" class="mdSw"><button data-md="zh">注音</button><button data-md="kk">KK</button><button data-md="ipa">IPA</button></div><a href="../index.html">🏠</a></div>

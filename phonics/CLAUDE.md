@@ -3,6 +3,28 @@
 > 2026-11-12 第四十七次 第 2 點：老師 的 Phonics Master（原本 在 claude.ai 字卡 頁 https://claude.ai/artifact/PBkfDY3omYxT4VYRMaH4Yw）加進 網站。
 > 根目錄 `AGENTS.md` 第四節 同樣 適用。⚠ 老師：只 說 改 一個 地方 就 只 改 那 一個 地方。
 
+## 2026-11-18 第六十一次（計畫＋狀態＋遊戲 誠實 檢查：`phonics/2026-11-18_第六十一次_計畫.md`）——先讀 這一節
+### 🔒 永久 規則（老師 2-(1)：寫 進 需求 檔，以後 不用 再 說）
+| 規則 | 做法 |
+|---|---|
+| **每 一頁 的 每 一個 單字 喇叭（🔊 song、🔊 strong…）＝ 整個 字 金色 外框 動畫＋每 個 字母 同時 稍微 放大、稍微 發光**（代表 現在 正在 唸 這 個 字）| 地圖／動畫 `sayWhole`（`data-wsay`、`data-ma`、`#mSay2`）、字卡 `#grid.say`、課本 `.bw2.gold`、map3 `.m3slots.gold`；新 的 喇叭 一律 用 這 幾 個 |
+| **遊戲 名字 說 什麼，就 要 真的 玩 什麼**（老師：打磚塊 是 假 的 ＝ 學生 覺得 被 欺騙）| 新 遊戲 一定 有 真的 操作（瞄準、拖、移動 的 目標…），不可以 只是「點 一個 寫 字 的 東西 ➜ 動畫 自己 演」；誠實 檢查 表 在 計畫 檔 第二節 |
+| 開場 字 要 少：只 留 圖示、名字、🎯 目標、一句 玩法、題數；玩 過 一次 以後 複習 動畫 學生 自己 選 | `start()`（`phm_pl_遊戲`、`#grevB`）|
+### 老師 的 每 一點 ➜ 做法
+| 老師 | 做法 |
+|---|---|
+| 1 聲音 P60 | ㄛ（`s_ao`）＝ 最 穩 的 中間 一段（F 網站／G）、qu ＝ B 的 ㄎ＋穩定 ㄨ、字尾 ch 從 摩擦 開始、短 oo ＝ ㄨ 滑 進 ㄛ；`tools/ph_fix61.py`（`b` ＝ 第二 部分），試聽 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-11-18_P61/ |
+| 2-(1) gain | `vLab`＋`.m3l1.nm／.sil`、全域 `.vy／.vg` |
+| 2-(2) 聽 最後 的 聲音 | `TAILON=false` |
+| 2-(3)A | `qSR` 選項 一定 有 正確 答案；`.srht` 淡紫 虛線 框 |
+| 2-(3)B | `patDraw` 每 個 方框 下面「子」「母」；`cvSort`（🔦 輸送帶 拖 進 門）、`cvRadar`（📡 雷達 光點 會 動）、`boQ`（🧲 真的 打磚塊，`G.boS` 給 量測）、`SAME` 聽 起來 一樣 的 字尾 不 一起 出 |
+| 4 dge／ve | `_map_combos.js`＋`_map.js` `CHK`／`parse`（`dj` ＝ ㄓ，`TT.dj`）、`_ph2.js` `ipa2` 的 j v、聲音 314 個 |
+| 5 7 個 主題 | `STGM`＝ 段 的 清單、`STGN` 名字；`live` `stm0～6`、`score/_bank.js` |
+| 6 live／living | `alignLtr`、`.bx.xe`、`chainScene` `ltr` |
+| 7 常見 拼字 組合 | `_book.js` `COMBO`／`WX`、`_games.js` `cxOpen`、`cx_` 聲音 |
+| 新 2-(2) 下一頁 | `#aNext`、`[data-next]` 在 chain 頁 ＝ `#chNx`；`BKORD` 不 放 'dining room'／'living room'（以前 living 的 下 一個 ＝ living room 同 一個）|
+### 量測 `node phonics/_verify_61.js`（67 項）＋舊 的（`_verify_59.js` 改 7 關、`_verify_60.js` 不 再 量〔聽 最後 的 聲音〕）
+
 ## 2026-11-18 第六十次（計畫＋狀態＋建議＋研究：`phonics/2026-11-18_第六十次_計畫.md`；需求檔 第四節 最下面「第六十次」）——先讀 這一節
 ### 🔒 永久 規則（老師 11-(1) 改寫 第五十九次 的 規則；以後 不用 再 說）
 | 規則 | 做法 |

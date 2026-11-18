@@ -284,7 +284,8 @@ Object.assign(PH.EXC,{"bach|b-ae-ch":"B AA K","bair|b-ai-r":"B EH R","barch|b-ar
   var IPA_V2 = { ii: 'aɪ', yu: 'juː', oy: 'ɔɪ', ao: 'ɔː' }, IPA_E2 = { st: 'st', sk: 'sk', ft: 'ft', ng: 'ŋ', nk: 'ŋk', k: 'k', l: 'l', pt: 'pt', kt: 'kt', kst: 'kst', lp: 'lp', lf: 'lf', lt: 'lt', sp: 'sp', ld: 'ld', lk: 'lk', nch: 'ntʃ', ts: 'ts', ps: 'ps', ks: 'ks', ds: 'dz', gs: 'ɡz' };
   function ipa2(c) { var p = c.split('-'), V = Object.assign({ ae: 'æ', eh: 'ɛ', ih: 'ɪ', aa: 'ɑː', uh: 'ʌ', ar: 'ɑːɹ', er: 'ɜː', or: 'ɔːɹ', ai: 'eɪ', ee: 'iː', oa: 'oʊ', uu: 'uː', oo: 'ʊ', ou: 'aʊ' }, IPA_V2),
     I = Object.assign({ b: 'b', p: 'p', m: 'm', f: 'f', d: 'd', t: 't', n: 'n', l: 'l', k: 'k', h: 'h', s: 's', j: 'dʒ', w: 'w', r: 'ɹ', z: 'z', g: 'ɡ', kw: 'kw', ch: 'tʃ', sh: 'ʃ', th: 'θ', dh: 'ð' }, IPA_I2),
-    E = Object.assign({ b: 'b', p: 'p', m: 'm', f: 'f', d: 'd', t: 't', n: 'n', l: 'l', g: 'ɡ', k: 'k', r: 'ɹ', s: 's', z: 'z', ks: 'ks', mp: 'mp', nd: 'nd', nt: 'nt', ch: 'tʃ', sh: 'ʃ', th: 'θ', shn: 'ʃən', zhn: 'ʒən' }, IPA_E2);
+    E = Object.assign({ b: 'b', p: 'p', m: 'm', f: 'f', d: 'd', t: 't', n: 'n', l: 'l', g: 'ɡ', k: 'k', r: 'ɹ', s: 's', z: 'z', ks: 'ks', mp: 'mp', nd: 'nd', nt: 'nt', ch: 'tʃ', sh: 'ʃ', th: 'θ', shn: 'ʃən', zhn: 'ʒən', j: 'dʒ', v: 'v' }, IPA_E2);   /* 第六十一次：字尾 dge（j）、ve（v）*/
+    I['0'] = '';
     return I[p[0]] + 'ˈ' + V[p[1]] + (p[2] ? E[p[2]] : '') + '.'; }
   /* 部位 的 聲音：〔字首＋母音〕＝ 字首 碼-母音 碼；〔母音＋字尾〕＝ 0-母音 碼-字尾 碼 */
   function partCode(full, part) { var p = full.split('-'); if (part === 'iv') return p[0] + '-' + p[1]; if (part === 've') return p[2] ? '0-' + p[1] + '-' + p[2] : 's_' + p[1]; return full; }

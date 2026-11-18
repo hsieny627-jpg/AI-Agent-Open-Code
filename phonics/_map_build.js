@@ -9,7 +9,7 @@ const t = (o, sup) => ({ zh: J(o.zh), sup: sup != null ? sup : (Array.isArray(o.
 const TT = {};
 ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'k', 'h', 's', 'j', 'w', 'z', 'ch', 'sh'].forEach(k => TT[k] = t(C[k]));
 TT.g = t(C.g_hard); TT.th = t(C['th(無聲)']); TT.dh = t(C['th(有聲)']); TT.ks = t(C.x); TT.kw = t(C.qu); TT.r = t(C.r); TT.v = { zh: 'v', sup: '', kk: 'v', ipa: 'v' };
-TT.y = { zh: '一', sup: '', kk: 'j', ipa: 'j' }; TT.oo = t(V.oo_short);   /* 第六十次 短 的 oo（good）*/ TT.ng = C2.ng ? t(C2.ng) : { zh: 'ㄥ', sup: '', kk: 'ŋ', ipa: 'ŋ' };
+TT.y = { zh: '一', sup: '', kk: 'j', ipa: 'j' }; TT.oo = t(V.oo_short); TT.dj = { zh: 'ㄓ', sup: '', kk: 'dʒ', ipa: 'dʒ' };   /* 第六十一次 老師：dge 的 雙語 注音 ＝ ㄓ */   /* 第六十次 短 的 oo（good）*/ TT.ng = C2.ng ? t(C2.ng) : { zh: 'ㄥ', sup: '', kk: 'ŋ', ipa: 'ŋ' };
 Object.assign(TT, { ae: t(V.a), eh: t(V.e), ih: t(V.i), aa: t(V.o), uh: t(V.u), ai: t(V.ai), ee: t(V.ee), oa: t(V.oa), ii: t(V2.i_e), uu: t(V.oo_long), yu: t(V2.u_e),
   ao: { zh: 'ㄛ', sup: '', kk: 'ɔ', ipa: 'ɔ' }, or: { zh: 'ㄛㄦ', sup: '', kk: 'ɔr', ipa: 'ɔɹ' }, ar: { zh: 'ㄚㄦ', sup: '', kk: 'ɑr', ipa: 'ɑɹ' }, er: { zh: 'ㄜㄦ', sup: '', kk: 'ɝ', ipa: 'ɜɹ' },
   el: { zh: 'ㄜㄛ', sup: '', kk: 'əl', ipa: 'əl' }, ah: { zh: 'ㄜ', sup: '', kk: 'ə', ipa: 'ə' },

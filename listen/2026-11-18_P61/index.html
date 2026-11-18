@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第六十一次 新聲音</title><style>
+body{margin:0;background:#0B1026;color:#fff;font-family:'Microsoft JhengHei','PingFang TC',sans-serif;padding:18px}
+h1{font-size:38px;margin:0 0 6px;color:#FFE07A}p{font-size:26px;line-height:1.6;color:#DCE4FF;margin:4px 0 14px}
+table{border-collapse:collapse;width:100%;max-width:1200px}td,th{border:1px solid #2A3570;padding:10px;font-size:26px;text-align:center}th{background:#141B3D;color:#FFE07A}
+td.w{font-size:40px;font-weight:700}td.t{text-align:left;font-size:24px;color:#DCE4FF}
+button{font-size:28px;font-weight:900;border-radius:14px;padding:12px 22px;cursor:pointer;margin:3px;min-height:60px}
+.o{background:#2A2A2A;color:#ccc;border:2px solid #666}.n{background:#062A35;color:#9EF0FF;border:3px solid #22D3EE}.s{outline:5px solid #FFE07A}
+</style></head><body>
+<h1>🎧 第六十一次 新聲音</h1>
+<p>灰色 ＝ 上一次（第六十次）的、藍色 ＝ 新 的。<b style="color:#FFE07A">黃框 ＝ 網站 現在 用 的</b>。有 兩種 的 請 老師 選 一個。（字尾 d ＝ A：老師 選了，網站 已經 是，不 動）</p>
+<table id="t"><tr><th>聲音</th><th>老師 說</th><th>我 怎麼 改</th><th>上一次</th><th>新 的</th></tr></table>
+<script>
+const A=new Audio();function pl(s){A.src=s;A.play().catch(()=>{})}
+const R=[['ball 的 a、or 的 o（同 一個 聲音）','全部 都 不好：要 堅定 乾淨 的 ㄛ，刪 尾音 ㄜ','只 留 最 穩 的 中間 一段（沒有 開頭 滑進來、沒有 結尾 ㄜ）。F ＝ 圓 的 ㄛ（網站）、G ＝ 更 圓 更 小 的 ㄛ','s_ao',[['F ㄛ','s_ao_F',1],['G ㄛ','s_ao_G']]],
+['字首 qu','B，但 尾音 改成 堅定 的 ㄨ','B 的 ㄎ（吹氣）＋ 穩定 的 ㄨ','s_kw',[['新 ㄎㄨ','s_kw_C',1]]],
+['字尾 ch','聲音 OK，刪 開頭 不 相關 的 聲音','從 ㄔ 真的 開始 的 那 一刻 才 開始','s_ech',[['新','s_ech_B',1]]],
+['短 oo（good）','改成 堅定 清晰 的 ㄨㄛ','穩定 的 ㄨ 滑 進 穩定 的 ㄛ','s_oo',[['新 ㄨㄛ','s_oo_C',1]]]];
+const T=document.getElementById('t');R.forEach(r=>{T.insertAdjacentHTML('beforeend','<tr><td class="w">'+r[0]+'</td><td class="t">'+r[1]+'</td><td class="t">'+r[2]+'</td><td><button class="o" data-s="v60/'+r[3]+'.mp3">🔊 上一次</button></td><td>'+r[4].map(x=>'<button class="n'+(x[2]?' s':'')+'" data-s="'+x[1]+'.mp3">🔊 '+x[0]+'</button>').join('')+'</td></tr>')});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b)pl(b.getAttribute('data-s'))});
+</script></body></html>

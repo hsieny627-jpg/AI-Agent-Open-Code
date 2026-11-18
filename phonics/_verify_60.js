@@ -17,9 +17,9 @@ function serve() { return new Promise(r => { const T = { '.html': 'text/html', '
 /* ① 聲音 */
 const AU = p => path.join(__dirname, 'au', p + '.mp3'), LI = p => path.join(ROOT, 'listen', '2026-11-18_P60', p + '.mp3');
 ['s_ed', 's_ao', 's_kw', 's_ech'].forEach(c => ok(fs.existsSync(AU(c)), '沒有 ' + c));
-ok(fs.readFileSync(AU('s_ao')).equals(fs.readFileSync(LI('s_ao_old'))), 's_ao 沒有 換 回 舊 的');
+/* 第六十一次：s_ao、s_kw 又 換 成 P61（_verify_61 量）*/ok(fs.readFileSync(AU('s_ao')).equals(fs.readFileSync(path.join(ROOT, 'listen', '2026-11-18_P61', 's_ao_F.mp3'))), 's_ao 不是 P61');
 ok(fs.readFileSync(AU('s_ed')).equals(fs.readFileSync(LI('s_ed_A2'))), 's_ed 不是 大聲 版');
-ok(fs.readFileSync(AU('s_kw')).equals(fs.readFileSync(LI('s_kw_A'))), 's_kw 不是 新 的');
+ok(fs.readFileSync(AU('s_kw')).equals(fs.readFileSync(path.join(ROOT, 'listen', '2026-11-18_P61', 's_kw_C.mp3'))), 's_kw 不是 P61');
 ok(!fs.readFileSync(AU('s_kw')).equals(fs.readFileSync(LI('v59/s_kw'))), 's_kw 跟 舊 的 一樣');
 ['s_ao_C', 's_ao_D', 's_kw_B', 's_ech_A'].forEach(c => ok(fs.existsSync(LI(c)), '試聽頁 沒有 ' + c));
 const LH = fs.readFileSync(path.join(ROOT, 'listen', '2026-11-18_P60', 'index.html'), 'utf8'); ['s_ao_C', 's_kw_B', 's_ech_A', 's_ed_A2'].forEach(c => ok(LH.indexOf(c) >= 0, '試聽頁 沒 放 ' + c));
@@ -89,7 +89,7 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
       window.__PHSAY.length = 0; const ck = document.querySelector('#m3w .ck'); ck.click(); await new Promise(r => setTimeout(r, 120)); o.ck = window.__PHSAY.length > 0;
       document.getElementById('m3lv').click(); await new Promise(r => setTimeout(r, 60)); o.k2 = PHM.M3S().y.x.w === w0; document.getElementById('m3lv').click(); await new Promise(r => setTimeout(r, 30));
       document.querySelector('[data-m3k="spell"]').click(); await new Promise(r => setTimeout(r, 60)); o.k3 = PHM.M3S().y.x.w === w0;
-      o.tail = !!document.getElementById('m3tail') || PHM.M3S().y.c === '無'; o.rush = !!document.getElementById('m3rush');
+      o.tail = true;   /* 第六十一次 老師：〔聽 最後 的 聲音〕暫時 刪除（_verify_61 量 沒有 它）*/ o.rush = !!document.getElementById('m3rush');
       /* 字尾 錯 ＝ 比 一比 */
       let tries = 0; while (tries++ < 30) { PHM.m3New(); const y = PHM.M3S().y; if (y.c !== '無' && y.o) break; }
       const S = PHM.M3S(), y = S.y; S.put.o = y.o; S.put.v = y.v; const wrong = [...document.querySelectorAll('[data-m3b="c"]')].map(b => b.dataset.v).find(v => v !== y.c && v !== '無');

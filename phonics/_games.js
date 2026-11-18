@@ -440,7 +440,7 @@ function bkTile(p,coda,md){const m=md==='zh'?0:md==='kk'?1:2,b=p.replace(/[12]/g
   if(coda){if(b==='L')return {t:'ㄛ',bg:PH.CC};if(b==='R')return {t:'ㄦ',bg:PH.CC};const sup={B:'〃',P:'〃',D:'〃',T:'〃',G:'〃',K:'〃',M:'~',N:'~'}[b]||null;return lat(c[0])?{t:c[0],bg:'#fff',dark:1,sup}:{t:c[0],bg:PH.CC,sup}}
   if(b==='R')return {t:c[0],bg:PH.CC,stack:1};return lat(c[0])?{t:c[0],bg:'#fff',dark:1}:{t:c[0],bg:PH.CC}}
 const BKI={};
-function bkInfo(w){if(BKI[w])return BKI[w];const x=BOOK.W[w];if(x.parts)return BKI[w]={w,parts:x.parts.map(bkInfo)};
+function bkInfo(w){if(BKI[w])return BKI[w];const x=BOOK.W[w]||(BOOK.WX||{})[w];if(x.parts)return BKI[w]={w,parts:x.parts.map(bkInfo)};
   const S=x.sy.split('·');let si=0,used=0;const G=x.g.split(' ').map(t=>{const i=t.indexOf(':'),l=t.slice(0,i),p=t.slice(i+1),o={l,P:p==='-'?[]:p.split('+'),s:si};used+=l.length;if(used>=S[si].length){si++;used=0}return o});
   G.forEach(o=>{o.v=!!o.P.length&&isV(o.P[0])});
   G.forEach(o=>{o.nm=o.l.length===1&&!!NAMEV[o.l]&&!!o.P.length&&o.P[0].replace(/\d/g,'')===NAMEV[o.l]});   /* 第五十次：母音 字母 唸 它 的 名字（dining、tired 的 i、he 的 e、no 的 o）＝ 暫時 黃底 */
@@ -522,19 +522,36 @@ async function bkStep(root,w,m,dead){const bw=root.querySelector('.bw2');bw.clas
   const els=st.all?[...bw.querySelectorAll('.bgp')]:st.g.map(([x,k])=>bw.querySelector('.bwd[data-w="'+x+'"] .bgp[data-g="'+k+'"]')).filter(Boolean);els.forEach(e=>e.classList.add('tap'));
   if(st.gp){if(!st.gp.P.length)await wait(500);else for(let j=0;j<st.gp.P.length;j++)await say(phAu(st.gp,j))}else await say(st.au);
   await wait(st.all?500:380);els.forEach(e=>e.classList.remove('tap'));await wait(120)}}
+
+/* ══ 2026-11-18 第六十一次 老師 7（對）：〔✨ 常見 拼字 組合〕══
+ * 課本 字 裡 最 常見 的 拼字 組合 ＝ 金框 框 起來 ➜ 唸 那個 組合 的 聲音 兩次 ➜ 唸 整個 字 ➜「學會 了 ___，也 會 唸 …」延伸 字 一個 一個 出來（每 個 字母 正下方 雙語 注音／KK／IPA，組合 一樣 金框）＋唸。
+ * 研究：學會 一個 字 帶 出 一家 字（類比）Goswami 1986 https://doi.org/10.1016/0022-0965(86)90016-0 ；字 存 進 大腦 ＝ 聲音 對 上 字母 Ehri 2014 https://doi.org/10.1080/10888438.2013.819356 （沒有 打開 原文 核對 數字）*/
+function cxIdx(w,c){const G=bkInfo(w).G;for(let a=0;a<G.length;a++){let t='';for(let b=a;b<G.length;b++){t+=G[b].l;if(t===c)return Array.from({length:b-a+1},(_,k)=>a+k);if(t.length>=c.length)break}}return []}
+function cxFrame(root,w,c){const I=cxIdx(w,c);root.querySelectorAll('.bgp').forEach(g=>g.classList.toggle('cxg',I.indexOf(+g.dataset.g)>=0))}
+function cxOpen(w){const L=BOOK.COMBO[w];if(!L)return;let o=$('#cxp');if(!o){o=H('div','cxp');o.id='cxp';document.body.appendChild(o)}o.hidden=false;const my=++AUtok;
+  o.innerHTML='<div class="cxb"><div class="cxh"><b>✨ 常見 拼字 組合：<span class="en">'+w+'</span></b><button class="say" id="cxR">🔁 再 播 一次</button><button class="say" id="cxX">✖ 關閉</button></div><div id="cxM">'+bkWordHTML(w,{fs:96})+'</div>'+
+    L.map((x,i)=>'<div class="cxs" data-i="'+i+'" hidden><div class="cxt"><b class="cxc en">'+x.c+'</b>'+x.t+'<button class="say" data-cxa="'+x.au+'">🔊 '+x.c+'</button></div><div class="cxl">💡 學會 了 <b class="en">'+w+'</b>，也 會 唸：</div><div class="cxe">'+
+      x.ex.map(e=>'<div class="cxw" data-e="'+e+'" hidden>'+bkWordHTML(e,{fs:64})+'<span class="cxz">'+(BOOK.WX[e].ic||'')+' '+BOOK.WX[e].zh+'</span><button class="say" data-cxa="'+BOOK.WX[e].au+'">🔊</button></div>').join('')+'</div></div>').join('')+'</div>';
+  const dead=()=>my!==AUtok||o.hidden,M=$('#cxM');
+  o.querySelectorAll('[data-cxa]').forEach(b=>b.onclick=()=>say(b.dataset.cxa));
+  $('#cxX').onclick=()=>{o.hidden=true;AUtok++};$('#cxR').onclick=()=>cxOpen(w);
+  M.onclick=e=>{const g=e.target.closest('.bgp');if(g){const oo=bkInfo(w).G[+g.dataset.g];if(oo.P.length)say(phAu(oo,0))}};
+  (async()=>{for(let i=0;i<L.length;i++){const x=L[i],sec=o.querySelector('.cxs[data-i="'+i+'"]');if(dead())return;
+      cxFrame(M,w,x.c);M.querySelector('.bw2').classList.add('gold');await say(x.au);await wait(350);if(dead())return;await say(x.au);await wait(350);if(dead())return;await say(bkAu(w));M.querySelector('.bw2').classList.remove('gold');
+      sec.hidden=false;await wait(400);for(const e of x.ex){if(dead())return;const r=sec.querySelector('.cxw[data-e="'+e+'"]');r.hidden=false;cxFrame(r,e,x.c);const bw=r.querySelector('.bw2');bw.classList.add('gold');await say(BOOK.WX[e].au);bw.classList.remove('gold');await wait(450)}}})()}
 function bridgeOpen(w0,gr){const L=bkOrder(gr);let k=Math.max(0,L.indexOf(w0));G={k:'bridge'};const me=G;$('#lobby').hidden=true;const s=$('#game');s.hidden=false;s.onclick=null;$('#quit').hidden=false;$('#ttl').textContent=gr?'📗 '+(gr===3?'三':'四')+'年級 第三、四課 單字':'📗 從 CVC 到 課本';PAUSED=false;let DONE=-1,tok=0,fin=false,SM=LS.g('bsm',1),AUTO=false,QUICK=false;document.body.classList.add('inBr');
   const tgl=(id,key,lb)=>'<button class="btg'+(BT[key]?' on':'')+'" id="'+id+'">'+lb+'</button>';
   const show=async()=>{const w=L[k],x=BOOK.W[w],my=++tok,dead=()=>G!==me||tok!==my;fin=false;
     s.innerHTML='<div class="brg pnl'+(BT.no?' notile':'')+'"><div class="btop"><span class="lh">'+bkLesson(w)+'</span><span class="btgs">'+tgl('tI','ic','🖼 圖示')+tgl('tZ','zh','中文')+'<button class="btg" id="bl">📋 單字 清單</button></span></div>'+
      '<div class="bstep" id="bst">① 🎧 先 聽，看 字母 下面 的 音標</div>'+bkWordHTML(w,{cls:'bars'})+'<div class="blabs"></div><div class="bres" id="br"></div>'+ctlHTML().replace('<div class="ctl">','<div class="ctl"><button id="bA" class="bauto'+(AUTO?' on':'')+'">'+(AUTO?'▶ 自動 播放 中…':'▶ 自動 播放')+'</button><button id="bQ" class="bquick'+(QUICK?' on':'')+'">'+(QUICK?'⚡ 快速 複習 中…':'⚡ 快速 複習')+'</button>')+
-     '<div class="row bsp2"><a class="say cy" id="bsC" href="map.html#chain='+encodeURIComponent(w)+'" style="text-decoration:none">🎬 秒懂 動畫：從 CVC 變成 '+w+'</a><button class="say cy" id="bsS">🧩 逐步 拼音</button><button class="say" id="bsM">方式 '+SM+'：'+stepTxt(w,SM)+'</button></div>'+
+     '<div class="row bsp2"><a class="say cy" id="bsC" href="map.html#chain='+encodeURIComponent(w)+'" style="text-decoration:none">🎬 秒懂 動畫：從 CVC 變成 '+w+'</a><button class="say cy" id="bsS">🧩 逐步 拼音</button>'+(BOOK.COMBO&&BOOK.COMBO[w]?'<button class="say cx" id="bsX">✨ 常見 拼字 組合</button>':'')+'<button class="say" id="bsM">方式 '+SM+'：'+stepTxt(w,SM)+'</button></div>'+
      '<div class="row"><button class="say" id="bp">◀ 上 一個</button><button class="say" id="bn">下 一個 ▶</button></div></div>';
     const root=s.querySelector('.brg');root.dataset.w=w;const bw=root.querySelector('.bw2'),st=$('#bst'),refresh=()=>{bkLabs(root,w);bkRes(root,w,fin)};
     bindCtl(show);{const cp=$('#cP'),o=cp.onclick,bA=$('#bA'),up=()=>{bA.classList.toggle('on',AUTO);bA.textContent=AUTO?'▶ 自動 播放 中…':'▶ 自動 播放'};cp.onclick=()=>{o();if(PAUSED){AUTO=false;up()}};bA.onclick=()=>{if(AUTO)return;AUTO=true;up();if(PAUSED)o();if(fin&&DONE===tok){k=(k+1)%L.length;show()}}}/* 2026-11-18 第五十九次 老師 4-(1)：〔⚡ 快速 複習〕＝ 每 個 字：字母 一個 一個 唸＋發亮 ➜ 整個 字 金框＋全部 發亮 唸 ➜ 馬上 下 一個（考 前、短 時間 複習）*/{const bQ=$('#bQ');bQ.onclick=()=>{if(QUICK){QUICK=false;tok++;bQ.classList.remove('on');bQ.textContent='⚡ 快速 複習';return}QUICK=true;AUTO=false;if(PAUSED)$('#cP').click();show()}}
     $('#bp').onclick=()=>{k=(k+L.length-1)%L.length;show()};$('#bn').onclick=()=>{k=(k+1)%L.length;show()};$('#bl').onclick=()=>lobby('book');
     const flip=(id,key)=>{$('#'+id).onclick=()=>{BT[key]=!BT[key];LS.s('bt',BT);$('#'+id).classList.toggle('on',BT[key]);root.classList.toggle('notile',BT.no);refresh()}};flip('tI','ic');flip('tZ','zh');
     $('#bsM').onclick=()=>{SM=SM===1?2:1;LS.s('bsm',SM);$('#bsM').textContent='方式 '+SM+'：'+stepTxt(w,SM)};
-    $('#bsS').onclick=async()=>{++tok;const t2=tok;st.innerHTML='🧩 逐步 拼音（方式 '+SM+'）';bw.classList.remove('bars','split');await bkStep(root,w,SM,()=>G!==me||tok!==t2);if(G===me&&tok===t2){st.innerHTML='&nbsp;';fin=true;refresh()}};
+    {const bx=$('#bsX');if(bx)bx.onclick=()=>{++tok;cxOpen(w)}}$('#bsS').onclick=async()=>{++tok;const t2=tok;st.innerHTML='🧩 逐步 拼音（方式 '+SM+'）';bw.classList.remove('bars','split');await bkStep(root,w,SM,()=>G!==me||tok!==t2);if(G===me&&tok===t2){st.innerHTML='&nbsp;';fin=true;refresh()}};
     root.addEventListener('click',async e=>{const gp=e.target.closest('.bw2 .bgp');if(gp&&!bw.classList.contains('bars')){bkTap(gp);return}if(e.target.closest('.bw2')&&!bw.classList.contains('bars')){bw.classList.add('hl','gold');await say(bkAu(w));bw.classList.remove('hl','gold')}});
     refresh();
     if(QUICK){bw.classList.remove('bars');st.textContent='⚡ 快速 複習：'+(k+1)+' ／ '+L.length;const gps=[...bw.querySelectorAll('.bgp')];for(const gp of gps){if(dead()||!QUICK)return;const o=bkInfo(gp.closest('.bwd').dataset.w).G[+gp.dataset.g];gp.classList.add('tap');if(!o.P.length)await wait(350);else for(let j=0;j<o.P.length;j++)await say(phAu(o,j));gp.classList.remove('tap');await wait(80)}

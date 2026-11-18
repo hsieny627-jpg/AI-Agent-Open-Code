@@ -199,7 +199,7 @@ function crPrev(){var c=CRS.cfg,run=c&&c.on&&!c.fin&&!CRS.ended;
 var VSM={e:'🎯 各自 闖關 PK',c:'🔒 同 一題'};
 /* 2026-11-18 第六十次 老師 3、9、10、11：🗺️ 拼音 地圖 遊戲（pm）＝ 平板 跳到 phonics/map.html?live=0班，老師 選 一個 遊戲（cfg.pk）*/
 var PMG=[['srA','⚡ 音素 解碼 競速','你 來 拼 限時（4 個 選項）'],['srB','🧱 聲音 積木 衝刺','積木 拼字 限時'],['cvB','🔦 子母 結構 掃描','基礎：看 字'],['cvA','📡 子母 聲波 雷達','進階：只 聽'],
- ['stm0','⚔️ 拼音 地圖 第 1 關',''],['stm1','⚔️ 拼音 地圖 第 2 關',''],['stm2','⚔️ 拼音 地圖 第 3 關',''],['stm3','⚔️ 拼音 地圖 第 4 關',''],['stm4','⚔️ 拼音 地圖 第 5 關',''],['stm5','⚔️ 拼音 地圖 第 6 關',''],['stm25','📝 拼音 地圖 25 題 闖關','6 關 融合'],
+ ['stm0','⚔️ 拼音 地圖 第 1 關','聲音 和 字母'],['stm1','⚔️ 拼音 地圖 第 2 關','CVC 短 母音'],['stm2','⚔️ 拼音 地圖 第 3 關','子音 群'],['stm3','⚔️ 拼音 地圖 第 4 關','兩個 字母 一個 聲音'],['stm4','⚔️ 拼音 地圖 第 5 關','唸 名字 的 母音'],['stm5','⚔️ 拼音 地圖 第 6 關','音節'],['stm6','⚔️ 拼音 地圖 第 7 關','一 字母 多 聲音'],['stm25','📝 拼音 地圖 25 題 闖關','6 關 融合'],
  ['stb0','⚔️ 課本 單字 第 1 關',''],['stb1','⚔️ 課本 單字 第 2 關',''],['stb2','⚔️ 課本 單字 第 3 關',''],['stb3','⚔️ 課本 單字 第 4 關',''],['stb4','⚔️ 課本 單字 第 5 關',''],['stb25','📝 課本 單字 25 題 闖關','5 關 融合']];
 function pmBox(){var k=CRS.pk||'srA';return '🗺️ 選 一個 拼音 地圖 遊戲：<div class="pmg">'+PMG.map(function(x){return '<button data-pmk="'+x[0]+'" class="pmb'+(k===x[0]?' on':'')+'"><b>'+x[1]+'</b>'+(x[2]?'<small>'+x[2]+'</small>':'')+'</button>'}).join('')+'</div>每 一個 學生 題目 都 不一樣。<b>時間 到 準時 結束</b>，答了 幾題 就 送 幾題 ➜ 排行榜 先 比 <b>💯 正確率</b>。'}
 document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-pmk]');if(!b)return;CRS.pk=b.getAttribute('data-pmk');crDraw()});

@@ -38,7 +38,7 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
     PHM.scPlay(ix('seg'), 'all'); out.prev = !!st.querySelector('.qzrow [data-prev]') && st.querySelector('.qzrow').firstElementChild.hasAttribute('data-prev');
     st.querySelector('.qzrow [data-prev]').click(); out.prev2 = PHM.SC.indexOf(PHM.SC[ix('cvc')]) >= 0 && /看字 讀音/.test(document.getElementById('stage').innerText);
     /* 階段 試煉 按鈕 在 第 5 段 */
-    PHM.scPlay(4, 'all'); out.stgBtn = !!st.querySelector('.qzrow [data-stg="m0"]');
+    PHM.scPlay(2, 'all'); out.stgBtn = !!st.querySelector('.qzrow [data-stg="m0"]');
     return out; });
   for (const k of ['cv0', 'cv4', 'modeR', 'modeS', 'allSegCap', 'blb', 'dots', 'lab', 'capRun', 'blend', 'many', 'prev', 'prev2', 'stgBtn']) ok(R[k] === true, tag + ' 拼音 地圖 ' + k + ' ' + JSON.stringify(R).slice(0, 300));
   /* 鏈：從 最 熟悉 的 一塊 開始、每 一列 都 有 聲音 */
@@ -46,7 +46,7 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
   ok(!C.miss.length, tag + ' 鏈 沒 聲音 ' + C.miss.join(' ')); ok(C.tur === 't.ur' && C.live === 'w_c59_live' && C.dine === 'w_c59_dine' && C.cat === 'c.a' && C.n === 26, tag + ' 鏈 不對 ' + JSON.stringify(C));
   /* ⑥ 階段 試煉 ＋ 25 題 闖關 */
   await p.evaluate(() => PHM.tab('play')); await p.waitForTimeout(200);
-  for (const f of ['m', 'b']) for (let i = 0; i < (f === 'm' ? 6 : 5); i++) for (const mode of ['ok', 'no']) {
+  for (const f of ['m', 'b']) for (let i = 0; i < (f === 'm' ? 7 : 5); i++) for (const mode of ['ok', 'no']) {
     const r = await p.evaluate(async ([f, i, mode]) => { document.querySelector('[data-stg="' + f + i + '"]').click(); for (let t = 0; t < 300; t++) { await new Promise(r => setTimeout(r, 30)); const g = PHM.G(); if (!g || document.querySelector('#again')) break; if (g.hk && g.lock !== g.q) { const h = g.hk; g.hk = null; h[mode](); } }
       const g = PHM.G(), an = document.querySelector('.skan'); const o = { ok: g && g.ok, n: g && g.Q.length, an: !!an }; document.getElementById('gx').click(); return o; }, [f, i, mode]);
     ok(r.n === 8 && r.ok === (mode === 'ok' ? 8 : 0) && r.an, tag + ' 試煉 ' + f + i + ' ' + mode + ' ' + JSON.stringify(r)); }

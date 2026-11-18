@@ -119,7 +119,7 @@ h1{font-size:clamp(24px,3.6vh,40px)}
 #hub .gr h2 a.h25{color:#FFB84A;border-bottom-color:#FFB84A}
 #hub .gr h2 a.bkbig{display:inline-block;font-size:1.05em;color:#0B1236;background:#5BE38C;border:3px solid #fff;border-radius:14px;padding:4px 14px;text-decoration:none;margin:4px}
 .tbtn.mbtn{white-space:nowrap;color:#fff;background:linear-gradient(#9C6BFF,#5A2BD6);box-shadow:0 0 0 3px #2A1070,0 0 18px #7C4DFF99;animation:none}
-body.scin .lbtn{display:none}   /* 學生 登入 了（平板）＝ 不放 老師 的 大螢幕 按鈕（一行 放得下） */   /* 按鈕 變長了：窄的 螢幕 不放 網址（一行 放得下，不 多出 捲軸） */
+body.scin .lbtn{display:inline-flex}   /* 2026-11-18 第六十一次 老師：總首頁 加回〔⚡ 現場任務〕＝ 一直 都 在；學生 登入 了 ＝ 連到 學生 的 現場任務（live/index.html），沒 登入 ＝ 老師 大螢幕 */   /* 按鈕 變長了：窄的 螢幕 不放 網址（一行 放得下，不 多出 捲軸） */
 /* 2026-10-12：四年級 Unit 2 那一列有 3 顆按鈕（含〔職業單字網站〕），標題被擠成三行、iPad 橫放多出 33px 捲軸 ➜ 只在總首頁：按鈕內距縮一點、標題兩行；矮的螢幕不放那一列的小字 */
 .gi.b3w .gb{gap:5px}
 .gi.b3w .gb a{padding:4px 9px;gap:3px}
@@ -2272,5 +2272,6 @@ SCH={on:function(){return hOv().classList.contains('on')},open:function(){hOv().
 <a href="offline.html">💾 離線版：沒有網路也能上課</a>
 </footer>
 
+<script>(function(){function f(){var a=document.querySelector('.lbtn');if(a)a.href=document.body.classList.contains('scin')?'live/index.html':'live/host.html'}f();try{new MutationObserver(f).observe(document.body,{attributes:true,attributeFilter:['class']})}catch(e){}})()</script>
 </body>
 </html>

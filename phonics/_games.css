@@ -327,3 +327,13 @@ main{top:calc(66px + var(--sbh,0px))}
 .bquick{background:#3B2A00;color:#FFE07A;border:3px solid #FFD54A;font-weight:900}.bquick.on{background:#FFD54A;color:#2B1A00}
 #top a.bk3{background:#0F3D24;border-color:#4ADE80;color:#C9FBD8}
 .bkrow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:6px 0 14px}.bkbig{display:flex;flex-direction:column;align-items:center;font-size:clamp(22px,2.4vw,30px);font-weight:900;padding:10px 22px;border-radius:18px;border:3px solid #4ADE80;background:linear-gradient(180deg,#14532D,#0F3D24);color:#fff;text-decoration:none;box-shadow:0 0 18px rgba(74,222,128,.35)}.bkbig small{font-size:.6em;color:#BBF7D0;font-family:var(--an)}
+
+/* 第六十一次：✨ 常見 拼字 組合 */
+.say.cx{background:linear-gradient(180deg,#FFE07A,#E0A800)!important;color:#2A1B00!important;border-color:#fff!important;font-weight:900}
+.cxp{position:fixed;inset:0;z-index:90;background:rgba(3,6,20,.92);display:flex;justify-content:center;align-items:flex-start;overflow:auto;padding:14px}
+.cxb{width:min(1150px,96vw);background:#0E1538;border:3px solid #FFE07A;border-radius:24px;padding:14px 18px;display:flex;flex-direction:column;gap:12px}
+.cxh{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.cxh b{font-size:clamp(24px,2.6vw,34px);color:#FFE07A;flex:1}
+#cxM{display:flex;justify-content:center}.cxs{border-top:2px dashed #3D4A80;padding-top:10px}.cxt{font-size:clamp(20px,2.2vw,28px);font-weight:800;color:#F1F4FF;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.cxc{font-size:1.5em;color:#2A1B00;background:#FFE07A;border-radius:12px;padding:0 12px}.cxl{font-size:clamp(20px,2.2vw,26px);color:#BFD0FF;margin:6px 0}
+.cxe{display:flex;flex-wrap:wrap;gap:12px}.cxw{display:flex;align-items:center;gap:10px;background:#141B3D;border-radius:18px;padding:6px 12px}.cxz{font-size:clamp(20px,2.2vw,26px);color:#FFE9A8;font-weight:800}
+.bgp.cxg{outline:5px solid #FFD54A;outline-offset:4px;border-radius:10px;box-shadow:0 0 22px rgba(255,213,74,.7);animation:cxG 1s ease-in-out infinite alternate}@keyframes cxG{to{box-shadow:0 0 34px rgba(255,213,74,1)}}
