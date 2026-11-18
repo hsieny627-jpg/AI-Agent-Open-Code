@@ -5,7 +5,7 @@ const fs = require('fs'), path = require('path'), { execFileSync } = require('ch
 const D = __dirname, LI = path.join(D, '..', 'listen', '2026-11-17_P58'), E = []; let n = 0; const ok = (c, m) => { n++; if (!c) E.push(m); };
 const dur = f => +execFileSync('ffprobe', ['-v', 'quiet', '-show_entries', 'format=duration', '-of', 'csv=p=0', f]).toString();
 const same = (a, b) => fs.existsSync(a) && fs.existsSync(b) && fs.readFileSync(a).equals(fs.readFileSync(b)), AU = c => path.join(D, 'au', c + '.mp3');
-const SITE = { s_k: 's_k_A', cl_angry_1_2: 'cl_angry_1_2_A', s_ed: 's_ed_C', s_dh: 's_dh_B', 'bl-ai-m': 'bl-ai-m', s_ao: 's_ao_A' };
+const SITE = { s_dh: 's_dh_B', 'bl-ai-m': 'bl-ai-m' };   /* 第五十九次：s_k、gr、字尾 d、s_ao 換 了 ➜ _verify_59s.js 量 */
 const LEN = { s_k: [0.04, 0.16], cl_angry_1_2: [0.08, 0.4], s_ed: [0.03, 0.3], s_dh: [0.15, 0.6], 'bl-ai-m': [0.3, 0.9], s_ao: [0.3, 0.8] };
 for (const c in SITE) { ok(same(AU(c), path.join(LI, SITE[c] + '.mp3')), c + ' 網站 不是 ' + SITE[c]); ok(fs.existsSync(path.join(LI, 'v57', c + '.mp3')), c + ' 上一次 的 沒 留'); const d = dur(AU(c)); ok(d >= LEN[c][0] && d <= LEN[c][1], c + ' 長度 ' + d); }
 const h = fs.readFileSync(path.join(LI, 'index.html'), 'utf8');

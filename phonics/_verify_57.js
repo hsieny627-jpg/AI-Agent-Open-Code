@@ -18,7 +18,7 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
   await ctx.addInitScript(() => { window.__PHFAST = 1; window.__PHAUTO = 1; window.__PHSAY = []; window.__PHREC = []; window.__PHNOLOGIN = 1; Object.defineProperty(window, 'SCORE_URL', { get: () => '', set: () => {}, configurable: true }); });
   const p = await ctx.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message));
   await p.goto(HTTP + '/phonics/map.html#ani'); await p.waitForTimeout(300);
-  const NS = await p.evaluate(() => PHM.SC.length); ok(NS === 30, tag + ' 動畫 段數 ' + NS);
+  const NS = await p.evaluate(() => PHM.SC.length); ok(NS === 31, tag + ' 動畫 段數 ' + NS);
   const capOK = () => p.waitForFunction(() => { const c = document.querySelector('#stage .cap'); return c && c.innerHTML; }, null, { timeout: 20000 });
   for (let i = 0; i < NS; i++) { const mode = ['step', 'all', 'think'][i % 3];
     await p.evaluate(i => { PHM.scCard(i); }, i); ok(await p.evaluate(() => !!document.querySelector('#stage [data-pm="step"]') && !!document.querySelector('#stage [data-pm="all"]') && /🎯/.test(document.querySelector('#stage').innerText) && /💪/.test(document.querySelector('#stage').innerText)), tag + ' 動畫 ' + (i + 1) + ' 開始 卡 沒有 🎯／💪／兩種 播法');
@@ -32,6 +32,7 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
       dotsPerCk:[...st.querySelectorAll('.ck')].filter(c=>!c.classList.contains('sil')&&!c.closest('.bx.g')).every(c=>c.querySelectorAll('.dt i').length>=1),
       silNoDot:[...st.querySelectorAll('.ck.sil')].every(c=>!c.querySelectorAll('.dt i').length),
       fs:Math.min(...[...st.querySelectorAll('.ck .L')].map(e=>parseFloat(getComputedStyle(e).fontSize)))}})()`);
+    if (await p.evaluate(i => !!PHM.SC[i].cv, i)) { ok(await p.evaluate(() => document.querySelectorAll('#stage .cvp:not(.hid2)').length === 4), tag + ' 子音 母音 4 幕 沒 全部 出來'); continue; }
     ok(!r.hid && !r.tl, tag + ' 動畫 ' + (i + 1) + ' 還有 沒 出來 的 方框／音標');
     r.rows.forEach((w, k) => ok(w.dots === w.all, tag + ' 動畫 ' + (i + 1) + ' 第 ' + (k + 1) + ' 列 聲音 點 沒 全部 亮'));
     ok(!r.o.length, tag + ' 動畫 ' + (i + 1) + ' 超出 畫面 ' + r.o.join('|')); ok(r.fs >= (r.n >= 3 || await p.evaluate(i => !!PHM.SC[i].how, i) ? 32 : 40), tag + ' 動畫 ' + (i + 1) + ' 字母 太 小 ' + r.fs);
@@ -52,9 +53,9 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
       wh: wh[0].ch[1].sil === 1 && wh[0].ch[1].l === 'h', st: st[0].ch[1].t === 'd_u', ck: du[2].ch[0].sil === 1, short4: PHM.countOf('sh.or.t').n, thin: PHM.countOf('th.i.n').n }; });
   ok(det.rr && det.ai && det.ee && det.wh && det.st && det.ck && det.short4 === 4 && det.thin === 3, tag + ' 顏色／聲音 規則 ' + JSON.stringify(det));
   await p.evaluate(() => { window.__PHSAY = []; localStorage.setItem('phm_one', '1'); }); await p.reload(); await p.waitForTimeout(300);
-  await p.evaluate(() => { window.__PHSAY = []; PHM.scPlay(2, 'step'); }); await capOK().catch(() => {}); const sy1 = await p.evaluate(() => window.__PHSAY.filter(f => /^[a-z]+-[a-z]+-[a-z]+$/.test(f)));
-  ok(sy1.length === 3, tag + ' 單字 唸 一次：整個 字 唸 了 ' + sy1.length + ' 次（3 個 字）'); await p.evaluate(() => localStorage.setItem('phm_one', '0')); await p.reload(); await p.waitForTimeout(300);
-  await p.click('#aIdx'); ok(await p.evaluate(() => document.querySelectorAll('#scIdx .idxg button').length === 30 && !document.getElementById('scIdx').hidden), tag + ' 目次 不對'); await p.click('#idxX');
+  await p.evaluate(() => { window.__PHSAY = []; PHM.scPlay(PHM.SC.findIndex(s => s.k === 'chg'), 'step'); }); await capOK().catch(() => {}); const sy1 = await p.evaluate(() => window.__PHSAY.filter(f => /^[a-z]+-[a-z]+-[a-z]+$/.test(f)));
+  ok(sy1.length === 4, tag + ' 單字 唸 一次：整個 字 唸 了 ' + sy1.length + ' 次（4 個 字）'); await p.evaluate(() => localStorage.setItem('phm_one', '0')); await p.reload(); await p.waitForTimeout(300);
+  await p.click('#aIdx'); ok(await p.evaluate(() => document.querySelectorAll('#scIdx .idxg button').length === 31 && !document.getElementById('scIdx').hidden), tag + ' 目次 不對'); await p.click('#idxX');
   const bi = await p.evaluate(() => PHM.SC.findIndex(s => s.k === 'baby')); await p.evaluate(i => PHM.scPlay(i, 'all'), bi); await p.click('#more2');
   ok(await p.evaluate(() => document.querySelectorAll('#more2w .wrow').length) >= 5, tag + ' ➕ 補充 兩 音節 字 少於 5 個'); 
   /* 黃點 ＝ 聲音 數（③ blast 5、⑦ strong 5、⑥ bathroom 6）*/

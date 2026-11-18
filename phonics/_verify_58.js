@@ -30,7 +30,7 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
     return out; });
   for (const k in R) ok(R[k] === true, tag + ' 拼音 地圖 ' + k + ' 不對');
   /* ⑦ 隨堂 測驗 切換 */
-  const q = await p.evaluate(async () => { const i = PHM.SC.findIndex(s => s.k === 'cvc'); window.__PHQZ = null; PHM.qzStart(i); await new Promise(r => setTimeout(r, 200)); const b = document.querySelectorAll('[data-qred]'), v = document.querySelectorAll('#gbody .op .vr').length; b[1].click(); const v2 = document.querySelectorAll('#gbody .op .vr').length; b[0].click(); const gx = document.getElementById('gx'); return { b: b.length, v, v2, gxfs: parseFloat(getComputedStyle(gx).fontSize), gxh: gx.getBoundingClientRect().height }; });
+  const q = await p.evaluate(async () => { const i = PHM.SC.findIndex(s => s.k === 'seg'); window.__PHQZ = null; PHM.qzStart(i); await new Promise(r => setTimeout(r, 200)); const b = document.querySelectorAll('[data-qred]'), v = document.querySelectorAll('#gbody .op .vr').length; b[1].click(); const v2 = document.querySelectorAll('#gbody .op .vr').length; b[0].click(); const gx = document.getElementById('gx'); return { b: b.length, v, v2, gxfs: parseFloat(getComputedStyle(gx).fontSize), gxh: gx.getBoundingClientRect().height }; });
   ok(q.b === 2 && q.v >= 3 && q.v2 === 0, tag + ' 隨堂 測驗 母音 紅／全部 同色 ' + JSON.stringify(q)); ok(q.gxfs >= 22 && q.gxh >= 60, tag + ' 〔離開〕不夠 大 ' + JSON.stringify(q));
   await p.evaluate(() => { document.getElementById('game').hidden = true; });
   /* ② 3／4 音節 */
