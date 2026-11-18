@@ -520,28 +520,32 @@ async function bkStep(root,w,m,dead){const bw=root.querySelector('.bw2');bw.clas
   const els=st.all?[...bw.querySelectorAll('.bgp')]:st.g.map(([x,k])=>bw.querySelector('.bwd[data-w="'+x+'"] .bgp[data-g="'+k+'"]')).filter(Boolean);els.forEach(e=>e.classList.add('tap'));
   if(st.gp){if(!st.gp.P.length)await wait(500);else for(let j=0;j<st.gp.P.length;j++)await say(phAu(st.gp,j))}else await say(st.au);
   await wait(st.all?500:380);els.forEach(e=>e.classList.remove('tap'));await wait(120)}}
-function bridgeOpen(w0){const L=bkOrder();let k=Math.max(0,L.indexOf(w0));G={k:'bridge'};const me=G;$('#lobby').hidden=true;const s=$('#game');s.hidden=false;s.onclick=null;$('#quit').hidden=false;$('#ttl').textContent='📗 從 CVC 到 課本';PAUSED=false;let DONE=-1,tok=0,fin=false,SM=LS.g('bsm',1),AUTO=false;document.body.classList.add('inBr');
+function bridgeOpen(w0,gr){const L=bkOrder(gr);let k=Math.max(0,L.indexOf(w0));G={k:'bridge'};const me=G;$('#lobby').hidden=true;const s=$('#game');s.hidden=false;s.onclick=null;$('#quit').hidden=false;$('#ttl').textContent=gr?'📗 '+(gr===3?'三':'四')+'年級 第三、四課 單字':'📗 從 CVC 到 課本';PAUSED=false;let DONE=-1,tok=0,fin=false,SM=LS.g('bsm',1),AUTO=false,QUICK=false;document.body.classList.add('inBr');
   const tgl=(id,key,lb)=>'<button class="btg'+(BT[key]?' on':'')+'" id="'+id+'">'+lb+'</button>';
   const show=async()=>{const w=L[k],x=BOOK.W[w],my=++tok,dead=()=>G!==me||tok!==my;fin=false;
     s.innerHTML='<div class="brg pnl'+(BT.no?' notile':'')+'"><div class="btop"><span class="lh">'+bkLesson(w)+'</span><span class="btgs">'+tgl('tI','ic','🖼 圖示')+tgl('tZ','zh','中文')+'<button class="btg" id="bl">📋 單字 清單</button></span></div>'+
-     '<div class="bstep" id="bst">① 🎧 先 聽，看 字母 下面 的 音標</div>'+bkWordHTML(w,{cls:'bars'})+'<div class="blabs"></div><div class="bres" id="br"></div>'+ctlHTML().replace('<div class="ctl">','<div class="ctl"><button id="bA" class="bauto'+(AUTO?' on':'')+'">'+(AUTO?'▶ 自動 播放 中…':'▶ 自動 播放')+'</button>')+
+     '<div class="bstep" id="bst">① 🎧 先 聽，看 字母 下面 的 音標</div>'+bkWordHTML(w,{cls:'bars'})+'<div class="blabs"></div><div class="bres" id="br"></div>'+ctlHTML().replace('<div class="ctl">','<div class="ctl"><button id="bA" class="bauto'+(AUTO?' on':'')+'">'+(AUTO?'▶ 自動 播放 中…':'▶ 自動 播放')+'</button><button id="bQ" class="bquick'+(QUICK?' on':'')+'">'+(QUICK?'⚡ 快速 複習 中…':'⚡ 快速 複習')+'</button>')+
      '<div class="row bsp2"><a class="say cy" id="bsC" href="map.html#chain='+encodeURIComponent(w)+'" style="text-decoration:none">🎬 秒懂 動畫：從 CVC 變成 '+w+'</a><button class="say cy" id="bsS">🧩 逐步 拼音</button><button class="say" id="bsM">方式 '+SM+'：'+stepTxt(w,SM)+'</button></div>'+
      '<div class="row"><button class="say" id="bp">◀ 上 一個</button><button class="say" id="bn">下 一個 ▶</button></div></div>';
     const root=s.querySelector('.brg');root.dataset.w=w;const bw=root.querySelector('.bw2'),st=$('#bst'),refresh=()=>{bkLabs(root,w);bkRes(root,w,fin)};
-    bindCtl(show);{const cp=$('#cP'),o=cp.onclick,bA=$('#bA'),up=()=>{bA.classList.toggle('on',AUTO);bA.textContent=AUTO?'▶ 自動 播放 中…':'▶ 自動 播放'};cp.onclick=()=>{o();if(PAUSED){AUTO=false;up()}};bA.onclick=()=>{if(AUTO)return;AUTO=true;up();if(PAUSED)o();if(fin&&DONE===tok){k=(k+1)%L.length;show()}}}$('#bp').onclick=()=>{k=(k+L.length-1)%L.length;show()};$('#bn').onclick=()=>{k=(k+1)%L.length;show()};$('#bl').onclick=()=>lobby('book');
+    bindCtl(show);{const cp=$('#cP'),o=cp.onclick,bA=$('#bA'),up=()=>{bA.classList.toggle('on',AUTO);bA.textContent=AUTO?'▶ 自動 播放 中…':'▶ 自動 播放'};cp.onclick=()=>{o();if(PAUSED){AUTO=false;up()}};bA.onclick=()=>{if(AUTO)return;AUTO=true;up();if(PAUSED)o();if(fin&&DONE===tok){k=(k+1)%L.length;show()}}}/* 2026-11-18 第五十九次 老師 4-(1)：〔⚡ 快速 複習〕＝ 每 個 字：字母 一個 一個 唸＋發亮 ➜ 整個 字 金框＋全部 發亮 唸 ➜ 馬上 下 一個（考 前、短 時間 複習）*/{const bQ=$('#bQ');bQ.onclick=()=>{if(QUICK){QUICK=false;tok++;bQ.classList.remove('on');bQ.textContent='⚡ 快速 複習';return}QUICK=true;AUTO=false;if(PAUSED)$('#cP').click();show()}}
+    $('#bp').onclick=()=>{k=(k+L.length-1)%L.length;show()};$('#bn').onclick=()=>{k=(k+1)%L.length;show()};$('#bl').onclick=()=>lobby('book');
     const flip=(id,key)=>{$('#'+id).onclick=()=>{BT[key]=!BT[key];LS.s('bt',BT);$('#'+id).classList.toggle('on',BT[key]);root.classList.toggle('notile',BT.no);refresh()}};flip('tI','ic');flip('tZ','zh');
     $('#bsM').onclick=()=>{SM=SM===1?2:1;LS.s('bsm',SM);$('#bsM').textContent='方式 '+SM+'：'+stepTxt(w,SM)};
     $('#bsS').onclick=async()=>{++tok;const t2=tok;st.innerHTML='🧩 逐步 拼音（方式 '+SM+'）';bw.classList.remove('bars','split');await bkStep(root,w,SM,()=>G!==me||tok!==t2);if(G===me&&tok===t2){st.innerHTML='&nbsp;';fin=true;refresh()}};
-    root.addEventListener('click',e=>{const gp=e.target.closest('.bw2 .bgp');if(gp&&!bw.classList.contains('bars'))bkTap(gp)});
+    root.addEventListener('click',async e=>{const gp=e.target.closest('.bw2 .bgp');if(gp&&!bw.classList.contains('bars')){bkTap(gp);return}if(e.target.closest('.bw2')&&!bw.classList.contains('bars')){bw.classList.add('hl','gold');await say(bkAu(w));bw.classList.remove('hl','gold')}});
     refresh();
-    for(let r=0;r<2;r++){if(dead())return;bw.classList.add('hl');await say(bkAu(w));bw.classList.remove('hl');await wait(700)}
+    if(QUICK){bw.classList.remove('bars');st.textContent='⚡ 快速 複習：'+(k+1)+' ／ '+L.length;const gps=[...bw.querySelectorAll('.bgp')];for(const gp of gps){if(dead()||!QUICK)return;const o=bkInfo(gp.closest('.bwd').dataset.w).G[+gp.dataset.g];gp.classList.add('tap');if(!o.P.length)await wait(350);else for(let j=0;j<o.P.length;j++)await say(phAu(o,j));gp.classList.remove('tap');await wait(80)}
+      if(dead()||!QUICK)return;bw.classList.add('hl','gold');await say(bkAu(w));await wait(350);bw.classList.remove('hl','gold');fin=true;bkRes(root,w,true);DONE=my;await wait(700);if(dead()||!QUICK)return;
+      if(k>=L.length-1){QUICK=false;const b=$('#bQ');if(b){b.classList.remove('on');b.textContent='⚡ 快速 複習'}st.textContent='✅ 快速 複習 完成！';return}k++;show();return}
+    for(let r=0;r<2;r++){if(dead())return;bw.classList.add('hl','gold');await say(bkAu(w));bw.classList.remove('hl','gold');await wait(700)}
     if(dead())return;st.textContent='② 一個 字母 一個 聲音（灰色 ＝ 不 發音）';await bkLetters(bw,w,dead);bw.classList.remove('bars');
     if(dead())return;if(hasSyl(w)){st.textContent='③ 音節：'+sylTxt(w);bw.classList.add('split');await wait(600);bkLabs(root,w);await bkSyll(bw,w,dead);await wait(300);if(dead())return;bw.classList.remove('split');await wait(650)}
     if(dead())return;st.innerHTML='&nbsp;';bw.classList.add('join');fin=true;bkLabs(root,w);bkRes(root,w,true);
     /* 老師：先 唸 bath、再 唸 room，然後 合 起來 唸 bathroom 兩次 */
     const P=bkPieces(root,w).length?bkPieces(root,w):hasSyl(w)?bkWords(bkInfo(w)).map(I=>[...bw.querySelectorAll('.bwd[data-w="'+I.w+'"] .bsy')].map((el,i)=>({el,au:'sy_'+I.w+'_'+i})))[0]:[];
     for(const p of P){if(dead())return;p.el.classList.add('hl');await say(p.au);await wait(380);p.el.classList.remove('hl');await wait(120)}
-    for(let r=0;r<2;r++){if(dead())return;bw.classList.add('hl');await say(bkAu(w));await wait(420);bw.classList.remove('hl');await wait(200)}
+    for(let r=0;r<2;r++){if(dead())return;bw.classList.add('hl','gold');await say(bkAu(w));await wait(420);bw.classList.remove('hl','gold');await wait(200)}
     DONE=my;if(window.__PHAUTO&&window.__PHBR)window.__PHBR.push(w);
     /* 第五十二次 老師：〔▶ 自動 播放〕＝ 唸完 這 一個 字，自己 換 下 一個 字 再 唸；〔⏸ 暫停〕＝ 停 下來（最後 一個 字 唸完 也 停）*/
     if(AUTO){await wait(1300);if(dead()||!AUTO)return;if(k>=L.length-1){AUTO=false;const b=$('#bA');if(b){b.classList.remove('on');b.textContent='▶ 自動 播放'}return}k++;show()}};
@@ -680,6 +684,6 @@ document.addEventListener('click',e=>{const rx=e.target.closest('[data-rx]');if(
   const md=e.target.closest('[data-md]');if(md){MD=md.dataset.md;LS.s('md',MD);$$('[data-md]').forEach(b=>b.classList.toggle('on',b===md));retile();if(G&&G.k==='bridge')$('#cR').click();return}
   if(e.target.closest('#quit')){if(G&&G.t)G.t.stop();lobby()}});
 $$('[data-md]').forEach(b=>b.classList.toggle('on',b.dataset.md===MD));$('#mdNo').classList.toggle('on',BT.no);
-lobby();crInit();{const sb=document.getElementById('scbar');if(sb&&window.ResizeObserver)new ResizeObserver(()=>document.documentElement.style.setProperty('--sbh',(sb.hidden?0:sb.offsetHeight)+'px')).observe(sb)}{const m=/[?&]c25=([34])/.exec(location.search);if(m&&!/[?&]live=/.test(location.search))c25Start(+m[1])}
+lobby();crInit();{const sb=document.getElementById('scbar');if(sb&&window.ResizeObserver)new ResizeObserver(()=>document.documentElement.style.setProperty('--sbh',(sb.hidden?0:sb.offsetHeight)+'px')).observe(sb)}{const m=/[?&]c25=([34])/.exec(location.search);if(m&&!/[?&]live=/.test(location.search))c25Start(+m[1])}{const b=/[?&]book=([34])/.exec(location.search);if(b)bridgeOpen(null,+b[1])}
 window.PHG={get G(){return G},sOf:sOf,ESTOP:ESTOP,stepTxt:stepTxt,GM:GM,start:start,lobby:lobby,lessonOpen:lessonOpen,bridgeOpen:bridgeOpen,c25Start:c25Start,crGo:()=>CRP&&CRP.go&&CRP.go(),bkInfo:bkInfo,bkOrder:bkOrder,slotNear:slotNear,phAu:phAu,HARDV:HARDV,CNEAR:CNEAR,C25A:C25A,C25B:C25B,ITEMS:ITEMS,BWL:BWL,codeOf:codeOf,near:near,realOf:realOf,pseOf:pseOf};
 })();

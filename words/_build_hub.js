@@ -189,6 +189,7 @@ h1{font-size:clamp(24px,3.6vh,40px)}
 .tbtn.mbtn.g3m{background:linear-gradient(#38C7A3,#12806A);box-shadow:0 0 0 3px #0B4A3C,0 0 18px #38C7A399}
 /* 2026-10-30 第三十四次 第 1～4 點：每個 年級 標題 旁邊〔📱 25 題 闖關 QR〕（go25/?g=3、?g=4；放 標題 那一行，總首頁 不 多 一行）*/
 #hub .gr h2 a.h25{color:#FFB84A;border-bottom-color:#FFB84A}
+#hub .gr h2 a.bkbig{display:inline-block;font-size:1.05em;color:#0B1236;background:#5BE38C;border:3px solid #fff;border-radius:14px;padding:4px 14px;text-decoration:none;margin:4px}
 .tbtn.mbtn{white-space:nowrap;color:#fff;background:linear-gradient(#9C6BFF,#5A2BD6);box-shadow:0 0 0 3px #2A1070,0 0 18px #7C4DFF99;animation:none}
 body.scin .lbtn{display:none}   /* 學生 登入 了（平板）＝ 不放 老師 的 大螢幕 按鈕（一行 放得下） */   /* 按鈕 變長了：窄的 螢幕 不放 網址（一行 放得下，不 多出 捲軸） */
 /* 2026-10-12：四年級 Unit 2 那一列有 3 顆按鈕（含〔職業單字網站〕），標題被擠成三行、iPad 橫放多出 33px 捲軸 ➜ 只在總首頁：按鈕內距縮一點、標題兩行；矮的螢幕不放那一列的小字 */
@@ -213,7 +214,7 @@ ${require('../score/_client.js').home(0, '', 'school', 1)}
 
 <main id="hub">
 ${require('./_grades').GRADES.map(G => require('./_grades').rows(G, '').replace('年級首頁 ➜</a>', '年級首頁 ➜</a> <a class="h25 c25" href="go25/index.html?g=' + (/三/.test(G.g) ? 3 : 4) + '">📱 25 題 闖關 QR ➜</a>')).join('\n')}
-<section class="gr phm"><h2>🔤 自然發音 Phonics Master <a href="phonics/index.html">🃏 字卡 ➜</a> <a class="h25" href="phonics/games.html">🎮 CVC 遊戲 ➜</a> <a class="h25" href="phonics/games.html?c25=3">🏁 三年級 CVC 單字 25 題 闖關 ➜</a> <a class="h25" href="phonics/games.html?c25=4">🏁 四年級 CVC 單字 25 題 闖關 ➜</a> <a class="h25" href="phonics/map.html">🗺️ 拼音 地圖：從 CVC 到 課本（秒懂 動畫＋10 種 遊戲）➜</a> <a class="h25" href="phonics/map2.html">🗺️ 新版 拼音 地圖（▲▼）➜</a></h2></section>
+<section class="gr phm"><h2>🔤 自然發音 Phonics Master <a class="bkbig" href="phonics/games.html?book=3">📗 三年級 第三、四課 單字 ➜</a> <a class="bkbig" href="phonics/games.html?book=4">📗 四年級 第三、四課 單字 ➜</a> <a href="phonics/index.html">🃏 字卡 ➜</a> <a class="h25" href="phonics/games.html">🎮 CVC 遊戲 ➜</a> <a class="h25" href="phonics/games.html?c25=3">🏁 三年級 CVC 單字 25 題 闖關 ➜</a> <a class="h25" href="phonics/games.html?c25=4">🏁 四年級 CVC 單字 25 題 闖關 ➜</a> <a class="h25" href="phonics/map.html">🗺️ 拼音 地圖：從 CVC 到 課本（秒懂 動畫＋10 種 遊戲）➜</a> <a class="h25" href="phonics/map2.html">🗺️ 新版 拼音 地圖（▲▼）➜</a></h2></section>
 </main>
 
 <footer>

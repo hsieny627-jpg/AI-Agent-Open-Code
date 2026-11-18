@@ -320,3 +320,9 @@ main{top:calc(66px + var(--sbh,0px))}
 .lnsl{margin:0 0 4px}.lnsl .ls{font-size:52px;min-width:60px}
 .lrow{margin:4px 0;gap:8px}.lch{font-size:36px;min-width:64px;padding:0 8px}
 .lns .row{margin-top:6px}.lns .row .big{padding:8px 24px;font-size:28px}
+
+/* 2026-11-18 第五十九次 老師 4-(4)(5)：唸 整個 字 ＝ 金色 框＋每 個 字母 同時 稍微 放大、發光 */
+.bw2.gold{outline:.06em solid #FFD54A;outline-offset:.1em;border-radius:.2em;box-shadow:0 0 .4em rgba(255,213,74,.7)}
+.bw2.gold .bgl{transform:scale(1.1);filter:brightness(1.4) drop-shadow(0 0 .12em #FFD54A)!important;transition:transform .2s}
+.bquick{background:#3B2A00;color:#FFE07A;border:3px solid #FFD54A;font-weight:900}.bquick.on{background:#FFD54A;color:#2B1A00}
+#top a.bk3{background:#0F3D24;border-color:#4ADE80;color:#C9FBD8}

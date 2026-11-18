@@ -104,18 +104,21 @@ const SC=[
 /* ⑧ baby 的〔➕ 再 看 5 個〕：何嘉仁 Super Fun 課本 的 兩 音節 字（老師 的 簡報 裡 有 的；字母 少、結構 簡單），音節 照「一個 子音 聲 往 後 搬」*/
 const MORE2=[['s.e|v.e=ah.n','w_c57_seven','seven','七'],['l.e|tt.er','w_c57_letter','letter','信'],['d.o.c|t.or=er1','w_c57_doctor','doctor','醫生'],['n.u.m|b.er','w_c57_number','number','數字'],['s.i.s|t.er','w_c57_sister','sister','姊妹'],['f.ar|m.er','w_c57_farmer','farmer','農夫']].map(x=>({s:x[0],au:x[1],w:x[2],zh:x[3]}));
 /* ══ 老師 4-11：每 個 課本 單字 字卡〔🎬 秒懂 動畫〕＝ 從 CVC 一步 一步 變成 課本 字（map.html#chain=<字>，用 同 一套 動畫）══ */
-const CHAIN={cat:[['b.a.t','b-ae-t'],['c.a.t','bk_cat']],dog:[['d.o.t','d-aa-t'],['d.o.g','bk_dog']],sad:[['s.a.t','s-ae-t'],['s.a.d','bk_sad']],not:[['h.o.t','h-aa-t'],['n.o.t','bk_not']],
-  yes:[['y.e.t','y-eh-t'],['y.e.s','bk_yes']],fish:[['f.i.t','f-ih-t'],['f.i.sh','bk_fish']],thin:[['t.i.n','t-ih-n'],['th.i.n','bk_thin']],he:[['h.e.n','h-eh-n'],['h.e!=ee','bk_he']],
-  she:[['h.e!=ee','bk_he'],['sh.e!=ee','bk_she']],no:[['n.o.t','bk_not'],['n.o!=oa','bk_no']],room:[['r.o.m','r-aa-m'],['r.oo.m','bk_room']],
-  bedroom:[['b.e.d','b-eh-d'],['r.oo.m','bk_room'],['b.e.d|r.oo.m','bk_bedroom']],bathroom:[['b.a.t','b-ae-t'],['b.a.th','b-ae-th'],['b.a.th|r.oo.m','bk_bathroom']],
-  rabbit:[['r.a.b','r-ae-b'],['b.i.t','b-ih-t'],['r.a|bb.i.t','bk_rabbit']],kitchen:[['k.i.t','k-ih-t'],['k.i|tch.e=ah.n','bk_kitchen']],
-  dining:[['d.i!=ii.n.e~','d-ii-n'],['d.i!=ii|n.i.ng','bk_dining']],living:[['l.i.t','l-ih-t'],['l.i|v.i.ng','bk_living']],
-  where:[['w.e.t','w-eh-t'],['wh.e=eh.r=rr.e~','bk_where']],bird:[['b.i.d','b-ih-d'],['b.ir.d','bk_bird']],turtle:[['t.u.b','t-uh-b'],['t.ur|t.le=el','bk_turtle']],
-  strong:[['s.o=ao.ng','w_song'],['st.o=ao.ng','w_stong',1],['str.o=ao.ng','bk_strong']],short:[['sh.o.t','sh-aa-t'],['sh.or.t','bk_short']],tall:[['b.a=ao.ll','w_ball'],['t.a=ao.ll','bk_tall']],
-  tired:[['t.i.n','t-ih-n'],['t.i!=ii.r=rr.e~.d','bk_tired']],angry:[['a.n.t','0-ae-nt'],['a.n|gr.y','bk_angry']],happy:[['h.a.p','h-ae-p'],['h.a|pp.y','bk_happy']]};
+/* 2026-11-18 第五十九次 老師 4-(3)：🔒 最高 原則 ＝ 降低 認知 負荷：第一步 一定 是 學生 最 熟悉 的 舊 經驗（自己 會 拼 的 那 一塊：字首＋母音、第一個 音節），
+ * 每 一步 只 多 一個 新 的 東西，嚴禁 多 一個 不 認識 的 字（以前 tub ➜ turtle、bat ➜ cat、lit ➜ living 都 多 了 一個 不 認識 的 字，而且 tub 的 聲音 像 tom）。
+ * 一個 音節：字首＋母音（cv_）➜ 整個 字；兩個 音節：第一個 音節 ➜ 第二個 音節 ➜ 整個 字；live ➜ living、dine ➜ dining（老師 指定：聲音＋中文＋圖 比較）*/
+const CHAIN={cat:[['c.a','cv_cat_0'],['c.a.t','bk_cat']],dog:[['d.o','cv_dog_0'],['d.o.g','bk_dog']],sad:[['s.a','cv_sad_0'],['s.a.d','bk_sad']],not:[['n.o','cv_not_0'],['n.o.t','bk_not']],
+  yes:[['y.e','cv_yes_0'],['y.e.s','bk_yes']],fish:[['f.i','cv_fish_0'],['f.i.sh','bk_fish']],thin:[['th.i','cv_thin_0'],['th.i.n','bk_thin']],he:[['h','s_h'],['h.e!=ee','bk_he']],
+  she:[['sh','s_sh'],['sh.e!=ee','bk_she']],no:[['n','s_n'],['n.o!=oa','bk_no']],room:[['r.oo','cv_room_0'],['r.oo.m','bk_room']],
+  bedroom:[['b.e.d','b-eh-d',0,'🛏️ bed ＝ 床'],['r.oo.m','bk_room',0,'🏠 room ＝ 房間'],['b.e.d|r.oo.m','bk_bedroom',0,'bedroom ＝ 臥室']],bathroom:[['b.a.th','b-ae-th',0,'🛀 bath ＝ 洗澡'],['r.oo.m','bk_room',0,'🏠 room ＝ 房間'],['b.a.th|r.oo.m','bk_bathroom',0,'bathroom ＝ 浴室']],
+  rabbit:[['r.a','sy_rabbit_0'],['bb.i.t','sy_rabbit_1'],['r.a|bb.i.t','bk_rabbit']],kitchen:[['k.i','sy_kitchen_0'],['tch.e=ah.n','sy_kitchen_1'],['k.i|tch.e=ah.n','bk_kitchen']],
+  dining:[['d.i!=ii.n.e~','w_c59_dine',0,'🍽️ dine ＝ 用餐'],['d.i!=ii|n.i.ng','bk_dining',0,'🍽️ dining ＝ 用餐（的）：e 拿掉 ＋ ing']],living:[['l.i.v.e~','w_c59_live',0,'🏡 live ＝ 住、生活'],['l.i|v.i.ng','bk_living',0,'🛋️ living ＝ 生活（的）：e 拿掉 ＋ ing']],
+  where:[['wh','s_w'],['wh.e=eh.r=rr.e~','bk_where']],bird:[['b.ir','cv_bird_0'],['b.ir.d','bk_bird']],turtle:[['t.ur','sy_turtle_0'],['t.le=el','sy_turtle_1'],['t.ur|t.le=el','bk_turtle']],
+  strong:[['s.o=ao.ng','w_song'],['st.o=ao.ng','w_stong',1],['str.o=ao.ng','bk_strong']],short:[['sh.o.t','sh-aa-t'],['sh.or.t','bk_short']],tall:[['t','s_t'],['t.a=ao.ll','bk_tall']],
+  tired:[['t.i!=ii','cv_tired_0'],['t.i!=ii.r=rr.e~.d','bk_tired']],angry:[['a.n','sy_angry_0'],['gr.y','sy_angry_1'],['a.n|gr.y','bk_angry']],happy:[['h.a','sy_happy_0'],['pp.y','sy_happy_1'],['h.a|pp.y','bk_happy']]};
 CHAIN['dining room']=CHAIN.dining;CHAIN['living room']=CHAIN.living;
-function chainScene(w){const C=CHAIN[w];if(!C)return null;return {k:'chain',t:'🎬 從 CVC 到 課本：'+w,g:C.map(r=>r[0].replace(/[.|]|!?=[a-z0-9]+|~/g,'')).join(' ➜ ')+'：每 次 只 加 一點點',w:'用 你 已經 會 的 CVC，一步 一步 變成 課本 的 字',
-  rows:C.map(r=>({s:r[0],au:r[1],fake:r[2]})),ask:'🤔 從 上 一行 到 下 一行，改變 了 哪裡？',cap:'<b>'+w+'</b>：從 '+C[0][0].replace(/[.|]|!?=[a-z0-9]+|~/g,'')+' 一步 一步 變 過來 ➜ 每 一步 只 改 一個 地方',qz:'spell'}}
+function chainScene(w){const C=CHAIN[w];if(!C)return null;return {k:'chain',t:'🎬 從 CVC 到 課本：'+w,g:C.map(r=>r[0].replace(/[.|]|!?=[a-z0-9]+|~/g,'')).join(' ➜ ')+'：每 次 只 加 一點點',w:'從 你 已經 會 的 那 一塊 開始，一步 一步 變成 課本 的 字',
+  rows:C.map(r=>({s:r[0],au:r[1],fake:r[2],nt:r[3]})),ask:'🤔 從 上 一行 到 下 一行，改變 了 哪裡？',cap:'<b>'+w+'</b>：從 '+C[0][0].replace(/[.|]|!?=[a-z0-9]+|~/g,'')+' 一步 一步 變 過來 ➜ 每 一步 只 改 一個 地方',qz:'spell'}}
 let ALG=null,ANI=LS.g('ani',1);
 let SCI=LS.g('sci3',0),STR=false,SMODE=LS.g('smode','step'),THINK=false;if(SCI>=SC.length)SCI=0;
 const qs=(r,s)=>r.querySelector(s),qsa=(r,s)=>[].slice.call(r.querySelectorAll(s));
@@ -376,7 +379,7 @@ let TAB='ani';function tab(t){TAB=t;TOK++;$$('#tabs button').forEach(b=>b.classL
   if(t==='ani')scCard(SCI);if(t==='map')mapDraw();if(t==='syl')sylDraw();if(t==='many')manyDraw();if(t==='play')gList();try{history.replaceState(null,'','#'+t)}catch(e){}}
 $$('#tabs button').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
 /*__GAMES__*/
-mdDraw();strBtn();modeBtn();{const ch=/#chain=([^&]+)/.exec(location.hash);if(ch){const w=decodeURIComponent(ch[1]),S=chainScene(w);if(S){SC.push(S);const i=SC.length-1;tab('ani');SCI=i;scCard(i);$('#aIdx').insertAdjacentHTML('beforebegin','<button class="btn go" onclick="history.length>1?history.back():location.href=\'games.html\'">⬅ 回 字卡</button>')}else tab('ani')}else tab((/#(ani|map|syl|many|play)/.exec(location.hash)||[0,M2?'map':'ani'])[1])}
+mdDraw();strBtn();modeBtn();{const ch=/#chain=([^&]+)/.exec(location.hash);if(ch){const w=decodeURIComponent(ch[1]),S=chainScene(w);if(S){SC.push(S);const i=SC.length-1;tab('ani');SCI=i;scCard(i);$('#aIdx').insertAdjacentHTML('beforebegin','<button class="btn go" onclick="history.length>1?history.back():location.href=\'games.html\'">⬅ 回 課本 單字 動畫</button>')}else tab('ani')}else tab((/#(ani|map|syl|many|play)/.exec(location.hash)||[0,M2?'map':'ani'])[1])}
 
 /* ══ 2026-11-17 第五十八次 老師 (7)：🆕 第三 版 拼音 地圖 map3.html ＝「聲音 積木 拼字台」（不同 的 介面，最 直覺、最 好 操作）══
  * 🎧 聽 ➜ 拼：聽 一個 字 ➜ 上面 3 個 空 方框（字首｜母音｜字尾，數 聲音 的 黃點 先 出來）➜ 下面 3 排 積木（每 排 6 個：對 的＋只 差 一點 的），點 積木 ＝ 唸 它 的 聲音＋放進 方框 ➜〔✅ 對 答案〕：

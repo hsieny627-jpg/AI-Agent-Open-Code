@@ -3,7 +3,7 @@
 const fs = require('fs'), path = require('path'), D = __dirname;
 const PH = require('./_ph.js'), PH2 = require('./_ph2.js'), QW = require('./_qwords.json'), REAL = require('./_realreg.json');
 const have = fs.readdirSync(path.join(D, 'au')).map(f => f.replace(/\.mp3$/, ''));
-const AVL = have.filter(c => /^(s_|w_|zy_|bk_|sy_)/.test(c) || /^[a-z]+-(ae|eh|ih|aa|uh|ai|ee|ii|oa|uu|yu|or|ou|oy|ao|ar|er)(-[a-z]+)?$/.test(c));   /* 第五十七次：多 ou oy ao ar er */
+const AVL = have.filter(c => /^(s_|w_|zy_|bk_|sy_|cv_)/.test(c) || /^[a-z]+-(ae|eh|ih|aa|uh|ai|ee|ii|oa|uu|yu|or|ou|oy|ao|ar|er)(-[a-z]+)?$/.test(c));   /* 第五十七次：多 ou oy ao ar er */
 const J = a => Array.isArray(a) ? a.join('') : a, C = PH.CONS, V = PH.VOW, V2 = PH2.VOW2, C2 = PH2.CONS2 || {};
 const t = (o, sup) => ({ zh: J(o.zh), sup: sup != null ? sup : (Array.isArray(o.sup) ? '' : o.sup || ''), kk: J(o.kk), ipa: J(o.ipa) });
 const TT = {};
