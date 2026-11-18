@@ -759,3 +759,7 @@ button.allgo{animation:allgo .9s ease-in-out 6;box-shadow:0 0 0 6px #FFD54A,0 0 
 .ca3d{position:absolute;left:0;right:0;bottom:4%;height:30%;display:flex;justify-content:center;align-items:flex-end;gap:2.4vw;perspective:900px;pointer-events:none;z-index:2;transform:rotateY(var(--ry))}
 .caf{width:7vw;height:var(--h);border-radius:10px 10px 0 0;background:linear-gradient(180deg,var(--cc),rgba(0,0,0,.2));opacity:.28;transform-origin:50% 100%;animation:caf 1.4s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(var(--i)*.25s + .4s);display:flex;justify-content:center}
 .caf b{font-size:2.2vw;color:#fff;margin-top:6px;text-shadow:0 2px 6px #000}@keyframes caf{from{transform:rotateX(85deg) translateZ(-300px);opacity:0}to{transform:none;opacity:.28}}
+/* 2026-11-18 第六十次：🗺️ 拼音 地圖 遊戲（pm）選 一個 遊戲 */
+.pmg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:10px 0}
+.pmb{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:72px;padding:8px 14px;border-radius:18px;border:3px solid rgba(255,255,255,.25);background:#14183A;color:#fff;text-align:left;cursor:pointer}
+.pmb b{font-size:22px}.pmb small{font-size:17px;color:#BFD0FF}.pmb.on{background:#FFD54A;color:#2A1B00;border-color:#fff}.pmb.on small{color:#5A3B00}

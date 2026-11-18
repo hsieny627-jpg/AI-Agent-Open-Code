@@ -405,6 +405,41 @@ body.m3 main{top:64px}#m3{max-width:1200px;margin:0 auto;padding:12px 16px;text-
 .skan{border:3px solid #7FD4FF;border-radius:16px;padding:10px 14px;margin-bottom:10px;text-align:left}.skt{font-size:26px;font-weight:900;color:#7FD4FF}.skr{display:grid;grid-template-columns:minmax(150px,1fr) 2fr auto;gap:10px;align-items:center;font-size:20px;margin:4px 0}
 .skb{height:16px;border-radius:8px;background:#22305F;overflow:hidden}.skb i{display:block;height:100%}.skb i.hi{background:#22C55E}.skb i.mid{background:#FFD54A}.skb i.lo{background:#FF5A5A}.skn{font-size:20px;color:#FFE07A;margin-top:6px}
 .btn.stgb{animation:capb 1.6s ease-in-out infinite}
+/* ══ 2026-11-18 第六十次：map2／map3 ══ */
+.vnav{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;padding:10px 12px 4px}.vbtn{font-size:clamp(22px,2.4vw,30px);font-weight:900;text-decoration:none;min-height:64px;display:inline-flex;align-items:center;padding:6px 26px;border-radius:20px;border:4px solid #FFE07A;color:#2A1B00;background:linear-gradient(180deg,#FFF1B0,#FFD54A);box-shadow:0 6px 18px rgba(255,213,74,.35)}.vbtn.v2{border-color:#7FD4FF;background:linear-gradient(180deg,#D8F1FF,#7FD4FF);color:#06233A}
+.m2p button{background:#FFF4D6;color:#2A1B00;border-color:#C9A227}.m2p button.on{background:#2EE59D;color:#05301E;border-color:#fff;box-shadow:0 0 0 4px rgba(46,229,157,.4)}
+.bigear{font-size:clamp(28px,3.2vw,40px)!important;min-height:76px;padding:8px 34px!important;border:4px solid #7FD4FF!important;background:linear-gradient(180deg,#1E5FA8,#0E2F5C)!important;color:#fff!important;animation:earB 1.4s ease-in-out infinite}.bigear.on{background:#FFE07A!important;color:#2A1B00!important}
+@keyframes earB{0%,100%{box-shadow:0 0 0 0 rgba(127,212,255,.7)}50%{box-shadow:0 0 0 14px rgba(127,212,255,0)}}
+.pnext{font-size:clamp(22px,2.4vw,28px);font-weight:900;color:#FFE07A;margin-top:6px}.btn.pulse{animation:earB 1.2s infinite}
+.m3tail{font-size:clamp(20px,2.2vw,26px);font-weight:900;min-height:60px;padding:6px 18px;border-radius:18px;border:3px solid #FF9EC4;background:#3A0E24;color:#FFD3E6}.m3tail.on{background:#FFE07A;color:#2A1B00}
+.m3b small.m3cue{display:block;font-family:inherit;font-size:clamp(13px,1.3vw,16px);font-weight:700;color:#FFE9A8;margin-top:2px}.m3pair{margin-top:6px;font-size:clamp(22px,2.4vw,28px)}.m3pair .ok{color:#2EE59D}
+/* ══ 第六十次：⏱️ 你 來 拼 限時 遊戲（⚡ 音素 解碼 競速 ＝ 霓虹 密碼鎖；🧱 聲音 積木 衝刺 ＝ 積木 工坊）、🔴🔵 子母 結構 遊戲 ══ */
+.srw{width:min(1180px,96vw);margin:0 auto;padding:10px 14px 16px;border-radius:26px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.srw.sr2{background:radial-gradient(700px 300px at 50% 0,rgba(0,240,255,.18),transparent 70%),linear-gradient(180deg,#071A2E,#020812);border:3px solid #00E5FF;box-shadow:0 0 40px rgba(0,229,255,.35),inset 0 0 40px rgba(0,229,255,.12)}
+.srw.sr3{background:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0 14px,transparent 14px 28px),linear-gradient(180deg,#2A1A05,#120A02);border:3px solid #FFB547;box-shadow:0 0 40px rgba(255,181,71,.3)}
+.srtop{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap}
+.srear{font-size:clamp(26px,3vw,38px);font-weight:900;min-height:74px;padding:6px 30px;border-radius:22px;border:4px solid #7FD4FF;background:linear-gradient(180deg,#1E5FA8,#0E2F5C);color:#fff;animation:earB 1.4s ease-in-out infinite;cursor:pointer}.srear.on{background:#FFE07A;color:#2A1B00}
+.srhint{font-size:clamp(22px,2.4vw,30px);font-weight:900;min-height:64px;padding:6px 22px;border-radius:20px;border:3px solid #C9A0FF;background:#2A1550;color:#F1E4FF;cursor:pointer}.srhint:disabled{opacity:.4}
+.srmul{font-size:clamp(22px,2.4vw,30px);font-weight:900;padding:8px 18px;border-radius:999px;background:linear-gradient(90deg,#FF7A1A,#FFD54A);color:#2A1000;box-shadow:0 0 22px rgba(255,170,40,.7);animation:mulG 1s ease-in-out infinite alternate}.srmul.lo{background:#3A3A4A;color:#DDD;box-shadow:none;animation:none}
+@keyframes mulG{from{transform:scale(1)}to{transform:scale(1.08)}}
+.srslots{display:flex;gap:clamp(10px,1.6vw,22px);justify-content:center;align-items:flex-start;flex-wrap:wrap}
+.srs{min-width:clamp(120px,15vw,190px);padding:8px 10px 10px;border-radius:20px;border:4px solid #4D8FFF;background:#0B1A3C;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.srs.v{border-color:#FF5A5A;background:#3A0B0B}.srs.g{border-color:#8C92A3;background:#22252E;opacity:.85}.srs.full b{color:#FFE07A}
+.srs small{font-size:clamp(18px,1.9vw,24px);font-weight:900;color:#DCE8FF}.srs>b{font-size:clamp(46px,6vw,76px);line-height:1.05;color:#fff}
+.srht{display:flex;gap:4px;justify-content:center;background:#FFF4D6;border-radius:12px;padding:4px 8px}.srht .tl{color:#2A1B00!important;background:transparent!important}
+.srop{display:flex;flex-direction:column;gap:6px;width:100%}.srop button{font-family:var(--an);font-size:clamp(24px,2.8vw,34px);font-weight:800;min-height:58px;border-radius:14px;border:3px solid #C9A227;background:#FFF4D6;color:#2A1B00;cursor:pointer}.srop button.on{background:#2EE59D;color:#05301E;border-color:#fff}
+.srrow{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}.srl{font-size:clamp(18px,1.9vw,24px);font-weight:900;min-width:5.5em;text-align:right}.srl.c{color:#8FB4FF}.srl.v{color:#FF9A9A}
+.srb{font-family:var(--an);font-size:clamp(26px,3vw,38px);font-weight:800;min-width:clamp(70px,8.5vw,100px);min-height:62px;border-radius:14px;border:3px solid rgba(255,255,255,.7);color:#fff;cursor:pointer;box-shadow:0 6px 0 rgba(0,0,0,.45)}.srb.c{background:#1B3A8F}.srb.v{background:#8F1B1B}.srb.on{background:#FFE07A;color:#2A1B00;transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.45)}
+.srgo{font-size:clamp(28px,3vw,38px);font-weight:900;min-height:74px;padding:6px 60px;border-radius:24px;border:4px solid #fff;background:linear-gradient(180deg,#3BE8A0,#13A866);color:#03261A;cursor:pointer}.srgo:disabled{opacity:.35}
+.g60{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;padding:10px;border:3px solid #FFE07A;border-radius:22px;margin-bottom:12px}.g60>b{grid-column:1/-1;font-size:26px;color:#FFE07A}
+.cvg{display:flex;flex-direction:column;align-items:center;gap:12px;width:min(1100px,96vw)}
+.cvword{position:relative;font-size:clamp(70px,10vw,130px);font-weight:800;color:#fff;padding:4px 40px;border-radius:24px;background:#0B1236;border:3px solid #3D5AFE;overflow:hidden}
+.cvbeam{position:absolute;top:0;bottom:0;width:22%;left:-25%;background:linear-gradient(90deg,transparent,rgba(127,212,255,.55),transparent);animation:cvb 1.8s linear infinite}@keyframes cvb{to{left:110%}}
+.cvradar{position:relative;width:clamp(140px,18vw,200px);height:clamp(140px,18vw,200px);border-radius:50%;border:3px solid #2EE59D;background:radial-gradient(circle,#06301E,#020D08)}.cvradar i{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(46,229,157,.7);animation:cvr 2.1s ease-out infinite}.cvradar i:nth-child(2){animation-delay:.7s}.cvradar i:nth-child(3){animation-delay:1.4s}@keyframes cvr{from{transform:scale(.2);opacity:1}to{transform:scale(1.15);opacity:0}}
+.cvt{display:block;font-size:clamp(20px,2vw,26px);font-weight:900;color:#FFE07A;margin-top:4px}
+.rush{font-size:clamp(20px,2.2vw,28px)!important;font-weight:900;min-height:62px;padding:6px 22px;border-radius:20px;border:3px solid #FF9A3D!important;background:linear-gradient(180deg,#FFB547,#E8590C)!important;color:#2A0E00!important;cursor:pointer}
+/* 第六十次 老師 9-(4)：不 發音 的 字母（kitchen 的 t）跟 其他 字母 同 一條 水平線 */
+.ck.sil{align-self:flex-start}
 </style></head><body>
 <div id="top"><a href="index.html">🔤 拼讀 字卡</a><a href="games.html">🎮 遊戲場</a><div class="ttl">🗺️ 拼音 地圖：從 CVC 到 課本</div>
 <div id="mdSw" class="mdSw"><button data-md="zh">注音</button><button data-md="kk">KK</button><button data-md="ipa">IPA</button></div><a href="../index.html">🏠</a></div>

@@ -26,7 +26,7 @@ const codeOf=w=>{const p=parts(w);return PH.code(p.i,VOWS[p.v],p.e)};
 /* 單獨 一個 音：字首（不 帶 ㄜ）、母音、字尾（m ＝ 閉嘴 mmm、n ＝ 嗯）*/
 const sOf=(p,k)=>k===0?'s_'+PH.initCode(p.i,p.v):k===1?'s_'+PH.vowCode(VOWS[p.v]):(p.e==='m'?'s_em':p.e==='n'?'s_en':p.e==='l'?'s_el':p.e==='x'?'s_x':ESTOP[p.e]||'s_'+PH.endCode(p.e));
 /* 第五十二次 老師 第 1 點：字尾 d 太 大聲、太 刻意 ➜ 字尾 塞音 b d g p t k 全部 用 真的 字 最後 的 那 一個 音（輕、自然；tools/ph_fix52.py）*/
-const ESTOP={b:'s_eb',d:'s_ed',g:'s_eg',p:'s_ep',t:'s_et',k:'s_ek',ck:'s_ek'};
+const ESTOP={b:'s_eb',d:'s_ed',g:'s_eg',p:'s_ep',t:'s_et',k:'s_ek',ck:'s_ek',ch:'s_ech',tch:'s_ech'};
 const REAL={};WORDS.forEach(x=>REAL[x[0]]={zh:x[1],em:x[2]});
 const PSEW=PSE.map(x=>x[0]);
 const ITEMS=WORDS.map(x=>x[0]).concat(PSEW);   /* 老師看板 的 第幾題 ＝ 這個 清單 的 第幾個（score/_bank.js 同一份）*/
@@ -454,7 +454,7 @@ function bkInner(I){return '<span class="bwd" data-w="'+I.w+'">'+I.S.map((s,si)=
 function bkWordHTML(w,o){o=o||{};const I=bkInfo(w);return '<div class="bw2'+(o.cls?' '+o.cls:'')+'" style="--fs:'+(o.fs||(w.length>9?60:w.length>6?72:88))+'px">'+(I.parts?I.parts.map(bkInner).join('<span class="bsp"></span>'):bkInner(I))+'</div>'}
 const BKS={ERV:'ir',AE:'ae',EH:'eh',IH:'ih',AA:'aa',AO:'ao',AH:'uh',AH0:'uh',IY:'ee',IY0:'ee',UW:'uu',AY:'ii',OW:'oa',ER:'er',ER0:'er'};
 function phAu(o,j){const b=o.P[j].replace(/[12]/g,'');if(BKS[b])return 's_'+BKS[b];const cd=o.coda||(j>0&&o.v);
-  return 's_'+({B:cd?'eb':'b',P:cd?'ep':'p',F:'f',D:cd?'ed':'d',T:cd?'et':'t',L:cd?'el':'l',K:cd?'ek':'k',G:cd?'eg':'g',HH:'h',S:'s',Z:'z',JH:'j',CH:'ch',SH:'sh',TH:'th',DH:'dh',W:'w',Y:'y',V:'v',NG:'ng',M:cd?'em':'m',N:cd?'en':'n',R:cd?'er':'r',RC:'er'}[b])}
+  return 's_'+({B:cd?'eb':'b',P:cd?'ep':'p',F:'f',D:cd?'ed':'d',T:cd?'et':'t',L:cd?'el':'l',K:cd?'ek':'k',G:cd?'eg':'g',HH:'h',S:'s',Z:'z',JH:'j',CH:cd?'ech':'ch',SH:'sh',TH:'th',DH:'dh',W:'w',Y:'y',V:'v',NG:'ng',M:cd?'em':'m',N:cd?'en':'n',R:cd?'er':'r',RC:'er'}[b])}
 const bkAu=w=>'bk_'+w.replace(/ /g,'_');
 const bkWords=I=>I.parts||[I];
 /* 一個 一個 字母 出來＋唸 它 的 聲音（不 發音 的 ＝ 灰色＋🤫，不 出 聲）*/
@@ -536,7 +536,7 @@ function bridgeOpen(w0,gr){const L=bkOrder(gr);let k=Math.max(0,L.indexOf(w0));G
     root.addEventListener('click',async e=>{const gp=e.target.closest('.bw2 .bgp');if(gp&&!bw.classList.contains('bars')){bkTap(gp);return}if(e.target.closest('.bw2')&&!bw.classList.contains('bars')){bw.classList.add('hl','gold');await say(bkAu(w));bw.classList.remove('hl','gold')}});
     refresh();
     if(QUICK){bw.classList.remove('bars');st.textContent='⚡ 快速 複習：'+(k+1)+' ／ '+L.length;const gps=[...bw.querySelectorAll('.bgp')];for(const gp of gps){if(dead()||!QUICK)return;const o=bkInfo(gp.closest('.bwd').dataset.w).G[+gp.dataset.g];gp.classList.add('tap');if(!o.P.length)await wait(350);else for(let j=0;j<o.P.length;j++)await say(phAu(o,j));gp.classList.remove('tap');await wait(80)}
-      if(dead()||!QUICK)return;bw.classList.add('hl','gold');await say(bkAu(w));await wait(350);bw.classList.remove('hl','gold');fin=true;bkRes(root,w,true);DONE=my;await wait(700);if(dead()||!QUICK)return;
+      if(dead()||!QUICK)return;bw.classList.add('hl','gold');await say(bkAu(w));await wait(450);if(dead()||!QUICK)return;await say(bkAu(w));await wait(350);bw.classList.remove('hl','gold');   /* 第六十次 老師 9-(3)：每 個 字 最後 整個 字 唸 兩次（低成就 學生 加深 印象）*/fin=true;bkRes(root,w,true);DONE=my;await wait(700);if(dead()||!QUICK)return;
       if(k>=L.length-1){QUICK=false;const b=$('#bQ');if(b){b.classList.remove('on');b.textContent='⚡ 快速 複習'}st.textContent='✅ 快速 複習 完成！';return}k++;show();return}
     for(let r=0;r<2;r++){if(dead())return;bw.classList.add('hl','gold');await say(bkAu(w));bw.classList.remove('hl','gold');await wait(700)}
     if(dead())return;st.textContent='② 一個 字母 一個 聲音（灰色 ＝ 不 發音）';await bkLetters(bw,w,dead);bw.classList.remove('bars');

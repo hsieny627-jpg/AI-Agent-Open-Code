@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第六十次 新聲音</title><style>
+body{margin:0;background:#0B1026;color:#fff;font-family:'Microsoft JhengHei','PingFang TC',sans-serif;padding:18px}
+h1{font-size:38px;margin:0 0 6px;color:#FFE07A}p{font-size:26px;line-height:1.6;color:#DCE4FF;margin:4px 0 14px}
+table{border-collapse:collapse;width:100%;max-width:1200px}td,th{border:1px solid #2A3570;padding:10px;font-size:26px;text-align:center}th{background:#141B3D;color:#FFE07A}
+td.w{font-size:40px;font-weight:700}td.t{text-align:left;font-size:24px;color:#DCE4FF}
+button{font-size:28px;font-weight:900;border-radius:14px;padding:12px 22px;cursor:pointer;margin:3px;min-height:60px}
+.o{background:#2A2A2A;color:#ccc;border:2px solid #666}.n{background:#062A35;color:#9EF0FF;border:3px solid #22D3EE}.s{outline:5px solid #FFE07A}
+</style></head><body>
+<h1>🎧 第六十次 新聲音</h1>
+<p>灰色 ＝ 上一次（第五十九次）的、藍色 ＝ 新 的。<b style="color:#FFE07A">黃框 ＝ 網站 現在 用 的</b>。有 兩種 的 請 老師 選 一個。（K、c ＝ A、字母 i ＝ 老師 錄音：老師 說 OK，這次 不 動）</p>
+<table id="t"><tr><th>聲音</th><th>老師 說</th><th>我 怎麼 改</th><th>上一次</th><th>新 的</th></tr></table>
+<script>
+const A=new Audio();function pl(s){A.src=s;A.play().catch(()=>{})}
+const R=[['字尾 d','A，但 聲音 請 稍微 放大','A 再 大聲 1.25 倍','s_ed',[['A 大聲','s_ed_A2',1]]],
+['ball 的 a、or 的 o（同 一個 聲音）','新 舊 都 不好，舊 的 勉強 接近；一定 要 是 ㄛ','網站 先 換 回 舊 的（黃框）。另外 做 兩種 更 接近 ㄛ 的：C ＝ 嘴巴 圓 的 ㄛ（ɔ）、D ＝ 更 圓 更 小 的 ㄛ（o）。請 老師 選 一個','s_ao',[['舊 的','s_ao_old',1],['C 圓 的 ㄛ','s_ao_C'],['D 更 圓','s_ao_D']]],
+['字首 qu','是 ㄎㄨ 的 聲音，不是 ㄎㄜ','A ＝ ㄎ 吹氣＋ㄨ 圓 嘴（網站）、B ＝ 真的 queen 開頭 的 kw','s_kw',[['A ㄎㄨ','s_kw_A',1],['B queen','s_kw_B']]],
+['字尾 ch','請 改成 ㄔ，不是 ㄕ','新 的 ＝ 真的 batch 最後 的 ch（先 閉住 再 爆開 ＝ ㄔ）；只 換 字尾，字首 ch 不 動','s_ch',[['新 ㄔ','s_ech_A',1]]]];
+const T=document.getElementById('t');R.forEach(r=>{T.insertAdjacentHTML('beforeend','<tr><td class="w">'+r[0]+'</td><td class="t">'+r[1]+'</td><td class="t">'+r[2]+'</td><td><button class="o" data-s="v59/'+r[3]+'.mp3">🔊 上一次</button></td><td>'+r[4].map(x=>'<button class="n'+(x[2]?' s':'')+'" data-s="'+x[1]+'.mp3">🔊 '+x[0]+'</button>').join('')+'</td></tr>')});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b)pl(b.getAttribute('data-s'))});
+</script></body></html>

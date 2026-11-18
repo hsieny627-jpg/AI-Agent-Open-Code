@@ -33,6 +33,9 @@
   .card:hover{border-color:#2b2b2b}
   .grid{display:grid;grid-auto-flow:column;justify-content:center;align-items:center;column-gap:clamp(5px,1vw,12px);row-gap:clamp(12px,2.2vh,22px);grid-template-rows:auto auto}
   .cell{display:flex;align-items:center;justify-content:center;gap:4px}
+  .grid.say{outline:5px solid #FFD54A;outline-offset:clamp(8px,1.6vh,16px);border-radius:18px;box-shadow:0 0 0 clamp(8px,1.6vh,16px) rgba(255,213,74,.07),0 0 34px 8px rgba(255,213,74,.45);animation:sayG 1s ease-in-out infinite alternate}
+  @keyframes sayG{from{outline-color:#FFD54A}to{outline-color:#FFF1B0}}
+  .letter{transition:transform .18s,filter .18s,text-shadow .18s}.grid.say .letter{transform:scale(1.08);filter:brightness(1.25);text-shadow:0 0 18px rgba(255,230,140,.85)}
   .letter{font-family:var(--andika);font-weight:700;white-space:nowrap;font-size:clamp(52px,min(11vw,17vh),124px);line-height:.9;letter-spacing:-.015em}
   .letter .nm{display:inline-block;line-height:.78;padding:.10em .09em .16em;border-radius:.13em;color:#000}
   .tile{position:relative;border-radius:.28em;min-width:1.9em;height:1.78em;padding:0 .30em;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;white-space:nowrap;-webkit-text-stroke:.034em currentColor;font-size:clamp(25px,min(4.7vw,7.4vh),46px)}
@@ -340,8 +343,8 @@ Object.assign(PH.EXC,{"bach|b-ae-ch":"B AA K","bair|b-ai-r":"B EH R","barch|b-ar
         basic: ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'c', 'k', 'h', 'j', 'w', 'r', 's', 'v', 'y'] },
       IG: [['blend', '雙 子音'], ['trip', '三 子音'], ['basic', '單 子音']],
       VLIST: VLIST_ADV,
-      ENDINGS: { g1: ['無', 'b', 'd', 'g', 'k', 'l', 'm', 'n', 'p', 't', 'x'], g2: ['nd', 'nt', 'mp', 'st', 'sk', 'ft'], g3: ['sh', 'ch', 'th', 'ck', 'tch', 'ng', 'nk'], g4: ['pt', 'ct', 'xt', 'lp', 'lf', 'lt', 'sp', 'mb', 'ld', 'lk', 'nch'], g5: ['ts', 'ps', 'ks', 'ds', 'gs'] },
-      EG: [['g1', '1'], ['g2', '2'], ['g3', '3'], ['g4', '新'], ['g5', '＋s']], end0: 't' }
+      ENDINGS: { g1: ['無', 'b', 'd', 'g', 'k', 'l', 'm', 'n', 'p', 't', 'x'], g2: ['nd', 'nt', 'mp', 'st', 'sk', 'ft', 'nk'], g3: ['sh', 'ch', 'th', 'ck', 'tch', 'ng'], g4: ['pt', 'ct', 'xt', 'lp', 'lf', 'lt', 'sp', 'mb', 'ld', 'lk', 'nch'], g5: ['ts', 'ps', 'ks', 'ds', 'gs'] },
+      EG: [['g1', '1 個 子音'], ['g2', '2 個 子音：2 個 聲音'], ['g3', '2 個 字母：1 個 聲音'], ['g4', '新'], ['g5', '＋s']], end0: 't' }   /* 2026-11-18 第六十次 老師 4：按鈕 改 秒懂 的 名字；nk ＝ ㄥ＋ㄎ 兩個 聲音 ➜ 搬 到 2 個 子音 */
   };
   var MAGIC_END = ['b', 'd', 'k', 'l', 'm', 'n', 'p', 't'];   /* magic e 後面 只 放 一個 子音 的 聲音（g、s、r 加 e 會 變 音：age、rose、care）*/
   var TEAM_END = ['d', 'k', 'l', 'm', 'n', 'p', 't', 'st', 'ch'];
@@ -376,8 +379,8 @@ Object.assign(PH.EXC,{"bach|b-ae-ch":"B AA K","bair|b-ai-r":"B EH R","barch|b-ar
   function partCode(full, part) { var p = full.split('-'); if (part === 'iv') return p[0] + '-' + p[1]; if (part === 've') return p[2] ? '0-' + p[1] + '-' + p[2] : 's_' + p[1]; return full; }
   /* 唸起來 像 不雅 字 的（新 的 組合）＝ 永遠 不放 */
   var BAD2 = ['sl-uh-t', 'pr-ih-k', 'kr-ae-p', 'sp-uh-nk', 'kl-ih-t', 'sm-uh-t', 'gr-oa-p', 'sp-ih-k', 'sn-ae-ch', 'bl-oa', 'sl-ae-g', 'tr-ae-mp', 'st-ih-ft',
-    'sk-uh-nk', 'sh-ih-t', '0-ae-s', 'k-uh-nt', 'f-ae-g', 'sl-oa-b', 'sk-ae-nk', 'kr-uh-k', 'b-uh-t', 'tw-ae-t', 'd-ih-k', 'p-ih-s', 'k-ae-nk', 'h-oa', 'p-ee', 'p-uu', 'p-oa-n', 'p-ih-nk',
-    'ch-ih-nk', 'g-uu-k', 'k-oa-k', 'j-ih-z', 'sp-uu-ch', 'kr-ae-k', 'st-ae-nk', 'sk-ae-nk', 'gr-ih-ng', 'b-ae-ng', 'sh-ae-g', 'n-ih-g', 'f-ae-nk', 'j-ae-p', 'v-ae-j', 'f-uh-ks', 's-uh-ks', 'f-ae-ks'];
+    'sk-uh-nk', 'sh-ih-t', '0-ae-s', 'k-uh-nt', 'f-ae-g', 'sl-oa-b', 'sk-ae-nk', 'kr-uh-k', 'tw-ae-t', 'd-ih-k', 'p-ih-s', 'k-ae-nk', 'h-oa', 'p-ee', 'p-uu', 'p-oa-n', 'p-ih-nk',
+    'ch-ih-nk', 'g-uu-k', 'k-oa-k', 'j-ih-z', 'sp-uu-ch', 'kr-ae-k', 'st-ae-nk', 'sk-ae-nk', 'gr-ih-ng', 'b-ae-ng', 'sh-ae-g', 'n-ih-g', 'f-ae-nk', 'j-ae-p', 'v-ae-j', 'f-uh-ks', 's-uh-ks'];  /* 2026-11-18 第六十次 老師 3-(2)B：but、fax 是 真的、沒有 不好 意思 的 常見 字 ➜ 從 這裡 拿掉（會 唸 了）*/
   function bad2(c) { return PH.BAD.indexOf(c) >= 0 || BAD2.indexOf(c) >= 0; }
   /* ── 例外 字：CMU 美式 發音 字典 的 音素 ➜ 真的 雙語 注音／KK／IPA（老師 2026-11-12：例外 字 ＝ 唸 真的＋寫 真的 注音＋標 ⚠）──
      子音 照 字卡 的 寫法（字尾 塞音 右上角 〃、字尾 m n ～、字尾 l ＝ ㄛ、字尾 r ＝ ㄦ），母音：老師 的 母音 表＋i_e ＝ ㄞ；沒有 寫法 的 音（OY、ZH 開頭）＝ 這個 字 不放 */
@@ -515,7 +518,11 @@ function playCur(){
   const src=curSrc();
   stopSound();if(!src)return;
   const a=new Audio(src);curAudio=a;a.playbackRate=rate;try{a.preservesPitch=true;a.webkitPreservesPitch=true}catch(e){}
-  a.play().catch(()=>{});
+  /* 2026-11-18 第六十次 老師 2：唸 整個 字 的 時候 ＝ 每 個 字母 同時 稍微 放大、發光＋整個 字 金色 外框（代表 正在 唸 這 個 字）*/
+  const G=document.getElementById('grid'),on=()=>{G.classList.remove('say');void G.offsetWidth;G.classList.add('say')},off=()=>{if(curAudio===a||!curAudio)G.classList.remove('say')};
+  a.addEventListener('playing',on);a.addEventListener('ended',off);a.addEventListener('pause',off);a.addEventListener('error',off);
+  setTimeout(off,4000);
+  a.play().catch(()=>{G.classList.remove('say')});
 }
 
 /* ===================== 繪製 ===================== */

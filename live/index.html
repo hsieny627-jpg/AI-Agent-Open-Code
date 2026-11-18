@@ -766,6 +766,10 @@ button.allgo{animation:allgo .9s ease-in-out 6;box-shadow:0 0 0 6px #FFD54A,0 0 
 .ca3d{position:absolute;left:0;right:0;bottom:4%;height:30%;display:flex;justify-content:center;align-items:flex-end;gap:2.4vw;perspective:900px;pointer-events:none;z-index:2;transform:rotateY(var(--ry))}
 .caf{width:7vw;height:var(--h);border-radius:10px 10px 0 0;background:linear-gradient(180deg,var(--cc),rgba(0,0,0,.2));opacity:.28;transform-origin:50% 100%;animation:caf 1.4s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(var(--i)*.25s + .4s);display:flex;justify-content:center}
 .caf b{font-size:2.2vw;color:#fff;margin-top:6px;text-shadow:0 2px 6px #000}@keyframes caf{from{transform:rotateX(85deg) translateZ(-300px);opacity:0}to{transform:none;opacity:.28}}
+/* 2026-11-18 第六十次：🗺️ 拼音 地圖 遊戲（pm）選 一個 遊戲 */
+.pmg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:10px 0}
+.pmb{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:72px;padding:8px 14px;border-radius:18px;border:3px solid rgba(255,255,255,.25);background:#14183A;color:#fff;text-align:left;cursor:pointer}
+.pmb b{font-size:22px}.pmb small{font-size:17px;color:#BFD0FF}.pmb.on{background:#FFD54A;color:#2A1B00;border-color:#fff}.pmb.on small{color:#5A3B00}
 
 </style></head><body class="stu">
 <script>window.SCLIVE=1;</script>
@@ -3234,7 +3238,7 @@ function ready(){if(!LDB.on()){scr('soff');return}
   /* 2026-10-26 第二十九次 第 1 點：老師 開了 🏫 三年級 課堂複習 ➜ 三年級 的 平板 自己 跳到 那 10 種 遊戲（g3mid/index.html?live=0304）*/
   if(S.unC)S.unC();if(/^[34]/.test(String(SCID)))S.unC=LDB.poll('rooms/'+S.code+'/cr',1500,function(v){if(!v||!v.on||Date.now()-(+v.t||0)>4*36e5)return;
     var o=document.getElementById('crgo');if(!o){o=document.createElement('div');o.id='crgo';document.body.appendChild(o)}o.innerHTML='<div class="crgob"><div style="font-size:clamp(70px,12vh,120px)">'+(String(SCID).charAt(0)==='4'?'📝':'🏫')+'</div><div class="crgot">老師 開了 '+(v.set==='vs'?'⚔️ 左右 對戰':v.set==='g25'?'成長測驗':v.set==='c25'?'CVC 單字 25 題 闖關':String(SCID).charAt(0)==='4'?'四年級 複習':'課堂複習')+'！</div><div class="note big2">⏳ 馬上 進去…</div></div>';o.className='on';
-    setTimeout(function(){location.href=v.set==='vs'?'../vs/index.html?live='+S.code:v.set==='c25'?'../phonics/games.html?live='+S.code:'../'+(String(SCID).charAt(0)==='4'&&v.set!=='g25'&&v.set!=='az'?'midterm':'g3mid')+'/index.html?live='+S.code},1600)   /* 第四十九次：c25 ＝ 🏁 CVC 單字 25 題 闖關（phonics/）*/   /* 2026-10-27 第三十次：四年級 ➜ 📝 四年級 複習（midterm/）*/});
+    setTimeout(function(){location.href=v.set==='vs'?'../vs/index.html?live='+S.code:v.set==='c25'?'../phonics/games.html?live='+S.code:v.set==='pm'?'../phonics/map.html?live='+S.code:'../'+(String(SCID).charAt(0)==='4'&&v.set!=='g25'&&v.set!=='az'?'midterm':'g3mid')+'/index.html?live='+S.code},1600)   /* 第四十九次：c25 ＝ 🏁 CVC 單字 25 題 闖關（phonics/）*/   /* 2026-10-27 第三十次：四年級 ➜ 📝 四年級 複習（midterm/）*/});
   try{S.introOK=sessionStorage.getItem('lv_intro')===SCID?1:0}catch(e){}
   wait()}
 /* 登入 以後 第一頁（3(4)）：先 用 動畫 說 現在 和 等一下 要 做 什麼；按〔我 懂了〕才 開始 小遊戲 */

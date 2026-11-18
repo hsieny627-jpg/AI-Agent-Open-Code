@@ -25,7 +25,7 @@ const CHK=['bb','pp','dd','tt','tch','ch','sh','th','ph','wh','ng','ck','qu','ss
 const RV={ar:'aa',or:'ao',er:'er1',ir:'er1',ur:'er1'};                 /* 母音＋r：母音 字母 自己 一格（紅）＋r 一格（藍，子音）*/
 const TEAM2={ai:1,ay:1,ee:1,ea:1,oa:1,ow:1};                           /* 唸 名字 的 兩個 母音 字母：第一個 黃、第二個 灰 */
 const NSND=t=>t==='ks'||t==='kw'?2:1;
-const CODA={b:'s_eb',d:'s_ed',g:'s_eg',p:'s_ep',t:'s_et',k:'s_ek',m:'s_em',n:'s_en',l:'s_el',ks:'s_x'};
+const CODA={b:'s_eb',d:'s_ed',g:'s_eg',p:'s_ep',t:'s_et',k:'s_ek',m:'s_em',n:'s_en',l:'s_el',ks:'s_x',ch:'s_ech'};   /* 第六十次 老師 4-(4)：字尾 ch ＝ ㄔ（s_ech，先 閉住 再 爆開）*/
 const UNASP={b_u:['ㄅ','p','b'],d_u:['ㄉ','t','d'],g_u:['ㄍ','k','g']};   /* s 後面 的 p t k：注音 ＝ ㄅ ㄉ ㄍ（老師：speech 的 p 實際 是 ㄅ）*/
 function auOf(t,coda){if(!t)return null;if(UNASP[t])return 's_'+UNASP[t][2];if(coda&&CODA[t])return CODA[t];if(t==='yu')return 's_uu';if(t==='ah')return 's_uh';if(t==='er1')return 's_uh';if(t==='rr'||t==='rr2')return 's_er';   /* 第五十八次 老師 (6)-8：ir er ur 的 i e u ＝ ㄜ；r 點 了 要 有 聲音 */return 's_'+t}
 /* 2026-11-17 第五十八次 老師 (4)：兩個 注音 一格 ＝ 大 的＋右上角 小 的（照 老師 雙語 注音 表 的 排法）：ㄝㄚ、一ㄝ、ㄨㄛ、ㄛ一、ㄊ〃 */
@@ -288,38 +288,40 @@ $('#aStress').onclick=()=>{STR=!STR;strBtn();scPlay(SCI,SMODE)};
  * 清單＋規則 ＝ _map_combos.js（MAPC）；點 一顆 ＝ 只 換 那 一個 地方（字首／母音／字尾），其他 不 動；不合 拼字 習慣 的 ＝ 暗＋說 為什麼（不 自動 改 別的 地方）
  * 新 字尾 pt ct xt lp lf lt sp mb ld lk nch 可以 自由 組合（不再 是 固定 的 例字）；ch 就 是 ch、tch 另外 一顆；全部 組合 都 有 聲音（tools/ph_gen57.py）*/
 const XBS=new Set(typeof XBAD!=='undefined'?XBAD:[]),BDS=new Set(typeof BADC!=='undefined'?BADC:[]),MAPC=window.MAPC,ON=MAPC.ON,VV=MAPC.VV,CO=MAPC.CO;
+/* 第六十次：ll ff ss、all、短 oo、沒有 字首 的 常見 真的 字（_realreg 用 規則 拼法 找 不到）*/
+const REALW=new Set('bell tell sell well fell yell hill fill will bill pill mill doll dull gull puff cuff cliff stiff stuff sniff fluff kiss miss boss moss toss less mess pass mass glass class grass dress press cross bliss ball tall fall call hall wall mall small stall good hood wood foot look cook hook took shook stood at an in on it up am and ant ask end ink'.split(' '));
 let MLV=LS.g('mlv','b'),MS=LS.g('ms2',{o:'b',v:'a',c:'t'}),MG={o:LS.g('mgo','b'),c:LS.g('mgc','b')};
-const VNM={a:'a',e:'e',i:'i',o:'o',u:'u',a_e:'a_e',i_e:'i_e',o_e:'o_e',u_e:'u_e',ai:'ai',ay:'ay',ee:'ee',ea:'ea',oa:'oa',ow:'ow',ou:'ou',ow2:'ow',oi:'oi',oy:'oy',au:'au',aw:'aw',oo:'oo',ar:'ar',or:'or',er:'er',ir:'ir',ur:'ur'};
-const VSUB={ow:'ㄡ',ow2:'ㄠ',au:'ㄛ',aw:'ㄛ',oo:'ㄨ',ou:'ㄠ',oi:'ㄛ一',oy:'ㄛ一'};
+const VNM={a:'a',e:'e',i:'i',o:'o',u:'u',a_e:'a_e',i_e:'i_e',o_e:'o_e',u_e:'u_e',ai:'ai',ay:'ay',ee:'ee',ea:'ea',oa:'oa',ow:'ow',ou:'ou',ow2:'ow',oi:'oi',oy:'oy',au:'au',aw:'aw',oo:'oo',oo2:'oo',ar:'ar',or:'or',er:'er',ir:'ir',ur:'ur'};
+const VSUB={ow:'ㄡ',ow2:'ㄠ',au:'ㄛ',aw:'ㄛ',oo:'長 ㄨ',oo2:'短 ㄛㄨ',ou:'ㄠ',oi:'ㄛ一',oy:'ㄛ一'};
 function codeOf(o,v,c){return MAPC.code(o,v,c)}function spellOf(o,v,c){return MAPC.spell(o,v,c)}
 /* 拼字 ➜ 方框 的 寫法 */
-function specOfMap(o,v,c){const sh=VV.b.indexOf(v)>=0,cc=c==='無'?'':c;let cs=cc;if(sh){if(cc==='k')cs='ck';else if(/^[lsfz]$/.test(cc))cs=cc+cc}
-  const vc=MAPC.VC[v],vs=v==='ow2'?'ow':v;let vp;
-  if(/_e$/.test(v))vp=v[0]+'!='+(codeOf(o,v,c).split('-')[1]);else if(sh)vp=v;else if(v==='ow2')vp='ow='+vc;else if(TEAM2[vs])vp=vs+'!='+vc;else if(RV[vs])vp=vs;else vp=vs+'='+vc;
+function specOfMap(o,v,c){if(o==='無')o='';const sh=VV.b.indexOf(v)>=0,cc=c==='無'?'':c;let cs=cc;if(sh){if(cc==='k')cs='ck';else if(cc==='z')cs='zz'}
+  const vc=MAPC.VC[v],vs=v==='ow2'?'ow':v==='oo2'?'oo':v;let vp;
+  if(/_e$/.test(v))vp=v[0]+'!='+(codeOf(o,v,c).split('-')[1]);else if(sh)vp=(v==='a'&&c==='ll')?'a=ao':v;else if(v==='ow2')vp='ow='+vc;else if(TEAM2[vs])vp=vs+'!='+vc;else if(RV[vs])vp=vs;else vp=vs+'='+vc;
   return (o?o+'.':'')+vp+(cs?'.'+cs:'')+(/_e$/.test(v)?'.e~':'')}
 function why(o,v,c){if(MAPC.ok(o,v,c))return '';const sh=VV.b.indexOf(v)>=0;
-  if(sh&&c==='無')return '短 母音 後面 一定 要 有 字尾（例：ca ➜ cat）';if(sh&&(c==='ld'||c==='lk'))return 'a、o 後面 接 ld、lk 母音 會 變（old、talk）';if(sh&&c==='mb')return 'mb 只 跟 a、i、u（lamb、limb、thumb）';
+  if(sh&&c==='無')return '短 母音 後面 一定 要 有 字尾（例：ca ➜ cat）';if(sh&&/^[lfs]$/.test(c))return '短 母音 後面 的 l、f、s 要 寫 兩個：ll、ff、ss（bell、puff、kiss）➜ 點 右邊 的 '+c+c;if(/^(ll|ff|ss)$/.test(c))return c+' 只 接 在 短 母音 a e i o u 後面'+(c==='ll'?'（o＋ll 會 變 音：doll／poll）':'');if(v==='oo2')return '短 的 oo 常見 的 字：good、foot、look ➜ 字尾 選 d、t、k';if(sh&&(c==='ld'||c==='lk'))return 'a、o 後面 接 ld、lk 母音 會 變（old、talk）';if(sh&&c==='mb')return 'mb 只 跟 a、i、u（lamb、limb、thumb）';
   if(v==='ay'||v==='ow'||v==='oy'||v==='aw')return v+' 通常 在 字 的 最後（day、snow、boy、saw）';if(/_e$/.test(v))return 'magic e 後面 只 放 一個 子音（b d k l m n p t）';
   return '英文 很少 這樣 拼'}
 function chipHTML(lab,list,k,tag){return '<div class="mg">'+lab+'</div><div class="chips">'+list.map(x=>{const t=Object.assign({},MS);t[k]=x;const ok=MAPC.ok(t.o,t.v,t.c);
   return '<button class="chip en'+(MS[k]===x?' on':'')+(ok?'':' dim')+'" data-mk="'+k+'" data-mv="'+x+'">'+(k==='v'?VNM[x]:x)+(k==='v'&&VSUB[x]?'<small>'+VSUB[x]+'</small>':tag?'<small>'+(x==='ld'||x==='lk'?'⚠ old talk':'新')+'</small>':'')+'</button>'}).join('')+'</div>'}
-const OG=[['b','一個 子音（sh ch th wh ＝ 兩個 字母 一個 聲音；wh 的 h 不 發音；qu ＝ 2 個 聲音）',ON.b],['a2','兩個 子音（2 個 聲音）',ON.a2],['a3','三個 子音（3 個 聲音）',ON.a3]];
+const OG=[['b','一個 子音（無 ＝ 沒有 字首，例：at、up；sh ch th wh ＝ 兩個 字母 一個 聲音；wh 的 h 不 發音；qu ＝ 2 個 聲音）',ON.b],['a2','兩個 子音（2 個 聲音）',ON.a2],['a3','三個 子音（3 個 聲音）',ON.a3]];
 const VG=[['b','短 母音（紅）',VV.b],['a','唸 名字 的 母音（黃）：magic e、兩個 母音 字母（第二個 灰）',VV.a],['t','其他 母音 組合：兩個 一起 唸（紅）、母音＋r（r 藍）',VV.t]];
-const CG=[['b','一個 子音（無 ＝ 沒有 字尾）',CO.b],['d','兩個 字母 一個 聲音（tch 的 t 不 發音）',CO.d],['a2','兩個 子音（2 個 聲音）',CO.a2],['n2','兩個 子音 新 加 的（mb 的 b 不 發音）',CO.n2.concat(CO.a3),1]];
+const CG=[['b','一個 子音（無 ＝ 沒有 字尾）',CO.b],['d','兩個 字母 一個 聲音（tch 的 t 不 發音；ll ff ss ＝ 短 母音 後面 的 l f s）',CO.d],['a2','兩個 子音（2 個 聲音）',CO.a2],['n2','兩個 子音 新 加 的（mb 的 b 不 發音）',CO.n2.concat(CO.a3),1]];
 function grpTabs(k,G0,cur){return '<div class="gtabs">'+G0.map(g=>'<button data-gk="'+k+'" data-gv="'+g[0]+'" class="'+(cur===g[0]?'on':'')+'">'+g[1].split('（')[0]+'</button>').join('')+'</div>'}
 function mapDraw(){const A=MLV==='a';$('#lvB').classList.toggle('on',!A);$('#lvA').classList.toggle('on',A);
-  if(!A){$('#mOn').innerHTML=chipHTML(OG[0][1],ON.b,'o');$('#mV').innerHTML=chipHTML(VG[0][1],VV.b,'v');$('#mCo').innerHTML=chipHTML(CG[0][1],CO.b,'c')+chipHTML(CG[1][1],CO.d,'c')}
+  if(!A){$('#mOn').innerHTML=chipHTML(OG[0][1],['無'].concat(ON.b),'o');$('#mV').innerHTML=chipHTML(VG[0][1],VV.b,'v');$('#mCo').innerHTML=chipHTML(CG[0][1],CO.b,'c')+chipHTML(CG[1][1],CO.d,'c')}
   else{/* 🔵 進階：字首、字尾 上面 分組 按鈕，一次 只 看 一組（不 眼花）*/
     const og=OG.find(g=>g[0]===MG.o)||OG[0],cg=CG.find(g=>g[0]===MG.c)||CG[0];
-    $('#mOn').innerHTML=grpTabs('o',OG,og[0])+chipHTML(og[1],og[2],'o');$('#mV').innerHTML=VG.map(g=>chipHTML(g[1],g[2],'v')).join('');$('#mCo').innerHTML=grpTabs('c',CG,cg[0])+chipHTML(cg[1],cg[2],'c',cg[3])}
+    $('#mOn').innerHTML=grpTabs('o',OG,og[0])+chipHTML(og[1],og[0]==='b'?['無'].concat(og[2]):og[2],'o');$('#mV').innerHTML=VG.map(g=>chipHTML(g[1],g[2],'v')).join('');$('#mCo').innerHTML=grpTabs('c',CG,cg[0])+chipHTML(cg[1],cg[2],'c',cg[3])}
   mapOut()}
 function mapSet(o,v,c){MS={o,v,c};LS.s('ms2',MS);if(TAB==='map')mapDraw()}
-async function mapOut(){TOK++;const o=MS.o,v=MS.v,c=MS.c,box=M2?$('#m2w'):$('#mapOut');const ok=MAPC.ok(o,v,c),spec=specOfMap(o,v,c),w=spellOf(o,v,c),code=codeOf(o,v,c),xb=XBS.has(code),bd=BDS.has(code),has=ok&&!xb&&!bd&&AV.has(code),real=REALC[code]===w,C=countOf(spec);
-  const note=(c==='ld'||c==='lk')?'<span class="mtag p">⚠ old、talk 的 母音 會 變（a、o 不 接 ld、lk）</span>':c==='mb'?'<span class="mtag p">mb 的 b 不 發音</span>':c==='tch'?'<span class="mtag p">tch 的 t 不 發音</span>':(v==='au'||v==='aw')?'<span class="mtag p">au、aw ＝ ㄛ（嘴巴 大大 張開，像 talk 的 a）</span>':'';
+async function mapOut(){TOK++;const o=MS.o,v=MS.v,c=MS.c,box=M2?$('#m2w'):$('#mapOut');const ok=MAPC.ok(o,v,c),spec=specOfMap(o,v,c),w=spellOf(o,v,c),code=codeOf(o,v,c),xb=XBS.has(code),bd=BDS.has(code),has=ok&&!xb&&!bd&&AV.has(code),real=REALC[code]===w||REALW.has(w),C=countOf(spec);
+  const note=(c==='ld'||c==='lk')?'<span class="mtag p">⚠ old、talk 的 母音 會 變（a、o 不 接 ld、lk）</span>':c==='mb'?'<span class="mtag p">mb 的 b 不 發音</span>':c==='tch'?'<span class="mtag p">tch 的 t 不 發音</span>':(v==='au'||v==='aw')?'<span class="mtag p">au、aw ＝ ㄛ（嘴巴 大大 張開，像 talk 的 a）</span>':(v==='a'&&c==='ll')?'<span class="mtag p">all 的 a ＝ ㄛ（ball、tall、fall）</span>':v==='oo2'?'<span class="mtag p">短 的 oo ＝ ㄛㄨ（good、foot、look）</span>':/^(ll|ff|ss)$/.test(c)?'<span class="mtag p">'+c+' ＝ 兩個 字母 一個 聲音</span>':'';
   box.innerHTML='<div class="wrow'+(ok?'':' bad')+'">'+wordHTML(spec,{lab:1,dots:1})+'</div><div class="sum">'+patTxt(spec)+'：'+C.b+' 個 方框、<b>'+C.n+' 個 聲音</b>'+(C.v>1?'、'+C.v+' 個 音節':'')+'</div>'+
     '<div class="cap">'+(bd?'<span class="mtag w">⚠ 這個 組合 不 放（唸 起來 像 不 好 的 字）</span>':xb?'<span class="mtag w">⚠ '+w+' 是 真的 英文 字，但是 不 照 規則 唸（例外 字），所以 這裡 不 唸</span>':!ok?'<span class="mtag w">⚠ '+why(o,v,c)+'</span>':real?'<span class="mtag r">✅ 真的 英文 字</span>':'<span class="mtag p">🔮 練習 用 的 假字（照 規則 唸）</span>')+note+'</div>'+
     '<div class="ctl"><button id="mSay1"'+(has?'':' disabled')+'>🔤 拼讀（一個 一個 唸 ➜ 合 起來）</button><button id="mSay2"'+(has?'':' disabled')+'>🔊 整個 字</button></div>';
-  if(M2)m2Arrows();$('#mSay2').onclick=()=>say(code);$('#mSay1').onclick=()=>mapSay(spec,code,box);if(has&&!FAST&&!PRAC)mapSay(spec,code,box)}
+  if(M2)m2Arrows();$('#mSay2').onclick=()=>sayWhole(box,code,++TOK);   /* 第六十次 老師 4-(4)：整個 字 ＝ 金框＋每 個 字母 一起 放大 發光 */$('#mSay1').onclick=()=>mapSay(spec,code,box);if(has&&!FAST&&!PRAC)mapSay(spec,code,box)}
 async function mapSay(spec,code,box){const me=++TOK,S=parse(spec),cks=qsa(box,'.ck');let k=0;for(const B of S)for(const b of B)for(const c of b.ch){const el=cks[k++];const a=auOf(c.t,b.coda);if(!a||c.sil||b.type==='g')continue;if(me!==TOK)return;el.classList.add('on');await sayW(a,me);el.classList.remove('on')}
   await sayWhole(box,code,me)}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-gk]');if(g){MG[g.dataset.gk]=g.dataset.gv;LS.s('mg'+g.dataset.gk,g.dataset.gv);mapDraw();return}
@@ -328,16 +330,19 @@ $('#lvB').onclick=()=>{MLV='b';LS.s('mlv','b');if(VV.b.indexOf(MS.v)<0)MS.v='a';
 $('#mRand').onclick=()=>{const L=MAPC.all().filter(x=>AV.has(x.code)&&!XBS.has(x.code)&&!BDS.has(x.code)&&(MLV==='a'||(ON.b.indexOf(x.o)>=0&&VV.b.indexOf(x.v)>=0&&CO.b.concat(CO.d).indexOf(x.c)>=0)));const x=R(L);MS={o:x.o,v:x.v,c:x.c};LS.s('ms2',MS);mapDraw()};
 /* 🎧 你 來 拼（聽 ➜ 自己 點 字首、母音、字尾）／👀 你 來 讀（看 ➜ 先 自己 唸 ➜ 再 聽 對 不 對）：我 做 ➜ 一起 做 ➜ 你 做 */
 let PRAC=null;
-function pracPool(){return QW.filter(x=>MLV==='a'||(!x.long&&x.on.join('').length<=2&&x.co.join('').length<=2)).map(x=>{const o=x.on.join(''),c=x.co.join('')||'無',v=x.v+(x.mg?'_e':'');return {o,v,c:c==='ck'?'k':/^(ll|ss|ff|zz)$/.test(c)?c[0]:c,x}}).filter(y=>MAPC.ok(y.o,y.v,y.c)&&codeOf(y.o,y.v,y.c)===y.x.c)}
+function pracPool(){return QW.filter(x=>MLV==='a'||(!x.long&&x.on.join('').length<=2&&x.co.join('').length<=2)).map(x=>{const o=x.on.join(''),c=x.co.join('')||'無',v=x.v+(x.mg?'_e':'');return {o,v,c:c==='ck'?'k':c==='zz'?'z':c,x}}).filter(y=>MAPC.ok(y.o,y.v,y.c)&&codeOf(y.o,y.v,y.c)===y.x.c)}
 function pracStart(kind){const y=R(pracPool());if(!y)return;PRAC={kind,y};if(M2&&kind==='spell')mapDraw();const P=$('#prac');P.hidden=false;
-  if(kind==='spell'){P.innerHTML='<div class="tq">🎧 你 來 拼：聽 ➜ 自己 點 ① 字首 ② 母音 ③ 字尾，拼 出 這個 字</div><div class="ctl"><button class="btn" id="pEar">🔊 再 聽 一次</button><button class="btn gold" id="pAns">👉 公布 答案</button><button class="btn" id="pX">✖ 結束 練習</button></div><div id="pRes" class="cap"></div>';
-    say(y.x.c);$('#pEar').onclick=()=>say(y.x.c);$('#pAns').onclick=()=>pracReveal()}
+  if(kind==='spell'){/* 2026-11-18 第六十次 老師 3-(2)C：〔🔊 再 聽 一次〕大大 的、會 呼吸 發光；拼 對／公布 答案 ＝ 整個 字 唸 兩次 就 停，等 學生 按〔🔊 再 聽 一次〕或〔➡ 下一題〕*/
+    P.innerHTML='<div class="tq">🎧 你 來 拼：聽 ➜ 自己 點 ① 字首 ② 母音 ③ 字尾，拼 出 這個 字</div><div class="ctl"><button class="btn bigear" id="pEar">🔊 再 聽 一次</button><button class="btn gold" id="pAns">👉 公布 答案</button><button class="btn go" id="pNx2">➡ 下一題</button><button class="btn" id="pX">✖ 結束 練習</button></div><div class="ctl"><button class="btn rush" id="pRush">⏱️ 限時 挑戰：⚡ 音素 解碼 競速（每 題 30 秒、不 看 提示 ✖5）</button></div><div id="pRes" class="cap"></div>';
+    say(y.x.c);$('#pEar').onclick=()=>{const b=$('#pEar');b.classList.add('on');say(y.x.c).then(()=>b.classList.remove('on'))};$('#pAns').onclick=()=>pracReveal();$('#pNx2').onclick=()=>pracStart('spell');$('#pRush').onclick=()=>{TOK++;start('srA')}}
   else{MS={o:y.o,v:y.v,c:y.c};mapDraw();$$('#mapOut .tl[data-t],#m2w .tl[data-t]').forEach(t=>t.classList.add('hide'));
     P.innerHTML='<div class="tq">👀 你 來 讀：先 找 母音（紅），一個 方框 一個 方框 在 心裡 唸，再 合 起來 ➜ 大聲 唸 出來</div><div class="ctl"><button class="btn gold" id="pAns">🔊 聽 答案（對 不 對？）</button><button class="btn" id="pNx">➡ 下 一個</button><button class="btn" id="pX">✖ 結束 練習</button></div>';
     $('#pAns').onclick=()=>{$$('#mapOut .tl,#m2w .tl').forEach(t=>t.classList.remove('hide'));mapSay(specOfMap(y.o,y.v,y.c),y.x.c,M2?$('#m2w'):$('#mapOut'))};$('#pNx').onclick=()=>pracStart('read')}
   $('#pX').onclick=()=>{PRAC=null;P.hidden=true;mapDraw()}}
-function pracCheck(){if(!PRAC||PRAC.kind!=='spell')return;const y=PRAC.y;if(MS.o===y.o&&MS.v===y.v&&MS.c===y.c){$('#pRes').innerHTML='🎉 <b>拼 對 了！</b> '+y.x.w;mapSay(specOfMap(y.o,y.v,y.c),y.x.c,M2?$('#m2w'):$('#mapOut'));setTimeout(()=>{if(PRAC&&PRAC.y===y)pracStart('spell')},FAST?30:2600)}}
-function pracReveal(){const y=PRAC.y;MS={o:y.o,v:y.v,c:y.c};mapDraw();$('#pRes').innerHTML='答案 ＝ <b class="en">'+y.x.w+'</b>；再 聽 一次，下 一題 自己 拼 拼 看';setTimeout(()=>{if(PRAC&&PRAC.y===y)pracStart('spell')},FAST?30:3200)}
+async function pracTwice(y){const box=M2?$('#m2w'):$('#mapOut'),me=++TOK;for(let k=0;k<2;k++){if(me!==TOK)return;await sayWhole(box,y.x.c,me);await wait(350)}}
+function pracDone(y,msg){PRAC.done=1;$('#pRes').innerHTML=msg+'<div class="pnext">👉 再 聽 一次？還是 ➡ 下一題？</div>';$('#pAns').hidden=true;$('#pNx2').classList.add('pulse');pracTwice(y)}
+function pracCheck(){if(!PRAC||PRAC.kind!=='spell'||PRAC.done)return;const y=PRAC.y;if(MS.o===y.o&&MS.v===y.v&&MS.c===y.c)pracDone(y,'🎉 <b>拼 對 了！</b> <span class="en">'+y.x.w+'</span>')}
+function pracReveal(){const y=PRAC.y;PRAC.done=0;MS={o:y.o,v:y.v,c:y.c};mapDraw();PRAC.done=0;pracDone(y,'👉 答案 ＝ <b class="en">'+y.x.w+'</b>　下 一題 自己 拼 拼 看')}
 $('#pSpell').onclick=()=>pracStart('spell');$('#pRead').onclick=()=>pracStart('read');
 /* map2（新 版本）：每 一個 方框 正下方〔▲〕〔▼〕直接 換（照 Phonics Master 字卡 的 操作，字 在 最 上面 大大 的）*/
 function m2List(k){const A=MLV==='a';return k==='o'?(A?ON.b.concat(ON.a2,ON.a3):ON.b):k==='v'?(A?VV.b.concat(VV.a,VV.t):VV.b):(A?CO.b.concat(CO.d,CO.a2,CO.n2,CO.a3):CO.b.concat(CO.d))}
@@ -379,18 +384,27 @@ let TAB='ani';function tab(t){TAB=t;TOK++;$$('#tabs button').forEach(b=>b.classL
   if(t==='ani')scCard(SCI);if(t==='map')mapDraw();if(t==='syl')sylDraw();if(t==='many')manyDraw();if(t==='play')gList();try{history.replaceState(null,'','#'+t)}catch(e){}}
 $$('#tabs button').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
 /*__GAMES__*/
-mdDraw();strBtn();modeBtn();{const ch=/#chain=([^&]+)/.exec(location.hash);if(ch){const w=decodeURIComponent(ch[1]),S=chainScene(w);if(S){SC.push(S);const i=SC.length-1;tab('ani');SCI=i;scCard(i);$('#aIdx').insertAdjacentHTML('beforebegin','<button class="btn go" onclick="history.length>1?history.back():location.href=\'games.html\'">⬅ 回 課本 單字 動畫</button>')}else tab('ani')}else tab((/#(ani|map|syl|many|play)/.exec(location.hash)||[0,M2?'map':'ani'])[1])}
+const BKORD=['strong','thin','short','tall','he','she','tired','angry','happy','sad','yes','no','not','bathroom','bedroom','kitchen','dining','dining room','living','living room','where','bird','rabbit','turtle','cat','dog','fish'];
+mdDraw();strBtn();modeBtn();{const ch=/#chain=([^&]+)/.exec(location.hash);if(ch){const w=decodeURIComponent(ch[1]),S=chainScene(w);if(S){SC.push(S);const i=SC.length-1;tab('ani');SCI=i;scCard(i);$('#aIdx').insertAdjacentHTML('beforebegin','<button class="btn go" onclick="history.length>1?history.back():location.href=\'games.html\'">⬅ 回 課本 單字 動畫</button>');/* 第六十次 老師 9-(4)：〔➡ 下 一個 單字〕＝ 直接 進 下 一個 字 的「從 CVC 變成…」動畫（課本 順序：三年級 ➜ 四年級）*/{const L=BKORD.filter(x=>CHAIN[x]),j=L.indexOf(w),nx=L[(j+1)%L.length];if(nx&&nx!==w)$('#aIdx').insertAdjacentHTML('afterend','<button class="btn gold" id="chNx" style="font-size:24px">➡ 下 一個 單字：<span class="en">'+nx+'</span></button>');const b=$('#chNx');if(b)b.onclick=()=>{location.replace('map.html#chain='+encodeURIComponent(nx));location.reload()}}}else tab('ani')}else tab((/#(ani|map|syl|many|play)/.exec(location.hash)||[0,M2?'map':'ani'])[1])}
 
 /* ══ 2026-11-17 第五十八次 老師 (7)：🆕 第三 版 拼音 地圖 map3.html ＝「聲音 積木 拼字台」（不同 的 介面，最 直覺、最 好 操作）══
  * 🎧 聽 ➜ 拼：聽 一個 字 ➜ 上面 3 個 空 方框（字首｜母音｜字尾，數 聲音 的 黃點 先 出來）➜ 下面 3 排 積木（每 排 6 個：對 的＋只 差 一點 的），點 積木 ＝ 唸 它 的 聲音＋放進 方框 ➜〔✅ 對 答案〕：
  *    對 ＝ 一個 一個 唸 ➜ 合 起來、🔥 連對；錯 ＝ 那 一格 紅、唸 你 放 的 ➜ 唸 對 的（只 差 哪裡 一看 就 懂）➜ 再 試 一次
  * 👀 看 ➜ 讀：一個 字 出來（沒有 音標）➜ 點 每 一個 方框 ＝ 聽 那 一塊 ➜〔🔗 合 起來〕➜〔🔊 聽 答案〕對照 */
 const M3=!!window.MAP3;let M3S=null,M3K=LS.g('m3k','spell'),M3F=0;
+/* 第六十次 老師 3-(3)：字尾 子音 選項 下面 一句 嘴巴 提示（只 寫 最 容易 搞混 的 那 一組 的 差別）*/
+const ECUE={b:'喉嚨 震動',p:'吹 一口 氣',d:'喉嚨 震動',t:'吹 一口 氣',g:'喉嚨 震動',k:'吹 一口 氣',m:'閉 嘴',n:'舌頭 頂 上面',th:'舌頭 夾 牙齒',s:'牙齒 嘶 嘶',f:'上 牙 咬 下 唇',sh:'嘟 嘴 噓',ch:'先 閉 再 噴'};
+/* 只 聽 最後 的 聲音 ＝ 母音＋字尾（cab ➜ ab），少 了 字首 ＝ 耳朵 只 注意 最後 */
+function m3Rime(y){if(!y||y.c==='無')return null;const cd=codeOf(y.o,y.v,y.c).split('-').slice(1).join('-'),rc='0-'+cd;return AV.has(rc)&&!BDS.has(rc)?rc:null}
+/* 點 字母 ＝ 唸 那個 字母 的 聲音＋發光（看 ➜ 讀 公布 答案 以前 也 可以）*/
+function ckSay(row,spec){if(!row)return;const S=parse(spec),cks=qsa(row,'.ck');let k=0;for(const B of S)for(const b of B)for(const c of b.ch){const el=cks[k++];if(!el)continue;const a=c.sil||b.type==='g'?null:(c.au||auOf(c.t,b.coda));if(!a)continue;el.style.cursor='pointer';el.onclick=ev=>{ev.stopPropagation();el.classList.add('on');say(a).then(()=>el.classList.remove('on'))}}}
 function m3Opts(y,k){const L=m2List(k).filter(x=>x!==y[k]),near=L.filter(x=>x[0]===y[k][0]||x.slice(-1)===y[k].slice(-1)),far=L.filter(x=>near.indexOf(x)<0);
   return SH([y[k]].concat(SH(near).concat(SH(far)).filter(x=>{const T=Object.assign({},y);T[k]=x;return MAPC.ok(T.o,T.v,T.c)&&(k!=='v'||!/_e$/.test(x)===!/_e$/.test(y.v))}).slice(0,5)))}
 function m3Part(k,val,y){/* 一塊 的 聲音：照 方框 的 字母 一個 一個 唸 */const T=Object.assign({},y);T[k]=val;const sp=specOfMap(T.o,T.v,T.c),S=parse(sp)[0];let i=k==='o'?0:k==='v'?(T.o?1:0):(T.o?2:1);const b=S[i];return b?b.ch.map(c=>c.sil?null:auOf(c.t,b.coda)).filter(Boolean):[]}
 async function m3SayParts(a){const me=++TOK;for(const f of a){if(me!==TOK)return;await sayW(f,me)}}
 function m3New(){const y=R(pracPool().filter(z=>MLV==='a'||z.c!=='無'));M3S={y,put:{o:null,v:null,c:null},tries:0};m3Draw();if(M3K==='spell')say(y.x.c)}
+/* 第六十次 老師 3-(3)：按〔聽 ➜ 拼〕〔看 ➜ 讀〕〔基礎／進階〕題目 不 換（只有〔➡ 下 一個〕才 換）*/
+function m3Keep(){const y=M3S.y;M3S={y,put:{o:null,v:null,c:null},tries:0};m3Draw();if(M3K==='spell')say(y.x.c)}
 /* 2026-11-18 第五十九次 老師 3：版面 重排（上 ➜ 下 一條 動線：① 聽 ➜ ② 選 積木 ➜ ③ 對 答案）；上面 的 字 ＝ 方框 本身（magic e 自己 跑 到 最後：f i l e）；
  * 每 個 聲音 一個 黃點，在 發 那 個 聲音 的 字母 正下方；點 字母 ＝ 唸＋發光、點〔🔊 整個 字〕＝ 全部 字母 一起 發光＋金框；對 答案 以後 不 自動 跳 題（只有〔➡ 下 一個〕才 跳）、結果 就 在 字 的 正下方 */
 function m3Units(k,val,y){/* 一格 裡 的「聲音 單位」：[{l:字母,n:幾 個 聲音,a:聲音 檔,sil}] */const T=Object.assign({},y);T[k]=val;const S=parse(specOfMap(T.o,T.v,T.c))[0];const i=k==='o'?0:k==='v'?(T.o?1:0):(T.o?2:1),b=S[i];if(!b)return [];
@@ -399,20 +413,20 @@ function m3Slot(k,S,y,nm){const v=S.put[k],cls='m3s '+(k==='v'?(v&&/_e$/.test(v)
   if(v==null){const n=m3Units(k,y[k],y).reduce((a,u)=>a+u.n,0);return '<div class="'+cls+'" data-m3s="'+k+'"><small>'+nm[k]+'</small><b>？</b><span class="m3dt">'+Array.from({length:n},()=>'<i></i>').join('')+'</span></div>'}
   if(v==='無')return '<div class="'+cls+'" data-m3s="'+k+'"><small>'+nm[k]+'</small><b>—</b><span class="m3dt"></span></div>';
   return '<div class="'+cls+'" data-m3s="'+k+'"><small>'+nm[k]+'</small><div class="m3u">'+m3Units(k,v,y).map(u=>'<span class="m3l1'+(u.sil?' sil':'')+(u.nm?' nm':'')+'"'+(u.a?' data-m3a="'+u.a+'"':'')+'><b>'+u.l+'</b><span class="m3dt">'+Array.from({length:u.n},()=>'<i></i>').join('')+'</span></span>').join('')+'</div></div>'}
-function m3Draw(){const W=$('#m3'),S=M3S,y=S.y,ks=['o','v','c'].filter(k=>k!=='o'||y.o),nm={o:'字首',v:'母音',c:'字尾'},full=ks.every(k=>S.put[k]!=null);
-  let h='<div class="m3top"><button data-m3k="spell" class="'+(M3K==='spell'?'on':'')+'">🎧 聽 ➜ 拼</button><button data-m3k="read" class="'+(M3K==='read'?'on':'')+'">👀 看 ➜ 讀</button><button id="m3lv" class="lv">'+(MLV==='a'?'🔵 進階':'🟢 基礎')+'</button><button id="m3how" class="how">❓ 怎麼 玩</button><span class="m3f">🔥 連對 <b>'+M3F+'</b></span></div>';
+function m3Draw(){const W=$('#m3'),S=M3S,y=S.y,ks=['o','v','c'].filter(k=>k!=='o'||y.o),nm={o:'字首 子音',v:'母音',c:'字尾 子音'},full=ks.every(k=>S.put[k]!=null);
+  let h='<div class="m3top"><button data-m3k="spell" class="'+(M3K==='spell'?'on':'')+'">🎧 聽 ➜ 拼</button><button data-m3k="read" class="'+(M3K==='read'?'on':'')+'">👀 看 ➜ 讀</button><button id="m3lv" class="lv">'+(MLV==='a'?'🔵 進階':'🟢 基礎')+'</button><button id="m3how" class="how">❓ 怎麼 玩</button><button id="m3rush" class="rush">⏱️ 限時 挑戰</button><span class="m3f">🔥 連對 <b>'+M3F+'</b></span></div>';
   if(M3K==='spell'){const st=S.good||S.bad?2:full?2:Object.values(S.put).some(v=>v!=null)?1:0;
     h+='<div class="m3steps">'+['🔊 ① 聽','🧱 ② 選 積木 放進 方框','✅ ③ 對 答案'].map((t,j)=>'<span class="'+(j===st?'on':j<st?'ok':'')+'">'+t+'</span>').join('')+'</div>';
-    h+='<div class="m3word"><div class="m3side"><button class="m3ear" id="m3ear">🔊 再 聽 一次</button><button class="m3whole" id="m3whole"'+(full?'':' disabled')+'>🔊 整個 字</button></div><div class="m3slots wrow" id="m3sl">'+ks.map(k=>m3Slot(k,S,y,nm)).join('')+(S.put.v&&/_e$/.test(S.put.v)?'<div class="m3s g full" data-m3s="e"><small>不 發音</small><div class="m3u"><span class="m3l1 sil"><b>e</b><span class="m3dt"></span></span></div></div>':'')+'</div></div>';
+    h+='<div class="m3word"><div class="m3side"><button class="m3ear" id="m3ear">🔊 再 聽 一次</button>'+(m3Rime(y)?'<button class="m3tail" id="m3tail">👂 聽 最後 的 聲音</button>':'')+'<button class="m3whole" id="m3whole"'+(full?'':' disabled')+'>🔊 整個 字</button></div><div class="m3slots wrow" id="m3sl">'+ks.map(k=>m3Slot(k,S,y,nm)).join('')+(S.put.v&&/_e$/.test(S.put.v)?'<div class="m3s g full" data-m3s="e"><small>不 發音</small><div class="m3u"><span class="m3l1 sil"><b>e</b><span class="m3dt"></span></span></div></div>':'')+'</div></div>';
     h+='<div class="m3msg'+(S.good?' good':S.bad?' bad':'')+'" id="m3msg">'+(S.msg||'💡 黃點 ＝ 這 一格 有 幾 個 聲音')+'</div>';
     if(S.good)h+='<div class="m3ctl"><button class="btn" id="m3again">🔊 再 聽 一次</button><button class="btn go big" id="m3nx">➡ 下 一個</button></div>';
-    else{h+=ks.map(k=>'<div class="m3row"><span class="m3l '+(k==='v'?'v':'c')+'">'+nm[k]+'</span>'+(S.op&&S.op[k]||(S.op=S.op||{},S.op[k]=m3Opts(y,k))).map(x=>'<button class="m3b '+(k==='v'?'v':'c')+(S.put[k]===x?' on':'')+'" data-m3b="'+k+'" data-v="'+x+'">'+(x==='無'?'—':k==='v'?VNM[x]:x)+'</button>').join('')+'</div>').join('');
+    else{h+=ks.map(k=>'<div class="m3row"><span class="m3l '+(k==='v'?'v':'c')+'">'+nm[k]+'</span>'+(S.op&&S.op[k]||(S.op=S.op||{},S.op[k]=m3Opts(y,k))).map(x=>'<button class="m3b '+(k==='v'?'v':'c')+(S.put[k]===x?' on':'')+'" data-m3b="'+k+'" data-v="'+x+'">'+(x==='無'?'—':k==='v'?VNM[x]:x)+(k==='c'&&ECUE[x]?'<small class="m3cue">'+ECUE[x]+'</small>':'')+'</button>').join('')+'</div>').join('');
       h+='<div class="m3ctl"><button class="btn gold big" id="m3ck"'+(full?'':' disabled')+'>✅ 對 答案</button><button class="btn" id="m3sk">👉 看 答案</button><button class="btn go" id="m3nx">➡ 下 一個</button></div>'}}
   else{const sp=specOfMap(y.o,y.v,y.c);h+='<div class="m3steps">'+['👀 ① 找 🔴 母音','👆 ② 點 每 一格 聽','🔗 ③ 合 起來 唸'].map((t,j)=>'<span class="'+(j===0?'on':'')+'">'+t+'</span>').join('')+'</div><div class="wrow m3w" id="m3w">'+wordHTML(sp,{hideT:1,dots:1,lab:1})+'</div>'+
     '<div class="m3ctl"><button class="btn gold big" id="m3bl">🔗 合 起來（聽 答案）</button><button class="btn go" id="m3nx">➡ 下 一個</button></div>'}
   W.innerHTML=h;const g=id=>W.querySelector(id);
   if(g('#m3ear'))g('#m3ear').onclick=()=>say(y.x.c);if(g('#m3again'))g('#m3again').onclick=()=>{const w=$('#m3sl');sayWhole(w,y.x.c,++TOK)};if(g('#m3nx'))g('#m3nx').onclick=m3New;
-  if(g('#m3lv'))g('#m3lv').onclick=()=>{MLV=MLV==='a'?'b':'a';LS.s('mlv',MLV);m3New()};if(g('#m3how'))g('#m3how').onclick=m3How;
+  if(g('#m3lv'))g('#m3lv').onclick=()=>{MLV=MLV==='a'?'b':'a';LS.s('mlv',MLV);m3Keep()};if(g('#m3how'))g('#m3how').onclick=m3How;if(g('#m3rush'))g('#m3rush').onclick=()=>{TOK++;start('srB')};
   if(g('#m3whole'))g('#m3whole').onclick=async()=>{const T=S.put,code=codeOf(T.o||'',T.v,T.c),me=++TOK;if(AV.has(code))await sayWhole($('#m3sl'),code,me);else{for(const e of qsa($('#m3sl'),'[data-m3a]')){if(me!==TOK)return;e.classList.add('on');await sayW(e.dataset.m3a,me);e.classList.remove('on')}}};
   qsa(W,'#m3sl [data-m3a]').forEach(e=>e.onclick=()=>{e.classList.add('on');say(e.dataset.m3a).then(()=>e.classList.remove('on'))});
   const msgTop=()=>{const m=$('#m3msg');if(m&&m.scrollIntoView)try{m.scrollIntoView({block:'center',behavior:FAST?'auto':'smooth'})}catch(x){}};
@@ -420,15 +434,21 @@ function m3Draw(){const W=$('#m3'),S=M3S,y=S.y,ks=['o','v','c'].filter(k=>k!=='o
   if(g('#m3ck'))g('#m3ck').onclick=async()=>{const bad={};ks.forEach(k=>{if(S.put[k]!==y[k])bad[k]=1});S.tries++;
     if(!Object.keys(bad).length){M3F++;S.good=1;S.bad=null;S.msg='🎉 <b>拼 對 了！</b> <span class="en">'+y.x.w+'</span>';m3Draw();msgTop();await m3Blend(y);return}
     M3F=0;S.bad=bad;const k=Object.keys(bad)[0];S.msg='❌ <b>'+nm[k]+'</b> 不對：你 放 的 '+(S.put[k]==='無'?'—':k==='v'?VNM[S.put[k]]:S.put[k])+' ➜ 聽 一次 對 的 聲音，再 試 一次';m3Draw();msgTop();
-    await m3SayParts(m3Part(k,S.put[k],y));await wait(350);await m3SayParts(m3Part(k,y[k],y))};
+    await m3SayParts(m3Part(k,S.put[k],y));await wait(350);await m3SayParts(m3Part(k,y[k],y));
+    /* 第六十次 老師 3-(3)：字尾 難 聽 ➜ 再 比 一比 整個 字（cap ➜ cab），慢慢 聽 最後 的 聲音 */
+    if(k==='c'){const T=Object.assign({},y);T.c=S.put[k];const wc=codeOf(T.o,T.v,T.c),me=TOK;if(AV.has(wc)&&!BDS.has(wc)){await wait(400);S.msg+='<div class="m3pair">👂 比 一比：<b class="en">'+spellOf(T.o,T.v,T.c)+'</b> ➜ <b class="en ok">'+y.x.w+'</b></div>';const m=$('#m3msg');if(m)m.innerHTML=S.msg;await sayW(wc,me);await wait(300);await sayW(y.x.c,me)}}};
   qsa(W,'[data-m3b]').forEach(b=>b.onclick=()=>{const k=b.dataset.m3b,v=b.dataset.v;S.put[k]=v;S.bad=null;S.good=0;S.msg='';m3Draw();m3SayParts(m3Part(k,v,y))});
   if(g('#m3bl'))g('#m3bl').onclick=async()=>{qsa(W,'.tl').forEach(t=>t.classList.remove('hide'));await blendRow($('#m3w'),specOfMap(y.o,y.v,y.c),y.x.c)};
-  qsa(W,'[data-m3k]').forEach(b=>b.onclick=()=>{M3K=b.dataset.m3k;LS.s('m3k',M3K);m3New()})}
+  qsa(W,'[data-m3k]').forEach(b=>b.onclick=()=>{M3K=b.dataset.m3k;LS.s('m3k',M3K);m3Keep()});
+  if(M3K==='read')ckSay($('#m3w'),specOfMap(y.o,y.v,y.c));
+  if(g('#m3tail'))g('#m3tail').onclick=async()=>{const b=g('#m3tail'),me=++TOK,rc=m3Rime(y);b.classList.add('on');await sayW(y.x.c,me);await wait(300);for(let k=0;k<2&&rc;k++){await sayW(rc,me);await wait(250)}b.classList.remove('on')}}
 /* 拼 對 了：每 個 字母 一個 一個 唸＋發光 ➜ 整個 字 金框＋全部 發光 */
 async function m3Blend(y){const me=++TOK;for(const e of qsa($('#m3sl'),'[data-m3a]')){if(me!==TOK)return;e.classList.add('on');await sayW(e.dataset.m3a,me);e.classList.remove('on')}if(me===TOK)await sayWhole($('#m3sl'),y.x.c,me)}
 /* ❓ 怎麼 玩：秒懂 動畫（第一次 打開 自動 演）*/
 function m3How(){capAni(M3K==='spell'?{cap:'🧱 聲音 積木：聽到 一個 字 ➜ 用 積木 拼 出來',ca:[{t:'🎯 這裡 練習「聽音 拼字」：聽到 字 就 會 拼'},{t:'① 🔊 先 聽（可以 一直 按 再 聽）',a:'f-ii-l'},{t:'② 黃點 ＝ 這 一格 有 幾 個 聲音',s:'f.i!=ii.l.e~',d:1},{t:'③ 點 積木 ＝ 聽 它 的 聲音＋放進 方框',s:'f.i!=ii.l.e~',p:1},{t:'magic e 會 自己 跑 到 最後：f i l e',s:'f.i!=ii.l.e~',a:'f-ii-l'},{t:'④ 按 ✅ 對 答案：錯 的 那 一格 變 紅'},{t:'💪 學會 了：沒 學 過 的 字，聽到 也 會 拼'}]}
   :{cap:'👀 看 ➜ 讀：看到 字 ➜ 自己 唸 出來',ca:[{t:'🎯 這裡 練習「看字 讀音」'},{t:'① 先 找 🔴 母音',s:'d.u.ck',v:1},{t:'② 點 每 一格 聽',s:'d.u.ck',p:1},{t:'③ 🔗 合 起來 唸',s:'d.u.ck',a:'d-uh-k'},{t:'💪 學會 了：新 的 字 自己 會 唸'}]})}
+/* 第六十次 老師 3-(1)(2)A：第三 版、新版 上面 明顯 的 按鈕 回到 原來 的 拼音 地圖／新版 拼音 地圖 */
+if(M2||M3){const nv=H('div','vnav','<a class="vbtn v1" href="map.html#map">⬅ 🗺️ 原來 的 拼音 地圖</a>'+(M3?'<a class="vbtn v2" href="map2.html#map">⬅ 🆕 新版 拼音 地圖</a>':''));document.body.insertBefore(nv,document.body.firstChild)}
 if(M3){document.body.classList.add('m3');$('#m3').hidden=false;qsa(document,'main>.scr').forEach(e=>e.hidden=true);if($('#tabs'))$('#tabs').style.display='none';m3New();if(!LS.g('m3intro',0)&&!FAST){LS.s('m3intro',1);m3How()}}
 window.PHM={blendRow,capAni,cvPlay,m3New,M3S:()=>M3S,BDS,SC,CHAIN,chainScene,MORE2,parse,countOf,patTxt,scPlay,scCard,qzStart,qzMake,tab,MS:()=>MS,mapOut,mapSet,codeOf,spellOf,AV,G:()=>G,start,QW,GM,q25Seq,MAPC};
 })();
