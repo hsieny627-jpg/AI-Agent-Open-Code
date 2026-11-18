@@ -326,7 +326,7 @@ function build(){
       const e=(DK&&E==='k')?CONS2.k_end:(CONS[key]||CONS2[key]);
       /* 第四十九次 老師 第 8 點：兩個、三個 字尾音（st sk ft mp nd nt nk）＝ 每 一個 字母 正下方 對齊 它 自己 的 音標 */
       if(e&&Array.isArray(e.zh)&&e.zh.length===E.length&&E.length>1)E.split('').forEach((c,k)=>pushUnit(g,[txtSpan(c,'#fff')],phon({zh:e.zh[k],sup:Array.isArray(e.sup)?e.sup[k]:null,kk:Array.isArray(e.kk)?e.kk[k]:e.kk,ipa:Array.isArray(e.ipa)?e.ipa[k]:e.ipa},false),hE));
-      else if(e)pushUnit(g,E.split('').map(c=>txtSpan(c,'#fff')),phon(e,false),hE);
+      else if(e){const pn=phon(e,false);/* 第五十九次 老師 4：ts＝ㄘ、ds＝ㄗ ＝ 一個 藍 方框 跟 正上方 兩個 字母 一樣 寬 */if(E==='ts'||E==='ds')pn.forEach(n=>{n.style.width='100%';n.style.boxSizing='border-box';n.classList.add('span2')});pushUnit(g,E.split('').map(c=>txtSpan(c,'#fff')),pn,hE);}
     }
     if(v2&&v2.magic)pushUnit(g,[txtSpan('e','var(--silent)')],[],hE);   /* magic e 最後 的 e 不 唸（灰色）*/
   }

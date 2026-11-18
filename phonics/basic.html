@@ -299,10 +299,10 @@ Object.assign(PH.EXC,{"bach|b-ae-ch":"B AA K","bair|b-ai-r":"B EH R","barch|b-ar
     'lk': { zh: ['ㄛ', 'ㄎ'], sup: [null, '〃'], kk: ['l', 'k'], ipa: ['l', 'k'] },
     'nch': { zh: ['ㄋ', 'ㄔ'], sup: [null, null], kk: ['n', 'tʃ'], ipa: ['n', 'tʃ'] },
     /* 2026-11-17 第五十八次 第 2 點（老師 選 乙）：字尾 加 s ＝ ts ps ks（ㄙ）＋ds gs（z：前面 是 有聲 的 d g，s 唸 z）；cats、cups、yaks、beds、dogs */
-    'ts': { zh: ['ㄊ', 'ㄙ'], sup: [null, null], kk: ['t', 's'], ipa: ['t', 's'] },
+    'ts': { zh: 'ㄘ', sup: '', kk: 'ts', ipa: 'ts' },   /* 2026-11-18 第五十九次 老師 4：t＋s 合 起來 ＝ ㄘ（一個 藍 方框 對齊 ts 兩個 字母）*/
     'ps': { zh: ['ㄆ', 'ㄙ'], sup: [null, null], kk: ['p', 's'], ipa: ['p', 's'] },
     'ks': { zh: ['ㄎ', 'ㄙ'], sup: [null, null], kk: ['k', 's'], ipa: ['k', 's'] },
-    'ds': { zh: ['ㄉ', 'z'], sup: [null, null], kk: ['d', 'z'], ipa: ['d', 'z'] },
+    'ds': { zh: 'ㄗ', sup: '', kk: 'dz', ipa: 'dz' },   /* 第五十九次 老師 4：d＋s 合 起來 ＝ ㄗ */
     'gs': { zh: ['ㄍ', 'z'], sup: [null, null], kk: ['g', 'z'], ipa: ['ɡ', 'z'] }
   };
   /* 雙子音、三子音 ＝ 一個 一個 子音 的 方塊 接 起來（r 一樣 是 疊 起來 的 ㄖ／ㄨ）*/
@@ -639,7 +639,7 @@ function build(){
       const e=(DK&&E==='k')?CONS2.k_end:(CONS[key]||CONS2[key]);
       /* 第四十九次 老師 第 8 點：兩個、三個 字尾音（st sk ft mp nd nt nk）＝ 每 一個 字母 正下方 對齊 它 自己 的 音標 */
       if(e&&Array.isArray(e.zh)&&e.zh.length===E.length&&E.length>1)E.split('').forEach((c,k)=>pushUnit(g,[txtSpan(c,'#fff')],phon({zh:e.zh[k],sup:Array.isArray(e.sup)?e.sup[k]:null,kk:Array.isArray(e.kk)?e.kk[k]:e.kk,ipa:Array.isArray(e.ipa)?e.ipa[k]:e.ipa},false),hE));
-      else if(e)pushUnit(g,E.split('').map(c=>txtSpan(c,'#fff')),phon(e,false),hE);
+      else if(e){const pn=phon(e,false);/* 第五十九次 老師 4：ts＝ㄘ、ds＝ㄗ ＝ 一個 藍 方框 跟 正上方 兩個 字母 一樣 寬 */if(E==='ts'||E==='ds')pn.forEach(n=>{n.style.width='100%';n.style.boxSizing='border-box';n.classList.add('span2')});pushUnit(g,E.split('').map(c=>txtSpan(c,'#fff')),pn,hE);}
     }
     if(v2&&v2.magic)pushUnit(g,[txtSpan('e','var(--silent)')],[],hE);   /* magic e 最後 的 e 不 唸（灰色）*/
   }

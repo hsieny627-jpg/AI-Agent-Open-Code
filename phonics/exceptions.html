@@ -35,13 +35,27 @@ header button.on{background:#fff;color:#000;border-color:#fff}
 .it .b button{font-family:var(--han);font-size:18px;font-weight:900;border-radius:10px;padding:6px 12px;cursor:pointer}
 .it .b .r{background:#062A35;color:#9EF0FF;border:2px solid #22D3EE}
 .it .b .g{background:#1a1a1a;color:#bbb;border:2px solid #444}
+.it .b .ani{background:#2B2410;color:#FFE07A;border:2px solid #FFD54A}
+#az{display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px;position:sticky;top:var(--hh,64px);z-index:4;background:rgba(0,0,0,.94);border-bottom:1px solid #222}
+#az button{font-family:var(--andika);font-size:26px;font-weight:700;min-width:46px;min-height:48px;border-radius:10px;border:2px solid #3C5598;background:#101a3a;color:#fff;cursor:pointer}#az button:disabled{opacity:.25;cursor:default}#az button.on{background:#FFE07A;color:#000;border-color:#fff}
+.it{scroll-margin-top:calc(var(--hh,64px) + 140px)}.lh{grid-column:1/-1;font-family:var(--andika);font-size:40px;font-weight:700;color:#FFE07A;border-bottom:2px solid #333;margin-top:8px;scroll-margin-top:calc(var(--hh,64px) + var(--azh,120px) + 6px)}
+#xa{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;padding:14px}#xa[hidden]{display:none}
+.xai{background:#0c0f22;border:4px solid #FFD54A;border-radius:24px;padding:18px 22px;max-width:900px;width:100%;text-align:center}
+.xaw{font-family:var(--andika);font-size:clamp(56px,9vw,96px);font-weight:700}.xaw i{font-style:normal}.xaw i.v{color:#FF4D4D}.xaw .sl i,.xaw i.sl{color:#8C92A3}.xaw i.nm{background:#FACC15;color:#C00000;border-radius:.12em}
+.xst{min-height:110px;display:flex;flex-direction:column;align-items:center;gap:8px;margin:8px 0;padding:10px;border-radius:18px;opacity:.15;transition:opacity .4s}.xst.in{opacity:1}
+.xst h3{margin:0;font-size:clamp(24px,3vw,32px)}.xst .tl{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}.xst .tile{font-size:34px}
+.xst.rule{background:#2a0e0e;border:3px solid #FF5A5A}.xst.real{background:#0e2a17;border:3px solid #5BE38C}.xst .tile.df{outline:4px solid #FFE07A;animation:xdf .5s 4 alternate}@keyframes xdf{to{transform:scale(1.2)}}
+.xno{font-size:clamp(26px,3.4vw,40px);font-weight:900;color:#FF7A7A;opacity:0;transition:opacity .3s}.xno.in{opacity:1}
+.xai .ctl{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px}.xai .ctl button{font-family:var(--han);font-size:22px;font-weight:900;min-height:56px;padding:6px 18px;border-radius:14px;border:2px solid #444;background:#1a1a1a;color:#fff;cursor:pointer}.xai .ctl .go{background:#16A34A;border-color:#4ADE80}
 </style></head><body>
 <header><h1>⚠ 例外 字：不 照 規則 的 常見 字</h1>
 <span id="md"><button data-m="zh" class="on">雙語 注音</button> <button data-m="kk">KK</button> <button data-m="ipa">IPA</button></span>
 <a href="index.html">⬅ 字卡</a><a href="../index.html">🏠 總首頁</a></header>
-<p class="why">這些 是 <b>真的 英文 字</b>，但是 <b>不 照 字卡 的 規則 唸</b>。<br>按〔🔊 真的〕聽 正確 唸法；按〔照 規則 會 唸 成〕比 一比 哪裡 不一樣。<br>（依據：美國 卡內基美隆大學 CMU 美式 發音 字典；常見 程度：wordfreq）</p>
+<p class="why">👆 上面 點 字母（像 字典）＝ 馬上 跳 到 那 個 字母 開頭 的 字；每 個 字 的〔🎬 比 一比〕＝ 秒懂 動畫。<br>這些 是 <b>真的 英文 字</b>，但是 <b>不 照 字卡 的 規則 唸</b>。<br>按〔🔊 真的〕聽 正確 唸法；按〔照 規則 會 唸 成〕比 一比 哪裡 不一樣。<br>（依據：美國 卡內基美隆大學 CMU 美式 發音 字典；常見 程度：wordfreq）</p>
 <div class="lg"><span><i style="color:#FF4D4D">a</i> 紅色 ＝ 母音 字母</span><span><i style="color:#8C92A3">e</i> 灰色 ＝ 不 發音</span><span><i style="background:#FACC15;color:#C00000">o</i> 黃底 ＝ 唸 字母 的 名字（go 的 o）</span></div>
+<nav id="az" aria-label="字母 索引"></nav>
 <div class="grid" id="g"></div>
+<div id="xa" hidden></div>
 <script>/* phonics/_ph.js — 🔤 Phonics Master 共用 資料＋發音 碼（字卡 頁、遊戲 頁、node build 都 用 這一份）
  * 2026-11-12 第四十七次 第 2 點（老師 的 Phonics Master，原本 在 claude.ai 字卡 頁）：
  *   ① 發音 ＝ 照 字卡 下面 的 雙語 注音 唸：每一張 卡 ＝ 字首 碼＋母音 碼＋字尾 碼（例 k-ae-d），音檔 ＝ phonics/au/<碼>.mp3
@@ -199,10 +213,10 @@ Object.assign(PH.EXC,{"bach|b-ae-ch":"B AA K","bair|b-ai-r":"B EH R","barch|b-ar
     'lk': { zh: ['ㄛ', 'ㄎ'], sup: [null, '〃'], kk: ['l', 'k'], ipa: ['l', 'k'] },
     'nch': { zh: ['ㄋ', 'ㄔ'], sup: [null, null], kk: ['n', 'tʃ'], ipa: ['n', 'tʃ'] },
     /* 2026-11-17 第五十八次 第 2 點（老師 選 乙）：字尾 加 s ＝ ts ps ks（ㄙ）＋ds gs（z：前面 是 有聲 的 d g，s 唸 z）；cats、cups、yaks、beds、dogs */
-    'ts': { zh: ['ㄊ', 'ㄙ'], sup: [null, null], kk: ['t', 's'], ipa: ['t', 's'] },
+    'ts': { zh: 'ㄘ', sup: '', kk: 'ts', ipa: 'ts' },   /* 2026-11-18 第五十九次 老師 4：t＋s 合 起來 ＝ ㄘ（一個 藍 方框 對齊 ts 兩個 字母）*/
     'ps': { zh: ['ㄆ', 'ㄙ'], sup: [null, null], kk: ['p', 's'], ipa: ['p', 's'] },
     'ks': { zh: ['ㄎ', 'ㄙ'], sup: [null, null], kk: ['k', 's'], ipa: ['k', 's'] },
-    'ds': { zh: ['ㄉ', 'z'], sup: [null, null], kk: ['d', 'z'], ipa: ['d', 'z'] },
+    'ds': { zh: 'ㄗ', sup: '', kk: 'dz', ipa: 'dz' },   /* 第五十九次 老師 4：d＋s 合 起來 ＝ ㄗ */
     'gs': { zh: ['ㄍ', 'z'], sup: [null, null], kk: ['g', 'z'], ipa: ['ɡ', 'z'] }
   };
   /* 雙子音、三子音 ＝ 一個 一個 子音 的 方塊 接 起來（r 一樣 是 疊 起來 的 ㄖ／ㄨ）*/
@@ -369,8 +383,8 @@ const NM={a:['EY'],e:['IY'],i:['AY'],o:['OW'],u:['UW','Y UW']},VW=/^(AA|AE|AH|AO
 function ltr(u,ph){const P=ph.split(' ').map(x=>x.replace(/[0-9]/g,'')),my=u.p.map(k=>P[k]),snd=my.join(' '),vs=my.filter(x=>VW.test(x)).join(' ');
   let yl=-1;if(u.p.length){for(let k=0;k<u.l.length;k++){const L=u.l[k];if(NM[L]&&NM[L].some(n=>n===vs||n===snd)){yl=k;break}}}
   return u.l.split('').map((L,k)=>{const isV=/[aeiou]/.test(L)||(L==='y'&&!!vs&&my[0]!=='Y');return '<i class="'+(u.p.length?'':'sl ')+(isV?'v':'')+(k===yl?' nm':'')+'">'+L+'</i>'}).join('')}
-function draw(){const g=document.getElementById('g');g.innerHTML='';ROWS.forEach(r=>{const it=document.createElement('div');it.className='it';
-  it.innerHTML='<div class="aw"></div><div class="b"><button class="r" data-a="x_'+r.w+'">🔊 真的</button><button class="g" data-a="'+r.c+'">照 規則 會 唸 成…</button></div>';
+function draw(){const g=document.getElementById('g');g.innerHTML='';let lastL='';ROWS.forEach(r=>{const it=document.createElement('div');it.className='it';
+  it.innerHTML='<div class="aw"></div><div class="b"><button class="r" data-a="x_'+r.w+'">🔊 真的</button><button class="g" data-a="'+r.c+'">照 規則 會 唸 成…</button><button class="ani" data-xa="'+r.w+'">🎬 比 一比</button></div>';const L0=r.w[0].toUpperCase();if(L0!==lastL){lastL=L0;const hd=document.createElement('div');hd.className='lh';hd.id='L_'+L0;hd.textContent=L0+' '+r.w[0];g.appendChild(hd)}
   /* 第五十次（老師 第 3 點）：每 一個 字母 正下方 ＝ 它 的 音標（雙語 注音／KK／IPA）；不 發音 ＝ 灰色＋虛線 方塊 */
   const aw=it.querySelector('.aw'),rt=PH2.realTiles(r.ph,mode)||[],al=PH2.align(r.w,r.ph)||[{l:r.w,p:rt.map(x=>x.pi)}],TT=PH2.tilesFor(al,rt);
   al.forEach((u,k)=>{const c=document.createElement('span');c.className='ch'+(u.p.length?'':' sil');c.innerHTML='<span class="lt">'+ltr(u,r.ph)+'</span><span class="tl"></span>';const tl=c.querySelector('.tl');
@@ -378,6 +392,28 @@ function draw(){const g=document.getElementById('g');g.innerHTML='';ROWS.forEach
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){A.src='au/'+b.dataset.a+'.mp3';A.play().catch(()=>{})}
   const m=e.target.closest('[data-m]');if(m){mode=m.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x===m));draw()}});
 draw();
+/* ══ 2026-11-18 第五十九次 老師 5：① 上面 A～Z 索引（像 字典）② 每 個 字〔🎬 比 一比〕：照 規則 會 唸 成… ➜ 真的 唸… ══ */
+function azDraw(){const has=new Set(ROWS.map(r=>r.w[0].toUpperCase())),z=document.getElementById('az');z.innerHTML='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(c=>'<button data-az="'+c+'"'+(has.has(c)?'':' disabled')+'>'+c+'</button>').join('');
+  const hh=()=>{document.documentElement.style.setProperty('--hh',document.querySelector('header').offsetHeight+'px');document.documentElement.style.setProperty('--azh',z.offsetHeight+'px')};hh();addEventListener('resize',hh)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-az]');if(!b)return;document.querySelectorAll('[data-az]').forEach(x=>x.classList.toggle('on',x===b));const t=document.getElementById('L_'+b.dataset.az);if(t)t.scrollIntoView({block:'start',behavior:'smooth'})});
+/* 照 規則 的 碼（b-ae-r）➜ 字典 寫法（B AE R）➜ 一樣 的 音標 方塊 */
+const CV={ae:'AE',eh:'EH',ih:'IH',aa:'AA',uh:'AH',ai:'EY',ee:'IY',ii:'AY',oa:'OW',uu:'UW',yu:'Y UW',ou:'AW',oy:'OY',ao:'AO',ar:'AA R',or:'AO R',er:'ER',oo:'UW'},
+  CC1={sh:'SH',ch:'CH',th:'TH',dh:'DH',ng:'NG',kw:'K W',ks:'K S',j:'JH',y:'Y',x:'K S',c:'K',h:'HH',nk:'NG K'};
+function code2ph(c){return c.split('-').map((t,i)=>{if(t==='0'||!t)return '';if(i===1)return CV[t]||t.toUpperCase();if(CC1[t])return CC1[t];const o=[];let s=t;while(s){const d=['sh','ch','th','dh','ng'].find(x=>s.startsWith(x));if(d){o.push(CC1[d]);s=s.slice(2)}else{o.push(CC1[s[0]]||s[0].toUpperCase());s=s.slice(1)}}return o.join(' ')}).filter(Boolean).join(' ')}
+const XA=new Audio();function xsay(f){return new Promise(r=>{let d=0;const fin=()=>{if(!d){d=1;r()}};XA.src='au/'+f+'.mp3';XA.onended=fin;XA.onerror=fin;setTimeout(fin,3500);XA.play().catch(fin)})}
+const xw=ms=>new Promise(r=>setTimeout(r,ms));let XT=0;
+async function xani(w){const r=ROWS.find(x=>x.w===w);if(!r)return;const me=++XT,o=document.getElementById('xa');o.hidden=false;
+  const ruleP=code2ph(r.c),rt=PH2.realTiles(ruleP,mode,1)||[],tt=PH2.realTiles(r.ph,mode,1)||[],al=PH2.align(r.w,r.ph)||[{l:r.w,p:[]}];
+  const rp=ruleP.split(' '),pp=r.ph.split(' ').map(x=>x.replace(/\d/g,''));
+  o.innerHTML='<div class="xai"><div class="xaw">'+al.map(u=>'<span class="'+(u.p.length?'':'sl')+'">'+ltr(u,r.ph)+'</span>').join('')+'</div>'+
+    '<div class="xst rule" id="x1"><h3>📏 照 字卡 規則，會 唸 成…</h3><div class="tl" id="x1t"></div></div><div class="xno" id="xno">❌ 但是 不是 這樣 唸！</div>'+
+    '<div class="xst real" id="x2"><h3>🗣 真的 唸：</h3><div class="tl" id="x2t"></div></div><div class="ctl"><button id="xR">🔁 再 看 一次</button><button id="xS">🔊 真的</button><button class="go" id="xX">✔ 懂 了</button></div></div>';
+  const g=id=>document.getElementById(id);g('xX').onclick=()=>{XT++;o.hidden=true};g('xR').onclick=()=>xani(w);g('xS').onclick=()=>xsay('x_'+w);
+  await xw(500);if(me!==XT)return;g('x1').classList.add('in');for(const x of rt){g('x1t').appendChild(tile(x));await xw(250)}await xsay(r.c);await xw(500);if(me!==XT)return;
+  g('xno').classList.add('in');await xw(1100);if(me!==XT)return;g('x2').classList.add('in');
+  tt.forEach((x,k)=>{const d=tile(x);if(rp[x.pi]!==pp[x.pi]||rp.length!==pp.length&&x.v)d.classList.add('df');g('x2t').appendChild(d)});await xsay('x_'+w);await xw(700);if(me!==XT)return;await xsay('x_'+w)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-xa]');if(b)xani(b.dataset.xa)});
+azDraw();
 </script>
 <script>(function(){if(window.__NODSP||(navigator.webdriver&&!window.__DSPTEST))return;var R=new RegExp("([\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])[ \\u00a0]+(?=[\\u3400-\\u9fff\\uff01-\\uff0f\\uff1a-\\uff20\\u3001-\\u303f\\u2026])",'g'),SEL="";
 function skip(n){var e=n.parentElement;while(e){var t=e.tagName;if(t==='SCRIPT'||t==='STYLE'||t==='TEXTAREA'||t==='INPUT'||(e.classList&&e.classList.contains('keepsp')))return true;e=e.parentElement}return false}

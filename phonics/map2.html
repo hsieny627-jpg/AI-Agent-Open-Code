@@ -384,6 +384,18 @@ body.m3 main{top:64px}#m3{max-width:1200px;margin:0 auto;padding:12px 16px;text-
 #stage .wrow.gold{outline-offset:2px}
 #stage.n5 .bx{padding:2px 6px 2px!important}#stage.n5 .ck .T{margin-top:0}#stage.n5 .rsd{flex-wrap:nowrap}#stage.n5 .rsd .sum{font-size:18px;white-space:nowrap}#stage.n5 .rsd .mtag.p{font-size:15px;padding:2px 8px}#stage.n5 .blb,#stage.n5 .wsay{font-size:18px;padding:2px 8px}
 @media (max-width:820px){.abc{grid-template-columns:repeat(9,1fr)}}
+/* 第五十九次 map3 */
+.m3top .how{border-color:#FFD54A!important;color:#FFE07A!important}
+.m3steps{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0}.m3steps span{font-size:clamp(18px,2vw,24px);font-weight:900;padding:4px 14px;border-radius:14px;background:#141B3D;color:#8C96C0;border:2px solid #2A3570}.m3steps span.on{background:#FFD54A;color:#2B1A00;border-color:#fff}.m3steps span.ok{color:#5BE38C;border-color:#5BE38C}
+.m3word{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin:6px 0}.m3word .m3slots{margin:0;padding-top:0}
+.m3side{display:flex;flex-direction:column;gap:10px}.m3side .m3ear{min-height:64px}.m3whole{font-size:clamp(22px,2.4vw,28px);font-weight:900;min-height:64px;padding:6px 18px;border-radius:18px;border:3px solid #FFD54A;background:#2B2410;color:#FFE07A}.m3whole:disabled{opacity:.35}
+.m3s{position:relative;padding:30px 10px 8px}.m3s small{position:absolute;top:4px;left:0;right:0}.m3s.n.full{background:linear-gradient(180deg,#FFD54F,#F5A300)}.m3s.g.full{background:linear-gradient(180deg,#8C92A3,#5B6070);min-width:clamp(70px,9vw,110px)}
+.m3u{display:flex;gap:10px;align-items:flex-end}.m3l1{display:flex;flex-direction:column;align-items:center;cursor:pointer;border-radius:12px;padding:0 4px;transition:transform .2s}.m3l1 b{font-family:var(--an);font-size:clamp(56px,8vw,96px);line-height:1;color:#fff}
+.m3s.n .m3l1.nm b{color:#4A2600}.m3l1.sil b{color:#D9DCE4}.m3l1.on{transform:scale(1.25);filter:brightness(1.4) drop-shadow(0 0 12px #FFE07A)}
+.m3dt{display:flex;gap:8px;justify-content:center;min-height:26px;margin-top:4px}.m3dt i{width:24px;height:24px;border-radius:50%;background:#FFD400;border:3px solid #fff;box-shadow:0 0 0 2px #0B1236,0 0 12px #FFD400}
+.m3slots.gold{outline:5px solid #FFD54A;outline-offset:8px;border-radius:24px;box-shadow:0 0 36px rgba(255,213,74,.75)}.m3slots .bx.say,.m3slots.gold .m3l1{transform:scale(1.12);filter:brightness(1.4) drop-shadow(0 0 12px #FFE07A)}
+.m3msg{margin:6px auto;max-width:980px;padding:6px 14px;border-radius:16px}.m3msg.good{background:#0F3D24;border:3px solid #5BE38C}.m3msg.bad{background:#3D0F0F;border:3px solid #FF5A5A}
+.m3ctl .btn.big{font-size:clamp(26px,3vw,34px)!important;min-height:72px!important;padding:8px 30px}
 </style></head><body class="m2"><script>window.MAP2=1</script>
 <div id="top"><a href="index.html">🔤 字卡</a><a href="games.html">🎮 遊戲場</a><div class="ttl">🗺️ 新版 拼音 地圖（▲▼ 直接 換）</div>
 <div id="mdSw" class="mdSw"><button data-md="zh">注音</button><button data-md="kk">KK</button><button data-md="ipa">IPA</button></div><a href="../index.html">🏠</a></div>
@@ -3190,26 +3202,45 @@ function m3Opts(y,k){const L=m2List(k).filter(x=>x!==y[k]),near=L.filter(x=>x[0]
 function m3Part(k,val,y){/* 一塊 的 聲音：照 方框 的 字母 一個 一個 唸 */const T=Object.assign({},y);T[k]=val;const sp=specOfMap(T.o,T.v,T.c),S=parse(sp)[0];let i=k==='o'?0:k==='v'?(T.o?1:0):(T.o?2:1);const b=S[i];return b?b.ch.map(c=>c.sil?null:auOf(c.t,b.coda)).filter(Boolean):[]}
 async function m3SayParts(a){const me=++TOK;for(const f of a){if(me!==TOK)return;await sayW(f,me)}}
 function m3New(){const y=R(pracPool().filter(z=>MLV==='a'||z.c!=='無'));M3S={y,put:{o:null,v:null,c:null},tries:0};m3Draw();if(M3K==='spell')say(y.x.c)}
-function m3Draw(){const W=$('#m3'),S=M3S,y=S.y,ks=['o','v','c'].filter(k=>k!=='o'||y.o),nm={o:'字首',v:'母音',c:'字尾'};
-  let h='<div class="m3top"><button data-m3k="spell" class="'+(M3K==='spell'?'on':'')+'">🎧 聽 ➜ 拼</button><button data-m3k="read" class="'+(M3K==='read'?'on':'')+'">👀 看 ➜ 讀</button><button id="m3lv" class="lv">'+(MLV==='a'?'🔵 進階':'🟢 基礎')+'</button><span class="m3f">🔥 連對 <b>'+M3F+'</b></span></div>';
-  if(M3K==='spell'){const C=countOf(specOfMap(y.o,y.v,y.c));
-    h+='<div class="m3q"><button class="m3ear" id="m3ear">🔊 再 聽 一次</button><div class="m3dots">'+Array.from({length:C.n},()=>'<i></i>').join('')+'<span>'+C.n+' 個 聲音</span></div></div>';
-    h+='<div class="m3slots">'+ks.map(k=>{const v=S.put[k];return '<div class="m3s '+(k==='v'?'v':'c')+(v!=null?' full':'')+(S.bad&&S.bad[k]?' bad':'')+(S.good?' good':'')+'" data-m3s="'+k+'"><small>'+nm[k]+'</small><b>'+(v==null?'？':v==='無'?'—':(k==='v'?VNM[v]:v))+'</b></div>'}).join('')+'</div>';
-    h+=ks.map(k=>'<div class="m3row"><span class="m3l '+(k==='v'?'v':'c')+'">'+nm[k]+'</span>'+(S.op&&S.op[k]||(S.op=S.op||{},S.op[k]=m3Opts(y,k))).map(x=>'<button class="m3b '+(k==='v'?'v':'c')+(S.put[k]===x?' on':'')+'" data-m3b="'+k+'" data-v="'+x+'">'+(x==='無'?'—':k==='v'?VNM[x]:x)+'</button>').join('')+'</div>').join('');
-    h+='<div class="m3ctl"><button class="btn gold" id="m3ck"'+(ks.every(k=>S.put[k]!=null)?'':' disabled')+'>✅ 對 答案</button><button class="btn" id="m3sk">👉 看 答案</button><button class="btn go" id="m3nx">➡ 下 一個</button></div><div class="m3msg" id="m3msg">'+(S.msg||'')+'</div>'}
-  else{const sp=specOfMap(y.o,y.v,y.c);h+='<div class="m3q"><div class="tq">👀 先 找 <span class="vb">母音（紅）</span> ➜ 點 每 一個 方框 聽 ➜ 自己 合 起來 唸 ➜ 再 聽 答案</div></div><div class="wrow m3w" id="m3w">'+wordHTML(sp,{hideT:1,dots:1})+'</div>'+
-    '<div class="m3ctl"><button class="btn gold" id="m3bl">🔗 合 起來（聽 答案）</button><button class="btn go" id="m3nx">➡ 下 一個</button></div>'}
+/* 2026-11-18 第五十九次 老師 3：版面 重排（上 ➜ 下 一條 動線：① 聽 ➜ ② 選 積木 ➜ ③ 對 答案）；上面 的 字 ＝ 方框 本身（magic e 自己 跑 到 最後：f i l e）；
+ * 每 個 聲音 一個 黃點，在 發 那 個 聲音 的 字母 正下方；點 字母 ＝ 唸＋發光、點〔🔊 整個 字〕＝ 全部 字母 一起 發光＋金框；對 答案 以後 不 自動 跳 題（只有〔➡ 下 一個〕才 跳）、結果 就 在 字 的 正下方 */
+function m3Units(k,val,y){/* 一格 裡 的「聲音 單位」：[{l:字母,n:幾 個 聲音,a:聲音 檔,sil}] */const T=Object.assign({},y);T[k]=val;const S=parse(specOfMap(T.o,T.v,T.c))[0];const i=k==='o'?0:k==='v'?(T.o?1:0):(T.o?2:1),b=S[i];if(!b)return [];
+  return b.ch.map(c=>({l:c.l,n:nOf(b,c),a:c.sil?null:auOf(c.t,b.coda),sil:!!c.sil,nm:!!c.nm}))}
+function m3Slot(k,S,y,nm){const v=S.put[k],cls='m3s '+(k==='v'?(v&&/_e$/.test(v)?'n':'v'):'c')+(v!=null?' full':'')+(S.bad&&S.bad[k]?' bad':'')+(S.good?' good':'');
+  if(v==null){const n=m3Units(k,y[k],y).reduce((a,u)=>a+u.n,0);return '<div class="'+cls+'" data-m3s="'+k+'"><small>'+nm[k]+'</small><b>？</b><span class="m3dt">'+Array.from({length:n},()=>'<i></i>').join('')+'</span></div>'}
+  if(v==='無')return '<div class="'+cls+'" data-m3s="'+k+'"><small>'+nm[k]+'</small><b>—</b><span class="m3dt"></span></div>';
+  return '<div class="'+cls+'" data-m3s="'+k+'"><small>'+nm[k]+'</small><div class="m3u">'+m3Units(k,v,y).map(u=>'<span class="m3l1'+(u.sil?' sil':'')+(u.nm?' nm':'')+'"'+(u.a?' data-m3a="'+u.a+'"':'')+'><b>'+u.l+'</b><span class="m3dt">'+Array.from({length:u.n},()=>'<i></i>').join('')+'</span></span>').join('')+'</div></div>'}
+function m3Draw(){const W=$('#m3'),S=M3S,y=S.y,ks=['o','v','c'].filter(k=>k!=='o'||y.o),nm={o:'字首',v:'母音',c:'字尾'},full=ks.every(k=>S.put[k]!=null);
+  let h='<div class="m3top"><button data-m3k="spell" class="'+(M3K==='spell'?'on':'')+'">🎧 聽 ➜ 拼</button><button data-m3k="read" class="'+(M3K==='read'?'on':'')+'">👀 看 ➜ 讀</button><button id="m3lv" class="lv">'+(MLV==='a'?'🔵 進階':'🟢 基礎')+'</button><button id="m3how" class="how">❓ 怎麼 玩</button><span class="m3f">🔥 連對 <b>'+M3F+'</b></span></div>';
+  if(M3K==='spell'){const st=S.good||S.bad?2:full?2:Object.values(S.put).some(v=>v!=null)?1:0;
+    h+='<div class="m3steps">'+['🔊 ① 聽','🧱 ② 選 積木 放進 方框','✅ ③ 對 答案'].map((t,j)=>'<span class="'+(j===st?'on':j<st?'ok':'')+'">'+t+'</span>').join('')+'</div>';
+    h+='<div class="m3word"><div class="m3side"><button class="m3ear" id="m3ear">🔊 再 聽 一次</button><button class="m3whole" id="m3whole"'+(full?'':' disabled')+'>🔊 整個 字</button></div><div class="m3slots wrow" id="m3sl">'+ks.map(k=>m3Slot(k,S,y,nm)).join('')+(S.put.v&&/_e$/.test(S.put.v)?'<div class="m3s g full" data-m3s="e"><small>不 發音</small><div class="m3u"><span class="m3l1 sil"><b>e</b><span class="m3dt"></span></span></div></div>':'')+'</div></div>';
+    h+='<div class="m3msg'+(S.good?' good':S.bad?' bad':'')+'" id="m3msg">'+(S.msg||'💡 黃點 ＝ 這 一格 有 幾 個 聲音')+'</div>';
+    if(S.good)h+='<div class="m3ctl"><button class="btn" id="m3again">🔊 再 聽 一次</button><button class="btn go big" id="m3nx">➡ 下 一個</button></div>';
+    else{h+=ks.map(k=>'<div class="m3row"><span class="m3l '+(k==='v'?'v':'c')+'">'+nm[k]+'</span>'+(S.op&&S.op[k]||(S.op=S.op||{},S.op[k]=m3Opts(y,k))).map(x=>'<button class="m3b '+(k==='v'?'v':'c')+(S.put[k]===x?' on':'')+'" data-m3b="'+k+'" data-v="'+x+'">'+(x==='無'?'—':k==='v'?VNM[x]:x)+'</button>').join('')+'</div>').join('');
+      h+='<div class="m3ctl"><button class="btn gold big" id="m3ck"'+(full?'':' disabled')+'>✅ 對 答案</button><button class="btn" id="m3sk">👉 看 答案</button><button class="btn go" id="m3nx">➡ 下 一個</button></div>'}}
+  else{const sp=specOfMap(y.o,y.v,y.c);h+='<div class="m3steps">'+['👀 ① 找 🔴 母音','👆 ② 點 每 一格 聽','🔗 ③ 合 起來 唸'].map((t,j)=>'<span class="'+(j===0?'on':'')+'">'+t+'</span>').join('')+'</div><div class="wrow m3w" id="m3w">'+wordHTML(sp,{hideT:1,dots:1,lab:1})+'</div>'+
+    '<div class="m3ctl"><button class="btn gold big" id="m3bl">🔗 合 起來（聽 答案）</button><button class="btn go" id="m3nx">➡ 下 一個</button></div>'}
   W.innerHTML=h;const g=id=>W.querySelector(id);
-  if(g('#m3ear'))g('#m3ear').onclick=()=>say(y.x.c);if(g('#m3nx'))g('#m3nx').onclick=m3New;if(g('#m3lv'))g('#m3lv').onclick=()=>{MLV=MLV==='a'?'b':'a';LS.s('mlv',MLV);m3New()};
-  if(g('#m3sk'))g('#m3sk').onclick=()=>{M3F=0;S.put={o:y.o||null,v:y.v,c:y.c};S.good=1;S.msg='答案 ＝ <b class="en">'+y.x.w+'</b>';m3Draw();mapSay(specOfMap(y.o,y.v,y.c),y.x.c,$('#m3'))};
+  if(g('#m3ear'))g('#m3ear').onclick=()=>say(y.x.c);if(g('#m3again'))g('#m3again').onclick=()=>{const w=$('#m3sl');sayWhole(w,y.x.c,++TOK)};if(g('#m3nx'))g('#m3nx').onclick=m3New;
+  if(g('#m3lv'))g('#m3lv').onclick=()=>{MLV=MLV==='a'?'b':'a';LS.s('mlv',MLV);m3New()};if(g('#m3how'))g('#m3how').onclick=m3How;
+  if(g('#m3whole'))g('#m3whole').onclick=async()=>{const T=S.put,code=codeOf(T.o||'',T.v,T.c),me=++TOK;if(AV.has(code))await sayWhole($('#m3sl'),code,me);else{for(const e of qsa($('#m3sl'),'[data-m3a]')){if(me!==TOK)return;e.classList.add('on');await sayW(e.dataset.m3a,me);e.classList.remove('on')}}};
+  qsa(W,'#m3sl [data-m3a]').forEach(e=>e.onclick=()=>{e.classList.add('on');say(e.dataset.m3a).then(()=>e.classList.remove('on'))});
+  const msgTop=()=>{const m=$('#m3msg');if(m&&m.scrollIntoView)try{m.scrollIntoView({block:'center',behavior:FAST?'auto':'smooth'})}catch(x){}};
+  if(g('#m3sk'))g('#m3sk').onclick=()=>{M3F=0;S.put={o:y.o||null,v:y.v,c:y.c};S.good=1;S.bad=null;S.msg='👉 答案 ＝ <b class="en">'+y.x.w+'</b>　再 聽 一次，下 一題 自己 拼 拼 看';m3Draw();msgTop();blendRow($('#m3sl'),specOfMap(y.o,y.v,y.c),y.x.c)};
   if(g('#m3ck'))g('#m3ck').onclick=async()=>{const bad={};ks.forEach(k=>{if(S.put[k]!==y[k])bad[k]=1});S.tries++;
-    if(!Object.keys(bad).length){M3F++;S.good=1;S.bad=null;S.msg='🎉 <b>拼 對 了！</b> <span class="en">'+y.x.w+'</span>';m3Draw();const sp=specOfMap(y.o,y.v,y.c),hold=H('div','wrow m3w',wordHTML(sp,{dots:1}));$('#m3').appendChild(hold);await mapSay(sp,y.x.c,hold);setTimeout(()=>{if(M3S===S)m3New()},FAST?20:1400);return}
-    M3F=0;S.bad=bad;const k=Object.keys(bad)[0];S.msg='❌ <b>'+nm[k]+'</b> 不對：你 放 的 '+(S.put[k]==='無'?'—':S.put[k])+' ➜ 聽 一次 對 的 聲音，再 試 一次';m3Draw();
+    if(!Object.keys(bad).length){M3F++;S.good=1;S.bad=null;S.msg='🎉 <b>拼 對 了！</b> <span class="en">'+y.x.w+'</span>';m3Draw();msgTop();await m3Blend(y);return}
+    M3F=0;S.bad=bad;const k=Object.keys(bad)[0];S.msg='❌ <b>'+nm[k]+'</b> 不對：你 放 的 '+(S.put[k]==='無'?'—':k==='v'?VNM[S.put[k]]:S.put[k])+' ➜ 聽 一次 對 的 聲音，再 試 一次';m3Draw();msgTop();
     await m3SayParts(m3Part(k,S.put[k],y));await wait(350);await m3SayParts(m3Part(k,y[k],y))};
   qsa(W,'[data-m3b]').forEach(b=>b.onclick=()=>{const k=b.dataset.m3b,v=b.dataset.v;S.put[k]=v;S.bad=null;S.good=0;S.msg='';m3Draw();m3SayParts(m3Part(k,v,y))});
-  if(g('#m3bl'))g('#m3bl').onclick=async()=>{qsa(W,'.tl').forEach(t=>t.classList.remove('hide'));await mapSay(specOfMap(y.o,y.v,y.c),y.x.c,$('#m3w'))};
+  if(g('#m3bl'))g('#m3bl').onclick=async()=>{qsa(W,'.tl').forEach(t=>t.classList.remove('hide'));await blendRow($('#m3w'),specOfMap(y.o,y.v,y.c),y.x.c)};
   qsa(W,'[data-m3k]').forEach(b=>b.onclick=()=>{M3K=b.dataset.m3k;LS.s('m3k',M3K);m3New()})}
-if(M3){document.body.classList.add('m3');$('#m3').hidden=false;qsa(document,'main>.scr').forEach(e=>e.hidden=true);if($('#tabs'))$('#tabs').style.display='none';m3New()}
+/* 拼 對 了：每 個 字母 一個 一個 唸＋發光 ➜ 整個 字 金框＋全部 發光 */
+async function m3Blend(y){const me=++TOK;for(const e of qsa($('#m3sl'),'[data-m3a]')){if(me!==TOK)return;e.classList.add('on');await sayW(e.dataset.m3a,me);e.classList.remove('on')}if(me===TOK)await sayWhole($('#m3sl'),y.x.c,me)}
+/* ❓ 怎麼 玩：秒懂 動畫（第一次 打開 自動 演）*/
+function m3How(){capAni(M3K==='spell'?{cap:'🧱 聲音 積木：聽到 一個 字 ➜ 用 積木 拼 出來',ca:[{t:'🎯 這裡 練習「聽音 拼字」：聽到 字 就 會 拼'},{t:'① 🔊 先 聽（可以 一直 按 再 聽）',a:'f-ii-l'},{t:'② 黃點 ＝ 這 一格 有 幾 個 聲音',s:'f.i!=ii.l.e~',d:1},{t:'③ 點 積木 ＝ 聽 它 的 聲音＋放進 方框',s:'f.i!=ii.l.e~',p:1},{t:'magic e 會 自己 跑 到 最後：f i l e',s:'f.i!=ii.l.e~',a:'f-ii-l'},{t:'④ 按 ✅ 對 答案：錯 的 那 一格 變 紅'},{t:'💪 學會 了：沒 學 過 的 字，聽到 也 會 拼'}]}
+  :{cap:'👀 看 ➜ 讀：看到 字 ➜ 自己 唸 出來',ca:[{t:'🎯 這裡 練習「看字 讀音」'},{t:'① 先 找 🔴 母音',s:'d.u.ck',v:1},{t:'② 點 每 一格 聽',s:'d.u.ck',p:1},{t:'③ 🔗 合 起來 唸',s:'d.u.ck',a:'d-uh-k'},{t:'💪 學會 了：新 的 字 自己 會 唸'}]})}
+if(M3){document.body.classList.add('m3');$('#m3').hidden=false;qsa(document,'main>.scr').forEach(e=>e.hidden=true);if($('#tabs'))$('#tabs').style.display='none';m3New();if(!LS.g('m3intro',0)&&!FAST){LS.s('m3intro',1);m3How()}}
 window.PHM={blendRow,capAni,cvPlay,m3New,M3S:()=>M3S,BDS,SC,CHAIN,chainScene,MORE2,parse,countOf,patTxt,scPlay,scCard,qzStart,qzMake,tab,MS:()=>MS,mapOut,mapSet,codeOf,spellOf,AV,G:()=>G,start,QW,GM,q25Seq,MAPC};
 })();
 </script>

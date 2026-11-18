@@ -32,10 +32,10 @@
     'lk': { zh: ['ㄛ', 'ㄎ'], sup: [null, '〃'], kk: ['l', 'k'], ipa: ['l', 'k'] },
     'nch': { zh: ['ㄋ', 'ㄔ'], sup: [null, null], kk: ['n', 'tʃ'], ipa: ['n', 'tʃ'] },
     /* 2026-11-17 第五十八次 第 2 點（老師 選 乙）：字尾 加 s ＝ ts ps ks（ㄙ）＋ds gs（z：前面 是 有聲 的 d g，s 唸 z）；cats、cups、yaks、beds、dogs */
-    'ts': { zh: ['ㄊ', 'ㄙ'], sup: [null, null], kk: ['t', 's'], ipa: ['t', 's'] },
+    'ts': { zh: 'ㄘ', sup: '', kk: 'ts', ipa: 'ts' },   /* 2026-11-18 第五十九次 老師 4：t＋s 合 起來 ＝ ㄘ（一個 藍 方框 對齊 ts 兩個 字母）*/
     'ps': { zh: ['ㄆ', 'ㄙ'], sup: [null, null], kk: ['p', 's'], ipa: ['p', 's'] },
     'ks': { zh: ['ㄎ', 'ㄙ'], sup: [null, null], kk: ['k', 's'], ipa: ['k', 's'] },
-    'ds': { zh: ['ㄉ', 'z'], sup: [null, null], kk: ['d', 'z'], ipa: ['d', 'z'] },
+    'ds': { zh: 'ㄗ', sup: '', kk: 'dz', ipa: 'dz' },   /* 第五十九次 老師 4：d＋s 合 起來 ＝ ㄗ */
     'gs': { zh: ['ㄍ', 'z'], sup: [null, null], kk: ['g', 'z'], ipa: ['ɡ', 'z'] }
   };
   /* 雙子音、三子音 ＝ 一個 一個 子音 的 方塊 接 起來（r 一樣 是 疊 起來 的 ㄖ／ㄨ）*/
