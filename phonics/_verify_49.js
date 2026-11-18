@@ -20,7 +20,7 @@ ok(T('We Can Help').gr === 3 && T('My Home').gr === 4 && /三年級 第三、四
 /* ⑩ 靜態：大螢幕、平板、總首頁、四年級／三年級 複習 頁 */
 const host = fs.readFileSync(path.join(ROOT, 'live', 'host.html'), 'utf8'), stu = fs.readFileSync(path.join(ROOT, 'live', 'index.html'), 'utf8'), hub = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 ok((host.match(/'c25','🏁 CVC 單字 25 題 闖關'|"c25","🏁 CVC 單字 25 題 闖關"/g) || []).length >= 2 || (host.split('🏁 CVC 單字 25 題 闖關').length - 1) >= 2, '大螢幕 三、四年級 沒有 🏁 CVC 單字 25 題 闖關');
-ok(/CRS\.set==='c25'\|\|crLW\(\)/.test(host), '大螢幕 c25 不是 限時＋即時 排行榜');
+ok(/CRS\.set==='c25'\|\|(CRS\.set==='vs'\|\|)?crLW\(\)/.test(host),   /* 第五十九次：第五十四次 多 了 vs（⚔️ 左右 對戰），舊 的 量測 沒 跟著 改 */ '大螢幕 c25 不是 限時＋即時 排行榜');
 ok(/phonics\/games\.html\?live=/.test(stu), '平板 沒有 跳到 phonics/games.html?live=');
 ok(/phonics\/games\.html\?c25=3/.test(hub) && /phonics\/games\.html\?c25=4/.test(hub), '總首頁 沒有 三、四年級 25 題 闖關');
 ['g3mid/index.html', 'midterm/index.html'].forEach(f => ok(/v\.set==='c25'/.test(fs.readFileSync(path.join(ROOT, f), 'utf8')), f + ' 沒有 c25 轉 到 phonics'));

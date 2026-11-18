@@ -465,6 +465,7 @@ main{top:calc(66px + var(--sbh,0px))}
 .bw2.gold .bgl{transform:scale(1.1);filter:brightness(1.4) drop-shadow(0 0 .12em #FFD54A)!important;transition:transform .2s}
 .bquick{background:#3B2A00;color:#FFE07A;border:3px solid #FFD54A;font-weight:900}.bquick.on{background:#FFD54A;color:#2B1A00}
 #top a.bk3{background:#0F3D24;border-color:#4ADE80;color:#C9FBD8}
+.bkrow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:6px 0 14px}.bkbig{display:flex;flex-direction:column;align-items:center;font-size:clamp(22px,2.4vw,30px);font-weight:900;padding:10px 22px;border-radius:18px;border:3px solid #4ADE80;background:linear-gradient(180deg,#14532D,#0F3D24);color:#fff;text-decoration:none;box-shadow:0 0 18px rgba(74,222,128,.35)}.bkbig small{font-size:.6em;color:#BBF7D0;font-family:var(--an)}
 
 
 /* 2026-11-17 第五十八次 (9) 結束 頁：答對 幾 題＋每 題 ✅❌＋跟 上一次 比＋下一步；〔✖ 離開〕放大 */
@@ -477,7 +478,7 @@ main{top:calc(66px + var(--sbh,0px))}
 .end{position:relative}
 #quit{font-size:clamp(22px,2.6vw,28px)!important;font-weight:900;min-height:60px;padding:6px 20px!important;border-radius:16px!important;background:#E53935!important;color:#fff!important;border:3px solid #fff!important;box-shadow:0 0 0 4px rgba(229,57,53,.35)}
 </style></head><body>
-<div id="top"><a href="index.html">🔤 自然 發音 字卡</a><a href="map.html">🗺️ 拼音 地圖</a><a class="bk3" href="games.html?book=3">📗 三年級 L3、L4 單字</a><a class="bk3" href="games.html?book=4">📗 四年級 L3、L4 單字</a><a href="../index.html">🏠 總首頁</a><div class="ttl" id="ttl">🎮 自然發音 遊戲場</div>
+<div id="top"><a href="index.html">🔤 拼讀 字卡</a><a href="map.html">🗺️ 拼音 地圖</a><a href="../index.html">🏠 總首頁</a><div class="ttl" id="ttl">🎮 自然發音 遊戲場</div>
 <div id="mdSw" title="字母 下面 的 音標"><button id="mdNo" title="不 顯示 音標">無</button><button data-md="zh">注音</button><button data-md="kk">KK</button><button data-md="ipa">IPA</button></div>
 <button class="tb" id="quit" hidden>✖ 離開</button></div>
 <main>
@@ -3656,6 +3657,7 @@ function lobby(sec){G=null;document.body.classList.remove('inBr');AUtok++;PAUSED
   const dexE=w=>BKW[w]?ICON(BKW[w].ic):REAL[w].em,dexZ=w=>BKW[w]?BKW[w].zh:REAL[w].zh;
   const sec2=(n,t,h,x)=>'<div class="sec"'+(x||'')+'><span class="sn">'+n+'</span><h2>'+t+'</h2><span class="sh">'+h+'</span></div>';
   $('#lobby').innerHTML='<div class="hero"><div><h1>自然發音 遊戲場</h1><p>一局 5 題・限時・答對 愈 快 分數 愈 高</p></div><div class="hr"><div class="lv"><button data-lv="1"'+(LV===1?' class="on"':'')+'>簡單：a i o</button><button data-lv="2"'+(LV===2?' class="on"':'')+'>全部：a e i o u</button></div><button class="rxq" data-rx="fever">❓ 分數 怎麼 算</button></div></div>'+
+   '<div class="bkrow"><a class="bkbig" href="games.html?book=3">📗 三年級 第三、四課 單字<small>We Can Help</small></a><a class="bkbig" href="games.html?book=4">📗 四年級 第三、四課 單字<small>My Home</small></a></div>'+
    sec2('1','CVC 單字 25 題 闖關','前 15 題 CVC 遊戲＋最後 10 題 課本 單字',' class="sec c25s"')+'<div class="c25row"><button class="c25" data-c25="3"><span class="ic">'+lic('c25')+'</span><b>三年級</b><small>最後 10 題：We Can Help</small></button><button class="c25" data-c25="4"><span class="ic">'+lic('c25')+'</span><b>四年級</b><small>最後 10 題：My Home</small></button></div>'+
    sec2('2','新手 小學堂','看 字母 ➜ 聽 聲音 ➜ 慢慢 合 起來 ➜ 換 你')+'<div class="path">'+LESS.map((L,i)=>'<button class="pstop'+(LS.g('ls_'+L.v,0)?' done':'')+'" data-ls="'+i+'"><span class="pv">'+L.v+'</span><small>第 '+(i+1)+' 課'+(LS.g('ls_'+L.v,0)?' ✔':'')+'</small></button>').join('')+'</div>'+
    sec2('3','CVC 遊戲','13 種 玩法：聽、讀、拼')+'<div class="gg">'+['line','yn','twin','slot','ufo','vault','zhu','bal','vow','end','lad','pic','train'].map(gc).join('')+'</div>'+

@@ -18,7 +18,7 @@ S.forEach(c => { const r = actRms(pcm(path.join(D, 'au', c + '.mp3'))); lo = Mat
 ok(hi / lo < 2.6, '單獨 字母 最 大聲／最 小聲 差 太 多 ' + (hi / lo).toFixed(2));
 ['s_eg', 's_el', 's_ir', 's_r', 's_ng', 't-aa-p', 'bk_rabbit', 'sy_rabbit_1', 'bk_strong'].forEach(c => ok(have.has(c), '沒有 音檔 ' + c));
 ok(fs.readFileSync(path.join(D, 'au', 'bk_kitchen.mp3')).equals(fs.readFileSync(path.join(ROOT, 'listen', '2026-11-14_P50', 'v48_kitchen.mp3'))), 'kitchen 不是 舊 的');
-ok(fs.readFileSync(path.join(D, 'au', 's_em.mp3')).equals(fs.readFileSync(path.join(D, 'au', 's_m.mp3'))) && fs.readFileSync(path.join(D, 'au', 's_en.mp3')).equals(fs.readFileSync(path.join(D, 'au', 's_n.mp3'))), '字尾 m n 不是 字首 的 m n');
+/* 第五十九次：第五十五次 老師 改 了「字尾 m n ＝ 三聲」（_verify_55 量）➜ 這 一項 不 再 量 */ if (0) ok(fs.readFileSync(path.join(D, 'au', 's_em.mp3')).equals(fs.readFileSync(path.join(D, 'au', 's_m.mp3'))) && fs.readFileSync(path.join(D, 'au', 's_en.mp3')).equals(fs.readFileSync(path.join(D, 'au', 's_n.mp3'))), '字尾 m n 不是 字首 的 m n');
 JSON.parse(cp.execFileSync('node', [path.join(ROOT, 'tools', 'ph_step50.js')]).toString()).forEach(([c]) => ok(have.has(c), '逐步 拼音 沒有 音檔 ' + c));
 ok(/i:IH/.test(BOOK.W.rabbit.g) && /i:ERV r:RC/.test(BOOK.W.bird.g) && /u:ERV r:RC/.test(BOOK.W.turtle.g), '_book.js rabbit／bird／turtle 沒 改');
 Object.keys(EXS).forEach(k => ok(have.has(k.split('|')[1]), '例外 字〔照 規則〕沒有 音檔 ' + k));

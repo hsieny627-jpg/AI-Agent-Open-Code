@@ -231,3 +231,84 @@ const SPECS={bathroom:'b.a.th|r.oo.m',bedroom:'b.e.d|r.oo.m',rabbit:'r.a|bb.i.t'
 function gList(){$('#gList').innerHTML='<button class="gc big" data-g="q25"><span class="gi">📝</span><b>拼音 25 題 闖關</b><span>10 種 遊戲 每 次 抽 5 種、每 種 5 題；組合 每 次 都 不一樣　🏆 最佳 '+LS.g('best_q25',0)+'</span></button>'+
   GK.map(k=>'<button class="gc" data-g="'+k+'"><em>🎯 '+GM[k].goal+'</em><span class="gi">'+GM[k].ic+'</span><b>'+GM[k].nm+'</b><span>'+GM[k].how.replace(/<[^>]+>/g,'')+'</span></button>').join('');
   $$('#gList [data-g]').forEach(b=>b.onclick=()=>start(b.dataset.g))}
+
+/* ══ 2026-11-18 第五十九次 老師 2-(1)(2)：🔒 每 5 部 秒懂 動畫 ＝ 一個 階段 ➜ 量身 打造 的「⚔️ 階段 試煉」＋全部 融合 成「25 題 闖關」══
+ * 兩 家族：🗺️ 拼音 地圖 秒懂 動畫（SC 31 段 ➜ 6 階段）、📗 從 CVC 到 課本（CHAIN 26 個 字 ➜ 6 階段，每 階段 5 個 字，最後 一 階段 6 個）。
+ * 每 一個 試煉：開始 前 ① 🎯 練 什麼（這 5 部 動畫 的 能力）② 💪 學會 對 英文 有 什麼 幫助 ③〔🎬 快速 複習〕＝ 5 部 動畫 的 關鍵 一幕 連 起來 演（約 40 秒）➜ 8 題、每 題 15 秒、守護者 血條、🔥 連對、👑 最後 一題 ✖2；
+ * 題目 只 考 這 5 部 動畫 教 的（拼音 地圖 ＝ 每 一段 自己 的 隨堂 測驗 題型；課本 字 ＝ 數 聲音、第一個／最後 一個 聲音、聽 ➜ 拼、看 ➜ 讀、從 CVC 加了 哪 一塊）。
+ * 25 題 闖關：6 階段 平均 出、每 次 題目 不同（跟 上一次 的 題目 錯開）；**上 一次 答錯 的 ＝ 這 一次 先 出「類似 題」**（同 一種 題型、同 一段／同 一階段 換 一個 字），答對 了 才 從 錯題 庫 拿掉；
+ * 答錯 ＝ 綠底 答錯頁（noPage）；做完 ＝ 📊 能力 分析（每 一種 能力 ✅ 幾 ／ 幾）＋📒 錯題 聽完 才 能 再 玩。研究：間隔 重複 與 提取 練習（Adesope 等 2017 後設分析 https://doi.org/10.3102/0034654316689306 ；Cepeda 等 2006 https://doi.org/10.1037/0033-2909.132.3.354 ）；沒有 打開 原文 核對 數字。*/
+const CHW=Object.keys(CHAIN).filter(w=>w.indexOf(' ')<0);
+const STGM=[[0,5],[5,10],[10,15],[15,20],[20,25],[25,31]],STGB=[[0,5],[5,10],[10,15],[15,20],[20,26]].concat([]);
+const STB=[CHW.slice(0,5),CHW.slice(5,10),CHW.slice(10,15),CHW.slice(15,20),CHW.slice(20,26)];
+const SKM={zy:'👂 注音 ↔ 字母',spell:'✏️ 聽音 拼字',spellB:'✏️ 聽音 拼字',count:'👂 數 聲音',part:'🔁 換 一個 方框',dig1:'👯 兩個 字母 一個 聲音',on:'➕ 字首 子音 群',co:'🔚 字尾 子音 群',magic:'🪄 magic e',team:'👫 兩個 母音 字母',syl:'🪜 音節',many:'🎨 一 字母 多 聲音',mix:'🏆 綜合',readA:'👀 看字 讀音',cv:'🔴🔵 子音／母音',
+  bsp:'✏️ 聽音 拼字',bcnt:'👂 數 聲音',bfst:'👂 第一個 聲音',blst:'👂 最後 一個 聲音',brd:'👀 看字 讀音',badd:'🧩 從 CVC 加 一塊'};
+function stgName(f,i){return f==='m'?'🗺️ 拼音 地圖 第 '+(i+1)+' 階段':'📗 課本 單字 第 '+(i+1)+' 階段'}
+function stgSegs(i){return SC.slice(STGM[i][0],Math.min(STGM[i][1],SC.length)).map((s,j)=>STGM[i][0]+j).filter(j=>SC[j]&&SC[j].k!=='chain')}
+function stgSkills(f,i){if(f==='m')return [...new Set(stgSegs(i).map(j=>SKM[SC[j].qz]||SC[j].t))];return ['👂 數 聲音、第一個／最後 一個 聲音（音素 覺察）','👀 看字 讀音（拼讀）','✏️ 聽音 拼字（拼字）','🧩 從 會 的 CVC 加 一塊 變成 課本 字']}
+function stgHelp(f,i){return f==='m'?'看到 沒 學 過 的 字 自己 會 唸、聽到 新 的 字 自己 會 拼 ＝ 自己 學 英文 的 鑰匙':'課本 的 字 不用 死背：拆 成 聲音 ➜ 字母，看 得 懂、唸 得 出、拼 得 對'}
+/* 課本 字 的 題目 */
+const ltrOf=s=>s.replace(/[.|]|!?=[a-z0-9]+|~|!/g,'');
+function bkFinal(w){const C=CHAIN[w];return {s:C[C.length-1][0],au:C[C.length-1][1]}}
+function bkNear(word){const v='aeiou',o=new Set(),sw={b:'d',d:'b',p:'b',t:'d',m:'n',n:'m',f:'v',s:'z',k:'g',g:'k',c:'k',h:'n',r:'l',l:'r',y:'j',w:'v',th:'t',sh:'s',ch:'sh'};
+  for(let i=0;i<word.length;i++){if(v.indexOf(word[i])>=0){v.split('').filter(x=>x!==word[i]).forEach(x=>o.add(word.slice(0,i)+x+word.slice(i+1)))}}
+  const f2=word.slice(0,2);if(sw[f2])o.add(sw[f2]+word.slice(2));if(sw[word[0]])o.add(sw[word[0]]+word.slice(1));const l=word.slice(-1);if(sw[l])o.add(word.slice(0,-1)+sw[l]);
+  o.delete(word);return SH([...o])}
+function boxL(b){return b.ch.filter(c=>!c.sil).map(c=>c.l).join('')}
+function bkMake(kind,w,pool){const F=bkFinal(w),S=parse(F.s),flat=[].concat(...S).filter(b=>b.type!=='g'),info={spec:F.s,au:F.au,w:ltrOf(F.s),zh:(BKZH[w]||'')},others=SH(pool.filter(x=>x!==w));
+  if(kind==='bsp'){const O=SH([info.w].concat(bkNear(info.w).slice(0,2)));return {k:kind,q:'🔊 聽 ➜ 選 對 的 拼法',au:F.au,O,ans:info.w,key:kind+w,info:Object.assign(info,{tip:'聽 每 一個 聲音：'+patTxt(F.s)})}}
+  if(kind==='bcnt'){const n=countOf(F.s).n;return {k:kind,q:'🔊 聽 ➜ 這個 字 有 幾 個 聲音？',au:F.au,O:SH([n,n-1,n+1].filter(x=>x>0).map(String)),ans:String(n),key:kind+w,info:Object.assign(info,{tip:info.w+' ＝ <b>'+n+' 個 聲音</b>（一個 聲音 一個 黃點）'})}}
+  if(kind==='bfst'||kind==='blst'){const b=kind==='bfst'?flat[0]:flat[flat.length-1],a=boxL(b),pick=y=>{const P=[].concat(...parse(bkFinal(y).s)).filter(z=>z.type!=='g');return boxL(kind==='bfst'?P[0]:P[P.length-1])};
+    const O=SH([a].concat([...new Set(others.map(pick))].filter(x=>x&&x!==a).slice(0,2)));return {k:kind,q:'🔊 聽 ➜ '+(kind==='bfst'?'第一個':'最後 一個')+' 聲音 是 哪 一個？',au:F.au,O,ans:a,key:kind+w,info:Object.assign(info,{tip:info.w+' 的 '+(kind==='bfst'?'第一個':'最後 一個')+' 聲音 ＝ <b>'+a+'</b>'})}}
+  if(kind==='brd'){const ws=[{w:info.w,c:F.au}].concat(others.slice(0,2).map(y=>({w:ltrOf(bkFinal(y).s),c:bkFinal(y).au})));return {k:kind,q:'👀 看 這個 字 ➜ 先 自己 唸 ➜ 哪 一個 🔊 唸 對 了？',au:null,show:F.s,aud:1,O:SH(ws.map(y=>y.w)),ans:info.w,byW:ws,key:kind+w,info:Object.assign(info,{tip:'① 找 母音 ➜ ② 一個 一個 唸 ➜ ③ 合 起來 ＝ <b>'+info.w+'</b>'})}}
+  /* badd：從 會 的 那 一塊 加 了 哪 一塊（ca ＋ ? ＝ cat、tur ＋ ? ＝ turtle）*/
+  const C=CHAIN[w],a0=ltrOf(C[0][0]),add=info.w.indexOf(a0)===0&&info.w.length>a0.length?info.w.slice(a0.length):null;
+  if(!add)return bkMake('bsp',w,pool);
+  const adds=[...new Set(others.map(y=>{const c=CHAIN[y],f=ltrOf(bkFinal(y).s),z=ltrOf(c[0][0]);return f.indexOf(z)===0?f.slice(z.length):''}).filter(x=>x&&x!==add))];
+  return {k:'badd',q:'🧩 <b class="en">'+a0+'</b> ＋ ？ ＝ 🔊 聽 ➜ 加 哪 一塊？',au:F.au,O:SH([add].concat(adds.slice(0,2))),ans:add,key:'badd'+w,info:Object.assign(info,{tip:'<b>'+a0+'</b> ＋ <b>'+add+'</b> ＝ '+info.w+'：從 你 會 的 那 一塊 開始'})}}
+const BKZH={cat:'貓',dog:'狗',sad:'難過的',not:'不',yes:'是',fish:'魚',thin:'瘦的',he:'他',she:'她',no:'不',room:'房間',bedroom:'臥室',bathroom:'浴室',rabbit:'兔子',kitchen:'廚房',dining:'用餐',living:'生活',where:'哪裡',bird:'鳥',turtle:'烏龜',strong:'強壯的',short:'矮的',tall:'高的',tired:'累的',angry:'生氣的',happy:'快樂的'};
+const BKK=['bcnt','bfst','blst','bsp','brd','badd'];
+/* 一題：家族 f、階段 i、（類似 題）指定 題型 kind／段 seg */
+function stgQ(f,i,want){if(f==='m'){const segs=stgSegs(i);let j=want&&want.seg!=null&&segs.indexOf(want.seg)>=0?want.seg:R(segs);QZI=j;const kind=want&&want.kind?want.kind:SC[j].qz;let q=qzMake(kind)||qzMake('spell');q.seg=j;q.stg=i;q.sk=kind;return q}
+  const W=STB[i];let w=want&&want.w&&W.indexOf(want.w)>=0?R(W.filter(x=>x!==want.w).concat([want.w])):R(W);const kind=want&&want.kind?want.kind:R(BKK);const q=bkMake(kind,w,[].concat(...STB));q.stg=i;q.sk=q.k;q.bw=w;return q}
+function stgRender(q,res){B().innerHTML=stgBoss()+'<div class="gq">'+q.q+'</div>'+(q.show?'<div class="wrow">'+wordHTML(q.show,{dots:0,hideT:1})+'</div>':'')+'<div class="opts'+(q.aud?' aud':'')+'">'+q.O.map((o,k)=>q.aud?'<div class="aop"><button class="op aplay" data-ap="'+k+'">🔊 '+'①②③④'[k]+'</button><button class="op apick" data-o="'+o+'">✅ 選 '+'①②③④'[k]+'</button></div>':'<button class="op'+(/^[㄀-ㄯ一-鿿💨📳🔴🔵]/u.test(o)?' zh':'')+'" data-o="'+o+'">'+(/^[a-z]+$/.test(o)?vRed(o):o)+'</button>').join('')+'</div>';
+  if(q.aud)B().querySelectorAll('[data-ap]').forEach(b=>b.onclick=()=>{const y=q.byW.find(z=>z.w===q.O[+b.dataset.ap]);B().querySelectorAll('.aplay').forEach(e=>e.classList.remove('on'));b.classList.add('on');say(y.c).then(()=>b.classList.remove('on'))});
+  if(q.au){B().appendChild(earBtn(q.au));play1(q.au)}
+  B().querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{if(G.lock===G.q)return;const y=b.dataset.o===q.ans;b.classList.add(y?'ok':'no');if(y){const c=ctr(b);sparks(c[0],c[1],22,'#FFD54A')}res(y,b.dataset.o)});
+  G.hk={ok:()=>[].find.call(B().querySelectorAll('[data-o]'),b=>b.dataset.o===q.ans).click(),no:()=>[].find.call(B().querySelectorAll('[data-o]'),b=>b.dataset.o!==q.ans).click()}}
+function stgBoss(){const N=G.N||NQ,hp=Math.max(0,100-Math.round(G.ok/N*100));return '<div class="sboss"><span class="sbn">🛡️ '+esc2(G.bossN||'守關 者')+'</span><span class="sbh"><i style="width:'+hp+'%"></i></span><b>'+hp+'</b>'+(G.combo>=2?'<span class="sbf">🔥 連對 '+G.combo+'</span>':'')+'</div>'}
+const esc2=s=>String(s).replace(/</g,'&lt;');
+function stgOne(){const me=G,f=G.fam,i=G.sq?G.sq[G.q].i:G.stg,want=G.sq?G.sq[G.q].want:null;let q=null;for(let t=0;t<12;t++){q=stgQ(f,i,want);if(!G.keys.has(q.key||q.au+q.ans))break}G.keys.add(q.key||q.au+q.ans);G.cq=q;
+  stgRender(q,(ok,yours)=>{G.sk[q.sk]=G.sk[q.sk]||[0,0];G.sk[q.sk][1]++;if(ok)G.sk[q.sk][0]++;stgBank(G.fam,q,ok,want);answer(ok,Object.assign({},q.info,ok?{}:{yours}))});begin(15,()=>Object.assign({},q.info))}
+/* 錯題 庫：答錯 ＝ 記 下來（題型＋段／階段＋字）；下 一次 25 題 闖關 先 出 類似 題；類似 題 答對 ＝ 拿掉 */
+function stgBank(f,q,ok,want){const k='wb_'+f;let L=LS.g(k,[]);const it={kind:q.sk,i:q.stg,seg:q.seg,w:q.bw};const same=x=>x.kind===it.kind&&x.i===it.i&&(f==='m'?x.seg===it.seg:true);
+  if(!ok){if(!L.some(same))L.push(it)}else if(want)L=L.filter(x=>!same(x));LS.s(k,L.slice(-20))}
+function stgStart(f,i,q25){const n=q25?25:8;const T=q25?{ic:'📝',nm:(f==='m'?'🗺️ 拼音 地圖':'📗 課本 單字')+' 25 題 闖關',goal:'6 個 階段 全部 融合（上 一次 錯 的 先 出 類似 題）',how:''}:{ic:'⚔️',nm:stgName(f,i)+'：試煉',goal:f==='b'?'數 聲音・看字 讀音・聽音 拼字':stgSkills(f,i).slice(0,3).join('・'),how:''};
+  const k='st'+f+(q25?'25':i);GM[k]=Object.assign({T:15,q:stgOne},T);
+  if(typeof SCON!=='undefined'&&SCON&&!SCID&&typeof scLogin==='function'&&!window.__PHNOLOGIN){scLogin(function(){SCH.close();if(typeof scBar==='function')scBar();stgStart(f,i,q25)});return}
+  G={k,q:0,ok:0,score:0,combo:0,res:[],wrong:[],Q:[],t0:Date.now(),lock:-1,tw:0,N:n,fam:f,stg:i,keys:new Set(),sk:{},stg9:1,bossN:q25?'25 題 闖關 守護者':'第 '+(i+1)+' 關 守護者'};TOK++;
+  if(q25){const W=SH(LS.g('wb_'+f,[])).slice(0,8),last=new Set(LS.g('lk_'+f,[])),ns=(f==='m'?STGM:STB).length,seq=W.map(w=>({i:w.i,want:w}));let r=0;while(seq.length<n){seq.push({i:r%ns,want:null});r++}
+    G.sq=[].concat(seq.slice(0,W.length),SH(seq.slice(W.length)));G.keys=last;G.re=W.length}
+  $('#game').hidden=false;$('#gq').textContent='';$('#gt').textContent=T.ic+' '+T.nm;$('#gsc').textContent='⭐ 0';
+  const sk=q25?['🗺️／📗 6 個 階段 的 全部 能力']:stgSkills(f,i),wb=LS.g('wb_'+f,[]).length;
+  B().innerHTML='<div class="pnl stgin" style="padding:18px 24px;text-align:center;max-width:960px"><div style="font-size:60px">'+T.ic+'</div><h2 class="st">'+T.nm+'</h2>'+
+    '<div class="stgk"><b>🎯 這 一關 練 什麼？</b>'+sk.map(s=>'<span>'+s+'</span>').join('')+'</div><div class="cap">💪 學會 了：'+stgHelp(f,i)+'</div>'+(q25&&wb?'<div class="cap" style="color:#FFB4A8">🔁 上一次 錯 的 '+Math.min(8,wb)+' 題，這次 會 先 出「類似 題」</div>':'')+
+    '<div class="cap" style="font-size:20px;color:#BFD0FF">📝 '+n+' 題　⏱ 每 題 15 秒　🔥 連對 3 題 ✖2　👑 最後 一題 ✖2　🛡️ 答對 ＝ 打掉 守護者 的 血</div>'+
+    '<div class="ctl"><button class="btn gold" id="stRev">🎬 快速 複習（先 看 重點）</button><button class="btn go" id="gGo" style="font-size:30px;min-height:70px;padding:10px 40px">▶ 開始 '+(q25?'闖關':'試煉')+'！</button></div></div>';
+  $('#stRev').onclick=()=>stgReview(f,q25?null:i);
+  $('#gGo').onclick=async()=>{TOK++;const o=$('#capAni');if(o)o.hidden=true;for(const n of ['3','2','1','GO!']){B().innerHTML='<div class="big3">'+n+'</div>';await wait(window.__PHFAST?5:650)}next()};
+  if(!window.__PHFAST&&!LS.g('strev_'+k,0)){LS.s('strev_'+k,1);stgReview(f,q25?null:i)}if(window.__PHAUTO)$('#gGo').click()}
+/* 🎬 快速 複習 ＝ 這 一階段 每 一部 動畫 的 關鍵 幕（拼音 地圖 ＝ 每 段 最後 2 幕；課本 字 ＝ 從 會 的 一塊 ➜ 課本 字）*/
+function stgReview(f,i){let fr=[];const IS=i==null?(f==='m'?STGM:STB).map((_,k)=>k):[i];
+  IS.forEach(k=>{if(f==='m')stgSegs(k).forEach(j=>{const S=SC[j];if(S.ca)fr=fr.concat(S.ca.slice(-(i==null?1:2)))});else STB[k].slice(0,i==null?1:5).forEach(w=>{const C=CHAIN[w];fr.push({t:ltrOf(C[0][0])+' ➜ '+ltrOf(C[C.length-1][0]),s:C[C.length-1][0],p:1,a:C[C.length-1][1]})})});
+  capAni({cap:'🎬 快速 複習：'+(i==null?'全部 階段':stgName(f,i)),ca:fr})}
+/* 結束 頁 多 一塊：📊 能力 分析 */
+const _endOld=end;end=async function(){const g=G;const p=_endOld();if(g&&g.stg9){if(g.sq)LS.s('lk_'+g.fam,[...g.keys].slice(-60));const pn=B().querySelector('.pnl');if(pn){const K=Object.keys(g.sk);pn.insertAdjacentHTML('afterbegin','<div class="skan"><div class="skt">📊 能力 分析</div>'+K.map(k=>{const v=g.sk[k],r=Math.round(v[0]/v[1]*100);return '<div class="skr"><span>'+(SKM[k]||k)+'</span><span class="skb"><i class="'+(r>=80?'hi':r>=60?'mid':'lo')+'" style="width:'+Math.max(4,r)+'%"></i></span><b>'+v[0]+' ／ '+v[1]+'</b></div>'}).join('')+'<div class="skn">'+(K.some(k=>g.sk[k][0]<g.sk[k][1])?'💡 紅色 的 能力：下 一次 25 題 闖關 會 先 出 類似 題 幫 你 練':'🎉 每 一種 能力 都 全對！')+'</div></div>')}
+    const ag=$('#again');if(ag)ag.onclick=()=>stgStart(g.fam,g.stg,!!g.sq)}return p};
+/* 遊戲 列表 多 兩區：⚔️ 階段 試煉（照 動畫 順序）＋兩個 25 題 闖關 */
+const _gListOld=gList;gList=function(){_gListOld();$('#gList').insertAdjacentHTML('afterbegin','<div class="stgL"><h3>⚔️ 階段 試煉：每 5 部 動畫 一關（先 看 動畫 ➜ 再 闖關）</h3>'+
+  '<div class="stgR"><b>🗺️ 拼音 地圖 動畫</b>'+STGM.map((s,i)=>'<button class="stb" data-stg="m'+i+'">第 '+(i+1)+' 關<small>動畫 '+(s[0]+1)+'～'+Math.min(s[1],SC.filter(x=>x.k!=='chain').length)+'</small></button>').join('')+'<button class="stb big" data-stg="m25">📝 25 題 闖關</button></div>'+
+  '<div class="stgR"><b>📗 從 CVC 到 課本</b>'+STB.map((W,i)=>'<button class="stb" data-stg="b'+i+'">第 '+(i+1)+' 關<small>'+W.slice(0,3).join(' ')+'…</small></button>').join('')+'<button class="stb big" data-stg="b25">📝 25 題 闖關</button></div></div>')};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-stg]');if(!b)return;const v=b.dataset.stg,f=v[0],r=v.slice(1);stgStart(f,r==='25'?0:+r,r==='25')});
+/* 每 一階段 最後 一部 動畫 演完 ＝ 隨堂 測驗 旁邊 多〔⚔️ 第 N 關 試煉〕 */
+function stgOfSeg(j){for(let i=0;i<STGM.length;i++)if(j>=STGM[i][0]&&j<STGM[i][1])return i;return -1}
