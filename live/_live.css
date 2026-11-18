@@ -729,3 +729,33 @@ body.host #hlob .lobr{padding-top:62px}   /* 右上角〔🏠 總首頁〕〔老
 /* 2026-11-16 第五十六次：經典 搶答 排行榜 ＝ 左 全班 前 10 名、右 進步 前 5 名 */
 #lb .lvw2{width:min(100%,1500px);grid-template-columns:6fr 4fr!important}#lb .lbt{font-size:clamp(28px,5vh,60px)}#lb .lvw2 .lbr{font-size:clamp(24px,2.7vh,32px);padding:2px 12px;gap:8px;margin:0 0 4px;width:100%}#lb .lvw2 *,#lb .vsh *{font-size:max(24px,1em)}#lb .vsh{font-size:26px}#lb .lvw2 .vsg{font-size:24px}#lb .lvw2 .lbi{width:1.6em;height:1.6em}
 #lvgrow{position:fixed;inset:0;z-index:120}#lvgrow .grbar,#lvgrow .grbar0{position:fixed;z-index:130;display:flex;gap:12px}#lvgrow .grbar{left:50%;bottom:9vh;transform:translateX(-50%)}#lvgrow .grbar0{left:1.5vw;top:1.5vh}#lvgrow .grbar button,#lvgrow .grbar0 button{min-height:56px;font-size:clamp(18px,1.6vw,24px)}#lb .lvw2 .lbr .noh{width:1.6em;height:1.6em;font-size:1em}
+
+/* ══ 2026-11-18 第五十九次 ══ */
+/* 誰 已經 登入（設定 畫面、經典 搶答 大廳）*/
+.who{margin:10px auto;padding:10px 14px;border-radius:18px;border:3px solid #3C5598;background:#0E1533;max-width:1180px}.who.all{border-color:#4ADE80;box-shadow:0 0 30px rgba(74,222,128,.45)}
+.whoh{font-size:clamp(24px,2.4vw,34px);font-weight:900;display:flex;align-items:center;gap:14px;flex-wrap:wrap}.whoh b{color:#5BE38C;font-size:1.3em}
+.whobar{flex:1;min-width:160px;height:18px;border-radius:9px;background:#22305F;overflow:hidden}.whobar i{display:block;height:100%;background:linear-gradient(90deg,#22C55E,#86EFAC);transition:width .6s}
+.whog{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px;margin-top:10px}
+.ws{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:64px;border-radius:14px;border:3px dashed #3C4A80;color:#6B7499;background:#0B1028}.ws b{font-size:28px;line-height:1}.ws img{width:34px;height:34px;object-fit:contain}.ws small{font-size:16px;min-height:1.1em}
+.ws.on{border:3px solid #4ADE80;background:linear-gradient(180deg,#16A34A,#0F5132);color:#fff}.ws.nw{animation:wsin .7s cubic-bezier(.2,1.6,.4,1)}@keyframes wsin{0%{transform:translateY(-40px) scale(.4);opacity:0}100%{transform:none;opacity:1}}
+.whoall{margin-top:10px;font-size:clamp(28px,3vw,42px);font-weight:900;color:#0B1236;background:linear-gradient(90deg,#FFD54A,#5BE38C,#FFD54A);background-size:200% 100%;border-radius:16px;padding:8px 14px;text-align:center;animation:whoall 1.4s ease-in-out 4}@keyframes whoall{50%{background-position:100% 0;transform:scale(1.03)}}
+.whowait{margin-top:8px;font-size:22px;color:#FFE07A}
+button.allgo{animation:allgo .9s ease-in-out 6;box-shadow:0 0 0 6px #FFD54A,0 0 40px #5BE38C!important}@keyframes allgo{50%{transform:scale(1.1)}}
+/* 簡潔版 即時 排行榜：只 留 名次、名字、分數、長條 */
+.crxr{display:flex;align-items:center;gap:12px}.crsimp{font-size:22px;font-weight:900;padding:6px 16px;border-radius:14px;border:3px solid #7FD4FF;background:#0E2238;color:#fff;cursor:pointer;min-height:52px}
+#hcrr.simp .crveh,#hcrr.simp .crhim,#hcrr.simp .crfl,#hcrr.simp .crcw,#hcrr.simp .crfin,#hcrr.simp .crgap,#hcrr.simp .crok,#hcrr.simp .vspb,#hcrr.simp .crsh,#hcrr.simp .crup{display:none!important}
+#hcrr.simp .crtrk{background:#1B2A55!important}#hcrr.simp .crtrk i{background:linear-gradient(90deg,#4ADE80,#22C55E)!important}#hcrr.simp .crlr{border-color:#34407A}
+/* 超車：衝刺 光束（那 一行 從 左 掃 到 右）＋ 橫幅 依 超 了 幾 人 變 強 */
+.crlr.nitro{box-shadow:0 0 0 3px #22D3EE,0 0 26px #22D3EE}.crlr.nitro::after{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(100deg,transparent 0,rgba(34,211,238,.0) 30%,rgba(255,255,255,.75) 48%,rgba(34,211,238,0) 66%,transparent 100%);background-size:220% 100%;animation:nitro 1.1s ease-out;pointer-events:none}@keyframes nitro{from{background-position:120% 0}to{background-position:-60% 0}}
+.crlead.ov2.on{color:#FFE07A;text-shadow:0 0 18px #FF8A1F}.crlead.ov3.on{color:#fff;text-shadow:0 0 22px #FF2D55,0 0 40px #FFD54A;transform:scale(1.08)}
+/* 班級 平均 即時 排行榜（一條）*/
+.crcls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 6px}.crcls .cat{font-size:22px;font-weight:900;color:#FFE07A}
+.cab{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:12px;border:2px solid var(--cc);background:#0E1533;font-size:20px}.cab.me{box-shadow:0 0 0 3px #fff,0 0 18px var(--cc)}.cab em{font-style:normal}.cab b{color:var(--cc)}.cab strong{font-size:24px}.cab small{font-size:15px;color:#BFD0FF}
+.cabt{width:90px;height:12px;border-radius:6px;background:#22305F;overflow:hidden}.cabt i{display:block;height:100%;background:var(--cc);transition:width .6s}
+/* 🏫 班級 頒獎 典禮（CLSX＋疊 上去 的 3D 班旗）*/
+#cacer{position:fixed;inset:0;z-index:140;background:#000;display:none;flex-direction:column}#cacer.on{display:flex}#cacer .cx{flex:1;position:relative;overflow:hidden}
+#cacer .cx.lx .lxsp{mix-blend-mode:normal!important}
+.cabar{display:flex;gap:12px;justify-content:center;padding:10px;background:#05070F}.cabar button{font-size:24px}
+.ca3d{position:absolute;left:0;right:0;bottom:4%;height:30%;display:flex;justify-content:center;align-items:flex-end;gap:2.4vw;perspective:900px;pointer-events:none;z-index:2;transform:rotateY(var(--ry))}
+.caf{width:7vw;height:var(--h);border-radius:10px 10px 0 0;background:linear-gradient(180deg,var(--cc),rgba(0,0,0,.2));opacity:.28;transform-origin:50% 100%;animation:caf 1.4s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(var(--i)*.25s + .4s);display:flex;justify-content:center}
+.caf b{font-size:2.2vw;color:#fff;margin-top:6px;text-shadow:0 2px 6px #000}@keyframes caf{from{transform:rotateX(85deg) translateZ(-300px);opacity:0}to{transform:none;opacity:.28}}
