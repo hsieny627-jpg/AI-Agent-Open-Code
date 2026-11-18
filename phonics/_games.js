@@ -234,6 +234,8 @@ function zhuQ(g){const w=R(Math.random()<.5?realOf():pseOf()),p=parts(w),U=unitT
   const vs=SH(VS().filter(v=>v!==p.v).filter(v=>onOK(p.i,v))).slice(0,2),opts=[{T:[].concat(...U),ok:1}];
   vs.forEach(v=>{const x=p.i+v+p.e;opts.push({T:[].concat(...unitTiles(x)),ok:0})});
   if(Math.random()<.5){const ic=(CF[p.i]||'').split('').filter(i=>onOK(i,p.v)&&parts(i+p.v+p.e))[0];if(ic)opts[opts.length-1]={T:[].concat(...unitTiles(ic+p.v+p.e)),ok:0}}
+  /* 第六十次：有 的 字 換 母音 找不到 2 個 錯 選項（以前 偶爾 只 剩 對 的 一排）➜ 用 換 字首 的 補 到 3 排 */
+  for(const i of SH(['b','d','p','t','m','n','s','h','l','r','f','g','k'])){if(opts.length>=3)break;if(i===p.i||!onOK(i,p.v)||!parts(i+p.v+p.e))continue;const T=[].concat(...unitTiles(i+p.v+p.e));if(opts.every(x=>JSON.stringify(x.T)!==JSON.stringify(T)))opts.push({T,ok:0})}
   const o=SH(opts);const nm=MD==='zh'?'雙語 注音':MD.toUpperCase();
   stage(g,'<div class="ask">👀 看 字 ➜ 選 對 的 <span class="k">'+nm+'</span></div><div class="word0">'+wordHTML(w)+'</div><div class="opts" id="ops">'+o.map((x,k)=>'<button class="opt" data-k="'+k+'">'+tileHTML(x.T)+'</button>').join('')+'</div>',GM.zhu.T,()=>pick(null));
   $('#ops').onclick=e=>{const b=e.target.closest('.opt');if(b)pick(+b.dataset.k)};

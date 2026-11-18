@@ -99,7 +99,7 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
   const sh = await p.evaluate(() => { const g = document.querySelector('#manyOut .pnl'); return [...g.querySelectorAll('.mrow')].map(r => { const v = r.querySelector('.bx.v'); return v ? getComputedStyle(v).backgroundColor : 'n'; }); });
   ok(new Set(sh.filter(x => x !== 'n')).size >= 3, tag + ' 一字 多音：不同 聲音 沒有 不同 深淺 的 紅 ' + sh.join(' | ')); ok(await p.evaluate(() => document.querySelectorAll('#manyOut .tl[data-t]').length >= 30), tag + ' 一字 多音：字母 下面 沒有 音標');
   /* ⑤ 遊戲 */
-  await p.click('[data-tab="play"]'); const GK = await p.evaluate(() => Object.keys(PHM.GM)); ok(GK.length === 10, tag + ' 遊戲 不是 10 種'); ok(await p.evaluate(() => /星環 彈珠台/.test(document.getElementById('gList').innerText)), tag + ' 彈珠台 名字');
+  await p.click('[data-tab="play"]'); const GK = await p.evaluate(() => Object.keys(PHM.GM)); ok(['mvow','mon','mco','mpat','mcnt','mspl','mcoin','mking','mbub','msyl'].every(k => GK.indexOf(k) >= 0), tag + ' 原本 的 10 種 遊戲 不 齊');   /* 第六十次：多 了 4 個 新 遊戲 ＝ 14 種 */ ok(await p.evaluate(() => /星環 彈珠台/.test(document.getElementById('gList').innerText)), tag + ' 彈珠台 名字');
   for (const k of GK) for (const mode of ['ok', 'no']) {
     await p.evaluate(() => { window.__PHREC.length = 0; }); await p.evaluate(k => PHM.start(k), k);
     for (let q = 0; q < 5; q++) { await p.waitForFunction(q => { const g = PHM.G(); return g && g.hk && g.lock !== g.q && g.q === q; }, q, { timeout: 8000 }).catch(() => E.push(tag + ' ' + k + ' 第 ' + (q + 1) + ' 題 沒 出來'));
