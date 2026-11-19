@@ -132,6 +132,14 @@ var HWSRC = function () {
   function jbar(strokes) { strokes = clean(strokes); var b = xbox(strokes), h = Math.max(.2, b.y1 - b.y0), w = Math.max(.4, b.x1 - b.x0), lo = 1e9, hi = -1e9;
     strokes.forEach(function (s) { s.forEach(function (q) { if (q[1] <= b.y0 + h * .2) { lo = Math.min(lo, q[0]); hi = Math.max(hi, q[0]); } }); });
     return hi - lo >= w * .4; }
+  /* 2026-11-19 第六十四次 老師 3：小寫 i（j）忘了 寫 點 ＝ 錯（以前 標準 寫法 有「沒有 點」的 一種 ➜ 會 算 對）。
+     找 最 高 的 那 一筆（直線）；點 ＝ 另外 一筆、不大（寬＋高 < 0.6 格）、整個 在 直線 頭 的 上面 */
+  function sbox(s) { var y0 = 1e9, y1 = -1e9, x0 = 1e9, x1 = -1e9; s.forEach(function (q) { y0 = Math.min(y0, q[1]); y1 = Math.max(y1, q[1]); x0 = Math.min(x0, q[0]); x1 = Math.max(x1, q[0]); }); return { y0: y0, y1: y1, x0: x0, x1: x1, h: y1 - y0, w: x1 - x0 }; }
+  function idot(strokes) { strokes = clean(strokes); if (strokes.length < 2) return false; var bx = strokes.map(sbox), k = 0; bx.forEach(function (b, i) { if (b.h > bx[k].h) k = i; });
+    return bx.some(function (b, i) { return i !== k && b.h + b.w < .6 && (b.y0 + b.y1) / 2 < bx[k].y0 - .02; }); }
+  /* 沒有 點 的 字：補 一個 點 再 判 ➜ 補了 就 對 ＝「只是 忘了 寫 點」*/
+  function addDot(strokes, want) { strokes = clean(strokes); var bx = strokes.map(sbox), k = 0; bx.forEach(function (b, i) { if (b.h > bx[k].h) k = i; }); var s = strokes[k], top = s.reduce(function (m, q) { return q[1] < m[1] ? q : m; }, s[0]);
+    return strokes.concat([[[top[0], top[1] - .45], [top[0], top[1] - .44]]]); }
   function judge(strokes, want, noPos) { strokes = clean(strokes);
     var r = rank(strokes, noPos); if (!r.length) return { ok: false, got: '', r: r };
     var top = r[0], mine = null;
@@ -175,7 +183,7 @@ var HWSRC = function () {
     best.miss.forEach(function (m) { var k = 'm' + m.hf + m.L; if (seen[k]) return; seen[k] = 1; ws.push((m.hf === 'h' ? '⬆️ 頭 沒有 碰到 ' : m.hf === 'f' ? '⬇️ 腳 沒有 碰到 ' : '↔️ 中間 沒有 碰到 ') + LN[m.L] + (m.d > .45 ? '（差 很多）' : '（還 差 一點）')); });
     best.over.forEach(function (m) { ws.push((m.hf === 'h' ? '⬆️ 頭 超出 ' : '⬇️ 腳 超出 ') + LN[m.L] + ' 太多'); });
     best.words = ws.slice(0, 2).join('；');   /* 最多 說 2 件（字 太多 學生 看 不完、畫面 放不下）*/ best.rule = (best.miss.some(function (m) { return m.hf === 'h'; }) || best.over.some(function (m) { return m.hf === 'h'; }) ? '頂天' : '') + (best.miss.some(function (m) { return m.hf === 'f'; }) || best.over.some(function (m) { return m.hf === 'f'; }) ? '立地' : ''); return best; }
-  return { T: T, clean: clean, rank: rank, judge: judge, jbar: jbar, body: body, lines: lines, contacts: contacts, TOL: TOL, THF: THF, OVT: OVT, LN: LN };
+  return { T: T, clean: clean, rank: rank, judge: judge, jbar: jbar, idot: idot, addDot: addDot, body: body, lines: lines, contacts: contacts, TOL: TOL, THF: THF, OVT: OVT, LN: LN };
 };
 var HW = HWSRC();
 module.exports = { HW: HW, js: 'var HW=(' + HWSRC.toString() + ')();' };

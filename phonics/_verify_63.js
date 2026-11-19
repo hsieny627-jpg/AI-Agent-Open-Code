@@ -11,7 +11,9 @@ function serve() { return new Promise(r => { const T = { '.html': 'text/html', '
   s.listen(0, '127.0.0.1', () => { HTTP = 'http://127.0.0.1:' + s.address().port; r(s); }); }); }
 const ZV = 'e ai ay a_e a ou ow2 ea ee e_e i oo oo2 u o_e oa ow o i_e u_e oi oy au aw ar or er ir ur';
 const HOST = fs.readFileSync(path.join(ROOT, 'live', 'host.html'), 'utf8'), BK = fs.readFileSync(path.join(ROOT, 'teacher', 'index.html'), 'utf8');
-for (let i = 0; i < 6; i++) for (const l of 'ba') { ok(HOST.indexOf("'sc" + i + l + "'") >= 0, '現場任務 沒有 sc' + i + l); ok(BK.indexOf('g3gm_ph-sc' + i + l) >= 0, '老師看板 沒有 sc' + i + l); }
+/* 第六十四次：路線 改 10 關（代號 SND.GS[i].id）；卡牌 對決 ＝ g:'card' 的 關（第 1 關 短 母音＋子音 3 關）*/
+const SNDD = require('./_snd.js'), CARD = SNDD.GS.map((g, i) => [g, i]).filter(z => z[0].g === 'card');
+for (const [g] of CARD) for (const l of 'ba') { ok(HOST.indexOf("'sc" + g.id + l + "'") >= 0, '現場任務 沒有 sc' + g.id + l); ok(BK.indexOf('g3gm_ph-sc' + g.id + l) >= 0, '老師看板 沒有 sc' + g.id + l); }
 ok(fs.readdirSync(path.join(__dirname, 'au')).filter(f => /^dh-/.test(f)).length > 200, '有聲 th 的 聲音 不夠');
 async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] }, hasTouch: true });
   await ctx.route(/firebaseio\.com|firebasedatabase\.app|script\.google\.com/, r => { E.push('想 連 真的：' + r.request().url().slice(0, 60)); r.abort(); });
@@ -29,19 +31,19 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
     await p.close(); }
   /* ② 聽音 卡牌 */
   { const p = await pg('phonics/sounds.html'); const rt = await p.evaluate(() => ({ c: document.querySelectorAll('#scRoute .scrc').length, b: document.querySelectorAll('#scRoute [data-scg]').length }));
-    ok(rt.c === 6 && rt.b === 12, tag + ' 練習 路線 不對 ' + JSON.stringify(rt));
-    for (let i = 0; i < 6; i++) for (const l of 'ba') { const r = await p.evaluate(async a => { const [i, l] = a, o = { n: [], tile: [], dup: 0, over: 0, small: 0, ks: new Set() }; PHSND.start('sc' + i + l); await new Promise(r => setTimeout(r, 150)); const b = document.getElementById('gGo'); if (b) b.click(); await new Promise(r => setTimeout(r, 1400));
+    ok(rt.c === 10 && rt.b === 20, tag + ' 練習 路線 不對 ' + JSON.stringify(rt));
+    for (const [cg, i] of CARD) for (const l of 'ba') { const r = await p.evaluate(async a => { const [i, l] = a, o = { n: [], tile: [], dup: 0, over: 0, small: 0, ks: new Set() }; PHSND.start('sc' + SND.GS[i].id + l); await new Promise(r => setTimeout(r, 150)); const b = document.getElementById('gGo'); if (b) b.click(); await new Promise(r => setTimeout(r, 1400));
         for (let q = 0; q < 10; q++) { let G = PHSND.G(); for (let w = 0; w < 40 && (!document.querySelector('.scd') || G.lock === G.q); w++) { await new Promise(r => setTimeout(r, 100)); G = PHSND.G(); }
           const cs = [...document.querySelectorAll('.scd')]; o.n.push(cs.length); o.tile.push(cs.every(c => !!c.querySelector('.scz'))); const tx = cs.map(c => c.querySelector('.kqL').textContent.replace(/\s/g, ''));
           if (l === 'a') { const sp = cs.map(c => [...c.querySelectorAll('.sp')].map(s => s.textContent)); sp.forEach((a, x) => sp.forEach((b, y) => { if (x < y && a.some(s => b.indexOf(s) >= 0)) o.dup++; })); }
           cs.forEach(c => { const r = c.getBoundingClientRect(); if (r.right > innerWidth + 1 || r.left < -1 || r.bottom > innerHeight + 1) o.over++; c.querySelectorAll('.sp').forEach(s => { if (parseFloat(getComputedStyle(s).fontSize) < 24) o.small++; }); });
           o.ks.add(G.sdl && G.sdl.k); (q % 3 === 2 ? G.hk.no : G.hk.ok)(); for (let w = 0; w < 40 && G.Q.length <= q; w++) await new Promise(r => setTimeout(r, 100)); await new Promise(r => setTimeout(r, 200)); }
         const G = PHSND.G(); o.q = G.Q.length; o.end = /答對/.test(document.getElementById('gbody').textContent); o.ks = o.ks.size; o.want = SND.GS[i].items.length; document.getElementById('gx').click(); return o; }, [i, l]);
-      ok(r.q === 10 && r.end, tag + ' sc' + i + l + ' 沒有 玩完 ' + r.q);
-      ok(r.n.slice(0, 3).every(x => x === 2) && r.n.slice(3, 6).every(x => x === 3) && r.n.slice(6).every(x => x >= 3 && x <= 4) && r.n.slice(6).some(x => x === 4), tag + ' sc' + i + l + ' 卡 張數 不是 2➜3➜4 ' + r.n);
-      ok(l === 'b' ? r.tile.every(Boolean) : !r.tile.some(Boolean), tag + ' sc' + i + l + ' 注音 方塊 不對');
-      ok(!r.dup, tag + ' sc' + i + l + ' 進階 選項 拼法 重複 ' + r.dup); ok(!r.over && !r.small, tag + ' sc' + i + l + ' 卡 超出 ' + r.over + '／字 太 小 ' + r.small);
-      ok(r.ks >= Math.min(r.want, 6), tag + ' sc' + i + l + ' 這 一關 的 音 沒有 都 考 到 ' + r.ks + '／' + r.want); }
+      ok(r.q === 10 && r.end, tag + ' sc' + cg.id + l + ' 沒有 玩完 ' + r.q);
+      ok(r.n.slice(0, 3).every(x => x === 2) && r.n.slice(3, 6).every(x => x === 3) && r.n.slice(6).every(x => x >= 3 && x <= 4) && r.n.slice(6).some(x => x === 4), tag + ' sc' + cg.id + l + ' 卡 張數 不是 2➜3➜4 ' + r.n);
+      ok(l === 'b' ? r.tile.every(Boolean) : !r.tile.some(Boolean), tag + ' sc' + cg.id + l + ' 注音 方塊 不對');
+      ok(!r.dup, tag + ' sc' + cg.id + l + ' 進階 選項 拼法 重複 ' + r.dup); ok(!r.over && !r.small, tag + ' sc' + cg.id + l + ' 卡 超出 ' + r.over + '／字 太 小 ' + r.small);
+      ok(r.ks >= Math.min(r.want, 6), tag + ' sc' + cg.id + l + ' 這 一關 的 音 沒有 都 考 到 ' + r.ks + '／' + r.want); }
     await p.close(); }
   errs.forEach(e => E.push(tag + ' 錯誤：' + e)); await ctx.close(); }
 (async () => { const s = await serve(); const br = await chromium.launch(); for (const vp of [[1024, 768], [820, 1180]]) await run(br, vp);

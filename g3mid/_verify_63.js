@@ -52,6 +52,7 @@ function finger(sk, sd, opt) { opt = opt || {}; const sc = opt.sc || (0.95 + rnd
       if (pass) good++; else bad.push(want + (Array.isArray(it) ? '（寫成 ' + it[1] + '）' : '') + '＝' + r.k); } }
     const pc = Math.round(good / tot * 100); SUM.push(c[0] + '：' + good + ' ／ ' + tot + '（' + pc + '%）' + (bad.length ? '　✗ ' + [...new Set(bad)].slice(0, 8).join('、') : ''));
     ok(pc >= (c[3] === 'ok' ? 95 : 100), c[0] + ' 只 有 ' + pc + '%'); }
-  { let k = 0; for (let rep = 0; rep < 3; rep++) { const r = await judge(finger(T0('i'), .025).filter(st => st.length > 1), 'i'); if (r.k === 'ok') k++; } SUM.push('⑩ i 忘了 點：' + (k ? '目前 算 對（' + k + ' ／ 3）' : '目前 算 錯') + '（給 老師 決定）'); }
+  /* 第六十四次 老師 3：小寫 i、j 忘了 寫 點 ＝ 錯，而且 原因 ＝ idot（答錯頁 說「忘了 寫 點」）*/
+  for (const ch of ['i', 'j']) { let k = 0; for (let rep = 0; rep < 3; rep++) { const r = await judge(finger(T0(ch), .025).filter(st => st.length > 1), ch); if (r.k === 'idot') k++; } SUM.push('⑩ ' + ch + ' 忘了 點：' + k + ' ／ 3 判 錯（忘了 點）'); ok(k === 3, ch + ' 忘了 點 沒有 判 錯 ' + k + ' ／ 3'); }
   ok(!errs.length, 'JS 錯誤：' + errs.slice(0, 2).join(' | '));
   await br.close(); s.close(); SUM.forEach(x => console.log('  ' + x)); E.forEach(e => console.log('❌ ' + e)); console.log((E.length ? '❌' : '✅') + ' 第六十三次 手指 寫 字母：' + n + ' 項，' + E.length + ' 個 失敗'); process.exit(E.length ? 1 : 0); })();

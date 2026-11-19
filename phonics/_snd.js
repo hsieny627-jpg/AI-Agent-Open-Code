@@ -73,14 +73,24 @@
     shoot: ['🎯', '聽音 射擊', '聽 🔊 ➜ 字母 靶 在 畫面 上 飛 來 飛 去 ➜ <b>打中</b> 對 的 那 一個'], pick: ['🔊', '看字 選聲', '看 字母 ➜ 點 三顆 聲音 球 聽聽看 ➜ 把 字母 <b>拖</b> 進 聲音 一樣 的 那 一顆'] };
   /* 2026-11-19 第六十三次 老師 2：🃏 聽音 卡牌 6 關（每 關 7～8 個 音）＝ 先〔基礎〕聽 ➜ 選「注音／KK＋字母」卡，再〔進階〕聽 同樣 的 音 ➜ 選「只有 字母」卡（老師 截圖）。
    順序 照 老師 投影片：母音 ① ㄝ／一 組 ➜ 母音 ② ㄨ／ㄜ／ㄚ 組 ➜ 母音 ③ 其他＋複習 ➜ 子音 ① 嘴唇＋舌尖 ➜ 子音 ② 舌尖＋舌根＋嘶嘶 ➜ 子音 ③ 嘟嘴＋滑音。弱化音 ə 不 放（要 在 字 裡 才 聽 得 出來）。*/
+  /* 2026-11-19 第六十四次 老師 1、2-B（🔒 永久：一次 只 練 4～5 個 新 的 音；學 A ➜ 學 B ➜ 複習 A＋B ➜ … ➜ 全部 總複習；每 一關 遊戲 完全 不同）
+   id ＝ 成績 代號（sc<id><b|a>）；g ＝ 遊戲（_map_snd2.js）；rev 1 ＝ 複習、2 ＝ 總複習。子音 3 關 代號 3～5 跟 第六十三次 一樣（舊 成績 對 得 上）。
+   舊 的 0～2（母音 ①②③）不 再 出現（老師看板 題庫 LEGACY 留著 看 舊 成績）。*/
+  var V1 = ['ae', 'eh', 'ih', 'aa', 'uh'], V2 = ['ai', 'ee', 'yu', 'ou'], V3 = ['uu', 'oo', 'oa', 'er', 'ar'], V4 = ['ii', 'oy', 'or', 'ear', 'air'];
   var GS = [
-    { n: '母音 ①：ㄝ 組、一 組', items: ['eh', 'ai', 'ae', 'ou', 'ih', 'ee', 'yu'] },
-    { n: '母音 ②：ㄨ 組、ㄜ 組、ㄚ 組', items: ['uu', 'oo', 'uh', 'oa', 'er', 'aa', 'ar'] },
-    { n: '母音 ③：ㄞ、ㄛ一、ㄦ＋複習', items: ['ii', 'oy', 'or', 'ear', 'air', 'ae', 'ee'] },
-    { n: '子音 ①：嘴唇、舌尖', items: ['b', 'p', 'm', 'f', 'v', 'd', 't', 'n'] },
-    { n: '子音 ②：舌尖、舌根、嘶嘶 聲', items: ['l', 'g', 'k', 'h', 'ng', 's', 'z', 'th'] },
-    { n: '子音 ③：有聲 th、嘟嘴、滑音', items: ['dh', 'j', 'ch', 'sh', 'zh', 'r', 'y', 'w'] }];
+    { id: 'v1', n: '母音 ①：CVC 短 母音', items: V1, g: 'card' },
+    { id: 'v2', n: '母音 ②：ㄝ一、一、一ㄨ、ㄠ', items: V2, g: 'bow' },
+    { id: 'vr1', n: '🔁 複習：母音 ①＋②', items: V1.concat(V2), g: 'run', rev: 1 },
+    { id: 'v3', n: '母音 ③：ㄨ、ㄨㄛ、ㄜㄨ、ㄜㄦ、ㄚㄦ', items: V3, g: 'beat' },
+    { id: 'v4', n: '母音 ④：ㄞ、ㄛ一、ㄛㄦ、一ㄦ、ㄝㄦ', items: V4, g: 'orb' },
+    { id: 'vr2', n: '🔁 複習：母音 ③＋④', items: V3.concat(V4), g: 'orbit', rev: 1 },
+    { id: 'va', n: '🏆 母音 總複習（全部 19 個）', items: V1.concat(V2, V3, V4), g: 'jump', rev: 2 },
+    { id: '3', n: '子音 ①：嘴唇、舌尖', items: ['b', 'p', 'm', 'f', 'v', 'd', 't', 'n'], g: 'card' },
+    { id: '4', n: '子音 ②：舌尖、舌根、嘶嘶 聲', items: ['l', 'g', 'k', 'h', 'ng', 's', 'z', 'th'], g: 'card' },
+    { id: '5', n: '子音 ③：有聲 th、嘟嘴、滑音', items: ['dh', 'j', 'ch', 'sh', 'zh', 'r', 'y', 'w'], g: 'card' }];
+  /* 第六十三次 的 母音 3 關（成績 代號 sc0～sc2）＝ 只 給 老師看板 看 舊 成績 */
+  var GSOLD = [{ id: '0', n: '母音 ①：ㄝ 組、一 組（舊）' }, { id: '1', n: '母音 ②：ㄨ 組、ㄜ 組、ㄚ 組（舊）' }, { id: '2', n: '母音 ③：ㄞ、ㄛ一、ㄦ＋複習（舊）' }];
   var ALL = V.concat(C), BY = {}; ALL.forEach(function (x, i) { x.i = i; x.v = i < V.length; BY[x.k] = x; });
-  var M = { V: V, C: C, ALL: ALL, BY: BY, TH: TH, GN: GN, GS: GS };
+  var M = { V: V, C: C, ALL: ALL, BY: BY, TH: TH, GN: GN, GS: GS, GSOLD: GSOLD };
   if (typeof module !== 'undefined' && module.exports) module.exports = M; else root.SND = M;
 })(typeof window !== 'undefined' ? window : this);

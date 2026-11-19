@@ -7,7 +7,8 @@ TT.ear={zh:'ㄦ',sup:'一',kk:'ɪr',ipa:'ɪɹ'};TT.air={zh:'ㄦ',sup:'ㄝ',kk:'�
 let SDT=LS.g('sdt',0),SDP=0,SDDONE=LS.g('sdd',{});
 const SDLIST=(()=>{const L=[];SND.TH.forEach((t,ti)=>{if(!t.items.length){L.push({ti,intro:1,n:'英文 有 44 個 聲音'});L.push({ti,intro:2,n:'聲音 ⇄ 字母'})}else t.items.forEach(k=>L.push({ti,k,n:SND.BY[k].sp.join('、')+'（'+sdZy(SND.BY[k])+'）'}))});return L})();
 function sdZy(x){const o=tileOf(x.t);return MD==='zh'?(o.sup||'')+o.zh:MD==='kk'?o.kk:o.ipa}
-function sdTile(x,big){const o=tileOf(x.t);const tx=MD==='zh'?'<b class="zm">'+o.zh+'</b>'+(o.sup?'<sup class="zc">'+o.sup+'</sup>':''):'<b class="zm en">'+(MD==='kk'?o.kk:o.ipa)+'</b>';
+/* 2026-11-19 第六十四次 老師 2-A：雙語 注音 正下方 一律 加 小字 KK（/æ/，注音 的 3 成、淡色）＝ 證明 注音 是 照 KK 轉 來 的；學習 重點 還是 注音 */
+function sdTile(x,big){const o=tileOf(x.t);const tx=MD==='zh'?'<span class="zgrp"><span class="zrow"><b class="zm">'+o.zh+'</b>'+(o.sup?'<sup class="zc">'+o.sup+'</sup>':'')+'</span>'+(o.kk?'<em class="kkm">/'+o.kk+'/</em>':'')+'</span>':'<b class="zm en">'+(MD==='kk'?o.kk:o.ipa)+'</b>';
   return '<span class="sdtile '+(x.v?'v':'c')+(big?' big':'')+'" data-sda="'+x.au+'">'+tx+'</span>'}
 /* 字母 顏色（全站 規則）：母音 紅、唸 名字 的 第一個 黃底＋第二個 灰、magic e 的 e 灰、兩個 母音 一個 聲音 粉紅、母音 後面 的 r 藍、子音 藍、兩個 字母 一個 聲音 水藍、ck 的 c 灰、弱化音 淡紅 */
 function sdSp(s,x){const NM=['ai','ay','ee','ea','oa','ow'],nm=x&&['ai','ee','oa'].indexOf(x.k)>=0,V=/[aeiou]/;let h='';
@@ -143,15 +144,25 @@ window.PHSND={SDLIST,sdPlay,sdCard,sndReview,sdTab,sdIdx,start:k=>start(k),G:()=
  * 這 一關 每 一個 音 都 會 考 到，錯 的 隔 1 題 再 考。玩法：聽 ➜ 點 卡 ＝ 卡牌 飛 出去 打 反派（老師 的 DARK OVERLORD／SHADOW SCHEMER 圖），10 題 打 光 血條 ＝ 擊敗；🔥 連對、⚡ 愈 快 愈 痛。
  * 進階：拼法 有 一樣 的 兩個 音（長 oo／短 oo、ow）不 會 一起 出現（只 看 字母 分 不 出來）。*/
 const SCL={b:'🟢 基礎',a:'🔵 進階'};
-SND.GS.forEach((g,i)=>['b','a'].forEach(l=>{GM['sc'+i+l]={ic:'🃏',nm:'聽音 卡牌 第 '+(i+1)+' 關 '+SCL[l],goal:g.n+(l==='b'?'：聽 ➜ 選 注音＋字母':'：聽 ➜ 只 看 字母 選'),how:'🔊 聽 一個 聲音 ➜ 點 對 的 卡 ➜ 卡牌 飛 出去 打 反派'+(l==='b'?'（卡 上 有 注音 和 字母）':'（卡 上 只 有 字母）'),T:12,q:()=>scQ(i,l)};GREV['sc'+i+l]=['sndS'+i,'聽到 聲音 就 想到 字母 ＝ 拼字、唸 字 的 地基']}));
+/* 第六十四次：10 關（_snd.js GS），每 一關 一個 完全 不同 的 遊戲（SGI ＝ 名字＋玩法；遊戲 本身 在 _map_snd2.js）*/
+const SGI={card:['🃏','聽音 卡牌 對決','點 對 的 卡 ➜ 卡牌 飛 出去 打 反派',12],bow:['🏹','星弓 神射手','手指 按住 弓 <b>往 後 拉</b> 瞄準 ➜ 放開 射 中 對 的 符文 盾',18],run:['🏃','極速 跑酷 傳送門','按 ◀ ▶（或 左右 滑）<b>換 跑道</b>，穿過 對 的 傳送門',14],
+  beat:['🥁','雷霆 節奏','音符 掉 進 <b>光圈</b> 的 那 一刻 按〔💥 打擊〕，只 打 對 的 音符',18],orb:['🔮','共鳴 水晶','把 中間 的 聲音 光球 <b>拖</b> 進 對 的 水晶',15],orbit:['🛰️','軌道 狙擊','盾牌 繞著 魔王 轉 ➜ 點 哪裡 雷射 就 射 到 哪裡，<b>要 打 在 它 轉 到 的 地方</b>',16],
+  jump:['🌋','熔岩 跳躍 總決戰','浮石 在 岩漿 上 漂 ➜ 對 的 浮石 漂 到 <b>腳 前面 的 光圈</b> 時 按〔🦘 跳〕',16]};
+/* 總複習 24 題：19 個 母音 每 個 都 考 到，還 留 位子 給 答錯 的 隔 1 題 再 考 */
+function sgN(gi){const g=SND.GS[gi];return g.rev===2?24:Math.max(10,g.items.length+1)}
+SND.GS.forEach((g,i)=>['b','a'].forEach(l=>{const s=SGI[g.g];GM['sc'+g.id+l]={N:sgN(i),ic:s[0],nm:'44 音 第 '+(i+1)+' 關 '+SCL[l]+'｜'+s[1],goal:g.n+(l==='b'?'：聽 ➜ 選 注音＋字母':'：聽 ➜ 只 看 字母 選'),how:'🔊 聽 一個 聲音 ➜ '+s[2]+(l==='b'?'（上面 有 注音 和 字母）':'（只 有 字母）'),T:s[3],q:()=>(g.g==='card'?scQ:SGQ[g.g])(i,l)};
+  GREV['sc'+g.id+l]=['sndS'+i,g.rev===2?'全部 母音 都 分 得 出來 ＝ 看 到 任何 字 都 唸 得 出 母音':g.rev?'學過 的 混 在 一起 也 分 得 出來 ＝ 真的 記住 了':'聽到 聲音 就 想到 字母 ＝ 拼字、唸 字 的 地基']}));
 function scConf(a,b,l){if(a===b)return true;if(l==='a'&&a.sp.some(s=>b.sp.indexOf(s)>=0))return true;if(l==='b'&&sdZy(a)===sdZy(b))return true;return false}
 function scPickX(gi){const L=SND.GS[gi].items.map(k=>SND.BY[k]);G.sdr=G.sdr||[];const k=G.sdr.findIndex(r=>r.at<=G.q);if(k>=0){G.re=1;return G.sdr.splice(k,1)[0].x}G.re=0;
   if(!G.scq||!G.scq.length){G.scq=SH(L);if(G.sdl&&G.scq[0]===G.sdl)G.scq.push(G.scq.shift())}const x=G.scq.shift();G.sdl=x;return x}
-function scOpts(x,gi,l){const n=G.q<3?2:G.q<6?3:4,L=SND.GS[gi].items.map(k=>SND.BY[k]).filter(y=>!scConf(x,y,l)&&!L0(y)),cf=SH(L.filter(y=>x.cf.indexOf(y.k)>=0)),far=SH(L.filter(y=>x.cf.indexOf(y.k)<0&&y.v===x.v));
-  function L0(y){return y.weak}let pick;if(n===2)pick=(far.length?far:SH(L)).slice(0,1);else{pick=(n===4?cf.slice(0,2):cf.slice(0,1));for(const y of SH(L))if(pick.length<n-1&&pick.indexOf(y)<0)pick.push(y)}
+function scOpts(x,gi,l){const NN=G.N||10,n=G.q<Math.round(NN*.3)?2:G.q<Math.round(NN*.6)?3:4,L=SND.GS[gi].items.map(k=>SND.BY[k]).filter(y=>!scConf(x,y,l)&&!L0(y)),cf=SH(L.filter(y=>x.cf.indexOf(y.k)>=0)),far=SH(L.filter(y=>x.cf.indexOf(y.k)<0&&y.v===x.v));
+  function L0(y){return y.weak}let pick;if(n===2)pick=(far.length?far:SH(L)).slice(0,1);else{pick=(n===4?cf.slice(0,2):cf.slice(0,1)).filter((y,i,A)=>!A.slice(0,i).some(z=>scConf(y,z,l)));for(const y of SH(L))if(pick.length<n-1&&pick.indexOf(y)<0&&!pick.some(z=>scConf(y,z,l)))pick.push(y)}   /* 第六十四次：補 的 也 不可以 跟 已經 選 的 分不出來（進階 uu／oo 都 拼 oo）*/
   /* 選項 之間 也 不可以 分不出來（進階：拼法 重複）*/pick=pick.filter((y,i)=>!pick.slice(0,i).some(z=>scConf(y,z,l)));return SH([x].concat(pick))}
-function kqCard(y,l){return '<button class="scd '+(y.v?'v':'c')+'" data-sc="'+y.k+'">'+(l==='b'?'<span class="scz">'+sdTile(y)+'</span>':'')+'<span class="kqL m'+y.sp.length+'">'+y.sp.map(s=>sdSp(s,y)).join('<i class="kqS">/</i>')+'</span></button>'}
-function scQ(gi,l){if(!G.N)G.N=10;gHud();const x=scPickX(gi),O=scOpts(x,gi,l),me=G;G.bhp=G.bhp==null?100:G.bhp;G.foe=G.foe||(gi%2?'foe2':'foe1');
+function kqIn(y,l){return (l==='b'?'<span class="scz">'+sdTile(y)+'</span>':'')+'<span class="kqL m'+y.sp.length+'">'+y.sp.map(s=>sdSp(s,y)).join('<i class="kqS">/</i>')+'</span>'}
+function kqCard(y,l){return '<button class="scd '+(y.v?'v':'c')+'" data-sc="'+y.k+'">'+kqIn(y,l)+'</button>'}
+/* 第六十四次：別的 遊戲 用 的 小 一點 的 牌面（一樣 的 樣子：基礎 ＝ 注音（小字 KK）＋字母、進階 ＝ 只有 字母）*/
+function kqFace(y,l){return '<span class="kqf '+(y.v?'v':'c')+(l==='b'?'':' a')+'" data-sc="'+y.k+'">'+kqIn(y,l)+'</span>'}
+function scQ(gi,l){if(!G.N)G.N=sgN(gi);gHud();const x=scPickX(gi),O=scOpts(x,gi,l),me=G;G.sgO=O;G.sgQ=G.q;G.bhp=G.bhp==null?100:G.bhp;G.foe=G.foe||(gi%2?'foe2':'foe1');
   B().innerHTML='<div class="scar"><div class="scfoe"><img src="../g3mid/img/'+G.foe+'.webp" alt=""><div class="kqHP"><i style="width:'+G.bhp+'%"></i><b>'+G.bhp+'</b></div></div>'+
     '<div class="scask">🔊 聽 ➜ 選 對 的 卡'+(G.combo>=2?'　<span class="scfire">🔥 連對 '+G.combo+'</span>':'')+'</div><div class="scrow n'+O.length+'">'+O.map(y=>kqCard(y,l)).join('')+'</div></div>';
   B().appendChild(earBtn(x.au));const cs=[...B().querySelectorAll('.scd')];cs.forEach((c,i)=>{c.style.animationDelay=(i*.09)+'s'});
@@ -160,7 +171,7 @@ function scQ(gi,l){if(!G.N)G.N=10;gHud();const x=scPickX(gi),O=scOpts(x,gi,l),me
       const dmg=Math.min(G.bhp,10);setTimeout(()=>{f.classList.add('hit');G.bhp-=dmg;const h=f.querySelector('.kqHP i');if(h)h.style.width=G.bhp+'%';const bb=f.querySelector('.kqHP b');if(bb)bb.textContent=G.bhp;const cc=ctr(f);fx('−'+dmg,cc[0]-20,cc[1]-60,'#FF6B6B');sparks(cc[0],cc[1],26);if(G.bhp<=0)f.classList.add('ko')},330)}
     else{c.classList.add('no');f.classList.add('laugh')}
     setTimeout(()=>sdAns(ok,x,y.sp.join('、')+'（'+sdZy(y)+'）'),ok?520:380)};
-  cs.forEach(c=>c.onclick=()=>go(c.dataset.sc));G.hk={ok:()=>go(x.k),no:()=>go(O.find(y=>y!==x).k)};begin(GM['sc'+gi+l].T,()=>sdInfo(x));play1(x.au)}
+  cs.forEach(c=>c.onclick=()=>go(c.dataset.sc));G.hk={ok:()=>go(x.k),no:()=>go(O.find(y=>y!==x).k)};begin(GM['sc'+SND.GS[gi].id+l].T,()=>sdInfo(x));play1(x.au)}
 /* 遊戲 開始 前 30 秒 複習 ＝ 這 一關 的 每 一個 音（注音 ➜ 字母 ➜ 聲音）*/
 const sndReview0=sndReview;
 sndReview=async function(ti,root){if(typeof ti==='string'&&/^S\d+$/.test(ti)){const gi=+ti.slice(1),me=++TOK,L=SND.GS[gi].items.map(k=>SND.BY[k]);root.innerHTML='<div class="sdrev"></div><div class="sdcap"></div>';const R0=root.querySelector('.sdrev');
@@ -168,7 +179,11 @@ sndReview=async function(ti,root){if(typeof ti==='string'&&/^S\d+$/.test(ti)){co
     sdCap(root,'🔊 <b>'+sdZy(x)+'</b> ➜ <b class="en">'+x.sp.join('、')+'</b>');if(!await sdSay(x.au,me,R0.querySelector('.sdtile')))return;if(!await sdW(Math.max(900,Math.round(26000/L.length)-1600),me))return}
   sdCap(root,'✔ 複習 完 了！按〔▶ 開始〕');return}return sndReview0(ti,root)};
 /* 44 音 分頁 最 上面：🃏 練習 路線（6 關 ✕ 基礎 ➜ 進階；玩 過 ＝ ✔）*/
-function scRoute(){const h=$('#scRoute');if(!h)return;h.innerHTML='<div class="scrt"><b>🃏 聽音 卡牌 練習 路線</b><small>每 一關：先 看 動畫 ➜ 🟢 基礎（注音＋字母）➜ 🔵 進階（只 有 字母）</small></div><div class="scrs">'+
-  SND.GS.map((g,i)=>'<div class="scrc"><div class="scrn"><em>第 '+(i+1)+' 關</em>'+g.n+'<span>'+g.items.map(k=>sdTile(SND.BY[k])).join('')+'</span></div><div class="scrb">'+['b','a'].map(l=>'<button class="btn'+(l==='b'?' go':' gold')+(LS.g('pl_sc'+i+l,0)?' dn':'')+'" data-scg="'+i+l+'">'+SCL[l]+(LS.g('pl_sc'+i+l,0)?' ✔':'')+'</button>').join('')+'</div></div>').join('')+'</div>'}
+/* 第六十四次：練習 路線 10 關（母音 7 關＝ 學 A ➜ 學 B ➜ 複習 ➜ 學 C ➜ 學 D ➜ 複習 ➜ 總複習；子音 3 關），每 一關 一個 完全 不同 的 遊戲 */
+function scRoute(){const h=$('#scRoute');if(!h)return;const card=(g,i)=>{const s=SGI[g.g];return '<div class="scrc'+(g.rev?' rv'+g.rev:'')+'"><div class="scrn"><em>第 '+(i+1)+' 關</em>'+g.n+'<span class="scgm">'+s[0]+' '+s[1]+'</span><span>'+(g.rev?'<b class="scrcnt">'+g.items.length+' 個 音 混 在 一起</b>':g.items.map(k=>sdTile(SND.BY[k])).join(''))+'</span></div><div class="scrb">'+['b','a'].map(l=>'<button class="btn'+(l==='b'?' go':' gold')+(LS.g('pl_sc'+g.id+l,0)?' dn':'')+'" data-scg="'+g.id+l+'">'+SCL[l]+(LS.g('pl_sc'+g.id+l,0)?' ✔':'')+'</button>').join('')+'</div></div>'};
+  h.innerHTML='<div class="scrt"><b>🎮 44 音 練習 路線</b><small>每 一關：先 看 動畫 ➜ 🟢 基礎（注音＋字母）➜ 🔵 進階（只 有 字母）；一次 只 練 4～5 個 新 的 音，學 兩 組 就 複習</small></div>'+
+  '<div class="sckk">🔎 注音 下面 的 小字（例：<b>/æ/</b>）＝ <b>KK 音標</b>：雙語 注音 是 照 KK 音標 一個 一個 轉 出來 的</div>'+
+  '<div class="scgh">🔴 母音</div><div class="scrs">'+SND.GS.map((g,i)=>[g,i]).filter(z=>z[0].items.every(k=>SND.BY[k].v)).map(z=>card(z[0],z[1])).join('')+'</div>'+
+  '<div class="scgh">🔵 子音</div><div class="scrs">'+SND.GS.map((g,i)=>[g,i]).filter(z=>!z[0].items.every(k=>SND.BY[k].v)).map(z=>card(z[0],z[1])).join('')+'</div>'}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-scg]');if(b)start('sc'+b.dataset.scg)});
 const sdTab0=sdTab;sdTab=function(){sdTab0();scRoute()};

@@ -235,7 +235,10 @@ Object.keys(BANK).forEach(k => { if (/_fun-/.test(k)) return;   /* 🏰 守城�
   [3, 4].forEach(g => Object.keys(QNM).forEach(k => put('g' + g + 'gm_ph-' + k, { name: '🔤 自然發音｜' + QNM[k], qs: QI })));
   /* 2026-11-19 第六十二次：🔤 44 音 字卡 13 個 主題 遊戲（phonics/map.html#snd、sounds.html）：第幾題 ＝ phonics/_snd.js 的 ALL（20 母音＋24 子音，只 可以 接 在 後面）*/
   const SN = require('../phonics/_snd.js'), SQ = SN.ALL.map(x => { const au = '../phonics/au/' + x.ex[1] + '.mp3'; return { k: 'g', kn: '🔤 44 音', q: '🔊 ' + x.sp.join('、'), o: [x.sp.join('、'), '（答錯）'], h: x.cue, ae: x.ex[2], ag: [[x.ex[2], '']], az: '', au, al: '../phonics/au/' + x.au + '.mp3', say: x.ex[2] }; });
-  [3, 4].forEach(g => SN.GS.forEach((t, i) => ['b', 'a'].forEach(l => put('g' + g + 'gm_ph-sc' + i + l, { name: '🔤 自然發音｜🃏 聽音 卡牌 第 ' + (i + 1) + ' 關 ' + (l === 'b' ? '基礎' : '進階') + '：' + t.n, qs: SQ }))));   /* 第六十三次 */
+  /* 第六十四次：練習 路線 10 關（代號 v1 v2 vr1 v3 v4 vr2 va 3 4 5）＋舊 的 sc0～sc2（只 看 舊 成績）*/
+  const SGN = { card: '🃏 聽音 卡牌 對決', bow: '🏹 星弓 神射手', run: '🏃 極速 跑酷 傳送門', beat: '🥁 雷霆 節奏', orb: '🔮 共鳴 水晶', orbit: '🛰️ 軌道 狙擊', jump: '🌋 熔岩 跳躍 總決戰' };
+  [3, 4].forEach(g => SN.GS.forEach((t, i) => ['b', 'a'].forEach(l => put('g' + g + 'gm_ph-sc' + t.id + l, { name: '🔤 自然發音｜44 音 第 ' + (i + 1) + ' 關 ' + (l === 'b' ? '基礎' : '進階') + '｜' + SGN[t.g] + '：' + t.n, qs: SQ }))));
+  [3, 4].forEach(g => SN.GSOLD.forEach(t => ['b', 'a'].forEach(l => put('g' + g + 'gm_ph-sc' + t.id + l, { name: '🔤 自然發音｜🃏 聽音 卡牌 ' + (l === 'b' ? '基礎' : '進階') + '：' + t.n, qs: SQ }))));
   [3, 4].forEach(g => SN.TH.forEach((t, i) => put('g' + g + 'gm_ph-sd' + i, { name: '🔤 自然發音｜44 音 ' + (i + 1) + '：' + t.n + '｜' + SN.GN[t.g][1], qs: SQ })));
   /* 2026-11-13 第四十九次：🧩 音標 密碼 拼字（bksp）、🏁 CVC 單字 25 題 闖關（c25：第幾題 ＝ ITEMS，課本 字 ＝ ITEMS 長度 ＋ 課本 順序）*/
 })();

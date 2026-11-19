@@ -9,14 +9,14 @@ const SYLW=[['bathroom',['bath','room'],['sy_bathroom_0','sy_bathroom_1'],'浴�
   ['turtle',['tur','tle'],['sy_turtle_0','sy_turtle_1'],'烏龜'],['dining',['di','ning'],['sy_dining_0','sy_dining_1'],'用餐'],['living',['li','ving'],['sy_living_0','sy_living_1'],'生活'],['baby',['ba','by'],['w_c55_ba','w_c55_by'],'嬰兒']];
 const NQ=window.__PHN||5;
 const GM={
-  mvow:{ic:'🧪',nm:'母音 煉金坊',goal:'母音 聽辨＋認讀',how:'客人 說 一個 字 🔊 ➜ 選 對 的 <b>母音 藥水</b> 倒進 紅框，才 煉 得 出 那個 字',T:15,q:qVow},
-  mon:{ic:'⚔️',nm:'聲音 結界',goal:'字首音（1、2、3 個 子音）',how:'聽 🔊 ➜ 打倒 身上 寫著 <b>字首</b> 的 那 一隻 魔物（bl、st、str…）',T:12,q:qOn},
+  mvow:{ic:'🧪',nm:'母音 煉金坊',goal:'母音 聽辨＋認讀',how:'客人 說 一個 字 🔊 ➜ 用 手指 把 對 的 <b>母音 藥水 拖</b> 到 鍋子 上 倒 進去，才 煉 得 出 那個 字',T:15,q:qVow},
+  mon:{ic:'⚔️',nm:'聲音 結界',goal:'字首音（1、2、3 個 子音）',how:'魔物 從 四面 走 過來！聽 🔊 ➜ 在 牠 走到 你 以前 <b>點</b> 身上 寫著 <b>字首</b> 的 那 一隻（bl、st、str…）',T:12,q:qOn},
   mco:{ic:'🧲',nm:'磁浮 打磚塊',goal:'字尾音（1、2 個 子音、兩個 字母 一個 聲音）',how:'聽 🔊 ➜ 點 寫著 <b>字尾</b> 的 磚塊，磁浮 球 飛 過去 打碎 它（st、mp、ng…）',T:15,q:qCo},
-  mpat:{ic:'🧱',nm:'子母 方塊 塔',goal:'子音 母音 怎麼 排（子母子、子子母子…）',how:'聽 🔊 或 看 字 ➜ 選 對 的 <b>方框 樣子</b>（藍 ＝ 子音、紅 ＝ 母音、黃點 ＝ 聲音），塔 才 蓋 得 上去',T:15,q:qPat},
+  mpat:{ic:'🧱',nm:'子母 方塊 塔',goal:'子音 母音 怎麼 排（子母子、子子母子…）',how:'聽 🔊 或 看 字 ➜ 把 對 的 <b>方框 塔 拖</b> 到 路 邊 發光 的 空地（藍 ＝ 子音、紅 ＝ 母音、黃點 ＝ 聲音），塔 會 自己 射 敵人',T:15,q:qPat},
   mcnt:{ic:'🥁',nm:'聲音 戰鼓',goal:'這個 字 有 幾個 聲音、是 哪些 聲音',how:'聽 🔊 ➜ ① 一個 聲音 敲 一下 鼓 ➜ ② 選 對 的 一排 音標',T:25,q:qCnt},
   mspl:{ic:'📜',nm:'咒語 卷軸',goal:'聽音 拼字',how:'聽 🔊 ➜ 照 聲音 的 順序 把 字母 塊 放進 卷軸（th、sh、ng ＝ 一塊）',T:30,q:qSpl},
-  mcoin:{ic:'🎱',nm:'星環 彈珠台',goal:'聽音 認字（拼字 很 像 也 不 會 錯）',how:'聽 🔊 ➜ 點 寫著 那個 字 的 金幣 洞 ➜ 彈簧 一拉，彈珠 繞 軌道 射 進去、撞 彈簧 柱 加 分',T:15,q:qCoin},
-  mking:{ic:'👑',nm:'拼音 王國',goal:'看字 讀音（自己 拼 出來，判斷 唸 得 對 不 對）',how:'使者 拿著 一個 字、唸 給 你 聽 🔊 ➜ 他 唸 得 <b>對</b> 還是 <b>錯</b>？判斷 對 ＝ 王國 變 強',T:15,q:qKing},
+  mcoin:{ic:'🎱',nm:'星環 彈珠台',goal:'聽音 認字（拼字 很 像 也 不 會 錯）',how:'聽 🔊 ➜ 按住 彈簧 <b>往 下 拉</b>（拉 愈 多 射 愈 高），讓 彈珠 停 在 寫著 那個 字 的 金幣 洞',T:15,q:qCoin},
+  mking:{ic:'👑',nm:'拼音 王國',goal:'看字 讀音（自己 拼 出來，判斷 唸 得 對 不 對）',how:'使者 拿著 一個 字 走 向 城門、唸 給 你 聽 🔊 ➜ 把 拉桿 <b>往 上 推 ＝ 開門（唸 對）</b>、<b>往 下 拉 ＝ 關門（唸 錯）</b>',T:15,q:qKing},
   mbub:{ic:'🫧',nm:'泡泡 救援',goal:'兩個 字母 一個 聲音（sh ch th ng ck）',how:'聽 🔊 ➜ 照 聲音 順序 戳 泡泡；<b>sh、th 是 一顆</b>，不要 戳 分開 的 s、h',T:25,q:qBub},
   msyl:{ic:'🏭',nm:'音節 工廠',goal:'兩 個 音節 的 字（課本 字）',how:'聽 🔊 ➜ 照 順序 選 兩 個 <b>音節 卡</b> 送進 機器（bath＋room）',T:20,q:qSyl}};
 const GK=Object.keys(GM);
@@ -62,7 +62,7 @@ function noPage(info){return new Promise(async res=>{const f=$('#fb');f.classNam
 /* 第六十二次：30 秒 複習 ＝ 拼音 地圖 那 一段 動畫，或 44 音 字卡 主題 的 複習（GREV 的 第一 格 ＝ 'sndN'）*/
 function revPlay(k){const g=GREV[k][0];if(/^sndS\d+$/.test(g))return sndReview(g.slice(3),$('#grevS'));if(/^snd\d+$/.test(g))return sndReview(+g.slice(3),$('#grevS'));return scPlay(SC.findIndex(x=>x.k===g),'step',$('#grevS'))}
 function start(k,opt){opt=opt||{};if(typeof SCON!=='undefined'&&SCON&&!SCID&&typeof scLogin==='function'&&!window.__PHNOLOGIN){scLogin(function(){SCH.close();if(typeof scBar==='function')scBar();start(k,opt)});return}
-  G={k,q:0,ok:0,score:0,combo:0,res:[],wrong:[],Q:[],t0:Date.now(),lock:-1,tw:0};if(k==='q25'){G.N=25;G.seq=q25Seq()}TOK++;
+  G={k,q:0,ok:0,score:0,combo:0,res:[],wrong:[],Q:[],t0:Date.now(),lock:-1,tw:0};if(k==='q25'){G.N=25;G.seq=q25Seq()}if(GM[k]&&GM[k].N)G.N=GM[k].N;   /* 第六十四次：44 音 練習 路線 一關 10～20 題（開場 頁 也 寫 對）*/TOK++;
   $('#game').hidden=false;const M=k==='q25'?{ic:'📝',nm:'拼音 25 題 闖關',goal:'10 種 遊戲 混 在 一起',how:'這 一回 抽到：<br>'+[...new Set(G.seq)].map(g=>GM[g].ic+' '+GM[g].nm).join('、')+'<br>每 一次 組合 都 不一樣'}:GM[k];
   $('#gq').textContent='';$('#gt').textContent=M.ic+' '+M.nm;$('#gsc').textContent='⭐ 0';
   B().innerHTML='<div class="pnl" style="padding:20px 26px;text-align:center;max-width:900px"><div style="font-size:70px">'+M.ic+'</div><h2 class="st">'+M.nm+'</h2><div class="cap">🎯 學習 目標：<b>'+M.goal+'</b></div><div class="cap">'+M.how+'</div>'+
@@ -98,25 +98,33 @@ const inf=(x,o)=>Object.assign({x,w:x.w,au:x.c,idx:QI(x)},o||{});
 const CUS=['🧙','🧛','🧜','🧞','🦸','🧚','🥷','🤴','👸','🧑‍🚀'];
 const VT={ae:'a',eh:'e',ih:'i',aa:'o',uh:'u'};
 const VCOL={a:'#FF5A5A',e:'#FF9F43',i:'#2EE59D',o:'#3BE8FF',u:'#B57BFF',ai:'#FFD54A',ee:'#7CFF9E',oa:'#7FB0FF',i_e:'#FF8AD8',a_e:'#FFD54A',o_e:'#7FB0FF',ea:'#7CFF9E',ay:'#FFD54A',ow:'#7FB0FF',u_e:'#C4B5FD',oo:'#9EF0FF'};
+/* 2026-11-19 第六十四次（第六十一次 第 3 點：以前 點 一下 ＝ 動畫 自己 倒 ＝ 假 的）➜ 手指 **拖** 藥水 到 鍋子 上 才 倒 得 進去；倒 錯 ＝ 鍋子 冒 黑煙 */
 function qVow(){const x=pickW(y=>y.on.length+y.co.length>=1&&(G.q<3?!y.long:true));const vs=x.v+(x.mg?'_e':'');
   let O;if(!x.long)O=['a','e','i','o','u'];else{const by={};QW.forEach(y=>{if(y.long&&y.vc!==x.vc)by[y.vc]=y.v+(y.mg?'_e':'')});O=SH([vs].concat(SH(Object.values(by)).slice(0,3)))}
   const info=inf(x,{tip:'中間 的 母音 是 <b class="en">'+vs+'</b>（'+tileHTML(x.vc)+'）'});
-  /* 第五十六次（老師 的 Cafe 截圖）：櫃台 前 排 一排 客人（頭上 點單 泡泡），下面 一排 藥水 架（右下角 存量）；倒 對 ＝ 出餐＋那 一瓶 補 貨 */
   G.st=G.st||{};O.forEach(v=>{if(G.st[v]==null)G.st[v]=3+Math.floor(Math.random()*5)});const cs=SH(CUS).slice(0,3);
-  B().innerHTML=reTag()+'<div class="cafe"><div class="lamps"><i></i><i></i></div><div class="queue"><div class="cu now"><div class="ord"><div class="gq" style="margin:0">我 要 👉 🔊</div><div class="wrow" style="padding:22px 4px 26px">'+wordHTML(x.on.join('')+(x.on.length?'.':'')+'[?]v'+(x.co.length?'.'+x.co.join(''):'')+(x.mg?'.e~':''),{hideT:1})+'</div></div><div class="cust">'+cs[0]+'</div></div><div class="cu"><div class="ord sm">🔊 ?</div><div class="cust">'+cs[1]+'</div></div><div class="cu"><div class="ord sm">🔊 ?</div><div class="cust">'+cs[2]+'</div></div></div>'+
+  B().innerHTML=reTag()+'<div class="cafe" data-real="drag"><div class="lamps"><i></i><i></i></div><div class="queue"><div class="cu now"><div class="ord"><div class="gq" style="margin:0">我 要 👉 🔊</div><div class="wrow" style="padding:22px 4px 26px">'+wordHTML(x.on.join('')+(x.on.length?'.':'')+'[?]v'+(x.co.length?'.'+x.co.join(''):'')+(x.mg?'.e~':''),{hideT:1})+'</div></div><div class="cust">'+cs[0]+'</div></div><div class="cu"><div class="ord sm">🔊 ?</div><div class="cust">'+cs[1]+'</div></div></div>'+
+    '<div class="caul" id="caul"><div class="cbub"><i></i><i></i><i></i></div><div class="cpot">⚗️</div><b>✋ 把 藥水 拖 到 這裡</b><div class="csmk"></div></div>'+
     '<div class="potions shelf">'+O.map(v=>'<button class="pot" data-v="'+v+'"><i style="background:linear-gradient(180deg,'+VCOL[v]+'cc,'+VCOL[v]+')"></i><b class="en">'+v+'</b><em class="stk">'+G.st[v]+'</em></button>').join('')+'</div></div>';
-  B().appendChild(earBtn(x.c));B().querySelectorAll('.pot').forEach(p=>p.onclick=()=>{const ok=p.dataset.v===vs;const c=ctr(p);if(ok){sparks(c[0],c[1],20,VCOL[vs]);p.style.transform='translateY(-30px) rotate(-30deg)';G.st[vs]++;p.querySelector('.stk').textContent=G.st[vs];const cu=B().querySelector('.cu.now');if(cu)cu.classList.add('served')}else{p.classList.add('shake')}answer(ok,Object.assign(info,{yours:ok?undefined:p.dataset.v}))});
-  G.hk={ok:()=>B().querySelector('.pot[data-v="'+vs+'"]').click(),no:()=>[].find.call(B().querySelectorAll('.pot'),p=>p.dataset.v!==vs).click()};begin(GM.mvow.T,()=>info);play1(x.c)}
+  B().appendChild(earBtn(x.c));const cl=$('#caul');
+  const pour=p=>{if(!G||G.lock===G.q)return;const me=G;const v=p.dataset.v,ok=v===vs,r=p.getBoundingClientRect(),c=cl.getBoundingClientRect();p.style.transition='transform .45s';p.style.transform='translate('+(c.left+c.width/2-r.left-r.width/2)+'px,'+(c.top-r.top-r.height*.6)+'px) rotate('+(r.left<c.left?110:-110)+'deg)';
+    cl.style.setProperty('--pc',VCOL[v]);cl.classList.add('pour');setTimeout(()=>{const k=ctr(cl);if(ok){cl.classList.add('ok');sparks(k[0],k[1]-30,30,VCOL[vs]);G.st[vs]++;const cu=B().querySelector('.cu.now');if(cu)cu.classList.add('served')}else{cl.classList.add('bad')}if(G===me)answer(ok,Object.assign(info,{yours:ok?undefined:v}))},window.__PHFAST?1:520)};
+  B().querySelectorAll('.pot').forEach(p=>{sdDrag(p,[cl],()=>pour(p));p.addEventListener('click',()=>{if(!p.classList.contains('drag')){cl.classList.remove('hint');void cl.offsetWidth;cl.classList.add('hint')}})});
+  G.hk={ok:()=>pour(B().querySelector('.pot[data-v="'+vs+'"]')),no:()=>pour([].find.call(B().querySelectorAll('.pot'),p=>p.dataset.v!==vs))};begin(GM.mvow.T,()=>info);play1(x.c)}
 /* ══ 2 ⚔️ 聲音 結界（Monster Brawl）══ */
 function onNear(on){const all=[...new Set(QW.map(y=>y.on.join('')).filter(Boolean))];const sc=y=>(y[0]===on[0]?2:0)+(y.length===on.length?1:0)+(y.slice(-1)===on.slice(-1)?1:0);return SH(all.filter(y=>y!==on)).sort((a,b)=>sc(b)-sc(a)).slice(0,3)}
+/* 第六十四次（第六十一次 第 3 點：魔物 以前 走 一半 就 停 ＝ 假 的）➜ 魔物 從 四面 **一直 走 近**（走到 英雄 ＝ 時間 到）；點 魔物 ＝ 英雄 射 出 會 追蹤 的 魔法 彈，**飛 一段 時間** 才 打到（魔物 一直 在 動）；打 錯 ＝ 那 隻 衝 過來 撞 英雄 */
 function qOn(){const x=pickW(y=>y.on.length&&(G.q<2?y.ot.length>=1:y.ot.length>=2||Math.random()<.4));const on=x.on.join(''),O=SH([on].concat(onNear(on)));const info=inf(x,{tip:'字首 是 <b class="en">'+on+'</b>（'+x.ot.length+' 個 聲音）'});G.hp=G.hp==null?5:G.hp;
-  /* 第五十六次（老師 的 Monster Brawl 截圖）：俯視 戰場，英雄 在 正中間＋魔法 光環，魔物 從 四面八方 往 中間 走；打 對 ＝ 英雄 射 出 雷光 */
-  B().innerHTML=reTag()+'<div class="gq">🔊 聽 ➜ 打倒 身上 是 <b>字首</b> 的 魔物</div><div class="arena brawl" id="ar"><div class="hp">'+'❤️'.repeat(G.hp)+'<span style="opacity:.25">'+'🖤'.repeat(5-G.hp)+'</span></div><div class="hero"><div class="aura"></div><div class="hcore">🧙</div></div></div>';B().appendChild(earBtn(x.c));
-  const ar=$('#ar'),W=ar.clientWidth,Hh=ar.clientHeight,cx=W/2,cy=Hh/2,P=SH([[.1,.14],[.88,.14],[.1,.84],[.88,.84],[.5,.06],[.06,.5],[.94,.5]]).slice(0,O.length),dur=GM.mon.T*(SLOW>1?1.5:1);
-  O.forEach((o,i)=>{const m=H('div','mon','<div class="mb en"><span>'+o+'</span></div>');const sz=Math.min(130,Math.max(90,W*.11));m.style.left=(W*P[i][0]-sz/2)+'px';m.style.top=(Hh*P[i][1]-sz/2)+'px';m.style.transition='left '+dur+'s linear,top '+dur+'s linear';ar.appendChild(m);
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{m.style.left=(cx+(W*P[i][0]-cx)*.32-sz/2)+'px';m.style.top=(cy+(Hh*P[i][1]-cy)*.32-sz/2)+'px'}));
-    m.onclick=()=>{if(G.lock===G.q)return;const ok=o===on,c=ctr(m),h=ctr(ar.querySelector('.hcore'));if(ok){const dx=c[0]-h[0],dy=c[1]-h[1],bo=H('div','bolt');bo.style.left=h[0]+'px';bo.style.top=h[1]+'px';bo.style.height=Math.hypot(dx,dy)+'px';bo.style.transform='rotate('+(Math.atan2(dy,dx)*180/Math.PI-90)+'deg)';bo.style.transformOrigin='top';document.body.appendChild(bo);setTimeout(()=>bo.remove(),400);m.classList.add('dead');sparks(c[0],c[1],22,'#9EF0FF');ar.querySelector('.aura').classList.add('blast')}else{m.classList.add('shake');G.hp=Math.max(1,G.hp-1)}answer(ok,Object.assign(info,{yours:ok?undefined:o}))}});
-  G.hk={ok:()=>[].find.call(B().querySelectorAll('.mon'),m=>m.textContent===on).click(),no:()=>[].find.call(B().querySelectorAll('.mon'),m=>m.textContent!==on).click()};begin(GM.mon.T,()=>info);play1(x.c)}
+  B().innerHTML=reTag()+'<div class="gq">🔊 聽 ➜ 在 魔物 走到 你 以前，<b>點</b> 身上 是 <b>字首</b> 的 那 一隻</div><div class="arena brawl" id="ar" data-real="move"><div class="hp">'+'❤️'.repeat(G.hp)+'<span style="opacity:.25">'+'🖤'.repeat(5-G.hp)+'</span></div><div class="hero"><div class="aura"></div><div class="hcore">🧙</div></div></div>';B().appendChild(earBtn(x.c));
+  const ar=$('#ar'),P=SH([[.08,.12],[.92,.12],[.08,.88],[.92,.88],[.5,.05],[.04,.5],[.96,.5]]).slice(0,O.length),dur=GM.mon.T*(SLOW>1?1.5:1)*1000,me=G,q=G.q;let t0=0,busy=0;
+  const M=O.map((o,i)=>{const m=H('div','mon','<div class="mb en"><span>'+o+'</span></div>');ar.appendChild(m);return {m,o,p:P[i],wob:Math.random()*6}});
+  (function walk(now){if(G!==me||G.q!==q||G.lock===q)return;if(!t0)t0=now;if(PAUSED)t0+=16;const f=Math.min(1,(now-t0)/dur),W=ar.clientWidth,Hh=ar.clientHeight,cx=W/2,cy=Hh/2;
+    M.forEach(z=>{if(z.dead)return;const sz=z.m.offsetWidth,k=1-f*.78,X=cx+(W*z.p[0]-cx)*k+Math.sin(now/300+z.wob)*10,Y=cy+(Hh*z.p[1]-cy)*k+Math.cos(now/350+z.wob)*8;z.x=X;z.y=Y;z.m.style.left=(X-sz/2)+'px';z.m.style.top=(Y-z.m.offsetHeight/2)+'px';z.m.style.transform='scale('+(1+f*.25)+')'});requestAnimationFrame(walk)})(performance.now());
+  const zap=z=>{if(!G||G!==me||G.lock===G.q||busy)return;busy=1;const ok=z.o===on,hc=ctr(ar.querySelector('.hcore')),a=ar.getBoundingClientRect(),b=H('div','mbolt');document.body.appendChild(b);const T0=performance.now(),TT=window.__PHFAST?1:380;
+    (function fly(now){const k=Math.min(1,(now-T0)/TT),tx=a.left+(z.x||0),ty=a.top+(z.y||0),bx=hc[0]+(tx-hc[0])*k,by=hc[1]+(ty-hc[1])*k;b.style.left=bx+'px';b.style.top=by+'px';if(k<1&&!window.__PHFAST){requestAnimationFrame(fly);return}b.remove();
+      if(ok){z.dead=1;z.m.classList.add('dead');sparks(tx,ty,26,'#9EF0FF');ar.querySelector('.aura').classList.add('blast')}else{z.m.classList.add('charge');G.hp=Math.max(1,G.hp-1);ar.classList.add('hurt')}if(G===me)answer(ok,Object.assign(info,{yours:ok?undefined:z.o}))})(performance.now())};
+  M.forEach(z=>z.m.onclick=()=>zap(z));
+  G.hk={ok:()=>zap(M.find(z=>z.o===on)),no:()=>zap(M.find(z=>z.o!==on))};begin(GM.mon.T,()=>info);play1(x.c)}
 /* ══ 3 🧲 磁浮 打磚塊（Zorb Blitz）══ */
 function qCo(){const x=pickW(y=>y.co.length&&!y.mg);const co=x.co.join('');const all=[...new Set(QW.filter(y=>!y.mg).map(y=>y.co.join('')).filter(Boolean))];
   const sc=y=>(y[0]===co[0]?2:0)+(y.slice(-1)===co.slice(-1)?2:0)+(y.length===co.length?1:0);const HARD=a=>/^(th|s|ss|f|ff)$/.test(a);/* 第五十七次（老師）：path 的 th、pass 的 s 字尾 很 難 聽辨 ➜ th 不 跟 s ss f ff 一起 當 選項 */
@@ -131,11 +139,17 @@ function qCo(){const x=pickW(y=>y.co.length&&!y.mg);const co=x.co.join('');const
 const PATS=['CVC','CCVC','CVCC','CCVCC','CCCVC','CV','CCV'];
 function patDraw(p,mg){const m=/^(C*)V(C*)$/.exec(p),bx=(t,n)=>'<div class="pbx"><div class="bx '+t+'"><div class="dots" style="position:static;margin-top:4px">'+Array.from({length:n},()=>'<i class="on"></i>').join('')+'</div></div><em class="pl '+t+'">'+(t==='c'?Array.from({length:n},()=>'子').join(' '):'母')+'</em></div>';   /* 第六十一次 老師 2-(3)B：藍 方框 正下方「子」、紅 方框 正下方「母」*/
   return '<div class="patb">'+(m[1]?bx('c',m[1].length):'')+bx('v',1)+(m[2]?bx('c',m[2].length):'')+(mg?'<div class="bx g" title="不 發音"><div class="dots" style="position:static;margin-top:4px"></div></div>':'')+'</div>'}   /* 第五十七次：magic e ＝ 最後 一個 灰色 方框（不 發音、沒有 點）*/
+/* 第六十四次（第六十一次 第 3 點：點 樣子 ＝ 塔 自己 出現 ＝ 假 的）➜ 把 對 的「結構 塔」用 手指 **拖 到** 路 邊 發光 的 空地，塔 **自己 射** 沿 路 走 的 敵人；錯 的 塔 倒 掉 */
 function qPat(){const x=pickW(y=>PATS.indexOf(y.pat)>=0),lsn=G.q%2===0;const O=SH([x.pat].concat(SH(PATS.filter(p=>p!==x.pat&&Math.abs(p.length-x.pat.length)<=1)).slice(0,2)));
-  const info=inf(x,{tip:x.w+' ＝ '+patTxt(specOf(x))+'：'+x.n+' 個 聲音'});G.tw=G.tw||0;
-  B().innerHTML=reTag()+'<div class="gq">'+(lsn?'🔊 聽 ➜ 這個 字 的 方框 長 什麼 樣子？':'👀 看 字 ➜ 方框 長 什麼 樣子？')+'</div>'+(lsn?'':'<div class="scroll" style="font-size:64px;padding:6px 30px">'+x.w+'</div>')+'<div class="arena td" id="ar"><svg viewBox="0 0 100 60" preserveAspectRatio="none"><path d="'+TDP+'" fill="none" stroke="#B9824A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="'+TDP+'" fill="none" stroke="#D9A86A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="tdr">第 '+(G.q+1)+' 波</div>'+Array.from({length:G.tw},(_,k)=>'<div class="twr" style="left:'+TDS[k%TDS.length][0]+'%;top:'+TDS[k%TDS.length][1]+'%">🗼</div>').join('')+'<div class="enemy" id="en">👾</div></div><div class="opts">'+O.map(p=>'<button class="op" data-p="'+p+'" style="padding:4px 8px">'+patDraw(p,x.mg)+'</button>').join('')+'</div>';
-  if(lsn)B().appendChild(earBtn(x.c));B().querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const ok=b.dataset.p===x.pat;b.classList.add(ok?'ok':'no');const en=$('#en');if(ok){const sp=TDS[G.tw%TDS.length];G.tw++;$('#ar').insertAdjacentHTML('beforeend','<div class="twr new" style="left:'+sp[0]+'%;top:'+sp[1]+'%">🗼</div>');if(en){const c=ctr(en);setTimeout(()=>{en.classList.add('dead');sparks(c[0],c[1],22,'#FFE07A')},250)}}answer(ok,Object.assign(info,{yours:ok?undefined:b.dataset.p.split('').map(c=>c==='C'?'子':'母').join(' ')}))});
-  tdMove();G.hk={ok:()=>B().querySelector('[data-p="'+x.pat+'"]').click(),no:()=>[].find.call(B().querySelectorAll('[data-p]'),b=>b.dataset.p!==x.pat).click()};begin(GM.mpat.T,()=>info);if(lsn)play1(x.c)}
+  const info=inf(x,{tip:x.w+' ＝ '+patTxt(specOf(x))+'：'+x.n+' 個 聲音'});G.tw=G.tw||0;const sp=TDS[G.tw%TDS.length];
+  B().innerHTML=reTag()+'<div class="gq">'+(lsn?'🔊 聽 ➜ 把 對 的 <b>方框 塔</b> 拖 到 發光 的 空地':'👀 看 字 ➜ 把 對 的 <b>方框 塔</b> 拖 到 發光 的 空地')+'</div>'+(lsn?'':'<div class="scroll" style="font-size:60px;padding:4px 30px">'+x.w+'</div>')+'<div class="arena td" id="ar" data-real="drag"><svg viewBox="0 0 100 60" preserveAspectRatio="none"><path d="'+TDP+'" fill="none" stroke="#B9824A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="'+TDP+'" fill="none" stroke="#D9A86A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="tdr">第 '+(G.q+1)+' 波</div>'+Array.from({length:G.tw},(_,k)=>'<div class="twr" style="left:'+TDS[k%TDS.length][0]+'%;top:'+TDS[k%TDS.length][1]+'%">🗼</div>').join('')+'<div class="tdpad" id="tdpad" style="left:'+sp[0]+'%;top:'+(sp[1]/60*100)+'%">🔨</div><div class="enemy" id="en">👾</div></div><div class="opts tdtray">'+O.map(p=>'<div class="op tdtw" data-p="'+p+'" style="padding:4px 8px">'+patDraw(p,x.mg)+'<small>✋ 拖</small></div>').join('')+'</div>';
+  if(lsn)B().appendChild(earBtn(x.c));const pad=$('#tdpad');
+  const build=b=>{if(!G||G.lock===G.q)return;const me=G;const ok=b.dataset.p===x.pat,ar=$('#ar'),en=$('#en');b.style.visibility='hidden';pad.innerHTML='<div class="tdbt'+(ok?'':' bad')+'">'+patDraw(b.dataset.p,x.mg)+'<i>🗼</i></div>';
+    if(ok){G.tw++;const fire=k=>{if(!en||!document.body.contains(en))return;const a=ctr(pad),c=ctr(en),s=H('div','tdshot');s.style.left=a[0]+'px';s.style.top=a[1]+'px';document.body.appendChild(s);requestAnimationFrame(()=>{s.style.left=c[0]+'px';s.style.top=c[1]+'px'});setTimeout(()=>{s.remove();if(k===2){en.classList.add('dead');sparks(c[0],c[1],24,'#FFE07A')}},window.__PHFAST?1:260)};
+      [0,1,2].forEach(k=>setTimeout(()=>fire(k),window.__PHFAST?0:k*230))}
+    setTimeout(()=>G===me&&answer(ok,Object.assign(info,{yours:ok?undefined:b.dataset.p.split('').map(c=>c==='C'?'子':'母').join(' ')})),window.__PHFAST?5:ok?800:500)};
+  B().querySelectorAll('.tdtw').forEach(b=>sdDrag(b,[pad],()=>build(b)));
+  tdMove();G.hk={ok:()=>build(B().querySelector('[data-p="'+x.pat+'"]')),no:()=>build([].find.call(B().querySelectorAll('[data-p]'),b=>b.dataset.p!==x.pat))};begin(GM.mpat.T,()=>info);if(lsn)play1(x.c)}
 /* 塔防 的 路（0～100 ✕ 0～60）：魔物 沿著 路 走，時間 到 走 到 終點；答 對 ＝ 路 邊 蓋 一座 塔 把 牠 打掉 */
 const TDP='M2 8 L30 8 L30 30 L60 30 L60 10 L85 10 L85 50 L40 50 L40 58',TDPT=[[2,8],[30,8],[30,30],[60,30],[60,10],[85,10],[85,50],[40,50],[40,58]],TDS=[[18,18],[45,40],[70,20],[72,58],[48,62],[92,30],[12,40]];
 function tdMove(){const en=$('#en');if(!en)return;const L=[];let tot=0;for(let i=1;i<TDPT.length;i++){const d=Math.hypot(TDPT[i][0]-TDPT[i-1][0],TDPT[i][1]-TDPT[i-1][1]);L.push(d);tot+=d}const me=G,q=G.q;
@@ -162,54 +176,52 @@ function qSpl(){const x=pickW(y=>G.q<2?y.n<=3:true),U=x.on.concat([x.v],x.co);co
   B().querySelectorAll('#sl [data-s]').forEach(s=>s.onclick=()=>{const k=+s.dataset.s;if(put[k]==null)return;put=put.slice(0,k);draw()});
   G.hk={ok:()=>{const used=[];U.forEach(u=>{const k=tiles.findIndex((t,i)=>t===u&&used.indexOf(i)<0);used.push(k);B().querySelector('.opts .op[data-k="'+k+'"]').click()})},no:()=>{const used=[];ex.concat(U).slice(0,U.length).forEach(u=>{const k=tiles.findIndex((t,i)=>t===u&&used.indexOf(i)<0);used.push(k);B().querySelector('.opts .op[data-k="'+k+'"]').click()})}};begin(GM.mspl.T,()=>info);play1(x.c)}
 function tokOfChunk(c){return CMAP[c]||VMAP[c]||c}
-/* ══ 7 🎱 星環 彈珠台（Pirate Pool 的 玩法；2026-11-17 第五十七次 老師 4-17：原本 沒有 彈珠台 的 樂趣 ➜ 整個 重做）
- * 傾斜 的 3D 檯面＋霓虹 軌道＋會 亮 的 彈簧 柱（bumper）＋右下 發射 彈簧＋下面 兩支 擋板（flipper）；
- * 聽 🔊 ➜ 點 上面 寫著 那個 字 的 金幣 洞 ➜ 拉 彈簧、彈珠 射 上 軌道、繞 一圈 掉進 你 選 的 洞（真的 重力＋碰撞，碰到 彈簧 柱 會 閃＋加 分）
- * 對 ＝ JACKPOT（洞 爆開、金幣 雨、軌道 燈 繞 圈）；錯 ＝ 洞 裂開、彈珠 掉 下去 被 擋板 打 出去 */
+/* ══ 7 🎱 星環 彈珠台（第六十四次 重做：以前 點 洞 ＝ 彈珠 自動 射 ＝ 假 的）
+ * 真的 彈珠台：中間 一條 往 上 的 霓虹 軌道，軌道 兩邊 4 個 金幣 洞（寫著 字）一個 比 一個 高；手指 **按住 最 下面 的 彈簧 往 下 拉**（拉 愈 多 射 愈 高），放開 ＝ 彈珠 衝 上去、
+ * 停 在 哪 一個 洞 旁邊 就 掉 進 那 一個（＝ 選 那 個 字）；沒 停 在 洞 旁邊 ＝ 滾 回來 再 拉（不 扣分）。旁邊 的 力量 尺 有 刻度 ＝ 每 個 洞 的 高度。*/
 function qCoin(){const x=pickW(()=>true);let O=[x].concat(near(x,'v',1),near(x,'on',1),near(x,'co',1));while(O.length<4){const y=R(QW);if(O.indexOf(y)<0&&O.every(z=>z.w!==y.w))O.push(y)}O=SH(O.slice(0,4));const info=inf(x,{tip:'聽 每 一個 聲音：'+patTxt(specOf(x))});
-  B().innerHTML=reTag()+'<div class="gq">🔊 聽 ➜ 點 寫著 那個 字 的 金幣 洞，把 彈珠 射 進去！</div><div class="pin" id="ar"><div class="pinb"><canvas id="pcv"></canvas><div class="prail"></div><div class="plane"><i id="pspr"></i></div><div class="pjack" id="pjk">JACKPOT</div></div></div>';B().appendChild(earBtn(x.c));
-  const ar=$('#ar'),bd=ar.querySelector('.pinb'),cv=$('#pcv'),W=bd.clientWidth,Hh=bd.clientHeight,ctx=cv.getContext('2d');cv.width=W;cv.height=Hh;
-  const HX=[.16,.39,.61,.84],HY=.2,holes=O.map((y,i)=>({x:W*HX[i]*.9,y:Hh*HY,y0:y}));
-  const PEG=[];[[.22,.42],[.45,.4],[.68,.42],[.12,.6],[.34,.58],[.57,.6],[.79,.58],[.24,.76],[.66,.76]].forEach(p=>PEG.push({x:W*p[0]*.9,y:Hh*p[1],r:Math.max(14,W*.022),f:0}));
-  holes.forEach((h,i)=>{const c=H('button','coin pcoin',h.y0.w);c.style.left=(h.x-Math.min(80,W*.09))+'px';c.style.top=(h.y-Math.min(80,W*.09)*.75)+'px';bd.appendChild(c);
-    c.onclick=()=>{if(G.lock===G.q||G.pin)return;G.pin=1;if(G.t)G.t.stop();const ok=h.y0===x;launch(h,c,ok)}});
-  let ball=null,parts=[],lights=0,raf=0;const me=G,q=G.q;
-  function draw(){if(G!==me||G.q!==q){cancelAnimationFrame(raf);return}ctx.clearRect(0,0,W,Hh);lights+=.06;
-    /* 軌道 燈：一圈 會 繞 的 小 燈 */
-    for(let k=0;k<26;k++){const a=Math.PI+k/25*Math.PI,lx=W*.45+Math.cos(a)*W*.43,ly=Hh*.34+Math.sin(a)*Hh*.3,on=(Math.floor(lights*3)+k)%5===0||G.jack;ctx.fillStyle=on?'#FFE07A':'rgba(255,224,122,.25)';ctx.beginPath();ctx.arc(lx,ly,on?5:3,0,7);ctx.fill()}
-    PEG.forEach(p=>{p.f*=.9;const g=ctx.createRadialGradient(p.x-p.r*.3,p.y-p.r*.3,2,p.x,p.y,p.r);g.addColorStop(0,'#fff');g.addColorStop(.35,p.f>.2?'#FFE07A':'#9EF0FF');g.addColorStop(1,p.f>.2?'#FF7A00':'#1B46C9');
-      ctx.shadowColor=p.f>.2?'#FFB000':'#3BE8FF';ctx.shadowBlur=14+p.f*30;ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,p.r*(1+p.f*.35),0,7);ctx.fill();ctx.shadowBlur=0});
-    /* 擋板 */
-    const fl=G.flip||0;[[.24,1],[.66,-1]].forEach(([fx,s])=>{ctx.save();ctx.translate(W*fx,Hh*.93);ctx.rotate(s*(.35-fl*.8));ctx.fillStyle='#FF4FA3';ctx.shadowColor='#FF4FA3';ctx.shadowBlur=16;ctx.beginPath();ctx.roundRect?ctx.roundRect(s>0?0:-W*.17,-9,W*.17,18,9):ctx.rect(s>0?0:-W*.17,-9,W*.17,18);ctx.fill();ctx.restore()});ctx.shadowBlur=0;
-    parts=parts.filter(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.25;p.l-=.02;if(p.l<=0)return false;ctx.globalAlpha=p.l;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();ctx.globalAlpha=1;return true});
-    if(ball){(ball.tr||[]).forEach((t,k,A)=>{ctx.globalAlpha=k/A.length*.6;ctx.fillStyle='#9EF0FF';ctx.beginPath();ctx.arc(t[0],t[1],ball.r*(k/A.length),0,7);ctx.fill()});ctx.globalAlpha=1;
-      const g=ctx.createRadialGradient(ball.x-4,ball.y-4,2,ball.x,ball.y,ball.r);g.addColorStop(0,'#fff');g.addColorStop(.5,'#E5E7EB');g.addColorStop(1,'#6B7280');ctx.fillStyle=g;ctx.shadowColor='#fff';ctx.shadowBlur=18;ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,7);ctx.fill();ctx.shadowBlur=0}
-    raf=requestAnimationFrame(draw)}
-  draw();
+  B().innerHTML=reTag()+'<div class="gq">🔊 聽 ➜ 按住 彈簧 <b>往 下 拉</b>（拉 愈 多 射 愈 高），讓 彈珠 停 在 那個 字 的 洞！</div><div class="pin" id="ar" data-real="pull"><div class="pinb pin2"><canvas id="pcv"></canvas><div class="pjack" id="pjk">JACKPOT</div><div class="pmeter"><i id="pmi"></i></div><div class="pplg" id="pplg"><b>✋</b><span>往 下 拉</span></div></div></div>';B().appendChild(earBtn(x.c));
+  const bd=B().querySelector('.pinb'),cv=$('#pcv'),W=bd.clientWidth,Hh=bd.clientHeight,ctx=cv.getContext('2d');cv.width=W;cv.height=Hh;
+  const LX=W*.5,Y0=Hh*.86,TOP=Hh*.08,HF=[.2,.42,.64,.86],holes=O.map((y,i)=>({y0:y,f:HF[i],side:i%2?1:-1}));const hy=h=>Y0-(Y0-TOP)*h.f;
+  holes.forEach(h=>{const c=H('div','coin pcoin',h.y0.w);const sz=Math.min(140,W*.15);c.style.width=c.style.height=sz+'px';c.style.left=(LX+h.side*W*.2-sz/2)+'px';c.style.top=(hy(h)-sz/2)+'px';c.style.animation='none';bd.appendChild(c);h.el=c;
+    const m=H('b','ptick');m.style.bottom=(h.f*100)+'%';bd.querySelector('.pmeter').appendChild(m)});
+  let ball={y:Y0,v:0,st:'rest'},pull=0,drag=null,raf=0,parts=[],lt=performance.now();const me=G,q=G.q,CATCH=(Y0-TOP)*.07;
+  const plg=$('#pplg');bd.style.touchAction='none';
+  bd.onpointerdown=e=>{if(G.lock===G.q||ball.st!=='rest')return;const r=bd.getBoundingClientRect();if(e.clientY-r.top<Hh*.6)return;drag=e.clientY;bd.setPointerCapture(e.pointerId)};
+  bd.onpointermove=e=>{if(drag==null)return;pull=Math.max(0,Math.min(1,(e.clientY-drag)/(Hh*.32)));$('#pmi').style.height=(pull*100)+'%';plg.style.transform='translateY('+(pull*Hh*.08)+'px)'};
+  bd.onpointerup=()=>{if(drag==null)return;drag=null;plg.style.transform='';if(pull<.05){$('#pmi').style.height='0';return}shoot(pull)};
+  function shoot(p){ball.st='up';ball.target=Math.min(1,p*1.0);ball.y=Y0;ball.h=0;$('#pmi').style.height='0'}
   function boom(px,py,n,c){for(let k=0;k<n;k++){const a=Math.random()*6.28,v=Math.random()*7+2;parts.push({x:px,y:py,vx:Math.cos(a)*v,vy:Math.sin(a)*v-3,r:Math.random()*4+2,l:1,c:c||R(['#FFE07A','#FFD54A','#fff','#FF9F43'])})}}
-  async function launch(h,coin,ok){const F=window.__PHFAST,spr=$('#pspr');spr.classList.add('pull');await wait(F?5:380);spr.classList.remove('pull');
-    ball={x:W*.955,y:Hh*.88,r:Math.max(11,W*.016),tr:[]};
-    /* ① 發射：沿著 右邊 軌道 往上 ➜ 繞 上面 的 弧 ➜ 到 你 選 的 洞 上方（貝茲 曲線）*/
-    const P0=[W*.955,Hh*.88],P1=[W*.97,Hh*.02],P2=[h.x+(h.x<W*.45?-W*.1:W*.1),-Hh*.05],P3=[h.x,h.y];const T1=F?2:900,t0=performance.now();
-    await new Promise(res=>{(function mv(){const k=Math.min(1,(performance.now()-t0)/T1),u=1-k,bz=i=>u*u*u*P0[i]+3*u*u*k*P1[i]+3*u*k*k*P2[i]+k*k*k*P3[i];ball.tr.push([ball.x,ball.y]);if(ball.tr.length>10)ball.tr.shift();ball.x=bz(0);ball.y=bz(1);if(k<1)requestAnimationFrame(mv);else res()})()});
-    if(ok){G.jack=1;coin.classList.add('sink','jk');boom(h.x,h.y,F?4:90);$('#pjk').classList.add('on');const k2=ctr(coin);sparks(k2[0],k2[1],30,'#FFD54A');setTimeout(()=>{G.jack=0},1600)}else{coin.classList.add('crack');boom(h.x,h.y,F?2:24,'#9CA3AF')}
-    /* ② 掉 下來：真的 重力＋碰 彈簧 柱 反彈（碰 一下 ＝ 閃＋＋10）*/
-    let vx=(Math.random()-.5)*4,vy=1;const t2=performance.now();
-    await new Promise(res=>{(function fall(){if(F){res();return}vy+=.38;ball.x+=vx;ball.y+=vy;ball.tr.push([ball.x,ball.y]);if(ball.tr.length>10)ball.tr.shift();
-      PEG.forEach(p=>{const dx=ball.x-p.x,dy=ball.y-p.y,d=Math.hypot(dx,dy),m=ball.r+p.r;if(d<m&&d>0){const nx=dx/d,ny=dy/d,dot=vx*nx+vy*ny;vx-=1.9*dot*nx;vy-=1.9*dot*ny;vx+=nx*1.5;ball.x=p.x+nx*m;ball.y=p.y+ny*m;p.f=1;boom(p.x,p.y,10,'#9EF0FF');fx('＋10',p.x+bd.getBoundingClientRect().left,p.y+bd.getBoundingClientRect().top-30,'#9EF0FF')}});
-      if(ball.x<ball.r){ball.x=ball.r;vx=Math.abs(vx)*.8}if(ball.x>W*.9-ball.r){ball.x=W*.9-ball.r;vx=-Math.abs(vx)*.8}
-      if(ball.y>Hh*.88||performance.now()-t2>2600){res();return}requestAnimationFrame(fall)})()});
-    /* ③ 擋板 一拍，彈珠 飛 出去 */
-    G.flip=1;setTimeout(()=>{if(G)G.flip=0},F?2:220);ball=null;await wait(F?5:300);
-    answer(ok,Object.assign(info,{yours:ok?undefined:h.y0.w}))}
-  G.pin=0;G.hk={ok:()=>[].find.call(B().querySelectorAll('.coin'),c=>c.textContent===x.w).click(),no:()=>[].find.call(B().querySelectorAll('.coin'),c=>c.textContent!==x.w).click()};begin(GM.mcoin.T,()=>info);play1(x.c)}
+  function land(h){ball.st='in';const ok=h.y0===x;if(ok){G.jack=1;h.el.classList.add('sink','jk');boom(LX+h.side*W*.2,hy(h),window.__PHFAST?2:90);$('#pjk').classList.add('on')}else{h.el.classList.add('crack');boom(LX+h.side*W*.2,hy(h),20,'#9CA3AF')}
+    setTimeout(()=>{if(G!==me)return;G.jack=0;answer(ok,Object.assign(info,{yours:ok?undefined:h.y0.w}))},window.__PHFAST?1:700)}
+  function draw(now){if(G!==me||G.q!==q){cancelAnimationFrame(raf);return}const dt=Math.min(.05,(now-lt)/1000);lt=now;ctx.clearRect(0,0,W,Hh);
+    /* 軌道 */const g=ctx.createLinearGradient(0,TOP,0,Y0);g.addColorStop(0,'#FF4FD8');g.addColorStop(1,'#3BE8FF');ctx.strokeStyle=g;ctx.lineWidth=6;ctx.shadowColor='#3BE8FF';ctx.shadowBlur=18;[-1,1].forEach(s=>{ctx.beginPath();ctx.moveTo(LX+s*28,Y0+30);ctx.lineTo(LX+s*28,TOP);ctx.stroke()});ctx.shadowBlur=0;
+    holes.forEach(h=>{const y=hy(h);ctx.strokeStyle='rgba(255,224,122,.55)';ctx.setLineDash([8,8]);ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(LX,y);ctx.lineTo(LX+h.side*W*.2,y);ctx.stroke();ctx.setLineDash([])});
+    /* 彈簧 */const sy=Y0+20+pull*Hh*.08;ctx.strokeStyle='#E5E7EB';ctx.lineWidth=4;ctx.beginPath();for(let k=0;k<=10;k++){const yy=sy+k*(Hh-sy-6)/10;ctx.lineTo(LX+(k%2?14:-14),yy)}ctx.stroke();
+    /* 彈珠 物理：往 上 衝 到 目標 高度 停 一下 ➜ 有 洞 ＝ 掉 進去；沒有 ＝ 滾 回來 */
+    if(ball.st==='up'){ball.h=Math.min(ball.target,ball.h+dt*(1.4+2*(ball.target-ball.h)));ball.y=Y0-(Y0-TOP)*ball.h;if(ball.target-ball.h<.004){const h=holes.find(z=>Math.abs(hy(z)-ball.y)<=CATCH);if(h)land(h);else{ball.st='down';const m=$('#gbody .pmiss');if(!m)B().insertAdjacentHTML('beforeend','<div class="pmiss">💨 沒 停 在 洞 旁邊，彈珠 滾 回來 了：再 拉 一次（不 扣分）</div>')}}}
+    else if(ball.st==='down'){ball.h=Math.max(0,ball.h-dt*1.8);ball.y=Y0-(Y0-TOP)*ball.h;if(ball.h<=0)ball.st='rest'}
+    if(ball.st!=='in'){const gg=ctx.createRadialGradient(LX-5,ball.y-5,2,LX,ball.y,15);gg.addColorStop(0,'#fff');gg.addColorStop(.6,'#D1D5DB');gg.addColorStop(1,'#6B7280');ctx.fillStyle=gg;ctx.shadowColor='#fff';ctx.shadowBlur=16;ctx.beginPath();ctx.arc(LX,ball.y,15,0,7);ctx.fill();ctx.shadowBlur=0}
+    parts=parts.filter(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.25;p.l-=.02;if(p.l<=0)return false;ctx.globalAlpha=p.l;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();ctx.globalAlpha=1;return true});
+    raf=requestAnimationFrame(draw)}
+  raf=requestAnimationFrame(draw);
+  G.hk={ok:()=>land(holes.find(h=>h.y0===x)),no:()=>land(holes.find(h=>h.y0!==x))};begin(GM.mcoin.T,()=>info);play1(x.c)}
 /* ══ 8 👑 拼音 王國（Crazy Kingdom）══ */
 const KR=[['🪵','木材'],['👥','人民'],['😊','快樂'],['🪙','黃金']];
+/* 第六十四次（第六十一次 第 3 點：以前 只 是 按 對／錯）➜ 使者 拿著 字 **一直 走 向 城門**（走到 ＝ 時間 到）；手指 把 **拉桿 往 上 推 ＝ 開門（唸 對 了）、往 下 拉 ＝ 關門（唸 錯 了）**；判斷 對 ＝ 四種 資源 真的 增加（數字 會 飛）*/
 function qKing(){const x=pickW(()=>true),alt=R(near(x,'v',2).concat(near(x,'on',2),near(x,'co',2))),right=!alt||Math.random()<.5,au=right?x.c:alt.c;G.kr=G.kr||[60,60,60,60];
   const info=inf(x,{tip:right?'使者 唸 的 就是 <b class="en">'+x.w+'</b>（唸 對 了）':'使者 唸 成 <b class="en">'+alt.w+'</b>，不是 '+x.w});
-  B().innerHTML=reTag()+'<div class="king">'+KR.map((r,k)=>'<div class="res">'+r[0]+' '+r[1]+'<i style="width:'+G.kr[k]+'%"></i></div>').join('')+'</div><div class="cust">🤴</div><div class="gq">使者：「這個 字 唸 作 🔊…」對 嗎？</div><div class="scroll">'+x.w+'</div><div class="opts"><button class="op zh" data-y="1">⭕ 唸 對 了</button><button class="op zh" data-y="0">❌ 唸 錯 了</button></div>';B().appendChild(earBtn(au));
-  B().querySelectorAll('[data-y]').forEach(b=>b.onclick=()=>{const ok=(b.dataset.y==='1')===right;G.kr=G.kr.map(v=>Math.max(5,Math.min(100,v+(ok?8:-10))));b.classList.add(ok?'ok':'no');answer(ok,Object.assign(info,{yours:ok?undefined:b.textContent}))});
-  G.hk={ok:()=>B().querySelector('[data-y="'+(right?1:0)+'"]').click(),no:()=>B().querySelector('[data-y="'+(right?0:1)+'"]').click()};begin(GM.mking.T,()=>info);play1(au)}
+  B().innerHTML=reTag()+'<div class="king">'+KR.map((r,k)=>'<div class="res" data-k="'+k+'">'+r[0]+' '+r[1]+'<i style="width:'+G.kr[k]+'%"></i></div>').join('')+'</div><div class="gq">使者 唸 🔊…「'+x.w+'」唸 得 對 嗎？<b>推 拉桿</b> 決定 開 不 開 城門</div>'+
+    '<div class="kgd" data-real="lever"><div class="kroad"><div class="kenv" id="kenv"><span>🤴</span><b class="en">'+x.w+'</b></div><div class="kgate" id="kgate"><i></i><i></i></div></div><div class="klev" id="klev"><div class="klt">⬆ 開門<small>唸 對 了</small></div><div class="kslot"><div class="kknob" id="kknob">✋</div></div><div class="klb">⬇ 關門<small>唸 錯 了</small></div></div></div>';B().appendChild(earBtn(au));
+  const kn=$('#kknob'),sl=kn.parentNode,env=$('#kenv'),gate=$('#kgate'),me=G,q=G.q,dur=GM.mking.T*(SLOW>1?1.5:1)*1000;let y0=null,off=0,t0=0;
+  (function walk(now){if(G!==me||G.q!==q||G.lock===q)return;if(!t0)t0=now;if(PAUSED)t0+=16;const f=Math.min(1,(now-t0)/dur);env.style.left=(4+f*58)+'%';requestAnimationFrame(walk)})(performance.now());
+  const decide=open=>{if(!G||G!==me||G.lock===G.q)return;const ok=open===right;kn.style.transform='translateY('+(open?-1:1)*sl.clientHeight*.36+'px)';gate.classList.add(open?'open':'shut');if(open)env.classList.add('in');else env.classList.add('stop');
+    G.kr=G.kr.map(v=>Math.max(5,Math.min(100,v+(ok?8:-10))));B().querySelectorAll('.res').forEach((r,k)=>{r.querySelector('i').style.width=G.kr[k]+'%';const c=ctr(r);fx(ok?'＋8':'－10',c[0]-20,c[1]-30,ok?'#2EE59D':'#FF6B6B')});
+    setTimeout(()=>G===me&&answer(ok,Object.assign(info,{yours:ok?undefined:(open?'⬆ 開門（唸 對 了）':'⬇ 關門（唸 錯 了）')})),window.__PHFAST?1:650)};
+  kn.style.touchAction='none';kn.onpointerdown=e=>{if(G.lock===G.q)return;y0=e.clientY;kn.setPointerCapture(e.pointerId)};
+  kn.onpointermove=e=>{if(y0==null)return;const lim=sl.clientHeight*.36;off=Math.max(-lim,Math.min(lim,e.clientY-y0));kn.style.transform='translateY('+off+'px)'};
+  kn.onpointerup=()=>{if(y0==null)return;y0=null;const lim=sl.clientHeight*.36;if(off<-lim*.6)decide(true);else if(off>lim*.6)decide(false);else{kn.style.transform='';off=0;sl.classList.remove('hint');void sl.offsetWidth;sl.classList.add('hint')}};
+  G.hk={ok:()=>decide(right),no:()=>decide(!right)};begin(GM.mking.T,()=>info);play1(au)}
 /* ══ 9 🫧 泡泡 救援（Plushie Panic）══ */
 const DIG=['sh','ch','th','ng','ck','tch','wh','ph'];
 function qBub(){const x=pickW(y=>y.on.concat(y.co).some(c=>DIG.indexOf(c)>=0)),U=x.on.concat([x.v],x.co);let ex=[];U.forEach(u=>{if(DIG.indexOf(u)>=0)ex.push(...u.split(''))});ex=ex.filter(e=>U.indexOf(e)<0);ex=[...new Set(ex)].slice(0,3);

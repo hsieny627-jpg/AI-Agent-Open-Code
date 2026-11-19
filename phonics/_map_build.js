@@ -31,7 +31,7 @@ QW.forEach(x => { if (have.indexOf(x.c) < 0) miss.push(x.c); });
 if (miss.length && !process.env.PH_LAX) { console.error('✗ 沒有 音檔：', [...new Set(miss)].join(' ')); process.exit(1); }
 const CL = require('../score/_client.js');
 /* 第六十三次（教訓）：44 音 的 scCard 跟 動畫 的 scCard 同名 ➜ 動畫 頁 整個 壞掉 ➜ 同 一頁 的 函式 名字 重複 ＝ build 失敗 */
-{ const all = js + '\n' + gjs + '\n' + fs.readFileSync(path.join(D, '_map_snd.js'), 'utf8'), seen = {}, dup = []; (all.match(/^(?:async\s+)?function\s+([A-Za-z_$][\w$]*)\s*\(/gm) || []).forEach(m => { const n = m.replace(/.*function\s+/, '').replace(/\s*\($/, ''); if (seen[n]) dup.push(n); seen[n] = 1; });
+{ const all = js + '\n' + gjs + '\n' + fs.readFileSync(path.join(D, '_map_snd.js'), 'utf8') + '\n' + fs.readFileSync(path.join(D, '_map_snd2.js'), 'utf8'), seen = {}, dup = []; (all.match(/^(?:async\s+)?function\s+([A-Za-z_$][\w$]*)\s*\(/gm) || []).forEach(m => { const n = m.replace(/.*function\s+/, '').replace(/\s*\($/, ''); if (seen[n]) dup.push(n); seen[n] = 1; });
   if (dup.length) { console.error('✗ 同名 函式：', [...new Set(dup)].join(' ')); process.exit(1); } }
 let html = fs.readFileSync(path.join(D, '_map.html'), 'utf8');
 const MAPCJS = fs.readFileSync(path.join(D, '_map_combos.js'), 'utf8');
@@ -39,7 +39,7 @@ html = html.split('/*__DATA__*/').join('var QW=' + JSON.stringify(QW) + ',TT=' +
   .split('/*__SCORE__*/').join(CL.home(0, '../', 'school') + '<script>' + require('../score/_dsp.js').js('') + '</script>' +
     /* 2026-11-18 第六十次：〔⚡ 現場任務〕🗺️ 拼音 地圖 遊戲（Firebase 網址、讀寫、時間 到 自動 送）*/
     '<script src="../live/fb.js"></script><script>' + fs.readFileSync(path.join(D, '..', 'live', '_db.js'), 'utf8') + '</script><script>' + fs.readFileSync(path.join(D, '..', 'live', '_xlive_rt.js'), 'utf8') + '</script>')
-  .split('/*__JS__*/').join(MAPCJS + '\n' + fs.readFileSync(path.join(D, '_snd.js'), 'utf8') + '\n' + js.split('/*__GAMES__*/').join(gjs + '\n' + fs.readFileSync(path.join(D, '_map_snd.js'), 'utf8')));
+  .split('/*__JS__*/').join(MAPCJS + '\n' + fs.readFileSync(path.join(D, '_snd.js'), 'utf8') + '\n' + js.split('/*__GAMES__*/').join(gjs + '\n' + fs.readFileSync(path.join(D, '_map_snd.js'), 'utf8') + '\n' + fs.readFileSync(path.join(D, '_map_snd2.js'), 'utf8')));
 fs.writeFileSync(path.join(D, 'map.html'), html);
 /* 第五十七次 老師 4-20：新 版本 拼音 地圖 map2.html（同 一套 程式，window.MAP2 ＝ 每 一個 方框 正下方 ▲▼ 直接 換）*/
 /* 2026-11-19 第六十二次 老師 2-(3)：🔤 字母 和 聲音（44 音 字卡）sounds.html ＝ 同 一套 程式，一 打開 就 是〔🔤 44 音 字卡〕*/
