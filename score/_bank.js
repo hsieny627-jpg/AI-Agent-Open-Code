@@ -233,6 +233,9 @@ Object.keys(BANK).forEach(k => { if (/_fun-/.test(k)) return;   /* 🏰 守城�
     stm0: '⚔️ 拼音 地圖 第 1 關：聲音 和 字母', stm1: '⚔️ 拼音 地圖 第 2 關：CVC 短 母音', stm2: '⚔️ 拼音 地圖 第 3 關：子音 群', stm3: '⚔️ 拼音 地圖 第 4 關：兩個 字母 一個 聲音', stm4: '⚔️ 拼音 地圖 第 5 關：唸 名字 的 母音', stm5: '⚔️ 拼音 地圖 第 6 關：音節', stm6: '⚔️ 拼音 地圖 第 7 關：一 字母 多 聲音', stm25: '📝 拼音 地圖 25 題 闖關',
     stb0: '⚔️ 課本 單字 第 1 關', stb1: '⚔️ 課本 單字 第 2 關', stb2: '⚔️ 課本 單字 第 3 關', stb3: '⚔️ 課本 單字 第 4 關', stb4: '⚔️ 課本 單字 第 5 關', stb25: '📝 課本 單字 25 題 闖關' };
   [3, 4].forEach(g => Object.keys(QNM).forEach(k => put('g' + g + 'gm_ph-' + k, { name: '🔤 自然發音｜' + QNM[k], qs: QI })));
+  /* 2026-11-19 第六十二次：🔤 44 音 字卡 13 個 主題 遊戲（phonics/map.html#snd、sounds.html）：第幾題 ＝ phonics/_snd.js 的 ALL（20 母音＋24 子音，只 可以 接 在 後面）*/
+  const SN = require('../phonics/_snd.js'), SQ = SN.ALL.map(x => { const au = '../phonics/au/' + x.ex[1] + '.mp3'; return { k: 'g', kn: '🔤 44 音', q: '🔊 ' + x.sp.join('、'), o: [x.sp.join('、'), '（答錯）'], h: x.cue, ae: x.ex[2], ag: [[x.ex[2], '']], az: '', au, al: '../phonics/au/' + x.au + '.mp3', say: x.ex[2] }; });
+  [3, 4].forEach(g => SN.TH.forEach((t, i) => put('g' + g + 'gm_ph-sd' + i, { name: '🔤 自然發音｜44 音 ' + (i + 1) + '：' + t.n + '｜' + SN.GN[t.g][1], qs: SQ })));
   /* 2026-11-13 第四十九次：🧩 音標 密碼 拼字（bksp）、🏁 CVC 單字 25 題 闖關（c25：第幾題 ＝ ITEMS，課本 字 ＝ ITEMS 長度 ＋ 課本 順序）*/
 })();
 /* ⚔️ 左右 對戰（2026-11-14 第五十四次；⚡ 現場任務 set vs，平板 vs/index.html）：g年級gm_vs-q1；第幾題 ＝ vs/_data.js 的 BANK[年級]（只 可以 接 在 後面 加）

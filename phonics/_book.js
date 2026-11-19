@@ -56,8 +56,39 @@ module.exports.WX = {
   fork: { g: 'f:F o:AO r:RC k:K', sy: 'fork', zh: '叉子', ic: '🍴', au: 'cx_fork' }, corn: { g: 'c:K o:AO r:RC n:N', sy: 'corn', zh: '玉米', ic: '🌽', au: 'cx_corn' },
   string: { g: 's:S t:T r:R i:IH ng:NG', sy: 'string', zh: '細繩', ic: '🧵', au: 'cx_string' }, street: { g: 's:S t:T r:R e:IY e:- t:T', sy: 'street', zh: '街道', ic: '🛣️', au: 'cx_street' },
   song: { g: 's:S o:AO ng:NG', sy: 'song', zh: '歌', ic: '🎵', au: 'cx_song' }, long: { g: 'l:L o:AO ng:NG', sy: 'long', zh: '長 的', ic: '📏', au: 'cx_long' }, king: { g: 'k:K i:IH ng:NG', sy: 'king', zh: '國王', ic: '👑', au: 'cx_king' } };
+/* 2026-11-19 第六十二次 老師 4（要）：其他 課本 字 也 加〔✨ 常見 拼字 組合〕＝ 延伸 字（聲音 cx_<字>，tools/ph_cx62.py 電腦 聽寫 聽 對 才 用）*/
+Object.assign(module.exports.WX, {
+  dish: { g: 'd:D i:IH sh:SH', sy: 'dish', zh: '盤子', ic: '🍽️', au: 'cx_dish' }, wish: { g: 'w:W i:IH sh:SH', sy: 'wish', zh: '希望', ic: '🌠', au: 'cx_wish' },
+  me: { g: 'm:M e:IY', sy: 'me', zh: '我', ic: '🙋', au: 'cx_me' }, we: { g: 'w:W e:IY', sy: 'we', zh: '我們', ic: '👫', au: 'cx_we' },
+  go: { g: 'g:G o:OW', sy: 'go', zh: '去', ic: '🚶', au: 'cx_go' }, so: { g: 's:S o:OW', sy: 'so', zh: '所以；很', ic: '👉', au: 'cx_so' },
+  moon: { g: 'm:M oo:UW n:N', sy: 'moon', zh: '月亮', ic: '🌙', au: 'cx_moon' }, food: { g: 'f:F oo:UW d:D', sy: 'food', zh: '食物', ic: '🍱', au: 'cx_food' },
+  math: { g: 'm:M a:AE th:TH', sy: 'math', zh: '數學', ic: '➗', au: 'cx_math' }, path: { g: 'p:P a:AE th:TH', sy: 'path', zh: '小路', ic: '🛤️', au: 'cx_path' },
+  catch: { g: 'c:K a:AE t:- ch:CH', sy: 'catch', zh: '接住', ic: '🧤', au: 'cx_catch' }, match: { g: 'm:M a:AE t:- ch:CH', sy: 'match', zh: '火柴；比賽', ic: '🔥', au: 'cx_match' },
+  sing: { g: 's:S i:IH ng:NG', sy: 'sing', zh: '唱歌', ic: '🎤', au: 'cx_sing' }, ring: { g: 'r:R i:IH ng:NG', sy: 'ring', zh: '戒指', ic: '💍', au: 'cx_ring' },
+  when: { g: 'w:W h:- e:EH n:N', sy: 'when', zh: '什麼 時候', ic: '⏰', au: 'cx_when' }, white: { g: 'w:W h:- i:AY t:T e:-', sy: 'white', zh: '白色', ic: '⚪', au: 'cx_white' },
+  girl: { g: 'g:G i:ERV r:RC l:L', sy: 'girl', zh: '女孩', ic: '👧', au: 'cx_girl' }, shirt: { g: 'sh:SH i:ERV r:RC t:T', sy: 'shirt', zh: '襯衫', ic: '👕', au: 'cx_shirt' },
+  nurse: { g: 'n:N u:ERV r:RC s:S e:-', sy: 'nurse', zh: '護理師', ic: '🧑‍⚕️', au: 'cx_nurse' }, hurt: { g: 'h:HH u:ERV r:RC t:T', sy: 'hurt', zh: '受傷', ic: '🩹', au: 'cx_hurt' },
+  funny: { g: 'f:F u:AH nn:N y:IY0', sy: 'fu·nny', zh: '好笑 的', ic: '😆', au: 'cx_funny' }, sunny: { g: 's:S u:AH nn:N y:IY0', sy: 'su·nny', zh: '晴朗 的', ic: '☀️', au: 'cx_sunny' },
+  green: { g: 'g:G r:R ee:IY n:N', sy: 'green', zh: '綠色', ic: '🟢', au: 'cx_green' }, grass: { g: 'g:G r:R a:AE ss:S', sy: 'grass', zh: '草', ic: '🌱', au: 'cx_grass' } });
 module.exports.COMBO = {
   thin: [{ c: 'th', au: 's_th', t: 'th 是 字首 常見 的 組合：舌頭 輕輕 咬 住，吹 氣（喉嚨 不 震動）', ex: ['thick', 'think', 'thing'] }],
   tall: [{ c: 'all', au: 'rm_tall_0', t: 'all 是 常見 的 組合：唸 ㄛ＋ㄌ（a 不 唸 ㄝㄚ）', ex: ['ball', 'fall', 'hall'] }],
   short: [{ c: 'sh', au: 's_sh', t: 'sh 是 字首 常見 的 組合：嘟 嘴 噓 ＝ ㄕ', ex: ['ship', 'shop'] }, { c: 'or', au: 's_or', t: 'or 是 常見 的 組合：ㄛ＋ㄦ', ex: ['fork', 'corn'] }],
   strong: [{ c: 'str', au: 'cl_strong_0_3', t: 'str 是 字首 常見 的 三個 字母 組合：s ➜ t ➜ r 連 著 唸', ex: ['string', 'street'] }, { c: 'ng', au: 's_ng', t: 'ng 是 字尾 常見 的 組合：鼻子 出 聲 ＝ ㄥ', ex: ['song', 'long', 'king'] }] };
+
+Object.assign(module.exports.COMBO, {
+  fish: [{ c: 'sh', au: 's_sh', t: 'sh 也 常 在 字尾：嘟 嘴 噓 ＝ ㄕ', ex: ['dish', 'wish'] }],
+  she: [{ c: 'sh', au: 's_sh', t: 'sh 是 字首 常見 的 組合：嘟 嘴 噓 ＝ ㄕ', ex: ['ship', 'shop'] }, { c: 'e', au: 's_ee', t: 'e 在 最後（前面 只有 子音）＝ 唸 名字 一', ex: ['me', 'we'] }],
+  he: [{ c: 'e', au: 's_ee', t: 'e 在 最後（前面 只有 子音）＝ 唸 名字 一', ex: ['me', 'we'] }],
+  no: [{ c: 'o', au: 's_oa', t: 'o 在 最後（前面 只有 子音）＝ 唸 名字 ㄛㄨ', ex: ['go', 'so'] }],
+  room: [{ c: 'oo', au: 's_uu', t: 'oo 是 常見 的 組合：嘴巴 嘟 圓 ＝ ㄨ', ex: ['moon', 'food'] }],
+  bedroom: [{ c: 'oo', au: 's_uu', t: 'oo 是 常見 的 組合：嘴巴 嘟 圓 ＝ ㄨ', ex: ['moon', 'food'] }],
+  bathroom: [{ c: 'th', au: 's_th', t: 'th 也 常 在 字尾：舌頭 輕輕 咬 住，吹 氣', ex: ['math', 'path'] }, { c: 'oo', au: 's_uu', t: 'oo 是 常見 的 組合：嘴巴 嘟 圓 ＝ ㄨ', ex: ['moon', 'food'] }],
+  kitchen: [{ c: 'tch', au: 's_ch', t: 'tch 是 常見 的 組合：t 不 唸，只 唸 ㄔ', ex: ['catch', 'match'] }],
+  dining: [{ c: 'ing', au: 'rm_living_1', t: 'ing 是 字尾 常見 的 組合：一＋ㄥ', ex: ['sing', 'ring', 'king'] }],
+  living: [{ c: 'ing', au: 'rm_living_1', t: 'ing 是 字尾 常見 的 組合：一＋ㄥ', ex: ['sing', 'ring', 'king'] }],
+  where: [{ c: 'wh', au: 's_w', t: 'wh 是 字首 常見 的 組合：h 不 唸，只 唸 ㄨ', ex: ['when', 'white'] }],
+  bird: [{ c: 'ir', au: 's_er', t: 'ir 是 常見 的 組合：ㄜ＋ㄦ', ex: ['girl', 'shirt'] }],
+  turtle: [{ c: 'ur', au: 's_er', t: 'ur 是 常見 的 組合：ㄜ＋ㄦ（跟 ir 一樣）', ex: ['nurse', 'hurt'] }],
+  happy: [{ c: 'y', au: 's_ee', t: 'y 在 字 最後 ＝ 一', ex: ['funny', 'sunny'] }],
+  angry: [{ c: 'gr', au: 'cl_angry_1_2', t: 'gr 是 字首 常見 的 組合：g ➜ r 連 著 唸', ex: ['green', 'grass'] }, { c: 'y', au: 's_ee', t: 'y 在 字 最後 ＝ 一', ex: ['funny', 'sunny'] }] });

@@ -527,18 +527,21 @@ async function bkStep(root,w,m,dead){const bw=root.querySelector('.bw2');bw.clas
  * 課本 字 裡 最 常見 的 拼字 組合 ＝ 金框 框 起來 ➜ 唸 那個 組合 的 聲音 兩次 ➜ 唸 整個 字 ➜「學會 了 ___，也 會 唸 …」延伸 字 一個 一個 出來（每 個 字母 正下方 雙語 注音／KK／IPA，組合 一樣 金框）＋唸。
  * 研究：學會 一個 字 帶 出 一家 字（類比）Goswami 1986 https://doi.org/10.1016/0022-0965(86)90016-0 ；字 存 進 大腦 ＝ 聲音 對 上 字母 Ehri 2014 https://doi.org/10.1080/10888438.2013.819356 （沒有 打開 原文 核對 數字）*/
 function cxIdx(w,c){const G=bkInfo(w).G;for(let a=0;a<G.length;a++){let t='';for(let b=a;b<G.length;b++){t+=G[b].l;if(t===c)return Array.from({length:b-a+1},(_,k)=>a+k);if(t.length>=c.length)break}}return []}
-function cxFrame(root,w,c){const I=cxIdx(w,c);root.querySelectorAll('.bgp').forEach(g=>g.classList.toggle('cxg',I.indexOf(+g.dataset.g)>=0))}
+function cxFrame(root,w,c,k){const I=cxIdx(w,c),cl=k?'cxg2':'cxg';root.querySelectorAll('.bgp').forEach(g=>{if(I.indexOf(+g.dataset.g)>=0)g.classList.add(cl)})}
+/* 第六十二次 老師 4-(1)：strong 的 str 金框、ng 也 要 框（另 一種 顏色：水藍）＝ 一 打開 每 一個 組合 都 框 好；點 框 裡 的 字母 ＝ 唸 那 個 組合（現在 唸 的 那 一組 .cxon 會 動）*/
+function cxAll(M,w,L){M.querySelectorAll('.bgp').forEach(g=>g.classList.remove('cxg','cxg2','cxon'));L.forEach((x,k)=>cxFrame(M,w,x.c,k))}
+function cxOn(M,w,c){M.querySelectorAll('.bgp').forEach(g=>g.classList.remove('cxon'));const I=cxIdx(w,c);M.querySelectorAll('.bgp').forEach(g=>{if(I.indexOf(+g.dataset.g)>=0)g.classList.add('cxon')})}
 function cxOpen(w){const L=BOOK.COMBO[w];if(!L)return;let o=$('#cxp');if(!o){o=H('div','cxp');o.id='cxp';document.body.appendChild(o)}o.hidden=false;const my=++AUtok;
   o.innerHTML='<div class="cxb"><div class="cxh"><b>✨ 常見 拼字 組合：<span class="en">'+w+'</span></b><button class="say" id="cxR">🔁 再 播 一次</button><button class="say" id="cxX">✖ 關閉</button></div><div id="cxM">'+bkWordHTML(w,{fs:96})+'</div>'+
-    L.map((x,i)=>'<div class="cxs" data-i="'+i+'" hidden><div class="cxt"><b class="cxc en">'+x.c+'</b>'+x.t+'<button class="say" data-cxa="'+x.au+'">🔊 '+x.c+'</button></div><div class="cxl">💡 學會 了 <b class="en">'+w+'</b>，也 會 唸：</div><div class="cxe">'+
+    L.map((x,i)=>'<div class="cxs" data-i="'+i+'" hidden><div class="cxt"><b class="cxc en'+(i?' c2':'')+'">'+x.c+'</b>'+x.t+'<button class="say" data-cxa="'+x.au+'">🔊 '+x.c+'</button></div><div class="cxl">💡 學會 了 <b class="en">'+w+'</b>，也 會 唸：</div><div class="cxe">'+
       x.ex.map(e=>'<div class="cxw" data-e="'+e+'" hidden>'+bkWordHTML(e,{fs:64})+'<span class="cxz">'+(BOOK.WX[e].ic||'')+' '+BOOK.WX[e].zh+'</span><button class="say" data-cxa="'+BOOK.WX[e].au+'">🔊</button></div>').join('')+'</div></div>').join('')+'</div>';
   const dead=()=>my!==AUtok||o.hidden,M=$('#cxM');
   o.querySelectorAll('[data-cxa]').forEach(b=>b.onclick=()=>say(b.dataset.cxa));
   $('#cxX').onclick=()=>{o.hidden=true;AUtok++};$('#cxR').onclick=()=>cxOpen(w);
-  M.onclick=e=>{const g=e.target.closest('.bgp');if(g){const oo=bkInfo(w).G[+g.dataset.g];if(oo.P.length)say(phAu(oo,0))}};
+  cxAll(M,w,L);M.onclick=e=>{const g=e.target.closest('.bgp');if(!g)return;const gi=+g.dataset.g,x=L.find(x=>cxIdx(w,x.c).indexOf(gi)>=0);if(x){cxOn(M,w,x.c);say(x.au).then(()=>M.querySelectorAll('.cxon').forEach(q=>q.classList.remove('cxon')));return}const oo=bkInfo(w).G[gi];if(oo.P.length)say(phAu(oo,0))};
   (async()=>{for(let i=0;i<L.length;i++){const x=L[i],sec=o.querySelector('.cxs[data-i="'+i+'"]');if(dead())return;
-      cxFrame(M,w,x.c);M.querySelector('.bw2').classList.add('gold');await say(x.au);await wait(350);if(dead())return;await say(x.au);await wait(350);if(dead())return;await say(bkAu(w));M.querySelector('.bw2').classList.remove('gold');
-      sec.hidden=false;await wait(400);for(const e of x.ex){if(dead())return;const r=sec.querySelector('.cxw[data-e="'+e+'"]');r.hidden=false;cxFrame(r,e,x.c);const bw=r.querySelector('.bw2');bw.classList.add('gold');await say(BOOK.WX[e].au);bw.classList.remove('gold');await wait(450)}}})()}
+      cxOn(M,w,x.c);await say(x.au);await wait(350);if(dead())return;await say(x.au);await wait(350);if(dead())return;M.querySelector('.bw2').classList.add('gold');await say(bkAu(w));M.querySelector('.bw2').classList.remove('gold');M.querySelectorAll('.cxon').forEach(q=>q.classList.remove('cxon'));
+      sec.hidden=false;await wait(400);for(const e of x.ex){if(dead())return;const r=sec.querySelector('.cxw[data-e="'+e+'"]');r.hidden=false;cxFrame(r,e,x.c,i);const bw=r.querySelector('.bw2');bw.classList.add('gold');await say(BOOK.WX[e].au);bw.classList.remove('gold');await wait(450)}}})()}
 function bridgeOpen(w0,gr){const L=bkOrder(gr);let k=Math.max(0,L.indexOf(w0));G={k:'bridge'};const me=G;$('#lobby').hidden=true;const s=$('#game');s.hidden=false;s.onclick=null;$('#quit').hidden=false;$('#ttl').textContent=gr?'📗 '+(gr===3?'三':'四')+'年級 第三、四課 單字':'📗 從 CVC 到 課本';PAUSED=false;let DONE=-1,tok=0,fin=false,SM=LS.g('bsm',1),AUTO=false,QUICK=false;document.body.classList.add('inBr');
   const tgl=(id,key,lb)=>'<button class="btg'+(BT[key]?' on':'')+'" id="'+id+'">'+lb+'</button>';
   const show=async()=>{const w=L[k],x=BOOK.W[w],my=++tok,dead=()=>G!==me||tok!==my;fin=false;
@@ -705,5 +708,5 @@ document.addEventListener('click',e=>{const rx=e.target.closest('[data-rx]');if(
   if(e.target.closest('#quit')){if(G&&G.t)G.t.stop();lobby()}});
 $$('[data-md]').forEach(b=>b.classList.toggle('on',b.dataset.md===MD));$('#mdNo').classList.toggle('on',BT.no);
 lobby();crInit();{const sb=document.getElementById('scbar');if(sb&&window.ResizeObserver)new ResizeObserver(()=>document.documentElement.style.setProperty('--sbh',(sb.hidden?0:sb.offsetHeight)+'px')).observe(sb)}{const m=/[?&]c25=([34])/.exec(location.search);if(m&&!/[?&]live=/.test(location.search))c25Start(+m[1])}{const b=/[?&]book=([34])/.exec(location.search);if(b)bridgeOpen(null,+b[1])}
-window.PHG={get G(){return G},sOf:sOf,ESTOP:ESTOP,stepTxt:stepTxt,GM:GM,start:start,lobby:lobby,lessonOpen:lessonOpen,bridgeOpen:bridgeOpen,c25Start:c25Start,crGo:()=>CRP&&CRP.go&&CRP.go(),bkInfo:bkInfo,bkOrder:bkOrder,slotNear:slotNear,phAu:phAu,HARDV:HARDV,CNEAR:CNEAR,C25A:C25A,C25B:C25B,ITEMS:ITEMS,BWL:BWL,codeOf:codeOf,near:near,realOf:realOf,pseOf:pseOf};
+window.PHG={cxOpen:cxOpen,BOOK:BOOK,get G(){return G},sOf:sOf,ESTOP:ESTOP,stepTxt:stepTxt,GM:GM,start:start,lobby:lobby,lessonOpen:lessonOpen,bridgeOpen:bridgeOpen,c25Start:c25Start,crGo:()=>CRP&&CRP.go&&CRP.go(),bkInfo:bkInfo,bkOrder:bkOrder,slotNear:slotNear,phAu:phAu,HARDV:HARDV,CNEAR:CNEAR,C25A:C25A,C25B:C25B,ITEMS:ITEMS,BWL:BWL,codeOf:codeOf,near:near,realOf:realOf,pseOf:pseOf};
 })();

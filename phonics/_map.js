@@ -316,12 +316,32 @@ const OG=[['b','一個 子音（無 ＝ 沒有 字首，例：at、up；sh ch th
 const VG=[['b','短 母音（紅）',VV.b],['a','唸 名字 的 母音（黃）：magic e、兩個 母音 字母（第二個 灰）',VV.a],['t','其他 母音 組合：兩個 一起 唸（紅）、母音＋r（r 藍）',VV.t]];
 const CG=[['b','一個 子音（無 ＝ 沒有 字尾）',CO.b],['d','兩個 字母 一個 聲音（tch 的 t 不 發音；ll ff ss ＝ 短 母音 後面 的 l f s；dge ＝ ㄓ、ve ＝ v）',CO.d],['a2','兩個 子音（2 個 聲音）',CO.a2],['n2','兩個 子音 新 加 的（mb 的 b 不 發音）',CO.n2.concat(CO.a3),1]];
 function grpTabs(k,G0,cur){return '<div class="gtabs">'+G0.map(g=>'<button data-gk="'+k+'" data-gv="'+g[0]+'" class="'+(cur===g[0]?'on':'')+'">'+g[1].split('（')[0]+'</button>').join('')+'</div>'}
+/* ══ 2026-11-19 第六十二次 老師 2-(2)：字首／母音／字尾 各 一顆〔ㄅㄆㄇ 注音 順序〕切換（ZO，記 在 這台 平板）══
+ * 字首：照 注音 ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐ…ㄓㄔㄕㄖㄗㄘㄙ（老師 給 的 b p m f d t n l g c k h j ch sh）；沒有 注音 的 照 我 的 建議 排 在 後面：一（y）ㄨ（w wh）ㄎㄨ（qu）v th
+ * 字尾：同 一個 順序（ff 跟 f、ll 跟 l、ss 跟 s、tch 跟 ch、dge ＝ ㄓ），最後 ng（ㄥ）、th、ve
+ * 母音：老師 的 五 組 ㄝ／一／ㄨ／ㄜ／ㄚ（照 老師 SoR 44 音 投影片 的 順序）＋剩下 的 照 我 的 建議：ar 跟 ㄚ、er ir ur 跟 ㄜ、ㄛ 組（au aw or oi oy）、ㄞ 組（i_e）*/
+const ZON=['b','p','m','f','d','t','n','l','g','c','k','h','j','ch','sh','r','z','s','y','w','wh','qu','v','th'];
+const ZCO=['b','p','m','f','ff','d','t','n','l','ll','g','k','x','dge','ch','tch','sh','z','s','ss','ng','th','ve'];
+const ZVG=[['ㄝ 組合',['e','ai','a_e','ay','a','ou','ow2']],['一 組合',['ea','ee','i','u_e']],['ㄨ 組合',['oo','oo2']],['ㄜ 組合',['u','o_e','oa','ow','er','ir','ur']],['ㄚ 組合',['o','ar']],['ㄛ 組合',['au','aw','or','oi','oy']],['ㄞ 組合',['i_e']]];
+let ZO=LS.g('mzo',{o:0,v:0,c:0});
+function zyTxt(t){const T=TT[t];if(!T)return '';return (T.sup||'')+T.zh}
+function zyOn(x){return x==='無'?'':zyTxt(MAPC.ONC?MAPC.ONC(x):({c:'k',qu:'kw',wh:'w'}[x]||x))}
+function zyCo(x){return x==='無'?'':zyTxt(({x:'ks',tch:'ch',ll:'l',ff:'f',ss:'s',dge:'dj',ve:'v'}[x])||x)}
+function zyV(v){return zyTxt(MAPC.VC[v])}
+function zoBtn(k){return '<button class="zob'+(ZO[k]?' on':'')+'" data-zo="'+k+'">'+(ZO[k]?'ㄅㄆㄇ 注音 順序 ✔':'ㄅㄆㄇ 注音 順序')+'</button>'}
+function zChips(list,k){return '<div class="chips">'+list.map(x=>{const t=Object.assign({},MS);t[k]=x;const ok=MAPC.ok(t.o,t.v,t.c),z=k==='o'?zyOn(x):k==='c'?zyCo(x):zyV(x);
+  return '<button class="chip en zc'+(MS[k]===x?' on':'')+(ok?'':' dim')+'" data-mk="'+k+'" data-mv="'+x+'">'+(k==='v'?VNM[x]:x)+'<small class="zy">'+(z||'&nbsp;')+'</small></button>'}).join('')+'</div>'}
+function mapDrawZ(A){const has=(L,x)=>L.indexOf(x)>=0;
+  if(ZO.o){const L=A?ON.b:ON.b;$('#mOn').innerHTML=zoBtn('o')+'<div class="mg">照 注音 ㄅ ㄆ ㄇ ㄈ… 的 順序（沒有 注音 的 在 最後）</div>'+zChips(['無'].concat(ZON.filter(x=>has(L,x))),'o')+(A?'<div class="mg">兩個、三個 子音：按 上面 切換 回 原本 順序</div>':'')}
+  if(ZO.v){const L=A?VV.b.concat(VV.a,VV.t):VV.b;$('#mV').innerHTML=zoBtn('v')+ZVG.map(g=>{const xs=g[1].filter(x=>has(L,x));return xs.length?'<div class="mg zg">'+g[0]+'</div>'+zChips(xs,'v'):''}).join('')}
+  if(ZO.c){const L=A?CO.b.concat(CO.d):CO.b.concat(CO.d);$('#mCo').innerHTML=zoBtn('c')+'<div class="mg">照 注音 ㄅ ㄆ ㄇ ㄈ… 的 順序（沒有 注音 的 在 最後）</div>'+zChips(['無'].concat(ZCO.filter(x=>has(L,x))),'c')+(A?'<div class="mg">兩個 子音（nd st…）：按 上面 切換 回 原本 順序</div>':'')}
+  ['o','v','c'].forEach(k=>{if(!ZO[k]){const el=$(k==='o'?'#mOn':k==='v'?'#mV':'#mCo');el.insertAdjacentHTML('afterbegin',zoBtn(k))}})}
 function mapDraw(){const A=MLV==='a';$('#lvB').classList.toggle('on',!A);$('#lvA').classList.toggle('on',A);
   if(!A){$('#mOn').innerHTML=chipHTML(OG[0][1],['無'].concat(ON.b),'o');$('#mV').innerHTML=chipHTML(VG[0][1],VV.b,'v');$('#mCo').innerHTML=chipHTML(CG[0][1],CO.b,'c')+chipHTML(CG[1][1],CO.d,'c')}
   else{/* 🔵 進階：字首、字尾 上面 分組 按鈕，一次 只 看 一組（不 眼花）*/
     const og=OG.find(g=>g[0]===MG.o)||OG[0],cg=CG.find(g=>g[0]===MG.c)||CG[0];
     $('#mOn').innerHTML=grpTabs('o',OG,og[0])+chipHTML(og[1],og[0]==='b'?['無'].concat(og[2]):og[2],'o');$('#mV').innerHTML=VG.map(g=>chipHTML(g[1],g[2],'v')).join('');$('#mCo').innerHTML=grpTabs('c',CG,cg[0])+chipHTML(cg[1],cg[2],'c',cg[3])}
-  mapOut()}
+  if(!M2)mapDrawZ(A);mapOut()}
 function mapSet(o,v,c){MS={o,v,c};LS.s('ms2',MS);if(TAB==='map')mapDraw()}
 async function mapOut(){TOK++;const o=MS.o,v=MS.v,c=MS.c,box=M2?$('#m2w'):$('#mapOut');const ok=MAPC.ok(o,v,c),spec=specOfMap(o,v,c),w=spellOf(o,v,c),code=codeOf(o,v,c),xb=XBS.has(code),bd=BDS.has(code),has=ok&&!xb&&!bd&&AV.has(code),real=REALC[code]===w||REALW.has(w),C=countOf(spec);
   const note=(c==='ld'||c==='lk')?'<span class="mtag p">⚠ old、talk 的 母音 會 變（a、o 不 接 ld、lk）</span>':c==='mb'?'<span class="mtag p">mb 的 b 不 發音</span>':c==='tch'?'<span class="mtag p">tch 的 t 不 發音</span>':(v==='au'||v==='aw')?'<span class="mtag p">au、aw ＝ ㄛ（嘴巴 大大 張開，像 talk 的 a）</span>':(v==='a'&&c==='ll')?'<span class="mtag p">all 的 a ＝ ㄛ（ball、tall、fall）</span>':v==='oo2'?'<span class="mtag p">短 的 oo ＝ ㄛㄨ（good、foot、look）</span>':/^(ll|ff|ss)$/.test(c)?'<span class="mtag p">'+c+' ＝ 兩個 字母 一個 聲音</span>':c==='dge'?'<span class="mtag p">dge ＝ ㄓ（d、e 不 發音）</span>':c==='ve'?'<span class="mtag p">ve ＝ v（英文 字 不 用 v 結尾，後面 加 不 發音 的 e）</span>':'';
@@ -331,7 +351,7 @@ async function mapOut(){TOK++;const o=MS.o,v=MS.v,c=MS.c,box=M2?$('#m2w'):$('#ma
   if(M2)m2Arrows();$('#mSay2').onclick=()=>sayWhole(box,code,++TOK);   /* 第六十次 老師 4-(4)：整個 字 ＝ 金框＋每 個 字母 一起 放大 發光 */$('#mSay1').onclick=()=>mapSay(spec,code,box);if(has&&!FAST&&!PRAC)mapSay(spec,code,box)}
 async function mapSay(spec,code,box){const me=++TOK,S=parse(spec),cks=qsa(box,'.ck');let k=0;for(const B of S)for(const b of B)for(const c of b.ch){const el=cks[k++];const a=auOf(c.t,b.coda);if(!a||c.sil||b.type==='g')continue;if(me!==TOK)return;el.classList.add('on');await sayW(a,me);el.classList.remove('on')}
   await sayWhole(box,code,me)}
-document.addEventListener('click',e=>{const g=e.target.closest('[data-gk]');if(g){MG[g.dataset.gk]=g.dataset.gv;LS.s('mg'+g.dataset.gk,g.dataset.gv);mapDraw();return}
+document.addEventListener('click',e=>{const z=e.target.closest('[data-zo]');if(z){ZO[z.dataset.zo]=ZO[z.dataset.zo]?0:1;LS.s('mzo',ZO);mapDraw();return}const g=e.target.closest('[data-gk]');if(g){MG[g.dataset.gk]=g.dataset.gv;LS.s('mg'+g.dataset.gk,g.dataset.gv);mapDraw();return}
   const b=e.target.closest('[data-mk]');if(!b)return;MS[b.dataset.mk]=b.dataset.mv;LS.s('ms2',MS);mapDraw();if(PRAC)pracCheck()});
 $('#lvB').onclick=()=>{MLV='b';LS.s('mlv','b');if(VV.b.indexOf(MS.v)<0)MS.v='a';if(ON.b.indexOf(MS.o)<0)MS.o='b';if(CO.b.concat(CO.d).indexOf(MS.c)<0)MS.c='t';mapDraw()};$('#lvA').onclick=()=>{MLV='a';LS.s('mlv','a');mapDraw()};
 $('#mRand').onclick=()=>{const L=MAPC.all().filter(x=>AV.has(x.code)&&!XBS.has(x.code)&&!BDS.has(x.code)&&(MLV==='a'||(ON.b.indexOf(x.o)>=0&&VV.b.indexOf(x.v)>=0&&CO.b.concat(CO.d).indexOf(x.c)>=0)));const x=R(L);MS={o:x.o,v:x.v,c:x.c};LS.s('ms2',MS);mapDraw()};
@@ -387,12 +407,12 @@ document.addEventListener('click',e=>{const r=e.target.closest('[data-ma]');if(r
 /* ══ 上面：注音／KK／IPA、分頁 ══ */
 function mdDraw(){$$('.mdSw button').forEach(b=>b.classList.toggle('on',b.dataset.md===MD))}
 $$('.mdSw button').forEach(b=>b.onclick=()=>{MD=b.dataset.md;LS.s('md',MD);mdDraw();retile()});
-let TAB='ani';function tab(t){TAB=t;TOK++;$$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));['ani','map','syl','many','play'].forEach(k=>$('#s_'+k).hidden=k!==t);
+let TAB='ani';function tab(t){TAB=t;TOK++;$$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));['snd','ani','map','syl','many','play'].forEach(k=>$('#s_'+k).hidden=k!==t);if(t==='snd')sdTab();
   if(t==='ani')scCard(SCI);if(t==='map')mapDraw();if(t==='syl')sylDraw();if(t==='many')manyDraw();if(t==='play')gList();try{history.replaceState(null,'','#'+t)}catch(e){}}
 $$('#tabs button').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
 /*__GAMES__*/
 const BKORD=['strong','thin','short','tall','he','she','tired','angry','happy','sad','yes','no','not','bathroom','bedroom','kitchen','dining','living','where','bird','rabbit','turtle','cat','dog','fish'];
-mdDraw();strBtn();modeBtn();{const ch=/#chain=([^&]+)/.exec(location.hash);if(ch){const w=decodeURIComponent(ch[1]),S=chainScene(w);if(S){SC.push(S);const i=SC.length-1;tab('ani');SCI=i;scCard(i);$('#aIdx').insertAdjacentHTML('beforebegin','<button class="btn go" onclick="history.length>1?history.back():location.href=\'games.html\'">⬅ 回 課本 單字 動畫</button>');/* 第六十次 老師 9-(4)：〔➡ 下 一個 單字〕＝ 直接 進 下 一個 字 的「從 CVC 變成…」動畫（課本 順序：三年級 ➜ 四年級）*/{const L=BKORD.filter(x=>CHAIN[x]),j=L.indexOf(w.replace(/ room$/,'')),nx=L[(j+1)%L.length];if(nx&&nx!==w)$('#aIdx').insertAdjacentHTML('afterend','<button class="btn gold" id="chNx" style="font-size:24px">➡ 下 一個 單字：<span class="en">'+nx+'</span></button>');const b=$('#chNx');if(b)b.onclick=()=>{location.replace('map.html#chain='+encodeURIComponent(nx));location.reload()}}}else tab('ani')}else tab((/#(ani|map|syl|many|play)/.exec(location.hash)||[0,M2?'map':'ani'])[1])}
+mdDraw();strBtn();modeBtn();{const ch=/#chain=([^&]+)/.exec(location.hash);if(ch){const w=decodeURIComponent(ch[1]),S=chainScene(w);if(S){SC.push(S);const i=SC.length-1;tab('ani');SCI=i;scCard(i);$('#aIdx').insertAdjacentHTML('beforebegin','<button class="btn go" onclick="history.length>1?history.back():location.href=\'games.html\'">⬅ 回 課本 單字 動畫</button>');/* 第六十次 老師 9-(4)：〔➡ 下 一個 單字〕＝ 直接 進 下 一個 字 的「從 CVC 變成…」動畫（課本 順序：三年級 ➜ 四年級）*/{const L=BKORD.filter(x=>CHAIN[x]),j=L.indexOf(w.replace(/ room$/,'')),nx=L[(j+1)%L.length];if(nx&&nx!==w)$('#aIdx').insertAdjacentHTML('afterend','<button class="btn gold" id="chNx" style="font-size:24px">➡ 下 一個 單字：<span class="en">'+nx+'</span></button>');const b=$('#chNx');if(b)b.onclick=()=>{location.replace('map.html#chain='+encodeURIComponent(nx));location.reload()}}}else tab('ani')}else tab((/#(snd|ani|map|syl|many|play)/.exec(location.hash)||[0,window.SNDP?'snd':M2?'map':'ani'])[1])}
 
 /* ══ 2026-11-17 第五十八次 老師 (7)：🆕 第三 版 拼音 地圖 map3.html ＝「聲音 積木 拼字台」（不同 的 介面，最 直覺、最 好 操作）══
  * 🎧 聽 ➜ 拼：聽 一個 字 ➜ 上面 3 個 空 方框（字首｜母音｜字尾，數 聲音 的 黃點 先 出來）➜ 下面 3 排 積木（每 排 6 個：對 的＋只 差 一點 的），點 積木 ＝ 唸 它 的 聲音＋放進 方框 ➜〔✅ 對 答案〕：

@@ -3,7 +3,9 @@
 const fs = require('fs'), path = require('path'), D = __dirname;
 const PH = require('./_ph.js'), PH2 = require('./_ph2.js'), QW = require('./_qwords.json'), REAL = require('./_realreg.json');
 const have = fs.readdirSync(path.join(D, 'au')).map(f => f.replace(/\.mp3$/, ''));
-const AVL = have.filter(c => /^(s_|w_|zy_|bk_|sy_|cv_)/.test(c) || /^([a-z]+|0)-(ae|eh|ih|aa|uh|ai|ee|ii|oa|uu|oo|yu|or|ou|oy|ao|ar|er)(-[a-z]+)?$/.test(c));   /* 第五十七次：多 ou oy ao ar er */
+/* 第六十二次：44 音 字卡 的 聲音（_snd.js：單獨 的 音＋例字）一定 要 在 名單 裡 */
+const SNDA = [], SNDM = require('./_snd.js'); SNDM.ALL.forEach(x => { SNDA.push(x.au, x.ex[1]); x.cf.forEach(k => { if (!SNDM.BY[k]) { console.error('✗ 44 音 容易 搞混 的 音 寫 錯：', x.k, k); process.exit(1); } }); }); SNDA.forEach(a => { if (have.indexOf(a) < 0) { console.error('✗ 44 音 沒有 音檔：', a); process.exit(1); } });
+const AVL = [...new Set(SNDA)].concat(have.filter(c => /^(s_|w_|zy_|bk_|sy_|cv_)/.test(c) || /^([a-z]+|0)-(ae|eh|ih|aa|uh|ai|ee|ii|oa|uu|oo|yu|or|ou|oy|ao|ar|er)(-[a-z]+)?$/.test(c)).filter(c => SNDA.indexOf(c) < 0));   /* 第五十七次：多 ou oy ao ar er */
 const J = a => Array.isArray(a) ? a.join('') : a, C = PH.CONS, V = PH.VOW, V2 = PH2.VOW2, C2 = PH2.CONS2 || {};
 const t = (o, sup) => ({ zh: J(o.zh), sup: sup != null ? sup : (Array.isArray(o.sup) ? '' : o.sup || ''), kk: J(o.kk), ipa: J(o.ipa) });
 const TT = {};
@@ -34,9 +36,11 @@ html = html.split('/*__DATA__*/').join('var QW=' + JSON.stringify(QW) + ',TT=' +
   .split('/*__SCORE__*/').join(CL.home(0, '../', 'school') + '<script>' + require('../score/_dsp.js').js('') + '</script>' +
     /* 2026-11-18 第六十次：〔⚡ 現場任務〕🗺️ 拼音 地圖 遊戲（Firebase 網址、讀寫、時間 到 自動 送）*/
     '<script src="../live/fb.js"></script><script>' + fs.readFileSync(path.join(D, '..', 'live', '_db.js'), 'utf8') + '</script><script>' + fs.readFileSync(path.join(D, '..', 'live', '_xlive_rt.js'), 'utf8') + '</script>')
-  .split('/*__JS__*/').join(MAPCJS + '\n' + js.split('/*__GAMES__*/').join(gjs));
+  .split('/*__JS__*/').join(MAPCJS + '\n' + fs.readFileSync(path.join(D, '_snd.js'), 'utf8') + '\n' + js.split('/*__GAMES__*/').join(gjs + '\n' + fs.readFileSync(path.join(D, '_map_snd.js'), 'utf8')));
 fs.writeFileSync(path.join(D, 'map.html'), html);
 /* 第五十七次 老師 4-20：新 版本 拼音 地圖 map2.html（同 一套 程式，window.MAP2 ＝ 每 一個 方框 正下方 ▲▼ 直接 換）*/
+/* 2026-11-19 第六十二次 老師 2-(3)：🔤 字母 和 聲音（44 音 字卡）sounds.html ＝ 同 一套 程式，一 打開 就 是〔🔤 44 音 字卡〕*/
+fs.writeFileSync(path.join(D, 'sounds.html'), html.replace('<title>拼音 地圖</title>', '<title>字母 和 聲音</title>').replace('<body>', '<body><script>window.SNDP=1</script>'));
 fs.writeFileSync(path.join(D, 'map2.html'), html.replace('<title>拼音 地圖</title>', '<title>新版 拼音 地圖</title>').replace('<body>', '<body class="m2"><script>window.MAP2=1</script>').replace('🗺️ 拼音 地圖：從 CVC 到 課本', '🗺️ 新版 拼音 地圖（▲▼ 直接 換）'));
 /* 2026-11-17 第五十八次 老師 (7)：第三 版 map3.html ＝ 聲音 積木 拼字台（window.MAP3）*/
 fs.writeFileSync(path.join(D, 'map3.html'), html.replace('<title>拼音 地圖</title>', '<title>聲音 積木 拼字台</title>').replace('<body>', '<body class="m3"><script>window.MAP3=1</script>').replace('🗺️ 拼音 地圖：從 CVC 到 課本', '🧱 聲音 積木 拼字台（第三 版）'));

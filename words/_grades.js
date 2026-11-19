@@ -65,12 +65,32 @@ const CSS = `
  border-radius:99px;padding:clamp(6px,.9vh,9px) clamp(10px,1.3vw,15px);font-size:clamp(14px,2.1vh,18px);font-weight:700;white-space:nowrap;min-height:42px}
 .gi .gb a:hover{border-color:#9FB4C8}
 .gi .gb a:active{transform:scale(.97)}`;
-function rows(G, pre) {
+/* 2026-11-19 第六十二次 老師 1-(1)：總首頁 三、四年級 的 Unit 1、Unit 2 收 進 一個 主題 區域「Unit 1　Unit 2」（只有 總首頁：rows(G, pre, 1)；年級 首頁 照舊）*/
+const CSS12 = `
+.gi.u12{align-items:stretch}.gi.u12 .gx{justify-content:center}
+.gi.u12 .gb{flex-direction:column;gap:clamp(3px,.5vh,6px)}
+.gi.u12 .ur{display:flex;align-items:center;gap:clamp(5px,.7vw,8px);justify-content:flex-end}
+.gi.u12 .ur u{text-decoration:none;font-size:clamp(13px,1.9vh,17px);color:#FFD66B;font-weight:700;white-space:nowrap}
+.gi.u12 .gb a{min-height:40px;padding:3px clamp(8px,1vw,12px)}
+.gl.m12{grid-template-rows:repeat(4,auto)}`;
+function rowHTML(r, k, pre) {
+  return '<div class="gi' + (r.b.length >= 3 && r.b.some(x => x.t.length >= 5) ? ' b3w' : '') + '"><span class="gn">' + (k + 1) + '</span><span class="gx"><b><span class="gic">' + r.ic + '</span>' + r.l + '</b>' +
+    (r.s ? '<i>' + r.s + '</i>' : '') + '</span><span class="gb">' + btns(r.b, pre) + '</span></div>';
+}
+function btns(b, pre) { return b.map(x => '<a href="' + (/^https?:/.test(x.href) ? '' : (pre || '')) + x.href + '">' + x.ic + ' ' + x.t + '</a>').join(''); }
+function rows(G, pre, m12) {
   pre = pre || '';
+  if (m12) {
+    const u = G.rows.slice(0, 2), rest = G.rows.slice(2);
+    return '<section class="gr"><h2>' + G.g + (G.home && pre !== null ? ' <a href="' + pre + G.home + '">年級首頁 ➜</a>' : '') + '</h2><div class="gl m12">' +
+      '<div class="gi u12"><span class="gn">1</span><span class="gx"><b><span class="gic">📘</span>Unit 1　Unit 2</b></span><span class="gb">' +
+      u.map(r => '<span class="ur"><u>' + r.l.replace(/　/, ' ') + '</u>' + btns(r.b, pre) + '</span>').join('') + '</span></div>' +
+      rest.map((r, k) => rowHTML(r, k + 1, pre)).join('') + '</div></section>';
+  }
   return '<section class="gr"><h2>' + G.g + (G.home && pre !== null ? ' <a href="' + pre + G.home + '">年級首頁 ➜</a>' : '') + '</h2><div class="gl">' +
     G.rows.map((r, k) => '<div class="gi' + (r.b.length >= 3 && r.b.some(x => x.t.length >= 5) ? ' b3w' : '') + '"><span class="gn">' + (k + 1) + '</span><span class="gx"><b><span class="gic">' + r.ic + '</span>' + r.l + '</b>' +
       (r.s ? '<i>' + r.s + '</i>' : '') + '</span><span class="gb">' +
       r.b.map(x => '<a href="' + (/^https?:/.test(x.href) ? '' : (pre || '')) + x.href + '">' + x.ic + ' ' + x.t + '</a>').join('') + '</span></div>').join('') +
     '</div></section>';
 }
-module.exports = { GRADES, CSS, rows };
+module.exports = { GRADES, CSS, CSS12, rows };

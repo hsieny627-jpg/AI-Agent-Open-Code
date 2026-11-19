@@ -457,11 +457,61 @@ body.m3 main{top:64px}#m3{max-width:1200px;margin:0 auto;padding:12px 16px;text-
 #gsc{font-size:clamp(26px,3vw,38px)!important;color:#FFE07A!important;font-weight:900}
 .bx.xe{position:relative;animation:eOut 1.4s 2.2s forwards}.bx.xe::after{content:'✖';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.4em;color:#FF4D4D;opacity:0;animation:eX .6s 1.6s forwards}
 @keyframes eX{to{opacity:1}}@keyframes eOut{to{opacity:.25;transform:scale(.8)}}
+/* 第六十二次：〔ㄅㄆㄇ 注音 順序〕*/
+.zob{display:block;margin:0 auto 6px;font-size:18px;font-weight:900;border-radius:12px;padding:6px 12px;min-height:44px;background:#14203F;color:#FFE07A;border:2px solid #FFE07A;cursor:pointer}.zob.on{background:#FFE07A;color:#2A1B00}
+.chip.zc{display:inline-flex;flex-direction:column;align-items:center;line-height:1.1}.chip.zc small.zy{font-family:'Microsoft JhengHei','PingFang TC',sans-serif;font-size:.72em;color:#FFE9A8;margin-top:2px}.chip.zc.on small.zy{color:#5A3A00}
+.mg.zg{color:#FFE07A;font-weight:900;font-size:20px}
+/* ══ 第六十二次：🔤 44 音 字卡 ══ */
+.sdtl{font-size:22px;color:#FFE9A8;font-weight:800}
+.sdwrap{display:grid;grid-template-columns:minmax(230px,300px) 1fr;gap:12px;align-items:start}@media (max-width:900px){.sdwrap{grid-template-columns:1fr}.sdths{display:flex;overflow-x:auto;gap:6px}.sdths .sdthb{min-width:200px}}
+.sdths{padding:8px;max-height:calc(100vh - 170px);overflow:auto}.sdthb{display:block;width:100%;text-align:left;font-size:19px;font-weight:800;background:#141B3D;color:#F1F4FF;border:2px solid #2A3570;border-radius:14px;padding:8px 10px;margin:0 0 6px;cursor:pointer;min-height:52px}
+.sdthb b{display:inline-block;min-width:1.6em;color:#FFE07A}.sdthb small{display:block;font-size:15px;color:#A9B8E8;font-weight:600}.sdthb.on{background:#FFE07A;color:#2A1B00;border-color:#fff}.sdthb.on small{color:#5A3A00}.sdthb.dn{border-color:#2EE59D}
+.sdgoal{font-size:21px;color:#DCE4FF;margin:0 0 6px;line-height:1.5}.sdgoal b{color:#FFE07A}
+.sdps{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}.sdpb{display:flex;align-items:center;gap:8px;background:#141B3D;color:#F1F4FF;border:2px solid #2A3570;border-radius:14px;padding:4px 10px;font-size:18px;font-weight:800;cursor:pointer;min-height:50px}.sdpb.on{border-color:#FFE07A;box-shadow:0 0 14px #FFE07A88}.sdpb.dn{border-color:#2EE59D}
+.sdgo{font-size:22px!important;min-height:56px}
+#sdStage{min-height:420px;padding:14px;text-align:center;position:relative}.sdh{font-size:20px;color:#A9B8E8;font-weight:800;margin-bottom:8px}
+.sdtile{display:inline-flex;align-items:flex-start;justify-content:center;min-width:1.6em;padding:.12em .3em;border-radius:.3em;font-size:32px;line-height:1.1;cursor:pointer;font-family:'Microsoft JhengHei','PingFang TC',sans-serif;transition:transform .2s,box-shadow .2s}
+.sdtile.v{background:#F6B3A9;color:#fff;text-shadow:0 1px 2px #A04030}.sdtile.c{background:#E8F4FF;color:#3A4A5A;border:2px solid #9DB8D8}.sdtile .zc{font-size:.5em;margin-left:.05em}.sdtile.big{font-size:96px;border-radius:22px;padding:.08em .3em}
+.sdtile.on{transform:scale(1.15);box-shadow:0 0 0 4px #FFE07A,0 0 30px #FFE07A}
+.sdcard{display:inline-flex;flex-direction:column;align-items:center;gap:6px;padding:14px 26px;border-radius:26px;background:linear-gradient(#FBE3EE,#FDEBDF);min-width:300px}.sdcard.c{background:linear-gradient(#DFF6FF,#E3ECF8)}.sdcard.sm .sdtile.big{font-size:64px}
+.sdtop{position:relative;display:flex;align-items:flex-start;gap:6px}.sdbub{font-size:34px}
+.sddn{font-size:26px;color:#333;opacity:0}.sddn span{background:#111;color:#fff;border-radius:6px;padding:0 10px;font-size:22px}.sddn.in{opacity:1;transition:opacity .4s}
+.sdsps{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;align-items:flex-end}
+.sp{display:inline-flex;font-family:Andika,sans-serif;font-size:92px;font-weight:700;line-height:1;transition:transform .2s,filter .2s}.sdcard.sm .sp{font-size:64px}.sp.on{transform:scale(1.18);filter:drop-shadow(0 0 14px #FFE07A)}.sp.in{animation:sdIn .45s ease-out}
+.sp i{font-style:normal}.sp .vr{color:#FF2020}.sp .pk{color:#FF6F9F}.sp .ny{color:#B00010;background:#FACC15;border-radius:8px;padding:0 4px}.sp .gr{color:#8C92A3}.sp .us{color:#556}.sp .rb{color:#1E5BFF}.sp .cb{color:#1E5BFF}.sp .cy{color:#009AAE}.sp .vw{color:#FF9C9C;font-size:.75em}
+.sdcue{display:inline-block;margin-top:10px;font-size:26px;font-weight:800;color:#FFE9A8;background:#1A2350;border-radius:14px;padding:6px 16px}.sdcue.in{animation:sdIn .5s}
+.sdex{margin-top:12px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}.sdex.in{animation:sdIn .5s}.ck.sdhit{outline:4px solid #FFE07A;border-radius:10px;box-shadow:0 0 18px #FFE07A}
+.sdcap{margin-top:12px;font-size:28px;font-weight:800;color:#F1F4FF;min-height:1.5em}.sdcap b{color:#FFE07A}.sdcap.pop{animation:sdIn .4s}
+.sdend{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.sdend .btn{font-size:24px;min-height:60px}
+@keyframes sdIn{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}
+.sdtile.in{animation:sdIn .5s}
+.sd44{display:flex;flex-direction:column;gap:10px;align-items:center}.sdrow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:980px}.sd44 .sdtile{font-size:30px;animation:sdIn .3s}.sdn{font-size:64px;font-weight:900;color:#FFE07A}
+.sdlane{display:flex;align-items:center;gap:16px;justify-content:center;flex-wrap:wrap;background:#141B3D;border-radius:20px;padding:10px 16px;margin:8px auto;max-width:980px}.sdl{font-size:26px;font-weight:900;color:#FFE9A8;min-width:270px}.sdq{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.sdq .sp{font-size:70px}.sdq .sdtile.big{font-size:70px}.sdar{font-size:48px;color:#FFE07A}
+.sdstart{display:flex;flex-direction:column;align-items:center;gap:12px}
+#sdIdxP{position:fixed;inset:0;z-index:95;background:rgba(3,6,20,.94);overflow:auto;padding:14px}#sdIdxP .pnl{max-width:1100px;margin:auto;padding:14px}#sdIdxP h3{color:#FFE07A;font-size:22px;margin:10px 0 6px}
+.sdrev{display:flex;flex-direction:column;align-items:center;gap:8px}
+/* 遊戲 */
+.sdsort{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:16px;align-items:center;width:100%;max-width:1000px;margin:10px auto}
+.sdgate{height:300px;border-radius:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:60px;border:5px dashed}.sdgate b{font-size:40px;color:#fff}.sdgate small{font-size:22px;color:#DCE4FF}
+.sdgate.v{background:radial-gradient(#5A1020,#2A0610);border-color:#FF4D6D}.sdgate.c{background:radial-gradient(#10306A,#06122E);border-color:#3BA0FF}.sdgate.hov{transform:scale(1.05);box-shadow:0 0 40px #FFE07A}.sdgate.ok{box-shadow:0 0 50px #2EE59D;border-style:solid}.sdgate.no{box-shadow:0 0 50px #FF3B3B}
+.sdmid{display:flex;justify-content:center}.sdblk,.sdgem{display:flex;flex-direction:column;align-items:center;gap:6px;background:linear-gradient(#FFF7E0,#FFE3B0);border-radius:24px;padding:14px 22px;cursor:grab;box-shadow:0 10px 30px #0008;user-select:none;touch-action:none}.sdblk .sp,.sdgem .sp{font-size:72px}.drag{cursor:grabbing;z-index:20;position:relative;box-shadow:0 0 40px #FFE07A}
+.sdsky{position:relative;width:100%;max-width:1000px;height:min(52vh,460px);margin:6px auto;border-radius:24px;background:linear-gradient(#0B1A4A,#1B0B3A);overflow:hidden;border:3px solid #3D4A80}
+.sdbask{position:absolute;bottom:6px;transform:translateX(-50%);font-size:84px;line-height:1;text-align:center;filter:drop-shadow(0 0 12px #FFE07A)}.sdgot{display:block;font-size:22px;color:#FFE07A;font-weight:900}
+.sdfall{position:absolute;transform:translateX(-50%);background:#FFF7E0;border-radius:16px;padding:2px 12px;box-shadow:0 6px 20px #0009}.sdfall .sp{font-size:52px}.sdfall.okc{background:#2EE59D;transition:opacity .4s;opacity:.2!important}.sdfall.noc{background:#FF3B3B}.sdfall.miss{opacity:.25!important}
+.sdfield{position:relative;width:100%;max-width:1000px;height:min(54vh,480px);margin:6px auto;border-radius:24px;background:radial-gradient(#1A2A6A,#060A20);overflow:hidden;border:3px solid #3D4A80}
+.sdgun{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);font-size:60px}.sdtgt{position:absolute;transform:translate(-50%,-50%);border:4px solid #FFE07A;border-radius:50%;width:132px;height:132px;background:radial-gradient(#FFF7E0 55%,#FF4D6D 56%,#FF4D6D 66%,#FFF7E0 67%);cursor:crosshair;display:flex;align-items:center;justify-content:center;padding:0}
+.sdtgt .sp{font-size:46px}.sdtgt.hit{animation:sdBoom .5s forwards}.sdtgt.no{filter:grayscale(1) brightness(.6)}@keyframes sdBoom{to{transform:translate(-50%,-50%) scale(1.8);opacity:0}}
+.sdlaser{position:fixed;height:6px;background:linear-gradient(90deg,#FFE07A,#FF4D6D);transform-origin:0 50%;z-index:50;box-shadow:0 0 18px #FFE07A;border-radius:3px}
+.sdpick{display:flex;flex-direction:column;align-items:center;gap:22px;margin-top:8px}.sdgem small{font-size:18px;color:#5A3A00}.sdorbs{display:flex;gap:28px;flex-wrap:wrap;justify-content:center}
+.sdorb{width:150px;height:150px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,#8FD3FF,#1E3A8F 70%);border:4px solid #8FD3FF;font-size:44px;color:#fff;cursor:pointer;box-shadow:0 0 24px #3BA0FF88}.sdorb b{font-size:40px}.sdorb.on{box-shadow:0 0 0 6px #FFE07A,0 0 40px #FFE07A}.sdorb.hov{transform:scale(1.1)}.sdorb.ok{background:radial-gradient(#2EE59D,#0A5A3A)}.sdorb.no{background:radial-gradient(#FF6B6B,#5A0A0A)}
 </style></head><body>
 <div id="top"><a href="index.html">🔤 拼讀 字卡</a><a href="games.html">🎮 遊戲場</a><div class="ttl">🗺️ 拼音 地圖：從 CVC 到 課本</div>
 <div id="mdSw" class="mdSw"><button data-md="zh">注音</button><button data-md="kk">KK</button><button data-md="ipa">IPA</button></div><a href="../index.html">🏠</a></div>
-<div id="tabs"><button data-tab="ani">🎬 秒懂 動畫</button><button data-tab="map">🗺️ 拼音 地圖</button><button data-tab="syl">🪜 多 音節</button><button data-tab="many">🔤 一 字母 多 聲音</button><button data-tab="play">🎮 10 種 遊戲＋25 題 闖關</button></div>
+<div id="tabs"><button data-tab="snd">🔤 44 音 字卡</button><button data-tab="ani">🎬 秒懂 動畫</button><button data-tab="map">🗺️ 拼音 地圖</button><button data-tab="syl">🪜 多 音節</button><button data-tab="many">🔤 一 字母 多 聲音</button><button data-tab="play">🎮 10 種 遊戲＋25 題 闖關</button></div>
 <main>
+<section class="scr" id="s_snd" hidden><div class="ctl top"><button id="sdIdxB" class="btn gold" data-sdc="idx">📑 目次</button><span class="sdtl">🔤 字母 和 聲音：先 熟悉 每 一個 字母 的 聲音，再 玩 拼音 地圖</span></div>
+  <div class="sdwrap"><div class="sdths pnl" id="sdThs"></div><div class="sdmain"><div id="sdInfo"></div><div class="pnl" id="sdStage"></div>
+  <div class="ctl"><button class="btn" data-sdc="pause">⏸️ 暫停</button><button class="btn" data-sdc="slow">🐢 慢速</button><button class="btn" data-sdc="again">🔁 再 一次</button><button class="btn" data-sdc="prev">◀ 上 一部</button><button class="btn" data-sdc="next">▶ 下 一部</button></div></div></div></section>
 <section class="scr" id="s_ani"><div class="ctl top"><button id="aIdx" class="btn gold">📑 目次</button><div id="scList"></div></div><div class="pnl" id="stage"></div>
   <div class="ctl"><button id="aAni">🎬 秒懂 動畫：開</button><button id="aPrev">◀ 上一段</button><button id="aStep">▶ 逐次 播放</button><button id="aAll">👀 全部 展示</button><button id="aThink">🤔 引導 思考</button><button id="aPause">⏸️ 暫停</button><button id="aSlow">🐢 慢速</button><button id="aAgain">🔁 再一次</button><button id="aOne">1️⃣ 單字 唸 一次：關</button><button id="aStress">🎵 重音：關</button><button id="aQz" class="btn gold">📝 隨堂 測驗</button><button id="aNext">下一段 ▶</button></div>
   <div id="scIdx" hidden></div></section>

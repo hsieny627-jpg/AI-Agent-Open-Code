@@ -15,6 +15,14 @@
 ② 兩大類 並排：**⚡ 現場 任務（上課，來源 school）**｜**🏠 回家 任務（來源 home）**；一個「任務」＝ 同 一天、同 一班、同 一個 題組；每 類 最上面「🆕 最近 一次」大 卡 ＋「📋 最近 五次」（新 的 在 上面）＋〔⬇ 再 看 10 個〕；
 ③ 點 一張 ＝ 全班 每 一個 人（照 座號：分數、正確率、答對／題數、秒數、做 了 幾 次、時間、只 做到 第 N 題）；**成長測驗 的 ✍️ 字母 書寫 分析 直接 在 這裡**（`hwHTML`）；打 一個 學生 ＝ 他 最近 5 次。量測 `OUT=… TABS=s SQ=307 node score/_shot_teacher.js`。
 
+## 2026-11-19 第六十二次（先讀 這一節；**改了 `_calc.js` ➜ 要 重新 部署** https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html ）
+| 老師 | 做法 |
+|---|---|
+| 6-(2)〔🔎 找 成績〕班級 最近 成績 | `_teacher.js`：`data-scls` 班級 按鈕；任務 打開 ＝ `sOver`（全班 整體 表現）、`sWrongRank`（全班 錯題 排行）、〔🔍 錯題〕`sPer`（個人）|
+| 6-(1)B ✍️ 字母 書寫 截圖 分析 | `_teacher.js` `hsOpen`／`hsBig`／`hsCanvas`（老師看板 內 嵌 `g3mid/_hw.js` 的 `HW.T` 畫 正確 寫法）；筆畫 ＝ 每 題 第 8 格 `"*A:…/a:…"`，第 7 格 沒 原因 ＝ `~w`；`_calc.js` `SKRE` 收（`~w` 不 算 拖曳 放錯）|
+| 44 音 遊戲 成績 | `_bank.js` `g年級gm_ph-sd0～12`（第幾題 ＝ `phonics/_snd.js` ALL）|
+量測 `node score/_verify_62.js`（假 伺服器）＋`node score/_test.js`。
+
 ## 2026-11-17 第五十八次（先讀 這一節）
 `_calc.js` `clean`：寫字 題 答錯 的 原因 第 7 格 `~draw`／`~line`／`~jbar` 留著（以前 只 留 拖曳 的 `~1.4`）；`questions()` 多 `wy`（每 一題 每 種 原因 幾次）。**要 重新 部署**（大字版 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/score/update.html ）。
 老師看板 `_teacher.js` `hwHTML`：〔🏫 課堂複習〕成長測驗 ✍️ 字母 書寫 分析（全班 錯 的 原因 長條、每 位 學生 第 1 次 ➜ 第 2 次＋進步、最近 一次 錯 在 哪裡）。`_wrev.js` 錯題 總複習：英文 中文 分開 記、步驟 條（見 `g3mid/CLAUDE.md`）。

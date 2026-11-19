@@ -161,7 +161,7 @@ h1{margin:0;font-size:clamp(26px,4.4vh,42px);font-weight:700;letter-spacing:.04e
 #cards .w{font-size:clamp(14px,2vh,18px);font-weight:700}
 #cards .z{font-size:clamp(11px,1.5vh,13px);color:#8E8E8E;margin-left:auto}
 
-${require('./_grades').CSS}
+${require('./_grades').CSS}${require('./_grades').CSS12}
 /* 2026-10-07：兩個年級各 9 項（使用者第 11 點），iPad 橫放 1024×768 不可以有捲軸 ➜ 總首頁每一列壓扁一點（按鈕照樣 ≧ 44px 高） */
 header{margin-bottom:clamp(4px,.7vh,10px)}
 h1{font-size:clamp(24px,3.6vh,40px)}
@@ -204,6 +204,13 @@ footer a{color:#7E7E7E;text-decoration:none;font-size:clamp(12px,1.7vh,14.5px);
  border-bottom:1px solid #242424;padding-bottom:1px}
 footer a:hover{color:#9FB4C8;border-bottom-color:#9FB4C8}
 footer .sep{color:#2A2A2A;font-size:12px}
+/* 2026-11-19 第六十二次 老師 1-(2)：自然發音 右半邊 字 太 小、擠 在 一起 ➜ 一顆 一顆 大 按鈕（跟 年級 按鈕 一樣 大），一排 3 顆 */
+.phg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(5px,.8vh,9px) clamp(8px,1vw,12px)}
+@media (max-width:1000px){.phg{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (max-width:600px){.phg{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.gr.phm h2{margin-bottom:4px}
+.phg a{display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;color:#F2F2F2;background:#18222B;border:1px solid #3A4A58;border-radius:14px;
+ padding:4px 10px;font-size:clamp(15px,2.2vh,20px);font-weight:700;min-height:44px;line-height:1.2}
+.phg a.bkbig{color:#0B1236;background:#5BE38C;border:2px solid #fff}
 </style>
 ${require('../score/_c25.js').hideLinks()}</head>
 <body>
@@ -213,8 +220,12 @@ ${require('../score/_client.js').home(0, '', 'school', 1)}
 </header>
 
 <main id="hub">
-${require('./_grades').GRADES.map(G => require('./_grades').rows(G, '').replace('年級首頁 ➜</a>', '年級首頁 ➜</a> <a class="h25 c25" href="go25/index.html?g=' + (/三/.test(G.g) ? 3 : 4) + '">📱 25 題 闖關 QR ➜</a>')).join('\n')}
-<section class="gr phm"><h2>🔤 自然發音 Phonics Master <a class="bkbig" href="phonics/games.html?book=3">📗 三年級 第三、四課 單字 ➜</a> <a class="bkbig" href="phonics/games.html?book=4">📗 四年級 第三、四課 單字 ➜</a> <a href="phonics/index.html">🃏 字卡 ➜</a> <a class="h25" href="phonics/games.html">🎮 CVC 遊戲 ➜</a> <a class="h25" href="phonics/games.html?c25=3">🏁 三年級 CVC 單字 25 題 闖關 ➜</a> <a class="h25" href="phonics/games.html?c25=4">🏁 四年級 CVC 單字 25 題 闖關 ➜</a> <a class="h25" href="phonics/map.html">🗺️ 拼音 地圖：從 CVC 到 課本（秒懂 動畫＋10 種 遊戲）➜</a> <a class="h25" href="phonics/map2.html">🗺️ 新版 拼音 地圖（▲▼）➜</a></h2></section>
+${require('./_grades').GRADES.map(G => require('./_grades').rows(G, '', 1).replace('年級首頁 ➜</a>', '年級首頁 ➜</a> <a class="h25 c25" href="go25/index.html?g=' + (/三/.test(G.g) ? 3 : 4) + '">📱 25 題 闖關 QR ➜</a>')).join('\n')}
+<section class="gr phm"><h2>🔤 自然發音 Phonics Master</h2><div class="phg">
+<a class="bkbig" href="phonics/games.html?book=3">📗 三年級 第三、四課 單字</a><a class="bkbig" href="phonics/games.html?book=4">📗 四年級 第三、四課 單字</a>
+<a href="phonics/index.html">🃏 字卡</a><a href="phonics/sounds.html">🔤 字母 和 聲音（44 音 字卡）</a><a href="phonics/games.html">🎮 CVC 遊戲</a>
+<a href="phonics/games.html?c25=3">🏁 三年級 CVC 25 題 闖關</a><a href="phonics/games.html?c25=4">🏁 四年級 CVC 25 題 闖關</a>
+<a href="phonics/map.html">🗺️ 拼音 地圖（動畫＋遊戲）</a><a href="phonics/map2.html">🗺️ 新版 拼音 地圖（▲▼）</a></div></section>
 </main>
 
 <footer>

@@ -337,3 +337,9 @@ main{top:calc(66px + var(--sbh,0px))}
 .cxc{font-size:1.5em;color:#2A1B00;background:#FFE07A;border-radius:12px;padding:0 12px}.cxl{font-size:clamp(20px,2.2vw,26px);color:#BFD0FF;margin:6px 0}
 .cxe{display:flex;flex-wrap:wrap;gap:12px}.cxw{display:flex;align-items:center;gap:10px;background:#141B3D;border-radius:18px;padding:6px 12px}.cxz{font-size:clamp(20px,2.2vw,26px);color:#FFE9A8;font-weight:800}
 .bgp.cxg{outline:5px solid #FFD54A;outline-offset:4px;border-radius:10px;box-shadow:0 0 22px rgba(255,213,74,.7);animation:cxG 1s ease-in-out infinite alternate}@keyframes cxG{to{box-shadow:0 0 34px rgba(255,213,74,1)}}
+
+/* 第六十二次：關閉 鈕 修好（.cxp 的 display:flex 蓋 掉 hidden）；第二 組 組合 ＝ 水藍 框；點 的 那 一組 會 動 */
+.cxp[hidden],.cxw[hidden],.cxs[hidden]{display:none!important}
+.bgp.cxg2{outline:5px solid #22D3EE;outline-offset:4px;border-radius:10px;box-shadow:0 0 22px rgba(34,211,238,.7);animation:cxG2 1s ease-in-out infinite alternate;cursor:pointer}@keyframes cxG2{to{box-shadow:0 0 34px rgba(34,211,238,1)}}
+.bgp.cxg{cursor:pointer}.bgp.cxon{transform:scale(1.12);filter:brightness(1.35);transition:transform .2s}
+.cxc.c2{background:#22D3EE;color:#00222B}

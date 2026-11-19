@@ -4554,12 +4554,20 @@ function tick(){cancelAnimationFrame(TM.raf);var l=tLeft();$('#tmb').style.trans
  if(TM.run&&l<=0){TM.run=false;if(!BUSY){BUSY=true;miss(null)}return}TM.raf=requestAnimationFrame(tick)}
 /* ── 對了：100 ＋ 速度 900 ＋ 連對（最多 ＋250）── */
 /* 成績（第二十七次）：一題 一筆 [答對, 選了 第幾個（0 ＝ 正解、-1 ＝ 時間到、1 ＝ 其他 錯的）, 秒數, 1 秒 內 就 按, 剩下, 題庫 第幾題] */
+/* 筆畫 ➜ 短 字串：x（0～3.4）、y（-0.25～3.25）各 一個 字元（62 格），一 筆 最多 28 個 點，筆 和 筆 之間 ',' */
+var SKC='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+function skEnc(sk){return (sk||[]).slice(0,8).map(function(st){var n=st.length,step=Math.max(1,Math.ceil(n/28)),o='';for(var i=0;i<n;i+=step){var p=st[i];o+=SKC[Math.max(0,Math.min(61,Math.round(p[0]/3.4*61)))]+SKC[Math.max(0,Math.min(61,Math.round((p[1]+.25)/3.5*61)))]}
+  if((n-1)%step){var q=st[n-1];o+=SKC[Math.max(0,Math.min(61,Math.round(q[0]/3.4*61)))]+SKC[Math.max(0,Math.min(61,Math.round((q[1]+.25)/3.5*61)))]}return o}).join(',')}
 function qRec(ok,pick){if(!R||R.Q.length>R.k)return;var ms=Date.now()-(R.ts||Date.now()),o=R.q.o,ci=ok?0:pick==null?-1:1;
   if(!ok&&o&&pick!=null){try{var pj=JSON.stringify(pick);for(var i=1;i<o.length;i++)if(JSON.stringify(o[i])===pj||o[i]===pick){ci=Math.min(3,i);break}}catch(e){}}   /* 寫字題 的 pick 有 畫布（不能 轉 文字）➜ 算 1 */
   R.Q.push([ok?1:0,ci,Math.round(ms/100)/10,pick!=null&&ms<1000?1:0,ok?Math.round(tLeft()/TM.T*1000)/1000:R.x&&G.id==='dc'?Math.round((R.frac||0)*1000)/1000:0,R.x?XA().indexOf(R.q):G.B.indexOf(R.q)]);   /* 🔓 解碼 任務 答錯 ＝ 第 5 格 放 放對 幾成（伺服器 照 這個 算 分）*/
   if(!ok&&G.id==='dc'&&pick&&pick.length&&R.q.t){var bd=decBad(R.q,pick);if(bd.length)R.Q[R.Q.length-1].push('~'+bd.slice(0,12).join('.'))}   /* 第四十四次 第 1-(2) 點：第 7 格 ＝ 放錯 的 是 哪幾個 英文 字 */
   /* 2026-11-17 第五十八次 第 11 點（老師：字母 書寫 是 真的 寫錯、時間 到 不會 寫，還是 只 是 沒 碰到 線？）：寫字 題 答錯 ＝ 第 7 格 記 原因 ~draw 字形 錯、~line 沒 碰到 線／超線、~jbar J 少 一橫；時間 到 ＝ 第 2 格 -1（本來 就 有）*/
-  if(!ok&&(pick==='line'||pick==='draw'||pick==='jbar'))R.Q[R.Q.length-1].push('~'+pick);crProg(ok);if(R.x&&!R.crs){xSeenAdd(XA().indexOf(R.q));setTimeout(xSave,0)}if(R.Q.length%5===0)setTimeout(recPart,0)}   /* 25／50 題：題庫 ＝ 挑戰 題庫（10 種 接起來）*/
+  if(!ok&&(pick==='line'||pick==='draw'||pick==='jbar'))R.Q[R.Q.length-1].push('~'+pick);
+  /* 2026-11-19 第六十二次 老師 6-(1)B：寫字 題 ＝ 第 8 格 存 最後 送出 的 筆畫（老師看板 ✍️ 截圖 分析）；時間 到 還 沒 送出 ＝ 存 板子 上 現在 的 樣子；第 7 格 沒有 原因 ＝ "~w" */
+  if(R.wSk||R.curPad){var W=R.wSk||{};if(R.curPad&&R.curWant&&!W[R.curWant]&&!R.curPad.empty())W[R.curWant]=R.curPad.strokes();var ks=Object.keys(W).slice(-2);
+    if(ks.length){var e='*'+ks.map(function(k){return k+':'+skEnc(W[k])}).join('/'),L=R.Q[R.Q.length-1];if(e.length<1400){if(L.length===6)L.push('~w');L.push(e)}}}
+  R.wSk=null;R.curPad=null;R.curWant=null;crProg(ok);if(R.x&&!R.crs){xSeenAdd(XA().indexOf(R.q));setTimeout(xSave,0)}if(R.Q.length%5===0)setTimeout(recPart,0)}   /* 25／50 題：題庫 ＝ 挑戰 題庫（10 種 接起來）*/
 /* 2026-11-03 第四十二次 第 5 點（老師）：做到 一半 ＝ 立刻 存＋送 給 老師（每 5 題、按〔先 離開〕、切到 別的 畫面）；老師看板「任務只完成到第 N 題」；
    同一次 ＝ 同一個 編號（R.pu），做完 的 那一筆 蓋掉 做到 一半 的；25／50 題 多 送 進度（換 平板 也 能 接著 做）*/
 function recTot(){return R?(R.x||(R.qs?R.qs.length:0)):0}
@@ -4664,7 +4672,8 @@ function skCanvas(sk,hpx,ln){var u=hpx/3.5,xs=[];sk.forEach(function(s){s.forEac
 function writeUI(stage,q,left,lk){var row=H('div','wrow'),L=H('div','wleft'),Rt=H('div','wrt');row.appendChild(L);row.appendChild(Rt);stage.appendChild(row);left(L);
  var pad=new Pad(Rt,{lock:function(){return BUSY||(lk&&lk())}}),bt=H('div','wbtn','<button class="er">🧽 擦掉</button><button class="go">✅ 寫好了</button>');Rt.appendChild(bt);
  bt.querySelector('.er').onclick=function(){if(!BUSY)pad.clear()};
- bt.querySelector('.go').onclick=function(){if(BUSY||pad.empty()||(lk&&lk()))return;var sk=pad.strokes(),j=HW.judge(sk,q.want);R.lastImg=pad.img();R.lastGot=j.got;R.lastSk=JSON.parse(JSON.stringify(sk));R.lastLn=null;R.lastJ=0;
+ if(R){R.curPad=pad;R.curWant=q.want}
+ bt.querySelector('.go').onclick=function(){if(BUSY||pad.empty()||(lk&&lk()))return;var sk=pad.strokes(),j=HW.judge(sk,q.want);if(R){R.wSk=R.wSk||{};R.wSk[q.want]=JSON.parse(JSON.stringify(sk))}R.lastImg=pad.img();R.lastGot=j.got;R.lastSk=JSON.parse(JSON.stringify(sk));R.lastLn=null;R.lastJ=0;
    var ln=HW.lines(sk,q.want),yy=[];sk.forEach(function(t){t.forEach(function(p){yy.push(p[1])})});var outG=Math.min.apply(0,yy)<-.2||Math.max.apply(0,yy)>3.2;   /* 2026-10-31 第三十五次 第 4 點：-.15 ➜ -.2（寫字板 的 邊 ＝ -.25，碰到 邊 才 叫 學生 再 寫 一次）*/   /* 超出 整個 四線格（最上面、最下面 的 線 外面）＝ 超出 格子 */
    if(outG&&!R.retry){R.retry=1;BUSY=true;tPause();var tt=H('div','rtry','✋ 超出 格子 了！<br>再 寫 一次<small>（不扣 時間，一題 一次）</small>');Rt.appendChild(tt);later(function(){tt.remove();pad.clear();BUSY=false;tGo()},1800);return}
    /* 2026-10-31 第三十五次 第 4 點：形狀 對（不看 位置）＋線 也 對（照 要寫 的 那一個 字母 的 線）＋不是 寫成 另一個 大小寫 ＝ 對（原本 位置 有一點 偏 就 判 錯）*/
@@ -5192,6 +5201,22 @@ function mgEnd(){var MGT=MT().T,c=[0,0,0,0,0];R.mg.forEach(function(v){c[v||0]++
   '<div>'+MGT.map(function(T,i){return c[i+1]?T[0]+' ✕ '+c[i+1]:''}).filter(Boolean).reverse().join('　')+'　'+MT().e+' ＋'+pts+'<small>（遊戲 積分，💯 正確率 照舊）</small></div></div>'}
 function caseTag(w){var up=w===w.toUpperCase()&&w!==w.toLowerCase();return '<span class="cz '+(up?'up':'lo')+'">✍️ 寫 <b><em class="czk">'+(up?'大':'小')+'</em>寫</b><i>'+(up?'A B C':'a b c')+'</i></span>'}   /* 第四十一次 第 7-A 點：「大」一直 變大、「小」一直 變小（秒懂 動畫）*/
 function lwSk(ch,dy,sc){var st=HW.T[ch][0];return st.map(function(s){return s.map(function(p){return [p[0]*(sc||1),p[1]*(sc||1)+(dy||0)]})})}
+/* ══ 2026-11-19 第六十二次 老師 6-(1)B-6：開始 前 用 秒懂 動畫 示範 正確 的 作答 方式（還 沒 計分，用 第一題 的 字母）：
+ *   ✍️ 正確 寫法 ＝ 四線格 上 一筆 一筆 寫 出來（筆 的 順序、頂天 立地 的 點 亮 起來）➜ ❌ 錯 的 寫法（大小寫 寫錯、超出 線、沒 碰到 線）➜ 看 標籤 寫 大寫 還是 小寫 ══ */
+function penCanvas(ch,hpx,col){var c=letterCanvas(ch,hpx,'#fff',0),cx=c.getContext('2d'),st=HW.T[ch][0],u=hpx/3.5,xs=[];st.forEach(function(s){s.forEach(function(p){xs.push(p[0])})});var x0=Math.min.apply(0,xs),x1=Math.max.apply(0,xs),W=Math.max(u*2.2,(x1-x0)*u+u*1.2),ox=(W-(x1-x0)*u)/2-x0*u;
+  function Y(g){return u*(g+.25)}var P=[];st.forEach(function(s,si){s.forEach(function(p,i){P.push([ox+p[0]*u,Y(p[1]),si,i])})});var k=0,t0=0;cx.strokeStyle=col||'#1A237E';cx.lineWidth=Math.max(6,u*.1);cx.lineCap='round';cx.lineJoin='round';
+  function step(){if(!document.body.contains(c)&&k>0)return;for(var n=0;n<2&&k<P.length;n++,k++){var p=P[k];if(p[3]===0){cx.beginPath();cx.moveTo(p[0],p[1])}else{cx.lineTo(p[0],p[1]);cx.stroke();cx.beginPath();cx.moveTo(p[0],p[1])}}
+    if(k<P.length)requestAnimationFrame(step);else{HW.contacts(st).forEach(function(q){cx.beginPath();cx.fillStyle='#FFB300';cx.strokeStyle='#7A4A00';cx.lineWidth=2;cx.arc(ox+q[0]*u,Y(q[1]),Math.max(6,u*.12),0,7);cx.fill();cx.stroke()})}}
+  c.replay=function(){var r=letterCanvas(ch,hpx,'#fff',0);cx.drawImage(r,0,0,r.width/2,r.height/2);k=0;cx.strokeStyle=col||'#1A237E';cx.lineWidth=Math.max(6,u*.1);requestAnimationFrame(step)};setTimeout(function(){requestAnimationFrame(step)},300);return c}
+function lwEx(){var q=R&&R.qs&&R.qs[0],w=q&&(q.up||q.want||'B');w=String(w).charAt(0);if(!HW.T[w])w='B';var up=w.toUpperCase(),lo=w.toLowerCase();return {up:HW.T[up]?up:'B',lo:HW.T[lo]?lo:'b'}}
+function lwShow(b,h){var e=lwEx();b.innerHTML='<div class="lwt">✍️ 正確 的 寫法：<b>一筆 一筆</b> 跟著 寫（還 沒 開始 計分）</div><div class="lwr"></div>';var r=b.querySelector('.lwr');
+  [e.up,e.lo].forEach(function(c,i){var d=H('div','lwc ok');d.innerHTML=caseTag(c);var cv=penCanvas(c,h,'#0A5E2D');d.appendChild(cv);d.appendChild(H('div','lwk','✅ '+c+'　黃點 ＝ 碰到 線'));r.appendChild(d);if(i)setTimeout(function(){cv.replay&&cv.replay()},1700)})}
+lwShow.ms=5200;
+function lwBad(b,h){var e=lwEx();b.innerHTML='<div class="lwt">❌ 這樣 寫 <b class="rd">算 錯</b>：</div><div class="lwr"></div>';var r=b.querySelector('.lwr');
+  var d0=H('div','lwc no');d0.innerHTML=caseTag(e.up);d0.appendChild(letterCanvas(e.lo,h,'#B71C1C',0));d0.appendChild(H('div','lwk','❌ 要 寫 大寫，寫成 小寫 '+e.lo));r.appendChild(d0);
+  [[lwSk(e.up,.5),'❌ 超出 紅線'],[lwSk(e.up,.3,.6),'❌ 頭 沒有 碰到 線']].forEach(function(x){var d=H('div','lwc no'),ln;try{ln=HW.lines(x[0],e.up)}catch(er){ln=null}if(!ln||!ln.map)ln={map:{sw:0,sx0:0,tx0:0,tw:1},miss:[],over:[]};d.appendChild(skCanvas(x[0],h,ln));d.appendChild(H('div','lwk',x[1]));r.appendChild(d)});
+  var ok=H('div','lwc ok');ok.innerHTML=caseTag(e.up);ok.appendChild(letterCanvas(e.up,h,'#0A5E2D',1));ok.appendChild(H('div','lwk','✅ 這樣 才 對'));r.appendChild(ok)}
+lwBad.ms=5200;
 function lwIntro(done){if(window.__NOGO||window.__NOLWI){done();return}var o=H('div','lwi',''),k=0,h=Math.round(Math.min(innerHeight*.26,230));document.body.appendChild(o);
   var S=[function(b){b.innerHTML=(LWM==='la'?'<div class="lwt">🔊 先 聽 一個 <b>字母</b>（唸 2 次）</div>':LWM==='lf'?'<div class="lwt">🔊 先 聽 一個 <b>單字</b> ➜ 想 它 的 <b>第一個 字母</b>（🔊 pig ➜ p）</div>':'')+'<div class="lwt">① 先 看 黃色／藍色 大 標籤：要 寫 哪 一種？</div><div class="lwr"><div class="lwc">'+caseTag('A')+'<div class="lws">A B C</div></div><div class="lwc">'+caseTag('a')+'<div class="lws">a b c</div></div></div>'},
     function(b){b.innerHTML='<div class="lwt">② ⬆ 頂天：高 的 字母，頭 碰到 <b>最上面 的 線</b></div><div class="lwr"></div>';var r=b.querySelector('.lwr');['H','h','J'].forEach(function(c){var d=H('div','lwc ok');d.appendChild(letterCanvas(c,h,'#0A5E2D',1));d.appendChild(H('div','lwk','✅ '+c));r.appendChild(d)})},
@@ -5199,9 +5224,9 @@ function lwIntro(done){if(window.__NOGO||window.__NOLWI){done();return}var o=H('
     function(b){b.innerHTML='<div class="lwt">④ 🚫 不超線：這樣 <b class="rd">算 錯</b> ❌，這樣 才 對 ✅</div><div class="lwr"></div>';var r=b.querySelector('.lwr');
       [[lwSk('h',.45),'❌ 腳 掉到 紅線 下面','h'],[lwSk('H',.55,.72),'❌ 頭 沒有 碰到 最上面','H'],[lwSk('a',-.55),'❌ 飄 在 半空中','a']].forEach(function(x){var d=H('div','lwc no'),ln;try{ln=HW.lines(x[0],x[2])}catch(e){ln=null}if(!ln||!ln.map)ln={map:{sw:0,sx0:0,tx0:0,tw:1},miss:[],over:[]};d.appendChild(skCanvas(x[0],h,ln));d.appendChild(H('div','lwk',x[1]));r.appendChild(d)});
       var d=H('div','lwc ok');d.appendChild(letterCanvas('h',h,'#0A5E2D',1));d.appendChild(H('div','lwk','✅ 頂天 立地'));r.appendChild(d)}];
-  S.unshift(mgIntro);if(LWM==='az'){S.unshift(azJ);S.unshift(azScore);S.unshift(azIntro)}   /* 第五十五次 第 1-(1)B 點：怎麼 算 分數、大寫 J 一橫 */   /* 第四十五次 第 3 點：三種 都 先 演 獎勵 規則 */   /* 第四十四次 第 6-(3) 點：先 用 秒懂 動畫 說：寫得 愈好 ＝ 魔法 獎勵 愈 豐盛；寫錯 ＝ 沒有 獎勵 */
+  S.unshift(lwBad);S.unshift(lwShow);S.unshift(mgIntro);if(LWM==='az'){S.unshift(azJ);S.unshift(azScore);S.unshift(azIntro)}   /* 第五十五次 第 1-(1)B 點：怎麼 算 分數、大寫 J 一橫 */   /* 第四十五次 第 3 點：三種 都 先 演 獎勵 規則 */   /* 第四十四次 第 6-(3) 點：先 用 秒懂 動畫 說：寫得 愈好 ＝ 魔法 獎勵 愈 豐盛；寫錯 ＝ 沒有 獎勵 */
   o.innerHTML='<div class="lww"><div class="lwh">'+(LWN[LWM]||LWN.lw)[0]+' '+(LWN[LWM]||LWN.lw)[1]+'：開始 前 看 一下</div><div class="lwd">'+S.map(function(){return '<i></i>'}).join('')+'</div><div class="lwb" id="lwb"></div><div class="lwbt"><button id="lwag" class="b2">🔁 再看 一次</button><button id="lwgo" class="b1" disabled>▶ 開始 寫（'+(LWM==='az'?'26 個 字母':'10 題')+'）</button></div></div>';
-  var tm=null;function show(){var b=$('#lwb');if(!b)return;[].forEach.call(o.querySelectorAll('.lwd i'),function(d,j){d.className=j<k?'ok':j===k?'on':''});S[k](b);b.classList.remove('in');void b.offsetWidth;b.classList.add('in');
+  var tm=null;function show(){var b=$('#lwb');if(!b)return;[].forEach.call(o.querySelectorAll('.lwd i'),function(d,j){d.className=j<k?'ok':j===k?'on':''});S[k](b,h);b.classList.remove('in');void b.offsetWidth;b.classList.add('in');
     tm=setTimeout(function(){k++;if(k<S.length)show();else{[].forEach.call(o.querySelectorAll('.lwd i'),function(d){d.className='ok'});$('#lwgo').disabled=false;$('#lwgo').classList.add('rdy')}},S[k].ms||(k===S.length-1?4200:3200))}
   $('#lwag').onclick=function(){clearTimeout(tm);k=0;show()};$('#lwgo').onclick=function(){if(this.disabled)return;clearTimeout(tm);o.remove();try{ls('g3m_lwi_'+(SCID||'0'),'1')}catch(e){}done()};show()}
 function startLW(m){if(m&&LWP[m])LWM=m;if(typeof SCON!=='undefined'&&SCON&&!SCID){scLogin(function(){SCH.close();scBar();startLW()});return}

@@ -17,9 +17,9 @@ function serve() { return new Promise(r => { const T = { '.html': 'text/html', '
 /* ① 聲音 */
 const AU = p => path.join(__dirname, 'au', p + '.mp3'), LI = p => path.join(ROOT, 'listen', '2026-11-18_P60', p + '.mp3');
 ['s_ed', 's_ao', 's_kw', 's_ech'].forEach(c => ok(fs.existsSync(AU(c)), '沒有 ' + c));
-/* 第六十一次：s_ao、s_kw 又 換 成 P61（_verify_61 量）*/ok(fs.readFileSync(AU('s_ao')).equals(fs.readFileSync(path.join(ROOT, 'listen', '2026-11-18_P61', 's_ao_F.mp3'))), 's_ao 不是 P61');
+/* 第六十一次：s_ao、s_kw 又 換 成 P61（_verify_61 量）*/ok(fs.readFileSync(AU('s_ao')).equals(fs.readFileSync(path.join(ROOT, 'listen', '2026-11-19_P62', 's_ao_T.mp3'))), 's_ao 不是 P62');   /* 第六十二次：換 成 老師 錄音（_verify_62 量）*/
 ok(fs.readFileSync(AU('s_ed')).equals(fs.readFileSync(LI('s_ed_A2'))), 's_ed 不是 大聲 版');
-ok(fs.readFileSync(AU('s_kw')).equals(fs.readFileSync(path.join(ROOT, 'listen', '2026-11-18_P61', 's_kw_C.mp3'))), 's_kw 不是 P61');
+ok(fs.readFileSync(AU('s_kw')).equals(fs.readFileSync(path.join(ROOT, 'listen', '2026-11-19_P62', 's_kw_D.mp3'))), 's_kw 不是 P62');
 ok(!fs.readFileSync(AU('s_kw')).equals(fs.readFileSync(LI('v59/s_kw'))), 's_kw 跟 舊 的 一樣');
 ['s_ao_C', 's_ao_D', 's_kw_B', 's_ech_A'].forEach(c => ok(fs.existsSync(LI(c)), '試聽頁 沒有 ' + c));
 const LH = fs.readFileSync(path.join(ROOT, 'listen', '2026-11-18_P60', 'index.html'), 'utf8'); ['s_ao_C', 's_kw_B', 's_ech_A', 's_ed_A2'].forEach(c => ok(LH.indexOf(c) >= 0, '試聽頁 沒 放 ' + c));

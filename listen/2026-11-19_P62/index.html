@@ -1,0 +1,23 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第六十二次 新聲音</title><style>
+body{margin:0;background:#0B1026;color:#fff;font-family:'Microsoft JhengHei','PingFang TC',sans-serif;padding:18px}
+h1{font-size:38px;margin:0 0 6px;color:#FFE07A}p{font-size:26px;line-height:1.6;color:#DCE4FF;margin:4px 0 14px}
+table{border-collapse:collapse;width:100%;max-width:1200px}td,th{border:1px solid #2A3570;padding:10px;font-size:26px;text-align:center}th{background:#141B3D;color:#FFE07A}
+td.w{font-size:40px;font-weight:700}td.t{text-align:left;font-size:24px;color:#DCE4FF}
+button{font-size:28px;font-weight:900;border-radius:14px;padding:12px 22px;cursor:pointer;margin:3px;min-height:60px}
+.o{background:#2A2A2A;color:#ccc;border:2px solid #666}.n{background:#062A35;color:#9EF0FF;border:3px solid #22D3EE}.s{outline:5px solid #FFE07A}
+</style></head><body>
+<h1>🎧 第六十二次 新聲音</h1>
+<p>灰色 ＝ 上一次（第六十一次）的、藍色 ＝ 新 的。<b style="color:#FFE07A">黃框 ＝ 網站 現在 用 的</b>。有 兩種 的 請 老師 選 一個。（字尾 ch：老師 說 OK，不 動）</p>
+<table id="t"><tr><th>聲音</th><th>老師 說</th><th>我 怎麼 改</th><th>上一次</th><th>新 的</th></tr></table>
+<script>
+const A=new Audio();function pl(s){A.src=s;A.play().catch(()=>{})}
+const R=[['ball 的 a、or 的 o（ㄛ）','都 不好，請 用 我 的 音檔','換成 老師 的 錄音（只 切掉 前後 沒 聲音、音量 跟 網站 一樣）','s_ao',[['老師 的 ㄛ','s_ao_T',1]]],
+['短 oo（good）','請 用 我 的 音檔','換成 老師 的 錄音','s_oo',[['老師 的 ㄨㄛ','s_oo_T',1]]],
+['字母 b','請 用 我 的 音檔','換成 老師 的 錄音','s_b',[['老師 的 b','s_b_T',1]]],
+['字首 qu','刪除 尾音 ㄛ','ㄨ 只 留 前面 最 穩 的 一小段，馬上 收尾','s_kw',[['新 ㄎㄨ','s_kw_D',1]]]];
+const N=[['ʒ（television 的 s、si／ge）','電腦 單獨 唸 不準 ➜ 從 真的 television 切 出來 接 長','s_zh'],['ear（一ㄦ）','新 做','s_ear'],['air（ㄝㄦ）','新 做','s_air'],['弱化音 ə（輕輕 的 ㄜ）','新 做','s_ax'],['u_e（一ㄨ）','新 做','s_yu'],['例字 television','電腦 聽寫 聽 對','../../phonics/au/w_c62_television'],['例字 hear','電腦 聽寫 聽 對','../../phonics/au/w_c62_hear'],['例字 hair','電腦 聽寫 聽 對','../../phonics/au/w_c62_hair']];
+const T=document.getElementById('t');R.forEach(r=>{T.insertAdjacentHTML('beforeend','<tr><td class="w">'+r[0]+'</td><td class="t">'+r[1]+'</td><td class="t">'+r[2]+'</td><td><button class="o" data-s="v61/'+r[3]+'.mp3">🔊 上一次</button></td><td>'+r[4].map(x=>'<button class="n'+(x[2]?' s':'')+'" data-s="'+x[1]+'.mp3">🔊 '+x[0]+'</button>').join('')+'</td></tr>')});
+document.body.insertAdjacentHTML('beforeend','<h1 style="margin-top:28px">🔤 44 音 字卡 新 的 聲音（請 老師 聽）</h1><table id="t2"><tr><th>聲音</th><th>怎麼 做 的</th><th>聽</th></tr>'+N.map(r=>'<tr><td class="w">'+r[0]+'</td><td class="t">'+r[1]+'</td><td><button class="n s" data-s="'+r[2]+'.mp3">🔊 聽</button></td></tr>').join('')+'</table>');
+document.addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b)pl(b.getAttribute('data-s'))});
+</script></body></html>

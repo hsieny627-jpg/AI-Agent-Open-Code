@@ -10,10 +10,10 @@ function serve() { return new Promise(r => { const T = { '.html': 'text/html', '
   const s = http.createServer((q, w) => { const f = path.join(ROOT, decodeURIComponent(q.url.split('?')[0])); fs.readFile(f, (er, b) => { if (er) { w.writeHead(404); w.end(); return; } w.writeHead(200, { 'content-type': T[path.extname(f)] || 'application/octet-stream' }); w.end(b); }); });
   s.listen(0, '127.0.0.1', () => { HTTP = 'http://127.0.0.1:' + s.address().port; r(s); }); }); }
 const AU = p => path.join(__dirname, 'au', p + '.mp3'), LI = p => path.join(ROOT, 'listen', '2026-11-18_P61', p + '.mp3'), eq = (a, b) => fs.readFileSync(a).equals(fs.readFileSync(b));
-ok(eq(AU('s_ao'), LI('s_ao_F')) && eq(AU('s_kw'), LI('s_kw_C')) && eq(AU('s_ech'), LI('s_ech_B')) && eq(AU('s_oo'), LI('s_oo_C')), '網站 聲音 沒有 換 成 P61');
+ok(eq(AU('s_ech'), LI('s_ech_B')), '網站 聲音 沒有 換 成 P61');   /* 第六十二次：ㄛ、qu、短 oo 換 成 P62（_verify_62 量）*/
 ['s_ao', 's_kw', 's_ech', 's_oo'].forEach(c => ok(!eq(AU(c), LI('v60/' + c)), c + ' 跟 舊 的 一樣'));
 const LH = fs.readFileSync(path.join(ROOT, 'listen', '2026-11-18_P61', 'index.html'), 'utf8'); ['s_ao_F', 's_ao_G', 's_kw_C', 's_ech_B', 's_oo_C'].forEach(c => ok(LH.indexOf(c) >= 0 && fs.existsSync(LI(c)), '試聽頁 沒有 ' + c));
-const B = require('./_book.js'); ok(Object.keys(B.COMBO).join() === 'thin,tall,short,strong', '常見 拼字 組合 不是 4 個 字');
+const B = require('./_book.js'); ok(Object.keys(B.COMBO).slice(0, 4).join() === 'thin,tall,short,strong', '常見 拼字 組合 前 4 個 字 不對');   /* 第六十二次：19 個 課本 字 */
 Object.values(B.COMBO).forEach(L => L.forEach(x => { ok(fs.existsSync(AU(x.au)), '沒有 組合 聲音 ' + x.au); x.ex.forEach(e => ok(B.WX[e] && fs.existsSync(AU(B.WX[e].au)), '延伸 字 沒有 聲音 ' + e)); }));
 const HOST = fs.readFileSync(path.join(ROOT, 'live', 'host.html'), 'utf8'); ok(/\['stm6','⚔️ 拼音 地圖 第 7 關','一 字母 多 聲音'\]/.test(HOST), '大螢幕 沒有 第 7 關');
 async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContext({ viewport: { width: vp[0], height: vp[1] }, hasTouch: true });

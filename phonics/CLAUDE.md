@@ -3,6 +3,16 @@
 > 2026-11-12 第四十七次 第 2 點：老師 的 Phonics Master（原本 在 claude.ai 字卡 頁 https://claude.ai/artifact/PBkfDY3omYxT4VYRMaH4Yw）加進 網站。
 > 根目錄 `AGENTS.md` 第四節 同樣 適用。⚠ 老師：只 說 改 一個 地方 就 只 改 那 一個 地方。
 
+## 2026-11-19 第六十二次（計畫＋狀態：`phonics/2026-11-19_第六十二次_計畫.md`）——先讀 這一節
+| 老師 | 做法 |
+|---|---|
+| 聲音 P62 | ㄛ（`s_ao`）、短 oo（`s_oo`）、b（`s_b`）＝ **老師 的 錄音**（`ref/audio/teacher_*.mp3`）；qu 刪 尾音 ㄛ；`tools/ph_fix62.py`，試聽 https://hsieny627-jpg.github.io/AI-Agent-Open-Code/listen/2026-11-19_P62/ （舊 的 `v61/`）|
+| 常見 拼字 組合 | 19 個 課本 字（`_book.js` `COMBO` 第二段＋`WX` 25 個 延伸 字，`tools/ph_cx62.py`）；一 打開 全部 組合 都 框：第一 組 金框 `cxg`、第二 組 水藍 `cxg2`；點 框 ＝ 唸 那 一組（`cxOn`）；〔✖ 關閉〕修好（`.cxp[hidden]`）|
+| 拼音 地圖〔ㄅㄆㄇ 注音 順序〕| `_map.js` `ZON`／`ZCO`／`ZVG`／`mapDrawZ`（字首、母音、字尾 各 一顆，`phm_mzo`）|
+| 🔤 **44 音 字卡**（老師：最 重要 的 地基）| `sounds.html`（＝ map.html 第一個 分頁 `#snd`，`window.SNDP`）；資料 `_snd.js`、畫面＋遊戲 `_map_snd.js`；13 個 主題、46 部 動畫、13 個 遊戲 `sd0～sd12`（分類 閘門／拼法 接接樂／聽音 射擊／看字 選聲）＋30 秒 複習（`revPlay` ➜ `sndReview`）；現場任務 `PMG`、老師看板 `score/_bank.js` |
+| ⏳ 還沒 做 | 5 個 遊戲 改 真的 玩法（計畫 檔 第五節）|
+### 量測 `node phonics/_verify_62.js`（兩種 螢幕）
+
 ## 2026-11-18 第六十一次（計畫＋狀態＋遊戲 誠實 檢查：`phonics/2026-11-18_第六十一次_計畫.md`）——先讀 這一節
 ### 🔒 永久 規則（老師 2-(1)：寫 進 需求 檔，以後 不用 再 說）
 | 規則 | 做法 |
