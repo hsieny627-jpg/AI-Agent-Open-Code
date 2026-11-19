@@ -298,11 +298,11 @@ const XBS=new Set(typeof XBAD!=='undefined'?XBAD:[]),BDS=new Set(typeof BADC!=='
 /* 第六十次：ll ff ss、all、短 oo、沒有 字首 的 常見 真的 字（_realreg 用 規則 拼法 找 不到）*/
 const REALW=new Set('badge edge ledge hedge wedge ridge bridge judge fudge lodge dodge have give bell tell sell well fell yell hill fill will bill pill mill doll dull gull puff cuff cliff stiff stuff sniff fluff kiss miss boss moss toss less mess pass mass glass class grass dress press cross bliss ball tall fall call hall wall mall small stall good hood wood foot look cook hook took shook stood at an in on it up am and ant ask end ink'.split(' '));
 let MLV=LS.g('mlv','b'),MS=LS.g('ms2',{o:'b',v:'a',c:'t'}),MG={o:LS.g('mgo','b'),c:LS.g('mgc','b')};
-const VNM={a:'a',e:'e',i:'i',o:'o',u:'u',a_e:'a_e',i_e:'i_e',o_e:'o_e',u_e:'u_e',ai:'ai',ay:'ay',ee:'ee',ea:'ea',oa:'oa',ow:'ow',ou:'ou',ow2:'ow',oi:'oi',oy:'oy',au:'au',aw:'aw',oo:'oo',oo2:'oo',ar:'ar',or:'or',er:'er',ir:'ir',ur:'ur'};
+const VNM={e_e:'e_e',a:'a',e:'e',i:'i',o:'o',u:'u',a_e:'a_e',i_e:'i_e',o_e:'o_e',u_e:'u_e',ai:'ai',ay:'ay',ee:'ee',ea:'ea',oa:'oa',ow:'ow',ou:'ou',ow2:'ow',oi:'oi',oy:'oy',au:'au',aw:'aw',oo:'oo',oo2:'oo',ar:'ar',or:'or',er:'er',ir:'ir',ur:'ur'};
 const VSUB={ow:'ㄡ',ow2:'ㄠ',au:'ㄛ',aw:'ㄛ',oo:'長 ㄨ',oo2:'短 ㄛㄨ',ou:'ㄠ',oi:'ㄛ一',oy:'ㄛ一'};
 function codeOf(o,v,c){return MAPC.code(o,v,c)}function spellOf(o,v,c){return MAPC.spell(o,v,c)}
 /* 拼字 ➜ 方框 的 寫法 */
-function specOfMap(o,v,c){if(o==='無')o='';const sh=VV.b.indexOf(v)>=0,cc=c==='無'?'':c;let cs=cc;if(sh){if(cc==='k')cs='ck';else if(cc==='z')cs='zz'}
+function specOfMap(o,v,c){if(o==='無')o='';if(o==='th2')o='th=dh';const sh=VV.b.indexOf(v)>=0,cc=c==='無'?'':c;let cs=cc;if(sh){if(cc==='k')cs='ck';else if(cc==='z')cs='zz'}
   const vc=MAPC.VC[v],vs=v==='ow2'?'ow':v==='oo2'?'oo':v;let vp;
   if(/_e$/.test(v))vp=v[0]+'!='+(codeOf(o,v,c).split('-')[1]);else if(sh)vp=(v==='a'&&c==='ll')?'a=ao':v;else if(v==='ow2')vp='ow='+vc;else if(TEAM2[vs])vp=vs+'!='+vc;else if(RV[vs])vp=vs;else vp=vs+'='+vc;
   return (o?o+'.':'')+vp+(cs?'.'+cs:'')+(/_e$/.test(v)?'.e~':'')}
@@ -311,7 +311,7 @@ function why(o,v,c){if(MAPC.ok(o,v,c))return '';const sh=VV.b.indexOf(v)>=0;
   if(v==='ay'||v==='ow'||v==='oy'||v==='aw')return v+' 通常 在 字 的 最後（day、snow、boy、saw）';if(/_e$/.test(v))return 'magic e 後面 只 放 一個 子音（b d k l m n p t）';
   return '英文 很少 這樣 拼'}
 function chipHTML(lab,list,k,tag){return '<div class="mg">'+lab+'</div><div class="chips">'+list.map(x=>{const t=Object.assign({},MS);t[k]=x;const ok=MAPC.ok(t.o,t.v,t.c);
-  return '<button class="chip en'+(MS[k]===x?' on':'')+(ok?'':' dim')+'" data-mk="'+k+'" data-mv="'+x+'">'+(k==='v'?VNM[x]:x)+(k==='v'&&VSUB[x]?'<small>'+VSUB[x]+'</small>':tag?'<small>'+(x==='ld'||x==='lk'?'⚠ old talk':'新')+'</small>':'')+'</button>'}).join('')+'</div>'}
+  return '<button class="chip en'+(MS[k]===x?' on':'')+(ok?'':' dim')+'" data-mk="'+k+'" data-mv="'+x+'">'+(k==='v'?VNM[x]:x==='th2'?'th<small>有聲</small>':x)+(k==='v'&&VSUB[x]?'<small>'+VSUB[x]+'</small>':tag?'<small>'+(x==='ld'||x==='lk'?'⚠ old talk':'新')+'</small>':'')+'</button>'}).join('')+'</div>'}
 const OG=[['b','一個 子音（無 ＝ 沒有 字首，例：at、up；sh ch th wh ＝ 兩個 字母 一個 聲音；wh 的 h 不 發音；qu ＝ 2 個 聲音）',ON.b],['a2','兩個 子音（2 個 聲音）',ON.a2],['a3','三個 子音（3 個 聲音）',ON.a3]];
 const VG=[['b','短 母音（紅）',VV.b],['a','唸 名字 的 母音（黃）：magic e、兩個 母音 字母（第二個 灰）',VV.a],['t','其他 母音 組合：兩個 一起 唸（紅）、母音＋r（r 藍）',VV.t]];
 const CG=[['b','一個 子音（無 ＝ 沒有 字尾）',CO.b],['d','兩個 字母 一個 聲音（tch 的 t 不 發音；ll ff ss ＝ 短 母音 後面 的 l f s；dge ＝ ㄓ、ve ＝ v）',CO.d],['a2','兩個 子音（2 個 聲音）',CO.a2],['n2','兩個 子音 新 加 的（mb 的 b 不 發音）',CO.n2.concat(CO.a3),1]];
@@ -320,9 +320,11 @@ function grpTabs(k,G0,cur){return '<div class="gtabs">'+G0.map(g=>'<button data-
  * 字首：照 注音 ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐ…ㄓㄔㄕㄖㄗㄘㄙ（老師 給 的 b p m f d t n l g c k h j ch sh）；沒有 注音 的 照 我 的 建議 排 在 後面：一（y）ㄨ（w wh）ㄎㄨ（qu）v th
  * 字尾：同 一個 順序（ff 跟 f、ll 跟 l、ss 跟 s、tch 跟 ch、dge ＝ ㄓ），最後 ng（ㄥ）、th、ve
  * 母音：老師 的 五 組 ㄝ／一／ㄨ／ㄜ／ㄚ（照 老師 SoR 44 音 投影片 的 順序）＋剩下 的 照 我 的 建議：ar 跟 ㄚ、er ir ur 跟 ㄜ、ㄛ 組（au aw or oi oy）、ㄞ 組（i_e）*/
-const ZON=['b','p','m','f','d','t','n','l','g','c','k','h','j','ch','sh','r','z','s','y','w','wh','qu','v','th'];
+const ZON=['b','p','m','f','d','t','n','l','g','c','k','h','j','ch','sh','r','z','s','y','w','wh','qu','v','th','th2'];   /* 第六十三次：補 有聲 th（老師：少了）*/
 const ZCO=['b','p','m','f','ff','d','t','n','l','ll','g','k','x','dge','ch','tch','sh','z','s','ss','ng','th','ve'];
-const ZVG=[['ㄝ 組合',['e','ai','a_e','ay','a','ou','ow2']],['一 組合',['ea','ee','i','u_e']],['ㄨ 組合',['oo','oo2']],['ㄜ 組合',['u','o_e','oa','ow','er','ir','ur']],['ㄚ 組合',['o','ar']],['ㄛ 組合',['au','aw','or','oi','oy']],['ㄞ 組合',['i_e']]];
+/* 第六十三次 老師：母音 少了 很多 字母 ＝ 我 上次 只 列 這個 等級 有 的（🟢 基礎 只 有 a e i o u）➜ 注音 順序 一律 列 全部；照 老師 給 的 五 組 順序，剩下 的 照 我 的 建議（ㄞ、一ㄨ、ㄛ一、ㄛ、母音＋r）*/
+const ZVG=[['ㄝ 組合：e（ㄝ）、ai（ㄝ一）、a（ㄝㄚ）、ou ow（ㄝㄠ）',['e','ai','ay','a_e','a','ou','ow2']],['一 組合：ea ee e_e（一）、i（一ㄜ）',['ea','ee','e_e','i']],['ㄨ 組合：oo（長 ㄨ）、oo（短 ㄨㄛ）',['oo','oo2']],['ㄜ 組合：u（ㄜ）、o_e oa ow（ㄜㄨ）',['u','o_e','oa','ow']],['ㄚ 組合：o（ㄚ）',['o']],
+  ['其他（我 的 建議）：ㄞ i_e、一ㄨ u_e、ㄛ一 oi oy、ㄛ au aw、母音＋r ar or er ir ur',['i_e','u_e','oi','oy','au','aw','ar','or','er','ir','ur']]];
 let ZO=LS.g('mzo',{o:0,v:0,c:0});
 function zyTxt(t){const T=TT[t];if(!T)return '';return (T.sup||'')+T.zh}
 function zyOn(x){return x==='無'?'':zyTxt(MAPC.ONC?MAPC.ONC(x):({c:'k',qu:'kw',wh:'w'}[x]||x))}
@@ -330,10 +332,10 @@ function zyCo(x){return x==='無'?'':zyTxt(({x:'ks',tch:'ch',ll:'l',ff:'f',ss:'s
 function zyV(v){return zyTxt(MAPC.VC[v])}
 function zoBtn(k){return '<button class="zob'+(ZO[k]?' on':'')+'" data-zo="'+k+'">'+(ZO[k]?'ㄅㄆㄇ 注音 順序 ✔':'ㄅㄆㄇ 注音 順序')+'</button>'}
 function zChips(list,k){return '<div class="chips">'+list.map(x=>{const t=Object.assign({},MS);t[k]=x;const ok=MAPC.ok(t.o,t.v,t.c),z=k==='o'?zyOn(x):k==='c'?zyCo(x):zyV(x);
-  return '<button class="chip en zc'+(MS[k]===x?' on':'')+(ok?'':' dim')+'" data-mk="'+k+'" data-mv="'+x+'">'+(k==='v'?VNM[x]:x)+'<small class="zy">'+(z||'&nbsp;')+'</small></button>'}).join('')+'</div>'}
+  return '<button class="chip en zc'+(MS[k]===x?' on':'')+(ok?'':' dim')+'" data-mk="'+k+'" data-mv="'+x+'">'+(k==='v'?VNM[x]:x==='th2'?'th':x)+'<small class="zy">'+(z||'&nbsp;')+'</small></button>'}).join('')+'</div>'}
 function mapDrawZ(A){const has=(L,x)=>L.indexOf(x)>=0;
   if(ZO.o){const L=A?ON.b:ON.b;$('#mOn').innerHTML=zoBtn('o')+'<div class="mg">照 注音 ㄅ ㄆ ㄇ ㄈ… 的 順序（沒有 注音 的 在 最後）</div>'+zChips(['無'].concat(ZON.filter(x=>has(L,x))),'o')+(A?'<div class="mg">兩個、三個 子音：按 上面 切換 回 原本 順序</div>':'')}
-  if(ZO.v){const L=A?VV.b.concat(VV.a,VV.t):VV.b;$('#mV').innerHTML=zoBtn('v')+ZVG.map(g=>{const xs=g[1].filter(x=>has(L,x));return xs.length?'<div class="mg zg">'+g[0]+'</div>'+zChips(xs,'v'):''}).join('')}
+  if(ZO.v){const L=VV.b.concat(VV.a,VV.t);$('#mV').innerHTML=zoBtn('v')+ZVG.map(g=>{const xs=g[1].filter(x=>has(L,x));return xs.length?'<div class="mg zg">'+g[0]+'</div>'+zChips(xs,'v'):''}).join('')}
   if(ZO.c){const L=A?CO.b.concat(CO.d):CO.b.concat(CO.d);$('#mCo').innerHTML=zoBtn('c')+'<div class="mg">照 注音 ㄅ ㄆ ㄇ ㄈ… 的 順序（沒有 注音 的 在 最後）</div>'+zChips(['無'].concat(ZCO.filter(x=>has(L,x))),'c')+(A?'<div class="mg">兩個 子音（nd st…）：按 上面 切換 回 原本 順序</div>':'')}
   ['o','v','c'].forEach(k=>{if(!ZO[k]){const el=$(k==='o'?'#mOn':k==='v'?'#mV':'#mCo');el.insertAdjacentHTML('afterbegin',zoBtn(k))}})}
 function mapDraw(){const A=MLV==='a';$('#lvB').classList.toggle('on',!A);$('#lvA').classList.toggle('on',A);

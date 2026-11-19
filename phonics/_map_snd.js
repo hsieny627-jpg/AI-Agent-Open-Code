@@ -136,3 +136,39 @@ function sdPickG(x,ti){const s=R(x.sp),amb=SND.ALL.some(y=>y!==x&&y.sp.indexOf(s
   const go=i=>{const ok=orbs[i]===x;os[i].classList.add(ok?'ok':'no');const c=ctr(os[i]);if(ok)sparks(c[0],c[1],20);sdAns(ok,x,'選了 '+'ABC'[i]+'（'+sdZy(orbs[i])+'）')};
   sdDrag(gem,os,t=>go(+t.dataset.o));G.hk={ok:()=>go(orbs.indexOf(x)),no:()=>go(orbs.findIndex(y=>y!==x))};begin(GM['sd'+ti].T,()=>sdInfo(x))}
 window.PHSND={SDLIST,sdPlay,sdCard,sndReview,sdTab,sdIdx,start:k=>start(k),G:()=>G,get SDP(){return SDP}};
+
+/* ══ 2026-11-19 第六十三次 老師 1、2：🃏 聽音 卡牌 對決（6 關 ✕ 🟢 基礎／🔵 進階）══
+ * 基礎 ＝ 聽 一個 音 ➜ 選「注音／KK／IPA 方塊＋字母」卡（老師 截圖 1）；進階 ＝ 同樣 的 音 ➜ 選「只有 字母」卡（老師 截圖 2）。
+ * 一場 10 題，**由 易 到 難**（認知 心理學：先 好 分 的 再 難 分 的、選項 慢慢 變多）：第 1～3 題 2 張 卡（差 很 多 的 音）➜ 第 4～6 題 3 張 ➜ 第 7～10 題 4 張（一定 有 容易 搞混 的 音）；
+ * 這 一關 每 一個 音 都 會 考 到，錯 的 隔 1 題 再 考。玩法：聽 ➜ 點 卡 ＝ 卡牌 飛 出去 打 反派（老師 的 DARK OVERLORD／SHADOW SCHEMER 圖），10 題 打 光 血條 ＝ 擊敗；🔥 連對、⚡ 愈 快 愈 痛。
+ * 進階：拼法 有 一樣 的 兩個 音（長 oo／短 oo、ow）不 會 一起 出現（只 看 字母 分 不 出來）。*/
+const SCL={b:'🟢 基礎',a:'🔵 進階'};
+SND.GS.forEach((g,i)=>['b','a'].forEach(l=>{GM['sc'+i+l]={ic:'🃏',nm:'聽音 卡牌 第 '+(i+1)+' 關 '+SCL[l],goal:g.n+(l==='b'?'：聽 ➜ 選 注音＋字母':'：聽 ➜ 只 看 字母 選'),how:'🔊 聽 一個 聲音 ➜ 點 對 的 卡 ➜ 卡牌 飛 出去 打 反派'+(l==='b'?'（卡 上 有 注音 和 字母）':'（卡 上 只 有 字母）'),T:12,q:()=>scQ(i,l)};GREV['sc'+i+l]=['sndS'+i,'聽到 聲音 就 想到 字母 ＝ 拼字、唸 字 的 地基']}));
+function scConf(a,b,l){if(a===b)return true;if(l==='a'&&a.sp.some(s=>b.sp.indexOf(s)>=0))return true;if(l==='b'&&sdZy(a)===sdZy(b))return true;return false}
+function scPickX(gi){const L=SND.GS[gi].items.map(k=>SND.BY[k]);G.sdr=G.sdr||[];const k=G.sdr.findIndex(r=>r.at<=G.q);if(k>=0){G.re=1;return G.sdr.splice(k,1)[0].x}G.re=0;
+  if(!G.scq||!G.scq.length){G.scq=SH(L);if(G.sdl&&G.scq[0]===G.sdl)G.scq.push(G.scq.shift())}const x=G.scq.shift();G.sdl=x;return x}
+function scOpts(x,gi,l){const n=G.q<3?2:G.q<6?3:4,L=SND.GS[gi].items.map(k=>SND.BY[k]).filter(y=>!scConf(x,y,l)&&!L0(y)),cf=SH(L.filter(y=>x.cf.indexOf(y.k)>=0)),far=SH(L.filter(y=>x.cf.indexOf(y.k)<0&&y.v===x.v));
+  function L0(y){return y.weak}let pick;if(n===2)pick=(far.length?far:SH(L)).slice(0,1);else{pick=(n===4?cf.slice(0,2):cf.slice(0,1));for(const y of SH(L))if(pick.length<n-1&&pick.indexOf(y)<0)pick.push(y)}
+  /* 選項 之間 也 不可以 分不出來（進階：拼法 重複）*/pick=pick.filter((y,i)=>!pick.slice(0,i).some(z=>scConf(y,z,l)));return SH([x].concat(pick))}
+function kqCard(y,l){return '<button class="scd '+(y.v?'v':'c')+'" data-sc="'+y.k+'">'+(l==='b'?'<span class="scz">'+sdTile(y)+'</span>':'')+'<span class="kqL m'+y.sp.length+'">'+y.sp.map(s=>sdSp(s,y)).join('<i class="kqS">/</i>')+'</span></button>'}
+function scQ(gi,l){if(!G.N)G.N=10;gHud();const x=scPickX(gi),O=scOpts(x,gi,l),me=G;G.bhp=G.bhp==null?100:G.bhp;G.foe=G.foe||(gi%2?'foe2':'foe1');
+  B().innerHTML='<div class="scar"><div class="scfoe"><img src="../g3mid/img/'+G.foe+'.webp" alt=""><div class="kqHP"><i style="width:'+G.bhp+'%"></i><b>'+G.bhp+'</b></div></div>'+
+    '<div class="scask">🔊 聽 ➜ 選 對 的 卡'+(G.combo>=2?'　<span class="scfire">🔥 連對 '+G.combo+'</span>':'')+'</div><div class="scrow n'+O.length+'">'+O.map(y=>kqCard(y,l)).join('')+'</div></div>';
+  B().appendChild(earBtn(x.au));const cs=[...B().querySelectorAll('.scd')];cs.forEach((c,i)=>{c.style.animationDelay=(i*.09)+'s'});
+  const go=k=>{if(G!==me||G.lock===G.q)return;const y=SND.BY[k],c=B().querySelector('[data-sc="'+k+'"]'),ok=y===x,f=B().querySelector('.scfoe');
+    if(ok){const a=c.getBoundingClientRect(),b=f.getBoundingClientRect();c.style.transition='transform .35s cubic-bezier(.5,-0.3,.7,1)';c.style.transform='translate('+(b.left+b.width/2-a.left-a.width/2)+'px,'+(b.top+b.height/2-a.top-a.height/2)+'px) rotate(25deg) scale(.4)';
+      const dmg=Math.min(G.bhp,10);setTimeout(()=>{f.classList.add('hit');G.bhp-=dmg;const h=f.querySelector('.kqHP i');if(h)h.style.width=G.bhp+'%';const bb=f.querySelector('.kqHP b');if(bb)bb.textContent=G.bhp;const cc=ctr(f);fx('−'+dmg,cc[0]-20,cc[1]-60,'#FF6B6B');sparks(cc[0],cc[1],26);if(G.bhp<=0)f.classList.add('ko')},330)}
+    else{c.classList.add('no');f.classList.add('laugh')}
+    setTimeout(()=>sdAns(ok,x,y.sp.join('、')+'（'+sdZy(y)+'）'),ok?520:380)};
+  cs.forEach(c=>c.onclick=()=>go(c.dataset.sc));G.hk={ok:()=>go(x.k),no:()=>go(O.find(y=>y!==x).k)};begin(GM['sc'+gi+l].T,()=>sdInfo(x));play1(x.au)}
+/* 遊戲 開始 前 30 秒 複習 ＝ 這 一關 的 每 一個 音（注音 ➜ 字母 ➜ 聲音）*/
+const sndReview0=sndReview;
+sndReview=async function(ti,root){if(typeof ti==='string'&&/^S\d+$/.test(ti)){const gi=+ti.slice(1),me=++TOK,L=SND.GS[gi].items.map(k=>SND.BY[k]);root.innerHTML='<div class="sdrev"></div><div class="sdcap"></div>';const R0=root.querySelector('.sdrev');
+  for(const x of L){if(me!==TOK)return;R0.innerHTML='<div class="sdcard '+(x.v?'v':'c')+' sm"><div class="sdtop">'+sdTile(x,1)+'</div><div class="sdsps">'+x.sp.map(s=>sdSp(s,x)).join('')+'</div></div>';
+    sdCap(root,'🔊 <b>'+sdZy(x)+'</b> ➜ <b class="en">'+x.sp.join('、')+'</b>');if(!await sdSay(x.au,me,R0.querySelector('.sdtile')))return;if(!await sdW(Math.max(900,Math.round(26000/L.length)-1600),me))return}
+  sdCap(root,'✔ 複習 完 了！按〔▶ 開始〕');return}return sndReview0(ti,root)};
+/* 44 音 分頁 最 上面：🃏 練習 路線（6 關 ✕ 基礎 ➜ 進階；玩 過 ＝ ✔）*/
+function scRoute(){const h=$('#scRoute');if(!h)return;h.innerHTML='<div class="scrt"><b>🃏 聽音 卡牌 練習 路線</b><small>每 一關：先 看 動畫 ➜ 🟢 基礎（注音＋字母）➜ 🔵 進階（只 有 字母）</small></div><div class="scrs">'+
+  SND.GS.map((g,i)=>'<div class="scrc"><div class="scrn"><em>第 '+(i+1)+' 關</em>'+g.n+'<span>'+g.items.map(k=>sdTile(SND.BY[k])).join('')+'</span></div><div class="scrb">'+['b','a'].map(l=>'<button class="btn'+(l==='b'?' go':' gold')+(LS.g('pl_sc'+i+l,0)?' dn':'')+'" data-scg="'+i+l+'">'+SCL[l]+(LS.g('pl_sc'+i+l,0)?' ✔':'')+'</button>').join('')+'</div></div>').join('')+'</div>'}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-scg]');if(b)start('sc'+b.dataset.scg)});
+const sdTab0=sdTab;sdTab=function(){sdTab0();scRoute()};

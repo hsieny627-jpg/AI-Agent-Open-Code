@@ -47,8 +47,8 @@ async function run(br, vp) { const tag = vp.join('×'), ctx = await br.newContex
       o.big = [...document.querySelectorAll('.zob')].every(b => b.getBoundingClientRect().height >= 40);
       document.getElementById('lvA').click(); await new Promise(r => setTimeout(r, 60)); o.vA = col('#mV').map(b => b.dataset.mv).join(' ');
       for (const k of ['o', 'v', 'c']) document.querySelector('[data-zo="' + k + '"]').click(); document.getElementById('lvB').click(); return o; });
-    ok(r.btn === 3 && r.big, tag + ' 注音 順序 按鈕 不是 3 顆 ' + r.btn); ok(/^無 b p m f d t n l g c k h j ch sh r z s/.test(r.on), tag + ' 字首 順序 錯 ' + r.on); ok(/^無 b p m f ff d t n l ll g k x dge ch tch sh z s ss ng th ve$/.test(r.co), tag + ' 字尾 順序 錯 ' + r.co);
-    ok(r.v === 'e a i u o', tag + ' 基礎 母音 順序 錯 ' + r.v); ok(/^e ai a_e ay a ou ow2 ea ee i u_e oo oo2 u o_e oa ow/.test(r.vA), tag + ' 進階 母音 順序 錯 ' + r.vA); ok(r.zy, tag + ' 字首 沒有 注音'); await p.close(); }
+    ok(r.btn === 3 && r.big, tag + ' 注音 順序 按鈕 不是 3 顆 ' + r.btn); ok(/^無 b p m f d t n l g c k h j ch sh r z s/.test(r.on) && / th th2$/.test(r.on), tag + ' 字首 順序 錯 ' + r.on);   /* 第六十三次：多 有聲 th */ ok(/^無 b p m f ff d t n l ll g k x dge ch tch sh z s ss ng th ve$/.test(r.co), tag + ' 字尾 順序 錯 ' + r.co);
+    ok(r.v === r.vA && /^e ai ay a_e a ou ow2 ea ee e_e i oo oo2 u o_e oa ow o /.test(r.vA), tag + ' 母音 順序 錯 ' + r.vA);   /* 第六十三次：基礎、進階 都 列 全部 29 個（_verify_63 量 完整 順序）*/ ok(r.zy, tag + ' 字首 沒有 注音'); await p.close(); }
   /* ⑤ 44 音 字卡：13 個 主題、46 部 動畫 每 一部 演完、不 超出；13 個 遊戲 每 個 5 題 玩完 */
   { const p = await pg('phonics/sounds.html'); const r = await p.evaluate(async () => { const o = { bad: [], over: [] }; o.tab = !document.getElementById('s_snd').hidden; o.th = document.querySelectorAll('.sdthb').length; o.n = PHSND.SDLIST.length;
       for (let i = 0; i < o.n; i++) { PHSND.sdCard(i); await PHSND.sdPlay(i); const st = document.getElementById('sdStage'); if (!st.querySelector('.sdend')) o.bad.push(i + 1);

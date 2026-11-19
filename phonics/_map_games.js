@@ -60,7 +60,7 @@ function noPage(info){return new Promise(async res=>{const f=$('#fb');f.classNam
   const go=$('#fbGo');await readWord(info2spec(info.x||info),info.au,f);await wait(300);await say(info.au);go.disabled=false;go.textContent='▶ 繼續';if(window.__PHFAST){f.hidden=true;res();return}go.onclick=()=>{f.hidden=true;res()}})}
 /* ── 開始／下一題／結束 ── */
 /* 第六十二次：30 秒 複習 ＝ 拼音 地圖 那 一段 動畫，或 44 音 字卡 主題 的 複習（GREV 的 第一 格 ＝ 'sndN'）*/
-function revPlay(k){const g=GREV[k][0];if(/^snd\d+$/.test(g))return sndReview(+g.slice(3),$('#grevS'));return scPlay(SC.findIndex(x=>x.k===g),'step',$('#grevS'))}
+function revPlay(k){const g=GREV[k][0];if(/^sndS\d+$/.test(g))return sndReview(g.slice(3),$('#grevS'));if(/^snd\d+$/.test(g))return sndReview(+g.slice(3),$('#grevS'));return scPlay(SC.findIndex(x=>x.k===g),'step',$('#grevS'))}
 function start(k,opt){opt=opt||{};if(typeof SCON!=='undefined'&&SCON&&!SCID&&typeof scLogin==='function'&&!window.__PHNOLOGIN){scLogin(function(){SCH.close();if(typeof scBar==='function')scBar();start(k,opt)});return}
   G={k,q:0,ok:0,score:0,combo:0,res:[],wrong:[],Q:[],t0:Date.now(),lock:-1,tw:0};if(k==='q25'){G.N=25;G.seq=q25Seq()}TOK++;
   $('#game').hidden=false;const M=k==='q25'?{ic:'📝',nm:'拼音 25 題 闖關',goal:'10 種 遊戲 混 在 一起',how:'這 一回 抽到：<br>'+[...new Set(G.seq)].map(g=>GM[g].ic+' '+GM[g].nm).join('、')+'<br>每 一次 組合 都 不一樣'}:GM[k];

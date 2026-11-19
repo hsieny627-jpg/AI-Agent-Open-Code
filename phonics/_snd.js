@@ -71,7 +71,16 @@
     { n: '子音 ⑥ 滑音', ic: '🔵', items: ['r', 'y', 'w'], g: 'pick', goal: '看 r y w ➜ 選 對 的 聲音', why: 'r 不是 ㄌ ＝ red／led 分 得 出來' }];
   var GN = { sort: ['🔀', '母音 子音 分類 閘門', '一個 聲音 方塊 飛 進來 🔊 ➜ 用 手指 <b>拖</b> 進 🔴 母音 門 或 🔵 子音 門'], catch: ['🧺', '拼法 接接樂', '聽 🔊 ➜ 字母 塊 從 天上 掉 下來 ➜ 左右 <b>拖</b> 籃子，<b>接住 每 一個</b> 對 的 拼法、躲開 錯 的'],
     shoot: ['🎯', '聽音 射擊', '聽 🔊 ➜ 字母 靶 在 畫面 上 飛 來 飛 去 ➜ <b>打中</b> 對 的 那 一個'], pick: ['🔊', '看字 選聲', '看 字母 ➜ 點 三顆 聲音 球 聽聽看 ➜ 把 字母 <b>拖</b> 進 聲音 一樣 的 那 一顆'] };
+  /* 2026-11-19 第六十三次 老師 2：🃏 聽音 卡牌 6 關（每 關 7～8 個 音）＝ 先〔基礎〕聽 ➜ 選「注音／KK＋字母」卡，再〔進階〕聽 同樣 的 音 ➜ 選「只有 字母」卡（老師 截圖）。
+   順序 照 老師 投影片：母音 ① ㄝ／一 組 ➜ 母音 ② ㄨ／ㄜ／ㄚ 組 ➜ 母音 ③ 其他＋複習 ➜ 子音 ① 嘴唇＋舌尖 ➜ 子音 ② 舌尖＋舌根＋嘶嘶 ➜ 子音 ③ 嘟嘴＋滑音。弱化音 ə 不 放（要 在 字 裡 才 聽 得 出來）。*/
+  var GS = [
+    { n: '母音 ①：ㄝ 組、一 組', items: ['eh', 'ai', 'ae', 'ou', 'ih', 'ee', 'yu'] },
+    { n: '母音 ②：ㄨ 組、ㄜ 組、ㄚ 組', items: ['uu', 'oo', 'uh', 'oa', 'er', 'aa', 'ar'] },
+    { n: '母音 ③：ㄞ、ㄛ一、ㄦ＋複習', items: ['ii', 'oy', 'or', 'ear', 'air', 'ae', 'ee'] },
+    { n: '子音 ①：嘴唇、舌尖', items: ['b', 'p', 'm', 'f', 'v', 'd', 't', 'n'] },
+    { n: '子音 ②：舌尖、舌根、嘶嘶 聲', items: ['l', 'g', 'k', 'h', 'ng', 's', 'z', 'th'] },
+    { n: '子音 ③：有聲 th、嘟嘴、滑音', items: ['dh', 'j', 'ch', 'sh', 'zh', 'r', 'y', 'w'] }];
   var ALL = V.concat(C), BY = {}; ALL.forEach(function (x, i) { x.i = i; x.v = i < V.length; BY[x.k] = x; });
-  var M = { V: V, C: C, ALL: ALL, BY: BY, TH: TH, GN: GN };
+  var M = { V: V, C: C, ALL: ALL, BY: BY, TH: TH, GN: GN, GS: GS };
   if (typeof module !== 'undefined' && module.exports) module.exports = M; else root.SND = M;
 })(typeof window !== 'undefined' ? window : this);

@@ -7,7 +7,7 @@ var HWSRC = function () {
   function L(x1, y1, x2, y2) { var r = [], n = Math.max(2, Math.round(Math.hypot(x2 - x1, y2 - y1) * 12)); for (var i = 0; i <= n; i++) r.push([x1 + (x2 - x1) * i / n, y1 + (y2 - y1) * i / n]); return r; }
   function A(cx, cy, rx, ry, a0, a1) { var r = [], n = Math.max(6, Math.round(Math.abs(a1 - a0) / 12)); for (var i = 0; i <= n; i++) { var t = (a0 + (a1 - a0) * i / n) * Math.PI / 180; r.push([cx + rx * Math.cos(t), cy + ry * Math.sin(t)]); } return r; }
   function S() { var r = []; for (var i = 0; i < arguments.length; i++) r = r.concat(arguments[i]); return r; }
-  function D(x, y) { return [[x, y - .04], [x, y + .04]]; }
+  function D(x, y) { return [[x, y - .004], [x, y + .004]]; }   /* 2026-11-19 第六十三次 老師：i j 的 點 是 圓 的 一點（以前 0.08 格 長 ＝ 畫 出來 像 橢圓）*/
   /* 每一個字母：好幾種寫法（小朋友常見的筆順），一種寫法 ＝ 好幾筆 */
   var T = {
     A: [[S(L(0, 2, .6, 0), L(.6, 0, 1.2, 2)), L(.3, 1.25, .9, 1.25)], [L(.6, 0, 0, 2), L(.6, 0, 1.2, 2), L(.3, 1.25, .9, 1.25)]],
@@ -128,7 +128,7 @@ var HWSRC = function () {
   /* 2026-11-18 第六十次 老師 6：手掌／手指 不小心 碰到 的 小 點、小 線（很 短，而且 整個 在 四線格 外面）＝ 不是 字，判斷 以前 先 拿掉（i j 的 點 在 格子 裡面，不會 被 拿掉）*/
   function clean(strokes) { strokes = (strokes || []).filter(function (s) { return s && s.length > 0; }); if (strokes.length < 2) return strokes;
     var k = strokes.filter(function (s) { var L = 0, y0 = 1e9, y1 = -1e9; s.forEach(function (q, i) { if (i) L += Math.hypot(q[0] - s[i - 1][0], q[1] - s[i - 1][1]); y0 = Math.min(y0, q[1]); y1 = Math.max(y1, q[1]); });
-      return !(L < .3 && (y0 > 3 + OVT || y1 < -OVT)); }); return k.length ? k : strokes; }
+      return !(L < .3 && (y0 > 3.1 || y1 < -.1)); }   /* 第六十三次（手指 量測）：手掌 碰 到 最 下面 那 條 線 下面 一點點 也 拿掉（以前 要 超過 0.3 格）*/); return k.length ? k : strokes; }
   function jbar(strokes) { strokes = clean(strokes); var b = xbox(strokes), h = Math.max(.2, b.y1 - b.y0), w = Math.max(.4, b.x1 - b.x0), lo = 1e9, hi = -1e9;
     strokes.forEach(function (s) { s.forEach(function (q) { if (q[1] <= b.y0 + h * .2) { lo = Math.min(lo, q[0]); hi = Math.max(hi, q[0]); } }); });
     return hi - lo >= w * .4; }

@@ -923,16 +923,20 @@ function skCanvas(sk,hpx,ln){var u=hpx/3.5,xs=[];sk.forEach(function(s){s.forEac
  cx.setLineDash([]);cx.strokeStyle='#1A237E';cx.lineWidth=Math.max(5,u*.09);cx.lineCap='round';cx.lineJoin='round';sk.forEach(function(s){cx.beginPath();s.forEach(function(p,i){if(i)cx.lineTo(ox+p[0]*u,Y(p[1]));else cx.moveTo(ox+p[0]*u,Y(p[1]))});if(s.length===1)cx.lineTo(ox+s[0][0]*u+.1,Y(s[0][1]));cx.stroke()});
  var M=ln.map;ln.miss.forEach(function(m){var x=M.sw<.05?(x0+x1)/2:M.sx0+(m.x-M.tx0)/M.tw*M.sw;cx.beginPath();cx.strokeStyle='#FF1744';cx.lineWidth=4;cx.arc(ox+x*u,Y(m.L),Math.max(10,u*.28),0,7);cx.stroke()});
  ln.over.forEach(function(m){cx.beginPath();cx.strokeStyle='#FF1744';cx.lineWidth=6;cx.moveTo(4,Y(m.L));cx.lineTo(W-4,Y(m.L));cx.stroke()});return c}
+/* 2026-11-19 第六十三次：寫字 的 判斷 抽 出來 一個 函式（量測 用 真的 手指 觸控 寫 在 真的 四線格 上，跟 學生 一模一樣 的 判斷）*/
+/* 第六十三次（手指 量測 抓到）：手掌 在 格子 最 下面 碰 一下 ＝ 以前 會 跳「超出 格子，再 寫 一次」冤枉 學生 ➜「超出 格子」也 先 拿掉 手掌 的 小 點（HW.clean，跟 判 字 一樣）*/
+function hwDecide(sk,want,noOut){var j=HW.judge(sk,want),ln=HW.lines(sk,want),yy=[];HW.clean(sk).forEach(function(t){t.forEach(function(p){yy.push(p[1])})});var outG=Math.min.apply(0,yy)<-.2||Math.max.apply(0,yy)>3.2,got=j.got;
+  if(outG&&!noOut)return {k:'out',got:got,ln:null};
+  if(!j.ok){var j2=HW.judge(sk,want,1),pt=want===want.toUpperCase()?want.toLowerCase():want.toUpperCase();if(j2.ok&&ln.ok&&j.got!==pt){j.ok=true;got=want}}
+  if(!j.ok){var j3=HW.judge(sk,want,1);if(j3.ok&&!ln.ok)return {k:'line',got:got,ln:ln};return {k:'draw',got:got,ln:null}}
+  if(!ln.ok)return {k:'line',got:got,ln:ln};if(want==='J'&&!HW.jbar(sk))return {k:'jbar',got:got,ln:ln};return {k:'ok',got:got,ln:ln}}
 function writeUI(stage,q,left,lk){var row=H('div','wrow'),L=H('div','wleft'),Rt=H('div','wrt');row.appendChild(L);row.appendChild(Rt);stage.appendChild(row);left(L);
  var pad=new Pad(Rt,{lock:function(){return BUSY||(lk&&lk())}}),bt=H('div','wbtn','<button class="er">🧽 擦掉</button><button class="go">✅ 寫好了</button>');Rt.appendChild(bt);
  bt.querySelector('.er').onclick=function(){if(!BUSY)pad.clear()};
  if(R){R.curPad=pad;R.curWant=q.want}
  bt.querySelector('.go').onclick=function(){if(BUSY||pad.empty()||(lk&&lk()))return;var sk=pad.strokes(),j=HW.judge(sk,q.want);if(R){R.wSk=R.wSk||{};R.wSk[q.want]=JSON.parse(JSON.stringify(sk))}R.lastImg=pad.img();R.lastGot=j.got;R.lastSk=JSON.parse(JSON.stringify(sk));R.lastLn=null;R.lastJ=0;
-   var ln=HW.lines(sk,q.want),yy=[];sk.forEach(function(t){t.forEach(function(p){yy.push(p[1])})});var outG=Math.min.apply(0,yy)<-.2||Math.max.apply(0,yy)>3.2;   /* 2026-10-31 第三十五次 第 4 點：-.15 ➜ -.2（寫字板 的 邊 ＝ -.25，碰到 邊 才 叫 學生 再 寫 一次）*/   /* 超出 整個 四線格（最上面、最下面 的 線 外面）＝ 超出 格子 */
-   if(outG&&!R.retry){R.retry=1;BUSY=true;tPause();var tt=H('div','rtry','✋ 超出 格子 了！<br>再 寫 一次<small>（不扣 時間，一題 一次）</small>');Rt.appendChild(tt);later(function(){tt.remove();pad.clear();BUSY=false;tGo()},1800);return}
-   /* 2026-10-31 第三十五次 第 4 點：形狀 對（不看 位置）＋線 也 對（照 要寫 的 那一個 字母 的 線）＋不是 寫成 另一個 大小寫 ＝ 對（原本 位置 有一點 偏 就 判 錯）*/
-   if(!j.ok){var j2=HW.judge(sk,q.want,1),pt=q.want===q.want.toUpperCase()?q.want.toLowerCase():q.want.toUpperCase();if(j2.ok&&ln.ok&&j.got!==pt){j.ok=true;R.lastGot=q.want}}
-   if(!j.ok){var j2=HW.judge(sk,q.want,1);if(j2.ok&&!ln.ok){R.lastLn=ln;miss('line');return}miss('draw');return}R.lastLn=ln;if(!ln.ok){miss('line');return}if(q.want==='J'&&!HW.jbar(sk)){R.lastJ=1;miss('jbar');return}WOK(q,L)};return pad}
+   var D=hwDecide(sk,q.want);if(D.k==='out'&&R.retry)D=hwDecide(sk,q.want,1);if(D.k==='out'){R.retry=1;BUSY=true;tPause();var tt=H('div','rtry','✋ 超出 格子 了！<br>再 寫 一次<small>（不扣 時間，一題 一次）</small>');Rt.appendChild(tt);later(function(){tt.remove();pad.clear();BUSY=false;tGo()},1800);return}
+   if(D.got)R.lastGot=D.got;if(D.ln)R.lastLn=D.ln;if(D.k==='jbar')R.lastJ=1;if(D.k==='line'||D.k==='draw'||D.k==='jbar'){miss(D.k);return}WOK(q,L)};return pad}
 
 /* ═══════ 10 種 遊戲 的 畫面（2026-10-25 第二十五次 老師第 3 點：每一個遊戲 更好玩、更刺激、更有 回饋；規格 g3mid/CLAUDE.md 最上面）═══════ */
 var REN={},FB={},WOK=null;

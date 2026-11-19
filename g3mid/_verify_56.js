@@ -6,6 +6,6 @@ let n = 0, f = 0; const ok = (c, m) => { n++; if (!c) { f++; console.log('✗', 
 const [bar, plain] = HW.T.J;
 for (let lv = 1; lv <= 2; lv++) for (let k = 0; k < 40; k++) { ok(HW.jbar(kid(bar, lv)), '有 橫 的 J 被 判 沒 橫 lv' + lv); ok(!HW.jbar(kid(plain, lv)), '沒 橫 的 J 被 判 有 橫 lv' + lv); }
 const B = fs.readFileSync(__dirname + '/_build.js', 'utf8');
-ok(/q\.want==='J'&&!HW\.jbar\(sk\)/.test(B), '寫字 判斷 沒有 接 J 一橫');
+ok(/q\.want==='J'&&!HW\.jbar\(sk\)/.test(B)||/want==='J'&&!HW\.jbar\(sk\)/.test(B), '寫字 判斷 沒有 接 J 一橫');
 ok(/大寫 <b>J<\/b> 上面 少了 <b>一橫<\/b>/.test(B), '答錯頁 沒有 說 少了 一橫');
 console.log(`g3mid 第五十六次 J 一橫：${n} 項，${f} 個 失敗`); process.exit(f ? 1 : 0);

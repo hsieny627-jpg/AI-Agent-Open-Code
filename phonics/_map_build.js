@@ -30,6 +30,9 @@ QW.forEach(x => { if (have.indexOf(x.c) < 0) miss.push(x.c); });
 ['s_ae', 's_eh', 's_ih', 's_aa', 's_uh', 's_ai', 's_ee', 's_ii', 's_oa', 's_uu', 's_ao', 's_or', 's_ar', 's_er', 's_el'].forEach(c => { if (have.indexOf(c) < 0) miss.push(c); });
 if (miss.length && !process.env.PH_LAX) { console.error('✗ 沒有 音檔：', [...new Set(miss)].join(' ')); process.exit(1); }
 const CL = require('../score/_client.js');
+/* 第六十三次（教訓）：44 音 的 scCard 跟 動畫 的 scCard 同名 ➜ 動畫 頁 整個 壞掉 ➜ 同 一頁 的 函式 名字 重複 ＝ build 失敗 */
+{ const all = js + '\n' + gjs + '\n' + fs.readFileSync(path.join(D, '_map_snd.js'), 'utf8'), seen = {}, dup = []; (all.match(/^(?:async\s+)?function\s+([A-Za-z_$][\w$]*)\s*\(/gm) || []).forEach(m => { const n = m.replace(/.*function\s+/, '').replace(/\s*\($/, ''); if (seen[n]) dup.push(n); seen[n] = 1; });
+  if (dup.length) { console.error('✗ 同名 函式：', [...new Set(dup)].join(' ')); process.exit(1); } }
 let html = fs.readFileSync(path.join(D, '_map.html'), 'utf8');
 const MAPCJS = fs.readFileSync(path.join(D, '_map_combos.js'), 'utf8');
 html = html.split('/*__DATA__*/').join('var QW=' + JSON.stringify(QW) + ',TT=' + JSON.stringify(TT) + ',REALC=' + JSON.stringify(REALC) + ',XBAD=' + JSON.stringify(Object.keys(XBAD)) + ',BADC=' + JSON.stringify(require('./_map_combos.js').all().filter(x => PH2.bad2(x.code)).map(x => x.code)) + ',AVL=' + JSON.stringify(AVL) + ';')
